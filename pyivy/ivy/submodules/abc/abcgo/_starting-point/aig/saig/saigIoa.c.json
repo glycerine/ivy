@@ -1,0 +1,1165 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c",
+  "SHA256": "8f806110a9338703c965307c5ee235320b80d7f358ba9c5c1bca371673e35c06",
+  "Library": [
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 54,
+        "Column": 9,
+        "ByteOffset": 1474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( spStatic_Saig_ObjName_Buffer, \"n%0*d\", Abc_Base10Log(Aig_ManObjNumMax(p)), Aig_ObjId(pObj) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 56,
+        "Column": 9,
+        "ByteOffset": 1623
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( spStatic_Saig_ObjName_Buffer, \"pi%0*d\", Abc_Base10Log(Saig_ManPiNum(p)), Aig_ObjCioId(pObj) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 58,
+        "Column": 9,
+        "ByteOffset": 1773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( spStatic_Saig_ObjName_Buffer, \"po%0*d\", Abc_Base10Log(Saig_ManPoNum(p)), Aig_ObjCioId(pObj) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 60,
+        "Column": 9,
+        "ByteOffset": 1923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( spStatic_Saig_ObjName_Buffer, \"lo%0*d\", Abc_Base10Log(Saig_ManRegNum(p)), Aig_ObjCioId(pObj) - Saig_ManPiNum(p) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 62,
+        "Column": 9,
+        "ByteOffset": 2093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( spStatic_Saig_ObjName_Buffer, \"li%0*d\", Abc_Base10Log(Saig_ManRegNum(p)), Aig_ObjCioId(pObj) - Saig_ManPoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 9,
+        "ByteOffset": 2239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 9,
+        "ByteOffset": 2708
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Aig_ManDumpBlif(): AIG manager does not have POs.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 89,
+        "Column": 13,
+        "ByteOffset": 2858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 9,
+        "ByteOffset": 2913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Saig_ManDumpBlif(): Cannot open file for writing.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 3004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# BLIF file written by procedure Saig_ManDumpBlif()\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 3083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# If unedited, this file can be read by Saig_ManReadBlif()\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 3169
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# AIG stats: pi=%d po=%d reg=%d and=%d obj=%d maxid=%d\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 3382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".model %s\\n\", p.pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 3456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".inputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 9,
+        "ByteOffset": 3726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", Saig_ObjName(p, pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 3784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 5,
+        "ByteOffset": 3841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".outputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 9,
+        "ByteOffset": 4112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", Saig_ObjName(p, pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 4170
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 13,
+        "ByteOffset": 4446
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".latch\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 13,
+        "ByteOffset": 4486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s\", Saig_ObjName(p, pObjLi) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 13,
+        "ByteOffset": 4548
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s\", Saig_ObjName(p, pObjLo) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 13,
+        "ByteOffset": 4610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" 0\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 9,
+        "ByteOffset": 4733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".names %s\\n 1\\n\", Saig_ObjName(p, Aig_ManConst1(p)) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 126,
+        "Column": 9,
+        "ByteOffset": 5123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".names\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 9,
+        "ByteOffset": 5159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", Saig_ObjName(p, Aig_ObjFanin0(pObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 9,
+        "ByteOffset": 5230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", Saig_ObjName(p, Aig_ObjFanin1(pObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 9,
+        "ByteOffset": 5301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", Saig_ObjName(p, pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 9,
+        "ByteOffset": 5357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n%d%d 1\\n\", !Aig_ObjFaninC0(pObj), !Aig_ObjFaninC1(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 9,
+        "ByteOffset": 5689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".names\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 5725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", Saig_ObjName(p, Aig_ObjFanin0(pObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 9,
+        "ByteOffset": 5796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s\", Saig_ObjName(p, pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 9,
+        "ByteOffset": 5852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n%d 1\\n\", !Aig_ObjFaninC0(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 5915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".end\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 141,
+        "Column": 5,
+        "ByteOffset": 5947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 8,
+        "ByteOffset": 6337
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fscanf( pFile, \"%s\", spStatic_Saig_ManReadToken_Buffer ) == 1 {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 176,
+        "Column": 16,
+        "ByteOffset": 6841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        return atoi( pToken + 1 ); }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 178,
+        "Column": 16,
+        "ByteOffset": 6904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        return atoi( pToken + 2 ); }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 180,
+        "Column": 16,
+        "ByteOffset": 6967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        return atoi( pToken + 2 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 181,
+        "Column": 5,
+        "ByteOffset": 6993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 199,
+        "Column": 15,
+        "ByteOffset": 7428
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Num = atoi( pToken + 1 );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 205,
+        "Column": 19,
+        "ByteOffset": 7592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Num = atoi( pToken + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 9,
+        "ByteOffset": 7726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 216,
+        "Column": 19,
+        "ByteOffset": 7857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Num = atoi( pToken + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 221,
+        "Column": 9,
+        "ByteOffset": 7992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 8035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 247,
+        "Column": 13,
+        "ByteOffset": 8684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"r\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 9,
+        "ByteOffset": 8739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Saig_ManReadBlif(): Cannot open file for reading.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 24,
+        "ByteOffset": 8969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pToken == nil { printf( \"Saig_ManReadBlif(): Error 1.\\n\" ); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 257,
+        "Column": 24,
+        "ByteOffset": 9111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pToken == nil { printf( \"Saig_ManReadBlif(): Error 2.\\n\" ); return nil; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 264,
+        "Column": 25,
+        "ByteOffset": 9390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pToken == nil || strcmp( pToken, \".inputs\" ) { printf( \"Saig_ManReadBlif(): Error 3.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 264,
+        "Column": 55,
+        "ByteOffset": 9420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pToken == nil || strcmp( pToken, \".inputs\" ) { printf( \"Saig_ManReadBlif(): Error 3.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 267,
+        "Column": 25,
+        "ByteOffset": 9624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pToken == nil || strcmp( pToken, \".outputs\" ) { printf( \"Saig_ManReadBlif(): Error 4.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 56,
+        "ByteOffset": 9655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pToken == nil || strcmp( pToken, \".outputs\" ) { printf( \"Saig_ManReadBlif(): Error 4.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 24,
+        "ByteOffset": 9862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pToken == nil { printf( \"Saig_ManReadBlif(): Error 5.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 271,
+        "Column": 21,
+        "ByteOffset": 9956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  nRegs = 0; strcmp( pToken, \".latch\" ) == 0; nRegs++  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 273,
+        "Column": 28,
+        "ByteOffset": 10072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pToken == nil { printf( \"Saig_ManReadBlif(): Error 6.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 275,
+        "Column": 28,
+        "ByteOffset": 10218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pToken == nil { printf( \"Saig_ManReadBlif(): Error 7.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 28,
+        "ByteOffset": 10364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pToken == nil { printf( \"Saig_ManReadBlif(): Error 8.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 279,
+        "Column": 28,
+        "ByteOffset": 10510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pToken == nil { printf( \"Saig_ManReadBlif(): Error 9.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 287,
+        "Column": 17,
+        "ByteOffset": 10763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  i = 0; strcmp( pToken, \".names\" ) == 0; i++  {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 293,
+        "Column": 33,
+        "ByteOffset": 11031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if pToken == nil || strcmp( pToken, \"1\" ) { printf( \"Saig_ManReadBlif(): Error 10.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 293,
+        "Column": 57,
+        "ByteOffset": 11055
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if pToken == nil || strcmp( pToken, \"1\" ) { printf( \"Saig_ManReadBlif(): Error 10.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 296,
+        "Column": 32,
+        "ByteOffset": 11235
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if pToken == nil { printf( \"Saig_ManReadBlif(): Error 11.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 32,
+        "ByteOffset": 11697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if pToken == nil { printf( \"Saig_ManReadBlif(): Error 12.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 311,
+        "Column": 33,
+        "ByteOffset": 11955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if pToken == nil || strcmp( pToken, \"1\" ) { printf( \"Saig_ManReadBlif(): Error 13.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 311,
+        "Column": 57,
+        "ByteOffset": 11979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if pToken == nil || strcmp( pToken, \"1\" ) { printf( \"Saig_ManReadBlif(): Error 13.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 315,
+        "Column": 32,
+        "ByteOffset": 12202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if pToken == nil { printf( \"Saig_ManReadBlif(): Error 14.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 327,
+        "Column": 37,
+        "ByteOffset": 12657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            var Size int32  = int32(pow(10.0, float64((strlen(pToken) - 1))));"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 327,
+        "Column": 56,
+        "ByteOffset": 12676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            var Size int32  = int32(pow(10.0, float64((strlen(pToken) - 1))));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 328,
+        "Column": 78,
+        "ByteOffset": 12777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pNum2Id = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Size), sizeof(int)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 334,
+        "Column": 28,
+        "ByteOffset": 12965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pToken == nil { printf( \"Saig_ManReadBlif(): Error 15.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 341,
+        "Column": 29,
+        "ByteOffset": 13275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pToken == nil || strcmp( pToken, \"1\" ) { printf( \"Saig_ManReadBlif(): Error 16.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 341,
+        "Column": 53,
+        "ByteOffset": 13299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pToken == nil || strcmp( pToken, \"1\" ) { printf( \"Saig_ManReadBlif(): Error 16.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 344,
+        "Column": 28,
+        "ByteOffset": 13467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pToken == nil { printf( \"Saig_ManReadBlif(): Error 17.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 348,
+        "Column": 38,
+        "ByteOffset": 13655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if Aig_IsComplement(pNode) { printf( \"Saig_ManReadBlif(): Error 18.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 352,
+        "Column": 25,
+        "ByteOffset": 13821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pToken == nil || strcmp( pToken, \".end\" ) { printf( \"Saig_ManReadBlif(): Error 19.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 52,
+        "ByteOffset": 13848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pToken == nil || strcmp( pToken, \".end\" ) { printf( \"Saig_ManReadBlif(): Error 19.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 353,
+        "Column": 42,
+        "ByteOffset": 13964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if nPos + nRegs != Aig_ManCoNum(p) { printf( \"Saig_ManReadBlif(): Error 20.\\n\" ); Aig_ManStop(p); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 363,
+        "Column": 9,
+        "ByteOffset": 14487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Saig_ManReadBlif(): Check has failed.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Saig_ObjName",
+      "Start": 1273,
+      "End": 2106,
+      "BodyStart": 1328,
+      "Original": "char * Saig_ObjName( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    static char Buffer[16];\n    if ( Aig_ObjIsNode(pObj) || Aig_ObjIsConst1(pObj) )\n        sprintf( Buffer, \"n%0*d\", Abc_Base10Log(Aig_ManObjNumMax(p)), Aig_ObjId(pObj) );\n    else if ( Saig_ObjIsPi(p, pObj) )\n        sprintf( Buffer, \"pi%0*d\", Abc_Base10Log(Saig_ManPiNum(p)), Aig_ObjCioId(pObj) );\n    else if ( Saig_ObjIsPo(p, pObj) )\n        sprintf( Buffer, \"po%0*d\", Abc_Base10Log(Saig_ManPoNum(p)), Aig_ObjCioId(pObj) );\n    else if ( Saig_ObjIsLo(p, pObj) )\n        sprintf( Buffer, \"lo%0*d\", Abc_Base10Log(Saig_ManRegNum(p)), Aig_ObjCioId(pObj) - Saig_ManPiNum(p) );\n    else if ( Saig_ObjIsLi(p, pObj) )\n        sprintf( Buffer, \"li%0*d\", Abc_Base10Log(Saig_ManRegNum(p)), Aig_ObjCioId(pObj) - Saig_ManPoNum(p) );\n    else \n        assert( 0 );\n    return Buffer;\n}",
+      "Draft": "func Saig_ObjName(p *Aig_Man_t, pObj *Aig_Obj_t) string {\n    \n    if Aig_ObjIsNode(pObj) || Aig_ObjIsConst1(pObj) {\n        spStatic_Saig_ObjName_Buffer = fmt.Sprintf(\"n%0*d\", Abc_Base10Log(Aig_ManObjNumMax(p)), Aig_ObjId(pObj));\n    } else if Saig_ObjIsPi(p, pObj) {\n        spStatic_Saig_ObjName_Buffer = fmt.Sprintf(\"pi%0*d\", Abc_Base10Log(Saig_ManPiNum(p)), Aig_ObjCioId(pObj));\n    } else if Saig_ObjIsPo(p, pObj) {\n        spStatic_Saig_ObjName_Buffer = fmt.Sprintf(\"po%0*d\", Abc_Base10Log(Saig_ManPoNum(p)), Aig_ObjCioId(pObj));\n    } else if Saig_ObjIsLo(p, pObj) {\n        spStatic_Saig_ObjName_Buffer = fmt.Sprintf(\"lo%0*d\", Abc_Base10Log(Saig_ManRegNum(p)), Aig_ObjCioId(pObj) - Saig_ManPiNum(p));\n    } else if Saig_ObjIsLi(p, pObj) {\n        spStatic_Saig_ObjName_Buffer = fmt.Sprintf(\"li%0*d\", Abc_Base10Log(Saig_ManRegNum(p)), Aig_ObjCioId(pObj) - Saig_ManPoNum(p));\n    } else { \n        assert(false, \"0\"); }\n    return spStatic_Saig_ObjName_Buffer;\n}"
+    },
+    {
+      "Name": "Saig_ManDumpBlif",
+      "Start": 2342,
+      "End": 4861,
+      "BodyStart": 2399,
+      "Original": "void Saig_ManDumpBlif( Aig_Man_t * p, char * pFileName )\n{\n    FILE * pFile;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    int i;\n    if ( Aig_ManCoNum(p) == 0 )\n    {\n        printf( \"Aig_ManDumpBlif(): AIG manager does not have POs.\\n\" );\n        return;\n    }\n    Aig_ManSetCioIds( p );\n    // write input file\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Saig_ManDumpBlif(): Cannot open file for writing.\\n\" );\n        return;\n    }\n    fprintf( pFile, \"# BLIF file written by procedure Saig_ManDumpBlif()\\n\" );\n    fprintf( pFile, \"# If unedited, this file can be read by Saig_ManReadBlif()\\n\" );\n    fprintf( pFile, \"# AIG stats: pi=%d po=%d reg=%d and=%d obj=%d maxid=%d\\n\", \n        Saig_ManPiNum(p), Saig_ManPoNum(p), Saig_ManRegNum(p), \n        Aig_ManNodeNum(p), Aig_ManObjNum(p), Aig_ManObjNumMax(p) );\n    fprintf( pFile, \".model %s\\n\", p-\u003epName );\n    // write primary inputs\n    fprintf( pFile, \".inputs\" );\n    Aig_ManForEachPiSeq( p, pObj, i )\n        fprintf( pFile, \" %s\", Saig_ObjName(p, pObj) );\n    fprintf( pFile, \"\\n\" );\n    // write primary outputs\n    fprintf( pFile, \".outputs\" );\n    Aig_ManForEachPoSeq( p, pObj, i )\n        fprintf( pFile, \" %s\", Saig_ObjName(p, pObj) );\n    fprintf( pFile, \"\\n\" );\n    // write registers\n    if ( Aig_ManRegNum(p) )\n    {\n        Aig_ManForEachLiLoSeq( p, pObjLi, pObjLo, i )\n        {\n            fprintf( pFile, \".latch\" );\n            fprintf( pFile, \" %s\", Saig_ObjName(p, pObjLi) );\n            fprintf( pFile, \" %s\", Saig_ObjName(p, pObjLo) );\n            fprintf( pFile, \" 0\\n\" );\n        }\n    } \n    // check if constant is used\n    if ( Aig_ObjRefs(Aig_ManConst1(p)) )\n        fprintf( pFile, \".names %s\\n 1\\n\", Saig_ObjName(p, Aig_ManConst1(p)) );\n    // write the nodes in the DFS order\n    Aig_ManForEachNode( p, pObj, i )\n    {\n        fprintf( pFile, \".names\" );\n        fprintf( pFile, \" %s\", Saig_ObjName(p, Aig_ObjFanin0(pObj)) );\n        fprintf( pFile, \" %s\", Saig_ObjName(p, Aig_ObjFanin1(pObj)) );\n        fprintf( pFile, \" %s\", Saig_ObjName(p, pObj) );\n        fprintf( pFile, \"\\n%d%d 1\\n\", !Aig_ObjFaninC0(pObj), !Aig_ObjFaninC1(pObj) );\n    }\n    // write the POs\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        fprintf( pFile, \".names\" );\n        fprintf( pFile, \" %s\", Saig_ObjName(p, Aig_ObjFanin0(pObj)) );\n        fprintf( pFile, \" %s\", Saig_ObjName(p, pObj) );\n        fprintf( pFile, \"\\n%d 1\\n\", !Aig_ObjFaninC0(pObj) );\n    }\n    fprintf( pFile, \".end\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func Saig_ManDumpBlif(p *Aig_Man_t, pFileName string) {\n    var pFile *os.File;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i int32;\n    if Aig_ManCoNum(p) == 0 {\n        fmt.Printf(\"Aig_ManDumpBlif(): AIG manager does not have POs.\\n\");\n        return;\n    }\n    Aig_ManSetCioIds( p );\n    // write input file\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Saig_ManDumpBlif(): Cannot open file for writing.\\n\");\n        return;\n    }\n    fmt.Fprintf(pFile, \"# BLIF file written by procedure Saig_ManDumpBlif()\\n\");\n    fmt.Fprintf(pFile, \"# If unedited, this file can be read by Saig_ManReadBlif()\\n\");\n    fmt.Fprintf(pFile, \"# AIG stats: pi=%d po=%d reg=%d and=%d obj=%d maxid=%d\\n\", Saig_ManPiNum(p), Saig_ManPoNum(p), Saig_ManRegNum(p), Aig_ManNodeNum(p), Aig_ManObjNum(p), Aig_ManObjNumMax(p));\n    fmt.Fprintf(pFile, \".model %s\\n\", p.pName);\n    // write primary inputs\n    fmt.Fprintf(pFile, \".inputs\");\n    // inlining of macro Aig_ManForEachPiSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCiNum(p)-Aig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, pObj));\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    // write primary outputs\n    fmt.Fprintf(pFile, \".outputs\");\n    // inlining of macro Aig_ManForEachPoSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCoNum(p)-Aig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, pObj));\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    // write registers\n    if Aig_ManRegNum(p) {\n        // inlining of macro Aig_ManForEachLiLoSeq\n        for  i = 0; (i \u003c Aig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {\n            fmt.Fprintf(pFile, \".latch\");\n            fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, pObjLi));\n            fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, pObjLo));\n            fmt.Fprintf(pFile, \" 0\\n\");\n        }\n    } \n    // check if constant is used\n    if Aig_ObjRefs(Aig_ManConst1(p)) {\n        fmt.Fprintf(pFile, \".names %s\\n 1\\n\", Saig_ObjName(p, Aig_ManConst1(p))); }\n    // write the nodes in the DFS order\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        fmt.Fprintf(pFile, \".names\");\n        fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, Aig_ObjFanin0(pObj)));\n        fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, Aig_ObjFanin1(pObj)));\n        fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, pObj));\n        fmt.Fprintf(pFile, \"\\n%d%d 1\\n\", !Aig_ObjFaninC0(pObj), !Aig_ObjFaninC1(pObj));\n    }\n    }\n    // write the POs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        fmt.Fprintf(pFile, \".names\");\n        fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, Aig_ObjFanin0(pObj)));\n        fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, pObj));\n        fmt.Fprintf(pFile, \"\\n%d 1\\n\", !Aig_ObjFaninC0(pObj));\n    }\n    fmt.Fprintf(pFile, \".end\\n\");\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Saig_ManReadToken",
+      "Start": 5123,
+      "End": 5283,
+      "BodyStart": 5164,
+      "Original": "char * Saig_ManReadToken( FILE * pFile )\n{\n    static char Buffer[1000];\n    if ( fscanf( pFile, \"%s\", Buffer ) == 1 )\n        return Buffer;\n    return NULL;\n}",
+      "Draft": "func Saig_ManReadToken(pFile *os.File) string {\n    \n    if fscanf( pFile, \"%s\", spStatic_Saig_ManReadToken_Buffer ) == 1 {\n        return spStatic_Saig_ManReadToken_Buffer; }\n    return nil;\n}"
+    },
+    {
+      "Name": "Saig_ManReadNumber",
+      "Start": 5552,
+      "End": 5831,
+      "BodyStart": 5607,
+      "Original": "int Saig_ManReadNumber( Aig_Man_t * p, char * pToken )\n{\n    if ( pToken[0] == 'n' )\n        return atoi( pToken + 1 );\n    if ( pToken[0] == 'p' )\n        return atoi( pToken + 2 );\n    if ( pToken[0] == 'l' )\n        return atoi( pToken + 2 );\n    assert( 0 );\n    return -1;\n}",
+      "Draft": "func Saig_ManReadNumber(p *Aig_Man_t, pToken string) int32 {\n    if pToken[0] == 'n' {\n        return strconv.Atoi(pToken + 1); }\n    if pToken[0] == 'p' {\n        return strconv.Atoi(pToken + 2); }\n    if pToken[0] == 'l' {\n        return strconv.Atoi(pToken + 2); }\n    assert(false, \"0\");\n    return -1;\n}"
+    },
+    {
+      "Name": "Saig_ManReadNode",
+      "Start": 6098,
+      "End": 6919,
+      "BodyStart": 6174,
+      "Original": "Aig_Obj_t * Saig_ManReadNode( Aig_Man_t * p, int * pNum2Id, char * pToken )\n{\n    int Num;\n    if ( pToken[0] == 'n' )\n    {\n        Num = atoi( pToken + 1 );\n        return Aig_ManObj( p, pNum2Id[Num] );\n    }\n    if ( pToken[0] == 'p' )\n    {\n        pToken++;\n        if ( pToken[0] == 'i' )\n        {\n            Num = atoi( pToken + 1 );\n            return Aig_ManCi( p, Num );\n        }\n        if ( pToken[0] == 'o' )\n            return NULL;\n        assert( 0 );\n        return NULL;\n    }\n    if ( pToken[0] == 'l' )\n    {\n        pToken++;\n        if ( pToken[0] == 'o' )\n        {\n            Num = atoi( pToken + 1 );\n            return Saig_ManLo( p, Num );\n        }\n        if ( pToken[0] == 'i' )\n            return NULL;\n        assert( 0 );\n        return NULL;\n    }\n    assert( 0 );\n    return NULL;\n}",
+      "Draft": "func Saig_ManReadNode(p *Aig_Man_t, pNum2Id *int32, pToken string) *Aig_Obj_t {\n    var Num int32;\n    if pToken[0] == 'n' {\n        Num = strconv.Atoi(pToken + 1);\n        return Aig_ManObj( p, pNum2Id[Num] );\n    }\n    if pToken[0] == 'p' {\n        pToken++;\n        if pToken[0] == 'i' {\n            Num = strconv.Atoi(pToken + 1);\n            return Aig_ManCi( p, Num );\n        }\n        if pToken[0] == 'o' {\n            return nil; }\n        assert(false, \"0\");\n        return nil;\n    }\n    if pToken[0] == 'l' {\n        pToken++;\n        if pToken[0] == 'o' {\n            Num = strconv.Atoi(pToken + 1);\n            return Saig_ManLo( p, Num );\n        }\n        if pToken[0] == 'i' {\n            return nil; }\n        assert(false, \"0\");\n        return nil;\n    }\n    assert(false, \"0\");\n    return nil;\n}"
+    },
+    {
+      "Name": "Saig_ManReadBlif",
+      "Start": 7206,
+      "End": 13552,
+      "BodyStart": 7255,
+      "Original": "Aig_Man_t * Saig_ManReadBlif( char * pFileName )\n{\n    FILE * pFile;\n    Aig_Man_t * p;\n    Aig_Obj_t * pFanin0, * pFanin1, * pNode;\n    char * pToken;\n    int i, nPis, nPos, nRegs, Number;\n    int * pNum2Id = NULL;  // mapping of node numbers in the file into AIG node IDs\n    // open the file\n    pFile = fopen( pFileName, \"r\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Saig_ManReadBlif(): Cannot open file for reading.\\n\" );\n        return NULL;\n    }\n    // skip through the comments\n    for ( i = 0; (pToken = Saig_ManReadToken( pFile )) \u0026\u0026 pToken[0] != '.'; i++ );\n    if ( pToken == NULL ) \n        { printf( \"Saig_ManReadBlif(): Error 1.\\n\" ); return NULL; }\n    // get he model\n    pToken = Saig_ManReadToken( pFile );\n    if ( pToken == NULL ) \n        { printf( \"Saig_ManReadBlif(): Error 2.\\n\" ); return NULL; }\n    // start the package\n    p = Aig_ManStart( 10000 );\n    p-\u003epName = Abc_UtilStrsav( pToken );\n    p-\u003epSpec = Abc_UtilStrsav( pFileName );\n    // count PIs\n    pToken = Saig_ManReadToken( pFile );\n    if ( pToken == NULL || strcmp( pToken, \".inputs\" ) ) \n        { printf( \"Saig_ManReadBlif(): Error 3.\\n\" ); Aig_ManStop(p); return NULL; }\n    for ( nPis = 0; (pToken = Saig_ManReadToken( pFile )) \u0026\u0026 pToken[0] != '.'; nPis++ );\n    // count POs\n    if ( pToken == NULL || strcmp( pToken, \".outputs\" ) ) \n        { printf( \"Saig_ManReadBlif(): Error 4.\\n\" ); Aig_ManStop(p); return NULL; }\n    for ( nPos = 0; (pToken = Saig_ManReadToken( pFile )) \u0026\u0026 pToken[0] != '.'; nPos++ );\n    // count latches\n    if ( pToken == NULL ) \n        { printf( \"Saig_ManReadBlif(): Error 5.\\n\" ); Aig_ManStop(p); return NULL; }\n    for ( nRegs = 0; strcmp( pToken, \".latch\" ) == 0; nRegs++ )\n    {\n        pToken = Saig_ManReadToken( pFile );\n        if ( pToken == NULL ) \n            { printf( \"Saig_ManReadBlif(): Error 6.\\n\" ); Aig_ManStop(p); return NULL; }\n        pToken = Saig_ManReadToken( pFile );\n        if ( pToken == NULL ) \n            { printf( \"Saig_ManReadBlif(): Error 7.\\n\" ); Aig_ManStop(p); return NULL; }\n        pToken = Saig_ManReadToken( pFile );\n        if ( pToken == NULL ) \n            { printf( \"Saig_ManReadBlif(): Error 8.\\n\" ); Aig_ManStop(p); return NULL; }\n        pToken = Saig_ManReadToken( pFile );\n        if ( pToken == NULL ) \n            { printf( \"Saig_ManReadBlif(): Error 9.\\n\" ); Aig_ManStop(p); return NULL; }\n    }\n    // create PIs and LOs\n    for ( i = 0; i \u003c nPis + nRegs; i++ )\n        Aig_ObjCreateCi( p );\n    Aig_ManSetRegNum( p, nRegs );\n    // create nodes\n    for ( i = 0; strcmp( pToken, \".names\" ) == 0; i++ )\n    {\n        // first token\n        pToken = Saig_ManReadToken( pFile );\n        if ( i == 0 \u0026\u0026 pToken[0] == 'n' )\n        { // constant node\n            // read 1\n            pToken = Saig_ManReadToken( pFile );\n            if ( pToken == NULL || strcmp( pToken, \"1\" ) ) \n                { printf( \"Saig_ManReadBlif(): Error 10.\\n\" ); Aig_ManStop(p); return NULL; }\n            // read next\n            pToken = Saig_ManReadToken( pFile );\n            if ( pToken == NULL ) \n                { printf( \"Saig_ManReadBlif(): Error 11.\\n\" ); Aig_ManStop(p); return NULL; }\n            continue;\n        }\n        pFanin0 = Saig_ManReadNode( p, pNum2Id, pToken );\n\n        // second token\n        pToken = Saig_ManReadToken( pFile );\n        if ( (pToken[0] == 'p' \u0026\u0026 pToken[1] == 'o') || (pToken[0] == 'l' \u0026\u0026 pToken[1] == 'i') )\n        { // buffer\n            // read complemented attribute\n            pToken = Saig_ManReadToken( pFile );\n            if ( pToken == NULL ) \n                { printf( \"Saig_ManReadBlif(): Error 12.\\n\" ); Aig_ManStop(p); return NULL; }\n            if ( pToken[0] == '0' )\n                pFanin0 = Aig_Not(pFanin0);\n            // read 1\n            pToken = Saig_ManReadToken( pFile );\n            if ( pToken == NULL || strcmp( pToken, \"1\" ) ) \n                { printf( \"Saig_ManReadBlif(): Error 13.\\n\" ); Aig_ManStop(p); return NULL; }\n            Aig_ObjCreateCo( p, pFanin0 );\n            // read next\n            pToken = Saig_ManReadToken( pFile );\n            if ( pToken == NULL ) \n                { printf( \"Saig_ManReadBlif(): Error 14.\\n\" ); Aig_ManStop(p); return NULL; }\n            continue;\n        }\n\n        // third token\n        // regular node\n        pFanin1 = Saig_ManReadNode( p, pNum2Id, pToken );\n        pToken = Saig_ManReadToken( pFile );\n        Number = Saig_ManReadNumber( p, pToken );\n        // allocate mapping\n        if ( pNum2Id == NULL )\n        {\n//            extern double pow( double x, double y );\n            int Size = (int)pow(10.0, (double)(strlen(pToken) - 1));\n            pNum2Id = ABC_CALLOC( int, Size );\n        }\n\n        // other tokens\n        // get the complemented attributes\n        pToken = Saig_ManReadToken( pFile );\n        if ( pToken == NULL ) \n            { printf( \"Saig_ManReadBlif(): Error 15.\\n\" ); Aig_ManStop(p); return NULL; }\n        if ( pToken[0] == '0' )\n            pFanin0 = Aig_Not(pFanin0);\n        if ( pToken[1] == '0' )\n            pFanin1 = Aig_Not(pFanin1);\n        // read 1\n        pToken = Saig_ManReadToken( pFile );\n        if ( pToken == NULL || strcmp( pToken, \"1\" ) ) \n            { printf( \"Saig_ManReadBlif(): Error 16.\\n\" ); Aig_ManStop(p); return NULL; }\n        // read next\n        pToken = Saig_ManReadToken( pFile );\n        if ( pToken == NULL ) \n            { printf( \"Saig_ManReadBlif(): Error 17.\\n\" ); Aig_ManStop(p); return NULL; }\n\n        // create new node\n        pNode = Aig_And( p, pFanin0, pFanin1 );\n        if ( Aig_IsComplement(pNode) )\n            { printf( \"Saig_ManReadBlif(): Error 18.\\n\" ); Aig_ManStop(p); return NULL; }\n        // set mapping\n        pNum2Id[ Number ] = pNode-\u003eId;\n    }\n    if ( pToken == NULL || strcmp( pToken, \".end\" ) ) \n        { printf( \"Saig_ManReadBlif(): Error 19.\\n\" ); Aig_ManStop(p); return NULL; }\n    if ( nPos + nRegs != Aig_ManCoNum(p) ) \n        { printf( \"Saig_ManReadBlif(): Error 20.\\n\" ); Aig_ManStop(p); return NULL; }\n    // add non-node objects to the mapping\n    Aig_ManForEachCi( p, pNode, i )\n        pNum2Id[pNode-\u003eId] = pNode-\u003eId;\n//    ABC_FREE( pNum2Id );\n    p-\u003epData = pNum2Id;\n    // check the new manager\n    Aig_ManSetRegNum( p, nRegs );\n    if ( !Aig_ManCheck(p) )\n        printf( \"Saig_ManReadBlif(): Check has failed.\\n\" );\n    return p;\n}",
+      "Draft": "func Saig_ManReadBlif(pFileName string) *Aig_Man_t {\n    var pFile *os.File;\n    var p *Aig_Man_t;\n    var pFanin0, pFanin1, pNode *Aig_Obj_t;\n    var pToken string;\n    var i, nPis, nPos, nRegs, Number int32;\n    var pNum2Id *int32  = nil;  // mapping of node numbers in the file into AIG node IDs\n    // open the file\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Saig_ManReadBlif(): Cannot open file for reading.\\n\");\n        return nil;\n    }\n    // skip through the comments\n    for  i = 0; (pToken = Saig_ManReadToken( pFile )) \u0026\u0026 pToken[0] != '.'; i++  {}\n    if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 1.\\n\"); return nil; }\n    // get he model\n    pToken = Saig_ManReadToken( pFile );\n    if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 2.\\n\"); return nil; }\n    // start the package\n    p = Aig_ManStart( 10000 );\n    p.pName = Abc_UtilStrsav( pToken );\n    p.pSpec = Abc_UtilStrsav( pFileName );\n    // count PIs\n    pToken = Saig_ManReadToken( pFile );\n    if pToken == nil || (int32(strings.Compare(pToken, \".inputs\")) != 0) { fmt.Printf(\"Saig_ManReadBlif(): Error 3.\\n\"); Aig_ManStop(p); return nil; }\n    for  nPis = 0; (pToken = Saig_ManReadToken( pFile )) \u0026\u0026 pToken[0] != '.'; nPis++  {}\n    // count POs\n    if pToken == nil || (int32(strings.Compare(pToken, \".outputs\")) != 0) { fmt.Printf(\"Saig_ManReadBlif(): Error 4.\\n\"); Aig_ManStop(p); return nil; }\n    for  nPos = 0; (pToken = Saig_ManReadToken( pFile )) \u0026\u0026 pToken[0] != '.'; nPos++  {}\n    // count latches\n    if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 5.\\n\"); Aig_ManStop(p); return nil; }\n    for  nRegs = 0; int32(strings.Compare(pToken, \".latch\")) == 0; nRegs++  {\n        pToken = Saig_ManReadToken( pFile );\n        if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 6.\\n\"); Aig_ManStop(p); return nil; }\n        pToken = Saig_ManReadToken( pFile );\n        if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 7.\\n\"); Aig_ManStop(p); return nil; }\n        pToken = Saig_ManReadToken( pFile );\n        if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 8.\\n\"); Aig_ManStop(p); return nil; }\n        pToken = Saig_ManReadToken( pFile );\n        if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 9.\\n\"); Aig_ManStop(p); return nil; }\n    }\n    // create PIs and LOs\n    for  i = 0; i \u003c nPis + nRegs; i++  {\n        Aig_ObjCreateCi( p );\n    }\n    Aig_ManSetRegNum( p, nRegs );\n    // create nodes\n    for  i = 0; int32(strings.Compare(pToken, \".names\")) == 0; i++  {\n        // first token\n        pToken = Saig_ManReadToken( pFile );\n        if i == 0 \u0026\u0026 pToken[0] == 'n' { // constant node\n            // read 1\n            pToken = Saig_ManReadToken( pFile );\n            if pToken == nil || (int32(strings.Compare(pToken, \"1\")) != 0) { fmt.Printf(\"Saig_ManReadBlif(): Error 10.\\n\"); Aig_ManStop(p); return nil; }\n            // read next\n            pToken = Saig_ManReadToken( pFile );\n            if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 11.\\n\"); Aig_ManStop(p); return nil; }\n            continue;\n        }\n        pFanin0 = Saig_ManReadNode( p, pNum2Id, pToken );\n\n        // second token\n        pToken = Saig_ManReadToken( pFile );\n        if (pToken[0] == 'p' \u0026\u0026 pToken[1] == 'o') || (pToken[0] == 'l' \u0026\u0026 pToken[1] == 'i') { // buffer\n            // read complemented attribute\n            pToken = Saig_ManReadToken( pFile );\n            if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 12.\\n\"); Aig_ManStop(p); return nil; }\n            if pToken[0] == '0' {\n                pFanin0 = Aig_Not(pFanin0); }\n            // read 1\n            pToken = Saig_ManReadToken( pFile );\n            if pToken == nil || (int32(strings.Compare(pToken, \"1\")) != 0) { fmt.Printf(\"Saig_ManReadBlif(): Error 13.\\n\"); Aig_ManStop(p); return nil; }\n            Aig_ObjCreateCo( p, pFanin0 );\n            // read next\n            pToken = Saig_ManReadToken( pFile );\n            if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 14.\\n\"); Aig_ManStop(p); return nil; }\n            continue;\n        }\n\n        // third token\n        // regular node\n        pFanin1 = Saig_ManReadNode( p, pNum2Id, pToken );\n        pToken = Saig_ManReadToken( pFile );\n        Number = Saig_ManReadNumber( p, pToken );\n        // allocate mapping\n        if pNum2Id == nil {\n//            extern double pow( double x, double y );\n            var Size int32  = int32(math.Pow(float64(10.0), float64(float64((len(pToken) - 1)))));\n            // inlining of macro ABC_CALLOC\n            pNum2Id = ((int *) calloc((size_t)(Size), sizeof(int)));\n        }\n\n        // other tokens\n        // get the complemented attributes\n        pToken = Saig_ManReadToken( pFile );\n        if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 15.\\n\"); Aig_ManStop(p); return nil; }\n        if pToken[0] == '0' {\n            pFanin0 = Aig_Not(pFanin0); }\n        if pToken[1] == '0' {\n            pFanin1 = Aig_Not(pFanin1); }\n        // read 1\n        pToken = Saig_ManReadToken( pFile );\n        if pToken == nil || (int32(strings.Compare(pToken, \"1\")) != 0) { fmt.Printf(\"Saig_ManReadBlif(): Error 16.\\n\"); Aig_ManStop(p); return nil; }\n        // read next\n        pToken = Saig_ManReadToken( pFile );\n        if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 17.\\n\"); Aig_ManStop(p); return nil; }\n\n        // create new node\n        pNode = Aig_And( p, pFanin0, pFanin1 );\n        if Aig_IsComplement(pNode) { fmt.Printf(\"Saig_ManReadBlif(): Error 18.\\n\"); Aig_ManStop(p); return nil; }\n        // set mapping\n        pNum2Id[ Number ] = pNode.Id;\n    }\n    if pToken == nil || (int32(strings.Compare(pToken, \".end\")) != 0) { fmt.Printf(\"Saig_ManReadBlif(): Error 19.\\n\"); Aig_ManStop(p); return nil; }\n    if nPos + nRegs != Aig_ManCoNum(p) { fmt.Printf(\"Saig_ManReadBlif(): Error 20.\\n\"); Aig_ManStop(p); return nil; }\n    // add non-node objects to the mapping\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pNode) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        pNum2Id[pNode.Id] = pNode.Id;\n    }\n//    ABC_FREE( pNum2Id );\n    p.pData = pNum2Id;\n    // check the new manager\n    Aig_ManSetRegNum( p, nRegs );\n    if !Aig_ManCheck(p) {\n        fmt.Printf(\"Saig_ManReadBlif(): Check has failed.\\n\"); }\n    return p;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::mechanical::static::1334",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1334,
+      "End": 1340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::mechanical::static::6115",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5170,
+      "End": 5176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::mechanical::sizeof::12885",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11862,
+      "End": 11862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::pointer-cast::3489",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3309,
+      "End": 3309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::pointer-cast::3870",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3494,
+      "End": 3494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::pointer-cast::4843",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4150,
+      "End": 4150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::pointer-cast::5466",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4540,
+      "End": 4540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::pointer-cast::12854",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11862,
+      "End": 11862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::pointer-cast::14437",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13262,
+      "End": 13262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::Saig_ObjName",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ObjName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1273,
+      "End": 2106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::Saig_ManDumpBlif",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDumpBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2342,
+      "End": 4861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::Saig_ManReadToken",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManReadToken",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5123,
+      "End": 5283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::Saig_ManReadNumber",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManReadNumber",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5552,
+      "End": 5831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::Saig_ManReadNode",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManReadNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6098,
+      "End": 6919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::Saig_ManReadBlif",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManReadBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7206,
+      "End": 13552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigIoa.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13799
+    }
+  ],
+  "Draft": "package saig\n\nimport (\n\t\"fmt\"\n\t\"math\"\n\t\"strconv\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [saigIoa.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [Input/output for sequential AIGs using BLIF files.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saigIoa.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cmath.h\u003e\n//#include \"saig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Saig_ObjName_Buffer string // was [16]byte in C\n\nfunc Saig_ObjName(p *Aig_Man_t, pObj *Aig_Obj_t) string {\n    \n    if Aig_ObjIsNode(pObj) || Aig_ObjIsConst1(pObj) {\n        spStatic_Saig_ObjName_Buffer = fmt.Sprintf(\"n%0*d\", Abc_Base10Log(Aig_ManObjNumMax(p)), Aig_ObjId(pObj));\n    } else if Saig_ObjIsPi(p, pObj) {\n        spStatic_Saig_ObjName_Buffer = fmt.Sprintf(\"pi%0*d\", Abc_Base10Log(Saig_ManPiNum(p)), Aig_ObjCioId(pObj));\n    } else if Saig_ObjIsPo(p, pObj) {\n        spStatic_Saig_ObjName_Buffer = fmt.Sprintf(\"po%0*d\", Abc_Base10Log(Saig_ManPoNum(p)), Aig_ObjCioId(pObj));\n    } else if Saig_ObjIsLo(p, pObj) {\n        spStatic_Saig_ObjName_Buffer = fmt.Sprintf(\"lo%0*d\", Abc_Base10Log(Saig_ManRegNum(p)), Aig_ObjCioId(pObj) - Saig_ManPiNum(p));\n    } else if Saig_ObjIsLi(p, pObj) {\n        spStatic_Saig_ObjName_Buffer = fmt.Sprintf(\"li%0*d\", Abc_Base10Log(Saig_ManRegNum(p)), Aig_ObjCioId(pObj) - Saig_ManPoNum(p));\n    } else { \n        assert(false, \"0\"); }\n    return spStatic_Saig_ObjName_Buffer;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDumpBlif(p *Aig_Man_t, pFileName string) {\n    var pFile *os.File;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i int32;\n    if Aig_ManCoNum(p) == 0 {\n        fmt.Printf(\"Aig_ManDumpBlif(): AIG manager does not have POs.\\n\");\n        return;\n    }\n    Aig_ManSetCioIds( p );\n    // write input file\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Saig_ManDumpBlif(): Cannot open file for writing.\\n\");\n        return;\n    }\n    fmt.Fprintf(pFile, \"# BLIF file written by procedure Saig_ManDumpBlif()\\n\");\n    fmt.Fprintf(pFile, \"# If unedited, this file can be read by Saig_ManReadBlif()\\n\");\n    fmt.Fprintf(pFile, \"# AIG stats: pi=%d po=%d reg=%d and=%d obj=%d maxid=%d\\n\", Saig_ManPiNum(p), Saig_ManPoNum(p), Saig_ManRegNum(p), Aig_ManNodeNum(p), Aig_ManObjNum(p), Aig_ManObjNumMax(p));\n    fmt.Fprintf(pFile, \".model %s\\n\", p.pName);\n    // write primary inputs\n    fmt.Fprintf(pFile, \".inputs\");\n    // inlining of macro Aig_ManForEachPiSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCiNum(p)-Aig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, pObj));\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    // write primary outputs\n    fmt.Fprintf(pFile, \".outputs\");\n    // inlining of macro Aig_ManForEachPoSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCoNum(p)-Aig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, pObj));\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    // write registers\n    if Aig_ManRegNum(p) {\n        // inlining of macro Aig_ManForEachLiLoSeq\n        for  i = 0; (i \u003c Aig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p, i)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(p, i)), 1); i++  {\n            fmt.Fprintf(pFile, \".latch\");\n            fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, pObjLi));\n            fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, pObjLo));\n            fmt.Fprintf(pFile, \" 0\\n\");\n        }\n    } \n    // check if constant is used\n    if Aig_ObjRefs(Aig_ManConst1(p)) {\n        fmt.Fprintf(pFile, \".names %s\\n 1\\n\", Saig_ObjName(p, Aig_ManConst1(p))); }\n    // write the nodes in the DFS order\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        fmt.Fprintf(pFile, \".names\");\n        fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, Aig_ObjFanin0(pObj)));\n        fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, Aig_ObjFanin1(pObj)));\n        fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, pObj));\n        fmt.Fprintf(pFile, \"\\n%d%d 1\\n\", !Aig_ObjFaninC0(pObj), !Aig_ObjFaninC1(pObj));\n    }\n    }\n    // write the POs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        fmt.Fprintf(pFile, \".names\");\n        fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, Aig_ObjFanin0(pObj)));\n        fmt.Fprintf(pFile, \" %s\", Saig_ObjName(p, pObj));\n        fmt.Fprintf(pFile, \"\\n%d 1\\n\", !Aig_ObjFaninC0(pObj));\n    }\n    fmt.Fprintf(pFile, \".end\\n\");\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads one token from file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Saig_ManReadToken_Buffer [1000]byte;\nfunc Saig_ManReadToken(pFile *os.File) string {\n    \n    if fscanf( pFile, \"%s\", spStatic_Saig_ManReadToken_Buffer ) == 1 {\n        return spStatic_Saig_ManReadToken_Buffer; }\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the corresponding number.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManReadNumber(p *Aig_Man_t, pToken string) int32 {\n    if pToken[0] == 'n' {\n        return strconv.Atoi(pToken + 1); }\n    if pToken[0] == 'p' {\n        return strconv.Atoi(pToken + 2); }\n    if pToken[0] == 'l' {\n        return strconv.Atoi(pToken + 2); }\n    assert(false, \"0\");\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the corresponding node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManReadNode(p *Aig_Man_t, pNum2Id *int32, pToken string) *Aig_Obj_t {\n    var Num int32;\n    if pToken[0] == 'n' {\n        Num = strconv.Atoi(pToken + 1);\n        return Aig_ManObj( p, pNum2Id[Num] );\n    }\n    if pToken[0] == 'p' {\n        pToken++;\n        if pToken[0] == 'i' {\n            Num = strconv.Atoi(pToken + 1);\n            return Aig_ManCi( p, Num );\n        }\n        if pToken[0] == 'o' {\n            return nil; }\n        assert(false, \"0\");\n        return nil;\n    }\n    if pToken[0] == 'l' {\n        pToken++;\n        if pToken[0] == 'o' {\n            Num = strconv.Atoi(pToken + 1);\n            return Saig_ManLo( p, Num );\n        }\n        if pToken[0] == 'i' {\n            return nil; }\n        assert(false, \"0\");\n        return nil;\n    }\n    assert(false, \"0\");\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads BLIF previously dumped by Saig_ManDumpBlif().]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManReadBlif(pFileName string) *Aig_Man_t {\n    var pFile *os.File;\n    var p *Aig_Man_t;\n    var pFanin0, pFanin1, pNode *Aig_Obj_t;\n    var pToken string;\n    var i, nPis, nPos, nRegs, Number int32;\n    var pNum2Id *int32  = nil;  // mapping of node numbers in the file into AIG node IDs\n    // open the file\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Saig_ManReadBlif(): Cannot open file for reading.\\n\");\n        return nil;\n    }\n    // skip through the comments\n    for  i = 0; (pToken = Saig_ManReadToken( pFile )) \u0026\u0026 pToken[0] != '.'; i++  {}\n    if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 1.\\n\"); return nil; }\n    // get he model\n    pToken = Saig_ManReadToken( pFile );\n    if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 2.\\n\"); return nil; }\n    // start the package\n    p = Aig_ManStart( 10000 );\n    p.pName = Abc_UtilStrsav( pToken );\n    p.pSpec = Abc_UtilStrsav( pFileName );\n    // count PIs\n    pToken = Saig_ManReadToken( pFile );\n    if pToken == nil || (int32(strings.Compare(pToken, \".inputs\")) != 0) { fmt.Printf(\"Saig_ManReadBlif(): Error 3.\\n\"); Aig_ManStop(p); return nil; }\n    for  nPis = 0; (pToken = Saig_ManReadToken( pFile )) \u0026\u0026 pToken[0] != '.'; nPis++  {}\n    // count POs\n    if pToken == nil || (int32(strings.Compare(pToken, \".outputs\")) != 0) { fmt.Printf(\"Saig_ManReadBlif(): Error 4.\\n\"); Aig_ManStop(p); return nil; }\n    for  nPos = 0; (pToken = Saig_ManReadToken( pFile )) \u0026\u0026 pToken[0] != '.'; nPos++  {}\n    // count latches\n    if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 5.\\n\"); Aig_ManStop(p); return nil; }\n    for  nRegs = 0; int32(strings.Compare(pToken, \".latch\")) == 0; nRegs++  {\n        pToken = Saig_ManReadToken( pFile );\n        if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 6.\\n\"); Aig_ManStop(p); return nil; }\n        pToken = Saig_ManReadToken( pFile );\n        if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 7.\\n\"); Aig_ManStop(p); return nil; }\n        pToken = Saig_ManReadToken( pFile );\n        if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 8.\\n\"); Aig_ManStop(p); return nil; }\n        pToken = Saig_ManReadToken( pFile );\n        if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 9.\\n\"); Aig_ManStop(p); return nil; }\n    }\n    // create PIs and LOs\n    for  i = 0; i \u003c nPis + nRegs; i++  {\n        Aig_ObjCreateCi( p );\n    }\n    Aig_ManSetRegNum( p, nRegs );\n    // create nodes\n    for  i = 0; int32(strings.Compare(pToken, \".names\")) == 0; i++  {\n        // first token\n        pToken = Saig_ManReadToken( pFile );\n        if i == 0 \u0026\u0026 pToken[0] == 'n' { // constant node\n            // read 1\n            pToken = Saig_ManReadToken( pFile );\n            if pToken == nil || (int32(strings.Compare(pToken, \"1\")) != 0) { fmt.Printf(\"Saig_ManReadBlif(): Error 10.\\n\"); Aig_ManStop(p); return nil; }\n            // read next\n            pToken = Saig_ManReadToken( pFile );\n            if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 11.\\n\"); Aig_ManStop(p); return nil; }\n            continue;\n        }\n        pFanin0 = Saig_ManReadNode( p, pNum2Id, pToken );\n\n        // second token\n        pToken = Saig_ManReadToken( pFile );\n        if (pToken[0] == 'p' \u0026\u0026 pToken[1] == 'o') || (pToken[0] == 'l' \u0026\u0026 pToken[1] == 'i') { // buffer\n            // read complemented attribute\n            pToken = Saig_ManReadToken( pFile );\n            if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 12.\\n\"); Aig_ManStop(p); return nil; }\n            if pToken[0] == '0' {\n                pFanin0 = Aig_Not(pFanin0); }\n            // read 1\n            pToken = Saig_ManReadToken( pFile );\n            if pToken == nil || (int32(strings.Compare(pToken, \"1\")) != 0) { fmt.Printf(\"Saig_ManReadBlif(): Error 13.\\n\"); Aig_ManStop(p); return nil; }\n            Aig_ObjCreateCo( p, pFanin0 );\n            // read next\n            pToken = Saig_ManReadToken( pFile );\n            if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 14.\\n\"); Aig_ManStop(p); return nil; }\n            continue;\n        }\n\n        // third token\n        // regular node\n        pFanin1 = Saig_ManReadNode( p, pNum2Id, pToken );\n        pToken = Saig_ManReadToken( pFile );\n        Number = Saig_ManReadNumber( p, pToken );\n        // allocate mapping\n        if pNum2Id == nil {\n//            extern double pow( double x, double y );\n            var Size int32  = int32(math.Pow(float64(10.0), float64(float64((len(pToken) - 1)))));\n            // inlining of macro ABC_CALLOC\n            pNum2Id = ((int *) calloc((size_t)(Size), sizeof(int)));\n        }\n\n        // other tokens\n        // get the complemented attributes\n        pToken = Saig_ManReadToken( pFile );\n        if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 15.\\n\"); Aig_ManStop(p); return nil; }\n        if pToken[0] == '0' {\n            pFanin0 = Aig_Not(pFanin0); }\n        if pToken[1] == '0' {\n            pFanin1 = Aig_Not(pFanin1); }\n        // read 1\n        pToken = Saig_ManReadToken( pFile );\n        if pToken == nil || (int32(strings.Compare(pToken, \"1\")) != 0) { fmt.Printf(\"Saig_ManReadBlif(): Error 16.\\n\"); Aig_ManStop(p); return nil; }\n        // read next\n        pToken = Saig_ManReadToken( pFile );\n        if pToken == nil { fmt.Printf(\"Saig_ManReadBlif(): Error 17.\\n\"); Aig_ManStop(p); return nil; }\n\n        // create new node\n        pNode = Aig_And( p, pFanin0, pFanin1 );\n        if Aig_IsComplement(pNode) { fmt.Printf(\"Saig_ManReadBlif(): Error 18.\\n\"); Aig_ManStop(p); return nil; }\n        // set mapping\n        pNum2Id[ Number ] = pNode.Id;\n    }\n    if pToken == nil || (int32(strings.Compare(pToken, \".end\")) != 0) { fmt.Printf(\"Saig_ManReadBlif(): Error 19.\\n\"); Aig_ManStop(p); return nil; }\n    if nPos + nRegs != Aig_ManCoNum(p) { fmt.Printf(\"Saig_ManReadBlif(): Error 20.\\n\"); Aig_ManStop(p); return nil; }\n    // add non-node objects to the mapping\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pNode) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        pNum2Id[pNode.Id] = pNode.Id;\n    }\n//    ABC_FREE( pNum2Id );\n    p.pData = pNum2Id;\n    // check the new manager\n    Aig_ManSetRegNum( p, nRegs );\n    if !Aig_ManCheck(p) {\n        fmt.Printf(\"Saig_ManReadBlif(): Check has failed.\\n\"); }\n    return p;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

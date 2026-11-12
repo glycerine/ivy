@@ -1,0 +1,296 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c",
+  "SHA256": "6acea32c33231ed98a178f3e7da51108dc53ce368151d7964701363a2c4cd139",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 5,
+        "ByteOffset": 2162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 262,
+        "Column": 5,
+        "ByteOffset": 8278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Type == IVY_AND || Type == IVY_EXOR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 263,
+        "Column": 5,
+        "ByteOffset": 8329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nArgs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 8741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vPairs.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 281,
+        "Column": 5,
+        "ByteOffset": 8773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vPairs.nSize % 2 == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_ObjIsExorType",
+      "Start": 804,
+      "End": 1419,
+      "BodyStart": 916,
+      "Original": "static inline int Ivy_ObjIsExorType( Ivy_Obj_t * p0, Ivy_Obj_t * p1, Ivy_Obj_t ** ppFan0, Ivy_Obj_t ** ppFan1 )\n{\n    if ( !Ivy_IsComplement(p0) || !Ivy_IsComplement(p1) )\n        return 0;\n    p0 = Ivy_Regular(p0);\n    p1 = Ivy_Regular(p1);\n    if ( !Ivy_ObjIsAnd(p0) || !Ivy_ObjIsAnd(p1) )\n        return 0;\n    if ( Ivy_ObjFanin0(p0) != Ivy_ObjFanin0(p1) || Ivy_ObjFanin1(p0) != Ivy_ObjFanin1(p1) )\n        return 0;\n    if ( Ivy_ObjFaninC0(p0) == Ivy_ObjFaninC0(p1) || Ivy_ObjFaninC1(p0) == Ivy_ObjFaninC1(p1) )\n        return 0;\n    *ppFan0 = Ivy_ObjChild0(p0);\n    *ppFan1 = Ivy_ObjChild1(p0);\n    return 1;\n}",
+      "Draft": "func Ivy_ObjIsExorType(p0 *Ivy_Obj_t, p1 *Ivy_Obj_t, ppFan0 **Ivy_Obj_t, ppFan1 **Ivy_Obj_t) int32 {\n    if !Ivy_IsComplement(p0) || !Ivy_IsComplement(p1) {\n        return 0; }\n    p0 = Ivy_Regular(p0);\n    p1 = Ivy_Regular(p1);\n    if !Ivy_ObjIsAnd(p0) || !Ivy_ObjIsAnd(p1) {\n        return 0; }\n    if Ivy_ObjFanin0(p0) != Ivy_ObjFanin0(p1) || Ivy_ObjFanin1(p0) != Ivy_ObjFanin1(p1) {\n        return 0; }\n    if Ivy_ObjFaninC0(p0) == Ivy_ObjFaninC0(p1) || Ivy_ObjFaninC1(p0) == Ivy_ObjFaninC1(p1) {\n        return 0; }\n    *ppFan0 = Ivy_ObjChild0(p0);\n    *ppFan1 = Ivy_ObjChild1(p0);\n    return 1;\n}"
+    },
+    {
+      "Name": "Ivy_Oper",
+      "Start": 1936,
+      "End": 2190,
+      "BodyStart": 2023,
+      "Original": "Ivy_Obj_t * Ivy_Oper( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1, Ivy_Type_t Type )\n{\n    if ( Type == IVY_AND )\n        return Ivy_And( p, p0, p1 );\n    if ( Type == IVY_EXOR )\n        return Ivy_Exor( p, p0, p1 );\n    assert( 0 );\n    return NULL;\n}",
+      "Draft": "func Ivy_Oper(p *Ivy_Man_t, p0 *Ivy_Obj_t, p1 *Ivy_Obj_t, Type Ivy_Type_t) *Ivy_Obj_t {\n    if Type == IVY_AND {\n        return Ivy_And( p, p0, p1 ); }\n    if Type == IVY_EXOR {\n        return Ivy_Exor( p, p0, p1 ); }\n    assert(false, \"0\");\n    return nil;\n}"
+    },
+    {
+      "Name": "Ivy_And",
+      "Start": 2494,
+      "End": 3115,
+      "BodyStart": 2563,
+      "Original": "Ivy_Obj_t * Ivy_And( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1 )\n{\n//    Ivy_Obj_t * pFan0, * pFan1;\n    // check trivial cases\n    if ( p0 == p1 )\n        return p0;\n    if ( p0 == Ivy_Not(p1) )\n        return Ivy_Not(p-\u003epConst1);\n    if ( Ivy_Regular(p0) == p-\u003epConst1 )\n        return p0 == p-\u003epConst1 ? p1 : Ivy_Not(p-\u003epConst1);\n    if ( Ivy_Regular(p1) == p-\u003epConst1 )\n        return p1 == p-\u003epConst1 ? p0 : Ivy_Not(p-\u003epConst1);\n    // check if it can be an EXOR gate\n//    if ( Ivy_ObjIsExorType( p0, p1, \u0026pFan0, \u0026pFan1 ) )\n//        return Ivy_CanonExor( pFan0, pFan1 );\n    return Ivy_CanonAnd( p, p0, p1 );\n}",
+      "Draft": "func Ivy_And(p *Ivy_Man_t, p0 *Ivy_Obj_t, p1 *Ivy_Obj_t) *Ivy_Obj_t {\n//    Ivy_Obj_t * pFan0, * pFan1;\n    // check trivial cases\n    if p0 == p1 {\n        return p0; }\n    if p0 == Ivy_Not(p1) {\n        return Ivy_Not(p.pConst1); }\n    if Ivy_Regular(p0) == p.pConst1 {\n        if p0 == p.pConst1 {\n            return p1;\n        } else {\n            return Ivy_Not(p.pConst1);\n        } }\n    if Ivy_Regular(p1) == p.pConst1 {\n        if p1 == p.pConst1 {\n            return p0;\n        } else {\n            return Ivy_Not(p.pConst1);\n        } }\n    // check if it can be an EXOR gate\n//    if ( Ivy_ObjIsExorType( p0, p1, \u0026pFan0, \u0026pFan1 ) )\n//        return Ivy_CanonExor( pFan0, pFan1 );\n    return Ivy_CanonAnd( p, p0, p1 );\n}"
+    },
+    {
+      "Name": "Ivy_Exor",
+      "Start": 3419,
+      "End": 3967,
+      "BodyStart": 3489,
+      "Original": "Ivy_Obj_t * Ivy_Exor( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1 )\n{\n/*\n    // check trivial cases\n    if ( p0 == p1 )\n        return Ivy_Not(p-\u003epConst1);\n    if ( p0 == Ivy_Not(p1) )\n        return p-\u003epConst1;\n    if ( Ivy_Regular(p0) == p-\u003epConst1 )\n        return Ivy_NotCond( p1, p0 == p-\u003epConst1 );\n    if ( Ivy_Regular(p1) == p-\u003epConst1 )\n        return Ivy_NotCond( p0, p1 == p-\u003epConst1 );\n    // check the table\n    return Ivy_CanonExor( p, p0, p1 );\n*/\n    return Ivy_Or( p, Ivy_And(p, p0, Ivy_Not(p1)), Ivy_And(p, Ivy_Not(p0), p1) );\n}",
+      "Draft": "func Ivy_Exor(p *Ivy_Man_t, p0 *Ivy_Obj_t, p1 *Ivy_Obj_t) *Ivy_Obj_t {\n/*\n    // check trivial cases\n    if ( p0 == p1 )\n        return Ivy_Not(p-\u003epConst1);\n    if ( p0 == Ivy_Not(p1) )\n        return p-\u003epConst1;\n    if ( Ivy_Regular(p0) == p-\u003epConst1 )\n        return Ivy_NotCond( p1, p0 == p-\u003epConst1 );\n    if ( Ivy_Regular(p1) == p-\u003epConst1 )\n        return Ivy_NotCond( p0, p1 == p-\u003epConst1 );\n    // check the table\n    return Ivy_CanonExor( p, p0, p1 );\n*/\n    return Ivy_Or( p, Ivy_And(p, p0, Ivy_Not(p1)), Ivy_And(p, Ivy_Not(p0), p1) );\n}"
+    },
+    {
+      "Name": "Ivy_Or",
+      "Start": 4225,
+      "End": 4358,
+      "BodyStart": 4293,
+      "Original": "Ivy_Obj_t * Ivy_Or( Ivy_Man_t * p, Ivy_Obj_t * p0, Ivy_Obj_t * p1 )\n{\n    return Ivy_Not( Ivy_And( p, Ivy_Not(p0), Ivy_Not(p1) ) );\n}",
+      "Draft": "func Ivy_Or(p *Ivy_Man_t, p0 *Ivy_Obj_t, p1 *Ivy_Obj_t) *Ivy_Obj_t {\n    return Ivy_Not( Ivy_And( p, Ivy_Not(p0), Ivy_Not(p1) ) );\n}"
+    },
+    {
+      "Name": "Ivy_Mux",
+      "Start": 4619,
+      "End": 6495,
+      "BodyStart": 4704,
+      "Original": "Ivy_Obj_t * Ivy_Mux( Ivy_Man_t * p, Ivy_Obj_t * pC, Ivy_Obj_t * p1, Ivy_Obj_t * p0 )\n{\n    Ivy_Obj_t * pTempA1, * pTempA2, * pTempB1, * pTempB2, * pTemp;\n    int Count0, Count1;\n    // consider trivial cases\n    if ( p0 == Ivy_Not(p1) )\n        return Ivy_Exor( p, pC, p0 );\n    // other cases can be added\n    // implement the first MUX (F = C * x1 + C' * x0)\n    pTempA1 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, pC,          p1, IVY_AND, IVY_INIT_NONE) );\n    pTempA2 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Not(pC), p0, IVY_AND, IVY_INIT_NONE) );\n    if ( pTempA1 \u0026\u0026 pTempA2 )\n    {\n        pTemp = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Not(pTempA1), Ivy_Not(pTempA2), IVY_AND, IVY_INIT_NONE) );\n        if ( pTemp ) return Ivy_Not(pTemp);\n    }\n    Count0 = (pTempA1 != NULL) + (pTempA2 != NULL);\n    // implement the second MUX (F' = C * x1' + C' * x0')\n    pTempB1 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, pC,          Ivy_Not(p1), IVY_AND, IVY_INIT_NONE) );\n    pTempB2 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Not(pC), Ivy_Not(p0), IVY_AND, IVY_INIT_NONE) );\n    if ( pTempB1 \u0026\u0026 pTempB2 )\n    {\n        pTemp = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Not(pTempB1), Ivy_Not(pTempB2), IVY_AND, IVY_INIT_NONE) );\n        if ( pTemp ) return pTemp;\n    }\n    Count1 = (pTempB1 != NULL) + (pTempB2 != NULL);\n    // compare and decide which one to implement\n    if ( Count0 \u003e= Count1 )\n    {\n        pTempA1 = pTempA1? pTempA1 : Ivy_And(p, pC,          p1);\n        pTempA2 = pTempA2? pTempA2 : Ivy_And(p, Ivy_Not(pC), p0);\n        return Ivy_Or( p, pTempA1, pTempA2 );\n    }\n    pTempB1 = pTempB1? pTempB1 : Ivy_And(p, pC,          Ivy_Not(p1));\n    pTempB2 = pTempB2? pTempB2 : Ivy_And(p, Ivy_Not(pC), Ivy_Not(p0));\n    return Ivy_Not( Ivy_Or( p, pTempB1, pTempB2 ) );\n\n//    return Ivy_Or( Ivy_And(pC, p1), Ivy_And(Ivy_Not(pC), p0) );\n}",
+      "Draft": "func Ivy_Mux(p *Ivy_Man_t, pC *Ivy_Obj_t, p1 *Ivy_Obj_t, p0 *Ivy_Obj_t) *Ivy_Obj_t {\n    var pTempA1, pTempA2, pTempB1, pTempB2, pTemp *Ivy_Obj_t;\n    var Count0, Count1 int32;\n    // consider trivial cases\n    if p0 == Ivy_Not(p1) {\n        return Ivy_Exor( p, pC, p0 ); }\n    // other cases can be added\n    // implement the first MUX (F = C * x1 + C' * x0)\n    pTempA1 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, pC,          p1, IVY_AND, IVY_INIT_NONE) );\n    pTempA2 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Not(pC), p0, IVY_AND, IVY_INIT_NONE) );\n    if pTempA1 \u0026\u0026 pTempA2 {\n        pTemp = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Not(pTempA1), Ivy_Not(pTempA2), IVY_AND, IVY_INIT_NONE) );\n        if pTemp != nil { return Ivy_Not(pTemp); }\n    }\n    Count0 = (pTempA1 != nil) + (pTempA2 != nil);\n    // implement the second MUX (F' = C * x1' + C' * x0')\n    pTempB1 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, pC,          Ivy_Not(p1), IVY_AND, IVY_INIT_NONE) );\n    pTempB2 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Not(pC), Ivy_Not(p0), IVY_AND, IVY_INIT_NONE) );\n    if pTempB1 \u0026\u0026 pTempB2 {\n        pTemp = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Not(pTempB1), Ivy_Not(pTempB2), IVY_AND, IVY_INIT_NONE) );\n        if pTemp != nil { return pTemp; }\n    }\n    Count1 = (pTempB1 != nil) + (pTempB2 != nil);\n    // compare and decide which one to implement\n    if Count0 \u003e= Count1 {\n        if pTempA1 {\n            pTempA1 = pTempA1;\n        } else {\n            pTempA1 = Ivy_And(p, pC,          p1);\n        }\n        if pTempA2 {\n            pTempA2 = pTempA2;\n        } else {\n            pTempA2 = Ivy_And(p, Ivy_Not(pC), p0);\n        }\n        return Ivy_Or( p, pTempA1, pTempA2 );\n    }\n    if pTempB1 {\n        pTempB1 = pTempB1;\n    } else {\n        pTempB1 = Ivy_And(p, pC,          Ivy_Not(p1));\n    }\n    if pTempB2 {\n        pTempB2 = pTempB2;\n    } else {\n        pTempB2 = Ivy_And(p, Ivy_Not(pC), Ivy_Not(p0));\n    }\n    return Ivy_Not( Ivy_Or( p, pTempB1, pTempB2 ) );\n\n//    return Ivy_Or( Ivy_And(pC, p1), Ivy_And(Ivy_Not(pC), p0) );\n}"
+    },
+    {
+      "Name": "Ivy_Maj",
+      "Start": 6756,
+      "End": 6939,
+      "BodyStart": 6841,
+      "Original": "Ivy_Obj_t * Ivy_Maj( Ivy_Man_t * p, Ivy_Obj_t * pA, Ivy_Obj_t * pB, Ivy_Obj_t * pC )\n{\n    return Ivy_Or( p, Ivy_Or(p, Ivy_And(p, pA, pB), Ivy_And(p, pA, pC)), Ivy_And(p, pB, pC) );\n}",
+      "Draft": "func Ivy_Maj(p *Ivy_Man_t, pA *Ivy_Obj_t, pB *Ivy_Obj_t, pC *Ivy_Obj_t) *Ivy_Obj_t {\n    return Ivy_Or( p, Ivy_Or(p, Ivy_And(p, pA, pB), Ivy_And(p, pA, pC)), Ivy_And(p, pB, pC) );\n}"
+    },
+    {
+      "Name": "Ivy_Multi_rec",
+      "Start": 7263,
+      "End": 7630,
+      "BodyStart": 7355,
+      "Original": "Ivy_Obj_t * Ivy_Multi_rec( Ivy_Man_t * p, Ivy_Obj_t ** ppObjs, int nObjs, Ivy_Type_t Type )\n{\n    Ivy_Obj_t * pObj1, * pObj2;\n    if ( nObjs == 1 )\n        return ppObjs[0];\n    pObj1 = Ivy_Multi_rec( p, ppObjs,           nObjs/2,         Type );\n    pObj2 = Ivy_Multi_rec( p, ppObjs + nObjs/2, nObjs - nObjs/2, Type );\n    return Ivy_Oper( p, pObj1, pObj2, Type );\n}",
+      "Draft": "func Ivy_Multi_rec(p *Ivy_Man_t, ppObjs **Ivy_Obj_t, nObjs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    var pObj1, pObj2 *Ivy_Obj_t;\n    if nObjs == 1 {\n        return ppObjs[0]; }\n    pObj1 = Ivy_Multi_rec( p, ppObjs,           nObjs/2,         Type );\n    pObj2 = Ivy_Multi_rec( p, ppObjs + nObjs/2, nObjs - nObjs/2, Type );\n    return Ivy_Oper( p, pObj1, pObj2, Type );\n}"
+    },
+    {
+      "Name": "Ivy_Multi",
+      "Start": 7875,
+      "End": 8092,
+      "BodyStart": 7962,
+      "Original": "Ivy_Obj_t * Ivy_Multi( Ivy_Man_t * p, Ivy_Obj_t ** pArgs, int nArgs, Ivy_Type_t Type )\n{\n    assert( Type == IVY_AND || Type == IVY_EXOR );\n    assert( nArgs \u003e 0 );\n    return Ivy_Multi_rec( p, pArgs, nArgs, Type );\n}",
+      "Draft": "func Ivy_Multi(p *Ivy_Man_t, pArgs **Ivy_Obj_t, nArgs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    assert(Type == IVY_AND || Type == IVY_EXOR, \"Type == IVY_AND || Type == IVY_EXOR\");\n    assert(nArgs \u003e 0, \"nArgs \u003e 0\");\n    return Ivy_Multi_rec( p, pArgs, nArgs, Type );\n}"
+    },
+    {
+      "Name": "Ivy_Miter",
+      "Start": 8349,
+      "End": 8839,
+      "BodyStart": 8408,
+      "Original": "Ivy_Obj_t * Ivy_Miter( Ivy_Man_t * p, Vec_Ptr_t * vPairs )\n{\n    int i;\n    assert( vPairs-\u003enSize \u003e 0 );\n    assert( vPairs-\u003enSize % 2 == 0 );\n    // go through the cubes of the node's SOP\n    for ( i = 0; i \u003c vPairs-\u003enSize; i += 2 )\n        vPairs-\u003epArray[i/2] = Ivy_Not( Ivy_Exor( p, (Ivy_Obj_t *)vPairs-\u003epArray[i], (Ivy_Obj_t *)vPairs-\u003epArray[i+1] ) );\n    vPairs-\u003enSize = vPairs-\u003enSize/2;\n    return Ivy_Not( Ivy_Multi_rec( p, (Ivy_Obj_t **)vPairs-\u003epArray, vPairs-\u003enSize, IVY_AND ) );\n}",
+      "Draft": "func Ivy_Miter(p *Ivy_Man_t, vPairs *Vec_Ptr_t) *Ivy_Obj_t {\n    var i int32;\n    assert(vPairs.nSize \u003e 0, \"vPairs.nSize \u003e 0\");\n    assert(vPairs.nSize % 2 == 0, \"vPairs.nSize % 2 == 0\");\n    // go through the cubes of the node's SOP\n    for  i = 0; i \u003c vPairs.nSize; i += 2  {\n        vPairs.pArray[i/2] = Ivy_Not( Ivy_Exor( p, (Ivy_Obj_t *)vPairs.pArray[i], (Ivy_Obj_t *)vPairs.pArray[i+1] ) );\n    }\n    vPairs.nSize = vPairs.nSize/2;\n    return Ivy_Not( Ivy_Multi_rec( p, (Ivy_Obj_t **)vPairs.pArray, vPairs.nSize, IVY_AND ) );\n}"
+    },
+    {
+      "Name": "Ivy_Latch",
+      "Start": 9105,
+      "End": 9226,
+      "BodyStart": 9179,
+      "Original": "Ivy_Obj_t * Ivy_Latch( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Init_t Init )\n{\n    return Ivy_CanonLatch( p, pObj, Init );\n}",
+      "Draft": "func Ivy_Latch(p *Ivy_Man_t, pObj *Ivy_Obj_t, Init Ivy_Init_t) *Ivy_Obj_t {\n    return Ivy_CanonLatch( p, pObj, Init );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::pointer-cast::8635",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8635,
+      "End": 8648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::pointer-cast::8667",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8667,
+      "End": 8680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::pointer-cast::8780",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8780,
+      "End": 8794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::Ivy_ObjIsExorType",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjIsExorType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 804,
+      "End": 1419
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::Ivy_Oper",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Oper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1936,
+      "End": 2190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::Ivy_And",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_And",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2494,
+      "End": 3115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::Ivy_Exor",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Exor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3419,
+      "End": 3967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::Ivy_Or",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Or",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4225,
+      "End": 4358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::Ivy_Mux",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Mux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4619,
+      "End": 6495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::Ivy_Maj",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Maj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6756,
+      "End": 6939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::Ivy_Multi_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Multi_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7263,
+      "End": 7630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::Ivy_Multi",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Multi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7875,
+      "End": 8092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::Ivy_Miter",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Miter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8349,
+      "End": 8839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::Ivy_Latch",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Latch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9105,
+      "End": 9226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyOper.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9473
+    }
+  ],
+  "Draft": "package ivy\n\n/**CFile****************************************************************\n\n  FileName    [ivyOper.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [AIG operations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: ivyOper.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// procedure to detect an EXOR gate\nfunc Ivy_ObjIsExorType(p0 *Ivy_Obj_t, p1 *Ivy_Obj_t, ppFan0 **Ivy_Obj_t, ppFan1 **Ivy_Obj_t) int32 {\n    if !Ivy_IsComplement(p0) || !Ivy_IsComplement(p1) {\n        return 0; }\n    p0 = Ivy_Regular(p0);\n    p1 = Ivy_Regular(p1);\n    if !Ivy_ObjIsAnd(p0) || !Ivy_ObjIsAnd(p1) {\n        return 0; }\n    if Ivy_ObjFanin0(p0) != Ivy_ObjFanin0(p1) || Ivy_ObjFanin1(p0) != Ivy_ObjFanin1(p1) {\n        return 0; }\n    if Ivy_ObjFaninC0(p0) == Ivy_ObjFaninC0(p1) || Ivy_ObjFaninC1(p0) == Ivy_ObjFaninC1(p1) {\n        return 0; }\n    *ppFan0 = Ivy_ObjChild0(p0);\n    *ppFan1 = Ivy_ObjChild1(p0);\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Perform one operation.]\n\n  Description [The argument nodes can be complemented.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_Oper(p *Ivy_Man_t, p0 *Ivy_Obj_t, p1 *Ivy_Obj_t, Type Ivy_Type_t) *Ivy_Obj_t {\n    if Type == IVY_AND {\n        return Ivy_And( p, p0, p1 ); }\n    if Type == IVY_EXOR {\n        return Ivy_Exor( p, p0, p1 ); }\n    assert(false, \"0\");\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs canonicization step.]\n\n  Description [The argument nodes can be complemented.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_And(p *Ivy_Man_t, p0 *Ivy_Obj_t, p1 *Ivy_Obj_t) *Ivy_Obj_t {\n//    Ivy_Obj_t * pFan0, * pFan1;\n    // check trivial cases\n    if p0 == p1 {\n        return p0; }\n    if p0 == Ivy_Not(p1) {\n        return Ivy_Not(p.pConst1); }\n    if Ivy_Regular(p0) == p.pConst1 {\n        if p0 == p.pConst1 {\n            return p1;\n        } else {\n            return Ivy_Not(p.pConst1);\n        } }\n    if Ivy_Regular(p1) == p.pConst1 {\n        if p1 == p.pConst1 {\n            return p0;\n        } else {\n            return Ivy_Not(p.pConst1);\n        } }\n    // check if it can be an EXOR gate\n//    if ( Ivy_ObjIsExorType( p0, p1, \u0026pFan0, \u0026pFan1 ) )\n//        return Ivy_CanonExor( pFan0, pFan1 );\n    return Ivy_CanonAnd( p, p0, p1 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs canonicization step.]\n\n  Description [The argument nodes can be complemented.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_Exor(p *Ivy_Man_t, p0 *Ivy_Obj_t, p1 *Ivy_Obj_t) *Ivy_Obj_t {\n/*\n    // check trivial cases\n    if ( p0 == p1 )\n        return Ivy_Not(p-\u003epConst1);\n    if ( p0 == Ivy_Not(p1) )\n        return p-\u003epConst1;\n    if ( Ivy_Regular(p0) == p-\u003epConst1 )\n        return Ivy_NotCond( p1, p0 == p-\u003epConst1 );\n    if ( Ivy_Regular(p1) == p-\u003epConst1 )\n        return Ivy_NotCond( p0, p1 == p-\u003epConst1 );\n    // check the table\n    return Ivy_CanonExor( p, p0, p1 );\n*/\n    return Ivy_Or( p, Ivy_And(p, p0, Ivy_Not(p1)), Ivy_And(p, Ivy_Not(p0), p1) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements Boolean OR.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_Or(p *Ivy_Man_t, p0 *Ivy_Obj_t, p1 *Ivy_Obj_t) *Ivy_Obj_t {\n    return Ivy_Not( Ivy_And( p, Ivy_Not(p0), Ivy_Not(p1) ) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements ITE operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_Mux(p *Ivy_Man_t, pC *Ivy_Obj_t, p1 *Ivy_Obj_t, p0 *Ivy_Obj_t) *Ivy_Obj_t {\n    var pTempA1, pTempA2, pTempB1, pTempB2, pTemp *Ivy_Obj_t;\n    var Count0, Count1 int32;\n    // consider trivial cases\n    if p0 == Ivy_Not(p1) {\n        return Ivy_Exor( p, pC, p0 ); }\n    // other cases can be added\n    // implement the first MUX (F = C * x1 + C' * x0)\n    pTempA1 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, pC,          p1, IVY_AND, IVY_INIT_NONE) );\n    pTempA2 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Not(pC), p0, IVY_AND, IVY_INIT_NONE) );\n    if pTempA1 \u0026\u0026 pTempA2 {\n        pTemp = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Not(pTempA1), Ivy_Not(pTempA2), IVY_AND, IVY_INIT_NONE) );\n        if pTemp != nil { return Ivy_Not(pTemp); }\n    }\n    Count0 = (pTempA1 != nil) + (pTempA2 != nil);\n    // implement the second MUX (F' = C * x1' + C' * x0')\n    pTempB1 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, pC,          Ivy_Not(p1), IVY_AND, IVY_INIT_NONE) );\n    pTempB2 = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Not(pC), Ivy_Not(p0), IVY_AND, IVY_INIT_NONE) );\n    if pTempB1 \u0026\u0026 pTempB2 {\n        pTemp = Ivy_TableLookup( p, Ivy_ObjCreateGhost(p, Ivy_Not(pTempB1), Ivy_Not(pTempB2), IVY_AND, IVY_INIT_NONE) );\n        if pTemp != nil { return pTemp; }\n    }\n    Count1 = (pTempB1 != nil) + (pTempB2 != nil);\n    // compare and decide which one to implement\n    if Count0 \u003e= Count1 {\n        if pTempA1 {\n            pTempA1 = pTempA1;\n        } else {\n            pTempA1 = Ivy_And(p, pC,          p1);\n        }\n        if pTempA2 {\n            pTempA2 = pTempA2;\n        } else {\n            pTempA2 = Ivy_And(p, Ivy_Not(pC), p0);\n        }\n        return Ivy_Or( p, pTempA1, pTempA2 );\n    }\n    if pTempB1 {\n        pTempB1 = pTempB1;\n    } else {\n        pTempB1 = Ivy_And(p, pC,          Ivy_Not(p1));\n    }\n    if pTempB2 {\n        pTempB2 = pTempB2;\n    } else {\n        pTempB2 = Ivy_And(p, Ivy_Not(pC), Ivy_Not(p0));\n    }\n    return Ivy_Not( Ivy_Or( p, pTempB1, pTempB2 ) );\n\n//    return Ivy_Or( Ivy_And(pC, p1), Ivy_And(Ivy_Not(pC), p0) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements ITE operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_Maj(p *Ivy_Man_t, pA *Ivy_Obj_t, pB *Ivy_Obj_t, pC *Ivy_Obj_t) *Ivy_Obj_t {\n    return Ivy_Or( p, Ivy_Or(p, Ivy_And(p, pA, pB), Ivy_And(p, pA, pC)), Ivy_And(p, pB, pC) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs the well-balanced tree of gates.]\n\n  Description [Disregards levels and possible logic sharing.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_Multi_rec(p *Ivy_Man_t, ppObjs **Ivy_Obj_t, nObjs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    var pObj1, pObj2 *Ivy_Obj_t;\n    if nObjs == 1 {\n        return ppObjs[0]; }\n    pObj1 = Ivy_Multi_rec( p, ppObjs,           nObjs/2,         Type );\n    pObj2 = Ivy_Multi_rec( p, ppObjs + nObjs/2, nObjs - nObjs/2, Type );\n    return Ivy_Oper( p, pObj1, pObj2, Type );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Old code.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_Multi(p *Ivy_Man_t, pArgs **Ivy_Obj_t, nArgs int32, Type Ivy_Type_t) *Ivy_Obj_t {\n    assert(Type == IVY_AND || Type == IVY_EXOR, \"Type == IVY_AND || Type == IVY_EXOR\");\n    assert(nArgs \u003e 0, \"nArgs \u003e 0\");\n    return Ivy_Multi_rec( p, pArgs, nArgs, Type );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements the miter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_Miter(p *Ivy_Man_t, vPairs *Vec_Ptr_t) *Ivy_Obj_t {\n    var i int32;\n    assert(vPairs.nSize \u003e 0, \"vPairs.nSize \u003e 0\");\n    assert(vPairs.nSize % 2 == 0, \"vPairs.nSize % 2 == 0\");\n    // go through the cubes of the node's SOP\n    for  i = 0; i \u003c vPairs.nSize; i += 2  {\n        vPairs.pArray[i/2] = Ivy_Not( Ivy_Exor( p, (Ivy_Obj_t *)vPairs.pArray[i], (Ivy_Obj_t *)vPairs.pArray[i+1] ) );\n    }\n    vPairs.nSize = vPairs.nSize/2;\n    return Ivy_Not( Ivy_Multi_rec( p, (Ivy_Obj_t **)vPairs.pArray, vPairs.nSize, IVY_AND ) );\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Performs canonicization step.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_Latch(p *Ivy_Man_t, pObj *Ivy_Obj_t, Init Ivy_Init_t) *Ivy_Obj_t {\n    return Ivy_CanonLatch( p, pObj, Init );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

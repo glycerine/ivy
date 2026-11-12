@@ -1,0 +1,64 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/System.h",
+  "SHA256": "c85e3ba7efc29279c30c61f3014e63534a3f327451fcf96abb0288bc77a88a1f",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 1372
+      },
+      "Directive": "#if defined(__linux__)"
+    },
+    {
+      "Location": {
+        "Line": 47,
+        "Column": 1,
+        "ByteOffset": 2062
+      },
+      "Directive": "#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__EMSCRIPTEN__)"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/System.h::mechanical::static::1635",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1617,
+      "End": 1623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/System.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/System.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1372,
+      "End": 1428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/System.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2062,
+      "End": 2629
+    }
+  ],
+  "Draft": "package glucose\n\n/****************************************************************************************[System.h]\nCopyright (c) 2003-2006, Niklas Een, Niklas Sorensson\nCopyright (c) 2007-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n\n\n\n#if defined(__linux__)\n//#include \u003cfpu_control.h\u003e\n#endif\n\n//#include \"sat/glucose/IntTypes.h\"\n\n//ABC_NAMESPACE_CXX_HEADER_START\n\n//-------------------------------------------------------------------------------------------------\n\nnamespace Gluco {\n\nstatic inline double cpuTime(void); // CPU-time in seconds.\nextern double memUsed();            // Memory in mega bytes (returns 0 for unsupported architectures).\nextern double memUsedPeak();        // Peak-memory in mega bytes (returns 0 for unsupported architectures).\n\n}\n\n//ABC_NAMESPACE_CXX_HEADER_END\n\n//-------------------------------------------------------------------------------------------------\n// Implementation of inline functions:\n\n#if defined(_MSC_VER) || defined(__MINGW32__) || defined(__EMSCRIPTEN__)\n#include \u003ctime.h\u003e\n\nABC_NAMESPACE_CXX_HEADER_START\n\nstatic inline double Gluco::cpuTime(void) { return (double)clock() / CLOCKS_PER_SEC; }\n\nABC_NAMESPACE_CXX_HEADER_END\n\n\n#else\n#include \u003csys/time.h\u003e\n#include \u003csys/resource.h\u003e\n#include \u003cunistd.h\u003e\n\nABC_NAMESPACE_CXX_HEADER_START\n\nstatic inline double Gluco::cpuTime(void) {\n    struct rusage ru;\n    getrusage(RUSAGE_SELF, \u0026ru);\n    return (double)ru.ru_utime.tv_sec + (double)ru.ru_utime.tv_usec / 1000000; }\n\nABC_NAMESPACE_CXX_HEADER_END\n\n#endif\n\n\n"
+}

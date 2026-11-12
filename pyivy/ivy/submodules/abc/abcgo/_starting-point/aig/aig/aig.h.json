@@ -1,0 +1,2527 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h",
+  "SHA256": "7226ea531fafa9adf8c6018a3e208d28b1c26a2bc251acd0eac96a88f651d187",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 291,
+        "Column": 47,
+        "ByteOffset": 13553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjIsConst1(pObj *Aig_Obj_t) int32 { assert(!Aig_IsComplement(pObj)); return pObj.Type == AIG_OBJ_CONST1; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 302,
+        "Column": 44,
+        "ByteOffset": 14738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjCioId(pObj *Aig_Obj_t) int32 { assert( !Aig_ObjIsNode(pObj) ); return pObj.CioId;                                            }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 323,
+        "Column": 38,
+        "ByteOffset": 16143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjDeref(pObj *Aig_Obj_t) { assert( pObj.nRefs \u003e 0 ); pObj.nRefs--;      }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 341,
+        "Column": 54,
+        "ByteOffset": 17171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjChild0Copy(pObj *Aig_Obj_t) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin0(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 346,
+        "Column": 54,
+        "ByteOffset": 17400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjChild1Copy(pObj *Aig_Obj_t) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin1(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 351,
+        "Column": 54,
+        "ByteOffset": 17629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjChild0Next(pObj *Aig_Obj_t) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin0(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 356,
+        "Column": 54,
+        "ByteOffset": 17858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjChild1Next(pObj *Aig_Obj_t) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin1(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 361,
+        "Column": 43,
+        "ByteOffset": 18076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjChild0Flip(pObj *Aig_Obj_t) { assert( !Aig_IsComplement(pObj) ); pObj.pFanin0 = Aig_Not(pObj.pFanin0);        }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 362,
+        "Column": 43,
+        "ByteOffset": 18200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjChild1Flip(pObj *Aig_Obj_t) { assert( !Aig_IsComplement(pObj) ); pObj.pFanin1 = Aig_Not(pObj.pFanin1);        }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 363,
+        "Column": 48,
+        "ByteOffset": 18329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjCopy(pObj *Aig_Obj_t) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); return (Aig_Obj_t *)pObj.pData;               } "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 364,
+        "Column": 59,
+        "ByteOffset": 18471
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjSetCopy(pObj *Aig_Obj_t, pCopy *Aig_Obj_t) {  assert( !Aig_IsComplement(pObj) ); pObj.pData = pCopy;       } "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 368,
+        "Column": 44,
+        "ByteOffset": 18982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjLevel(pObj *Aig_Obj_t) int32 { assert( !Aig_IsComplement(pObj) ); return pObj.Level;                            }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 47,
+        "ByteOffset": 19111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjLevelNew(pObj *Aig_Obj_t) int32 { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin1(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 374,
+        "Column": 56,
+        "ByteOffset": 19380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjSetLevel(pObj *Aig_Obj_t, i int32) int32 { assert( !Aig_IsComplement(pObj) ); return pObj.Level = i;                    }"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 375,
+        "Column": 38,
+        "ByteOffset": 19496
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjClean(pObj *Aig_Obj_t) { memset( pObj, 0, sizeof(Aig_Obj_t) );                                                             }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 376,
+        "Column": 65,
+        "ByteOffset": 19660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjFanout0(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert(p.pFanData \u0026\u0026 pObj.Id \u003c p.nFansAlloc); return Aig_ManObj(p, p.pFanData[5*pObj.Id] \u003e\u003e 1); } "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 382,
+        "Column": 72,
+        "ByteOffset": 19978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjSetEquiv(p *Aig_Man_t, pObj *Aig_Obj_t, pEqu *Aig_Obj_t) { assert(p.pEquivs); p.pEquivs[pObj.Id] = pEqu;                  }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 388,
+        "Column": 72,
+        "ByteOffset": 20261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjSetRepr(p *Aig_Man_t, pObj *Aig_Obj_t, pRepr *Aig_Obj_t) { assert(p.pReprs); p.pReprs[pObj.Id] = pRepr;                                } "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 392,
+        "Column": 5,
+        "ByteOffset": 20515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(0); return -1; "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 397,
+        "Column": 5,
+        "ByteOffset": 20754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(0); return -1; "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 403,
+        "Column": 5,
+        "ByteOffset": 20945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Type != AIG_OBJ_AND || !Aig_ObjIsConst1(Aig_Regular(p0)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 404,
+        "Column": 5,
+        "ByteOffset": 21017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p1 == nil || !Aig_ObjIsConst1(Aig_Regular(p1)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 405,
+        "Column": 5,
+        "ByteOffset": 21079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Type == AIG_OBJ_CI || Aig_Regular(p0) != Aig_Regular(p1) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 424,
+        "Column": 5,
+        "ByteOffset": 21657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pTemp, 0, sizeof(Aig_Obj_t) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 431,
+        "Column": 5,
+        "ByteOffset": 21931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pEntry.nRefs == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 498,
+        "Column": 59,
+        "ByteOffset": 25127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjFanout0Int(p *Aig_Man_t, ObjId int32) int32 { assert(ObjId \u003c p.nFansAlloc);  return p.pFanData[5*ObjId];                         }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 499,
+        "Column": 58,
+        "ByteOffset": 25269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_ObjFanoutNext(p *Aig_Man_t, iFan int32) int32 { assert(iFan/2 \u003c p.nFansAlloc); return p.pFanData[5*(iFan \u003e\u003e 1) + 3 + (iFan \u0026 1)];  }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ObjCuts",
+      "Start": 8882,
+      "End": 9014,
+      "BodyStart": 8983,
+      "Original": "static inline Aig_Cut_t *  Aig_ObjCuts( Aig_ManCut_t * p, Aig_Obj_t * pObj )                         { return p-\u003epCuts[pObj-\u003eId];  }",
+      "Draft": "func Aig_ObjCuts(p *Aig_ManCut_t, pObj *Aig_Obj_t) *Aig_Cut_t { return p.pCuts[pObj.Id];  }"
+    },
+    {
+      "Name": "Aig_ObjSetCuts",
+      "Start": 9015,
+      "End": 9147,
+      "BodyStart": 9116,
+      "Original": "static inline void         Aig_ObjSetCuts( Aig_ManCut_t * p, Aig_Obj_t * pObj, Aig_Cut_t * pCuts )   { p-\u003epCuts[pObj-\u003eId] = pCuts; }",
+      "Draft": "func Aig_ObjSetCuts(p *Aig_ManCut_t, pObj *Aig_Obj_t, pCuts *Aig_Cut_t) { p.pCuts[pObj.Id] = pCuts; }"
+    },
+    {
+      "Name": "Aig_CutLeaveNum",
+      "Start": 9149,
+      "End": 9281,
+      "BodyStart": 9221,
+      "Original": "static inline int          Aig_CutLeaveNum( Aig_Cut_t * pCut )          { return pCut-\u003enFanins;                                    }",
+      "Draft": "func Aig_CutLeaveNum(pCut *Aig_Cut_t) int32 { return pCut.nFanins;                                    }"
+    },
+    {
+      "Name": "Aig_CutLeaves",
+      "Start": 9282,
+      "End": 9414,
+      "BodyStart": 9354,
+      "Original": "static inline int *        Aig_CutLeaves( Aig_Cut_t * pCut )            { return pCut-\u003epFanins;                                    }",
+      "Draft": "func Aig_CutLeaves(pCut *Aig_Cut_t) *int32 { return pCut.pFanins;                                    }"
+    },
+    {
+      "Name": "Aig_CutTruth",
+      "Start": 9415,
+      "End": 9547,
+      "BodyStart": 9487,
+      "Original": "static inline unsigned *   Aig_CutTruth( Aig_Cut_t * pCut )             { return (unsigned *)(pCut-\u003epFanins + pCut-\u003enLeafMax);     }",
+      "Draft": "func Aig_CutTruth(pCut *Aig_Cut_t) *uint32 { return (unsigned *)(pCut.pFanins + pCut.nLeafMax);     }"
+    },
+    {
+      "Name": "Aig_CutNext",
+      "Start": 9548,
+      "End": 9680,
+      "BodyStart": 9620,
+      "Original": "static inline Aig_Cut_t *  Aig_CutNext( Aig_Cut_t * pCut )              { return (Aig_Cut_t *)(((char *)pCut) + pCut-\u003enCutSize);   }",
+      "Draft": "func Aig_CutNext(pCut *Aig_Cut_t) *Aig_Cut_t { return (Aig_Cut_t *)(((char *)pCut) + pCut.nCutSize);   }"
+    },
+    {
+      "Name": "Aig_ObjCutSign",
+      "Start": 10316,
+      "End": 10440,
+      "BodyStart": 10382,
+      "Original": "static inline unsigned     Aig_ObjCutSign( unsigned ObjId )       { return (1 \u003c\u003c (ObjId \u0026 31));                            }",
+      "Draft": "func Aig_ObjCutSign(ObjId uint32) uint32 { return (1 \u003c\u003c (ObjId \u0026 31));                            }"
+    },
+    {
+      "Name": "Aig_WordCountOnes",
+      "Start": 10441,
+      "End": 10803,
+      "BodyStart": 10504,
+      "Original": "static inline int          Aig_WordCountOnes( unsigned uWord )\n{\n    uWord = (uWord \u0026 0x55555555) + ((uWord\u003e\u003e1) \u0026 0x55555555);\n    uWord = (uWord \u0026 0x33333333) + ((uWord\u003e\u003e2) \u0026 0x33333333);\n    uWord = (uWord \u0026 0x0F0F0F0F) + ((uWord\u003e\u003e4) \u0026 0x0F0F0F0F);\n    uWord = (uWord \u0026 0x00FF00FF) + ((uWord\u003e\u003e8) \u0026 0x00FF00FF);\n    return  (uWord \u0026 0x0000FFFF) + (uWord\u003e\u003e16);\n}",
+      "Draft": "func Aig_WordCountOnes(uWord uint32) int32 {\n    uWord = (uWord \u0026 0x55555555) + ((uWord\u003e\u003e1) \u0026 0x55555555);\n    uWord = (uWord \u0026 0x33333333) + ((uWord\u003e\u003e2) \u0026 0x33333333);\n    uWord = (uWord \u0026 0x0F0F0F0F) + ((uWord\u003e\u003e4) \u0026 0x0F0F0F0F);\n    uWord = (uWord \u0026 0x00FF00FF) + ((uWord\u003e\u003e8) \u0026 0x00FF00FF);\n    return  (uWord \u0026 0x0000FFFF) + (uWord\u003e\u003e16);\n}"
+    },
+    {
+      "Name": "Aig_WordFindFirstBit",
+      "Start": 10804,
+      "End": 10984,
+      "BodyStart": 10870,
+      "Original": "static inline int          Aig_WordFindFirstBit( unsigned uWord )\n{\n    int i;\n    for ( i = 0; i \u003c 32; i++ )\n        if ( uWord \u0026 (1 \u003c\u003c i) )\n            return i;\n    return -1;\n}",
+      "Draft": "func Aig_WordFindFirstBit(uWord uint32) int32 {\n    var i int32;\n    for  i = 0; i \u003c 32; i++  {\n        if uWord \u0026 (1 \u003c\u003c i) {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Aig_Regular",
+      "Start": 10986,
+      "End": 11104,
+      "BodyStart": 11052,
+      "Original": "static inline Aig_Obj_t *  Aig_Regular( Aig_Obj_t * p )           { return (Aig_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01);  }",
+      "Draft": "func Aig_Regular(p *Aig_Obj_t) *Aig_Obj_t { return (Aig_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01);  }"
+    },
+    {
+      "Name": "Aig_Not",
+      "Start": 11105,
+      "End": 11223,
+      "BodyStart": 11171,
+      "Original": "static inline Aig_Obj_t *  Aig_Not( Aig_Obj_t * p )               { return (Aig_Obj_t *)((ABC_PTRUINT_T)(p) ^  01);  }",
+      "Draft": "func Aig_Not(p *Aig_Obj_t) *Aig_Obj_t { return (Aig_Obj_t *)((ABC_PTRUINT_T)(p) ^  01);  }"
+    },
+    {
+      "Name": "Aig_NotCond",
+      "Start": 11224,
+      "End": 11342,
+      "BodyStart": 11290,
+      "Original": "static inline Aig_Obj_t *  Aig_NotCond( Aig_Obj_t * p, int c )    { return (Aig_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c));  }",
+      "Draft": "func Aig_NotCond(p *Aig_Obj_t, c int32) *Aig_Obj_t { return (Aig_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c));  }"
+    },
+    {
+      "Name": "Aig_IsComplement",
+      "Start": 11343,
+      "End": 11461,
+      "BodyStart": 11409,
+      "Original": "static inline int          Aig_IsComplement( Aig_Obj_t * p )      { return (int)((ABC_PTRUINT_T)(p) \u0026 01);           }",
+      "Draft": "func Aig_IsComplement(p *Aig_Obj_t) int32 { return int32(((ABC_PTRUINT_T)(p) \u0026 01));           }"
+    },
+    {
+      "Name": "Aig_ManCiNum",
+      "Start": 11463,
+      "End": 11581,
+      "BodyStart": 11529,
+      "Original": "static inline int          Aig_ManCiNum( Aig_Man_t * p )          { return p-\u003enObjs[AIG_OBJ_CI];                     }",
+      "Draft": "func Aig_ManCiNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_CI];                     }"
+    },
+    {
+      "Name": "Aig_ManCoNum",
+      "Start": 11582,
+      "End": 11700,
+      "BodyStart": 11648,
+      "Original": "static inline int          Aig_ManCoNum( Aig_Man_t * p )          { return p-\u003enObjs[AIG_OBJ_CO];                     }",
+      "Draft": "func Aig_ManCoNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_CO];                     }"
+    },
+    {
+      "Name": "Aig_ManBufNum",
+      "Start": 11701,
+      "End": 11819,
+      "BodyStart": 11767,
+      "Original": "static inline int          Aig_ManBufNum( Aig_Man_t * p )         { return p-\u003enObjs[AIG_OBJ_BUF];                    }",
+      "Draft": "func Aig_ManBufNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_BUF];                    }"
+    },
+    {
+      "Name": "Aig_ManAndNum",
+      "Start": 11820,
+      "End": 11938,
+      "BodyStart": 11886,
+      "Original": "static inline int          Aig_ManAndNum( Aig_Man_t * p )         { return p-\u003enObjs[AIG_OBJ_AND];                    }",
+      "Draft": "func Aig_ManAndNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_AND];                    }"
+    },
+    {
+      "Name": "Aig_ManExorNum",
+      "Start": 11939,
+      "End": 12057,
+      "BodyStart": 12005,
+      "Original": "static inline int          Aig_ManExorNum( Aig_Man_t * p )        { return p-\u003enObjs[AIG_OBJ_EXOR];                   }",
+      "Draft": "func Aig_ManExorNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_EXOR];                   }"
+    },
+    {
+      "Name": "Aig_ManNodeNum",
+      "Start": 12058,
+      "End": 12182,
+      "BodyStart": 12124,
+      "Original": "static inline int          Aig_ManNodeNum( Aig_Man_t * p )        { return p-\u003enObjs[AIG_OBJ_AND]+p-\u003enObjs[AIG_OBJ_EXOR];   }",
+      "Draft": "func Aig_ManNodeNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_AND]+p.nObjs[AIG_OBJ_EXOR];   }"
+    },
+    {
+      "Name": "Aig_ManGetCost",
+      "Start": 12183,
+      "End": 12307,
+      "BodyStart": 12249,
+      "Original": "static inline int          Aig_ManGetCost( Aig_Man_t * p )        { return p-\u003enObjs[AIG_OBJ_AND]+3*p-\u003enObjs[AIG_OBJ_EXOR]; }",
+      "Draft": "func Aig_ManGetCost(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_AND]+3*p.nObjs[AIG_OBJ_EXOR]; }"
+    },
+    {
+      "Name": "Aig_ManObjNum",
+      "Start": 12308,
+      "End": 12426,
+      "BodyStart": 12374,
+      "Original": "static inline int          Aig_ManObjNum( Aig_Man_t * p )         { return Vec_PtrSize(p-\u003evObjs) - p-\u003enDeleted;      }",
+      "Draft": "func Aig_ManObjNum(p *Aig_Man_t) int32 { return Vec_PtrSize(p.vObjs) - p.nDeleted;      }"
+    },
+    {
+      "Name": "Aig_ManObjNumMax",
+      "Start": 12427,
+      "End": 12545,
+      "BodyStart": 12493,
+      "Original": "static inline int          Aig_ManObjNumMax( Aig_Man_t * p )      { return Vec_PtrSize(p-\u003evObjs);                    }",
+      "Draft": "func Aig_ManObjNumMax(p *Aig_Man_t) int32 { return Vec_PtrSize(p.vObjs);                    }"
+    },
+    {
+      "Name": "Aig_ManRegNum",
+      "Start": 12546,
+      "End": 12664,
+      "BodyStart": 12612,
+      "Original": "static inline int          Aig_ManRegNum( Aig_Man_t * p )         { return p-\u003enRegs;                                 }",
+      "Draft": "func Aig_ManRegNum(p *Aig_Man_t) int32 { return p.nRegs;                                 }"
+    },
+    {
+      "Name": "Aig_ManConstrNum",
+      "Start": 12665,
+      "End": 12783,
+      "BodyStart": 12731,
+      "Original": "static inline int          Aig_ManConstrNum( Aig_Man_t * p )      { return p-\u003enConstrs;                              }",
+      "Draft": "func Aig_ManConstrNum(p *Aig_Man_t) int32 { return p.nConstrs;                              }"
+    },
+    {
+      "Name": "Aig_ManConst0",
+      "Start": 12785,
+      "End": 12903,
+      "BodyStart": 12851,
+      "Original": "static inline Aig_Obj_t *  Aig_ManConst0( Aig_Man_t * p )         { return Aig_Not(p-\u003epConst1);                      }",
+      "Draft": "func Aig_ManConst0(p *Aig_Man_t) *Aig_Obj_t { return Aig_Not(p.pConst1);                      }"
+    },
+    {
+      "Name": "Aig_ManConst1",
+      "Start": 12904,
+      "End": 13022,
+      "BodyStart": 12970,
+      "Original": "static inline Aig_Obj_t *  Aig_ManConst1( Aig_Man_t * p )         { return p-\u003epConst1;                               }",
+      "Draft": "func Aig_ManConst1(p *Aig_Man_t) *Aig_Obj_t { return p.pConst1;                               }"
+    },
+    {
+      "Name": "Aig_ManGhost",
+      "Start": 13023,
+      "End": 13141,
+      "BodyStart": 13089,
+      "Original": "static inline Aig_Obj_t *  Aig_ManGhost( Aig_Man_t * p )          { return \u0026p-\u003eGhost;                                }",
+      "Draft": "func Aig_ManGhost(p *Aig_Man_t) *Aig_Obj_t { return \u0026p.Ghost;                                }"
+    },
+    {
+      "Name": "Aig_ManCi",
+      "Start": 13142,
+      "End": 13260,
+      "BodyStart": 13208,
+      "Original": "static inline Aig_Obj_t *  Aig_ManCi( Aig_Man_t * p, int i )      { return (Aig_Obj_t *)Vec_PtrEntry(p-\u003evCis, i);    }",
+      "Draft": "func Aig_ManCi(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i);    }"
+    },
+    {
+      "Name": "Aig_ManCo",
+      "Start": 13261,
+      "End": 13379,
+      "BodyStart": 13327,
+      "Original": "static inline Aig_Obj_t *  Aig_ManCo( Aig_Man_t * p, int i )      { return (Aig_Obj_t *)Vec_PtrEntry(p-\u003evCos, i);    }",
+      "Draft": "func Aig_ManCo(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i);    }"
+    },
+    {
+      "Name": "Aig_ManLo",
+      "Start": 13380,
+      "End": 13530,
+      "BodyStart": 13446,
+      "Original": "static inline Aig_Obj_t *  Aig_ManLo( Aig_Man_t * p, int i )      { return (Aig_Obj_t *)Vec_PtrEntry(p-\u003evCis, Aig_ManCiNum(p)-Aig_ManRegNum(p)+i);   }",
+      "Draft": "func Aig_ManLo(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCis, Aig_ManCiNum(p)-Aig_ManRegNum(p)+i);   }"
+    },
+    {
+      "Name": "Aig_ManLi",
+      "Start": 13531,
+      "End": 13681,
+      "BodyStart": 13597,
+      "Original": "static inline Aig_Obj_t *  Aig_ManLi( Aig_Man_t * p, int i )      { return (Aig_Obj_t *)Vec_PtrEntry(p-\u003evCos, Aig_ManCoNum(p)-Aig_ManRegNum(p)+i);   }",
+      "Draft": "func Aig_ManLi(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCos, Aig_ManCoNum(p)-Aig_ManRegNum(p)+i);   }"
+    },
+    {
+      "Name": "Aig_ManObj",
+      "Start": 13682,
+      "End": 13817,
+      "BodyStart": 13748,
+      "Original": "static inline Aig_Obj_t *  Aig_ManObj( Aig_Man_t * p, int i )     { return p-\u003evObjs ? (Aig_Obj_t *)Vec_PtrEntry(p-\u003evObjs, i) : NULL;  }",
+      "Draft": "func Aig_ManObj(p *Aig_Man_t, i int32) *Aig_Obj_t { if p.vObjs {\n    return (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i);\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Aig_ObjType",
+      "Start": 13819,
+      "End": 13925,
+      "BodyStart": 13885,
+      "Original": "static inline Aig_Type_t   Aig_ObjType( Aig_Obj_t * pObj )        { return (Aig_Type_t)pObj-\u003eType;       }",
+      "Draft": "func Aig_ObjType(pObj *Aig_Obj_t) Aig_Type_t { return (Aig_Type_t)pObj.Type;       }"
+    },
+    {
+      "Name": "Aig_ObjIsNone",
+      "Start": 13926,
+      "End": 14032,
+      "BodyStart": 13992,
+      "Original": "static inline int          Aig_ObjIsNone( Aig_Obj_t * pObj )      { return pObj-\u003eType == AIG_OBJ_NONE;   }",
+      "Draft": "func Aig_ObjIsNone(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_NONE;   }"
+    },
+    {
+      "Name": "Aig_ObjIsConst1",
+      "Start": 14033,
+      "End": 14172,
+      "BodyStart": 14099,
+      "Original": "static inline int          Aig_ObjIsConst1( Aig_Obj_t * pObj )    { assert(!Aig_IsComplement(pObj)); return pObj-\u003eType == AIG_OBJ_CONST1; }",
+      "Draft": "func Aig_ObjIsConst1(pObj *Aig_Obj_t) int32 { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); return pObj.Type == AIG_OBJ_CONST1; }"
+    },
+    {
+      "Name": "Aig_ObjIsCi",
+      "Start": 14173,
+      "End": 14279,
+      "BodyStart": 14239,
+      "Original": "static inline int          Aig_ObjIsCi( Aig_Obj_t * pObj )        { return pObj-\u003eType == AIG_OBJ_CI;     }",
+      "Draft": "func Aig_ObjIsCi(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_CI;     }"
+    },
+    {
+      "Name": "Aig_ObjIsCo",
+      "Start": 14280,
+      "End": 14386,
+      "BodyStart": 14346,
+      "Original": "static inline int          Aig_ObjIsCo( Aig_Obj_t * pObj )        { return pObj-\u003eType == AIG_OBJ_CO;     }",
+      "Draft": "func Aig_ObjIsCo(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_CO;     }"
+    },
+    {
+      "Name": "Aig_ObjIsBuf",
+      "Start": 14387,
+      "End": 14493,
+      "BodyStart": 14453,
+      "Original": "static inline int          Aig_ObjIsBuf( Aig_Obj_t * pObj )       { return pObj-\u003eType == AIG_OBJ_BUF;    }",
+      "Draft": "func Aig_ObjIsBuf(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_BUF;    }"
+    },
+    {
+      "Name": "Aig_ObjIsAnd",
+      "Start": 14494,
+      "End": 14600,
+      "BodyStart": 14560,
+      "Original": "static inline int          Aig_ObjIsAnd( Aig_Obj_t * pObj )       { return pObj-\u003eType == AIG_OBJ_AND;    }",
+      "Draft": "func Aig_ObjIsAnd(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_AND;    }"
+    },
+    {
+      "Name": "Aig_ObjIsExor",
+      "Start": 14601,
+      "End": 14707,
+      "BodyStart": 14667,
+      "Original": "static inline int          Aig_ObjIsExor( Aig_Obj_t * pObj )      { return pObj-\u003eType == AIG_OBJ_EXOR;   }",
+      "Draft": "func Aig_ObjIsExor(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_EXOR;   }"
+    },
+    {
+      "Name": "Aig_ObjIsNode",
+      "Start": 14708,
+      "End": 14843,
+      "BodyStart": 14774,
+      "Original": "static inline int          Aig_ObjIsNode( Aig_Obj_t * pObj )      { return pObj-\u003eType == AIG_OBJ_AND || pObj-\u003eType == AIG_OBJ_EXOR;   }",
+      "Draft": "func Aig_ObjIsNode(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_AND || pObj.Type == AIG_OBJ_EXOR;   }"
+    },
+    {
+      "Name": "Aig_ObjIsTerm",
+      "Start": 14844,
+      "End": 15009,
+      "BodyStart": 14910,
+      "Original": "static inline int          Aig_ObjIsTerm( Aig_Obj_t * pObj )      { return pObj-\u003eType == AIG_OBJ_CI  || pObj-\u003eType == AIG_OBJ_CO || pObj-\u003eType == AIG_OBJ_CONST1;   }",
+      "Draft": "func Aig_ObjIsTerm(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_CI  || pObj.Type == AIG_OBJ_CO || pObj.Type == AIG_OBJ_CONST1;   }"
+    },
+    {
+      "Name": "Aig_ObjIsHash",
+      "Start": 15010,
+      "End": 15175,
+      "BodyStart": 15076,
+      "Original": "static inline int          Aig_ObjIsHash( Aig_Obj_t * pObj )      { return pObj-\u003eType == AIG_OBJ_AND || pObj-\u003eType == AIG_OBJ_EXOR;                                 }",
+      "Draft": "func Aig_ObjIsHash(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_AND || pObj.Type == AIG_OBJ_EXOR;                                 }"
+    },
+    {
+      "Name": "Aig_ObjIsChoice",
+      "Start": 15176,
+      "End": 15341,
+      "BodyStart": 15257,
+      "Original": "static inline int          Aig_ObjIsChoice( Aig_Man_t * p, Aig_Obj_t * pObj )    { return p-\u003epEquivs \u0026\u0026 p-\u003epEquivs[pObj-\u003eId] \u0026\u0026 pObj-\u003enRefs \u003e 0;                    }",
+      "Draft": "func Aig_ObjIsChoice(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return p.pEquivs \u0026\u0026 p.pEquivs[pObj.Id] \u0026\u0026 pObj.nRefs \u003e 0;                    }"
+    },
+    {
+      "Name": "Aig_ObjIsCand",
+      "Start": 15342,
+      "End": 15507,
+      "BodyStart": 15408,
+      "Original": "static inline int          Aig_ObjIsCand( Aig_Obj_t * pObj )      { return pObj-\u003eType == AIG_OBJ_CI || pObj-\u003eType == AIG_OBJ_AND || pObj-\u003eType == AIG_OBJ_EXOR;     }",
+      "Draft": "func Aig_ObjIsCand(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_CI || pObj.Type == AIG_OBJ_AND || pObj.Type == AIG_OBJ_EXOR;     }"
+    },
+    {
+      "Name": "Aig_ObjCioId",
+      "Start": 15508,
+      "End": 15672,
+      "BodyStart": 15574,
+      "Original": "static inline int          Aig_ObjCioId( Aig_Obj_t * pObj )       { assert( !Aig_ObjIsNode(pObj) ); return pObj-\u003eCioId;                                            }",
+      "Draft": "func Aig_ObjCioId(pObj *Aig_Obj_t) int32 { assert(!(Aig_ObjIsNode(pObj) != 0), \"!Aig_ObjIsNode(pObj)\"); return pObj.CioId;                                            }"
+    },
+    {
+      "Name": "Aig_ObjId",
+      "Start": 15673,
+      "End": 15779,
+      "BodyStart": 15739,
+      "Original": "static inline int          Aig_ObjId( Aig_Obj_t * pObj )          { return pObj-\u003eId;                     }",
+      "Draft": "func Aig_ObjId(pObj *Aig_Obj_t) int32 { return pObj.Id;                     }"
+    },
+    {
+      "Name": "Aig_ObjIsMarkA",
+      "Start": 15781,
+      "End": 15872,
+      "BodyStart": 15847,
+      "Original": "static inline int          Aig_ObjIsMarkA( Aig_Obj_t * pObj )     { return pObj-\u003efMarkA;  }",
+      "Draft": "func Aig_ObjIsMarkA(pObj *Aig_Obj_t) int32 { return pObj.fMarkA;  }"
+    },
+    {
+      "Name": "Aig_ObjSetMarkA",
+      "Start": 15873,
+      "End": 15964,
+      "BodyStart": 15939,
+      "Original": "static inline void         Aig_ObjSetMarkA( Aig_Obj_t * pObj )    { pObj-\u003efMarkA = 1;     }",
+      "Draft": "func Aig_ObjSetMarkA(pObj *Aig_Obj_t) { pObj.fMarkA = 1;     }"
+    },
+    {
+      "Name": "Aig_ObjClearMarkA",
+      "Start": 15965,
+      "End": 16056,
+      "BodyStart": 16031,
+      "Original": "static inline void         Aig_ObjClearMarkA( Aig_Obj_t * pObj )  { pObj-\u003efMarkA = 0;     }",
+      "Draft": "func Aig_ObjClearMarkA(pObj *Aig_Obj_t) { pObj.fMarkA = 0;     }"
+    },
+    {
+      "Name": "Aig_ObjSetTravId",
+      "Start": 16059,
+      "End": 16200,
+      "BodyStart": 16150,
+      "Original": "static inline void         Aig_ObjSetTravId( Aig_Obj_t * pObj, int TravId )                { pObj-\u003eTravId = TravId;                         }",
+      "Draft": "func Aig_ObjSetTravId(pObj *Aig_Obj_t, TravId int32) { pObj.TravId = TravId;                         }"
+    },
+    {
+      "Name": "Aig_ObjSetTravIdCurrent",
+      "Start": 16201,
+      "End": 16342,
+      "BodyStart": 16292,
+      "Original": "static inline void         Aig_ObjSetTravIdCurrent( Aig_Man_t * p, Aig_Obj_t * pObj )      { pObj-\u003eTravId = p-\u003enTravIds;                    }",
+      "Draft": "func Aig_ObjSetTravIdCurrent(p *Aig_Man_t, pObj *Aig_Obj_t) { pObj.TravId = p.nTravIds;                    }"
+    },
+    {
+      "Name": "Aig_ObjSetTravIdPrevious",
+      "Start": 16343,
+      "End": 16484,
+      "BodyStart": 16434,
+      "Original": "static inline void         Aig_ObjSetTravIdPrevious( Aig_Man_t * p, Aig_Obj_t * pObj )     { pObj-\u003eTravId = p-\u003enTravIds - 1;                }",
+      "Draft": "func Aig_ObjSetTravIdPrevious(p *Aig_Man_t, pObj *Aig_Obj_t) { pObj.TravId = p.nTravIds - 1;                }"
+    },
+    {
+      "Name": "Aig_ObjIsTravIdCurrent",
+      "Start": 16485,
+      "End": 16626,
+      "BodyStart": 16576,
+      "Original": "static inline int          Aig_ObjIsTravIdCurrent( Aig_Man_t * p, Aig_Obj_t * pObj )       { return (int)(pObj-\u003eTravId == p-\u003enTravIds);     }",
+      "Draft": "func Aig_ObjIsTravIdCurrent(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return int32((pObj.TravId == p.nTravIds));     }"
+    },
+    {
+      "Name": "Aig_ObjIsTravIdPrevious",
+      "Start": 16627,
+      "End": 16768,
+      "BodyStart": 16718,
+      "Original": "static inline int          Aig_ObjIsTravIdPrevious( Aig_Man_t * p, Aig_Obj_t * pObj )      { return (int)(pObj-\u003eTravId == p-\u003enTravIds - 1); }",
+      "Draft": "func Aig_ObjIsTravIdPrevious(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return int32((pObj.TravId == p.nTravIds - 1)); }"
+    },
+    {
+      "Name": "Aig_ObjPhase",
+      "Start": 16770,
+      "End": 16886,
+      "BodyStart": 16836,
+      "Original": "static inline int          Aig_ObjPhase( Aig_Obj_t * pObj )       { return pObj-\u003efPhase;                           }",
+      "Draft": "func Aig_ObjPhase(pObj *Aig_Obj_t) int32 { return pObj.fPhase;                           }"
+    },
+    {
+      "Name": "Aig_ObjPhaseReal",
+      "Start": 16887,
+      "End": 17054,
+      "BodyStart": 16953,
+      "Original": "static inline int          Aig_ObjPhaseReal( Aig_Obj_t * pObj )   { return pObj? Aig_Regular(pObj)-\u003efPhase ^ Aig_IsComplement(pObj) : 1;                              }",
+      "Draft": "func Aig_ObjPhaseReal(pObj *Aig_Obj_t) int32 { if pObj != nil {\n    return Aig_Regular(pObj).fPhase ^ Aig_IsComplement(pObj);\n} else {\n    return 1;\n}                              }"
+    },
+    {
+      "Name": "Aig_ObjRefs",
+      "Start": 17055,
+      "End": 17171,
+      "BodyStart": 17121,
+      "Original": "static inline int          Aig_ObjRefs( Aig_Obj_t * pObj )        { return pObj-\u003enRefs;                            }",
+      "Draft": "func Aig_ObjRefs(pObj *Aig_Obj_t) int32 { return pObj.nRefs;                            }"
+    },
+    {
+      "Name": "Aig_ObjRef",
+      "Start": 17172,
+      "End": 17288,
+      "BodyStart": 17238,
+      "Original": "static inline void         Aig_ObjRef( Aig_Obj_t * pObj )         { pObj-\u003enRefs++;                                 }",
+      "Draft": "func Aig_ObjRef(pObj *Aig_Obj_t) { pObj.nRefs++;                                 }"
+    },
+    {
+      "Name": "Aig_ObjDeref",
+      "Start": 17289,
+      "End": 17405,
+      "BodyStart": 17355,
+      "Original": "static inline void         Aig_ObjDeref( Aig_Obj_t * pObj )       { assert( pObj-\u003enRefs \u003e 0 ); pObj-\u003enRefs--;      }",
+      "Draft": "func Aig_ObjDeref(pObj *Aig_Obj_t) { assert(pObj.nRefs \u003e 0, \"pObj.nRefs \u003e 0\"); pObj.nRefs--;      }"
+    },
+    {
+      "Name": "Aig_ObjClearRef",
+      "Start": 17406,
+      "End": 17522,
+      "BodyStart": 17472,
+      "Original": "static inline void         Aig_ObjClearRef( Aig_Obj_t * pObj )    { pObj-\u003enRefs = 0;                               }",
+      "Draft": "func Aig_ObjClearRef(pObj *Aig_Obj_t) { pObj.nRefs = 0;                               }"
+    },
+    {
+      "Name": "Aig_ObjFaninId0",
+      "Start": 17523,
+      "End": 17651,
+      "BodyStart": 17589,
+      "Original": "static inline int          Aig_ObjFaninId0( Aig_Obj_t * pObj )    { return pObj-\u003epFanin0? Aig_Regular(pObj-\u003epFanin0)-\u003eId : -1; }",
+      "Draft": "func Aig_ObjFaninId0(pObj *Aig_Obj_t) int32 { if pObj.pFanin0 {\n    return Aig_Regular(pObj.pFanin0).Id;\n} else {\n    return -1;\n} }"
+    },
+    {
+      "Name": "Aig_ObjFaninId1",
+      "Start": 17652,
+      "End": 17780,
+      "BodyStart": 17718,
+      "Original": "static inline int          Aig_ObjFaninId1( Aig_Obj_t * pObj )    { return pObj-\u003epFanin1? Aig_Regular(pObj-\u003epFanin1)-\u003eId : -1; }",
+      "Draft": "func Aig_ObjFaninId1(pObj *Aig_Obj_t) int32 { if pObj.pFanin1 {\n    return Aig_Regular(pObj.pFanin1).Id;\n} else {\n    return -1;\n} }"
+    },
+    {
+      "Name": "Aig_ObjFaninC0",
+      "Start": 17781,
+      "End": 17897,
+      "BodyStart": 17847,
+      "Original": "static inline int          Aig_ObjFaninC0( Aig_Obj_t * pObj )     { return Aig_IsComplement(pObj-\u003epFanin0);        }",
+      "Draft": "func Aig_ObjFaninC0(pObj *Aig_Obj_t) int32 { return Aig_IsComplement(pObj.pFanin0);        }"
+    },
+    {
+      "Name": "Aig_ObjFaninC1",
+      "Start": 17898,
+      "End": 18014,
+      "BodyStart": 17964,
+      "Original": "static inline int          Aig_ObjFaninC1( Aig_Obj_t * pObj )     { return Aig_IsComplement(pObj-\u003epFanin1);        }",
+      "Draft": "func Aig_ObjFaninC1(pObj *Aig_Obj_t) int32 { return Aig_IsComplement(pObj.pFanin1);        }"
+    },
+    {
+      "Name": "Aig_ObjFanin0",
+      "Start": 18015,
+      "End": 18131,
+      "BodyStart": 18081,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjFanin0( Aig_Obj_t * pObj )      { return Aig_Regular(pObj-\u003epFanin0);             }",
+      "Draft": "func Aig_ObjFanin0(pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_Regular(pObj.pFanin0);             }"
+    },
+    {
+      "Name": "Aig_ObjFanin1",
+      "Start": 18132,
+      "End": 18248,
+      "BodyStart": 18198,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjFanin1( Aig_Obj_t * pObj )      { return Aig_Regular(pObj-\u003epFanin1);             }",
+      "Draft": "func Aig_ObjFanin1(pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_Regular(pObj.pFanin1);             }"
+    },
+    {
+      "Name": "Aig_ObjChild0",
+      "Start": 18249,
+      "End": 18365,
+      "BodyStart": 18315,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjChild0( Aig_Obj_t * pObj )      { return pObj-\u003epFanin0;                          }",
+      "Draft": "func Aig_ObjChild0(pObj *Aig_Obj_t) *Aig_Obj_t { return pObj.pFanin0;                          }"
+    },
+    {
+      "Name": "Aig_ObjChild1",
+      "Start": 18366,
+      "End": 18482,
+      "BodyStart": 18432,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjChild1( Aig_Obj_t * pObj )      { return pObj-\u003epFanin1;                          }",
+      "Draft": "func Aig_ObjChild1(pObj *Aig_Obj_t) *Aig_Obj_t { return pObj.pFanin1;                          }"
+    },
+    {
+      "Name": "Aig_ObjChild0Copy",
+      "Start": 18483,
+      "End": 18699,
+      "BodyStart": 18549,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjChild0Copy( Aig_Obj_t * pObj )  { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin0(pObj)? Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj)-\u003epData, Aig_ObjFaninC0(pObj)) : NULL;  }",
+      "Draft": "func Aig_ObjChild0Copy(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) != nil {\n    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj).pData, Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Aig_ObjChild1Copy",
+      "Start": 18700,
+      "End": 18916,
+      "BodyStart": 18766,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjChild1Copy( Aig_Obj_t * pObj )  { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin1(pObj)? Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin1(pObj)-\u003epData, Aig_ObjFaninC1(pObj)) : NULL;  }",
+      "Draft": "func Aig_ObjChild1Copy(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) != nil {\n    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin1(pObj).pData, Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Aig_ObjChild0Next",
+      "Start": 18917,
+      "End": 19133,
+      "BodyStart": 18983,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjChild0Next( Aig_Obj_t * pObj )  { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin0(pObj)? Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj)-\u003epNext, Aig_ObjFaninC0(pObj)) : NULL;  }",
+      "Draft": "func Aig_ObjChild0Next(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) != nil {\n    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj).pNext, Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Aig_ObjChild1Next",
+      "Start": 19134,
+      "End": 19350,
+      "BodyStart": 19200,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjChild1Next( Aig_Obj_t * pObj )  { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin1(pObj)? Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin1(pObj)-\u003epNext, Aig_ObjFaninC1(pObj)) : NULL;  }",
+      "Draft": "func Aig_ObjChild1Next(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) != nil {\n    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin1(pObj).pNext, Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Aig_ObjChild0Flip",
+      "Start": 19351,
+      "End": 19502,
+      "BodyStart": 19417,
+      "Original": "static inline void         Aig_ObjChild0Flip( Aig_Obj_t * pObj )  { assert( !Aig_IsComplement(pObj) ); pObj-\u003epFanin0 = Aig_Not(pObj-\u003epFanin0);        }",
+      "Draft": "func Aig_ObjChild0Flip(pObj *Aig_Obj_t) { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); pObj.pFanin0 = Aig_Not(pObj.pFanin0);        }"
+    },
+    {
+      "Name": "Aig_ObjChild1Flip",
+      "Start": 19503,
+      "End": 19654,
+      "BodyStart": 19569,
+      "Original": "static inline void         Aig_ObjChild1Flip( Aig_Obj_t * pObj )  { assert( !Aig_IsComplement(pObj) ); pObj-\u003epFanin1 = Aig_Not(pObj-\u003epFanin1);        }",
+      "Draft": "func Aig_ObjChild1Flip(pObj *Aig_Obj_t) { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); pObj.pFanin1 = Aig_Not(pObj.pFanin1);        }"
+    },
+    {
+      "Name": "Aig_ObjCopy",
+      "Start": 19655,
+      "End": 19806,
+      "BodyStart": 19721,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjCopy( Aig_Obj_t * pObj )        { assert( !Aig_IsComplement(pObj) ); return (Aig_Obj_t *)pObj-\u003epData;               }",
+      "Draft": "func Aig_ObjCopy(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); return (Aig_Obj_t *)pObj.pData;               }"
+    },
+    {
+      "Name": "Aig_ObjSetCopy",
+      "Start": 19808,
+      "End": 19959,
+      "BodyStart": 19893,
+      "Original": "static inline void         Aig_ObjSetCopy( Aig_Obj_t * pObj, Aig_Obj_t * pCopy )     {  assert( !Aig_IsComplement(pObj) ); pObj-\u003epData = pCopy;       }",
+      "Draft": "func Aig_ObjSetCopy(pObj *Aig_Obj_t, pCopy *Aig_Obj_t) {  assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); pObj.pData = pCopy;       }"
+    },
+    {
+      "Name": "Aig_ObjRealCopy",
+      "Start": 19961,
+      "End": 20112,
+      "BodyStart": 20027,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjRealCopy( Aig_Obj_t * pObj )    { return Aig_NotCond((Aig_Obj_t *)Aig_Regular(pObj)-\u003epData, Aig_IsComplement(pObj));}",
+      "Draft": "func Aig_ObjRealCopy(pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond((Aig_Obj_t *)Aig_Regular(pObj).pData, Aig_IsComplement(pObj));}"
+    },
+    {
+      "Name": "Aig_ObjToLit",
+      "Start": 20113,
+      "End": 20264,
+      "BodyStart": 20179,
+      "Original": "static inline int          Aig_ObjToLit( Aig_Obj_t * pObj )       { return Abc_Var2Lit( Aig_ObjId(Aig_Regular(pObj)), Aig_IsComplement(pObj) );       }",
+      "Draft": "func Aig_ObjToLit(pObj *Aig_Obj_t) int32 { return Abc_Var2Lit( Aig_ObjId(Aig_Regular(pObj)), Aig_IsComplement(pObj) );       }"
+    },
+    {
+      "Name": "Aig_ObjFromLit",
+      "Start": 20265,
+      "End": 20416,
+      "BodyStart": 20331,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjFromLit( Aig_Man_t * p,int iLit){ return Aig_NotCond( Aig_ManObj(p, Abc_Lit2Var(iLit)), Abc_LitIsCompl(iLit) );     }",
+      "Draft": "func Aig_ObjFromLit(p *Aig_Man_t, iLit int32) *Aig_Obj_t { return Aig_NotCond( Aig_ManObj(p, Abc_Lit2Var(iLit)), Abc_LitIsCompl(iLit) );     }"
+    },
+    {
+      "Name": "Aig_ObjLevel",
+      "Start": 20417,
+      "End": 20568,
+      "BodyStart": 20483,
+      "Original": "static inline int          Aig_ObjLevel( Aig_Obj_t * pObj )       { assert( !Aig_IsComplement(pObj) ); return pObj-\u003eLevel;                            }",
+      "Draft": "func Aig_ObjLevel(pObj *Aig_Obj_t) int32 { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); return pObj.Level;                            }"
+    },
+    {
+      "Name": "Aig_ObjLevelNew",
+      "Start": 20569,
+      "End": 20824,
+      "BodyStart": 20635,
+      "Original": "static inline int          Aig_ObjLevelNew( Aig_Obj_t * pObj )    { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin1(pObj)? 1 + Aig_ObjIsExor(pObj) + Abc_MaxInt(Aig_ObjFanin0(pObj)-\u003eLevel, Aig_ObjFanin1(pObj)-\u003eLevel) : Aig_ObjFanin0(pObj)-\u003eLevel; }",
+      "Draft": "func Aig_ObjLevelNew(pObj *Aig_Obj_t) int32 { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) != nil {\n    return 1 + Aig_ObjIsExor(pObj) + Abc_MaxInt(Aig_ObjFanin0(pObj).Level, Aig_ObjFanin1(pObj).Level);\n} else {\n    return Aig_ObjFanin0(pObj).Level;\n} }"
+    },
+    {
+      "Name": "Aig_ObjSetLevel",
+      "Start": 20825,
+      "End": 20976,
+      "BodyStart": 20895,
+      "Original": "static inline int          Aig_ObjSetLevel( Aig_Obj_t * pObj, int i ) { assert( !Aig_IsComplement(pObj) ); return pObj-\u003eLevel = i;                    }",
+      "Draft": "func Aig_ObjSetLevel(pObj *Aig_Obj_t, i int32) int32 { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); return pObj.Level = i;                    }"
+    },
+    {
+      "Name": "Aig_ObjClean",
+      "Start": 20977,
+      "End": 21144,
+      "BodyStart": 21043,
+      "Original": "static inline void         Aig_ObjClean( Aig_Obj_t * pObj )       { memset( pObj, 0, sizeof(Aig_Obj_t) );                                                             }",
+      "Draft": "func Aig_ObjClean(pObj *Aig_Obj_t) { *pObj = Aig_Obj_t{};                                                             }"
+    },
+    {
+      "Name": "Aig_ObjFanout0",
+      "Start": 21145,
+      "End": 21327,
+      "BodyStart": 21223,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjFanout0( Aig_Man_t * p, Aig_Obj_t * pObj )  { assert(p-\u003epFanData \u0026\u0026 pObj-\u003eId \u003c p-\u003enFansAlloc); return Aig_ManObj(p, p-\u003epFanData[5*pObj-\u003eId] \u003e\u003e 1); }",
+      "Draft": "func Aig_ObjFanout0(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert(p.pFanData \u0026\u0026 pObj.Id \u003c p.nFansAlloc, \"p.pFanData \u0026\u0026 pObj.Id \u003c p.nFansAlloc\"); return Aig_ManObj(p, p.pFanData[5*pObj.Id] \u003e\u003e 1); }"
+    },
+    {
+      "Name": "Aig_ObjEquiv",
+      "Start": 21329,
+      "End": 21468,
+      "BodyStart": 21407,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjEquiv( Aig_Man_t * p, Aig_Obj_t * pObj )    { return p-\u003epEquivs? p-\u003epEquivs[pObj-\u003eId] : NULL;           }",
+      "Draft": "func Aig_ObjEquiv(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { if p.pEquivs {\n    return p.pEquivs[pObj.Id];\n} else {\n    return nil;\n}           }"
+    },
+    {
+      "Name": "Aig_ObjSetEquiv",
+      "Start": 21470,
+      "End": 21635,
+      "BodyStart": 21566,
+      "Original": "static inline void         Aig_ObjSetEquiv( Aig_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pEqu ) { assert(p-\u003epEquivs); p-\u003epEquivs[pObj-\u003eId] = pEqu;                  }",
+      "Draft": "func Aig_ObjSetEquiv(p *Aig_Man_t, pObj *Aig_Obj_t, pEqu *Aig_Obj_t) { assert(p.pEquivs, \"p.pEquivs\"); p.pEquivs[pObj.Id] = pEqu;                  }"
+    },
+    {
+      "Name": "Aig_ObjRepr",
+      "Start": 21636,
+      "End": 21775,
+      "BodyStart": 21714,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjRepr( Aig_Man_t * p, Aig_Obj_t * pObj )     { return p-\u003epReprs? p-\u003epReprs[pObj-\u003eId] : NULL;             }",
+      "Draft": "func Aig_ObjRepr(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { if p.pReprs {\n    return p.pReprs[pObj.Id];\n} else {\n    return nil;\n}             }"
+    },
+    {
+      "Name": "Aig_ObjSetRepr",
+      "Start": 21777,
+      "End": 21959,
+      "BodyStart": 21877,
+      "Original": "static inline void         Aig_ObjSetRepr( Aig_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pRepr )     { assert(p-\u003epReprs); p-\u003epReprs[pObj-\u003eId] = pRepr;                                }",
+      "Draft": "func Aig_ObjSetRepr(p *Aig_Man_t, pObj *Aig_Obj_t, pRepr *Aig_Obj_t) { assert(p.pReprs, \"p.pReprs\"); p.pReprs[pObj.Id] = pRepr;                                }"
+    },
+    {
+      "Name": "Aig_ObjWhatFanin",
+      "Start": 21961,
+      "End": 22184,
+      "BodyStart": 22049,
+      "Original": "static inline int          Aig_ObjWhatFanin( Aig_Obj_t * pObj, Aig_Obj_t * pFanin )    \n{ \n    if ( Aig_ObjFanin0(pObj) == pFanin ) return 0; \n    if ( Aig_ObjFanin1(pObj) == pFanin ) return 1; \n    assert(0); return -1; \n}",
+      "Draft": "func Aig_ObjWhatFanin(pObj *Aig_Obj_t, pFanin *Aig_Obj_t) int32 { \n    if Aig_ObjFanin0(pObj) == pFanin { return 0; } \n    if Aig_ObjFanin1(pObj) == pFanin { return 1; } \n    assert(false, \"0\"); return -1; \n}"
+    },
+    {
+      "Name": "Aig_ObjFanoutC",
+      "Start": 22185,
+      "End": 22447,
+      "BodyStart": 22272,
+      "Original": "static inline int          Aig_ObjFanoutC( Aig_Obj_t * pObj, Aig_Obj_t * pFanout )    \n{ \n    if ( Aig_ObjFanin0(pFanout) == pObj ) return Aig_ObjFaninC0(pObj); \n    if ( Aig_ObjFanin1(pFanout) == pObj ) return Aig_ObjFaninC1(pObj); \n    assert(0); return -1; \n}",
+      "Draft": "func Aig_ObjFanoutC(pObj *Aig_Obj_t, pFanout *Aig_Obj_t) int32 { \n    if Aig_ObjFanin0(pFanout) == pObj { return Aig_ObjFaninC0(pObj); } \n    if Aig_ObjFanin1(pFanout) == pObj { return Aig_ObjFaninC1(pObj); } \n    assert(false, \"0\"); return -1; \n}"
+    },
+    {
+      "Name": "Aig_ObjCreateGhost",
+      "Start": 22485,
+      "End": 23129,
+      "BodyStart": 22601,
+      "Original": "static inline Aig_Obj_t *  Aig_ObjCreateGhost( Aig_Man_t * p, Aig_Obj_t * p0, Aig_Obj_t * p1, Aig_Type_t Type )    \n{\n    Aig_Obj_t * pGhost;\n    assert( Type != AIG_OBJ_AND || !Aig_ObjIsConst1(Aig_Regular(p0)) );\n    assert( p1 == NULL || !Aig_ObjIsConst1(Aig_Regular(p1)) );\n    assert( Type == AIG_OBJ_CI || Aig_Regular(p0) != Aig_Regular(p1) );\n    pGhost = Aig_ManGhost(p);\n    pGhost-\u003eType = Type;\n    if ( p1 == NULL || Aig_Regular(p0)-\u003eId \u003c Aig_Regular(p1)-\u003eId )\n    {\n        pGhost-\u003epFanin0 = p0;\n        pGhost-\u003epFanin1 = p1;\n    }\n    else\n    {\n        pGhost-\u003epFanin0 = p1;\n        pGhost-\u003epFanin1 = p0;\n    }\n    return pGhost;\n}",
+      "Draft": "func Aig_ObjCreateGhost(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t, Type Aig_Type_t) *Aig_Obj_t {\n    var pGhost *Aig_Obj_t;\n    assert(Type != AIG_OBJ_AND || !(Aig_ObjIsConst1(Aig_Regular(p0)) != 0), \"Type != AIG_OBJ_AND || !Aig_ObjIsConst1(Aig_Regular(p0))\");\n    assert(p1 == nil || !(Aig_ObjIsConst1(Aig_Regular(p1)) != 0), \"p1 == nil || !Aig_ObjIsConst1(Aig_Regular(p1))\");\n    assert(Type == AIG_OBJ_CI || Aig_Regular(p0) != Aig_Regular(p1), \"Type == AIG_OBJ_CI || Aig_Regular(p0) != Aig_Regular(p1)\");\n    pGhost = Aig_ManGhost(p);\n    pGhost.Type = Type;\n    if p1 == nil || Aig_Regular(p0).Id \u003c Aig_Regular(p1).Id {\n        pGhost.pFanin0 = p0;\n        pGhost.pFanin1 = p1;\n    \n    } else {\n        pGhost.pFanin0 = p1;\n        pGhost.pFanin1 = p0;\n    }\n    return pGhost;\n}"
+    },
+    {
+      "Name": "Aig_ManFetchMemory",
+      "Start": 23158,
+      "End": 23510,
+      "BodyStart": 23222,
+      "Original": "static inline Aig_Obj_t * Aig_ManFetchMemory( Aig_Man_t * p )  \n{\n    extern char * Aig_MmFixedEntryFetch( Aig_MmFixed_t * p );\n    Aig_Obj_t * pTemp;\n    pTemp = (Aig_Obj_t *)Aig_MmFixedEntryFetch( p-\u003epMemObjs );\n    memset( pTemp, 0, sizeof(Aig_Obj_t) ); \n    pTemp-\u003eId = Vec_PtrSize(p-\u003evObjs);\n    Vec_PtrPush( p-\u003evObjs, pTemp );\n    return pTemp;\n}",
+      "Draft": "func Aig_ManFetchMemory(p *Aig_Man_t) *Aig_Obj_t {\n    extern char * Aig_MmFixedEntryFetch( Aig_MmFixed_t * p );\n    var pTemp *Aig_Obj_t;\n    pTemp = (Aig_Obj_t *)Aig_MmFixedEntryFetch( p.pMemObjs );\n    *pTemp = Aig_Obj_t{}; \n    pTemp.Id = Vec_PtrSize(p.vObjs);\n    Vec_PtrPush( p.vObjs, pTemp );\n    return pTemp;\n}"
+    },
+    {
+      "Name": "Aig_ManRecycleMemory",
+      "Start": 23511,
+      "End": 23860,
+      "BodyStart": 23588,
+      "Original": "static inline void Aig_ManRecycleMemory( Aig_Man_t * p, Aig_Obj_t * pEntry )\n{\n    extern void Aig_MmFixedEntryRecycle( Aig_MmFixed_t * p, char * pEntry );\n    assert( pEntry-\u003enRefs == 0 );\n    pEntry-\u003eType = AIG_OBJ_NONE; // distinquishes a dead node from a live node\n    Aig_MmFixedEntryRecycle( p-\u003epMemObjs, (char *)pEntry );\n    p-\u003enDeleted++;\n}",
+      "Draft": "func Aig_ManRecycleMemory(p *Aig_Man_t, pEntry *Aig_Obj_t) {\n    extern void Aig_MmFixedEntryRecycle( Aig_MmFixed_t * p, char * pEntry );\n    assert(pEntry.nRefs == 0, \"pEntry.nRefs == 0\");\n    pEntry.Type = AIG_OBJ_NONE; // distinquishes a dead node from a live node\n    Aig_MmFixedEntryRecycle( p.pMemObjs, (char *)pEntry );\n    p.nDeleted++;\n}"
+    },
+    {
+      "Name": "Aig_ObjFanout0Int",
+      "Start": 26501,
+      "End": 26658,
+      "BodyStart": 26570,
+      "Original": "static inline int     Aig_ObjFanout0Int( Aig_Man_t * p, int ObjId )  { assert(ObjId \u003c p-\u003enFansAlloc);  return p-\u003epFanData[5*ObjId];                         }",
+      "Draft": "func Aig_ObjFanout0Int(p *Aig_Man_t, ObjId int32) int32 { assert(ObjId \u003c p.nFansAlloc, \"ObjId \u003c p.nFansAlloc\");  return p.pFanData[5*ObjId];                         }"
+    },
+    {
+      "Name": "Aig_ObjFanoutNext",
+      "Start": 26659,
+      "End": 26816,
+      "BodyStart": 26728,
+      "Original": "static inline int     Aig_ObjFanoutNext( Aig_Man_t * p, int iFan )   { assert(iFan/2 \u003c p-\u003enFansAlloc); return p-\u003epFanData[5*(iFan \u003e\u003e 1) + 3 + (iFan \u0026 1)];  }",
+      "Draft": "func Aig_ObjFanoutNext(p *Aig_Man_t, iFan int32) int32 { assert(iFan/2 \u003c p.nFansAlloc, \"iFan/2 \u003c p.nFansAlloc\"); return p.pFanData[5*(iFan \u003e\u003e 1) + 3 + (iFan \u0026 1)];  }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Cut_t::// the current number of fanins\n    int             pFanins[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 7907,
+      "End": 7979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Cut_t",
+      "Category": "struct-review",
+      "Symbol": "Aig_Cut_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 7370,
+      "End": 8031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Obj_t_::union {                         \n        Aig_Obj_t *  pNext;          // strashing table\n        int          CioId;          // 0-based number of CI/CO\n    };",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2200,
+      "End": 2364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Obj_t_::// fanin\n    unsigned int     Type    :  3;",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2440,
+      "End": 2491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Obj_t_::// object type\n    unsigned int     fPhase  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2491,
+      "End": 2543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Obj_t_::// value under 000...0 pattern\n    unsigned int     fMarkA  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2543,
+      "End": 2611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Obj_t_::// multipurpose mask\n    unsigned int     fMarkB  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2611,
+      "End": 2669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Obj_t_::// multipurpose mask\n    unsigned int     nRefs   : 26;",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2669,
+      "End": 2727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Obj_t_::// reference count \n    unsigned         Level   : 24;",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2727,
+      "End": 2784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Obj_t_::// the level of this node\n    unsigned         nCuts   :  8;",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2784,
+      "End": 2847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Obj_t_::// unique ID of the node\n    union {                          // temporary store for user's data\n        void *       pData;\n        int          iData;\n        float        dData;\n    };",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2983,
+      "End": 3183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Obj_t_",
+      "Category": "struct-review",
+      "Symbol": "Aig_Obj_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2169,
+      "End": 3186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Man_t_::// the number of barrier buffers\n    // AIG node counters\n    int              nObjs[AIG_OBJ_VOID];",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4176,
+      "End": 4282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Man_t_::// mapping of AIG nodes into FRAIG nodes\n    void (*pImpFunc) (void*, void*);",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6120,
+      "End": 6202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Aig_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3207,
+      "End": 7298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_ManCut_t_::// memory manager for cuts\n    unsigned *      puTemp[4];",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_ManCut_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8766,
+      "End": 8831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::struct::Aig_ManCut_t_",
+      "Category": "struct-review",
+      "Symbol": "Aig_ManCut_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 8064,
+      "End": 8880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::mechanical::enum::1668",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1668,
+      "End": 1672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::mechanical::union::2205",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 2205,
+      "End": 2210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::mechanical::union::3025",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 3025,
+      "End": 3030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::mechanical::sizeof::21062",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 21062,
+      "End": 21068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::mechanical::sizeof::23394",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23394,
+      "End": 23400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::9496",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9496,
+      "End": 9508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::9629",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9629,
+      "End": 9642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::9644",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9644,
+      "End": 9652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::11061",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11061,
+      "End": 11074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::11180",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11180,
+      "End": 11193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::11299",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11299,
+      "End": 11312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::13217",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13217,
+      "End": 13230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::13336",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13336,
+      "End": 13349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::13455",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13455,
+      "End": 13468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::13606",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13606,
+      "End": 13619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::13768",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13768,
+      "End": 13781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::18626",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18626,
+      "End": 18639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::18843",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18843,
+      "End": 18856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::19060",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19060,
+      "End": 19073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::19277",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19277,
+      "End": 19290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::19765",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19765,
+      "End": 19778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::20048",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20048,
+      "End": 20061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::23321",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23321,
+      "End": 23334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::pointer-cast::23822",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23822,
+      "End": 23830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ObjForEachCut",
+      "Category": "macro-review",
+      "Symbol": "Aig_ObjForEachCut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9716,
+      "End": 9885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_CutForEachLeaf",
+      "Category": "macro-review",
+      "Symbol": "Aig_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9921,
+      "End": 10094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachCi",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 24125,
+      "End": 24263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachCiReverse",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachCiReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 24264,
+      "End": 24409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachCo",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachCo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 24453,
+      "End": 24591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachCoReverse",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachCoReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 24592,
+      "End": 24737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachObj",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 24804,
+      "End": 24973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachObjReverse",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachObjReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 24974,
+      "End": 25150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachObjVec",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 25214,
+      "End": 25396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachObjVecReverse",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachObjVecReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 25397,
+      "End": 25584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachNode",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 25613,
+      "End": 25806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachNodeReverse",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachNodeReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 25807,
+      "End": 26007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachExor",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachExor",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 26035,
+      "End": 26228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachExorReverse",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachExorReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 26229,
+      "End": 26429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ObjForEachFanout",
+      "Category": "macro-review",
+      "Symbol": "Aig_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 26846,
+      "End": 27162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachPiSeq",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachPiSeq",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 27421,
+      "End": 27597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachLoSeq",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachLoSeq",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 27633,
+      "End": 27810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachPoSeq",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachPoSeq",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 27848,
+      "End": 28024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachLiSeq",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachLiSeq",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 28059,
+      "End": 28236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::macro::Aig_ManForEachLiLoSeq",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachLiLoSeq",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 28282,
+      "End": 28495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjCuts",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8882,
+      "End": 9014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjSetCuts",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9015,
+      "End": 9147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_CutLeaveNum",
+      "Category": "semantic-review",
+      "Symbol": "Aig_CutLeaveNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9149,
+      "End": 9281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_CutLeaves",
+      "Category": "semantic-review",
+      "Symbol": "Aig_CutLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9282,
+      "End": 9414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_CutTruth",
+      "Category": "semantic-review",
+      "Symbol": "Aig_CutTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9415,
+      "End": 9547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_CutNext",
+      "Category": "semantic-review",
+      "Symbol": "Aig_CutNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9548,
+      "End": 9680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjCutSign",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjCutSign",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10316,
+      "End": 10440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_WordCountOnes",
+      "Category": "semantic-review",
+      "Symbol": "Aig_WordCountOnes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10441,
+      "End": 10803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_WordFindFirstBit",
+      "Category": "semantic-review",
+      "Symbol": "Aig_WordFindFirstBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10804,
+      "End": 10984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_Regular",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Regular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10986,
+      "End": 11104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_Not",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Not",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11105,
+      "End": 11223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_NotCond",
+      "Category": "semantic-review",
+      "Symbol": "Aig_NotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11224,
+      "End": 11342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_IsComplement",
+      "Category": "semantic-review",
+      "Symbol": "Aig_IsComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11343,
+      "End": 11461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManCiNum",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11463,
+      "End": 11581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManCoNum",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11582,
+      "End": 11700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManBufNum",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManBufNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11701,
+      "End": 11819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManAndNum",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManAndNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11820,
+      "End": 11938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManExorNum",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManExorNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11939,
+      "End": 12057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12058,
+      "End": 12182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManGetCost",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManGetCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12183,
+      "End": 12307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManObjNum",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManObjNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12308,
+      "End": 12426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManObjNumMax",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManObjNumMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12427,
+      "End": 12545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManRegNum",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRegNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12546,
+      "End": 12664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManConstrNum",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManConstrNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12665,
+      "End": 12783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManConst0",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12785,
+      "End": 12903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManConst1",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12904,
+      "End": 13022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManGhost",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManGhost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13023,
+      "End": 13141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManCi",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13142,
+      "End": 13260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManCo",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13261,
+      "End": 13379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManLo",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManLo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13380,
+      "End": 13530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManLi",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManLi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13531,
+      "End": 13681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManObj",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13682,
+      "End": 13817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjType",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13819,
+      "End": 13925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsNone",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsNone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13926,
+      "End": 14032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsConst1",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14033,
+      "End": 14172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsCi",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14173,
+      "End": 14279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsCo",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14280,
+      "End": 14386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsBuf",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsBuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14387,
+      "End": 14493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsAnd",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14494,
+      "End": 14600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsExor",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsExor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14601,
+      "End": 14707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsNode",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14708,
+      "End": 14843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsTerm",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsTerm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14844,
+      "End": 15009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsHash",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15010,
+      "End": 15175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsChoice",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15176,
+      "End": 15341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsCand",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsCand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15342,
+      "End": 15507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjCioId",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjCioId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15508,
+      "End": 15672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjId",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15673,
+      "End": 15779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsMarkA",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsMarkA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15781,
+      "End": 15872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjSetMarkA",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetMarkA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15873,
+      "End": 15964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjClearMarkA",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjClearMarkA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15965,
+      "End": 16056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjSetTravId",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetTravId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16059,
+      "End": 16200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjSetTravIdCurrent",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetTravIdCurrent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16201,
+      "End": 16342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjSetTravIdPrevious",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetTravIdPrevious",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16343,
+      "End": 16484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsTravIdCurrent",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsTravIdCurrent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16485,
+      "End": 16626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjIsTravIdPrevious",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjIsTravIdPrevious",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16627,
+      "End": 16768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjPhase",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16770,
+      "End": 16886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjPhaseReal",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjPhaseReal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16887,
+      "End": 17054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjRefs",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17055,
+      "End": 17171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjRef",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17172,
+      "End": 17288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjDeref",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17289,
+      "End": 17405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjClearRef",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjClearRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17406,
+      "End": 17522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjFaninId0",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFaninId0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17523,
+      "End": 17651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjFaninId1",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFaninId1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17652,
+      "End": 17780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjFaninC0",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFaninC0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17781,
+      "End": 17897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjFaninC1",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFaninC1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17898,
+      "End": 18014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjFanin0",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFanin0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18015,
+      "End": 18131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjFanin1",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFanin1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18132,
+      "End": 18248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjChild0",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18249,
+      "End": 18365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjChild1",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18366,
+      "End": 18482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjChild0Copy",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild0Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18483,
+      "End": 18699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjChild1Copy",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild1Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18700,
+      "End": 18916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjChild0Next",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild0Next",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18917,
+      "End": 19133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjChild1Next",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild1Next",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19134,
+      "End": 19350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjChild0Flip",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild0Flip",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19351,
+      "End": 19502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjChild1Flip",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjChild1Flip",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19503,
+      "End": 19654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjCopy",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19655,
+      "End": 19806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjSetCopy",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19808,
+      "End": 19959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjRealCopy",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjRealCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19961,
+      "End": 20112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjToLit",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjToLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20113,
+      "End": 20264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjFromLit",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFromLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20265,
+      "End": 20416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjLevel",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20417,
+      "End": 20568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjLevelNew",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjLevelNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20569,
+      "End": 20824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjSetLevel",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20825,
+      "End": 20976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjClean",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20977,
+      "End": 21144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjFanout0",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFanout0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21145,
+      "End": 21327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjEquiv",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjEquiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21329,
+      "End": 21468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjSetEquiv",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetEquiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21470,
+      "End": 21635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjRepr",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21636,
+      "End": 21775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjSetRepr",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjSetRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21777,
+      "End": 21959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjWhatFanin",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjWhatFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21961,
+      "End": 22184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjFanoutC",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFanoutC",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22185,
+      "End": 22447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjCreateGhost",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjCreateGhost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22485,
+      "End": 23129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManFetchMemory",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManFetchMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23158,
+      "End": 23510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ManRecycleMemory",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRecycleMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23511,
+      "End": 23860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjFanout0Int",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFanout0Int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26501,
+      "End": 26658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::Aig_ObjFanoutNext",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjFanoutNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26659,
+      "End": 26816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aig.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 47543
+    }
+  ],
+  "Draft": "package aig\n\n/**CFile****************************************************************\n\n  FileName    [aig.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aig.h,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n//#include \"misc/util/utilCex.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Aig_Man_t =            Aig_Man_t_;\ntype Aig_Obj_t =            Aig_Obj_t_;\ntype Aig_MmFixed_t =        Aig_MmFixed_t_;    \ntype Aig_MmFlex_t =         Aig_MmFlex_t_;     \ntype Aig_MmStep_t =         Aig_MmStep_t_;     \n\n// object types\n type Aig_Type_t int32\nconst ( \n    AIG_OBJ_NONE Aig_Type_t = iota\n                    // 0: non-existent object\n    AIG_OBJ_CONST1\n                  // 1: constant 1 \n    AIG_OBJ_CI\n                      // 2: combinational input\n    AIG_OBJ_CO\n                      // 3: combinational output\n    AIG_OBJ_BUF\n                     // 4: buffer node\n    AIG_OBJ_AND\n                     // 5: AND node\n    AIG_OBJ_EXOR\n                    // 6: EXOR node\n    AIG_OBJ_VOID                     // 7: unused object\n\n)\n\n \n\n// the AIG node\ntype Aig_Obj_t_ struct {  // 8 words\n\n    union {                         \n        Aig_Obj_t *  pNext;          // strashing table\n        int          CioId;          // 0-based number of CI/CO\n    };\n    pFanin0       *Aig_Obj_t;        // fanin\n    pFanin1       *Aig_Obj_t;        // fanin\n    Type uint32; /* C bitfield: 3 bits; review packing and truncation */   // object type\n    fPhase uint32; /* C bitfield: 1 bits; review packing and truncation */   // value under 000...0 pattern\n    fMarkA uint32; /* C bitfield: 1 bits; review packing and truncation */   // multipurpose mask\n    fMarkB uint32; /* C bitfield: 1 bits; review packing and truncation */   // multipurpose mask\n    nRefs uint32; /* C bitfield: 26 bits; review packing and truncation */   // reference count \n    Level uint32; /* C bitfield: 24 bits; review packing and truncation */   // the level of this node\n    nCuts uint32; /* C bitfield: 8 bits; review packing and truncation */   // the number of cuts\n    TravId              int32;         // unique ID of last traversal involving the node\n    Id              int32;             // unique ID of the node\n    union {                          // temporary store for user's data\n        void *       pData;\n        int          iData;\n        float        dData;\n    };\n}\n\n// the AIG manager\ntype Aig_Man_t_ struct {\n    pName            string;          // the design name\n    pSpec            string;          // the input file name\n    // AIG nodes\n    vCis       *Vec_Ptr_t;           // the array of PIs\n    vCos       *Vec_Ptr_t;           // the array of POs\n    vObjs       *Vec_Ptr_t;          // the array of all nodes (optional)\n    vBufs       *Vec_Ptr_t;          // the array of buffers\n    pConst1       *Aig_Obj_t;        // the constant 1 node\n    Ghost        Aig_Obj_t;          // the ghost node\n    nRegs              int32;          // the number of registers (registers are last POs)\n    nTruePis              int32;       // the number of true primary inputs\n    nTruePos              int32;       // the number of true primary outputs\n    nAsserts              int32;       // the number of asserts among POs (asserts are first POs)\n    nConstrs              int32;       // the number of constraints (model checking only)\n    nBarBufs              int32;       // the number of barrier buffers\n    // AIG node counters\n    nObjs [AIG_OBJ_VOID]int32;// the number of objects by type\n    nDeleted              int32;       // the number of deleted objects\n    // structural hash table\n    pTable      **Aig_Obj_t;         // structural hash table\n    nTableSize              int32;     // structural hash table size\n    // representation of fanouts\n    pFanData             *int32;       // the database to store fanout information\n    nFansAlloc              int32;     // the size of fanout representation\n    vLevels       *Vec_Vec_t;        // used to update timing information\n    nBufReplaces              int32;   // the number of times replacement led to a buffer\n    nBufFixes              int32;      // the number of times buffers were propagated\n    nBufMax              int32;        // the maximum number of buffers during computation\n    // topological order\n    pOrderData        *uint32;\n    nOrderAlloc              int32;\n    iPrev              int32;\n    iNext              int32;\n    nAndTotal              int32;\n    nAndPrev              int32;\n    // representatives\n    pEquivs      **Aig_Obj_t;        // linked list of equivalent nodes (when choices are used)\n    pReprs      **Aig_Obj_t;         // representatives of each node\n    nReprsAlloc              int32;    // the number of allocated representatives\n    // various data members\n    pMemObjs   *Aig_MmFixed_t;       // memory manager for objects\n    vLevelR       *Vec_Int_t;        // the reverse level of the nodes\n    nLevelMax              int32;      // maximum number of levels\n    pData            any;          // the temporary data\n    pData2            any;         // the temporary data\n    nTravIds              int32;       // the current traversal ID\n    fCatchExor              int32;     // enables EXOR nodes\n    fAddStrash              int32;     // performs additional strashing\n    pObjCopies      **Aig_Obj_t;     // mapping of AIG nodes into FRAIG nodes\n    void (*pImpFunc) (void*, void*); // implication checking precedure\n    pImpData            any;       // implication checking data\n    pManTime            any;       // the timing manager\n    pManCuts            any;\n    pFastSim             *int32; \n    pTerSimData        *uint32;    // ternary simulation data\n    vMapped       *Vec_Ptr_t;\n    vFlopNums       *Vec_Int_t;      \n    vFlopReprs       *Vec_Int_t;      \n    pSeqModel       *Abc_Cex_t;\n    vSeqModelVec       *Vec_Ptr_t;   // vector of counter-examples (for sequential miters)\n    pManExdc       *Aig_Man_t;\n    vOnehots       *Vec_Ptr_t;\n    fCreatePios              int32;\n    vEquPairs       *Vec_Int_t;   \n    vClockDoms       *Vec_Vec_t; \n    vProbs       *Vec_Int_t;         // probability of node being 1 \n    vCiNumsOrig       *Vec_Int_t;    // original CI names\n    nComplEdges              int32;    // complemented edges\n    Time2Quit          abctime;\n    // timing statistics\n    time1          abctime;\n    time2          abctime;\n  //-- jlong -- begin\n  unfold2_type_I       *Vec_Ptr_t;\n  unfold2_type_II       *Vec_Ptr_t;\n  //-- jlong -- end\n}\n\n// cut computation\ntype Aig_ManCut_t =         Aig_ManCut_t_;\n              \n\n// the cut used to represent node in the AIG\ntype Aig_Cut_t struct {\n    pNext      *Aig_Cut_t;           // the next cut in the table \n    Cost             int32;            // the cost of the cut\n    uSign        uint32;           // cut signature\n    iNode             int32;           // the node, for which it is the cut\n    nCutSize           int16;        // the number of bytes in the cut\n    nLeafMax            byte;        // the maximum number of fanins\n    nFanins            byte;         // the current number of fanins\n    pFanins [0]int32;      // the fanins (followed by the truth table)\n}\n\n// the CNF computation manager\ntype Aig_ManCut_t_ struct {\n    // AIG manager\n    pAig      *Aig_Man_t;            // the input AIG manager\n    pCuts     **Aig_Cut_t;           // the cuts for each node in the output manager\n    // parameters\n    nCutsMax             int32;        // the max number of cuts at the node\n    nLeafMax             int32;        // the max number of leaves of a cut\n    fTruth             int32;          // enables truth table computation\n    fVerbose             int32;        // enables verbose output\n    // internal variables\n    nCutSize             int32;        // the number of bytes needed to store one cut\n    nTruthWords             int32;     // the number of truth table words\n    pMemCuts  *Aig_MmFixed_t;        // memory manager for cuts\n    puTemp [4]*uint32;       // used for the truth table computation\n}\n\nfunc Aig_ObjCuts(p *Aig_ManCut_t, pObj *Aig_Obj_t) *Aig_Cut_t { return p.pCuts[pObj.Id];  }\nfunc Aig_ObjSetCuts(p *Aig_ManCut_t, pObj *Aig_Obj_t, pCuts *Aig_Cut_t) { p.pCuts[pObj.Id] = pCuts; }\n\nfunc Aig_CutLeaveNum(pCut *Aig_Cut_t) int32 { return pCut.nFanins;                                    }\nfunc Aig_CutLeaves(pCut *Aig_Cut_t) *int32 { return pCut.pFanins;                                    }\nfunc Aig_CutTruth(pCut *Aig_Cut_t) *uint32 { return (unsigned *)(pCut.pFanins + pCut.nLeafMax);     }\nfunc Aig_CutNext(pCut *Aig_Cut_t) *Aig_Cut_t { return (Aig_Cut_t *)(((char *)pCut) + pCut.nCutSize);   }\n\n// iterator over cuts of the node\n// Original macro:\n// #define Aig_ObjForEachCut( p, pObj, pCut, i )                           \\\n//     for ( i = 0, pCut = Aig_ObjCuts(p, pObj); i \u003c p-\u003enCutsMax; i++, pCut = Aig_CutNext(pCut) ) \n\n// iterator over leaves of the cut\n// Original macro:\n// #define Aig_CutForEachLeaf( p, pCut, pLeaf, i )                         \\\n//     for ( i = 0; (i \u003c (int)(pCut)-\u003enFanins) \u0026\u0026 ((pLeaf) = Aig_ManObj(p, (pCut)-\u003epFanins[i])); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Aig_ObjCutSign(ObjId uint32) uint32 { return (1 \u003c\u003c (ObjId \u0026 31));                            }\nfunc Aig_WordCountOnes(uWord uint32) int32 {\n    uWord = (uWord \u0026 0x55555555) + ((uWord\u003e\u003e1) \u0026 0x55555555);\n    uWord = (uWord \u0026 0x33333333) + ((uWord\u003e\u003e2) \u0026 0x33333333);\n    uWord = (uWord \u0026 0x0F0F0F0F) + ((uWord\u003e\u003e4) \u0026 0x0F0F0F0F);\n    uWord = (uWord \u0026 0x00FF00FF) + ((uWord\u003e\u003e8) \u0026 0x00FF00FF);\n    return  (uWord \u0026 0x0000FFFF) + (uWord\u003e\u003e16);\n}\nfunc Aig_WordFindFirstBit(uWord uint32) int32 {\n    var i int32;\n    for  i = 0; i \u003c 32; i++  {\n        if uWord \u0026 (1 \u003c\u003c i) {\n            return i; }\n    }\n    return -1;\n}\n\nfunc Aig_Regular(p *Aig_Obj_t) *Aig_Obj_t { return (Aig_Obj_t *)((ABC_PTRUINT_T)(p) \u0026 ~01);  }\nfunc Aig_Not(p *Aig_Obj_t) *Aig_Obj_t { return (Aig_Obj_t *)((ABC_PTRUINT_T)(p) ^  01);  }\nfunc Aig_NotCond(p *Aig_Obj_t, c int32) *Aig_Obj_t { return (Aig_Obj_t *)((ABC_PTRUINT_T)(p) ^ (c));  }\nfunc Aig_IsComplement(p *Aig_Obj_t) int32 { return int32(((ABC_PTRUINT_T)(p) \u0026 01));           }\n\nfunc Aig_ManCiNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_CI];                     }\nfunc Aig_ManCoNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_CO];                     }\nfunc Aig_ManBufNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_BUF];                    }\nfunc Aig_ManAndNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_AND];                    }\nfunc Aig_ManExorNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_EXOR];                   }\nfunc Aig_ManNodeNum(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_AND]+p.nObjs[AIG_OBJ_EXOR];   }\nfunc Aig_ManGetCost(p *Aig_Man_t) int32 { return p.nObjs[AIG_OBJ_AND]+3*p.nObjs[AIG_OBJ_EXOR]; }\nfunc Aig_ManObjNum(p *Aig_Man_t) int32 { return Vec_PtrSize(p.vObjs) - p.nDeleted;      }\nfunc Aig_ManObjNumMax(p *Aig_Man_t) int32 { return Vec_PtrSize(p.vObjs);                    }\nfunc Aig_ManRegNum(p *Aig_Man_t) int32 { return p.nRegs;                                 }\nfunc Aig_ManConstrNum(p *Aig_Man_t) int32 { return p.nConstrs;                              }\n\nfunc Aig_ManConst0(p *Aig_Man_t) *Aig_Obj_t { return Aig_Not(p.pConst1);                      }\nfunc Aig_ManConst1(p *Aig_Man_t) *Aig_Obj_t { return p.pConst1;                               }\nfunc Aig_ManGhost(p *Aig_Man_t) *Aig_Obj_t { return \u0026p.Ghost;                                }\nfunc Aig_ManCi(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i);    }\nfunc Aig_ManCo(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i);    }\nfunc Aig_ManLo(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCis, Aig_ManCiNum(p)-Aig_ManRegNum(p)+i);   }\nfunc Aig_ManLi(p *Aig_Man_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrEntry(p.vCos, Aig_ManCoNum(p)-Aig_ManRegNum(p)+i);   }\nfunc Aig_ManObj(p *Aig_Man_t, i int32) *Aig_Obj_t { if p.vObjs {\n    return (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i);\n} else {\n    return nil;\n}  }\n\nfunc Aig_ObjType(pObj *Aig_Obj_t) Aig_Type_t { return (Aig_Type_t)pObj.Type;       }\nfunc Aig_ObjIsNone(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_NONE;   }\nfunc Aig_ObjIsConst1(pObj *Aig_Obj_t) int32 { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); return pObj.Type == AIG_OBJ_CONST1; }\nfunc Aig_ObjIsCi(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_CI;     }\nfunc Aig_ObjIsCo(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_CO;     }\nfunc Aig_ObjIsBuf(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_BUF;    }\nfunc Aig_ObjIsAnd(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_AND;    }\nfunc Aig_ObjIsExor(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_EXOR;   }\nfunc Aig_ObjIsNode(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_AND || pObj.Type == AIG_OBJ_EXOR;   }\nfunc Aig_ObjIsTerm(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_CI  || pObj.Type == AIG_OBJ_CO || pObj.Type == AIG_OBJ_CONST1;   }\nfunc Aig_ObjIsHash(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_AND || pObj.Type == AIG_OBJ_EXOR;                                 }\nfunc Aig_ObjIsChoice(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return p.pEquivs \u0026\u0026 p.pEquivs[pObj.Id] \u0026\u0026 pObj.nRefs \u003e 0;                    }\nfunc Aig_ObjIsCand(pObj *Aig_Obj_t) int32 { return pObj.Type == AIG_OBJ_CI || pObj.Type == AIG_OBJ_AND || pObj.Type == AIG_OBJ_EXOR;     }\nfunc Aig_ObjCioId(pObj *Aig_Obj_t) int32 { assert(!(Aig_ObjIsNode(pObj) != 0), \"!Aig_ObjIsNode(pObj)\"); return pObj.CioId;                                            }\nfunc Aig_ObjId(pObj *Aig_Obj_t) int32 { return pObj.Id;                     }\n\nfunc Aig_ObjIsMarkA(pObj *Aig_Obj_t) int32 { return pObj.fMarkA;  }\nfunc Aig_ObjSetMarkA(pObj *Aig_Obj_t) { pObj.fMarkA = 1;     }\nfunc Aig_ObjClearMarkA(pObj *Aig_Obj_t) { pObj.fMarkA = 0;     }\n \nfunc Aig_ObjSetTravId(pObj *Aig_Obj_t, TravId int32) { pObj.TravId = TravId;                         }\nfunc Aig_ObjSetTravIdCurrent(p *Aig_Man_t, pObj *Aig_Obj_t) { pObj.TravId = p.nTravIds;                    }\nfunc Aig_ObjSetTravIdPrevious(p *Aig_Man_t, pObj *Aig_Obj_t) { pObj.TravId = p.nTravIds - 1;                }\nfunc Aig_ObjIsTravIdCurrent(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return int32((pObj.TravId == p.nTravIds));     }\nfunc Aig_ObjIsTravIdPrevious(p *Aig_Man_t, pObj *Aig_Obj_t) int32 { return int32((pObj.TravId == p.nTravIds - 1)); }\n\nfunc Aig_ObjPhase(pObj *Aig_Obj_t) int32 { return pObj.fPhase;                           }\nfunc Aig_ObjPhaseReal(pObj *Aig_Obj_t) int32 { if pObj != nil {\n    return Aig_Regular(pObj).fPhase ^ Aig_IsComplement(pObj);\n} else {\n    return 1;\n}                              }\nfunc Aig_ObjRefs(pObj *Aig_Obj_t) int32 { return pObj.nRefs;                            }\nfunc Aig_ObjRef(pObj *Aig_Obj_t) { pObj.nRefs++;                                 }\nfunc Aig_ObjDeref(pObj *Aig_Obj_t) { assert(pObj.nRefs \u003e 0, \"pObj.nRefs \u003e 0\"); pObj.nRefs--;      }\nfunc Aig_ObjClearRef(pObj *Aig_Obj_t) { pObj.nRefs = 0;                               }\nfunc Aig_ObjFaninId0(pObj *Aig_Obj_t) int32 { if pObj.pFanin0 {\n    return Aig_Regular(pObj.pFanin0).Id;\n} else {\n    return -1;\n} }\nfunc Aig_ObjFaninId1(pObj *Aig_Obj_t) int32 { if pObj.pFanin1 {\n    return Aig_Regular(pObj.pFanin1).Id;\n} else {\n    return -1;\n} }\nfunc Aig_ObjFaninC0(pObj *Aig_Obj_t) int32 { return Aig_IsComplement(pObj.pFanin0);        }\nfunc Aig_ObjFaninC1(pObj *Aig_Obj_t) int32 { return Aig_IsComplement(pObj.pFanin1);        }\nfunc Aig_ObjFanin0(pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_Regular(pObj.pFanin0);             }\nfunc Aig_ObjFanin1(pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_Regular(pObj.pFanin1);             }\nfunc Aig_ObjChild0(pObj *Aig_Obj_t) *Aig_Obj_t { return pObj.pFanin0;                          }\nfunc Aig_ObjChild1(pObj *Aig_Obj_t) *Aig_Obj_t { return pObj.pFanin1;                          }\nfunc Aig_ObjChild0Copy(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) != nil {\n    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj).pData, Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }\nfunc Aig_ObjChild1Copy(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) != nil {\n    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin1(pObj).pData, Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }\nfunc Aig_ObjChild0Next(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) != nil {\n    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pObj).pNext, Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }\nfunc Aig_ObjChild1Next(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) != nil {\n    return Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin1(pObj).pNext, Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }\nfunc Aig_ObjChild0Flip(pObj *Aig_Obj_t) { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); pObj.pFanin0 = Aig_Not(pObj.pFanin0);        }\nfunc Aig_ObjChild1Flip(pObj *Aig_Obj_t) { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); pObj.pFanin1 = Aig_Not(pObj.pFanin1);        }\nfunc Aig_ObjCopy(pObj *Aig_Obj_t) *Aig_Obj_t { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); return (Aig_Obj_t *)pObj.pData;               } \nfunc Aig_ObjSetCopy(pObj *Aig_Obj_t, pCopy *Aig_Obj_t) {  assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); pObj.pData = pCopy;       } \nfunc Aig_ObjRealCopy(pObj *Aig_Obj_t) *Aig_Obj_t { return Aig_NotCond((Aig_Obj_t *)Aig_Regular(pObj).pData, Aig_IsComplement(pObj));}\nfunc Aig_ObjToLit(pObj *Aig_Obj_t) int32 { return Abc_Var2Lit( Aig_ObjId(Aig_Regular(pObj)), Aig_IsComplement(pObj) );       }\nfunc Aig_ObjFromLit(p *Aig_Man_t, iLit int32) *Aig_Obj_t { return Aig_NotCond( Aig_ManObj(p, Abc_Lit2Var(iLit)), Abc_LitIsCompl(iLit) );     }\nfunc Aig_ObjLevel(pObj *Aig_Obj_t) int32 { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); return pObj.Level;                            }\nfunc Aig_ObjLevelNew(pObj *Aig_Obj_t) int32 { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) != nil {\n    return 1 + Aig_ObjIsExor(pObj) + Abc_MaxInt(Aig_ObjFanin0(pObj).Level, Aig_ObjFanin1(pObj).Level);\n} else {\n    return Aig_ObjFanin0(pObj).Level;\n} }\nfunc Aig_ObjSetLevel(pObj *Aig_Obj_t, i int32) int32 { assert(!(Aig_IsComplement(pObj) != 0), \"!Aig_IsComplement(pObj)\"); return pObj.Level = i;                    }\nfunc Aig_ObjClean(pObj *Aig_Obj_t) { *pObj = Aig_Obj_t{};                                                             }\nfunc Aig_ObjFanout0(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { assert(p.pFanData \u0026\u0026 pObj.Id \u003c p.nFansAlloc, \"p.pFanData \u0026\u0026 pObj.Id \u003c p.nFansAlloc\"); return Aig_ManObj(p, p.pFanData[5*pObj.Id] \u003e\u003e 1); } \nfunc Aig_ObjEquiv(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { if p.pEquivs {\n    return p.pEquivs[pObj.Id];\n} else {\n    return nil;\n}           } \nfunc Aig_ObjSetEquiv(p *Aig_Man_t, pObj *Aig_Obj_t, pEqu *Aig_Obj_t) { assert(p.pEquivs, \"p.pEquivs\"); p.pEquivs[pObj.Id] = pEqu;                  }\nfunc Aig_ObjRepr(p *Aig_Man_t, pObj *Aig_Obj_t) *Aig_Obj_t { if p.pReprs {\n    return p.pReprs[pObj.Id];\n} else {\n    return nil;\n}             } \nfunc Aig_ObjSetRepr(p *Aig_Man_t, pObj *Aig_Obj_t, pRepr *Aig_Obj_t) { assert(p.pReprs, \"p.pReprs\"); p.pReprs[pObj.Id] = pRepr;                                } \nfunc Aig_ObjWhatFanin(pObj *Aig_Obj_t, pFanin *Aig_Obj_t) int32 { \n    if Aig_ObjFanin0(pObj) == pFanin { return 0; } \n    if Aig_ObjFanin1(pObj) == pFanin { return 1; } \n    assert(false, \"0\"); return -1; \n}\nfunc Aig_ObjFanoutC(pObj *Aig_Obj_t, pFanout *Aig_Obj_t) int32 { \n    if Aig_ObjFanin0(pFanout) == pObj { return Aig_ObjFaninC0(pObj); } \n    if Aig_ObjFanin1(pFanout) == pObj { return Aig_ObjFaninC1(pObj); } \n    assert(false, \"0\"); return -1; \n}\n\n// create the ghost of the new node\nfunc Aig_ObjCreateGhost(p *Aig_Man_t, p0 *Aig_Obj_t, p1 *Aig_Obj_t, Type Aig_Type_t) *Aig_Obj_t {\n    var pGhost *Aig_Obj_t;\n    assert(Type != AIG_OBJ_AND || !(Aig_ObjIsConst1(Aig_Regular(p0)) != 0), \"Type != AIG_OBJ_AND || !Aig_ObjIsConst1(Aig_Regular(p0))\");\n    assert(p1 == nil || !(Aig_ObjIsConst1(Aig_Regular(p1)) != 0), \"p1 == nil || !Aig_ObjIsConst1(Aig_Regular(p1))\");\n    assert(Type == AIG_OBJ_CI || Aig_Regular(p0) != Aig_Regular(p1), \"Type == AIG_OBJ_CI || Aig_Regular(p0) != Aig_Regular(p1)\");\n    pGhost = Aig_ManGhost(p);\n    pGhost.Type = Type;\n    if p1 == nil || Aig_Regular(p0).Id \u003c Aig_Regular(p1).Id {\n        pGhost.pFanin0 = p0;\n        pGhost.pFanin1 = p1;\n    \n    } else {\n        pGhost.pFanin0 = p1;\n        pGhost.pFanin1 = p0;\n    }\n    return pGhost;\n}\n\n// internal memory manager\nfunc Aig_ManFetchMemory(p *Aig_Man_t) *Aig_Obj_t {\n    extern char * Aig_MmFixedEntryFetch( Aig_MmFixed_t * p );\n    var pTemp *Aig_Obj_t;\n    pTemp = (Aig_Obj_t *)Aig_MmFixedEntryFetch( p.pMemObjs );\n    *pTemp = Aig_Obj_t{}; \n    pTemp.Id = Vec_PtrSize(p.vObjs);\n    Vec_PtrPush( p.vObjs, pTemp );\n    return pTemp;\n}\nfunc Aig_ManRecycleMemory(p *Aig_Man_t, pEntry *Aig_Obj_t) {\n    extern void Aig_MmFixedEntryRecycle( Aig_MmFixed_t * p, char * pEntry );\n    assert(pEntry.nRefs == 0, \"pEntry.nRefs == 0\");\n    pEntry.Type = AIG_OBJ_NONE; // distinquishes a dead node from a live node\n    Aig_MmFixedEntryRecycle( p.pMemObjs, (char *)pEntry );\n    p.nDeleted++;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                             ITERATORS                            ///\n////////////////////////////////////////////////////////////////////////\n\n// iterator over the combinational inputs\n// Original macro:\n// #define Aig_ManForEachCi( p, pObj, i )                                          \\\n//     Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evCis, pObj, i )\n\n// Original macro:\n// #define Aig_ManForEachCiReverse( p, pObj, i )                                   \\\n//     Vec_PtrForEachEntryReverse( Aig_Obj_t *, p-\u003evCis, pObj, i )\n\n// iterator over the combinational outputs\n// Original macro:\n// #define Aig_ManForEachCo( p, pObj, i )                                          \\\n//     Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evCos, pObj, i )\n\n// Original macro:\n// #define Aig_ManForEachCoReverse( p, pObj, i )                                   \\\n//     Vec_PtrForEachEntryReverse( Aig_Obj_t *, p-\u003evCos, pObj, i )\n\n// iterators over all objects, including those currently not used\n// Original macro:\n// #define Aig_ManForEachObj( p, pObj, i )                                         \\\n//     Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evObjs, pObj, i ) if ( (pObj) == NULL ) {} else\n\n// Original macro:\n// #define Aig_ManForEachObjReverse( p, pObj, i )                                  \\\n//     Vec_PtrForEachEntryReverse( Aig_Obj_t *, p-\u003evObjs, pObj, i ) if ( (pObj) == NULL ) {} else\n\n// iterators over the objects whose IDs are stored in an array\n// Original macro:\n// #define Aig_ManForEachObjVec( vIds, p, pObj, i )                                \\\n//     for ( i = 0; i \u003c Vec_IntSize(vIds) \u0026\u0026 (((pObj) = Aig_ManObj(p, Vec_IntEntry(vIds,i))), 1); i++ )\n\n// Original macro:\n// #define Aig_ManForEachObjVecReverse( vIds, p, pObj, i )                         \\\n//     for ( i = Vec_IntSize(vIds) - 1; i \u003e= 0 \u0026\u0026 (((pObj) = Aig_ManObj(p, Vec_IntEntry(vIds,i))), 1); i-- )\n\n// iterators over all nodes\n// Original macro:\n// #define Aig_ManForEachNode( p, pObj, i )                                        \\\n//     Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evObjs, pObj, i ) if ( (pObj) == NULL || !Aig_ObjIsNode(pObj) ) {} else\n\n// Original macro:\n// #define Aig_ManForEachNodeReverse( p, pObj, i )                                 \\\n//     Vec_PtrForEachEntryReverse( Aig_Obj_t *, p-\u003evObjs, pObj, i ) if ( (pObj) == NULL || !Aig_ObjIsNode(pObj) ) {} else\n\n// iterator over all nodes\n// Original macro:\n// #define Aig_ManForEachExor( p, pObj, i )                                        \\\n//     Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evObjs, pObj, i ) if ( (pObj) == NULL || !Aig_ObjIsExor(pObj) ) {} else\n\n// Original macro:\n// #define Aig_ManForEachExorReverse( p, pObj, i )                                 \\\n//     Vec_PtrForEachEntryReverse( Aig_Obj_t *, p-\u003evObjs, pObj, i ) if ( (pObj) == NULL || !Aig_ObjIsExor(pObj) ) {} else\n\n\n// these two procedures are only here for the use inside the iterator\nfunc Aig_ObjFanout0Int(p *Aig_Man_t, ObjId int32) int32 { assert(ObjId \u003c p.nFansAlloc, \"ObjId \u003c p.nFansAlloc\");  return p.pFanData[5*ObjId];                         }\nfunc Aig_ObjFanoutNext(p *Aig_Man_t, iFan int32) int32 { assert(iFan/2 \u003c p.nFansAlloc, \"iFan/2 \u003c p.nFansAlloc\"); return p.pFanData[5*(iFan \u003e\u003e 1) + 3 + (iFan \u0026 1)];  }\n// iterator over the fanouts\n// Original macro:\n// #define Aig_ObjForEachFanout( p, pObj, pFanout, iFan, i )                       \\\n//     for ( assert(p-\u003epFanData), i = 0; (i \u003c (int)(pObj)-\u003enRefs) \u0026\u0026               \\\n//           (((iFan) = i? Aig_ObjFanoutNext(p, iFan) : Aig_ObjFanout0Int(p, pObj-\u003eId)), 1) \u0026\u0026 \\\n//           (((pFanout) = Aig_ManObj(p, iFan\u003e\u003e1)), 1); i++ )\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     SEQUENTIAL ITERATORS                         ///\n////////////////////////////////////////////////////////////////////////\n\n// iterator over the primary inputs\n// Original macro:\n// #define Aig_ManForEachPiSeq( p, pObj, i )                                       \\\n//     Vec_PtrForEachEntryStop( Aig_Obj_t *, p-\u003evCis, pObj, i, Aig_ManCiNum(p)-Aig_ManRegNum(p) )\n\n// iterator over the latch outputs\n// Original macro:\n// #define Aig_ManForEachLoSeq( p, pObj, i )                                       \\\n//     Vec_PtrForEachEntryStart( Aig_Obj_t *, p-\u003evCis, pObj, i, Aig_ManCiNum(p)-Aig_ManRegNum(p) )\n\n// iterator over the primary outputs\n// Original macro:\n// #define Aig_ManForEachPoSeq( p, pObj, i )                                       \\\n//     Vec_PtrForEachEntryStop( Aig_Obj_t *, p-\u003evCos, pObj, i, Aig_ManCoNum(p)-Aig_ManRegNum(p) )\n\n// iterator over the latch inputs\n// Original macro:\n// #define Aig_ManForEachLiSeq( p, pObj, i )                                       \\\n//     Vec_PtrForEachEntryStart( Aig_Obj_t *, p-\u003evCos, pObj, i, Aig_ManCoNum(p)-Aig_ManRegNum(p) )\n\n// iterator over the latch input and outputs\n// Original macro:\n// #define Aig_ManForEachLiLoSeq( p, pObjLi, pObjLo, k )                           \\\n//     for ( k = 0; (k \u003c Aig_ManRegNum(p)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p, k)), 1)    \\\n//         \u0026\u0026 (((pObjLo)=Aig_ManLo(p, k)), 1); k++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== aigCheck.c ========================================================*/\nextern ABC_DLL int     Aig_ManCheck( Aig_Man_t * p );\n// extern void            Aig_ManCheckMarkA( Aig_Man_t * p );\n\n// extern void            Aig_ManCheckPhase( Aig_Man_t * p );\n\n/*=== aigCuts.c ========================================================*/\n// extern Aig_ManCut_t *  Aig_ComputeCuts( Aig_Man_t * pAig, int nCutsMax, int nLeafMax, int fTruth, int fVerbose );\n\n// extern void            Aig_ManCutStop( Aig_ManCut_t * p );\n\n/*=== aigDfs.c ==========================================================*/\n// extern int             Aig_ManVerifyTopoOrder( Aig_Man_t * p );\n\n// extern Vec_Ptr_t *     Aig_ManDfs( Aig_Man_t * p, int fNodesOnly );\n\n// extern Vec_Ptr_t *     Aig_ManDfsAll( Aig_Man_t * p );\n\n// extern Vec_Ptr_t *     Aig_ManDfsPreorder( Aig_Man_t * p, int fNodesOnly );\n\n// extern Vec_Vec_t *     Aig_ManLevelize( Aig_Man_t * p );\n\n// extern Vec_Ptr_t *     Aig_ManDfsNodes( Aig_Man_t * p, Aig_Obj_t ** ppNodes, int nNodes );\n\n// extern Vec_Ptr_t *     Aig_ManDfsChoices( Aig_Man_t * p );\n\n// extern Vec_Ptr_t *     Aig_ManDfsReverse( Aig_Man_t * p );\n\n// extern int             Aig_ManLevelNum( Aig_Man_t * p );\n\n// extern int             Aig_ManChoiceLevel( Aig_Man_t * p );\n\n// extern int             Aig_DagSize( Aig_Obj_t * pObj );\n\n// extern int             Aig_SupportSize( Aig_Man_t * p, Aig_Obj_t * pObj );\n\n// extern Vec_Ptr_t *     Aig_Support( Aig_Man_t * p, Aig_Obj_t * pObj );\n\n// extern void            Aig_SupportNodes( Aig_Man_t * p, Aig_Obj_t ** ppObjs, int nObjs, Vec_Ptr_t * vSupp );\n\n// extern void            Aig_ConeUnmark_rec( Aig_Obj_t * pObj );\n\n// extern Aig_Obj_t *     Aig_Transfer( Aig_Man_t * pSour, Aig_Man_t * pDest, Aig_Obj_t * pObj, int nVars );\n\n// extern Aig_Obj_t *     Aig_Compose( Aig_Man_t * p, Aig_Obj_t * pRoot, Aig_Obj_t * pFunc, int iVar );\n\n// extern void            Aig_ObjCollectCut( Aig_Obj_t * pRoot, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vNodes );\n\n// extern int             Aig_ObjCollectSuper( Aig_Obj_t * pObj, Vec_Ptr_t * vSuper );\n\n/*=== aigDup.c ==========================================================*/\n// extern Aig_Obj_t *     Aig_ManDupSimpleDfs_rec( Aig_Man_t * pNew, Aig_Man_t * p, Aig_Obj_t * pObj );\n\n// extern Aig_Man_t *     Aig_ManDupSimple( Aig_Man_t * p );\n\n// extern Aig_Man_t *     Aig_ManDupSimpleWithHints( Aig_Man_t * p, Vec_Int_t * vHints );\n\n// extern Aig_Man_t *     Aig_ManDupSimpleDfs( Aig_Man_t * p );\n\n// extern Aig_Man_t *     Aig_ManDupSimpleDfsPart( Aig_Man_t * p, Vec_Ptr_t * vPis, Vec_Ptr_t * vCos );\n\n// extern Aig_Man_t *     Aig_ManDupOrdered( Aig_Man_t * p );\n\n// extern Aig_Man_t *     Aig_ManDupCof( Aig_Man_t * p, int iInput, int Value );\n\n// extern Aig_Man_t *     Aig_ManDupTrim( Aig_Man_t * p );\n\n// extern Aig_Man_t *     Aig_ManDupExor( Aig_Man_t * p );\n\n// extern Aig_Man_t *     Aig_ManDupDfs( Aig_Man_t * p );\n\n// extern Vec_Ptr_t *     Aig_ManOrderPios( Aig_Man_t * p, Aig_Man_t * pOrder );\n\n// extern Aig_Man_t *     Aig_ManDupDfsGuided( Aig_Man_t * p, Vec_Ptr_t * vPios );\n\n// extern Aig_Man_t *     Aig_ManDupLevelized( Aig_Man_t * p );\n\n// extern Aig_Man_t *     Aig_ManDupWithoutPos( Aig_Man_t * p );\n\n// extern Aig_Man_t *     Aig_ManDupFlopsOnly( Aig_Man_t * p );\n\n// extern Aig_Man_t *     Aig_ManDupRepres( Aig_Man_t * p );\n\n// extern Aig_Man_t *     Aig_ManDupRepresDfs( Aig_Man_t * p );\n\n// extern Aig_Man_t *     Aig_ManCreateMiter( Aig_Man_t * p1, Aig_Man_t * p2, int fImpl );\n\n// extern Aig_Man_t *     Aig_ManDupOrpos( Aig_Man_t * p, int fAddRegs );\n\n// extern Aig_Man_t *     Aig_ManDupOneOutput( Aig_Man_t * p, int iPoNum, int fAddRegs );\n\n// extern Aig_Man_t *     Aig_ManDupUnsolvedOutputs( Aig_Man_t * p, int fAddRegs );\n\n// extern Aig_Man_t *     Aig_ManDupArray( Vec_Ptr_t * vArray );\n\n// extern Aig_Man_t *     Aig_ManDupNodes( Aig_Man_t * pMan, Vec_Ptr_t * vArray );\n\n/*=== aigFanout.c ==========================================================*/\n// extern void            Aig_ObjAddFanout( Aig_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pFanout );\n\n// extern void            Aig_ObjRemoveFanout( Aig_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pFanout );\n\n// extern void            Aig_ManFanoutStart( Aig_Man_t * p );\n\n// extern void            Aig_ManFanoutStop( Aig_Man_t * p );\n\n/*=== aigFrames.c ==========================================================*/\n// extern Aig_Man_t *     Aig_ManFrames( Aig_Man_t * pAig, int nFs, int fInit, int fOuts, int fRegs, int fEnlarge, Aig_Obj_t *** ppObjMap );\n\n/*=== aigMan.c ==========================================================*/\n// extern Aig_Man_t *     Aig_ManStart( int nNodesMax );\n\n// extern Aig_Man_t *     Aig_ManStartFrom( Aig_Man_t * p );\n\n// extern Aig_Man_t *     Aig_ManExtractMiter( Aig_Man_t * p, Aig_Obj_t * pNode1, Aig_Obj_t * pNode2 );\n\n// extern void            Aig_ManStop( Aig_Man_t * p );\n\n// extern void            Aig_ManStopP( Aig_Man_t ** p );\n\n// extern int             Aig_ManCleanup( Aig_Man_t * p );\n\n// extern int             Aig_ManAntiCleanup( Aig_Man_t * p );\n\n// extern int             Aig_ManCiCleanup( Aig_Man_t * p );\n\n// extern int             Aig_ManCoCleanup( Aig_Man_t * p );\n\n// extern void            Aig_ManPrintStats( Aig_Man_t * p );\n\n// extern void            Aig_ManReportImprovement( Aig_Man_t * p, Aig_Man_t * pNew );\n\n// extern void            Aig_ManSetRegNum( Aig_Man_t * p, int nRegs );\n\n// extern void            Aig_ManFlipFirstPo( Aig_Man_t * p );\n\n// extern void *          Aig_ManReleaseData( Aig_Man_t * p );\n\n/*=== aigMem.c ==========================================================*/\n// extern void            Aig_ManStartMemory( Aig_Man_t * p );\n\n// extern void            Aig_ManStopMemory( Aig_Man_t * p );\n\n/*=== aigMffc.c ==========================================================*/\n// extern int             Aig_NodeRef_rec( Aig_Obj_t * pNode, unsigned LevelMin );\n\n// extern int             Aig_NodeDeref_rec( Aig_Obj_t * pNode, unsigned LevelMin, float * pPower, float * pProbs );\n\n// extern int             Aig_NodeMffcSupp( Aig_Man_t * p, Aig_Obj_t * pNode, int LevelMin, Vec_Ptr_t * vSupp );\n\n// extern int             Aig_NodeMffcLabel( Aig_Man_t * p, Aig_Obj_t * pNode, float * pPower );\n\n// extern int             Aig_NodeMffcLabelCut( Aig_Man_t * p, Aig_Obj_t * pNode, Vec_Ptr_t * vLeaves );\n\n// extern int             Aig_NodeMffcExtendCut( Aig_Man_t * p, Aig_Obj_t * pNode, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vResult );\n\n/*=== aigObj.c ==========================================================*/\n// extern Aig_Obj_t *     Aig_ObjCreateCi( Aig_Man_t * p );\n\n// extern Aig_Obj_t *     Aig_ObjCreateCo( Aig_Man_t * p, Aig_Obj_t * pDriver );\n\n// extern Aig_Obj_t *     Aig_ObjCreate( Aig_Man_t * p, Aig_Obj_t * pGhost );\n\n// extern void            Aig_ObjConnect( Aig_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pFan0, Aig_Obj_t * pFan1 );\n\n// extern void            Aig_ObjDisconnect( Aig_Man_t * p, Aig_Obj_t * pObj );\n\n// extern void            Aig_ObjDelete( Aig_Man_t * p, Aig_Obj_t * pObj );\n\n// extern void            Aig_ObjDelete_rec( Aig_Man_t * p, Aig_Obj_t * pObj, int fFreeTop );\n\n// extern void            Aig_ObjDeletePo( Aig_Man_t * p, Aig_Obj_t * pObj );\n\n// extern void            Aig_ObjPrint( Aig_Man_t * p, Aig_Obj_t * pObj );\n\n// extern void            Aig_ObjPatchFanin0( Aig_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pFaninNew );\n\n// extern void            Aig_ObjReplace( Aig_Man_t * p, Aig_Obj_t * pObjOld, Aig_Obj_t * pObjNew, int fUpdateLevel );\n\n/*=== aigOper.c =========================================================*/\n// extern Aig_Obj_t *     Aig_IthVar( Aig_Man_t * p, int i );\n\n// extern Aig_Obj_t *     Aig_Oper( Aig_Man_t * p, Aig_Obj_t * p0, Aig_Obj_t * p1, Aig_Type_t Type );\n\n// extern Aig_Obj_t *     Aig_And( Aig_Man_t * p, Aig_Obj_t * p0, Aig_Obj_t * p1 );\n\n// extern Aig_Obj_t *     Aig_Or( Aig_Man_t * p, Aig_Obj_t * p0, Aig_Obj_t * p1 );\n\n// extern Aig_Obj_t *     Aig_Exor( Aig_Man_t * p, Aig_Obj_t * p0, Aig_Obj_t * p1 );\n\n// extern Aig_Obj_t *     Aig_Mux( Aig_Man_t * p, Aig_Obj_t * pC, Aig_Obj_t * p1, Aig_Obj_t * p0 );\n\n// extern Aig_Obj_t *     Aig_Maj( Aig_Man_t * p, Aig_Obj_t * pA, Aig_Obj_t * pB, Aig_Obj_t * pC );\n\n// extern Aig_Obj_t *     Aig_Multi( Aig_Man_t * p, Aig_Obj_t ** pArgs, int nArgs, Aig_Type_t Type );\n\n// extern Aig_Obj_t *     Aig_Miter( Aig_Man_t * p, Vec_Ptr_t * vPairs );\n\n// extern Aig_Obj_t *     Aig_MiterTwo( Aig_Man_t * p, Vec_Ptr_t * vNodes1, Vec_Ptr_t * vNodes2 );\n\n// extern Aig_Obj_t *     Aig_CreateAnd( Aig_Man_t * p, int nVars );\n\n// extern Aig_Obj_t *     Aig_CreateOr( Aig_Man_t * p, int nVars );\n\n// extern Aig_Obj_t *     Aig_CreateExor( Aig_Man_t * p, int nVars );\n\n/*=== aigOrder.c =========================================================*/\n// extern void            Aig_ManOrderStart( Aig_Man_t * p );\n\n// extern void            Aig_ManOrderStop( Aig_Man_t * p );\n\n// extern void            Aig_ObjOrderInsert( Aig_Man_t * p, int ObjId );\n\n// extern void            Aig_ObjOrderRemove( Aig_Man_t * p, int ObjId );\n\n// extern void            Aig_ObjOrderAdvance( Aig_Man_t * p );\n\n/*=== aigPart.c =========================================================*/\n// extern Vec_Ptr_t *     Aig_ManSupports( Aig_Man_t * p );\n\n// extern Vec_Ptr_t *     Aig_ManSupportsInverse( Aig_Man_t * p );\n\n// extern Vec_Ptr_t *     Aig_ManSupportsRegisters( Aig_Man_t * p );\n\n// extern Vec_Ptr_t *     Aig_ManPartitionSmart( Aig_Man_t * p, int nPartSizeLimit, int fVerbose, Vec_Ptr_t ** pvPartSupps );\n\n// extern Vec_Ptr_t *     Aig_ManPartitionSmartRegisters( Aig_Man_t * pAig, int nSuppSizeLimit, int fVerbose );\n\n// extern Vec_Ptr_t *     Aig_ManPartitionNaive( Aig_Man_t * p, int nPartSize );\n\n// extern Vec_Ptr_t *     Aig_ManMiterPartitioned( Aig_Man_t * p1, Aig_Man_t * p2, int nPartSize, int fSmart );\n\n// extern Aig_Man_t *     Aig_ManChoicePartitioned( Vec_Ptr_t * vAigs, int nPartSize, int nConfMax, int nLevelMax, int fVerbose );\n\n// extern Aig_Man_t *     Aig_ManFraigPartitioned( Aig_Man_t * pAig, int nPartSize, int nConfMax, int nLevelMax, int fVerbose );\n\n// extern Aig_Man_t *     Aig_ManChoiceConstructive( Vec_Ptr_t * vAigs, int fVerbose );\n\n/*=== aigPartReg.c =========================================================*/\n// extern Vec_Ptr_t *     Aig_ManRegPartitionSimple( Aig_Man_t * pAig, int nPartSize, int nOverSize );\n\n// extern void            Aig_ManPartDivide( Vec_Ptr_t * vResult, Vec_Int_t * vDomain, int nPartSize, int nOverSize );\n\n// extern Vec_Ptr_t *     Aig_ManRegPartitionSmart( Aig_Man_t * pAig, int nPartSize );\n\n// extern Aig_Man_t *     Aig_ManRegCreatePart( Aig_Man_t * pAig, Vec_Int_t * vPart, int * pnCountPis, int * pnCountRegs, int ** ppMapBack );\n\n// extern Vec_Ptr_t *     Aig_ManRegProjectOnehots( Aig_Man_t * pAig, Aig_Man_t * pPart, Vec_Ptr_t * vOnehots, int fVerbose );\n\n/*=== aigRepr.c =========================================================*/\n// extern void            Aig_ManReprStart( Aig_Man_t * p, int nIdMax );\n\n// extern void            Aig_ManReprStop( Aig_Man_t * p );\n\n// extern void            Aig_ObjCreateRepr( Aig_Man_t * p, Aig_Obj_t * pNode1, Aig_Obj_t * pNode2 );\n\n// extern void            Aig_ManTransferRepr( Aig_Man_t * pNew, Aig_Man_t * p );\n\n// extern Aig_Man_t *     Aig_ManDupRepr( Aig_Man_t * p, int fOrdered );\n\n// extern Aig_Man_t *     Aig_ManDupReprBasic( Aig_Man_t * p );\n\n// extern int             Aig_ManCountReprs( Aig_Man_t * p );\n\n// extern Aig_Man_t *     Aig_ManRehash( Aig_Man_t * p );\n\n// extern int             Aig_ObjCheckTfi( Aig_Man_t * p, Aig_Obj_t * pNew, Aig_Obj_t * pOld );\n\n// extern void            Aig_ManMarkValidChoices( Aig_Man_t * p );\n\n// extern int             Aig_TransferMappedClasses( Aig_Man_t * pAig, Aig_Man_t * pPart, int * pMapBack );\n\n/*=== aigRet.c ========================================================*/\n// extern Aig_Man_t *     Rtm_ManRetime( Aig_Man_t * p, int fForward, int nStepsMax, int fVerbose );\n\n/*=== aigRetF.c ========================================================*/\n// extern Aig_Man_t *     Aig_ManRetimeFrontier( Aig_Man_t * p, int nStepsMax );\n\n/*=== aigScl.c ==========================================================*/\n// extern Aig_Man_t *     Aig_ManRemap( Aig_Man_t * p, Vec_Ptr_t * vMap );\n\n// extern int             Aig_ManSeqCleanup( Aig_Man_t * p );\n\n// extern int             Aig_ManSeqCleanupBasic( Aig_Man_t * p );\n\n// extern int             Aig_ManCountMergeRegs( Aig_Man_t * p );\n\n// extern Aig_Man_t *     Aig_ManReduceLaches( Aig_Man_t * p, int fVerbose );\n\n// extern void            Aig_ManComputeSccs( Aig_Man_t * p );\n \n// extern Aig_Man_t *     Aig_ManScl( Aig_Man_t * pAig, int fLatchConst, int fLatchEqual, int fUseMvSweep, int nFramesSymb, int nFramesSatur, int fVerbose, int fVeryVerbose );\n\n/*=== aigShow.c ========================================================*/\n// extern void            Aig_ManShow( Aig_Man_t * pMan, int fHaig, Vec_Ptr_t * vBold );\n\n/*=== aigTable.c ========================================================*/\n// extern Aig_Obj_t *     Aig_TableLookup( Aig_Man_t * p, Aig_Obj_t * pGhost );\n\n// extern Aig_Obj_t *     Aig_TableLookupTwo( Aig_Man_t * p, Aig_Obj_t * pFanin0, Aig_Obj_t * pFanin1 );\n\n// extern void            Aig_TableInsert( Aig_Man_t * p, Aig_Obj_t * pObj );\n\n// extern void            Aig_TableDelete( Aig_Man_t * p, Aig_Obj_t * pObj );\n\n// extern int             Aig_TableCountEntries( Aig_Man_t * p );\n\n// extern void            Aig_TableProfile( Aig_Man_t * p );\n\n// extern void            Aig_TableClear( Aig_Man_t * p );\n\n/*=== aigTiming.c ========================================================*/\n// extern void            Aig_ObjClearReverseLevel( Aig_Man_t * p, Aig_Obj_t * pObj );\n\n// extern int             Aig_ObjRequiredLevel( Aig_Man_t * p, Aig_Obj_t * pObj );\n\n// extern void            Aig_ManStartReverseLevels( Aig_Man_t * p, int nMaxLevelIncrease );\n\n// extern void            Aig_ManStopReverseLevels( Aig_Man_t * p );\n\n// extern void            Aig_ManUpdateLevel( Aig_Man_t * p, Aig_Obj_t * pObjNew );\n\n// extern void            Aig_ManUpdateReverseLevel( Aig_Man_t * p, Aig_Obj_t * pObjNew );\n\n// extern void            Aig_ManVerifyLevel( Aig_Man_t * p );\n\n// extern void            Aig_ManVerifyReverseLevel( Aig_Man_t * p );\n\n/*=== aigTruth.c ========================================================*/\n// extern unsigned *      Aig_ManCutTruth( Aig_Obj_t * pRoot, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vNodes, Vec_Ptr_t * vTruthElem, Vec_Ptr_t * vTruthStore );\n\n/*=== aigTsim.c ========================================================*/\n// extern Aig_Man_t *     Aig_ManConstReduce( Aig_Man_t * p, int fUseMvSweep, int nFramesSymb, int nFramesSatur, int fVerbose, int fVeryVerbose );\n\n/*=== aigUtil.c =========================================================*/\n// extern void            Aig_ManIncrementTravId( Aig_Man_t * p );\n\n// extern char *          Aig_TimeStamp();\n\n// extern int             Aig_ManHasNoGaps( Aig_Man_t * p );\n\n// extern int             Aig_ManLevels( Aig_Man_t * p );\n\n// extern void            Aig_ManResetRefs( Aig_Man_t * p );\n\n// extern void            Aig_ManCleanMarkA( Aig_Man_t * p );\n\n// extern void            Aig_ManCleanMarkB( Aig_Man_t * p );\n\n// extern void            Aig_ManCleanMarkAB( Aig_Man_t * p );\n\n// extern void            Aig_ManCleanData( Aig_Man_t * p );\n\n// extern void            Aig_ObjCleanData_rec( Aig_Obj_t * pObj );\n\n// extern void            Aig_ManCleanNext( Aig_Man_t * p );\n\n// extern void            Aig_ObjCollectMulti( Aig_Obj_t * pFunc, Vec_Ptr_t * vSuper );\n\n// extern int             Aig_ObjIsMuxType( Aig_Obj_t * pObj );\n\n// extern int             Aig_ObjRecognizeExor( Aig_Obj_t * pObj, Aig_Obj_t ** ppFan0, Aig_Obj_t ** ppFan1 );\n\n// extern Aig_Obj_t *     Aig_ObjRecognizeMux( Aig_Obj_t * pObj, Aig_Obj_t ** ppObjT, Aig_Obj_t ** ppObjE );\n\n// extern Aig_Obj_t *     Aig_ObjReal_rec( Aig_Obj_t * pObj );\n\n// extern int             Aig_ObjCompareIdIncrease( Aig_Obj_t ** pp1, Aig_Obj_t ** pp2 );\n\n// extern void            Aig_ObjPrintEqn( FILE * pFile, Aig_Obj_t * pObj, Vec_Vec_t * vLevels, int Level );\n\n// extern void            Aig_ObjPrintVerilog( FILE * pFile, Aig_Obj_t * pObj, Vec_Vec_t * vLevels, int Level );\n\n// extern void            Aig_ObjPrintVerbose( Aig_Obj_t * pObj, int fHaig );\n\n// extern void            Aig_ManPrintVerbose( Aig_Man_t * p, int fHaig );\n\n// extern void            Aig_ManDump( Aig_Man_t * p );\n\n// extern void            Aig_ManDumpBlif( Aig_Man_t * p, char * pFileName, Vec_Ptr_t * vPiNames, Vec_Ptr_t * vPoNames );\n\n// extern void            Aig_ManDumpVerilog( Aig_Man_t * p, char * pFileName );\n\n// extern void            Aig_ManSetCioIds( Aig_Man_t * p );\n\n// extern void            Aig_ManCleanCioIds( Aig_Man_t * p );\n\n// extern int             Aig_ManChoiceNum( Aig_Man_t * p );\n\n// extern char *          Aig_FileNameGenericAppend( char * pBase, char * pSuffix );\n\n// extern unsigned        Aig_ManRandom( int fReset );\n\n// extern word            Aig_ManRandom64( int fReset );\n\n// extern void            Aig_ManRandomInfo( Vec_Ptr_t * vInfo, int iInputStart, int iWordStart, int iWordStop );\n\n// extern void            Aig_NodeUnionLists( Vec_Ptr_t * vArr1, Vec_Ptr_t * vArr2, Vec_Ptr_t * vArr );\n\n// extern void            Aig_NodeIntersectLists( Vec_Ptr_t * vArr1, Vec_Ptr_t * vArr2, Vec_Ptr_t * vArr );\n\n// extern void            Aig_ManSetPhase( Aig_Man_t * pAig );\n\n// extern Vec_Ptr_t *     Aig_ManMuxesCollect( Aig_Man_t * pAig );\n\n// extern void            Aig_ManMuxesDeref( Aig_Man_t * pAig, Vec_Ptr_t * vMuxes );\n\n// extern void            Aig_ManMuxesRef( Aig_Man_t * pAig, Vec_Ptr_t * vMuxes );\n\n// extern void            Aig_ManInvertConstraints( Aig_Man_t * pAig );\n\n\n/*=== aigWin.c =========================================================*/\n// extern void            Aig_ManFindCut( Aig_Obj_t * pRoot, Vec_Ptr_t * vFront, Vec_Ptr_t * vVisited, int nSizeLimit, int nFanoutLimit );\n\n \n/*=== aigMem.c ===========================================================*/\n// fixed-size-block memory manager\n// extern Aig_MmFixed_t * Aig_MmFixedStart( int nEntrySize, int nEntriesMax );\n\n// extern void            Aig_MmFixedStop( Aig_MmFixed_t * p, int fVerbose );\n\n// extern char *          Aig_MmFixedEntryFetch( Aig_MmFixed_t * p );\n\n// extern void            Aig_MmFixedEntryRecycle( Aig_MmFixed_t * p, char * pEntry );\n\n// extern void            Aig_MmFixedRestart( Aig_MmFixed_t * p );\n\n// extern int             Aig_MmFixedReadMemUsage( Aig_MmFixed_t * p );\n\n// extern int             Aig_MmFixedReadMaxEntriesUsed( Aig_MmFixed_t * p );\n\n// flexible-size-block memory manager\n// extern Aig_MmFlex_t *  Aig_MmFlexStart();\n\n// extern void            Aig_MmFlexStop( Aig_MmFlex_t * p, int fVerbose );\n\n// extern char *          Aig_MmFlexEntryFetch( Aig_MmFlex_t * p, int nBytes );\n\n// extern void            Aig_MmFlexRestart( Aig_MmFlex_t * p );\n\n// extern int             Aig_MmFlexReadMemUsage( Aig_MmFlex_t * p );\n\n// hierarchical memory manager\n// extern Aig_MmStep_t *  Aig_MmStepStart( int nSteps );\n\n// extern void            Aig_MmStepStop( Aig_MmStep_t * p, int fVerbose );\n\n// extern char *          Aig_MmStepEntryFetch( Aig_MmStep_t * p, int nBytes );\n\n// extern void            Aig_MmStepEntryRecycle( Aig_MmStep_t * p, char * pEntry, int nBytes );\n\n// extern int             Aig_MmStepReadMemUsage( Aig_MmStep_t * p );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

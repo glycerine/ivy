@@ -1,0 +1,1330 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c",
+  "SHA256": "413b8f7393930435185498286af72780a0318cd4021b198848c4681c148600d2",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 186,
+        "Column": 5,
+        "ByteOffset": 7482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Map_NodeIsVar(pNode) || Map_NodeIsBuf(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 204,
+        "Column": 5,
+        "ByteOffset": 8151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nVarsMax \u003e 1 \u0026\u0026 p.nVarsMax \u003c 7 );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 211,
+        "Column": 41,
+        "ByteOffset": 8407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, nNodes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 228,
+        "Column": 9,
+        "ByteOffset": 8969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes = %6d.  Total %d-feasible cuts = %10d.  Per node = %.1f. \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 231,
+        "Column": 73,
+        "ByteOffset": 9273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 10604
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pList );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 13,
+        "ByteOffset": 10799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pTemp.pCuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 13,
+        "ByteOffset": 10895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pTemp.pCuts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 707,
+        "Column": 5,
+        "ByteOffset": 27276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pRoot.pNext == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 756,
+        "Column": 9,
+        "ByteOffset": 28591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d : \", Counter + 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 776,
+        "Column": 9,
+        "ByteOffset": 29150
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d : \", Counter + 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 794,
+        "Column": 5,
+        "ByteOffset": 29581
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"(%3d)  {\", pRoot.Num );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 797,
+        "Column": 13,
+        "ByteOffset": 29698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %3d\", pCut.ppLeaves[i].Num ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 799,
+        "Column": 5,
+        "ByteOffset": 29750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" }\\n\" );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 823,
+        "Column": 74,
+        "ByteOffset": 30237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Map_CutTable_t *) malloc(sizeof(Map_CutTable_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 824,
+        "Column": 5,
+        "ByteOffset": 30288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Map_CutTable_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 826,
+        "Column": 77,
+        "ByteOffset": 30462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pBins = /*__starting_point_inline_macro:ABC_ALLOC__*/((Map_Cut_t * *) malloc(sizeof(Map_Cut_t *) * (size_t)(p.nBins)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 827,
+        "Column": 5,
+        "ByteOffset": 30516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pBins, 0, sizeof(Map_Cut_t *) * p.nBins );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 828,
+        "Column": 69,
+        "ByteOffset": 30637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCuts = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(2 * MAP_CUTS_MAX_COMPUTE)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 829,
+        "Column": 78,
+        "ByteOffset": 30773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pArray = /*__starting_point_inline_macro:ABC_ALLOC__*/((Map_Cut_t * *) malloc(sizeof(Map_Cut_t *) * (size_t)(2 * MAP_CUTS_MAX_COMPUTE)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 830,
+        "Column": 78,
+        "ByteOffset": 30917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCuts1 = /*__starting_point_inline_macro:ABC_ALLOC__*/((Map_Cut_t * *) malloc(sizeof(Map_Cut_t *) * (size_t)(2 * MAP_CUTS_MAX_COMPUTE)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 831,
+        "Column": 78,
+        "ByteOffset": 31061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCuts2 = /*__starting_point_inline_macro:ABC_ALLOC__*/((Map_Cut_t * *) malloc(sizeof(Map_Cut_t *) * (size_t)(2 * MAP_CUTS_MAX_COMPUTE)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 847,
+        "Column": 64,
+        "ByteOffset": 31506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCuts1) ? (free((char *) (p.pCuts1)), (p.pCuts1) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 848,
+        "Column": 64,
+        "ByteOffset": 31618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCuts2) ? (free((char *) (p.pCuts2)), (p.pCuts2) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 849,
+        "Column": 64,
+        "ByteOffset": 31730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 850,
+        "Column": 63,
+        "ByteOffset": 31841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 851,
+        "Column": 63,
+        "ByteOffset": 31950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCuts) ? (free((char *) (p.pCuts)), (p.pCuts) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 852,
+        "Column": 57,
+        "ByteOffset": 32053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 928,
+        "Column": 5,
+        "ByteOffset": 34158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNodes \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 938,
+        "Column": 5,
+        "ByteOffset": 34439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pBins[Place] == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 960,
+        "Column": 9,
+        "ByteOffset": 35073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pBins[ p.pCuts[i] ] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1004,
+        "Column": 5,
+        "ByteOffset": 36212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCuts \u003c= MAP_CUTS_MAX_COMPUTE );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 1007,
+        "Column": 5,
+        "ByteOffset": 36299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( (void *)p.pCuts1, (size_t)nCuts, sizeof(Map_Cut_t *), "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1100,
+        "Column": 9,
+        "ByteOffset": 38999
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pTemp0.nLeaves \u003c pCut.nLeaves );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1109,
+        "Column": 9,
+        "ByteOffset": 39316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( uPhase \u003c 32 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1122,
+        "Column": 17,
+        "ByteOffset": 40052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1137,
+        "Column": 9,
+        "ByteOffset": 40431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pTemp1.nLeaves \u003c pCut.nLeaves );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1146,
+        "Column": 9,
+        "ByteOffset": 40748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( uPhase \u003c 32 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1159,
+        "Column": 17,
+        "ByteOffset": 41484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Map_MappingCountAllCuts",
+      "Start": 4486,
+      "End": 6098,
+      "BodyStart": 4534,
+      "Original": "int Map_MappingCountAllCuts( Map_Man_t * pMan )\n{\n    Map_Node_t * pNode;\n    Map_Cut_t * pCut;\n    int i, nCuts;\n//    int nCuts55 = 0, nCuts5x = 0, nCuts4x = 0, nCuts3x = 0;\n//    int pCounts[7] = {0};\n    nCuts = 0;\n    for ( i = 0; i \u003c pMan-\u003enBins; i++ )\n        for ( pNode = pMan-\u003epBins[i]; pNode; pNode = pNode-\u003epNext )\n            for ( pCut = pNode-\u003epCuts; pCut; pCut = pCut-\u003epNext )\n                if ( pCut-\u003enLeaves \u003e 1 ) // skip the elementary cuts\n                {\n                    nCuts++;\n/*\n                    if ( Map_CutRegular(pCut-\u003epOne)-\u003enLeaves == 5 \u0026\u0026 Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves == 5 )\n                        nCuts55++;\n                    if ( Map_CutRegular(pCut-\u003epOne)-\u003enLeaves == 5 || Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves == 5 )\n                        nCuts5x++;\n                    else if ( Map_CutRegular(pCut-\u003epOne)-\u003enLeaves == 4 || Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves == 4 )\n                        nCuts4x++;\n                    else if ( Map_CutRegular(pCut-\u003epOne)-\u003enLeaves == 3 || Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves == 3 )\n                        nCuts3x++;\n*/                  \n//                    pCounts[ Map_CutRegular(pCut-\u003epOne)-\u003enLeaves ]++;\n//                    pCounts[ Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves ]++;\n                }\n//    printf( \"Total cuts = %6d. 55 = %6d. 5x = %6d. 4x = %6d. 3x = %6d.\\n\", nCuts, nCuts55, nCuts5x, nCuts4x, nCuts3x );\n\n//    printf( \"Total cuts = %6d. 6= %6d. 5= %6d. 4= %6d. 3= %6d. 2= %6d. 1= %6d.\\n\", \n//        nCuts, pCounts[6], pCounts[5], pCounts[4], pCounts[3], pCounts[2], pCounts[1] );\n    return nCuts;\n}",
+      "Draft": "func Map_MappingCountAllCuts(pMan *Map_Man_t) int32 {\n    var pNode *Map_Node_t;\n    var pCut *Map_Cut_t;\n    var i, nCuts int32;\n//    int nCuts55 = 0, nCuts5x = 0, nCuts4x = 0, nCuts3x = 0;\n//    int pCounts[7] = {0};\n    nCuts = 0;\n    for  i = 0; i \u003c pMan.nBins; i++  {\n        for  pNode = pMan.pBins[i]; (pNode != nil); pNode = pNode.pNext  {\n            for  pCut = pNode.pCuts; (pCut != nil); pCut = pCut.pNext  {\n                if pCut.nLeaves \u003e 1 { // skip the elementary cuts\n                \n                    nCuts++;\n/*\n                    if ( Map_CutRegular(pCut-\u003epOne)-\u003enLeaves == 5 \u0026\u0026 Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves == 5 )\n                        nCuts55++;\n                    if ( Map_CutRegular(pCut-\u003epOne)-\u003enLeaves == 5 || Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves == 5 )\n                        nCuts5x++;\n                    else if ( Map_CutRegular(pCut-\u003epOne)-\u003enLeaves == 4 || Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves == 4 )\n                        nCuts4x++;\n                    else if ( Map_CutRegular(pCut-\u003epOne)-\u003enLeaves == 3 || Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves == 3 )\n                        nCuts3x++;\n*/                  \n//                    pCounts[ Map_CutRegular(pCut-\u003epOne)-\u003enLeaves ]++;\n//                    pCounts[ Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves ]++;\n                }\n            }\n        }\n    }\n//    printf( \"Total cuts = %6d. 55 = %6d. 5x = %6d. 4x = %6d. 3x = %6d.\\n\", nCuts, nCuts55, nCuts5x, nCuts4x, nCuts3x );\n\n//    printf( \"Total cuts = %6d. 6= %6d. 5= %6d. 4= %6d. 3= %6d. 2= %6d. 1= %6d.\\n\", \n//        nCuts, pCounts[6], pCounts[5], pCounts[4], pCounts[3], pCounts[2], pCounts[1] );\n    return nCuts;\n}"
+    },
+    {
+      "Name": "Map_MappingCutsInput",
+      "Start": 7229,
+      "End": 7745,
+      "BodyStart": 7292,
+      "Original": "void Map_MappingCutsInput( Map_Man_t * p, Map_Node_t * pNode )\n{\n    Map_Cut_t * pCut;\n    assert( Map_NodeIsVar(pNode) || Map_NodeIsBuf(pNode) );\n    pCut = Map_CutAlloc( p );\n    pCut-\u003enLeaves = 1;\n    pCut-\u003eppLeaves[0] = pNode;\n    pNode-\u003epCuts   = pCut;\n    pNode-\u003epCutBest[0] = NULL; // negative polarity is not mapped\n    pNode-\u003epCutBest[1] = pCut; // positive polarity is a trivial cut\n    pCut-\u003euTruth = 0xAAAAAAAA; // the first variable \"1010\"\n    pCut-\u003eM[0].AreaFlow = 0.0;\n    pCut-\u003eM[1].AreaFlow = 0.0;\n}",
+      "Draft": "func Map_MappingCutsInput(p *Map_Man_t, pNode *Map_Node_t) {\n    var pCut *Map_Cut_t;\n    assert(Map_NodeIsVar(pNode) || Map_NodeIsBuf(pNode), \"Map_NodeIsVar(pNode) || Map_NodeIsBuf(pNode)\");\n    pCut = Map_CutAlloc( p );\n    pCut.nLeaves = 1;\n    pCut.ppLeaves[0] = pNode;\n    pNode.pCuts   = pCut;\n    pNode.pCutBest[0] = nil; // negative polarity is not mapped\n    pNode.pCutBest[1] = pCut; // positive polarity is a trivial cut\n    pCut.uTruth = 0xAAAAAAAA; // the first variable \"1010\"\n    pCut.M[0].AreaFlow = 0.0;\n    pCut.M[1].AreaFlow = 0.0;\n}"
+    },
+    {
+      "Name": "Map_MappingCuts",
+      "Start": 7746,
+      "End": 9125,
+      "BodyStart": 7784,
+      "Original": "void Map_MappingCuts( Map_Man_t * p )\n{\n    ProgressBar * pProgress;\n    Map_CutTable_t * pTable;\n    Map_Node_t * pNode;\n    int nCuts, nNodes, i;\n    abctime clk = Abc_Clock();\n    // set the elementary cuts for the PI variables\n    assert( p-\u003enVarsMax \u003e 1 \u0026\u0026 p-\u003enVarsMax \u003c 7 );\n    for ( i = 0; i \u003c p-\u003enInputs; i++ )\n        Map_MappingCutsInput( p, p-\u003epInputs[i] );\n\n    // compute the cuts for the internal nodes\n    nNodes = p-\u003evMapObjs-\u003enSize;\n    pProgress = Extra_ProgressBarStart( stdout, nNodes );\n    pTable = Map_CutTableStart( p );\n    for ( i = 0; i \u003c nNodes; i++ )\n    {\n        pNode = p-\u003evMapObjs-\u003epArray[i];\n        if ( Map_NodeIsBuf(pNode) )\n            Map_MappingCutsInput( p, pNode );\n        else if ( Map_NodeIsAnd(pNode) )\n            Map_CutCompute( p, pTable, pNode );\n        else continue;\n        Extra_ProgressBarUpdate( pProgress, i, \"Cuts ...\" );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Map_CutTableStop( pTable );\n\n    // report the stats\n    if ( p-\u003efVerbose )\n    {\n        nCuts = Map_MappingCountAllCuts(p);\n        printf( \"Nodes = %6d.  Total %d-feasible cuts = %10d.  Per node = %.1f. \", \n               p-\u003enNodes, p-\u003enVarsMax, nCuts, ((float)nCuts)/p-\u003enNodes );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n\n    // print the cuts for the first primary output\n//    Map_CutListPrint( p, Map_Regular(p-\u003epOutputs[0]) );\n}",
+      "Draft": "func Map_MappingCuts(p *Map_Man_t) {\n    var pProgress *ProgressBar;\n    var pTable *Map_CutTable_t;\n    var pNode *Map_Node_t;\n    var nCuts, nNodes, i int32;\n    var clk abctime  = Abc_Clock();\n    // set the elementary cuts for the PI variables\n    assert(p.nVarsMax \u003e 1 \u0026\u0026 p.nVarsMax \u003c 7, \"p.nVarsMax \u003e 1 \u0026\u0026 p.nVarsMax \u003c 7\");\n    for  i = 0; i \u003c p.nInputs; i++  {\n        Map_MappingCutsInput( p, p.pInputs[i] );\n    }\n\n    // compute the cuts for the internal nodes\n    nNodes = p.vMapObjs.nSize;\n    pProgress = Extra_ProgressBarStart( os.Stdout, nNodes );\n    pTable = Map_CutTableStart( p );\n    for  i = 0; i \u003c nNodes; i++  {\n        pNode = p.vMapObjs.pArray[i];\n        if Map_NodeIsBuf(pNode) {\n            Map_MappingCutsInput( p, pNode );\n        } else if Map_NodeIsAnd(pNode) {\n            Map_CutCompute( p, pTable, pNode );\n        } else { continue; }\n        Extra_ProgressBarUpdate( pProgress, i, \"Cuts ...\" );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Map_CutTableStop( pTable );\n\n    // report the stats\n    if p.fVerbose {\n        nCuts = Map_MappingCountAllCuts(p);\n        fmt.Printf(\"Nodes = %6d.  Total %d-feasible cuts = %10d.  Per node = %.1f. \", p.nNodes, p.nVarsMax, nCuts, (float32(nCuts))/p.nNodes);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n\n    // print the cuts for the first primary output\n//    Map_CutListPrint( p, Map_Regular(p-\u003epOutputs[0]) );\n}"
+    },
+    {
+      "Name": "Map_CutCompute",
+      "Start": 9392,
+      "End": 11303,
+      "BodyStart": 9481,
+      "Original": "Map_Cut_t * Map_CutCompute( Map_Man_t * p, Map_CutTable_t * pTable, Map_Node_t * pNode )\n{\n    Map_Node_t * pTemp;\n    Map_Cut_t * pList, * pList1, * pList2;\n    Map_Cut_t * pCut;\n\n    // if the cuts are computed return them\n    if ( pNode-\u003epCuts )\n        return pNode-\u003epCuts;\n\n    // compute the cuts for the children\n    pList1 = Map_Regular(pNode-\u003ep1)-\u003epCuts;\n    pList2 = Map_Regular(pNode-\u003ep2)-\u003epCuts;\n    // merge the lists\n    pList = Map_CutMergeLists( p, pTable, pList1, pList2, \n        Map_IsComplement(pNode-\u003ep1), Map_IsComplement(pNode-\u003ep2) );\n    // if there are functionally equivalent nodes, union them with this list\n    assert( pList );\n    // only add to the list of cuts if the node is a representative one\n    if ( pNode-\u003epRepr == NULL )\n    {\n        for ( pTemp = pNode-\u003epNextE; pTemp; pTemp = pTemp-\u003epNextE )\n        {\n            assert( pTemp-\u003epCuts );\n            pList = Map_CutUnionLists( pList, pTemp-\u003epCuts );\n            assert( pTemp-\u003epCuts );\n            pList = Map_CutSortCuts( p, pTable, pList );\n        }\n    }\n    // add the new cut\n    pCut = Map_CutAlloc( p );\n    pCut-\u003enLeaves = 1;\n    pCut-\u003eppLeaves[0] = pNode;\n    pCut-\u003euTruth = 0xAAAAAAAA;\n    // append (it is important that the elementary cut is appended first)\n    pCut-\u003epNext = pList;\n    // set at the node\n    pNode-\u003epCuts = pCut;\n    // remove the dominated cuts\n    Map_CutFilter( p, pNode );\n    // set the phase correctly\n    if ( pNode-\u003epRepr \u0026\u0026 Map_NodeComparePhase(pNode, pNode-\u003epRepr) )\n    {\n        Map_ListForEachCut( pNode-\u003epCuts, pCut )\n            pCut-\u003ePhase = 1;\n    }\n/*\n    { \n        int i, Counter = 0;;\n        for ( pCut = pNode-\u003epCuts-\u003epNext; pCut; pCut = pCut-\u003epNext )\n            for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n                Counter += (pCut-\u003eppLeaves[i]-\u003eLevel \u003e= pNode-\u003eLevel);\n//        if ( Counter )\n//            printf( \" %d\", Counter );\n    }\n*/\n    return pCut;\n}",
+      "Draft": "func Map_CutCompute(p *Map_Man_t, pTable *Map_CutTable_t, pNode *Map_Node_t) *Map_Cut_t {\n    var pTemp *Map_Node_t;\n    var pList, pList1, pList2 *Map_Cut_t;\n    var pCut *Map_Cut_t;\n\n    // if the cuts are computed return them\n    if pNode.pCuts {\n        return pNode.pCuts; }\n\n    // compute the cuts for the children\n    // inlining of macro Map_Regular\n    pList1 = ((Map_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .pCuts;\n    // inlining of macro Map_Regular\n    pList2 = ((Map_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .pCuts;\n    // merge the lists\n    pList = Map_CutMergeLists( p, pTable, pList1, pList2, \n        // inlining of macro Map_IsComplement\n        ((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01)))), ((int32(((ABC_PTRUINT_T) (pNode.p2) \u0026 01)))) );\n    // if there are functionally equivalent nodes, union them with this list\n    assert((pList != nil), \"pList\");\n    // only add to the list of cuts if the node is a representative one\n    if pNode.pRepr == nil {\n        for  pTemp = pNode.pNextE; pTemp; pTemp = pTemp.pNextE  {\n            assert(pTemp.pCuts, \"pTemp.pCuts\");\n            pList = Map_CutUnionLists( pList, pTemp.pCuts );\n            assert(pTemp.pCuts, \"pTemp.pCuts\");\n            pList = Map_CutSortCuts( p, pTable, pList );\n        }\n    }\n    // add the new cut\n    pCut = Map_CutAlloc( p );\n    pCut.nLeaves = 1;\n    pCut.ppLeaves[0] = pNode;\n    pCut.uTruth = 0xAAAAAAAA;\n    // append (it is important that the elementary cut is appended first)\n    pCut.pNext = pList;\n    // set at the node\n    pNode.pCuts = pCut;\n    // remove the dominated cuts\n    Map_CutFilter( p, pNode );\n    // set the phase correctly\n    if pNode.pRepr \u0026\u0026 Map_NodeComparePhase(pNode, pNode.pRepr) {\n        // inlining of macro Map_ListForEachCut\n        for  pCut = pNode.pCuts;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n            pCut.Phase = 1;\n        }\n    }\n/*\n    { \n        int i, Counter = 0;;\n        for ( pCut = pNode-\u003epCuts-\u003epNext; pCut; pCut = pCut-\u003epNext )\n            for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n                Counter += (pCut-\u003eppLeaves[i]-\u003eLevel \u003e= pNode-\u003eLevel);\n//        if ( Counter )\n//            printf( \" %d\", Counter );\n    }\n*/\n    return pCut;\n}"
+    },
+    {
+      "Name": "Map_CutFilter",
+      "Start": 11571,
+      "End": 12824,
+      "BodyStart": 11627,
+      "Original": "void Map_CutFilter( Map_Man_t * p, Map_Node_t * pNode )\n{ \n    Map_Cut_t * pTemp, * pPrev, * pCut, * pCut2;\n    int i, k, Counter;\n\n    Counter = 0;\n    pPrev = pNode-\u003epCuts;\n    Map_ListForEachCutSafe( pNode-\u003epCuts-\u003epNext, pCut, pCut2 )\n    {\n        // go through all the previous cuts up to pCut\n        for ( pTemp = pNode-\u003epCuts-\u003epNext; pTemp != pCut; pTemp = pTemp-\u003epNext )\n        {\n            // check if every node in pTemp is contained in pCut\n            for ( i = 0; i \u003c pTemp-\u003enLeaves; i++ )\n            {\n                for ( k = 0; k \u003c pCut-\u003enLeaves; k++ )\n                    if ( pTemp-\u003eppLeaves[i] == pCut-\u003eppLeaves[k] )\n                        break;\n                if ( k == pCut-\u003enLeaves ) // node i in pTemp is not contained in pCut\n                    break;\n            }\n            if ( i == pTemp-\u003enLeaves ) // every node in pTemp is contained in pCut\n            {\n                Counter++;\n                break;\n            }\n        }\n        if ( pTemp != pCut ) // pTemp contain pCut\n        {\n            pPrev-\u003epNext = pCut-\u003epNext;  // skip pCut\n            // recycle pCut\n            Map_CutFree( p, pCut );\n        }\n        else \n            pPrev = pCut; \n    }\n//  printf( \"Dominated = %3d. \\n\", Counter );\n}",
+      "Draft": "func Map_CutFilter(p *Map_Man_t, pNode *Map_Node_t) { \n    var pTemp, pPrev, pCut, pCut2 *Map_Cut_t;\n    var i, k, Counter int32;\n\n    Counter = 0;\n    pPrev = pNode.pCuts;\n    // inlining of macro Map_ListForEachCutSafe\n    for  pCut = pNode.pCuts.pNext,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n        // go through all the previous cuts up to pCut\n        for  pTemp = pNode.pCuts.pNext; pTemp != pCut; pTemp = pTemp.pNext  {\n            // check if every node in pTemp is contained in pCut\n            for  i = 0; i \u003c pTemp.nLeaves; i++  {\n                for  k = 0; k \u003c pCut.nLeaves; k++  {\n                    if pTemp.ppLeaves[i] == pCut.ppLeaves[k] {\n                        break; }\n                }\n                if k == pCut.nLeaves { // node i in pTemp is not contained in pCut\n                    break; }\n            }\n            if i == pTemp.nLeaves { // every node in pTemp is contained in pCut\n            \n                Counter++;\n                break;\n            }\n        }\n        if pTemp != pCut { // pTemp contain pCut\n        \n            pPrev.pNext = pCut.pNext;  // skip pCut\n            // recycle pCut\n            Map_CutFree( p, pCut );\n        \n        } else { \n            pPrev = pCut; } \n    }\n//  printf( \"Dominated = %3d. \\n\", Counter );\n}"
+    },
+    {
+      "Name": "Map_CutMergeLists",
+      "Start": 13085,
+      "End": 19322,
+      "BodyStart": 13226,
+      "Original": "Map_Cut_t * Map_CutMergeLists( Map_Man_t * p, Map_CutTable_t * pTable, \n    Map_Cut_t * pList1, Map_Cut_t * pList2, int fComp1, int fComp2 )\n{\n    Map_Node_t * ppNodes[6];\n    Map_Cut_t * pListNew, ** ppListNew, * pLists[7] = { NULL };\n    Map_Cut_t * pCut, * pPrev, * pTemp1, * pTemp2;\n    int nNodes, Counter, i;\n    Map_Cut_t ** ppArray1, ** ppArray2, ** ppArray3;\n    int nCuts1, nCuts2, nCuts3, k, fComp3;\n\n    ppArray1 = pTable-\u003epCuts1;\n    ppArray2 = pTable-\u003epCuts2;\n    nCuts1 = Map_CutList2Array( ppArray1, pList1 );\n    nCuts2 = Map_CutList2Array( ppArray2, pList2 );\n    // swap the lists based on their length\n    if ( nCuts1 \u003e nCuts2 )\n    {\n         ppArray3 = ppArray1;\n         ppArray1 = ppArray2;\n         ppArray2 = ppArray3;\n\n         nCuts3 = nCuts1;\n         nCuts1 = nCuts2;\n         nCuts2 = nCuts3;\n\n         fComp3 = fComp1;\n         fComp1 = fComp2;\n         fComp2 = fComp3;\n    }\n    // pList1 is shorter or equal length compared to pList2\n \n    // prepare the manager for the cut computation\n    Map_CutTableRestart( pTable );\n    // go through the cut pairs\n    Counter = 0;\n//    for ( pTemp1 = pList1; pTemp1; pTemp1 = fPivot1? NULL: pTemp1-\u003epNext )\n//        for ( pTemp2 = pList2; pTemp2; pTemp2 = fPivot2? NULL: pTemp2-\u003epNext )\n    for ( i = 0; i \u003c nCuts1; i++ )\n    {\n        for ( k = 0; k \u003c= i; k++ )\n        {\n            pTemp1 = ppArray1[i];\n            pTemp2 = ppArray2[k];\n\n            if ( pTemp1-\u003enLeaves == p-\u003enVarsMax \u0026\u0026 pTemp2-\u003enLeaves == p-\u003enVarsMax )\n            {\n                if ( pTemp1-\u003eppLeaves[0] != pTemp2-\u003eppLeaves[0] )\n                    continue;\n                if ( pTemp1-\u003eppLeaves[1] != pTemp2-\u003eppLeaves[1] )\n                    continue;\n            }\n\n            // check if k-feasible cut exists\n            nNodes = Map_CutMergeTwo( pTemp1, pTemp2, ppNodes, p-\u003enVarsMax );\n            if ( nNodes == 0 )\n                continue;\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Map_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if ( pCut == NULL )\n                continue;\n            // add data to the cut\n            pCut-\u003epOne = Map_CutNotCond( pTemp1, fComp1 );\n            pCut-\u003epTwo = Map_CutNotCond( pTemp2, fComp2 );\n//            if ( p-\u003enVarsMax == 5 )\n//            pCut-\u003euTruth = Map_CutComputeTruth( p, pCut, pTemp1, pTemp2, fComp1, fComp2 );\n            // add it to the corresponding list\n            pCut-\u003epNext = pLists[(int)pCut-\u003enLeaves];\n            pLists[(int)pCut-\u003enLeaves] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if ( Counter == MAP_CUTS_MAX_COMPUTE )\n                goto QUITS;\n        }\n        for ( k = 0; k \u003c i; k++ )\n        {\n            pTemp1 = ppArray1[k];\n            pTemp2 = ppArray2[i];\n\n            if ( pTemp1-\u003enLeaves == p-\u003enVarsMax \u0026\u0026 pTemp2-\u003enLeaves == p-\u003enVarsMax )\n            {\n                if ( pTemp1-\u003eppLeaves[0] != pTemp2-\u003eppLeaves[0] )\n                    continue;\n                if ( pTemp1-\u003eppLeaves[1] != pTemp2-\u003eppLeaves[1] )\n                    continue;\n            }\n\n            // check if k-feasible cut exists\n            nNodes = Map_CutMergeTwo( pTemp1, pTemp2, ppNodes, p-\u003enVarsMax );\n            if ( nNodes == 0 )\n                continue;\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Map_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if ( pCut == NULL )\n                continue;\n            // add data to the cut\n            pCut-\u003epOne = Map_CutNotCond( pTemp1, fComp1 );\n            pCut-\u003epTwo = Map_CutNotCond( pTemp2, fComp2 );\n//            if ( p-\u003enVarsMax == 5 )\n//            pCut-\u003euTruth = Map_CutComputeTruth( p, pCut, pTemp1, pTemp2, fComp1, fComp2 );\n            // add it to the corresponding list\n            pCut-\u003epNext = pLists[(int)pCut-\u003enLeaves];\n            pLists[(int)pCut-\u003enLeaves] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if ( Counter == MAP_CUTS_MAX_COMPUTE )\n                goto QUITS;\n        }\n    }\n    // consider the rest of them\n    for ( i = nCuts1; i \u003c nCuts2; i++ )\n        for ( k = 0; k \u003c nCuts1; k++ )\n        {\n            pTemp1 = ppArray1[k];\n            pTemp2 = ppArray2[i];\n\n            if ( pTemp1-\u003enLeaves == p-\u003enVarsMax \u0026\u0026 pTemp2-\u003enLeaves == p-\u003enVarsMax )\n            {\n                if ( pTemp1-\u003eppLeaves[0] != pTemp2-\u003eppLeaves[0] )\n                    continue;\n                if ( pTemp1-\u003eppLeaves[1] != pTemp2-\u003eppLeaves[1] )\n                    continue;\n            }\n\n            // check if k-feasible cut exists\n            nNodes = Map_CutMergeTwo( pTemp1, pTemp2, ppNodes, p-\u003enVarsMax );\n            if ( nNodes == 0 )\n                continue;\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Map_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if ( pCut == NULL )\n                continue;\n            // add data to the cut\n            pCut-\u003epOne = Map_CutNotCond( pTemp1, fComp1 );\n            pCut-\u003epTwo = Map_CutNotCond( pTemp2, fComp2 );\n//            if ( p-\u003enVarsMax == 5 )\n//            pCut-\u003euTruth = Map_CutComputeTruth( p, pCut, pTemp1, pTemp2, fComp1, fComp2 );\n            // add it to the corresponding list\n            pCut-\u003epNext = pLists[(int)pCut-\u003enLeaves];\n            pLists[(int)pCut-\u003enLeaves] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if ( Counter == MAP_CUTS_MAX_COMPUTE )\n                goto QUITS;\n        }\nQUITS :\n    // combine all the lists into one\n    pListNew  = NULL;\n    ppListNew = \u0026pListNew;\n    for ( i = 1; i \u003c= p-\u003enVarsMax; i++ )\n    {\n        if ( pLists[i] == NULL )\n            continue;\n        // find the last entry\n        for ( pPrev = pLists[i], pCut = pPrev-\u003epNext; pCut; \n            pPrev = pCut, pCut = pCut-\u003epNext );\n        // connect these lists\n        *ppListNew = pLists[i];\n        ppListNew  = \u0026pPrev-\u003epNext;\n    }\n    *ppListNew = NULL;\n    // soft the cuts by arrival times and use only the first MAP_CUTS_MAX_USE\n    pListNew = Map_CutSortCuts( p, pTable, pListNew );\n    return pListNew;\n}",
+      "Draft": "func Map_CutMergeLists(p *Map_Man_t, pTable *Map_CutTable_t, pList1 *Map_Cut_t, pList2 *Map_Cut_t, fComp1 int32, fComp2 int32) *Map_Cut_t {\n    var ppNodes [6]*Map_Node_t;\n    var pListNew *Map_Cut_t;\n    var ppListNew **Map_Cut_t;\n    var pLists [7]*Map_Cut_t = [7]*Map_Cut_t{ nil };\n    var pCut, pPrev, pTemp1, pTemp2 *Map_Cut_t;\n    var nNodes, Counter, i int32;\n    var ppArray1, ppArray2, ppArray3 **Map_Cut_t;\n    var nCuts1, nCuts2, nCuts3, k, fComp3 int32;\n\n    ppArray1 = pTable.pCuts1;\n    ppArray2 = pTable.pCuts2;\n    nCuts1 = Map_CutList2Array( ppArray1, pList1 );\n    nCuts2 = Map_CutList2Array( ppArray2, pList2 );\n    // swap the lists based on their length\n    if nCuts1 \u003e nCuts2 {\n         ppArray3 = ppArray1;\n         ppArray1 = ppArray2;\n         ppArray2 = ppArray3;\n\n         nCuts3 = nCuts1;\n         nCuts1 = nCuts2;\n         nCuts2 = nCuts3;\n\n         fComp3 = fComp1;\n         fComp1 = fComp2;\n         fComp2 = fComp3;\n    }\n    // pList1 is shorter or equal length compared to pList2\n \n    // prepare the manager for the cut computation\n    Map_CutTableRestart( pTable );\n    // go through the cut pairs\n    Counter = 0;\n//    for ( pTemp1 = pList1; pTemp1; pTemp1 = fPivot1? NULL: pTemp1-\u003epNext )\n//        for ( pTemp2 = pList2; pTemp2; pTemp2 = fPivot2? NULL: pTemp2-\u003epNext )\n    for  i = 0; i \u003c nCuts1; i++  {\n        for  k = 0; k \u003c= i; k++  {\n            pTemp1 = ppArray1[i];\n            pTemp2 = ppArray2[k];\n\n            if pTemp1.nLeaves == p.nVarsMax \u0026\u0026 pTemp2.nLeaves == p.nVarsMax {\n                if pTemp1.ppLeaves[0] != pTemp2.ppLeaves[0] {\n                    continue; }\n                if pTemp1.ppLeaves[1] != pTemp2.ppLeaves[1] {\n                    continue; }\n            }\n\n            // check if k-feasible cut exists\n            nNodes = Map_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Map_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Map_CutNotCond\n            pCut.pOne = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Map_CutNotCond\n            pCut.pTwo = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n//            if ( p-\u003enVarsMax == 5 )\n//            pCut-\u003euTruth = Map_CutComputeTruth( p, pCut, pTemp1, pTemp2, fComp1, fComp2 );\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == MAP_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n        for  k = 0; k \u003c i; k++  {\n            pTemp1 = ppArray1[k];\n            pTemp2 = ppArray2[i];\n\n            if pTemp1.nLeaves == p.nVarsMax \u0026\u0026 pTemp2.nLeaves == p.nVarsMax {\n                if pTemp1.ppLeaves[0] != pTemp2.ppLeaves[0] {\n                    continue; }\n                if pTemp1.ppLeaves[1] != pTemp2.ppLeaves[1] {\n                    continue; }\n            }\n\n            // check if k-feasible cut exists\n            nNodes = Map_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Map_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Map_CutNotCond\n            pCut.pOne = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Map_CutNotCond\n            pCut.pTwo = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n//            if ( p-\u003enVarsMax == 5 )\n//            pCut-\u003euTruth = Map_CutComputeTruth( p, pCut, pTemp1, pTemp2, fComp1, fComp2 );\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == MAP_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n    }\n    // consider the rest of them\n    for  i = nCuts1; i \u003c nCuts2; i++  {\n        for  k = 0; k \u003c nCuts1; k++  {\n            pTemp1 = ppArray1[k];\n            pTemp2 = ppArray2[i];\n\n            if pTemp1.nLeaves == p.nVarsMax \u0026\u0026 pTemp2.nLeaves == p.nVarsMax {\n                if pTemp1.ppLeaves[0] != pTemp2.ppLeaves[0] {\n                    continue; }\n                if pTemp1.ppLeaves[1] != pTemp2.ppLeaves[1] {\n                    continue; }\n            }\n\n            // check if k-feasible cut exists\n            nNodes = Map_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Map_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Map_CutNotCond\n            pCut.pOne = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Map_CutNotCond\n            pCut.pTwo = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n//            if ( p-\u003enVarsMax == 5 )\n//            pCut-\u003euTruth = Map_CutComputeTruth( p, pCut, pTemp1, pTemp2, fComp1, fComp2 );\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == MAP_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n    }\nQUITS :\n    // combine all the lists into one\n    pListNew  = nil;\n    ppListNew = \u0026pListNew;\n    for  i = 1; i \u003c= p.nVarsMax; i++  {\n        if pLists[i] == nil {\n            continue; }\n        // find the last entry\n        for  pPrev = pLists[i], pCut = pPrev.pNext; (pCut != nil); \n            pPrev = pCut, pCut = pCut.pNext  {}\n        // connect these lists\n        *ppListNew = pLists[i];\n        ppListNew  = \u0026pPrev.pNext;\n    }\n    *ppListNew = nil;\n    // soft the cuts by arrival times and use only the first MAP_CUTS_MAX_USE\n    pListNew = Map_CutSortCuts( p, pTable, pListNew );\n    return pListNew;\n}"
+    },
+    {
+      "Name": "Map_CutMergeLists2",
+      "Start": 19584,
+      "End": 21650,
+      "BodyStart": 19726,
+      "Original": "Map_Cut_t * Map_CutMergeLists2( Map_Man_t * p, Map_CutTable_t * pTable, \n    Map_Cut_t * pList1, Map_Cut_t * pList2, int fComp1, int fComp2 )\n{\n    Map_Node_t * ppNodes[6];\n    Map_Cut_t * pListNew, ** ppListNew, * pLists[7] = { NULL };\n    Map_Cut_t * pCut, * pPrev, * pTemp1, * pTemp2;\n    int nNodes, Counter, i;\n\n    // prepare the manager for the cut computation\n    Map_CutTableRestart( pTable );\n    // go through the cut pairs\n    Counter = 0;\n    for ( pTemp1 = pList1; pTemp1; pTemp1 = pTemp1-\u003epNext )\n        for ( pTemp2 = pList2; pTemp2; pTemp2 = pTemp2-\u003epNext )\n        {\n            // check if k-feasible cut exists\n            nNodes = Map_CutMergeTwo( pTemp1, pTemp2, ppNodes, p-\u003enVarsMax );\n            if ( nNodes == 0 )\n                continue;\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Map_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if ( pCut == NULL )\n                continue;\n            // add data to the cut\n            pCut-\u003epOne = Map_CutNotCond( pTemp1, fComp1 );\n            pCut-\u003epTwo = Map_CutNotCond( pTemp2, fComp2 );\n            // add it to the corresponding list\n            pCut-\u003epNext = pLists[(int)pCut-\u003enLeaves];\n            pLists[(int)pCut-\u003enLeaves] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if ( Counter == MAP_CUTS_MAX_COMPUTE )\n                goto QUITS;\n        }\nQUITS :\n    // combine all the lists into one\n    pListNew  = NULL;\n    ppListNew = \u0026pListNew;\n    for ( i = 1; i \u003c= p-\u003enVarsMax; i++ )\n    {\n        if ( pLists[i] == NULL )\n            continue;\n        // find the last entry\n        for ( pPrev = pLists[i], pCut = pPrev-\u003epNext; pCut; \n            pPrev = pCut, pCut = pCut-\u003epNext );\n        // connect these lists\n        *ppListNew = pLists[i];\n        ppListNew  = \u0026pPrev-\u003epNext;\n    }\n    *ppListNew = NULL;\n    // soft the cuts by arrival times and use only the first MAP_CUTS_MAX_USE\n    pListNew = Map_CutSortCuts( p, pTable, pListNew );\n    return pListNew;\n}",
+      "Draft": "func Map_CutMergeLists2(p *Map_Man_t, pTable *Map_CutTable_t, pList1 *Map_Cut_t, pList2 *Map_Cut_t, fComp1 int32, fComp2 int32) *Map_Cut_t {\n    var ppNodes [6]*Map_Node_t;\n    var pListNew *Map_Cut_t;\n    var ppListNew **Map_Cut_t;\n    var pLists [7]*Map_Cut_t = [7]*Map_Cut_t{ nil };\n    var pCut, pPrev, pTemp1, pTemp2 *Map_Cut_t;\n    var nNodes, Counter, i int32;\n\n    // prepare the manager for the cut computation\n    Map_CutTableRestart( pTable );\n    // go through the cut pairs\n    Counter = 0;\n    for  pTemp1 = pList1; (pTemp1 != nil); pTemp1 = pTemp1.pNext  {\n        for  pTemp2 = pList2; (pTemp2 != nil); pTemp2 = pTemp2.pNext  {\n            // check if k-feasible cut exists\n            nNodes = Map_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Map_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Map_CutNotCond\n            pCut.pOne = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Map_CutNotCond\n            pCut.pTwo = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == MAP_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n    }\nQUITS :\n    // combine all the lists into one\n    pListNew  = nil;\n    ppListNew = \u0026pListNew;\n    for  i = 1; i \u003c= p.nVarsMax; i++  {\n        if pLists[i] == nil {\n            continue; }\n        // find the last entry\n        for  pPrev = pLists[i], pCut = pPrev.pNext; (pCut != nil); \n            pPrev = pCut, pCut = pCut.pNext  {}\n        // connect these lists\n        *ppListNew = pLists[i];\n        ppListNew  = \u0026pPrev.pNext;\n    }\n    *ppListNew = nil;\n    // soft the cuts by arrival times and use only the first MAP_CUTS_MAX_USE\n    pListNew = Map_CutSortCuts( p, pTable, pListNew );\n    return pListNew;\n}"
+    },
+    {
+      "Name": "Map_CutMergeTwo",
+      "Start": 22036,
+      "End": 25050,
+      "BodyStart": 22135,
+      "Original": "int Map_CutMergeTwo( Map_Cut_t * pCut1, Map_Cut_t * pCut2, Map_Node_t * ppNodes[], int nNodesMax )\n{\n    Map_Node_t * pNodeTemp;\n    int nTotal, i, k, min, fMismatch;\n\n    // check the special case when at least of the cuts is the largest\n    if ( pCut1-\u003enLeaves == nNodesMax )\n    {\n        if ( pCut2-\u003enLeaves == nNodesMax )\n        {\n            // return 0 if the cuts are different\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                if ( pCut1-\u003eppLeaves[i] != pCut2-\u003eppLeaves[i] )\n                    return 0;\n            // return nNodesMax if they are the same\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                ppNodes[i] = pCut1-\u003eppLeaves[i];\n            return nNodesMax;\n        }\n        else if ( pCut2-\u003enLeaves == nNodesMax - 1 ) \n        {\n            // return 0 if the cuts are different\n            fMismatch = 0;\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                if ( pCut1-\u003eppLeaves[i] != pCut2-\u003eppLeaves[i - fMismatch] )\n                {\n                    if ( fMismatch == 1 )\n                        return 0;\n                    fMismatch = 1;\n                }\n            // return nNodesMax if they are the same\n            for ( i = 0; i \u003c nNodesMax; i++ )\n                ppNodes[i] = pCut1-\u003eppLeaves[i];\n            return nNodesMax;\n        }\n    }\n    else if ( pCut1-\u003enLeaves == nNodesMax - 1 \u0026\u0026 pCut2-\u003enLeaves == nNodesMax )\n    {\n        // return 0 if the cuts are different\n        fMismatch = 0;\n        for ( i = 0; i \u003c nNodesMax; i++ )\n            if ( pCut1-\u003eppLeaves[i - fMismatch] != pCut2-\u003eppLeaves[i] )\n            {\n                if ( fMismatch == 1 )\n                    return 0;\n                fMismatch = 1;\n            }\n        // return nNodesMax if they are the same\n        for ( i = 0; i \u003c nNodesMax; i++ )\n            ppNodes[i] = pCut2-\u003eppLeaves[i];\n        return nNodesMax;\n    }\n\n    // count the number of unique entries in pCut2\n    nTotal = pCut1-\u003enLeaves;\n    for ( i = 0; i \u003c pCut2-\u003enLeaves; i++ )\n    {\n        // try to find this entry among the leaves of pCut1\n        for ( k = 0; k \u003c pCut1-\u003enLeaves; k++ )\n            if ( pCut2-\u003eppLeaves[i] == pCut1-\u003eppLeaves[k] )\n                break;\n        if ( k \u003c pCut1-\u003enLeaves ) // found\n            continue;\n        // we found a new entry to add\n        if ( nTotal == nNodesMax )\n            return 0;\n        ppNodes[nTotal++] = pCut2-\u003eppLeaves[i];\n    }\n    // we know that the feasible cut exists\n\n    // add the starting entries\n    for ( k = 0; k \u003c pCut1-\u003enLeaves; k++ )\n        ppNodes[k] = pCut1-\u003eppLeaves[k];\n\n    // selection-sort the entries\n    for ( i = 0; i \u003c nTotal - 1; i++ )\n    {\n        min = i;\n        for ( k = i+1; k \u003c nTotal; k++ )\n//            if ( ppNodes[k] \u003c ppNodes[min] ) // reported bug fix (non-determinism!)\n            if ( ppNodes[k]-\u003eNum \u003c ppNodes[min]-\u003eNum )\n                min = k;\n        pNodeTemp    = ppNodes[i];\n        ppNodes[i]   = ppNodes[min];\n        ppNodes[min] = pNodeTemp;\n    }\n\n    return nTotal;\n}",
+      "Draft": "func Map_CutMergeTwo(pCut1 *Map_Cut_t, pCut2 *Map_Cut_t, ppNodes []*Map_Node_t, nNodesMax int32) int32 {\n    var pNodeTemp *Map_Node_t;\n    var nTotal, i, k, min, fMismatch int32;\n\n    // check the special case when at least of the cuts is the largest\n    if pCut1.nLeaves == nNodesMax {\n        if pCut2.nLeaves == nNodesMax {\n            // return 0 if the cuts are different\n            for  i = 0; i \u003c nNodesMax; i++  {\n                if pCut1.ppLeaves[i] != pCut2.ppLeaves[i] {\n                    return 0; }\n            }\n            // return nNodesMax if they are the same\n            for  i = 0; i \u003c nNodesMax; i++  {\n                ppNodes[i] = pCut1.ppLeaves[i];\n            }\n            return nNodesMax;\n        \n        } else if pCut2.nLeaves == nNodesMax - 1 {\n            // return 0 if the cuts are different\n            fMismatch = 0;\n            for  i = 0; i \u003c nNodesMax; i++  {\n                if pCut1.ppLeaves[i] != pCut2.ppLeaves[i - fMismatch] {\n                    if fMismatch == 1 {\n                        return 0; }\n                    fMismatch = 1;\n                }\n            }\n            // return nNodesMax if they are the same\n            for  i = 0; i \u003c nNodesMax; i++  {\n                ppNodes[i] = pCut1.ppLeaves[i];\n            }\n            return nNodesMax;\n        }\n    \n    } else if pCut1.nLeaves == nNodesMax - 1 \u0026\u0026 pCut2.nLeaves == nNodesMax {\n        // return 0 if the cuts are different\n        fMismatch = 0;\n        for  i = 0; i \u003c nNodesMax; i++  {\n            if pCut1.ppLeaves[i - fMismatch] != pCut2.ppLeaves[i] {\n                if fMismatch == 1 {\n                    return 0; }\n                fMismatch = 1;\n            }\n        }\n        // return nNodesMax if they are the same\n        for  i = 0; i \u003c nNodesMax; i++  {\n            ppNodes[i] = pCut2.ppLeaves[i];\n        }\n        return nNodesMax;\n    }\n\n    // count the number of unique entries in pCut2\n    nTotal = pCut1.nLeaves;\n    for  i = 0; i \u003c pCut2.nLeaves; i++  {\n        // try to find this entry among the leaves of pCut1\n        for  k = 0; k \u003c pCut1.nLeaves; k++  {\n            if pCut2.ppLeaves[i] == pCut1.ppLeaves[k] {\n                break; }\n        }\n        if k \u003c pCut1.nLeaves { // found\n            continue; }\n        // we found a new entry to add\n        if nTotal == nNodesMax {\n            return 0; }\n        ppNodes[nTotal++] = pCut2.ppLeaves[i];\n    }\n    // we know that the feasible cut exists\n\n    // add the starting entries\n    for  k = 0; k \u003c pCut1.nLeaves; k++  {\n        ppNodes[k] = pCut1.ppLeaves[k];\n    }\n\n    // selection-sort the entries\n    for  i = 0; i \u003c nTotal - 1; i++  {\n        min = i;\n        for  k = i+1; k \u003c nTotal; k++  {\n//            if ( ppNodes[k] \u003c ppNodes[min] ) // reported bug fix (non-determinism!)\n            if ppNodes[k].Num \u003c ppNodes[min].Num {\n                min = k; }\n        }\n        pNodeTemp    = ppNodes[i];\n        ppNodes[i]   = ppNodes[min];\n        ppNodes[min] = pNodeTemp;\n    }\n\n    return nTotal;\n}"
+    },
+    {
+      "Name": "Map_CutUnionLists",
+      "Start": 25330,
+      "End": 25757,
+      "BodyStart": 25402,
+      "Original": "Map_Cut_t * Map_CutUnionLists( Map_Cut_t * pList1, Map_Cut_t * pList2 )\n{\n    Map_Cut_t * pTemp, * pRoot;\n    // find the last cut in the first list\n    pRoot = pList1;\n    Map_ListForEachCut( pList1, pTemp )\n        pRoot = pTemp;\n    // attach the non-trival part of the second cut to the end of the first\n    assert( pRoot-\u003epNext == NULL );\n    pRoot-\u003epNext = pList2-\u003epNext;   \n    pList2-\u003epNext = NULL;\n    return pList1;\n}",
+      "Draft": "func Map_CutUnionLists(pList1 *Map_Cut_t, pList2 *Map_Cut_t) *Map_Cut_t {\n    var pTemp, pRoot *Map_Cut_t;\n    // find the last cut in the first list\n    pRoot = pList1;\n    // inlining of macro Map_ListForEachCut\n    for  pTemp = pList1;                                             pTemp;                                                     pTemp = pTemp.pNext  {\n        pRoot = pTemp;\n    }\n    // attach the non-trival part of the second cut to the end of the first\n    assert(pRoot.pNext == nil, \"pRoot.pNext == nil\");\n    pRoot.pNext = pList2.pNext;   \n    pList2.pNext = nil;\n    return pList1;\n}"
+    },
+    {
+      "Name": "Map_CutBelongsToList",
+      "Start": 26110,
+      "End": 26473,
+      "BodyStart": 26192,
+      "Original": "int Map_CutBelongsToList( Map_Cut_t * pList, Map_Node_t * ppNodes[], int nNodes )\n{\n    Map_Cut_t * pTemp;\n    int i;\n    for ( pTemp = pList; pTemp; pTemp = pTemp-\u003epNext )\n    {\n        for ( i = 0; i \u003c nNodes; i++ )\n            if ( pTemp-\u003eppLeaves[i] != ppNodes[i] )\n                break;\n        if ( i == nNodes )\n            return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Map_CutBelongsToList(pList *Map_Cut_t, ppNodes []*Map_Node_t, nNodes int32) int32 {\n    var pTemp *Map_Cut_t;\n    var i int32;\n    for  pTemp = pList; pTemp; pTemp = pTemp.pNext  {\n        for  i = 0; i \u003c nNodes; i++  {\n            if pTemp.ppLeaves[i] != ppNodes[i] {\n                break; }\n        }\n        if i == nNodes {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Map_CutListPrint",
+      "Start": 26738,
+      "End": 27027,
+      "BodyStart": 26800,
+      "Original": "void Map_CutListPrint( Map_Man_t * pMan, Map_Node_t * pRoot )\n{\n    Map_Cut_t * pTemp;\n    int Counter;\n    for ( Counter = 0, pTemp = pRoot-\u003epCuts; pTemp; pTemp = pTemp-\u003epNext, Counter++ )\n    {\n        printf( \"%2d : \", Counter + 1 );\n        Map_CutPrint_( pMan, pTemp, pRoot );\n    }\n}",
+      "Draft": "func Map_CutListPrint(pMan *Map_Man_t, pRoot *Map_Node_t) {\n    var pTemp *Map_Cut_t;\n    var Counter int32;\n    for  Counter, pTemp = 0, pRoot.pCuts; pTemp; pTemp, Counter = pTemp.pNext, Counter+1  {\n        fmt.Printf(\"%2d : \", Counter + 1);\n        Map_CutPrint_( pMan, pTemp, pRoot );\n    }\n}"
+    },
+    {
+      "Name": "Map_CutListPrint2",
+      "Start": 27291,
+      "End": 27581,
+      "BodyStart": 27354,
+      "Original": "void Map_CutListPrint2( Map_Man_t * pMan, Map_Node_t * pRoot )\n{\n    Map_Cut_t * pTemp;\n    int Counter;\n    for ( Counter = 0, pTemp = pRoot-\u003epCuts; pTemp; pTemp = pTemp-\u003epNext, Counter++ )\n    {\n        printf( \"%2d : \", Counter + 1 );\n        Map_CutPrint_( pMan, pTemp, pRoot );\n    }\n}",
+      "Draft": "func Map_CutListPrint2(pMan *Map_Man_t, pRoot *Map_Node_t) {\n    var pTemp *Map_Cut_t;\n    var Counter int32;\n    for  Counter, pTemp = 0, pRoot.pCuts; pTemp; pTemp, Counter = pTemp.pNext, Counter+1  {\n        fmt.Printf(\"%2d : \", Counter + 1);\n        Map_CutPrint_( pMan, pTemp, pRoot );\n    }\n}"
+    },
+    {
+      "Name": "Map_CutPrint_",
+      "Start": 27832,
+      "End": 28113,
+      "BodyStart": 27909,
+      "Original": "void Map_CutPrint_( Map_Man_t * pMan, Map_Cut_t * pCut, Map_Node_t * pRoot )\n{\n    int i;\n    printf( \"(%3d)  {\", pRoot-\u003eNum );\n    for ( i = 0; i \u003c pMan-\u003enVarsMax; i++ )\n        if ( pCut-\u003eppLeaves[i] )\n            printf( \" %3d\", pCut-\u003eppLeaves[i]-\u003eNum );\n    printf( \" }\\n\" );\n}",
+      "Draft": "func Map_CutPrint_(pMan *Map_Man_t, pCut *Map_Cut_t, pRoot *Map_Node_t) {\n    var i int32;\n    fmt.Printf(\"(%3d)  {\", pRoot.Num);\n    for  i = 0; i \u003c pMan.nVarsMax; i++  {\n        if pCut.ppLeaves[i] {\n            fmt.Printf(\" %3d\", pCut.ppLeaves[i].Num); }\n    }\n    fmt.Printf(\" }\\n\");\n}"
+    },
+    {
+      "Name": "Map_CutTableStart",
+      "Start": 28397,
+      "End": 29035,
+      "BodyStart": 28452,
+      "Original": "Map_CutTable_t * Map_CutTableStart( Map_Man_t * pMan )\n{\n    Map_CutTable_t * p;\n    // allocate the table\n    p = ABC_ALLOC( Map_CutTable_t, 1 );\n    memset( p, 0, sizeof(Map_CutTable_t) );\n    p-\u003enBins = Abc_PrimeCudd( 10 * MAP_CUTS_MAX_COMPUTE );\n    p-\u003epBins = ABC_ALLOC( Map_Cut_t *, p-\u003enBins );\n    memset( p-\u003epBins, 0, sizeof(Map_Cut_t *) * p-\u003enBins );\n    p-\u003epCuts = ABC_ALLOC( int, 2 * MAP_CUTS_MAX_COMPUTE );\n    p-\u003epArray = ABC_ALLOC( Map_Cut_t *, 2 * MAP_CUTS_MAX_COMPUTE );\n    p-\u003epCuts1 = ABC_ALLOC( Map_Cut_t *, 2 * MAP_CUTS_MAX_COMPUTE );\n    p-\u003epCuts2 = ABC_ALLOC( Map_Cut_t *, 2 * MAP_CUTS_MAX_COMPUTE );\n    return p;\n}",
+      "Draft": "func Map_CutTableStart(pMan *Map_Man_t) *Map_CutTable_t {\n    var p *Map_CutTable_t;\n    // allocate the table\n    // inlining of macro ABC_ALLOC\n    p = ((Map_CutTable_t *) malloc(sizeof(Map_CutTable_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Map_CutTable_t) );\n    p.nBins = Abc_PrimeCudd( 10 * MAP_CUTS_MAX_COMPUTE );\n    // inlining of macro ABC_ALLOC\n    p.pBins = ((Map_Cut_t * *) malloc(sizeof(Map_Cut_t *) * (size_t)(p.nBins)));\n    memset( p.pBins, 0, sizeof(Map_Cut_t *) * p.nBins );\n    // inlining of macro ABC_ALLOC\n    p.pCuts = ((int *) malloc(sizeof(int) * (size_t)(2 * MAP_CUTS_MAX_COMPUTE)));\n    // inlining of macro ABC_ALLOC\n    p.pArray = ((Map_Cut_t * *) malloc(sizeof(Map_Cut_t *) * (size_t)(2 * MAP_CUTS_MAX_COMPUTE)));\n    // inlining of macro ABC_ALLOC\n    p.pCuts1 = ((Map_Cut_t * *) malloc(sizeof(Map_Cut_t *) * (size_t)(2 * MAP_CUTS_MAX_COMPUTE)));\n    // inlining of macro ABC_ALLOC\n    p.pCuts2 = ((Map_Cut_t * *) malloc(sizeof(Map_Cut_t *) * (size_t)(2 * MAP_CUTS_MAX_COMPUTE)));\n    return p;\n}"
+    },
+    {
+      "Name": "Map_CutTableStop",
+      "Start": 29292,
+      "End": 29491,
+      "BodyStart": 29336,
+      "Original": "void Map_CutTableStop( Map_CutTable_t * p )\n{\n    ABC_FREE( p-\u003epCuts1 );\n    ABC_FREE( p-\u003epCuts2 );\n    ABC_FREE( p-\u003epArray );\n    ABC_FREE( p-\u003epBins );\n    ABC_FREE( p-\u003epCuts );\n    ABC_FREE( p );\n}",
+      "Draft": "func Map_CutTableStop(p *Map_CutTable_t) {\n    // inlining of macro ABC_FREE\n    ((p.pCuts1) ? (free((char *) (p.pCuts1)), (p.pCuts1) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCuts2) ? (free((char *) (p.pCuts2)), (p.pCuts2) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCuts) ? (free((char *) (p.pCuts)), (p.pCuts) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Map_CutTableHash",
+      "Start": 29762,
+      "End": 29976,
+      "BodyStart": 29826,
+      "Original": "unsigned Map_CutTableHash( Map_Node_t * ppNodes[], int nNodes )\n{\n    unsigned uRes;\n    int i;\n    uRes = 0;\n    for ( i = 0; i \u003c nNodes; i++ )\n        uRes += s_HashPrimes[i] * ppNodes[i]-\u003eNum;\n    return uRes;\n}",
+      "Draft": "func Map_CutTableHash(ppNodes []*Map_Node_t, nNodes int32) uint32 {\n    var uRes uint32;\n    var i int32;\n    uRes = 0;\n    for  i = 0; i \u003c nNodes; i++  {\n        uRes += s_HashPrimes[i] * ppNodes[i].Num;\n    }\n    return uRes;\n}"
+    },
+    {
+      "Name": "Map_CutTableLookup",
+      "Start": 30374,
+      "End": 30903,
+      "BodyStart": 30455,
+      "Original": "int Map_CutTableLookup( Map_CutTable_t * p, Map_Node_t * ppNodes[], int nNodes )\n{\n    Map_Cut_t * pCut;\n    unsigned Key;\n    int b, i;\n\n    Key = Map_CutTableHash(ppNodes, nNodes) % p-\u003enBins; \n    for ( b = Key; p-\u003epBins[b]; b = (b+1) % p-\u003enBins )\n    {\n        pCut = p-\u003epBins[b];\n        if ( pCut-\u003enLeaves != nNodes )\n            continue;\n        for ( i = 0; i \u003c nNodes; i++ )\n            if ( pCut-\u003eppLeaves[i] != ppNodes[i] )\n                break;\n        if ( i == nNodes )\n            return -1;\n    }\n    return b;\n}",
+      "Draft": "func Map_CutTableLookup(p *Map_CutTable_t, ppNodes []*Map_Node_t, nNodes int32) int32 {\n    var pCut *Map_Cut_t;\n    var Key uint32;\n    var b, i int32;\n\n    Key = Map_CutTableHash(ppNodes, nNodes) % p.nBins; \n    for  b = Key; p.pBins[b]; b = (b+1) % p.nBins  {\n        pCut = p.pBins[b];\n        if pCut.nLeaves != nNodes {\n            continue; }\n        for  i = 0; i \u003c nNodes; i++  {\n            if pCut.ppLeaves[i] != ppNodes[i] {\n                break; }\n        }\n        if i == nNodes {\n            return -1; }\n    }\n    return b;\n}"
+    },
+    {
+      "Name": "Map_CutTableConsider",
+      "Start": 31229,
+      "End": 31951,
+      "BodyStart": 31338,
+      "Original": "Map_Cut_t * Map_CutTableConsider( Map_Man_t * pMan, Map_CutTable_t * p, Map_Node_t * ppNodes[], int nNodes )\n{\n    Map_Cut_t * pCut;\n    int Place, i;\n//    abctime clk;\n    // check the cut\n    Place = Map_CutTableLookup( p, ppNodes, nNodes );\n    if ( Place == -1 )\n        return NULL;\n    assert( nNodes \u003e 0 );\n    // create the new cut\n//clk = Abc_Clock();\n    pCut = Map_CutAlloc( pMan );\n//pMan-\u003etime1 += Abc_Clock() - clk;\n    pCut-\u003enLeaves = nNodes;\n    for ( i = 0; i \u003c nNodes; i++ )\n        pCut-\u003eppLeaves[i] = ppNodes[i];\n    // add the cut to the table\n    assert( p-\u003epBins[Place] == NULL );\n    p-\u003epBins[Place] = pCut;\n    // add the cut to the new list\n    p-\u003epCuts[ p-\u003enCuts++ ] = Place;\n    return pCut;\n}",
+      "Draft": "func Map_CutTableConsider(pMan *Map_Man_t, p *Map_CutTable_t, ppNodes []*Map_Node_t, nNodes int32) *Map_Cut_t {\n    var pCut *Map_Cut_t;\n    var Place, i int32;\n//    abctime clk;\n    // check the cut\n    Place = Map_CutTableLookup( p, ppNodes, nNodes );\n    if Place == -1 {\n        return nil; }\n    assert(nNodes \u003e 0, \"nNodes \u003e 0\");\n    // create the new cut\n//clk = Abc_Clock();\n    pCut = Map_CutAlloc( pMan );\n//pMan-\u003etime1 += Abc_Clock() - clk;\n    pCut.nLeaves = nNodes;\n    for  i = 0; i \u003c nNodes; i++  {\n        pCut.ppLeaves[i] = ppNodes[i];\n    }\n    // add the cut to the table\n    assert(p.pBins[Place] == nil, \"p.pBins[Place] == nil\");\n    p.pBins[Place] = pCut;\n    // add the cut to the new list\n    p.pCuts[ p.nCuts++ ] = Place;\n    return pCut;\n}"
+    },
+    {
+      "Name": "Map_CutTableRestart",
+      "Start": 32331,
+      "End": 32542,
+      "BodyStart": 32378,
+      "Original": "void Map_CutTableRestart( Map_CutTable_t * p )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enCuts; i++ )\n    {\n        assert( p-\u003epBins[ p-\u003epCuts[i] ] );\n        p-\u003epBins[ p-\u003epCuts[i] ] = NULL;\n    }\n    p-\u003enCuts = 0;\n}",
+      "Draft": "func Map_CutTableRestart(p *Map_CutTable_t) {\n    var i int32;\n    for  i = 0; i \u003c p.nCuts; i++  {\n        assert(p.pBins[ p.pCuts[i] ], \"p.pBins[ p.pCuts[i] ]\");\n        p.pBins[ p.pCuts[i] ] = nil;\n    }\n    p.nCuts = 0;\n}"
+    },
+    {
+      "Name": "Map_CutSortCutsCompare",
+      "Start": 32840,
+      "End": 33049,
+      "BodyStart": 32905,
+      "Original": "int Map_CutSortCutsCompare( Map_Cut_t ** pC1, Map_Cut_t ** pC2 )\n{\n    if ( (*pC1)-\u003enLeaves \u003c (*pC2)-\u003enLeaves )\n        return -1;\n    if ( (*pC1)-\u003enLeaves \u003e (*pC2)-\u003enLeaves )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Map_CutSortCutsCompare(pC1 **Map_Cut_t, pC2 **Map_Cut_t) int32 {\n    if (*pC1).nLeaves \u003c (*pC2).nLeaves {\n        return -1; }\n    if (*pC1).nLeaves \u003e (*pC2).nLeaves {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Map_CutSortCuts",
+      "Start": 33324,
+      "End": 34251,
+      "BodyStart": 33411,
+      "Original": "Map_Cut_t * Map_CutSortCuts( Map_Man_t * pMan, Map_CutTable_t * p, Map_Cut_t * pList )\n{\n    Map_Cut_t * pListNew;\n    int nCuts, i;\n//    abctime clk;\n    // move the cuts from the list into the array\n    nCuts = Map_CutList2Array( p-\u003epCuts1, pList );\n    assert( nCuts \u003c= MAP_CUTS_MAX_COMPUTE );\n    // sort the cuts\n//clk = Abc_Clock();\n    qsort( (void *)p-\u003epCuts1, (size_t)nCuts, sizeof(Map_Cut_t *), \n            (int (*)(const void *, const void *)) Map_CutSortCutsCompare );\n//pMan-\u003etime2 += Abc_Clock() - clk;\n    // move them back into the list\n    if ( nCuts \u003e MAP_CUTS_MAX_USE - 1 )\n    {\n        // free the remaining cuts\n        for ( i = MAP_CUTS_MAX_USE - 1; i \u003c nCuts; i++ )\n            Extra_MmFixedEntryRecycle( pMan-\u003emmCuts, (char *)p-\u003epCuts1[i] );\n        // update the number of cuts\n        nCuts = MAP_CUTS_MAX_USE - 1;\n    }\n    pListNew = Map_CutArray2List( p-\u003epCuts1, nCuts );\n    return pListNew;\n}",
+      "Draft": "func Map_CutSortCuts(pMan *Map_Man_t, p *Map_CutTable_t, pList *Map_Cut_t) *Map_Cut_t {\n    var pListNew *Map_Cut_t;\n    var nCuts, i int32;\n//    abctime clk;\n    // move the cuts from the list into the array\n    nCuts = Map_CutList2Array( p.pCuts1, pList );\n    assert(nCuts \u003c= MAP_CUTS_MAX_COMPUTE, \"nCuts \u003c= MAP_CUTS_MAX_COMPUTE\");\n    // sort the cuts\n//clk = Abc_Clock();\n    qsort( (void *)p.pCuts1, (size_t)nCuts, sizeof(Map_Cut_t *), \n                (int (*)(void *, void *)) Map_CutSortCutsCompare );\n//pMan-\u003etime2 += Abc_Clock() - clk;\n    // move them back into the list\n    if nCuts \u003e MAP_CUTS_MAX_USE - 1 {\n        // free the remaining cuts\n        for  i = MAP_CUTS_MAX_USE - 1; i \u003c nCuts; i++  {\n            Extra_MmFixedEntryRecycle( pMan.mmCuts, (char *)p.pCuts1[i] );\n        }\n        // update the number of cuts\n        nCuts = MAP_CUTS_MAX_USE - 1;\n    }\n    pListNew = Map_CutArray2List( p.pCuts1, nCuts );\n    return pListNew;\n}"
+    },
+    {
+      "Name": "Map_CutList2Array",
+      "Start": 34532,
+      "End": 34703,
+      "BodyStart": 34596,
+      "Original": "int Map_CutList2Array( Map_Cut_t ** pArray, Map_Cut_t * pList )\n{\n    int i;\n    for ( i = 0; pList; pList = pList-\u003epNext, i++ )\n        pArray[i] = pList;\n    return i;\n}",
+      "Draft": "func Map_CutList2Array(pArray **Map_Cut_t, pList *Map_Cut_t) int32 {\n    var i int32;\n    for  i = 0; (pList != nil); pList, i = pList.pNext, i+1  {\n        pArray[i] = pList;\n    }\n    return i;\n}"
+    },
+    {
+      "Name": "Map_CutArray2List",
+      "Start": 34984,
+      "End": 35363,
+      "BodyStart": 35048,
+      "Original": "Map_Cut_t * Map_CutArray2List( Map_Cut_t ** pArray, int nCuts )\n{\n    Map_Cut_t * pListNew, ** ppListNew;\n    int i;\n    pListNew  = NULL;\n    ppListNew = \u0026pListNew;\n    for ( i = 0; i \u003c nCuts; i++ )\n    {\n        // connect these lists\n        *ppListNew = pArray[i];\n        ppListNew  = \u0026pArray[i]-\u003epNext;\n    }\n//printf( \"\\n\" );\n\n    *ppListNew = NULL;\n    return pListNew;\n}",
+      "Draft": "func Map_CutArray2List(pArray **Map_Cut_t, nCuts int32) *Map_Cut_t {\n    var pListNew *Map_Cut_t;\n    var ppListNew **Map_Cut_t;\n    var i int32;\n    pListNew  = nil;\n    ppListNew = \u0026pListNew;\n    for  i = 0; i \u003c nCuts; i++  {\n        // connect these lists\n        *ppListNew = pArray[i];\n        ppListNew  = \u0026pArray[i].pNext;\n    }\n//printf( \"\\n\" );\n\n    *ppListNew = nil;\n    return pListNew;\n}"
+    },
+    {
+      "Name": "Map_CutComputeTruth",
+      "Start": 35644,
+      "End": 38626,
+      "BodyStart": 35772,
+      "Original": "unsigned Map_CutComputeTruth( Map_Man_t * p, Map_Cut_t * pCut, Map_Cut_t * pTemp0, Map_Cut_t * pTemp1, int fComp0, int fComp1 )\n{\n    static unsigned ** pPerms53 = NULL;\n    static unsigned ** pPerms54 = NULL;\n\n    unsigned uPhase, uTruth, uTruth0, uTruth1;\n    int i, k;\n\n    if ( pPerms53 == NULL )\n    {\n        pPerms53 = (unsigned **)Extra_TruthPerm53();\n        pPerms54 = (unsigned **)Extra_TruthPerm54();\n    }\n\n    // find the mapping from the old nodes to the new\n    if ( pTemp0-\u003enLeaves == pCut-\u003enLeaves )\n        uTruth0 = pTemp0-\u003euTruth;\n    else\n    {\n        assert( pTemp0-\u003enLeaves \u003c pCut-\u003enLeaves );\n        uPhase = 0;\n        for ( i = 0; i \u003c (int)pTemp0-\u003enLeaves; i++ )\n        {\n            for ( k = 0; k \u003c pCut-\u003enLeaves; k++ )\n                if ( pTemp0-\u003eppLeaves[i] == pCut-\u003eppLeaves[k] )\n                    break;\n            uPhase |= (1 \u003c\u003c k);\n        }\n        assert( uPhase \u003c 32 );\n        if ( pTemp0-\u003enLeaves == 4 )\n        {\n            if ( uPhase == 31-16 ) // 01111\n                uTruth0 = pTemp0-\u003euTruth;\n            else if ( uPhase == 31-8 ) // 10111\n                uTruth0 = pPerms54[pTemp0-\u003euTruth \u0026 0xFFFF][0];\n            else if ( uPhase == 31-4 ) // 11011\n                uTruth0 = pPerms54[pTemp0-\u003euTruth \u0026 0xFFFF][1];\n            else if ( uPhase == 31-2 ) // 11101\n                uTruth0 = pPerms54[pTemp0-\u003euTruth \u0026 0xFFFF][2];\n            else if ( uPhase == 31-1 ) // 11110\n                uTruth0 = pPerms54[pTemp0-\u003euTruth \u0026 0xFFFF][3];\n            else\n                assert( 0 );\n        }\n        else\n            uTruth0 = pPerms53[pTemp0-\u003euTruth \u0026 0xFF][uPhase];\n    }\n    uTruth0 = fComp0? ~uTruth0: uTruth0;\n\n    // find the mapping from the old nodes to the new\n    if ( pTemp1-\u003enLeaves == pCut-\u003enLeaves )\n        uTruth1 = pTemp1-\u003euTruth;\n    else\n    {\n        assert( pTemp1-\u003enLeaves \u003c pCut-\u003enLeaves );\n        uPhase = 0;\n        for ( i = 0; i \u003c (int)pTemp1-\u003enLeaves; i++ )\n        {\n            for ( k = 0; k \u003c pCut-\u003enLeaves; k++ )\n                if ( pTemp1-\u003eppLeaves[i] == pCut-\u003eppLeaves[k] )\n                    break;\n            uPhase |= (1 \u003c\u003c k);\n        }\n        assert( uPhase \u003c 32 );\n        if ( pTemp1-\u003enLeaves == 4 )\n        {\n            if ( uPhase == 31-16 ) // 01111\n                uTruth1 = pTemp1-\u003euTruth;\n            else if ( uPhase == 31-8 ) // 10111\n                uTruth1 = pPerms54[pTemp1-\u003euTruth \u0026 0xFFFF][0];\n            else if ( uPhase == 31-4 ) // 11011\n                uTruth1 = pPerms54[pTemp1-\u003euTruth \u0026 0xFFFF][1];\n            else if ( uPhase == 31-2 ) // 11101\n                uTruth1 = pPerms54[pTemp1-\u003euTruth \u0026 0xFFFF][2];\n            else if ( uPhase == 31-1 ) // 11110\n                uTruth1 = pPerms54[pTemp1-\u003euTruth \u0026 0xFFFF][3];\n            else\n                assert( 0 );\n        }\n        else\n            uTruth1 = pPerms53[pTemp1-\u003euTruth \u0026 0xFF][uPhase];\n    }\n    uTruth1 = fComp1? ~uTruth1: uTruth1;\n    uTruth  = uTruth0 \u0026 uTruth1;\n    return uTruth;\n}",
+      "Draft": "func Map_CutComputeTruth(p *Map_Man_t, pCut *Map_Cut_t, pTemp0 *Map_Cut_t, pTemp1 *Map_Cut_t, fComp0 int32, fComp1 int32) uint32 {\n    \n    \n\n    var uPhase, uTruth, uTruth0, uTruth1 uint32;\n    var i, k int32;\n\n    if spStatic_Map_CutComputeTruth_pPerms53 == nil {\n        spStatic_Map_CutComputeTruth_pPerms53 = (unsigned **)Extra_TruthPerm53();\n        spStatic_Map_CutComputeTruth_pPerms54 = (unsigned **)Extra_TruthPerm54();\n    }\n\n    // find the mapping from the old nodes to the new\n    if pTemp0.nLeaves == pCut.nLeaves {\n        uTruth0 = pTemp0.uTruth;\n    } else {\n        assert(pTemp0.nLeaves \u003c pCut.nLeaves, \"pTemp0.nLeaves \u003c pCut.nLeaves\");\n        uPhase = 0;\n        for  i = 0; i \u003c int32(pTemp0.nLeaves); i++  {\n            for  k = 0; k \u003c pCut.nLeaves; k++  {\n                if pTemp0.ppLeaves[i] == pCut.ppLeaves[k] {\n                    break; }\n            }\n            uPhase |= (1 \u003c\u003c k);\n        }\n        assert(uPhase \u003c 32, \"uPhase \u003c 32\");\n        if pTemp0.nLeaves == 4 {\n            if uPhase == 31-16 { // 01111\n                uTruth0 = pTemp0.uTruth;\n            } else if uPhase == 31-8 { // 10111\n                uTruth0 = spStatic_Map_CutComputeTruth_pPerms54[pTemp0.uTruth \u0026 0xFFFF][0];\n            } else if uPhase == 31-4 { // 11011\n                uTruth0 = spStatic_Map_CutComputeTruth_pPerms54[pTemp0.uTruth \u0026 0xFFFF][1];\n            } else if uPhase == 31-2 { // 11101\n                uTruth0 = spStatic_Map_CutComputeTruth_pPerms54[pTemp0.uTruth \u0026 0xFFFF][2];\n            } else if uPhase == 31-1 { // 11110\n                uTruth0 = spStatic_Map_CutComputeTruth_pPerms54[pTemp0.uTruth \u0026 0xFFFF][3];\n            } else {\n                assert(false, \"0\"); }\n        \n        } else {\n            uTruth0 = spStatic_Map_CutComputeTruth_pPerms53[pTemp0.uTruth \u0026 0xFF][uPhase]; }\n    }\n    if fComp0 != 0 {\n        uTruth0 = ~uTruth0;\n    } else {\n        uTruth0 = uTruth0;\n    }\n\n    // find the mapping from the old nodes to the new\n    if pTemp1.nLeaves == pCut.nLeaves {\n        uTruth1 = pTemp1.uTruth;\n    } else {\n        assert(pTemp1.nLeaves \u003c pCut.nLeaves, \"pTemp1.nLeaves \u003c pCut.nLeaves\");\n        uPhase = 0;\n        for  i = 0; i \u003c int32(pTemp1.nLeaves); i++  {\n            for  k = 0; k \u003c pCut.nLeaves; k++  {\n                if pTemp1.ppLeaves[i] == pCut.ppLeaves[k] {\n                    break; }\n            }\n            uPhase |= (1 \u003c\u003c k);\n        }\n        assert(uPhase \u003c 32, \"uPhase \u003c 32\");\n        if pTemp1.nLeaves == 4 {\n            if uPhase == 31-16 { // 01111\n                uTruth1 = pTemp1.uTruth;\n            } else if uPhase == 31-8 { // 10111\n                uTruth1 = spStatic_Map_CutComputeTruth_pPerms54[pTemp1.uTruth \u0026 0xFFFF][0];\n            } else if uPhase == 31-4 { // 11011\n                uTruth1 = spStatic_Map_CutComputeTruth_pPerms54[pTemp1.uTruth \u0026 0xFFFF][1];\n            } else if uPhase == 31-2 { // 11101\n                uTruth1 = spStatic_Map_CutComputeTruth_pPerms54[pTemp1.uTruth \u0026 0xFFFF][2];\n            } else if uPhase == 31-1 { // 11110\n                uTruth1 = spStatic_Map_CutComputeTruth_pPerms54[pTemp1.uTruth \u0026 0xFFFF][3];\n            } else {\n                assert(false, \"0\"); }\n        \n        } else {\n            uTruth1 = spStatic_Map_CutComputeTruth_pPerms53[pTemp1.uTruth \u0026 0xFF][uPhase]; }\n    }\n    if fComp1 != 0 {\n        uTruth1 = ~uTruth1;\n    } else {\n        uTruth1 = uTruth1;\n    }\n    uTruth  = uTruth0 \u0026 uTruth1;\n    return uTruth;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::struct::Map_CutTable_t",
+      "Category": "struct-review",
+      "Symbol": "Map_CutTable_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 942,
+      "End": 1479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::mechanical::sizeof::30166",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28512,
+      "End": 28512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::mechanical::sizeof::30224",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28562,
+      "End": 28568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::mechanical::sizeof::30393",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28662,
+      "End": 28662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::mechanical::sizeof::30462",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28723,
+      "End": 28729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::mechanical::sizeof::30572",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28772,
+      "End": 28772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::mechanical::sizeof::30709",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28832,
+      "End": 28832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::mechanical::sizeof::30854",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28900,
+      "End": 28900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::mechanical::sizeof::30999",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28968,
+      "End": 28968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::mechanical::sizeof::36256",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 33709,
+      "End": 33715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::mechanical::static::38325",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 35778,
+      "End": 35784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::mechanical::static::38365",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 35818,
+      "End": 35824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::9901",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9725,
+      "End": 9725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::10021",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9769,
+      "End": 9769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::16171",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15256,
+      "End": 15256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::16299",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15315,
+      "End": 15315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::17718",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16665,
+      "End": 16665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::17846",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16724,
+      "End": 16724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::19349",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18158,
+      "End": 18158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::19477",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18217,
+      "End": 18217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::21946",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20617,
+      "End": 20617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::22074",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20676,
+      "End": 20676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::30140",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28512,
+      "End": 28512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::30370",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28662,
+      "End": 28662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::30399",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28662,
+      "End": 28662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::30468",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28729,
+      "End": 28742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::30557",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28772,
+      "End": 28772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::30686",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28832,
+      "End": 28832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::30715",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28832,
+      "End": 28832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::30831",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28900,
+      "End": 28900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::30860",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28900,
+      "End": 28900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::30976",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28968,
+      "End": 28968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::31005",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28968,
+      "End": 28968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::31446",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29342,
+      "End": 29342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::31561",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29369,
+      "End": 29369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::31676",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29396,
+      "End": 29396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::31790",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29423,
+      "End": 29423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::31902",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29449,
+      "End": 29449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::32007",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29475,
+      "End": 29475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::36222",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33675,
+      "End": 33683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::36262",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33715,
+      "End": 33728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::36617",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34070,
+      "End": 34078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::38517",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35970,
+      "End": 35983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::pointer-cast::38570",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36023,
+      "End": 36036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::macro::Map_ListForEachCut",
+      "Category": "macro-review",
+      "Symbol": "Map_ListForEachCut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3456,
+      "End": 3666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::macro::Map_ListForEachCutSafe",
+      "Category": "macro-review",
+      "Symbol": "Map_ListForEachCutSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3667,
+      "End": 4010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_MappingCountAllCuts",
+      "Category": "semantic-review",
+      "Symbol": "Map_MappingCountAllCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4486,
+      "End": 6098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_MappingCutsInput",
+      "Category": "semantic-review",
+      "Symbol": "Map_MappingCutsInput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7229,
+      "End": 7745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_MappingCuts",
+      "Category": "semantic-review",
+      "Symbol": "Map_MappingCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7746,
+      "End": 9125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutCompute",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutCompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9392,
+      "End": 11303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::ternary::Map_CutFilter",
+      "Category": "ternary-review",
+      "Symbol": "Map_CutFilter",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11571,
+      "End": 12824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutFilter",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutFilter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11571,
+      "End": 12824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutMergeLists",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutMergeLists",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13085,
+      "End": 19322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutMergeLists2",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutMergeLists2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19584,
+      "End": 21650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutMergeTwo",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutMergeTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22036,
+      "End": 25050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutUnionLists",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutUnionLists",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25330,
+      "End": 25757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutBelongsToList",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutBelongsToList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26110,
+      "End": 26473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutListPrint",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutListPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26738,
+      "End": 27027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutListPrint2",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutListPrint2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27291,
+      "End": 27581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutPrint_",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutPrint_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27832,
+      "End": 28113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutTableStart",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutTableStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28397,
+      "End": 29035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::ternary::Map_CutTableStop",
+      "Category": "ternary-review",
+      "Symbol": "Map_CutTableStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 29292,
+      "End": 29491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutTableStop",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutTableStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29292,
+      "End": 29491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutTableHash",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutTableHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29762,
+      "End": 29976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutTableLookup",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutTableLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30374,
+      "End": 30903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutTableConsider",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutTableConsider",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31229,
+      "End": 31951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutTableRestart",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutTableRestart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32331,
+      "End": 32542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutSortCutsCompare",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutSortCutsCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32840,
+      "End": 33049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutSortCuts",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutSortCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33324,
+      "End": 34251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutList2Array",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutList2Array",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34532,
+      "End": 34703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutArray2List",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutArray2List",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34984,
+      "End": 35363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::Map_CutComputeTruth",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutComputeTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35644,
+      "End": 38626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCut.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 38872
+    }
+  ],
+  "Draft": "package mapper\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [mapperCut.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Generic technology mapping engine.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - June 1, 2004.]\n\n  Revision    [$Id: mapperCut.c,v 1.12 2005/02/28 05:34:27 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mapperInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// the largest number of cuts considered\nconst MAP_CUTS_MAX_COMPUTE =   1000\n// the largest number of cuts used\nconst MAP_CUTS_MAX_USE =       250\n\n// temporary hash table to store the cuts\n   \ntype Map_CutTable_t struct {\n    pBins  **Map_Cut_t;        // the table used for linear probing\n    nBins          int32;        // the size of the table\n    pCuts         *int32;        // the array of cuts currently stored \n    nCuts          int32;        // the number of cuts currently stored \n    pArray  **Map_Cut_t;       // the temporary array of cuts\n    pCuts1  **Map_Cut_t;       // the temporary array of cuts\n    pCuts2  **Map_Cut_t;       // the temporary array of cuts\n}\n\n// primes used to compute the hash key\nvar s_HashPrimes [10]int32 = [10]int32{ 109, 499, 557, 619, 631, 709, 797, 881, 907, 991 };\n\n// static Map_Cut_t *      Map_CutCompute( Map_Man_t * p, Map_CutTable_t * pTable, Map_Node_t * pNode );\n\n// static void             Map_CutFilter( Map_Man_t * p, Map_Node_t * pNode );\n\n// static Map_Cut_t *      Map_CutMergeLists( Map_Man_t * p, Map_CutTable_t * pTable, Map_Cut_t * pList1, Map_Cut_t * pList2, int fComp1, int fComp2 );\n\n// static int              Map_CutMergeTwo( Map_Cut_t * pCut1, Map_Cut_t * pCut2, Map_Node_t * ppNodes[], int nNodesMax );\n\n// static Map_Cut_t *      Map_CutUnionLists( Map_Cut_t * pList1, Map_Cut_t * pList2 );\n\n// static int              Map_CutBelongsToList( Map_Cut_t * pList, Map_Node_t * ppNodes[], int nNodes );\n\n\n// static void             Map_CutListPrint( Map_Man_t * pMan, Map_Node_t * pRoot );\n\n// static void             Map_CutListPrint2( Map_Man_t * pMan, Map_Node_t * pRoot );\n\n// static void             Map_CutPrint_( Map_Man_t * pMan, Map_Cut_t * pCut, Map_Node_t * pRoot );\n\n\n// static Map_CutTable_t * Map_CutTableStart( Map_Man_t * pMan );\n\n// static void             Map_CutTableStop( Map_CutTable_t * p );\n\n// static unsigned         Map_CutTableHash( Map_Node_t * ppNodes[], int nNodes );\n\n// static int              Map_CutTableLookup( Map_CutTable_t * p, Map_Node_t * ppNodes[], int nNodes );\n\n// static Map_Cut_t *      Map_CutTableConsider( Map_Man_t * pMan, Map_CutTable_t * p, Map_Node_t * ppNodes[], int nNodes );\n\n// static void             Map_CutTableRestart( Map_CutTable_t * p );\n\n\n// static Map_Cut_t *      Map_CutSortCuts( Map_Man_t * pMan, Map_CutTable_t * p, Map_Cut_t * pList );\n\n// static int              Map_CutList2Array( Map_Cut_t ** pArray, Map_Cut_t * pList );\n\n// static Map_Cut_t *      Map_CutArray2List( Map_Cut_t ** pArray, int nCuts );\n\n\n// static unsigned         Map_CutComputeTruth( Map_Man_t * p, Map_Cut_t * pCut, Map_Cut_t * pTemp0, Map_Cut_t * pTemp1, int fComp0, int fComp1 );\n\n\n// iterator through all the cuts of the list\n// Original macro:\n// #define Map_ListForEachCut( pList, pCut )                 \\\n//     for ( pCut = pList;                                   \\\n//           pCut;                                           \\\n//           pCut = pCut-\u003epNext )\n\n// Original macro:\n// #define Map_ListForEachCutSafe( pList, pCut, pCut2 )      \\\n//     for ( pCut = pList,                                   \\\n//           pCut2 = pCut? pCut-\u003epNext: NULL;                \\\n//           pCut;                                           \\\n//           pCut = pCut2,                                   \\\n//           pCut2 = pCut? pCut-\u003epNext: NULL )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Counts all the cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_MappingCountAllCuts(pMan *Map_Man_t) int32 {\n    var pNode *Map_Node_t;\n    var pCut *Map_Cut_t;\n    var i, nCuts int32;\n//    int nCuts55 = 0, nCuts5x = 0, nCuts4x = 0, nCuts3x = 0;\n//    int pCounts[7] = {0};\n    nCuts = 0;\n    for  i = 0; i \u003c pMan.nBins; i++  {\n        for  pNode = pMan.pBins[i]; (pNode != nil); pNode = pNode.pNext  {\n            for  pCut = pNode.pCuts; (pCut != nil); pCut = pCut.pNext  {\n                if pCut.nLeaves \u003e 1 { // skip the elementary cuts\n                \n                    nCuts++;\n/*\n                    if ( Map_CutRegular(pCut-\u003epOne)-\u003enLeaves == 5 \u0026\u0026 Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves == 5 )\n                        nCuts55++;\n                    if ( Map_CutRegular(pCut-\u003epOne)-\u003enLeaves == 5 || Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves == 5 )\n                        nCuts5x++;\n                    else if ( Map_CutRegular(pCut-\u003epOne)-\u003enLeaves == 4 || Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves == 4 )\n                        nCuts4x++;\n                    else if ( Map_CutRegular(pCut-\u003epOne)-\u003enLeaves == 3 || Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves == 3 )\n                        nCuts3x++;\n*/                  \n//                    pCounts[ Map_CutRegular(pCut-\u003epOne)-\u003enLeaves ]++;\n//                    pCounts[ Map_CutRegular(pCut-\u003epTwo)-\u003enLeaves ]++;\n                }\n            }\n        }\n    }\n//    printf( \"Total cuts = %6d. 55 = %6d. 5x = %6d. 4x = %6d. 3x = %6d.\\n\", nCuts, nCuts55, nCuts5x, nCuts4x, nCuts3x );\n\n//    printf( \"Total cuts = %6d. 6= %6d. 5= %6d. 4= %6d. 3= %6d. 2= %6d. 1= %6d.\\n\", \n//        nCuts, pCounts[6], pCounts[5], pCounts[4], pCounts[3], pCounts[2], pCounts[1] );\n    return nCuts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts for each node in the object graph.]\n\n  Description [The cuts are computed in one sweep over the mapping graph. \n  First, the elementary cuts, which include the node itself, are assigned \n  to the PI nodes. The internal nodes are considered in the DFS order.\n  Each node is two-input AND-gate. So to compute the cuts at a node, we\n  need to merge the sets of cuts of its two predecessors. The merged set\n  contains only unique cuts with the number of inputs equal to k or less.\n  Finally, the elementary cut, composed of the node itself, is added to\n  the set of cuts for the node.\n  \n  This procedure is pretty fast for 5-feasible cuts, but it dramatically\n  slows down on some \"dense\" networks when computing 6-feasible cuts.\n  The problem is that there are too many cuts in this case. We should\n  think how to heuristically trim the number of cuts in such cases, \n  to have reasonable runtime.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_MappingCutsInput(p *Map_Man_t, pNode *Map_Node_t) {\n    var pCut *Map_Cut_t;\n    assert(Map_NodeIsVar(pNode) || Map_NodeIsBuf(pNode), \"Map_NodeIsVar(pNode) || Map_NodeIsBuf(pNode)\");\n    pCut = Map_CutAlloc( p );\n    pCut.nLeaves = 1;\n    pCut.ppLeaves[0] = pNode;\n    pNode.pCuts   = pCut;\n    pNode.pCutBest[0] = nil; // negative polarity is not mapped\n    pNode.pCutBest[1] = pCut; // positive polarity is a trivial cut\n    pCut.uTruth = 0xAAAAAAAA; // the first variable \"1010\"\n    pCut.M[0].AreaFlow = 0.0;\n    pCut.M[1].AreaFlow = 0.0;\n}\nfunc Map_MappingCuts(p *Map_Man_t) {\n    var pProgress *ProgressBar;\n    var pTable *Map_CutTable_t;\n    var pNode *Map_Node_t;\n    var nCuts, nNodes, i int32;\n    var clk abctime  = Abc_Clock();\n    // set the elementary cuts for the PI variables\n    assert(p.nVarsMax \u003e 1 \u0026\u0026 p.nVarsMax \u003c 7, \"p.nVarsMax \u003e 1 \u0026\u0026 p.nVarsMax \u003c 7\");\n    for  i = 0; i \u003c p.nInputs; i++  {\n        Map_MappingCutsInput( p, p.pInputs[i] );\n    }\n\n    // compute the cuts for the internal nodes\n    nNodes = p.vMapObjs.nSize;\n    pProgress = Extra_ProgressBarStart( os.Stdout, nNodes );\n    pTable = Map_CutTableStart( p );\n    for  i = 0; i \u003c nNodes; i++  {\n        pNode = p.vMapObjs.pArray[i];\n        if Map_NodeIsBuf(pNode) {\n            Map_MappingCutsInput( p, pNode );\n        } else if Map_NodeIsAnd(pNode) {\n            Map_CutCompute( p, pTable, pNode );\n        } else { continue; }\n        Extra_ProgressBarUpdate( pProgress, i, \"Cuts ...\" );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Map_CutTableStop( pTable );\n\n    // report the stats\n    if p.fVerbose {\n        nCuts = Map_MappingCountAllCuts(p);\n        fmt.Printf(\"Nodes = %6d.  Total %d-feasible cuts = %10d.  Per node = %.1f. \", p.nNodes, p.nVarsMax, nCuts, (float32(nCuts))/p.nNodes);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n\n    // print the cuts for the first primary output\n//    Map_CutListPrint( p, Map_Regular(p-\u003epOutputs[0]) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts for one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutCompute(p *Map_Man_t, pTable *Map_CutTable_t, pNode *Map_Node_t) *Map_Cut_t {\n    var pTemp *Map_Node_t;\n    var pList, pList1, pList2 *Map_Cut_t;\n    var pCut *Map_Cut_t;\n\n    // if the cuts are computed return them\n    if pNode.pCuts {\n        return pNode.pCuts; }\n\n    // compute the cuts for the children\n    // inlining of macro Map_Regular\n    pList1 = ((Map_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .pCuts;\n    // inlining of macro Map_Regular\n    pList2 = ((Map_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .pCuts;\n    // merge the lists\n    pList = Map_CutMergeLists( p, pTable, pList1, pList2, \n        // inlining of macro Map_IsComplement\n        ((int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01)))), ((int32(((ABC_PTRUINT_T) (pNode.p2) \u0026 01)))) );\n    // if there are functionally equivalent nodes, union them with this list\n    assert((pList != nil), \"pList\");\n    // only add to the list of cuts if the node is a representative one\n    if pNode.pRepr == nil {\n        for  pTemp = pNode.pNextE; pTemp; pTemp = pTemp.pNextE  {\n            assert(pTemp.pCuts, \"pTemp.pCuts\");\n            pList = Map_CutUnionLists( pList, pTemp.pCuts );\n            assert(pTemp.pCuts, \"pTemp.pCuts\");\n            pList = Map_CutSortCuts( p, pTable, pList );\n        }\n    }\n    // add the new cut\n    pCut = Map_CutAlloc( p );\n    pCut.nLeaves = 1;\n    pCut.ppLeaves[0] = pNode;\n    pCut.uTruth = 0xAAAAAAAA;\n    // append (it is important that the elementary cut is appended first)\n    pCut.pNext = pList;\n    // set at the node\n    pNode.pCuts = pCut;\n    // remove the dominated cuts\n    Map_CutFilter( p, pNode );\n    // set the phase correctly\n    if pNode.pRepr \u0026\u0026 Map_NodeComparePhase(pNode, pNode.pRepr) {\n        // inlining of macro Map_ListForEachCut\n        for  pCut = pNode.pCuts;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n            pCut.Phase = 1;\n        }\n    }\n/*\n    { \n        int i, Counter = 0;;\n        for ( pCut = pNode-\u003epCuts-\u003epNext; pCut; pCut = pCut-\u003epNext )\n            for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n                Counter += (pCut-\u003eppLeaves[i]-\u003eLevel \u003e= pNode-\u003eLevel);\n//        if ( Counter )\n//            printf( \" %d\", Counter );\n    }\n*/\n    return pCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Filter the cuts using dominance.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutFilter(p *Map_Man_t, pNode *Map_Node_t) { \n    var pTemp, pPrev, pCut, pCut2 *Map_Cut_t;\n    var i, k, Counter int32;\n\n    Counter = 0;\n    pPrev = pNode.pCuts;\n    // inlining of macro Map_ListForEachCutSafe\n    for  pCut = pNode.pCuts.pNext,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n        // go through all the previous cuts up to pCut\n        for  pTemp = pNode.pCuts.pNext; pTemp != pCut; pTemp = pTemp.pNext  {\n            // check if every node in pTemp is contained in pCut\n            for  i = 0; i \u003c pTemp.nLeaves; i++  {\n                for  k = 0; k \u003c pCut.nLeaves; k++  {\n                    if pTemp.ppLeaves[i] == pCut.ppLeaves[k] {\n                        break; }\n                }\n                if k == pCut.nLeaves { // node i in pTemp is not contained in pCut\n                    break; }\n            }\n            if i == pTemp.nLeaves { // every node in pTemp is contained in pCut\n            \n                Counter++;\n                break;\n            }\n        }\n        if pTemp != pCut { // pTemp contain pCut\n        \n            pPrev.pNext = pCut.pNext;  // skip pCut\n            // recycle pCut\n            Map_CutFree( p, pCut );\n        \n        } else { \n            pPrev = pCut; } \n    }\n//  printf( \"Dominated = %3d. \\n\", Counter );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two lists of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutMergeLists(p *Map_Man_t, pTable *Map_CutTable_t, pList1 *Map_Cut_t, pList2 *Map_Cut_t, fComp1 int32, fComp2 int32) *Map_Cut_t {\n    var ppNodes [6]*Map_Node_t;\n    var pListNew *Map_Cut_t;\n    var ppListNew **Map_Cut_t;\n    var pLists [7]*Map_Cut_t = [7]*Map_Cut_t{ nil };\n    var pCut, pPrev, pTemp1, pTemp2 *Map_Cut_t;\n    var nNodes, Counter, i int32;\n    var ppArray1, ppArray2, ppArray3 **Map_Cut_t;\n    var nCuts1, nCuts2, nCuts3, k, fComp3 int32;\n\n    ppArray1 = pTable.pCuts1;\n    ppArray2 = pTable.pCuts2;\n    nCuts1 = Map_CutList2Array( ppArray1, pList1 );\n    nCuts2 = Map_CutList2Array( ppArray2, pList2 );\n    // swap the lists based on their length\n    if nCuts1 \u003e nCuts2 {\n         ppArray3 = ppArray1;\n         ppArray1 = ppArray2;\n         ppArray2 = ppArray3;\n\n         nCuts3 = nCuts1;\n         nCuts1 = nCuts2;\n         nCuts2 = nCuts3;\n\n         fComp3 = fComp1;\n         fComp1 = fComp2;\n         fComp2 = fComp3;\n    }\n    // pList1 is shorter or equal length compared to pList2\n \n    // prepare the manager for the cut computation\n    Map_CutTableRestart( pTable );\n    // go through the cut pairs\n    Counter = 0;\n//    for ( pTemp1 = pList1; pTemp1; pTemp1 = fPivot1? NULL: pTemp1-\u003epNext )\n//        for ( pTemp2 = pList2; pTemp2; pTemp2 = fPivot2? NULL: pTemp2-\u003epNext )\n    for  i = 0; i \u003c nCuts1; i++  {\n        for  k = 0; k \u003c= i; k++  {\n            pTemp1 = ppArray1[i];\n            pTemp2 = ppArray2[k];\n\n            if pTemp1.nLeaves == p.nVarsMax \u0026\u0026 pTemp2.nLeaves == p.nVarsMax {\n                if pTemp1.ppLeaves[0] != pTemp2.ppLeaves[0] {\n                    continue; }\n                if pTemp1.ppLeaves[1] != pTemp2.ppLeaves[1] {\n                    continue; }\n            }\n\n            // check if k-feasible cut exists\n            nNodes = Map_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Map_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Map_CutNotCond\n            pCut.pOne = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Map_CutNotCond\n            pCut.pTwo = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n//            if ( p-\u003enVarsMax == 5 )\n//            pCut-\u003euTruth = Map_CutComputeTruth( p, pCut, pTemp1, pTemp2, fComp1, fComp2 );\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == MAP_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n        for  k = 0; k \u003c i; k++  {\n            pTemp1 = ppArray1[k];\n            pTemp2 = ppArray2[i];\n\n            if pTemp1.nLeaves == p.nVarsMax \u0026\u0026 pTemp2.nLeaves == p.nVarsMax {\n                if pTemp1.ppLeaves[0] != pTemp2.ppLeaves[0] {\n                    continue; }\n                if pTemp1.ppLeaves[1] != pTemp2.ppLeaves[1] {\n                    continue; }\n            }\n\n            // check if k-feasible cut exists\n            nNodes = Map_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Map_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Map_CutNotCond\n            pCut.pOne = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Map_CutNotCond\n            pCut.pTwo = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n//            if ( p-\u003enVarsMax == 5 )\n//            pCut-\u003euTruth = Map_CutComputeTruth( p, pCut, pTemp1, pTemp2, fComp1, fComp2 );\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == MAP_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n    }\n    // consider the rest of them\n    for  i = nCuts1; i \u003c nCuts2; i++  {\n        for  k = 0; k \u003c nCuts1; k++  {\n            pTemp1 = ppArray1[k];\n            pTemp2 = ppArray2[i];\n\n            if pTemp1.nLeaves == p.nVarsMax \u0026\u0026 pTemp2.nLeaves == p.nVarsMax {\n                if pTemp1.ppLeaves[0] != pTemp2.ppLeaves[0] {\n                    continue; }\n                if pTemp1.ppLeaves[1] != pTemp2.ppLeaves[1] {\n                    continue; }\n            }\n\n            // check if k-feasible cut exists\n            nNodes = Map_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Map_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Map_CutNotCond\n            pCut.pOne = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Map_CutNotCond\n            pCut.pTwo = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n//            if ( p-\u003enVarsMax == 5 )\n//            pCut-\u003euTruth = Map_CutComputeTruth( p, pCut, pTemp1, pTemp2, fComp1, fComp2 );\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == MAP_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n    }\nQUITS :\n    // combine all the lists into one\n    pListNew  = nil;\n    ppListNew = \u0026pListNew;\n    for  i = 1; i \u003c= p.nVarsMax; i++  {\n        if pLists[i] == nil {\n            continue; }\n        // find the last entry\n        for  pPrev = pLists[i], pCut = pPrev.pNext; (pCut != nil); \n            pPrev = pCut, pCut = pCut.pNext  {}\n        // connect these lists\n        *ppListNew = pLists[i];\n        ppListNew  = \u0026pPrev.pNext;\n    }\n    *ppListNew = nil;\n    // soft the cuts by arrival times and use only the first MAP_CUTS_MAX_USE\n    pListNew = Map_CutSortCuts( p, pTable, pListNew );\n    return pListNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two lists of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutMergeLists2(p *Map_Man_t, pTable *Map_CutTable_t, pList1 *Map_Cut_t, pList2 *Map_Cut_t, fComp1 int32, fComp2 int32) *Map_Cut_t {\n    var ppNodes [6]*Map_Node_t;\n    var pListNew *Map_Cut_t;\n    var ppListNew **Map_Cut_t;\n    var pLists [7]*Map_Cut_t = [7]*Map_Cut_t{ nil };\n    var pCut, pPrev, pTemp1, pTemp2 *Map_Cut_t;\n    var nNodes, Counter, i int32;\n\n    // prepare the manager for the cut computation\n    Map_CutTableRestart( pTable );\n    // go through the cut pairs\n    Counter = 0;\n    for  pTemp1 = pList1; (pTemp1 != nil); pTemp1 = pTemp1.pNext  {\n        for  pTemp2 = pList2; (pTemp2 != nil); pTemp2 = pTemp2.pNext  {\n            // check if k-feasible cut exists\n            nNodes = Map_CutMergeTwo( pTemp1, pTemp2, ppNodes, p.nVarsMax );\n            if nNodes == 0 {\n                continue; }\n            // consider the cut for possible addition to the set of new cuts\n            pCut = Map_CutTableConsider( p, pTable, ppNodes, nNodes );\n            if pCut == nil {\n                continue; }\n            // add data to the cut\n            // inlining of macro Map_CutNotCond\n            pCut.pOne = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp1) ^ (fComp1)));\n            // inlining of macro Map_CutNotCond\n            pCut.pTwo = ((Map_Cut_t *)((ABC_PTRUINT_T)(pTemp2) ^ (fComp2)));\n            // add it to the corresponding list\n            pCut.pNext = pLists[int32(pCut.nLeaves)];\n            pLists[int32(pCut.nLeaves)] = pCut;\n            // count this cut and quit if limit is reached\n            Counter++;\n            if Counter == MAP_CUTS_MAX_COMPUTE {\n                goto QUITS; }\n        }\n    }\nQUITS :\n    // combine all the lists into one\n    pListNew  = nil;\n    ppListNew = \u0026pListNew;\n    for  i = 1; i \u003c= p.nVarsMax; i++  {\n        if pLists[i] == nil {\n            continue; }\n        // find the last entry\n        for  pPrev = pLists[i], pCut = pPrev.pNext; (pCut != nil); \n            pPrev = pCut, pCut = pCut.pNext  {}\n        // connect these lists\n        *ppListNew = pLists[i];\n        ppListNew  = \u0026pPrev.pNext;\n    }\n    *ppListNew = nil;\n    // soft the cuts by arrival times and use only the first MAP_CUTS_MAX_USE\n    pListNew = Map_CutSortCuts( p, pTable, pListNew );\n    return pListNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two cuts.]\n\n  Description [Returns the number of nodes in the resulting cut, or 0 if the\n  cut is infeasible. Returns the resulting nodes in the array ppNodes[].]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutMergeTwo(pCut1 *Map_Cut_t, pCut2 *Map_Cut_t, ppNodes []*Map_Node_t, nNodesMax int32) int32 {\n    var pNodeTemp *Map_Node_t;\n    var nTotal, i, k, min, fMismatch int32;\n\n    // check the special case when at least of the cuts is the largest\n    if pCut1.nLeaves == nNodesMax {\n        if pCut2.nLeaves == nNodesMax {\n            // return 0 if the cuts are different\n            for  i = 0; i \u003c nNodesMax; i++  {\n                if pCut1.ppLeaves[i] != pCut2.ppLeaves[i] {\n                    return 0; }\n            }\n            // return nNodesMax if they are the same\n            for  i = 0; i \u003c nNodesMax; i++  {\n                ppNodes[i] = pCut1.ppLeaves[i];\n            }\n            return nNodesMax;\n        \n        } else if pCut2.nLeaves == nNodesMax - 1 {\n            // return 0 if the cuts are different\n            fMismatch = 0;\n            for  i = 0; i \u003c nNodesMax; i++  {\n                if pCut1.ppLeaves[i] != pCut2.ppLeaves[i - fMismatch] {\n                    if fMismatch == 1 {\n                        return 0; }\n                    fMismatch = 1;\n                }\n            }\n            // return nNodesMax if they are the same\n            for  i = 0; i \u003c nNodesMax; i++  {\n                ppNodes[i] = pCut1.ppLeaves[i];\n            }\n            return nNodesMax;\n        }\n    \n    } else if pCut1.nLeaves == nNodesMax - 1 \u0026\u0026 pCut2.nLeaves == nNodesMax {\n        // return 0 if the cuts are different\n        fMismatch = 0;\n        for  i = 0; i \u003c nNodesMax; i++  {\n            if pCut1.ppLeaves[i - fMismatch] != pCut2.ppLeaves[i] {\n                if fMismatch == 1 {\n                    return 0; }\n                fMismatch = 1;\n            }\n        }\n        // return nNodesMax if they are the same\n        for  i = 0; i \u003c nNodesMax; i++  {\n            ppNodes[i] = pCut2.ppLeaves[i];\n        }\n        return nNodesMax;\n    }\n\n    // count the number of unique entries in pCut2\n    nTotal = pCut1.nLeaves;\n    for  i = 0; i \u003c pCut2.nLeaves; i++  {\n        // try to find this entry among the leaves of pCut1\n        for  k = 0; k \u003c pCut1.nLeaves; k++  {\n            if pCut2.ppLeaves[i] == pCut1.ppLeaves[k] {\n                break; }\n        }\n        if k \u003c pCut1.nLeaves { // found\n            continue; }\n        // we found a new entry to add\n        if nTotal == nNodesMax {\n            return 0; }\n        ppNodes[nTotal++] = pCut2.ppLeaves[i];\n    }\n    // we know that the feasible cut exists\n\n    // add the starting entries\n    for  k = 0; k \u003c pCut1.nLeaves; k++  {\n        ppNodes[k] = pCut1.ppLeaves[k];\n    }\n\n    // selection-sort the entries\n    for  i = 0; i \u003c nTotal - 1; i++  {\n        min = i;\n        for  k = i+1; k \u003c nTotal; k++  {\n//            if ( ppNodes[k] \u003c ppNodes[min] ) // reported bug fix (non-determinism!)\n            if ppNodes[k].Num \u003c ppNodes[min].Num {\n                min = k; }\n        }\n        pNodeTemp    = ppNodes[i];\n        ppNodes[i]   = ppNodes[min];\n        ppNodes[min] = pNodeTemp;\n    }\n\n    return nTotal;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the union of the two lists of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutUnionLists(pList1 *Map_Cut_t, pList2 *Map_Cut_t) *Map_Cut_t {\n    var pTemp, pRoot *Map_Cut_t;\n    // find the last cut in the first list\n    pRoot = pList1;\n    // inlining of macro Map_ListForEachCut\n    for  pTemp = pList1;                                             pTemp;                                                     pTemp = pTemp.pNext  {\n        pRoot = pTemp;\n    }\n    // attach the non-trival part of the second cut to the end of the first\n    assert(pRoot.pNext == nil, \"pRoot.pNext == nil\");\n    pRoot.pNext = pList2.pNext;   \n    pList2.pNext = nil;\n    return pList1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks whether the given cut belongs to the list.]\n\n  Description [This procedure takes most of the runtime in the cut \n  computation.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutBelongsToList(pList *Map_Cut_t, ppNodes []*Map_Node_t, nNodes int32) int32 {\n    var pTemp *Map_Cut_t;\n    var i int32;\n    for  pTemp = pList; pTemp; pTemp = pTemp.pNext  {\n        for  i = 0; i \u003c nNodes; i++  {\n            if pTemp.ppLeaves[i] != ppNodes[i] {\n                break; }\n        }\n        if i == nNodes {\n            return 1; }\n    }\n    return 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the cuts in the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutListPrint(pMan *Map_Man_t, pRoot *Map_Node_t) {\n    var pTemp *Map_Cut_t;\n    var Counter int32;\n    for  Counter, pTemp = 0, pRoot.pCuts; pTemp; pTemp, Counter = pTemp.pNext, Counter+1  {\n        fmt.Printf(\"%2d : \", Counter + 1);\n        Map_CutPrint_( pMan, pTemp, pRoot );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the cuts in the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutListPrint2(pMan *Map_Man_t, pRoot *Map_Node_t) {\n    var pTemp *Map_Cut_t;\n    var Counter int32;\n    for  Counter, pTemp = 0, pRoot.pCuts; pTemp; pTemp, Counter = pTemp.pNext, Counter+1  {\n        fmt.Printf(\"%2d : \", Counter + 1);\n        Map_CutPrint_( pMan, pTemp, pRoot );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutPrint_(pMan *Map_Man_t, pCut *Map_Cut_t, pRoot *Map_Node_t) {\n    var i int32;\n    fmt.Printf(\"(%3d)  {\", pRoot.Num);\n    for  i = 0; i \u003c pMan.nVarsMax; i++  {\n        if pCut.ppLeaves[i] {\n            fmt.Printf(\" %3d\", pCut.ppLeaves[i].Num); }\n    }\n    fmt.Printf(\" }\\n\");\n}\n\n\n\n\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the hash table to canonicize cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutTableStart(pMan *Map_Man_t) *Map_CutTable_t {\n    var p *Map_CutTable_t;\n    // allocate the table\n    // inlining of macro ABC_ALLOC\n    p = ((Map_CutTable_t *) malloc(sizeof(Map_CutTable_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Map_CutTable_t) );\n    p.nBins = Abc_PrimeCudd( 10 * MAP_CUTS_MAX_COMPUTE );\n    // inlining of macro ABC_ALLOC\n    p.pBins = ((Map_Cut_t * *) malloc(sizeof(Map_Cut_t *) * (size_t)(p.nBins)));\n    memset( p.pBins, 0, sizeof(Map_Cut_t *) * p.nBins );\n    // inlining of macro ABC_ALLOC\n    p.pCuts = ((int *) malloc(sizeof(int) * (size_t)(2 * MAP_CUTS_MAX_COMPUTE)));\n    // inlining of macro ABC_ALLOC\n    p.pArray = ((Map_Cut_t * *) malloc(sizeof(Map_Cut_t *) * (size_t)(2 * MAP_CUTS_MAX_COMPUTE)));\n    // inlining of macro ABC_ALLOC\n    p.pCuts1 = ((Map_Cut_t * *) malloc(sizeof(Map_Cut_t *) * (size_t)(2 * MAP_CUTS_MAX_COMPUTE)));\n    // inlining of macro ABC_ALLOC\n    p.pCuts2 = ((Map_Cut_t * *) malloc(sizeof(Map_Cut_t *) * (size_t)(2 * MAP_CUTS_MAX_COMPUTE)));\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the hash table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutTableStop(p *Map_CutTable_t) {\n    // inlining of macro ABC_FREE\n    ((p.pCuts1) ? (free((char *) (p.pCuts1)), (p.pCuts1) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCuts2) ? (free((char *) (p.pCuts2)), (p.pCuts2) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCuts) ? (free((char *) (p.pCuts)), (p.pCuts) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the hash value of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutTableHash(ppNodes []*Map_Node_t, nNodes int32) uint32 {\n    var uRes uint32;\n    var i int32;\n    uRes = 0;\n    for  i = 0; i \u003c nNodes; i++  {\n        uRes += s_HashPrimes[i] * ppNodes[i].Num;\n    }\n    return uRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Looks up the table for the available cut.]\n\n  Description [Returns -1 if the same cut is found. Returns the index\n  of the cell where the cut should be added, if it does not exist.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutTableLookup(p *Map_CutTable_t, ppNodes []*Map_Node_t, nNodes int32) int32 {\n    var pCut *Map_Cut_t;\n    var Key uint32;\n    var b, i int32;\n\n    Key = Map_CutTableHash(ppNodes, nNodes) % p.nBins; \n    for  b = Key; p.pBins[b]; b = (b+1) % p.nBins  {\n        pCut = p.pBins[b];\n        if pCut.nLeaves != nNodes {\n            continue; }\n        for  i = 0; i \u003c nNodes; i++  {\n            if pCut.ppLeaves[i] != ppNodes[i] {\n                break; }\n        }\n        if i == nNodes {\n            return -1; }\n    }\n    return b;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the hash table to canonicize cuts.]\n\n  Description [Considers addition of the cut to the hash table.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutTableConsider(pMan *Map_Man_t, p *Map_CutTable_t, ppNodes []*Map_Node_t, nNodes int32) *Map_Cut_t {\n    var pCut *Map_Cut_t;\n    var Place, i int32;\n//    abctime clk;\n    // check the cut\n    Place = Map_CutTableLookup( p, ppNodes, nNodes );\n    if Place == -1 {\n        return nil; }\n    assert(nNodes \u003e 0, \"nNodes \u003e 0\");\n    // create the new cut\n//clk = Abc_Clock();\n    pCut = Map_CutAlloc( pMan );\n//pMan-\u003etime1 += Abc_Clock() - clk;\n    pCut.nLeaves = nNodes;\n    for  i = 0; i \u003c nNodes; i++  {\n        pCut.ppLeaves[i] = ppNodes[i];\n    }\n    // add the cut to the table\n    assert(p.pBins[Place] == nil, \"p.pBins[Place] == nil\");\n    p.pBins[Place] = pCut;\n    // add the cut to the new list\n    p.pCuts[ p.nCuts++ ] = Place;\n    return pCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the table to be used with other cuts.]\n\n  Description [Restarts the table by cleaning the info about cuts stored\n  when the previous node was considered.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutTableRestart(p *Map_CutTable_t) {\n    var i int32;\n    for  i = 0; i \u003c p.nCuts; i++  {\n        assert(p.pBins[ p.pCuts[i] ], \"p.pBins[ p.pCuts[i] ]\");\n        p.pBins[ p.pCuts[i] ] = nil;\n    }\n    p.nCuts = 0;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compares the cuts by the number of leaves and then by delay.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutSortCutsCompare(pC1 **Map_Cut_t, pC2 **Map_Cut_t) int32 {\n    if (*pC1).nLeaves \u003c (*pC2).nLeaves {\n        return -1; }\n    if (*pC1).nLeaves \u003e (*pC2).nLeaves {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorts the cuts by average arrival time.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutSortCuts(pMan *Map_Man_t, p *Map_CutTable_t, pList *Map_Cut_t) *Map_Cut_t {\n    var pListNew *Map_Cut_t;\n    var nCuts, i int32;\n//    abctime clk;\n    // move the cuts from the list into the array\n    nCuts = Map_CutList2Array( p.pCuts1, pList );\n    assert(nCuts \u003c= MAP_CUTS_MAX_COMPUTE, \"nCuts \u003c= MAP_CUTS_MAX_COMPUTE\");\n    // sort the cuts\n//clk = Abc_Clock();\n    qsort( (void *)p.pCuts1, (size_t)nCuts, sizeof(Map_Cut_t *), \n                (int (*)(void *, void *)) Map_CutSortCutsCompare );\n//pMan-\u003etime2 += Abc_Clock() - clk;\n    // move them back into the list\n    if nCuts \u003e MAP_CUTS_MAX_USE - 1 {\n        // free the remaining cuts\n        for  i = MAP_CUTS_MAX_USE - 1; i \u003c nCuts; i++  {\n            Extra_MmFixedEntryRecycle( pMan.mmCuts, (char *)p.pCuts1[i] );\n        }\n        // update the number of cuts\n        nCuts = MAP_CUTS_MAX_USE - 1;\n    }\n    pListNew = Map_CutArray2List( p.pCuts1, nCuts );\n    return pListNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Moves the nodes from the list into the array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutList2Array(pArray **Map_Cut_t, pList *Map_Cut_t) int32 {\n    var i int32;\n    for  i = 0; (pList != nil); pList, i = pList.pNext, i+1  {\n        pArray[i] = pList;\n    }\n    return i;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Moves the nodes from the array into the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutArray2List(pArray **Map_Cut_t, nCuts int32) *Map_Cut_t {\n    var pListNew *Map_Cut_t;\n    var ppListNew **Map_Cut_t;\n    var i int32;\n    pListNew  = nil;\n    ppListNew = \u0026pListNew;\n    for  i = 0; i \u003c nCuts; i++  {\n        // connect these lists\n        *ppListNew = pArray[i];\n        ppListNew  = \u0026pArray[i].pNext;\n    }\n//printf( \"\\n\" );\n\n    *ppListNew = nil;\n    return pListNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the truth table of the 5-input cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Map_CutComputeTruth_pPerms53 **uint32 = nil;\nvar spStatic_Map_CutComputeTruth_pPerms54 **uint32 = nil;\nfunc Map_CutComputeTruth(p *Map_Man_t, pCut *Map_Cut_t, pTemp0 *Map_Cut_t, pTemp1 *Map_Cut_t, fComp0 int32, fComp1 int32) uint32 {\n    \n    \n\n    var uPhase, uTruth, uTruth0, uTruth1 uint32;\n    var i, k int32;\n\n    if spStatic_Map_CutComputeTruth_pPerms53 == nil {\n        spStatic_Map_CutComputeTruth_pPerms53 = (unsigned **)Extra_TruthPerm53();\n        spStatic_Map_CutComputeTruth_pPerms54 = (unsigned **)Extra_TruthPerm54();\n    }\n\n    // find the mapping from the old nodes to the new\n    if pTemp0.nLeaves == pCut.nLeaves {\n        uTruth0 = pTemp0.uTruth;\n    } else {\n        assert(pTemp0.nLeaves \u003c pCut.nLeaves, \"pTemp0.nLeaves \u003c pCut.nLeaves\");\n        uPhase = 0;\n        for  i = 0; i \u003c int32(pTemp0.nLeaves); i++  {\n            for  k = 0; k \u003c pCut.nLeaves; k++  {\n                if pTemp0.ppLeaves[i] == pCut.ppLeaves[k] {\n                    break; }\n            }\n            uPhase |= (1 \u003c\u003c k);\n        }\n        assert(uPhase \u003c 32, \"uPhase \u003c 32\");\n        if pTemp0.nLeaves == 4 {\n            if uPhase == 31-16 { // 01111\n                uTruth0 = pTemp0.uTruth;\n            } else if uPhase == 31-8 { // 10111\n                uTruth0 = spStatic_Map_CutComputeTruth_pPerms54[pTemp0.uTruth \u0026 0xFFFF][0];\n            } else if uPhase == 31-4 { // 11011\n                uTruth0 = spStatic_Map_CutComputeTruth_pPerms54[pTemp0.uTruth \u0026 0xFFFF][1];\n            } else if uPhase == 31-2 { // 11101\n                uTruth0 = spStatic_Map_CutComputeTruth_pPerms54[pTemp0.uTruth \u0026 0xFFFF][2];\n            } else if uPhase == 31-1 { // 11110\n                uTruth0 = spStatic_Map_CutComputeTruth_pPerms54[pTemp0.uTruth \u0026 0xFFFF][3];\n            } else {\n                assert(false, \"0\"); }\n        \n        } else {\n            uTruth0 = spStatic_Map_CutComputeTruth_pPerms53[pTemp0.uTruth \u0026 0xFF][uPhase]; }\n    }\n    if fComp0 != 0 {\n        uTruth0 = ~uTruth0;\n    } else {\n        uTruth0 = uTruth0;\n    }\n\n    // find the mapping from the old nodes to the new\n    if pTemp1.nLeaves == pCut.nLeaves {\n        uTruth1 = pTemp1.uTruth;\n    } else {\n        assert(pTemp1.nLeaves \u003c pCut.nLeaves, \"pTemp1.nLeaves \u003c pCut.nLeaves\");\n        uPhase = 0;\n        for  i = 0; i \u003c int32(pTemp1.nLeaves); i++  {\n            for  k = 0; k \u003c pCut.nLeaves; k++  {\n                if pTemp1.ppLeaves[i] == pCut.ppLeaves[k] {\n                    break; }\n            }\n            uPhase |= (1 \u003c\u003c k);\n        }\n        assert(uPhase \u003c 32, \"uPhase \u003c 32\");\n        if pTemp1.nLeaves == 4 {\n            if uPhase == 31-16 { // 01111\n                uTruth1 = pTemp1.uTruth;\n            } else if uPhase == 31-8 { // 10111\n                uTruth1 = spStatic_Map_CutComputeTruth_pPerms54[pTemp1.uTruth \u0026 0xFFFF][0];\n            } else if uPhase == 31-4 { // 11011\n                uTruth1 = spStatic_Map_CutComputeTruth_pPerms54[pTemp1.uTruth \u0026 0xFFFF][1];\n            } else if uPhase == 31-2 { // 11101\n                uTruth1 = spStatic_Map_CutComputeTruth_pPerms54[pTemp1.uTruth \u0026 0xFFFF][2];\n            } else if uPhase == 31-1 { // 11110\n                uTruth1 = spStatic_Map_CutComputeTruth_pPerms54[pTemp1.uTruth \u0026 0xFFFF][3];\n            } else {\n                assert(false, \"0\"); }\n        \n        } else {\n            uTruth1 = spStatic_Map_CutComputeTruth_pPerms53[pTemp1.uTruth \u0026 0xFF][uPhase]; }\n    }\n    if fComp1 != 0 {\n        uTruth1 = ~uTruth1;\n    } else {\n        uTruth1 = uTruth1;\n    }\n    uTruth  = uTruth0 \u0026 uTruth1;\n    return uTruth;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

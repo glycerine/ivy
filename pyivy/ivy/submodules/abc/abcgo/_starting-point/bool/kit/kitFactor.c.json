@@ -1,0 +1,254 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitFactor.c",
+  "SHA256": "26c9caed181e488d9723b2700173e4840d2f296dbd453c94ef2ea970dbc48173",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 71,
+        "Column": 5,
+        "ByteOffset": 2277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 5,
+        "ByteOffset": 4010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Kit_SopCubeNum(cSop) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 4322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Kit_SopCubeNum(cQuo) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 5930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Kit_SopCubeNum(cSimple) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 7193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( uCube );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 7420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iLit != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 326,
+        "Column": 5,
+        "ByteOffset": 10573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 338,
+        "Column": 5,
+        "ByteOffset": 10899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Vars = %2d. Cubes = %3d. FFNodes = %3d. FF_memory = %3d.\\n\","
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Kit_SopFactor",
+      "Start": 1874,
+      "End": 3180,
+      "BodyStart": 1968,
+      "Original": "Kit_Graph_t * Kit_SopFactor( Vec_Int_t * vCover, int fCompl, int nVars, Vec_Int_t * vMemory )\n{\n    Kit_Sop_t Sop, * cSop = \u0026Sop;\n    Kit_Graph_t * pFForm;\n    Kit_Edge_t eRoot;\n//    int nCubes;\n\n    // works for up to 15 variables because division procedure\n    // used the last bit for marking the cubes going to the remainder\n    assert( nVars \u003c 16 );\n\n    // check for trivial functions\n    if ( Vec_IntSize(vCover) == 0 )\n        return Kit_GraphCreateConst0();\n    if ( Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover, 0) == 0 )\n        return Kit_GraphCreateConst1();\n\n    // prepare memory manager\n//    Vec_IntClear( vMemory );\n    Vec_IntGrow( vMemory, KIT_FACTOR_MEM_LIMIT );\n\n    // perform CST\n    Kit_SopCreateInverse( cSop, vCover, 2 * nVars, vMemory ); // CST\n\n    // start the factored form\n    pFForm = Kit_GraphCreate( nVars );\n    // factor the cover\n    eRoot = Kit_SopFactor_rec( pFForm, cSop, 2 * nVars, vMemory );\n    // finalize the factored form\n    Kit_GraphSetRoot( pFForm, eRoot );\n    if ( fCompl )\n        Kit_GraphComplement( pFForm );\n\n    // verify the factored form\n//    nCubes = Vec_IntSize(vCover);\n//    Vec_IntShrink( vCover, nCubes );\n//    if ( !Kit_SopFactorVerify( vCover, pFForm, nVars ) )\n//        printf( \"Verification has failed.\\n\" );\n    return pFForm;\n}",
+      "Draft": "func Kit_SopFactor(vCover *Vec_Int_t, fCompl int32, nVars int32, vMemory *Vec_Int_t) *Kit_Graph_t {\n    var Sop Kit_Sop_t;\n    var cSop *Kit_Sop_t = \u0026Sop;\n    var pFForm *Kit_Graph_t;\n    var eRoot Kit_Edge_t;\n//    int nCubes;\n\n    // works for up to 15 variables because division procedure\n    // used the last bit for marking the cubes going to the remainder\n    assert(nVars \u003c 16, \"nVars \u003c 16\");\n\n    // check for trivial functions\n    if Vec_IntSize(vCover) == 0 {\n        return Kit_GraphCreateConst0(); }\n    if Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover, 0) == 0 {\n        return Kit_GraphCreateConst1(); }\n\n    // prepare memory manager\n//    Vec_IntClear( vMemory );\n    Vec_IntGrow( vMemory, KIT_FACTOR_MEM_LIMIT );\n\n    // perform CST\n    Kit_SopCreateInverse( cSop, vCover, 2 * nVars, vMemory ); // CST\n\n    // start the factored form\n    pFForm = Kit_GraphCreate( nVars );\n    // factor the cover\n    eRoot = Kit_SopFactor_rec( pFForm, cSop, 2 * nVars, vMemory );\n    // finalize the factored form\n    Kit_GraphSetRoot( pFForm, eRoot );\n    if fCompl != 0 {\n        Kit_GraphComplement( pFForm ); }\n\n    // verify the factored form\n//    nCubes = Vec_IntSize(vCover);\n//    Vec_IntShrink( vCover, nCubes );\n//    if ( !Kit_SopFactorVerify( vCover, pFForm, nVars ) )\n//        printf( \"Verification has failed.\\n\" );\n    return pFForm;\n}"
+    },
+    {
+      "Name": "Kit_SopFactor_rec",
+      "Start": 3557,
+      "End": 5190,
+      "BodyStart": 3660,
+      "Original": "Kit_Edge_t Kit_SopFactor_rec( Kit_Graph_t * pFForm, Kit_Sop_t * cSop, int nLits, Vec_Int_t * vMemory )\n{\n    Kit_Sop_t Div, Quo, Rem, Com;\n    Kit_Sop_t * cDiv = \u0026Div, * cQuo = \u0026Quo, * cRem = \u0026Rem, * cCom = \u0026Com;\n    Kit_Edge_t eNodeDiv, eNodeQuo, eNodeRem, eNodeAnd;\n\n    // make sure the cover contains some cubes\n    assert( Kit_SopCubeNum(cSop) \u003e 0 );\n\n    // get the divisor\n    if ( !Kit_SopDivisor(cDiv, cSop, nLits, vMemory) )\n        return Kit_SopFactorTrivial( pFForm, cSop, nLits );\n\n    // divide the cover by the divisor\n    Kit_SopDivideInternal( cSop, cDiv, cQuo, cRem, vMemory );\n\n    // check the trivial case\n    assert( Kit_SopCubeNum(cQuo) \u003e 0 );\n    if ( Kit_SopCubeNum(cQuo) == 1 )\n        return Kit_SopFactorLF_rec( pFForm, cSop, cQuo, nLits, vMemory );\n\n    // make the quotient cube ABC_FREE\n    Kit_SopMakeCubeFree( cQuo );\n\n    // divide the cover by the quotient\n    Kit_SopDivideInternal( cSop, cQuo, cDiv, cRem, vMemory );\n\n    // check the trivial case\n    if ( Kit_SopIsCubeFree( cDiv ) )\n    {\n        eNodeDiv = Kit_SopFactor_rec( pFForm, cDiv, nLits, vMemory );\n        eNodeQuo = Kit_SopFactor_rec( pFForm, cQuo, nLits, vMemory );\n        eNodeAnd = Kit_GraphAddNodeAnd( pFForm, eNodeDiv, eNodeQuo );\n        if ( Kit_SopCubeNum(cRem) == 0 )\n            return eNodeAnd;\n        eNodeRem = Kit_SopFactor_rec( pFForm, cRem, nLits, vMemory );\n        return Kit_GraphAddNodeOr( pFForm, eNodeAnd, eNodeRem );\n    }\n\n    // get the common cube\n    Kit_SopCommonCubeCover( cCom, cDiv, vMemory );\n\n    // solve the simple problem\n    return Kit_SopFactorLF_rec( pFForm, cSop, cCom, nLits, vMemory );\n}",
+      "Draft": "func Kit_SopFactor_rec(pFForm *Kit_Graph_t, cSop *Kit_Sop_t, nLits int32, vMemory *Vec_Int_t) Kit_Edge_t {\n    var Div, Quo, Rem, Com Kit_Sop_t;\n    var cDiv *Kit_Sop_t = \u0026Div;\n    var cQuo *Kit_Sop_t = \u0026Quo;\n    var cRem *Kit_Sop_t = \u0026Rem;\n    var cCom *Kit_Sop_t = \u0026Com;\n    var eNodeDiv, eNodeQuo, eNodeRem, eNodeAnd Kit_Edge_t;\n\n    // make sure the cover contains some cubes\n    assert(Kit_SopCubeNum(cSop) \u003e 0, \"Kit_SopCubeNum(cSop) \u003e 0\");\n\n    // get the divisor\n    if !Kit_SopDivisor(cDiv, cSop, nLits, vMemory) {\n        return Kit_SopFactorTrivial( pFForm, cSop, nLits ); }\n\n    // divide the cover by the divisor\n    Kit_SopDivideInternal( cSop, cDiv, cQuo, cRem, vMemory );\n\n    // check the trivial case\n    assert(Kit_SopCubeNum(cQuo) \u003e 0, \"Kit_SopCubeNum(cQuo) \u003e 0\");\n    if Kit_SopCubeNum(cQuo) == 1 {\n        return Kit_SopFactorLF_rec( pFForm, cSop, cQuo, nLits, vMemory ); }\n\n    // make the quotient cube ABC_FREE\n    Kit_SopMakeCubeFree( cQuo );\n\n    // divide the cover by the quotient\n    Kit_SopDivideInternal( cSop, cQuo, cDiv, cRem, vMemory );\n\n    // check the trivial case\n    if Kit_SopIsCubeFree( cDiv ) {\n        eNodeDiv = Kit_SopFactor_rec( pFForm, cDiv, nLits, vMemory );\n        eNodeQuo = Kit_SopFactor_rec( pFForm, cQuo, nLits, vMemory );\n        eNodeAnd = Kit_GraphAddNodeAnd( pFForm, eNodeDiv, eNodeQuo );\n        if Kit_SopCubeNum(cRem) == 0 {\n            return eNodeAnd; }\n        eNodeRem = Kit_SopFactor_rec( pFForm, cRem, nLits, vMemory );\n        return Kit_GraphAddNodeOr( pFForm, eNodeAnd, eNodeRem );\n    }\n\n    // get the common cube\n    Kit_SopCommonCubeCover( cCom, cDiv, vMemory );\n\n    // solve the simple problem\n    return Kit_SopFactorLF_rec( pFForm, cSop, cCom, nLits, vMemory );\n}"
+    },
+    {
+      "Name": "Kit_SopFactorLF_rec",
+      "Start": 5484,
+      "End": 6513,
+      "BodyStart": 5610,
+      "Original": "Kit_Edge_t Kit_SopFactorLF_rec( Kit_Graph_t * pFForm, Kit_Sop_t * cSop, Kit_Sop_t * cSimple, int nLits, Vec_Int_t * vMemory )\n{\n    Kit_Sop_t Div, Quo, Rem;\n    Kit_Sop_t * cDiv = \u0026Div, * cQuo = \u0026Quo, * cRem = \u0026Rem;\n    Kit_Edge_t eNodeDiv, eNodeQuo, eNodeRem, eNodeAnd;\n    assert( Kit_SopCubeNum(cSimple) == 1 );\n    // get the most often occurring literal\n    Kit_SopBestLiteralCover( cDiv, cSop, Kit_SopCube(cSimple, 0), nLits, vMemory );\n    // divide the cover by the literal\n    Kit_SopDivideByCube( cSop, cDiv, cQuo, cRem, vMemory );\n    // get the node pointer for the literal\n    eNodeDiv = Kit_SopFactorTrivialCube( pFForm, Kit_SopCube(cDiv, 0), nLits );\n    // factor the quotient and remainder\n    eNodeQuo = Kit_SopFactor_rec( pFForm, cQuo, nLits, vMemory );\n    eNodeAnd = Kit_GraphAddNodeAnd( pFForm, eNodeDiv, eNodeQuo );\n    if ( Kit_SopCubeNum(cRem) == 0 )\n        return eNodeAnd;\n    eNodeRem = Kit_SopFactor_rec( pFForm, cRem, nLits, vMemory );\n    return Kit_GraphAddNodeOr( pFForm, eNodeAnd, eNodeRem );\n}",
+      "Draft": "func Kit_SopFactorLF_rec(pFForm *Kit_Graph_t, cSop *Kit_Sop_t, cSimple *Kit_Sop_t, nLits int32, vMemory *Vec_Int_t) Kit_Edge_t {\n    var Div, Quo, Rem Kit_Sop_t;\n    var cDiv *Kit_Sop_t = \u0026Div;\n    var cQuo *Kit_Sop_t = \u0026Quo;\n    var cRem *Kit_Sop_t = \u0026Rem;\n    var eNodeDiv, eNodeQuo, eNodeRem, eNodeAnd Kit_Edge_t;\n    assert(Kit_SopCubeNum(cSimple) == 1, \"Kit_SopCubeNum(cSimple) == 1\");\n    // get the most often occurring literal\n    Kit_SopBestLiteralCover( cDiv, cSop, Kit_SopCube(cSimple, 0), nLits, vMemory );\n    // divide the cover by the literal\n    Kit_SopDivideByCube( cSop, cDiv, cQuo, cRem, vMemory );\n    // get the node pointer for the literal\n    eNodeDiv = Kit_SopFactorTrivialCube( pFForm, Kit_SopCube(cDiv, 0), nLits );\n    // factor the quotient and remainder\n    eNodeQuo = Kit_SopFactor_rec( pFForm, cQuo, nLits, vMemory );\n    eNodeAnd = Kit_GraphAddNodeAnd( pFForm, eNodeDiv, eNodeQuo );\n    if Kit_SopCubeNum(cRem) == 0 {\n        return eNodeAnd; }\n    eNodeRem = Kit_SopFactor_rec( pFForm, cRem, nLits, vMemory );\n    return Kit_GraphAddNodeOr( pFForm, eNodeAnd, eNodeRem );\n}"
+    },
+    {
+      "Name": "Kit_SopFactorTrivialCube_rec",
+      "Start": 6765,
+      "End": 7963,
+      "BodyStart": 6870,
+      "Original": "Kit_Edge_t Kit_SopFactorTrivialCube_rec( Kit_Graph_t * pFForm, unsigned uCube, int nStart, int nFinish )\n{\n    Kit_Edge_t eNode1, eNode2;\n    int i, iLit = -1, nLits, nLits1, nLits2;\n    assert( uCube );\n    // count the number of literals in this interval\n    nLits = 0;\n    for ( i = nStart; i \u003c nFinish; i++ )\n        if ( Kit_CubeHasLit(uCube, i) )\n        {\n            iLit = i;\n            nLits++;\n        }\n    assert( iLit != -1 );\n    // quit if there is only one literal        \n    if ( nLits == 1 )\n        return Kit_EdgeCreate( iLit/2, iLit%2 ); // CST\n    // split the literals into two parts\n    nLits1 = nLits/2;\n    nLits2 = nLits - nLits1;\n//    nLits2 = nLits/2;\n//    nLits1 = nLits - nLits2;\n    // find the splitting point\n    nLits = 0;\n    for ( i = nStart; i \u003c nFinish; i++ )\n        if ( Kit_CubeHasLit(uCube, i) )\n        {\n            if ( nLits == nLits1 )\n                break;\n            nLits++;\n        }\n    // recursively construct the tree for the parts\n    eNode1 = Kit_SopFactorTrivialCube_rec( pFForm, uCube, nStart, i  );\n    eNode2 = Kit_SopFactorTrivialCube_rec( pFForm, uCube, i, nFinish );\n    return Kit_GraphAddNodeAnd( pFForm, eNode1, eNode2 );\n}",
+      "Draft": "func Kit_SopFactorTrivialCube_rec(pFForm *Kit_Graph_t, uCube uint32, nStart int32, nFinish int32) Kit_Edge_t {\n    var eNode1, eNode2 Kit_Edge_t;\n    var i int32;\n    var iLit int32 = -1;\n    var nLits int32;\n    var nLits1 int32;\n    var nLits2 int32;\n    assert((uCube != 0), \"uCube\");\n    // count the number of literals in this interval\n    nLits = 0;\n    for  i = nStart; i \u003c nFinish; i++  {\n        if Kit_CubeHasLit(uCube, i) {\n            iLit = i;\n            nLits++;\n        }\n    }\n    assert(iLit != -1, \"iLit != -1\");\n    // quit if there is only one literal        \n    if nLits == 1 {\n        return Kit_EdgeCreate( iLit/2, iLit%2 ); } // CST\n    // split the literals into two parts\n    nLits1 = nLits/2;\n    nLits2 = nLits - nLits1;\n//    nLits2 = nLits/2;\n//    nLits1 = nLits - nLits2;\n    // find the splitting point\n    nLits = 0;\n    for  i = nStart; i \u003c nFinish; i++  {\n        if Kit_CubeHasLit(uCube, i) {\n            if nLits == nLits1 {\n                break; }\n            nLits++;\n        }\n    }\n    // recursively construct the tree for the parts\n    eNode1 = Kit_SopFactorTrivialCube_rec( pFForm, uCube, nStart, i  );\n    eNode2 = Kit_SopFactorTrivialCube_rec( pFForm, uCube, i, nFinish );\n    return Kit_GraphAddNodeAnd( pFForm, eNode1, eNode2 );\n}"
+    },
+    {
+      "Name": "Kit_SopFactorTrivialCube",
+      "Start": 8214,
+      "End": 8372,
+      "BodyStart": 8301,
+      "Original": "Kit_Edge_t Kit_SopFactorTrivialCube( Kit_Graph_t * pFForm, unsigned uCube, int nLits )\n{\n    return Kit_SopFactorTrivialCube_rec( pFForm, uCube, 0, nLits );\n}",
+      "Draft": "func Kit_SopFactorTrivialCube(pFForm *Kit_Graph_t, uCube uint32, nLits int32) Kit_Edge_t {\n    return Kit_SopFactorTrivialCube_rec( pFForm, uCube, 0, nLits );\n}"
+    },
+    {
+      "Name": "Kit_SopFactorTrivial_rec",
+      "Start": 8622,
+      "End": 9312,
+      "BodyStart": 8724,
+      "Original": "Kit_Edge_t Kit_SopFactorTrivial_rec( Kit_Graph_t * pFForm, unsigned * pCubes, int nCubes, int nLits )\n{\n    Kit_Edge_t eNode1, eNode2;\n    int nCubes1, nCubes2;\n    if ( nCubes == 1 )\n        return Kit_SopFactorTrivialCube_rec( pFForm, pCubes[0], 0, nLits );\n    // split the cubes into two parts\n    nCubes1 = nCubes/2;\n    nCubes2 = nCubes - nCubes1;\n//    nCubes2 = nCubes/2;\n//    nCubes1 = nCubes - nCubes2;\n    // recursively construct the tree for the parts\n    eNode1 = Kit_SopFactorTrivial_rec( pFForm, pCubes,           nCubes1, nLits );\n    eNode2 = Kit_SopFactorTrivial_rec( pFForm, pCubes + nCubes1, nCubes2, nLits );\n    return Kit_GraphAddNodeOr( pFForm, eNode1, eNode2 );\n}",
+      "Draft": "func Kit_SopFactorTrivial_rec(pFForm *Kit_Graph_t, pCubes *uint32, nCubes int32, nLits int32) Kit_Edge_t {\n    var eNode1, eNode2 Kit_Edge_t;\n    var nCubes1, nCubes2 int32;\n    if nCubes == 1 {\n        return Kit_SopFactorTrivialCube_rec( pFForm, pCubes[0], 0, nLits ); }\n    // split the cubes into two parts\n    nCubes1 = nCubes/2;\n    nCubes2 = nCubes - nCubes1;\n//    nCubes2 = nCubes/2;\n//    nCubes1 = nCubes - nCubes2;\n    // recursively construct the tree for the parts\n    eNode1 = Kit_SopFactorTrivial_rec( pFForm, pCubes,           nCubes1, nLits );\n    eNode2 = Kit_SopFactorTrivial_rec( pFForm, pCubes + nCubes1, nCubes2, nLits );\n    return Kit_GraphAddNodeOr( pFForm, eNode1, eNode2 );\n}"
+    },
+    {
+      "Name": "Kit_SopFactorTrivial",
+      "Start": 9601,
+      "End": 9771,
+      "BodyStart": 9686,
+      "Original": "Kit_Edge_t Kit_SopFactorTrivial( Kit_Graph_t * pFForm, Kit_Sop_t * cSop, int nLits )\n{\n    return Kit_SopFactorTrivial_rec( pFForm, cSop-\u003epCubes, cSop-\u003enCubes, nLits );\n}",
+      "Draft": "func Kit_SopFactorTrivial(pFForm *Kit_Graph_t, cSop *Kit_Sop_t, nLits int32) Kit_Edge_t {\n    return Kit_SopFactorTrivial_rec( pFForm, cSop.pCubes, cSop.nCubes, nLits );\n}"
+    },
+    {
+      "Name": "Kit_FactorTest",
+      "Start": 10049,
+      "End": 10889,
+      "BodyStart": 10101,
+      "Original": "void Kit_FactorTest( unsigned * pTruth, int nVars )\n{\n    Vec_Int_t * vCover, * vMemory;\n    Kit_Graph_t * pGraph;\n//    unsigned uTruthRes;\n    int RetValue;\n\n    // derive SOP\n    vCover = Vec_IntAlloc( 0 );\n    RetValue = Kit_TruthIsop( pTruth, nVars, vCover, 0 );\n    assert( RetValue == 0 );\n\n    // derive factored form\n    vMemory = Vec_IntAlloc( 0 );\n    pGraph = Kit_SopFactor( vCover, 0, nVars, vMemory );\n/*\n    // derive truth table\n    assert( nVars \u003c= 5 );\n    uTruthRes = Kit_GraphToTruth( pGraph );\n    if ( uTruthRes != pTruth[0] )\n        printf( \"Verification failed!\" );\n*/\n    printf( \"Vars = %2d. Cubes = %3d. FFNodes = %3d. FF_memory = %3d.\\n\",\n        nVars, Vec_IntSize(vCover), Kit_GraphNodeNum(pGraph), Vec_IntSize(vMemory) );\n\n    Vec_IntFree( vMemory );\n    Vec_IntFree( vCover );\n    Kit_GraphFree( pGraph );\n}",
+      "Draft": "func Kit_FactorTest(pTruth *uint32, nVars int32) {\n    var vCover, vMemory *Vec_Int_t;\n    var pGraph *Kit_Graph_t;\n//    unsigned uTruthRes;\n    var RetValue int32;\n\n    // derive SOP\n    vCover = Vec_IntAlloc( 0 );\n    RetValue = Kit_TruthIsop( pTruth, nVars, vCover, 0 );\n    assert(RetValue == 0, \"RetValue == 0\");\n\n    // derive factored form\n    vMemory = Vec_IntAlloc( 0 );\n    pGraph = Kit_SopFactor( vCover, 0, nVars, vMemory );\n/*\n    // derive truth table\n    assert( nVars \u003c= 5 );\n    uTruthRes = Kit_GraphToTruth( pGraph );\n    if ( uTruthRes != pTruth[0] )\n        printf( \"Verification failed!\" );\n*/\n    fmt.Printf(\"Vars = %2d. Cubes = %3d. FFNodes = %3d. FF_memory = %3d.\\n\", nVars, Vec_IntSize(vCover), Kit_GraphNodeNum(pGraph), Vec_IntSize(vMemory));\n\n    Vec_IntFree( vMemory );\n    Vec_IntFree( vCover );\n    Kit_GraphFree( pGraph );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitFactor.c::Kit_SopFactor",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopFactor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1874,
+      "End": 3180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitFactor.c::Kit_SopFactor_rec",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopFactor_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3557,
+      "End": 5190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitFactor.c::Kit_SopFactorLF_rec",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopFactorLF_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5484,
+      "End": 6513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitFactor.c::Kit_SopFactorTrivialCube_rec",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopFactorTrivialCube_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6765,
+      "End": 7963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitFactor.c::Kit_SopFactorTrivialCube",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopFactorTrivialCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8214,
+      "End": 8372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitFactor.c::Kit_SopFactorTrivial_rec",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopFactorTrivial_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8622,
+      "End": 9312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitFactor.c::Kit_SopFactorTrivial",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopFactorTrivial",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9601,
+      "End": 9771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitFactor.c::Kit_FactorTest",
+      "Category": "semantic-review",
+      "Symbol": "Kit_FactorTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10049,
+      "End": 10889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitFactor.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11136
+    }
+  ],
+  "Draft": "package kit\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [kitFactor.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Computation kit.]\n\n  Synopsis    [Algebraic factoring.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Dec 6, 2006.]\n\n  Revision    [$Id: kitFactor.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// factoring fails if intermediate memory usage exceed this limit\n#define KIT_FACTOR_MEM_LIMIT  (1\u003c\u003c20)\n\n// static Kit_Edge_t  Kit_SopFactor_rec( Kit_Graph_t * pFForm, Kit_Sop_t * cSop, int nLits, Vec_Int_t * vMemory );\n\n// static Kit_Edge_t  Kit_SopFactorLF_rec( Kit_Graph_t * pFForm, Kit_Sop_t * cSop, Kit_Sop_t * cSimple, int nLits, Vec_Int_t * vMemory );\n\n// static Kit_Edge_t  Kit_SopFactorTrivial( Kit_Graph_t * pFForm, Kit_Sop_t * cSop, int nLits );\n\n// static Kit_Edge_t  Kit_SopFactorTrivialCube( Kit_Graph_t * pFForm, unsigned uCube, int nLits );\n\n\n// extern int         Kit_SopFactorVerify( Vec_Int_t * cSop, Kit_Graph_t * pFForm, int nVars );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Factors the cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopFactor(vCover *Vec_Int_t, fCompl int32, nVars int32, vMemory *Vec_Int_t) *Kit_Graph_t {\n    var Sop Kit_Sop_t;\n    var cSop *Kit_Sop_t = \u0026Sop;\n    var pFForm *Kit_Graph_t;\n    var eRoot Kit_Edge_t;\n//    int nCubes;\n\n    // works for up to 15 variables because division procedure\n    // used the last bit for marking the cubes going to the remainder\n    assert(nVars \u003c 16, \"nVars \u003c 16\");\n\n    // check for trivial functions\n    if Vec_IntSize(vCover) == 0 {\n        return Kit_GraphCreateConst0(); }\n    if Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover, 0) == 0 {\n        return Kit_GraphCreateConst1(); }\n\n    // prepare memory manager\n//    Vec_IntClear( vMemory );\n    Vec_IntGrow( vMemory, KIT_FACTOR_MEM_LIMIT );\n\n    // perform CST\n    Kit_SopCreateInverse( cSop, vCover, 2 * nVars, vMemory ); // CST\n\n    // start the factored form\n    pFForm = Kit_GraphCreate( nVars );\n    // factor the cover\n    eRoot = Kit_SopFactor_rec( pFForm, cSop, 2 * nVars, vMemory );\n    // finalize the factored form\n    Kit_GraphSetRoot( pFForm, eRoot );\n    if fCompl != 0 {\n        Kit_GraphComplement( pFForm ); }\n\n    // verify the factored form\n//    nCubes = Vec_IntSize(vCover);\n//    Vec_IntShrink( vCover, nCubes );\n//    if ( !Kit_SopFactorVerify( vCover, pFForm, nVars ) )\n//        printf( \"Verification has failed.\\n\" );\n    return pFForm;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursive factoring procedure.]\n\n  Description [For the pseudo-code, see Hachtel/Somenzi, \n  Logic synthesis and verification algorithms, Kluwer, 1996, p. 432.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopFactor_rec(pFForm *Kit_Graph_t, cSop *Kit_Sop_t, nLits int32, vMemory *Vec_Int_t) Kit_Edge_t {\n    var Div, Quo, Rem, Com Kit_Sop_t;\n    var cDiv *Kit_Sop_t = \u0026Div;\n    var cQuo *Kit_Sop_t = \u0026Quo;\n    var cRem *Kit_Sop_t = \u0026Rem;\n    var cCom *Kit_Sop_t = \u0026Com;\n    var eNodeDiv, eNodeQuo, eNodeRem, eNodeAnd Kit_Edge_t;\n\n    // make sure the cover contains some cubes\n    assert(Kit_SopCubeNum(cSop) \u003e 0, \"Kit_SopCubeNum(cSop) \u003e 0\");\n\n    // get the divisor\n    if !Kit_SopDivisor(cDiv, cSop, nLits, vMemory) {\n        return Kit_SopFactorTrivial( pFForm, cSop, nLits ); }\n\n    // divide the cover by the divisor\n    Kit_SopDivideInternal( cSop, cDiv, cQuo, cRem, vMemory );\n\n    // check the trivial case\n    assert(Kit_SopCubeNum(cQuo) \u003e 0, \"Kit_SopCubeNum(cQuo) \u003e 0\");\n    if Kit_SopCubeNum(cQuo) == 1 {\n        return Kit_SopFactorLF_rec( pFForm, cSop, cQuo, nLits, vMemory ); }\n\n    // make the quotient cube ABC_FREE\n    Kit_SopMakeCubeFree( cQuo );\n\n    // divide the cover by the quotient\n    Kit_SopDivideInternal( cSop, cQuo, cDiv, cRem, vMemory );\n\n    // check the trivial case\n    if Kit_SopIsCubeFree( cDiv ) {\n        eNodeDiv = Kit_SopFactor_rec( pFForm, cDiv, nLits, vMemory );\n        eNodeQuo = Kit_SopFactor_rec( pFForm, cQuo, nLits, vMemory );\n        eNodeAnd = Kit_GraphAddNodeAnd( pFForm, eNodeDiv, eNodeQuo );\n        if Kit_SopCubeNum(cRem) == 0 {\n            return eNodeAnd; }\n        eNodeRem = Kit_SopFactor_rec( pFForm, cRem, nLits, vMemory );\n        return Kit_GraphAddNodeOr( pFForm, eNodeAnd, eNodeRem );\n    }\n\n    // get the common cube\n    Kit_SopCommonCubeCover( cCom, cDiv, vMemory );\n\n    // solve the simple problem\n    return Kit_SopFactorLF_rec( pFForm, cSop, cCom, nLits, vMemory );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Internal recursive factoring procedure for the leaf case.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopFactorLF_rec(pFForm *Kit_Graph_t, cSop *Kit_Sop_t, cSimple *Kit_Sop_t, nLits int32, vMemory *Vec_Int_t) Kit_Edge_t {\n    var Div, Quo, Rem Kit_Sop_t;\n    var cDiv *Kit_Sop_t = \u0026Div;\n    var cQuo *Kit_Sop_t = \u0026Quo;\n    var cRem *Kit_Sop_t = \u0026Rem;\n    var eNodeDiv, eNodeQuo, eNodeRem, eNodeAnd Kit_Edge_t;\n    assert(Kit_SopCubeNum(cSimple) == 1, \"Kit_SopCubeNum(cSimple) == 1\");\n    // get the most often occurring literal\n    Kit_SopBestLiteralCover( cDiv, cSop, Kit_SopCube(cSimple, 0), nLits, vMemory );\n    // divide the cover by the literal\n    Kit_SopDivideByCube( cSop, cDiv, cQuo, cRem, vMemory );\n    // get the node pointer for the literal\n    eNodeDiv = Kit_SopFactorTrivialCube( pFForm, Kit_SopCube(cDiv, 0), nLits );\n    // factor the quotient and remainder\n    eNodeQuo = Kit_SopFactor_rec( pFForm, cQuo, nLits, vMemory );\n    eNodeAnd = Kit_GraphAddNodeAnd( pFForm, eNodeDiv, eNodeQuo );\n    if Kit_SopCubeNum(cRem) == 0 {\n        return eNodeAnd; }\n    eNodeRem = Kit_SopFactor_rec( pFForm, cRem, nLits, vMemory );\n    return Kit_GraphAddNodeOr( pFForm, eNodeAnd, eNodeRem );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Factoring cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopFactorTrivialCube_rec(pFForm *Kit_Graph_t, uCube uint32, nStart int32, nFinish int32) Kit_Edge_t {\n    var eNode1, eNode2 Kit_Edge_t;\n    var i int32;\n    var iLit int32 = -1;\n    var nLits int32;\n    var nLits1 int32;\n    var nLits2 int32;\n    assert((uCube != 0), \"uCube\");\n    // count the number of literals in this interval\n    nLits = 0;\n    for  i = nStart; i \u003c nFinish; i++  {\n        if Kit_CubeHasLit(uCube, i) {\n            iLit = i;\n            nLits++;\n        }\n    }\n    assert(iLit != -1, \"iLit != -1\");\n    // quit if there is only one literal        \n    if nLits == 1 {\n        return Kit_EdgeCreate( iLit/2, iLit%2 ); } // CST\n    // split the literals into two parts\n    nLits1 = nLits/2;\n    nLits2 = nLits - nLits1;\n//    nLits2 = nLits/2;\n//    nLits1 = nLits - nLits2;\n    // find the splitting point\n    nLits = 0;\n    for  i = nStart; i \u003c nFinish; i++  {\n        if Kit_CubeHasLit(uCube, i) {\n            if nLits == nLits1 {\n                break; }\n            nLits++;\n        }\n    }\n    // recursively construct the tree for the parts\n    eNode1 = Kit_SopFactorTrivialCube_rec( pFForm, uCube, nStart, i  );\n    eNode2 = Kit_SopFactorTrivialCube_rec( pFForm, uCube, i, nFinish );\n    return Kit_GraphAddNodeAnd( pFForm, eNode1, eNode2 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Factoring cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopFactorTrivialCube(pFForm *Kit_Graph_t, uCube uint32, nLits int32) Kit_Edge_t {\n    return Kit_SopFactorTrivialCube_rec( pFForm, uCube, 0, nLits );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Factoring SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopFactorTrivial_rec(pFForm *Kit_Graph_t, pCubes *uint32, nCubes int32, nLits int32) Kit_Edge_t {\n    var eNode1, eNode2 Kit_Edge_t;\n    var nCubes1, nCubes2 int32;\n    if nCubes == 1 {\n        return Kit_SopFactorTrivialCube_rec( pFForm, pCubes[0], 0, nLits ); }\n    // split the cubes into two parts\n    nCubes1 = nCubes/2;\n    nCubes2 = nCubes - nCubes1;\n//    nCubes2 = nCubes/2;\n//    nCubes1 = nCubes - nCubes2;\n    // recursively construct the tree for the parts\n    eNode1 = Kit_SopFactorTrivial_rec( pFForm, pCubes,           nCubes1, nLits );\n    eNode2 = Kit_SopFactorTrivial_rec( pFForm, pCubes + nCubes1, nCubes2, nLits );\n    return Kit_GraphAddNodeOr( pFForm, eNode1, eNode2 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Factoring the cover, which has no algebraic divisors.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_SopFactorTrivial(pFForm *Kit_Graph_t, cSop *Kit_Sop_t, nLits int32) Kit_Edge_t {\n    return Kit_SopFactorTrivial_rec( pFForm, cSop.pCubes, cSop.nCubes, nLits );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Testing procedure for the factoring code.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_FactorTest(pTruth *uint32, nVars int32) {\n    var vCover, vMemory *Vec_Int_t;\n    var pGraph *Kit_Graph_t;\n//    unsigned uTruthRes;\n    var RetValue int32;\n\n    // derive SOP\n    vCover = Vec_IntAlloc( 0 );\n    RetValue = Kit_TruthIsop( pTruth, nVars, vCover, 0 );\n    assert(RetValue == 0, \"RetValue == 0\");\n\n    // derive factored form\n    vMemory = Vec_IntAlloc( 0 );\n    pGraph = Kit_SopFactor( vCover, 0, nVars, vMemory );\n/*\n    // derive truth table\n    assert( nVars \u003c= 5 );\n    uTruthRes = Kit_GraphToTruth( pGraph );\n    if ( uTruthRes != pTruth[0] )\n        printf( \"Verification failed!\" );\n*/\n    fmt.Printf(\"Vars = %2d. Cubes = %3d. FFNodes = %3d. FF_memory = %3d.\\n\", nVars, Vec_IntSize(vCover), Kit_GraphNodeNum(pGraph), Vec_IntSize(vMemory));\n\n    Vec_IntFree( vMemory );\n    Vec_IntFree( vCover );\n    Kit_GraphFree( pGraph );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

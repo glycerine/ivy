@@ -1,0 +1,152 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/huffman.c",
+  "SHA256": "fe63f3b73f7cb769b1487130edda84c70a48848ab51356473b60e836a0d067cb",
+  "Functions": [
+    {
+      "Name": "BZ2_hbMakeCodeLengths",
+      "Start": 2631,
+      "End": 5355,
+      "BodyStart": 2805,
+      "Original": "void BZ2_hbMakeCodeLengths ( UChar *len, \n                             Int32 *freq,\n                             Int32 alphaSize,\n                             Int32 maxLen )\n{\n   /*--\n      Nodes and heap entries run from 1.  Entry 0\n      for both the heap and nodes is a sentinel.\n   --*/\n   Int32 nNodes, nHeap, n1, n2, i, j, k;\n   Bool  tooLong;\n\n   Int32 heap   [ BZ_MAX_ALPHA_SIZE + 2 ];\n   Int32 weight [ BZ_MAX_ALPHA_SIZE * 2 ];\n   Int32 parent [ BZ_MAX_ALPHA_SIZE * 2 ]; \n\n   for (i = 0; i \u003c alphaSize; i++)\n      weight[i+1] = (freq[i] == 0 ? 1 : freq[i]) \u003c\u003c 8;\n\n   while (True) {\n\n      nNodes = alphaSize;\n      nHeap = 0;\n\n      heap[0] = 0;\n      weight[0] = 0;\n      parent[0] = -2;\n\n      for (i = 1; i \u003c= alphaSize; i++) {\n         parent[i] = -1;\n         nHeap++;\n         heap[nHeap] = i;\n         UPHEAP(nHeap);\n      }\n\n      AssertH( nHeap \u003c (BZ_MAX_ALPHA_SIZE+2), 2001 );\n   \n      while (nHeap \u003e 1) {\n         n1 = heap[1]; heap[1] = heap[nHeap]; nHeap--; DOWNHEAP(1);\n         n2 = heap[1]; heap[1] = heap[nHeap]; nHeap--; DOWNHEAP(1);\n         nNodes++;\n         parent[n1] = parent[n2] = nNodes;\n         weight[nNodes] = ADDWEIGHTS(weight[n1], weight[n2]);\n         parent[nNodes] = -1;\n         nHeap++;\n         heap[nHeap] = nNodes;\n         UPHEAP(nHeap);\n      }\n\n      AssertH( nNodes \u003c (BZ_MAX_ALPHA_SIZE * 2), 2002 );\n\n      tooLong = False;\n      for (i = 1; i \u003c= alphaSize; i++) {\n         j = 0;\n         k = i;\n         while (parent[k] \u003e= 0) { k = parent[k]; j++; }\n         len[i-1] = j;\n         if (j \u003e maxLen) tooLong = True;\n      }\n      \n      if (! tooLong) break;\n\n      /* 17 Oct 04: keep-going condition for the following loop used\n         to be 'i \u003c alphaSize', which missed the last element,\n         theoretically leading to the possibility of the compressor\n         looping.  However, this count-scaling step is only needed if\n         one of the generated Huffman code words is longer than\n         maxLen, which up to and including version 1.0.2 was 20 bits,\n         which is extremely unlikely.  In version 1.0.3 maxLen was\n         changed to 17 bits, which has minimal effect on compression\n         ratio, but does mean this scaling step is used from time to\n         time, enough to verify that it works.\n\n         This means that bzip2-1.0.3 and later will only produce\n         Huffman codes with a maximum length of 17 bits.  However, in\n         order to preserve backwards compatibility with bitstreams\n         produced by versions pre-1.0.3, the decompressor must still\n         handle lengths of up to 20. */\n\n      for (i = 1; i \u003c= alphaSize; i++) {\n         j = weight[i] \u003e\u003e 8;\n         j = 1 + (j / 2);\n         weight[i] = j \u003c\u003c 8;\n      }\n   }\n}",
+      "Draft": "func BZ2_hbMakeCodeLengths(len *UChar, freq *Int32, alphaSize Int32, maxLen Int32) {\n   /*--\n      Nodes and heap entries run from 1.  Entry 0\n      for both the heap and nodes is a sentinel.\n   --*/\n   var nNodes, nHeap, n1, n2, i, j, k Int32;\n   var tooLong Bool;\n\n   var heap [BZ_MAX_ALPHA_SIZE + 2]Int32;\n   var weight [BZ_MAX_ALPHA_SIZE * 2]Int32;\n   var parent [BZ_MAX_ALPHA_SIZE * 2]Int32; \n\n   for i = 0; i \u003c alphaSize; i++ {\n      weight[i+1] = (freq[i] == 0 ? 1 : freq[i]) \u003c\u003c 8;\n   }\n\n   for True {\n\n      nNodes = alphaSize;\n      nHeap = 0;\n\n      heap[0] = 0;\n      weight[0] = 0;\n      parent[0] = -2;\n\n      for i = 1; i \u003c= alphaSize; i++ {\n         parent[i] = -1;\n         nHeap++;\n         heap[nHeap] = i;\n         // inlining of macro UPHEAP\n         {                                                        var zz, tmp Int32;                                        zz = nHeap; tmp = heap[zz];                               for weight[tmp] \u003c weight[heap[zz \u003e\u003e 1]] {            heap[zz] = heap[zz \u003e\u003e 1];                             zz \u003e\u003e= 1;                                          }\n                                                     heap[zz] = tmp;                                    };\n      }\n\n      AssertH( nHeap \u003c (BZ_MAX_ALPHA_SIZE+2), 2001 );\n   \n      for nHeap \u003e 1 {\n         // inlining of macro DOWNHEAP\n         n1 = heap[1]; heap[1] = heap[nHeap]; nHeap--; {                                                        var zz, yy, tmp Int32;                                    zz = 1; tmp = heap[zz];                               for True {                                           yy = zz \u003c\u003c 1;                                         if yy \u003e nHeap { break; }\n                                if yy \u003c nHeap \u0026\u0026                                         weight[heap[yy+1]] \u003c weight[heap[yy]] {               yy++; }\n                                              if weight[tmp] \u003c weight[heap[yy]] { break; }\n            heap[zz] = heap[yy];                                  zz = yy;                                           }\n                                                     heap[zz] = tmp;                                    };\n         // inlining of macro DOWNHEAP\n         n2 = heap[1]; heap[1] = heap[nHeap]; nHeap--; {                                                        var zz, yy, tmp Int32;                                    zz = 1; tmp = heap[zz];                               for True {                                           yy = zz \u003c\u003c 1;                                         if yy \u003e nHeap { break; }\n                                if yy \u003c nHeap \u0026\u0026                                         weight[heap[yy+1]] \u003c weight[heap[yy]] {               yy++; }\n                                              if weight[tmp] \u003c weight[heap[yy]] { break; }\n            heap[zz] = heap[yy];                                  zz = yy;                                           }\n                                                     heap[zz] = tmp;                                    };\n         nNodes++;\n         parent[n1] = parent[n2] = nNodes;\n         // inlining of macro ADDWEIGHTS\n         // inlining of macro WEIGHTOF\n         // inlining of macro MYMAX\n         // inlining of macro DEPTHOF\n         weight[nNodes] = (((weight[n1]) \u0026 0xffffff00)+((weight[n2]) \u0026 0xffffff00)) |                       (1 + ((((weight[n1]) \u0026 0x000000ff)) \u003e (((weight[n2]) \u0026 0x000000ff)) ? (((weight[n1]) \u0026 0x000000ff)) : (((weight[n2]) \u0026 0x000000ff))));\n         parent[nNodes] = -1;\n         nHeap++;\n         heap[nHeap] = nNodes;\n         // inlining of macro UPHEAP\n         {                                                        var zz, tmp Int32;                                        zz = nHeap; tmp = heap[zz];                               for weight[tmp] \u003c weight[heap[zz \u003e\u003e 1]] {            heap[zz] = heap[zz \u003e\u003e 1];                             zz \u003e\u003e= 1;                                          }\n                                                     heap[zz] = tmp;                                    };\n      }\n\n      AssertH( nNodes \u003c (BZ_MAX_ALPHA_SIZE * 2), 2002 );\n\n      tooLong = False;\n      for i = 1; i \u003c= alphaSize; i++ {\n         j = 0;\n         k = i;\n         for parent[k] \u003e= 0 { k = parent[k]; j++; }\n         len[i-1] = j;\n         if j \u003e maxLen { tooLong = True; }\n      }\n      \n      if ! tooLong { break; }\n\n      /* 17 Oct 04: keep-going condition for the following loop used\n         to be 'i \u003c alphaSize', which missed the last element,\n         theoretically leading to the possibility of the compressor\n         looping.  However, this count-scaling step is only needed if\n         one of the generated Huffman code words is longer than\n         maxLen, which up to and including version 1.0.2 was 20 bits,\n         which is extremely unlikely.  In version 1.0.3 maxLen was\n         changed to 17 bits, which has minimal effect on compression\n         ratio, but does mean this scaling step is used from time to\n         time, enough to verify that it works.\n\n         This means that bzip2-1.0.3 and later will only produce\n         Huffman codes with a maximum length of 17 bits.  However, in\n         order to preserve backwards compatibility with bitstreams\n         produced by versions pre-1.0.3, the decompressor must still\n         handle lengths of up to 20. */\n\n      for i = 1; i \u003c= alphaSize; i++ {\n         j = weight[i] \u003e\u003e 8;\n         j = 1 + (j / 2);\n         weight[i] = j \u003c\u003c 8;\n      }\n   }\n}"
+    },
+    {
+      "Name": "BZ2_hbAssignCodes",
+      "Start": 5414,
+      "End": 5805,
+      "BodyStart": 5613,
+      "Original": "void BZ2_hbAssignCodes ( Int32 *code,\n                         UChar *length,\n                         Int32 minLen,\n                         Int32 maxLen,\n                         Int32 alphaSize )\n{\n   Int32 n, vec, i;\n\n   vec = 0;\n   for (n = minLen; n \u003c= maxLen; n++) {\n      for (i = 0; i \u003c alphaSize; i++)\n         if (length[i] == n) { code[i] = vec; vec++; };\n      vec \u003c\u003c= 1;\n   }\n}",
+      "Draft": "func BZ2_hbAssignCodes(code *Int32, length *UChar, minLen Int32, maxLen Int32, alphaSize Int32) {\n   var n, vec, i Int32;\n\n   vec = 0;\n   for n = minLen; n \u003c= maxLen; n++ {\n      for i = 0; i \u003c alphaSize; i++ {\n         if length[i] == n { code[i] = vec; vec++; }\n      };\n      vec \u003c\u003c= 1;\n   }\n}"
+    },
+    {
+      "Name": "BZ2_hbCreateDecodeTables",
+      "Start": 5864,
+      "End": 6817,
+      "BodyStart": 6189,
+      "Original": "void BZ2_hbCreateDecodeTables ( Int32 *limit,\n                                Int32 *base,\n                                Int32 *perm,\n                                UChar *length,\n                                Int32 minLen,\n                                Int32 maxLen,\n                                Int32 alphaSize )\n{\n   Int32 pp, i, j, vec;\n\n   pp = 0;\n   for (i = minLen; i \u003c= maxLen; i++)\n      for (j = 0; j \u003c alphaSize; j++)\n         if (length[j] == i) { perm[pp] = j; pp++; };\n\n   for (i = 0; i \u003c BZ_MAX_CODE_LEN; i++) base[i] = 0;\n   for (i = 0; i \u003c alphaSize; i++) base[length[i]+1]++;\n\n   for (i = 1; i \u003c BZ_MAX_CODE_LEN; i++) base[i] += base[i-1];\n\n   for (i = 0; i \u003c BZ_MAX_CODE_LEN; i++) limit[i] = 0;\n   vec = 0;\n\n   for (i = minLen; i \u003c= maxLen; i++) {\n      vec += (base[i+1] - base[i]);\n      limit[i] = vec-1;\n      vec \u003c\u003c= 1;\n   }\n   for (i = minLen + 1; i \u003c= maxLen; i++)\n      base[i] = ((limit[i-1] + 1) \u003c\u003c 1) - base[i];\n}",
+      "Draft": "func BZ2_hbCreateDecodeTables(limit *Int32, base *Int32, perm *Int32, length *UChar, minLen Int32, maxLen Int32, alphaSize Int32) {\n   var pp, i, j, vec Int32;\n\n   pp = 0;\n   for i = minLen; i \u003c= maxLen; i++ {\n      for j = 0; j \u003c alphaSize; j++ {\n         if length[j] == i { perm[pp] = j; pp++; }\n      }\n   };\n\n   for i = 0; i \u003c BZ_MAX_CODE_LEN; i++ { base[i] = 0; }\n   for i = 0; i \u003c alphaSize; i++ { base[length[i]+1]++; }\n\n   for i = 1; i \u003c BZ_MAX_CODE_LEN; i++ { base[i] += base[i-1]; }\n\n   for i = 0; i \u003c BZ_MAX_CODE_LEN; i++ { limit[i] = 0; }\n   vec = 0;\n\n   for i = minLen; i \u003c= maxLen; i++ {\n      vec += (base[i+1] - base[i]);\n      limit[i] = vec-1;\n      vec \u003c\u003c= 1;\n   }\n   for i = minLen + 1; i \u003c= maxLen; i++ {\n      base[i] = ((limit[i-1] + 1) \u003c\u003c 1) - base[i];\n   }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/huffman.c::macro::WEIGHTOF",
+      "Category": "macro-review",
+      "Symbol": "WEIGHTOF",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 925,
+      "End": 968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/huffman.c::macro::DEPTHOF",
+      "Category": "macro-review",
+      "Symbol": "DEPTHOF",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 969,
+      "End": 1012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/huffman.c::macro::MYMAX",
+      "Category": "macro-review",
+      "Symbol": "MYMAX",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1013,
+      "End": 1067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/huffman.c::macro::ADDWEIGHTS",
+      "Category": "macro-review",
+      "Symbol": "ADDWEIGHTS",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1069,
+      "End": 1222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/huffman.c::macro::UPHEAP",
+      "Category": "macro-review",
+      "Symbol": "UPHEAP",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1224,
+      "End": 1729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/huffman.c::macro::DOWNHEAP",
+      "Category": "macro-review",
+      "Symbol": "DOWNHEAP",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1731,
+      "End": 2572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/huffman.c::ternary::BZ2_hbMakeCodeLengths",
+      "Category": "ternary-review",
+      "Symbol": "BZ2_hbMakeCodeLengths",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2631,
+      "End": 5355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/huffman.c::BZ2_hbMakeCodeLengths",
+      "Category": "semantic-review",
+      "Symbol": "BZ2_hbMakeCodeLengths",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2631,
+      "End": 5355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/huffman.c::BZ2_hbAssignCodes",
+      "Category": "semantic-review",
+      "Symbol": "BZ2_hbAssignCodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5414,
+      "End": 5805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/huffman.c::BZ2_hbCreateDecodeTables",
+      "Category": "semantic-review",
+      "Symbol": "BZ2_hbCreateDecodeTables",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5864,
+      "End": 6817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/huffman.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/huffman.c::macro-inline::3479",
+      "Category": "macro-inline-review",
+      "Symbol": "AssertH",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3479,
+      "End": 3525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bzlib/huffman.c::macro-inline::3935",
+      "Category": "macro-inline-review",
+      "Symbol": "AssertH",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3935,
+      "End": 3984
+    }
+  ],
+  "Draft": "package bzlib\n\n\n/*-------------------------------------------------------------*/\n/*--- Huffman coding low-level stuff                        ---*/\n/*---                                             huffman.c ---*/\n/*-------------------------------------------------------------*/\n\n/* ------------------------------------------------------------------\n   This file is part of bzip2/libbzip2, a program and library for\n   lossless, block-sorting data compression.\n\n   bzip2/libbzip2 version 1.0.5 of 10 December 2007\n   Copyright (C) 1996-2007 Julian Seward \u003cjseward@bzip.org\u003e\n\n   Please read the WARNING, DISCLAIMER and PATENTS sections in the \n   README file.\n\n   This program is released under the terms of the license contained\n   in the file LICENSE.\n   ------------------------------------------------------------------ */\n\n\n//#include \"bzlib_private.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*---------------------------------------------------*/\n// Original macro:\n// #define WEIGHTOF(zz0)  ((zz0) \u0026 0xffffff00)\n\n// Original macro:\n// #define DEPTHOF(zz1)   ((zz1) \u0026 0x000000ff)\n\n// Original macro:\n// #define MYMAX(zz2,zz3) ((zz2) \u003e (zz3) ? (zz2) : (zz3))\n\n\n// Original macro:\n// #define ADDWEIGHTS(zw1,zw2)                           \\\n//    (WEIGHTOF(zw1)+WEIGHTOF(zw2)) |                    \\\n//    (1 + MYMAX(DEPTHOF(zw1),DEPTHOF(zw2)))\n\n\n// Original macro:\n// #define UPHEAP(z)                                     \\\n// {                                                     \\\n//    Int32 zz, tmp;                                     \\\n//    zz = z; tmp = heap[zz];                            \\\n//    while (weight[tmp] \u003c weight[heap[zz \u003e\u003e 1]]) {      \\\n//       heap[zz] = heap[zz \u003e\u003e 1];                       \\\n//       zz \u003e\u003e= 1;                                       \\\n//    }                                                  \\\n//    heap[zz] = tmp;                                    \\\n// }\n\n\n// Original macro:\n// #define DOWNHEAP(z)                                   \\\n// {                                                     \\\n//    Int32 zz, yy, tmp;                                 \\\n//    zz = z; tmp = heap[zz];                            \\\n//    while (True) {                                     \\\n//       yy = zz \u003c\u003c 1;                                   \\\n//       if (yy \u003e nHeap) break;                          \\\n//       if (yy \u003c nHeap \u0026\u0026                               \\\n//           weight[heap[yy+1]] \u003c weight[heap[yy]])      \\\n//          yy++;                                        \\\n//       if (weight[tmp] \u003c weight[heap[yy]]) break;      \\\n//       heap[zz] = heap[yy];                            \\\n//       zz = yy;                                        \\\n//    }                                                  \\\n//    heap[zz] = tmp;                                    \\\n// }\n\n\n\n/*---------------------------------------------------*/\nfunc BZ2_hbMakeCodeLengths(len *UChar, freq *Int32, alphaSize Int32, maxLen Int32) {\n   /*--\n      Nodes and heap entries run from 1.  Entry 0\n      for both the heap and nodes is a sentinel.\n   --*/\n   var nNodes, nHeap, n1, n2, i, j, k Int32;\n   var tooLong Bool;\n\n   var heap [BZ_MAX_ALPHA_SIZE + 2]Int32;\n   var weight [BZ_MAX_ALPHA_SIZE * 2]Int32;\n   var parent [BZ_MAX_ALPHA_SIZE * 2]Int32; \n\n   for i = 0; i \u003c alphaSize; i++ {\n      weight[i+1] = (freq[i] == 0 ? 1 : freq[i]) \u003c\u003c 8;\n   }\n\n   for True {\n\n      nNodes = alphaSize;\n      nHeap = 0;\n\n      heap[0] = 0;\n      weight[0] = 0;\n      parent[0] = -2;\n\n      for i = 1; i \u003c= alphaSize; i++ {\n         parent[i] = -1;\n         nHeap++;\n         heap[nHeap] = i;\n         // inlining of macro UPHEAP\n         {                                                        var zz, tmp Int32;                                        zz = nHeap; tmp = heap[zz];                               for weight[tmp] \u003c weight[heap[zz \u003e\u003e 1]] {            heap[zz] = heap[zz \u003e\u003e 1];                             zz \u003e\u003e= 1;                                          }\n                                                     heap[zz] = tmp;                                    };\n      }\n\n      AssertH( nHeap \u003c (BZ_MAX_ALPHA_SIZE+2), 2001 );\n   \n      for nHeap \u003e 1 {\n         // inlining of macro DOWNHEAP\n         n1 = heap[1]; heap[1] = heap[nHeap]; nHeap--; {                                                        var zz, yy, tmp Int32;                                    zz = 1; tmp = heap[zz];                               for True {                                           yy = zz \u003c\u003c 1;                                         if yy \u003e nHeap { break; }\n                                if yy \u003c nHeap \u0026\u0026                                         weight[heap[yy+1]] \u003c weight[heap[yy]] {               yy++; }\n                                              if weight[tmp] \u003c weight[heap[yy]] { break; }\n            heap[zz] = heap[yy];                                  zz = yy;                                           }\n                                                     heap[zz] = tmp;                                    };\n         // inlining of macro DOWNHEAP\n         n2 = heap[1]; heap[1] = heap[nHeap]; nHeap--; {                                                        var zz, yy, tmp Int32;                                    zz = 1; tmp = heap[zz];                               for True {                                           yy = zz \u003c\u003c 1;                                         if yy \u003e nHeap { break; }\n                                if yy \u003c nHeap \u0026\u0026                                         weight[heap[yy+1]] \u003c weight[heap[yy]] {               yy++; }\n                                              if weight[tmp] \u003c weight[heap[yy]] { break; }\n            heap[zz] = heap[yy];                                  zz = yy;                                           }\n                                                     heap[zz] = tmp;                                    };\n         nNodes++;\n         parent[n1] = parent[n2] = nNodes;\n         // inlining of macro ADDWEIGHTS\n         // inlining of macro WEIGHTOF\n         // inlining of macro MYMAX\n         // inlining of macro DEPTHOF\n         weight[nNodes] = (((weight[n1]) \u0026 0xffffff00)+((weight[n2]) \u0026 0xffffff00)) |                       (1 + ((((weight[n1]) \u0026 0x000000ff)) \u003e (((weight[n2]) \u0026 0x000000ff)) ? (((weight[n1]) \u0026 0x000000ff)) : (((weight[n2]) \u0026 0x000000ff))));\n         parent[nNodes] = -1;\n         nHeap++;\n         heap[nHeap] = nNodes;\n         // inlining of macro UPHEAP\n         {                                                        var zz, tmp Int32;                                        zz = nHeap; tmp = heap[zz];                               for weight[tmp] \u003c weight[heap[zz \u003e\u003e 1]] {            heap[zz] = heap[zz \u003e\u003e 1];                             zz \u003e\u003e= 1;                                          }\n                                                     heap[zz] = tmp;                                    };\n      }\n\n      AssertH( nNodes \u003c (BZ_MAX_ALPHA_SIZE * 2), 2002 );\n\n      tooLong = False;\n      for i = 1; i \u003c= alphaSize; i++ {\n         j = 0;\n         k = i;\n         for parent[k] \u003e= 0 { k = parent[k]; j++; }\n         len[i-1] = j;\n         if j \u003e maxLen { tooLong = True; }\n      }\n      \n      if ! tooLong { break; }\n\n      /* 17 Oct 04: keep-going condition for the following loop used\n         to be 'i \u003c alphaSize', which missed the last element,\n         theoretically leading to the possibility of the compressor\n         looping.  However, this count-scaling step is only needed if\n         one of the generated Huffman code words is longer than\n         maxLen, which up to and including version 1.0.2 was 20 bits,\n         which is extremely unlikely.  In version 1.0.3 maxLen was\n         changed to 17 bits, which has minimal effect on compression\n         ratio, but does mean this scaling step is used from time to\n         time, enough to verify that it works.\n\n         This means that bzip2-1.0.3 and later will only produce\n         Huffman codes with a maximum length of 17 bits.  However, in\n         order to preserve backwards compatibility with bitstreams\n         produced by versions pre-1.0.3, the decompressor must still\n         handle lengths of up to 20. */\n\n      for i = 1; i \u003c= alphaSize; i++ {\n         j = weight[i] \u003e\u003e 8;\n         j = 1 + (j / 2);\n         weight[i] = j \u003c\u003c 8;\n      }\n   }\n}\n\n\n/*---------------------------------------------------*/\nfunc BZ2_hbAssignCodes(code *Int32, length *UChar, minLen Int32, maxLen Int32, alphaSize Int32) {\n   var n, vec, i Int32;\n\n   vec = 0;\n   for n = minLen; n \u003c= maxLen; n++ {\n      for i = 0; i \u003c alphaSize; i++ {\n         if length[i] == n { code[i] = vec; vec++; }\n      };\n      vec \u003c\u003c= 1;\n   }\n}\n\n\n/*---------------------------------------------------*/\nfunc BZ2_hbCreateDecodeTables(limit *Int32, base *Int32, perm *Int32, length *UChar, minLen Int32, maxLen Int32, alphaSize Int32) {\n   var pp, i, j, vec Int32;\n\n   pp = 0;\n   for i = minLen; i \u003c= maxLen; i++ {\n      for j = 0; j \u003c alphaSize; j++ {\n         if length[j] == i { perm[pp] = j; pp++; }\n      }\n   };\n\n   for i = 0; i \u003c BZ_MAX_CODE_LEN; i++ { base[i] = 0; }\n   for i = 0; i \u003c alphaSize; i++ { base[length[i]+1]++; }\n\n   for i = 1; i \u003c BZ_MAX_CODE_LEN; i++ { base[i] += base[i-1]; }\n\n   for i = 0; i \u003c BZ_MAX_CODE_LEN; i++ { limit[i] = 0; }\n   vec = 0;\n\n   for i = minLen; i \u003c= maxLen; i++ {\n      vec += (base[i+1] - base[i]);\n      limit[i] = vec-1;\n      vec \u003c\u003c= 1;\n   }\n   for i = minLen + 1; i \u003c= maxLen; i++ {\n      base[i] = ((limit[i-1] + 1) \u003c\u003c 1) - base[i];\n   }\n}\n\n\n/*-------------------------------------------------------------*/\n/*--- end                                         huffman.c ---*/\n/*-------------------------------------------------------------*/\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

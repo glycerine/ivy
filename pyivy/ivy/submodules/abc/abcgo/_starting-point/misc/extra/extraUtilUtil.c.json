@@ -1,0 +1,711 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c",
+  "SHA256": "8ad035ad11b7a5e21624817f945914d19304aeecfdb4f67e50dc1482426bf116",
+  "Library": [
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 110,
+        "Column": 20,
+        "ByteOffset": 2826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            return EOF; }"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 113,
+        "Column": 20,
+        "ByteOffset": 2942
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            return EOF; }"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 116,
+        "Column": 20,
+        "ByteOffset": 3046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            return EOF; }"
+    },
+    {
+      "Name": "strchr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 13,
+        "ByteOffset": 3121
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    place = strchr(optstring, c);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 16,
+        "ByteOffset": 3192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(stderr, \"%s: unknown option %c\\n\", argv[0], c);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 123,
+        "Column": 24,
+        "ByteOffset": 3200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(stderr, \"%s: unknown option %c\\n\", argv[0], c);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 24,
+        "ByteOffset": 3491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(stderr, \"%s: %c requires an argument\\n\", "
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 133,
+        "Column": 32,
+        "ByteOffset": 3499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(stderr, \"%s: %c requires an argument\\n\", "
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 12,
+        "ByteOffset": 4091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) sprintf(spStatic_Extra_UtilPrintTime_s, \"%ld.%02ld sec\", t/1000, (t%1000)/10);"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 180,
+        "Column": 15,
+        "ByteOffset": 4613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "       return strcpy(/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(s)+1))), s);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 180,
+        "Column": 77,
+        "ByteOffset": 4675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "       return strcpy(/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(s)+1))), s);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 180,
+        "Column": 108,
+        "ByteOffset": 4706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "       return strcpy(/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(s)+1))), s);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 240,
+        "Column": 8,
+        "ByteOffset": 6120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp(mode, \"x\") == 0 {"
+    },
+    {
+      "Name": "fopen",
+      "Status": "review",
+      "Message": "Dynamic fopen mode retained; choose OpenFile flags explicitly.",
+      "Location": {
+        "Line": 243,
+        "Column": 10,
+        "ByteOffset": 6176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fp = fopen(filename, mode);"
+    },
+    {
+      "Name": "fclose",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 246,
+        "Column": 12,
+        "ByteOffset": 6253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fclose(fp);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 270,
+        "Column": 21,
+        "ByteOffset": 6858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if path == 0 || strcmp(path, \"\") == 0 {"
+    },
+    {
+      "Name": "strchr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 10,
+        "ByteOffset": 7033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    cp = strchr(path, ':');"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 285,
+        "Column": 8,
+        "ByteOffset": 7195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp(path, \".\") == 0 {"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 288,
+        "Column": 73,
+        "ByteOffset": 7346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        buffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(path) + strlen(file) + 4)));"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 288,
+        "Column": 104,
+        "ByteOffset": 7377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        buffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(path) + strlen(file) + 4)));"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 288,
+        "Column": 119,
+        "ByteOffset": 7392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        buffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(path) + strlen(file) + 4)));"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 289,
+        "Column": 16,
+        "ByteOffset": 7428
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) sprintf(buffer, \"%s/%s\", path, file);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 292,
+        "Column": 62,
+        "ByteOffset": 7579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((buffer) ? (free((char *) (buffer)), (buffer) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 296,
+        "Column": 69,
+        "ByteOffset": 7772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((save_path) ? (free((char *) (save_path)), (save_path) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 299,
+        "Column": 64,
+        "ByteOffset": 7917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((filename) ? (free((char *) (filename)), (filename) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 305,
+        "Column": 65,
+        "ByteOffset": 8080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((save_path) ? (free((char *) (save_path)), (save_path) = 0) : 0);"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 322,
+        "Column": 12,
+        "ByteOffset": 8525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 322,
+        "Column": 19,
+        "ByteOffset": 8532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 12,
+        "ByteOffset": 8552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr, \"\\nout of memory allocating %u bytes\\n\","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 323,
+        "Column": 20,
+        "ByteOffset": 8560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr, \"\\nout of memory allocating %u bytes\\n\","
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 325,
+        "Column": 5,
+        "ByteOffset": 8640
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 326,
+        "Column": 5,
+        "ByteOffset": 8657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(1);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 376,
+        "Column": 1,
+        "ByteOffset": 8984
+      },
+      "Directive": "#if defined(NT) || defined(NT64) || defined(WIN32) || defined(__EMSCRIPTEN__)"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_GetSoftDataLimit",
+      "Start": 1793,
+      "End": 1863,
+      "BodyStart": 1822,
+      "Original": "int Extra_GetSoftDataLimit()\n{\n    return EXTRA_RLIMIT_DATA_DEFAULT;\n}",
+      "Draft": "func Extra_GetSoftDataLimit() int32 {\n    return EXTRA_RLIMIT_DATA_DEFAULT;\n}"
+    },
+    {
+      "Name": "Extra_UtilGetoptReset",
+      "Start": 2118,
+      "End": 2220,
+      "BodyStart": 2147,
+      "Original": "void Extra_UtilGetoptReset()\n{\n    globalUtilOptarg = 0;\n    globalUtilOptind = 0;\n    pScanStr = 0;\n}",
+      "Draft": "func Extra_UtilGetoptReset() {\n    globalUtilOptarg = 0;\n    globalUtilOptind = 0;\n    pScanStr = 0;\n}"
+    },
+    {
+      "Name": "Extra_UtilGetopt",
+      "Start": 2469,
+      "End": 3751,
+      "BodyStart": 2539,
+      "Original": "int Extra_UtilGetopt( int argc, char *argv[], const char *optstring )\n{\n    register int c;\n    register const char *place;\n\n    globalUtilOptarg = NULL;\n\n    if (pScanStr == NULL || *pScanStr == '\\0') \n    {\n        if (globalUtilOptind == 0) \n            globalUtilOptind++;\n        if (globalUtilOptind \u003e= argc) \n            return EOF;\n        place = argv[globalUtilOptind];\n        if (place[0] != '-' || place[1] == '\\0') \n            return EOF;\n        globalUtilOptind++;\n        if (place[1] == '-' \u0026\u0026 place[2] == '\\0') \n            return EOF;\n        pScanStr = place+1;\n    }\n\n    c = *pScanStr++;\n    place = strchr(optstring, c);\n    if (place == NULL || c == ':') {\n        (void) fprintf(stderr, \"%s: unknown option %c\\n\", argv[0], c);\n        return '?';\n    }\n    if (*++place == ':') \n    {\n        if (*pScanStr != '\\0') \n        {\n            globalUtilOptarg = pScanStr;\n            pScanStr = NULL;\n        } \n        else \n        {\n            if (globalUtilOptind \u003e= argc) \n            {\n                (void) fprintf(stderr, \"%s: %c requires an argument\\n\", \n                    argv[0], c);\n                return '?';\n            }\n            globalUtilOptarg = argv[globalUtilOptind];\n            globalUtilOptind++;\n        }\n    }\n    return c;\n}",
+      "Draft": "func Extra_UtilGetopt(argc int32, argv []string, optstring string) int32 {\n    register int c;\n    register char *place;\n\n    globalUtilOptarg = nil;\n\n    if pScanStr == nil || *pScanStr == '\\0' {\n        if globalUtilOptind == 0 { \n            globalUtilOptind++; }\n        if globalUtilOptind \u003e= argc { \n            return -1; }\n        place = argv[globalUtilOptind];\n        if place[0] != '-' || place[1] == '\\0' { \n            return -1; }\n        globalUtilOptind++;\n        if place[1] == '-' \u0026\u0026 place[2] == '\\0' { \n            return -1; }\n        pScanStr = place+1;\n    }\n\n    c = *pScanStr++;\n    place = strchr(optstring, c);\n    if place == nil || c == ':' {\n        (void) fmt.Fprintf(os.Stderr, \"%s: unknown option %c\\n\", argv[0], c);\n        return '?';\n    }\n    if *++place == ':' {\n        if *pScanStr != '\\0' {\n            globalUtilOptarg = pScanStr;\n            pScanStr = nil;\n         \n        } else {\n            if globalUtilOptind \u003e= argc {\n                (void) fmt.Fprintf(os.Stderr, \"%s: %c requires an argument\\n\", argv[0], c);\n                return '?';\n            }\n            globalUtilOptarg = argv[globalUtilOptind];\n            globalUtilOptind++;\n        }\n    }\n    return c;\n}"
+    },
+    {
+      "Name": "Extra_UtilPrintTime",
+      "Start": 4004,
+      "End": 4143,
+      "BodyStart": 4041,
+      "Original": "char * Extra_UtilPrintTime( long t )\n{\n    static char s[40];\n\n    (void) sprintf(s, \"%ld.%02ld sec\", t/1000, (t%1000)/10);\n    return s;\n}",
+      "Draft": "func Extra_UtilPrintTime(t long) string {\n    \n\n    (void) sprintf(spStatic_Extra_UtilPrintTime_s, \"%ld.%02ld sec\", t/1000, (t%1000)/10);\n    return spStatic_Extra_UtilPrintTime_s;\n}"
+    },
+    {
+      "Name": "Extra_UtilStrsav",
+      "Start": 4398,
+      "End": 4594,
+      "BodyStart": 4439,
+      "Original": "char * Extra_UtilStrsav( const char *s )\n{\n    if(s == NULL) {  /* added 7/95, for robustness */\n       return NULL;\n    }\n    else {\n       return strcpy(ABC_ALLOC(char, strlen(s)+1), s);\n    }\n}",
+      "Draft": "func Extra_UtilStrsav(s string) string {\n    if s == nil {  /* added 7/95, for robustness */\n       return nil;\n    \n    } else {\n       // inlining of macro ABC_ALLOC\n       return strcpy(((char *) malloc(sizeof(char) * (size_t)(len(s)+1))), s);\n    }\n}"
+    },
+    {
+      "Name": "Extra_UtilTildeExpand",
+      "Start": 4890,
+      "End": 5613,
+      "BodyStart": 4934,
+      "Original": "char * Extra_UtilTildeExpand( char *fname )\n{\n    return Extra_UtilStrsav( fname );\n/*\n    int         n_tildes = 0;\n    const char* home;\n    char*       expanded;\n    int         length;\n    int         i, j, k;\n\n    for (i = 0; i \u003c (int)strlen(fname); i++)\n        if (fname[i] == '~') n_tildes++;\n\n    home     = getenv(\"HOME\");\n    length   = n_tildes * strlen(home) + strlen(fname);\n    expanded = ABC_ALLOC(char, length + 1);\n\n    j = 0;\n    for (i = 0; i \u003c (int)strlen(fname); i++){\n        if (fname[i] == '~'){\n            for (k = 0; k \u003c (int)strlen(home); k++)\n                expanded[j++] = home[k];\n        }else\n            expanded[j++] = fname[i];\n    }\n\n    expanded[j] = '\\0';\n    return expanded; \n*/\n}",
+      "Draft": "func Extra_UtilTildeExpand(fname string) string {\n    return Extra_UtilStrsav( fname );\n/*\n    int         n_tildes = 0;\n    const char* home;\n    char*       expanded;\n    int         length;\n    int         i, j, k;\n\n    for (i = 0; i \u003c (int)strlen(fname); i++)\n        if (fname[i] == '~') n_tildes++;\n\n    home     = getenv(\"HOME\");\n    length   = n_tildes * strlen(home) + strlen(fname);\n    expanded = ABC_ALLOC(char, length + 1);\n\n    j = 0;\n    for (i = 0; i \u003c (int)strlen(fname); i++){\n        if (fname[i] == '~'){\n            for (k = 0; k \u003c (int)strlen(home); k++)\n                expanded[j++] = home[k];\n        }else\n            expanded[j++] = fname[i];\n    }\n\n    expanded[j] = '\\0';\n    return expanded; \n*/\n}"
+    },
+    {
+      "Name": "Extra_UtilCheckFile",
+      "Start": 5861,
+      "End": 6138,
+      "BodyStart": 5919,
+      "Original": "int Extra_UtilCheckFile(char *filename, const char *mode)\n{\n    FILE *fp;\n    int got_file;\n\n    if (strcmp(mode, \"x\") == 0) {\n    mode = \"r\";\n    }\n    fp = fopen(filename, mode);\n    got_file = (fp != 0);\n    if (fp != 0) {\n    (void) fclose(fp);\n    }\n    return got_file;\n}",
+      "Draft": "func Extra_UtilCheckFile(filename string, mode string) int32 {\n    var fp *os.File;\n    var got_file int32;\n\n    if int32(strings.Compare(mode, \"x\")) == 0 {\n    mode = \"r\";\n    }\n    fp = fopen(filename, mode);\n    got_file = (fp != 0);\n    if fp != 0 {\n    (void) fclose(fp);\n    }\n    return got_file;\n}"
+    },
+    {
+      "Name": "Extra_UtilFileSearch",
+      "Start": 6392,
+      "End": 7557,
+      "BodyStart": 6612,
+      "Original": "char * Extra_UtilFileSearch(char *file, char *path, char *mode)\n//char *file;            // file we're looking for \n//char *path;            // search path, colon separated \n//char *mode;            // \"r\", \"w\", or \"x\" \n{\n    int quit;\n    char *buffer, *filename, *save_path, *cp;\n\n    if (path == 0 || strcmp(path, \"\") == 0) {\n    path = \".\";        /* just look in the current directory */\n    }\n\n    save_path = path = Extra_UtilStrsav(path);\n    quit = 0;\n    do {\n    cp = strchr(path, ':');\n    if (cp != 0) {\n        *cp = '\\0';\n    } else {\n        quit = 1;\n    }\n\n    /* cons up the filename out of the path and file name */\n    if (strcmp(path, \".\") == 0) {\n        buffer = Extra_UtilStrsav(file);\n    } else {\n        buffer = ABC_ALLOC(char, strlen(path) + strlen(file) + 4);\n        (void) sprintf(buffer, \"%s/%s\", path, file);\n    }\n    filename = Extra_UtilTildeExpand(buffer);\n    ABC_FREE(buffer);\n\n    /* see if we can access it */\n    if (Extra_UtilCheckFile(filename, mode)) {\n        ABC_FREE(save_path);\n        return filename;\n    }\n    ABC_FREE(filename);\n    path = ++cp;\n    } while (! quit); \n\n    ABC_FREE(save_path);\n    return 0;\n}",
+      "Draft": "char * Extra_UtilFileSearch(char *file, char *path, char *mode)\n//char *file;            // file we're looking for \n//char *path;            // search path, colon separated \n//char *mode;            // \"r\", \"w\", or \"x\" \n{\n    var quit int32;\n    var buffer, filename, save_path, cp string;\n\n    if path == 0 || int32(strings.Compare(path, \"\")) == 0 {\n    path = \".\";        /* just look in the current directory */\n    }\n\n    save_path = path = Extra_UtilStrsav(path);\n    quit = 0;\n    for {\n    cp = strchr(path, ':');\n    if cp != 0 {\n        *cp = '\\0';\n    } else {\n        quit = 1;\n    }\n\n    /* cons up the filename out of the path and file name */\n    if int32(strings.Compare(path, \".\")) == 0 {\n        buffer = Extra_UtilStrsav(file);\n    } else {\n        // inlining of macro ABC_ALLOC\n        buffer = ((char *) malloc(sizeof(char) * (size_t)(len(path) + len(file) + 4)));\n        (void) sprintf(buffer, \"%s/%s\", path, file);\n    }\n    filename = Extra_UtilTildeExpand(buffer);\n    // inlining of macro ABC_FREE\n    ((buffer) ? (free((char *) (buffer)), (buffer) = 0) : 0);\n\n    /* see if we can access it */\n    if Extra_UtilCheckFile(filename, mode) != 0 {\n        // inlining of macro ABC_FREE\n        ((save_path) ? (free((char *) (save_path)), (save_path) = 0) : 0);\n        return filename;\n    }\n    // inlining of macro ABC_FREE\n    ((filename) ? (free((char *) (filename)), (filename) = 0) : 0);\n    path = ++cp;\n    \nif !(! (quit != 0)) { break }\n}  \n\n    // inlining of macro ABC_FREE\n    ((save_path) ? (free((char *) (save_path)), (save_path) = 0) : 0);\n    return 0;\n}"
+    },
+    {
+      "Name": "Extra_UtilMMout_Of_Memory",
+      "Start": 7881,
+      "End": 8083,
+      "BodyStart": 7926,
+      "Original": "void Extra_UtilMMout_Of_Memory( long size ) \n{\n    (void) fflush(stdout);\n    (void) fprintf(stderr, \"\\nout of memory allocating %u bytes\\n\",\n           (unsigned) size);\n    assert( 0 );\n    exit(1);\n}",
+      "Draft": "func Extra_UtilMMout_Of_Memory(size long) {\n    (void) fflush(os.Stdout);\n    (void) fmt.Fprintf(os.Stderr, \"\\nout of memory allocating %d bytes\\n\", uint32( size));\n    assert(false, \"0\");\n    os.Exit(int(1));\n}"
+    },
+    {
+      "Name": "Extra_CpuTime",
+      "Start": 8682,
+      "End": 8733,
+      "BodyStart": 8706,
+      "Original": "abctime Extra_CpuTime()\n{\n    return Abc_Clock();\n}",
+      "Draft": "func Extra_CpuTime() abctime {\n    return Abc_Clock();\n}"
+    },
+    {
+      "Name": "Extra_MemTest",
+      "Start": 9695,
+      "End": 9750,
+      "BodyStart": 9716,
+      "Original": "void Extra_MemTest()\n{\n//    ABC_ALLOC( char, 1002 );\n}",
+      "Draft": "func Extra_MemTest() {\n//    ABC_ALLOC( char, 1002 );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::mechanical::static::4047",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4047,
+      "End": 4053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::mechanical::sizeof::4615",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4553,
+      "End": 4553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::mechanical::do::6929",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6857,
+      "End": 6859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::mechanical::sizeof::7267",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7133,
+      "End": 7133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::pointer-cast::4599",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4553,
+      "End": 4553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::pointer-cast::7251",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7133,
+      "End": 7133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::pointer-cast::7498",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7292,
+      "End": 7292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::pointer-cast::7693",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7400,
+      "End": 7400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::pointer-cast::7838",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7456,
+      "End": 7456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::pointer-cast::7992",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7521,
+      "End": 7521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::Extra_GetSoftDataLimit",
+      "Category": "semantic-review",
+      "Symbol": "Extra_GetSoftDataLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1793,
+      "End": 1863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::Extra_UtilGetoptReset",
+      "Category": "semantic-review",
+      "Symbol": "Extra_UtilGetoptReset",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2118,
+      "End": 2220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::Extra_UtilGetopt",
+      "Category": "semantic-review",
+      "Symbol": "Extra_UtilGetopt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2469,
+      "End": 3751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::Extra_UtilPrintTime",
+      "Category": "semantic-review",
+      "Symbol": "Extra_UtilPrintTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4004,
+      "End": 4143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::Extra_UtilStrsav",
+      "Category": "semantic-review",
+      "Symbol": "Extra_UtilStrsav",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4398,
+      "End": 4594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::Extra_UtilTildeExpand",
+      "Category": "semantic-review",
+      "Symbol": "Extra_UtilTildeExpand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4890,
+      "End": 5613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::Extra_UtilCheckFile",
+      "Category": "semantic-review",
+      "Symbol": "Extra_UtilCheckFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5861,
+      "End": 6138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::ternary::Extra_UtilFileSearch",
+      "Category": "ternary-review",
+      "Symbol": "Extra_UtilFileSearch",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6392,
+      "End": 7557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::Extra_UtilFileSearch",
+      "Category": "semantic-review",
+      "Symbol": "Extra_UtilFileSearch",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6392,
+      "End": 7557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::Extra_UtilMMout_Of_Memory",
+      "Category": "semantic-review",
+      "Symbol": "Extra_UtilMMout_Of_Memory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7881,
+      "End": 8083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::Extra_CpuTime",
+      "Category": "semantic-review",
+      "Symbol": "Extra_CpuTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8682,
+      "End": 8733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::Extra_MemTest",
+      "Category": "semantic-review",
+      "Symbol": "Extra_MemTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9695,
+      "End": 9750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilUtil.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8984,
+      "End": 9438
+    }
+  ],
+  "Draft": "package extra\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [extraUtilUtil.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [extra]\n\n  Synopsis    [Old SIS utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: extraUtilUtil.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstring.h\u003e\n//#include \"extra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst EXTRA_RLIMIT_DATA_DEFAULT = 67108864  // assume 64MB by default \n\n/*  File   : getopt.c\n *  Author : Henry Spencer, University of Toronto\n *  Updated: 28 April 1984\n *\n *  Changes: (R Rudell)\n *  changed index() to strchr();\n *  added getopt_reset() to reset the getopt argument parsing\n *\n *  Purpose: get option letter from argv.\n */\n\nvar globalUtilOptarg string;        // Global argument pointer (util_optarg)\nvar globalUtilOptind int32;    // Global argv index (util_optind)\n\nvar pScanStr string;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [getSoftDataLimit()]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_GetSoftDataLimit() int32 {\n    return EXTRA_RLIMIT_DATA_DEFAULT;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [util_getopt_reset()]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_UtilGetoptReset() {\n    globalUtilOptarg = 0;\n    globalUtilOptind = 0;\n    pScanStr = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [util_getopt()]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_UtilGetopt(argc int32, argv []string, optstring string) int32 {\n    register int c;\n    register char *place;\n\n    globalUtilOptarg = nil;\n\n    if pScanStr == nil || *pScanStr == '\\0' {\n        if globalUtilOptind == 0 { \n            globalUtilOptind++; }\n        if globalUtilOptind \u003e= argc { \n            return -1; }\n        place = argv[globalUtilOptind];\n        if place[0] != '-' || place[1] == '\\0' { \n            return -1; }\n        globalUtilOptind++;\n        if place[1] == '-' \u0026\u0026 place[2] == '\\0' { \n            return -1; }\n        pScanStr = place+1;\n    }\n\n    c = *pScanStr++;\n    place = strchr(optstring, c);\n    if place == nil || c == ':' {\n        (void) fmt.Fprintf(os.Stderr, \"%s: unknown option %c\\n\", argv[0], c);\n        return '?';\n    }\n    if *++place == ':' {\n        if *pScanStr != '\\0' {\n            globalUtilOptarg = pScanStr;\n            pScanStr = nil;\n         \n        } else {\n            if globalUtilOptind \u003e= argc {\n                (void) fmt.Fprintf(os.Stderr, \"%s: %c requires an argument\\n\", argv[0], c);\n                return '?';\n            }\n            globalUtilOptarg = argv[globalUtilOptind];\n            globalUtilOptind++;\n        }\n    }\n    return c;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [util_print_time()]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Extra_UtilPrintTime_s [40]byte;\nfunc Extra_UtilPrintTime(t long) string {\n    \n\n    (void) sprintf(spStatic_Extra_UtilPrintTime_s, \"%ld.%02ld sec\", t/1000, (t%1000)/10);\n    return spStatic_Extra_UtilPrintTime_s;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Extra_UtilStrsav()]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_UtilStrsav(s string) string {\n    if s == nil {  /* added 7/95, for robustness */\n       return nil;\n    \n    } else {\n       // inlining of macro ABC_ALLOC\n       return strcpy(((char *) malloc(sizeof(char) * (size_t)(len(s)+1))), s);\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [util_tilde_expand()]\n\n  Description [The code contributed by Niklas Sorensson.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_UtilTildeExpand(fname string) string {\n    return Extra_UtilStrsav( fname );\n/*\n    int         n_tildes = 0;\n    const char* home;\n    char*       expanded;\n    int         length;\n    int         i, j, k;\n\n    for (i = 0; i \u003c (int)strlen(fname); i++)\n        if (fname[i] == '~') n_tildes++;\n\n    home     = getenv(\"HOME\");\n    length   = n_tildes * strlen(home) + strlen(fname);\n    expanded = ABC_ALLOC(char, length + 1);\n\n    j = 0;\n    for (i = 0; i \u003c (int)strlen(fname); i++){\n        if (fname[i] == '~'){\n            for (k = 0; k \u003c (int)strlen(home); k++)\n                expanded[j++] = home[k];\n        }else\n            expanded[j++] = fname[i];\n    }\n\n    expanded[j] = '\\0';\n    return expanded; \n*/\n}\n\n/**Function*************************************************************\n\n  Synopsis    [check_file()]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_UtilCheckFile(filename string, mode string) int32 {\n    var fp *os.File;\n    var got_file int32;\n\n    if int32(strings.Compare(mode, \"x\")) == 0 {\n    mode = \"r\";\n    }\n    fp = fopen(filename, mode);\n    got_file = (fp != 0);\n    if fp != 0 {\n    (void) fclose(fp);\n    }\n    return got_file;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [util_file_search()]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nchar * Extra_UtilFileSearch(char *file, char *path, char *mode)\n//char *file;            // file we're looking for \n//char *path;            // search path, colon separated \n//char *mode;            // \"r\", \"w\", or \"x\" \n{\n    var quit int32;\n    var buffer, filename, save_path, cp string;\n\n    if path == 0 || int32(strings.Compare(path, \"\")) == 0 {\n    path = \".\";        /* just look in the current directory */\n    }\n\n    save_path = path = Extra_UtilStrsav(path);\n    quit = 0;\n    for {\n    cp = strchr(path, ':');\n    if cp != 0 {\n        *cp = '\\0';\n    } else {\n        quit = 1;\n    }\n\n    /* cons up the filename out of the path and file name */\n    if int32(strings.Compare(path, \".\")) == 0 {\n        buffer = Extra_UtilStrsav(file);\n    } else {\n        // inlining of macro ABC_ALLOC\n        buffer = ((char *) malloc(sizeof(char) * (size_t)(len(path) + len(file) + 4)));\n        (void) sprintf(buffer, \"%s/%s\", path, file);\n    }\n    filename = Extra_UtilTildeExpand(buffer);\n    // inlining of macro ABC_FREE\n    ((buffer) ? (free((char *) (buffer)), (buffer) = 0) : 0);\n\n    /* see if we can access it */\n    if Extra_UtilCheckFile(filename, mode) != 0 {\n        // inlining of macro ABC_FREE\n        ((save_path) ? (free((char *) (save_path)), (save_path) = 0) : 0);\n        return filename;\n    }\n    // inlining of macro ABC_FREE\n    ((filename) ? (free((char *) (filename)), (filename) = 0) : 0);\n    path = ++cp;\n    \nif !(! (quit != 0)) { break }\n}  \n\n    // inlining of macro ABC_FREE\n    ((save_path) ? (free((char *) (save_path)), (save_path) = 0) : 0);\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [MMout_of_memory()]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n/* MMout_of_memory -- out of memory for lazy people, flush and exit */\nfunc Extra_UtilMMout_Of_Memory(size long) {\n    (void) fflush(os.Stdout);\n    (void) fmt.Fprintf(os.Stderr, \"\\nout of memory allocating %d bytes\\n\", uint32( size));\n    assert(false, \"0\");\n    os.Exit(int(1));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [MMoutOfMemory()]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid (*Extra_UtilMMoutOfMemory)( long size ) = (void (*)( long size ))Extra_UtilMMout_Of_Memory;\n\n\n/**Function*************************************************************\n\n  Synopsis    [util_cpu_time()]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_CpuTime() abctime {\n    return Abc_Clock();\n}\n\n/**Function*************************************************************\n\n  Synopsis    [util_cpu_time()]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n#if defined(NT) || defined(NT64) || defined(WIN32) || defined(__EMSCRIPTEN__)\ndouble Extra_CpuTimeDouble()\n{\n    return 1.0*Abc_Clock()/CLOCKS_PER_SEC;\n}\n#else\n\nABC_NAMESPACE_IMPL_END\n\n#include \u003csys/time.h\u003e\n#include \u003csys/resource.h\u003e\n#include \u003cunistd.h\u003e\n\nABC_NAMESPACE_IMPL_START\n\ndouble Extra_CpuTimeDouble()\n{\n    struct rusage ru;\n    getrusage(RUSAGE_SELF, \u0026ru);\n    return (double)ru.ru_utime.tv_sec + (double)ru.ru_utime.tv_usec / 1000000; \n}\n#endif\n\n/**Function*************************************************************\n\n  Synopsis    [Testing memory leaks.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_MemTest() {\n//    ABC_ALLOC( char, 1002 );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

@@ -1,0 +1,334 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c",
+  "SHA256": "602f0f5b4abf13aca6ea9c6f4780c61f66a91bd193dd69d0d3ff6385c54c5bb6",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 22,
+        "ByteOffset": 5387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    *yIndex = temp = ABC_ALLOC(int, n);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 16,
+        "ByteOffset": 5483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(bdd.out,"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 187,
+        "Column": 5,
+        "ByteOffset": 6635
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(yIndex);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 84,
+        "Column": 1,
+        "ByteOffset": 3313
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_SolveEqn",
+      "Start": 5047,
+      "End": 5760,
+      "BodyStart": 5337,
+      "Original": "DdNode *\nCudd_SolveEqn(\n  DdManager *  bdd,\n  DdNode * F /* the left-hand side of the equation */,\n  DdNode * Y /* the cube of the y variables */,\n  DdNode ** G /* the array of solutions (return parameter) */,\n  int ** yIndex /* index of y variables */,\n  int  n /* numbers of unknowns */)\n{\n    DdNode *res;\n    int *temp;\n\n    *yIndex = temp = ABC_ALLOC(int, n);\n    if (temp == NULL) {\n        bdd-\u003eerrorCode = CUDD_MEMORY_OUT;\n        (void) fprintf(bdd-\u003eout,\n                       \"Cudd_SolveEqn: Out of memory for yIndex\\n\");\n        return(NULL);\n    }\n\n    do {\n        bdd-\u003ereordered = 0;\n        res = cuddSolveEqnRecur(bdd, F, Y, G, n, temp, 0);\n    } while (bdd-\u003ereordered == 1);\n\n    return(res);\n\n}",
+      "Draft": "DdNode *\nCudd_SolveEqn(\n  DdManager *  bdd,\n  DdNode * F /* the left-hand side of the equation */,\n  DdNode * Y /* the cube of the y variables */,\n  DdNode ** G /* the array of solutions (return parameter) */,\n  int ** yIndex /* index of y variables */,\n  int  n /* numbers of unknowns */)\n{\n    var res *DdNode;\n    var temp *int32;\n\n    *yIndex = temp = ABC_ALLOC(int, n);\n    if temp == nil {\n        bdd.errorCode = CUDD_MEMORY_OUT;\n        (void) fmt.Fprintf(bdd.out, \"Cudd_SolveEqn: Out of memory for yIndex\\n\");\n        return(nil);\n    }\n\n    for {\n        bdd.reordered = 0;\n        res = cuddSolveEqnRecur(bdd, F, Y, G, n, temp, 0);\n    \nif !(bdd.reordered == 1) { break }\n} \n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_VerifySol",
+      "Start": 6256,
+      "End": 6665,
+      "BodyStart": 6479,
+      "Original": "DdNode *\nCudd_VerifySol(\n  DdManager *  bdd,\n  DdNode * F /* the left-hand side of the equation */,\n  DdNode ** G /* the array of solutions */,\n  int * yIndex /* index of y variables */,\n  int  n /* numbers of unknowns */)\n{\n    DdNode *res;\n\n    do {\n        bdd-\u003ereordered = 0;\n        res = cuddVerifySol(bdd, F, G, yIndex, n);\n    } while (bdd-\u003ereordered == 1);\n\n    ABC_FREE(yIndex);\n\n    return(res);\n\n}",
+      "Draft": "DdNode *\nCudd_VerifySol(\n  DdManager *  bdd,\n  DdNode * F /* the left-hand side of the equation */,\n  DdNode ** G /* the array of solutions */,\n  int * yIndex /* index of y variables */,\n  int  n /* numbers of unknowns */)\n{\n    var res *DdNode;\n\n    for {\n        bdd.reordered = 0;\n        res = cuddVerifySol(bdd, F, G, yIndex, n);\n    \nif !(bdd.reordered == 1) { break }\n} \n\n    ABC_FREE(yIndex);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddSolveEqnRecur",
+      "Start": 7430,
+      "End": 10264,
+      "BodyStart": 7759,
+      "Original": "DdNode *\ncuddSolveEqnRecur(\n  DdManager * bdd,\n  DdNode * F /* the left-hand side of the equation */,\n  DdNode * Y /* the cube of remaining y variables */,\n  DdNode ** G /* the array of solutions */,\n  int  n /* number of unknowns */,\n  int * yIndex /* array holding the y variable indices */,\n  int  i /* level of recursion */)\n{\n    DdNode *Fn, *Fm1, *Fv, *Fvbar, *T, *w, *nextY, *one;\n    DdNodePtr *variables;\n\n    int j;\n\n    statLine(bdd);\n    variables = bdd-\u003evars;\n    one = DD_ONE(bdd);\n\n    /* Base condition. */\n    if (Y == one) {\n        return F;\n    }\n\n    /* Cofactor of Y. */\n    yIndex[i] = Y-\u003eindex;\n    nextY = Cudd_T(Y);\n\n    /* Universal abstraction of F with respect to the top variable index. */\n    Fm1 = cuddBddExistAbstractRecur(bdd, Cudd_Not(F), variables[yIndex[i]]);\n    if (Fm1) {\n        Fm1 = Cudd_Not(Fm1);\n        cuddRef(Fm1);\n    } else {\n        return(NULL);\n    }\n\n    Fn = cuddSolveEqnRecur(bdd, Fm1, nextY, G, n, yIndex, i+1);\n    if (Fn) {\n        cuddRef(Fn);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        return(NULL);\n    }\n\n    Fv = cuddCofactorRecur(bdd, F, variables[yIndex[i]]);\n    if (Fv) {\n        cuddRef(Fv);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        Cudd_RecursiveDeref(bdd, Fn);\n        return(NULL);\n    }\n\n    Fvbar = cuddCofactorRecur(bdd, F, Cudd_Not(variables[yIndex[i]]));\n    if (Fvbar) {\n        cuddRef(Fvbar);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        Cudd_RecursiveDeref(bdd, Fn);\n        Cudd_RecursiveDeref(bdd, Fv);\n        return(NULL);\n    }\n\n    /* Build i-th component of the solution. */\n    w = cuddBddIteRecur(bdd, variables[yIndex[i]], Cudd_Not(Fv), Fvbar);\n    if (w) {\n        cuddRef(w);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        Cudd_RecursiveDeref(bdd, Fn);\n        Cudd_RecursiveDeref(bdd, Fv);\n        Cudd_RecursiveDeref(bdd, Fvbar);\n        return(NULL);\n    }\n\n    T = cuddBddRestrictRecur(bdd, w, Cudd_Not(Fm1));\n    if(T) {\n        cuddRef(T);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        Cudd_RecursiveDeref(bdd, Fn);\n        Cudd_RecursiveDeref(bdd, Fv);\n        Cudd_RecursiveDeref(bdd, Fvbar);\n        Cudd_RecursiveDeref(bdd, w);\n        return(NULL);\n    }\n\n    Cudd_RecursiveDeref(bdd,Fm1);\n    Cudd_RecursiveDeref(bdd,w);\n    Cudd_RecursiveDeref(bdd,Fv);\n    Cudd_RecursiveDeref(bdd,Fvbar);\n\n    /* Substitute components of solution already found into solution. */\n    for (j = n-1; j \u003e i; j--) {\n        w = cuddBddComposeRecur(bdd,T, G[j], variables[yIndex[j]]);\n        if(w) {\n            cuddRef(w);\n        } else {\n            Cudd_RecursiveDeref(bdd, Fn);\n            Cudd_RecursiveDeref(bdd, T);\n            return(NULL);\n        }\n        Cudd_RecursiveDeref(bdd,T);\n        T = w;\n    }\n    G[i] = T;\n\n    Cudd_Deref(Fn);\n\n    return(Fn);\n\n}",
+      "Draft": "DdNode *\ncuddSolveEqnRecur(\n  DdManager * bdd,\n  DdNode * F /* the left-hand side of the equation */,\n  DdNode * Y /* the cube of remaining y variables */,\n  DdNode ** G /* the array of solutions */,\n  int  n /* number of unknowns */,\n  int * yIndex /* array holding the y variable indices */,\n  int  i /* level of recursion */)\n{\n    var Fn, Fm1, Fv, Fvbar, T, w, nextY, one *DdNode;\n    var variables *DdNodePtr;\n\n    var j int32;\n\n    statLine(bdd);\n    variables = bdd.vars;\n    // inlining of macro DD_ONE\n    one = ((bdd).one);\n\n    /* Base condition. */\n    if Y == one {\n        return F;\n    }\n\n    /* Cofactor of Y. */\n    yIndex[i] = Y.index;\n    // inlining of macro Cudd_T\n    // inlining of macro Cudd_Regular\n    nextY = ((((DdNode *)((ptruint)(Y) \u0026 ~01))).type.kids.T);\n\n    /* Universal abstraction of F with respect to the top variable index. */\n    // inlining of macro Cudd_Not\n    Fm1 = cuddBddExistAbstractRecur(bdd, ((DdNode *)((ptrint)(F) ^ 01)), variables[yIndex[i]]);\n    if Fm1 {\n        // inlining of macro Cudd_Not\n        Fm1 = ((DdNode *)((ptrint)(Fm1) ^ 01));\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(Fm1).ref);\n    } else {\n        return(nil);\n    }\n\n    Fn = cuddSolveEqnRecur(bdd, Fm1, nextY, G, n, yIndex, i+1);\n    if Fn {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(Fn).ref);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        return(nil);\n    }\n\n    Fv = cuddCofactorRecur(bdd, F, variables[yIndex[i]]);\n    if Fv {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(Fv).ref);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        Cudd_RecursiveDeref(bdd, Fn);\n        return(nil);\n    }\n\n    // inlining of macro Cudd_Not\n    Fvbar = cuddCofactorRecur(bdd, F, ((DdNode *)((ptrint)(variables[yIndex[i]]) ^ 01)));\n    if Fvbar {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(Fvbar).ref);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        Cudd_RecursiveDeref(bdd, Fn);\n        Cudd_RecursiveDeref(bdd, Fv);\n        return(nil);\n    }\n\n    /* Build i-th component of the solution. */\n    // inlining of macro Cudd_Not\n    w = cuddBddIteRecur(bdd, variables[yIndex[i]], ((DdNode *)((ptrint)(Fv) ^ 01)), Fvbar);\n    if w {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(w).ref);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        Cudd_RecursiveDeref(bdd, Fn);\n        Cudd_RecursiveDeref(bdd, Fv);\n        Cudd_RecursiveDeref(bdd, Fvbar);\n        return(nil);\n    }\n\n    // inlining of macro Cudd_Not\n    T = cuddBddRestrictRecur(bdd, w, ((DdNode *)((ptrint)(Fm1) ^ 01)));\n    if T {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(T).ref);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        Cudd_RecursiveDeref(bdd, Fn);\n        Cudd_RecursiveDeref(bdd, Fv);\n        Cudd_RecursiveDeref(bdd, Fvbar);\n        Cudd_RecursiveDeref(bdd, w);\n        return(nil);\n    }\n\n    Cudd_RecursiveDeref(bdd,Fm1);\n    Cudd_RecursiveDeref(bdd,w);\n    Cudd_RecursiveDeref(bdd,Fv);\n    Cudd_RecursiveDeref(bdd,Fvbar);\n\n    /* Substitute components of solution already found into solution. */\n    for j = n-1; j \u003e i; j-- {\n        w = cuddBddComposeRecur(bdd,T, G[j], variables[yIndex[j]]);\n        if w {\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(w).ref);\n        } else {\n            Cudd_RecursiveDeref(bdd, Fn);\n            Cudd_RecursiveDeref(bdd, T);\n            return(nil);\n        }\n        Cudd_RecursiveDeref(bdd,T);\n        T = w;\n    }\n    G[i] = T;\n\n    Cudd_Deref(Fn);\n\n    return(Fn);\n\n}"
+    },
+    {
+      "Name": "cuddVerifySol",
+      "Start": 10598,
+      "End": 11173,
+      "BodyStart": 10834,
+      "Original": "DdNode *\ncuddVerifySol(\n  DdManager * bdd,\n  DdNode * F /* the left-hand side of the equation */,\n  DdNode ** G /* the array of solutions */,\n  int * yIndex /* array holding the y variable indices */,\n  int  n /* number of unknowns */)\n{\n    DdNode *w, *R;\n\n    int j;\n\n    R = F;\n    cuddRef(R);\n    for(j = n - 1; j \u003e= 0; j--) {\n         w = Cudd_bddCompose(bdd, R, G[j], yIndex[j]);\n        if (w) {\n            cuddRef(w);\n        } else {\n            return(NULL); \n        }\n        Cudd_RecursiveDeref(bdd,R);\n        R = w;\n    }\n\n    cuddDeref(R);\n\n    return(R);\n\n}",
+      "Draft": "DdNode *\ncuddVerifySol(\n  DdManager * bdd,\n  DdNode * F /* the left-hand side of the equation */,\n  DdNode ** G /* the array of solutions */,\n  int * yIndex /* array holding the y variable indices */,\n  int  n /* number of unknowns */)\n{\n    var w, R *DdNode;\n\n    var j int32;\n\n    R = F;\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(R).ref);\n    for j = n - 1; j \u003e= 0; j-- {\n         w = Cudd_bddCompose(bdd, R, G[j], yIndex[j]);\n        if w {\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(w).ref);\n        } else {\n            return(nil); \n        }\n        Cudd_RecursiveDeref(bdd,R);\n        R = w;\n    }\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(R).ref);\n\n    return(R);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::mechanical::do::5577",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5613,
+      "End": 5615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::mechanical::do::6467",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6503,
+      "End": 6505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::pointer-cast::8161",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8061,
+      "End": 8061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::pointer-cast::8373",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8191,
+      "End": 8191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::pointer-cast::8501",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8256,
+      "End": 8256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::pointer-cast::9268",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8765,
+      "End": 8765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::pointer-cast::9726",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9095,
+      "End": 9095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::pointer-cast::10144",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9385,
+      "End": 9385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::Cudd_SolveEqn",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_SolveEqn",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5047,
+      "End": 5760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::Cudd_VerifySol",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_VerifySol",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6256,
+      "End": 6665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::cuddSolveEqnRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddSolveEqnRecur",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 7430,
+      "End": 10264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::cuddVerifySol",
+      "Category": "semantic-review",
+      "Symbol": "cuddVerifySol",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 10598,
+      "End": 11173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3313,
+      "End": 3423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::macro-inline::5393",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5393,
+      "End": 5410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::macro-inline::6627",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6627,
+      "End": 6643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::macro-inline::7861",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7861,
+      "End": 7874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::macro-inline::8279",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8279,
+      "End": 8291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::macro-inline::8421",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8421,
+      "End": 8432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::macro-inline::8595",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8595,
+      "End": 8606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::macro-inline::8823",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8823,
+      "End": 8837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::macro-inline::9138",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9138,
+      "End": 9148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::macro-inline::9421",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9421,
+      "End": 9431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::macro-inline::10005",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10005,
+      "End": 10015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::macro-inline::10883",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10883,
+      "End": 10893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::macro-inline::11013",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11013,
+      "End": 11023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSolve.c::macro-inline::11141",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11141,
+      "End": 11153
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"fmt\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddSolve.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Boolean equation solver and related functions.]\n\n  Description [External functions included in this modoule:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_SolveEqn()\n                \u003cli\u003e Cudd_VerifySol()\n                \u003c/ul\u003e\n        Internal functions included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddSolveEqnRecur()\n                \u003cli\u003e cuddVerifySol()\n                \u003c/ul\u003e ]\n\n  SeeAlso     []\n\n  Author      [Balakrishna Kumthekar]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Structure declarations                                                    */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddSolve.c,v 1.12 2004/08/13 18:04:51 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Implements the solution of F(x,y) = 0.]\n\n  Description [Implements the solution for F(x,y) = 0. The return\n  value is the consistency condition. The y variables are the unknowns\n  and the remaining variables are the parameters.  Returns the\n  consistency condition if successful; NULL otherwise. Cudd_SolveEqn\n  allocates an array and fills it with the indices of the\n  unknowns. This array is used by Cudd_VerifySol.]\n\n  SideEffects [The solution is returned in G; the indices of the y\n  variables are returned in yIndex.]\n\n  SeeAlso     [Cudd_VerifySol]\n\n******************************************************************************/\nDdNode *\nCudd_SolveEqn(\n  DdManager *  bdd,\n  DdNode * F /* the left-hand side of the equation */,\n  DdNode * Y /* the cube of the y variables */,\n  DdNode ** G /* the array of solutions (return parameter) */,\n  int ** yIndex /* index of y variables */,\n  int  n /* numbers of unknowns */)\n{\n    var res *DdNode;\n    var temp *int32;\n\n    *yIndex = temp = ABC_ALLOC(int, n);\n    if temp == nil {\n        bdd.errorCode = CUDD_MEMORY_OUT;\n        (void) fmt.Fprintf(bdd.out, \"Cudd_SolveEqn: Out of memory for yIndex\\n\");\n        return(nil);\n    }\n\n    for {\n        bdd.reordered = 0;\n        res = cuddSolveEqnRecur(bdd, F, Y, G, n, temp, 0);\n    \nif !(bdd.reordered == 1) { break }\n} \n\n    return(res);\n\n} /* end of Cudd_SolveEqn */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks the solution of F(x,y) = 0.]\n\n  Description [Checks the solution of F(x,y) = 0. This procedure \n  substitutes the solution components for the unknowns of F and returns \n  the resulting BDD for F.] \n\n  SideEffects [Frees the memory pointed by yIndex.]\n\n  SeeAlso     [Cudd_SolveEqn]\n\n******************************************************************************/\nDdNode *\nCudd_VerifySol(\n  DdManager *  bdd,\n  DdNode * F /* the left-hand side of the equation */,\n  DdNode ** G /* the array of solutions */,\n  int * yIndex /* index of y variables */,\n  int  n /* numbers of unknowns */)\n{\n    var res *DdNode;\n\n    for {\n        bdd.reordered = 0;\n        res = cuddVerifySol(bdd, F, G, yIndex, n);\n    \nif !(bdd.reordered == 1) { break }\n} \n\n    ABC_FREE(yIndex);\n\n    return(res);\n\n} /* end of Cudd_VerifySol */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Implements the recursive step of Cudd_SolveEqn.]\n\n  Description [Implements the recursive step of Cudd_SolveEqn. \n  Returns NULL if the intermediate solution blows up\n  or reordering occurs. The parametric solutions are\n  stored in the array G.]\n\n  SideEffects [none]\n\n  SeeAlso     [Cudd_SolveEqn, Cudd_VerifySol]\n\n******************************************************************************/\nDdNode *\ncuddSolveEqnRecur(\n  DdManager * bdd,\n  DdNode * F /* the left-hand side of the equation */,\n  DdNode * Y /* the cube of remaining y variables */,\n  DdNode ** G /* the array of solutions */,\n  int  n /* number of unknowns */,\n  int * yIndex /* array holding the y variable indices */,\n  int  i /* level of recursion */)\n{\n    var Fn, Fm1, Fv, Fvbar, T, w, nextY, one *DdNode;\n    var variables *DdNodePtr;\n\n    var j int32;\n\n    statLine(bdd);\n    variables = bdd.vars;\n    // inlining of macro DD_ONE\n    one = ((bdd).one);\n\n    /* Base condition. */\n    if Y == one {\n        return F;\n    }\n\n    /* Cofactor of Y. */\n    yIndex[i] = Y.index;\n    // inlining of macro Cudd_T\n    // inlining of macro Cudd_Regular\n    nextY = ((((DdNode *)((ptruint)(Y) \u0026 ~01))).type.kids.T);\n\n    /* Universal abstraction of F with respect to the top variable index. */\n    // inlining of macro Cudd_Not\n    Fm1 = cuddBddExistAbstractRecur(bdd, ((DdNode *)((ptrint)(F) ^ 01)), variables[yIndex[i]]);\n    if Fm1 {\n        // inlining of macro Cudd_Not\n        Fm1 = ((DdNode *)((ptrint)(Fm1) ^ 01));\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(Fm1).ref);\n    } else {\n        return(nil);\n    }\n\n    Fn = cuddSolveEqnRecur(bdd, Fm1, nextY, G, n, yIndex, i+1);\n    if Fn {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(Fn).ref);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        return(nil);\n    }\n\n    Fv = cuddCofactorRecur(bdd, F, variables[yIndex[i]]);\n    if Fv {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(Fv).ref);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        Cudd_RecursiveDeref(bdd, Fn);\n        return(nil);\n    }\n\n    // inlining of macro Cudd_Not\n    Fvbar = cuddCofactorRecur(bdd, F, ((DdNode *)((ptrint)(variables[yIndex[i]]) ^ 01)));\n    if Fvbar {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(Fvbar).ref);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        Cudd_RecursiveDeref(bdd, Fn);\n        Cudd_RecursiveDeref(bdd, Fv);\n        return(nil);\n    }\n\n    /* Build i-th component of the solution. */\n    // inlining of macro Cudd_Not\n    w = cuddBddIteRecur(bdd, variables[yIndex[i]], ((DdNode *)((ptrint)(Fv) ^ 01)), Fvbar);\n    if w {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(w).ref);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        Cudd_RecursiveDeref(bdd, Fn);\n        Cudd_RecursiveDeref(bdd, Fv);\n        Cudd_RecursiveDeref(bdd, Fvbar);\n        return(nil);\n    }\n\n    // inlining of macro Cudd_Not\n    T = cuddBddRestrictRecur(bdd, w, ((DdNode *)((ptrint)(Fm1) ^ 01)));\n    if T {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(T).ref);\n    } else {\n        Cudd_RecursiveDeref(bdd, Fm1);\n        Cudd_RecursiveDeref(bdd, Fn);\n        Cudd_RecursiveDeref(bdd, Fv);\n        Cudd_RecursiveDeref(bdd, Fvbar);\n        Cudd_RecursiveDeref(bdd, w);\n        return(nil);\n    }\n\n    Cudd_RecursiveDeref(bdd,Fm1);\n    Cudd_RecursiveDeref(bdd,w);\n    Cudd_RecursiveDeref(bdd,Fv);\n    Cudd_RecursiveDeref(bdd,Fvbar);\n\n    /* Substitute components of solution already found into solution. */\n    for j = n-1; j \u003e i; j-- {\n        w = cuddBddComposeRecur(bdd,T, G[j], variables[yIndex[j]]);\n        if w {\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(w).ref);\n        } else {\n            Cudd_RecursiveDeref(bdd, Fn);\n            Cudd_RecursiveDeref(bdd, T);\n            return(nil);\n        }\n        Cudd_RecursiveDeref(bdd,T);\n        T = w;\n    }\n    G[i] = T;\n\n    Cudd_Deref(Fn);\n\n    return(Fn);\n\n} /* end of cuddSolveEqnRecur */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Implements the recursive step of Cudd_VerifySol. ]\n\n  Description []\n\n  SideEffects [none]\n\n  SeeAlso     [Cudd_VerifySol]\n\n******************************************************************************/\nDdNode *\ncuddVerifySol(\n  DdManager * bdd,\n  DdNode * F /* the left-hand side of the equation */,\n  DdNode ** G /* the array of solutions */,\n  int * yIndex /* array holding the y variable indices */,\n  int  n /* number of unknowns */)\n{\n    var w, R *DdNode;\n\n    var j int32;\n\n    R = F;\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(R).ref);\n    for j = n - 1; j \u003e= 0; j-- {\n         w = Cudd_bddCompose(bdd, R, G[j], yIndex[j]);\n        if w {\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(w).ref);\n        } else {\n            return(nil); \n        }\n        Cudd_RecursiveDeref(bdd,R);\n        R = w;\n    }\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(R).ref);\n\n    return(R);\n\n} /* end of cuddVerifySol */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

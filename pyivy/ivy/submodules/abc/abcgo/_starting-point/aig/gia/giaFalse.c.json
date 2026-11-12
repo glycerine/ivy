@@ -1,0 +1,579 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c",
+  "SHA256": "26ed9d330fc9973be2c61fae4561e7be2a5d58ee8f820a92702a6a04731c9c31",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vHook) \u003e= 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 14,
+        "ByteOffset": 2136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 85,
+        "Column": 9,
+        "ByteOffset": 2732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Eliminated path: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 88,
+        "Column": 13,
+        "ByteOffset": 2966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Level %3d : \", Gia_ObjLevel(p, pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 21,
+        "ByteOffset": 3721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Path %d : \", Counter++ ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 6697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsCo(pPivot) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 186,
+        "Column": 63,
+        "ByteOffset": 6844
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sat_solver_set_runtime_limit( pSat, nTimeOut ? nTimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 204,
+        "Column": 13,
+        "ByteOffset": 7953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( i \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 222,
+        "Column": 22,
+        "ByteOffset": 9086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 227,
+        "Column": 18,
+        "ByteOffset": 9355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 9,
+        "ByteOffset": 10405
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"PO %6d : Level = %3d  \", iOut, Gia_ObjLevel(p, pPivot) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 13,
+        "ByteOffset": 10515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Timeout reached after %d seconds. \", nTimeOut );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 13,
+        "ByteOffset": 10622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"There is no false path. \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 258,
+        "Column": 13,
+        "ByteOffset": 10689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"False path contains %d nodes (out of %d):  \", nLits, Vec_IntSize(vPath) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 13,
+        "ByteOffset": 10785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"top = %d  \", Vec_IntEntry(vPath, Abc_Lit2Var(pLits[0])) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 262,
+        "Column": 21,
+        "ByteOffset": 10949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%d \", Abc_Lit2Var(pLits[i]) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 264,
+        "Column": 13,
+        "ByteOffset": 11021
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 299,
+        "Column": 5,
+        "ByteOffset": 12380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Collected %d non-overlapping false paths.\\n\", Vec_WecSizeUsed(vHooks) ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 370,
+        "Column": 63,
+        "ByteOffset": 15087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sat_solver_set_runtime_limit( pSat, nTimeOut ? nTimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 389,
+        "Column": 9,
+        "ByteOffset": 16217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 407,
+        "Column": 18,
+        "ByteOffset": 17278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 419,
+        "Column": 9,
+        "ByteOffset": 17868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iBeg \u003c= iEnd );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 427,
+        "Column": 9,
+        "ByteOffset": 18127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"PO %6d : Level = %3d  \", iOut, Gia_ObjLevelId(p, iObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 429,
+        "Column": 13,
+        "ByteOffset": 18237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Timeout reached after %d seconds. \", nTimeOut );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 431,
+        "Column": 13,
+        "ByteOffset": 18344
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"There is no false path. \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 433,
+        "Column": 13,
+        "ByteOffset": 18411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"False path contains %d nodes (out of %d):  \", Vec_IntSize(vLits), Vec_IntSize(vPath) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 436,
+        "Column": 21,
+        "ByteOffset": 18607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%d \", Vec_IntEntry(vPath, Abc_Lit2Var(pLits[i])) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 438,
+        "Column": 13,
+        "ByteOffset": 18700
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 490,
+        "Column": 9,
+        "ByteOffset": 20392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Performed %d attempts and %d changes.\\n\", Tried, Changed );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 535,
+        "Column": 9,
+        "ByteOffset": 21934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Performed %d attempts and %d changes.\\n\", Tried, Changed );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManFalseRebuildOne",
+      "Start": 1382,
+      "End": 2720,
+      "BodyStart": 1496,
+      "Original": "void Gia_ManFalseRebuildOne( Gia_Man_t * pNew, Gia_Man_t * p, Vec_Int_t * vHook, int fVerbose, int fVeryVerbose )\n{\n    Gia_Obj_t * pObj, * pObj1, * pPrev = NULL;\n    int i, CtrlValue = 0, iPrevValue = -1;\n    pObj = Gia_ManObj( p, Vec_IntEntry(vHook, 0) );\n    if ( Vec_IntSize(vHook) == 1 )\n    {\n        pObj-\u003eValue = 0; // what if stuck at 1???\n        return;\n    }\n    assert( Vec_IntSize(vHook) \u003e= 2 );\n    // find controlling value\n    pObj1 = Gia_ManObj( p, Vec_IntEntry(vHook, 1) );\n    if ( Gia_ObjFanin0(pObj1) == pObj )\n        CtrlValue = Gia_ObjFaninC0(pObj1);\n    else if ( Gia_ObjFanin1(pObj1) == pObj )\n        CtrlValue = Gia_ObjFaninC1(pObj1);\n    else assert( 0 );\n//    printf( \"%d \", CtrlValue );\n    // rewrite the path\n    Gia_ManForEachObjVec( vHook, p, pObj, i )\n    {\n        int iObjValue = pObj-\u003eValue;\n        pObj-\u003eValue = i ? Gia_ManHashAnd(pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj)) : CtrlValue;\n        if ( pPrev )\n            pPrev-\u003eValue = iPrevValue;\n        iPrevValue = iObjValue;\n        pPrev = pObj;\n    }\n    if ( fVeryVerbose )\n    {\n        printf( \"Eliminated path: \" );\n        Vec_IntPrint( vHook );\n        Gia_ManForEachObjVec( vHook, p, pObj, i )\n        {\n            printf( \"Level %3d : \", Gia_ObjLevel(p, pObj) );\n            Gia_ObjPrint( p, pObj );\n        }\n    }\n}",
+      "Draft": "func Gia_ManFalseRebuildOne(pNew *Gia_Man_t, p *Gia_Man_t, vHook *Vec_Int_t, fVerbose int32, fVeryVerbose int32) {\n    var pObj *Gia_Obj_t;\n    var pObj1 *Gia_Obj_t;\n    var pPrev *Gia_Obj_t = nil;\n    var i int32;\n    var CtrlValue int32;\n    var iPrevValue int32 = -1;\n    pObj = Gia_ManObj( p, Vec_IntEntry(vHook, 0) );\n    if Vec_IntSize(vHook) == 1 {\n        pObj.Value = 0; // what if stuck at 1???\n        return;\n    }\n    assert(Vec_IntSize(vHook) \u003e= 2, \"Vec_IntSize(vHook) \u003e= 2\");\n    // find controlling value\n    pObj1 = Gia_ManObj( p, Vec_IntEntry(vHook, 1) );\n    if Gia_ObjFanin0(pObj1) == pObj {\n        CtrlValue = Gia_ObjFaninC0(pObj1);\n    } else if Gia_ObjFanin1(pObj1) == pObj {\n        CtrlValue = Gia_ObjFaninC1(pObj1);\n    } else { assert(false, \"0\"); }\n//    printf( \"%d \", CtrlValue );\n    // rewrite the path\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vHook)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vHook,i))); i++  {\n        var iObjValue int32  = pObj.Value;\n        if i != 0 {\n            pObj.Value = Gia_ManHashAnd(pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj));\n        } else {\n            pObj.Value = CtrlValue;\n        }\n        if pPrev != nil {\n            pPrev.Value = iPrevValue; }\n        iPrevValue = iObjValue;\n        pPrev = pObj;\n    }\n    if fVeryVerbose != 0 {\n        fmt.Printf(\"Eliminated path: \");\n        Vec_IntPrint( vHook );\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vHook)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vHook,i))); i++  {\n            fmt.Printf(\"Level %3d : \", Gia_ObjLevel(p, pObj));\n            Gia_ObjPrint( p, pObj );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManFalseRebuild",
+      "Start": 2721,
+      "End": 3970,
+      "BodyStart": 2822,
+      "Original": "Gia_Man_t * Gia_ManFalseRebuild( Gia_Man_t * p, Vec_Wec_t * vHooks, int fVerbose, int fVeryVerbose )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj;\n    int i, Counter = 0;\n    pNew = Gia_ManStart( 4 * Gia_ManObjNum(p) / 3 );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManHashAlloc( pNew );\n    Gia_ManForEachObj1( p, pObj, i )\n    {\n        if ( Gia_ObjIsAnd(pObj) )\n        {\n            if ( Vec_WecLevelSize(vHooks, i) \u003e 0 )\n            {\n                if ( fVeryVerbose )\n                    printf( \"Path %d : \", Counter++ );\n                Gia_ManFalseRebuildOne( pNew, p, Vec_WecEntry(vHooks, i), fVerbose, fVeryVerbose );\n            }\n            else\n                pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        }\n        else if ( Gia_ObjIsCi(pObj) )\n            pObj-\u003eValue = Gia_ManAppendCi( pNew );\n        else if ( Gia_ObjIsCo(pObj) )\n            pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Gia_ManFalseRebuild(p *Gia_Man_t, vHooks *Vec_Wec_t, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i, Counter int32;\n    pNew = Gia_ManStart( 4 * Gia_ManObjNum(p) / 3 );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            if Vec_WecLevelSize(vHooks, i) \u003e 0 {\n                if fVeryVerbose != 0 {\n                    fmt.Printf(\"Path %d : \", Counter++); }\n                Gia_ManFalseRebuildOne( pNew, p, Vec_WecEntry(vHooks, i), fVerbose, fVeryVerbose );\n            \n            } else {\n                pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        \n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManCollectPath_rec",
+      "Start": 4255,
+      "End": 4939,
+      "BodyStart": 4337,
+      "Original": "void Gia_ManCollectPath_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vPath )\n{\n    if ( Gia_ObjIsAnd(pObj) )\n    {\n        if ( Gia_ObjLevel(p, Gia_ObjFanin0(pObj)) \u003e Gia_ObjLevel(p, Gia_ObjFanin1(pObj)) )\n            Gia_ManCollectPath_rec( p, Gia_ObjFanin0(pObj), vPath );\n        else if ( Gia_ObjLevel(p, Gia_ObjFanin0(pObj)) \u003c Gia_ObjLevel(p, Gia_ObjFanin1(pObj)) )\n            Gia_ManCollectPath_rec( p, Gia_ObjFanin1(pObj), vPath );\n//        else if ( rand() \u0026 1 )\n//            Gia_ManCollectPath_rec( p, Gia_ObjFanin0(pObj), vPath );\n        else\n            Gia_ManCollectPath_rec( p, Gia_ObjFanin1(pObj), vPath );\n    }\n    Vec_IntPush( vPath, Gia_ObjId(p, pObj) );\n}",
+      "Draft": "func Gia_ManCollectPath_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vPath *Vec_Int_t) {\n    if Gia_ObjIsAnd(pObj) {\n        if Gia_ObjLevel(p, Gia_ObjFanin0(pObj)) \u003e Gia_ObjLevel(p, Gia_ObjFanin1(pObj)) {\n            Gia_ManCollectPath_rec( p, Gia_ObjFanin0(pObj), vPath );\n        } else if Gia_ObjLevel(p, Gia_ObjFanin0(pObj)) \u003c Gia_ObjLevel(p, Gia_ObjFanin1(pObj)) {\n            Gia_ManCollectPath_rec( p, Gia_ObjFanin1(pObj), vPath );\n//        else if ( rand() \u0026 1 )\n//            Gia_ManCollectPath_rec( p, Gia_ObjFanin0(pObj), vPath );\n        } else {\n            Gia_ManCollectPath_rec( p, Gia_ObjFanin1(pObj), vPath ); }\n    }\n    Vec_IntPush( vPath, Gia_ObjId(p, pObj) );\n}"
+    },
+    {
+      "Name": "Gia_ManCollectPath",
+      "Start": 4940,
+      "End": 5167,
+      "BodyStart": 5006,
+      "Original": "Vec_Int_t * Gia_ManCollectPath( Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    Vec_Int_t * vPath = Vec_IntAlloc( p-\u003enLevels );\n    Gia_ManCollectPath_rec( p, Gia_ObjIsCo(pObj) ? Gia_ObjFanin0(pObj) : pObj, vPath );\n    return vPath;\n}",
+      "Draft": "func Gia_ManCollectPath(p *Gia_Man_t, pObj *Gia_Obj_t) *Vec_Int_t {\n    var vPath *Vec_Int_t  = Vec_IntAlloc( p.nLevels );\n    Gia_ManCollectPath_rec( p, Gia_ObjIsCo(pObj) ? Gia_ObjFanin0(pObj) : pObj, vPath );\n    return vPath;\n}"
+    },
+    {
+      "Name": "Gia_ManCheckFalseOne",
+      "Start": 5403,
+      "End": 10451,
+      "BodyStart": 5522,
+      "Original": "void Gia_ManCheckFalseOne( Gia_Man_t * p, int iOut, int nTimeOut, Vec_Wec_t * vHooks, int fVerbose, int fVeryVerbose )\n{\n    sat_solver * pSat;\n    Gia_Obj_t * pObj, * pFanin;\n    Gia_Obj_t * pPivot = Gia_ManCo( p, iOut );\n    Vec_Int_t * vLits = Vec_IntAlloc( p-\u003enLevels );\n    Vec_Int_t * vPath = Gia_ManCollectPath( p, pPivot );\n    int nLits = 0, * pLits = NULL;\n    int i, Shift[2], status;\n    abctime clkStart = Abc_Clock();\n    // collect objects and assign SAT variables\n    int iFanin = Gia_ObjFaninId0p( p, pPivot );\n    Vec_Int_t * vObjs = Gia_ManCollectNodesCis( p, \u0026iFanin, 1 );\n    Gia_ManForEachObjVec( vObjs, p, pObj, i )\n        pObj-\u003eValue = Vec_IntSize(vObjs) - 1 - i;\n    assert( Gia_ObjIsCo(pPivot) );\n    // create SAT solver\n    pSat = sat_solver_new();\n    sat_solver_set_runtime_limit( pSat, nTimeOut ? nTimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0 );\n    sat_solver_setnvars( pSat, 3 * Vec_IntSize(vPath) + 2 * Vec_IntSize(vObjs) );\n    Shift[0] = 3 * Vec_IntSize(vPath);\n    Shift[1] = 3 * Vec_IntSize(vPath) + Vec_IntSize(vObjs);\n    // add CNF for the cone\n    Gia_ManForEachObjVec( vObjs, p, pObj, i )\n    {\n        if ( !Gia_ObjIsAnd(pObj) )\n            continue;\n        sat_solver_add_and( pSat, pObj-\u003eValue + Shift[0], \n            Gia_ObjFanin0(pObj)-\u003eValue + Shift[0], Gia_ObjFanin1(pObj)-\u003eValue + Shift[0], \n            Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n        sat_solver_add_and( pSat, pObj-\u003eValue + Shift[1], \n            Gia_ObjFanin0(pObj)-\u003eValue + Shift[1], Gia_ObjFanin1(pObj)-\u003eValue + Shift[1], \n            Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n    }\n    // add CNF for the path\n    Gia_ManForEachObjVec( vPath, p, pObj, i )\n    {\n        if ( Gia_ObjIsAnd(pObj) )\n        {\n            assert( i \u003e 0 );\n            pFanin = Gia_ManObj( p, Vec_IntEntry(vPath, i-1) );\n            if ( pFanin == Gia_ObjFanin0(pObj) )\n            {\n                sat_solver_add_and( pSat, i + 1*Vec_IntSize(vPath), \n                    i-1 + 1*Vec_IntSize(vPath), Gia_ObjFanin1(pObj)-\u003eValue + Shift[0], \n                    Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n                sat_solver_add_and( pSat, i + 2*Vec_IntSize(vPath), \n                    i-1 + 2*Vec_IntSize(vPath), Gia_ObjFanin1(pObj)-\u003eValue + Shift[1], \n                    Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n            }\n            else if ( pFanin == Gia_ObjFanin1(pObj) )\n            {\n                sat_solver_add_and( pSat, i + 1*Vec_IntSize(vPath), \n                    Gia_ObjFanin0(pObj)-\u003eValue + Shift[0], i-1 + 1*Vec_IntSize(vPath), \n                    Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n                sat_solver_add_and( pSat, i + 2*Vec_IntSize(vPath), \n                    Gia_ObjFanin0(pObj)-\u003eValue + Shift[1], i-1 + 2*Vec_IntSize(vPath), \n                    Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n            }\n            else assert( 0 );\n            sat_solver_add_xor( pSat, i, i + 1*Vec_IntSize(vPath), i + 2*Vec_IntSize(vPath), 0 );\n        }\n        else if ( Gia_ObjIsCi(pObj) )\n            sat_solver_add_xor( pSat, i, pObj-\u003eValue + Shift[0], pObj-\u003eValue + Shift[1], 0 );\n        else assert( 0 );\n        Vec_IntPush( vLits, Abc_Var2Lit(i, 0) );\n    }\n    // call the SAT solver\n    status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), (ABC_INT64_T)nTimeOut, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if ( status == l_False )\n    {\n        int iBeg, iEnd;\n        nLits = sat_solver_final( pSat, \u0026pLits );\n        iBeg  = Abc_Lit2Var(pLits[nLits-1]);\n        iEnd  = Abc_Lit2Var(pLits[0]);\n        if ( iEnd - iBeg \u003c 20 )\n        {\n            // check if nodes on the path are already used\n            for ( i = Abc_MaxInt(iBeg-1, 0); i \u003c= iEnd; i++ )\n                if ( Vec_WecLevelSize(vHooks, Vec_IntEntry(vPath, i)) \u003e 0 )\n                    break;\n            if ( i \u003e iEnd )\n            {\n                Vec_Int_t * vHook = Vec_WecEntry(vHooks, Vec_IntEntry(vPath, iEnd));\n                for ( i = Abc_MaxInt(iBeg-1, 0); i \u003c= iEnd; i++ )\n                    Vec_IntPush( vHook, Vec_IntEntry(vPath, i) );\n            }\n        }\n    }\n    if ( fVerbose )\n    {\n        printf( \"PO %6d : Level = %3d  \", iOut, Gia_ObjLevel(p, pPivot) );\n        if ( status == l_Undef )\n            printf( \"Timeout reached after %d seconds. \", nTimeOut );\n        else if ( status == l_True )\n            printf( \"There is no false path. \" );\n        else\n        {\n            printf( \"False path contains %d nodes (out of %d):  \", nLits, Vec_IntSize(vPath) );\n            printf( \"top = %d  \", Vec_IntEntry(vPath, Abc_Lit2Var(pLits[0])) );\n            if ( fVeryVerbose )\n                for ( i = 0; i \u003c nLits; i++ )\n                    printf( \"%d \", Abc_Lit2Var(pLits[i]) );\n            printf( \"  \" );\n        }\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    }\n    sat_solver_delete( pSat );\n    Vec_IntFree( vObjs );\n    Vec_IntFree( vPath );\n    Vec_IntFree( vLits );\n}",
+      "Draft": "func Gia_ManCheckFalseOne(p *Gia_Man_t, iOut int32, nTimeOut int32, vHooks *Vec_Wec_t, fVerbose int32, fVeryVerbose int32) {\n    var pSat *sat_solver;\n    var pObj, pFanin *Gia_Obj_t;\n    var pPivot *Gia_Obj_t  = Gia_ManCo( p, iOut );\n    var vLits *Vec_Int_t  = Vec_IntAlloc( p.nLevels );\n    var vPath *Vec_Int_t  = Gia_ManCollectPath( p, pPivot );\n    var nLits int32;\n    var pLits *int32 = nil;\n    var i int32;\n    var Shift [2]int32;\n    var status int32;\n    var clkStart abctime  = Abc_Clock();\n    // collect objects and assign SAT variables\n    var iFanin int32  = Gia_ObjFaninId0p( p, pPivot );\n    var vObjs *Vec_Int_t  = Gia_ManCollectNodesCis( p, \u0026iFanin, 1 );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {\n        pObj.Value = Vec_IntSize(vObjs) - 1 - i;\n    }\n    assert(Gia_ObjIsCo(pPivot), \"Gia_ObjIsCo(pPivot)\");\n    // create SAT solver\n    pSat = sat_solver_new();\n    sat_solver_set_runtime_limit( pSat, nTimeOut ? nTimeOut * int64(time.Second) + Abc_Clock(): 0 );\n    sat_solver_setnvars( pSat, 3 * Vec_IntSize(vPath) + 2 * Vec_IntSize(vObjs) );\n    Shift[0] = 3 * Vec_IntSize(vPath);\n    Shift[1] = 3 * Vec_IntSize(vPath) + Vec_IntSize(vObjs);\n    // add CNF for the cone\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {\n        if !Gia_ObjIsAnd(pObj) {\n            continue; }\n        sat_solver_add_and( pSat, pObj.Value + Shift[0], \n            Gia_ObjFanin0(pObj).Value + Shift[0], Gia_ObjFanin1(pObj).Value + Shift[0], \n            Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n        sat_solver_add_and( pSat, pObj.Value + Shift[1], \n            Gia_ObjFanin0(pObj).Value + Shift[1], Gia_ObjFanin1(pObj).Value + Shift[1], \n            Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n    }\n    // add CNF for the path\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vPath)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vPath,i))); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            assert(i \u003e 0, \"i \u003e 0\");\n            pFanin = Gia_ManObj( p, Vec_IntEntry(vPath, i-1) );\n            if pFanin == Gia_ObjFanin0(pObj) {\n                sat_solver_add_and( pSat, i + 1*Vec_IntSize(vPath), \n                    i-1 + 1*Vec_IntSize(vPath), Gia_ObjFanin1(pObj).Value + Shift[0], \n                    Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n                sat_solver_add_and( pSat, i + 2*Vec_IntSize(vPath), \n                    i-1 + 2*Vec_IntSize(vPath), Gia_ObjFanin1(pObj).Value + Shift[1], \n                    Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n            \n            } else if pFanin == Gia_ObjFanin1(pObj) {\n                sat_solver_add_and( pSat, i + 1*Vec_IntSize(vPath), \n                    Gia_ObjFanin0(pObj).Value + Shift[0], i-1 + 1*Vec_IntSize(vPath), \n                    Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n                sat_solver_add_and( pSat, i + 2*Vec_IntSize(vPath), \n                    Gia_ObjFanin0(pObj).Value + Shift[1], i-1 + 2*Vec_IntSize(vPath), \n                    Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n            \n            } else { assert(false, \"0\"); }\n            sat_solver_add_xor( pSat, i, i + 1*Vec_IntSize(vPath), i + 2*Vec_IntSize(vPath), 0 );\n        \n        } else if Gia_ObjIsCi(pObj) {\n            sat_solver_add_xor( pSat, i, pObj.Value + Shift[0], pObj.Value + Shift[1], 0 );\n        } else { assert(false, \"0\"); }\n        Vec_IntPush( vLits, Abc_Var2Lit(i, 0) );\n    }\n    // call the SAT solver\n    status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), (ABC_INT64_T)nTimeOut, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if status == l_False {\n        var iBeg, iEnd int32;\n        nLits = sat_solver_final( pSat, \u0026pLits );\n        iBeg  = Abc_Lit2Var(pLits[nLits-1]);\n        iEnd  = Abc_Lit2Var(pLits[0]);\n        if iEnd - iBeg \u003c 20 {\n            // check if nodes on the path are already used\n            for  i = Abc_MaxInt(iBeg-1, 0); i \u003c= iEnd; i++  {\n                if Vec_WecLevelSize(vHooks, Vec_IntEntry(vPath, i)) \u003e 0 {\n                    break; }\n            }\n            if i \u003e iEnd {\n                var vHook *Vec_Int_t  = Vec_WecEntry(vHooks, Vec_IntEntry(vPath, iEnd));\n                for  i = Abc_MaxInt(iBeg-1, 0); i \u003c= iEnd; i++  {\n                    Vec_IntPush( vHook, Vec_IntEntry(vPath, i) );\n                }\n            }\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"PO %6d : Level = %3d  \", iOut, Gia_ObjLevel(p, pPivot));\n        if status == l_Undef {\n            fmt.Printf(\"Timeout reached after %d seconds. \", nTimeOut);\n        } else if status == l_True {\n            fmt.Printf(\"There is no false path. \");\n        } else {\n            fmt.Printf(\"False path contains %d nodes (out of %d):  \", nLits, Vec_IntSize(vPath));\n            fmt.Printf(\"top = %d  \", Vec_IntEntry(vPath, Abc_Lit2Var(pLits[0])));\n            if fVeryVerbose != 0 {\n                for  i = 0; i \u003c nLits; i++  {\n                    fmt.Printf(\"%d \", Abc_Lit2Var(pLits[i]));\n                } }\n            fmt.Printf(\"  \");\n        }\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    }\n    sat_solver_delete( pSat );\n    Vec_IntFree( vObjs );\n    Vec_IntFree( vPath );\n    Vec_IntFree( vLits );\n}"
+    },
+    {
+      "Name": "Gia_ManCheckFalse2",
+      "Start": 10452,
+      "End": 11664,
+      "BodyStart": 10561,
+      "Original": "Gia_Man_t * Gia_ManCheckFalse2( Gia_Man_t * p, int nSlackMax, int nTimeOut, int fVerbose, int fVeryVerbose )\n{\n    Gia_Man_t * pNew;\n    Vec_Wec_t * vHooks;\n    Vec_Que_t * vPrio;\n    Vec_Flt_t * vWeights;\n    Gia_Obj_t * pObj;\n    int i;\n//    srand( 111 );\n    Gia_ManLevelNum( p );\n    // create PO weights\n    vWeights = Vec_FltAlloc( Gia_ManCoNum(p) );\n    Gia_ManForEachCo( p, pObj, i )\n        Vec_FltPush( vWeights, Gia_ObjLevel(p, pObj) );\n    // put POs into the queue\n    vPrio = Vec_QueAlloc( Gia_ManCoNum(p) );\n    Vec_QueSetPriority( vPrio, Vec_FltArrayP(vWeights) );\n    Gia_ManForEachCo( p, pObj, i )\n        Vec_QuePush( vPrio, i );\n    // work on each PO in the queue\n    vHooks = Vec_WecStart( Gia_ManObjNum(p) );\n    while ( Vec_QueTopPriority(vPrio) \u003e= p-\u003enLevels - nSlackMax )\n        Gia_ManCheckFalseOne( p, Vec_QuePop(vPrio), nTimeOut, vHooks, fVerbose, fVeryVerbose );\n    if ( fVerbose )\n    printf( \"Collected %d non-overlapping false paths.\\n\", Vec_WecSizeUsed(vHooks) );\n    // reconstruct the AIG\n    pNew = Gia_ManFalseRebuild( p, vHooks, fVerbose, fVeryVerbose );\n    // cleanup\n    Vec_WecFree( vHooks );\n    Vec_FltFree( vWeights );\n    Vec_QueFree( vPrio );\n    return pNew;\n}",
+      "Draft": "func Gia_ManCheckFalse2(p *Gia_Man_t, nSlackMax int32, nTimeOut int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var vHooks *Vec_Wec_t;\n    var vPrio *Vec_Que_t;\n    var vWeights *Vec_Flt_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n//    srand( 111 );\n    Gia_ManLevelNum( p );\n    // create PO weights\n    vWeights = Vec_FltAlloc( Gia_ManCoNum(p) );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Vec_FltPush( vWeights, Gia_ObjLevel(p, pObj) );\n    }\n    // put POs into the queue\n    vPrio = Vec_QueAlloc( Gia_ManCoNum(p) );\n    Vec_QueSetPriority( vPrio, Vec_FltArrayP(vWeights) );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Vec_QuePush( vPrio, i );\n    }\n    // work on each PO in the queue\n    vHooks = Vec_WecStart( Gia_ManObjNum(p) );\n    for  Vec_QueTopPriority(vPrio) \u003e= p.nLevels - nSlackMax  {\n        Gia_ManCheckFalseOne( p, Vec_QuePop(vPrio), nTimeOut, vHooks, fVerbose, fVeryVerbose );\n    }\n    if fVerbose != 0 {\n    fmt.Printf(\"Collected %d non-overlapping false paths.\\n\", Vec_WecSizeUsed(vHooks)); }\n    // reconstruct the AIG\n    pNew = Gia_ManFalseRebuild( p, vHooks, fVerbose, fVeryVerbose );\n    // cleanup\n    Vec_WecFree( vHooks );\n    Vec_FltFree( vWeights );\n    Vec_QueFree( vPrio );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManFalseRebuildPath",
+      "Start": 11902,
+      "End": 13050,
+      "BodyStart": 12007,
+      "Original": "Gia_Man_t * Gia_ManFalseRebuildPath( Gia_Man_t * p, Vec_Int_t * vHooks, int fVerbose, int fVeryVerbose )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj;\n    int i, iPathEnd = Vec_IntEntryLast(vHooks);\n    pNew = Gia_ManStart( 4 * Gia_ManObjNum(p) / 3 );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManHashAlloc( pNew );\n    Gia_ManForEachObj1( p, pObj, i )\n    {\n        if ( Gia_ObjIsAnd(pObj) )\n        {\n            if ( iPathEnd == i )\n                Gia_ManFalseRebuildOne( pNew, p, vHooks, fVerbose, fVeryVerbose );\n            else\n                pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        }\n        else if ( Gia_ObjIsCi(pObj) )\n            pObj-\u003eValue = Gia_ManAppendCi( pNew );\n        else if ( Gia_ObjIsCo(pObj) )\n            pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Gia_ManFalseRebuildPath(p *Gia_Man_t, vHooks *Vec_Int_t, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var iPathEnd int32 = Vec_IntEntryLast(vHooks);\n    pNew = Gia_ManStart( 4 * Gia_ManObjNum(p) / 3 );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p).Value = 0;\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            if iPathEnd == i {\n                Gia_ManFalseRebuildOne( pNew, p, vHooks, fVerbose, fVeryVerbose );\n            } else {\n                pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        \n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManCheckOne",
+      "Start": 13051,
+      "End": 17851,
+      "BodyStart": 13162,
+      "Original": "Gia_Man_t * Gia_ManCheckOne( Gia_Man_t * p, int iOut, int iObj, int nTimeOut, int fVerbose, int fVeryVerbose )\n{\n    sat_solver * pSat;\n    Gia_Man_t * pNew;\n    Gia_Obj_t * pObj, * pFanin;\n    Vec_Int_t * vLits = Vec_IntAlloc( p-\u003enLevels );\n    Vec_Int_t * vPath = Gia_ManCollectPath( p, Gia_ManObj(p, iObj) );\n    int nLits = 0, * pLits = NULL;\n    int i, Shift[2], status;\n    abctime clkStart = Abc_Clock();\n    // collect objects and assign SAT variables\n    Vec_Int_t * vObjs = Gia_ManCollectNodesCis( p, \u0026iObj, 1 );\n    Gia_ManForEachObjVec( vObjs, p, pObj, i )\n        pObj-\u003eValue = Vec_IntSize(vObjs) - 1 - i;\n    // create SAT solver\n    pSat = sat_solver_new();\n    sat_solver_set_runtime_limit( pSat, nTimeOut ? nTimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0 );\n    sat_solver_setnvars( pSat, 3 * Vec_IntSize(vPath) + 2 * Vec_IntSize(vObjs) );\n    Shift[0] = 3 * Vec_IntSize(vPath);\n    Shift[1] = 3 * Vec_IntSize(vPath) + Vec_IntSize(vObjs);\n    // add CNF for the cone\n    Gia_ManForEachObjVec( vObjs, p, pObj, i )\n    {\n        if ( !Gia_ObjIsAnd(pObj) )\n            continue;\n        sat_solver_add_and( pSat, pObj-\u003eValue + Shift[0], \n            Gia_ObjFanin0(pObj)-\u003eValue + Shift[0], Gia_ObjFanin1(pObj)-\u003eValue + Shift[0], \n            Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n        sat_solver_add_and( pSat, pObj-\u003eValue + Shift[1], \n            Gia_ObjFanin0(pObj)-\u003eValue + Shift[1], Gia_ObjFanin1(pObj)-\u003eValue + Shift[1], \n            Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n    }\n    // add CNF for the path\n    Gia_ManForEachObjVec( vPath, p, pObj, i )\n    {\n        if ( !Gia_ObjIsAnd(pObj) )\n            continue;\n        assert( i \u003e 0 );\n        pFanin = Gia_ManObj( p, Vec_IntEntry(vPath, i-1) );\n        if ( pFanin == Gia_ObjFanin0(pObj) )\n        {\n            sat_solver_add_and( pSat, i + 1*Vec_IntSize(vPath), \n                i-1 + 1*Vec_IntSize(vPath), Gia_ObjFanin1(pObj)-\u003eValue + Shift[0], \n                Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n            sat_solver_add_and( pSat, i + 2*Vec_IntSize(vPath), \n                i-1 + 2*Vec_IntSize(vPath), Gia_ObjFanin1(pObj)-\u003eValue + Shift[1], \n                Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n        }\n        else if ( pFanin == Gia_ObjFanin1(pObj) )\n        {\n            sat_solver_add_and( pSat, i + 1*Vec_IntSize(vPath), \n                Gia_ObjFanin0(pObj)-\u003eValue + Shift[0], i-1 + 1*Vec_IntSize(vPath), \n                Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n            sat_solver_add_and( pSat, i + 2*Vec_IntSize(vPath), \n                Gia_ObjFanin0(pObj)-\u003eValue + Shift[1], i-1 + 2*Vec_IntSize(vPath), \n                Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n        }\n        else assert( 0 );\n        sat_solver_add_xor( pSat, i, i + 1*Vec_IntSize(vPath), i + 2*Vec_IntSize(vPath), 0 );\n        Vec_IntPush( vLits, Abc_Var2Lit(i, 0) );\n    }\n    // call the SAT solver\n    status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), (ABC_INT64_T)nTimeOut, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    Vec_IntClear( vLits );\n    if ( status == l_False )\n    {\n        int iBeg, iEnd;\n        nLits = sat_solver_final( pSat, \u0026pLits );\n        iBeg  = Abc_Lit2Var(pLits[nLits-1]);\n        iEnd  = Abc_Lit2Var(pLits[0]);\n        assert( iBeg \u003c= iEnd );\n        // collect path\n        for ( i = Abc_MaxInt(iBeg-1, 0); i \u003c= iEnd; i++ )\n//        for ( i = 0; i \u003c Vec_IntSize(vPath); i++ )\n            Vec_IntPush( vLits, Vec_IntEntry(vPath, i) );\n    }\n    if ( fVerbose )\n    {\n        printf( \"PO %6d : Level = %3d  \", iOut, Gia_ObjLevelId(p, iObj) );\n        if ( status == l_Undef )\n            printf( \"Timeout reached after %d seconds. \", nTimeOut );\n        else if ( status == l_True )\n            printf( \"There is no false path. \" );\n        else\n        {\n            printf( \"False path contains %d nodes (out of %d):  \", Vec_IntSize(vLits), Vec_IntSize(vPath) );\n            if ( fVeryVerbose )\n                for ( i = nLits-1; i \u003e= 0; i-- )\n                    printf( \"%d \", Vec_IntEntry(vPath, Abc_Lit2Var(pLits[i])) );\n            printf( \"  \" );\n        }\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    }\n    sat_solver_delete( pSat );\n    Vec_IntFree( vObjs );\n    Vec_IntFree( vPath );\n    // update the AIG\n    pNew = Vec_IntSize(vLits) ? Gia_ManFalseRebuildPath( p, vLits, fVerbose, fVeryVerbose ) : NULL;\n    Vec_IntFree( vLits );\n/*\n    if ( pNew )\n    {\n        Gia_Man_t * pTemp = Gia_ManDupDfsNode( p, Gia_ManObj(p, iObj) );\n        Gia_AigerWrite( pTemp, \"false.aig\", 0, 0, 0 );\n        Abc_Print( 1, \"Dumping cone with %d nodes into file \\\"%s\\\".\\n\", Gia_ManAndNum(pTemp), \"false.aig\" );\n        Gia_ManStop( pTemp );\n    }\n*/\n    return pNew;\n}",
+      "Draft": "func Gia_ManCheckOne(p *Gia_Man_t, iOut int32, iObj int32, nTimeOut int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pSat *sat_solver;\n    var pNew *Gia_Man_t;\n    var pObj, pFanin *Gia_Obj_t;\n    var vLits *Vec_Int_t  = Vec_IntAlloc( p.nLevels );\n    var vPath *Vec_Int_t  = Gia_ManCollectPath( p, Gia_ManObj(p, iObj) );\n    var nLits int32;\n    var pLits *int32 = nil;\n    var i int32;\n    var Shift [2]int32;\n    var status int32;\n    var clkStart abctime  = Abc_Clock();\n    // collect objects and assign SAT variables\n    var vObjs *Vec_Int_t  = Gia_ManCollectNodesCis( p, \u0026iObj, 1 );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {\n        pObj.Value = Vec_IntSize(vObjs) - 1 - i;\n    }\n    // create SAT solver\n    pSat = sat_solver_new();\n    sat_solver_set_runtime_limit( pSat, nTimeOut ? nTimeOut * int64(time.Second) + Abc_Clock(): 0 );\n    sat_solver_setnvars( pSat, 3 * Vec_IntSize(vPath) + 2 * Vec_IntSize(vObjs) );\n    Shift[0] = 3 * Vec_IntSize(vPath);\n    Shift[1] = 3 * Vec_IntSize(vPath) + Vec_IntSize(vObjs);\n    // add CNF for the cone\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {\n        if !Gia_ObjIsAnd(pObj) {\n            continue; }\n        sat_solver_add_and( pSat, pObj.Value + Shift[0], \n            Gia_ObjFanin0(pObj).Value + Shift[0], Gia_ObjFanin1(pObj).Value + Shift[0], \n            Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n        sat_solver_add_and( pSat, pObj.Value + Shift[1], \n            Gia_ObjFanin0(pObj).Value + Shift[1], Gia_ObjFanin1(pObj).Value + Shift[1], \n            Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n    }\n    // add CNF for the path\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vPath)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vPath,i))); i++  {\n        if !Gia_ObjIsAnd(pObj) {\n            continue; }\n        assert(i \u003e 0, \"i \u003e 0\");\n        pFanin = Gia_ManObj( p, Vec_IntEntry(vPath, i-1) );\n        if pFanin == Gia_ObjFanin0(pObj) {\n            sat_solver_add_and( pSat, i + 1*Vec_IntSize(vPath), \n                i-1 + 1*Vec_IntSize(vPath), Gia_ObjFanin1(pObj).Value + Shift[0], \n                Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n            sat_solver_add_and( pSat, i + 2*Vec_IntSize(vPath), \n                i-1 + 2*Vec_IntSize(vPath), Gia_ObjFanin1(pObj).Value + Shift[1], \n                Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n        \n        } else if pFanin == Gia_ObjFanin1(pObj) {\n            sat_solver_add_and( pSat, i + 1*Vec_IntSize(vPath), \n                Gia_ObjFanin0(pObj).Value + Shift[0], i-1 + 1*Vec_IntSize(vPath), \n                Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n            sat_solver_add_and( pSat, i + 2*Vec_IntSize(vPath), \n                Gia_ObjFanin0(pObj).Value + Shift[1], i-1 + 2*Vec_IntSize(vPath), \n                Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n        \n        } else { assert(false, \"0\"); }\n        sat_solver_add_xor( pSat, i, i + 1*Vec_IntSize(vPath), i + 2*Vec_IntSize(vPath), 0 );\n        Vec_IntPush( vLits, Abc_Var2Lit(i, 0) );\n    }\n    // call the SAT solver\n    status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), (ABC_INT64_T)nTimeOut, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    Vec_IntClear( vLits );\n    if status == l_False {\n        var iBeg, iEnd int32;\n        nLits = sat_solver_final( pSat, \u0026pLits );\n        iBeg  = Abc_Lit2Var(pLits[nLits-1]);\n        iEnd  = Abc_Lit2Var(pLits[0]);\n        assert(iBeg \u003c= iEnd, \"iBeg \u003c= iEnd\");\n        // collect path\n        for  i = Abc_MaxInt(iBeg-1, 0); i \u003c= iEnd; i++  {\n//        for ( i = 0; i \u003c Vec_IntSize(vPath); i++ )\n            Vec_IntPush( vLits, Vec_IntEntry(vPath, i) );\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"PO %6d : Level = %3d  \", iOut, Gia_ObjLevelId(p, iObj));\n        if status == l_Undef {\n            fmt.Printf(\"Timeout reached after %d seconds. \", nTimeOut);\n        } else if status == l_True {\n            fmt.Printf(\"There is no false path. \");\n        } else {\n            fmt.Printf(\"False path contains %d nodes (out of %d):  \", Vec_IntSize(vLits), Vec_IntSize(vPath));\n            if fVeryVerbose != 0 {\n                for  i = nLits-1; i \u003e= 0; i--  {\n                    fmt.Printf(\"%d \", Vec_IntEntry(vPath, Abc_Lit2Var(pLits[i])));\n                } }\n            fmt.Printf(\"  \");\n        }\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    }\n    sat_solver_delete( pSat );\n    Vec_IntFree( vObjs );\n    Vec_IntFree( vPath );\n    // update the AIG\n    if Vec_IntSize(vLits) {\n        pNew = Gia_ManFalseRebuildPath( p, vLits, fVerbose, fVeryVerbose );\n    } else {\n        pNew = nil;\n    }\n    Vec_IntFree( vLits );\n/*\n    if ( pNew )\n    {\n        Gia_Man_t * pTemp = Gia_ManDupDfsNode( p, Gia_ManObj(p, iObj) );\n        Gia_AigerWrite( pTemp, \"false.aig\", 0, 0, 0 );\n        Abc_Print( 1, \"Dumping cone with %d nodes into file \\\"%s\\\".\\n\", Gia_ManAndNum(pTemp), \"false.aig\" );\n        Gia_ManStop( pTemp );\n    }\n*/\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManCheckFalseAll",
+      "Start": 17852,
+      "End": 18776,
+      "BodyStart": 17963,
+      "Original": "Gia_Man_t * Gia_ManCheckFalseAll( Gia_Man_t * p, int nSlackMax, int nTimeOut, int fVerbose, int fVeryVerbose )\n{\n    int Tried = 0, Changed = 0;\n    p = Gia_ManDup( p );\n    while ( 1 )\n    {\n        Gia_Man_t * pNew;\n        Gia_Obj_t * pObj;\n        int i, LevelMax, Changed0 = Changed;\n        LevelMax = Gia_ManLevelNum( p );\n        Gia_ManForEachAnd( p, pObj, i )\n        {\n            if ( Gia_ObjLevel(p, pObj) \u003e nSlackMax )\n                continue;\n            Tried++;\n            pNew = Gia_ManCheckOne( p, -1, i, nTimeOut, fVerbose, fVeryVerbose );\n            if ( pNew == NULL )\n                continue;\n            Changed++;\n            Gia_ManStop( p );\n            p = pNew;\n            LevelMax = Gia_ManLevelNum( p );\n        }\n        if ( Changed0 == Changed )\n            break;\n    }\n//    if ( fVerbose )\n        printf( \"Performed %d attempts and %d changes.\\n\", Tried, Changed );\n    return p;\n}",
+      "Draft": "func Gia_ManCheckFalseAll(p *Gia_Man_t, nSlackMax int32, nTimeOut int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var Tried, Changed int32;\n    p = Gia_ManDup( p );\n    for {\n        var pNew *Gia_Man_t;\n        var pObj *Gia_Obj_t;\n        var i int32;\n        var LevelMax int32;\n        var Changed0 int32 = Changed;\n        LevelMax = Gia_ManLevelNum( p );\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            if Gia_ObjLevel(p, pObj) \u003e nSlackMax {\n                continue; }\n            Tried++;\n            pNew = Gia_ManCheckOne( p, -1, i, nTimeOut, fVerbose, fVeryVerbose );\n            if pNew == nil {\n                continue; }\n            Changed++;\n            Gia_ManStop( p );\n            p = pNew;\n            LevelMax = Gia_ManLevelNum( p );\n        }\n        }\n        if Changed0 == Changed {\n            break; }\n    }\n//    if ( fVerbose )\n        fmt.Printf(\"Performed %d attempts and %d changes.\\n\", Tried, Changed);\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_ManCheckFalse",
+      "Start": 18777,
+      "End": 20229,
+      "BodyStart": 18885,
+      "Original": "Gia_Man_t * Gia_ManCheckFalse( Gia_Man_t * p, int nSlackMax, int nTimeOut, int fVerbose, int fVeryVerbose )\n{\n    int Tried = 0, Changed = 0;\n    Vec_Int_t * vTried;\n//    srand( 111 );\n    p = Gia_ManDup( p );\n    vTried = Vec_IntStart( Gia_ManCoNum(p) );\n    while ( 1 )\n    {\n        Gia_Man_t * pNew;\n        Gia_Obj_t * pObj;\n        int i, LevelMax, Changed0 = Changed;\n        LevelMax = Gia_ManLevelNum( p );\n        Gia_ManForEachCo( p, pObj, i )\n        {\n            if ( !Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) )\n                continue;\n            if ( Gia_ObjLevel(p, Gia_ObjFanin0(pObj)) \u003c LevelMax - nSlackMax )\n                continue;\n            if ( Vec_IntEntry( vTried, i ) )\n                continue;\n            Tried++;\n            pNew = Gia_ManCheckOne( p, i, Gia_ObjFaninId0p(p, pObj), nTimeOut, fVerbose, fVeryVerbose );\n/*\n            if ( i != 126 \u0026\u0026 pNew )\n            {\n                Gia_ManStop( pNew );\n                pNew = NULL;\n            }\n*/\n            if ( pNew == NULL )\n            {\n                Vec_IntWriteEntry( vTried, i, 1 );\n                continue;\n            }\n            Changed++;\n            Gia_ManStop( p );\n            p = pNew;\n            LevelMax = Gia_ManLevelNum( p );\n        }\n        if ( Changed0 == Changed )\n            break;\n    }\n//    if ( fVerbose )\n        printf( \"Performed %d attempts and %d changes.\\n\", Tried, Changed );\n    Vec_IntFree( vTried );\n    return p;\n}",
+      "Draft": "func Gia_ManCheckFalse(p *Gia_Man_t, nSlackMax int32, nTimeOut int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var Tried, Changed int32;\n    var vTried *Vec_Int_t;\n//    srand( 111 );\n    p = Gia_ManDup( p );\n    vTried = Vec_IntStart( Gia_ManCoNum(p) );\n    for {\n        var pNew *Gia_Man_t;\n        var pObj *Gia_Obj_t;\n        var i int32;\n        var LevelMax int32;\n        var Changed0 int32 = Changed;\n        LevelMax = Gia_ManLevelNum( p );\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            if !Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) {\n                continue; }\n            if Gia_ObjLevel(p, Gia_ObjFanin0(pObj)) \u003c LevelMax - nSlackMax {\n                continue; }\n            if Vec_IntEntry( vTried, i ) {\n                continue; }\n            Tried++;\n            pNew = Gia_ManCheckOne( p, i, Gia_ObjFaninId0p(p, pObj), nTimeOut, fVerbose, fVeryVerbose );\n/*\n            if ( i != 126 \u0026\u0026 pNew )\n            {\n                Gia_ManStop( pNew );\n                pNew = NULL;\n            }\n*/\n            if pNew == nil {\n                Vec_IntWriteEntry( vTried, i, 1 );\n                continue;\n            }\n            Changed++;\n            Gia_ManStop( p );\n            p = pNew;\n            LevelMax = Gia_ManLevelNum( p );\n        }\n        if Changed0 == Changed {\n            break; }\n    }\n//    if ( fVerbose )\n        fmt.Printf(\"Performed %d attempts and %d changes.\\n\", Tried, Changed);\n    Vec_IntFree( vTried );\n    return p;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c::Gia_ManFalseRebuildOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFalseRebuildOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1382,
+      "End": 2720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c::Gia_ManFalseRebuild",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFalseRebuild",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2721,
+      "End": 3970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c::Gia_ManCollectPath_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCollectPath_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4255,
+      "End": 4939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c::ternary::Gia_ManCollectPath",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManCollectPath",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4940,
+      "End": 5167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c::Gia_ManCollectPath",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCollectPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4940,
+      "End": 5167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c::ternary::Gia_ManCheckFalseOne",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManCheckFalseOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5403,
+      "End": 10451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c::Gia_ManCheckFalseOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCheckFalseOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5403,
+      "End": 10451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c::Gia_ManCheckFalse2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCheckFalse2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10452,
+      "End": 11664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c::Gia_ManFalseRebuildPath",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFalseRebuildPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11902,
+      "End": 13050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c::ternary::Gia_ManCheckOne",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManCheckOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13051,
+      "End": 17851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c::Gia_ManCheckOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCheckOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13051,
+      "End": 17851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c::Gia_ManCheckFalseAll",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCheckFalseAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17852,
+      "End": 18776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c::Gia_ManCheckFalse",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCheckFalse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18777,
+      "End": 20229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFalse.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20476
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [giaFalse.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Detection and elimination of false paths.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaFalse.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"misc/vec/vecQue.h\"\n//#include \"misc/vec/vecWec.h\"\n//#include \"sat/bsat/satStore.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reconstruct the AIG after detecting false paths.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFalseRebuildOne(pNew *Gia_Man_t, p *Gia_Man_t, vHook *Vec_Int_t, fVerbose int32, fVeryVerbose int32) {\n    var pObj *Gia_Obj_t;\n    var pObj1 *Gia_Obj_t;\n    var pPrev *Gia_Obj_t = nil;\n    var i int32;\n    var CtrlValue int32;\n    var iPrevValue int32 = -1;\n    pObj = Gia_ManObj( p, Vec_IntEntry(vHook, 0) );\n    if Vec_IntSize(vHook) == 1 {\n        pObj.Value = 0; // what if stuck at 1???\n        return;\n    }\n    assert(Vec_IntSize(vHook) \u003e= 2, \"Vec_IntSize(vHook) \u003e= 2\");\n    // find controlling value\n    pObj1 = Gia_ManObj( p, Vec_IntEntry(vHook, 1) );\n    if Gia_ObjFanin0(pObj1) == pObj {\n        CtrlValue = Gia_ObjFaninC0(pObj1);\n    } else if Gia_ObjFanin1(pObj1) == pObj {\n        CtrlValue = Gia_ObjFaninC1(pObj1);\n    } else { assert(false, \"0\"); }\n//    printf( \"%d \", CtrlValue );\n    // rewrite the path\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vHook)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vHook,i))); i++  {\n        var iObjValue int32  = pObj.Value;\n        if i != 0 {\n            pObj.Value = Gia_ManHashAnd(pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj));\n        } else {\n            pObj.Value = CtrlValue;\n        }\n        if pPrev != nil {\n            pPrev.Value = iPrevValue; }\n        iPrevValue = iObjValue;\n        pPrev = pObj;\n    }\n    if fVeryVerbose != 0 {\n        fmt.Printf(\"Eliminated path: \");\n        Vec_IntPrint( vHook );\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vHook)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vHook,i))); i++  {\n            fmt.Printf(\"Level %3d : \", Gia_ObjLevel(p, pObj));\n            Gia_ObjPrint( p, pObj );\n        }\n    }\n}\nfunc Gia_ManFalseRebuild(p *Gia_Man_t, vHooks *Vec_Wec_t, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i, Counter int32;\n    pNew = Gia_ManStart( 4 * Gia_ManObjNum(p) / 3 );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            if Vec_WecLevelSize(vHooks, i) \u003e 0 {\n                if fVeryVerbose != 0 {\n                    fmt.Printf(\"Path %d : \", Counter++); }\n                Gia_ManFalseRebuildOne( pNew, p, Vec_WecEntry(vHooks, i), fVerbose, fVeryVerbose );\n            \n            } else {\n                pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        \n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derive critical path by following minimum slacks.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCollectPath_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vPath *Vec_Int_t) {\n    if Gia_ObjIsAnd(pObj) {\n        if Gia_ObjLevel(p, Gia_ObjFanin0(pObj)) \u003e Gia_ObjLevel(p, Gia_ObjFanin1(pObj)) {\n            Gia_ManCollectPath_rec( p, Gia_ObjFanin0(pObj), vPath );\n        } else if Gia_ObjLevel(p, Gia_ObjFanin0(pObj)) \u003c Gia_ObjLevel(p, Gia_ObjFanin1(pObj)) {\n            Gia_ManCollectPath_rec( p, Gia_ObjFanin1(pObj), vPath );\n//        else if ( rand() \u0026 1 )\n//            Gia_ManCollectPath_rec( p, Gia_ObjFanin0(pObj), vPath );\n        } else {\n            Gia_ManCollectPath_rec( p, Gia_ObjFanin1(pObj), vPath ); }\n    }\n    Vec_IntPush( vPath, Gia_ObjId(p, pObj) );\n}\nfunc Gia_ManCollectPath(p *Gia_Man_t, pObj *Gia_Obj_t) *Vec_Int_t {\n    var vPath *Vec_Int_t  = Vec_IntAlloc( p.nLevels );\n    Gia_ManCollectPath_rec( p, Gia_ObjIsCo(pObj) ? Gia_ObjFanin0(pObj) : pObj, vPath );\n    return vPath;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCheckFalseOne(p *Gia_Man_t, iOut int32, nTimeOut int32, vHooks *Vec_Wec_t, fVerbose int32, fVeryVerbose int32) {\n    var pSat *sat_solver;\n    var pObj, pFanin *Gia_Obj_t;\n    var pPivot *Gia_Obj_t  = Gia_ManCo( p, iOut );\n    var vLits *Vec_Int_t  = Vec_IntAlloc( p.nLevels );\n    var vPath *Vec_Int_t  = Gia_ManCollectPath( p, pPivot );\n    var nLits int32;\n    var pLits *int32 = nil;\n    var i int32;\n    var Shift [2]int32;\n    var status int32;\n    var clkStart abctime  = Abc_Clock();\n    // collect objects and assign SAT variables\n    var iFanin int32  = Gia_ObjFaninId0p( p, pPivot );\n    var vObjs *Vec_Int_t  = Gia_ManCollectNodesCis( p, \u0026iFanin, 1 );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {\n        pObj.Value = Vec_IntSize(vObjs) - 1 - i;\n    }\n    assert(Gia_ObjIsCo(pPivot), \"Gia_ObjIsCo(pPivot)\");\n    // create SAT solver\n    pSat = sat_solver_new();\n    sat_solver_set_runtime_limit( pSat, nTimeOut ? nTimeOut * int64(time.Second) + Abc_Clock(): 0 );\n    sat_solver_setnvars( pSat, 3 * Vec_IntSize(vPath) + 2 * Vec_IntSize(vObjs) );\n    Shift[0] = 3 * Vec_IntSize(vPath);\n    Shift[1] = 3 * Vec_IntSize(vPath) + Vec_IntSize(vObjs);\n    // add CNF for the cone\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {\n        if !Gia_ObjIsAnd(pObj) {\n            continue; }\n        sat_solver_add_and( pSat, pObj.Value + Shift[0], \n            Gia_ObjFanin0(pObj).Value + Shift[0], Gia_ObjFanin1(pObj).Value + Shift[0], \n            Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n        sat_solver_add_and( pSat, pObj.Value + Shift[1], \n            Gia_ObjFanin0(pObj).Value + Shift[1], Gia_ObjFanin1(pObj).Value + Shift[1], \n            Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n    }\n    // add CNF for the path\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vPath)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vPath,i))); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            assert(i \u003e 0, \"i \u003e 0\");\n            pFanin = Gia_ManObj( p, Vec_IntEntry(vPath, i-1) );\n            if pFanin == Gia_ObjFanin0(pObj) {\n                sat_solver_add_and( pSat, i + 1*Vec_IntSize(vPath), \n                    i-1 + 1*Vec_IntSize(vPath), Gia_ObjFanin1(pObj).Value + Shift[0], \n                    Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n                sat_solver_add_and( pSat, i + 2*Vec_IntSize(vPath), \n                    i-1 + 2*Vec_IntSize(vPath), Gia_ObjFanin1(pObj).Value + Shift[1], \n                    Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n            \n            } else if pFanin == Gia_ObjFanin1(pObj) {\n                sat_solver_add_and( pSat, i + 1*Vec_IntSize(vPath), \n                    Gia_ObjFanin0(pObj).Value + Shift[0], i-1 + 1*Vec_IntSize(vPath), \n                    Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n                sat_solver_add_and( pSat, i + 2*Vec_IntSize(vPath), \n                    Gia_ObjFanin0(pObj).Value + Shift[1], i-1 + 2*Vec_IntSize(vPath), \n                    Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n            \n            } else { assert(false, \"0\"); }\n            sat_solver_add_xor( pSat, i, i + 1*Vec_IntSize(vPath), i + 2*Vec_IntSize(vPath), 0 );\n        \n        } else if Gia_ObjIsCi(pObj) {\n            sat_solver_add_xor( pSat, i, pObj.Value + Shift[0], pObj.Value + Shift[1], 0 );\n        } else { assert(false, \"0\"); }\n        Vec_IntPush( vLits, Abc_Var2Lit(i, 0) );\n    }\n    // call the SAT solver\n    status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), (ABC_INT64_T)nTimeOut, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    if status == l_False {\n        var iBeg, iEnd int32;\n        nLits = sat_solver_final( pSat, \u0026pLits );\n        iBeg  = Abc_Lit2Var(pLits[nLits-1]);\n        iEnd  = Abc_Lit2Var(pLits[0]);\n        if iEnd - iBeg \u003c 20 {\n            // check if nodes on the path are already used\n            for  i = Abc_MaxInt(iBeg-1, 0); i \u003c= iEnd; i++  {\n                if Vec_WecLevelSize(vHooks, Vec_IntEntry(vPath, i)) \u003e 0 {\n                    break; }\n            }\n            if i \u003e iEnd {\n                var vHook *Vec_Int_t  = Vec_WecEntry(vHooks, Vec_IntEntry(vPath, iEnd));\n                for  i = Abc_MaxInt(iBeg-1, 0); i \u003c= iEnd; i++  {\n                    Vec_IntPush( vHook, Vec_IntEntry(vPath, i) );\n                }\n            }\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"PO %6d : Level = %3d  \", iOut, Gia_ObjLevel(p, pPivot));\n        if status == l_Undef {\n            fmt.Printf(\"Timeout reached after %d seconds. \", nTimeOut);\n        } else if status == l_True {\n            fmt.Printf(\"There is no false path. \");\n        } else {\n            fmt.Printf(\"False path contains %d nodes (out of %d):  \", nLits, Vec_IntSize(vPath));\n            fmt.Printf(\"top = %d  \", Vec_IntEntry(vPath, Abc_Lit2Var(pLits[0])));\n            if fVeryVerbose != 0 {\n                for  i = 0; i \u003c nLits; i++  {\n                    fmt.Printf(\"%d \", Abc_Lit2Var(pLits[i]));\n                } }\n            fmt.Printf(\"  \");\n        }\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    }\n    sat_solver_delete( pSat );\n    Vec_IntFree( vObjs );\n    Vec_IntFree( vPath );\n    Vec_IntFree( vLits );\n}\nfunc Gia_ManCheckFalse2(p *Gia_Man_t, nSlackMax int32, nTimeOut int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var vHooks *Vec_Wec_t;\n    var vPrio *Vec_Que_t;\n    var vWeights *Vec_Flt_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n//    srand( 111 );\n    Gia_ManLevelNum( p );\n    // create PO weights\n    vWeights = Vec_FltAlloc( Gia_ManCoNum(p) );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Vec_FltPush( vWeights, Gia_ObjLevel(p, pObj) );\n    }\n    // put POs into the queue\n    vPrio = Vec_QueAlloc( Gia_ManCoNum(p) );\n    Vec_QueSetPriority( vPrio, Vec_FltArrayP(vWeights) );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Vec_QuePush( vPrio, i );\n    }\n    // work on each PO in the queue\n    vHooks = Vec_WecStart( Gia_ManObjNum(p) );\n    for  Vec_QueTopPriority(vPrio) \u003e= p.nLevels - nSlackMax  {\n        Gia_ManCheckFalseOne( p, Vec_QuePop(vPrio), nTimeOut, vHooks, fVerbose, fVeryVerbose );\n    }\n    if fVerbose != 0 {\n    fmt.Printf(\"Collected %d non-overlapping false paths.\\n\", Vec_WecSizeUsed(vHooks)); }\n    // reconstruct the AIG\n    pNew = Gia_ManFalseRebuild( p, vHooks, fVerbose, fVeryVerbose );\n    // cleanup\n    Vec_WecFree( vHooks );\n    Vec_FltFree( vWeights );\n    Vec_QueFree( vPrio );\n    return pNew;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFalseRebuildPath(p *Gia_Man_t, vHooks *Vec_Int_t, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var iPathEnd int32 = Vec_IntEntryLast(vHooks);\n    pNew = Gia_ManStart( 4 * Gia_ManObjNum(p) / 3 );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManFillValue(p);\n    Gia_ManConst0(p).Value = 0;\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            if iPathEnd == i {\n                Gia_ManFalseRebuildOne( pNew, p, vHooks, fVerbose, fVeryVerbose );\n            } else {\n                pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        \n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\nfunc Gia_ManCheckOne(p *Gia_Man_t, iOut int32, iObj int32, nTimeOut int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var pSat *sat_solver;\n    var pNew *Gia_Man_t;\n    var pObj, pFanin *Gia_Obj_t;\n    var vLits *Vec_Int_t  = Vec_IntAlloc( p.nLevels );\n    var vPath *Vec_Int_t  = Gia_ManCollectPath( p, Gia_ManObj(p, iObj) );\n    var nLits int32;\n    var pLits *int32 = nil;\n    var i int32;\n    var Shift [2]int32;\n    var status int32;\n    var clkStart abctime  = Abc_Clock();\n    // collect objects and assign SAT variables\n    var vObjs *Vec_Int_t  = Gia_ManCollectNodesCis( p, \u0026iObj, 1 );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {\n        pObj.Value = Vec_IntSize(vObjs) - 1 - i;\n    }\n    // create SAT solver\n    pSat = sat_solver_new();\n    sat_solver_set_runtime_limit( pSat, nTimeOut ? nTimeOut * int64(time.Second) + Abc_Clock(): 0 );\n    sat_solver_setnvars( pSat, 3 * Vec_IntSize(vPath) + 2 * Vec_IntSize(vObjs) );\n    Shift[0] = 3 * Vec_IntSize(vPath);\n    Shift[1] = 3 * Vec_IntSize(vPath) + Vec_IntSize(vObjs);\n    // add CNF for the cone\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {\n        if !Gia_ObjIsAnd(pObj) {\n            continue; }\n        sat_solver_add_and( pSat, pObj.Value + Shift[0], \n            Gia_ObjFanin0(pObj).Value + Shift[0], Gia_ObjFanin1(pObj).Value + Shift[0], \n            Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n        sat_solver_add_and( pSat, pObj.Value + Shift[1], \n            Gia_ObjFanin0(pObj).Value + Shift[1], Gia_ObjFanin1(pObj).Value + Shift[1], \n            Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n    }\n    // add CNF for the path\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vPath)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vPath,i))); i++  {\n        if !Gia_ObjIsAnd(pObj) {\n            continue; }\n        assert(i \u003e 0, \"i \u003e 0\");\n        pFanin = Gia_ManObj( p, Vec_IntEntry(vPath, i-1) );\n        if pFanin == Gia_ObjFanin0(pObj) {\n            sat_solver_add_and( pSat, i + 1*Vec_IntSize(vPath), \n                i-1 + 1*Vec_IntSize(vPath), Gia_ObjFanin1(pObj).Value + Shift[0], \n                Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n            sat_solver_add_and( pSat, i + 2*Vec_IntSize(vPath), \n                i-1 + 2*Vec_IntSize(vPath), Gia_ObjFanin1(pObj).Value + Shift[1], \n                Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n        \n        } else if pFanin == Gia_ObjFanin1(pObj) {\n            sat_solver_add_and( pSat, i + 1*Vec_IntSize(vPath), \n                Gia_ObjFanin0(pObj).Value + Shift[0], i-1 + 1*Vec_IntSize(vPath), \n                Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n            sat_solver_add_and( pSat, i + 2*Vec_IntSize(vPath), \n                Gia_ObjFanin0(pObj).Value + Shift[1], i-1 + 2*Vec_IntSize(vPath), \n                Gia_ObjFaninC0(pObj), Gia_ObjFaninC1(pObj), 0 ); \n        \n        } else { assert(false, \"0\"); }\n        sat_solver_add_xor( pSat, i, i + 1*Vec_IntSize(vPath), i + 2*Vec_IntSize(vPath), 0 );\n        Vec_IntPush( vLits, Abc_Var2Lit(i, 0) );\n    }\n    // call the SAT solver\n    status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), (ABC_INT64_T)nTimeOut, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    Vec_IntClear( vLits );\n    if status == l_False {\n        var iBeg, iEnd int32;\n        nLits = sat_solver_final( pSat, \u0026pLits );\n        iBeg  = Abc_Lit2Var(pLits[nLits-1]);\n        iEnd  = Abc_Lit2Var(pLits[0]);\n        assert(iBeg \u003c= iEnd, \"iBeg \u003c= iEnd\");\n        // collect path\n        for  i = Abc_MaxInt(iBeg-1, 0); i \u003c= iEnd; i++  {\n//        for ( i = 0; i \u003c Vec_IntSize(vPath); i++ )\n            Vec_IntPush( vLits, Vec_IntEntry(vPath, i) );\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"PO %6d : Level = %3d  \", iOut, Gia_ObjLevelId(p, iObj));\n        if status == l_Undef {\n            fmt.Printf(\"Timeout reached after %d seconds. \", nTimeOut);\n        } else if status == l_True {\n            fmt.Printf(\"There is no false path. \");\n        } else {\n            fmt.Printf(\"False path contains %d nodes (out of %d):  \", Vec_IntSize(vLits), Vec_IntSize(vPath));\n            if fVeryVerbose != 0 {\n                for  i = nLits-1; i \u003e= 0; i--  {\n                    fmt.Printf(\"%d \", Vec_IntEntry(vPath, Abc_Lit2Var(pLits[i])));\n                } }\n            fmt.Printf(\"  \");\n        }\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n    }\n    sat_solver_delete( pSat );\n    Vec_IntFree( vObjs );\n    Vec_IntFree( vPath );\n    // update the AIG\n    if Vec_IntSize(vLits) {\n        pNew = Gia_ManFalseRebuildPath( p, vLits, fVerbose, fVeryVerbose );\n    } else {\n        pNew = nil;\n    }\n    Vec_IntFree( vLits );\n/*\n    if ( pNew )\n    {\n        Gia_Man_t * pTemp = Gia_ManDupDfsNode( p, Gia_ManObj(p, iObj) );\n        Gia_AigerWrite( pTemp, \"false.aig\", 0, 0, 0 );\n        Abc_Print( 1, \"Dumping cone with %d nodes into file \\\"%s\\\".\\n\", Gia_ManAndNum(pTemp), \"false.aig\" );\n        Gia_ManStop( pTemp );\n    }\n*/\n    return pNew;\n}\nfunc Gia_ManCheckFalseAll(p *Gia_Man_t, nSlackMax int32, nTimeOut int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var Tried, Changed int32;\n    p = Gia_ManDup( p );\n    for {\n        var pNew *Gia_Man_t;\n        var pObj *Gia_Obj_t;\n        var i int32;\n        var LevelMax int32;\n        var Changed0 int32 = Changed;\n        LevelMax = Gia_ManLevelNum( p );\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            if Gia_ObjLevel(p, pObj) \u003e nSlackMax {\n                continue; }\n            Tried++;\n            pNew = Gia_ManCheckOne( p, -1, i, nTimeOut, fVerbose, fVeryVerbose );\n            if pNew == nil {\n                continue; }\n            Changed++;\n            Gia_ManStop( p );\n            p = pNew;\n            LevelMax = Gia_ManLevelNum( p );\n        }\n        }\n        if Changed0 == Changed {\n            break; }\n    }\n//    if ( fVerbose )\n        fmt.Printf(\"Performed %d attempts and %d changes.\\n\", Tried, Changed);\n    return p;\n}\nfunc Gia_ManCheckFalse(p *Gia_Man_t, nSlackMax int32, nTimeOut int32, fVerbose int32, fVeryVerbose int32) *Gia_Man_t {\n    var Tried, Changed int32;\n    var vTried *Vec_Int_t;\n//    srand( 111 );\n    p = Gia_ManDup( p );\n    vTried = Vec_IntStart( Gia_ManCoNum(p) );\n    for {\n        var pNew *Gia_Man_t;\n        var pObj *Gia_Obj_t;\n        var i int32;\n        var LevelMax int32;\n        var Changed0 int32 = Changed;\n        LevelMax = Gia_ManLevelNum( p );\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            if !Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) {\n                continue; }\n            if Gia_ObjLevel(p, Gia_ObjFanin0(pObj)) \u003c LevelMax - nSlackMax {\n                continue; }\n            if Vec_IntEntry( vTried, i ) {\n                continue; }\n            Tried++;\n            pNew = Gia_ManCheckOne( p, i, Gia_ObjFaninId0p(p, pObj), nTimeOut, fVerbose, fVeryVerbose );\n/*\n            if ( i != 126 \u0026\u0026 pNew )\n            {\n                Gia_ManStop( pNew );\n                pNew = NULL;\n            }\n*/\n            if pNew == nil {\n                Vec_IntWriteEntry( vTried, i, 1 );\n                continue;\n            }\n            Changed++;\n            Gia_ManStop( p );\n            p = pNew;\n            LevelMax = Gia_ManLevelNum( p );\n        }\n        if Changed0 == Changed {\n            break; }\n    }\n//    if ( fVerbose )\n        fmt.Printf(\"Performed %d attempts and %d changes.\\n\", Tried, Changed);\n    Vec_IntFree( vTried );\n    return p;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

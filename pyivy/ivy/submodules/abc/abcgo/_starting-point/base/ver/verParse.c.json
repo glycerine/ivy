@@ -1,0 +1,89 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verParse.c",
+  "SHA256": "3c325a3f69de4248a06a959b455812539178d7a827ff47f78fd70156df4740e9",
+  "Library": [
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 2217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( pMan.sError, \"Cannot parse after symbol \\\"/\\\".\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 109,
+        "Column": 39,
+        "ByteOffset": 3212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            var pEnd string = pWord + strlen( pWord );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ver_ParseSkipComments",
+      "Start": 1275,
+      "End": 2312,
+      "BodyStart": 1321,
+      "Original": "int Ver_ParseSkipComments( Ver_Man_t * pMan )\n{\n    Ver_Stream_t * p = pMan-\u003epReader;\n    char Symbol;\n    // skip spaces\n    Ver_StreamSkipChars( p, \" \\t\\n\\r\" );\n    if ( !Ver_StreamIsOkey(pMan-\u003epReader) )\n        return 1;\n    // read the first symbol\n    Symbol = Ver_StreamScanChar( p );\n    if ( Symbol != '/' )\n        return 1;\n    Ver_StreamPopChar( p );\n    // read the second symbol\n    Symbol = Ver_StreamScanChar( p );\n    if ( Symbol == '/' )\n    { // skip till the end of line\n        Ver_StreamSkipToChars( p, \"\\n\" );\n        return Ver_ParseSkipComments( pMan );\n    }\n    if ( Symbol == '*' )\n    { // skip till the next occurrence of */\n        Ver_StreamPopChar( p );\n        do {\n            Ver_StreamSkipToChars( p, \"*\" );\n            Ver_StreamPopChar( p );\n        } while ( Ver_StreamScanChar( p ) != '/' );\n        Ver_StreamPopChar( p );\n        return Ver_ParseSkipComments( pMan );\n    }\n    sprintf( pMan-\u003esError, \"Cannot parse after symbol \\\"/\\\".\" );\n    Ver_ParsePrintErrorMessage( pMan );\n    return 0;\n}",
+      "Draft": "func Ver_ParseSkipComments(pMan *Ver_Man_t) int32 {\n    var p *Ver_Stream_t  = pMan.pReader;\n    var Symbol byte;\n    // skip spaces\n    Ver_StreamSkipChars( p, \" \\t\\n\\r\" );\n    if !Ver_StreamIsOkey(pMan.pReader) {\n        return 1; }\n    // read the first symbol\n    Symbol = Ver_StreamScanChar( p );\n    if Symbol != '/' {\n        return 1; }\n    Ver_StreamPopChar( p );\n    // read the second symbol\n    Symbol = Ver_StreamScanChar( p );\n    if Symbol == '/' { // skip till the end of line\n        Ver_StreamSkipToChars( p, \"\\n\" );\n        return Ver_ParseSkipComments( pMan );\n    }\n    if Symbol == '*' { // skip till the next occurrence of */\n        Ver_StreamPopChar( p );\n        for {\n            Ver_StreamSkipToChars( p, \"*\" );\n            Ver_StreamPopChar( p );\n        \nif !( Ver_StreamScanChar( p ) != '/' ) { break }\n} \n        Ver_StreamPopChar( p );\n        return Ver_ParseSkipComments( pMan );\n    }\n    sprintf( pMan.sError, \"Cannot parse after symbol \\\"/\\\".\" );\n    Ver_ParsePrintErrorMessage( pMan );\n    return 0;\n}"
+    },
+    {
+      "Name": "Ver_ParseGetName",
+      "Start": 2601,
+      "End": 3522,
+      "BodyStart": 2645,
+      "Original": "char * Ver_ParseGetName( Ver_Man_t * pMan )\n{\n    Ver_Stream_t * p = pMan-\u003epReader;\n    char Symbol;\n    char * pWord;\n    pMan-\u003efNameLast = 0;\n    if ( !Ver_StreamIsOkey(p) )\n        return NULL;\n    if ( !Ver_ParseSkipComments( pMan ) )\n        return NULL;\n    Symbol = Ver_StreamScanChar( p );\n    if ( Symbol == '\\\\' )\n    {\n        pMan-\u003efNameLast = 1;\n        Ver_StreamPopChar( p );\n        pWord = Ver_StreamGetWord( p, \" \\r\\n\" );\n        Ver_StreamSkipChars( p, \" \\r\\n\" );\n        if ( Ver_StreamScanChar(p) == '[' )\n        {\n            char This, * pEnd = pWord + strlen( pWord );\n            while ( (This = Ver_StreamPopChar(p)) != ']' )\n                *pEnd++ = This;\n            *pEnd++ = This;\n            *pEnd = 0;\n        }\n    }\n    else\n        pWord = Ver_StreamGetWord( p, \" \\t\\n\\r(),;\" );\n    if ( Ver_StreamIsOkey(p) \u0026\u0026 !Ver_ParseSkipComments( pMan ) )\n        return NULL;\n    return pWord;\n}",
+      "Draft": "func Ver_ParseGetName(pMan *Ver_Man_t) string {\n    var p *Ver_Stream_t  = pMan.pReader;\n    var Symbol byte;\n    var pWord string;\n    pMan.fNameLast = 0;\n    if !Ver_StreamIsOkey(p) {\n        return nil; }\n    if !(Ver_ParseSkipComments( pMan ) != 0) {\n        return nil; }\n    Symbol = Ver_StreamScanChar( p );\n    if Symbol == '\\\\' {\n        pMan.fNameLast = 1;\n        Ver_StreamPopChar( p );\n        pWord = Ver_StreamGetWord( p, \" \\r\\n\" );\n        Ver_StreamSkipChars( p, \" \\r\\n\" );\n        if Ver_StreamScanChar(p) == '[' {\n            var This byte;\n            var pEnd string = pWord + len(pWord);\n            for  (This = Ver_StreamPopChar(p)) != ']'  {\n                *pEnd++ = This;\n            }\n            *pEnd++ = This;\n            *pEnd = 0;\n        }\n    \n    } else {\n        pWord = Ver_StreamGetWord( p, \" \\t\\n\\r(),;\" ); }\n    if Ver_StreamIsOkey(p) \u0026\u0026 !(Ver_ParseSkipComments( pMan ) != 0) {\n        return nil; }\n    return pWord;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verParse.c::mechanical::do::1970",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 1970,
+      "End": 1972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verParse.c::Ver_ParseSkipComments",
+      "Category": "semantic-review",
+      "Symbol": "Ver_ParseSkipComments",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1275,
+      "End": 2312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verParse.c::Ver_ParseGetName",
+      "Category": "semantic-review",
+      "Symbol": "Ver_ParseGetName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2601,
+      "End": 3522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/ver/verParse.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3770
+    }
+  ],
+  "Draft": "package ver\n\n/**CFile****************************************************************\n\n  FileName    [verParse.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Verilog parser.]\n\n  Synopsis    [Performs some Verilog parsing tasks.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 19, 2006.]\n\n  Revision    [$Id: verParse.c,v 1.00 2006/08/19 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Skips the comments of they are present.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_ParseSkipComments(pMan *Ver_Man_t) int32 {\n    var p *Ver_Stream_t  = pMan.pReader;\n    var Symbol byte;\n    // skip spaces\n    Ver_StreamSkipChars( p, \" \\t\\n\\r\" );\n    if !Ver_StreamIsOkey(pMan.pReader) {\n        return 1; }\n    // read the first symbol\n    Symbol = Ver_StreamScanChar( p );\n    if Symbol != '/' {\n        return 1; }\n    Ver_StreamPopChar( p );\n    // read the second symbol\n    Symbol = Ver_StreamScanChar( p );\n    if Symbol == '/' { // skip till the end of line\n        Ver_StreamSkipToChars( p, \"\\n\" );\n        return Ver_ParseSkipComments( pMan );\n    }\n    if Symbol == '*' { // skip till the next occurrence of */\n        Ver_StreamPopChar( p );\n        for {\n            Ver_StreamSkipToChars( p, \"*\" );\n            Ver_StreamPopChar( p );\n        \nif !( Ver_StreamScanChar( p ) != '/' ) { break }\n} \n        Ver_StreamPopChar( p );\n        return Ver_ParseSkipComments( pMan );\n    }\n    sprintf( pMan.sError, \"Cannot parse after symbol \\\"/\\\".\" );\n    Ver_ParsePrintErrorMessage( pMan );\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Parses a Verilog name that can be being with a slash.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ver_ParseGetName(pMan *Ver_Man_t) string {\n    var p *Ver_Stream_t  = pMan.pReader;\n    var Symbol byte;\n    var pWord string;\n    pMan.fNameLast = 0;\n    if !Ver_StreamIsOkey(p) {\n        return nil; }\n    if !(Ver_ParseSkipComments( pMan ) != 0) {\n        return nil; }\n    Symbol = Ver_StreamScanChar( p );\n    if Symbol == '\\\\' {\n        pMan.fNameLast = 1;\n        Ver_StreamPopChar( p );\n        pWord = Ver_StreamGetWord( p, \" \\r\\n\" );\n        Ver_StreamSkipChars( p, \" \\r\\n\" );\n        if Ver_StreamScanChar(p) == '[' {\n            var This byte;\n            var pEnd string = pWord + len(pWord);\n            for  (This = Ver_StreamPopChar(p)) != ']'  {\n                *pEnd++ = This;\n            }\n            *pEnd++ = This;\n            *pEnd = 0;\n        }\n    \n    } else {\n        pWord = Ver_StreamGetWord( p, \" \\t\\n\\r(),;\" ); }\n    if Ver_StreamIsOkey(p) \u0026\u0026 !(Ver_ParseSkipComments( pMan ) != 0) {\n        return nil; }\n    return pWord;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

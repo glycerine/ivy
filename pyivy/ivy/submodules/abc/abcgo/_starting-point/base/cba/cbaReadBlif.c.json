@@ -1,0 +1,927 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c",
+  "SHA256": "f544b2697452e7cb8dd71f2ae288b1a4249cb4f04919903b8913862c156e66b4",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 5,
+        "ByteOffset": 2449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NamObjNumMax(p.pStrs) == i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 5,
+        "ByteOffset": 4675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Prs_ManIsSpace(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 211,
+        "Column": 5,
+        "ByteOffset": 6953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Prs_ManIsLit(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 241,
+        "Column": 18,
+        "ByteOffset": 8195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 243,
+        "Column": 5,
+        "ByteOffset": 8220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_StrSize(\u0026p.vCover) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 249,
+        "Column": 5,
+        "ByteOffset": 8509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Prs_BoxNtk(p.pNtk, Prs_NtkBoxNum(p.pNtk)-1) == 1 ); // default const 0"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 375,
+        "Column": 5,
+        "ByteOffset": 13419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cannot read directive \\\"%s\\\".\\n\", Abc_NamStr(p.pStrs, iToken) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 380,
+        "Column": 9,
+        "ByteOffset": 13591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Prs_ManIsChar(p, '\\n') );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 432,
+        "Column": 5,
+        "ByteOffset": 14981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Finished reading %d networks. \", Vec_PtrSize(vPrs) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 433,
+        "Column": 5,
+        "ByteOffset": 15048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"NameIDs = %d. \", Abc_NamObjNumMax(Prs_ManNameMan(vPrs)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 434,
+        "Column": 5,
+        "ByteOffset": 15120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Memory = %.2f MB. \", 1.0*Prs_ManMemory(vPrs)/(1\u003c\u003c20) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 456,
+        "Column": 5,
+        "ByteOffset": 15770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Network \\\"%s\\\": Signal \\\"%s\\\" is not driven.\\n\", Cba_NtkName(p), Cba_NtkStr(p, NameId) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 491,
+        "Column": 9,
+        "ByteOffset": 17429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Prs_BoxIONum(pNtk, i) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 492,
+        "Column": 9,
+        "ByteOffset": 17474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vBox) % 2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 531,
+        "Column": 13,
+        "ByteOffset": 19533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Cba_ObjType(p, iObj) == CBA_BOX_DFFRS );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 538,
+        "Column": 13,
+        "ByteOffset": 19826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Cba_ObjType(p, iObj) == CBA_BOX_NODE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 551,
+        "Column": 13,
+        "ByteOffset": 20490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Cba_NtkPiNum(pBox) == Cba_ObjFinNum(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 552,
+        "Column": 13,
+        "ByteOffset": 20558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Cba_NtkPoNum(pBox) == Cba_ObjFonNum(p, iObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 591,
+        "Column": 9,
+        "ByteOffset": 22780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Elaboration module \\\"%s\\\"...\\n\", Prs_NtkName(pPrsNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 597,
+        "Column": 9,
+        "ByteOffset": 22984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Quitting because of errors.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Prs_NtkAddBlifDirectives",
+      "Start": 1835,
+      "End": 2067,
+      "BodyStart": 1896,
+      "Original": "static inline void Prs_NtkAddBlifDirectives( Prs_Man_t * p )\n{\n    int i;\n    for ( i = 1; s_BlifTypes[i]; i++ )\n        Abc_NamStrFindOrAdd( p-\u003epStrs, (char *)s_BlifTypes[i], NULL );\n    assert( Abc_NamObjNumMax(p-\u003epStrs) == i );\n}",
+      "Draft": "func Prs_NtkAddBlifDirectives(p *Prs_Man_t) {\n    var i int32;\n    for  i = 1; s_BlifTypes[i]; i++  {\n        Abc_NamStrFindOrAdd( p.pStrs, (char *)s_BlifTypes[i], nil );\n    }\n    assert(Abc_NamObjNumMax(p.pStrs) == i, \"Abc_NamObjNumMax(p.pStrs) == i\");\n}"
+    },
+    {
+      "Name": "Prs_CharIsSpace",
+      "Start": 2543,
+      "End": 2662,
+      "BodyStart": 2603,
+      "Original": "static inline int  Prs_CharIsSpace( char c )                { return c == ' ' || c == '\\t' || c == '\\r';              }",
+      "Draft": "func Prs_CharIsSpace(c byte) int32 { return c == ' ' || c == '\\t' || c == '\\r';              }"
+    },
+    {
+      "Name": "Prs_CharIsStop",
+      "Start": 2663,
+      "End": 2782,
+      "BodyStart": 2723,
+      "Original": "static inline int  Prs_CharIsStop( char c )                 { return c == '#' || c == '\\\\' || c == '\\n' || c == '=';  }",
+      "Draft": "func Prs_CharIsStop(c byte) int32 { return c == '#' || c == '\\\\' || c == '\\n' || c == '=';  }"
+    },
+    {
+      "Name": "Prs_CharIsLit",
+      "Start": 2783,
+      "End": 2902,
+      "BodyStart": 2843,
+      "Original": "static inline int  Prs_CharIsLit( char c )                  { return c == '0' || c == '1'  || c == '-';               }",
+      "Draft": "func Prs_CharIsLit(c byte) int32 { return c == '0' || c == '1'  || c == '-';               }"
+    },
+    {
+      "Name": "Prs_ManIsSpace",
+      "Start": 2904,
+      "End": 3023,
+      "BodyStart": 2964,
+      "Original": "static inline int  Prs_ManIsSpace( Prs_Man_t * p )          { return Prs_CharIsSpace(*p-\u003epCur);                       }",
+      "Draft": "func Prs_ManIsSpace(p *Prs_Man_t) int32 { return Prs_CharIsSpace(*p.pCur);                       }"
+    },
+    {
+      "Name": "Prs_ManIsStop",
+      "Start": 3024,
+      "End": 3143,
+      "BodyStart": 3084,
+      "Original": "static inline int  Prs_ManIsStop( Prs_Man_t * p )           { return Prs_CharIsStop(*p-\u003epCur);                        }",
+      "Draft": "func Prs_ManIsStop(p *Prs_Man_t) int32 { return Prs_CharIsStop(*p.pCur);                        }"
+    },
+    {
+      "Name": "Prs_ManIsLit",
+      "Start": 3144,
+      "End": 3263,
+      "BodyStart": 3204,
+      "Original": "static inline int  Prs_ManIsLit( Prs_Man_t * p )            { return Prs_CharIsLit(*p-\u003epCur);                         }",
+      "Draft": "func Prs_ManIsLit(p *Prs_Man_t) int32 { return Prs_CharIsLit(*p.pCur);                         }"
+    },
+    {
+      "Name": "Prs_ManIsChar",
+      "Start": 3265,
+      "End": 3384,
+      "BodyStart": 3325,
+      "Original": "static inline int  Prs_ManIsChar( Prs_Man_t * p, char c )   { return *p-\u003epCur == c;                                   }",
+      "Draft": "func Prs_ManIsChar(p *Prs_Man_t, c byte) int32 { return *p.pCur == c;                                   }"
+    },
+    {
+      "Name": "Prs_ManIsChar2",
+      "Start": 3385,
+      "End": 3504,
+      "BodyStart": 3445,
+      "Original": "static inline int  Prs_ManIsChar2( Prs_Man_t * p, char c )  { return *p-\u003epCur++ == c;                                 }",
+      "Draft": "func Prs_ManIsChar2(p *Prs_Man_t, c byte) int32 { return *p.pCur++ == c;                                 }"
+    },
+    {
+      "Name": "Prs_ManSkip",
+      "Start": 3506,
+      "End": 3625,
+      "BodyStart": 3566,
+      "Original": "static inline void Prs_ManSkip( Prs_Man_t * p )             { p-\u003epCur++;                                              }",
+      "Draft": "func Prs_ManSkip(p *Prs_Man_t) { p.pCur++;                                              }"
+    },
+    {
+      "Name": "Prs_ManSkip2",
+      "Start": 3626,
+      "End": 3745,
+      "BodyStart": 3686,
+      "Original": "static inline char Prs_ManSkip2( Prs_Man_t * p )            { return *p-\u003epCur++;                                      }",
+      "Draft": "func Prs_ManSkip2(p *Prs_Man_t) byte { return *p.pCur++;                                      }"
+    },
+    {
+      "Name": "Prs_ManSkipToChar",
+      "Start": 3996,
+      "End": 4124,
+      "BodyStart": 4060,
+      "Original": "static inline void Prs_ManSkipToChar( Prs_Man_t * p, char c )  \n{ \n    while ( !Prs_ManIsChar(p, c) ) \n        Prs_ManSkip(p);\n}",
+      "Draft": "func Prs_ManSkipToChar(p *Prs_Man_t, c byte) { \n    for  !(Prs_ManIsChar(p, c) != 0)  { \n        Prs_ManSkip(p);\n    }\n}"
+    },
+    {
+      "Name": "Prs_ManSkipSpaces",
+      "Start": 4125,
+      "End": 4554,
+      "BodyStart": 4179,
+      "Original": "static inline void Prs_ManSkipSpaces( Prs_Man_t * p )\n{\n    while ( 1 )\n    {\n        while ( Prs_ManIsSpace(p) )\n            Prs_ManSkip(p);\n        if ( Prs_ManIsChar(p, '\\\\') )\n        {\n            Prs_ManSkipToChar( p, '\\n' );\n            Prs_ManSkip(p);\n            continue;\n        }\n        if ( Prs_ManIsChar(p, '#') )  \n            Prs_ManSkipToChar( p, '\\n' );\n        break;\n    }\n    assert( !Prs_ManIsSpace(p) );\n}",
+      "Draft": "func Prs_ManSkipSpaces(p *Prs_Man_t) {\n    for {\n        for  Prs_ManIsSpace(p) != 0  {\n            Prs_ManSkip(p);\n        }\n        if Prs_ManIsChar(p, '\\\\') != 0 {\n            Prs_ManSkipToChar( p, '\\n' );\n            Prs_ManSkip(p);\n            continue;\n        }\n        if Prs_ManIsChar(p, '#') != 0 {  \n            Prs_ManSkipToChar( p, '\\n' ); }\n        break;\n    }\n    assert(!(Prs_ManIsSpace(p) != 0), \"!Prs_ManIsSpace(p)\");\n}"
+    },
+    {
+      "Name": "Prs_ManReadName",
+      "Start": 4555,
+      "End": 4925,
+      "BodyStart": 4606,
+      "Original": "static inline int Prs_ManReadName( Prs_Man_t * p )\n{\n    char * pStart;\n    Prs_ManSkipSpaces( p );\n    if ( Prs_ManIsChar(p, '\\n') )\n        return 0;\n    pStart = p-\u003epCur;\n    while ( !Prs_ManIsSpace(p) \u0026\u0026 !Prs_ManIsStop(p) )\n        Prs_ManSkip(p);\n    if ( pStart == p-\u003epCur )\n        return 0;\n    return Abc_NamStrFindOrAddLim( p-\u003epStrs, pStart, p-\u003epCur, NULL );\n}",
+      "Draft": "func Prs_ManReadName(p *Prs_Man_t) int32 {\n    var pStart string;\n    Prs_ManSkipSpaces( p );\n    if Prs_ManIsChar(p, '\\n') != 0 {\n        return 0; }\n    pStart = p.pCur;\n    for  !(Prs_ManIsSpace(p) != 0) \u0026\u0026 !(Prs_ManIsStop(p) != 0)  {\n        Prs_ManSkip(p);\n    }\n    if pStart == p.pCur {\n        return 0; }\n    return Abc_NamStrFindOrAddLim( p.pStrs, pStart, p.pCur, nil );\n}"
+    },
+    {
+      "Name": "Prs_ManReadList",
+      "Start": 4926,
+      "End": 5337,
+      "BodyStart": 5007,
+      "Original": "static inline int Prs_ManReadList( Prs_Man_t * p, Vec_Int_t * vOrder, int Type )\n{\n    int iToken;\n    Vec_IntClear( \u0026p-\u003evTemp );\n    while ( (iToken = Prs_ManReadName(p)) )\n    {\n        Vec_IntPush( \u0026p-\u003evTemp, iToken );\n        Vec_IntPush( vOrder, Abc_Var2Lit2(iToken, Type) );\n    }\n    if ( Vec_IntSize(\u0026p-\u003evTemp) == 0 )                return Prs_ManErrorSet(p, \"Signal list is empty.\", 1);\n    return 0;\n}",
+      "Draft": "func Prs_ManReadList(p *Prs_Man_t, vOrder *Vec_Int_t, Type int32) int32 {\n    var iToken int32;\n    Vec_IntClear( \u0026p.vTemp );\n    for  iToken = Prs_ManReadName(p)  {\n        Vec_IntPush( \u0026p.vTemp, iToken );\n        Vec_IntPush( vOrder, Abc_Var2Lit2(iToken, Type) );\n    }\n    if Vec_IntSize(\u0026p.vTemp) == 0 {                return Prs_ManErrorSet(p, \"Signal list is empty.\", 1); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManReadList2",
+      "Start": 5338,
+      "End": 5655,
+      "BodyStart": 5390,
+      "Original": "static inline int Prs_ManReadList2( Prs_Man_t * p )\n{\n    int iToken;\n    Vec_IntClear( \u0026p-\u003evTemp );\n    while ( (iToken = Prs_ManReadName(p)) )\n        Vec_IntPushTwo( \u0026p-\u003evTemp, 0, iToken );\n    if ( Vec_IntSize(\u0026p-\u003evTemp) == 0 )                return Prs_ManErrorSet(p, \"Signal list is empty.\", 1);\n    return 0;\n}",
+      "Draft": "func Prs_ManReadList2(p *Prs_Man_t) int32 {\n    var iToken int32;\n    Vec_IntClear( \u0026p.vTemp );\n    for  iToken = Prs_ManReadName(p)  {\n        Vec_IntPushTwo( \u0026p.vTemp, 0, iToken );\n    }\n    if Vec_IntSize(\u0026p.vTemp) == 0 {                return Prs_ManErrorSet(p, \"Signal list is empty.\", 1); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManReadList3",
+      "Start": 5656,
+      "End": 6563,
+      "BodyStart": 5708,
+      "Original": "static inline int Prs_ManReadList3( Prs_Man_t * p )\n{\n    Vec_IntClear( \u0026p-\u003evTemp );\n    while ( !Prs_ManIsChar(p, '\\n') )\n    {\n        int iToken = Prs_ManReadName(p);\n        if ( iToken == 0 )              return Prs_ManErrorSet(p, \"Cannot read formal name.\", 1);\n        Vec_IntPush( \u0026p-\u003evTemp, iToken );\n        Prs_ManSkipSpaces( p );\n        if ( !Prs_ManIsChar2(p, '=') )  return Prs_ManErrorSet(p, \"Cannot find symbol \\\"=\\\".\", 1);\n        iToken = Prs_ManReadName(p);\n        if ( iToken == 0 )              return Prs_ManErrorSet(p, \"Cannot read actual name.\", 1);\n        Vec_IntPush( \u0026p-\u003evTemp, iToken );\n        Prs_ManSkipSpaces( p );\n    }\n    if ( Vec_IntSize(\u0026p-\u003evTemp) == 0 )  return Prs_ManErrorSet(p, \"Cannot read a list of formal/actual names.\", 1);\n    if ( Vec_IntSize(\u0026p-\u003evTemp) % 2  )  return Prs_ManErrorSet(p, \"The number of formal/actual names is not even.\", 1);\n    return 0;\n}",
+      "Draft": "func Prs_ManReadList3(p *Prs_Man_t) int32 {\n    Vec_IntClear( \u0026p.vTemp );\n    for  !(Prs_ManIsChar(p, '\\n') != 0)  {\n        var iToken int32  = Prs_ManReadName(p);\n        if iToken == 0 {              return Prs_ManErrorSet(p, \"Cannot read formal name.\", 1); }\n        Vec_IntPush( \u0026p.vTemp, iToken );\n        Prs_ManSkipSpaces( p );\n        if !(Prs_ManIsChar2(p, '=') != 0) {  return Prs_ManErrorSet(p, \"Cannot find symbol \\\"=\\\".\", 1); }\n        iToken = Prs_ManReadName(p);\n        if iToken == 0 {              return Prs_ManErrorSet(p, \"Cannot read actual name.\", 1); }\n        Vec_IntPush( \u0026p.vTemp, iToken );\n        Prs_ManSkipSpaces( p );\n    }\n    if Vec_IntSize(\u0026p.vTemp) == 0 {  return Prs_ManErrorSet(p, \"Cannot read a list of formal/actual names.\", 1); }\n    if Vec_IntSize(\u0026p.vTemp) % 2 {  return Prs_ManErrorSet(p, \"The number of formal/actual names is not even.\", 1); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManReadCube",
+      "Start": 6799,
+      "End": 7757,
+      "BodyStart": 6850,
+      "Original": "static inline int Prs_ManReadCube( Prs_Man_t * p )\n{\n    assert( Prs_ManIsLit(p) );\n    while ( Prs_ManIsLit(p) )\n        Vec_StrPush( \u0026p-\u003evCover, Prs_ManSkip2(p) );\n    Prs_ManSkipSpaces( p );\n    if ( Prs_ManIsChar(p, '\\n') )\n    {\n        if ( Vec_StrSize(\u0026p-\u003evCover) != 1 )           return Prs_ManErrorSet(p, \"Cannot read cube.\", 1);\n        // fix single literal cube by adding space\n        Vec_StrPush( \u0026p-\u003evCover, Vec_StrEntry(\u0026p-\u003evCover,0) );\n        Vec_StrWriteEntry( \u0026p-\u003evCover, 0, ' ' );\n        Vec_StrPush( \u0026p-\u003evCover, '\\n' );\n        return 0;\n    }\n    if ( !Prs_ManIsLit(p) )                           return Prs_ManErrorSet(p, \"Cannot read output literal.\", 1);\n    Vec_StrPush( \u0026p-\u003evCover, ' ' );\n    Vec_StrPush( \u0026p-\u003evCover, Prs_ManSkip2(p) );\n    Vec_StrPush( \u0026p-\u003evCover, '\\n' );\n    Prs_ManSkipSpaces( p );\n    if ( !Prs_ManIsChar(p, '\\n') )                    return Prs_ManErrorSet(p, \"Cannot read end of cube.\", 1);\n    return 0;\n}",
+      "Draft": "func Prs_ManReadCube(p *Prs_Man_t) int32 {\n    assert((Prs_ManIsLit(p) != 0), \"Prs_ManIsLit(p)\");\n    for  Prs_ManIsLit(p) != 0  {\n        Vec_StrPush( \u0026p.vCover, Prs_ManSkip2(p) );\n    }\n    Prs_ManSkipSpaces( p );\n    if Prs_ManIsChar(p, '\\n') != 0 {\n        if Vec_StrSize(\u0026p.vCover) != 1 {           return Prs_ManErrorSet(p, \"Cannot read cube.\", 1); }\n        // fix single literal cube by adding space\n        Vec_StrPush( \u0026p.vCover, Vec_StrEntry(\u0026p.vCover,0) );\n        Vec_StrWriteEntry( \u0026p.vCover, 0, ' ' );\n        Vec_StrPush( \u0026p.vCover, '\\n' );\n        return 0;\n    }\n    if !(Prs_ManIsLit(p) != 0) {                           return Prs_ManErrorSet(p, \"Cannot read output literal.\", 1); }\n    Vec_StrPush( \u0026p.vCover, ' ' );\n    Vec_StrPush( \u0026p.vCover, Prs_ManSkip2(p) );\n    Vec_StrPush( \u0026p.vCover, '\\n' );\n    Prs_ManSkipSpaces( p );\n    if !(Prs_ManIsChar(p, '\\n') != 0) {                    return Prs_ManErrorSet(p, \"Cannot read end of cube.\", 1); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManSaveCover",
+      "Start": 7758,
+      "End": 8602,
+      "BodyStart": 7811,
+      "Original": "static inline void Prs_ManSaveCover( Prs_Man_t * p )\n{\n    int iToken;\n    if ( Vec_StrSize(\u0026p-\u003evCover) == 0 )\n        p-\u003epNtk-\u003efHasC0s = 1;\n    else if ( Vec_StrSize(\u0026p-\u003evCover) == 2 )\n    {\n        if ( Vec_StrEntryLast(\u0026p-\u003evCover) == '0' )\n            p-\u003epNtk-\u003efHasC0s = 1;\n        else if ( Vec_StrEntryLast(\u0026p-\u003evCover) == '1' )\n            p-\u003epNtk-\u003efHasC1s = 1;\n        else assert( 0 );\n    }\n    assert( Vec_StrSize(\u0026p-\u003evCover) \u003e 0 );\n    Vec_StrPush( \u0026p-\u003evCover, '\\0' );\n//    iToken = Ptr_SopToType( Vec_StrArray(\u0026p-\u003evCover) );\n    iToken = Abc_NamStrFindOrAdd( p-\u003epFuns, Vec_StrArray(\u0026p-\u003evCover), NULL );\n    Vec_StrClear( \u0026p-\u003evCover );\n    // set the cover to the module of this box\n    assert( Prs_BoxNtk(p-\u003epNtk, Prs_NtkBoxNum(p-\u003epNtk)-1) == 1 ); // default const 0\n    Prs_BoxSetNtk( p-\u003epNtk, Prs_NtkBoxNum(p-\u003epNtk)-1, iToken );\n}",
+      "Draft": "func Prs_ManSaveCover(p *Prs_Man_t) {\n    var iToken int32;\n    if Vec_StrSize(\u0026p.vCover) == 0 {\n        p.pNtk.fHasC0s = 1;\n    } else if Vec_StrSize(\u0026p.vCover) == 2 {\n        if Vec_StrEntryLast(\u0026p.vCover) == '0' {\n            p.pNtk.fHasC0s = 1;\n        } else if Vec_StrEntryLast(\u0026p.vCover) == '1' {\n            p.pNtk.fHasC1s = 1;\n        } else { assert(false, \"0\"); }\n    }\n    assert(Vec_StrSize(\u0026p.vCover) \u003e 0, \"Vec_StrSize(\u0026p.vCover) \u003e 0\");\n    Vec_StrPush( \u0026p.vCover, '\\0' );\n//    iToken = Ptr_SopToType( Vec_StrArray(\u0026p-\u003evCover) );\n    iToken = Abc_NamStrFindOrAdd( p.pFuns, Vec_StrArray(\u0026p.vCover), nil );\n    Vec_StrClear( \u0026p.vCover );\n    // set the cover to the module of this box\n    assert(Prs_BoxNtk(p.pNtk, Prs_NtkBoxNum(p.pNtk)-1) == 1, \"Prs_BoxNtk(p.pNtk, Prs_NtkBoxNum(p.pNtk)-1) == 1\"); // default const 0\n    Prs_BoxSetNtk( p.pNtk, Prs_NtkBoxNum(p.pNtk)-1, iToken );\n}"
+    },
+    {
+      "Name": "Prs_ManReadInouts",
+      "Start": 8838,
+      "End": 9023,
+      "BodyStart": 8891,
+      "Original": "static inline int Prs_ManReadInouts( Prs_Man_t * p )\n{\n    if ( Prs_ManReadList(p, \u0026p-\u003epNtk-\u003evOrder, 3) )    return 1;\n    Vec_IntAppend( \u0026p-\u003epNtk-\u003evInouts, \u0026p-\u003evTemp );\n    return 0;\n}",
+      "Draft": "func Prs_ManReadInouts(p *Prs_Man_t) int32 {\n    if Prs_ManReadList(p, \u0026p.pNtk.vOrder, 3) != 0 {    return 1; }\n    Vec_IntAppend( \u0026p.pNtk.vInouts, \u0026p.vTemp );\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManReadInputs",
+      "Start": 9024,
+      "End": 9209,
+      "BodyStart": 9077,
+      "Original": "static inline int Prs_ManReadInputs( Prs_Man_t * p )\n{\n    if ( Prs_ManReadList(p, \u0026p-\u003epNtk-\u003evOrder, 1) )    return 1;\n    Vec_IntAppend( \u0026p-\u003epNtk-\u003evInputs, \u0026p-\u003evTemp );\n    return 0;\n}",
+      "Draft": "func Prs_ManReadInputs(p *Prs_Man_t) int32 {\n    if Prs_ManReadList(p, \u0026p.pNtk.vOrder, 1) != 0 {    return 1; }\n    Vec_IntAppend( \u0026p.pNtk.vInputs, \u0026p.vTemp );\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManReadOutputs",
+      "Start": 9210,
+      "End": 9397,
+      "BodyStart": 9264,
+      "Original": "static inline int Prs_ManReadOutputs( Prs_Man_t * p )\n{\n    if ( Prs_ManReadList(p, \u0026p-\u003epNtk-\u003evOrder, 2) )    return 1;\n    Vec_IntAppend( \u0026p-\u003epNtk-\u003evOutputs, \u0026p-\u003evTemp );\n    return 0;\n}",
+      "Draft": "func Prs_ManReadOutputs(p *Prs_Man_t) int32 {\n    if Prs_ManReadList(p, \u0026p.pNtk.vOrder, 2) != 0 {    return 1; }\n    Vec_IntAppend( \u0026p.pNtk.vOutputs, \u0026p.vTemp );\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManReadNode",
+      "Start": 9398,
+      "End": 9604,
+      "BodyStart": 9449,
+      "Original": "static inline int Prs_ManReadNode( Prs_Man_t * p )\n{\n    if ( Prs_ManReadList2(p) )   return 1;\n    // save results\n    Prs_NtkAddBox( p-\u003epNtk, 1, 0, \u0026p-\u003evTemp ); // default const 0 function\n    return 0;\n}",
+      "Draft": "func Prs_ManReadNode(p *Prs_Man_t) int32 {\n    if Prs_ManReadList2(p) != 0 {   return 1; }\n    // save results\n    Prs_NtkAddBox( p.pNtk, 1, 0, \u0026p.vTemp ); // default const 0 function\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManReadBox",
+      "Start": 9605,
+      "End": 9964,
+      "BodyStart": 9666,
+      "Original": "static inline int Prs_ManReadBox( Prs_Man_t * p, int fGate )\n{\n    int iToken = Prs_ManReadName(p);\n    if ( iToken == 0 )           return Prs_ManErrorSet(p, \"Cannot read model name.\", 1);\n    if ( Prs_ManReadList3(p) )   return 1;\n    // save results\n    Prs_NtkAddBox( p-\u003epNtk, iToken, 0, \u0026p-\u003evTemp );\n    if ( fGate ) p-\u003epNtk-\u003efMapped = 1;\n    return 0;\n}",
+      "Draft": "func Prs_ManReadBox(p *Prs_Man_t, fGate int32) int32 {\n    var iToken int32  = Prs_ManReadName(p);\n    if iToken == 0 {           return Prs_ManErrorSet(p, \"Cannot read model name.\", 1); }\n    if Prs_ManReadList3(p) != 0 {   return 1; }\n    // save results\n    Prs_NtkAddBox( p.pNtk, iToken, 0, \u0026p.vTemp );\n    if fGate != 0 { p.pNtk.fMapped = 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManReadLatch",
+      "Start": 9965,
+      "End": 10723,
+      "BodyStart": 10017,
+      "Original": "static inline int Prs_ManReadLatch( Prs_Man_t * p )\n{\n    int iToken = Prs_ManReadName(p);\n    Vec_IntClear( \u0026p-\u003evTemp );\n    if ( iToken == 0 )                 return Prs_ManErrorSet(p, \"Cannot read latch input.\", 1);\n    Vec_IntWriteEntry( \u0026p-\u003evTemp, 1, iToken );\n    iToken = Prs_ManReadName(p);\n    if ( iToken == 0 )                 return Prs_ManErrorSet(p, \"Cannot read latch output.\", 1);\n    Vec_IntWriteEntry( \u0026p-\u003evTemp, 0, iToken );\n    Prs_ManSkipSpaces( p );\n    if ( Prs_ManIsChar(p, '0') )\n        iToken = 0;\n    else if ( Prs_ManIsChar(p, '1') )\n        iToken = 1;\n    else \n        iToken = 2;\n    Prs_ManSkipToChar( p, '\\n' );\n    // save results\n    Prs_NtkAddBox( p-\u003epNtk, -1, iToken, \u0026p-\u003evTemp ); // -1 stands for latch\n    return 0;\n}",
+      "Draft": "func Prs_ManReadLatch(p *Prs_Man_t) int32 {\n    var iToken int32  = Prs_ManReadName(p);\n    Vec_IntClear( \u0026p.vTemp );\n    if iToken == 0 {                 return Prs_ManErrorSet(p, \"Cannot read latch input.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 1, iToken );\n    iToken = Prs_ManReadName(p);\n    if iToken == 0 {                 return Prs_ManErrorSet(p, \"Cannot read latch output.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 0, iToken );\n    Prs_ManSkipSpaces( p );\n    if Prs_ManIsChar(p, '0') != 0 {\n        iToken = 0;\n    } else if Prs_ManIsChar(p, '1') != 0 {\n        iToken = 1;\n    } else { \n        iToken = 2; }\n    Prs_ManSkipToChar( p, '\\n' );\n    // save results\n    Prs_NtkAddBox( p.pNtk, -1, iToken, \u0026p.vTemp ); // -1 stands for latch\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManReadShort",
+      "Start": 10724,
+      "End": 11451,
+      "BodyStart": 10776,
+      "Original": "static inline int Prs_ManReadShort( Prs_Man_t * p )\n{\n    int iToken = Prs_ManReadName(p);\n    Vec_IntClear( \u0026p-\u003evTemp );\n    if ( iToken == 0 )                 return Prs_ManErrorSet(p, \"Cannot read .short input.\", 1);\n    Vec_IntWriteEntry( \u0026p-\u003evTemp, 1, iToken );\n    iToken = Prs_ManReadName(p);\n    if ( iToken == 0 )                 return Prs_ManErrorSet(p, \"Cannot read .short output.\", 1);\n    Vec_IntWriteEntry( \u0026p-\u003evTemp, 0, iToken );\n    Prs_ManSkipSpaces( p );\n    if ( !Prs_ManIsChar(p, '\\n') )     return Prs_ManErrorSet(p, \"Trailing symbols on .short line.\", 1);\n    // save results\n    iToken = Abc_NamStrFindOrAdd( p-\u003epStrs, \"1 1\\n\", NULL );\n    Prs_NtkAddBox( p-\u003epNtk, iToken, 0, \u0026p-\u003evTemp );\n    return 0;\n}",
+      "Draft": "func Prs_ManReadShort(p *Prs_Man_t) int32 {\n    var iToken int32  = Prs_ManReadName(p);\n    Vec_IntClear( \u0026p.vTemp );\n    if iToken == 0 {                 return Prs_ManErrorSet(p, \"Cannot read .short input.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 1, iToken );\n    iToken = Prs_ManReadName(p);\n    if iToken == 0 {                 return Prs_ManErrorSet(p, \"Cannot read .short output.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 0, iToken );\n    Prs_ManSkipSpaces( p );\n    if !(Prs_ManIsChar(p, '\\n') != 0) {     return Prs_ManErrorSet(p, \"Trailing symbols on .short line.\", 1); }\n    // save results\n    iToken = Abc_NamStrFindOrAdd( p.pStrs, \"1 1\\n\", nil );\n    Prs_NtkAddBox( p.pNtk, iToken, 0, \u0026p.vTemp );\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManReadModel",
+      "Start": 11452,
+      "End": 11987,
+      "BodyStart": 11504,
+      "Original": "static inline int Prs_ManReadModel( Prs_Man_t * p )\n{\n    int iToken;\n    if ( p-\u003epNtk != NULL )                         return Prs_ManErrorSet(p, \"Parsing previous model is unfinished.\", 1);\n    iToken = Prs_ManReadName(p);\n    if ( iToken == 0 )                             return Prs_ManErrorSet(p, \"Cannot read model name.\", 1);\n    Prs_ManInitializeNtk( p, iToken, 0 );\n    Prs_ManSkipSpaces( p );\n    if ( !Prs_ManIsChar(p, '\\n') )                 return Prs_ManErrorSet(p, \"Trailing symbols on .model line.\", 1);\n    return 0;\n}",
+      "Draft": "func Prs_ManReadModel(p *Prs_Man_t) int32 {\n    var iToken int32;\n    if p.pNtk != nil {                         return Prs_ManErrorSet(p, \"Parsing previous model is unfinished.\", 1); }\n    iToken = Prs_ManReadName(p);\n    if iToken == 0 {                             return Prs_ManErrorSet(p, \"Cannot read model name.\", 1); }\n    Prs_ManInitializeNtk( p, iToken, 0 );\n    Prs_ManSkipSpaces( p );\n    if !(Prs_ManIsChar(p, '\\n') != 0) {                 return Prs_ManErrorSet(p, \"Trailing symbols on .model line.\", 1); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManReadEnd",
+      "Start": 11988,
+      "End": 12422,
+      "BodyStart": 12038,
+      "Original": "static inline int Prs_ManReadEnd( Prs_Man_t * p )\n{\n    if ( p-\u003epNtk == 0 )                            return Prs_ManErrorSet(p, \"Directive .end without .model.\", 1);\n    //printf( \"Saving model \\\"%s\\\".\\n\", Abc_NamStr(p-\u003epStrs, p-\u003eiModuleName) );\n    Prs_ManFinalizeNtk( p );\n    Prs_ManSkipSpaces( p );\n    if ( !Prs_ManIsChar(p, '\\n') )                 return Prs_ManErrorSet(p, \"Trailing symbols on .end line.\", 1);\n    return 0;\n}",
+      "Draft": "func Prs_ManReadEnd(p *Prs_Man_t) int32 {\n    if p.pNtk == 0 {                            return Prs_ManErrorSet(p, \"Directive .end without .model.\", 1); }\n    //printf( \"Saving model \\\"%s\\\".\\n\", Abc_NamStr(p-\u003epStrs, p-\u003eiModuleName) );\n    Prs_ManFinalizeNtk( p );\n    Prs_ManSkipSpaces( p );\n    if !(Prs_ManIsChar(p, '\\n') != 0) {                 return Prs_ManErrorSet(p, \"Trailing symbols on .end line.\", 1); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManReadDirective",
+      "Start": 12424,
+      "End": 13558,
+      "BodyStart": 12480,
+      "Original": "static inline int Prs_ManReadDirective( Prs_Man_t * p )\n{\n    int iToken;\n    if ( !Prs_ManIsChar(p, '.') )\n        return Prs_ManReadCube( p );\n    if ( Vec_StrSize(\u0026p-\u003evCover) \u003e 0 ) // SOP was specified for the previous node\n        Prs_ManSaveCover( p );\n    iToken = Prs_ManReadName( p );  \n    if ( iToken == PRS_BLIF_MODEL )\n        return Prs_ManReadModel( p );\n    if ( iToken == PRS_BLIF_INOUTS )\n        return Prs_ManReadInouts( p );\n    if ( iToken == PRS_BLIF_INPUTS )\n        return Prs_ManReadInputs( p );\n    if ( iToken == PRS_BLIF_OUTPUTS )\n        return Prs_ManReadOutputs( p );\n    if ( iToken == PRS_BLIF_NAMES )\n        return Prs_ManReadNode( p );\n    if ( iToken == PRS_BLIF_SUBCKT )\n        return Prs_ManReadBox( p, 0 );\n    if ( iToken == PRS_BLIF_GATE )\n        return Prs_ManReadBox( p, 1 );\n    if ( iToken == PRS_BLIF_LATCH )\n        return Prs_ManReadLatch( p );\n    if ( iToken == PRS_BLIF_SHORT )\n        return Prs_ManReadShort( p );\n    if ( iToken == PRS_BLIF_END )\n        return Prs_ManReadEnd( p );\n    printf( \"Cannot read directive \\\"%s\\\".\\n\", Abc_NamStr(p-\u003epStrs, iToken) );\n    return 1;\n}",
+      "Draft": "func Prs_ManReadDirective(p *Prs_Man_t) int32 {\n    var iToken int32;\n    if !(Prs_ManIsChar(p, '.') != 0) {\n        return Prs_ManReadCube( p ); }\n    if Vec_StrSize(\u0026p.vCover) \u003e 0 { // SOP was specified for the previous node\n        Prs_ManSaveCover( p ); }\n    iToken = Prs_ManReadName( p );  \n    if iToken == PRS_BLIF_MODEL {\n        return Prs_ManReadModel( p ); }\n    if iToken == PRS_BLIF_INOUTS {\n        return Prs_ManReadInouts( p ); }\n    if iToken == PRS_BLIF_INPUTS {\n        return Prs_ManReadInputs( p ); }\n    if iToken == PRS_BLIF_OUTPUTS {\n        return Prs_ManReadOutputs( p ); }\n    if iToken == PRS_BLIF_NAMES {\n        return Prs_ManReadNode( p ); }\n    if iToken == PRS_BLIF_SUBCKT {\n        return Prs_ManReadBox( p, 0 ); }\n    if iToken == PRS_BLIF_GATE {\n        return Prs_ManReadBox( p, 1 ); }\n    if iToken == PRS_BLIF_LATCH {\n        return Prs_ManReadLatch( p ); }\n    if iToken == PRS_BLIF_SHORT {\n        return Prs_ManReadShort( p ); }\n    if iToken == PRS_BLIF_END {\n        return Prs_ManReadEnd( p ); }\n    fmt.Printf(\"Cannot read directive \\\"%s\\\".\\n\", Abc_NamStr(p.pStrs, iToken));\n    return 1;\n}"
+    },
+    {
+      "Name": "Prs_ManReadLines",
+      "Start": 13559,
+      "End": 13895,
+      "BodyStart": 13611,
+      "Original": "static inline int Prs_ManReadLines( Prs_Man_t * p )\n{\n    while ( p-\u003epCur[1] != '\\0' )\n    {\n        assert( Prs_ManIsChar(p, '\\n') );\n        Prs_ManSkip(p);\n        Prs_ManSkipSpaces( p );\n        if ( Prs_ManIsChar(p, '\\n') )\n            continue;\n        if ( Prs_ManReadDirective(p) )   \n            return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Prs_ManReadLines(p *Prs_Man_t) int32 {\n    for  p.pCur[1] != '\\0'  {\n        assert((Prs_ManIsChar(p, '\\n') != 0), \"Prs_ManIsChar(p, '\\\\n')\");\n        Prs_ManSkip(p);\n        Prs_ManSkipSpaces( p );\n        if Prs_ManIsChar(p, '\\n') != 0 {\n            continue; }\n        if Prs_ManReadDirective(p) != 0 {   \n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManReadBlif",
+      "Start": 14131,
+      "End": 14584,
+      "BodyStart": 14179,
+      "Original": "Vec_Ptr_t * Prs_ManReadBlif( char * pFileName )\n{\n    Vec_Ptr_t * vPrs = NULL;\n    Prs_Man_t * p = Prs_ManAlloc( pFileName );\n    if ( p == NULL )\n        return NULL;\n    Abc_NamStrFindOrAdd( p-\u003epFuns, \" 0\\n\", NULL );\n    Abc_NamStrFindOrAdd( p-\u003epFuns, \" 1\\n\", NULL );\n    Prs_NtkAddBlifDirectives( p );\n    Prs_ManReadLines( p );\n    if ( Prs_ManErrorPrint(p) )\n        ABC_SWAP( Vec_Ptr_t *, vPrs, p-\u003evNtks );\n    Prs_ManFree( p );\n    return vPrs;\n}",
+      "Draft": "func Prs_ManReadBlif(pFileName string) *Vec_Ptr_t {\n    var vPrs *Vec_Ptr_t  = nil;\n    var p *Prs_Man_t  = Prs_ManAlloc( pFileName );\n    if p == nil {\n        return nil; }\n    Abc_NamStrFindOrAdd( p.pFuns, \" 0\\n\", nil );\n    Abc_NamStrFindOrAdd( p.pFuns, \" 1\\n\", nil );\n    Prs_NtkAddBlifDirectives( p );\n    Prs_ManReadLines( p );\n    if Prs_ManErrorPrint(p) {\n        // inlining of macro ABC_SWAP\n         var t *Vec_Ptr_t  = vPrs; vPrs = p.vNtks; p.vNtks = t; };\n    Prs_ManFree( p );\n    return vPrs;\n}"
+    },
+    {
+      "Name": "Prs_ManReadBlifTest",
+      "Start": 14820,
+      "End": 15379,
+      "BodyStart": 14865,
+      "Original": "void Prs_ManReadBlifTest( char * pFileName )\n{\n    abctime clk = Abc_Clock();\n    Vec_Ptr_t * vPrs = Prs_ManReadBlif( pFileName );\n    if ( !vPrs ) return;\n    printf( \"Finished reading %d networks. \", Vec_PtrSize(vPrs) );\n    printf( \"NameIDs = %d. \", Abc_NamObjNumMax(Prs_ManNameMan(vPrs)) );\n    printf( \"Memory = %.2f MB. \", 1.0*Prs_ManMemory(vPrs)/(1\u003c\u003c20) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    Abc_NamPrint( p-\u003epStrs );\n    Prs_ManWriteBlif( Extra_FileNameGenericAppend(pFileName, \"_out.blif\"), vPrs );\n    Prs_ManVecFree( vPrs );\n}",
+      "Draft": "func Prs_ManReadBlifTest(pFileName string) {\n    var clk abctime  = Abc_Clock();\n    var vPrs *Vec_Ptr_t  = Prs_ManReadBlif( pFileName );\n    if !(vPrs != nil) { return; }\n    fmt.Printf(\"Finished reading %d networks. \", Vec_PtrSize(vPrs));\n    fmt.Printf(\"NameIDs = %d. \", Abc_NamObjNumMax(Prs_ManNameMan(vPrs)));\n    fmt.Printf(\"Memory = %.2f MB. \", 1.0*Prs_ManMemory(vPrs)/(1\u003c\u003c20));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    Abc_NamPrint( p-\u003epStrs );\n    Prs_ManWriteBlif( Extra_FileNameGenericAppend(pFileName, \"_out.blif\"), vPrs );\n    Prs_ManVecFree( vPrs );\n}"
+    },
+    {
+      "Name": "Prs_CreateBlifFindFon",
+      "Start": 15615,
+      "End": 15870,
+      "BodyStart": 15670,
+      "Original": "int Prs_CreateBlifFindFon( Cba_Ntk_t * p, int NameId )\n{\n    int iFon = Cba_NtkGetMap( p, NameId );\n    if ( iFon )\n        return iFon;\n    printf( \"Network \\\"%s\\\": Signal \\\"%s\\\" is not driven.\\n\", Cba_NtkName(p), Cba_NtkStr(p, NameId) );\n    return 0;\n}",
+      "Draft": "func Prs_CreateBlifFindFon(p *Cba_Ntk_t, NameId int32) int32 {\n    var iFon int32  = Cba_NtkGetMap( p, NameId );\n    if iFon != 0 {\n        return iFon; }\n    fmt.Printf(\"Network \\\"%s\\\": Signal \\\"%s\\\" is not driven.\\n\", Cba_NtkName(p), Cba_NtkStr(p, NameId));\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_CreateBlifPio",
+      "Start": 15871,
+      "End": 16597,
+      "BodyStart": 15929,
+      "Original": "void Prs_CreateBlifPio( Cba_Ntk_t * p, Prs_Ntk_t * pNtk )\n{\n    int i, NameId, iObj, iFon;\n    Cba_NtkCleanObjFuncs( p );\n    Cba_NtkCleanObjNames( p );\n    Cba_NtkCleanFonNames( p );\n    // create inputs\n    Prs_NtkForEachPi( pNtk, NameId, i )\n    {\n        iObj = Cba_ObjAlloc( p, CBA_OBJ_PI, 0, 1 );\n        Cba_ObjSetName( p, iObj, NameId );\n        iFon = Cba_ObjFon0(p, iObj);\n        Cba_FonSetName( p, iFon, NameId );\n        Cba_NtkSetMap( p, NameId, iFon );\n        Vec_IntPush( \u0026p-\u003evOrder, iObj );\n    }\n    // create outputs\n    Prs_NtkForEachPo( pNtk, NameId, i )\n    {\n        iObj = Cba_ObjAlloc( p, CBA_OBJ_PO, 1, 0 );\n        Cba_ObjSetName( p, iObj, NameId );\n        Vec_IntPush( \u0026p-\u003evOrder, iObj );\n    }\n}",
+      "Draft": "func Prs_CreateBlifPio(p *Cba_Ntk_t, pNtk *Prs_Ntk_t) {\n    var i, NameId, iObj, iFon int32;\n    Cba_NtkCleanObjFuncs( p );\n    Cba_NtkCleanObjNames( p );\n    Cba_NtkCleanFonNames( p );\n    // create inputs\n    // inlining of macro Prs_NtkForEachPi\n    for  i = 0; i \u003c Prs_NtkPiNum(pNtk) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtk.vInputs, i)); i++  {\n        iObj = Cba_ObjAlloc( p, CBA_OBJ_PI, 0, 1 );\n        Cba_ObjSetName( p, iObj, NameId );\n        iFon = Cba_ObjFon0(p, iObj);\n        Cba_FonSetName( p, iFon, NameId );\n        Cba_NtkSetMap( p, NameId, iFon );\n        Vec_IntPush( \u0026p.vOrder, iObj );\n    }\n    // create outputs\n    // inlining of macro Prs_NtkForEachPo\n    for  i = 0; i \u003c Prs_NtkPoNum(pNtk) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtk.vOutputs, i)); i++  {\n        iObj = Cba_ObjAlloc( p, CBA_OBJ_PO, 1, 0 );\n        Cba_ObjSetName( p, iObj, NameId );\n        Vec_IntPush( \u0026p.vOrder, iObj );\n    }\n}"
+    },
+    {
+      "Name": "Prs_CreateBlifNtk",
+      "Start": 16598,
+      "End": 20447,
+      "BodyStart": 16655,
+      "Original": "int Prs_CreateBlifNtk( Cba_Ntk_t * p, Prs_Ntk_t * pNtk )\n{\n    Vec_Int_t * vBox;\n    int i, k, iObj, iTerm, iFon, FormId, ActId;\n    // map inputs\n    Cba_NtkCleanMap( p );\n    Cba_NtkForEachPi( p, iObj, i )\n        Cba_NtkSetMap( p, Cba_ObjName(p, iObj), Cba_ObjFon0(p, iObj) );\n    // create objects\n    Prs_NtkForEachBox( pNtk, vBox, i )\n    {\n        int FuncId = Prs_BoxNtk(pNtk, i);\n        assert( Prs_BoxIONum(pNtk, i) \u003e 0 );\n        assert( Vec_IntSize(vBox) % 2 == 0 );\n        if ( FuncId == -1 ) // latch\n        {\n            iObj = Cba_ObjAlloc( p, CBA_BOX_DFFRS, 4, 1 );\n            Cba_NtkSetMap( p, Vec_IntEntry(vBox, 3), Cba_ObjFon0(p, iObj) ); // latch output\n            Cba_ObjSetFunc( p, iObj, Prs_BoxName(pNtk, i)+1 ); // init + 1\n        }\n        else if ( Prs_BoxIsNode(pNtk, i) ) // node\n        {\n            iObj = Cba_ObjAlloc( p, CBA_BOX_NODE, Prs_BoxIONum(pNtk, i)-1, 1 );\n            Cba_FonSetName( p, Cba_ObjFon0(p, iObj), Vec_IntEntryLast(vBox) ); // node output\n            Cba_NtkSetMap( p, Vec_IntEntryLast(vBox), Cba_ObjFon0(p, iObj) );\n            Cba_ObjSetFunc( p, iObj, FuncId );\n        }\n        else // box\n        {\n            Cba_Ntk_t * pBox = Cba_ManNtkFind( p-\u003epDesign, Prs_NtkStr(pNtk, FuncId) );\n            iObj = Cba_ObjAlloc( p, CBA_OBJ_BOX, Cba_NtkPiNum(pBox), Cba_NtkPoNum(pBox) );\n            Cba_ObjSetFunc( p, iObj, Cba_NtkId(pBox) );\n            // mark PO objects\n            Cba_NtkCleanMap2( p );\n            Cba_NtkForEachPo( pBox, iTerm, k )\n                Cba_NtkSetMap2( p, Cba_ObjName(pBox, iTerm), k+1 );\n            // map box fons\n            Vec_IntForEachEntryDouble( vBox, FormId, ActId, k )\n                if ( Cba_NtkGetMap2(p, FormId) )\n                {\n                    iFon = Cba_ObjFon(p, iObj, Cba_NtkGetMap2(p, FormId)-1);\n                    Cba_FonSetName( p, iFon, ActId );\n                    Cba_NtkSetMap( p, ActId, iFon );\n                }\n        }\n    }\n    // connect objects\n    Prs_NtkForEachBox( pNtk, vBox, i )\n    {\n        iObj = Cba_NtkPiNum(p) + Cba_NtkPoNum(p) + i + 1;\n        if ( Prs_BoxNtk(pNtk, i) == -1 ) // latch\n        {\n            assert( Cba_ObjType(p, iObj) == CBA_BOX_DFFRS );\n            iFon = Prs_CreateBlifFindFon( p, Vec_IntEntry(vBox, 1) ); // latch input\n            if ( iFon )\n                Cba_ObjSetFinFon( p, iObj, 0, iFon );\n        }\n        else if ( Prs_BoxIsNode(pNtk, i) ) // node\n        {\n            assert( Cba_ObjType(p, iObj) == CBA_BOX_NODE );\n            Vec_IntForEachEntryDouble( vBox, FormId, ActId, k )\n            {\n                if ( k == 2 * Cba_ObjFinNum(p, iObj) ) // stop at node output\n                    break;\n                iFon = Prs_CreateBlifFindFon( p, ActId );\n                if ( iFon )\n                    Cba_ObjSetFinFon( p, iObj, k/2, iFon ); \n            }\n        }\n        else // box\n        {\n            // mark PI objects\n            Cba_Ntk_t * pBox = Cba_ObjNtk(p, iObj);\n            assert( Cba_NtkPiNum(pBox) == Cba_ObjFinNum(p, iObj) );\n            assert( Cba_NtkPoNum(pBox) == Cba_ObjFonNum(p, iObj) );\n            Cba_NtkCleanMap2( p );\n            Cba_NtkForEachPi( pBox, iTerm, k )\n                Cba_NtkSetMap2( p, Cba_ObjName(pBox, iTerm), k+1 );\n            // connect box fins\n            Vec_IntForEachEntryDouble( vBox, FormId, ActId, k )\n                if ( Cba_NtkGetMap2(p, FormId) )\n                {\n                    iFon = Prs_CreateBlifFindFon( p, ActId );\n                    if ( iFon )\n                        Cba_ObjSetFinFon( p, iObj, Cba_NtkGetMap2(p, FormId)-1, iFon );\n                }\n        }\n    }\n    // connect outputs\n    Cba_NtkForEachPo( p, iObj, i )\n    {\n        iFon = Prs_CreateBlifFindFon( p, Cba_ObjName(p, iObj) );\n        if ( iFon )\n            Cba_ObjSetFinFon( p, iObj, 0, iFon );\n    }\n    return 0;\n}",
+      "Draft": "func Prs_CreateBlifNtk(p *Cba_Ntk_t, pNtk *Prs_Ntk_t) int32 {\n    var vBox *Vec_Int_t;\n    var i, k, iObj, iTerm, iFon, FormId, ActId int32;\n    // map inputs\n    Cba_NtkCleanMap( p );\n    // inlining of macro Cba_NtkForEachPi\n    for  i = 0; (i \u003c Cba_NtkPiNum(p))  \u0026\u0026 (((iObj) = Cba_NtkPi(p, i)), 1); i++  { \n        Cba_NtkSetMap( p, Cba_ObjName(p, iObj), Cba_ObjFon0(p, iObj) );\n    }\n    // create objects\n    // inlining of macro Prs_NtkForEachBox\n    for  i = 0; i \u003c Prs_NtkBoxNum(pNtk) \u0026\u0026 ((vBox) = Prs_BoxSignals(pNtk, i)); i++  {\n        var FuncId int32  = Prs_BoxNtk(pNtk, i);\n        assert(Prs_BoxIONum(pNtk, i) \u003e 0, \"Prs_BoxIONum(pNtk, i) \u003e 0\");\n        assert(Vec_IntSize(vBox) % 2 == 0, \"Vec_IntSize(vBox) % 2 == 0\");\n        if FuncId == -1 { // latch\n        \n            iObj = Cba_ObjAlloc( p, CBA_BOX_DFFRS, 4, 1 );\n            Cba_NtkSetMap( p, Vec_IntEntry(vBox, 3), Cba_ObjFon0(p, iObj) ); // latch output\n            Cba_ObjSetFunc( p, iObj, Prs_BoxName(pNtk, i)+1 ); // init + 1\n        \n        } else if Prs_BoxIsNode(pNtk, i) { // node\n        \n            iObj = Cba_ObjAlloc( p, CBA_BOX_NODE, Prs_BoxIONum(pNtk, i)-1, 1 );\n            Cba_FonSetName( p, Cba_ObjFon0(p, iObj), Vec_IntEntryLast(vBox) ); // node output\n            Cba_NtkSetMap( p, Vec_IntEntryLast(vBox), Cba_ObjFon0(p, iObj) );\n            Cba_ObjSetFunc( p, iObj, FuncId );\n        \n        } else { // box\n        \n            var pBox *Cba_Ntk_t  = Cba_ManNtkFind( p.pDesign, Prs_NtkStr(pNtk, FuncId) );\n            iObj = Cba_ObjAlloc( p, CBA_OBJ_BOX, Cba_NtkPiNum(pBox), Cba_NtkPoNum(pBox) );\n            Cba_ObjSetFunc( p, iObj, Cba_NtkId(pBox) );\n            // mark PO objects\n            Cba_NtkCleanMap2( p );\n            // inlining of macro Cba_NtkForEachPo\n            for  k = 0; (k \u003c Cba_NtkPoNum(pBox))  \u0026\u0026 (((iTerm) = Cba_NtkPo(pBox, k)), 1); k++  { \n                Cba_NtkSetMap2( p, Cba_ObjName(pBox, iTerm), k+1 );\n            }\n            // map box fons\n            // inlining of macro Vec_IntForEachEntryDouble\n            for  k = 0; (k+1 \u003c Vec_IntSize(vBox)) \u0026\u0026 (((FormId) = Vec_IntEntry(vBox, k)), 1) \u0026\u0026 (((ActId) = Vec_IntEntry(vBox, k+1)), 1); k += 2  {\n                if Cba_NtkGetMap2(p, FormId) {\n                    iFon = Cba_ObjFon(p, iObj, Cba_NtkGetMap2(p, FormId)-1);\n                    Cba_FonSetName( p, iFon, ActId );\n                    Cba_NtkSetMap( p, ActId, iFon );\n                }\n            }\n        }\n    }\n    // connect objects\n    // inlining of macro Prs_NtkForEachBox\n    for  i = 0; i \u003c Prs_NtkBoxNum(pNtk) \u0026\u0026 ((vBox) = Prs_BoxSignals(pNtk, i)); i++  {\n        iObj = Cba_NtkPiNum(p) + Cba_NtkPoNum(p) + i + 1;\n        if Prs_BoxNtk(pNtk, i) == -1 { // latch\n        \n            assert(Cba_ObjType(p, iObj) == CBA_BOX_DFFRS, \"Cba_ObjType(p, iObj) == CBA_BOX_DFFRS\");\n            iFon = Prs_CreateBlifFindFon( p, Vec_IntEntry(vBox, 1) ); // latch input\n            if iFon != 0 {\n                Cba_ObjSetFinFon( p, iObj, 0, iFon ); }\n        \n        } else if Prs_BoxIsNode(pNtk, i) { // node\n        \n            assert(Cba_ObjType(p, iObj) == CBA_BOX_NODE, \"Cba_ObjType(p, iObj) == CBA_BOX_NODE\");\n            // inlining of macro Vec_IntForEachEntryDouble\n            for  k = 0; (k+1 \u003c Vec_IntSize(vBox)) \u0026\u0026 (((FormId) = Vec_IntEntry(vBox, k)), 1) \u0026\u0026 (((ActId) = Vec_IntEntry(vBox, k+1)), 1); k += 2  {\n                if k == 2 * Cba_ObjFinNum(p, iObj) { // stop at node output\n                    break; }\n                iFon = Prs_CreateBlifFindFon( p, ActId );\n                if iFon != 0 {\n                    Cba_ObjSetFinFon( p, iObj, k/2, iFon ); } \n            }\n        \n        } else { // box\n        \n            // mark PI objects\n            var pBox *Cba_Ntk_t  = Cba_ObjNtk(p, iObj);\n            assert(Cba_NtkPiNum(pBox) == Cba_ObjFinNum(p, iObj), \"Cba_NtkPiNum(pBox) == Cba_ObjFinNum(p, iObj)\");\n            assert(Cba_NtkPoNum(pBox) == Cba_ObjFonNum(p, iObj), \"Cba_NtkPoNum(pBox) == Cba_ObjFonNum(p, iObj)\");\n            Cba_NtkCleanMap2( p );\n            // inlining of macro Cba_NtkForEachPi\n            for  k = 0; (k \u003c Cba_NtkPiNum(pBox))  \u0026\u0026 (((iTerm) = Cba_NtkPi(pBox, k)), 1); k++  { \n                Cba_NtkSetMap2( p, Cba_ObjName(pBox, iTerm), k+1 );\n            }\n            // connect box fins\n            // inlining of macro Vec_IntForEachEntryDouble\n            for  k = 0; (k+1 \u003c Vec_IntSize(vBox)) \u0026\u0026 (((FormId) = Vec_IntEntry(vBox, k)), 1) \u0026\u0026 (((ActId) = Vec_IntEntry(vBox, k+1)), 1); k += 2  {\n                if Cba_NtkGetMap2(p, FormId) {\n                    iFon = Prs_CreateBlifFindFon( p, ActId );\n                    if iFon != 0 {\n                        Cba_ObjSetFinFon( p, iObj, Cba_NtkGetMap2(p, FormId)-1, iFon ); }\n                }\n            }\n        }\n    }\n    // connect outputs\n    // inlining of macro Cba_NtkForEachPo\n    for  i = 0; (i \u003c Cba_NtkPoNum(p))  \u0026\u0026 (((iObj) = Cba_NtkPo(p, i)), 1); i++  {\n        iFon = Prs_CreateBlifFindFon( p, Cba_ObjName(p, iObj) );\n        if iFon != 0 {\n            Cba_ObjSetFinFon( p, iObj, 0, iFon ); }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Prs_ManBuildCbaBlif",
+      "Start": 20448,
+      "End": 21599,
+      "BodyStart": 20518,
+      "Original": "Cba_Man_t * Prs_ManBuildCbaBlif( char * pFileName, Vec_Ptr_t * vDes )\n{\n    Prs_Ntk_t * pPrsNtk; int i, fError = 0;\n    Prs_Ntk_t * pPrsRoot = Prs_ManRoot(vDes);\n    // start the manager\n    Abc_Nam_t * pStrs = Abc_NamRef(pPrsRoot-\u003epStrs);\n    Abc_Nam_t * pFuns = Abc_NamRef(pPrsRoot-\u003epFuns);\n    Abc_Nam_t * pMods = Abc_NamStart( 100, 24 );\n    Cba_Man_t * p = Cba_ManAlloc( pFileName, Vec_PtrSize(vDes), pStrs, pFuns, pMods, NULL );\n    // initialize networks\n    Vec_PtrForEachEntry( Prs_Ntk_t *, vDes, pPrsNtk, i )\n    {\n        Cba_Ntk_t * pNtk = Cba_NtkAlloc( p, Prs_NtkId(pPrsNtk), Prs_NtkPiNum(pPrsNtk), Prs_NtkPoNum(pPrsNtk), Prs_NtkObjNum(pPrsNtk), 100, 100 );\n        Prs_CreateBlifPio( pNtk, pPrsNtk );\n        Cba_NtkAdd( p, pNtk );\n    }\n    // create networks\n    Vec_PtrForEachEntry( Prs_Ntk_t *, vDes, pPrsNtk, i )\n    {\n        printf( \"Elaboration module \\\"%s\\\"...\\n\", Prs_NtkName(pPrsNtk) );\n        fError = Prs_CreateBlifNtk( Cba_ManNtk(p, i+1), pPrsNtk );\n        if ( fError )\n            break;\n    }\n    if ( fError )\n        printf( \"Quitting because of errors.\\n\" );\n    else\n        Cba_ManPrepareSeq( p );\n    return p;\n}",
+      "Draft": "func Prs_ManBuildCbaBlif(pFileName string, vDes *Vec_Ptr_t) *Cba_Man_t {\n    var pPrsNtk *Prs_Ntk_t; var i, fError int32;\n    var pPrsRoot *Prs_Ntk_t  = Prs_ManRoot(vDes);\n    // start the manager\n    var pStrs *Abc_Nam_t  = Abc_NamRef(pPrsRoot.pStrs);\n    var pFuns *Abc_Nam_t  = Abc_NamRef(pPrsRoot.pFuns);\n    var pMods *Abc_Nam_t  = Abc_NamStart( 100, 24 );\n    var p *Cba_Man_t  = Cba_ManAlloc( pFileName, Vec_PtrSize(vDes), pStrs, pFuns, pMods, nil );\n    // initialize networks\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDes)) \u0026\u0026 (((pPrsNtk) = (Prs_Ntk_t *)Vec_PtrEntry(vDes, i)), 1); i++  {\n        var pNtk *Cba_Ntk_t  = Cba_NtkAlloc( p, Prs_NtkId(pPrsNtk), Prs_NtkPiNum(pPrsNtk), Prs_NtkPoNum(pPrsNtk), Prs_NtkObjNum(pPrsNtk), 100, 100 );\n        Prs_CreateBlifPio( pNtk, pPrsNtk );\n        Cba_NtkAdd( p, pNtk );\n    }\n    // create networks\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDes)) \u0026\u0026 (((pPrsNtk) = (Prs_Ntk_t *)Vec_PtrEntry(vDes, i)), 1); i++  {\n        fmt.Printf(\"Elaboration module \\\"%s\\\"...\\n\", Prs_NtkName(pPrsNtk));\n        fError = Prs_CreateBlifNtk( Cba_ManNtk(p, i+1), pPrsNtk );\n        if fError != 0 {\n            break; }\n    }\n    if fError != 0 {\n        fmt.Printf(\"Quitting because of errors.\\n\");\n    } else {\n        Cba_ManPrepareSeq( p ); }\n    return p;\n}"
+    },
+    {
+      "Name": "Cba_ManReadBlif",
+      "Start": 21835,
+      "End": 22116,
+      "BodyStart": 21883,
+      "Original": "Cba_Man_t * Cba_ManReadBlif( char * pFileName )\n{\n    Cba_Man_t * p = NULL;\n    Vec_Ptr_t * vDes = Prs_ManReadBlif( pFileName );\n    if ( vDes \u0026\u0026 Vec_PtrSize(vDes) )\n        p = Prs_ManBuildCbaBlif( pFileName, vDes );\n    if ( vDes )\n        Prs_ManVecFree( vDes );\n    return p;\n}",
+      "Draft": "func Cba_ManReadBlif(pFileName string) *Cba_Man_t {\n    var p *Cba_Man_t  = nil;\n    var vDes *Vec_Ptr_t  = Prs_ManReadBlif( pFileName );\n    if (vDes != nil) \u0026\u0026 Vec_PtrSize(vDes) {\n        p = Prs_ManBuildCbaBlif( pFileName, vDes ); }\n    if vDes != nil {\n        Prs_ManVecFree( vDes ); }\n    return p;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::mechanical::enum::827",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 827,
+      "End": 831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::pointer-cast::1987",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1987,
+      "End": 1995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::pointer-cast::22340",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20914,
+      "End": 20914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::pointer-cast::22756",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21227,
+      "End": 21227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_NtkAddBlifDirectives",
+      "Category": "semantic-review",
+      "Symbol": "Prs_NtkAddBlifDirectives",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1835,
+      "End": 2067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_CharIsSpace",
+      "Category": "semantic-review",
+      "Symbol": "Prs_CharIsSpace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2543,
+      "End": 2662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_CharIsStop",
+      "Category": "semantic-review",
+      "Symbol": "Prs_CharIsStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2663,
+      "End": 2782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_CharIsLit",
+      "Category": "semantic-review",
+      "Symbol": "Prs_CharIsLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2783,
+      "End": 2902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManIsSpace",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManIsSpace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2904,
+      "End": 3023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManIsStop",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManIsStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3024,
+      "End": 3143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManIsLit",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManIsLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3144,
+      "End": 3263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManIsChar",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManIsChar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3265,
+      "End": 3384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManIsChar2",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManIsChar2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3385,
+      "End": 3504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManSkip",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManSkip",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3506,
+      "End": 3625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManSkip2",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManSkip2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3626,
+      "End": 3745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManSkipToChar",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManSkipToChar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3996,
+      "End": 4124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManSkipSpaces",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManSkipSpaces",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4125,
+      "End": 4554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadName",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4555,
+      "End": 4925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadList",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4926,
+      "End": 5337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadList2",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadList2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5338,
+      "End": 5655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadList3",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadList3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5656,
+      "End": 6563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadCube",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6799,
+      "End": 7757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManSaveCover",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManSaveCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7758,
+      "End": 8602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadInouts",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadInouts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8838,
+      "End": 9023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadInputs",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadInputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9024,
+      "End": 9209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9210,
+      "End": 9397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadNode",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9398,
+      "End": 9604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadBox",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9605,
+      "End": 9964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadLatch",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadLatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9965,
+      "End": 10723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadShort",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadShort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10724,
+      "End": 11451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadModel",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadModel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11452,
+      "End": 11987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadEnd",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadEnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11988,
+      "End": 12422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadDirective",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadDirective",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12424,
+      "End": 13558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadLines",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadLines",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13559,
+      "End": 13895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadBlif",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14131,
+      "End": 14584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManReadBlifTest",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManReadBlifTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14820,
+      "End": 15379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_CreateBlifFindFon",
+      "Category": "semantic-review",
+      "Symbol": "Prs_CreateBlifFindFon",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15615,
+      "End": 15870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_CreateBlifPio",
+      "Category": "semantic-review",
+      "Symbol": "Prs_CreateBlifPio",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15871,
+      "End": 16597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_CreateBlifNtk",
+      "Category": "semantic-review",
+      "Symbol": "Prs_CreateBlifNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16598,
+      "End": 20447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Prs_ManBuildCbaBlif",
+      "Category": "semantic-review",
+      "Symbol": "Prs_ManBuildCbaBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20448,
+      "End": 21599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::Cba_ManReadBlif",
+      "Category": "semantic-review",
+      "Symbol": "Cba_ManReadBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21835,
+      "End": 22116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaReadBlif.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 22363
+    }
+  ],
+  "Draft": "package cba\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [cbaReadBlif.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [BLIF parser.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: cbaReadBlif.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cba.h\"\n//#include \"cbaPrs.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// BLIF keywords\n type Cba_BlifType_t int32\nconst ( \n    PRS_BLIF_NONE Cba_BlifType_t = 0\n // 0:   unused\n    PRS_BLIF_MODEL Cba_BlifType_t = PRS_BLIF_NONE + 1\n    // 1:   .model\n    PRS_BLIF_INOUTS Cba_BlifType_t = PRS_BLIF_MODEL + 1\n   // 2:   .inouts\n    PRS_BLIF_INPUTS Cba_BlifType_t = PRS_BLIF_INOUTS + 1\n   // 3:   .inputs\n    PRS_BLIF_OUTPUTS Cba_BlifType_t = PRS_BLIF_INPUTS + 1\n  // 4:   .outputs\n    PRS_BLIF_NAMES Cba_BlifType_t = PRS_BLIF_OUTPUTS + 1\n    // 5:   .names\n    PRS_BLIF_SUBCKT Cba_BlifType_t = PRS_BLIF_NAMES + 1\n   // 6:   .subckt\n    PRS_BLIF_GATE Cba_BlifType_t = PRS_BLIF_SUBCKT + 1\n     // 7:   .gate\n    PRS_BLIF_LATCH Cba_BlifType_t = PRS_BLIF_GATE + 1\n    // 8:   .latch\n    PRS_BLIF_SHORT Cba_BlifType_t = PRS_BLIF_LATCH + 1\n    // 9:   .short\n    PRS_BLIF_END Cba_BlifType_t = PRS_BLIF_SHORT + 1\n      // 10:  .end\n    PRS_BLIF_UNKNOWN Cba_BlifType_t = PRS_BLIF_END + 1   // 11:  unknown\n\n)\n\n \n\nstatic char * s_BlifTypes[PRS_BLIF_UNKNOWN+1] = {\n    NULL,              // 0:   unused\n    \".model\",          // 1:   .model   \n    \".inouts\",         // 2:   .inputs\n    \".inputs\",         // 3:   .inputs\n    \".outputs\",        // 4:   .outputs\n    \".names\",          // 5:   .names\n    \".subckt\",         // 6:   .subckt\n    \".gate\",           // 7:   .gate\n    \".latch\",          // 8:   .latch\n    \".short\",          // 9:   .short\n    \".end\",            // 10:  .end\n    NULL               // 11:  unknown\n};\n\nfunc Prs_NtkAddBlifDirectives(p *Prs_Man_t) {\n    var i int32;\n    for  i = 1; s_BlifTypes[i]; i++  {\n        Abc_NamStrFindOrAdd( p.pStrs, (char *)s_BlifTypes[i], nil );\n    }\n    assert(Abc_NamObjNumMax(p.pStrs) == i, \"Abc_NamObjNumMax(p.pStrs) == i\");\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reading characters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Prs_CharIsSpace(c byte) int32 { return c == ' ' || c == '\\t' || c == '\\r';              }\nfunc Prs_CharIsStop(c byte) int32 { return c == '#' || c == '\\\\' || c == '\\n' || c == '=';  }\nfunc Prs_CharIsLit(c byte) int32 { return c == '0' || c == '1'  || c == '-';               }\n\nfunc Prs_ManIsSpace(p *Prs_Man_t) int32 { return Prs_CharIsSpace(*p.pCur);                       }\nfunc Prs_ManIsStop(p *Prs_Man_t) int32 { return Prs_CharIsStop(*p.pCur);                        }\nfunc Prs_ManIsLit(p *Prs_Man_t) int32 { return Prs_CharIsLit(*p.pCur);                         }\n\nfunc Prs_ManIsChar(p *Prs_Man_t, c byte) int32 { return *p.pCur == c;                                   }\nfunc Prs_ManIsChar2(p *Prs_Man_t, c byte) int32 { return *p.pCur++ == c;                                 }\n\nfunc Prs_ManSkip(p *Prs_Man_t) { p.pCur++;                                              }\nfunc Prs_ManSkip2(p *Prs_Man_t) byte { return *p.pCur++;                                      }\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reading names.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Prs_ManSkipToChar(p *Prs_Man_t, c byte) { \n    for  !(Prs_ManIsChar(p, c) != 0)  { \n        Prs_ManSkip(p);\n    }\n}\nfunc Prs_ManSkipSpaces(p *Prs_Man_t) {\n    for {\n        for  Prs_ManIsSpace(p) != 0  {\n            Prs_ManSkip(p);\n        }\n        if Prs_ManIsChar(p, '\\\\') != 0 {\n            Prs_ManSkipToChar( p, '\\n' );\n            Prs_ManSkip(p);\n            continue;\n        }\n        if Prs_ManIsChar(p, '#') != 0 {  \n            Prs_ManSkipToChar( p, '\\n' ); }\n        break;\n    }\n    assert(!(Prs_ManIsSpace(p) != 0), \"!Prs_ManIsSpace(p)\");\n}\nfunc Prs_ManReadName(p *Prs_Man_t) int32 {\n    var pStart string;\n    Prs_ManSkipSpaces( p );\n    if Prs_ManIsChar(p, '\\n') != 0 {\n        return 0; }\n    pStart = p.pCur;\n    for  !(Prs_ManIsSpace(p) != 0) \u0026\u0026 !(Prs_ManIsStop(p) != 0)  {\n        Prs_ManSkip(p);\n    }\n    if pStart == p.pCur {\n        return 0; }\n    return Abc_NamStrFindOrAddLim( p.pStrs, pStart, p.pCur, nil );\n}\nfunc Prs_ManReadList(p *Prs_Man_t, vOrder *Vec_Int_t, Type int32) int32 {\n    var iToken int32;\n    Vec_IntClear( \u0026p.vTemp );\n    for  iToken = Prs_ManReadName(p)  {\n        Vec_IntPush( \u0026p.vTemp, iToken );\n        Vec_IntPush( vOrder, Abc_Var2Lit2(iToken, Type) );\n    }\n    if Vec_IntSize(\u0026p.vTemp) == 0 {                return Prs_ManErrorSet(p, \"Signal list is empty.\", 1); }\n    return 0;\n}\nfunc Prs_ManReadList2(p *Prs_Man_t) int32 {\n    var iToken int32;\n    Vec_IntClear( \u0026p.vTemp );\n    for  iToken = Prs_ManReadName(p)  {\n        Vec_IntPushTwo( \u0026p.vTemp, 0, iToken );\n    }\n    if Vec_IntSize(\u0026p.vTemp) == 0 {                return Prs_ManErrorSet(p, \"Signal list is empty.\", 1); }\n    return 0;\n}\nfunc Prs_ManReadList3(p *Prs_Man_t) int32 {\n    Vec_IntClear( \u0026p.vTemp );\n    for  !(Prs_ManIsChar(p, '\\n') != 0)  {\n        var iToken int32  = Prs_ManReadName(p);\n        if iToken == 0 {              return Prs_ManErrorSet(p, \"Cannot read formal name.\", 1); }\n        Vec_IntPush( \u0026p.vTemp, iToken );\n        Prs_ManSkipSpaces( p );\n        if !(Prs_ManIsChar2(p, '=') != 0) {  return Prs_ManErrorSet(p, \"Cannot find symbol \\\"=\\\".\", 1); }\n        iToken = Prs_ManReadName(p);\n        if iToken == 0 {              return Prs_ManErrorSet(p, \"Cannot read actual name.\", 1); }\n        Vec_IntPush( \u0026p.vTemp, iToken );\n        Prs_ManSkipSpaces( p );\n    }\n    if Vec_IntSize(\u0026p.vTemp) == 0 {  return Prs_ManErrorSet(p, \"Cannot read a list of formal/actual names.\", 1); }\n    if Vec_IntSize(\u0026p.vTemp) % 2 {  return Prs_ManErrorSet(p, \"The number of formal/actual names is not even.\", 1); }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Prs_ManReadCube(p *Prs_Man_t) int32 {\n    assert((Prs_ManIsLit(p) != 0), \"Prs_ManIsLit(p)\");\n    for  Prs_ManIsLit(p) != 0  {\n        Vec_StrPush( \u0026p.vCover, Prs_ManSkip2(p) );\n    }\n    Prs_ManSkipSpaces( p );\n    if Prs_ManIsChar(p, '\\n') != 0 {\n        if Vec_StrSize(\u0026p.vCover) != 1 {           return Prs_ManErrorSet(p, \"Cannot read cube.\", 1); }\n        // fix single literal cube by adding space\n        Vec_StrPush( \u0026p.vCover, Vec_StrEntry(\u0026p.vCover,0) );\n        Vec_StrWriteEntry( \u0026p.vCover, 0, ' ' );\n        Vec_StrPush( \u0026p.vCover, '\\n' );\n        return 0;\n    }\n    if !(Prs_ManIsLit(p) != 0) {                           return Prs_ManErrorSet(p, \"Cannot read output literal.\", 1); }\n    Vec_StrPush( \u0026p.vCover, ' ' );\n    Vec_StrPush( \u0026p.vCover, Prs_ManSkip2(p) );\n    Vec_StrPush( \u0026p.vCover, '\\n' );\n    Prs_ManSkipSpaces( p );\n    if !(Prs_ManIsChar(p, '\\n') != 0) {                    return Prs_ManErrorSet(p, \"Cannot read end of cube.\", 1); }\n    return 0;\n}\nfunc Prs_ManSaveCover(p *Prs_Man_t) {\n    var iToken int32;\n    if Vec_StrSize(\u0026p.vCover) == 0 {\n        p.pNtk.fHasC0s = 1;\n    } else if Vec_StrSize(\u0026p.vCover) == 2 {\n        if Vec_StrEntryLast(\u0026p.vCover) == '0' {\n            p.pNtk.fHasC0s = 1;\n        } else if Vec_StrEntryLast(\u0026p.vCover) == '1' {\n            p.pNtk.fHasC1s = 1;\n        } else { assert(false, \"0\"); }\n    }\n    assert(Vec_StrSize(\u0026p.vCover) \u003e 0, \"Vec_StrSize(\u0026p.vCover) \u003e 0\");\n    Vec_StrPush( \u0026p.vCover, '\\0' );\n//    iToken = Ptr_SopToType( Vec_StrArray(\u0026p-\u003evCover) );\n    iToken = Abc_NamStrFindOrAdd( p.pFuns, Vec_StrArray(\u0026p.vCover), nil );\n    Vec_StrClear( \u0026p.vCover );\n    // set the cover to the module of this box\n    assert(Prs_BoxNtk(p.pNtk, Prs_NtkBoxNum(p.pNtk)-1) == 1, \"Prs_BoxNtk(p.pNtk, Prs_NtkBoxNum(p.pNtk)-1) == 1\"); // default const 0\n    Prs_BoxSetNtk( p.pNtk, Prs_NtkBoxNum(p.pNtk)-1, iToken );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Prs_ManReadInouts(p *Prs_Man_t) int32 {\n    if Prs_ManReadList(p, \u0026p.pNtk.vOrder, 3) != 0 {    return 1; }\n    Vec_IntAppend( \u0026p.pNtk.vInouts, \u0026p.vTemp );\n    return 0;\n}\nfunc Prs_ManReadInputs(p *Prs_Man_t) int32 {\n    if Prs_ManReadList(p, \u0026p.pNtk.vOrder, 1) != 0 {    return 1; }\n    Vec_IntAppend( \u0026p.pNtk.vInputs, \u0026p.vTemp );\n    return 0;\n}\nfunc Prs_ManReadOutputs(p *Prs_Man_t) int32 {\n    if Prs_ManReadList(p, \u0026p.pNtk.vOrder, 2) != 0 {    return 1; }\n    Vec_IntAppend( \u0026p.pNtk.vOutputs, \u0026p.vTemp );\n    return 0;\n}\nfunc Prs_ManReadNode(p *Prs_Man_t) int32 {\n    if Prs_ManReadList2(p) != 0 {   return 1; }\n    // save results\n    Prs_NtkAddBox( p.pNtk, 1, 0, \u0026p.vTemp ); // default const 0 function\n    return 0;\n}\nfunc Prs_ManReadBox(p *Prs_Man_t, fGate int32) int32 {\n    var iToken int32  = Prs_ManReadName(p);\n    if iToken == 0 {           return Prs_ManErrorSet(p, \"Cannot read model name.\", 1); }\n    if Prs_ManReadList3(p) != 0 {   return 1; }\n    // save results\n    Prs_NtkAddBox( p.pNtk, iToken, 0, \u0026p.vTemp );\n    if fGate != 0 { p.pNtk.fMapped = 1; }\n    return 0;\n}\nfunc Prs_ManReadLatch(p *Prs_Man_t) int32 {\n    var iToken int32  = Prs_ManReadName(p);\n    Vec_IntClear( \u0026p.vTemp );\n    if iToken == 0 {                 return Prs_ManErrorSet(p, \"Cannot read latch input.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 1, iToken );\n    iToken = Prs_ManReadName(p);\n    if iToken == 0 {                 return Prs_ManErrorSet(p, \"Cannot read latch output.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 0, iToken );\n    Prs_ManSkipSpaces( p );\n    if Prs_ManIsChar(p, '0') != 0 {\n        iToken = 0;\n    } else if Prs_ManIsChar(p, '1') != 0 {\n        iToken = 1;\n    } else { \n        iToken = 2; }\n    Prs_ManSkipToChar( p, '\\n' );\n    // save results\n    Prs_NtkAddBox( p.pNtk, -1, iToken, \u0026p.vTemp ); // -1 stands for latch\n    return 0;\n}\nfunc Prs_ManReadShort(p *Prs_Man_t) int32 {\n    var iToken int32  = Prs_ManReadName(p);\n    Vec_IntClear( \u0026p.vTemp );\n    if iToken == 0 {                 return Prs_ManErrorSet(p, \"Cannot read .short input.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 1, iToken );\n    iToken = Prs_ManReadName(p);\n    if iToken == 0 {                 return Prs_ManErrorSet(p, \"Cannot read .short output.\", 1); }\n    Vec_IntWriteEntry( \u0026p.vTemp, 0, iToken );\n    Prs_ManSkipSpaces( p );\n    if !(Prs_ManIsChar(p, '\\n') != 0) {     return Prs_ManErrorSet(p, \"Trailing symbols on .short line.\", 1); }\n    // save results\n    iToken = Abc_NamStrFindOrAdd( p.pStrs, \"1 1\\n\", nil );\n    Prs_NtkAddBox( p.pNtk, iToken, 0, \u0026p.vTemp );\n    return 0;\n}\nfunc Prs_ManReadModel(p *Prs_Man_t) int32 {\n    var iToken int32;\n    if p.pNtk != nil {                         return Prs_ManErrorSet(p, \"Parsing previous model is unfinished.\", 1); }\n    iToken = Prs_ManReadName(p);\n    if iToken == 0 {                             return Prs_ManErrorSet(p, \"Cannot read model name.\", 1); }\n    Prs_ManInitializeNtk( p, iToken, 0 );\n    Prs_ManSkipSpaces( p );\n    if !(Prs_ManIsChar(p, '\\n') != 0) {                 return Prs_ManErrorSet(p, \"Trailing symbols on .model line.\", 1); }\n    return 0;\n}\nfunc Prs_ManReadEnd(p *Prs_Man_t) int32 {\n    if p.pNtk == 0 {                            return Prs_ManErrorSet(p, \"Directive .end without .model.\", 1); }\n    //printf( \"Saving model \\\"%s\\\".\\n\", Abc_NamStr(p-\u003epStrs, p-\u003eiModuleName) );\n    Prs_ManFinalizeNtk( p );\n    Prs_ManSkipSpaces( p );\n    if !(Prs_ManIsChar(p, '\\n') != 0) {                 return Prs_ManErrorSet(p, \"Trailing symbols on .end line.\", 1); }\n    return 0;\n}\n\nfunc Prs_ManReadDirective(p *Prs_Man_t) int32 {\n    var iToken int32;\n    if !(Prs_ManIsChar(p, '.') != 0) {\n        return Prs_ManReadCube( p ); }\n    if Vec_StrSize(\u0026p.vCover) \u003e 0 { // SOP was specified for the previous node\n        Prs_ManSaveCover( p ); }\n    iToken = Prs_ManReadName( p );  \n    if iToken == PRS_BLIF_MODEL {\n        return Prs_ManReadModel( p ); }\n    if iToken == PRS_BLIF_INOUTS {\n        return Prs_ManReadInouts( p ); }\n    if iToken == PRS_BLIF_INPUTS {\n        return Prs_ManReadInputs( p ); }\n    if iToken == PRS_BLIF_OUTPUTS {\n        return Prs_ManReadOutputs( p ); }\n    if iToken == PRS_BLIF_NAMES {\n        return Prs_ManReadNode( p ); }\n    if iToken == PRS_BLIF_SUBCKT {\n        return Prs_ManReadBox( p, 0 ); }\n    if iToken == PRS_BLIF_GATE {\n        return Prs_ManReadBox( p, 1 ); }\n    if iToken == PRS_BLIF_LATCH {\n        return Prs_ManReadLatch( p ); }\n    if iToken == PRS_BLIF_SHORT {\n        return Prs_ManReadShort( p ); }\n    if iToken == PRS_BLIF_END {\n        return Prs_ManReadEnd( p ); }\n    fmt.Printf(\"Cannot read directive \\\"%s\\\".\\n\", Abc_NamStr(p.pStrs, iToken));\n    return 1;\n}\nfunc Prs_ManReadLines(p *Prs_Man_t) int32 {\n    for  p.pCur[1] != '\\0'  {\n        assert((Prs_ManIsChar(p, '\\n') != 0), \"Prs_ManIsChar(p, '\\\\n')\");\n        Prs_ManSkip(p);\n        Prs_ManSkipSpaces( p );\n        if Prs_ManIsChar(p, '\\n') != 0 {\n            continue; }\n        if Prs_ManReadDirective(p) != 0 {   \n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Prs_ManReadBlif(pFileName string) *Vec_Ptr_t {\n    var vPrs *Vec_Ptr_t  = nil;\n    var p *Prs_Man_t  = Prs_ManAlloc( pFileName );\n    if p == nil {\n        return nil; }\n    Abc_NamStrFindOrAdd( p.pFuns, \" 0\\n\", nil );\n    Abc_NamStrFindOrAdd( p.pFuns, \" 1\\n\", nil );\n    Prs_NtkAddBlifDirectives( p );\n    Prs_ManReadLines( p );\n    if Prs_ManErrorPrint(p) {\n        // inlining of macro ABC_SWAP\n         var t *Vec_Ptr_t  = vPrs; vPrs = p.vNtks; p.vNtks = t; };\n    Prs_ManFree( p );\n    return vPrs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Prs_ManReadBlifTest(pFileName string) {\n    var clk abctime  = Abc_Clock();\n    var vPrs *Vec_Ptr_t  = Prs_ManReadBlif( pFileName );\n    if !(vPrs != nil) { return; }\n    fmt.Printf(\"Finished reading %d networks. \", Vec_PtrSize(vPrs));\n    fmt.Printf(\"NameIDs = %d. \", Abc_NamObjNumMax(Prs_ManNameMan(vPrs)));\n    fmt.Printf(\"Memory = %.2f MB. \", 1.0*Prs_ManMemory(vPrs)/(1\u003c\u003c20));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    Abc_NamPrint( p-\u003epStrs );\n    Prs_ManWriteBlif( Extra_FileNameGenericAppend(pFileName, \"_out.blif\"), vPrs );\n    Prs_ManVecFree( vPrs );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Prs_CreateBlifFindFon(p *Cba_Ntk_t, NameId int32) int32 {\n    var iFon int32  = Cba_NtkGetMap( p, NameId );\n    if iFon != 0 {\n        return iFon; }\n    fmt.Printf(\"Network \\\"%s\\\": Signal \\\"%s\\\" is not driven.\\n\", Cba_NtkName(p), Cba_NtkStr(p, NameId));\n    return 0;\n}\nfunc Prs_CreateBlifPio(p *Cba_Ntk_t, pNtk *Prs_Ntk_t) {\n    var i, NameId, iObj, iFon int32;\n    Cba_NtkCleanObjFuncs( p );\n    Cba_NtkCleanObjNames( p );\n    Cba_NtkCleanFonNames( p );\n    // create inputs\n    // inlining of macro Prs_NtkForEachPi\n    for  i = 0; i \u003c Prs_NtkPiNum(pNtk) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtk.vInputs, i)); i++  {\n        iObj = Cba_ObjAlloc( p, CBA_OBJ_PI, 0, 1 );\n        Cba_ObjSetName( p, iObj, NameId );\n        iFon = Cba_ObjFon0(p, iObj);\n        Cba_FonSetName( p, iFon, NameId );\n        Cba_NtkSetMap( p, NameId, iFon );\n        Vec_IntPush( \u0026p.vOrder, iObj );\n    }\n    // create outputs\n    // inlining of macro Prs_NtkForEachPo\n    for  i = 0; i \u003c Prs_NtkPoNum(pNtk) \u0026\u0026 ((NameId) = Vec_IntEntry(\u0026pNtk.vOutputs, i)); i++  {\n        iObj = Cba_ObjAlloc( p, CBA_OBJ_PO, 1, 0 );\n        Cba_ObjSetName( p, iObj, NameId );\n        Vec_IntPush( \u0026p.vOrder, iObj );\n    }\n}\nfunc Prs_CreateBlifNtk(p *Cba_Ntk_t, pNtk *Prs_Ntk_t) int32 {\n    var vBox *Vec_Int_t;\n    var i, k, iObj, iTerm, iFon, FormId, ActId int32;\n    // map inputs\n    Cba_NtkCleanMap( p );\n    // inlining of macro Cba_NtkForEachPi\n    for  i = 0; (i \u003c Cba_NtkPiNum(p))  \u0026\u0026 (((iObj) = Cba_NtkPi(p, i)), 1); i++  { \n        Cba_NtkSetMap( p, Cba_ObjName(p, iObj), Cba_ObjFon0(p, iObj) );\n    }\n    // create objects\n    // inlining of macro Prs_NtkForEachBox\n    for  i = 0; i \u003c Prs_NtkBoxNum(pNtk) \u0026\u0026 ((vBox) = Prs_BoxSignals(pNtk, i)); i++  {\n        var FuncId int32  = Prs_BoxNtk(pNtk, i);\n        assert(Prs_BoxIONum(pNtk, i) \u003e 0, \"Prs_BoxIONum(pNtk, i) \u003e 0\");\n        assert(Vec_IntSize(vBox) % 2 == 0, \"Vec_IntSize(vBox) % 2 == 0\");\n        if FuncId == -1 { // latch\n        \n            iObj = Cba_ObjAlloc( p, CBA_BOX_DFFRS, 4, 1 );\n            Cba_NtkSetMap( p, Vec_IntEntry(vBox, 3), Cba_ObjFon0(p, iObj) ); // latch output\n            Cba_ObjSetFunc( p, iObj, Prs_BoxName(pNtk, i)+1 ); // init + 1\n        \n        } else if Prs_BoxIsNode(pNtk, i) { // node\n        \n            iObj = Cba_ObjAlloc( p, CBA_BOX_NODE, Prs_BoxIONum(pNtk, i)-1, 1 );\n            Cba_FonSetName( p, Cba_ObjFon0(p, iObj), Vec_IntEntryLast(vBox) ); // node output\n            Cba_NtkSetMap( p, Vec_IntEntryLast(vBox), Cba_ObjFon0(p, iObj) );\n            Cba_ObjSetFunc( p, iObj, FuncId );\n        \n        } else { // box\n        \n            var pBox *Cba_Ntk_t  = Cba_ManNtkFind( p.pDesign, Prs_NtkStr(pNtk, FuncId) );\n            iObj = Cba_ObjAlloc( p, CBA_OBJ_BOX, Cba_NtkPiNum(pBox), Cba_NtkPoNum(pBox) );\n            Cba_ObjSetFunc( p, iObj, Cba_NtkId(pBox) );\n            // mark PO objects\n            Cba_NtkCleanMap2( p );\n            // inlining of macro Cba_NtkForEachPo\n            for  k = 0; (k \u003c Cba_NtkPoNum(pBox))  \u0026\u0026 (((iTerm) = Cba_NtkPo(pBox, k)), 1); k++  { \n                Cba_NtkSetMap2( p, Cba_ObjName(pBox, iTerm), k+1 );\n            }\n            // map box fons\n            // inlining of macro Vec_IntForEachEntryDouble\n            for  k = 0; (k+1 \u003c Vec_IntSize(vBox)) \u0026\u0026 (((FormId) = Vec_IntEntry(vBox, k)), 1) \u0026\u0026 (((ActId) = Vec_IntEntry(vBox, k+1)), 1); k += 2  {\n                if Cba_NtkGetMap2(p, FormId) {\n                    iFon = Cba_ObjFon(p, iObj, Cba_NtkGetMap2(p, FormId)-1);\n                    Cba_FonSetName( p, iFon, ActId );\n                    Cba_NtkSetMap( p, ActId, iFon );\n                }\n            }\n        }\n    }\n    // connect objects\n    // inlining of macro Prs_NtkForEachBox\n    for  i = 0; i \u003c Prs_NtkBoxNum(pNtk) \u0026\u0026 ((vBox) = Prs_BoxSignals(pNtk, i)); i++  {\n        iObj = Cba_NtkPiNum(p) + Cba_NtkPoNum(p) + i + 1;\n        if Prs_BoxNtk(pNtk, i) == -1 { // latch\n        \n            assert(Cba_ObjType(p, iObj) == CBA_BOX_DFFRS, \"Cba_ObjType(p, iObj) == CBA_BOX_DFFRS\");\n            iFon = Prs_CreateBlifFindFon( p, Vec_IntEntry(vBox, 1) ); // latch input\n            if iFon != 0 {\n                Cba_ObjSetFinFon( p, iObj, 0, iFon ); }\n        \n        } else if Prs_BoxIsNode(pNtk, i) { // node\n        \n            assert(Cba_ObjType(p, iObj) == CBA_BOX_NODE, \"Cba_ObjType(p, iObj) == CBA_BOX_NODE\");\n            // inlining of macro Vec_IntForEachEntryDouble\n            for  k = 0; (k+1 \u003c Vec_IntSize(vBox)) \u0026\u0026 (((FormId) = Vec_IntEntry(vBox, k)), 1) \u0026\u0026 (((ActId) = Vec_IntEntry(vBox, k+1)), 1); k += 2  {\n                if k == 2 * Cba_ObjFinNum(p, iObj) { // stop at node output\n                    break; }\n                iFon = Prs_CreateBlifFindFon( p, ActId );\n                if iFon != 0 {\n                    Cba_ObjSetFinFon( p, iObj, k/2, iFon ); } \n            }\n        \n        } else { // box\n        \n            // mark PI objects\n            var pBox *Cba_Ntk_t  = Cba_ObjNtk(p, iObj);\n            assert(Cba_NtkPiNum(pBox) == Cba_ObjFinNum(p, iObj), \"Cba_NtkPiNum(pBox) == Cba_ObjFinNum(p, iObj)\");\n            assert(Cba_NtkPoNum(pBox) == Cba_ObjFonNum(p, iObj), \"Cba_NtkPoNum(pBox) == Cba_ObjFonNum(p, iObj)\");\n            Cba_NtkCleanMap2( p );\n            // inlining of macro Cba_NtkForEachPi\n            for  k = 0; (k \u003c Cba_NtkPiNum(pBox))  \u0026\u0026 (((iTerm) = Cba_NtkPi(pBox, k)), 1); k++  { \n                Cba_NtkSetMap2( p, Cba_ObjName(pBox, iTerm), k+1 );\n            }\n            // connect box fins\n            // inlining of macro Vec_IntForEachEntryDouble\n            for  k = 0; (k+1 \u003c Vec_IntSize(vBox)) \u0026\u0026 (((FormId) = Vec_IntEntry(vBox, k)), 1) \u0026\u0026 (((ActId) = Vec_IntEntry(vBox, k+1)), 1); k += 2  {\n                if Cba_NtkGetMap2(p, FormId) {\n                    iFon = Prs_CreateBlifFindFon( p, ActId );\n                    if iFon != 0 {\n                        Cba_ObjSetFinFon( p, iObj, Cba_NtkGetMap2(p, FormId)-1, iFon ); }\n                }\n            }\n        }\n    }\n    // connect outputs\n    // inlining of macro Cba_NtkForEachPo\n    for  i = 0; (i \u003c Cba_NtkPoNum(p))  \u0026\u0026 (((iObj) = Cba_NtkPo(p, i)), 1); i++  {\n        iFon = Prs_CreateBlifFindFon( p, Cba_ObjName(p, iObj) );\n        if iFon != 0 {\n            Cba_ObjSetFinFon( p, iObj, 0, iFon ); }\n    }\n    return 0;\n}\nfunc Prs_ManBuildCbaBlif(pFileName string, vDes *Vec_Ptr_t) *Cba_Man_t {\n    var pPrsNtk *Prs_Ntk_t; var i, fError int32;\n    var pPrsRoot *Prs_Ntk_t  = Prs_ManRoot(vDes);\n    // start the manager\n    var pStrs *Abc_Nam_t  = Abc_NamRef(pPrsRoot.pStrs);\n    var pFuns *Abc_Nam_t  = Abc_NamRef(pPrsRoot.pFuns);\n    var pMods *Abc_Nam_t  = Abc_NamStart( 100, 24 );\n    var p *Cba_Man_t  = Cba_ManAlloc( pFileName, Vec_PtrSize(vDes), pStrs, pFuns, pMods, nil );\n    // initialize networks\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDes)) \u0026\u0026 (((pPrsNtk) = (Prs_Ntk_t *)Vec_PtrEntry(vDes, i)), 1); i++  {\n        var pNtk *Cba_Ntk_t  = Cba_NtkAlloc( p, Prs_NtkId(pPrsNtk), Prs_NtkPiNum(pPrsNtk), Prs_NtkPoNum(pPrsNtk), Prs_NtkObjNum(pPrsNtk), 100, 100 );\n        Prs_CreateBlifPio( pNtk, pPrsNtk );\n        Cba_NtkAdd( p, pNtk );\n    }\n    // create networks\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDes)) \u0026\u0026 (((pPrsNtk) = (Prs_Ntk_t *)Vec_PtrEntry(vDes, i)), 1); i++  {\n        fmt.Printf(\"Elaboration module \\\"%s\\\"...\\n\", Prs_NtkName(pPrsNtk));\n        fError = Prs_CreateBlifNtk( Cba_ManNtk(p, i+1), pPrsNtk );\n        if fError != 0 {\n            break; }\n    }\n    if fError != 0 {\n        fmt.Printf(\"Quitting because of errors.\\n\");\n    } else {\n        Cba_ManPrepareSeq( p ); }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cba_ManReadBlif(pFileName string) *Cba_Man_t {\n    var p *Cba_Man_t  = nil;\n    var vDes *Vec_Ptr_t  = Prs_ManReadBlif( pFileName );\n    if (vDes != nil) \u0026\u0026 Vec_PtrSize(vDes) {\n        p = Prs_ManBuildCbaBlif( pFileName, vDes ); }\n    if vDes != nil {\n        Prs_ManVecFree( vDes ); }\n    return p;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

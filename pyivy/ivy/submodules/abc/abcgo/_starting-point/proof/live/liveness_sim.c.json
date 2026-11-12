@@ -1,0 +1,958 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c",
+  "SHA256": "ff3762036d6e4237060e94af964060ae07b2cd9f2f6f33f9b65a3f68acba111c",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 65,
+        "Column": 9,
+        "ByteOffset": 2230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"vec[%d] = %s\\n\", i, (char *)Vec_PtrEntry(vec, i) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 85,
+        "Column": 5,
+        "ByteOffset": 2900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ObjIsPi( pAigNew, pObjPivot ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 90,
+        "Column": 5,
+        "ByteOffset": 3249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( index \u003c Aig_ManCiNum( pAigNew ) - Aig_ManRegNum( pAigNew ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 96,
+        "Column": 9,
+        "ByteOffset": 3508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjOld.pData == pObjPivot );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 109,
+        "Column": 36,
+        "ByteOffset": 3978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var dummyStr string  = (char *)malloc( sizeof(char) * 50 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 4012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ObjIsLo( pAigNew, pObjPivot ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 120,
+        "Column": 9,
+        "ByteOffset": 4517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjOld.pData == pObjPivot );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 129,
+        "Column": 9,
+        "ByteOffset": 4925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( dummyStr, \"%s__%s\", Abc_ObjName( pNode ), \"SHADOW\");"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 16,
+        "ByteOffset": 5492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strstr( Abc_ObjName( pNode ), \"assert_fair\" ) != nil {"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 139,
+        "Column": 21,
+        "ByteOffset": 5609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    sprintf( dummyStr, \"%s__%s\", Abc_ObjName( pNode ), \"LIVENESS\");"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 16,
+        "ByteOffset": 6359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strstr( Abc_ObjName( pNode ), \"assume_fair\" ) != nil {"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 154,
+        "Column": 21,
+        "ByteOffset": 6476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    sprintf( dummyStr, \"%s__%s\", Abc_ObjName( pNode ), \"FAIRNESS\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 307,
+        "Column": 5,
+        "ByteOffset": 13411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCheck( pNew ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 462,
+        "Column": 9,
+        "ByteOffset": 20618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\nCircuit without any liveness property\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 483,
+        "Column": 9,
+        "ByteOffset": 21515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\nCircuit without any fairness property\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 507,
+        "Column": 5,
+        "ByteOffset": 22470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\nSaig_ManPiNum = %d, Reg Num = %d, before everything, before Pi cleanup\\n\", Vec_PtrSize( pNew.vCis ), pNew.nRegs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 514,
+        "Column": 5,
+        "ByteOffset": 22704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCheck( pNew ) );"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 528,
+        "Column": 12,
+        "ByteOffset": 23105
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strstr( Abc_ObjName( pNode ), \"assert_fair\") != nil {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 533,
+        "Column": 5,
+        "ByteOffset": 23262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\nNumber of liveness property found = %d\\n\", liveCounter);"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 544,
+        "Column": 12,
+        "ByteOffset": 23692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strstr( Abc_ObjName( pNode ), \"assume_fair\") != nil {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 549,
+        "Column": 5,
+        "ByteOffset": 23849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\nNumber of fairness property found = %d\\n\", fairCounter);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 584,
+        "Column": 9,
+        "ByteOffset": 25666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Empty network.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 589,
+        "Column": 9,
+        "ByteOffset": 25770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\nThe input network was not strashed, strashing....\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 634,
+        "Column": 9,
+        "ByteOffset": 27850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkCreateCone(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 634,
+        "Column": 18,
+        "ByteOffset": 27859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkCreateCone(): Network check has failed.\\n\" ); }"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 220,
+        "Column": 1,
+        "ByteOffset": 7458
+      },
+      "Directive": "#ifdef DUPLICATE_CKT_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 256,
+        "Column": 1,
+        "ByteOffset": 9023
+      },
+      "Directive": "#ifndef DUPLICATE_CKT_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 277,
+        "Column": 1,
+        "ByteOffset": 9860
+      },
+      "Directive": "#ifndef DUPLICATE_CKT_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 288,
+        "Column": 1,
+        "ByteOffset": 10299
+      },
+      "Directive": "#ifndef DUPLICATE_CKT_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 306,
+        "Column": 1,
+        "ByteOffset": 11170
+      },
+      "Directive": "#ifndef DUPLICATE_CKT_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 314,
+        "Column": 1,
+        "ByteOffset": 11581
+      },
+      "Directive": "#ifdef DUPLICATE_CKT_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 334,
+        "Column": 1,
+        "ByteOffset": 12182
+      },
+      "Directive": "#ifndef DUPLICATE_CKT_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 346,
+        "Column": 1,
+        "ByteOffset": 12532
+      },
+      "Directive": "#ifdef PROPAGATE_NAMES"
+    },
+    {
+      "Location": {
+        "Line": 386,
+        "Column": 1,
+        "ByteOffset": 14198
+      },
+      "Directive": "#ifdef PROPAGATE_NAMES"
+    },
+    {
+      "Location": {
+        "Line": 427,
+        "Column": 1,
+        "ByteOffset": 15860
+      },
+      "Directive": "#ifdef PROPAGATE_NAMES"
+    },
+    {
+      "Location": {
+        "Line": 469,
+        "Column": 1,
+        "ByteOffset": 17477
+      },
+      "Directive": "#ifndef DUPLICATE_CKT_DEBUG"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "printVecPtrOfString",
+      "Start": 2070,
+      "End": 2258,
+      "BodyStart": 2120,
+      "Original": "static void printVecPtrOfString( Vec_Ptr_t *vec )\n{\n    int i;\n\n    for( i=0; i\u003c Vec_PtrSize( vec ); i++ )\n    {\n        printf(\"vec[%d] = %s\\n\", i, (char *)Vec_PtrEntry(vec, i) );\n    }\n}",
+      "Draft": "func printVecPtrOfString(vec *Vec_Ptr_t) {\n    var i int32;\n\n    for  i=0; i\u003c Vec_PtrSize( vec ); i++  {\n        fmt.Printf(\"vec[%d] = %s\\n\", i, (char *)Vec_PtrEntry(vec, i));\n    }\n}"
+    },
+    {
+      "Name": "getPoIndex",
+      "Start": 2260,
+      "End": 2473,
+      "BodyStart": 2320,
+      "Original": "static int getPoIndex( Aig_Man_t *pAig, Aig_Obj_t *pPivot )\n{\n    int i;\n    Aig_Obj_t *pObj;\n\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        if( pObj == pPivot )\n            return i;\n    }\n    return -1;\n}",
+      "Draft": "func getPoIndex(pAig *Aig_Man_t, pPivot *Aig_Obj_t) int32 {\n    var i int32;\n    var pObj *Aig_Obj_t;\n\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        if pObj == pPivot {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "retrieveTruePiName",
+      "Start": 2475,
+      "End": 3158,
+      "BodyStart": 2592,
+      "Original": "static char * retrieveTruePiName( Abc_Ntk_t *pNtkOld, Aig_Man_t *pAigOld, Aig_Man_t *pAigNew, Aig_Obj_t *pObjPivot )\n{\n    Aig_Obj_t *pObjOld, *pObj;\n    Abc_Obj_t *pNode;\n    int index;\n\n    assert( Saig_ObjIsPi( pAigNew, pObjPivot ) );\n    Aig_ManForEachCi( pAigNew, pObj, index )\n        if( pObj == pObjPivot )\n            break;\n    assert( index \u003c Aig_ManCiNum( pAigNew ) - Aig_ManRegNum( pAigNew ) );\n    if( index == Saig_ManPiNum( pAigNew ) - 1 )\n        return \"SAVE_BIERE\";\n    else\n    {\n        pObjOld = Aig_ManCi( pAigOld, index );\n        pNode = Abc_NtkPi( pNtkOld, index );\n        assert( pObjOld-\u003epData == pObjPivot );\n        return Abc_ObjName( pNode );\n    }\n}",
+      "Draft": "func retrieveTruePiName(pNtkOld *Abc_Ntk_t, pAigOld *Aig_Man_t, pAigNew *Aig_Man_t, pObjPivot *Aig_Obj_t) string {\n    var pObjOld, pObj *Aig_Obj_t;\n    var pNode *Abc_Obj_t;\n    var index int32;\n\n    assert(Saig_ObjIsPi( pAigNew, pObjPivot ), \"Saig_ObjIsPi( pAigNew, pObjPivot )\");\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  index = 0; (index \u003c Vec_PtrSize(pAigNew.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAigNew.vCis, index)), 1); index++  {\n        if pObj == pObjPivot {\n            break; }\n    }\n    assert(index \u003c Aig_ManCiNum( pAigNew ) - Aig_ManRegNum( pAigNew ), \"index \u003c Aig_ManCiNum( pAigNew ) - Aig_ManRegNum( pAigNew )\");\n    if index == Saig_ManPiNum( pAigNew ) - 1 {\n        return \"SAVE_BIERE\";\n    } else {\n        pObjOld = Aig_ManCi( pAigOld, index );\n        pNode = Abc_NtkPi( pNtkOld, index );\n        assert(pObjOld.pData == pObjPivot, \"pObjOld.pData == pObjPivot\");\n        return Abc_ObjName( pNode );\n    }\n}"
+    },
+    {
+      "Name": "retrieveLOName",
+      "Start": 3160,
+      "End": 5800,
+      "BodyStart": 3310,
+      "Original": "static char * retrieveLOName( Abc_Ntk_t *pNtkOld, Aig_Man_t *pAigOld, Aig_Man_t *pAigNew, Aig_Obj_t *pObjPivot, Vec_Ptr_t *vLive, Vec_Ptr_t * vFair )\n{\n    Aig_Obj_t *pObjOld, *pObj;\n    Abc_Obj_t *pNode;\n    int index, oldIndex, originalLatchNum = Saig_ManRegNum(pAigOld), strMatch, i;\n    char *dummyStr = (char *)malloc( sizeof(char) * 50 );\n\n    assert( Saig_ObjIsLo( pAigNew, pObjPivot ) );\n    Saig_ManForEachLo( pAigNew, pObj, index )\n        if( pObj == pObjPivot )\n            break;\n    if( index \u003c originalLatchNum )\n    {\n        oldIndex = Saig_ManPiNum( pAigOld ) + index;\n        pObjOld = Aig_ManCi( pAigOld, oldIndex );\n        pNode = Abc_NtkCi( pNtkOld, oldIndex );\n        assert( pObjOld-\u003epData == pObjPivot );\n        return Abc_ObjName( pNode );\n    }\n    else if( index == originalLatchNum )\n        return \"SAVED_LO\";\n    else if( index \u003e originalLatchNum \u0026\u0026 index \u003c 2 * originalLatchNum + 1 )\n    {\n        oldIndex = Saig_ManPiNum( pAigOld ) + index - originalLatchNum - 1;\n        pObjOld = Aig_ManCi( pAigOld, oldIndex );\n        pNode = Abc_NtkCi( pNtkOld, oldIndex );\n        sprintf( dummyStr, \"%s__%s\", Abc_ObjName( pNode ), \"SHADOW\");\n        return dummyStr;\n    }\n    else if( index \u003e= 2 * originalLatchNum + 1 \u0026\u0026 index \u003c 2 * originalLatchNum + 1 + Vec_PtrSize( vLive ) )\n    {\n        oldIndex = index - 2 * originalLatchNum - 1;\n        strMatch = 0;\n        Saig_ManForEachPo( pAigOld, pObj, i )\n        {\n            pNode = Abc_NtkPo( pNtkOld, i );\n            if( strstr( Abc_ObjName( pNode ), \"assert_fair\" ) != NULL )\n            {\n                if( strMatch == oldIndex )\n                {\n                    sprintf( dummyStr, \"%s__%s\", Abc_ObjName( pNode ), \"LIVENESS\");\n                    return dummyStr;\n                }\n                else\n                    strMatch++;\n            }\n        }\n    }\n    else if( index \u003e= 2 * originalLatchNum + 1 + Vec_PtrSize( vLive ) \u0026\u0026 index \u003c 2 * originalLatchNum + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) )\n    {\n        oldIndex = index - 2 * originalLatchNum - 1 - Vec_PtrSize( vLive );\n        strMatch = 0;\n        Saig_ManForEachPo( pAigOld, pObj, i )\n        {\n            pNode = Abc_NtkPo( pNtkOld, i );\n            if( strstr( Abc_ObjName( pNode ), \"assume_fair\" ) != NULL )\n            {\n                if( strMatch == oldIndex )\n                {\n                    sprintf( dummyStr, \"%s__%s\", Abc_ObjName( pNode ), \"FAIRNESS\");\n                    return dummyStr;\n                }\n                else\n                    strMatch++;\n            }\n        }\n    }\n    else\n        return \"UNKNOWN\";\n    return NULL;\n}",
+      "Draft": "func retrieveLOName(pNtkOld *Abc_Ntk_t, pAigOld *Aig_Man_t, pAigNew *Aig_Man_t, pObjPivot *Aig_Obj_t, vLive *Vec_Ptr_t, vFair *Vec_Ptr_t) string {\n    var pObjOld, pObj *Aig_Obj_t;\n    var pNode *Abc_Obj_t;\n    var index int32;\n    var oldIndex int32;\n    var originalLatchNum int32 = Saig_ManRegNum(pAigOld);\n    var strMatch int32;\n    var i int32;\n    var dummyStr string  = (char *)malloc( sizeof(char) * 50 );\n\n    assert(Saig_ObjIsLo( pAigNew, pObjPivot ), \"Saig_ObjIsLo( pAigNew, pObjPivot )\");\n    // inlining of macro Saig_ManForEachLo\n    for  index = 0; (index \u003c Saig_ManRegNum(pAigNew)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAigNew.vCis, index+Saig_ManPiNum(pAigNew))), 1); index++  {\n        if pObj == pObjPivot {\n            break; }\n    }\n    if index \u003c originalLatchNum {\n        oldIndex = Saig_ManPiNum( pAigOld ) + index;\n        pObjOld = Aig_ManCi( pAigOld, oldIndex );\n        pNode = Abc_NtkCi( pNtkOld, oldIndex );\n        assert(pObjOld.pData == pObjPivot, \"pObjOld.pData == pObjPivot\");\n        return Abc_ObjName( pNode );\n    \n    } else if index == originalLatchNum {\n        return \"SAVED_LO\";\n    } else if index \u003e originalLatchNum \u0026\u0026 index \u003c 2 * originalLatchNum + 1 {\n        oldIndex = Saig_ManPiNum( pAigOld ) + index - originalLatchNum - 1;\n        pObjOld = Aig_ManCi( pAigOld, oldIndex );\n        pNode = Abc_NtkCi( pNtkOld, oldIndex );\n        dummyStr = fmt.Sprintf(\"%s__%s\", Abc_ObjName( pNode ), \"SHADOW\");\n        return dummyStr;\n    \n    } else if index \u003e= 2 * originalLatchNum + 1 \u0026\u0026 index \u003c 2 * originalLatchNum + 1 + Vec_PtrSize( vLive ) {\n        oldIndex = index - 2 * originalLatchNum - 1;\n        strMatch = 0;\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPoNum(pAigOld)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAigOld.vCos, i)), 1); i++  {\n            pNode = Abc_NtkPo( pNtkOld, i );\n            if strstr( Abc_ObjName( pNode ), \"assert_fair\" ) != nil {\n                if strMatch == oldIndex {\n                    dummyStr = fmt.Sprintf(\"%s__%s\", Abc_ObjName( pNode ), \"LIVENESS\");\n                    return dummyStr;\n                \n                } else {\n                    strMatch++; }\n            }\n        }\n    \n    } else if index \u003e= 2 * originalLatchNum + 1 + Vec_PtrSize( vLive ) \u0026\u0026 index \u003c 2 * originalLatchNum + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) {\n        oldIndex = index - 2 * originalLatchNum - 1 - Vec_PtrSize( vLive );\n        strMatch = 0;\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPoNum(pAigOld)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAigOld.vCos, i)), 1); i++  {\n            pNode = Abc_NtkPo( pNtkOld, i );\n            if strstr( Abc_ObjName( pNode ), \"assume_fair\" ) != nil {\n                if strMatch == oldIndex {\n                    dummyStr = fmt.Sprintf(\"%s__%s\", Abc_ObjName( pNode ), \"FAIRNESS\");\n                    return dummyStr;\n                \n                } else {\n                    strMatch++; }\n            }\n        }\n    \n    } else {\n        return \"UNKNOWN\"; }\n    return nil;\n}"
+    },
+    {
+      "Name": "Aig_ManCiCleanupBiere",
+      "Start": 5882,
+      "End": 6155,
+      "BodyStart": 5932,
+      "Original": "static int Aig_ManCiCleanupBiere( Aig_Man_t * p )\n{\n    int nPisOld = Aig_ManCiNum(p);\n    \n    p-\u003enObjs[AIG_OBJ_CI] = Vec_PtrSize( p-\u003evCis );\n    if ( Aig_ManRegNum(p) )\n        p-\u003enTruePis = Aig_ManCiNum(p) - Aig_ManRegNum(p);\n    \n    return nPisOld - Aig_ManCiNum(p);\n}",
+      "Draft": "func Aig_ManCiCleanupBiere(p *Aig_Man_t) int32 {\n    var nPisOld int32  = Aig_ManCiNum(p);\n    \n    p.nObjs[AIG_OBJ_CI] = Vec_PtrSize( p.vCis );\n    if Aig_ManRegNum(p) {\n        p.nTruePis = Aig_ManCiNum(p) - Aig_ManRegNum(p); }\n    \n    return nPisOld - Aig_ManCiNum(p);\n}"
+    },
+    {
+      "Name": "Aig_ManCoCleanupBiere",
+      "Start": 6158,
+      "End": 6422,
+      "BodyStart": 6208,
+      "Original": "static int Aig_ManCoCleanupBiere( Aig_Man_t * p )\n{\n    int nPosOld = Aig_ManCoNum(p);\n\n    p-\u003enObjs[AIG_OBJ_CO] = Vec_PtrSize( p-\u003evCos );\n    if ( Aig_ManRegNum(p) )\n        p-\u003enTruePos = Aig_ManCoNum(p) - Aig_ManRegNum(p);\n    return nPosOld - Aig_ManCoNum(p);\n}",
+      "Draft": "func Aig_ManCoCleanupBiere(p *Aig_Man_t) int32 {\n    var nPosOld int32  = Aig_ManCoNum(p);\n\n    p.nObjs[AIG_OBJ_CO] = Vec_PtrSize( p.vCos );\n    if Aig_ManRegNum(p) {\n        p.nTruePos = Aig_ManCoNum(p) - Aig_ManRegNum(p); }\n    return nPosOld - Aig_ManCoNum(p);\n}"
+    },
+    {
+      "Name": "LivenessToSafetyTransformationSim",
+      "Start": 6424,
+      "End": 17861,
+      "BodyStart": 6548,
+      "Original": "static Aig_Man_t * LivenessToSafetyTransformationSim( Abc_Ntk_t * pNtk, Aig_Man_t * p, Vec_Ptr_t *vLive, Vec_Ptr_t *vFair )\n{\n    Aig_Man_t * pNew;\n    int i, nRegCount;\n    Aig_Obj_t * pObjSavePi;\n    Aig_Obj_t *pObjSavedLo, *pObjSavedLi;\n    Aig_Obj_t *pObj, *pMatch;\n    Aig_Obj_t *pObjSaveOrSaved, *pObjSavedLoAndEquality;\n    Aig_Obj_t *pObjShadowLo, *pObjShadowLi, *pObjShadowLiDriver;\n    Aig_Obj_t *pObjXor, *pObjXnor, *pObjAndAcc, *pObjAndAccDummy;\n    Aig_Obj_t *pObjLive, *pObjFair, *pObjSafetyGate;\n    Aig_Obj_t *pObjSafetyPropertyOutput;\n    Aig_Obj_t *pDriverImage;\n    char *nodeName;\n    int piCopied = 0, liCopied = 0, loCopied = 0, liCreated = 0, loCreated = 0, liveLatch = 0, fairLatch = 0;\n    \n    vecPis = Vec_PtrAlloc( Saig_ManPiNum( p ) + 1);\n    vecPiNames = Vec_PtrAlloc( Saig_ManPiNum( p ) + 1);\n\n    vecLos = Vec_PtrAlloc( Saig_ManRegNum( p )*2 + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) );\n    vecLoNames = Vec_PtrAlloc( Saig_ManRegNum( p )*2 + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) );\n\n#ifdef DUPLICATE_CKT_DEBUG\n    printf(\"\\nCode is compiled in DEBUG mode, the input-output behavior will be the same as the original circuit\\n\");\n    printf(\"Press any key to continue...\");\n    scanf(\"%c\", \u0026c);\n#endif\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNew = Aig_ManStart( 2 * Aig_ManObjNumMax(p) );\n    pNew-\u003epName = Abc_UtilStrsav( \"live2safe\" );\n    pNew-\u003epSpec = NULL;\n    \n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n    pObj = Aig_ManConst1( p );\n    pObj-\u003epData = Aig_ManConst1( pNew );\n\n    //****************************************************************\n    // Step 3: create true PIs\n    //****************************************************************\n    Saig_ManForEachPi( p, pObj, i )\n    {\n        piCopied++;\n        pObj-\u003epData = Aig_ObjCreateCi(pNew);\n        Vec_PtrPush( vecPis, pObj-\u003epData );\n        nodeName = Abc_UtilStrsav(Abc_ObjName( Abc_NtkPi( pNtk, i ) ));\n        Vec_PtrPush( vecPiNames, nodeName );\n    }\n\n    //****************************************************************\n    // Step 4: create the special Pi corresponding to SAVE\n    //****************************************************************\n#ifndef DUPLICATE_CKT_DEBUG\n    pObjSavePi = Aig_ObjCreateCi( pNew );\n    nodeName = Abc_UtilStrsav(\"SAVE_BIERE\"),\n    Vec_PtrPush( vecPiNames, nodeName );\n#endif\n        \n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n    Saig_ManForEachLo( p, pObj, i )\n    {\n        loCopied++;\n        pObj-\u003epData = Aig_ObjCreateCi(pNew);\n        Vec_PtrPush( vecLos, pObj-\u003epData );\n        nodeName = Abc_UtilStrsav(Abc_ObjName( Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i ) ));\n        Vec_PtrPush( vecLoNames, nodeName );\n    }\n\n    //****************************************************************\n    // Step 6: create \"saved\" register output\n    //****************************************************************\n#ifndef DUPLICATE_CKT_DEBUG\n    loCreated++;\n    pObjSavedLo = Aig_ObjCreateCi( pNew );\n    Vec_PtrPush( vecLos, pObjSavedLo );\n    nodeName = Abc_UtilStrsav(\"SAVED_LO\");\n    Vec_PtrPush( vecLoNames, nodeName );\n#endif\n\n    //****************************************************************\n    // Step 7: create the OR gate and the AND gate directly fed by \"SAVE\" Pi\n    //****************************************************************\n#ifndef DUPLICATE_CKT_DEBUG\n    pObjSaveOrSaved = Aig_Or( pNew, pObjSavePi, pObjSavedLo );\n    //pObjSaveAndNotSaved = Aig_And( pNew, pObjSavePi, Aig_Not(pObjSavedLo) );\n#endif\n\n    //********************************************************************\n    // Step 8: create internal nodes\n    //********************************************************************\n    Aig_ManForEachNode( p, pObj, i )\n    {\n        pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n\n    //********************************************************************\n    // Step 9: create the safety property output gate\n    // create the safety property output gate, this will be the sole true PO \n    // of the whole circuit, discuss with Sat/Alan for an alternative implementation\n    //********************************************************************\n#ifndef DUPLICATE_CKT_DEBUG\n    pObjSafetyPropertyOutput = Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Aig_ObjFanin0(pObj)-\u003epData );\n#endif\n\n    //********************************************************************\n    // DEBUG: To recreate the same circuit, at least from the input and output\n    // behavior, we need to copy the original PO\n    //********************************************************************\n#ifdef DUPLICATE_CKT_DEBUG\n    Saig_ManForEachPo( p, pObj, i )\n    {\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n#endif\n\n    // create register inputs for the original registers\n    nRegCount = 0;\n    \n    Saig_ManForEachLo( p, pObj, i )\n    {\n        pMatch = Saig_ObjLoToLi( p, pObj );\n        //Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pMatch) );\n        Aig_ObjCreateCo( pNew, Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pMatch)-\u003epData, Aig_ObjFaninC0( pMatch ) ) );\n        nRegCount++;\n        liCopied++;\n    }\n\n    // create register input corresponding to the register \"saved\"\n#ifndef DUPLICATE_CKT_DEBUG\n    pObjSavedLi = Aig_ObjCreateCo( pNew, pObjSaveOrSaved );\n    nRegCount++;\n    liCreated++;\n\n    pObjAndAcc = NULL;\n\n    // create the family of shadow registers, then create the cascade of Xnor and And gates for the comparator \n    Saig_ManForEachLo( p, pObj, i )\n    {\n        pObjShadowLo = Aig_ObjCreateCi( pNew );\n\n#ifdef PROPAGATE_NAMES\n        Vec_PtrPush( vecLos, pObjShadowLo );\n        nodeName = (char *)malloc( strlen( Abc_ObjName( Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i ) ) ) + 10 );\n        sprintf( nodeName, \"%s__%s\", Abc_ObjName( Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i ) ), \"SHADOW\" );\n        Vec_PtrPush( vecLoNames, nodeName );\n#endif\n\n        pObjShadowLiDriver = Aig_Mux( pNew, pObjSavePi, (Aig_Obj_t *)pObj-\u003epData, pObjShadowLo );\n        pObjShadowLi = Aig_ObjCreateCo( pNew, pObjShadowLiDriver );\n        nRegCount++;\n        loCreated++; liCreated++;\n        \n        pObjXor = Aig_Exor( pNew, (Aig_Obj_t *)pObj-\u003epData, pObjShadowLo );\n        pObjXnor = Aig_Not( pObjXor );\n        if( pObjAndAcc == NULL )\n            pObjAndAcc = pObjXnor;\n        else\n        {\n            pObjAndAccDummy = pObjAndAcc;\n            pObjAndAcc = Aig_And( pNew, pObjXnor, pObjAndAccDummy );\n        }\n    }\n\n    // create the AND gate whose output will be the signal \"looped\"\n    pObjSavedLoAndEquality = Aig_And( pNew, pObjSavedLo, pObjAndAcc );\n    \n    // create the master AND gate and corresponding AND and OR logic for the liveness properties\n    pObjAndAcc = NULL;\n    if( vLive == NULL || Vec_PtrSize( vLive ) == 0 )\n        printf(\"\\nCircuit without any liveness property\\n\");\n    else\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vLive, pObj, i )\n        {\n            //assert( Aig_ObjIsNode( Aig_ObjChild0( pObj ) ) );\n            //Aig_ObjPrint( pNew, pObj );\n            liveLatch++;\n            pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj ))-\u003epData, Aig_ObjFaninC0(pObj));\n            pObjShadowLo = Aig_ObjCreateCi( pNew );\n\n#ifdef PROPAGATE_NAMES\n        Vec_PtrPush( vecLos, pObjShadowLo );\n        nodeName = (char *)malloc( strlen( Abc_ObjName( Abc_NtkPo( pNtk, getPoIndex( p, pObj ) ) ) ) + 12 );\n        sprintf( nodeName, \"%s__%s\", Abc_ObjName( Abc_NtkPo( pNtk, getPoIndex( p, pObj ) ) ), \"LIVENESS\" );\n        Vec_PtrPush( vecLoNames, nodeName );\n#endif\n\n            pObjShadowLiDriver = Aig_Or( pNew, Aig_Mux(pNew, pObjSavePi, Aig_Not(Aig_ManConst1(pNew)), pObjShadowLo), \n                                                Aig_And( pNew, pDriverImage, pObjSaveOrSaved ) );\n            pObjShadowLi = Aig_ObjCreateCo( pNew, pObjShadowLiDriver );\n            nRegCount++;\n            loCreated++; liCreated++;\n            \n            if( pObjAndAcc == NULL )\n                pObjAndAcc = pObjShadowLo;\n            else\n            {\n                pObjAndAccDummy = pObjAndAcc;\n                pObjAndAcc = Aig_And( pNew, pObjShadowLo, pObjAndAccDummy );\n            }\n        }\n    }\n\n    if( pObjAndAcc != NULL )\n        pObjLive = pObjAndAcc;\n    else\n        pObjLive = Aig_ManConst1( pNew );\n    \n    // create the master AND gate and corresponding AND and OR logic for the fairness properties\n    pObjAndAcc = NULL;\n    if( vFair == NULL || Vec_PtrSize( vFair ) == 0 )\n        printf(\"\\nCircuit without any fairness property\\n\");\n    else\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vFair, pObj, i )\n        {\n            fairLatch++;\n            //assert( Aig_ObjIsNode( Aig_ObjChild0( pObj ) ) );\n            pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj ))-\u003epData, Aig_ObjFaninC0(pObj));\n            pObjShadowLo = Aig_ObjCreateCi( pNew );\n\n#ifdef PROPAGATE_NAMES\n        Vec_PtrPush( vecLos, pObjShadowLo );\n        nodeName = (char *)malloc( strlen( Abc_ObjName( Abc_NtkPo( pNtk, getPoIndex( p, pObj ) ) ) ) + 12 );\n        sprintf( nodeName, \"%s__%s\", Abc_ObjName( Abc_NtkPo( pNtk, getPoIndex( p, pObj ) ) ), \"FAIRNESS\" );\n        Vec_PtrPush( vecLoNames, nodeName );\n#endif\n\n            pObjShadowLiDriver = Aig_Or( pNew, Aig_Mux(pNew, pObjSavePi, Aig_Not(Aig_ManConst1(pNew)), pObjShadowLo), \n                                    Aig_And( pNew, pDriverImage, pObjSaveOrSaved ) );\n            pObjShadowLi = Aig_ObjCreateCo( pNew, pObjShadowLiDriver );\n            nRegCount++;\n            loCreated++; liCreated++;\n            \n            if( pObjAndAcc == NULL )\n                pObjAndAcc = pObjShadowLo;\n            else\n            {\n                pObjAndAccDummy = pObjAndAcc;\n                pObjAndAcc = Aig_And( pNew, pObjShadowLo, pObjAndAccDummy );\n            }\n        }\n    }\n\n    if( pObjAndAcc != NULL )\n        pObjFair = pObjAndAcc;\n    else\n        pObjFair = Aig_ManConst1( pNew );\n    \n    //pObjSafetyGate = Aig_Exor( pNew, Aig_Not(Aig_ManConst1( pNew )), Aig_And( pNew, pObjSavedLoAndEquality, Aig_And( pNew, pObjFair, Aig_Not( pObjLive ) ) ) );\n    pObjSafetyGate = Aig_And( pNew, pObjSavedLoAndEquality, Aig_And( pNew, pObjFair, Aig_Not( pObjLive ) ) );\n    \n    Aig_ObjPatchFanin0( pNew, pObjSafetyPropertyOutput, pObjSafetyGate );\n#endif\n\n    Aig_ManSetRegNum( pNew, nRegCount );\n\n    Aig_ManCiCleanupBiere( pNew );\n    Aig_ManCoCleanupBiere( pNew );\n    \n    Aig_ManCleanup( pNew );\n    assert( Aig_ManCheck( pNew ) );\n    \n#ifndef DUPLICATE_CKT_DEBUG\n    assert((Aig_Obj_t *)Vec_PtrEntry(pNew-\u003evCos, Saig_ManPoNum(pNew)+Aig_ObjCioId(pObjSavedLo)-Saig_ManPiNum(p)-1) == pObjSavedLi);\n    assert( Saig_ManPoNum( pNew ) == 1 );\n    assert( Saig_ManPiNum( p ) + 1 == Saig_ManPiNum( pNew ) );\n    assert( Saig_ManRegNum( pNew ) == Saig_ManRegNum( p ) * 2 + 1 + liveLatch + fairLatch );\n#endif\n\n    return pNew;\n}",
+      "Draft": "func LivenessToSafetyTransformationSim(pNtk *Abc_Ntk_t, p *Aig_Man_t, vLive *Vec_Ptr_t, vFair *Vec_Ptr_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var i, nRegCount int32;\n    var pObjSavePi *Aig_Obj_t;\n    var pObjSavedLo, pObjSavedLi *Aig_Obj_t;\n    var pObj, pMatch *Aig_Obj_t;\n    var pObjSaveOrSaved, pObjSavedLoAndEquality *Aig_Obj_t;\n    var pObjShadowLo, pObjShadowLi, pObjShadowLiDriver *Aig_Obj_t;\n    var pObjXor, pObjXnor, pObjAndAcc, pObjAndAccDummy *Aig_Obj_t;\n    var pObjLive, pObjFair, pObjSafetyGate *Aig_Obj_t;\n    var pObjSafetyPropertyOutput *Aig_Obj_t;\n    var pDriverImage *Aig_Obj_t;\n    var nodeName string;\n    var piCopied, liCopied, loCopied, liCreated, loCreated, liveLatch, fairLatch int32;\n    \n    vecPis = Vec_PtrAlloc( Saig_ManPiNum( p ) + 1);\n    vecPiNames = Vec_PtrAlloc( Saig_ManPiNum( p ) + 1);\n\n    vecLos = Vec_PtrAlloc( Saig_ManRegNum( p )*2 + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) );\n    vecLoNames = Vec_PtrAlloc( Saig_ManRegNum( p )*2 + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) );\n\n#ifdef DUPLICATE_CKT_DEBUG\n    printf(\"\\nCode is compiled in DEBUG mode, the input-output behavior will be the same as the original circuit\\n\");\n    printf(\"Press any key to continue...\");\n    scanf(\"%c\", \u0026c);\n#endif\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNew = Aig_ManStart( 2 * Aig_ManObjNumMax(p) );\n    pNew.pName = Abc_UtilStrsav( \"live2safe\" );\n    pNew.pSpec = nil;\n    \n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n    pObj = Aig_ManConst1( p );\n    pObj.pData = Aig_ManConst1( pNew );\n\n    //****************************************************************\n    // Step 3: create true PIs\n    //****************************************************************\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        piCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNew);\n        Vec_PtrPush( vecPis, pObj.pData );\n        nodeName = Abc_UtilStrsav(Abc_ObjName( Abc_NtkPi( pNtk, i ) ));\n        Vec_PtrPush( vecPiNames, nodeName );\n    }\n\n    //****************************************************************\n    // Step 4: create the special Pi corresponding to SAVE\n    //****************************************************************\n#ifndef DUPLICATE_CKT_DEBUG\n    pObjSavePi = Aig_ObjCreateCi( pNew );\n    nodeName = Abc_UtilStrsav(\"SAVE_BIERE\"),\n    Vec_PtrPush( vecPiNames, nodeName );\n#endif\n        \n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        loCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNew);\n        Vec_PtrPush( vecLos, pObj.pData );\n        nodeName = Abc_UtilStrsav(Abc_ObjName( Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i ) ));\n        Vec_PtrPush( vecLoNames, nodeName );\n    }\n\n    //****************************************************************\n    // Step 6: create \"saved\" register output\n    //****************************************************************\n#ifndef DUPLICATE_CKT_DEBUG\n    loCreated++;\n    pObjSavedLo = Aig_ObjCreateCi( pNew );\n    Vec_PtrPush( vecLos, pObjSavedLo );\n    nodeName = Abc_UtilStrsav(\"SAVED_LO\");\n    Vec_PtrPush( vecLoNames, nodeName );\n#endif\n\n    //****************************************************************\n    // Step 7: create the OR gate and the AND gate directly fed by \"SAVE\" Pi\n    //****************************************************************\n#ifndef DUPLICATE_CKT_DEBUG\n    pObjSaveOrSaved = Aig_Or( pNew, pObjSavePi, pObjSavedLo );\n    //pObjSaveAndNotSaved = Aig_And( pNew, pObjSavePi, Aig_Not(pObjSavedLo) );\n#endif\n\n    //********************************************************************\n    // Step 8: create internal nodes\n    //********************************************************************\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n    }\n\n    //********************************************************************\n    // Step 9: create the safety property output gate\n    // create the safety property output gate, this will be the sole true PO \n    // of the whole circuit, discuss with Sat/Alan for an alternative implementation\n    //********************************************************************\n#ifndef DUPLICATE_CKT_DEBUG\n    pObjSafetyPropertyOutput = Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Aig_ObjFanin0(pObj)-\u003epData );\n#endif\n\n    //********************************************************************\n    // DEBUG: To recreate the same circuit, at least from the input and output\n    // behavior, we need to copy the original PO\n    //********************************************************************\n#ifdef DUPLICATE_CKT_DEBUG\n    Saig_ManForEachPo( p, pObj, i )\n    {\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n#endif\n\n    // create register inputs for the original registers\n    nRegCount = 0;\n    \n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        pMatch = Saig_ObjLoToLi( p, pObj );\n        //Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pMatch) );\n        Aig_ObjCreateCo( pNew, Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pMatch).pData, Aig_ObjFaninC0( pMatch ) ) );\n        nRegCount++;\n        liCopied++;\n    }\n\n    // create register input corresponding to the register \"saved\"\n#ifndef DUPLICATE_CKT_DEBUG\n    pObjSavedLi = Aig_ObjCreateCo( pNew, pObjSaveOrSaved );\n    nRegCount++;\n    liCreated++;\n\n    pObjAndAcc = NULL;\n\n    // create the family of shadow registers, then create the cascade of Xnor and And gates for the comparator \n    Saig_ManForEachLo( p, pObj, i )\n    {\n        pObjShadowLo = Aig_ObjCreateCi( pNew );\n\n#ifdef PROPAGATE_NAMES\n        Vec_PtrPush( vecLos, pObjShadowLo );\n        nodeName = (char *)malloc( strlen( Abc_ObjName( Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i ) ) ) + 10 );\n        sprintf( nodeName, \"%s__%s\", Abc_ObjName( Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i ) ), \"SHADOW\" );\n        Vec_PtrPush( vecLoNames, nodeName );\n#endif\n\n        pObjShadowLiDriver = Aig_Mux( pNew, pObjSavePi, (Aig_Obj_t *)pObj-\u003epData, pObjShadowLo );\n        pObjShadowLi = Aig_ObjCreateCo( pNew, pObjShadowLiDriver );\n        nRegCount++;\n        loCreated++; liCreated++;\n        \n        pObjXor = Aig_Exor( pNew, (Aig_Obj_t *)pObj-\u003epData, pObjShadowLo );\n        pObjXnor = Aig_Not( pObjXor );\n        if( pObjAndAcc == NULL )\n            pObjAndAcc = pObjXnor;\n        else\n        {\n            pObjAndAccDummy = pObjAndAcc;\n            pObjAndAcc = Aig_And( pNew, pObjXnor, pObjAndAccDummy );\n        }\n    }\n\n    // create the AND gate whose output will be the signal \"looped\"\n    pObjSavedLoAndEquality = Aig_And( pNew, pObjSavedLo, pObjAndAcc );\n    \n    // create the master AND gate and corresponding AND and OR logic for the liveness properties\n    pObjAndAcc = NULL;\n    if( vLive == NULL || Vec_PtrSize( vLive ) == 0 )\n        printf(\"\\nCircuit without any liveness property\\n\");\n    else\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vLive, pObj, i )\n        {\n            //assert( Aig_ObjIsNode( Aig_ObjChild0( pObj ) ) );\n            //Aig_ObjPrint( pNew, pObj );\n            liveLatch++;\n            pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj ))-\u003epData, Aig_ObjFaninC0(pObj));\n            pObjShadowLo = Aig_ObjCreateCi( pNew );\n\n#ifdef PROPAGATE_NAMES\n        Vec_PtrPush( vecLos, pObjShadowLo );\n        nodeName = (char *)malloc( strlen( Abc_ObjName( Abc_NtkPo( pNtk, getPoIndex( p, pObj ) ) ) ) + 12 );\n        sprintf( nodeName, \"%s__%s\", Abc_ObjName( Abc_NtkPo( pNtk, getPoIndex( p, pObj ) ) ), \"LIVENESS\" );\n        Vec_PtrPush( vecLoNames, nodeName );\n#endif\n\n            pObjShadowLiDriver = Aig_Or( pNew, Aig_Mux(pNew, pObjSavePi, Aig_Not(Aig_ManConst1(pNew)), pObjShadowLo), \n                                                Aig_And( pNew, pDriverImage, pObjSaveOrSaved ) );\n            pObjShadowLi = Aig_ObjCreateCo( pNew, pObjShadowLiDriver );\n            nRegCount++;\n            loCreated++; liCreated++;\n            \n            if( pObjAndAcc == NULL )\n                pObjAndAcc = pObjShadowLo;\n            else\n            {\n                pObjAndAccDummy = pObjAndAcc;\n                pObjAndAcc = Aig_And( pNew, pObjShadowLo, pObjAndAccDummy );\n            }\n        }\n    }\n\n    if( pObjAndAcc != NULL )\n        pObjLive = pObjAndAcc;\n    else\n        pObjLive = Aig_ManConst1( pNew );\n    \n    // create the master AND gate and corresponding AND and OR logic for the fairness properties\n    pObjAndAcc = NULL;\n    if( vFair == NULL || Vec_PtrSize( vFair ) == 0 )\n        printf(\"\\nCircuit without any fairness property\\n\");\n    else\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vFair, pObj, i )\n        {\n            fairLatch++;\n            //assert( Aig_ObjIsNode( Aig_ObjChild0( pObj ) ) );\n            pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj ))-\u003epData, Aig_ObjFaninC0(pObj));\n            pObjShadowLo = Aig_ObjCreateCi( pNew );\n\n#ifdef PROPAGATE_NAMES\n        Vec_PtrPush( vecLos, pObjShadowLo );\n        nodeName = (char *)malloc( strlen( Abc_ObjName( Abc_NtkPo( pNtk, getPoIndex( p, pObj ) ) ) ) + 12 );\n        sprintf( nodeName, \"%s__%s\", Abc_ObjName( Abc_NtkPo( pNtk, getPoIndex( p, pObj ) ) ), \"FAIRNESS\" );\n        Vec_PtrPush( vecLoNames, nodeName );\n#endif\n\n            pObjShadowLiDriver = Aig_Or( pNew, Aig_Mux(pNew, pObjSavePi, Aig_Not(Aig_ManConst1(pNew)), pObjShadowLo), \n                                    Aig_And( pNew, pDriverImage, pObjSaveOrSaved ) );\n            pObjShadowLi = Aig_ObjCreateCo( pNew, pObjShadowLiDriver );\n            nRegCount++;\n            loCreated++; liCreated++;\n            \n            if( pObjAndAcc == NULL )\n                pObjAndAcc = pObjShadowLo;\n            else\n            {\n                pObjAndAccDummy = pObjAndAcc;\n                pObjAndAcc = Aig_And( pNew, pObjShadowLo, pObjAndAccDummy );\n            }\n        }\n    }\n\n    if( pObjAndAcc != NULL )\n        pObjFair = pObjAndAcc;\n    else\n        pObjFair = Aig_ManConst1( pNew );\n    \n    //pObjSafetyGate = Aig_Exor( pNew, Aig_Not(Aig_ManConst1( pNew )), Aig_And( pNew, pObjSavedLoAndEquality, Aig_And( pNew, pObjFair, Aig_Not( pObjLive ) ) ) );\n    pObjSafetyGate = Aig_And( pNew, pObjSavedLoAndEquality, Aig_And( pNew, pObjFair, Aig_Not( pObjLive ) ) );\n    \n    Aig_ObjPatchFanin0( pNew, pObjSafetyPropertyOutput, pObjSafetyGate );\n#endif\n\n    Aig_ManSetRegNum( pNew, nRegCount );\n\n    Aig_ManCiCleanupBiere( pNew );\n    Aig_ManCoCleanupBiere( pNew );\n    \n    Aig_ManCleanup( pNew );\n    assert(Aig_ManCheck( pNew ), \"Aig_ManCheck( pNew )\");\n    \n#ifndef DUPLICATE_CKT_DEBUG\n    assert((Aig_Obj_t *)Vec_PtrEntry(pNew-\u003evCos, Saig_ManPoNum(pNew)+Aig_ObjCioId(pObjSavedLo)-Saig_ManPiNum(p)-1) == pObjSavedLi);\n    assert( Saig_ManPoNum( pNew ) == 1 );\n    assert( Saig_ManPiNum( p ) + 1 == Saig_ManPiNum( pNew ) );\n    assert( Saig_ManRegNum( pNew ) == Saig_ManRegNum( p ) * 2 + 1 + liveLatch + fairLatch );\n#endif\n\n    return pNew;\n}"
+    },
+    {
+      "Name": "LivenessToSafetyTransformationOneStepLoopSim",
+      "Start": 17864,
+      "End": 26120,
+      "BodyStart": 17999,
+      "Original": "static Aig_Man_t * LivenessToSafetyTransformationOneStepLoopSim( Abc_Ntk_t * pNtk, Aig_Man_t * p, Vec_Ptr_t *vLive, Vec_Ptr_t *vFair )\n{\n    Aig_Man_t * pNew;\n    int i, nRegCount;\n    Aig_Obj_t * pObjSavePi;\n    Aig_Obj_t *pObj, *pMatch;\n    Aig_Obj_t *pObjSavedLoAndEquality;\n    Aig_Obj_t *pObjXor, *pObjXnor, *pObjAndAcc, *pObjAndAccDummy;\n    Aig_Obj_t *pObjLive, *pObjFair, *pObjSafetyGate;\n    Aig_Obj_t *pObjSafetyPropertyOutput;\n    Aig_Obj_t *pDriverImage;\n    Aig_Obj_t *pObjCorrespondingLi;\n\n\n    char *nodeName;\n    int piCopied = 0, liCopied = 0, loCopied = 0;//, liCreated = 0, loCreated = 0, piVecIndex = 0;\n    \n    vecPis = Vec_PtrAlloc( Saig_ManPiNum( p ) + 1);\n    vecPiNames = Vec_PtrAlloc( Saig_ManPiNum( p ) + 1);\n\n    vecLos = Vec_PtrAlloc( Saig_ManRegNum( p )*2 + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) );\n    vecLoNames = Vec_PtrAlloc( Saig_ManRegNum( p )*2 + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) );\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNew = Aig_ManStart( 2 * Aig_ManObjNumMax(p) );\n    pNew-\u003epName = Abc_UtilStrsav( \"live2safe\" );\n    pNew-\u003epSpec = NULL;\n    \n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n    pObj = Aig_ManConst1( p );\n    pObj-\u003epData = Aig_ManConst1( pNew );\n\n    //****************************************************************\n    // Step 3: create true PIs\n    //****************************************************************\n    Saig_ManForEachPi( p, pObj, i )\n    {\n        piCopied++;\n        pObj-\u003epData = Aig_ObjCreateCi(pNew);\n        Vec_PtrPush( vecPis, pObj-\u003epData );\n        nodeName = Abc_UtilStrsav(Abc_ObjName( Abc_NtkPi( pNtk, i ) ));\n        Vec_PtrPush( vecPiNames, nodeName );\n    }\n\n    //****************************************************************\n    // Step 4: create the special Pi corresponding to SAVE\n    //****************************************************************\n    pObjSavePi = Aig_ObjCreateCi( pNew );\n    nodeName = \"SAVE_BIERE\",\n    Vec_PtrPush( vecPiNames, nodeName );\n        \n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n    Saig_ManForEachLo( p, pObj, i )\n    {\n        loCopied++;\n        pObj-\u003epData = Aig_ObjCreateCi(pNew);\n        Vec_PtrPush( vecLos, pObj-\u003epData );\n        nodeName = Abc_UtilStrsav(Abc_ObjName( Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i ) ));\n        Vec_PtrPush( vecLoNames, nodeName );\n    }\n\n    //****************************************************************\n    // Step 6: create \"saved\" register output\n    //****************************************************************\n\n#if 0\n    loCreated++;\n    pObjSavedLo = Aig_ObjCreateCi( pNew );\n    Vec_PtrPush( vecLos, pObjSavedLo );\n    nodeName = \"SAVED_LO\";\n    Vec_PtrPush( vecLoNames, nodeName );\n#endif\n\n    //****************************************************************\n    // Step 7: create the OR gate and the AND gate directly fed by \"SAVE\" Pi\n    //****************************************************************\n#if 0\n    pObjSaveOrSaved = Aig_Or( pNew, pObjSavePi, pObjSavedLo );\n    pObjSaveAndNotSaved = Aig_And( pNew, pObjSavePi, Aig_Not(pObjSavedLo) );\n#endif\n\n    //********************************************************************\n    // Step 8: create internal nodes\n    //********************************************************************\n    Aig_ManForEachNode( p, pObj, i )\n    {\n        pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n\n    //********************************************************************\n    // Step 9: create the safety property output gate\n    // create the safety property output gate, this will be the sole true PO \n    // of the whole circuit, discuss with Sat/Alan for an alternative implementation\n    //********************************************************************\n\n    pObjSafetyPropertyOutput = Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Aig_ObjFanin0(pObj)-\u003epData );\n\n    // create register inputs for the original registers\n    nRegCount = 0;\n    \n    Saig_ManForEachLo( p, pObj, i )\n    {\n        pMatch = Saig_ObjLoToLi( p, pObj );\n        //Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pMatch) );\n        Aig_ObjCreateCo( pNew, Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pMatch)-\u003epData, Aig_ObjFaninC0( pMatch ) ) );\n        nRegCount++;\n        liCopied++;\n    }\n\n#if 0\n    // create register input corresponding to the register \"saved\"\n    pObjSavedLi = Aig_ObjCreateCo( pNew, pObjSaveOrSaved );\n    nRegCount++;\n    liCreated++;\n#endif\n\n    pObjAndAcc = NULL;\n\n    //****************************************************************************************************\n    //For detection of loop of length 1 we do not need any shadow register, we only need equality detector\n    //between Lo_j and Li_j and then a cascade of AND gates\n    //****************************************************************************************************\n\n    Saig_ManForEachLo( p, pObj, i )\n    {\n        pObjCorrespondingLi = Saig_ObjLoToLi( p, pObj );\n        \n        pObjXor = Aig_Exor( pNew, (Aig_Obj_t *)pObj-\u003epData,  Aig_NotCond( (Aig_Obj_t *)Aig_ObjFanin0( pObjCorrespondingLi )-\u003epData, Aig_ObjFaninC0( pObjCorrespondingLi ) ) );\n        pObjXnor = Aig_Not( pObjXor );\n        \n        if( pObjAndAcc == NULL )\n            pObjAndAcc = pObjXnor;\n        else\n        {\n            pObjAndAccDummy = pObjAndAcc;\n            pObjAndAcc = Aig_And( pNew, pObjXnor, pObjAndAccDummy );\n        }\n    }\n\n    // create the AND gate whose output will be the signal \"looped\"\n    pObjSavedLoAndEquality = Aig_And( pNew, pObjSavePi, pObjAndAcc );\n    \n    // create the master AND gate and corresponding AND and OR logic for the liveness properties\n    pObjAndAcc = NULL;\n    if( vLive == NULL || Vec_PtrSize( vLive ) == 0 )\n        printf(\"\\nCircuit without any liveness property\\n\");\n    else\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vLive, pObj, i )\n        {\n            pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj ))-\u003epData, Aig_ObjFaninC0(pObj));\n            if( pObjAndAcc == NULL )\n                pObjAndAcc = pDriverImage;\n            else\n            {\n                pObjAndAccDummy = pObjAndAcc;\n                pObjAndAcc = Aig_And( pNew, pDriverImage, pObjAndAccDummy );\n            }\n        }\n    }\n\n    if( pObjAndAcc != NULL )\n        pObjLive = pObjAndAcc;\n    else\n        pObjLive = Aig_ManConst1( pNew );\n    \n    // create the master AND gate and corresponding AND and OR logic for the fairness properties\n    pObjAndAcc = NULL;\n    if( vFair == NULL || Vec_PtrSize( vFair ) == 0 )\n        printf(\"\\nCircuit without any fairness property\\n\");\n    else\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vFair, pObj, i )\n        {\n            pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj ))-\u003epData, Aig_ObjFaninC0(pObj));\n            if( pObjAndAcc == NULL )\n                pObjAndAcc = pDriverImage;\n            else\n            {\n                pObjAndAccDummy = pObjAndAcc;\n                pObjAndAcc = Aig_And( pNew, pDriverImage, pObjAndAccDummy );\n            }\n        }\n    }\n\n    if( pObjAndAcc != NULL )\n        pObjFair = pObjAndAcc;\n    else\n        pObjFair = Aig_ManConst1( pNew );\n    \n    pObjSafetyGate = Aig_And( pNew, pObjSavedLoAndEquality, Aig_And( pNew, pObjFair, Aig_Not( pObjLive ) ) );\n    \n    Aig_ObjPatchFanin0( pNew, pObjSafetyPropertyOutput, pObjSafetyGate );\n\n    Aig_ManSetRegNum( pNew, nRegCount );\n\n    printf(\"\\nSaig_ManPiNum = %d, Reg Num = %d, before everything, before Pi cleanup\\n\", Vec_PtrSize( pNew-\u003evCis ), pNew-\u003enRegs );\n\n    Aig_ManCiCleanupBiere( pNew );\n    Aig_ManCoCleanupBiere( pNew );\n\n    Aig_ManCleanup( pNew );\n    \n    assert( Aig_ManCheck( pNew ) );\n    \n    return pNew;\n}",
+      "Draft": "func LivenessToSafetyTransformationOneStepLoopSim(pNtk *Abc_Ntk_t, p *Aig_Man_t, vLive *Vec_Ptr_t, vFair *Vec_Ptr_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var i, nRegCount int32;\n    var pObjSavePi *Aig_Obj_t;\n    var pObj, pMatch *Aig_Obj_t;\n    var pObjSavedLoAndEquality *Aig_Obj_t;\n    var pObjXor, pObjXnor, pObjAndAcc, pObjAndAccDummy *Aig_Obj_t;\n    var pObjLive, pObjFair, pObjSafetyGate *Aig_Obj_t;\n    var pObjSafetyPropertyOutput *Aig_Obj_t;\n    var pDriverImage *Aig_Obj_t;\n    var pObjCorrespondingLi *Aig_Obj_t;\n\n\n    var nodeName string;\n    var piCopied, liCopied, loCopied int32;//, liCreated = 0, loCreated = 0, piVecIndex = 0;\n    \n    vecPis = Vec_PtrAlloc( Saig_ManPiNum( p ) + 1);\n    vecPiNames = Vec_PtrAlloc( Saig_ManPiNum( p ) + 1);\n\n    vecLos = Vec_PtrAlloc( Saig_ManRegNum( p )*2 + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) );\n    vecLoNames = Vec_PtrAlloc( Saig_ManRegNum( p )*2 + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) );\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNew = Aig_ManStart( 2 * Aig_ManObjNumMax(p) );\n    pNew.pName = Abc_UtilStrsav( \"live2safe\" );\n    pNew.pSpec = nil;\n    \n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n    pObj = Aig_ManConst1( p );\n    pObj.pData = Aig_ManConst1( pNew );\n\n    //****************************************************************\n    // Step 3: create true PIs\n    //****************************************************************\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        piCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNew);\n        Vec_PtrPush( vecPis, pObj.pData );\n        nodeName = Abc_UtilStrsav(Abc_ObjName( Abc_NtkPi( pNtk, i ) ));\n        Vec_PtrPush( vecPiNames, nodeName );\n    }\n\n    //****************************************************************\n    // Step 4: create the special Pi corresponding to SAVE\n    //****************************************************************\n    pObjSavePi = Aig_ObjCreateCi( pNew );\n    nodeName = \"SAVE_BIERE\";\nVec_PtrPush( vecPiNames, nodeName );\n        \n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        loCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNew);\n        Vec_PtrPush( vecLos, pObj.pData );\n        nodeName = Abc_UtilStrsav(Abc_ObjName( Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i ) ));\n        Vec_PtrPush( vecLoNames, nodeName );\n    }\n\n    //****************************************************************\n    // Step 6: create \"saved\" register output\n    //****************************************************************\n\n     \n                \n                                          \n                                       \n                          \n                                        \n      \n\n    //****************************************************************\n    // Step 7: create the OR gate and the AND gate directly fed by \"SAVE\" Pi\n    //****************************************************************\n     \n                                                              \n                                                                            \n      \n\n    //********************************************************************\n    // Step 8: create internal nodes\n    //********************************************************************\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n    }\n\n    //********************************************************************\n    // Step 9: create the safety property output gate\n    // create the safety property output gate, this will be the sole true PO \n    // of the whole circuit, discuss with Sat/Alan for an alternative implementation\n    //********************************************************************\n\n    pObjSafetyPropertyOutput = Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Aig_ObjFanin0(pObj).pData );\n\n    // create register inputs for the original registers\n    nRegCount = 0;\n    \n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        pMatch = Saig_ObjLoToLi( p, pObj );\n        //Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pMatch) );\n        Aig_ObjCreateCo( pNew, Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pMatch).pData, Aig_ObjFaninC0( pMatch ) ) );\n        nRegCount++;\n        liCopied++;\n    }\n\n     \n                                                                  \n                                                           \n                \n                \n      \n\n    pObjAndAcc = nil;\n\n    //****************************************************************************************************\n    //For detection of loop of length 1 we do not need any shadow register, we only need equality detector\n    //between Lo_j and Li_j and then a cascade of AND gates\n    //****************************************************************************************************\n\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        pObjCorrespondingLi = Saig_ObjLoToLi( p, pObj );\n        \n        pObjXor = Aig_Exor( pNew, (Aig_Obj_t *)pObj.pData,  Aig_NotCond( (Aig_Obj_t *)Aig_ObjFanin0( pObjCorrespondingLi ).pData, Aig_ObjFaninC0( pObjCorrespondingLi ) ) );\n        pObjXnor = Aig_Not( pObjXor );\n        \n        if pObjAndAcc == nil {\n            pObjAndAcc = pObjXnor;\n        } else {\n            pObjAndAccDummy = pObjAndAcc;\n            pObjAndAcc = Aig_And( pNew, pObjXnor, pObjAndAccDummy );\n        }\n    }\n\n    // create the AND gate whose output will be the signal \"looped\"\n    pObjSavedLoAndEquality = Aig_And( pNew, pObjSavePi, pObjAndAcc );\n    \n    // create the master AND gate and corresponding AND and OR logic for the liveness properties\n    pObjAndAcc = nil;\n    if vLive == nil || Vec_PtrSize( vLive ) == 0 {\n        fmt.Printf(\"\\nCircuit without any liveness property\\n\");\n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vLive)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLive, i)), 1); i++  {\n            pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj )).pData, Aig_ObjFaninC0(pObj));\n            if pObjAndAcc == nil {\n                pObjAndAcc = pDriverImage;\n            } else {\n                pObjAndAccDummy = pObjAndAcc;\n                pObjAndAcc = Aig_And( pNew, pDriverImage, pObjAndAccDummy );\n            }\n        }\n    }\n\n    if pObjAndAcc != nil {\n        pObjLive = pObjAndAcc;\n    } else {\n        pObjLive = Aig_ManConst1( pNew ); }\n    \n    // create the master AND gate and corresponding AND and OR logic for the fairness properties\n    pObjAndAcc = nil;\n    if vFair == nil || Vec_PtrSize( vFair ) == 0 {\n        fmt.Printf(\"\\nCircuit without any fairness property\\n\");\n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vFair)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vFair, i)), 1); i++  {\n            pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj )).pData, Aig_ObjFaninC0(pObj));\n            if pObjAndAcc == nil {\n                pObjAndAcc = pDriverImage;\n            } else {\n                pObjAndAccDummy = pObjAndAcc;\n                pObjAndAcc = Aig_And( pNew, pDriverImage, pObjAndAccDummy );\n            }\n        }\n    }\n\n    if pObjAndAcc != nil {\n        pObjFair = pObjAndAcc;\n    } else {\n        pObjFair = Aig_ManConst1( pNew ); }\n    \n    pObjSafetyGate = Aig_And( pNew, pObjSavedLoAndEquality, Aig_And( pNew, pObjFair, Aig_Not( pObjLive ) ) );\n    \n    Aig_ObjPatchFanin0( pNew, pObjSafetyPropertyOutput, pObjSafetyGate );\n\n    Aig_ManSetRegNum( pNew, nRegCount );\n\n    fmt.Printf(\"\\nSaig_ManPiNum = %d, Reg Num = %d, before everything, before Pi cleanup\\n\", Vec_PtrSize( pNew.vCis ), pNew.nRegs);\n\n    Aig_ManCiCleanupBiere( pNew );\n    Aig_ManCoCleanupBiere( pNew );\n\n    Aig_ManCleanup( pNew );\n    \n    assert(Aig_ManCheck( pNew ), \"Aig_ManCheck( pNew )\");\n    \n    return pNew;\n}"
+    },
+    {
+      "Name": "populateLivenessVector",
+      "Start": 26124,
+      "End": 26611,
+      "BodyStart": 26202,
+      "Original": "static Vec_Ptr_t * populateLivenessVector( Abc_Ntk_t *pNtk, Aig_Man_t *pAig )\n{\n    Abc_Obj_t * pNode;\n    int i, liveCounter = 0;\n    Vec_Ptr_t * vLive;\n\n    vLive = Vec_PtrAlloc( 100 );\n    Abc_NtkForEachPo( pNtk, pNode, i )\n        if( strstr( Abc_ObjName( pNode ), \"assert_fair\") != NULL )\n        {\n            Vec_PtrPush( vLive, Aig_ManCo( pAig, i ) );\n            liveCounter++;\n        }\n    printf(\"\\nNumber of liveness property found = %d\\n\", liveCounter);\n    return vLive;\n}",
+      "Draft": "func populateLivenessVector(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) *Vec_Ptr_t {\n    var pNode *Abc_Obj_t;\n    var i, liveCounter int32;\n    var vLive *Vec_Ptr_t;\n\n    vLive = Vec_PtrAlloc( 100 );\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        if strstr( Abc_ObjName( pNode ), \"assert_fair\") != nil {\n            Vec_PtrPush( vLive, Aig_ManCo( pAig, i ) );\n            liveCounter++;\n        }\n    }\n    fmt.Printf(\"\\nNumber of liveness property found = %d\\n\", liveCounter);\n    return vLive;\n}"
+    },
+    {
+      "Name": "populateFairnessVector",
+      "Start": 26613,
+      "End": 27100,
+      "BodyStart": 26691,
+      "Original": "static Vec_Ptr_t * populateFairnessVector( Abc_Ntk_t *pNtk, Aig_Man_t *pAig )\n{\n    Abc_Obj_t * pNode;\n    int i, fairCounter = 0;\n    Vec_Ptr_t * vFair;\n\n    vFair = Vec_PtrAlloc( 100 );\n    Abc_NtkForEachPo( pNtk, pNode, i )\n        if( strstr( Abc_ObjName( pNode ), \"assume_fair\") != NULL )\n        {\n            Vec_PtrPush( vFair, Aig_ManCo( pAig, i ) );\n            fairCounter++;\n        }\n    printf(\"\\nNumber of fairness property found = %d\\n\", fairCounter);\n    return vFair;\n}",
+      "Draft": "func populateFairnessVector(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) *Vec_Ptr_t {\n    var pNode *Abc_Obj_t;\n    var i, fairCounter int32;\n    var vFair *Vec_Ptr_t;\n\n    vFair = Vec_PtrAlloc( 100 );\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        if strstr( Abc_ObjName( pNode ), \"assume_fair\") != nil {\n            Vec_PtrPush( vFair, Aig_ManCo( pAig, i ) );\n            fairCounter++;\n        }\n    }\n    fmt.Printf(\"\\nNumber of fairness property found = %d\\n\", fairCounter);\n    return vFair;\n}"
+    },
+    {
+      "Name": "updateNewNetworkNameManager",
+      "Start": 27102,
+      "End": 28110,
+      "BodyStart": 27220,
+      "Original": "static void updateNewNetworkNameManager( Abc_Ntk_t *pNtk, Aig_Man_t *pAig, Vec_Ptr_t *vPiNames, Vec_Ptr_t *vLoNames )\n{\n    Aig_Obj_t *pObj;\n    int i, ntkObjId;\n\n    pNtk-\u003epManName = Nm_ManCreate( Abc_NtkCiNum( pNtk ) );\n\n    Saig_ManForEachPi( pAig, pObj, i )\n    {\n        ntkObjId = Abc_NtkCi( pNtk, i )-\u003eId;\n        //printf(\"Pi %d, Saved Name = %s, id = %d\\n\", i, Nm_ManStoreIdName( pNtk-\u003epManName, ntkObjId, Aig_ObjType(pObj), Vec_PtrEntry(vPiNames, i), NULL ), ntkObjId);  \n        Nm_ManStoreIdName( pNtk-\u003epManName, ntkObjId, Aig_ObjType(pObj), (char *)Vec_PtrEntry(vPiNames, i), NULL );\n    }\n    Saig_ManForEachLo( pAig, pObj, i )\n    {\n        ntkObjId = Abc_NtkCi( pNtk, Saig_ManPiNum( pAig ) + i )-\u003eId;\n        //printf(\"Lo %d, Saved name = %s, id = %d\\n\", i, Nm_ManStoreIdName( pNtk-\u003epManName, ntkObjId, Aig_ObjType(pObj), Vec_PtrEntry(vLoNames, i), NULL ), ntkObjId);  \n        Nm_ManStoreIdName( pNtk-\u003epManName, ntkObjId, Aig_ObjType(pObj), (char *)Vec_PtrEntry(vLoNames, i), NULL );\n    }\n}",
+      "Draft": "func updateNewNetworkNameManager(pNtk *Abc_Ntk_t, pAig *Aig_Man_t, vPiNames *Vec_Ptr_t, vLoNames *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i, ntkObjId int32;\n\n    pNtk.pManName = Nm_ManCreate( Abc_NtkCiNum( pNtk ) );\n\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        ntkObjId = Abc_NtkCi( pNtk, i ).Id;\n        //printf(\"Pi %d, Saved Name = %s, id = %d\\n\", i, Nm_ManStoreIdName( pNtk-\u003epManName, ntkObjId, Aig_ObjType(pObj), Vec_PtrEntry(vPiNames, i), NULL ), ntkObjId);  \n        Nm_ManStoreIdName( pNtk.pManName, ntkObjId, Aig_ObjType(pObj), (char *)Vec_PtrEntry(vPiNames, i), nil );\n    }\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        ntkObjId = Abc_NtkCi( pNtk, Saig_ManPiNum( pAig ) + i ).Id;\n        //printf(\"Lo %d, Saved name = %s, id = %d\\n\", i, Nm_ManStoreIdName( pNtk-\u003epManName, ntkObjId, Aig_ObjType(pObj), Vec_PtrEntry(vLoNames, i), NULL ), ntkObjId);  \n        Nm_ManStoreIdName( pNtk.pManName, ntkObjId, Aig_ObjType(pObj), (char *)Vec_PtrEntry(vLoNames, i), nil );\n    }\n}"
+    },
+    {
+      "Name": "Abc_CommandAbcLivenessToSafetySim",
+      "Start": 28113,
+      "End": 31835,
+      "BodyStart": 28197,
+      "Original": "int Abc_CommandAbcLivenessToSafetySim( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    FILE * pOut, * pErr;\n    Abc_Ntk_t * pNtk, * pNtkTemp, *pNtkNew, *pNtkOld;\n    Aig_Man_t * pAig, *pAigNew;\n    int c;\n    Vec_Ptr_t * vLive, * vFair;\n                \n    pNtk = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    if ( pNtk == NULL )\n    {\n        fprintf( pErr, \"Empty network.\\n\" );\n        return 1;\n    }\n\n    if( !Abc_NtkIsStrash( pNtk ) )\n    {\n        printf(\"\\nThe input network was not strashed, strashing....\\n\");\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n        pNtkOld = pNtkTemp;\n        pAig = Abc_NtkToDar( pNtkTemp, 0, 1 );\n        vLive = populateLivenessVector( pNtk, pAig );\n        vFair = populateFairnessVector( pNtk, pAig );\n    }\n    else\n    {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        pNtkOld = pNtk;\n        vLive = populateLivenessVector( pNtk, pAig );\n        vFair = populateFairnessVector( pNtk, pAig );\n    }\n\n#if 0\n    Aig_ManPrintStats( pAig );\n    printf(\"\\nDetail statistics*************************************\\n\");\n    printf(\"Number of true primary inputs = %d\\n\", Saig_ManPiNum( pAig ));\n    printf(\"Number of true primary outputs = %d\\n\", Saig_ManPoNum( pAig ));\n    printf(\"Number of true latch outputs = %d\\n\", Saig_ManCiNum( pAig ) - Saig_ManPiNum( pAig ));\n    printf(\"Number of true latch inputs = %d\\n\", Saig_ManCoNum( pAig ) - Saig_ManPoNum( pAig ));\n    printf(\"Numer of registers = %d\\n\", Saig_ManRegNum( pAig ) );\n    printf(\"\\n*******************************************************\\n\");\n#endif\n\n    c = Extra_UtilGetopt( argc, argv, \"1\" );\n    if( c == '1' )\n        pAigNew = LivenessToSafetyTransformationOneStepLoopSim( pNtk, pAig, vLive, vFair );\n    else\n        pAigNew = LivenessToSafetyTransformationSim( pNtk, pAig, vLive, vFair );\n    \n#if 0\n    Aig_ManPrintStats( pAigNew );\n    printf(\"\\nDetail statistics*************************************\\n\");\n    printf(\"Number of true primary inputs = %d\\n\", Saig_ManPiNum( pAigNew ));\n    printf(\"Number of true primary outputs = %d\\n\", Saig_ManPoNum( pAigNew ));\n    printf(\"Number of true latch outputs = %d\\n\", Saig_ManCiNum( pAigNew ) - Saig_ManPiNum( pAigNew ));\n    printf(\"Number of true latch inputs = %d\\n\", Saig_ManCoNum( pAigNew ) - Saig_ManPoNum( pAigNew ));\n    printf(\"Numer of registers = %d\\n\", Saig_ManRegNum( pAigNew ) );\n    printf(\"\\n*******************************************************\\n\");\n#endif\n\n    pNtkNew = Abc_NtkFromAigPhase( pAigNew );\n\n    if ( !Abc_NtkCheck( pNtkNew ) )\n        fprintf( stdout, \"Abc_NtkCreateCone(): Network check has failed.\\n\" );\n    \n    updateNewNetworkNameManager( pNtkNew, pAigNew, vecPiNames,vecLoNames );\n    Abc_FrameSetCurrentNetwork( pAbc, pNtkNew );\n\n    //Saig_ManForEachPi( pAigNew, pObj, i )\n    //    printf(\"Name of %d-th Pi = %s\\n\", i, retrieveTruePiName( pNtk, pAig, pAigNew, pObj ) );\n\n    //Saig_ManForEachLo( pAigNew, pObj, i )\n    //    printf(\"Name of %d-th Lo = %s\\n\", i, retrieveLOName( pNtk, pAig, pAigNew, pObj, vLive, vFair ) );\n\n    //printVecPtrOfString( vecPiNames );\n    //printVecPtrOfString( vecLoNames );\n\n#if 0\n#ifndef DUPLICATE_CKT_DEBUG\n    Saig_ManForEachPi( pAigNew, pObj, i )\n        assert( strcmp( (char *)Vec_PtrEntry(vecPiNames, i), retrieveTruePiName( pNtk, pAig, pAigNew, pObj ) ) == 0 );\n        //printf(\"Name of %d-th Pi = %s, %s\\n\", i, retrieveTruePiName( pNtk, pAig, pAigNew, pObj ), (char *)Vec_PtrEntry(vecPiNames, i) );\n\n    Saig_ManForEachLo( pAigNew, pObj, i )\n        assert( strcmp( (char *)Vec_PtrEntry(vecLoNames, i), retrieveLOName( pNtk, pAig, pAigNew, pObj, vLive, vFair ) ) == 0 );\n#endif    \n#endif\n        \n    return 0;\n\n}",
+      "Draft": "func Abc_CommandAbcLivenessToSafetySim(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr *os.File;\n    var pNtk, pNtkTemp, pNtkNew, pNtkOld *Abc_Ntk_t;\n    var pAig, pAigNew *Aig_Man_t;\n    var c int32;\n    var vLive, vFair *Vec_Ptr_t;\n                \n    pNtk = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    if pNtk == nil {\n        fmt.Fprintf(pErr, \"Empty network.\\n\");\n        return 1;\n    }\n\n    if !Abc_NtkIsStrash( pNtk ) {\n        fmt.Printf(\"\\nThe input network was not strashed, strashing....\\n\");\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n        pNtkOld = pNtkTemp;\n        pAig = Abc_NtkToDar( pNtkTemp, 0, 1 );\n        vLive = populateLivenessVector( pNtk, pAig );\n        vFair = populateFairnessVector( pNtk, pAig );\n    \n    } else {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        pNtkOld = pNtk;\n        vLive = populateLivenessVector( pNtk, pAig );\n        vFair = populateFairnessVector( pNtk, pAig );\n    }\n\n     \n                              \n                                                                         \n                                                                          \n                                                                           \n                                                                                                 \n                                                                                                \n                                                                 \n                                                                          \n      \n\n    c = Extra_UtilGetopt( argc, argv, \"1\" );\n    if c == '1' {\n        pAigNew = LivenessToSafetyTransformationOneStepLoopSim( pNtk, pAig, vLive, vFair );\n    } else {\n        pAigNew = LivenessToSafetyTransformationSim( pNtk, pAig, vLive, vFair ); }\n    \n     \n                                 \n                                                                         \n                                                                             \n                                                                              \n                                                                                                       \n                                                                                                      \n                                                                    \n                                                                          \n      \n\n    pNtkNew = Abc_NtkFromAigPhase( pAigNew );\n\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkCreateCone(): Network check has failed.\\n\"); }\n    \n    updateNewNetworkNameManager( pNtkNew, pAigNew, vecPiNames,vecLoNames );\n    Abc_FrameSetCurrentNetwork( pAbc, pNtkNew );\n\n    //Saig_ManForEachPi( pAigNew, pObj, i )\n    //    printf(\"Name of %d-th Pi = %s\\n\", i, retrieveTruePiName( pNtk, pAig, pAigNew, pObj ) );\n\n    //Saig_ManForEachLo( pAigNew, pObj, i )\n    //    printf(\"Name of %d-th Lo = %s\\n\", i, retrieveLOName( pNtk, pAig, pAigNew, pObj, vLive, vFair ) );\n\n    //printVecPtrOfString( vecPiNames );\n    //printVecPtrOfString( vecLoNames );\n\n     \n                           \n                                         \n                                                                                                                      \n                                                                                                                                          \n\n                                         \n                                                                                                                                \n          \n      \n        \n    return 0;\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::mechanical::sizeof::3865",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3484,
+      "End": 3490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::2219",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2219,
+      "End": 2227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::2524",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2359,
+      "End": 2359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::3075",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2717,
+      "End": 2717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::3849",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3468,
+      "End": 3476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::4059",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3560,
+      "End": 3560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::5269",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4557,
+      "End": 4557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::6183",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5285,
+      "End": 5285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::9487",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8551,
+      "End": 8551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::10350",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9380,
+      "End": 9380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::11591",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10668,
+      "End": 10668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::12784",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11807,
+      "End": 11807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::13006",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11994,
+      "End": 12007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::15537",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19686,
+      "End": 19686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::16437",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20464,
+      "End": 20464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::17863",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21691,
+      "End": 21691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::18492",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22248,
+      "End": 22261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::18725",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22377,
+      "End": 22377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::18947",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22564,
+      "End": 22577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::19757",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23270,
+      "End": 23270
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::19930",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23408,
+      "End": 23421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::19970",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23448,
+      "End": 23461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::20845",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24216,
+      "End": 24216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::20942",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24316,
+      "End": 24329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::21766",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25033,
+      "End": 25033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::21863",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25133,
+      "End": 25146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::24426",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27329,
+      "End": 27329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::24771",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27656,
+      "End": 27664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::24931",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27709,
+      "End": 27709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::pointer-cast::25320",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28060,
+      "End": 28068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::printVecPtrOfString",
+      "Category": "semantic-review",
+      "Symbol": "printVecPtrOfString",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2070,
+      "End": 2258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::getPoIndex",
+      "Category": "semantic-review",
+      "Symbol": "getPoIndex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2260,
+      "End": 2473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::retrieveTruePiName",
+      "Category": "semantic-review",
+      "Symbol": "retrieveTruePiName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2475,
+      "End": 3158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::retrieveLOName",
+      "Category": "semantic-review",
+      "Symbol": "retrieveLOName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3160,
+      "End": 5800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::Aig_ManCiCleanupBiere",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCiCleanupBiere",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5882,
+      "End": 6155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::Aig_ManCoCleanupBiere",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCoCleanupBiere",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6158,
+      "End": 6422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::LivenessToSafetyTransformationSim",
+      "Category": "semantic-review",
+      "Symbol": "LivenessToSafetyTransformationSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6424,
+      "End": 17861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::LivenessToSafetyTransformationOneStepLoopSim",
+      "Category": "semantic-review",
+      "Symbol": "LivenessToSafetyTransformationOneStepLoopSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17864,
+      "End": 26120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::populateLivenessVector",
+      "Category": "semantic-review",
+      "Symbol": "populateLivenessVector",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26124,
+      "End": 26611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::populateFairnessVector",
+      "Category": "semantic-review",
+      "Symbol": "populateFairnessVector",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26613,
+      "End": 27100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::updateNewNetworkNameManager",
+      "Category": "semantic-review",
+      "Symbol": "updateNewNetworkNameManager",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27102,
+      "End": 28110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::Abc_CommandAbcLivenessToSafetySim",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CommandAbcLivenessToSafetySim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28113,
+      "End": 31835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 31860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7458,
+      "End": 7674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9023,
+      "End": 9185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9860,
+      "End": 10078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 10299,
+      "End": 10475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11170,
+      "End": 11301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11581,
+      "End": 11720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 12182,
+      "End": 17289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/live/liveness_sim.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17477,
+      "End": 17841
+    }
+  ],
+  "Draft": "package live\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [liveness_sim.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Liveness property checking.]\n\n  Synopsis    [Main implementation module.]\n\n  Author      [Sayak Ray]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2009.]\n\n  Revision    [$Id: liveness_sim.c,v 1.00 2009/01/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \"base/main/main.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"aig/saig/saig.h\"\n//#include \u003cstring.h\u003e\n\n//ABC_NAMESPACE_IMPL_START\n\n\n#define PROPAGATE_NAMES\n//#define DUPLICATE_CKT_DEBUG\n\n// extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n\n// extern Abc_Ntk_t * Abc_NtkFromAigPhase( Aig_Man_t * pMan );\n\n//char *strdup(const char *string);\n\n\n/*******************************************************************\nLAYOUT OF PI VECTOR:\n \n+------------------------------------------------------------------------------------------------------------------------------------+\n| TRUE ORIGINAL PI (n) | SAVE(PI) (1) | ORIGINAL LO (k) | SAVED(LO) (1) | SHADOW_ORIGINAL LO (k) | LIVENESS LO (l) | FAIRNESS LO (f) |\n+------------------------------------------------------------------------------------------------------------------------------------+\n\u003c------------True PI-----------------\u003e|\u003c----------------------------LO---------------------------------------------------------------\u003e\n\nLAYOUT OF PO VECTOR:\n\n+-----------------------------------------------------------------------------------------------------------+\n| SOLE PO (1) | ORIGINAL LI (k) | SAVED LI (1) | SHADOW_ORIGINAL LI (k) | LIVENESS LI (l) | FAIRNESS LI (f) |\n+-----------------------------------------------------------------------------------------------------------+\n\u003c--True PO---\u003e|\u003c--------------------------------------LI----------------------------------------------------\u003e\n\n********************************************************************/\n\nfunc printVecPtrOfString(vec *Vec_Ptr_t) {\n    var i int32;\n\n    for  i=0; i\u003c Vec_PtrSize( vec ); i++  {\n        fmt.Printf(\"vec[%d] = %s\\n\", i, (char *)Vec_PtrEntry(vec, i));\n    }\n}\n\nfunc getPoIndex(pAig *Aig_Man_t, pPivot *Aig_Obj_t) int32 {\n    var i int32;\n    var pObj *Aig_Obj_t;\n\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        if pObj == pPivot {\n            return i; }\n    }\n    return -1;\n}\n\nfunc retrieveTruePiName(pNtkOld *Abc_Ntk_t, pAigOld *Aig_Man_t, pAigNew *Aig_Man_t, pObjPivot *Aig_Obj_t) string {\n    var pObjOld, pObj *Aig_Obj_t;\n    var pNode *Abc_Obj_t;\n    var index int32;\n\n    assert(Saig_ObjIsPi( pAigNew, pObjPivot ), \"Saig_ObjIsPi( pAigNew, pObjPivot )\");\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  index = 0; (index \u003c Vec_PtrSize(pAigNew.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAigNew.vCis, index)), 1); index++  {\n        if pObj == pObjPivot {\n            break; }\n    }\n    assert(index \u003c Aig_ManCiNum( pAigNew ) - Aig_ManRegNum( pAigNew ), \"index \u003c Aig_ManCiNum( pAigNew ) - Aig_ManRegNum( pAigNew )\");\n    if index == Saig_ManPiNum( pAigNew ) - 1 {\n        return \"SAVE_BIERE\";\n    } else {\n        pObjOld = Aig_ManCi( pAigOld, index );\n        pNode = Abc_NtkPi( pNtkOld, index );\n        assert(pObjOld.pData == pObjPivot, \"pObjOld.pData == pObjPivot\");\n        return Abc_ObjName( pNode );\n    }\n}\n\nfunc retrieveLOName(pNtkOld *Abc_Ntk_t, pAigOld *Aig_Man_t, pAigNew *Aig_Man_t, pObjPivot *Aig_Obj_t, vLive *Vec_Ptr_t, vFair *Vec_Ptr_t) string {\n    var pObjOld, pObj *Aig_Obj_t;\n    var pNode *Abc_Obj_t;\n    var index int32;\n    var oldIndex int32;\n    var originalLatchNum int32 = Saig_ManRegNum(pAigOld);\n    var strMatch int32;\n    var i int32;\n    var dummyStr string  = (char *)malloc( sizeof(char) * 50 );\n\n    assert(Saig_ObjIsLo( pAigNew, pObjPivot ), \"Saig_ObjIsLo( pAigNew, pObjPivot )\");\n    // inlining of macro Saig_ManForEachLo\n    for  index = 0; (index \u003c Saig_ManRegNum(pAigNew)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAigNew.vCis, index+Saig_ManPiNum(pAigNew))), 1); index++  {\n        if pObj == pObjPivot {\n            break; }\n    }\n    if index \u003c originalLatchNum {\n        oldIndex = Saig_ManPiNum( pAigOld ) + index;\n        pObjOld = Aig_ManCi( pAigOld, oldIndex );\n        pNode = Abc_NtkCi( pNtkOld, oldIndex );\n        assert(pObjOld.pData == pObjPivot, \"pObjOld.pData == pObjPivot\");\n        return Abc_ObjName( pNode );\n    \n    } else if index == originalLatchNum {\n        return \"SAVED_LO\";\n    } else if index \u003e originalLatchNum \u0026\u0026 index \u003c 2 * originalLatchNum + 1 {\n        oldIndex = Saig_ManPiNum( pAigOld ) + index - originalLatchNum - 1;\n        pObjOld = Aig_ManCi( pAigOld, oldIndex );\n        pNode = Abc_NtkCi( pNtkOld, oldIndex );\n        dummyStr = fmt.Sprintf(\"%s__%s\", Abc_ObjName( pNode ), \"SHADOW\");\n        return dummyStr;\n    \n    } else if index \u003e= 2 * originalLatchNum + 1 \u0026\u0026 index \u003c 2 * originalLatchNum + 1 + Vec_PtrSize( vLive ) {\n        oldIndex = index - 2 * originalLatchNum - 1;\n        strMatch = 0;\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPoNum(pAigOld)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAigOld.vCos, i)), 1); i++  {\n            pNode = Abc_NtkPo( pNtkOld, i );\n            if strstr( Abc_ObjName( pNode ), \"assert_fair\" ) != nil {\n                if strMatch == oldIndex {\n                    dummyStr = fmt.Sprintf(\"%s__%s\", Abc_ObjName( pNode ), \"LIVENESS\");\n                    return dummyStr;\n                \n                } else {\n                    strMatch++; }\n            }\n        }\n    \n    } else if index \u003e= 2 * originalLatchNum + 1 + Vec_PtrSize( vLive ) \u0026\u0026 index \u003c 2 * originalLatchNum + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) {\n        oldIndex = index - 2 * originalLatchNum - 1 - Vec_PtrSize( vLive );\n        strMatch = 0;\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPoNum(pAigOld)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAigOld.vCos, i)), 1); i++  {\n            pNode = Abc_NtkPo( pNtkOld, i );\n            if strstr( Abc_ObjName( pNode ), \"assume_fair\" ) != nil {\n                if strMatch == oldIndex {\n                    dummyStr = fmt.Sprintf(\"%s__%s\", Abc_ObjName( pNode ), \"FAIRNESS\");\n                    return dummyStr;\n                \n                } else {\n                    strMatch++; }\n            }\n        }\n    \n    } else {\n        return \"UNKNOWN\"; }\n    return nil;\n}\n\nvar vecPis, vecPiNames *Vec_Ptr_t;\nvar vecLos, vecLoNames *Vec_Ptr_t;\n\n\nfunc Aig_ManCiCleanupBiere(p *Aig_Man_t) int32 {\n    var nPisOld int32  = Aig_ManCiNum(p);\n    \n    p.nObjs[AIG_OBJ_CI] = Vec_PtrSize( p.vCis );\n    if Aig_ManRegNum(p) {\n        p.nTruePis = Aig_ManCiNum(p) - Aig_ManRegNum(p); }\n    \n    return nPisOld - Aig_ManCiNum(p);\n}\n\n\nfunc Aig_ManCoCleanupBiere(p *Aig_Man_t) int32 {\n    var nPosOld int32  = Aig_ManCoNum(p);\n\n    p.nObjs[AIG_OBJ_CO] = Vec_PtrSize( p.vCos );\n    if Aig_ManRegNum(p) {\n        p.nTruePos = Aig_ManCoNum(p) - Aig_ManRegNum(p); }\n    return nPosOld - Aig_ManCoNum(p);\n}\n\nfunc LivenessToSafetyTransformationSim(pNtk *Abc_Ntk_t, p *Aig_Man_t, vLive *Vec_Ptr_t, vFair *Vec_Ptr_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var i, nRegCount int32;\n    var pObjSavePi *Aig_Obj_t;\n    var pObjSavedLo, pObjSavedLi *Aig_Obj_t;\n    var pObj, pMatch *Aig_Obj_t;\n    var pObjSaveOrSaved, pObjSavedLoAndEquality *Aig_Obj_t;\n    var pObjShadowLo, pObjShadowLi, pObjShadowLiDriver *Aig_Obj_t;\n    var pObjXor, pObjXnor, pObjAndAcc, pObjAndAccDummy *Aig_Obj_t;\n    var pObjLive, pObjFair, pObjSafetyGate *Aig_Obj_t;\n    var pObjSafetyPropertyOutput *Aig_Obj_t;\n    var pDriverImage *Aig_Obj_t;\n    var nodeName string;\n    var piCopied, liCopied, loCopied, liCreated, loCreated, liveLatch, fairLatch int32;\n    \n    vecPis = Vec_PtrAlloc( Saig_ManPiNum( p ) + 1);\n    vecPiNames = Vec_PtrAlloc( Saig_ManPiNum( p ) + 1);\n\n    vecLos = Vec_PtrAlloc( Saig_ManRegNum( p )*2 + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) );\n    vecLoNames = Vec_PtrAlloc( Saig_ManRegNum( p )*2 + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) );\n\n#ifdef DUPLICATE_CKT_DEBUG\n    printf(\"\\nCode is compiled in DEBUG mode, the input-output behavior will be the same as the original circuit\\n\");\n    printf(\"Press any key to continue...\");\n    scanf(\"%c\", \u0026c);\n#endif\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNew = Aig_ManStart( 2 * Aig_ManObjNumMax(p) );\n    pNew.pName = Abc_UtilStrsav( \"live2safe\" );\n    pNew.pSpec = nil;\n    \n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n    pObj = Aig_ManConst1( p );\n    pObj.pData = Aig_ManConst1( pNew );\n\n    //****************************************************************\n    // Step 3: create true PIs\n    //****************************************************************\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        piCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNew);\n        Vec_PtrPush( vecPis, pObj.pData );\n        nodeName = Abc_UtilStrsav(Abc_ObjName( Abc_NtkPi( pNtk, i ) ));\n        Vec_PtrPush( vecPiNames, nodeName );\n    }\n\n    //****************************************************************\n    // Step 4: create the special Pi corresponding to SAVE\n    //****************************************************************\n#ifndef DUPLICATE_CKT_DEBUG\n    pObjSavePi = Aig_ObjCreateCi( pNew );\n    nodeName = Abc_UtilStrsav(\"SAVE_BIERE\"),\n    Vec_PtrPush( vecPiNames, nodeName );\n#endif\n        \n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        loCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNew);\n        Vec_PtrPush( vecLos, pObj.pData );\n        nodeName = Abc_UtilStrsav(Abc_ObjName( Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i ) ));\n        Vec_PtrPush( vecLoNames, nodeName );\n    }\n\n    //****************************************************************\n    // Step 6: create \"saved\" register output\n    //****************************************************************\n#ifndef DUPLICATE_CKT_DEBUG\n    loCreated++;\n    pObjSavedLo = Aig_ObjCreateCi( pNew );\n    Vec_PtrPush( vecLos, pObjSavedLo );\n    nodeName = Abc_UtilStrsav(\"SAVED_LO\");\n    Vec_PtrPush( vecLoNames, nodeName );\n#endif\n\n    //****************************************************************\n    // Step 7: create the OR gate and the AND gate directly fed by \"SAVE\" Pi\n    //****************************************************************\n#ifndef DUPLICATE_CKT_DEBUG\n    pObjSaveOrSaved = Aig_Or( pNew, pObjSavePi, pObjSavedLo );\n    //pObjSaveAndNotSaved = Aig_And( pNew, pObjSavePi, Aig_Not(pObjSavedLo) );\n#endif\n\n    //********************************************************************\n    // Step 8: create internal nodes\n    //********************************************************************\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n    }\n\n    //********************************************************************\n    // Step 9: create the safety property output gate\n    // create the safety property output gate, this will be the sole true PO \n    // of the whole circuit, discuss with Sat/Alan for an alternative implementation\n    //********************************************************************\n#ifndef DUPLICATE_CKT_DEBUG\n    pObjSafetyPropertyOutput = Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Aig_ObjFanin0(pObj)-\u003epData );\n#endif\n\n    //********************************************************************\n    // DEBUG: To recreate the same circuit, at least from the input and output\n    // behavior, we need to copy the original PO\n    //********************************************************************\n#ifdef DUPLICATE_CKT_DEBUG\n    Saig_ManForEachPo( p, pObj, i )\n    {\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n#endif\n\n    // create register inputs for the original registers\n    nRegCount = 0;\n    \n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        pMatch = Saig_ObjLoToLi( p, pObj );\n        //Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pMatch) );\n        Aig_ObjCreateCo( pNew, Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pMatch).pData, Aig_ObjFaninC0( pMatch ) ) );\n        nRegCount++;\n        liCopied++;\n    }\n\n    // create register input corresponding to the register \"saved\"\n#ifndef DUPLICATE_CKT_DEBUG\n    pObjSavedLi = Aig_ObjCreateCo( pNew, pObjSaveOrSaved );\n    nRegCount++;\n    liCreated++;\n\n    pObjAndAcc = NULL;\n\n    // create the family of shadow registers, then create the cascade of Xnor and And gates for the comparator \n    Saig_ManForEachLo( p, pObj, i )\n    {\n        pObjShadowLo = Aig_ObjCreateCi( pNew );\n\n#ifdef PROPAGATE_NAMES\n        Vec_PtrPush( vecLos, pObjShadowLo );\n        nodeName = (char *)malloc( strlen( Abc_ObjName( Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i ) ) ) + 10 );\n        sprintf( nodeName, \"%s__%s\", Abc_ObjName( Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i ) ), \"SHADOW\" );\n        Vec_PtrPush( vecLoNames, nodeName );\n#endif\n\n        pObjShadowLiDriver = Aig_Mux( pNew, pObjSavePi, (Aig_Obj_t *)pObj-\u003epData, pObjShadowLo );\n        pObjShadowLi = Aig_ObjCreateCo( pNew, pObjShadowLiDriver );\n        nRegCount++;\n        loCreated++; liCreated++;\n        \n        pObjXor = Aig_Exor( pNew, (Aig_Obj_t *)pObj-\u003epData, pObjShadowLo );\n        pObjXnor = Aig_Not( pObjXor );\n        if( pObjAndAcc == NULL )\n            pObjAndAcc = pObjXnor;\n        else\n        {\n            pObjAndAccDummy = pObjAndAcc;\n            pObjAndAcc = Aig_And( pNew, pObjXnor, pObjAndAccDummy );\n        }\n    }\n\n    // create the AND gate whose output will be the signal \"looped\"\n    pObjSavedLoAndEquality = Aig_And( pNew, pObjSavedLo, pObjAndAcc );\n    \n    // create the master AND gate and corresponding AND and OR logic for the liveness properties\n    pObjAndAcc = NULL;\n    if( vLive == NULL || Vec_PtrSize( vLive ) == 0 )\n        printf(\"\\nCircuit without any liveness property\\n\");\n    else\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vLive, pObj, i )\n        {\n            //assert( Aig_ObjIsNode( Aig_ObjChild0( pObj ) ) );\n            //Aig_ObjPrint( pNew, pObj );\n            liveLatch++;\n            pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj ))-\u003epData, Aig_ObjFaninC0(pObj));\n            pObjShadowLo = Aig_ObjCreateCi( pNew );\n\n#ifdef PROPAGATE_NAMES\n        Vec_PtrPush( vecLos, pObjShadowLo );\n        nodeName = (char *)malloc( strlen( Abc_ObjName( Abc_NtkPo( pNtk, getPoIndex( p, pObj ) ) ) ) + 12 );\n        sprintf( nodeName, \"%s__%s\", Abc_ObjName( Abc_NtkPo( pNtk, getPoIndex( p, pObj ) ) ), \"LIVENESS\" );\n        Vec_PtrPush( vecLoNames, nodeName );\n#endif\n\n            pObjShadowLiDriver = Aig_Or( pNew, Aig_Mux(pNew, pObjSavePi, Aig_Not(Aig_ManConst1(pNew)), pObjShadowLo), \n                                                Aig_And( pNew, pDriverImage, pObjSaveOrSaved ) );\n            pObjShadowLi = Aig_ObjCreateCo( pNew, pObjShadowLiDriver );\n            nRegCount++;\n            loCreated++; liCreated++;\n            \n            if( pObjAndAcc == NULL )\n                pObjAndAcc = pObjShadowLo;\n            else\n            {\n                pObjAndAccDummy = pObjAndAcc;\n                pObjAndAcc = Aig_And( pNew, pObjShadowLo, pObjAndAccDummy );\n            }\n        }\n    }\n\n    if( pObjAndAcc != NULL )\n        pObjLive = pObjAndAcc;\n    else\n        pObjLive = Aig_ManConst1( pNew );\n    \n    // create the master AND gate and corresponding AND and OR logic for the fairness properties\n    pObjAndAcc = NULL;\n    if( vFair == NULL || Vec_PtrSize( vFair ) == 0 )\n        printf(\"\\nCircuit without any fairness property\\n\");\n    else\n    {\n        Vec_PtrForEachEntry( Aig_Obj_t *, vFair, pObj, i )\n        {\n            fairLatch++;\n            //assert( Aig_ObjIsNode( Aig_ObjChild0( pObj ) ) );\n            pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj ))-\u003epData, Aig_ObjFaninC0(pObj));\n            pObjShadowLo = Aig_ObjCreateCi( pNew );\n\n#ifdef PROPAGATE_NAMES\n        Vec_PtrPush( vecLos, pObjShadowLo );\n        nodeName = (char *)malloc( strlen( Abc_ObjName( Abc_NtkPo( pNtk, getPoIndex( p, pObj ) ) ) ) + 12 );\n        sprintf( nodeName, \"%s__%s\", Abc_ObjName( Abc_NtkPo( pNtk, getPoIndex( p, pObj ) ) ), \"FAIRNESS\" );\n        Vec_PtrPush( vecLoNames, nodeName );\n#endif\n\n            pObjShadowLiDriver = Aig_Or( pNew, Aig_Mux(pNew, pObjSavePi, Aig_Not(Aig_ManConst1(pNew)), pObjShadowLo), \n                                    Aig_And( pNew, pDriverImage, pObjSaveOrSaved ) );\n            pObjShadowLi = Aig_ObjCreateCo( pNew, pObjShadowLiDriver );\n            nRegCount++;\n            loCreated++; liCreated++;\n            \n            if( pObjAndAcc == NULL )\n                pObjAndAcc = pObjShadowLo;\n            else\n            {\n                pObjAndAccDummy = pObjAndAcc;\n                pObjAndAcc = Aig_And( pNew, pObjShadowLo, pObjAndAccDummy );\n            }\n        }\n    }\n\n    if( pObjAndAcc != NULL )\n        pObjFair = pObjAndAcc;\n    else\n        pObjFair = Aig_ManConst1( pNew );\n    \n    //pObjSafetyGate = Aig_Exor( pNew, Aig_Not(Aig_ManConst1( pNew )), Aig_And( pNew, pObjSavedLoAndEquality, Aig_And( pNew, pObjFair, Aig_Not( pObjLive ) ) ) );\n    pObjSafetyGate = Aig_And( pNew, pObjSavedLoAndEquality, Aig_And( pNew, pObjFair, Aig_Not( pObjLive ) ) );\n    \n    Aig_ObjPatchFanin0( pNew, pObjSafetyPropertyOutput, pObjSafetyGate );\n#endif\n\n    Aig_ManSetRegNum( pNew, nRegCount );\n\n    Aig_ManCiCleanupBiere( pNew );\n    Aig_ManCoCleanupBiere( pNew );\n    \n    Aig_ManCleanup( pNew );\n    assert(Aig_ManCheck( pNew ), \"Aig_ManCheck( pNew )\");\n    \n#ifndef DUPLICATE_CKT_DEBUG\n    assert((Aig_Obj_t *)Vec_PtrEntry(pNew-\u003evCos, Saig_ManPoNum(pNew)+Aig_ObjCioId(pObjSavedLo)-Saig_ManPiNum(p)-1) == pObjSavedLi);\n    assert( Saig_ManPoNum( pNew ) == 1 );\n    assert( Saig_ManPiNum( p ) + 1 == Saig_ManPiNum( pNew ) );\n    assert( Saig_ManRegNum( pNew ) == Saig_ManRegNum( p ) * 2 + 1 + liveLatch + fairLatch );\n#endif\n\n    return pNew;\n}\n\n\nfunc LivenessToSafetyTransformationOneStepLoopSim(pNtk *Abc_Ntk_t, p *Aig_Man_t, vLive *Vec_Ptr_t, vFair *Vec_Ptr_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var i, nRegCount int32;\n    var pObjSavePi *Aig_Obj_t;\n    var pObj, pMatch *Aig_Obj_t;\n    var pObjSavedLoAndEquality *Aig_Obj_t;\n    var pObjXor, pObjXnor, pObjAndAcc, pObjAndAccDummy *Aig_Obj_t;\n    var pObjLive, pObjFair, pObjSafetyGate *Aig_Obj_t;\n    var pObjSafetyPropertyOutput *Aig_Obj_t;\n    var pDriverImage *Aig_Obj_t;\n    var pObjCorrespondingLi *Aig_Obj_t;\n\n\n    var nodeName string;\n    var piCopied, liCopied, loCopied int32;//, liCreated = 0, loCreated = 0, piVecIndex = 0;\n    \n    vecPis = Vec_PtrAlloc( Saig_ManPiNum( p ) + 1);\n    vecPiNames = Vec_PtrAlloc( Saig_ManPiNum( p ) + 1);\n\n    vecLos = Vec_PtrAlloc( Saig_ManRegNum( p )*2 + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) );\n    vecLoNames = Vec_PtrAlloc( Saig_ManRegNum( p )*2 + 1 + Vec_PtrSize( vLive ) + Vec_PtrSize( vFair ) );\n\n    //****************************************************************\n    // Step1: create the new manager\n    // Note: The new manager is created with \"2 * Aig_ManObjNumMax(p)\"\n    // nodes, but this selection is arbitrary - need to be justified\n    //****************************************************************\n    pNew = Aig_ManStart( 2 * Aig_ManObjNumMax(p) );\n    pNew.pName = Abc_UtilStrsav( \"live2safe\" );\n    pNew.pSpec = nil;\n    \n    //****************************************************************\n    // Step 2: map constant nodes\n    //****************************************************************\n    pObj = Aig_ManConst1( p );\n    pObj.pData = Aig_ManConst1( pNew );\n\n    //****************************************************************\n    // Step 3: create true PIs\n    //****************************************************************\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        piCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNew);\n        Vec_PtrPush( vecPis, pObj.pData );\n        nodeName = Abc_UtilStrsav(Abc_ObjName( Abc_NtkPi( pNtk, i ) ));\n        Vec_PtrPush( vecPiNames, nodeName );\n    }\n\n    //****************************************************************\n    // Step 4: create the special Pi corresponding to SAVE\n    //****************************************************************\n    pObjSavePi = Aig_ObjCreateCi( pNew );\n    nodeName = \"SAVE_BIERE\";\nVec_PtrPush( vecPiNames, nodeName );\n        \n    //****************************************************************\n    // Step 5: create register outputs\n    //****************************************************************\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        loCopied++;\n        pObj.pData = Aig_ObjCreateCi(pNew);\n        Vec_PtrPush( vecLos, pObj.pData );\n        nodeName = Abc_UtilStrsav(Abc_ObjName( Abc_NtkCi( pNtk, Abc_NtkPiNum(pNtk) + i ) ));\n        Vec_PtrPush( vecLoNames, nodeName );\n    }\n\n    //****************************************************************\n    // Step 6: create \"saved\" register output\n    //****************************************************************\n\n     \n                \n                                          \n                                       \n                          \n                                        \n      \n\n    //****************************************************************\n    // Step 7: create the OR gate and the AND gate directly fed by \"SAVE\" Pi\n    //****************************************************************\n     \n                                                              \n                                                                            \n      \n\n    //********************************************************************\n    // Step 8: create internal nodes\n    //********************************************************************\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    }\n    }\n\n    //********************************************************************\n    // Step 9: create the safety property output gate\n    // create the safety property output gate, this will be the sole true PO \n    // of the whole circuit, discuss with Sat/Alan for an alternative implementation\n    //********************************************************************\n\n    pObjSafetyPropertyOutput = Aig_ObjCreateCo( pNew, (Aig_Obj_t *)Aig_ObjFanin0(pObj).pData );\n\n    // create register inputs for the original registers\n    nRegCount = 0;\n    \n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        pMatch = Saig_ObjLoToLi( p, pObj );\n        //Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pMatch) );\n        Aig_ObjCreateCo( pNew, Aig_NotCond((Aig_Obj_t *)Aig_ObjFanin0(pMatch).pData, Aig_ObjFaninC0( pMatch ) ) );\n        nRegCount++;\n        liCopied++;\n    }\n\n     \n                                                                  \n                                                           \n                \n                \n      \n\n    pObjAndAcc = nil;\n\n    //****************************************************************************************************\n    //For detection of loop of length 1 we do not need any shadow register, we only need equality detector\n    //between Lo_j and Li_j and then a cascade of AND gates\n    //****************************************************************************************************\n\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        pObjCorrespondingLi = Saig_ObjLoToLi( p, pObj );\n        \n        pObjXor = Aig_Exor( pNew, (Aig_Obj_t *)pObj.pData,  Aig_NotCond( (Aig_Obj_t *)Aig_ObjFanin0( pObjCorrespondingLi ).pData, Aig_ObjFaninC0( pObjCorrespondingLi ) ) );\n        pObjXnor = Aig_Not( pObjXor );\n        \n        if pObjAndAcc == nil {\n            pObjAndAcc = pObjXnor;\n        } else {\n            pObjAndAccDummy = pObjAndAcc;\n            pObjAndAcc = Aig_And( pNew, pObjXnor, pObjAndAccDummy );\n        }\n    }\n\n    // create the AND gate whose output will be the signal \"looped\"\n    pObjSavedLoAndEquality = Aig_And( pNew, pObjSavePi, pObjAndAcc );\n    \n    // create the master AND gate and corresponding AND and OR logic for the liveness properties\n    pObjAndAcc = nil;\n    if vLive == nil || Vec_PtrSize( vLive ) == 0 {\n        fmt.Printf(\"\\nCircuit without any liveness property\\n\");\n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vLive)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLive, i)), 1); i++  {\n            pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj )).pData, Aig_ObjFaninC0(pObj));\n            if pObjAndAcc == nil {\n                pObjAndAcc = pDriverImage;\n            } else {\n                pObjAndAccDummy = pObjAndAcc;\n                pObjAndAcc = Aig_And( pNew, pDriverImage, pObjAndAccDummy );\n            }\n        }\n    }\n\n    if pObjAndAcc != nil {\n        pObjLive = pObjAndAcc;\n    } else {\n        pObjLive = Aig_ManConst1( pNew ); }\n    \n    // create the master AND gate and corresponding AND and OR logic for the fairness properties\n    pObjAndAcc = nil;\n    if vFair == nil || Vec_PtrSize( vFair ) == 0 {\n        fmt.Printf(\"\\nCircuit without any fairness property\\n\");\n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vFair)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vFair, i)), 1); i++  {\n            pDriverImage = Aig_NotCond((Aig_Obj_t *)Aig_Regular(Aig_ObjChild0( pObj )).pData, Aig_ObjFaninC0(pObj));\n            if pObjAndAcc == nil {\n                pObjAndAcc = pDriverImage;\n            } else {\n                pObjAndAccDummy = pObjAndAcc;\n                pObjAndAcc = Aig_And( pNew, pDriverImage, pObjAndAccDummy );\n            }\n        }\n    }\n\n    if pObjAndAcc != nil {\n        pObjFair = pObjAndAcc;\n    } else {\n        pObjFair = Aig_ManConst1( pNew ); }\n    \n    pObjSafetyGate = Aig_And( pNew, pObjSavedLoAndEquality, Aig_And( pNew, pObjFair, Aig_Not( pObjLive ) ) );\n    \n    Aig_ObjPatchFanin0( pNew, pObjSafetyPropertyOutput, pObjSafetyGate );\n\n    Aig_ManSetRegNum( pNew, nRegCount );\n\n    fmt.Printf(\"\\nSaig_ManPiNum = %d, Reg Num = %d, before everything, before Pi cleanup\\n\", Vec_PtrSize( pNew.vCis ), pNew.nRegs);\n\n    Aig_ManCiCleanupBiere( pNew );\n    Aig_ManCoCleanupBiere( pNew );\n\n    Aig_ManCleanup( pNew );\n    \n    assert(Aig_ManCheck( pNew ), \"Aig_ManCheck( pNew )\");\n    \n    return pNew;\n}\n\n\n\nfunc populateLivenessVector(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) *Vec_Ptr_t {\n    var pNode *Abc_Obj_t;\n    var i, liveCounter int32;\n    var vLive *Vec_Ptr_t;\n\n    vLive = Vec_PtrAlloc( 100 );\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        if strstr( Abc_ObjName( pNode ), \"assert_fair\") != nil {\n            Vec_PtrPush( vLive, Aig_ManCo( pAig, i ) );\n            liveCounter++;\n        }\n    }\n    fmt.Printf(\"\\nNumber of liveness property found = %d\\n\", liveCounter);\n    return vLive;\n}\n\nfunc populateFairnessVector(pNtk *Abc_Ntk_t, pAig *Aig_Man_t) *Vec_Ptr_t {\n    var pNode *Abc_Obj_t;\n    var i, fairCounter int32;\n    var vFair *Vec_Ptr_t;\n\n    vFair = Vec_PtrAlloc( 100 );\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        if strstr( Abc_ObjName( pNode ), \"assume_fair\") != nil {\n            Vec_PtrPush( vFair, Aig_ManCo( pAig, i ) );\n            fairCounter++;\n        }\n    }\n    fmt.Printf(\"\\nNumber of fairness property found = %d\\n\", fairCounter);\n    return vFair;\n}\n\nfunc updateNewNetworkNameManager(pNtk *Abc_Ntk_t, pAig *Aig_Man_t, vPiNames *Vec_Ptr_t, vLoNames *Vec_Ptr_t) {\n    var pObj *Aig_Obj_t;\n    var i, ntkObjId int32;\n\n    pNtk.pManName = Nm_ManCreate( Abc_NtkCiNum( pNtk ) );\n\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        ntkObjId = Abc_NtkCi( pNtk, i ).Id;\n        //printf(\"Pi %d, Saved Name = %s, id = %d\\n\", i, Nm_ManStoreIdName( pNtk-\u003epManName, ntkObjId, Aig_ObjType(pObj), Vec_PtrEntry(vPiNames, i), NULL ), ntkObjId);  \n        Nm_ManStoreIdName( pNtk.pManName, ntkObjId, Aig_ObjType(pObj), (char *)Vec_PtrEntry(vPiNames, i), nil );\n    }\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        ntkObjId = Abc_NtkCi( pNtk, Saig_ManPiNum( pAig ) + i ).Id;\n        //printf(\"Lo %d, Saved name = %s, id = %d\\n\", i, Nm_ManStoreIdName( pNtk-\u003epManName, ntkObjId, Aig_ObjType(pObj), Vec_PtrEntry(vLoNames, i), NULL ), ntkObjId);  \n        Nm_ManStoreIdName( pNtk.pManName, ntkObjId, Aig_ObjType(pObj), (char *)Vec_PtrEntry(vLoNames, i), nil );\n    }\n}\n\n\nfunc Abc_CommandAbcLivenessToSafetySim(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr *os.File;\n    var pNtk, pNtkTemp, pNtkNew, pNtkOld *Abc_Ntk_t;\n    var pAig, pAigNew *Aig_Man_t;\n    var c int32;\n    var vLive, vFair *Vec_Ptr_t;\n                \n    pNtk = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    if pNtk == nil {\n        fmt.Fprintf(pErr, \"Empty network.\\n\");\n        return 1;\n    }\n\n    if !Abc_NtkIsStrash( pNtk ) {\n        fmt.Printf(\"\\nThe input network was not strashed, strashing....\\n\");\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n        pNtkOld = pNtkTemp;\n        pAig = Abc_NtkToDar( pNtkTemp, 0, 1 );\n        vLive = populateLivenessVector( pNtk, pAig );\n        vFair = populateFairnessVector( pNtk, pAig );\n    \n    } else {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n        pNtkOld = pNtk;\n        vLive = populateLivenessVector( pNtk, pAig );\n        vFair = populateFairnessVector( pNtk, pAig );\n    }\n\n     \n                              \n                                                                         \n                                                                          \n                                                                           \n                                                                                                 \n                                                                                                \n                                                                 \n                                                                          \n      \n\n    c = Extra_UtilGetopt( argc, argv, \"1\" );\n    if c == '1' {\n        pAigNew = LivenessToSafetyTransformationOneStepLoopSim( pNtk, pAig, vLive, vFair );\n    } else {\n        pAigNew = LivenessToSafetyTransformationSim( pNtk, pAig, vLive, vFair ); }\n    \n     \n                                 \n                                                                         \n                                                                             \n                                                                              \n                                                                                                       \n                                                                                                      \n                                                                    \n                                                                          \n      \n\n    pNtkNew = Abc_NtkFromAigPhase( pAigNew );\n\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkCreateCone(): Network check has failed.\\n\"); }\n    \n    updateNewNetworkNameManager( pNtkNew, pAigNew, vecPiNames,vecLoNames );\n    Abc_FrameSetCurrentNetwork( pAbc, pNtkNew );\n\n    //Saig_ManForEachPi( pAigNew, pObj, i )\n    //    printf(\"Name of %d-th Pi = %s\\n\", i, retrieveTruePiName( pNtk, pAig, pAigNew, pObj ) );\n\n    //Saig_ManForEachLo( pAigNew, pObj, i )\n    //    printf(\"Name of %d-th Lo = %s\\n\", i, retrieveLOName( pNtk, pAig, pAigNew, pObj, vLive, vFair ) );\n\n    //printVecPtrOfString( vecPiNames );\n    //printVecPtrOfString( vecLoNames );\n\n     \n                           \n                                         \n                                                                                                                      \n                                                                                                                                          \n\n                                         \n                                                                                                                                \n          \n      \n        \n    return 0;\n\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

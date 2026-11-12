@@ -1,0 +1,939 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c",
+  "SHA256": "ddcba43bcaf65d7b68dc4f547b74f1d4d446ef3ae6fb5b7a6dc194b4eb2c5b5a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 9,
+        "ByteOffset": 1523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (uint32((ABC_PTRUINT_T))pObj.pData) \u0026 0xffff0000 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 9,
+        "ByteOffset": 1748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Hop_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 107,
+        "Column": 13,
+        "ByteOffset": 3724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( (uint32((ABC_PTRUINT_T))pFanin.pCopy) \u0026 0xffff0000 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 138,
+        "Column": 5,
+        "ByteOffset": 4782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 140,
+        "Column": 9,
+        "ByteOffset": 4845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (uint32((ABC_PTRUINT_T))pObj.pData) \u0026 0xffff0000 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 148,
+        "Column": 9,
+        "ByteOffset": 5149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Hop_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 178,
+        "Column": 5,
+        "ByteOffset": 6284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nNodes \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 194,
+        "Column": 13,
+        "ByteOffset": 7142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( (uint32((ABC_PTRUINT_T))pFanin.pCopy) \u0026 0xffff0000 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 7906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iCount \u003c= Vec_PtrSize(p.vTtNodes) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 5,
+        "ByteOffset": 9648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nLeaves \u003e 0 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 270,
+        "Column": 5,
+        "ByteOffset": 9706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pRefs, 0, sizeof(int) * pCut.nLeaves );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 273,
+        "Column": 9,
+        "ByteOffset": 9950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fMarkA == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 295,
+        "Column": 13,
+        "ByteOffset": 10808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pFanin.fMarkA == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 350,
+        "Column": 5,
+        "ByteOffset": 12430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutNew.uSign[0] || pCutNew.uSign[1] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 407,
+        "Column": 9,
+        "ByteOffset": 14337
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"LEAVES:\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 409,
+        "Column": 9,
+        "ByteOffset": 14533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d,\", pObj.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 412,
+        "Column": 9,
+        "ByteOffset": 14595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\nNODES:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 414,
+        "Column": 13,
+        "ByteOffset": 14796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d,\", pObj.Id );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 415,
+        "Column": 13,
+        "ByteOffset": 14834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 417,
+        "Column": 9,
+        "ByteOffset": 14883
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 438,
+        "Column": 13,
+        "ByteOffset": 15435
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCut.pLeaves[i] \u003c pCut.pLeaves[i+1] ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 471,
+        "Column": 5,
+        "ByteOffset": 16272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 478,
+        "Column": 9,
+        "ByteOffset": 16546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( int32(pCut.nNodesDup) \u003c p.pPars.nLutsOver );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 492,
+        "Column": 5,
+        "ByteOffset": 17005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nCuts \u003c LPK_CUTS_MAX );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 519,
+        "Column": 9,
+        "ByteOffset": 17945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCutNew.nLeaves \u003c= LPK_SIZE_MAX );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 528,
+        "Column": 5,
+        "ByteOffset": 18186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nNodes \u003c LPK_SIZE_MAX );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 529,
+        "Column": 5,
+        "ByteOffset": 18228
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pCutNew.pNodes, pCut.pNodes, pCut.nNodes * sizeof(int) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 550,
+        "Column": 5,
+        "ByteOffset": 18990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutNew.nNodes \u003c= p.nMffc + pCutNew.nNodesDup );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 552,
+        "Column": 5,
+        "ByteOffset": 19081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nCuts \u003c LPK_CUTS_MAX );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 605,
+        "Column": 5,
+        "ByteOffset": 20490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nMffc \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Lpk_CutTruthBdd_rec",
+      "Start": 1289,
+      "End": 2269,
+      "BodyStart": 1389,
+      "Original": "CloudNode * Lpk_CutTruthBdd_rec( CloudManager * dd, Hop_Man_t * pMan, Hop_Obj_t * pObj, int nVars )\n{\n    CloudNode * pTruth, * pTruth0, * pTruth1;\n    assert( !Hop_IsComplement(pObj) );\n    if ( pObj-\u003epData )\n    {\n        assert( ((unsigned)(ABC_PTRUINT_T)pObj-\u003epData) \u0026 0xffff0000 );\n        return (CloudNode *)pObj-\u003epData;\n    }\n    // get the plan for a new truth table\n    if ( Hop_ObjIsConst1(pObj) )\n        pTruth = dd-\u003eone;\n    else\n    {\n        assert( Hop_ObjIsAnd(pObj) );\n        // compute the truth tables of the fanins\n        pTruth0 = Lpk_CutTruthBdd_rec( dd, pMan, Hop_ObjFanin0(pObj), nVars );\n        pTruth1 = Lpk_CutTruthBdd_rec( dd, pMan, Hop_ObjFanin1(pObj), nVars );\n        pTruth0 = Cloud_NotCond( pTruth0, Hop_ObjFaninC0(pObj) );\n        pTruth1 = Cloud_NotCond( pTruth1, Hop_ObjFaninC1(pObj) );\n        // creat the truth table of the node\n        pTruth = Cloud_bddAnd( dd, pTruth0, pTruth1 );\n    }\n    pObj-\u003epData = pTruth;\n    return pTruth;\n}",
+      "Draft": "func Lpk_CutTruthBdd_rec(dd *CloudManager, pMan *Hop_Man_t, pObj *Hop_Obj_t, nVars int32) *CloudNode {\n    var pTruth, pTruth0, pTruth1 *CloudNode;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if pObj.pData {\n        assert((uint32((ABC_PTRUINT_T))pObj.pData) \u0026 0xffff0000, \"(uint32((ABC_PTRUINT_T))pObj.pData) \u0026 0xffff0000\");\n        return (CloudNode *)pObj.pData;\n    }\n    // get the plan for a new truth table\n    if Hop_ObjIsConst1(pObj) {\n        pTruth = dd.one;\n    } else {\n        assert(Hop_ObjIsAnd(pObj), \"Hop_ObjIsAnd(pObj)\");\n        // compute the truth tables of the fanins\n        pTruth0 = Lpk_CutTruthBdd_rec( dd, pMan, Hop_ObjFanin0(pObj), nVars );\n        pTruth1 = Lpk_CutTruthBdd_rec( dd, pMan, Hop_ObjFanin1(pObj), nVars );\n        pTruth0 = Cloud_NotCond( pTruth0, Hop_ObjFaninC0(pObj) );\n        pTruth1 = Cloud_NotCond( pTruth1, Hop_ObjFaninC1(pObj) );\n        // creat the truth table of the node\n        pTruth = Cloud_bddAnd( dd, pTruth0, pTruth1 );\n    }\n    pObj.pData = pTruth;\n    return pTruth;\n}"
+    },
+    {
+      "Name": "Lpk_CutTruthBdd",
+      "Start": 2544,
+      "End": 4111,
+      "BodyStart": 2607,
+      "Original": "CloudNode * Lpk_CutTruthBdd( Lpk_Man_t * p, Lpk_Cut_t * pCut )\n{\n    CloudManager * dd = p-\u003epDsdMan-\u003edd;\n    Hop_Man_t * pManHop = (Hop_Man_t *)p-\u003epNtk-\u003epManFunc;\n    Hop_Obj_t * pObjHop;\n    Abc_Obj_t * pObj, * pFanin;\n    CloudNode * pTruth = NULL; // Suppress \"might be used uninitialized\"\n    int i, k;\n\n//    return NULL;\n//    Lpk_NodePrintCut( p, pCut );\n    // initialize the leaves\n    Lpk_CutForEachLeaf( p-\u003epNtk, pCut, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)dd-\u003evars[pCut-\u003enLeaves-1-i];\n\n    // construct truth table in the topological order\n    Lpk_CutForEachNodeReverse( p-\u003epNtk, pCut, pObj, i )\n    {\n        // get the local AIG\n        pObjHop = Hop_Regular((Hop_Obj_t *)pObj-\u003epData);\n        // clean the data field of the nodes in the AIG subgraph\n        Hop_ObjCleanData_rec( pObjHop );\n        // set the initial truth tables at the fanins\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            assert( ((unsigned)(ABC_PTRUINT_T)pFanin-\u003epCopy) \u0026 0xffff0000 );\n            Hop_ManPi( pManHop, k )-\u003epData = pFanin-\u003epCopy;\n        }\n        // compute the truth table of internal nodes\n        pTruth = Lpk_CutTruthBdd_rec( dd, pManHop, pObjHop, pCut-\u003enLeaves );\n        if ( Hop_IsComplement((Hop_Obj_t *)pObj-\u003epData) )\n            pTruth = Cloud_Not(pTruth);\n        // set the truth table at the node\n        pObj-\u003epCopy = (Abc_Obj_t *)pTruth;\n        \n    }\n\n//    Cloud_bddPrint( dd, pTruth );\n//    printf( \"Bdd size = %d. Total nodes = %d.\\n\", Cloud_DagSize( dd, pTruth ), dd-\u003enNodesCur-dd-\u003enVars-1 );\n    return pTruth;\n}",
+      "Draft": "func Lpk_CutTruthBdd(p *Lpk_Man_t, pCut *Lpk_Cut_t) *CloudNode {\n    var dd *CloudManager  = p.pDsdMan.dd;\n    var pManHop *Hop_Man_t  = (Hop_Man_t *)p.pNtk.pManFunc;\n    var pObjHop *Hop_Obj_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var pTruth *CloudNode  = nil; // Suppress \"might be used uninitialized\"\n    var i, k int32;\n\n//    return NULL;\n//    Lpk_NodePrintCut( p, pCut );\n    // initialize the leaves\n    // inlining of macro Lpk_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pLeaves[i])), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)dd.vars[pCut.nLeaves-1-i];\n    }\n\n    // construct truth table in the topological order\n    // inlining of macro Lpk_CutForEachNodeReverse\n    for  i = int32((pCut).nNodes) - 1; (i \u003e= 0) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pNodes[i])), 1); i--  {\n        // get the local AIG\n        pObjHop = Hop_Regular((Hop_Obj_t *)pObj.pData);\n        // clean the data field of the nodes in the AIG subgraph\n        Hop_ObjCleanData_rec( pObjHop );\n        // set the initial truth tables at the fanins\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            assert((uint32((ABC_PTRUINT_T))pFanin.pCopy) \u0026 0xffff0000, \"(uint32((ABC_PTRUINT_T))pFanin.pCopy) \u0026 0xffff0000\");\n            Hop_ManPi( pManHop, k ).pData = pFanin.pCopy;\n        }\n        // compute the truth table of internal nodes\n        pTruth = Lpk_CutTruthBdd_rec( dd, pManHop, pObjHop, pCut.nLeaves );\n        if Hop_IsComplement((Hop_Obj_t *)pObj.pData) {\n            pTruth = Cloud_Not(pTruth); }\n        // set the truth table at the node\n        pObj.pCopy = (Abc_Obj_t *)pTruth;\n        \n    }\n\n//    Cloud_bddPrint( dd, pTruth );\n//    printf( \"Bdd size = %d. Total nodes = %d.\\n\", Cloud_DagSize( dd, pTruth ), dd-\u003enNodesCur-dd-\u003enVars-1 );\n    return pTruth;\n}"
+    },
+    {
+      "Name": "Lpk_CutTruth_rec",
+      "Start": 4384,
+      "End": 5398,
+      "BodyStart": 4498,
+      "Original": "unsigned * Lpk_CutTruth_rec( Hop_Man_t * pMan, Hop_Obj_t * pObj, int nVars, Vec_Ptr_t * vTtNodes, int * piCount )\n{\n    unsigned * pTruth, * pTruth0, * pTruth1;\n    assert( !Hop_IsComplement(pObj) );\n    if ( pObj-\u003epData )\n    {\n        assert( ((unsigned)(ABC_PTRUINT_T)pObj-\u003epData) \u0026 0xffff0000 );\n        return (unsigned *)pObj-\u003epData;\n    }\n    // get the plan for a new truth table\n    pTruth = (unsigned *)Vec_PtrEntry( vTtNodes, (*piCount)++ );\n    if ( Hop_ObjIsConst1(pObj) )\n        Kit_TruthFill( pTruth, nVars );\n    else\n    {\n        assert( Hop_ObjIsAnd(pObj) );\n        // compute the truth tables of the fanins\n        pTruth0 = Lpk_CutTruth_rec( pMan, Hop_ObjFanin0(pObj), nVars, vTtNodes, piCount );\n        pTruth1 = Lpk_CutTruth_rec( pMan, Hop_ObjFanin1(pObj), nVars, vTtNodes, piCount );\n        // creat the truth table of the node\n        Kit_TruthAndPhase( pTruth, pTruth0, pTruth1, nVars, Hop_ObjFaninC0(pObj), Hop_ObjFaninC1(pObj) );\n    }\n    pObj-\u003epData = pTruth;\n    return pTruth;\n}",
+      "Draft": "func Lpk_CutTruth_rec(pMan *Hop_Man_t, pObj *Hop_Obj_t, nVars int32, vTtNodes *Vec_Ptr_t, piCount *int32) *uint32 {\n    var pTruth, pTruth0, pTruth1 *uint32;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if pObj.pData {\n        assert((uint32((ABC_PTRUINT_T))pObj.pData) \u0026 0xffff0000, \"(uint32((ABC_PTRUINT_T))pObj.pData) \u0026 0xffff0000\");\n        return (unsigned *)pObj.pData;\n    }\n    // get the plan for a new truth table\n    pTruth = (unsigned *)Vec_PtrEntry( vTtNodes, (*piCount)++ );\n    if Hop_ObjIsConst1(pObj) {\n        Kit_TruthFill( pTruth, nVars );\n    } else {\n        assert(Hop_ObjIsAnd(pObj), \"Hop_ObjIsAnd(pObj)\");\n        // compute the truth tables of the fanins\n        pTruth0 = Lpk_CutTruth_rec( pMan, Hop_ObjFanin0(pObj), nVars, vTtNodes, piCount );\n        pTruth1 = Lpk_CutTruth_rec( pMan, Hop_ObjFanin1(pObj), nVars, vTtNodes, piCount );\n        // creat the truth table of the node\n        Kit_TruthAndPhase( pTruth, pTruth0, pTruth1, nVars, Hop_ObjFaninC0(pObj), Hop_ObjFaninC1(pObj) );\n    }\n    pObj.pData = pTruth;\n    return pTruth;\n}"
+    },
+    {
+      "Name": "Lpk_CutTruth",
+      "Start": 5669,
+      "End": 7538,
+      "BodyStart": 5738,
+      "Original": "unsigned * Lpk_CutTruth( Lpk_Man_t * p, Lpk_Cut_t * pCut, int fInv )\n{\n    Hop_Man_t * pManHop = (Hop_Man_t *)p-\u003epNtk-\u003epManFunc;\n    Hop_Obj_t * pObjHop;\n    Abc_Obj_t * pObj = NULL; // Suppress \"might be used uninitialized\"\n    Abc_Obj_t * pFanin;\n    unsigned * pTruth = NULL; // Suppress \"might be used uninitialized\"\n    int i, k, iCount = 0;\n//    Lpk_NodePrintCut( p, pCut );\n    assert( pCut-\u003enNodes \u003e 0 );\n\n    // initialize the leaves\n    Lpk_CutForEachLeaf( p-\u003epNtk, pCut, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)Vec_PtrEntry( p-\u003evTtElems, fInv? pCut-\u003enLeaves-1-i : i );\n\n    // construct truth table in the topological order\n    Lpk_CutForEachNodeReverse( p-\u003epNtk, pCut, pObj, i )\n    {\n        // get the local AIG\n        pObjHop = Hop_Regular((Hop_Obj_t *)pObj-\u003epData);\n        // clean the data field of the nodes in the AIG subgraph\n        Hop_ObjCleanData_rec( pObjHop );\n        // set the initial truth tables at the fanins\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            assert( ((unsigned)(ABC_PTRUINT_T)pFanin-\u003epCopy) \u0026 0xffff0000 );\n            Hop_ManPi( pManHop, k )-\u003epData = pFanin-\u003epCopy;\n        }\n        // compute the truth table of internal nodes\n        pTruth = Lpk_CutTruth_rec( pManHop, pObjHop, pCut-\u003enLeaves, p-\u003evTtNodes, \u0026iCount );\n        if ( Hop_IsComplement((Hop_Obj_t *)pObj-\u003epData) )\n            Kit_TruthNot( pTruth, pTruth, pCut-\u003enLeaves );\n        // set the truth table at the node\n        pObj-\u003epCopy = (Abc_Obj_t *)pTruth;\n    }\n\n    // make sure direct truth table is stored elsewhere (assuming the first call for direct truth!!!)\n    if ( fInv == 0 )\n    {\n        pTruth = (unsigned *)Vec_PtrEntry( p-\u003evTtNodes, iCount++ );\n        Kit_TruthCopy( pTruth, (unsigned *)(ABC_PTRUINT_T)pObj-\u003epCopy, pCut-\u003enLeaves );\n    }\n    assert( iCount \u003c= Vec_PtrSize(p-\u003evTtNodes) );\n    return pTruth;\n}",
+      "Draft": "func Lpk_CutTruth(p *Lpk_Man_t, pCut *Lpk_Cut_t, fInv int32) *uint32 {\n    var pManHop *Hop_Man_t  = (Hop_Man_t *)p.pNtk.pManFunc;\n    var pObjHop *Hop_Obj_t;\n    var pObj *Abc_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var pFanin *Abc_Obj_t;\n    var pTruth *uint32  = nil; // Suppress \"might be used uninitialized\"\n    var i, k, iCount int32;\n//    Lpk_NodePrintCut( p, pCut );\n    assert(pCut.nNodes \u003e 0, \"pCut.nNodes \u003e 0\");\n\n    // initialize the leaves\n    // inlining of macro Lpk_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pLeaves[i])), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)Vec_PtrEntry( p.vTtElems, fInv? pCut.nLeaves-1-i : i );\n    }\n\n    // construct truth table in the topological order\n    // inlining of macro Lpk_CutForEachNodeReverse\n    for  i = int32((pCut).nNodes) - 1; (i \u003e= 0) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pNodes[i])), 1); i--  {\n        // get the local AIG\n        pObjHop = Hop_Regular((Hop_Obj_t *)pObj.pData);\n        // clean the data field of the nodes in the AIG subgraph\n        Hop_ObjCleanData_rec( pObjHop );\n        // set the initial truth tables at the fanins\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            assert((uint32((ABC_PTRUINT_T))pFanin.pCopy) \u0026 0xffff0000, \"(uint32((ABC_PTRUINT_T))pFanin.pCopy) \u0026 0xffff0000\");\n            Hop_ManPi( pManHop, k ).pData = pFanin.pCopy;\n        }\n        // compute the truth table of internal nodes\n        pTruth = Lpk_CutTruth_rec( pManHop, pObjHop, pCut.nLeaves, p.vTtNodes, \u0026iCount );\n        if Hop_IsComplement((Hop_Obj_t *)pObj.pData) {\n            Kit_TruthNot( pTruth, pTruth, pCut.nLeaves ); }\n        // set the truth table at the node\n        pObj.pCopy = (Abc_Obj_t *)pTruth;\n    }\n\n    // make sure direct truth table is stored elsewhere (assuming the first call for direct truth!!!)\n    if fInv == 0 {\n        pTruth = (unsigned *)Vec_PtrEntry( p.vTtNodes, iCount++ );\n        Kit_TruthCopy( pTruth, (unsigned *)(ABC_PTRUINT_T)pObj.pCopy, pCut.nLeaves );\n    }\n    assert(iCount \u003c= Vec_PtrSize(p.vTtNodes), \"iCount \u003c= Vec_PtrSize(p.vTtNodes)\");\n    return pTruth;\n}"
+    },
+    {
+      "Name": "Lpk_NodeRecordImpact",
+      "Start": 7819,
+      "End": 8800,
+      "BodyStart": 7862,
+      "Original": "void Lpk_NodeRecordImpact( Lpk_Man_t * p )\n{\n    Lpk_Cut_t * pCut;\n    Vec_Ptr_t * vNodes = Vec_VecEntry( p-\u003evVisited, p-\u003epObj-\u003eId );\n    Abc_Obj_t * pNode, * pNode2;\n    int i, k;\n    // collect the nodes that impact the given node\n    Vec_PtrClear( vNodes );\n    for ( i = 0; i \u003c p-\u003enCuts; i++ )\n    {\n        pCut = p-\u003epCuts + i;\n        for ( k = 0; k \u003c (int)pCut-\u003enLeaves; k++ )\n        {\n            pNode = Abc_NtkObj( p-\u003epNtk, pCut-\u003epLeaves[k] );\n            if ( pNode-\u003efMarkC )\n                continue;\n            pNode-\u003efMarkC = 1;\n            Vec_PtrPush( vNodes, (void *)(ABC_PTRUINT_T)pNode-\u003eId );\n            Vec_PtrPush( vNodes, (void *)(ABC_PTRUINT_T)Abc_ObjFanoutNum(pNode) );\n        }\n    }\n    // clear the marks\n    Vec_PtrForEachEntryDouble( Abc_Obj_t *, Abc_Obj_t *, vNodes, pNode, pNode2, i )\n    {\n        pNode = Abc_NtkObj( p-\u003epNtk, (int)(ABC_PTRUINT_T)pNode );\n        pNode-\u003efMarkC = 0;\n//        i++;\n    }\n//printf( \"%d \", Vec_PtrSize(vNodes) );\n}",
+      "Draft": "func Lpk_NodeRecordImpact(p *Lpk_Man_t) {\n    var pCut *Lpk_Cut_t;\n    var vNodes *Vec_Ptr_t  = Vec_VecEntry( p.vVisited, p.pObj.Id );\n    var pNode, pNode2 *Abc_Obj_t;\n    var i, k int32;\n    // collect the nodes that impact the given node\n    Vec_PtrClear( vNodes );\n    for  i = 0; i \u003c p.nCuts; i++  {\n        pCut = p.pCuts + i;\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            pNode = Abc_NtkObj( p.pNtk, pCut.pLeaves[k] );\n            if pNode.fMarkC {\n                continue; }\n            pNode.fMarkC = 1;\n            Vec_PtrPush( vNodes, (void *)(ABC_PTRUINT_T)pNode.Id );\n            Vec_PtrPush( vNodes, (void *)(ABC_PTRUINT_T)Abc_ObjFanoutNum(pNode) );\n        }\n    }\n    // clear the marks\n    Vec_PtrForEachEntryDouble( Abc_Obj_t *, Abc_Obj_t *, vNodes, pNode, pNode2, i )\n    {\n        pNode = Abc_NtkObj( p.pNtk, int32((ABC_PTRUINT_T))pNode );\n        pNode.fMarkC = 0;\n//        i++;\n    }\n//printf( \"%d \", Vec_PtrSize(vNodes) );\n}"
+    },
+    {
+      "Name": "Lpk_NodeCutsCheckDsd",
+      "Start": 9076,
+      "End": 10548,
+      "BodyStart": 9136,
+      "Original": "int Lpk_NodeCutsCheckDsd( Lpk_Man_t * p, Lpk_Cut_t * pCut )\n{\n    Abc_Obj_t * pObj, * pFanin;\n    int i, k, nCands, fLeavesOnly, RetValue;\n    assert( pCut-\u003enLeaves \u003e 0 );\n    // clear ref counters\n    memset( p-\u003epRefs, 0, sizeof(int) * pCut-\u003enLeaves );\n    // mark cut leaves\n    Lpk_CutForEachLeaf( p-\u003epNtk, pCut, pObj, i )\n    {\n        assert( pObj-\u003efMarkA == 0 );\n        pObj-\u003efMarkA = 1;\n        pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)i;\n    }\n    // ref leaves pointed from the internal nodes\n    nCands = 0;\n    Lpk_CutForEachNode( p-\u003epNtk, pCut, pObj, i )\n    {\n        fLeavesOnly = 1;\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            if ( pFanin-\u003efMarkA )\n                p-\u003epRefs[(int)(ABC_PTRUINT_T)pFanin-\u003epCopy]++;\n            else\n                fLeavesOnly = 0;\n        if ( fLeavesOnly )\n            p-\u003epCands[nCands++] = pObj-\u003eId;\n    }\n    // look at the nodes that only point to the leaves\n    RetValue = 0;\n    for ( i = 0; i \u003c nCands; i++ )\n    {\n        pObj = Abc_NtkObj( p-\u003epNtk, p-\u003epCands[i] );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            assert( pFanin-\u003efMarkA == 1 );\n            if ( p-\u003epRefs[(int)(ABC_PTRUINT_T)pFanin-\u003epCopy] \u003e 1 )\n                break;\n        }\n        if ( k == Abc_ObjFaninNum(pObj) )\n        {\n            RetValue = 1;\n            break;\n        }\n    }\n    // unmark cut leaves\n    Lpk_CutForEachLeaf( p-\u003epNtk, pCut, pObj, i )\n        pObj-\u003efMarkA = 0;\n    return RetValue;\n}",
+      "Draft": "func Lpk_NodeCutsCheckDsd(p *Lpk_Man_t, pCut *Lpk_Cut_t) int32 {\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k, nCands, fLeavesOnly, RetValue int32;\n    assert(pCut.nLeaves \u003e 0, \"pCut.nLeaves \u003e 0\");\n    // clear ref counters\n    memset( p.pRefs, 0, sizeof(int) * pCut.nLeaves );\n    // mark cut leaves\n    // inlining of macro Lpk_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pLeaves[i])), 1); i++  {\n        assert(pObj.fMarkA == 0, \"pObj.fMarkA == 0\");\n        pObj.fMarkA = 1;\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)i;\n    }\n    // ref leaves pointed from the internal nodes\n    nCands = 0;\n    // inlining of macro Lpk_CutForEachNode\n    for  i = 0; (i \u003c int32((pCut).nNodes)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pNodes[i])), 1); i++  {\n        fLeavesOnly = 1;\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            if ( pFanin.fMarkA )\n                p.pRefs[int32((ABC_PTRUINT_T))pFanin.pCopy]++;\n            else\n                fLeavesOnly = 0;\n        if fLeavesOnly != 0 {\n            p.pCands[nCands++] = pObj.Id; }\n    }\n    // look at the nodes that only point to the leaves\n    RetValue = 0;\n    for  i = 0; i \u003c nCands; i++  {\n        pObj = Abc_NtkObj( p.pNtk, p.pCands[i] );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            assert(pFanin.fMarkA == 1, \"pFanin.fMarkA == 1\");\n            if p.pRefs[int32((ABC_PTRUINT_T))pFanin.pCopy] \u003e 1 {\n                break; }\n        }\n        if k == Abc_ObjFaninNum(pObj) {\n            RetValue = 1;\n            break;\n        }\n    }\n    // unmark cut leaves\n    // inlining of macro Lpk_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pLeaves[i])), 1); i++  {\n        pObj.fMarkA = 0;\n    }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Lpk_NodeCutsOneDominance",
+      "Start": 10823,
+      "End": 11275,
+      "BodyStart": 10904,
+      "Original": "static inline int Lpk_NodeCutsOneDominance( Lpk_Cut_t * pDom, Lpk_Cut_t * pCut )\n{\n    int i, k;\n    for ( i = 0; i \u003c (int)pDom-\u003enLeaves; i++ )\n    {\n        for ( k = 0; k \u003c (int)pCut-\u003enLeaves; k++ )\n            if ( pDom-\u003epLeaves[i] == pCut-\u003epLeaves[k] )\n                break;\n        if ( k == (int)pCut-\u003enLeaves ) // node i in pDom is not contained in pCut\n            return 0;\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}",
+      "Draft": "func Lpk_NodeCutsOneDominance(pDom *Lpk_Cut_t, pCut *Lpk_Cut_t) int32 {\n    var i, k int32;\n    for  i = 0; i \u003c int32(pDom.nLeaves); i++  {\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            if pDom.pLeaves[i] == pCut.pLeaves[k] {\n                break; }\n        }\n        if k == int32(pCut.nLeaves) { // node i in pDom is not contained in pCut\n            return 0; }\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}"
+    },
+    {
+      "Name": "Lpk_NodeCutsOneFilter",
+      "Start": 11563,
+      "End": 13240,
+      "BodyStart": 11642,
+      "Original": "int Lpk_NodeCutsOneFilter( Lpk_Cut_t * pCuts, int nCuts, Lpk_Cut_t * pCutNew )\n{\n    Lpk_Cut_t * pCut;\n    int i, k;\n    assert( pCutNew-\u003euSign[0] || pCutNew-\u003euSign[1] );\n    // try to find the cut\n    for ( i = 0; i \u003c nCuts; i++ )\n    {\n        pCut = pCuts + i;\n        if ( pCut-\u003enLeaves == 0 )\n            continue;\n        if ( pCut-\u003enLeaves == pCutNew-\u003enLeaves )\n        {\n            if ( pCut-\u003euSign[0] == pCutNew-\u003euSign[0] \u0026\u0026 pCut-\u003euSign[1] == pCutNew-\u003euSign[1] )\n            {\n                for ( k = 0; k \u003c (int)pCutNew-\u003enLeaves; k++ )\n                    if ( pCut-\u003epLeaves[k] != pCutNew-\u003epLeaves[k] )\n                        break;\n                if ( k == (int)pCutNew-\u003enLeaves )\n                    return 1;\n            }\n            continue;\n        }\n        if ( pCut-\u003enLeaves \u003c pCutNew-\u003enLeaves )\n        {\n            // skip the non-contained cuts\n            if ( (pCut-\u003euSign[0] \u0026 pCutNew-\u003euSign[0]) != pCut-\u003euSign[0] )\n                continue;\n            if ( (pCut-\u003euSign[1] \u0026 pCutNew-\u003euSign[1]) != pCut-\u003euSign[1] )\n                continue;\n            // check containment seriously\n            if ( Lpk_NodeCutsOneDominance( pCut, pCutNew ) )\n                return 1;\n            continue;\n        }\n        // check potential containment of other cut\n\n        // skip the non-contained cuts\n        if ( (pCut-\u003euSign[0] \u0026 pCutNew-\u003euSign[0]) != pCutNew-\u003euSign[0] )\n            continue;\n        if ( (pCut-\u003euSign[1] \u0026 pCutNew-\u003euSign[1]) != pCutNew-\u003euSign[1] )\n            continue;\n        // check containment seriously\n        if ( Lpk_NodeCutsOneDominance( pCutNew, pCut ) )\n            pCut-\u003enLeaves = 0; // removed\n    }\n    return 0;\n}",
+      "Draft": "func Lpk_NodeCutsOneFilter(pCuts *Lpk_Cut_t, nCuts int32, pCutNew *Lpk_Cut_t) int32 {\n    var pCut *Lpk_Cut_t;\n    var i, k int32;\n    assert(pCutNew.uSign[0] || pCutNew.uSign[1], \"pCutNew.uSign[0] || pCutNew.uSign[1]\");\n    // try to find the cut\n    for  i = 0; i \u003c nCuts; i++  {\n        pCut = pCuts + i;\n        if pCut.nLeaves == 0 {\n            continue; }\n        if pCut.nLeaves == pCutNew.nLeaves {\n            if pCut.uSign[0] == pCutNew.uSign[0] \u0026\u0026 pCut.uSign[1] == pCutNew.uSign[1] {\n                for  k = 0; k \u003c int32(pCutNew.nLeaves); k++  {\n                    if pCut.pLeaves[k] != pCutNew.pLeaves[k] {\n                        break; }\n                }\n                if k == int32(pCutNew.nLeaves) {\n                    return 1; }\n            }\n            continue;\n        }\n        if pCut.nLeaves \u003c pCutNew.nLeaves {\n            // skip the non-contained cuts\n            if (pCut.uSign[0] \u0026 pCutNew.uSign[0]) != pCut.uSign[0] {\n                continue; }\n            if (pCut.uSign[1] \u0026 pCutNew.uSign[1]) != pCut.uSign[1] {\n                continue; }\n            // check containment seriously\n            if Lpk_NodeCutsOneDominance( pCut, pCutNew ) != 0 {\n                return 1; }\n            continue;\n        }\n        // check potential containment of other cut\n\n        // skip the non-contained cuts\n        if (pCut.uSign[0] \u0026 pCutNew.uSign[0]) != pCutNew.uSign[0] {\n            continue; }\n        if (pCut.uSign[1] \u0026 pCutNew.uSign[1]) != pCutNew.uSign[1] {\n            continue; }\n        // check containment seriously\n        if Lpk_NodeCutsOneDominance( pCutNew, pCut ) != 0 {\n            pCut.nLeaves = 0; } // removed\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Lpk_NodePrintCut",
+      "Start": 13497,
+      "End": 13993,
+      "BodyStart": 13571,
+      "Original": "void Lpk_NodePrintCut( Lpk_Man_t * p, Lpk_Cut_t * pCut, int fLeavesOnly )\n{\n    Abc_Obj_t * pObj;\n    int i;\n    if ( !fLeavesOnly )\n        printf( \"LEAVES:\\n\" );\n    Lpk_CutForEachLeaf( p-\u003epNtk, pCut, pObj, i )\n        printf( \"%d,\", pObj-\u003eId );\n    if ( !fLeavesOnly )\n    {\n        printf( \"\\nNODES:\\n\" );\n        Lpk_CutForEachNode( p-\u003epNtk, pCut, pObj, i )\n        {\n            printf( \"%d,\", pObj-\u003eId );\n            assert( Abc_ObjIsNode(pObj) );\n        }\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Lpk_NodePrintCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, fLeavesOnly int32) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    if !(fLeavesOnly != 0) {\n        fmt.Printf(\"LEAVES:\\n\"); }\n    // inlining of macro Lpk_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pLeaves[i])), 1); i++  {\n        fmt.Printf(\"%d,\", pObj.Id);\n    }\n    if !(fLeavesOnly != 0) {\n        fmt.Printf(\"\\nNODES:\\n\");\n        // inlining of macro Lpk_CutForEachNode\n        for  i = 0; (i \u003c int32((pCut).nNodes)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pNodes[i])), 1); i++  {\n            fmt.Printf(\"%d,\", pObj.Id);\n            assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n        }\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Lpk_NodeCutSignature",
+      "Start": 14251,
+      "End": 14594,
+      "BodyStart": 14297,
+      "Original": "void Lpk_NodeCutSignature( Lpk_Cut_t * pCut )\n{\n    unsigned i;\n    pCut-\u003euSign[0] = pCut-\u003euSign[1] = 0;\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n    {\n        pCut-\u003euSign[(pCut-\u003epLeaves[i] \u0026 32) \u003e 0] |= (1 \u003c\u003c (pCut-\u003epLeaves[i] \u0026 31));\n        if ( i != pCut-\u003enLeaves - 1 )\n            assert( pCut-\u003epLeaves[i] \u003c pCut-\u003epLeaves[i+1] );\n    }\n}",
+      "Draft": "func Lpk_NodeCutSignature(pCut *Lpk_Cut_t) {\n    var i uint32;\n    pCut.uSign[0] = pCut.uSign[1] = 0;\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pCut.uSign[(pCut.pLeaves[i] \u0026 32) \u003e 0] |= (1 \u003c\u003c (pCut.pLeaves[i] \u0026 31));\n        if i != pCut.nLeaves - 1 {\n            assert(pCut.pLeaves[i] \u003c pCut.pLeaves[i+1], \"pCut.pLeaves[i] \u003c pCut.pLeaves[i+1]\"); }\n    }\n}"
+    },
+    {
+      "Name": "Lpk_NodeCutsOne",
+      "Start": 14860,
+      "End": 18239,
+      "BodyStart": 14926,
+      "Original": "void Lpk_NodeCutsOne( Lpk_Man_t * p, Lpk_Cut_t * pCut, int Node )\n{\n    Lpk_Cut_t * pCutNew;\n    Abc_Obj_t * pObj, * pFanin;\n    int i, k, j, nLeavesNew;\n/*\n    printf( \"Exploring cut \" );\n    Lpk_NodePrintCut( p, pCut, 1 );\n    printf( \"with node %d\\n\", Node );\n*/\n    // check if the cut can stand adding one more internal node\n    if ( pCut-\u003enNodes == LPK_SIZE_MAX )\n        return;\n\n    // if the node is a PI, quit\n    pObj = Abc_NtkObj( p-\u003epNtk, Node );\n    if ( Abc_ObjIsCi(pObj) )\n        return;\n    assert( Abc_ObjIsNode(pObj) );\n//    assert( Abc_ObjFaninNum(pObj) \u003c= p-\u003epPars-\u003enLutSize );\n\n    // if the node is not in the MFFC, check the limit\n    if ( !Abc_NodeIsTravIdCurrent(pObj) )\n    {\n        if ( (int)pCut-\u003enNodesDup == p-\u003epPars-\u003enLutsOver )\n            return;\n        assert( (int)pCut-\u003enNodesDup \u003c p-\u003epPars-\u003enLutsOver );\n    }\n\n    // check the possibility of adding this node using the signature\n    nLeavesNew = pCut-\u003enLeaves - 1;\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n    {\n        if ( (pCut-\u003euSign[(pFanin-\u003eId \u0026 32) \u003e 0] \u0026 (1 \u003c\u003c (pFanin-\u003eId \u0026 31))) )\n            continue;\n        if ( ++nLeavesNew \u003e p-\u003epPars-\u003enVarsMax )\n            return;\n    }\n\n    // initialize the set of leaves to the nodes in the cut\n    assert( p-\u003enCuts \u003c LPK_CUTS_MAX );\n    pCutNew = p-\u003epCuts + p-\u003enCuts;\n    pCutNew-\u003enLeaves = 0;\n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        if ( pCut-\u003epLeaves[i] != Node )\n            pCutNew-\u003epLeaves[pCutNew-\u003enLeaves++] = pCut-\u003epLeaves[i];\n\n    // add new nodes\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n    {\n        // find the place where this node belongs\n        for ( k = 0; k \u003c (int)pCutNew-\u003enLeaves; k++ )\n            if ( pCutNew-\u003epLeaves[k] \u003e= pFanin-\u003eId )\n                break;\n        if ( k \u003c (int)pCutNew-\u003enLeaves \u0026\u0026 pCutNew-\u003epLeaves[k] == pFanin-\u003eId )\n            continue;\n        // check if there is room\n        if ( (int)pCutNew-\u003enLeaves == p-\u003epPars-\u003enVarsMax )\n            return;\n        // move all the nodes\n        for ( j = pCutNew-\u003enLeaves; j \u003e k; j-- )\n            pCutNew-\u003epLeaves[j] = pCutNew-\u003epLeaves[j-1];\n        pCutNew-\u003epLeaves[k] = pFanin-\u003eId;\n        pCutNew-\u003enLeaves++;\n        assert( pCutNew-\u003enLeaves \u003c= LPK_SIZE_MAX );\n\n    }\n    // skip the contained cuts\n    Lpk_NodeCutSignature( pCutNew );\n    if ( Lpk_NodeCutsOneFilter( p-\u003epCuts, p-\u003enCuts, pCutNew ) )\n        return;\n\n    // update the set of internal nodes\n    assert( pCut-\u003enNodes \u003c LPK_SIZE_MAX );\n    memcpy( pCutNew-\u003epNodes, pCut-\u003epNodes, pCut-\u003enNodes * sizeof(int) );\n    pCutNew-\u003enNodes = pCut-\u003enNodes;\n    pCutNew-\u003enNodesDup = pCut-\u003enNodesDup;\n\n    // check if the node is already there\n    // if so, move the node to be the last\n    for ( i = 0; i \u003c (int)pCutNew-\u003enNodes; i++ )\n        if ( pCutNew-\u003epNodes[i] == Node )\n        {\n            for ( k = i; k \u003c (int)pCutNew-\u003enNodes - 1; k++ )\n                pCutNew-\u003epNodes[k] = pCutNew-\u003epNodes[k+1];\n            pCutNew-\u003epNodes[k] = Node;\n            break;\n        }\n    if ( i == (int)pCutNew-\u003enNodes ) // new node\n    {\n        pCutNew-\u003epNodes[ pCutNew-\u003enNodes++ ] = Node;\n        pCutNew-\u003enNodesDup += !Abc_NodeIsTravIdCurrent(pObj);\n    }\n    // the number of nodes does not exceed MFFC plus duplications\n    assert( pCutNew-\u003enNodes \u003c= p-\u003enMffc + pCutNew-\u003enNodesDup );\n    // add the cut to storage\n    assert( p-\u003enCuts \u003c LPK_CUTS_MAX );\n    p-\u003enCuts++;\n}",
+      "Draft": "func Lpk_NodeCutsOne(p *Lpk_Man_t, pCut *Lpk_Cut_t, Node int32) {\n    var pCutNew *Lpk_Cut_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k, j, nLeavesNew int32;\n/*\n    printf( \"Exploring cut \" );\n    Lpk_NodePrintCut( p, pCut, 1 );\n    printf( \"with node %d\\n\", Node );\n*/\n    // check if the cut can stand adding one more internal node\n    if pCut.nNodes == LPK_SIZE_MAX {\n        return; }\n\n    // if the node is a PI, quit\n    pObj = Abc_NtkObj( p.pNtk, Node );\n    if Abc_ObjIsCi(pObj) {\n        return; }\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n//    assert( Abc_ObjFaninNum(pObj) \u003c= p-\u003epPars-\u003enLutSize );\n\n    // if the node is not in the MFFC, check the limit\n    if !Abc_NodeIsTravIdCurrent(pObj) {\n        if int32(pCut.nNodesDup) == p.pPars.nLutsOver {\n            return; }\n        assert(int32(pCut.nNodesDup) \u003c p.pPars.nLutsOver, \"int32(pCut.nNodesDup) \u003c p.pPars.nLutsOver\");\n    }\n\n    // check the possibility of adding this node using the signature\n    nLeavesNew = pCut.nLeaves - 1;\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n    {\n        if pCut.uSign[(pFanin.Id \u0026 32) \u003e 0] \u0026 (1 \u003c\u003c (pFanin.Id \u0026 31)) {\n            continue; }\n        if nLeavesNew++; nLeavesNew \u003e p.pPars.nVarsMax {\n            return; }\n    }\n\n    // initialize the set of leaves to the nodes in the cut\n    assert(p.nCuts \u003c LPK_CUTS_MAX, \"p.nCuts \u003c LPK_CUTS_MAX\");\n    pCutNew = p.pCuts + p.nCuts;\n    pCutNew.nLeaves = 0;\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        if pCut.pLeaves[i] != Node {\n            pCutNew.pLeaves[pCutNew.nLeaves++] = pCut.pLeaves[i]; }\n    }\n\n    // add new nodes\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n    {\n        // find the place where this node belongs\n        for  k = 0; k \u003c int32(pCutNew.nLeaves); k++  {\n            if pCutNew.pLeaves[k] \u003e= pFanin.Id {\n                break; }\n        }\n        if k \u003c int32(pCutNew.nLeaves) \u0026\u0026 pCutNew.pLeaves[k] == pFanin.Id {\n            continue; }\n        // check if there is room\n        if int32(pCutNew.nLeaves) == p.pPars.nVarsMax {\n            return; }\n        // move all the nodes\n        for  j = pCutNew.nLeaves; j \u003e k; j--  {\n            pCutNew.pLeaves[j] = pCutNew.pLeaves[j-1];\n        }\n        pCutNew.pLeaves[k] = pFanin.Id;\n        pCutNew.nLeaves++;\n        assert(pCutNew.nLeaves \u003c= LPK_SIZE_MAX, \"pCutNew.nLeaves \u003c= LPK_SIZE_MAX\");\n\n    }\n    // skip the contained cuts\n    Lpk_NodeCutSignature( pCutNew );\n    if Lpk_NodeCutsOneFilter( p.pCuts, p.nCuts, pCutNew ) != 0 {\n        return; }\n\n    // update the set of internal nodes\n    assert(pCut.nNodes \u003c LPK_SIZE_MAX, \"pCut.nNodes \u003c LPK_SIZE_MAX\");\n    memcpy( pCutNew.pNodes, pCut.pNodes, pCut.nNodes * sizeof(int) );\n    pCutNew.nNodes = pCut.nNodes;\n    pCutNew.nNodesDup = pCut.nNodesDup;\n\n    // check if the node is already there\n    // if so, move the node to be the last\n    for  i = 0; i \u003c int32(pCutNew.nNodes); i++  {\n        if pCutNew.pNodes[i] == Node {\n            for  k = i; k \u003c int32(pCutNew.nNodes) - 1; k++  {\n                pCutNew.pNodes[k] = pCutNew.pNodes[k+1];\n            }\n            pCutNew.pNodes[k] = Node;\n            break;\n        }\n    }\n    if i == int32(pCutNew.nNodes) { // new node\n    \n        pCutNew.pNodes[ pCutNew.nNodes++ ] = Node;\n        pCutNew.nNodesDup += !Abc_NodeIsTravIdCurrent(pObj);\n    }\n    // the number of nodes does not exceed MFFC plus duplications\n    assert(pCutNew.nNodes \u003c= p.nMffc + pCutNew.nNodesDup, \"pCutNew.nNodes \u003c= p.nMffc + pCutNew.nNodesDup\");\n    // add the cut to storage\n    assert(p.nCuts \u003c LPK_CUTS_MAX, \"p.nCuts \u003c LPK_CUTS_MAX\");\n    p.nCuts++;\n}"
+    },
+    {
+      "Name": "Lpk_CountSupp",
+      "Start": 18489,
+      "End": 19046,
+      "BodyStart": 18544,
+      "Original": "int Lpk_CountSupp( Abc_Ntk_t * p, Vec_Ptr_t * vNodes )\n{\n    Abc_Obj_t * pObj, * pFanin; \n    int i, k, Count = 0;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            if ( Abc_NodeIsTravIdCurrent(pFanin) )\n                continue;\n            Count += !pFanin-\u003efPersist;\n            pFanin-\u003efPersist = 1;\n        }\n    }\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            pFanin-\u003efPersist = 0;\n    return Count;\n}",
+      "Draft": "func Lpk_CountSupp(p *Abc_Ntk_t, vNodes *Vec_Ptr_t) int32 {\n    var pObj, pFanin *Abc_Obj_t; \n    var i, k, Count int32;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            if Abc_NodeIsTravIdCurrent(pFanin) {\n                continue; }\n            Count += !pFanin.fPersist;\n            pFanin.fPersist = 1;\n        }\n    }\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            pFanin.fPersist = 0;\n    return Count;\n}"
+    },
+    {
+      "Name": "Lpk_NodeCuts",
+      "Start": 19311,
+      "End": 22678,
+      "BodyStart": 19345,
+      "Original": "int Lpk_NodeCuts( Lpk_Man_t * p )\n{\n    Lpk_Cut_t * pCut, * pCut2;\n    int i, k, Temp, nMffc, fChanges;\n    //int nSupp;\n\n    // mark the MFFC of the node with the current trav ID\n    Vec_PtrClear( p-\u003evTemp );\n    nMffc = p-\u003enMffc = Abc_NodeMffcLabel( p-\u003epObj, p-\u003evTemp );\n    assert( nMffc \u003e 0 );\n    if ( nMffc == 1 )\n        return 0;\n/*\n    // count the leaves\n    nSupp = Lpk_CountSupp( p-\u003epNtk, p-\u003evTemp );\n    if ( nMffc \u003e 10 \u0026\u0026 nSupp \u003c= 10 )\n        printf( \"Obj = %4d : Supp = %4d. Mffc = %4d.\\n\", p-\u003epObj-\u003eId, nSupp, nMffc );\n*/\n    // initialize the first cut\n    pCut = p-\u003epCuts; p-\u003enCuts = 1;\n    pCut-\u003enNodes = 0; \n    pCut-\u003enNodesDup = 0;\n    pCut-\u003enLeaves = 1;\n    pCut-\u003epLeaves[0] = p-\u003epObj-\u003eId;\n    // assign the signature\n    Lpk_NodeCutSignature( pCut );\n\n    // perform the cut computation\n    for ( i = 0; i \u003c p-\u003enCuts; i++ )\n    {\n        pCut = p-\u003epCuts + i;\n        if ( pCut-\u003enLeaves == 0 )\n            continue;\n\n        // try to expand the fanins of this cut\n        for ( k = 0; k \u003c (int)pCut-\u003enLeaves; k++ )\n        {\n            // create a new cut\n            Lpk_NodeCutsOne( p, pCut, pCut-\u003epLeaves[k] );\n            // quit if the number of cuts has exceeded the limit\n            if ( p-\u003enCuts == LPK_CUTS_MAX )\n                break;\n        }\n        if ( p-\u003enCuts == LPK_CUTS_MAX )\n            break;\n    }\n    if ( p-\u003enCuts == LPK_CUTS_MAX ) \n        p-\u003enNodesOver++;\n\n    // record the impact of this node\n    if ( p-\u003epPars-\u003efSatur )\n        Lpk_NodeRecordImpact( p );\n\n    // compress the cuts by removing empty ones, those with negative Weight, and decomposable ones\n    p-\u003enEvals = 0;\n    for ( i = 0; i \u003c p-\u003enCuts; i++ )\n    {\n        pCut = p-\u003epCuts + i;\n        if ( pCut-\u003enLeaves \u003c 2 )\n            continue;\n        // compute the minimum number of LUTs needed to implement this cut\n        // V = N * (K-1) + 1  ~~~~~  N = Ceiling[(V-1)/(K-1)] = (V-1)/(K-1) + [(V-1)%(K-1) \u003e 0]\n        pCut-\u003enLuts = Lpk_LutNumLuts( pCut-\u003enLeaves, p-\u003epPars-\u003enLutSize ); \n//        pCut-\u003eWeight = (float)1.0 * (pCut-\u003enNodes - pCut-\u003enNodesDup - 1) / pCut-\u003enLuts; //p-\u003epPars-\u003enLutsMax;\n        pCut-\u003eWeight = (float)1.0 * (pCut-\u003enNodes - pCut-\u003enNodesDup) / pCut-\u003enLuts; //p-\u003epPars-\u003enLutsMax;\n        if ( pCut-\u003eWeight \u003c= 1.001 )\n//        if ( pCut-\u003eWeight \u003c= 0.999 )\n            continue;\n        pCut-\u003efHasDsd = Lpk_NodeCutsCheckDsd( p, pCut );\n        if ( pCut-\u003efHasDsd )\n            continue;\n        p-\u003epEvals[p-\u003enEvals++] = i;\n\n//        if ( pCut-\u003enLeaves \u003c= 9 \u0026\u0026 pCut-\u003enNodes \u003e 15 )\n//        printf( \"%5d : Obj = %4d  Leaves = %4d  Nodes = %4d  LUTs = %4d\\n\", i, p-\u003epObj-\u003eId, pCut-\u003enLeaves, pCut-\u003enNodes, pCut-\u003enLuts );\n    }\n    if ( p-\u003enEvals == 0 )\n        return 0;\n\n    // sort the cuts by Weight\n    do {\n        fChanges = 0;\n        for ( i = 0; i \u003c p-\u003enEvals - 1; i++ )\n        {\n            pCut = p-\u003epCuts + p-\u003epEvals[i];\n            pCut2 = p-\u003epCuts + p-\u003epEvals[i+1];\n            if ( pCut-\u003eWeight \u003e= pCut2-\u003eWeight - 0.001 )\n                continue;\n            Temp = p-\u003epEvals[i];\n            p-\u003epEvals[i] = p-\u003epEvals[i+1];\n            p-\u003epEvals[i+1] = Temp;\n            fChanges = 1;\n        }\n    } while ( fChanges );\n/*\n    for ( i = 0; i \u003c p-\u003enEvals; i++ )\n    {\n        pCut = p-\u003epCuts + p-\u003epEvals[i];\n        printf( \"Cut %3d : W = %5.2f.\\n\", i, pCut-\u003eWeight );\n    }\n    printf( \"\\n\" );\n*/\n    return 1;\n}",
+      "Draft": "func Lpk_NodeCuts(p *Lpk_Man_t) int32 {\n    var pCut, pCut2 *Lpk_Cut_t;\n    var i, k, Temp, nMffc, fChanges int32;\n    //int nSupp;\n\n    // mark the MFFC of the node with the current trav ID\n    Vec_PtrClear( p.vTemp );\n    nMffc = p.nMffc = Abc_NodeMffcLabel( p.pObj, p.vTemp );\n    assert(nMffc \u003e 0, \"nMffc \u003e 0\");\n    if nMffc == 1 {\n        return 0; }\n/*\n    // count the leaves\n    nSupp = Lpk_CountSupp( p-\u003epNtk, p-\u003evTemp );\n    if ( nMffc \u003e 10 \u0026\u0026 nSupp \u003c= 10 )\n        printf( \"Obj = %4d : Supp = %4d. Mffc = %4d.\\n\", p-\u003epObj-\u003eId, nSupp, nMffc );\n*/\n    // initialize the first cut\n    pCut = p.pCuts; p.nCuts = 1;\n    pCut.nNodes = 0; \n    pCut.nNodesDup = 0;\n    pCut.nLeaves = 1;\n    pCut.pLeaves[0] = p.pObj.Id;\n    // assign the signature\n    Lpk_NodeCutSignature( pCut );\n\n    // perform the cut computation\n    for  i = 0; i \u003c p.nCuts; i++  {\n        pCut = p.pCuts + i;\n        if pCut.nLeaves == 0 {\n            continue; }\n\n        // try to expand the fanins of this cut\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            // create a new cut\n            Lpk_NodeCutsOne( p, pCut, pCut.pLeaves[k] );\n            // quit if the number of cuts has exceeded the limit\n            if p.nCuts == LPK_CUTS_MAX {\n                break; }\n        }\n        if p.nCuts == LPK_CUTS_MAX {\n            break; }\n    }\n    if p.nCuts == LPK_CUTS_MAX { \n        p.nNodesOver++; }\n\n    // record the impact of this node\n    if p.pPars.fSatur {\n        Lpk_NodeRecordImpact( p ); }\n\n    // compress the cuts by removing empty ones, those with negative Weight, and decomposable ones\n    p.nEvals = 0;\n    for  i = 0; i \u003c p.nCuts; i++  {\n        pCut = p.pCuts + i;\n        if pCut.nLeaves \u003c 2 {\n            continue; }\n        // compute the minimum number of LUTs needed to implement this cut\n        // V = N * (K-1) + 1  ~~~~~  N = Ceiling[(V-1)/(K-1)] = (V-1)/(K-1) + [(V-1)%(K-1) \u003e 0]\n        pCut.nLuts = Lpk_LutNumLuts( pCut.nLeaves, p.pPars.nLutSize ); \n//        pCut-\u003eWeight = (float)1.0 * (pCut-\u003enNodes - pCut-\u003enNodesDup - 1) / pCut-\u003enLuts; //p-\u003epPars-\u003enLutsMax;\n        pCut.Weight = float32(1.0) * (pCut.nNodes - pCut.nNodesDup) / pCut.nLuts; //p-\u003epPars-\u003enLutsMax;\n        if pCut.Weight \u003c= 1.001 {\n//        if ( pCut-\u003eWeight \u003c= 0.999 )\n            continue; }\n        pCut.fHasDsd = Lpk_NodeCutsCheckDsd( p, pCut );\n        if pCut.fHasDsd {\n            continue; }\n        p.pEvals[p.nEvals++] = i;\n\n//        if ( pCut-\u003enLeaves \u003c= 9 \u0026\u0026 pCut-\u003enNodes \u003e 15 )\n//        printf( \"%5d : Obj = %4d  Leaves = %4d  Nodes = %4d  LUTs = %4d\\n\", i, p-\u003epObj-\u003eId, pCut-\u003enLeaves, pCut-\u003enNodes, pCut-\u003enLuts );\n    }\n    if p.nEvals == 0 {\n        return 0; }\n\n    // sort the cuts by Weight\n    do {\n        fChanges = 0;\n        for  i = 0; i \u003c p.nEvals - 1; i++  {\n            pCut = p.pCuts + p.pEvals[i];\n            pCut2 = p.pCuts + p.pEvals[i+1];\n            if pCut.Weight \u003e= pCut2.Weight - 0.001 {\n                continue; }\n            Temp = p.pEvals[i];\n            p.pEvals[i] = p.pEvals[i+1];\n            p.pEvals[i+1] = Temp;\n            fChanges = 1;\n        }\n    } while ( fChanges );\n/*\n    for ( i = 0; i \u003c p-\u003enEvals; i++ )\n    {\n        pCut = p-\u003epCuts + p-\u003epEvals[i];\n        printf( \"Cut %3d : W = %5.2f.\\n\", i, pCut-\u003eWeight );\n    }\n    printf( \"\\n\" );\n*/\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::mechanical::sizeof::9765",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9299,
+      "End": 9305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::mechanical::sizeof::18416",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17379,
+      "End": 17385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::mechanical::do::23093",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 22056,
+      "End": 22058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::1591",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1591,
+      "End": 1604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::2675",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2675,
+      "End": 2688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::3121",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3006,
+      "End": 3019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::3457",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3224,
+      "End": 3237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::4008",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3775,
+      "End": 3788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::4141",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3908,
+      "End": 3921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::4932",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4699,
+      "End": 4711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::5018",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4785,
+      "End": 4797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::5999",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5766,
+      "End": 5779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::6532",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6184,
+      "End": 6197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::6897",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6431,
+      "End": 6444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::7463",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6997,
+      "End": 7010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::7615",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7149,
+      "End": 7162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::7789",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7323,
+      "End": 7335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::7871",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7405,
+      "End": 7417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::8863",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8397,
+      "End": 8405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::8932",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8466,
+      "End": 8474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::pointer-cast::10074",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9493,
+      "End": 9506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::Lpk_CutTruthBdd_rec",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_CutTruthBdd_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1289,
+      "End": 2269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::Lpk_CutTruthBdd",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_CutTruthBdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2544,
+      "End": 4111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::Lpk_CutTruth_rec",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_CutTruth_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4384,
+      "End": 5398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::ternary::Lpk_CutTruth",
+      "Category": "ternary-review",
+      "Symbol": "Lpk_CutTruth",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5669,
+      "End": 7538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::Lpk_CutTruth",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_CutTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5669,
+      "End": 7538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::Lpk_NodeRecordImpact",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_NodeRecordImpact",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7819,
+      "End": 8800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::Lpk_NodeCutsCheckDsd",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_NodeCutsCheckDsd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9076,
+      "End": 10548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::Lpk_NodeCutsOneDominance",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_NodeCutsOneDominance",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10823,
+      "End": 11275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::Lpk_NodeCutsOneFilter",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_NodeCutsOneFilter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11563,
+      "End": 13240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::Lpk_NodePrintCut",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_NodePrintCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13497,
+      "End": 13993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::Lpk_NodeCutSignature",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_NodeCutSignature",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14251,
+      "End": 14594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::Lpk_NodeCutsOne",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_NodeCutsOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14860,
+      "End": 18239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::Lpk_CountSupp",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_CountSupp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18489,
+      "End": 19046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::Lpk_NodeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_NodeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19311,
+      "End": 22678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 22925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::macro-inline::2003",
+      "Category": "macro-inline-review",
+      "Symbol": "Cloud_NotCond",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2003,
+      "End": 2049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::macro-inline::2069",
+      "Category": "macro-inline-review",
+      "Symbol": "Cloud_NotCond",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2069,
+      "End": 2115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::macro-inline::3419",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3419,
+      "End": 3457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::macro-inline::3824",
+      "Category": "macro-inline-review",
+      "Symbol": "Cloud_Not",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3824,
+      "End": 3841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::macro-inline::6626",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6626,
+      "End": 6664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::macro-inline::8559",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryDouble",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8559,
+      "End": 8638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::macro-inline::9684",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9684,
+      "End": 9722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::macro-inline::10121",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10121,
+      "End": 10159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::macro-inline::15822",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15822,
+      "End": 15860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::macro-inline::16386",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16386,
+      "End": 16424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::macro-inline::18608",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18608,
+      "End": 18659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::macro-inline::18674",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18674,
+      "End": 18712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::macro-inline::18894",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18894,
+      "End": 18945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkCut.c::macro-inline::18954",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18954,
+      "End": 18992
+    }
+  ],
+  "Draft": "package lpk\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [lpkCut.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast Boolean matching for LUT structures.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: lpkCut.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"lpkInt.h\"\n//#include \"bool/kit/cloud.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the truth table of one cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_CutTruthBdd_rec(dd *CloudManager, pMan *Hop_Man_t, pObj *Hop_Obj_t, nVars int32) *CloudNode {\n    var pTruth, pTruth0, pTruth1 *CloudNode;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if pObj.pData {\n        assert((uint32((ABC_PTRUINT_T))pObj.pData) \u0026 0xffff0000, \"(uint32((ABC_PTRUINT_T))pObj.pData) \u0026 0xffff0000\");\n        return (CloudNode *)pObj.pData;\n    }\n    // get the plan for a new truth table\n    if Hop_ObjIsConst1(pObj) {\n        pTruth = dd.one;\n    } else {\n        assert(Hop_ObjIsAnd(pObj), \"Hop_ObjIsAnd(pObj)\");\n        // compute the truth tables of the fanins\n        pTruth0 = Lpk_CutTruthBdd_rec( dd, pMan, Hop_ObjFanin0(pObj), nVars );\n        pTruth1 = Lpk_CutTruthBdd_rec( dd, pMan, Hop_ObjFanin1(pObj), nVars );\n        pTruth0 = Cloud_NotCond( pTruth0, Hop_ObjFaninC0(pObj) );\n        pTruth1 = Cloud_NotCond( pTruth1, Hop_ObjFaninC1(pObj) );\n        // creat the truth table of the node\n        pTruth = Cloud_bddAnd( dd, pTruth0, pTruth1 );\n    }\n    pObj.pData = pTruth;\n    return pTruth;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies that the factoring is correct.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_CutTruthBdd(p *Lpk_Man_t, pCut *Lpk_Cut_t) *CloudNode {\n    var dd *CloudManager  = p.pDsdMan.dd;\n    var pManHop *Hop_Man_t  = (Hop_Man_t *)p.pNtk.pManFunc;\n    var pObjHop *Hop_Obj_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var pTruth *CloudNode  = nil; // Suppress \"might be used uninitialized\"\n    var i, k int32;\n\n//    return NULL;\n//    Lpk_NodePrintCut( p, pCut );\n    // initialize the leaves\n    // inlining of macro Lpk_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pLeaves[i])), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)dd.vars[pCut.nLeaves-1-i];\n    }\n\n    // construct truth table in the topological order\n    // inlining of macro Lpk_CutForEachNodeReverse\n    for  i = int32((pCut).nNodes) - 1; (i \u003e= 0) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pNodes[i])), 1); i--  {\n        // get the local AIG\n        pObjHop = Hop_Regular((Hop_Obj_t *)pObj.pData);\n        // clean the data field of the nodes in the AIG subgraph\n        Hop_ObjCleanData_rec( pObjHop );\n        // set the initial truth tables at the fanins\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            assert((uint32((ABC_PTRUINT_T))pFanin.pCopy) \u0026 0xffff0000, \"(uint32((ABC_PTRUINT_T))pFanin.pCopy) \u0026 0xffff0000\");\n            Hop_ManPi( pManHop, k ).pData = pFanin.pCopy;\n        }\n        // compute the truth table of internal nodes\n        pTruth = Lpk_CutTruthBdd_rec( dd, pManHop, pObjHop, pCut.nLeaves );\n        if Hop_IsComplement((Hop_Obj_t *)pObj.pData) {\n            pTruth = Cloud_Not(pTruth); }\n        // set the truth table at the node\n        pObj.pCopy = (Abc_Obj_t *)pTruth;\n        \n    }\n\n//    Cloud_bddPrint( dd, pTruth );\n//    printf( \"Bdd size = %d. Total nodes = %d.\\n\", Cloud_DagSize( dd, pTruth ), dd-\u003enNodesCur-dd-\u003enVars-1 );\n    return pTruth;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the truth table of one cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_CutTruth_rec(pMan *Hop_Man_t, pObj *Hop_Obj_t, nVars int32, vTtNodes *Vec_Ptr_t, piCount *int32) *uint32 {\n    var pTruth, pTruth0, pTruth1 *uint32;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if pObj.pData {\n        assert((uint32((ABC_PTRUINT_T))pObj.pData) \u0026 0xffff0000, \"(uint32((ABC_PTRUINT_T))pObj.pData) \u0026 0xffff0000\");\n        return (unsigned *)pObj.pData;\n    }\n    // get the plan for a new truth table\n    pTruth = (unsigned *)Vec_PtrEntry( vTtNodes, (*piCount)++ );\n    if Hop_ObjIsConst1(pObj) {\n        Kit_TruthFill( pTruth, nVars );\n    } else {\n        assert(Hop_ObjIsAnd(pObj), \"Hop_ObjIsAnd(pObj)\");\n        // compute the truth tables of the fanins\n        pTruth0 = Lpk_CutTruth_rec( pMan, Hop_ObjFanin0(pObj), nVars, vTtNodes, piCount );\n        pTruth1 = Lpk_CutTruth_rec( pMan, Hop_ObjFanin1(pObj), nVars, vTtNodes, piCount );\n        // creat the truth table of the node\n        Kit_TruthAndPhase( pTruth, pTruth0, pTruth1, nVars, Hop_ObjFaninC0(pObj), Hop_ObjFaninC1(pObj) );\n    }\n    pObj.pData = pTruth;\n    return pTruth;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the truth able of one cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_CutTruth(p *Lpk_Man_t, pCut *Lpk_Cut_t, fInv int32) *uint32 {\n    var pManHop *Hop_Man_t  = (Hop_Man_t *)p.pNtk.pManFunc;\n    var pObjHop *Hop_Obj_t;\n    var pObj *Abc_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var pFanin *Abc_Obj_t;\n    var pTruth *uint32  = nil; // Suppress \"might be used uninitialized\"\n    var i, k, iCount int32;\n//    Lpk_NodePrintCut( p, pCut );\n    assert(pCut.nNodes \u003e 0, \"pCut.nNodes \u003e 0\");\n\n    // initialize the leaves\n    // inlining of macro Lpk_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pLeaves[i])), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)Vec_PtrEntry( p.vTtElems, fInv? pCut.nLeaves-1-i : i );\n    }\n\n    // construct truth table in the topological order\n    // inlining of macro Lpk_CutForEachNodeReverse\n    for  i = int32((pCut).nNodes) - 1; (i \u003e= 0) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pNodes[i])), 1); i--  {\n        // get the local AIG\n        pObjHop = Hop_Regular((Hop_Obj_t *)pObj.pData);\n        // clean the data field of the nodes in the AIG subgraph\n        Hop_ObjCleanData_rec( pObjHop );\n        // set the initial truth tables at the fanins\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            assert((uint32((ABC_PTRUINT_T))pFanin.pCopy) \u0026 0xffff0000, \"(uint32((ABC_PTRUINT_T))pFanin.pCopy) \u0026 0xffff0000\");\n            Hop_ManPi( pManHop, k ).pData = pFanin.pCopy;\n        }\n        // compute the truth table of internal nodes\n        pTruth = Lpk_CutTruth_rec( pManHop, pObjHop, pCut.nLeaves, p.vTtNodes, \u0026iCount );\n        if Hop_IsComplement((Hop_Obj_t *)pObj.pData) {\n            Kit_TruthNot( pTruth, pTruth, pCut.nLeaves ); }\n        // set the truth table at the node\n        pObj.pCopy = (Abc_Obj_t *)pTruth;\n    }\n\n    // make sure direct truth table is stored elsewhere (assuming the first call for direct truth!!!)\n    if fInv == 0 {\n        pTruth = (unsigned *)Vec_PtrEntry( p.vTtNodes, iCount++ );\n        Kit_TruthCopy( pTruth, (unsigned *)(ABC_PTRUINT_T)pObj.pCopy, pCut.nLeaves );\n    }\n    assert(iCount \u003c= Vec_PtrSize(p.vTtNodes), \"iCount \u003c= Vec_PtrSize(p.vTtNodes)\");\n    return pTruth;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if at least one entry has changed.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_NodeRecordImpact(p *Lpk_Man_t) {\n    var pCut *Lpk_Cut_t;\n    var vNodes *Vec_Ptr_t  = Vec_VecEntry( p.vVisited, p.pObj.Id );\n    var pNode, pNode2 *Abc_Obj_t;\n    var i, k int32;\n    // collect the nodes that impact the given node\n    Vec_PtrClear( vNodes );\n    for  i = 0; i \u003c p.nCuts; i++  {\n        pCut = p.pCuts + i;\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            pNode = Abc_NtkObj( p.pNtk, pCut.pLeaves[k] );\n            if pNode.fMarkC {\n                continue; }\n            pNode.fMarkC = 1;\n            Vec_PtrPush( vNodes, (void *)(ABC_PTRUINT_T)pNode.Id );\n            Vec_PtrPush( vNodes, (void *)(ABC_PTRUINT_T)Abc_ObjFanoutNum(pNode) );\n        }\n    }\n    // clear the marks\n    Vec_PtrForEachEntryDouble( Abc_Obj_t *, Abc_Obj_t *, vNodes, pNode, pNode2, i )\n    {\n        pNode = Abc_NtkObj( p.pNtk, int32((ABC_PTRUINT_T))pNode );\n        pNode.fMarkC = 0;\n//        i++;\n    }\n//printf( \"%d \", Vec_PtrSize(vNodes) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the cut has structural DSD.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_NodeCutsCheckDsd(p *Lpk_Man_t, pCut *Lpk_Cut_t) int32 {\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k, nCands, fLeavesOnly, RetValue int32;\n    assert(pCut.nLeaves \u003e 0, \"pCut.nLeaves \u003e 0\");\n    // clear ref counters\n    memset( p.pRefs, 0, sizeof(int) * pCut.nLeaves );\n    // mark cut leaves\n    // inlining of macro Lpk_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pLeaves[i])), 1); i++  {\n        assert(pObj.fMarkA == 0, \"pObj.fMarkA == 0\");\n        pObj.fMarkA = 1;\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)i;\n    }\n    // ref leaves pointed from the internal nodes\n    nCands = 0;\n    // inlining of macro Lpk_CutForEachNode\n    for  i = 0; (i \u003c int32((pCut).nNodes)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pNodes[i])), 1); i++  {\n        fLeavesOnly = 1;\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            if ( pFanin.fMarkA )\n                p.pRefs[int32((ABC_PTRUINT_T))pFanin.pCopy]++;\n            else\n                fLeavesOnly = 0;\n        if fLeavesOnly != 0 {\n            p.pCands[nCands++] = pObj.Id; }\n    }\n    // look at the nodes that only point to the leaves\n    RetValue = 0;\n    for  i = 0; i \u003c nCands; i++  {\n        pObj = Abc_NtkObj( p.pNtk, p.pCands[i] );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            assert(pFanin.fMarkA == 1, \"pFanin.fMarkA == 1\");\n            if p.pRefs[int32((ABC_PTRUINT_T))pFanin.pCopy] \u003e 1 {\n                break; }\n        }\n        if k == Abc_ObjFaninNum(pObj) {\n            RetValue = 1;\n            break;\n        }\n    }\n    // unmark cut leaves\n    // inlining of macro Lpk_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pLeaves[i])), 1); i++  {\n        pObj.fMarkA = 0;\n    }\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pDom is contained in pCut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_NodeCutsOneDominance(pDom *Lpk_Cut_t, pCut *Lpk_Cut_t) int32 {\n    var i, k int32;\n    for  i = 0; i \u003c int32(pDom.nLeaves); i++  {\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            if pDom.pLeaves[i] == pCut.pLeaves[k] {\n                break; }\n        }\n        if k == int32(pCut.nLeaves) { // node i in pDom is not contained in pCut\n            return 0; }\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Check if the cut exists.]\n\n  Description [Returns 1 if the cut exists.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_NodeCutsOneFilter(pCuts *Lpk_Cut_t, nCuts int32, pCutNew *Lpk_Cut_t) int32 {\n    var pCut *Lpk_Cut_t;\n    var i, k int32;\n    assert(pCutNew.uSign[0] || pCutNew.uSign[1], \"pCutNew.uSign[0] || pCutNew.uSign[1]\");\n    // try to find the cut\n    for  i = 0; i \u003c nCuts; i++  {\n        pCut = pCuts + i;\n        if pCut.nLeaves == 0 {\n            continue; }\n        if pCut.nLeaves == pCutNew.nLeaves {\n            if pCut.uSign[0] == pCutNew.uSign[0] \u0026\u0026 pCut.uSign[1] == pCutNew.uSign[1] {\n                for  k = 0; k \u003c int32(pCutNew.nLeaves); k++  {\n                    if pCut.pLeaves[k] != pCutNew.pLeaves[k] {\n                        break; }\n                }\n                if k == int32(pCutNew.nLeaves) {\n                    return 1; }\n            }\n            continue;\n        }\n        if pCut.nLeaves \u003c pCutNew.nLeaves {\n            // skip the non-contained cuts\n            if (pCut.uSign[0] \u0026 pCutNew.uSign[0]) != pCut.uSign[0] {\n                continue; }\n            if (pCut.uSign[1] \u0026 pCutNew.uSign[1]) != pCut.uSign[1] {\n                continue; }\n            // check containment seriously\n            if Lpk_NodeCutsOneDominance( pCut, pCutNew ) != 0 {\n                return 1; }\n            continue;\n        }\n        // check potential containment of other cut\n\n        // skip the non-contained cuts\n        if (pCut.uSign[0] \u0026 pCutNew.uSign[0]) != pCutNew.uSign[0] {\n            continue; }\n        if (pCut.uSign[1] \u0026 pCutNew.uSign[1]) != pCutNew.uSign[1] {\n            continue; }\n        // check containment seriously\n        if Lpk_NodeCutsOneDominance( pCutNew, pCut ) != 0 {\n            pCut.nLeaves = 0; } // removed\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the given cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_NodePrintCut(p *Lpk_Man_t, pCut *Lpk_Cut_t, fLeavesOnly int32) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    if !(fLeavesOnly != 0) {\n        fmt.Printf(\"LEAVES:\\n\"); }\n    // inlining of macro Lpk_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nLeaves)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pLeaves[i])), 1); i++  {\n        fmt.Printf(\"%d,\", pObj.Id);\n    }\n    if !(fLeavesOnly != 0) {\n        fmt.Printf(\"\\nNODES:\\n\");\n        // inlining of macro Lpk_CutForEachNode\n        for  i = 0; (i \u003c int32((pCut).nNodes)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, (pCut).pNodes[i])), 1); i++  {\n            fmt.Printf(\"%d,\", pObj.Id);\n            assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n        }\n        fmt.Printf(\"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Set the cut signature.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_NodeCutSignature(pCut *Lpk_Cut_t) {\n    var i uint32;\n    pCut.uSign[0] = pCut.uSign[1] = 0;\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pCut.uSign[(pCut.pLeaves[i] \u0026 32) \u003e 0] |= (1 \u003c\u003c (pCut.pLeaves[i] \u0026 31));\n        if i != pCut.nLeaves - 1 {\n            assert(pCut.pLeaves[i] \u003c pCut.pLeaves[i+1], \"pCut.pLeaves[i] \u003c pCut.pLeaves[i+1]\"); }\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the set of all cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_NodeCutsOne(p *Lpk_Man_t, pCut *Lpk_Cut_t, Node int32) {\n    var pCutNew *Lpk_Cut_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k, j, nLeavesNew int32;\n/*\n    printf( \"Exploring cut \" );\n    Lpk_NodePrintCut( p, pCut, 1 );\n    printf( \"with node %d\\n\", Node );\n*/\n    // check if the cut can stand adding one more internal node\n    if pCut.nNodes == LPK_SIZE_MAX {\n        return; }\n\n    // if the node is a PI, quit\n    pObj = Abc_NtkObj( p.pNtk, Node );\n    if Abc_ObjIsCi(pObj) {\n        return; }\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n//    assert( Abc_ObjFaninNum(pObj) \u003c= p-\u003epPars-\u003enLutSize );\n\n    // if the node is not in the MFFC, check the limit\n    if !Abc_NodeIsTravIdCurrent(pObj) {\n        if int32(pCut.nNodesDup) == p.pPars.nLutsOver {\n            return; }\n        assert(int32(pCut.nNodesDup) \u003c p.pPars.nLutsOver, \"int32(pCut.nNodesDup) \u003c p.pPars.nLutsOver\");\n    }\n\n    // check the possibility of adding this node using the signature\n    nLeavesNew = pCut.nLeaves - 1;\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n    {\n        if pCut.uSign[(pFanin.Id \u0026 32) \u003e 0] \u0026 (1 \u003c\u003c (pFanin.Id \u0026 31)) {\n            continue; }\n        if nLeavesNew++; nLeavesNew \u003e p.pPars.nVarsMax {\n            return; }\n    }\n\n    // initialize the set of leaves to the nodes in the cut\n    assert(p.nCuts \u003c LPK_CUTS_MAX, \"p.nCuts \u003c LPK_CUTS_MAX\");\n    pCutNew = p.pCuts + p.nCuts;\n    pCutNew.nLeaves = 0;\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        if pCut.pLeaves[i] != Node {\n            pCutNew.pLeaves[pCutNew.nLeaves++] = pCut.pLeaves[i]; }\n    }\n\n    // add new nodes\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n    {\n        // find the place where this node belongs\n        for  k = 0; k \u003c int32(pCutNew.nLeaves); k++  {\n            if pCutNew.pLeaves[k] \u003e= pFanin.Id {\n                break; }\n        }\n        if k \u003c int32(pCutNew.nLeaves) \u0026\u0026 pCutNew.pLeaves[k] == pFanin.Id {\n            continue; }\n        // check if there is room\n        if int32(pCutNew.nLeaves) == p.pPars.nVarsMax {\n            return; }\n        // move all the nodes\n        for  j = pCutNew.nLeaves; j \u003e k; j--  {\n            pCutNew.pLeaves[j] = pCutNew.pLeaves[j-1];\n        }\n        pCutNew.pLeaves[k] = pFanin.Id;\n        pCutNew.nLeaves++;\n        assert(pCutNew.nLeaves \u003c= LPK_SIZE_MAX, \"pCutNew.nLeaves \u003c= LPK_SIZE_MAX\");\n\n    }\n    // skip the contained cuts\n    Lpk_NodeCutSignature( pCutNew );\n    if Lpk_NodeCutsOneFilter( p.pCuts, p.nCuts, pCutNew ) != 0 {\n        return; }\n\n    // update the set of internal nodes\n    assert(pCut.nNodes \u003c LPK_SIZE_MAX, \"pCut.nNodes \u003c LPK_SIZE_MAX\");\n    memcpy( pCutNew.pNodes, pCut.pNodes, pCut.nNodes * sizeof(int) );\n    pCutNew.nNodes = pCut.nNodes;\n    pCutNew.nNodesDup = pCut.nNodesDup;\n\n    // check if the node is already there\n    // if so, move the node to be the last\n    for  i = 0; i \u003c int32(pCutNew.nNodes); i++  {\n        if pCutNew.pNodes[i] == Node {\n            for  k = i; k \u003c int32(pCutNew.nNodes) - 1; k++  {\n                pCutNew.pNodes[k] = pCutNew.pNodes[k+1];\n            }\n            pCutNew.pNodes[k] = Node;\n            break;\n        }\n    }\n    if i == int32(pCutNew.nNodes) { // new node\n    \n        pCutNew.pNodes[ pCutNew.nNodes++ ] = Node;\n        pCutNew.nNodesDup += !Abc_NodeIsTravIdCurrent(pObj);\n    }\n    // the number of nodes does not exceed MFFC plus duplications\n    assert(pCutNew.nNodes \u003c= p.nMffc + pCutNew.nNodesDup, \"pCutNew.nNodes \u003c= p.nMffc + pCutNew.nNodesDup\");\n    // add the cut to storage\n    assert(p.nCuts \u003c LPK_CUTS_MAX, \"p.nCuts \u003c LPK_CUTS_MAX\");\n    p.nCuts++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Count support.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_CountSupp(p *Abc_Ntk_t, vNodes *Vec_Ptr_t) int32 {\n    var pObj, pFanin *Abc_Obj_t; \n    var i, k, Count int32;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            if Abc_NodeIsTravIdCurrent(pFanin) {\n                continue; }\n            Count += !pFanin.fPersist;\n            pFanin.fPersist = 1;\n        }\n    }\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            pFanin.fPersist = 0;\n    return Count;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the set of all cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_NodeCuts(p *Lpk_Man_t) int32 {\n    var pCut, pCut2 *Lpk_Cut_t;\n    var i, k, Temp, nMffc, fChanges int32;\n    //int nSupp;\n\n    // mark the MFFC of the node with the current trav ID\n    Vec_PtrClear( p.vTemp );\n    nMffc = p.nMffc = Abc_NodeMffcLabel( p.pObj, p.vTemp );\n    assert(nMffc \u003e 0, \"nMffc \u003e 0\");\n    if nMffc == 1 {\n        return 0; }\n/*\n    // count the leaves\n    nSupp = Lpk_CountSupp( p-\u003epNtk, p-\u003evTemp );\n    if ( nMffc \u003e 10 \u0026\u0026 nSupp \u003c= 10 )\n        printf( \"Obj = %4d : Supp = %4d. Mffc = %4d.\\n\", p-\u003epObj-\u003eId, nSupp, nMffc );\n*/\n    // initialize the first cut\n    pCut = p.pCuts; p.nCuts = 1;\n    pCut.nNodes = 0; \n    pCut.nNodesDup = 0;\n    pCut.nLeaves = 1;\n    pCut.pLeaves[0] = p.pObj.Id;\n    // assign the signature\n    Lpk_NodeCutSignature( pCut );\n\n    // perform the cut computation\n    for  i = 0; i \u003c p.nCuts; i++  {\n        pCut = p.pCuts + i;\n        if pCut.nLeaves == 0 {\n            continue; }\n\n        // try to expand the fanins of this cut\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            // create a new cut\n            Lpk_NodeCutsOne( p, pCut, pCut.pLeaves[k] );\n            // quit if the number of cuts has exceeded the limit\n            if p.nCuts == LPK_CUTS_MAX {\n                break; }\n        }\n        if p.nCuts == LPK_CUTS_MAX {\n            break; }\n    }\n    if p.nCuts == LPK_CUTS_MAX { \n        p.nNodesOver++; }\n\n    // record the impact of this node\n    if p.pPars.fSatur {\n        Lpk_NodeRecordImpact( p ); }\n\n    // compress the cuts by removing empty ones, those with negative Weight, and decomposable ones\n    p.nEvals = 0;\n    for  i = 0; i \u003c p.nCuts; i++  {\n        pCut = p.pCuts + i;\n        if pCut.nLeaves \u003c 2 {\n            continue; }\n        // compute the minimum number of LUTs needed to implement this cut\n        // V = N * (K-1) + 1  ~~~~~  N = Ceiling[(V-1)/(K-1)] = (V-1)/(K-1) + [(V-1)%(K-1) \u003e 0]\n        pCut.nLuts = Lpk_LutNumLuts( pCut.nLeaves, p.pPars.nLutSize ); \n//        pCut-\u003eWeight = (float)1.0 * (pCut-\u003enNodes - pCut-\u003enNodesDup - 1) / pCut-\u003enLuts; //p-\u003epPars-\u003enLutsMax;\n        pCut.Weight = float32(1.0) * (pCut.nNodes - pCut.nNodesDup) / pCut.nLuts; //p-\u003epPars-\u003enLutsMax;\n        if pCut.Weight \u003c= 1.001 {\n//        if ( pCut-\u003eWeight \u003c= 0.999 )\n            continue; }\n        pCut.fHasDsd = Lpk_NodeCutsCheckDsd( p, pCut );\n        if pCut.fHasDsd {\n            continue; }\n        p.pEvals[p.nEvals++] = i;\n\n//        if ( pCut-\u003enLeaves \u003c= 9 \u0026\u0026 pCut-\u003enNodes \u003e 15 )\n//        printf( \"%5d : Obj = %4d  Leaves = %4d  Nodes = %4d  LUTs = %4d\\n\", i, p-\u003epObj-\u003eId, pCut-\u003enLeaves, pCut-\u003enNodes, pCut-\u003enLuts );\n    }\n    if p.nEvals == 0 {\n        return 0; }\n\n    // sort the cuts by Weight\n    do {\n        fChanges = 0;\n        for  i = 0; i \u003c p.nEvals - 1; i++  {\n            pCut = p.pCuts + p.pEvals[i];\n            pCut2 = p.pCuts + p.pEvals[i+1];\n            if pCut.Weight \u003e= pCut2.Weight - 0.001 {\n                continue; }\n            Temp = p.pEvals[i];\n            p.pEvals[i] = p.pEvals[i+1];\n            p.pEvals[i+1] = Temp;\n            fChanges = 1;\n        }\n    } while ( fChanges );\n/*\n    for ( i = 0; i \u003c p-\u003enEvals; i++ )\n    {\n        pCut = p-\u003epCuts + p-\u003epEvals[i];\n        printf( \"Cut %3d : W = %5.2f.\\n\", i, pCut-\u003eWeight );\n    }\n    printf( \"\\n\" );\n*/\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

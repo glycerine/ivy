@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.h",
+  "SHA256": "99a9f3b2d1bf9c08a1a16cdd1a1c73705e0935d156ab7abf49c6c53eb5fef398",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.h::struct::Fxu_Data_t",
+      "Category": "struct-review",
+      "Symbol": "Fxu_Data_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1269,
+      "End": 3072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxu.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4029
+    }
+  ],
+  "Draft": "package fxu\n\n/**CFile****************************************************************\n\n  FileName    [fxu.h]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [External declarations of fast extract for unate covers.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: fxu.h,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"misc/vec/vec.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n     \n\n// structure for the FX input/output data \ntype Fxu_Data_t struct {\n    // user specified parameters\n    fOnlyS               int32;           // set to 1 to have only single-cube divs\n    fOnlyD               int32;           // set to 1 to have only double-cube divs\n    fUse0               int32;            // set to 1 to have 0-weight also extracted\n    fUseCompl               int32;        // set to 1 to have complement taken into account\n    fVerbose               int32;         // set to 1 to have verbose output\n    fVeryVerbose               int32;     // set to 1 to have more verbose output\n    nNodesExt               int32;        // the number of divisors to extract\n    nSingleMax               int32;       // the max number of single-cube divisors to consider\n    nPairsMax               int32;        // the max number of double-cube divisors to consider\n    WeightMin               int32;        // the min weight of a divisor to extract\n    LitCountMax               int32;      // the max literal count of a divisor to consider\n    fCanonDivs               int32;       // use only canonical divisors (AND/XOR/MUX) \n    // the input information\n    vSops        *Vec_Ptr_t;            // the SOPs for each node in the network\n    vFanins        *Vec_Ptr_t;          // the fanins of each node in the network\n    // output information\n    vSopsNew        *Vec_Ptr_t;         // the SOPs for each node in the network after extraction\n    vFaninsNew        *Vec_Ptr_t;       // the fanins of each node in the network after extraction\n    // the SOP manager\n    pManSop       *Mem_Flex_t;\n    // statistics   \n    nNodesOld               int32;        // the old number of nodes\n    nNodesNew               int32;        // the number of divisors actually extracted\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*===== fxu.c ==========================================================*/\n// extern void   Abc_NtkSetDefaultFxParams( Fxu_Data_t * p );\n\n// extern int    Abc_NtkFastExtract( Abc_Ntk_t * pNtk, Fxu_Data_t * p );\n\n// extern void   Abc_NtkFxuFreeInfo( Fxu_Data_t * p );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

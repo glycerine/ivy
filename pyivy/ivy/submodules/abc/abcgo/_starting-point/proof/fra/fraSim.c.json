@@ -1,0 +1,1675 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c",
+  "SHA256": "521af447816c2555f18ae5db83a97b448b3e8509a0f8a094f44eec769cc2a100",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 6064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pPatWords, 0, sizeof(unsigned) * p.nPatWords );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 223,
+        "Column": 5,
+        "ByteOffset": 6499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pPatWords, 0xff, sizeof(unsigned) * p.nPatWords );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 248,
+        "Column": 5,
+        "ByteOffset": 7475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pPatWords, 0, sizeof(unsigned) * p.nPatWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 9235
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003c p.pSml.nWordsTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 306,
+        "Column": 5,
+        "ByteOffset": 9399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k \u003c 32 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 310,
+        "Column": 68,
+        "ByteOffset": 9584
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pModel = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(Aig_ManCiNum(p.pManFraig)+1)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 318,
+        "Column": 5,
+        "ByteOffset": 10092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pManFraig.pData == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 339,
+        "Column": 5,
+        "ByteOffset": 10674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjFanin0(pObj).fPhase == uint32(Aig_ObjFaninC0(pObj)) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 366,
+        "Column": 5,
+        "ByteOffset": 11576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 387,
+        "Column": 5,
+        "ByteOffset": 12138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 409,
+        "Column": 9,
+        "ByteOffset": 12744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ManRegNum(p.pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 410,
+        "Column": 9,
+        "ByteOffset": 12789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 441,
+        "Column": 5,
+        "ByteOffset": 14299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nFrames \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 496,
+        "Column": 5,
+        "ByteOffset": 16771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 497,
+        "Column": 5,
+        "ByteOffset": 16810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 498,
+        "Column": 5,
+        "ByteOffset": 16845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 565,
+        "Column": 5,
+        "ByteOffset": 19076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 566,
+        "Column": 5,
+        "ByteOffset": 19116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 567,
+        "Column": 5,
+        "ByteOffset": 19156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame0 == 0 || p.nWordsFrame \u003c p.nWordsTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 568,
+        "Column": 5,
+        "ByteOffset": 19217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame1 == 0 || p.nWordsFrame \u003c p.nWordsTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 594,
+        "Column": 5,
+        "ByteOffset": 19985
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 595,
+        "Column": 5,
+        "ByteOffset": 20024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 596,
+        "Column": 5,
+        "ByteOffset": 20057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 629,
+        "Column": 5,
+        "ByteOffset": 21134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pOut) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 630,
+        "Column": 5,
+        "ByteOffset": 21173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pIn) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 631,
+        "Column": 5,
+        "ByteOffset": 21211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCo(pOut) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 632,
+        "Column": 5,
+        "ByteOffset": 21244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCi(pIn) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 633,
+        "Column": 5,
+        "ByteOffset": 21276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 736,
+        "Column": 9,
+        "ByteOffset": 25370
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Error: A counter-example did not refine classes!\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 756,
+        "Column": 5,
+        "ByteOffset": 25965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !fInit || Aig_ManRegNum(p.pManAig) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 765,
+        "Column": 1,
+        "ByteOffset": 26286
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Starting classes = %5d.   Lits = %6d.\\n\", Vec_PtrSize(p.pCla.vClasses), Fra_ClassesCountLits(p.pCla) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 780,
+        "Column": 1,
+        "ByteOffset": 26807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Refined classes  = %5d.   Changes = %4d.   Lits = %6d.\\n\", Vec_PtrSize(p.pCla.vClasses), nChanges, Fra_ClassesCountLits(p.pCla) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 792,
+        "Column": 1,
+        "ByteOffset": 27298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Refined classes  = %5d.   Changes = %4d.   Lits = %6d.\\n\", Vec_PtrSize(p.pCla.vClasses), nChanges, Fra_ClassesCountLits(p.pCla) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 805,
+        "Column": 1,
+        "ByteOffset": 27870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Refined classes  = %5d.   Changes = %4d.   Lits = %6d.\\n\", Vec_PtrSize(p.pCla.vClasses), nChanges, Fra_ClassesCountLits(p.pCla) ); }"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 830,
+        "Column": 77,
+        "ByteOffset": 28792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Fra_Sml_t *)/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(sizeof(Fra_Sml_t) + sizeof(unsigned) * Aig_ManObjNumMax(pAig) * (nPref + nFrames) * nWordsFrame)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 831,
+        "Column": 5,
+        "ByteOffset": 28927
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Fra_Sml_t) + sizeof(unsigned) * (nPref + nFrames) * nWordsFrame );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 854,
+        "Column": 57,
+        "ByteOffset": 29694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 895,
+        "Column": 13,
+        "ByteOffset": 30880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 897,
+        "Column": 9,
+        "ByteOffset": 30936
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" with simulation patterns.\\n\", pFileName );"
+    },
+    {
+      "Name": "fgetc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 901,
+        "Column": 15,
+        "ByteOffset": 31085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(pFile)) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 901,
+        "Column": 32,
+        "ByteOffset": 31102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(pFile)) != EOF  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 905,
+        "Column": 13,
+        "ByteOffset": 31273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"File \\\"%s\\\" contains symbol (%c) other than \\'0\\' or \\'1\\'.\\n\", pFileName, byte(c) );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 910,
+        "Column": 5,
+        "ByteOffset": 31442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 932,
+        "Column": 5,
+        "ByteOffset": 32026
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p.pAig) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 933,
+        "Column": 5,
+        "ByteOffset": 32068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_StrSize(vSimInfo) % Aig_ManCiNum(p.pAig) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 934,
+        "Column": 5,
+        "ByteOffset": 32133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nPats \u003c= nPatsPadded );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 972,
+        "Column": 13,
+        "ByteOffset": 33678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", Abc_InfoHasBit( pSims, k ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 974,
+        "Column": 9,
+        "ByteOffset": 33740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );               ;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 993,
+        "Column": 5,
+        "ByteOffset": 34253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pAig) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 999,
+        "Column": 9,
+        "ByteOffset": 34490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"File \\\"%s\\\": The number of binary digits (%d) is not divisible by the number of primary inputs (%d).\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1055,
+        "Column": 5,
+        "ByteOffset": 36299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.fNonConstOut );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1074,
+        "Column": 5,
+        "ByteOffset": 37058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPo \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1075,
+        "Column": 5,
+        "ByteOffset": 37122
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrame \u003c p.nFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1076,
+        "Column": 5,
+        "ByteOffset": 37156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit \u003c 32 * p.nWordsFrame );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1098,
+        "Column": 9,
+        "ByteOffset": 38411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fra_SmlGetCounterExample(): Counter-example is invalid.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1121,
+        "Column": 5,
+        "ByteOffset": 39090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1122,
+        "Column": 5,
+        "ByteOffset": 39129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pFrames) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1126,
+        "Column": 5,
+        "ByteOffset": 39330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nTruePis * nFrames == Aig_ManCiNum(pFrames) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1127,
+        "Column": 5,
+        "ByteOffset": 39389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nTruePos * nFrames == Aig_ManCoNum(pFrames) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1138,
+        "Column": 5,
+        "ByteOffset": 39891
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPo \u003e= 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1154,
+        "Column": 9,
+        "ByteOffset": 40383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fra_SmlGetCounterExample(): Counter-example is invalid.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fra_SmlNodeHash",
+      "Start": 1282,
+      "End": 2615,
+      "BodyStart": 1338,
+      "Original": "int Fra_SmlNodeHash( Aig_Obj_t * pObj, int nTableSize )\n{\n    Fra_Man_t * p = (Fra_Man_t *)pObj-\u003epData;\n    static int s_FPrimes[128] = { \n        1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459, \n        1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997, \n        2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543, \n        2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089, \n        3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671, \n        3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243, \n        4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871, \n        4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471, \n        5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073, \n        6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689, \n        6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309, \n        7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933, \n        8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147\n    };\n    unsigned * pSims;\n    unsigned uHash;\n    int i;\n//    assert( p-\u003epSml-\u003enWordsTotal \u003c= 128 );\n    uHash = 0;\n    pSims = Fra_ObjSim(p-\u003epSml, pObj-\u003eId);\n    for ( i = p-\u003epSml-\u003enWordsPref; i \u003c p-\u003epSml-\u003enWordsTotal; i++ )\n        uHash ^= pSims[i] * s_FPrimes[i \u0026 0x7F];\n    return uHash % nTableSize;\n}",
+      "Draft": "func Fra_SmlNodeHash(pObj *Aig_Obj_t, nTableSize int32) int32 {\n    var p *Fra_Man_t  = (Fra_Man_t *)pObj.pData;\n    \n    var pSims *uint32;\n    var uHash uint32;\n    var i int32;\n//    assert( p-\u003epSml-\u003enWordsTotal \u003c= 128 );\n    uHash = 0;\n    pSims = Fra_ObjSim(p.pSml, pObj.Id);\n    for  i = p.pSml.nWordsPref; i \u003c p.pSml.nWordsTotal; i++  {\n        uHash ^= pSims[i] * spStatic_Fra_SmlNodeHash_s_FPrimes[i \u0026 0x7F];\n    }\n    return uHash % nTableSize;\n}"
+    },
+    {
+      "Name": "Fra_SmlNodeIsConst",
+      "Start": 2905,
+      "End": 3200,
+      "BodyStart": 2948,
+      "Original": "int Fra_SmlNodeIsConst( Aig_Obj_t * pObj )\n{\n    Fra_Man_t * p = (Fra_Man_t *)pObj-\u003epData;\n    unsigned * pSims;\n    int i;\n    pSims = Fra_ObjSim(p-\u003epSml, pObj-\u003eId);\n    for ( i = p-\u003epSml-\u003enWordsPref; i \u003c p-\u003epSml-\u003enWordsTotal; i++ )\n        if ( pSims[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Fra_SmlNodeIsConst(pObj *Aig_Obj_t) int32 {\n    var p *Fra_Man_t  = (Fra_Man_t *)pObj.pData;\n    var pSims *uint32;\n    var i int32;\n    pSims = Fra_ObjSim(p.pSml, pObj.Id);\n    for  i = p.pSml.nWordsPref; i \u003c p.pSml.nWordsTotal; i++  {\n        if pSims[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Fra_SmlNodesAreEqual",
+      "Start": 3476,
+      "End": 3866,
+      "BodyStart": 3541,
+      "Original": "int Fra_SmlNodesAreEqual( Aig_Obj_t * pObj0, Aig_Obj_t * pObj1 )\n{\n    Fra_Man_t * p = (Fra_Man_t *)pObj0-\u003epData;\n    unsigned * pSims0, * pSims1;\n    int i;\n    pSims0 = Fra_ObjSim(p-\u003epSml, pObj0-\u003eId);\n    pSims1 = Fra_ObjSim(p-\u003epSml, pObj1-\u003eId);\n    for ( i = p-\u003epSml-\u003enWordsPref; i \u003c p-\u003epSml-\u003enWordsTotal; i++ )\n        if ( pSims0[i] != pSims1[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Fra_SmlNodesAreEqual(pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {\n    var p *Fra_Man_t  = (Fra_Man_t *)pObj0.pData;\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    pSims0 = Fra_ObjSim(p.pSml, pObj0.Id);\n    pSims1 = Fra_ObjSim(p.pSml, pObj1.Id);\n    for  i = p.pSml.nWordsPref; i \u003c p.pSml.nWordsTotal; i++  {\n        if pSims0[i] != pSims1[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Fra_SmlNodeNotEquWeight",
+      "Start": 4156,
+      "End": 4487,
+      "BodyStart": 4222,
+      "Original": "int Fra_SmlNodeNotEquWeight( Fra_Sml_t * p, int Left, int Right )\n{\n    unsigned * pSimL, * pSimR;\n    int k, Counter = 0;\n    pSimL = Fra_ObjSim( p, Left );\n    pSimR = Fra_ObjSim( p, Right );\n    for ( k = p-\u003enWordsPref; k \u003c p-\u003enWordsTotal; k++ )\n        Counter += Aig_WordCountOnes( pSimL[k] ^ pSimR[k] );\n    return Counter;\n}",
+      "Draft": "func Fra_SmlNodeNotEquWeight(p *Fra_Sml_t, Left int32, Right int32) int32 {\n    var pSimL, pSimR *uint32;\n    var k, Counter int32;\n    pSimL = Fra_ObjSim( p, Left );\n    pSimR = Fra_ObjSim( p, Right );\n    for  k = p.nWordsPref; k \u003c p.nWordsTotal; k++  {\n        Counter += Aig_WordCountOnes( pSimL[k] ^ pSimR[k] );\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Fra_SmlNodeIsZero",
+      "Start": 4777,
+      "End": 5022,
+      "BodyStart": 4834,
+      "Original": "int Fra_SmlNodeIsZero( Fra_Sml_t * p, Aig_Obj_t * pObj )\n{\n    unsigned * pSims;\n    int i;\n    pSims = Fra_ObjSim(p, pObj-\u003eId);\n    for ( i = p-\u003enWordsPref; i \u003c p-\u003enWordsTotal; i++ )\n        if ( pSims[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Fra_SmlNodeIsZero(p *Fra_Sml_t, pObj *Aig_Obj_t) int32 {\n    var pSims *uint32;\n    var i int32;\n    pSims = Fra_ObjSim(p, pObj.Id);\n    for  i = p.nWordsPref; i \u003c p.nWordsTotal; i++  {\n        if pSims[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Fra_SmlNodeCountOnes",
+      "Start": 5313,
+      "End": 5572,
+      "BodyStart": 5373,
+      "Original": "int Fra_SmlNodeCountOnes( Fra_Sml_t * p, Aig_Obj_t * pObj )\n{\n    unsigned * pSims;\n    int i, Counter = 0;\n    pSims = Fra_ObjSim(p, pObj-\u003eId);\n    for ( i = 0; i \u003c p-\u003enWordsTotal; i++ )\n        Counter += Aig_WordCountOnes( pSims[i] );\n    return Counter;\n}",
+      "Draft": "func Fra_SmlNodeCountOnes(p *Fra_Sml_t, pObj *Aig_Obj_t) int32 {\n    var pSims *uint32;\n    var i, Counter int32;\n    pSims = Fra_ObjSim(p, pObj.Id);\n    for  i = 0; i \u003c p.nWordsTotal; i++  {\n        Counter += Aig_WordCountOnes( pSims[i] );\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Fra_SmlSavePattern0",
+      "Start": 5836,
+      "End": 5956,
+      "BodyStart": 5889,
+      "Original": "void Fra_SmlSavePattern0( Fra_Man_t * p, int fInit )\n{\n    memset( p-\u003epPatWords, 0, sizeof(unsigned) * p-\u003enPatWords );\n}",
+      "Draft": "func Fra_SmlSavePattern0(p *Fra_Man_t, fInit int32) {\n    memset( p.pPatWords, 0, sizeof(unsigned) * p.nPatWords );\n}"
+    },
+    {
+      "Name": "Fra_SmlSavePattern1",
+      "Start": 6219,
+      "End": 6686,
+      "BodyStart": 6272,
+      "Original": "void Fra_SmlSavePattern1( Fra_Man_t * p, int fInit )\n{\n    Aig_Obj_t * pObj;\n    int i, k, nTruePis;\n    memset( p-\u003epPatWords, 0xff, sizeof(unsigned) * p-\u003enPatWords );\n    if ( !fInit )\n        return;\n    // clear the state bits to correspond to all-0 initial state\n    nTruePis = Aig_ManCiNum(p-\u003epManAig) - Aig_ManRegNum(p-\u003epManAig);\n    k = 0;\n    Aig_ManForEachLoSeq( p-\u003epManAig, pObj, i )\n        Abc_InfoXorBit( p-\u003epPatWords, nTruePis * p-\u003enFramesAll + k++ );\n}",
+      "Draft": "func Fra_SmlSavePattern1(p *Fra_Man_t, fInit int32) {\n    var pObj *Aig_Obj_t;\n    var i, k, nTruePis int32;\n    memset( p.pPatWords, 0xff, sizeof(unsigned) * p.nPatWords );\n    if !(fInit != 0) {\n        return; }\n    // clear the state bits to correspond to all-0 initial state\n    nTruePis = Aig_ManCiNum(p.pManAig) - Aig_ManRegNum(p.pManAig);\n    k = 0;\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        Abc_InfoXorBit( p.pPatWords, nTruePis * p.nFramesAll + k++ );\n    }\n}"
+    },
+    {
+      "Name": "Fra_SmlSavePattern",
+      "Start": 6977,
+      "End": 7909,
+      "BodyStart": 7018,
+      "Original": "void Fra_SmlSavePattern( Fra_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    memset( p-\u003epPatWords, 0, sizeof(unsigned) * p-\u003enPatWords );\n    Aig_ManForEachCi( p-\u003epManFraig, pObj, i )\n//        if ( p-\u003epSat-\u003emodel.ptr[Fra_ObjSatNum(pObj)] == l_True )\n        if ( sat_solver_var_value(p-\u003epSat, Fra_ObjSatNum(pObj)) )\n            Abc_InfoSetBit( p-\u003epPatWords, i );\n\n    if ( p-\u003evCex )\n    {\n        Vec_IntClear( p-\u003evCex );\n        for ( i = 0; i \u003c Aig_ManCiNum(p-\u003epManAig) - Aig_ManRegNum(p-\u003epManAig); i++ )\n            Vec_IntPush( p-\u003evCex, Abc_InfoHasBit( p-\u003epPatWords, i ) );\n        for ( i = Aig_ManCiNum(p-\u003epManFraig) - Aig_ManRegNum(p-\u003epManFraig); i \u003c Aig_ManCiNum(p-\u003epManFraig); i++ )\n            Vec_IntPush( p-\u003evCex, Abc_InfoHasBit( p-\u003epPatWords, i ) );\n    }\n\n/*\n    printf( \"Pattern: \" );\n    Aig_ManForEachCi( p-\u003epManFraig, pObj, i )\n        printf( \"%d\", Abc_InfoHasBit( p-\u003epPatWords, i ) );\n    printf( \"\\n\" );\n*/\n}",
+      "Draft": "func Fra_SmlSavePattern(p *Fra_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    memset( p.pPatWords, 0, sizeof(unsigned) * p.nPatWords );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManFraig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManFraig.vCis, i)), 1); i++  {\n//        if ( p-\u003epSat-\u003emodel.ptr[Fra_ObjSatNum(pObj)] == l_True )\n        if sat_solver_var_value(p.pSat, Fra_ObjSatNum(pObj)) {\n            Abc_InfoSetBit( p.pPatWords, i ); }\n    }\n\n    if p.vCex {\n        Vec_IntClear( p.vCex );\n        for  i = 0; i \u003c Aig_ManCiNum(p.pManAig) - Aig_ManRegNum(p.pManAig); i++  {\n            Vec_IntPush( p.vCex, Abc_InfoHasBit( p.pPatWords, i ) );\n        }\n        for  i = Aig_ManCiNum(p.pManFraig) - Aig_ManRegNum(p.pManFraig); i \u003c Aig_ManCiNum(p.pManFraig); i++  {\n            Vec_IntPush( p.vCex, Abc_InfoHasBit( p.pPatWords, i ) );\n        }\n    }\n\n/*\n    printf( \"Pattern: \" );\n    Aig_ManForEachCi( p-\u003epManFraig, pObj, i )\n        printf( \"%d\", Abc_InfoHasBit( p-\u003epPatWords, i ) );\n    printf( \"\\n\" );\n*/\n}"
+    },
+    {
+      "Name": "Fra_SmlCheckOutputSavePattern",
+      "Start": 8203,
+      "End": 9276,
+      "BodyStart": 8275,
+      "Original": "void Fra_SmlCheckOutputSavePattern( Fra_Man_t * p, Aig_Obj_t * pObjPo )\n{ \n    Aig_Obj_t * pFanin, * pObjPi;\n    unsigned * pSims;\n    int i, k, BestPat, * pModel;\n    // find the word of the pattern\n    pFanin = Aig_ObjFanin0(pObjPo);\n    pSims = Fra_ObjSim(p-\u003epSml, pFanin-\u003eId);\n    for ( i = 0; i \u003c p-\u003epSml-\u003enWordsTotal; i++ )\n        if ( pSims[i] )\n            break;\n    assert( i \u003c p-\u003epSml-\u003enWordsTotal );\n    // find the bit of the pattern\n    for ( k = 0; k \u003c 32; k++ )\n        if ( pSims[i] \u0026 (1 \u003c\u003c k) )\n            break;\n    assert( k \u003c 32 );\n    // determine the best pattern\n    BestPat = i * 32 + k;\n    // fill in the counter-example data\n    pModel = ABC_ALLOC( int, Aig_ManCiNum(p-\u003epManFraig)+1 );\n    Aig_ManForEachCi( p-\u003epManAig, pObjPi, i )\n    {\n        pModel[i] = Abc_InfoHasBit(Fra_ObjSim(p-\u003epSml, pObjPi-\u003eId), BestPat);\n//        printf( \"%d\", pModel[i] );\n    }\n    pModel[Aig_ManCiNum(p-\u003epManAig)] = pObjPo-\u003eId;\n//    printf( \"\\n\" );\n    // set the model\n    assert( p-\u003epManFraig-\u003epData == NULL );\n    p-\u003epManFraig-\u003epData = pModel;\n    return;\n}",
+      "Draft": "func Fra_SmlCheckOutputSavePattern(p *Fra_Man_t, pObjPo *Aig_Obj_t) { \n    var pFanin, pObjPi *Aig_Obj_t;\n    var pSims *uint32;\n    var i int32;\n    var k int32;\n    var BestPat int32;\n    var pModel *int32;\n    // find the word of the pattern\n    pFanin = Aig_ObjFanin0(pObjPo);\n    pSims = Fra_ObjSim(p.pSml, pFanin.Id);\n    for  i = 0; i \u003c p.pSml.nWordsTotal; i++  {\n        if pSims[i] {\n            break; }\n    }\n    assert(i \u003c p.pSml.nWordsTotal, \"i \u003c p.pSml.nWordsTotal\");\n    // find the bit of the pattern\n    for  k = 0; k \u003c 32; k++  {\n        if pSims[i] \u0026 (1 \u003c\u003c k) {\n            break; }\n    }\n    assert(k \u003c 32, \"k \u003c 32\");\n    // determine the best pattern\n    BestPat = i * 32 + k;\n    // fill in the counter-example data\n    // inlining of macro ABC_ALLOC\n    pModel = ((int *) malloc(sizeof(int) * (size_t)(Aig_ManCiNum(p.pManFraig)+1)));\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObjPi) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        pModel[i] = Abc_InfoHasBit(Fra_ObjSim(p.pSml, pObjPi.Id), BestPat);\n//        printf( \"%d\", pModel[i] );\n    }\n    pModel[Aig_ManCiNum(p.pManAig)] = pObjPo.Id;\n//    printf( \"\\n\" );\n    // set the model\n    assert(p.pManFraig.pData == nil, \"p.pManFraig.pData == nil\");\n    p.pManFraig.pData = pModel;\n    return;\n}"
+    },
+    {
+      "Name": "Fra_SmlCheckOutput",
+      "Start": 9573,
+      "End": 10124,
+      "BodyStart": 9613,
+      "Original": "int Fra_SmlCheckOutput( Fra_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    // make sure the reference simulation pattern does not detect the bug\n    pObj = Aig_ManCo( p-\u003epManAig, 0 );\n    assert( Aig_ObjFanin0(pObj)-\u003efPhase == (unsigned)Aig_ObjFaninC0(pObj) ); \n    Aig_ManForEachCo( p-\u003epManAig, pObj, i )\n    {\n        if ( !Fra_SmlNodeIsConst( Aig_ObjFanin0(pObj) ) )\n        {\n            // create the counter-example from this pattern\n            Fra_SmlCheckOutputSavePattern( p, pObj );\n            return 1;\n        }\n    }\n    return 0;\n}",
+      "Draft": "func Fra_SmlCheckOutput(p *Fra_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // make sure the reference simulation pattern does not detect the bug\n    pObj = Aig_ManCo( p.pManAig, 0 );\n    assert(Aig_ObjFanin0(pObj).fPhase == uint32(Aig_ObjFaninC0(pObj)), \"Aig_ObjFanin0(pObj).fPhase == uint32(Aig_ObjFaninC0(pObj))\"); \n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCos, i)), 1); i++  {\n        if !(Fra_SmlNodeIsConst( Aig_ObjFanin0(pObj) ) != 0) {\n            // create the counter-example from this pattern\n            Fra_SmlCheckOutputSavePattern( p, pObj );\n            return 1;\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Fra_SmlAssignRandom",
+      "Start": 10401,
+      "End": 10651,
+      "BodyStart": 10461,
+      "Original": "void Fra_SmlAssignRandom( Fra_Sml_t * p, Aig_Obj_t * pObj )\n{\n    unsigned * pSims;\n    int i;\n    assert( Aig_ObjIsCi(pObj) );\n    pSims = Fra_ObjSim( p, pObj-\u003eId );\n    for ( i = 0; i \u003c p-\u003enWordsTotal; i++ )\n        pSims[i] = Fra_ObjRandomSim();\n}",
+      "Draft": "func Fra_SmlAssignRandom(p *Fra_Sml_t, pObj *Aig_Obj_t) {\n    var pSims *uint32;\n    var i int32;\n    assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n    pSims = Fra_ObjSim( p, pObj.Id );\n    for  i = 0; i \u003c p.nWordsTotal; i++  {\n        pSims[i] = Fra_ObjRandomSim();\n    }\n}"
+    },
+    {
+      "Name": "Fra_SmlAssignConst",
+      "Start": 10928,
+      "End": 11260,
+      "BodyStart": 11012,
+      "Original": "void Fra_SmlAssignConst( Fra_Sml_t * p, Aig_Obj_t * pObj, int fConst1, int iFrame )\n{\n    unsigned * pSims;\n    int i;\n    assert( Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) );\n    pSims = Fra_ObjSim( p, pObj-\u003eId ) + p-\u003enWordsFrame * iFrame;\n    for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n        pSims[i] = fConst1? ~(unsigned)0 : 0;\n}",
+      "Draft": "func Fra_SmlAssignConst(p *Fra_Sml_t, pObj *Aig_Obj_t, fConst1 int32, iFrame int32) {\n    var pSims *uint32;\n    var i int32;\n    assert(Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj), \"Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj)\");\n    pSims = Fra_ObjSim( p, pObj.Id ) + p.nWordsFrame * iFrame;\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        pSims[i] = fConst1? ~uint32(0) : 0;\n    }\n}"
+    },
+    {
+      "Name": "Fra_SmlInitialize",
+      "Start": 11539,
+      "End": 12167,
+      "BodyStart": 11590,
+      "Original": "void Fra_SmlInitialize( Fra_Sml_t * p, int fInit )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    if ( fInit )\n    {\n        assert( Aig_ManRegNum(p-\u003epAig) \u003e 0 );\n        assert( Aig_ManRegNum(p-\u003epAig) \u003c Aig_ManCiNum(p-\u003epAig) );\n        // assign random info for primary inputs\n        Aig_ManForEachPiSeq( p-\u003epAig, pObj, i )\n            Fra_SmlAssignRandom( p, pObj );\n        // assign the initial state for the latches\n        Aig_ManForEachLoSeq( p-\u003epAig, pObj, i )\n            Fra_SmlAssignConst( p, pObj, 0, 0 );\n    }\n    else\n    {\n        Aig_ManForEachCi( p-\u003epAig, pObj, i )\n            Fra_SmlAssignRandom( p, pObj );\n    }\n}",
+      "Draft": "func Fra_SmlInitialize(p *Fra_Sml_t, fInit int32) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    if fInit != 0 {\n        assert(Aig_ManRegNum(p.pAig) \u003e 0, \"Aig_ManRegNum(p.pAig) \u003e 0\");\n        assert(Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig), \"Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig)\");\n        // assign random info for primary inputs\n        // inlining of macro Aig_ManForEachPiSeq\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Fra_SmlAssignRandom( p, pObj );\n        }\n        // assign the initial state for the latches\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig); (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Fra_SmlAssignConst( p, pObj, 0, 0 );\n        }\n    \n    } else {\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Fra_SmlAssignRandom( p, pObj );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Fra_SmlAssignDist1",
+      "Start": 12450,
+      "End": 13973,
+      "BodyStart": 12508,
+      "Original": "void Fra_SmlAssignDist1( Fra_Sml_t * p, unsigned * pPat )\n{\n    Aig_Obj_t * pObj;\n    int f, i, k, Limit, nTruePis;\n    assert( p-\u003enFrames \u003e 0 );\n    if ( p-\u003enFrames == 1 )\n    {\n        // copy the PI info \n        Aig_ManForEachCi( p-\u003epAig, pObj, i )\n            Fra_SmlAssignConst( p, pObj, Abc_InfoHasBit(pPat, i), 0 );\n        // flip one bit\n        Limit = Abc_MinInt( Aig_ManCiNum(p-\u003epAig), p-\u003enWordsTotal * 32 - 1 );\n        for ( i = 0; i \u003c Limit; i++ )\n            Abc_InfoXorBit( Fra_ObjSim( p, Aig_ManCi(p-\u003epAig,i)-\u003eId ), i+1 );\n    }\n    else\n    {\n        int fUseDist1 = 0;\n\n        // copy the PI info for each frame\n        nTruePis = Aig_ManCiNum(p-\u003epAig) - Aig_ManRegNum(p-\u003epAig);\n        for ( f = 0; f \u003c p-\u003enFrames; f++ )\n            Aig_ManForEachPiSeq( p-\u003epAig, pObj, i )\n                Fra_SmlAssignConst( p, pObj, Abc_InfoHasBit(pPat, nTruePis * f + i), f );\n        // copy the latch info \n        k = 0;\n        Aig_ManForEachLoSeq( p-\u003epAig, pObj, i )\n            Fra_SmlAssignConst( p, pObj, Abc_InfoHasBit(pPat, nTruePis * p-\u003enFrames + k++), 0 );\n//        assert( p-\u003epManFraig == NULL || nTruePis * p-\u003enFrames + k == Aig_ManCiNum(p-\u003epManFraig) );\n\n        // flip one bit of the last frame\n        if ( fUseDist1 ) //\u0026\u0026 p-\u003enFrames == 2 )\n        {\n            Limit = Abc_MinInt( nTruePis, p-\u003enWordsFrame * 32 - 1 );\n            for ( i = 0; i \u003c Limit; i++ )\n                Abc_InfoXorBit( Fra_ObjSim( p, Aig_ManCi(p-\u003epAig, i)-\u003eId ) + p-\u003enWordsFrame*(p-\u003enFrames-1), i+1 );\n        }\n    }\n}",
+      "Draft": "func Fra_SmlAssignDist1(p *Fra_Sml_t, pPat *uint32) {\n    var pObj *Aig_Obj_t;\n    var f, i, k, Limit, nTruePis int32;\n    assert(p.nFrames \u003e 0, \"p.nFrames \u003e 0\");\n    if p.nFrames == 1 {\n        // copy the PI info \n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Fra_SmlAssignConst( p, pObj, Abc_InfoHasBit(pPat, i), 0 );\n        }\n        // flip one bit\n        Limit = Abc_MinInt( Aig_ManCiNum(p.pAig), p.nWordsTotal * 32 - 1 );\n        for  i = 0; i \u003c Limit; i++  {\n            Abc_InfoXorBit( Fra_ObjSim( p, Aig_ManCi(p.pAig,i).Id ), i+1 );\n        }\n    \n    } else {\n        var fUseDist1 int32;\n\n        // copy the PI info for each frame\n        nTruePis = Aig_ManCiNum(p.pAig) - Aig_ManRegNum(p.pAig);\n        for  f = 0; f \u003c p.nFrames; f++  {\n            // inlining of macro Aig_ManForEachPiSeq\n            // inlining of macro Vec_PtrForEachEntryStop\n            for  i = 0; (i \u003c Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n                Fra_SmlAssignConst( p, pObj, Abc_InfoHasBit(pPat, nTruePis * f + i), f );\n            }\n        }\n        // copy the latch info \n        k = 0;\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig); (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Fra_SmlAssignConst( p, pObj, Abc_InfoHasBit(pPat, nTruePis * p.nFrames + k++), 0 );\n        }\n//        assert( p-\u003epManFraig == NULL || nTruePis * p-\u003enFrames + k == Aig_ManCiNum(p-\u003epManFraig) );\n\n        // flip one bit of the last frame\n        if fUseDist1 != 0 { //\u0026\u0026 p-\u003enFrames == 2 )\n        \n            Limit = Abc_MinInt( nTruePis, p.nWordsFrame * 32 - 1 );\n            for  i = 0; i \u003c Limit; i++  {\n                Abc_InfoXorBit( Fra_ObjSim( p, Aig_ManCi(p.pAig, i).Id ) + p.nWordsFrame*(p.nFrames-1), i+1 );\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Fra_SmlNodeSimulate",
+      "Start": 14229,
+      "End": 16172,
+      "BodyStart": 14301,
+      "Original": "void Fra_SmlNodeSimulate( Fra_Sml_t * p, Aig_Obj_t * pObj, int iFrame )\n{\n    unsigned * pSims, * pSims0, * pSims1;\n    int fCompl, fCompl0, fCompl1, i;\n    assert( !Aig_IsComplement(pObj) );\n    assert( Aig_ObjIsNode(pObj) );\n    assert( iFrame == 0 || p-\u003enWordsFrame \u003c p-\u003enWordsTotal );\n    // get hold of the simulation information\n    pSims  = Fra_ObjSim(p, pObj-\u003eId) + p-\u003enWordsFrame * iFrame;\n    pSims0 = Fra_ObjSim(p, Aig_ObjFanin0(pObj)-\u003eId) + p-\u003enWordsFrame * iFrame;\n    pSims1 = Fra_ObjSim(p, Aig_ObjFanin1(pObj)-\u003eId) + p-\u003enWordsFrame * iFrame;\n    // get complemented attributes of the children using their random info\n    fCompl  = pObj-\u003efPhase;\n    fCompl0 = Aig_ObjPhaseReal(Aig_ObjChild0(pObj));\n    fCompl1 = Aig_ObjPhaseReal(Aig_ObjChild1(pObj));\n    // simulate\n    if ( fCompl0 \u0026\u0026 fCompl1 )\n    {\n        if ( fCompl )\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = (pSims0[i] | pSims1[i]);\n        else\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = ~(pSims0[i] | pSims1[i]);\n    }\n    else if ( fCompl0 \u0026\u0026 !fCompl1 )\n    {\n        if ( fCompl )\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = (pSims0[i] | ~pSims1[i]);\n        else\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = (~pSims0[i] \u0026 pSims1[i]);\n    }\n    else if ( !fCompl0 \u0026\u0026 fCompl1 )\n    {\n        if ( fCompl )\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = (~pSims0[i] | pSims1[i]);\n        else\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = (pSims0[i] \u0026 ~pSims1[i]);\n    }\n    else // if ( !fCompl0 \u0026\u0026 !fCompl1 )\n    {\n        if ( fCompl )\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = ~(pSims0[i] \u0026 pSims1[i]);\n        else\n            for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n                pSims[i] = (pSims0[i] \u0026 pSims1[i]);\n    }\n}",
+      "Draft": "func Fra_SmlNodeSimulate(p *Fra_Sml_t, pObj *Aig_Obj_t, iFrame int32) {\n    var pSims, pSims0, pSims1 *uint32;\n    var fCompl, fCompl0, fCompl1, i int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    assert(iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims  = Fra_ObjSim(p, pObj.Id) + p.nWordsFrame * iFrame;\n    pSims0 = Fra_ObjSim(p, Aig_ObjFanin0(pObj).Id) + p.nWordsFrame * iFrame;\n    pSims1 = Fra_ObjSim(p, Aig_ObjFanin1(pObj).Id) + p.nWordsFrame * iFrame;\n    // get complemented attributes of the children using their random info\n    fCompl  = pObj.fPhase;\n    fCompl0 = Aig_ObjPhaseReal(Aig_ObjChild0(pObj));\n    fCompl1 = Aig_ObjPhaseReal(Aig_ObjChild1(pObj));\n    // simulate\n    if fCompl0 \u0026\u0026 fCompl1 {\n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] | pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = ~(pSims0[i] | pSims1[i]);\n            } }\n    \n    } else if fCompl0 \u0026\u0026 !fCompl1 {\n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] | ~pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (~pSims0[i] \u0026 pSims1[i]);\n            } }\n    \n    } else if !fCompl0 \u0026\u0026 fCompl1 {\n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (~pSims0[i] | pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] \u0026 ~pSims1[i]);\n            } }\n    \n    } else { // if ( !fCompl0 \u0026\u0026 !fCompl1 )\n    \n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = ~(pSims0[i] \u0026 pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] \u0026 pSims1[i]);\n            } }\n    }\n}"
+    },
+    {
+      "Name": "Fra_SmlNodesCompareInFrame",
+      "Start": 16427,
+      "End": 17104,
+      "BodyStart": 16539,
+      "Original": "int Fra_SmlNodesCompareInFrame( Fra_Sml_t * p, Aig_Obj_t * pObj0, Aig_Obj_t * pObj1, int iFrame0, int iFrame1 )\n{\n    unsigned * pSims0, * pSims1;\n    int i;\n    assert( !Aig_IsComplement(pObj0) );\n    assert( !Aig_IsComplement(pObj1) );\n    assert( iFrame0 == 0 || p-\u003enWordsFrame \u003c p-\u003enWordsTotal );\n    assert( iFrame1 == 0 || p-\u003enWordsFrame \u003c p-\u003enWordsTotal );\n    // get hold of the simulation information\n    pSims0  = Fra_ObjSim(p, pObj0-\u003eId) + p-\u003enWordsFrame * iFrame0;\n    pSims1  = Fra_ObjSim(p, pObj1-\u003eId) + p-\u003enWordsFrame * iFrame1;\n    // compare\n    for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n        if ( pSims0[i] != pSims1[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Fra_SmlNodesCompareInFrame(p *Fra_Sml_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t, iFrame0 int32, iFrame1 int32) int32 {\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    assert(!Aig_IsComplement(pObj0), \"!Aig_IsComplement(pObj0)\");\n    assert(!Aig_IsComplement(pObj1), \"!Aig_IsComplement(pObj1)\");\n    assert(iFrame0 == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame0 == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    assert(iFrame1 == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame1 == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims0  = Fra_ObjSim(p, pObj0.Id) + p.nWordsFrame * iFrame0;\n    pSims1  = Fra_ObjSim(p, pObj1.Id) + p.nWordsFrame * iFrame1;\n    // compare\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        if pSims0[i] != pSims1[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Fra_SmlNodeCopyFanin",
+      "Start": 17359,
+      "End": 18232,
+      "BodyStart": 17432,
+      "Original": "void Fra_SmlNodeCopyFanin( Fra_Sml_t * p, Aig_Obj_t * pObj, int iFrame )\n{\n    unsigned * pSims, * pSims0;\n    int fCompl, fCompl0, i;\n    assert( !Aig_IsComplement(pObj) );\n    assert( Aig_ObjIsCo(pObj) );\n    assert( iFrame == 0 || p-\u003enWordsFrame \u003c p-\u003enWordsTotal );\n    // get hold of the simulation information\n    pSims  = Fra_ObjSim(p, pObj-\u003eId) + p-\u003enWordsFrame * iFrame;\n    pSims0 = Fra_ObjSim(p, Aig_ObjFanin0(pObj)-\u003eId) + p-\u003enWordsFrame * iFrame;\n    // get complemented attributes of the children using their random info\n    fCompl  = pObj-\u003efPhase;\n    fCompl0 = Aig_ObjPhaseReal(Aig_ObjChild0(pObj));\n    // copy information as it is\n//    if ( Aig_ObjFaninC0(pObj) )\n    if ( fCompl0 )\n        for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n            pSims[i] = ~pSims0[i];\n    else\n        for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n            pSims[i] = pSims0[i];\n}",
+      "Draft": "func Fra_SmlNodeCopyFanin(p *Fra_Sml_t, pObj *Aig_Obj_t, iFrame int32) {\n    var pSims, pSims0 *uint32;\n    var fCompl, fCompl0, i int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Aig_ObjIsCo(pObj), \"Aig_ObjIsCo(pObj)\");\n    assert(iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims  = Fra_ObjSim(p, pObj.Id) + p.nWordsFrame * iFrame;\n    pSims0 = Fra_ObjSim(p, Aig_ObjFanin0(pObj).Id) + p.nWordsFrame * iFrame;\n    // get complemented attributes of the children using their random info\n    fCompl  = pObj.fPhase;\n    fCompl0 = Aig_ObjPhaseReal(Aig_ObjChild0(pObj));\n    // copy information as it is\n//    if ( Aig_ObjFaninC0(pObj) )\n    if fCompl0 {\n        for  i = 0; i \u003c p.nWordsFrame; i++  {\n            pSims[i] = ~pSims0[i];\n        }\n    } else {\n        for  i = 0; i \u003c p.nWordsFrame; i++  {\n            pSims[i] = pSims0[i];\n        } }\n}"
+    },
+    {
+      "Name": "Fra_SmlNodeTransferNext",
+      "Start": 18487,
+      "End": 19115,
+      "BodyStart": 18580,
+      "Original": "void Fra_SmlNodeTransferNext( Fra_Sml_t * p, Aig_Obj_t * pOut, Aig_Obj_t * pIn, int iFrame )\n{\n    unsigned * pSims0, * pSims1;\n    int i;\n    assert( !Aig_IsComplement(pOut) );\n    assert( !Aig_IsComplement(pIn) );\n    assert( Aig_ObjIsCo(pOut) );\n    assert( Aig_ObjIsCi(pIn) );\n    assert( iFrame == 0 || p-\u003enWordsFrame \u003c p-\u003enWordsTotal );\n    // get hold of the simulation information\n    pSims0 = Fra_ObjSim(p, pOut-\u003eId) + p-\u003enWordsFrame * iFrame;\n    pSims1 = Fra_ObjSim(p, pIn-\u003eId) + p-\u003enWordsFrame * (iFrame+1);\n    // copy information as it is\n    for ( i = 0; i \u003c p-\u003enWordsFrame; i++ )\n        pSims1[i] = pSims0[i];\n}",
+      "Draft": "func Fra_SmlNodeTransferNext(p *Fra_Sml_t, pOut *Aig_Obj_t, pIn *Aig_Obj_t, iFrame int32) {\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    assert(!Aig_IsComplement(pOut), \"!Aig_IsComplement(pOut)\");\n    assert(!Aig_IsComplement(pIn), \"!Aig_IsComplement(pIn)\");\n    assert(Aig_ObjIsCo(pOut), \"Aig_ObjIsCo(pOut)\");\n    assert(Aig_ObjIsCi(pIn), \"Aig_ObjIsCi(pIn)\");\n    assert(iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims0 = Fra_ObjSim(p, pOut.Id) + p.nWordsFrame * iFrame;\n    pSims1 = Fra_ObjSim(p, pIn.Id) + p.nWordsFrame * (iFrame+1);\n    // copy information as it is\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        pSims1[i] = pSims0[i];\n    }\n}"
+    },
+    {
+      "Name": "Fra_SmlCheckNonConstOutputs",
+      "Start": 19397,
+      "End": 19605,
+      "BodyStart": 19446,
+      "Original": "int Fra_SmlCheckNonConstOutputs( Fra_Sml_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManForEachPoSeq( p-\u003epAig, pObj, i )\n        if ( !Fra_SmlNodeIsZero(p, pObj) )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Fra_SmlCheckNonConstOutputs(p *Fra_Sml_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Aig_ManForEachPoSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n        if !(Fra_SmlNodeIsZero(p, pObj) != 0) {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Fra_SmlSimulateOne",
+      "Start": 19911,
+      "End": 20823,
+      "BodyStart": 19952,
+      "Original": "void Fra_SmlSimulateOne( Fra_Sml_t * p )\n{\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    int f, i;\n    abctime clk;\nclk = Abc_Clock();\n    for ( f = 0; f \u003c p-\u003enFrames; f++ )\n    {\n        // simulate the nodes\n        Aig_ManForEachNode( p-\u003epAig, pObj, i )\n            Fra_SmlNodeSimulate( p, pObj, f );\n        // copy simulation info into outputs\n        Aig_ManForEachPoSeq( p-\u003epAig, pObj, i )\n            Fra_SmlNodeCopyFanin( p, pObj, f );\n        // quit if this is the last timeframe\n        if ( f == p-\u003enFrames - 1 )\n            break;\n        // copy simulation info into outputs\n        Aig_ManForEachLiSeq( p-\u003epAig, pObj, i )\n            Fra_SmlNodeCopyFanin( p, pObj, f );\n        // copy simulation info into the inputs\n        Aig_ManForEachLiLoSeq( p-\u003epAig, pObjLi, pObjLo, i )\n            Fra_SmlNodeTransferNext( p, pObjLi, pObjLo, f );\n    }\np-\u003etimeSim += Abc_Clock() - clk;\np-\u003enSimRounds++;\n}",
+      "Draft": "func Fra_SmlSimulateOne(p *Fra_Sml_t) {\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var f, i int32;\n    var clk abctime;\nclk = Abc_Clock();\n    for  f = 0; f \u003c p.nFrames; f++  {\n        // simulate the nodes\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            Fra_SmlNodeSimulate( p, pObj, f ); }\n        }\n        // copy simulation info into outputs\n        // inlining of macro Aig_ManForEachPoSeq\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n            Fra_SmlNodeCopyFanin( p, pObj, f );\n        }\n        // quit if this is the last timeframe\n        if f == p.nFrames - 1 {\n            break; }\n        // copy simulation info into outputs\n        // inlining of macro Aig_ManForEachLiSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig); (i \u003c Vec_PtrSize(p.pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n            Fra_SmlNodeCopyFanin( p, pObj, f );\n        }\n        // copy simulation info into the inputs\n        // inlining of macro Aig_ManForEachLiLoSeq\n        for  i = 0; (i \u003c Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(p.pAig, i)), 1); i++  {\n            Fra_SmlNodeTransferNext( p, pObjLi, pObjLo, f );\n        }\n    }\np.timeSim += Abc_Clock() - clk;\np.nSimRounds++;\n}"
+    },
+    {
+      "Name": "Fra_SmlResimulate",
+      "Start": 21121,
+      "End": 21994,
+      "BodyStart": 21161,
+      "Original": "void Fra_SmlResimulate( Fra_Man_t * p )\n{\n    int nChanges;\n    abctime clk;\n    Fra_SmlAssignDist1( p-\u003epSml, p-\u003epPatWords );\n    Fra_SmlSimulateOne( p-\u003epSml );\n//    if ( p-\u003epPars-\u003efPatScores )\n//        Fra_CleanPatScores( p );\n    if ( p-\u003epPars-\u003efProve \u0026\u0026 Fra_SmlCheckOutput(p) )\n        return;\nclk = Abc_Clock();\n    nChanges = Fra_ClassesRefine( p-\u003epCla );\n    nChanges += Fra_ClassesRefine1( p-\u003epCla, 1, NULL );\n    if ( p-\u003epCla-\u003evImps )\n        nChanges += Fra_ImpRefineUsingCex( p, p-\u003epCla-\u003evImps );\n    if ( p-\u003evOneHots )\n        nChanges += Fra_OneHotRefineUsingCex( p, p-\u003evOneHots );\np-\u003etimeRef += Abc_Clock() - clk;\n    if ( !p-\u003epPars-\u003enFramesK \u0026\u0026 nChanges \u003c 1 )\n        printf( \"Error: A counter-example did not refine classes!\\n\" );\n//    assert( nChanges \u003e= 1 );\n//printf( \"Refined classes = %5d.   Changes = %4d.\\n\", Vec_PtrSize(p-\u003evClasses), nChanges );\n}",
+      "Draft": "func Fra_SmlResimulate(p *Fra_Man_t) {\n    var nChanges int32;\n    var clk abctime;\n    Fra_SmlAssignDist1( p.pSml, p.pPatWords );\n    Fra_SmlSimulateOne( p.pSml );\n//    if ( p-\u003epPars-\u003efPatScores )\n//        Fra_CleanPatScores( p );\n    if p.pPars.fProve \u0026\u0026 (Fra_SmlCheckOutput(p) != 0) {\n        return; }\nclk = Abc_Clock();\n    nChanges = Fra_ClassesRefine( p.pCla );\n    nChanges += Fra_ClassesRefine1( p.pCla, 1, nil );\n    if p.pCla.vImps {\n        nChanges += Fra_ImpRefineUsingCex( p, p.pCla.vImps ); }\n    if p.vOneHots {\n        nChanges += Fra_OneHotRefineUsingCex( p, p.vOneHots ); }\np.timeRef += Abc_Clock() - clk;\n    if !p.pPars.nFramesK \u0026\u0026 nChanges \u003c 1 {\n        fmt.Printf(\"Error: A counter-example did not refine classes!\\n\"); }\n//    assert( nChanges \u003e= 1 );\n//printf( \"Refined classes = %5d.   Changes = %4d.\\n\", Vec_PtrSize(p-\u003evClasses), nChanges );\n}"
+    },
+    {
+      "Name": "Fra_SmlSimulate",
+      "Start": 22265,
+      "End": 24793,
+      "BodyStart": 22314,
+      "Original": "void Fra_SmlSimulate( Fra_Man_t * p, int fInit )\n{\n    int fVerbose = 0;\n    int nChanges, nClasses;\n    abctime clk;\n    assert( !fInit || Aig_ManRegNum(p-\u003epManAig) );\n    // start the classes\n    Fra_SmlInitialize( p-\u003epSml, fInit );\n    Fra_SmlSimulateOne( p-\u003epSml );\n    if ( p-\u003epPars-\u003efProve \u0026\u0026 Fra_SmlCheckOutput(p) )\n        return;\n    Fra_ClassesPrepare( p-\u003epCla, p-\u003epPars-\u003efLatchCorr, 0 );\n//    Fra_ClassesPrint( p-\u003epCla, 0 );\nif ( fVerbose )\nprintf( \"Starting classes = %5d.   Lits = %6d.\\n\", Vec_PtrSize(p-\u003epCla-\u003evClasses), Fra_ClassesCountLits(p-\u003epCla) );\n\n//return;\n\n    // refine classes by walking 0/1 patterns\n    Fra_SmlSavePattern0( p, fInit );\n    Fra_SmlAssignDist1( p-\u003epSml, p-\u003epPatWords );\n    Fra_SmlSimulateOne( p-\u003epSml );\n    if ( p-\u003epPars-\u003efProve \u0026\u0026 Fra_SmlCheckOutput(p) )\n        return;\nclk = Abc_Clock();\n    nChanges = Fra_ClassesRefine( p-\u003epCla );\n    nChanges += Fra_ClassesRefine1( p-\u003epCla, 1, NULL );\np-\u003etimeRef += Abc_Clock() - clk;\nif ( fVerbose )\nprintf( \"Refined classes  = %5d.   Changes = %4d.   Lits = %6d.\\n\", Vec_PtrSize(p-\u003epCla-\u003evClasses), nChanges, Fra_ClassesCountLits(p-\u003epCla) );\n    Fra_SmlSavePattern1( p, fInit );\n    Fra_SmlAssignDist1( p-\u003epSml, p-\u003epPatWords );\n    Fra_SmlSimulateOne( p-\u003epSml );\n    if ( p-\u003epPars-\u003efProve \u0026\u0026 Fra_SmlCheckOutput(p) )\n        return;\nclk = Abc_Clock();\n    nChanges = Fra_ClassesRefine( p-\u003epCla );\n    nChanges += Fra_ClassesRefine1( p-\u003epCla, 1, NULL );\np-\u003etimeRef += Abc_Clock() - clk;\n\nif ( fVerbose )\nprintf( \"Refined classes  = %5d.   Changes = %4d.   Lits = %6d.\\n\", Vec_PtrSize(p-\u003epCla-\u003evClasses), nChanges, Fra_ClassesCountLits(p-\u003epCla) );\n    // refine classes by random simulation\n    do {\n        Fra_SmlInitialize( p-\u003epSml, fInit );\n        Fra_SmlSimulateOne( p-\u003epSml );\n        nClasses = Vec_PtrSize(p-\u003epCla-\u003evClasses);\n        if ( p-\u003epPars-\u003efProve \u0026\u0026 Fra_SmlCheckOutput(p) )\n            return;\nclk = Abc_Clock();\n        nChanges = Fra_ClassesRefine( p-\u003epCla );\n        nChanges += Fra_ClassesRefine1( p-\u003epCla, 1, NULL );\np-\u003etimeRef += Abc_Clock() - clk;\nif ( fVerbose )\nprintf( \"Refined classes  = %5d.   Changes = %4d.   Lits = %6d.\\n\", Vec_PtrSize(p-\u003epCla-\u003evClasses), nChanges, Fra_ClassesCountLits(p-\u003epCla) );\n    } while ( (double)nChanges / nClasses \u003e p-\u003epPars-\u003edSimSatur );\n\n//    if ( p-\u003epPars-\u003efVerbose )\n//    printf( \"Consts = %6d. Classes = %6d. Literals = %6d.\\n\", \n//        Vec_PtrSize(p-\u003epCla-\u003evClasses1), Vec_PtrSize(p-\u003epCla-\u003evClasses), Fra_ClassesCountLits(p-\u003epCla) );\n//    Fra_ClassesPrint( p-\u003epCla, 0 );\n}",
+      "Draft": "func Fra_SmlSimulate(p *Fra_Man_t, fInit int32) {\n    var fVerbose int32;\n    var nChanges, nClasses int32;\n    var clk abctime;\n    assert(!(fInit != 0) || Aig_ManRegNum(p.pManAig), \"!fInit || Aig_ManRegNum(p.pManAig)\");\n    // start the classes\n    Fra_SmlInitialize( p.pSml, fInit );\n    Fra_SmlSimulateOne( p.pSml );\n    if p.pPars.fProve \u0026\u0026 (Fra_SmlCheckOutput(p) != 0) {\n        return; }\n    Fra_ClassesPrepare( p.pCla, p.pPars.fLatchCorr, 0 );\n//    Fra_ClassesPrint( p-\u003epCla, 0 );\nif fVerbose != 0 {\nfmt.Printf(\"Starting classes = %5d.   Lits = %6d.\\n\", Vec_PtrSize(p.pCla.vClasses), Fra_ClassesCountLits(p.pCla)); }\n\n//return;\n\n    // refine classes by walking 0/1 patterns\n    Fra_SmlSavePattern0( p, fInit );\n    Fra_SmlAssignDist1( p.pSml, p.pPatWords );\n    Fra_SmlSimulateOne( p.pSml );\n    if p.pPars.fProve \u0026\u0026 (Fra_SmlCheckOutput(p) != 0) {\n        return; }\nclk = Abc_Clock();\n    nChanges = Fra_ClassesRefine( p.pCla );\n    nChanges += Fra_ClassesRefine1( p.pCla, 1, nil );\np.timeRef += Abc_Clock() - clk;\nif fVerbose != 0 {\nfmt.Printf(\"Refined classes  = %5d.   Changes = %4d.   Lits = %6d.\\n\", Vec_PtrSize(p.pCla.vClasses), nChanges, Fra_ClassesCountLits(p.pCla)); }\n    Fra_SmlSavePattern1( p, fInit );\n    Fra_SmlAssignDist1( p.pSml, p.pPatWords );\n    Fra_SmlSimulateOne( p.pSml );\n    if p.pPars.fProve \u0026\u0026 (Fra_SmlCheckOutput(p) != 0) {\n        return; }\nclk = Abc_Clock();\n    nChanges = Fra_ClassesRefine( p.pCla );\n    nChanges += Fra_ClassesRefine1( p.pCla, 1, nil );\np.timeRef += Abc_Clock() - clk;\n\nif fVerbose != 0 {\nfmt.Printf(\"Refined classes  = %5d.   Changes = %4d.   Lits = %6d.\\n\", Vec_PtrSize(p.pCla.vClasses), nChanges, Fra_ClassesCountLits(p.pCla)); }\n    // refine classes by random simulation\n    for {\n        Fra_SmlInitialize( p.pSml, fInit );\n        Fra_SmlSimulateOne( p.pSml );\n        nClasses = Vec_PtrSize(p.pCla.vClasses);\n        if p.pPars.fProve \u0026\u0026 (Fra_SmlCheckOutput(p) != 0) {\n            return; }\nclk = Abc_Clock();\n        nChanges = Fra_ClassesRefine( p.pCla );\n        nChanges += Fra_ClassesRefine1( p.pCla, 1, nil );\np.timeRef += Abc_Clock() - clk;\nif fVerbose != 0 {\nfmt.Printf(\"Refined classes  = %5d.   Changes = %4d.   Lits = %6d.\\n\", Vec_PtrSize(p.pCla.vClasses), nChanges, Fra_ClassesCountLits(p.pCla)); }\n    \nif !( float64(nChanges) / nClasses \u003e p.pPars.dSimSatur ) { break }\n} \n\n//    if ( p-\u003epPars-\u003efVerbose )\n//    printf( \"Consts = %6d. Classes = %6d. Literals = %6d.\\n\", \n//        Vec_PtrSize(p-\u003epCla-\u003evClasses1), Vec_PtrSize(p-\u003epCla-\u003evClasses), Fra_ClassesCountLits(p-\u003epCla) );\n//    Fra_ClassesPrint( p-\u003epCla, 0 );\n}"
+    },
+    {
+      "Name": "Fra_SmlStart",
+      "Start": 25060,
+      "End": 25725,
+      "BodyStart": 25146,
+      "Original": "Fra_Sml_t * Fra_SmlStart( Aig_Man_t * pAig, int nPref, int nFrames, int nWordsFrame )\n{\n    Fra_Sml_t * p;\n    p = (Fra_Sml_t *)ABC_ALLOC( char, sizeof(Fra_Sml_t) + sizeof(unsigned) * Aig_ManObjNumMax(pAig) * (nPref + nFrames) * nWordsFrame );\n    memset( p, 0, sizeof(Fra_Sml_t) + sizeof(unsigned) * (nPref + nFrames) * nWordsFrame );\n    p-\u003epAig        = pAig;\n    p-\u003enPref       = nPref;\n    p-\u003enFrames     = nPref + nFrames;\n    p-\u003enWordsFrame = nWordsFrame;\n    p-\u003enWordsTotal = (nPref + nFrames) * nWordsFrame;\n    p-\u003enWordsPref  = nPref * nWordsFrame;\n    // constant 1 is initialized to 0 because we store values modulus phase (pObj-\u003efPhase)\n    return p;\n}",
+      "Draft": "func Fra_SmlStart(pAig *Aig_Man_t, nPref int32, nFrames int32, nWordsFrame int32) *Fra_Sml_t {\n    var p *Fra_Sml_t;\n    // inlining of macro ABC_ALLOC\n    p = (Fra_Sml_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Fra_Sml_t) + sizeof(unsigned) * Aig_ManObjNumMax(pAig) * (nPref + nFrames) * nWordsFrame)));\n    memset( p, 0, sizeof(Fra_Sml_t) + sizeof(unsigned) * (nPref + nFrames) * nWordsFrame );\n    p.pAig        = pAig;\n    p.nPref       = nPref;\n    p.nFrames     = nPref + nFrames;\n    p.nWordsFrame = nWordsFrame;\n    p.nWordsTotal = (nPref + nFrames) * nWordsFrame;\n    p.nWordsPref  = nPref * nWordsFrame;\n    // constant 1 is initialized to 0 because we store values modulus phase (pObj-\u003efPhase)\n    return p;\n}"
+    },
+    {
+      "Name": "Fra_SmlStop",
+      "Start": 25992,
+      "End": 26048,
+      "BodyStart": 26026,
+      "Original": "void Fra_SmlStop( Fra_Sml_t * p )\n{\n    ABC_FREE( p );\n}",
+      "Draft": "func Fra_SmlStop(p *Fra_Sml_t) {\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Fra_SmlSimulateComb",
+      "Start": 26334,
+      "End": 26638,
+      "BodyStart": 26415,
+      "Original": "Fra_Sml_t * Fra_SmlSimulateComb( Aig_Man_t * pAig, int nWords, int fCheckMiter )\n{\n    Fra_Sml_t * p;\n    p = Fra_SmlStart( pAig, 0, 1, nWords );\n    Fra_SmlInitialize( p, 0 );\n    Fra_SmlSimulateOne( p );\n    if ( fCheckMiter )\n        p-\u003efNonConstOut = Fra_SmlCheckNonConstOutputs( p );\n    return p;\n}",
+      "Draft": "func Fra_SmlSimulateComb(pAig *Aig_Man_t, nWords int32, fCheckMiter int32) *Fra_Sml_t {\n    var p *Fra_Sml_t;\n    p = Fra_SmlStart( pAig, 0, 1, nWords );\n    Fra_SmlInitialize( p, 0 );\n    Fra_SmlSimulateOne( p );\n    if fCheckMiter != 0 {\n        p.fNonConstOut = Fra_SmlCheckNonConstOutputs( p ); }\n    return p;\n}"
+    },
+    {
+      "Name": "Fra_SmlSimulateReadFile",
+      "Start": 27053,
+      "End": 27801,
+      "BodyStart": 27109,
+      "Original": "Vec_Str_t * Fra_SmlSimulateReadFile( char * pFileName )\n{\n    Vec_Str_t * vRes;\n    FILE * pFile;\n    int c;\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file \\\"%s\\\" with simulation patterns.\\n\", pFileName );\n        return NULL;\n    }\n    vRes = Vec_StrAlloc( 1000 );\n    while ( (c = fgetc(pFile)) != EOF )\n    {\n        if ( c == '0' || c == '1' )\n            Vec_StrPush( vRes, (char)(c - '0') );\n        else if ( c != ' ' \u0026\u0026 c != '\\r' \u0026\u0026 c != '\\n' \u0026\u0026 c != '\\t' )\n        {\n            printf( \"File \\\"%s\\\" contains symbol (%c) other than \\'0\\' or \\'1\\'.\\n\", pFileName, (char)c );\n            Vec_StrFreeP( \u0026vRes );\n            break;\n        }\n    }\n    fclose( pFile );\n    return vRes;\n}",
+      "Draft": "func Fra_SmlSimulateReadFile(pFileName string) *Vec_Str_t {\n    var vRes *Vec_Str_t;\n    var pFile *os.File;\n    var c int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" with simulation patterns.\\n\", pFileName);\n        return nil;\n    }\n    vRes = Vec_StrAlloc( 1000 );\n    for  (c = fgetc(pFile)) != -1  {\n        if c == '0' || c == '1' {\n            Vec_StrPush( vRes, byte((c - '0')) );\n        } else if c != ' ' \u0026\u0026 c != '\\r' \u0026\u0026 c != '\\n' \u0026\u0026 c != '\\t' {\n            fmt.Printf(\"File \\\"%s\\\" contains symbol (%c) other than \\'0\\' or \\'1\\'.\\n\", pFileName, byte(c));\n            Vec_StrFreeP( \u0026vRes );\n            break;\n        }\n    }\n    _ = (pFile).Close();\n    return vRes;\n}"
+    },
+    {
+      "Name": "Fra_SmlInitializeGiven",
+      "Start": 28082,
+      "End": 29057,
+      "BodyStart": 28149,
+      "Original": "void Fra_SmlInitializeGiven( Fra_Sml_t * p, Vec_Str_t * vSimInfo )\n{\n    Aig_Obj_t * pObj;\n    unsigned * pSims;\n    int i, k, nPats = Vec_StrSize(vSimInfo) / Aig_ManCiNum(p-\u003epAig);\n    int nPatsPadded = p-\u003enWordsTotal * 32;\n    assert( Aig_ManRegNum(p-\u003epAig) == 0 );\n    assert( Vec_StrSize(vSimInfo) % Aig_ManCiNum(p-\u003epAig) == 0 );\n    assert( nPats \u003c= nPatsPadded );\n    Aig_ManForEachCi( p-\u003epAig, pObj, i )\n    {\n        pSims = Fra_ObjSim( p, pObj-\u003eId );\n        // clean data\n        for ( k = 0; k \u003c p-\u003enWordsTotal; k++ )\n            pSims[k] = 0;\n        // load patterns\n        for ( k = 0; k \u003c nPats; k++ )\n            if ( Vec_StrEntry(vSimInfo, k * Aig_ManCiNum(p-\u003epAig) + i) )\n                Abc_InfoSetBit( pSims, k );\n        // pad the remaining bits with the value of the last pattern\n        for ( ; k \u003c nPatsPadded; k++ )\n            if ( Vec_StrEntry(vSimInfo, (nPats-1) * Aig_ManCiNum(p-\u003epAig) + i) )\n                Abc_InfoSetBit( pSims, k );\n    }\n}",
+      "Draft": "func Fra_SmlInitializeGiven(p *Fra_Sml_t, vSimInfo *Vec_Str_t) {\n    var pObj *Aig_Obj_t;\n    var pSims *uint32;\n    var i int32;\n    var k int32;\n    var nPats int32 = Vec_StrSize(vSimInfo) / Aig_ManCiNum(p.pAig);\n    var nPatsPadded int32  = p.nWordsTotal * 32;\n    assert(Aig_ManRegNum(p.pAig) == 0, \"Aig_ManRegNum(p.pAig) == 0\");\n    assert(Vec_StrSize(vSimInfo) % Aig_ManCiNum(p.pAig) == 0, \"Vec_StrSize(vSimInfo) % Aig_ManCiNum(p.pAig) == 0\");\n    assert(nPats \u003c= nPatsPadded, \"nPats \u003c= nPatsPadded\");\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        pSims = Fra_ObjSim( p, pObj.Id );\n        // clean data\n        for  k = 0; k \u003c p.nWordsTotal; k++  {\n            pSims[k] = 0;\n        }\n        // load patterns\n        for  k = 0; k \u003c nPats; k++  {\n            if Vec_StrEntry(vSimInfo, k * Aig_ManCiNum(p.pAig) + i) {\n                Abc_InfoSetBit( pSims, k ); }\n        }\n        // pad the remaining bits with the value of the last pattern\n        for  ; k \u003c nPatsPadded; k++  {\n            if Vec_StrEntry(vSimInfo, (nPats-1) * Aig_ManCiNum(p.pAig) + i) {\n                Abc_InfoSetBit( pSims, k ); }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Fra_SmlPrintOutputs",
+      "Start": 29314,
+      "End": 29690,
+      "BodyStart": 29371,
+      "Original": "void Fra_SmlPrintOutputs( Fra_Sml_t * p, int nPatterns )\n{\n    Aig_Obj_t * pObj;\n    unsigned * pSims;\n    int i, k;\n    for ( k = 0; k \u003c nPatterns; k++ )\n    {\n        Aig_ManForEachCo( p-\u003epAig, pObj, i )\n        {\n            pSims = Fra_ObjSim( p, pObj-\u003eId );\n            printf( \"%d\", Abc_InfoHasBit( pSims, k ) );\n        }\n        printf( \"\\n\" );               ;\n    }\n}",
+      "Draft": "func Fra_SmlPrintOutputs(p *Fra_Sml_t, nPatterns int32) {\n    var pObj *Aig_Obj_t;\n    var pSims *uint32;\n    var i, k int32;\n    for  k = 0; k \u003c nPatterns; k++  {\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n            pSims = Fra_ObjSim( p, pObj.Id );\n            fmt.Printf(\"%d\", Abc_InfoHasBit( pSims, k ));\n        }\n        fmt.Printf(\"\\n\");               ;\n    }\n}"
+    },
+    {
+      "Name": "Fra_SmlSimulateCombGiven",
+      "Start": 29971,
+      "End": 31057,
+      "BodyStart": 30077,
+      "Original": "Fra_Sml_t * Fra_SmlSimulateCombGiven( Aig_Man_t * pAig, char * pFileName, int fCheckMiter, int fVerbose )\n{\n    Vec_Str_t * vSimInfo;\n    Fra_Sml_t * p;\n    int nPatterns;\n    assert( Aig_ManRegNum(pAig) == 0 );\n    // read comb patterns from file\n    vSimInfo = Fra_SmlSimulateReadFile( pFileName );\n    if ( vSimInfo == NULL )\n        return NULL;\n    if ( Vec_StrSize(vSimInfo) % Aig_ManCiNum(pAig) != 0 )\n    {\n        printf( \"File \\\"%s\\\": The number of binary digits (%d) is not divisible by the number of primary inputs (%d).\\n\", \n            pFileName, Vec_StrSize(vSimInfo), Aig_ManCiNum(pAig) );\n        Vec_StrFree( vSimInfo );\n        return NULL;\n    }\n    p = Fra_SmlStart( pAig, 0, 1, Abc_BitWordNum(Vec_StrSize(vSimInfo) / Aig_ManCiNum(pAig)) );\n    Fra_SmlInitializeGiven( p, vSimInfo );\n    nPatterns = Vec_StrSize(vSimInfo) / Aig_ManCiNum(pAig);\n    Vec_StrFree( vSimInfo );\n    Fra_SmlSimulateOne( p );\n    if ( fCheckMiter )\n        p-\u003efNonConstOut = Fra_SmlCheckNonConstOutputs( p );\n    if ( fVerbose )\n        Fra_SmlPrintOutputs( p, nPatterns );\n    return p;\n}",
+      "Draft": "func Fra_SmlSimulateCombGiven(pAig *Aig_Man_t, pFileName string, fCheckMiter int32, fVerbose int32) *Fra_Sml_t {\n    var vSimInfo *Vec_Str_t;\n    var p *Fra_Sml_t;\n    var nPatterns int32;\n    assert(Aig_ManRegNum(pAig) == 0, \"Aig_ManRegNum(pAig) == 0\");\n    // read comb patterns from file\n    vSimInfo = Fra_SmlSimulateReadFile( pFileName );\n    if vSimInfo == nil {\n        return nil; }\n    if Vec_StrSize(vSimInfo) % Aig_ManCiNum(pAig) != 0 {\n        fmt.Printf(\"File \\\"%s\\\": The number of binary digits (%d) is not divisible by the number of primary inputs (%d).\\n\", pFileName, Vec_StrSize(vSimInfo), Aig_ManCiNum(pAig));\n        Vec_StrFree( vSimInfo );\n        return nil;\n    }\n    p = Fra_SmlStart( pAig, 0, 1, Abc_BitWordNum(Vec_StrSize(vSimInfo) / Aig_ManCiNum(pAig)) );\n    Fra_SmlInitializeGiven( p, vSimInfo );\n    nPatterns = Vec_StrSize(vSimInfo) / Aig_ManCiNum(pAig);\n    Vec_StrFree( vSimInfo );\n    Fra_SmlSimulateOne( p );\n    if fCheckMiter != 0 {\n        p.fNonConstOut = Fra_SmlCheckNonConstOutputs( p ); }\n    if fVerbose != 0 {\n        Fra_SmlPrintOutputs( p, nPatterns ); }\n    return p;\n}"
+    },
+    {
+      "Name": "Fra_SmlSimulateSeq",
+      "Start": 31340,
+      "End": 31677,
+      "BodyStart": 31444,
+      "Original": "Fra_Sml_t * Fra_SmlSimulateSeq( Aig_Man_t * pAig, int nPref, int nFrames, int nWords, int fCheckMiter )\n{\n    Fra_Sml_t * p;\n    p = Fra_SmlStart( pAig, nPref, nFrames, nWords );\n    Fra_SmlInitialize( p, 1 );\n    Fra_SmlSimulateOne( p );\n    if ( fCheckMiter )\n        p-\u003efNonConstOut = Fra_SmlCheckNonConstOutputs( p );\n    return p;\n}",
+      "Draft": "func Fra_SmlSimulateSeq(pAig *Aig_Man_t, nPref int32, nFrames int32, nWords int32, fCheckMiter int32) *Fra_Sml_t {\n    var p *Fra_Sml_t;\n    p = Fra_SmlStart( pAig, nPref, nFrames, nWords );\n    Fra_SmlInitialize( p, 1 );\n    Fra_SmlSimulateOne( p );\n    if fCheckMiter != 0 {\n        p.fNonConstOut = Fra_SmlCheckNonConstOutputs( p ); }\n    return p;\n}"
+    },
+    {
+      "Name": "Fra_SmlGetCounterExample",
+      "Start": 31973,
+      "End": 33860,
+      "BodyStart": 32027,
+      "Original": "Abc_Cex_t * Fra_SmlGetCounterExample( Fra_Sml_t * p )\n{\n    Abc_Cex_t * pCex;\n    Aig_Obj_t * pObj;\n    unsigned * pSims;\n    int iPo, iFrame, iBit, i, k;\n\n    // make sure the simulation manager has it\n    assert( p-\u003efNonConstOut );\n\n    // find the first output that failed\n    iPo = -1;\n    iBit = -1;\n    iFrame = -1;\n    Aig_ManForEachPoSeq( p-\u003epAig, pObj, iPo )\n    {\n        if ( Fra_SmlNodeIsZero(p, pObj) )\n            continue;\n        pSims = Fra_ObjSim( p, pObj-\u003eId );\n        for ( i = p-\u003enWordsPref; i \u003c p-\u003enWordsTotal; i++ )\n            if ( pSims[i] )\n            {\n                iFrame = i / p-\u003enWordsFrame;\n                iBit = 32 * (i % p-\u003enWordsFrame) + Aig_WordFindFirstBit( pSims[i] );\n                break;\n            }\n        break;\n    }\n    assert( iPo \u003c Aig_ManCoNum(p-\u003epAig)-Aig_ManRegNum(p-\u003epAig) );\n    assert( iFrame \u003c p-\u003enFrames );\n    assert( iBit \u003c 32 * p-\u003enWordsFrame );\n\n    // allocate the counter example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(p-\u003epAig), Aig_ManCiNum(p-\u003epAig) - Aig_ManRegNum(p-\u003epAig), iFrame + 1 );\n    pCex-\u003eiPo    = iPo;\n    pCex-\u003eiFrame = iFrame;\n\n    // copy the bit data\n    Aig_ManForEachLoSeq( p-\u003epAig, pObj, k )\n    {\n        pSims = Fra_ObjSim( p, pObj-\u003eId );\n        if ( Abc_InfoHasBit( pSims, iBit ) )\n            Abc_InfoSetBit( pCex-\u003epData, k );\n    }\n    for ( i = 0; i \u003c= iFrame; i++ )\n    {\n        Aig_ManForEachPiSeq( p-\u003epAig, pObj, k )\n        {\n            pSims = Fra_ObjSim( p, pObj-\u003eId );\n            if ( Abc_InfoHasBit( pSims, 32 * p-\u003enWordsFrame * i + iBit ) )\n                Abc_InfoSetBit( pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * i + k );\n        }\n    }\n    // verify the counter example\n    if ( !Saig_ManVerifyCex( p-\u003epAig, pCex ) )\n    {\n        printf( \"Fra_SmlGetCounterExample(): Counter-example is invalid.\\n\" );\n        Abc_CexFree( pCex );\n        pCex = NULL;\n    }\n    return pCex;\n}",
+      "Draft": "func Fra_SmlGetCounterExample(p *Fra_Sml_t) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var pObj *Aig_Obj_t;\n    var pSims *uint32;\n    var iPo, iFrame, iBit, i, k int32;\n\n    // make sure the simulation manager has it\n    assert(p.fNonConstOut, \"p.fNonConstOut\");\n\n    // find the first output that failed\n    iPo = -1;\n    iBit = -1;\n    iFrame = -1;\n    // inlining of macro Aig_ManForEachPoSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  iPo = 0; (iPo \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, iPo)), 1); iPo++  {\n        if Fra_SmlNodeIsZero(p, pObj) != 0 {\n            continue; }\n        pSims = Fra_ObjSim( p, pObj.Id );\n        for  i = p.nWordsPref; i \u003c p.nWordsTotal; i++  {\n            if pSims[i] {\n                iFrame = i / p.nWordsFrame;\n                iBit = 32 * (i % p.nWordsFrame) + Aig_WordFindFirstBit( pSims[i] );\n                break;\n            }\n        }\n        break;\n    }\n    assert(iPo \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig), \"iPo \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig)\");\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(iBit \u003c 32 * p.nWordsFrame, \"iBit \u003c 32 * p.nWordsFrame\");\n\n    // allocate the counter example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(p.pAig), Aig_ManCiNum(p.pAig) - Aig_ManRegNum(p.pAig), iFrame + 1 );\n    pCex.iPo    = iPo;\n    pCex.iFrame = iFrame;\n\n    // copy the bit data\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  k = Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig); (k \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, k)), 1); k++  {\n        pSims = Fra_ObjSim( p, pObj.Id );\n        if Abc_InfoHasBit( pSims, iBit ) {\n            Abc_InfoSetBit( pCex.pData, k ); }\n    }\n    for  i = 0; i \u003c= iFrame; i++  {\n        // inlining of macro Aig_ManForEachPiSeq\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, k)), 1); k++  {\n            pSims = Fra_ObjSim( p, pObj.Id );\n            if Abc_InfoHasBit( pSims, 32 * p.nWordsFrame * i + iBit ) {\n                Abc_InfoSetBit( pCex.pData, pCex.nRegs + pCex.nPis * i + k ); }\n        }\n    }\n    // verify the counter example\n    if !Saig_ManVerifyCex( p.pAig, pCex ) {\n        fmt.Printf(\"Fra_SmlGetCounterExample(): Counter-example is invalid.\\n\");\n        Abc_CexFree( pCex );\n        pCex = nil;\n    }\n    return pCex;\n}"
+    },
+    {
+      "Name": "Fra_SmlCopyCounterExample",
+      "Start": 34154,
+      "End": 35664,
+      "BodyStart": 34247,
+      "Original": "Abc_Cex_t * Fra_SmlCopyCounterExample( Aig_Man_t * pAig, Aig_Man_t * pFrames, int * pModel )\n{\n    Abc_Cex_t * pCex;\n    Aig_Obj_t * pObj;\n    int i, nFrames, nTruePis, nTruePos, iPo, iFrame;\n    // get the number of frames\n    assert( Aig_ManRegNum(pAig) \u003e 0 );\n    assert( Aig_ManRegNum(pFrames) == 0 );\n    nTruePis = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n    nTruePos = Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig);\n    nFrames = Aig_ManCiNum(pFrames) / nTruePis;\n    assert( nTruePis * nFrames == Aig_ManCiNum(pFrames) );\n    assert( nTruePos * nFrames == Aig_ManCoNum(pFrames) );\n    // find the PO that failed\n    iPo = -1;\n    iFrame = -1;\n    Aig_ManForEachCo( pFrames, pObj, i )\n        if ( pObj-\u003eId == pModel[Aig_ManCiNum(pFrames)] )\n        {\n            iPo = i % nTruePos;\n            iFrame = i / nTruePos;\n            break;\n        }\n    assert( iPo \u003e= 0 );\n    // allocate the counter example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(pAig), nTruePis, iFrame + 1 );\n    pCex-\u003eiPo    = iPo;\n    pCex-\u003eiFrame = iFrame;\n\n    // copy the bit data\n    for ( i = 0; i \u003c Aig_ManCiNum(pFrames); i++ )\n    {\n        if ( pModel[i] )\n            Abc_InfoSetBit( pCex-\u003epData, pCex-\u003enRegs + i );\n        if ( pCex-\u003enRegs + i == pCex-\u003enBits - 1 )\n            break;\n    }\n\n    // verify the counter example\n    if ( !Saig_ManVerifyCex( pAig, pCex ) )\n    {\n        printf( \"Fra_SmlGetCounterExample(): Counter-example is invalid.\\n\" );\n        Abc_CexFree( pCex );\n        pCex = NULL;\n    }\n    return pCex;\n\n}",
+      "Draft": "func Fra_SmlCopyCounterExample(pAig *Aig_Man_t, pFrames *Aig_Man_t, pModel *int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var pObj *Aig_Obj_t;\n    var i, nFrames, nTruePis, nTruePos, iPo, iFrame int32;\n    // get the number of frames\n    assert(Aig_ManRegNum(pAig) \u003e 0, \"Aig_ManRegNum(pAig) \u003e 0\");\n    assert(Aig_ManRegNum(pFrames) == 0, \"Aig_ManRegNum(pFrames) == 0\");\n    nTruePis = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n    nTruePos = Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig);\n    nFrames = Aig_ManCiNum(pFrames) / nTruePis;\n    assert(nTruePis * nFrames == Aig_ManCiNum(pFrames), \"nTruePis * nFrames == Aig_ManCiNum(pFrames)\");\n    assert(nTruePos * nFrames == Aig_ManCoNum(pFrames), \"nTruePos * nFrames == Aig_ManCoNum(pFrames)\");\n    // find the PO that failed\n    iPo = -1;\n    iFrame = -1;\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pFrames.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vCos, i)), 1); i++  {\n        if pObj.Id == pModel[Aig_ManCiNum(pFrames)] {\n            iPo = i % nTruePos;\n            iFrame = i / nTruePos;\n            break;\n        }\n    }\n    assert(iPo \u003e= 0, \"iPo \u003e= 0\");\n    // allocate the counter example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(pAig), nTruePis, iFrame + 1 );\n    pCex.iPo    = iPo;\n    pCex.iFrame = iFrame;\n\n    // copy the bit data\n    for  i = 0; i \u003c Aig_ManCiNum(pFrames); i++  {\n        if pModel[i] {\n            Abc_InfoSetBit( pCex.pData, pCex.nRegs + i ); }\n        if pCex.nRegs + i == pCex.nBits - 1 {\n            break; }\n    }\n\n    // verify the counter example\n    if !Saig_ManVerifyCex( pAig, pCex ) {\n        fmt.Printf(\"Fra_SmlGetCounterExample(): Counter-example is invalid.\\n\");\n        Abc_CexFree( pCex );\n        pCex = nil;\n    }\n    return pCex;\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::mechanical::static::1390",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1390,
+      "End": 1396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::mechanical::sizeof::5920",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5920,
+      "End": 5926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::mechanical::sizeof::6352",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6352,
+      "End": 6358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::mechanical::sizeof::7325",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7082,
+      "End": 7088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::mechanical::sizeof::9366",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8871,
+      "End": 8871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::mechanical::do::27122",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 23944,
+      "End": 23946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::mechanical::sizeof::28428",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 25188,
+      "End": 25188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::mechanical::sizeof::28452",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 25188,
+      "End": 25188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::mechanical::sizeof::28472",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 25188,
+      "End": 25188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::mechanical::sizeof::28570",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 25322,
+      "End": 25328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::mechanical::sizeof::28590",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 25342,
+      "End": 25348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::1360",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1360,
+      "End": 1373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::2970",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2970,
+      "End": 2983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::3563",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3563,
+      "End": 3576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::6797",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6570,
+      "End": 6570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::7536",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7121,
+      "End": 7121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::9351",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8871,
+      "End": 8871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::9598",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8923,
+      "End": 8923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::10705",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9843,
+      "End": 9843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::12890",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11817,
+      "End": 11817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::13268",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11961,
+      "End": 11961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::13569",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12079,
+      "End": 12079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::14342",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12666,
+      "End": 12666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::15093",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13206,
+      "End": 13206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::15512",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13391,
+      "End": 13391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::21814",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19485,
+      "End": 19485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::22644",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20129,
+      "End": 20129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::23047",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20268,
+      "End": 20268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::23522",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20509,
+      "End": 20509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::28353",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25175,
+      "End": 25188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::28412",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25188,
+      "End": 25188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::29337",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26032,
+      "End": 26032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::31943",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28456,
+      "End": 28456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::33156",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29483,
+      "End": 29483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::36187",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32299,
+      "End": 32299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::37239",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33115,
+      "End": 33115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::37683",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33351,
+      "End": 33351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::pointer-cast::39317",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34802,
+      "End": 34802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlNodeHash",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlNodeHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1282,
+      "End": 2615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlNodeIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlNodeIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2905,
+      "End": 3200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlNodesAreEqual",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlNodesAreEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3476,
+      "End": 3866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlNodeNotEquWeight",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlNodeNotEquWeight",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4156,
+      "End": 4487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlNodeIsZero",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlNodeIsZero",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4777,
+      "End": 5022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlNodeCountOnes",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlNodeCountOnes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5313,
+      "End": 5572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlSavePattern0",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlSavePattern0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5836,
+      "End": 5956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlSavePattern1",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlSavePattern1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6219,
+      "End": 6686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlSavePattern",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlSavePattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6977,
+      "End": 7909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlCheckOutputSavePattern",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlCheckOutputSavePattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8203,
+      "End": 9276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlCheckOutput",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlCheckOutput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9573,
+      "End": 10124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlAssignRandom",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlAssignRandom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10401,
+      "End": 10651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::ternary::Fra_SmlAssignConst",
+      "Category": "ternary-review",
+      "Symbol": "Fra_SmlAssignConst",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10928,
+      "End": 11260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlAssignConst",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlAssignConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10928,
+      "End": 11260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlInitialize",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlInitialize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11539,
+      "End": 12167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlAssignDist1",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlAssignDist1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12450,
+      "End": 13973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlNodeSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlNodeSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14229,
+      "End": 16172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlNodesCompareInFrame",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlNodesCompareInFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16427,
+      "End": 17104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlNodeCopyFanin",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlNodeCopyFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17359,
+      "End": 18232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlNodeTransferNext",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlNodeTransferNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18487,
+      "End": 19115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlCheckNonConstOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlCheckNonConstOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19397,
+      "End": 19605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlSimulateOne",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlSimulateOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19911,
+      "End": 20823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlResimulate",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlResimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21121,
+      "End": 21994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22265,
+      "End": 24793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlStart",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25060,
+      "End": 25725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::ternary::Fra_SmlStop",
+      "Category": "ternary-review",
+      "Symbol": "Fra_SmlStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 25992,
+      "End": 26048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlStop",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25992,
+      "End": 26048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlSimulateComb",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlSimulateComb",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26334,
+      "End": 26638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlSimulateReadFile",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlSimulateReadFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27053,
+      "End": 27801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlInitializeGiven",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlInitializeGiven",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28082,
+      "End": 29057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlPrintOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlPrintOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29314,
+      "End": 29690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlSimulateCombGiven",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlSimulateCombGiven",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29971,
+      "End": 31057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlSimulateSeq",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlSimulateSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31340,
+      "End": 31677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlGetCounterExample",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlGetCounterExample",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31973,
+      "End": 33860
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::Fra_SmlCopyCounterExample",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SmlCopyCounterExample",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34154,
+      "End": 35664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSim.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 35912
+    }
+  ],
+  "Draft": "package fra\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [fraSim.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [New FRAIG package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 30, 2007.]\n\n  Revision    [$Id: fraSim.c,v 1.00 2007/06/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fra.h\"\n//#include \"aig/saig/saig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes hash value of the node using its simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Fra_SmlNodeHash_s_FPrimes [128]int32 = [128]int32{ \n        1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459, \n        1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997, \n        2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543, \n        2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089, \n        3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671, \n        3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243, \n        4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871, \n        4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471, \n        5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073, \n        6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689, \n        6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309, \n        7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933, \n        8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147,\n    };\nfunc Fra_SmlNodeHash(pObj *Aig_Obj_t, nTableSize int32) int32 {\n    var p *Fra_Man_t  = (Fra_Man_t *)pObj.pData;\n    \n    var pSims *uint32;\n    var uHash uint32;\n    var i int32;\n//    assert( p-\u003epSml-\u003enWordsTotal \u003c= 128 );\n    uHash = 0;\n    pSims = Fra_ObjSim(p.pSml, pObj.Id);\n    for  i = p.pSml.nWordsPref; i \u003c p.pSml.nWordsTotal; i++  {\n        uHash ^= pSims[i] * spStatic_Fra_SmlNodeHash_s_FPrimes[i \u0026 0x7F];\n    }\n    return uHash % nTableSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if simulation info is composed of all zeros.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlNodeIsConst(pObj *Aig_Obj_t) int32 {\n    var p *Fra_Man_t  = (Fra_Man_t *)pObj.pData;\n    var pSims *uint32;\n    var i int32;\n    pSims = Fra_ObjSim(p.pSml, pObj.Id);\n    for  i = p.pSml.nWordsPref; i \u003c p.pSml.nWordsTotal; i++  {\n        if pSims[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if simulation infos are equal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlNodesAreEqual(pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {\n    var p *Fra_Man_t  = (Fra_Man_t *)pObj0.pData;\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    pSims0 = Fra_ObjSim(p.pSml, pObj0.Id);\n    pSims1 = Fra_ObjSim(p.pSml, pObj1.Id);\n    for  i = p.pSml.nWordsPref; i \u003c p.pSml.nWordsTotal; i++  {\n        if pSims0[i] != pSims1[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of 1s in the XOR of simulation data.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlNodeNotEquWeight(p *Fra_Sml_t, Left int32, Right int32) int32 {\n    var pSimL, pSimR *uint32;\n    var k, Counter int32;\n    pSimL = Fra_ObjSim( p, Left );\n    pSimR = Fra_ObjSim( p, Right );\n    for  k = p.nWordsPref; k \u003c p.nWordsTotal; k++  {\n        Counter += Aig_WordCountOnes( pSimL[k] ^ pSimR[k] );\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if simulation info is composed of all zeros.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlNodeIsZero(p *Fra_Sml_t, pObj *Aig_Obj_t) int32 {\n    var pSims *uint32;\n    var i int32;\n    pSims = Fra_ObjSim(p, pObj.Id);\n    for  i = p.nWordsPref; i \u003c p.nWordsTotal; i++  {\n        if pSims[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of one's in the patten of the output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlNodeCountOnes(p *Fra_Sml_t, pObj *Aig_Obj_t) int32 {\n    var pSims *uint32;\n    var i, Counter int32;\n    pSims = Fra_ObjSim(p, pObj.Id);\n    for  i = 0; i \u003c p.nWordsTotal; i++  {\n        Counter += Aig_WordCountOnes( pSims[i] );\n    }\n    return Counter;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Generated const 0 pattern.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlSavePattern0(p *Fra_Man_t, fInit int32) {\n    memset( p.pPatWords, 0, sizeof(unsigned) * p.nPatWords );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [[Generated const 1 pattern.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlSavePattern1(p *Fra_Man_t, fInit int32) {\n    var pObj *Aig_Obj_t;\n    var i, k, nTruePis int32;\n    memset( p.pPatWords, 0xff, sizeof(unsigned) * p.nPatWords );\n    if !(fInit != 0) {\n        return; }\n    // clear the state bits to correspond to all-0 initial state\n    nTruePis = Aig_ManCiNum(p.pManAig) - Aig_ManRegNum(p.pManAig);\n    k = 0;\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(p.pManAig)-Aig_ManRegNum(p.pManAig); (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        Abc_InfoXorBit( p.pPatWords, nTruePis * p.nFramesAll + k++ );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Copy pattern from the solver into the internal storage.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlSavePattern(p *Fra_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    memset( p.pPatWords, 0, sizeof(unsigned) * p.nPatWords );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManFraig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManFraig.vCis, i)), 1); i++  {\n//        if ( p-\u003epSat-\u003emodel.ptr[Fra_ObjSatNum(pObj)] == l_True )\n        if sat_solver_var_value(p.pSat, Fra_ObjSatNum(pObj)) {\n            Abc_InfoSetBit( p.pPatWords, i ); }\n    }\n\n    if p.vCex {\n        Vec_IntClear( p.vCex );\n        for  i = 0; i \u003c Aig_ManCiNum(p.pManAig) - Aig_ManRegNum(p.pManAig); i++  {\n            Vec_IntPush( p.vCex, Abc_InfoHasBit( p.pPatWords, i ) );\n        }\n        for  i = Aig_ManCiNum(p.pManFraig) - Aig_ManRegNum(p.pManFraig); i \u003c Aig_ManCiNum(p.pManFraig); i++  {\n            Vec_IntPush( p.vCex, Abc_InfoHasBit( p.pPatWords, i ) );\n        }\n    }\n\n/*\n    printf( \"Pattern: \" );\n    Aig_ManForEachCi( p-\u003epManFraig, pObj, i )\n        printf( \"%d\", Abc_InfoHasBit( p-\u003epPatWords, i ) );\n    printf( \"\\n\" );\n*/\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the counter-example from the successful pattern.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlCheckOutputSavePattern(p *Fra_Man_t, pObjPo *Aig_Obj_t) { \n    var pFanin, pObjPi *Aig_Obj_t;\n    var pSims *uint32;\n    var i int32;\n    var k int32;\n    var BestPat int32;\n    var pModel *int32;\n    // find the word of the pattern\n    pFanin = Aig_ObjFanin0(pObjPo);\n    pSims = Fra_ObjSim(p.pSml, pFanin.Id);\n    for  i = 0; i \u003c p.pSml.nWordsTotal; i++  {\n        if pSims[i] {\n            break; }\n    }\n    assert(i \u003c p.pSml.nWordsTotal, \"i \u003c p.pSml.nWordsTotal\");\n    // find the bit of the pattern\n    for  k = 0; k \u003c 32; k++  {\n        if pSims[i] \u0026 (1 \u003c\u003c k) {\n            break; }\n    }\n    assert(k \u003c 32, \"k \u003c 32\");\n    // determine the best pattern\n    BestPat = i * 32 + k;\n    // fill in the counter-example data\n    // inlining of macro ABC_ALLOC\n    pModel = ((int *) malloc(sizeof(int) * (size_t)(Aig_ManCiNum(p.pManFraig)+1)));\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObjPi) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        pModel[i] = Abc_InfoHasBit(Fra_ObjSim(p.pSml, pObjPi.Id), BestPat);\n//        printf( \"%d\", pModel[i] );\n    }\n    pModel[Aig_ManCiNum(p.pManAig)] = pObjPo.Id;\n//    printf( \"\\n\" );\n    // set the model\n    assert(p.pManFraig.pData == nil, \"p.pManFraig.pData == nil\");\n    p.pManFraig.pData = pModel;\n    return;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the one of the output is already non-constant 0.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlCheckOutput(p *Fra_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // make sure the reference simulation pattern does not detect the bug\n    pObj = Aig_ManCo( p.pManAig, 0 );\n    assert(Aig_ObjFanin0(pObj).fPhase == uint32(Aig_ObjFaninC0(pObj)), \"Aig_ObjFanin0(pObj).fPhase == uint32(Aig_ObjFaninC0(pObj))\"); \n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCos, i)), 1); i++  {\n        if !(Fra_SmlNodeIsConst( Aig_ObjFanin0(pObj) ) != 0) {\n            // create the counter-example from this pattern\n            Fra_SmlCheckOutputSavePattern( p, pObj );\n            return 1;\n        }\n    }\n    return 0;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns random patterns to the PI node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlAssignRandom(p *Fra_Sml_t, pObj *Aig_Obj_t) {\n    var pSims *uint32;\n    var i int32;\n    assert(Aig_ObjIsCi(pObj), \"Aig_ObjIsCi(pObj)\");\n    pSims = Fra_ObjSim( p, pObj.Id );\n    for  i = 0; i \u003c p.nWordsTotal; i++  {\n        pSims[i] = Fra_ObjRandomSim();\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns constant patterns to the PI node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlAssignConst(p *Fra_Sml_t, pObj *Aig_Obj_t, fConst1 int32, iFrame int32) {\n    var pSims *uint32;\n    var i int32;\n    assert(Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj), \"Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj)\");\n    pSims = Fra_ObjSim( p, pObj.Id ) + p.nWordsFrame * iFrame;\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        pSims[i] = fConst1? ~uint32(0) : 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assings random simulation info for the PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlInitialize(p *Fra_Sml_t, fInit int32) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    if fInit != 0 {\n        assert(Aig_ManRegNum(p.pAig) \u003e 0, \"Aig_ManRegNum(p.pAig) \u003e 0\");\n        assert(Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig), \"Aig_ManRegNum(p.pAig) \u003c Aig_ManCiNum(p.pAig)\");\n        // assign random info for primary inputs\n        // inlining of macro Aig_ManForEachPiSeq\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Fra_SmlAssignRandom( p, pObj );\n        }\n        // assign the initial state for the latches\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig); (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Fra_SmlAssignConst( p, pObj, 0, 0 );\n        }\n    \n    } else {\n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Fra_SmlAssignRandom( p, pObj );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assings distance-1 simulation info for the PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlAssignDist1(p *Fra_Sml_t, pPat *uint32) {\n    var pObj *Aig_Obj_t;\n    var f, i, k, Limit, nTruePis int32;\n    assert(p.nFrames \u003e 0, \"p.nFrames \u003e 0\");\n    if p.nFrames == 1 {\n        // copy the PI info \n        // inlining of macro Aig_ManForEachCi\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Fra_SmlAssignConst( p, pObj, Abc_InfoHasBit(pPat, i), 0 );\n        }\n        // flip one bit\n        Limit = Abc_MinInt( Aig_ManCiNum(p.pAig), p.nWordsTotal * 32 - 1 );\n        for  i = 0; i \u003c Limit; i++  {\n            Abc_InfoXorBit( Fra_ObjSim( p, Aig_ManCi(p.pAig,i).Id ), i+1 );\n        }\n    \n    } else {\n        var fUseDist1 int32;\n\n        // copy the PI info for each frame\n        nTruePis = Aig_ManCiNum(p.pAig) - Aig_ManRegNum(p.pAig);\n        for  f = 0; f \u003c p.nFrames; f++  {\n            // inlining of macro Aig_ManForEachPiSeq\n            // inlining of macro Vec_PtrForEachEntryStop\n            for  i = 0; (i \u003c Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n                Fra_SmlAssignConst( p, pObj, Abc_InfoHasBit(pPat, nTruePis * f + i), f );\n            }\n        }\n        // copy the latch info \n        k = 0;\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig); (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Fra_SmlAssignConst( p, pObj, Abc_InfoHasBit(pPat, nTruePis * p.nFrames + k++), 0 );\n        }\n//        assert( p-\u003epManFraig == NULL || nTruePis * p-\u003enFrames + k == Aig_ManCiNum(p-\u003epManFraig) );\n\n        // flip one bit of the last frame\n        if fUseDist1 != 0 { //\u0026\u0026 p-\u003enFrames == 2 )\n        \n            Limit = Abc_MinInt( nTruePis, p.nWordsFrame * 32 - 1 );\n            for  i = 0; i \u003c Limit; i++  {\n                Abc_InfoXorBit( Fra_ObjSim( p, Aig_ManCi(p.pAig, i).Id ) + p.nWordsFrame*(p.nFrames-1), i+1 );\n            }\n        }\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlNodeSimulate(p *Fra_Sml_t, pObj *Aig_Obj_t, iFrame int32) {\n    var pSims, pSims0, pSims1 *uint32;\n    var fCompl, fCompl0, fCompl1, i int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    assert(iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims  = Fra_ObjSim(p, pObj.Id) + p.nWordsFrame * iFrame;\n    pSims0 = Fra_ObjSim(p, Aig_ObjFanin0(pObj).Id) + p.nWordsFrame * iFrame;\n    pSims1 = Fra_ObjSim(p, Aig_ObjFanin1(pObj).Id) + p.nWordsFrame * iFrame;\n    // get complemented attributes of the children using their random info\n    fCompl  = pObj.fPhase;\n    fCompl0 = Aig_ObjPhaseReal(Aig_ObjChild0(pObj));\n    fCompl1 = Aig_ObjPhaseReal(Aig_ObjChild1(pObj));\n    // simulate\n    if fCompl0 \u0026\u0026 fCompl1 {\n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] | pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = ~(pSims0[i] | pSims1[i]);\n            } }\n    \n    } else if fCompl0 \u0026\u0026 !fCompl1 {\n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] | ~pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (~pSims0[i] \u0026 pSims1[i]);\n            } }\n    \n    } else if !fCompl0 \u0026\u0026 fCompl1 {\n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (~pSims0[i] | pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] \u0026 ~pSims1[i]);\n            } }\n    \n    } else { // if ( !fCompl0 \u0026\u0026 !fCompl1 )\n    \n        if fCompl {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = ~(pSims0[i] \u0026 pSims1[i]);\n            }\n        } else {\n            for  i = 0; i \u003c p.nWordsFrame; i++  {\n                pSims[i] = (pSims0[i] \u0026 pSims1[i]);\n            } }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlNodesCompareInFrame(p *Fra_Sml_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t, iFrame0 int32, iFrame1 int32) int32 {\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    assert(!Aig_IsComplement(pObj0), \"!Aig_IsComplement(pObj0)\");\n    assert(!Aig_IsComplement(pObj1), \"!Aig_IsComplement(pObj1)\");\n    assert(iFrame0 == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame0 == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    assert(iFrame1 == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame1 == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims0  = Fra_ObjSim(p, pObj0.Id) + p.nWordsFrame * iFrame0;\n    pSims1  = Fra_ObjSim(p, pObj1.Id) + p.nWordsFrame * iFrame1;\n    // compare\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        if pSims0[i] != pSims1[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlNodeCopyFanin(p *Fra_Sml_t, pObj *Aig_Obj_t, iFrame int32) {\n    var pSims, pSims0 *uint32;\n    var fCompl, fCompl0, i int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    assert(Aig_ObjIsCo(pObj), \"Aig_ObjIsCo(pObj)\");\n    assert(iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims  = Fra_ObjSim(p, pObj.Id) + p.nWordsFrame * iFrame;\n    pSims0 = Fra_ObjSim(p, Aig_ObjFanin0(pObj).Id) + p.nWordsFrame * iFrame;\n    // get complemented attributes of the children using their random info\n    fCompl  = pObj.fPhase;\n    fCompl0 = Aig_ObjPhaseReal(Aig_ObjChild0(pObj));\n    // copy information as it is\n//    if ( Aig_ObjFaninC0(pObj) )\n    if fCompl0 {\n        for  i = 0; i \u003c p.nWordsFrame; i++  {\n            pSims[i] = ~pSims0[i];\n        }\n    } else {\n        for  i = 0; i \u003c p.nWordsFrame; i++  {\n            pSims[i] = pSims0[i];\n        } }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlNodeTransferNext(p *Fra_Sml_t, pOut *Aig_Obj_t, pIn *Aig_Obj_t, iFrame int32) {\n    var pSims0, pSims1 *uint32;\n    var i int32;\n    assert(!Aig_IsComplement(pOut), \"!Aig_IsComplement(pOut)\");\n    assert(!Aig_IsComplement(pIn), \"!Aig_IsComplement(pIn)\");\n    assert(Aig_ObjIsCo(pOut), \"Aig_ObjIsCo(pOut)\");\n    assert(Aig_ObjIsCi(pIn), \"Aig_ObjIsCi(pIn)\");\n    assert(iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal, \"iFrame == 0 || p.nWordsFrame \u003c p.nWordsTotal\");\n    // get hold of the simulation information\n    pSims0 = Fra_ObjSim(p, pOut.Id) + p.nWordsFrame * iFrame;\n    pSims1 = Fra_ObjSim(p, pIn.Id) + p.nWordsFrame * (iFrame+1);\n    // copy information as it is\n    for  i = 0; i \u003c p.nWordsFrame; i++  {\n        pSims1[i] = pSims0[i];\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Check if any of the POs becomes non-constant.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlCheckNonConstOutputs(p *Fra_Sml_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Aig_ManForEachPoSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n        if !(Fra_SmlNodeIsZero(p, pObj) != 0) {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates AIG manager.]\n\n  Description [Assumes that the PI simulation info is attached.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlSimulateOne(p *Fra_Sml_t) {\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var f, i int32;\n    var clk abctime;\nclk = Abc_Clock();\n    for  f = 0; f \u003c p.nFrames; f++  {\n        // simulate the nodes\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            Fra_SmlNodeSimulate( p, pObj, f ); }\n        }\n        // copy simulation info into outputs\n        // inlining of macro Aig_ManForEachPoSeq\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n            Fra_SmlNodeCopyFanin( p, pObj, f );\n        }\n        // quit if this is the last timeframe\n        if f == p.nFrames - 1 {\n            break; }\n        // copy simulation info into outputs\n        // inlining of macro Aig_ManForEachLiSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig); (i \u003c Vec_PtrSize(p.pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n            Fra_SmlNodeCopyFanin( p, pObj, f );\n        }\n        // copy simulation info into the inputs\n        // inlining of macro Aig_ManForEachLiLoSeq\n        for  i = 0; (i \u003c Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLi) = Aig_ManLi(p.pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Aig_ManLo(p.pAig, i)), 1); i++  {\n            Fra_SmlNodeTransferNext( p, pObjLi, pObjLo, f );\n        }\n    }\np.timeSim += Abc_Clock() - clk;\np.nSimRounds++;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Resimulates fraiging manager after finding a counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlResimulate(p *Fra_Man_t) {\n    var nChanges int32;\n    var clk abctime;\n    Fra_SmlAssignDist1( p.pSml, p.pPatWords );\n    Fra_SmlSimulateOne( p.pSml );\n//    if ( p-\u003epPars-\u003efPatScores )\n//        Fra_CleanPatScores( p );\n    if p.pPars.fProve \u0026\u0026 (Fra_SmlCheckOutput(p) != 0) {\n        return; }\nclk = Abc_Clock();\n    nChanges = Fra_ClassesRefine( p.pCla );\n    nChanges += Fra_ClassesRefine1( p.pCla, 1, nil );\n    if p.pCla.vImps {\n        nChanges += Fra_ImpRefineUsingCex( p, p.pCla.vImps ); }\n    if p.vOneHots {\n        nChanges += Fra_OneHotRefineUsingCex( p, p.vOneHots ); }\np.timeRef += Abc_Clock() - clk;\n    if !p.pPars.nFramesK \u0026\u0026 nChanges \u003c 1 {\n        fmt.Printf(\"Error: A counter-example did not refine classes!\\n\"); }\n//    assert( nChanges \u003e= 1 );\n//printf( \"Refined classes = %5d.   Changes = %4d.\\n\", Vec_PtrSize(p-\u003evClasses), nChanges );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs simulation of the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlSimulate(p *Fra_Man_t, fInit int32) {\n    var fVerbose int32;\n    var nChanges, nClasses int32;\n    var clk abctime;\n    assert(!(fInit != 0) || Aig_ManRegNum(p.pManAig), \"!fInit || Aig_ManRegNum(p.pManAig)\");\n    // start the classes\n    Fra_SmlInitialize( p.pSml, fInit );\n    Fra_SmlSimulateOne( p.pSml );\n    if p.pPars.fProve \u0026\u0026 (Fra_SmlCheckOutput(p) != 0) {\n        return; }\n    Fra_ClassesPrepare( p.pCla, p.pPars.fLatchCorr, 0 );\n//    Fra_ClassesPrint( p-\u003epCla, 0 );\nif fVerbose != 0 {\nfmt.Printf(\"Starting classes = %5d.   Lits = %6d.\\n\", Vec_PtrSize(p.pCla.vClasses), Fra_ClassesCountLits(p.pCla)); }\n\n//return;\n\n    // refine classes by walking 0/1 patterns\n    Fra_SmlSavePattern0( p, fInit );\n    Fra_SmlAssignDist1( p.pSml, p.pPatWords );\n    Fra_SmlSimulateOne( p.pSml );\n    if p.pPars.fProve \u0026\u0026 (Fra_SmlCheckOutput(p) != 0) {\n        return; }\nclk = Abc_Clock();\n    nChanges = Fra_ClassesRefine( p.pCla );\n    nChanges += Fra_ClassesRefine1( p.pCla, 1, nil );\np.timeRef += Abc_Clock() - clk;\nif fVerbose != 0 {\nfmt.Printf(\"Refined classes  = %5d.   Changes = %4d.   Lits = %6d.\\n\", Vec_PtrSize(p.pCla.vClasses), nChanges, Fra_ClassesCountLits(p.pCla)); }\n    Fra_SmlSavePattern1( p, fInit );\n    Fra_SmlAssignDist1( p.pSml, p.pPatWords );\n    Fra_SmlSimulateOne( p.pSml );\n    if p.pPars.fProve \u0026\u0026 (Fra_SmlCheckOutput(p) != 0) {\n        return; }\nclk = Abc_Clock();\n    nChanges = Fra_ClassesRefine( p.pCla );\n    nChanges += Fra_ClassesRefine1( p.pCla, 1, nil );\np.timeRef += Abc_Clock() - clk;\n\nif fVerbose != 0 {\nfmt.Printf(\"Refined classes  = %5d.   Changes = %4d.   Lits = %6d.\\n\", Vec_PtrSize(p.pCla.vClasses), nChanges, Fra_ClassesCountLits(p.pCla)); }\n    // refine classes by random simulation\n    for {\n        Fra_SmlInitialize( p.pSml, fInit );\n        Fra_SmlSimulateOne( p.pSml );\n        nClasses = Vec_PtrSize(p.pCla.vClasses);\n        if p.pPars.fProve \u0026\u0026 (Fra_SmlCheckOutput(p) != 0) {\n            return; }\nclk = Abc_Clock();\n        nChanges = Fra_ClassesRefine( p.pCla );\n        nChanges += Fra_ClassesRefine1( p.pCla, 1, nil );\np.timeRef += Abc_Clock() - clk;\nif fVerbose != 0 {\nfmt.Printf(\"Refined classes  = %5d.   Changes = %4d.   Lits = %6d.\\n\", Vec_PtrSize(p.pCla.vClasses), nChanges, Fra_ClassesCountLits(p.pCla)); }\n    \nif !( float64(nChanges) / nClasses \u003e p.pPars.dSimSatur ) { break }\n} \n\n//    if ( p-\u003epPars-\u003efVerbose )\n//    printf( \"Consts = %6d. Classes = %6d. Literals = %6d.\\n\", \n//        Vec_PtrSize(p-\u003epCla-\u003evClasses1), Vec_PtrSize(p-\u003epCla-\u003evClasses), Fra_ClassesCountLits(p-\u003epCla) );\n//    Fra_ClassesPrint( p-\u003epCla, 0 );\n}\n \n\n/**Function*************************************************************\n\n  Synopsis    [Allocates simulation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlStart(pAig *Aig_Man_t, nPref int32, nFrames int32, nWordsFrame int32) *Fra_Sml_t {\n    var p *Fra_Sml_t;\n    // inlining of macro ABC_ALLOC\n    p = (Fra_Sml_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Fra_Sml_t) + sizeof(unsigned) * Aig_ManObjNumMax(pAig) * (nPref + nFrames) * nWordsFrame)));\n    memset( p, 0, sizeof(Fra_Sml_t) + sizeof(unsigned) * (nPref + nFrames) * nWordsFrame );\n    p.pAig        = pAig;\n    p.nPref       = nPref;\n    p.nFrames     = nPref + nFrames;\n    p.nWordsFrame = nWordsFrame;\n    p.nWordsTotal = (nPref + nFrames) * nWordsFrame;\n    p.nWordsPref  = nPref * nWordsFrame;\n    // constant 1 is initialized to 0 because we store values modulus phase (pObj-\u003efPhase)\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates simulation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlStop(p *Fra_Sml_t) {\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs simulation of the uninitialized circuit.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlSimulateComb(pAig *Aig_Man_t, nWords int32, fCheckMiter int32) *Fra_Sml_t {\n    var p *Fra_Sml_t;\n    p = Fra_SmlStart( pAig, 0, 1, nWords );\n    Fra_SmlInitialize( p, 0 );\n    Fra_SmlSimulateOne( p );\n    if fCheckMiter != 0 {\n        p.fNonConstOut = Fra_SmlCheckNonConstOutputs( p ); }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads simulation patterns from file.]\n\n  Description [Each pattern contains the given number (nInputs) of binary digits.\n  No other symbols (except spaces and line endings) are allowed in the file.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlSimulateReadFile(pFileName string) *Vec_Str_t {\n    var vRes *Vec_Str_t;\n    var pFile *os.File;\n    var c int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" with simulation patterns.\\n\", pFileName);\n        return nil;\n    }\n    vRes = Vec_StrAlloc( 1000 );\n    for  (c = fgetc(pFile)) != -1  {\n        if c == '0' || c == '1' {\n            Vec_StrPush( vRes, byte((c - '0')) );\n        } else if c != ' ' \u0026\u0026 c != '\\r' \u0026\u0026 c != '\\n' \u0026\u0026 c != '\\t' {\n            fmt.Printf(\"File \\\"%s\\\" contains symbol (%c) other than \\'0\\' or \\'1\\'.\\n\", pFileName, byte(c));\n            Vec_StrFreeP( \u0026vRes );\n            break;\n        }\n    }\n    _ = (pFile).Close();\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns simulation patters derived from file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlInitializeGiven(p *Fra_Sml_t, vSimInfo *Vec_Str_t) {\n    var pObj *Aig_Obj_t;\n    var pSims *uint32;\n    var i int32;\n    var k int32;\n    var nPats int32 = Vec_StrSize(vSimInfo) / Aig_ManCiNum(p.pAig);\n    var nPatsPadded int32  = p.nWordsTotal * 32;\n    assert(Aig_ManRegNum(p.pAig) == 0, \"Aig_ManRegNum(p.pAig) == 0\");\n    assert(Vec_StrSize(vSimInfo) % Aig_ManCiNum(p.pAig) == 0, \"Vec_StrSize(vSimInfo) % Aig_ManCiNum(p.pAig) == 0\");\n    assert(nPats \u003c= nPatsPadded, \"nPats \u003c= nPatsPadded\");\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        pSims = Fra_ObjSim( p, pObj.Id );\n        // clean data\n        for  k = 0; k \u003c p.nWordsTotal; k++  {\n            pSims[k] = 0;\n        }\n        // load patterns\n        for  k = 0; k \u003c nPats; k++  {\n            if Vec_StrEntry(vSimInfo, k * Aig_ManCiNum(p.pAig) + i) {\n                Abc_InfoSetBit( pSims, k ); }\n        }\n        // pad the remaining bits with the value of the last pattern\n        for  ; k \u003c nPatsPadded; k++  {\n            if Vec_StrEntry(vSimInfo, (nPats-1) * Aig_ManCiNum(p.pAig) + i) {\n                Abc_InfoSetBit( pSims, k ); }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints output values.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlPrintOutputs(p *Fra_Sml_t, nPatterns int32) {\n    var pObj *Aig_Obj_t;\n    var pSims *uint32;\n    var i, k int32;\n    for  k = 0; k \u003c nPatterns; k++  {\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n            pSims = Fra_ObjSim( p, pObj.Id );\n            fmt.Printf(\"%d\", Abc_InfoHasBit( pSims, k ));\n        }\n        fmt.Printf(\"\\n\");               ;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns simulation patters derived from file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlSimulateCombGiven(pAig *Aig_Man_t, pFileName string, fCheckMiter int32, fVerbose int32) *Fra_Sml_t {\n    var vSimInfo *Vec_Str_t;\n    var p *Fra_Sml_t;\n    var nPatterns int32;\n    assert(Aig_ManRegNum(pAig) == 0, \"Aig_ManRegNum(pAig) == 0\");\n    // read comb patterns from file\n    vSimInfo = Fra_SmlSimulateReadFile( pFileName );\n    if vSimInfo == nil {\n        return nil; }\n    if Vec_StrSize(vSimInfo) % Aig_ManCiNum(pAig) != 0 {\n        fmt.Printf(\"File \\\"%s\\\": The number of binary digits (%d) is not divisible by the number of primary inputs (%d).\\n\", pFileName, Vec_StrSize(vSimInfo), Aig_ManCiNum(pAig));\n        Vec_StrFree( vSimInfo );\n        return nil;\n    }\n    p = Fra_SmlStart( pAig, 0, 1, Abc_BitWordNum(Vec_StrSize(vSimInfo) / Aig_ManCiNum(pAig)) );\n    Fra_SmlInitializeGiven( p, vSimInfo );\n    nPatterns = Vec_StrSize(vSimInfo) / Aig_ManCiNum(pAig);\n    Vec_StrFree( vSimInfo );\n    Fra_SmlSimulateOne( p );\n    if fCheckMiter != 0 {\n        p.fNonConstOut = Fra_SmlCheckNonConstOutputs( p ); }\n    if fVerbose != 0 {\n        Fra_SmlPrintOutputs( p, nPatterns ); }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs simulation of the initialized circuit.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlSimulateSeq(pAig *Aig_Man_t, nPref int32, nFrames int32, nWords int32, fCheckMiter int32) *Fra_Sml_t {\n    var p *Fra_Sml_t;\n    p = Fra_SmlStart( pAig, nPref, nFrames, nWords );\n    Fra_SmlInitialize( p, 1 );\n    Fra_SmlSimulateOne( p );\n    if fCheckMiter != 0 {\n        p.fNonConstOut = Fra_SmlCheckNonConstOutputs( p ); }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates sequential counter-example from the simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlGetCounterExample(p *Fra_Sml_t) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var pObj *Aig_Obj_t;\n    var pSims *uint32;\n    var iPo, iFrame, iBit, i, k int32;\n\n    // make sure the simulation manager has it\n    assert(p.fNonConstOut, \"p.fNonConstOut\");\n\n    // find the first output that failed\n    iPo = -1;\n    iBit = -1;\n    iFrame = -1;\n    // inlining of macro Aig_ManForEachPoSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  iPo = 0; (iPo \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, iPo)), 1); iPo++  {\n        if Fra_SmlNodeIsZero(p, pObj) != 0 {\n            continue; }\n        pSims = Fra_ObjSim( p, pObj.Id );\n        for  i = p.nWordsPref; i \u003c p.nWordsTotal; i++  {\n            if pSims[i] {\n                iFrame = i / p.nWordsFrame;\n                iBit = 32 * (i % p.nWordsFrame) + Aig_WordFindFirstBit( pSims[i] );\n                break;\n            }\n        }\n        break;\n    }\n    assert(iPo \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig), \"iPo \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig)\");\n    assert(iFrame \u003c p.nFrames, \"iFrame \u003c p.nFrames\");\n    assert(iBit \u003c 32 * p.nWordsFrame, \"iBit \u003c 32 * p.nWordsFrame\");\n\n    // allocate the counter example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(p.pAig), Aig_ManCiNum(p.pAig) - Aig_ManRegNum(p.pAig), iFrame + 1 );\n    pCex.iPo    = iPo;\n    pCex.iFrame = iFrame;\n\n    // copy the bit data\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  k = Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig); (k \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, k)), 1); k++  {\n        pSims = Fra_ObjSim( p, pObj.Id );\n        if Abc_InfoHasBit( pSims, iBit ) {\n            Abc_InfoSetBit( pCex.pData, k ); }\n    }\n    for  i = 0; i \u003c= iFrame; i++  {\n        // inlining of macro Aig_ManForEachPiSeq\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, k)), 1); k++  {\n            pSims = Fra_ObjSim( p, pObj.Id );\n            if Abc_InfoHasBit( pSims, 32 * p.nWordsFrame * i + iBit ) {\n                Abc_InfoSetBit( pCex.pData, pCex.nRegs + pCex.nPis * i + k ); }\n        }\n    }\n    // verify the counter example\n    if !Saig_ManVerifyCex( p.pAig, pCex ) {\n        fmt.Printf(\"Fra_SmlGetCounterExample(): Counter-example is invalid.\\n\");\n        Abc_CexFree( pCex );\n        pCex = nil;\n    }\n    return pCex;\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Generates seq counter-example from the combinational one.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SmlCopyCounterExample(pAig *Aig_Man_t, pFrames *Aig_Man_t, pModel *int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var pObj *Aig_Obj_t;\n    var i, nFrames, nTruePis, nTruePos, iPo, iFrame int32;\n    // get the number of frames\n    assert(Aig_ManRegNum(pAig) \u003e 0, \"Aig_ManRegNum(pAig) \u003e 0\");\n    assert(Aig_ManRegNum(pFrames) == 0, \"Aig_ManRegNum(pFrames) == 0\");\n    nTruePis = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n    nTruePos = Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig);\n    nFrames = Aig_ManCiNum(pFrames) / nTruePis;\n    assert(nTruePis * nFrames == Aig_ManCiNum(pFrames), \"nTruePis * nFrames == Aig_ManCiNum(pFrames)\");\n    assert(nTruePos * nFrames == Aig_ManCoNum(pFrames), \"nTruePos * nFrames == Aig_ManCoNum(pFrames)\");\n    // find the PO that failed\n    iPo = -1;\n    iFrame = -1;\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pFrames.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vCos, i)), 1); i++  {\n        if pObj.Id == pModel[Aig_ManCiNum(pFrames)] {\n            iPo = i % nTruePos;\n            iFrame = i / nTruePos;\n            break;\n        }\n    }\n    assert(iPo \u003e= 0, \"iPo \u003e= 0\");\n    // allocate the counter example\n    pCex = Abc_CexAlloc( Aig_ManRegNum(pAig), nTruePis, iFrame + 1 );\n    pCex.iPo    = iPo;\n    pCex.iFrame = iFrame;\n\n    // copy the bit data\n    for  i = 0; i \u003c Aig_ManCiNum(pFrames); i++  {\n        if pModel[i] {\n            Abc_InfoSetBit( pCex.pData, pCex.nRegs + i ); }\n        if pCex.nRegs + i == pCex.nBits - 1 {\n            break; }\n    }\n\n    // verify the counter example\n    if !Saig_ManVerifyCex( pAig, pCex ) {\n        fmt.Printf(\"Fra_SmlGetCounterExample(): Counter-example is invalid.\\n\");\n        Abc_CexFree( pCex );\n        pCex = nil;\n    }\n    return pCex;\n\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

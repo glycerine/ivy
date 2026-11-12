@@ -1,0 +1,450 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h",
+  "SHA256": "10d37ddf17e8b3b24bb5aada136e9d48ad37e1821b422ea2053de3cf8fbe0706",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 3,
+        "ByteOffset": 2715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(nBins \u003e 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 95,
+        "Column": 68,
+        "ByteOffset": 2801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Hash_Flt_t *) malloc(sizeof(Hash_Flt_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 99,
+        "Column": 83,
+        "ByteOffset": 2995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  p.pArray = /*__starting_point_inline_macro:ABC_ALLOC__*/((Hash_Flt_Entry_t * *) malloc(sizeof(Hash_Flt_Entry_t *) * (size_t)(nBins)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 174,
+        "Column": 90,
+        "ByteOffset": 4738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  (*pLast) = pEntry = /*__starting_point_inline_macro:ABC_ALLOC__*/((Hash_Flt_Entry_t *) malloc(sizeof(Hash_Flt_Entry_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 216,
+        "Column": 92,
+        "ByteOffset": 5832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (*pLast) = pEntry = /*__starting_point_inline_macro:ABC_ALLOC__*/((Hash_Flt_Entry_t *) malloc(sizeof(Hash_Flt_Entry_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 259,
+        "Column": 90,
+        "ByteOffset": 6908
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  (*pLast) = pEntry = /*__starting_point_inline_macro:ABC_ALLOC__*/((Hash_Flt_Entry_t *) malloc(sizeof(Hash_Flt_Entry_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 293,
+        "Column": 64,
+        "ByteOffset": 7736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      /*__starting_point_inline_macro:ABC_FREE__*/((pEntry) ? (free((char *) (pEntry)), (pEntry) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 325,
+        "Column": 63,
+        "ByteOffset": 8455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      /*__starting_point_inline_macro:ABC_FREE__*/((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 330,
+        "Column": 62,
+        "ByteOffset": 8586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  /*__starting_point_inline_macro:ABC_FREE__*/((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 331,
+        "Column": 55,
+        "ByteOffset": 8689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Hash_FltAlloc",
+      "Start": 2694,
+      "End": 3021,
+      "BodyStart": 2748,
+      "Original": "static inline Hash_Flt_t * Hash_FltAlloc( int nBins )\n{\n  Hash_Flt_t * p;\n  int i;\n  assert(nBins \u003e 0);\n  p = ABC_ALLOC( Hash_Flt_t, 1);\n  p-\u003enBins = nBins;\n  p-\u003efHash = Hash_DefaultHashFunc;\n  p-\u003enSize  = 0;\n  p-\u003epArray = ABC_ALLOC( Hash_Flt_Entry_t *, nBins );\n  for(i=0; i\u003cnBins; i++)\n    p-\u003epArray[i] = NULL;\n\n  return p;\n}",
+      "Draft": "func Hash_FltAlloc(nBins int32) *Hash_Flt_t {\n  var p *Hash_Flt_t;\n  var i int32;\n  assert(nBins \u003e 0, \"nBins \u003e 0\");\n  // inlining of macro ABC_ALLOC\n  p = ((Hash_Flt_t *) malloc(sizeof(Hash_Flt_t) * (size_t)(1)));\n  p.nBins = nBins;\n  p.fHash = Hash_DefaultHashFunc;\n  p.nSize  = 0;\n  // inlining of macro ABC_ALLOC\n  p.pArray = ((Hash_Flt_Entry_t * *) malloc(sizeof(Hash_Flt_Entry_t *) * (size_t)(nBins)));\n  for i=0; i\u003cnBins; i++ {\n    p.pArray[i] = nil;\n  }\n\n  return p;\n}"
+    },
+    {
+      "Name": "Hash_FltExists",
+      "Start": 3291,
+      "End": 3706,
+      "BodyStart": 3350,
+      "Original": "static inline int Hash_FltExists( Hash_Flt_t *p, int key )\n{\n  int bin;\n  Hash_Flt_Entry_t *pEntry, **pLast;\n\n  // find the bin where this key would live\n  bin = (*(p-\u003efHash))(key, p-\u003enBins);\n\n  // search for key\n  pLast = \u0026(p-\u003epArray[bin]);\n  pEntry = p-\u003epArray[bin];\n  while(pEntry) {\n    if (pEntry-\u003ekey == key) {\n      return 1;\n    }\n    pLast = \u0026(pEntry-\u003epNext);\n    pEntry = pEntry-\u003epNext;\n  }\n\n  return 0;\n}",
+      "Draft": "func Hash_FltExists(p *Hash_Flt_t, key int32) int32 {\n  var bin int32;\n  var pEntry *Hash_Flt_Entry_t;\n  var pLast **Hash_Flt_Entry_t;\n\n  // find the bin where this key would live\n  bin = (*(p.fHash))(key, p.nBins);\n\n  // search for key\n  pLast = \u0026(p.pArray[bin]);\n  pEntry = p.pArray[bin];\n  for pEntry != nil {\n    if pEntry.key == key {\n      return 1;\n    }\n    pLast = \u0026(pEntry.pNext);\n    pEntry = pEntry.pNext;\n  }\n\n  return 0;\n}"
+    },
+    {
+      "Name": "Hash_FltWriteEntry",
+      "Start": 3996,
+      "End": 4668,
+      "BodyStart": 4072,
+      "Original": "static inline void Hash_FltWriteEntry( Hash_Flt_t *p, int key, float data )\n{\n  int bin;\n  Hash_Flt_Entry_t *pEntry, **pLast;\n\n  // find the bin where this key would live\n  bin = (*(p-\u003efHash))(key, p-\u003enBins);\n\n  // search for key\n  pLast = \u0026(p-\u003epArray[bin]);\n  pEntry = p-\u003epArray[bin];\n  while(pEntry) {\n    if (pEntry-\u003ekey == key) {\n      pEntry-\u003edata = data;\n      return;\n    }\n    pLast = \u0026(pEntry-\u003epNext);\n    pEntry = pEntry-\u003epNext;\n  }\n\n  // this key does not currently exist\n  // create a new entry and add to bin\n  p-\u003enSize++;\n  (*pLast) = pEntry = ABC_ALLOC( Hash_Flt_Entry_t, 1 );\n  pEntry-\u003epNext = NULL;\n  pEntry-\u003ekey = key;\n  pEntry-\u003edata = data;\n\n  return;\n}",
+      "Draft": "func Hash_FltWriteEntry(p *Hash_Flt_t, key int32, data float32) {\n  var bin int32;\n  var pEntry *Hash_Flt_Entry_t;\n  var pLast **Hash_Flt_Entry_t;\n\n  // find the bin where this key would live\n  bin = (*(p.fHash))(key, p.nBins);\n\n  // search for key\n  pLast = \u0026(p.pArray[bin]);\n  pEntry = p.pArray[bin];\n  for pEntry != nil {\n    if pEntry.key == key {\n      pEntry.data = data;\n      return;\n    }\n    pLast = \u0026(pEntry.pNext);\n    pEntry = pEntry.pNext;\n  }\n\n  // this key does not currently exist\n  // create a new entry and add to bin\n  p.nSize++;\n  // inlining of macro ABC_ALLOC\n  (*pLast) = pEntry = ((Hash_Flt_Entry_t *) malloc(sizeof(Hash_Flt_Entry_t) * (size_t)(1)));\n  pEntry.pNext = nil;\n  pEntry.key = key;\n  pEntry.data = data;\n\n  return;\n}"
+    },
+    {
+      "Name": "Hash_FltEntry",
+      "Start": 4998,
+      "End": 5706,
+      "BodyStart": 5071,
+      "Original": "static inline float Hash_FltEntry( Hash_Flt_t *p, int key, int fCreate )\n{\n  int bin;\n  Hash_Flt_Entry_t *pEntry, **pLast;\n\n  // find the bin where this key would live\n  bin = (*(p-\u003efHash))(key, p-\u003enBins);\n\n  // search for key\n  pLast = \u0026(p-\u003epArray[bin]);\n  pEntry = p-\u003epArray[bin];\n  while(pEntry) {\n    if (pEntry-\u003ekey == key)\n      return pEntry-\u003edata;\n    pLast = \u0026(pEntry-\u003epNext);\n    pEntry = pEntry-\u003epNext;\n  }\n\n  // this key does not currently exist\n  if (fCreate) {\n    // create a new entry and add to bin\n    p-\u003enSize++;\n    (*pLast) = pEntry = ABC_ALLOC( Hash_Flt_Entry_t, 1 );\n    pEntry-\u003epNext = NULL;\n    pEntry-\u003ekey = key;\n    pEntry-\u003edata = 0.0;\n    return pEntry-\u003edata;\n  }\n\n  return 0.0;\n}",
+      "Draft": "func Hash_FltEntry(p *Hash_Flt_t, key int32, fCreate int32) float32 {\n  var bin int32;\n  var pEntry *Hash_Flt_Entry_t;\n  var pLast **Hash_Flt_Entry_t;\n\n  // find the bin where this key would live\n  bin = (*(p.fHash))(key, p.nBins);\n\n  // search for key\n  pLast = \u0026(p.pArray[bin]);\n  pEntry = p.pArray[bin];\n  for pEntry != nil {\n    if pEntry.key == key {\n      return pEntry.data; }\n    pLast = \u0026(pEntry.pNext);\n    pEntry = pEntry.pNext;\n  }\n\n  // this key does not currently exist\n  if fCreate != 0 {\n    // create a new entry and add to bin\n    p.nSize++;\n    // inlining of macro ABC_ALLOC\n    (*pLast) = pEntry = ((Hash_Flt_Entry_t *) malloc(sizeof(Hash_Flt_Entry_t) * (size_t)(1)));\n    pEntry.pNext = nil;\n    pEntry.key = key;\n    pEntry.data = 0.0;\n    return pEntry.data;\n  }\n\n  return 0.0;\n}"
+    },
+    {
+      "Name": "Hash_FltEntryPtr",
+      "Start": 6010,
+      "End": 6666,
+      "BodyStart": 6074,
+      "Original": "static inline float* Hash_FltEntryPtr( Hash_Flt_t *p, int key )\n{\n  int bin;\n  Hash_Flt_Entry_t *pEntry, **pLast;\n\n  // find the bin where this key would live\n  bin = (*(p-\u003efHash))(key, p-\u003enBins);\n\n  // search for key\n  pLast = \u0026(p-\u003epArray[bin]);\n  pEntry = p-\u003epArray[bin];\n  while(pEntry) {\n    if (pEntry-\u003ekey == key)\n      return \u0026(pEntry-\u003edata);\n    pLast = \u0026(pEntry-\u003epNext);\n    pEntry = pEntry-\u003epNext;\n  }\n\n  // this key does not currently exist\n  // create a new entry and add to bin\n  p-\u003enSize++;\n  (*pLast) = pEntry = ABC_ALLOC( Hash_Flt_Entry_t, 1 );\n  pEntry-\u003epNext = NULL;\n  pEntry-\u003ekey = key;\n  pEntry-\u003edata = 0.0;\n\n  return \u0026(pEntry-\u003edata);\n}",
+      "Draft": "func Hash_FltEntryPtr(p *Hash_Flt_t, key int32) *float32 {\n  var bin int32;\n  var pEntry *Hash_Flt_Entry_t;\n  var pLast **Hash_Flt_Entry_t;\n\n  // find the bin where this key would live\n  bin = (*(p.fHash))(key, p.nBins);\n\n  // search for key\n  pLast = \u0026(p.pArray[bin]);\n  pEntry = p.pArray[bin];\n  for pEntry != nil {\n    if pEntry.key == key {\n      return \u0026(pEntry.data); }\n    pLast = \u0026(pEntry.pNext);\n    pEntry = pEntry.pNext;\n  }\n\n  // this key does not currently exist\n  // create a new entry and add to bin\n  p.nSize++;\n  // inlining of macro ABC_ALLOC\n  (*pLast) = pEntry = ((Hash_Flt_Entry_t *) malloc(sizeof(Hash_Flt_Entry_t) * (size_t)(1)));\n  pEntry.pNext = nil;\n  pEntry.key = key;\n  pEntry.data = 0.0;\n\n  return \u0026(pEntry.data);\n}"
+    },
+    {
+      "Name": "Hash_FltRemove",
+      "Start": 6919,
+      "End": 7436,
+      "BodyStart": 6979,
+      "Original": "static inline void Hash_FltRemove( Hash_Flt_t *p, int key )\n{\n  int    bin;\n  Hash_Flt_Entry_t *pEntry, **pLast;\n\n  // find the bin where this key would live\n  bin = (*(p-\u003efHash))(key, p-\u003enBins);\n\n  // search for key\n  pLast = \u0026(p-\u003epArray[bin]);\n  pEntry = p-\u003epArray[bin];\n  while(pEntry) {\n    if (pEntry-\u003ekey == key) {\n      p-\u003enSize--;\n      *pLast = pEntry-\u003epNext;\n      ABC_FREE( pEntry );\n      return;\n    }\n    pLast = \u0026(pEntry-\u003epNext);\n    pEntry = pEntry-\u003epNext;\n  }\n    \n  // could not find key\n  return;\n}",
+      "Draft": "func Hash_FltRemove(p *Hash_Flt_t, key int32) {\n  var bin int32;\n  var pEntry *Hash_Flt_Entry_t;\n  var pLast **Hash_Flt_Entry_t;\n\n  // find the bin where this key would live\n  bin = (*(p.fHash))(key, p.nBins);\n\n  // search for key\n  pLast = \u0026(p.pArray[bin]);\n  pEntry = p.pArray[bin];\n  for pEntry != nil {\n    if pEntry.key == key {\n      p.nSize--;\n      *pLast = pEntry.pNext;\n      // inlining of macro ABC_FREE\n      ((pEntry) ? (free((char *) (pEntry)), (pEntry) = 0) : 0);\n      return;\n    }\n    pLast = \u0026(pEntry.pNext);\n    pEntry = pEntry.pNext;\n  }\n    \n  // could not find key\n  return;\n}"
+    },
+    {
+      "Name": "Hash_FltFree",
+      "Start": 7687,
+      "End": 8037,
+      "BodyStart": 7736,
+      "Original": "static inline void Hash_FltFree( Hash_Flt_t *p ) {\n  int bin;\n  Hash_Flt_Entry_t *pEntry, *pTemp;\n\n  // free bins\n  for(bin = 0; bin \u003c p-\u003enBins; bin++) {\n    pEntry = p-\u003epArray[bin];\n    while(pEntry) {\n      pTemp = pEntry;\n      pEntry = pEntry-\u003epNext;\n      ABC_FREE( pTemp );\n    }\n  }\n \n  // free hash\n  ABC_FREE( p-\u003epArray );\n  ABC_FREE( p );\n}",
+      "Draft": "func Hash_FltFree(p *Hash_Flt_t) {\n  var bin int32;\n  var pEntry, pTemp *Hash_Flt_Entry_t;\n\n  // free bins\n  for bin = 0; bin \u003c p.nBins; bin++ {\n    pEntry = p.pArray[bin];\n    for pEntry != nil {\n      pTemp = pEntry;\n      pEntry = pEntry.pNext;\n      // inlining of macro ABC_FREE\n      ((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);\n    }\n  }\n \n  // free hash\n  // inlining of macro ABC_FREE\n  ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);\n  // inlining of macro ABC_FREE\n  ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::struct::Hash_Flt_Entry_t",
+      "Category": "struct-review",
+      "Symbol": "Hash_Flt_Entry_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1390,
+      "End": 1594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::struct::Hash_Flt_t_::int (* fHash)(int key, int nBins);",
+      "Category": "struct-field-review",
+      "Symbol": "Hash_Flt_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1699,
+      "End": 1736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::struct::Hash_Flt_t_",
+      "Category": "struct-review",
+      "Symbol": "Hash_Flt_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1596,
+      "End": 1781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::mechanical::sizeof::2872",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2804,
+      "End": 2804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::mechanical::sizeof::3070",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2917,
+      "End": 2917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::mechanical::sizeof::4789",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4554,
+      "End": 4554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::mechanical::sizeof::5871",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5554,
+      "End": 5554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::mechanical::sizeof::6936",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6537,
+      "End": 6537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::pointer-cast::2850",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2804,
+      "End": 2804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::pointer-cast::3040",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2917,
+      "End": 2917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::pointer-cast::3076",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2917,
+      "End": 2917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::pointer-cast::4761",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4554,
+      "End": 4554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::pointer-cast::5843",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5554,
+      "End": 5554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::pointer-cast::6908",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6537,
+      "End": 6537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::pointer-cast::7763",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7294,
+      "End": 7294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::pointer-cast::8498",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7948,
+      "End": 7948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::pointer-cast::8630",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7996,
+      "End": 7996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::pointer-cast::8735",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8021,
+      "End": 8021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::macro::Hash_FltForEachEntry",
+      "Category": "macro-review",
+      "Symbol": "Hash_FltForEachEntry",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2005,
+      "End": 2187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::Hash_FltAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Hash_FltAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2694,
+      "End": 3021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::Hash_FltExists",
+      "Category": "semantic-review",
+      "Symbol": "Hash_FltExists",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3291,
+      "End": 3706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::Hash_FltWriteEntry",
+      "Category": "semantic-review",
+      "Symbol": "Hash_FltWriteEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3996,
+      "End": 4668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::Hash_FltEntry",
+      "Category": "semantic-review",
+      "Symbol": "Hash_FltEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4998,
+      "End": 5706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::Hash_FltEntryPtr",
+      "Category": "semantic-review",
+      "Symbol": "Hash_FltEntryPtr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6010,
+      "End": 6666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::ternary::Hash_FltRemove",
+      "Category": "ternary-review",
+      "Symbol": "Hash_FltRemove",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6919,
+      "End": 7436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::Hash_FltRemove",
+      "Category": "semantic-review",
+      "Symbol": "Hash_FltRemove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6919,
+      "End": 7436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::ternary::Hash_FltFree",
+      "Category": "ternary-review",
+      "Symbol": "Hash_FltFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7687,
+      "End": 8037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::Hash_FltFree",
+      "Category": "semantic-review",
+      "Symbol": "Hash_FltFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7687,
+      "End": 8037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/hash/hashFlt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8294
+    }
+  ],
+  "Draft": "package hash\n\n/**CFile****************************************************************\n\n  FileName    [hashFlt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hash maps.]\n\n  Synopsis    [Hash maps.]\n\n  Author      [Aaron P. Hurst]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 16, 2006.]\n\n  Revision    [$Id: vecInt.h,v 1.00 2005/06/20 00:00:00 ahurst Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \"misc/extra/extra.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n// extern int Hash_DefaultHashFunc(int key, int nBins);\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Hash_Flt_t =       Hash_Flt_t_;\n   \n\ntype Hash_Flt_Entry_t struct {\n  key                              int32;\n  data                            float32;\n  pNext         *Hash_Flt_Entry_t;\n}\n\ntype Hash_Flt_t_ struct {\n  nSize                             int32;\n  nBins                             int32;\n  int (* fHash)(int key, int nBins);\n  pArray              **Hash_Flt_Entry_t;\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define Hash_FltForEachEntry( pHash, pEntry, bin)   \\\n//   for(bin=-1, pEntry=NULL; bin \u003c pHash-\u003enBins; (!pEntry)?(pEntry=pHash-\u003epArray[++bin]):(pEntry=pEntry-\u003epNext)) \\\n//     if (pEntry)\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates a hash map with the given number of bins.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hash_FltAlloc(nBins int32) *Hash_Flt_t {\n  var p *Hash_Flt_t;\n  var i int32;\n  assert(nBins \u003e 0, \"nBins \u003e 0\");\n  // inlining of macro ABC_ALLOC\n  p = ((Hash_Flt_t *) malloc(sizeof(Hash_Flt_t) * (size_t)(1)));\n  p.nBins = nBins;\n  p.fHash = Hash_DefaultHashFunc;\n  p.nSize  = 0;\n  // inlining of macro ABC_ALLOC\n  p.pArray = ((Hash_Flt_Entry_t * *) malloc(sizeof(Hash_Flt_Entry_t *) * (size_t)(nBins)));\n  for i=0; i\u003cnBins; i++ {\n    p.pArray[i] = nil;\n  }\n\n  return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if a key already exists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hash_FltExists(p *Hash_Flt_t, key int32) int32 {\n  var bin int32;\n  var pEntry *Hash_Flt_Entry_t;\n  var pLast **Hash_Flt_Entry_t;\n\n  // find the bin where this key would live\n  bin = (*(p.fHash))(key, p.nBins);\n\n  // search for key\n  pLast = \u0026(p.pArray[bin]);\n  pEntry = p.pArray[bin];\n  for pEntry != nil {\n    if pEntry.key == key {\n      return 1;\n    }\n    pLast = \u0026(pEntry.pNext);\n    pEntry = pEntry.pNext;\n  }\n\n  return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds or creates an entry with a key and writes value.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hash_FltWriteEntry(p *Hash_Flt_t, key int32, data float32) {\n  var bin int32;\n  var pEntry *Hash_Flt_Entry_t;\n  var pLast **Hash_Flt_Entry_t;\n\n  // find the bin where this key would live\n  bin = (*(p.fHash))(key, p.nBins);\n\n  // search for key\n  pLast = \u0026(p.pArray[bin]);\n  pEntry = p.pArray[bin];\n  for pEntry != nil {\n    if pEntry.key == key {\n      pEntry.data = data;\n      return;\n    }\n    pLast = \u0026(pEntry.pNext);\n    pEntry = pEntry.pNext;\n  }\n\n  // this key does not currently exist\n  // create a new entry and add to bin\n  p.nSize++;\n  // inlining of macro ABC_ALLOC\n  (*pLast) = pEntry = ((Hash_Flt_Entry_t *) malloc(sizeof(Hash_Flt_Entry_t) * (size_t)(1)));\n  pEntry.pNext = nil;\n  pEntry.key = key;\n  pEntry.data = data;\n\n  return;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Finds or creates an entry with a key.]\n\n  Description [fCreate specifies whether new entries should be created.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hash_FltEntry(p *Hash_Flt_t, key int32, fCreate int32) float32 {\n  var bin int32;\n  var pEntry *Hash_Flt_Entry_t;\n  var pLast **Hash_Flt_Entry_t;\n\n  // find the bin where this key would live\n  bin = (*(p.fHash))(key, p.nBins);\n\n  // search for key\n  pLast = \u0026(p.pArray[bin]);\n  pEntry = p.pArray[bin];\n  for pEntry != nil {\n    if pEntry.key == key {\n      return pEntry.data; }\n    pLast = \u0026(pEntry.pNext);\n    pEntry = pEntry.pNext;\n  }\n\n  // this key does not currently exist\n  if fCreate != 0 {\n    // create a new entry and add to bin\n    p.nSize++;\n    // inlining of macro ABC_ALLOC\n    (*pLast) = pEntry = ((Hash_Flt_Entry_t *) malloc(sizeof(Hash_Flt_Entry_t) * (size_t)(1)));\n    pEntry.pNext = nil;\n    pEntry.key = key;\n    pEntry.data = 0.0;\n    return pEntry.data;\n  }\n\n  return 0.0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Finds or creates an entry with a key and returns the pointer to it.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hash_FltEntryPtr(p *Hash_Flt_t, key int32) *float32 {\n  var bin int32;\n  var pEntry *Hash_Flt_Entry_t;\n  var pLast **Hash_Flt_Entry_t;\n\n  // find the bin where this key would live\n  bin = (*(p.fHash))(key, p.nBins);\n\n  // search for key\n  pLast = \u0026(p.pArray[bin]);\n  pEntry = p.pArray[bin];\n  for pEntry != nil {\n    if pEntry.key == key {\n      return \u0026(pEntry.data); }\n    pLast = \u0026(pEntry.pNext);\n    pEntry = pEntry.pNext;\n  }\n\n  // this key does not currently exist\n  // create a new entry and add to bin\n  p.nSize++;\n  // inlining of macro ABC_ALLOC\n  (*pLast) = pEntry = ((Hash_Flt_Entry_t *) malloc(sizeof(Hash_Flt_Entry_t) * (size_t)(1)));\n  pEntry.pNext = nil;\n  pEntry.key = key;\n  pEntry.data = 0.0;\n\n  return \u0026(pEntry.data);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes an entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hash_FltRemove(p *Hash_Flt_t, key int32) {\n  var bin int32;\n  var pEntry *Hash_Flt_Entry_t;\n  var pLast **Hash_Flt_Entry_t;\n\n  // find the bin where this key would live\n  bin = (*(p.fHash))(key, p.nBins);\n\n  // search for key\n  pLast = \u0026(p.pArray[bin]);\n  pEntry = p.pArray[bin];\n  for pEntry != nil {\n    if pEntry.key == key {\n      p.nSize--;\n      *pLast = pEntry.pNext;\n      // inlining of macro ABC_FREE\n      ((pEntry) ? (free((char *) (pEntry)), (pEntry) = 0) : 0);\n      return;\n    }\n    pLast = \u0026(pEntry.pNext);\n    pEntry = pEntry.pNext;\n  }\n    \n  // could not find key\n  return;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the hash.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hash_FltFree(p *Hash_Flt_t) {\n  var bin int32;\n  var pEntry, pTemp *Hash_Flt_Entry_t;\n\n  // free bins\n  for bin = 0; bin \u003c p.nBins; bin++ {\n    pEntry = p.pArray[bin];\n    for pEntry != nil {\n      pTemp = pEntry;\n      pEntry = pEntry.pNext;\n      // inlining of macro ABC_FREE\n      ((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);\n    }\n  }\n \n  // free hash\n  // inlining of macro ABC_FREE\n  ((p.pArray) ? (free((char *) (p.pArray)), (p.pArray) = 0) : 0);\n  // inlining of macro ABC_FREE\n  ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

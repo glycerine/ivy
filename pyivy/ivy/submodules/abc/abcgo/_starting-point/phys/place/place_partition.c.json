@@ -1,0 +1,1341 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c",
+  "SHA256": "82dcc904adf0ca0c7818982d4038fad21fb85ce3e8def8136bf12384fb273282",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 72,
+        "Column": 30,
+        "ByteOffset": 1889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  if g_place_rootPartition { free(g_place_rootPartition); }"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 73,
+        "Column": 27,
+        "ByteOffset": 1946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  g_place_rootPartition = malloc(sizeof(Partition));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 82,
+        "Column": 37,
+        "ByteOffset": 2311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  g_place_rootPartition.m_members = malloc(sizeof(ConcreteCell*)*g_place_numCells);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 106,
+        "Column": 30,
+        "ByteOffset": 3056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  allNetsL2 = (ConcreteNet**)realloc(allNetsL2, sizeof(ConcreteNet*)*g_place_numNets);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 107,
+        "Column": 30,
+        "ByteOffset": 3143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  allNetsR2 = (ConcreteNet**)realloc(allNetsR2, sizeof(ConcreteNet*)*g_place_numNets);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 108,
+        "Column": 30,
+        "ByteOffset": 3230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  allNetsB2 = (ConcreteNet**)realloc(allNetsB2, sizeof(ConcreteNet*)*g_place_numNets);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 109,
+        "Column": 30,
+        "ByteOffset": 3317
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  allNetsT2 = (ConcreteNet**)realloc(allNetsT2, sizeof(ConcreteNet*)*g_place_numNets);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 110,
+        "Column": 3,
+        "ByteOffset": 3377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  memcpy(allNetsL2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 111,
+        "Column": 3,
+        "ByteOffset": 3466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  memcpy(allNetsR2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 112,
+        "Column": 3,
+        "ByteOffset": 3555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  memcpy(allNetsB2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 113,
+        "Column": 3,
+        "ByteOffset": 3644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  memcpy(allNetsT2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 114,
+        "Column": 3,
+        "ByteOffset": 3733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  qsort(allNetsL2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByL);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 115,
+        "Column": 3,
+        "ByteOffset": 3812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  qsort(allNetsR2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByR);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 116,
+        "Column": 3,
+        "ByteOffset": 3891
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  qsort(allNetsB2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByB);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 117,
+        "Column": 3,
+        "ByteOffset": 3970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  qsort(allNetsT2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByT);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 3,
+        "ByteOffset": 5010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(p);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 170,
+        "Column": 14,
+        "ByteOffset": 5345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  p.m_sub1 = malloc(sizeof(Partition));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 178,
+        "Column": 14,
+        "ByteOffset": 5591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  p.m_sub2 = malloc(sizeof(Partition));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 238,
+        "Column": 5,
+        "ByteOffset": 6987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"QPART-35 : WARNING: degenerate partition generated\\n\");"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 679,
+        "Column": 5,
+        "ByteOffset": 22722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort(parent.m_members, (size_t)parent.m_numMembers, sizeof(ConcreteCell*), cellSortByX);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 682,
+        "Column": 5,
+        "ByteOffset": 22853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort(parent.m_members, (size_t)parent.m_numMembers, sizeof(ConcreteCell*), cellSortByY); }"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 688,
+        "Column": 45,
+        "ByteOffset": 23106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  parent.m_sub1.m_members = (ConcreteCell**)realloc(parent.m_sub1.m_members, "
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 692,
+        "Column": 45,
+        "ByteOffset": 23326
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  parent.m_sub2.m_members = (ConcreteCell**)realloc(parent.m_sub2.m_members, "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 894,
+        "Column": 51,
+        "ByteOffset": 29545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var newCells1 **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*numNewCells);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 895,
+        "Column": 51,
+        "ByteOffset": 29638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var newCells2 **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*numNewCells);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 899,
+        "Column": 3,
+        "ByteOffset": 29747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(p);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 902,
+        "Column": 33,
+        "ByteOffset": 29828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  p.m_members = (ConcreteCell**)realloc(p.m_members, "
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 904,
+        "Column": 3,
+        "ByteOffset": 29912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  memcpy(\u0026(p.m_members[p.m_numMembers]), newCells, sizeof(ConcreteCell*)*numNewCells);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 932,
+        "Column": 3,
+        "ByteOffset": 30824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(newCells1);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 933,
+        "Column": 3,
+        "ByteOffset": 30843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(newCells2);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 948,
+        "Column": 50,
+        "ByteOffset": 31335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var allCells **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 949,
+        "Column": 50,
+        "ByteOffset": 31432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  var newCells **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 951,
+        "Column": 3,
+        "ByteOffset": 31483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(g_place_rootPartition);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 954,
+        "Column": 3,
+        "ByteOffset": 31557
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  memcpy(allCells, (size_t)g_place_concreteCells, sizeof(ConcreteCell*)*g_place_numCells);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 955,
+        "Column": 3,
+        "ByteOffset": 31648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  qsort(allCells, (size_t)g_place_numCells, sizeof(ConcreteCell*), cellSortByID);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 956,
+        "Column": 3,
+        "ByteOffset": 31730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  qsort(g_place_rootPartition.m_members, (size_t)g_place_rootPartition.m_numMembers,"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 975,
+        "Column": 3,
+        "ByteOffset": 32429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"QPRT-50 : \\tincremental partitioning with %d new cells\\n\", numNewCells);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 978,
+        "Column": 3,
+        "ByteOffset": 32607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(allCells);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 979,
+        "Column": 3,
+        "ByteOffset": 32625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  free(newCells);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 22,
+        "Column": 1,
+        "ByteOffset": 474
+      },
+      "Directive": "#if !defined(NO_HMETIS)"
+    },
+    {
+      "Location": {
+        "Line": 259,
+        "Column": 1,
+        "ByteOffset": 7602
+      },
+      "Directive": "#if defined(NO_HMETIS)"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "initPartitioning",
+      "Start": 1664,
+      "End": 2673,
+      "BodyStart": 1688,
+      "Original": "void initPartitioning() {\n  int i;\n  float area;\n\n  // create root partition\n  g_place_numPartitions = 1;\n  if (g_place_rootPartition) free(g_place_rootPartition);\n  g_place_rootPartition = malloc(sizeof(Partition));\n  g_place_rootPartition-\u003em_level = 0;\n  g_place_rootPartition-\u003em_area = 0;\n  g_place_rootPartition-\u003em_bounds = g_place_coreBounds;\n  g_place_rootPartition-\u003em_vertical = false;\n  g_place_rootPartition-\u003em_done = false;\n  g_place_rootPartition-\u003em_leaf = true;\n      \n  // add all of the cells to this partition\n  g_place_rootPartition-\u003em_members = malloc(sizeof(ConcreteCell*)*g_place_numCells);\n  g_place_rootPartition-\u003em_numMembers = 0;\n  for (i=0; i\u003cg_place_numCells; i++) \n    if (g_place_concreteCells[i]) {\n      if (!g_place_concreteCells[i]-\u003em_fixed) {\n        area = getCellArea(g_place_concreteCells[i]);\n        g_place_rootPartition-\u003em_members[g_place_rootPartition-\u003em_numMembers++] =\n          g_place_concreteCells[i];\n        g_place_rootPartition-\u003em_area += area;\n      }\n    }\n}",
+      "Draft": "func initPartitioning() {\n  var i int32;\n  var area float32;\n\n  // create root partition\n  g_place_numPartitions = 1;\n  if g_place_rootPartition != nil { free(g_place_rootPartition); }\n  g_place_rootPartition = malloc(sizeof(Partition));\n  g_place_rootPartition.m_level = 0;\n  g_place_rootPartition.m_area = 0;\n  g_place_rootPartition.m_bounds = g_place_coreBounds;\n  g_place_rootPartition.m_vertical = false;\n  g_place_rootPartition.m_done = false;\n  g_place_rootPartition.m_leaf = true;\n      \n  // add all of the cells to this partition\n  g_place_rootPartition.m_members = malloc(sizeof(ConcreteCell*)*g_place_numCells);\n  g_place_rootPartition.m_numMembers = 0;\n  for i=0; i\u003cg_place_numCells; i++ { \n    if g_place_concreteCells[i] {\n      if !g_place_concreteCells[i].m_fixed {\n        area = getCellArea(g_place_concreteCells[i]);\n        g_place_rootPartition.m_members[g_place_rootPartition.m_numMembers++] =\n          g_place_concreteCells[i];\n        g_place_rootPartition.m_area += area;\n      }\n    }\n  }\n}"
+    },
+    {
+      "Name": "presortNets",
+      "Start": 2926,
+      "End": 3968,
+      "BodyStart": 2945,
+      "Original": "void presortNets() {\n  allNetsL2 = (ConcreteNet**)realloc(allNetsL2, sizeof(ConcreteNet*)*g_place_numNets);\n  allNetsR2 = (ConcreteNet**)realloc(allNetsR2, sizeof(ConcreteNet*)*g_place_numNets);\n  allNetsB2 = (ConcreteNet**)realloc(allNetsB2, sizeof(ConcreteNet*)*g_place_numNets);\n  allNetsT2 = (ConcreteNet**)realloc(allNetsT2, sizeof(ConcreteNet*)*g_place_numNets);\n  memcpy(allNetsL2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);\n  memcpy(allNetsR2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);\n  memcpy(allNetsB2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);\n  memcpy(allNetsT2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);\n  qsort(allNetsL2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByL);\n  qsort(allNetsR2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByR);\n  qsort(allNetsB2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByB);\n  qsort(allNetsT2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByT);\n}",
+      "Draft": "func presortNets() {\n  allNetsL2 = (ConcreteNet**)realloc(allNetsL2, sizeof(ConcreteNet*)*g_place_numNets);\n  allNetsR2 = (ConcreteNet**)realloc(allNetsR2, sizeof(ConcreteNet*)*g_place_numNets);\n  allNetsB2 = (ConcreteNet**)realloc(allNetsB2, sizeof(ConcreteNet*)*g_place_numNets);\n  allNetsT2 = (ConcreteNet**)realloc(allNetsT2, sizeof(ConcreteNet*)*g_place_numNets);\n  memcpy(allNetsL2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);\n  memcpy(allNetsR2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);\n  memcpy(allNetsB2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);\n  memcpy(allNetsT2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);\n  qsort(allNetsL2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByL);\n  qsort(allNetsR2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByR);\n  qsort(allNetsB2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByB);\n  qsort(allNetsT2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByT);\n}"
+    },
+    {
+      "Name": "refinePartitions",
+      "Start": 4183,
+      "End": 4260,
+      "BodyStart": 4207,
+      "Original": "bool refinePartitions() {\n\n  return refinePartition(g_place_rootPartition);\n}",
+      "Draft": "func refinePartitions() bool {\n\n  return refinePartition(g_place_rootPartition);\n}"
+    },
+    {
+      "Name": "reallocPartitions",
+      "Start": 4506,
+      "End": 4578,
+      "BodyStart": 4531,
+      "Original": "void reallocPartitions() {\n\n  reallocPartition(g_place_rootPartition);\n}",
+      "Draft": "func reallocPartitions() {\n\n  reallocPartition(g_place_rootPartition);\n}"
+    },
+    {
+      "Name": "refinePartition",
+      "Start": 4807,
+      "End": 7225,
+      "BodyStart": 4842,
+      "Original": "bool refinePartition(Partition *p) {\n  bool degenerate = false;\n  int nonzeroCount = 0;\n  int i;\n\n  assert(p);\n\n  // is this partition completed?\n  if (p-\u003em_done) return true;\n\n  // is this partition a non-leaf node?\n  if (!p-\u003em_leaf) {\n    p-\u003em_done = refinePartition(p-\u003em_sub1);\n    p-\u003em_done \u0026= refinePartition(p-\u003em_sub2);\n    return p-\u003em_done;\n  }\n  \n  // leaf...\n  // create two new subpartitions\n  g_place_numPartitions++;\n  p-\u003em_sub1 = malloc(sizeof(Partition));\n  p-\u003em_sub1-\u003em_level = p-\u003em_level+1;\n  p-\u003em_sub1-\u003em_leaf = true;\n  p-\u003em_sub1-\u003em_done = false;\n  p-\u003em_sub1-\u003em_area = 0;\n  p-\u003em_sub1-\u003em_vertical = !p-\u003em_vertical;\n  p-\u003em_sub1-\u003em_numMembers = 0;\n  p-\u003em_sub1-\u003em_members = NULL;\n  p-\u003em_sub2 = malloc(sizeof(Partition));\n  p-\u003em_sub2-\u003em_level = p-\u003em_level+1;\n  p-\u003em_sub2-\u003em_leaf = true;\n  p-\u003em_sub2-\u003em_done = false;\n  p-\u003em_sub2-\u003em_area = 0;\n  p-\u003em_sub2-\u003em_vertical = !p-\u003em_vertical;\n  p-\u003em_sub2-\u003em_numMembers = 0;\n  p-\u003em_sub2-\u003em_members = NULL;\n  p-\u003em_leaf = false;\n\n  // --- INITIAL PARTITION\n\n  if (PARTITION_AREA_ONLY)\n    partitionEqualArea(p);\n  else \n    partitionScanlineMincut(p);\n\n  resizePartition(p);\n\n  // --- PARTITION IMPROVEMENT\n\n  if (p-\u003em_level \u003c REPARTITION_LEVEL_DEPTH) {\n    if (REPARTITION_FM)\n      repartitionFM(p);\n    else if (REPARTITION_HMETIS)\n      repartitionHMetis(p);\n  }\n    \n  resizePartition(p);\n  \n  // fix imbalances due to zero-area cells\n  for(i=0; i\u003cp-\u003em_sub1-\u003em_numMembers; i++)\n    if (p-\u003em_sub1-\u003em_members[i]) \n      if (getCellArea(p-\u003em_sub1-\u003em_members[i]) \u003e 0) {\n        nonzeroCount++;\n      }\n  \n  // is this leaf now done?\n  if (nonzeroCount \u003c= LARGEST_FINAL_SIZE)\n      p-\u003em_sub1-\u003em_done = true;\n  if (nonzeroCount == 0)\n      degenerate = true;\n\n  nonzeroCount = 0;\n  for(i=0; i\u003cp-\u003em_sub2-\u003em_numMembers; i++)\n    if (p-\u003em_sub2-\u003em_members[i])\n      if (getCellArea(p-\u003em_sub2-\u003em_members[i]) \u003e 0) {\n        nonzeroCount++;\n      }\n\n  // is this leaf now done?\n  if (nonzeroCount \u003c= LARGEST_FINAL_SIZE)\n      p-\u003em_sub2-\u003em_done = true;\n  if (nonzeroCount == 0)\n      degenerate = true;\n\n  // have we found a degenerate partitioning?\n  if (degenerate) {\n    printf(\"QPART-35 : WARNING: degenerate partition generated\\n\");\n    partitionEqualArea(p);\n    resizePartition(p);\n    p-\u003em_sub1-\u003em_done = true;\n    p-\u003em_sub2-\u003em_done = true;\n  }\n  \n  // is this parent now finished?\n  if (p-\u003em_sub1-\u003em_done \u0026\u0026 p-\u003em_sub2-\u003em_done) p-\u003em_done = true;\n  \n  return p-\u003em_done;\n}",
+      "Draft": "func refinePartition(p *Partition) bool {\n  var degenerate bool  = false;\n  var nonzeroCount int32;\n  var i int32;\n\n  assert((p != nil), \"p\");\n\n  // is this partition completed?\n  if p.m_done { return true; }\n\n  // is this partition a non-leaf node?\n  if !p.m_leaf {\n    p.m_done = refinePartition(p.m_sub1);\n    p.m_done \u0026= refinePartition(p.m_sub2);\n    return p.m_done;\n  }\n  \n  // leaf...\n  // create two new subpartitions\n  g_place_numPartitions++;\n  p.m_sub1 = malloc(sizeof(Partition));\n  p.m_sub1.m_level = p.m_level+1;\n  p.m_sub1.m_leaf = true;\n  p.m_sub1.m_done = false;\n  p.m_sub1.m_area = 0;\n  p.m_sub1.m_vertical = !p.m_vertical;\n  p.m_sub1.m_numMembers = 0;\n  p.m_sub1.m_members = nil;\n  p.m_sub2 = malloc(sizeof(Partition));\n  p.m_sub2.m_level = p.m_level+1;\n  p.m_sub2.m_leaf = true;\n  p.m_sub2.m_done = false;\n  p.m_sub2.m_area = 0;\n  p.m_sub2.m_vertical = !p.m_vertical;\n  p.m_sub2.m_numMembers = 0;\n  p.m_sub2.m_members = nil;\n  p.m_leaf = false;\n\n  // --- INITIAL PARTITION\n\n  if PARTITION_AREA_ONLY {\n    partitionEqualArea(p);\n  } else { \n    partitionScanlineMincut(p); }\n\n  resizePartition(p);\n\n  // --- PARTITION IMPROVEMENT\n\n  if p.m_level \u003c REPARTITION_LEVEL_DEPTH {\n    if REPARTITION_FM {\n      repartitionFM(p);\n    } else if REPARTITION_HMETIS {\n      repartitionHMetis(p); }\n  }\n    \n  resizePartition(p);\n  \n  // fix imbalances due to zero-area cells\n  for i=0; i\u003cp.m_sub1.m_numMembers; i++ {\n    if p.m_sub1.m_members[i] { \n      if getCellArea(p.m_sub1.m_members[i]) \u003e 0 {\n        nonzeroCount++;\n      } }\n  }\n  \n  // is this leaf now done?\n  if nonzeroCount \u003c= LARGEST_FINAL_SIZE {\n      p.m_sub1.m_done = true; }\n  if nonzeroCount == 0 {\n      degenerate = true; }\n\n  nonzeroCount = 0;\n  for i=0; i\u003cp.m_sub2.m_numMembers; i++ {\n    if p.m_sub2.m_members[i] {\n      if getCellArea(p.m_sub2.m_members[i]) \u003e 0 {\n        nonzeroCount++;\n      } }\n  }\n\n  // is this leaf now done?\n  if nonzeroCount \u003c= LARGEST_FINAL_SIZE {\n      p.m_sub2.m_done = true; }\n  if nonzeroCount == 0 {\n      degenerate = true; }\n\n  // have we found a degenerate partitioning?\n  if degenerate {\n    fmt.Printf(\"QPART-35 : WARNING: degenerate partition generated\\n\");\n    partitionEqualArea(p);\n    resizePartition(p);\n    p.m_sub1.m_done = true;\n    p.m_sub2.m_done = true;\n  }\n  \n  // is this parent now finished?\n  if p.m_sub1.m_done \u0026\u0026 p.m_sub2.m_done { p.m_done = true; }\n  \n  return p.m_done;\n}"
+    },
+    {
+      "Name": "repartitionHMetis",
+      "Start": 7558,
+      "End": 13402,
+      "BodyStart": 7600,
+      "Original": "void repartitionHMetis(Partition *parent) {\n#if defined(NO_HMETIS)\n  printf(\"QPAR_02 : \\t\\tERROR: hMetis not available.  Ignoring.\\n\");\n#else\n\n  int n,c,t, i;\n  float area;\n  int *edgeConnections = NULL;\n  int *partitionAssignment = (int *)calloc(g_place_numCells, sizeof(int));\n  int *vertexWeights = (int *)calloc(g_place_numCells, sizeof(int));\n  int *edgeDegree = (int *)malloc(sizeof(int)*(g_place_numNets+1));\n  int numConnections = 0;\n  int numEdges = 0;\n  float initial_cut;\n  int targets = 0;\n  ConcreteCell *cell = NULL;\n  int options[9];\n  int afterCuts = 0;\n\n  assert(parent);\n  assert(parent-\u003em_sub1);\n  assert(parent-\u003em_sub2);\n\n  printf(\"QPAR-02 : \\t\\trepartitioning with hMetis\\n\");\n\n  // count edges\n  edgeDegree[0] = 0;\n  for(n=0; n\u003cg_place_numNets; n++) if (g_place_concreteNets[n])\n    if (g_place_concreteNets[n]-\u003em_numTerms \u003e 1) {\n      numConnections += g_place_concreteNets[n]-\u003em_numTerms;\n      edgeDegree[++numEdges] = numConnections;\n    }\n  \n  if (parent-\u003em_vertical) {\n    // vertical\n    initial_cut = parent-\u003em_sub2-\u003em_bounds.x;\n    \n    // initialize all cells\n    for(c=0; c\u003cg_place_numCells; c++) if (g_place_concreteCells[c]) {\n      if (g_place_concreteCells[c]-\u003em_x \u003c initial_cut)\n        partitionAssignment[c] = 0;\n      else\n        partitionAssignment[c] = 1;\n    }\n  \n    // initialize cells in partition 1\n    for(t=0; t\u003cparent-\u003em_sub1-\u003em_numMembers; t++) if (parent-\u003em_sub1-\u003em_members[t]) {\n      cell = parent-\u003em_sub1-\u003em_members[t];\n      vertexWeights[cell-\u003em_id] = getCellArea(cell);\n      // pay attention to cells that are close to the cut\n      if (abs(cell-\u003em_x-initial_cut) \u003c parent-\u003em_bounds.w*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        partitionAssignment[cell-\u003em_id] = -1;\n      }\n    }\n    \n    // initialize cells in partition 2\n    for(t=0; t\u003cparent-\u003em_sub2-\u003em_numMembers; t++) if (parent-\u003em_sub2-\u003em_members[t]) {\n      cell = parent-\u003em_sub2-\u003em_members[t];\n      vertexWeights[cell-\u003em_id] = getCellArea(cell);\n      // pay attention to cells that are close to the cut\n      if (abs(cell-\u003em_x-initial_cut) \u003c parent-\u003em_bounds.w*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        partitionAssignment[cell-\u003em_id] = -1;\n      }        \n    }\n    \n  } else {\n    // horizontal\n    initial_cut = parent-\u003em_sub2-\u003em_bounds.y;\n    \n    // initialize all cells\n    for(c=0; c\u003cg_place_numCells; c++) if (g_place_concreteCells[c]) {\n      if (g_place_concreteCells[c]-\u003em_y \u003c initial_cut)\n        partitionAssignment[c] = 0;\n      else\n        partitionAssignment[c] = 1;\n    }\n    \n    // initialize cells in partition 1\n    for(t=0; t\u003cparent-\u003em_sub1-\u003em_numMembers; t++) if (parent-\u003em_sub1-\u003em_members[t]) {\n      cell = parent-\u003em_sub1-\u003em_members[t];\n      vertexWeights[cell-\u003em_id] = getCellArea(cell);\n      // pay attention to cells that are close to the cut\n      if (abs(cell-\u003em_y-initial_cut) \u003c parent-\u003em_bounds.h*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        partitionAssignment[cell-\u003em_id] = -1;\n      }\n    }\n    \n    // initialize cells in partition 2\n    for(t=0; t\u003cparent-\u003em_sub2-\u003em_numMembers; t++) if (parent-\u003em_sub2-\u003em_members[t]) {\n      cell = parent-\u003em_sub2-\u003em_members[t];\n      vertexWeights[cell-\u003em_id] = getCellArea(cell);\n      // pay attention to cells that are close to the cut\n      if (abs(cell-\u003em_y-initial_cut) \u003c parent-\u003em_bounds.h*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        partitionAssignment[cell-\u003em_id] = -1;\n      }        \n    }\n  }\n\n  options[0] = 1;  // any non-default values?\n  options[1] = 3; // num bisections\n  options[2] = 1;  // grouping scheme\n  options[3] = 1;  // refinement scheme\n  options[4] = 1;  // cycle refinement scheme\n  options[5] = 0;  // reconstruction scheme\n  options[6] = 0;  // fixed assignments?\n  options[7] = 12261980; // random seed\n  options[8] = 0;  // debugging level\n\n  edgeConnections = (int *)malloc(sizeof(int)*numConnections);\n\n  i = 0;\n  for(n=0; n\u003cg_place_numNets; n++) if (g_place_concreteNets[n]) {\n    if (g_place_concreteNets[n]-\u003em_numTerms \u003e 1)\n      for(t=0; t\u003cg_place_concreteNets[n]-\u003em_numTerms; t++)\n        edgeConnections[i++] = g_place_concreteNets[n]-\u003em_terms[t]-\u003em_id;\n  }\n\n  HMETIS_PartRecursive(g_place_numCells, numEdges, vertexWeights,\n               edgeDegree, edgeConnections, NULL,\n               2, (int)(100*MAX_PARTITION_NONSYMMETRY),\n               options, partitionAssignment, \u0026afterCuts);\n    \n  /*\n  printf(\"HMET-20 : \\t\\t\\tbalance before %d / %d ... \", parent-\u003em_sub1-\u003em_numMembers,\n         parent-\u003em_sub2-\u003em_numMembers);\n  */\n\n  // reassign members to subpartitions\n  parent-\u003em_sub1-\u003em_numMembers = 0;\n  parent-\u003em_sub1-\u003em_area = 0;\n  parent-\u003em_sub2-\u003em_numMembers = 0;\n  parent-\u003em_sub2-\u003em_area = 0;\n  parent-\u003em_sub1-\u003em_members = (ConcreteCell**)realloc(parent-\u003em_sub1-\u003em_members, \n       sizeof(ConcreteCell*)*parent-\u003em_numMembers); \n  parent-\u003em_sub2-\u003em_members = (ConcreteCell**)realloc(parent-\u003em_sub2-\u003em_members, \n       sizeof(ConcreteCell*)*parent-\u003em_numMembers); \n \n  for(t=0; t\u003cparent-\u003em_numMembers; t++) if (parent-\u003em_members[t]) {\n    cell = parent-\u003em_members[t];\n    area = getCellArea(cell);\n    if (partitionAssignment[cell-\u003em_id] == 0) {\n      parent-\u003em_sub1-\u003em_members[parent-\u003em_sub1-\u003em_numMembers++] = cell;\n      parent-\u003em_sub1-\u003em_area += area;\n    }\n    else {\n      parent-\u003em_sub2-\u003em_members[parent-\u003em_sub2-\u003em_numMembers++] = cell;\n      parent-\u003em_sub2-\u003em_area += area;\n    }\n  }\n  /*\n  printf(\"after %d / %d\\n\", parent-\u003em_sub1-\u003em_numMembers,\n         parent-\u003em_sub2-\u003em_numMembers);\n  */\n\n  // cout \u003c\u003c \"HMET-21 : \\t\\t\\tloc: \" \u003c\u003c initial_cut \u003c\u003c  \" targetting: \" \u003c\u003c targets*100/parent-\u003em_members.length() \u003c\u003c \"%\" \u003c\u003c endl;\n  // cout \u003c\u003c \"HMET-22 : \\t\\t\\tstarting cuts= \" \u003c\u003c beforeCuts \u003c\u003c \" final cuts= \" \u003c\u003c afterCuts \u003c\u003c endl;\n\n  free(edgeConnections);\n  free(vertexWeights);\n  free(edgeDegree);\n  free(partitionAssignment);\n#endif\n}",
+      "Draft": "func repartitionHMetis(parent *Partition) {\n#if defined(NO_HMETIS)\n  printf(\"QPAR_02 : \\t\\tERROR: hMetis not available.  Ignoring.\\n\");\n#else\n\n  int n,c,t, i;\n  float area;\n  int *edgeConnections = NULL;\n  int *partitionAssignment = (int *)calloc(g_place_numCells, sizeof(int));\n  int *vertexWeights = (int *)calloc(g_place_numCells, sizeof(int));\n  int *edgeDegree = (int *)malloc(sizeof(int)*(g_place_numNets+1));\n  int numConnections = 0;\n  int numEdges = 0;\n  float initial_cut;\n  int targets = 0;\n  ConcreteCell *cell = NULL;\n  int options[9];\n  int afterCuts = 0;\n\n  assert(parent);\n  assert(parent-\u003em_sub1);\n  assert(parent-\u003em_sub2);\n\n  printf(\"QPAR-02 : \\t\\trepartitioning with hMetis\\n\");\n\n  // count edges\n  edgeDegree[0] = 0;\n  for(n=0; n\u003cg_place_numNets; n++) if (g_place_concreteNets[n])\n    if (g_place_concreteNets[n]-\u003em_numTerms \u003e 1) {\n      numConnections += g_place_concreteNets[n]-\u003em_numTerms;\n      edgeDegree[++numEdges] = numConnections;\n    }\n  \n  if (parent-\u003em_vertical) {\n    // vertical\n    initial_cut = parent-\u003em_sub2-\u003em_bounds.x;\n    \n    // initialize all cells\n    for(c=0; c\u003cg_place_numCells; c++) if (g_place_concreteCells[c]) {\n      if (g_place_concreteCells[c]-\u003em_x \u003c initial_cut)\n        partitionAssignment[c] = 0;\n      else\n        partitionAssignment[c] = 1;\n    }\n  \n    // initialize cells in partition 1\n    for(t=0; t\u003cparent-\u003em_sub1-\u003em_numMembers; t++) if (parent-\u003em_sub1-\u003em_members[t]) {\n      cell = parent-\u003em_sub1-\u003em_members[t];\n      vertexWeights[cell-\u003em_id] = getCellArea(cell);\n      // pay attention to cells that are close to the cut\n      if (abs(cell-\u003em_x-initial_cut) \u003c parent-\u003em_bounds.w*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        partitionAssignment[cell-\u003em_id] = -1;\n      }\n    }\n    \n    // initialize cells in partition 2\n    for(t=0; t\u003cparent-\u003em_sub2-\u003em_numMembers; t++) if (parent-\u003em_sub2-\u003em_members[t]) {\n      cell = parent-\u003em_sub2-\u003em_members[t];\n      vertexWeights[cell-\u003em_id] = getCellArea(cell);\n      // pay attention to cells that are close to the cut\n      if (abs(cell-\u003em_x-initial_cut) \u003c parent-\u003em_bounds.w*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        partitionAssignment[cell-\u003em_id] = -1;\n      }        \n    }\n    \n  } else {\n    // horizontal\n    initial_cut = parent-\u003em_sub2-\u003em_bounds.y;\n    \n    // initialize all cells\n    for(c=0; c\u003cg_place_numCells; c++) if (g_place_concreteCells[c]) {\n      if (g_place_concreteCells[c]-\u003em_y \u003c initial_cut)\n        partitionAssignment[c] = 0;\n      else\n        partitionAssignment[c] = 1;\n    }\n    \n    // initialize cells in partition 1\n    for(t=0; t\u003cparent-\u003em_sub1-\u003em_numMembers; t++) if (parent-\u003em_sub1-\u003em_members[t]) {\n      cell = parent-\u003em_sub1-\u003em_members[t];\n      vertexWeights[cell-\u003em_id] = getCellArea(cell);\n      // pay attention to cells that are close to the cut\n      if (abs(cell-\u003em_y-initial_cut) \u003c parent-\u003em_bounds.h*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        partitionAssignment[cell-\u003em_id] = -1;\n      }\n    }\n    \n    // initialize cells in partition 2\n    for(t=0; t\u003cparent-\u003em_sub2-\u003em_numMembers; t++) if (parent-\u003em_sub2-\u003em_members[t]) {\n      cell = parent-\u003em_sub2-\u003em_members[t];\n      vertexWeights[cell-\u003em_id] = getCellArea(cell);\n      // pay attention to cells that are close to the cut\n      if (abs(cell-\u003em_y-initial_cut) \u003c parent-\u003em_bounds.h*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        partitionAssignment[cell-\u003em_id] = -1;\n      }        \n    }\n  }\n\n  options[0] = 1;  // any non-default values?\n  options[1] = 3; // num bisections\n  options[2] = 1;  // grouping scheme\n  options[3] = 1;  // refinement scheme\n  options[4] = 1;  // cycle refinement scheme\n  options[5] = 0;  // reconstruction scheme\n  options[6] = 0;  // fixed assignments?\n  options[7] = 12261980; // random seed\n  options[8] = 0;  // debugging level\n\n  edgeConnections = (int *)malloc(sizeof(int)*numConnections);\n\n  i = 0;\n  for(n=0; n\u003cg_place_numNets; n++) if (g_place_concreteNets[n]) {\n    if (g_place_concreteNets[n]-\u003em_numTerms \u003e 1)\n      for(t=0; t\u003cg_place_concreteNets[n]-\u003em_numTerms; t++)\n        edgeConnections[i++] = g_place_concreteNets[n]-\u003em_terms[t]-\u003em_id;\n  }\n\n  HMETIS_PartRecursive(g_place_numCells, numEdges, vertexWeights,\n               edgeDegree, edgeConnections, NULL,\n               2, (int)(100*MAX_PARTITION_NONSYMMETRY),\n               options, partitionAssignment, \u0026afterCuts);\n    \n  /*\n  printf(\"HMET-20 : \\t\\t\\tbalance before %d / %d ... \", parent-\u003em_sub1-\u003em_numMembers,\n         parent-\u003em_sub2-\u003em_numMembers);\n  */\n\n  // reassign members to subpartitions\n  parent-\u003em_sub1-\u003em_numMembers = 0;\n  parent-\u003em_sub1-\u003em_area = 0;\n  parent-\u003em_sub2-\u003em_numMembers = 0;\n  parent-\u003em_sub2-\u003em_area = 0;\n  parent-\u003em_sub1-\u003em_members = (ConcreteCell**)realloc(parent-\u003em_sub1-\u003em_members, \n       sizeof(ConcreteCell*)*parent-\u003em_numMembers); \n  parent-\u003em_sub2-\u003em_members = (ConcreteCell**)realloc(parent-\u003em_sub2-\u003em_members, \n       sizeof(ConcreteCell*)*parent-\u003em_numMembers); \n \n  for(t=0; t\u003cparent-\u003em_numMembers; t++) if (parent-\u003em_members[t]) {\n    cell = parent-\u003em_members[t];\n    area = getCellArea(cell);\n    if (partitionAssignment[cell-\u003em_id] == 0) {\n      parent-\u003em_sub1-\u003em_members[parent-\u003em_sub1-\u003em_numMembers++] = cell;\n      parent-\u003em_sub1-\u003em_area += area;\n    }\n    else {\n      parent-\u003em_sub2-\u003em_members[parent-\u003em_sub2-\u003em_numMembers++] = cell;\n      parent-\u003em_sub2-\u003em_area += area;\n    }\n  }\n  /*\n  printf(\"after %d / %d\\n\", parent-\u003em_sub1-\u003em_numMembers,\n         parent-\u003em_sub2-\u003em_numMembers);\n  */\n\n  // cout \u003c\u003c \"HMET-21 : \\t\\t\\tloc: \" \u003c\u003c initial_cut \u003c\u003c  \" targetting: \" \u003c\u003c targets*100/parent-\u003em_members.length() \u003c\u003c \"%\" \u003c\u003c endl;\n  // cout \u003c\u003c \"HMET-22 : \\t\\t\\tstarting cuts= \" \u003c\u003c beforeCuts \u003c\u003c \" final cuts= \" \u003c\u003c afterCuts \u003c\u003c endl;\n\n  free(edgeConnections);\n  free(vertexWeights);\n  free(edgeDegree);\n  free(partitionAssignment);\n#endif\n}"
+    },
+    {
+      "Name": "repartitionFM",
+      "Start": 13675,
+      "End": 26357,
+      "BodyStart": 13713,
+      "Original": "void repartitionFM(Partition *parent) {\n#if 0\n    assert(!parent-\u003eleaf \u0026\u0026 parent-\u003em_sub1-\u003eleaf \u0026\u0026 parent-\u003em_sub2-\u003eleaf);\n\n    // count of each net's number of cells in each bipartition\n    int count_1[m_design-\u003enets.length()];\n    memset(count_1, 0, sizeof(int)*m_design-\u003enets.length());\n    int count_2[m_design-\u003enets.length()];\n    memset(count_2, 0, sizeof(int)*m_design-\u003enets.length());\n\n    FM_cell target[m_design-\u003ecells.length()];\n    memset(target, 0, sizeof(FM_cell)*m_design-\u003ecells.length());\n    FM_cell *bin[FM_MAX_BIN+1];\n    FM_cell *locked = 0;\n    memset(bin, 0, sizeof(FM_cell *)*(FM_MAX_BIN+1));\n\n    int max_gain = 0;\n    int before_cuts = 0, current_cuts = 0;\n    double initial_cut;\n    int targets = 0;\n    long cell_id;\n    double halfArea = parent-\u003em_area / 2.0;\n    double areaFlexibility = parent-\u003em_area * MAX_PARTITION_NONSYMMETRY;\n    ConcreteNet *net;\n\n    // INITIALIZATION\n    //   select cells to partition\n\n    if (parent-\u003evertical) {\n    // vertical\n\n    initial_cut = parent-\u003em_sub2-\u003em_bounds.x;\n\n    // initialize all cells\n    for(h::list\u003cConcreteCell *\u003e::iterator it = rootPartition-\u003em_members.begin(); !it; it++) {\n        cell_id = (*it)-\u003egetID();\n        if ((*it)-\u003etemp_x \u003c initial_cut)\n        target[cell_id].loc = -1;\n        else\n        target[cell_id].loc = -2;\n        target[cell_id].cell = *it;\n        target[cell_id].gain = 0;\n    }\n\n    // initialize cells in partition 1\n    for(h::list\u003cConcreteCell *\u003e::iterator it = parent-\u003em_sub1-\u003em_members.begin(); !it; it++) {\n        cell_id = (*it)-\u003egetID();\n        // pay attention to cells that are close to the cut\n        if (abs((*it)-\u003etemp_x-initial_cut) \u003c parent-\u003em_bounds.w*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        target[cell_id].loc = 1;\n        }\n    }\n\n    // initialize cells in partition 2\n    for(h::list\u003cConcreteCell *\u003e::iterator it = parent-\u003em_sub2-\u003em_members.begin(); !it; it++) {\n        cell_id = (*it)-\u003egetID();\n        // pay attention to cells that are close to the cut\n        if (abs((*it)-\u003etemp_x-initial_cut) \u003c parent-\u003em_bounds.w*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        target[cell_id].loc = 2;\n        }        \n    }\n\n       // count the number of cells on each side of the partition for every net \n    for(h::hash_map\u003cConcreteNet *\u003e::iterator n_it = m_design-\u003enets.begin(); !n_it; n_it++) {\n        for(ConcretePinList::iterator p_it = (net = *n_it)-\u003egetPins().begin(); !p_it; p_it++)\n        if (abs(target[(*p_it)-\u003egetCell()-\u003egetID()].loc) == 1)\n            count_1[net-\u003egetID()]++;\n        else if (abs(target[(*p_it)-\u003egetCell()-\u003egetID()].loc) == 2)\n            count_2[net-\u003egetID()]++;\n        else if ((*p_it)-\u003egetCell()-\u003etemp_x \u003c initial_cut) \n            count_1[net-\u003egetID()]++;\n        else\n            count_2[net-\u003egetID()]++;\n        if (count_1[net-\u003egetID()] \u003e 0 \u0026\u0026 count_2[net-\u003egetID()] \u003e 0) before_cuts++;\n    }\n    \n    } else {\n    // horizontal\n\n    initial_cut = parent-\u003em_sub2-\u003em_bounds.y;\n\n    // initialize all cells\n    for(h::list\u003cConcreteCell *\u003e::iterator it = rootPartition-\u003em_members.begin(); !it; it++) {\n        cell_id = (*it)-\u003egetID();\n        if ((*it)-\u003etemp_y \u003c initial_cut)\n        target[cell_id].loc = -1;\n        else\n        target[cell_id].loc = -2;\n        target[cell_id].cell = *it;\n        target[cell_id].gain = 0;\n    }\n\n    // initialize cells in partition 1\n    for(h::list\u003cConcreteCell *\u003e::iterator it = parent-\u003em_sub1-\u003em_members.begin(); !it; it++) {\n        cell_id = (*it)-\u003egetID();\n        // pay attention to cells that are close to the cut\n        if (abs((*it)-\u003etemp_y-initial_cut) \u003c parent-\u003em_bounds.h*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        target[cell_id].loc = 1;\n        }\n    }\n\n    // initialize cells in partition 2\n    for(h::list\u003cConcreteCell *\u003e::iterator it = parent-\u003em_sub2-\u003em_members.begin(); !it; it++) {\n        cell_id = (*it)-\u003egetID();\n        // pay attention to cells that are close to the cut\n        if (abs((*it)-\u003etemp_y-initial_cut) \u003c parent-\u003em_bounds.h*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        target[cell_id].loc = 2;\n        }        \n    }\n\n       // count the number of cells on each side of the partition for every net \n    for(h::hash_map\u003cConcreteNet *\u003e::iterator n_it = m_design-\u003enets.begin(); !n_it; n_it++) {\n        for(ConcretePinList::iterator p_it = (net = *n_it)-\u003egetPins().begin(); !p_it; p_it++)\n        if (abs(target[(*p_it)-\u003egetCell()-\u003egetID()].loc) == 1)\n            count_1[net-\u003egetID()]++;\n        else if (abs(target[(*p_it)-\u003egetCell()-\u003egetID()].loc) == 2)\n            count_2[net-\u003egetID()]++;\n        else if ((*p_it)-\u003egetCell()-\u003etemp_y \u003c initial_cut) \n            count_1[net-\u003egetID()]++;\n        else\n            count_2[net-\u003egetID()]++;\n        if (count_1[net-\u003egetID()] \u003e 0 \u0026\u0026 count_2[net-\u003egetID()] \u003e 0) before_cuts++;\n    }\n    }\n\n    // INITIAL GAIN CALCULATION\n    for(long id=0; id \u003c m_design-\u003ecells.length(); id++)\n    if (target[id].loc \u003e 0) {\n        assert(target[id].cell != 0);\n        assert(target[id].gain == 0);\n\n        // examine counts for the net on each pin\n        for(ConcretePinMap::iterator p_it = target[id].cell-\u003egetPins().begin(); !p_it; p_it++)\n        if ((*p_it)-\u003eisAttached()) {\n            int n_id = (*p_it)-\u003egetNet()-\u003egetID();\n            if (target[id].loc == 1 \u0026\u0026 count_1[n_id] == 1) target[id].gain++;\n            if (target[id].loc == 1 \u0026\u0026 count_2[n_id] == 0) target[id].gain--;\n            if (target[id].loc == 2 \u0026\u0026 count_1[n_id] == 0) target[id].gain--;\n            if (target[id].loc == 2 \u0026\u0026 count_2[n_id] == 1) target[id].gain++;\n        }\n\n        assert(target[id].cell-\u003egetPins().length() \u003e= abs(target[id].gain));\n\n        // add it to a bin\n        int bin_num = min(max(0, target[id].gain),FM_MAX_BIN);\n        max_gain = max(max_gain, bin_num);\n\n        assert(bin_num \u003e= 0 \u0026\u0026 bin_num \u003c= FM_MAX_BIN);\n        target[id].next = bin[bin_num];\n        target[id].prev = 0;\n        if (bin[bin_num] != 0)\n        bin[bin_num]-\u003eprev = \u0026target[id];\n        bin[bin_num] = \u0026target[id];\n    }\n\n    // OUTER F-M LOOP\n    current_cuts = before_cuts;\n    int num_moves = 1;\n    int pass = 0;\n    while(num_moves \u003e 0 \u0026\u0026 pass \u003c FM_MAX_PASSES) {\n    pass++;\n    num_moves = 0;    \n\n    // check_list(bin, locked, targets); // DEBUG\n\n    // move all locked cells back\n    int moved_back = 0;\n    while(locked != 0) {\n        FM_cell *current = locked;\n        current-\u003elocked = false;\n\n        int bin_num = min(max(0, current-\u003egain),FM_MAX_BIN);       \n        max_gain = max(max_gain, bin_num);\n\n        locked = current-\u003enext;\n        if (locked != 0)\n        locked-\u003eprev = 0;\n\n        if (bin[bin_num] != 0)\n        bin[bin_num]-\u003eprev = current;\n        current-\u003enext = bin[bin_num];\n        bin[bin_num] = current;\n\n        moved_back++;\n    }\n    // cout \u003c\u003c \"\\tmoved back: \" \u003c\u003c moved_back \u003c\u003c endl;\n    // check_list(bin, locked, targets); // DEBUG    \n    \n    max_gain = FM_MAX_BIN;\n    while(bin[max_gain] == 0 \u0026\u0026 max_gain \u003e 0) max_gain--;\n\n    // INNER F-M LOOP (single pass)\n    while(1) {\n\n        int bin_num = FM_MAX_BIN;\n        FM_cell *current = bin[bin_num];\n\n        // look for next cell to move\n        while (bin_num \u003e 0 \u0026\u0026 (current == 0 || \n        (current-\u003eloc==1 \u0026\u0026 current-\u003ecell-\u003egetArea()+parent-\u003em_sub2-\u003em_area \u003e halfArea+areaFlexibility) ||\n        (current-\u003eloc==2 \u0026\u0026 current-\u003ecell-\u003egetArea()+parent-\u003em_sub1-\u003em_area \u003e halfArea+areaFlexibility))) {\n\n        if (current == 0) current = bin[--bin_num]; else current = current-\u003enext;        \n        }\n        if (bin_num == 0)\n        break;\n\n        num_moves++;\n        current-\u003elocked = true;\n        // cout \u003c\u003c \"moving cell \" \u003c\u003c current-\u003ecell-\u003egetID() \u003c\u003c \" gain=\" \u003c\u003c current-\u003egain \u003c\u003c \" pins= \" \u003c\u003c current-\u003ecell-\u003egetPins().length() \u003c\u003c \" from \" \u003c\u003c current-\u003eloc;\n\n        // change partition marking and areas\n        if (current-\u003eloc == 1) {\n        current-\u003eloc = 2;\n        parent-\u003em_sub1-\u003em_area -= current-\u003ecell-\u003egetArea();\n        parent-\u003em_sub2-\u003em_area += current-\u003ecell-\u003egetArea();\n\n        // update partition counts on all nets attached to this cell\n        for(ConcretePinMap::iterator p_it = current-\u003ecell-\u003egetPins().begin(); \n            !p_it; p_it++) {\n            \n            if (!(*p_it)-\u003eisAttached()) // ignore unattached pins\n            continue;\n            net = (*p_it)-\u003egetNet();\n            \n            count_1[net-\u003egetID()]--;\n            count_2[net-\u003egetID()]++;\n\n            // cout \u003c\u003c \"\\tnet \" \u003c\u003c net-\u003egetID() \u003c\u003c \" was \" \u003c\u003c count_1[net-\u003egetID()]+1 \u003c\u003c \"/\" \u003c\u003c count_2[net-\u003egetID()]-1 \u003c\u003c \" now \" \u003c\u003c count_1[net-\u003egetID()] \u003c\u003c \"/\" \u003c\u003c count_2[net-\u003egetID()] \u003c\u003c endl;\n\n            // if net becomes critical, update gains on attached cells and resort bins\n            if (count_1[net-\u003egetID()] == 0) { current_cuts--; FM_updateGains(net, 2, -1, target, bin, count_1, count_2); }\n            if (count_2[net-\u003egetID()] == 1) { current_cuts++; FM_updateGains(net, 1, -1, target, bin, count_1, count_2); }\n            \n            // check_list(bin, locked, targets); // DEBUG\n        }\n\n        } else {\n        current-\u003eloc = 1;\n        parent-\u003em_sub2-\u003em_area -= current-\u003ecell-\u003egetArea();\n        parent-\u003em_sub1-\u003em_area += current-\u003ecell-\u003egetArea();\n\n        // update gains on all nets attached to this cell\n        for(ConcretePinMap::iterator p_it = current-\u003ecell-\u003egetPins().begin(); \n            !p_it; p_it++) {\n            \n            if (!(*p_it)-\u003eisAttached()) // ignore unattached pins\n            continue;\n            net = (*p_it)-\u003egetNet();\n            count_2[net-\u003egetID()]--;\n            count_1[net-\u003egetID()]++;\n\n            // cout \u003c\u003c \"\\tnet \" \u003c\u003c net-\u003egetID() \u003c\u003c \" was \" \u003c\u003c count_1[net-\u003egetID()]-1 \u003c\u003c \"/\" \u003c\u003c count_2[net-\u003egetID()]+1 \u003c\u003c \" now \" \u003c\u003c count_1[net-\u003egetID()] \u003c\u003c \"/\" \u003c\u003c count_2[net-\u003egetID()] \u003c\u003c endl;\n\n            if (count_2[net-\u003egetID()] == 0) { current_cuts--; FM_updateGains(net, 2, -1, target, bin, count_1, count_2); }\n            if (count_1[net-\u003egetID()] == 1) { current_cuts++; FM_updateGains(net, 1, -1, target, bin, count_1, count_2); }\n        \n            // check_list(bin, locked, targets); // DEBUG\n        }\n        }\n\n        //cout \u003c\u003c \" cuts=\" \u003c\u003c current_cuts \u003c\u003c endl;\n\n        // move current to locked\n\n/*\n        cout \u003c\u003c \"b=\" \u003c\u003c bin[bin_num] \u003c\u003c \" \";\n        cout \u003c\u003c current-\u003eprev \u003c\u003c \"-\u003e \";\n        if (current-\u003eprev == 0)\n        cout \u003c\u003c \"X\";\n        else cout \u003c\u003c current-\u003eprev-\u003enext;\n        cout  \u003c\u003c \"=\" \u003c\u003c current \u003c\u003c \"=\";\n        if (current-\u003enext == 0)\n        cout \u003c\u003c \"X\";\n        else\n        cout \u003c\u003c current-\u003enext-\u003eprev;\n        cout \u003c\u003c \" -\u003e\" \u003c\u003c current-\u003enext \u003c\u003c endl;\n*/\n\n        if (bin[bin_num] == current)\n        bin[bin_num] = current-\u003enext;\n        if (current-\u003eprev != 0)\n        current-\u003eprev-\u003enext = current-\u003enext;\n        if (current-\u003enext != 0)\n        current-\u003enext-\u003eprev = current-\u003eprev;\n\n/*\n        cout \u003c\u003c \"b=\" \u003c\u003c bin[bin_num] \u003c\u003c \" \";\n        cout \u003c\u003c current-\u003eprev \u003c\u003c \"-\u003e \";\n        if (current-\u003eprev == 0)\n        cout \u003c\u003c \"X\";\n        else cout \u003c\u003c current-\u003eprev-\u003enext;\n        cout  \u003c\u003c \"=\" \u003c\u003c current \u003c\u003c \"=\";\n        if (current-\u003enext == 0)\n        cout \u003c\u003c \"X\";\n        else\n        cout \u003c\u003c current-\u003enext-\u003eprev;\n        cout \u003c\u003c \" -\u003e\" \u003c\u003c current-\u003enext \u003c\u003c endl;\n*/\n\n        current-\u003eprev = 0;\n        current-\u003enext = locked;\n        if (locked != 0)\n        locked-\u003eprev = current;\n        locked = current;\n        \n        // check_list(bin, locked, targets); // DEBUG    \n\n        // update max_gain\n        max_gain = FM_MAX_BIN;\n        while(bin[max_gain] == 0 \u0026\u0026 max_gain \u003e 0) max_gain--;\n    }\n\n    // cout \u003c\u003c \"\\tcurrent cuts= \" \u003c\u003c current_cuts \u003c\u003c \" moves= \" \u003c\u003c num_moves \u003c\u003c endl;\n    }\n\n    // reassign members to subpartitions\n    cout \u003c\u003c \"FIDM-20 : \\tbalance before \" \u003c\u003c parent-\u003em_sub1-\u003em_members.length() \u003c\u003c \"/\"\n       \u003c\u003c parent-\u003em_sub2-\u003em_members.length() \u003c\u003c \" \";\n    parent-\u003em_sub1-\u003em_members.clear();\n    parent-\u003em_sub1-\u003em_area = 0;\n    parent-\u003em_sub2-\u003em_members.clear();\n    parent-\u003em_sub2-\u003em_area = 0;\n    for(h::list\u003cConcreteCell *\u003e::iterator it = parent-\u003em_members.begin(); !it; it++) {\n    if (target[(*it)-\u003egetID()].loc == 1 || target[(*it)-\u003egetID()].loc == -1) {\n        parent-\u003em_sub1-\u003em_members.push_back(*it);\n        parent-\u003em_sub1-\u003em_area += (*it)-\u003egetArea();\n    }\n    else {\n        parent-\u003em_sub2-\u003em_members.push_back(*it);\n        parent-\u003em_sub2-\u003em_area += (*it)-\u003egetArea();\n    }\n    }\n    cout \u003c\u003c \" after \" \u003c\u003c parent-\u003em_sub1-\u003em_members.length() \u003c\u003c \"/\"\n       \u003c\u003c parent-\u003em_sub2-\u003em_members.length() \u003c\u003c endl;\n\n\n    cout \u003c\u003c \"FIDM-21 : \\tloc: \" \u003c\u003c initial_cut \u003c\u003c  \" targetting: \" \u003c\u003c targets*100/parent-\u003em_members.length() \u003c\u003c \"%\" \u003c\u003c endl;\n    cout \u003c\u003c \"FIDM-22 : \\tstarting cuts= \" \u003c\u003c before_cuts \u003c\u003c \" final cuts= \" \u003c\u003c current_cuts \u003c\u003c endl;\n#endif\n}",
+      "Draft": "func repartitionFM(parent *Partition) {\n     \n                                                                          \n\n                                                              \n                                         \n                                                            \n                                         \n                                                            \n\n                                             \n                                                                \n                               \n                        \n                                                     \n\n                     \n                                          \n                       \n                    \n                 \n                                           \n                                                                        \n                     \n\n                     \n                                  \n\n                           \n               \n\n                                             \n\n                           \n                                                                                             \n                                 \n                                        \n                                 \n            \n                                 \n                                   \n                                 \n     \n\n                                      \n                                                                                              \n                                 \n                                                           \n                                                                                              \n                  \n                                \n         \n     \n\n                                      \n                                                                                              \n                                 \n                                                           \n                                                                                              \n                  \n                                \n                 \n     \n\n                                                                                \n                                                                                            \n                                                                                             \n                                                              \n                                    \n                                                                   \n                                    \n                                                           \n                                    \n            \n                                    \n                                                                                  \n     \n    \n            \n                 \n\n                                             \n\n                           \n                                                                                             \n                                 \n                                        \n                                 \n            \n                                 \n                                   \n                                 \n     \n\n                                      \n                                                                                              \n                                 \n                                                           \n                                                                                              \n                  \n                                \n         \n     \n\n                                      \n                                                                                              \n                                 \n                                                           \n                                                                                              \n                  \n                                \n                 \n     \n\n                                                                                \n                                                                                            \n                                                                                             \n                                                              \n                                    \n                                                                   \n                                    \n                                                           \n                                    \n            \n                                    \n                                                                                  \n     \n     \n\n                               \n                                                       \n                             \n                                     \n                                     \n\n                                                 \n                                                                                              \n                                    \n                                                  \n                                                                             \n                                                                             \n                                                                             \n                                                                             \n         \n\n                                                                            \n\n                          \n                                                              \n                                          \n\n                                                      \n                                       \n                            \n                              \n                                         \n                                   \n     \n\n                     \n                               \n                      \n                 \n                                                  \n           \n                      \n\n                                                 \n\n                                 \n                       \n                        \n                                  \n                                \n\n                                                                   \n                                          \n\n                               \n                        \n                         \n\n                              \n                                     \n                                     \n                               \n\n                     \n     \n                                                      \n                                                     \n    \n                          \n                                                         \n\n                                   \n              \n\n                                 \n                                        \n\n                                     \n                                               \n                                                                                                          \n                                                                                                           \n\n                                                                                         \n         \n                         \n              \n\n                    \n                               \n                                                                                                                                                                       \n\n                                             \n                                \n                         \n                                                           \n                                                           \n\n                                                                    \n                                                                              \n                            \n            \n                                                                 \n                     \n                                    \n            \n                                    \n                                    \n\n                                                                                                                                                                                                    \n\n                                                                                      \n                                                                                                                          \n                                                                                                                          \n            \n                                                         \n         \n\n                \n                         \n                                                           \n                                                           \n\n                                                         \n                                                                              \n                            \n            \n                                                                 \n                     \n                                    \n                                    \n                                    \n\n                                                                                                                                                                                                    \n\n                                                                                                                          \n                                                                                                                          \n        \n                                                         \n         \n         \n\n                                                   \n\n                                 \n\n  \n                                            \n                                       \n                               \n                    \n                                         \n                                       \n                               \n                    \n            \n                                    \n                                               \n  \n\n                                    \n                                     \n                               \n                                            \n                               \n                                            \n\n  \n                                            \n                                       \n                               \n                    \n                                         \n                                       \n                               \n                    \n            \n                                    \n                                               \n  \n\n                          \n                               \n                        \n                               \n                         \n        \n                                                         \n\n                          \n                              \n                                                             \n     \n\n                                                                                     \n     \n\n                                        \n                                                                                      \n                                                    \n                                      \n                               \n                                      \n                               \n                                                                                      \n                                                                              \n                                                 \n                                                   \n     \n          \n                                                 \n                                                   \n     \n     \n                                                                  \n                                                     \n\n\n                                                                                                                            \n                                                                                                    \n      \n}"
+    },
+    {
+      "Name": "partitionEqualArea",
+      "Start": 28216,
+      "End": 29626,
+      "BodyStart": 28259,
+      "Original": "void partitionEqualArea(Partition *parent) {\n  float halfArea, area;\n  int i=0;\n  \n  // which way to sort?\n  if (parent-\u003em_vertical)\n    // sort by X position\n    qsort(parent-\u003em_members, (size_t)parent-\u003em_numMembers, sizeof(ConcreteCell*), cellSortByX);\n  else\n    // sort by Y position\n    qsort(parent-\u003em_members, (size_t)parent-\u003em_numMembers, sizeof(ConcreteCell*), cellSortByY);\n\n  // split the list\n  halfArea = parent-\u003em_area*0.5;\n  parent-\u003em_sub1-\u003em_area = 0.0;\n  parent-\u003em_sub1-\u003em_numMembers = 0;\n  parent-\u003em_sub1-\u003em_members = (ConcreteCell**)realloc(parent-\u003em_sub1-\u003em_members, \n                                  sizeof(ConcreteCell*)*parent-\u003em_numMembers);\n  parent-\u003em_sub2-\u003em_area = 0.0;\n  parent-\u003em_sub2-\u003em_numMembers = 0;\n  parent-\u003em_sub2-\u003em_members = (ConcreteCell**)realloc(parent-\u003em_sub2-\u003em_members, \n                                  sizeof(ConcreteCell*)*parent-\u003em_numMembers);\n\n  for(; parent-\u003em_sub1-\u003em_area \u003c halfArea; i++) \n    if (parent-\u003em_members[i]) {\n      area = getCellArea(parent-\u003em_members[i]);\n      parent-\u003em_sub1-\u003em_members[parent-\u003em_sub1-\u003em_numMembers++] = parent-\u003em_members[i];\n      parent-\u003em_sub1-\u003em_area += area;\n  }\n  for(; i\u003cparent-\u003em_numMembers; i++) \n    if (parent-\u003em_members[i]) {\n      area = getCellArea(parent-\u003em_members[i]);\n      parent-\u003em_sub2-\u003em_members[parent-\u003em_sub2-\u003em_numMembers++] = parent-\u003em_members[i];\n      parent-\u003em_sub2-\u003em_area += area;\n    }\n  \n}",
+      "Draft": "func partitionEqualArea(parent *Partition) {\n  var halfArea, area float32;\n  var i int32;\n  \n  // which way to sort?\n  if parent.m_vertical {\n    // sort by X position\n    qsort(parent.m_members, (size_t)parent.m_numMembers, sizeof(ConcreteCell*), cellSortByX);\n  } else {\n    // sort by Y position\n    qsort(parent.m_members, (size_t)parent.m_numMembers, sizeof(ConcreteCell*), cellSortByY); }\n\n  // split the list\n  halfArea = parent.m_area*0.5;\n  parent.m_sub1.m_area = 0.0;\n  parent.m_sub1.m_numMembers = 0;\n  parent.m_sub1.m_members = (ConcreteCell**)realloc(parent.m_sub1.m_members, \n                                    sizeof(ConcreteCell*)*parent.m_numMembers);\n  parent.m_sub2.m_area = 0.0;\n  parent.m_sub2.m_numMembers = 0;\n  parent.m_sub2.m_members = (ConcreteCell**)realloc(parent.m_sub2.m_members, \n                                    sizeof(ConcreteCell*)*parent.m_numMembers);\n\n  for ; parent.m_sub1.m_area \u003c halfArea; i++ { \n    if parent.m_members[i] {\n      area = getCellArea(parent.m_members[i]);\n      parent.m_sub1.m_members[parent.m_sub1.m_numMembers++] = parent.m_members[i];\n      parent.m_sub1.m_area += area;\n  }\n  }\n  for ; i\u003cparent.m_numMembers; i++ { \n    if parent.m_members[i] {\n      area = getCellArea(parent.m_members[i]);\n      parent.m_sub2.m_members[parent.m_sub2.m_numMembers++] = parent.m_members[i];\n      parent.m_sub2.m_area += area;\n    }\n  }\n  \n}"
+    },
+    {
+      "Name": "partitionScanlineMincut",
+      "Start": 29898,
+      "End": 32954,
+      "BodyStart": 29946,
+      "Original": "void partitionScanlineMincut(Partition *parent) {\n#if 0\n  int current_cuts = 0;\n  int minimum_cuts = INT_MAX;\n  ConcreteCell *minimum_location = NULL;\n  double currentArea = 0, halfArea = parent-\u003em_area * 0.5;\n  double areaFlexibility = parent-\u003em_area * MAX_PARTITION_NONSYMMETRY;\n  double newLine, oldLine = -DBL_MAX;\n\n  for(ConcreteNetList::iterator n_it = m_design-\u003enets.begin(); !n_it; n_it++)\n    (*n_it)-\u003em_mark = 0;\n  for(h::list\u003cConcreteCell *\u003e::iterator i = parent-\u003em_members.begin();\n      !i.isDone(); i++) {\n    assert(*i);\n    for(ConcretePinMap::iterator j = (*i)-\u003egetPins().begin();\n    !j.isDone(); j++) {\n      assert(*j);\n      if((*j)-\u003eisAttached()) {\n    (*j)-\u003egetNet()-\u003em_mark = 1;\n      }\n    }\n  }\n\n  if (parent-\u003evertical) {\n    parent-\u003em_members.sort(sortByX);\n    int all1 = 0, all2 = 0;\n    h::list\u003cConcreteCell *\u003e::iterator local = parent-\u003em_members.begin();\n    for(; !local.isDone(); local++) {\n      currentArea += (*local)-\u003egetArea();\n      if (currentArea \u003c halfArea-areaFlexibility)\n    continue;\n      if (currentArea \u003e halfArea+areaFlexibility)\n    break;\n      newLine = (*local)-\u003etemp_x;\n      while(all1 \u003c g_place_numNets \u0026\u0026 allNetsL2[all1]-\u003egetBoundingBox().left() \u003c= newLine) {\n    if(allNetsL2[all1]-\u003em_mark) {\n      current_cuts++;\n    }\n    all1++;\n      }\n      while(all2 \u003c g_place_numNets \u0026\u0026 allNetsR2[all2]-\u003egetBoundingBox().right() \u003c= newLine) {\n    if(allNetsR2[all2]-\u003em_mark) {\n      current_cuts--;\n    }\n    all2++;\n      }\n      if (current_cuts \u003c minimum_cuts) {\n    minimum_cuts = current_cuts;\n    minimum_location = *local;\n      }\n      oldLine = newLine;\n    }\n  }\n  else {\n    parent-\u003em_members.sort(sortByY);\n    int all1 = 0, all2 = 0;\n    h::list\u003cConcreteCell *\u003e::iterator local = parent-\u003em_members.begin();\n    for(; !local.isDone(); local++) {\n      currentArea += (*local)-\u003egetArea();\n      if (currentArea \u003c halfArea-areaFlexibility)\n    continue;\n      if (currentArea \u003e halfArea+areaFlexibility)\n    break;\n      newLine = (*local)-\u003etemp_y;\n      while(all1 \u003c g_place_numNets \u0026\u0026 allNetsB2[all1]-\u003egetBoundingBox().top() \u003c= newLine) {\n    if(allNetsB2[all1]-\u003em_mark) {\n      current_cuts++;\n    }\n    all1++;\n      }\n      while(all2 \u003c g_place_numNets \u0026\u0026 allNetsT2[all2]-\u003egetBoundingBox().bottom() \u003c= newLine) {\n    if(allNetsT2[all2]-\u003em_mark) {\n      current_cuts--;\n    }\n    all2++;\n      }\n      if (current_cuts \u003c minimum_cuts) {\n    minimum_cuts = current_cuts;\n    minimum_location = *local;\n      }\n      oldLine = newLine;\n    }\n  }\n  if (minimum_location == NULL) {\n    return partitionEqualArea(parent);\n  }\n  h::list\u003cConcreteCell *\u003e::iterator it = parent-\u003em_members.begin();\n  parent-\u003em_sub1-\u003em_members.clear();\n  parent-\u003em_sub1-\u003em_area = 0;\n  for(; *it != minimum_location; it++) {\n    parent-\u003em_sub1-\u003em_members.push_front(*it);\n    parent-\u003em_sub1-\u003em_area += (*it)-\u003egetArea();\n  }\n  parent-\u003em_sub2-\u003em_members.clear();\n  parent-\u003em_sub2-\u003em_area = 0;\n  for(; !it; it++) {\n    parent-\u003em_sub2-\u003em_members.push_front(*it);\n    parent-\u003em_sub2-\u003em_area += (*it)-\u003egetArea();\n  }\n#endif\n}",
+      "Draft": "func partitionScanlineMincut(parent *Partition) {\n     \n                       \n                             \n                                        \n                                                          \n                                                                      \n                                     \n\n                                                                             \n                        \n                                                                      \n                         \n               \n                                                             \n                       \n                 \n                              \n                               \n       \n     \n   \n\n                         \n                                    \n                           \n                                                                        \n                                     \n                                         \n                                                 \n             \n                                                 \n          \n                                 \n                                                                                            \n                                 \n                     \n     \n           \n       \n                                                                                             \n                                 \n                     \n     \n           \n       \n                                        \n                                \n                              \n       \n                        \n     \n   \n        \n                                    \n                           \n                                                                        \n                                     \n                                         \n                                                 \n             \n                                                 \n          \n                                 \n                                                                                           \n                                 \n                     \n     \n           \n       \n                                                                                              \n                                 \n                     \n     \n           \n       \n                                        \n                                \n                              \n       \n                        \n     \n   \n                                 \n                                      \n   \n                                                                   \n                                    \n                             \n                                        \n                                              \n                                               \n   \n                                    \n                             \n                    \n                                              \n                                               \n   \n      \n}"
+    },
+    {
+      "Name": "reallocPartition",
+      "Start": 33189,
+      "End": 33640,
+      "BodyStart": 33225,
+      "Original": "void reallocPartition(Partition *p) {\n\n  if (p-\u003em_leaf) {\n    return;\n  }\n\n  // --- INITIAL PARTITION\n\n  if (PARTITION_AREA_ONLY)\n    partitionEqualArea(p);\n  else \n    partitionScanlineMincut(p);\n\n  resizePartition(p);\n\n  // --- PARTITION IMPROVEMENT\n  if (p-\u003em_level \u003c REPARTITION_LEVEL_DEPTH) {\n    if (REPARTITION_HMETIS)\n      repartitionHMetis(p);\n    \n    resizePartition(p);\n  }\n\n  reallocPartition(p-\u003em_sub1);\n  reallocPartition(p-\u003em_sub2);\n}",
+      "Draft": "func reallocPartition(p *Partition) {\n\n  if p.m_leaf {\n    return;\n  }\n\n  // --- INITIAL PARTITION\n\n  if PARTITION_AREA_ONLY {\n    partitionEqualArea(p);\n  } else { \n    partitionScanlineMincut(p); }\n\n  resizePartition(p);\n\n  // --- PARTITION IMPROVEMENT\n  if p.m_level \u003c REPARTITION_LEVEL_DEPTH {\n    if REPARTITION_HMETIS {\n      repartitionHMetis(p); }\n    \n    resizePartition(p);\n  }\n\n  reallocPartition(p.m_sub1);\n  reallocPartition(p.m_sub2);\n}"
+    },
+    {
+      "Name": "resizePartition",
+      "Start": 33910,
+      "End": 34786,
+      "BodyStart": 33945,
+      "Original": "void resizePartition(Partition *p) {\n  // compute the new bounding box\n  p-\u003em_sub1-\u003em_bounds.x = p-\u003em_bounds.x;\n  p-\u003em_sub1-\u003em_bounds.y = p-\u003em_bounds.y;\n  if (p-\u003em_vertical) {\n    p-\u003em_sub1-\u003em_bounds.w = p-\u003em_bounds.w*(p-\u003em_sub1-\u003em_area/p-\u003em_area);\n    p-\u003em_sub1-\u003em_bounds.h = p-\u003em_bounds.h;\n    p-\u003em_sub2-\u003em_bounds.x = p-\u003em_bounds.x + p-\u003em_sub1-\u003em_bounds.w;\n    p-\u003em_sub2-\u003em_bounds.w = p-\u003em_bounds.w*(p-\u003em_sub2-\u003em_area/p-\u003em_area);\n    p-\u003em_sub2-\u003em_bounds.y = p-\u003em_bounds.y;\n    p-\u003em_sub2-\u003em_bounds.h = p-\u003em_bounds.h;\n  } else {\n    p-\u003em_sub1-\u003em_bounds.h = p-\u003em_bounds.h*(p-\u003em_sub1-\u003em_area/p-\u003em_area);\n    p-\u003em_sub1-\u003em_bounds.w = p-\u003em_bounds.w;\n    p-\u003em_sub2-\u003em_bounds.y = p-\u003em_bounds.y + p-\u003em_sub1-\u003em_bounds.h;\n    p-\u003em_sub2-\u003em_bounds.h = p-\u003em_bounds.h*(p-\u003em_sub2-\u003em_area/p-\u003em_area);\n    p-\u003em_sub2-\u003em_bounds.x = p-\u003em_bounds.x;\n    p-\u003em_sub2-\u003em_bounds.w = p-\u003em_bounds.w;\n  }\n}",
+      "Draft": "func resizePartition(p *Partition) {\n  // compute the new bounding box\n  p.m_sub1.m_bounds.x = p.m_bounds.x;\n  p.m_sub1.m_bounds.y = p.m_bounds.y;\n  if p.m_vertical {\n    p.m_sub1.m_bounds.w = p.m_bounds.w*(p.m_sub1.m_area/p.m_area);\n    p.m_sub1.m_bounds.h = p.m_bounds.h;\n    p.m_sub2.m_bounds.x = p.m_bounds.x + p.m_sub1.m_bounds.w;\n    p.m_sub2.m_bounds.w = p.m_bounds.w*(p.m_sub2.m_area/p.m_area);\n    p.m_sub2.m_bounds.y = p.m_bounds.y;\n    p.m_sub2.m_bounds.h = p.m_bounds.h;\n  } else {\n    p.m_sub1.m_bounds.h = p.m_bounds.h*(p.m_sub1.m_area/p.m_area);\n    p.m_sub1.m_bounds.w = p.m_bounds.w;\n    p.m_sub2.m_bounds.y = p.m_bounds.y + p.m_sub1.m_bounds.h;\n    p.m_sub2.m_bounds.h = p.m_bounds.h*(p.m_sub2.m_area/p.m_area);\n    p.m_sub2.m_bounds.x = p.m_bounds.x;\n    p.m_sub2.m_bounds.w = p.m_bounds.w;\n  }\n}"
+    },
+    {
+      "Name": "incrementalSubpartition",
+      "Start": 35140,
+      "End": 36574,
+      "BodyStart": 35233,
+      "Original": "void incrementalSubpartition(Partition *p, ConcreteCell *newCells [], const int numNewCells) {\n  int c;\n  ConcreteCell **newCells1 = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*numNewCells), \n    **newCells2 = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*numNewCells);\n  int numNewCells1 = 0, numNewCells2 = 0;\n  float cut_loc;\n\n  assert(p);\n\n  // add new cells to partition list\n  p-\u003em_members = (ConcreteCell**)realloc(p-\u003em_members, \n       sizeof(ConcreteCell*)*(p-\u003em_numMembers+numNewCells));\n  memcpy(\u0026(p-\u003em_members[p-\u003em_numMembers]), newCells, sizeof(ConcreteCell*)*numNewCells);\n  p-\u003em_numMembers += numNewCells;\n\n  // if is a leaf partition, finished\n  if (p-\u003em_leaf) return;\n\n  // split new cells into sub-partitions based on location\n  if (p-\u003em_vertical) {\n    cut_loc = p-\u003em_sub2-\u003em_bounds.x;\n    for(c=0; c\u003cnumNewCells; c++)\n      if (newCells[c]-\u003em_x \u003c cut_loc)\n        newCells1[numNewCells1++] = newCells[c];\n      else\n        newCells2[numNewCells2++] = newCells[c];\n  } else {\n    cut_loc = p-\u003em_sub2-\u003em_bounds.y;\n    for(c=0; c\u003cnumNewCells; c++)\n      if (newCells[c]-\u003em_y \u003c cut_loc)\n        newCells1[numNewCells1++] = newCells[c];\n      else\n        newCells2[numNewCells2++] = newCells[c];    \n  }\n\n  if (numNewCells1 \u003e 0) incrementalSubpartition(p-\u003em_sub1, newCells1, numNewCells1);\n  if (numNewCells2 \u003e 0) incrementalSubpartition(p-\u003em_sub2, newCells2, numNewCells2);\n\n  free(newCells1);\n  free(newCells2);\n}",
+      "Draft": "func incrementalSubpartition(p *Partition, newCells []*ConcreteCell, numNewCells int32) {\n  var c int32;\n  var newCells1 **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*numNewCells);\n  var newCells2 **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*numNewCells);\n  var numNewCells1, numNewCells2 int32;\n  var cut_loc float32;\n\n  assert((p != nil), \"p\");\n\n  // add new cells to partition list\n  p.m_members = (ConcreteCell**)realloc(p.m_members, \n         sizeof(ConcreteCell*)*(p.m_numMembers+numNewCells));\n  memcpy(\u0026(p.m_members[p.m_numMembers]), newCells, sizeof(ConcreteCell*)*numNewCells);\n  p.m_numMembers += numNewCells;\n\n  // if is a leaf partition, finished\n  if p.m_leaf { return; }\n\n  // split new cells into sub-partitions based on location\n  if p.m_vertical {\n    cut_loc = p.m_sub2.m_bounds.x;\n    for c=0; c\u003cnumNewCells; c++ {\n      if newCells[c].m_x \u003c cut_loc {\n        newCells1[numNewCells1++] = newCells[c];\n      } else {\n        newCells2[numNewCells2++] = newCells[c]; }\n    }\n  } else {\n    cut_loc = p.m_sub2.m_bounds.y;\n    for c=0; c\u003cnumNewCells; c++ {\n      if newCells[c].m_y \u003c cut_loc {\n        newCells1[numNewCells1++] = newCells[c];\n      } else {\n        newCells2[numNewCells2++] = newCells[c]; }\n    }    \n  }\n\n  if numNewCells1 \u003e 0 { incrementalSubpartition(p.m_sub1, newCells1, numNewCells1); }\n  if numNewCells2 \u003e 0 { incrementalSubpartition(p.m_sub2, newCells2, numNewCells2); }\n\n  free(newCells1);\n  free(newCells2);\n}"
+    },
+    {
+      "Name": "incrementalPartition",
+      "Start": 36925,
+      "End": 38338,
+      "BodyStart": 36953,
+      "Original": "void incrementalPartition() {\n  int c = 0, c2 = 0;\n  int numNewCells = 0;\n  ConcreteCell **allCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells),\n    **newCells = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n\n  assert(g_place_rootPartition);\n\n  // update cell list of root partition\n  memcpy(allCells, (size_t)g_place_concreteCells, sizeof(ConcreteCell*)*g_place_numCells);\n  qsort(allCells, (size_t)g_place_numCells, sizeof(ConcreteCell*), cellSortByID);\n  qsort(g_place_rootPartition-\u003em_members, (size_t)g_place_rootPartition-\u003em_numMembers,\n        sizeof(ConcreteCell*), cellSortByID);\n\n  // scan sorted lists and collect cells not in partitions\n  while(!allCells[c++]);\n  while(!g_place_rootPartition-\u003em_members[c2++]);\n\n  for(; c\u003cg_place_numCells; c++, c2++) {\n    while(c2 \u003c g_place_rootPartition-\u003em_numMembers \u0026\u0026\n          allCells[c]-\u003em_id \u003e g_place_rootPartition-\u003em_members[c2]-\u003em_id) c2++;\n    while(c \u003c g_place_numCells \u0026\u0026 \n          (c2 \u003e= g_place_rootPartition-\u003em_numMembers ||\n           allCells[c]-\u003em_id \u003c g_place_rootPartition-\u003em_members[c2]-\u003em_id)) {\n      // a new cell!\n      newCells[numNewCells++] = allCells[c];\n      c++;\n    }\n  }\n  \n  printf(\"QPRT-50 : \\tincremental partitioning with %d new cells\\n\", numNewCells);\n  if (numNewCells\u003e0) incrementalSubpartition(g_place_rootPartition, newCells, numNewCells);\n\n  free(allCells);\n  free(newCells);\n}",
+      "Draft": "func incrementalPartition() {\n  var c, c2 int32;\n  var numNewCells int32;\n  var allCells **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n  var newCells **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n\n  assert((g_place_rootPartition != nil), \"g_place_rootPartition\");\n\n  // update cell list of root partition\n  memcpy(allCells, (size_t)g_place_concreteCells, sizeof(ConcreteCell*)*g_place_numCells);\n  qsort(allCells, (size_t)g_place_numCells, sizeof(ConcreteCell*), cellSortByID);\n  qsort(g_place_rootPartition.m_members, (size_t)g_place_rootPartition.m_numMembers,\n          sizeof(ConcreteCell*), cellSortByID);\n\n  // scan sorted lists and collect cells not in partitions\n  for !allCells[c++] {; }\n  for !g_place_rootPartition.m_members[c2++] {; }\n\n  for ; c\u003cg_place_numCells; c, c2 = c+1, c2+1 {\n    for c2 \u003c g_place_rootPartition.m_numMembers \u0026\u0026\n          allCells[c].m_id \u003e g_place_rootPartition.m_members[c2].m_id { c2++; }\n    for c \u003c g_place_numCells \u0026\u0026 \n          (c2 \u003e= g_place_rootPartition.m_numMembers ||\n           allCells[c].m_id \u003c g_place_rootPartition.m_members[c2].m_id) {\n      // a new cell!\n      newCells[numNewCells++] = allCells[c];\n      c++;\n    }\n  }\n  \n  fmt.Printf(\"QPRT-50 : \\tincremental partitioning with %d new cells\\n\", numNewCells);\n  if numNewCells\u003e0 { incrementalSubpartition(g_place_rootPartition, newCells, numNewCells); }\n\n  free(allCells);\n  free(newCells);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::1855",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1861,
+      "End": 1867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::2227",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2233,
+      "End": 2239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::2989",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2995,
+      "End": 3001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::3076",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3082,
+      "End": 3088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::3163",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3169,
+      "End": 3175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::3250",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3256,
+      "End": 3262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::3339",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3345,
+      "End": 3351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::3428",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3434,
+      "End": 3440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::3517",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3523,
+      "End": 3529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::3606",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3612,
+      "End": 3618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::3689",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3695,
+      "End": 3701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::3768",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3774,
+      "End": 3780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::3847",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3853,
+      "End": 3859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::3926",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3932,
+      "End": 3938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::5251",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5257,
+      "End": 5263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::5515",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5521,
+      "End": 5527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::22704",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28434,
+      "End": 28440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::22833",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28563,
+      "End": 28569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::23108",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 28838,
+      "End": 28844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::23337",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 29067,
+      "End": 29073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::29567",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 35297,
+      "End": 35303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::29646",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 35376,
+      "End": 35382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::29856",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 35586,
+      "End": 35592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::29963",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 35693,
+      "End": 35699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::31321",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 37051,
+      "End": 37057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::31403",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 37133,
+      "End": 37139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::31569",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 37299,
+      "End": 37305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::31654",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 37384,
+      "End": 37390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::mechanical::sizeof::31787",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 37517,
+      "End": 37523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::2233",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2239,
+      "End": 2254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::2955",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2961,
+      "End": 2976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::2995",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3001,
+      "End": 3015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::3042",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3048,
+      "End": 3063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::3082",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3088,
+      "End": 3102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::3129",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3135,
+      "End": 3150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::3169",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3175,
+      "End": 3189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::3216",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3222,
+      "End": 3237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::3256",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3262,
+      "End": 3276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::3345",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3351,
+      "End": 3365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::3434",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3440,
+      "End": 3454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::3523",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3529,
+      "End": 3543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::3612",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3618,
+      "End": 3632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::3695",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3701,
+      "End": 3715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::3774",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3780,
+      "End": 3794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::3853",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3859,
+      "End": 3873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::3932",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3938,
+      "End": 3952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::22710",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28440,
+      "End": 28455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::22839",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28569,
+      "End": 28584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::23022",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28752,
+      "End": 28768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::23114",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28844,
+      "End": 28859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::23251",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28981,
+      "End": 28997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::23343",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29073,
+      "End": 29088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::29543",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35273,
+      "End": 35290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::29573",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35303,
+      "End": 35318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::29622",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35352,
+      "End": 35369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::29652",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35382,
+      "End": 35397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::29810",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35540,
+      "End": 35556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::29862",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35592,
+      "End": 35607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::29969",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35699,
+      "End": 35714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::31297",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37027,
+      "End": 37044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::31327",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37057,
+      "End": 37072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::31379",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37109,
+      "End": 37126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::31409",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37139,
+      "End": 37154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::31575",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37305,
+      "End": 37320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::31660",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37390,
+      "End": 37405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::pointer-cast::31793",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37523,
+      "End": 37538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::initPartitioning",
+      "Category": "semantic-review",
+      "Symbol": "initPartitioning",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1664,
+      "End": 2673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::presortNets",
+      "Category": "semantic-review",
+      "Symbol": "presortNets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2926,
+      "End": 3968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::refinePartitions",
+      "Category": "semantic-review",
+      "Symbol": "refinePartitions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4183,
+      "End": 4260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::reallocPartitions",
+      "Category": "semantic-review",
+      "Symbol": "reallocPartitions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4506,
+      "End": 4578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::refinePartition",
+      "Category": "semantic-review",
+      "Symbol": "refinePartition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4807,
+      "End": 7225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::repartitionHMetis",
+      "Category": "semantic-review",
+      "Symbol": "repartitionHMetis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7558,
+      "End": 13402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::repartitionFM",
+      "Category": "semantic-review",
+      "Symbol": "repartitionFM",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13675,
+      "End": 26357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::partitionEqualArea",
+      "Category": "semantic-review",
+      "Symbol": "partitionEqualArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28216,
+      "End": 29626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::partitionScanlineMincut",
+      "Category": "semantic-review",
+      "Symbol": "partitionScanlineMincut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29898,
+      "End": 32954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::reallocPartition",
+      "Category": "semantic-review",
+      "Symbol": "reallocPartition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33189,
+      "End": 33640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::resizePartition",
+      "Category": "semantic-review",
+      "Symbol": "resizePartition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33910,
+      "End": 34786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::incrementalSubpartition",
+      "Category": "semantic-review",
+      "Symbol": "incrementalSubpartition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35140,
+      "End": 36574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::incrementalPartition",
+      "Category": "semantic-review",
+      "Symbol": "incrementalPartition",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36925,
+      "End": 38338
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 38363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 474,
+      "End": 554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_partition.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7602,
+      "End": 13400
+    }
+  ],
+  "Draft": "package place\n\nimport \"fmt\"\n\n/*===================================================================*/\n//  \n//     place_partition.c\n//\n//        Aaron P. Hurst, 2003-2007\n//              ahurst@eecs.berkeley.edu\n//\n/*===================================================================*/\n\n//#include \u003cstdlib.h\u003e\n//#include \u003cmath.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cstdio.h\u003e\n//#include \u003climits.h\u003e\n//#include \u003cassert.h\u003e\n//#include \u003csys/stat.h\u003e\n//#include \u003cunistd.h\u003e\n\n//#include \"place_base.h\"\n//#include \"place_gordian.h\"\n\n#if !defined(NO_HMETIS)\n#include \"libhmetis.h\"\n\nABC_NAMESPACE_IMPL_START\n\n#endif\n\n// --------------------------------------------------------------------\n// Global variables\n//\n// --------------------------------------------------------------------\n\nvar g_place_rootPartition *Partition = nil;\nvar allNetsR2 **ConcreteNet = nil;\nvar allNetsL2 **ConcreteNet = nil;\nvar allNetsB2 **ConcreteNet = nil;\nvar allNetsT2 **ConcreteNet = nil;\n\n\n// --------------------------------------------------------------------\n// Function prototypes and local data structures\n//\n// --------------------------------------------------------------------\n\ntypedef struct FM_cell {\n    int loc;\n    int gain;\n    ConcreteCell *cell;\n    struct FM_cell *next, *prev;\n    bool locked;\n}\n FM_cell;\n\n// void FM_updateGains(ConcreteNet *net, int partition, int inc, \n//                     FM_cell target [], FM_cell *bin [], \n//                     int count_1 [], int count_2 []);\n\n\n\n// --------------------------------------------------------------------\n// initPartitioning()\n//\n/// \\brief Initializes data structures necessary for partitioning.\n//\n/// Creates a valid g_place_rootPartition.\n///\n// --------------------------------------------------------------------\nfunc initPartitioning() {\n  var i int32;\n  var area float32;\n\n  // create root partition\n  g_place_numPartitions = 1;\n  if g_place_rootPartition != nil { free(g_place_rootPartition); }\n  g_place_rootPartition = malloc(sizeof(Partition));\n  g_place_rootPartition.m_level = 0;\n  g_place_rootPartition.m_area = 0;\n  g_place_rootPartition.m_bounds = g_place_coreBounds;\n  g_place_rootPartition.m_vertical = false;\n  g_place_rootPartition.m_done = false;\n  g_place_rootPartition.m_leaf = true;\n      \n  // add all of the cells to this partition\n  g_place_rootPartition.m_members = malloc(sizeof(ConcreteCell*)*g_place_numCells);\n  g_place_rootPartition.m_numMembers = 0;\n  for i=0; i\u003cg_place_numCells; i++ { \n    if g_place_concreteCells[i] {\n      if !g_place_concreteCells[i].m_fixed {\n        area = getCellArea(g_place_concreteCells[i]);\n        g_place_rootPartition.m_members[g_place_rootPartition.m_numMembers++] =\n          g_place_concreteCells[i];\n        g_place_rootPartition.m_area += area;\n      }\n    }\n  }\n}\n\n\n// --------------------------------------------------------------------\n// presortNets()\n//\n/// \\brief Sorts nets by corner positions.\n//\n/// Allocates allNetsX2 structures.\n///\n// --------------------------------------------------------------------\nfunc presortNets() {\n  allNetsL2 = (ConcreteNet**)realloc(allNetsL2, sizeof(ConcreteNet*)*g_place_numNets);\n  allNetsR2 = (ConcreteNet**)realloc(allNetsR2, sizeof(ConcreteNet*)*g_place_numNets);\n  allNetsB2 = (ConcreteNet**)realloc(allNetsB2, sizeof(ConcreteNet*)*g_place_numNets);\n  allNetsT2 = (ConcreteNet**)realloc(allNetsT2, sizeof(ConcreteNet*)*g_place_numNets);\n  memcpy(allNetsL2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);\n  memcpy(allNetsR2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);\n  memcpy(allNetsB2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);\n  memcpy(allNetsT2, (size_t)g_place_concreteNets, sizeof(ConcreteNet*)*g_place_numNets);\n  qsort(allNetsL2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByL);\n  qsort(allNetsR2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByR);\n  qsort(allNetsB2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByB);\n  qsort(allNetsT2, (size_t)g_place_numNets, sizeof(ConcreteNet*), netSortByT);\n}\n\n// --------------------------------------------------------------------\n// refinePartitions()\n//\n/// \\brief Splits large leaf partitions.\n//\n// --------------------------------------------------------------------\nfunc refinePartitions() bool {\n\n  return refinePartition(g_place_rootPartition);\n}\n\n\n// --------------------------------------------------------------------\n// reallocPartitions()\n//\n/// \\brief Reallocates the partitions based on placement information.\n//\n// --------------------------------------------------------------------\nfunc reallocPartitions() {\n\n  reallocPartition(g_place_rootPartition);\n}\n\n\n// --------------------------------------------------------------------\n// refinePartition()\n//\n/// \\brief Splits any large leaves within a partition.\n//\n// --------------------------------------------------------------------\nfunc refinePartition(p *Partition) bool {\n  var degenerate bool  = false;\n  var nonzeroCount int32;\n  var i int32;\n\n  assert((p != nil), \"p\");\n\n  // is this partition completed?\n  if p.m_done { return true; }\n\n  // is this partition a non-leaf node?\n  if !p.m_leaf {\n    p.m_done = refinePartition(p.m_sub1);\n    p.m_done \u0026= refinePartition(p.m_sub2);\n    return p.m_done;\n  }\n  \n  // leaf...\n  // create two new subpartitions\n  g_place_numPartitions++;\n  p.m_sub1 = malloc(sizeof(Partition));\n  p.m_sub1.m_level = p.m_level+1;\n  p.m_sub1.m_leaf = true;\n  p.m_sub1.m_done = false;\n  p.m_sub1.m_area = 0;\n  p.m_sub1.m_vertical = !p.m_vertical;\n  p.m_sub1.m_numMembers = 0;\n  p.m_sub1.m_members = nil;\n  p.m_sub2 = malloc(sizeof(Partition));\n  p.m_sub2.m_level = p.m_level+1;\n  p.m_sub2.m_leaf = true;\n  p.m_sub2.m_done = false;\n  p.m_sub2.m_area = 0;\n  p.m_sub2.m_vertical = !p.m_vertical;\n  p.m_sub2.m_numMembers = 0;\n  p.m_sub2.m_members = nil;\n  p.m_leaf = false;\n\n  // --- INITIAL PARTITION\n\n  if PARTITION_AREA_ONLY {\n    partitionEqualArea(p);\n  } else { \n    partitionScanlineMincut(p); }\n\n  resizePartition(p);\n\n  // --- PARTITION IMPROVEMENT\n\n  if p.m_level \u003c REPARTITION_LEVEL_DEPTH {\n    if REPARTITION_FM {\n      repartitionFM(p);\n    } else if REPARTITION_HMETIS {\n      repartitionHMetis(p); }\n  }\n    \n  resizePartition(p);\n  \n  // fix imbalances due to zero-area cells\n  for i=0; i\u003cp.m_sub1.m_numMembers; i++ {\n    if p.m_sub1.m_members[i] { \n      if getCellArea(p.m_sub1.m_members[i]) \u003e 0 {\n        nonzeroCount++;\n      } }\n  }\n  \n  // is this leaf now done?\n  if nonzeroCount \u003c= LARGEST_FINAL_SIZE {\n      p.m_sub1.m_done = true; }\n  if nonzeroCount == 0 {\n      degenerate = true; }\n\n  nonzeroCount = 0;\n  for i=0; i\u003cp.m_sub2.m_numMembers; i++ {\n    if p.m_sub2.m_members[i] {\n      if getCellArea(p.m_sub2.m_members[i]) \u003e 0 {\n        nonzeroCount++;\n      } }\n  }\n\n  // is this leaf now done?\n  if nonzeroCount \u003c= LARGEST_FINAL_SIZE {\n      p.m_sub2.m_done = true; }\n  if nonzeroCount == 0 {\n      degenerate = true; }\n\n  // have we found a degenerate partitioning?\n  if degenerate {\n    fmt.Printf(\"QPART-35 : WARNING: degenerate partition generated\\n\");\n    partitionEqualArea(p);\n    resizePartition(p);\n    p.m_sub1.m_done = true;\n    p.m_sub2.m_done = true;\n  }\n  \n  // is this parent now finished?\n  if p.m_sub1.m_done \u0026\u0026 p.m_sub2.m_done { p.m_done = true; }\n  \n  return p.m_done;\n}\n\n\n// --------------------------------------------------------------------\n// repartitionHMetis()\n//\n/// \\brief Repartitions the two subpartitions using the hMetis min-cut library.\n///\n/// The number of cut nets between the two partitions will be minimized.\n//\n// --------------------------------------------------------------------\nfunc repartitionHMetis(parent *Partition) {\n#if defined(NO_HMETIS)\n  printf(\"QPAR_02 : \\t\\tERROR: hMetis not available.  Ignoring.\\n\");\n#else\n\n  int n,c,t, i;\n  float area;\n  int *edgeConnections = NULL;\n  int *partitionAssignment = (int *)calloc(g_place_numCells, sizeof(int));\n  int *vertexWeights = (int *)calloc(g_place_numCells, sizeof(int));\n  int *edgeDegree = (int *)malloc(sizeof(int)*(g_place_numNets+1));\n  int numConnections = 0;\n  int numEdges = 0;\n  float initial_cut;\n  int targets = 0;\n  ConcreteCell *cell = NULL;\n  int options[9];\n  int afterCuts = 0;\n\n  assert(parent);\n  assert(parent-\u003em_sub1);\n  assert(parent-\u003em_sub2);\n\n  printf(\"QPAR-02 : \\t\\trepartitioning with hMetis\\n\");\n\n  // count edges\n  edgeDegree[0] = 0;\n  for(n=0; n\u003cg_place_numNets; n++) if (g_place_concreteNets[n])\n    if (g_place_concreteNets[n]-\u003em_numTerms \u003e 1) {\n      numConnections += g_place_concreteNets[n]-\u003em_numTerms;\n      edgeDegree[++numEdges] = numConnections;\n    }\n  \n  if (parent-\u003em_vertical) {\n    // vertical\n    initial_cut = parent-\u003em_sub2-\u003em_bounds.x;\n    \n    // initialize all cells\n    for(c=0; c\u003cg_place_numCells; c++) if (g_place_concreteCells[c]) {\n      if (g_place_concreteCells[c]-\u003em_x \u003c initial_cut)\n        partitionAssignment[c] = 0;\n      else\n        partitionAssignment[c] = 1;\n    }\n  \n    // initialize cells in partition 1\n    for(t=0; t\u003cparent-\u003em_sub1-\u003em_numMembers; t++) if (parent-\u003em_sub1-\u003em_members[t]) {\n      cell = parent-\u003em_sub1-\u003em_members[t];\n      vertexWeights[cell-\u003em_id] = getCellArea(cell);\n      // pay attention to cells that are close to the cut\n      if (abs(cell-\u003em_x-initial_cut) \u003c parent-\u003em_bounds.w*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        partitionAssignment[cell-\u003em_id] = -1;\n      }\n    }\n    \n    // initialize cells in partition 2\n    for(t=0; t\u003cparent-\u003em_sub2-\u003em_numMembers; t++) if (parent-\u003em_sub2-\u003em_members[t]) {\n      cell = parent-\u003em_sub2-\u003em_members[t];\n      vertexWeights[cell-\u003em_id] = getCellArea(cell);\n      // pay attention to cells that are close to the cut\n      if (abs(cell-\u003em_x-initial_cut) \u003c parent-\u003em_bounds.w*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        partitionAssignment[cell-\u003em_id] = -1;\n      }        \n    }\n    \n  } else {\n    // horizontal\n    initial_cut = parent-\u003em_sub2-\u003em_bounds.y;\n    \n    // initialize all cells\n    for(c=0; c\u003cg_place_numCells; c++) if (g_place_concreteCells[c]) {\n      if (g_place_concreteCells[c]-\u003em_y \u003c initial_cut)\n        partitionAssignment[c] = 0;\n      else\n        partitionAssignment[c] = 1;\n    }\n    \n    // initialize cells in partition 1\n    for(t=0; t\u003cparent-\u003em_sub1-\u003em_numMembers; t++) if (parent-\u003em_sub1-\u003em_members[t]) {\n      cell = parent-\u003em_sub1-\u003em_members[t];\n      vertexWeights[cell-\u003em_id] = getCellArea(cell);\n      // pay attention to cells that are close to the cut\n      if (abs(cell-\u003em_y-initial_cut) \u003c parent-\u003em_bounds.h*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        partitionAssignment[cell-\u003em_id] = -1;\n      }\n    }\n    \n    // initialize cells in partition 2\n    for(t=0; t\u003cparent-\u003em_sub2-\u003em_numMembers; t++) if (parent-\u003em_sub2-\u003em_members[t]) {\n      cell = parent-\u003em_sub2-\u003em_members[t];\n      vertexWeights[cell-\u003em_id] = getCellArea(cell);\n      // pay attention to cells that are close to the cut\n      if (abs(cell-\u003em_y-initial_cut) \u003c parent-\u003em_bounds.h*REPARTITION_TARGET_FRACTION) {\n        targets++;\n        partitionAssignment[cell-\u003em_id] = -1;\n      }        \n    }\n  }\n\n  options[0] = 1;  // any non-default values?\n  options[1] = 3; // num bisections\n  options[2] = 1;  // grouping scheme\n  options[3] = 1;  // refinement scheme\n  options[4] = 1;  // cycle refinement scheme\n  options[5] = 0;  // reconstruction scheme\n  options[6] = 0;  // fixed assignments?\n  options[7] = 12261980; // random seed\n  options[8] = 0;  // debugging level\n\n  edgeConnections = (int *)malloc(sizeof(int)*numConnections);\n\n  i = 0;\n  for(n=0; n\u003cg_place_numNets; n++) if (g_place_concreteNets[n]) {\n    if (g_place_concreteNets[n]-\u003em_numTerms \u003e 1)\n      for(t=0; t\u003cg_place_concreteNets[n]-\u003em_numTerms; t++)\n        edgeConnections[i++] = g_place_concreteNets[n]-\u003em_terms[t]-\u003em_id;\n  }\n\n  HMETIS_PartRecursive(g_place_numCells, numEdges, vertexWeights,\n               edgeDegree, edgeConnections, NULL,\n               2, (int)(100*MAX_PARTITION_NONSYMMETRY),\n               options, partitionAssignment, \u0026afterCuts);\n    \n  /*\n  printf(\"HMET-20 : \\t\\t\\tbalance before %d / %d ... \", parent-\u003em_sub1-\u003em_numMembers,\n         parent-\u003em_sub2-\u003em_numMembers);\n  */\n\n  // reassign members to subpartitions\n  parent-\u003em_sub1-\u003em_numMembers = 0;\n  parent-\u003em_sub1-\u003em_area = 0;\n  parent-\u003em_sub2-\u003em_numMembers = 0;\n  parent-\u003em_sub2-\u003em_area = 0;\n  parent-\u003em_sub1-\u003em_members = (ConcreteCell**)realloc(parent-\u003em_sub1-\u003em_members, \n       sizeof(ConcreteCell*)*parent-\u003em_numMembers); \n  parent-\u003em_sub2-\u003em_members = (ConcreteCell**)realloc(parent-\u003em_sub2-\u003em_members, \n       sizeof(ConcreteCell*)*parent-\u003em_numMembers); \n \n  for(t=0; t\u003cparent-\u003em_numMembers; t++) if (parent-\u003em_members[t]) {\n    cell = parent-\u003em_members[t];\n    area = getCellArea(cell);\n    if (partitionAssignment[cell-\u003em_id] == 0) {\n      parent-\u003em_sub1-\u003em_members[parent-\u003em_sub1-\u003em_numMembers++] = cell;\n      parent-\u003em_sub1-\u003em_area += area;\n    }\n    else {\n      parent-\u003em_sub2-\u003em_members[parent-\u003em_sub2-\u003em_numMembers++] = cell;\n      parent-\u003em_sub2-\u003em_area += area;\n    }\n  }\n  /*\n  printf(\"after %d / %d\\n\", parent-\u003em_sub1-\u003em_numMembers,\n         parent-\u003em_sub2-\u003em_numMembers);\n  */\n\n  // cout \u003c\u003c \"HMET-21 : \\t\\t\\tloc: \" \u003c\u003c initial_cut \u003c\u003c  \" targetting: \" \u003c\u003c targets*100/parent-\u003em_members.length() \u003c\u003c \"%\" \u003c\u003c endl;\n  // cout \u003c\u003c \"HMET-22 : \\t\\t\\tstarting cuts= \" \u003c\u003c beforeCuts \u003c\u003c \" final cuts= \" \u003c\u003c afterCuts \u003c\u003c endl;\n\n  free(edgeConnections);\n  free(vertexWeights);\n  free(edgeDegree);\n  free(partitionAssignment);\n#endif\n}\n\n\n// --------------------------------------------------------------------\n// repartitionFM()\n//\n/// \\brief Fiduccia-Matheyses mincut partitioning algorithm.\n//\n/// UNIMPLEMENTED (well, un-C-ified)\n//\n// --------------------------------------------------------------------\nfunc repartitionFM(parent *Partition) {\n     \n                                                                          \n\n                                                              \n                                         \n                                                            \n                                         \n                                                            \n\n                                             \n                                                                \n                               \n                        \n                                                     \n\n                     \n                                          \n                       \n                    \n                 \n                                           \n                                                                        \n                     \n\n                     \n                                  \n\n                           \n               \n\n                                             \n\n                           \n                                                                                             \n                                 \n                                        \n                                 \n            \n                                 \n                                   \n                                 \n     \n\n                                      \n                                                                                              \n                                 \n                                                           \n                                                                                              \n                  \n                                \n         \n     \n\n                                      \n                                                                                              \n                                 \n                                                           \n                                                                                              \n                  \n                                \n                 \n     \n\n                                                                                \n                                                                                            \n                                                                                             \n                                                              \n                                    \n                                                                   \n                                    \n                                                           \n                                    \n            \n                                    \n                                                                                  \n     \n    \n            \n                 \n\n                                             \n\n                           \n                                                                                             \n                                 \n                                        \n                                 \n            \n                                 \n                                   \n                                 \n     \n\n                                      \n                                                                                              \n                                 \n                                                           \n                                                                                              \n                  \n                                \n         \n     \n\n                                      \n                                                                                              \n                                 \n                                                           \n                                                                                              \n                  \n                                \n                 \n     \n\n                                                                                \n                                                                                            \n                                                                                             \n                                                              \n                                    \n                                                                   \n                                    \n                                                           \n                                    \n            \n                                    \n                                                                                  \n     \n     \n\n                               \n                                                       \n                             \n                                     \n                                     \n\n                                                 \n                                                                                              \n                                    \n                                                  \n                                                                             \n                                                                             \n                                                                             \n                                                                             \n         \n\n                                                                            \n\n                          \n                                                              \n                                          \n\n                                                      \n                                       \n                            \n                              \n                                         \n                                   \n     \n\n                     \n                               \n                      \n                 \n                                                  \n           \n                      \n\n                                                 \n\n                                 \n                       \n                        \n                                  \n                                \n\n                                                                   \n                                          \n\n                               \n                        \n                         \n\n                              \n                                     \n                                     \n                               \n\n                     \n     \n                                                      \n                                                     \n    \n                          \n                                                         \n\n                                   \n              \n\n                                 \n                                        \n\n                                     \n                                               \n                                                                                                          \n                                                                                                           \n\n                                                                                         \n         \n                         \n              \n\n                    \n                               \n                                                                                                                                                                       \n\n                                             \n                                \n                         \n                                                           \n                                                           \n\n                                                                    \n                                                                              \n                            \n            \n                                                                 \n                     \n                                    \n            \n                                    \n                                    \n\n                                                                                                                                                                                                    \n\n                                                                                      \n                                                                                                                          \n                                                                                                                          \n            \n                                                         \n         \n\n                \n                         \n                                                           \n                                                           \n\n                                                         \n                                                                              \n                            \n            \n                                                                 \n                     \n                                    \n                                    \n                                    \n\n                                                                                                                                                                                                    \n\n                                                                                                                          \n                                                                                                                          \n        \n                                                         \n         \n         \n\n                                                   \n\n                                 \n\n  \n                                            \n                                       \n                               \n                    \n                                         \n                                       \n                               \n                    \n            \n                                    \n                                               \n  \n\n                                    \n                                     \n                               \n                                            \n                               \n                                            \n\n  \n                                            \n                                       \n                               \n                    \n                                         \n                                       \n                               \n                    \n            \n                                    \n                                               \n  \n\n                          \n                               \n                        \n                               \n                         \n        \n                                                         \n\n                          \n                              \n                                                             \n     \n\n                                                                                     \n     \n\n                                        \n                                                                                      \n                                                    \n                                      \n                               \n                                      \n                               \n                                                                                      \n                                                                              \n                                                 \n                                                   \n     \n          \n                                                 \n                                                   \n     \n     \n                                                                  \n                                                     \n\n\n                                                                                                                            \n                                                                                                    \n      \n}\n\n// ----- FM_updateGains()\n//   moves a cell between bins\n     \n                                                              \n                                                        \n                                                     \n\n                                                                           \n                                                            \n                               \n    \n                                 \n                      \n\n                                             \n                                                                                        \n                                    \n                                              \n                                                                     \n                                                                     \n                                                                     \n                                                                     \n         \n\n                           \n                                        \n                                                        \n                                    \n                                     \n                               \n                                            \n                               \n                                            \n                                  \n                                                         \n                          \n                                     \n                              \n                                     \n                               \n     \n     \n    \n \n      \n\n\n// --------------------------------------------------------------------\n// partitionEqualArea()\n//\n/// \\brief Splits a partition into two halves of equal area.\n//\n// --------------------------------------------------------------------\nfunc partitionEqualArea(parent *Partition) {\n  var halfArea, area float32;\n  var i int32;\n  \n  // which way to sort?\n  if parent.m_vertical {\n    // sort by X position\n    qsort(parent.m_members, (size_t)parent.m_numMembers, sizeof(ConcreteCell*), cellSortByX);\n  } else {\n    // sort by Y position\n    qsort(parent.m_members, (size_t)parent.m_numMembers, sizeof(ConcreteCell*), cellSortByY); }\n\n  // split the list\n  halfArea = parent.m_area*0.5;\n  parent.m_sub1.m_area = 0.0;\n  parent.m_sub1.m_numMembers = 0;\n  parent.m_sub1.m_members = (ConcreteCell**)realloc(parent.m_sub1.m_members, \n                                    sizeof(ConcreteCell*)*parent.m_numMembers);\n  parent.m_sub2.m_area = 0.0;\n  parent.m_sub2.m_numMembers = 0;\n  parent.m_sub2.m_members = (ConcreteCell**)realloc(parent.m_sub2.m_members, \n                                    sizeof(ConcreteCell*)*parent.m_numMembers);\n\n  for ; parent.m_sub1.m_area \u003c halfArea; i++ { \n    if parent.m_members[i] {\n      area = getCellArea(parent.m_members[i]);\n      parent.m_sub1.m_members[parent.m_sub1.m_numMembers++] = parent.m_members[i];\n      parent.m_sub1.m_area += area;\n  }\n  }\n  for ; i\u003cparent.m_numMembers; i++ { \n    if parent.m_members[i] {\n      area = getCellArea(parent.m_members[i]);\n      parent.m_sub2.m_members[parent.m_sub2.m_numMembers++] = parent.m_members[i];\n      parent.m_sub2.m_area += area;\n    }\n  }\n  \n}\n\n\n// --------------------------------------------------------------------\n// partitionScanlineMincut()\n//\n/// \\brief Scans the cells within a partition from left to right and chooses the min-cut.\n//\n// --------------------------------------------------------------------\nfunc partitionScanlineMincut(parent *Partition) {\n     \n                       \n                             \n                                        \n                                                          \n                                                                      \n                                     \n\n                                                                             \n                        \n                                                                      \n                         \n               \n                                                             \n                       \n                 \n                              \n                               \n       \n     \n   \n\n                         \n                                    \n                           \n                                                                        \n                                     \n                                         \n                                                 \n             \n                                                 \n          \n                                 \n                                                                                            \n                                 \n                     \n     \n           \n       \n                                                                                             \n                                 \n                     \n     \n           \n       \n                                        \n                                \n                              \n       \n                        \n     \n   \n        \n                                    \n                           \n                                                                        \n                                     \n                                         \n                                                 \n             \n                                                 \n          \n                                 \n                                                                                           \n                                 \n                     \n     \n           \n       \n                                                                                              \n                                 \n                     \n     \n           \n       \n                                        \n                                \n                              \n       \n                        \n     \n   \n                                 \n                                      \n   \n                                                                   \n                                    \n                             \n                                        \n                                              \n                                               \n   \n                                    \n                             \n                    \n                                              \n                                               \n   \n      \n}\n\n\n// --------------------------------------------------------------------\n// reallocPartition()\n//\n/// \\brief Reallocates a partition and all of its children.\n//\n// --------------------------------------------------------------------\nfunc reallocPartition(p *Partition) {\n\n  if p.m_leaf {\n    return;\n  }\n\n  // --- INITIAL PARTITION\n\n  if PARTITION_AREA_ONLY {\n    partitionEqualArea(p);\n  } else { \n    partitionScanlineMincut(p); }\n\n  resizePartition(p);\n\n  // --- PARTITION IMPROVEMENT\n  if p.m_level \u003c REPARTITION_LEVEL_DEPTH {\n    if REPARTITION_HMETIS {\n      repartitionHMetis(p); }\n    \n    resizePartition(p);\n  }\n\n  reallocPartition(p.m_sub1);\n  reallocPartition(p.m_sub2);\n}\n\n\n// --------------------------------------------------------------------\n// resizePartition()\n//\n/// \\brief Recomputes the bounding boxes of the child partitions based on their relative areas.\n//\n// --------------------------------------------------------------------\nfunc resizePartition(p *Partition) {\n  // compute the new bounding box\n  p.m_sub1.m_bounds.x = p.m_bounds.x;\n  p.m_sub1.m_bounds.y = p.m_bounds.y;\n  if p.m_vertical {\n    p.m_sub1.m_bounds.w = p.m_bounds.w*(p.m_sub1.m_area/p.m_area);\n    p.m_sub1.m_bounds.h = p.m_bounds.h;\n    p.m_sub2.m_bounds.x = p.m_bounds.x + p.m_sub1.m_bounds.w;\n    p.m_sub2.m_bounds.w = p.m_bounds.w*(p.m_sub2.m_area/p.m_area);\n    p.m_sub2.m_bounds.y = p.m_bounds.y;\n    p.m_sub2.m_bounds.h = p.m_bounds.h;\n  } else {\n    p.m_sub1.m_bounds.h = p.m_bounds.h*(p.m_sub1.m_area/p.m_area);\n    p.m_sub1.m_bounds.w = p.m_bounds.w;\n    p.m_sub2.m_bounds.y = p.m_bounds.y + p.m_sub1.m_bounds.h;\n    p.m_sub2.m_bounds.h = p.m_bounds.h*(p.m_sub2.m_area/p.m_area);\n    p.m_sub2.m_bounds.x = p.m_bounds.x;\n    p.m_sub2.m_bounds.w = p.m_bounds.w;\n  }\n}\n\n\n// --------------------------------------------------------------------\n// incrementalSubpartition()\n//\n/// \\brief Adds new cells to an existing partition.  Partition sizes/locations are unchanged.\n///\n/// The function recurses, adding new cells to appropriate subpartitions.\n//\n// --------------------------------------------------------------------\nfunc incrementalSubpartition(p *Partition, newCells []*ConcreteCell, numNewCells int32) {\n  var c int32;\n  var newCells1 **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*numNewCells);\n  var newCells2 **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*numNewCells);\n  var numNewCells1, numNewCells2 int32;\n  var cut_loc float32;\n\n  assert((p != nil), \"p\");\n\n  // add new cells to partition list\n  p.m_members = (ConcreteCell**)realloc(p.m_members, \n         sizeof(ConcreteCell*)*(p.m_numMembers+numNewCells));\n  memcpy(\u0026(p.m_members[p.m_numMembers]), newCells, sizeof(ConcreteCell*)*numNewCells);\n  p.m_numMembers += numNewCells;\n\n  // if is a leaf partition, finished\n  if p.m_leaf { return; }\n\n  // split new cells into sub-partitions based on location\n  if p.m_vertical {\n    cut_loc = p.m_sub2.m_bounds.x;\n    for c=0; c\u003cnumNewCells; c++ {\n      if newCells[c].m_x \u003c cut_loc {\n        newCells1[numNewCells1++] = newCells[c];\n      } else {\n        newCells2[numNewCells2++] = newCells[c]; }\n    }\n  } else {\n    cut_loc = p.m_sub2.m_bounds.y;\n    for c=0; c\u003cnumNewCells; c++ {\n      if newCells[c].m_y \u003c cut_loc {\n        newCells1[numNewCells1++] = newCells[c];\n      } else {\n        newCells2[numNewCells2++] = newCells[c]; }\n    }    \n  }\n\n  if numNewCells1 \u003e 0 { incrementalSubpartition(p.m_sub1, newCells1, numNewCells1); }\n  if numNewCells2 \u003e 0 { incrementalSubpartition(p.m_sub2, newCells2, numNewCells2); }\n\n  free(newCells1);\n  free(newCells2);\n}\n\n\n// --------------------------------------------------------------------\n// incrementalPartition()\n//\n/// \\brief Adds new cells to an existing partition.  Partition sizes/locations are unchanged.\n///\n/// The function recurses, adding new cells to appropriate subpartitions.\n//\n// --------------------------------------------------------------------\nfunc incrementalPartition() {\n  var c, c2 int32;\n  var numNewCells int32;\n  var allCells **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n  var newCells **ConcreteCell = (ConcreteCell **)malloc(sizeof(ConcreteCell*)*g_place_numCells);\n\n  assert((g_place_rootPartition != nil), \"g_place_rootPartition\");\n\n  // update cell list of root partition\n  memcpy(allCells, (size_t)g_place_concreteCells, sizeof(ConcreteCell*)*g_place_numCells);\n  qsort(allCells, (size_t)g_place_numCells, sizeof(ConcreteCell*), cellSortByID);\n  qsort(g_place_rootPartition.m_members, (size_t)g_place_rootPartition.m_numMembers,\n          sizeof(ConcreteCell*), cellSortByID);\n\n  // scan sorted lists and collect cells not in partitions\n  for !allCells[c++] {; }\n  for !g_place_rootPartition.m_members[c2++] {; }\n\n  for ; c\u003cg_place_numCells; c, c2 = c+1, c2+1 {\n    for c2 \u003c g_place_rootPartition.m_numMembers \u0026\u0026\n          allCells[c].m_id \u003e g_place_rootPartition.m_members[c2].m_id { c2++; }\n    for c \u003c g_place_numCells \u0026\u0026 \n          (c2 \u003e= g_place_rootPartition.m_numMembers ||\n           allCells[c].m_id \u003c g_place_rootPartition.m_members[c2].m_id) {\n      // a new cell!\n      newCells[numNewCells++] = allCells[c];\n      c++;\n    }\n  }\n  \n  fmt.Printf(\"QPRT-50 : \\tincremental partitioning with %d new cells\\n\", numNewCells);\n  if numNewCells\u003e0 { incrementalSubpartition(g_place_rootPartition, newCells, numNewCells); }\n\n  free(allCells);\n  free(newCells);\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

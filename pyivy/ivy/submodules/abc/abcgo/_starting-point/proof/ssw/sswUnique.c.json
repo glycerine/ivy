@@ -1,0 +1,214 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswUnique.c",
+  "SHA256": "bc6d67b09d4e06e5bef34edad0b11d5888d75bb9f2853dbef823644f65139402",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 5,
+        "ByteOffset": 2384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vDiffPairs) == Saig_ManRegNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 3276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pPars.nFramesK \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 3312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vDiffPairs \u0026\u0026 Vec_IntSize(p.vDiffPairs) == Saig_ManRegNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 107,
+        "Column": 9,
+        "ByteOffset": 3808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjIsCi(pTemp) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 110,
+        "Column": 9,
+        "ByteOffset": 3912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjCioId(pTemp) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 5413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vCommon) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 158,
+        "Column": 9,
+        "ByteOffset": 5690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Saig_ObjIsLo(p.pAig, pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 6523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iOutputLit == -1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssw_UniqueRegisterPairInfo",
+      "Start": 1316,
+      "End": 2520,
+      "BodyStart": 1365,
+      "Original": "void Ssw_UniqueRegisterPairInfo( Ssw_Man_t * p )\n{\n    Aig_Obj_t * pObjLo, * pObj0, * pObj1;\n    int i, RetValue, Counter;\n    if ( p-\u003evDiffPairs == NULL )\n        p-\u003evDiffPairs = Vec_IntAlloc( Saig_ManRegNum(p-\u003epAig) );\n    Vec_IntClear( p-\u003evDiffPairs );\n    Saig_ManForEachLo( p-\u003epAig, pObjLo, i )\n    {\n        pObj0 = Ssw_ObjFrame( p, pObjLo, 0 );\n        pObj1 = Ssw_ObjFrame( p, pObjLo, 1 );\n        if ( pObj0 == pObj1 )\n            Vec_IntPush( p-\u003evDiffPairs, 0 );\n        else if ( pObj0 == Aig_Not(pObj1) )\n            Vec_IntPush( p-\u003evDiffPairs, 1 );\n//        else\n//            Vec_IntPush( p-\u003evDiffPairs, 1 );\n        else if ( Aig_ObjPhaseReal(pObj0) != Aig_ObjPhaseReal(pObj1) )\n            Vec_IntPush( p-\u003evDiffPairs, 1 );\n        else\n        {\n            RetValue = Ssw_NodesAreEquiv( p, Aig_Regular(pObj0), Aig_Regular(pObj1) );\n            Vec_IntPush( p-\u003evDiffPairs, RetValue!=1 );\n        }\n    }\n    assert( Vec_IntSize(p-\u003evDiffPairs) == Saig_ManRegNum(p-\u003epAig) );\n    // count the number of ones\n    Counter = 0;\n    Vec_IntForEachEntry( p-\u003evDiffPairs, RetValue, i )\n        Counter += RetValue;\n//    Abc_Print( 1, \"The number of different register pairs = %d.\\n\", Counter );\n}",
+      "Draft": "func Ssw_UniqueRegisterPairInfo(p *Ssw_Man_t) {\n    var pObjLo, pObj0, pObj1 *Aig_Obj_t;\n    var i, RetValue, Counter int32;\n    if p.vDiffPairs == nil {\n        p.vDiffPairs = Vec_IntAlloc( Saig_ManRegNum(p.pAig) ); }\n    Vec_IntClear( p.vDiffPairs );\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLo) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n        pObj0 = Ssw_ObjFrame( p, pObjLo, 0 );\n        pObj1 = Ssw_ObjFrame( p, pObjLo, 1 );\n        if pObj0 == pObj1 {\n            Vec_IntPush( p.vDiffPairs, 0 );\n        } else if pObj0 == Aig_Not(pObj1) {\n            Vec_IntPush( p.vDiffPairs, 1 );\n//        else\n//            Vec_IntPush( p-\u003evDiffPairs, 1 );\n        } else if Aig_ObjPhaseReal(pObj0) != Aig_ObjPhaseReal(pObj1) {\n            Vec_IntPush( p.vDiffPairs, 1 );\n        } else {\n            RetValue = Ssw_NodesAreEquiv( p, Aig_Regular(pObj0), Aig_Regular(pObj1) );\n            Vec_IntPush( p.vDiffPairs, RetValue!=1 );\n        }\n    }\n    assert(Vec_IntSize(p.vDiffPairs) == Saig_ManRegNum(p.pAig), \"Vec_IntSize(p.vDiffPairs) == Saig_ManRegNum(p.pAig)\");\n    // count the number of ones\n    Counter = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vDiffPairs)) \u0026\u0026 (((RetValue) = Vec_IntEntry(p.vDiffPairs, i)), 1); i++  {\n        Counter += RetValue;\n    }\n//    Abc_Print( 1, \"The number of different register pairs = %d.\\n\", Counter );\n}"
+    },
+    {
+      "Name": "Ssw_ManUniqueOne",
+      "Start": 2806,
+      "End": 4434,
+      "BodyStart": 2895,
+      "Original": "int Ssw_ManUniqueOne( Ssw_Man_t * p, Aig_Obj_t * pRepr, Aig_Obj_t * pObj, int fVerbose )\n{\n    Aig_Obj_t * ppObjs[2], * pTemp;\n    int i, k, Value0, Value1, RetValue, fFeasible;\n\n    assert( p-\u003epPars-\u003enFramesK \u003e 1 );\n    assert( p-\u003evDiffPairs \u0026\u0026 Vec_IntSize(p-\u003evDiffPairs) == Saig_ManRegNum(p-\u003epAig) );\n\n    // compute the first support in terms of LOs\n    ppObjs[0] = pRepr;\n    ppObjs[1] = pObj;\n    Aig_SupportNodes( p-\u003epAig, ppObjs, 2, p-\u003evCommon );\n    // keep only LOs\n    RetValue = Vec_PtrSize( p-\u003evCommon );\n    fFeasible = 0;\n    k = 0;\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evCommon, pTemp, i )\n    {\n        assert( Aig_ObjIsCi(pTemp) );\n        if ( !Saig_ObjIsLo(p-\u003epAig, pTemp) )\n            continue;\n        assert( Aig_ObjCioId(pTemp) \u003e 0 );\n        Vec_PtrWriteEntry( p-\u003evCommon, k++, pTemp );\n        if ( Vec_IntEntry(p-\u003evDiffPairs, Aig_ObjCioId(pTemp) - Saig_ManPiNum(p-\u003epAig)) )\n            fFeasible = 1;\n    }\n    Vec_PtrShrink( p-\u003evCommon, k );\n\n    if ( fVerbose )\n        Abc_Print( 1, \"Node = %5d : Supp = %3d. Regs = %3d. Feasible = %s. \",\n            Aig_ObjId(pObj), RetValue, Vec_PtrSize(p-\u003evCommon),\n            fFeasible? \"yes\": \"no \" );\n\n    // check the current values\n    RetValue = 1;\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evCommon, pTemp, i )\n    {\n        Value0 = Ssw_ManGetSatVarValue( p, pTemp, 0 );\n        Value1 = Ssw_ManGetSatVarValue( p, pTemp, 1 );\n        if ( Value0 != Value1 )\n            RetValue = 0;\n        if ( fVerbose )\n            Abc_Print( 1, \"%d\", Value0 ^ Value1 );\n    }\n    if ( fVerbose )\n        Abc_Print( 1, \"\\n\" );\n\n    return RetValue \u0026\u0026 fFeasible;\n}",
+      "Draft": "func Ssw_ManUniqueOne(p *Ssw_Man_t, pRepr *Aig_Obj_t, pObj *Aig_Obj_t, fVerbose int32) int32 {\n    var ppObjs [2]*Aig_Obj_t;\n    var pTemp *Aig_Obj_t;\n    var i, k, Value0, Value1, RetValue, fFeasible int32;\n\n    assert(p.pPars.nFramesK \u003e 1, \"p.pPars.nFramesK \u003e 1\");\n    assert(p.vDiffPairs \u0026\u0026 Vec_IntSize(p.vDiffPairs) == Saig_ManRegNum(p.pAig), \"p.vDiffPairs \u0026\u0026 Vec_IntSize(p.vDiffPairs) == Saig_ManRegNum(p.pAig)\");\n\n    // compute the first support in terms of LOs\n    ppObjs[0] = pRepr;\n    ppObjs[1] = pObj;\n    Aig_SupportNodes( p.pAig, ppObjs, 2, p.vCommon );\n    // keep only LOs\n    RetValue = Vec_PtrSize( p.vCommon );\n    fFeasible = 0;\n    k = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCommon)) \u0026\u0026 (((pTemp) = (Aig_Obj_t *)Vec_PtrEntry(p.vCommon, i)), 1); i++  {\n        assert(Aig_ObjIsCi(pTemp), \"Aig_ObjIsCi(pTemp)\");\n        if !Saig_ObjIsLo(p.pAig, pTemp) {\n            continue; }\n        assert(Aig_ObjCioId(pTemp) \u003e 0, \"Aig_ObjCioId(pTemp) \u003e 0\");\n        Vec_PtrWriteEntry( p.vCommon, k++, pTemp );\n        if Vec_IntEntry(p.vDiffPairs, Aig_ObjCioId(pTemp) - Saig_ManPiNum(p.pAig)) {\n            fFeasible = 1; }\n    }\n    Vec_PtrShrink( p.vCommon, k );\n\n    if fVerbose != 0 {\n        Abc_Print( 1, \"Node = %5d : Supp = %3d. Regs = %3d. Feasible = %s. \",\n            Aig_ObjId(pObj), RetValue, Vec_PtrSize(p.vCommon),\n            fFeasible? \"yes\": \"no \" ); }\n\n    // check the current values\n    RetValue = 1;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCommon)) \u0026\u0026 (((pTemp) = (Aig_Obj_t *)Vec_PtrEntry(p.vCommon, i)), 1); i++  {\n        Value0 = Ssw_ManGetSatVarValue( p, pTemp, 0 );\n        Value1 = Ssw_ManGetSatVarValue( p, pTemp, 1 );\n        if Value0 != Value1 {\n            RetValue = 0; }\n        if fVerbose != 0 {\n            Abc_Print( 1, \"%d\", Value0 ^ Value1 ); }\n    }\n    if fVerbose != 0 {\n        Abc_Print( 1, \"\\n\" ); }\n\n    return RetValue \u0026\u0026 fFeasible;\n}"
+    },
+    {
+      "Name": "Ssw_ManUniqueAddConstraint",
+      "Start": 4718,
+      "End": 6016,
+      "BodyStart": 4803,
+      "Original": "int Ssw_ManUniqueAddConstraint( Ssw_Man_t * p, Vec_Ptr_t * vCommon, int f1, int f2 )\n{\n    Aig_Obj_t * pObj, * pObj1New, * pObj2New, * pMiter, * pTotal;\n    int i, pLits[2];\n//    int RetValue;\n    assert( Vec_PtrSize(vCommon) \u003e 0 );\n    // generate the constraint\n    pTotal = Aig_ManConst0(p-\u003epFrames);\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCommon, pObj, i )\n    {\n        assert( Saig_ObjIsLo(p-\u003epAig, pObj) );\n        pObj1New = Ssw_ObjFrame( p, pObj, f1 );\n        pObj2New = Ssw_ObjFrame( p, pObj, f2 );\n        pMiter = Aig_Exor( p-\u003epFrames, pObj1New, pObj2New );\n        pTotal = Aig_Or( p-\u003epFrames, pTotal, pMiter );\n    }\n    if ( Aig_ObjIsConst1(Aig_Regular(pTotal)) )\n    {\n//        Abc_Print( 1, \"Skipped\\n\" );\n        return 0;\n    }\n    // create CNF\n    Ssw_CnfNodeAddToSolver( p-\u003epMSat, Aig_Regular(pTotal) );\n    // add output constraint\n    pLits[0] = toLitCond( Ssw_ObjSatNum(p-\u003epMSat,Aig_Regular(pTotal)), Aig_IsComplement(pTotal) );\n/*\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 1 );\n    assert( RetValue );\n    // simplify the solver\n    if ( p-\u003epSat-\u003eqtail != p-\u003epSat-\u003eqhead )\n    {\n        RetValue = sat_solver_simplify(p-\u003epSat);\n        assert( RetValue != 0 );\n    }\n*/\n    assert( p-\u003eiOutputLit == -1 );\n    p-\u003eiOutputLit = pLits[0];\n    return 1;\n}",
+      "Draft": "func Ssw_ManUniqueAddConstraint(p *Ssw_Man_t, vCommon *Vec_Ptr_t, f1 int32, f2 int32) int32 {\n    var pObj, pObj1New, pObj2New, pMiter, pTotal *Aig_Obj_t;\n    var i int32;\n    var pLits [2]int32;\n//    int RetValue;\n    assert(Vec_PtrSize(vCommon) \u003e 0, \"Vec_PtrSize(vCommon) \u003e 0\");\n    // generate the constraint\n    pTotal = Aig_ManConst0(p.pFrames);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCommon)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vCommon, i)), 1); i++  {\n        assert(Saig_ObjIsLo(p.pAig, pObj), \"Saig_ObjIsLo(p.pAig, pObj)\");\n        pObj1New = Ssw_ObjFrame( p, pObj, f1 );\n        pObj2New = Ssw_ObjFrame( p, pObj, f2 );\n        pMiter = Aig_Exor( p.pFrames, pObj1New, pObj2New );\n        pTotal = Aig_Or( p.pFrames, pTotal, pMiter );\n    }\n    if Aig_ObjIsConst1(Aig_Regular(pTotal)) {\n//        Abc_Print( 1, \"Skipped\\n\" );\n        return 0;\n    }\n    // create CNF\n    Ssw_CnfNodeAddToSolver( p.pMSat, Aig_Regular(pTotal) );\n    // add output constraint\n    pLits[0] = toLitCond( Ssw_ObjSatNum(p.pMSat,Aig_Regular(pTotal)), Aig_IsComplement(pTotal) );\n/*\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 1 );\n    assert( RetValue );\n    // simplify the solver\n    if ( p-\u003epSat-\u003eqtail != p-\u003epSat-\u003eqhead )\n    {\n        RetValue = sat_solver_simplify(p-\u003epSat);\n        assert( RetValue != 0 );\n    }\n*/\n    assert(p.iOutputLit == -1, \"p.iOutputLit == -1\");\n    p.iOutputLit = pLits[0];\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswUnique.c::pointer-cast::1688",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1576,
+      "End": 1576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswUnique.c::pointer-cast::3733",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3357,
+      "End": 3357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswUnique.c::pointer-cast::4521",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4036,
+      "End": 4036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswUnique.c::pointer-cast::5617",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5027,
+      "End": 5027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswUnique.c::Ssw_UniqueRegisterPairInfo",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_UniqueRegisterPairInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1316,
+      "End": 2520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswUnique.c::ternary::Ssw_ManUniqueOne",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_ManUniqueOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2806,
+      "End": 4434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswUnique.c::Ssw_ManUniqueOne",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManUniqueOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2806,
+      "End": 4434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswUnique.c::Ssw_ManUniqueAddConstraint",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManUniqueAddConstraint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4718,
+      "End": 6016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswUnique.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6262
+    }
+  ],
+  "Draft": "package ssw\n\n/**CFile****************************************************************\n\n  FileName    [sswSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Inductive prover with constraints.]\n\n  Synopsis    [On-demand uniqueness constraints.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 1, 2008.]\n\n  Revision    [$Id: sswSat.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sswInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Performs computation of signal correspondence with constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_UniqueRegisterPairInfo(p *Ssw_Man_t) {\n    var pObjLo, pObj0, pObj1 *Aig_Obj_t;\n    var i, RetValue, Counter int32;\n    if p.vDiffPairs == nil {\n        p.vDiffPairs = Vec_IntAlloc( Saig_ManRegNum(p.pAig) ); }\n    Vec_IntClear( p.vDiffPairs );\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObjLo) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i+Saig_ManPiNum(p.pAig))), 1); i++  {\n        pObj0 = Ssw_ObjFrame( p, pObjLo, 0 );\n        pObj1 = Ssw_ObjFrame( p, pObjLo, 1 );\n        if pObj0 == pObj1 {\n            Vec_IntPush( p.vDiffPairs, 0 );\n        } else if pObj0 == Aig_Not(pObj1) {\n            Vec_IntPush( p.vDiffPairs, 1 );\n//        else\n//            Vec_IntPush( p-\u003evDiffPairs, 1 );\n        } else if Aig_ObjPhaseReal(pObj0) != Aig_ObjPhaseReal(pObj1) {\n            Vec_IntPush( p.vDiffPairs, 1 );\n        } else {\n            RetValue = Ssw_NodesAreEquiv( p, Aig_Regular(pObj0), Aig_Regular(pObj1) );\n            Vec_IntPush( p.vDiffPairs, RetValue!=1 );\n        }\n    }\n    assert(Vec_IntSize(p.vDiffPairs) == Saig_ManRegNum(p.pAig), \"Vec_IntSize(p.vDiffPairs) == Saig_ManRegNum(p.pAig)\");\n    // count the number of ones\n    Counter = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vDiffPairs)) \u0026\u0026 (((RetValue) = Vec_IntEntry(p.vDiffPairs, i)), 1); i++  {\n        Counter += RetValue;\n    }\n//    Abc_Print( 1, \"The number of different register pairs = %d.\\n\", Counter );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if uniqueness constraints can be added.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManUniqueOne(p *Ssw_Man_t, pRepr *Aig_Obj_t, pObj *Aig_Obj_t, fVerbose int32) int32 {\n    var ppObjs [2]*Aig_Obj_t;\n    var pTemp *Aig_Obj_t;\n    var i, k, Value0, Value1, RetValue, fFeasible int32;\n\n    assert(p.pPars.nFramesK \u003e 1, \"p.pPars.nFramesK \u003e 1\");\n    assert(p.vDiffPairs \u0026\u0026 Vec_IntSize(p.vDiffPairs) == Saig_ManRegNum(p.pAig), \"p.vDiffPairs \u0026\u0026 Vec_IntSize(p.vDiffPairs) == Saig_ManRegNum(p.pAig)\");\n\n    // compute the first support in terms of LOs\n    ppObjs[0] = pRepr;\n    ppObjs[1] = pObj;\n    Aig_SupportNodes( p.pAig, ppObjs, 2, p.vCommon );\n    // keep only LOs\n    RetValue = Vec_PtrSize( p.vCommon );\n    fFeasible = 0;\n    k = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCommon)) \u0026\u0026 (((pTemp) = (Aig_Obj_t *)Vec_PtrEntry(p.vCommon, i)), 1); i++  {\n        assert(Aig_ObjIsCi(pTemp), \"Aig_ObjIsCi(pTemp)\");\n        if !Saig_ObjIsLo(p.pAig, pTemp) {\n            continue; }\n        assert(Aig_ObjCioId(pTemp) \u003e 0, \"Aig_ObjCioId(pTemp) \u003e 0\");\n        Vec_PtrWriteEntry( p.vCommon, k++, pTemp );\n        if Vec_IntEntry(p.vDiffPairs, Aig_ObjCioId(pTemp) - Saig_ManPiNum(p.pAig)) {\n            fFeasible = 1; }\n    }\n    Vec_PtrShrink( p.vCommon, k );\n\n    if fVerbose != 0 {\n        Abc_Print( 1, \"Node = %5d : Supp = %3d. Regs = %3d. Feasible = %s. \",\n            Aig_ObjId(pObj), RetValue, Vec_PtrSize(p.vCommon),\n            fFeasible? \"yes\": \"no \" ); }\n\n    // check the current values\n    RetValue = 1;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCommon)) \u0026\u0026 (((pTemp) = (Aig_Obj_t *)Vec_PtrEntry(p.vCommon, i)), 1); i++  {\n        Value0 = Ssw_ManGetSatVarValue( p, pTemp, 0 );\n        Value1 = Ssw_ManGetSatVarValue( p, pTemp, 1 );\n        if Value0 != Value1 {\n            RetValue = 0; }\n        if fVerbose != 0 {\n            Abc_Print( 1, \"%d\", Value0 ^ Value1 ); }\n    }\n    if fVerbose != 0 {\n        Abc_Print( 1, \"\\n\" ); }\n\n    return RetValue \u0026\u0026 fFeasible;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the output of the uniqueness constraint.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManUniqueAddConstraint(p *Ssw_Man_t, vCommon *Vec_Ptr_t, f1 int32, f2 int32) int32 {\n    var pObj, pObj1New, pObj2New, pMiter, pTotal *Aig_Obj_t;\n    var i int32;\n    var pLits [2]int32;\n//    int RetValue;\n    assert(Vec_PtrSize(vCommon) \u003e 0, \"Vec_PtrSize(vCommon) \u003e 0\");\n    // generate the constraint\n    pTotal = Aig_ManConst0(p.pFrames);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCommon)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vCommon, i)), 1); i++  {\n        assert(Saig_ObjIsLo(p.pAig, pObj), \"Saig_ObjIsLo(p.pAig, pObj)\");\n        pObj1New = Ssw_ObjFrame( p, pObj, f1 );\n        pObj2New = Ssw_ObjFrame( p, pObj, f2 );\n        pMiter = Aig_Exor( p.pFrames, pObj1New, pObj2New );\n        pTotal = Aig_Or( p.pFrames, pTotal, pMiter );\n    }\n    if Aig_ObjIsConst1(Aig_Regular(pTotal)) {\n//        Abc_Print( 1, \"Skipped\\n\" );\n        return 0;\n    }\n    // create CNF\n    Ssw_CnfNodeAddToSolver( p.pMSat, Aig_Regular(pTotal) );\n    // add output constraint\n    pLits[0] = toLitCond( Ssw_ObjSatNum(p.pMSat,Aig_Regular(pTotal)), Aig_IsComplement(pTotal) );\n/*\n    RetValue = sat_solver_addclause( p-\u003epSat, pLits, pLits + 1 );\n    assert( RetValue );\n    // simplify the solver\n    if ( p-\u003epSat-\u003eqtail != p-\u003epSat-\u003eqhead )\n    {\n        RetValue = sat_solver_simplify(p-\u003epSat);\n        assert( RetValue != 0 );\n    }\n*/\n    assert(p.iOutputLit == -1, \"p.iOutputLit == -1\");\n    p.iOutputLit = pLits[0];\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

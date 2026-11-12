@@ -1,0 +1,523 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c",
+  "SHA256": "7a84fd198515ab3d6b25d572ed54d23601cceadd07134cb361057a69a808be1e",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 55,
+        "Column": 9,
+        "ByteOffset": 1881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( reo_man, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(reo_man) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pTops );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 5,
+        "ByteOffset": 2595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pSupp );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 83,
+        "Column": 5,
+        "ByteOffset": 2620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pOrderInt );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 2649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pWidthCofs );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 85,
+        "Column": 5,
+        "ByteOffset": 2679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pMapToPlanes );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 86,
+        "Column": 5,
+        "ByteOffset": 2711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pMapToDdVarsOrig );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 2747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pMapToDdVarsFinal );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 2784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pPlanes );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pVarCosts );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 5,
+        "ByteOffset": 2840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pLevelOrder );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.HTable );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 5,
+        "ByteOffset": 2897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pRefNodes );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 2958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pMemChunks );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 2988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 4722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_ReorderInit",
+      "Start": 1722,
+      "End": 2197,
+      "BodyStart": 1783,
+      "Original": "reo_man * Extra_ReorderInit( int nDdVarsMax, int nNodesMax )\n{\n    reo_man * p;\n    // allocate and clean the data structure\n    p = ABC_ALLOC( reo_man, 1 );\n    memset( p, 0, sizeof(reo_man) );\n    // resize the manager to meet user's needs    \n    reoResizeStructures( p, nDdVarsMax, nNodesMax, 100 );\n    // set the defaults\n    p-\u003efMinApl   = 0;\n    p-\u003efMinWidth = 0;\n    p-\u003efRemapUp  = 0;\n    p-\u003efVerbose  = 0;\n    p-\u003efVerify   = 0;\n    p-\u003enIters    = 1;\n    return p;\n}",
+      "Draft": "func Extra_ReorderInit(nDdVarsMax int32, nNodesMax int32) *reo_man {\n    var p *reo_man;\n    // allocate and clean the data structure\n    p = new(reo_man);\n    memset( p, 0, sizeof(reo_man) );\n    // resize the manager to meet user's needs    \n    reoResizeStructures( p, nDdVarsMax, nNodesMax, 100 );\n    // set the defaults\n    p.fMinApl   = 0;\n    p.fMinWidth = 0;\n    p.fRemapUp  = 0;\n    p.fVerbose  = 0;\n    p.fVerify   = 0;\n    p.nIters    = 1;\n    return p;\n}"
+    },
+    {
+      "Name": "Extra_ReorderQuit",
+      "Start": 2509,
+      "End": 3000,
+      "BodyStart": 2547,
+      "Original": "void Extra_ReorderQuit( reo_man * p )\n{\n    ABC_FREE( p-\u003epTops );\n    ABC_FREE( p-\u003epSupp );\n    ABC_FREE( p-\u003epOrderInt );\n    ABC_FREE( p-\u003epWidthCofs );\n    ABC_FREE( p-\u003epMapToPlanes );\n    ABC_FREE( p-\u003epMapToDdVarsOrig );\n    ABC_FREE( p-\u003epMapToDdVarsFinal );\n    ABC_FREE( p-\u003epPlanes );\n    ABC_FREE( p-\u003epVarCosts );\n    ABC_FREE( p-\u003epLevelOrder );\n    ABC_FREE( p-\u003eHTable );\n    ABC_FREE( p-\u003epRefNodes );\n    reoUnitsStopDispenser( p );\n    ABC_FREE( p-\u003epMemChunks );\n    ABC_FREE( p );\n}",
+      "Draft": "func Extra_ReorderQuit(p *reo_man) {\n    ABC_FREE( p.pTops );\n    ABC_FREE( p.pSupp );\n    ABC_FREE( p.pOrderInt );\n    ABC_FREE( p.pWidthCofs );\n    ABC_FREE( p.pMapToPlanes );\n    ABC_FREE( p.pMapToDdVarsOrig );\n    ABC_FREE( p.pMapToDdVarsFinal );\n    ABC_FREE( p.pPlanes );\n    ABC_FREE( p.pVarCosts );\n    ABC_FREE( p.pLevelOrder );\n    ABC_FREE( p.HTable );\n    ABC_FREE( p.pRefNodes );\n    reoUnitsStopDispenser( p );\n    ABC_FREE( p.pMemChunks );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Extra_ReorderSetMinimizationType",
+      "Start": 4325,
+      "End": 4774,
+      "BodyStart": 4401,
+      "Original": "void Extra_ReorderSetMinimizationType( reo_man * p, reo_min_type fMinType )\n{\n    if ( fMinType == REO_MINIMIZE_NODES ) \n    {\n        p-\u003efMinWidth = 0;\n        p-\u003efMinApl   = 0;\n    }\n    else if ( fMinType == REO_MINIMIZE_WIDTH )\n    {\n        p-\u003efMinWidth = 1;\n        p-\u003efMinApl   = 0;\n    }\n    else if ( fMinType == REO_MINIMIZE_APL )\n    {\n        p-\u003efMinWidth = 0;\n        p-\u003efMinApl   = 1;\n    }\n    else \n    {\n        assert( 0 );\n    }\n}",
+      "Draft": "func Extra_ReorderSetMinimizationType(p *reo_man, fMinType reo_min_type) {\n    if fMinType == REO_MINIMIZE_NODES {\n        p.fMinWidth = 0;\n        p.fMinApl   = 0;\n    \n    } else if fMinType == REO_MINIMIZE_WIDTH {\n        p.fMinWidth = 1;\n        p.fMinApl   = 0;\n    \n    } else if fMinType == REO_MINIMIZE_APL {\n        p.fMinWidth = 0;\n        p.fMinApl   = 1;\n    \n    } else {\n        assert(false, \"0\");\n    }\n}"
+    },
+    {
+      "Name": "Extra_ReorderSetRemapping",
+      "Start": 6156,
+      "End": 6247,
+      "BodyStart": 6216,
+      "Original": "void Extra_ReorderSetRemapping( reo_man * p, int fRemapUp )\n{\n    p-\u003efRemapUp = fRemapUp;\n}",
+      "Draft": "func Extra_ReorderSetRemapping(p *reo_man, fRemapUp int32) {\n    p.fRemapUp = fRemapUp;\n}"
+    },
+    {
+      "Name": "Extra_ReorderSetIterations",
+      "Start": 6811,
+      "End": 6897,
+      "BodyStart": 6870,
+      "Original": "void Extra_ReorderSetIterations( reo_man * p, int nIters )\n{\n    p-\u003enIters = nIters;\n}",
+      "Draft": "func Extra_ReorderSetIterations(p *reo_man, nIters int32) {\n    p.nIters = nIters;\n}"
+    },
+    {
+      "Name": "Extra_ReorderSetVerification",
+      "Start": 7480,
+      "End": 7571,
+      "BodyStart": 7542,
+      "Original": "void Extra_ReorderSetVerification( reo_man * p, int fVerify )\n{\n    p-\u003efVerify = fVerify;\n}",
+      "Draft": "func Extra_ReorderSetVerification(p *reo_man, fVerify int32) {\n    p.fVerify = fVerify;\n}"
+    },
+    {
+      "Name": "Extra_ReorderSetVerbosity",
+      "Start": 7905,
+      "End": 7996,
+      "BodyStart": 7965,
+      "Original": "void Extra_ReorderSetVerbosity( reo_man * p, int fVerbose )\n{\n    p-\u003efVerbose = fVerbose;\n}",
+      "Draft": "func Extra_ReorderSetVerbosity(p *reo_man, fVerbose int32) {\n    p.fVerbose = fVerbose;\n}"
+    },
+    {
+      "Name": "Extra_Reorder",
+      "Start": 9633,
+      "End": 9849,
+      "BodyStart": 9716,
+      "Original": "DdNode * Extra_Reorder( reo_man * p, DdManager * dd, DdNode * Func, int * pOrder )\n{\n    DdNode * FuncRes;\n    Extra_ReorderArray( p, dd, \u0026Func, \u0026FuncRes, 1, pOrder );\n    Cudd_Deref( FuncRes );\n    return FuncRes;\n}",
+      "Draft": "func Extra_Reorder(p *reo_man, dd *DdManager, Func *DdNode, pOrder *int32) *DdNode {\n    var FuncRes *DdNode;\n    Extra_ReorderArray( p, dd, \u0026Func, \u0026FuncRes, 1, pOrder );\n    Cudd_Deref( FuncRes );\n    return FuncRes;\n}"
+    },
+    {
+      "Name": "Extra_ReorderArray",
+      "Start": 10281,
+      "End": 10467,
+      "BodyStart": 10401,
+      "Original": "void Extra_ReorderArray( reo_man * p, DdManager * dd, DdNode * Funcs[], DdNode * FuncsRes[], int nFuncs, int * pOrder )\n{\n    reoReorderArray( p, dd, Funcs, FuncsRes, nFuncs, pOrder );\n}",
+      "Draft": "func Extra_ReorderArray(p *reo_man, dd *DdManager, Funcs []*DdNode, FuncsRes []*DdNode, nFuncs int32, pOrder *int32) {\n    reoReorderArray( p, dd, Funcs, FuncsRes, nFuncs, pOrder );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::mechanical::sizeof::1898",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1898,
+      "End": 1904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::Extra_ReorderInit",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ReorderInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1722,
+      "End": 2197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::Extra_ReorderQuit",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ReorderQuit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2509,
+      "End": 3000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::Extra_ReorderSetMinimizationType",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ReorderSetMinimizationType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4325,
+      "End": 4774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::Extra_ReorderSetRemapping",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ReorderSetRemapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6156,
+      "End": 6247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::Extra_ReorderSetIterations",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ReorderSetIterations",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6811,
+      "End": 6897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::Extra_ReorderSetVerification",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ReorderSetVerification",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7480,
+      "End": 7571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::Extra_ReorderSetVerbosity",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ReorderSetVerbosity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7905,
+      "End": 7996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::Extra_Reorder",
+      "Category": "semantic-review",
+      "Symbol": "Extra_Reorder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9633,
+      "End": 9849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::Extra_ReorderArray",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ReorderArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10281,
+      "End": 10467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::1855",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1855,
+      "End": 1878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::2553",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2553,
+      "End": 2573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::2579",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2579,
+      "End": 2599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::2605",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2605,
+      "End": 2629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::2635",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2635,
+      "End": 2660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::2666",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2666,
+      "End": 2693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::2699",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2699,
+      "End": 2730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::2736",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2736,
+      "End": 2768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::2774",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2774,
+      "End": 2796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::2802",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2802,
+      "End": 2826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::2832",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2832,
+      "End": 2858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::2864",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2864,
+      "End": 2885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::2891",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2891,
+      "End": 2915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::2953",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2953,
+      "End": 2978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoApi.c::macro-inline::2984",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2984,
+      "End": 2997
+    }
+  ],
+  "Draft": "package reo\n\n/**CFile****************************************************************\n\n  FileName    [reoApi.c]\n\n  PackageName [REO: A specialized DD reordering engine.]\n\n  Synopsis    [Implementation of API functions.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 15, 2002.]\n\n  Revision    [$Id: reoApi.c,v 1.0 2002/15/10 03:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"reo.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Initializes the reordering engine.]\n\n  Description [The first argument is the max number of variables in the\n  CUDD DD manager which will be used with the reordering engine \n  (this number of should be the maximum of BDD and ZDD parts). \n  The second argument is the maximum number of BDD nodes in the BDDs \n  to be reordered. These limits are soft. Setting lower limits will later \n  cause the reordering manager to resize internal data structures. \n  However, setting the exact values will make reordering more efficient \n  because resizing will be not necessary.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ReorderInit(nDdVarsMax int32, nNodesMax int32) *reo_man {\n    var p *reo_man;\n    // allocate and clean the data structure\n    p = new(reo_man);\n    memset( p, 0, sizeof(reo_man) );\n    // resize the manager to meet user's needs    \n    reoResizeStructures( p, nDdVarsMax, nNodesMax, 100 );\n    // set the defaults\n    p.fMinApl   = 0;\n    p.fMinWidth = 0;\n    p.fRemapUp  = 0;\n    p.fVerbose  = 0;\n    p.fVerify   = 0;\n    p.nIters    = 1;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Disposes of the reordering engine.]\n\n  Description [Removes all memory associated with the reordering engine.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ReorderQuit(p *reo_man) {\n    ABC_FREE( p.pTops );\n    ABC_FREE( p.pSupp );\n    ABC_FREE( p.pOrderInt );\n    ABC_FREE( p.pWidthCofs );\n    ABC_FREE( p.pMapToPlanes );\n    ABC_FREE( p.pMapToDdVarsOrig );\n    ABC_FREE( p.pMapToDdVarsFinal );\n    ABC_FREE( p.pPlanes );\n    ABC_FREE( p.pVarCosts );\n    ABC_FREE( p.pLevelOrder );\n    ABC_FREE( p.HTable );\n    ABC_FREE( p.pRefNodes );\n    reoUnitsStopDispenser( p );\n    ABC_FREE( p.pMemChunks );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the type of DD minimizationl that will be performed.]\n\n  Description [Currently, three different types of minimization are supported.\n  It is possible to minimize the number of BDD nodes. This is a classical type\n  of minimization, which is attempting to reduce the total number of nodes in\n  the (shared) BDD of the given Boolean functions. It is also possible to \n  minimize the BDD width, defined as the sum total of the number of cofactors \n  on each level in the (shared) BDD (note that the number of cofactors on the \n  given level may be larger than the number of nodes appearing on the given level).\n  It is also possible to minimize the average path length in the (shared) BDD \n  defined as the sum of products, for all BDD paths from the top node to any \n  terminal node, of the number of minterms on the path by the number of nodes \n  on the path. The default reordering type is minimization for the number of \n  BDD nodes. Calling this function with REO_MINIMIZE_WIDTH or REO_MINIMIZE_APL\n  as the second argument, changes the default minimization option for all the \n  reorder calls performed afterwards.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ReorderSetMinimizationType(p *reo_man, fMinType reo_min_type) {\n    if fMinType == REO_MINIMIZE_NODES {\n        p.fMinWidth = 0;\n        p.fMinApl   = 0;\n    \n    } else if fMinType == REO_MINIMIZE_WIDTH {\n        p.fMinWidth = 1;\n        p.fMinApl   = 0;\n    \n    } else if fMinType == REO_MINIMIZE_APL {\n        p.fMinWidth = 0;\n        p.fMinApl   = 1;\n    \n    } else {\n        assert(false, \"0\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the type of remapping performed by the engine.]\n\n  Description [The remapping refers to the way the resulting BDD\n  is expressed using the elementary variables of the CUDD BDD manager.\n  Currently, two types possibilities are supported: remapping and no\n  remapping. Remapping means that the function(s) after reordering\n  depend on the topmost variables in the manager. No remapping means \n  that the function(s) after reordering depend on the same variables \n  as before. Consider the following example. Suppose the initial four\n  variable function depends on variables 2,4,5, and 9 on the CUDD BDD\n  manager, which may be found anywhere in the current variable order.\n  If remapping is set, the function after ordering depends on the \n  topmost variables in the manager, which may or may not be the same\n  as the variables 2,4,5, and 9. If no remapping is set, then the \n  reordered function depend on the same variables 2,4,5, and 9, but\n  the meaning of each variale has changed according to the new ordering.\n  The resulting ordering is returned in the array \"pOrder\" filled out\n  by the reordering engine in the call to Extra_Reorder(). The default\n  is no remapping.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ReorderSetRemapping(p *reo_man, fRemapUp int32) {\n    p.fRemapUp = fRemapUp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the number of iterations of sifting performed.]\n\n  Description [The default is one iteration. But a higher minimization\n  quality is desired, it is possible to set the number of iterations \n  to any number larger than 1. Convergence is often reached after\n  several iterations, so typically it make no sense to set the number\n  of iterations higher than 3.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ReorderSetIterations(p *reo_man, nIters int32) {\n    p.nIters = nIters;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the verification mode.]\n\n  Description [Setting the level to 1 results in verifying the results\n  of variable reordering. Verification is performed by remapping the\n  resulting functions into the original variable order and comparing\n  them with the original functions given by the user. Enabling verification\n  typically leads to 20-30% increase in the total runtime of REO.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ReorderSetVerification(p *reo_man, fVerify int32) {\n    p.fVerify = fVerify;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the verbosity level.]\n\n  Description [Setting the level to 1 results in printing statistics\n  before and after the reordering.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ReorderSetVerbosity(p *reo_man, fVerbose int32) {\n    p.fVerbose = fVerbose;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs reordering of the function.]\n\n  Description [Returns the DD minimized by variable reordering in the REO \n  engine. Takes the CUDD decision diagram manager (dd) and the function (Func) \n  represented as a BDD or ADD (MTBDD). If the variable array (pOrder) is not NULL, \n  returns the resulting  variable permutation. The permutation is such that if the resulting \n  function is permuted by Cudd_(add,bdd)Permute() using pOrder as the permutation \n  array, the initial function (Func) results.\n  Several flag set by other interface functions specify reordering options: \n  - Remappig can be set by Extra_ReorderSetRemapping(). Then the resulting DD after \n  reordering is remapped into the topmost levels of the DD manager. Otherwise, \n  the resulting DD after reordering is mapped using the same variables, on which it \n  originally depended, only (possibly) permuted as a result of reordering.\n  - Minimization type can be set by Extra_ReorderSetMinimizationType(). Note\n  that when the BDD is minimized for the total width of the total APL, the number\n  BDD nodes can increase. The total width is defines as sum total of widths on each \n  level. The width on one level is defined as the number of distinct BDD nodes \n  pointed by the nodes situated above the given level.\n  - The number of iterations of sifting can be set by Extra_ReorderSetIterations().\n  The decision diagram returned by this procedure is not referenced.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_Reorder(p *reo_man, dd *DdManager, Func *DdNode, pOrder *int32) *DdNode {\n    var FuncRes *DdNode;\n    Extra_ReorderArray( p, dd, \u0026Func, \u0026FuncRes, 1, pOrder );\n    Cudd_Deref( FuncRes );\n    return FuncRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs reordering of the array of functions.]\n\n  Description [The options are similar to the procedure Extra_Reorder(), except that\n  the user should also provide storage for the resulting DDs, which are returned \n  referenced.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ReorderArray(p *reo_man, dd *DdManager, Funcs []*DdNode, FuncsRes []*DdNode, nFuncs int32, pOrder *int32) {\n    reoReorderArray( p, dd, Funcs, FuncsRes, nFuncs, pOrder );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                         END OF FILE                              ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

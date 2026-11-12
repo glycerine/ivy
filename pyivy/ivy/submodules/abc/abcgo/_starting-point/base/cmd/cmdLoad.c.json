@@ -1,0 +1,149 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdLoad.c",
+  "SHA256": "27c6da45e460f4a1dc958abd40c6929fc8c61b5ab3c52cfd69a08507d4a3fd4e",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 62,
+        "Column": 17,
+        "ByteOffset": 1780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( Vec_StrArray(vCommand), \"r\" )) == nil {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 1974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 120,
+        "Column": 12,
+        "ByteOffset": 3349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strncmp( pName, \"abccmd_\", 7 ) {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 17,
+        "ByteOffset": 3480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pStop = strstr( pName + 7, \".\" );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 97,
+        "Column": 1,
+        "ByteOffset": 2731
+      },
+      "Directive": "#if defined(WIN32) \u0026\u0026 !defined(__cplusplus)"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "CmdCommandLoad",
+      "Start": 1358,
+      "End": 2495,
+      "BodyStart": 1423,
+      "Original": "int CmdCommandLoad( Abc_Frame_t * pAbc, int argc, char ** argv )\n{\n    Vec_Str_t * vCommand;\n    FILE * pFile;\n    int i;\n    vCommand = Vec_StrAlloc( 100 );\n    Vec_StrAppend( vCommand, \"abccmd_\" );\n    Vec_StrAppend( vCommand, argv[0] );\n    Vec_StrAppend( vCommand, \".exe\" );\n    Vec_StrPush( vCommand, 0 );\n    // check if there is the binary\n    if ( (pFile = fopen( Vec_StrArray(vCommand), \"r\" )) == NULL )\n    {\n        Vec_StrFree( vCommand );\n        Abc_Print( -1, \"Cannot run the binary \\\"%s\\\".\\n\\n\", Vec_StrArray(vCommand) );\n        return 1;\n    }\n    fclose( pFile );\n    Vec_StrPop( vCommand );\n    // add other arguments\n    for ( i = 1; i \u003c argc; i++ )\n    {\n        Vec_StrAppend( vCommand, \" \" );\n        Vec_StrAppend( vCommand, argv[i] );\n    }\n    Vec_StrPush( vCommand, 0 );\n    // run the command line\n    if ( Util_SignalSystem( Vec_StrArray(vCommand) ) )\n    {\n        Vec_StrFree( vCommand );\n        Abc_Print( -1, \"The following command has returned non-zero exit status:\\n\" );\n        Abc_Print( -1, \"\\\"%s\\\"\\n\", Vec_StrArray(vCommand) );\n        return 1;\n    }\n    Vec_StrFree( vCommand );\n    return 0;\n}",
+      "Draft": "func CmdCommandLoad(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var vCommand *Vec_Str_t;\n    var pFile *os.File;\n    var i int32;\n    vCommand = Vec_StrAlloc( 100 );\n    Vec_StrAppend( vCommand, \"abccmd_\" );\n    Vec_StrAppend( vCommand, argv[0] );\n    Vec_StrAppend( vCommand, \".exe\" );\n    Vec_StrPush( vCommand, 0 );\n    // check if there is the binary\n    if (pFile = os.Open(Vec_StrArray(vCommand))) == nil {\n        Vec_StrFree( vCommand );\n        Abc_Print( -1, \"Cannot run the binary \\\"%s\\\".\\n\\n\", Vec_StrArray(vCommand) );\n        return 1;\n    }\n    _ = (pFile).Close();\n    Vec_StrPop( vCommand );\n    // add other arguments\n    for  i = 1; i \u003c argc; i++  {\n        Vec_StrAppend( vCommand, \" \" );\n        Vec_StrAppend( vCommand, argv[i] );\n    }\n    Vec_StrPush( vCommand, 0 );\n    // run the command line\n    if Util_SignalSystem( Vec_StrArray(vCommand) ) {\n        Vec_StrFree( vCommand );\n        Abc_Print( -1, \"The following command has returned non-zero exit status:\\n\" );\n        Abc_Print( -1, \"\\\"%s\\\"\\n\", Vec_StrArray(vCommand) );\n        return 1;\n    }\n    Vec_StrFree( vCommand );\n    return 0;\n}"
+    },
+    {
+      "Name": "Load_Init",
+      "Start": 4172,
+      "End": 4829,
+      "BodyStart": 4209,
+      "Original": "void Load_Init( Abc_Frame_t * pAbc )\n{\n    Vec_Ptr_t * vFileNames;\n    char * pName, * pStop;\n    int i;\n    vFileNames = CmdCollectFileNames();\n    if ( vFileNames == NULL )\n        return;\n    Vec_PtrForEachEntry( char *, vFileNames, pName, i )\n    {\n        if ( strncmp( pName, \"abccmd_\", 7 ) )\n            continue;\n        // get the command name\n//        pName[6] = '!';\n        pStop = strstr( pName + 7, \".\" );\n        if ( pStop )\n            *pStop = 0;\n        // add the command\n        Cmd_CommandAdd( pAbc, \"ZZ\", pName+7, CmdCommandLoad, 0 );\n//        printf( \"Loaded command \\\"%s\\\"\\n\", pName+7 );\n    }\n    Vec_PtrFreeFree( vFileNames );\n}",
+      "Draft": "func Load_Init(pAbc *Abc_Frame_t) {\n    var vFileNames *Vec_Ptr_t;\n    var pName, pStop string;\n    var i int32;\n    vFileNames = CmdCollectFileNames();\n    if vFileNames == nil {\n        return; }\n    Vec_PtrForEachEntry( char *, vFileNames, pName, i )\n    {\n        if strncmp( pName, \"abccmd_\", 7 ) {\n            continue; }\n        // get the command name\n//        pName[6] = '!';\n        pStop = strstr( pName + 7, \".\" );\n        if pStop {\n            *pStop = 0; }\n        // add the command\n        Cmd_CommandAdd( pAbc, \"ZZ\", pName+7, CmdCommandLoad, 0 );\n//        printf( \"Loaded command \\\"%s\\\"\\n\", pName+7 );\n    }\n    Vec_PtrFreeFree( vFileNames );\n}"
+    },
+    {
+      "Name": "Load_End",
+      "Start": 5065,
+      "End": 5104,
+      "BodyStart": 5101,
+      "Original": "void Load_End( Abc_Frame_t * pAbc )\n{\n}",
+      "Draft": "func Load_End(pAbc *Abc_Frame_t) {\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdLoad.c::CmdCommandLoad",
+      "Category": "semantic-review",
+      "Symbol": "CmdCommandLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1358,
+      "End": 2495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdLoad.c::Load_Init",
+      "Category": "semantic-review",
+      "Symbol": "Load_Init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4172,
+      "End": 4829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdLoad.c::Load_End",
+      "Category": "semantic-review",
+      "Symbol": "Load_End",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5065,
+      "End": 5104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdLoad.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdLoad.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2731,
+      "End": 3935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdLoad.c::macro-inline::4367",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4367,
+      "End": 4418
+    }
+  ],
+  "Draft": "package cmd\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [cmdApi.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [External procedures of the command package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cmdApi.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/mainInt.h\"\n//#include \"cmd.h\"\n//#include \"cmdInt.h\"\n//#include \"misc/util/utilSignal.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc CmdCommandLoad(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var vCommand *Vec_Str_t;\n    var pFile *os.File;\n    var i int32;\n    vCommand = Vec_StrAlloc( 100 );\n    Vec_StrAppend( vCommand, \"abccmd_\" );\n    Vec_StrAppend( vCommand, argv[0] );\n    Vec_StrAppend( vCommand, \".exe\" );\n    Vec_StrPush( vCommand, 0 );\n    // check if there is the binary\n    if (pFile = os.Open(Vec_StrArray(vCommand))) == nil {\n        Vec_StrFree( vCommand );\n        Abc_Print( -1, \"Cannot run the binary \\\"%s\\\".\\n\\n\", Vec_StrArray(vCommand) );\n        return 1;\n    }\n    _ = (pFile).Close();\n    Vec_StrPop( vCommand );\n    // add other arguments\n    for  i = 1; i \u003c argc; i++  {\n        Vec_StrAppend( vCommand, \" \" );\n        Vec_StrAppend( vCommand, argv[i] );\n    }\n    Vec_StrPush( vCommand, 0 );\n    // run the command line\n    if Util_SignalSystem( Vec_StrArray(vCommand) ) {\n        Vec_StrFree( vCommand );\n        Abc_Print( -1, \"The following command has returned non-zero exit status:\\n\" );\n        Abc_Print( -1, \"\\\"%s\\\"\\n\", Vec_StrArray(vCommand) );\n        return 1;\n    }\n    Vec_StrFree( vCommand );\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n#if defined(WIN32) \u0026\u0026 !defined(__cplusplus)\n\n#include \u003cdirect.h\u003e\n#include \u003cio.h\u003e\n\n/**Function*************************************************************\n\n  Synopsis    [Collect file names ending with .exe]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nVec_Ptr_t * CmdCollectFileNames()\n{\n    Vec_Ptr_t * vFileNames;\n    struct _finddata_t c_file;\n    long   hFile;\n    if( (hFile = _findfirst( \"*.exe\", \u0026c_file )) == -1L )\n    {\n//        Abc_Print( 0, \"No files with extention \\\"%s\\\" in the current directory.\\n\", \"exe\" );\n        return NULL;\n    }\n    vFileNames = Vec_PtrAlloc( 100 );\n    do {\n        Vec_PtrPush( vFileNames, Extra_UtilStrsav( c_file.name ) );\n    } while( _findnext( hFile, \u0026c_file ) == 0 );\n    _findclose( hFile );\n    return vFileNames;\n}\n\n#else \n\n/**Function*************************************************************\n\n  Synopsis    [Collect file names ending with .exe]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nVec_Ptr_t * CmdCollectFileNames()\n{\n    return NULL;\n}\n\n#endif\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Load_Init(pAbc *Abc_Frame_t) {\n    var vFileNames *Vec_Ptr_t;\n    var pName, pStop string;\n    var i int32;\n    vFileNames = CmdCollectFileNames();\n    if vFileNames == nil {\n        return; }\n    Vec_PtrForEachEntry( char *, vFileNames, pName, i )\n    {\n        if strncmp( pName, \"abccmd_\", 7 ) {\n            continue; }\n        // get the command name\n//        pName[6] = '!';\n        pStop = strstr( pName + 7, \".\" );\n        if pStop {\n            *pStop = 0; }\n        // add the command\n        Cmd_CommandAdd( pAbc, \"ZZ\", pName+7, CmdCommandLoad, 0 );\n//        printf( \"Loaded command \\\"%s\\\"\\n\", pName+7 );\n    }\n    Vec_PtrFreeFree( vFileNames );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Load_End(pAbc *Abc_Frame_t) {\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

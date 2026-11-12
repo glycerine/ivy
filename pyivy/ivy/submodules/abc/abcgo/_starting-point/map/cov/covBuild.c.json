@@ -1,0 +1,538 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c",
+  "SHA256": "0dec26f2fd0fa0016c18b20935760af4b5a08553543e24c9cd9750593a781ae1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCube.nLits == uint32(vLits.nSize) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 66,
+        "Column": 9,
+        "ByteOffset": 2103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Lit == 1 || Lit == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 2316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCube.nLits \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 9,
+        "ByteOffset": 2619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Lit == 1 || Lit == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 3576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 3807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vSupp );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 6095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 195,
+        "Column": 9,
+        "ByteOffset": 6765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkCovDerive: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 217,
+        "Column": 5,
+        "ByteOffset": 7272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.pCopy );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 246,
+        "Column": 5,
+        "ByteOffset": 8166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCube.nLits == uint32(vLits.nSize) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 252,
+        "Column": 9,
+        "ByteOffset": 8460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Lit == 1 || Lit == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 8733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCube.nLits \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 266,
+        "Column": 9,
+        "ByteOffset": 9036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Lit == 1 || Lit == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 297,
+        "Column": 5,
+        "ByteOffset": 10144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 302,
+        "Column": 5,
+        "ByteOffset": 10294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vSupp );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 345,
+        "Column": 5,
+        "ByteOffset": 12016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 357,
+        "Column": 9,
+        "ByteOffset": 12615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkCovDeriveInv: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 388,
+        "Column": 5,
+        "ByteOffset": 13418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 391,
+        "Column": 5,
+        "ByteOffset": 13528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vSupp );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 420,
+        "Column": 9,
+        "ByteOffset": 14635
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 423,
+        "Column": 9,
+        "ByteOffset": 14714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"{ \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 425,
+        "Column": 13,
+        "ByteOffset": 14893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d \", Entry );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 427,
+        "Column": 9,
+        "ByteOffset": 14935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"}  cubes = %d\\n\", Min_CoverCountCubes( pCover ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 482,
+        "Column": 5,
+        "ByteOffset": 16935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 502,
+        "Column": 9,
+        "ByteOffset": 17904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkCovDerive: The network check has failed.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkCovDeriveCube",
+      "Start": 1281,
+      "End": 2987,
+      "BodyStart": 1406,
+      "Original": "Abc_Obj_t * Abc_NtkCovDeriveCube( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pObj, Min_Cube_t * pCube, Vec_Int_t * vSupp, int fCompl )\n{\n    Vec_Int_t * vLits;\n    Abc_Obj_t * pNodeNew, * pFanin;\n    int i, iFanin, Lit;\n    // create empty cube\n    if ( pCube-\u003enLits == 0 )\n    {\n        if ( fCompl )\n            return Abc_NtkCreateNodeConst0(pNtkNew);\n        return Abc_NtkCreateNodeConst1(pNtkNew);\n    }\n    // get the literals of this cube\n    vLits = Vec_IntAlloc( 10 );\n    Min_CubeGetLits( pCube, vLits );\n    assert( pCube-\u003enLits == (unsigned)vLits-\u003enSize );\n    // create special case when there is only one literal\n    if ( pCube-\u003enLits == 1 )\n    {\n        iFanin = Vec_IntEntry(vLits,0);\n        pFanin = Abc_NtkObj( pObj-\u003epNtk, Vec_IntEntry(vSupp, iFanin) );\n        Lit = Min_CubeGetVar(pCube, iFanin);\n        assert( Lit == 1 || Lit == 2 );\n        Vec_IntFree( vLits );\n        if ( (Lit == 1) ^ fCompl )// negative\n            return Abc_NtkCreateNodeInv( pNtkNew, pFanin-\u003epCopy );\n        return pFanin-\u003epCopy;\n    }\n    assert( pCube-\u003enLits \u003e 1 );\n    // create the AND cube\n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n    for ( i = 0; i \u003c vLits-\u003enSize; i++ )\n    {\n        iFanin = Vec_IntEntry(vLits,i);\n        pFanin = Abc_NtkObj( pObj-\u003epNtk, Vec_IntEntry(vSupp, iFanin) );\n        Lit = Min_CubeGetVar(pCube, iFanin);\n        assert( Lit == 1 || Lit == 2 );\n        Vec_IntWriteEntry( vLits, i, Lit==1 );\n        Abc_ObjAddFanin( pNodeNew, pFanin-\u003epCopy );\n    }\n    pNodeNew-\u003epData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew-\u003epManFunc, vLits-\u003enSize, vLits-\u003epArray );\n    if ( fCompl )\n        Abc_SopComplement( (char *)pNodeNew-\u003epData );\n    Vec_IntFree( vLits );\n    return pNodeNew;\n}",
+      "Draft": "func Abc_NtkCovDeriveCube(pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t, pCube *Min_Cube_t, vSupp *Vec_Int_t, fCompl int32) *Abc_Obj_t {\n    var vLits *Vec_Int_t;\n    var pNodeNew, pFanin *Abc_Obj_t;\n    var i, iFanin, Lit int32;\n    // create empty cube\n    if pCube.nLits == 0 {\n        if fCompl != 0 {\n            return Abc_NtkCreateNodeConst0(pNtkNew); }\n        return Abc_NtkCreateNodeConst1(pNtkNew);\n    }\n    // get the literals of this cube\n    vLits = Vec_IntAlloc( 10 );\n    Min_CubeGetLits( pCube, vLits );\n    assert(pCube.nLits == uint32(vLits.nSize), \"pCube.nLits == uint32(vLits.nSize)\");\n    // create special case when there is only one literal\n    if pCube.nLits == 1 {\n        iFanin = Vec_IntEntry(vLits,0);\n        pFanin = Abc_NtkObj( pObj.pNtk, Vec_IntEntry(vSupp, iFanin) );\n        Lit = Min_CubeGetVar(pCube, iFanin);\n        assert(Lit == 1 || Lit == 2, \"Lit == 1 || Lit == 2\");\n        Vec_IntFree( vLits );\n        if (Lit == 1) ^ fCompl {// negative\n            return Abc_NtkCreateNodeInv( pNtkNew, pFanin.pCopy ); }\n        return pFanin.pCopy;\n    }\n    assert(pCube.nLits \u003e 1, \"pCube.nLits \u003e 1\");\n    // create the AND cube\n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n    for  i = 0; i \u003c vLits.nSize; i++  {\n        iFanin = Vec_IntEntry(vLits,i);\n        pFanin = Abc_NtkObj( pObj.pNtk, Vec_IntEntry(vSupp, iFanin) );\n        Lit = Min_CubeGetVar(pCube, iFanin);\n        assert(Lit == 1 || Lit == 2, \"Lit == 1 || Lit == 2\");\n        Vec_IntWriteEntry( vLits, i, Lit==1 );\n        Abc_ObjAddFanin( pNodeNew, pFanin.pCopy );\n    }\n    pNodeNew.pData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew.pManFunc, vLits.nSize, vLits.pArray );\n    if fCompl != 0 {\n        Abc_SopComplement( (char *)pNodeNew.pData ); }\n    Vec_IntFree( vLits );\n    return pNodeNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkCovDeriveNode_rec",
+      "Start": 3254,
+      "End": 5421,
+      "BodyStart": 3358,
+      "Original": "Abc_Obj_t * Abc_NtkCovDeriveNode_rec( Cov_Man_t * p, Abc_Ntk_t * pNtkNew, Abc_Obj_t * pObj, int Level )\n{\n    Min_Cube_t * pCover = NULL, * pCube;\n    Abc_Obj_t * pFaninNew, * pNodeNew, * pFanin;\n    Vec_Int_t * vSupp;\n    int Entry, nCubes, i;\n\n    if ( Abc_ObjIsCi(pObj) )\n        return pObj-\u003epCopy;\n    assert( Abc_ObjIsNode(pObj) );\n    // skip if already computed\n    if ( pObj-\u003epCopy )\n        return pObj-\u003epCopy;\n\n    // get the support and the cover\n    vSupp  = Abc_ObjGetSupp( pObj ); \n    pCover = Abc_ObjGetCover2( pObj );\n    assert( vSupp );\n/*\n    if ( pCover \u0026\u0026  pCover-\u003enVars - Min_CoverSuppVarNum(p-\u003epManMin, pCover) \u003e 0 )\n    {\n        printf( \"%d\\n \", pCover-\u003enVars - Min_CoverSuppVarNum(p-\u003epManMin, pCover) );\n        Min_CoverWrite( stdout, pCover );\n    }\n*/\n/*\n    // print the support of this node\n    printf( \"{ \" );\n    Vec_IntForEachEntry( vSupp, Entry, i )\n        printf( \"%d \", Entry );\n    printf( \"}  cubes = %d\\n\", Min_CoverCountCubes( pCover ) );\n*/\n    // process the fanins\n    Vec_IntForEachEntry( vSupp, Entry, i )\n    {\n        pFanin = Abc_NtkObj(pObj-\u003epNtk, Entry);\n        Abc_NtkCovDeriveNode_rec( p, pNtkNew, pFanin, Level+1 );\n    }\n\n    // for each cube, construct the node\n    nCubes = Min_CoverCountCubes( pCover );\n    if ( nCubes == 0 )\n        pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);\n    else if ( nCubes == 1 )\n        pNodeNew = Abc_NtkCovDeriveCube( pNtkNew, pObj, pCover, vSupp, 0 );\n    else\n    {\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        Min_CoverForEachCube( pCover, pCube )\n        {\n            pFaninNew = Abc_NtkCovDeriveCube( pNtkNew, pObj, pCube, vSupp, 0 );\n            Abc_ObjAddFanin( pNodeNew, pFaninNew );\n        }\n        pNodeNew-\u003epData = Abc_SopCreateXorSpecial( (Mem_Flex_t *)pNtkNew-\u003epManFunc, nCubes );\n    }\n/*\n    printf( \"Created node %d(%d) at level %d: \", pNodeNew-\u003eId, pObj-\u003eId, Level );\n    Vec_IntForEachEntry( vSupp, Entry, i )\n    {\n        pFanin = Abc_NtkObj(pObj-\u003epNtk, Entry);\n        printf( \"%d(%d) \", pFanin-\u003epCopy-\u003eId, pFanin-\u003eId );\n    }\n    printf( \"\\n\" );\n    Min_CoverWrite( stdout, pCover );\n*/\n    pObj-\u003epCopy = pNodeNew;\n    return pNodeNew;\n}",
+      "Draft": "func Abc_NtkCovDeriveNode_rec(p *Cov_Man_t, pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t, Level int32) *Abc_Obj_t {\n    var pCover *Min_Cube_t = nil;\n    var pCube *Min_Cube_t;\n    var pFaninNew, pNodeNew, pFanin *Abc_Obj_t;\n    var vSupp *Vec_Int_t;\n    var Entry, nCubes, i int32;\n\n    if Abc_ObjIsCi(pObj) {\n        return pObj.pCopy; }\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n    // skip if already computed\n    if pObj.pCopy {\n        return pObj.pCopy; }\n\n    // get the support and the cover\n    vSupp  = Abc_ObjGetSupp( pObj ); \n    pCover = Abc_ObjGetCover2( pObj );\n    assert((vSupp != nil), \"vSupp\");\n/*\n    if ( pCover \u0026\u0026  pCover-\u003enVars - Min_CoverSuppVarNum(p-\u003epManMin, pCover) \u003e 0 )\n    {\n        printf( \"%d\\n \", pCover-\u003enVars - Min_CoverSuppVarNum(p-\u003epManMin, pCover) );\n        Min_CoverWrite( stdout, pCover );\n    }\n*/\n/*\n    // print the support of this node\n    printf( \"{ \" );\n    Vec_IntForEachEntry( vSupp, Entry, i )\n        printf( \"%d \", Entry );\n    printf( \"}  cubes = %d\\n\", Min_CoverCountCubes( pCover ) );\n*/\n    // process the fanins\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSupp, i)), 1); i++  {\n        pFanin = Abc_NtkObj(pObj.pNtk, Entry);\n        Abc_NtkCovDeriveNode_rec( p, pNtkNew, pFanin, Level+1 );\n    }\n\n    // for each cube, construct the node\n    nCubes = Min_CoverCountCubes( pCover );\n    if nCubes == 0 {\n        pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);\n    } else if nCubes == 1 {\n        pNodeNew = Abc_NtkCovDeriveCube( pNtkNew, pObj, pCover, vSupp, 0 );\n    } else {\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        // inlining of macro Min_CoverForEachCube\n        for  pCube = pCover;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n            pFaninNew = Abc_NtkCovDeriveCube( pNtkNew, pObj, pCube, vSupp, 0 );\n            Abc_ObjAddFanin( pNodeNew, pFaninNew );\n        }\n        pNodeNew.pData = Abc_SopCreateXorSpecial( (Mem_Flex_t *)pNtkNew.pManFunc, nCubes );\n    }\n/*\n    printf( \"Created node %d(%d) at level %d: \", pNodeNew-\u003eId, pObj-\u003eId, Level );\n    Vec_IntForEachEntry( vSupp, Entry, i )\n    {\n        pFanin = Abc_NtkObj(pObj-\u003epNtk, Entry);\n        printf( \"%d(%d) \", pFanin-\u003epCopy-\u003eId, pFanin-\u003eId );\n    }\n    printf( \"\\n\" );\n    Min_CoverWrite( stdout, pCover );\n*/\n    pObj.pCopy = pNodeNew;\n    return pNodeNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkCovDerive",
+      "Start": 5688,
+      "End": 6544,
+      "BodyStart": 5752,
+      "Original": "Abc_Ntk_t * Abc_NtkCovDerive( Cov_Man_t * p, Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pObj;\n    int i;\n    assert( Abc_NtkIsStrash(pNtk) );\n    // perform strashing\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // reconstruct the network\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        Abc_NtkCovDeriveNode_rec( p, pNtkNew, Abc_ObjFanin0(pObj), 0 );\n//        printf( \"*** CO %s : %d -\u003e %d \\n\", Abc_ObjName(pObj), pObj-\u003epCopy-\u003eId, Abc_ObjFanin0(pObj)-\u003epCopy-\u003eId );\n    }\n    // add the COs\n    Abc_NtkFinalize( pNtk, pNtkNew );\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 1 );\n    // make sure everything is okay\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Abc_NtkCovDerive: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkCovDerive(p *Cov_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // perform strashing\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // reconstruct the network\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Abc_NtkCovDeriveNode_rec( p, pNtkNew, Abc_ObjFanin0(pObj), 0 );\n//        printf( \"*** CO %s : %d -\u003e %d \\n\", Abc_ObjName(pObj), pObj-\u003epCopy-\u003eId, Abc_ObjFanin0(pObj)-\u003epCopy-\u003eId );\n    }\n    // add the COs\n    Abc_NtkFinalize( pNtk, pNtkNew );\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 1 );\n    // make sure everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkCovDerive: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkCovDeriveInv",
+      "Start": 6814,
+      "End": 7121,
+      "BodyStart": 6899,
+      "Original": "Abc_Obj_t * Abc_NtkCovDeriveInv( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pObj, int fCompl )\n{\n    assert( pObj-\u003epCopy );\n    if ( !fCompl )\n        return pObj-\u003epCopy;\n    if ( pObj-\u003epCopy-\u003epCopy == NULL )\n        pObj-\u003epCopy-\u003epCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj-\u003epCopy );\n    return pObj-\u003epCopy-\u003epCopy;\n }",
+      "Draft": "func Abc_NtkCovDeriveInv(pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t, fCompl int32) *Abc_Obj_t {\n    assert(pObj.pCopy, \"pObj.pCopy\");\n    if !(fCompl != 0) {\n        return pObj.pCopy; }\n    if pObj.pCopy.pCopy == nil {\n        pObj.pCopy.pCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj.pCopy ); }\n    return pObj.pCopy.pCopy;\n }"
+    },
+    {
+      "Name": "Abc_NtkCovDeriveCubeInv",
+      "Start": 7388,
+      "End": 9168,
+      "BodyStart": 7504,
+      "Original": "Abc_Obj_t * Abc_NtkCovDeriveCubeInv( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pObj, Min_Cube_t * pCube, Vec_Int_t * vSupp )\n{\n    Vec_Int_t * vLits;\n    Abc_Obj_t * pNodeNew, * pFanin;\n    int i, iFanin, Lit;\n    // create empty cube\n    if ( pCube-\u003enLits == 0 )\n        return Abc_NtkCreateNodeConst1(pNtkNew);\n    // get the literals of this cube\n    vLits = Vec_IntAlloc( 10 );\n    Min_CubeGetLits( pCube, vLits );\n    assert( pCube-\u003enLits == (unsigned)vLits-\u003enSize );\n    // create special case when there is only one literal\n    if ( pCube-\u003enLits == 1 )\n    {\n        iFanin = Vec_IntEntry(vLits,0);\n        pFanin = Abc_NtkObj( pObj-\u003epNtk, Vec_IntEntry(vSupp, iFanin) );\n        Lit = Min_CubeGetVar(pCube, iFanin);\n        assert( Lit == 1 || Lit == 2 );\n        Vec_IntFree( vLits );\n//        if ( Lit == 1 )// negative\n//            return Abc_NtkCreateNodeInv( pNtkNew, pFanin-\u003epCopy );\n//        return pFanin-\u003epCopy;\n        return Abc_NtkCovDeriveInv( pNtkNew, pFanin, Lit==1 );\n    }\n    assert( pCube-\u003enLits \u003e 1 );\n    // create the AND cube\n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n    for ( i = 0; i \u003c vLits-\u003enSize; i++ )\n    {\n        iFanin = Vec_IntEntry(vLits,i);\n        pFanin = Abc_NtkObj( pObj-\u003epNtk, Vec_IntEntry(vSupp, iFanin) );\n        Lit = Min_CubeGetVar(pCube, iFanin);\n        assert( Lit == 1 || Lit == 2 );\n        Vec_IntWriteEntry( vLits, i, Lit==1 );\n//        Abc_ObjAddFanin( pNodeNew, pFanin-\u003epCopy );\n        Abc_ObjAddFanin( pNodeNew, Abc_NtkCovDeriveInv( pNtkNew, pFanin, Lit==1 ) );\n    }\n//    pNodeNew-\u003epData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew-\u003epManFunc, vLits-\u003enSize, vLits-\u003epArray );\n    pNodeNew-\u003epData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew-\u003epManFunc, vLits-\u003enSize, NULL );\n    Vec_IntFree( vLits );\n    return pNodeNew;\n}",
+      "Draft": "func Abc_NtkCovDeriveCubeInv(pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t, pCube *Min_Cube_t, vSupp *Vec_Int_t) *Abc_Obj_t {\n    var vLits *Vec_Int_t;\n    var pNodeNew, pFanin *Abc_Obj_t;\n    var i, iFanin, Lit int32;\n    // create empty cube\n    if pCube.nLits == 0 {\n        return Abc_NtkCreateNodeConst1(pNtkNew); }\n    // get the literals of this cube\n    vLits = Vec_IntAlloc( 10 );\n    Min_CubeGetLits( pCube, vLits );\n    assert(pCube.nLits == uint32(vLits.nSize), \"pCube.nLits == uint32(vLits.nSize)\");\n    // create special case when there is only one literal\n    if pCube.nLits == 1 {\n        iFanin = Vec_IntEntry(vLits,0);\n        pFanin = Abc_NtkObj( pObj.pNtk, Vec_IntEntry(vSupp, iFanin) );\n        Lit = Min_CubeGetVar(pCube, iFanin);\n        assert(Lit == 1 || Lit == 2, \"Lit == 1 || Lit == 2\");\n        Vec_IntFree( vLits );\n//        if ( Lit == 1 )// negative\n//            return Abc_NtkCreateNodeInv( pNtkNew, pFanin-\u003epCopy );\n//        return pFanin-\u003epCopy;\n        return Abc_NtkCovDeriveInv( pNtkNew, pFanin, Lit==1 );\n    }\n    assert(pCube.nLits \u003e 1, \"pCube.nLits \u003e 1\");\n    // create the AND cube\n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n    for  i = 0; i \u003c vLits.nSize; i++  {\n        iFanin = Vec_IntEntry(vLits,i);\n        pFanin = Abc_NtkObj( pObj.pNtk, Vec_IntEntry(vSupp, iFanin) );\n        Lit = Min_CubeGetVar(pCube, iFanin);\n        assert(Lit == 1 || Lit == 2, \"Lit == 1 || Lit == 2\");\n        Vec_IntWriteEntry( vLits, i, Lit==1 );\n//        Abc_ObjAddFanin( pNodeNew, pFanin-\u003epCopy );\n        Abc_ObjAddFanin( pNodeNew, Abc_NtkCovDeriveInv( pNtkNew, pFanin, Lit==1 ) );\n    }\n//    pNodeNew-\u003epData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew-\u003epManFunc, vLits-\u003enSize, vLits-\u003epArray );\n    pNodeNew.pData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew.pManFunc, vLits.nSize, nil );\n    Vec_IntFree( vLits );\n    return pNodeNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkCovDeriveNodeInv_rec",
+      "Start": 9435,
+      "End": 10872,
+      "BodyStart": 9543,
+      "Original": "Abc_Obj_t * Abc_NtkCovDeriveNodeInv_rec( Cov_Man_t * p, Abc_Ntk_t * pNtkNew, Abc_Obj_t * pObj, int fCompl )\n{\n    Min_Cube_t * pCover, * pCube;\n    Abc_Obj_t * pFaninNew, * pNodeNew, * pFanin;\n    Vec_Int_t * vSupp;\n    int Entry, nCubes, i;\n\n    // skip if already computed\n    if ( pObj-\u003epCopy )\n        return Abc_NtkCovDeriveInv( pNtkNew, pObj, fCompl );\n    assert( Abc_ObjIsNode(pObj) );\n\n    // get the support and the cover\n    vSupp  = Abc_ObjGetSupp( pObj ); \n    pCover = Abc_ObjGetCover2( pObj );\n    assert( vSupp );\n\n    // process the fanins\n    Vec_IntForEachEntry( vSupp, Entry, i )\n    {\n        pFanin = Abc_NtkObj(pObj-\u003epNtk, Entry);\n        Abc_NtkCovDeriveNodeInv_rec( p, pNtkNew, pFanin, 0 );\n    }\n\n    // for each cube, construct the node\n    nCubes = Min_CoverCountCubes( pCover );\n    if ( nCubes == 0 )\n        pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);\n    else if ( nCubes == 1 )\n        pNodeNew = Abc_NtkCovDeriveCubeInv( pNtkNew, pObj, pCover, vSupp );\n    else\n    {\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        Min_CoverForEachCube( pCover, pCube )\n        {\n            pFaninNew = Abc_NtkCovDeriveCubeInv( pNtkNew, pObj, pCube, vSupp );\n            Abc_ObjAddFanin( pNodeNew, pFaninNew );\n        }\n        pNodeNew-\u003epData = Abc_SopCreateXorSpecial( (Mem_Flex_t *)pNtkNew-\u003epManFunc, nCubes );\n    }\n\n    pObj-\u003epCopy = pNodeNew;\n    return Abc_NtkCovDeriveInv( pNtkNew, pObj, fCompl );\n}",
+      "Draft": "func Abc_NtkCovDeriveNodeInv_rec(p *Cov_Man_t, pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t, fCompl int32) *Abc_Obj_t {\n    var pCover, pCube *Min_Cube_t;\n    var pFaninNew, pNodeNew, pFanin *Abc_Obj_t;\n    var vSupp *Vec_Int_t;\n    var Entry, nCubes, i int32;\n\n    // skip if already computed\n    if pObj.pCopy {\n        return Abc_NtkCovDeriveInv( pNtkNew, pObj, fCompl ); }\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n\n    // get the support and the cover\n    vSupp  = Abc_ObjGetSupp( pObj ); \n    pCover = Abc_ObjGetCover2( pObj );\n    assert((vSupp != nil), \"vSupp\");\n\n    // process the fanins\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSupp, i)), 1); i++  {\n        pFanin = Abc_NtkObj(pObj.pNtk, Entry);\n        Abc_NtkCovDeriveNodeInv_rec( p, pNtkNew, pFanin, 0 );\n    }\n\n    // for each cube, construct the node\n    nCubes = Min_CoverCountCubes( pCover );\n    if nCubes == 0 {\n        pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);\n    } else if nCubes == 1 {\n        pNodeNew = Abc_NtkCovDeriveCubeInv( pNtkNew, pObj, pCover, vSupp );\n    } else {\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        // inlining of macro Min_CoverForEachCube\n        for  pCube = pCover;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n            pFaninNew = Abc_NtkCovDeriveCubeInv( pNtkNew, pObj, pCube, vSupp );\n            Abc_ObjAddFanin( pNodeNew, pFaninNew );\n        }\n        pNodeNew.pData = Abc_SopCreateXorSpecial( (Mem_Flex_t *)pNtkNew.pManFunc, nCubes );\n    }\n\n    pObj.pCopy = pNodeNew;\n    return Abc_NtkCovDeriveInv( pNtkNew, pObj, fCompl );\n}"
+    },
+    {
+      "Name": "Abc_NtkCovDeriveClean",
+      "Start": 11261,
+      "End": 12067,
+      "BodyStart": 11330,
+      "Original": "Abc_Ntk_t * Abc_NtkCovDeriveClean( Cov_Man_t * p, Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pObj, * pNodeNew;\n    int i;\n    assert( Abc_NtkIsStrash(pNtk) );\n    // perform strashing\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // reconstruct the network\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        pNodeNew = Abc_NtkCovDeriveNodeInv_rec( p, pNtkNew, Abc_ObjFanin0(pObj), Abc_ObjFaninC0(pObj) );\n        Abc_ObjAddFanin( pObj-\u003epCopy, pNodeNew );\n    }\n    // add the COs\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // make sure everything is okay\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Abc_NtkCovDeriveInv: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkCovDeriveClean(p *Cov_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pObj, pNodeNew *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // perform strashing\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // reconstruct the network\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pNodeNew = Abc_NtkCovDeriveNodeInv_rec( p, pNtkNew, Abc_ObjFanin0(pObj), Abc_ObjFaninC0(pObj) );\n        Abc_ObjAddFanin( pObj.pCopy, pNodeNew );\n    }\n    // add the COs\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // make sure everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkCovDeriveInv: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkCovDerive_rec",
+      "Start": 12336,
+      "End": 15522,
+      "BodyStart": 12425,
+      "Original": "Abc_Obj_t * Abc_NtkCovDerive_rec( Cov_Man_t * p, Abc_Ntk_t * pNtkNew, Abc_Obj_t * pObj )\n{\n    int fVerbose = 0;\n    Min_Cube_t * pCover, * pCovers[3];\n    Abc_Obj_t * pNodeNew, * pFanin;\n    Vec_Int_t * vSupp;\n    Vec_Str_t * vCover;\n    int i, Entry, nCubes, Type = 0;\n    // skip if already computed\n    if ( pObj-\u003epCopy )\n        return pObj-\u003epCopy;\n    assert( Abc_ObjIsNode(pObj) );\n    // get the support and the cover\n    vSupp  = Abc_ObjGetSupp( pObj ); \n    assert( vSupp );\n    // choose the cover to implement\n    pCovers[0] = Abc_ObjGetCover( pObj, 0 );\n    pCovers[1] = Abc_ObjGetCover( pObj, 1 );\n    pCovers[2] = Abc_ObjGetCover2( pObj );\n    // use positive polarity\n    if ( pCovers[0] \n        \u0026\u0026 (!pCovers[1] || Min_CoverCountCubes(pCovers[0]) \u003c= Min_CoverCountCubes(pCovers[1]))\n        \u0026\u0026 (!pCovers[2] || Min_CoverCountCubes(pCovers[0]) \u003c= Min_CoverCountCubes(pCovers[2]))   )\n    {\n        pCover = pCovers[0];\n        Type = '1';\n    }\n    else \n    // use negative polarity\n    if ( pCovers[1] \n        \u0026\u0026 (!pCovers[0] || Min_CoverCountCubes(pCovers[1]) \u003c= Min_CoverCountCubes(pCovers[0]))\n        \u0026\u0026 (!pCovers[2] || Min_CoverCountCubes(pCovers[1]) \u003c= Min_CoverCountCubes(pCovers[2]))   )\n    {\n        pCover = pCovers[1];\n        Type = '0';\n    }\n    else \n    // use XOR polarity\n    if ( pCovers[2] \n        \u0026\u0026 (!pCovers[0] || Min_CoverCountCubes(pCovers[2]) \u003c Min_CoverCountCubes(pCovers[0]))\n        \u0026\u0026 (!pCovers[1] || Min_CoverCountCubes(pCovers[2]) \u003c Min_CoverCountCubes(pCovers[1]))   )\n    {\n        pCover = pCovers[2];\n        Type = 'x';\n    }\n    else\n        assert( 0 );\n    // print the support of this node\n    if ( fVerbose )\n    {\n        printf( \"{ \" );\n        Vec_IntForEachEntry( vSupp, Entry, i )\n            printf( \"%d \", Entry );\n        printf( \"}  cubes = %d\\n\", Min_CoverCountCubes( pCover ) );\n    }\n    // process the fanins\n    Vec_IntForEachEntry( vSupp, Entry, i )\n    {\n        pFanin = Abc_NtkObj(pObj-\u003epNtk, Entry);\n        Abc_NtkCovDerive_rec( p, pNtkNew, pFanin );\n    }\n    // for each cube, construct the node\n    nCubes = Min_CoverCountCubes( pCover );\n    if ( nCubes == 0 )\n        pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);\n    else if ( nCubes == 1 )\n        pNodeNew = Abc_NtkCovDeriveCube( pNtkNew, pObj, pCover, vSupp, Type == '0' );\n    else\n    {\n        // create the node\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        Vec_IntForEachEntry( vSupp, Entry, i )\n        {\n            pFanin = Abc_NtkObj(pObj-\u003epNtk, Entry);\n            Abc_ObjAddFanin( pNodeNew, pFanin-\u003epCopy );\n        }\n        // derive the function\n        vCover = Vec_StrAlloc( 100 );\n        Min_CoverCreate( vCover, pCover, (char)Type );\n        pNodeNew-\u003epData = Abc_SopRegister((Mem_Flex_t *)pNtkNew-\u003epManFunc, Vec_StrArray(vCover) );\n        Vec_StrFree( vCover );\n    }\n\n/*\n    printf( \"Created node %d(%d) at level %d: \", pNodeNew-\u003eId, pObj-\u003eId, Level );\n    Vec_IntForEachEntry( vSupp, Entry, i )\n    {\n        pFanin = Abc_NtkObj(pObj-\u003epNtk, Entry);\n        printf( \"%d(%d) \", pFanin-\u003epCopy-\u003eId, pFanin-\u003eId );\n    }\n    printf( \"\\n\" );\n    Min_CoverWrite( stdout, pCover );\n*/\n    return pObj-\u003epCopy = pNodeNew;\n}",
+      "Draft": "func Abc_NtkCovDerive_rec(p *Cov_Man_t, pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t) *Abc_Obj_t {\n    var fVerbose int32;\n    var pCover *Min_Cube_t;\n    var pCovers [3]*Min_Cube_t;\n    var pNodeNew, pFanin *Abc_Obj_t;\n    var vSupp *Vec_Int_t;\n    var vCover *Vec_Str_t;\n    var i, Entry, nCubes, Type int32;\n    // skip if already computed\n    if pObj.pCopy {\n        return pObj.pCopy; }\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n    // get the support and the cover\n    vSupp  = Abc_ObjGetSupp( pObj ); \n    assert((vSupp != nil), \"vSupp\");\n    // choose the cover to implement\n    pCovers[0] = Abc_ObjGetCover( pObj, 0 );\n    pCovers[1] = Abc_ObjGetCover( pObj, 1 );\n    pCovers[2] = Abc_ObjGetCover2( pObj );\n    // use positive polarity\n    if pCovers[0] \n        \u0026\u0026 (!pCovers[1] || Min_CoverCountCubes(pCovers[0]) \u003c= Min_CoverCountCubes(pCovers[1]))\n        \u0026\u0026 (!pCovers[2] || Min_CoverCountCubes(pCovers[0]) \u003c= Min_CoverCountCubes(pCovers[2])) {\n        pCover = pCovers[0];\n        Type = '1';\n    \n    } else \n    // use negative polarity\n    if pCovers[1] \n        \u0026\u0026 (!pCovers[0] || Min_CoverCountCubes(pCovers[1]) \u003c= Min_CoverCountCubes(pCovers[0]))\n        \u0026\u0026 (!pCovers[2] || Min_CoverCountCubes(pCovers[1]) \u003c= Min_CoverCountCubes(pCovers[2])) {\n        pCover = pCovers[1];\n        Type = '0';\n    \n    } else \n    // use XOR polarity\n    if pCovers[2] \n        \u0026\u0026 (!pCovers[0] || Min_CoverCountCubes(pCovers[2]) \u003c Min_CoverCountCubes(pCovers[0]))\n        \u0026\u0026 (!pCovers[1] || Min_CoverCountCubes(pCovers[2]) \u003c Min_CoverCountCubes(pCovers[1])) {\n        pCover = pCovers[2];\n        Type = 'x';\n    \n    } else {\n        assert(false, \"0\"); }\n    // print the support of this node\n    if fVerbose != 0 {\n        fmt.Printf(\"{ \");\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSupp, i)), 1); i++  {\n            fmt.Printf(\"%d \", Entry);\n        }\n        fmt.Printf(\"}  cubes = %d\\n\", Min_CoverCountCubes( pCover ));\n    }\n    // process the fanins\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSupp, i)), 1); i++  {\n        pFanin = Abc_NtkObj(pObj.pNtk, Entry);\n        Abc_NtkCovDerive_rec( p, pNtkNew, pFanin );\n    }\n    // for each cube, construct the node\n    nCubes = Min_CoverCountCubes( pCover );\n    if nCubes == 0 {\n        pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);\n    } else if nCubes == 1 {\n        pNodeNew = Abc_NtkCovDeriveCube( pNtkNew, pObj, pCover, vSupp, Type == '0' );\n    } else {\n        // create the node\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSupp, i)), 1); i++  {\n            pFanin = Abc_NtkObj(pObj.pNtk, Entry);\n            Abc_ObjAddFanin( pNodeNew, pFanin.pCopy );\n        }\n        // derive the function\n        vCover = Vec_StrAlloc( 100 );\n        Min_CoverCreate( vCover, pCover, byte(Type) );\n        pNodeNew.pData = Abc_SopRegister((Mem_Flex_t *)pNtkNew.pManFunc, Vec_StrArray(vCover) );\n        Vec_StrFree( vCover );\n    }\n\n/*\n    printf( \"Created node %d(%d) at level %d: \", pNodeNew-\u003eId, pObj-\u003eId, Level );\n    Vec_IntForEachEntry( vSupp, Entry, i )\n    {\n        pFanin = Abc_NtkObj(pObj-\u003epNtk, Entry);\n        printf( \"%d(%d) \", pFanin-\u003epCopy-\u003eId, pFanin-\u003eId );\n    }\n    printf( \"\\n\" );\n    Min_CoverWrite( stdout, pCover );\n*/\n    return pObj.pCopy = pNodeNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkCovDeriveRegular",
+      "Start": 15789,
+      "End": 16975,
+      "BodyStart": 15860,
+      "Original": "Abc_Ntk_t * Abc_NtkCovDeriveRegular( Cov_Man_t * p, Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pObj, * pNodeNew;\n    int i;\n    assert( Abc_NtkIsStrash(pNtk) );\n    // perform strashing\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // reconstruct the network\n    if ( Abc_ObjFanoutNum(Abc_AigConst1(pNtk)) \u003e 0 )\n        Abc_AigConst1(pNtk)-\u003epCopy = Abc_NtkCreateNodeConst1(pNtkNew);\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        pNodeNew = Abc_NtkCovDerive_rec( p, pNtkNew, Abc_ObjFanin0(pObj) );\n        if ( Abc_ObjFaninC0(pObj) )\n        {\n            if ( pNodeNew-\u003epData \u0026\u0026 Abc_ObjFanoutNum(Abc_ObjFanin0(pObj)) == 1 )\n                Abc_SopComplement( (char *)pNodeNew-\u003epData );\n            else\n                pNodeNew = Abc_NtkCreateNodeInv( pNtkNew, pNodeNew );\n        }\n        Abc_ObjAddFanin( pObj-\u003epCopy, pNodeNew );\n    }\n    // add the COs\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // make sure everything is okay\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Abc_NtkCovDerive: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkCovDeriveRegular(p *Cov_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pObj, pNodeNew *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // perform strashing\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // reconstruct the network\n    if Abc_ObjFanoutNum(Abc_AigConst1(pNtk)) \u003e 0 {\n        Abc_AigConst1(pNtk).pCopy = Abc_NtkCreateNodeConst1(pNtkNew); }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pNodeNew = Abc_NtkCovDerive_rec( p, pNtkNew, Abc_ObjFanin0(pObj) );\n        if Abc_ObjFaninC0(pObj) {\n            if pNodeNew.pData \u0026\u0026 Abc_ObjFanoutNum(Abc_ObjFanin0(pObj)) == 1 {\n                Abc_SopComplement( (char *)pNodeNew.pData );\n            } else {\n                pNodeNew = Abc_NtkCreateNodeInv( pNtkNew, pNodeNew ); }\n        }\n        Abc_ObjAddFanin( pObj.pCopy, pNodeNew );\n    }\n    // add the COs\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // make sure everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkCovDerive: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::pointer-cast::2803",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2803,
+      "End": 2817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::pointer-cast::2912",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2912,
+      "End": 2920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::pointer-cast::5292",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5013,
+      "End": 5027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::pointer-cast::9445",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9065,
+      "End": 9079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::pointer-cast::11395",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10736,
+      "End": 10750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::pointer-cast::16154",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15082,
+      "End": 15096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::pointer-cast::17673",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16500,
+      "End": 16508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::Abc_NtkCovDeriveCube",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCovDeriveCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1281,
+      "End": 2987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::Abc_NtkCovDeriveNode_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCovDeriveNode_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3254,
+      "End": 5421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::Abc_NtkCovDerive",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCovDerive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5688,
+      "End": 6544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::Abc_NtkCovDeriveInv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCovDeriveInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6814,
+      "End": 7121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::Abc_NtkCovDeriveCubeInv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCovDeriveCubeInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7388,
+      "End": 9168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::Abc_NtkCovDeriveNodeInv_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCovDeriveNodeInv_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9435,
+      "End": 10872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::Abc_NtkCovDeriveClean",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCovDeriveClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11261,
+      "End": 12067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::Abc_NtkCovDerive_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCovDerive_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12336,
+      "End": 15522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::Abc_NtkCovDeriveRegular",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCovDeriveRegular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15789,
+      "End": 16975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covBuild.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17222
+    }
+  ],
+  "Draft": "package cov\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [covBuild.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Mapping into network of SOPs/ESOPs.]\n\n  Synopsis    [Network construction procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: covBuild.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cov.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the decomposed network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCovDeriveCube(pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t, pCube *Min_Cube_t, vSupp *Vec_Int_t, fCompl int32) *Abc_Obj_t {\n    var vLits *Vec_Int_t;\n    var pNodeNew, pFanin *Abc_Obj_t;\n    var i, iFanin, Lit int32;\n    // create empty cube\n    if pCube.nLits == 0 {\n        if fCompl != 0 {\n            return Abc_NtkCreateNodeConst0(pNtkNew); }\n        return Abc_NtkCreateNodeConst1(pNtkNew);\n    }\n    // get the literals of this cube\n    vLits = Vec_IntAlloc( 10 );\n    Min_CubeGetLits( pCube, vLits );\n    assert(pCube.nLits == uint32(vLits.nSize), \"pCube.nLits == uint32(vLits.nSize)\");\n    // create special case when there is only one literal\n    if pCube.nLits == 1 {\n        iFanin = Vec_IntEntry(vLits,0);\n        pFanin = Abc_NtkObj( pObj.pNtk, Vec_IntEntry(vSupp, iFanin) );\n        Lit = Min_CubeGetVar(pCube, iFanin);\n        assert(Lit == 1 || Lit == 2, \"Lit == 1 || Lit == 2\");\n        Vec_IntFree( vLits );\n        if (Lit == 1) ^ fCompl {// negative\n            return Abc_NtkCreateNodeInv( pNtkNew, pFanin.pCopy ); }\n        return pFanin.pCopy;\n    }\n    assert(pCube.nLits \u003e 1, \"pCube.nLits \u003e 1\");\n    // create the AND cube\n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n    for  i = 0; i \u003c vLits.nSize; i++  {\n        iFanin = Vec_IntEntry(vLits,i);\n        pFanin = Abc_NtkObj( pObj.pNtk, Vec_IntEntry(vSupp, iFanin) );\n        Lit = Min_CubeGetVar(pCube, iFanin);\n        assert(Lit == 1 || Lit == 2, \"Lit == 1 || Lit == 2\");\n        Vec_IntWriteEntry( vLits, i, Lit==1 );\n        Abc_ObjAddFanin( pNodeNew, pFanin.pCopy );\n    }\n    pNodeNew.pData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew.pManFunc, vLits.nSize, vLits.pArray );\n    if fCompl != 0 {\n        Abc_SopComplement( (char *)pNodeNew.pData ); }\n    Vec_IntFree( vLits );\n    return pNodeNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the decomposed network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCovDeriveNode_rec(p *Cov_Man_t, pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t, Level int32) *Abc_Obj_t {\n    var pCover *Min_Cube_t = nil;\n    var pCube *Min_Cube_t;\n    var pFaninNew, pNodeNew, pFanin *Abc_Obj_t;\n    var vSupp *Vec_Int_t;\n    var Entry, nCubes, i int32;\n\n    if Abc_ObjIsCi(pObj) {\n        return pObj.pCopy; }\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n    // skip if already computed\n    if pObj.pCopy {\n        return pObj.pCopy; }\n\n    // get the support and the cover\n    vSupp  = Abc_ObjGetSupp( pObj ); \n    pCover = Abc_ObjGetCover2( pObj );\n    assert((vSupp != nil), \"vSupp\");\n/*\n    if ( pCover \u0026\u0026  pCover-\u003enVars - Min_CoverSuppVarNum(p-\u003epManMin, pCover) \u003e 0 )\n    {\n        printf( \"%d\\n \", pCover-\u003enVars - Min_CoverSuppVarNum(p-\u003epManMin, pCover) );\n        Min_CoverWrite( stdout, pCover );\n    }\n*/\n/*\n    // print the support of this node\n    printf( \"{ \" );\n    Vec_IntForEachEntry( vSupp, Entry, i )\n        printf( \"%d \", Entry );\n    printf( \"}  cubes = %d\\n\", Min_CoverCountCubes( pCover ) );\n*/\n    // process the fanins\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSupp, i)), 1); i++  {\n        pFanin = Abc_NtkObj(pObj.pNtk, Entry);\n        Abc_NtkCovDeriveNode_rec( p, pNtkNew, pFanin, Level+1 );\n    }\n\n    // for each cube, construct the node\n    nCubes = Min_CoverCountCubes( pCover );\n    if nCubes == 0 {\n        pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);\n    } else if nCubes == 1 {\n        pNodeNew = Abc_NtkCovDeriveCube( pNtkNew, pObj, pCover, vSupp, 0 );\n    } else {\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        // inlining of macro Min_CoverForEachCube\n        for  pCube = pCover;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n            pFaninNew = Abc_NtkCovDeriveCube( pNtkNew, pObj, pCube, vSupp, 0 );\n            Abc_ObjAddFanin( pNodeNew, pFaninNew );\n        }\n        pNodeNew.pData = Abc_SopCreateXorSpecial( (Mem_Flex_t *)pNtkNew.pManFunc, nCubes );\n    }\n/*\n    printf( \"Created node %d(%d) at level %d: \", pNodeNew-\u003eId, pObj-\u003eId, Level );\n    Vec_IntForEachEntry( vSupp, Entry, i )\n    {\n        pFanin = Abc_NtkObj(pObj-\u003epNtk, Entry);\n        printf( \"%d(%d) \", pFanin-\u003epCopy-\u003eId, pFanin-\u003eId );\n    }\n    printf( \"\\n\" );\n    Min_CoverWrite( stdout, pCover );\n*/\n    pObj.pCopy = pNodeNew;\n    return pNodeNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the decomposed network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCovDerive(p *Cov_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // perform strashing\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // reconstruct the network\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Abc_NtkCovDeriveNode_rec( p, pNtkNew, Abc_ObjFanin0(pObj), 0 );\n//        printf( \"*** CO %s : %d -\u003e %d \\n\", Abc_ObjName(pObj), pObj-\u003epCopy-\u003eId, Abc_ObjFanin0(pObj)-\u003epCopy-\u003eId );\n    }\n    // add the COs\n    Abc_NtkFinalize( pNtk, pNtkNew );\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 1 );\n    // make sure everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkCovDerive: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the decomposed network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCovDeriveInv(pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t, fCompl int32) *Abc_Obj_t {\n    assert(pObj.pCopy, \"pObj.pCopy\");\n    if !(fCompl != 0) {\n        return pObj.pCopy; }\n    if pObj.pCopy.pCopy == nil {\n        pObj.pCopy.pCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj.pCopy ); }\n    return pObj.pCopy.pCopy;\n }\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the decomposed network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCovDeriveCubeInv(pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t, pCube *Min_Cube_t, vSupp *Vec_Int_t) *Abc_Obj_t {\n    var vLits *Vec_Int_t;\n    var pNodeNew, pFanin *Abc_Obj_t;\n    var i, iFanin, Lit int32;\n    // create empty cube\n    if pCube.nLits == 0 {\n        return Abc_NtkCreateNodeConst1(pNtkNew); }\n    // get the literals of this cube\n    vLits = Vec_IntAlloc( 10 );\n    Min_CubeGetLits( pCube, vLits );\n    assert(pCube.nLits == uint32(vLits.nSize), \"pCube.nLits == uint32(vLits.nSize)\");\n    // create special case when there is only one literal\n    if pCube.nLits == 1 {\n        iFanin = Vec_IntEntry(vLits,0);\n        pFanin = Abc_NtkObj( pObj.pNtk, Vec_IntEntry(vSupp, iFanin) );\n        Lit = Min_CubeGetVar(pCube, iFanin);\n        assert(Lit == 1 || Lit == 2, \"Lit == 1 || Lit == 2\");\n        Vec_IntFree( vLits );\n//        if ( Lit == 1 )// negative\n//            return Abc_NtkCreateNodeInv( pNtkNew, pFanin-\u003epCopy );\n//        return pFanin-\u003epCopy;\n        return Abc_NtkCovDeriveInv( pNtkNew, pFanin, Lit==1 );\n    }\n    assert(pCube.nLits \u003e 1, \"pCube.nLits \u003e 1\");\n    // create the AND cube\n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n    for  i = 0; i \u003c vLits.nSize; i++  {\n        iFanin = Vec_IntEntry(vLits,i);\n        pFanin = Abc_NtkObj( pObj.pNtk, Vec_IntEntry(vSupp, iFanin) );\n        Lit = Min_CubeGetVar(pCube, iFanin);\n        assert(Lit == 1 || Lit == 2, \"Lit == 1 || Lit == 2\");\n        Vec_IntWriteEntry( vLits, i, Lit==1 );\n//        Abc_ObjAddFanin( pNodeNew, pFanin-\u003epCopy );\n        Abc_ObjAddFanin( pNodeNew, Abc_NtkCovDeriveInv( pNtkNew, pFanin, Lit==1 ) );\n    }\n//    pNodeNew-\u003epData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew-\u003epManFunc, vLits-\u003enSize, vLits-\u003epArray );\n    pNodeNew.pData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew.pManFunc, vLits.nSize, nil );\n    Vec_IntFree( vLits );\n    return pNodeNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the decomposed network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCovDeriveNodeInv_rec(p *Cov_Man_t, pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t, fCompl int32) *Abc_Obj_t {\n    var pCover, pCube *Min_Cube_t;\n    var pFaninNew, pNodeNew, pFanin *Abc_Obj_t;\n    var vSupp *Vec_Int_t;\n    var Entry, nCubes, i int32;\n\n    // skip if already computed\n    if pObj.pCopy {\n        return Abc_NtkCovDeriveInv( pNtkNew, pObj, fCompl ); }\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n\n    // get the support and the cover\n    vSupp  = Abc_ObjGetSupp( pObj ); \n    pCover = Abc_ObjGetCover2( pObj );\n    assert((vSupp != nil), \"vSupp\");\n\n    // process the fanins\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSupp, i)), 1); i++  {\n        pFanin = Abc_NtkObj(pObj.pNtk, Entry);\n        Abc_NtkCovDeriveNodeInv_rec( p, pNtkNew, pFanin, 0 );\n    }\n\n    // for each cube, construct the node\n    nCubes = Min_CoverCountCubes( pCover );\n    if nCubes == 0 {\n        pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);\n    } else if nCubes == 1 {\n        pNodeNew = Abc_NtkCovDeriveCubeInv( pNtkNew, pObj, pCover, vSupp );\n    } else {\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        // inlining of macro Min_CoverForEachCube\n        for  pCube = pCover;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n            pFaninNew = Abc_NtkCovDeriveCubeInv( pNtkNew, pObj, pCube, vSupp );\n            Abc_ObjAddFanin( pNodeNew, pFaninNew );\n        }\n        pNodeNew.pData = Abc_SopCreateXorSpecial( (Mem_Flex_t *)pNtkNew.pManFunc, nCubes );\n    }\n\n    pObj.pCopy = pNodeNew;\n    return Abc_NtkCovDeriveInv( pNtkNew, pObj, fCompl );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the decomposed network.]\n\n  Description [The resulting network contains only pure AND/OR/EXOR gates\n  and inverters. This procedure is usedful to generate Verilog.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCovDeriveClean(p *Cov_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pObj, pNodeNew *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // perform strashing\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // reconstruct the network\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pNodeNew = Abc_NtkCovDeriveNodeInv_rec( p, pNtkNew, Abc_ObjFanin0(pObj), Abc_ObjFaninC0(pObj) );\n        Abc_ObjAddFanin( pObj.pCopy, pNodeNew );\n    }\n    // add the COs\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // make sure everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkCovDeriveInv: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the decomposed network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCovDerive_rec(p *Cov_Man_t, pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t) *Abc_Obj_t {\n    var fVerbose int32;\n    var pCover *Min_Cube_t;\n    var pCovers [3]*Min_Cube_t;\n    var pNodeNew, pFanin *Abc_Obj_t;\n    var vSupp *Vec_Int_t;\n    var vCover *Vec_Str_t;\n    var i, Entry, nCubes, Type int32;\n    // skip if already computed\n    if pObj.pCopy {\n        return pObj.pCopy; }\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n    // get the support and the cover\n    vSupp  = Abc_ObjGetSupp( pObj ); \n    assert((vSupp != nil), \"vSupp\");\n    // choose the cover to implement\n    pCovers[0] = Abc_ObjGetCover( pObj, 0 );\n    pCovers[1] = Abc_ObjGetCover( pObj, 1 );\n    pCovers[2] = Abc_ObjGetCover2( pObj );\n    // use positive polarity\n    if pCovers[0] \n        \u0026\u0026 (!pCovers[1] || Min_CoverCountCubes(pCovers[0]) \u003c= Min_CoverCountCubes(pCovers[1]))\n        \u0026\u0026 (!pCovers[2] || Min_CoverCountCubes(pCovers[0]) \u003c= Min_CoverCountCubes(pCovers[2])) {\n        pCover = pCovers[0];\n        Type = '1';\n    \n    } else \n    // use negative polarity\n    if pCovers[1] \n        \u0026\u0026 (!pCovers[0] || Min_CoverCountCubes(pCovers[1]) \u003c= Min_CoverCountCubes(pCovers[0]))\n        \u0026\u0026 (!pCovers[2] || Min_CoverCountCubes(pCovers[1]) \u003c= Min_CoverCountCubes(pCovers[2])) {\n        pCover = pCovers[1];\n        Type = '0';\n    \n    } else \n    // use XOR polarity\n    if pCovers[2] \n        \u0026\u0026 (!pCovers[0] || Min_CoverCountCubes(pCovers[2]) \u003c Min_CoverCountCubes(pCovers[0]))\n        \u0026\u0026 (!pCovers[1] || Min_CoverCountCubes(pCovers[2]) \u003c Min_CoverCountCubes(pCovers[1])) {\n        pCover = pCovers[2];\n        Type = 'x';\n    \n    } else {\n        assert(false, \"0\"); }\n    // print the support of this node\n    if fVerbose != 0 {\n        fmt.Printf(\"{ \");\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSupp, i)), 1); i++  {\n            fmt.Printf(\"%d \", Entry);\n        }\n        fmt.Printf(\"}  cubes = %d\\n\", Min_CoverCountCubes( pCover ));\n    }\n    // process the fanins\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSupp, i)), 1); i++  {\n        pFanin = Abc_NtkObj(pObj.pNtk, Entry);\n        Abc_NtkCovDerive_rec( p, pNtkNew, pFanin );\n    }\n    // for each cube, construct the node\n    nCubes = Min_CoverCountCubes( pCover );\n    if nCubes == 0 {\n        pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);\n    } else if nCubes == 1 {\n        pNodeNew = Abc_NtkCovDeriveCube( pNtkNew, pObj, pCover, vSupp, Type == '0' );\n    } else {\n        // create the node\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSupp, i)), 1); i++  {\n            pFanin = Abc_NtkObj(pObj.pNtk, Entry);\n            Abc_ObjAddFanin( pNodeNew, pFanin.pCopy );\n        }\n        // derive the function\n        vCover = Vec_StrAlloc( 100 );\n        Min_CoverCreate( vCover, pCover, byte(Type) );\n        pNodeNew.pData = Abc_SopRegister((Mem_Flex_t *)pNtkNew.pManFunc, Vec_StrArray(vCover) );\n        Vec_StrFree( vCover );\n    }\n\n/*\n    printf( \"Created node %d(%d) at level %d: \", pNodeNew-\u003eId, pObj-\u003eId, Level );\n    Vec_IntForEachEntry( vSupp, Entry, i )\n    {\n        pFanin = Abc_NtkObj(pObj-\u003epNtk, Entry);\n        printf( \"%d(%d) \", pFanin-\u003epCopy-\u003eId, pFanin-\u003eId );\n    }\n    printf( \"\\n\" );\n    Min_CoverWrite( stdout, pCover );\n*/\n    return pObj.pCopy = pNodeNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the decomposed network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCovDeriveRegular(p *Cov_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pObj, pNodeNew *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // perform strashing\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // reconstruct the network\n    if Abc_ObjFanoutNum(Abc_AigConst1(pNtk)) \u003e 0 {\n        Abc_AigConst1(pNtk).pCopy = Abc_NtkCreateNodeConst1(pNtkNew); }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pNodeNew = Abc_NtkCovDerive_rec( p, pNtkNew, Abc_ObjFanin0(pObj) );\n        if Abc_ObjFaninC0(pObj) {\n            if pNodeNew.pData \u0026\u0026 Abc_ObjFanoutNum(Abc_ObjFanin0(pObj)) == 1 {\n                Abc_SopComplement( (char *)pNodeNew.pData );\n            } else {\n                pNodeNew = Abc_NtkCreateNodeInv( pNtkNew, pNodeNew ); }\n        }\n        Abc_ObjAddFanin( pObj.pCopy, pNodeNew );\n    }\n    // add the COs\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // make sure everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkCovDerive: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

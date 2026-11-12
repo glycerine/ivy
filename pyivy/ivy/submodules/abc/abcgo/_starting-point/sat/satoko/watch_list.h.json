@@ -1,0 +1,640 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h",
+  "SHA256": "234eadcbb44b057c2bcea4a06cdbdc5373ff4ec0d14d358f91b8d1e687e0ca57",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 61,
+        "Column": 62,
+        "ByteOffset": 1713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:satoko_free__*/for { free(wl.watchers); wl.watchers = nil; "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 73,
+        "Column": 5,
+        "ByteOffset": 1946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(size \u003c= wl.size);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 86,
+        "Column": 79,
+        "ByteOffset": 2286
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:satoko_realloc__*/((struct watcher *) realloc(wl.watchers, (new_size) * sizeof(struct watcher)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 88,
+        "Column": 9,
+        "ByteOffset": 2379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"Failed to realloc memory from %.1f MB to %.1f \""
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 92,
+        "Column": 9,
+        "ByteOffset": 2552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 92,
+        "Column": 16,
+        "ByteOffset": 2559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush(stdout);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 2743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(wl);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 9,
+        "ByteOffset": 3546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(i \u003c watch_list_size(wl));"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 126,
+        "Column": 9,
+        "ByteOffset": 3607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memmove((wl.watchers + i), (wl.watchers + i + 1),"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 130,
+        "Column": 9,
+        "ByteOffset": 3798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(i \u003c watch_list_size(wl));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 154,
+        "Column": 91,
+        "ByteOffset": 4659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var vec_wl *vec_wl_t  = /*__starting_point_inline_macro:satoko_alloc__*/((vec_wl_t *) malloc((1) * sizeof(vec_wl_t)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 161,
+        "Column": 98,
+        "ByteOffset": 4894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    vec_wl.watch_lists = /*__starting_point_inline_macro:satoko_calloc__*/((struct watch_list *) calloc((sizeof(struct watch_list) * vec_wl.cap), sizeof(struct watch_list)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 170,
+        "Column": 58,
+        "ByteOffset": 5198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:satoko_free__*/for { free(vec_wl.watch_lists); vec_wl.watch_lists = nil; "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 173,
+        "Column": 58,
+        "ByteOffset": 5329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:satoko_free__*/for { free(vec_wl); vec_wl = nil; "
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 196,
+        "Column": 103,
+        "ByteOffset": 5930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        vec_wl.watch_lists = /*__starting_point_inline_macro:satoko_realloc__*/((struct watch_list *) realloc(vec_wl.watch_lists, (new_size) * sizeof(struct watch_list)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 197,
+        "Column": 9,
+        "ByteOffset": 6008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset(vec_wl.watch_lists + vec_wl.cap, 0,"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 200,
+        "Column": 13,
+        "ByteOffset": 6171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"failed to realloc memory from %.1f mb to %.1f \""
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 204,
+        "Column": 13,
+        "ByteOffset": 6364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 204,
+        "Column": 20,
+        "ByteOffset": 6371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush(stdout);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 212,
+        "Column": 5,
+        "ByteOffset": 6519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(idx \u003c vec_wl.cap);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 213,
+        "Column": 5,
+        "ByteOffset": 6549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(idx \u003c vec_wl.size);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "watch_list_free",
+      "Start": 1573,
+      "End": 1691,
+      "BodyStart": 1631,
+      "Original": "static inline void watch_list_free(struct watch_list *wl)\n{\n    if (wl-\u003ewatchers)\n        satoko_free(wl-\u003ewatchers);\n}",
+      "Draft": "static inline void watch_list_free(struct watch_list *wl)\n{\n    if wl.watchers {\n        // inlining of macro satoko_free\n        for { free(wl.watchers); wl.watchers = nil; \nif !(false) { break }\n}  }\n}"
+    },
+    {
+      "Name": "watch_list_size",
+      "Start": 1693,
+      "End": 1779,
+      "BodyStart": 1755,
+      "Original": "static inline unsigned watch_list_size(struct watch_list *wl)\n{\n    return wl-\u003esize;\n}",
+      "Draft": "static inline unsigned watch_list_size(struct watch_list *wl)\n{\n    return wl.size;\n}"
+    },
+    {
+      "Name": "watch_list_shrink",
+      "Start": 1781,
+      "End": 1910,
+      "BodyStart": 1856,
+      "Original": "static inline void watch_list_shrink(struct watch_list *wl, unsigned size)\n{\n    assert(size \u003c= wl-\u003esize);\n    wl-\u003esize = size;\n}",
+      "Draft": "static inline void watch_list_shrink(struct watch_list *wl, unsigned size)\n{\n    assert(size \u003c= wl.size, \"size \u003c= wl.size\");\n    wl.size = size;\n}"
+    },
+    {
+      "Name": "watch_list_grow",
+      "Start": 1912,
+      "End": 2432,
+      "BodyStart": 1970,
+      "Original": "static inline void watch_list_grow(struct watch_list *wl)\n{\n    unsigned new_size = (wl-\u003ecap \u003c 4) ? 4 : (wl-\u003ecap / 2) * 3;\n    struct watcher *watchers =\n        satoko_realloc(struct watcher, wl-\u003ewatchers, new_size);\n    if (watchers == NULL) {\n        printf(\"Failed to realloc memory from %.1f MB to %.1f \"\n               \"MB.\\n\",\n               1.0 * wl-\u003ecap / (1 \u003c\u003c 20),\n               1.0 * new_size / (1 \u003c\u003c 20));\n        fflush(stdout);\n        return;\n    }\n    wl-\u003ewatchers = watchers;\n    wl-\u003ecap = new_size;\n}",
+      "Draft": "static inline void watch_list_grow(struct watch_list *wl)\n{\n    var new_size uint32;\n    if wl.cap \u003c 4 {\n        new_size = 4;\n    } else {\n        new_size = (wl.cap / 2) * 3;\n    }\n    struct watcher *watchers =\n        // inlining of macro satoko_realloc\n        ((struct watcher *) realloc(wl.watchers, (new_size) * sizeof(struct watcher)));\n    if watchers == nil {\n        fmt.Printf(\"Failed to realloc memory from %.1f MB to %.1f \"\n                       \"MB.\\n\", 1.0 * wl.cap / (1 \u003c\u003c 20), 1.0 * new_size / (1 \u003c\u003c 20));\n        fflush(os.Stdout);\n        return;\n    }\n    wl.watchers = watchers;\n    wl.cap = new_size;\n}"
+    },
+    {
+      "Name": "watch_list_push",
+      "Start": 2434,
+      "End": 2794,
+      "BodyStart": 2527,
+      "Original": "static inline void watch_list_push(struct watch_list *wl, struct watcher w, unsigned is_bin)\n{\n    assert(wl);\n    if (wl-\u003esize == wl-\u003ecap)\n        watch_list_grow(wl);\n    wl-\u003ewatchers[wl-\u003esize++] = w;\n    if (is_bin \u0026\u0026 wl-\u003esize \u003e wl-\u003en_bin) {\n        stk_swap(struct watcher, wl-\u003ewatchers[wl-\u003en_bin], wl-\u003ewatchers[wl-\u003esize - 1]);\n        wl-\u003en_bin++;\n    }\n}",
+      "Draft": "static inline void watch_list_push(struct watch_list *wl, struct watcher w, unsigned is_bin)\n{\n    assert(wl, \"wl\");\n    if wl.size == wl.cap {\n        watch_list_grow(wl); }\n    wl.watchers[wl.size++] = w;\n    if is_bin \u0026\u0026 wl.size \u003e wl.n_bin {\n        // inlining of macro stk_swap\n        { struct watcher t = wl.watchers[wl.n_bin]; wl.watchers[wl.n_bin] = wl.watchers[wl.size - 1]; wl.watchers[wl.size - 1] = t; };\n        wl.n_bin++;\n    }\n}"
+    },
+    {
+      "Name": "watch_list_array",
+      "Start": 2796,
+      "End": 2894,
+      "BodyStart": 2866,
+      "Original": "static inline struct watcher *watch_list_array(struct watch_list *wl)\n{\n    return wl-\u003ewatchers;\n}",
+      "Draft": "static inline struct watcher *watch_list_array(struct watch_list *wl)\n{\n    return wl.watchers;\n}"
+    },
+    {
+      "Name": "watch_list_remove",
+      "Start": 3011,
+      "End": 3647,
+      "BodyStart": 3103,
+      "Original": "static inline void watch_list_remove(struct watch_list *wl, unsigned cref, unsigned is_bin)\n{\n    struct watcher *watchers = watch_list_array(wl);\n    unsigned i;\n    if (is_bin) {\n        for (i = 0; watchers[i].cref != cref; i++);\n        assert(i \u003c watch_list_size(wl));\n        wl-\u003en_bin--;\n        memmove((wl-\u003ewatchers + i), (wl-\u003ewatchers + i + 1),\n                (wl-\u003esize - i - 1) * sizeof(struct watcher));\n    } else {\n        for (i = wl-\u003en_bin; watchers[i].cref != cref; i++);\n        assert(i \u003c watch_list_size(wl));\n        stk_swap(struct watcher, wl-\u003ewatchers[i], wl-\u003ewatchers[wl-\u003esize - 1]);\n    }\n    wl-\u003esize -= 1;\n}",
+      "Draft": "static inline void watch_list_remove(struct watch_list *wl, unsigned cref, unsigned is_bin)\n{\n    struct watcher *watchers = watch_list_array(wl);\n    var i uint32;\n    if is_bin {\n        for i = 0; watchers[i].cref != cref; i++ {}\n        assert(i \u003c watch_list_size(wl), \"i \u003c watch_list_size(wl)\");\n        wl.n_bin--;\n        memmove((wl.watchers + i), (wl.watchers + i + 1),\n                        (wl.size - i - 1) * sizeof(struct watcher));\n    } else {\n        for i = wl.n_bin; watchers[i].cref != cref; i++ {}\n        assert(i \u003c watch_list_size(wl), \"i \u003c watch_list_size(wl)\");\n        // inlining of macro stk_swap\n        { struct watcher t = wl.watchers[i]; wl.watchers[i] = wl.watchers[wl.size - 1]; wl.watchers[wl.size - 1] = t; };\n    }\n    wl.size -= 1;\n}"
+    },
+    {
+      "Name": "vec_wl_alloc",
+      "Start": 4153,
+      "End": 4488,
+      "BodyStart": 4204,
+      "Original": "static inline vec_wl_t *vec_wl_alloc(unsigned cap)\n{\n    vec_wl_t *vec_wl = satoko_alloc(vec_wl_t, 1);\n\n    if (cap == 0)\n        vec_wl-\u003ecap = 4;\n    else\n        vec_wl-\u003ecap = cap;\n    vec_wl-\u003esize = 0;\n    vec_wl-\u003ewatch_lists = satoko_calloc(\n        struct watch_list, sizeof(struct watch_list) * vec_wl-\u003ecap);\n    return vec_wl;\n}",
+      "Draft": "func vec_wl_alloc(cap uint32) *vec_wl_t {\n    // inlining of macro satoko_alloc\n    var vec_wl *vec_wl_t  = ((vec_wl_t *) malloc((1) * sizeof(vec_wl_t)));\n\n    if cap == 0 {\n        vec_wl.cap = 4;\n    } else {\n        vec_wl.cap = cap; }\n    vec_wl.size = 0;\n    // inlining of macro satoko_calloc\n    vec_wl.watch_lists = ((struct watch_list *) calloc((sizeof(struct watch_list) * vec_wl.cap), sizeof(struct watch_list)));\n    return vec_wl;\n}"
+    },
+    {
+      "Name": "vec_wl_free",
+      "Start": 4490,
+      "End": 4709,
+      "BodyStart": 4539,
+      "Original": "static inline void vec_wl_free(vec_wl_t *vec_wl)\n{\n    unsigned i;\n    for (i = 0; i \u003c vec_wl-\u003ecap; i++)\n        watch_list_free(vec_wl-\u003ewatch_lists + i);\n    satoko_free(vec_wl-\u003ewatch_lists);\n    satoko_free(vec_wl);\n}",
+      "Draft": "func vec_wl_free(vec_wl *vec_wl_t) {\n    var i uint32;\n    for i = 0; i \u003c vec_wl.cap; i++ {\n        watch_list_free(vec_wl.watch_lists + i);\n    }\n    // inlining of macro satoko_free\n    for { free(vec_wl.watch_lists); vec_wl.watch_lists = nil; \nif !(false) { break }\n} \n    // inlining of macro satoko_free\n    for { free(vec_wl); vec_wl = nil; \nif !(false) { break }\n} \n}"
+    },
+    {
+      "Name": "vec_wl_clean",
+      "Start": 4711,
+      "End": 4932,
+      "BodyStart": 4761,
+      "Original": "static inline void vec_wl_clean(vec_wl_t *vec_wl)\n{\n    unsigned i;\n    for (i = 0; i \u003c vec_wl-\u003esize; i++) {\n        vec_wl-\u003ewatch_lists[i].size = 0;\n        vec_wl-\u003ewatch_lists[i].n_bin = 0;\n    }\n    vec_wl-\u003esize = 0;\n}",
+      "Draft": "func vec_wl_clean(vec_wl *vec_wl_t) {\n    var i uint32;\n    for i = 0; i \u003c vec_wl.size; i++ {\n        vec_wl.watch_lists[i].size = 0;\n        vec_wl.watch_lists[i].n_bin = 0;\n    }\n    vec_wl.size = 0;\n}"
+    },
+    {
+      "Name": "vec_wl_push",
+      "Start": 4934,
+      "End": 5692,
+      "BodyStart": 4983,
+      "Original": "static inline void vec_wl_push(vec_wl_t *vec_wl)\n{\n    if (vec_wl-\u003esize == vec_wl-\u003ecap) {\n        unsigned new_size =\n            (vec_wl-\u003ecap \u003c 4) ? vec_wl-\u003ecap * 2 : (vec_wl-\u003ecap / 2) * 3;\n\n        vec_wl-\u003ewatch_lists = satoko_realloc(\n            struct watch_list, vec_wl-\u003ewatch_lists, new_size);\n        memset(vec_wl-\u003ewatch_lists + vec_wl-\u003ecap, 0,\n               sizeof(struct watch_list) * (new_size - vec_wl-\u003ecap));\n        if (vec_wl-\u003ewatch_lists == NULL) {\n            printf(\"failed to realloc memory from %.1f mb to %.1f \"\n                   \"mb.\\n\",\n                   1.0 * vec_wl-\u003ecap / (1 \u003c\u003c 20),\n                   1.0 * new_size / (1 \u003c\u003c 20));\n            fflush(stdout);\n        }\n        vec_wl-\u003ecap = new_size;\n    }\n    vec_wl-\u003esize++;\n}",
+      "Draft": "func vec_wl_push(vec_wl *vec_wl_t) {\n    if vec_wl.size == vec_wl.cap {\n        var new_size uint32;\n        if vec_wl.cap \u003c 4 {\n            new_size = vec_wl.cap * 2;\n        } else {\n            new_size = (vec_wl.cap / 2) * 3;\n        }\n\n        // inlining of macro satoko_realloc\n        vec_wl.watch_lists = ((struct watch_list *) realloc(vec_wl.watch_lists, (new_size) * sizeof(struct watch_list)));\n        memset(vec_wl.watch_lists + vec_wl.cap, 0,\n                       sizeof(struct watch_list) * (new_size - vec_wl.cap));\n        if vec_wl.watch_lists == nil {\n            fmt.Printf(\"failed to realloc memory from %.1f mb to %.1f \"\n                               \"mb.\\n\", 1.0 * vec_wl.cap / (1 \u003c\u003c 20), 1.0 * new_size / (1 \u003c\u003c 20));\n            fflush(os.Stdout);\n        }\n        vec_wl.cap = new_size;\n    }\n    vec_wl.size++;\n}"
+    },
+    {
+      "Name": "vec_wl_at",
+      "Start": 5694,
+      "End": 5873,
+      "BodyStart": 5769,
+      "Original": "static inline struct watch_list *vec_wl_at(vec_wl_t *vec_wl, unsigned idx)\n{\n    assert(idx \u003c vec_wl-\u003ecap);\n    assert(idx \u003c vec_wl-\u003esize);\n    return vec_wl-\u003ewatch_lists + idx;\n}",
+      "Draft": "func vec_wl_at(vec_wl *vec_wl_t, idx uint32) *struct watch_list {\n    assert(idx \u003c vec_wl.cap, \"idx \u003c vec_wl.cap\");\n    assert(idx \u003c vec_wl.size, \"idx \u003c vec_wl.size\");\n    return vec_wl.watch_lists + idx;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::struct::vec_wl_t::struct watch_list *watch_lists;",
+      "Category": "struct-field-review",
+      "Symbol": "vec_wl_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 744,
+      "End": 780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::struct::vec_wl_t",
+      "Category": "struct-review",
+      "Symbol": "vec_wl_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 654,
+      "End": 783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::struct::watcher",
+      "Category": "struct-review",
+      "Symbol": "watcher",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 481,
+      "End": 541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::struct::watch_list::struct watcher *watchers;",
+      "Category": "struct-field-review",
+      "Symbol": "watch_list",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 619,
+      "End": 649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::struct::watch_list",
+      "Category": "struct-review",
+      "Symbol": "watch_list",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 543,
+      "End": 652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::mechanical::do::1710",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 1663,
+      "End": 1663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::mechanical::sizeof::2257",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2074,
+      "End": 2074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::mechanical::sizeof::3656",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3403,
+      "End": 3409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::mechanical::sizeof::4649",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4229,
+      "End": 4229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::mechanical::sizeof::4877",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4384,
+      "End": 4384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::mechanical::sizeof::4919",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4384,
+      "End": 4384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::mechanical::do::5176",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4649,
+      "End": 4649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::mechanical::do::5299",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4687,
+      "End": 4687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::mechanical::sizeof::5908",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5156,
+      "End": 5156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::mechanical::sizeof::6005",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5303,
+      "End": 5309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::pointer-cast::4623",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4229,
+      "End": 4229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::macro::watch_list_foreach",
+      "Category": "macro-review",
+      "Symbol": "watch_list_foreach",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 968,
+      "End": 1182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::macro::watch_list_foreach_bin",
+      "Category": "macro-review",
+      "Symbol": "watch_list_foreach_bin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1184,
+      "End": 1392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::watch_list_free",
+      "Category": "semantic-review",
+      "Symbol": "watch_list_free",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1573,
+      "End": 1691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::watch_list_size",
+      "Category": "semantic-review",
+      "Symbol": "watch_list_size",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1693,
+      "End": 1779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::watch_list_shrink",
+      "Category": "semantic-review",
+      "Symbol": "watch_list_shrink",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1781,
+      "End": 1910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::watch_list_grow",
+      "Category": "semantic-review",
+      "Symbol": "watch_list_grow",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1912,
+      "End": 2432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::watch_list_push",
+      "Category": "semantic-review",
+      "Symbol": "watch_list_push",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 2434,
+      "End": 2794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::watch_list_array",
+      "Category": "semantic-review",
+      "Symbol": "watch_list_array",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 2796,
+      "End": 2894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::watch_list_remove",
+      "Category": "semantic-review",
+      "Symbol": "watch_list_remove",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 3011,
+      "End": 3647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::vec_wl_alloc",
+      "Category": "semantic-review",
+      "Symbol": "vec_wl_alloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4153,
+      "End": 4488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::vec_wl_free",
+      "Category": "semantic-review",
+      "Symbol": "vec_wl_free",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4490,
+      "End": 4709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::vec_wl_clean",
+      "Category": "semantic-review",
+      "Symbol": "vec_wl_clean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4711,
+      "End": 4932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::vec_wl_push",
+      "Category": "semantic-review",
+      "Symbol": "vec_wl_push",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4934,
+      "End": 5692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::vec_wl_at",
+      "Category": "semantic-review",
+      "Symbol": "vec_wl_at",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5694,
+      "End": 5873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/watch_list.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5934
+    }
+  ],
+  "Draft": "package satoko\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n//===--- watch_list.h -------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n\n\n\n//#include \"utils/mem.h\"\n//#include \"utils/misc.h\"\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_HEADER_START\n\ntype watcher struct {\n    cref uint32;\n    blocker uint32;\n}\n\ntype watch_list struct {\n    cap uint32;\n    size uint32;\n    n_bin uint32;\n    struct watcher *watchers;\n}\n\n   \ntype vec_wl_t struct {\n    cap uint32;\n    size uint32;\n    struct watch_list *watch_lists;\n}\n\n//===------------------------------------------------------------------------===\n// Watch list Macros\n//===------------------------------------------------------------------------===\n// Original macro:\n// #define watch_list_foreach(vec, watch, lit) \\\n//     for (watch = watch_list_array(vec_wl_at(vec, lit)); \\\n//          watch \u003c watch_list_array(vec_wl_at(vec, lit)) + watch_list_size(vec_wl_at(vec, lit)); \\\n//      watch++)\n\n\n// Original macro:\n// #define watch_list_foreach_bin(vec, watch, lit) \\\n//     for (watch = watch_list_array(vec_wl_at(vec, lit)); \\\n//          watch \u003c watch_list_array(vec_wl_at(vec, lit)) + vec_wl_at(vec, lit)-\u003en_bin; \\\n//      watch++)\n\n//===------------------------------------------------------------------------===\n// Watch list API\n//===------------------------------------------------------------------------===\nstatic inline void watch_list_free(struct watch_list *wl)\n{\n    if wl.watchers {\n        // inlining of macro satoko_free\n        for { free(wl.watchers); wl.watchers = nil; \nif !(false) { break }\n}  }\n}\n\nstatic inline unsigned watch_list_size(struct watch_list *wl)\n{\n    return wl.size;\n}\n\nstatic inline void watch_list_shrink(struct watch_list *wl, unsigned size)\n{\n    assert(size \u003c= wl.size, \"size \u003c= wl.size\");\n    wl.size = size;\n}\n\nstatic inline void watch_list_grow(struct watch_list *wl)\n{\n    var new_size uint32;\n    if wl.cap \u003c 4 {\n        new_size = 4;\n    } else {\n        new_size = (wl.cap / 2) * 3;\n    }\n    struct watcher *watchers =\n        // inlining of macro satoko_realloc\n        ((struct watcher *) realloc(wl.watchers, (new_size) * sizeof(struct watcher)));\n    if watchers == nil {\n        fmt.Printf(\"Failed to realloc memory from %.1f MB to %.1f \"\n                       \"MB.\\n\", 1.0 * wl.cap / (1 \u003c\u003c 20), 1.0 * new_size / (1 \u003c\u003c 20));\n        fflush(os.Stdout);\n        return;\n    }\n    wl.watchers = watchers;\n    wl.cap = new_size;\n}\n\nstatic inline void watch_list_push(struct watch_list *wl, struct watcher w, unsigned is_bin)\n{\n    assert(wl, \"wl\");\n    if wl.size == wl.cap {\n        watch_list_grow(wl); }\n    wl.watchers[wl.size++] = w;\n    if is_bin \u0026\u0026 wl.size \u003e wl.n_bin {\n        // inlining of macro stk_swap\n        { struct watcher t = wl.watchers[wl.n_bin]; wl.watchers[wl.n_bin] = wl.watchers[wl.size - 1]; wl.watchers[wl.size - 1] = t; };\n        wl.n_bin++;\n    }\n}\n\nstatic inline struct watcher *watch_list_array(struct watch_list *wl)\n{\n    return wl.watchers;\n}\n\n/* TODO: I still have mixed feelings if this change should be done, keeping the\n * old code commented after it. */\nstatic inline void watch_list_remove(struct watch_list *wl, unsigned cref, unsigned is_bin)\n{\n    struct watcher *watchers = watch_list_array(wl);\n    var i uint32;\n    if is_bin {\n        for i = 0; watchers[i].cref != cref; i++ {}\n        assert(i \u003c watch_list_size(wl), \"i \u003c watch_list_size(wl)\");\n        wl.n_bin--;\n        memmove((wl.watchers + i), (wl.watchers + i + 1),\n                        (wl.size - i - 1) * sizeof(struct watcher));\n    } else {\n        for i = wl.n_bin; watchers[i].cref != cref; i++ {}\n        assert(i \u003c watch_list_size(wl), \"i \u003c watch_list_size(wl)\");\n        // inlining of macro stk_swap\n        { struct watcher t = wl.watchers[i]; wl.watchers[i] = wl.watchers[wl.size - 1]; wl.watchers[wl.size - 1] = t; };\n    }\n    wl.size -= 1;\n}\n\n/*\nstatic inline void watch_list_remove(struct watch_list *wl, unsigned cref, unsigned is_bin)\n{\n    struct watcher *watchers = watch_list_array(wl);\n    unsigned i;\n    if (is_bin) {\n        for (i = 0; watchers[i].cref != cref; i++);\n        wl-\u003en_bin--;\n    } else\n        for (i = wl-\u003en_bin; watchers[i].cref != cref; i++);\n    assert(i \u003c watch_list_size(wl));\n    memmove((wl-\u003ewatchers + i), (wl-\u003ewatchers + i + 1),\n            (wl-\u003esize - i - 1) * sizeof(struct watcher));\n    wl-\u003esize -= 1;\n}\n*/\n\nfunc vec_wl_alloc(cap uint32) *vec_wl_t {\n    // inlining of macro satoko_alloc\n    var vec_wl *vec_wl_t  = ((vec_wl_t *) malloc((1) * sizeof(vec_wl_t)));\n\n    if cap == 0 {\n        vec_wl.cap = 4;\n    } else {\n        vec_wl.cap = cap; }\n    vec_wl.size = 0;\n    // inlining of macro satoko_calloc\n    vec_wl.watch_lists = ((struct watch_list *) calloc((sizeof(struct watch_list) * vec_wl.cap), sizeof(struct watch_list)));\n    return vec_wl;\n}\n\nfunc vec_wl_free(vec_wl *vec_wl_t) {\n    var i uint32;\n    for i = 0; i \u003c vec_wl.cap; i++ {\n        watch_list_free(vec_wl.watch_lists + i);\n    }\n    // inlining of macro satoko_free\n    for { free(vec_wl.watch_lists); vec_wl.watch_lists = nil; \nif !(false) { break }\n} \n    // inlining of macro satoko_free\n    for { free(vec_wl); vec_wl = nil; \nif !(false) { break }\n} \n}\n\nfunc vec_wl_clean(vec_wl *vec_wl_t) {\n    var i uint32;\n    for i = 0; i \u003c vec_wl.size; i++ {\n        vec_wl.watch_lists[i].size = 0;\n        vec_wl.watch_lists[i].n_bin = 0;\n    }\n    vec_wl.size = 0;\n}\n\nfunc vec_wl_push(vec_wl *vec_wl_t) {\n    if vec_wl.size == vec_wl.cap {\n        var new_size uint32;\n        if vec_wl.cap \u003c 4 {\n            new_size = vec_wl.cap * 2;\n        } else {\n            new_size = (vec_wl.cap / 2) * 3;\n        }\n\n        // inlining of macro satoko_realloc\n        vec_wl.watch_lists = ((struct watch_list *) realloc(vec_wl.watch_lists, (new_size) * sizeof(struct watch_list)));\n        memset(vec_wl.watch_lists + vec_wl.cap, 0,\n                       sizeof(struct watch_list) * (new_size - vec_wl.cap));\n        if vec_wl.watch_lists == nil {\n            fmt.Printf(\"failed to realloc memory from %.1f mb to %.1f \"\n                               \"mb.\\n\", 1.0 * vec_wl.cap / (1 \u003c\u003c 20), 1.0 * new_size / (1 \u003c\u003c 20));\n            fflush(os.Stdout);\n        }\n        vec_wl.cap = new_size;\n    }\n    vec_wl.size++;\n}\n\nfunc vec_wl_at(vec_wl *vec_wl_t, idx uint32) *struct watch_list {\n    assert(idx \u003c vec_wl.cap, \"idx \u003c vec_wl.cap\");\n    assert(idx \u003c vec_wl.size, \"idx \u003c vec_wl.size\");\n    return vec_wl.watch_lists + idx;\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

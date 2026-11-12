@@ -1,0 +1,258 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h",
+  "SHA256": "0ac3fa8c88d3ecf2b2d4259e2cbf9df574fe9d5adfb8b181908c6ae0c92fe900",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 6,
+        "Column": 1,
+        "ByteOffset": 191
+      },
+      "Directive": "#ifdef _LARGEFILE64_SOURCE"
+    },
+    {
+      "Location": {
+        "Line": 7,
+        "Column": 1,
+        "ByteOffset": 218
+      },
+      "Directive": "#  ifndef _LARGEFILE_SOURCE"
+    },
+    {
+      "Location": {
+        "Line": 10,
+        "Column": 1,
+        "ByteOffset": 287
+      },
+      "Directive": "#  ifdef _FILE_OFFSET_BITS"
+    },
+    {
+      "Location": {
+        "Line": 15,
+        "Column": 1,
+        "ByteOffset": 360
+      },
+      "Directive": "#if ((__GNUC__-0) * 10 + __GNUC_MINOR__-0 \u003e= 33) \u0026\u0026 !defined(NO_VIZ)"
+    },
+    {
+      "Location": {
+        "Line": 23,
+        "Column": 1,
+        "ByteOffset": 567
+      },
+      "Directive": "#ifdef STDC"
+    },
+    {
+      "Location": {
+        "Line": 30,
+        "Column": 1,
+        "ByteOffset": 672
+      },
+      "Directive": "#ifdef NO_DEFLATE       /* for compatibility with old definition */"
+    },
+    {
+      "Location": {
+        "Line": 34,
+        "Column": 1,
+        "ByteOffset": 772
+      },
+      "Directive": "#ifdef _MSC_VER"
+    },
+    {
+      "Location": {
+        "Line": 39,
+        "Column": 1,
+        "ByteOffset": 845
+      },
+      "Directive": "#ifndef local"
+    },
+    {
+      "Location": {
+        "Line": 45,
+        "Column": 1,
+        "ByteOffset": 1020
+      },
+      "Directive": "#ifndef STDC"
+    },
+    {
+      "Location": {
+        "Line": 51,
+        "Column": 1,
+        "ByteOffset": 1162
+      },
+      "Directive": "#if defined UNDER_CE"
+    },
+    {
+      "Location": {
+        "Line": 55,
+        "Column": 1,
+        "ByteOffset": 1272
+      },
+      "Directive": "#  ifdef STDC"
+    },
+    {
+      "Location": {
+        "Line": 68,
+        "Column": 1,
+        "ByteOffset": 1510
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 77,
+        "Column": 1,
+        "ByteOffset": 1701
+      },
+      "Directive": "#if !defined(_LARGEFILE64_SOURCE) || _LFS64_LARGEFILE-0 == 0"
+    },
+    {
+      "Location": {
+        "Line": 133,
+        "Column": 1,
+        "ByteOffset": 4357
+      },
+      "Directive": "#if defined UNDER_CE"
+    },
+    {
+      "Location": {
+        "Line": 140,
+        "Column": 1,
+        "ByteOffset": 4663
+      },
+      "Directive": "#ifdef INT_MAX"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 191,
+      "End": 358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 360,
+      "End": 528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 567,
+      "End": 651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 672,
+      "End": 770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 772,
+      "End": 843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 845,
+      "End": 888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1020,
+      "End": 1120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1162,
+      "End": 1426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1510,
+      "End": 1633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1701,
+      "End": 2015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4357,
+      "End": 4438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4663,
+      "End": 4883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzguts.h::macro-inline::4321",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4321,
+      "End": 4355
+    }
+  ],
+  "Draft": "package zlib\n\n/* gzguts.h -- zlib internal header definitions for gz* operations\n * Copyright (C) 2004, 2005, 2010 Mark Adler\n * For conditions of distribution and use, see copyright notice in zlib.h\n */\n\n#ifdef _LARGEFILE64_SOURCE\n#  ifndef _LARGEFILE_SOURCE\n#    define _LARGEFILE_SOURCE 1\n#  endif\n#  ifdef _FILE_OFFSET_BITS\n#    undef _FILE_OFFSET_BITS\n#  endif\n#endif\n\n#if ((__GNUC__-0) * 10 + __GNUC_MINOR__-0 \u003e= 33) \u0026\u0026 !defined(NO_VIZ)\n#  define ZLIB_INTERNAL __attribute__((visibility (\"hidden\")))\n#else\n#  define ZLIB_INTERNAL\n#endif\n\n//#include \u003cstdio.h\u003e\n//#include \"zlib.h\"\n#ifdef STDC\n#  include \u003cstring.h\u003e\n#  include \u003cstdlib.h\u003e\n#  include \u003climits.h\u003e\n#endif\n//#include \u003cfcntl.h\u003e\n\n#ifdef NO_DEFLATE       /* for compatibility with old definition */\n#  define NO_GZCOMPRESS\n#endif\n\n#ifdef _MSC_VER\n#  include \u003cio.h\u003e\n#  define vsnprintf _vsnprintf\n#endif\n\n#ifndef local\n#  define local static\n#endif\n/* compile with -Dlocal if your debugger can't find static symbols */\n\n/* gz* functions always use library allocation functions */\n#ifndef STDC\n  extern voidp  malloc OF((uInt size));\n  extern void   free   OF((voidpf ptr));\n#endif\n\n/* get errno and strerror definition */\n#if defined UNDER_CE\n#  include \u003cwindows.h\u003e\n#  define zstrerror() gz_strwinerror((DWORD)GetLastError())\n#else\n#  ifdef STDC\n#    include \u003cerrno.h\u003e\n#    define zstrerror() strerror(errno)\n#  else\n#    define zstrerror() \"stdio error (consult errno)\"\n#  endif\n#endif\n\n//#include \u003cstdio.h\u003e\n//#include \"misc/util/abc_global.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n#ifdef _WIN32\n#define open  _open\n#define close _close\n#define lseek _lseek\n#define read  _read\n#define write _write\n#endif\n\n/* provide prototypes for these when building zlib without LFS */\n#if !defined(_LARGEFILE64_SOURCE) || _LFS64_LARGEFILE-0 == 0\n    ZEXTERN gzFile ZEXPORT gzopen64 OF((const char *, const char *));\n    ZEXTERN z_off64_t ZEXPORT gzseek64 OF((gzFile, z_off64_t, int));\n    ZEXTERN z_off64_t ZEXPORT gztell64 OF((gzFile));\n    ZEXTERN z_off64_t ZEXPORT gzoffset64 OF((gzFile));\n#endif\n\n/* default i/o buffer size -- double this for output when reading */\nconst GZBUFSIZE = 8192\n\n/* gzip modes, also provide a little integrity check on the passed structure */\nconst GZ_NONE = 0\nconst GZ_READ = 7247\nconst GZ_WRITE = 31153\nconst GZ_APPEND = 1     /* mode set to GZ_WRITE after the file is opened */\n\n/* values for gz_state how */\nconst LOOK = 0      /* look for a gzip header */\nconst COPY = 1      /* copy input directly */\nconst GZIP = 2      /* decompress a gzip stream */\n\n/* internal gzip file state data structure */\ntypedef struct {\n        /* used for both reading and writing */\n    int mode;               /* see gzip modes above */\n    int fd;                 /* file descriptor */\n    char *path;             /* path or fd for error messages */\n    z_off64_t pos;          /* current position in uncompressed data */\n    unsigned size;          /* buffer size, zero if not allocated yet */\n    unsigned want;          /* requested buffer size, default is GZBUFSIZE */\n    unsigned char *in;      /* input buffer */\n    unsigned char *out;     /* output buffer (double-sized when reading) */\n    unsigned char *next;    /* next output data to deliver or write */\n        /* just for reading */\n    unsigned have;          /* amount of output data unused at next */\n    int eof;                /* true if end of input file reached */\n    z_off64_t start;        /* where the gzip data started, for rewinding */\n    z_off64_t raw;          /* where the raw data started, for seeking */\n    int how;                /* 0: get header, 1: copy, 2: decompress */\n    int direct;             /* true if last read direct, false if gzip */\n        /* just for writing */\n    int level;              /* compression level */\n    int strategy;           /* compression strategy */\n        /* seek request */\n    z_off64_t skip;         /* amount to skip (already rewound if backwards) */\n    int seek;               /* true if seek request pending */\n        /* error information */\n    int err;                /* error code */\n    char *msg;              /* error message */\n        /* zlib inflate or deflate stream */\n    z_stream strm;          /* stream structure in-place (not a pointer) */\n}\n gz_state;\ntypedef gz_state FAR *gz_statep;\n\n/* shared functions */\n// void ZLIB_INTERNAL gz_error OF((gz_statep, int, const char *));\n\n#if defined UNDER_CE\nchar ZLIB_INTERNAL *gz_strwinerror OF((DWORD error));\n#endif\n\n/* GT_OFF(x), where x is an unsigned value, is true if x \u003e maximum z_off64_t\n   value -- needed when comparing unsigned to z_off64_t, which is signed\n   (possible z_off64_t types off_t, off64_t, and long are all signed) */\n#ifdef INT_MAX\n#  define GT_OFF(x) (sizeof(int) == sizeof(z_off64_t) \u0026\u0026 (x) \u003e INT_MAX)\n#else\nunsigned ZLIB_INTERNAL gz_intmax OF((void));\n#  define GT_OFF(x) (sizeof(int) == sizeof(z_off64_t) \u0026\u0026 (x) \u003e gz_intmax())\n#endif\n\n//ABC_NAMESPACE_HEADER_END\n"
+}

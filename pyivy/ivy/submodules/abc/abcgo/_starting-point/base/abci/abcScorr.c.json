@@ -1,0 +1,593 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c",
+  "SHA256": "f71440564e7ad8076038cf75eedc075924e9c43eeb3d2d094b5f1fc674ff6a85",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 5375
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s=%s%s\\n\", pName1, fPol? \"~\": \"\", pName2 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 173,
+        "Column": 5,
+        "ByteOffset": 5938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s=%s%s\\n\", pName1, fPol? \"~\": \"\", \"const0\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 192,
+        "Column": 5,
+        "ByteOffset": 6423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( spStatic_Abc_NtkBmcFileName_Buffer, \"%s_bmc%s\", pNameGeneric, pName + strlen(pNameGeneric) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 192,
+        "Column": 84,
+        "ByteOffset": 6502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( spStatic_Abc_NtkBmcFileName_Buffer, \"%s_bmc%s\", pNameGeneric, pName + strlen(pNameGeneric) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 193,
+        "Column": 68,
+        "ByteOffset": 6593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pNameGeneric) ? (free((char *) (pNameGeneric)), (pNameGeneric) = 0) : 0);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 220,
+        "Column": 13,
+        "ByteOffset": 7395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileNameOut, \"wb\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 8378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 241,
+        "Column": 5,
+        "ByteOffset": 8399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d pairs of sequentially equivalent nodes are written into file \\\"%s\\\".\\n\", Counter, pFileNameOut );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 268,
+        "Column": 13,
+        "ByteOffset": 9227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileNameOut, \"wb\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 287,
+        "Column": 5,
+        "ByteOffset": 10306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 10327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d pairs of sequentially equivalent nodes are written into file \\\"%s\\\".\\n\", Counter, pFileNameOut );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 316,
+        "Column": 13,
+        "ByteOffset": 11337
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileNameIn, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 318,
+        "Column": 9,
+        "ByteOffset": 11395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Input file \\\"%s\\\" cannot be opened.\\n\", pFileNameIn );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 321,
+        "Column": 5,
+        "ByteOffset": 11489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 323,
+        "Column": 13,
+        "ByteOffset": 11541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileNameOut, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 9,
+        "ByteOffset": 11600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Output file \\\"%s\\\" cannot be opened.\\n\", pFileNameOut );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 328,
+        "Column": 5,
+        "ByteOffset": 11696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 332,
+        "Column": 9,
+        "ByteOffset": 11869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Reading input file \\\"%s\\\" has failed.\\n\", pFileNameIn );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 338,
+        "Column": 9,
+        "ByteOffset": 12068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Deriving logic network from input file %s has failed.\\n\", pFileNameIn );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 344,
+        "Column": 17,
+        "ByteOffset": 12382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pFile = fopen( pFileNameInit, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 346,
+        "Column": 13,
+        "ByteOffset": 12450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Init file \\\"%s\\\" cannot be opened.\\n\", pFileNameInit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 13,
+        "ByteOffset": 12677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Initial state was derived from file \\\"%s\\\".\\n\", pFileNameInit ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 358,
+        "Column": 9,
+        "ByteOffset": 12907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Deriving strashed network from input file %s has failed.\\n\", pFileNameIn );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 373,
+        "Column": 9,
+        "ByteOffset": 13510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( pData, 0, sizeof(Tst_Dat_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 399,
+        "Column": 9,
+        "ByteOffset": 14562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( pData, 0, sizeof(Tst_Dat_t) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkMapGiaIntoNameId",
+      "Start": 1693,
+      "End": 3746,
+      "BodyStart": 1789,
+      "Original": "Vec_Int_t * Abc_NtkMapGiaIntoNameId( Abc_Ntk_t * pNetlist, Aig_Man_t * pAig, Gia_Man_t * pGia )\n{\n    Vec_Int_t * vId2Name;\n    Abc_Obj_t * pNet, * pNode, * pAnd;\n    Aig_Obj_t * pObjAig;\n    int i;\n    vId2Name = Vec_IntAlloc( 0 );\n    Vec_IntFill( vId2Name, pGia ? Gia_ManObjNum(pGia) : Aig_ManObjNumMax(pAig), ~0 );\n    // copy all names\n    Abc_NtkForEachNet( pNetlist, pNet, i )\n    {\n        pNode = Abc_ObjFanin0(pNet)-\u003epCopy; \n        if ( pNode \u0026\u0026 (pAnd = Abc_ObjRegular(pNode-\u003epCopy)) \u0026\u0026 \n            (pObjAig = (Aig_Obj_t *)Abc_ObjRegular(pAnd-\u003epCopy)) \u0026\u0026 \n             Aig_ObjType(pObjAig) != AIG_OBJ_NONE )\n        {\n            if ( pGia == NULL )\n                Vec_IntWriteEntry( vId2Name, Aig_ObjId(pObjAig), Abc_ObjId(pNet) );\n            else\n                Vec_IntWriteEntry( vId2Name, Abc_Lit2Var(pObjAig-\u003eiData), Abc_ObjId(pNet) );\n        }\n    }\n    // overwrite CO names\n    Abc_NtkForEachCo( pNetlist, pNode, i )\n    {\n        pNet = Abc_ObjFanin0(pNode);\n        pNode = pNode-\u003epCopy;\n        if ( pNode \u0026\u0026 (pAnd = Abc_ObjRegular(pNode-\u003epCopy)) \u0026\u0026 \n            (pObjAig = (Aig_Obj_t *)Abc_ObjRegular(pAnd-\u003epCopy)) \u0026\u0026 \n             Aig_ObjType(pObjAig) != AIG_OBJ_NONE )\n        {\n            if ( pGia == NULL )\n                Vec_IntWriteEntry( vId2Name, Aig_ObjId(pObjAig), Abc_ObjId(pNet) );\n            else\n                Vec_IntWriteEntry( vId2Name, Abc_Lit2Var(pObjAig-\u003eiData), Abc_ObjId(pNet) );\n        }\n    }\n    // overwrite CI names\n    Abc_NtkForEachCi( pNetlist, pNode, i )\n    {\n        pNet = Abc_ObjFanout0(pNode);\n        pNode = pNode-\u003epCopy;\n        if ( pNode \u0026\u0026 (pAnd = Abc_ObjRegular(pNode-\u003epCopy)) \u0026\u0026 \n            (pObjAig = (Aig_Obj_t *)Abc_ObjRegular(pAnd-\u003epCopy)) \u0026\u0026 \n             Aig_ObjType(pObjAig) != AIG_OBJ_NONE )\n        {\n            if ( pGia == NULL )\n                Vec_IntWriteEntry( vId2Name, Aig_ObjId(pObjAig), Abc_ObjId(pNet) );\n            else\n                Vec_IntWriteEntry( vId2Name, Abc_Lit2Var(pObjAig-\u003eiData), Abc_ObjId(pNet) );\n        }\n    }\n    return vId2Name;\n}",
+      "Draft": "func Abc_NtkMapGiaIntoNameId(pNetlist *Abc_Ntk_t, pAig *Aig_Man_t, pGia *Gia_Man_t) *Vec_Int_t {\n    var vId2Name *Vec_Int_t;\n    var pNet, pNode, pAnd *Abc_Obj_t;\n    var pObjAig *Aig_Obj_t;\n    var i int32;\n    vId2Name = Vec_IntAlloc( 0 );\n    Vec_IntFill( vId2Name, pGia ? Gia_ManObjNum(pGia) : Aig_ManObjNumMax(pAig), ~0 );\n    // copy all names\n    // inlining of macro Abc_NtkForEachNet\n    for  i = 0; (i \u003c Vec_PtrSize((pNetlist).vObjs)) \u0026\u0026 (((pNet) = Abc_NtkObj(pNetlist, i)), 1); i++  {            if (pNet) == nil || !Abc_ObjIsNet(pNet) {} else {\n        pNode = Abc_ObjFanin0(pNet).pCopy; \n        if pNode \u0026\u0026 (pAnd = Abc_ObjRegular(pNode.pCopy)) \u0026\u0026 \n            (pObjAig = (Aig_Obj_t *)Abc_ObjRegular(pAnd.pCopy)) \u0026\u0026 \n             Aig_ObjType(pObjAig) != AIG_OBJ_NONE {\n            if pGia == nil {\n                Vec_IntWriteEntry( vId2Name, Aig_ObjId(pObjAig), Abc_ObjId(pNet) );\n            } else {\n                Vec_IntWriteEntry( vId2Name, Abc_Lit2Var(pObjAig.iData), Abc_ObjId(pNet) ); }\n        }\n    }\n    }\n    // overwrite CO names\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNetlist)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNetlist, i)), 1); i++  {\n        pNet = Abc_ObjFanin0(pNode);\n        pNode = pNode.pCopy;\n        if pNode \u0026\u0026 (pAnd = Abc_ObjRegular(pNode.pCopy)) \u0026\u0026 \n            (pObjAig = (Aig_Obj_t *)Abc_ObjRegular(pAnd.pCopy)) \u0026\u0026 \n             Aig_ObjType(pObjAig) != AIG_OBJ_NONE {\n            if pGia == nil {\n                Vec_IntWriteEntry( vId2Name, Aig_ObjId(pObjAig), Abc_ObjId(pNet) );\n            } else {\n                Vec_IntWriteEntry( vId2Name, Abc_Lit2Var(pObjAig.iData), Abc_ObjId(pNet) ); }\n        }\n    }\n    // overwrite CI names\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNetlist)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNetlist, i)), 1); i++  {\n        pNet = Abc_ObjFanout0(pNode);\n        pNode = pNode.pCopy;\n        if pNode \u0026\u0026 (pAnd = Abc_ObjRegular(pNode.pCopy)) \u0026\u0026 \n            (pObjAig = (Aig_Obj_t *)Abc_ObjRegular(pAnd.pCopy)) \u0026\u0026 \n             Aig_ObjType(pObjAig) != AIG_OBJ_NONE {\n            if pGia == nil {\n                Vec_IntWriteEntry( vId2Name, Aig_ObjId(pObjAig), Abc_ObjId(pNet) );\n            } else {\n                Vec_IntWriteEntry( vId2Name, Abc_Lit2Var(pObjAig.iData), Abc_ObjId(pNet) ); }\n        }\n    }\n    return vId2Name;\n}"
+    },
+    {
+      "Name": "Abc_NtkTestScorrGetName",
+      "Start": 3982,
+      "End": 4421,
+      "BodyStart": 4067,
+      "Original": "char * Abc_NtkTestScorrGetName( Abc_Ntk_t * pNetlist, Vec_Int_t * vId2Name, int Id )\n{\n//    Abc_Obj_t * pObj;\n//printf( \"trying to get name for %d\\n\", Id );\n    if ( Vec_IntEntry(vId2Name, Id) == ~0 )\n        return NULL;\n//    pObj = Abc_NtkObj( pNetlist, Vec_IntEntry(vId2Name, Id) );\n//    pObj = Abc_ObjFanin0(pObj);\n//    assert( Abc_ObjIsCi(pObj) );\n    return Nm_ManFindNameById( pNetlist-\u003epManName, Vec_IntEntry(vId2Name, Id) );\n}",
+      "Draft": "func Abc_NtkTestScorrGetName(pNetlist *Abc_Ntk_t, vId2Name *Vec_Int_t, Id int32) string {\n//    Abc_Obj_t * pObj;\n//printf( \"trying to get name for %d\\n\", Id );\n    if Vec_IntEntry(vId2Name, Id) == ~0 {\n        return nil; }\n//    pObj = Abc_NtkObj( pNetlist, Vec_IntEntry(vId2Name, Id) );\n//    pObj = Abc_ObjFanin0(pObj);\n//    assert( Abc_ObjIsCi(pObj) );\n    return Nm_ManFindNameById( pNetlist.pManName, Vec_IntEntry(vId2Name, Id) );\n}"
+    },
+    {
+      "Name": "Abc_NtkTestScorrWriteEquivPair",
+      "Start": 4657,
+      "End": 5069,
+      "BodyStart": 4780,
+      "Original": "int Abc_NtkTestScorrWriteEquivPair( Abc_Ntk_t * pNetlist, Vec_Int_t * vId2Name, int Id1, int Id2, FILE * pFile, int fPol )\n{\n    char * pName1 = Abc_NtkTestScorrGetName( pNetlist, vId2Name, Id1 );\n    char * pName2 = Abc_NtkTestScorrGetName( pNetlist, vId2Name, Id2 );\n    if ( pName1 == NULL || pName2 == NULL )\n        return 0;\n    fprintf( pFile, \"%s=%s%s\\n\", pName1, fPol? \"~\": \"\", pName2 );\n    return 1;\n}",
+      "Draft": "func Abc_NtkTestScorrWriteEquivPair(pNetlist *Abc_Ntk_t, vId2Name *Vec_Int_t, Id1 int32, Id2 int32, pFile *os.File, fPol int32) int32 {\n    var pName1 string  = Abc_NtkTestScorrGetName( pNetlist, vId2Name, Id1 );\n    var pName2 string  = Abc_NtkTestScorrGetName( pNetlist, vId2Name, Id2 );\n    if pName1 == nil || pName2 == nil {\n        return 0; }\n    fmt.Fprintf(pFile, \"%s=%s%s\\n\", pName1, fPol? \"~\": \"\", pName2);\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkTestScorrWriteEquivConst",
+      "Start": 5305,
+      "End": 5621,
+      "BodyStart": 5420,
+      "Original": "int Abc_NtkTestScorrWriteEquivConst( Abc_Ntk_t * pNetlist, Vec_Int_t * vId2Name, int Id1, FILE * pFile, int fPol )\n{\n    char * pName1 = Abc_NtkTestScorrGetName( pNetlist, vId2Name, Id1 );\n    if ( pName1 == NULL )\n        return 0;\n    fprintf( pFile, \"%s=%s%s\\n\", pName1, fPol? \"~\": \"\", \"const0\" );\n    return 1;\n}",
+      "Draft": "func Abc_NtkTestScorrWriteEquivConst(pNetlist *Abc_Ntk_t, vId2Name *Vec_Int_t, Id1 int32, pFile *os.File, fPol int32) int32 {\n    var pName1 string  = Abc_NtkTestScorrGetName( pNetlist, vId2Name, Id1 );\n    if pName1 == nil {\n        return 0; }\n    fmt.Fprintf(pFile, \"%s=%s%s\\n\", pName1, fPol? \"~\": \"\", \"const0\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkBmcFileName",
+      "Start": 5857,
+      "End": 6118,
+      "BodyStart": 5899,
+      "Original": "char * Abc_NtkBmcFileName( char * pName )\n{\n    static char Buffer[1000];\n    char * pNameGeneric = Extra_FileNameGeneric( pName );\n    sprintf( Buffer, \"%s_bmc%s\", pNameGeneric, pName + strlen(pNameGeneric) );\n    ABC_FREE( pNameGeneric );\n    return Buffer;\n}",
+      "Draft": "func Abc_NtkBmcFileName(pName string) string {\n    \n    var pNameGeneric string  = Extra_FileNameGeneric( pName );\n    spStatic_Abc_NtkBmcFileName_Buffer = fmt.Sprintf(\"%s_bmc%s\", pNameGeneric, pName + len(pNameGeneric));\n    // inlining of macro ABC_FREE\n    ((pNameGeneric) ? (free((char *) (pNameGeneric)), (pNameGeneric) = 0) : 0);\n    return spStatic_Abc_NtkBmcFileName_Buffer;\n}"
+    },
+    {
+      "Name": "Abc_NtkTestScorrWriteEquivGia",
+      "Start": 6354,
+      "End": 7872,
+      "BodyStart": 6409,
+      "Original": "int Abc_NtkTestScorrWriteEquivGia( Tst_Dat_t * pData )\n{\n    Abc_Ntk_t * pNetlist = pData-\u003epNetlist;\n    Vec_Int_t * vId2Name = pData-\u003evId2Name;\n    Gia_Man_t * pGia     = pData-\u003epGia;\n    char * pFileNameOut  = pData-\u003epFileNameOut;\n    FILE * pFile;\n    Gia_Obj_t * pObj, * pRepr;\n    int i, Counter = 0;\n    if ( pData-\u003efDumpBmc )\n    {\n        pData-\u003efDumpBmc = 0;\n        pFileNameOut = Abc_NtkBmcFileName( pFileNameOut );\n    }\n    pFile = fopen( pFileNameOut, \"wb\" );\n    Gia_ManSetPhase( pGia );\n    Gia_ManForEachObj( pGia, pObj, i )\n    {\n        if ( !Gia_ObjHasRepr(pGia, i) )\n            continue;\n        pRepr = Gia_ManObj( pGia,Gia_ObjRepr(pGia, i) );\n        if ( pData-\u003efFlopOnly )\n        {\n            if ( !Gia_ObjIsRo(pGia, pObj) || !(Gia_ObjIsRo(pGia, pRepr)||Gia_ObjIsConst0(pRepr)) )\n                continue;\n        }\n        else if ( pData-\u003efFfNdOnly )\n        {\n            if ( !Gia_ObjIsRo(pGia, pObj) \u0026\u0026 !(Gia_ObjIsRo(pGia, pRepr)||Gia_ObjIsConst0(pRepr)) )\n                continue;\n        }\n        if ( Gia_ObjRepr(pGia, i) == 0 )\n            Counter += Abc_NtkTestScorrWriteEquivConst( pNetlist, vId2Name, i, pFile, Gia_ObjPhase(pObj) );\n        else\n            Counter += Abc_NtkTestScorrWriteEquivPair( pNetlist, vId2Name, Gia_ObjRepr(pGia, i), i, pFile, \n                Gia_ObjPhase(pRepr) ^ Gia_ObjPhase(pObj) );\n    }\n    fclose( pFile );\n    printf( \"%d pairs of sequentially equivalent nodes are written into file \\\"%s\\\".\\n\", Counter, pFileNameOut );\n    return Counter;\n}",
+      "Draft": "func Abc_NtkTestScorrWriteEquivGia(pData *Tst_Dat_t) int32 {\n    var pNetlist *Abc_Ntk_t  = pData.pNetlist;\n    var vId2Name *Vec_Int_t  = pData.vId2Name;\n    var pGia *Gia_Man_t      = pData.pGia;\n    var pFileNameOut string   = pData.pFileNameOut;\n    var pFile *os.File;\n    var pObj, pRepr *Gia_Obj_t;\n    var i, Counter int32;\n    if pData.fDumpBmc {\n        pData.fDumpBmc = 0;\n        pFileNameOut = Abc_NtkBmcFileName( pFileNameOut );\n    }\n    pFile = os.OpenFile(pFileNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    Gia_ManSetPhase( pGia );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {\n        if !Gia_ObjHasRepr(pGia, i) {\n            continue; }\n        pRepr = Gia_ManObj( pGia,Gia_ObjRepr(pGia, i) );\n        if pData.fFlopOnly {\n            if !Gia_ObjIsRo(pGia, pObj) || !(Gia_ObjIsRo(pGia, pRepr)||Gia_ObjIsConst0(pRepr)) {\n                continue; }\n        \n        } else if pData.fFfNdOnly {\n            if !Gia_ObjIsRo(pGia, pObj) \u0026\u0026 !(Gia_ObjIsRo(pGia, pRepr)||Gia_ObjIsConst0(pRepr)) {\n                continue; }\n        }\n        if Gia_ObjRepr(pGia, i) == 0 {\n            Counter += Abc_NtkTestScorrWriteEquivConst( pNetlist, vId2Name, i, pFile, Gia_ObjPhase(pObj) );\n        } else {\n            Counter += Abc_NtkTestScorrWriteEquivPair( pNetlist, vId2Name, Gia_ObjRepr(pGia, i), i, pFile, \n                Gia_ObjPhase(pRepr) ^ Gia_ObjPhase(pObj) ); }\n    }\n    _ = (pFile).Close();\n    fmt.Printf(\"%d pairs of sequentially equivalent nodes are written into file \\\"%s\\\".\\n\", Counter, pFileNameOut);\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NtkTestScorrWriteEquivAig",
+      "Start": 8108,
+      "End": 9596,
+      "BodyStart": 8163,
+      "Original": "int Abc_NtkTestScorrWriteEquivAig( Tst_Dat_t * pData )\n{\n    Abc_Ntk_t * pNetlist = pData-\u003epNetlist;\n    Vec_Int_t * vId2Name = pData-\u003evId2Name;\n    Aig_Man_t * pAig     = pData-\u003epAig;\n    char * pFileNameOut  = pData-\u003epFileNameOut;\n    FILE * pFile;\n    Aig_Obj_t * pObj, * pRepr;\n    int i, Counter = 0;\n    if ( pData-\u003efDumpBmc )\n    {\n        pData-\u003efDumpBmc = 0;\n        pFileNameOut = Abc_NtkBmcFileName( pFileNameOut );\n    }\n    pFile = fopen( pFileNameOut, \"wb\" );\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n        if ( (pRepr = Aig_ObjRepr(pAig, pObj)) == NULL )\n            continue;\n        if ( pData-\u003efFlopOnly )\n        {\n            if ( !Saig_ObjIsLo(pAig, pObj) || !(Saig_ObjIsLo(pAig, pRepr)||pRepr==Aig_ManConst1(pAig)) )\n                continue;\n        }\n        else if ( pData-\u003efFfNdOnly )\n        {\n            if ( !Saig_ObjIsLo(pAig, pObj) \u0026\u0026 !(Saig_ObjIsLo(pAig, pRepr)||pRepr==Aig_ManConst1(pAig)) )\n                continue;\n        }\n        if ( pRepr == Aig_ManConst1(pAig) )\n            Counter += Abc_NtkTestScorrWriteEquivConst( pNetlist, vId2Name, Aig_ObjId(pObj), pFile, Aig_ObjPhase(pObj) );\n        else\n            Counter += Abc_NtkTestScorrWriteEquivPair( pNetlist, vId2Name, Aig_ObjId(pRepr), Aig_ObjId(pObj), pFile, \n                Aig_ObjPhase(pRepr) ^ Aig_ObjPhase(pObj) );\n    }\n    fclose( pFile );\n    printf( \"%d pairs of sequentially equivalent nodes are written into file \\\"%s\\\".\\n\", Counter, pFileNameOut );\n    return Counter;\n}",
+      "Draft": "func Abc_NtkTestScorrWriteEquivAig(pData *Tst_Dat_t) int32 {\n    var pNetlist *Abc_Ntk_t  = pData.pNetlist;\n    var vId2Name *Vec_Int_t  = pData.vId2Name;\n    var pAig *Aig_Man_t      = pData.pAig;\n    var pFileNameOut string   = pData.pFileNameOut;\n    var pFile *os.File;\n    var pObj, pRepr *Aig_Obj_t;\n    var i, Counter int32;\n    if pData.fDumpBmc {\n        pData.fDumpBmc = 0;\n        pFileNameOut = Abc_NtkBmcFileName( pFileNameOut );\n    }\n    pFile = os.OpenFile(pFileNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if (pRepr = Aig_ObjRepr(pAig, pObj)) == nil {\n            continue; }\n        if pData.fFlopOnly {\n            if !Saig_ObjIsLo(pAig, pObj) || !(Saig_ObjIsLo(pAig, pRepr)||pRepr==Aig_ManConst1(pAig)) {\n                continue; }\n        \n        } else if pData.fFfNdOnly {\n            if !Saig_ObjIsLo(pAig, pObj) \u0026\u0026 !(Saig_ObjIsLo(pAig, pRepr)||pRepr==Aig_ManConst1(pAig)) {\n                continue; }\n        }\n        if pRepr == Aig_ManConst1(pAig) {\n            Counter += Abc_NtkTestScorrWriteEquivConst( pNetlist, vId2Name, Aig_ObjId(pObj), pFile, Aig_ObjPhase(pObj) );\n        } else {\n            Counter += Abc_NtkTestScorrWriteEquivPair( pNetlist, vId2Name, Aig_ObjId(pRepr), Aig_ObjId(pObj), pFile, \n                Aig_ObjPhase(pRepr) ^ Aig_ObjPhase(pObj) ); }\n    }\n    }\n    _ = (pFile).Close();\n    fmt.Printf(\"%d pairs of sequentially equivalent nodes are written into file \\\"%s\\\".\\n\", Counter, pFileNameOut);\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NtkTestScorr",
+      "Start": 9832,
+      "End": 14614,
+      "BodyStart": 9991,
+      "Original": "Abc_Ntk_t * Abc_NtkTestScorr( char * pFileNameIn, char * pFileNameOut, int nStepsMax, int nBTLimit, int fNewAlgo, int fFlopOnly, int fFfNdOnly, int fVerbose )\n{\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    extern Abc_Ntk_t * Abc_NtkFromDarSeqSweep( Abc_Ntk_t * pNtkOld, Aig_Man_t * pMan );\n\n    FILE * pFile;\n    Tst_Dat_t Data, * pData = \u0026Data;\n    Vec_Int_t * vId2Name;\n    Abc_Ntk_t * pNetlist, * pLogic, * pStrash, * pResult;\n    Aig_Man_t * pAig, * pTempAig;\n    Gia_Man_t * pGia, * pTempGia;\n//    int Counter = 0;\n    // check the files\n    pFile = fopen( pFileNameIn, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Input file \\\"%s\\\" cannot be opened.\\n\", pFileNameIn );\n        return NULL;\n    }\n    fclose( pFile );\n    // check the files\n    pFile = fopen( pFileNameOut, \"wb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Output file \\\"%s\\\" cannot be opened.\\n\", pFileNameOut );\n        return NULL;\n    }\n    fclose( pFile );\n    // derive AIG for signal correspondence\n    pNetlist = Io_ReadNetlist( pFileNameIn, Io_ReadFileType(pFileNameIn), 1 );\n    if ( pNetlist == NULL )\n    {\n        printf( \"Reading input file \\\"%s\\\" has failed.\\n\", pFileNameIn );\n        return NULL;\n    }\n    pLogic = Abc_NtkToLogic( pNetlist );\n    if ( pLogic == NULL )\n    {\n        Abc_NtkDelete( pNetlist );\n        printf( \"Deriving logic network from input file %s has failed.\\n\", pFileNameIn );\n        return NULL;\n    }\n    if ( Extra_FileIsType( pFileNameIn, \".bench\", \".BENCH\", NULL ) )\n    {\n        // get the init file name\n        char * pFileNameInit = Extra_FileNameGenericAppend( pLogic-\u003epSpec, \".init\" );\n        pFile = fopen( pFileNameInit, \"rb\" );\n        if ( pFile == NULL )\n        {\n            printf( \"Init file \\\"%s\\\" cannot be opened.\\n\", pFileNameInit );\n            return NULL;\n        }\n        Io_ReadBenchInit( pLogic, pFileNameInit );\n        Abc_NtkConvertDcLatches( pLogic );\n        if ( fVerbose )\n            printf( \"Initial state was derived from file \\\"%s\\\".\\n\", pFileNameInit );\n    }\n    pStrash = Abc_NtkStrash( pLogic, 0, 1, 0 );\n    if ( pStrash == NULL )\n    {\n        Abc_NtkDelete( pLogic );\n        Abc_NtkDelete( pNetlist );\n        printf( \"Deriving strashed network from input file %s has failed.\\n\", pFileNameIn );\n        return NULL;\n    }\n    pAig = Abc_NtkToDar( pStrash, 0, 1 ); // performs \"zero\" internally\n    // the newer computation (\u0026scorr)\n    if ( fNewAlgo )\n    {\n        Cec_ParCor_t CorPars, * pCorPars = \u0026CorPars;\n        Cec_ManCorSetDefaultParams( pCorPars );\n        pCorPars-\u003enBTLimit  = nBTLimit;\n        pCorPars-\u003enStepsMax = nStepsMax;\n        pCorPars-\u003efVerbose  = fVerbose;\n        pCorPars-\u003efUseCSat  = 1;\n        pGia = Gia_ManFromAig( pAig );\n        // prepare the data-structure\n        memset( pData, 0, sizeof(Tst_Dat_t) );\n        pData-\u003epNetlist     = pNetlist;\n        pData-\u003epAig         = NULL;\n        pData-\u003epGia         = pGia;\n        pData-\u003evId2Name     = vId2Name = Abc_NtkMapGiaIntoNameId( pNetlist, pAig, pGia );\n        pData-\u003epFileNameOut = pFileNameOut;\n        pData-\u003efFlopOnly    = fFlopOnly;\n        pData-\u003efFfNdOnly    = fFfNdOnly;\n        pData-\u003efDumpBmc     = 1;\n        pCorPars-\u003epData     = pData;\n        pCorPars-\u003epFunc     = (void *)Abc_NtkTestScorrWriteEquivGia;\n        // call signal correspondence\n        pTempGia = Cec_ManLSCorrespondence( pGia, pCorPars );\n        pTempAig = Gia_ManToAigSimple( pTempGia );\n        Gia_ManStop( pTempGia );\n        Gia_ManStop( pGia );\n    }\n    // the older computation (scorr)\n    else\n    {\n        Ssw_Pars_t SswPars, * pSswPars = \u0026SswPars;\n        Ssw_ManSetDefaultParams( pSswPars );\n        pSswPars-\u003enBTLimit  = nBTLimit;\n        pSswPars-\u003enStepsMax = nStepsMax;\n        pSswPars-\u003efVerbose  = fVerbose;\n        // preSswPare the data-structure\n        memset( pData, 0, sizeof(Tst_Dat_t) );\n        pData-\u003epNetlist     = pNetlist;\n        pData-\u003epAig         = pAig;\n        pData-\u003epGia         = NULL;\n        pData-\u003evId2Name     = vId2Name = Abc_NtkMapGiaIntoNameId( pNetlist, pAig, NULL );\n        pData-\u003epFileNameOut = pFileNameOut;\n        pData-\u003efFlopOnly    = fFlopOnly;\n        pData-\u003efFfNdOnly    = fFfNdOnly;\n        pData-\u003efDumpBmc     = 1;\n        pSswPars-\u003epData     = pData;\n        pSswPars-\u003epFunc     = (void *)Abc_NtkTestScorrWriteEquivAig;\n        // call signal correspondence\n        pTempAig = Ssw_SignalCorrespondence( pAig, pSswPars );\n    }\n    // create the resulting AIG\n    pResult = Abc_NtkFromDarSeqSweep( pStrash, pTempAig );\n    // cleanup\n    Vec_IntFree( vId2Name );\n    Aig_ManStop( pAig );\n    Aig_ManStop( pTempAig );\n    Abc_NtkDelete( pStrash );\n    Abc_NtkDelete( pLogic );\n    Abc_NtkDelete( pNetlist );\n    return pResult;\n}",
+      "Draft": "func Abc_NtkTestScorr(pFileNameIn string, pFileNameOut string, nStepsMax int32, nBTLimit int32, fNewAlgo int32, fFlopOnly int32, fFfNdOnly int32, fVerbose int32) *Abc_Ntk_t {\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    extern Abc_Ntk_t * Abc_NtkFromDarSeqSweep( Abc_Ntk_t * pNtkOld, Aig_Man_t * pMan );\n\n    var pFile *os.File;\n    var Data Tst_Dat_t;\n    var pData *Tst_Dat_t = \u0026Data;\n    var vId2Name *Vec_Int_t;\n    var pNetlist, pLogic, pStrash, pResult *Abc_Ntk_t;\n    var pAig, pTempAig *Aig_Man_t;\n    var pGia, pTempGia *Gia_Man_t;\n//    int Counter = 0;\n    // check the files\n    pFile = os.Open(pFileNameIn);\n    if pFile == nil {\n        fmt.Printf(\"Input file \\\"%s\\\" cannot be opened.\\n\", pFileNameIn);\n        return nil;\n    }\n    _ = (pFile).Close();\n    // check the files\n    pFile = os.OpenFile(pFileNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Output file \\\"%s\\\" cannot be opened.\\n\", pFileNameOut);\n        return nil;\n    }\n    _ = (pFile).Close();\n    // derive AIG for signal correspondence\n    pNetlist = Io_ReadNetlist( pFileNameIn, Io_ReadFileType(pFileNameIn), 1 );\n    if pNetlist == nil {\n        fmt.Printf(\"Reading input file \\\"%s\\\" has failed.\\n\", pFileNameIn);\n        return nil;\n    }\n    pLogic = Abc_NtkToLogic( pNetlist );\n    if pLogic == nil {\n        Abc_NtkDelete( pNetlist );\n        fmt.Printf(\"Deriving logic network from input file %s has failed.\\n\", pFileNameIn);\n        return nil;\n    }\n    if Extra_FileIsType( pFileNameIn, \".bench\", \".BENCH\", nil ) {\n        // get the init file name\n        var pFileNameInit string  = Extra_FileNameGenericAppend( pLogic.pSpec, \".init\" );\n        pFile = os.Open(pFileNameInit);\n        if pFile == nil {\n            fmt.Printf(\"Init file \\\"%s\\\" cannot be opened.\\n\", pFileNameInit);\n            return nil;\n        }\n        Io_ReadBenchInit( pLogic, pFileNameInit );\n        Abc_NtkConvertDcLatches( pLogic );\n        if fVerbose != 0 {\n            fmt.Printf(\"Initial state was derived from file \\\"%s\\\".\\n\", pFileNameInit); }\n    }\n    pStrash = Abc_NtkStrash( pLogic, 0, 1, 0 );\n    if pStrash == nil {\n        Abc_NtkDelete( pLogic );\n        Abc_NtkDelete( pNetlist );\n        fmt.Printf(\"Deriving strashed network from input file %s has failed.\\n\", pFileNameIn);\n        return nil;\n    }\n    pAig = Abc_NtkToDar( pStrash, 0, 1 ); // performs \"zero\" internally\n    // the newer computation (\u0026scorr)\n    if fNewAlgo != 0 {\n        var CorPars Cec_ParCor_t;\n        var pCorPars *Cec_ParCor_t = \u0026CorPars;\n        Cec_ManCorSetDefaultParams( pCorPars );\n        pCorPars.nBTLimit  = nBTLimit;\n        pCorPars.nStepsMax = nStepsMax;\n        pCorPars.fVerbose  = fVerbose;\n        pCorPars.fUseCSat  = 1;\n        pGia = Gia_ManFromAig( pAig );\n        // prepare the data-structure\n        *pData = Tst_Dat_t{};\n        pData.pNetlist     = pNetlist;\n        pData.pAig         = nil;\n        pData.pGia         = pGia;\n        pData.vId2Name     = vId2Name = Abc_NtkMapGiaIntoNameId( pNetlist, pAig, pGia );\n        pData.pFileNameOut = pFileNameOut;\n        pData.fFlopOnly    = fFlopOnly;\n        pData.fFfNdOnly    = fFfNdOnly;\n        pData.fDumpBmc     = 1;\n        pCorPars.pData     = pData;\n        pCorPars.pFunc     = (void *)Abc_NtkTestScorrWriteEquivGia;\n        // call signal correspondence\n        pTempGia = Cec_ManLSCorrespondence( pGia, pCorPars );\n        pTempAig = Gia_ManToAigSimple( pTempGia );\n        Gia_ManStop( pTempGia );\n        Gia_ManStop( pGia );\n    \n    // the older computation (scorr)\n    } else {\n        var SswPars Ssw_Pars_t;\n        var pSswPars *Ssw_Pars_t = \u0026SswPars;\n        Ssw_ManSetDefaultParams( pSswPars );\n        pSswPars.nBTLimit  = nBTLimit;\n        pSswPars.nStepsMax = nStepsMax;\n        pSswPars.fVerbose  = fVerbose;\n        // preSswPare the data-structure\n        *pData = Tst_Dat_t{};\n        pData.pNetlist     = pNetlist;\n        pData.pAig         = pAig;\n        pData.pGia         = nil;\n        pData.vId2Name     = vId2Name = Abc_NtkMapGiaIntoNameId( pNetlist, pAig, nil );\n        pData.pFileNameOut = pFileNameOut;\n        pData.fFlopOnly    = fFlopOnly;\n        pData.fFfNdOnly    = fFfNdOnly;\n        pData.fDumpBmc     = 1;\n        pSswPars.pData     = pData;\n        pSswPars.pFunc     = (void *)Abc_NtkTestScorrWriteEquivAig;\n        // call signal correspondence\n        pTempAig = Ssw_SignalCorrespondence( pAig, pSswPars );\n    }\n    // create the resulting AIG\n    pResult = Abc_NtkFromDarSeqSweep( pStrash, pTempAig );\n    // cleanup\n    Vec_IntFree( vId2Name );\n    Aig_ManStop( pAig );\n    Aig_ManStop( pTempAig );\n    Abc_NtkDelete( pStrash );\n    Abc_NtkDelete( pLogic );\n    Abc_NtkDelete( pNetlist );\n    return pResult;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::struct::Tst_Dat_t",
+      "Category": "struct-review",
+      "Symbol": "Tst_Dat_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 966,
+      "End": 1237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::mechanical::static::6293",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5905,
+      "End": 5911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::mechanical::sizeof::13463",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12676,
+      "End": 12682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::mechanical::sizeof::14506",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13719,
+      "End": 13725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::pointer-cast::2393",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2215,
+      "End": 2228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::pointer-cast::3077",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2794,
+      "End": 2807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::pointer-cast::3762",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3374,
+      "End": 3387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::pointer-cast::6528",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6072,
+      "End": 6072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::pointer-cast::9324",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8586,
+      "End": 8586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::pointer-cast::13912",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13125,
+      "End": 13133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::pointer-cast::14955",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14168,
+      "End": 14176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::ternary::Abc_NtkMapGiaIntoNameId",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkMapGiaIntoNameId",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1693,
+      "End": 3746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::Abc_NtkMapGiaIntoNameId",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMapGiaIntoNameId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1693,
+      "End": 3746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::Abc_NtkTestScorrGetName",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestScorrGetName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3982,
+      "End": 4421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::ternary::Abc_NtkTestScorrWriteEquivPair",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkTestScorrWriteEquivPair",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4657,
+      "End": 5069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::Abc_NtkTestScorrWriteEquivPair",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestScorrWriteEquivPair",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4657,
+      "End": 5069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::ternary::Abc_NtkTestScorrWriteEquivConst",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkTestScorrWriteEquivConst",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5305,
+      "End": 5621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::Abc_NtkTestScorrWriteEquivConst",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestScorrWriteEquivConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5305,
+      "End": 5621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::ternary::Abc_NtkBmcFileName",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkBmcFileName",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5857,
+      "End": 6118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::Abc_NtkBmcFileName",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkBmcFileName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5857,
+      "End": 6118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::Abc_NtkTestScorrWriteEquivGia",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestScorrWriteEquivGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6354,
+      "End": 7872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::Abc_NtkTestScorrWriteEquivAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestScorrWriteEquivAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8108,
+      "End": 9596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::Abc_NtkTestScorr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestScorr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9832,
+      "End": 14614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcScorr.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14862
+    }
+  ],
+  "Draft": "package abci\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [abcScorr.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Signal correspondence testing procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcScorr.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n//#include \"base/abc/abc.h\"\n//#include \"base/io/ioAbc.h\"\n//#include \"aig/saig/saig.h\"\n//#include \"proof/ssw/ssw.h\"\n//#include \"aig/gia/gia.h\"\n//#include \"proof/cec/cec.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Tst_Dat_t struct {\n    pNetlist  *Abc_Ntk_t;\n    pAig  *Aig_Man_t;\n    pGia  *Gia_Man_t;\n    vId2Name  *Vec_Int_t;\n    pFileNameOut       string;\n    fFlopOnly         int32;\n    fFfNdOnly         int32;\n    fDumpBmc         int32;      \n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMapGiaIntoNameId(pNetlist *Abc_Ntk_t, pAig *Aig_Man_t, pGia *Gia_Man_t) *Vec_Int_t {\n    var vId2Name *Vec_Int_t;\n    var pNet, pNode, pAnd *Abc_Obj_t;\n    var pObjAig *Aig_Obj_t;\n    var i int32;\n    vId2Name = Vec_IntAlloc( 0 );\n    Vec_IntFill( vId2Name, pGia ? Gia_ManObjNum(pGia) : Aig_ManObjNumMax(pAig), ~0 );\n    // copy all names\n    // inlining of macro Abc_NtkForEachNet\n    for  i = 0; (i \u003c Vec_PtrSize((pNetlist).vObjs)) \u0026\u0026 (((pNet) = Abc_NtkObj(pNetlist, i)), 1); i++  {            if (pNet) == nil || !Abc_ObjIsNet(pNet) {} else {\n        pNode = Abc_ObjFanin0(pNet).pCopy; \n        if pNode \u0026\u0026 (pAnd = Abc_ObjRegular(pNode.pCopy)) \u0026\u0026 \n            (pObjAig = (Aig_Obj_t *)Abc_ObjRegular(pAnd.pCopy)) \u0026\u0026 \n             Aig_ObjType(pObjAig) != AIG_OBJ_NONE {\n            if pGia == nil {\n                Vec_IntWriteEntry( vId2Name, Aig_ObjId(pObjAig), Abc_ObjId(pNet) );\n            } else {\n                Vec_IntWriteEntry( vId2Name, Abc_Lit2Var(pObjAig.iData), Abc_ObjId(pNet) ); }\n        }\n    }\n    }\n    // overwrite CO names\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNetlist)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNetlist, i)), 1); i++  {\n        pNet = Abc_ObjFanin0(pNode);\n        pNode = pNode.pCopy;\n        if pNode \u0026\u0026 (pAnd = Abc_ObjRegular(pNode.pCopy)) \u0026\u0026 \n            (pObjAig = (Aig_Obj_t *)Abc_ObjRegular(pAnd.pCopy)) \u0026\u0026 \n             Aig_ObjType(pObjAig) != AIG_OBJ_NONE {\n            if pGia == nil {\n                Vec_IntWriteEntry( vId2Name, Aig_ObjId(pObjAig), Abc_ObjId(pNet) );\n            } else {\n                Vec_IntWriteEntry( vId2Name, Abc_Lit2Var(pObjAig.iData), Abc_ObjId(pNet) ); }\n        }\n    }\n    // overwrite CI names\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNetlist)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNetlist, i)), 1); i++  {\n        pNet = Abc_ObjFanout0(pNode);\n        pNode = pNode.pCopy;\n        if pNode \u0026\u0026 (pAnd = Abc_ObjRegular(pNode.pCopy)) \u0026\u0026 \n            (pObjAig = (Aig_Obj_t *)Abc_ObjRegular(pAnd.pCopy)) \u0026\u0026 \n             Aig_ObjType(pObjAig) != AIG_OBJ_NONE {\n            if pGia == nil {\n                Vec_IntWriteEntry( vId2Name, Aig_ObjId(pObjAig), Abc_ObjId(pNet) );\n            } else {\n                Vec_IntWriteEntry( vId2Name, Abc_Lit2Var(pObjAig.iData), Abc_ObjId(pNet) ); }\n        }\n    }\n    return vId2Name;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestScorrGetName(pNetlist *Abc_Ntk_t, vId2Name *Vec_Int_t, Id int32) string {\n//    Abc_Obj_t * pObj;\n//printf( \"trying to get name for %d\\n\", Id );\n    if Vec_IntEntry(vId2Name, Id) == ~0 {\n        return nil; }\n//    pObj = Abc_NtkObj( pNetlist, Vec_IntEntry(vId2Name, Id) );\n//    pObj = Abc_ObjFanin0(pObj);\n//    assert( Abc_ObjIsCi(pObj) );\n    return Nm_ManFindNameById( pNetlist.pManName, Vec_IntEntry(vId2Name, Id) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestScorrWriteEquivPair(pNetlist *Abc_Ntk_t, vId2Name *Vec_Int_t, Id1 int32, Id2 int32, pFile *os.File, fPol int32) int32 {\n    var pName1 string  = Abc_NtkTestScorrGetName( pNetlist, vId2Name, Id1 );\n    var pName2 string  = Abc_NtkTestScorrGetName( pNetlist, vId2Name, Id2 );\n    if pName1 == nil || pName2 == nil {\n        return 0; }\n    fmt.Fprintf(pFile, \"%s=%s%s\\n\", pName1, fPol? \"~\": \"\", pName2);\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestScorrWriteEquivConst(pNetlist *Abc_Ntk_t, vId2Name *Vec_Int_t, Id1 int32, pFile *os.File, fPol int32) int32 {\n    var pName1 string  = Abc_NtkTestScorrGetName( pNetlist, vId2Name, Id1 );\n    if pName1 == nil {\n        return 0; }\n    fmt.Fprintf(pFile, \"%s=%s%s\\n\", pName1, fPol? \"~\": \"\", \"const0\");\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Abc_NtkBmcFileName_Buffer string // was [1000]byte in C\n\nfunc Abc_NtkBmcFileName(pName string) string {\n    \n    var pNameGeneric string  = Extra_FileNameGeneric( pName );\n    spStatic_Abc_NtkBmcFileName_Buffer = fmt.Sprintf(\"%s_bmc%s\", pNameGeneric, pName + len(pNameGeneric));\n    // inlining of macro ABC_FREE\n    ((pNameGeneric) ? (free((char *) (pNameGeneric)), (pNameGeneric) = 0) : 0);\n    return spStatic_Abc_NtkBmcFileName_Buffer;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestScorrWriteEquivGia(pData *Tst_Dat_t) int32 {\n    var pNetlist *Abc_Ntk_t  = pData.pNetlist;\n    var vId2Name *Vec_Int_t  = pData.vId2Name;\n    var pGia *Gia_Man_t      = pData.pGia;\n    var pFileNameOut string   = pData.pFileNameOut;\n    var pFile *os.File;\n    var pObj, pRepr *Gia_Obj_t;\n    var i, Counter int32;\n    if pData.fDumpBmc {\n        pData.fDumpBmc = 0;\n        pFileNameOut = Abc_NtkBmcFileName( pFileNameOut );\n    }\n    pFile = os.OpenFile(pFileNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    Gia_ManSetPhase( pGia );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {\n        if !Gia_ObjHasRepr(pGia, i) {\n            continue; }\n        pRepr = Gia_ManObj( pGia,Gia_ObjRepr(pGia, i) );\n        if pData.fFlopOnly {\n            if !Gia_ObjIsRo(pGia, pObj) || !(Gia_ObjIsRo(pGia, pRepr)||Gia_ObjIsConst0(pRepr)) {\n                continue; }\n        \n        } else if pData.fFfNdOnly {\n            if !Gia_ObjIsRo(pGia, pObj) \u0026\u0026 !(Gia_ObjIsRo(pGia, pRepr)||Gia_ObjIsConst0(pRepr)) {\n                continue; }\n        }\n        if Gia_ObjRepr(pGia, i) == 0 {\n            Counter += Abc_NtkTestScorrWriteEquivConst( pNetlist, vId2Name, i, pFile, Gia_ObjPhase(pObj) );\n        } else {\n            Counter += Abc_NtkTestScorrWriteEquivPair( pNetlist, vId2Name, Gia_ObjRepr(pGia, i), i, pFile, \n                Gia_ObjPhase(pRepr) ^ Gia_ObjPhase(pObj) ); }\n    }\n    _ = (pFile).Close();\n    fmt.Printf(\"%d pairs of sequentially equivalent nodes are written into file \\\"%s\\\".\\n\", Counter, pFileNameOut);\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestScorrWriteEquivAig(pData *Tst_Dat_t) int32 {\n    var pNetlist *Abc_Ntk_t  = pData.pNetlist;\n    var vId2Name *Vec_Int_t  = pData.vId2Name;\n    var pAig *Aig_Man_t      = pData.pAig;\n    var pFileNameOut string   = pData.pFileNameOut;\n    var pFile *os.File;\n    var pObj, pRepr *Aig_Obj_t;\n    var i, Counter int32;\n    if pData.fDumpBmc {\n        pData.fDumpBmc = 0;\n        pFileNameOut = Abc_NtkBmcFileName( pFileNameOut );\n    }\n    pFile = os.OpenFile(pFileNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if (pRepr = Aig_ObjRepr(pAig, pObj)) == nil {\n            continue; }\n        if pData.fFlopOnly {\n            if !Saig_ObjIsLo(pAig, pObj) || !(Saig_ObjIsLo(pAig, pRepr)||pRepr==Aig_ManConst1(pAig)) {\n                continue; }\n        \n        } else if pData.fFfNdOnly {\n            if !Saig_ObjIsLo(pAig, pObj) \u0026\u0026 !(Saig_ObjIsLo(pAig, pRepr)||pRepr==Aig_ManConst1(pAig)) {\n                continue; }\n        }\n        if pRepr == Aig_ManConst1(pAig) {\n            Counter += Abc_NtkTestScorrWriteEquivConst( pNetlist, vId2Name, Aig_ObjId(pObj), pFile, Aig_ObjPhase(pObj) );\n        } else {\n            Counter += Abc_NtkTestScorrWriteEquivPair( pNetlist, vId2Name, Aig_ObjId(pRepr), Aig_ObjId(pObj), pFile, \n                Aig_ObjPhase(pRepr) ^ Aig_ObjPhase(pObj) ); }\n    }\n    }\n    _ = (pFile).Close();\n    fmt.Printf(\"%d pairs of sequentially equivalent nodes are written into file \\\"%s\\\".\\n\", Counter, pFileNameOut);\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestScorr(pFileNameIn string, pFileNameOut string, nStepsMax int32, nBTLimit int32, fNewAlgo int32, fFlopOnly int32, fFfNdOnly int32, fVerbose int32) *Abc_Ntk_t {\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    extern Abc_Ntk_t * Abc_NtkFromDarSeqSweep( Abc_Ntk_t * pNtkOld, Aig_Man_t * pMan );\n\n    var pFile *os.File;\n    var Data Tst_Dat_t;\n    var pData *Tst_Dat_t = \u0026Data;\n    var vId2Name *Vec_Int_t;\n    var pNetlist, pLogic, pStrash, pResult *Abc_Ntk_t;\n    var pAig, pTempAig *Aig_Man_t;\n    var pGia, pTempGia *Gia_Man_t;\n//    int Counter = 0;\n    // check the files\n    pFile = os.Open(pFileNameIn);\n    if pFile == nil {\n        fmt.Printf(\"Input file \\\"%s\\\" cannot be opened.\\n\", pFileNameIn);\n        return nil;\n    }\n    _ = (pFile).Close();\n    // check the files\n    pFile = os.OpenFile(pFileNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Output file \\\"%s\\\" cannot be opened.\\n\", pFileNameOut);\n        return nil;\n    }\n    _ = (pFile).Close();\n    // derive AIG for signal correspondence\n    pNetlist = Io_ReadNetlist( pFileNameIn, Io_ReadFileType(pFileNameIn), 1 );\n    if pNetlist == nil {\n        fmt.Printf(\"Reading input file \\\"%s\\\" has failed.\\n\", pFileNameIn);\n        return nil;\n    }\n    pLogic = Abc_NtkToLogic( pNetlist );\n    if pLogic == nil {\n        Abc_NtkDelete( pNetlist );\n        fmt.Printf(\"Deriving logic network from input file %s has failed.\\n\", pFileNameIn);\n        return nil;\n    }\n    if Extra_FileIsType( pFileNameIn, \".bench\", \".BENCH\", nil ) {\n        // get the init file name\n        var pFileNameInit string  = Extra_FileNameGenericAppend( pLogic.pSpec, \".init\" );\n        pFile = os.Open(pFileNameInit);\n        if pFile == nil {\n            fmt.Printf(\"Init file \\\"%s\\\" cannot be opened.\\n\", pFileNameInit);\n            return nil;\n        }\n        Io_ReadBenchInit( pLogic, pFileNameInit );\n        Abc_NtkConvertDcLatches( pLogic );\n        if fVerbose != 0 {\n            fmt.Printf(\"Initial state was derived from file \\\"%s\\\".\\n\", pFileNameInit); }\n    }\n    pStrash = Abc_NtkStrash( pLogic, 0, 1, 0 );\n    if pStrash == nil {\n        Abc_NtkDelete( pLogic );\n        Abc_NtkDelete( pNetlist );\n        fmt.Printf(\"Deriving strashed network from input file %s has failed.\\n\", pFileNameIn);\n        return nil;\n    }\n    pAig = Abc_NtkToDar( pStrash, 0, 1 ); // performs \"zero\" internally\n    // the newer computation (\u0026scorr)\n    if fNewAlgo != 0 {\n        var CorPars Cec_ParCor_t;\n        var pCorPars *Cec_ParCor_t = \u0026CorPars;\n        Cec_ManCorSetDefaultParams( pCorPars );\n        pCorPars.nBTLimit  = nBTLimit;\n        pCorPars.nStepsMax = nStepsMax;\n        pCorPars.fVerbose  = fVerbose;\n        pCorPars.fUseCSat  = 1;\n        pGia = Gia_ManFromAig( pAig );\n        // prepare the data-structure\n        *pData = Tst_Dat_t{};\n        pData.pNetlist     = pNetlist;\n        pData.pAig         = nil;\n        pData.pGia         = pGia;\n        pData.vId2Name     = vId2Name = Abc_NtkMapGiaIntoNameId( pNetlist, pAig, pGia );\n        pData.pFileNameOut = pFileNameOut;\n        pData.fFlopOnly    = fFlopOnly;\n        pData.fFfNdOnly    = fFfNdOnly;\n        pData.fDumpBmc     = 1;\n        pCorPars.pData     = pData;\n        pCorPars.pFunc     = (void *)Abc_NtkTestScorrWriteEquivGia;\n        // call signal correspondence\n        pTempGia = Cec_ManLSCorrespondence( pGia, pCorPars );\n        pTempAig = Gia_ManToAigSimple( pTempGia );\n        Gia_ManStop( pTempGia );\n        Gia_ManStop( pGia );\n    \n    // the older computation (scorr)\n    } else {\n        var SswPars Ssw_Pars_t;\n        var pSswPars *Ssw_Pars_t = \u0026SswPars;\n        Ssw_ManSetDefaultParams( pSswPars );\n        pSswPars.nBTLimit  = nBTLimit;\n        pSswPars.nStepsMax = nStepsMax;\n        pSswPars.fVerbose  = fVerbose;\n        // preSswPare the data-structure\n        *pData = Tst_Dat_t{};\n        pData.pNetlist     = pNetlist;\n        pData.pAig         = pAig;\n        pData.pGia         = nil;\n        pData.vId2Name     = vId2Name = Abc_NtkMapGiaIntoNameId( pNetlist, pAig, nil );\n        pData.pFileNameOut = pFileNameOut;\n        pData.fFlopOnly    = fFlopOnly;\n        pData.fFfNdOnly    = fFfNdOnly;\n        pData.fDumpBmc     = 1;\n        pSswPars.pData     = pData;\n        pSswPars.pFunc     = (void *)Abc_NtkTestScorrWriteEquivAig;\n        // call signal correspondence\n        pTempAig = Ssw_SignalCorrespondence( pAig, pSswPars );\n    }\n    // create the resulting AIG\n    pResult = Abc_NtkFromDarSeqSweep( pStrash, pTempAig );\n    // cleanup\n    Vec_IntFree( vId2Name );\n    Aig_ManStop( pAig );\n    Aig_ManStop( pTempAig );\n    Abc_NtkDelete( pStrash );\n    Abc_NtkDelete( pLogic );\n    Abc_NtkDelete( pNetlist );\n    return pResult;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,1205 @@
+package gia
+
+import (
+	"fmt"
+	"os"
+	"time"
+)
+
+/**CFile****************************************************************
+
+  FileName    [giaSweeper.c]
+
+  SystemName  [ABC: Logic synthesis and verification system.]
+
+  PackageName [Scalable AIG package.]
+
+  Synopsis    [Incremental SAT sweeper.]
+
+  Author      [Alan Mishchenko]
+  
+  Affiliation [UC Berkeley]
+
+  Date        [Ver. 1.0. Started - June 20, 2005.]
+
+  Revision    [$Id: giaSweeper.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]
+
+***********************************************************************/
+
+//#include "gia.h"
+//#include "base/main/main.h"
+//#include "sat/bsat/satSolver.h"
+//#include "proof/ssc/ssc.h"
+
+//ABC_NAMESPACE_IMPL_START
+
+/*
+
+SAT sweeping/equivalence checking requires the following steps:
+- Creating probes
+  These APIs should be called for all internal points in the logic, which may be used as
+      - nodes representing conditions to be used as constraints
+      - nodes representing functions to be equivalence checked
+      - nodes representing functions needed by the user at the end of SAT sweeping
+  Creating new probe using  Gia_SweeperProbeCreate():   int Gia_SweeperProbeCreate( Gia_Man_t * p, int iLit );
+  Delete existing probe using Gia_SweeperProbeDelete(): int Gia_SweeperProbeDelete( Gia_Man_t * p, int ProbeId );
+  Update existing probe using Gia_SweeperProbeUpdate(): int Gia_SweeperProbeUpdate( Gia_Man_t * p, int ProbeId, int iLit );
+  Comments:
+      - a probe is identified by its 0-based ID, which is returned by above procedures
+      - GIA literal of the probe is returned by       int Gia_SweeperProbeLit( Gia_Man_t * p, int ProbeId )
+- Adding/removing conditions on the current path by calling Gia_SweeperCondPush() and Gia_SweeperCondPop()
+      extern void Gia_SweeperCondPush( Gia_Man_t * p, int ProbeId );
+      extern void Gia_SweeperCondPop( Gia_Man_t * p );
+- Performing equivalence checking by calling     int Gia_SweeperCheckEquiv( Gia_Man_t * pGia, int Probe1, int Probe2 )
+      (resource limits, such as the number of conflicts, will be controllable by dedicated GIA APIs)
+- The resulting AIG to be returned to the user by calling Gia_SweeperExtractUserLogic()
+      Gia_Man_t * Gia_SweeperExtractUserLogic( Gia_Man_t * p, Vec_Int_t * vProbeIds, Vec_Ptr_t * vOutNames )
+
+*/
+
+////////////////////////////////////////////////////////////////////////
+///                        DECLARATIONS                              ///
+////////////////////////////////////////////////////////////////////////
+
+   
+type Swp_Man_t struct {
+    pGia     *Gia_Man_t;        // GIA manager under construction
+    nConfMax            int32;    // conflict limit in seconds
+    nTimeOut            int32;    // runtime limit in seconds
+    vProbes     *Vec_Int_t;     // probes
+    vCondProbes     *Vec_Int_t; // conditions as probes
+    vCondAssump     *Vec_Int_t; // conditions as SAT solver literals
+    // equivalence checking
+    pSat    *sat_solver;        // SAT solver 
+    vId2Lit     *Vec_Int_t;     // mapping of Obj IDs into SAT literal
+    vFront     *Vec_Int_t;      // temporary frontier
+    vFanins     *Vec_Int_t;     // temporary fanins
+    vCexSwp     *Vec_Int_t;     // sweeper counter-example
+    vCexUser     *Vec_Int_t;    // user-visible counter-example
+    nSatVars            int32;    // counter of SAT variables
+    // statistics
+    nSatCalls            int32;
+    nSatCallsSat            int32;
+    nSatCallsUnsat            int32;
+    nSatCallsUndec            int32;
+    nSatProofs            int32;
+    timeStart        abctime;
+    timeTotal        abctime;
+    timeCnf        abctime;
+    timeSat        abctime;
+    timeSatSat        abctime;
+    timeSatUnsat        abctime;
+    timeSatUndec        abctime;
+}
+
+func Swp_ManObj2Lit(p *Swp_Man_t, Id int32) int32 { return Vec_IntGetEntry( p.vId2Lit, Id );              }
+func Swp_ManLit2Lit(p *Swp_Man_t, Lit int32) int32 { assert(Vec_IntEntry(p.vId2Lit, Abc_Lit2Var(Lit)), "Vec_IntEntry(p.vId2Lit, Abc_Lit2Var(Lit))"); return Abc_Lit2LitL( Vec_IntArray(p.vId2Lit), Lit );  }
+func Swp_ManSetObj2Lit(p *Swp_Man_t, Id int32, Lit int32) { assert(Lit > 0, "Lit > 0"); Vec_IntSetEntry( p.vId2Lit, Id, Lit );                }
+
+////////////////////////////////////////////////////////////////////////
+///                     FUNCTION DEFINITIONS                         ///
+////////////////////////////////////////////////////////////////////////
+    
+/**Function*************************************************************
+
+  Synopsis    [Creating/deleting the manager.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Swp_ManStart(pGia *Gia_Man_t) *Swp_Man_t {
+    var p *Swp_Man_t;
+    var Lit int32;
+    assert(Vec_IntSize(&pGia.vHTable), "Vec_IntSize(&pGia.vHTable)");
+    // inlining of macro ABC_CALLOC
+    pGia.pData = p = &Swp_Man_t{};
+    p.pGia         = pGia;
+    p.nConfMax     = 1000;
+    p.vProbes      = Vec_IntAlloc( 100 );
+    p.vCondProbes  = Vec_IntAlloc( 100 );
+    p.vCondAssump  = Vec_IntAlloc( 100 );
+    p.vId2Lit      = Vec_IntAlloc( 10000 );
+    p.vFront       = Vec_IntAlloc( 100 );
+    p.vFanins      = Vec_IntAlloc( 100 );
+    p.vCexSwp      = Vec_IntAlloc( 100 );
+    p.pSat         = sat_solver_new();
+    p.nSatVars     = 1;
+    sat_solver_setnvars( p.pSat, 1000 );
+    Swp_ManSetObj2Lit( p, 0, (Lit = Abc_Var2Lit(p.nSatVars++, 0)) );
+    Lit = Abc_LitNot(Lit);
+    sat_solver_addclause( p.pSat, &Lit, &Lit + 1 );
+    p.timeStart    = Abc_Clock();
+    return p;
+}
+func Swp_ManStop(pGia *Gia_Man_t) {
+    var p *Swp_Man_t  = (Swp_Man_t *)pGia.pData;
+    sat_solver_delete( p.pSat );
+    Vec_IntFree( p.vFanins );
+    Vec_IntFree( p.vCexSwp );
+    Vec_IntFree( p.vId2Lit );
+    Vec_IntFree( p.vFront );
+    Vec_IntFree( p.vProbes );
+    Vec_IntFree( p.vCondProbes );
+    Vec_IntFree( p.vCondAssump );
+    // inlining of macro ABC_FREE
+    ((p) ? (free((char *) (p)), (p) = 0) : 0);
+    pGia.pData = nil;
+}
+func Gia_SweeperStart(pGia *Gia_Man_t) *Gia_Man_t {
+    if pGia == nil {
+        pGia = Gia_ManStart( 10000 ); }
+    if Vec_IntSize(&pGia.vHTable) == 0 {
+        Gia_ManHashStart( pGia ); }
+    // recompute fPhase and fMark1 to mark multiple fanout nodes if AIG is already defined!!!
+
+    Swp_ManStart( pGia );
+    pGia.fSweeper = 1;
+    return pGia;
+}
+func Gia_SweeperStop(pGia *Gia_Man_t) {
+    pGia.fSweeper = 0;
+    Swp_ManStop( pGia );
+    Gia_ManHashStop( pGia );
+//    Gia_ManStop( pGia );
+}
+func Gia_SweeperIsRunning(pGia *Gia_Man_t) int32 {
+    return (pGia.pData != nil);
+}
+func Gia_SweeperMemUsage(pGia *Gia_Man_t) float64 {
+    var p *Swp_Man_t  = (Swp_Man_t *)pGia.pData;
+    var nMem float64  = sizeof(Swp_Man_t);
+    nMem += Vec_IntCap(p.vProbes);
+    nMem += Vec_IntCap(p.vCondProbes);
+    nMem += Vec_IntCap(p.vCondAssump);
+    nMem += Vec_IntCap(p.vId2Lit);
+    nMem += Vec_IntCap(p.vFront);
+    nMem += Vec_IntCap(p.vFanins);
+    nMem += Vec_IntCap(p.vCexSwp);
+    return 4.0 * nMem;
+}
+func Gia_SweeperPrintStats(pGia *Gia_Man_t) {
+    var p *Swp_Man_t  = (Swp_Man_t *)pGia.pData;
+    var nMemSwp float64  = Gia_SweeperMemUsage(pGia);
+    var nMemGia float64  = float64(Gia_ManObjNum(pGia))*(sizeof(Gia_Obj_t) + sizeof(int));
+    var nMemSat float64  = sat_solver_memory(p.pSat);
+    var nMemTot float64  = nMemSwp + nMemGia + nMemSat;
+    fmt.Printf("SAT sweeper statistics:\n");
+    fmt.Printf("Memory usage:\n");
+    // inlining of macro ABC_PRMP
+    Abc_Print(1, "%s =", ("Sweeper         "));
+Abc_Print(1, "%10.3f MB (%6.2f %%)\n",  (1.0*(float64((nMemSwp)))/(1<<20)), ((float64((nMemTot)))? 100.0*(float64((nMemSwp)))/(float64((nMemTot))) : 0.0) );;
+    // inlining of macro ABC_PRMP
+    Abc_Print(1, "%s =", ("AIG manager     "));
+Abc_Print(1, "%10.3f MB (%6.2f %%)\n",  (1.0*(float64((nMemGia)))/(1<<20)), ((float64((nMemTot)))? 100.0*(float64((nMemGia)))/(float64((nMemTot))) : 0.0) );;
+    // inlining of macro ABC_PRMP
+    Abc_Print(1, "%s =", ("SAT solver      "));
+Abc_Print(1, "%10.3f MB (%6.2f %%)\n",  (1.0*(float64((nMemSat)))/(1<<20)), ((float64((nMemTot)))? 100.0*(float64((nMemSat)))/(float64((nMemTot))) : 0.0) );;
+    // inlining of macro ABC_PRMP
+    Abc_Print(1, "%s =", ("TOTAL           "));
+Abc_Print(1, "%10.3f MB (%6.2f %%)\n",  (1.0*(float64((nMemTot)))/(1<<20)), ((float64((nMemTot)))? 100.0*(float64((nMemTot)))/(float64((nMemTot))) : 0.0) );;
+    fmt.Printf("Runtime usage:\n");
+    p.timeTotal = Abc_Clock() - p.timeStart;
+    // inlining of macro ABC_PRTP
+    Abc_Print(1, "%s =", ("CNF construction"));
+Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeCnf)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeCnf)))/(float64((p.timeTotal))) : 0.0);;
+    // inlining of macro ABC_PRTP
+    Abc_Print(1, "%s =", ("SAT solving     "));
+Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSat)))/(float64((p.timeTotal))) : 0.0);;
+    // inlining of macro ABC_PRTP
+    Abc_Print(1, "%s =", ("    Sat         "));
+Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSatSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((p.timeTotal))) : 0.0);;
+    // inlining of macro ABC_PRTP
+    Abc_Print(1, "%s =", ("    Unsat       "));
+Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSatUnsat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((p.timeTotal))) : 0.0);;
+    // inlining of macro ABC_PRTP
+    Abc_Print(1, "%s =", ("    Undecided   "));
+Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeSatUndec)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((p.timeTotal))) : 0.0);;
+    // inlining of macro ABC_PRTP
+    Abc_Print(1, "%s =", ("TOTAL RUNTIME   "));
+Abc_Print(1, "%9.2f sec (%6.2f %%)\n", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;
+    fmt.Printf("GIA: ");
+    Gia_ManPrintStats( pGia, nil );
+    fmt.Printf("SAT calls = %d. Sat = %d. Unsat = %d. Undecided = %d.  Proofs = %d.\n", p.nSatCalls, p.nSatCallsSat, p.nSatCallsUnsat, p.nSatCallsUndec, p.nSatProofs);
+    Sat_SolverPrintStats( os.Stdout, p.pSat );
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Setting resource limits.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_SweeperSetConflictLimit(p *Gia_Man_t, nConfMax int32) {
+    var pSwp *Swp_Man_t  = (Swp_Man_t *)p.pData;
+    pSwp.nConfMax = nConfMax;
+}
+func Gia_SweeperSetRuntimeLimit(p *Gia_Man_t, nSeconds int32) {
+    var pSwp *Swp_Man_t  = (Swp_Man_t *)p.pData;
+    pSwp.nTimeOut = nSeconds;
+}
+func Gia_SweeperGetCex(p *Gia_Man_t) *Vec_Int_t {
+    var pSwp *Swp_Man_t  = (Swp_Man_t *)p.pData;
+    assert(pSwp.vCexUser == nil || Vec_IntSize(pSwp.vCexUser) == Gia_ManPiNum(p), "pSwp.vCexUser == nil || Vec_IntSize(pSwp.vCexUser) == Gia_ManPiNum(p)");
+    return pSwp.vCexUser;
+}
+    
+/**Function*************************************************************
+
+  Synopsis    []
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+// create new probe
+func Gia_SweeperProbeCreate(p *Gia_Man_t, iLit int32) int32 {
+    var pSwp *Swp_Man_t  = (Swp_Man_t *)p.pData;
+    var ProbeId int32  = Vec_IntSize(pSwp.vProbes);
+    assert(iLit >= 0, "iLit >= 0");
+    Vec_IntPush( pSwp.vProbes, iLit );
+    return ProbeId;
+}
+// delete existing probe
+func Gia_SweeperProbeDelete(p *Gia_Man_t, ProbeId int32) int32 {
+    var pSwp *Swp_Man_t  = (Swp_Man_t *)p.pData;
+    var iLit int32  = Vec_IntEntry(pSwp.vProbes, ProbeId);
+    assert(iLit >= 0, "iLit >= 0");
+    Vec_IntWriteEntry(pSwp.vProbes, ProbeId, -1);
+    return iLit;
+}
+// update existing probe
+func Gia_SweeperProbeUpdate(p *Gia_Man_t, ProbeId int32, iLitNew int32) int32 {
+    var pSwp *Swp_Man_t  = (Swp_Man_t *)p.pData;
+    var iLit int32  = Vec_IntEntry(pSwp.vProbes, ProbeId);
+    assert(iLit >= 0, "iLit >= 0");
+    Vec_IntWriteEntry(pSwp.vProbes, ProbeId, iLitNew);
+    return iLit;
+}
+// returns literal associated with the probe
+func Gia_SweeperProbeLit(p *Gia_Man_t, ProbeId int32) int32 {
+    var pSwp *Swp_Man_t  = (Swp_Man_t *)p.pData;
+    var iLit int32  = Vec_IntEntry(pSwp.vProbes, ProbeId);
+    assert(iLit >= 0, "iLit >= 0");
+    return iLit;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [This procedure returns indexes of all currently defined valid probes.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_SweeperCollectValidProbeIds(p *Gia_Man_t) *Vec_Int_t {
+    var pSwp *Swp_Man_t  = (Swp_Man_t *)p.pData;
+    var vProbeIds *Vec_Int_t  = Vec_IntAlloc( 1000 );
+    var iLit, ProbeId int32;
+    // inlining of macro Vec_IntForEachEntry
+    for  ProbeId = 0; (ProbeId < Vec_IntSize(pSwp.vProbes)) && (((iLit) = Vec_IntEntry(pSwp.vProbes, ProbeId)), 1); ProbeId++  {
+        if iLit < 0 { continue; }
+        Vec_IntPush( vProbeIds, ProbeId );
+    }
+    return vProbeIds;
+}
+
+/**Function*************************************************************
+
+  Synopsis    []
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_SweeperCondPush(p *Gia_Man_t, ProbeId int32) {
+    var pSwp *Swp_Man_t  = (Swp_Man_t *)p.pData;
+    Vec_IntPush( pSwp.vCondProbes, ProbeId );
+}
+func Gia_SweeperCondPop(p *Gia_Man_t) int32 {
+    var pSwp *Swp_Man_t  = (Swp_Man_t *)p.pData;
+    return Vec_IntPop( pSwp.vCondProbes );
+}
+func Gia_SweeperCondVector(p *Gia_Man_t) *Vec_Int_t {
+    var pSwp *Swp_Man_t  = (Swp_Man_t *)p.pData;
+    return pSwp.vCondProbes;
+}
+
+
+/**Function*************************************************************
+
+  Synopsis    []
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_ManExtract_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vObjIds *Vec_Int_t) {
+    if !Gia_ObjIsAnd(pObj) {
+        return; }
+    if Gia_ObjIsTravIdCurrent(p, pObj) {
+        return; }
+    Gia_ObjSetTravIdCurrent(p, pObj);
+    Gia_ManExtract_rec( p, Gia_ObjFanin0(pObj), vObjIds );
+    Gia_ManExtract_rec( p, Gia_ObjFanin1(pObj), vObjIds );
+    Vec_IntPush( vObjIds, Gia_ObjId(p, pObj) );
+}
+func Gia_SweeperExtractUserLogic(p *Gia_Man_t, vProbeIds *Vec_Int_t, vInNames *Vec_Ptr_t, vOutNames *Vec_Ptr_t) *Gia_Man_t {
+    var vObjIds, vValues *Vec_Int_t;
+    var pNew, pTemp *Gia_Man_t;
+    var pObj *Gia_Obj_t;
+    var i, ProbeId int32;
+    assert(vInNames  == nil || Gia_ManPiNum(p) == Vec_PtrSize(vInNames), "vInNames  == nil || Gia_ManPiNum(p) == Vec_PtrSize(vInNames)");
+    assert(vOutNames == nil || Vec_IntSize(vProbeIds) == Vec_PtrSize(vOutNames), "vOutNames == nil || Vec_IntSize(vProbeIds) == Vec_PtrSize(vOutNames)");
+    // create new
+    Gia_ManIncrementTravId( p );
+    vObjIds = Vec_IntAlloc( 1000 );
+    // inlining of macro Vec_IntForEachEntry
+    for  i = 0; (i < Vec_IntSize(vProbeIds)) && (((ProbeId) = Vec_IntEntry(vProbeIds, i)), 1); i++  {
+        pObj = Gia_Lit2Obj( p, Gia_SweeperProbeLit(p, ProbeId) );
+        Gia_ManExtract_rec( p, Gia_Regular(pObj), vObjIds );
+    }
+    // create new manager
+    pNew = Gia_ManStart( 1 + Gia_ManPiNum(p) + Vec_IntSize(vObjIds) + Vec_IntSize(vProbeIds) + 100 );
+    pNew.pName = Abc_UtilStrsav( p.pName );
+    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
+    Gia_ManConst0(p).Value = 0;
+    // inlining of macro Gia_ManForEachPi
+    for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
+        pObj.Value = Gia_ManAppendCi(pNew);
+    }
+    // create internal nodes
+    Gia_ManHashStart( pNew );
+    vValues = Vec_IntAlloc( Vec_IntSize(vObjIds) );
+    // inlining of macro Gia_ManForEachObjVec
+    for  i = 0; (i < Vec_IntSize(vObjIds)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjIds,i))); i++  {
+        Vec_IntPush( vValues, pObj.Value );
+        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
+    }
+    Gia_ManHashStop( pNew );
+    // create outputs
+    // inlining of macro Vec_IntForEachEntry
+    for  i = 0; (i < Vec_IntSize(vProbeIds)) && (((ProbeId) = Vec_IntEntry(vProbeIds, i)), 1); i++  {
+        pObj = Gia_Lit2Obj( p, Gia_SweeperProbeLit(p, ProbeId) );
+        Gia_ManAppendCo( pNew, Gia_Regular(pObj).Value ^ Gia_IsComplement(pObj) );
+    }
+    // return the values back
+    // inlining of macro Gia_ManForEachPi
+    for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
+        pObj.Value = 0;
+    }
+    // inlining of macro Gia_ManForEachObjVec
+    for  i = 0; (i < Vec_IntSize(vObjIds)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjIds,i))); i++  {
+        pObj.Value = Vec_IntEntry( vValues, i );
+    }
+    Vec_IntFree( vObjIds );
+    Vec_IntFree( vValues );
+    // duplicate if needed
+    if Gia_ManHasDangling(pNew) {
+        pNew = Gia_ManCleanup( pTemp = pNew );
+        Gia_ManStop( pTemp );
+    }
+    // copy names if present
+    if vInNames != nil {
+        pNew.vNamesIn = Vec_PtrDupStr( vInNames ); }
+    if vOutNames != nil {
+        pNew.vNamesOut = Vec_PtrDupStr( vOutNames ); }
+    return pNew;
+}
+
+/**Function*************************************************************
+
+  Synopsis    []
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_SweeperLogicDump(p *Gia_Man_t, vProbeIds *Vec_Int_t, fDumpConds int32, pFileName string) {
+    var pGiaOuts *Gia_Man_t  = Gia_SweeperExtractUserLogic( p, vProbeIds, nil, nil );
+    var vProbeConds *Vec_Int_t  = Gia_SweeperCondVector( p );
+    fmt.Printf("Dumping logic cones");
+    if (fDumpConds != 0) && Vec_IntSize(vProbeConds) > 0 {
+        var pGiaCond *Gia_Man_t  = Gia_SweeperExtractUserLogic( p, vProbeConds, nil, nil );
+        Gia_ManDupAppendShare( pGiaOuts, pGiaCond );
+        pGiaOuts.nConstrs = Gia_ManPoNum(pGiaCond);
+        Gia_ManHashStop( pGiaOuts );
+        Gia_ManStop( pGiaCond );
+        fmt.Printf(" and conditions");
+    }
+    Gia_AigerWrite( pGiaOuts, pFileName, 0, 0, 0 );
+    Gia_ManStop( pGiaOuts );
+    fmt.Printf(" into file \"%s\".\n", pFileName);
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Sweeper cleanup.]
+
+  Description [Returns new GIA with sweeper defined, which is the same
+  as the original sweeper, with all the dangling logic removed and SAT 
+  solver restarted. The probe IDs are guaranteed to have the same logic
+  functions as in the original manager.]
+               
+  SideEffects [The input manager is deleted inside this procedure.]
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_SweeperCleanup(p *Gia_Man_t, pCommLime string) *Gia_Man_t {
+    var pSwp *Swp_Man_t  = (Swp_Man_t *)p.pData;
+    var vObjIds *Vec_Int_t;
+    var pNew, pTemp *Gia_Man_t;
+    var pObj *Gia_Obj_t;
+    var i, iLit, ProbeId int32;
+
+    // collect all internal nodes pointed to by currently-used probes
+    Gia_ManIncrementTravId( p );
+    vObjIds = Vec_IntAlloc( 1000 );
+    // inlining of macro Vec_IntForEachEntry
+    for  ProbeId = 0; (ProbeId < Vec_IntSize(pSwp.vProbes)) && (((iLit) = Vec_IntEntry(pSwp.vProbes, ProbeId)), 1); ProbeId++  {
+        if iLit < 0 { continue; }
+        pObj = Gia_Lit2Obj( p, iLit );
+        Gia_ManExtract_rec( p, Gia_Regular(pObj), vObjIds );
+    }
+    // create new manager
+    pNew = Gia_ManStart( 1 + Gia_ManPiNum(p) + Vec_IntSize(vObjIds) + 100 );
+    pNew.pName = Abc_UtilStrsav( p.pName );
+    pNew.pSpec = Abc_UtilStrsav( p.pSpec );
+    Gia_ManConst0(p).Value = 0;
+    // inlining of macro Gia_ManForEachPi
+    for  i = 0; (i < Gia_ManPiNum(p)) && ((pObj) = Gia_ManCi(p, i)); i++  {
+        pObj.Value = Gia_ManAppendCi(pNew);
+    }
+    // create internal nodes
+    Gia_ManHashStart( pNew );
+    // inlining of macro Gia_ManForEachObjVec
+    for  i = 0; (i < Vec_IntSize(vObjIds)) && ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjIds,i))); i++  {
+        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );
+    }
+    Gia_ManHashStop( pNew );
+    // create outputs
+    // inlining of macro Vec_IntForEachEntry
+    for  ProbeId = 0; (ProbeId < Vec_IntSize(pSwp.vProbes)) && (((iLit) = Vec_IntEntry(pSwp.vProbes, ProbeId)), 1); ProbeId++  {
+        if iLit < 0 { continue; }
+        pObj = Gia_Lit2Obj( p, iLit );
+        iLit = Gia_Regular(pObj).Value ^ Gia_IsComplement(pObj);
+        Vec_IntWriteEntry( pSwp.vProbes, ProbeId, iLit );
+    }
+    Vec_IntFree( vObjIds );
+    // duplicate if needed
+    if Gia_ManHasDangling(pNew) {
+        pNew = Gia_ManCleanup( pTemp = pNew );
+        Gia_ManStop( pTemp );
+    }
+    // execute command line
+    if pCommLime {
+        // set pNew to be current GIA in ABC
+        Abc_FrameUpdateGia( Abc_FrameGetGlobalFrame(), pNew );
+        // execute command line pCommLine using Abc_CmdCommandExecute()
+        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), pCommLime );
+        // get pNew to be current GIA in ABC     
+        pNew = Abc_FrameGetGia( Abc_FrameGetGlobalFrame() );
+    }
+    // restart the SAT solver
+    Vec_IntClear( pSwp.vId2Lit );
+    sat_solver_delete( pSwp.pSat );
+    pSwp.pSat         = sat_solver_new();
+    pSwp.nSatVars     = 1;
+    sat_solver_setnvars( pSwp.pSat, 1000 );
+    Swp_ManSetObj2Lit( pSwp, 0, (iLit = Abc_Var2Lit(pSwp.nSatVars++, 0)) );
+    iLit = Abc_LitNot(iLit);
+    sat_solver_addclause( pSwp.pSat, &iLit, &iLit + 1 );
+    pSwp.timeStart    = Abc_Clock();
+    // return the result
+    pNew.pData = p.pData; p.pData = nil;
+    Gia_ManStop( p );
+    return pNew;
+}
+
+
+/**Function*************************************************************
+
+  Synopsis    [Addes clauses to the solver.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_ManAddClausesMux(p *Swp_Man_t, pNode *Gia_Obj_t) {
+    var pNodeI, pNodeT, pNodeE *Gia_Obj_t;
+    var pLits [4]int32;
+    var LitF int32;
+    var LitI int32;
+    var LitT int32;
+    var LitE int32;
+    var RetValue int32;
+    assert(!Gia_IsComplement( pNode ), "!Gia_IsComplement( pNode )");
+    assert(Gia_ObjIsMuxType( pNode ), "Gia_ObjIsMuxType( pNode )");
+    // get nodes (I = if, T = then, E = else)
+    pNodeI = Gia_ObjRecognizeMux( pNode, &pNodeT, &pNodeE );
+    // get the Litiable numbers
+    LitF = Swp_ManLit2Lit( p, Gia_Obj2Lit(p.pGia,pNode) );
+    LitI = Swp_ManLit2Lit( p, Gia_Obj2Lit(p.pGia,pNodeI) );
+    LitT = Swp_ManLit2Lit( p, Gia_Obj2Lit(p.pGia,pNodeT) );
+    LitE = Swp_ManLit2Lit( p, Gia_Obj2Lit(p.pGia,pNodeE) );
+
+    // f = ITE(i, t, e)
+
+    // i' + t' + f
+    // i' + t  + f'
+    // i  + e' + f
+    // i  + e  + f'
+
+    // create four clauses
+    pLits[0] = Abc_LitNotCond(LitI, 1);
+    pLits[1] = Abc_LitNotCond(LitT, 1);
+    pLits[2] = Abc_LitNotCond(LitF, 0);
+    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );
+    assert((RetValue != 0), "RetValue");
+    pLits[0] = Abc_LitNotCond(LitI, 1);
+    pLits[1] = Abc_LitNotCond(LitT, 0);
+    pLits[2] = Abc_LitNotCond(LitF, 1);
+    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );
+    assert((RetValue != 0), "RetValue");
+    pLits[0] = Abc_LitNotCond(LitI, 0);
+    pLits[1] = Abc_LitNotCond(LitE, 1);
+    pLits[2] = Abc_LitNotCond(LitF, 0);
+    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );
+    assert((RetValue != 0), "RetValue");
+    pLits[0] = Abc_LitNotCond(LitI, 0);
+    pLits[1] = Abc_LitNotCond(LitE, 0);
+    pLits[2] = Abc_LitNotCond(LitF, 1);
+    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );
+    assert((RetValue != 0), "RetValue");
+
+    // two additional clauses
+    // t' & e' -> f'
+    // t  & e  -> f
+
+    // t  + e   + f'
+    // t' + e'  + f
+
+    if LitT == LitE {
+//        assert( fCompT == !fCompE );
+        return;
+    }
+
+    pLits[0] = Abc_LitNotCond(LitT, 0);
+    pLits[1] = Abc_LitNotCond(LitE, 0);
+    pLits[2] = Abc_LitNotCond(LitF, 1);
+    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );
+    assert((RetValue != 0), "RetValue");
+    pLits[0] = Abc_LitNotCond(LitT, 1);
+    pLits[1] = Abc_LitNotCond(LitE, 1);
+    pLits[2] = Abc_LitNotCond(LitF, 0);
+    RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 3 );
+    assert((RetValue != 0), "RetValue");
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Addes clauses to the solver.]
+
+  Description []
+
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_ManAddClausesSuper(p *Swp_Man_t, pNode *Gia_Obj_t, vSuper *Vec_Int_t) {
+    var i int32;
+    var RetValue int32;
+    var Lit int32;
+    var LitNode int32;
+    var pLits [2]int32;
+    assert(!Gia_IsComplement(pNode), "!Gia_IsComplement(pNode)");
+    assert(Gia_ObjIsAnd( pNode ), "Gia_ObjIsAnd( pNode )");
+    // suppose AND-gate is A & B = C
+    // add !A => !C   or   A + !C
+    // add !B => !C   or   B + !C
+    LitNode = Swp_ManLit2Lit( p, Gia_Obj2Lit(p.pGia,pNode) );
+    // inlining of macro Vec_IntForEachEntry
+    for  i = 0; (i < Vec_IntSize(vSuper)) && (((Lit) = Vec_IntEntry(vSuper, i)), 1); i++  {
+        pLits[0] = Swp_ManLit2Lit( p, Lit );
+        pLits[1] = Abc_LitNot( LitNode );
+        RetValue = sat_solver_addclause( p.pSat, pLits, pLits + 2 );
+        assert((RetValue != 0), "RetValue");
+        // update literals
+        Vec_IntWriteEntry( vSuper, i, Abc_LitNot(pLits[0]) );
+    }
+    // add A & B => C   or   !A + !B + C
+    Vec_IntPush( vSuper, LitNode );
+    RetValue = sat_solver_addclause( p.pSat, Vec_IntArray(vSuper), Vec_IntArray(vSuper) + Vec_IntSize(vSuper) );
+    assert((RetValue != 0), "RetValue");
+    (void) RetValue;
+}
+
+
+/**Function*************************************************************
+
+  Synopsis    [Collects the supergate.]
+
+  Description []
+
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_ManCollectSuper_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t) {
+    // stop at complements, shared, PIs, and MUXes
+    if Gia_IsComplement(pObj) || pObj.fMark1 || Gia_ObjIsCi(pObj) || Gia_ObjIsMuxType(pObj) {
+        Vec_IntPushUnique( vSuper, Gia_Obj2Lit(p, pObj) );
+        return;
+    }
+    Gia_ManCollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper );
+    Gia_ManCollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper );
+}
+func Gia_ManCollectSuper(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t) {
+    assert(!Gia_IsComplement(pObj), "!Gia_IsComplement(pObj)");
+    assert(Gia_ObjIsAnd(pObj), "Gia_ObjIsAnd(pObj)");
+    Vec_IntClear( vSuper );
+    Gia_ManCollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper );
+    Gia_ManCollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper );
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Updates the solver clause database.]
+
+  Description []
+
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_ManObjAddToFrontier(p *Swp_Man_t, Id int32, vFront *Vec_Int_t) {
+    var pObj *Gia_Obj_t;
+    if Id == 0 || (Swp_ManObj2Lit(p, Id) != 0) {
+        return; }
+    pObj = Gia_ManObj( p.pGia, Id );
+    Swp_ManSetObj2Lit( p, Id, Abc_Var2Lit(p.nSatVars++, pObj.fPhase) );
+    sat_solver_setnvars( p.pSat, p.nSatVars + 100 );
+    if Gia_ObjIsAnd(pObj) {
+        Vec_IntPush( vFront, Id ); }
+}
+func Gia_ManCnfNodeAddToSolver(p *Swp_Man_t, NodeId int32) {
+    var pNode *Gia_Obj_t;
+    var i, k, Id, Lit int32;
+    var clk abctime;
+    // quit if CNF is ready
+    if NodeId == 0 || (Swp_ManObj2Lit(p, NodeId) != 0) {
+        return; }
+clk = Abc_Clock();
+    // start the frontier
+    Vec_IntClear( p.vFront );
+    Gia_ManObjAddToFrontier( p, NodeId, p.vFront );
+    // explore nodes in the frontier
+    // inlining of macro Gia_ManForEachObjVec
+    for  i = 0; (i < Vec_IntSize(p.vFront)) && ((pNode) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vFront,i))); i++  {
+        // create the supergate
+        assert((Swp_ManObj2Lit(p, Gia_ObjId(p.pGia, pNode)) != 0), "Swp_ManObj2Lit(p, Gia_ObjId(p.pGia, pNode))");
+        if Gia_ObjIsMuxType(pNode) {
+            Vec_IntClear( p.vFanins );
+            Vec_IntPushUnique( p.vFanins, Gia_ObjFaninId0p( p.pGia, Gia_ObjFanin0(pNode) ) );
+            Vec_IntPushUnique( p.vFanins, Gia_ObjFaninId0p( p.pGia, Gia_ObjFanin1(pNode) ) );
+            Vec_IntPushUnique( p.vFanins, Gia_ObjFaninId1p( p.pGia, Gia_ObjFanin0(pNode) ) );
+            Vec_IntPushUnique( p.vFanins, Gia_ObjFaninId1p( p.pGia, Gia_ObjFanin1(pNode) ) );
+            // inlining of macro Vec_IntForEachEntry
+            for  k = 0; (k < Vec_IntSize(p.vFanins)) && (((Id) = Vec_IntEntry(p.vFanins, k)), 1); k++  {
+                Gia_ManObjAddToFrontier( p, Id, p.vFront );
+            }
+            Gia_ManAddClausesMux( p, pNode );
+        
+        } else {
+            Gia_ManCollectSuper( p.pGia, pNode, p.vFanins );
+            // inlining of macro Vec_IntForEachEntry
+            for  k = 0; (k < Vec_IntSize(p.vFanins)) && (((Lit) = Vec_IntEntry(p.vFanins, k)), 1); k++  {
+                Gia_ManObjAddToFrontier( p, Abc_Lit2Var(Lit), p.vFront );
+            }
+            Gia_ManAddClausesSuper( p, pNode, p.vFanins );
+        }
+        assert(Vec_IntSize(p.vFanins) > 1, "Vec_IntSize(p.vFanins) > 1");
+    }
+p.timeCnf += Abc_Clock() - clk;
+}
+
+
+/**Function*************************************************************
+
+  Synopsis    []
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_ManGetCex(pGia *Gia_Man_t, vId2Lit *Vec_Int_t, pSat *sat_solver, vCex *Vec_Int_t) *Vec_Int_t {
+    var pObj *Gia_Obj_t;
+    var i, LitSat, Value int32;
+    Vec_IntClear( vCex );
+    // inlining of macro Gia_ManForEachPi
+    for  i = 0; (i < Gia_ManPiNum(pGia)) && ((pObj) = Gia_ManCi(pGia, i)); i++  {
+        if Gia_ObjId(pGia, pObj) >= Vec_IntSize(vId2Lit) {
+            Vec_IntPush( vCex, 2 );
+            continue;
+        }
+        LitSat = Vec_IntEntry( vId2Lit, Gia_ObjId(pGia, pObj) );
+        if LitSat == 0 {
+            Vec_IntPush( vCex, 2 );
+            continue;
+        }
+        assert(LitSat > 0, "LitSat > 0");
+        Value = sat_solver_var_value(pSat, Abc_Lit2Var(LitSat)) ^ Abc_LitIsCompl(LitSat);
+        Vec_IntPush( vCex, Value );
+    }
+    return vCex;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Runs equivalence test for probes.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_SweeperCheckEquiv(pGia *Gia_Man_t, Probe1 int32, Probe2 int32) int32 {
+    var p *Swp_Man_t  = (Swp_Man_t *)pGia.pData;
+    var iLitOld int32;
+    var iLitNew int32;
+    var iLitAig int32;
+    var pLitsSat [2]int32;
+    var RetValue int32;
+    var RetValue1 int32;
+    var ProbeId int32;
+    var i int32;
+    var clk abctime;
+    p.nSatCalls++;
+    assert(p.pSat != nil, "p.pSat != nil");
+    p.vCexUser = nil;
+
+    // get the literals
+    iLitOld = Gia_SweeperProbeLit( pGia, Probe1 );
+    iLitNew = Gia_SweeperProbeLit( pGia, Probe2 );
+    // if the literals are identical, the probes are equivalent
+    if iLitOld == iLitNew {
+        return 1; }
+    // if the literals are opposites, the probes are not equivalent
+    if Abc_LitRegular(iLitOld) == Abc_LitRegular(iLitNew) {
+        Vec_IntFill( p.vCexSwp, Gia_ManPiNum(pGia), 2 );
+        p.vCexUser = p.vCexSwp;
+        return 0;
+    }
+    // order the literals
+    if iLitOld < iLitNew {
+        // inlining of macro ABC_SWAP
+         var t int32  = iLitOld; iLitOld = iLitNew; iLitNew = t; };
+    assert(iLitOld > iLitNew, "iLitOld > iLitNew");
+
+    // create logic cones and the array of assumptions
+    Vec_IntClear( p.vCondAssump );
+    // inlining of macro Vec_IntForEachEntry
+    for  i = 0; (i < Vec_IntSize(p.vCondProbes)) && (((ProbeId) = Vec_IntEntry(p.vCondProbes, i)), 1); i++  {
+        iLitAig = Gia_SweeperProbeLit( pGia, ProbeId );
+        Gia_ManCnfNodeAddToSolver( p, Abc_Lit2Var(iLitAig) );
+        Vec_IntPush( p.vCondAssump, Abc_LitNot(Swp_ManLit2Lit(p, iLitAig)) );
+    }
+    Gia_ManCnfNodeAddToSolver( p, Abc_Lit2Var(iLitOld) );
+    Gia_ManCnfNodeAddToSolver( p, Abc_Lit2Var(iLitNew) );
+    sat_solver_compress( p.pSat );
+
+    // set the SAT literals
+    pLitsSat[0] = Swp_ManLit2Lit( p, iLitOld );
+    pLitsSat[1] = Swp_ManLit2Lit( p, iLitNew );
+
+    // solve under assumptions
+    // A = 1; B = 0     OR     A = 1; B = 1 
+    Vec_IntPush( p.vCondAssump, pLitsSat[0] );
+    Vec_IntPush( p.vCondAssump, Abc_LitNot(pLitsSat[1]) );
+
+    // set runtime limit for this call
+    if p.nTimeOut {
+        sat_solver_set_runtime_limit( p.pSat, p.nTimeOut * int64(time.Second) + Abc_Clock() ); }
+
+clk = Abc_Clock();
+    RetValue1 = sat_solver_solve( p.pSat, Vec_IntArray(p.vCondAssump), Vec_IntArray(p.vCondAssump) + Vec_IntSize(p.vCondAssump), 
+        (ABC_INT64_T)p.nConfMax, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
+    Vec_IntShrink( p.vCondAssump, Vec_IntSize(p.vCondAssump) - 2 );
+p.timeSat += Abc_Clock() - clk;
+    if RetValue1 == l_False {
+        pLitsSat[0] = Abc_LitNot( pLitsSat[0] );
+        RetValue = sat_solver_addclause( p.pSat, pLitsSat, pLitsSat + 2 );
+        assert((RetValue != 0), "RetValue");
+        pLitsSat[0] = Abc_LitNot( pLitsSat[0] );
+p.timeSatUnsat += Abc_Clock() - clk;
+        p.nSatCallsUnsat++;
+    
+    } else if RetValue1 == l_True {
+        p.vCexUser = Gia_ManGetCex( p.pGia, p.vId2Lit, p.pSat, p.vCexSwp );
+p.timeSatSat += Abc_Clock() - clk;
+        p.nSatCallsSat++;
+        return 0;
+    
+    } else { // if ( RetValue1 == l_Undef )
+    
+p.timeSatUndec += Abc_Clock() - clk;
+        p.nSatCallsUndec++;
+        return -1;
+    }
+
+    // if the old node was constant 0, we already know the answer
+    if Gia_ManIsConstLit(iLitNew) {
+        p.nSatProofs++;
+        return 1;
+    }
+
+    // solve under assumptions
+    // A = 0; B = 1     OR     A = 0; B = 0 
+    Vec_IntPush( p.vCondAssump, Abc_LitNot(pLitsSat[0]) );
+    Vec_IntPush( p.vCondAssump, pLitsSat[1] );
+
+clk = Abc_Clock();
+    RetValue1 = sat_solver_solve( p.pSat, Vec_IntArray(p.vCondAssump), Vec_IntArray(p.vCondAssump) + Vec_IntSize(p.vCondAssump), 
+        (ABC_INT64_T)p.nConfMax, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
+    Vec_IntShrink( p.vCondAssump, Vec_IntSize(p.vCondAssump) - 2 );
+p.timeSat += Abc_Clock() - clk;
+    if RetValue1 == l_False {
+        pLitsSat[1] = Abc_LitNot( pLitsSat[1] );
+        RetValue = sat_solver_addclause( p.pSat, pLitsSat, pLitsSat + 2 );
+        assert((RetValue != 0), "RetValue");
+        pLitsSat[1] = Abc_LitNot( pLitsSat[1] );
+p.timeSatUnsat += Abc_Clock() - clk;
+        p.nSatCallsUnsat++;
+    
+    } else if RetValue1 == l_True {
+        p.vCexUser = Gia_ManGetCex( p.pGia, p.vId2Lit, p.pSat, p.vCexSwp );
+p.timeSatSat += Abc_Clock() - clk;
+        p.nSatCallsSat++;
+        return 0;
+    
+    } else { // if ( RetValue1 == l_Undef )
+    
+p.timeSatUndec += Abc_Clock() - clk;
+        p.nSatCallsUndec++;
+        return -1;
+    }
+    // return SAT proof
+    p.nSatProofs++;
+    return 1;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Returns 1 if the set of conditions is UNSAT (0 if SAT; -1 if undecided).]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_SweeperCondCheckUnsat(pGia *Gia_Man_t) int32 {
+    var p *Swp_Man_t  = (Swp_Man_t *)pGia.pData;
+    var RetValue, ProbeId, iLitAig, i int32;
+    var clk abctime;
+    assert(p.pSat != nil, "p.pSat != nil");
+    p.nSatCalls++;
+    p.vCexUser = nil;
+
+    // create logic cones and the array of assumptions
+    Vec_IntClear( p.vCondAssump );
+    // inlining of macro Vec_IntForEachEntry
+    for  i = 0; (i < Vec_IntSize(p.vCondProbes)) && (((ProbeId) = Vec_IntEntry(p.vCondProbes, i)), 1); i++  {
+        iLitAig = Gia_SweeperProbeLit( pGia, ProbeId );
+        Gia_ManCnfNodeAddToSolver( p, Abc_Lit2Var(iLitAig) );
+        Vec_IntPush( p.vCondAssump, Abc_LitNot(Swp_ManLit2Lit(p, iLitAig)) );
+    }
+    sat_solver_compress( p.pSat );
+
+    // set runtime limit for this call
+    if p.nTimeOut {
+        sat_solver_set_runtime_limit( p.pSat, p.nTimeOut * int64(time.Second) + Abc_Clock() ); }
+
+clk = Abc_Clock();
+    RetValue = sat_solver_solve( p.pSat, Vec_IntArray(p.vCondAssump), Vec_IntArray(p.vCondAssump) + Vec_IntSize(p.vCondAssump), 
+        (ABC_INT64_T)p.nConfMax, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );
+p.timeSat += Abc_Clock() - clk;
+    if RetValue == l_False {
+        assert(Vec_IntSize(p.vCondProbes) > 0, "Vec_IntSize(p.vCondProbes) > 0");
+p.timeSatUnsat += Abc_Clock() - clk;
+        p.nSatCallsUnsat++;
+        p.nSatProofs++;
+        return 1;
+    
+    } else if RetValue == l_True {
+        p.vCexUser = Gia_ManGetCex( p.pGia, p.vId2Lit, p.pSat, p.vCexSwp );
+p.timeSatSat += Abc_Clock() - clk;
+        p.nSatCallsSat++;
+        return 0;
+    
+    } else { // if ( RetValue1 == l_Undef )
+    
+p.timeSatUndec += Abc_Clock() - clk;
+        p.nSatCallsUndec++;
+        return -1;
+    }
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Performs grafting from another manager.]
+
+  Description [Returns the array of resulting literals in the destination manager.]
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_SweeperGraft(pDst *Gia_Man_t, vProbes *Vec_Int_t, pSrc *Gia_Man_t) *Vec_Int_t {
+    var vOutLits *Vec_Int_t;
+    var pObj *Gia_Obj_t;
+    var i int32;
+    assert((Gia_SweeperIsRunning(pDst) != 0), "Gia_SweeperIsRunning(pDst)");
+    if vProbes != nil {
+        assert(Vec_IntSize(vProbes) == Gia_ManPiNum(pSrc), "Vec_IntSize(vProbes) == Gia_ManPiNum(pSrc)");
+    } else {
+        assert(Gia_ManPiNum(pDst) == Gia_ManPiNum(pSrc), "Gia_ManPiNum(pDst) == Gia_ManPiNum(pSrc)"); }
+    // inlining of macro Gia_ManForEachPi
+    for  i = 0; (i < Gia_ManPiNum(pSrc)) && ((pObj) = Gia_ManCi(pSrc, i)); i++  {
+        if vProbes != nil {
+            pObj.Value = Gia_SweeperProbeLit(pDst, Vec_IntEntry(vProbes, i));
+        } else {
+            pObj.Value = Gia_Obj2Lit(pDst,Gia_ManPi(pDst, i));
+        }
+    }
+    // inlining of macro Gia_ManForEachAnd
+    for  i = 0; (i < pSrc.nObjs) && ((pObj) = Gia_ManObj(pSrc, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {
+        pObj.Value = Gia_ManHashAnd( pDst, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }
+    }
+    vOutLits = Vec_IntAlloc( Gia_ManPoNum(pSrc) );
+    // inlining of macro Gia_ManForEachPo
+    for  i = 0; (i < Gia_ManPoNum(pSrc)) && ((pObj) = Gia_ManCo(pSrc, i)); i++  {
+        Vec_IntPush( vOutLits, Gia_ObjFanin0Copy(pObj) );
+    }
+    return vOutLits;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Performs conditional sweeping of the cone.]
+
+  Description [Returns the result as a new GIA manager with as many inputs 
+  as the original manager and as many outputs as there are logic cones.]
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_SweeperSweep(p *Gia_Man_t, vProbeOuts *Vec_Int_t, nWords int32, nConfs int32, fVerify int32, fVerbose int32) *Gia_Man_t {
+    var vProbeConds *Vec_Int_t;
+    var pGiaCond, pGiaOuts, pGiaRes *Gia_Man_t;
+    var Pars Ssc_Pars_t;
+    var pPars *Ssc_Pars_t = &Pars;
+    Ssc_ManSetDefaultParams( pPars );
+    pPars.nWords   = nWords;
+    pPars.nBTLimit = nConfs;
+    pPars.fVerify  = fVerify;
+    pPars.fVerbose = fVerbose;
+    // sweeper is running
+    assert((Gia_SweeperIsRunning(p) != 0), "Gia_SweeperIsRunning(p)");
+    // extract conditions and logic cones
+    vProbeConds = Gia_SweeperCondVector( p );
+    pGiaCond = Gia_SweeperExtractUserLogic( p, vProbeConds, nil, nil );
+    pGiaOuts = Gia_SweeperExtractUserLogic( p, vProbeOuts, nil, nil );
+    Gia_ManSetPhase( pGiaOuts );
+    // if there is no conditions, define constant true constraint (constant 0 output)
+    if Gia_ManPoNum(pGiaCond) == 0 {
+        Gia_ManAppendCo( pGiaCond, Gia_ManConst0Lit() ); }
+    // perform sweeping under constraints
+    pGiaRes = Ssc_PerformSweeping( pGiaOuts, pGiaCond, pPars );
+    Gia_ManStop( pGiaCond );
+    Gia_ManStop( pGiaOuts );
+    return pGiaRes;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Procedure to perform conditional fraig sweeping on separate logic cones.]
+
+  Description [The procedure takes GIA with the sweeper defined. The sweeper
+  is assumed to have some conditions currently pushed, which will be used
+  as constraints for fraig sweeping. The second argument (vProbes) contains
+  the array of probe IDs pointing to the user's logic cones to be SAT swept.
+  Finally, the optional command line (pCommLine) is an ABC command line
+  to be applied to the resulting GIA after SAT sweeping before it is 
+  grafted back into the original GIA manager. The return value is the status
+  (success/failure) and the array of original probes possibly pointing to the
+  new literals in the original GIA manager, corresponding to the user's
+  logic cones after sweeping, synthesis and grafting.]
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_SweeperFraig(p *Gia_Man_t, vProbeIds *Vec_Int_t, pCommLime string, nWords int32, nConfs int32, fVerify int32, fVerbose int32) int32 {
+    var pNew *Gia_Man_t;
+    var vLits *Vec_Int_t;
+    var ProbeId, i int32;
+    // sweeper is running
+    assert((Gia_SweeperIsRunning(p) != 0), "Gia_SweeperIsRunning(p)");
+    // sweep the logic
+    pNew = Gia_SweeperSweep( p, vProbeIds, nWords, nConfs, fVerify, fVerbose );
+    if pNew == nil {
+        return 0; }
+    // execute command line
+    if pCommLime {
+        // set pNew to be current GIA in ABC
+        Abc_FrameUpdateGia( Abc_FrameGetGlobalFrame(), pNew );
+        // execute command line pCommLine using Abc_CmdCommandExecute()
+        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), pCommLime );
+        // get pNew to be current GIA in ABC     
+        pNew = Abc_FrameGetGia( Abc_FrameGetGlobalFrame() );
+    }
+    // return logic back into the main manager
+    vLits = Gia_SweeperGraft( p, nil, pNew );
+    Gia_ManStop( pNew );
+    // update the array of probes
+    // inlining of macro Vec_IntForEachEntry
+    for  i = 0; (i < Vec_IntSize(vProbeIds)) && (((ProbeId) = Vec_IntEntry(vProbeIds, i)), 1); i++  {
+        Gia_SweeperProbeUpdate( p, ProbeId, Vec_IntEntry(vLits, i) );
+    }
+    Vec_IntFree( vLits );        
+    return 1;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Executes given command line for the logic defined by the probes.]
+
+  Description [ ]
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_SweeperRun(p *Gia_Man_t, vProbeIds *Vec_Int_t, pCommLime string, fVerbose int32) int32 {
+    var pNew *Gia_Man_t;
+    var vLits *Vec_Int_t;
+    var ProbeId, i int32;
+    // sweeper is running
+    assert((Gia_SweeperIsRunning(p) != 0), "Gia_SweeperIsRunning(p)");
+    // sweep the logic
+    pNew = Gia_SweeperExtractUserLogic( p, vProbeIds, nil, nil );
+    // execute command line
+    if pCommLime {
+        if fVerbose != 0 {
+            fmt.Printf("GIA manager statistics before and after applying \"%s\":\n", pCommLime); }
+        if fVerbose != 0 {
+            Gia_ManPrintStats( pNew, nil ); }
+        // set pNew to be current GIA in ABC
+        Abc_FrameUpdateGia( Abc_FrameGetGlobalFrame(), pNew );
+        // execute command line pCommLine using Abc_CmdCommandExecute()
+        Cmd_CommandExecute( Abc_FrameGetGlobalFrame(), pCommLime );
+        // get pNew to be current GIA in ABC     
+        pNew = Abc_FrameGetGia( Abc_FrameGetGlobalFrame() );
+        if fVerbose != 0 {
+            Gia_ManPrintStats( pNew, nil ); }
+    }
+    // return logic back into the main manager
+    vLits = Gia_SweeperGraft( p, nil, pNew );
+    Gia_ManStop( pNew );
+    // update the array of probes
+    // inlining of macro Vec_IntForEachEntry
+    for  i = 0; (i < Vec_IntSize(vProbeIds)) && (((ProbeId) = Vec_IntEntry(vProbeIds, i)), 1); i++  {
+        Gia_SweeperProbeUpdate( p, ProbeId, Vec_IntEntry(vLits, i) );
+    }
+    Vec_IntFree( vLits );        
+    return 1;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Sweeper sweeper test.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Gia_SweeperFraigTest(pInit *Gia_Man_t, nWords int32, nConfs int32, fVerbose int32) *Gia_Man_t {
+    var p, pGia *Gia_Man_t;
+    var pObj *Gia_Obj_t;
+    var vOuts *Vec_Int_t;
+    var i int32;
+    // add one-hotness constraints
+    p = Gia_ManDupOneHot( pInit );
+    // create sweeper
+    Gia_SweeperStart( p );
+    // collect outputs and create conditions
+    vOuts = Vec_IntAlloc( Gia_ManPoNum(p) );
+    // inlining of macro Gia_ManForEachPo
+    for  i = 0; (i < Gia_ManPoNum(p)) && ((pObj) = Gia_ManCo(p, i)); i++  {
+        if i < Gia_ManPoNum(p) - p.nConstrs {  // this is the user's output
+            Vec_IntPush( vOuts, Gia_SweeperProbeCreate( p,  Gia_ObjFaninLit0p(p, pObj) ) );
+        } else { // this is a constraint
+            Gia_SweeperCondPush( p, Gia_SweeperProbeCreate( p, Gia_ObjFaninLit0p(p, pObj) ) ); }
+    }
+    // perform the sweeping
+    pGia = Gia_SweeperSweep( p, vOuts, nWords, nConfs, fVerbose, 0 );
+//    pGia = Gia_ManDup( p );
+    Vec_IntFree( vOuts );
+    // sop the sweeper
+    Gia_SweeperStop( p );
+    Gia_ManStop( p );
+    return pGia;
+}
+
+
+////////////////////////////////////////////////////////////////////////
+///                       END OF FILE                                ///
+////////////////////////////////////////////////////////////////////////
+
+//ABC_NAMESPACE_IMPL_END
+

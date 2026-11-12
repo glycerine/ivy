@@ -1,0 +1,1338 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c",
+  "SHA256": "7e756df40266b10f91bc609b516e64e1ad7b357abf6f68b6a2dab26bfa118920",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 13,
+        "ByteOffset": 3203
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c = %s\\n\", 'a' + i, pS.pStore[i] ); }"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 128,
+        "Column": 9,
+        "ByteOffset": 3784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pRes, \"%s%s\", fCompl ? \"!\" : \"\", pDsd ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 166,
+        "Column": 9,
+        "ByteOffset": 5149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nNested \u003c DAU_MAX_VAR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 5192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNested == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 184,
+        "Column": 9,
+        "ByteOffset": 5827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pDsd[i]-'a' \u003c DAU_MAX_VAR );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 6225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pVarPres, 0, sizeof(int)*DAU_MAX_VAR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 214,
+        "Column": 9,
+        "ByteOffset": 6875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pVarPres[i] == 1 || pVarPres[i] == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 228,
+        "Column": 13,
+        "ByteOffset": 7347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pDsd[pMatches[i]] == '\u003e' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 243,
+        "Column": 9,
+        "ByteOffset": 7924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pDsd[i]-'a' \u003c DAU_MAX_STR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 249,
+        "Column": 5,
+        "ByteOffset": 8088
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pRes - pBegin \u003c DAU_MAX_STR );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 8505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%s\\n\", p );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 269,
+        "Column": 13,
+        "ByteOffset": 8672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 271,
+        "Column": 13,
+        "ByteOffset": 8735
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", pStatus[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 273,
+        "Column": 13,
+        "ByteOffset": 8792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"-\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 275,
+        "Column": 5,
+        "ByteOffset": 8819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 311,
+        "Column": 9,
+        "ByteOffset": 9884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *q == **p + 1 + (**p != '(') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 317,
+        "Column": 9,
+        "ByteOffset": 10123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 318,
+        "Column": 9,
+        "ByteOffset": 10150
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nTotal \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 327,
+        "Column": 18,
+        "ByteOffset": 10412
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 330,
+        "Column": 5,
+        "ByteOffset": 10485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 399,
+        "Column": 9,
+        "ByteOffset": 12534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *q == **p + 1 + (**p != '(') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 401,
+        "Column": 14,
+        "ByteOffset": 12608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "             assert( Status == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 405,
+        "Column": 9,
+        "ByteOffset": 12691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Status != 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 417,
+        "Column": 13,
+        "ByteOffset": 13168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 437,
+        "Column": 13,
+        "ByteOffset": 14036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 464,
+        "Column": 9,
+        "ByteOffset": 15167
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 467,
+        "Column": 5,
+        "ByteOffset": 15206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 509,
+        "Column": 9,
+        "ByteOffset": 16350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *q == **p + 1 + (**p != '(') );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 520,
+        "Column": 17,
+        "ByteOffset": 16782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( **p == ')' || **p == ']' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 524,
+        "Column": 9,
+        "ByteOffset": 16885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *p == q );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 527,
+        "Column": 5,
+        "ByteOffset": 16930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 593,
+        "Column": 1,
+        "ByteOffset": 18759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\nAfter copying:\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 595,
+        "Column": 1,
+        "ByteOffset": 18807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"%s\\n\", pDsd0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 597,
+        "Column": 1,
+        "ByteOffset": 18848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"%s\\n\", pDsd1 ); }"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 601,
+        "Column": 13,
+        "ByteOffset": 19003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            strcpy( spStatic_Dau_DsdMerge_pRes, pDsd0 );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 603,
+        "Column": 13,
+        "ByteOffset": 19103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            strcpy( spStatic_Dau_DsdMerge_pRes, pDsd1 );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 605,
+        "Column": 13,
+        "ByteOffset": 19203
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            strcpy( spStatic_Dau_DsdMerge_pRes, pDsd1 );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 607,
+        "Column": 13,
+        "ByteOffset": 19303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            strcpy( spStatic_Dau_DsdMerge_pRes, pDsd0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 608,
+        "Column": 18,
+        "ByteOffset": 19365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 619,
+        "Column": 1,
+        "ByteOffset": 19692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"After replacement:\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 621,
+        "Column": 1,
+        "ByteOffset": 19742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"%s\\n\", pDsd0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 623,
+        "Column": 1,
+        "ByteOffset": 19783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"%s\\n\", pDsd1 ); }"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 639,
+        "Column": 9,
+        "ByteOffset": 20306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( spStatic_Dau_DsdMerge_pRes, \"(%s%s)\", pDsd0, pDsd1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 641,
+        "Column": 1,
+        "ByteOffset": 20383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Disjoint:\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 643,
+        "Column": 1,
+        "ByteOffset": 20424
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 649,
+        "Column": 1,
+        "ByteOffset": 20681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Normalized:\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 651,
+        "Column": 1,
+        "ByteOffset": 20724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 666,
+        "Column": 1,
+        "ByteOffset": 21343
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Individual status:\\n\" ); }"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 676,
+        "Column": 5,
+        "ByteOffset": 21712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( pDsd0, pS.pOutput );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 678,
+        "Column": 1,
+        "ByteOffset": 21755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Substitutions:\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 680,
+        "Column": 1,
+        "ByteOffset": 21801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"%s\\n\", pDsd0 ); }"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 685,
+        "Column": 5,
+        "ByteOffset": 21964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( pDsd1, pS.pOutput );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 687,
+        "Column": 1,
+        "ByteOffset": 22007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"%s\\n\", pDsd1 ); }"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 693,
+        "Column": 5,
+        "ByteOffset": 22149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( pS.pOutput, \"(%s%s)\", pDsd0, pDsd1 );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 702,
+        "Column": 9,
+        "ByteOffset": 22540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        strcpy( spStatic_Dau_DsdMerge_pRes, pS.pOutput );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 706,
+        "Column": 1,
+        "ByteOffset": 22653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Decomposition:\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 708,
+        "Column": 1,
+        "ByteOffset": 22699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"%s\\n\", pS.pOutput ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 713,
+        "Column": 1,
+        "ByteOffset": 22928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Inlining:\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 715,
+        "Column": 1,
+        "ByteOffset": 22969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 721,
+        "Column": 1,
+        "ByteOffset": 23272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Replaced:\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 723,
+        "Column": 1,
+        "ByteOffset": 23313
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 726,
+        "Column": 1,
+        "ByteOffset": 23427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Normalized:\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 728,
+        "Column": 1,
+        "ByteOffset": 23470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 733,
+        "Column": 13,
+        "ByteOffset": 23678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Dau_DsdMerge(): Verification failed!\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dau_DsdMergeStoreClean",
+      "Start": 1725,
+      "End": 1911,
+      "BodyStart": 1798,
+      "Original": "static inline void Dau_DsdMergeStoreClean( Dau_Sto_t * pS, int nShared )\n{\n    int i;\n    pS-\u003eiVarUsed  = nShared;\n    for ( i = 0; i \u003c DAU_MAX_VAR; i++ )\n        pS-\u003epStore[i][0] = 0;\n}",
+      "Draft": "func Dau_DsdMergeStoreClean(pS *Dau_Sto_t, nShared int32) {\n    var i int32;\n    pS.iVarUsed  = nShared;\n    for  i = 0; i \u003c DAU_MAX_VAR; i++  {\n        pS.pStore[i][0] = 0;\n    }\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeStoreCleanOutput",
+      "Start": 1913,
+      "End": 2016,
+      "BodyStart": 1979,
+      "Original": "static inline void Dau_DsdMergeStoreCleanOutput( Dau_Sto_t * pS )\n{\n    pS-\u003epPosOutput = pS-\u003epOutput;\n}",
+      "Draft": "func Dau_DsdMergeStoreCleanOutput(pS *Dau_Sto_t) {\n    pS.pPosOutput = pS.pOutput;\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeStoreAddToOutput",
+      "Start": 2017,
+      "End": 2175,
+      "BodyStart": 2109,
+      "Original": "static inline void Dau_DsdMergeStoreAddToOutput( Dau_Sto_t * pS, char * pBeg, char * pEnd )\n{\n    while ( pBeg \u003c pEnd )\n        *pS-\u003epPosOutput++ = *pBeg++;\n}",
+      "Draft": "func Dau_DsdMergeStoreAddToOutput(pS *Dau_Sto_t, pBeg string, pEnd string) {\n    for  pBeg \u003c pEnd  {\n        *pS.pPosOutput++ = *pBeg++;\n    }\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeStoreAddToOutputChar",
+      "Start": 2176,
+      "End": 2284,
+      "BodyStart": 2254,
+      "Original": "static inline void Dau_DsdMergeStoreAddToOutputChar( Dau_Sto_t * pS, char c )\n{\n    *pS-\u003epPosOutput++ = c;\n}",
+      "Draft": "func Dau_DsdMergeStoreAddToOutputChar(pS *Dau_Sto_t, c byte) {\n    *pS.pPosOutput++ = c;\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeStoreStartDef",
+      "Start": 2286,
+      "End": 2493,
+      "BodyStart": 2356,
+      "Original": "static inline int Dau_DsdMergeStoreStartDef( Dau_Sto_t * pS, char c )\n{\n    pS-\u003epPosStore[pS-\u003eiVarUsed] = pS-\u003epStore[pS-\u003eiVarUsed];\n    if (c) *pS-\u003epPosStore[pS-\u003eiVarUsed]++ = c;\n    return pS-\u003eiVarUsed++;\n}",
+      "Draft": "func Dau_DsdMergeStoreStartDef(pS *Dau_Sto_t, c byte) int32 {\n    pS.pPosStore[pS.iVarUsed] = pS.pStore[pS.iVarUsed];\n    if c { *pS.pPosStore[pS.iVarUsed]++ = c; }\n    return pS.iVarUsed++;\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeStoreAddToDef",
+      "Start": 2494,
+      "End": 2662,
+      "BodyStart": 2592,
+      "Original": "static inline void Dau_DsdMergeStoreAddToDef( Dau_Sto_t * pS, int New, char * pBeg, char * pEnd )\n{\n    while ( pBeg \u003c pEnd )\n        *pS-\u003epPosStore[New]++ = *pBeg++;\n}",
+      "Draft": "func Dau_DsdMergeStoreAddToDef(pS *Dau_Sto_t, New int32, pBeg string, pEnd string) {\n    for  pBeg \u003c pEnd  {\n        *pS.pPosStore[New]++ = *pBeg++;\n    }\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeStoreAddToDefChar",
+      "Start": 2663,
+      "End": 2781,
+      "BodyStart": 2747,
+      "Original": "static inline void Dau_DsdMergeStoreAddToDefChar( Dau_Sto_t * pS, int New, char c )\n{\n    *pS-\u003epPosStore[New]++ = c;\n}",
+      "Draft": "func Dau_DsdMergeStoreAddToDefChar(pS *Dau_Sto_t, New int32, c byte) {\n    *pS.pPosStore[New]++ = c;\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeStoreStopDef",
+      "Start": 2782,
+      "End": 2933,
+      "BodyStart": 2861,
+      "Original": "static inline void Dau_DsdMergeStoreStopDef( Dau_Sto_t * pS, int New, char c )\n{\n    if (c) *pS-\u003epPosStore[New]++ = c;\n    *pS-\u003epPosStore[New]++ = 0;\n}",
+      "Draft": "func Dau_DsdMergeStoreStopDef(pS *Dau_Sto_t, New int32, c byte) {\n    if c { *pS.pPosStore[New]++ = c; }\n    *pS.pPosStore[New]++ = 0;\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeStoreCreateDef",
+      "Start": 2935,
+      "End": 3192,
+      "BodyStart": 3025,
+      "Original": "static inline char Dau_DsdMergeStoreCreateDef( Dau_Sto_t * pS, char * pBeg, char * pEnd )\n{\n    int New = Dau_DsdMergeStoreStartDef( pS, 0 );\n    Dau_DsdMergeStoreAddToDef( pS, New, pBeg, pEnd );\n    Dau_DsdMergeStoreStopDef( pS, New, 0 );\n    return New;\n}",
+      "Draft": "func Dau_DsdMergeStoreCreateDef(pS *Dau_Sto_t, pBeg string, pEnd string) byte {\n    var New int32  = Dau_DsdMergeStoreStartDef( pS, 0 );\n    Dau_DsdMergeStoreAddToDef( pS, New, pBeg, pEnd );\n    Dau_DsdMergeStoreStopDef( pS, New, 0 );\n    return New;\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeStorePrintDefs",
+      "Start": 3193,
+      "End": 3402,
+      "BodyStart": 3257,
+      "Original": "static inline void Dau_DsdMergeStorePrintDefs( Dau_Sto_t * pS )\n{\n    int i;\n    for ( i = 0; i \u003c DAU_MAX_VAR; i++ )\n        if ( pS-\u003epStore[i][0] )\n            printf( \"%c = %s\\n\", 'a' + i, pS-\u003epStore[i] );\n}",
+      "Draft": "func Dau_DsdMergeStorePrintDefs(pS *Dau_Sto_t) {\n    var i int32;\n    for  i = 0; i \u003c DAU_MAX_VAR; i++  {\n        if pS.pStore[i][0] {\n            fmt.Printf(\"%c = %s\\n\", 'a' + i, pS.pStore[i]); }\n    }\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeCopy",
+      "Start": 3657,
+      "End": 3989,
+      "BodyStart": 3733,
+      "Original": "static inline void Dau_DsdMergeCopy( char * pDsd, int fCompl, char * pRes )\n{\n    if ( fCompl \u0026\u0026 pDsd[0] == '!' )\n        fCompl = 0, pDsd++;\n    if ( Dau_DsdIsConst(pDsd) ) // constant\n        pRes[0] = (fCompl ? (char)((int)pDsd[0] ^ 1) : pDsd[0]), pRes[1] = 0;\n    else\n        sprintf( pRes, \"%s%s\", fCompl ? \"!\" : \"\", pDsd );\n}",
+      "Draft": "func Dau_DsdMergeCopy(pDsd string, fCompl int32, pRes string) {\n    if (fCompl != 0) \u0026\u0026 pDsd[0] == '!' {\n        fCompl = 0;\npDsd++; }\n    if Dau_DsdIsConst(pDsd) { // constant\n        pRes[0] = (fCompl ? byte((int32(pDsd[0]) ^ 1)) : pDsd[0]), pRes[1] = 0;\n    } else {\n        pRes = fmt.Sprintf(\"%s%s\", fCompl ? \"!\" : \"\", pDsd); }\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeReplace",
+      "Start": 4269,
+      "End": 4863,
+      "BodyStart": 4351,
+      "Original": "static inline void Dau_DsdMergeReplace( char * pDsd, int * pMatches, int * pMap )\n{\n    int i;\n    for ( i = 0; pDsd[i]; i++ )\n    {\n        // skip non-DSD block\n        if ( pDsd[i] == '\u003c' \u0026\u0026 pDsd[pMatches[i]+1] == '{' )\n            i = pMatches[i] + 1;\n        if ( (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9') )\n            while ( (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9') )\n                i++;\n        // detect variables\n        if ( pDsd[i] \u003e= 'a' \u0026\u0026 pDsd[i] \u003c= 'z' )\n            pDsd[i] = 'a' + pMap[ pDsd[i] - 'a' ];\n    }\n}",
+      "Draft": "func Dau_DsdMergeReplace(pDsd string, pMatches *int32, pMap *int32) {\n    var i int32;\n    for  i = 0; pDsd[i]; i++  {\n        // skip non-DSD block\n        if pDsd[i] == '\u003c' \u0026\u0026 pDsd[pMatches[i]+1] == '{' {\n            i = pMatches[i] + 1; }\n        if (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9') {\n            for  (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9')  {\n                i++;\n            } }\n        // detect variables\n        if pDsd[i] \u003e= 'a' \u0026\u0026 pDsd[i] \u003c= 'z' {\n            pDsd[i] = 'a' + pMap[ pDsd[i] - 'a' ]; }\n    }\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeMatches",
+      "Start": 4864,
+      "End": 5384,
+      "BodyStart": 4934,
+      "Original": "static inline void Dau_DsdMergeMatches( char * pDsd, int * pMatches )\n{\n    int pNested[DAU_MAX_VAR];\n    int i, nNested = 0;\n    for ( i = 0; pDsd[i]; i++ )\n    {\n        pMatches[i] = 0;\n        if ( pDsd[i] == '(' || pDsd[i] == '[' || pDsd[i] == '\u003c' || pDsd[i] == '{' )\n            pNested[nNested++] = i;\n        else if ( pDsd[i] == ')' || pDsd[i] == ']' || pDsd[i] == '\u003e' || pDsd[i] == '}' )\n            pMatches[pNested[--nNested]] = i;\n        assert( nNested \u003c DAU_MAX_VAR );\n    }\n    assert( nNested == 0 );\n}",
+      "Draft": "func Dau_DsdMergeMatches(pDsd string, pMatches *int32) {\n    var pNested [DAU_MAX_VAR]int32;\n    var i, nNested int32;\n    for  i = 0; pDsd[i]; i++  {\n        pMatches[i] = 0;\n        if pDsd[i] == '(' || pDsd[i] == '[' || pDsd[i] == '\u003c' || pDsd[i] == '{' {\n            pNested[nNested++] = i;\n        } else if pDsd[i] == ')' || pDsd[i] == ']' || pDsd[i] == '\u003e' || pDsd[i] == '}' {\n            pMatches[pNested[--nNested]] = i; }\n        assert(nNested \u003c DAU_MAX_VAR, \"nNested \u003c DAU_MAX_VAR\");\n    }\n    assert(nNested == 0, \"nNested == 0\");\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeVarPres",
+      "Start": 5385,
+      "End": 6074,
+      "BodyStart": 5478,
+      "Original": "static inline void Dau_DsdMergeVarPres( char * pDsd, int * pMatches, int * pPres, int Mask )\n{\n    int i;\n    for ( i = 0; pDsd[i]; i++ )\n    {\n        // skip non-DSD block\n        if ( pDsd[i] == '\u003c' \u0026\u0026 pDsd[pMatches[i]+1] == '{' )\n            i = pMatches[i] + 1;\n        if ( (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9') )\n            while ( (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9') )\n                i++;\n        // skip non-variables\n        if ( !(pDsd[i] \u003e= 'a' \u0026\u0026 pDsd[i] \u003c= 'z') )\n            continue;\n        // record the mask\n        assert( pDsd[i]-'a' \u003c DAU_MAX_VAR );\n        pPres[pDsd[i]-'a'] |= Mask;\n    }\n}",
+      "Draft": "func Dau_DsdMergeVarPres(pDsd string, pMatches *int32, pPres *int32, Mask int32) {\n    var i int32;\n    for  i = 0; pDsd[i]; i++  {\n        // skip non-DSD block\n        if pDsd[i] == '\u003c' \u0026\u0026 pDsd[pMatches[i]+1] == '{' {\n            i = pMatches[i] + 1; }\n        if (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9') {\n            for  (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9')  {\n                i++;\n            } }\n        // skip non-variables\n        if !(pDsd[i] \u003e= 'a' \u0026\u0026 pDsd[i] \u003c= 'z') {\n            continue; }\n        // record the mask\n        assert(pDsd[i]-'a' \u003c DAU_MAX_VAR, \"pDsd[i]-'a' \u003c DAU_MAX_VAR\");\n        pPres[pDsd[i]-'a'] |= Mask;\n    }\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeCountShared",
+      "Start": 6075,
+      "End": 6268,
+      "BodyStart": 6142,
+      "Original": "static inline int Dau_DsdMergeCountShared( int * pPres, int Mask )\n{\n    int i, Counter = 0;\n    for ( i = 0; i \u003c DAU_MAX_VAR; i++ )\n        Counter += (pPres[i] == Mask);\n    return Counter;\n}",
+      "Draft": "func Dau_DsdMergeCountShared(pPres *int32, Mask int32) int32 {\n    var i, Counter int32;\n    for  i = 0; i \u003c DAU_MAX_VAR; i++  {\n        Counter += (pPres[i] == Mask);\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeFindShared",
+      "Start": 6269,
+      "End": 6612,
+      "BodyStart": 6390,
+      "Original": "static inline int Dau_DsdMergeFindShared( char * pDsd0, char * pDsd1, int * pMatches0, int * pMatches1, int * pVarPres )\n{\n    memset( pVarPres, 0, sizeof(int)*DAU_MAX_VAR );\n    Dau_DsdMergeVarPres( pDsd0, pMatches0, pVarPres, 1 );\n    Dau_DsdMergeVarPres( pDsd1, pMatches1, pVarPres, 2 );\n    return Dau_DsdMergeCountShared( pVarPres, 3 );\n}",
+      "Draft": "func Dau_DsdMergeFindShared(pDsd0 string, pDsd1 string, pMatches0 *int32, pMatches1 *int32, pVarPres *int32) int32 {\n    memset( pVarPres, 0, sizeof(int)*DAU_MAX_VAR );\n    Dau_DsdMergeVarPres( pDsd0, pMatches0, pVarPres, 1 );\n    Dau_DsdMergeVarPres( pDsd1, pMatches1, pVarPres, 2 );\n    return Dau_DsdMergeCountShared( pVarPres, 3 );\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeCreateMaps",
+      "Start": 6613,
+      "End": 7198,
+      "BodyStart": 6717,
+      "Original": "static inline int Dau_DsdMergeCreateMaps( int * pVarPres, int nShared, int * pOld2New, int * pNew2Old )\n{\n    int i, Counter = 0, Counter2 = nShared;\n    for ( i = 0; i \u003c DAU_MAX_VAR; i++ )\n    {\n        if ( pVarPres[i] == 0 )\n            continue;\n        if ( pVarPres[i] == 3 )\n        {\n            pOld2New[i] = Counter;\n            pNew2Old[Counter] = i;\n            Counter++;\n            continue;\n        }\n        assert( pVarPres[i] == 1 || pVarPres[i] == 2 );\n        pOld2New[i] = Counter2;\n        pNew2Old[Counter2] = i;\n        Counter2++;\n    }\n    return Counter2;\n}",
+      "Draft": "func Dau_DsdMergeCreateMaps(pVarPres *int32, nShared int32, pOld2New *int32, pNew2Old *int32) int32 {\n    var i int32;\n    var Counter int32;\n    var Counter2 int32 = nShared;\n    for  i = 0; i \u003c DAU_MAX_VAR; i++  {\n        if pVarPres[i] == 0 {\n            continue; }\n        if pVarPres[i] == 3 {\n            pOld2New[i] = Counter;\n            pNew2Old[Counter] = i;\n            Counter++;\n            continue;\n        }\n        assert(pVarPres[i] == 1 || pVarPres[i] == 2, \"pVarPres[i] == 1 || pVarPres[i] == 2\");\n        pOld2New[i] = Counter2;\n        pNew2Old[Counter2] = i;\n        Counter2++;\n    }\n    return Counter2;\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeInlineDefinitions",
+      "Start": 7199,
+      "End": 8285,
+      "BodyStart": 7321,
+      "Original": "static inline void Dau_DsdMergeInlineDefinitions( char * pDsd, int * pMatches, Dau_Sto_t * pS, char * pRes, int nShared )\n{\n    int i;\n    char * pDef;\n    char * pBegin = pRes;\n    for ( i = 0; pDsd[i]; i++ )\n    {\n        // skip non-DSD block\n        if ( pDsd[i] == '\u003c' \u0026\u0026 pDsd[pMatches[i]+1] == '{' )\n        {\n            assert( pDsd[pMatches[i]] == '\u003e' );\n            for ( ; i \u003c= pMatches[i]; i++ )\n                *pRes++ = pDsd[i];\n        }\n        if ( (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9') )\n            while ( (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9') )\n                *pRes++ = pDsd[i++];\n        // detect variables\n        if ( !(pDsd[i] \u003e= 'a' \u0026\u0026 pDsd[i] \u003c= 'z') || (pDsd[i] - 'a' \u003c nShared) )\n        {\n            *pRes++ = pDsd[i];\n            continue;\n        }\n        // inline definition\n        assert( pDsd[i]-'a' \u003c DAU_MAX_STR );\n        for ( pDef = pS-\u003epStore[pDsd[i]-'a']; *pDef; pDef++ )\n            *pRes++ = *pDef;\n    }\n    *pRes++ = 0;\n    assert( pRes - pBegin \u003c DAU_MAX_STR );\n}",
+      "Draft": "func Dau_DsdMergeInlineDefinitions(pDsd string, pMatches *int32, pS *Dau_Sto_t, pRes string, nShared int32) {\n    var i int32;\n    var pDef string;\n    var pBegin string  = pRes;\n    for  i = 0; pDsd[i]; i++  {\n        // skip non-DSD block\n        if pDsd[i] == '\u003c' \u0026\u0026 pDsd[pMatches[i]+1] == '{' {\n            assert(pDsd[pMatches[i]] == '\u003e', \"pDsd[pMatches[i]] == '\u003e'\");\n            for  ; i \u003c= pMatches[i]; i++  {\n                *pRes++ = pDsd[i];\n            }\n        }\n        if (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9') {\n            for  (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9')  {\n                *pRes++ = pDsd[i++];\n            } }\n        // detect variables\n        if !(pDsd[i] \u003e= 'a' \u0026\u0026 pDsd[i] \u003c= 'z') || (pDsd[i] - 'a' \u003c nShared) {\n            *pRes++ = pDsd[i];\n            continue;\n        }\n        // inline definition\n        assert(pDsd[i]-'a' \u003c DAU_MAX_STR, \"pDsd[i]-'a' \u003c DAU_MAX_STR\");\n        for  pDef = pS.pStore[pDsd[i]-'a']; *pDef; pDef++  {\n            *pRes++ = *pDef;\n        }\n    }\n    *pRes++ = 0;\n    assert(pRes - pBegin \u003c DAU_MAX_STR, \"pRes - pBegin \u003c DAU_MAX_STR\");\n}"
+    },
+    {
+      "Name": "Dau_DsdMergePrintWithStatus",
+      "Start": 8580,
+      "End": 8992,
+      "BodyStart": 8654,
+      "Original": "static inline void Dau_DsdMergePrintWithStatus( char * p, int * pStatus )\n{\n    int i;\n    printf( \"%s\\n\", p );\n    for ( i = 0; p[i]; i++ )\n        if ( !(p[i] == '(' || p[i] == '[' || p[i] == '\u003c' || p[i] == '{' || (p[i] \u003e= 'a' \u0026\u0026 p[i] \u003c= 'z')) )\n            printf( \" \" );\n        else if ( pStatus[i] \u003e= 0 )\n            printf( \"%d\", pStatus[i] );\n        else\n            printf( \"-\" );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Dau_DsdMergePrintWithStatus(p string, pStatus *int32) {\n    var i int32;\n    fmt.Printf(\"%s\\n\", p);\n    for  i = 0; p[i]; i++  {\n        if !(p[i] == '(' || p[i] == '[' || p[i] == '\u003c' || p[i] == '{' || (p[i] \u003e= 'a' \u0026\u0026 p[i] \u003c= 'z')) {\n            fmt.Printf(\" \");\n        } else if pStatus[i] \u003e= 0 {\n            fmt.Printf(\"%d\", pStatus[i]);\n        } else {\n            fmt.Printf(\"-\"); }\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeStatus_rec",
+      "Start": 8993,
+      "End": 10613,
+      "BodyStart": 9090,
+      "Original": "int Dau_DsdMergeStatus_rec( char * pStr, char ** p, int * pMatches, int nShared, int * pStatus )\n{\n    // none pure\n    // 1 one pure\n    // 2 two or more pure\n    // 3 all pure\n    if ( **p == '!' )\n    {\n        pStatus[*p - pStr] = -1;\n        (*p)++;\n    }\n    while ( (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9') )\n    {\n        pStatus[*p - pStr] = -1;\n        (*p)++;\n    }\n    if ( **p == '\u003c' )\n    {\n        char * q = pStr + pMatches[ *p - pStr ];\n        if ( *(q+1) == '{' )\n        {\n            char * pTemp = *p;\n            *p = q+1;\n            for ( ; pTemp \u003c q+1; pTemp++ )\n                pStatus[pTemp - pStr] = -1;\n        }\n    }\n    if ( **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' ) // var\n        return pStatus[*p - pStr] = (**p - 'a' \u003c nShared) ? 0 : 3;\n    if ( **p == '(' || **p == '[' || **p == '\u003c' || **p == '{' ) // and/or/xor\n    {\n        int Status, nPure = 0, nTotal = 0;\n        char * pOld = *p;\n        char * q = pStr + pMatches[ *p - pStr ];\n        assert( *q == **p + 1 + (**p != '(') );\n        for ( (*p)++; *p \u003c q; (*p)++ )\n        {\n            Status = Dau_DsdMergeStatus_rec( pStr, p, pMatches, nShared, pStatus );\n            nPure += (Status == 3);\n            nTotal++;\n        }\n        assert( *p == q );\n        assert( nTotal \u003e 1 );\n        if ( nPure == 0 )\n            Status = 0;\n        else if ( nPure == 1 )\n            Status = 1;\n        else if ( nPure \u003c nTotal )\n            Status = 2;\n        else if ( nPure == nTotal ) \n            Status = 3;\n        else assert( 0 );\n        return (pStatus[pOld - pStr] = Status);\n    }\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Dau_DsdMergeStatus_rec(pStr string, p *string, pMatches *int32, nShared int32, pStatus *int32) int32 {\n    // none pure\n    // 1 one pure\n    // 2 two or more pure\n    // 3 all pure\n    if **p == '!' {\n        pStatus[*p - pStr] = -1;\n        (*p)++;\n    }\n    for  (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9')  {\n        pStatus[*p - pStr] = -1;\n        (*p)++;\n    }\n    if **p == '\u003c' {\n        var q string  = pStr + pMatches[ *p - pStr ];\n        if *(q+1) == '{' {\n            var pTemp string  = *p;\n            *p = q+1;\n            for  ; pTemp \u003c q+1; pTemp++  {\n                pStatus[pTemp - pStr] = -1;\n            }\n        }\n    }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' { // var\n        if pStatus[*p - pStr] = (**p - 'a' \u003c nShared) {\n            return 0;\n        } else {\n            return 3;\n        } }\n    if **p == '(' || **p == '[' || **p == '\u003c' || **p == '{' { // and/or/xor\n    \n        var Status, nPure, nTotal int32;\n        var pOld string  = *p;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Status = Dau_DsdMergeStatus_rec( pStr, p, pMatches, nShared, pStatus );\n            nPure += (Status == 3);\n            nTotal++;\n        }\n        assert(*p == q, \"*p == q\");\n        assert(nTotal \u003e 1, \"nTotal \u003e 1\");\n        if nPure == 0 {\n            Status = 0;\n        } else if nPure == 1 {\n            Status = 1;\n        } else if nPure \u003c nTotal {\n            Status = 2;\n        } else if nPure == nTotal { \n            Status = 3;\n        } else { assert(false, \"0\"); }\n        return (pStatus[pOld - pStr] = Status);\n    }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeStatus",
+      "Start": 10614,
+      "End": 10791,
+      "BodyStart": 10710,
+      "Original": "static inline int Dau_DsdMergeStatus( char * pDsd, int * pMatches, int nShared, int * pStatus )\n{\n    return Dau_DsdMergeStatus_rec( pDsd, \u0026pDsd, pMatches, nShared, pStatus );\n}",
+      "Draft": "func Dau_DsdMergeStatus(pDsd string, pMatches *int32, nShared int32, pStatus *int32) int32 {\n    return Dau_DsdMergeStatus_rec( pDsd, \u0026pDsd, pMatches, nShared, pStatus );\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeGetStatus",
+      "Start": 11048,
+      "End": 11456,
+      "BodyStart": 11147,
+      "Original": "static inline int Dau_DsdMergeGetStatus( char * pBeg, char * pStr, int * pMatches, int * pStatus )\n{\n    if ( *pBeg == '!' )\n        pBeg++;\n    while ( (*pBeg \u003e= 'A' \u0026\u0026 *pBeg \u003c= 'F') || (*pBeg \u003e= '0' \u0026\u0026 *pBeg \u003c= '9') )\n        pBeg++;\n    if ( *pBeg == '\u003c' )\n    {\n        char * q = pStr + pMatches[pBeg - pStr];\n        if ( *(q+1) == '{' )\n            pBeg = q+1;\n    }\n    return pStatus[pBeg - pStr];\n}",
+      "Draft": "func Dau_DsdMergeGetStatus(pBeg string, pStr string, pMatches *int32, pStatus *int32) int32 {\n    if *pBeg == '!' {\n        pBeg++; }\n    for  (*pBeg \u003e= 'A' \u0026\u0026 *pBeg \u003c= 'F') || (*pBeg \u003e= '0' \u0026\u0026 *pBeg \u003c= '9')  {\n        pBeg++;\n    }\n    if *pBeg == '\u003c' {\n        var q string  = pStr + pMatches[pBeg - pStr];\n        if *(q+1) == '{' {\n            pBeg = q+1; }\n    }\n    return pStatus[pBeg - pStr];\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeSubstitute_rec",
+      "Start": 11457,
+      "End": 15422,
+      "BodyStart": 11574,
+      "Original": "void Dau_DsdMergeSubstitute_rec( Dau_Sto_t * pS, char * pStr, char ** p, int * pMatches, int * pStatus, int fWrite )\n{\n//    assert( **p != '!' );\n\n    if ( **p == '!' )\n    {\n        if ( fWrite )\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n        (*p)++;\n    }\n\n    while ( (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9') )\n    {\n        if ( fWrite )\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n        (*p)++;\n    }\n    if ( **p == '\u003c' )\n    {\n        char * q = pStr + pMatches[ *p - pStr ];\n        if ( *(q+1) == '{' )\n        {\n            char * pTemp = *p;\n            *p = q+1;\n            if ( fWrite )\n                for ( ; pTemp \u003c q+1; pTemp++ )\n                    Dau_DsdMergeStoreAddToOutputChar( pS, *pTemp );\n        }\n    }\n    if ( **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' ) // var\n    {\n        if ( fWrite )\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n        return;\n    }\n    if ( **p == '(' || **p == '[' || **p == '\u003c' || **p == '{' ) // and/or/xor\n    {\n        int New, StatusFan, Status = pStatus[*p - pStr];\n        char * pBeg, * q = pStr + pMatches[ *p - pStr ];\n        assert( *q == **p + 1 + (**p != '(') );\n        if ( !fWrite )\n        {\n             assert( Status == 3 );\n             *p = q;\n             return;\n        }\n        assert( Status != 3 );\n        if ( Status == 0 ) // none pure\n        {\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            for ( (*p)++; *p \u003c q; (*p)++ )\n            {\n                if ( **p == '!' )\n                {\n                    Dau_DsdMergeStoreAddToOutputChar( pS, '!' );\n                    (*p)++;\n                }\n                Dau_DsdMergeSubstitute_rec( pS, pStr, p, pMatches, pStatus, 1 );\n            }\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            assert( *p == q );\n            return;\n        }\n        if ( Status == 1 || **p == '\u003c' || **p == '{' ) // 1 pure\n        {\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            for ( (*p)++; *p \u003c q; (*p)++ )\n            {\n                if ( **p == '!' )\n                {\n                    Dau_DsdMergeStoreAddToOutputChar( pS, '!' );\n                    (*p)++;\n                }\n                pBeg = *p;\n                StatusFan = Dau_DsdMergeGetStatus( pBeg, pStr, pMatches, pStatus );\n                Dau_DsdMergeSubstitute_rec( pS, pStr, p, pMatches, pStatus, StatusFan != 3 );\n                if ( StatusFan == 3 )\n                {\n                    int New = Dau_DsdMergeStoreCreateDef( pS, pBeg, *p+1 );\n                    Dau_DsdMergeStoreAddToOutputChar( pS, (char)('a' + New) );\n                }\n            }\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            assert( *p == q );\n            return;\n        }\n        if ( Status == 2 )\n        {\n            // add more than one defs\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            New = Dau_DsdMergeStoreStartDef( pS, **p );\n            for ( (*p)++; *p \u003c q; (*p)++ )\n            {\n                pBeg = *p;\n                StatusFan = Dau_DsdMergeGetStatus( pBeg, pStr, pMatches, pStatus );\n                if ( **p == '!' )\n                {\n                    if ( StatusFan != 3 )\n                        Dau_DsdMergeStoreAddToOutputChar( pS, '!' );\n                    else\n                        Dau_DsdMergeStoreAddToDefChar( pS, New, '!' );\n                    (*p)++;\n                    pBeg++;\n                }\n                Dau_DsdMergeSubstitute_rec( pS, pStr, p, pMatches, pStatus, StatusFan != 3 );\n                if ( StatusFan == 3 )\n                    Dau_DsdMergeStoreAddToDef( pS, New, pBeg, *p+1 );\n            }\n            Dau_DsdMergeStoreStopDef( pS, New, *q );\n            Dau_DsdMergeStoreAddToOutputChar( pS, (char)('a' + New) );\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            return;\n        }\n        assert( 0 );\n        return;\n    }\n    assert( 0 );\n}",
+      "Draft": "func Dau_DsdMergeSubstitute_rec(pS *Dau_Sto_t, pStr string, p *string, pMatches *int32, pStatus *int32, fWrite int32) {\n//    assert( **p != '!' );\n\n    if **p == '!' {\n        if fWrite != 0 {\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p ); }\n        (*p)++;\n    }\n\n    for  (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9')  {\n        if fWrite != 0 {\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p ); }\n        (*p)++;\n    }\n    if **p == '\u003c' {\n        var q string  = pStr + pMatches[ *p - pStr ];\n        if *(q+1) == '{' {\n            var pTemp string  = *p;\n            *p = q+1;\n            if fWrite != 0 {\n                for  ; pTemp \u003c q+1; pTemp++  {\n                    Dau_DsdMergeStoreAddToOutputChar( pS, *pTemp );\n                } }\n        }\n    }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' { // var\n    \n        if fWrite != 0 {\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p ); }\n        return;\n    }\n    if **p == '(' || **p == '[' || **p == '\u003c' || **p == '{' { // and/or/xor\n    \n        var New int32;\n        var StatusFan int32;\n        var Status int32 = pStatus[*p - pStr];\n        var pBeg string;\n        var q string = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        if !(fWrite != 0) {\n             assert(Status == 3, \"Status == 3\");\n             *p = q;\n             return;\n        }\n        assert(Status != 3, \"Status != 3\");\n        if Status == 0 { // none pure\n        \n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            for  (*p)++; *p \u003c q; (*p)++  {\n                if **p == '!' {\n                    Dau_DsdMergeStoreAddToOutputChar( pS, '!' );\n                    (*p)++;\n                }\n                Dau_DsdMergeSubstitute_rec( pS, pStr, p, pMatches, pStatus, 1 );\n            }\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            assert(*p == q, \"*p == q\");\n            return;\n        }\n        if Status == 1 || **p == '\u003c' || **p == '{' { // 1 pure\n        \n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            for  (*p)++; *p \u003c q; (*p)++  {\n                if **p == '!' {\n                    Dau_DsdMergeStoreAddToOutputChar( pS, '!' );\n                    (*p)++;\n                }\n                pBeg = *p;\n                StatusFan = Dau_DsdMergeGetStatus( pBeg, pStr, pMatches, pStatus );\n                Dau_DsdMergeSubstitute_rec( pS, pStr, p, pMatches, pStatus, StatusFan != 3 );\n                if StatusFan == 3 {\n                    var New int32  = Dau_DsdMergeStoreCreateDef( pS, pBeg, *p+1 );\n                    Dau_DsdMergeStoreAddToOutputChar( pS, byte(('a' + New)) );\n                }\n            }\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            assert(*p == q, \"*p == q\");\n            return;\n        }\n        if Status == 2 {\n            // add more than one defs\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            New = Dau_DsdMergeStoreStartDef( pS, **p );\n            for  (*p)++; *p \u003c q; (*p)++  {\n                pBeg = *p;\n                StatusFan = Dau_DsdMergeGetStatus( pBeg, pStr, pMatches, pStatus );\n                if **p == '!' {\n                    if StatusFan != 3 {\n                        Dau_DsdMergeStoreAddToOutputChar( pS, '!' );\n                    } else {\n                        Dau_DsdMergeStoreAddToDefChar( pS, New, '!' ); }\n                    (*p)++;\n                    pBeg++;\n                }\n                Dau_DsdMergeSubstitute_rec( pS, pStr, p, pMatches, pStatus, StatusFan != 3 );\n                if StatusFan == 3 {\n                    Dau_DsdMergeStoreAddToDef( pS, New, pBeg, *p+1 ); }\n            }\n            Dau_DsdMergeStoreStopDef( pS, New, *q );\n            Dau_DsdMergeStoreAddToOutputChar( pS, byte(('a' + New)) );\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            return;\n        }\n        assert(false, \"0\");\n        return;\n    }\n    assert(false, \"0\");\n}"
+    },
+    {
+      "Name": "Dau_DsdMergeSubstitute",
+      "Start": 15423,
+      "End": 15803,
+      "BodyStart": 15527,
+      "Original": "static inline void Dau_DsdMergeSubstitute( Dau_Sto_t * pS, char * pDsd, int * pMatches, int * pStatus )\n{\n/*\n    int fCompl = 0;\n    if ( pDsd[0] == '!' )\n    {\n        Dau_DsdMergeStoreAddToOutputChar( pS, '!' );\n        pDsd++;\n        fCompl = 1;\n    }\n*/\n    Dau_DsdMergeSubstitute_rec( pS, pDsd, \u0026pDsd, pMatches, pStatus, 1 );\n    Dau_DsdMergeStoreAddToOutputChar( pS, 0 );\n}",
+      "Draft": "func Dau_DsdMergeSubstitute(pS *Dau_Sto_t, pDsd string, pMatches *int32, pStatus *int32) {\n/*\n    int fCompl = 0;\n    if ( pDsd[0] == '!' )\n    {\n        Dau_DsdMergeStoreAddToOutputChar( pS, '!' );\n        pDsd++;\n        fCompl = 1;\n    }\n*/\n    Dau_DsdMergeSubstitute_rec( pS, pDsd, \u0026pDsd, pMatches, pStatus, 1 );\n    Dau_DsdMergeStoreAddToOutputChar( pS, 0 );\n}"
+    },
+    {
+      "Name": "Dau_DsdRemoveBraces_rec",
+      "Start": 16054,
+      "End": 17086,
+      "BodyStart": 16125,
+      "Original": "void Dau_DsdRemoveBraces_rec( char * pStr, char ** p, int * pMatches )\n{\n    if ( **p == '!' )\n        (*p)++;\n    while ( (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9') )\n        (*p)++;\n    if ( **p == '\u003c' )\n    {\n        char * q = pStr + pMatches[*p - pStr];\n        if ( *(q+1) == '{' )\n            *p = q+1;\n    }\n    if ( **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' ) // var\n        return;\n    if ( **p == '(' || **p == '[' || **p == '\u003c' || **p == '{' ) \n    {\n        char * q = pStr + pMatches[ *p - pStr ];\n        assert( *q == **p + 1 + (**p != '(') );\n        for ( (*p)++; *p \u003c q; (*p)++ )\n        {\n            int fCompl = (**p == '!');\n            char * pBeg = fCompl ? *p + 1 : *p;\n            Dau_DsdRemoveBraces_rec( pStr, p, pMatches );\n            if ( (!fCompl \u0026\u0026 *pBeg == '(' \u0026\u0026 *q == ')') || (*pBeg == '[' \u0026\u0026 *q == ']') )\n            {\n                assert( **p == ')' || **p == ']' );\n                *pBeg = **p = ' ';\n            }\n        }\n        assert( *p == q );\n        return;\n    }\n    assert( 0 );\n}",
+      "Draft": "func Dau_DsdRemoveBraces_rec(pStr string, p *string, pMatches *int32) {\n    if **p == '!' {\n        (*p)++; }\n    for  (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9')  {\n        (*p)++;\n    }\n    if **p == '\u003c' {\n        var q string  = pStr + pMatches[*p - pStr];\n        if *(q+1) == '{' {\n            *p = q+1; }\n    }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' { // var\n        return; }\n    if **p == '(' || **p == '[' || **p == '\u003c' || **p == '{' {\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            var fCompl int32  = (**p == '!');\n            var pBeg string;\n            if fCompl != 0 {\n                pBeg = *p + 1;\n            } else {\n                pBeg = *p;\n            }\n            Dau_DsdRemoveBraces_rec( pStr, p, pMatches );\n            if (!(fCompl != 0) \u0026\u0026 *pBeg == '(' \u0026\u0026 *q == ')') || (*pBeg == '[' \u0026\u0026 *q == ']') {\n                assert(**p == ')' || **p == ']', \"**p == ')' || **p == ']'\");\n                *pBeg = **p = ' ';\n            }\n        }\n        assert(*p == q, \"*p == q\");\n        return;\n    }\n    assert(false, \"0\");\n}"
+    },
+    {
+      "Name": "Dau_DsdRemoveBraces",
+      "Start": 17087,
+      "End": 17504,
+      "BodyStart": 17143,
+      "Original": "void Dau_DsdRemoveBraces( char * pDsd, int * pMatches )\n{\n    char * q, * p = pDsd;\n    if ( pDsd[1] == 0 )\n        return;\n    Dau_DsdRemoveBraces_rec( pDsd, \u0026pDsd, pMatches );\n    for ( q = p; *p; p++ )\n        if ( *p != ' ' )\n        {\n            if ( *p == '!' \u0026\u0026 *(q-1) == '!' \u0026\u0026 p != q )\n            {\n                q--;\n                continue;\n            }\n            *q++ = *p;\n        }\n    *q = 0;\n}",
+      "Draft": "func Dau_DsdRemoveBraces(pDsd string, pMatches *int32) {\n    var q string;\n    var p string = pDsd;\n    if pDsd[1] == 0 {\n        return; }\n    Dau_DsdRemoveBraces_rec( pDsd, \u0026pDsd, pMatches );\n    for  q = p; *p; p++  {\n        if *p != ' ' {\n            if *p == '!' \u0026\u0026 *(q-1) == '!' \u0026\u0026 p != q {\n                q--;\n                continue;\n            }\n            *q++ = *p;\n        }\n    }\n    *q = 0;\n}"
+    },
+    {
+      "Name": "Dau_DsdMerge",
+      "Start": 17808,
+      "End": 23366,
+      "BodyStart": 17925,
+      "Original": "char * Dau_DsdMerge( char * pDsd0i, int * pPerm0, char * pDsd1i, int * pPerm1, int fCompl0, int fCompl1, int nVars )\n{\n    int fVerbose = 0;\n    int fCheck = 0;\n    static int Counter = 0;\n    static char pRes[2*DAU_MAX_STR+10];\n    char pDsd0[DAU_MAX_STR];\n    char pDsd1[DAU_MAX_STR];\n    int pMatches0[DAU_MAX_STR];\n    int pMatches1[DAU_MAX_STR];\n    int pVarPres[DAU_MAX_VAR];\n    int pOld2New[DAU_MAX_VAR];\n    int pNew2Old[DAU_MAX_VAR];\n    int pStatus0[DAU_MAX_STR];\n    int pStatus1[DAU_MAX_STR];\n    int pMatches[DAU_MAX_STR];\n    int nVarsShared, nVarsTotal;\n    Dau_Sto_t S, * pS = \u0026S;\n    word * pTruth, * pt = NULL, * pt0 = NULL, * pt1 = NULL;\n    word pParts[3][DAU_MAX_WORD];\n    int Status;\n    abctime clk = Abc_Clock();\n    Counter++;\n    // create local copies\n    Dau_DsdMergeCopy( pDsd0i, fCompl0, pDsd0 );\n    Dau_DsdMergeCopy( pDsd1i, fCompl1, pDsd1 );\nif ( fVerbose )\nprintf( \"\\nAfter copying:\\n\" );\nif ( fVerbose )\nprintf( \"%s\\n\", pDsd0 );\nif ( fVerbose )\nprintf( \"%s\\n\", pDsd1 );\n    // handle constants\n    if ( Dau_DsdIsConst(pDsd0) || Dau_DsdIsConst(pDsd1) )\n    {\n        if ( Dau_DsdIsConst0(pDsd0) )\n            strcpy( pRes, pDsd0 );\n        else if ( Dau_DsdIsConst1(pDsd0) )\n            strcpy( pRes, pDsd1 );\n        else if ( Dau_DsdIsConst0(pDsd1) )\n            strcpy( pRes, pDsd1 );\n        else if ( Dau_DsdIsConst1(pDsd1) )\n            strcpy( pRes, pDsd0 );\n        else assert( 0 );\n        return pRes;\n    }\n\n    // compute matches\n    Dau_DsdMergeMatches( pDsd0, pMatches0 );\n    Dau_DsdMergeMatches( pDsd1, pMatches1 );\n    // implement permutation\n    Dau_DsdMergeReplace( pDsd0, pMatches0, pPerm0 );\n    Dau_DsdMergeReplace( pDsd1, pMatches1, pPerm1 );\nif ( fVerbose )\nprintf( \"After replacement:\\n\" );\nif ( fVerbose )\nprintf( \"%s\\n\", pDsd0 );\nif ( fVerbose )\nprintf( \"%s\\n\", pDsd1 );\n\n\n    if ( fCheck )\n    {\n        pt0 = Dau_DsdToTruth( pDsd0, nVars );\n        Abc_TtCopy( pParts[0], pt0, Abc_TtWordNum(nVars), 0 );\n    }\n    if ( fCheck )\n    {\n        pt1 = Dau_DsdToTruth( pDsd1, nVars );\n        Abc_TtCopy( pParts[1], pt1, Abc_TtWordNum(nVars), 0 );\n        Abc_TtAnd( pParts[2], pParts[0], pParts[1], Abc_TtWordNum(nVars), 0 );\n    }\n\n    // find shared varaiables\n    nVarsShared = Dau_DsdMergeFindShared(pDsd0, pDsd1, pMatches0, pMatches1, pVarPres);\n    if ( nVarsShared == 0 )\n    {\n        sprintf( pRes, \"(%s%s)\", pDsd0, pDsd1 );\nif ( fVerbose )\nprintf( \"Disjoint:\\n\" );\nif ( fVerbose )\nprintf( \"%s\\n\", pRes );\n\n        Dau_DsdMergeMatches( pRes, pMatches );\n        Dau_DsdRemoveBraces( pRes, pMatches );\n        Dau_DsdNormalize( pRes );\nif ( fVerbose )\nprintf( \"Normalized:\\n\" );\nif ( fVerbose )\nprintf( \"%s\\n\", pRes );\n\n        s_TimeComp[0] += Abc_Clock() - clk;\n        return pRes;\n    }\ns_TimeComp[3] += Abc_Clock() - clk;\n    // create variable mapping\n    nVarsTotal = Dau_DsdMergeCreateMaps( pVarPres, nVarsShared, pOld2New, pNew2Old );\n    // perform variable replacement\n    Dau_DsdMergeReplace( pDsd0, pMatches0, pOld2New );\n    Dau_DsdMergeReplace( pDsd1, pMatches1, pOld2New );\n    // find uniqueness status\n    Dau_DsdMergeStatus( pDsd0, pMatches0, nVarsShared, pStatus0 );\n    Dau_DsdMergeStatus( pDsd1, pMatches1, nVarsShared, pStatus1 );\nif ( fVerbose )\nprintf( \"Individual status:\\n\" );\nif ( fVerbose )\nDau_DsdMergePrintWithStatus( pDsd0, pStatus0 );\nif ( fVerbose )\nDau_DsdMergePrintWithStatus( pDsd1, pStatus1 );\n    // prepare storage\n    Dau_DsdMergeStoreClean( pS, nVarsShared );\n    // perform substitutions\n    Dau_DsdMergeStoreCleanOutput( pS );\n    Dau_DsdMergeSubstitute( pS, pDsd0, pMatches0, pStatus0 );\n    strcpy( pDsd0, pS-\u003epOutput );\nif ( fVerbose )\nprintf( \"Substitutions:\\n\" );\nif ( fVerbose )\nprintf( \"%s\\n\", pDsd0 );\n\n    // perform substitutions\n    Dau_DsdMergeStoreCleanOutput( pS );\n    Dau_DsdMergeSubstitute( pS, pDsd1, pMatches1, pStatus1 );\n    strcpy( pDsd1, pS-\u003epOutput );\nif ( fVerbose )\nprintf( \"%s\\n\", pDsd1 );\nif ( fVerbose )\nDau_DsdMergeStorePrintDefs( pS );\n\n    // create new function\n//    assert( nVarsTotal \u003c= 6 );\n    sprintf( pS-\u003epOutput, \"(%s%s)\", pDsd0, pDsd1 );\n    pTruth = Dau_DsdToTruth( pS-\u003epOutput, nVarsTotal );\n    Status = Dau_DsdDecompose( pTruth, nVarsTotal, 0, 1, pS-\u003epOutput );\n//printf( \"%d \", Status );\n    if ( Status == -1 ) // did not find 1-step DSD\n        return NULL;\n//    if ( Status \u003e 6 ) // non-DSD part is too large\n//        return NULL;\n    if ( Dau_DsdIsConst(pS-\u003epOutput) )\n    {\n        strcpy( pRes, pS-\u003epOutput );\n        return pRes;\n    }\nif ( fVerbose )\nprintf( \"Decomposition:\\n\" );\nif ( fVerbose )\nprintf( \"%s\\n\", pS-\u003epOutput );\n    // substitute definitions\n    Dau_DsdMergeMatches( pS-\u003epOutput, pMatches );\n    Dau_DsdMergeInlineDefinitions( pS-\u003epOutput, pMatches, pS, pRes, nVarsShared );\nif ( fVerbose )\nprintf( \"Inlining:\\n\" );\nif ( fVerbose )\nprintf( \"%s\\n\", pRes );\n    // perform variable replacement\n    Dau_DsdMergeMatches( pRes, pMatches );\n    Dau_DsdMergeReplace( pRes, pMatches, pNew2Old );\n    Dau_DsdRemoveBraces( pRes, pMatches );\nif ( fVerbose )\nprintf( \"Replaced:\\n\" );\nif ( fVerbose )\nprintf( \"%s\\n\", pRes );\n    Dau_DsdNormalize( pRes );\nif ( fVerbose )\nprintf( \"Normalized:\\n\" );\nif ( fVerbose )\nprintf( \"%s\\n\", pRes );\n\n    if ( fCheck )\n    {\n        pt = Dau_DsdToTruth( pRes, nVars );\n        if ( !Abc_TtEqual( pParts[2], pt, Abc_TtWordNum(nVars) ) )\n            printf( \"Dau_DsdMerge(): Verification failed!\\n\" );\n    }\n\n    if ( Status == 0 )\n        s_TimeComp[1] += Abc_Clock() - clk;\n    else\n        s_TimeComp[2] += Abc_Clock() - clk;\n    return pRes;\n}",
+      "Draft": "func Dau_DsdMerge(pDsd0i string, pPerm0 *int32, pDsd1i string, pPerm1 *int32, fCompl0 int32, fCompl1 int32, nVars int32) string {\n    var fVerbose int32;\n    var fCheck int32;\n    \n    \n    var pDsd0 [DAU_MAX_STR]byte;\n    var pDsd1 [DAU_MAX_STR]byte;\n    var pMatches0 [DAU_MAX_STR]int32;\n    var pMatches1 [DAU_MAX_STR]int32;\n    var pVarPres [DAU_MAX_VAR]int32;\n    var pOld2New [DAU_MAX_VAR]int32;\n    var pNew2Old [DAU_MAX_VAR]int32;\n    var pStatus0 [DAU_MAX_STR]int32;\n    var pStatus1 [DAU_MAX_STR]int32;\n    var pMatches [DAU_MAX_STR]int32;\n    var nVarsShared, nVarsTotal int32;\n    var S Dau_Sto_t;\n    var pS *Dau_Sto_t = \u0026S;\n    var pTruth *word;\n    var pt *word = nil;\n    var pt0 *word = nil;\n    var pt1 *word = nil;\n    var pParts [3][DAU_MAX_WORD]word;\n    var Status int32;\n    var clk abctime  = Abc_Clock();\n    spStatic_Dau_DsdMerge_Counter++;\n    // create local copies\n    Dau_DsdMergeCopy( pDsd0i, fCompl0, pDsd0 );\n    Dau_DsdMergeCopy( pDsd1i, fCompl1, pDsd1 );\nif fVerbose != 0 {\nfmt.Printf(\"\\nAfter copying:\\n\"); }\nif fVerbose != 0 {\nfmt.Printf(\"%s\\n\", pDsd0); }\nif fVerbose != 0 {\nfmt.Printf(\"%s\\n\", pDsd1); }\n    // handle constants\n    if Dau_DsdIsConst(pDsd0) || Dau_DsdIsConst(pDsd1) {\n        if Dau_DsdIsConst0(pDsd0) {\n            strcpy( spStatic_Dau_DsdMerge_pRes, pDsd0 );\n        } else if Dau_DsdIsConst1(pDsd0) {\n            strcpy( spStatic_Dau_DsdMerge_pRes, pDsd1 );\n        } else if Dau_DsdIsConst0(pDsd1) {\n            strcpy( spStatic_Dau_DsdMerge_pRes, pDsd1 );\n        } else if Dau_DsdIsConst1(pDsd1) {\n            strcpy( spStatic_Dau_DsdMerge_pRes, pDsd0 );\n        } else { assert(false, \"0\"); }\n        return spStatic_Dau_DsdMerge_pRes;\n    }\n\n    // compute matches\n    Dau_DsdMergeMatches( pDsd0, pMatches0 );\n    Dau_DsdMergeMatches( pDsd1, pMatches1 );\n    // implement permutation\n    Dau_DsdMergeReplace( pDsd0, pMatches0, pPerm0 );\n    Dau_DsdMergeReplace( pDsd1, pMatches1, pPerm1 );\nif fVerbose != 0 {\nfmt.Printf(\"After replacement:\\n\"); }\nif fVerbose != 0 {\nfmt.Printf(\"%s\\n\", pDsd0); }\nif fVerbose != 0 {\nfmt.Printf(\"%s\\n\", pDsd1); }\n\n\n    if fCheck != 0 {\n        pt0 = Dau_DsdToTruth( pDsd0, nVars );\n        Abc_TtCopy( pParts[0], pt0, Abc_TtWordNum(nVars), 0 );\n    }\n    if fCheck != 0 {\n        pt1 = Dau_DsdToTruth( pDsd1, nVars );\n        Abc_TtCopy( pParts[1], pt1, Abc_TtWordNum(nVars), 0 );\n        Abc_TtAnd( pParts[2], pParts[0], pParts[1], Abc_TtWordNum(nVars), 0 );\n    }\n\n    // find shared varaiables\n    nVarsShared = Dau_DsdMergeFindShared(pDsd0, pDsd1, pMatches0, pMatches1, pVarPres);\n    if nVarsShared == 0 {\n        spStatic_Dau_DsdMerge_pRes = fmt.Sprintf(\"(%s%s)\", pDsd0, pDsd1);\nif fVerbose != 0 {\nfmt.Printf(\"Disjoint:\\n\"); }\nif fVerbose != 0 {\nprintf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }\n\n        Dau_DsdMergeMatches( spStatic_Dau_DsdMerge_pRes, pMatches );\n        Dau_DsdRemoveBraces( spStatic_Dau_DsdMerge_pRes, pMatches );\n        Dau_DsdNormalize( spStatic_Dau_DsdMerge_pRes );\nif fVerbose != 0 {\nfmt.Printf(\"Normalized:\\n\"); }\nif fVerbose != 0 {\nprintf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }\n\n        s_TimeComp[0] += Abc_Clock() - clk;\n        return spStatic_Dau_DsdMerge_pRes;\n    }\ns_TimeComp[3] += Abc_Clock() - clk;\n    // create variable mapping\n    nVarsTotal = Dau_DsdMergeCreateMaps( pVarPres, nVarsShared, pOld2New, pNew2Old );\n    // perform variable replacement\n    Dau_DsdMergeReplace( pDsd0, pMatches0, pOld2New );\n    Dau_DsdMergeReplace( pDsd1, pMatches1, pOld2New );\n    // find uniqueness status\n    Dau_DsdMergeStatus( pDsd0, pMatches0, nVarsShared, pStatus0 );\n    Dau_DsdMergeStatus( pDsd1, pMatches1, nVarsShared, pStatus1 );\nif fVerbose != 0 {\nfmt.Printf(\"Individual status:\\n\"); }\nif fVerbose != 0 {\nDau_DsdMergePrintWithStatus( pDsd0, pStatus0 ); }\nif fVerbose != 0 {\nDau_DsdMergePrintWithStatus( pDsd1, pStatus1 ); }\n    // prepare storage\n    Dau_DsdMergeStoreClean( pS, nVarsShared );\n    // perform substitutions\n    Dau_DsdMergeStoreCleanOutput( pS );\n    Dau_DsdMergeSubstitute( pS, pDsd0, pMatches0, pStatus0 );\n    strcpy( pDsd0, pS.pOutput );\nif fVerbose != 0 {\nfmt.Printf(\"Substitutions:\\n\"); }\nif fVerbose != 0 {\nfmt.Printf(\"%s\\n\", pDsd0); }\n\n    // perform substitutions\n    Dau_DsdMergeStoreCleanOutput( pS );\n    Dau_DsdMergeSubstitute( pS, pDsd1, pMatches1, pStatus1 );\n    strcpy( pDsd1, pS.pOutput );\nif fVerbose != 0 {\nfmt.Printf(\"%s\\n\", pDsd1); }\nif fVerbose != 0 {\nDau_DsdMergeStorePrintDefs( pS ); }\n\n    // create new function\n//    assert( nVarsTotal \u003c= 6 );\n    sprintf( pS.pOutput, \"(%s%s)\", pDsd0, pDsd1 );\n    pTruth = Dau_DsdToTruth( pS.pOutput, nVarsTotal );\n    Status = Dau_DsdDecompose( pTruth, nVarsTotal, 0, 1, pS.pOutput );\n//printf( \"%d \", Status );\n    if Status == -1 { // did not find 1-step DSD\n        return nil; }\n//    if ( Status \u003e 6 ) // non-DSD part is too large\n//        return NULL;\n    if Dau_DsdIsConst(pS.pOutput) {\n        strcpy( spStatic_Dau_DsdMerge_pRes, pS.pOutput );\n        return spStatic_Dau_DsdMerge_pRes;\n    }\nif fVerbose != 0 {\nfmt.Printf(\"Decomposition:\\n\"); }\nif fVerbose != 0 {\nfmt.Printf(\"%s\\n\", pS.pOutput); }\n    // substitute definitions\n    Dau_DsdMergeMatches( pS.pOutput, pMatches );\n    Dau_DsdMergeInlineDefinitions( pS.pOutput, pMatches, pS, spStatic_Dau_DsdMerge_pRes, nVarsShared );\nif fVerbose != 0 {\nfmt.Printf(\"Inlining:\\n\"); }\nif fVerbose != 0 {\nprintf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }\n    // perform variable replacement\n    Dau_DsdMergeMatches( spStatic_Dau_DsdMerge_pRes, pMatches );\n    Dau_DsdMergeReplace( spStatic_Dau_DsdMerge_pRes, pMatches, pNew2Old );\n    Dau_DsdRemoveBraces( spStatic_Dau_DsdMerge_pRes, pMatches );\nif fVerbose != 0 {\nfmt.Printf(\"Replaced:\\n\"); }\nif fVerbose != 0 {\nprintf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }\n    Dau_DsdNormalize( spStatic_Dau_DsdMerge_pRes );\nif fVerbose != 0 {\nfmt.Printf(\"Normalized:\\n\"); }\nif fVerbose != 0 {\nprintf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }\n\n    if fCheck != 0 {\n        pt = Dau_DsdToTruth( spStatic_Dau_DsdMerge_pRes, nVars );\n        if !Abc_TtEqual( pParts[2], pt, Abc_TtWordNum(nVars) ) {\n            fmt.Printf(\"Dau_DsdMerge(): Verification failed!\\n\"); }\n    }\n\n    if Status == 0 {\n        s_TimeComp[1] += Abc_Clock() - clk;\n    } else {\n        s_TimeComp[2] += Abc_Clock() - clk; }\n    return spStatic_Dau_DsdMerge_pRes;\n}"
+    },
+    {
+      "Name": "Dau_DsdTest66",
+      "Start": 23369,
+      "End": 24697,
+      "BodyStart": 23390,
+      "Original": "void Dau_DsdTest66()\n{\n    int Perm0[DAU_MAX_VAR] = { 0, 1, 2, 3, 4, 5 };\n//    int pMatches[DAU_MAX_STR];\n//    int pStatus[DAU_MAX_STR];\n\n//    char * pStr = \"(!(!a\u003cbcd\u003e)!(!fe))\";\n//    char * pStr = \"([acb]\u003c!edf\u003e)\";\n//    char * pStr = \"!(f!(b!c!(d[ea])))\";\n    char * pStr = \"[!(a[be])!(c!df)]\";\n//    char * pStr = \"\u003c(e\u003cbca\u003e)fd\u003e\";\n//    char * pStr = \"[d8001{abef}c]\";\n//    char * pStr1 = \"(abc)\";\n//    char * pStr2 = \"[adf]\";\n//    char * pStr1 = \"(!abce)\";\n//    char * pStr2 = \"[adf!b]\";\n//    char * pStr1 = \"(!abc)\";\n//    char * pStr2 = \"[ab]\";\n//    char * pStr1 = \"[d81{abe}c]\";\n//    char * pStr1 = \"[d\u003ca(bc)(!b!c)\u003e{abe}c]\";\n//    char * pStr1 = \"[d81{abe}c]\";\n//    char * pStr1 = \"[d(a[be])c]\";\n//    char * pStr2 = \"(df)\";\n//    char * pStr1 = \"(abf)\";\n//    char * pStr2 = \"(a[(bc)(fde)])\";\n//    char * pStr1 = \"8001{abc[ef]}\";\n//    char * pStr2 = \"(abe)\";\n\n    char * pStr1 = \"(!(ab)de)\";\n    char * pStr2 = \"(!(ac)f)\";\n\n    char * pRes;\n    word t = Dau_Dsd6ToTruth( pStr );\n    return;\n\n//    pStr2 = Dau_DsdDecompose( \u0026t, 6, 0, NULL );\n//    Dau_DsdNormalize( pStr2 );\n\n//    Dau_DsdMergeMatches( pStr, pMatches );\n//    Dau_DsdMergeStatus( pStr, pMatches, 2, pStatus );\n//    Dau_DsdMergePrintWithStatus( pStr, pStatus );\n\n    pRes = Dau_DsdMerge( pStr1, Perm0, pStr2, Perm0, 0, 0, 6 );\n\n    t = 0; \n}",
+      "Draft": "func Dau_DsdTest66() {\n    var Perm0 [DAU_MAX_VAR]int32 = [DAU_MAX_VAR]int32{ 0, 1, 2, 3, 4, 5 };\n//    int pMatches[DAU_MAX_STR];\n//    int pStatus[DAU_MAX_STR];\n\n//    char * pStr = \"(!(!a\u003cbcd\u003e)!(!fe))\";\n//    char * pStr = \"([acb]\u003c!edf\u003e)\";\n//    char * pStr = \"!(f!(b!c!(d[ea])))\";\n    var pStr string  = \"[!(a[be])!(c!df)]\";\n//    char * pStr = \"\u003c(e\u003cbca\u003e)fd\u003e\";\n//    char * pStr = \"[d8001{abef}c]\";\n//    char * pStr1 = \"(abc)\";\n//    char * pStr2 = \"[adf]\";\n//    char * pStr1 = \"(!abce)\";\n//    char * pStr2 = \"[adf!b]\";\n//    char * pStr1 = \"(!abc)\";\n//    char * pStr2 = \"[ab]\";\n//    char * pStr1 = \"[d81{abe}c]\";\n//    char * pStr1 = \"[d\u003ca(bc)(!b!c)\u003e{abe}c]\";\n//    char * pStr1 = \"[d81{abe}c]\";\n//    char * pStr1 = \"[d(a[be])c]\";\n//    char * pStr2 = \"(df)\";\n//    char * pStr1 = \"(abf)\";\n//    char * pStr2 = \"(a[(bc)(fde)])\";\n//    char * pStr1 = \"8001{abc[ef]}\";\n//    char * pStr2 = \"(abe)\";\n\n    var pStr1 string  = \"(!(ab)de)\";\n    var pStr2 string  = \"(!(ac)f)\";\n\n    var pRes string;\n    var t word  = Dau_Dsd6ToTruth( pStr );\n    return;\n\n//    pStr2 = Dau_DsdDecompose( \u0026t, 6, 0, NULL );\n//    Dau_DsdNormalize( pStr2 );\n\n//    Dau_DsdMergeMatches( pStr, pMatches );\n//    Dau_DsdMergeStatus( pStr, pMatches, 2, pStatus );\n//    Dau_DsdMergePrintWithStatus( pStr, pStatus );\n\n    pRes = Dau_DsdMerge( pStr1, Perm0, pStr2, Perm0, 0, 0, 6 );\n\n    t = 0; \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::struct::Dau_Sto_t::// counter of used variables\n    char     pOutput[DAU_MAX_STR];",
+      "Category": "struct-field-review",
+      "Symbol": "Dau_Sto_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1370,
+      "End": 1459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::struct::Dau_Sto_t::// place in the output\n    char     pStore[DAU_MAX_VAR][DAU_MAX_STR];",
+      "Category": "struct-field-review",
+      "Symbol": "Dau_Sto_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1529,
+      "End": 1622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::struct::Dau_Sto_t::// storage for definitions\n    char *   pPosStore[DAU_MAX_VAR];",
+      "Category": "struct-field-review",
+      "Symbol": "Dau_Sto_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1622,
+      "End": 1687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::struct::Dau_Sto_t",
+      "Category": "struct-review",
+      "Symbol": "Dau_Sto_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1291,
+      "End": 1723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::mechanical::sizeof::6417",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6417,
+      "End": 6423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::mechanical::static::17973",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 17973,
+      "End": 17979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::mechanical::static::18001",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 18001,
+      "End": 18007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeStoreClean",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeStoreClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1725,
+      "End": 1911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeStoreCleanOutput",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeStoreCleanOutput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1913,
+      "End": 2016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeStoreAddToOutput",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeStoreAddToOutput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2017,
+      "End": 2175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeStoreAddToOutputChar",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeStoreAddToOutputChar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2176,
+      "End": 2284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeStoreStartDef",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeStoreStartDef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2286,
+      "End": 2493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeStoreAddToDef",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeStoreAddToDef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2494,
+      "End": 2662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeStoreAddToDefChar",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeStoreAddToDefChar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2663,
+      "End": 2781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeStoreStopDef",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeStoreStopDef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2782,
+      "End": 2933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeStoreCreateDef",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeStoreCreateDef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2935,
+      "End": 3192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeStorePrintDefs",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeStorePrintDefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3193,
+      "End": 3402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::ternary::Dau_DsdMergeCopy",
+      "Category": "ternary-review",
+      "Symbol": "Dau_DsdMergeCopy",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3657,
+      "End": 3989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeCopy",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3657,
+      "End": 3989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeReplace",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeReplace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4269,
+      "End": 4863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeMatches",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeMatches",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4864,
+      "End": 5384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeVarPres",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeVarPres",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5385,
+      "End": 6074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeCountShared",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeCountShared",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6075,
+      "End": 6268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeFindShared",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeFindShared",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6269,
+      "End": 6612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeCreateMaps",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeCreateMaps",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6613,
+      "End": 7198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeInlineDefinitions",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeInlineDefinitions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7199,
+      "End": 8285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergePrintWithStatus",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergePrintWithStatus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8580,
+      "End": 8992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeStatus_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeStatus_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8993,
+      "End": 10613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeStatus",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeStatus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10614,
+      "End": 10791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeGetStatus",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeGetStatus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11048,
+      "End": 11456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeSubstitute_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeSubstitute_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11457,
+      "End": 15422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMergeSubstitute",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMergeSubstitute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15423,
+      "End": 15803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdRemoveBraces_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdRemoveBraces_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16054,
+      "End": 17086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdRemoveBraces",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdRemoveBraces",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17087,
+      "End": 17504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdMerge",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17808,
+      "End": 23366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::Dau_DsdTest66",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdTest66",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23369,
+      "End": 24697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauMerge.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 24944
+    }
+  ],
+  "Draft": "package dau\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [dauMerge.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware unmapping.]\n\n  Synopsis    [Enumeration of decompositions.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: dauMerge.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dauInt.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [Substitution storage.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n   \ntype Dau_Sto_t struct {\n    iVarUsed      int32;                          // counter of used variables\n    pOutput [DAU_MAX_STR]byte;              // storage for reduced function\n    pPosOutput    string;                        // place in the output\n    pStore [DAU_MAX_VAR][DAU_MAX_STR]byte;  // storage for definitions\n    pPosStore [DAU_MAX_VAR]string;            // place in the store\n}\n\nfunc Dau_DsdMergeStoreClean(pS *Dau_Sto_t, nShared int32) {\n    var i int32;\n    pS.iVarUsed  = nShared;\n    for  i = 0; i \u003c DAU_MAX_VAR; i++  {\n        pS.pStore[i][0] = 0;\n    }\n}\n\nfunc Dau_DsdMergeStoreCleanOutput(pS *Dau_Sto_t) {\n    pS.pPosOutput = pS.pOutput;\n}\nfunc Dau_DsdMergeStoreAddToOutput(pS *Dau_Sto_t, pBeg string, pEnd string) {\n    for  pBeg \u003c pEnd  {\n        *pS.pPosOutput++ = *pBeg++;\n    }\n}\nfunc Dau_DsdMergeStoreAddToOutputChar(pS *Dau_Sto_t, c byte) {\n    *pS.pPosOutput++ = c;\n}\n\nfunc Dau_DsdMergeStoreStartDef(pS *Dau_Sto_t, c byte) int32 {\n    pS.pPosStore[pS.iVarUsed] = pS.pStore[pS.iVarUsed];\n    if c { *pS.pPosStore[pS.iVarUsed]++ = c; }\n    return pS.iVarUsed++;\n}\nfunc Dau_DsdMergeStoreAddToDef(pS *Dau_Sto_t, New int32, pBeg string, pEnd string) {\n    for  pBeg \u003c pEnd  {\n        *pS.pPosStore[New]++ = *pBeg++;\n    }\n}\nfunc Dau_DsdMergeStoreAddToDefChar(pS *Dau_Sto_t, New int32, c byte) {\n    *pS.pPosStore[New]++ = c;\n}\nfunc Dau_DsdMergeStoreStopDef(pS *Dau_Sto_t, New int32, c byte) {\n    if c { *pS.pPosStore[New]++ = c; }\n    *pS.pPosStore[New]++ = 0;\n}\n\nfunc Dau_DsdMergeStoreCreateDef(pS *Dau_Sto_t, pBeg string, pEnd string) byte {\n    var New int32  = Dau_DsdMergeStoreStartDef( pS, 0 );\n    Dau_DsdMergeStoreAddToDef( pS, New, pBeg, pEnd );\n    Dau_DsdMergeStoreStopDef( pS, New, 0 );\n    return New;\n}\nfunc Dau_DsdMergeStorePrintDefs(pS *Dau_Sto_t) {\n    var i int32;\n    for  i = 0; i \u003c DAU_MAX_VAR; i++  {\n        if pS.pStore[i][0] {\n            fmt.Printf(\"%c = %s\\n\", 'a' + i, pS.pStore[i]); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates local copy.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DsdMergeCopy(pDsd string, fCompl int32, pRes string) {\n    if (fCompl != 0) \u0026\u0026 pDsd[0] == '!' {\n        fCompl = 0;\npDsd++; }\n    if Dau_DsdIsConst(pDsd) { // constant\n        pRes[0] = (fCompl ? byte((int32(pDsd[0]) ^ 1)) : pDsd[0]), pRes[1] = 0;\n    } else {\n        pRes = fmt.Sprintf(\"%s%s\", fCompl ? \"!\" : \"\", pDsd); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces variables according to the mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DsdMergeReplace(pDsd string, pMatches *int32, pMap *int32) {\n    var i int32;\n    for  i = 0; pDsd[i]; i++  {\n        // skip non-DSD block\n        if pDsd[i] == '\u003c' \u0026\u0026 pDsd[pMatches[i]+1] == '{' {\n            i = pMatches[i] + 1; }\n        if (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9') {\n            for  (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9')  {\n                i++;\n            } }\n        // detect variables\n        if pDsd[i] \u003e= 'a' \u0026\u0026 pDsd[i] \u003c= 'z' {\n            pDsd[i] = 'a' + pMap[ pDsd[i] - 'a' ]; }\n    }\n}\nfunc Dau_DsdMergeMatches(pDsd string, pMatches *int32) {\n    var pNested [DAU_MAX_VAR]int32;\n    var i, nNested int32;\n    for  i = 0; pDsd[i]; i++  {\n        pMatches[i] = 0;\n        if pDsd[i] == '(' || pDsd[i] == '[' || pDsd[i] == '\u003c' || pDsd[i] == '{' {\n            pNested[nNested++] = i;\n        } else if pDsd[i] == ')' || pDsd[i] == ']' || pDsd[i] == '\u003e' || pDsd[i] == '}' {\n            pMatches[pNested[--nNested]] = i; }\n        assert(nNested \u003c DAU_MAX_VAR, \"nNested \u003c DAU_MAX_VAR\");\n    }\n    assert(nNested == 0, \"nNested == 0\");\n}\nfunc Dau_DsdMergeVarPres(pDsd string, pMatches *int32, pPres *int32, Mask int32) {\n    var i int32;\n    for  i = 0; pDsd[i]; i++  {\n        // skip non-DSD block\n        if pDsd[i] == '\u003c' \u0026\u0026 pDsd[pMatches[i]+1] == '{' {\n            i = pMatches[i] + 1; }\n        if (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9') {\n            for  (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9')  {\n                i++;\n            } }\n        // skip non-variables\n        if !(pDsd[i] \u003e= 'a' \u0026\u0026 pDsd[i] \u003c= 'z') {\n            continue; }\n        // record the mask\n        assert(pDsd[i]-'a' \u003c DAU_MAX_VAR, \"pDsd[i]-'a' \u003c DAU_MAX_VAR\");\n        pPres[pDsd[i]-'a'] |= Mask;\n    }\n}\nfunc Dau_DsdMergeCountShared(pPres *int32, Mask int32) int32 {\n    var i, Counter int32;\n    for  i = 0; i \u003c DAU_MAX_VAR; i++  {\n        Counter += (pPres[i] == Mask);\n    }\n    return Counter;\n}\nfunc Dau_DsdMergeFindShared(pDsd0 string, pDsd1 string, pMatches0 *int32, pMatches1 *int32, pVarPres *int32) int32 {\n    memset( pVarPres, 0, sizeof(int)*DAU_MAX_VAR );\n    Dau_DsdMergeVarPres( pDsd0, pMatches0, pVarPres, 1 );\n    Dau_DsdMergeVarPres( pDsd1, pMatches1, pVarPres, 2 );\n    return Dau_DsdMergeCountShared( pVarPres, 3 );\n}\nfunc Dau_DsdMergeCreateMaps(pVarPres *int32, nShared int32, pOld2New *int32, pNew2Old *int32) int32 {\n    var i int32;\n    var Counter int32;\n    var Counter2 int32 = nShared;\n    for  i = 0; i \u003c DAU_MAX_VAR; i++  {\n        if pVarPres[i] == 0 {\n            continue; }\n        if pVarPres[i] == 3 {\n            pOld2New[i] = Counter;\n            pNew2Old[Counter] = i;\n            Counter++;\n            continue;\n        }\n        assert(pVarPres[i] == 1 || pVarPres[i] == 2, \"pVarPres[i] == 1 || pVarPres[i] == 2\");\n        pOld2New[i] = Counter2;\n        pNew2Old[Counter2] = i;\n        Counter2++;\n    }\n    return Counter2;\n}\nfunc Dau_DsdMergeInlineDefinitions(pDsd string, pMatches *int32, pS *Dau_Sto_t, pRes string, nShared int32) {\n    var i int32;\n    var pDef string;\n    var pBegin string  = pRes;\n    for  i = 0; pDsd[i]; i++  {\n        // skip non-DSD block\n        if pDsd[i] == '\u003c' \u0026\u0026 pDsd[pMatches[i]+1] == '{' {\n            assert(pDsd[pMatches[i]] == '\u003e', \"pDsd[pMatches[i]] == '\u003e'\");\n            for  ; i \u003c= pMatches[i]; i++  {\n                *pRes++ = pDsd[i];\n            }\n        }\n        if (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9') {\n            for  (pDsd[i] \u003e= 'A' \u0026\u0026 pDsd[i] \u003c= 'F') || (pDsd[i] \u003e= '0' \u0026\u0026 pDsd[i] \u003c= '9')  {\n                *pRes++ = pDsd[i++];\n            } }\n        // detect variables\n        if !(pDsd[i] \u003e= 'a' \u0026\u0026 pDsd[i] \u003c= 'z') || (pDsd[i] - 'a' \u003c nShared) {\n            *pRes++ = pDsd[i];\n            continue;\n        }\n        // inline definition\n        assert(pDsd[i]-'a' \u003c DAU_MAX_STR, \"pDsd[i]-'a' \u003c DAU_MAX_STR\");\n        for  pDef = pS.pStore[pDsd[i]-'a']; *pDef; pDef++  {\n            *pRes++ = *pDef;\n        }\n    }\n    *pRes++ = 0;\n    assert(pRes - pBegin \u003c DAU_MAX_STR, \"pRes - pBegin \u003c DAU_MAX_STR\");\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes independence status for each opening parenthesis.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DsdMergePrintWithStatus(p string, pStatus *int32) {\n    var i int32;\n    fmt.Printf(\"%s\\n\", p);\n    for  i = 0; p[i]; i++  {\n        if !(p[i] == '(' || p[i] == '[' || p[i] == '\u003c' || p[i] == '{' || (p[i] \u003e= 'a' \u0026\u0026 p[i] \u003c= 'z')) {\n            fmt.Printf(\" \");\n        } else if pStatus[i] \u003e= 0 {\n            fmt.Printf(\"%d\", pStatus[i]);\n        } else {\n            fmt.Printf(\"-\"); }\n    }\n    fmt.Printf(\"\\n\");\n}\nfunc Dau_DsdMergeStatus_rec(pStr string, p *string, pMatches *int32, nShared int32, pStatus *int32) int32 {\n    // none pure\n    // 1 one pure\n    // 2 two or more pure\n    // 3 all pure\n    if **p == '!' {\n        pStatus[*p - pStr] = -1;\n        (*p)++;\n    }\n    for  (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9')  {\n        pStatus[*p - pStr] = -1;\n        (*p)++;\n    }\n    if **p == '\u003c' {\n        var q string  = pStr + pMatches[ *p - pStr ];\n        if *(q+1) == '{' {\n            var pTemp string  = *p;\n            *p = q+1;\n            for  ; pTemp \u003c q+1; pTemp++  {\n                pStatus[pTemp - pStr] = -1;\n            }\n        }\n    }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' { // var\n        if pStatus[*p - pStr] = (**p - 'a' \u003c nShared) {\n            return 0;\n        } else {\n            return 3;\n        } }\n    if **p == '(' || **p == '[' || **p == '\u003c' || **p == '{' { // and/or/xor\n    \n        var Status, nPure, nTotal int32;\n        var pOld string  = *p;\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            Status = Dau_DsdMergeStatus_rec( pStr, p, pMatches, nShared, pStatus );\n            nPure += (Status == 3);\n            nTotal++;\n        }\n        assert(*p == q, \"*p == q\");\n        assert(nTotal \u003e 1, \"nTotal \u003e 1\");\n        if nPure == 0 {\n            Status = 0;\n        } else if nPure == 1 {\n            Status = 1;\n        } else if nPure \u003c nTotal {\n            Status = 2;\n        } else if nPure == nTotal { \n            Status = 3;\n        } else { assert(false, \"0\"); }\n        return (pStatus[pOld - pStr] = Status);\n    }\n    assert(false, \"0\");\n    return 0;\n}\nfunc Dau_DsdMergeStatus(pDsd string, pMatches *int32, nShared int32, pStatus *int32) int32 {\n    return Dau_DsdMergeStatus_rec( pDsd, \u0026pDsd, pMatches, nShared, pStatus );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Extracts the formula.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DsdMergeGetStatus(pBeg string, pStr string, pMatches *int32, pStatus *int32) int32 {\n    if *pBeg == '!' {\n        pBeg++; }\n    for  (*pBeg \u003e= 'A' \u0026\u0026 *pBeg \u003c= 'F') || (*pBeg \u003e= '0' \u0026\u0026 *pBeg \u003c= '9')  {\n        pBeg++;\n    }\n    if *pBeg == '\u003c' {\n        var q string  = pStr + pMatches[pBeg - pStr];\n        if *(q+1) == '{' {\n            pBeg = q+1; }\n    }\n    return pStatus[pBeg - pStr];\n}\nfunc Dau_DsdMergeSubstitute_rec(pS *Dau_Sto_t, pStr string, p *string, pMatches *int32, pStatus *int32, fWrite int32) {\n//    assert( **p != '!' );\n\n    if **p == '!' {\n        if fWrite != 0 {\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p ); }\n        (*p)++;\n    }\n\n    for  (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9')  {\n        if fWrite != 0 {\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p ); }\n        (*p)++;\n    }\n    if **p == '\u003c' {\n        var q string  = pStr + pMatches[ *p - pStr ];\n        if *(q+1) == '{' {\n            var pTemp string  = *p;\n            *p = q+1;\n            if fWrite != 0 {\n                for  ; pTemp \u003c q+1; pTemp++  {\n                    Dau_DsdMergeStoreAddToOutputChar( pS, *pTemp );\n                } }\n        }\n    }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' { // var\n    \n        if fWrite != 0 {\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p ); }\n        return;\n    }\n    if **p == '(' || **p == '[' || **p == '\u003c' || **p == '{' { // and/or/xor\n    \n        var New int32;\n        var StatusFan int32;\n        var Status int32 = pStatus[*p - pStr];\n        var pBeg string;\n        var q string = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        if !(fWrite != 0) {\n             assert(Status == 3, \"Status == 3\");\n             *p = q;\n             return;\n        }\n        assert(Status != 3, \"Status != 3\");\n        if Status == 0 { // none pure\n        \n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            for  (*p)++; *p \u003c q; (*p)++  {\n                if **p == '!' {\n                    Dau_DsdMergeStoreAddToOutputChar( pS, '!' );\n                    (*p)++;\n                }\n                Dau_DsdMergeSubstitute_rec( pS, pStr, p, pMatches, pStatus, 1 );\n            }\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            assert(*p == q, \"*p == q\");\n            return;\n        }\n        if Status == 1 || **p == '\u003c' || **p == '{' { // 1 pure\n        \n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            for  (*p)++; *p \u003c q; (*p)++  {\n                if **p == '!' {\n                    Dau_DsdMergeStoreAddToOutputChar( pS, '!' );\n                    (*p)++;\n                }\n                pBeg = *p;\n                StatusFan = Dau_DsdMergeGetStatus( pBeg, pStr, pMatches, pStatus );\n                Dau_DsdMergeSubstitute_rec( pS, pStr, p, pMatches, pStatus, StatusFan != 3 );\n                if StatusFan == 3 {\n                    var New int32  = Dau_DsdMergeStoreCreateDef( pS, pBeg, *p+1 );\n                    Dau_DsdMergeStoreAddToOutputChar( pS, byte(('a' + New)) );\n                }\n            }\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            assert(*p == q, \"*p == q\");\n            return;\n        }\n        if Status == 2 {\n            // add more than one defs\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            New = Dau_DsdMergeStoreStartDef( pS, **p );\n            for  (*p)++; *p \u003c q; (*p)++  {\n                pBeg = *p;\n                StatusFan = Dau_DsdMergeGetStatus( pBeg, pStr, pMatches, pStatus );\n                if **p == '!' {\n                    if StatusFan != 3 {\n                        Dau_DsdMergeStoreAddToOutputChar( pS, '!' );\n                    } else {\n                        Dau_DsdMergeStoreAddToDefChar( pS, New, '!' ); }\n                    (*p)++;\n                    pBeg++;\n                }\n                Dau_DsdMergeSubstitute_rec( pS, pStr, p, pMatches, pStatus, StatusFan != 3 );\n                if StatusFan == 3 {\n                    Dau_DsdMergeStoreAddToDef( pS, New, pBeg, *p+1 ); }\n            }\n            Dau_DsdMergeStoreStopDef( pS, New, *q );\n            Dau_DsdMergeStoreAddToOutputChar( pS, byte(('a' + New)) );\n            Dau_DsdMergeStoreAddToOutputChar( pS, **p );\n            return;\n        }\n        assert(false, \"0\");\n        return;\n    }\n    assert(false, \"0\");\n}\nfunc Dau_DsdMergeSubstitute(pS *Dau_Sto_t, pDsd string, pMatches *int32, pStatus *int32) {\n/*\n    int fCompl = 0;\n    if ( pDsd[0] == '!' )\n    {\n        Dau_DsdMergeStoreAddToOutputChar( pS, '!' );\n        pDsd++;\n        fCompl = 1;\n    }\n*/\n    Dau_DsdMergeSubstitute_rec( pS, pDsd, \u0026pDsd, pMatches, pStatus, 1 );\n    Dau_DsdMergeStoreAddToOutputChar( pS, 0 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes braces.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DsdRemoveBraces_rec(pStr string, p *string, pMatches *int32) {\n    if **p == '!' {\n        (*p)++; }\n    for  (**p \u003e= 'A' \u0026\u0026 **p \u003c= 'F') || (**p \u003e= '0' \u0026\u0026 **p \u003c= '9')  {\n        (*p)++;\n    }\n    if **p == '\u003c' {\n        var q string  = pStr + pMatches[*p - pStr];\n        if *(q+1) == '{' {\n            *p = q+1; }\n    }\n    if **p \u003e= 'a' \u0026\u0026 **p \u003c= 'z' { // var\n        return; }\n    if **p == '(' || **p == '[' || **p == '\u003c' || **p == '{' {\n        var q string  = pStr + pMatches[ *p - pStr ];\n        assert(*q == **p + 1 + (**p != '('), \"*q == **p + 1 + (**p != '(')\");\n        for  (*p)++; *p \u003c q; (*p)++  {\n            var fCompl int32  = (**p == '!');\n            var pBeg string;\n            if fCompl != 0 {\n                pBeg = *p + 1;\n            } else {\n                pBeg = *p;\n            }\n            Dau_DsdRemoveBraces_rec( pStr, p, pMatches );\n            if (!(fCompl != 0) \u0026\u0026 *pBeg == '(' \u0026\u0026 *q == ')') || (*pBeg == '[' \u0026\u0026 *q == ']') {\n                assert(**p == ')' || **p == ']', \"**p == ')' || **p == ']'\");\n                *pBeg = **p = ' ';\n            }\n        }\n        assert(*p == q, \"*p == q\");\n        return;\n    }\n    assert(false, \"0\");\n}\nfunc Dau_DsdRemoveBraces(pDsd string, pMatches *int32) {\n    var q string;\n    var p string = pDsd;\n    if pDsd[1] == 0 {\n        return; }\n    Dau_DsdRemoveBraces_rec( pDsd, \u0026pDsd, pMatches );\n    for  q = p; *p; p++  {\n        if *p != ' ' {\n            if *p == '!' \u0026\u0026 *(q-1) == '!' \u0026\u0026 p != q {\n                q--;\n                continue;\n            }\n            *q++ = *p;\n        }\n    }\n    *q = 0;\n}\n\n\nvar s_TimeComp [4]abctime ;\n\n/**Function*************************************************************\n\n  Synopsis    [Performs merging of two DSD formulas.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Dau_DsdMerge_Counter int32;\nvar spStatic_Dau_DsdMerge_pRes string // was [2*DAU_MAX_STR+10]byte in C\n\nfunc Dau_DsdMerge(pDsd0i string, pPerm0 *int32, pDsd1i string, pPerm1 *int32, fCompl0 int32, fCompl1 int32, nVars int32) string {\n    var fVerbose int32;\n    var fCheck int32;\n    \n    \n    var pDsd0 [DAU_MAX_STR]byte;\n    var pDsd1 [DAU_MAX_STR]byte;\n    var pMatches0 [DAU_MAX_STR]int32;\n    var pMatches1 [DAU_MAX_STR]int32;\n    var pVarPres [DAU_MAX_VAR]int32;\n    var pOld2New [DAU_MAX_VAR]int32;\n    var pNew2Old [DAU_MAX_VAR]int32;\n    var pStatus0 [DAU_MAX_STR]int32;\n    var pStatus1 [DAU_MAX_STR]int32;\n    var pMatches [DAU_MAX_STR]int32;\n    var nVarsShared, nVarsTotal int32;\n    var S Dau_Sto_t;\n    var pS *Dau_Sto_t = \u0026S;\n    var pTruth *word;\n    var pt *word = nil;\n    var pt0 *word = nil;\n    var pt1 *word = nil;\n    var pParts [3][DAU_MAX_WORD]word;\n    var Status int32;\n    var clk abctime  = Abc_Clock();\n    spStatic_Dau_DsdMerge_Counter++;\n    // create local copies\n    Dau_DsdMergeCopy( pDsd0i, fCompl0, pDsd0 );\n    Dau_DsdMergeCopy( pDsd1i, fCompl1, pDsd1 );\nif fVerbose != 0 {\nfmt.Printf(\"\\nAfter copying:\\n\"); }\nif fVerbose != 0 {\nfmt.Printf(\"%s\\n\", pDsd0); }\nif fVerbose != 0 {\nfmt.Printf(\"%s\\n\", pDsd1); }\n    // handle constants\n    if Dau_DsdIsConst(pDsd0) || Dau_DsdIsConst(pDsd1) {\n        if Dau_DsdIsConst0(pDsd0) {\n            strcpy( spStatic_Dau_DsdMerge_pRes, pDsd0 );\n        } else if Dau_DsdIsConst1(pDsd0) {\n            strcpy( spStatic_Dau_DsdMerge_pRes, pDsd1 );\n        } else if Dau_DsdIsConst0(pDsd1) {\n            strcpy( spStatic_Dau_DsdMerge_pRes, pDsd1 );\n        } else if Dau_DsdIsConst1(pDsd1) {\n            strcpy( spStatic_Dau_DsdMerge_pRes, pDsd0 );\n        } else { assert(false, \"0\"); }\n        return spStatic_Dau_DsdMerge_pRes;\n    }\n\n    // compute matches\n    Dau_DsdMergeMatches( pDsd0, pMatches0 );\n    Dau_DsdMergeMatches( pDsd1, pMatches1 );\n    // implement permutation\n    Dau_DsdMergeReplace( pDsd0, pMatches0, pPerm0 );\n    Dau_DsdMergeReplace( pDsd1, pMatches1, pPerm1 );\nif fVerbose != 0 {\nfmt.Printf(\"After replacement:\\n\"); }\nif fVerbose != 0 {\nfmt.Printf(\"%s\\n\", pDsd0); }\nif fVerbose != 0 {\nfmt.Printf(\"%s\\n\", pDsd1); }\n\n\n    if fCheck != 0 {\n        pt0 = Dau_DsdToTruth( pDsd0, nVars );\n        Abc_TtCopy( pParts[0], pt0, Abc_TtWordNum(nVars), 0 );\n    }\n    if fCheck != 0 {\n        pt1 = Dau_DsdToTruth( pDsd1, nVars );\n        Abc_TtCopy( pParts[1], pt1, Abc_TtWordNum(nVars), 0 );\n        Abc_TtAnd( pParts[2], pParts[0], pParts[1], Abc_TtWordNum(nVars), 0 );\n    }\n\n    // find shared varaiables\n    nVarsShared = Dau_DsdMergeFindShared(pDsd0, pDsd1, pMatches0, pMatches1, pVarPres);\n    if nVarsShared == 0 {\n        spStatic_Dau_DsdMerge_pRes = fmt.Sprintf(\"(%s%s)\", pDsd0, pDsd1);\nif fVerbose != 0 {\nfmt.Printf(\"Disjoint:\\n\"); }\nif fVerbose != 0 {\nprintf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }\n\n        Dau_DsdMergeMatches( spStatic_Dau_DsdMerge_pRes, pMatches );\n        Dau_DsdRemoveBraces( spStatic_Dau_DsdMerge_pRes, pMatches );\n        Dau_DsdNormalize( spStatic_Dau_DsdMerge_pRes );\nif fVerbose != 0 {\nfmt.Printf(\"Normalized:\\n\"); }\nif fVerbose != 0 {\nprintf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }\n\n        s_TimeComp[0] += Abc_Clock() - clk;\n        return spStatic_Dau_DsdMerge_pRes;\n    }\ns_TimeComp[3] += Abc_Clock() - clk;\n    // create variable mapping\n    nVarsTotal = Dau_DsdMergeCreateMaps( pVarPres, nVarsShared, pOld2New, pNew2Old );\n    // perform variable replacement\n    Dau_DsdMergeReplace( pDsd0, pMatches0, pOld2New );\n    Dau_DsdMergeReplace( pDsd1, pMatches1, pOld2New );\n    // find uniqueness status\n    Dau_DsdMergeStatus( pDsd0, pMatches0, nVarsShared, pStatus0 );\n    Dau_DsdMergeStatus( pDsd1, pMatches1, nVarsShared, pStatus1 );\nif fVerbose != 0 {\nfmt.Printf(\"Individual status:\\n\"); }\nif fVerbose != 0 {\nDau_DsdMergePrintWithStatus( pDsd0, pStatus0 ); }\nif fVerbose != 0 {\nDau_DsdMergePrintWithStatus( pDsd1, pStatus1 ); }\n    // prepare storage\n    Dau_DsdMergeStoreClean( pS, nVarsShared );\n    // perform substitutions\n    Dau_DsdMergeStoreCleanOutput( pS );\n    Dau_DsdMergeSubstitute( pS, pDsd0, pMatches0, pStatus0 );\n    strcpy( pDsd0, pS.pOutput );\nif fVerbose != 0 {\nfmt.Printf(\"Substitutions:\\n\"); }\nif fVerbose != 0 {\nfmt.Printf(\"%s\\n\", pDsd0); }\n\n    // perform substitutions\n    Dau_DsdMergeStoreCleanOutput( pS );\n    Dau_DsdMergeSubstitute( pS, pDsd1, pMatches1, pStatus1 );\n    strcpy( pDsd1, pS.pOutput );\nif fVerbose != 0 {\nfmt.Printf(\"%s\\n\", pDsd1); }\nif fVerbose != 0 {\nDau_DsdMergeStorePrintDefs( pS ); }\n\n    // create new function\n//    assert( nVarsTotal \u003c= 6 );\n    sprintf( pS.pOutput, \"(%s%s)\", pDsd0, pDsd1 );\n    pTruth = Dau_DsdToTruth( pS.pOutput, nVarsTotal );\n    Status = Dau_DsdDecompose( pTruth, nVarsTotal, 0, 1, pS.pOutput );\n//printf( \"%d \", Status );\n    if Status == -1 { // did not find 1-step DSD\n        return nil; }\n//    if ( Status \u003e 6 ) // non-DSD part is too large\n//        return NULL;\n    if Dau_DsdIsConst(pS.pOutput) {\n        strcpy( spStatic_Dau_DsdMerge_pRes, pS.pOutput );\n        return spStatic_Dau_DsdMerge_pRes;\n    }\nif fVerbose != 0 {\nfmt.Printf(\"Decomposition:\\n\"); }\nif fVerbose != 0 {\nfmt.Printf(\"%s\\n\", pS.pOutput); }\n    // substitute definitions\n    Dau_DsdMergeMatches( pS.pOutput, pMatches );\n    Dau_DsdMergeInlineDefinitions( pS.pOutput, pMatches, pS, spStatic_Dau_DsdMerge_pRes, nVarsShared );\nif fVerbose != 0 {\nfmt.Printf(\"Inlining:\\n\"); }\nif fVerbose != 0 {\nprintf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }\n    // perform variable replacement\n    Dau_DsdMergeMatches( spStatic_Dau_DsdMerge_pRes, pMatches );\n    Dau_DsdMergeReplace( spStatic_Dau_DsdMerge_pRes, pMatches, pNew2Old );\n    Dau_DsdRemoveBraces( spStatic_Dau_DsdMerge_pRes, pMatches );\nif fVerbose != 0 {\nfmt.Printf(\"Replaced:\\n\"); }\nif fVerbose != 0 {\nprintf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }\n    Dau_DsdNormalize( spStatic_Dau_DsdMerge_pRes );\nif fVerbose != 0 {\nfmt.Printf(\"Normalized:\\n\"); }\nif fVerbose != 0 {\nprintf( \"%s\\n\", spStatic_Dau_DsdMerge_pRes ); }\n\n    if fCheck != 0 {\n        pt = Dau_DsdToTruth( spStatic_Dau_DsdMerge_pRes, nVars );\n        if !Abc_TtEqual( pParts[2], pt, Abc_TtWordNum(nVars) ) {\n            fmt.Printf(\"Dau_DsdMerge(): Verification failed!\\n\"); }\n    }\n\n    if Status == 0 {\n        s_TimeComp[1] += Abc_Clock() - clk;\n    } else {\n        s_TimeComp[2] += Abc_Clock() - clk; }\n    return spStatic_Dau_DsdMerge_pRes;\n}\n\n\nfunc Dau_DsdTest66() {\n    var Perm0 [DAU_MAX_VAR]int32 = [DAU_MAX_VAR]int32{ 0, 1, 2, 3, 4, 5 };\n//    int pMatches[DAU_MAX_STR];\n//    int pStatus[DAU_MAX_STR];\n\n//    char * pStr = \"(!(!a\u003cbcd\u003e)!(!fe))\";\n//    char * pStr = \"([acb]\u003c!edf\u003e)\";\n//    char * pStr = \"!(f!(b!c!(d[ea])))\";\n    var pStr string  = \"[!(a[be])!(c!df)]\";\n//    char * pStr = \"\u003c(e\u003cbca\u003e)fd\u003e\";\n//    char * pStr = \"[d8001{abef}c]\";\n//    char * pStr1 = \"(abc)\";\n//    char * pStr2 = \"[adf]\";\n//    char * pStr1 = \"(!abce)\";\n//    char * pStr2 = \"[adf!b]\";\n//    char * pStr1 = \"(!abc)\";\n//    char * pStr2 = \"[ab]\";\n//    char * pStr1 = \"[d81{abe}c]\";\n//    char * pStr1 = \"[d\u003ca(bc)(!b!c)\u003e{abe}c]\";\n//    char * pStr1 = \"[d81{abe}c]\";\n//    char * pStr1 = \"[d(a[be])c]\";\n//    char * pStr2 = \"(df)\";\n//    char * pStr1 = \"(abf)\";\n//    char * pStr2 = \"(a[(bc)(fde)])\";\n//    char * pStr1 = \"8001{abc[ef]}\";\n//    char * pStr2 = \"(abe)\";\n\n    var pStr1 string  = \"(!(ab)de)\";\n    var pStr2 string  = \"(!(ac)f)\";\n\n    var pRes string;\n    var t word  = Dau_Dsd6ToTruth( pStr );\n    return;\n\n//    pStr2 = Dau_DsdDecompose( \u0026t, 6, 0, NULL );\n//    Dau_DsdNormalize( pStr2 );\n\n//    Dau_DsdMergeMatches( pStr, pMatches );\n//    Dau_DsdMergeStatus( pStr, pMatches, 2, pStatus );\n//    Dau_DsdMergePrintWithStatus( pStr, pStatus );\n\n    pRes = Dau_DsdMerge( pStr1, Perm0, pStr2, Perm0, 0, 0, 6 );\n\n    t = 0; \n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

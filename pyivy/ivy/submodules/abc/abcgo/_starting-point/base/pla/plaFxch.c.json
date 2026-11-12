@@ -1,0 +1,2001 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c",
+  "SHA256": "12640dd91e754da3f7dcce97c9b9442ea1f2df241b1a340cf8ba3c6b06e01e75",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 100,
+        "Column": 27,
+        "ByteOffset": 3523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 102,
+        "Column": 9,
+        "ByteOffset": 3579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 9,
+        "ByteOffset": 3825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"# BLIF file written via PLA package in ABC on \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 9,
+        "ByteOffset": 3901
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 9,
+        "ByteOffset": 3952
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 9,
+        "ByteOffset": 4004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".model %s\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 9,
+        "ByteOffset": 4056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".inputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 13,
+        "ByteOffset": 4139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" i%d\", i );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 9,
+        "ByteOffset": 4186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 9,
+        "ByteOffset": 4218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".outputs o\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 9,
+        "ByteOffset": 4258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 9,
+        "ByteOffset": 4312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".names\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 125,
+        "Column": 13,
+        "ByteOffset": 4403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" i%d\", i );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 9,
+        "ByteOffset": 4450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" o\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 139,
+        "Column": 13,
+        "ByteOffset": 4958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s 1\\n\", Vec_StrArray(vStr) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 146,
+        "Column": 13,
+        "ByteOffset": 5240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".names\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 147,
+        "Column": 13,
+        "ByteOffset": 5280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" i%d\", Abc_Lit2Var(pLits[0]) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 13,
+        "ByteOffset": 5341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" i%d\", Abc_Lit2Var(pLits[1]) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 149,
+        "Column": 13,
+        "ByteOffset": 5402
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" i%d\\n\", i );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 13,
+        "ByteOffset": 5445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d%d 1\\n\", !Abc_LitIsCompl(pLits[0]), !Abc_LitIsCompl(pLits[1]) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 9,
+        "ByteOffset": 5547
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".end\\n\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 153,
+        "Column": 9,
+        "ByteOffset": 5585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 5610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Written BLIF file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 171,
+        "Column": 26,
+        "ByteOffset": 6070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var p *Fxch_Man_t  = ABC_CALLOC( Fxch_Man_t, 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 6655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(\u0026p.vCubeLinks) == Vec_WecSize(\u0026p.vCubes) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 192,
+        "Column": 5,
+        "ByteOffset": 6784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( LogSize \u003c= 26 );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 194,
+        "Column": 15,
+        "ByteOffset": 6860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pBins = ABC_CALLOC( Fxch_Obj_t, p.SizeMask + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 195,
+        "Column": 5,
+        "ByteOffset": 6906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nLits+1 \u003c p.SizeMask+1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 220,
+        "Column": 5,
+        "ByteOffset": 7697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pBins );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 5,
+        "ByteOffset": 7722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 295,
+        "Column": 5,
+        "ByteOffset": 10469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iInd1 \u003e= 0 \u0026\u0026 iInd1 \u003c Vec_IntSize(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 297,
+        "Column": 5,
+        "ByteOffset": 10542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iInd1 \u003e= 0 \u0026\u0026 iInd1 \u003c Vec_IntSize(p) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 308,
+        "Column": 5,
+        "ByteOffset": 10969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p) == k + 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 346,
+        "Column": 5,
+        "ByteOffset": 12048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Lit0 != Lit1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 354,
+        "Column": 9,
+        "ByteOffset": 12359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_FltSize(\u0026p.vWeights) == Vec_WecSize(\u0026p.vPairs) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 368,
+        "Column": 5,
+        "ByteOffset": 12824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Lit0 != Lit1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 373,
+        "Column": 5,
+        "ByteOffset": 13006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iDiv \u003e 0 \u0026\u0026 iDiv \u003c Vec_FltSize(\u0026p.vWeights) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 396,
+        "Column": 63,
+        "ByteOffset": 13758
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Fxch_TabEntryId(p *Fxch_Man_t, pEnt *Fxch_Obj_t) int32 { assert(pEnt \u003e p.pBins); return pEnt - p.pBins; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 401,
+        "Column": 5,
+        "ByteOffset": 13963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pI.Next == j );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 402,
+        "Column": 5,
+        "ByteOffset": 13991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pJ.Prev == i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 403,
+        "Column": 5,
+        "ByteOffset": 14019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pI.MarkN == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 404,
+        "Column": 5,
+        "ByteOffset": 14048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pI.MarkP == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 405,
+        "Column": 5,
+        "ByteOffset": 14077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pJ.MarkN == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 406,
+        "Column": 5,
+        "ByteOffset": 14106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pJ.MarkP == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 413,
+        "Column": 5,
+        "ByteOffset": 14326
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pI.Next == j );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 414,
+        "Column": 5,
+        "ByteOffset": 14354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pJ.Prev == i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 415,
+        "Column": 5,
+        "ByteOffset": 14382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pI.MarkN == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 416,
+        "Column": 5,
+        "ByteOffset": 14411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pI.MarkP == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 417,
+        "Column": 5,
+        "ByteOffset": 14440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pJ.MarkN == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 418,
+        "Column": 5,
+        "ByteOffset": 14469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pJ.MarkP == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 427,
+        "Column": 5,
+        "ByteOffset": 14791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pN.Prev == i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 428,
+        "Column": 5,
+        "ByteOffset": 14819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( fSkipCheck || pI.MarkN == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 429,
+        "Column": 5,
+        "ByteOffset": 14862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( fSkipCheck || pN.MarkP == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 430,
+        "Column": 5,
+        "ByteOffset": 14905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( fSkipCheck || pJ.MarkN == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 431,
+        "Column": 5,
+        "ByteOffset": 14948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( fSkipCheck || pJ.MarkP == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 440,
+        "Column": 5,
+        "ByteOffset": 15306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pI.Next == j );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 441,
+        "Column": 5,
+        "ByteOffset": 15334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pJ.Prev == i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 442,
+        "Column": 5,
+        "ByteOffset": 15362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pN.Prev == j );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 443,
+        "Column": 5,
+        "ByteOffset": 15390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pI.MarkN == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 444,
+        "Column": 5,
+        "ByteOffset": 15419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pJ.MarkP == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 445,
+        "Column": 5,
+        "ByteOffset": 15448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pJ.MarkN == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 446,
+        "Column": 5,
+        "ByteOffset": 15477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pN.MarkP == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 459,
+        "Column": 5,
+        "ByteOffset": 15900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCell.MarkN == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 460,
+        "Column": 5,
+        "ByteOffset": 15932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCell.MarkP == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 461,
+        "Column": 5,
+        "ByteOffset": 15964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCell.Cube == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 480,
+        "Column": 9,
+        "ByteOffset": 16840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iDiv \u003c Vec_WecSize(\u0026p.vPairs) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 492,
+        "Column": 5,
+        "ByteOffset": 17201
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iEnt == int32(pBin.Table) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 501,
+        "Column": 5,
+        "ByteOffset": 17576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pLink.Cube == hCube );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 517,
+        "Column": 9,
+        "ByteOffset": 18067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pLink.Prev == iLink );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 525,
+        "Column": 5,
+        "ByteOffset": 18272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Fxch_TabCompare(p, pPair.Cube, hCube) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 553,
+        "Column": 9,
+        "ByteOffset": 19236
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Lit \u003c Lit2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 583,
+        "Column": 5,
+        "ByteOffset": 20287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vHash == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 625,
+        "Column": 5,
+        "ByteOffset": 21873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 645,
+        "Column": 5,
+        "ByteOffset": 22866
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(\u0026p.vCubesD) % 2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 647,
+        "Column": 5,
+        "ByteOffset": 22953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(\u0026p.vCubesD) % 2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 709,
+        "Column": 9,
+        "ByteOffset": 25534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vCube1, Pla_CubeLit(hCube1)) == Abc_LitNot(Lit0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 710,
+        "Column": 9,
+        "ByteOffset": 25615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vCube2, Pla_CubeLit(hCube2)) == Abc_LitNot(Lit1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 756,
+        "Column": 5,
+        "ByteOffset": 27442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Num =%6d  \", Vec_WrdSize(\u0026p.vDivs) - p.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 757,
+        "Column": 5,
+        "ByteOffset": 27503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cubes =%8d  \", Vec_WecSizeUsed(\u0026p.vCubes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 758,
+        "Column": 5,
+        "ByteOffset": 27561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Lits  =%8d  \", p.nLits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 759,
+        "Column": 5,
+        "ByteOffset": 27600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Divs  =%8d  \", Hash_IntManEntryNum(p.vHash) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 760,
+        "Column": 5,
+        "ByteOffset": 27660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Divs+ =%8d  \", Vec_QueSize(p.vPrio) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 761,
+        "Column": 5,
+        "ByteOffset": 27712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PairS =%6d  \", p.nPairsS );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 762,
+        "Column": 5,
+        "ByteOffset": 27753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PairD =%6d  \", p.nPairsD );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 770,
+        "Column": 5,
+        "ByteOffset": 28037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 771,
+        "Column": 5,
+        "ByteOffset": 28090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Div %4d : \", iDiv );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 772,
+        "Column": 5,
+        "ByteOffset": 28124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Weight %12.5f  \", Vec_FltEntry(\u0026p.vWeights, iDiv) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 773,
+        "Column": 5,
+        "ByteOffset": 28190
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Pairs = %5d  \",   Vec_IntSize(Vec_WecEntry(\u0026p.vPairs, iDiv))/2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 776,
+        "Column": 13,
+        "ByteOffset": 28363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", !Abc_LitIsCompl(Lit0) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 778,
+        "Column": 13,
+        "ByteOffset": 28457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", !Abc_LitIsCompl(Lit1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 780,
+        "Column": 13,
+        "ByteOffset": 28525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"-\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 782,
+        "Column": 5,
+        "ByteOffset": 28552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 789,
+        "Column": 5,
+        "ByteOffset": 28740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 833,
+        "Column": 5,
+        "ByteOffset": 30081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( pFileName, \"%s.blif\", Pla_ManName(p) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fxch_ManCube",
+      "Start": 2570,
+      "End": 2694,
+      "BodyStart": 2638,
+      "Original": "static inline Vec_Int_t * Fxch_ManCube( Fxch_Man_t * p, int hCube ) { return Vec_WecEntry(\u0026p-\u003evCubes, Pla_CubeNum(hCube)); }",
+      "Draft": "func Fxch_ManCube(p *Fxch_Man_t, hCube int32) *Vec_Int_t { return Vec_WecEntry(\u0026p.vCubes, Pla_CubeNum(hCube)); }"
+    },
+    {
+      "Name": "Fxch_ManWriteBlif",
+      "Start": 3191,
+      "End": 5467,
+      "BodyStart": 3273,
+      "Original": "void Fxch_ManWriteBlif( char * pFileName, Vec_Wec_t * vCubes, Vec_Wrd_t * vDivs )\n{\n    // find the number of original variables\n    int nVarsInit = Vec_WrdCountZero(vDivs);\n    FILE * pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );\n    else\n    {\n        //char * pLits = \"-01?\";\n        Vec_Str_t * vStr;\n        Vec_Int_t * vCube;\n        int i, k, Lit;\n        word Div;\n        // comment\n        fprintf( pFile, \"# BLIF file written via PLA package in ABC on \" );\n        fprintf( pFile, \"%s\", Extra_TimeStamp() );\n        fprintf( pFile, \"\\n\\n\" );\n        // header\n        fprintf( pFile, \".model %s\\n\", pFileName );\n        fprintf( pFile, \".inputs\" );\n        for ( i = 0; i \u003c nVarsInit; i++ )\n            fprintf( pFile, \" i%d\", i );\n        fprintf( pFile, \"\\n\" );\n        fprintf( pFile, \".outputs o\" );\n        fprintf( pFile, \"\\n\" );\n        // SOP header\n        fprintf( pFile, \".names\" );\n        for ( i = 0; i \u003c Vec_WrdSize(vDivs); i++ )\n            fprintf( pFile, \" i%d\", i );\n        fprintf( pFile, \" o\\n\" );\n        // SOP cubes\n        vStr = Vec_StrStart( Vec_WrdSize(vDivs) + 1 );\n        Vec_WecForEachLevel( vCubes, vCube, i )\n        {\n            if ( !Vec_IntSize(vCube) )\n                continue;\n            for ( k = 0; k \u003c Vec_WrdSize(vDivs); k++ )\n                Vec_StrWriteEntry( vStr, k, '-' );\n            Vec_IntForEachEntry( vCube, Lit, k )\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), (char)(Abc_LitIsCompl(Lit) ? '0' : '1') );\n            fprintf( pFile, \"%s 1\\n\", Vec_StrArray(vStr) );\n        }\n        Vec_StrFree( vStr );\n        // divisors\n        Vec_WrdForEachEntryStart( vDivs, Div, i, nVarsInit )\n        {\n            int pLits[2] = { (int)(Div \u0026 0xFFFFFFFF), (int)(Div \u003e\u003e 32) };\n            fprintf( pFile, \".names\" );\n            fprintf( pFile, \" i%d\", Abc_Lit2Var(pLits[0]) );\n            fprintf( pFile, \" i%d\", Abc_Lit2Var(pLits[1]) );\n            fprintf( pFile, \" i%d\\n\", i );\n            fprintf( pFile, \"%d%d 1\\n\", !Abc_LitIsCompl(pLits[0]), !Abc_LitIsCompl(pLits[1]) );\n        }\n        fprintf( pFile, \".end\\n\\n\" );\n        fclose( pFile );\n        printf( \"Written BLIF file \\\"%s\\\".\\n\", pFileName );\n    }\n}",
+      "Draft": "func Fxch_ManWriteBlif(pFileName string, vCubes *Vec_Wec_t, vDivs *Vec_Wrd_t) {\n    // find the number of original variables\n    var nVarsInit int32  = Vec_WrdCountZero(vDivs);\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n    } else {\n        //char * pLits = \"-01?\";\n        var vStr *Vec_Str_t;\n        var vCube *Vec_Int_t;\n        var i, k, Lit int32;\n        var Div word;\n        // comment\n        fmt.Fprintf(pFile, \"# BLIF file written via PLA package in ABC on \");\n        fmt.Fprintf(pFile, \"%s\", Extra_TimeStamp());\n        fmt.Fprintf(pFile, \"\\n\\n\");\n        // header\n        fmt.Fprintf(pFile, \".model %s\\n\", pFileName);\n        fmt.Fprintf(pFile, \".inputs\");\n        for  i = 0; i \u003c nVarsInit; i++  {\n            fmt.Fprintf(pFile, \" i%d\", i);\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n        fmt.Fprintf(pFile, \".outputs o\");\n        fmt.Fprintf(pFile, \"\\n\");\n        // SOP header\n        fmt.Fprintf(pFile, \".names\");\n        for  i = 0; i \u003c Vec_WrdSize(vDivs); i++  {\n            fmt.Fprintf(pFile, \" i%d\", i);\n        }\n        fmt.Fprintf(pFile, \" o\\n\");\n        // SOP cubes\n        vStr = Vec_StrStart( Vec_WrdSize(vDivs) + 1 );\n        Vec_WecForEachLevel( vCubes, vCube, i )\n        {\n            if !Vec_IntSize(vCube) {\n                continue; }\n            for  k = 0; k \u003c Vec_WrdSize(vDivs); k++  {\n                Vec_StrWriteEntry( vStr, k, '-' );\n            }\n            Vec_IntForEachEntry( vCube, Lit, k )\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), byte((Abc_LitIsCompl(Lit) ? '0' : '1')) );\n            fmt.Fprintf(pFile, \"%s 1\\n\", Vec_StrArray(vStr));\n        }\n        Vec_StrFree( vStr );\n        // divisors\n        Vec_WrdForEachEntryStart( vDivs, Div, i, nVarsInit )\n        {\n            var pLits [2]int32 = [2]int32{ int32((Div \u0026 0xFFFFFFFF)), int32((Div \u003e\u003e 32)) };\n            fmt.Fprintf(pFile, \".names\");\n            fmt.Fprintf(pFile, \" i%d\", Abc_Lit2Var(pLits[0]));\n            fmt.Fprintf(pFile, \" i%d\", Abc_Lit2Var(pLits[1]));\n            fmt.Fprintf(pFile, \" i%d\\n\", i);\n            fmt.Fprintf(pFile, \"%d%d 1\\n\", !Abc_LitIsCompl(pLits[0]), !Abc_LitIsCompl(pLits[1]));\n        }\n        fmt.Fprintf(pFile, \".end\\n\\n\");\n        _ = (pFile).Close();\n        fmt.Printf(\"Written BLIF file \\\"%s\\\".\\n\", pFileName);\n    }\n}"
+    },
+    {
+      "Name": "Fxch_ManStart",
+      "Start": 5724,
+      "End": 7058,
+      "BodyStart": 5792,
+      "Original": "Fxch_Man_t * Fxch_ManStart( Vec_Wec_t * vCubes, Vec_Wec_t * vLits )\n{\n    Vec_Int_t * vCube;  int i, LogSize;\n    Fxch_Man_t * p = ABC_CALLOC( Fxch_Man_t, 1 );\n    p-\u003evCubes = *vCubes;\n    p-\u003evLits  = *vLits;\n    p-\u003enVars  = Vec_WecSize(vLits)/2;\n    p-\u003enLits  = 0;\n    // random numbers\n    Gia_ManRandom( 1 );\n    Vec_IntGrow( \u0026p-\u003evRands, 2*p-\u003enVars );\n    for ( i = 0; i \u003c 2*p-\u003enVars; i++ )\n        Vec_IntPush( \u0026p-\u003evRands, Gia_ManRandom(0) \u0026 0x3FFFFFF ); // assert( LogSize \u003c= 26 );\n    // create cube links\n    Vec_IntGrow( \u0026p-\u003evCubeLinks, Vec_WecSize(\u0026p-\u003evCubes) );\n    Vec_WecForEachLevel( vCubes, vCube, i )\n    {\n        Vec_IntPush( \u0026p-\u003evCubeLinks, p-\u003enLits+1 );\n        p-\u003enLits += Vec_IntSize(vCube);\n    }\n    assert( Vec_IntSize(\u0026p-\u003evCubeLinks) == Vec_WecSize(\u0026p-\u003evCubes) );\n    // create table\n    LogSize = Abc_Base2Log( p-\u003enLits+1 );\n    assert( LogSize \u003c= 26 );\n    p-\u003eSizeMask = (1 \u003c\u003c LogSize) - 1;\n    p-\u003epBins = ABC_CALLOC( Fxch_Obj_t, p-\u003eSizeMask + 1 );\n    assert( p-\u003enLits+1 \u003c p-\u003eSizeMask+1 );\n    // divisor weights and cube pairs\n    Vec_FltGrow( \u0026p-\u003evWeights, 1000 );\n    Vec_FltPush( \u0026p-\u003evWeights, -1 );\n    Vec_WecGrow( \u0026p-\u003evPairs, 1000 );\n    Vec_WecPushLevel( \u0026p-\u003evPairs );\n    // prepare divisors\n    Vec_WrdGrow( \u0026p-\u003evDivs, p-\u003enVars + 1000 );\n    Vec_WrdFill( \u0026p-\u003evDivs, p-\u003enVars, 0 );\n    return p;\n}",
+      "Draft": "func Fxch_ManStart(vCubes *Vec_Wec_t, vLits *Vec_Wec_t) *Fxch_Man_t {\n    var vCube *Vec_Int_t;  var i, LogSize int32;\n    var p *Fxch_Man_t  = new(Fxch_Man_t);\n    p.vCubes = *vCubes;\n    p.vLits  = *vLits;\n    p.nVars  = Vec_WecSize(vLits)/2;\n    p.nLits  = 0;\n    // random numbers\n    Gia_ManRandom( 1 );\n    Vec_IntGrow( \u0026p.vRands, 2*p.nVars );\n    for  i = 0; i \u003c 2*p.nVars; i++  {\n        Vec_IntPush( \u0026p.vRands, Gia_ManRandom(0) \u0026 0x3FFFFFF );\n    } // assert( LogSize \u003c= 26 );\n    // create cube links\n    Vec_IntGrow( \u0026p.vCubeLinks, Vec_WecSize(\u0026p.vCubes) );\n    Vec_WecForEachLevel( vCubes, vCube, i )\n    {\n        Vec_IntPush( \u0026p.vCubeLinks, p.nLits+1 );\n        p.nLits += Vec_IntSize(vCube);\n    }\n    assert(Vec_IntSize(\u0026p.vCubeLinks) == Vec_WecSize(\u0026p.vCubes), \"Vec_IntSize(\u0026p.vCubeLinks) == Vec_WecSize(\u0026p.vCubes)\");\n    // create table\n    LogSize = Abc_Base2Log( p.nLits+1 );\n    assert(LogSize \u003c= 26, \"LogSize \u003c= 26\");\n    p.SizeMask = (1 \u003c\u003c LogSize) - 1;\n    p.pBins = ABC_CALLOC( Fxch_Obj_t, p.SizeMask + 1 );\n    assert(p.nLits+1 \u003c p.SizeMask+1, \"p.nLits+1 \u003c p.SizeMask+1\");\n    // divisor weights and cube pairs\n    Vec_FltGrow( \u0026p.vWeights, 1000 );\n    Vec_FltPush( \u0026p.vWeights, -1 );\n    Vec_WecGrow( \u0026p.vPairs, 1000 );\n    Vec_WecPushLevel( \u0026p.vPairs );\n    // prepare divisors\n    Vec_WrdGrow( \u0026p.vDivs, p.nVars + 1000 );\n    Vec_WrdFill( \u0026p.vDivs, p.nVars, 0 );\n    return p;\n}"
+    },
+    {
+      "Name": "Fxch_ManStop",
+      "Start": 7059,
+      "End": 7563,
+      "BodyStart": 7095,
+      "Original": "void Fxch_ManStop( Fxch_Man_t * p )\n{\n    Vec_WecErase( \u0026p-\u003evCubes );\n    Vec_WecErase( \u0026p-\u003evLits );\n    Vec_IntErase( \u0026p-\u003evRands );\n    Vec_IntErase( \u0026p-\u003evCubeLinks );\n    Hash_IntManStop( p-\u003evHash );\n    Vec_QueFree( p-\u003evPrio );\n    Vec_FltErase( \u0026p-\u003evWeights );\n    Vec_WecErase( \u0026p-\u003evPairs );\n    Vec_WrdErase( \u0026p-\u003evDivs );\n    Vec_IntErase( \u0026p-\u003evCubesS );\n    Vec_IntErase( \u0026p-\u003evCubesD );\n    Vec_IntErase( \u0026p-\u003evCube1 );\n    Vec_IntErase( \u0026p-\u003evCube2 );\n    ABC_FREE( p-\u003epBins );\n    ABC_FREE( p );\n}",
+      "Draft": "func Fxch_ManStop(p *Fxch_Man_t) {\n    Vec_WecErase( \u0026p.vCubes );\n    Vec_WecErase( \u0026p.vLits );\n    Vec_IntErase( \u0026p.vRands );\n    Vec_IntErase( \u0026p.vCubeLinks );\n    Hash_IntManStop( p.vHash );\n    Vec_QueFree( p.vPrio );\n    Vec_FltErase( \u0026p.vWeights );\n    Vec_WecErase( \u0026p.vPairs );\n    Vec_WrdErase( \u0026p.vDivs );\n    Vec_IntErase( \u0026p.vCubesS );\n    Vec_IntErase( \u0026p.vCubesD );\n    Vec_IntErase( \u0026p.vCube1 );\n    Vec_IntErase( \u0026p.vCube2 );\n    ABC_FREE( p.pBins );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Fxch_TabCompare",
+      "Start": 7799,
+      "End": 8349,
+      "BodyStart": 7875,
+      "Original": "static inline int Fxch_TabCompare( Fxch_Man_t * p, int hCube1, int hCube2 )\n{\n    Vec_Int_t * vCube1 = Fxch_ManCube( p, hCube1 );\n    Vec_Int_t * vCube2 = Fxch_ManCube( p, hCube2 );\n    if ( !Vec_IntSize(vCube1) || !Vec_IntSize(vCube2) || Vec_IntSize(vCube1) != Vec_IntSize(vCube2) )\n        return 0;\n    Vec_IntClear( \u0026p-\u003evCube1 );\n    Vec_IntClear( \u0026p-\u003evCube2 );\n    Vec_IntAppendSkip( \u0026p-\u003evCube1, vCube1, Pla_CubeLit(hCube1) );\n    Vec_IntAppendSkip( \u0026p-\u003evCube2, vCube2, Pla_CubeLit(hCube2) );\n    return Vec_IntEqual( \u0026p-\u003evCube1, \u0026p-\u003evCube2 );\n}",
+      "Draft": "func Fxch_TabCompare(p *Fxch_Man_t, hCube1 int32, hCube2 int32) int32 {\n    var vCube1 *Vec_Int_t  = Fxch_ManCube( p, hCube1 );\n    var vCube2 *Vec_Int_t  = Fxch_ManCube( p, hCube2 );\n    if !Vec_IntSize(vCube1) || !Vec_IntSize(vCube2) || Vec_IntSize(vCube1) != Vec_IntSize(vCube2) {\n        return 0; }\n    Vec_IntClear( \u0026p.vCube1 );\n    Vec_IntClear( \u0026p.vCube2 );\n    Vec_IntAppendSkip( \u0026p.vCube1, vCube1, Pla_CubeLit(hCube1) );\n    Vec_IntAppendSkip( \u0026p.vCube2, vCube2, Pla_CubeLit(hCube2) );\n    return Vec_IntEqual( \u0026p.vCube1, \u0026p.vCube2 );\n}"
+    },
+    {
+      "Name": "Fxch_CompressCubes",
+      "Start": 8350,
+      "End": 8659,
+      "BodyStart": 8429,
+      "Original": "static inline void Fxch_CompressCubes( Fxch_Man_t * p, Vec_Int_t * vLit2Cube )\n{\n    int i, hCube, k = 0;\n    Vec_IntForEachEntry( vLit2Cube, hCube, i )\n        if ( Vec_IntSize(Vec_WecEntry(\u0026p-\u003evCubes, hCube)) \u003e 0 )\n            Vec_IntWriteEntry( vLit2Cube, k++, hCube );\n    Vec_IntShrink( vLit2Cube, k );\n}",
+      "Draft": "func Fxch_CompressCubes(p *Fxch_Man_t, vLit2Cube *Vec_Int_t) {\n    var i, hCube, k int32;\n    Vec_IntForEachEntry( vLit2Cube, hCube, i )\n        if ( Vec_IntSize(Vec_WecEntry(\u0026p.vCubes, hCube)) \u003e 0 )\n            Vec_IntWriteEntry( vLit2Cube, k++, hCube );\n    Vec_IntShrink( vLit2Cube, k );\n}"
+    },
+    {
+      "Name": "Fxch_CollectSingles",
+      "Start": 8660,
+      "End": 9584,
+      "BodyStart": 8756,
+      "Original": "static inline int Fxch_CollectSingles( Vec_Int_t * vArr1, Vec_Int_t * vArr2, Vec_Int_t * vArr )\n{\n    int * pBeg1 = vArr1-\u003epArray;\n    int * pBeg2 = vArr2-\u003epArray;\n    int * pEnd1 = vArr1-\u003epArray + vArr1-\u003enSize;\n    int * pEnd2 = vArr2-\u003epArray + vArr2-\u003enSize;\n    int * pBeg1New = vArr1-\u003epArray;\n    int * pBeg2New = vArr2-\u003epArray;\n    Vec_IntClear( vArr );\n    while ( pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2 )\n    {\n        if ( Pla_CubeNum(*pBeg1) == Pla_CubeNum(*pBeg2) )\n            Vec_IntPushTwo( vArr, *pBeg1, *pBeg2 ), pBeg1++, pBeg2++;\n        else if ( *pBeg1 \u003c *pBeg2 )\n            *pBeg1New++ = *pBeg1++;\n        else \n            *pBeg2New++ = *pBeg2++;\n    }\n    while ( pBeg1 \u003c pEnd1 )\n        *pBeg1New++ = *pBeg1++;\n    while ( pBeg2 \u003c pEnd2 )\n        *pBeg2New++ = *pBeg2++;\n    Vec_IntShrink( vArr1, pBeg1New - vArr1-\u003epArray );\n    Vec_IntShrink( vArr2, pBeg2New - vArr2-\u003epArray );\n    return Vec_IntSize(vArr);\n}",
+      "Draft": "func Fxch_CollectSingles(vArr1 *Vec_Int_t, vArr2 *Vec_Int_t, vArr *Vec_Int_t) int32 {\n    var pBeg1 *int32  = vArr1.pArray;\n    var pBeg2 *int32  = vArr2.pArray;\n    var pEnd1 *int32  = vArr1.pArray + vArr1.nSize;\n    var pEnd2 *int32  = vArr2.pArray + vArr2.nSize;\n    var pBeg1New *int32  = vArr1.pArray;\n    var pBeg2New *int32  = vArr2.pArray;\n    Vec_IntClear( vArr );\n    for  pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2  {\n        if Pla_CubeNum(*pBeg1) == Pla_CubeNum(*pBeg2) {\n            Vec_IntPushTwo( vArr, *pBeg1, *pBeg2 );\npBeg1++;\npBeg2++;\n        } else if *pBeg1 \u003c *pBeg2 {\n            *pBeg1New++ = *pBeg1++;\n        } else { \n            *pBeg2New++ = *pBeg2++; }\n    }\n    for  pBeg1 \u003c pEnd1  {\n        *pBeg1New++ = *pBeg1++;\n    }\n    for  pBeg2 \u003c pEnd2  {\n        *pBeg2New++ = *pBeg2++;\n    }\n    Vec_IntShrink( vArr1, pBeg1New - vArr1.pArray );\n    Vec_IntShrink( vArr2, pBeg2New - vArr2.pArray );\n    return Vec_IntSize(vArr);\n}"
+    },
+    {
+      "Name": "Fxch_CollectDoubles",
+      "Start": 9585,
+      "End": 10206,
+      "BodyStart": 9700,
+      "Original": "static inline void Fxch_CollectDoubles( Fxch_Man_t * p, Vec_Int_t * vPairs, Vec_Int_t * vRes, int Lit0, int Lit1 )\n{\n    int i, hCube1, hCube2;\n    Vec_IntClear( vRes );\n    Vec_IntForEachEntryDouble( vPairs, hCube1, hCube2, i )\n        if ( Fxch_TabCompare(p, hCube1, hCube2) \u0026\u0026 \n             Vec_IntEntry(Fxch_ManCube(p, hCube1), Pla_CubeLit(hCube1)) == Lit0 \u0026\u0026 \n             Vec_IntEntry(Fxch_ManCube(p, hCube2), Pla_CubeLit(hCube2)) == Lit1 )\n            Vec_IntPushTwo( vRes, hCube1, hCube2 );\n    Vec_IntClear( vPairs );\n    // order pairs in the increasing order of the first cube\n    //Vec_IntSortPairs( vRes );\n}",
+      "Draft": "func Fxch_CollectDoubles(p *Fxch_Man_t, vPairs *Vec_Int_t, vRes *Vec_Int_t, Lit0 int32, Lit1 int32) {\n    var i, hCube1, hCube2 int32;\n    Vec_IntClear( vRes );\n    Vec_IntForEachEntryDouble( vPairs, hCube1, hCube2, i )\n        if ( Fxch_TabCompare(p, hCube1, hCube2) \u0026\u0026 \n             Vec_IntEntry(Fxch_ManCube(p, hCube1), Pla_CubeLit(hCube1)) == Lit0 \u0026\u0026 \n             Vec_IntEntry(Fxch_ManCube(p, hCube2), Pla_CubeLit(hCube2)) == Lit1 )\n            Vec_IntPushTwo( vRes, hCube1, hCube2 );\n    Vec_IntClear( vPairs );\n    // order pairs in the increasing order of the first cube\n    //Vec_IntSortPairs( vRes );\n}"
+    },
+    {
+      "Name": "Fxch_CompressLiterals2",
+      "Start": 10207,
+      "End": 10591,
+      "BodyStart": 10288,
+      "Original": "static inline void Fxch_CompressLiterals2( Vec_Int_t * p, int iInd1, int iInd2 )\n{\n    int i, Lit, k = 0;\n    assert( iInd1 \u003e= 0 \u0026\u0026 iInd1 \u003c Vec_IntSize(p) );\n    if ( iInd2 != -1 )\n    assert( iInd1 \u003e= 0 \u0026\u0026 iInd1 \u003c Vec_IntSize(p) );\n    Vec_IntForEachEntry( p, Lit, i )\n        if ( i != iInd1 \u0026\u0026 i != iInd2 )\n            Vec_IntWriteEntry( p, k++, Lit );\n    Vec_IntShrink( p, k );\n}",
+      "Draft": "func Fxch_CompressLiterals2(p *Vec_Int_t, iInd1 int32, iInd2 int32) {\n    var i, Lit, k int32;\n    assert(iInd1 \u003e= 0 \u0026\u0026 iInd1 \u003c Vec_IntSize(p), \"iInd1 \u003e= 0 \u0026\u0026 iInd1 \u003c Vec_IntSize(p)\");\n    if iInd2 != -1 {\n    assert(iInd1 \u003e= 0 \u0026\u0026 iInd1 \u003c Vec_IntSize(p), \"iInd1 \u003e= 0 \u0026\u0026 iInd1 \u003c Vec_IntSize(p)\"); }\n    Vec_IntForEachEntry( p, Lit, i )\n        if ( i != iInd1 \u0026\u0026 i != iInd2 )\n            Vec_IntWriteEntry( p, k++, Lit );\n    Vec_IntShrink( p, k );\n}"
+    },
+    {
+      "Name": "Fxch_CompressLiterals",
+      "Start": 10592,
+      "End": 10891,
+      "BodyStart": 10672,
+      "Original": "static inline void Fxch_CompressLiterals( Vec_Int_t * p, int iLit1, int iLit2 )\n{\n    int i, Lit, k = 0;\n    Vec_IntForEachEntry( p, Lit, i )\n        if ( Lit != iLit1 \u0026\u0026 Lit != iLit2 )\n            Vec_IntWriteEntry( p, k++, Lit );\n    assert( Vec_IntSize(p) == k + 2 );\n    Vec_IntShrink( p, k );\n}",
+      "Draft": "func Fxch_CompressLiterals(p *Vec_Int_t, iLit1 int32, iLit2 int32) {\n    var i, Lit, k int32;\n    Vec_IntForEachEntry( p, Lit, i )\n        if ( Lit != iLit1 \u0026\u0026 Lit != iLit2 )\n            Vec_IntWriteEntry( p, k++, Lit );\n    assert(Vec_IntSize(p) == k + 2, \"Vec_IntSize(p) == k + 2\");\n    Vec_IntShrink( p, k );\n}"
+    },
+    {
+      "Name": "Fxch_FilterCubes",
+      "Start": 10892,
+      "End": 11543,
+      "BodyStart": 10987,
+      "Original": "static inline void Fxch_FilterCubes( Fxch_Man_t * p, Vec_Int_t * vCubesS, int Lit0, int Lit1 )\n{\n    Vec_Int_t * vCube;\n    int i, k, Lit, iCube, n = 0;\n    int fFound0, fFound1;\n    Vec_IntForEachEntry( vCubesS, iCube, i )\n    {\n        vCube = Vec_WecEntry( \u0026p-\u003evCubes, iCube );\n        fFound0 = fFound1 = 0;\n        Vec_IntForEachEntry( vCube, Lit, k )\n        {\n            if ( Lit == Lit0 )\n                fFound0 = 1;\n            else if ( Lit == Lit1 )\n                fFound1 = 1;\n        }\n        if ( fFound0 \u0026\u0026 fFound1 )\n            Vec_IntWriteEntry( vCubesS, n++, Pla_CubeHandle(iCube, 255) );\n    }\n    Vec_IntShrink( vCubesS, n );\n}",
+      "Draft": "func Fxch_FilterCubes(p *Fxch_Man_t, vCubesS *Vec_Int_t, Lit0 int32, Lit1 int32) {\n    var vCube *Vec_Int_t;\n    var i, k, Lit, iCube, n int32;\n    var fFound0, fFound1 int32;\n    Vec_IntForEachEntry( vCubesS, iCube, i )\n    {\n        vCube = Vec_WecEntry( \u0026p.vCubes, iCube );\n        fFound0 = fFound1 = 0;\n        Vec_IntForEachEntry( vCube, Lit, k )\n        {\n            if Lit == Lit0 {\n                fFound0 = 1;\n            } else if Lit == Lit1 {\n                fFound1 = 1; }\n        }\n        if fFound0 \u0026\u0026 (fFound1 != 0) {\n            Vec_IntWriteEntry( vCubesS, n++, Pla_CubeHandle(iCube, 255) ); }\n    }\n    Vec_IntShrink( vCubesS, n );\n}"
+    },
+    {
+      "Name": "Fxch_DivisorAdd",
+      "Start": 11805,
+      "End": 12587,
+      "BodyStart": 11875,
+      "Original": "int Fxch_DivisorAdd( Fxch_Man_t * p, int Lit0, int Lit1, int Weight )\n{\n    int iDiv;\n    assert( Lit0 != Lit1 );\n    if ( Lit0 \u003c Lit1 )\n        iDiv = Hash_Int2ManInsert( p-\u003evHash, Lit0, Lit1, 0 );\n    else\n        iDiv = Hash_Int2ManInsert( p-\u003evHash, Lit1, Lit0, 0 );\n    if ( iDiv == Vec_FltSize(\u0026p-\u003evWeights) )\n    {\n        Vec_FltPush( \u0026p-\u003evWeights, -2 );\n        Vec_WecPushLevel( \u0026p-\u003evPairs );\n        assert( Vec_FltSize(\u0026p-\u003evWeights) == Vec_WecSize(\u0026p-\u003evPairs) );\n    }\n    Vec_FltAddToEntry( \u0026p-\u003evWeights, iDiv, Weight );\n    if ( p-\u003evPrio )\n    {\n        if ( Vec_QueIsMember(p-\u003evPrio, iDiv) )\n            Vec_QueUpdate( p-\u003evPrio, iDiv );\n        else \n            Vec_QuePush( p-\u003evPrio, iDiv );\n        //assert( iDiv \u003c Vec_QueSize(p-\u003evPrio) );\n    }\n    return iDiv;\n}",
+      "Draft": "func Fxch_DivisorAdd(p *Fxch_Man_t, Lit0 int32, Lit1 int32, Weight int32) int32 {\n    var iDiv int32;\n    assert(Lit0 != Lit1, \"Lit0 != Lit1\");\n    if Lit0 \u003c Lit1 {\n        iDiv = Hash_Int2ManInsert( p.vHash, Lit0, Lit1, 0 );\n    } else {\n        iDiv = Hash_Int2ManInsert( p.vHash, Lit1, Lit0, 0 ); }\n    if iDiv == Vec_FltSize(\u0026p.vWeights) {\n        Vec_FltPush( \u0026p.vWeights, -2 );\n        Vec_WecPushLevel( \u0026p.vPairs );\n        assert(Vec_FltSize(\u0026p.vWeights) == Vec_WecSize(\u0026p.vPairs), \"Vec_FltSize(\u0026p.vWeights) == Vec_WecSize(\u0026p.vPairs)\");\n    }\n    Vec_FltAddToEntry( \u0026p.vWeights, iDiv, Weight );\n    if p.vPrio {\n        if Vec_QueIsMember(p.vPrio, iDiv) {\n            Vec_QueUpdate( p.vPrio, iDiv );\n        } else { \n            Vec_QuePush( p.vPrio, iDiv ); }\n        //assert( iDiv \u003c Vec_QueSize(p-\u003evPrio) );\n    }\n    return iDiv;\n}"
+    },
+    {
+      "Name": "Fxch_DivisorRemove",
+      "Start": 12588,
+      "End": 13057,
+      "BodyStart": 12662,
+      "Original": "void Fxch_DivisorRemove( Fxch_Man_t * p, int Lit0, int Lit1, int Weight )\n{\n    int iDiv;\n    assert( Lit0 != Lit1 );\n    if ( Lit0 \u003c Lit1 )\n        iDiv = *Hash_Int2ManLookup( p-\u003evHash, Lit0, Lit1 );\n    else\n        iDiv = *Hash_Int2ManLookup( p-\u003evHash, Lit1, Lit0 );\n    assert( iDiv \u003e 0 \u0026\u0026 iDiv \u003c Vec_FltSize(\u0026p-\u003evWeights) );\n    Vec_FltAddToEntry( \u0026p-\u003evWeights, iDiv, -Weight );\n    if ( Vec_QueIsMember(p-\u003evPrio, iDiv) )\n        Vec_QueUpdate( p-\u003evPrio, iDiv );\n}",
+      "Draft": "func Fxch_DivisorRemove(p *Fxch_Man_t, Lit0 int32, Lit1 int32, Weight int32) {\n    var iDiv int32;\n    assert(Lit0 != Lit1, \"Lit0 != Lit1\");\n    if Lit0 \u003c Lit1 {\n        iDiv = *Hash_Int2ManLookup( p.vHash, Lit0, Lit1 );\n    } else {\n        iDiv = *Hash_Int2ManLookup( p.vHash, Lit1, Lit0 ); }\n    assert(iDiv \u003e 0 \u0026\u0026 iDiv \u003c Vec_FltSize(\u0026p.vWeights), \"iDiv \u003e 0 \u0026\u0026 iDiv \u003c Vec_FltSize(\u0026p.vWeights)\");\n    Vec_FltAddToEntry( \u0026p.vWeights, iDiv, -Weight );\n    if Vec_QueIsMember(p.vPrio, iDiv) {\n        Vec_QueUpdate( p.vPrio, iDiv ); }\n}"
+    },
+    {
+      "Name": "Fxch_TabBin",
+      "Start": 13314,
+      "End": 13446,
+      "BodyStart": 13394,
+      "Original": "static inline Fxch_Obj_t * Fxch_TabBin( Fxch_Man_t * p, int Value )             { return p-\u003epBins + (Value \u0026 p-\u003eSizeMask);         }",
+      "Draft": "func Fxch_TabBin(p *Fxch_Man_t, Value int32) *Fxch_Obj_t { return p.pBins + (Value \u0026 p.SizeMask);         }"
+    },
+    {
+      "Name": "Fxch_TabEntry",
+      "Start": 13447,
+      "End": 13579,
+      "BodyStart": 13527,
+      "Original": "static inline Fxch_Obj_t * Fxch_TabEntry( Fxch_Man_t * p, int i )               { return i ? p-\u003epBins + i : NULL;                  }",
+      "Draft": "func Fxch_TabEntry(p *Fxch_Man_t, i int32) *Fxch_Obj_t { if i != 0 {\n    return p.pBins + i;\n} else {\n    return nil;\n}                  }"
+    },
+    {
+      "Name": "Fxch_TabEntryId",
+      "Start": 13580,
+      "End": 13712,
+      "BodyStart": 13660,
+      "Original": "static inline int          Fxch_TabEntryId( Fxch_Man_t * p, Fxch_Obj_t * pEnt ) { assert(pEnt \u003e p-\u003epBins); return pEnt - p-\u003epBins; }",
+      "Draft": "func Fxch_TabEntryId(p *Fxch_Man_t, pEnt *Fxch_Obj_t) int32 { assert(pEnt \u003e p.pBins, \"pEnt \u003e p.pBins\"); return pEnt - p.pBins; }"
+    },
+    {
+      "Name": "Fxch_TabMarkPair",
+      "Start": 13714,
+      "End": 14087,
+      "BodyStart": 13782,
+      "Original": "static inline void Fxch_TabMarkPair( Fxch_Man_t * p, int i, int j )\n{\n    Fxch_Obj_t * pI = Fxch_TabEntry(p, i);\n    Fxch_Obj_t * pJ = Fxch_TabEntry(p, j);\n    assert( pI-\u003eNext == j );\n    assert( pJ-\u003ePrev == i );\n    assert( pI-\u003eMarkN == 0 );\n    assert( pI-\u003eMarkP == 0 );\n    assert( pJ-\u003eMarkN == 0 );\n    assert( pJ-\u003eMarkP == 0 );\n    pI-\u003eMarkN = 1;\n    pJ-\u003eMarkP = 1;\n}",
+      "Draft": "func Fxch_TabMarkPair(p *Fxch_Man_t, i int32, j int32) {\n    var pI *Fxch_Obj_t  = Fxch_TabEntry(p, i);\n    var pJ *Fxch_Obj_t  = Fxch_TabEntry(p, j);\n    assert(pI.Next == j, \"pI.Next == j\");\n    assert(pJ.Prev == i, \"pJ.Prev == i\");\n    assert(pI.MarkN == 0, \"pI.MarkN == 0\");\n    assert(pI.MarkP == 0, \"pI.MarkP == 0\");\n    assert(pJ.MarkN == 0, \"pJ.MarkN == 0\");\n    assert(pJ.MarkP == 0, \"pJ.MarkP == 0\");\n    pI.MarkN = 1;\n    pJ.MarkP = 1;\n}"
+    },
+    {
+      "Name": "Fxch_TabUnmarkPair",
+      "Start": 14088,
+      "End": 14463,
+      "BodyStart": 14158,
+      "Original": "static inline void Fxch_TabUnmarkPair( Fxch_Man_t * p, int i, int j )\n{\n    Fxch_Obj_t * pI = Fxch_TabEntry(p, i);\n    Fxch_Obj_t * pJ = Fxch_TabEntry(p, j);\n    assert( pI-\u003eNext == j );\n    assert( pJ-\u003ePrev == i );\n    assert( pI-\u003eMarkN == 1 );\n    assert( pI-\u003eMarkP == 0 );\n    assert( pJ-\u003eMarkN == 0 );\n    assert( pJ-\u003eMarkP == 1 );\n    pI-\u003eMarkN = 0;\n    pJ-\u003eMarkP = 0;\n}",
+      "Draft": "func Fxch_TabUnmarkPair(p *Fxch_Man_t, i int32, j int32) {\n    var pI *Fxch_Obj_t  = Fxch_TabEntry(p, i);\n    var pJ *Fxch_Obj_t  = Fxch_TabEntry(p, j);\n    assert(pI.Next == j, \"pI.Next == j\");\n    assert(pJ.Prev == i, \"pJ.Prev == i\");\n    assert(pI.MarkN == 1, \"pI.MarkN == 1\");\n    assert(pI.MarkP == 0, \"pI.MarkP == 0\");\n    assert(pJ.MarkN == 0, \"pJ.MarkN == 0\");\n    assert(pJ.MarkP == 1, \"pJ.MarkP == 1\");\n    pI.MarkN = 0;\n    pJ.MarkP = 0;\n}"
+    },
+    {
+      "Name": "Fxch_TabInsertLink",
+      "Start": 14464,
+      "End": 15005,
+      "BodyStart": 14550,
+      "Original": "static inline void Fxch_TabInsertLink( Fxch_Man_t * p, int i, int j, int fSkipCheck )\n{\n    Fxch_Obj_t * pI = Fxch_TabEntry(p, i);\n    Fxch_Obj_t * pN = Fxch_TabEntry(p, pI-\u003eNext);\n    Fxch_Obj_t * pJ = Fxch_TabEntry(p, j);\n    //assert( pJ-\u003eCube != 0 );\n    assert( pN-\u003ePrev == i );\n    assert( fSkipCheck || pI-\u003eMarkN == 0 );\n    assert( fSkipCheck || pN-\u003eMarkP == 0 );\n    assert( fSkipCheck || pJ-\u003eMarkN == 0 );\n    assert( fSkipCheck || pJ-\u003eMarkP == 0 );\n    pJ-\u003eNext = pI-\u003eNext;  pI-\u003eNext = j;\n    pJ-\u003ePrev = i;         pN-\u003ePrev = j;\n}",
+      "Draft": "func Fxch_TabInsertLink(p *Fxch_Man_t, i int32, j int32, fSkipCheck int32) {\n    var pI *Fxch_Obj_t  = Fxch_TabEntry(p, i);\n    var pN *Fxch_Obj_t  = Fxch_TabEntry(p, pI.Next);\n    var pJ *Fxch_Obj_t  = Fxch_TabEntry(p, j);\n    //assert( pJ-\u003eCube != 0 );\n    assert(pN.Prev == i, \"pN.Prev == i\");\n    assert((fSkipCheck != 0) || pI.MarkN == 0, \"fSkipCheck || pI.MarkN == 0\");\n    assert((fSkipCheck != 0) || pN.MarkP == 0, \"fSkipCheck || pN.MarkP == 0\");\n    assert((fSkipCheck != 0) || pJ.MarkN == 0, \"fSkipCheck || pJ.MarkN == 0\");\n    assert((fSkipCheck != 0) || pJ.MarkP == 0, \"fSkipCheck || pJ.MarkP == 0\");\n    pJ.Next = pI.Next;  pI.Next = j;\n    pJ.Prev = i;         pN.Prev = j;\n}"
+    },
+    {
+      "Name": "Fxch_TabExtractLink",
+      "Start": 15006,
+      "End": 15534,
+      "BodyStart": 15077,
+      "Original": "static inline void Fxch_TabExtractLink( Fxch_Man_t * p, int i, int j )\n{\n    Fxch_Obj_t * pI = Fxch_TabEntry(p, i);\n    Fxch_Obj_t * pJ = Fxch_TabEntry(p, j);\n    Fxch_Obj_t * pN = Fxch_TabEntry(p, pJ-\u003eNext);\n    //assert( pJ-\u003eCube != 0 );\n    assert( pI-\u003eNext == j );\n    assert( pJ-\u003ePrev == i );\n    assert( pN-\u003ePrev == j );\n    assert( pI-\u003eMarkN == 0 );\n    assert( pJ-\u003eMarkP == 0 );\n    assert( pJ-\u003eMarkN == 0 );\n    assert( pN-\u003eMarkP == 0 );\n    pI-\u003eNext = pJ-\u003eNext;  pJ-\u003eNext = 0;\n    pN-\u003ePrev = pJ-\u003ePrev;  pJ-\u003ePrev = 0;\n}",
+      "Draft": "func Fxch_TabExtractLink(p *Fxch_Man_t, i int32, j int32) {\n    var pI *Fxch_Obj_t  = Fxch_TabEntry(p, i);\n    var pJ *Fxch_Obj_t  = Fxch_TabEntry(p, j);\n    var pN *Fxch_Obj_t  = Fxch_TabEntry(p, pJ.Next);\n    //assert( pJ-\u003eCube != 0 );\n    assert(pI.Next == j, \"pI.Next == j\");\n    assert(pJ.Prev == i, \"pJ.Prev == i\");\n    assert(pN.Prev == j, \"pN.Prev == j\");\n    assert(pI.MarkN == 0, \"pI.MarkN == 0\");\n    assert(pJ.MarkP == 0, \"pJ.MarkP == 0\");\n    assert(pJ.MarkN == 0, \"pJ.MarkN == 0\");\n    assert(pN.MarkP == 0, \"pN.MarkP == 0\");\n    pI.Next = pJ.Next;  pJ.Next = 0;\n    pN.Prev = pJ.Prev;  pJ.Prev = 0;\n}"
+    },
+    {
+      "Name": "Fxch_TabInsert",
+      "Start": 15535,
+      "End": 17275,
+      "BodyStart": 15620,
+      "Original": "static inline void Fxch_TabInsert( Fxch_Man_t * p, int iLink, int Value, int hCube )\n{\n    int iEnt, iDiv, Lit0, Lit1, fStart = 1;\n    Fxch_Obj_t * pEnt;\n    Fxch_Obj_t * pBin  = Fxch_TabBin( p, Value );\n    Fxch_Obj_t * pCell = Fxch_TabEntry( p, iLink );\n    assert( pCell-\u003eMarkN == 0 );\n    assert( pCell-\u003eMarkP == 0 );\n    assert( pCell-\u003eCube == 0 );\n    pCell-\u003eCube = hCube;\n    if ( pBin-\u003eTable == 0 )\n    {\n        pBin-\u003eTable = pCell-\u003eNext = pCell-\u003ePrev = iLink;\n        return;\n    }\n    // find equal cubes\n    for ( iEnt = pBin-\u003eTable; iEnt != (int)pBin-\u003eTable || fStart; iEnt = pEnt-\u003eNext, fStart = 0 )\n    {\n        pEnt = Fxch_TabBin( p, iEnt );\n        if ( pEnt-\u003eMarkN || pEnt-\u003eMarkP || !Fxch_TabCompare(p, pEnt-\u003eCube, hCube) )\n            continue;\n        Fxch_TabInsertLink( p, iEnt, iLink, 0 );\n        Fxch_TabMarkPair( p, iEnt, iLink );\n        // get literals\n        Lit0 = Vec_IntEntry( Fxch_ManCube(p, hCube),      Pla_CubeLit(hCube) );\n        Lit1 = Vec_IntEntry( Fxch_ManCube(p, pEnt-\u003eCube), Pla_CubeLit(pEnt-\u003eCube) );\n        // increment divisor weight\n        iDiv = Fxch_DivisorAdd( p, Abc_LitNot(Lit0), Abc_LitNot(Lit1), Vec_IntSize(Fxch_ManCube(p, hCube)) );\n        // add divisor pair\n        assert( iDiv \u003c Vec_WecSize(\u0026p-\u003evPairs) );\n        if ( Lit0 \u003c Lit1 )\n        {\n            Vec_WecPush( \u0026p-\u003evPairs, iDiv, hCube );\n            Vec_WecPush( \u0026p-\u003evPairs, iDiv, pEnt-\u003eCube );\n        }\n        else\n        {\n            Vec_WecPush( \u0026p-\u003evPairs, iDiv, pEnt-\u003eCube );\n            Vec_WecPush( \u0026p-\u003evPairs, iDiv, hCube );\n        }\n        p-\u003enPairsD++;\n        return;\n    }\n    assert( iEnt == (int)pBin-\u003eTable );\n    pEnt = Fxch_TabBin( p, iEnt );\n    Fxch_TabInsertLink( p, pEnt-\u003ePrev, iLink, 1 );\n}",
+      "Draft": "func Fxch_TabInsert(p *Fxch_Man_t, iLink int32, Value int32, hCube int32) {\n    var iEnt int32;\n    var iDiv int32;\n    var Lit0 int32;\n    var Lit1 int32;\n    var fStart int32 = 1;\n    var pEnt *Fxch_Obj_t;\n    var pBin *Fxch_Obj_t   = Fxch_TabBin( p, Value );\n    var pCell *Fxch_Obj_t  = Fxch_TabEntry( p, iLink );\n    assert(pCell.MarkN == 0, \"pCell.MarkN == 0\");\n    assert(pCell.MarkP == 0, \"pCell.MarkP == 0\");\n    assert(pCell.Cube == 0, \"pCell.Cube == 0\");\n    pCell.Cube = hCube;\n    if pBin.Table == 0 {\n        pBin.Table = pCell.Next = pCell.Prev = iLink;\n        return;\n    }\n    // find equal cubes\n    for  iEnt = pBin.Table; iEnt != int32(pBin.Table) || (fStart != 0); iEnt, fStart = pEnt.Next, 0  {\n        pEnt = Fxch_TabBin( p, iEnt );\n        if pEnt.MarkN || pEnt.MarkP || !(Fxch_TabCompare(p, pEnt.Cube, hCube) != 0) {\n            continue; }\n        Fxch_TabInsertLink( p, iEnt, iLink, 0 );\n        Fxch_TabMarkPair( p, iEnt, iLink );\n        // get literals\n        Lit0 = Vec_IntEntry( Fxch_ManCube(p, hCube),      Pla_CubeLit(hCube) );\n        Lit1 = Vec_IntEntry( Fxch_ManCube(p, pEnt.Cube), Pla_CubeLit(pEnt.Cube) );\n        // increment divisor weight\n        iDiv = Fxch_DivisorAdd( p, Abc_LitNot(Lit0), Abc_LitNot(Lit1), Vec_IntSize(Fxch_ManCube(p, hCube)) );\n        // add divisor pair\n        assert(iDiv \u003c Vec_WecSize(\u0026p.vPairs), \"iDiv \u003c Vec_WecSize(\u0026p.vPairs)\");\n        if Lit0 \u003c Lit1 {\n            Vec_WecPush( \u0026p.vPairs, iDiv, hCube );\n            Vec_WecPush( \u0026p.vPairs, iDiv, pEnt.Cube );\n        \n        } else {\n            Vec_WecPush( \u0026p.vPairs, iDiv, pEnt.Cube );\n            Vec_WecPush( \u0026p.vPairs, iDiv, hCube );\n        }\n        p.nPairsD++;\n        return;\n    }\n    assert(iEnt == int32(pBin.Table), \"iEnt == int32(pBin.Table)\");\n    pEnt = Fxch_TabBin( p, iEnt );\n    Fxch_TabInsertLink( p, pEnt.Prev, iLink, 1 );\n}"
+    },
+    {
+      "Name": "Fxch_TabExtract",
+      "Start": 17276,
+      "End": 18568,
+      "BodyStart": 17362,
+      "Original": "static inline void Fxch_TabExtract( Fxch_Man_t * p, int iLink, int Value, int hCube )\n{\n    int Lit0, Lit1;\n    Fxch_Obj_t * pPair = NULL;\n    Fxch_Obj_t * pBin  = Fxch_TabBin( p, Value );\n    Fxch_Obj_t * pLink = Fxch_TabEntry( p, iLink );\n    assert( pLink-\u003eCube == hCube );\n    if ( pLink-\u003eMarkN )\n    {\n        pPair = Fxch_TabEntry( p, pLink-\u003eNext );\n        Fxch_TabUnmarkPair( p, iLink, pLink-\u003eNext );\n    }\n    else if ( pLink-\u003eMarkP )\n    {\n        pPair = Fxch_TabEntry( p, pLink-\u003ePrev );\n        Fxch_TabUnmarkPair( p, pLink-\u003ePrev, iLink );\n    }\n    if ( (int)pBin-\u003eTable == iLink )\n        pBin-\u003eTable = pLink-\u003eNext != iLink ? pLink-\u003eNext : 0;\n    if ( pLink-\u003eNext == iLink )\n    {\n        assert( pLink-\u003ePrev == iLink );\n        pLink-\u003eNext = pLink-\u003ePrev = 0;\n    }\n    else\n        Fxch_TabExtractLink( p, pLink-\u003ePrev, iLink );\n    pLink-\u003eCube = 0;\n    if ( pPair == NULL )\n        return;\n    assert( Fxch_TabCompare(p, pPair-\u003eCube, hCube) );\n    // get literals\n    Lit0 = Vec_IntEntry( Fxch_ManCube(p, hCube),       Pla_CubeLit(hCube) );\n    Lit1 = Vec_IntEntry( Fxch_ManCube(p, pPair-\u003eCube), Pla_CubeLit(pPair-\u003eCube) );\n    // decrement divisor weight\n    Fxch_DivisorRemove( p, Abc_LitNot(Lit0), Abc_LitNot(Lit1), Vec_IntSize(Fxch_ManCube(p, hCube)) );\n    p-\u003enPairsD--;\n}",
+      "Draft": "func Fxch_TabExtract(p *Fxch_Man_t, iLink int32, Value int32, hCube int32) {\n    var Lit0, Lit1 int32;\n    var pPair *Fxch_Obj_t  = nil;\n    var pBin *Fxch_Obj_t   = Fxch_TabBin( p, Value );\n    var pLink *Fxch_Obj_t  = Fxch_TabEntry( p, iLink );\n    assert(pLink.Cube == hCube, \"pLink.Cube == hCube\");\n    if pLink.MarkN {\n        pPair = Fxch_TabEntry( p, pLink.Next );\n        Fxch_TabUnmarkPair( p, iLink, pLink.Next );\n    \n    } else if pLink.MarkP {\n        pPair = Fxch_TabEntry( p, pLink.Prev );\n        Fxch_TabUnmarkPair( p, pLink.Prev, iLink );\n    }\n    if int32(pBin.Table) == iLink {\n        if pLink.Next != iLink {\n            pBin.Table = pLink.Next;\n        } else {\n            pBin.Table = 0;\n        } }\n    if pLink.Next == iLink {\n        assert(pLink.Prev == iLink, \"pLink.Prev == iLink\");\n        pLink.Next = pLink.Prev = 0;\n    \n    } else {\n        Fxch_TabExtractLink( p, pLink.Prev, iLink ); }\n    pLink.Cube = 0;\n    if pPair == nil {\n        return; }\n    assert((Fxch_TabCompare(p, pPair.Cube, hCube) != 0), \"Fxch_TabCompare(p, pPair.Cube, hCube)\");\n    // get literals\n    Lit0 = Vec_IntEntry( Fxch_ManCube(p, hCube),       Pla_CubeLit(hCube) );\n    Lit1 = Vec_IntEntry( Fxch_ManCube(p, pPair.Cube), Pla_CubeLit(pPair.Cube) );\n    // decrement divisor weight\n    Fxch_DivisorRemove( p, Abc_LitNot(Lit0), Abc_LitNot(Lit1), Vec_IntSize(Fxch_ManCube(p, hCube)) );\n    p.nPairsD--;\n}"
+    },
+    {
+      "Name": "Fxch_TabSingleDivisors",
+      "Start": 18825,
+      "End": 19387,
+      "BodyStart": 18891,
+      "Original": "int Fxch_TabSingleDivisors( Fxch_Man_t * p, int iCube, int fAdd )\n{\n    Vec_Int_t * vCube = Vec_WecEntry( \u0026p-\u003evCubes, iCube );\n    int i, k, Lit, Lit2;\n    if ( Vec_IntSize(vCube) \u003c 2 )\n        return 0;\n    Vec_IntForEachEntry( vCube, Lit, i )\n    Vec_IntForEachEntryStart( vCube, Lit2, k, i+1 )\n    {\n        assert( Lit \u003c Lit2 );\n        if ( fAdd )\n            Fxch_DivisorAdd( p, Lit, Lit2, 1 ), p-\u003enPairsS++;\n        else\n            Fxch_DivisorRemove( p, Lit, Lit2, 1 ), p-\u003enPairsS--;\n    }\n    return Vec_IntSize(vCube) * (Vec_IntSize(vCube) - 1) / 2;\n}",
+      "Draft": "func Fxch_TabSingleDivisors(p *Fxch_Man_t, iCube int32, fAdd int32) int32 {\n    var vCube *Vec_Int_t  = Vec_WecEntry( \u0026p.vCubes, iCube );\n    var i, k, Lit, Lit2 int32;\n    if Vec_IntSize(vCube) \u003c 2 {\n        return 0; }\n    Vec_IntForEachEntry( vCube, Lit, i )\n    Vec_IntForEachEntryStart( vCube, Lit2, k, i+1 )\n    {\n        assert(Lit \u003c Lit2, \"Lit \u003c Lit2\");\n        if fAdd != 0 {\n            Fxch_DivisorAdd( p, Lit, Lit2, 1 );\np.nPairsS++;\n        } else {\n            Fxch_DivisorRemove( p, Lit, Lit2, 1 );\np.nPairsS--; }\n    }\n    return Vec_IntSize(vCube) * (Vec_IntSize(vCube) - 1) / 2;\n}"
+    },
+    {
+      "Name": "Fxch_TabDoubleDivisors",
+      "Start": 19388,
+      "End": 20053,
+      "BodyStart": 19454,
+      "Original": "int Fxch_TabDoubleDivisors( Fxch_Man_t * p, int iCube, int fAdd )\n{\n    Vec_Int_t * vCube = Vec_WecEntry( \u0026p-\u003evCubes, iCube );\n    int iLinkFirst = Vec_IntEntry( \u0026p-\u003evCubeLinks, iCube );\n    int k, Lit, Value = 0;\n    Vec_IntForEachEntry( vCube, Lit, k )\n        Value += Vec_IntEntry(\u0026p-\u003evRands, Lit);\n    Vec_IntForEachEntry( vCube, Lit, k )\n    {\n        Value -= Vec_IntEntry(\u0026p-\u003evRands, Lit);\n        if ( fAdd )\n            Fxch_TabInsert( p, iLinkFirst + k, Value, Pla_CubeHandle(iCube, k) );\n        else\n            Fxch_TabExtract( p, iLinkFirst + k, Value, Pla_CubeHandle(iCube, k) );\n        Value += Vec_IntEntry(\u0026p-\u003evRands, Lit);\n    }\n    return 1;\n}",
+      "Draft": "func Fxch_TabDoubleDivisors(p *Fxch_Man_t, iCube int32, fAdd int32) int32 {\n    var vCube *Vec_Int_t  = Vec_WecEntry( \u0026p.vCubes, iCube );\n    var iLinkFirst int32  = Vec_IntEntry( \u0026p.vCubeLinks, iCube );\n    var k, Lit, Value int32;\n    Vec_IntForEachEntry( vCube, Lit, k )\n        Value += Vec_IntEntry(\u0026p.vRands, Lit);\n    Vec_IntForEachEntry( vCube, Lit, k )\n    {\n        Value -= Vec_IntEntry(\u0026p.vRands, Lit);\n        if fAdd != 0 {\n            Fxch_TabInsert( p, iLinkFirst + k, Value, Pla_CubeHandle(iCube, k) );\n        } else {\n            Fxch_TabExtract( p, iLinkFirst + k, Value, Pla_CubeHandle(iCube, k) ); }\n        Value += Vec_IntEntry(\u0026p.vRands, Lit);\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Fxch_ManCreateDivisors",
+      "Start": 20054,
+      "End": 20813,
+      "BodyStart": 20100,
+      "Original": "void Fxch_ManCreateDivisors( Fxch_Man_t * p )\n{\n    float Weight;  int i;\n    // alloc hash table\n    assert( p-\u003evHash == NULL );\n    p-\u003evHash = Hash_IntManStart( 1000 );\n    // create single-cube two-literal divisors\n    for ( i = 0; i \u003c Vec_WecSize(\u0026p-\u003evCubes); i++ )\n        Fxch_TabSingleDivisors( p, i, 1 ); // add - no update\n    // create two-cube divisors\n    for ( i = 0; i \u003c Vec_WecSize(\u0026p-\u003evCubes); i++ )\n        Fxch_TabDoubleDivisors( p, i, 1 ); // add - no update\n    // create queue with all divisors\n    p-\u003evPrio = Vec_QueAlloc( Vec_FltSize(\u0026p-\u003evWeights) );\n    Vec_QueSetPriority( p-\u003evPrio, Vec_FltArrayP(\u0026p-\u003evWeights) );\n    Vec_FltForEachEntry( \u0026p-\u003evWeights, Weight, i )\n        if ( Weight \u003e 0.0 )\n            Vec_QuePush( p-\u003evPrio, i );\n}",
+      "Draft": "func Fxch_ManCreateDivisors(p *Fxch_Man_t) {\n    var Weight float32;  var i int32;\n    // alloc hash table\n    assert(p.vHash == nil, \"p.vHash == nil\");\n    p.vHash = Hash_IntManStart( 1000 );\n    // create single-cube two-literal divisors\n    for  i = 0; i \u003c Vec_WecSize(\u0026p.vCubes); i++  {\n        Fxch_TabSingleDivisors( p, i, 1 );\n    } // add - no update\n    // create two-cube divisors\n    for  i = 0; i \u003c Vec_WecSize(\u0026p.vCubes); i++  {\n        Fxch_TabDoubleDivisors( p, i, 1 );\n    } // add - no update\n    // create queue with all divisors\n    p.vPrio = Vec_QueAlloc( Vec_FltSize(\u0026p.vWeights) );\n    Vec_QueSetPriority( p.vPrio, Vec_FltArrayP(\u0026p.vWeights) );\n    Vec_FltForEachEntry( \u0026p.vWeights, Weight, i )\n        if ( Weight \u003e 0.0 )\n            Vec_QuePush( p.vPrio, i );\n}"
+    },
+    {
+      "Name": "Fxch_ManUpdate",
+      "Start": 21106,
+      "End": 27004,
+      "BodyStart": 21154,
+      "Original": "void Fxch_ManUpdate( Fxch_Man_t * p, int iDiv )\n{\n    Vec_Int_t * vCube1, * vCube2, * vLitP, * vLitN;\n    //int nLitsNew = p-\u003enLits - (int)Vec_FltEntry(\u0026p-\u003evWeights, iDiv);\n    int i, Lit0, Lit1, hCube1, hCube2, iVarNew;\n    //float Diff = Vec_FltEntry(\u0026p-\u003evWeights, iDiv) - (float)((int)Vec_FltEntry(\u0026p-\u003evWeights, iDiv));\n    //assert( Diff \u003e 0.0 \u0026\u0026 Diff \u003c 1.0 );\n\n    // get the divisor and select pivot variables\n    Vec_IntPush( \u0026p-\u003evRands, Gia_ManRandom(0) \u0026 0x3FFFFFF ); \n    Vec_IntPush( \u0026p-\u003evRands, Gia_ManRandom(0) \u0026 0x3FFFFFF );\n    Lit0 = Hash_IntObjData0( p-\u003evHash, iDiv );\n    Lit1 = Hash_IntObjData1( p-\u003evHash, iDiv );\n    assert( Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit1 );\n    Vec_WrdPush( \u0026p-\u003evDivs, ((word)Lit1 \u003c\u003c 32) | (word)Lit0 );\n\n    // if the input cover is not prime, it may happen that we are extracting divisor (x + !x)\n    // although it is not strictly correct, it seems to be fine to just skip such divisors\n//    if ( Abc_Lit2Var(Lit0) == Abc_Lit2Var(Lit1) \u0026\u0026 Vec_IntSize(Hsh_VecReadEntry(p-\u003evHash, iDiv)) == 2 )\n//        return;\n\n    // collect single-cube-divisor cubes\n    vLitP = Vec_WecEntry(\u0026p-\u003evLits, Lit0);\n    vLitN = Vec_WecEntry(\u0026p-\u003evLits, Lit1);\n    Fxch_CompressCubes( p, vLitP );\n    Fxch_CompressCubes( p, vLitN );\n//    Fxch_CollectSingles( vLitP, vLitN, \u0026p-\u003evCubesS );\n//    assert( Vec_IntSize(\u0026p-\u003evCubesS) % 2 == 0 );\n    Vec_IntTwoRemoveCommon( vLitP, vLitN, \u0026p-\u003evCubesS );\n    Fxch_FilterCubes( p, \u0026p-\u003evCubesS, Lit0, Lit1 );\n\n    // collect double-cube-divisor cube pairs\n    Fxch_CollectDoubles( p, Vec_WecEntry(\u0026p-\u003evPairs, iDiv), \u0026p-\u003evCubesD, Abc_LitNot(Lit0), Abc_LitNot(Lit1) );\n    assert( Vec_IntSize(\u0026p-\u003evCubesD) % 2 == 0 );\n    Vec_IntUniqifyPairs( \u0026p-\u003evCubesD );\n    assert( Vec_IntSize(\u0026p-\u003evCubesD) % 2 == 0 );\n\n    // subtract cost of single-cube divisors\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p-\u003evCubesS, hCube1, i )\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube1), 0 );  // remove - update\n    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesD, hCube1, hCube2, i )\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube1), 0 ),  // remove - update\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube2), 0 );  // remove - update\n\n    // subtract cost of double-cube divisors\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p-\u003evCubesS, hCube1, i )\n    {\n        //printf( \"%d \", Pla_CubeNum(hCube1) );\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube1), 0 );  // remove - update\n    }\n    //printf( \"\\n\" );\n\n    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesD, hCube1, hCube2, i )\n    {\n        //printf( \"%d \", Pla_CubeNum(hCube1) );\n        //printf( \"%d  \", Pla_CubeNum(hCube2) );\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube1), 0 ),  // remove - update\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube2), 0 );  // remove - update\n    }\n    //printf( \"\\n\" );\n\n    // create new literals\n    p-\u003enLits += 2;\n    iVarNew = Vec_WecSize( \u0026p-\u003evLits ) / 2;\n    vLitP = Vec_WecPushLevel( \u0026p-\u003evLits );\n    vLitN = Vec_WecPushLevel( \u0026p-\u003evLits );\n    vLitP = Vec_WecEntry( \u0026p-\u003evLits, Vec_WecSize(\u0026p-\u003evLits) - 2 );\n    // update single-cube divisor cubes\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p-\u003evCubesS, hCube1, i )\n    {\n//        int Lit0s, Lit1s;\n        vCube1 = Fxch_ManCube( p, hCube1 );\n//        Lit0s = Vec_IntEntry(vCube1, Pla_CubeLit(hCube1));\n//        Lit1s = Vec_IntEntry(vCube1, Pla_CubeLit(hCube2));\n//        assert( Pla_CubeNum(hCube1) == Pla_CubeNum(hCube2) );\n//        assert( Vec_IntEntry(vCube1, Pla_CubeLit(hCube1)) == Lit0 );\n//        assert( Vec_IntEntry(vCube1, Pla_CubeLit(hCube2)) == Lit1 );\n        Fxch_CompressLiterals( vCube1, Lit0, Lit1 );\n//        Vec_IntPush( vLitP, Pla_CubeHandle(Pla_CubeNum(hCube1), Vec_IntSize(vCube1)) );\n        Vec_IntPush( vLitP, Pla_CubeNum(hCube1) );\n        Vec_IntPush( vCube1, Abc_Var2Lit(iVarNew, 0) );\n\n        //if ( Pla_CubeNum(hCube1) == 3 )\n        //    printf( \"VecSize = %d\\n\", Vec_IntSize(vCube1) );\n\n        p-\u003enLits--;\n    }\n    // update double-cube divisor cube pairs\n    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesD, hCube1, hCube2, i )\n    {\n        vCube1 = Fxch_ManCube( p, hCube1 );\n        vCube2 = Fxch_ManCube( p, hCube2 );\n        assert( Vec_IntEntry(vCube1, Pla_CubeLit(hCube1)) == Abc_LitNot(Lit0) );\n        assert( Vec_IntEntry(vCube2, Pla_CubeLit(hCube2)) == Abc_LitNot(Lit1) );\n        Fxch_CompressLiterals2( vCube1, Pla_CubeLit(hCube1), -1 );\n//        Vec_IntPush( vLitN, Pla_CubeHandle(Pla_CubeNum(hCube1), Vec_IntSize(vCube1)) );\n        Vec_IntPush( vLitN, Pla_CubeNum(hCube1) );\n        Vec_IntPush( vCube1, Abc_Var2Lit(iVarNew, 1) );\n        p-\u003enLits -= Vec_IntSize(vCube2);\n\n        //if ( Pla_CubeNum(hCube1) == 3 )\n        //    printf( \"VecSize = %d\\n\", Vec_IntSize(vCube1) );\n\n        // remove second cube\n        Vec_IntClear( vCube2 ); \n    }\n    Vec_IntSort( vLitN, 0 );\n    Vec_IntSort( vLitP, 0 );\n\n    // add cost of single-cube divisors\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p-\u003evCubesS, hCube1, i )\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube1), 1 );  // add - update\n    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesD, hCube1, hCube2, i )\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube1), 1 );  // add - update\n\n    // add cost of double-cube divisors\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p-\u003evCubesS, hCube1, i )\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube1), 1 );  // add - update\n    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesD, hCube1, hCube2, i )\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube1), 1 );  // add - update\n    \n    // check predicted improvement: (new SOP lits == old SOP lits - divisor weight)\n    //assert( p-\u003enLits == nLitsNew );\n}",
+      "Draft": "func Fxch_ManUpdate(p *Fxch_Man_t, iDiv int32) {\n    var vCube1, vCube2, vLitP, vLitN *Vec_Int_t;\n    //int nLitsNew = p-\u003enLits - (int)Vec_FltEntry(\u0026p-\u003evWeights, iDiv);\n    var i, Lit0, Lit1, hCube1, hCube2, iVarNew int32;\n    //float Diff = Vec_FltEntry(\u0026p-\u003evWeights, iDiv) - (float)((int)Vec_FltEntry(\u0026p-\u003evWeights, iDiv));\n    //assert( Diff \u003e 0.0 \u0026\u0026 Diff \u003c 1.0 );\n\n    // get the divisor and select pivot variables\n    Vec_IntPush( \u0026p.vRands, Gia_ManRandom(0) \u0026 0x3FFFFFF ); \n    Vec_IntPush( \u0026p.vRands, Gia_ManRandom(0) \u0026 0x3FFFFFF );\n    Lit0 = Hash_IntObjData0( p.vHash, iDiv );\n    Lit1 = Hash_IntObjData1( p.vHash, iDiv );\n    assert(Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit1, \"Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit1\");\n    Vec_WrdPush( \u0026p.vDivs, ((word)Lit1 \u003c\u003c 32) | (word)Lit0 );\n\n    // if the input cover is not prime, it may happen that we are extracting divisor (x + !x)\n    // although it is not strictly correct, it seems to be fine to just skip such divisors\n//    if ( Abc_Lit2Var(Lit0) == Abc_Lit2Var(Lit1) \u0026\u0026 Vec_IntSize(Hsh_VecReadEntry(p-\u003evHash, iDiv)) == 2 )\n//        return;\n\n    // collect single-cube-divisor cubes\n    vLitP = Vec_WecEntry(\u0026p.vLits, Lit0);\n    vLitN = Vec_WecEntry(\u0026p.vLits, Lit1);\n    Fxch_CompressCubes( p, vLitP );\n    Fxch_CompressCubes( p, vLitN );\n//    Fxch_CollectSingles( vLitP, vLitN, \u0026p-\u003evCubesS );\n//    assert( Vec_IntSize(\u0026p-\u003evCubesS) % 2 == 0 );\n    Vec_IntTwoRemoveCommon( vLitP, vLitN, \u0026p.vCubesS );\n    Fxch_FilterCubes( p, \u0026p.vCubesS, Lit0, Lit1 );\n\n    // collect double-cube-divisor cube pairs\n    Fxch_CollectDoubles( p, Vec_WecEntry(\u0026p.vPairs, iDiv), \u0026p.vCubesD, Abc_LitNot(Lit0), Abc_LitNot(Lit1) );\n    assert(Vec_IntSize(\u0026p.vCubesD) % 2 == 0, \"Vec_IntSize(\u0026p.vCubesD) % 2 == 0\");\n    Vec_IntUniqifyPairs( \u0026p.vCubesD );\n    assert(Vec_IntSize(\u0026p.vCubesD) % 2 == 0, \"Vec_IntSize(\u0026p.vCubesD) % 2 == 0\");\n\n    // subtract cost of single-cube divisors\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p.vCubesS, hCube1, i )\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube1), 0 );  // remove - update\n    Vec_IntForEachEntryDouble( \u0026p.vCubesD, hCube1, hCube2, i )\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube1), 0 );\n// remove - update\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube2), 0 );  // remove - update\n\n    // subtract cost of double-cube divisors\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p.vCubesS, hCube1, i )\n    {\n        //printf( \"%d \", Pla_CubeNum(hCube1) );\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube1), 0 );  // remove - update\n    }\n    //printf( \"\\n\" );\n\n    Vec_IntForEachEntryDouble( \u0026p.vCubesD, hCube1, hCube2, i )\n    {\n        //printf( \"%d \", Pla_CubeNum(hCube1) );\n        //printf( \"%d  \", Pla_CubeNum(hCube2) );\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube1), 0 );\n// remove - update\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube2), 0 );  // remove - update\n    }\n    //printf( \"\\n\" );\n\n    // create new literals\n    p.nLits += 2;\n    iVarNew = Vec_WecSize( \u0026p.vLits ) / 2;\n    vLitP = Vec_WecPushLevel( \u0026p.vLits );\n    vLitN = Vec_WecPushLevel( \u0026p.vLits );\n    vLitP = Vec_WecEntry( \u0026p.vLits, Vec_WecSize(\u0026p.vLits) - 2 );\n    // update single-cube divisor cubes\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p.vCubesS, hCube1, i )\n    {\n//        int Lit0s, Lit1s;\n        vCube1 = Fxch_ManCube( p, hCube1 );\n//        Lit0s = Vec_IntEntry(vCube1, Pla_CubeLit(hCube1));\n//        Lit1s = Vec_IntEntry(vCube1, Pla_CubeLit(hCube2));\n//        assert( Pla_CubeNum(hCube1) == Pla_CubeNum(hCube2) );\n//        assert( Vec_IntEntry(vCube1, Pla_CubeLit(hCube1)) == Lit0 );\n//        assert( Vec_IntEntry(vCube1, Pla_CubeLit(hCube2)) == Lit1 );\n        Fxch_CompressLiterals( vCube1, Lit0, Lit1 );\n//        Vec_IntPush( vLitP, Pla_CubeHandle(Pla_CubeNum(hCube1), Vec_IntSize(vCube1)) );\n        Vec_IntPush( vLitP, Pla_CubeNum(hCube1) );\n        Vec_IntPush( vCube1, Abc_Var2Lit(iVarNew, 0) );\n\n        //if ( Pla_CubeNum(hCube1) == 3 )\n        //    printf( \"VecSize = %d\\n\", Vec_IntSize(vCube1) );\n\n        p.nLits--;\n    }\n    // update double-cube divisor cube pairs\n    Vec_IntForEachEntryDouble( \u0026p.vCubesD, hCube1, hCube2, i )\n    {\n        vCube1 = Fxch_ManCube( p, hCube1 );\n        vCube2 = Fxch_ManCube( p, hCube2 );\n        assert(Vec_IntEntry(vCube1, Pla_CubeLit(hCube1)) == Abc_LitNot(Lit0), \"Vec_IntEntry(vCube1, Pla_CubeLit(hCube1)) == Abc_LitNot(Lit0)\");\n        assert(Vec_IntEntry(vCube2, Pla_CubeLit(hCube2)) == Abc_LitNot(Lit1), \"Vec_IntEntry(vCube2, Pla_CubeLit(hCube2)) == Abc_LitNot(Lit1)\");\n        Fxch_CompressLiterals2( vCube1, Pla_CubeLit(hCube1), -1 );\n//        Vec_IntPush( vLitN, Pla_CubeHandle(Pla_CubeNum(hCube1), Vec_IntSize(vCube1)) );\n        Vec_IntPush( vLitN, Pla_CubeNum(hCube1) );\n        Vec_IntPush( vCube1, Abc_Var2Lit(iVarNew, 1) );\n        p.nLits -= Vec_IntSize(vCube2);\n\n        //if ( Pla_CubeNum(hCube1) == 3 )\n        //    printf( \"VecSize = %d\\n\", Vec_IntSize(vCube1) );\n\n        // remove second cube\n        Vec_IntClear( vCube2 ); \n    }\n    Vec_IntSort( vLitN, 0 );\n    Vec_IntSort( vLitP, 0 );\n\n    // add cost of single-cube divisors\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p.vCubesS, hCube1, i )\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube1), 1 );  // add - update\n    Vec_IntForEachEntryDouble( \u0026p.vCubesD, hCube1, hCube2, i )\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube1), 1 );  // add - update\n\n    // add cost of double-cube divisors\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p.vCubesS, hCube1, i )\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube1), 1 );  // add - update\n    Vec_IntForEachEntryDouble( \u0026p.vCubesD, hCube1, hCube2, i )\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube1), 1 );  // add - update\n    \n    // check predicted improvement: (new SOP lits == old SOP lits - divisor weight)\n    //assert( p-\u003enLits == nLitsNew );\n}"
+    },
+    {
+      "Name": "Fxch_PrintStats",
+      "Start": 27287,
+      "End": 27768,
+      "BodyStart": 27346,
+      "Original": "static void Fxch_PrintStats( Fxch_Man_t * p, abctime clk )\n{\n    printf( \"Num =%6d  \", Vec_WrdSize(\u0026p-\u003evDivs) - p-\u003enVars );\n    printf( \"Cubes =%8d  \", Vec_WecSizeUsed(\u0026p-\u003evCubes) );\n    printf( \"Lits  =%8d  \", p-\u003enLits );\n    printf( \"Divs  =%8d  \", Hash_IntManEntryNum(p-\u003evHash) );\n    printf( \"Divs+ =%8d  \", Vec_QueSize(p-\u003evPrio) );\n    printf( \"PairS =%6d  \", p-\u003enPairsS );\n    printf( \"PairD =%6d  \", p-\u003enPairsD );\n    Abc_PrintTime( 1, \"Time\", clk );\n//    printf( \"\\n\" );\n}",
+      "Draft": "func Fxch_PrintStats(p *Fxch_Man_t, clk abctime) {\n    fmt.Printf(\"Num =%6d  \", Vec_WrdSize(\u0026p.vDivs) - p.nVars);\n    fmt.Printf(\"Cubes =%8d  \", Vec_WecSizeUsed(\u0026p.vCubes));\n    fmt.Printf(\"Lits  =%8d  \", p.nLits);\n    fmt.Printf(\"Divs  =%8d  \", Hash_IntManEntryNum(p.vHash));\n    fmt.Printf(\"Divs+ =%8d  \", Vec_QueSize(p.vPrio));\n    fmt.Printf(\"PairS =%6d  \", p.nPairsS);\n    fmt.Printf(\"PairD =%6d  \", p.nPairsD);\n    Abc_PrintTime( 1, \"Time\", clk );\n//    printf( \"\\n\" );\n}"
+    },
+    {
+      "Name": "Fxch_PrintDivOne",
+      "Start": 27769,
+      "End": 28489,
+      "BodyStart": 27833,
+      "Original": "static inline void Fxch_PrintDivOne( Fxch_Man_t * p, int iDiv )\n{\n    int i;\n    int Lit0 = Hash_IntObjData0( p-\u003evHash, iDiv );\n    int Lit1 = Hash_IntObjData1( p-\u003evHash, iDiv );\n    assert( Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit1 );\n    printf( \"Div %4d : \", iDiv );\n    printf( \"Weight %12.5f  \", Vec_FltEntry(\u0026p-\u003evWeights, iDiv) );\n    printf( \"Pairs = %5d  \",   Vec_IntSize(Vec_WecEntry(\u0026p-\u003evPairs, iDiv))/2 );\n    for ( i = 0; i \u003c Vec_WrdSize(\u0026p-\u003evDivs); i++ )\n    {\n        if ( i == Abc_Lit2Var(Lit0) )\n            printf( \"%d\", !Abc_LitIsCompl(Lit0) );\n        else if ( i == Abc_Lit2Var(Lit1) )\n            printf( \"%d\", !Abc_LitIsCompl(Lit1) );\n        else\n            printf( \"-\" );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Fxch_PrintDivOne(p *Fxch_Man_t, iDiv int32) {\n    var i int32;\n    var Lit0 int32  = Hash_IntObjData0( p.vHash, iDiv );\n    var Lit1 int32  = Hash_IntObjData1( p.vHash, iDiv );\n    assert(Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit1, \"Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit1\");\n    fmt.Printf(\"Div %4d : \", iDiv);\n    fmt.Printf(\"Weight %12.5f  \", Vec_FltEntry(\u0026p.vWeights, iDiv));\n    fmt.Printf(\"Pairs = %5d  \", Vec_IntSize(Vec_WecEntry(\u0026p.vPairs, iDiv))/2);\n    for  i = 0; i \u003c Vec_WrdSize(\u0026p.vDivs); i++  {\n        if i == Abc_Lit2Var(Lit0) {\n            fmt.Printf(\"%d\", !Abc_LitIsCompl(Lit0));\n        } else if i == Abc_Lit2Var(Lit1) {\n            fmt.Printf(\"%d\", !Abc_LitIsCompl(Lit1));\n        } else {\n            fmt.Printf(\"-\"); }\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Fxch_PrintDivisors",
+      "Start": 28490,
+      "End": 28676,
+      "BodyStart": 28539,
+      "Original": "static void Fxch_PrintDivisors( Fxch_Man_t * p )\n{\n    int iDiv;\n    for ( iDiv = 1; iDiv \u003c Vec_FltSize(\u0026p-\u003evWeights); iDiv++ )\n        Fxch_PrintDivOne( p, iDiv );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Fxch_PrintDivisors(p *Fxch_Man_t) {\n    var iDiv int32;\n    for  iDiv = 1; iDiv \u003c Vec_FltSize(\u0026p.vWeights); iDiv++  {\n        Fxch_PrintDivOne( p, iDiv );\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Fxch_ManFastExtract",
+      "Start": 28678,
+      "End": 29401,
+      "BodyStart": 28752,
+      "Original": "int Fxch_ManFastExtract( Fxch_Man_t * p, int fVerbose, int fVeryVerbose )\n{\n    int nNewNodesMax = ABC_INFINITY;\n    abctime clk = Abc_Clock();\n    int i, iDiv;\n    Fxch_ManCreateDivisors( p );\n//    Fxch_PrintDivisors( p );\n    if ( fVerbose )\n        Fxch_PrintStats( p, Abc_Clock() - clk );\n    p-\u003etimeStart = Abc_Clock();\n    for ( i = 0; i \u003c nNewNodesMax \u0026\u0026 Vec_QueTopPriority(p-\u003evPrio) \u003e 0.0; i++ )\n    {\n        iDiv = Vec_QuePop(p-\u003evPrio);\n        //if ( fVerbose )\n        //    Fxch_PrintStats( p, Abc_Clock() - clk );\n        if ( fVeryVerbose )\n            Fxch_PrintDivOne( p, iDiv );\n        Fxch_ManUpdate( p, iDiv );\n    }\n    if ( fVerbose )\n        Fxch_PrintStats( p, Abc_Clock() - clk );\n    return 1;\n}",
+      "Draft": "func Fxch_ManFastExtract(p *Fxch_Man_t, fVerbose int32, fVeryVerbose int32) int32 {\n    var nNewNodesMax int32  = ABC_INFINITY;\n    var clk abctime  = Abc_Clock();\n    var i, iDiv int32;\n    Fxch_ManCreateDivisors( p );\n//    Fxch_PrintDivisors( p );\n    if fVerbose != 0 {\n        Fxch_PrintStats( p, Abc_Clock() - clk ); }\n    p.timeStart = Abc_Clock();\n    for  i = 0; i \u003c nNewNodesMax \u0026\u0026 Vec_QueTopPriority(p.vPrio) \u003e 0.0; i++  {\n        iDiv = Vec_QuePop(p.vPrio);\n        //if ( fVerbose )\n        //    Fxch_PrintStats( p, Abc_Clock() - clk );\n        if fVeryVerbose != 0 {\n            Fxch_PrintDivOne( p, iDiv ); }\n        Fxch_ManUpdate( p, iDiv );\n    }\n    if fVerbose != 0 {\n        Fxch_PrintStats( p, Abc_Clock() - clk ); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Pla_ManPerformFxch",
+      "Start": 29684,
+      "End": 30136,
+      "BodyStart": 29724,
+      "Original": "int Pla_ManPerformFxch( Pla_Man_t * p )\n{\n    char pFileName[1000];\n    Fxch_Man_t * pFxch;\n    Pla_ManConvertFromBits( p );\n    pFxch = Fxch_ManStart( \u0026p-\u003evCubeLits, \u0026p-\u003evOccurs );\n    Vec_WecZero( \u0026p-\u003evCubeLits );\n    Vec_WecZero( \u0026p-\u003evOccurs );\n    Fxch_ManFastExtract( pFxch, 1, 0 );\n    sprintf( pFileName, \"%s.blif\", Pla_ManName(p) );\n    //Fxch_ManWriteBlif( pFileName, \u0026pFxch-\u003evCubes, \u0026pFxch-\u003evDivs );\n    Fxch_ManStop( pFxch );\n    return 1;\n}",
+      "Draft": "func Pla_ManPerformFxch(p *Pla_Man_t) int32 {\n    var pFileName string // was [1000]byte in C\n\n    var pFxch *Fxch_Man_t;\n    Pla_ManConvertFromBits( p );\n    pFxch = Fxch_ManStart( \u0026p.vCubeLits, \u0026p.vOccurs );\n    Vec_WecZero( \u0026p.vCubeLits );\n    Vec_WecZero( \u0026p.vOccurs );\n    Fxch_ManFastExtract( pFxch, 1, 0 );\n    pFileName = fmt.Sprintf(\"%s.blif\", Pla_ManName(p));\n    //Fxch_ManWriteBlif( pFileName, \u0026pFxch-\u003evCubes, \u0026pFxch-\u003evDivs );\n    Fxch_ManStop( pFxch );\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::struct::Fxch_Obj_t::unsigned        Table : 30;",
+      "Category": "struct-field-review",
+      "Symbol": "Fxch_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 886,
+      "End": 918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::struct::Fxch_Obj_t::unsigned        MarkN :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fxch_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 918,
+      "End": 950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::struct::Fxch_Obj_t::unsigned        MarkP :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fxch_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 950,
+      "End": 982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::struct::Fxch_Obj_t",
+      "Category": "struct-review",
+      "Symbol": "Fxch_Obj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 827,
+      "End": 1063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::struct::Fxch_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Fxch_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1065,
+      "End": 2391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro::Fxch_ManForEachCubeVec",
+      "Category": "macro-review",
+      "Symbol": "Fxch_ManForEachCubeVec",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2393,
+      "End": 2568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_ManCube",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2570,
+      "End": 2694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::ternary::Fxch_ManWriteBlif",
+      "Category": "ternary-review",
+      "Symbol": "Fxch_ManWriteBlif",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3191,
+      "End": 5467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_ManWriteBlif",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManWriteBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3191,
+      "End": 5467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5724,
+      "End": 7058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7059,
+      "End": 7563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_TabCompare",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_TabCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7799,
+      "End": 8349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_CompressCubes",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_CompressCubes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8350,
+      "End": 8659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_CollectSingles",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_CollectSingles",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8660,
+      "End": 9584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_CollectDoubles",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_CollectDoubles",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9585,
+      "End": 10206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_CompressLiterals2",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_CompressLiterals2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10207,
+      "End": 10591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_CompressLiterals",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_CompressLiterals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10592,
+      "End": 10891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_FilterCubes",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_FilterCubes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10892,
+      "End": 11543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_DivisorAdd",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_DivisorAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11805,
+      "End": 12587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_DivisorRemove",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_DivisorRemove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12588,
+      "End": 13057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_TabBin",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_TabBin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13314,
+      "End": 13446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_TabEntry",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_TabEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13447,
+      "End": 13579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_TabEntryId",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_TabEntryId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13580,
+      "End": 13712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_TabMarkPair",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_TabMarkPair",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13714,
+      "End": 14087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_TabUnmarkPair",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_TabUnmarkPair",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14088,
+      "End": 14463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_TabInsertLink",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_TabInsertLink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14464,
+      "End": 15005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_TabExtractLink",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_TabExtractLink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15006,
+      "End": 15534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_TabInsert",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_TabInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15535,
+      "End": 17275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_TabExtract",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_TabExtract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17276,
+      "End": 18568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_TabSingleDivisors",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_TabSingleDivisors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18825,
+      "End": 19387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_TabDoubleDivisors",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_TabDoubleDivisors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19388,
+      "End": 20053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_ManCreateDivisors",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManCreateDivisors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20054,
+      "End": 20813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_ManUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21106,
+      "End": 27004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_PrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_PrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27287,
+      "End": 27768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_PrintDivOne",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_PrintDivOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27769,
+      "End": 28489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_PrintDivisors",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_PrintDivisors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28490,
+      "End": 28676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Fxch_ManFastExtract",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManFastExtract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28678,
+      "End": 29401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::Pla_ManPerformFxch",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManPerformFxch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29684,
+      "End": 30136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 30383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::4390",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4390,
+      "End": 4429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::4623",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4623,
+      "End": 4659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::4889",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WrdForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4889,
+      "End": 4941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::5855",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5855,
+      "End": 5882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::6300",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6300,
+      "End": 6339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::6657",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6657,
+      "End": 6698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::7521",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7521,
+      "End": 7541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::7547",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7547,
+      "End": 7560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::8460",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8460,
+      "End": 8502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::9759",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryDouble",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9759,
+      "End": 9813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::10444",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10444,
+      "End": 10476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::10701",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10701,
+      "End": 10733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::11075",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11075,
+      "End": 11115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::11212",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11212,
+      "End": 11248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::19033",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19033,
+      "End": 19069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::19074",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19074,
+      "End": 19121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::19606",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19606,
+      "End": 19642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::19695",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19695,
+      "End": 19731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::20697",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_FltForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20697,
+      "End": 20743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::22993",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22993,
+      "End": 23038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::23124",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryDouble",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23124,
+      "End": 23183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::23462",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23462,
+      "End": 23507
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::23676",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryDouble",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23676,
+      "End": 23735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::24383",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24383,
+      "End": 24428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::25267",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryDouble",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25267,
+      "End": 25326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::26233",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26233,
+      "End": 26278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::26361",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryDouble",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26361,
+      "End": 26420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::26610",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26610,
+      "End": 26655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaFxch.c::macro-inline::26738",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryDouble",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26738,
+      "End": 26797
+    }
+  ],
+  "Draft": "package pla\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [plaFxch.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SOP manager.]\n\n  Synopsis    [Scalable SOP transformations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - March 18, 2015.]\n\n  Revision    [$Id: plaFxch.c,v 1.00 2014/09/12 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"pla.h\"\n//#include \"misc/vec/vecHash.h\"\n//#include \"misc/vec/vecQue.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Fxch_Obj_t struct {\n    Table uint32; /* C bitfield: 30 bits; review packing and truncation */\n    MarkN uint32; /* C bitfield: 1 bits; review packing and truncation */\n    MarkP uint32; /* C bitfield: 1 bits; review packing and truncation */\n    Next             int32;\n    Prev             int32;\n    Cube             int32;\n}\n\n   \ntype Fxch_Man_t struct {\n    // user's data\n    vCubes       Vec_Wec_t;     // cube -\u003e lit\n    // internal data\n    vLits       Vec_Wec_t;      // lit -\u003e cube\n    vRands       Vec_Int_t;     // random numbers for each literal\n    vCubeLinks       Vec_Int_t; // first link for each cube\n    pBins     *Fxch_Obj_t;      // hash table (lits -\u003e cube + lit)\n    vHash  *Hash_IntMan_t;      // divisor hash table\n    vPrio      *Vec_Que_t;      // priority queue for divisors by weight\n    vWeights       Vec_Flt_t;   // divisor weights\n    vPairs       Vec_Wec_t;     // cube pairs for each div\n    vDivs       Vec_Wrd_t;      // extracted divisors\n    // temporary data \n    vCubesS       Vec_Int_t;    // cube pairs for single\n    vCubesD       Vec_Int_t;    // cube pairs for double\n    vCube1       Vec_Int_t;     // first cube\n    vCube2       Vec_Int_t;     // second cube\n    // statistics \n    timeStart         abctime;  // starting time\n    SizeMask             int32;   // hash table mask\n    nVars             int32;      // original problem variables\n    nLits             int32;      // the number of SOP literals\n    nCompls             int32;    // the number of complements\n    nPairsS             int32;    // number of lit pairs\n    nPairsD             int32;    // number of cube pairs\n}\n\n// Original macro:\n// #define Fxch_ManForEachCubeVec( vVec, vCubes, vCube, i )           \\\n//     for ( i = 0; (i \u003c Vec_IntSize(vVec)) \u0026\u0026 ((vCube) = Vec_WecEntry(vCubes, Vec_IntEntry(vVec, i))); i++ )\n\n\nfunc Fxch_ManCube(p *Fxch_Man_t, hCube int32) *Vec_Int_t { return Vec_WecEntry(\u0026p.vCubes, Pla_CubeNum(hCube)); }\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the current state of the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxch_ManWriteBlif(pFileName string, vCubes *Vec_Wec_t, vDivs *Vec_Wrd_t) {\n    // find the number of original variables\n    var nVarsInit int32  = Vec_WrdCountZero(vDivs);\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n    } else {\n        //char * pLits = \"-01?\";\n        var vStr *Vec_Str_t;\n        var vCube *Vec_Int_t;\n        var i, k, Lit int32;\n        var Div word;\n        // comment\n        fmt.Fprintf(pFile, \"# BLIF file written via PLA package in ABC on \");\n        fmt.Fprintf(pFile, \"%s\", Extra_TimeStamp());\n        fmt.Fprintf(pFile, \"\\n\\n\");\n        // header\n        fmt.Fprintf(pFile, \".model %s\\n\", pFileName);\n        fmt.Fprintf(pFile, \".inputs\");\n        for  i = 0; i \u003c nVarsInit; i++  {\n            fmt.Fprintf(pFile, \" i%d\", i);\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n        fmt.Fprintf(pFile, \".outputs o\");\n        fmt.Fprintf(pFile, \"\\n\");\n        // SOP header\n        fmt.Fprintf(pFile, \".names\");\n        for  i = 0; i \u003c Vec_WrdSize(vDivs); i++  {\n            fmt.Fprintf(pFile, \" i%d\", i);\n        }\n        fmt.Fprintf(pFile, \" o\\n\");\n        // SOP cubes\n        vStr = Vec_StrStart( Vec_WrdSize(vDivs) + 1 );\n        Vec_WecForEachLevel( vCubes, vCube, i )\n        {\n            if !Vec_IntSize(vCube) {\n                continue; }\n            for  k = 0; k \u003c Vec_WrdSize(vDivs); k++  {\n                Vec_StrWriteEntry( vStr, k, '-' );\n            }\n            Vec_IntForEachEntry( vCube, Lit, k )\n                Vec_StrWriteEntry( vStr, Abc_Lit2Var(Lit), byte((Abc_LitIsCompl(Lit) ? '0' : '1')) );\n            fmt.Fprintf(pFile, \"%s 1\\n\", Vec_StrArray(vStr));\n        }\n        Vec_StrFree( vStr );\n        // divisors\n        Vec_WrdForEachEntryStart( vDivs, Div, i, nVarsInit )\n        {\n            var pLits [2]int32 = [2]int32{ int32((Div \u0026 0xFFFFFFFF)), int32((Div \u003e\u003e 32)) };\n            fmt.Fprintf(pFile, \".names\");\n            fmt.Fprintf(pFile, \" i%d\", Abc_Lit2Var(pLits[0]));\n            fmt.Fprintf(pFile, \" i%d\", Abc_Lit2Var(pLits[1]));\n            fmt.Fprintf(pFile, \" i%d\\n\", i);\n            fmt.Fprintf(pFile, \"%d%d 1\\n\", !Abc_LitIsCompl(pLits[0]), !Abc_LitIsCompl(pLits[1]));\n        }\n        fmt.Fprintf(pFile, \".end\\n\\n\");\n        _ = (pFile).Close();\n        fmt.Printf(\"Written BLIF file \\\"%s\\\".\\n\", pFileName);\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starting the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxch_ManStart(vCubes *Vec_Wec_t, vLits *Vec_Wec_t) *Fxch_Man_t {\n    var vCube *Vec_Int_t;  var i, LogSize int32;\n    var p *Fxch_Man_t  = new(Fxch_Man_t);\n    p.vCubes = *vCubes;\n    p.vLits  = *vLits;\n    p.nVars  = Vec_WecSize(vLits)/2;\n    p.nLits  = 0;\n    // random numbers\n    Gia_ManRandom( 1 );\n    Vec_IntGrow( \u0026p.vRands, 2*p.nVars );\n    for  i = 0; i \u003c 2*p.nVars; i++  {\n        Vec_IntPush( \u0026p.vRands, Gia_ManRandom(0) \u0026 0x3FFFFFF );\n    } // assert( LogSize \u003c= 26 );\n    // create cube links\n    Vec_IntGrow( \u0026p.vCubeLinks, Vec_WecSize(\u0026p.vCubes) );\n    Vec_WecForEachLevel( vCubes, vCube, i )\n    {\n        Vec_IntPush( \u0026p.vCubeLinks, p.nLits+1 );\n        p.nLits += Vec_IntSize(vCube);\n    }\n    assert(Vec_IntSize(\u0026p.vCubeLinks) == Vec_WecSize(\u0026p.vCubes), \"Vec_IntSize(\u0026p.vCubeLinks) == Vec_WecSize(\u0026p.vCubes)\");\n    // create table\n    LogSize = Abc_Base2Log( p.nLits+1 );\n    assert(LogSize \u003c= 26, \"LogSize \u003c= 26\");\n    p.SizeMask = (1 \u003c\u003c LogSize) - 1;\n    p.pBins = ABC_CALLOC( Fxch_Obj_t, p.SizeMask + 1 );\n    assert(p.nLits+1 \u003c p.SizeMask+1, \"p.nLits+1 \u003c p.SizeMask+1\");\n    // divisor weights and cube pairs\n    Vec_FltGrow( \u0026p.vWeights, 1000 );\n    Vec_FltPush( \u0026p.vWeights, -1 );\n    Vec_WecGrow( \u0026p.vPairs, 1000 );\n    Vec_WecPushLevel( \u0026p.vPairs );\n    // prepare divisors\n    Vec_WrdGrow( \u0026p.vDivs, p.nVars + 1000 );\n    Vec_WrdFill( \u0026p.vDivs, p.nVars, 0 );\n    return p;\n}\nfunc Fxch_ManStop(p *Fxch_Man_t) {\n    Vec_WecErase( \u0026p.vCubes );\n    Vec_WecErase( \u0026p.vLits );\n    Vec_IntErase( \u0026p.vRands );\n    Vec_IntErase( \u0026p.vCubeLinks );\n    Hash_IntManStop( p.vHash );\n    Vec_QueFree( p.vPrio );\n    Vec_FltErase( \u0026p.vWeights );\n    Vec_WecErase( \u0026p.vPairs );\n    Vec_WrdErase( \u0026p.vDivs );\n    Vec_IntErase( \u0026p.vCubesS );\n    Vec_IntErase( \u0026p.vCubesD );\n    Vec_IntErase( \u0026p.vCube1 );\n    Vec_IntErase( \u0026p.vCube2 );\n    ABC_FREE( p.pBins );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxch_TabCompare(p *Fxch_Man_t, hCube1 int32, hCube2 int32) int32 {\n    var vCube1 *Vec_Int_t  = Fxch_ManCube( p, hCube1 );\n    var vCube2 *Vec_Int_t  = Fxch_ManCube( p, hCube2 );\n    if !Vec_IntSize(vCube1) || !Vec_IntSize(vCube2) || Vec_IntSize(vCube1) != Vec_IntSize(vCube2) {\n        return 0; }\n    Vec_IntClear( \u0026p.vCube1 );\n    Vec_IntClear( \u0026p.vCube2 );\n    Vec_IntAppendSkip( \u0026p.vCube1, vCube1, Pla_CubeLit(hCube1) );\n    Vec_IntAppendSkip( \u0026p.vCube2, vCube2, Pla_CubeLit(hCube2) );\n    return Vec_IntEqual( \u0026p.vCube1, \u0026p.vCube2 );\n}\nfunc Fxch_CompressCubes(p *Fxch_Man_t, vLit2Cube *Vec_Int_t) {\n    var i, hCube, k int32;\n    Vec_IntForEachEntry( vLit2Cube, hCube, i )\n        if ( Vec_IntSize(Vec_WecEntry(\u0026p.vCubes, hCube)) \u003e 0 )\n            Vec_IntWriteEntry( vLit2Cube, k++, hCube );\n    Vec_IntShrink( vLit2Cube, k );\n}\nfunc Fxch_CollectSingles(vArr1 *Vec_Int_t, vArr2 *Vec_Int_t, vArr *Vec_Int_t) int32 {\n    var pBeg1 *int32  = vArr1.pArray;\n    var pBeg2 *int32  = vArr2.pArray;\n    var pEnd1 *int32  = vArr1.pArray + vArr1.nSize;\n    var pEnd2 *int32  = vArr2.pArray + vArr2.nSize;\n    var pBeg1New *int32  = vArr1.pArray;\n    var pBeg2New *int32  = vArr2.pArray;\n    Vec_IntClear( vArr );\n    for  pBeg1 \u003c pEnd1 \u0026\u0026 pBeg2 \u003c pEnd2  {\n        if Pla_CubeNum(*pBeg1) == Pla_CubeNum(*pBeg2) {\n            Vec_IntPushTwo( vArr, *pBeg1, *pBeg2 );\npBeg1++;\npBeg2++;\n        } else if *pBeg1 \u003c *pBeg2 {\n            *pBeg1New++ = *pBeg1++;\n        } else { \n            *pBeg2New++ = *pBeg2++; }\n    }\n    for  pBeg1 \u003c pEnd1  {\n        *pBeg1New++ = *pBeg1++;\n    }\n    for  pBeg2 \u003c pEnd2  {\n        *pBeg2New++ = *pBeg2++;\n    }\n    Vec_IntShrink( vArr1, pBeg1New - vArr1.pArray );\n    Vec_IntShrink( vArr2, pBeg2New - vArr2.pArray );\n    return Vec_IntSize(vArr);\n}\nfunc Fxch_CollectDoubles(p *Fxch_Man_t, vPairs *Vec_Int_t, vRes *Vec_Int_t, Lit0 int32, Lit1 int32) {\n    var i, hCube1, hCube2 int32;\n    Vec_IntClear( vRes );\n    Vec_IntForEachEntryDouble( vPairs, hCube1, hCube2, i )\n        if ( Fxch_TabCompare(p, hCube1, hCube2) \u0026\u0026 \n             Vec_IntEntry(Fxch_ManCube(p, hCube1), Pla_CubeLit(hCube1)) == Lit0 \u0026\u0026 \n             Vec_IntEntry(Fxch_ManCube(p, hCube2), Pla_CubeLit(hCube2)) == Lit1 )\n            Vec_IntPushTwo( vRes, hCube1, hCube2 );\n    Vec_IntClear( vPairs );\n    // order pairs in the increasing order of the first cube\n    //Vec_IntSortPairs( vRes );\n}\nfunc Fxch_CompressLiterals2(p *Vec_Int_t, iInd1 int32, iInd2 int32) {\n    var i, Lit, k int32;\n    assert(iInd1 \u003e= 0 \u0026\u0026 iInd1 \u003c Vec_IntSize(p), \"iInd1 \u003e= 0 \u0026\u0026 iInd1 \u003c Vec_IntSize(p)\");\n    if iInd2 != -1 {\n    assert(iInd1 \u003e= 0 \u0026\u0026 iInd1 \u003c Vec_IntSize(p), \"iInd1 \u003e= 0 \u0026\u0026 iInd1 \u003c Vec_IntSize(p)\"); }\n    Vec_IntForEachEntry( p, Lit, i )\n        if ( i != iInd1 \u0026\u0026 i != iInd2 )\n            Vec_IntWriteEntry( p, k++, Lit );\n    Vec_IntShrink( p, k );\n}\nfunc Fxch_CompressLiterals(p *Vec_Int_t, iLit1 int32, iLit2 int32) {\n    var i, Lit, k int32;\n    Vec_IntForEachEntry( p, Lit, i )\n        if ( Lit != iLit1 \u0026\u0026 Lit != iLit2 )\n            Vec_IntWriteEntry( p, k++, Lit );\n    assert(Vec_IntSize(p) == k + 2, \"Vec_IntSize(p) == k + 2\");\n    Vec_IntShrink( p, k );\n}\nfunc Fxch_FilterCubes(p *Fxch_Man_t, vCubesS *Vec_Int_t, Lit0 int32, Lit1 int32) {\n    var vCube *Vec_Int_t;\n    var i, k, Lit, iCube, n int32;\n    var fFound0, fFound1 int32;\n    Vec_IntForEachEntry( vCubesS, iCube, i )\n    {\n        vCube = Vec_WecEntry( \u0026p.vCubes, iCube );\n        fFound0 = fFound1 = 0;\n        Vec_IntForEachEntry( vCube, Lit, k )\n        {\n            if Lit == Lit0 {\n                fFound0 = 1;\n            } else if Lit == Lit1 {\n                fFound1 = 1; }\n        }\n        if fFound0 \u0026\u0026 (fFound1 != 0) {\n            Vec_IntWriteEntry( vCubesS, n++, Pla_CubeHandle(iCube, 255) ); }\n    }\n    Vec_IntShrink( vCubesS, n );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Divisor addition removal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxch_DivisorAdd(p *Fxch_Man_t, Lit0 int32, Lit1 int32, Weight int32) int32 {\n    var iDiv int32;\n    assert(Lit0 != Lit1, \"Lit0 != Lit1\");\n    if Lit0 \u003c Lit1 {\n        iDiv = Hash_Int2ManInsert( p.vHash, Lit0, Lit1, 0 );\n    } else {\n        iDiv = Hash_Int2ManInsert( p.vHash, Lit1, Lit0, 0 ); }\n    if iDiv == Vec_FltSize(\u0026p.vWeights) {\n        Vec_FltPush( \u0026p.vWeights, -2 );\n        Vec_WecPushLevel( \u0026p.vPairs );\n        assert(Vec_FltSize(\u0026p.vWeights) == Vec_WecSize(\u0026p.vPairs), \"Vec_FltSize(\u0026p.vWeights) == Vec_WecSize(\u0026p.vPairs)\");\n    }\n    Vec_FltAddToEntry( \u0026p.vWeights, iDiv, Weight );\n    if p.vPrio {\n        if Vec_QueIsMember(p.vPrio, iDiv) {\n            Vec_QueUpdate( p.vPrio, iDiv );\n        } else { \n            Vec_QuePush( p.vPrio, iDiv ); }\n        //assert( iDiv \u003c Vec_QueSize(p-\u003evPrio) );\n    }\n    return iDiv;\n}\nfunc Fxch_DivisorRemove(p *Fxch_Man_t, Lit0 int32, Lit1 int32, Weight int32) {\n    var iDiv int32;\n    assert(Lit0 != Lit1, \"Lit0 != Lit1\");\n    if Lit0 \u003c Lit1 {\n        iDiv = *Hash_Int2ManLookup( p.vHash, Lit0, Lit1 );\n    } else {\n        iDiv = *Hash_Int2ManLookup( p.vHash, Lit1, Lit0 ); }\n    assert(iDiv \u003e 0 \u0026\u0026 iDiv \u003c Vec_FltSize(\u0026p.vWeights), \"iDiv \u003e 0 \u0026\u0026 iDiv \u003c Vec_FltSize(\u0026p.vWeights)\");\n    Vec_FltAddToEntry( \u0026p.vWeights, iDiv, -Weight );\n    if Vec_QueIsMember(p.vPrio, iDiv) {\n        Vec_QueUpdate( p.vPrio, iDiv ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starting the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxch_TabBin(p *Fxch_Man_t, Value int32) *Fxch_Obj_t { return p.pBins + (Value \u0026 p.SizeMask);         }\nfunc Fxch_TabEntry(p *Fxch_Man_t, i int32) *Fxch_Obj_t { if i != 0 {\n    return p.pBins + i;\n} else {\n    return nil;\n}                  }\nfunc Fxch_TabEntryId(p *Fxch_Man_t, pEnt *Fxch_Obj_t) int32 { assert(pEnt \u003e p.pBins, \"pEnt \u003e p.pBins\"); return pEnt - p.pBins; }\n\nfunc Fxch_TabMarkPair(p *Fxch_Man_t, i int32, j int32) {\n    var pI *Fxch_Obj_t  = Fxch_TabEntry(p, i);\n    var pJ *Fxch_Obj_t  = Fxch_TabEntry(p, j);\n    assert(pI.Next == j, \"pI.Next == j\");\n    assert(pJ.Prev == i, \"pJ.Prev == i\");\n    assert(pI.MarkN == 0, \"pI.MarkN == 0\");\n    assert(pI.MarkP == 0, \"pI.MarkP == 0\");\n    assert(pJ.MarkN == 0, \"pJ.MarkN == 0\");\n    assert(pJ.MarkP == 0, \"pJ.MarkP == 0\");\n    pI.MarkN = 1;\n    pJ.MarkP = 1;\n}\nfunc Fxch_TabUnmarkPair(p *Fxch_Man_t, i int32, j int32) {\n    var pI *Fxch_Obj_t  = Fxch_TabEntry(p, i);\n    var pJ *Fxch_Obj_t  = Fxch_TabEntry(p, j);\n    assert(pI.Next == j, \"pI.Next == j\");\n    assert(pJ.Prev == i, \"pJ.Prev == i\");\n    assert(pI.MarkN == 1, \"pI.MarkN == 1\");\n    assert(pI.MarkP == 0, \"pI.MarkP == 0\");\n    assert(pJ.MarkN == 0, \"pJ.MarkN == 0\");\n    assert(pJ.MarkP == 1, \"pJ.MarkP == 1\");\n    pI.MarkN = 0;\n    pJ.MarkP = 0;\n}\nfunc Fxch_TabInsertLink(p *Fxch_Man_t, i int32, j int32, fSkipCheck int32) {\n    var pI *Fxch_Obj_t  = Fxch_TabEntry(p, i);\n    var pN *Fxch_Obj_t  = Fxch_TabEntry(p, pI.Next);\n    var pJ *Fxch_Obj_t  = Fxch_TabEntry(p, j);\n    //assert( pJ-\u003eCube != 0 );\n    assert(pN.Prev == i, \"pN.Prev == i\");\n    assert((fSkipCheck != 0) || pI.MarkN == 0, \"fSkipCheck || pI.MarkN == 0\");\n    assert((fSkipCheck != 0) || pN.MarkP == 0, \"fSkipCheck || pN.MarkP == 0\");\n    assert((fSkipCheck != 0) || pJ.MarkN == 0, \"fSkipCheck || pJ.MarkN == 0\");\n    assert((fSkipCheck != 0) || pJ.MarkP == 0, \"fSkipCheck || pJ.MarkP == 0\");\n    pJ.Next = pI.Next;  pI.Next = j;\n    pJ.Prev = i;         pN.Prev = j;\n}\nfunc Fxch_TabExtractLink(p *Fxch_Man_t, i int32, j int32) {\n    var pI *Fxch_Obj_t  = Fxch_TabEntry(p, i);\n    var pJ *Fxch_Obj_t  = Fxch_TabEntry(p, j);\n    var pN *Fxch_Obj_t  = Fxch_TabEntry(p, pJ.Next);\n    //assert( pJ-\u003eCube != 0 );\n    assert(pI.Next == j, \"pI.Next == j\");\n    assert(pJ.Prev == i, \"pJ.Prev == i\");\n    assert(pN.Prev == j, \"pN.Prev == j\");\n    assert(pI.MarkN == 0, \"pI.MarkN == 0\");\n    assert(pJ.MarkP == 0, \"pJ.MarkP == 0\");\n    assert(pJ.MarkN == 0, \"pJ.MarkN == 0\");\n    assert(pN.MarkP == 0, \"pN.MarkP == 0\");\n    pI.Next = pJ.Next;  pJ.Next = 0;\n    pN.Prev = pJ.Prev;  pJ.Prev = 0;\n}\nfunc Fxch_TabInsert(p *Fxch_Man_t, iLink int32, Value int32, hCube int32) {\n    var iEnt int32;\n    var iDiv int32;\n    var Lit0 int32;\n    var Lit1 int32;\n    var fStart int32 = 1;\n    var pEnt *Fxch_Obj_t;\n    var pBin *Fxch_Obj_t   = Fxch_TabBin( p, Value );\n    var pCell *Fxch_Obj_t  = Fxch_TabEntry( p, iLink );\n    assert(pCell.MarkN == 0, \"pCell.MarkN == 0\");\n    assert(pCell.MarkP == 0, \"pCell.MarkP == 0\");\n    assert(pCell.Cube == 0, \"pCell.Cube == 0\");\n    pCell.Cube = hCube;\n    if pBin.Table == 0 {\n        pBin.Table = pCell.Next = pCell.Prev = iLink;\n        return;\n    }\n    // find equal cubes\n    for  iEnt = pBin.Table; iEnt != int32(pBin.Table) || (fStart != 0); iEnt, fStart = pEnt.Next, 0  {\n        pEnt = Fxch_TabBin( p, iEnt );\n        if pEnt.MarkN || pEnt.MarkP || !(Fxch_TabCompare(p, pEnt.Cube, hCube) != 0) {\n            continue; }\n        Fxch_TabInsertLink( p, iEnt, iLink, 0 );\n        Fxch_TabMarkPair( p, iEnt, iLink );\n        // get literals\n        Lit0 = Vec_IntEntry( Fxch_ManCube(p, hCube),      Pla_CubeLit(hCube) );\n        Lit1 = Vec_IntEntry( Fxch_ManCube(p, pEnt.Cube), Pla_CubeLit(pEnt.Cube) );\n        // increment divisor weight\n        iDiv = Fxch_DivisorAdd( p, Abc_LitNot(Lit0), Abc_LitNot(Lit1), Vec_IntSize(Fxch_ManCube(p, hCube)) );\n        // add divisor pair\n        assert(iDiv \u003c Vec_WecSize(\u0026p.vPairs), \"iDiv \u003c Vec_WecSize(\u0026p.vPairs)\");\n        if Lit0 \u003c Lit1 {\n            Vec_WecPush( \u0026p.vPairs, iDiv, hCube );\n            Vec_WecPush( \u0026p.vPairs, iDiv, pEnt.Cube );\n        \n        } else {\n            Vec_WecPush( \u0026p.vPairs, iDiv, pEnt.Cube );\n            Vec_WecPush( \u0026p.vPairs, iDiv, hCube );\n        }\n        p.nPairsD++;\n        return;\n    }\n    assert(iEnt == int32(pBin.Table), \"iEnt == int32(pBin.Table)\");\n    pEnt = Fxch_TabBin( p, iEnt );\n    Fxch_TabInsertLink( p, pEnt.Prev, iLink, 1 );\n}\nfunc Fxch_TabExtract(p *Fxch_Man_t, iLink int32, Value int32, hCube int32) {\n    var Lit0, Lit1 int32;\n    var pPair *Fxch_Obj_t  = nil;\n    var pBin *Fxch_Obj_t   = Fxch_TabBin( p, Value );\n    var pLink *Fxch_Obj_t  = Fxch_TabEntry( p, iLink );\n    assert(pLink.Cube == hCube, \"pLink.Cube == hCube\");\n    if pLink.MarkN {\n        pPair = Fxch_TabEntry( p, pLink.Next );\n        Fxch_TabUnmarkPair( p, iLink, pLink.Next );\n    \n    } else if pLink.MarkP {\n        pPair = Fxch_TabEntry( p, pLink.Prev );\n        Fxch_TabUnmarkPair( p, pLink.Prev, iLink );\n    }\n    if int32(pBin.Table) == iLink {\n        if pLink.Next != iLink {\n            pBin.Table = pLink.Next;\n        } else {\n            pBin.Table = 0;\n        } }\n    if pLink.Next == iLink {\n        assert(pLink.Prev == iLink, \"pLink.Prev == iLink\");\n        pLink.Next = pLink.Prev = 0;\n    \n    } else {\n        Fxch_TabExtractLink( p, pLink.Prev, iLink ); }\n    pLink.Cube = 0;\n    if pPair == nil {\n        return; }\n    assert((Fxch_TabCompare(p, pPair.Cube, hCube) != 0), \"Fxch_TabCompare(p, pPair.Cube, hCube)\");\n    // get literals\n    Lit0 = Vec_IntEntry( Fxch_ManCube(p, hCube),       Pla_CubeLit(hCube) );\n    Lit1 = Vec_IntEntry( Fxch_ManCube(p, pPair.Cube), Pla_CubeLit(pPair.Cube) );\n    // decrement divisor weight\n    Fxch_DivisorRemove( p, Abc_LitNot(Lit0), Abc_LitNot(Lit1), Vec_IntSize(Fxch_ManCube(p, hCube)) );\n    p.nPairsD--;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starting the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxch_TabSingleDivisors(p *Fxch_Man_t, iCube int32, fAdd int32) int32 {\n    var vCube *Vec_Int_t  = Vec_WecEntry( \u0026p.vCubes, iCube );\n    var i, k, Lit, Lit2 int32;\n    if Vec_IntSize(vCube) \u003c 2 {\n        return 0; }\n    Vec_IntForEachEntry( vCube, Lit, i )\n    Vec_IntForEachEntryStart( vCube, Lit2, k, i+1 )\n    {\n        assert(Lit \u003c Lit2, \"Lit \u003c Lit2\");\n        if fAdd != 0 {\n            Fxch_DivisorAdd( p, Lit, Lit2, 1 );\np.nPairsS++;\n        } else {\n            Fxch_DivisorRemove( p, Lit, Lit2, 1 );\np.nPairsS--; }\n    }\n    return Vec_IntSize(vCube) * (Vec_IntSize(vCube) - 1) / 2;\n}\nfunc Fxch_TabDoubleDivisors(p *Fxch_Man_t, iCube int32, fAdd int32) int32 {\n    var vCube *Vec_Int_t  = Vec_WecEntry( \u0026p.vCubes, iCube );\n    var iLinkFirst int32  = Vec_IntEntry( \u0026p.vCubeLinks, iCube );\n    var k, Lit, Value int32;\n    Vec_IntForEachEntry( vCube, Lit, k )\n        Value += Vec_IntEntry(\u0026p.vRands, Lit);\n    Vec_IntForEachEntry( vCube, Lit, k )\n    {\n        Value -= Vec_IntEntry(\u0026p.vRands, Lit);\n        if fAdd != 0 {\n            Fxch_TabInsert( p, iLinkFirst + k, Value, Pla_CubeHandle(iCube, k) );\n        } else {\n            Fxch_TabExtract( p, iLinkFirst + k, Value, Pla_CubeHandle(iCube, k) ); }\n        Value += Vec_IntEntry(\u0026p.vRands, Lit);\n    }\n    return 1;\n}\nfunc Fxch_ManCreateDivisors(p *Fxch_Man_t) {\n    var Weight float32;  var i int32;\n    // alloc hash table\n    assert(p.vHash == nil, \"p.vHash == nil\");\n    p.vHash = Hash_IntManStart( 1000 );\n    // create single-cube two-literal divisors\n    for  i = 0; i \u003c Vec_WecSize(\u0026p.vCubes); i++  {\n        Fxch_TabSingleDivisors( p, i, 1 );\n    } // add - no update\n    // create two-cube divisors\n    for  i = 0; i \u003c Vec_WecSize(\u0026p.vCubes); i++  {\n        Fxch_TabDoubleDivisors( p, i, 1 );\n    } // add - no update\n    // create queue with all divisors\n    p.vPrio = Vec_QueAlloc( Vec_FltSize(\u0026p.vWeights) );\n    Vec_QueSetPriority( p.vPrio, Vec_FltArrayP(\u0026p.vWeights) );\n    Vec_FltForEachEntry( \u0026p.vWeights, Weight, i )\n        if ( Weight \u003e 0.0 )\n            Vec_QuePush( p.vPrio, i );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the data-structure when one divisor is selected.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxch_ManUpdate(p *Fxch_Man_t, iDiv int32) {\n    var vCube1, vCube2, vLitP, vLitN *Vec_Int_t;\n    //int nLitsNew = p-\u003enLits - (int)Vec_FltEntry(\u0026p-\u003evWeights, iDiv);\n    var i, Lit0, Lit1, hCube1, hCube2, iVarNew int32;\n    //float Diff = Vec_FltEntry(\u0026p-\u003evWeights, iDiv) - (float)((int)Vec_FltEntry(\u0026p-\u003evWeights, iDiv));\n    //assert( Diff \u003e 0.0 \u0026\u0026 Diff \u003c 1.0 );\n\n    // get the divisor and select pivot variables\n    Vec_IntPush( \u0026p.vRands, Gia_ManRandom(0) \u0026 0x3FFFFFF ); \n    Vec_IntPush( \u0026p.vRands, Gia_ManRandom(0) \u0026 0x3FFFFFF );\n    Lit0 = Hash_IntObjData0( p.vHash, iDiv );\n    Lit1 = Hash_IntObjData1( p.vHash, iDiv );\n    assert(Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit1, \"Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit1\");\n    Vec_WrdPush( \u0026p.vDivs, ((word)Lit1 \u003c\u003c 32) | (word)Lit0 );\n\n    // if the input cover is not prime, it may happen that we are extracting divisor (x + !x)\n    // although it is not strictly correct, it seems to be fine to just skip such divisors\n//    if ( Abc_Lit2Var(Lit0) == Abc_Lit2Var(Lit1) \u0026\u0026 Vec_IntSize(Hsh_VecReadEntry(p-\u003evHash, iDiv)) == 2 )\n//        return;\n\n    // collect single-cube-divisor cubes\n    vLitP = Vec_WecEntry(\u0026p.vLits, Lit0);\n    vLitN = Vec_WecEntry(\u0026p.vLits, Lit1);\n    Fxch_CompressCubes( p, vLitP );\n    Fxch_CompressCubes( p, vLitN );\n//    Fxch_CollectSingles( vLitP, vLitN, \u0026p-\u003evCubesS );\n//    assert( Vec_IntSize(\u0026p-\u003evCubesS) % 2 == 0 );\n    Vec_IntTwoRemoveCommon( vLitP, vLitN, \u0026p.vCubesS );\n    Fxch_FilterCubes( p, \u0026p.vCubesS, Lit0, Lit1 );\n\n    // collect double-cube-divisor cube pairs\n    Fxch_CollectDoubles( p, Vec_WecEntry(\u0026p.vPairs, iDiv), \u0026p.vCubesD, Abc_LitNot(Lit0), Abc_LitNot(Lit1) );\n    assert(Vec_IntSize(\u0026p.vCubesD) % 2 == 0, \"Vec_IntSize(\u0026p.vCubesD) % 2 == 0\");\n    Vec_IntUniqifyPairs( \u0026p.vCubesD );\n    assert(Vec_IntSize(\u0026p.vCubesD) % 2 == 0, \"Vec_IntSize(\u0026p.vCubesD) % 2 == 0\");\n\n    // subtract cost of single-cube divisors\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p.vCubesS, hCube1, i )\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube1), 0 );  // remove - update\n    Vec_IntForEachEntryDouble( \u0026p.vCubesD, hCube1, hCube2, i )\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube1), 0 );\n// remove - update\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube2), 0 );  // remove - update\n\n    // subtract cost of double-cube divisors\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p.vCubesS, hCube1, i )\n    {\n        //printf( \"%d \", Pla_CubeNum(hCube1) );\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube1), 0 );  // remove - update\n    }\n    //printf( \"\\n\" );\n\n    Vec_IntForEachEntryDouble( \u0026p.vCubesD, hCube1, hCube2, i )\n    {\n        //printf( \"%d \", Pla_CubeNum(hCube1) );\n        //printf( \"%d  \", Pla_CubeNum(hCube2) );\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube1), 0 );\n// remove - update\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube2), 0 );  // remove - update\n    }\n    //printf( \"\\n\" );\n\n    // create new literals\n    p.nLits += 2;\n    iVarNew = Vec_WecSize( \u0026p.vLits ) / 2;\n    vLitP = Vec_WecPushLevel( \u0026p.vLits );\n    vLitN = Vec_WecPushLevel( \u0026p.vLits );\n    vLitP = Vec_WecEntry( \u0026p.vLits, Vec_WecSize(\u0026p.vLits) - 2 );\n    // update single-cube divisor cubes\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p.vCubesS, hCube1, i )\n    {\n//        int Lit0s, Lit1s;\n        vCube1 = Fxch_ManCube( p, hCube1 );\n//        Lit0s = Vec_IntEntry(vCube1, Pla_CubeLit(hCube1));\n//        Lit1s = Vec_IntEntry(vCube1, Pla_CubeLit(hCube2));\n//        assert( Pla_CubeNum(hCube1) == Pla_CubeNum(hCube2) );\n//        assert( Vec_IntEntry(vCube1, Pla_CubeLit(hCube1)) == Lit0 );\n//        assert( Vec_IntEntry(vCube1, Pla_CubeLit(hCube2)) == Lit1 );\n        Fxch_CompressLiterals( vCube1, Lit0, Lit1 );\n//        Vec_IntPush( vLitP, Pla_CubeHandle(Pla_CubeNum(hCube1), Vec_IntSize(vCube1)) );\n        Vec_IntPush( vLitP, Pla_CubeNum(hCube1) );\n        Vec_IntPush( vCube1, Abc_Var2Lit(iVarNew, 0) );\n\n        //if ( Pla_CubeNum(hCube1) == 3 )\n        //    printf( \"VecSize = %d\\n\", Vec_IntSize(vCube1) );\n\n        p.nLits--;\n    }\n    // update double-cube divisor cube pairs\n    Vec_IntForEachEntryDouble( \u0026p.vCubesD, hCube1, hCube2, i )\n    {\n        vCube1 = Fxch_ManCube( p, hCube1 );\n        vCube2 = Fxch_ManCube( p, hCube2 );\n        assert(Vec_IntEntry(vCube1, Pla_CubeLit(hCube1)) == Abc_LitNot(Lit0), \"Vec_IntEntry(vCube1, Pla_CubeLit(hCube1)) == Abc_LitNot(Lit0)\");\n        assert(Vec_IntEntry(vCube2, Pla_CubeLit(hCube2)) == Abc_LitNot(Lit1), \"Vec_IntEntry(vCube2, Pla_CubeLit(hCube2)) == Abc_LitNot(Lit1)\");\n        Fxch_CompressLiterals2( vCube1, Pla_CubeLit(hCube1), -1 );\n//        Vec_IntPush( vLitN, Pla_CubeHandle(Pla_CubeNum(hCube1), Vec_IntSize(vCube1)) );\n        Vec_IntPush( vLitN, Pla_CubeNum(hCube1) );\n        Vec_IntPush( vCube1, Abc_Var2Lit(iVarNew, 1) );\n        p.nLits -= Vec_IntSize(vCube2);\n\n        //if ( Pla_CubeNum(hCube1) == 3 )\n        //    printf( \"VecSize = %d\\n\", Vec_IntSize(vCube1) );\n\n        // remove second cube\n        Vec_IntClear( vCube2 ); \n    }\n    Vec_IntSort( vLitN, 0 );\n    Vec_IntSort( vLitP, 0 );\n\n    // add cost of single-cube divisors\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p.vCubesS, hCube1, i )\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube1), 1 );  // add - update\n    Vec_IntForEachEntryDouble( \u0026p.vCubesD, hCube1, hCube2, i )\n        Fxch_TabSingleDivisors( p, Pla_CubeNum(hCube1), 1 );  // add - update\n\n    // add cost of double-cube divisors\n//    Vec_IntForEachEntryDouble( \u0026p-\u003evCubesS, hCube1, hCube2, i )\n    Vec_IntForEachEntry( \u0026p.vCubesS, hCube1, i )\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube1), 1 );  // add - update\n    Vec_IntForEachEntryDouble( \u0026p.vCubesD, hCube1, hCube2, i )\n        Fxch_TabDoubleDivisors( p, Pla_CubeNum(hCube1), 1 );  // add - update\n    \n    // check predicted improvement: (new SOP lits == old SOP lits - divisor weight)\n    //assert( p-\u003enLits == nLitsNew );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements the improved fast_extract algorithm.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxch_PrintStats(p *Fxch_Man_t, clk abctime) {\n    fmt.Printf(\"Num =%6d  \", Vec_WrdSize(\u0026p.vDivs) - p.nVars);\n    fmt.Printf(\"Cubes =%8d  \", Vec_WecSizeUsed(\u0026p.vCubes));\n    fmt.Printf(\"Lits  =%8d  \", p.nLits);\n    fmt.Printf(\"Divs  =%8d  \", Hash_IntManEntryNum(p.vHash));\n    fmt.Printf(\"Divs+ =%8d  \", Vec_QueSize(p.vPrio));\n    fmt.Printf(\"PairS =%6d  \", p.nPairsS);\n    fmt.Printf(\"PairD =%6d  \", p.nPairsD);\n    Abc_PrintTime( 1, \"Time\", clk );\n//    printf( \"\\n\" );\n}\nfunc Fxch_PrintDivOne(p *Fxch_Man_t, iDiv int32) {\n    var i int32;\n    var Lit0 int32  = Hash_IntObjData0( p.vHash, iDiv );\n    var Lit1 int32  = Hash_IntObjData1( p.vHash, iDiv );\n    assert(Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit1, \"Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 \u0026\u0026 Lit0 \u003c Lit1\");\n    fmt.Printf(\"Div %4d : \", iDiv);\n    fmt.Printf(\"Weight %12.5f  \", Vec_FltEntry(\u0026p.vWeights, iDiv));\n    fmt.Printf(\"Pairs = %5d  \", Vec_IntSize(Vec_WecEntry(\u0026p.vPairs, iDiv))/2);\n    for  i = 0; i \u003c Vec_WrdSize(\u0026p.vDivs); i++  {\n        if i == Abc_Lit2Var(Lit0) {\n            fmt.Printf(\"%d\", !Abc_LitIsCompl(Lit0));\n        } else if i == Abc_Lit2Var(Lit1) {\n            fmt.Printf(\"%d\", !Abc_LitIsCompl(Lit1));\n        } else {\n            fmt.Printf(\"-\"); }\n    }\n    fmt.Printf(\"\\n\");\n}\nfunc Fxch_PrintDivisors(p *Fxch_Man_t) {\n    var iDiv int32;\n    for  iDiv = 1; iDiv \u003c Vec_FltSize(\u0026p.vWeights); iDiv++  {\n        Fxch_PrintDivOne( p, iDiv );\n    }\n    fmt.Printf(\"\\n\");\n}\n\nfunc Fxch_ManFastExtract(p *Fxch_Man_t, fVerbose int32, fVeryVerbose int32) int32 {\n    var nNewNodesMax int32  = ABC_INFINITY;\n    var clk abctime  = Abc_Clock();\n    var i, iDiv int32;\n    Fxch_ManCreateDivisors( p );\n//    Fxch_PrintDivisors( p );\n    if fVerbose != 0 {\n        Fxch_PrintStats( p, Abc_Clock() - clk ); }\n    p.timeStart = Abc_Clock();\n    for  i = 0; i \u003c nNewNodesMax \u0026\u0026 Vec_QueTopPriority(p.vPrio) \u003e 0.0; i++  {\n        iDiv = Vec_QuePop(p.vPrio);\n        //if ( fVerbose )\n        //    Fxch_PrintStats( p, Abc_Clock() - clk );\n        if fVeryVerbose != 0 {\n            Fxch_PrintDivOne( p, iDiv ); }\n        Fxch_ManUpdate( p, iDiv );\n    }\n    if fVerbose != 0 {\n        Fxch_PrintStats( p, Abc_Clock() - clk ); }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements the improved fast_extract algorithm.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pla_ManPerformFxch(p *Pla_Man_t) int32 {\n    var pFileName string // was [1000]byte in C\n\n    var pFxch *Fxch_Man_t;\n    Pla_ManConvertFromBits( p );\n    pFxch = Fxch_ManStart( \u0026p.vCubeLits, \u0026p.vOccurs );\n    Vec_WecZero( \u0026p.vCubeLits );\n    Vec_WecZero( \u0026p.vOccurs );\n    Fxch_ManFastExtract( pFxch, 1, 0 );\n    pFileName = fmt.Sprintf(\"%s.blif\", Pla_ManName(p));\n    //Fxch_ManWriteBlif( pFileName, \u0026pFxch-\u003evCubes, \u0026pFxch-\u003evDivs );\n    Fxch_ManStop( pFxch );\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

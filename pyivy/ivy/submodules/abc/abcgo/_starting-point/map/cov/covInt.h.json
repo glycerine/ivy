@@ -1,0 +1,765 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h",
+  "SHA256": "2463261fcd98475b84ec518b792b1bfe66d0862e9d7099e7464ea08804e3e149",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 6119
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCube.uData, 0xff, sizeof(unsigned) * p.nWords );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 7076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pCube.uData, pCopy.uData, sizeof(unsigned) * p.nWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 315,
+        "Column": 5,
+        "ByteOffset": 10626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCube0.nVars == pCube1.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 381,
+        "Column": 9,
+        "ByteOffset": 12599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 382,
+        "Column": 24,
+        "ByteOffset": 12638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Min_CubeWrite( stdout, pCube0 );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 383,
+        "Column": 24,
+        "ByteOffset": 12679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Min_CubeWrite( stdout, pCube1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 384,
+        "Column": 9,
+        "ByteOffset": 12705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Error: Min_CubesDistOne() looks at two equal cubes!\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 446,
+        "Column": 9,
+        "ByteOffset": 14402
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 447,
+        "Column": 24,
+        "ByteOffset": 14441
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Min_CubeWrite( stdout, pCube0 );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 448,
+        "Column": 24,
+        "ByteOffset": 14482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Min_CubeWrite( stdout, pCube1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 449,
+        "Column": 9,
+        "ByteOffset": 14508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Error: Min_CubesDistTwo() looks at two equal cubes or dist1 cubes!\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 468,
+        "Column": 5,
+        "ByteOffset": 15016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCube0.nVars == pCube1.nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 491,
+        "Column": 5,
+        "ByteOffset": 15657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCube0.nVars == pCube1.nVars );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Min_CubeHasBit",
+      "Start": 3189,
+      "End": 3317,
+      "BodyStart": 3261,
+      "Original": "static inline int  Min_CubeHasBit( Min_Cube_t * p, int i )              { return (p-\u003euData[(i)\u003e\u003e5] \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0;     }",
+      "Draft": "func Min_CubeHasBit(p *Min_Cube_t, i int32) int32 { return (p.uData[(i)\u003e\u003e5] \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0;     }"
+    },
+    {
+      "Name": "Min_CubeSetBit",
+      "Start": 3318,
+      "End": 3446,
+      "BodyStart": 3390,
+      "Original": "static inline void Min_CubeSetBit( Min_Cube_t * p, int i )              { p-\u003euData[(i)\u003e\u003e5] |= (1\u003c\u003c((i) \u0026 31));                 }",
+      "Draft": "func Min_CubeSetBit(p *Min_Cube_t, i int32) { p.uData[(i)\u003e\u003e5] |= (1\u003c\u003c((i) \u0026 31));                 }"
+    },
+    {
+      "Name": "Min_CubeXorBit",
+      "Start": 3447,
+      "End": 3575,
+      "BodyStart": 3519,
+      "Original": "static inline void Min_CubeXorBit( Min_Cube_t * p, int i )              { p-\u003euData[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31));                 }",
+      "Draft": "func Min_CubeXorBit(p *Min_Cube_t, i int32) { p.uData[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31));                 }"
+    },
+    {
+      "Name": "Min_CubeGetVar",
+      "Start": 3576,
+      "End": 3704,
+      "BodyStart": 3648,
+      "Original": "static inline int  Min_CubeGetVar( Min_Cube_t * p, int Var )            { return 3 \u0026 (p-\u003euData[(2*Var)\u003e\u003e5] \u003e\u003e ((2*Var) \u0026 31)); }",
+      "Draft": "func Min_CubeGetVar(p *Min_Cube_t, Var int32) int32 { return 3 \u0026 (p.uData[(2*Var)\u003e\u003e5] \u003e\u003e ((2*Var) \u0026 31)); }"
+    },
+    {
+      "Name": "Min_CubeXorVar",
+      "Start": 3705,
+      "End": 3833,
+      "BodyStart": 3777,
+      "Original": "static inline void Min_CubeXorVar( Min_Cube_t * p, int Var, int Value ) { p-\u003euData[(2*Var)\u003e\u003e5] ^= (Value\u003c\u003c((2*Var) \u0026 31));     }",
+      "Draft": "func Min_CubeXorVar(p *Min_Cube_t, Var int32, Value int32) { p.uData[(2*Var)\u003e\u003e5] ^= (Value\u003c\u003c((2*Var) \u0026 31));     }"
+    },
+    {
+      "Name": "Min_CubeAlloc",
+      "Start": 5769,
+      "End": 6111,
+      "BodyStart": 5827,
+      "Original": "static inline Min_Cube_t * Min_CubeAlloc( Min_Man_t * p )\n{\n    Min_Cube_t * pCube;\n    pCube = (Min_Cube_t *)Extra_MmFixedEntryFetch( p-\u003epMemMan );\n    pCube-\u003epNext  = NULL;\n    pCube-\u003enVars  = p-\u003enVars;\n    pCube-\u003enWords = p-\u003enWords;\n    pCube-\u003enLits  = 0;\n    memset( pCube-\u003euData, 0xff, sizeof(unsigned) * p-\u003enWords );\n    return pCube;\n}",
+      "Draft": "func Min_CubeAlloc(p *Min_Man_t) *Min_Cube_t {\n    var pCube *Min_Cube_t;\n    pCube = (Min_Cube_t *)Extra_MmFixedEntryFetch( p.pMemMan );\n    pCube.pNext  = nil;\n    pCube.nVars  = p.nVars;\n    pCube.nWords = p.nWords;\n    pCube.nLits  = 0;\n    memset( pCube.uData, 0xff, sizeof(unsigned) * p.nWords );\n    return pCube;\n}"
+    },
+    {
+      "Name": "Min_CubeAllocVar",
+      "Start": 6392,
+      "End": 6618,
+      "BodyStart": 6475,
+      "Original": "static inline Min_Cube_t * Min_CubeAllocVar( Min_Man_t * p, int iVar, int fCompl )\n{\n    Min_Cube_t * pCube;\n    pCube = Min_CubeAlloc( p );\n    Min_CubeXorBit( pCube, iVar*2+fCompl );\n    pCube-\u003enLits = 1;\n    return pCube;\n}",
+      "Draft": "func Min_CubeAllocVar(p *Min_Man_t, iVar int32, fCompl int32) *Min_Cube_t {\n    var pCube *Min_Cube_t;\n    pCube = Min_CubeAlloc( p );\n    Min_CubeXorBit( pCube, iVar*2+fCompl );\n    pCube.nLits = 1;\n    return pCube;\n}"
+    },
+    {
+      "Name": "Min_CubeDup",
+      "Start": 6871,
+      "End": 7129,
+      "BodyStart": 6947,
+      "Original": "static inline Min_Cube_t * Min_CubeDup( Min_Man_t * p, Min_Cube_t * pCopy )\n{\n    Min_Cube_t * pCube;\n    pCube = Min_CubeAlloc( p );\n    memcpy( pCube-\u003euData, pCopy-\u003euData, sizeof(unsigned) * p-\u003enWords );\n    pCube-\u003enLits = pCopy-\u003enLits;\n    return pCube;\n}",
+      "Draft": "func Min_CubeDup(p *Min_Man_t, pCopy *Min_Cube_t) *Min_Cube_t {\n    var pCube *Min_Cube_t;\n    pCube = Min_CubeAlloc( p );\n    memcpy( pCube.uData, pCopy.uData, sizeof(unsigned) * p.nWords );\n    pCube.nLits = pCopy.nLits;\n    return pCube;\n}"
+    },
+    {
+      "Name": "Min_CubeRecycle",
+      "Start": 7383,
+      "End": 7518,
+      "BodyStart": 7455,
+      "Original": "static inline void Min_CubeRecycle( Min_Man_t * p, Min_Cube_t * pCube )\n{\n    Extra_MmFixedEntryRecycle( p-\u003epMemMan, (char *)pCube );\n}",
+      "Draft": "func Min_CubeRecycle(p *Min_Man_t, pCube *Min_Cube_t) {\n    Extra_MmFixedEntryRecycle( p.pMemMan, (char *)pCube );\n}"
+    },
+    {
+      "Name": "Min_CoverRecycle",
+      "Start": 7778,
+      "End": 8007,
+      "BodyStart": 7852,
+      "Original": "static inline void Min_CoverRecycle( Min_Man_t * p, Min_Cube_t * pCover )\n{\n    Min_Cube_t * pCube, * pCube2;\n    Min_CoverForEachCubeSafe( pCover, pCube, pCube2 )\n        Extra_MmFixedEntryRecycle( p-\u003epMemMan, (char *)pCube );\n}",
+      "Draft": "func Min_CoverRecycle(p *Min_Man_t, pCover *Min_Cube_t) {\n    var pCube, pCube2 *Min_Cube_t;\n    // inlining of macro Min_CoverForEachCubeSafe\n    for  pCube = pCover,                                                 pCube2 = pCube? pCube.pNext: nil;                             (pCube != nil);                                                          pCube = pCube2,                                                 pCube2 = pCube? pCube.pNext: nil  {\n        Extra_MmFixedEntryRecycle( p.pMemMan, (char *)pCube );\n    }\n}"
+    },
+    {
+      "Name": "Min_CubeCountLits",
+      "Start": 8284,
+      "End": 8624,
+      "BodyStart": 8342,
+      "Original": "static inline int Min_CubeCountLits( Min_Cube_t * pCube )\n{\n    unsigned uData;\n    int Count = 0, i, w;\n    for ( w = 0; w \u003c (int)pCube-\u003enWords; w++ )\n    {\n        uData = pCube-\u003euData[w] ^ (pCube-\u003euData[w] \u003e\u003e 1);\n        for ( i = 0; i \u003c 32; i += 2 )\n            if ( uData \u0026 (1 \u003c\u003c i) )\n                Count++;\n    }\n    return Count;\n}",
+      "Draft": "func Min_CubeCountLits(pCube *Min_Cube_t) int32 {\n    var uData uint32;\n    var Count, i, w int32;\n    for  w = 0; w \u003c int32(pCube.nWords); w++  {\n        uData = pCube.uData[w] ^ (pCube.uData[w] \u003e\u003e 1);\n        for  i = 0; i \u003c 32; i += 2  {\n            if uData \u0026 (1 \u003c\u003c i) {\n                Count++; }\n        }\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Min_CubeGetLits",
+      "Start": 8900,
+      "End": 9281,
+      "BodyStart": 8976,
+      "Original": "static inline void Min_CubeGetLits( Min_Cube_t * pCube, Vec_Int_t * vLits )\n{\n    unsigned uData;\n    int i, w;\n    Vec_IntClear( vLits );\n    for ( w = 0; w \u003c (int)pCube-\u003enWords; w++ )\n    {\n        uData = pCube-\u003euData[w] ^ (pCube-\u003euData[w] \u003e\u003e 1);\n        for ( i = 0; i \u003c 32; i += 2 )\n            if ( uData \u0026 (1 \u003c\u003c i) )\n                Vec_IntPush( vLits, w*16 + i/2 );\n    }\n}",
+      "Draft": "func Min_CubeGetLits(pCube *Min_Cube_t, vLits *Vec_Int_t) {\n    var uData uint32;\n    var i, w int32;\n    Vec_IntClear( vLits );\n    for  w = 0; w \u003c int32(pCube.nWords); w++  {\n        uData = pCube.uData[w] ^ (pCube.uData[w] \u003e\u003e 1);\n        for  i = 0; i \u003c 32; i += 2  {\n            if uData \u0026 (1 \u003c\u003c i) {\n                Vec_IntPush( vLits, w*16 + i/2 ); }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Min_CoverCountCubes",
+      "Start": 9557,
+      "End": 9741,
+      "BodyStart": 9618,
+      "Original": "static inline int Min_CoverCountCubes( Min_Cube_t * pCover )\n{\n    Min_Cube_t * pCube;\n    int Count = 0;\n    Min_CoverForEachCube( pCover, pCube )\n        Count++;\n    return Count;\n}",
+      "Draft": "func Min_CoverCountCubes(pCover *Min_Cube_t) int32 {\n    var pCube *Min_Cube_t;\n    var Count int32;\n    // inlining of macro Min_CoverForEachCube\n    for  pCube = pCover;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n        Count++;\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Min_CubesDisjoint",
+      "Start": 10011,
+      "End": 10408,
+      "BodyStart": 10091,
+      "Original": "static inline int Min_CubesDisjoint( Min_Cube_t * pCube0, Min_Cube_t * pCube1 )\n{\n    unsigned uData;\n    int i;\n    assert( pCube0-\u003enVars == pCube1-\u003enVars );\n    for ( i = 0; i \u003c (int)pCube0-\u003enWords; i++ )\n    {\n        uData = pCube0-\u003euData[i] \u0026 pCube1-\u003euData[i];\n        uData = (uData | (uData \u003e\u003e 1)) \u0026 0x55555555;\n        if ( uData != 0x55555555 )\n            return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Min_CubesDisjoint(pCube0 *Min_Cube_t, pCube1 *Min_Cube_t) int32 {\n    var uData uint32;\n    var i int32;\n    assert(pCube0.nVars == pCube1.nVars, \"pCube0.nVars == pCube1.nVars\");\n    for  i = 0; i \u003c int32(pCube0.nWords); i++  {\n        uData = pCube0.uData[i] \u0026 pCube1.uData[i];\n        uData = (uData | (uData \u003e\u003e 1)) \u0026 0x55555555;\n        if uData != 0x55555555 {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Min_CoverGetDisjVars",
+      "Start": 10693,
+      "End": 11222,
+      "BodyStart": 10794,
+      "Original": "static inline void Min_CoverGetDisjVars( Min_Cube_t * pThis, Min_Cube_t * pCube, Vec_Int_t * vVars )\n{\n    unsigned uData;\n    int i, w;\n    Vec_IntClear( vVars );\n    for ( w = 0; w \u003c (int)pCube-\u003enWords; w++ )\n    {\n        uData  = pThis-\u003euData[w] \u0026 (pThis-\u003euData[w] \u003e\u003e 1) \u0026 0x55555555;\n        uData \u0026= (pCube-\u003euData[w] ^ (pCube-\u003euData[w] \u003e\u003e 1));\n        if ( uData == 0 )\n            continue;\n        for ( i = 0; i \u003c 32; i += 2 )\n            if ( uData \u0026 (1 \u003c\u003c i) )\n                Vec_IntPush( vVars, w*16 + i/2 );\n    }\n}",
+      "Draft": "func Min_CoverGetDisjVars(pThis *Min_Cube_t, pCube *Min_Cube_t, vVars *Vec_Int_t) {\n    var uData uint32;\n    var i, w int32;\n    Vec_IntClear( vVars );\n    for  w = 0; w \u003c int32(pCube.nWords); w++  {\n        uData  = pThis.uData[w] \u0026 (pThis.uData[w] \u003e\u003e 1) \u0026 0x55555555;\n        uData \u0026= (pCube.uData[w] ^ (pCube.uData[w] \u003e\u003e 1));\n        if uData == 0 {\n            continue; }\n        for  i = 0; i \u003c 32; i += 2  {\n            if uData \u0026 (1 \u003c\u003c i) {\n                Vec_IntPush( vVars, w*16 + i/2 ); }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Min_CubesDistOne",
+      "Start": 11491,
+      "End": 12351,
+      "BodyStart": 11590,
+      "Original": "static inline int Min_CubesDistOne( Min_Cube_t * pCube0, Min_Cube_t * pCube1, Min_Cube_t * pTemp )\n{\n    unsigned uData;\n    int i, fFound = 0;\n    for ( i = 0; i \u003c (int)pCube0-\u003enWords; i++ )\n    {\n        uData = pCube0-\u003euData[i] ^ pCube1-\u003euData[i];\n        if ( uData == 0 )\n        {\n            if ( pTemp ) pTemp-\u003euData[i] = 0;\n            continue;\n        }\n        if ( fFound )\n            return 0;\n        uData = (uData | (uData \u003e\u003e 1)) \u0026 0x55555555;\n        if ( (uData \u0026 (uData-1)) \u003e 0 ) // more than one 1\n            return 0;\n        if ( pTemp ) pTemp-\u003euData[i] = uData | (uData \u003c\u003c 1);\n        fFound = 1;\n    }\n    if ( fFound == 0 )\n    {\n        printf( \"\\n\" );\n        Min_CubeWrite( stdout, pCube0 );\n        Min_CubeWrite( stdout, pCube1 );\n        printf( \"Error: Min_CubesDistOne() looks at two equal cubes!\\n\" );\n    }\n    return 1;\n}",
+      "Draft": "func Min_CubesDistOne(pCube0 *Min_Cube_t, pCube1 *Min_Cube_t, pTemp *Min_Cube_t) int32 {\n    var uData uint32;\n    var i, fFound int32;\n    for  i = 0; i \u003c int32(pCube0.nWords); i++  {\n        uData = pCube0.uData[i] ^ pCube1.uData[i];\n        if uData == 0 {\n            if pTemp != nil { pTemp.uData[i] = 0; }\n            continue;\n        }\n        if fFound != 0 {\n            return 0; }\n        uData = (uData | (uData \u003e\u003e 1)) \u0026 0x55555555;\n        if (uData \u0026 (uData-1)) \u003e 0 { // more than one 1\n            return 0; }\n        if pTemp != nil { pTemp.uData[i] = uData | (uData \u003c\u003c 1); }\n        fFound = 1;\n    }\n    if fFound == 0 {\n        fmt.Printf(\"\\n\");\n        Min_CubeWrite( os.Stdout, pCube0 );\n        Min_CubeWrite( os.Stdout, pCube1 );\n        fmt.Printf(\"Error: Min_CubesDistOne() looks at two equal cubes!\\n\");\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Min_CubesDistTwo",
+      "Start": 12620,
+      "End": 14153,
+      "BodyStart": 12725,
+      "Original": "static inline int Min_CubesDistTwo( Min_Cube_t * pCube0, Min_Cube_t * pCube1, int * pVar0, int * pVar1 )\n{\n    unsigned uData;//, uData2;\n    int i, k, Var0 = -1, Var1 = -1;\n    for ( i = 0; i \u003c (int)pCube0-\u003enWords; i++ )\n    {\n        uData = pCube0-\u003euData[i] ^ pCube1-\u003euData[i];\n        if ( uData == 0 )\n            continue;\n        if ( Var0 \u003e= 0 \u0026\u0026 Var1 \u003e= 0 ) // more than two 1s\n            return 0;\n        uData = (uData | (uData \u003e\u003e 1)) \u0026 0x55555555;\n        if ( (Var0 \u003e= 0 || Var1 \u003e= 0) \u0026\u0026 (uData \u0026 (uData-1)) \u003e 0 )\n            return 0;\n        for ( k = 0; k \u003c 32; k += 2 )\n            if ( uData \u0026 (1 \u003c\u003c k) )\n            {\n                if ( Var0 == -1 )\n                    Var0 = 16 * i + k/2;\n                else if ( Var1 == -1 )\n                    Var1 = 16 * i + k/2;\n                else\n                    return 0;\n            }\n        /*\n        if ( Var0 \u003e= 0 )\n        {\n            uData \u0026= 0xFFFF;\n            uData2 = (uData \u003e\u003e 16);\n            if ( uData \u0026\u0026 uData2 )\n                return 0;\n            if ( uData )\n            {\n            }\n            uData }= uData2;\n            uData \u0026= 0x\n        }\n        */\n    }\n    if ( Var0 \u003e= 0 \u0026\u0026 Var1 \u003e= 0 )\n    {\n        *pVar0 = Var0;\n        *pVar1 = Var1;\n        return 1;\n    }\n    if ( Var0 == -1 || Var1 == -1 )\n    {\n        printf( \"\\n\" );\n        Min_CubeWrite( stdout, pCube0 );\n        Min_CubeWrite( stdout, pCube1 );\n        printf( \"Error: Min_CubesDistTwo() looks at two equal cubes or dist1 cubes!\\n\" );\n    }\n    return 0;\n}",
+      "Draft": "func Min_CubesDistTwo(pCube0 *Min_Cube_t, pCube1 *Min_Cube_t, pVar0 *int32, pVar1 *int32) int32 {\n    var uData uint32;//, uData2;\n    var i int32;\n    var k int32;\n    var Var0 int32 = -1;\n    var Var1 int32 = -1;\n    for  i = 0; i \u003c int32(pCube0.nWords); i++  {\n        uData = pCube0.uData[i] ^ pCube1.uData[i];\n        if uData == 0 {\n            continue; }\n        if Var0 \u003e= 0 \u0026\u0026 Var1 \u003e= 0 { // more than two 1s\n            return 0; }\n        uData = (uData | (uData \u003e\u003e 1)) \u0026 0x55555555;\n        if (Var0 \u003e= 0 || Var1 \u003e= 0) \u0026\u0026 (uData \u0026 (uData-1)) \u003e 0 {\n            return 0; }\n        for  k = 0; k \u003c 32; k += 2  {\n            if uData \u0026 (1 \u003c\u003c k) {\n                if Var0 == -1 {\n                    Var0 = 16 * i + k/2;\n                } else if Var1 == -1 {\n                    Var1 = 16 * i + k/2;\n                } else {\n                    return 0; }\n            }\n        }\n        /*\n        if ( Var0 \u003e= 0 )\n        {\n            uData \u0026= 0xFFFF;\n            uData2 = (uData \u003e\u003e 16);\n            if ( uData \u0026\u0026 uData2 )\n                return 0;\n            if ( uData )\n            {\n            }\n            uData }= uData2;\n            uData \u0026= 0x\n        }\n        */\n    }\n    if Var0 \u003e= 0 \u0026\u0026 Var1 \u003e= 0 {\n        *pVar0 = Var0;\n        *pVar1 = Var1;\n        return 1;\n    }\n    if Var0 == -1 || Var1 == -1 {\n        fmt.Printf(\"\\n\");\n        Min_CubeWrite( os.Stdout, pCube0 );\n        Min_CubeWrite( os.Stdout, pCube1 );\n        fmt.Printf(\"Error: Min_CubesDistTwo() looks at two equal cubes or dist1 cubes!\\n\");\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Min_CubesProduct",
+      "Start": 14420,
+      "End": 14805,
+      "BodyStart": 14523,
+      "Original": "static inline Min_Cube_t * Min_CubesProduct( Min_Man_t * p, Min_Cube_t * pCube0, Min_Cube_t * pCube1 )\n{\n    Min_Cube_t * pCube;\n    int i;\n    assert( pCube0-\u003enVars == pCube1-\u003enVars );\n    pCube = Min_CubeAlloc( p );\n    for ( i = 0; i \u003c p-\u003enWords; i++ )\n        pCube-\u003euData[i] = pCube0-\u003euData[i] \u0026 pCube1-\u003euData[i];\n    pCube-\u003enLits = Min_CubeCountLits( pCube );\n    return pCube;\n}",
+      "Draft": "func Min_CubesProduct(p *Min_Man_t, pCube0 *Min_Cube_t, pCube1 *Min_Cube_t) *Min_Cube_t {\n    var pCube *Min_Cube_t;\n    var i int32;\n    assert(pCube0.nVars == pCube1.nVars, \"pCube0.nVars == pCube1.nVars\");\n    pCube = Min_CubeAlloc( p );\n    for  i = 0; i \u003c p.nWords; i++  {\n        pCube.uData[i] = pCube0.uData[i] \u0026 pCube1.uData[i];\n    }\n    pCube.nLits = Min_CubeCountLits( pCube );\n    return pCube;\n}"
+    },
+    {
+      "Name": "Min_CubesXor",
+      "Start": 15072,
+      "End": 15453,
+      "BodyStart": 15171,
+      "Original": "static inline Min_Cube_t * Min_CubesXor( Min_Man_t * p, Min_Cube_t * pCube0, Min_Cube_t * pCube1 )\n{\n    Min_Cube_t * pCube;\n    int i;\n    assert( pCube0-\u003enVars == pCube1-\u003enVars );\n    pCube = Min_CubeAlloc( p );\n    for ( i = 0; i \u003c p-\u003enWords; i++ )\n        pCube-\u003euData[i] = pCube0-\u003euData[i] ^ pCube1-\u003euData[i];\n    pCube-\u003enLits = Min_CubeCountLits( pCube );\n    return pCube;\n}",
+      "Draft": "func Min_CubesXor(p *Min_Man_t, pCube0 *Min_Cube_t, pCube1 *Min_Cube_t) *Min_Cube_t {\n    var pCube *Min_Cube_t;\n    var i int32;\n    assert(pCube0.nVars == pCube1.nVars, \"pCube0.nVars == pCube1.nVars\");\n    pCube = Min_CubeAlloc( p );\n    for  i = 0; i \u003c p.nWords; i++  {\n        pCube.uData[i] = pCube0.uData[i] ^ pCube1.uData[i];\n    }\n    pCube.nLits = Min_CubeCountLits( pCube );\n    return pCube;\n}"
+    },
+    {
+      "Name": "Min_CubesAreEqual",
+      "Start": 15720,
+      "End": 15950,
+      "BodyStart": 15800,
+      "Original": "static inline int Min_CubesAreEqual( Min_Cube_t * pCube0, Min_Cube_t * pCube1 )\n{\n    int i;\n    for ( i = 0; i \u003c (int)pCube0-\u003enWords; i++ )\n        if ( pCube0-\u003euData[i] != pCube1-\u003euData[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Min_CubesAreEqual(pCube0 *Min_Cube_t, pCube1 *Min_Cube_t) int32 {\n    var i int32;\n    for  i = 0; i \u003c int32(pCube0.nWords); i++  {\n        if pCube0.uData[i] != pCube1.uData[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Min_CubeIsContained",
+      "Start": 16238,
+      "End": 16491,
+      "BodyStart": 16320,
+      "Original": "static inline int Min_CubeIsContained( Min_Cube_t * pCube0, Min_Cube_t * pCube1 )\n{\n    int i;\n    for ( i = 0; i \u003c (int)pCube0-\u003enWords; i++ )\n        if ( (pCube0-\u003euData[i] \u0026 pCube1-\u003euData[i]) != pCube1-\u003euData[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Min_CubeIsContained(pCube0 *Min_Cube_t, pCube1 *Min_Cube_t) int32 {\n    var i int32;\n    for  i = 0; i \u003c int32(pCube0.nWords); i++  {\n        if (pCube0.uData[i] \u0026 pCube1.uData[i]) != pCube1.uData[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Min_CubesTransform",
+      "Start": 16774,
+      "End": 17075,
+      "BodyStart": 16874,
+      "Original": "static inline void Min_CubesTransform( Min_Cube_t * pCube, Min_Cube_t * pDist, Min_Cube_t * pMask )\n{\n    int w;\n    for ( w = 0; w \u003c (int)pCube-\u003enWords; w++ )\n    {\n        pCube-\u003euData[w]  =  pCube-\u003euData[w] ^ pDist-\u003euData[w];\n        pCube-\u003euData[w] |= (pDist-\u003euData[w] \u0026 ~pMask-\u003euData[w]);\n    }\n}",
+      "Draft": "func Min_CubesTransform(pCube *Min_Cube_t, pDist *Min_Cube_t, pMask *Min_Cube_t) {\n    var w int32;\n    for  w = 0; w \u003c int32(pCube.nWords); w++  {\n        pCube.uData[w]  =  pCube.uData[w] ^ pDist.uData[w];\n        pCube.uData[w] |= (pDist.uData[w] \u0026 ~pMask.uData[w]);\n    }\n}"
+    },
+    {
+      "Name": "Min_CubesTransformOr",
+      "Start": 17369,
+      "End": 17556,
+      "BodyStart": 17451,
+      "Original": "static inline void Min_CubesTransformOr( Min_Cube_t * pCube, Min_Cube_t * pDist )\n{\n    int w;\n    for ( w = 0; w \u003c (int)pCube-\u003enWords; w++ )\n        pCube-\u003euData[w] |= pDist-\u003euData[w];\n}",
+      "Draft": "func Min_CubesTransformOr(pCube *Min_Cube_t, pDist *Min_Cube_t) {\n    var w int32;\n    for  w = 0; w \u003c int32(pCube.nWords); w++  {\n        pCube.uData[w] |= pDist.uData[w];\n    }\n}"
+    },
+    {
+      "Name": "Min_CoverExpandRemoveEqual",
+      "Start": 17847,
+      "End": 18586,
+      "BodyStart": 17931,
+      "Original": "static inline void Min_CoverExpandRemoveEqual( Min_Man_t * p, Min_Cube_t * pCover )\n{\n    Min_Cube_t * pCube, * pCube2, * pThis;\n    if ( pCover == NULL )\n    {\n        Min_ManClean( p, p-\u003enVars );\n        return;\n    }\n    Min_ManClean( p, pCover-\u003enVars );\n    Min_CoverForEachCubeSafe( pCover, pCube, pCube2 )\n    {\n        // go through the linked list\n        Min_CoverForEachCube( p-\u003eppStore[pCube-\u003enLits], pThis )\n            if ( Min_CubesAreEqual( pCube, pThis ) )\n            {\n                Min_CubeRecycle( p, pCube );\n                break;\n            }\n        if ( pThis != NULL )\n            continue;\n        pCube-\u003epNext = p-\u003eppStore[pCube-\u003enLits];\n        p-\u003eppStore[pCube-\u003enLits] = pCube;\n        p-\u003enCubes++;\n    }\n}",
+      "Draft": "func Min_CoverExpandRemoveEqual(p *Min_Man_t, pCover *Min_Cube_t) {\n    var pCube, pCube2, pThis *Min_Cube_t;\n    if pCover == nil {\n        Min_ManClean( p, p.nVars );\n        return;\n    }\n    Min_ManClean( p, pCover.nVars );\n    // inlining of macro Min_CoverForEachCubeSafe\n    for  pCube = pCover,                                                 pCube2 = pCube? pCube.pNext: nil;                             (pCube != nil);                                                          pCube = pCube2,                                                 pCube2 = pCube? pCube.pNext: nil  {\n        // go through the linked list\n        // inlining of macro Min_CoverForEachCube\n        for  pThis = p.ppStore[pCube.nLits];                                                 (pThis != nil);                                                          pThis = pThis.pNext  {\n            if Min_CubesAreEqual( pCube, pThis ) != 0 {\n                Min_CubeRecycle( p, pCube );\n                break;\n            }\n        }\n        if pThis != nil {\n            continue; }\n        pCube.pNext = p.ppStore[pCube.nLits];\n        p.ppStore[pCube.nLits] = pCube;\n        p.nCubes++;\n    }\n}"
+    },
+    {
+      "Name": "Min_CoverContainsCube",
+      "Start": 18896,
+      "End": 19554,
+      "BodyStart": 18973,
+      "Original": "static inline int Min_CoverContainsCube( Min_Man_t * p, Min_Cube_t * pCube )\n{\n    Min_Cube_t * pThis;\n    int i;\n/*\n    // this cube cannot be equal to any cube\n    Min_CoverForEachCube( p-\u003eppStore[pCube-\u003enLits], pThis )\n    {\n        if ( Min_CubesAreEqual( pCube, pThis ) )\n        {\n            Min_CubeWrite( stdout, pCube );\n            assert( 0 );\n        }\n    }\n*/\n    // try to find a containing cube\n    for ( i = 0; i \u003c= (int)pCube-\u003enLits; i++ )\n    Min_CoverForEachCube( p-\u003eppStore[i], pThis )\n    {\n        // skip the bubble\n        if ( pThis != p-\u003epBubble \u0026\u0026 Min_CubeIsContained( pThis, pCube ) )\n            return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Min_CoverContainsCube(p *Min_Man_t, pCube *Min_Cube_t) int32 {\n    var pThis *Min_Cube_t;\n    var i int32;\n/*\n    // this cube cannot be equal to any cube\n    Min_CoverForEachCube( p-\u003eppStore[pCube-\u003enLits], pThis )\n    {\n        if ( Min_CubesAreEqual( pCube, pThis ) )\n        {\n            Min_CubeWrite( stdout, pCube );\n            assert( 0 );\n        }\n    }\n*/\n    // try to find a containing cube\n    for  i = 0; i \u003c= int32(pCube.nLits); i++  {\n    // inlining of macro Min_CoverForEachCube\n    for  pThis = p.ppStore[i];                                                 (pThis != nil);                                                          pThis = pThis.pNext  {\n        // skip the bubble\n        if pThis != p.pBubble \u0026\u0026 (Min_CubeIsContained( pThis, pCube ) != 0) {\n            return 1; }\n    }\n    }\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::struct::Min_Man_t_::// tautology cube\n    Min_Cube_t *      pTriv0[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Min_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1251,
+      "End": 1311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::struct::Min_Man_t_::// trivial cube\n    Min_Cube_t *      pTriv1[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Min_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1311,
+      "End": 1365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::struct::Min_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Min_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 937,
+      "End": 1713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::struct::Min_Cube_t_::// the pointer to the next cube in the cover\n    unsigned          nVars    : 10;",
+      "Category": "struct-field-review",
+      "Symbol": "Min_Cube_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1764,
+      "End": 1855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::struct::Min_Cube_t_::// the number of variables\n    unsigned          nWords   : 12;",
+      "Category": "struct-field-review",
+      "Symbol": "Min_Cube_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1855,
+      "End": 1920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::struct::Min_Cube_t_::// the number of machine words\n    unsigned          nLits    : 10;",
+      "Category": "struct-field-review",
+      "Symbol": "Min_Cube_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1920,
+      "End": 1989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::struct::Min_Cube_t_::// the number of literals in the cube\n    unsigned          uData[1];",
+      "Category": "struct-field-review",
+      "Symbol": "Min_Cube_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1989,
+      "End": 2060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::struct::Min_Cube_t_",
+      "Category": "struct-review",
+      "Symbol": "Min_Cube_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1715,
+      "End": 2098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::mechanical::sizeof::6060",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6060,
+      "End": 6066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::mechanical::sizeof::7045",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7045,
+      "End": 7051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::pointer-cast::5865",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5865,
+      "End": 5879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::pointer-cast::7500",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7500,
+      "End": 7508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::pointer-cast::8298",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7989,
+      "End": 7997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::macro::Min_CoverForEachCube",
+      "Category": "macro-review",
+      "Symbol": "Min_CoverForEachCube",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2163,
+      "End": 2393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::macro::Min_CoverForEachCubeSafe",
+      "Category": "macro-review",
+      "Symbol": "Min_CoverForEachCubeSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2394,
+      "End": 2770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::macro::Min_CoverForEachCubePrev",
+      "Category": "macro-review",
+      "Symbol": "Min_CoverForEachCubePrev",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2771,
+      "End": 3133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubeHasBit",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeHasBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3189,
+      "End": 3317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubeSetBit",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeSetBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3318,
+      "End": 3446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubeXorBit",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeXorBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3447,
+      "End": 3575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubeGetVar",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeGetVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3576,
+      "End": 3704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubeXorVar",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeXorVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3705,
+      "End": 3833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubeAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5769,
+      "End": 6111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubeAllocVar",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeAllocVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6392,
+      "End": 6618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubeDup",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6871,
+      "End": 7129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubeRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7383,
+      "End": 7518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::ternary::Min_CoverRecycle",
+      "Category": "ternary-review",
+      "Symbol": "Min_CoverRecycle",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7778,
+      "End": 8007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CoverRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Min_CoverRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7778,
+      "End": 8007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubeCountLits",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeCountLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8284,
+      "End": 8624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubeGetLits",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeGetLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8900,
+      "End": 9281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CoverCountCubes",
+      "Category": "semantic-review",
+      "Symbol": "Min_CoverCountCubes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9557,
+      "End": 9741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubesDisjoint",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubesDisjoint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10011,
+      "End": 10408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CoverGetDisjVars",
+      "Category": "semantic-review",
+      "Symbol": "Min_CoverGetDisjVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10693,
+      "End": 11222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubesDistOne",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubesDistOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11491,
+      "End": 12351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubesDistTwo",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubesDistTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12620,
+      "End": 14153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubesProduct",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubesProduct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14420,
+      "End": 14805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubesXor",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubesXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15072,
+      "End": 15453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubesAreEqual",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubesAreEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15720,
+      "End": 15950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubeIsContained",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeIsContained",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16238,
+      "End": 16491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubesTransform",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubesTransform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16774,
+      "End": 17075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CubesTransformOr",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubesTransformOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17369,
+      "End": 17556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::ternary::Min_CoverExpandRemoveEqual",
+      "Category": "ternary-review",
+      "Symbol": "Min_CoverExpandRemoveEqual",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17847,
+      "End": 18586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CoverExpandRemoveEqual",
+      "Category": "semantic-review",
+      "Symbol": "Min_CoverExpandRemoveEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17847,
+      "End": 18586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::Min_CoverContainsCube",
+      "Category": "semantic-review",
+      "Symbol": "Min_CoverContainsCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18896,
+      "End": 19554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19811
+    }
+  ],
+  "Draft": "package cov\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [covInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Mapping into network of SOPs/ESOPs.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: covInt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n//#include \"base/abc/abc.h\"\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Min_Man_t =  Min_Man_t_;\ntype Min_Cube_t = Min_Cube_t_;\n\ntype Min_Man_t_ struct {\n    nVars               int32;          // the number of vars\n    nWords               int32;         // the number of words\n    pMemMan  *Extra_MmFixed_t;        // memory manager for cubes\n    // temporary cubes\n    pOne0       *Min_Cube_t;          // tautology cube\n    pOne1       *Min_Cube_t;          // tautology cube\n    pTriv0 [2]*Min_Cube_t;      // trivial cube\n    pTriv1 [2]*Min_Cube_t;      // trivial cube\n    pTemp       *Min_Cube_t;          // cube for computing the distance\n    pBubble       *Min_Cube_t;        // cube used as a separator\n    // temporary storage for the new cover\n    nCubes               int32;         // the number of cubes\n    ppStore      **Min_Cube_t;        // storage for cubes by number of literals\n}\n\ntype Min_Cube_t_ struct {\n    pNext       *Min_Cube_t;          // the pointer to the next cube in the cover\n    nVars uint32; /* C bitfield: 10 bits; review packing and truncation */  // the number of variables\n    nWords uint32; /* C bitfield: 12 bits; review packing and truncation */  // the number of machine words\n    nLits uint32; /* C bitfield: 10 bits; review packing and truncation */  // the number of literals in the cube\n    uData [1]uint32;       // the bit-data for the cube\n}\n\n\n// iterators through the entries in the linked lists of cubes\n// Original macro:\n// #define Min_CoverForEachCube( pCover, pCube )                   \\\n//     for ( pCube = pCover;                                       \\\n//           pCube;                                                \\\n//           pCube = pCube-\u003epNext )\n\n// Original macro:\n// #define Min_CoverForEachCubeSafe( pCover, pCube, pCube2 )       \\\n//     for ( pCube = pCover,                                       \\\n//           pCube2 = pCube? pCube-\u003epNext: NULL;                   \\\n//           pCube;                                                \\\n//           pCube = pCube2,                                       \\\n//           pCube2 = pCube? pCube-\u003epNext: NULL )\n\n// Original macro:\n// #define Min_CoverForEachCubePrev( pCover, pCube, ppPrev )       \\\n//     for ( pCube = pCover,                                       \\\n//           ppPrev = \u0026(pCover);                                   \\\n//           pCube;                                                \\\n//           ppPrev = \u0026pCube-\u003epNext,                               \\\n//           pCube = pCube-\u003epNext )\n\n\n// macros to get hold of bits and values in the cubes\nfunc Min_CubeHasBit(p *Min_Cube_t, i int32) int32 { return (p.uData[(i)\u003e\u003e5] \u0026 (1\u003c\u003c((i) \u0026 31))) \u003e 0;     }\nfunc Min_CubeSetBit(p *Min_Cube_t, i int32) { p.uData[(i)\u003e\u003e5] |= (1\u003c\u003c((i) \u0026 31));                 }\nfunc Min_CubeXorBit(p *Min_Cube_t, i int32) { p.uData[(i)\u003e\u003e5] ^= (1\u003c\u003c((i) \u0026 31));                 }\nfunc Min_CubeGetVar(p *Min_Cube_t, Var int32) int32 { return 3 \u0026 (p.uData[(2*Var)\u003e\u003e5] \u003e\u003e ((2*Var) \u0026 31)); }\nfunc Min_CubeXorVar(p *Min_Cube_t, Var int32, Value int32) { p.uData[(2*Var)\u003e\u003e5] ^= (Value\u003c\u003c((2*Var) \u0026 31));     }\n\n/*=== covMinEsop.c ==========================================================*/\n// extern void         Min_EsopMinimize( Min_Man_t * p );\n\n// extern void         Min_EsopAddCube( Min_Man_t * p, Min_Cube_t * pCube );\n\n/*=== covMinSop.c ==========================================================*/\n// extern void         Min_SopMinimize( Min_Man_t * p );\n\n// extern void         Min_SopAddCube( Min_Man_t * p, Min_Cube_t * pCube );\n\n/*=== covMinMan.c ==========================================================*/\n// extern Min_Man_t *  Min_ManAlloc( int nVars );\n\n// extern void         Min_ManClean( Min_Man_t * p, int nSupp );\n\n// extern void         Min_ManFree( Min_Man_t * p );\n\n/*=== covMinUtil.c ==========================================================*/\n// extern void         Min_CoverCreate( Vec_Str_t * vCover, Min_Cube_t * pCover, char Type );\n\n// extern void         Min_CubeWrite( FILE * pFile, Min_Cube_t * pCube );\n\n// extern void         Min_CoverWrite( FILE * pFile, Min_Cube_t * pCover );\n\n// extern void         Min_CoverWriteStore( FILE * pFile, Min_Man_t * p );\n\n// extern void         Min_CoverWriteFile( Min_Cube_t * pCover, char * pName, int fEsop );\n\n// extern void         Min_CoverCheck( Min_Man_t * p );\n\n// extern int          Min_CubeCheck( Min_Cube_t * pCube );\n\n// extern Min_Cube_t * Min_CoverCollect( Min_Man_t * p, int nSuppSize );\n\n// extern void         Min_CoverExpand( Min_Man_t * p, Min_Cube_t * pCover );\n\n// extern int          Min_CoverSuppVarNum( Min_Man_t * p, Min_Cube_t * pCover );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubeAlloc(p *Min_Man_t) *Min_Cube_t {\n    var pCube *Min_Cube_t;\n    pCube = (Min_Cube_t *)Extra_MmFixedEntryFetch( p.pMemMan );\n    pCube.pNext  = nil;\n    pCube.nVars  = p.nVars;\n    pCube.nWords = p.nWords;\n    pCube.nLits  = 0;\n    memset( pCube.uData, 0xff, sizeof(unsigned) * p.nWords );\n    return pCube;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the cube representing elementary var.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubeAllocVar(p *Min_Man_t, iVar int32, fCompl int32) *Min_Cube_t {\n    var pCube *Min_Cube_t;\n    pCube = Min_CubeAlloc( p );\n    Min_CubeXorBit( pCube, iVar*2+fCompl );\n    pCube.nLits = 1;\n    return pCube;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubeDup(p *Min_Man_t, pCopy *Min_Cube_t) *Min_Cube_t {\n    var pCube *Min_Cube_t;\n    pCube = Min_CubeAlloc( p );\n    memcpy( pCube.uData, pCopy.uData, sizeof(unsigned) * p.nWords );\n    pCube.nLits = pCopy.nLits;\n    return pCube;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recycles the cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubeRecycle(p *Min_Man_t, pCube *Min_Cube_t) {\n    Extra_MmFixedEntryRecycle( p.pMemMan, (char *)pCube );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recycles the cube cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CoverRecycle(p *Min_Man_t, pCover *Min_Cube_t) {\n    var pCube, pCube2 *Min_Cube_t;\n    // inlining of macro Min_CoverForEachCubeSafe\n    for  pCube = pCover,                                                 pCube2 = pCube? pCube.pNext: nil;                             (pCube != nil);                                                          pCube = pCube2,                                                 pCube2 = pCube? pCube.pNext: nil  {\n        Extra_MmFixedEntryRecycle( p.pMemMan, (char *)pCube );\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of cubes in the cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubeCountLits(pCube *Min_Cube_t) int32 {\n    var uData uint32;\n    var Count, i, w int32;\n    for  w = 0; w \u003c int32(pCube.nWords); w++  {\n        uData = pCube.uData[w] ^ (pCube.uData[w] \u003e\u003e 1);\n        for  i = 0; i \u003c 32; i += 2  {\n            if uData \u0026 (1 \u003c\u003c i) {\n                Count++; }\n        }\n    }\n    return Count;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of cubes in the cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubeGetLits(pCube *Min_Cube_t, vLits *Vec_Int_t) {\n    var uData uint32;\n    var i, w int32;\n    Vec_IntClear( vLits );\n    for  w = 0; w \u003c int32(pCube.nWords); w++  {\n        uData = pCube.uData[w] ^ (pCube.uData[w] \u003e\u003e 1);\n        for  i = 0; i \u003c 32; i += 2  {\n            if uData \u0026 (1 \u003c\u003c i) {\n                Vec_IntPush( vLits, w*16 + i/2 ); }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of cubes in the cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CoverCountCubes(pCover *Min_Cube_t) int32 {\n    var pCube *Min_Cube_t;\n    var Count int32;\n    // inlining of macro Min_CoverForEachCube\n    for  pCube = pCover;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n        Count++;\n    }\n    return Count;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if two cubes are disjoint.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubesDisjoint(pCube0 *Min_Cube_t, pCube1 *Min_Cube_t) int32 {\n    var uData uint32;\n    var i int32;\n    assert(pCube0.nVars == pCube1.nVars, \"pCube0.nVars == pCube1.nVars\");\n    for  i = 0; i \u003c int32(pCube0.nWords); i++  {\n        uData = pCube0.uData[i] \u0026 pCube1.uData[i];\n        uData = (uData | (uData \u003e\u003e 1)) \u0026 0x55555555;\n        if uData != 0x55555555 {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the disjoint variables of the two cubes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CoverGetDisjVars(pThis *Min_Cube_t, pCube *Min_Cube_t, vVars *Vec_Int_t) {\n    var uData uint32;\n    var i, w int32;\n    Vec_IntClear( vVars );\n    for  w = 0; w \u003c int32(pCube.nWords); w++  {\n        uData  = pThis.uData[w] \u0026 (pThis.uData[w] \u003e\u003e 1) \u0026 0x55555555;\n        uData \u0026= (pCube.uData[w] ^ (pCube.uData[w] \u003e\u003e 1));\n        if uData == 0 {\n            continue; }\n        for  i = 0; i \u003c 32; i += 2  {\n            if uData \u0026 (1 \u003c\u003c i) {\n                Vec_IntPush( vVars, w*16 + i/2 ); }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if two cubes are disjoint.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubesDistOne(pCube0 *Min_Cube_t, pCube1 *Min_Cube_t, pTemp *Min_Cube_t) int32 {\n    var uData uint32;\n    var i, fFound int32;\n    for  i = 0; i \u003c int32(pCube0.nWords); i++  {\n        uData = pCube0.uData[i] ^ pCube1.uData[i];\n        if uData == 0 {\n            if pTemp != nil { pTemp.uData[i] = 0; }\n            continue;\n        }\n        if fFound != 0 {\n            return 0; }\n        uData = (uData | (uData \u003e\u003e 1)) \u0026 0x55555555;\n        if (uData \u0026 (uData-1)) \u003e 0 { // more than one 1\n            return 0; }\n        if pTemp != nil { pTemp.uData[i] = uData | (uData \u003c\u003c 1); }\n        fFound = 1;\n    }\n    if fFound == 0 {\n        fmt.Printf(\"\\n\");\n        Min_CubeWrite( os.Stdout, pCube0 );\n        Min_CubeWrite( os.Stdout, pCube1 );\n        fmt.Printf(\"Error: Min_CubesDistOne() looks at two equal cubes!\\n\");\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if two cubes are disjoint.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubesDistTwo(pCube0 *Min_Cube_t, pCube1 *Min_Cube_t, pVar0 *int32, pVar1 *int32) int32 {\n    var uData uint32;//, uData2;\n    var i int32;\n    var k int32;\n    var Var0 int32 = -1;\n    var Var1 int32 = -1;\n    for  i = 0; i \u003c int32(pCube0.nWords); i++  {\n        uData = pCube0.uData[i] ^ pCube1.uData[i];\n        if uData == 0 {\n            continue; }\n        if Var0 \u003e= 0 \u0026\u0026 Var1 \u003e= 0 { // more than two 1s\n            return 0; }\n        uData = (uData | (uData \u003e\u003e 1)) \u0026 0x55555555;\n        if (Var0 \u003e= 0 || Var1 \u003e= 0) \u0026\u0026 (uData \u0026 (uData-1)) \u003e 0 {\n            return 0; }\n        for  k = 0; k \u003c 32; k += 2  {\n            if uData \u0026 (1 \u003c\u003c k) {\n                if Var0 == -1 {\n                    Var0 = 16 * i + k/2;\n                } else if Var1 == -1 {\n                    Var1 = 16 * i + k/2;\n                } else {\n                    return 0; }\n            }\n        }\n        /*\n        if ( Var0 \u003e= 0 )\n        {\n            uData \u0026= 0xFFFF;\n            uData2 = (uData \u003e\u003e 16);\n            if ( uData \u0026\u0026 uData2 )\n                return 0;\n            if ( uData )\n            {\n            }\n            uData }= uData2;\n            uData \u0026= 0x\n        }\n        */\n    }\n    if Var0 \u003e= 0 \u0026\u0026 Var1 \u003e= 0 {\n        *pVar0 = Var0;\n        *pVar1 = Var1;\n        return 1;\n    }\n    if Var0 == -1 || Var1 == -1 {\n        fmt.Printf(\"\\n\");\n        Min_CubeWrite( os.Stdout, pCube0 );\n        Min_CubeWrite( os.Stdout, pCube1 );\n        fmt.Printf(\"Error: Min_CubesDistTwo() looks at two equal cubes or dist1 cubes!\\n\");\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Makes the produce of two cubes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubesProduct(p *Min_Man_t, pCube0 *Min_Cube_t, pCube1 *Min_Cube_t) *Min_Cube_t {\n    var pCube *Min_Cube_t;\n    var i int32;\n    assert(pCube0.nVars == pCube1.nVars, \"pCube0.nVars == pCube1.nVars\");\n    pCube = Min_CubeAlloc( p );\n    for  i = 0; i \u003c p.nWords; i++  {\n        pCube.uData[i] = pCube0.uData[i] \u0026 pCube1.uData[i];\n    }\n    pCube.nLits = Min_CubeCountLits( pCube );\n    return pCube;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Makes the produce of two cubes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubesXor(p *Min_Man_t, pCube0 *Min_Cube_t, pCube1 *Min_Cube_t) *Min_Cube_t {\n    var pCube *Min_Cube_t;\n    var i int32;\n    assert(pCube0.nVars == pCube1.nVars, \"pCube0.nVars == pCube1.nVars\");\n    pCube = Min_CubeAlloc( p );\n    for  i = 0; i \u003c p.nWords; i++  {\n        pCube.uData[i] = pCube0.uData[i] ^ pCube1.uData[i];\n    }\n    pCube.nLits = Min_CubeCountLits( pCube );\n    return pCube;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Makes the produce of two cubes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubesAreEqual(pCube0 *Min_Cube_t, pCube1 *Min_Cube_t) int32 {\n    var i int32;\n    for  i = 0; i \u003c int32(pCube0.nWords); i++  {\n        if pCube0.uData[i] != pCube1.uData[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pCube1 is contained in pCube0, bitwise.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubeIsContained(pCube0 *Min_Cube_t, pCube1 *Min_Cube_t) int32 {\n    var i int32;\n    for  i = 0; i \u003c int32(pCube0.nWords); i++  {\n        if (pCube0.uData[i] \u0026 pCube1.uData[i]) != pCube1.uData[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the cube into the result of merging.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubesTransform(pCube *Min_Cube_t, pDist *Min_Cube_t, pMask *Min_Cube_t) {\n    var w int32;\n    for  w = 0; w \u003c int32(pCube.nWords); w++  {\n        pCube.uData[w]  =  pCube.uData[w] ^ pDist.uData[w];\n        pCube.uData[w] |= (pDist.uData[w] \u0026 ~pMask.uData[w]);\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the cube into the result of distance-1 merging.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubesTransformOr(pCube *Min_Cube_t, pDist *Min_Cube_t) {\n    var w int32;\n    for  w = 0; w \u003c int32(pCube.nWords); w++  {\n        pCube.uData[w] |= pDist.uData[w];\n    }\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Sorts the cover in the increasing number of literals.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CoverExpandRemoveEqual(p *Min_Man_t, pCover *Min_Cube_t) {\n    var pCube, pCube2, pThis *Min_Cube_t;\n    if pCover == nil {\n        Min_ManClean( p, p.nVars );\n        return;\n    }\n    Min_ManClean( p, pCover.nVars );\n    // inlining of macro Min_CoverForEachCubeSafe\n    for  pCube = pCover,                                                 pCube2 = pCube? pCube.pNext: nil;                             (pCube != nil);                                                          pCube = pCube2,                                                 pCube2 = pCube? pCube.pNext: nil  {\n        // go through the linked list\n        // inlining of macro Min_CoverForEachCube\n        for  pThis = p.ppStore[pCube.nLits];                                                 (pThis != nil);                                                          pThis = pThis.pNext  {\n            if Min_CubesAreEqual( pCube, pThis ) != 0 {\n                Min_CubeRecycle( p, pCube );\n                break;\n            }\n        }\n        if pThis != nil {\n            continue; }\n        pCube.pNext = p.ppStore[pCube.nLits];\n        p.ppStore[pCube.nLits] = pCube;\n        p.nCubes++;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the given cube is contained in one of the cubes of the cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CoverContainsCube(p *Min_Man_t, pCube *Min_Cube_t) int32 {\n    var pThis *Min_Cube_t;\n    var i int32;\n/*\n    // this cube cannot be equal to any cube\n    Min_CoverForEachCube( p-\u003eppStore[pCube-\u003enLits], pThis )\n    {\n        if ( Min_CubesAreEqual( pCube, pThis ) )\n        {\n            Min_CubeWrite( stdout, pCube );\n            assert( 0 );\n        }\n    }\n*/\n    // try to find a containing cube\n    for  i = 0; i \u003c= int32(pCube.nLits); i++  {\n    // inlining of macro Min_CoverForEachCube\n    for  pThis = p.ppStore[i];                                                 (pThis != nil);                                                          pThis = pThis.pNext  {\n        // skip the bubble\n        if pThis != p.pBubble \u0026\u0026 (Min_CubeIsContained( pThis, pCube ) != 0) {\n            return 1; }\n    }\n    }\n    return 0;\n}\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

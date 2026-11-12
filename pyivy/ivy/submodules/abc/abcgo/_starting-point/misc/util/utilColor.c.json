@@ -1,0 +1,73 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilColor.c",
+  "SHA256": "46addf1335330a79699a5e56e18862f1fbdba7285eb7fdfd41d6e71b93c4d1ac",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 27,
+        "Column": 1,
+        "ByteOffset": 617
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 54,
+        "Column": 1,
+        "ByteOffset": 1382
+      },
+      "Directive": "#ifdef WIN32"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_ColorTest",
+      "Start": 1359,
+      "End": 3504,
+      "BodyStart": 1380,
+      "Original": "void Abc_ColorTest()\n{\n#ifdef WIN32\n    int x, y;\n    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);\n    printf( \"Background     00   01   02   03   04   05   06   07   08   09   10   11   12   13   14   15\\n\" );\n    for ( y = 0; y \u003c 16; y++ )\n    {\n        printf( \"Foreground %02d\", y );\n        for ( x = 0; x \u003c 16; x++ )\n        {\n            printf( \" \" );\n            SetConsoleTextAttribute( hConsole, (WORD)(16 * x + y) );\n            printf( \" Hi \" );\n            SetConsoleTextAttribute( hConsole, 7 );\n        }\n        printf( \"\\n\" );\n    }\n#else\n/*\n  fg[Default]   = '[0m';    fg[DefaultBold] = '[1m'\n\n  fg[Black]     = '[0;30m'; fg[DarkGray]    = '[1;30m'\n  fg[Blue]      = '[0;34m'; fg[LightBlue]   = '[1;34m'\n  fg[Green]     = '[0;32m'; fg[LightGreen]  = '[1;32m'\n  fg[Cyan]      = '[0;36m'; fg[LightCyan]   = '[1;36m'\n  fg[Red]       = '[0;31m'; fg[LightRed]    = '[1;31m'\n  fg[Purple]    = '[0;35m'; fg[LightPurple] = '[1;35m'\n  fg[Brown]     = '[0;33m'; fg[Yellow]      = '[1;33m'\n  fg[LightGray] = '[0;37m'; fg[White]       = '[1;37m'\n\n  bg[Black]     = '[0;40m'; hi[Underlined]  = '[4m'\n  bg[Blue]      = '[0;44m'; hi[Blinking]    = '[5m'\n  bg[Green]     = '[0;42m'; hi[Inverted]    = '[7m'\n  bg[Cyan]      = '[0;46m'; hi[Concealed]   = '[8m'\n  bg[Red]       = '[0;41m'\n  bg[Purple]    = '[0;45m'\n  bg[Brown]     = '[0;43m'\n  bg[LightGray] = '[0;47m'\n*/\n    int x, y;\n    printf( \"Background       \" );\n    for ( x = 0; x \u003c 8; x++ )\n        printf( \"  [1;4%dm\", x );\n    printf( \"\\n\" );\n    for ( y = 0; y \u003c 2; y++ )\n    {\n        printf( \"Foreground [%dm   \", y );\n        for ( x = 0; x \u003c 8; x++ )\n            printf( \"  \\033[%d;3%dm\\033[%dm  Hi  \\033[0m\", y\u00261, y\u003e\u003e1, x );\n        printf( \"\\n\" );\n    }\n    for ( y = 0; y \u003c 16; y++ )\n    {\n        printf( \"Foreground [%d;3%dm\", y\u00261, y\u003e\u003e1 );\n        for ( x = 0; x \u003c 8; x++ )\n            printf( \"  \\033[%d;3%dm\\033[1;4%dm  Hi  \\033[0m\", y\u00261, y\u003e\u003e1, x );\n        printf( \"\\n\" );\n    }\n    printf( \"\\033[4mUnderlined\\033[0m\\n\" );\n    printf( \"\\033[5mBlinking  \\033[0m\\n\" );\n    printf( \"\\033[7mInverted  \\033[0m\\n\" );\n    printf( \"\\033[8mConcealed \\033[0m\\n\" );\n#endif\n}",
+      "Draft": "func Abc_ColorTest() {\n#ifdef WIN32\n    int x, y;\n    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);\n    printf( \"Background     00   01   02   03   04   05   06   07   08   09   10   11   12   13   14   15\\n\" );\n    for ( y = 0; y \u003c 16; y++ )\n    {\n        printf( \"Foreground %02d\", y );\n        for ( x = 0; x \u003c 16; x++ )\n        {\n            printf( \" \" );\n            SetConsoleTextAttribute( hConsole, (WORD)(16 * x + y) );\n            printf( \" Hi \" );\n            SetConsoleTextAttribute( hConsole, 7 );\n        }\n        printf( \"\\n\" );\n    }\n#else\n/*\n  fg[Default]   = '[0m';    fg[DefaultBold] = '[1m'\n\n  fg[Black]     = '[0;30m'; fg[DarkGray]    = '[1;30m'\n  fg[Blue]      = '[0;34m'; fg[LightBlue]   = '[1;34m'\n  fg[Green]     = '[0;32m'; fg[LightGreen]  = '[1;32m'\n  fg[Cyan]      = '[0;36m'; fg[LightCyan]   = '[1;36m'\n  fg[Red]       = '[0;31m'; fg[LightRed]    = '[1;31m'\n  fg[Purple]    = '[0;35m'; fg[LightPurple] = '[1;35m'\n  fg[Brown]     = '[0;33m'; fg[Yellow]      = '[1;33m'\n  fg[LightGray] = '[0;37m'; fg[White]       = '[1;37m'\n\n  bg[Black]     = '[0;40m'; hi[Underlined]  = '[4m'\n  bg[Blue]      = '[0;44m'; hi[Blinking]    = '[5m'\n  bg[Green]     = '[0;42m'; hi[Inverted]    = '[7m'\n  bg[Cyan]      = '[0;46m'; hi[Concealed]   = '[8m'\n  bg[Red]       = '[0;41m'\n  bg[Purple]    = '[0;45m'\n  bg[Brown]     = '[0;43m'\n  bg[LightGray] = '[0;47m'\n*/\n    int x, y;\n    printf( \"Background       \" );\n    for ( x = 0; x \u003c 8; x++ )\n        printf( \"  [1;4%dm\", x );\n    printf( \"\\n\" );\n    for ( y = 0; y \u003c 2; y++ )\n    {\n        printf( \"Foreground [%dm   \", y );\n        for ( x = 0; x \u003c 8; x++ )\n            printf( \"  \\033[%d;3%dm\\033[%dm  Hi  \\033[0m\", y\u00261, y\u003e\u003e1, x );\n        printf( \"\\n\" );\n    }\n    for ( y = 0; y \u003c 16; y++ )\n    {\n        printf( \"Foreground [%d;3%dm\", y\u00261, y\u003e\u003e1 );\n        for ( x = 0; x \u003c 8; x++ )\n            printf( \"  \\033[%d;3%dm\\033[1;4%dm  Hi  \\033[0m\", y\u00261, y\u003e\u003e1, x );\n        printf( \"\\n\" );\n    }\n    printf( \"\\033[4mUnderlined\\033[0m\\n\" );\n    printf( \"\\033[5mBlinking  \\033[0m\\n\" );\n    printf( \"\\033[7mInverted  \\033[0m\\n\" );\n    printf( \"\\033[8mConcealed \\033[0m\\n\" );\n#endif\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilColor.c::Abc_ColorTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ColorTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1359,
+      "End": 3504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilColor.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilColor.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 617,
+      "End": 657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilColor.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1382,
+      "End": 3502
+    }
+  ],
+  "Draft": "package util\n\n/**CFile****************************************************************\n\n  FileName    [utilColor.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Handling counter-examples.]\n\n  Synopsis    [Handling counter-examples.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Feburary 13, 2011.]\n\n  Revision    [$Id: utilColor.c,v 1.00 2011/02/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \"misc/util/abc_global.h\"\n\n\n#ifdef WIN32\n#include \u003cwindows.h\u003e\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ColorTest() {\n#ifdef WIN32\n    int x, y;\n    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);\n    printf( \"Background     00   01   02   03   04   05   06   07   08   09   10   11   12   13   14   15\\n\" );\n    for ( y = 0; y \u003c 16; y++ )\n    {\n        printf( \"Foreground %02d\", y );\n        for ( x = 0; x \u003c 16; x++ )\n        {\n            printf( \" \" );\n            SetConsoleTextAttribute( hConsole, (WORD)(16 * x + y) );\n            printf( \" Hi \" );\n            SetConsoleTextAttribute( hConsole, 7 );\n        }\n        printf( \"\\n\" );\n    }\n#else\n/*\n  fg[Default]   = '[0m';    fg[DefaultBold] = '[1m'\n\n  fg[Black]     = '[0;30m'; fg[DarkGray]    = '[1;30m'\n  fg[Blue]      = '[0;34m'; fg[LightBlue]   = '[1;34m'\n  fg[Green]     = '[0;32m'; fg[LightGreen]  = '[1;32m'\n  fg[Cyan]      = '[0;36m'; fg[LightCyan]   = '[1;36m'\n  fg[Red]       = '[0;31m'; fg[LightRed]    = '[1;31m'\n  fg[Purple]    = '[0;35m'; fg[LightPurple] = '[1;35m'\n  fg[Brown]     = '[0;33m'; fg[Yellow]      = '[1;33m'\n  fg[LightGray] = '[0;37m'; fg[White]       = '[1;37m'\n\n  bg[Black]     = '[0;40m'; hi[Underlined]  = '[4m'\n  bg[Blue]      = '[0;44m'; hi[Blinking]    = '[5m'\n  bg[Green]     = '[0;42m'; hi[Inverted]    = '[7m'\n  bg[Cyan]      = '[0;46m'; hi[Concealed]   = '[8m'\n  bg[Red]       = '[0;41m'\n  bg[Purple]    = '[0;45m'\n  bg[Brown]     = '[0;43m'\n  bg[LightGray] = '[0;47m'\n*/\n    int x, y;\n    printf( \"Background       \" );\n    for ( x = 0; x \u003c 8; x++ )\n        printf( \"  [1;4%dm\", x );\n    printf( \"\\n\" );\n    for ( y = 0; y \u003c 2; y++ )\n    {\n        printf( \"Foreground [%dm   \", y );\n        for ( x = 0; x \u003c 8; x++ )\n            printf( \"  \\033[%d;3%dm\\033[%dm  Hi  \\033[0m\", y\u00261, y\u003e\u003e1, x );\n        printf( \"\\n\" );\n    }\n    for ( y = 0; y \u003c 16; y++ )\n    {\n        printf( \"Foreground [%d;3%dm\", y\u00261, y\u003e\u003e1 );\n        for ( x = 0; x \u003c 8; x++ )\n            printf( \"  \\033[%d;3%dm\\033[1;4%dm  Hi  \\033[0m\", y\u00261, y\u003e\u003e1, x );\n        printf( \"\\n\" );\n    }\n    printf( \"\\033[4mUnderlined\\033[0m\\n\" );\n    printf( \"\\033[5mBlinking  \\033[0m\\n\" );\n    printf( \"\\033[7mInverted  \\033[0m\\n\" );\n    printf( \"\\033[8mConcealed \\033[0m\\n\" );\n#endif\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

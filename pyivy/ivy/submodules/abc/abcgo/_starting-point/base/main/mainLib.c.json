@@ -1,0 +1,73 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainLib.c",
+  "SHA256": "92835b6a9cabcc52aab9a41dbb239f31aa375640f7db332655807576d6b20153",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 56,
+        "Column": 1,
+        "ByteOffset": 1842
+      },
+      "Directive": "#if defined(_DEBUG) \u0026\u0026 defined(_MSC_VER)"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_Start",
+      "Start": 1762,
+      "End": 2091,
+      "BodyStart": 1779,
+      "Original": "void Abc_Start()\n{\n    Abc_Frame_t * pAbc;\n    // added to detect memory leaks:\n#if defined(_DEBUG) \u0026\u0026 defined(_MSC_VER) \n    _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );\n#endif\n    // start the glocal frame\n    pAbc = Abc_FrameGetGlobalFrame();\n    // source the resource file\n//    Abc_UtilsSource( pAbc );\n}",
+      "Draft": "func Abc_Start() {\n    var pAbc *Abc_Frame_t;\n    // added to detect memory leaks:\n#if defined(_DEBUG) \u0026\u0026 defined(_MSC_VER) \n    _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );\n#endif\n    // start the glocal frame\n    pAbc = Abc_FrameGetGlobalFrame();\n    // source the resource file\n//    Abc_UtilsSource( pAbc );\n}"
+    },
+    {
+      "Name": "Abc_Stop",
+      "Start": 2374,
+      "End": 2573,
+      "BodyStart": 2390,
+      "Original": "void Abc_Stop()\n{\n    Abc_Frame_t * pAbc;\n    pAbc = Abc_FrameGetGlobalFrame();\n    // perform uninitializations\n    Abc_FrameEnd( pAbc );\n    // stop the framework\n    Abc_FrameDeallocate( pAbc );\n}",
+      "Draft": "func Abc_Stop() {\n    var pAbc *Abc_Frame_t;\n    pAbc = Abc_FrameGetGlobalFrame();\n    // perform uninitializations\n    Abc_FrameEnd( pAbc );\n    // stop the framework\n    Abc_FrameDeallocate( pAbc );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainLib.c::Abc_Start",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Start",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1762,
+      "End": 2091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainLib.c::Abc_Stop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Stop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2374,
+      "End": 2573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainLib.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainLib.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1842,
+      "End": 1958
+    }
+  ],
+  "Draft": "package main\n\n/**CFile****************************************************************\n\n  FileName    [main.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [The main package.]\n\n  Synopsis    [Here everything starts.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: main.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"mainInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Initialization procedure for the library project.]\n\n  Description [Note that when Abc_Start() is run in a static library\n  project, it does not load the resource file by default. As a result, \n  ABC is not set up the same way, as when it is run on a command line. \n  For example, some error messages while parsing files will not be \n  produced, and intermediate networks will not be checked for consistancy. \n  One possibility is to load the resource file after Abc_Start() as follows:\n  Abc_UtilsSource(  Abc_FrameGetGlobalFrame() );]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_Start() {\n    var pAbc *Abc_Frame_t;\n    // added to detect memory leaks:\n#if defined(_DEBUG) \u0026\u0026 defined(_MSC_VER) \n    _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );\n#endif\n    // start the glocal frame\n    pAbc = Abc_FrameGetGlobalFrame();\n    // source the resource file\n//    Abc_UtilsSource( pAbc );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocation procedure for the library project.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_Stop() {\n    var pAbc *Abc_Frame_t;\n    pAbc = Abc_FrameGetGlobalFrame();\n    // perform uninitializations\n    Abc_FrameEnd( pAbc );\n    // stop the framework\n    Abc_FrameDeallocate( pAbc );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

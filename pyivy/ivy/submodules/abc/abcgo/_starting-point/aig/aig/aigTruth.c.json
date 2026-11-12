@@ -1,0 +1,146 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTruth.c",
+  "SHA256": "18495b7ce57855087300837e13648db56b7fc73d0bbdf0f494fc01d16c47a6ed",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2833
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vLeaves) \u003c= Vec_PtrSize(vTruthElem) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 90,
+        "Column": 5,
+        "ByteOffset": 2896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vNodes) \u003c= Vec_PtrSize(vTruthStore) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2959
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vNodes) == 0 || pRoot == Vec_PtrEntryLast(vNodes) );  "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ManCutTruthOne",
+      "Start": 1261,
+      "End": 2256,
+      "BodyStart": 1343,
+      "Original": "unsigned * Aig_ManCutTruthOne( Aig_Obj_t * pNode, unsigned * pTruth, int nWords )\n{\n    unsigned * pTruth0, * pTruth1;\n    int i;\n    pTruth0 = (unsigned *)Aig_ObjFanin0(pNode)-\u003epData;\n    pTruth1 = (unsigned *)Aig_ObjFanin1(pNode)-\u003epData;\n    if ( Aig_ObjIsExor(pNode) )\n        for ( i = 0; i \u003c nWords; i++ )\n            pTruth[i] = pTruth0[i] ^ pTruth1[i];\n    else if ( !Aig_ObjFaninC0(pNode) \u0026\u0026 !Aig_ObjFaninC1(pNode) )\n        for ( i = 0; i \u003c nWords; i++ )\n            pTruth[i] = pTruth0[i] \u0026 pTruth1[i];\n    else if ( !Aig_ObjFaninC0(pNode) \u0026\u0026 Aig_ObjFaninC1(pNode) )\n        for ( i = 0; i \u003c nWords; i++ )\n            pTruth[i] = pTruth0[i] \u0026 ~pTruth1[i];\n    else if ( Aig_ObjFaninC0(pNode) \u0026\u0026 !Aig_ObjFaninC1(pNode) )\n        for ( i = 0; i \u003c nWords; i++ )\n            pTruth[i] = ~pTruth0[i] \u0026 pTruth1[i];\n    else // if ( Aig_ObjFaninC0(pNode) \u0026\u0026 Aig_ObjFaninC1(pNode) )\n        for ( i = 0; i \u003c nWords; i++ )\n            pTruth[i] = ~pTruth0[i] \u0026 ~pTruth1[i];\n    return pTruth;\n}",
+      "Draft": "func Aig_ManCutTruthOne(pNode *Aig_Obj_t, pTruth *uint32, nWords int32) *uint32 {\n    var pTruth0, pTruth1 *uint32;\n    var i int32;\n    pTruth0 = (unsigned *)Aig_ObjFanin0(pNode).pData;\n    pTruth1 = (unsigned *)Aig_ObjFanin1(pNode).pData;\n    if Aig_ObjIsExor(pNode) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = pTruth0[i] ^ pTruth1[i];\n        }\n    } else if !Aig_ObjFaninC0(pNode) \u0026\u0026 !Aig_ObjFaninC1(pNode) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = pTruth0[i] \u0026 pTruth1[i];\n        }\n    } else if !Aig_ObjFaninC0(pNode) \u0026\u0026 Aig_ObjFaninC1(pNode) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = pTruth0[i] \u0026 ~pTruth1[i];\n        }\n    } else if Aig_ObjFaninC0(pNode) \u0026\u0026 !Aig_ObjFaninC1(pNode) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = ~pTruth0[i] \u0026 pTruth1[i];\n        }\n    } else { // if ( Aig_ObjFaninC0(pNode) \u0026\u0026 Aig_ObjFaninC1(pNode) )\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = ~pTruth0[i] \u0026 ~pTruth1[i];\n        } }\n    return pTruth;\n}"
+    },
+    {
+      "Name": "Aig_ManCutTruth",
+      "Start": 2572,
+      "End": 3393,
+      "BodyStart": 2710,
+      "Original": "unsigned * Aig_ManCutTruth( Aig_Obj_t * pRoot, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vNodes, Vec_Ptr_t * vTruthElem, Vec_Ptr_t * vTruthStore )\n{\n    Aig_Obj_t * pObj;\n    int i, nWords;\n    assert( Vec_PtrSize(vLeaves) \u003c= Vec_PtrSize(vTruthElem) );\n    assert( Vec_PtrSize(vNodes) \u003c= Vec_PtrSize(vTruthStore) );\n    assert( Vec_PtrSize(vNodes) == 0 || pRoot == Vec_PtrEntryLast(vNodes) );  \n    // assign elementary truth tables\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLeaves, pObj, i )\n        pObj-\u003epData = Vec_PtrEntry( vTruthElem, i );\n    // compute truths for other nodes\n    nWords = Abc_TruthWordNum( Vec_PtrSize(vLeaves) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        pObj-\u003epData = Aig_ManCutTruthOne( pObj, (unsigned *)Vec_PtrEntry(vTruthStore, i), nWords );\n    return (unsigned *)pRoot-\u003epData;\n}",
+      "Draft": "func Aig_ManCutTruth(pRoot *Aig_Obj_t, vLeaves *Vec_Ptr_t, vNodes *Vec_Ptr_t, vTruthElem *Vec_Ptr_t, vTruthStore *Vec_Ptr_t) *uint32 {\n    var pObj *Aig_Obj_t;\n    var i, nWords int32;\n    assert(Vec_PtrSize(vLeaves) \u003c= Vec_PtrSize(vTruthElem), \"Vec_PtrSize(vLeaves) \u003c= Vec_PtrSize(vTruthElem)\");\n    assert(Vec_PtrSize(vNodes) \u003c= Vec_PtrSize(vTruthStore), \"Vec_PtrSize(vNodes) \u003c= Vec_PtrSize(vTruthStore)\");\n    assert(Vec_PtrSize(vNodes) == 0 || pRoot == Vec_PtrEntryLast(vNodes), \"Vec_PtrSize(vNodes) == 0 || pRoot == Vec_PtrEntryLast(vNodes)\");  \n    // assign elementary truth tables\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pObj.pData = Vec_PtrEntry( vTruthElem, i );\n    }\n    // compute truths for other nodes\n    nWords = Abc_TruthWordNum( Vec_PtrSize(vLeaves) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pData = Aig_ManCutTruthOne( pObj, (unsigned *)Vec_PtrEntry(vTruthStore, i), nWords );\n    }\n    return (unsigned *)pRoot.pData;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTruth.c::pointer-cast::1405",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1405,
+      "End": 1417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTruth.c::pointer-cast::1460",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1460,
+      "End": 1472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTruth.c::pointer-cast::3109",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3000,
+      "End": 3000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTruth.c::pointer-cast::3417",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3203,
+      "End": 3203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTruth.c::pointer-cast::3514",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3303,
+      "End": 3315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTruth.c::pointer-cast::3577",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3366,
+      "End": 3378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTruth.c::Aig_ManCutTruthOne",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCutTruthOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1261,
+      "End": 2256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTruth.c::Aig_ManCutTruth",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCutTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2572,
+      "End": 3393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTruth.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3640
+    }
+  ],
+  "Draft": "package aig\n\n/**CFile****************************************************************\n\n  FileName    [aigTruth.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Computes truth table for the cut.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigTruth.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes truth table of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManCutTruthOne(pNode *Aig_Obj_t, pTruth *uint32, nWords int32) *uint32 {\n    var pTruth0, pTruth1 *uint32;\n    var i int32;\n    pTruth0 = (unsigned *)Aig_ObjFanin0(pNode).pData;\n    pTruth1 = (unsigned *)Aig_ObjFanin1(pNode).pData;\n    if Aig_ObjIsExor(pNode) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = pTruth0[i] ^ pTruth1[i];\n        }\n    } else if !Aig_ObjFaninC0(pNode) \u0026\u0026 !Aig_ObjFaninC1(pNode) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = pTruth0[i] \u0026 pTruth1[i];\n        }\n    } else if !Aig_ObjFaninC0(pNode) \u0026\u0026 Aig_ObjFaninC1(pNode) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = pTruth0[i] \u0026 ~pTruth1[i];\n        }\n    } else if Aig_ObjFaninC0(pNode) \u0026\u0026 !Aig_ObjFaninC1(pNode) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = ~pTruth0[i] \u0026 pTruth1[i];\n        }\n    } else { // if ( Aig_ObjFaninC0(pNode) \u0026\u0026 Aig_ObjFaninC1(pNode) )\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = ~pTruth0[i] \u0026 ~pTruth1[i];\n        } }\n    return pTruth;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes truth table of the cut.]\n\n  Description [The returned pointer should be used immediately.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManCutTruth(pRoot *Aig_Obj_t, vLeaves *Vec_Ptr_t, vNodes *Vec_Ptr_t, vTruthElem *Vec_Ptr_t, vTruthStore *Vec_Ptr_t) *uint32 {\n    var pObj *Aig_Obj_t;\n    var i, nWords int32;\n    assert(Vec_PtrSize(vLeaves) \u003c= Vec_PtrSize(vTruthElem), \"Vec_PtrSize(vLeaves) \u003c= Vec_PtrSize(vTruthElem)\");\n    assert(Vec_PtrSize(vNodes) \u003c= Vec_PtrSize(vTruthStore), \"Vec_PtrSize(vNodes) \u003c= Vec_PtrSize(vTruthStore)\");\n    assert(Vec_PtrSize(vNodes) == 0 || pRoot == Vec_PtrEntryLast(vNodes), \"Vec_PtrSize(vNodes) == 0 || pRoot == Vec_PtrEntryLast(vNodes)\");  \n    // assign elementary truth tables\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pObj.pData = Vec_PtrEntry( vTruthElem, i );\n    }\n    // compute truths for other nodes\n    nWords = Abc_TruthWordNum( Vec_PtrSize(vLeaves) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pData = Aig_ManCutTruthOne( pObj, (unsigned *)Vec_PtrEntry(vTruthStore, i), nWords );\n    }\n    return (unsigned *)pRoot.pData;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

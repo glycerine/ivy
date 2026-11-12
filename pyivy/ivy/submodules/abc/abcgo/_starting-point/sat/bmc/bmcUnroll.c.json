@@ -1,0 +1,769 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c",
+  "SHA256": "e964e5cfc81604fa1229a976e170f63765ac80f92ce01fe6d20248a9e8944302",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 68,
+        "Column": 53,
+        "ByteOffset": 3022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Unr_ManObj(p *Unr_Man_t, h int32) *Unr_Obj_t { assert( h \u003e= 0 \u0026\u0026 h \u003c p.pEnd - p.pObjs ); return (Unr_Obj_t *)(p.pObjs + h);  }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 75,
+        "Column": 5,
+        "ByteOffset": 3565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFanin.RankCur \u003c pFanin.RankMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 3612
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.uRDiff0 \u003c pFanin.RankMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 82,
+        "Column": 5,
+        "ByteOffset": 3932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFanin.RankCur \u003c pFanin.RankMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 5,
+        "ByteOffset": 3979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.uRDiff1 \u003c pFanin.RankMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 4138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.RankCur \u003e= 0 \u0026\u0026 pObj.RankCur \u003c pObj.RankMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 4297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 4954
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 9,
+        "ByteOffset": 5877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d : %8d  (%6.2f %%)\\n\", i, Count, 100.0 * Count / Vec_IntSize(vRanks) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 6001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Extra space = %d (%6.2f %%)  \", nExtras, 100.0 * nExtras / Vec_IntSize(vRanks) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 188,
+        "Column": 5,
+        "ByteOffset": 7661
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vOrder) == 0 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 216,
+        "Column": 78,
+        "ByteOffset": 9138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pObjs = pInts = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(nInts), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 9604
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vObjLim) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 249,
+        "Column": 13,
+        "ByteOffset": 10904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( ((pInts - p.pObjs) \u0026 1) == 0 ); // align for 64-bits"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 11092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pInts - p.pObjs == nInts );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 290,
+        "Column": 9,
+        "ByteOffset": 12860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Memory usage = %6.2f MB  \", 4.0 * nInts / (1\u003c\u003c20) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 342,
+        "Column": 63,
+        "ByteOffset": 14463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 343,
+        "Column": 57,
+        "ByteOffset": 14566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 392,
+        "Column": 13,
+        "ByteOffset": 16396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pUnrObj.fItIsPi \u0026\u0026 f \u003e= int32(pUnrObj.hFan1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 398,
+        "Column": 5,
+        "ByteOffset": 16669
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pObjs + hStart == p.pEnd );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 399,
+        "Column": 5,
+        "ByteOffset": 16711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(p.pFrames) == (f + 1) * Gia_ManPoNum(p.pGia) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Unr_ManObj",
+      "Start": 2702,
+      "End": 2848,
+      "BodyStart": 2764,
+      "Original": "static inline Unr_Obj_t * Unr_ManObj( Unr_Man_t * p, int h )  { assert( h \u003e= 0 \u0026\u0026 h \u003c p-\u003epEnd - p-\u003epObjs ); return (Unr_Obj_t *)(p-\u003epObjs + h);  }",
+      "Draft": "func Unr_ManObj(p *Unr_Man_t, h int32) *Unr_Obj_t { assert(h \u003e= 0 \u0026\u0026 h \u003c p.pEnd - p.pObjs, \"h \u003e= 0 \u0026\u0026 h \u003c p.pEnd - p.pObjs\"); return (Unr_Obj_t *)(p.pObjs + h);  }"
+    },
+    {
+      "Name": "Unr_ObjSizeInt",
+      "Start": 2849,
+      "End": 2995,
+      "BodyStart": 2911,
+      "Original": "static inline int         Unr_ObjSizeInt( int Rank )          { return 0xFFFFFFFE \u0026 (sizeof(Unr_Obj_t) / sizeof(int) + Rank);                    }",
+      "Draft": "func Unr_ObjSizeInt(Rank int32) int32 { return 0xFFFFFFFE \u0026 (sizeof(Unr_Obj_t) / sizeof(int) + Rank);                    }"
+    },
+    {
+      "Name": "Unr_ObjSize",
+      "Start": 2996,
+      "End": 3142,
+      "BodyStart": 3058,
+      "Original": "static inline int         Unr_ObjSize( Unr_Obj_t * pObj )     { return Unr_ObjSizeInt(pObj-\u003eRankMax);                                            }",
+      "Draft": "func Unr_ObjSize(pObj *Unr_Obj_t) int32 { return Unr_ObjSizeInt(pObj.RankMax);                                            }"
+    },
+    {
+      "Name": "Unr_ManFanin0Value",
+      "Start": 3144,
+      "End": 3521,
+      "BodyStart": 3216,
+      "Original": "static inline int Unr_ManFanin0Value( Unr_Man_t * p, Unr_Obj_t * pObj )\n{\n    Unr_Obj_t * pFanin = Unr_ManObj( p, pObj-\u003ehFan0 );\n    int Index = (pFanin-\u003eRankCur + pFanin-\u003eRankMax - pObj-\u003euRDiff0) % pFanin-\u003eRankMax;\n    assert( pFanin-\u003eRankCur \u003c pFanin-\u003eRankMax );\n    assert( pObj-\u003euRDiff0 \u003c pFanin-\u003eRankMax );\n    return Abc_LitNotCond( pFanin-\u003eRes[Index], pObj-\u003efCompl0 );\n}",
+      "Draft": "func Unr_ManFanin0Value(p *Unr_Man_t, pObj *Unr_Obj_t) int32 {\n    var pFanin *Unr_Obj_t  = Unr_ManObj( p, pObj.hFan0 );\n    var Index int32  = (pFanin.RankCur + pFanin.RankMax - pObj.uRDiff0) % pFanin.RankMax;\n    assert(pFanin.RankCur \u003c pFanin.RankMax, \"pFanin.RankCur \u003c pFanin.RankMax\");\n    assert(pObj.uRDiff0 \u003c pFanin.RankMax, \"pObj.uRDiff0 \u003c pFanin.RankMax\");\n    return Abc_LitNotCond( pFanin.Res[Index], pObj.fCompl0 );\n}"
+    },
+    {
+      "Name": "Unr_ManFanin1Value",
+      "Start": 3522,
+      "End": 3899,
+      "BodyStart": 3594,
+      "Original": "static inline int Unr_ManFanin1Value( Unr_Man_t * p, Unr_Obj_t * pObj )\n{\n    Unr_Obj_t * pFanin = Unr_ManObj( p, pObj-\u003ehFan1 );\n    int Index = (pFanin-\u003eRankCur + pFanin-\u003eRankMax - pObj-\u003euRDiff1) % pFanin-\u003eRankMax;\n    assert( pFanin-\u003eRankCur \u003c pFanin-\u003eRankMax );\n    assert( pObj-\u003euRDiff1 \u003c pFanin-\u003eRankMax );\n    return Abc_LitNotCond( pFanin-\u003eRes[Index], pObj-\u003efCompl1 );\n}",
+      "Draft": "func Unr_ManFanin1Value(p *Unr_Man_t, pObj *Unr_Obj_t) int32 {\n    var pFanin *Unr_Obj_t  = Unr_ManObj( p, pObj.hFan1 );\n    var Index int32  = (pFanin.RankCur + pFanin.RankMax - pObj.uRDiff1) % pFanin.RankMax;\n    assert(pFanin.RankCur \u003c pFanin.RankMax, \"pFanin.RankCur \u003c pFanin.RankMax\");\n    assert(pObj.uRDiff1 \u003c pFanin.RankMax, \"pObj.uRDiff1 \u003c pFanin.RankMax\");\n    return Abc_LitNotCond( pFanin.Res[Index], pObj.fCompl1 );\n}"
+    },
+    {
+      "Name": "Unr_ManObjReadValue",
+      "Start": 3900,
+      "End": 4067,
+      "BodyStart": 3958,
+      "Original": "static inline int Unr_ManObjReadValue( Unr_Obj_t * pObj )\n{\n    assert( pObj-\u003eRankCur \u003e= 0 \u0026\u0026 pObj-\u003eRankCur \u003c pObj-\u003eRankMax );\n    return pObj-\u003eRes[ pObj-\u003eRankCur ];\n}",
+      "Draft": "func Unr_ManObjReadValue(pObj *Unr_Obj_t) int32 {\n    assert(pObj.RankCur \u003e= 0 \u0026\u0026 pObj.RankCur \u003c pObj.RankMax, \"pObj.RankCur \u003e= 0 \u0026\u0026 pObj.RankCur \u003c pObj.RankMax\");\n    return pObj.Res[ pObj.RankCur ];\n}"
+    },
+    {
+      "Name": "Unr_ManObjSetValue",
+      "Start": 4068,
+      "End": 4281,
+      "BodyStart": 4137,
+      "Original": "static inline void Unr_ManObjSetValue( Unr_Obj_t * pObj, int Value )\n{\n    assert( Value \u003e= 0 );\n    pObj-\u003eRankCur = (UNR_DIFF_NULL \u0026 (pObj-\u003eRankCur + 1)) % pObj-\u003eRankMax;\n    pObj-\u003eRes[ pObj-\u003eRankCur ] = Value;\n}",
+      "Draft": "func Unr_ManObjSetValue(pObj *Unr_Obj_t, Value int32) {\n    assert(Value \u003e= 0, \"Value \u003e= 0\");\n    pObj.RankCur = (UNR_DIFF_NULL \u0026 (pObj.RankCur + 1)) % pObj.RankMax;\n    pObj.Res[ pObj.RankCur ] = Value;\n}"
+    },
+    {
+      "Name": "Vec_IntWriteMaxEntry",
+      "Start": 4737,
+      "End": 4907,
+      "BodyStart": 4812,
+      "Original": "static inline void Vec_IntWriteMaxEntry( Vec_Int_t * p, int i, int Entry )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize );\n    p-\u003epArray[i] = Abc_MaxInt( p-\u003epArray[i], Entry );\n}",
+      "Draft": "func Vec_IntWriteMaxEntry(p *Vec_Int_t, i int32, Entry int32) {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    p.pArray[i] = Abc_MaxInt( p.pArray[i], Entry );\n}"
+    },
+    {
+      "Name": "Unr_ManProfileRanks",
+      "Start": 5143,
+      "End": 5767,
+      "BodyStart": 5190,
+      "Original": "void Unr_ManProfileRanks( Vec_Int_t * vRanks )\n{\n    int RankMax = Vec_IntFindMax( vRanks );\n    Vec_Int_t * vCounts = Vec_IntStart( RankMax+1 );\n    int i, Rank, Count, nExtras = 0;\n    Vec_IntForEachEntry( vRanks, Rank, i )\n        Vec_IntAddToEntry( vCounts, Rank, 1 );\n    Vec_IntForEachEntry( vCounts, Count, i )\n    {\n        if ( Count == 0 )\n            continue;\n        printf( \"%2d : %8d  (%6.2f %%)\\n\", i, Count, 100.0 * Count / Vec_IntSize(vRanks) );\n        nExtras += Count * i;\n    }\n    printf( \"Extra space = %d (%6.2f %%)  \", nExtras, 100.0 * nExtras / Vec_IntSize(vRanks) );\n    Vec_IntFree( vCounts );\n}",
+      "Draft": "func Unr_ManProfileRanks(vRanks *Vec_Int_t) {\n    var RankMax int32  = Vec_IntFindMax( vRanks );\n    var vCounts *Vec_Int_t  = Vec_IntStart( RankMax+1 );\n    var i, Rank, Count, nExtras int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRanks)) \u0026\u0026 (((Rank) = Vec_IntEntry(vRanks, i)), 1); i++  {\n        Vec_IntAddToEntry( vCounts, Rank, 1 );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCounts)) \u0026\u0026 (((Count) = Vec_IntEntry(vCounts, i)), 1); i++  {\n        if Count == 0 {\n            continue; }\n        fmt.Printf(\"%2d : %8d  (%6.2f %%)\\n\", i, Count, 100.0 * Count / Vec_IntSize(vRanks));\n        nExtras += Count * i;\n    }\n    fmt.Printf(\"Extra space = %d (%6.2f %%)  \", nExtras, 100.0 * nExtras / Vec_IntSize(vRanks));\n    Vec_IntFree( vCounts );\n}"
+    },
+    {
+      "Name": "Unr_ManSetup_rec",
+      "Start": 6003,
+      "End": 7009,
+      "BodyStart": 6083,
+      "Original": "void Unr_ManSetup_rec( Unr_Man_t * p, int iObj, int iTent, Vec_Int_t * vRoots )\n{\n    Gia_Obj_t * pObj;\n    int iFanin;\n    if ( Vec_IntEntry(p-\u003evTents, iObj) \u003e= 0 )\n        return;\n    Vec_IntWriteEntry(p-\u003evTents, iObj, iTent);\n    pObj = Gia_ManObj( p-\u003epGia, iObj );\n    if ( Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) )\n    {\n        Unr_ManSetup_rec( p, (iFanin = Gia_ObjFaninId0(pObj, iObj)), iTent, vRoots );\n        Vec_IntWriteMaxEntry( p-\u003evRanks, iFanin, Abc_MaxInt(0, iTent - Vec_IntEntry(p-\u003evTents, iFanin) - 1) );\n    }\n    if ( Gia_ObjIsAnd(pObj) )\n    {\n        Unr_ManSetup_rec( p, (iFanin = Gia_ObjFaninId1(pObj, iObj)), iTent, vRoots );\n        Vec_IntWriteMaxEntry( p-\u003evRanks, iFanin, Abc_MaxInt(0, iTent - Vec_IntEntry(p-\u003evTents, iFanin) - 1) );\n    }\n    else if ( Gia_ObjIsRo(p-\u003epGia, pObj) )\n    {\n        Vec_IntPush( vRoots, (iFanin = Gia_ObjId(p-\u003epGia, Gia_ObjRoToRi(p-\u003epGia, pObj))) );\n        Vec_IntWriteMaxEntry( p-\u003evRanks, iFanin, 0 );\n    }\n    Vec_IntPush( p-\u003evOrder, iObj );\n}",
+      "Draft": "func Unr_ManSetup_rec(p *Unr_Man_t, iObj int32, iTent int32, vRoots *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var iFanin int32;\n    if Vec_IntEntry(p.vTents, iObj) \u003e= 0 {\n        return; }\n    Vec_IntWriteEntry(p.vTents, iObj, iTent);\n    pObj = Gia_ManObj( p.pGia, iObj );\n    if Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) {\n        Unr_ManSetup_rec( p, (iFanin = Gia_ObjFaninId0(pObj, iObj)), iTent, vRoots );\n        Vec_IntWriteMaxEntry( p.vRanks, iFanin, Abc_MaxInt(0, iTent - Vec_IntEntry(p.vTents, iFanin) - 1) );\n    }\n    if Gia_ObjIsAnd(pObj) {\n        Unr_ManSetup_rec( p, (iFanin = Gia_ObjFaninId1(pObj, iObj)), iTent, vRoots );\n        Vec_IntWriteMaxEntry( p.vRanks, iFanin, Abc_MaxInt(0, iTent - Vec_IntEntry(p.vTents, iFanin) - 1) );\n    \n    } else if Gia_ObjIsRo(p.pGia, pObj) {\n        Vec_IntPush( vRoots, (iFanin = Gia_ObjId(p.pGia, Gia_ObjRoToRi(p.pGia, pObj))) );\n        Vec_IntWriteMaxEntry( p.vRanks, iFanin, 0 );\n    }\n    Vec_IntPush( p.vOrder, iObj );\n}"
+    },
+    {
+      "Name": "Unr_ManSetup",
+      "Start": 7010,
+      "End": 11981,
+      "BodyStart": 7059,
+      "Original": "void Unr_ManSetup( Unr_Man_t * p, int fVerbose )\n{\n    Vec_Int_t * vRoots, * vRoots2, * vMap;\n    Unr_Obj_t * pUnrObj;\n    Gia_Obj_t * pObj;\n    int i, k, t, iObj, nInts, * pInts;\n    abctime clk = Abc_Clock();\n    // create zero rank\n    assert( Vec_IntSize(p-\u003evOrder) == 0 );\n    Vec_IntPush( p-\u003evOrder, 0 );\n    Vec_IntPush( p-\u003evOrderLim, Vec_IntSize(p-\u003evOrder) );\n    Vec_IntWriteEntry( p-\u003evTents, 0, 0 );\n    Vec_IntWriteEntry( p-\u003evRanks, 0, 0 );\n    // start from the POs\n    vRoots  = Vec_IntAlloc( 100 );\n    vRoots2 = Vec_IntAlloc( 100 );\n    Gia_ManForEachPo( p-\u003epGia, pObj, i )\n        Unr_ManSetup_rec( p, Gia_ObjId(p-\u003epGia, pObj), 0, vRoots );\n    // collect tents\n    while ( Vec_IntSize(vRoots) \u003e 0 )\n    {\n        Vec_IntPush( p-\u003evOrderLim, Vec_IntSize(p-\u003evOrder) );\n        Vec_IntClear( vRoots2 );\n        Vec_IntForEachEntry( vRoots, iObj, i )\n            Unr_ManSetup_rec( p, iObj, Vec_IntSize(p-\u003evOrderLim)-1, vRoots2 );\n        ABC_SWAP( Vec_Int_t *, vRoots, vRoots2 );\n    }\n    Vec_IntPush( p-\u003evOrderLim, Vec_IntSize(p-\u003evOrder) );\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vRoots2 );\n    // allocate memory\n    nInts = 0;\n    Vec_IntForEachEntry( p-\u003evOrder, iObj, i )\n        nInts += Unr_ObjSizeInt( Vec_IntEntry(p-\u003evRanks, iObj) + 1 );\n    p-\u003epObjs = pInts = ABC_CALLOC( int, nInts );\n    p-\u003epEnd = p-\u003epObjs + nInts;\n    // create const0 node\n    pUnrObj = Unr_ManObj( p, pInts - p-\u003epObjs );\n    pUnrObj-\u003eRankMax = Vec_IntEntry(p-\u003evRanks, 0) + 1;\n    pUnrObj-\u003euRDiff0 = pUnrObj-\u003euRDiff1 = UNR_DIFF_NULL;\n    pUnrObj-\u003eRes[0]  = 0; // const0\n    // map the objects\n    vMap = Vec_IntStartFull( p-\u003enObjs );\n    Vec_IntWriteEntry( vMap, 0, pInts - p-\u003epObjs );\n    pInts += Unr_ObjSize(pUnrObj);\n    // mark up the entries\n    assert( Vec_IntSize(p-\u003evObjLim) == 0 );\n    for ( t = Vec_IntSize(p-\u003evOrderLim) - 2; t \u003e= 0; t-- )\n    {\n        int Beg = Vec_IntEntry(p-\u003evOrderLim, t);\n        int End = Vec_IntEntry(p-\u003evOrderLim, t+1);\n        Vec_IntPush( p-\u003evObjLim, pInts - p-\u003epObjs );\n        Vec_IntForEachEntryStartStop( p-\u003evOrder, iObj, i, Beg, End )\n        {\n            pObj = Gia_ManObj( p-\u003epGia, iObj );\n            pUnrObj = Unr_ManObj( p, pInts - p-\u003epObjs );\n            pUnrObj-\u003euRDiff0 = pUnrObj-\u003euRDiff1 = UNR_DIFF_NULL;\n            if ( Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) )\n                pUnrObj-\u003euRDiff0 = Abc_MaxInt(0, Vec_IntEntry(p-\u003evTents, iObj) - Vec_IntEntry(p-\u003evTents, Gia_ObjFaninId0(pObj, iObj)) - 1);\n            if ( Gia_ObjIsAnd(pObj) )\n                pUnrObj-\u003euRDiff1 = Abc_MaxInt(0, Vec_IntEntry(p-\u003evTents, iObj) - Vec_IntEntry(p-\u003evTents, Gia_ObjFaninId1(pObj, iObj)) - 1);\n            else if ( Gia_ObjIsRo(p-\u003epGia, pObj) )\n                pUnrObj-\u003euRDiff0 = 0;\n            pUnrObj-\u003eRankMax = Vec_IntEntry(p-\u003evRanks, iObj) + 1;\n            pUnrObj-\u003eRankCur = UNR_DIFF_NULL;\n            pUnrObj-\u003eOrigId  = iObj;\n            for ( k = 0; k \u003c (int)pUnrObj-\u003eRankMax; k++ )\n                pUnrObj-\u003eRes[k] = -1;\n            assert( ((pInts - p-\u003epObjs) \u0026 1) == 0 ); // align for 64-bits\n            Vec_IntWriteEntry( vMap, iObj, pInts - p-\u003epObjs );\n            pInts += Unr_ObjSize( pUnrObj );\n        }\n    }\n    assert( pInts - p-\u003epObjs == nInts );\n    // label the objects\n    Gia_ManForEachObj( p-\u003epGia, pObj, i )\n    {\n        if ( Vec_IntEntry(vMap, i) == -1 )\n            continue;\n        pUnrObj = Unr_ManObj( p, Vec_IntEntry(vMap, i) );\n        if ( Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) )\n        {\n            pUnrObj-\u003ehFan0   = Vec_IntEntry( vMap, Gia_ObjFaninId0(pObj, i) );\n            pUnrObj-\u003efCompl0 = Gia_ObjFaninC0(pObj);\n            pUnrObj-\u003efItIsPo = Gia_ObjIsPo(p-\u003epGia, pObj);\n        }\n        if ( Gia_ObjIsAnd(pObj) )\n        {\n            pUnrObj-\u003ehFan1   = Vec_IntEntry( vMap, Gia_ObjFaninId1(pObj, i) );\n            pUnrObj-\u003efCompl1 = Gia_ObjFaninC1(pObj);\n        }\n        else if ( Gia_ObjIsRo(p-\u003epGia, pObj) )\n        {\n            pUnrObj-\u003ehFan0   = Vec_IntEntry( vMap, Gia_ObjId(p-\u003epGia, Gia_ObjRoToRi(p-\u003epGia, pObj)) );\n            pUnrObj-\u003efCompl0 = 0;\n        }\n        else if ( Gia_ObjIsPi(p-\u003epGia, pObj) )\n        {\n            pUnrObj-\u003ehFan0   = Gia_ObjCioId(pObj);           // remember CIO id\n            pUnrObj-\u003ehFan1   = Vec_IntEntry(p-\u003evTents, i);   // remember tent\n            pUnrObj-\u003efItIsPi = 1;\n        }\n    }\n    // store CI/PO objects;\n    Gia_ManForEachCi( p-\u003epGia, pObj, i )\n        Vec_IntPush( p-\u003evCiMap, Vec_IntEntry(vMap, Gia_ObjId(p-\u003epGia, pObj)) );\n    Gia_ManForEachCo( p-\u003epGia, pObj, i )\n        Vec_IntPush( p-\u003evCoMap, Vec_IntEntry(vMap, Gia_ObjId(p-\u003epGia, pObj)) );\n    Vec_IntFreeP( \u0026vMap );\n    // print stats\n    if ( fVerbose )\n    {\n        Unr_ManProfileRanks( p-\u003evRanks );\n        printf( \"Memory usage = %6.2f MB  \", 4.0 * nInts / (1\u003c\u003c20) );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    Vec_IntFreeP( \u0026p-\u003evOrder );\n    Vec_IntFreeP( \u0026p-\u003evOrderLim );\n    Vec_IntFreeP( \u0026p-\u003evRanks );\n    Vec_IntFreeP( \u0026p-\u003evTents );\n}",
+      "Draft": "func Unr_ManSetup(p *Unr_Man_t, fVerbose int32) {\n    var vRoots, vRoots2, vMap *Vec_Int_t;\n    var pUnrObj *Unr_Obj_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var t int32;\n    var iObj int32;\n    var nInts int32;\n    var pInts *int32;\n    var clk abctime  = Abc_Clock();\n    // create zero rank\n    assert(Vec_IntSize(p.vOrder) == 0, \"Vec_IntSize(p.vOrder) == 0\");\n    Vec_IntPush( p.vOrder, 0 );\n    Vec_IntPush( p.vOrderLim, Vec_IntSize(p.vOrder) );\n    Vec_IntWriteEntry( p.vTents, 0, 0 );\n    Vec_IntWriteEntry( p.vRanks, 0, 0 );\n    // start from the POs\n    vRoots  = Vec_IntAlloc( 100 );\n    vRoots2 = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p.pGia)) \u0026\u0026 ((pObj) = Gia_ManCo(p.pGia, i)); i++  {\n        Unr_ManSetup_rec( p, Gia_ObjId(p.pGia, pObj), 0, vRoots );\n    }\n    // collect tents\n    for  Vec_IntSize(vRoots) \u003e 0  {\n        Vec_IntPush( p.vOrderLim, Vec_IntSize(p.vOrder) );\n        Vec_IntClear( vRoots2 );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 (((iObj) = Vec_IntEntry(vRoots, i)), 1); i++  {\n            Unr_ManSetup_rec( p, iObj, Vec_IntSize(p.vOrderLim)-1, vRoots2 );\n        }\n        // inlining of macro ABC_SWAP\n        { var t *Vec_Int_t  = vRoots; vRoots = vRoots2; vRoots2 = t; };\n    }\n    Vec_IntPush( p.vOrderLim, Vec_IntSize(p.vOrder) );\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vRoots2 );\n    // allocate memory\n    nInts = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vOrder)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrder, i)), 1); i++  {\n        nInts += Unr_ObjSizeInt( Vec_IntEntry(p.vRanks, iObj) + 1 );\n    }\n    // inlining of macro ABC_CALLOC\n    p.pObjs = pInts = ((int *) calloc((size_t)(nInts), sizeof(int)));\n    p.pEnd = p.pObjs + nInts;\n    // create const0 node\n    pUnrObj = Unr_ManObj( p, pInts - p.pObjs );\n    pUnrObj.RankMax = Vec_IntEntry(p.vRanks, 0) + 1;\n    pUnrObj.uRDiff0 = pUnrObj.uRDiff1 = UNR_DIFF_NULL;\n    pUnrObj.Res[0]  = 0; // const0\n    // map the objects\n    vMap = Vec_IntStartFull( p.nObjs );\n    Vec_IntWriteEntry( vMap, 0, pInts - p.pObjs );\n    pInts += Unr_ObjSize(pUnrObj);\n    // mark up the entries\n    assert(Vec_IntSize(p.vObjLim) == 0, \"Vec_IntSize(p.vObjLim) == 0\");\n    for  t = Vec_IntSize(p.vOrderLim) - 2; t \u003e= 0; t--  {\n        var Beg int32  = Vec_IntEntry(p.vOrderLim, t);\n        var End int32  = Vec_IntEntry(p.vOrderLim, t+1);\n        Vec_IntPush( p.vObjLim, pInts - p.pObjs );\n        // inlining of macro Vec_IntForEachEntryStartStop\n        for  i = Beg; (i \u003c End) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrder, i)), 1); i++  {\n            pObj = Gia_ManObj( p.pGia, iObj );\n            pUnrObj = Unr_ManObj( p, pInts - p.pObjs );\n            pUnrObj.uRDiff0 = pUnrObj.uRDiff1 = UNR_DIFF_NULL;\n            if Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) {\n                pUnrObj.uRDiff0 = Abc_MaxInt(0, Vec_IntEntry(p.vTents, iObj) - Vec_IntEntry(p.vTents, Gia_ObjFaninId0(pObj, iObj)) - 1); }\n            if Gia_ObjIsAnd(pObj) {\n                pUnrObj.uRDiff1 = Abc_MaxInt(0, Vec_IntEntry(p.vTents, iObj) - Vec_IntEntry(p.vTents, Gia_ObjFaninId1(pObj, iObj)) - 1);\n            } else if Gia_ObjIsRo(p.pGia, pObj) {\n                pUnrObj.uRDiff0 = 0; }\n            pUnrObj.RankMax = Vec_IntEntry(p.vRanks, iObj) + 1;\n            pUnrObj.RankCur = UNR_DIFF_NULL;\n            pUnrObj.OrigId  = iObj;\n            for  k = 0; k \u003c int32(pUnrObj.RankMax); k++  {\n                pUnrObj.Res[k] = -1;\n            }\n            assert(((pInts - p.pObjs) \u0026 1) == 0, \"((pInts - p.pObjs) \u0026 1) == 0\"); // align for 64-bits\n            Vec_IntWriteEntry( vMap, iObj, pInts - p.pObjs );\n            pInts += Unr_ObjSize( pUnrObj );\n        }\n    }\n    assert(pInts - p.pObjs == nInts, \"pInts - p.pObjs == nInts\");\n    // label the objects\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, i)); i++  {\n        if Vec_IntEntry(vMap, i) == -1 {\n            continue; }\n        pUnrObj = Unr_ManObj( p, Vec_IntEntry(vMap, i) );\n        if Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) {\n            pUnrObj.hFan0   = Vec_IntEntry( vMap, Gia_ObjFaninId0(pObj, i) );\n            pUnrObj.fCompl0 = Gia_ObjFaninC0(pObj);\n            pUnrObj.fItIsPo = Gia_ObjIsPo(p.pGia, pObj);\n        }\n        if Gia_ObjIsAnd(pObj) {\n            pUnrObj.hFan1   = Vec_IntEntry( vMap, Gia_ObjFaninId1(pObj, i) );\n            pUnrObj.fCompl1 = Gia_ObjFaninC1(pObj);\n        \n        } else if Gia_ObjIsRo(p.pGia, pObj) {\n            pUnrObj.hFan0   = Vec_IntEntry( vMap, Gia_ObjId(p.pGia, Gia_ObjRoToRi(p.pGia, pObj)) );\n            pUnrObj.fCompl0 = 0;\n        \n        } else if Gia_ObjIsPi(p.pGia, pObj) {\n            pUnrObj.hFan0   = Gia_ObjCioId(pObj);           // remember CIO id\n            pUnrObj.hFan1   = Vec_IntEntry(p.vTents, i);   // remember tent\n            pUnrObj.fItIsPi = 1;\n        }\n    }\n    // store CI/PO objects;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p.pGia, i)); i++  {\n        Vec_IntPush( p.vCiMap, Vec_IntEntry(vMap, Gia_ObjId(p.pGia, pObj)) );\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p.pGia, i)); i++  {\n        Vec_IntPush( p.vCoMap, Vec_IntEntry(vMap, Gia_ObjId(p.pGia, pObj)) );\n    }\n    Vec_IntFreeP( \u0026vMap );\n    // print stats\n    if fVerbose != 0 {\n        Unr_ManProfileRanks( p.vRanks );\n        fmt.Printf(\"Memory usage = %6.2f MB  \", 4.0 * nInts / (1\u003c\u003c20));\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    Vec_IntFreeP( \u0026p.vOrder );\n    Vec_IntFreeP( \u0026p.vOrderLim );\n    Vec_IntFreeP( \u0026p.vRanks );\n    Vec_IntFreeP( \u0026p.vTents );\n}"
+    },
+    {
+      "Name": "Unr_ManAlloc",
+      "Start": 12219,
+      "End": 12905,
+      "BodyStart": 12264,
+      "Original": "Unr_Man_t * Unr_ManAlloc( Gia_Man_t * pGia )\n{\n    Unr_Man_t * p;\n    p = ABC_CALLOC( Unr_Man_t, 1 );\n    p-\u003epGia      = pGia;\n    p-\u003enObjs     = Gia_ManObjNum(pGia);\n    p-\u003evOrder    = Vec_IntAlloc( p-\u003enObjs );\n    p-\u003evOrderLim = Vec_IntAlloc( 100 );\n    p-\u003evTents    = Vec_IntStartFull( p-\u003enObjs );\n    p-\u003evRanks    = Vec_IntStart( p-\u003enObjs );\n    p-\u003evObjLim   = Vec_IntAlloc( 100 );\n    p-\u003evCiMap    = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p-\u003evCoMap    = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p-\u003evPiLits   = Vec_IntAlloc( 10000 );\n    p-\u003epFrames   = Gia_ManStart( 10000 );\n    p-\u003epFrames-\u003epName = Abc_UtilStrsav( pGia-\u003epName );\n    Gia_ManHashStart( p-\u003epFrames );\n    return p;\n}",
+      "Draft": "func Unr_ManAlloc(pGia *Gia_Man_t) *Unr_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Unr_Man_t{};\n    p.pGia      = pGia;\n    p.nObjs     = Gia_ManObjNum(pGia);\n    p.vOrder    = Vec_IntAlloc( p.nObjs );\n    p.vOrderLim = Vec_IntAlloc( 100 );\n    p.vTents    = Vec_IntStartFull( p.nObjs );\n    p.vRanks    = Vec_IntStart( p.nObjs );\n    p.vObjLim   = Vec_IntAlloc( 100 );\n    p.vCiMap    = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p.vCoMap    = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p.vPiLits   = Vec_IntAlloc( 10000 );\n    p.pFrames   = Gia_ManStart( 10000 );\n    p.pFrames.pName = Abc_UtilStrsav( pGia.pName );\n    Gia_ManHashStart( p.pFrames );\n    return p;\n}"
+    },
+    {
+      "Name": "Unr_ManFree",
+      "Start": 12906,
+      "End": 13327,
+      "BodyStart": 12940,
+      "Original": "void Unr_ManFree( Unr_Man_t * p )\n{\n    Gia_ManStop( p-\u003epFrames );\n    // intermediate data\n    Vec_IntFreeP( \u0026p-\u003evOrder );\n    Vec_IntFreeP( \u0026p-\u003evOrderLim );\n    Vec_IntFreeP( \u0026p-\u003evTents );\n    Vec_IntFreeP( \u0026p-\u003evRanks );\n    // unrolling data\n    Vec_IntFreeP( \u0026p-\u003evObjLim );\n    Vec_IntFreeP( \u0026p-\u003evCiMap );\n    Vec_IntFreeP( \u0026p-\u003evCoMap );\n    Vec_IntFreeP( \u0026p-\u003evPiLits );\n    ABC_FREE( p-\u003epObjs );\n    ABC_FREE( p );\n}",
+      "Draft": "func Unr_ManFree(p *Unr_Man_t) {\n    Gia_ManStop( p.pFrames );\n    // intermediate data\n    Vec_IntFreeP( \u0026p.vOrder );\n    Vec_IntFreeP( \u0026p.vOrderLim );\n    Vec_IntFreeP( \u0026p.vTents );\n    Vec_IntFreeP( \u0026p.vRanks );\n    // unrolling data\n    Vec_IntFreeP( \u0026p.vObjLim );\n    Vec_IntFreeP( \u0026p.vCiMap );\n    Vec_IntFreeP( \u0026p.vCoMap );\n    Vec_IntFreeP( \u0026p.vPiLits );\n    // inlining of macro ABC_FREE\n    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Unr_ManUnrollStart",
+      "Start": 13587,
+      "End": 13967,
+      "BodyStart": 13652,
+      "Original": "Unr_Man_t * Unr_ManUnrollStart( Gia_Man_t * pGia, int fVerbose )\n{\n    int i, iHandle;\n    Unr_Man_t * p;\n    p = Unr_ManAlloc( pGia );\n    Unr_ManSetup( p, fVerbose );\n    for ( i = 0; i \u003c Gia_ManRegNum(p-\u003epGia); i++ )\n        if ( (iHandle = Vec_IntEntry(p-\u003evCoMap, Gia_ManPoNum(p-\u003epGia) + i)) != -1 )\n            Unr_ManObjSetValue( Unr_ManObj(p, iHandle), 0 );\n    return p;\n}",
+      "Draft": "func Unr_ManUnrollStart(pGia *Gia_Man_t, fVerbose int32) *Unr_Man_t {\n    var i, iHandle int32;\n    var p *Unr_Man_t;\n    p = Unr_ManAlloc( pGia );\n    Unr_ManSetup( p, fVerbose );\n    for  i = 0; i \u003c Gia_ManRegNum(p.pGia); i++  {\n        if (iHandle = Vec_IntEntry(p.vCoMap, Gia_ManPoNum(p.pGia) + i)) != -1 {\n            Unr_ManObjSetValue( Unr_ManObj(p, iHandle), 0 ); }\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Unr_ManUnrollFrame",
+      "Start": 13968,
+      "End": 15528,
+      "BodyStart": 14023,
+      "Original": "Gia_Man_t * Unr_ManUnrollFrame( Unr_Man_t * p, int f )\n{\n    int i, iLit, iLit0, iLit1, hStart;\n    for ( i = 0; i \u003c Gia_ManPiNum(p-\u003epGia); i++ )\n        Vec_IntPush( p-\u003evPiLits, Gia_ManAppendCi(p-\u003epFrames) );\n    hStart = Vec_IntEntry( p-\u003evObjLim, Abc_MaxInt(0, Vec_IntSize(p-\u003evObjLim)-1-f) );\n    while ( p-\u003epObjs + hStart \u003c p-\u003epEnd )\n    {\n        Unr_Obj_t * pUnrObj = Unr_ManObj( p, hStart );\n        if ( pUnrObj-\u003euRDiff0 != UNR_DIFF_NULL \u0026\u0026 pUnrObj-\u003euRDiff1 != UNR_DIFF_NULL ) // AND node\n        {\n            iLit0 = Unr_ManFanin0Value( p, pUnrObj );\n            iLit1 = Unr_ManFanin1Value( p, pUnrObj );\n            iLit  = Gia_ManHashAnd( p-\u003epFrames, iLit0, iLit1 );\n            Unr_ManObjSetValue( pUnrObj, iLit );\n        }\n        else if ( pUnrObj-\u003euRDiff0 != UNR_DIFF_NULL \u0026\u0026 pUnrObj-\u003euRDiff1 == UNR_DIFF_NULL ) // PO/RI/RO\n        {\n            iLit  = Unr_ManFanin0Value( p, pUnrObj );\n            Unr_ManObjSetValue( pUnrObj, iLit );\n            if ( pUnrObj-\u003efItIsPo )\n                Gia_ManAppendCo( p-\u003epFrames, iLit );\n        }\n        else // PI  (pUnrObj-\u003ehFan0 is CioId; pUnrObj-\u003ehFan1 is tent)\n        {\n            assert( pUnrObj-\u003efItIsPi \u0026\u0026 f \u003e= (int)pUnrObj-\u003ehFan1 );\n            iLit = Vec_IntEntry( p-\u003evPiLits, Gia_ManPiNum(p-\u003epGia) * (f - pUnrObj-\u003ehFan1) + pUnrObj-\u003ehFan0 );\n            Unr_ManObjSetValue( pUnrObj, iLit );\n        }\n        hStart += Unr_ObjSize( pUnrObj );\n    }\n    assert( p-\u003epObjs + hStart == p-\u003epEnd );\n    assert( Gia_ManPoNum(p-\u003epFrames) == (f + 1) * Gia_ManPoNum(p-\u003epGia) );\n    return p-\u003epFrames;\n}",
+      "Draft": "func Unr_ManUnrollFrame(p *Unr_Man_t, f int32) *Gia_Man_t {\n    var i, iLit, iLit0, iLit1, hStart int32;\n    for  i = 0; i \u003c Gia_ManPiNum(p.pGia); i++  {\n        Vec_IntPush( p.vPiLits, Gia_ManAppendCi(p.pFrames) );\n    }\n    hStart = Vec_IntEntry( p.vObjLim, Abc_MaxInt(0, Vec_IntSize(p.vObjLim)-1-f) );\n    for  p.pObjs + hStart \u003c p.pEnd  {\n        var pUnrObj *Unr_Obj_t  = Unr_ManObj( p, hStart );\n        if pUnrObj.uRDiff0 != UNR_DIFF_NULL \u0026\u0026 pUnrObj.uRDiff1 != UNR_DIFF_NULL { // AND node\n        \n            iLit0 = Unr_ManFanin0Value( p, pUnrObj );\n            iLit1 = Unr_ManFanin1Value( p, pUnrObj );\n            iLit  = Gia_ManHashAnd( p.pFrames, iLit0, iLit1 );\n            Unr_ManObjSetValue( pUnrObj, iLit );\n        \n        } else if pUnrObj.uRDiff0 != UNR_DIFF_NULL \u0026\u0026 pUnrObj.uRDiff1 == UNR_DIFF_NULL { // PO/RI/RO\n        \n            iLit  = Unr_ManFanin0Value( p, pUnrObj );\n            Unr_ManObjSetValue( pUnrObj, iLit );\n            if pUnrObj.fItIsPo {\n                Gia_ManAppendCo( p.pFrames, iLit ); }\n        \n        } else { // PI  (pUnrObj-\u003ehFan0 is CioId; pUnrObj-\u003ehFan1 is tent)\n        \n            assert(pUnrObj.fItIsPi \u0026\u0026 f \u003e= int32(pUnrObj.hFan1), \"pUnrObj.fItIsPi \u0026\u0026 f \u003e= int32(pUnrObj.hFan1)\");\n            iLit = Vec_IntEntry( p.vPiLits, Gia_ManPiNum(p.pGia) * (f - pUnrObj.hFan1) + pUnrObj.hFan0 );\n            Unr_ManObjSetValue( pUnrObj, iLit );\n        }\n        hStart += Unr_ObjSize( pUnrObj );\n    }\n    assert(p.pObjs + hStart == p.pEnd, \"p.pObjs + hStart == p.pEnd\");\n    assert(Gia_ManPoNum(p.pFrames) == (f + 1) * Gia_ManPoNum(p.pGia), \"Gia_ManPoNum(p.pFrames) == (f + 1) * Gia_ManPoNum(p.pGia)\");\n    return p.pFrames;\n}"
+    },
+    {
+      "Name": "Unr_ManUnroll",
+      "Start": 15529,
+      "End": 15843,
+      "BodyStart": 15588,
+      "Original": "Gia_Man_t * Unr_ManUnroll( Gia_Man_t * pGia, int nFrames )\n{\n    Unr_Man_t * p;\n    Gia_Man_t * pFrames;\n    int f;\n    p = Unr_ManUnrollStart( pGia, 1 );\n    for ( f = 0; f \u003c nFrames; f++ )\n        Unr_ManUnrollFrame( p, f );\n    pFrames = Gia_ManCleanup( p-\u003epFrames );\n    Unr_ManFree( p );\n    return pFrames;\n}",
+      "Draft": "func Unr_ManUnroll(pGia *Gia_Man_t, nFrames int32) *Gia_Man_t {\n    var p *Unr_Man_t;\n    var pFrames *Gia_Man_t;\n    var f int32;\n    p = Unr_ManUnrollStart( pGia, 1 );\n    for  f = 0; f \u003c nFrames; f++  {\n        Unr_ManUnrollFrame( p, f );\n    }\n    pFrames = Gia_ManCleanup( p.pFrames );\n    Unr_ManFree( p );\n    return pFrames;\n}"
+    },
+    {
+      "Name": "Unr_ManUnrollSimple",
+      "Start": 16103,
+      "End": 17194,
+      "BodyStart": 16168,
+      "Original": "Gia_Man_t * Unr_ManUnrollSimple( Gia_Man_t * pGia, int nFrames )\n{\n    Gia_Man_t * pFrames;\n    Gia_Obj_t * pObj, * pObjRi;\n    int f, i; \n    pFrames = Gia_ManStart( 10000 );\n    pFrames-\u003epName = Abc_UtilStrsav( pGia-\u003epName );\n    Gia_ManHashAlloc( pFrames );\n    Gia_ManConst0(pGia)-\u003eValue = 0;\n    Gia_ManForEachRi( pGia, pObj, i )\n        pObj-\u003eValue = 0;\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        Gia_ManForEachPi( pGia, pObj, i )\n            pObj-\u003eValue = Gia_ManAppendCi(pFrames);\n        Gia_ManForEachRiRo( pGia, pObjRi, pObj, i )\n            pObj-\u003eValue = pObjRi-\u003eValue;\n        Gia_ManForEachAnd( pGia, pObj, i )\n            pObj-\u003eValue = Gia_ManHashAnd( pFrames, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        Gia_ManForEachCo( pGia, pObj, i )\n            pObj-\u003eValue = Gia_ObjFanin0Copy(pObj);\n        Gia_ManForEachPo( pGia, pObj, i )\n            Gia_ManAppendCo( pFrames, pObj-\u003eValue );\n    }\n    Gia_ManHashStop( pFrames );\n    Gia_ManSetRegNum( pFrames, 0 );\n    pFrames = Gia_ManCleanup( pGia = pFrames );\n    Gia_ManStop( pGia );\n    return pFrames;\n}",
+      "Draft": "func Unr_ManUnrollSimple(pGia *Gia_Man_t, nFrames int32) *Gia_Man_t {\n    var pFrames *Gia_Man_t;\n    var pObj, pObjRi *Gia_Obj_t;\n    var f, i int32; \n    pFrames = Gia_ManStart( 10000 );\n    pFrames.pName = Abc_UtilStrsav( pGia.pName );\n    Gia_ManHashAlloc( pFrames );\n    Gia_ManConst0(pGia).Value = 0;\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(pGia)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, Gia_ManPoNum(pGia)+i)); i++  {\n        pObj.Value = 0;\n    }\n    for  f = 0; f \u003c nFrames; f++  {\n        // inlining of macro Gia_ManForEachPi\n        for  i = 0; (i \u003c Gia_ManPiNum(pGia)) \u0026\u0026 ((pObj) = Gia_ManCi(pGia, i)); i++  {\n            pObj.Value = Gia_ManAppendCi(pFrames);\n        }\n        // inlining of macro Gia_ManForEachRiRo\n        for  i = 0; (i \u003c Gia_ManRegNum(pGia)) \u0026\u0026 ((pObjRi) = Gia_ManCo(pGia, Gia_ManPoNum(pGia)+i)) \u0026\u0026 ((pObj) = Gia_ManCi(pGia, Gia_ManPiNum(pGia)+i)); i++  {\n            pObj.Value = pObjRi.Value;\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            pObj.Value = Gia_ManHashAnd( pFrames, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        }\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n            pObj.Value = Gia_ObjFanin0Copy(pObj);\n        }\n        // inlining of macro Gia_ManForEachPo\n        for  i = 0; (i \u003c Gia_ManPoNum(pGia)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n            Gia_ManAppendCo( pFrames, pObj.Value );\n        }\n    }\n    Gia_ManHashStop( pFrames );\n    Gia_ManSetRegNum( pFrames, 0 );\n    pFrames = Gia_ManCleanup( pGia = pFrames );\n    Gia_ManStop( pGia );\n    return pFrames;\n}"
+    },
+    {
+      "Name": "Unr_ManTest",
+      "Start": 17449,
+      "End": 18040,
+      "BodyStart": 17499,
+      "Original": "void Unr_ManTest( Gia_Man_t * pGia, int nFrames )\n{\n    Gia_Man_t * pFrames0, * pFrames1;\n    abctime clk = Abc_Clock();\n    pFrames0 = Unr_ManUnroll( pGia, nFrames );\n    Abc_PrintTime( 1, \"Unroll \", Abc_Clock() - clk );\n    clk = Abc_Clock();\n    pFrames1 = Unr_ManUnrollSimple( pGia, nFrames );\n    Abc_PrintTime( 1, \"UnrollS\", Abc_Clock() - clk );\n\nGia_ManPrintStats( pFrames0, NULL );\nGia_ManPrintStats( pFrames1, NULL );\nGia_AigerWrite( pFrames0, \"frames0.aig\", 0, 0, 0 );\nGia_AigerWrite( pFrames1, \"frames1.aig\", 0, 0, 0 );\n\n    Gia_ManStop( pFrames0 );\n    Gia_ManStop( pFrames1 );\n}",
+      "Draft": "func Unr_ManTest(pGia *Gia_Man_t, nFrames int32) {\n    var pFrames0, pFrames1 *Gia_Man_t;\n    var clk abctime  = Abc_Clock();\n    pFrames0 = Unr_ManUnroll( pGia, nFrames );\n    Abc_PrintTime( 1, \"Unroll \", Abc_Clock() - clk );\n    clk = Abc_Clock();\n    pFrames1 = Unr_ManUnrollSimple( pGia, nFrames );\n    Abc_PrintTime( 1, \"UnrollS\", Abc_Clock() - clk );\n\nGia_ManPrintStats( pFrames0, nil );\nGia_ManPrintStats( pFrames1, nil );\nGia_AigerWrite( pFrames0, \"frames0.aig\", 0, 0, 0 );\nGia_AigerWrite( pFrames1, \"frames1.aig\", 0, 0, 0 );\n\n    Gia_ManStop( pFrames0 );\n    Gia_ManStop( pFrames1 );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::struct::Unr_Obj_t::// address of the fanin\n    unsigned              fCompl0 :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Unr_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 994,
+      "End": 1065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::struct::Unr_Obj_t::// complemented bit\n    unsigned              fCompl1 :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Unr_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1065,
+      "End": 1125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::struct::Unr_Obj_t::// complemented bit\n    unsigned              uRDiff0 : 15;",
+      "Category": "struct-field-review",
+      "Symbol": "Unr_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1125,
+      "End": 1185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::struct::Unr_Obj_t::// rank diff of the fanin\n    unsigned              uRDiff1 : 15;",
+      "Category": "struct-field-review",
+      "Symbol": "Unr_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1185,
+      "End": 1251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::struct::Unr_Obj_t::// rank diff of the fanin\n    unsigned              fItIsPi :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Unr_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1251,
+      "End": 1317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::struct::Unr_Obj_t::// remember attributes\n    unsigned              fItIsPo :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Unr_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1317,
+      "End": 1380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::struct::Unr_Obj_t::// remember attributes\n    unsigned              RankMax : 15;",
+      "Category": "struct-field-review",
+      "Symbol": "Unr_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1380,
+      "End": 1443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::struct::Unr_Obj_t::// max rank diff between node and its fanout\n    unsigned              RankCur : 15;",
+      "Category": "struct-field-review",
+      "Symbol": "Unr_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1443,
+      "End": 1528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::struct::Unr_Obj_t::// original object ID\n    unsigned              Res[1];",
+      "Category": "struct-field-review",
+      "Symbol": "Unr_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1586,
+      "End": 1648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::struct::Unr_Obj_t",
+      "Category": "struct-review",
+      "Symbol": "Unr_Obj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 805,
+      "End": 1676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::struct::Unr_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Unr_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1678,
+      "End": 2700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::mechanical::sizeof::2934",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2934,
+      "End": 2940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::mechanical::sizeof::2954",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2954,
+      "End": 2960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::mechanical::sizeof::8961",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8297,
+      "End": 8297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::mechanical::sizeof::13409",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12293,
+      "End": 12293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::pointer-cast::2817",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2817,
+      "End": 2830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::pointer-cast::8929",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8297,
+      "End": 8297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::pointer-cast::13375",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12293,
+      "End": 12293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::pointer-cast::14458",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13285,
+      "End": 13285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::pointer-cast::14563",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13311,
+      "End": 13311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManObj",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2702,
+      "End": 2848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ObjSizeInt",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ObjSizeInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2849,
+      "End": 2995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ObjSize",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ObjSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2996,
+      "End": 3142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManFanin0Value",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManFanin0Value",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3144,
+      "End": 3521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManFanin1Value",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManFanin1Value",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3522,
+      "End": 3899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManObjReadValue",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManObjReadValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3900,
+      "End": 4067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManObjSetValue",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManObjSetValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4068,
+      "End": 4281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Vec_IntWriteMaxEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_IntWriteMaxEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4737,
+      "End": 4907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManProfileRanks",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManProfileRanks",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5143,
+      "End": 5767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManSetup_rec",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManSetup_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6003,
+      "End": 7009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManSetup",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManSetup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7010,
+      "End": 11981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12219,
+      "End": 12905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::ternary::Unr_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Unr_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12906,
+      "End": 13327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12906,
+      "End": 13327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManUnrollStart",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManUnrollStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13587,
+      "End": 13967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManUnrollFrame",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManUnrollFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13968,
+      "End": 15528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManUnroll",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManUnroll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15529,
+      "End": 15843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManUnrollSimple",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManUnrollSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16103,
+      "End": 17194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::Unr_ManTest",
+      "Category": "semantic-review",
+      "Symbol": "Unr_ManTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17449,
+      "End": 18040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcUnroll.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18287
+    }
+  ],
+  "Draft": "package bmc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [bmcUnroll.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based bounded model checking.]\n\n  Synopsis    [Unrolling manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bmc.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bmc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst UNR_DIFF_NULL = 0x7FFF\n\n    // 24 bytes + (RankMax-1) * 4 bytes\ntype Unr_Obj_t struct {\n    hFan0              uint32;        // address of the fanin\n    hFan1              uint32;        // address of the fanin\n    fCompl0 uint32; /* C bitfield: 1 bits; review packing and truncation */ // complemented bit\n    fCompl1 uint32; /* C bitfield: 1 bits; review packing and truncation */ // complemented bit\n    uRDiff0 uint32; /* C bitfield: 15 bits; review packing and truncation */ // rank diff of the fanin\n    uRDiff1 uint32; /* C bitfield: 15 bits; review packing and truncation */ // rank diff of the fanin\n    fItIsPi uint32; /* C bitfield: 1 bits; review packing and truncation */ // remember attributes\n    fItIsPo uint32; /* C bitfield: 1 bits; review packing and truncation */ // remember attributes\n    RankMax uint32; /* C bitfield: 15 bits; review packing and truncation */ // max rank diff between node and its fanout\n    RankCur uint32; /* C bitfield: 15 bits; review packing and truncation */ // cur rank of the node\n    OrigId              uint32;       // original object ID\n    Res [1]uint32;       // RankMax entries\n}\n\ntype Unr_Man_t_ struct {\n    // input data\n    pGia            *Gia_Man_t;           // the user's AIG manager\n    pFrames            *Gia_Man_t;        // unrolled manager\n    nObjs                   int32;          // the number of objects\n    // intermediate data\n    vOrder            *Vec_Int_t;         // ordering of GIA objects\n    vOrderLim            *Vec_Int_t;      // beginning of each time frame\n    vTents            *Vec_Int_t;         // tents of GIA objects\n    vRanks            *Vec_Int_t;         // ranks of GIA objects\n    // unrolling data\n    pObjs                  *int32;          // storage for unroling objects\n    pEnd                  *int32;           // end of storage\n    vObjLim            *Vec_Int_t;        // handle of the first object in each frame\n    vCiMap            *Vec_Int_t;         // mapping of GIA CIs into unrolling objects\n    vCoMap            *Vec_Int_t;         // mapping of GIA POs into unrolling objects\n    vPiLits            *Vec_Int_t;        // storage for PI literals\n}\n\nfunc Unr_ManObj(p *Unr_Man_t, h int32) *Unr_Obj_t { assert(h \u003e= 0 \u0026\u0026 h \u003c p.pEnd - p.pObjs, \"h \u003e= 0 \u0026\u0026 h \u003c p.pEnd - p.pObjs\"); return (Unr_Obj_t *)(p.pObjs + h);  }\nfunc Unr_ObjSizeInt(Rank int32) int32 { return 0xFFFFFFFE \u0026 (sizeof(Unr_Obj_t) / sizeof(int) + Rank);                    }\nfunc Unr_ObjSize(pObj *Unr_Obj_t) int32 { return Unr_ObjSizeInt(pObj.RankMax);                                            }\n\nfunc Unr_ManFanin0Value(p *Unr_Man_t, pObj *Unr_Obj_t) int32 {\n    var pFanin *Unr_Obj_t  = Unr_ManObj( p, pObj.hFan0 );\n    var Index int32  = (pFanin.RankCur + pFanin.RankMax - pObj.uRDiff0) % pFanin.RankMax;\n    assert(pFanin.RankCur \u003c pFanin.RankMax, \"pFanin.RankCur \u003c pFanin.RankMax\");\n    assert(pObj.uRDiff0 \u003c pFanin.RankMax, \"pObj.uRDiff0 \u003c pFanin.RankMax\");\n    return Abc_LitNotCond( pFanin.Res[Index], pObj.fCompl0 );\n}\nfunc Unr_ManFanin1Value(p *Unr_Man_t, pObj *Unr_Obj_t) int32 {\n    var pFanin *Unr_Obj_t  = Unr_ManObj( p, pObj.hFan1 );\n    var Index int32  = (pFanin.RankCur + pFanin.RankMax - pObj.uRDiff1) % pFanin.RankMax;\n    assert(pFanin.RankCur \u003c pFanin.RankMax, \"pFanin.RankCur \u003c pFanin.RankMax\");\n    assert(pObj.uRDiff1 \u003c pFanin.RankMax, \"pObj.uRDiff1 \u003c pFanin.RankMax\");\n    return Abc_LitNotCond( pFanin.Res[Index], pObj.fCompl1 );\n}\nfunc Unr_ManObjReadValue(pObj *Unr_Obj_t) int32 {\n    assert(pObj.RankCur \u003e= 0 \u0026\u0026 pObj.RankCur \u003c pObj.RankMax, \"pObj.RankCur \u003e= 0 \u0026\u0026 pObj.RankCur \u003c pObj.RankMax\");\n    return pObj.Res[ pObj.RankCur ];\n}\nfunc Unr_ManObjSetValue(pObj *Unr_Obj_t, Value int32) {\n    assert(Value \u003e= 0, \"Value \u003e= 0\");\n    pObj.RankCur = (UNR_DIFF_NULL \u0026 (pObj.RankCur + 1)) % pObj.RankMax;\n    pObj.Res[ pObj.RankCur ] = Value;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_IntWriteMaxEntry(p *Vec_Int_t, i int32, Entry int32) {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    p.pArray[i] = Abc_MaxInt( p.pArray[i], Entry );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Unr_ManProfileRanks(vRanks *Vec_Int_t) {\n    var RankMax int32  = Vec_IntFindMax( vRanks );\n    var vCounts *Vec_Int_t  = Vec_IntStart( RankMax+1 );\n    var i, Rank, Count, nExtras int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRanks)) \u0026\u0026 (((Rank) = Vec_IntEntry(vRanks, i)), 1); i++  {\n        Vec_IntAddToEntry( vCounts, Rank, 1 );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCounts)) \u0026\u0026 (((Count) = Vec_IntEntry(vCounts, i)), 1); i++  {\n        if Count == 0 {\n            continue; }\n        fmt.Printf(\"%2d : %8d  (%6.2f %%)\\n\", i, Count, 100.0 * Count / Vec_IntSize(vRanks));\n        nExtras += Count * i;\n    }\n    fmt.Printf(\"Extra space = %d (%6.2f %%)  \", nExtras, 100.0 * nExtras / Vec_IntSize(vRanks));\n    Vec_IntFree( vCounts );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Unr_ManSetup_rec(p *Unr_Man_t, iObj int32, iTent int32, vRoots *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var iFanin int32;\n    if Vec_IntEntry(p.vTents, iObj) \u003e= 0 {\n        return; }\n    Vec_IntWriteEntry(p.vTents, iObj, iTent);\n    pObj = Gia_ManObj( p.pGia, iObj );\n    if Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) {\n        Unr_ManSetup_rec( p, (iFanin = Gia_ObjFaninId0(pObj, iObj)), iTent, vRoots );\n        Vec_IntWriteMaxEntry( p.vRanks, iFanin, Abc_MaxInt(0, iTent - Vec_IntEntry(p.vTents, iFanin) - 1) );\n    }\n    if Gia_ObjIsAnd(pObj) {\n        Unr_ManSetup_rec( p, (iFanin = Gia_ObjFaninId1(pObj, iObj)), iTent, vRoots );\n        Vec_IntWriteMaxEntry( p.vRanks, iFanin, Abc_MaxInt(0, iTent - Vec_IntEntry(p.vTents, iFanin) - 1) );\n    \n    } else if Gia_ObjIsRo(p.pGia, pObj) {\n        Vec_IntPush( vRoots, (iFanin = Gia_ObjId(p.pGia, Gia_ObjRoToRi(p.pGia, pObj))) );\n        Vec_IntWriteMaxEntry( p.vRanks, iFanin, 0 );\n    }\n    Vec_IntPush( p.vOrder, iObj );\n}\nfunc Unr_ManSetup(p *Unr_Man_t, fVerbose int32) {\n    var vRoots, vRoots2, vMap *Vec_Int_t;\n    var pUnrObj *Unr_Obj_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var t int32;\n    var iObj int32;\n    var nInts int32;\n    var pInts *int32;\n    var clk abctime  = Abc_Clock();\n    // create zero rank\n    assert(Vec_IntSize(p.vOrder) == 0, \"Vec_IntSize(p.vOrder) == 0\");\n    Vec_IntPush( p.vOrder, 0 );\n    Vec_IntPush( p.vOrderLim, Vec_IntSize(p.vOrder) );\n    Vec_IntWriteEntry( p.vTents, 0, 0 );\n    Vec_IntWriteEntry( p.vRanks, 0, 0 );\n    // start from the POs\n    vRoots  = Vec_IntAlloc( 100 );\n    vRoots2 = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p.pGia)) \u0026\u0026 ((pObj) = Gia_ManCo(p.pGia, i)); i++  {\n        Unr_ManSetup_rec( p, Gia_ObjId(p.pGia, pObj), 0, vRoots );\n    }\n    // collect tents\n    for  Vec_IntSize(vRoots) \u003e 0  {\n        Vec_IntPush( p.vOrderLim, Vec_IntSize(p.vOrder) );\n        Vec_IntClear( vRoots2 );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 (((iObj) = Vec_IntEntry(vRoots, i)), 1); i++  {\n            Unr_ManSetup_rec( p, iObj, Vec_IntSize(p.vOrderLim)-1, vRoots2 );\n        }\n        // inlining of macro ABC_SWAP\n        { var t *Vec_Int_t  = vRoots; vRoots = vRoots2; vRoots2 = t; };\n    }\n    Vec_IntPush( p.vOrderLim, Vec_IntSize(p.vOrder) );\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vRoots2 );\n    // allocate memory\n    nInts = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vOrder)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrder, i)), 1); i++  {\n        nInts += Unr_ObjSizeInt( Vec_IntEntry(p.vRanks, iObj) + 1 );\n    }\n    // inlining of macro ABC_CALLOC\n    p.pObjs = pInts = ((int *) calloc((size_t)(nInts), sizeof(int)));\n    p.pEnd = p.pObjs + nInts;\n    // create const0 node\n    pUnrObj = Unr_ManObj( p, pInts - p.pObjs );\n    pUnrObj.RankMax = Vec_IntEntry(p.vRanks, 0) + 1;\n    pUnrObj.uRDiff0 = pUnrObj.uRDiff1 = UNR_DIFF_NULL;\n    pUnrObj.Res[0]  = 0; // const0\n    // map the objects\n    vMap = Vec_IntStartFull( p.nObjs );\n    Vec_IntWriteEntry( vMap, 0, pInts - p.pObjs );\n    pInts += Unr_ObjSize(pUnrObj);\n    // mark up the entries\n    assert(Vec_IntSize(p.vObjLim) == 0, \"Vec_IntSize(p.vObjLim) == 0\");\n    for  t = Vec_IntSize(p.vOrderLim) - 2; t \u003e= 0; t--  {\n        var Beg int32  = Vec_IntEntry(p.vOrderLim, t);\n        var End int32  = Vec_IntEntry(p.vOrderLim, t+1);\n        Vec_IntPush( p.vObjLim, pInts - p.pObjs );\n        // inlining of macro Vec_IntForEachEntryStartStop\n        for  i = Beg; (i \u003c End) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrder, i)), 1); i++  {\n            pObj = Gia_ManObj( p.pGia, iObj );\n            pUnrObj = Unr_ManObj( p, pInts - p.pObjs );\n            pUnrObj.uRDiff0 = pUnrObj.uRDiff1 = UNR_DIFF_NULL;\n            if Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) {\n                pUnrObj.uRDiff0 = Abc_MaxInt(0, Vec_IntEntry(p.vTents, iObj) - Vec_IntEntry(p.vTents, Gia_ObjFaninId0(pObj, iObj)) - 1); }\n            if Gia_ObjIsAnd(pObj) {\n                pUnrObj.uRDiff1 = Abc_MaxInt(0, Vec_IntEntry(p.vTents, iObj) - Vec_IntEntry(p.vTents, Gia_ObjFaninId1(pObj, iObj)) - 1);\n            } else if Gia_ObjIsRo(p.pGia, pObj) {\n                pUnrObj.uRDiff0 = 0; }\n            pUnrObj.RankMax = Vec_IntEntry(p.vRanks, iObj) + 1;\n            pUnrObj.RankCur = UNR_DIFF_NULL;\n            pUnrObj.OrigId  = iObj;\n            for  k = 0; k \u003c int32(pUnrObj.RankMax); k++  {\n                pUnrObj.Res[k] = -1;\n            }\n            assert(((pInts - p.pObjs) \u0026 1) == 0, \"((pInts - p.pObjs) \u0026 1) == 0\"); // align for 64-bits\n            Vec_IntWriteEntry( vMap, iObj, pInts - p.pObjs );\n            pInts += Unr_ObjSize( pUnrObj );\n        }\n    }\n    assert(pInts - p.pObjs == nInts, \"pInts - p.pObjs == nInts\");\n    // label the objects\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, i)); i++  {\n        if Vec_IntEntry(vMap, i) == -1 {\n            continue; }\n        pUnrObj = Unr_ManObj( p, Vec_IntEntry(vMap, i) );\n        if Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) {\n            pUnrObj.hFan0   = Vec_IntEntry( vMap, Gia_ObjFaninId0(pObj, i) );\n            pUnrObj.fCompl0 = Gia_ObjFaninC0(pObj);\n            pUnrObj.fItIsPo = Gia_ObjIsPo(p.pGia, pObj);\n        }\n        if Gia_ObjIsAnd(pObj) {\n            pUnrObj.hFan1   = Vec_IntEntry( vMap, Gia_ObjFaninId1(pObj, i) );\n            pUnrObj.fCompl1 = Gia_ObjFaninC1(pObj);\n        \n        } else if Gia_ObjIsRo(p.pGia, pObj) {\n            pUnrObj.hFan0   = Vec_IntEntry( vMap, Gia_ObjId(p.pGia, Gia_ObjRoToRi(p.pGia, pObj)) );\n            pUnrObj.fCompl0 = 0;\n        \n        } else if Gia_ObjIsPi(p.pGia, pObj) {\n            pUnrObj.hFan0   = Gia_ObjCioId(pObj);           // remember CIO id\n            pUnrObj.hFan1   = Vec_IntEntry(p.vTents, i);   // remember tent\n            pUnrObj.fItIsPi = 1;\n        }\n    }\n    // store CI/PO objects;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p.pGia, i)); i++  {\n        Vec_IntPush( p.vCiMap, Vec_IntEntry(vMap, Gia_ObjId(p.pGia, pObj)) );\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p.pGia, i)); i++  {\n        Vec_IntPush( p.vCoMap, Vec_IntEntry(vMap, Gia_ObjId(p.pGia, pObj)) );\n    }\n    Vec_IntFreeP( \u0026vMap );\n    // print stats\n    if fVerbose != 0 {\n        Unr_ManProfileRanks( p.vRanks );\n        fmt.Printf(\"Memory usage = %6.2f MB  \", 4.0 * nInts / (1\u003c\u003c20));\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    }\n    Vec_IntFreeP( \u0026p.vOrder );\n    Vec_IntFreeP( \u0026p.vOrderLim );\n    Vec_IntFreeP( \u0026p.vRanks );\n    Vec_IntFreeP( \u0026p.vTents );\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Unr_ManAlloc(pGia *Gia_Man_t) *Unr_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Unr_Man_t{};\n    p.pGia      = pGia;\n    p.nObjs     = Gia_ManObjNum(pGia);\n    p.vOrder    = Vec_IntAlloc( p.nObjs );\n    p.vOrderLim = Vec_IntAlloc( 100 );\n    p.vTents    = Vec_IntStartFull( p.nObjs );\n    p.vRanks    = Vec_IntStart( p.nObjs );\n    p.vObjLim   = Vec_IntAlloc( 100 );\n    p.vCiMap    = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p.vCoMap    = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p.vPiLits   = Vec_IntAlloc( 10000 );\n    p.pFrames   = Gia_ManStart( 10000 );\n    p.pFrames.pName = Abc_UtilStrsav( pGia.pName );\n    Gia_ManHashStart( p.pFrames );\n    return p;\n}\nfunc Unr_ManFree(p *Unr_Man_t) {\n    Gia_ManStop( p.pFrames );\n    // intermediate data\n    Vec_IntFreeP( \u0026p.vOrder );\n    Vec_IntFreeP( \u0026p.vOrderLim );\n    Vec_IntFreeP( \u0026p.vTents );\n    Vec_IntFreeP( \u0026p.vRanks );\n    // unrolling data\n    Vec_IntFreeP( \u0026p.vObjLim );\n    Vec_IntFreeP( \u0026p.vCiMap );\n    Vec_IntFreeP( \u0026p.vCoMap );\n    Vec_IntFreeP( \u0026p.vPiLits );\n    // inlining of macro ABC_FREE\n    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform smart unrolling.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Unr_ManUnrollStart(pGia *Gia_Man_t, fVerbose int32) *Unr_Man_t {\n    var i, iHandle int32;\n    var p *Unr_Man_t;\n    p = Unr_ManAlloc( pGia );\n    Unr_ManSetup( p, fVerbose );\n    for  i = 0; i \u003c Gia_ManRegNum(p.pGia); i++  {\n        if (iHandle = Vec_IntEntry(p.vCoMap, Gia_ManPoNum(p.pGia) + i)) != -1 {\n            Unr_ManObjSetValue( Unr_ManObj(p, iHandle), 0 ); }\n    }\n    return p;\n}\nfunc Unr_ManUnrollFrame(p *Unr_Man_t, f int32) *Gia_Man_t {\n    var i, iLit, iLit0, iLit1, hStart int32;\n    for  i = 0; i \u003c Gia_ManPiNum(p.pGia); i++  {\n        Vec_IntPush( p.vPiLits, Gia_ManAppendCi(p.pFrames) );\n    }\n    hStart = Vec_IntEntry( p.vObjLim, Abc_MaxInt(0, Vec_IntSize(p.vObjLim)-1-f) );\n    for  p.pObjs + hStart \u003c p.pEnd  {\n        var pUnrObj *Unr_Obj_t  = Unr_ManObj( p, hStart );\n        if pUnrObj.uRDiff0 != UNR_DIFF_NULL \u0026\u0026 pUnrObj.uRDiff1 != UNR_DIFF_NULL { // AND node\n        \n            iLit0 = Unr_ManFanin0Value( p, pUnrObj );\n            iLit1 = Unr_ManFanin1Value( p, pUnrObj );\n            iLit  = Gia_ManHashAnd( p.pFrames, iLit0, iLit1 );\n            Unr_ManObjSetValue( pUnrObj, iLit );\n        \n        } else if pUnrObj.uRDiff0 != UNR_DIFF_NULL \u0026\u0026 pUnrObj.uRDiff1 == UNR_DIFF_NULL { // PO/RI/RO\n        \n            iLit  = Unr_ManFanin0Value( p, pUnrObj );\n            Unr_ManObjSetValue( pUnrObj, iLit );\n            if pUnrObj.fItIsPo {\n                Gia_ManAppendCo( p.pFrames, iLit ); }\n        \n        } else { // PI  (pUnrObj-\u003ehFan0 is CioId; pUnrObj-\u003ehFan1 is tent)\n        \n            assert(pUnrObj.fItIsPi \u0026\u0026 f \u003e= int32(pUnrObj.hFan1), \"pUnrObj.fItIsPi \u0026\u0026 f \u003e= int32(pUnrObj.hFan1)\");\n            iLit = Vec_IntEntry( p.vPiLits, Gia_ManPiNum(p.pGia) * (f - pUnrObj.hFan1) + pUnrObj.hFan0 );\n            Unr_ManObjSetValue( pUnrObj, iLit );\n        }\n        hStart += Unr_ObjSize( pUnrObj );\n    }\n    assert(p.pObjs + hStart == p.pEnd, \"p.pObjs + hStart == p.pEnd\");\n    assert(Gia_ManPoNum(p.pFrames) == (f + 1) * Gia_ManPoNum(p.pGia), \"Gia_ManPoNum(p.pFrames) == (f + 1) * Gia_ManPoNum(p.pGia)\");\n    return p.pFrames;\n}\nfunc Unr_ManUnroll(pGia *Gia_Man_t, nFrames int32) *Gia_Man_t {\n    var p *Unr_Man_t;\n    var pFrames *Gia_Man_t;\n    var f int32;\n    p = Unr_ManUnrollStart( pGia, 1 );\n    for  f = 0; f \u003c nFrames; f++  {\n        Unr_ManUnrollFrame( p, f );\n    }\n    pFrames = Gia_ManCleanup( p.pFrames );\n    Unr_ManFree( p );\n    return pFrames;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform naive unrolling.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Unr_ManUnrollSimple(pGia *Gia_Man_t, nFrames int32) *Gia_Man_t {\n    var pFrames *Gia_Man_t;\n    var pObj, pObjRi *Gia_Obj_t;\n    var f, i int32; \n    pFrames = Gia_ManStart( 10000 );\n    pFrames.pName = Abc_UtilStrsav( pGia.pName );\n    Gia_ManHashAlloc( pFrames );\n    Gia_ManConst0(pGia).Value = 0;\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(pGia)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, Gia_ManPoNum(pGia)+i)); i++  {\n        pObj.Value = 0;\n    }\n    for  f = 0; f \u003c nFrames; f++  {\n        // inlining of macro Gia_ManForEachPi\n        for  i = 0; (i \u003c Gia_ManPiNum(pGia)) \u0026\u0026 ((pObj) = Gia_ManCi(pGia, i)); i++  {\n            pObj.Value = Gia_ManAppendCi(pFrames);\n        }\n        // inlining of macro Gia_ManForEachRiRo\n        for  i = 0; (i \u003c Gia_ManRegNum(pGia)) \u0026\u0026 ((pObjRi) = Gia_ManCo(pGia, Gia_ManPoNum(pGia)+i)) \u0026\u0026 ((pObj) = Gia_ManCi(pGia, Gia_ManPiNum(pGia)+i)); i++  {\n            pObj.Value = pObjRi.Value;\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            pObj.Value = Gia_ManHashAnd( pFrames, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        }\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n            pObj.Value = Gia_ObjFanin0Copy(pObj);\n        }\n        // inlining of macro Gia_ManForEachPo\n        for  i = 0; (i \u003c Gia_ManPoNum(pGia)) \u0026\u0026 ((pObj) = Gia_ManCo(pGia, i)); i++  {\n            Gia_ManAppendCo( pFrames, pObj.Value );\n        }\n    }\n    Gia_ManHashStop( pFrames );\n    Gia_ManSetRegNum( pFrames, 0 );\n    pFrames = Gia_ManCleanup( pGia = pFrames );\n    Gia_ManStop( pGia );\n    return pFrames;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform evaluation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Unr_ManTest(pGia *Gia_Man_t, nFrames int32) {\n    var pFrames0, pFrames1 *Gia_Man_t;\n    var clk abctime  = Abc_Clock();\n    pFrames0 = Unr_ManUnroll( pGia, nFrames );\n    Abc_PrintTime( 1, \"Unroll \", Abc_Clock() - clk );\n    clk = Abc_Clock();\n    pFrames1 = Unr_ManUnrollSimple( pGia, nFrames );\n    Abc_PrintTime( 1, \"UnrollS\", Abc_Clock() - clk );\n\nGia_ManPrintStats( pFrames0, nil );\nGia_ManPrintStats( pFrames1, nil );\nGia_AigerWrite( pFrames0, \"frames0.aig\", 0, 0, 0 );\nGia_AigerWrite( pFrames1, \"frames1.aig\", 0, 0, 0 );\n\n    Gia_ManStop( pFrames0 );\n    Gia_ManStop( pFrames1 );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

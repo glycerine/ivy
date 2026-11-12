@@ -1,0 +1,1336 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c",
+  "SHA256": "f18cf6f54e7cd855e0d2328f35d730ac156620ab0245202ee720d3dcc5c58a18",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 45,
+        "Column": 5,
+        "ByteOffset": 1422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntEntry(vEdge1, iObj) == iNext || Vec_IntEntry(vEdge2, iObj) == iNext );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 77,
+        "Column": 9,
+        "ByteOffset": 2785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iObj1 \u003c iObj2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 9,
+        "ByteOffset": 2978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Found %d violations during edge conversion.\\n\", Count ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 3182
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vEdge1 \u0026\u0026 p.vEdge2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 3218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vEdge1) == Gia_ManObjNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 3275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vEdge2) == Gia_ManObjNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 130,
+        "Column": 9,
+        "ByteOffset": 4624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Entry \u003e 0 \u0026\u0026 Entry \u003c 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 5412
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nEntries == nEntries2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 5468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Skipped %d illegal edges.\\n\", Count ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 9,
+        "ByteOffset": 6278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjLutSize(p, iObj) \u003c= 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 9,
+        "ByteOffset": 6689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjLutSize2(p, iObj) \u003c= 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 188,
+        "Column": 14,
+        "ByteOffset": 7068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 7191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vEdge1 \u0026\u0026 p.vEdge2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 216,
+        "Column": 21,
+        "ByteOffset": 8574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 246,
+        "Column": 21,
+        "ByteOffset": 10220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 256,
+        "Column": 14,
+        "ByteOffset": 10609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 286,
+        "Column": 9,
+        "ByteOffset": 11714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjLutSize(p, iObj) \u003c= 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 306,
+        "Column": 9,
+        "ByteOffset": 12485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjLutSize2(p, iObj) \u003c= 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 325,
+        "Column": 14,
+        "ByteOffset": 13224
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 326,
+        "Column": 5,
+        "ByteOffset": 13243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCountMax \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 382,
+        "Column": 21,
+        "ByteOffset": 16019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 412,
+        "Column": 21,
+        "ByteOffset": 17651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 422,
+        "Column": 14,
+        "ByteOffset": 18033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 504,
+        "Column": 14,
+        "ByteOffset": 21631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 512,
+        "Column": 5,
+        "ByteOffset": 21954
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pManTime == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 529,
+        "Column": 14,
+        "ByteOffset": 22982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 558,
+        "Column": 5,
+        "ByteOffset": 24323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vNodes) == Vec_WecSize(vWin) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 573,
+        "Column": 5,
+        "ByteOffset": 25085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vNodes) == Vec_WecSize(vWin) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 596,
+        "Column": 5,
+        "ByteOffset": 25615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManHasMapping(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 602,
+        "Column": 9,
+        "ByteOffset": 25970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjLutSize(p, iObj) \u003c= 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 626,
+        "Column": 5,
+        "ByteOffset": 26764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsLut2(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 636,
+        "Column": 5,
+        "ByteOffset": 27277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vEdge1 \u0026\u0026 p.vEdge2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 654,
+        "Column": 5,
+        "ByteOffset": 28003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsLut2(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 665,
+        "Column": 5,
+        "ByteOffset": 28555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vEdge1 \u0026\u0026 p.vEdge2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 684,
+        "Column": 5,
+        "ByteOffset": 29372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vEdge1 \u0026\u0026 p.vEdge2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 690,
+        "Column": 9,
+        "ByteOffset": 29733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Delay1 + Delay2 \u003c= DelayMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 698,
+        "Column": 9,
+        "ByteOffset": 30140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vLevel) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 730,
+        "Column": 13,
+        "ByteOffset": 31301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Delay1 + Delay2 \u003c= DelayMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 737,
+        "Column": 13,
+        "ByteOffset": 31505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Delay1 + Delay2 + 1 \u003c= DelayMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 748,
+        "Column": 9,
+        "ByteOffset": 32037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsAnd(Gia_ManObj(p, iNext)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 752,
+        "Column": 13,
+        "ByteOffset": 32217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Delay1 + Delay2 \u003c= DelayMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 759,
+        "Column": 13,
+        "ByteOffset": 32423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Delay1 + Delay2 + 1 \u003c= DelayMax );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 768,
+        "Column": 9,
+        "ByteOffset": 32695
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%8d : \", iObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 769,
+        "Column": 9,
+        "ByteOffset": 32729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Edges = %d  \", nEdges );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 770,
+        "Column": 9,
+        "ByteOffset": 32771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fanins (all %d  EC %d  ENC %d  C %d)  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 772,
+        "Column": 9,
+        "ByteOffset": 32903
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fanouts (all %d  EC %d  ENC %d  C %d)  \", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 776,
+        "Column": 5,
+        "ByteOffset": 33075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nEdges \u003c= nEdgeLimit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 779,
+        "Column": 13,
+        "ByteOffset": 33171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Full\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 795,
+        "Column": 17,
+        "ByteOffset": 33810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Wrong number of edges.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 797,
+        "Column": 17,
+        "ByteOffset": 33892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Fixed %d critical fanins\\n\", nFaninsC ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 812,
+        "Column": 17,
+        "ByteOffset": 34495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Wrong number of edges.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 814,
+        "Column": 17,
+        "ByteOffset": 34577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Fixed %d critical fanouts\\n\", nFanoutsC ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 819,
+        "Column": 9,
+        "ByteOffset": 34695
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot fix\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 850,
+        "Column": 9,
+        "ByteOffset": 35481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Running edge assignment with E = %d.\\n\", nEdges ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 866,
+        "Column": 9,
+        "ByteOffset": 36091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( DelayD == DelayR + DelayNoEdge );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 875,
+        "Column": 13,
+        "ByteOffset": 36477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\nIter %4d : Delay = %4d\\n\", i, DelayD ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 888,
+        "Column": 17,
+        "ByteOffset": 37254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%d: Level %2d : \", k, Level );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ObjEdgeCount",
+      "Start": 797,
+      "End": 967,
+      "BodyStart": 884,
+      "Original": "static inline int Gia_ObjEdgeCount( int iObj, Vec_Int_t * vEdge1, Vec_Int_t * vEdge2 )\n{\n    return (Vec_IntEntry(vEdge1, iObj) \u003e 0) + (Vec_IntEntry(vEdge2, iObj) \u003e 0);\n}",
+      "Draft": "func Gia_ObjEdgeCount(iObj int32, vEdge1 *Vec_Int_t, vEdge2 *Vec_Int_t) int32 {\n    return (Vec_IntEntry(vEdge1, iObj) \u003e 0) + (Vec_IntEntry(vEdge2, iObj) \u003e 0);\n}"
+    },
+    {
+      "Name": "Gia_ObjEdgeAdd",
+      "Start": 968,
+      "End": 1320,
+      "BodyStart": 1064,
+      "Original": "static inline int Gia_ObjEdgeAdd( int iObj, int iNext, Vec_Int_t * vEdge1, Vec_Int_t * vEdge2 )\n{\n    int RetValue = 0;\n    if ( Vec_IntEntry(vEdge1, iObj) == 0 )\n        Vec_IntWriteEntry(vEdge1, iObj, iNext);\n    else if ( Vec_IntEntry(vEdge2, iObj) == 0 )\n        Vec_IntWriteEntry(vEdge2, iObj, iNext);\n    else RetValue = 1;\n    return RetValue;\n}",
+      "Draft": "func Gia_ObjEdgeAdd(iObj int32, iNext int32, vEdge1 *Vec_Int_t, vEdge2 *Vec_Int_t) int32 {\n    var RetValue int32;\n    if Vec_IntEntry(vEdge1, iObj) == 0 {\n        Vec_IntWriteEntry(vEdge1, iObj, iNext);\n    } else if Vec_IntEntry(vEdge2, iObj) == 0 {\n        Vec_IntWriteEntry(vEdge2, iObj, iNext);\n    } else { RetValue = 1; }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Gia_ObjEdgeRemove",
+      "Start": 1321,
+      "End": 1674,
+      "BodyStart": 1421,
+      "Original": "static inline void Gia_ObjEdgeRemove( int iObj, int iNext, Vec_Int_t * vEdge1, Vec_Int_t * vEdge2 )\n{\n    assert( Vec_IntEntry(vEdge1, iObj) == iNext || Vec_IntEntry(vEdge2, iObj) == iNext );\n    if ( Vec_IntEntry(vEdge1, iObj) == iNext )\n        Vec_IntWriteEntry( vEdge1, iObj, Vec_IntEntry(vEdge2, iObj) );\n    Vec_IntWriteEntry( vEdge2, iObj, 0 );\n}",
+      "Draft": "func Gia_ObjEdgeRemove(iObj int32, iNext int32, vEdge1 *Vec_Int_t, vEdge2 *Vec_Int_t) {\n    assert(Vec_IntEntry(vEdge1, iObj) == iNext || Vec_IntEntry(vEdge2, iObj) == iNext, \"Vec_IntEntry(vEdge1, iObj) == iNext || Vec_IntEntry(vEdge2, iObj) == iNext\");\n    if Vec_IntEntry(vEdge1, iObj) == iNext {\n        Vec_IntWriteEntry( vEdge1, iObj, Vec_IntEntry(vEdge2, iObj) ); }\n    Vec_IntWriteEntry( vEdge2, iObj, 0 );\n}"
+    },
+    {
+      "Name": "Gia_ObjEdgeClean",
+      "Start": 1675,
+      "End": 1850,
+      "BodyStart": 1763,
+      "Original": "static inline void Gia_ObjEdgeClean( int iObj, Vec_Int_t * vEdge1, Vec_Int_t * vEdge2 )\n{\n    Vec_IntWriteEntry( vEdge1, iObj, 0 );\n    Vec_IntWriteEntry( vEdge2, iObj, 0 );\n}",
+      "Draft": "func Gia_ObjEdgeClean(iObj int32, vEdge1 *Vec_Int_t, vEdge2 *Vec_Int_t) {\n    Vec_IntWriteEntry( vEdge1, iObj, 0 );\n    Vec_IntWriteEntry( vEdge2, iObj, 0 );\n}"
+    },
+    {
+      "Name": "Gia_ManEdgeFromArray",
+      "Start": 2333,
+      "End": 2935,
+      "BodyStart": 2396,
+      "Original": "void Gia_ManEdgeFromArray( Gia_Man_t * p, Vec_Int_t * vArray )\n{\n    int i, iObj1, iObj2, Count = 0;\n    Vec_IntFreeP( \u0026p-\u003evEdge1 );\n    Vec_IntFreeP( \u0026p-\u003evEdge2 );\n    p-\u003evEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p-\u003evEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n    Vec_IntForEachEntryDouble( vArray, iObj1, iObj2, i )\n    {\n        assert( iObj1 \u003c iObj2 );\n        Count += Gia_ObjEdgeAdd( iObj1, iObj2, p-\u003evEdge1, p-\u003evEdge2 );\n        Count += Gia_ObjEdgeAdd( iObj2, iObj1, p-\u003evEdge1, p-\u003evEdge2 );\n    }\n    if ( Count ) \n        printf( \"Found %d violations during edge conversion.\\n\", Count );\n}",
+      "Draft": "func Gia_ManEdgeFromArray(p *Gia_Man_t, vArray *Vec_Int_t) {\n    var i, iObj1, iObj2, Count int32;\n    Vec_IntFreeP( \u0026p.vEdge1 );\n    Vec_IntFreeP( \u0026p.vEdge2 );\n    p.vEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p.vEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vArray)) \u0026\u0026 (((iObj1) = Vec_IntEntry(vArray, i)), 1) \u0026\u0026 (((iObj2) = Vec_IntEntry(vArray, i+1)), 1); i += 2  {\n        assert(iObj1 \u003c iObj2, \"iObj1 \u003c iObj2\");\n        Count += Gia_ObjEdgeAdd( iObj1, iObj2, p.vEdge1, p.vEdge2 );\n        Count += Gia_ObjEdgeAdd( iObj2, iObj1, p.vEdge1, p.vEdge2 );\n    }\n    if Count != 0 { \n        fmt.Printf(\"Found %d violations during edge conversion.\\n\", Count); }\n}"
+    },
+    {
+      "Name": "Gia_ManEdgeToArray",
+      "Start": 2936,
+      "End": 3577,
+      "BodyStart": 2984,
+      "Original": "Vec_Int_t * Gia_ManEdgeToArray( Gia_Man_t * p )\n{\n    int iObj, iFanin;\n    Vec_Int_t * vArray = Vec_IntAlloc( 1000 );\n    assert( p-\u003evEdge1 \u0026\u0026 p-\u003evEdge2 );\n    assert( Vec_IntSize(p-\u003evEdge1) == Gia_ManObjNum(p) );\n    assert( Vec_IntSize(p-\u003evEdge2) == Gia_ManObjNum(p) );\n    for ( iObj = 0; iObj \u003c Gia_ManObjNum(p); iObj++ )\n    {\n        iFanin = Vec_IntEntry( p-\u003evEdge1, iObj );\n        if ( iFanin \u0026\u0026 iFanin \u003c iObj )\n            Vec_IntPushTwo( vArray, iFanin, iObj );\n        iFanin = Vec_IntEntry( p-\u003evEdge2, iObj );\n        if ( iFanin \u0026\u0026 iFanin \u003c iObj )\n            Vec_IntPushTwo( vArray, iFanin, iObj );\n    }\n    return vArray;\n}",
+      "Draft": "func Gia_ManEdgeToArray(p *Gia_Man_t) *Vec_Int_t {\n    var iObj, iFanin int32;\n    var vArray *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    assert(p.vEdge1 \u0026\u0026 p.vEdge2, \"p.vEdge1 \u0026\u0026 p.vEdge2\");\n    assert(Vec_IntSize(p.vEdge1) == Gia_ManObjNum(p), \"Vec_IntSize(p.vEdge1) == Gia_ManObjNum(p)\");\n    assert(Vec_IntSize(p.vEdge2) == Gia_ManObjNum(p), \"Vec_IntSize(p.vEdge2) == Gia_ManObjNum(p)\");\n    for  iObj = 0; iObj \u003c Gia_ManObjNum(p); iObj++  {\n        iFanin = Vec_IntEntry( p.vEdge1, iObj );\n        if (iFanin != 0) \u0026\u0026 iFanin \u003c iObj {\n            Vec_IntPushTwo( vArray, iFanin, iObj ); }\n        iFanin = Vec_IntEntry( p.vEdge2, iObj );\n        if (iFanin != 0) \u0026\u0026 iFanin \u003c iObj {\n            Vec_IntPushTwo( vArray, iFanin, iObj ); }\n    }\n    return vArray;\n}"
+    },
+    {
+      "Name": "Gia_ManConvertPackingToEdges",
+      "Start": 3839,
+      "End": 5252,
+      "BodyStart": 3890,
+      "Original": "void Gia_ManConvertPackingToEdges( Gia_Man_t * p )\n{\n    int i, k, Entry, nEntries, nEntries2, nNodes[4], Count = 0;\n    if ( p-\u003evPacking == NULL )\n        return;\n    Vec_IntFreeP( \u0026p-\u003evEdge1 );\n    Vec_IntFreeP( \u0026p-\u003evEdge2 );\n    p-\u003evEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p-\u003evEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n    // iterate through structures\n    nEntries = Vec_IntEntry( p-\u003evPacking, 0 );\n    nEntries2 = 0;\n    Vec_IntForEachEntryStart( p-\u003evPacking, Entry, i, 1 )\n    {\n        assert( Entry \u003e 0 \u0026\u0026 Entry \u003c 4 );\n        i++;\n        for ( k = 0; k \u003c Entry; k++, i++ )\n            nNodes[k] = Vec_IntEntry(p-\u003evPacking, i);\n        i--;\n        nEntries2++;\n        // create edges\n        if ( Entry == 2 )\n        {\n            Count += Gia_ObjEdgeAdd( nNodes[0], nNodes[1], p-\u003evEdge1, p-\u003evEdge2 );\n            Count += Gia_ObjEdgeAdd( nNodes[1], nNodes[0], p-\u003evEdge1, p-\u003evEdge2 );\n        }\n        else if ( Entry == 3 )\n        {\n            Count += Gia_ObjEdgeAdd( nNodes[0], nNodes[2], p-\u003evEdge1, p-\u003evEdge2 );\n            Count += Gia_ObjEdgeAdd( nNodes[2], nNodes[0], p-\u003evEdge1, p-\u003evEdge2 );\n            Count += Gia_ObjEdgeAdd( nNodes[1], nNodes[2], p-\u003evEdge1, p-\u003evEdge2 );\n            Count += Gia_ObjEdgeAdd( nNodes[2], nNodes[1], p-\u003evEdge1, p-\u003evEdge2 );\n        }\n    }\n    assert( nEntries == nEntries2 );\n    if ( Count )\n        printf( \"Skipped %d illegal edges.\\n\", Count );\n}",
+      "Draft": "func Gia_ManConvertPackingToEdges(p *Gia_Man_t) {\n    var i int32;\n    var k int32;\n    var Entry int32;\n    var nEntries int32;\n    var nEntries2 int32;\n    var nNodes [4]int32;\n    var Count int32;\n    if p.vPacking == nil {\n        return; }\n    Vec_IntFreeP( \u0026p.vEdge1 );\n    Vec_IntFreeP( \u0026p.vEdge2 );\n    p.vEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p.vEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n    // iterate through structures\n    nEntries = Vec_IntEntry( p.vPacking, 0 );\n    nEntries2 = 0;\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(p.vPacking)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vPacking, i)), 1); i++  {\n        assert(Entry \u003e 0 \u0026\u0026 Entry \u003c 4, \"Entry \u003e 0 \u0026\u0026 Entry \u003c 4\");\n        i++;\n        for  k = 0; k \u003c Entry; k, i = k+1, i+1  {\n            nNodes[k] = Vec_IntEntry(p.vPacking, i);\n        }\n        i--;\n        nEntries2++;\n        // create edges\n        if Entry == 2 {\n            Count += Gia_ObjEdgeAdd( nNodes[0], nNodes[1], p.vEdge1, p.vEdge2 );\n            Count += Gia_ObjEdgeAdd( nNodes[1], nNodes[0], p.vEdge1, p.vEdge2 );\n        \n        } else if Entry == 3 {\n            Count += Gia_ObjEdgeAdd( nNodes[0], nNodes[2], p.vEdge1, p.vEdge2 );\n            Count += Gia_ObjEdgeAdd( nNodes[2], nNodes[0], p.vEdge1, p.vEdge2 );\n            Count += Gia_ObjEdgeAdd( nNodes[1], nNodes[2], p.vEdge1, p.vEdge2 );\n            Count += Gia_ObjEdgeAdd( nNodes[2], nNodes[1], p.vEdge1, p.vEdge2 );\n        }\n    }\n    assert(nEntries == nEntries2, \"nEntries == nEntries2\");\n    if Count != 0 {\n        fmt.Printf(\"Skipped %d illegal edges.\\n\", Count); }\n}"
+    },
+    {
+      "Name": "Gia_ObjHaveEdge",
+      "Start": 5520,
+      "End": 5688,
+      "BodyStart": 5592,
+      "Original": "static inline int Gia_ObjHaveEdge( Gia_Man_t * p, int iObj, int iNext )\n{\n    return Vec_IntEntry(p-\u003evEdge1, iObj) == iNext || Vec_IntEntry(p-\u003evEdge2, iObj) == iNext;\n}",
+      "Draft": "func Gia_ObjHaveEdge(p *Gia_Man_t, iObj int32, iNext int32) int32 {\n    return Vec_IntEntry(p.vEdge1, iObj) == iNext || Vec_IntEntry(p.vEdge2, iObj) == iNext;\n}"
+    },
+    {
+      "Name": "Gia_ObjCheckEdge",
+      "Start": 5689,
+      "End": 5797,
+      "BodyStart": 5748,
+      "Original": "int Gia_ObjCheckEdge( Gia_Man_t * p, int iObj, int iNext )\n{\n    return Gia_ObjHaveEdge( p, iObj, iNext );\n}",
+      "Draft": "func Gia_ObjCheckEdge(p *Gia_Man_t, iObj int32, iNext int32) int32 {\n    return Gia_ObjHaveEdge( p, iObj, iNext );\n}"
+    },
+    {
+      "Name": "Gia_ObjEvalEdgeDelay",
+      "Start": 5798,
+      "End": 6656,
+      "BodyStart": 5884,
+      "Original": "static inline int Gia_ObjEvalEdgeDelay( Gia_Man_t * p, int iObj, Vec_Int_t * vDelay )\n{\n    int nEdgeDelay = 2;\n    int i, iFan, Delay, DelayMax = 0;\n    if ( Gia_ManHasMapping(p) \u0026\u0026 Gia_ObjIsLut(p, iObj) )\n    {\n        assert( Gia_ObjLutSize(p, iObj) \u003c= 4 );\n        Gia_LutForEachFanin( p, iObj, iFan, i )\n        {\n            Delay = Vec_IntEntry(vDelay, iFan) + (Gia_ObjHaveEdge(p, iObj, iFan) ? nEdgeDelay : 10);\n            DelayMax = Abc_MaxInt( DelayMax, Delay );\n        }\n    }\n    else if ( Gia_ObjIsLut2(p, iObj) )\n    {\n        assert( Gia_ObjLutSize2(p, iObj) \u003c= 4 );\n        Gia_LutForEachFanin2( p, iObj, iFan, i )\n        {\n            Delay = Vec_IntEntry(vDelay, iFan) + (Gia_ObjHaveEdge(p, iObj, iFan) ? nEdgeDelay : 10);\n            DelayMax = Abc_MaxInt( DelayMax, Delay );\n        }\n    }\n    else assert( 0 );\n    return DelayMax;\n}",
+      "Draft": "func Gia_ObjEvalEdgeDelay(p *Gia_Man_t, iObj int32, vDelay *Vec_Int_t) int32 {\n    var nEdgeDelay int32  = 2;\n    var i, iFan, Delay, DelayMax int32;\n    if Gia_ManHasMapping(p) \u0026\u0026 Gia_ObjIsLut(p, iObj) {\n        assert(Gia_ObjLutSize(p, iObj) \u003c= 4, \"Gia_ObjLutSize(p, iObj) \u003c= 4\");\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iObj)[i]),1); i++  {\n            Delay = Vec_IntEntry(vDelay, iFan) + (Gia_ObjHaveEdge(p, iObj, iFan) ? nEdgeDelay : 10);\n            DelayMax = Abc_MaxInt( DelayMax, Delay );\n        }\n    \n    } else if Gia_ObjIsLut2(p, iObj) {\n        assert(Gia_ObjLutSize2(p, iObj) \u003c= 4, \"Gia_ObjLutSize2(p, iObj) \u003c= 4\");\n        // inlining of macro Gia_LutForEachFanin2\n        for  i = 0; i \u003c Gia_ObjLutSize2(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanin2(p,iObj,i)),1); i++  {\n            Delay = Vec_IntEntry(vDelay, iFan) + (Gia_ObjHaveEdge(p, iObj, iFan) ? nEdgeDelay : 10);\n            DelayMax = Abc_MaxInt( DelayMax, Delay );\n        }\n    \n    } else { assert(false, \"0\"); }\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Gia_ManEvalEdgeDelay",
+      "Start": 6657,
+      "End": 10013,
+      "BodyStart": 6699,
+      "Original": "int Gia_ManEvalEdgeDelay( Gia_Man_t * p )\n{\n    int k, iLut, DelayMax = 0;\n    assert( p-\u003evEdge1 \u0026\u0026 p-\u003evEdge2 );\n    Vec_IntFreeP( \u0026p-\u003evEdgeDelay );\n    p-\u003evEdgeDelay = Vec_IntStart( Gia_ManObjNum(p) );\n    if ( Gia_ManHasMapping(p) )\n    {\n        if ( p-\u003epManTime != NULL \u0026\u0026 Tim_ManBoxNum((Tim_Man_t*)p-\u003epManTime) )\n        {\n            Gia_Obj_t * pObj; \n            Vec_Int_t * vNodes = Gia_ManOrderWithBoxes( p );\n            Tim_ManIncrementTravId( (Tim_Man_t*)p-\u003epManTime );\n            Gia_ManForEachObjVec( vNodes, p, pObj, k )\n            {\n                iLut = Gia_ObjId( p, pObj );\n                if ( Gia_ObjIsAnd(pObj) )\n                {\n                    if ( Gia_ObjIsLut(p, iLut) )\n                        Vec_IntWriteEntry( p-\u003evEdgeDelay, iLut, Gia_ObjEvalEdgeDelay(p, iLut, p-\u003evEdgeDelay) );\n                }\n                else if ( Gia_ObjIsCi(pObj) )\n                {\n                    int arrTime = Tim_ManGetCiArrival( (Tim_Man_t*)p-\u003epManTime, Gia_ObjCioId(pObj) );\n                    Vec_IntWriteEntry( p-\u003evEdgeDelay,  iLut, arrTime );\n                }\n                else if ( Gia_ObjIsCo(pObj) )\n                {\n                    int arrTime = Vec_IntEntry( p-\u003evEdgeDelay, Gia_ObjFaninId0(pObj, iLut) );\n                    Tim_ManSetCoArrival( (Tim_Man_t*)p-\u003epManTime, Gia_ObjCioId(pObj), arrTime );\n                }\n                else if ( !Gia_ObjIsConst0(pObj) ) \n                    assert( 0 );\n            }\n            Vec_IntFree( vNodes );\n        }\n        else\n        {\n            Gia_ManForEachLut( p, iLut )\n                Vec_IntWriteEntry( p-\u003evEdgeDelay, iLut, Gia_ObjEvalEdgeDelay(p, iLut, p-\u003evEdgeDelay) );\n        }\n    }\n    else if ( Gia_ManHasMapping2(p) )\n    {\n        if ( p-\u003epManTime != NULL \u0026\u0026 Tim_ManBoxNum((Tim_Man_t*)p-\u003epManTime) )\n        {\n            Gia_Obj_t * pObj; \n            Vec_Int_t * vNodes = Gia_ManOrderWithBoxes( p );\n            Tim_ManIncrementTravId( (Tim_Man_t*)p-\u003epManTime );\n            Gia_ManForEachObjVec( vNodes, p, pObj, k )\n            {\n                iLut = Gia_ObjId( p, pObj );\n                if ( Gia_ObjIsAnd(pObj) )\n                {\n                    if ( Gia_ObjIsLut2(p, iLut) )\n                        Vec_IntWriteEntry( p-\u003evEdgeDelay, iLut, Gia_ObjEvalEdgeDelay(p, iLut, p-\u003evEdgeDelay) );\n                }\n                else if ( Gia_ObjIsCi(pObj) )\n                {\n                    int arrTime = Tim_ManGetCiArrival( (Tim_Man_t*)p-\u003epManTime, Gia_ObjCioId(pObj) );\n                    Vec_IntWriteEntry( p-\u003evEdgeDelay,  iLut, arrTime );\n                }\n                else if ( Gia_ObjIsCo(pObj) )\n                {\n                    int arrTime = Vec_IntEntry( p-\u003evEdgeDelay, Gia_ObjFaninId0(pObj, iLut) );\n                    Tim_ManSetCoArrival( (Tim_Man_t*)p-\u003epManTime, Gia_ObjCioId(pObj), arrTime );\n                }\n                else if ( !Gia_ObjIsConst0(pObj) ) \n                    assert( 0 );\n            }\n            Vec_IntFree( vNodes );\n        }\n        else\n        {\n            Gia_ManForEachLut2( p, iLut )\n                Vec_IntWriteEntry( p-\u003evEdgeDelay, iLut, Gia_ObjEvalEdgeDelay(p, iLut, p-\u003evEdgeDelay) );\n        }\n    }\n    else assert( 0 );\n    Gia_ManForEachCoDriverId( p, iLut, k )\n        DelayMax = Abc_MaxInt( DelayMax, Vec_IntEntry(p-\u003evEdgeDelay, iLut) );\n    return DelayMax;\n}",
+      "Draft": "func Gia_ManEvalEdgeDelay(p *Gia_Man_t) int32 {\n    var k, iLut, DelayMax int32;\n    assert(p.vEdge1 \u0026\u0026 p.vEdge2, \"p.vEdge1 \u0026\u0026 p.vEdge2\");\n    Vec_IntFreeP( \u0026p.vEdgeDelay );\n    p.vEdgeDelay = Vec_IntStart( Gia_ManObjNum(p) );\n    if Gia_ManHasMapping(p) {\n        if p.pManTime != nil \u0026\u0026 Tim_ManBoxNum((Tim_Man_t*)p.pManTime) {\n            var pObj *Gia_Obj_t; \n            var vNodes *Vec_Int_t  = Gia_ManOrderWithBoxes( p );\n            Tim_ManIncrementTravId( (Tim_Man_t*)p.pManTime );\n            // inlining of macro Gia_ManForEachObjVec\n            for  k = 0; (k \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,k))); k++  {\n                iLut = Gia_ObjId( p, pObj );\n                if Gia_ObjIsAnd(pObj) {\n                    if Gia_ObjIsLut(p, iLut) {\n                        Vec_IntWriteEntry( p.vEdgeDelay, iLut, Gia_ObjEvalEdgeDelay(p, iLut, p.vEdgeDelay) ); }\n                \n                } else if Gia_ObjIsCi(pObj) {\n                    var arrTime int32  = Tim_ManGetCiArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj) );\n                    Vec_IntWriteEntry( p.vEdgeDelay,  iLut, arrTime );\n                \n                } else if Gia_ObjIsCo(pObj) {\n                    var arrTime int32  = Vec_IntEntry( p.vEdgeDelay, Gia_ObjFaninId0(pObj, iLut) );\n                    Tim_ManSetCoArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj), arrTime );\n                \n                } else if !Gia_ObjIsConst0(pObj) { \n                    assert(false, \"0\"); }\n            }\n            Vec_IntFree( vNodes );\n        \n        } else {\n            // inlining of macro Gia_ManForEachLut\n            for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut(p, iLut) {} else {\n                Vec_IntWriteEntry( p.vEdgeDelay, iLut, Gia_ObjEvalEdgeDelay(p, iLut, p.vEdgeDelay) ); }\n            }\n        }\n    \n    } else if Gia_ManHasMapping2(p) {\n        if p.pManTime != nil \u0026\u0026 Tim_ManBoxNum((Tim_Man_t*)p.pManTime) {\n            var pObj *Gia_Obj_t; \n            var vNodes *Vec_Int_t  = Gia_ManOrderWithBoxes( p );\n            Tim_ManIncrementTravId( (Tim_Man_t*)p.pManTime );\n            // inlining of macro Gia_ManForEachObjVec\n            for  k = 0; (k \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,k))); k++  {\n                iLut = Gia_ObjId( p, pObj );\n                if Gia_ObjIsAnd(pObj) {\n                    if Gia_ObjIsLut2(p, iLut) {\n                        Vec_IntWriteEntry( p.vEdgeDelay, iLut, Gia_ObjEvalEdgeDelay(p, iLut, p.vEdgeDelay) ); }\n                \n                } else if Gia_ObjIsCi(pObj) {\n                    var arrTime int32  = Tim_ManGetCiArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj) );\n                    Vec_IntWriteEntry( p.vEdgeDelay,  iLut, arrTime );\n                \n                } else if Gia_ObjIsCo(pObj) {\n                    var arrTime int32  = Vec_IntEntry( p.vEdgeDelay, Gia_ObjFaninId0(pObj, iLut) );\n                    Tim_ManSetCoArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj), arrTime );\n                \n                } else if !Gia_ObjIsConst0(pObj) { \n                    assert(false, \"0\"); }\n            }\n            Vec_IntFree( vNodes );\n        \n        } else {\n            // inlining of macro Gia_ManForEachLut2\n            for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut2(p, iLut) {} else {\n                Vec_IntWriteEntry( p.vEdgeDelay, iLut, Gia_ObjEvalEdgeDelay(p, iLut, p.vEdgeDelay) ); }\n            }\n        }\n    \n    } else { assert(false, \"0\"); }\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (((iLut) = Gia_ObjFaninId0p(p, Gia_ManCo(p, k))), 1); k++  {\n        DelayMax = Abc_MaxInt( DelayMax, Vec_IntEntry(p.vEdgeDelay, iLut) );\n    }\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Gia_ManEvalEdgeCount",
+      "Start": 10014,
+      "End": 10141,
+      "BodyStart": 10056,
+      "Original": "int Gia_ManEvalEdgeCount( Gia_Man_t * p )\n{\n    return (Vec_IntCountPositive(p-\u003evEdge1) + Vec_IntCountPositive(p-\u003evEdge2))/2;\n}",
+      "Draft": "func Gia_ManEvalEdgeCount(p *Gia_Man_t) int32 {\n    return (Vec_IntCountPositive(p.vEdge1) + Vec_IntCountPositive(p.vEdge2))/2;\n}"
+    },
+    {
+      "Name": "Gia_ObjComputeEdgeDelay",
+      "Start": 10400,
+      "End": 13422,
+      "BodyStart": 10528,
+      "Original": "int Gia_ObjComputeEdgeDelay( Gia_Man_t * p, int iObj, Vec_Int_t * vDelay, Vec_Int_t * vEdge1, Vec_Int_t * vEdge2, int fUseTwo )\n{\n    int i, iFan, Delay, Status1, Status2;\n    int DelayMax = 0, DelayMax2 = 0, nCountMax = 0;\n    int iFanMax1 = -1, iFanMax2 = -1;\n    Vec_IntWriteEntry(vEdge1, iObj, 0);\n    Vec_IntWriteEntry(vEdge2, iObj, 0);\n    if ( Gia_ManHasMapping(p) \u0026\u0026 Gia_ObjIsLut(p, iObj) )\n    {\n        assert( Gia_ObjLutSize(p, iObj) \u003c= 4 );\n        Gia_LutForEachFanin( p, iObj, iFan, i )\n        {\n            Delay = Vec_IntEntry( vDelay, iFan ) + 10;\n            if ( DelayMax \u003c Delay )\n            {\n                DelayMax2 = DelayMax;\n                DelayMax  = Delay;\n                iFanMax1  = iFan;\n                nCountMax = 1;\n            }\n            else if ( DelayMax == Delay )\n            {\n                iFanMax2  = iFan;\n                nCountMax++;\n                if ( !fUseTwo )\n                    DelayMax2 = DelayMax;\n            }\n            else\n                DelayMax2 = Abc_MaxInt( DelayMax2, Delay );\n        }\n    }\n    else if ( Gia_ObjIsLut2(p, iObj) )\n    {\n        assert( Gia_ObjLutSize2(p, iObj) \u003c= 4 );\n        Gia_LutForEachFanin2( p, iObj, iFan, i )\n        {\n            Delay = Vec_IntEntry( vDelay, iFan ) + 10;\n            if ( DelayMax \u003c Delay )\n            {\n                DelayMax2 = DelayMax;\n                DelayMax  = Delay;\n                iFanMax1  = iFan;\n                nCountMax = 1;\n            }\n            else if ( DelayMax == Delay )\n            {\n                iFanMax2  = iFan;\n                nCountMax++;\n                if ( !fUseTwo )\n                    DelayMax2 = DelayMax;\n            }\n            else\n                DelayMax2 = Abc_MaxInt( DelayMax2, Delay );\n        }\n    }\n    else assert( 0 );\n    assert( nCountMax \u003e 0 );\n    if ( DelayMax \u003c= 10 )\n    {} // skip first level\n    else if ( nCountMax == 1 )\n    {\n        Status1 = Gia_ObjEdgeCount( iFanMax1, vEdge1, vEdge2 );\n        if ( Status1 \u003c= 1 )\n        {\n            Gia_ObjEdgeAdd( iFanMax1, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax1, vEdge1, vEdge2 );\n            DelayMax = Abc_MaxInt( DelayMax2, DelayMax - 8 );\n            Vec_IntWriteEntry( vDelay, iObj, DelayMax );\n            return DelayMax;\n        }\n    }\n    else if ( fUseTwo \u0026\u0026 nCountMax == 2 )\n    {\n        Status1 = Gia_ObjEdgeCount( iFanMax1, vEdge1, vEdge2 );\n        Status2 = Gia_ObjEdgeCount( iFanMax2, vEdge1, vEdge2 );\n        if ( Status1 \u003c= 1 \u0026\u0026 Status2 \u003c= 1 )\n        {\n            Gia_ObjEdgeAdd( iFanMax1, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iFanMax2, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax1, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax2, vEdge1, vEdge2 );\n            DelayMax = Abc_MaxInt( DelayMax2, DelayMax - 8 );\n            Vec_IntWriteEntry( vDelay, iObj, DelayMax );\n            return DelayMax;\n        }\n    }\n    Vec_IntWriteEntry( vDelay, iObj, DelayMax );\n    return DelayMax;\n}",
+      "Draft": "func Gia_ObjComputeEdgeDelay(p *Gia_Man_t, iObj int32, vDelay *Vec_Int_t, vEdge1 *Vec_Int_t, vEdge2 *Vec_Int_t, fUseTwo int32) int32 {\n    var i, iFan, Delay, Status1, Status2 int32;\n    var DelayMax, DelayMax2, nCountMax int32;\n    var iFanMax1 int32 = -1;\n    var iFanMax2 int32 = -1;\n    Vec_IntWriteEntry(vEdge1, iObj, 0);\n    Vec_IntWriteEntry(vEdge2, iObj, 0);\n    if Gia_ManHasMapping(p) \u0026\u0026 Gia_ObjIsLut(p, iObj) {\n        assert(Gia_ObjLutSize(p, iObj) \u003c= 4, \"Gia_ObjLutSize(p, iObj) \u003c= 4\");\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iObj)[i]),1); i++  {\n            Delay = Vec_IntEntry( vDelay, iFan ) + 10;\n            if DelayMax \u003c Delay {\n                DelayMax2 = DelayMax;\n                DelayMax  = Delay;\n                iFanMax1  = iFan;\n                nCountMax = 1;\n            \n            } else if DelayMax == Delay {\n                iFanMax2  = iFan;\n                nCountMax++;\n                if !(fUseTwo != 0) {\n                    DelayMax2 = DelayMax; }\n            \n            } else {\n                DelayMax2 = Abc_MaxInt( DelayMax2, Delay ); }\n        }\n    \n    } else if Gia_ObjIsLut2(p, iObj) {\n        assert(Gia_ObjLutSize2(p, iObj) \u003c= 4, \"Gia_ObjLutSize2(p, iObj) \u003c= 4\");\n        // inlining of macro Gia_LutForEachFanin2\n        for  i = 0; i \u003c Gia_ObjLutSize2(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanin2(p,iObj,i)),1); i++  {\n            Delay = Vec_IntEntry( vDelay, iFan ) + 10;\n            if DelayMax \u003c Delay {\n                DelayMax2 = DelayMax;\n                DelayMax  = Delay;\n                iFanMax1  = iFan;\n                nCountMax = 1;\n            \n            } else if DelayMax == Delay {\n                iFanMax2  = iFan;\n                nCountMax++;\n                if !(fUseTwo != 0) {\n                    DelayMax2 = DelayMax; }\n            \n            } else {\n                DelayMax2 = Abc_MaxInt( DelayMax2, Delay ); }\n        }\n    \n    } else { assert(false, \"0\"); }\n    assert(nCountMax \u003e 0, \"nCountMax \u003e 0\");\n    if DelayMax \u003c= 10 { // skip first level\n    } else if nCountMax == 1 {\n        Status1 = Gia_ObjEdgeCount( iFanMax1, vEdge1, vEdge2 );\n        if Status1 \u003c= 1 {\n            Gia_ObjEdgeAdd( iFanMax1, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax1, vEdge1, vEdge2 );\n            DelayMax = Abc_MaxInt( DelayMax2, DelayMax - 8 );\n            Vec_IntWriteEntry( vDelay, iObj, DelayMax );\n            return DelayMax;\n        }\n    \n    } else if (fUseTwo != 0) \u0026\u0026 nCountMax == 2 {\n        Status1 = Gia_ObjEdgeCount( iFanMax1, vEdge1, vEdge2 );\n        Status2 = Gia_ObjEdgeCount( iFanMax2, vEdge1, vEdge2 );\n        if Status1 \u003c= 1 \u0026\u0026 Status2 \u003c= 1 {\n            Gia_ObjEdgeAdd( iFanMax1, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iFanMax2, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax1, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax2, vEdge1, vEdge2 );\n            DelayMax = Abc_MaxInt( DelayMax2, DelayMax - 8 );\n            Vec_IntWriteEntry( vDelay, iObj, DelayMax );\n            return DelayMax;\n        }\n    }\n    Vec_IntWriteEntry( vDelay, iObj, DelayMax );\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Gia_ManComputeEdgeDelay",
+      "Start": 13423,
+      "End": 16992,
+      "BodyStart": 13481,
+      "Original": "int Gia_ManComputeEdgeDelay( Gia_Man_t * p, int fUseTwo )\n{\n    int k, iLut, DelayMax = 0;\n    Vec_IntFreeP( \u0026p-\u003evEdgeDelay );\n    Vec_IntFreeP( \u0026p-\u003evEdge1 );\n    Vec_IntFreeP( \u0026p-\u003evEdge2 );\n    p-\u003evEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p-\u003evEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n    p-\u003evEdgeDelay = Vec_IntStart( Gia_ManObjNum(p) );\n    if ( Gia_ManHasMapping(p) )\n    {\n        if ( p-\u003epManTime != NULL \u0026\u0026 Tim_ManBoxNum((Tim_Man_t*)p-\u003epManTime) )\n        {\n            Gia_Obj_t * pObj; \n            Vec_Int_t * vNodes = Gia_ManOrderWithBoxes( p );\n            Tim_ManIncrementTravId( (Tim_Man_t*)p-\u003epManTime );\n            Gia_ManForEachObjVec( vNodes, p, pObj, k )\n            {\n                iLut = Gia_ObjId( p, pObj );\n                if ( Gia_ObjIsAnd(pObj) )\n                {\n                    if ( Gia_ObjIsLut(p, iLut) )\n                        Gia_ObjComputeEdgeDelay( p, iLut, p-\u003evEdgeDelay, p-\u003evEdge1, p-\u003evEdge2, fUseTwo );\n                }\n                else if ( Gia_ObjIsCi(pObj) )\n                {\n                    int arrTime = Tim_ManGetCiArrival( (Tim_Man_t*)p-\u003epManTime, Gia_ObjCioId(pObj) );\n                    Vec_IntWriteEntry( p-\u003evEdgeDelay,  iLut, arrTime );\n                }\n                else if ( Gia_ObjIsCo(pObj) )\n                {\n                    int arrTime = Vec_IntEntry( p-\u003evEdgeDelay, Gia_ObjFaninId0(pObj, iLut) );\n                    Tim_ManSetCoArrival( (Tim_Man_t*)p-\u003epManTime, Gia_ObjCioId(pObj), arrTime );\n                }\n                else if ( !Gia_ObjIsConst0(pObj) ) \n                    assert( 0 );\n            }\n            Vec_IntFree( vNodes );\n        }\n        else\n        {\n            Gia_ManForEachLut( p, iLut )\n                Gia_ObjComputeEdgeDelay( p, iLut, p-\u003evEdgeDelay, p-\u003evEdge1, p-\u003evEdge2, fUseTwo );\n        }\n    }\n    else if ( Gia_ManHasMapping2(p) )\n    {\n        if ( p-\u003epManTime != NULL \u0026\u0026 Tim_ManBoxNum((Tim_Man_t*)p-\u003epManTime) )\n        {\n            Gia_Obj_t * pObj; \n            Vec_Int_t * vNodes = Gia_ManOrderWithBoxes( p );\n            Tim_ManIncrementTravId( (Tim_Man_t*)p-\u003epManTime );\n            Gia_ManForEachObjVec( vNodes, p, pObj, k )\n            {\n                iLut = Gia_ObjId( p, pObj );\n                if ( Gia_ObjIsAnd(pObj) )\n                {\n                    if ( Gia_ObjIsLut2(p, iLut) )\n                        Gia_ObjComputeEdgeDelay( p, iLut, p-\u003evEdgeDelay, p-\u003evEdge1, p-\u003evEdge2, fUseTwo );\n                }\n                else if ( Gia_ObjIsCi(pObj) )\n                {\n                    int arrTime = Tim_ManGetCiArrival( (Tim_Man_t*)p-\u003epManTime, Gia_ObjCioId(pObj) );\n                    Vec_IntWriteEntry( p-\u003evEdgeDelay,  iLut, arrTime );\n                }\n                else if ( Gia_ObjIsCo(pObj) )\n                {\n                    int arrTime = Vec_IntEntry( p-\u003evEdgeDelay, Gia_ObjFaninId0(pObj, iLut) );\n                    Tim_ManSetCoArrival( (Tim_Man_t*)p-\u003epManTime, Gia_ObjCioId(pObj), arrTime );\n                }\n                else if ( !Gia_ObjIsConst0(pObj) ) \n                    assert( 0 );\n            }\n            Vec_IntFree( vNodes );\n        }\n        else\n        {\n            Gia_ManForEachLut2( p, iLut )\n                Gia_ObjComputeEdgeDelay( p, iLut, p-\u003evEdgeDelay, p-\u003evEdge1, p-\u003evEdge2, fUseTwo );\n        }\n    }\n    else assert( 0 );\n    Gia_ManForEachCoDriverId( p, iLut, k )\n        DelayMax = Abc_MaxInt( DelayMax, Vec_IntEntry(p-\u003evEdgeDelay, iLut) );\n    //printf( \"The number of edges = %d.  Delay = %d.\\n\", Gia_ManEvalEdgeCount(p), DelayMax );\n    return DelayMax;\n}",
+      "Draft": "func Gia_ManComputeEdgeDelay(p *Gia_Man_t, fUseTwo int32) int32 {\n    var k, iLut, DelayMax int32;\n    Vec_IntFreeP( \u0026p.vEdgeDelay );\n    Vec_IntFreeP( \u0026p.vEdge1 );\n    Vec_IntFreeP( \u0026p.vEdge2 );\n    p.vEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p.vEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n    p.vEdgeDelay = Vec_IntStart( Gia_ManObjNum(p) );\n    if Gia_ManHasMapping(p) {\n        if p.pManTime != nil \u0026\u0026 Tim_ManBoxNum((Tim_Man_t*)p.pManTime) {\n            var pObj *Gia_Obj_t; \n            var vNodes *Vec_Int_t  = Gia_ManOrderWithBoxes( p );\n            Tim_ManIncrementTravId( (Tim_Man_t*)p.pManTime );\n            // inlining of macro Gia_ManForEachObjVec\n            for  k = 0; (k \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,k))); k++  {\n                iLut = Gia_ObjId( p, pObj );\n                if Gia_ObjIsAnd(pObj) {\n                    if Gia_ObjIsLut(p, iLut) {\n                        Gia_ObjComputeEdgeDelay( p, iLut, p.vEdgeDelay, p.vEdge1, p.vEdge2, fUseTwo ); }\n                \n                } else if Gia_ObjIsCi(pObj) {\n                    var arrTime int32  = Tim_ManGetCiArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj) );\n                    Vec_IntWriteEntry( p.vEdgeDelay,  iLut, arrTime );\n                \n                } else if Gia_ObjIsCo(pObj) {\n                    var arrTime int32  = Vec_IntEntry( p.vEdgeDelay, Gia_ObjFaninId0(pObj, iLut) );\n                    Tim_ManSetCoArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj), arrTime );\n                \n                } else if !Gia_ObjIsConst0(pObj) { \n                    assert(false, \"0\"); }\n            }\n            Vec_IntFree( vNodes );\n        \n        } else {\n            // inlining of macro Gia_ManForEachLut\n            for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut(p, iLut) {} else {\n                Gia_ObjComputeEdgeDelay( p, iLut, p.vEdgeDelay, p.vEdge1, p.vEdge2, fUseTwo ); }\n            }\n        }\n    \n    } else if Gia_ManHasMapping2(p) {\n        if p.pManTime != nil \u0026\u0026 Tim_ManBoxNum((Tim_Man_t*)p.pManTime) {\n            var pObj *Gia_Obj_t; \n            var vNodes *Vec_Int_t  = Gia_ManOrderWithBoxes( p );\n            Tim_ManIncrementTravId( (Tim_Man_t*)p.pManTime );\n            // inlining of macro Gia_ManForEachObjVec\n            for  k = 0; (k \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,k))); k++  {\n                iLut = Gia_ObjId( p, pObj );\n                if Gia_ObjIsAnd(pObj) {\n                    if Gia_ObjIsLut2(p, iLut) {\n                        Gia_ObjComputeEdgeDelay( p, iLut, p.vEdgeDelay, p.vEdge1, p.vEdge2, fUseTwo ); }\n                \n                } else if Gia_ObjIsCi(pObj) {\n                    var arrTime int32  = Tim_ManGetCiArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj) );\n                    Vec_IntWriteEntry( p.vEdgeDelay,  iLut, arrTime );\n                \n                } else if Gia_ObjIsCo(pObj) {\n                    var arrTime int32  = Vec_IntEntry( p.vEdgeDelay, Gia_ObjFaninId0(pObj, iLut) );\n                    Tim_ManSetCoArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj), arrTime );\n                \n                } else if !Gia_ObjIsConst0(pObj) { \n                    assert(false, \"0\"); }\n            }\n            Vec_IntFree( vNodes );\n        \n        } else {\n            // inlining of macro Gia_ManForEachLut2\n            for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut2(p, iLut) {} else {\n                Gia_ObjComputeEdgeDelay( p, iLut, p.vEdgeDelay, p.vEdge1, p.vEdge2, fUseTwo ); }\n            }\n        }\n    \n    } else { assert(false, \"0\"); }\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (((iLut) = Gia_ObjFaninId0p(p, Gia_ManCo(p, k))), 1); k++  {\n        DelayMax = Abc_MaxInt( DelayMax, Vec_IntEntry(p.vEdgeDelay, iLut) );\n    }\n    //printf( \"The number of edges = %d.  Delay = %d.\\n\", Gia_ManEvalEdgeCount(p), DelayMax );\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Gia_ObjComputeEdgeDelay2",
+      "Start": 17250,
+      "End": 20148,
+      "BodyStart": 17433,
+      "Original": "int Gia_ObjComputeEdgeDelay2( Gia_Man_t * p, int iObj, Vec_Int_t * vDelay, Vec_Int_t * vEdge1, Vec_Int_t * vEdge2, Vec_Int_t * vFanMax1, Vec_Int_t * vFanMax2, Vec_Int_t * vCountMax )\n{\n    int i, iFan, DelayFanin, Status1, Status2;\n    int DelayMax = 0, nCountMax = 0;\n    int iFanMax1 = -1, iFanMax2 = -1;\n    Vec_IntWriteEntry(vEdge1, iObj, 0);\n    Vec_IntWriteEntry(vEdge2, iObj, 0);\n    // analyze this node\n    DelayMax = Vec_IntEntry( vDelay, iObj );\n    nCountMax = Vec_IntEntry( vCountMax, iObj );\n    if ( DelayMax == 0 )\n    {}\n    else if ( nCountMax == 1 )\n    {\n        iFanMax1 = Vec_IntEntry( vFanMax1, iObj );\n        Status1 = Gia_ObjEdgeCount( iFanMax1, vEdge1, vEdge2 );\n        if ( Status1 \u003c= 1 )\n        {\n            Gia_ObjEdgeAdd( iFanMax1, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax1, vEdge1, vEdge2 );\n            DelayMax--;\n        }\n    }\n    else if ( nCountMax == 2 )\n    {\n        iFanMax1 = Vec_IntEntry( vFanMax1, iObj );\n        iFanMax2 = Vec_IntEntry( vFanMax2, iObj );\n        Status1 = Gia_ObjEdgeCount( iFanMax1, vEdge1, vEdge2 );\n        Status2 = Gia_ObjEdgeCount( iFanMax2, vEdge1, vEdge2 );\n        if ( Status1 \u003c= 1 \u0026\u0026 Status2 \u003c= 1 )\n        {\n            Gia_ObjEdgeAdd( iFanMax1, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iFanMax2, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax1, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax2, vEdge1, vEdge2 );\n            DelayMax--;\n        }\n    }\n    Vec_IntWriteEntry( vDelay, iObj, DelayMax );\n    // computed DelayMax at this point\n    if ( Gia_ManHasMapping(p) \u0026\u0026 Gia_ObjIsLut(p, iObj) )\n    {\n        Gia_LutForEachFanin( p, iObj, iFan, i )\n        {\n            DelayFanin = Vec_IntEntry( vDelay, iFan );\n            if ( DelayFanin \u003c DelayMax + 1 )\n            {\n                Vec_IntWriteEntry( vDelay, iFan, DelayMax + 1 );\n                Vec_IntWriteEntry( vFanMax1, iFan, iObj );\n                Vec_IntWriteEntry( vCountMax, iFan, 1 );\n            }\n            else if ( DelayFanin == DelayMax + 1 )\n            {\n                Vec_IntWriteEntry( vFanMax2, iFan, iObj );\n                Vec_IntAddToEntry( vCountMax, iFan, 1 );\n            }\n        }\n    }\n    else if ( Gia_ObjIsLut2(p, iObj) )\n    {\n        Gia_LutForEachFanin2( p, iObj, iFan, i )\n        {\n            DelayFanin = Vec_IntEntry( vDelay, iFan );\n            if ( DelayFanin \u003c DelayMax + 1 )\n            {\n                Vec_IntWriteEntry( vDelay, iFan, DelayMax + 1 );\n                Vec_IntWriteEntry( vFanMax1, iFan, iObj );\n                Vec_IntWriteEntry( vCountMax, iFan, 1 );\n            }\n            else if ( DelayFanin == DelayMax + 1 )\n            {\n                Vec_IntWriteEntry( vFanMax2, iFan, iObj );\n                Vec_IntAddToEntry( vCountMax, iFan, 1 );\n            }\n        }\n    }\n    else assert( 0 );\n    return DelayMax;\n}",
+      "Draft": "func Gia_ObjComputeEdgeDelay2(p *Gia_Man_t, iObj int32, vDelay *Vec_Int_t, vEdge1 *Vec_Int_t, vEdge2 *Vec_Int_t, vFanMax1 *Vec_Int_t, vFanMax2 *Vec_Int_t, vCountMax *Vec_Int_t) int32 {\n    var i, iFan, DelayFanin, Status1, Status2 int32;\n    var DelayMax, nCountMax int32;\n    var iFanMax1 int32 = -1;\n    var iFanMax2 int32 = -1;\n    Vec_IntWriteEntry(vEdge1, iObj, 0);\n    Vec_IntWriteEntry(vEdge2, iObj, 0);\n    // analyze this node\n    DelayMax = Vec_IntEntry( vDelay, iObj );\n    nCountMax = Vec_IntEntry( vCountMax, iObj );\n    if DelayMax == 0 {\n    } else if nCountMax == 1 {\n        iFanMax1 = Vec_IntEntry( vFanMax1, iObj );\n        Status1 = Gia_ObjEdgeCount( iFanMax1, vEdge1, vEdge2 );\n        if Status1 \u003c= 1 {\n            Gia_ObjEdgeAdd( iFanMax1, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax1, vEdge1, vEdge2 );\n            DelayMax--;\n        }\n    \n    } else if nCountMax == 2 {\n        iFanMax1 = Vec_IntEntry( vFanMax1, iObj );\n        iFanMax2 = Vec_IntEntry( vFanMax2, iObj );\n        Status1 = Gia_ObjEdgeCount( iFanMax1, vEdge1, vEdge2 );\n        Status2 = Gia_ObjEdgeCount( iFanMax2, vEdge1, vEdge2 );\n        if Status1 \u003c= 1 \u0026\u0026 Status2 \u003c= 1 {\n            Gia_ObjEdgeAdd( iFanMax1, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iFanMax2, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax1, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax2, vEdge1, vEdge2 );\n            DelayMax--;\n        }\n    }\n    Vec_IntWriteEntry( vDelay, iObj, DelayMax );\n    // computed DelayMax at this point\n    if Gia_ManHasMapping(p) \u0026\u0026 Gia_ObjIsLut(p, iObj) {\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iObj)[i]),1); i++  {\n            DelayFanin = Vec_IntEntry( vDelay, iFan );\n            if DelayFanin \u003c DelayMax + 1 {\n                Vec_IntWriteEntry( vDelay, iFan, DelayMax + 1 );\n                Vec_IntWriteEntry( vFanMax1, iFan, iObj );\n                Vec_IntWriteEntry( vCountMax, iFan, 1 );\n            \n            } else if DelayFanin == DelayMax + 1 {\n                Vec_IntWriteEntry( vFanMax2, iFan, iObj );\n                Vec_IntAddToEntry( vCountMax, iFan, 1 );\n            }\n        }\n    \n    } else if Gia_ObjIsLut2(p, iObj) {\n        // inlining of macro Gia_LutForEachFanin2\n        for  i = 0; i \u003c Gia_ObjLutSize2(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanin2(p,iObj,i)),1); i++  {\n            DelayFanin = Vec_IntEntry( vDelay, iFan );\n            if DelayFanin \u003c DelayMax + 1 {\n                Vec_IntWriteEntry( vDelay, iFan, DelayMax + 1 );\n                Vec_IntWriteEntry( vFanMax1, iFan, iObj );\n                Vec_IntWriteEntry( vCountMax, iFan, 1 );\n            \n            } else if DelayFanin == DelayMax + 1 {\n                Vec_IntWriteEntry( vFanMax2, iFan, iObj );\n                Vec_IntAddToEntry( vCountMax, iFan, 1 );\n            }\n        }\n    \n    } else { assert(false, \"0\"); }\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Gia_ManComputeEdgeDelay2",
+      "Start": 20149,
+      "End": 21536,
+      "BodyStart": 20195,
+      "Original": "int Gia_ManComputeEdgeDelay2( Gia_Man_t * p )\n{\n    int k, iLut, DelayMax = 0;\n    Vec_Int_t * vFanMax1 = Vec_IntStart( Gia_ManObjNum(p) );\n    Vec_Int_t * vFanMax2 = Vec_IntStart( Gia_ManObjNum(p) );\n    Vec_Int_t * vCountMax = Vec_IntStart( Gia_ManObjNum(p) );\n    assert( p-\u003epManTime == NULL );\n    Vec_IntFreeP( \u0026p-\u003evEdgeDelay );\n    Vec_IntFreeP( \u0026p-\u003evEdge1 );\n    Vec_IntFreeP( \u0026p-\u003evEdge2 );\n    p-\u003evEdgeDelay = Vec_IntStart( Gia_ManObjNum(p) );\n    p-\u003evEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p-\u003evEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n//    Gia_ManForEachCoDriverId( p, iLut, k )\n//        Vec_IntWriteEntry( p-\u003evEdgeDelay, iLut, 1 );\n    if ( Gia_ManHasMapping(p) )\n        Gia_ManForEachLutReverse( p, iLut )\n            Gia_ObjComputeEdgeDelay2( p, iLut, p-\u003evEdgeDelay, p-\u003evEdge1, p-\u003evEdge2, vFanMax1, vFanMax2, vCountMax );\n    else if ( Gia_ManHasMapping2(p) )\n        Gia_ManForEachLut2Reverse( p, iLut )\n            Gia_ObjComputeEdgeDelay2( p, iLut, p-\u003evEdgeDelay, p-\u003evEdge1, p-\u003evEdge2, vFanMax1, vFanMax2, vCountMax );\n    else assert( 0 );\n    Gia_ManForEachCiId( p, iLut, k )\n        DelayMax = Abc_MaxInt( DelayMax, Vec_IntEntry(p-\u003evEdgeDelay, iLut) );\n    Vec_IntFree( vFanMax1 );\n    Vec_IntFree( vFanMax2 );\n    Vec_IntFree( vCountMax );\n    //printf( \"The number of edges = %d.  Delay = %d.\\n\", Gia_ManEvalEdgeCount(p), DelayMax );\n    return DelayMax;\n}",
+      "Draft": "func Gia_ManComputeEdgeDelay2(p *Gia_Man_t) int32 {\n    var k, iLut, DelayMax int32;\n    var vFanMax1 *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vFanMax2 *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vCountMax *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    assert(p.pManTime == nil, \"p.pManTime == nil\");\n    Vec_IntFreeP( \u0026p.vEdgeDelay );\n    Vec_IntFreeP( \u0026p.vEdge1 );\n    Vec_IntFreeP( \u0026p.vEdge2 );\n    p.vEdgeDelay = Vec_IntStart( Gia_ManObjNum(p) );\n    p.vEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p.vEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n//    Gia_ManForEachCoDriverId( p, iLut, k )\n//        Vec_IntWriteEntry( p-\u003evEdgeDelay, iLut, 1 );\n    if Gia_ManHasMapping(p) {\n        // inlining of macro Gia_ManForEachLutReverse\n        for  iLut = Gia_ManObjNum(p) - 1; iLut \u003e 0; iLut--  { if !Gia_ObjIsLut(p, iLut) {} else {\n            Gia_ObjComputeEdgeDelay2( p, iLut, p.vEdgeDelay, p.vEdge1, p.vEdge2, vFanMax1, vFanMax2, vCountMax ); }\n        }\n    } else if Gia_ManHasMapping2(p) {\n        // inlining of macro Gia_ManForEachLut2Reverse\n        for  iLut = Gia_ManObjNum(p) - 1; iLut \u003e 0; iLut--  { if !Gia_ObjIsLut2(p, iLut) {} else {\n            Gia_ObjComputeEdgeDelay2( p, iLut, p.vEdgeDelay, p.vEdge1, p.vEdge2, vFanMax1, vFanMax2, vCountMax ); }\n        }\n    } else { assert(false, \"0\"); }\n    // inlining of macro Gia_ManForEachCiId\n    for  k = 0; (k \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((iLut) = Gia_ObjId(p, Gia_ManCi(p, k))); k++  {\n        DelayMax = Abc_MaxInt( DelayMax, Vec_IntEntry(p.vEdgeDelay, iLut) );\n    }\n    Vec_IntFree( vFanMax1 );\n    Vec_IntFree( vFanMax2 );\n    Vec_IntFree( vCountMax );\n    //printf( \"The number of edges = %d.  Delay = %d.\\n\", Gia_ManEvalEdgeCount(p), DelayMax );\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Gia_ManUpdateMapping",
+      "Start": 21794,
+      "End": 22031,
+      "BodyStart": 21875,
+      "Original": "void Gia_ManUpdateMapping( Gia_Man_t * p, Vec_Int_t * vNodes, Vec_Wec_t * vWin )\n{\n    int i, iNode;\n    Vec_IntForEachEntry( vNodes, iNode, i )\n        ABC_SWAP( Vec_Int_t, *Vec_WecEntry(p-\u003evMapping2, iNode), *Vec_WecEntry(vWin, i) );\n}",
+      "Draft": "func Gia_ManUpdateMapping(p *Gia_Man_t, vNodes *Vec_Int_t, vWin *Vec_Wec_t) {\n    var i, iNode int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((iNode) = Vec_IntEntry(vNodes, i)), 1); i++  {\n        // inlining of macro ABC_SWAP\n         var t Vec_Int_t  = *Vec_WecEntry(p.vMapping2, iNode); *Vec_WecEntry(p.vMapping2, iNode) = *Vec_WecEntry(vWin, i); *Vec_WecEntry(vWin, i) = t; };\n}"
+    },
+    {
+      "Name": "Gia_ManEvalWindowInc",
+      "Start": 22032,
+      "End": 22713,
+      "BodyStart": 22165,
+      "Original": "int Gia_ManEvalWindowInc( Gia_Man_t * p, Vec_Int_t * vLeaves, Vec_Int_t * vNodes, Vec_Wec_t * vWin, Vec_Int_t * vTemp, int fUseTwo )\n{\n    int i, iLut, Delay, DelayMax = 0;\n    assert( Vec_IntSize(vNodes) == Vec_WecSize(vWin) );\n    Gia_ManUpdateMapping( p, vNodes, vWin );\n    Gia_ManCollectTfo( p, vLeaves, vTemp );\n    Vec_IntReverseOrder( vTemp );\n    Vec_IntForEachEntry( vTemp, iLut, i )\n    {\n        if ( !Gia_ObjIsLut(p, iLut) )\n            continue;\n        Delay = Gia_ObjComputeEdgeDelay( p, iLut, p-\u003evEdgeDelay, p-\u003evEdge1, p-\u003evEdge2, fUseTwo );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    Gia_ManUpdateMapping( p, vNodes, vWin );\n    return DelayMax;\n}",
+      "Draft": "func Gia_ManEvalWindowInc(p *Gia_Man_t, vLeaves *Vec_Int_t, vNodes *Vec_Int_t, vWin *Vec_Wec_t, vTemp *Vec_Int_t, fUseTwo int32) int32 {\n    var i, iLut, Delay, DelayMax int32;\n    assert(Vec_IntSize(vNodes) == Vec_WecSize(vWin), \"Vec_IntSize(vNodes) == Vec_WecSize(vWin)\");\n    Gia_ManUpdateMapping( p, vNodes, vWin );\n    Gia_ManCollectTfo( p, vLeaves, vTemp );\n    Vec_IntReverseOrder( vTemp );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vTemp)) \u0026\u0026 (((iLut) = Vec_IntEntry(vTemp, i)), 1); i++  {\n        if !Gia_ObjIsLut(p, iLut) {\n            continue; }\n        Delay = Gia_ObjComputeEdgeDelay( p, iLut, p.vEdgeDelay, p.vEdge1, p.vEdge2, fUseTwo );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    Gia_ManUpdateMapping( p, vNodes, vWin );\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Gia_ManEvalWindow",
+      "Start": 22714,
+      "End": 23086,
+      "BodyStart": 22844,
+      "Original": "int Gia_ManEvalWindow( Gia_Man_t * p, Vec_Int_t * vLeaves, Vec_Int_t * vNodes, Vec_Wec_t * vWin, Vec_Int_t * vTemp, int fUseTwo )\n{\n    int DelayMax;\n    assert( Vec_IntSize(vNodes) == Vec_WecSize(vWin) );\n    Gia_ManUpdateMapping( p, vNodes, vWin );\n    DelayMax = Gia_ManComputeEdgeDelay( p, fUseTwo );\n    Gia_ManUpdateMapping( p, vNodes, vWin );\n    return DelayMax;\n}",
+      "Draft": "func Gia_ManEvalWindow(p *Gia_Man_t, vLeaves *Vec_Int_t, vNodes *Vec_Int_t, vWin *Vec_Wec_t, vTemp *Vec_Int_t, fUseTwo int32) int32 {\n    var DelayMax int32;\n    assert(Vec_IntSize(vNodes) == Vec_WecSize(vWin), \"Vec_IntSize(vNodes) == Vec_WecSize(vWin)\");\n    Gia_ManUpdateMapping( p, vNodes, vWin );\n    DelayMax = Gia_ManComputeEdgeDelay( p, fUseTwo );\n    Gia_ManUpdateMapping( p, vNodes, vWin );\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Edg_ManToMapping",
+      "Start": 23325,
+      "End": 23877,
+      "BodyStart": 23364,
+      "Original": "void Edg_ManToMapping( Gia_Man_t * p )\n{\n    int iObj, iFanin, k;\n    assert( Gia_ManHasMapping(p) );\n    Vec_WecFreeP( \u0026p-\u003evMapping2 );\n    Vec_WecFreeP( \u0026p-\u003evFanouts2 );\n    p-\u003evMapping2 = Vec_WecStart( Gia_ManObjNum(p) );\n    p-\u003evFanouts2 = Vec_WecStart( Gia_ManObjNum(p) );\n    Gia_ManForEachLut( p, iObj )\n    {\n        assert( Gia_ObjLutSize(p, iObj) \u003c= 4 );\n        Gia_LutForEachFanin( p, iObj, iFanin, k )\n        {\n            Vec_WecPush( p-\u003evMapping2, iObj, iFanin );\n            Vec_WecPush( p-\u003evFanouts2, iFanin, iObj );\n        }\n    }\n}",
+      "Draft": "func Edg_ManToMapping(p *Gia_Man_t) {\n    var iObj, iFanin, k int32;\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");\n    Vec_WecFreeP( \u0026p.vMapping2 );\n    Vec_WecFreeP( \u0026p.vFanouts2 );\n    p.vMapping2 = Vec_WecStart( Gia_ManObjNum(p) );\n    p.vFanouts2 = Vec_WecStart( Gia_ManObjNum(p) );\n    // inlining of macro Gia_ManForEachLut\n    for  iObj = 1; iObj \u003c Gia_ManObjNum(p); iObj++  { if !Gia_ObjIsLut(p, iObj) {} else {\n        assert(Gia_ObjLutSize(p, iObj) \u003c= 4, \"Gia_ObjLutSize(p, iObj) \u003c= 4\");\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p,iObj)[k]),1); k++  {\n            Vec_WecPush( p.vMapping2, iObj, iFanin );\n            Vec_WecPush( p.vFanouts2, iFanin, iObj );\n        }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Edg_ObjEvalEdgeDelay",
+      "Start": 24158,
+      "End": 24665,
+      "BodyStart": 24244,
+      "Original": "static inline int Edg_ObjEvalEdgeDelay( Gia_Man_t * p, int iObj, Vec_Int_t * vDelay )\n{\n    int DelayEdge = 0; // 2;\n    int DelayNoEdge = 1;\n    int i, iFan, Delay, DelayMax = 0;\n    assert( Gia_ObjIsLut2(p, iObj) );\n    Gia_LutForEachFanin2( p, iObj, iFan, i )\n    {\n        Delay = Vec_IntEntry(vDelay, iFan) + (Gia_ObjHaveEdge(p, iObj, iFan) ? DelayEdge : DelayNoEdge);\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    //printf( \"Obj %d - Level %d\\n\", iObj, DelayMax );\n    return DelayMax;\n}",
+      "Draft": "func Edg_ObjEvalEdgeDelay(p *Gia_Man_t, iObj int32, vDelay *Vec_Int_t) int32 {\n    var DelayEdge int32; // 2;\n    var DelayNoEdge int32  = 1;\n    var i, iFan, Delay, DelayMax int32;\n    assert(Gia_ObjIsLut2(p, iObj), \"Gia_ObjIsLut2(p, iObj)\");\n    // inlining of macro Gia_LutForEachFanin2\n    for  i = 0; i \u003c Gia_ObjLutSize2(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanin2(p,iObj,i)),1); i++  {\n        Delay = Vec_IntEntry(vDelay, iFan) + (Gia_ObjHaveEdge(p, iObj, iFan) ? DelayEdge : DelayNoEdge);\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    //printf( \"Obj %d - Level %d\\n\", iObj, DelayMax );\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Edg_ManEvalEdgeDelay",
+      "Start": 24666,
+      "End": 25179,
+      "BodyStart": 24708,
+      "Original": "int Edg_ManEvalEdgeDelay( Gia_Man_t * p )\n{\n    int iLut, Delay, DelayMax = 0;\n    assert( p-\u003evEdge1 \u0026\u0026 p-\u003evEdge2 );\n    if ( p-\u003evEdgeDelay == NULL )\n        p-\u003evEdgeDelay = Vec_IntStart( Gia_ManObjNum(p) );\n    else\n        Vec_IntFill( p-\u003evEdgeDelay, Gia_ManObjNum(p), 0 );\n    Gia_ManForEachLut2( p, iLut )\n    {\n        Delay = Edg_ObjEvalEdgeDelay(p, iLut, p-\u003evEdgeDelay);\n        Vec_IntWriteEntry( p-\u003evEdgeDelay, iLut, Delay );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    return DelayMax;\n}",
+      "Draft": "func Edg_ManEvalEdgeDelay(p *Gia_Man_t) int32 {\n    var iLut, Delay, DelayMax int32;\n    assert(p.vEdge1 \u0026\u0026 p.vEdge2, \"p.vEdge1 \u0026\u0026 p.vEdge2\");\n    if p.vEdgeDelay == nil {\n        p.vEdgeDelay = Vec_IntStart( Gia_ManObjNum(p) );\n    } else {\n        Vec_IntFill( p.vEdgeDelay, Gia_ManObjNum(p), 0 ); }\n    // inlining of macro Gia_ManForEachLut2\n    for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut2(p, iLut) {} else {\n        Delay = Edg_ObjEvalEdgeDelay(p, iLut, p.vEdgeDelay);\n        Vec_IntWriteEntry( p.vEdgeDelay, iLut, Delay );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    }\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Edg_ObjEvalEdgeDelayR",
+      "Start": 25181,
+      "End": 25691,
+      "BodyStart": 25268,
+      "Original": "static inline int Edg_ObjEvalEdgeDelayR( Gia_Man_t * p, int iObj, Vec_Int_t * vDelay )\n{\n    int DelayEdge = 0; // 2;\n    int DelayNoEdge = 1;\n    int i, iFan, Delay, DelayMax = 0;\n    assert( Gia_ObjIsLut2(p, iObj) );\n    Gia_LutForEachFanout2( p, iObj, iFan, i )\n    {\n        Delay = Vec_IntEntry(vDelay, iFan) + (Gia_ObjHaveEdge(p, iObj, iFan) ? DelayEdge : DelayNoEdge);\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    //printf( \"Obj %d - LevelR %d\\n\", iObj, DelayMax );\n    return DelayMax;\n}",
+      "Draft": "func Edg_ObjEvalEdgeDelayR(p *Gia_Man_t, iObj int32, vDelay *Vec_Int_t) int32 {\n    var DelayEdge int32; // 2;\n    var DelayNoEdge int32  = 1;\n    var i, iFan, Delay, DelayMax int32;\n    assert(Gia_ObjIsLut2(p, iObj), \"Gia_ObjIsLut2(p, iObj)\");\n    // inlining of macro Gia_LutForEachFanout2\n    for  i = 0; i \u003c Gia_ObjLutFanoutNum2(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanout2(p,iObj,i)),1); i++  {\n        Delay = Vec_IntEntry(vDelay, iFan) + (Gia_ObjHaveEdge(p, iObj, iFan) ? DelayEdge : DelayNoEdge);\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    //printf( \"Obj %d - LevelR %d\\n\", iObj, DelayMax );\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Edg_ManEvalEdgeDelayR",
+      "Start": 25692,
+      "End": 26360,
+      "BodyStart": 25735,
+      "Original": "int Edg_ManEvalEdgeDelayR( Gia_Man_t * p )\n{\n//    int k, DelayNoEdge = 1;\n    int iLut, Delay, DelayMax = 0;\n    assert( p-\u003evEdge1 \u0026\u0026 p-\u003evEdge2 );\n    if ( p-\u003evEdgeDelayR == NULL )\n        p-\u003evEdgeDelayR = Vec_IntStart( Gia_ManObjNum(p) );\n    else\n        Vec_IntFill( p-\u003evEdgeDelayR, Gia_ManObjNum(p), 0 );\n//    Gia_ManForEachCoDriverId( p, iLut, k )\n//        Vec_IntWriteEntry( p-\u003evEdgeDelayR, iLut, DelayNoEdge );\n    Gia_ManForEachLut2Reverse( p, iLut )\n    {\n        Delay = Edg_ObjEvalEdgeDelayR(p, iLut, p-\u003evEdgeDelayR);\n        Vec_IntWriteEntry( p-\u003evEdgeDelayR, iLut, Delay );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    return DelayMax;\n}",
+      "Draft": "func Edg_ManEvalEdgeDelayR(p *Gia_Man_t) int32 {\n//    int k, DelayNoEdge = 1;\n    var iLut, Delay, DelayMax int32;\n    assert(p.vEdge1 \u0026\u0026 p.vEdge2, \"p.vEdge1 \u0026\u0026 p.vEdge2\");\n    if p.vEdgeDelayR == nil {\n        p.vEdgeDelayR = Vec_IntStart( Gia_ManObjNum(p) );\n    } else {\n        Vec_IntFill( p.vEdgeDelayR, Gia_ManObjNum(p), 0 ); }\n//    Gia_ManForEachCoDriverId( p, iLut, k )\n//        Vec_IntWriteEntry( p-\u003evEdgeDelayR, iLut, DelayNoEdge );\n    // inlining of macro Gia_ManForEachLut2Reverse\n    for  iLut = Gia_ManObjNum(p) - 1; iLut \u003e 0; iLut--  { if !Gia_ObjIsLut2(p, iLut) {} else {\n        Delay = Edg_ObjEvalEdgeDelayR(p, iLut, p.vEdgeDelayR);\n        Vec_IntWriteEntry( p.vEdgeDelayR, iLut, Delay );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    }\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Edg_ManCollectCritEdges",
+      "Start": 26362,
+      "End": 27100,
+      "BodyStart": 26442,
+      "Original": "void Edg_ManCollectCritEdges( Gia_Man_t * p, Vec_Wec_t * vEdges, int DelayMax )\n{\n    Vec_Int_t * vLevel;\n    int k, iLut, Delay1, Delay2;\n    assert( p-\u003evEdge1 \u0026\u0026 p-\u003evEdge2 );\n    Vec_WecClear( vEdges );\n    Vec_WecInit( vEdges, DelayMax + 1 );\n    Gia_ManForEachLut2( p, iLut )\n    {\n        Delay1 = Vec_IntEntry( p-\u003evEdgeDelay, iLut );\n        Delay2 = Vec_IntEntry( p-\u003evEdgeDelayR, iLut );\n        assert( Delay1 + Delay2 \u003c= DelayMax );\n        if ( Delay1 + Delay2 == DelayMax )\n            Vec_WecPush( vEdges, Delay1, iLut );\n    }\n    // every level should have critical nodes, except the first one\n    //Vec_WecPrint( vEdges, 0 );\n    Vec_WecForEachLevelStart( vEdges, vLevel, k, 1 )\n        assert( Vec_IntSize(vLevel) \u003e 0 );\n}",
+      "Draft": "func Edg_ManCollectCritEdges(p *Gia_Man_t, vEdges *Vec_Wec_t, DelayMax int32) {\n    var vLevel *Vec_Int_t;\n    var k, iLut, Delay1, Delay2 int32;\n    assert(p.vEdge1 \u0026\u0026 p.vEdge2, \"p.vEdge1 \u0026\u0026 p.vEdge2\");\n    Vec_WecClear( vEdges );\n    Vec_WecInit( vEdges, DelayMax + 1 );\n    // inlining of macro Gia_ManForEachLut2\n    for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut2(p, iLut) {} else {\n        Delay1 = Vec_IntEntry( p.vEdgeDelay, iLut );\n        Delay2 = Vec_IntEntry( p.vEdgeDelayR, iLut );\n        assert(Delay1 + Delay2 \u003c= DelayMax, \"Delay1 + Delay2 \u003c= DelayMax\");\n        if Delay1 + Delay2 == DelayMax {\n            Vec_WecPush( vEdges, Delay1, iLut ); }\n    }\n    }\n    // every level should have critical nodes, except the first one\n    //Vec_WecPrint( vEdges, 0 );\n    // inlining of macro Vec_WecForEachLevelStart\n    for  k = 1; (k \u003c Vec_WecSize(vEdges)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vEdges, k)), 1); k++  {\n        assert(Vec_IntSize(vLevel) \u003e 0, \"Vec_IntSize(vLevel) \u003e 0\");\n    }\n}"
+    },
+    {
+      "Name": "Edg_ObjImprove",
+      "Start": 27353,
+      "End": 31566,
+      "BodyStart": 27443,
+      "Original": "int Edg_ObjImprove( Gia_Man_t * p, int iObj, int nEdgeLimit, int DelayMax, int fVerbose )\n{\n    int nFaninsC = 0,   nFanoutsC = 0;    // critical\n    int nFaninsEC = 0,  nFanoutsEC = 0;   // edge-critical\n    int nFaninsENC = 0, nFanoutsENC = 0;  // edge-non-critial\n    int pFanins[4], pFanouts[4];\n    int nEdgeDiff, nEdges = 0, Count = 0;\n    int i, iNext, Delay1, Delay2;\n    // count how many fanins have critical edge\n    Delay1 = Vec_IntEntry( p-\u003evEdgeDelayR, iObj );\n    //if ( Delay1 \u003e 1 )\n    Gia_LutForEachFanin2( p, iObj, iNext, i )\n    {\n        if ( !Gia_ObjIsAnd(Gia_ManObj(p, iNext)) )\n            continue;\n        Delay2 = Vec_IntEntry( p-\u003evEdgeDelay, iNext );\n        if ( Gia_ObjHaveEdge(p, iObj, iNext) )\n        {\n            nEdges++;\n            assert( Delay1 + Delay2 \u003c= DelayMax );\n            if ( Delay1 + Delay2 == DelayMax )\n                nFaninsEC++;\n            else\n                nFaninsENC++;\n        }\n        else\n        {\n            assert( Delay1 + Delay2 + 1 \u003c= DelayMax );\n            if ( Delay1 + Delay2 + 1 == DelayMax )\n                pFanins[nFaninsC++] = iNext;\n        }\n    }\n    // count how many fanouts have critical edge\n    Delay1 = Vec_IntEntry( p-\u003evEdgeDelay, iObj );\n    //if ( Delay2 \u003c DelayMax - 1 )\n    Gia_LutForEachFanout2( p, iObj, iNext, i )\n    {\n        //if ( !Gia_ObjIsAnd(Gia_ManObj(p, iNext)) )\n        //    continue;\n        assert( Gia_ObjIsAnd(Gia_ManObj(p, iNext)) );\n        Delay2 = Vec_IntEntry( p-\u003evEdgeDelayR, iNext );\n        if ( Gia_ObjHaveEdge(p, iObj, iNext) )\n        {\n            nEdges++;\n            assert( Delay1 + Delay2 \u003c= DelayMax );\n            if ( Delay1 + Delay2 == DelayMax )\n                nFanoutsEC++;\n            else\n                nFanoutsENC++;\n        }\n        else\n        {\n            assert( Delay1 + Delay2 + 1 \u003c= DelayMax );\n            if ( Delay1 + Delay2 + 1 == DelayMax )\n            {\n                if ( nFanoutsC \u003c nEdgeLimit )\n                    pFanouts[nFanoutsC] = iNext;\n                nFanoutsC++;\n            }\n        }\n    }\n    if ( fVerbose )\n    {\n        printf( \"%8d : \", iObj );\n        printf( \"Edges = %d  \", nEdges );\n        printf( \"Fanins (all %d  EC %d  ENC %d  C %d)  \", \n            Gia_ObjLutSize2(p, iObj), nFaninsEC, nFaninsENC, nFaninsC );\n        printf( \"Fanouts (all %d  EC %d  ENC %d  C %d)  \", \n            Gia_ObjLutFanoutNum2(p, iObj), nFanoutsEC, nFanoutsENC, nFanoutsC );\n    }\n    // consider simple cases\n    assert( nEdges \u003c= nEdgeLimit );\n    if ( nEdges == nEdgeLimit )\n    {\n        if ( fVerbose )\n            printf( \"Full\\n\" );\n        return 0;\n    }\n    nEdgeDiff = nEdgeLimit - nEdges;\n    // check if fanins or fanouts could be improved\n    if ( nFaninsEC == 0 \u0026\u0026 nFaninsC \u0026\u0026 nFaninsC \u003c= nEdgeDiff )\n    {\n        for ( i = 0; i \u003c nFaninsC; i++ )\n            if ( Gia_ObjEdgeCount(pFanins[i], p-\u003evEdge1, p-\u003evEdge2) == nEdgeLimit )\n                break;\n        if ( i == nFaninsC )\n        {\n            for ( i = 0; i \u003c nFaninsC; i++ )\n            {\n                Count += Gia_ObjEdgeAdd( iObj, pFanins[i], p-\u003evEdge1, p-\u003evEdge2 );\n                Count += Gia_ObjEdgeAdd( pFanins[i], iObj, p-\u003evEdge1, p-\u003evEdge2 );\n            }\n            if ( Count )\n                printf( \"Wrong number of edges.\\n\" );\n            if ( fVerbose )\n                printf( \"Fixed %d critical fanins\\n\", nFaninsC );\n            return 1;\n        }\n    }\n    if ( nFanoutsEC == 0 \u0026\u0026 nFanoutsC \u0026\u0026 nFanoutsC \u003c= nEdgeDiff )\n    {\n        for ( i = 0; i \u003c nFanoutsC; i++ )\n            if ( Gia_ObjEdgeCount(pFanouts[i], p-\u003evEdge1, p-\u003evEdge2) == nEdgeLimit )\n                break;\n        if ( i == nFanoutsC )\n        {\n            for ( i = 0; i \u003c nFanoutsC; i++ )\n            {\n                Count += Gia_ObjEdgeAdd( iObj, pFanouts[i], p-\u003evEdge1, p-\u003evEdge2 );\n                Count += Gia_ObjEdgeAdd( pFanouts[i], iObj, p-\u003evEdge1, p-\u003evEdge2 );\n            }\n            if ( Count )\n                printf( \"Wrong number of edges.\\n\" );\n            if ( fVerbose )\n                printf( \"Fixed %d critical fanouts\\n\", nFanoutsC );\n            return 1;\n        }\n    }\n    if ( fVerbose )\n        printf( \"Cannot fix\\n\" );\n    return 0;\n}",
+      "Draft": "func Edg_ObjImprove(p *Gia_Man_t, iObj int32, nEdgeLimit int32, DelayMax int32, fVerbose int32) int32 {\n    var nFaninsC, nFanoutsC int32;    // critical\n    var nFaninsEC, nFanoutsEC int32;   // edge-critical\n    var nFaninsENC, nFanoutsENC int32;  // edge-non-critial\n    var pFanins, pFanouts [4]int32;\n    var nEdgeDiff, nEdges, Count int32;\n    var i, iNext, Delay1, Delay2 int32;\n    // count how many fanins have critical edge\n    Delay1 = Vec_IntEntry( p.vEdgeDelayR, iObj );\n    //if ( Delay1 \u003e 1 )\n    // inlining of macro Gia_LutForEachFanin2\n    for  i = 0; i \u003c Gia_ObjLutSize2(p,iObj) \u0026\u0026 ((iNext = Gia_ObjLutFanin2(p,iObj,i)),1); i++  {\n        if !Gia_ObjIsAnd(Gia_ManObj(p, iNext)) {\n            continue; }\n        Delay2 = Vec_IntEntry( p.vEdgeDelay, iNext );\n        if Gia_ObjHaveEdge(p, iObj, iNext) != 0 {\n            nEdges++;\n            assert(Delay1 + Delay2 \u003c= DelayMax, \"Delay1 + Delay2 \u003c= DelayMax\");\n            if Delay1 + Delay2 == DelayMax {\n                nFaninsEC++;\n            } else {\n                nFaninsENC++; }\n        \n        } else {\n            assert(Delay1 + Delay2 + 1 \u003c= DelayMax, \"Delay1 + Delay2 + 1 \u003c= DelayMax\");\n            if Delay1 + Delay2 + 1 == DelayMax {\n                pFanins[nFaninsC++] = iNext; }\n        }\n    }\n    // count how many fanouts have critical edge\n    Delay1 = Vec_IntEntry( p.vEdgeDelay, iObj );\n    //if ( Delay2 \u003c DelayMax - 1 )\n    // inlining of macro Gia_LutForEachFanout2\n    for  i = 0; i \u003c Gia_ObjLutFanoutNum2(p,iObj) \u0026\u0026 ((iNext = Gia_ObjLutFanout2(p,iObj,i)),1); i++  {\n        //if ( !Gia_ObjIsAnd(Gia_ManObj(p, iNext)) )\n        //    continue;\n        assert(Gia_ObjIsAnd(Gia_ManObj(p, iNext)), \"Gia_ObjIsAnd(Gia_ManObj(p, iNext))\");\n        Delay2 = Vec_IntEntry( p.vEdgeDelayR, iNext );\n        if Gia_ObjHaveEdge(p, iObj, iNext) != 0 {\n            nEdges++;\n            assert(Delay1 + Delay2 \u003c= DelayMax, \"Delay1 + Delay2 \u003c= DelayMax\");\n            if Delay1 + Delay2 == DelayMax {\n                nFanoutsEC++;\n            } else {\n                nFanoutsENC++; }\n        \n        } else {\n            assert(Delay1 + Delay2 + 1 \u003c= DelayMax, \"Delay1 + Delay2 + 1 \u003c= DelayMax\");\n            if Delay1 + Delay2 + 1 == DelayMax {\n                if nFanoutsC \u003c nEdgeLimit {\n                    pFanouts[nFanoutsC] = iNext; }\n                nFanoutsC++;\n            }\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"%8d : \", iObj);\n        fmt.Printf(\"Edges = %d  \", nEdges);\n        fmt.Printf(\"Fanins (all %d  EC %d  ENC %d  C %d)  \", Gia_ObjLutSize2(p, iObj), nFaninsEC, nFaninsENC, nFaninsC);\n        fmt.Printf(\"Fanouts (all %d  EC %d  ENC %d  C %d)  \", Gia_ObjLutFanoutNum2(p, iObj), nFanoutsEC, nFanoutsENC, nFanoutsC);\n    }\n    // consider simple cases\n    assert(nEdges \u003c= nEdgeLimit, \"nEdges \u003c= nEdgeLimit\");\n    if nEdges == nEdgeLimit {\n        if fVerbose != 0 {\n            fmt.Printf(\"Full\\n\"); }\n        return 0;\n    }\n    nEdgeDiff = nEdgeLimit - nEdges;\n    // check if fanins or fanouts could be improved\n    if nFaninsEC == 0 \u0026\u0026 nFaninsC \u0026\u0026 nFaninsC \u003c= nEdgeDiff {\n        for  i = 0; i \u003c nFaninsC; i++  {\n            if Gia_ObjEdgeCount(pFanins[i], p.vEdge1, p.vEdge2) == nEdgeLimit {\n                break; }\n        }\n        if i == nFaninsC {\n            for  i = 0; i \u003c nFaninsC; i++  {\n                Count += Gia_ObjEdgeAdd( iObj, pFanins[i], p.vEdge1, p.vEdge2 );\n                Count += Gia_ObjEdgeAdd( pFanins[i], iObj, p.vEdge1, p.vEdge2 );\n            }\n            if Count != 0 {\n                fmt.Printf(\"Wrong number of edges.\\n\"); }\n            if fVerbose != 0 {\n                fmt.Printf(\"Fixed %d critical fanins\\n\", nFaninsC); }\n            return 1;\n        }\n    }\n    if nFanoutsEC == 0 \u0026\u0026 (nFanoutsC != 0) \u0026\u0026 nFanoutsC \u003c= nEdgeDiff {\n        for  i = 0; i \u003c nFanoutsC; i++  {\n            if Gia_ObjEdgeCount(pFanouts[i], p.vEdge1, p.vEdge2) == nEdgeLimit {\n                break; }\n        }\n        if i == nFanoutsC {\n            for  i = 0; i \u003c nFanoutsC; i++  {\n                Count += Gia_ObjEdgeAdd( iObj, pFanouts[i], p.vEdge1, p.vEdge2 );\n                Count += Gia_ObjEdgeAdd( pFanouts[i], iObj, p.vEdge1, p.vEdge2 );\n            }\n            if Count != 0 {\n                fmt.Printf(\"Wrong number of edges.\\n\"); }\n            if fVerbose != 0 {\n                fmt.Printf(\"Fixed %d critical fanouts\\n\", nFanoutsC); }\n            return 1;\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Cannot fix\\n\"); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Edg_ManAssignEdgeNew",
+      "Start": 31824,
+      "End": 34480,
+      "BodyStart": 31892,
+      "Original": "int Edg_ManAssignEdgeNew( Gia_Man_t * p, int nEdges, int fVerbose )\n{\n    int DelayNoEdge = 1;\n    int fLevelVerbose = 0;\n    Vec_Int_t * vLevel;\n    Vec_Wec_t * vEdges = Vec_WecStart(0);\n    Vec_Int_t * vEdge1 = NULL, * vEdge2 = NULL;\n    int DelayD = 0, DelayR = 0, DelayPrev = ABC_INFINITY;\n    int k, j, i, iLast = -1, iObj;\n    if ( fVerbose )\n        printf( \"Running edge assignment with E = %d.\\n\", nEdges );\n    // create fanouts\n    Edg_ManToMapping( p );\n    // create empty assignment\n    Vec_IntFreeP( \u0026p-\u003evEdge1 );\n    Vec_IntFreeP( \u0026p-\u003evEdge2 );\n    p-\u003evEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p-\u003evEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n    // perform optimization\n    for ( i = 0; i \u003c 10000; i++ )\n    {\n        // if there is no improvement after 10 iterations, quit\n        if ( i \u003e iLast + 50 )\n            break;\n        // create delay information\n        DelayD = Edg_ManEvalEdgeDelay( p );\n        DelayR = Edg_ManEvalEdgeDelayR( p );\n        assert( DelayD == DelayR + DelayNoEdge );\n        if ( DelayPrev \u003e DelayD )\n        {\n            //printf( \"Saving backup point at %d levels.\\n\", DelayD );\n            Vec_IntFreeP( \u0026vEdge1 );  vEdge1 = Vec_IntDup( p-\u003evEdge1 );\n            Vec_IntFreeP( \u0026vEdge2 );  vEdge2 = Vec_IntDup( p-\u003evEdge2 );\n            DelayPrev = DelayD;\n            iLast = i;\n        }\n        if ( fVerbose )\n            printf( \"\\nIter %4d : Delay = %4d\\n\", i, DelayD );\n        // collect critical nodes (nodes with critical edges)\n        Edg_ManCollectCritEdges( p, vEdges, DelayD );\n        // sort levels according to the number of critical edges\n        if ( fLevelVerbose )\n        {\n            Vec_WecForEachLevel( vEdges, vLevel, k )\n                Vec_IntPush( vLevel, k );\n        }\n        Vec_WecSort( vEdges, 0 );\n        if ( fLevelVerbose )\n        {\n            Vec_WecForEachLevel( vEdges, vLevel, k )\n            {\n                int Level = Vec_IntPop( vLevel );\n                printf( \"%d: Level %2d : \", k, Level );\n                Vec_IntPrint( vLevel );\n            }\n        }\n        Vec_WecForEachLevel( vEdges, vLevel, k )\n        {\n            Vec_IntForEachEntry( vLevel, iObj, j )\n                if ( Edg_ObjImprove(p, iObj, nEdges, DelayD, fVerbose) ) // improved\n                    break;\n            if ( j \u003c Vec_IntSize(vLevel) )\n                break;\n        }\n        if ( k == Vec_WecSize(vEdges) ) // if we could not improve anything, quit\n            break;\n    }\n    Vec_WecFree( vEdges );\n    // update to the saved version\n    Vec_IntFreeP( \u0026p-\u003evEdge1 );  p-\u003evEdge1 = vEdge1;\n    Vec_IntFreeP( \u0026p-\u003evEdge2 );  p-\u003evEdge2 = vEdge2;\n    return DelayD;\n}",
+      "Draft": "func Edg_ManAssignEdgeNew(p *Gia_Man_t, nEdges int32, fVerbose int32) int32 {\n    var DelayNoEdge int32  = 1;\n    var fLevelVerbose int32;\n    var vLevel *Vec_Int_t;\n    var vEdges *Vec_Wec_t  = Vec_WecStart(0);\n    var vEdge1 *Vec_Int_t = nil;\n    var vEdge2 *Vec_Int_t = nil;\n    var DelayD int32;\n    var DelayR int32;\n    var DelayPrev int32 = ABC_INFINITY;\n    var k int32;\n    var j int32;\n    var i int32;\n    var iLast int32 = -1;\n    var iObj int32;\n    if fVerbose != 0 {\n        fmt.Printf(\"Running edge assignment with E = %d.\\n\", nEdges); }\n    // create fanouts\n    Edg_ManToMapping( p );\n    // create empty assignment\n    Vec_IntFreeP( \u0026p.vEdge1 );\n    Vec_IntFreeP( \u0026p.vEdge2 );\n    p.vEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p.vEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n    // perform optimization\n    for  i = 0; i \u003c 10000; i++  {\n        // if there is no improvement after 10 iterations, quit\n        if i \u003e iLast + 50 {\n            break; }\n        // create delay information\n        DelayD = Edg_ManEvalEdgeDelay( p );\n        DelayR = Edg_ManEvalEdgeDelayR( p );\n        assert(DelayD == DelayR + DelayNoEdge, \"DelayD == DelayR + DelayNoEdge\");\n        if DelayPrev \u003e DelayD {\n            //printf( \"Saving backup point at %d levels.\\n\", DelayD );\n            Vec_IntFreeP( \u0026vEdge1 );  vEdge1 = Vec_IntDup( p.vEdge1 );\n            Vec_IntFreeP( \u0026vEdge2 );  vEdge2 = Vec_IntDup( p.vEdge2 );\n            DelayPrev = DelayD;\n            iLast = i;\n        }\n        if fVerbose != 0 {\n            fmt.Printf(\"\\nIter %4d : Delay = %4d\\n\", i, DelayD); }\n        // collect critical nodes (nodes with critical edges)\n        Edg_ManCollectCritEdges( p, vEdges, DelayD );\n        // sort levels according to the number of critical edges\n        if fLevelVerbose != 0 {\n            // inlining of macro Vec_WecForEachLevel\n            for  k = 0; (k \u003c Vec_WecSize(vEdges)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vEdges, k)), 1); k++  {\n                Vec_IntPush( vLevel, k );\n            }\n        }\n        Vec_WecSort( vEdges, 0 );\n        if fLevelVerbose != 0 {\n            // inlining of macro Vec_WecForEachLevel\n            for  k = 0; (k \u003c Vec_WecSize(vEdges)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vEdges, k)), 1); k++  {\n                var Level int32  = Vec_IntPop( vLevel );\n                fmt.Printf(\"%d: Level %2d : \", k, Level);\n                Vec_IntPrint( vLevel );\n            }\n        }\n        // inlining of macro Vec_WecForEachLevel\n        for  k = 0; (k \u003c Vec_WecSize(vEdges)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vEdges, k)), 1); k++  {\n            // inlining of macro Vec_IntForEachEntry\n            for  j = 0; (j \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((iObj) = Vec_IntEntry(vLevel, j)), 1); j++  {\n                if Edg_ObjImprove(p, iObj, nEdges, DelayD, fVerbose) != 0 { // improved\n                    break; }\n            }\n            if j \u003c Vec_IntSize(vLevel) {\n                break; }\n        }\n        if k == Vec_WecSize(vEdges) { // if we could not improve anything, quit\n            break; }\n    }\n    Vec_WecFree( vEdges );\n    // update to the saved version\n    Vec_IntFreeP( \u0026p.vEdge1 );  p.vEdge1 = vEdge1;\n    Vec_IntFreeP( \u0026p.vEdge2 );  p.vEdge2 = vEdge2;\n    return DelayD;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::7416",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6948,
+      "End": 6960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::7581",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7113,
+      "End": 7125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::8191",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7612,
+      "End": 7624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::8527",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7948,
+      "End": 7960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::9135",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8444,
+      "End": 8456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::9300",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8609,
+      "End": 8621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::9911",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9109,
+      "End": 9121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::10247",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9445,
+      "End": 9457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::15107",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13856,
+      "End": 13868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::15272",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14021,
+      "End": 14033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::15876",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14514,
+      "End": 14526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::16212",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14850,
+      "End": 14862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::16814",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15340,
+      "End": 15352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::16979",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15505,
+      "End": 15517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::17584",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15999,
+      "End": 16011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::pointer-cast::17920",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16335,
+      "End": 16347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ObjEdgeCount",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjEdgeCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 797,
+      "End": 967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ObjEdgeAdd",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjEdgeAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 968,
+      "End": 1320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ObjEdgeRemove",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjEdgeRemove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1321,
+      "End": 1674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ObjEdgeClean",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjEdgeClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1675,
+      "End": 1850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ManEdgeFromArray",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManEdgeFromArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2333,
+      "End": 2935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ManEdgeToArray",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManEdgeToArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2936,
+      "End": 3577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ManConvertPackingToEdges",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManConvertPackingToEdges",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3839,
+      "End": 5252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ObjHaveEdge",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjHaveEdge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5520,
+      "End": 5688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ObjCheckEdge",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjCheckEdge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5689,
+      "End": 5797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::ternary::Gia_ObjEvalEdgeDelay",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ObjEvalEdgeDelay",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5798,
+      "End": 6656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ObjEvalEdgeDelay",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjEvalEdgeDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5798,
+      "End": 6656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ManEvalEdgeDelay",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManEvalEdgeDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6657,
+      "End": 10013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ManEvalEdgeCount",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManEvalEdgeCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10014,
+      "End": 10141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ObjComputeEdgeDelay",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjComputeEdgeDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10400,
+      "End": 13422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ManComputeEdgeDelay",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManComputeEdgeDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13423,
+      "End": 16992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ObjComputeEdgeDelay2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjComputeEdgeDelay2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17250,
+      "End": 20148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ManComputeEdgeDelay2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManComputeEdgeDelay2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20149,
+      "End": 21536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ManUpdateMapping",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManUpdateMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21794,
+      "End": 22031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ManEvalWindowInc",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManEvalWindowInc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22032,
+      "End": 22713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Gia_ManEvalWindow",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManEvalWindow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22714,
+      "End": 23086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Edg_ManToMapping",
+      "Category": "semantic-review",
+      "Symbol": "Edg_ManToMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23325,
+      "End": 23877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::ternary::Edg_ObjEvalEdgeDelay",
+      "Category": "ternary-review",
+      "Symbol": "Edg_ObjEvalEdgeDelay",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 24158,
+      "End": 24665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Edg_ObjEvalEdgeDelay",
+      "Category": "semantic-review",
+      "Symbol": "Edg_ObjEvalEdgeDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24158,
+      "End": 24665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Edg_ManEvalEdgeDelay",
+      "Category": "semantic-review",
+      "Symbol": "Edg_ManEvalEdgeDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24666,
+      "End": 25179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::ternary::Edg_ObjEvalEdgeDelayR",
+      "Category": "ternary-review",
+      "Symbol": "Edg_ObjEvalEdgeDelayR",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 25181,
+      "End": 25691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Edg_ObjEvalEdgeDelayR",
+      "Category": "semantic-review",
+      "Symbol": "Edg_ObjEvalEdgeDelayR",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25181,
+      "End": 25691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Edg_ManEvalEdgeDelayR",
+      "Category": "semantic-review",
+      "Symbol": "Edg_ManEvalEdgeDelayR",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25692,
+      "End": 26360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Edg_ManCollectCritEdges",
+      "Category": "semantic-review",
+      "Symbol": "Edg_ManCollectCritEdges",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26362,
+      "End": 27100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Edg_ObjImprove",
+      "Category": "semantic-review",
+      "Symbol": "Edg_ObjImprove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27353,
+      "End": 31566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::Edg_ManAssignEdgeNew",
+      "Category": "semantic-review",
+      "Symbol": "Edg_ManAssignEdgeNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31824,
+      "End": 34480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEdge.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 34728
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaEdge.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Edge-related procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaEdge.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"misc/tim/tim.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Gia_ObjEdgeCount(iObj int32, vEdge1 *Vec_Int_t, vEdge2 *Vec_Int_t) int32 {\n    return (Vec_IntEntry(vEdge1, iObj) \u003e 0) + (Vec_IntEntry(vEdge2, iObj) \u003e 0);\n}\nfunc Gia_ObjEdgeAdd(iObj int32, iNext int32, vEdge1 *Vec_Int_t, vEdge2 *Vec_Int_t) int32 {\n    var RetValue int32;\n    if Vec_IntEntry(vEdge1, iObj) == 0 {\n        Vec_IntWriteEntry(vEdge1, iObj, iNext);\n    } else if Vec_IntEntry(vEdge2, iObj) == 0 {\n        Vec_IntWriteEntry(vEdge2, iObj, iNext);\n    } else { RetValue = 1; }\n    return RetValue;\n}\nfunc Gia_ObjEdgeRemove(iObj int32, iNext int32, vEdge1 *Vec_Int_t, vEdge2 *Vec_Int_t) {\n    assert(Vec_IntEntry(vEdge1, iObj) == iNext || Vec_IntEntry(vEdge2, iObj) == iNext, \"Vec_IntEntry(vEdge1, iObj) == iNext || Vec_IntEntry(vEdge2, iObj) == iNext\");\n    if Vec_IntEntry(vEdge1, iObj) == iNext {\n        Vec_IntWriteEntry( vEdge1, iObj, Vec_IntEntry(vEdge2, iObj) ); }\n    Vec_IntWriteEntry( vEdge2, iObj, 0 );\n}\nfunc Gia_ObjEdgeClean(iObj int32, vEdge1 *Vec_Int_t, vEdge2 *Vec_Int_t) {\n    Vec_IntWriteEntry( vEdge1, iObj, 0 );\n    Vec_IntWriteEntry( vEdge2, iObj, 0 );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms edge assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManEdgeFromArray(p *Gia_Man_t, vArray *Vec_Int_t) {\n    var i, iObj1, iObj2, Count int32;\n    Vec_IntFreeP( \u0026p.vEdge1 );\n    Vec_IntFreeP( \u0026p.vEdge2 );\n    p.vEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p.vEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vArray)) \u0026\u0026 (((iObj1) = Vec_IntEntry(vArray, i)), 1) \u0026\u0026 (((iObj2) = Vec_IntEntry(vArray, i+1)), 1); i += 2  {\n        assert(iObj1 \u003c iObj2, \"iObj1 \u003c iObj2\");\n        Count += Gia_ObjEdgeAdd( iObj1, iObj2, p.vEdge1, p.vEdge2 );\n        Count += Gia_ObjEdgeAdd( iObj2, iObj1, p.vEdge1, p.vEdge2 );\n    }\n    if Count != 0 { \n        fmt.Printf(\"Found %d violations during edge conversion.\\n\", Count); }\n}\nfunc Gia_ManEdgeToArray(p *Gia_Man_t) *Vec_Int_t {\n    var iObj, iFanin int32;\n    var vArray *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    assert(p.vEdge1 \u0026\u0026 p.vEdge2, \"p.vEdge1 \u0026\u0026 p.vEdge2\");\n    assert(Vec_IntSize(p.vEdge1) == Gia_ManObjNum(p), \"Vec_IntSize(p.vEdge1) == Gia_ManObjNum(p)\");\n    assert(Vec_IntSize(p.vEdge2) == Gia_ManObjNum(p), \"Vec_IntSize(p.vEdge2) == Gia_ManObjNum(p)\");\n    for  iObj = 0; iObj \u003c Gia_ManObjNum(p); iObj++  {\n        iFanin = Vec_IntEntry( p.vEdge1, iObj );\n        if (iFanin != 0) \u0026\u0026 iFanin \u003c iObj {\n            Vec_IntPushTwo( vArray, iFanin, iObj ); }\n        iFanin = Vec_IntEntry( p.vEdge2, iObj );\n        if (iFanin != 0) \u0026\u0026 iFanin \u003c iObj {\n            Vec_IntPushTwo( vArray, iFanin, iObj ); }\n    }\n    return vArray;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints mapping statistics.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManConvertPackingToEdges(p *Gia_Man_t) {\n    var i int32;\n    var k int32;\n    var Entry int32;\n    var nEntries int32;\n    var nEntries2 int32;\n    var nNodes [4]int32;\n    var Count int32;\n    if p.vPacking == nil {\n        return; }\n    Vec_IntFreeP( \u0026p.vEdge1 );\n    Vec_IntFreeP( \u0026p.vEdge2 );\n    p.vEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p.vEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n    // iterate through structures\n    nEntries = Vec_IntEntry( p.vPacking, 0 );\n    nEntries2 = 0;\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(p.vPacking)) \u0026\u0026 (((Entry) = Vec_IntEntry(p.vPacking, i)), 1); i++  {\n        assert(Entry \u003e 0 \u0026\u0026 Entry \u003c 4, \"Entry \u003e 0 \u0026\u0026 Entry \u003c 4\");\n        i++;\n        for  k = 0; k \u003c Entry; k, i = k+1, i+1  {\n            nNodes[k] = Vec_IntEntry(p.vPacking, i);\n        }\n        i--;\n        nEntries2++;\n        // create edges\n        if Entry == 2 {\n            Count += Gia_ObjEdgeAdd( nNodes[0], nNodes[1], p.vEdge1, p.vEdge2 );\n            Count += Gia_ObjEdgeAdd( nNodes[1], nNodes[0], p.vEdge1, p.vEdge2 );\n        \n        } else if Entry == 3 {\n            Count += Gia_ObjEdgeAdd( nNodes[0], nNodes[2], p.vEdge1, p.vEdge2 );\n            Count += Gia_ObjEdgeAdd( nNodes[2], nNodes[0], p.vEdge1, p.vEdge2 );\n            Count += Gia_ObjEdgeAdd( nNodes[1], nNodes[2], p.vEdge1, p.vEdge2 );\n            Count += Gia_ObjEdgeAdd( nNodes[2], nNodes[1], p.vEdge1, p.vEdge2 );\n        }\n    }\n    assert(nEntries == nEntries2, \"nEntries == nEntries2\");\n    if Count != 0 {\n        fmt.Printf(\"Skipped %d illegal edges.\\n\", Count); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Evaluates given edge assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ObjHaveEdge(p *Gia_Man_t, iObj int32, iNext int32) int32 {\n    return Vec_IntEntry(p.vEdge1, iObj) == iNext || Vec_IntEntry(p.vEdge2, iObj) == iNext;\n}\nfunc Gia_ObjCheckEdge(p *Gia_Man_t, iObj int32, iNext int32) int32 {\n    return Gia_ObjHaveEdge( p, iObj, iNext );\n}\nfunc Gia_ObjEvalEdgeDelay(p *Gia_Man_t, iObj int32, vDelay *Vec_Int_t) int32 {\n    var nEdgeDelay int32  = 2;\n    var i, iFan, Delay, DelayMax int32;\n    if Gia_ManHasMapping(p) \u0026\u0026 Gia_ObjIsLut(p, iObj) {\n        assert(Gia_ObjLutSize(p, iObj) \u003c= 4, \"Gia_ObjLutSize(p, iObj) \u003c= 4\");\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iObj)[i]),1); i++  {\n            Delay = Vec_IntEntry(vDelay, iFan) + (Gia_ObjHaveEdge(p, iObj, iFan) ? nEdgeDelay : 10);\n            DelayMax = Abc_MaxInt( DelayMax, Delay );\n        }\n    \n    } else if Gia_ObjIsLut2(p, iObj) {\n        assert(Gia_ObjLutSize2(p, iObj) \u003c= 4, \"Gia_ObjLutSize2(p, iObj) \u003c= 4\");\n        // inlining of macro Gia_LutForEachFanin2\n        for  i = 0; i \u003c Gia_ObjLutSize2(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanin2(p,iObj,i)),1); i++  {\n            Delay = Vec_IntEntry(vDelay, iFan) + (Gia_ObjHaveEdge(p, iObj, iFan) ? nEdgeDelay : 10);\n            DelayMax = Abc_MaxInt( DelayMax, Delay );\n        }\n    \n    } else { assert(false, \"0\"); }\n    return DelayMax;\n}\nfunc Gia_ManEvalEdgeDelay(p *Gia_Man_t) int32 {\n    var k, iLut, DelayMax int32;\n    assert(p.vEdge1 \u0026\u0026 p.vEdge2, \"p.vEdge1 \u0026\u0026 p.vEdge2\");\n    Vec_IntFreeP( \u0026p.vEdgeDelay );\n    p.vEdgeDelay = Vec_IntStart( Gia_ManObjNum(p) );\n    if Gia_ManHasMapping(p) {\n        if p.pManTime != nil \u0026\u0026 Tim_ManBoxNum((Tim_Man_t*)p.pManTime) {\n            var pObj *Gia_Obj_t; \n            var vNodes *Vec_Int_t  = Gia_ManOrderWithBoxes( p );\n            Tim_ManIncrementTravId( (Tim_Man_t*)p.pManTime );\n            // inlining of macro Gia_ManForEachObjVec\n            for  k = 0; (k \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,k))); k++  {\n                iLut = Gia_ObjId( p, pObj );\n                if Gia_ObjIsAnd(pObj) {\n                    if Gia_ObjIsLut(p, iLut) {\n                        Vec_IntWriteEntry( p.vEdgeDelay, iLut, Gia_ObjEvalEdgeDelay(p, iLut, p.vEdgeDelay) ); }\n                \n                } else if Gia_ObjIsCi(pObj) {\n                    var arrTime int32  = Tim_ManGetCiArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj) );\n                    Vec_IntWriteEntry( p.vEdgeDelay,  iLut, arrTime );\n                \n                } else if Gia_ObjIsCo(pObj) {\n                    var arrTime int32  = Vec_IntEntry( p.vEdgeDelay, Gia_ObjFaninId0(pObj, iLut) );\n                    Tim_ManSetCoArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj), arrTime );\n                \n                } else if !Gia_ObjIsConst0(pObj) { \n                    assert(false, \"0\"); }\n            }\n            Vec_IntFree( vNodes );\n        \n        } else {\n            // inlining of macro Gia_ManForEachLut\n            for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut(p, iLut) {} else {\n                Vec_IntWriteEntry( p.vEdgeDelay, iLut, Gia_ObjEvalEdgeDelay(p, iLut, p.vEdgeDelay) ); }\n            }\n        }\n    \n    } else if Gia_ManHasMapping2(p) {\n        if p.pManTime != nil \u0026\u0026 Tim_ManBoxNum((Tim_Man_t*)p.pManTime) {\n            var pObj *Gia_Obj_t; \n            var vNodes *Vec_Int_t  = Gia_ManOrderWithBoxes( p );\n            Tim_ManIncrementTravId( (Tim_Man_t*)p.pManTime );\n            // inlining of macro Gia_ManForEachObjVec\n            for  k = 0; (k \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,k))); k++  {\n                iLut = Gia_ObjId( p, pObj );\n                if Gia_ObjIsAnd(pObj) {\n                    if Gia_ObjIsLut2(p, iLut) {\n                        Vec_IntWriteEntry( p.vEdgeDelay, iLut, Gia_ObjEvalEdgeDelay(p, iLut, p.vEdgeDelay) ); }\n                \n                } else if Gia_ObjIsCi(pObj) {\n                    var arrTime int32  = Tim_ManGetCiArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj) );\n                    Vec_IntWriteEntry( p.vEdgeDelay,  iLut, arrTime );\n                \n                } else if Gia_ObjIsCo(pObj) {\n                    var arrTime int32  = Vec_IntEntry( p.vEdgeDelay, Gia_ObjFaninId0(pObj, iLut) );\n                    Tim_ManSetCoArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj), arrTime );\n                \n                } else if !Gia_ObjIsConst0(pObj) { \n                    assert(false, \"0\"); }\n            }\n            Vec_IntFree( vNodes );\n        \n        } else {\n            // inlining of macro Gia_ManForEachLut2\n            for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut2(p, iLut) {} else {\n                Vec_IntWriteEntry( p.vEdgeDelay, iLut, Gia_ObjEvalEdgeDelay(p, iLut, p.vEdgeDelay) ); }\n            }\n        }\n    \n    } else { assert(false, \"0\"); }\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (((iLut) = Gia_ObjFaninId0p(p, Gia_ManCo(p, k))), 1); k++  {\n        DelayMax = Abc_MaxInt( DelayMax, Vec_IntEntry(p.vEdgeDelay, iLut) );\n    }\n    return DelayMax;\n}\nfunc Gia_ManEvalEdgeCount(p *Gia_Man_t) int32 {\n    return (Vec_IntCountPositive(p.vEdge1) + Vec_IntCountPositive(p.vEdge2))/2;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Finds edge assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ObjComputeEdgeDelay(p *Gia_Man_t, iObj int32, vDelay *Vec_Int_t, vEdge1 *Vec_Int_t, vEdge2 *Vec_Int_t, fUseTwo int32) int32 {\n    var i, iFan, Delay, Status1, Status2 int32;\n    var DelayMax, DelayMax2, nCountMax int32;\n    var iFanMax1 int32 = -1;\n    var iFanMax2 int32 = -1;\n    Vec_IntWriteEntry(vEdge1, iObj, 0);\n    Vec_IntWriteEntry(vEdge2, iObj, 0);\n    if Gia_ManHasMapping(p) \u0026\u0026 Gia_ObjIsLut(p, iObj) {\n        assert(Gia_ObjLutSize(p, iObj) \u003c= 4, \"Gia_ObjLutSize(p, iObj) \u003c= 4\");\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iObj)[i]),1); i++  {\n            Delay = Vec_IntEntry( vDelay, iFan ) + 10;\n            if DelayMax \u003c Delay {\n                DelayMax2 = DelayMax;\n                DelayMax  = Delay;\n                iFanMax1  = iFan;\n                nCountMax = 1;\n            \n            } else if DelayMax == Delay {\n                iFanMax2  = iFan;\n                nCountMax++;\n                if !(fUseTwo != 0) {\n                    DelayMax2 = DelayMax; }\n            \n            } else {\n                DelayMax2 = Abc_MaxInt( DelayMax2, Delay ); }\n        }\n    \n    } else if Gia_ObjIsLut2(p, iObj) {\n        assert(Gia_ObjLutSize2(p, iObj) \u003c= 4, \"Gia_ObjLutSize2(p, iObj) \u003c= 4\");\n        // inlining of macro Gia_LutForEachFanin2\n        for  i = 0; i \u003c Gia_ObjLutSize2(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanin2(p,iObj,i)),1); i++  {\n            Delay = Vec_IntEntry( vDelay, iFan ) + 10;\n            if DelayMax \u003c Delay {\n                DelayMax2 = DelayMax;\n                DelayMax  = Delay;\n                iFanMax1  = iFan;\n                nCountMax = 1;\n            \n            } else if DelayMax == Delay {\n                iFanMax2  = iFan;\n                nCountMax++;\n                if !(fUseTwo != 0) {\n                    DelayMax2 = DelayMax; }\n            \n            } else {\n                DelayMax2 = Abc_MaxInt( DelayMax2, Delay ); }\n        }\n    \n    } else { assert(false, \"0\"); }\n    assert(nCountMax \u003e 0, \"nCountMax \u003e 0\");\n    if DelayMax \u003c= 10 { // skip first level\n    } else if nCountMax == 1 {\n        Status1 = Gia_ObjEdgeCount( iFanMax1, vEdge1, vEdge2 );\n        if Status1 \u003c= 1 {\n            Gia_ObjEdgeAdd( iFanMax1, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax1, vEdge1, vEdge2 );\n            DelayMax = Abc_MaxInt( DelayMax2, DelayMax - 8 );\n            Vec_IntWriteEntry( vDelay, iObj, DelayMax );\n            return DelayMax;\n        }\n    \n    } else if (fUseTwo != 0) \u0026\u0026 nCountMax == 2 {\n        Status1 = Gia_ObjEdgeCount( iFanMax1, vEdge1, vEdge2 );\n        Status2 = Gia_ObjEdgeCount( iFanMax2, vEdge1, vEdge2 );\n        if Status1 \u003c= 1 \u0026\u0026 Status2 \u003c= 1 {\n            Gia_ObjEdgeAdd( iFanMax1, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iFanMax2, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax1, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax2, vEdge1, vEdge2 );\n            DelayMax = Abc_MaxInt( DelayMax2, DelayMax - 8 );\n            Vec_IntWriteEntry( vDelay, iObj, DelayMax );\n            return DelayMax;\n        }\n    }\n    Vec_IntWriteEntry( vDelay, iObj, DelayMax );\n    return DelayMax;\n}\nfunc Gia_ManComputeEdgeDelay(p *Gia_Man_t, fUseTwo int32) int32 {\n    var k, iLut, DelayMax int32;\n    Vec_IntFreeP( \u0026p.vEdgeDelay );\n    Vec_IntFreeP( \u0026p.vEdge1 );\n    Vec_IntFreeP( \u0026p.vEdge2 );\n    p.vEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p.vEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n    p.vEdgeDelay = Vec_IntStart( Gia_ManObjNum(p) );\n    if Gia_ManHasMapping(p) {\n        if p.pManTime != nil \u0026\u0026 Tim_ManBoxNum((Tim_Man_t*)p.pManTime) {\n            var pObj *Gia_Obj_t; \n            var vNodes *Vec_Int_t  = Gia_ManOrderWithBoxes( p );\n            Tim_ManIncrementTravId( (Tim_Man_t*)p.pManTime );\n            // inlining of macro Gia_ManForEachObjVec\n            for  k = 0; (k \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,k))); k++  {\n                iLut = Gia_ObjId( p, pObj );\n                if Gia_ObjIsAnd(pObj) {\n                    if Gia_ObjIsLut(p, iLut) {\n                        Gia_ObjComputeEdgeDelay( p, iLut, p.vEdgeDelay, p.vEdge1, p.vEdge2, fUseTwo ); }\n                \n                } else if Gia_ObjIsCi(pObj) {\n                    var arrTime int32  = Tim_ManGetCiArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj) );\n                    Vec_IntWriteEntry( p.vEdgeDelay,  iLut, arrTime );\n                \n                } else if Gia_ObjIsCo(pObj) {\n                    var arrTime int32  = Vec_IntEntry( p.vEdgeDelay, Gia_ObjFaninId0(pObj, iLut) );\n                    Tim_ManSetCoArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj), arrTime );\n                \n                } else if !Gia_ObjIsConst0(pObj) { \n                    assert(false, \"0\"); }\n            }\n            Vec_IntFree( vNodes );\n        \n        } else {\n            // inlining of macro Gia_ManForEachLut\n            for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut(p, iLut) {} else {\n                Gia_ObjComputeEdgeDelay( p, iLut, p.vEdgeDelay, p.vEdge1, p.vEdge2, fUseTwo ); }\n            }\n        }\n    \n    } else if Gia_ManHasMapping2(p) {\n        if p.pManTime != nil \u0026\u0026 Tim_ManBoxNum((Tim_Man_t*)p.pManTime) {\n            var pObj *Gia_Obj_t; \n            var vNodes *Vec_Int_t  = Gia_ManOrderWithBoxes( p );\n            Tim_ManIncrementTravId( (Tim_Man_t*)p.pManTime );\n            // inlining of macro Gia_ManForEachObjVec\n            for  k = 0; (k \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,k))); k++  {\n                iLut = Gia_ObjId( p, pObj );\n                if Gia_ObjIsAnd(pObj) {\n                    if Gia_ObjIsLut2(p, iLut) {\n                        Gia_ObjComputeEdgeDelay( p, iLut, p.vEdgeDelay, p.vEdge1, p.vEdge2, fUseTwo ); }\n                \n                } else if Gia_ObjIsCi(pObj) {\n                    var arrTime int32  = Tim_ManGetCiArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj) );\n                    Vec_IntWriteEntry( p.vEdgeDelay,  iLut, arrTime );\n                \n                } else if Gia_ObjIsCo(pObj) {\n                    var arrTime int32  = Vec_IntEntry( p.vEdgeDelay, Gia_ObjFaninId0(pObj, iLut) );\n                    Tim_ManSetCoArrival( (Tim_Man_t*)p.pManTime, Gia_ObjCioId(pObj), arrTime );\n                \n                } else if !Gia_ObjIsConst0(pObj) { \n                    assert(false, \"0\"); }\n            }\n            Vec_IntFree( vNodes );\n        \n        } else {\n            // inlining of macro Gia_ManForEachLut2\n            for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut2(p, iLut) {} else {\n                Gia_ObjComputeEdgeDelay( p, iLut, p.vEdgeDelay, p.vEdge1, p.vEdge2, fUseTwo ); }\n            }\n        }\n    \n    } else { assert(false, \"0\"); }\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (((iLut) = Gia_ObjFaninId0p(p, Gia_ManCo(p, k))), 1); k++  {\n        DelayMax = Abc_MaxInt( DelayMax, Vec_IntEntry(p.vEdgeDelay, iLut) );\n    }\n    //printf( \"The number of edges = %d.  Delay = %d.\\n\", Gia_ManEvalEdgeCount(p), DelayMax );\n    return DelayMax;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds edge assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ObjComputeEdgeDelay2(p *Gia_Man_t, iObj int32, vDelay *Vec_Int_t, vEdge1 *Vec_Int_t, vEdge2 *Vec_Int_t, vFanMax1 *Vec_Int_t, vFanMax2 *Vec_Int_t, vCountMax *Vec_Int_t) int32 {\n    var i, iFan, DelayFanin, Status1, Status2 int32;\n    var DelayMax, nCountMax int32;\n    var iFanMax1 int32 = -1;\n    var iFanMax2 int32 = -1;\n    Vec_IntWriteEntry(vEdge1, iObj, 0);\n    Vec_IntWriteEntry(vEdge2, iObj, 0);\n    // analyze this node\n    DelayMax = Vec_IntEntry( vDelay, iObj );\n    nCountMax = Vec_IntEntry( vCountMax, iObj );\n    if DelayMax == 0 {\n    } else if nCountMax == 1 {\n        iFanMax1 = Vec_IntEntry( vFanMax1, iObj );\n        Status1 = Gia_ObjEdgeCount( iFanMax1, vEdge1, vEdge2 );\n        if Status1 \u003c= 1 {\n            Gia_ObjEdgeAdd( iFanMax1, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax1, vEdge1, vEdge2 );\n            DelayMax--;\n        }\n    \n    } else if nCountMax == 2 {\n        iFanMax1 = Vec_IntEntry( vFanMax1, iObj );\n        iFanMax2 = Vec_IntEntry( vFanMax2, iObj );\n        Status1 = Gia_ObjEdgeCount( iFanMax1, vEdge1, vEdge2 );\n        Status2 = Gia_ObjEdgeCount( iFanMax2, vEdge1, vEdge2 );\n        if Status1 \u003c= 1 \u0026\u0026 Status2 \u003c= 1 {\n            Gia_ObjEdgeAdd( iFanMax1, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iFanMax2, iObj, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax1, vEdge1, vEdge2 );\n            Gia_ObjEdgeAdd( iObj, iFanMax2, vEdge1, vEdge2 );\n            DelayMax--;\n        }\n    }\n    Vec_IntWriteEntry( vDelay, iObj, DelayMax );\n    // computed DelayMax at this point\n    if Gia_ManHasMapping(p) \u0026\u0026 Gia_ObjIsLut(p, iObj) {\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,iObj)[i]),1); i++  {\n            DelayFanin = Vec_IntEntry( vDelay, iFan );\n            if DelayFanin \u003c DelayMax + 1 {\n                Vec_IntWriteEntry( vDelay, iFan, DelayMax + 1 );\n                Vec_IntWriteEntry( vFanMax1, iFan, iObj );\n                Vec_IntWriteEntry( vCountMax, iFan, 1 );\n            \n            } else if DelayFanin == DelayMax + 1 {\n                Vec_IntWriteEntry( vFanMax2, iFan, iObj );\n                Vec_IntAddToEntry( vCountMax, iFan, 1 );\n            }\n        }\n    \n    } else if Gia_ObjIsLut2(p, iObj) {\n        // inlining of macro Gia_LutForEachFanin2\n        for  i = 0; i \u003c Gia_ObjLutSize2(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanin2(p,iObj,i)),1); i++  {\n            DelayFanin = Vec_IntEntry( vDelay, iFan );\n            if DelayFanin \u003c DelayMax + 1 {\n                Vec_IntWriteEntry( vDelay, iFan, DelayMax + 1 );\n                Vec_IntWriteEntry( vFanMax1, iFan, iObj );\n                Vec_IntWriteEntry( vCountMax, iFan, 1 );\n            \n            } else if DelayFanin == DelayMax + 1 {\n                Vec_IntWriteEntry( vFanMax2, iFan, iObj );\n                Vec_IntAddToEntry( vCountMax, iFan, 1 );\n            }\n        }\n    \n    } else { assert(false, \"0\"); }\n    return DelayMax;\n}\nfunc Gia_ManComputeEdgeDelay2(p *Gia_Man_t) int32 {\n    var k, iLut, DelayMax int32;\n    var vFanMax1 *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vFanMax2 *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vCountMax *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    assert(p.pManTime == nil, \"p.pManTime == nil\");\n    Vec_IntFreeP( \u0026p.vEdgeDelay );\n    Vec_IntFreeP( \u0026p.vEdge1 );\n    Vec_IntFreeP( \u0026p.vEdge2 );\n    p.vEdgeDelay = Vec_IntStart( Gia_ManObjNum(p) );\n    p.vEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p.vEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n//    Gia_ManForEachCoDriverId( p, iLut, k )\n//        Vec_IntWriteEntry( p-\u003evEdgeDelay, iLut, 1 );\n    if Gia_ManHasMapping(p) {\n        // inlining of macro Gia_ManForEachLutReverse\n        for  iLut = Gia_ManObjNum(p) - 1; iLut \u003e 0; iLut--  { if !Gia_ObjIsLut(p, iLut) {} else {\n            Gia_ObjComputeEdgeDelay2( p, iLut, p.vEdgeDelay, p.vEdge1, p.vEdge2, vFanMax1, vFanMax2, vCountMax ); }\n        }\n    } else if Gia_ManHasMapping2(p) {\n        // inlining of macro Gia_ManForEachLut2Reverse\n        for  iLut = Gia_ManObjNum(p) - 1; iLut \u003e 0; iLut--  { if !Gia_ObjIsLut2(p, iLut) {} else {\n            Gia_ObjComputeEdgeDelay2( p, iLut, p.vEdgeDelay, p.vEdge1, p.vEdge2, vFanMax1, vFanMax2, vCountMax ); }\n        }\n    } else { assert(false, \"0\"); }\n    // inlining of macro Gia_ManForEachCiId\n    for  k = 0; (k \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((iLut) = Gia_ObjId(p, Gia_ManCi(p, k))); k++  {\n        DelayMax = Abc_MaxInt( DelayMax, Vec_IntEntry(p.vEdgeDelay, iLut) );\n    }\n    Vec_IntFree( vFanMax1 );\n    Vec_IntFree( vFanMax2 );\n    Vec_IntFree( vCountMax );\n    //printf( \"The number of edges = %d.  Delay = %d.\\n\", Gia_ManEvalEdgeCount(p), DelayMax );\n    return DelayMax;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds edge assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManUpdateMapping(p *Gia_Man_t, vNodes *Vec_Int_t, vWin *Vec_Wec_t) {\n    var i, iNode int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((iNode) = Vec_IntEntry(vNodes, i)), 1); i++  {\n        // inlining of macro ABC_SWAP\n         var t Vec_Int_t  = *Vec_WecEntry(p.vMapping2, iNode); *Vec_WecEntry(p.vMapping2, iNode) = *Vec_WecEntry(vWin, i); *Vec_WecEntry(vWin, i) = t; };\n}\nfunc Gia_ManEvalWindowInc(p *Gia_Man_t, vLeaves *Vec_Int_t, vNodes *Vec_Int_t, vWin *Vec_Wec_t, vTemp *Vec_Int_t, fUseTwo int32) int32 {\n    var i, iLut, Delay, DelayMax int32;\n    assert(Vec_IntSize(vNodes) == Vec_WecSize(vWin), \"Vec_IntSize(vNodes) == Vec_WecSize(vWin)\");\n    Gia_ManUpdateMapping( p, vNodes, vWin );\n    Gia_ManCollectTfo( p, vLeaves, vTemp );\n    Vec_IntReverseOrder( vTemp );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vTemp)) \u0026\u0026 (((iLut) = Vec_IntEntry(vTemp, i)), 1); i++  {\n        if !Gia_ObjIsLut(p, iLut) {\n            continue; }\n        Delay = Gia_ObjComputeEdgeDelay( p, iLut, p.vEdgeDelay, p.vEdge1, p.vEdge2, fUseTwo );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    Gia_ManUpdateMapping( p, vNodes, vWin );\n    return DelayMax;\n}\nfunc Gia_ManEvalWindow(p *Gia_Man_t, vLeaves *Vec_Int_t, vNodes *Vec_Int_t, vWin *Vec_Wec_t, vTemp *Vec_Int_t, fUseTwo int32) int32 {\n    var DelayMax int32;\n    assert(Vec_IntSize(vNodes) == Vec_WecSize(vWin), \"Vec_IntSize(vNodes) == Vec_WecSize(vWin)\");\n    Gia_ManUpdateMapping( p, vNodes, vWin );\n    DelayMax = Gia_ManComputeEdgeDelay( p, fUseTwo );\n    Gia_ManUpdateMapping( p, vNodes, vWin );\n    return DelayMax;\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Edg_ManToMapping(p *Gia_Man_t) {\n    var iObj, iFanin, k int32;\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");\n    Vec_WecFreeP( \u0026p.vMapping2 );\n    Vec_WecFreeP( \u0026p.vFanouts2 );\n    p.vMapping2 = Vec_WecStart( Gia_ManObjNum(p) );\n    p.vFanouts2 = Vec_WecStart( Gia_ManObjNum(p) );\n    // inlining of macro Gia_ManForEachLut\n    for  iObj = 1; iObj \u003c Gia_ManObjNum(p); iObj++  { if !Gia_ObjIsLut(p, iObj) {} else {\n        assert(Gia_ObjLutSize(p, iObj) \u003c= 4, \"Gia_ObjLutSize(p, iObj) \u003c= 4\");\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p,iObj)[k]),1); k++  {\n            Vec_WecPush( p.vMapping2, iObj, iFanin );\n            Vec_WecPush( p.vFanouts2, iFanin, iObj );\n        }\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes delay for the given edge assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Edg_ObjEvalEdgeDelay(p *Gia_Man_t, iObj int32, vDelay *Vec_Int_t) int32 {\n    var DelayEdge int32; // 2;\n    var DelayNoEdge int32  = 1;\n    var i, iFan, Delay, DelayMax int32;\n    assert(Gia_ObjIsLut2(p, iObj), \"Gia_ObjIsLut2(p, iObj)\");\n    // inlining of macro Gia_LutForEachFanin2\n    for  i = 0; i \u003c Gia_ObjLutSize2(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanin2(p,iObj,i)),1); i++  {\n        Delay = Vec_IntEntry(vDelay, iFan) + (Gia_ObjHaveEdge(p, iObj, iFan) ? DelayEdge : DelayNoEdge);\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    //printf( \"Obj %d - Level %d\\n\", iObj, DelayMax );\n    return DelayMax;\n}\nfunc Edg_ManEvalEdgeDelay(p *Gia_Man_t) int32 {\n    var iLut, Delay, DelayMax int32;\n    assert(p.vEdge1 \u0026\u0026 p.vEdge2, \"p.vEdge1 \u0026\u0026 p.vEdge2\");\n    if p.vEdgeDelay == nil {\n        p.vEdgeDelay = Vec_IntStart( Gia_ManObjNum(p) );\n    } else {\n        Vec_IntFill( p.vEdgeDelay, Gia_ManObjNum(p), 0 ); }\n    // inlining of macro Gia_ManForEachLut2\n    for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut2(p, iLut) {} else {\n        Delay = Edg_ObjEvalEdgeDelay(p, iLut, p.vEdgeDelay);\n        Vec_IntWriteEntry( p.vEdgeDelay, iLut, Delay );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    }\n    return DelayMax;\n}\n\nfunc Edg_ObjEvalEdgeDelayR(p *Gia_Man_t, iObj int32, vDelay *Vec_Int_t) int32 {\n    var DelayEdge int32; // 2;\n    var DelayNoEdge int32  = 1;\n    var i, iFan, Delay, DelayMax int32;\n    assert(Gia_ObjIsLut2(p, iObj), \"Gia_ObjIsLut2(p, iObj)\");\n    // inlining of macro Gia_LutForEachFanout2\n    for  i = 0; i \u003c Gia_ObjLutFanoutNum2(p,iObj) \u0026\u0026 ((iFan = Gia_ObjLutFanout2(p,iObj,i)),1); i++  {\n        Delay = Vec_IntEntry(vDelay, iFan) + (Gia_ObjHaveEdge(p, iObj, iFan) ? DelayEdge : DelayNoEdge);\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    //printf( \"Obj %d - LevelR %d\\n\", iObj, DelayMax );\n    return DelayMax;\n}\nfunc Edg_ManEvalEdgeDelayR(p *Gia_Man_t) int32 {\n//    int k, DelayNoEdge = 1;\n    var iLut, Delay, DelayMax int32;\n    assert(p.vEdge1 \u0026\u0026 p.vEdge2, \"p.vEdge1 \u0026\u0026 p.vEdge2\");\n    if p.vEdgeDelayR == nil {\n        p.vEdgeDelayR = Vec_IntStart( Gia_ManObjNum(p) );\n    } else {\n        Vec_IntFill( p.vEdgeDelayR, Gia_ManObjNum(p), 0 ); }\n//    Gia_ManForEachCoDriverId( p, iLut, k )\n//        Vec_IntWriteEntry( p-\u003evEdgeDelayR, iLut, DelayNoEdge );\n    // inlining of macro Gia_ManForEachLut2Reverse\n    for  iLut = Gia_ManObjNum(p) - 1; iLut \u003e 0; iLut--  { if !Gia_ObjIsLut2(p, iLut) {} else {\n        Delay = Edg_ObjEvalEdgeDelayR(p, iLut, p.vEdgeDelayR);\n        Vec_IntWriteEntry( p.vEdgeDelayR, iLut, Delay );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    }\n    return DelayMax;\n}\n\nfunc Edg_ManCollectCritEdges(p *Gia_Man_t, vEdges *Vec_Wec_t, DelayMax int32) {\n    var vLevel *Vec_Int_t;\n    var k, iLut, Delay1, Delay2 int32;\n    assert(p.vEdge1 \u0026\u0026 p.vEdge2, \"p.vEdge1 \u0026\u0026 p.vEdge2\");\n    Vec_WecClear( vEdges );\n    Vec_WecInit( vEdges, DelayMax + 1 );\n    // inlining of macro Gia_ManForEachLut2\n    for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut2(p, iLut) {} else {\n        Delay1 = Vec_IntEntry( p.vEdgeDelay, iLut );\n        Delay2 = Vec_IntEntry( p.vEdgeDelayR, iLut );\n        assert(Delay1 + Delay2 \u003c= DelayMax, \"Delay1 + Delay2 \u003c= DelayMax\");\n        if Delay1 + Delay2 == DelayMax {\n            Vec_WecPush( vEdges, Delay1, iLut ); }\n    }\n    }\n    // every level should have critical nodes, except the first one\n    //Vec_WecPrint( vEdges, 0 );\n    // inlining of macro Vec_WecForEachLevelStart\n    for  k = 1; (k \u003c Vec_WecSize(vEdges)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vEdges, k)), 1); k++  {\n        assert(Vec_IntSize(vLevel) \u003e 0, \"Vec_IntSize(vLevel) \u003e 0\");\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Update one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Edg_ObjImprove(p *Gia_Man_t, iObj int32, nEdgeLimit int32, DelayMax int32, fVerbose int32) int32 {\n    var nFaninsC, nFanoutsC int32;    // critical\n    var nFaninsEC, nFanoutsEC int32;   // edge-critical\n    var nFaninsENC, nFanoutsENC int32;  // edge-non-critial\n    var pFanins, pFanouts [4]int32;\n    var nEdgeDiff, nEdges, Count int32;\n    var i, iNext, Delay1, Delay2 int32;\n    // count how many fanins have critical edge\n    Delay1 = Vec_IntEntry( p.vEdgeDelayR, iObj );\n    //if ( Delay1 \u003e 1 )\n    // inlining of macro Gia_LutForEachFanin2\n    for  i = 0; i \u003c Gia_ObjLutSize2(p,iObj) \u0026\u0026 ((iNext = Gia_ObjLutFanin2(p,iObj,i)),1); i++  {\n        if !Gia_ObjIsAnd(Gia_ManObj(p, iNext)) {\n            continue; }\n        Delay2 = Vec_IntEntry( p.vEdgeDelay, iNext );\n        if Gia_ObjHaveEdge(p, iObj, iNext) != 0 {\n            nEdges++;\n            assert(Delay1 + Delay2 \u003c= DelayMax, \"Delay1 + Delay2 \u003c= DelayMax\");\n            if Delay1 + Delay2 == DelayMax {\n                nFaninsEC++;\n            } else {\n                nFaninsENC++; }\n        \n        } else {\n            assert(Delay1 + Delay2 + 1 \u003c= DelayMax, \"Delay1 + Delay2 + 1 \u003c= DelayMax\");\n            if Delay1 + Delay2 + 1 == DelayMax {\n                pFanins[nFaninsC++] = iNext; }\n        }\n    }\n    // count how many fanouts have critical edge\n    Delay1 = Vec_IntEntry( p.vEdgeDelay, iObj );\n    //if ( Delay2 \u003c DelayMax - 1 )\n    // inlining of macro Gia_LutForEachFanout2\n    for  i = 0; i \u003c Gia_ObjLutFanoutNum2(p,iObj) \u0026\u0026 ((iNext = Gia_ObjLutFanout2(p,iObj,i)),1); i++  {\n        //if ( !Gia_ObjIsAnd(Gia_ManObj(p, iNext)) )\n        //    continue;\n        assert(Gia_ObjIsAnd(Gia_ManObj(p, iNext)), \"Gia_ObjIsAnd(Gia_ManObj(p, iNext))\");\n        Delay2 = Vec_IntEntry( p.vEdgeDelayR, iNext );\n        if Gia_ObjHaveEdge(p, iObj, iNext) != 0 {\n            nEdges++;\n            assert(Delay1 + Delay2 \u003c= DelayMax, \"Delay1 + Delay2 \u003c= DelayMax\");\n            if Delay1 + Delay2 == DelayMax {\n                nFanoutsEC++;\n            } else {\n                nFanoutsENC++; }\n        \n        } else {\n            assert(Delay1 + Delay2 + 1 \u003c= DelayMax, \"Delay1 + Delay2 + 1 \u003c= DelayMax\");\n            if Delay1 + Delay2 + 1 == DelayMax {\n                if nFanoutsC \u003c nEdgeLimit {\n                    pFanouts[nFanoutsC] = iNext; }\n                nFanoutsC++;\n            }\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"%8d : \", iObj);\n        fmt.Printf(\"Edges = %d  \", nEdges);\n        fmt.Printf(\"Fanins (all %d  EC %d  ENC %d  C %d)  \", Gia_ObjLutSize2(p, iObj), nFaninsEC, nFaninsENC, nFaninsC);\n        fmt.Printf(\"Fanouts (all %d  EC %d  ENC %d  C %d)  \", Gia_ObjLutFanoutNum2(p, iObj), nFanoutsEC, nFanoutsENC, nFanoutsC);\n    }\n    // consider simple cases\n    assert(nEdges \u003c= nEdgeLimit, \"nEdges \u003c= nEdgeLimit\");\n    if nEdges == nEdgeLimit {\n        if fVerbose != 0 {\n            fmt.Printf(\"Full\\n\"); }\n        return 0;\n    }\n    nEdgeDiff = nEdgeLimit - nEdges;\n    // check if fanins or fanouts could be improved\n    if nFaninsEC == 0 \u0026\u0026 nFaninsC \u0026\u0026 nFaninsC \u003c= nEdgeDiff {\n        for  i = 0; i \u003c nFaninsC; i++  {\n            if Gia_ObjEdgeCount(pFanins[i], p.vEdge1, p.vEdge2) == nEdgeLimit {\n                break; }\n        }\n        if i == nFaninsC {\n            for  i = 0; i \u003c nFaninsC; i++  {\n                Count += Gia_ObjEdgeAdd( iObj, pFanins[i], p.vEdge1, p.vEdge2 );\n                Count += Gia_ObjEdgeAdd( pFanins[i], iObj, p.vEdge1, p.vEdge2 );\n            }\n            if Count != 0 {\n                fmt.Printf(\"Wrong number of edges.\\n\"); }\n            if fVerbose != 0 {\n                fmt.Printf(\"Fixed %d critical fanins\\n\", nFaninsC); }\n            return 1;\n        }\n    }\n    if nFanoutsEC == 0 \u0026\u0026 (nFanoutsC != 0) \u0026\u0026 nFanoutsC \u003c= nEdgeDiff {\n        for  i = 0; i \u003c nFanoutsC; i++  {\n            if Gia_ObjEdgeCount(pFanouts[i], p.vEdge1, p.vEdge2) == nEdgeLimit {\n                break; }\n        }\n        if i == nFanoutsC {\n            for  i = 0; i \u003c nFanoutsC; i++  {\n                Count += Gia_ObjEdgeAdd( iObj, pFanouts[i], p.vEdge1, p.vEdge2 );\n                Count += Gia_ObjEdgeAdd( pFanouts[i], iObj, p.vEdge1, p.vEdge2 );\n            }\n            if Count != 0 {\n                fmt.Printf(\"Wrong number of edges.\\n\"); }\n            if fVerbose != 0 {\n                fmt.Printf(\"Fixed %d critical fanouts\\n\", nFanoutsC); }\n            return 1;\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Cannot fix\\n\"); }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds edge assignment.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Edg_ManAssignEdgeNew(p *Gia_Man_t, nEdges int32, fVerbose int32) int32 {\n    var DelayNoEdge int32  = 1;\n    var fLevelVerbose int32;\n    var vLevel *Vec_Int_t;\n    var vEdges *Vec_Wec_t  = Vec_WecStart(0);\n    var vEdge1 *Vec_Int_t = nil;\n    var vEdge2 *Vec_Int_t = nil;\n    var DelayD int32;\n    var DelayR int32;\n    var DelayPrev int32 = ABC_INFINITY;\n    var k int32;\n    var j int32;\n    var i int32;\n    var iLast int32 = -1;\n    var iObj int32;\n    if fVerbose != 0 {\n        fmt.Printf(\"Running edge assignment with E = %d.\\n\", nEdges); }\n    // create fanouts\n    Edg_ManToMapping( p );\n    // create empty assignment\n    Vec_IntFreeP( \u0026p.vEdge1 );\n    Vec_IntFreeP( \u0026p.vEdge2 );\n    p.vEdge1 = Vec_IntStart( Gia_ManObjNum(p) );\n    p.vEdge2 = Vec_IntStart( Gia_ManObjNum(p) );\n    // perform optimization\n    for  i = 0; i \u003c 10000; i++  {\n        // if there is no improvement after 10 iterations, quit\n        if i \u003e iLast + 50 {\n            break; }\n        // create delay information\n        DelayD = Edg_ManEvalEdgeDelay( p );\n        DelayR = Edg_ManEvalEdgeDelayR( p );\n        assert(DelayD == DelayR + DelayNoEdge, \"DelayD == DelayR + DelayNoEdge\");\n        if DelayPrev \u003e DelayD {\n            //printf( \"Saving backup point at %d levels.\\n\", DelayD );\n            Vec_IntFreeP( \u0026vEdge1 );  vEdge1 = Vec_IntDup( p.vEdge1 );\n            Vec_IntFreeP( \u0026vEdge2 );  vEdge2 = Vec_IntDup( p.vEdge2 );\n            DelayPrev = DelayD;\n            iLast = i;\n        }\n        if fVerbose != 0 {\n            fmt.Printf(\"\\nIter %4d : Delay = %4d\\n\", i, DelayD); }\n        // collect critical nodes (nodes with critical edges)\n        Edg_ManCollectCritEdges( p, vEdges, DelayD );\n        // sort levels according to the number of critical edges\n        if fLevelVerbose != 0 {\n            // inlining of macro Vec_WecForEachLevel\n            for  k = 0; (k \u003c Vec_WecSize(vEdges)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vEdges, k)), 1); k++  {\n                Vec_IntPush( vLevel, k );\n            }\n        }\n        Vec_WecSort( vEdges, 0 );\n        if fLevelVerbose != 0 {\n            // inlining of macro Vec_WecForEachLevel\n            for  k = 0; (k \u003c Vec_WecSize(vEdges)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vEdges, k)), 1); k++  {\n                var Level int32  = Vec_IntPop( vLevel );\n                fmt.Printf(\"%d: Level %2d : \", k, Level);\n                Vec_IntPrint( vLevel );\n            }\n        }\n        // inlining of macro Vec_WecForEachLevel\n        for  k = 0; (k \u003c Vec_WecSize(vEdges)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vEdges, k)), 1); k++  {\n            // inlining of macro Vec_IntForEachEntry\n            for  j = 0; (j \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((iObj) = Vec_IntEntry(vLevel, j)), 1); j++  {\n                if Edg_ObjImprove(p, iObj, nEdges, DelayD, fVerbose) != 0 { // improved\n                    break; }\n            }\n            if j \u003c Vec_IntSize(vLevel) {\n                break; }\n        }\n        if k == Vec_WecSize(vEdges) { // if we could not improve anything, quit\n            break; }\n    }\n    Vec_WecFree( vEdges );\n    // update to the saved version\n    Vec_IntFreeP( \u0026p.vEdge1 );  p.vEdge1 = vEdge1;\n    Vec_IntFreeP( \u0026p.vEdge2 );  p.vEdge2 = vEdge2;\n    return DelayD;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

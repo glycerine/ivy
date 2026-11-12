@@ -1,0 +1,232 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h",
+  "SHA256": "5228169166de8d146e925a0b6349bed1c5137d5182a5036f91e22de65bca80dd",
+  "Functions": [
+    {
+      "Name": "Rwt_IsComplement",
+      "Start": 4749,
+      "End": 4867,
+      "BodyStart": 4814,
+      "Original": "static inline int          Rwt_IsComplement( Rwt_Node_t * p )    { return (int)(((ABC_PTRUINT_T)p) \u0026 01);            }",
+      "Draft": "func Rwt_IsComplement(p *Rwt_Node_t) int32 { return int32((((ABC_PTRUINT_T)p) \u0026 01));            }"
+    },
+    {
+      "Name": "Rwt_Regular",
+      "Start": 4868,
+      "End": 4986,
+      "BodyStart": 4933,
+      "Original": "static inline Rwt_Node_t * Rwt_Regular( Rwt_Node_t * p )         { return (Rwt_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01);  }",
+      "Draft": "func Rwt_Regular(p *Rwt_Node_t) *Rwt_Node_t { return (Rwt_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01);  }"
+    },
+    {
+      "Name": "Rwt_Not",
+      "Start": 4987,
+      "End": 5105,
+      "BodyStart": 5052,
+      "Original": "static inline Rwt_Node_t * Rwt_Not( Rwt_Node_t * p )             { return (Rwt_Node_t *)((ABC_PTRUINT_T)(p) ^  01);  }",
+      "Draft": "func Rwt_Not(p *Rwt_Node_t) *Rwt_Node_t { return (Rwt_Node_t *)((ABC_PTRUINT_T)(p) ^  01);  }"
+    },
+    {
+      "Name": "Rwt_NotCond",
+      "Start": 5106,
+      "End": 5224,
+      "BodyStart": 5171,
+      "Original": "static inline Rwt_Node_t * Rwt_NotCond( Rwt_Node_t * p, int c )  { return (Rwt_Node_t *)((ABC_PTRUINT_T)(p) ^ (c));  }",
+      "Draft": "func Rwt_NotCond(p *Rwt_Node_t, c int32) *Rwt_Node_t { return (Rwt_Node_t *)((ABC_PTRUINT_T)(p) ^ (c));  }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::struct::Rwt_Man_t_::// number of four var functions\n    unsigned short *   puCanons;",
+      "Category": "struct-field-review",
+      "Symbol": "Rwt_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1726,
+      "End": 1801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::struct::Rwt_Man_t_::// canonical permutations\n    unsigned char *    pMap;",
+      "Category": "struct-field-review",
+      "Symbol": "Rwt_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1920,
+      "End": 1985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::struct::Rwt_Man_t_::// mapping of functions into class numbers\n    unsigned short *   pMapInv;",
+      "Category": "struct-field-review",
+      "Symbol": "Rwt_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1985,
+      "End": 2072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::struct::Rwt_Man_t_::int                nScores[222];",
+      "Category": "struct-field-review",
+      "Symbol": "Rwt_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3697,
+      "End": 3734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::struct::Rwt_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Rwt_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1652,
+      "End": 4132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::struct::Rwt_Node_t_::// traversal ID\n    unsigned           uTruth : 16;",
+      "Category": "struct-field-review",
+      "Symbol": "Rwt_Node_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4245,
+      "End": 4307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::struct::Rwt_Node_t_::// truth table\n    unsigned           Volume :  8;",
+      "Category": "struct-field-review",
+      "Symbol": "Rwt_Node_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4307,
+      "End": 4363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::struct::Rwt_Node_t_::// volume\n    unsigned           Level  :  6;",
+      "Category": "struct-field-review",
+      "Symbol": "Rwt_Node_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4363,
+      "End": 4414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::struct::Rwt_Node_t_::// level\n    unsigned           fUsed  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Rwt_Node_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4414,
+      "End": 4464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::struct::Rwt_Node_t_::// mark\n    unsigned           fExor  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Rwt_Node_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4464,
+      "End": 4513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::struct::Rwt_Node_t_",
+      "Category": "struct-review",
+      "Symbol": "Rwt_Node_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4134,
+      "End": 4704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::pointer-cast::4942",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4942,
+      "End": 4956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::pointer-cast::5061",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5061,
+      "End": 5075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::pointer-cast::5180",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5180,
+      "End": 5194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::macro::RWT_MIN",
+      "Category": "macro-review",
+      "Symbol": "RWT_MIN",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1469,
+      "End": 1519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::macro::RWT_MAX",
+      "Category": "macro-review",
+      "Symbol": "RWT_MAX",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1520,
+      "End": 1570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::Rwt_IsComplement",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_IsComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4749,
+      "End": 4867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::Rwt_Regular",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_Regular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4868,
+      "End": 4986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::Rwt_Not",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_Not",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4987,
+      "End": 5105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::Rwt_NotCond",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_NotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5106,
+      "End": 5224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwt/rwt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7151
+    }
+  ],
+  "Draft": "package rwt\n\n/**CFile****************************************************************\n\n  FileName    [rwt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware AIG rewriting package.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: rwt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"misc/mem/mem.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n \n#define RWT_LIMIT  1048576/4  // ((1 \u003c\u003c 20) \n// Original macro:\n// #define RWT_MIN(a,b)      (((a) \u003c (b))? (a) : (b))\n\n// Original macro:\n// #define RWT_MAX(a,b)      (((a) \u003e (b))? (a) : (b))\n\n\ntype Rwt_Man_t =   Rwt_Man_t_;\ntype Rwt_Node_t =  Rwt_Node_t_;\n\ntype Rwt_Man_t_ struct {\n    // internal lookups\n    nFuncs                int32;           // number of four var functions\n    unsigned short *   puCanons;         // canonical forms\n    pPhases              string;          // canonical phases\n    pPerms              string;           // canonical permutations\n    unsigned char *    pMap;             // mapping of functions into class numbers\n    unsigned short *   pMapInv;          // mapping of classes into functions\n    pPractical              string;       // practical NPN classes\n    pPerms4             *string;          // four-var permutations\n    // node space\n    vForest         *Vec_Ptr_t;          // all the nodes\n    pTable       **Rwt_Node_t;           // the hash table of nodes by their canonical form\n    vClasses         *Vec_Vec_t;         // the nodes of the equivalence classes\n    pMmNode       *Mem_Fixed_t;          // memory for nodes and cuts\n    // statistical variables\n    nTravIds                int32;         // the counter of traversal IDs\n    nConsidered                int32;      // the number of nodes considered\n    nAdded                int32;           // the number of nodes added to lists\n    nClasses                int32;         // the number of NN classes\n    // the result of resynthesis\n    fCompl                int32;           // indicates if the output of FF should be complemented\n    pCut              any;             // the decomposition tree (temporary)\n    pGraph              any;           // the decomposition tree (temporary)\n    pPerm              string;            // permutation used for the best cut\n    vFanins         *Vec_Ptr_t;          // the fanins array (temporary)\n    vFaninsCur         *Vec_Ptr_t;       // the fanins array (temporary)\n    vLevNums         *Vec_Int_t;         // the array of levels (temporary)\n    vNodesTemp         *Vec_Ptr_t;       // the nodes in MFFC (temporary)\n    // node statistics\n    nNodesConsidered                int32;\n    nNodesRewritten                int32;\n    nNodesGained                int32;\n    nScores [222]int32;\n    nCutsGood                int32;\n    nCutsBad                int32;\n    nSubgraphs                int32;\n    // runtime statistics\n    timeStart            abctime;\n    timeTruth            abctime;\n    timeCut            abctime;\n    timeRes            abctime;\n    timeEval            abctime;\n    timeMffc            abctime;\n    timeUpdate            abctime;\n    timeTotal            abctime;\n}\n\ntype Rwt_Node_t_ struct { // 24 bytes\n\n    Id                int32;               // ID \n    TravId                int32;           // traversal ID\n    uTruth uint32; /* C bitfield: 16 bits; review packing and truncation */      // truth table\n    Volume uint32; /* C bitfield: 8 bits; review packing and truncation */      // volume\n    Level uint32; /* C bitfield: 6 bits; review packing and truncation */      // level\n    fUsed uint32; /* C bitfield: 1 bits; review packing and truncation */      // mark\n    fExor uint32; /* C bitfield: 1 bits; review packing and truncation */      // mark\n    p0        *Rwt_Node_t;               // first child\n    p1        *Rwt_Node_t;               // second child\n    pNext        *Rwt_Node_t;            // next in the table\n}\n\n// manipulation of complemented attributes\nfunc Rwt_IsComplement(p *Rwt_Node_t) int32 { return int32((((ABC_PTRUINT_T)p) \u0026 01));            }\nfunc Rwt_Regular(p *Rwt_Node_t) *Rwt_Node_t { return (Rwt_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01);  }\nfunc Rwt_Not(p *Rwt_Node_t) *Rwt_Node_t { return (Rwt_Node_t *)((ABC_PTRUINT_T)(p) ^  01);  }\nfunc Rwt_NotCond(p *Rwt_Node_t, c int32) *Rwt_Node_t { return (Rwt_Node_t *)((ABC_PTRUINT_T)(p) ^ (c));  }\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== rwrDec.c ========================================================*/\n// extern void              Rwt_ManPreprocess( Rwt_Man_t * p );\n\n/*=== rwrMan.c ========================================================*/\n// extern Rwt_Man_t *       Rwt_ManStart( int fPrecompute );\n\n// extern void              Rwt_ManStop( Rwt_Man_t * p );\n\n// extern void              Rwt_ManPrintStats( Rwt_Man_t * p );\n\n// extern void              Rwt_ManPrintStatsFile( Rwt_Man_t * p );\n\n// extern void *            Rwt_ManReadDecs( Rwt_Man_t * p );\n\n// extern Vec_Ptr_t *       Rwt_ManReadLeaves( Rwt_Man_t * p );\n\n// extern int               Rwt_ManReadCompl( Rwt_Man_t * p );\n\n// extern void              Rwt_ManAddTimeCuts( Rwt_Man_t * p, abctime Time );\n\n// extern void              Rwt_ManAddTimeUpdate( Rwt_Man_t * p, abctime Time );\n\n// extern void              Rwt_ManAddTimeTotal( Rwt_Man_t * p, abctime Time );\n\n/*=== rwrUtil.c ========================================================*/\n// extern void              Rwt_ManLoadFromArray( Rwt_Man_t * p, int fVerbose );\n\n// extern char *            Rwt_ManGetPractical( Rwt_Man_t * p );\n\n// extern Rwt_Node_t *      Rwt_ManAddVar( Rwt_Man_t * p, unsigned uTruth, int fPrecompute );\n\n// extern void              Rwt_ManIncTravId( Rwt_Man_t * p );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

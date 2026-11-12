@@ -1,0 +1,114 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscInt.h",
+  "SHA256": "e90a1d8d9bb4e7500d7ac28f5cd3050bab8ef79511d89cd00253ceac56d47250",
+  "Functions": [
+    {
+      "Name": "Ssc_ObjSatVar",
+      "Start": 3656,
+      "End": 3776,
+      "BodyStart": 3730,
+      "Original": "static inline int    Ssc_ObjSatVar( Ssc_Man_t * p, int iObj )             { return Vec_IntEntry(p-\u003evId2Var, iObj);     }",
+      "Draft": "func Ssc_ObjSatVar(p *Ssc_Man_t, iObj int32) int32 { return Vec_IntEntry(p.vId2Var, iObj);     }"
+    },
+    {
+      "Name": "Ssc_ObjSetSatVar",
+      "Start": 3777,
+      "End": 3940,
+      "BodyStart": 3851,
+      "Original": "static inline void   Ssc_ObjSetSatVar( Ssc_Man_t * p, int iObj, int Num ) { Vec_IntWriteEntry(p-\u003evId2Var, iObj, Num);  Vec_IntWriteEntry(p-\u003evVar2Id, Num, iObj);  }",
+      "Draft": "func Ssc_ObjSetSatVar(p *Ssc_Man_t, iObj int32, Num int32) { Vec_IntWriteEntry(p.vId2Var, iObj, Num);  Vec_IntWriteEntry(p.vVar2Id, Num, iObj);  }"
+    },
+    {
+      "Name": "Ssc_ObjCleanSatVar",
+      "Start": 3941,
+      "End": 4148,
+      "BodyStart": 4015,
+      "Original": "static inline void   Ssc_ObjCleanSatVar( Ssc_Man_t * p, int Num )         { Vec_IntWriteEntry(p-\u003evId2Var, Vec_IntEntry(p-\u003evVar2Id, Num), Num);  Vec_IntWriteEntry(p-\u003evVar2Id, Num, 0);                        }",
+      "Draft": "func Ssc_ObjCleanSatVar(p *Ssc_Man_t, Num int32) { Vec_IntWriteEntry(p.vId2Var, Vec_IntEntry(p.vVar2Id, Num), Num);  Vec_IntWriteEntry(p.vVar2Id, Num, 0);                        }"
+    },
+    {
+      "Name": "Ssc_ObjFraig",
+      "Start": 4150,
+      "End": 4257,
+      "BodyStart": 4224,
+      "Original": "static inline int    Ssc_ObjFraig( Ssc_Man_t * p, Gia_Obj_t * pObj )      { return pObj-\u003eValue;           }",
+      "Draft": "func Ssc_ObjFraig(p *Ssc_Man_t, pObj *Gia_Obj_t) int32 { return pObj.Value;           }"
+    },
+    {
+      "Name": "Ssc_ObjSetFraig",
+      "Start": 4258,
+      "End": 4365,
+      "BodyStart": 4332,
+      "Original": "static inline void   Ssc_ObjSetFraig( Gia_Obj_t * pObj, int iNode )       { pObj-\u003eValue = iNode;          }",
+      "Draft": "func Ssc_ObjSetFraig(pObj *Gia_Obj_t, iNode int32) { pObj.Value = iNode;          }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscInt.h::struct::Ssc_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Ssc_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1370,
+      "End": 3434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscInt.h::Ssc_ObjSatVar",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ObjSatVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3656,
+      "End": 3776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscInt.h::Ssc_ObjSetSatVar",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ObjSetSatVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3777,
+      "End": 3940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscInt.h::Ssc_ObjCleanSatVar",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ObjCleanSatVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3941,
+      "End": 4148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscInt.h::Ssc_ObjFraig",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ObjFraig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4150,
+      "End": 4257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscInt.h::Ssc_ObjSetFraig",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ObjSetFraig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4258,
+      "End": 4365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6485
+    }
+  ],
+  "Draft": "package ssc\n\n/**CFile****************************************************************\n\n  FileName    [sscInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Choice computation for tech-mapping.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 29, 2008.]\n\n  Revision    [$Id: sscInt.h,v 1.00 2008/07/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/gia/gia.h\"\n//#include \"sat/bsat/satSolver.h\"\n//#include \"ssc.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// choicing manager\n   \ntype Ssc_Man_t struct {\n    // user data\n    pPars      *Ssc_Pars_t;          // choicing parameters\n    pAig       *Gia_Man_t;           // subject AIG\n    pCare       *Gia_Man_t;          // care set AIG\n    // internal data\n    pFraig       *Gia_Man_t;         // resulting AIG\n    pSat      *sat_solver;           // recyclable SAT solver\n    vId2Var       *Vec_Int_t;        // mapping of each node into its SAT var\n    vVar2Id       *Vec_Int_t;        // mapping of each SAT var into its node\n    vPivot       *Vec_Int_t;         // one SAT pattern\n    nSatVarsPivot              int32;  // the number of variables for constraints\n    nSatVars              int32;       // the current number of variables  \n    // temporary storage\n    vFront       *Vec_Int_t;         // supergate fanins\n    vFanins       *Vec_Int_t;        // supergate fanins\n    vPattern       *Vec_Int_t;       // counter-example\n    vDisPairs       *Vec_Int_t;      // disproved pairs\n    // SAT calls statistics\n    nSimRounds              int32;     // the number of simulation rounds\n    nRecycles              int32;      // the number of times SAT solver was recycled\n    nCallsSince              int32;    // the number of calls since the last recycle\n    nSatCalls              int32;      // the number of SAT calls\n    nSatCallsUnsat              int32; // the number of unsat SAT calls\n    nSatCallsSat              int32;   // the number of sat SAT calls\n    nSatCallsUndec              int32; // the number of undec SAT calls\n    // runtime stats\n    timeSimInit          abctime;    // simulation and class computation\n    timeSimSat          abctime;     // simulation of the counter-examples\n    timeCnfGen          abctime;     // generation of CNF\n    timeSat          abctime;        // total SAT time\n    timeSatSat          abctime;     // sat\n    timeSatUnsat          abctime;   // unsat\n    timeSatUndec          abctime;   // undecided\n    timeOther          abctime;      // other runtime\n    timeTotal          abctime;      // total runtime\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Ssc_ObjSatVar(p *Ssc_Man_t, iObj int32) int32 { return Vec_IntEntry(p.vId2Var, iObj);     }\nfunc Ssc_ObjSetSatVar(p *Ssc_Man_t, iObj int32, Num int32) { Vec_IntWriteEntry(p.vId2Var, iObj, Num);  Vec_IntWriteEntry(p.vVar2Id, Num, iObj);  }\nfunc Ssc_ObjCleanSatVar(p *Ssc_Man_t, Num int32) { Vec_IntWriteEntry(p.vId2Var, Vec_IntEntry(p.vVar2Id, Num), Num);  Vec_IntWriteEntry(p.vVar2Id, Num, 0);                        }\n\nfunc Ssc_ObjFraig(p *Ssc_Man_t, pObj *Gia_Obj_t) int32 { return pObj.Value;           }\nfunc Ssc_ObjSetFraig(pObj *Gia_Obj_t, iNode int32) { pObj.Value = iNode;          }\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== sscClass.c =================================================*/\n// extern void          Ssc_GiaClassesInit( Gia_Man_t * p );\n\n// extern int           Ssc_GiaClassesRefine( Gia_Man_t * p );\n\n// extern void          Ssc_GiaClassesCheckPairs( Gia_Man_t * p, Vec_Int_t * vDisPairs );\n\n// extern int           Ssc_GiaSimClassRefineOneBit( Gia_Man_t * p, int i );\n\n/*=== sscCnf.c ===================================================*/\n// extern void          Ssc_CnfNodeAddToSolver( Ssc_Man_t * p, Gia_Obj_t * pObj );\n\n/*=== sscCore.c ==================================================*/\n/*=== sscSat.c ===================================================*/\n// extern void          Ssc_ManSatSolverRecycle( Ssc_Man_t * p );\n\n// extern void          Ssc_ManStartSolver( Ssc_Man_t * p );\n\n// extern Vec_Int_t *   Ssc_ManFindPivotSat( Ssc_Man_t * p );\n\n// extern int           Ssc_ManCheckEquivalence( Ssc_Man_t * p, int iRepr, int iObj, int fCompl );\n\n/*=== sscSim.c ===================================================*/\n// extern void          Ssc_GiaResetPiPattern( Gia_Man_t * p, int nWords );\n\n// extern void          Ssc_GiaRandomPiPattern( Gia_Man_t * p, int nWords, Vec_Int_t * vPivot );\n\n// extern int           Ssc_GiaTransferPiPattern( Gia_Man_t * pAig, Gia_Man_t * pCare, Vec_Int_t * vPivot );\n\n// extern void          Ssc_GiaSavePiPattern( Gia_Man_t * p, Vec_Int_t * vPat );\n\n// extern void          Ssc_GiaSimRound( Gia_Man_t * p );\n\n// extern Vec_Int_t *   Ssc_GiaFindPivotSim( Gia_Man_t * p );\n\n// extern int           Ssc_GiaEstimateCare( Gia_Man_t * p, int nWords );\n\n/*=== sscUtil.c ===================================================*/\n// extern Gia_Man_t *   Ssc_GenerateOneHot( int nVars );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

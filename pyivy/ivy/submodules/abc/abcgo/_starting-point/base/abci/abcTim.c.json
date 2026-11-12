@@ -1,0 +1,663 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c",
+  "SHA256": "4205b101bf7cd94d347a421e9d9ff44b8bf97464cc7135770780d339bb303dd2",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 39,
+        "Column": 50,
+        "ByteOffset": 1099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_NodeIsWhiteBox(pObj *Abc_Obj_t) int32 { assert( Abc_ObjIsNode(pObj) ); return Abc_ObjId(pObj) % TIM_TEST_BOX_RATIO == 0 \u0026\u0026 Abc_ObjFaninNum(pObj) \u003e 0 \u0026\u0026 Abc_ObjFaninNum(pObj) \u003c 10; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 63,
+        "Column": 5,
+        "ByteOffset": 2162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 71,
+        "Column": 5,
+        "ByteOffset": 2416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 2452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsAigLogic(pNode.pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 6688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode( pObj ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 211,
+        "Column": 9,
+        "ByteOffset": 7158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 212,
+        "Column": 9,
+        "ByteOffset": 7197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Abc_NodeIsTravIdCurrent( pObj ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 9139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsTopo(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 294,
+        "Column": 13,
+        "ByteOffset": 9766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Selecting node %6d as white boxes with %d inputs and %d output.\\n\", i, Abc_ObjFaninNum(pObj), 1 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 368,
+        "Column": 5,
+        "ByteOffset": 12978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( curPi == Gia_ManPiNum(pGia) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 5,
+        "ByteOffset": 13021
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( curPo == Gia_ManPoNum(pGia) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 383,
+        "Column": 5,
+        "ByteOffset": 13409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pGia.pManTime == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 448,
+        "Column": 5,
+        "ByteOffset": 15209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pReprs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 453,
+        "Column": 70,
+        "ByteOffset": 15494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:Gia_ClassForEachObj1__*/for  assert(Gia_ObjIsHead(p, iRepr)), iNode = Gia_ObjNext(p, iRepr); iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 455,
+        "Column": 17,
+        "ByteOffset": 15659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Member %d of choice class %d is a representative.\\n\", iNode, iRepr );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 458,
+        "Column": 17,
+        "ByteOffset": 15819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Node %d participates in more than one choice node.\\n\", iNode );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 468,
+        "Column": 17,
+        "ByteOffset": 16228
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Fanin 0 of AND node %d has a repr.\\n\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 471,
+        "Column": 17,
+        "ByteOffset": 16371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Fanin 1 of AND node %d has a repr.\\n\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 476,
+        "Column": 17,
+        "ByteOffset": 16561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Fanin 0 of CO node %d has a repr.\\n\", i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 509,
+        "Column": 70,
+        "ByteOffset": 17829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:Gia_ClassForEachObj1__*/for  assert(Gia_ObjIsHead(p, iRepr)), iNode = Gia_ObjNext(p, iRepr); iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 511,
+        "Column": 17,
+        "ByteOffset": 17985
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( iRepr \u003c iNode );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 513,
+        "Column": 17,
+        "ByteOffset": 18047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( iRepr \u003e iNode ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 534,
+        "Column": 70,
+        "ByteOffset": 19041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:Gia_ClassForEachObj1__*/for  assert(Gia_ObjIsHead(p, iRepr)), iNode = Gia_ObjNext(p, iRepr); iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 536,
+        "Column": 17,
+        "ByteOffset": 19197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Gia_ObjRepr(p, iNode) == iRepr \u0026\u0026 iRepr \u003e iNode );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 538,
+        "Column": 17,
+        "ByteOffset": 19293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Gia_ObjRepr(p, iNode) == iRepr \u0026\u0026 iRepr \u003c iNode ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 579,
+        "Column": 9,
+        "ByteOffset": 20352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification suceessful.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 600,
+        "Column": 5,
+        "ByteOffset": 20902
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 607,
+        "Column": 5,
+        "ByteOffset": 21252
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Created GIA manager for network with %d white boxes.\\n\", Tim_ManBoxNum((Tim_Man_t *)pGia.pManTime) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NodeIsWhiteBox",
+      "Start": 1022,
+      "End": 1223,
+      "BodyStart": 1080,
+      "Original": "static inline int Abc_NodeIsWhiteBox( Abc_Obj_t * pObj )  { assert( Abc_ObjIsNode(pObj) ); return Abc_ObjId(pObj) % TIM_TEST_BOX_RATIO == 0 \u0026\u0026 Abc_ObjFaninNum(pObj) \u003e 0 \u0026\u0026 Abc_ObjFaninNum(pObj) \u003c 10; }",
+      "Draft": "func Abc_NodeIsWhiteBox(pObj *Abc_Obj_t) int32 { assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\"); return Abc_ObjId(pObj) % TIM_TEST_BOX_RATIO == 0 \u0026\u0026 Abc_ObjFaninNum(pObj) \u003e 0 \u0026\u0026 Abc_ObjFaninNum(pObj) \u003c 10; }"
+    },
+    {
+      "Name": "Abc_NtkTestTimNodeStrash_rec",
+      "Start": 1740,
+      "End": 2231,
+      "BodyStart": 1812,
+      "Original": "void Abc_NtkTestTimNodeStrash_rec( Gia_Man_t * pGia, Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return;\n    Abc_NtkTestTimNodeStrash_rec( pGia, Hop_ObjFanin0(pObj) ); \n    Abc_NtkTestTimNodeStrash_rec( pGia, Hop_ObjFanin1(pObj) );\n    pObj-\u003eiData = Gia_ManHashAnd( pGia, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Abc_NtkTestTimNodeStrash_rec(pGia *Gia_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_NtkTestTimNodeStrash_rec( pGia, Hop_ObjFanin0(pObj) ); \n    Abc_NtkTestTimNodeStrash_rec( pGia, Hop_ObjFanin1(pObj) );\n    pObj.iData = Gia_ManHashAnd( pGia, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Abc_NtkTestTimNodeStrash",
+      "Start": 2232,
+      "End": 3166,
+      "BodyStart": 2300,
+      "Original": "int Abc_NtkTestTimNodeStrash( Gia_Man_t * pGia, Abc_Obj_t * pNode )\n{\n    Hop_Man_t * pMan;\n    Hop_Obj_t * pRoot;\n    Abc_Obj_t * pFanin;\n    int i;\n    assert( Abc_ObjIsNode(pNode) );\n    assert( Abc_NtkIsAigLogic(pNode-\u003epNtk) );\n    // get the local AIG manager and the local root node\n    pMan = (Hop_Man_t *)pNode-\u003epNtk-\u003epManFunc;\n    pRoot = (Hop_Obj_t *)pNode-\u003epData;\n    // check the constant case\n    if ( Abc_NodeIsConst(pNode) || Hop_Regular(pRoot) == Hop_ManConst1(pMan) )\n        return !Hop_IsComplement(pRoot);\n    // set elementary variables\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        Hop_IthVar(pMan, i)-\u003eiData = pFanin-\u003eiTemp;\n    // strash the AIG of this node\n    Abc_NtkTestTimNodeStrash_rec( pGia, Hop_Regular(pRoot) );\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    // return the final node with complement if needed\n    return Abc_LitNotCond( Hop_Regular(pRoot)-\u003eiData, Hop_IsComplement(pRoot) );\n}",
+      "Draft": "func Abc_NtkTestTimNodeStrash(pGia *Gia_Man_t, pNode *Abc_Obj_t) int32 {\n    var pMan *Hop_Man_t;\n    var pRoot *Hop_Obj_t;\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    assert(Abc_NtkIsAigLogic(pNode.pNtk), \"Abc_NtkIsAigLogic(pNode.pNtk)\");\n    // get the local AIG manager and the local root node\n    pMan = (Hop_Man_t *)pNode.pNtk.pManFunc;\n    pRoot = (Hop_Obj_t *)pNode.pData;\n    // check the constant case\n    if Abc_NodeIsConst(pNode) || Hop_Regular(pRoot) == Hop_ManConst1(pMan) {\n        return !Hop_IsComplement(pRoot); }\n    // set elementary variables\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Hop_IthVar(pMan, i).iData = pFanin.iTemp;\n    }\n    // strash the AIG of this node\n    Abc_NtkTestTimNodeStrash_rec( pGia, Hop_Regular(pRoot) );\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    // return the final node with complement if needed\n    return Abc_LitNotCond( Hop_Regular(pRoot).iData, Hop_IsComplement(pRoot) );\n}"
+    },
+    {
+      "Name": "Abc_NtkTestTimCollectCone_rec",
+      "Start": 6288,
+      "End": 6713,
+      "BodyStart": 6363,
+      "Original": "void Abc_NtkTestTimCollectCone_rec( Abc_Obj_t * pObj, Vec_Ptr_t * vNodes )\n{\n    Abc_Obj_t * pFanin;\n    int i;\n    if ( Abc_NodeIsTravIdCurrent( pObj ) )\n        return;\n    Abc_NodeSetTravIdCurrent( pObj );\n    if ( Abc_ObjIsCi(pObj) )\n        return;\n    assert( Abc_ObjIsNode( pObj ) );\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n        Abc_NtkTestTimCollectCone_rec( pFanin, vNodes );\n    Vec_PtrPush( vNodes, pObj );\n}",
+      "Draft": "func Abc_NtkTestTimCollectCone_rec(pObj *Abc_Obj_t, vNodes *Vec_Ptr_t) {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    if Abc_NodeIsTravIdCurrent( pObj ) {\n        return; }\n    Abc_NodeSetTravIdCurrent( pObj );\n    if Abc_ObjIsCi(pObj) {\n        return; }\n    assert(Abc_ObjIsNode( pObj ), \"Abc_ObjIsNode( pObj )\");\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        Abc_NtkTestTimCollectCone_rec( pFanin, vNodes );\n    }\n    Vec_PtrPush( vNodes, pObj );\n}"
+    },
+    {
+      "Name": "Abc_NtkTestTimCollectCone",
+      "Start": 6714,
+      "End": 7361,
+      "BodyStart": 6790,
+      "Original": "Vec_Ptr_t * Abc_NtkTestTimCollectCone( Abc_Ntk_t * pNtk, Abc_Obj_t * pObj )\n{\n    Vec_Ptr_t * vCone = Vec_PtrAlloc( 1000 );\n    if ( pObj != NULL )\n    {\n        // collect for one node\n        assert( Abc_ObjIsNode(pObj) );\n        assert( !Abc_NodeIsTravIdCurrent( pObj ) );\n        Abc_NtkTestTimCollectCone_rec( pObj, vCone );\n        // remove the node because it is a white box\n        Vec_PtrPop( vCone );\n    }\n    else\n    {\n        // collect for all COs\n        Abc_Obj_t * pObj;\n        int i;\n        Abc_NtkForEachCo( pNtk, pObj, i )\n            Abc_NtkTestTimCollectCone_rec( Abc_ObjFanin0(pObj), vCone );\n    }\n    return vCone;\n\n}",
+      "Draft": "func Abc_NtkTestTimCollectCone(pNtk *Abc_Ntk_t, pObj *Abc_Obj_t) *Vec_Ptr_t {\n    var vCone *Vec_Ptr_t  = Vec_PtrAlloc( 1000 );\n    if pObj != nil {\n        // collect for one node\n        assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n        assert(!Abc_NodeIsTravIdCurrent( pObj ), \"!Abc_NodeIsTravIdCurrent( pObj )\");\n        Abc_NtkTestTimCollectCone_rec( pObj, vCone );\n        // remove the node because it is a white box\n        Vec_PtrPop( vCone );\n    \n    } else {\n        // collect for all COs\n        var pObj *Abc_Obj_t;\n        var i int32;\n        // inlining of macro Abc_NtkForEachCo\n        for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n            Abc_NtkTestTimCollectCone_rec( Abc_ObjFanin0(pObj), vCone );\n        }\n    }\n    return vCone;\n\n}"
+    },
+    {
+      "Name": "Abc_NtkTestCreateArrivals",
+      "Start": 7617,
+      "End": 7826,
+      "BodyStart": 7670,
+      "Original": "Vec_Flt_t * Abc_NtkTestCreateArrivals( int nInputs )\n{\n    Vec_Flt_t * p;\n    int i;\n    p = Vec_FltAlloc( nInputs );\n    for ( i = 0; i \u003c nInputs; i++ )\n        Vec_FltPush( p, 1.0*(i % 10) );\n    return p;\n}",
+      "Draft": "func Abc_NtkTestCreateArrivals(nInputs int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    var i int32;\n    p = Vec_FltAlloc( nInputs );\n    for  i = 0; i \u003c nInputs; i++  {\n        Vec_FltPush( p, 1.0*(i % 10) );\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_NtkTestCreateRequired",
+      "Start": 7827,
+      "End": 8040,
+      "BodyStart": 7881,
+      "Original": "Vec_Flt_t * Abc_NtkTestCreateRequired( int nOutputs )\n{\n    Vec_Flt_t * p;\n    int i;\n    p = Vec_FltAlloc( nOutputs );\n    for ( i = 0; i \u003c nOutputs; i++ )\n        Vec_FltPush( p, 100.0 + 1.0*i );\n    return p;\n}",
+      "Draft": "func Abc_NtkTestCreateRequired(nOutputs int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    var i int32;\n    p = Vec_FltAlloc( nOutputs );\n    for  i = 0; i \u003c nOutputs; i++  {\n        Vec_FltPush( p, 100.0 + 1.0*i );\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_NtkTestTimDeriveGia",
+      "Start": 8331,
+      "End": 12745,
+      "BodyStart": 8401,
+      "Original": "Gia_Man_t * Abc_NtkTestTimDeriveGia( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    Gia_Man_t * pTemp;\n    Gia_Man_t * pGia = NULL;\n    Gia_Man_t * pHoles = NULL;\n    Tim_Man_t * pTim = NULL;\n    Vec_Int_t * vGiaCoLits, * vGiaCoLits2;\n    Vec_Flt_t * vArrTimes, * vReqTimes;\n    Abc_Obj_t * pObj, * pFanin;\n    int i, k, Entry, curPi, curPo, BoxUniqueId;\n    int nBoxFaninMax = 0;\n    assert( Abc_NtkIsTopo(pNtk) );\n    Abc_NtkFillTemp( pNtk );\n\n    // create white boxes\n    curPi = Abc_NtkCiNum(pNtk);\n    curPo = Abc_NtkCoNum(pNtk);\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        pObj-\u003efMarkA = Abc_NodeIsWhiteBox( pObj );\n        if ( !pObj-\u003efMarkA )\n            continue;\n        nBoxFaninMax  = Abc_MaxInt( nBoxFaninMax, Abc_ObjFaninNum(pObj) );\n        curPi++;\n        curPo += Abc_ObjFaninNum(pObj);\n        if ( fVerbose )\n            printf( \"Selecting node %6d as white boxes with %d inputs and %d output.\\n\", i, Abc_ObjFaninNum(pObj), 1 );\n    }\n\n    // construct GIA\n    pGia = Gia_ManStart( Abc_NtkObjNumMax(pNtk) );\n    pHoles = Gia_ManStart( 1000 );\n    for ( i = 0; i \u003c curPi; i++ )\n        Gia_ManAppendCi(pGia);\n    for ( i = 0; i \u003c nBoxFaninMax; i++ )\n        Gia_ManAppendCi(pHoles);\n    Gia_ManHashAlloc( pGia );\n    Gia_ManHashAlloc( pHoles );\n\n    // construct the timing manager\n    pTim = Tim_ManStart( curPi, curPo );\n\n    // assign primary inputs\n    curPi = 0;\n    curPo = 0;\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj-\u003eiTemp = Abc_Var2Lit( Gia_ObjId(pGia, Gia_ManCi(pGia, curPi++)), 0 );\n    // create internal nodes in a topologic order from white boxes\n    vGiaCoLits = Vec_IntAlloc( 1000 );\n    vGiaCoLits2 = Vec_IntAlloc( 1000 );\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        if ( !pObj-\u003efMarkA ) // not a white box\n        {\n            pObj-\u003eiTemp = Abc_NtkTestTimNodeStrash( pGia, pObj );\n            continue;\n        }\n        // create box\n        BoxUniqueId = Abc_ObjFaninNum(pObj); // in this case, the node size is the ID of its delay table\n        Tim_ManCreateBox( pTim, curPo, Abc_ObjFaninNum(pObj), curPi, 1, BoxUniqueId, 0 );\n        curPo += Abc_ObjFaninNum(pObj);\n\n        // handle box inputs\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            // save CO drivers for the AIG\n            Vec_IntPush( vGiaCoLits, pFanin-\u003eiTemp );\n            // load CI nodes for the Holes\n            pFanin-\u003eiTemp = Abc_Var2Lit( Gia_ObjId(pHoles, Gia_ManCi(pHoles, k)), 0 );\n        }\n\n        // handle logic of the box\n        pObj-\u003eiTemp = Abc_NtkTestTimNodeStrash( pHoles, pObj );\n\n        // handle box outputs\n        // save CO drivers for the Holes\n        Vec_IntPush( vGiaCoLits2, pObj-\u003eiTemp );\n//        Gia_ManAppendCo( pHoles, pObj-\u003eiTemp );\n        // load CO drivers for the AIG\n        pObj-\u003eiTemp = Abc_Var2Lit( Gia_ObjId(pGia, Gia_ManCi(pGia, curPi++)), 0 );\n    }\n    Abc_NtkCleanMarkA( pNtk );\n    // create COs of the AIG\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Gia_ManAppendCo( pGia, Abc_ObjFanin0(pObj)-\u003eiTemp );\n    Vec_IntForEachEntry( vGiaCoLits, Entry, i )\n        Gia_ManAppendCo( pGia, Entry );\n    Vec_IntFree( vGiaCoLits );\n    // second AIG\n    Vec_IntForEachEntry( vGiaCoLits2, Entry, i )\n        Gia_ManAppendCo( pHoles, Entry );\n    Vec_IntFree( vGiaCoLits2 );\n    // check parameters\n    curPo += Abc_NtkPoNum( pNtk );\n    assert( curPi == Gia_ManPiNum(pGia) );\n    assert( curPo == Gia_ManPoNum(pGia) );\n    // finalize GIA\n    Gia_ManHashStop( pGia );\n    Gia_ManSetRegNum( pGia, 0 );\n    Gia_ManHashStop( pHoles );\n    Gia_ManSetRegNum( pHoles, 0 );\n\n    // clean up GIA\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    pHoles = Gia_ManCleanup( pTemp = pHoles );\n    Gia_ManStop( pTemp );\n\n    // attach the timing manager\n    assert( pGia-\u003epManTime == NULL );\n    pGia-\u003epManTime = pTim;\n\n    // derive hierarchy manager from box info and input/output arrival/required info\n    vArrTimes = Abc_NtkTestCreateArrivals( Abc_NtkPiNum(pNtk) );\n    vReqTimes = Abc_NtkTestCreateRequired( Abc_NtkPoNum(pNtk) );\n\n    Tim_ManPrint( (Tim_Man_t *)pGia-\u003epManTime );\n    Tim_ManCreate( (Tim_Man_t *)pGia-\u003epManTime, Abc_FrameReadLibBox(), vArrTimes, vReqTimes );\n    Tim_ManPrint( (Tim_Man_t *)pGia-\u003epManTime );\n\n    Vec_FltFree( vArrTimes );\n    Vec_FltFree( vReqTimes );\n\nGia_AigerWrite( pHoles, \"holes00.aig\", 0, 0, 0 );\n\n    // return \n    pGia-\u003epAigExtra = pHoles;\n    return pGia;\n}",
+      "Draft": "func Abc_NtkTestTimDeriveGia(pNtk *Abc_Ntk_t, fVerbose int32) *Gia_Man_t {\n    var pTemp *Gia_Man_t;\n    var pGia *Gia_Man_t  = nil;\n    var pHoles *Gia_Man_t  = nil;\n    var pTim *Tim_Man_t  = nil;\n    var vGiaCoLits, vGiaCoLits2 *Vec_Int_t;\n    var vArrTimes, vReqTimes *Vec_Flt_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k, Entry, curPi, curPo, BoxUniqueId int32;\n    var nBoxFaninMax int32;\n    assert(Abc_NtkIsTopo(pNtk), \"Abc_NtkIsTopo(pNtk)\");\n    Abc_NtkFillTemp( pNtk );\n\n    // create white boxes\n    curPi = Abc_NtkCiNum(pNtk);\n    curPo = Abc_NtkCoNum(pNtk);\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        pObj.fMarkA = Abc_NodeIsWhiteBox( pObj );\n        if !pObj.fMarkA {\n            continue; }\n        nBoxFaninMax  = Abc_MaxInt( nBoxFaninMax, Abc_ObjFaninNum(pObj) );\n        curPi++;\n        curPo += Abc_ObjFaninNum(pObj);\n        if fVerbose != 0 {\n            fmt.Printf(\"Selecting node %6d as white boxes with %d inputs and %d output.\\n\", i, Abc_ObjFaninNum(pObj), 1); }\n    }\n    }\n\n    // construct GIA\n    pGia = Gia_ManStart( Abc_NtkObjNumMax(pNtk) );\n    pHoles = Gia_ManStart( 1000 );\n    for  i = 0; i \u003c curPi; i++  {\n        Gia_ManAppendCi(pGia);\n    }\n    for  i = 0; i \u003c nBoxFaninMax; i++  {\n        Gia_ManAppendCi(pHoles);\n    }\n    Gia_ManHashAlloc( pGia );\n    Gia_ManHashAlloc( pHoles );\n\n    // construct the timing manager\n    pTim = Tim_ManStart( curPi, curPo );\n\n    // assign primary inputs\n    curPi = 0;\n    curPo = 0;\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.iTemp = Abc_Var2Lit( Gia_ObjId(pGia, Gia_ManCi(pGia, curPi++)), 0 );\n    }\n    // create internal nodes in a topologic order from white boxes\n    vGiaCoLits = Vec_IntAlloc( 1000 );\n    vGiaCoLits2 = Vec_IntAlloc( 1000 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if !pObj.fMarkA { // not a white box\n        \n            pObj.iTemp = Abc_NtkTestTimNodeStrash( pGia, pObj );\n            continue;\n        }\n        // create box\n        BoxUniqueId = Abc_ObjFaninNum(pObj); // in this case, the node size is the ID of its delay table\n        Tim_ManCreateBox( pTim, curPo, Abc_ObjFaninNum(pObj), curPi, 1, BoxUniqueId, 0 );\n        curPo += Abc_ObjFaninNum(pObj);\n\n        // handle box inputs\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            // save CO drivers for the AIG\n            Vec_IntPush( vGiaCoLits, pFanin.iTemp );\n            // load CI nodes for the Holes\n            pFanin.iTemp = Abc_Var2Lit( Gia_ObjId(pHoles, Gia_ManCi(pHoles, k)), 0 );\n        }\n\n        // handle logic of the box\n        pObj.iTemp = Abc_NtkTestTimNodeStrash( pHoles, pObj );\n\n        // handle box outputs\n        // save CO drivers for the Holes\n        Vec_IntPush( vGiaCoLits2, pObj.iTemp );\n//        Gia_ManAppendCo( pHoles, pObj-\u003eiTemp );\n        // load CO drivers for the AIG\n        pObj.iTemp = Abc_Var2Lit( Gia_ObjId(pGia, Gia_ManCi(pGia, curPi++)), 0 );\n    }\n    }\n    Abc_NtkCleanMarkA( pNtk );\n    // create COs of the AIG\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Gia_ManAppendCo( pGia, Abc_ObjFanin0(pObj).iTemp );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vGiaCoLits)) \u0026\u0026 (((Entry) = Vec_IntEntry(vGiaCoLits, i)), 1); i++  {\n        Gia_ManAppendCo( pGia, Entry );\n    }\n    Vec_IntFree( vGiaCoLits );\n    // second AIG\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vGiaCoLits2)) \u0026\u0026 (((Entry) = Vec_IntEntry(vGiaCoLits2, i)), 1); i++  {\n        Gia_ManAppendCo( pHoles, Entry );\n    }\n    Vec_IntFree( vGiaCoLits2 );\n    // check parameters\n    curPo += Abc_NtkPoNum( pNtk );\n    assert(curPi == Gia_ManPiNum(pGia), \"curPi == Gia_ManPiNum(pGia)\");\n    assert(curPo == Gia_ManPoNum(pGia), \"curPo == Gia_ManPoNum(pGia)\");\n    // finalize GIA\n    Gia_ManHashStop( pGia );\n    Gia_ManSetRegNum( pGia, 0 );\n    Gia_ManHashStop( pHoles );\n    Gia_ManSetRegNum( pHoles, 0 );\n\n    // clean up GIA\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    pHoles = Gia_ManCleanup( pTemp = pHoles );\n    Gia_ManStop( pTemp );\n\n    // attach the timing manager\n    assert(pGia.pManTime == nil, \"pGia.pManTime == nil\");\n    pGia.pManTime = pTim;\n\n    // derive hierarchy manager from box info and input/output arrival/required info\n    vArrTimes = Abc_NtkTestCreateArrivals( Abc_NtkPiNum(pNtk) );\n    vReqTimes = Abc_NtkTestCreateRequired( Abc_NtkPoNum(pNtk) );\n\n    Tim_ManPrint( (Tim_Man_t *)pGia.pManTime );\n    Tim_ManCreate( (Tim_Man_t *)pGia.pManTime, Abc_FrameReadLibBox(), vArrTimes, vReqTimes );\n    Tim_ManPrint( (Tim_Man_t *)pGia.pManTime );\n\n    Vec_FltFree( vArrTimes );\n    Vec_FltFree( vReqTimes );\n\nGia_AigerWrite( pHoles, \"holes00.aig\", 0, 0, 0 );\n\n    // return \n    pGia.pAigExtra = pHoles;\n    return pGia;\n}"
+    },
+    {
+      "Name": "Abc_NtkTestTimPerformSynthesis",
+      "Start": 13036,
+      "End": 13535,
+      "BodyStart": 13110,
+      "Original": "Gia_Man_t * Abc_NtkTestTimPerformSynthesis( Gia_Man_t * p, int fChoices )\n{\n    Gia_Man_t * pGia;\n    Aig_Man_t * pNew, * pTemp;\n    Dch_Pars_t Pars, * pPars = \u0026Pars;\n    Dch_ManSetDefaultParams( pPars );\n    pNew = Gia_ManToAig( p, 0 );\n    if ( fChoices )\n        pNew = Dar_ManChoiceNew( pNew, pPars );\n    else\n    {\n        pNew = Dar_ManCompress2( pTemp = pNew, 1, 1, 1, 0, 0 );\n        Aig_ManStop( pTemp );\n    }\n    pGia = Gia_ManFromAig( pNew );\n    Aig_ManStop( pNew );\n    return pGia;\n}",
+      "Draft": "func Abc_NtkTestTimPerformSynthesis(p *Gia_Man_t, fChoices int32) *Gia_Man_t {\n    var pGia *Gia_Man_t;\n    var pNew, pTemp *Aig_Man_t;\n    var Pars Dch_Pars_t;\n    var pPars *Dch_Pars_t = \u0026Pars;\n    Dch_ManSetDefaultParams( pPars );\n    pNew = Gia_ManToAig( p, 0 );\n    if fChoices != 0 {\n        pNew = Dar_ManChoiceNew( pNew, pPars );\n    } else {\n        pNew = Dar_ManCompress2( pTemp = pNew, 1, 1, 1, 0, 0 );\n        Aig_ManStop( pTemp );\n    }\n    pGia = Gia_ManFromAig( pNew );\n    Aig_ManStop( pNew );\n    return pGia;\n}"
+    },
+    {
+      "Name": "Gia_ManVerifyChoices",
+      "Start": 13771,
+      "End": 15091,
+      "BodyStart": 13814,
+      "Original": "void Gia_ManVerifyChoices( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i, iRepr, iNode, fProb = 0;\n    assert( p-\u003epReprs );\n\n    // mark nodes \n    Gia_ManCleanMark0(p);\n    Gia_ManForEachClass( p, iRepr )\n        Gia_ClassForEachObj1( p, iRepr, iNode )\n        {\n            if ( Gia_ObjIsHead(p, iNode) )\n                printf( \"Member %d of choice class %d is a representative.\\n\", iNode, iRepr ), fProb = 1;\n            if ( Gia_ManObj( p, iNode )-\u003efMark0 == 1 )\n                printf( \"Node %d participates in more than one choice node.\\n\", iNode ), fProb = 1;\n            Gia_ManObj( p, iNode )-\u003efMark0 = 1;\n        }\n    Gia_ManCleanMark0(p);\n\n    Gia_ManForEachObj( p, pObj, i )\n    {\n        if ( Gia_ObjIsAnd(pObj) )\n        {\n            if ( Gia_ObjHasRepr(p, Gia_ObjFaninId0(pObj, i)) )\n                printf( \"Fanin 0 of AND node %d has a repr.\\n\", i ), fProb = 1;\n            if ( Gia_ObjHasRepr(p, Gia_ObjFaninId1(pObj, i)) )\n                printf( \"Fanin 1 of AND node %d has a repr.\\n\", i ), fProb = 1;\n        }\n        else if ( Gia_ObjIsCo(pObj) )\n        {\n            if ( Gia_ObjHasRepr(p, Gia_ObjFaninId0(pObj, i)) )\n                printf( \"Fanin 0 of CO node %d has a repr.\\n\", i ), fProb = 1;\n        }\n    }\n//    if ( !fProb )\n//        printf( \"GIA with choices is correct.\\n\" );\n}",
+      "Draft": "func Gia_ManVerifyChoices(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i, iRepr, iNode, fProb int32;\n    assert(p.pReprs, \"p.pReprs\");\n\n    // mark nodes \n    Gia_ManCleanMark0(p);\n    // inlining of macro Gia_ManForEachClass\n    for  iRepr = 1; iRepr \u003c Gia_ManObjNum(p); iRepr++  { if !Gia_ObjIsHead(p, iRepr) {} else {\n        // inlining of macro Gia_ClassForEachObj1\n        for  assert(Gia_ObjIsHead(p, iRepr), \"Gia_ObjIsHead(p, iRepr)\"), iNode = Gia_ObjNext(p, iRepr); iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {\n            if Gia_ObjIsHead(p, iNode) {\n                fmt.Printf(\"Member %d of choice class %d is a representative.\\n\", iNode, iRepr);\nfProb = 1; }\n            if Gia_ManObj( p, iNode ).fMark0 == 1 {\n                fmt.Printf(\"Node %d participates in more than one choice node.\\n\", iNode);\nfProb = 1; }\n            Gia_ManObj( p, iNode ).fMark0 = 1;\n        } }\n    }\n    Gia_ManCleanMark0(p);\n\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            if Gia_ObjHasRepr(p, Gia_ObjFaninId0(pObj, i)) {\n                fmt.Printf(\"Fanin 0 of AND node %d has a repr.\\n\", i);\nfProb = 1; }\n            if Gia_ObjHasRepr(p, Gia_ObjFaninId1(pObj, i)) {\n                fmt.Printf(\"Fanin 1 of AND node %d has a repr.\\n\", i);\nfProb = 1; }\n        \n        } else if Gia_ObjIsCo(pObj) {\n            if Gia_ObjHasRepr(p, Gia_ObjFaninId0(pObj, i)) {\n                fmt.Printf(\"Fanin 0 of CO node %d has a repr.\\n\", i);\nfProb = 1; }\n        }\n    }\n//    if ( !fProb )\n//        printf( \"GIA with choices is correct.\\n\" );\n}"
+    },
+    {
+      "Name": "Gia_ManReverseClasses",
+      "Start": 15422,
+      "End": 17024,
+      "BodyStart": 15486,
+      "Original": "void Gia_ManReverseClasses( Gia_Man_t * p, int fNowIncreasing )\n{\n    Vec_Int_t * vCollected;\n    Vec_Int_t * vClass;\n    int i, k, iRepr, iNode, iPrev;\n    // collect classes\n    vCollected = Vec_IntAlloc( 100 );\n    Gia_ManForEachClass( p, iRepr )\n        Vec_IntPush( vCollected, iRepr );\n    // correct each class\n    vClass = Vec_IntAlloc( 100 );\n    Vec_IntForEachEntry( vCollected, iRepr, i )\n    {\n        Vec_IntClear( vClass );\n        Vec_IntPush( vClass, iRepr );\n        Gia_ClassForEachObj1( p, iRepr, iNode )\n        {\n            if ( fNowIncreasing )\n                assert( iRepr \u003c iNode );\n            else\n                assert( iRepr \u003e iNode );\n            Vec_IntPush( vClass, iNode );\n        }\n//        if ( !fNowIncreasing )\n//            Vec_IntSort( vClass, 1 );\n        // reverse the class\n        iPrev = 0;\n        iRepr = Vec_IntEntryLast( vClass );\n        Vec_IntForEachEntry( vClass, iNode, k )\n        {\n            if ( fNowIncreasing )\n                Gia_ObjSetReprRev( p, iNode, iNode == iRepr ? GIA_VOID : iRepr );\n            else\n                Gia_ObjSetRepr( p, iNode, iNode == iRepr ? GIA_VOID : iRepr );\n            Gia_ObjSetNext( p, iNode, iPrev );\n            iPrev = iNode;\n        }\n    }\n    Vec_IntFree( vCollected );\n    Vec_IntFree( vClass );\n    // verify\n    Gia_ManForEachClass( p, iRepr )\n        Gia_ClassForEachObj1( p, iRepr, iNode )\n            if ( fNowIncreasing )\n                assert( Gia_ObjRepr(p, iNode) == iRepr \u0026\u0026 iRepr \u003e iNode );\n            else\n                assert( Gia_ObjRepr(p, iNode) == iRepr \u0026\u0026 iRepr \u003c iNode );\n}",
+      "Draft": "func Gia_ManReverseClasses(p *Gia_Man_t, fNowIncreasing int32) {\n    var vCollected *Vec_Int_t;\n    var vClass *Vec_Int_t;\n    var i, k, iRepr, iNode, iPrev int32;\n    // collect classes\n    vCollected = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachClass\n    for  iRepr = 1; iRepr \u003c Gia_ManObjNum(p); iRepr++  { if !Gia_ObjIsHead(p, iRepr) {} else {\n        Vec_IntPush( vCollected, iRepr ); }\n    }\n    // correct each class\n    vClass = Vec_IntAlloc( 100 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCollected)) \u0026\u0026 (((iRepr) = Vec_IntEntry(vCollected, i)), 1); i++  {\n        Vec_IntClear( vClass );\n        Vec_IntPush( vClass, iRepr );\n        // inlining of macro Gia_ClassForEachObj1\n        for  assert(Gia_ObjIsHead(p, iRepr), \"Gia_ObjIsHead(p, iRepr)\"), iNode = Gia_ObjNext(p, iRepr); iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {\n            if fNowIncreasing != 0 {\n                assert(iRepr \u003c iNode, \"iRepr \u003c iNode\");\n            } else {\n                assert(iRepr \u003e iNode, \"iRepr \u003e iNode\"); }\n            Vec_IntPush( vClass, iNode );\n        }\n//        if ( !fNowIncreasing )\n//            Vec_IntSort( vClass, 1 );\n        // reverse the class\n        iPrev = 0;\n        iRepr = Vec_IntEntryLast( vClass );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vClass)) \u0026\u0026 (((iNode) = Vec_IntEntry(vClass, k)), 1); k++  {\n            if fNowIncreasing != 0 {\n                Gia_ObjSetReprRev( p, iNode, iNode == iRepr ? GIA_VOID : iRepr );\n            } else {\n                Gia_ObjSetRepr( p, iNode, iNode == iRepr ? GIA_VOID : iRepr ); }\n            Gia_ObjSetNext( p, iNode, iPrev );\n            iPrev = iNode;\n        }\n    }\n    Vec_IntFree( vCollected );\n    Vec_IntFree( vClass );\n    // verify\n    // inlining of macro Gia_ManForEachClass\n    for  iRepr = 1; iRepr \u003c Gia_ManObjNum(p); iRepr++  { if !Gia_ObjIsHead(p, iRepr) {} else {\n        // inlining of macro Gia_ClassForEachObj1\n        for  assert(Gia_ObjIsHead(p, iRepr), \"Gia_ObjIsHead(p, iRepr)\"), iNode = Gia_ObjNext(p, iRepr); iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {\n            if fNowIncreasing != 0 {\n                assert(Gia_ObjRepr(p, iNode) == iRepr \u0026\u0026 iRepr \u003e iNode, \"Gia_ObjRepr(p, iNode) == iRepr \u0026\u0026 iRepr \u003e iNode\");\n            } else {\n                assert(Gia_ObjRepr(p, iNode) == iRepr \u0026\u0026 iRepr \u003c iNode, \"Gia_ObjRepr(p, iNode) == iRepr \u0026\u0026 iRepr \u003c iNode\"); }\n        } }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkTestTimByWritingFile",
+      "Start": 17295,
+      "End": 18089,
+      "BodyStart": 17366,
+      "Original": "void Abc_NtkTestTimByWritingFile( Gia_Man_t * pGia, char * pFileName )\n{\n    Gia_Man_t * pGia2;\n\n    // normalize choices\n    if ( Gia_ManHasChoices(pGia) )\n    {\n        Gia_ManVerifyChoices( pGia );\n        Gia_ManReverseClasses( pGia, 0 );\n    }\n    // write file\n    Gia_AigerWrite( pGia, pFileName, 0, 0, 0 );\n    // unnormalize choices\n    if ( Gia_ManHasChoices(pGia) )\n        Gia_ManReverseClasses( pGia, 1 );\n\n    // read file\n    pGia2 = Gia_AigerRead( pFileName, 0, 1, 1 );\n\n    // normalize choices\n    if ( Gia_ManHasChoices(pGia2) )\n    {\n        Gia_ManVerifyChoices( pGia2 );\n        Gia_ManReverseClasses( pGia2, 1 );\n    }\n\n    // compare resulting managers\n    if ( Gia_ManCompare( pGia, pGia2 ) )\n        printf( \"Verification suceessful.\\n\" );\n\n    Gia_ManStop( pGia2 );\n}",
+      "Draft": "func Abc_NtkTestTimByWritingFile(pGia *Gia_Man_t, pFileName string) {\n    var pGia2 *Gia_Man_t;\n\n    // normalize choices\n    if Gia_ManHasChoices(pGia) {\n        Gia_ManVerifyChoices( pGia );\n        Gia_ManReverseClasses( pGia, 0 );\n    }\n    // write file\n    Gia_AigerWrite( pGia, pFileName, 0, 0, 0 );\n    // unnormalize choices\n    if Gia_ManHasChoices(pGia) {\n        Gia_ManReverseClasses( pGia, 1 ); }\n\n    // read file\n    pGia2 = Gia_AigerRead( pFileName, 0, 1, 1 );\n\n    // normalize choices\n    if Gia_ManHasChoices(pGia2) {\n        Gia_ManVerifyChoices( pGia2 );\n        Gia_ManReverseClasses( pGia2, 1 );\n    }\n\n    // compare resulting managers\n    if Gia_ManCompare( pGia, pGia2 ) {\n        fmt.Printf(\"Verification suceessful.\\n\"); }\n\n    Gia_ManStop( pGia2 );\n}"
+    },
+    {
+      "Name": "Abc_NtkTestTim",
+      "Start": 18362,
+      "End": 19532,
+      "BodyStart": 18416,
+      "Original": "void Abc_NtkTestTim( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    int fUseChoices = 0;\n    Gia_Man_t * pGia, * pTemp;\n\n    // this test only works for a logic network (for example, network with LUT mapping)\n    assert( Abc_NtkIsLogic(pNtk) );\n    // make sure local functions of the nodes are in the AIG form\n    Abc_NtkToAig( pNtk );\n\n    // create GIA manager (pGia) with hierarhy/timing manager attached (pGia-\u003epManTime)\n    // while assuming that some nodes are white boxes (see Abc_NodeIsWhiteBox)\n    pGia = Abc_NtkTestTimDeriveGia( pNtk, fVerbose );\n    printf( \"Created GIA manager for network with %d white boxes.\\n\", Tim_ManBoxNum((Tim_Man_t *)pGia-\u003epManTime) );\n\n    // print the timing manager\n    if ( fVerbose )\n        Tim_ManPrint( (Tim_Man_t *)pGia-\u003epManTime );\n\n    // test writing both managers into a file and reading them back\n    Abc_NtkTestTimByWritingFile( pGia, \"test1.aig\" );\n\n    // perform synthesis\n    pGia = Abc_NtkTestTimPerformSynthesis( pTemp = pGia, fUseChoices );\n    Gia_ManStop( pTemp );\n\n    // test writing both managers into a file and reading them back\n    Abc_NtkTestTimByWritingFile( pGia, \"test2.aig\" );\n\n    Gia_ManStop( pGia );\n}",
+      "Draft": "func Abc_NtkTestTim(pNtk *Abc_Ntk_t, fVerbose int32) {\n    var fUseChoices int32;\n    var pGia, pTemp *Gia_Man_t;\n\n    // this test only works for a logic network (for example, network with LUT mapping)\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // make sure local functions of the nodes are in the AIG form\n    Abc_NtkToAig( pNtk );\n\n    // create GIA manager (pGia) with hierarhy/timing manager attached (pGia-\u003epManTime)\n    // while assuming that some nodes are white boxes (see Abc_NodeIsWhiteBox)\n    pGia = Abc_NtkTestTimDeriveGia( pNtk, fVerbose );\n    fmt.Printf(\"Created GIA manager for network with %d white boxes.\\n\", Tim_ManBoxNum((Tim_Man_t *)pGia.pManTime));\n\n    // print the timing manager\n    if fVerbose != 0 {\n        Tim_ManPrint( (Tim_Man_t *)pGia.pManTime ); }\n\n    // test writing both managers into a file and reading them back\n    Abc_NtkTestTimByWritingFile( pGia, \"test1.aig\" );\n\n    // perform synthesis\n    pGia = Abc_NtkTestTimPerformSynthesis( pTemp = pGia, fUseChoices );\n    Gia_ManStop( pTemp );\n\n    // test writing both managers into a file and reading them back\n    Abc_NtkTestTimByWritingFile( pGia, \"test2.aig\" );\n\n    Gia_ManStop( pGia );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::pointer-cast::2532",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2532,
+      "End": 2545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::pointer-cast::2580",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2580,
+      "End": 2593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::pointer-cast::13586",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12394,
+      "End": 12407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::pointer-cast::13636",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12444,
+      "End": 12457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::pointer-cast::13730",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12538,
+      "End": 12551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::pointer-cast::21225",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18997,
+      "End": 19010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::pointer-cast::21332",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19104,
+      "End": 19117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::Abc_NodeIsWhiteBox",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeIsWhiteBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1022,
+      "End": 1223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::Abc_NtkTestTimNodeStrash_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestTimNodeStrash_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1740,
+      "End": 2231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::Abc_NtkTestTimNodeStrash",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestTimNodeStrash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2232,
+      "End": 3166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::Abc_NtkTestTimCollectCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestTimCollectCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6288,
+      "End": 6713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::Abc_NtkTestTimCollectCone",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestTimCollectCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6714,
+      "End": 7361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::Abc_NtkTestCreateArrivals",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestCreateArrivals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7617,
+      "End": 7826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::Abc_NtkTestCreateRequired",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestCreateRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7827,
+      "End": 8040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::Abc_NtkTestTimDeriveGia",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestTimDeriveGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8331,
+      "End": 12745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::Abc_NtkTestTimPerformSynthesis",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestTimPerformSynthesis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13036,
+      "End": 13535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::Gia_ManVerifyChoices",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManVerifyChoices",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13771,
+      "End": 15091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::ternary::Gia_ManReverseClasses",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManReverseClasses",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15422,
+      "End": 17024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::Gia_ManReverseClasses",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManReverseClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15422,
+      "End": 17024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::Abc_NtkTestTimByWritingFile",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestTimByWritingFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17295,
+      "End": 18089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::Abc_NtkTestTim",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestTim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18362,
+      "End": 19532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcTim.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19782
+    }
+  ],
+  "Draft": "package abci\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [abcTim.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Testing hierarchy/timing manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcTim.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"aig/gia/giaAig.h\"\n//#include \"misc/tim/tim.h\"\n//#include \"opt/dar/dar.h\"\n//#include \"proof/dch/dch.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst TIM_TEST_BOX_RATIO = 200\n\n// assume that every TIM_TEST_BOX_RATIO'th object is a white box\nfunc Abc_NodeIsWhiteBox(pObj *Abc_Obj_t) int32 { assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\"); return Abc_ObjId(pObj) % TIM_TEST_BOX_RATIO == 0 \u0026\u0026 Abc_ObjFaninNum(pObj) \u003e 0 \u0026\u0026 Abc_ObjFaninNum(pObj) \u003c 10; }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Derives GIA for the output of the local function of one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestTimNodeStrash_rec(pGia *Gia_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_NtkTestTimNodeStrash_rec( pGia, Hop_ObjFanin0(pObj) ); \n    Abc_NtkTestTimNodeStrash_rec( pGia, Hop_ObjFanin1(pObj) );\n    pObj.iData = Gia_ManHashAnd( pGia, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}\nfunc Abc_NtkTestTimNodeStrash(pGia *Gia_Man_t, pNode *Abc_Obj_t) int32 {\n    var pMan *Hop_Man_t;\n    var pRoot *Hop_Obj_t;\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    assert(Abc_NtkIsAigLogic(pNode.pNtk), \"Abc_NtkIsAigLogic(pNode.pNtk)\");\n    // get the local AIG manager and the local root node\n    pMan = (Hop_Man_t *)pNode.pNtk.pManFunc;\n    pRoot = (Hop_Obj_t *)pNode.pData;\n    // check the constant case\n    if Abc_NodeIsConst(pNode) || Hop_Regular(pRoot) == Hop_ManConst1(pMan) {\n        return !Hop_IsComplement(pRoot); }\n    // set elementary variables\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Hop_IthVar(pMan, i).iData = pFanin.iTemp;\n    }\n    // strash the AIG of this node\n    Abc_NtkTestTimNodeStrash_rec( pGia, Hop_Regular(pRoot) );\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    // return the final node with complement if needed\n    return Abc_LitNotCond( Hop_Regular(pRoot).iData, Hop_IsComplement(pRoot) );\n}\n\n\n      \n\n                                                                        \n\n                                                                                \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                                        \n \n                      \n                            \n                       \n                               \n                          \n                            \n                                   \n                         \n                    \n                            \n                                                  \n                             \n                            \n                                     \n                                            \n                                                                  \n                                   \n                                                       \n     \n                     \n                                                         \n         \n                                                   \n                                                      \n                                \n                                                  \n                                                                                 \n         \n                                   \n                                                             \n                      \n                                                         \n         \n                                                   \n                                                      \n                                 \n                                                                         \n         \n     \n                          \n                             \n                                     \n                                                                          \n                   \n                            \n                                \n                   \n                                          \n                         \n                \n \n\n                                                                        \n\n                \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                           \n \n                     \n                                     \n                                                                    \n                                               \n                        \n                                                                                                \n                                       \n \n\n      \n\n/**Function*************************************************************\n\n  Synopsis    [Collect nodes reachable from this box.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestTimCollectCone_rec(pObj *Abc_Obj_t, vNodes *Vec_Ptr_t) {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    if Abc_NodeIsTravIdCurrent( pObj ) {\n        return; }\n    Abc_NodeSetTravIdCurrent( pObj );\n    if Abc_ObjIsCi(pObj) {\n        return; }\n    assert(Abc_ObjIsNode( pObj ), \"Abc_ObjIsNode( pObj )\");\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        Abc_NtkTestTimCollectCone_rec( pFanin, vNodes );\n    }\n    Vec_PtrPush( vNodes, pObj );\n}\nfunc Abc_NtkTestTimCollectCone(pNtk *Abc_Ntk_t, pObj *Abc_Obj_t) *Vec_Ptr_t {\n    var vCone *Vec_Ptr_t  = Vec_PtrAlloc( 1000 );\n    if pObj != nil {\n        // collect for one node\n        assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n        assert(!Abc_NodeIsTravIdCurrent( pObj ), \"!Abc_NodeIsTravIdCurrent( pObj )\");\n        Abc_NtkTestTimCollectCone_rec( pObj, vCone );\n        // remove the node because it is a white box\n        Vec_PtrPop( vCone );\n    \n    } else {\n        // collect for all COs\n        var pObj *Abc_Obj_t;\n        var i int32;\n        // inlining of macro Abc_NtkForEachCo\n        for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n            Abc_NtkTestTimCollectCone_rec( Abc_ObjFanin0(pObj), vCone );\n        }\n    }\n    return vCone;\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create arrival times]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestCreateArrivals(nInputs int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    var i int32;\n    p = Vec_FltAlloc( nInputs );\n    for  i = 0; i \u003c nInputs; i++  {\n        Vec_FltPush( p, 1.0*(i % 10) );\n    }\n    return p;\n}\nfunc Abc_NtkTestCreateRequired(nOutputs int32) *Vec_Flt_t {\n    var p *Vec_Flt_t;\n    var i int32;\n    p = Vec_FltAlloc( nOutputs );\n    for  i = 0; i \u003c nOutputs; i++  {\n        Vec_FltPush( p, 100.0 + 1.0*i );\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives GIA manager together with the hierachy manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestTimDeriveGia(pNtk *Abc_Ntk_t, fVerbose int32) *Gia_Man_t {\n    var pTemp *Gia_Man_t;\n    var pGia *Gia_Man_t  = nil;\n    var pHoles *Gia_Man_t  = nil;\n    var pTim *Tim_Man_t  = nil;\n    var vGiaCoLits, vGiaCoLits2 *Vec_Int_t;\n    var vArrTimes, vReqTimes *Vec_Flt_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k, Entry, curPi, curPo, BoxUniqueId int32;\n    var nBoxFaninMax int32;\n    assert(Abc_NtkIsTopo(pNtk), \"Abc_NtkIsTopo(pNtk)\");\n    Abc_NtkFillTemp( pNtk );\n\n    // create white boxes\n    curPi = Abc_NtkCiNum(pNtk);\n    curPo = Abc_NtkCoNum(pNtk);\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        pObj.fMarkA = Abc_NodeIsWhiteBox( pObj );\n        if !pObj.fMarkA {\n            continue; }\n        nBoxFaninMax  = Abc_MaxInt( nBoxFaninMax, Abc_ObjFaninNum(pObj) );\n        curPi++;\n        curPo += Abc_ObjFaninNum(pObj);\n        if fVerbose != 0 {\n            fmt.Printf(\"Selecting node %6d as white boxes with %d inputs and %d output.\\n\", i, Abc_ObjFaninNum(pObj), 1); }\n    }\n    }\n\n    // construct GIA\n    pGia = Gia_ManStart( Abc_NtkObjNumMax(pNtk) );\n    pHoles = Gia_ManStart( 1000 );\n    for  i = 0; i \u003c curPi; i++  {\n        Gia_ManAppendCi(pGia);\n    }\n    for  i = 0; i \u003c nBoxFaninMax; i++  {\n        Gia_ManAppendCi(pHoles);\n    }\n    Gia_ManHashAlloc( pGia );\n    Gia_ManHashAlloc( pHoles );\n\n    // construct the timing manager\n    pTim = Tim_ManStart( curPi, curPo );\n\n    // assign primary inputs\n    curPi = 0;\n    curPo = 0;\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.iTemp = Abc_Var2Lit( Gia_ObjId(pGia, Gia_ManCi(pGia, curPi++)), 0 );\n    }\n    // create internal nodes in a topologic order from white boxes\n    vGiaCoLits = Vec_IntAlloc( 1000 );\n    vGiaCoLits2 = Vec_IntAlloc( 1000 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if !pObj.fMarkA { // not a white box\n        \n            pObj.iTemp = Abc_NtkTestTimNodeStrash( pGia, pObj );\n            continue;\n        }\n        // create box\n        BoxUniqueId = Abc_ObjFaninNum(pObj); // in this case, the node size is the ID of its delay table\n        Tim_ManCreateBox( pTim, curPo, Abc_ObjFaninNum(pObj), curPi, 1, BoxUniqueId, 0 );\n        curPo += Abc_ObjFaninNum(pObj);\n\n        // handle box inputs\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            // save CO drivers for the AIG\n            Vec_IntPush( vGiaCoLits, pFanin.iTemp );\n            // load CI nodes for the Holes\n            pFanin.iTemp = Abc_Var2Lit( Gia_ObjId(pHoles, Gia_ManCi(pHoles, k)), 0 );\n        }\n\n        // handle logic of the box\n        pObj.iTemp = Abc_NtkTestTimNodeStrash( pHoles, pObj );\n\n        // handle box outputs\n        // save CO drivers for the Holes\n        Vec_IntPush( vGiaCoLits2, pObj.iTemp );\n//        Gia_ManAppendCo( pHoles, pObj-\u003eiTemp );\n        // load CO drivers for the AIG\n        pObj.iTemp = Abc_Var2Lit( Gia_ObjId(pGia, Gia_ManCi(pGia, curPi++)), 0 );\n    }\n    }\n    Abc_NtkCleanMarkA( pNtk );\n    // create COs of the AIG\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Gia_ManAppendCo( pGia, Abc_ObjFanin0(pObj).iTemp );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vGiaCoLits)) \u0026\u0026 (((Entry) = Vec_IntEntry(vGiaCoLits, i)), 1); i++  {\n        Gia_ManAppendCo( pGia, Entry );\n    }\n    Vec_IntFree( vGiaCoLits );\n    // second AIG\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vGiaCoLits2)) \u0026\u0026 (((Entry) = Vec_IntEntry(vGiaCoLits2, i)), 1); i++  {\n        Gia_ManAppendCo( pHoles, Entry );\n    }\n    Vec_IntFree( vGiaCoLits2 );\n    // check parameters\n    curPo += Abc_NtkPoNum( pNtk );\n    assert(curPi == Gia_ManPiNum(pGia), \"curPi == Gia_ManPiNum(pGia)\");\n    assert(curPo == Gia_ManPoNum(pGia), \"curPo == Gia_ManPoNum(pGia)\");\n    // finalize GIA\n    Gia_ManHashStop( pGia );\n    Gia_ManSetRegNum( pGia, 0 );\n    Gia_ManHashStop( pHoles );\n    Gia_ManSetRegNum( pHoles, 0 );\n\n    // clean up GIA\n    pGia = Gia_ManCleanup( pTemp = pGia );\n    Gia_ManStop( pTemp );\n    pHoles = Gia_ManCleanup( pTemp = pHoles );\n    Gia_ManStop( pTemp );\n\n    // attach the timing manager\n    assert(pGia.pManTime == nil, \"pGia.pManTime == nil\");\n    pGia.pManTime = pTim;\n\n    // derive hierarchy manager from box info and input/output arrival/required info\n    vArrTimes = Abc_NtkTestCreateArrivals( Abc_NtkPiNum(pNtk) );\n    vReqTimes = Abc_NtkTestCreateRequired( Abc_NtkPoNum(pNtk) );\n\n    Tim_ManPrint( (Tim_Man_t *)pGia.pManTime );\n    Tim_ManCreate( (Tim_Man_t *)pGia.pManTime, Abc_FrameReadLibBox(), vArrTimes, vReqTimes );\n    Tim_ManPrint( (Tim_Man_t *)pGia.pManTime );\n\n    Vec_FltFree( vArrTimes );\n    Vec_FltFree( vReqTimes );\n\nGia_AigerWrite( pHoles, \"holes00.aig\", 0, 0, 0 );\n\n    // return \n    pGia.pAigExtra = pHoles;\n    return pGia;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs synthesis with or without structural choices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestTimPerformSynthesis(p *Gia_Man_t, fChoices int32) *Gia_Man_t {\n    var pGia *Gia_Man_t;\n    var pNew, pTemp *Aig_Man_t;\n    var Pars Dch_Pars_t;\n    var pPars *Dch_Pars_t = \u0026Pars;\n    Dch_ManSetDefaultParams( pPars );\n    pNew = Gia_ManToAig( p, 0 );\n    if fChoices != 0 {\n        pNew = Dar_ManChoiceNew( pNew, pPars );\n    } else {\n        pNew = Dar_ManCompress2( pTemp = pNew, 1, 1, 1, 0, 0 );\n        Aig_ManStop( pTemp );\n    }\n    pGia = Gia_ManFromAig( pNew );\n    Aig_ManStop( pNew );\n    return pGia;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManVerifyChoices(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i, iRepr, iNode, fProb int32;\n    assert(p.pReprs, \"p.pReprs\");\n\n    // mark nodes \n    Gia_ManCleanMark0(p);\n    // inlining of macro Gia_ManForEachClass\n    for  iRepr = 1; iRepr \u003c Gia_ManObjNum(p); iRepr++  { if !Gia_ObjIsHead(p, iRepr) {} else {\n        // inlining of macro Gia_ClassForEachObj1\n        for  assert(Gia_ObjIsHead(p, iRepr), \"Gia_ObjIsHead(p, iRepr)\"), iNode = Gia_ObjNext(p, iRepr); iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {\n            if Gia_ObjIsHead(p, iNode) {\n                fmt.Printf(\"Member %d of choice class %d is a representative.\\n\", iNode, iRepr);\nfProb = 1; }\n            if Gia_ManObj( p, iNode ).fMark0 == 1 {\n                fmt.Printf(\"Node %d participates in more than one choice node.\\n\", iNode);\nfProb = 1; }\n            Gia_ManObj( p, iNode ).fMark0 = 1;\n        } }\n    }\n    Gia_ManCleanMark0(p);\n\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            if Gia_ObjHasRepr(p, Gia_ObjFaninId0(pObj, i)) {\n                fmt.Printf(\"Fanin 0 of AND node %d has a repr.\\n\", i);\nfProb = 1; }\n            if Gia_ObjHasRepr(p, Gia_ObjFaninId1(pObj, i)) {\n                fmt.Printf(\"Fanin 1 of AND node %d has a repr.\\n\", i);\nfProb = 1; }\n        \n        } else if Gia_ObjIsCo(pObj) {\n            if Gia_ObjHasRepr(p, Gia_ObjFaninId0(pObj, i)) {\n                fmt.Printf(\"Fanin 0 of CO node %d has a repr.\\n\", i);\nfProb = 1; }\n        }\n    }\n//    if ( !fProb )\n//        printf( \"GIA with choices is correct.\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reverse the order of nodes in equiv classes.]\n\n  Description [If the flag is 1, assumed current increasing order ]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManReverseClasses(p *Gia_Man_t, fNowIncreasing int32) {\n    var vCollected *Vec_Int_t;\n    var vClass *Vec_Int_t;\n    var i, k, iRepr, iNode, iPrev int32;\n    // collect classes\n    vCollected = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachClass\n    for  iRepr = 1; iRepr \u003c Gia_ManObjNum(p); iRepr++  { if !Gia_ObjIsHead(p, iRepr) {} else {\n        Vec_IntPush( vCollected, iRepr ); }\n    }\n    // correct each class\n    vClass = Vec_IntAlloc( 100 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCollected)) \u0026\u0026 (((iRepr) = Vec_IntEntry(vCollected, i)), 1); i++  {\n        Vec_IntClear( vClass );\n        Vec_IntPush( vClass, iRepr );\n        // inlining of macro Gia_ClassForEachObj1\n        for  assert(Gia_ObjIsHead(p, iRepr), \"Gia_ObjIsHead(p, iRepr)\"), iNode = Gia_ObjNext(p, iRepr); iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {\n            if fNowIncreasing != 0 {\n                assert(iRepr \u003c iNode, \"iRepr \u003c iNode\");\n            } else {\n                assert(iRepr \u003e iNode, \"iRepr \u003e iNode\"); }\n            Vec_IntPush( vClass, iNode );\n        }\n//        if ( !fNowIncreasing )\n//            Vec_IntSort( vClass, 1 );\n        // reverse the class\n        iPrev = 0;\n        iRepr = Vec_IntEntryLast( vClass );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vClass)) \u0026\u0026 (((iNode) = Vec_IntEntry(vClass, k)), 1); k++  {\n            if fNowIncreasing != 0 {\n                Gia_ObjSetReprRev( p, iNode, iNode == iRepr ? GIA_VOID : iRepr );\n            } else {\n                Gia_ObjSetRepr( p, iNode, iNode == iRepr ? GIA_VOID : iRepr ); }\n            Gia_ObjSetNext( p, iNode, iPrev );\n            iPrev = iNode;\n        }\n    }\n    Vec_IntFree( vCollected );\n    Vec_IntFree( vClass );\n    // verify\n    // inlining of macro Gia_ManForEachClass\n    for  iRepr = 1; iRepr \u003c Gia_ManObjNum(p); iRepr++  { if !Gia_ObjIsHead(p, iRepr) {} else {\n        // inlining of macro Gia_ClassForEachObj1\n        for  assert(Gia_ObjIsHead(p, iRepr), \"Gia_ObjIsHead(p, iRepr)\"), iNode = Gia_ObjNext(p, iRepr); iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {\n            if fNowIncreasing != 0 {\n                assert(Gia_ObjRepr(p, iNode) == iRepr \u0026\u0026 iRepr \u003e iNode, \"Gia_ObjRepr(p, iNode) == iRepr \u0026\u0026 iRepr \u003e iNode\");\n            } else {\n                assert(Gia_ObjRepr(p, iNode) == iRepr \u0026\u0026 iRepr \u003c iNode, \"Gia_ObjRepr(p, iNode) == iRepr \u0026\u0026 iRepr \u003c iNode\"); }\n        } }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Tests the hierarchy-timing manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestTimByWritingFile(pGia *Gia_Man_t, pFileName string) {\n    var pGia2 *Gia_Man_t;\n\n    // normalize choices\n    if Gia_ManHasChoices(pGia) {\n        Gia_ManVerifyChoices( pGia );\n        Gia_ManReverseClasses( pGia, 0 );\n    }\n    // write file\n    Gia_AigerWrite( pGia, pFileName, 0, 0, 0 );\n    // unnormalize choices\n    if Gia_ManHasChoices(pGia) {\n        Gia_ManReverseClasses( pGia, 1 ); }\n\n    // read file\n    pGia2 = Gia_AigerRead( pFileName, 0, 1, 1 );\n\n    // normalize choices\n    if Gia_ManHasChoices(pGia2) {\n        Gia_ManVerifyChoices( pGia2 );\n        Gia_ManReverseClasses( pGia2, 1 );\n    }\n\n    // compare resulting managers\n    if Gia_ManCompare( pGia, pGia2 ) {\n        fmt.Printf(\"Verification suceessful.\\n\"); }\n\n    Gia_ManStop( pGia2 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Tests construction and serialization.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestTim(pNtk *Abc_Ntk_t, fVerbose int32) {\n    var fUseChoices int32;\n    var pGia, pTemp *Gia_Man_t;\n\n    // this test only works for a logic network (for example, network with LUT mapping)\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // make sure local functions of the nodes are in the AIG form\n    Abc_NtkToAig( pNtk );\n\n    // create GIA manager (pGia) with hierarhy/timing manager attached (pGia-\u003epManTime)\n    // while assuming that some nodes are white boxes (see Abc_NodeIsWhiteBox)\n    pGia = Abc_NtkTestTimDeriveGia( pNtk, fVerbose );\n    fmt.Printf(\"Created GIA manager for network with %d white boxes.\\n\", Tim_ManBoxNum((Tim_Man_t *)pGia.pManTime));\n\n    // print the timing manager\n    if fVerbose != 0 {\n        Tim_ManPrint( (Tim_Man_t *)pGia.pManTime ); }\n\n    // test writing both managers into a file and reading them back\n    Abc_NtkTestTimByWritingFile( pGia, \"test1.aig\" );\n\n    // perform synthesis\n    pGia = Abc_NtkTestTimPerformSynthesis( pTemp = pGia, fUseChoices );\n    Gia_ManStop( pTemp );\n\n    // test writing both managers into a file and reading them back\n    Abc_NtkTestTimByWritingFile( pGia, \"test2.aig\" );\n\n    Gia_ManStop( pGia );\n}\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

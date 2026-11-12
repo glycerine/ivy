@@ -1,0 +1,100 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reo.h",
+  "SHA256": "6d4e54d0878ccfa478fdb71b343114d81f827dc84c57959419a7296fbd17c85e",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reo.h::struct::_reo_unit",
+      "Category": "struct-review",
+      "Symbol": "_reo_unit",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2449,
+      "End": 3201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reo.h::struct::_reo_plane",
+      "Category": "struct-review",
+      "Symbol": "_reo_plane",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3203,
+      "End": 3801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reo.h::struct::_reo_hash",
+      "Category": "struct-review",
+      "Symbol": "_reo_hash",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3803,
+      "End": 4067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reo.h::struct::_reo_man",
+      "Category": "struct-review",
+      "Symbol": "_reo_man",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4069,
+      "End": 6950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reo.h::mechanical::enum::1725",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1725,
+      "End": 1729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reo.h::macro::Unit_Regular",
+      "Category": "macro-review",
+      "Symbol": "Unit_Regular",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6980,
+      "End": 7048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reo.h::macro::Unit_Not",
+      "Category": "macro-review",
+      "Symbol": "Unit_Not",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7049,
+      "End": 7116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reo.h::macro::Unit_NotCond",
+      "Category": "macro-review",
+      "Symbol": "Unit_NotCond",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7117,
+      "End": 7185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reo.h::macro::Unit_IsConstant",
+      "Category": "macro-review",
+      "Symbol": "Unit_IsConstant",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7186,
+      "End": 7250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reo.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10708
+    }
+  ],
+  "Draft": "package reo\n\n/**CFile****************************************************************\n\n  FileName    [reo.h]\n\n  PackageName [REO: A specialized DD reordering engine.]\n\n  Synopsis    [External and internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 15, 2002.]\n\n  Revision    [$Id: reo.h,v 1.0 2002/15/10 03:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \"bdd/extrab/extraBdd.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                     MACRO DEFINITIONS                            ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n// reordering parameters\nconst REO_REORDER_LIMIT =      1.15  // determines the quality/runtime trade-off\nconst REO_QUAL_PAR =              3  // the quality [1 = simple lower bound, 2 = strict, larger = heuristic]\n// internal parameters\nconst REO_CONST_LEVEL =       30000  // the number of the constant level\nconst REO_TOPREF_UNDEF =      30000  // the undefined top reference\nconst REO_CHUNK_SIZE =         5000  // the number of units allocated at one time\nconst REO_COST_EPSILON =  0.0000001  // difference in cost large enough so that it counted as an error\nconst REO_HIGH_VALUE =     10000000  // a large value used to initialize some variables\n// interface parameters\nconst REO_ENABLE =                1  // the value of the enable flag\nconst REO_DISABLE =               0  // the value of the disable flag\n\n// the types of minimization currently supported\n type reo_min_type int32\nconst (\n    REO_MINIMIZE_NODES reo_min_type = iota\n\n    REO_MINIMIZE_WIDTH\n   // may not work for BDDs with complemented edges\n    REO_MINIMIZE_APL\n\n)\n\n \n\n////////////////////////////////////////////////////////////////////////\n///                      DATA STRUCTURES                             ///\n////////////////////////////////////////////////////////////////////////\n\ntype reo_unit =     _reo_unit;    // the unit representing one DD node during reordering\ntype reo_plane =    _reo_plane;   // the set of nodes on one level\ntype reo_hash =     _reo_hash;    // the entry in the hash table\ntype reo_man =      _reo_man;     // the reordering manager\ntype reo_test =     _reo_test;    // \n\ntype _reo_unit struct {\n    lev       int16;             // the level of this node at the beginning\n    TopRef       int16;          // the top level from which this node is refed (used to update BDD width)\n    TopRefNew       int16;       // the new top level from which this node is refed (used to update BDD width)\n    n       int16;               // the number of incoming edges (similar to ref count in the BDD)\n    Sign         int32;            // the signature\n\n    pE   *reo_unit;              // the pointer to the \"else\" branch\n    pT   *reo_unit;              // the pointer to the \"then\" branch\n    Next   *reo_unit;            // the link to the next one in the list\n    Weight      float64;          // the probability of traversing this node\n}\n\ntype _reo_plane struct {\n    fSifted         int32;         // to mark the sifted variables\n    statsNodes         int32;      // the number of nodes in the current level\n    statsWidth         int32;      // the width on the current level\n    statsApl      float64;        // the sum of node probabilities on this level\n    statsCost      float64;       // the current cost is stored here\n    statsCostAbove      float64;  // the current cost is stored here\n    statsCostBelow      float64;  // the current cost is stored here\n\n    pHead   *reo_unit;           // the pointer to the beginning of the unit list\n}\n\ntype _reo_hash struct {\n    Sign         int32;            // signature of the current cache operation\n    Arg1   *reo_unit;            // the first argument\n    Arg2   *reo_unit;            // the second argument\n    Arg3   *reo_unit;            // the third argument\n}\n\ntype _reo_man struct {\n    // these paramaters can be set by the API functions\n    fMinWidth         int32;       // the flag to enable reordering for minimum width\n    fMinApl         int32;         // the flag to enable reordering for minimum APL\n    fVerbose         int32;        // the verbosity level\n    fVerify         int32;         // the flag toggling verification\n    fRemapUp         int32;        // the flag to enable remapping   \n    nIters         int32;          // the number of iterations of sifting to perform\n\n    // parameters given by the user when reordering is called\n    dd  *DdManager;              // the CUDD BDD manager\n    pOrder        *int32;          // the resulting variable order will be returned here\n\n    // derived parameters\n    fThisIsAdd         int32;      // this flag is one if the function is the ADD \n    pSupp        *int32;           // the support of the given function\n    nSuppAlloc         int32;      // the max allowed number of support variables\n    nSupp         int32;           // the number of support variables\n    pOrderInt        *int32;       // the array storing the internal variable permutation\n    pVarCosts     *float64;       // other arrays\n    pLevelOrder        *int32;     // other arrays\n    pWidthCofs  **reo_unit;      // temporary storage for cofactors used during reordering for width\n\n    // parameters related to cost\n    nNodesBeg         int32;\n    nNodesCur         int32;\n    nNodesEnd         int32;\n    nWidthCur         int32;\n    nWidthBeg         int32;\n    nWidthEnd         int32;\n    nAplCur      float64;\n    nAplBeg      float64;\n    nAplEnd      float64;\n\n    // mapping of the function into planes and back\n    pMapToPlanes        *int32;    // the mapping of var indexes into plane levels\n    pMapToDdVarsOrig        *int32;// the mapping of plane levels into the original indexes\n    pMapToDdVarsFinal        *int32;// the mapping of plane levels into the final indexes\n\n    // the planes table\n    pPlanes  *reo_plane;\n    nPlanes         int32;\n    pTops  **reo_unit;\n    nTops         int32;\n    nTopsAlloc         int32;\n\n    // the hash table\n    HTable   *reo_hash;           // the table itself\n    nTableSize         int32;       // the size of the hash table\n    Signature         int32;        // the signature counter\n\n    // the referenced node list\n    nNodesMaxAlloc         int32;   // this parameters determins how much memory is allocated\n    pRefNodes    **DdNode;\n    nRefNodes         int32;\n    nRefNodesAlloc         int32;\n\n    // unit memory management\n    pUnitFreeList   *reo_unit;\n    pMemChunks  **reo_unit;\n    nMemChunks         int32;\n    nMemChunksAlloc         int32;\n    nUnitsUsed         int32;\n\n    // statistic variables\n    HashSuccess         int32;\n    HashFailure         int32;\n    nSwaps         int32;            // the number of swaps\n    nNISwaps         int32;          // the number of swaps without interaction\n}\n\n// used to manipulate units\n// Original macro:\n// #define Unit_Regular(u)     ((reo_unit *)((ABC_PTRUINT_T)(u) \u0026 ~01))\n\n// Original macro:\n// #define Unit_Not(u)         ((reo_unit *)((ABC_PTRUINT_T)(u) ^ 01))\n\n// Original macro:\n// #define Unit_NotCond(u,c)   ((reo_unit *)((ABC_PTRUINT_T)(u) ^ (c)))\n\n// Original macro:\n// #define Unit_IsConstant(u)  ((int)((u)-\u003elev == REO_CONST_LEVEL))\n\n\n////////////////////////////////////////////////////////////////////////\n///                   FUNCTION DECLARATIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n// ======================= reoApi.c ========================================\n// extern reo_man *  Extra_ReorderInit( int nDdVarsMax, int nNodesMax );\n\n// extern void       Extra_ReorderQuit( reo_man * p );\n\n// extern void       Extra_ReorderSetMinimizationType( reo_man * p, reo_min_type fMinType );\n\n// extern void       Extra_ReorderSetRemapping( reo_man * p, int fRemapUp );\n\n// extern void       Extra_ReorderSetIterations( reo_man * p, int nIters );\n\n// extern void       Extra_ReorderSetVerbosity( reo_man * p, int fVerbose );\n\n// extern void       Extra_ReorderSetVerification( reo_man * p, int fVerify );\n\n// extern DdNode *   Extra_Reorder( reo_man * p, DdManager * dd, DdNode * Func, int * pOrder );\n\n// extern void       Extra_ReorderArray( reo_man * p, DdManager * dd, DdNode * Funcs[], DdNode * FuncsRes[], int nFuncs, int * pOrder );\n\n// ======================= reoCore.c =======================================\n// extern void       reoReorderArray( reo_man * p, DdManager * dd, DdNode * Funcs[], DdNode * FuncsRes[], int nFuncs, int * pOrder );\n\n// extern void       reoResizeStructures( reo_man * p, int nDdVarsMax, int nNodesMax, int nFuncs );\n\n// ======================= reoProfile.c ======================================\n// extern void       reoProfileNodesStart( reo_man * p );\n\n// extern void       reoProfileAplStart( reo_man * p );\n\n// extern void       reoProfileWidthStart( reo_man * p );\n\n// extern void       reoProfileWidthStart2( reo_man * p );\n\n// extern void       reoProfileAplPrint( reo_man * p );\n\n// extern void       reoProfileNodesPrint( reo_man * p );\n\n// extern void       reoProfileWidthPrint( reo_man * p );\n\n// extern void       reoProfileWidthVerifyLevel( reo_plane * pPlane, int Level );\n\n// ======================= reoSift.c =======================================\n// extern void       reoReorderSift( reo_man * p );\n\n// ======================= reoSwap.c =======================================\n// extern double     reoReorderSwapAdjacentVars( reo_man * p, int Level, int fMovingUp );\n\n// ======================= reoTransfer.c ===================================\n// extern reo_unit * reoTransferNodesToUnits_rec( reo_man * p, DdNode * F );\n\n// extern DdNode *   reoTransferUnitsToNodes_rec( reo_man * p, reo_unit * pUnit );\n\n// ======================= reoUnits.c ======================================\n// extern reo_unit * reoUnitsGetNextUnit(reo_man * p );\n\n// extern void       reoUnitsRecycleUnit( reo_man * p, reo_unit * pUnit );\n\n// extern void       reoUnitsRecycleUnitList( reo_man * p, reo_plane * pPlane );\n\n// extern void       reoUnitsAddUnitToPlane( reo_plane * pPlane, reo_unit * pUnit );\n\n// extern void       reoUnitsStopDispenser( reo_man * p );\n\n// ======================= reoTest.c =======================================\n// extern void       Extra_ReorderTest( DdManager * dd, DdNode * Func );\n\n// extern DdNode *   Extra_ReorderCudd( DdManager * dd, DdNode * aFunc, int pPermuteReo[] );\n\n// extern int        Extra_bddReorderTest( DdManager * dd, DdNode * bF );\n \n// extern int        Extra_addReorderTest( DdManager * dd, DdNode * aF );\n \n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                         END OF FILE                              ///\n////////////////////////////////////////////////////////////////////////\n"
+}

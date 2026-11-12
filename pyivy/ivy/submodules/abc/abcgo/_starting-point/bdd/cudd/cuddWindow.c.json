@@ -1,0 +1,822 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c",
+  "SHA256": "0e5f9fd3a4887c7aacb25e06b6495d82165f79339bc0dc1e2a657d65af9f465e",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 14,
+        "ByteOffset": 9323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    events = ABC_ALLOC(int,nwin);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 272,
+        "Column": 21,
+        "ByteOffset": 9759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    ABC_FREE(events);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 278,
+        "Column": 25,
+        "ByteOffset": 10020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        ABC_FREE(events);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 296,
+        "Column": 5,
+        "ByteOffset": 10558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(events);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 453,
+        "Column": 14,
+        "ByteOffset": 15112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    events = ABC_ALLOC(int,nwin);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 490,
+        "Column": 21,
+        "ByteOffset": 16322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    ABC_FREE(events);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 502,
+        "Column": 5,
+        "ByteOffset": 16636
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(events);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 832,
+        "Column": 14,
+        "ByteOffset": 26903
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    events = ABC_ALLOC(int,nwin);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 911,
+        "Column": 21,
+        "ByteOffset": 29729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    ABC_FREE(events);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 923,
+        "Column": 5,
+        "ByteOffset": 30043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(events);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 87,
+        "Column": 1,
+        "ByteOffset": 3474
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 91,
+        "Column": 1,
+        "ByteOffset": 3587
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 150,
+        "Column": 1,
+        "ByteOffset": 6079
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 169,
+        "Column": 1,
+        "ByteOffset": 6587
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 180,
+        "Column": 1,
+        "ByteOffset": 7028
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 224,
+        "Column": 1,
+        "ByteOffset": 8313
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 239,
+        "Column": 1,
+        "ByteOffset": 8749
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 280,
+        "Column": 1,
+        "ByteOffset": 9724
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 320,
+        "Column": 1,
+        "ByteOffset": 10926
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 330,
+        "Column": 1,
+        "ByteOffset": 11190
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 369,
+        "Column": 1,
+        "ByteOffset": 12179
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 434,
+        "Column": 1,
+        "ByteOffset": 13816
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 465,
+        "Column": 1,
+        "ByteOffset": 14550
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 474,
+        "Column": 1,
+        "ByteOffset": 14787
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 514,
+        "Column": 1,
+        "ByteOffset": 15756
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 562,
+        "Column": 1,
+        "ByteOffset": 17239
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 572,
+        "Column": 1,
+        "ByteOffset": 17503
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 609,
+        "Column": 1,
+        "ByteOffset": 18368
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 835,
+        "Column": 1,
+        "ByteOffset": 25665
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 866,
+        "Column": 1,
+        "ByteOffset": 26399
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 875,
+        "Column": 1,
+        "ByteOffset": 26636
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 915,
+        "Column": 1,
+        "ByteOffset": 27606
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1005,
+        "Column": 1,
+        "ByteOffset": 30737
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 1015,
+        "Column": 1,
+        "ByteOffset": 31002
+      },
+      "Directive": "#ifdef DD_STATS"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "cuddWindowReorder",
+      "Start": 5856,
+      "End": 7437,
+      "BodyStart": 6063,
+      "Original": "int\ncuddWindowReorder(\n  DdManager * table /* DD table */,\n  int low /* lowest index to reorder */,\n  int high /* highest index to reorder */,\n  Cudd_ReorderingType submethod /* window reordering option */)\n{\n\n    int res;\n#ifdef DD_DEBUG\n    int supposedOpt;\n#endif\n\n    switch (submethod) {\n    case CUDD_REORDER_WINDOW2:\n        res = ddWindow2(table,low,high);\n        break;\n    case CUDD_REORDER_WINDOW3:\n        res = ddWindow3(table,low,high);\n        break;\n    case CUDD_REORDER_WINDOW4:\n        res = ddWindow4(table,low,high);\n        break;\n    case CUDD_REORDER_WINDOW2_CONV:\n        res = ddWindowConv2(table,low,high);\n        break;\n    case CUDD_REORDER_WINDOW3_CONV:\n        res = ddWindowConv3(table,low,high);\n#ifdef DD_DEBUG\n        supposedOpt = table-\u003ekeys - table-\u003eisolated;\n        res = ddWindow3(table,low,high);\n        if (table-\u003ekeys - table-\u003eisolated != (unsigned) supposedOpt) {\n            (void) fprintf(table-\u003eerr, \"Convergence failed! (%d != %d)\\n\",\n                           table-\u003ekeys - table-\u003eisolated, supposedOpt);\n        }\n#endif\n        break;\n    case CUDD_REORDER_WINDOW4_CONV:\n        res = ddWindowConv4(table,low,high);\n#ifdef DD_DEBUG\n        supposedOpt = table-\u003ekeys - table-\u003eisolated;\n        res = ddWindow4(table,low,high);\n        if (table-\u003ekeys - table-\u003eisolated != (unsigned) supposedOpt) {\n            (void) fprintf(table-\u003eerr,\"Convergence failed! (%d != %d)\\n\",\n                           table-\u003ekeys - table-\u003eisolated, supposedOpt);\n        }\n#endif\n        break;\n    default: return(0);\n    }\n\n    return(res);\n\n}",
+      "Draft": "int\ncuddWindowReorder(\n  DdManager * table /* DD table */,\n  int low /* lowest index to reorder */,\n  int high /* highest index to reorder */,\n  Cudd_ReorderingType submethod /* window reordering option */)\n{\n\n    var res int32;\n#ifdef DD_DEBUG\n    int supposedOpt;\n#endif\n\n    switch submethod {\n    case CUDD_REORDER_WINDOW2:\n        res = ddWindow2(table,low,high);\n        break;\n    case CUDD_REORDER_WINDOW3:\n        res = ddWindow3(table,low,high);\n        break;\n    case CUDD_REORDER_WINDOW4:\n        res = ddWindow4(table,low,high);\n        break;\n    case CUDD_REORDER_WINDOW2_CONV:\n        res = ddWindowConv2(table,low,high);\n        break;\n    case CUDD_REORDER_WINDOW3_CONV:\n        res = ddWindowConv3(table,low,high);\n#ifdef DD_DEBUG\n        supposedOpt = table-\u003ekeys - table-\u003eisolated;\n        res = ddWindow3(table,low,high);\n        if (table-\u003ekeys - table-\u003eisolated != (unsigned) supposedOpt) {\n            (void) fprintf(table-\u003eerr, \"Convergence failed! (%d != %d)\\n\",\n                           table-\u003ekeys - table-\u003eisolated, supposedOpt);\n        }\n#endif\n        break;\n    case CUDD_REORDER_WINDOW4_CONV:\n        res = ddWindowConv4(table,low,high);\n#ifdef DD_DEBUG\n        supposedOpt = table-\u003ekeys - table-\u003eisolated;\n        res = ddWindow4(table,low,high);\n        if (table-\u003ekeys - table-\u003eisolated != (unsigned) supposedOpt) {\n            (void) fprintf(table-\u003eerr,\"Convergence failed! (%d != %d)\\n\",\n                           table-\u003ekeys - table-\u003eisolated, supposedOpt);\n        }\n#endif\n        break;\n    default: return(0);\n    }\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "ddWindow2",
+      "Start": 8203,
+      "End": 8965,
+      "BodyStart": 8271,
+      "Original": "static int\nddWindow2(\n  DdManager * table,\n  int  low,\n  int  high)\n{\n\n    int x;\n    int res;\n    int size;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if (high-low \u003c 1) return(0);\n\n    res = table-\u003ekeys - table-\u003eisolated;\n    for (x = low; x \u003c high; x++) {\n        size = res;\n        res = cuddSwapInPlace(table,x,x+1);\n        if (res == 0) return(0);\n        if (res \u003e= size) { /* no improvement: undo permutation */\n            res = cuddSwapInPlace(table,x,x+1);\n            if (res == 0) return(0);\n        }\n#ifdef DD_STATS\n        if (res \u003c size) {\n            (void) fprintf(table-\u003eout,\"-\");\n        } else {\n            (void) fprintf(table-\u003eout,\"=\");\n        }\n        fflush(table-\u003eout);\n#endif\n    }\n\n    return(1);\n\n}",
+      "Draft": "func ddWindow2(table *DdManager, low int32, high int32) int32 {\n\n    var x int32;\n    var res int32;\n    var size int32;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if high-low \u003c 1 { return(0); }\n\n    res = table.keys - table.isolated;\n    for x = low; x \u003c high; x++ {\n        size = res;\n        res = cuddSwapInPlace(table,x,x+1);\n        if res == 0 { return(0); }\n        if res \u003e= size { /* no improvement: undo permutation */\n            res = cuddSwapInPlace(table,x,x+1);\n            if res == 0 { return(0); }\n        }\n#ifdef DD_STATS\n        if (res \u003c size) {\n            (void) fprintf(table-\u003eout,\"-\");\n        } else {\n            (void) fprintf(table-\u003eout,\"=\");\n        }\n        fflush(table-\u003eout);\n#endif\n    }\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "ddWindowConv2",
+      "Start": 9562,
+      "End": 11388,
+      "BodyStart": 9634,
+      "Original": "static int\nddWindowConv2(\n  DdManager * table,\n  int  low,\n  int  high)\n{\n    int x;\n    int res;\n    int nwin;\n    int newevent;\n    int *events;\n    int size;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if (high-low \u003c 1) return(ddWindowConv2(table,low,high));\n\n    nwin = high-low;\n    events = ABC_ALLOC(int,nwin);\n    if (events == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for (x=0; x\u003cnwin; x++) {\n        events[x] = 1;\n    }\n\n    res = table-\u003ekeys - table-\u003eisolated;\n    do {\n        newevent = 0;\n        for (x=0; x\u003cnwin; x++) {\n            if (events[x]) {\n                size = res;\n                res = cuddSwapInPlace(table,x+low,x+low+1);\n                if (res == 0) {\n                    ABC_FREE(events);\n                    return(0);\n                }\n                if (res \u003e= size) { /* no improvement: undo permutation */\n                    res = cuddSwapInPlace(table,x+low,x+low+1);\n                    if (res == 0) {\n                        ABC_FREE(events);\n                        return(0);\n                    }\n                }\n                if (res \u003c size) {\n                    if (x \u003c nwin-1)     events[x+1] = 1;\n                    if (x \u003e 0)          events[x-1] = 1;\n                    newevent = 1;\n                }\n                events[x] = 0;\n#ifdef DD_STATS\n                if (res \u003c size) {\n                    (void) fprintf(table-\u003eout,\"-\");\n                } else {\n                    (void) fprintf(table-\u003eout,\"=\");\n                }\n                fflush(table-\u003eout);\n#endif\n            }\n        }\n#ifdef DD_STATS\n        if (newevent) {\n            (void) fprintf(table-\u003eout,\"|\");\n            fflush(table-\u003eout);\n        }\n#endif\n    } while (newevent);\n\n    ABC_FREE(events);\n\n    return(1);\n\n}",
+      "Draft": "func ddWindowConv2(table *DdManager, low int32, high int32) int32 {\n    var x int32;\n    var res int32;\n    var nwin int32;\n    var newevent int32;\n    var events *int32;\n    var size int32;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if high-low \u003c 1 { return(ddWindowConv2(table,low,high)); }\n\n    nwin = high-low;\n    events = ABC_ALLOC(int,nwin);\n    if events == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for x=0; x\u003cnwin; x++ {\n        events[x] = 1;\n    }\n\n    res = table.keys - table.isolated;\n    for {\n        newevent = 0;\n        for x=0; x\u003cnwin; x++ {\n            if events[x] {\n                size = res;\n                res = cuddSwapInPlace(table,x+low,x+low+1);\n                if res == 0 {\n                    ABC_FREE(events);\n                    return(0);\n                }\n                if res \u003e= size { /* no improvement: undo permutation */\n                    res = cuddSwapInPlace(table,x+low,x+low+1);\n                    if res == 0 {\n                        ABC_FREE(events);\n                        return(0);\n                    }\n                }\n                if res \u003c size {\n                    if x \u003c nwin-1 {     events[x+1] = 1; }\n                    if x \u003e 0 {          events[x-1] = 1; }\n                    newevent = 1;\n                }\n                events[x] = 0;\n#ifdef DD_STATS\n                if (res \u003c size) {\n                    (void) fprintf(table-\u003eout,\"-\");\n                } else {\n                    (void) fprintf(table-\u003eout,\"=\");\n                }\n                fflush(table-\u003eout);\n#endif\n            }\n        }\n#ifdef DD_STATS\n        if (newevent) {\n            (void) fprintf(table-\u003eout,\"|\");\n            fflush(table-\u003eout);\n        }\n#endif\n    \nif !((newevent != 0)) { break }\n} \n\n    ABC_FREE(events);\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "ddPermuteWindow3",
+      "Start": 12067,
+      "End": 13922,
+      "BodyStart": 12127,
+      "Original": "static int\nddPermuteWindow3(\n  DdManager * table,\n  int  x)\n{\n    int y,z;\n    int size,sizeNew;\n    int best;\n\n#ifdef DD_DEBUG\n    assert(table-\u003edead == 0);\n    assert(x+2 \u003c table-\u003esize);\n#endif\n\n    size = table-\u003ekeys - table-\u003eisolated;\n    y = x+1; z = y+1;\n\n    /* The permutation pattern is:\n    ** (x,y)(y,z)\n    ** repeated three times to get all 3! = 6 permutations.\n    */\n#define ABC 1\n    best = ABC;\n\n#define BAC 2\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if (sizeNew \u003c size) {\n        if (sizeNew == 0) return(0);\n        best = BAC;\n        size = sizeNew;\n    }\n#define BCA 3\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if (sizeNew \u003c size) {\n        if (sizeNew == 0) return(0);\n        best = BCA;\n        size = sizeNew;\n    }\n#define CBA 4\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if (sizeNew \u003c size) {\n        if (sizeNew == 0) return(0);\n        best = CBA;\n        size = sizeNew;\n    }\n#define CAB 5\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if (sizeNew \u003c size) {\n        if (sizeNew == 0) return(0);\n        best = CAB;\n        size = sizeNew;\n    }\n#define ACB 6\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if (sizeNew \u003c size) {\n        if (sizeNew == 0) return(0);\n        best = ACB;\n        size = sizeNew;\n    }\n\n    /* Now take the shortest route to the best permuytation.\n    ** The initial permutation is ACB.\n    */\n    switch(best) {\n    case BCA: if (!cuddSwapInPlace(table,y,z)) return(0);\n    case CBA: if (!cuddSwapInPlace(table,x,y)) return(0);\n    case ABC: if (!cuddSwapInPlace(table,y,z)) return(0);\n    case ACB: break;\n    case BAC: if (!cuddSwapInPlace(table,y,z)) return(0);\n    case CAB: if (!cuddSwapInPlace(table,x,y)) return(0);\n               break;\n    default: return(0);\n    }\n\n#ifdef DD_DEBUG\n    assert(table-\u003ekeys - table-\u003eisolated == (unsigned) size);\n#endif\n\n    return(best);\n\n}",
+      "Draft": "func ddPermuteWindow3(table *DdManager, x int32) int32 {\n    var y, z int32;\n    var size, sizeNew int32;\n    var best int32;\n\n#ifdef DD_DEBUG\n    assert(table-\u003edead == 0);\n    assert(x+2 \u003c table-\u003esize);\n#endif\n\n    size = table.keys - table.isolated;\n    y = x+1; z = y+1;\n\n    /* The permutation pattern is:\n    ** (x,y)(y,z)\n    ** repeated three times to get all 3! = 6 permutations.\n    */\nconst ABC = 1\n    best = ABC;\n\nconst BAC = 2\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = BAC;\n        size = sizeNew;\n    }\nconst BCA = 3\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = BCA;\n        size = sizeNew;\n    }\nconst CBA = 4\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = CBA;\n        size = sizeNew;\n    }\nconst CAB = 5\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = CAB;\n        size = sizeNew;\n    }\nconst ACB = 6\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = ACB;\n        size = sizeNew;\n    }\n\n    /* Now take the shortest route to the best permuytation.\n    ** The initial permutation is ACB.\n    */\n    switch best {\n    case BCA: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase CBA: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase ABC: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase ACB: break;\n    case BAC: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase CAB: if (!cuddSwapInPlace(table,x,y)) return(0);\n               break;\n    default: return(0);\n    }\n\n#ifdef DD_DEBUG\n    assert(table-\u003ekeys - table-\u003eisolated == (unsigned) size);\n#endif\n\n    return(best);\n\n}"
+    },
+    {
+      "Name": "ddWindow3",
+      "Start": 14454,
+      "End": 15003,
+      "BodyStart": 14522,
+      "Original": "static int\nddWindow3(\n  DdManager * table,\n  int  low,\n  int  high)\n{\n\n    int x;\n    int res;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if (high-low \u003c 2) return(ddWindow2(table,low,high));\n\n    for (x = low; x+1 \u003c high; x++) {\n        res = ddPermuteWindow3(table,x);\n        if (res == 0) return(0);\n#ifdef DD_STATS\n        if (res == ABC) {\n            (void) fprintf(table-\u003eout,\"=\");\n        } else {\n            (void) fprintf(table-\u003eout,\"-\");\n        }\n        fflush(table-\u003eout);\n#endif\n    }\n\n    return(1);\n\n}",
+      "Draft": "func ddWindow3(table *DdManager, low int32, high int32) int32 {\n\n    var x int32;\n    var res int32;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if high-low \u003c 2 { return(ddWindow2(table,low,high)); }\n\n    for x = low; x+1 \u003c high; x++ {\n        res = ddPermuteWindow3(table,x);\n        if res == 0 { return(0); }\n#ifdef DD_STATS\n        if (res == ABC) {\n            (void) fprintf(table-\u003eout,\"=\");\n        } else {\n            (void) fprintf(table-\u003eout,\"-\");\n        }\n        fflush(table-\u003eout);\n#endif\n    }\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "ddWindowConv3",
+      "Start": 15608,
+      "End": 17701,
+      "BodyStart": 15680,
+      "Original": "static int\nddWindowConv3(\n  DdManager * table,\n  int  low,\n  int  high)\n{\n    int x;\n    int res;\n    int nwin;\n    int newevent;\n    int *events;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if (high-low \u003c 2) return(ddWindowConv2(table,low,high));\n\n    nwin = high-low-1;\n    events = ABC_ALLOC(int,nwin);\n    if (events == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for (x=0; x\u003cnwin; x++) {\n        events[x] = 1;\n    }\n\n    do {\n        newevent = 0;\n        for (x=0; x\u003cnwin; x++) {\n            if (events[x]) {\n                res = ddPermuteWindow3(table,x+low);\n                switch (res) {\n                case ABC:\n                    break;\n                case BAC:\n                    if (x \u003c nwin-1)     events[x+1] = 1;\n                    if (x \u003e 1)          events[x-2] = 1;\n                    newevent = 1;\n                    break;\n                case BCA:\n                case CBA:\n                case CAB:\n                    if (x \u003c nwin-2)     events[x+2] = 1;\n                    if (x \u003c nwin-1)     events[x+1] = 1;\n                    if (x \u003e 0)          events[x-1] = 1;\n                    if (x \u003e 1)          events[x-2] = 1;\n                    newevent = 1;\n                    break;\n                case ACB:\n                    if (x \u003c nwin-2)     events[x+2] = 1;\n                    if (x \u003e 0)          events[x-1] = 1;\n                    newevent = 1;\n                    break;\n                default:\n                    ABC_FREE(events);\n                    return(0);\n                }\n                events[x] = 0;\n#ifdef DD_STATS\n                if (res == ABC) {\n                    (void) fprintf(table-\u003eout,\"=\");\n                } else {\n                    (void) fprintf(table-\u003eout,\"-\");\n                }\n                fflush(table-\u003eout);\n#endif\n            }\n        }\n#ifdef DD_STATS\n        if (newevent) {\n            (void) fprintf(table-\u003eout,\"|\");\n            fflush(table-\u003eout);\n        }\n#endif\n    } while (newevent);\n\n    ABC_FREE(events);\n\n    return(1);\n\n}",
+      "Draft": "func ddWindowConv3(table *DdManager, low int32, high int32) int32 {\n    var x int32;\n    var res int32;\n    var nwin int32;\n    var newevent int32;\n    var events *int32;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if high-low \u003c 2 { return(ddWindowConv2(table,low,high)); }\n\n    nwin = high-low-1;\n    events = ABC_ALLOC(int,nwin);\n    if events == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for x=0; x\u003cnwin; x++ {\n        events[x] = 1;\n    }\n\n    for {\n        newevent = 0;\n        for x=0; x\u003cnwin; x++ {\n            if events[x] {\n                res = ddPermuteWindow3(table,x+low);\n                switch res {\n                case ABC:\n                    break;\n                case BAC:\n                    if (x \u003c nwin-1)     events[x+1] = 1;\n                    if x \u003e 1 {          events[x-2] = 1; }\n                    newevent = 1;\n                    break;\n                case BCA,\n                 CBA,\n                 CAB:\n                    if (x \u003c nwin-2)     events[x+2] = 1;\n                    if x \u003c nwin-1 {     events[x+1] = 1; }\n                    if x \u003e 0 {          events[x-1] = 1; }\n                    if x \u003e 1 {          events[x-2] = 1; }\n                    newevent = 1;\n                    break;\n                case ACB:\n                    if (x \u003c nwin-2)     events[x+2] = 1;\n                    if x \u003e 0 {          events[x-1] = 1; }\n                    newevent = 1;\n                    break;\n                default:\n                    ABC_FREE(events);\n                    return(0);\n                }\n                events[x] = 0;\n#ifdef DD_STATS\n                if (res == ABC) {\n                    (void) fprintf(table-\u003eout,\"=\");\n                } else {\n                    (void) fprintf(table-\u003eout,\"-\");\n                }\n                fflush(table-\u003eout);\n#endif\n            }\n        }\n#ifdef DD_STATS\n        if (newevent) {\n            (void) fprintf(table-\u003eout,\"|\");\n            fflush(table-\u003eout);\n        }\n#endif\n    \nif !((newevent != 0)) { break }\n} \n\n    ABC_FREE(events);\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "ddPermuteWindow4",
+      "Start": 18254,
+      "End": 25771,
+      "BodyStart": 18314,
+      "Original": "static int\nddPermuteWindow4(\n  DdManager * table,\n  int  w)\n{\n    int x,y,z;\n    int size,sizeNew;\n    int best;\n\n#ifdef DD_DEBUG\n    assert(table-\u003edead == 0);\n    assert(w+3 \u003c table-\u003esize);\n#endif\n\n    size = table-\u003ekeys - table-\u003eisolated;\n    x = w+1; y = x+1; z = y+1;\n\n    /* The permutation pattern is:\n     * (w,x)(y,z)(w,x)(x,y)\n     * (y,z)(w,x)(y,z)(x,y)\n     * repeated three times to get all 4! = 24 permutations.\n     * This gives a hamiltonian circuit of Cayley's graph.\n     * The codes to the permutation are assigned in topological order.\n     * The permutations at lower distance from the final permutation are\n     * assigned lower codes. This way we can choose, between\n     * permutations that give the same size, one that requires the minimum\n     * number of swaps from the final permutation of the hamiltonian circuit.\n     * There is an exception to this rule: ABCD is given Code 1, to\n     * avoid oscillation when convergence is sought.\n     */\n#define ABCD 1\n    best = ABCD;\n\n#define BACD 7\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if (sizeNew \u003c size) {\n        if (sizeNew == 0) return(0);\n        best = BACD;\n        size = sizeNew;\n    }\n#define BADC 13\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if (sizeNew \u003c size) {\n        if (sizeNew == 0) return(0);\n        best = BADC;\n        size = sizeNew;\n    }\n#define ABDC 8\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 ABDC \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = ABDC;\n        size = sizeNew;\n    }\n#define ADBC 14\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if (sizeNew \u003c size) {\n        if (sizeNew == 0) return(0);\n        best = ADBC;\n        size = sizeNew;\n    }\n#define ADCB 9\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 ADCB \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = ADCB;\n        size = sizeNew;\n    }\n#define DACB 15\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if (sizeNew \u003c size) {\n        if (sizeNew == 0) return(0);\n        best = DACB;\n        size = sizeNew;\n    }\n#define DABC 20\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if (sizeNew \u003c size) {\n        if (sizeNew == 0) return(0);\n        best = DABC;\n        size = sizeNew;\n    }\n#define DBAC 23\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if (sizeNew \u003c size) {\n        if (sizeNew == 0) return(0);\n        best = DBAC;\n        size = sizeNew;\n    }\n#define BDAC 19\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 BDAC \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = BDAC;\n        size = sizeNew;\n    }\n#define BDCA 21\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 BDCA \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = BDCA;\n        size = sizeNew;\n    }\n#define DBCA 24\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if (sizeNew \u003c size) {\n        if (sizeNew == 0) return(0);\n        best = DBCA;\n        size = sizeNew;\n    }\n#define DCBA 22\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 DCBA \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = DCBA;\n        size = sizeNew;\n    }\n#define DCAB 18\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 DCAB \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = DCAB;\n        size = sizeNew;\n    }\n#define CDAB 12\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 CDAB \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = CDAB;\n        size = sizeNew;\n    }\n#define CDBA 17\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 CDBA \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = CDBA;\n        size = sizeNew;\n    }\n#define CBDA 11\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 CBDA \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = CBDA;\n        size = sizeNew;\n    }\n#define BCDA 16\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 BCDA \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = BCDA;\n        size = sizeNew;\n    }\n#define BCAD 10\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 BCAD \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = BCAD;\n        size = sizeNew;\n    }\n#define CBAD 5\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 CBAD \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = CBAD;\n        size = sizeNew;\n    }\n#define CABD 3\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 CABD \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = CABD;\n        size = sizeNew;\n    }\n#define CADB 6\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 CADB \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = CADB;\n        size = sizeNew;\n    }\n#define ACDB 4\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 ACDB \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = ACDB;\n        size = sizeNew;\n    }\n#define ACBD 2\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if (sizeNew \u003c size || (sizeNew == size \u0026\u0026 ACBD \u003c best)) {\n        if (sizeNew == 0) return(0);\n        best = ACBD;\n        size = sizeNew;\n    }\n\n    /* Now take the shortest route to the best permutation.\n    ** The initial permutation is ACBD.\n    */\n    switch(best) {\n    case DBCA: if (!cuddSwapInPlace(table,y,z)) return(0);\n    case BDCA: if (!cuddSwapInPlace(table,x,y)) return(0);\n    case CDBA: if (!cuddSwapInPlace(table,w,x)) return(0);\n    case ADBC: if (!cuddSwapInPlace(table,y,z)) return(0);\n    case ABDC: if (!cuddSwapInPlace(table,x,y)) return(0);\n    case ACDB: if (!cuddSwapInPlace(table,y,z)) return(0);\n    case ACBD: break;\n    case DCBA: if (!cuddSwapInPlace(table,y,z)) return(0);\n    case BCDA: if (!cuddSwapInPlace(table,x,y)) return(0);\n    case CBDA: if (!cuddSwapInPlace(table,w,x)) return(0);\n               if (!cuddSwapInPlace(table,x,y)) return(0);\n               if (!cuddSwapInPlace(table,y,z)) return(0);\n               break;\n    case DBAC: if (!cuddSwapInPlace(table,x,y)) return(0);\n    case DCAB: if (!cuddSwapInPlace(table,w,x)) return(0);\n    case DACB: if (!cuddSwapInPlace(table,y,z)) return(0);\n    case BACD: if (!cuddSwapInPlace(table,x,y)) return(0);\n    case CABD: if (!cuddSwapInPlace(table,w,x)) return(0);\n               break;\n    case DABC: if (!cuddSwapInPlace(table,y,z)) return(0);\n    case BADC: if (!cuddSwapInPlace(table,x,y)) return(0);\n    case CADB: if (!cuddSwapInPlace(table,w,x)) return(0);\n               if (!cuddSwapInPlace(table,y,z)) return(0);\n               break;\n    case BDAC: if (!cuddSwapInPlace(table,x,y)) return(0);\n    case CDAB: if (!cuddSwapInPlace(table,w,x)) return(0);\n    case ADCB: if (!cuddSwapInPlace(table,y,z)) return(0);\n    case ABCD: if (!cuddSwapInPlace(table,x,y)) return(0);\n               break;\n    case BCAD: if (!cuddSwapInPlace(table,x,y)) return(0);\n    case CBAD: if (!cuddSwapInPlace(table,w,x)) return(0);\n               if (!cuddSwapInPlace(table,x,y)) return(0);\n               break;\n    default: return(0);\n    }\n\n#ifdef DD_DEBUG\n    assert(table-\u003ekeys - table-\u003eisolated == (unsigned) size);\n#endif\n\n    return(best);\n\n}",
+      "Draft": "func ddPermuteWindow4(table *DdManager, w int32) int32 {\n    var x, y, z int32;\n    var size, sizeNew int32;\n    var best int32;\n\n#ifdef DD_DEBUG\n    assert(table-\u003edead == 0);\n    assert(w+3 \u003c table-\u003esize);\n#endif\n\n    size = table.keys - table.isolated;\n    x = w+1; y = x+1; z = y+1;\n\n    /* The permutation pattern is:\n     * (w,x)(y,z)(w,x)(x,y)\n     * (y,z)(w,x)(y,z)(x,y)\n     * repeated three times to get all 4! = 24 permutations.\n     * This gives a hamiltonian circuit of Cayley's graph.\n     * The codes to the permutation are assigned in topological order.\n     * The permutations at lower distance from the final permutation are\n     * assigned lower codes. This way we can choose, between\n     * permutations that give the same size, one that requires the minimum\n     * number of swaps from the final permutation of the hamiltonian circuit.\n     * There is an exception to this rule: ABCD is given Code 1, to\n     * avoid oscillation when convergence is sought.\n     */\nconst ABCD = 1\n    best = ABCD;\n\nconst BACD = 7\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = BACD;\n        size = sizeNew;\n    }\nconst BADC = 13\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = BADC;\n        size = sizeNew;\n    }\nconst ABDC = 8\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 ABDC \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = ABDC;\n        size = sizeNew;\n    }\nconst ADBC = 14\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = ADBC;\n        size = sizeNew;\n    }\nconst ADCB = 9\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 ADCB \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = ADCB;\n        size = sizeNew;\n    }\nconst DACB = 15\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = DACB;\n        size = sizeNew;\n    }\nconst DABC = 20\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = DABC;\n        size = sizeNew;\n    }\nconst DBAC = 23\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = DBAC;\n        size = sizeNew;\n    }\nconst BDAC = 19\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 BDAC \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = BDAC;\n        size = sizeNew;\n    }\nconst BDCA = 21\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 BDCA \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = BDCA;\n        size = sizeNew;\n    }\nconst DBCA = 24\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = DBCA;\n        size = sizeNew;\n    }\nconst DCBA = 22\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 DCBA \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = DCBA;\n        size = sizeNew;\n    }\nconst DCAB = 18\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 DCAB \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = DCAB;\n        size = sizeNew;\n    }\nconst CDAB = 12\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 CDAB \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = CDAB;\n        size = sizeNew;\n    }\nconst CDBA = 17\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 CDBA \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = CDBA;\n        size = sizeNew;\n    }\nconst CBDA = 11\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 CBDA \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = CBDA;\n        size = sizeNew;\n    }\nconst BCDA = 16\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 BCDA \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = BCDA;\n        size = sizeNew;\n    }\nconst BCAD = 10\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 BCAD \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = BCAD;\n        size = sizeNew;\n    }\nconst CBAD = 5\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 CBAD \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = CBAD;\n        size = sizeNew;\n    }\nconst CABD = 3\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 CABD \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = CABD;\n        size = sizeNew;\n    }\nconst CADB = 6\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 CADB \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = CADB;\n        size = sizeNew;\n    }\nconst ACDB = 4\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 ACDB \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = ACDB;\n        size = sizeNew;\n    }\nconst ACBD = 2\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 ACBD \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = ACBD;\n        size = sizeNew;\n    }\n\n    /* Now take the shortest route to the best permutation.\n    ** The initial permutation is ACBD.\n    */\n    switch best {\n    case DBCA: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase BDCA: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase CDBA: if (!cuddSwapInPlace(table,w,x)) return(0);\n    fallthrough\ncase ADBC: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase ABDC: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase ACDB: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase ACBD: break;\n    case DCBA: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase BCDA: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase CBDA: if (!cuddSwapInPlace(table,w,x)) return(0);\n               if !cuddSwapInPlace(table,x,y) { return(0); }\n               if !cuddSwapInPlace(table,y,z) { return(0); }\n               break;\n    case DBAC: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase DCAB: if (!cuddSwapInPlace(table,w,x)) return(0);\n    fallthrough\ncase DACB: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase BACD: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase CABD: if (!cuddSwapInPlace(table,w,x)) return(0);\n               break;\n    case DABC: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase BADC: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase CADB: if (!cuddSwapInPlace(table,w,x)) return(0);\n               if !cuddSwapInPlace(table,y,z) { return(0); }\n               break;\n    case BDAC: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase CDAB: if (!cuddSwapInPlace(table,w,x)) return(0);\n    fallthrough\ncase ADCB: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase ABCD: if (!cuddSwapInPlace(table,x,y)) return(0);\n               break;\n    case BCAD: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase CBAD: if (!cuddSwapInPlace(table,w,x)) return(0);\n               if !cuddSwapInPlace(table,x,y) { return(0); }\n               break;\n    default: return(0);\n    }\n\n#ifdef DD_DEBUG\n    assert(table-\u003ekeys - table-\u003eisolated == (unsigned) size);\n#endif\n\n    return(best);\n\n}"
+    },
+    {
+      "Name": "ddWindow4",
+      "Start": 26303,
+      "End": 26853,
+      "BodyStart": 26371,
+      "Original": "static int\nddWindow4(\n  DdManager * table,\n  int  low,\n  int  high)\n{\n\n    int w;\n    int res;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if (high-low \u003c 3) return(ddWindow3(table,low,high));\n\n    for (w = low; w+2 \u003c high; w++) {\n        res = ddPermuteWindow4(table,w);\n        if (res == 0) return(0);\n#ifdef DD_STATS\n        if (res == ABCD) {\n            (void) fprintf(table-\u003eout,\"=\");\n        } else {\n            (void) fprintf(table-\u003eout,\"-\");\n        }\n        fflush(table-\u003eout);\n#endif\n    }\n\n    return(1);\n\n}",
+      "Draft": "func ddWindow4(table *DdManager, low int32, high int32) int32 {\n\n    var w int32;\n    var res int32;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if high-low \u003c 3 { return(ddWindow3(table,low,high)); }\n\n    for w = low; w+2 \u003c high; w++ {\n        res = ddPermuteWindow4(table,w);\n        if res == 0 { return(0); }\n#ifdef DD_STATS\n        if (res == ABCD) {\n            (void) fprintf(table-\u003eout,\"=\");\n        } else {\n            (void) fprintf(table-\u003eout,\"-\");\n        }\n        fflush(table-\u003eout);\n#endif\n    }\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "ddWindowConv4",
+      "Start": 27458,
+      "End": 31200,
+      "BodyStart": 27530,
+      "Original": "static int\nddWindowConv4(\n  DdManager * table,\n  int  low,\n  int  high)\n{\n    int x;\n    int res;\n    int nwin;\n    int newevent;\n    int *events;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if (high-low \u003c 3) return(ddWindowConv3(table,low,high));\n\n    nwin = high-low-2;\n    events = ABC_ALLOC(int,nwin);\n    if (events == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for (x=0; x\u003cnwin; x++) {\n        events[x] = 1;\n    }\n\n    do {\n        newevent = 0;\n        for (x=0; x\u003cnwin; x++) {\n            if (events[x]) {\n                res = ddPermuteWindow4(table,x+low);\n                switch (res) {\n                case ABCD:\n                    break;\n                case BACD:\n                    if (x \u003c nwin-1)     events[x+1] = 1;\n                    if (x \u003e 2)          events[x-3] = 1;\n                    newevent = 1;\n                    break;\n                case BADC:\n                    if (x \u003c nwin-3)     events[x+3] = 1;\n                    if (x \u003c nwin-1)     events[x+1] = 1;\n                    if (x \u003e 0)          events[x-1] = 1;\n                    if (x \u003e 2)          events[x-3] = 1;\n                    newevent = 1;\n                    break;\n                case ABDC:\n                    if (x \u003c nwin-3)     events[x+3] = 1;\n                    if (x \u003e 0)          events[x-1] = 1;\n                    newevent = 1;\n                    break;\n                case ADBC:\n                case ADCB:\n                case ACDB:\n                    if (x \u003c nwin-3)     events[x+3] = 1;\n                    if (x \u003c nwin-2)     events[x+2] = 1;\n                    if (x \u003e 0)          events[x-1] = 1;\n                    if (x \u003e 1)          events[x-2] = 1;\n                    newevent = 1;\n                    break;\n                case DACB:\n                case DABC:\n                case DBAC:\n                case BDAC:\n                case BDCA:\n                case DBCA:\n                case DCBA:\n                case DCAB:\n                case CDAB:\n                case CDBA:\n                case CBDA:\n                case BCDA:\n                case CADB:\n                    if (x \u003c nwin-3)     events[x+3] = 1;\n                    if (x \u003c nwin-2)     events[x+2] = 1;\n                    if (x \u003c nwin-1)     events[x+1] = 1;\n                    if (x \u003e 0)          events[x-1] = 1;\n                    if (x \u003e 1)          events[x-2] = 1;\n                    if (x \u003e 2)          events[x-3] = 1;\n                    newevent = 1;\n                    break;\n                case BCAD:\n                case CBAD:\n                case CABD:\n                    if (x \u003c nwin-2)     events[x+2] = 1;\n                    if (x \u003c nwin-1)     events[x+1] = 1;\n                    if (x \u003e 1)          events[x-2] = 1;\n                    if (x \u003e 2)          events[x-3] = 1;\n                    newevent = 1;\n                    break;\n                case ACBD:\n                    if (x \u003c nwin-2)     events[x+2] = 1;\n                    if (x \u003e 1)          events[x-2] = 1;\n                    newevent = 1;\n                    break;\n                default:\n                    ABC_FREE(events);\n                    return(0);\n                }\n                events[x] = 0;\n#ifdef DD_STATS\n                if (res == ABCD) {\n                    (void) fprintf(table-\u003eout,\"=\");\n                } else {\n                    (void) fprintf(table-\u003eout,\"-\");\n                }\n                fflush(table-\u003eout);\n#endif\n            }\n        }\n#ifdef DD_STATS\n        if (newevent) {\n            (void) fprintf(table-\u003eout,\"|\");\n            fflush(table-\u003eout);\n        }\n#endif\n    } while (newevent);\n\n    ABC_FREE(events);\n\n    return(1);\n\n}",
+      "Draft": "func ddWindowConv4(table *DdManager, low int32, high int32) int32 {\n    var x int32;\n    var res int32;\n    var nwin int32;\n    var newevent int32;\n    var events *int32;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if high-low \u003c 3 { return(ddWindowConv3(table,low,high)); }\n\n    nwin = high-low-2;\n    events = ABC_ALLOC(int,nwin);\n    if events == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for x=0; x\u003cnwin; x++ {\n        events[x] = 1;\n    }\n\n    for {\n        newevent = 0;\n        for x=0; x\u003cnwin; x++ {\n            if events[x] {\n                res = ddPermuteWindow4(table,x+low);\n                switch res {\n                case ABCD:\n                    break;\n                case BACD:\n                    if (x \u003c nwin-1)     events[x+1] = 1;\n                    if x \u003e 2 {          events[x-3] = 1; }\n                    newevent = 1;\n                    break;\n                case BADC:\n                    if (x \u003c nwin-3)     events[x+3] = 1;\n                    if x \u003c nwin-1 {     events[x+1] = 1; }\n                    if x \u003e 0 {          events[x-1] = 1; }\n                    if x \u003e 2 {          events[x-3] = 1; }\n                    newevent = 1;\n                    break;\n                case ABDC:\n                    if (x \u003c nwin-3)     events[x+3] = 1;\n                    if x \u003e 0 {          events[x-1] = 1; }\n                    newevent = 1;\n                    break;\n                case ADBC,\n                 ADCB,\n                 ACDB:\n                    if (x \u003c nwin-3)     events[x+3] = 1;\n                    if x \u003c nwin-2 {     events[x+2] = 1; }\n                    if x \u003e 0 {          events[x-1] = 1; }\n                    if x \u003e 1 {          events[x-2] = 1; }\n                    newevent = 1;\n                    break;\n                case DACB,\n                 DABC,\n                 DBAC,\n                 BDAC,\n                 BDCA,\n                 DBCA,\n                 DCBA,\n                 DCAB,\n                 CDAB,\n                 CDBA,\n                 CBDA,\n                 BCDA,\n                 CADB:\n                    if (x \u003c nwin-3)     events[x+3] = 1;\n                    if x \u003c nwin-2 {     events[x+2] = 1; }\n                    if x \u003c nwin-1 {     events[x+1] = 1; }\n                    if x \u003e 0 {          events[x-1] = 1; }\n                    if x \u003e 1 {          events[x-2] = 1; }\n                    if x \u003e 2 {          events[x-3] = 1; }\n                    newevent = 1;\n                    break;\n                case BCAD,\n                 CBAD,\n                 CABD:\n                    if (x \u003c nwin-2)     events[x+2] = 1;\n                    if x \u003c nwin-1 {     events[x+1] = 1; }\n                    if x \u003e 1 {          events[x-2] = 1; }\n                    if x \u003e 2 {          events[x-3] = 1; }\n                    newevent = 1;\n                    break;\n                case ACBD:\n                    if (x \u003c nwin-2)     events[x+2] = 1;\n                    if x \u003e 1 {          events[x-2] = 1; }\n                    newevent = 1;\n                    break;\n                default:\n                    ABC_FREE(events);\n                    return(0);\n                }\n                events[x] = 0;\n#ifdef DD_STATS\n                if (res == ABCD) {\n                    (void) fprintf(table-\u003eout,\"=\");\n                } else {\n                    (void) fprintf(table-\u003eout,\"-\");\n                }\n                fflush(table-\u003eout);\n#endif\n            }\n        }\n#ifdef DD_STATS\n        if (newevent) {\n            (void) fprintf(table-\u003eout,\"|\");\n            fflush(table-\u003eout);\n        }\n#endif\n    \nif !((newevent != 0)) { break }\n} \n\n    ABC_FREE(events);\n\n    return(1);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::mechanical::do::9443",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 10108,
+      "End": 10110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::mechanical::do::15103",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 16101,
+      "End": 16103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::mechanical::do::26623",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 27951,
+      "End": 27953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::cuddWindowReorder",
+      "Category": "semantic-review",
+      "Symbol": "cuddWindowReorder",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5856,
+      "End": 7437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::ddWindow2",
+      "Category": "semantic-review",
+      "Symbol": "ddWindow2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8203,
+      "End": 8965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::ddWindowConv2",
+      "Category": "semantic-review",
+      "Symbol": "ddWindowConv2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9562,
+      "End": 11388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::ddPermuteWindow3",
+      "Category": "semantic-review",
+      "Symbol": "ddPermuteWindow3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12067,
+      "End": 13922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::ddWindow3",
+      "Category": "semantic-review",
+      "Symbol": "ddWindow3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14454,
+      "End": 15003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::ddWindowConv3",
+      "Category": "semantic-review",
+      "Symbol": "ddWindowConv3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15608,
+      "End": 17701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::ddPermuteWindow4",
+      "Category": "semantic-review",
+      "Symbol": "ddPermuteWindow4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18254,
+      "End": 25771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::ddWindow4",
+      "Category": "semantic-review",
+      "Symbol": "ddWindow4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26303,
+      "End": 26853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::ddWindowConv4",
+      "Category": "semantic-review",
+      "Symbol": "ddWindowConv4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27458,
+      "End": 31200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 31254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3474,
+      "End": 3585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3587,
+      "End": 3680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6079,
+      "End": 6122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6587,
+      "End": 6931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7028,
+      "End": 7371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8313,
+      "End": 8379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8749,
+      "End": 8940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9724,
+      "End": 9790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 10926,
+      "End": 11165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11190,
+      "End": 11322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 12179,
+      "End": 12262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13816,
+      "End": 13900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 14550,
+      "End": 14616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::13",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 14787,
+      "End": 14978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::14",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 15756,
+      "End": 15822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::15",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17239,
+      "End": 17478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::16",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17503,
+      "End": 17635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::17",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 18368,
+      "End": 18451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::18",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 25665,
+      "End": 25749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::19",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 26399,
+      "End": 26465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::20",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 26636,
+      "End": 26828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::21",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 27606,
+      "End": 27672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::22",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 30737,
+      "End": 30977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::conditional::23",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 31002,
+      "End": 31134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::macro-inline::9888",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9888,
+      "End": 9907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::macro-inline::10337",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10337,
+      "End": 10353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::macro-inline::10602",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10602,
+      "End": 10618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::macro-inline::11352",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11352,
+      "End": 11368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::macro-inline::15922",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15922,
+      "End": 15941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::macro-inline::17141",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17141,
+      "End": 17157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::macro-inline::17665",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17665,
+      "End": 17681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::macro-inline::27772",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27772,
+      "End": 27791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::macro-inline::30639",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30639,
+      "End": 30655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddWindow.c::macro-inline::31164",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31164,
+      "End": 31180
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddWindow.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions for variable reordering by window permutation.]\n\n  Description [Internal procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddWindowReorder()\n                \u003c/ul\u003e\n        Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e ddWindow2()\n                \u003cli\u003e ddWindowConv2()\n                \u003cli\u003e ddPermuteWindow3()\n                \u003cli\u003e ddWindow3()\n                \u003cli\u003e ddWindowConv3()\n                \u003cli\u003e ddPermuteWindow4()\n                \u003cli\u003e ddWindow4()\n                \u003cli\u003e ddWindowConv4()\n                \u003c/ul\u003e]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddWindow.c,v 1.14 2009/02/20 02:14:58 fabio Exp $\";\n#endif\n\n#ifdef DD_STATS\nextern  int     ddTotalNumberSwapping;\nextern  int     ddTotalNISwaps;\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static int ddWindow2 (DdManager *table, int low, int high);\n\n// static int ddWindowConv2 (DdManager *table, int low, int high);\n\n// static int ddPermuteWindow3 (DdManager *table, int x);\n\n// static int ddWindow3 (DdManager *table, int low, int high);\n\n// static int ddWindowConv3 (DdManager *table, int low, int high);\n\n// static int ddPermuteWindow4 (DdManager *table, int w);\n\n// static int ddWindow4 (DdManager *table, int low, int high);\n\n// static int ddWindowConv4 (DdManager *table, int low, int high);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Reorders by applying the method of the sliding window.]\n\n  Description [Reorders by applying the method of the sliding window.\n  Tries all possible permutations to the variables in a window that\n  slides from low to high. The size of the window is determined by\n  submethod.  Assumes that no dead nodes are present.  Returns 1 in\n  case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nint\ncuddWindowReorder(\n  DdManager * table /* DD table */,\n  int low /* lowest index to reorder */,\n  int high /* highest index to reorder */,\n  Cudd_ReorderingType submethod /* window reordering option */)\n{\n\n    var res int32;\n#ifdef DD_DEBUG\n    int supposedOpt;\n#endif\n\n    switch submethod {\n    case CUDD_REORDER_WINDOW2:\n        res = ddWindow2(table,low,high);\n        break;\n    case CUDD_REORDER_WINDOW3:\n        res = ddWindow3(table,low,high);\n        break;\n    case CUDD_REORDER_WINDOW4:\n        res = ddWindow4(table,low,high);\n        break;\n    case CUDD_REORDER_WINDOW2_CONV:\n        res = ddWindowConv2(table,low,high);\n        break;\n    case CUDD_REORDER_WINDOW3_CONV:\n        res = ddWindowConv3(table,low,high);\n#ifdef DD_DEBUG\n        supposedOpt = table-\u003ekeys - table-\u003eisolated;\n        res = ddWindow3(table,low,high);\n        if (table-\u003ekeys - table-\u003eisolated != (unsigned) supposedOpt) {\n            (void) fprintf(table-\u003eerr, \"Convergence failed! (%d != %d)\\n\",\n                           table-\u003ekeys - table-\u003eisolated, supposedOpt);\n        }\n#endif\n        break;\n    case CUDD_REORDER_WINDOW4_CONV:\n        res = ddWindowConv4(table,low,high);\n#ifdef DD_DEBUG\n        supposedOpt = table-\u003ekeys - table-\u003eisolated;\n        res = ddWindow4(table,low,high);\n        if (table-\u003ekeys - table-\u003eisolated != (unsigned) supposedOpt) {\n            (void) fprintf(table-\u003eerr,\"Convergence failed! (%d != %d)\\n\",\n                           table-\u003ekeys - table-\u003eisolated, supposedOpt);\n        }\n#endif\n        break;\n    default: return(0);\n    }\n\n    return(res);\n\n} /* end of cuddWindowReorder */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Reorders by applying a sliding window of width 2.]\n\n  Description [Reorders by applying a sliding window of width 2.\n  Tries both permutations of the variables in a window\n  that slides from low to high.  Assumes that no dead nodes are\n  present.  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc ddWindow2(table *DdManager, low int32, high int32) int32 {\n\n    var x int32;\n    var res int32;\n    var size int32;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if high-low \u003c 1 { return(0); }\n\n    res = table.keys - table.isolated;\n    for x = low; x \u003c high; x++ {\n        size = res;\n        res = cuddSwapInPlace(table,x,x+1);\n        if res == 0 { return(0); }\n        if res \u003e= size { /* no improvement: undo permutation */\n            res = cuddSwapInPlace(table,x,x+1);\n            if res == 0 { return(0); }\n        }\n#ifdef DD_STATS\n        if (res \u003c size) {\n            (void) fprintf(table-\u003eout,\"-\");\n        } else {\n            (void) fprintf(table-\u003eout,\"=\");\n        }\n        fflush(table-\u003eout);\n#endif\n    }\n\n    return(1);\n\n} /* end of ddWindow2 */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Reorders by repeatedly applying a sliding window of width 2.]\n\n  Description [Reorders by repeatedly applying a sliding window of width\n  2. Tries both permutations of the variables in a window\n  that slides from low to high.  Assumes that no dead nodes are\n  present.  Uses an event-driven approach to determine convergence.\n  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc ddWindowConv2(table *DdManager, low int32, high int32) int32 {\n    var x int32;\n    var res int32;\n    var nwin int32;\n    var newevent int32;\n    var events *int32;\n    var size int32;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if high-low \u003c 1 { return(ddWindowConv2(table,low,high)); }\n\n    nwin = high-low;\n    events = ABC_ALLOC(int,nwin);\n    if events == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for x=0; x\u003cnwin; x++ {\n        events[x] = 1;\n    }\n\n    res = table.keys - table.isolated;\n    for {\n        newevent = 0;\n        for x=0; x\u003cnwin; x++ {\n            if events[x] {\n                size = res;\n                res = cuddSwapInPlace(table,x+low,x+low+1);\n                if res == 0 {\n                    ABC_FREE(events);\n                    return(0);\n                }\n                if res \u003e= size { /* no improvement: undo permutation */\n                    res = cuddSwapInPlace(table,x+low,x+low+1);\n                    if res == 0 {\n                        ABC_FREE(events);\n                        return(0);\n                    }\n                }\n                if res \u003c size {\n                    if x \u003c nwin-1 {     events[x+1] = 1; }\n                    if x \u003e 0 {          events[x-1] = 1; }\n                    newevent = 1;\n                }\n                events[x] = 0;\n#ifdef DD_STATS\n                if (res \u003c size) {\n                    (void) fprintf(table-\u003eout,\"-\");\n                } else {\n                    (void) fprintf(table-\u003eout,\"=\");\n                }\n                fflush(table-\u003eout);\n#endif\n            }\n        }\n#ifdef DD_STATS\n        if (newevent) {\n            (void) fprintf(table-\u003eout,\"|\");\n            fflush(table-\u003eout);\n        }\n#endif\n    \nif !((newevent != 0)) { break }\n} \n\n    ABC_FREE(events);\n\n    return(1);\n\n} /* end of ddWindowConv3 */\n\n\n/**Function********************************************************************\n\n  Synopsis [Tries all the permutations of the three variables between\n  x and x+2 and retains the best.]\n\n  Description [Tries all the permutations of the three variables between\n  x and x+2 and retains the best. Assumes that no dead nodes are\n  present.  Returns the index of the best permutation (1-6) in case of\n  success; 0 otherwise.Assumes that no dead nodes are present.  Returns\n  the index of the best permutation (1-6) in case of success; 0\n  otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc ddPermuteWindow3(table *DdManager, x int32) int32 {\n    var y, z int32;\n    var size, sizeNew int32;\n    var best int32;\n\n#ifdef DD_DEBUG\n    assert(table-\u003edead == 0);\n    assert(x+2 \u003c table-\u003esize);\n#endif\n\n    size = table.keys - table.isolated;\n    y = x+1; z = y+1;\n\n    /* The permutation pattern is:\n    ** (x,y)(y,z)\n    ** repeated three times to get all 3! = 6 permutations.\n    */\nconst ABC = 1\n    best = ABC;\n\nconst BAC = 2\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = BAC;\n        size = sizeNew;\n    }\nconst BCA = 3\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = BCA;\n        size = sizeNew;\n    }\nconst CBA = 4\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = CBA;\n        size = sizeNew;\n    }\nconst CAB = 5\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = CAB;\n        size = sizeNew;\n    }\nconst ACB = 6\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = ACB;\n        size = sizeNew;\n    }\n\n    /* Now take the shortest route to the best permuytation.\n    ** The initial permutation is ACB.\n    */\n    switch best {\n    case BCA: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase CBA: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase ABC: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase ACB: break;\n    case BAC: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase CAB: if (!cuddSwapInPlace(table,x,y)) return(0);\n               break;\n    default: return(0);\n    }\n\n#ifdef DD_DEBUG\n    assert(table-\u003ekeys - table-\u003eisolated == (unsigned) size);\n#endif\n\n    return(best);\n\n} /* end of ddPermuteWindow3 */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Reorders by applying a sliding window of width 3.]\n\n  Description [Reorders by applying a sliding window of width 3.\n  Tries all possible permutations to the variables in a\n  window that slides from low to high.  Assumes that no dead nodes are\n  present.  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc ddWindow3(table *DdManager, low int32, high int32) int32 {\n\n    var x int32;\n    var res int32;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if high-low \u003c 2 { return(ddWindow2(table,low,high)); }\n\n    for x = low; x+1 \u003c high; x++ {\n        res = ddPermuteWindow3(table,x);\n        if res == 0 { return(0); }\n#ifdef DD_STATS\n        if (res == ABC) {\n            (void) fprintf(table-\u003eout,\"=\");\n        } else {\n            (void) fprintf(table-\u003eout,\"-\");\n        }\n        fflush(table-\u003eout);\n#endif\n    }\n\n    return(1);\n\n} /* end of ddWindow3 */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Reorders by repeatedly applying a sliding window of width 3.]\n\n  Description [Reorders by repeatedly applying a sliding window of width\n  3. Tries all possible permutations to the variables in a\n  window that slides from low to high.  Assumes that no dead nodes are\n  present.  Uses an event-driven approach to determine convergence.\n  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc ddWindowConv3(table *DdManager, low int32, high int32) int32 {\n    var x int32;\n    var res int32;\n    var nwin int32;\n    var newevent int32;\n    var events *int32;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if high-low \u003c 2 { return(ddWindowConv2(table,low,high)); }\n\n    nwin = high-low-1;\n    events = ABC_ALLOC(int,nwin);\n    if events == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for x=0; x\u003cnwin; x++ {\n        events[x] = 1;\n    }\n\n    for {\n        newevent = 0;\n        for x=0; x\u003cnwin; x++ {\n            if events[x] {\n                res = ddPermuteWindow3(table,x+low);\n                switch res {\n                case ABC:\n                    break;\n                case BAC:\n                    if (x \u003c nwin-1)     events[x+1] = 1;\n                    if x \u003e 1 {          events[x-2] = 1; }\n                    newevent = 1;\n                    break;\n                case BCA,\n                 CBA,\n                 CAB:\n                    if (x \u003c nwin-2)     events[x+2] = 1;\n                    if x \u003c nwin-1 {     events[x+1] = 1; }\n                    if x \u003e 0 {          events[x-1] = 1; }\n                    if x \u003e 1 {          events[x-2] = 1; }\n                    newevent = 1;\n                    break;\n                case ACB:\n                    if (x \u003c nwin-2)     events[x+2] = 1;\n                    if x \u003e 0 {          events[x-1] = 1; }\n                    newevent = 1;\n                    break;\n                default:\n                    ABC_FREE(events);\n                    return(0);\n                }\n                events[x] = 0;\n#ifdef DD_STATS\n                if (res == ABC) {\n                    (void) fprintf(table-\u003eout,\"=\");\n                } else {\n                    (void) fprintf(table-\u003eout,\"-\");\n                }\n                fflush(table-\u003eout);\n#endif\n            }\n        }\n#ifdef DD_STATS\n        if (newevent) {\n            (void) fprintf(table-\u003eout,\"|\");\n            fflush(table-\u003eout);\n        }\n#endif\n    \nif !((newevent != 0)) { break }\n} \n\n    ABC_FREE(events);\n\n    return(1);\n\n} /* end of ddWindowConv3 */\n\n\n/**Function********************************************************************\n\n  Synopsis [Tries all the permutations of the four variables between w\n  and w+3 and retains the best.]\n\n  Description [Tries all the permutations of the four variables between\n  w and w+3 and retains the best. Assumes that no dead nodes are\n  present.  Returns the index of the best permutation (1-24) in case of\n  success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc ddPermuteWindow4(table *DdManager, w int32) int32 {\n    var x, y, z int32;\n    var size, sizeNew int32;\n    var best int32;\n\n#ifdef DD_DEBUG\n    assert(table-\u003edead == 0);\n    assert(w+3 \u003c table-\u003esize);\n#endif\n\n    size = table.keys - table.isolated;\n    x = w+1; y = x+1; z = y+1;\n\n    /* The permutation pattern is:\n     * (w,x)(y,z)(w,x)(x,y)\n     * (y,z)(w,x)(y,z)(x,y)\n     * repeated three times to get all 4! = 24 permutations.\n     * This gives a hamiltonian circuit of Cayley's graph.\n     * The codes to the permutation are assigned in topological order.\n     * The permutations at lower distance from the final permutation are\n     * assigned lower codes. This way we can choose, between\n     * permutations that give the same size, one that requires the minimum\n     * number of swaps from the final permutation of the hamiltonian circuit.\n     * There is an exception to this rule: ABCD is given Code 1, to\n     * avoid oscillation when convergence is sought.\n     */\nconst ABCD = 1\n    best = ABCD;\n\nconst BACD = 7\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = BACD;\n        size = sizeNew;\n    }\nconst BADC = 13\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = BADC;\n        size = sizeNew;\n    }\nconst ABDC = 8\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 ABDC \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = ABDC;\n        size = sizeNew;\n    }\nconst ADBC = 14\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = ADBC;\n        size = sizeNew;\n    }\nconst ADCB = 9\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 ADCB \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = ADCB;\n        size = sizeNew;\n    }\nconst DACB = 15\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = DACB;\n        size = sizeNew;\n    }\nconst DABC = 20\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = DABC;\n        size = sizeNew;\n    }\nconst DBAC = 23\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = DBAC;\n        size = sizeNew;\n    }\nconst BDAC = 19\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 BDAC \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = BDAC;\n        size = sizeNew;\n    }\nconst BDCA = 21\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 BDCA \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = BDCA;\n        size = sizeNew;\n    }\nconst DBCA = 24\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size {\n        if sizeNew == 0 { return(0); }\n        best = DBCA;\n        size = sizeNew;\n    }\nconst DCBA = 22\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 DCBA \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = DCBA;\n        size = sizeNew;\n    }\nconst DCAB = 18\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 DCAB \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = DCAB;\n        size = sizeNew;\n    }\nconst CDAB = 12\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 CDAB \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = CDAB;\n        size = sizeNew;\n    }\nconst CDBA = 17\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 CDBA \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = CDBA;\n        size = sizeNew;\n    }\nconst CBDA = 11\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 CBDA \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = CBDA;\n        size = sizeNew;\n    }\nconst BCDA = 16\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 BCDA \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = BCDA;\n        size = sizeNew;\n    }\nconst BCAD = 10\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 BCAD \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = BCAD;\n        size = sizeNew;\n    }\nconst CBAD = 5\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 CBAD \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = CBAD;\n        size = sizeNew;\n    }\nconst CABD = 3\n    sizeNew = cuddSwapInPlace(table,x,y);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 CABD \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = CABD;\n        size = sizeNew;\n    }\nconst CADB = 6\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 CADB \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = CADB;\n        size = sizeNew;\n    }\nconst ACDB = 4\n    sizeNew = cuddSwapInPlace(table,w,x);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 ACDB \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = ACDB;\n        size = sizeNew;\n    }\nconst ACBD = 2\n    sizeNew = cuddSwapInPlace(table,y,z);\n    if sizeNew \u003c size || (sizeNew == size \u0026\u0026 ACBD \u003c best) {\n        if sizeNew == 0 { return(0); }\n        best = ACBD;\n        size = sizeNew;\n    }\n\n    /* Now take the shortest route to the best permutation.\n    ** The initial permutation is ACBD.\n    */\n    switch best {\n    case DBCA: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase BDCA: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase CDBA: if (!cuddSwapInPlace(table,w,x)) return(0);\n    fallthrough\ncase ADBC: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase ABDC: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase ACDB: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase ACBD: break;\n    case DCBA: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase BCDA: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase CBDA: if (!cuddSwapInPlace(table,w,x)) return(0);\n               if !cuddSwapInPlace(table,x,y) { return(0); }\n               if !cuddSwapInPlace(table,y,z) { return(0); }\n               break;\n    case DBAC: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase DCAB: if (!cuddSwapInPlace(table,w,x)) return(0);\n    fallthrough\ncase DACB: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase BACD: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase CABD: if (!cuddSwapInPlace(table,w,x)) return(0);\n               break;\n    case DABC: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase BADC: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase CADB: if (!cuddSwapInPlace(table,w,x)) return(0);\n               if !cuddSwapInPlace(table,y,z) { return(0); }\n               break;\n    case BDAC: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase CDAB: if (!cuddSwapInPlace(table,w,x)) return(0);\n    fallthrough\ncase ADCB: if (!cuddSwapInPlace(table,y,z)) return(0);\n    fallthrough\ncase ABCD: if (!cuddSwapInPlace(table,x,y)) return(0);\n               break;\n    case BCAD: if (!cuddSwapInPlace(table,x,y)) return(0);\n    fallthrough\ncase CBAD: if (!cuddSwapInPlace(table,w,x)) return(0);\n               if !cuddSwapInPlace(table,x,y) { return(0); }\n               break;\n    default: return(0);\n    }\n\n#ifdef DD_DEBUG\n    assert(table-\u003ekeys - table-\u003eisolated == (unsigned) size);\n#endif\n\n    return(best);\n\n} /* end of ddPermuteWindow4 */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Reorders by applying a sliding window of width 4.]\n\n  Description [Reorders by applying a sliding window of width 4.\n  Tries all possible permutations to the variables in a\n  window that slides from low to high.  Assumes that no dead nodes are\n  present.  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc ddWindow4(table *DdManager, low int32, high int32) int32 {\n\n    var w int32;\n    var res int32;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if high-low \u003c 3 { return(ddWindow3(table,low,high)); }\n\n    for w = low; w+2 \u003c high; w++ {\n        res = ddPermuteWindow4(table,w);\n        if res == 0 { return(0); }\n#ifdef DD_STATS\n        if (res == ABCD) {\n            (void) fprintf(table-\u003eout,\"=\");\n        } else {\n            (void) fprintf(table-\u003eout,\"-\");\n        }\n        fflush(table-\u003eout);\n#endif\n    }\n\n    return(1);\n\n} /* end of ddWindow4 */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Reorders by repeatedly applying a sliding window of width 4.]\n\n  Description [Reorders by repeatedly applying a sliding window of width\n  4. Tries all possible permutations to the variables in a\n  window that slides from low to high.  Assumes that no dead nodes are\n  present.  Uses an event-driven approach to determine convergence.\n  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc ddWindowConv4(table *DdManager, low int32, high int32) int32 {\n    var x int32;\n    var res int32;\n    var nwin int32;\n    var newevent int32;\n    var events *int32;\n\n#ifdef DD_DEBUG\n    assert(low \u003e= 0 \u0026\u0026 high \u003c table-\u003esize);\n#endif\n\n    if high-low \u003c 3 { return(ddWindowConv3(table,low,high)); }\n\n    nwin = high-low-2;\n    events = ABC_ALLOC(int,nwin);\n    if events == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        return(0);\n    }\n    for x=0; x\u003cnwin; x++ {\n        events[x] = 1;\n    }\n\n    for {\n        newevent = 0;\n        for x=0; x\u003cnwin; x++ {\n            if events[x] {\n                res = ddPermuteWindow4(table,x+low);\n                switch res {\n                case ABCD:\n                    break;\n                case BACD:\n                    if (x \u003c nwin-1)     events[x+1] = 1;\n                    if x \u003e 2 {          events[x-3] = 1; }\n                    newevent = 1;\n                    break;\n                case BADC:\n                    if (x \u003c nwin-3)     events[x+3] = 1;\n                    if x \u003c nwin-1 {     events[x+1] = 1; }\n                    if x \u003e 0 {          events[x-1] = 1; }\n                    if x \u003e 2 {          events[x-3] = 1; }\n                    newevent = 1;\n                    break;\n                case ABDC:\n                    if (x \u003c nwin-3)     events[x+3] = 1;\n                    if x \u003e 0 {          events[x-1] = 1; }\n                    newevent = 1;\n                    break;\n                case ADBC,\n                 ADCB,\n                 ACDB:\n                    if (x \u003c nwin-3)     events[x+3] = 1;\n                    if x \u003c nwin-2 {     events[x+2] = 1; }\n                    if x \u003e 0 {          events[x-1] = 1; }\n                    if x \u003e 1 {          events[x-2] = 1; }\n                    newevent = 1;\n                    break;\n                case DACB,\n                 DABC,\n                 DBAC,\n                 BDAC,\n                 BDCA,\n                 DBCA,\n                 DCBA,\n                 DCAB,\n                 CDAB,\n                 CDBA,\n                 CBDA,\n                 BCDA,\n                 CADB:\n                    if (x \u003c nwin-3)     events[x+3] = 1;\n                    if x \u003c nwin-2 {     events[x+2] = 1; }\n                    if x \u003c nwin-1 {     events[x+1] = 1; }\n                    if x \u003e 0 {          events[x-1] = 1; }\n                    if x \u003e 1 {          events[x-2] = 1; }\n                    if x \u003e 2 {          events[x-3] = 1; }\n                    newevent = 1;\n                    break;\n                case BCAD,\n                 CBAD,\n                 CABD:\n                    if (x \u003c nwin-2)     events[x+2] = 1;\n                    if x \u003c nwin-1 {     events[x+1] = 1; }\n                    if x \u003e 1 {          events[x-2] = 1; }\n                    if x \u003e 2 {          events[x-3] = 1; }\n                    newevent = 1;\n                    break;\n                case ACBD:\n                    if (x \u003c nwin-2)     events[x+2] = 1;\n                    if x \u003e 1 {          events[x-2] = 1; }\n                    newevent = 1;\n                    break;\n                default:\n                    ABC_FREE(events);\n                    return(0);\n                }\n                events[x] = 0;\n#ifdef DD_STATS\n                if (res == ABCD) {\n                    (void) fprintf(table-\u003eout,\"=\");\n                } else {\n                    (void) fprintf(table-\u003eout,\"-\");\n                }\n                fflush(table-\u003eout);\n#endif\n            }\n        }\n#ifdef DD_STATS\n        if (newevent) {\n            (void) fprintf(table-\u003eout,\"|\");\n            fflush(table-\u003eout);\n        }\n#endif\n    \nif !((newevent != 0)) { break }\n} \n\n    ABC_FREE(events);\n\n    return(1);\n\n} /* end of ddWindowConv4 */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

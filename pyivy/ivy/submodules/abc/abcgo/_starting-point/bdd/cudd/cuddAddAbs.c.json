@@ -1,0 +1,574 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c",
+  "SHA256": "5ad840280e3a89f6c74e4c91a1206e26bd3a90f92e05882e2f77b0854efafa05",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 16,
+        "ByteOffset": 5443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(manager.err,\"Error: Can only abstract cubes\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 179,
+        "Column": 16,
+        "ByteOffset": 6722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(manager.err,\"Error:  Can only abstract cubes\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 214,
+        "Column": 16,
+        "ByteOffset": 7719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(manager.err,\"Error: Can only abstract cubes\");"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 88,
+        "Column": 1,
+        "ByteOffset": 3535
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_addExistAbstract",
+      "Start": 5118,
+      "End": 5815,
+      "BodyStart": 5204,
+      "Original": "DdNode *\nCudd_addExistAbstract(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * cube)\n{\n    DdNode *res;\n\n    two = cuddUniqueConst(manager,(CUDD_VALUE_TYPE) 2);\n    if (two == NULL) return(NULL);\n    cuddRef(two);\n\n    if (addCheckPositiveCube(manager, cube) == 0) {\n        (void) fprintf(manager-\u003eerr,\"Error: Can only abstract cubes\");\n        return(NULL);\n    }\n\n    do {\n        manager-\u003ereordered = 0;\n        res = cuddAddExistAbstractRecur(manager, f, cube);\n    } while (manager-\u003ereordered == 1);\n\n    if (res == NULL) {\n        Cudd_RecursiveDeref(manager,two);\n        return(NULL);\n    }\n    cuddRef(res);\n    Cudd_RecursiveDeref(manager,two);\n    cuddDeref(res);\n\n    return(res);\n\n}",
+      "Draft": "func Cudd_addExistAbstract(manager *DdManager, f *DdNode, cube *DdNode) *DdNode {\n    var res *DdNode;\n\n    two = cuddUniqueConst(manager,(CUDD_VALUE_TYPE) 2);\n    if two == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(two).ref);\n\n    if addCheckPositiveCube(manager, cube) == 0 {\n        (void) fmt.Fprintf(manager.err, \"Error: Can only abstract cubes\");\n        return(nil);\n    }\n\n    for {\n        manager.reordered = 0;\n        res = cuddAddExistAbstractRecur(manager, f, cube);\n    \nif !(manager.reordered == 1) { break }\n} \n\n    if res == nil {\n        Cudd_RecursiveDeref(manager,two);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(res).ref);\n    Cudd_RecursiveDeref(manager,two);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(res).ref);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_addUnivAbstract",
+      "Start": 6382,
+      "End": 6811,
+      "BodyStart": 6467,
+      "Original": "DdNode *\nCudd_addUnivAbstract(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * cube)\n{\n    DdNode              *res;\n\n    if (addCheckPositiveCube(manager, cube) == 0) {\n        (void) fprintf(manager-\u003eerr,\"Error:  Can only abstract cubes\");\n        return(NULL);\n    }\n\n    do {\n        manager-\u003ereordered = 0;\n        res = cuddAddUnivAbstractRecur(manager, f, cube);\n    } while (manager-\u003ereordered == 1);\n\n    return(res);\n\n}",
+      "Draft": "func Cudd_addUnivAbstract(manager *DdManager, f *DdNode, cube *DdNode) *DdNode {\n    var res *DdNode;\n\n    if addCheckPositiveCube(manager, cube) == 0 {\n        (void) fmt.Fprintf(manager.err, \"Error:  Can only abstract cubes\");\n        return(nil);\n    }\n\n    for {\n        manager.reordered = 0;\n        res = cuddAddUnivAbstractRecur(manager, f, cube);\n    \nif !(manager.reordered == 1) { break }\n} \n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_addOrAbstract",
+      "Start": 7392,
+      "End": 7802,
+      "BodyStart": 7475,
+      "Original": "DdNode *\nCudd_addOrAbstract(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * cube)\n{\n    DdNode *res;\n\n    if (addCheckPositiveCube(manager, cube) == 0) {\n        (void) fprintf(manager-\u003eerr,\"Error: Can only abstract cubes\");\n        return(NULL);\n    }\n\n    do {\n        manager-\u003ereordered = 0;\n        res = cuddAddOrAbstractRecur(manager, f, cube);\n    } while (manager-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_addOrAbstract(manager *DdManager, f *DdNode, cube *DdNode) *DdNode {\n    var res *DdNode;\n\n    if addCheckPositiveCube(manager, cube) == 0 {\n        (void) fmt.Fprintf(manager.err, \"Error: Can only abstract cubes\");\n        return(nil);\n    }\n\n    for {\n        manager.reordered = 0;\n        res = cuddAddOrAbstractRecur(manager, f, cube);\n    \nif !(manager.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddAddExistAbstractRecur",
+      "Start": 8527,
+      "End": 11454,
+      "BodyStart": 8617,
+      "Original": "DdNode *\ncuddAddExistAbstractRecur(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * cube)\n{\n    DdNode      *T, *E, *res, *res1, *res2, *zero;\n\n    statLine(manager);\n    zero = DD_ZERO(manager);\n\n    /* Cube is guaranteed to be a cube at this point. */        \n    if (f == zero || cuddIsConstant(cube)) {  \n        return(f);\n    }\n\n    /* Abstract a variable that does not appear in f =\u003e multiply by 2. */\n    if (cuddI(manager,f-\u003eindex) \u003e cuddI(manager,cube-\u003eindex)) {\n        res1 = cuddAddExistAbstractRecur(manager, f, cuddT(cube));\n        if (res1 == NULL) return(NULL);\n        cuddRef(res1);\n        /* Use the \"internal\" procedure to be alerted in case of\n        ** dynamic reordering. If dynamic reordering occurs, we\n        ** have to abort the entire abstraction.\n        */\n        res = cuddAddApplyRecur(manager,Cudd_addTimes,res1,two);\n        if (res == NULL) {\n            Cudd_RecursiveDeref(manager,res1);\n            return(NULL);\n        }\n        cuddRef(res);\n        Cudd_RecursiveDeref(manager,res1);\n        cuddDeref(res);\n        return(res);\n    }\n\n    if ((res = cuddCacheLookup2(manager, Cudd_addExistAbstract, f, cube)) != NULL) {\n        return(res);\n    }\n\n    T = cuddT(f);\n    E = cuddE(f);\n\n    /* If the two indices are the same, so are their levels. */\n    if (f-\u003eindex == cube-\u003eindex) {\n        res1 = cuddAddExistAbstractRecur(manager, T, cuddT(cube));\n        if (res1 == NULL) return(NULL);\n        cuddRef(res1);\n        res2 = cuddAddExistAbstractRecur(manager, E, cuddT(cube));\n        if (res2 == NULL) {\n            Cudd_RecursiveDeref(manager,res1);\n            return(NULL);\n        }\n        cuddRef(res2);\n        res = cuddAddApplyRecur(manager, Cudd_addPlus, res1, res2);\n        if (res == NULL) {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(NULL);\n        }\n        cuddRef(res);\n        Cudd_RecursiveDeref(manager,res1);\n        Cudd_RecursiveDeref(manager,res2);\n        cuddCacheInsert2(manager, Cudd_addExistAbstract, f, cube, res);\n        cuddDeref(res);\n        return(res);\n    } else { /* if (cuddI(manager,f-\u003eindex) \u003c cuddI(manager,cube-\u003eindex)) */\n        res1 = cuddAddExistAbstractRecur(manager, T, cube);\n        if (res1 == NULL) return(NULL);\n        cuddRef(res1);\n        res2 = cuddAddExistAbstractRecur(manager, E, cube);\n        if (res2 == NULL) {\n            Cudd_RecursiveDeref(manager,res1);\n            return(NULL);\n        }\n        cuddRef(res2);\n        res = (res1 == res2) ? res1 :\n            cuddUniqueInter(manager, (int) f-\u003eindex, res1, res2);\n        if (res == NULL) {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(NULL);\n        }\n        cuddDeref(res1);\n        cuddDeref(res2);\n        cuddCacheInsert2(manager, Cudd_addExistAbstract, f, cube, res);\n        return(res);\n    }       \n\n}",
+      "Draft": "func cuddAddExistAbstractRecur(manager *DdManager, f *DdNode, cube *DdNode) *DdNode {\n    var T, E, res, res1, res2, zero *DdNode;\n\n    statLine(manager);\n    // inlining of macro DD_ZERO\n    zero = ((manager).zero);\n\n    /* Cube is guaranteed to be a cube at this point. */        \n    // inlining of macro cuddIsConstant\n    if f == zero || ((cube).index == CUDD_CONST_INDEX) {  \n        return(f);\n    }\n\n    /* Abstract a variable that does not appear in f =\u003e multiply by 2. */\n    // inlining of macro cuddI\n    if (((f.index)==CUDD_CONST_INDEX)?int32((f.index)):(manager).perm[(f.index)]) \u003e (((cube.index)==CUDD_CONST_INDEX)?int32((cube.index)):(manager).perm[(cube.index)]) {\n        // inlining of macro cuddT\n        res1 = cuddAddExistAbstractRecur(manager, f, ((cube).type.kids.T));\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        /* Use the \"internal\" procedure to be alerted in case of\n        ** dynamic reordering. If dynamic reordering occurs, we\n        ** have to abort the entire abstraction.\n        */\n        res = cuddAddApplyRecur(manager,Cudd_addTimes,res1,two);\n        if res == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDeref(manager,res1);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref);\n        return(res);\n    }\n\n    if (res = cuddCacheLookup2(manager, Cudd_addExistAbstract, f, cube)) != nil {\n        return(res);\n    }\n\n    // inlining of macro cuddT\n    T = ((f).type.kids.T);\n    // inlining of macro cuddE\n    E = ((f).type.kids.E);\n\n    /* If the two indices are the same, so are their levels. */\n    if f.index == cube.index {\n        // inlining of macro cuddT\n        res1 = cuddAddExistAbstractRecur(manager, T, ((cube).type.kids.T));\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        // inlining of macro cuddT\n        res2 = cuddAddExistAbstractRecur(manager, E, ((cube).type.kids.T));\n        if res2 == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res2).ref);\n        res = cuddAddApplyRecur(manager, Cudd_addPlus, res1, res2);\n        if res == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDeref(manager,res1);\n        Cudd_RecursiveDeref(manager,res2);\n        cuddCacheInsert2(manager, Cudd_addExistAbstract, f, cube, res);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref);\n        return(res);\n    } else { /* if (cuddI(manager,f-\u003eindex) \u003c cuddI(manager,cube-\u003eindex)) */\n        res1 = cuddAddExistAbstractRecur(manager, T, cube);\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        res2 = cuddAddExistAbstractRecur(manager, E, cube);\n        if res2 == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res2).ref);\n        if res1 == res2 {\n            res = res1;\n        } else {\n            res = cuddUniqueInter(manager, int32( f.index), res1, res2);\n        }\n        if res == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res1).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res2).ref);\n        cuddCacheInsert2(manager, Cudd_addExistAbstract, f, cube, res);\n        return(res);\n    }       \n\n}"
+    },
+    {
+      "Name": "cuddAddUnivAbstractRecur",
+      "Start": 11942,
+      "End": 14936,
+      "BodyStart": 12031,
+      "Original": "DdNode *\ncuddAddUnivAbstractRecur(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * cube)\n{\n    DdNode      *T, *E, *res, *res1, *res2, *one, *zero;\n\n    statLine(manager);\n    one = DD_ONE(manager);\n    zero = DD_ZERO(manager);\n\n    /* Cube is guaranteed to be a cube at this point.\n    ** zero and one are the only constatnts c such that c*c=c.\n    */\n    if (f == zero || f == one || cube == one) {  \n        return(f);\n    }\n\n    /* Abstract a variable that does not appear in f. */\n    if (cuddI(manager,f-\u003eindex) \u003e cuddI(manager,cube-\u003eindex)) {\n        res1 = cuddAddUnivAbstractRecur(manager, f, cuddT(cube));\n        if (res1 == NULL) return(NULL);\n        cuddRef(res1);\n        /* Use the \"internal\" procedure to be alerted in case of\n        ** dynamic reordering. If dynamic reordering occurs, we\n        ** have to abort the entire abstraction.\n        */\n        res = cuddAddApplyRecur(manager, Cudd_addTimes, res1, res1);\n        if (res == NULL) {\n            Cudd_RecursiveDeref(manager,res1);\n            return(NULL);\n        }\n        cuddRef(res);\n        Cudd_RecursiveDeref(manager,res1);\n        cuddDeref(res);\n        return(res);\n    }\n\n    if ((res = cuddCacheLookup2(manager, Cudd_addUnivAbstract, f, cube)) != NULL) {\n        return(res);\n    }\n\n    T = cuddT(f);\n    E = cuddE(f);\n\n    /* If the two indices are the same, so are their levels. */\n    if (f-\u003eindex == cube-\u003eindex) {\n        res1 = cuddAddUnivAbstractRecur(manager, T, cuddT(cube));\n        if (res1 == NULL) return(NULL);\n        cuddRef(res1);\n        res2 = cuddAddUnivAbstractRecur(manager, E, cuddT(cube));\n        if (res2 == NULL) {\n            Cudd_RecursiveDeref(manager,res1);\n            return(NULL);\n        }\n        cuddRef(res2);\n        res = cuddAddApplyRecur(manager, Cudd_addTimes, res1, res2);\n        if (res == NULL) {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(NULL);\n        }\n        cuddRef(res);\n        Cudd_RecursiveDeref(manager,res1);\n        Cudd_RecursiveDeref(manager,res2);\n        cuddCacheInsert2(manager, Cudd_addUnivAbstract, f, cube, res);\n        cuddDeref(res);\n        return(res);\n    } else { /* if (cuddI(manager,f-\u003eindex) \u003c cuddI(manager,cube-\u003eindex)) */\n        res1 = cuddAddUnivAbstractRecur(manager, T, cube);\n        if (res1 == NULL) return(NULL);\n        cuddRef(res1);\n        res2 = cuddAddUnivAbstractRecur(manager, E, cube);\n        if (res2 == NULL) {\n            Cudd_RecursiveDeref(manager,res1);\n            return(NULL);\n        }\n        cuddRef(res2);\n        res = (res1 == res2) ? res1 :\n            cuddUniqueInter(manager, (int) f-\u003eindex, res1, res2);\n        if (res == NULL) {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(NULL);\n        }\n        cuddDeref(res1);\n        cuddDeref(res2);\n        cuddCacheInsert2(manager, Cudd_addUnivAbstract, f, cube, res);\n        return(res);\n    }\n\n}",
+      "Draft": "func cuddAddUnivAbstractRecur(manager *DdManager, f *DdNode, cube *DdNode) *DdNode {\n    var T, E, res, res1, res2, one, zero *DdNode;\n\n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro DD_ZERO\n    zero = ((manager).zero);\n\n    /* Cube is guaranteed to be a cube at this point.\n    ** zero and one are the only constatnts c such that c*c=c.\n    */\n    if f == zero || f == one || cube == one {  \n        return(f);\n    }\n\n    /* Abstract a variable that does not appear in f. */\n    // inlining of macro cuddI\n    if (((f.index)==CUDD_CONST_INDEX)?int32((f.index)):(manager).perm[(f.index)]) \u003e (((cube.index)==CUDD_CONST_INDEX)?int32((cube.index)):(manager).perm[(cube.index)]) {\n        // inlining of macro cuddT\n        res1 = cuddAddUnivAbstractRecur(manager, f, ((cube).type.kids.T));\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        /* Use the \"internal\" procedure to be alerted in case of\n        ** dynamic reordering. If dynamic reordering occurs, we\n        ** have to abort the entire abstraction.\n        */\n        res = cuddAddApplyRecur(manager, Cudd_addTimes, res1, res1);\n        if res == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDeref(manager,res1);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref);\n        return(res);\n    }\n\n    if (res = cuddCacheLookup2(manager, Cudd_addUnivAbstract, f, cube)) != nil {\n        return(res);\n    }\n\n    // inlining of macro cuddT\n    T = ((f).type.kids.T);\n    // inlining of macro cuddE\n    E = ((f).type.kids.E);\n\n    /* If the two indices are the same, so are their levels. */\n    if f.index == cube.index {\n        // inlining of macro cuddT\n        res1 = cuddAddUnivAbstractRecur(manager, T, ((cube).type.kids.T));\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        // inlining of macro cuddT\n        res2 = cuddAddUnivAbstractRecur(manager, E, ((cube).type.kids.T));\n        if res2 == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res2).ref);\n        res = cuddAddApplyRecur(manager, Cudd_addTimes, res1, res2);\n        if res == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDeref(manager,res1);\n        Cudd_RecursiveDeref(manager,res2);\n        cuddCacheInsert2(manager, Cudd_addUnivAbstract, f, cube, res);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref);\n        return(res);\n    } else { /* if (cuddI(manager,f-\u003eindex) \u003c cuddI(manager,cube-\u003eindex)) */\n        res1 = cuddAddUnivAbstractRecur(manager, T, cube);\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        res2 = cuddAddUnivAbstractRecur(manager, E, cube);\n        if res2 == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res2).ref);\n        if res1 == res2 {\n            res = res1;\n        } else {\n            res = cuddUniqueInter(manager, int32( f.index), res1, res2);\n        }\n        if res == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res1).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res2).ref);\n        cuddCacheInsert2(manager, Cudd_addUnivAbstract, f, cube, res);\n        return(res);\n    }\n\n}"
+    },
+    {
+      "Name": "cuddAddOrAbstractRecur",
+      "Start": 15419,
+      "End": 17902,
+      "BodyStart": 15506,
+      "Original": "DdNode *\ncuddAddOrAbstractRecur(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * cube)\n{\n    DdNode      *T, *E, *res, *res1, *res2, *one;\n\n    statLine(manager);\n    one = DD_ONE(manager);\n\n    /* Cube is guaranteed to be a cube at this point. */\n    if (cuddIsConstant(f) || cube == one) {  \n        return(f);\n    }\n\n    /* Abstract a variable that does not appear in f. */\n    if (cuddI(manager,f-\u003eindex) \u003e cuddI(manager,cube-\u003eindex)) {\n        res = cuddAddOrAbstractRecur(manager, f, cuddT(cube));\n        return(res);\n    }\n\n    if ((res = cuddCacheLookup2(manager, Cudd_addOrAbstract, f, cube)) != NULL) {\n        return(res);\n    }\n\n    T = cuddT(f);\n    E = cuddE(f);\n\n    /* If the two indices are the same, so are their levels. */\n    if (f-\u003eindex == cube-\u003eindex) {\n        res1 = cuddAddOrAbstractRecur(manager, T, cuddT(cube));\n        if (res1 == NULL) return(NULL);\n        cuddRef(res1);\n        if (res1 != one) {\n            res2 = cuddAddOrAbstractRecur(manager, E, cuddT(cube));\n            if (res2 == NULL) {\n                Cudd_RecursiveDeref(manager,res1);\n                return(NULL);\n            }\n            cuddRef(res2);\n            res = cuddAddApplyRecur(manager, Cudd_addOr, res1, res2);\n            if (res == NULL) {\n                Cudd_RecursiveDeref(manager,res1);\n                Cudd_RecursiveDeref(manager,res2);\n                return(NULL);\n            }\n            cuddRef(res);\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n        } else {\n            res = res1;\n        }\n        cuddCacheInsert2(manager, Cudd_addOrAbstract, f, cube, res);\n        cuddDeref(res);\n        return(res);\n    } else { /* if (cuddI(manager,f-\u003eindex) \u003c cuddI(manager,cube-\u003eindex)) */\n        res1 = cuddAddOrAbstractRecur(manager, T, cube);\n        if (res1 == NULL) return(NULL);\n        cuddRef(res1);\n        res2 = cuddAddOrAbstractRecur(manager, E, cube);\n        if (res2 == NULL) {\n            Cudd_RecursiveDeref(manager,res1);\n            return(NULL);\n        }\n        cuddRef(res2);\n        res = (res1 == res2) ? res1 :\n            cuddUniqueInter(manager, (int) f-\u003eindex, res1, res2);\n        if (res == NULL) {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(NULL);\n        }\n        cuddDeref(res1);\n        cuddDeref(res2);\n        cuddCacheInsert2(manager, Cudd_addOrAbstract, f, cube, res);\n        return(res);\n    }\n\n}",
+      "Draft": "func cuddAddOrAbstractRecur(manager *DdManager, f *DdNode, cube *DdNode) *DdNode {\n    var T, E, res, res1, res2, one *DdNode;\n\n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n\n    /* Cube is guaranteed to be a cube at this point. */\n    // inlining of macro cuddIsConstant\n    if ((f).index == CUDD_CONST_INDEX) || cube == one {  \n        return(f);\n    }\n\n    /* Abstract a variable that does not appear in f. */\n    // inlining of macro cuddI\n    if (((f.index)==CUDD_CONST_INDEX)?int32((f.index)):(manager).perm[(f.index)]) \u003e (((cube.index)==CUDD_CONST_INDEX)?int32((cube.index)):(manager).perm[(cube.index)]) {\n        // inlining of macro cuddT\n        res = cuddAddOrAbstractRecur(manager, f, ((cube).type.kids.T));\n        return(res);\n    }\n\n    if (res = cuddCacheLookup2(manager, Cudd_addOrAbstract, f, cube)) != nil {\n        return(res);\n    }\n\n    // inlining of macro cuddT\n    T = ((f).type.kids.T);\n    // inlining of macro cuddE\n    E = ((f).type.kids.E);\n\n    /* If the two indices are the same, so are their levels. */\n    if f.index == cube.index {\n        // inlining of macro cuddT\n        res1 = cuddAddOrAbstractRecur(manager, T, ((cube).type.kids.T));\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        if res1 != one {\n            // inlining of macro cuddT\n            res2 = cuddAddOrAbstractRecur(manager, E, ((cube).type.kids.T));\n            if res2 == nil {\n                Cudd_RecursiveDeref(manager,res1);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(res2).ref);\n            res = cuddAddApplyRecur(manager, Cudd_addOr, res1, res2);\n            if res == nil {\n                Cudd_RecursiveDeref(manager,res1);\n                Cudd_RecursiveDeref(manager,res2);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(res).ref);\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n        } else {\n            res = res1;\n        }\n        cuddCacheInsert2(manager, Cudd_addOrAbstract, f, cube, res);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref);\n        return(res);\n    } else { /* if (cuddI(manager,f-\u003eindex) \u003c cuddI(manager,cube-\u003eindex)) */\n        res1 = cuddAddOrAbstractRecur(manager, T, cube);\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        res2 = cuddAddOrAbstractRecur(manager, E, cube);\n        if res2 == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res2).ref);\n        if res1 == res2 {\n            res = res1;\n        } else {\n            res = cuddUniqueInter(manager, int32( f.index), res1, res2);\n        }\n        if res == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res1).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res2).ref);\n        cuddCacheInsert2(manager, Cudd_addOrAbstract, f, cube, res);\n        return(res);\n    }\n\n}"
+    },
+    {
+      "Name": "addCheckPositiveCube",
+      "Start": 18620,
+      "End": 18950,
+      "BodyStart": 18693,
+      "Original": "static int\naddCheckPositiveCube(\n  DdManager * manager,\n  DdNode * cube)\n{\n    if (Cudd_IsComplement(cube)) return(0);\n    if (cube == DD_ONE(manager)) return(1);\n    if (cuddIsConstant(cube)) return(0);\n    if (cuddE(cube) == DD_ZERO(manager)) {\n        return(addCheckPositiveCube(manager, cuddT(cube)));\n    }\n    return(0);\n\n}",
+      "Draft": "func addCheckPositiveCube(manager *DdManager, cube *DdNode) int32 {\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (cube) \u0026 01)) != 0 { return(0); }\n    // inlining of macro DD_ONE\n    if cube == ((manager).one) { return(1); }\n    // inlining of macro cuddIsConstant\n    if (cube).index == CUDD_CONST_INDEX { return(0); }\n    // inlining of macro cuddE\n    // inlining of macro DD_ZERO\n    if ((cube).type.kids.E) == ((manager).zero) {\n        // inlining of macro cuddT\n        return(addCheckPositiveCube(manager, ((cube).type.kids.T)));\n    }\n    return(0);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::mechanical::do::5518",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5490,
+      "End": 5492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::mechanical::do::6815",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6657,
+      "End": 6659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::mechanical::do::7809",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 7651,
+      "End": 7653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::Cudd_addExistAbstract",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addExistAbstract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5118,
+      "End": 5815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::Cudd_addUnivAbstract",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addUnivAbstract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6382,
+      "End": 6811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::Cudd_addOrAbstract",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addOrAbstract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7392,
+      "End": 7802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::ternary::cuddAddExistAbstractRecur",
+      "Category": "ternary-review",
+      "Symbol": "cuddAddExistAbstractRecur",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8527,
+      "End": 11454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::cuddAddExistAbstractRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddAddExistAbstractRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8527,
+      "End": 11454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::ternary::cuddAddUnivAbstractRecur",
+      "Category": "ternary-review",
+      "Symbol": "cuddAddUnivAbstractRecur",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11942,
+      "End": 14936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::cuddAddUnivAbstractRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddAddUnivAbstractRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11942,
+      "End": 14936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::ternary::cuddAddOrAbstractRecur",
+      "Category": "ternary-review",
+      "Symbol": "cuddAddOrAbstractRecur",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15419,
+      "End": 17902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::cuddAddOrAbstractRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddAddOrAbstractRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15419,
+      "End": 17902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::addCheckPositiveCube",
+      "Category": "semantic-review",
+      "Symbol": "addCheckPositiveCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18620,
+      "End": 18950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3535,
+      "End": 3646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::5319",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5319,
+      "End": 5331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::5723",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5723,
+      "End": 5735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::5779",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5779,
+      "End": 5793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::8675",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8675,
+      "End": 8692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::9115",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9115,
+      "End": 9128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::9502",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9502,
+      "End": 9514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::9567",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9567,
+      "End": 9581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::9975",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9975,
+      "End": 9988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::10176",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10176,
+      "End": 10189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::10424",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10424,
+      "End": 10436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::10604",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10604,
+      "End": 10618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::10826",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10826,
+      "End": 10839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::11020",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11020,
+      "End": 11033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::11304",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11304,
+      "End": 11319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::11329",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11329,
+      "End": 11344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::12095",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12095,
+      "End": 12112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::12606",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12606,
+      "End": 12619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::12997",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12997,
+      "End": 13009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::13062",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13062,
+      "End": 13076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::13468",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13468,
+      "End": 13481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::13668",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13668,
+      "End": 13681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::13917",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13917,
+      "End": 13929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::14096",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14096,
+      "End": 14110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::14317",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14317,
+      "End": 14330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::14510",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14510,
+      "End": 14523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::14794",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14794,
+      "End": 14809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::14819",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14819,
+      "End": 14834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::15563",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15563,
+      "End": 15580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::16309",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16309,
+      "End": 16322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::16558",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16558,
+      "End": 16571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::16832",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16832,
+      "End": 16844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::17068",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17068,
+      "End": 17082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::17287",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17287,
+      "End": 17300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::17478",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17478,
+      "End": 17491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::17762",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17762,
+      "End": 17777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddAbs.c::macro-inline::17787",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17787,
+      "End": 17802
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"fmt\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddAddAbs.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Quantification functions for ADDs.]\n\n  Description [External procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_addExistAbstract()\n                \u003cli\u003e Cudd_addUnivAbstract()\n                \u003cli\u003e Cudd_addOrAbstract()\n                \u003c/ul\u003e\n        Internal procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddAddExistAbstractRecur()\n                \u003cli\u003e cuddAddUnivAbstractRecur()\n                \u003cli\u003e cuddAddOrAbstractRecur()\n                \u003c/ul\u003e\n        Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e addCheckPositiveCube()\n                \u003c/ul\u003e]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddAddAbs.c,v 1.15 2004/08/13 18:04:45 fabio Exp $\";\n#endif\n\nvar two *DdNode;\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static int addCheckPositiveCube (DdManager *manager, DdNode *cube);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Existentially Abstracts all the variables in cube from f.]\n\n  Description [Abstracts all the variables in cube from f by summing\n  over all possible values taken by the variables. Returns the\n  abstracted ADD.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addUnivAbstract Cudd_bddExistAbstract\n  Cudd_addOrAbstract]\n\n******************************************************************************/\nfunc Cudd_addExistAbstract(manager *DdManager, f *DdNode, cube *DdNode) *DdNode {\n    var res *DdNode;\n\n    two = cuddUniqueConst(manager,(CUDD_VALUE_TYPE) 2);\n    if two == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(two).ref);\n\n    if addCheckPositiveCube(manager, cube) == 0 {\n        (void) fmt.Fprintf(manager.err, \"Error: Can only abstract cubes\");\n        return(nil);\n    }\n\n    for {\n        manager.reordered = 0;\n        res = cuddAddExistAbstractRecur(manager, f, cube);\n    \nif !(manager.reordered == 1) { break }\n} \n\n    if res == nil {\n        Cudd_RecursiveDeref(manager,two);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(res).ref);\n    Cudd_RecursiveDeref(manager,two);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(res).ref);\n\n    return(res);\n\n} /* end of Cudd_addExistAbstract */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Universally Abstracts all the variables in cube from f.]\n\n  Description [Abstracts all the variables in cube from f by taking\n  the product over all possible values taken by the variable. Returns\n  the abstracted ADD if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addExistAbstract Cudd_bddUnivAbstract\n  Cudd_addOrAbstract]\n\n******************************************************************************/\nfunc Cudd_addUnivAbstract(manager *DdManager, f *DdNode, cube *DdNode) *DdNode {\n    var res *DdNode;\n\n    if addCheckPositiveCube(manager, cube) == 0 {\n        (void) fmt.Fprintf(manager.err, \"Error:  Can only abstract cubes\");\n        return(nil);\n    }\n\n    for {\n        manager.reordered = 0;\n        res = cuddAddUnivAbstractRecur(manager, f, cube);\n    \nif !(manager.reordered == 1) { break }\n} \n\n    return(res);\n\n} /* end of Cudd_addUnivAbstract */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Disjunctively abstracts all the variables in cube from the\n  0-1 ADD f.]\n\n  Description [Abstracts all the variables in cube from the 0-1 ADD f\n  by taking the disjunction over all possible values taken by the\n  variables.  Returns the abstracted ADD if successful; NULL\n  otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addUnivAbstract Cudd_addExistAbstract]\n\n******************************************************************************/\nfunc Cudd_addOrAbstract(manager *DdManager, f *DdNode, cube *DdNode) *DdNode {\n    var res *DdNode;\n\n    if addCheckPositiveCube(manager, cube) == 0 {\n        (void) fmt.Fprintf(manager.err, \"Error: Can only abstract cubes\");\n        return(nil);\n    }\n\n    for {\n        manager.reordered = 0;\n        res = cuddAddOrAbstractRecur(manager, f, cube);\n    \nif !(manager.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_addOrAbstract */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_addExistAbstract.]\n\n  Description [Performs the recursive step of Cudd_addExistAbstract.\n  Returns the ADD obtained by abstracting the variables of cube from f,\n  if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddAddExistAbstractRecur(manager *DdManager, f *DdNode, cube *DdNode) *DdNode {\n    var T, E, res, res1, res2, zero *DdNode;\n\n    statLine(manager);\n    // inlining of macro DD_ZERO\n    zero = ((manager).zero);\n\n    /* Cube is guaranteed to be a cube at this point. */        \n    // inlining of macro cuddIsConstant\n    if f == zero || ((cube).index == CUDD_CONST_INDEX) {  \n        return(f);\n    }\n\n    /* Abstract a variable that does not appear in f =\u003e multiply by 2. */\n    // inlining of macro cuddI\n    if (((f.index)==CUDD_CONST_INDEX)?int32((f.index)):(manager).perm[(f.index)]) \u003e (((cube.index)==CUDD_CONST_INDEX)?int32((cube.index)):(manager).perm[(cube.index)]) {\n        // inlining of macro cuddT\n        res1 = cuddAddExistAbstractRecur(manager, f, ((cube).type.kids.T));\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        /* Use the \"internal\" procedure to be alerted in case of\n        ** dynamic reordering. If dynamic reordering occurs, we\n        ** have to abort the entire abstraction.\n        */\n        res = cuddAddApplyRecur(manager,Cudd_addTimes,res1,two);\n        if res == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDeref(manager,res1);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref);\n        return(res);\n    }\n\n    if (res = cuddCacheLookup2(manager, Cudd_addExistAbstract, f, cube)) != nil {\n        return(res);\n    }\n\n    // inlining of macro cuddT\n    T = ((f).type.kids.T);\n    // inlining of macro cuddE\n    E = ((f).type.kids.E);\n\n    /* If the two indices are the same, so are their levels. */\n    if f.index == cube.index {\n        // inlining of macro cuddT\n        res1 = cuddAddExistAbstractRecur(manager, T, ((cube).type.kids.T));\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        // inlining of macro cuddT\n        res2 = cuddAddExistAbstractRecur(manager, E, ((cube).type.kids.T));\n        if res2 == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res2).ref);\n        res = cuddAddApplyRecur(manager, Cudd_addPlus, res1, res2);\n        if res == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDeref(manager,res1);\n        Cudd_RecursiveDeref(manager,res2);\n        cuddCacheInsert2(manager, Cudd_addExistAbstract, f, cube, res);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref);\n        return(res);\n    } else { /* if (cuddI(manager,f-\u003eindex) \u003c cuddI(manager,cube-\u003eindex)) */\n        res1 = cuddAddExistAbstractRecur(manager, T, cube);\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        res2 = cuddAddExistAbstractRecur(manager, E, cube);\n        if res2 == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res2).ref);\n        if res1 == res2 {\n            res = res1;\n        } else {\n            res = cuddUniqueInter(manager, int32( f.index), res1, res2);\n        }\n        if res == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res1).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res2).ref);\n        cuddCacheInsert2(manager, Cudd_addExistAbstract, f, cube, res);\n        return(res);\n    }       \n\n} /* end of cuddAddExistAbstractRecur */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_addUnivAbstract.]\n\n  Description [Performs the recursive step of Cudd_addUnivAbstract.\n  Returns the ADD obtained by abstracting the variables of cube from f,\n  if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddAddUnivAbstractRecur(manager *DdManager, f *DdNode, cube *DdNode) *DdNode {\n    var T, E, res, res1, res2, one, zero *DdNode;\n\n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro DD_ZERO\n    zero = ((manager).zero);\n\n    /* Cube is guaranteed to be a cube at this point.\n    ** zero and one are the only constatnts c such that c*c=c.\n    */\n    if f == zero || f == one || cube == one {  \n        return(f);\n    }\n\n    /* Abstract a variable that does not appear in f. */\n    // inlining of macro cuddI\n    if (((f.index)==CUDD_CONST_INDEX)?int32((f.index)):(manager).perm[(f.index)]) \u003e (((cube.index)==CUDD_CONST_INDEX)?int32((cube.index)):(manager).perm[(cube.index)]) {\n        // inlining of macro cuddT\n        res1 = cuddAddUnivAbstractRecur(manager, f, ((cube).type.kids.T));\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        /* Use the \"internal\" procedure to be alerted in case of\n        ** dynamic reordering. If dynamic reordering occurs, we\n        ** have to abort the entire abstraction.\n        */\n        res = cuddAddApplyRecur(manager, Cudd_addTimes, res1, res1);\n        if res == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDeref(manager,res1);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref);\n        return(res);\n    }\n\n    if (res = cuddCacheLookup2(manager, Cudd_addUnivAbstract, f, cube)) != nil {\n        return(res);\n    }\n\n    // inlining of macro cuddT\n    T = ((f).type.kids.T);\n    // inlining of macro cuddE\n    E = ((f).type.kids.E);\n\n    /* If the two indices are the same, so are their levels. */\n    if f.index == cube.index {\n        // inlining of macro cuddT\n        res1 = cuddAddUnivAbstractRecur(manager, T, ((cube).type.kids.T));\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        // inlining of macro cuddT\n        res2 = cuddAddUnivAbstractRecur(manager, E, ((cube).type.kids.T));\n        if res2 == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res2).ref);\n        res = cuddAddApplyRecur(manager, Cudd_addTimes, res1, res2);\n        if res == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res).ref);\n        Cudd_RecursiveDeref(manager,res1);\n        Cudd_RecursiveDeref(manager,res2);\n        cuddCacheInsert2(manager, Cudd_addUnivAbstract, f, cube, res);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref);\n        return(res);\n    } else { /* if (cuddI(manager,f-\u003eindex) \u003c cuddI(manager,cube-\u003eindex)) */\n        res1 = cuddAddUnivAbstractRecur(manager, T, cube);\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        res2 = cuddAddUnivAbstractRecur(manager, E, cube);\n        if res2 == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res2).ref);\n        if res1 == res2 {\n            res = res1;\n        } else {\n            res = cuddUniqueInter(manager, int32( f.index), res1, res2);\n        }\n        if res == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res1).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res2).ref);\n        cuddCacheInsert2(manager, Cudd_addUnivAbstract, f, cube, res);\n        return(res);\n    }\n\n} /* end of cuddAddUnivAbstractRecur */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_addOrAbstract.]\n\n  Description [Performs the recursive step of Cudd_addOrAbstract.\n  Returns the ADD obtained by abstracting the variables of cube from f,\n  if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddAddOrAbstractRecur(manager *DdManager, f *DdNode, cube *DdNode) *DdNode {\n    var T, E, res, res1, res2, one *DdNode;\n\n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n\n    /* Cube is guaranteed to be a cube at this point. */\n    // inlining of macro cuddIsConstant\n    if ((f).index == CUDD_CONST_INDEX) || cube == one {  \n        return(f);\n    }\n\n    /* Abstract a variable that does not appear in f. */\n    // inlining of macro cuddI\n    if (((f.index)==CUDD_CONST_INDEX)?int32((f.index)):(manager).perm[(f.index)]) \u003e (((cube.index)==CUDD_CONST_INDEX)?int32((cube.index)):(manager).perm[(cube.index)]) {\n        // inlining of macro cuddT\n        res = cuddAddOrAbstractRecur(manager, f, ((cube).type.kids.T));\n        return(res);\n    }\n\n    if (res = cuddCacheLookup2(manager, Cudd_addOrAbstract, f, cube)) != nil {\n        return(res);\n    }\n\n    // inlining of macro cuddT\n    T = ((f).type.kids.T);\n    // inlining of macro cuddE\n    E = ((f).type.kids.E);\n\n    /* If the two indices are the same, so are their levels. */\n    if f.index == cube.index {\n        // inlining of macro cuddT\n        res1 = cuddAddOrAbstractRecur(manager, T, ((cube).type.kids.T));\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        if res1 != one {\n            // inlining of macro cuddT\n            res2 = cuddAddOrAbstractRecur(manager, E, ((cube).type.kids.T));\n            if res2 == nil {\n                Cudd_RecursiveDeref(manager,res1);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(res2).ref);\n            res = cuddAddApplyRecur(manager, Cudd_addOr, res1, res2);\n            if res == nil {\n                Cudd_RecursiveDeref(manager,res1);\n                Cudd_RecursiveDeref(manager,res2);\n                return(nil);\n            }\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(res).ref);\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n        } else {\n            res = res1;\n        }\n        cuddCacheInsert2(manager, Cudd_addOrAbstract, f, cube, res);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res).ref);\n        return(res);\n    } else { /* if (cuddI(manager,f-\u003eindex) \u003c cuddI(manager,cube-\u003eindex)) */\n        res1 = cuddAddOrAbstractRecur(manager, T, cube);\n        if res1 == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res1).ref);\n        res2 = cuddAddOrAbstractRecur(manager, E, cube);\n        if res2 == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(res2).ref);\n        if res1 == res2 {\n            res = res1;\n        } else {\n            res = cuddUniqueInter(manager, int32( f.index), res1, res2);\n        }\n        if res == nil {\n            Cudd_RecursiveDeref(manager,res1);\n            Cudd_RecursiveDeref(manager,res2);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res1).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(res2).ref);\n        cuddCacheInsert2(manager, Cudd_addOrAbstract, f, cube, res);\n        return(res);\n    }\n\n} /* end of cuddAddOrAbstractRecur */\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks whether cube is an ADD representing the product\n  of positive literals.]\n\n  Description [Checks whether cube is an ADD representing the product of\n  positive literals. Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc addCheckPositiveCube(manager *DdManager, cube *DdNode) int32 {\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (cube) \u0026 01)) != 0 { return(0); }\n    // inlining of macro DD_ONE\n    if cube == ((manager).one) { return(1); }\n    // inlining of macro cuddIsConstant\n    if (cube).index == CUDD_CONST_INDEX { return(0); }\n    // inlining of macro cuddE\n    // inlining of macro DD_ZERO\n    if ((cube).type.kids.E) == ((manager).zero) {\n        // inlining of macro cuddT\n        return(addCheckPositiveCube(manager, ((cube).type.kids.T)));\n    }\n    return(0);\n\n} /* end of addCheckPositiveCube */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n\n"
+}

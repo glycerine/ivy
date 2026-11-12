@@ -1,0 +1,764 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c",
+  "SHA256": "f01ef91de0f0ce02004a02947a7fd6fcb8d9ddf45f9b78de4a33ccd13403a0d0",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 5,
+        "ByteOffset": 3296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLutSize \u003c= nCutSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 3332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCutSize \u003c SBD_CUT_NO_LEAF );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 3374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= SBD_MAX_CUTSIZE );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 3433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c SBD_MAX_CUTNUM );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 90,
+        "Column": 9,
+        "ByteOffset": 3492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Sbd_Srv_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 4111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 4796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 149,
+        "Column": 9,
+        "ByteOffset": 5354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cut of node %d is not tological\\n\", iObj ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 150,
+        "Column": 5,
+        "ByteOffset": 5413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 6035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 202,
+        "Column": 9,
+        "ByteOffset": 7050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Prev \u003c Entry );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 9,
+        "ByteOffset": 7719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Entry );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 225,
+        "Column": 9,
+        "ByteOffset": 7744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vMirrors, Entry) == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 9,
+        "ByteOffset": 7799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vLutLevs, Entry) \u003c= LevStop );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 247,
+        "Column": 5,
+        "ByteOffset": 8655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 273,
+        "Column": 9,
+        "ByteOffset": 9622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 9,
+        "ByteOffset": 9660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vLutLevs, Entry) == LevStop );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 289,
+        "Column": 9,
+        "ByteOffset": 10260
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vLutLevs, Fan0) \u003c= LevStop );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 290,
+        "Column": 9,
+        "ByteOffset": 10319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vLutLevs, Fan1) \u003c= LevStop );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 339,
+        "Column": 9,
+        "ByteOffset": 12226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 349,
+        "Column": 9,
+        "ByteOffset": 12748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(p.vCut) \u003c= p.nCutSize );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 352,
+        "Column": 13,
+        "ByteOffset": 13000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 359,
+        "Column": 13,
+        "ByteOffset": 13466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(p.vCut) \u003c= p.nCutSize );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 362,
+        "Column": 17,
+        "ByteOffset": 13732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 17,
+        "ByteOffset": 14226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Vec_IntSize(p.vCut) \u003c= p.nCutSize );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 372,
+        "Column": 21,
+        "ByteOffset": 14505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 379,
+        "Column": 21,
+        "ByteOffset": 15027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Vec_IntSize(p.vCut) \u003c= p.nCutSize );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 382,
+        "Column": 25,
+        "ByteOffset": 15319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 413,
+        "Column": 9,
+        "ByteOffset": 16635
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sbd_ManCutServerStart",
+      "Start": 2928,
+      "End": 3883,
+      "BodyStart": 3191,
+      "Original": "Sbd_Srv_t * Sbd_ManCutServerStart( Gia_Man_t * pGia, Vec_Int_t * vMirrors, \n                                   Vec_Int_t * vLutLevs, Vec_Int_t * vLevs, Vec_Int_t * vRefs, \n                                   int nLutSize, int nCutSize, int nCutNum, int fVerbose )\n{\n    Sbd_Srv_t * p;\n    assert( nLutSize \u003c= nCutSize );\n    assert( nCutSize \u003c SBD_CUT_NO_LEAF );\n    assert( nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= SBD_MAX_CUTSIZE );\n    assert( nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c SBD_MAX_CUTNUM );\n    p = ABC_CALLOC( Sbd_Srv_t, 1 );\n    p-\u003eclkStart = Abc_Clock();\n    p-\u003enLutSize = nLutSize;\n    p-\u003enCutSize = nCutSize;\n    p-\u003enCutNum  = nCutNum;\n    p-\u003efVerbose = fVerbose;\n    p-\u003epGia     = pGia;\n    p-\u003evMirrors = vMirrors;\n    p-\u003evLutLevs = vLutLevs;\n    p-\u003evLevs    = vLevs;\n    p-\u003evRefs    = vRefs;\n    p-\u003evCut0    = Vec_IntAlloc( 100 );\n    p-\u003evCut     = Vec_IntAlloc( 100 );\n    p-\u003evCutTop  = Vec_IntAlloc( 100 );\n    p-\u003evCutBot  = Vec_IntAlloc( 100 );\n    return p;\n}",
+      "Draft": "func Sbd_ManCutServerStart(pGia *Gia_Man_t, vMirrors *Vec_Int_t, vLutLevs *Vec_Int_t, vLevs *Vec_Int_t, vRefs *Vec_Int_t, nLutSize int32, nCutSize int32, nCutNum int32, fVerbose int32) *Sbd_Srv_t {\n    var p *Sbd_Srv_t;\n    assert(nLutSize \u003c= nCutSize, \"nLutSize \u003c= nCutSize\");\n    assert(nCutSize \u003c SBD_CUT_NO_LEAF, \"nCutSize \u003c SBD_CUT_NO_LEAF\");\n    assert(nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= SBD_MAX_CUTSIZE, \"nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= SBD_MAX_CUTSIZE\");\n    assert(nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c SBD_MAX_CUTNUM, \"nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c SBD_MAX_CUTNUM\");\n    p = new(Sbd_Srv_t);\n    p.clkStart = Abc_Clock();\n    p.nLutSize = nLutSize;\n    p.nCutSize = nCutSize;\n    p.nCutNum  = nCutNum;\n    p.fVerbose = fVerbose;\n    p.pGia     = pGia;\n    p.vMirrors = vMirrors;\n    p.vLutLevs = vLutLevs;\n    p.vLevs    = vLevs;\n    p.vRefs    = vRefs;\n    p.vCut0    = Vec_IntAlloc( 100 );\n    p.vCut     = Vec_IntAlloc( 100 );\n    p.vCutTop  = Vec_IntAlloc( 100 );\n    p.vCutBot  = Vec_IntAlloc( 100 );\n    return p;\n}"
+    },
+    {
+      "Name": "Sbd_ManCutServerStop",
+      "Start": 3884,
+      "End": 4068,
+      "BodyStart": 3927,
+      "Original": "void Sbd_ManCutServerStop( Sbd_Srv_t * p )\n{\n    Vec_IntFree( p-\u003evCut0 );\n    Vec_IntFree( p-\u003evCut );\n    Vec_IntFree( p-\u003evCutTop );\n    Vec_IntFree( p-\u003evCutBot );\n    ABC_FREE( p );\n}",
+      "Draft": "func Sbd_ManCutServerStop(p *Sbd_Srv_t) {\n    Vec_IntFree( p.vCut0 );\n    Vec_IntFree( p.vCut );\n    Vec_IntFree( p.vCutTop );\n    Vec_IntFree( p.vCutBot );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Sbd_ManCutIsTopo_rec",
+      "Start": 4304,
+      "End": 4933,
+      "BodyStart": 4378,
+      "Original": "int Sbd_ManCutIsTopo_rec( Gia_Man_t * p, Vec_Int_t * vMirrors, int iObj )\n{\n    Gia_Obj_t * pObj; \n    int Ret0, Ret1;\n    if ( Vec_IntEntry(vMirrors, iObj) \u003e= 0 )\n        iObj = Abc_Lit2Var(Vec_IntEntry(vMirrors, iObj));\n    if ( !iObj || Gia_ObjIsTravIdCurrentId(p, iObj) )\n        return 1;\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if ( Gia_ObjIsCi(pObj) )\n        return 0;\n    assert( Gia_ObjIsAnd(pObj) );\n    Ret0 = Sbd_ManCutIsTopo_rec( p, vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n    Ret1 = Sbd_ManCutIsTopo_rec( p, vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n    return Ret0 \u0026\u0026 Ret1;\n}",
+      "Draft": "func Sbd_ManCutIsTopo_rec(p *Gia_Man_t, vMirrors *Vec_Int_t, iObj int32) int32 {\n    var pObj *Gia_Obj_t; \n    var Ret0, Ret1 int32;\n    if Vec_IntEntry(vMirrors, iObj) \u003e= 0 {\n        iObj = Abc_Lit2Var(Vec_IntEntry(vMirrors, iObj)); }\n    if !(iObj != 0) || Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return 1; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) {\n        return 0; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Ret0 = Sbd_ManCutIsTopo_rec( p, vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n    Ret1 = Sbd_ManCutIsTopo_rec( p, vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n    return Ret0 \u0026\u0026 Ret1;\n}"
+    },
+    {
+      "Name": "Sbd_ManCutIsTopo",
+      "Start": 4934,
+      "End": 5372,
+      "BodyStart": 5022,
+      "Original": "int Sbd_ManCutIsTopo( Gia_Man_t * p, Vec_Int_t * vMirrors, Vec_Int_t * vCut, int iObj )\n{\n    int i, Entry, RetValue;\n    Gia_ManIncrementTravId( p );\n    Vec_IntForEachEntry( vCut, Entry, i )\n        Gia_ObjSetTravIdCurrentId( p, Entry );        \n    RetValue = Sbd_ManCutIsTopo_rec( p, vMirrors, iObj );\n    if ( RetValue == 0 )\n        printf( \"Cut of node %d is not tological\\n\", iObj );\n    assert( RetValue );\n    return RetValue;\n}",
+      "Draft": "func Sbd_ManCutIsTopo(p *Gia_Man_t, vMirrors *Vec_Int_t, vCut *Vec_Int_t, iObj int32) int32 {\n    var i, Entry, RetValue int32;\n    Gia_ManIncrementTravId( p );\n    Vec_IntForEachEntry( vCut, Entry, i )\n        Gia_ObjSetTravIdCurrentId( p, Entry );        \n    RetValue = Sbd_ManCutIsTopo_rec( p, vMirrors, iObj );\n    if RetValue == 0 {\n        fmt.Printf(\"Cut of node %d is not tological\\n\", iObj); }\n    assert((RetValue != 0), \"RetValue\");\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Sbd_ManCutExpandOne",
+      "Start": 5608,
+      "End": 6699,
+      "BodyStart": 5746,
+      "Original": "static inline int Sbd_ManCutExpandOne( Gia_Man_t * p, Vec_Int_t * vMirrors, Vec_Int_t * vLutLevs, Vec_Int_t * vCut, int iThis, int iObj )\n{\n    int Lit0m, Lit1m, Fan0, Fan1, iPlace0, iPlace1;\n    int LutLev = Vec_IntEntry( vLutLevs, iObj );\n    Gia_Obj_t * pObj = Gia_ManObj(p, iObj);\n    if ( Gia_ObjIsCi(pObj) )\n        return 0;\n    assert( Gia_ObjIsAnd(pObj) );\n    Lit0m = Vec_IntEntry( vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n    Lit1m = Vec_IntEntry( vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n    Fan0 = Lit0m \u003e= 0 ? Abc_Lit2Var(Lit0m) : Gia_ObjFaninId0(pObj, iObj);\n    Fan1 = Lit1m \u003e= 0 ? Abc_Lit2Var(Lit1m) : Gia_ObjFaninId1(pObj, iObj);\n    iPlace0 = Vec_IntFind( vCut, Fan0 );\n    iPlace1 = Vec_IntFind( vCut, Fan1 );\n    if ( iPlace0 == -1 \u0026\u0026 iPlace1 == -1 )\n        return 0;\n    if ( Vec_IntEntry(vLutLevs, Fan0) \u003e LutLev || Vec_IntEntry(vLutLevs, Fan1) \u003e LutLev )\n        return 0;\n    Vec_IntDrop( vCut, iThis );\n    if ( iPlace0 == -1 \u0026\u0026 Fan0 )\n        Vec_IntPushOrder( vCut, Fan0 );\n    if ( iPlace1 == -1 \u0026\u0026 Fan1 )\n        Vec_IntPushOrder( vCut, Fan1 );\n    return 1;\n}",
+      "Draft": "func Sbd_ManCutExpandOne(p *Gia_Man_t, vMirrors *Vec_Int_t, vLutLevs *Vec_Int_t, vCut *Vec_Int_t, iThis int32, iObj int32) int32 {\n    var Lit0m, Lit1m, Fan0, Fan1, iPlace0, iPlace1 int32;\n    var LutLev int32  = Vec_IntEntry( vLutLevs, iObj );\n    var pObj *Gia_Obj_t  = Gia_ManObj(p, iObj);\n    if Gia_ObjIsCi(pObj) {\n        return 0; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Lit0m = Vec_IntEntry( vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n    Lit1m = Vec_IntEntry( vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n    if Lit0m \u003e= 0 {\n        Fan0 = Abc_Lit2Var(Lit0m);\n    } else {\n        Fan0 = Gia_ObjFaninId0(pObj, iObj);\n    }\n    if Lit1m \u003e= 0 {\n        Fan1 = Abc_Lit2Var(Lit1m);\n    } else {\n        Fan1 = Gia_ObjFaninId1(pObj, iObj);\n    }\n    iPlace0 = Vec_IntFind( vCut, Fan0 );\n    iPlace1 = Vec_IntFind( vCut, Fan1 );\n    if iPlace0 == -1 \u0026\u0026 iPlace1 == -1 {\n        return 0; }\n    if Vec_IntEntry(vLutLevs, Fan0) \u003e LutLev || Vec_IntEntry(vLutLevs, Fan1) \u003e LutLev {\n        return 0; }\n    Vec_IntDrop( vCut, iThis );\n    if iPlace0 == -1 \u0026\u0026 Fan0 {\n        Vec_IntPushOrder( vCut, Fan0 ); }\n    if iPlace1 == -1 \u0026\u0026 (Fan1 != 0) {\n        Vec_IntPushOrder( vCut, Fan1 ); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Vec_IntIsOrdered",
+      "Start": 6700,
+      "End": 6921,
+      "BodyStart": 6742,
+      "Original": "void Vec_IntIsOrdered( Vec_Int_t * vCut )\n{\n    int i, Prev, Entry;\n    Prev = Vec_IntEntry( vCut, 0 );\n    Vec_IntForEachEntryStart( vCut, Entry, i, 1 )\n    {\n        assert( Prev \u003c Entry );\n        Prev = Entry;\n    }\n}",
+      "Draft": "func Vec_IntIsOrdered(vCut *Vec_Int_t) {\n    var i, Prev, Entry int32;\n    Prev = Vec_IntEntry( vCut, 0 );\n    Vec_IntForEachEntryStart( vCut, Entry, i, 1 )\n    {\n        assert(Prev \u003c Entry, \"Prev \u003c Entry\");\n        Prev = Entry;\n    }\n}"
+    },
+    {
+      "Name": "Sbd_ManCutExpand",
+      "Start": 6922,
+      "End": 7250,
+      "BodyStart": 7023,
+      "Original": "void Sbd_ManCutExpand( Gia_Man_t * p, Vec_Int_t * vMirrors, Vec_Int_t * vLutLevs, Vec_Int_t * vCut )\n{\n    int i, Entry;\n    do\n    {\n        Vec_IntForEachEntry( vCut, Entry, i )\n            if ( Sbd_ManCutExpandOne( p, vMirrors, vLutLevs, vCut, i, Entry ) )\n                break;\n    } \n    while ( i \u003c Vec_IntSize(vCut) );\n}",
+      "Draft": "func Sbd_ManCutExpand(p *Gia_Man_t, vMirrors *Vec_Int_t, vLutLevs *Vec_Int_t, vCut *Vec_Int_t) {\n    var i, Entry int32;\n    for\n    {\n        Vec_IntForEachEntry( vCut, Entry, i )\n            if ( Sbd_ManCutExpandOne( p, vMirrors, vLutLevs, vCut, i, Entry ) )\n                break;\n    \nif !( i \u003c Vec_IntSize(vCut) ) { break }\n} \n    \n}"
+    },
+    {
+      "Name": "Sbd_ManCutReload",
+      "Start": 7251,
+      "End": 7850,
+      "BodyStart": 7392,
+      "Original": "void Sbd_ManCutReload( Vec_Int_t * vMirrors, Vec_Int_t * vLutLevs, int LevStop, Vec_Int_t * vCut, Vec_Int_t * vCutTop, Vec_Int_t * vCutBot )\n{\n    int i, Entry;\n    Vec_IntClear( vCutTop );\n    Vec_IntClear( vCutBot );\n    Vec_IntForEachEntry( vCut, Entry, i )\n    {\n        assert( Entry );\n        assert( Vec_IntEntry(vMirrors, Entry) == -1 );\n        assert( Vec_IntEntry(vLutLevs, Entry) \u003c= LevStop );\n        if ( Vec_IntEntry(vLutLevs, Entry) == LevStop )\n            Vec_IntPush( vCutTop, Entry );\n        else\n            Vec_IntPush( vCutBot, Entry );\n    }\n    Vec_IntIsOrdered( vCut );\n}",
+      "Draft": "func Sbd_ManCutReload(vMirrors *Vec_Int_t, vLutLevs *Vec_Int_t, LevStop int32, vCut *Vec_Int_t, vCutTop *Vec_Int_t, vCutBot *Vec_Int_t) {\n    var i, Entry int32;\n    Vec_IntClear( vCutTop );\n    Vec_IntClear( vCutBot );\n    Vec_IntForEachEntry( vCut, Entry, i )\n    {\n        assert((Entry != 0), \"Entry\");\n        assert(Vec_IntEntry(vMirrors, Entry) == -1, \"Vec_IntEntry(vMirrors, Entry) == -1\");\n        assert(Vec_IntEntry(vLutLevs, Entry) \u003c= LevStop, \"Vec_IntEntry(vLutLevs, Entry) \u003c= LevStop\");\n        if Vec_IntEntry(vLutLevs, Entry) == LevStop {\n            Vec_IntPush( vCutTop, Entry );\n        } else {\n            Vec_IntPush( vCutBot, Entry ); }\n    }\n    Vec_IntIsOrdered( vCut );\n}"
+    },
+    {
+      "Name": "Sbd_ManCutCollect_rec",
+      "Start": 7851,
+      "End": 8714,
+      "BodyStart": 7979,
+      "Original": "int Sbd_ManCutCollect_rec( Gia_Man_t * p, Vec_Int_t * vMirrors, int iObj, int LevStop, Vec_Int_t * vLutLevs, Vec_Int_t * vCut )\n{\n    Gia_Obj_t * pObj; \n    int Ret0, Ret1;\n    if ( Vec_IntEntry(vMirrors, iObj) \u003e= 0 )\n        iObj = Abc_Lit2Var(Vec_IntEntry(vMirrors, iObj));\n    if ( !iObj || Gia_ObjIsTravIdCurrentId(p, iObj) )\n        return 1;\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if ( Gia_ObjIsCi(pObj) || Vec_IntEntry(vLutLevs, iObj) \u003c= LevStop )\n    {\n        Vec_IntPush( vCut, iObj );\n        return Vec_IntEntry(vLutLevs, iObj) \u003c= LevStop;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Ret0 = Sbd_ManCutCollect_rec( p, vMirrors, Gia_ObjFaninId0(pObj, iObj), LevStop, vLutLevs, vCut );\n    Ret1 = Sbd_ManCutCollect_rec( p, vMirrors, Gia_ObjFaninId1(pObj, iObj), LevStop, vLutLevs, vCut );\n    return Ret0 \u0026\u0026 Ret1;\n}",
+      "Draft": "func Sbd_ManCutCollect_rec(p *Gia_Man_t, vMirrors *Vec_Int_t, iObj int32, LevStop int32, vLutLevs *Vec_Int_t, vCut *Vec_Int_t) int32 {\n    var pObj *Gia_Obj_t; \n    var Ret0, Ret1 int32;\n    if Vec_IntEntry(vMirrors, iObj) \u003e= 0 {\n        iObj = Abc_Lit2Var(Vec_IntEntry(vMirrors, iObj)); }\n    if !(iObj != 0) || Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return 1; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) || Vec_IntEntry(vLutLevs, iObj) \u003c= LevStop {\n        Vec_IntPush( vCut, iObj );\n        return Vec_IntEntry(vLutLevs, iObj) \u003c= LevStop;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Ret0 = Sbd_ManCutCollect_rec( p, vMirrors, Gia_ObjFaninId0(pObj, iObj), LevStop, vLutLevs, vCut );\n    Ret1 = Sbd_ManCutCollect_rec( p, vMirrors, Gia_ObjFaninId1(pObj, iObj), LevStop, vLutLevs, vCut );\n    return Ret0 \u0026\u0026 Ret1;\n}"
+    },
+    {
+      "Name": "Sbd_ManCutReduceTop",
+      "Start": 8950,
+      "End": 10394,
+      "BodyStart": 9098,
+      "Original": "int Sbd_ManCutReduceTop( Gia_Man_t * p, Vec_Int_t * vMirrors, int iObj, Vec_Int_t * vLutLevs, Vec_Int_t * vCut, Vec_Int_t * vCutTop, int nCutSize )\n{\n    int i, Entry, Lit0m, Lit1m, Fan0, Fan1;\n    int LevStop = Vec_IntEntry(vLutLevs, iObj) - 2;\n    Vec_IntIsOrdered( vCut );\n    Vec_IntForEachEntryReverse( vCutTop, Entry, i )\n    {\n        Gia_Obj_t * pObj = Gia_ManObj( p, Entry );\n        if ( Gia_ObjIsCi(pObj) )\n            continue;\n        assert( Gia_ObjIsAnd(pObj) );\n        assert( Vec_IntEntry(vLutLevs, Entry) == LevStop );\n        Lit0m = Vec_IntEntry( vMirrors, Gia_ObjFaninId0(pObj, Entry) );\n        Lit1m = Vec_IntEntry( vMirrors, Gia_ObjFaninId1(pObj, Entry) );\n        Fan0 = Lit0m \u003e= 0 ? Abc_Lit2Var(Lit0m) : Gia_ObjFaninId0(pObj, Entry);\n        Fan1 = Lit1m \u003e= 0 ? Abc_Lit2Var(Lit1m) : Gia_ObjFaninId1(pObj, Entry);\n        if ( Vec_IntEntry(vLutLevs, Fan0) \u003e LevStop || Vec_IntEntry(vLutLevs, Fan1) \u003e LevStop )\n            continue;\n        assert( Vec_IntEntry(vLutLevs, Fan0) \u003c= LevStop );\n        assert( Vec_IntEntry(vLutLevs, Fan1) \u003c= LevStop );\n        if ( Vec_IntEntry(vLutLevs, Fan0) == LevStop \u0026\u0026 Vec_IntEntry(vLutLevs, Fan1) == LevStop )\n            continue;\n        Vec_IntRemove( vCut, Entry );\n        if ( Fan0 ) Vec_IntPushUniqueOrder( vCut, Fan0 );\n        if ( Fan1 ) Vec_IntPushUniqueOrder( vCut, Fan1 );\n        //Sbd_ManCutIsTopo( p, vMirrors, vCut, iObj );\n        return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Sbd_ManCutReduceTop(p *Gia_Man_t, vMirrors *Vec_Int_t, iObj int32, vLutLevs *Vec_Int_t, vCut *Vec_Int_t, vCutTop *Vec_Int_t, nCutSize int32) int32 {\n    var i, Entry, Lit0m, Lit1m, Fan0, Fan1 int32;\n    var LevStop int32  = Vec_IntEntry(vLutLevs, iObj) - 2;\n    Vec_IntIsOrdered( vCut );\n    Vec_IntForEachEntryReverse( vCutTop, Entry, i )\n    {\n        var pObj *Gia_Obj_t  = Gia_ManObj( p, Entry );\n        if Gia_ObjIsCi(pObj) {\n            continue; }\n        assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n        assert(Vec_IntEntry(vLutLevs, Entry) == LevStop, \"Vec_IntEntry(vLutLevs, Entry) == LevStop\");\n        Lit0m = Vec_IntEntry( vMirrors, Gia_ObjFaninId0(pObj, Entry) );\n        Lit1m = Vec_IntEntry( vMirrors, Gia_ObjFaninId1(pObj, Entry) );\n        if Lit0m \u003e= 0 {\n            Fan0 = Abc_Lit2Var(Lit0m);\n        } else {\n            Fan0 = Gia_ObjFaninId0(pObj, Entry);\n        }\n        if Lit1m \u003e= 0 {\n            Fan1 = Abc_Lit2Var(Lit1m);\n        } else {\n            Fan1 = Gia_ObjFaninId1(pObj, Entry);\n        }\n        if Vec_IntEntry(vLutLevs, Fan0) \u003e LevStop || Vec_IntEntry(vLutLevs, Fan1) \u003e LevStop {\n            continue; }\n        assert(Vec_IntEntry(vLutLevs, Fan0) \u003c= LevStop, \"Vec_IntEntry(vLutLevs, Fan0) \u003c= LevStop\");\n        assert(Vec_IntEntry(vLutLevs, Fan1) \u003c= LevStop, \"Vec_IntEntry(vLutLevs, Fan1) \u003c= LevStop\");\n        if Vec_IntEntry(vLutLevs, Fan0) == LevStop \u0026\u0026 Vec_IntEntry(vLutLevs, Fan1) == LevStop {\n            continue; }\n        Vec_IntRemove( vCut, Entry );\n        if Fan0 { Vec_IntPushUniqueOrder( vCut, Fan0 ); }\n        if Fan1 != 0 { Vec_IntPushUniqueOrder( vCut, Fan1 ); }\n        //Sbd_ManCutIsTopo( p, vMirrors, vCut, iObj );\n        return 1;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Sbd_ManCutServerFirst",
+      "Start": 10630,
+      "End": 16689,
+      "BodyStart": 10698,
+      "Original": "int Sbd_ManCutServerFirst( Sbd_Srv_t * p, int iObj, int * pLeaves )\n{\n    int RetValue, LevStop = Vec_IntEntry(p-\u003evLutLevs, iObj) - 2;\n\n    Vec_IntClear( p-\u003evCut );\n    Gia_ManIncrementTravId( p-\u003epGia );\n    RetValue = Sbd_ManCutCollect_rec( p-\u003epGia, p-\u003evMirrors, iObj, LevStop, p-\u003evLutLevs, p-\u003evCut );\n    if ( RetValue == 0 ) // cannot build delay-improving cut\n        return -1;\n    // check if the current cut is good\n    Vec_IntSort( p-\u003evCut, 0 );\n/*\n    Sbd_ManCutReload( p-\u003evMirrors, p-\u003evLutLevs, LevStop, p-\u003evCut, p-\u003evCutTop, p-\u003evCutBot );\n    if ( Vec_IntSize(p-\u003evCut) \u003c= p-\u003enCutSize \u0026\u0026 Vec_IntSize(p-\u003evCutTop) \u003c= p-\u003enLutSize-1 )\n    {\n        //printf( \"%d \", Vec_IntSize(p-\u003evCut) );\n        memcpy( pLeaves, Vec_IntArray(p-\u003evCut), sizeof(int) * Vec_IntSize(p-\u003evCut) );\n        return Vec_IntSize(p-\u003evCut);\n    }\n*/\n    // try to expand the cut\n    Sbd_ManCutExpand( p-\u003epGia, p-\u003evMirrors, p-\u003evLutLevs, p-\u003evCut );\n    Sbd_ManCutReload( p-\u003evMirrors, p-\u003evLutLevs, LevStop, p-\u003evCut, p-\u003evCutTop, p-\u003evCutBot );\n    if ( Vec_IntSize(p-\u003evCut) \u003c= p-\u003enCutSize \u0026\u0026 Vec_IntSize(p-\u003evCutTop) \u003c= p-\u003enLutSize-1 )\n    {\n        //printf( \"1=(%d,%d) \", Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n        //printf( \"%d \", Vec_IntSize(p-\u003evCut) );\n        memcpy( pLeaves, Vec_IntArray(p-\u003evCut), sizeof(int) * Vec_IntSize(p-\u003evCut) );\n        return Vec_IntSize(p-\u003evCut);\n    }\n\n    // try to reduce the topmost\n    Vec_IntClear( p-\u003evCut0 );\n    Vec_IntAppend( p-\u003evCut0, p-\u003evCut );\n    if ( Vec_IntSize(p-\u003evCut) \u003c p-\u003enCutSize \u0026\u0026 Sbd_ManCutReduceTop( p-\u003epGia, p-\u003evMirrors, iObj, p-\u003evLutLevs, p-\u003evCut, p-\u003evCutTop, p-\u003enCutSize ) )\n    {\n        Sbd_ManCutExpand( p-\u003epGia, p-\u003evMirrors, p-\u003evLutLevs, p-\u003evCut );\n        Sbd_ManCutReload( p-\u003evMirrors, p-\u003evLutLevs, LevStop, p-\u003evCut, p-\u003evCutTop, p-\u003evCutBot );\n        assert( Vec_IntSize(p-\u003evCut) \u003c= p-\u003enCutSize );\n        if ( Vec_IntSize(p-\u003evCutTop) \u003c= p-\u003enLutSize-1 )\n        {\n            //printf( \"%d -\u003e %d (%d + %d)\\n\", Vec_IntSize(p-\u003evCut0), Vec_IntSize(p-\u003evCut), Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n            memcpy( pLeaves, Vec_IntArray(p-\u003evCut), sizeof(int) * Vec_IntSize(p-\u003evCut) );\n            return Vec_IntSize(p-\u003evCut);\n        }\n        // try again\n        if ( Vec_IntSize(p-\u003evCut) \u003c p-\u003enCutSize \u0026\u0026 Sbd_ManCutReduceTop( p-\u003epGia, p-\u003evMirrors, iObj, p-\u003evLutLevs, p-\u003evCut, p-\u003evCutTop, p-\u003enCutSize ) )\n        {\n            Sbd_ManCutExpand( p-\u003epGia, p-\u003evMirrors, p-\u003evLutLevs, p-\u003evCut );\n            Sbd_ManCutReload( p-\u003evMirrors, p-\u003evLutLevs, LevStop, p-\u003evCut, p-\u003evCutTop, p-\u003evCutBot );\n            assert( Vec_IntSize(p-\u003evCut) \u003c= p-\u003enCutSize );\n            if ( Vec_IntSize(p-\u003evCutTop) \u003c= p-\u003enLutSize-1 )\n            {\n                //printf( \"* %d -\u003e %d (%d + %d)\\n\", Vec_IntSize(p-\u003evCut0), Vec_IntSize(p-\u003evCut), Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n                memcpy( pLeaves, Vec_IntArray(p-\u003evCut), sizeof(int) * Vec_IntSize(p-\u003evCut) );\n                return Vec_IntSize(p-\u003evCut);\n            }\n            // try again\n            if ( Vec_IntSize(p-\u003evCut) \u003c p-\u003enCutSize \u0026\u0026 Sbd_ManCutReduceTop( p-\u003epGia, p-\u003evMirrors, iObj, p-\u003evLutLevs, p-\u003evCut, p-\u003evCutTop, p-\u003enCutSize ) )\n            {\n                Sbd_ManCutExpand( p-\u003epGia, p-\u003evMirrors, p-\u003evLutLevs, p-\u003evCut );\n                Sbd_ManCutReload( p-\u003evMirrors, p-\u003evLutLevs, LevStop, p-\u003evCut, p-\u003evCutTop, p-\u003evCutBot );\n                assert( Vec_IntSize(p-\u003evCut) \u003c= p-\u003enCutSize );\n                if ( Vec_IntSize(p-\u003evCutTop) \u003c= p-\u003enLutSize-1 )\n                {\n                    //printf( \"** %d -\u003e %d (%d + %d)\\n\", Vec_IntSize(p-\u003evCut0), Vec_IntSize(p-\u003evCut), Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n                    memcpy( pLeaves, Vec_IntArray(p-\u003evCut), sizeof(int) * Vec_IntSize(p-\u003evCut) );\n                    return Vec_IntSize(p-\u003evCut);\n                }\n                // try again\n                if ( Vec_IntSize(p-\u003evCut) \u003c p-\u003enCutSize \u0026\u0026 Sbd_ManCutReduceTop( p-\u003epGia, p-\u003evMirrors, iObj, p-\u003evLutLevs, p-\u003evCut, p-\u003evCutTop, p-\u003enCutSize ) )\n                {\n                    Sbd_ManCutExpand( p-\u003epGia, p-\u003evMirrors, p-\u003evLutLevs, p-\u003evCut );\n                    Sbd_ManCutReload( p-\u003evMirrors, p-\u003evLutLevs, LevStop, p-\u003evCut, p-\u003evCutTop, p-\u003evCutBot );\n                    assert( Vec_IntSize(p-\u003evCut) \u003c= p-\u003enCutSize );\n                    if ( Vec_IntSize(p-\u003evCutTop) \u003c= p-\u003enLutSize-1 )\n                    {\n                        //printf( \"*** %d -\u003e %d (%d + %d)\\n\", Vec_IntSize(p-\u003evCut0), Vec_IntSize(p-\u003evCut), Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n                        memcpy( pLeaves, Vec_IntArray(p-\u003evCut), sizeof(int) * Vec_IntSize(p-\u003evCut) );\n                        return Vec_IntSize(p-\u003evCut);\n                    }\n                }\n            }\n        }\n    }\n\n    // recompute the cut\n    Vec_IntClear( p-\u003evCut );\n    Gia_ManIncrementTravId( p-\u003epGia );\n    RetValue = Sbd_ManCutCollect_rec( p-\u003epGia, p-\u003evMirrors, iObj, LevStop-1, p-\u003evLutLevs, p-\u003evCut );\n    if ( RetValue == 0 ) // cannot build delay-improving cut\n        return -1;\n    // check if the current cut is good\n    Vec_IntSort( p-\u003evCut, 0 );\n/*\n    Sbd_ManCutReload( p-\u003evMirrors, p-\u003evLutLevs, LevStop, p-\u003evCut, p-\u003evCutTop, p-\u003evCutBot );\n    if ( Vec_IntSize(p-\u003evCut) \u003c= p-\u003enCutSize \u0026\u0026 Vec_IntSize(p-\u003evCutTop) \u003c= p-\u003enLutSize-1 )\n    {\n        //printf( \"%d \", Vec_IntSize(p-\u003evCut) );\n        memcpy( pLeaves, Vec_IntArray(p-\u003evCut), sizeof(int) * Vec_IntSize(p-\u003evCut) );\n        return Vec_IntSize(p-\u003evCut);\n    }\n*/\n    // try to expand the cut\n    Sbd_ManCutExpand( p-\u003epGia, p-\u003evMirrors, p-\u003evLutLevs, p-\u003evCut );\n    Sbd_ManCutReload( p-\u003evMirrors, p-\u003evLutLevs, LevStop, p-\u003evCut, p-\u003evCutTop, p-\u003evCutBot );\n    if ( Vec_IntSize(p-\u003evCut) \u003c= p-\u003enCutSize \u0026\u0026 Vec_IntSize(p-\u003evCutTop) \u003c= p-\u003enLutSize-1 )\n    {\n        //printf( \"2=(%d,%d) \", Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n        //printf( \"%d \", Vec_IntSize(p-\u003evCut) );\n        memcpy( pLeaves, Vec_IntArray(p-\u003evCut), sizeof(int) * Vec_IntSize(p-\u003evCut) );\n        return Vec_IntSize(p-\u003evCut);\n    }\n\n    return -1;\n}",
+      "Draft": "func Sbd_ManCutServerFirst(p *Sbd_Srv_t, iObj int32, pLeaves *int32) int32 {\n    var RetValue int32;\n    var LevStop int32 = Vec_IntEntry(p.vLutLevs, iObj) - 2;\n\n    Vec_IntClear( p.vCut );\n    Gia_ManIncrementTravId( p.pGia );\n    RetValue = Sbd_ManCutCollect_rec( p.pGia, p.vMirrors, iObj, LevStop, p.vLutLevs, p.vCut );\n    if RetValue == 0 { // cannot build delay-improving cut\n        return -1; }\n    // check if the current cut is good\n    Vec_IntSort( p.vCut, 0 );\n/*\n    Sbd_ManCutReload( p-\u003evMirrors, p-\u003evLutLevs, LevStop, p-\u003evCut, p-\u003evCutTop, p-\u003evCutBot );\n    if ( Vec_IntSize(p-\u003evCut) \u003c= p-\u003enCutSize \u0026\u0026 Vec_IntSize(p-\u003evCutTop) \u003c= p-\u003enLutSize-1 )\n    {\n        //printf( \"%d \", Vec_IntSize(p-\u003evCut) );\n        memcpy( pLeaves, Vec_IntArray(p-\u003evCut), sizeof(int) * Vec_IntSize(p-\u003evCut) );\n        return Vec_IntSize(p-\u003evCut);\n    }\n*/\n    // try to expand the cut\n    Sbd_ManCutExpand( p.pGia, p.vMirrors, p.vLutLevs, p.vCut );\n    Sbd_ManCutReload( p.vMirrors, p.vLutLevs, LevStop, p.vCut, p.vCutTop, p.vCutBot );\n    if Vec_IntSize(p.vCut) \u003c= p.nCutSize \u0026\u0026 Vec_IntSize(p.vCutTop) \u003c= p.nLutSize-1 {\n        //printf( \"1=(%d,%d) \", Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n        //printf( \"%d \", Vec_IntSize(p-\u003evCut) );\n        memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );\n        return Vec_IntSize(p.vCut);\n    }\n\n    // try to reduce the topmost\n    Vec_IntClear( p.vCut0 );\n    Vec_IntAppend( p.vCut0, p.vCut );\n    if Vec_IntSize(p.vCut) \u003c p.nCutSize \u0026\u0026 (Sbd_ManCutReduceTop( p.pGia, p.vMirrors, iObj, p.vLutLevs, p.vCut, p.vCutTop, p.nCutSize ) != 0) {\n        Sbd_ManCutExpand( p.pGia, p.vMirrors, p.vLutLevs, p.vCut );\n        Sbd_ManCutReload( p.vMirrors, p.vLutLevs, LevStop, p.vCut, p.vCutTop, p.vCutBot );\n        assert(Vec_IntSize(p.vCut) \u003c= p.nCutSize, \"Vec_IntSize(p.vCut) \u003c= p.nCutSize\");\n        if Vec_IntSize(p.vCutTop) \u003c= p.nLutSize-1 {\n            //printf( \"%d -\u003e %d (%d + %d)\\n\", Vec_IntSize(p-\u003evCut0), Vec_IntSize(p-\u003evCut), Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n            memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );\n            return Vec_IntSize(p.vCut);\n        }\n        // try again\n        if Vec_IntSize(p.vCut) \u003c p.nCutSize \u0026\u0026 (Sbd_ManCutReduceTop( p.pGia, p.vMirrors, iObj, p.vLutLevs, p.vCut, p.vCutTop, p.nCutSize ) != 0) {\n            Sbd_ManCutExpand( p.pGia, p.vMirrors, p.vLutLevs, p.vCut );\n            Sbd_ManCutReload( p.vMirrors, p.vLutLevs, LevStop, p.vCut, p.vCutTop, p.vCutBot );\n            assert(Vec_IntSize(p.vCut) \u003c= p.nCutSize, \"Vec_IntSize(p.vCut) \u003c= p.nCutSize\");\n            if Vec_IntSize(p.vCutTop) \u003c= p.nLutSize-1 {\n                //printf( \"* %d -\u003e %d (%d + %d)\\n\", Vec_IntSize(p-\u003evCut0), Vec_IntSize(p-\u003evCut), Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n                memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );\n                return Vec_IntSize(p.vCut);\n            }\n            // try again\n            if Vec_IntSize(p.vCut) \u003c p.nCutSize \u0026\u0026 (Sbd_ManCutReduceTop( p.pGia, p.vMirrors, iObj, p.vLutLevs, p.vCut, p.vCutTop, p.nCutSize ) != 0) {\n                Sbd_ManCutExpand( p.pGia, p.vMirrors, p.vLutLevs, p.vCut );\n                Sbd_ManCutReload( p.vMirrors, p.vLutLevs, LevStop, p.vCut, p.vCutTop, p.vCutBot );\n                assert(Vec_IntSize(p.vCut) \u003c= p.nCutSize, \"Vec_IntSize(p.vCut) \u003c= p.nCutSize\");\n                if Vec_IntSize(p.vCutTop) \u003c= p.nLutSize-1 {\n                    //printf( \"** %d -\u003e %d (%d + %d)\\n\", Vec_IntSize(p-\u003evCut0), Vec_IntSize(p-\u003evCut), Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n                    memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );\n                    return Vec_IntSize(p.vCut);\n                }\n                // try again\n                if Vec_IntSize(p.vCut) \u003c p.nCutSize \u0026\u0026 (Sbd_ManCutReduceTop( p.pGia, p.vMirrors, iObj, p.vLutLevs, p.vCut, p.vCutTop, p.nCutSize ) != 0) {\n                    Sbd_ManCutExpand( p.pGia, p.vMirrors, p.vLutLevs, p.vCut );\n                    Sbd_ManCutReload( p.vMirrors, p.vLutLevs, LevStop, p.vCut, p.vCutTop, p.vCutBot );\n                    assert(Vec_IntSize(p.vCut) \u003c= p.nCutSize, \"Vec_IntSize(p.vCut) \u003c= p.nCutSize\");\n                    if Vec_IntSize(p.vCutTop) \u003c= p.nLutSize-1 {\n                        //printf( \"*** %d -\u003e %d (%d + %d)\\n\", Vec_IntSize(p-\u003evCut0), Vec_IntSize(p-\u003evCut), Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n                        memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );\n                        return Vec_IntSize(p.vCut);\n                    }\n                }\n            }\n        }\n    }\n\n    // recompute the cut\n    Vec_IntClear( p.vCut );\n    Gia_ManIncrementTravId( p.pGia );\n    RetValue = Sbd_ManCutCollect_rec( p.pGia, p.vMirrors, iObj, LevStop-1, p.vLutLevs, p.vCut );\n    if RetValue == 0 { // cannot build delay-improving cut\n        return -1; }\n    // check if the current cut is good\n    Vec_IntSort( p.vCut, 0 );\n/*\n    Sbd_ManCutReload( p-\u003evMirrors, p-\u003evLutLevs, LevStop, p-\u003evCut, p-\u003evCutTop, p-\u003evCutBot );\n    if ( Vec_IntSize(p-\u003evCut) \u003c= p-\u003enCutSize \u0026\u0026 Vec_IntSize(p-\u003evCutTop) \u003c= p-\u003enLutSize-1 )\n    {\n        //printf( \"%d \", Vec_IntSize(p-\u003evCut) );\n        memcpy( pLeaves, Vec_IntArray(p-\u003evCut), sizeof(int) * Vec_IntSize(p-\u003evCut) );\n        return Vec_IntSize(p-\u003evCut);\n    }\n*/\n    // try to expand the cut\n    Sbd_ManCutExpand( p.pGia, p.vMirrors, p.vLutLevs, p.vCut );\n    Sbd_ManCutReload( p.vMirrors, p.vLutLevs, LevStop, p.vCut, p.vCutTop, p.vCutBot );\n    if Vec_IntSize(p.vCut) \u003c= p.nCutSize \u0026\u0026 Vec_IntSize(p.vCutTop) \u003c= p.nLutSize-1 {\n        //printf( \"2=(%d,%d) \", Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n        //printf( \"%d \", Vec_IntSize(p-\u003evCut) );\n        memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );\n        return Vec_IntSize(p.vCut);\n    }\n\n    return -1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::struct::Sbd_Cut_t::// cut cost\n    unsigned        nTreeLeaves  :  9;",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1156,
+      "End": 1225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::struct::Sbd_Cut_t::// tree leaves\n    unsigned        nSlowLeaves  :  9;",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1225,
+      "End": 1287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::struct::Sbd_Cut_t::// slow leaves\n    unsigned        nTopLeaves   : 10;",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1287,
+      "End": 1349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::struct::Sbd_Cut_t::// top leaves\n    unsigned        nLeaves      :  4;",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1349,
+      "End": 1410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::struct::Sbd_Cut_t::// leaf count\n    int             pLeaves[SBD_MAX_CUTSIZE];",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1410,
+      "End": 1478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::struct::Sbd_Cut_t",
+      "Category": "struct-review",
+      "Symbol": "Sbd_Cut_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 887,
+      "End": 1492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::struct::Sbd_Srv_t_::// refs for each node\n    Sbd_Cut_t       pCuts[SBD_MAX_CUTNUM];",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Srv_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1977,
+      "End": 2062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::struct::Sbd_Srv_t_::// temporary cuts\n    Sbd_Cut_t *     ppCuts[SBD_MAX_CUTNUM];",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Srv_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2062,
+      "End": 2128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::struct::Sbd_Srv_t_",
+      "Category": "struct-review",
+      "Symbol": "Sbd_Srv_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1494,
+      "End": 2472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::mechanical::do::7047",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 7047,
+      "End": 7049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::mechanical::sizeof::11924",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11924,
+      "End": 11930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::mechanical::sizeof::12745",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12745,
+      "End": 12751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::mechanical::sizeof::13529",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13529,
+      "End": 13535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::mechanical::sizeof::14362",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14362,
+      "End": 14368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::mechanical::sizeof::15244",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15244,
+      "End": 15250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::mechanical::sizeof::16591",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16591,
+      "End": 16597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::Sbd_ManCutServerStart",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManCutServerStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2928,
+      "End": 3883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::Sbd_ManCutServerStop",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManCutServerStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3884,
+      "End": 4068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::Sbd_ManCutIsTopo_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManCutIsTopo_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4304,
+      "End": 4933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::Sbd_ManCutIsTopo",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManCutIsTopo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4934,
+      "End": 5372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::Sbd_ManCutExpandOne",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManCutExpandOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5608,
+      "End": 6699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::Vec_IntIsOrdered",
+      "Category": "semantic-review",
+      "Symbol": "Vec_IntIsOrdered",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6700,
+      "End": 6921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::Sbd_ManCutExpand",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManCutExpand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6922,
+      "End": 7250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::Sbd_ManCutReload",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManCutReload",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7251,
+      "End": 7850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::Sbd_ManCutCollect_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManCutCollect_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7851,
+      "End": 8714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::Sbd_ManCutReduceTop",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManCutReduceTop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8950,
+      "End": 10394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::Sbd_ManCutServerFirst",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ManCutServerFirst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10630,
+      "End": 16689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::macro-inline::3412",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3412,
+      "End": 3438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::macro-inline::4052",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4052,
+      "End": 4065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::macro-inline::5089",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5089,
+      "End": 5126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::macro-inline::6808",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6808,
+      "End": 6853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::macro-inline::7064",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7064,
+      "End": 7101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::macro-inline::7474",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7474,
+      "End": 7511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdCut2.c::macro-inline::9230",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryReverse",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9230,
+      "End": 9277
+    }
+  ],
+  "Draft": "package sbd\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sbdCut2.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [Cut computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sbdCut2.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sbdInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst SBD_MAX_CUTSIZE =   10\nconst SBD_MAX_CUTNUM =    501\n\nconst SBD_CUT_NO_LEAF =   0xF\n\n    \ntype Sbd_Cut_t struct {\n    Sign            word;                      // signature\n    iFunc             int32;                     // functionality\n    Cost             int32;                      // cut cost\n    CostLev             int32;                   // cut cost\n    nTreeLeaves uint32; /* C bitfield: 9 bits; review packing and truncation */         // tree leaves\n    nSlowLeaves uint32; /* C bitfield: 9 bits; review packing and truncation */         // slow leaves\n    nTopLeaves uint32; /* C bitfield: 10 bits; review packing and truncation */         // top leaves\n    nLeaves uint32; /* C bitfield: 4 bits; review packing and truncation */         // leaf count\n    pLeaves [SBD_MAX_CUTSIZE]int32;  // leaves\n}\n\ntype Sbd_Srv_t_ struct {\n    nLutSize             int32;\n    nCutSize             int32;\n    nCutNum             int32;\n    fVerbose             int32;\n    pGia      *Gia_Man_t;                      // user's AIG manager (will be modified by adding nodes)\n    vMirrors      *Vec_Int_t;                  // mirrors for each node\n    vLutLevs      *Vec_Int_t;                  // delays for each node\n    vLevs      *Vec_Int_t;                     // levels for each node\n    vRefs      *Vec_Int_t;                     // refs for each node\n    pCuts [SBD_MAX_CUTNUM]Sbd_Cut_t;     // temporary cuts\n    ppCuts [SBD_MAX_CUTNUM]*Sbd_Cut_t;    // temporary cut pointers\n    clkStart         abctime;                  // starting time\n    vCut0      *Vec_Int_t;                     // current cut\n    vCut      *Vec_Int_t;                      // current cut\n    vCutTop      *Vec_Int_t;                   // current cut\n    vCutBot      *Vec_Int_t;                   // current cut\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_ManCutServerStart(pGia *Gia_Man_t, vMirrors *Vec_Int_t, vLutLevs *Vec_Int_t, vLevs *Vec_Int_t, vRefs *Vec_Int_t, nLutSize int32, nCutSize int32, nCutNum int32, fVerbose int32) *Sbd_Srv_t {\n    var p *Sbd_Srv_t;\n    assert(nLutSize \u003c= nCutSize, \"nLutSize \u003c= nCutSize\");\n    assert(nCutSize \u003c SBD_CUT_NO_LEAF, \"nCutSize \u003c SBD_CUT_NO_LEAF\");\n    assert(nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= SBD_MAX_CUTSIZE, \"nCutSize \u003e 1 \u0026\u0026 nCutSize \u003c= SBD_MAX_CUTSIZE\");\n    assert(nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c SBD_MAX_CUTNUM, \"nCutNum \u003e 1 \u0026\u0026 nCutNum \u003c SBD_MAX_CUTNUM\");\n    p = new(Sbd_Srv_t);\n    p.clkStart = Abc_Clock();\n    p.nLutSize = nLutSize;\n    p.nCutSize = nCutSize;\n    p.nCutNum  = nCutNum;\n    p.fVerbose = fVerbose;\n    p.pGia     = pGia;\n    p.vMirrors = vMirrors;\n    p.vLutLevs = vLutLevs;\n    p.vLevs    = vLevs;\n    p.vRefs    = vRefs;\n    p.vCut0    = Vec_IntAlloc( 100 );\n    p.vCut     = Vec_IntAlloc( 100 );\n    p.vCutTop  = Vec_IntAlloc( 100 );\n    p.vCutBot  = Vec_IntAlloc( 100 );\n    return p;\n}\nfunc Sbd_ManCutServerStop(p *Sbd_Srv_t) {\n    Vec_IntFree( p.vCut0 );\n    Vec_IntFree( p.vCut );\n    Vec_IntFree( p.vCutTop );\n    Vec_IntFree( p.vCutBot );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_ManCutIsTopo_rec(p *Gia_Man_t, vMirrors *Vec_Int_t, iObj int32) int32 {\n    var pObj *Gia_Obj_t; \n    var Ret0, Ret1 int32;\n    if Vec_IntEntry(vMirrors, iObj) \u003e= 0 {\n        iObj = Abc_Lit2Var(Vec_IntEntry(vMirrors, iObj)); }\n    if !(iObj != 0) || Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return 1; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) {\n        return 0; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Ret0 = Sbd_ManCutIsTopo_rec( p, vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n    Ret1 = Sbd_ManCutIsTopo_rec( p, vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n    return Ret0 \u0026\u0026 Ret1;\n}\nfunc Sbd_ManCutIsTopo(p *Gia_Man_t, vMirrors *Vec_Int_t, vCut *Vec_Int_t, iObj int32) int32 {\n    var i, Entry, RetValue int32;\n    Gia_ManIncrementTravId( p );\n    Vec_IntForEachEntry( vCut, Entry, i )\n        Gia_ObjSetTravIdCurrentId( p, Entry );        \n    RetValue = Sbd_ManCutIsTopo_rec( p, vMirrors, iObj );\n    if RetValue == 0 {\n        fmt.Printf(\"Cut of node %d is not tological\\n\", iObj); }\n    assert((RetValue != 0), \"RetValue\");\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_ManCutExpandOne(p *Gia_Man_t, vMirrors *Vec_Int_t, vLutLevs *Vec_Int_t, vCut *Vec_Int_t, iThis int32, iObj int32) int32 {\n    var Lit0m, Lit1m, Fan0, Fan1, iPlace0, iPlace1 int32;\n    var LutLev int32  = Vec_IntEntry( vLutLevs, iObj );\n    var pObj *Gia_Obj_t  = Gia_ManObj(p, iObj);\n    if Gia_ObjIsCi(pObj) {\n        return 0; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Lit0m = Vec_IntEntry( vMirrors, Gia_ObjFaninId0(pObj, iObj) );\n    Lit1m = Vec_IntEntry( vMirrors, Gia_ObjFaninId1(pObj, iObj) );\n    if Lit0m \u003e= 0 {\n        Fan0 = Abc_Lit2Var(Lit0m);\n    } else {\n        Fan0 = Gia_ObjFaninId0(pObj, iObj);\n    }\n    if Lit1m \u003e= 0 {\n        Fan1 = Abc_Lit2Var(Lit1m);\n    } else {\n        Fan1 = Gia_ObjFaninId1(pObj, iObj);\n    }\n    iPlace0 = Vec_IntFind( vCut, Fan0 );\n    iPlace1 = Vec_IntFind( vCut, Fan1 );\n    if iPlace0 == -1 \u0026\u0026 iPlace1 == -1 {\n        return 0; }\n    if Vec_IntEntry(vLutLevs, Fan0) \u003e LutLev || Vec_IntEntry(vLutLevs, Fan1) \u003e LutLev {\n        return 0; }\n    Vec_IntDrop( vCut, iThis );\n    if iPlace0 == -1 \u0026\u0026 Fan0 {\n        Vec_IntPushOrder( vCut, Fan0 ); }\n    if iPlace1 == -1 \u0026\u0026 (Fan1 != 0) {\n        Vec_IntPushOrder( vCut, Fan1 ); }\n    return 1;\n}\nfunc Vec_IntIsOrdered(vCut *Vec_Int_t) {\n    var i, Prev, Entry int32;\n    Prev = Vec_IntEntry( vCut, 0 );\n    Vec_IntForEachEntryStart( vCut, Entry, i, 1 )\n    {\n        assert(Prev \u003c Entry, \"Prev \u003c Entry\");\n        Prev = Entry;\n    }\n}\nfunc Sbd_ManCutExpand(p *Gia_Man_t, vMirrors *Vec_Int_t, vLutLevs *Vec_Int_t, vCut *Vec_Int_t) {\n    var i, Entry int32;\n    for\n    {\n        Vec_IntForEachEntry( vCut, Entry, i )\n            if ( Sbd_ManCutExpandOne( p, vMirrors, vLutLevs, vCut, i, Entry ) )\n                break;\n    \nif !( i \u003c Vec_IntSize(vCut) ) { break }\n} \n    \n}\nfunc Sbd_ManCutReload(vMirrors *Vec_Int_t, vLutLevs *Vec_Int_t, LevStop int32, vCut *Vec_Int_t, vCutTop *Vec_Int_t, vCutBot *Vec_Int_t) {\n    var i, Entry int32;\n    Vec_IntClear( vCutTop );\n    Vec_IntClear( vCutBot );\n    Vec_IntForEachEntry( vCut, Entry, i )\n    {\n        assert((Entry != 0), \"Entry\");\n        assert(Vec_IntEntry(vMirrors, Entry) == -1, \"Vec_IntEntry(vMirrors, Entry) == -1\");\n        assert(Vec_IntEntry(vLutLevs, Entry) \u003c= LevStop, \"Vec_IntEntry(vLutLevs, Entry) \u003c= LevStop\");\n        if Vec_IntEntry(vLutLevs, Entry) == LevStop {\n            Vec_IntPush( vCutTop, Entry );\n        } else {\n            Vec_IntPush( vCutBot, Entry ); }\n    }\n    Vec_IntIsOrdered( vCut );\n}\nfunc Sbd_ManCutCollect_rec(p *Gia_Man_t, vMirrors *Vec_Int_t, iObj int32, LevStop int32, vLutLevs *Vec_Int_t, vCut *Vec_Int_t) int32 {\n    var pObj *Gia_Obj_t; \n    var Ret0, Ret1 int32;\n    if Vec_IntEntry(vMirrors, iObj) \u003e= 0 {\n        iObj = Abc_Lit2Var(Vec_IntEntry(vMirrors, iObj)); }\n    if !(iObj != 0) || Gia_ObjIsTravIdCurrentId(p, iObj) {\n        return 1; }\n    Gia_ObjSetTravIdCurrentId(p, iObj);\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) || Vec_IntEntry(vLutLevs, iObj) \u003c= LevStop {\n        Vec_IntPush( vCut, iObj );\n        return Vec_IntEntry(vLutLevs, iObj) \u003c= LevStop;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Ret0 = Sbd_ManCutCollect_rec( p, vMirrors, Gia_ObjFaninId0(pObj, iObj), LevStop, vLutLevs, vCut );\n    Ret1 = Sbd_ManCutCollect_rec( p, vMirrors, Gia_ObjFaninId1(pObj, iObj), LevStop, vLutLevs, vCut );\n    return Ret0 \u0026\u0026 Ret1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_ManCutReduceTop(p *Gia_Man_t, vMirrors *Vec_Int_t, iObj int32, vLutLevs *Vec_Int_t, vCut *Vec_Int_t, vCutTop *Vec_Int_t, nCutSize int32) int32 {\n    var i, Entry, Lit0m, Lit1m, Fan0, Fan1 int32;\n    var LevStop int32  = Vec_IntEntry(vLutLevs, iObj) - 2;\n    Vec_IntIsOrdered( vCut );\n    Vec_IntForEachEntryReverse( vCutTop, Entry, i )\n    {\n        var pObj *Gia_Obj_t  = Gia_ManObj( p, Entry );\n        if Gia_ObjIsCi(pObj) {\n            continue; }\n        assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n        assert(Vec_IntEntry(vLutLevs, Entry) == LevStop, \"Vec_IntEntry(vLutLevs, Entry) == LevStop\");\n        Lit0m = Vec_IntEntry( vMirrors, Gia_ObjFaninId0(pObj, Entry) );\n        Lit1m = Vec_IntEntry( vMirrors, Gia_ObjFaninId1(pObj, Entry) );\n        if Lit0m \u003e= 0 {\n            Fan0 = Abc_Lit2Var(Lit0m);\n        } else {\n            Fan0 = Gia_ObjFaninId0(pObj, Entry);\n        }\n        if Lit1m \u003e= 0 {\n            Fan1 = Abc_Lit2Var(Lit1m);\n        } else {\n            Fan1 = Gia_ObjFaninId1(pObj, Entry);\n        }\n        if Vec_IntEntry(vLutLevs, Fan0) \u003e LevStop || Vec_IntEntry(vLutLevs, Fan1) \u003e LevStop {\n            continue; }\n        assert(Vec_IntEntry(vLutLevs, Fan0) \u003c= LevStop, \"Vec_IntEntry(vLutLevs, Fan0) \u003c= LevStop\");\n        assert(Vec_IntEntry(vLutLevs, Fan1) \u003c= LevStop, \"Vec_IntEntry(vLutLevs, Fan1) \u003c= LevStop\");\n        if Vec_IntEntry(vLutLevs, Fan0) == LevStop \u0026\u0026 Vec_IntEntry(vLutLevs, Fan1) == LevStop {\n            continue; }\n        Vec_IntRemove( vCut, Entry );\n        if Fan0 { Vec_IntPushUniqueOrder( vCut, Fan0 ); }\n        if Fan1 != 0 { Vec_IntPushUniqueOrder( vCut, Fan1 ); }\n        //Sbd_ManCutIsTopo( p, vMirrors, vCut, iObj );\n        return 1;\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sbd_ManCutServerFirst(p *Sbd_Srv_t, iObj int32, pLeaves *int32) int32 {\n    var RetValue int32;\n    var LevStop int32 = Vec_IntEntry(p.vLutLevs, iObj) - 2;\n\n    Vec_IntClear( p.vCut );\n    Gia_ManIncrementTravId( p.pGia );\n    RetValue = Sbd_ManCutCollect_rec( p.pGia, p.vMirrors, iObj, LevStop, p.vLutLevs, p.vCut );\n    if RetValue == 0 { // cannot build delay-improving cut\n        return -1; }\n    // check if the current cut is good\n    Vec_IntSort( p.vCut, 0 );\n/*\n    Sbd_ManCutReload( p-\u003evMirrors, p-\u003evLutLevs, LevStop, p-\u003evCut, p-\u003evCutTop, p-\u003evCutBot );\n    if ( Vec_IntSize(p-\u003evCut) \u003c= p-\u003enCutSize \u0026\u0026 Vec_IntSize(p-\u003evCutTop) \u003c= p-\u003enLutSize-1 )\n    {\n        //printf( \"%d \", Vec_IntSize(p-\u003evCut) );\n        memcpy( pLeaves, Vec_IntArray(p-\u003evCut), sizeof(int) * Vec_IntSize(p-\u003evCut) );\n        return Vec_IntSize(p-\u003evCut);\n    }\n*/\n    // try to expand the cut\n    Sbd_ManCutExpand( p.pGia, p.vMirrors, p.vLutLevs, p.vCut );\n    Sbd_ManCutReload( p.vMirrors, p.vLutLevs, LevStop, p.vCut, p.vCutTop, p.vCutBot );\n    if Vec_IntSize(p.vCut) \u003c= p.nCutSize \u0026\u0026 Vec_IntSize(p.vCutTop) \u003c= p.nLutSize-1 {\n        //printf( \"1=(%d,%d) \", Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n        //printf( \"%d \", Vec_IntSize(p-\u003evCut) );\n        memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );\n        return Vec_IntSize(p.vCut);\n    }\n\n    // try to reduce the topmost\n    Vec_IntClear( p.vCut0 );\n    Vec_IntAppend( p.vCut0, p.vCut );\n    if Vec_IntSize(p.vCut) \u003c p.nCutSize \u0026\u0026 (Sbd_ManCutReduceTop( p.pGia, p.vMirrors, iObj, p.vLutLevs, p.vCut, p.vCutTop, p.nCutSize ) != 0) {\n        Sbd_ManCutExpand( p.pGia, p.vMirrors, p.vLutLevs, p.vCut );\n        Sbd_ManCutReload( p.vMirrors, p.vLutLevs, LevStop, p.vCut, p.vCutTop, p.vCutBot );\n        assert(Vec_IntSize(p.vCut) \u003c= p.nCutSize, \"Vec_IntSize(p.vCut) \u003c= p.nCutSize\");\n        if Vec_IntSize(p.vCutTop) \u003c= p.nLutSize-1 {\n            //printf( \"%d -\u003e %d (%d + %d)\\n\", Vec_IntSize(p-\u003evCut0), Vec_IntSize(p-\u003evCut), Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n            memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );\n            return Vec_IntSize(p.vCut);\n        }\n        // try again\n        if Vec_IntSize(p.vCut) \u003c p.nCutSize \u0026\u0026 (Sbd_ManCutReduceTop( p.pGia, p.vMirrors, iObj, p.vLutLevs, p.vCut, p.vCutTop, p.nCutSize ) != 0) {\n            Sbd_ManCutExpand( p.pGia, p.vMirrors, p.vLutLevs, p.vCut );\n            Sbd_ManCutReload( p.vMirrors, p.vLutLevs, LevStop, p.vCut, p.vCutTop, p.vCutBot );\n            assert(Vec_IntSize(p.vCut) \u003c= p.nCutSize, \"Vec_IntSize(p.vCut) \u003c= p.nCutSize\");\n            if Vec_IntSize(p.vCutTop) \u003c= p.nLutSize-1 {\n                //printf( \"* %d -\u003e %d (%d + %d)\\n\", Vec_IntSize(p-\u003evCut0), Vec_IntSize(p-\u003evCut), Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n                memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );\n                return Vec_IntSize(p.vCut);\n            }\n            // try again\n            if Vec_IntSize(p.vCut) \u003c p.nCutSize \u0026\u0026 (Sbd_ManCutReduceTop( p.pGia, p.vMirrors, iObj, p.vLutLevs, p.vCut, p.vCutTop, p.nCutSize ) != 0) {\n                Sbd_ManCutExpand( p.pGia, p.vMirrors, p.vLutLevs, p.vCut );\n                Sbd_ManCutReload( p.vMirrors, p.vLutLevs, LevStop, p.vCut, p.vCutTop, p.vCutBot );\n                assert(Vec_IntSize(p.vCut) \u003c= p.nCutSize, \"Vec_IntSize(p.vCut) \u003c= p.nCutSize\");\n                if Vec_IntSize(p.vCutTop) \u003c= p.nLutSize-1 {\n                    //printf( \"** %d -\u003e %d (%d + %d)\\n\", Vec_IntSize(p-\u003evCut0), Vec_IntSize(p-\u003evCut), Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n                    memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );\n                    return Vec_IntSize(p.vCut);\n                }\n                // try again\n                if Vec_IntSize(p.vCut) \u003c p.nCutSize \u0026\u0026 (Sbd_ManCutReduceTop( p.pGia, p.vMirrors, iObj, p.vLutLevs, p.vCut, p.vCutTop, p.nCutSize ) != 0) {\n                    Sbd_ManCutExpand( p.pGia, p.vMirrors, p.vLutLevs, p.vCut );\n                    Sbd_ManCutReload( p.vMirrors, p.vLutLevs, LevStop, p.vCut, p.vCutTop, p.vCutBot );\n                    assert(Vec_IntSize(p.vCut) \u003c= p.nCutSize, \"Vec_IntSize(p.vCut) \u003c= p.nCutSize\");\n                    if Vec_IntSize(p.vCutTop) \u003c= p.nLutSize-1 {\n                        //printf( \"*** %d -\u003e %d (%d + %d)\\n\", Vec_IntSize(p-\u003evCut0), Vec_IntSize(p-\u003evCut), Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n                        memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );\n                        return Vec_IntSize(p.vCut);\n                    }\n                }\n            }\n        }\n    }\n\n    // recompute the cut\n    Vec_IntClear( p.vCut );\n    Gia_ManIncrementTravId( p.pGia );\n    RetValue = Sbd_ManCutCollect_rec( p.pGia, p.vMirrors, iObj, LevStop-1, p.vLutLevs, p.vCut );\n    if RetValue == 0 { // cannot build delay-improving cut\n        return -1; }\n    // check if the current cut is good\n    Vec_IntSort( p.vCut, 0 );\n/*\n    Sbd_ManCutReload( p-\u003evMirrors, p-\u003evLutLevs, LevStop, p-\u003evCut, p-\u003evCutTop, p-\u003evCutBot );\n    if ( Vec_IntSize(p-\u003evCut) \u003c= p-\u003enCutSize \u0026\u0026 Vec_IntSize(p-\u003evCutTop) \u003c= p-\u003enLutSize-1 )\n    {\n        //printf( \"%d \", Vec_IntSize(p-\u003evCut) );\n        memcpy( pLeaves, Vec_IntArray(p-\u003evCut), sizeof(int) * Vec_IntSize(p-\u003evCut) );\n        return Vec_IntSize(p-\u003evCut);\n    }\n*/\n    // try to expand the cut\n    Sbd_ManCutExpand( p.pGia, p.vMirrors, p.vLutLevs, p.vCut );\n    Sbd_ManCutReload( p.vMirrors, p.vLutLevs, LevStop, p.vCut, p.vCutTop, p.vCutBot );\n    if Vec_IntSize(p.vCut) \u003c= p.nCutSize \u0026\u0026 Vec_IntSize(p.vCutTop) \u003c= p.nLutSize-1 {\n        //printf( \"2=(%d,%d) \", Vec_IntSize(p-\u003evCutTop), Vec_IntSize(p-\u003evCutBot) );\n        //printf( \"%d \", Vec_IntSize(p-\u003evCut) );\n        memcpy( pLeaves, Vec_IntArray(p.vCut), sizeof(int) * Vec_IntSize(p.vCut) );\n        return Vec_IntSize(p.vCut);\n    }\n\n    return -1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

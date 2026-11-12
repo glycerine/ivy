@@ -1,0 +1,554 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c",
+  "SHA256": "3323e4adb47790d76e964aea65a004fd8175f07441493fca7337c0f36318b2bb",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 3076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPars, 0, sizeof(Dar_RefPar_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 111,
+        "Column": 9,
+        "ByteOffset": 3845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Ref_Man_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 3876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Ref_Man_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 5,
+        "ByteOffset": 4925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"NodesBeg = %8d. NodesEnd = %8d. Gain = %6d. (%6.2f %%).\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 5,
+        "ByteOffset": 5078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Tried = %6d. Below = %5d. Extended = %5d.  Used = %5d.  Levels = %4d.\\n\", "
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 175,
+        "Column": 5,
+        "ByteOffset": 6017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 204,
+        "Column": 5,
+        "ByteOffset": 6626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d\", pObj? Aig_Regular(pObj).Id : -1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 9,
+        "ByteOffset": 6697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"(%d) \", Aig_IsComplement(pObj) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 234,
+        "Column": 9,
+        "ByteOffset": 7990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_Regular((Aig_Obj_t *)pNode.pFunc).Level \u003c (1\u003c\u003c24)-1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 530,
+        "Column": 21,
+        "ByteOffset": 19173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( nNodesSaved2 == nNodesSaved );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 565,
+        "Column": 9,
+        "ByteOffset": 20340
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( int32(Aig_Regular(pObjNew).Level) \u003c= Required );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 570,
+        "Column": 9,
+        "ByteOffset": 20576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.GainBest \u003c= nNodeBefore - nNodeAfter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 601,
+        "Column": 9,
+        "ByteOffset": 21517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Dar_ManRefactor: The network check has failed.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dar_ManDefaultRefParams",
+      "Start": 3011,
+      "End": 3454,
+      "BodyStart": 3064,
+      "Original": "void Dar_ManDefaultRefParams( Dar_RefPar_t * pPars )\n{\n    memset( pPars, 0, sizeof(Dar_RefPar_t) );\n    pPars-\u003enMffcMin     =  2;  // the min MFFC size for which refactoring is used\n    pPars-\u003enLeafMax     = 12;  // the max number of leaves of a cut\n    pPars-\u003enCutsMax     =  5;  // the max number of cuts to consider  \n    pPars-\u003efUpdateLevel =  0;\n    pPars-\u003efUseZeros    =  0;\n    pPars-\u003efVerbose     =  0;\n    pPars-\u003efVeryVerbose =  0;\n}",
+      "Draft": "func Dar_ManDefaultRefParams(pPars *Dar_RefPar_t) {\n    memset( pPars, 0, sizeof(Dar_RefPar_t) );\n    pPars.nMffcMin     =  2;  // the min MFFC size for which refactoring is used\n    pPars.nLeafMax     = 12;  // the max number of leaves of a cut\n    pPars.nCutsMax     =  5;  // the max number of cuts to consider  \n    pPars.fUpdateLevel =  0;\n    pPars.fUseZeros    =  0;\n    pPars.fVerbose     =  0;\n    pPars.fVeryVerbose =  0;\n}"
+    },
+    {
+      "Name": "Dar_ManRefStart",
+      "Start": 3719,
+      "End": 4556,
+      "BodyStart": 3789,
+      "Original": "Ref_Man_t * Dar_ManRefStart( Aig_Man_t * pAig, Dar_RefPar_t * pPars )\n{\n    Ref_Man_t * p;\n    // start the manager\n    p = ABC_ALLOC( Ref_Man_t, 1 );\n    memset( p, 0, sizeof(Ref_Man_t) );\n    p-\u003epAig         = pAig;\n    p-\u003epPars        = pPars;\n    // other data\n    p-\u003evCuts        = Vec_VecStart( pPars-\u003enCutsMax );\n    p-\u003evTruthElem   = Vec_PtrAllocTruthTables( pPars-\u003enLeafMax );\n    p-\u003evTruthStore  = Vec_PtrAllocSimInfo( 1024, Kit_TruthWordNum(pPars-\u003enLeafMax) );\n    p-\u003evMemory      = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    p-\u003evCutNodes    = Vec_PtrAlloc( 256 );\n    p-\u003evLeavesBest  = Vec_PtrAlloc( pPars-\u003enLeafMax );\n    // alloc bi-decomposition manager\n    p-\u003eDecPars.nVarsMax = pPars-\u003enLeafMax;\n    p-\u003eDecPars.fVerbose = pPars-\u003efVerbose;\n    p-\u003eDecPars.fVeryVerbose = 0;\n//    p-\u003epManDec = Bdc_ManAlloc( \u0026p-\u003eDecPars );\n    return p;\n}",
+      "Draft": "func Dar_ManRefStart(pAig *Aig_Man_t, pPars *Dar_RefPar_t) *Ref_Man_t {\n    var p *Ref_Man_t;\n    // start the manager\n    p = new(Ref_Man_t);\n    *p = Ref_Man_t{};\n    p.pAig         = pAig;\n    p.pPars        = pPars;\n    // other data\n    p.vCuts        = Vec_VecStart( pPars.nCutsMax );\n    p.vTruthElem   = Vec_PtrAllocTruthTables( pPars.nLeafMax );\n    p.vTruthStore  = Vec_PtrAllocSimInfo( 1024, Kit_TruthWordNum(pPars.nLeafMax) );\n    p.vMemory      = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    p.vCutNodes    = Vec_PtrAlloc( 256 );\n    p.vLeavesBest  = Vec_PtrAlloc( pPars.nLeafMax );\n    // alloc bi-decomposition manager\n    p.DecPars.nVarsMax = pPars.nLeafMax;\n    p.DecPars.fVerbose = pPars.fVerbose;\n    p.DecPars.fVeryVerbose = 0;\n//    p-\u003epManDec = Bdc_ManAlloc( \u0026p-\u003eDecPars );\n    return p;\n}"
+    },
+    {
+      "Name": "Dar_ManRefPrintStats",
+      "Start": 4833,
+      "End": 5429,
+      "BodyStart": 4876,
+      "Original": "void Dar_ManRefPrintStats( Ref_Man_t * p )\n{\n    int Gain = p-\u003enNodesInit - Aig_ManNodeNum(p-\u003epAig);\n    printf( \"NodesBeg = %8d. NodesEnd = %8d. Gain = %6d. (%6.2f %%).\\n\", \n        p-\u003enNodesInit, Aig_ManNodeNum(p-\u003epAig), Gain, 100.0*Gain/p-\u003enNodesInit );\n    printf( \"Tried = %6d. Below = %5d. Extended = %5d.  Used = %5d.  Levels = %4d.\\n\", \n        p-\u003enNodesTried, p-\u003enNodesBelow, p-\u003enNodesExten, p-\u003enCutsUsed, Aig_ManLevels(p-\u003epAig) );\n    ABC_PRT( \"Cuts  \", p-\u003etimeCuts );\n    ABC_PRT( \"Eval  \", p-\u003etimeEval );\n    ABC_PRT( \"Other \", p-\u003etimeOther );\n    ABC_PRT( \"TOTAL \", p-\u003etimeTotal );\n}",
+      "Draft": "func Dar_ManRefPrintStats(p *Ref_Man_t) {\n    var Gain int32  = p.nNodesInit - Aig_ManNodeNum(p.pAig);\n    fmt.Printf(\"NodesBeg = %8d. NodesEnd = %8d. Gain = %6d. (%6.2f %%).\\n\", p.nNodesInit, Aig_ManNodeNum(p.pAig), Gain, 100.0*Gain/p.nNodesInit);\n    fmt.Printf(\"Tried = %6d. Below = %5d. Extended = %5d.  Used = %5d.  Levels = %4d.\\n\", p.nNodesTried, p.nNodesBelow, p.nNodesExten, p.nCutsUsed, Aig_ManLevels(p.pAig));\n    ABC_PRT( \"Cuts  \", p.timeCuts );\n    ABC_PRT( \"Eval  \", p.timeEval );\n    ABC_PRT( \"Other \", p.timeOther );\n    ABC_PRT( \"TOTAL \", p.timeTotal );\n}"
+    },
+    {
+      "Name": "Dar_ManRefStop",
+      "Start": 5693,
+      "End": 6071,
+      "BodyStart": 5730,
+      "Original": "void Dar_ManRefStop( Ref_Man_t * p )\n{\n    if ( p-\u003epManDec )\n        Bdc_ManFree( p-\u003epManDec );\n    if ( p-\u003epPars-\u003efVerbose )\n        Dar_ManRefPrintStats( p );\n    Vec_VecFree( p-\u003evCuts );\n    Vec_PtrFree( p-\u003evTruthElem );\n    Vec_PtrFree( p-\u003evTruthStore );\n    Vec_PtrFree( p-\u003evLeavesBest );\n    Vec_IntFree( p-\u003evMemory );\n    Vec_PtrFree( p-\u003evCutNodes );\n    ABC_FREE( p );\n}",
+      "Draft": "func Dar_ManRefStop(p *Ref_Man_t) {\n    if p.pManDec {\n        Bdc_ManFree( p.pManDec ); }\n    if p.pPars.fVerbose {\n        Dar_ManRefPrintStats( p ); }\n    Vec_VecFree( p.vCuts );\n    Vec_PtrFree( p.vTruthElem );\n    Vec_PtrFree( p.vTruthStore );\n    Vec_PtrFree( p.vLeavesBest );\n    Vec_IntFree( p.vMemory );\n    Vec_PtrFree( p.vCutNodes );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Ref_ObjComputeCuts",
+      "Start": 6307,
+      "End": 6392,
+      "BodyStart": 6389,
+      "Original": "void Ref_ObjComputeCuts( Aig_Man_t * pAig, Aig_Obj_t * pRoot, Vec_Vec_t * vCuts )\n{\n}",
+      "Draft": "func Ref_ObjComputeCuts(pAig *Aig_Man_t, pRoot *Aig_Obj_t, vCuts *Vec_Vec_t) {\n}"
+    },
+    {
+      "Name": "Ref_ObjPrint",
+      "Start": 6628,
+      "End": 6790,
+      "BodyStart": 6666,
+      "Original": "void Ref_ObjPrint( Aig_Obj_t * pObj )\n{\n    printf( \"%d\", pObj? Aig_Regular(pObj)-\u003eId : -1 );\n    if ( pObj )\n        printf( \"(%d) \", Aig_IsComplement(pObj) );\n}",
+      "Draft": "func Ref_ObjPrint(pObj *Aig_Obj_t) {\n    fmt.Printf(\"%d\", pObj? Aig_Regular(pObj).Id : -1);\n    if pObj != nil {\n        fmt.Printf(\"(%d) \", Aig_IsComplement(pObj)); }\n}"
+    },
+    {
+      "Name": "Dar_RefactTryGraph",
+      "Start": 7341,
+      "End": 10067,
+      "BodyStart": 7470,
+      "Original": "int Dar_RefactTryGraph( Aig_Man_t * pAig, Aig_Obj_t * pRoot, Vec_Ptr_t * vCut, Kit_Graph_t * pGraph, int NodeMax, int LevelMax )\n{\n    Kit_Node_t * pNode, * pNode0, * pNode1;\n    Aig_Obj_t * pAnd, * pAnd0, * pAnd1;\n    int i, Counter, LevelNew, LevelOld;\n    // check for constant function or a literal\n    if ( Kit_GraphIsConst(pGraph) || Kit_GraphIsVar(pGraph) )\n        return 0;\n    // set the levels of the leaves\n    Kit_GraphForEachLeaf( pGraph, pNode, i )\n    {\n        pNode-\u003epFunc = Vec_PtrEntry(vCut, i);\n        pNode-\u003eLevel = Aig_Regular((Aig_Obj_t *)pNode-\u003epFunc)-\u003eLevel;\n        assert( Aig_Regular((Aig_Obj_t *)pNode-\u003epFunc)-\u003eLevel \u003c (1\u003c\u003c24)-1 );\n    }\n//printf( \"Trying:\\n\" );\n    // compute the AIG size after adding the internal nodes\n    Counter = 0;\n    Kit_GraphForEachNode( pGraph, pNode, i )\n    {\n        // get the children of this node\n        pNode0 = Kit_GraphNode( pGraph, pNode-\u003eeEdge0.Node );\n        pNode1 = Kit_GraphNode( pGraph, pNode-\u003eeEdge1.Node );\n        // get the AIG nodes corresponding to the children \n        pAnd0 = (Aig_Obj_t *)pNode0-\u003epFunc; \n        pAnd1 = (Aig_Obj_t *)pNode1-\u003epFunc; \n        if ( pAnd0 \u0026\u0026 pAnd1 )\n        {\n            // if they are both present, find the resulting node\n            pAnd0 = Aig_NotCond( pAnd0, pNode-\u003eeEdge0.fCompl );\n            pAnd1 = Aig_NotCond( pAnd1, pNode-\u003eeEdge1.fCompl );\n            pAnd  = Aig_TableLookupTwo( pAig, pAnd0, pAnd1 );\n            // return -1 if the node is the same as the original root\n            if ( Aig_Regular(pAnd) == pRoot )\n                return -1;\n        }\n        else\n            pAnd = NULL;\n        // count the number of added nodes\n        if ( pAnd == NULL || Aig_ObjIsTravIdCurrent(pAig, Aig_Regular(pAnd)) )\n        {\n            if ( ++Counter \u003e NodeMax )\n                return -1;\n        }\n        // count the number of new levels\n        LevelNew = 1 + Abc_MaxInt( pNode0-\u003eLevel, pNode1-\u003eLevel );\n        if ( pAnd )\n        {\n            if ( Aig_Regular(pAnd) == Aig_ManConst1(pAig) )\n                LevelNew = 0;\n            else if ( Aig_Regular(pAnd) == Aig_Regular(pAnd0) )\n                LevelNew = (int)Aig_Regular(pAnd0)-\u003eLevel;\n            else if ( Aig_Regular(pAnd) == Aig_Regular(pAnd1) )\n                LevelNew = (int)Aig_Regular(pAnd1)-\u003eLevel;\n            LevelOld = (int)Aig_Regular(pAnd)-\u003eLevel;\n//            assert( LevelNew == LevelOld );\n        }\n        if ( LevelNew \u003e LevelMax )\n            return -1;\n        pNode-\u003epFunc = pAnd;\n        pNode-\u003eLevel = LevelNew;\n/*\nprintf( \"Checking \" );\nRef_ObjPrint( pAnd0 );\nprintf( \" and \" );\nRef_ObjPrint( pAnd1 );\nprintf( \"  Result \" );\nRef_ObjPrint( pNode-\u003epFunc );\nprintf( \"\\n\" );\n*/\n    }\n    return Counter;\n}",
+      "Draft": "func Dar_RefactTryGraph(pAig *Aig_Man_t, pRoot *Aig_Obj_t, vCut *Vec_Ptr_t, pGraph *Kit_Graph_t, NodeMax int32, LevelMax int32) int32 {\n    var pNode, pNode0, pNode1 *Kit_Node_t;\n    var pAnd, pAnd0, pAnd1 *Aig_Obj_t;\n    var i, Counter, LevelNew, LevelOld int32;\n    // check for constant function or a literal\n    if Kit_GraphIsConst(pGraph) || Kit_GraphIsVar(pGraph) {\n        return 0; }\n    // set the levels of the leaves\n    // inlining of macro Kit_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pNode.pFunc = Vec_PtrEntry(vCut, i);\n        pNode.Level = Aig_Regular((Aig_Obj_t *)pNode.pFunc).Level;\n        assert(Aig_Regular((Aig_Obj_t *)pNode.pFunc).Level \u003c (1\u003c\u003c24)-1, \"Aig_Regular((Aig_Obj_t *)pNode.pFunc).Level \u003c (1\u003c\u003c24)-1\");\n    }\n//printf( \"Trying:\\n\" );\n    // compute the AIG size after adding the internal nodes\n    Counter = 0;\n    // inlining of macro Kit_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        // get the children of this node\n        pNode0 = Kit_GraphNode( pGraph, pNode.eEdge0.Node );\n        pNode1 = Kit_GraphNode( pGraph, pNode.eEdge1.Node );\n        // get the AIG nodes corresponding to the children \n        pAnd0 = (Aig_Obj_t *)pNode0.pFunc; \n        pAnd1 = (Aig_Obj_t *)pNode1.pFunc; \n        if pAnd0 \u0026\u0026 (pAnd1 != nil) {\n            // if they are both present, find the resulting node\n            pAnd0 = Aig_NotCond( pAnd0, pNode.eEdge0.fCompl );\n            pAnd1 = Aig_NotCond( pAnd1, pNode.eEdge1.fCompl );\n            pAnd  = Aig_TableLookupTwo( pAig, pAnd0, pAnd1 );\n            // return -1 if the node is the same as the original root\n            if Aig_Regular(pAnd) == pRoot {\n                return -1; }\n        \n        } else {\n            pAnd = nil; }\n        // count the number of added nodes\n        if pAnd == nil || Aig_ObjIsTravIdCurrent(pAig, Aig_Regular(pAnd)) {\n            if Counter++; Counter \u003e NodeMax {\n                return -1; }\n        }\n        // count the number of new levels\n        LevelNew = 1 + Abc_MaxInt( pNode0.Level, pNode1.Level );\n        if pAnd {\n            if Aig_Regular(pAnd) == Aig_ManConst1(pAig) {\n                LevelNew = 0;\n            } else if Aig_Regular(pAnd) == Aig_Regular(pAnd0) {\n                LevelNew = int32(Aig_Regular(pAnd0).Level);\n            } else if Aig_Regular(pAnd) == Aig_Regular(pAnd1) {\n                LevelNew = int32(Aig_Regular(pAnd1).Level); }\n            LevelOld = int32(Aig_Regular(pAnd).Level);\n//            assert( LevelNew == LevelOld );\n        }\n        if LevelNew \u003e LevelMax {\n            return -1; }\n        pNode.pFunc = pAnd;\n        pNode.Level = LevelNew;\n/*\nprintf( \"Checking \" );\nRef_ObjPrint( pAnd0 );\nprintf( \" and \" );\nRef_ObjPrint( pAnd1 );\nprintf( \"  Result \" );\nRef_ObjPrint( pNode-\u003epFunc );\nprintf( \"\\n\" );\n*/\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Dar_RefactBuildGraph",
+      "Start": 10303,
+      "End": 11679,
+      "BodyStart": 10396,
+      "Original": "Aig_Obj_t * Dar_RefactBuildGraph( Aig_Man_t * pAig, Vec_Ptr_t * vCut, Kit_Graph_t * pGraph )\n{\n    Aig_Obj_t * pAnd0, * pAnd1;\n    Kit_Node_t * pNode = NULL;\n    int i;\n    // check for constant function\n    if ( Kit_GraphIsConst(pGraph) )\n        return Aig_NotCond( Aig_ManConst1(pAig), Kit_GraphIsComplement(pGraph) );\n    // set the leaves\n    Kit_GraphForEachLeaf( pGraph, pNode, i )\n        pNode-\u003epFunc = Vec_PtrEntry(vCut, i);\n    // check for a literal\n    if ( Kit_GraphIsVar(pGraph) )\n        return Aig_NotCond( (Aig_Obj_t *)Kit_GraphVar(pGraph)-\u003epFunc, Kit_GraphIsComplement(pGraph) );\n    // build the AIG nodes corresponding to the AND gates of the graph\n//printf( \"Building (current number %d):\\n\", Aig_ManObjNumMax(pAig) );\n    Kit_GraphForEachNode( pGraph, pNode, i )\n    {\n        pAnd0 = Aig_NotCond( (Aig_Obj_t *)Kit_GraphNode(pGraph, pNode-\u003eeEdge0.Node)-\u003epFunc, pNode-\u003eeEdge0.fCompl ); \n        pAnd1 = Aig_NotCond( (Aig_Obj_t *)Kit_GraphNode(pGraph, pNode-\u003eeEdge1.Node)-\u003epFunc, pNode-\u003eeEdge1.fCompl ); \n        pNode-\u003epFunc = Aig_And( pAig, pAnd0, pAnd1 );\n/*\nprintf( \"Checking \" );\nRef_ObjPrint( pAnd0 );\nprintf( \" and \" );\nRef_ObjPrint( pAnd1 );\nprintf( \"  Result \" );\nRef_ObjPrint( pNode-\u003epFunc );\nprintf( \"\\n\" );\n*/\n    }\n    // complement the result if necessary\n    return Aig_NotCond( (Aig_Obj_t *)pNode-\u003epFunc, Kit_GraphIsComplement(pGraph) );\n}",
+      "Draft": "func Dar_RefactBuildGraph(pAig *Aig_Man_t, vCut *Vec_Ptr_t, pGraph *Kit_Graph_t) *Aig_Obj_t {\n    var pAnd0, pAnd1 *Aig_Obj_t;\n    var pNode *Kit_Node_t  = nil;\n    var i int32;\n    // check for constant function\n    if Kit_GraphIsConst(pGraph) {\n        return Aig_NotCond( Aig_ManConst1(pAig), Kit_GraphIsComplement(pGraph) ); }\n    // set the leaves\n    // inlining of macro Kit_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pNode.pFunc = Vec_PtrEntry(vCut, i);\n    }\n    // check for a literal\n    if Kit_GraphIsVar(pGraph) {\n        return Aig_NotCond( (Aig_Obj_t *)Kit_GraphVar(pGraph).pFunc, Kit_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n//printf( \"Building (current number %d):\\n\", Aig_ManObjNumMax(pAig) );\n    // inlining of macro Kit_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Aig_NotCond( (Aig_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Aig_NotCond( (Aig_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n        pNode.pFunc = Aig_And( pAig, pAnd0, pAnd1 );\n/*\nprintf( \"Checking \" );\nRef_ObjPrint( pAnd0 );\nprintf( \" and \" );\nRef_ObjPrint( pAnd1 );\nprintf( \"  Result \" );\nRef_ObjPrint( pNode-\u003epFunc );\nprintf( \"\\n\" );\n*/\n    }\n    // complement the result if necessary\n    return Aig_NotCond( (Aig_Obj_t *)pNode.pFunc, Kit_GraphIsComplement(pGraph) );\n}"
+    },
+    {
+      "Name": "Dar_ManRefactorTryCuts",
+      "Start": 11915,
+      "End": 15949,
+      "BodyStart": 12008,
+      "Original": "int Dar_ManRefactorTryCuts( Ref_Man_t * p, Aig_Obj_t * pObj, int nNodesSaved, int Required )\n{\n    Vec_Ptr_t * vCut;\n    Kit_Graph_t * pGraphCur;\n    int k, RetValue, GainCur, nNodesAdded;\n    unsigned * pTruth;\n\n    p-\u003eGainBest = -1;\n    p-\u003epGraphBest = NULL;\n    Vec_VecForEachLevel( p-\u003evCuts, vCut, k )\n    {\n        if ( Vec_PtrSize(vCut) == 0 )\n            continue;\n//        if ( Vec_PtrSize(vCut) != 0 \u0026\u0026 Vec_PtrSize(Vec_VecEntry(p-\u003evCuts, k+1)) != 0 )\n//            continue;\n\n        p-\u003enCutsTried++;\n        // get the cut nodes\n        Aig_ObjCollectCut( pObj, vCut, p-\u003evCutNodes );\n        // get the truth table\n        pTruth = Aig_ManCutTruth( pObj, vCut, p-\u003evCutNodes, p-\u003evTruthElem, p-\u003evTruthStore );\n        if ( Kit_TruthIsConst0(pTruth, Vec_PtrSize(vCut)) )\n        {\n            p-\u003eGainBest = Aig_NodeMffcSupp( p-\u003epAig, pObj, 0, NULL );\n            p-\u003epGraphBest = Kit_GraphCreateConst0();\n            Vec_PtrCopy( p-\u003evLeavesBest, vCut );\n            return p-\u003eGainBest;\n        }\n        if ( Kit_TruthIsConst1(pTruth, Vec_PtrSize(vCut)) )\n        {\n            p-\u003eGainBest = Aig_NodeMffcSupp( p-\u003epAig, pObj, 0, NULL );\n            p-\u003epGraphBest = Kit_GraphCreateConst1();\n            Vec_PtrCopy( p-\u003evLeavesBest, vCut );\n            return p-\u003eGainBest;\n        }\n\n        // try the positive phase\n        RetValue = Kit_TruthIsop( pTruth, Vec_PtrSize(vCut), p-\u003evMemory, 0 );\n        if ( RetValue \u003e -1 )\n        {\n            pGraphCur = Kit_SopFactor( p-\u003evMemory, 0, Vec_PtrSize(vCut), p-\u003evMemory );\n/*\n{\n    int RetValue;\n    RetValue = Bdc_ManDecompose( p-\u003epManDec, pTruth, NULL, Vec_PtrSize(vCut), NULL, 1000 );\n    printf( \"Graph = %d. Bidec = %d.\\n\", Kit_GraphNodeNum(pGraphCur), RetValue );\n}\n*/\n            nNodesAdded = Dar_RefactTryGraph( p-\u003epAig, pObj, vCut, pGraphCur, nNodesSaved - !p-\u003epPars-\u003efUseZeros, Required );\n            if ( nNodesAdded \u003e -1 )\n            {\n                GainCur = nNodesSaved - nNodesAdded;\n                if ( p-\u003eGainBest \u003c GainCur || (p-\u003eGainBest == GainCur \u0026\u0026 \n                    (Kit_GraphIsConst(pGraphCur) || Kit_GraphRootLevel(pGraphCur) \u003c Kit_GraphRootLevel(p-\u003epGraphBest))) )\n                {\n                    p-\u003eGainBest = GainCur;\n                    if ( p-\u003epGraphBest )\n                        Kit_GraphFree( p-\u003epGraphBest );\n                    p-\u003epGraphBest = pGraphCur;\n                    Vec_PtrCopy( p-\u003evLeavesBest, vCut );\n                }\n                else\n                    Kit_GraphFree( pGraphCur );\n            }\n            else\n                Kit_GraphFree( pGraphCur );\n        }\n        // try negative phase\n        Kit_TruthNot( pTruth, pTruth, Vec_PtrSize(vCut) );\n        RetValue = Kit_TruthIsop( pTruth, Vec_PtrSize(vCut), p-\u003evMemory, 0 );\n//        Kit_TruthNot( pTruth, pTruth, Vec_PtrSize(vCut) );\n        if ( RetValue \u003e -1 )\n        {\n            pGraphCur = Kit_SopFactor( p-\u003evMemory, 1, Vec_PtrSize(vCut), p-\u003evMemory );\n/*\n{\n    int RetValue;\n    RetValue = Bdc_ManDecompose( p-\u003epManDec, pTruth, NULL, Vec_PtrSize(vCut), NULL, 1000 );\n    printf( \"Graph = %d. Bidec = %d.\\n\", Kit_GraphNodeNum(pGraphCur), RetValue );\n}\n*/\n            nNodesAdded = Dar_RefactTryGraph( p-\u003epAig, pObj, vCut, pGraphCur, nNodesSaved - !p-\u003epPars-\u003efUseZeros, Required );\n            if ( nNodesAdded \u003e -1 )\n            {\n                GainCur = nNodesSaved - nNodesAdded;\n                if ( p-\u003eGainBest \u003c GainCur || (p-\u003eGainBest == GainCur \u0026\u0026 \n                    (Kit_GraphIsConst(pGraphCur) || Kit_GraphRootLevel(pGraphCur) \u003c Kit_GraphRootLevel(p-\u003epGraphBest))) )\n                {\n                    p-\u003eGainBest = GainCur;\n                    if ( p-\u003epGraphBest )\n                        Kit_GraphFree( p-\u003epGraphBest );\n                    p-\u003epGraphBest = pGraphCur;\n                    Vec_PtrCopy( p-\u003evLeavesBest, vCut );\n                }\n                else\n                    Kit_GraphFree( pGraphCur );\n            }\n            else\n                Kit_GraphFree( pGraphCur );\n        }\n    }\n\n    return p-\u003eGainBest;\n}",
+      "Draft": "func Dar_ManRefactorTryCuts(p *Ref_Man_t, pObj *Aig_Obj_t, nNodesSaved int32, Required int32) int32 {\n    var vCut *Vec_Ptr_t;\n    var pGraphCur *Kit_Graph_t;\n    var k, RetValue, GainCur, nNodesAdded int32;\n    var pTruth *uint32;\n\n    p.GainBest = -1;\n    p.pGraphBest = nil;\n    Vec_VecForEachLevel( p.vCuts, vCut, k )\n    {\n        if Vec_PtrSize(vCut) == 0 {\n            continue; }\n//        if ( Vec_PtrSize(vCut) != 0 \u0026\u0026 Vec_PtrSize(Vec_VecEntry(p-\u003evCuts, k+1)) != 0 )\n//            continue;\n\n        p.nCutsTried++;\n        // get the cut nodes\n        Aig_ObjCollectCut( pObj, vCut, p.vCutNodes );\n        // get the truth table\n        pTruth = Aig_ManCutTruth( pObj, vCut, p.vCutNodes, p.vTruthElem, p.vTruthStore );\n        if Kit_TruthIsConst0(pTruth, Vec_PtrSize(vCut)) {\n            p.GainBest = Aig_NodeMffcSupp( p.pAig, pObj, 0, nil );\n            p.pGraphBest = Kit_GraphCreateConst0();\n            Vec_PtrCopy( p.vLeavesBest, vCut );\n            return p.GainBest;\n        }\n        if Kit_TruthIsConst1(pTruth, Vec_PtrSize(vCut)) {\n            p.GainBest = Aig_NodeMffcSupp( p.pAig, pObj, 0, nil );\n            p.pGraphBest = Kit_GraphCreateConst1();\n            Vec_PtrCopy( p.vLeavesBest, vCut );\n            return p.GainBest;\n        }\n\n        // try the positive phase\n        RetValue = Kit_TruthIsop( pTruth, Vec_PtrSize(vCut), p.vMemory, 0 );\n        if RetValue \u003e -1 {\n            pGraphCur = Kit_SopFactor( p.vMemory, 0, Vec_PtrSize(vCut), p.vMemory );\n/*\n{\n    int RetValue;\n    RetValue = Bdc_ManDecompose( p-\u003epManDec, pTruth, NULL, Vec_PtrSize(vCut), NULL, 1000 );\n    printf( \"Graph = %d. Bidec = %d.\\n\", Kit_GraphNodeNum(pGraphCur), RetValue );\n}\n*/\n            nNodesAdded = Dar_RefactTryGraph( p.pAig, pObj, vCut, pGraphCur, nNodesSaved - !p.pPars.fUseZeros, Required );\n            if nNodesAdded \u003e -1 {\n                GainCur = nNodesSaved - nNodesAdded;\n                if p.GainBest \u003c GainCur || (p.GainBest == GainCur \u0026\u0026 \n                    (Kit_GraphIsConst(pGraphCur) || Kit_GraphRootLevel(pGraphCur) \u003c Kit_GraphRootLevel(p.pGraphBest))) {\n                    p.GainBest = GainCur;\n                    if p.pGraphBest {\n                        Kit_GraphFree( p.pGraphBest ); }\n                    p.pGraphBest = pGraphCur;\n                    Vec_PtrCopy( p.vLeavesBest, vCut );\n                \n                } else {\n                    Kit_GraphFree( pGraphCur ); }\n            \n            } else {\n                Kit_GraphFree( pGraphCur ); }\n        }\n        // try negative phase\n        Kit_TruthNot( pTruth, pTruth, Vec_PtrSize(vCut) );\n        RetValue = Kit_TruthIsop( pTruth, Vec_PtrSize(vCut), p.vMemory, 0 );\n//        Kit_TruthNot( pTruth, pTruth, Vec_PtrSize(vCut) );\n        if RetValue \u003e -1 {\n            pGraphCur = Kit_SopFactor( p.vMemory, 1, Vec_PtrSize(vCut), p.vMemory );\n/*\n{\n    int RetValue;\n    RetValue = Bdc_ManDecompose( p-\u003epManDec, pTruth, NULL, Vec_PtrSize(vCut), NULL, 1000 );\n    printf( \"Graph = %d. Bidec = %d.\\n\", Kit_GraphNodeNum(pGraphCur), RetValue );\n}\n*/\n            nNodesAdded = Dar_RefactTryGraph( p.pAig, pObj, vCut, pGraphCur, nNodesSaved - !p.pPars.fUseZeros, Required );\n            if nNodesAdded \u003e -1 {\n                GainCur = nNodesSaved - nNodesAdded;\n                if p.GainBest \u003c GainCur || (p.GainBest == GainCur \u0026\u0026 \n                    (Kit_GraphIsConst(pGraphCur) || Kit_GraphRootLevel(pGraphCur) \u003c Kit_GraphRootLevel(p.pGraphBest))) {\n                    p.GainBest = GainCur;\n                    if p.pGraphBest {\n                        Kit_GraphFree( p.pGraphBest ); }\n                    p.pGraphBest = pGraphCur;\n                    Vec_PtrCopy( p.vLeavesBest, vCut );\n                \n                } else {\n                    Kit_GraphFree( pGraphCur ); }\n            \n            } else {\n                Kit_GraphFree( pGraphCur ); }\n        }\n    }\n\n    return p.GainBest;\n}"
+    },
+    {
+      "Name": "Dar_ObjCutLevelAchieved",
+      "Start": 16235,
+      "End": 16491,
+      "BodyStart": 16298,
+      "Original": "int Dar_ObjCutLevelAchieved( Vec_Ptr_t * vCut, int nLevelMin )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCut, pObj, i )\n        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 (int)pObj-\u003eLevel \u003c= nLevelMin )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Dar_ObjCutLevelAchieved(vCut *Vec_Ptr_t, nLevelMin int32) int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCut, pObj, i )\n        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 int32(pObj.Level) \u003c= nLevelMin )\n            return 1;\n    return 0;\n}"
+    },
+    {
+      "Name": "Dar_ManRefactor",
+      "Start": 16728,
+      "End": 21432,
+      "BodyStart": 16790,
+      "Original": "int Dar_ManRefactor( Aig_Man_t * pAig, Dar_RefPar_t * pPars )\n{\n//    Bar_Progress_t * pProgress;\n    Ref_Man_t * p;\n    Vec_Ptr_t * vCut, * vCut2;\n    Aig_Obj_t * pObj, * pObjNew;\n    int nNodesOld, nNodeBefore, nNodeAfter, nNodesSaved, nNodesSaved2;\n    int i, Required, nLevelMin;\n    abctime clkStart, clk;\n\n    // start the manager\n    p = Dar_ManRefStart( pAig, pPars );\n    // remove dangling nodes\n    Aig_ManCleanup( pAig );\n    // if updating levels is requested, start fanout and timing\n    Aig_ManFanoutStart( pAig );\n    if ( p-\u003epPars-\u003efUpdateLevel )\n        Aig_ManStartReverseLevels( pAig, 0 );\n\n    // resynthesize each node once\n    clkStart = Abc_Clock();\n    vCut = Vec_VecEntry( p-\u003evCuts, 0 );\n    vCut2 = Vec_VecEntry( p-\u003evCuts, 1 );\n    p-\u003enNodesInit = Aig_ManNodeNum(pAig);\n    nNodesOld = Vec_PtrSize( pAig-\u003evObjs );\n//    pProgress = Bar_ProgressStart( stdout, nNodesOld );\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n//        Bar_ProgressUpdate( pProgress, i, NULL );\n        if ( !Aig_ObjIsNode(pObj) )\n            continue;\n        if ( i \u003e nNodesOld )\n            break;\n        if ( pAig-\u003eTime2Quit \u0026\u0026 !(i \u0026 256) \u0026\u0026 Abc_Clock() \u003e pAig-\u003eTime2Quit )\n            break;\n        Vec_VecClear( p-\u003evCuts );\n\n//printf( \"\\nConsidering node %d.\\n\", pObj-\u003eId );\n        // get the bounded MFFC size\nclk = Abc_Clock();\n        nLevelMin = Abc_MaxInt( 0, Aig_ObjLevel(pObj) - 10 );\n        nNodesSaved = Aig_NodeMffcSupp( pAig, pObj, nLevelMin, vCut );\n        if ( nNodesSaved \u003c p-\u003epPars-\u003enMffcMin ) // too small to consider\n        {\np-\u003etimeCuts += Abc_Clock() - clk;\n            continue; \n        }\n        p-\u003enNodesTried++;\n        if ( Vec_PtrSize(vCut) \u003e p-\u003epPars-\u003enLeafMax ) // get one reconv-driven cut\n        {\n            Aig_ManFindCut( pObj, vCut, p-\u003evCutNodes, p-\u003epPars-\u003enLeafMax, 50 );\n            nNodesSaved = Aig_NodeMffcLabelCut( p-\u003epAig, pObj, vCut );\n        }\n        else if ( Vec_PtrSize(vCut) \u003c p-\u003epPars-\u003enLeafMax - 2 \u0026\u0026 p-\u003epPars-\u003efExtend )\n        {\n            if ( !Dar_ObjCutLevelAchieved(vCut, nLevelMin) )\n            {\n                if ( Aig_NodeMffcExtendCut( pAig, pObj, vCut, vCut2 ) )\n                {\n                    nNodesSaved2 = Aig_NodeMffcLabelCut( p-\u003epAig, pObj, vCut );\n                    assert( nNodesSaved2 == nNodesSaved );\n                }\n                if ( Vec_PtrSize(vCut2) \u003e p-\u003epPars-\u003enLeafMax )\n                    Vec_PtrClear(vCut2);\n                if ( Vec_PtrSize(vCut2) \u003e 0 )\n                {\n                    p-\u003enNodesExten++;\n//                    printf( \"%d(%d) \", Vec_PtrSize(vCut), Vec_PtrSize(vCut2) );\n                }\n            }\n            else\n                p-\u003enNodesBelow++;\n        }\np-\u003etimeCuts += Abc_Clock() - clk;\n\n        // try the cuts\nclk = Abc_Clock();\n        Required = pAig-\u003evLevelR? Aig_ObjRequiredLevel(pAig, pObj) : ABC_INFINITY;\n        Dar_ManRefactorTryCuts( p, pObj, nNodesSaved, Required );\np-\u003etimeEval += Abc_Clock() - clk;\n\n        // check the best gain\n        if ( !(p-\u003eGainBest \u003e 0 || (p-\u003eGainBest == 0 \u0026\u0026 p-\u003epPars-\u003efUseZeros)) )\n        {\n            if ( p-\u003epGraphBest )\n                Kit_GraphFree( p-\u003epGraphBest );\n            continue;\n        }\n//printf( \"\\n\" );\n\n        // if we end up here, a rewriting step is accepted\n        nNodeBefore = Aig_ManNodeNum( pAig );\n        pObjNew = Dar_RefactBuildGraph( pAig, p-\u003evLeavesBest, p-\u003epGraphBest );\n        assert( (int)Aig_Regular(pObjNew)-\u003eLevel \u003c= Required );\n        // replace the node\n        Aig_ObjReplace( pAig, pObj, pObjNew, p-\u003epPars-\u003efUpdateLevel );\n        // compare the gains\n        nNodeAfter = Aig_ManNodeNum( pAig );\n        assert( p-\u003eGainBest \u003c= nNodeBefore - nNodeAfter );\n        Kit_GraphFree( p-\u003epGraphBest );\n        p-\u003enCutsUsed++;\n//        break;\n    }\np-\u003etimeTotal = Abc_Clock() - clkStart;\np-\u003etimeOther = p-\u003etimeTotal - p-\u003etimeCuts - p-\u003etimeEval;\n\n//    Bar_ProgressStop( pProgress );\n    // put the nodes into the DFS order and reassign their IDs\n//    Aig_NtkReassignIds( p );\n    // fix the levels\n    Aig_ManFanoutStop( pAig );\n    if ( p-\u003epPars-\u003efUpdateLevel )\n        Aig_ManStopReverseLevels( pAig );\n/*\n    Aig_ManForEachObj( p-\u003epAig, pObj, i )\n        if ( Aig_ObjIsNode(pObj) \u0026\u0026 Aig_ObjRefs(pObj) == 0 )\n        {\n            printf( \"Unreferenced \" );\n            Aig_ObjPrintVerbose( pObj, 0 );\n            printf( \"\\n\" );\n        }\n*/\n    // remove dangling nodes (they should not be here!)\n    Aig_ManCleanup( pAig );\n\n    // stop the rewriting manager\n    Dar_ManRefStop( p );\n//    Aig_ManCheckPhase( pAig );\n    if ( !Aig_ManCheck( pAig ) )\n    {\n        printf( \"Dar_ManRefactor: The network check has failed.\\n\" );\n        return 0;\n    }\n    return 1;\n\n}",
+      "Draft": "func Dar_ManRefactor(pAig *Aig_Man_t, pPars *Dar_RefPar_t) int32 {\n//    Bar_Progress_t * pProgress;\n    var p *Ref_Man_t;\n    var vCut, vCut2 *Vec_Ptr_t;\n    var pObj, pObjNew *Aig_Obj_t;\n    var nNodesOld, nNodeBefore, nNodeAfter, nNodesSaved, nNodesSaved2 int32;\n    var i, Required, nLevelMin int32;\n    var clkStart, clk abctime;\n\n    // start the manager\n    p = Dar_ManRefStart( pAig, pPars );\n    // remove dangling nodes\n    Aig_ManCleanup( pAig );\n    // if updating levels is requested, start fanout and timing\n    Aig_ManFanoutStart( pAig );\n    if p.pPars.fUpdateLevel {\n        Aig_ManStartReverseLevels( pAig, 0 ); }\n\n    // resynthesize each node once\n    clkStart = Abc_Clock();\n    vCut = Vec_VecEntry( p.vCuts, 0 );\n    vCut2 = Vec_VecEntry( p.vCuts, 1 );\n    p.nNodesInit = Aig_ManNodeNum(pAig);\n    nNodesOld = Vec_PtrSize( pAig.vObjs );\n//    pProgress = Bar_ProgressStart( stdout, nNodesOld );\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n//        Bar_ProgressUpdate( pProgress, i, NULL );\n        if !Aig_ObjIsNode(pObj) {\n            continue; }\n        if i \u003e nNodesOld {\n            break; }\n        if pAig.Time2Quit \u0026\u0026 !(i \u0026 256) \u0026\u0026 Abc_Clock() \u003e pAig.Time2Quit {\n            break; }\n        Vec_VecClear( p.vCuts );\n\n//printf( \"\\nConsidering node %d.\\n\", pObj-\u003eId );\n        // get the bounded MFFC size\nclk = Abc_Clock();\n        nLevelMin = Abc_MaxInt( 0, Aig_ObjLevel(pObj) - 10 );\n        nNodesSaved = Aig_NodeMffcSupp( pAig, pObj, nLevelMin, vCut );\n        if nNodesSaved \u003c p.pPars.nMffcMin { // too small to consider\n        \np.timeCuts += Abc_Clock() - clk;\n            continue; \n        }\n        p.nNodesTried++;\n        if Vec_PtrSize(vCut) \u003e p.pPars.nLeafMax { // get one reconv-driven cut\n        \n            Aig_ManFindCut( pObj, vCut, p.vCutNodes, p.pPars.nLeafMax, 50 );\n            nNodesSaved = Aig_NodeMffcLabelCut( p.pAig, pObj, vCut );\n        \n        } else if Vec_PtrSize(vCut) \u003c p.pPars.nLeafMax - 2 \u0026\u0026 p.pPars.fExtend {\n            if !(Dar_ObjCutLevelAchieved(vCut, nLevelMin) != 0) {\n                if Aig_NodeMffcExtendCut( pAig, pObj, vCut, vCut2 ) {\n                    nNodesSaved2 = Aig_NodeMffcLabelCut( p.pAig, pObj, vCut );\n                    assert(nNodesSaved2 == nNodesSaved, \"nNodesSaved2 == nNodesSaved\");\n                }\n                if Vec_PtrSize(vCut2) \u003e p.pPars.nLeafMax {\n                    Vec_PtrClear(vCut2); }\n                if Vec_PtrSize(vCut2) \u003e 0 {\n                    p.nNodesExten++;\n//                    printf( \"%d(%d) \", Vec_PtrSize(vCut), Vec_PtrSize(vCut2) );\n                }\n            \n            } else {\n                p.nNodesBelow++; }\n        }\np.timeCuts += Abc_Clock() - clk;\n\n        // try the cuts\nclk = Abc_Clock();\n        if pAig.vLevelR {\n            Required = Aig_ObjRequiredLevel(pAig, pObj);\n        } else {\n            Required = ABC_INFINITY;\n        }\n        Dar_ManRefactorTryCuts( p, pObj, nNodesSaved, Required );\np.timeEval += Abc_Clock() - clk;\n\n        // check the best gain\n        if !(p.GainBest \u003e 0 || (p.GainBest == 0 \u0026\u0026 p.pPars.fUseZeros)) {\n            if p.pGraphBest {\n                Kit_GraphFree( p.pGraphBest ); }\n            continue;\n        }\n//printf( \"\\n\" );\n\n        // if we end up here, a rewriting step is accepted\n        nNodeBefore = Aig_ManNodeNum( pAig );\n        pObjNew = Dar_RefactBuildGraph( pAig, p.vLeavesBest, p.pGraphBest );\n        assert(int32(Aig_Regular(pObjNew).Level) \u003c= Required, \"int32(Aig_Regular(pObjNew).Level) \u003c= Required\");\n        // replace the node\n        Aig_ObjReplace( pAig, pObj, pObjNew, p.pPars.fUpdateLevel );\n        // compare the gains\n        nNodeAfter = Aig_ManNodeNum( pAig );\n        assert(p.GainBest \u003c= nNodeBefore - nNodeAfter, \"p.GainBest \u003c= nNodeBefore - nNodeAfter\");\n        Kit_GraphFree( p.pGraphBest );\n        p.nCutsUsed++;\n//        break;\n    }\np.timeTotal = Abc_Clock() - clkStart;\np.timeOther = p.timeTotal - p.timeCuts - p.timeEval;\n\n//    Bar_ProgressStop( pProgress );\n    // put the nodes into the DFS order and reassign their IDs\n//    Aig_NtkReassignIds( p );\n    // fix the levels\n    Aig_ManFanoutStop( pAig );\n    if p.pPars.fUpdateLevel {\n        Aig_ManStopReverseLevels( pAig ); }\n/*\n    Aig_ManForEachObj( p-\u003epAig, pObj, i )\n        if ( Aig_ObjIsNode(pObj) \u0026\u0026 Aig_ObjRefs(pObj) == 0 )\n        {\n            printf( \"Unreferenced \" );\n            Aig_ObjPrintVerbose( pObj, 0 );\n            printf( \"\\n\" );\n        }\n*/\n    // remove dangling nodes (they should not be here!)\n    Aig_ManCleanup( pAig );\n\n    // stop the rewriting manager\n    Dar_ManRefStop( p );\n//    Aig_ManCheckPhase( pAig );\n    if !Aig_ManCheck( pAig ) {\n        fmt.Printf(\"Dar_ManRefactor: The network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::struct::Ref_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Ref_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 880,
+      "End": 2495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::mechanical::sizeof::3088",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3088,
+      "End": 3094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::mechanical::sizeof::3888",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3888,
+      "End": 3894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::pointer-cast::7996",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7892,
+      "End": 7905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::pointer-cast::8059",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7955,
+      "End": 7968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::pointer-cast::8626",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8404,
+      "End": 8417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::pointer-cast::8671",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8449,
+      "End": 8462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::pointer-cast::11153",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10827,
+      "End": 10840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::pointer-cast::11568",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11124,
+      "End": 11137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::pointer-cast::11685",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11241,
+      "End": 11254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::pointer-cast::12062",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11618,
+      "End": 11631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::Dar_ManDefaultRefParams",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManDefaultRefParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3011,
+      "End": 3454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::Dar_ManRefStart",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManRefStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3719,
+      "End": 4556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::Dar_ManRefPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManRefPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4833,
+      "End": 5429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::Dar_ManRefStop",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManRefStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5693,
+      "End": 6071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::Ref_ObjComputeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Ref_ObjComputeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6307,
+      "End": 6392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::ternary::Ref_ObjPrint",
+      "Category": "ternary-review",
+      "Symbol": "Ref_ObjPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6628,
+      "End": 6790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::Ref_ObjPrint",
+      "Category": "semantic-review",
+      "Symbol": "Ref_ObjPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6628,
+      "End": 6790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::Dar_RefactTryGraph",
+      "Category": "semantic-review",
+      "Symbol": "Dar_RefactTryGraph",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7341,
+      "End": 10067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::Dar_RefactBuildGraph",
+      "Category": "semantic-review",
+      "Symbol": "Dar_RefactBuildGraph",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10303,
+      "End": 11679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::Dar_ManRefactorTryCuts",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManRefactorTryCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11915,
+      "End": 15949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::Dar_ObjCutLevelAchieved",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ObjCutLevelAchieved",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16235,
+      "End": 16491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::Dar_ManRefactor",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManRefactor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16728,
+      "End": 21432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::macro-inline::3843",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3843,
+      "End": 3868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::macro-inline::5278",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5278,
+      "End": 5310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::macro-inline::5316",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5316,
+      "End": 5348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::macro-inline::5354",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5354,
+      "End": 5387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::macro-inline::5393",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5393,
+      "End": 5426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::macro-inline::6055",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6055,
+      "End": 6068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::macro-inline::12180",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12180,
+      "End": 12220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::macro-inline::16337",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16337,
+      "End": 16386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darRefact.c::macro-inline::17631",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17631,
+      "End": 17665
+    }
+  ],
+  "Draft": "package dar\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [darRefact.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware AIG rewriting.]\n\n  Synopsis    [Refactoring.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: darRefact.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"darInt.h\"\n//#include \"bool/kit/kit.h\"\n\n//#include \"bool/bdc/bdc.h\"\n//#include \"bool/bdc/bdcInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// the refactoring manager\n              \ntype Ref_Man_t struct {\n    // input data\n    pPars    *Dar_RefPar_t;          // rewriting parameters\n    pAig       *Aig_Man_t;           // AIG manager \n    // computed cuts\n    vCuts       *Vec_Vec_t;          // the storage for cuts\n    // truth table and ISOP\n    vTruthElem       *Vec_Ptr_t;     // elementary truth tables\n    vTruthStore       *Vec_Ptr_t;    // storage for truth tables\n    vMemory       *Vec_Int_t;        // storage for ISOP\n    vCutNodes       *Vec_Ptr_t;      // storage for internal nodes of the cut\n    // various data members\n    vLeavesBest       *Vec_Ptr_t;    // the best set of leaves\n    pGraphBest     *Kit_Graph_t;     // the best factored form\n    GainBest              int32;       // the best gain\n    LevelBest              int32;      // the level of node with the best gain\n    // bi-decomposition\n    DecPars        Bdc_Par_t;        // decomposition parameters\n    pManDec       *Bdc_Man_t;        // decomposition manager\n    // node statistics\n    nNodesInit              int32;     // the initial number of nodes\n    nNodesTried              int32;    // the number of nodes tried\n    nNodesBelow              int32;    // the number of nodes below the level limit\n    nNodesExten              int32;    // the number of nodes with extended cut\n    nCutsUsed              int32;      // the number of rewriting steps\n    nCutsTried              int32;     // the number of cuts tries\n    // timing statistics\n    timeCuts          abctime;\n    timeEval          abctime;\n    timeOther          abctime;\n    timeTotal          abctime;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the structure with default assignment of parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManDefaultRefParams(pPars *Dar_RefPar_t) {\n    memset( pPars, 0, sizeof(Dar_RefPar_t) );\n    pPars.nMffcMin     =  2;  // the min MFFC size for which refactoring is used\n    pPars.nLeafMax     = 12;  // the max number of leaves of a cut\n    pPars.nCutsMax     =  5;  // the max number of cuts to consider  \n    pPars.fUpdateLevel =  0;\n    pPars.fUseZeros    =  0;\n    pPars.fVerbose     =  0;\n    pPars.fVeryVerbose =  0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the rewriting manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManRefStart(pAig *Aig_Man_t, pPars *Dar_RefPar_t) *Ref_Man_t {\n    var p *Ref_Man_t;\n    // start the manager\n    p = new(Ref_Man_t);\n    *p = Ref_Man_t{};\n    p.pAig         = pAig;\n    p.pPars        = pPars;\n    // other data\n    p.vCuts        = Vec_VecStart( pPars.nCutsMax );\n    p.vTruthElem   = Vec_PtrAllocTruthTables( pPars.nLeafMax );\n    p.vTruthStore  = Vec_PtrAllocSimInfo( 1024, Kit_TruthWordNum(pPars.nLeafMax) );\n    p.vMemory      = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    p.vCutNodes    = Vec_PtrAlloc( 256 );\n    p.vLeavesBest  = Vec_PtrAlloc( pPars.nLeafMax );\n    // alloc bi-decomposition manager\n    p.DecPars.nVarsMax = pPars.nLeafMax;\n    p.DecPars.fVerbose = pPars.fVerbose;\n    p.DecPars.fVeryVerbose = 0;\n//    p-\u003epManDec = Bdc_ManAlloc( \u0026p-\u003eDecPars );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints out the statistics of the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManRefPrintStats(p *Ref_Man_t) {\n    var Gain int32  = p.nNodesInit - Aig_ManNodeNum(p.pAig);\n    fmt.Printf(\"NodesBeg = %8d. NodesEnd = %8d. Gain = %6d. (%6.2f %%).\\n\", p.nNodesInit, Aig_ManNodeNum(p.pAig), Gain, 100.0*Gain/p.nNodesInit);\n    fmt.Printf(\"Tried = %6d. Below = %5d. Extended = %5d.  Used = %5d.  Levels = %4d.\\n\", p.nNodesTried, p.nNodesBelow, p.nNodesExten, p.nCutsUsed, Aig_ManLevels(p.pAig));\n    ABC_PRT( \"Cuts  \", p.timeCuts );\n    ABC_PRT( \"Eval  \", p.timeEval );\n    ABC_PRT( \"Other \", p.timeOther );\n    ABC_PRT( \"TOTAL \", p.timeTotal );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the rewriting manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManRefStop(p *Ref_Man_t) {\n    if p.pManDec {\n        Bdc_ManFree( p.pManDec ); }\n    if p.pPars.fVerbose {\n        Dar_ManRefPrintStats( p ); }\n    Vec_VecFree( p.vCuts );\n    Vec_PtrFree( p.vTruthElem );\n    Vec_PtrFree( p.vTruthStore );\n    Vec_PtrFree( p.vLeavesBest );\n    Vec_IntFree( p.vMemory );\n    Vec_PtrFree( p.vCutNodes );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ref_ObjComputeCuts(pAig *Aig_Man_t, pRoot *Aig_Obj_t, vCuts *Vec_Vec_t) {\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ref_ObjPrint(pObj *Aig_Obj_t) {\n    fmt.Printf(\"%d\", pObj? Aig_Regular(pObj).Id : -1);\n    if pObj != nil {\n        fmt.Printf(\"(%d) \", Aig_IsComplement(pObj)); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of new nodes added when using this graph.]\n\n  Description [AIG nodes for the fanins should be assigned to pNode-\u003epFunc \n  of the leaves of the graph before calling this procedure. \n  Returns -1 if the number of nodes and levels exceeded the given limit or \n  the number of levels exceeded the maximum allowed level.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_RefactTryGraph(pAig *Aig_Man_t, pRoot *Aig_Obj_t, vCut *Vec_Ptr_t, pGraph *Kit_Graph_t, NodeMax int32, LevelMax int32) int32 {\n    var pNode, pNode0, pNode1 *Kit_Node_t;\n    var pAnd, pAnd0, pAnd1 *Aig_Obj_t;\n    var i, Counter, LevelNew, LevelOld int32;\n    // check for constant function or a literal\n    if Kit_GraphIsConst(pGraph) || Kit_GraphIsVar(pGraph) {\n        return 0; }\n    // set the levels of the leaves\n    // inlining of macro Kit_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pNode.pFunc = Vec_PtrEntry(vCut, i);\n        pNode.Level = Aig_Regular((Aig_Obj_t *)pNode.pFunc).Level;\n        assert(Aig_Regular((Aig_Obj_t *)pNode.pFunc).Level \u003c (1\u003c\u003c24)-1, \"Aig_Regular((Aig_Obj_t *)pNode.pFunc).Level \u003c (1\u003c\u003c24)-1\");\n    }\n//printf( \"Trying:\\n\" );\n    // compute the AIG size after adding the internal nodes\n    Counter = 0;\n    // inlining of macro Kit_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        // get the children of this node\n        pNode0 = Kit_GraphNode( pGraph, pNode.eEdge0.Node );\n        pNode1 = Kit_GraphNode( pGraph, pNode.eEdge1.Node );\n        // get the AIG nodes corresponding to the children \n        pAnd0 = (Aig_Obj_t *)pNode0.pFunc; \n        pAnd1 = (Aig_Obj_t *)pNode1.pFunc; \n        if pAnd0 \u0026\u0026 (pAnd1 != nil) {\n            // if they are both present, find the resulting node\n            pAnd0 = Aig_NotCond( pAnd0, pNode.eEdge0.fCompl );\n            pAnd1 = Aig_NotCond( pAnd1, pNode.eEdge1.fCompl );\n            pAnd  = Aig_TableLookupTwo( pAig, pAnd0, pAnd1 );\n            // return -1 if the node is the same as the original root\n            if Aig_Regular(pAnd) == pRoot {\n                return -1; }\n        \n        } else {\n            pAnd = nil; }\n        // count the number of added nodes\n        if pAnd == nil || Aig_ObjIsTravIdCurrent(pAig, Aig_Regular(pAnd)) {\n            if Counter++; Counter \u003e NodeMax {\n                return -1; }\n        }\n        // count the number of new levels\n        LevelNew = 1 + Abc_MaxInt( pNode0.Level, pNode1.Level );\n        if pAnd {\n            if Aig_Regular(pAnd) == Aig_ManConst1(pAig) {\n                LevelNew = 0;\n            } else if Aig_Regular(pAnd) == Aig_Regular(pAnd0) {\n                LevelNew = int32(Aig_Regular(pAnd0).Level);\n            } else if Aig_Regular(pAnd) == Aig_Regular(pAnd1) {\n                LevelNew = int32(Aig_Regular(pAnd1).Level); }\n            LevelOld = int32(Aig_Regular(pAnd).Level);\n//            assert( LevelNew == LevelOld );\n        }\n        if LevelNew \u003e LevelMax {\n            return -1; }\n        pNode.pFunc = pAnd;\n        pNode.Level = LevelNew;\n/*\nprintf( \"Checking \" );\nRef_ObjPrint( pAnd0 );\nprintf( \" and \" );\nRef_ObjPrint( pAnd1 );\nprintf( \"  Result \" );\nRef_ObjPrint( pNode-\u003epFunc );\nprintf( \"\\n\" );\n*/\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_RefactBuildGraph(pAig *Aig_Man_t, vCut *Vec_Ptr_t, pGraph *Kit_Graph_t) *Aig_Obj_t {\n    var pAnd0, pAnd1 *Aig_Obj_t;\n    var pNode *Kit_Node_t  = nil;\n    var i int32;\n    // check for constant function\n    if Kit_GraphIsConst(pGraph) {\n        return Aig_NotCond( Aig_ManConst1(pAig), Kit_GraphIsComplement(pGraph) ); }\n    // set the leaves\n    // inlining of macro Kit_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pNode.pFunc = Vec_PtrEntry(vCut, i);\n    }\n    // check for a literal\n    if Kit_GraphIsVar(pGraph) {\n        return Aig_NotCond( (Aig_Obj_t *)Kit_GraphVar(pGraph).pFunc, Kit_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n//printf( \"Building (current number %d):\\n\", Aig_ManObjNumMax(pAig) );\n    // inlining of macro Kit_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Aig_NotCond( (Aig_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Aig_NotCond( (Aig_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n        pNode.pFunc = Aig_And( pAig, pAnd0, pAnd1 );\n/*\nprintf( \"Checking \" );\nRef_ObjPrint( pAnd0 );\nprintf( \" and \" );\nRef_ObjPrint( pAnd1 );\nprintf( \"  Result \" );\nRef_ObjPrint( pNode-\u003epFunc );\nprintf( \"\\n\" );\n*/\n    }\n    // complement the result if necessary\n    return Aig_NotCond( (Aig_Obj_t *)pNode.pFunc, Kit_GraphIsComplement(pGraph) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManRefactorTryCuts(p *Ref_Man_t, pObj *Aig_Obj_t, nNodesSaved int32, Required int32) int32 {\n    var vCut *Vec_Ptr_t;\n    var pGraphCur *Kit_Graph_t;\n    var k, RetValue, GainCur, nNodesAdded int32;\n    var pTruth *uint32;\n\n    p.GainBest = -1;\n    p.pGraphBest = nil;\n    Vec_VecForEachLevel( p.vCuts, vCut, k )\n    {\n        if Vec_PtrSize(vCut) == 0 {\n            continue; }\n//        if ( Vec_PtrSize(vCut) != 0 \u0026\u0026 Vec_PtrSize(Vec_VecEntry(p-\u003evCuts, k+1)) != 0 )\n//            continue;\n\n        p.nCutsTried++;\n        // get the cut nodes\n        Aig_ObjCollectCut( pObj, vCut, p.vCutNodes );\n        // get the truth table\n        pTruth = Aig_ManCutTruth( pObj, vCut, p.vCutNodes, p.vTruthElem, p.vTruthStore );\n        if Kit_TruthIsConst0(pTruth, Vec_PtrSize(vCut)) {\n            p.GainBest = Aig_NodeMffcSupp( p.pAig, pObj, 0, nil );\n            p.pGraphBest = Kit_GraphCreateConst0();\n            Vec_PtrCopy( p.vLeavesBest, vCut );\n            return p.GainBest;\n        }\n        if Kit_TruthIsConst1(pTruth, Vec_PtrSize(vCut)) {\n            p.GainBest = Aig_NodeMffcSupp( p.pAig, pObj, 0, nil );\n            p.pGraphBest = Kit_GraphCreateConst1();\n            Vec_PtrCopy( p.vLeavesBest, vCut );\n            return p.GainBest;\n        }\n\n        // try the positive phase\n        RetValue = Kit_TruthIsop( pTruth, Vec_PtrSize(vCut), p.vMemory, 0 );\n        if RetValue \u003e -1 {\n            pGraphCur = Kit_SopFactor( p.vMemory, 0, Vec_PtrSize(vCut), p.vMemory );\n/*\n{\n    int RetValue;\n    RetValue = Bdc_ManDecompose( p-\u003epManDec, pTruth, NULL, Vec_PtrSize(vCut), NULL, 1000 );\n    printf( \"Graph = %d. Bidec = %d.\\n\", Kit_GraphNodeNum(pGraphCur), RetValue );\n}\n*/\n            nNodesAdded = Dar_RefactTryGraph( p.pAig, pObj, vCut, pGraphCur, nNodesSaved - !p.pPars.fUseZeros, Required );\n            if nNodesAdded \u003e -1 {\n                GainCur = nNodesSaved - nNodesAdded;\n                if p.GainBest \u003c GainCur || (p.GainBest == GainCur \u0026\u0026 \n                    (Kit_GraphIsConst(pGraphCur) || Kit_GraphRootLevel(pGraphCur) \u003c Kit_GraphRootLevel(p.pGraphBest))) {\n                    p.GainBest = GainCur;\n                    if p.pGraphBest {\n                        Kit_GraphFree( p.pGraphBest ); }\n                    p.pGraphBest = pGraphCur;\n                    Vec_PtrCopy( p.vLeavesBest, vCut );\n                \n                } else {\n                    Kit_GraphFree( pGraphCur ); }\n            \n            } else {\n                Kit_GraphFree( pGraphCur ); }\n        }\n        // try negative phase\n        Kit_TruthNot( pTruth, pTruth, Vec_PtrSize(vCut) );\n        RetValue = Kit_TruthIsop( pTruth, Vec_PtrSize(vCut), p.vMemory, 0 );\n//        Kit_TruthNot( pTruth, pTruth, Vec_PtrSize(vCut) );\n        if RetValue \u003e -1 {\n            pGraphCur = Kit_SopFactor( p.vMemory, 1, Vec_PtrSize(vCut), p.vMemory );\n/*\n{\n    int RetValue;\n    RetValue = Bdc_ManDecompose( p-\u003epManDec, pTruth, NULL, Vec_PtrSize(vCut), NULL, 1000 );\n    printf( \"Graph = %d. Bidec = %d.\\n\", Kit_GraphNodeNum(pGraphCur), RetValue );\n}\n*/\n            nNodesAdded = Dar_RefactTryGraph( p.pAig, pObj, vCut, pGraphCur, nNodesSaved - !p.pPars.fUseZeros, Required );\n            if nNodesAdded \u003e -1 {\n                GainCur = nNodesSaved - nNodesAdded;\n                if p.GainBest \u003c GainCur || (p.GainBest == GainCur \u0026\u0026 \n                    (Kit_GraphIsConst(pGraphCur) || Kit_GraphRootLevel(pGraphCur) \u003c Kit_GraphRootLevel(p.pGraphBest))) {\n                    p.GainBest = GainCur;\n                    if p.pGraphBest {\n                        Kit_GraphFree( p.pGraphBest ); }\n                    p.pGraphBest = pGraphCur;\n                    Vec_PtrCopy( p.vLeavesBest, vCut );\n                \n                } else {\n                    Kit_GraphFree( pGraphCur ); }\n            \n            } else {\n                Kit_GraphFree( pGraphCur ); }\n        }\n    }\n\n    return p.GainBest;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if a non-PI node has nLevelMin or below.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ObjCutLevelAchieved(vCut *Vec_Ptr_t, nLevelMin int32) int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vCut, pObj, i )\n        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 int32(pObj.Level) \u003c= nLevelMin )\n            return 1;\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n \n***********************************************************************/\nfunc Dar_ManRefactor(pAig *Aig_Man_t, pPars *Dar_RefPar_t) int32 {\n//    Bar_Progress_t * pProgress;\n    var p *Ref_Man_t;\n    var vCut, vCut2 *Vec_Ptr_t;\n    var pObj, pObjNew *Aig_Obj_t;\n    var nNodesOld, nNodeBefore, nNodeAfter, nNodesSaved, nNodesSaved2 int32;\n    var i, Required, nLevelMin int32;\n    var clkStart, clk abctime;\n\n    // start the manager\n    p = Dar_ManRefStart( pAig, pPars );\n    // remove dangling nodes\n    Aig_ManCleanup( pAig );\n    // if updating levels is requested, start fanout and timing\n    Aig_ManFanoutStart( pAig );\n    if p.pPars.fUpdateLevel {\n        Aig_ManStartReverseLevels( pAig, 0 ); }\n\n    // resynthesize each node once\n    clkStart = Abc_Clock();\n    vCut = Vec_VecEntry( p.vCuts, 0 );\n    vCut2 = Vec_VecEntry( p.vCuts, 1 );\n    p.nNodesInit = Aig_ManNodeNum(pAig);\n    nNodesOld = Vec_PtrSize( pAig.vObjs );\n//    pProgress = Bar_ProgressStart( stdout, nNodesOld );\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n//        Bar_ProgressUpdate( pProgress, i, NULL );\n        if !Aig_ObjIsNode(pObj) {\n            continue; }\n        if i \u003e nNodesOld {\n            break; }\n        if pAig.Time2Quit \u0026\u0026 !(i \u0026 256) \u0026\u0026 Abc_Clock() \u003e pAig.Time2Quit {\n            break; }\n        Vec_VecClear( p.vCuts );\n\n//printf( \"\\nConsidering node %d.\\n\", pObj-\u003eId );\n        // get the bounded MFFC size\nclk = Abc_Clock();\n        nLevelMin = Abc_MaxInt( 0, Aig_ObjLevel(pObj) - 10 );\n        nNodesSaved = Aig_NodeMffcSupp( pAig, pObj, nLevelMin, vCut );\n        if nNodesSaved \u003c p.pPars.nMffcMin { // too small to consider\n        \np.timeCuts += Abc_Clock() - clk;\n            continue; \n        }\n        p.nNodesTried++;\n        if Vec_PtrSize(vCut) \u003e p.pPars.nLeafMax { // get one reconv-driven cut\n        \n            Aig_ManFindCut( pObj, vCut, p.vCutNodes, p.pPars.nLeafMax, 50 );\n            nNodesSaved = Aig_NodeMffcLabelCut( p.pAig, pObj, vCut );\n        \n        } else if Vec_PtrSize(vCut) \u003c p.pPars.nLeafMax - 2 \u0026\u0026 p.pPars.fExtend {\n            if !(Dar_ObjCutLevelAchieved(vCut, nLevelMin) != 0) {\n                if Aig_NodeMffcExtendCut( pAig, pObj, vCut, vCut2 ) {\n                    nNodesSaved2 = Aig_NodeMffcLabelCut( p.pAig, pObj, vCut );\n                    assert(nNodesSaved2 == nNodesSaved, \"nNodesSaved2 == nNodesSaved\");\n                }\n                if Vec_PtrSize(vCut2) \u003e p.pPars.nLeafMax {\n                    Vec_PtrClear(vCut2); }\n                if Vec_PtrSize(vCut2) \u003e 0 {\n                    p.nNodesExten++;\n//                    printf( \"%d(%d) \", Vec_PtrSize(vCut), Vec_PtrSize(vCut2) );\n                }\n            \n            } else {\n                p.nNodesBelow++; }\n        }\np.timeCuts += Abc_Clock() - clk;\n\n        // try the cuts\nclk = Abc_Clock();\n        if pAig.vLevelR {\n            Required = Aig_ObjRequiredLevel(pAig, pObj);\n        } else {\n            Required = ABC_INFINITY;\n        }\n        Dar_ManRefactorTryCuts( p, pObj, nNodesSaved, Required );\np.timeEval += Abc_Clock() - clk;\n\n        // check the best gain\n        if !(p.GainBest \u003e 0 || (p.GainBest == 0 \u0026\u0026 p.pPars.fUseZeros)) {\n            if p.pGraphBest {\n                Kit_GraphFree( p.pGraphBest ); }\n            continue;\n        }\n//printf( \"\\n\" );\n\n        // if we end up here, a rewriting step is accepted\n        nNodeBefore = Aig_ManNodeNum( pAig );\n        pObjNew = Dar_RefactBuildGraph( pAig, p.vLeavesBest, p.pGraphBest );\n        assert(int32(Aig_Regular(pObjNew).Level) \u003c= Required, \"int32(Aig_Regular(pObjNew).Level) \u003c= Required\");\n        // replace the node\n        Aig_ObjReplace( pAig, pObj, pObjNew, p.pPars.fUpdateLevel );\n        // compare the gains\n        nNodeAfter = Aig_ManNodeNum( pAig );\n        assert(p.GainBest \u003c= nNodeBefore - nNodeAfter, \"p.GainBest \u003c= nNodeBefore - nNodeAfter\");\n        Kit_GraphFree( p.pGraphBest );\n        p.nCutsUsed++;\n//        break;\n    }\np.timeTotal = Abc_Clock() - clkStart;\np.timeOther = p.timeTotal - p.timeCuts - p.timeEval;\n\n//    Bar_ProgressStop( pProgress );\n    // put the nodes into the DFS order and reassign their IDs\n//    Aig_NtkReassignIds( p );\n    // fix the levels\n    Aig_ManFanoutStop( pAig );\n    if p.pPars.fUpdateLevel {\n        Aig_ManStopReverseLevels( pAig ); }\n/*\n    Aig_ManForEachObj( p-\u003epAig, pObj, i )\n        if ( Aig_ObjIsNode(pObj) \u0026\u0026 Aig_ObjRefs(pObj) == 0 )\n        {\n            printf( \"Unreferenced \" );\n            Aig_ObjPrintVerbose( pObj, 0 );\n            printf( \"\\n\" );\n        }\n*/\n    // remove dangling nodes (they should not be here!)\n    Aig_ManCleanup( pAig );\n\n    // stop the rewriting manager\n    Dar_ManRefStop( p );\n//    Aig_ManCheckPhase( pAig );\n    if !Aig_ManCheck( pAig ) {\n        fmt.Printf(\"Dar_ManRefactor: The network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

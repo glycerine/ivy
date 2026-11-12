@@ -1,0 +1,46 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/mincov_int.h",
+  "SHA256": "c9a2df398877d35ec942634351c13e30ac999408e63fd0683cb62daced1bfaec",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/mincov_int.h::struct::stats_t",
+      "Category": "struct-review",
+      "Symbol": "stats_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 211,
+      "End": 898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/mincov_int.h::struct::solution_t",
+      "Category": "struct-review",
+      "Symbol": "solution_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 902,
+      "End": 1003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/mincov_int.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/mincov_int.h::macro-inline::177",
+      "Category": "macro-inline-review",
+      "Symbol": "include",
+      "Status": "open",
+      "Message": "Local include not resolved for macro expansion; supply Options.IncludePaths when using the library.",
+      "Start": 177,
+      "End": 208
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"port.h\"\n//#include \"utility.h\"\n//#include \"sparse.h\"\n//#include \"mincov.h\"\n\n//#include \"util_hack.h\" // added\n\n\n   \ntype stats_t struct {\n    debug int32;            /* 1 if debugging is enabled */\n    max_print_depth int32;    /* dump stats for levels up to this level */\n    max_depth int32;        /* deepest the recursion has gone */\n    nodes int32;            /* total nodes visited */\n    component int32;        /* currently solving a component */\n    comp_count int32;        /* number of components detected */\n    gimpel_count int32;        /* number of times Gimpel reduction applied */\n    gimpel int32;            /* currently inside Gimpel reduction */\n    start_time long;        /* cpu time when the covering started */\n    no_branching int32;\n    lower_bound int32;\n}\n\n\n\n   \ntype solution_t struct {\n    row *sm_row;\n    cost int32;\n}\n\n\n// extern solution_t *solution_alloc();\n\n// extern void solution_free();\n\n// extern solution_t *solution_dup();\n\n// extern void solution_accept();\n\n// extern void solution_reject();\n\n// extern void solution_add();\n\n// extern solution_t *solution_choose_best();\n\n\n// extern solution_t *sm_maximal_independent_set();\n\n// extern solution_t *sm_mincov();\n\n// extern int gimpel_reduce();\n\n\n\n#define ABC__misc__espresso__mincov_int_h\n"
+}

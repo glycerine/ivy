@@ -1,0 +1,500 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c",
+  "SHA256": "6c6cb2b4d6409bee14f90e1ad2b5ff246884cfb8a3615bd116c28882454f3b3e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 2124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLeaves \u003c= IVY_CUT_INPUT );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 82,
+        "Column": 9,
+        "ByteOffset": 2814
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Ivy_ObjTravId(pLeaf) \u003c nNodes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 9,
+        "ByteOffset": 3849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(vCuts0) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 103,
+        "Column": 9,
+        "ByteOffset": 3892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(vCuts1) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 122,
+        "Column": 9,
+        "ByteOffset": 4862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut.nSize \u003c= nLeaves );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 148,
+        "Column": 5,
+        "ByteOffset": 5737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pBitCut, 0, (size_t)(4 * nWords) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 278,
+        "Column": 5,
+        "ByteOffset": 9911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 327,
+        "Column": 5,
+        "ByteOffset": 11655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFanin.Level \u003c= pPivot.Level );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 446,
+        "Column": 5,
+        "ByteOffset": 15931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total cuts = %6d. Trivial = %6d.   Nodes = %6d. Satur = %6d.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 449,
+        "Column": 73,
+        "ByteOffset": 16239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_NodeFindCutsTravAll",
+      "Start": 1580,
+      "End": 4566,
+      "BodyStart": 1803,
+      "Original": "Ivy_Store_t * Ivy_NodeFindCutsTravAll( Ivy_Man_t * p, Ivy_Obj_t * pObj, int nLeaves, int nNodeLimit, \n                                      Vec_Ptr_t * vNodes, Vec_Ptr_t * vFront, Vec_Int_t * vStore, Vec_Vec_t * vBitCuts )\n{\n    static Ivy_Store_t CutStore, * pCutStore = \u0026CutStore;\n    Vec_Ptr_t * vCuts, * vCuts0, * vCuts1;\n    unsigned * pBitCut;\n    Ivy_Obj_t * pLeaf;\n    Ivy_Cut_t * pCut;\n    int i, k, nWords, nNodes;\n\n    assert( nLeaves \u003c= IVY_CUT_INPUT );\n\n    // find the given number of nodes in the TFI\n    Ivy_NodeComputeVolume( pObj, nNodeLimit - 1, vNodes, vFront );\n    nNodes = Vec_PtrSize(vNodes);\n//    assert( nNodes \u003c= nNodeLimit );\n\n    // make sure vBitCuts has enough room\n    Vec_VecExpand( vBitCuts, nNodes-1 );\n    Vec_VecClear( vBitCuts );\n\n    // prepare the memory manager\n    Vec_IntClear( vStore );\n    Vec_IntGrow( vStore, 64000 );\n\n    // set elementary cuts for the leaves\n    nWords = Extra_BitWordNum( nNodes );\n    Vec_PtrForEachEntry( Ivy_Obj_t *, vFront, pLeaf, i )\n    {\n        assert( Ivy_ObjTravId(pLeaf) \u003c nNodes );\n        // get the new bitcut\n        pBitCut = Ivy_NodeCutElementary( vStore, nWords, Ivy_ObjTravId(pLeaf) );\n        // set it as the cut of this leaf\n        Vec_VecPush( vBitCuts, Ivy_ObjTravId(pLeaf), pBitCut );\n    }\n\n    // compute the cuts for each node\n    Vec_PtrForEachEntry( Ivy_Obj_t *, vNodes, pLeaf, i )\n    {\n        // skip the leaves\n        vCuts = Vec_VecEntry( vBitCuts, Ivy_ObjTravId(pLeaf) );\n        if ( Vec_PtrSize(vCuts) \u003e 0 )\n            continue;\n        // add elementary cut\n        pBitCut = Ivy_NodeCutElementary( vStore, nWords, Ivy_ObjTravId(pLeaf) );\n        // set it as the cut of this leaf\n        Vec_VecPush( vBitCuts, Ivy_ObjTravId(pLeaf), pBitCut );\n        // get the fanin cuts\n        vCuts0 = Vec_VecEntry( vBitCuts, Ivy_ObjTravId( Ivy_ObjFanin0(pLeaf) ) );\n        vCuts1 = Vec_VecEntry( vBitCuts, Ivy_ObjTravId( Ivy_ObjFanin1(pLeaf) ) );\n        assert( Vec_PtrSize(vCuts0) \u003e 0 );\n        assert( Vec_PtrSize(vCuts1) \u003e 0 );\n        // merge the cuts\n        Ivy_NodeFindCutsMerge( vCuts0, vCuts1, vCuts, nLeaves, nWords, vStore );\n    }\n\n    // start the structure\n    pCutStore-\u003enCuts = 0;\n    pCutStore-\u003enCutsMax = IVY_CUT_LIMIT;\n    // collect the cuts of the root node\n    vCuts = Vec_VecEntry( vBitCuts, Ivy_ObjTravId(pObj) );\n    Vec_PtrForEachEntry( unsigned *, vCuts, pBitCut, i )\n    {\n        pCut = pCutStore-\u003epCuts + pCutStore-\u003enCuts++;\n        pCut-\u003enSize = 0;\n        pCut-\u003enSizeMax = nLeaves;\n        pCut-\u003euHash = 0;\n        for ( k = 0; k \u003c nNodes; k++ )\n            if ( Extra_TruthHasBit(pBitCut, k) )\n                pCut-\u003epArray[ pCut-\u003enSize++ ] = Ivy_ObjId( (Ivy_Obj_t *)Vec_PtrEntry(vNodes, k) );\n        assert( pCut-\u003enSize \u003c= nLeaves );\n        if ( pCutStore-\u003enCuts == pCutStore-\u003enCutsMax )\n            break;\n    }\n\n    // clean the travIds\n    Vec_PtrForEachEntry( Ivy_Obj_t *, vNodes, pLeaf, i )\n        pLeaf-\u003eTravId = 0;\n    return pCutStore;\n}",
+      "Draft": "func Ivy_NodeFindCutsTravAll(p *Ivy_Man_t, pObj *Ivy_Obj_t, nLeaves int32, nNodeLimit int32, vNodes *Vec_Ptr_t, vFront *Vec_Ptr_t, vStore *Vec_Int_t, vBitCuts *Vec_Vec_t) *Ivy_Store_t {\n    \n    var vCuts, vCuts0, vCuts1 *Vec_Ptr_t;\n    var pBitCut *uint32;\n    var pLeaf *Ivy_Obj_t;\n    var pCut *Ivy_Cut_t;\n    var i, k, nWords, nNodes int32;\n\n    assert(nLeaves \u003c= IVY_CUT_INPUT, \"nLeaves \u003c= IVY_CUT_INPUT\");\n\n    // find the given number of nodes in the TFI\n    Ivy_NodeComputeVolume( pObj, nNodeLimit - 1, vNodes, vFront );\n    nNodes = Vec_PtrSize(vNodes);\n//    assert( nNodes \u003c= nNodeLimit );\n\n    // make sure vBitCuts has enough room\n    Vec_VecExpand( vBitCuts, nNodes-1 );\n    Vec_VecClear( vBitCuts );\n\n    // prepare the memory manager\n    Vec_IntClear( vStore );\n    Vec_IntGrow( vStore, 64000 );\n\n    // set elementary cuts for the leaves\n    nWords = Extra_BitWordNum( nNodes );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pLeaf) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        assert(Ivy_ObjTravId(pLeaf) \u003c nNodes, \"Ivy_ObjTravId(pLeaf) \u003c nNodes\");\n        // get the new bitcut\n        pBitCut = Ivy_NodeCutElementary( vStore, nWords, Ivy_ObjTravId(pLeaf) );\n        // set it as the cut of this leaf\n        Vec_VecPush( vBitCuts, Ivy_ObjTravId(pLeaf), pBitCut );\n    }\n\n    // compute the cuts for each node\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pLeaf) = (Ivy_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // skip the leaves\n        vCuts = Vec_VecEntry( vBitCuts, Ivy_ObjTravId(pLeaf) );\n        if Vec_PtrSize(vCuts) \u003e 0 {\n            continue; }\n        // add elementary cut\n        pBitCut = Ivy_NodeCutElementary( vStore, nWords, Ivy_ObjTravId(pLeaf) );\n        // set it as the cut of this leaf\n        Vec_VecPush( vBitCuts, Ivy_ObjTravId(pLeaf), pBitCut );\n        // get the fanin cuts\n        vCuts0 = Vec_VecEntry( vBitCuts, Ivy_ObjTravId( Ivy_ObjFanin0(pLeaf) ) );\n        vCuts1 = Vec_VecEntry( vBitCuts, Ivy_ObjTravId( Ivy_ObjFanin1(pLeaf) ) );\n        assert(Vec_PtrSize(vCuts0) \u003e 0, \"Vec_PtrSize(vCuts0) \u003e 0\");\n        assert(Vec_PtrSize(vCuts1) \u003e 0, \"Vec_PtrSize(vCuts1) \u003e 0\");\n        // merge the cuts\n        Ivy_NodeFindCutsMerge( vCuts0, vCuts1, vCuts, nLeaves, nWords, vStore );\n    }\n\n    // start the structure\n    spStatic_Ivy_NodeFindCutsTravAll_pCutStore.nCuts = 0;\n    spStatic_Ivy_NodeFindCutsTravAll_pCutStore.nCutsMax = IVY_CUT_LIMIT;\n    // collect the cuts of the root node\n    vCuts = Vec_VecEntry( vBitCuts, Ivy_ObjTravId(pObj) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCuts)) \u0026\u0026 (((pBitCut) = (unsigned *)Vec_PtrEntry(vCuts, i)), 1); i++  {\n        pCut = spStatic_Ivy_NodeFindCutsTravAll_pCutStore.pCuts + spStatic_Ivy_NodeFindCutsTravAll_pCutStore.nCuts++;\n        pCut.nSize = 0;\n        pCut.nSizeMax = nLeaves;\n        pCut.uHash = 0;\n        for  k = 0; k \u003c nNodes; k++  {\n            if Extra_TruthHasBit(pBitCut, k) {\n                pCut.pArray[ pCut.nSize++ ] = Ivy_ObjId( (Ivy_Obj_t *)Vec_PtrEntry(vNodes, k) ); }\n        }\n        assert(pCut.nSize \u003c= nLeaves, \"pCut.nSize \u003c= nLeaves\");\n        if spStatic_Ivy_NodeFindCutsTravAll_pCutStore.nCuts == spStatic_Ivy_NodeFindCutsTravAll_pCutStore.nCutsMax {\n            break; }\n    }\n\n    // clean the travIds\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pLeaf) = (Ivy_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pLeaf.TravId = 0;\n    }\n    return spStatic_Ivy_NodeFindCutsTravAll_pCutStore;\n}"
+    },
+    {
+      "Name": "Ivy_NodeCutElementary",
+      "Start": 4829,
+      "End": 5091,
+      "BodyStart": 4908,
+      "Original": "unsigned * Ivy_NodeCutElementary( Vec_Int_t * vStore, int nWords, int NodeId )\n{\n    unsigned * pBitCut;\n    pBitCut = Vec_IntFetch( vStore, nWords );\n    memset( pBitCut, 0, (size_t)(4 * nWords) );\n    Extra_TruthSetBit( pBitCut, NodeId );\n    return pBitCut;\n}",
+      "Draft": "func Ivy_NodeCutElementary(vStore *Vec_Int_t, nWords int32, NodeId int32) *uint32 {\n    var pBitCut *uint32;\n    pBitCut = Vec_IntFetch( vStore, nWords );\n    memset( pBitCut, 0, (size_t)(4 * nWords) );\n    Extra_TruthSetBit( pBitCut, NodeId );\n    return pBitCut;\n}"
+    },
+    {
+      "Name": "Ivy_CompareNodesByLevel",
+      "Start": 5354,
+      "End": 5624,
+      "BodyStart": 5426,
+      "Original": "int Ivy_CompareNodesByLevel( Ivy_Obj_t ** ppObj1, Ivy_Obj_t ** ppObj2 )\n{\n    Ivy_Obj_t * pObj1 = *ppObj1;\n    Ivy_Obj_t * pObj2 = *ppObj2;\n    if ( pObj1-\u003eLevel \u003c pObj2-\u003eLevel )\n        return -1;\n    if ( pObj1-\u003eLevel \u003e pObj2-\u003eLevel )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Ivy_CompareNodesByLevel(ppObj1 **Ivy_Obj_t, ppObj2 **Ivy_Obj_t) int32 {\n    var pObj1 *Ivy_Obj_t  = *ppObj1;\n    var pObj2 *Ivy_Obj_t  = *ppObj2;\n    if pObj1.Level \u003c pObj2.Level {\n        return -1; }\n    if pObj1.Level \u003e pObj2.Level {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Ivy_NodeComputeVolumeTrav1_rec",
+      "Start": 5897,
+      "End": 6188,
+      "BodyStart": 5964,
+      "Original": "void Ivy_NodeComputeVolumeTrav1_rec( Ivy_Obj_t * pObj, int Depth )\n{\n    if ( Ivy_ObjIsCi(pObj) || Depth == 0 )\n        return;\n    Ivy_NodeComputeVolumeTrav1_rec( Ivy_ObjFanin0(pObj), Depth - 1 );\n    Ivy_NodeComputeVolumeTrav1_rec( Ivy_ObjFanin1(pObj), Depth - 1 );\n    pObj-\u003efMarkA = 1;\n}",
+      "Draft": "func Ivy_NodeComputeVolumeTrav1_rec(pObj *Ivy_Obj_t, Depth int32) {\n    if Ivy_ObjIsCi(pObj) || Depth == 0 {\n        return; }\n    Ivy_NodeComputeVolumeTrav1_rec( Ivy_ObjFanin0(pObj), Depth - 1 );\n    Ivy_NodeComputeVolumeTrav1_rec( Ivy_ObjFanin1(pObj), Depth - 1 );\n    pObj.fMarkA = 1;\n}"
+    },
+    {
+      "Name": "Ivy_NodeComputeVolumeTrav2_rec",
+      "Start": 6449,
+      "End": 6736,
+      "BodyStart": 6525,
+      "Original": "void Ivy_NodeComputeVolumeTrav2_rec( Ivy_Obj_t * pObj, Vec_Ptr_t * vNodes )\n{\n    if ( !pObj-\u003efMarkA )\n        return;\n    Ivy_NodeComputeVolumeTrav2_rec( Ivy_ObjFanin0(pObj), vNodes );\n    Ivy_NodeComputeVolumeTrav2_rec( Ivy_ObjFanin1(pObj), vNodes );\n    Vec_PtrPush( vNodes, pObj );\n}",
+      "Draft": "func Ivy_NodeComputeVolumeTrav2_rec(pObj *Ivy_Obj_t, vNodes *Vec_Ptr_t) {\n    if !pObj.fMarkA {\n        return; }\n    Ivy_NodeComputeVolumeTrav2_rec( Ivy_ObjFanin0(pObj), vNodes );\n    Ivy_NodeComputeVolumeTrav2_rec( Ivy_ObjFanin1(pObj), vNodes );\n    Vec_PtrPush( vNodes, pObj );\n}"
+    },
+    {
+      "Name": "Ivy_NodeComputeVolume",
+      "Start": 6972,
+      "End": 8373,
+      "BodyStart": 7075,
+      "Original": "void Ivy_NodeComputeVolume( Ivy_Obj_t * pObj, int nNodeLimit, Vec_Ptr_t * vNodes, Vec_Ptr_t * vFront )\n{\n    Ivy_Obj_t * pTemp, * pFanin;\n    int i, nNodes;\n    // mark nodes up to the given depth\n    Ivy_NodeComputeVolumeTrav1_rec( pObj, 6 );\n    // collect the marked nodes\n    Vec_PtrClear( vFront );\n    Ivy_NodeComputeVolumeTrav2_rec( pObj, vFront );\n    // find the fanins that are not marked\n    Vec_PtrClear( vNodes );\n    Vec_PtrForEachEntry( Ivy_Obj_t *, vFront, pTemp, i )\n    {\n        pFanin = Ivy_ObjFanin0(pTemp);\n        if ( !pFanin-\u003efMarkA )\n        {\n            pFanin-\u003efMarkA = 1;\n            Vec_PtrPush( vNodes, pFanin );\n        }\n        pFanin = Ivy_ObjFanin1(pTemp);\n        if ( !pFanin-\u003efMarkA )\n        {\n            pFanin-\u003efMarkA = 1;\n            Vec_PtrPush( vNodes, pFanin );\n        }\n    }\n    // remember the number of nodes in the frontier\n    nNodes = Vec_PtrSize( vNodes );\n    // add the remaining nodes\n    Vec_PtrForEachEntry( Ivy_Obj_t *, vFront, pTemp, i )\n        Vec_PtrPush( vNodes, pTemp );\n    // unmark the nodes\n    Vec_PtrForEachEntry( Ivy_Obj_t *, vNodes, pTemp, i )\n    {\n        pTemp-\u003efMarkA = 0;\n        pTemp-\u003eTravId = i;\n    }\n    // collect the frontier nodes\n    Vec_PtrClear( vFront );\n    Vec_PtrForEachEntryStop( Ivy_Obj_t *, vNodes, pTemp, i, nNodes )\n        Vec_PtrPush( vFront, pTemp );\n//    printf( \"%d \", Vec_PtrSize(vNodes) );\n}",
+      "Draft": "func Ivy_NodeComputeVolume(pObj *Ivy_Obj_t, nNodeLimit int32, vNodes *Vec_Ptr_t, vFront *Vec_Ptr_t) {\n    var pTemp, pFanin *Ivy_Obj_t;\n    var i, nNodes int32;\n    // mark nodes up to the given depth\n    Ivy_NodeComputeVolumeTrav1_rec( pObj, 6 );\n    // collect the marked nodes\n    Vec_PtrClear( vFront );\n    Ivy_NodeComputeVolumeTrav2_rec( pObj, vFront );\n    // find the fanins that are not marked\n    Vec_PtrClear( vNodes );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        pFanin = Ivy_ObjFanin0(pTemp);\n        if !pFanin.fMarkA {\n            pFanin.fMarkA = 1;\n            Vec_PtrPush( vNodes, pFanin );\n        }\n        pFanin = Ivy_ObjFanin1(pTemp);\n        if !pFanin.fMarkA {\n            pFanin.fMarkA = 1;\n            Vec_PtrPush( vNodes, pFanin );\n        }\n    }\n    // remember the number of nodes in the frontier\n    nNodes = Vec_PtrSize( vNodes );\n    // add the remaining nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        Vec_PtrPush( vNodes, pTemp );\n    }\n    // unmark the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pTemp.fMarkA = 0;\n        pTemp.TravId = i;\n    }\n    // collect the frontier nodes\n    Vec_PtrClear( vFront );\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c nNodes) \u0026\u0026 (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Vec_PtrPush( vFront, pTemp );\n    }\n//    printf( \"%d \", Vec_PtrSize(vNodes) );\n}"
+    },
+    {
+      "Name": "Ivy_NodeComputeVolume2",
+      "Start": 8609,
+      "End": 10709,
+      "BodyStart": 8713,
+      "Original": "void Ivy_NodeComputeVolume2( Ivy_Obj_t * pObj, int nNodeLimit, Vec_Ptr_t * vNodes, Vec_Ptr_t * vFront )\n{\n    Ivy_Obj_t * pLeaf, * pPivot, * pFanin;\n    int LevelMax, i;\n    assert( Ivy_ObjIsNode(pObj) );\n    // clear arrays\n    Vec_PtrClear( vNodes );\n    Vec_PtrClear( vFront );\n    // add the root\n    pObj-\u003efMarkA = 1;\n    Vec_PtrPush( vNodes, pObj );\n    Vec_PtrPush( vFront, pObj );\n    // expand node with maximum level\n    LevelMax = pObj-\u003eLevel;\n    do {\n        // get the node to expand\n        pPivot = NULL;\n        Vec_PtrForEachEntryReverse( Ivy_Obj_t *, vFront, pLeaf, i )\n        {\n            if ( (int)pLeaf-\u003eLevel == LevelMax )\n            {\n                pPivot = pLeaf;\n                break;\n            }\n        }\n        // decrease level if we did not find the node\n        if ( pPivot == NULL )\n        {\n            if ( --LevelMax == 0 )\n                break;\n            continue;\n        }\n        // the node to expand is found\n        // remove it from frontier\n        Vec_PtrRemove( vFront, pPivot );\n        // add fanins\n        pFanin = Ivy_ObjFanin0(pPivot); \n        if ( !pFanin-\u003efMarkA )\n        {\n            pFanin-\u003efMarkA = 1;\n            Vec_PtrPush( vNodes, pFanin );\n            Vec_PtrPush( vFront, pFanin );\n        }\n        pFanin = Ivy_ObjFanin1(pPivot); \n        if ( pFanin \u0026\u0026 !pFanin-\u003efMarkA )\n        {\n            pFanin-\u003efMarkA = 1;\n            Vec_PtrPush( vNodes, pFanin );\n            Vec_PtrPush( vFront, pFanin );\n        }\n        // quit if we collected enough nodes\n    } while ( Vec_PtrSize(vNodes) \u003c nNodeLimit );\n\n    // sort nodes by level\n    Vec_PtrSort( vNodes, (int (*)(void))Ivy_CompareNodesByLevel );\n    // make sure the nodes are ordered in the increasing number of levels\n    pFanin = (Ivy_Obj_t *)Vec_PtrEntry( vNodes, 0 );\n    pPivot = (Ivy_Obj_t *)Vec_PtrEntryLast( vNodes );\n    assert( pFanin-\u003eLevel \u003c= pPivot-\u003eLevel );\n\n    // clean the marks and remember node numbers in the TravId\n    Vec_PtrForEachEntry( Ivy_Obj_t *, vNodes, pFanin, i )\n    {\n        pFanin-\u003efMarkA = 0;\n        pFanin-\u003eTravId = i;\n    }\n}",
+      "Draft": "func Ivy_NodeComputeVolume2(pObj *Ivy_Obj_t, nNodeLimit int32, vNodes *Vec_Ptr_t, vFront *Vec_Ptr_t) {\n    var pLeaf, pPivot, pFanin *Ivy_Obj_t;\n    var LevelMax, i int32;\n    assert(Ivy_ObjIsNode(pObj), \"Ivy_ObjIsNode(pObj)\");\n    // clear arrays\n    Vec_PtrClear( vNodes );\n    Vec_PtrClear( vFront );\n    // add the root\n    pObj.fMarkA = 1;\n    Vec_PtrPush( vNodes, pObj );\n    Vec_PtrPush( vFront, pObj );\n    // expand node with maximum level\n    LevelMax = pObj.Level;\n    do {\n        // get the node to expand\n        pPivot = nil;\n        // inlining of macro Vec_PtrForEachEntryReverse\n        for  i = Vec_PtrSize(vFront) - 1; (i \u003e= 0) \u0026\u0026 (((pLeaf) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i--  {\n            if int32(pLeaf.Level) == LevelMax {\n                pPivot = pLeaf;\n                break;\n            }\n        }\n        // decrease level if we did not find the node\n        if pPivot == nil {\n            if LevelMax--; LevelMax == 0 {\n                break; }\n            continue;\n        }\n        // the node to expand is found\n        // remove it from frontier\n        Vec_PtrRemove( vFront, pPivot );\n        // add fanins\n        pFanin = Ivy_ObjFanin0(pPivot); \n        if !pFanin.fMarkA {\n            pFanin.fMarkA = 1;\n            Vec_PtrPush( vNodes, pFanin );\n            Vec_PtrPush( vFront, pFanin );\n        }\n        pFanin = Ivy_ObjFanin1(pPivot); \n        if (pFanin != nil) \u0026\u0026 !pFanin.fMarkA {\n            pFanin.fMarkA = 1;\n            Vec_PtrPush( vNodes, pFanin );\n            Vec_PtrPush( vFront, pFanin );\n        }\n        // quit if we collected enough nodes\n    } while ( Vec_PtrSize(vNodes) \u003c nNodeLimit );\n\n    // sort nodes by level\n    Vec_PtrSort( vNodes, (int (*)(void))Ivy_CompareNodesByLevel );\n    // make sure the nodes are ordered in the increasing number of levels\n    pFanin = (Ivy_Obj_t *)Vec_PtrEntry( vNodes, 0 );\n    pPivot = (Ivy_Obj_t *)Vec_PtrEntryLast( vNodes );\n    assert(pFanin.Level \u003c= pPivot.Level, \"pFanin.Level \u003c= pPivot.Level\");\n\n    // clean the marks and remember node numbers in the TravId\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pFanin) = (Ivy_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pFanin.fMarkA = 0;\n        pFanin.TravId = i;\n    }\n}"
+    },
+    {
+      "Name": "Extra_TruthOrWords",
+      "Start": 10945,
+      "End": 11137,
+      "BodyStart": 11048,
+      "Original": "static inline void Extra_TruthOrWords( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nWords )\n{\n    int w;\n    for ( w = nWords-1; w \u003e= 0; w-- )\n        pOut[w] = pIn0[w] | pIn1[w];\n}",
+      "Draft": "func Extra_TruthOrWords(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nWords int32) {\n    var w int32;\n    for  w = nWords-1; w \u003e= 0; w--  {\n        pOut[w] = pIn0[w] | pIn1[w];\n    }\n}"
+    },
+    {
+      "Name": "Extra_TruthIsImplyWords",
+      "Start": 11138,
+      "End": 11350,
+      "BodyStart": 11228,
+      "Original": "static inline int Extra_TruthIsImplyWords( unsigned * pIn1, unsigned * pIn2, int nWords )\n{\n    int w;\n    for ( w = nWords-1; w \u003e= 0; w-- )\n        if ( pIn1[w] \u0026 ~pIn2[w] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Extra_TruthIsImplyWords(pIn1 *uint32, pIn2 *uint32, nWords int32) int32 {\n    var w int32;\n    for  w = nWords-1; w \u003e= 0; w--  {\n        if pIn1[w] \u0026 ~pIn2[w] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Ivy_NodeFindCutsMerge",
+      "Start": 11624,
+      "End": 13091,
+      "BodyStart": 11785,
+      "Original": "void Ivy_NodeFindCutsMerge( Vec_Ptr_t * vCuts0, Vec_Ptr_t * vCuts1, Vec_Ptr_t * vCuts, \n                           int nLeaves, int nWords, Vec_Int_t * vStore )\n{\n    unsigned * pBitCut, * pBitCut0, * pBitCut1, * pBitCutTest;\n    int i, k, c, w, Counter;\n    // iterate through the cut pairs\n    Vec_PtrForEachEntry( unsigned *, vCuts0, pBitCut0, i )\n    Vec_PtrForEachEntry( unsigned *, vCuts1, pBitCut1, k )\n    {\n        // skip infeasible cuts\n        Counter = 0;\n        for ( w = 0; w \u003c nWords; w++ )\n        {\n            Counter += Extra_WordCountOnes( pBitCut0[w] | pBitCut1[w] );\n            if ( Counter \u003e nLeaves )\n                break;\n        }\n        if ( Counter \u003e nLeaves )\n            continue;\n        // the new cut is feasible - create it\n        pBitCutTest = Vec_IntFetch( vStore, nWords );\n        Extra_TruthOrWords( pBitCutTest, pBitCut0, pBitCut1, nWords );\n        // filter contained cuts; try to find containing cut\n        w = 0;\n        Vec_PtrForEachEntry( unsigned *, vCuts, pBitCut, c )\n        {\n            if ( Extra_TruthIsImplyWords( pBitCut, pBitCutTest, nWords ) )\n                break;\n            if ( Extra_TruthIsImplyWords( pBitCutTest, pBitCut, nWords ) )\n                continue;\n            Vec_PtrWriteEntry( vCuts, w++, pBitCut );\n        }\n        if ( c != Vec_PtrSize(vCuts) )\n            continue;\n        Vec_PtrShrink( vCuts, w );\n        // add the cut\n        Vec_PtrPush( vCuts, pBitCutTest );\n    }\n}",
+      "Draft": "func Ivy_NodeFindCutsMerge(vCuts0 *Vec_Ptr_t, vCuts1 *Vec_Ptr_t, vCuts *Vec_Ptr_t, nLeaves int32, nWords int32, vStore *Vec_Int_t) {\n    var pBitCut, pBitCut0, pBitCut1, pBitCutTest *uint32;\n    var i, k, c, w, Counter int32;\n    // iterate through the cut pairs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCuts0)) \u0026\u0026 (((pBitCut0) = (unsigned *)Vec_PtrEntry(vCuts0, i)), 1); i++  {\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(vCuts1)) \u0026\u0026 (((pBitCut1) = (unsigned *)Vec_PtrEntry(vCuts1, k)), 1); k++  {\n        // skip infeasible cuts\n        Counter = 0;\n        for  w = 0; w \u003c nWords; w++  {\n            Counter += Extra_WordCountOnes( pBitCut0[w] | pBitCut1[w] );\n            if Counter \u003e nLeaves {\n                break; }\n        }\n        if Counter \u003e nLeaves {\n            continue; }\n        // the new cut is feasible - create it\n        pBitCutTest = Vec_IntFetch( vStore, nWords );\n        Extra_TruthOrWords( pBitCutTest, pBitCut0, pBitCut1, nWords );\n        // filter contained cuts; try to find containing cut\n        w = 0;\n        // inlining of macro Vec_PtrForEachEntry\n        for  c = 0; (c \u003c Vec_PtrSize(vCuts)) \u0026\u0026 (((pBitCut) = (unsigned *)Vec_PtrEntry(vCuts, c)), 1); c++  {\n            if Extra_TruthIsImplyWords( pBitCut, pBitCutTest, nWords ) != 0 {\n                break; }\n            if Extra_TruthIsImplyWords( pBitCutTest, pBitCut, nWords ) != 0 {\n                continue; }\n            Vec_PtrWriteEntry( vCuts, w++, pBitCut );\n        }\n        if c != Vec_PtrSize(vCuts) {\n            continue; }\n        Vec_PtrShrink( vCuts, w );\n        // add the cut\n        Vec_PtrPush( vCuts, pBitCutTest );\n    }\n    }\n}"
+    },
+    {
+      "Name": "Ivy_ManTestCutsTravAll",
+      "Start": 13356,
+      "End": 14489,
+      "BodyStart": 13401,
+      "Original": "void Ivy_ManTestCutsTravAll( Ivy_Man_t * p )\n{\n    Ivy_Store_t * pStore;\n    Ivy_Obj_t * pObj;\n    Vec_Ptr_t * vNodes, * vFront;\n    Vec_Int_t * vStore;\n    Vec_Vec_t * vBitCuts;\n    int i, nCutsCut, nCutsTotal, nNodeTotal, nNodeOver;\n    abctime clk = Abc_Clock();\n\n    vNodes = Vec_PtrAlloc( 100 );\n    vFront = Vec_PtrAlloc( 100 );\n    vStore = Vec_IntAlloc( 100 );\n    vBitCuts = Vec_VecAlloc( 100 );\n\n    nNodeTotal = nNodeOver = 0;\n    nCutsTotal = -Ivy_ManNodeNum(p);\n    Ivy_ManForEachObj( p, pObj, i )\n    {\n        if ( !Ivy_ObjIsNode(pObj) )\n            continue;\n        pStore = Ivy_NodeFindCutsTravAll( p, pObj, 4, 60, vNodes, vFront, vStore, vBitCuts );\n        nCutsCut    = pStore-\u003enCuts;\n        nCutsTotal += nCutsCut;\n        nNodeOver  += (nCutsCut == IVY_CUT_LIMIT);\n        nNodeTotal++;\n    }\n    printf( \"Total cuts = %6d. Trivial = %6d.   Nodes = %6d. Satur = %6d.  \", \n        nCutsTotal, Ivy_ManPiNum(p) + Ivy_ManNodeNum(p), nNodeTotal, nNodeOver );\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vFront );\n    Vec_IntFree( vStore );\n    Vec_VecFree( vBitCuts );\n\n}",
+      "Draft": "func Ivy_ManTestCutsTravAll(p *Ivy_Man_t) {\n    var pStore *Ivy_Store_t;\n    var pObj *Ivy_Obj_t;\n    var vNodes, vFront *Vec_Ptr_t;\n    var vStore *Vec_Int_t;\n    var vBitCuts *Vec_Vec_t;\n    var i, nCutsCut, nCutsTotal, nNodeTotal, nNodeOver int32;\n    var clk abctime  = Abc_Clock();\n\n    vNodes = Vec_PtrAlloc( 100 );\n    vFront = Vec_PtrAlloc( 100 );\n    vStore = Vec_IntAlloc( 100 );\n    vBitCuts = Vec_VecAlloc( 100 );\n\n    nNodeTotal = nNodeOver = 0;\n    nCutsTotal = -Ivy_ManNodeNum(p);\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Ivy_ObjIsNode(pObj) {\n            continue; }\n        pStore = Ivy_NodeFindCutsTravAll( p, pObj, 4, 60, vNodes, vFront, vStore, vBitCuts );\n        nCutsCut    = pStore.nCuts;\n        nCutsTotal += nCutsCut;\n        nNodeOver  += (nCutsCut == IVY_CUT_LIMIT);\n        nNodeTotal++;\n    }\n    }\n    fmt.Printf(\"Total cuts = %6d. Trivial = %6d.   Nodes = %6d. Satur = %6d.  \", nCutsTotal, Ivy_ManPiNum(p) + Ivy_ManNodeNum(p), nNodeTotal, nNodeOver);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vFront );\n    Vec_IntFree( vStore );\n    Vec_VecFree( vBitCuts );\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::mechanical::static::1809",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1809,
+      "End": 1815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::mechanical::do::9886",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9068,
+      "End": 9070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::2643",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2534,
+      "End": 2534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::3122",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2908,
+      "End": 2908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::4247",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3927,
+      "End": 3927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::4585",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4271,
+      "End": 4284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::4886",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4463,
+      "End": 4463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::7931",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7403,
+      "End": 7403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::8554",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7921,
+      "End": 7921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::8778",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8040,
+      "End": 8040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::9059",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8225,
+      "End": 8225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::10077",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9138,
+      "End": 9138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::11306",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10378,
+      "End": 10391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::11359",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10431,
+      "End": 10444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::11624",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10586,
+      "End": 10586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::13065",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11920,
+      "End": 11920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::13229",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11979,
+      "End": 11979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::13949",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12596,
+      "End": 12596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::pointer-cast::15345",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13835,
+      "End": 13835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::Ivy_NodeFindCutsTravAll",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_NodeFindCutsTravAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1580,
+      "End": 4566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::Ivy_NodeCutElementary",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_NodeCutElementary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4829,
+      "End": 5091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::Ivy_CompareNodesByLevel",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_CompareNodesByLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5354,
+      "End": 5624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::Ivy_NodeComputeVolumeTrav1_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_NodeComputeVolumeTrav1_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5897,
+      "End": 6188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::Ivy_NodeComputeVolumeTrav2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_NodeComputeVolumeTrav2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6449,
+      "End": 6736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::Ivy_NodeComputeVolume",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_NodeComputeVolume",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6972,
+      "End": 8373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::Ivy_NodeComputeVolume2",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_NodeComputeVolume2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8609,
+      "End": 10709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::Extra_TruthOrWords",
+      "Category": "semantic-review",
+      "Symbol": "Extra_TruthOrWords",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10945,
+      "End": 11137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::Extra_TruthIsImplyWords",
+      "Category": "semantic-review",
+      "Symbol": "Extra_TruthIsImplyWords",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11138,
+      "End": 11350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::Ivy_NodeFindCutsMerge",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_NodeFindCutsMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11624,
+      "End": 13091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::Ivy_ManTestCutsTravAll",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManTestCutsTravAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13356,
+      "End": 14489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyCutTrav.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14736
+    }
+  ],
+  "Draft": "package ivy\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [ivyCutTrav.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: ivyCutTrav.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static unsigned * Ivy_NodeCutElementary( Vec_Int_t * vStore, int nWords, int NodeId );\n\n// static void Ivy_NodeComputeVolume( Ivy_Obj_t * pObj, int nNodeLimit, Vec_Ptr_t * vNodes, Vec_Ptr_t * vFront );\n\n// static void Ivy_NodeFindCutsMerge( Vec_Ptr_t * vCuts0, Vec_Ptr_t * vCuts1, Vec_Ptr_t * vCuts, int nLeaves, int nWords, Vec_Int_t * vStore );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes cuts for one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Ivy_NodeFindCutsTravAll_CutStore Ivy_Store_t;\nvar spStatic_Ivy_NodeFindCutsTravAll_pCutStore *Ivy_Store_t = \u0026spStatic_Ivy_NodeFindCutsTravAll_CutStore;\nfunc Ivy_NodeFindCutsTravAll(p *Ivy_Man_t, pObj *Ivy_Obj_t, nLeaves int32, nNodeLimit int32, vNodes *Vec_Ptr_t, vFront *Vec_Ptr_t, vStore *Vec_Int_t, vBitCuts *Vec_Vec_t) *Ivy_Store_t {\n    \n    var vCuts, vCuts0, vCuts1 *Vec_Ptr_t;\n    var pBitCut *uint32;\n    var pLeaf *Ivy_Obj_t;\n    var pCut *Ivy_Cut_t;\n    var i, k, nWords, nNodes int32;\n\n    assert(nLeaves \u003c= IVY_CUT_INPUT, \"nLeaves \u003c= IVY_CUT_INPUT\");\n\n    // find the given number of nodes in the TFI\n    Ivy_NodeComputeVolume( pObj, nNodeLimit - 1, vNodes, vFront );\n    nNodes = Vec_PtrSize(vNodes);\n//    assert( nNodes \u003c= nNodeLimit );\n\n    // make sure vBitCuts has enough room\n    Vec_VecExpand( vBitCuts, nNodes-1 );\n    Vec_VecClear( vBitCuts );\n\n    // prepare the memory manager\n    Vec_IntClear( vStore );\n    Vec_IntGrow( vStore, 64000 );\n\n    // set elementary cuts for the leaves\n    nWords = Extra_BitWordNum( nNodes );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pLeaf) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        assert(Ivy_ObjTravId(pLeaf) \u003c nNodes, \"Ivy_ObjTravId(pLeaf) \u003c nNodes\");\n        // get the new bitcut\n        pBitCut = Ivy_NodeCutElementary( vStore, nWords, Ivy_ObjTravId(pLeaf) );\n        // set it as the cut of this leaf\n        Vec_VecPush( vBitCuts, Ivy_ObjTravId(pLeaf), pBitCut );\n    }\n\n    // compute the cuts for each node\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pLeaf) = (Ivy_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // skip the leaves\n        vCuts = Vec_VecEntry( vBitCuts, Ivy_ObjTravId(pLeaf) );\n        if Vec_PtrSize(vCuts) \u003e 0 {\n            continue; }\n        // add elementary cut\n        pBitCut = Ivy_NodeCutElementary( vStore, nWords, Ivy_ObjTravId(pLeaf) );\n        // set it as the cut of this leaf\n        Vec_VecPush( vBitCuts, Ivy_ObjTravId(pLeaf), pBitCut );\n        // get the fanin cuts\n        vCuts0 = Vec_VecEntry( vBitCuts, Ivy_ObjTravId( Ivy_ObjFanin0(pLeaf) ) );\n        vCuts1 = Vec_VecEntry( vBitCuts, Ivy_ObjTravId( Ivy_ObjFanin1(pLeaf) ) );\n        assert(Vec_PtrSize(vCuts0) \u003e 0, \"Vec_PtrSize(vCuts0) \u003e 0\");\n        assert(Vec_PtrSize(vCuts1) \u003e 0, \"Vec_PtrSize(vCuts1) \u003e 0\");\n        // merge the cuts\n        Ivy_NodeFindCutsMerge( vCuts0, vCuts1, vCuts, nLeaves, nWords, vStore );\n    }\n\n    // start the structure\n    spStatic_Ivy_NodeFindCutsTravAll_pCutStore.nCuts = 0;\n    spStatic_Ivy_NodeFindCutsTravAll_pCutStore.nCutsMax = IVY_CUT_LIMIT;\n    // collect the cuts of the root node\n    vCuts = Vec_VecEntry( vBitCuts, Ivy_ObjTravId(pObj) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCuts)) \u0026\u0026 (((pBitCut) = (unsigned *)Vec_PtrEntry(vCuts, i)), 1); i++  {\n        pCut = spStatic_Ivy_NodeFindCutsTravAll_pCutStore.pCuts + spStatic_Ivy_NodeFindCutsTravAll_pCutStore.nCuts++;\n        pCut.nSize = 0;\n        pCut.nSizeMax = nLeaves;\n        pCut.uHash = 0;\n        for  k = 0; k \u003c nNodes; k++  {\n            if Extra_TruthHasBit(pBitCut, k) {\n                pCut.pArray[ pCut.nSize++ ] = Ivy_ObjId( (Ivy_Obj_t *)Vec_PtrEntry(vNodes, k) ); }\n        }\n        assert(pCut.nSize \u003c= nLeaves, \"pCut.nSize \u003c= nLeaves\");\n        if spStatic_Ivy_NodeFindCutsTravAll_pCutStore.nCuts == spStatic_Ivy_NodeFindCutsTravAll_pCutStore.nCutsMax {\n            break; }\n    }\n\n    // clean the travIds\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pLeaf) = (Ivy_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pLeaf.TravId = 0;\n    }\n    return spStatic_Ivy_NodeFindCutsTravAll_pCutStore;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates elementary bit-cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_NodeCutElementary(vStore *Vec_Int_t, nWords int32, NodeId int32) *uint32 {\n    var pBitCut *uint32;\n    pBitCut = Vec_IntFetch( vStore, nWords );\n    memset( pBitCut, 0, (size_t)(4 * nWords) );\n    Extra_TruthSetBit( pBitCut, NodeId );\n    return pBitCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compares the node by level.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_CompareNodesByLevel(ppObj1 **Ivy_Obj_t, ppObj2 **Ivy_Obj_t) int32 {\n    var pObj1 *Ivy_Obj_t  = *ppObj1;\n    var pObj2 *Ivy_Obj_t  = *ppObj2;\n    if pObj1.Level \u003c pObj2.Level {\n        return -1; }\n    if pObj1.Level \u003e pObj2.Level {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Mark all nodes up to the given depth.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_NodeComputeVolumeTrav1_rec(pObj *Ivy_Obj_t, Depth int32) {\n    if Ivy_ObjIsCi(pObj) || Depth == 0 {\n        return; }\n    Ivy_NodeComputeVolumeTrav1_rec( Ivy_ObjFanin0(pObj), Depth - 1 );\n    Ivy_NodeComputeVolumeTrav1_rec( Ivy_ObjFanin1(pObj), Depth - 1 );\n    pObj.fMarkA = 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect the marked nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_NodeComputeVolumeTrav2_rec(pObj *Ivy_Obj_t, vNodes *Vec_Ptr_t) {\n    if !pObj.fMarkA {\n        return; }\n    Ivy_NodeComputeVolumeTrav2_rec( Ivy_ObjFanin0(pObj), vNodes );\n    Ivy_NodeComputeVolumeTrav2_rec( Ivy_ObjFanin1(pObj), vNodes );\n    Vec_PtrPush( vNodes, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_NodeComputeVolume(pObj *Ivy_Obj_t, nNodeLimit int32, vNodes *Vec_Ptr_t, vFront *Vec_Ptr_t) {\n    var pTemp, pFanin *Ivy_Obj_t;\n    var i, nNodes int32;\n    // mark nodes up to the given depth\n    Ivy_NodeComputeVolumeTrav1_rec( pObj, 6 );\n    // collect the marked nodes\n    Vec_PtrClear( vFront );\n    Ivy_NodeComputeVolumeTrav2_rec( pObj, vFront );\n    // find the fanins that are not marked\n    Vec_PtrClear( vNodes );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        pFanin = Ivy_ObjFanin0(pTemp);\n        if !pFanin.fMarkA {\n            pFanin.fMarkA = 1;\n            Vec_PtrPush( vNodes, pFanin );\n        }\n        pFanin = Ivy_ObjFanin1(pTemp);\n        if !pFanin.fMarkA {\n            pFanin.fMarkA = 1;\n            Vec_PtrPush( vNodes, pFanin );\n        }\n    }\n    // remember the number of nodes in the frontier\n    nNodes = Vec_PtrSize( vNodes );\n    // add the remaining nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i++  {\n        Vec_PtrPush( vNodes, pTemp );\n    }\n    // unmark the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pTemp.fMarkA = 0;\n        pTemp.TravId = i;\n    }\n    // collect the frontier nodes\n    Vec_PtrClear( vFront );\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c nNodes) \u0026\u0026 (((pTemp) = (Ivy_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Vec_PtrPush( vFront, pTemp );\n    }\n//    printf( \"%d \", Vec_PtrSize(vNodes) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_NodeComputeVolume2(pObj *Ivy_Obj_t, nNodeLimit int32, vNodes *Vec_Ptr_t, vFront *Vec_Ptr_t) {\n    var pLeaf, pPivot, pFanin *Ivy_Obj_t;\n    var LevelMax, i int32;\n    assert(Ivy_ObjIsNode(pObj), \"Ivy_ObjIsNode(pObj)\");\n    // clear arrays\n    Vec_PtrClear( vNodes );\n    Vec_PtrClear( vFront );\n    // add the root\n    pObj.fMarkA = 1;\n    Vec_PtrPush( vNodes, pObj );\n    Vec_PtrPush( vFront, pObj );\n    // expand node with maximum level\n    LevelMax = pObj.Level;\n    do {\n        // get the node to expand\n        pPivot = nil;\n        // inlining of macro Vec_PtrForEachEntryReverse\n        for  i = Vec_PtrSize(vFront) - 1; (i \u003e= 0) \u0026\u0026 (((pLeaf) = (Ivy_Obj_t *)Vec_PtrEntry(vFront, i)), 1); i--  {\n            if int32(pLeaf.Level) == LevelMax {\n                pPivot = pLeaf;\n                break;\n            }\n        }\n        // decrease level if we did not find the node\n        if pPivot == nil {\n            if LevelMax--; LevelMax == 0 {\n                break; }\n            continue;\n        }\n        // the node to expand is found\n        // remove it from frontier\n        Vec_PtrRemove( vFront, pPivot );\n        // add fanins\n        pFanin = Ivy_ObjFanin0(pPivot); \n        if !pFanin.fMarkA {\n            pFanin.fMarkA = 1;\n            Vec_PtrPush( vNodes, pFanin );\n            Vec_PtrPush( vFront, pFanin );\n        }\n        pFanin = Ivy_ObjFanin1(pPivot); \n        if (pFanin != nil) \u0026\u0026 !pFanin.fMarkA {\n            pFanin.fMarkA = 1;\n            Vec_PtrPush( vNodes, pFanin );\n            Vec_PtrPush( vFront, pFanin );\n        }\n        // quit if we collected enough nodes\n    } while ( Vec_PtrSize(vNodes) \u003c nNodeLimit );\n\n    // sort nodes by level\n    Vec_PtrSort( vNodes, (int (*)(void))Ivy_CompareNodesByLevel );\n    // make sure the nodes are ordered in the increasing number of levels\n    pFanin = (Ivy_Obj_t *)Vec_PtrEntry( vNodes, 0 );\n    pPivot = (Ivy_Obj_t *)Vec_PtrEntryLast( vNodes );\n    assert(pFanin.Level \u003c= pPivot.Level, \"pFanin.Level \u003c= pPivot.Level\");\n\n    // clean the marks and remember node numbers in the TravId\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pFanin) = (Ivy_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pFanin.fMarkA = 0;\n        pFanin.TravId = i;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_TruthOrWords(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nWords int32) {\n    var w int32;\n    for  w = nWords-1; w \u003e= 0; w--  {\n        pOut[w] = pIn0[w] | pIn1[w];\n    }\n}\nfunc Extra_TruthIsImplyWords(pIn1 *uint32, pIn2 *uint32, nWords int32) int32 {\n    var w int32;\n    for  w = nWords-1; w \u003e= 0; w--  {\n        if pIn1[w] \u0026 ~pIn2[w] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two sets of bit-cuts at a node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_NodeFindCutsMerge(vCuts0 *Vec_Ptr_t, vCuts1 *Vec_Ptr_t, vCuts *Vec_Ptr_t, nLeaves int32, nWords int32, vStore *Vec_Int_t) {\n    var pBitCut, pBitCut0, pBitCut1, pBitCutTest *uint32;\n    var i, k, c, w, Counter int32;\n    // iterate through the cut pairs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCuts0)) \u0026\u0026 (((pBitCut0) = (unsigned *)Vec_PtrEntry(vCuts0, i)), 1); i++  {\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(vCuts1)) \u0026\u0026 (((pBitCut1) = (unsigned *)Vec_PtrEntry(vCuts1, k)), 1); k++  {\n        // skip infeasible cuts\n        Counter = 0;\n        for  w = 0; w \u003c nWords; w++  {\n            Counter += Extra_WordCountOnes( pBitCut0[w] | pBitCut1[w] );\n            if Counter \u003e nLeaves {\n                break; }\n        }\n        if Counter \u003e nLeaves {\n            continue; }\n        // the new cut is feasible - create it\n        pBitCutTest = Vec_IntFetch( vStore, nWords );\n        Extra_TruthOrWords( pBitCutTest, pBitCut0, pBitCut1, nWords );\n        // filter contained cuts; try to find containing cut\n        w = 0;\n        // inlining of macro Vec_PtrForEachEntry\n        for  c = 0; (c \u003c Vec_PtrSize(vCuts)) \u0026\u0026 (((pBitCut) = (unsigned *)Vec_PtrEntry(vCuts, c)), 1); c++  {\n            if Extra_TruthIsImplyWords( pBitCut, pBitCutTest, nWords ) != 0 {\n                break; }\n            if Extra_TruthIsImplyWords( pBitCutTest, pBitCut, nWords ) != 0 {\n                continue; }\n            Vec_PtrWriteEntry( vCuts, w++, pBitCut );\n        }\n        if c != Vec_PtrSize(vCuts) {\n            continue; }\n        Vec_PtrShrink( vCuts, w );\n        // add the cut\n        Vec_PtrPush( vCuts, pBitCutTest );\n    }\n    }\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Compute the set of all cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManTestCutsTravAll(p *Ivy_Man_t) {\n    var pStore *Ivy_Store_t;\n    var pObj *Ivy_Obj_t;\n    var vNodes, vFront *Vec_Ptr_t;\n    var vStore *Vec_Int_t;\n    var vBitCuts *Vec_Vec_t;\n    var i, nCutsCut, nCutsTotal, nNodeTotal, nNodeOver int32;\n    var clk abctime  = Abc_Clock();\n\n    vNodes = Vec_PtrAlloc( 100 );\n    vFront = Vec_PtrAlloc( 100 );\n    vStore = Vec_IntAlloc( 100 );\n    vBitCuts = Vec_VecAlloc( 100 );\n\n    nNodeTotal = nNodeOver = 0;\n    nCutsTotal = -Ivy_ManNodeNum(p);\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Ivy_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Ivy_ObjIsNode(pObj) {\n            continue; }\n        pStore = Ivy_NodeFindCutsTravAll( p, pObj, 4, 60, vNodes, vFront, vStore, vBitCuts );\n        nCutsCut    = pStore.nCuts;\n        nCutsTotal += nCutsCut;\n        nNodeOver  += (nCutsCut == IVY_CUT_LIMIT);\n        nNodeTotal++;\n    }\n    }\n    fmt.Printf(\"Total cuts = %6d. Trivial = %6d.   Nodes = %6d. Satur = %6d.  \", nCutsTotal, Ivy_ManPiNum(p) + Ivy_ManNodeNum(p), nNodeTotal, nNodeOver);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\n    Vec_PtrFree( vNodes );\n    Vec_PtrFree( vFront );\n    Vec_IntFree( vStore );\n    Vec_VecFree( vBitCuts );\n\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

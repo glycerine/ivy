@@ -1,0 +1,166 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMap.c",
+  "SHA256": "7e72028f3e447e4aa39e3f460b64f1d666787db8e9cf5763ee186e7ef83b4647",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 3924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iLit \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 133,
+        "Column": 9,
+        "ByteOffset": 4516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.nFans == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 143,
+        "Column": 9,
+        "ByteOffset": 5034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.nFans == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 152,
+        "Column": 5,
+        "ByteOffset": 5552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.Type == KIT_DSD_PRIME );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Lpk_MapPrimeInternal",
+      "Start": 1272,
+      "End": 2249,
+      "BodyStart": 1347,
+      "Original": "If_Obj_t * Lpk_MapPrimeInternal( If_Man_t * pIfMan, Kit_Graph_t * pGraph )\n{\n    Kit_Node_t * pNode = NULL; // Suppress \"might be used uninitialized\"\n    If_Obj_t * pAnd0, * pAnd1;\n    int i;\n    // check for constant function\n    if ( Kit_GraphIsConst(pGraph) )\n        return If_ManConst1(pIfMan);\n    // check for a literal\n    if ( Kit_GraphIsVar(pGraph) )\n        return (If_Obj_t *)Kit_GraphVar(pGraph)-\u003epFunc;\n    // build the AIG nodes corresponding to the AND gates of the graph\n    Kit_GraphForEachNode( pGraph, pNode, i )\n    {\n        pAnd0 = (If_Obj_t *)Kit_GraphNode(pGraph, pNode-\u003eeEdge0.Node)-\u003epFunc; \n        pAnd1 = (If_Obj_t *)Kit_GraphNode(pGraph, pNode-\u003eeEdge1.Node)-\u003epFunc; \n        pNode-\u003epFunc = If_ManCreateAnd( pIfMan, \n            If_NotCond( If_Regular(pAnd0), If_IsComplement(pAnd0) ^ pNode-\u003eeEdge0.fCompl ), \n            If_NotCond( If_Regular(pAnd1), If_IsComplement(pAnd1) ^ pNode-\u003eeEdge1.fCompl ) );\n    }\n    return (If_Obj_t *)pNode-\u003epFunc;\n}",
+      "Draft": "func Lpk_MapPrimeInternal(pIfMan *If_Man_t, pGraph *Kit_Graph_t) *If_Obj_t {\n    var pNode *Kit_Node_t  = nil; // Suppress \"might be used uninitialized\"\n    var pAnd0, pAnd1 *If_Obj_t;\n    var i int32;\n    // check for constant function\n    if Kit_GraphIsConst(pGraph) {\n        return If_ManConst1(pIfMan); }\n    // check for a literal\n    if Kit_GraphIsVar(pGraph) {\n        return (If_Obj_t *)Kit_GraphVar(pGraph).pFunc; }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Kit_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = (If_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge0.Node).pFunc; \n        pAnd1 = (If_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge1.Node).pFunc; \n        pNode.pFunc = If_ManCreateAnd( pIfMan, \n            If_NotCond( If_Regular(pAnd0), If_IsComplement(pAnd0) ^ pNode.eEdge0.fCompl ), \n            If_NotCond( If_Regular(pAnd1), If_IsComplement(pAnd1) ^ pNode.eEdge1.fCompl ) );\n    }\n    return (If_Obj_t *)pNode.pFunc;\n}"
+    },
+    {
+      "Name": "Lpk_MapPrime",
+      "Start": 2523,
+      "End": 3133,
+      "BodyStart": 2616,
+      "Original": "If_Obj_t * Lpk_MapPrime( Lpk_Man_t * p, unsigned * pTruth, int nVars, If_Obj_t ** ppLeaves )\n{\n    Kit_Graph_t * pGraph;\n    Kit_Node_t * pNode;\n    If_Obj_t * pRes;\n    int i;\n    // derive the factored form\n    pGraph = Kit_TruthToGraph( pTruth, nVars, p-\u003evCover );\n    if ( pGraph == NULL )\n        return NULL;\n    // collect the fanins\n    Kit_GraphForEachLeaf( pGraph, pNode, i )\n        pNode-\u003epFunc = ppLeaves[i];\n    // perform strashing\n    pRes = Lpk_MapPrimeInternal( p-\u003epIfMan, pGraph );\n    pRes = If_NotCond( pRes, Kit_GraphIsComplement(pGraph) );\n    Kit_GraphFree( pGraph );\n    return pRes;\n}",
+      "Draft": "func Lpk_MapPrime(p *Lpk_Man_t, pTruth *uint32, nVars int32, ppLeaves **If_Obj_t) *If_Obj_t {\n    var pGraph *Kit_Graph_t;\n    var pNode *Kit_Node_t;\n    var pRes *If_Obj_t;\n    var i int32;\n    // derive the factored form\n    pGraph = Kit_TruthToGraph( pTruth, nVars, p.vCover );\n    if pGraph == nil {\n        return nil; }\n    // collect the fanins\n    // inlining of macro Kit_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pNode.pFunc = ppLeaves[i];\n    }\n    // perform strashing\n    pRes = Lpk_MapPrimeInternal( p.pIfMan, pGraph );\n    pRes = If_NotCond( pRes, Kit_GraphIsComplement(pGraph) );\n    Kit_GraphFree( pGraph );\n    return pRes;\n}"
+    },
+    {
+      "Name": "Lpk_MapTree_rec",
+      "Start": 3398,
+      "End": 6925,
+      "BodyStart": 3515,
+      "Original": "If_Obj_t * Lpk_MapTree_rec( Lpk_Man_t * p, Kit_DsdNtk_t * pNtk, If_Obj_t ** ppLeaves, int iLit, If_Obj_t * pResult )\n{\n    Kit_DsdObj_t * pObj;\n    If_Obj_t * pObjNew = NULL, * pObjNew2 = NULL, * pFansNew[16];\n    unsigned i, iLitFanin;\n\n    assert( iLit \u003e= 0 );\n\n    // consider the case of a gate\n    pObj = Kit_DsdNtkObj( pNtk, Abc_Lit2Var(iLit) );\n    if ( pObj == NULL )\n    {\n        pObjNew = ppLeaves[Abc_Lit2Var(iLit)];\n        return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) );\n    }\n    if ( pObj-\u003eType == KIT_DSD_CONST1 )\n    {\n        return If_NotCond( If_ManConst1(p-\u003epIfMan), Abc_LitIsCompl(iLit) );\n    }\n    if ( pObj-\u003eType == KIT_DSD_VAR )\n    {\n        pObjNew = ppLeaves[Abc_Lit2Var(pObj-\u003epFans[0])];\n        return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) ^ Abc_LitIsCompl(pObj-\u003epFans[0]) );\n    }\n    if ( pObj-\u003eType == KIT_DSD_AND )\n    {\n        assert( pObj-\u003enFans == 2 );\n        pFansNew[0] = Lpk_MapTree_rec( p, pNtk, ppLeaves, pObj-\u003epFans[0], NULL );\n        pFansNew[1] = pResult? pResult : Lpk_MapTree_rec( p, pNtk, ppLeaves, pObj-\u003epFans[1], NULL );\n        if ( pFansNew[0] == NULL || pFansNew[1] == NULL )\n            return NULL;\n        pObjNew = If_ManCreateAnd( p-\u003epIfMan, pFansNew[0], pFansNew[1] ); \n        return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) );\n    }\n    if ( pObj-\u003eType == KIT_DSD_XOR )\n    {\n        int fCompl = Abc_LitIsCompl(iLit);\n        assert( pObj-\u003enFans == 2 );\n        pFansNew[0] = Lpk_MapTree_rec( p, pNtk, ppLeaves, pObj-\u003epFans[0], NULL );\n        pFansNew[1] = pResult? pResult : Lpk_MapTree_rec( p, pNtk, ppLeaves, pObj-\u003epFans[1], NULL );\n        if ( pFansNew[0] == NULL || pFansNew[1] == NULL )\n            return NULL;\n        fCompl ^= If_IsComplement(pFansNew[0]) ^ If_IsComplement(pFansNew[1]);\n        pObjNew = If_ManCreateXor( p-\u003epIfMan, If_Regular(pFansNew[0]), If_Regular(pFansNew[1]) );\n        return If_NotCond( pObjNew, fCompl );\n    }\n    assert( pObj-\u003eType == KIT_DSD_PRIME );\n    p-\u003enBlocks[pObj-\u003enFans]++;\n\n    // solve for the inputs\n    Kit_DsdObjForEachFanin( pNtk, pObj, iLitFanin, i )\n    {\n        if ( i == 0 )\n            pFansNew[i] = pResult? pResult : Lpk_MapTree_rec( p, pNtk, ppLeaves, iLitFanin, NULL );\n        else\n            pFansNew[i] = Lpk_MapTree_rec( p, pNtk, ppLeaves, iLitFanin, NULL );\n        if ( pFansNew[i] == NULL )\n            return NULL;\n    }\n/* \n    if ( !p-\u003efCofactoring \u0026\u0026 p-\u003epPars-\u003enVarsShared \u003e 0 \u0026\u0026 (int)pObj-\u003enFans \u003e p-\u003epPars-\u003enLutSize )\n    {\n        pObjNew = Lpk_MapTreeMulti( p, Kit_DsdObjTruth(pObj), pObj-\u003enFans, pFansNew );\n        return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) );\n    }\n*/\n/*\n    if ( (int)pObj-\u003enFans \u003e p-\u003epPars-\u003enLutSize )\n    {\n        pObjNew2 = Lpk_MapTreeMux_rec( p, Kit_DsdObjTruth(pObj), pObj-\u003enFans, pFansNew );\n//        if ( pObjNew2 )\n//            return If_NotCond( pObjNew2, Abc_LitIsCompl(iLit) );\n    }\n*/\n\n    // find best cofactoring variable\n    if ( p-\u003epPars-\u003enVarsShared \u003e 0 \u0026\u0026 (int)pObj-\u003enFans \u003e p-\u003epPars-\u003enLutSize )\n    {\n        pObjNew2 = Lpk_MapSuppRedDec_rec( p, Kit_DsdObjTruth(pObj), pObj-\u003enFans, pFansNew );\n        if ( pObjNew2 )\n            return If_NotCond( pObjNew2, Abc_LitIsCompl(iLit) );\n    }\n\n    pObjNew = Lpk_MapPrime( p, Kit_DsdObjTruth(pObj), pObj-\u003enFans, pFansNew );\n\n    // add choice\n    if ( pObjNew \u0026\u0026 pObjNew2 )\n    {\n        If_ObjSetChoice( If_Regular(pObjNew), If_Regular(pObjNew2) );\n        If_ManCreateChoice( p-\u003epIfMan, If_Regular(pObjNew) );\n    }\n    return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) );\n}",
+      "Draft": "func Lpk_MapTree_rec(p *Lpk_Man_t, pNtk *Kit_DsdNtk_t, ppLeaves **If_Obj_t, iLit int32, pResult *If_Obj_t) *If_Obj_t {\n    var pObj *Kit_DsdObj_t;\n    var pObjNew *If_Obj_t = nil;\n    var pObjNew2 *If_Obj_t = nil;\n    var pFansNew [16]*If_Obj_t;\n    var i, iLitFanin uint32;\n\n    assert(iLit \u003e= 0, \"iLit \u003e= 0\");\n\n    // consider the case of a gate\n    pObj = Kit_DsdNtkObj( pNtk, Abc_Lit2Var(iLit) );\n    if pObj == nil {\n        pObjNew = ppLeaves[Abc_Lit2Var(iLit)];\n        return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) );\n    }\n    if pObj.Type == KIT_DSD_CONST1 {\n        return If_NotCond( If_ManConst1(p.pIfMan), Abc_LitIsCompl(iLit) );\n    }\n    if pObj.Type == KIT_DSD_VAR {\n        pObjNew = ppLeaves[Abc_Lit2Var(pObj.pFans[0])];\n        return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) ^ Abc_LitIsCompl(pObj.pFans[0]) );\n    }\n    if pObj.Type == KIT_DSD_AND {\n        assert(pObj.nFans == 2, \"pObj.nFans == 2\");\n        pFansNew[0] = Lpk_MapTree_rec( p, pNtk, ppLeaves, pObj.pFans[0], nil );\n        pFansNew[1] = pResult? pResult : Lpk_MapTree_rec( p, pNtk, ppLeaves, pObj.pFans[1], nil );\n        if pFansNew[0] == nil || pFansNew[1] == nil {\n            return nil; }\n        pObjNew = If_ManCreateAnd( p.pIfMan, pFansNew[0], pFansNew[1] ); \n        return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) );\n    }\n    if pObj.Type == KIT_DSD_XOR {\n        var fCompl int32  = Abc_LitIsCompl(iLit);\n        assert(pObj.nFans == 2, \"pObj.nFans == 2\");\n        pFansNew[0] = Lpk_MapTree_rec( p, pNtk, ppLeaves, pObj.pFans[0], nil );\n        pFansNew[1] = pResult? pResult : Lpk_MapTree_rec( p, pNtk, ppLeaves, pObj.pFans[1], nil );\n        if pFansNew[0] == nil || pFansNew[1] == nil {\n            return nil; }\n        fCompl ^= If_IsComplement(pFansNew[0]) ^ If_IsComplement(pFansNew[1]);\n        pObjNew = If_ManCreateXor( p.pIfMan, If_Regular(pFansNew[0]), If_Regular(pFansNew[1]) );\n        return If_NotCond( pObjNew, fCompl );\n    }\n    assert(pObj.Type == KIT_DSD_PRIME, \"pObj.Type == KIT_DSD_PRIME\");\n    p.nBlocks[pObj.nFans]++;\n\n    // solve for the inputs\n    // inlining of macro Kit_DsdObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFans)) \u0026\u0026 ((iLitFanin) = (pObj).pFans[i], 1); i++  {\n        if i == 0 {\n            pFansNew[i] = pResult? pResult : Lpk_MapTree_rec( p, pNtk, ppLeaves, iLitFanin, nil );\n        } else {\n            pFansNew[i] = Lpk_MapTree_rec( p, pNtk, ppLeaves, iLitFanin, nil ); }\n        if pFansNew[i] == nil {\n            return nil; }\n    }\n/* \n    if ( !p-\u003efCofactoring \u0026\u0026 p-\u003epPars-\u003enVarsShared \u003e 0 \u0026\u0026 (int)pObj-\u003enFans \u003e p-\u003epPars-\u003enLutSize )\n    {\n        pObjNew = Lpk_MapTreeMulti( p, Kit_DsdObjTruth(pObj), pObj-\u003enFans, pFansNew );\n        return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) );\n    }\n*/\n/*\n    if ( (int)pObj-\u003enFans \u003e p-\u003epPars-\u003enLutSize )\n    {\n        pObjNew2 = Lpk_MapTreeMux_rec( p, Kit_DsdObjTruth(pObj), pObj-\u003enFans, pFansNew );\n//        if ( pObjNew2 )\n//            return If_NotCond( pObjNew2, Abc_LitIsCompl(iLit) );\n    }\n*/\n\n    // find best cofactoring variable\n    if p.pPars.nVarsShared \u003e 0 \u0026\u0026 int32(pObj.nFans) \u003e p.pPars.nLutSize {\n        pObjNew2 = Lpk_MapSuppRedDec_rec( p, Kit_DsdObjTruth(pObj), pObj.nFans, pFansNew );\n        if pObjNew2 != nil {\n            return If_NotCond( pObjNew2, Abc_LitIsCompl(iLit) ); }\n    }\n\n    pObjNew = Lpk_MapPrime( p, Kit_DsdObjTruth(pObj), pObj.nFans, pFansNew );\n\n    // add choice\n    if (pObjNew != nil) \u0026\u0026 (pObjNew2 != nil) {\n        If_ObjSetChoice( If_Regular(pObjNew), If_Regular(pObjNew2) );\n        If_ManCreateChoice( p.pIfMan, If_Regular(pObjNew) );\n    }\n    return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMap.c::pointer-cast::1648",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1648,
+      "End": 1660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMap.c::pointer-cast::1945",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1827,
+      "End": 1839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMap.c::pointer-cast::2024",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1906,
+      "End": 1918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMap.c::pointer-cast::2340",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2222,
+      "End": 2234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMap.c::Lpk_MapPrimeInternal",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_MapPrimeInternal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1272,
+      "End": 2249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMap.c::Lpk_MapPrime",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_MapPrime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2523,
+      "End": 3133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMap.c::ternary::Lpk_MapTree_rec",
+      "Category": "ternary-review",
+      "Symbol": "Lpk_MapTree_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3398,
+      "End": 6925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMap.c::Lpk_MapTree_rec",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_MapTree_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3398,
+      "End": 6925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMap.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7172
+    }
+  ],
+  "Draft": "package lpk\n\n/**CFile****************************************************************\n\n  FileName    [lpkMap.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast Boolean matching for LUT structures.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: lpkMap.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"lpkInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the decomposition graph into the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_MapPrimeInternal(pIfMan *If_Man_t, pGraph *Kit_Graph_t) *If_Obj_t {\n    var pNode *Kit_Node_t  = nil; // Suppress \"might be used uninitialized\"\n    var pAnd0, pAnd1 *If_Obj_t;\n    var i int32;\n    // check for constant function\n    if Kit_GraphIsConst(pGraph) {\n        return If_ManConst1(pIfMan); }\n    // check for a literal\n    if Kit_GraphIsVar(pGraph) {\n        return (If_Obj_t *)Kit_GraphVar(pGraph).pFunc; }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Kit_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = (If_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge0.Node).pFunc; \n        pAnd1 = (If_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge1.Node).pFunc; \n        pNode.pFunc = If_ManCreateAnd( pIfMan, \n            If_NotCond( If_Regular(pAnd0), If_IsComplement(pAnd0) ^ pNode.eEdge0.fCompl ), \n            If_NotCond( If_Regular(pAnd1), If_IsComplement(pAnd1) ^ pNode.eEdge1.fCompl ) );\n    }\n    return (If_Obj_t *)pNode.pFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Strashes one logic node using its SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_MapPrime(p *Lpk_Man_t, pTruth *uint32, nVars int32, ppLeaves **If_Obj_t) *If_Obj_t {\n    var pGraph *Kit_Graph_t;\n    var pNode *Kit_Node_t;\n    var pRes *If_Obj_t;\n    var i int32;\n    // derive the factored form\n    pGraph = Kit_TruthToGraph( pTruth, nVars, p.vCover );\n    if pGraph == nil {\n        return nil; }\n    // collect the fanins\n    // inlining of macro Kit_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pNode.pFunc = ppLeaves[i];\n    }\n    // perform strashing\n    pRes = Lpk_MapPrimeInternal( p.pIfMan, pGraph );\n    pRes = If_NotCond( pRes, Kit_GraphIsComplement(pGraph) );\n    Kit_GraphFree( pGraph );\n    return pRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the mapping manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_MapTree_rec(p *Lpk_Man_t, pNtk *Kit_DsdNtk_t, ppLeaves **If_Obj_t, iLit int32, pResult *If_Obj_t) *If_Obj_t {\n    var pObj *Kit_DsdObj_t;\n    var pObjNew *If_Obj_t = nil;\n    var pObjNew2 *If_Obj_t = nil;\n    var pFansNew [16]*If_Obj_t;\n    var i, iLitFanin uint32;\n\n    assert(iLit \u003e= 0, \"iLit \u003e= 0\");\n\n    // consider the case of a gate\n    pObj = Kit_DsdNtkObj( pNtk, Abc_Lit2Var(iLit) );\n    if pObj == nil {\n        pObjNew = ppLeaves[Abc_Lit2Var(iLit)];\n        return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) );\n    }\n    if pObj.Type == KIT_DSD_CONST1 {\n        return If_NotCond( If_ManConst1(p.pIfMan), Abc_LitIsCompl(iLit) );\n    }\n    if pObj.Type == KIT_DSD_VAR {\n        pObjNew = ppLeaves[Abc_Lit2Var(pObj.pFans[0])];\n        return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) ^ Abc_LitIsCompl(pObj.pFans[0]) );\n    }\n    if pObj.Type == KIT_DSD_AND {\n        assert(pObj.nFans == 2, \"pObj.nFans == 2\");\n        pFansNew[0] = Lpk_MapTree_rec( p, pNtk, ppLeaves, pObj.pFans[0], nil );\n        pFansNew[1] = pResult? pResult : Lpk_MapTree_rec( p, pNtk, ppLeaves, pObj.pFans[1], nil );\n        if pFansNew[0] == nil || pFansNew[1] == nil {\n            return nil; }\n        pObjNew = If_ManCreateAnd( p.pIfMan, pFansNew[0], pFansNew[1] ); \n        return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) );\n    }\n    if pObj.Type == KIT_DSD_XOR {\n        var fCompl int32  = Abc_LitIsCompl(iLit);\n        assert(pObj.nFans == 2, \"pObj.nFans == 2\");\n        pFansNew[0] = Lpk_MapTree_rec( p, pNtk, ppLeaves, pObj.pFans[0], nil );\n        pFansNew[1] = pResult? pResult : Lpk_MapTree_rec( p, pNtk, ppLeaves, pObj.pFans[1], nil );\n        if pFansNew[0] == nil || pFansNew[1] == nil {\n            return nil; }\n        fCompl ^= If_IsComplement(pFansNew[0]) ^ If_IsComplement(pFansNew[1]);\n        pObjNew = If_ManCreateXor( p.pIfMan, If_Regular(pFansNew[0]), If_Regular(pFansNew[1]) );\n        return If_NotCond( pObjNew, fCompl );\n    }\n    assert(pObj.Type == KIT_DSD_PRIME, \"pObj.Type == KIT_DSD_PRIME\");\n    p.nBlocks[pObj.nFans]++;\n\n    // solve for the inputs\n    // inlining of macro Kit_DsdObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFans)) \u0026\u0026 ((iLitFanin) = (pObj).pFans[i], 1); i++  {\n        if i == 0 {\n            pFansNew[i] = pResult? pResult : Lpk_MapTree_rec( p, pNtk, ppLeaves, iLitFanin, nil );\n        } else {\n            pFansNew[i] = Lpk_MapTree_rec( p, pNtk, ppLeaves, iLitFanin, nil ); }\n        if pFansNew[i] == nil {\n            return nil; }\n    }\n/* \n    if ( !p-\u003efCofactoring \u0026\u0026 p-\u003epPars-\u003enVarsShared \u003e 0 \u0026\u0026 (int)pObj-\u003enFans \u003e p-\u003epPars-\u003enLutSize )\n    {\n        pObjNew = Lpk_MapTreeMulti( p, Kit_DsdObjTruth(pObj), pObj-\u003enFans, pFansNew );\n        return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) );\n    }\n*/\n/*\n    if ( (int)pObj-\u003enFans \u003e p-\u003epPars-\u003enLutSize )\n    {\n        pObjNew2 = Lpk_MapTreeMux_rec( p, Kit_DsdObjTruth(pObj), pObj-\u003enFans, pFansNew );\n//        if ( pObjNew2 )\n//            return If_NotCond( pObjNew2, Abc_LitIsCompl(iLit) );\n    }\n*/\n\n    // find best cofactoring variable\n    if p.pPars.nVarsShared \u003e 0 \u0026\u0026 int32(pObj.nFans) \u003e p.pPars.nLutSize {\n        pObjNew2 = Lpk_MapSuppRedDec_rec( p, Kit_DsdObjTruth(pObj), pObj.nFans, pFansNew );\n        if pObjNew2 != nil {\n            return If_NotCond( pObjNew2, Abc_LitIsCompl(iLit) ); }\n    }\n\n    pObjNew = Lpk_MapPrime( p, Kit_DsdObjTruth(pObj), pObj.nFans, pFansNew );\n\n    // add choice\n    if (pObjNew != nil) \u0026\u0026 (pObjNew2 != nil) {\n        If_ObjSetChoice( If_Regular(pObjNew), If_Regular(pObjNew2) );\n        If_ManCreateChoice( p.pIfMan, If_Regular(pObjNew) );\n    }\n    return If_NotCond( pObjNew, Abc_LitIsCompl(iLit) );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

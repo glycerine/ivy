@@ -1,0 +1,369 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c",
+  "SHA256": "03fa6bf3b57f0954b215216f8f0fe80ea32cdbcc153432a6e69ff10622c0acb6",
+  "Functions": [
+    {
+      "Name": "Mvc_CoverReadWordNum",
+      "Start": 1161,
+      "End": 1255,
+      "BodyStart": 1221,
+      "Original": "int          Mvc_CoverReadWordNum( Mvc_Cover_t * pCover )   { return pCover-\u003enWords;         }",
+      "Draft": "func Mvc_CoverReadWordNum(pCover *Mvc_Cover_t) int32 { return pCover.nWords;         }"
+    },
+    {
+      "Name": "Mvc_CoverReadBitNum",
+      "Start": 1256,
+      "End": 1350,
+      "BodyStart": 1316,
+      "Original": "int          Mvc_CoverReadBitNum( Mvc_Cover_t * pCover )    { return pCover-\u003enBits;          }",
+      "Draft": "func Mvc_CoverReadBitNum(pCover *Mvc_Cover_t) int32 { return pCover.nBits;          }"
+    },
+    {
+      "Name": "Mvc_CoverReadCubeNum",
+      "Start": 1351,
+      "End": 1444,
+      "BodyStart": 1411,
+      "Original": "int          Mvc_CoverReadCubeNum( Mvc_Cover_t * pCover )   { return pCover-\u003elCubes.nItems; }",
+      "Draft": "func Mvc_CoverReadCubeNum(pCover *Mvc_Cover_t) int32 { return pCover.lCubes.nItems; }"
+    },
+    {
+      "Name": "Mvc_CoverReadCubeHead",
+      "Start": 1445,
+      "End": 1538,
+      "BodyStart": 1505,
+      "Original": "Mvc_Cube_t * Mvc_CoverReadCubeHead( Mvc_Cover_t * pCover )  { return pCover-\u003elCubes.pHead;  }",
+      "Draft": "func Mvc_CoverReadCubeHead(pCover *Mvc_Cover_t) *Mvc_Cube_t { return pCover.lCubes.pHead;  }"
+    },
+    {
+      "Name": "Mvc_CoverReadCubeTail",
+      "Start": 1539,
+      "End": 1632,
+      "BodyStart": 1599,
+      "Original": "Mvc_Cube_t * Mvc_CoverReadCubeTail( Mvc_Cover_t * pCover )  { return pCover-\u003elCubes.pTail;  }",
+      "Draft": "func Mvc_CoverReadCubeTail(pCover *Mvc_Cover_t) *Mvc_Cube_t { return pCover.lCubes.pTail;  }"
+    },
+    {
+      "Name": "Mvc_CoverReadCubeList",
+      "Start": 1633,
+      "End": 1727,
+      "BodyStart": 1693,
+      "Original": "Mvc_List_t * Mvc_CoverReadCubeList( Mvc_Cover_t * pCover )  { return \u0026pCover-\u003elCubes;        }",
+      "Draft": "func Mvc_CoverReadCubeList(pCover *Mvc_Cover_t) *Mvc_List_t { return \u0026pCover.lCubes;        }"
+    },
+    {
+      "Name": "Mvc_ListReadCubeNum",
+      "Start": 1964,
+      "End": 2046,
+      "BodyStart": 2021,
+      "Original": "int          Mvc_ListReadCubeNum( Mvc_List_t * pList )   { return pList-\u003enItems; }",
+      "Draft": "func Mvc_ListReadCubeNum(pList *Mvc_List_t) int32 { return pList.nItems; }"
+    },
+    {
+      "Name": "Mvc_ListReadCubeHead",
+      "Start": 2047,
+      "End": 2129,
+      "BodyStart": 2104,
+      "Original": "Mvc_Cube_t * Mvc_ListReadCubeHead( Mvc_List_t * pList )  { return pList-\u003epHead;  }",
+      "Draft": "func Mvc_ListReadCubeHead(pList *Mvc_List_t) *Mvc_Cube_t { return pList.pHead;  }"
+    },
+    {
+      "Name": "Mvc_ListReadCubeTail",
+      "Start": 2130,
+      "End": 2212,
+      "BodyStart": 2187,
+      "Original": "Mvc_Cube_t * Mvc_ListReadCubeTail( Mvc_List_t * pList )  { return pList-\u003epTail;  }",
+      "Draft": "func Mvc_ListReadCubeTail(pList *Mvc_List_t) *Mvc_Cube_t { return pList.pTail;  }"
+    },
+    {
+      "Name": "Mvc_CoverSetCubeNum",
+      "Start": 2448,
+      "End": 2561,
+      "BodyStart": 2526,
+      "Original": "void         Mvc_CoverSetCubeNum( Mvc_Cover_t * pCover,int nItems )           { pCover-\u003elCubes.nItems = nItems; }",
+      "Draft": "func Mvc_CoverSetCubeNum(pCover *Mvc_Cover_t, nItems int32) { pCover.lCubes.nItems = nItems; }"
+    },
+    {
+      "Name": "Mvc_CoverSetCubeHead",
+      "Start": 2562,
+      "End": 2675,
+      "BodyStart": 2640,
+      "Original": "void         Mvc_CoverSetCubeHead( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube ) { pCover-\u003elCubes.pHead = pCube;   }",
+      "Draft": "func Mvc_CoverSetCubeHead(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) { pCover.lCubes.pHead = pCube;   }"
+    },
+    {
+      "Name": "Mvc_CoverSetCubeTail",
+      "Start": 2676,
+      "End": 2789,
+      "BodyStart": 2754,
+      "Original": "void         Mvc_CoverSetCubeTail( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube ) { pCover-\u003elCubes.pTail = pCube;   }",
+      "Draft": "func Mvc_CoverSetCubeTail(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) { pCover.lCubes.pTail = pCube;   }"
+    },
+    {
+      "Name": "Mvc_CoverSetCubeList",
+      "Start": 2790,
+      "End": 2903,
+      "BodyStart": 2868,
+      "Original": "void         Mvc_CoverSetCubeList( Mvc_Cover_t * pCover, Mvc_List_t * pList ) { pCover-\u003elCubes = *pList;        }",
+      "Draft": "func Mvc_CoverSetCubeList(pCover *Mvc_Cover_t, pList *Mvc_List_t) { pCover.lCubes = *pList;        }"
+    },
+    {
+      "Name": "Mvc_CoverIsEmpty",
+      "Start": 3139,
+      "End": 3233,
+      "BodyStart": 3184,
+      "Original": "int Mvc_CoverIsEmpty( Mvc_Cover_t * pCover )\n{\n    return Mvc_CoverReadCubeNum(pCover) == 0;\n}",
+      "Draft": "func Mvc_CoverIsEmpty(pCover *Mvc_Cover_t) int32 {\n    return Mvc_CoverReadCubeNum(pCover) == 0;\n}"
+    },
+    {
+      "Name": "Mvc_CoverIsTautology",
+      "Start": 3469,
+      "End": 3791,
+      "BodyStart": 3518,
+      "Original": "int Mvc_CoverIsTautology( Mvc_Cover_t * pCover )\n{\n    Mvc_Cube_t * pCube;\n    int iBit, Value;\n\n    if ( Mvc_CoverReadCubeNum(pCover) != 1 )\n        return 0;\n\n    pCube = Mvc_CoverReadCubeHead( pCover );\n    Mvc_CubeForEachBit( pCover, pCube, iBit, Value )\n        if ( Value == 0 )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Mvc_CoverIsTautology(pCover *Mvc_Cover_t) int32 {\n    var pCube *Mvc_Cube_t;\n    var iBit, Value int32;\n\n    if Mvc_CoverReadCubeNum(pCover) != 1 {\n        return 0; }\n\n    pCube = Mvc_CoverReadCubeHead( pCover );\n    // inlining of macro Mvc_CubeForEachBit\n    // inlining of macro Mvc_CubeBitValue\n    // inlining of macro Mvc_CubeWhichWord\n    // inlining of macro Mvc_CubeWhichBit\n    for  iBit = 0;          iBit \u003c pCover.nBits \u0026\u0026 ((Value = (((pCube).pData[((iBit) \u003e\u003e BITS_PER_WORD_LOG)] \u0026   (((Mvc_CubeWord_t)1)\u003c\u003c(((iBit) \u0026  BITS_PER_WORD_MINUS)))) \u003e 0)), 1);          iBit++  {\n        if Value == 0 {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Mvc_CoverIsBinaryBuffer",
+      "Start": 4069,
+      "End": 4403,
+      "BodyStart": 4121,
+      "Original": "int Mvc_CoverIsBinaryBuffer( Mvc_Cover_t * pCover )\n{\n    Mvc_Cube_t * pCube;\n    if ( pCover-\u003enBits != 2 )\n        return 0;\n    if ( Mvc_CoverReadCubeNum(pCover) != 1 )\n        return 0;\n    pCube = pCover-\u003elCubes.pHead;\n    if ( Mvc_CubeBitValue(pCube, 0) == 0 \u0026\u0026 Mvc_CubeBitValue(pCube, 1) == 1 )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Mvc_CoverIsBinaryBuffer(pCover *Mvc_Cover_t) int32 {\n    var pCube *Mvc_Cube_t;\n    if pCover.nBits != 2 {\n        return 0; }\n    if Mvc_CoverReadCubeNum(pCover) != 1 {\n        return 0; }\n    pCube = pCover.lCubes.pHead;\n    // inlining of macro Mvc_CubeBitValue\n    // inlining of macro Mvc_CubeWhichWord\n    // inlining of macro Mvc_CubeWhichBit\n    if  (((pCube).pData[((0) \u003e\u003e BITS_PER_WORD_LOG)] \u0026   (((Mvc_CubeWord_t)1)\u003c\u003c(((0) \u0026  BITS_PER_WORD_MINUS)))) \u003e 0) == 0 \u0026\u0026 (((pCube).pData[((1) \u003e\u003e BITS_PER_WORD_LOG)] \u0026   (((Mvc_CubeWord_t)1)\u003c\u003c(((1) \u0026  BITS_PER_WORD_MINUS)))) \u003e 0) == 1 {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Mvc_CoverMakeEmpty",
+      "Start": 4640,
+      "End": 4915,
+      "BodyStart": 4688,
+      "Original": "void Mvc_CoverMakeEmpty( Mvc_Cover_t * pCover )\n{\n    Mvc_Cube_t * pCube, * pCube2;\n    Mvc_CoverForEachCubeSafe( pCover, pCube, pCube2 )\n        Mvc_CubeFree( pCover, pCube );\n    pCover-\u003elCubes.nItems = 0;\n    pCover-\u003elCubes.pHead = NULL;\n    pCover-\u003elCubes.pTail = NULL;\n}",
+      "Draft": "func Mvc_CoverMakeEmpty(pCover *Mvc_Cover_t) {\n    var pCube, pCube2 *Mvc_Cube_t;\n    // inlining of macro Mvc_CoverForEachCubeSafe\n    for  pCube = (pCover).lCubes.pHead, pCube2 = (pCube? pCube.pNext: nil);          (pCube != nil);          pCube = pCube2, pCube2 = (pCube? pCube.pNext: nil)  {\n        Mvc_CubeFree( pCover, pCube );\n    }\n    pCover.lCubes.nItems = 0;\n    pCover.lCubes.pHead = nil;\n    pCover.lCubes.pTail = nil;\n}"
+    },
+    {
+      "Name": "Mvc_CoverMakeTautology",
+      "Start": 5151,
+      "End": 5386,
+      "BodyStart": 5203,
+      "Original": "void Mvc_CoverMakeTautology( Mvc_Cover_t * pCover )\n{\n    Mvc_Cube_t * pCubeNew;\n    Mvc_CoverMakeEmpty( pCover );\n    pCubeNew = Mvc_CubeAlloc( pCover );\n    Mvc_CubeBitFill( pCubeNew );\n    Mvc_CoverAddCubeTail( pCover, pCubeNew );\n}",
+      "Draft": "func Mvc_CoverMakeTautology(pCover *Mvc_Cover_t) {\n    var pCubeNew *Mvc_Cube_t;\n    Mvc_CoverMakeEmpty( pCover );\n    pCubeNew = Mvc_CubeAlloc( pCover );\n    // inlining of macro Mvc_CubeBitFill\n    // inlining of macro Mvc_Cube1Words\n    // inlining of macro Mvc_Cube1BitFill\n    // inlining of macro Mvc_Cube2Words\n    // inlining of macro Mvc_Cube2BitFill\n    if  (pCubeNew).iLast == 0      { (pCubeNew).pData[0] = (BITS_FULL \u003e\u003e (pCubeNew).nUnused);; }    else if  (pCubeNew).iLast == 1 { ((pCubeNew).pData[0] =  BITS_FULL);\n// inlining of macro Mvc_CubeNBitFill\n((pCubeNew).pData[1] = (BITS_FULL \u003e\u003e (pCubeNew).nUnused)); ; }    else                             { {    var _i_ int32;    (pCubeNew).pData[(pCubeNew).iLast] = (BITS_FULL \u003e\u003e (pCubeNew).nUnused);    for  _i_ = (pCubeNew).iLast - 1; _i_ \u003e= 0; _i_--  {        (pCubeNew).pData[_i_] =  BITS_FULL; }}; };\n    // inlining of macro Mvc_CoverAddCubeTail\n    // inlining of macro Mvc_ListAddCubeTail\n    // inlining of macro Mvc_CubeSetNext\n    {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeNew; }        else {            ((pList.pTail).pNext = (pCubeNew)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeNew;        ((pCubeNew).pNext = (nil));        pList.nItems++;    };};\n}"
+    },
+    {
+      "Name": "Mvc_CoverCreateEmpty",
+      "Start": 5623,
+      "End": 5799,
+      "BodyStart": 5682,
+      "Original": "Mvc_Cover_t * Mvc_CoverCreateEmpty( Mvc_Cover_t * pCover )\n{\n    Mvc_Cover_t * pCoverNew;\n    pCoverNew = Mvc_CoverAlloc( pCover-\u003epMem, pCover-\u003enBits );\n    return pCoverNew;\n}",
+      "Draft": "func Mvc_CoverCreateEmpty(pCover *Mvc_Cover_t) *Mvc_Cover_t {\n    var pCoverNew *Mvc_Cover_t;\n    pCoverNew = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n    return pCoverNew;\n}"
+    },
+    {
+      "Name": "Mvc_CoverCreateTautology",
+      "Start": 6035,
+      "End": 6367,
+      "BodyStart": 6098,
+      "Original": "Mvc_Cover_t * Mvc_CoverCreateTautology( Mvc_Cover_t * pCover )\n{\n    Mvc_Cube_t * pCubeNew;\n    Mvc_Cover_t * pCoverNew;\n    pCoverNew = Mvc_CoverAlloc( pCover-\u003epMem, pCover-\u003enBits );\n    pCubeNew = Mvc_CubeAlloc( pCoverNew );\n    Mvc_CubeBitFill( pCubeNew );\n    Mvc_CoverAddCubeTail( pCoverNew, pCubeNew );\n    return pCoverNew;\n}",
+      "Draft": "func Mvc_CoverCreateTautology(pCover *Mvc_Cover_t) *Mvc_Cover_t {\n    var pCubeNew *Mvc_Cube_t;\n    var pCoverNew *Mvc_Cover_t;\n    pCoverNew = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n    pCubeNew = Mvc_CubeAlloc( pCoverNew );\n    // inlining of macro Mvc_CubeBitFill\n    // inlining of macro Mvc_Cube1Words\n    // inlining of macro Mvc_Cube1BitFill\n    // inlining of macro Mvc_Cube2Words\n    // inlining of macro Mvc_Cube2BitFill\n    if  (pCubeNew).iLast == 0      { (pCubeNew).pData[0] = (BITS_FULL \u003e\u003e (pCubeNew).nUnused);; }    else if  (pCubeNew).iLast == 1 { ((pCubeNew).pData[0] =  BITS_FULL);\n// inlining of macro Mvc_CubeNBitFill\n((pCubeNew).pData[1] = (BITS_FULL \u003e\u003e (pCubeNew).nUnused)); ; }    else                             { {    var _i_ int32;    (pCubeNew).pData[(pCubeNew).iLast] = (BITS_FULL \u003e\u003e (pCubeNew).nUnused);    for  _i_ = (pCubeNew).iLast - 1; _i_ \u003e= 0; _i_--  {        (pCubeNew).pData[_i_] =  BITS_FULL; }}; };\n    // inlining of macro Mvc_CoverAddCubeTail\n    // inlining of macro Mvc_ListAddCubeTail\n    // inlining of macro Mvc_CubeSetNext\n    {    var pList *Mvc_List_t  = \u0026pCoverNew.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeNew; }        else {            ((pList.pTail).pNext = (pCubeNew)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeNew;        ((pCubeNew).pNext = (nil));        pList.nItems++;    };};\n    return pCoverNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverReadWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverReadWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1161,
+      "End": 1255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverReadBitNum",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverReadBitNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1256,
+      "End": 1350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverReadCubeNum",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverReadCubeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1351,
+      "End": 1444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverReadCubeHead",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverReadCubeHead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1445,
+      "End": 1538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverReadCubeTail",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverReadCubeTail",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1539,
+      "End": 1632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverReadCubeList",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverReadCubeList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1633,
+      "End": 1727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_ListReadCubeNum",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_ListReadCubeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1964,
+      "End": 2046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_ListReadCubeHead",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_ListReadCubeHead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2047,
+      "End": 2129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_ListReadCubeTail",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_ListReadCubeTail",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2130,
+      "End": 2212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverSetCubeNum",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverSetCubeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2448,
+      "End": 2561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverSetCubeHead",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverSetCubeHead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2562,
+      "End": 2675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverSetCubeTail",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverSetCubeTail",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2676,
+      "End": 2789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverSetCubeList",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverSetCubeList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2790,
+      "End": 2903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverIsEmpty",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverIsEmpty",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3139,
+      "End": 3233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverIsTautology",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverIsTautology",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3469,
+      "End": 3791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverIsBinaryBuffer",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverIsBinaryBuffer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4069,
+      "End": 4403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::ternary::Mvc_CoverMakeEmpty",
+      "Category": "ternary-review",
+      "Symbol": "Mvc_CoverMakeEmpty",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4640,
+      "End": 4915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverMakeEmpty",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverMakeEmpty",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4640,
+      "End": 4915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverMakeTautology",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverMakeTautology",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5151,
+      "End": 5386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverCreateEmpty",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverCreateEmpty",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5623,
+      "End": 5799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::Mvc_CoverCreateTautology",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverCreateTautology",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6035,
+      "End": 6367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcApi.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6615
+    }
+  ],
+  "Draft": "package mvc\n\n/**CFile****************************************************************\n\n  FileName    [mvcApi.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    []\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: mvcApi.c,v 1.4 2003/04/03 06:31:48 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mvc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverReadWordNum(pCover *Mvc_Cover_t) int32 { return pCover.nWords;         }\nfunc Mvc_CoverReadBitNum(pCover *Mvc_Cover_t) int32 { return pCover.nBits;          }\nfunc Mvc_CoverReadCubeNum(pCover *Mvc_Cover_t) int32 { return pCover.lCubes.nItems; }\nfunc Mvc_CoverReadCubeHead(pCover *Mvc_Cover_t) *Mvc_Cube_t { return pCover.lCubes.pHead;  }\nfunc Mvc_CoverReadCubeTail(pCover *Mvc_Cover_t) *Mvc_Cube_t { return pCover.lCubes.pTail;  }\nfunc Mvc_CoverReadCubeList(pCover *Mvc_Cover_t) *Mvc_List_t { return \u0026pCover.lCubes;        }\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_ListReadCubeNum(pList *Mvc_List_t) int32 { return pList.nItems; }\nfunc Mvc_ListReadCubeHead(pList *Mvc_List_t) *Mvc_Cube_t { return pList.pHead;  }\nfunc Mvc_ListReadCubeTail(pList *Mvc_List_t) *Mvc_Cube_t { return pList.pTail;  }\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverSetCubeNum(pCover *Mvc_Cover_t, nItems int32) { pCover.lCubes.nItems = nItems; }\nfunc Mvc_CoverSetCubeHead(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) { pCover.lCubes.pHead = pCube;   }\nfunc Mvc_CoverSetCubeTail(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) { pCover.lCubes.pTail = pCube;   }\nfunc Mvc_CoverSetCubeList(pCover *Mvc_Cover_t, pList *Mvc_List_t) { pCover.lCubes = *pList;        }\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverIsEmpty(pCover *Mvc_Cover_t) int32 {\n    return Mvc_CoverReadCubeNum(pCover) == 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverIsTautology(pCover *Mvc_Cover_t) int32 {\n    var pCube *Mvc_Cube_t;\n    var iBit, Value int32;\n\n    if Mvc_CoverReadCubeNum(pCover) != 1 {\n        return 0; }\n\n    pCube = Mvc_CoverReadCubeHead( pCover );\n    // inlining of macro Mvc_CubeForEachBit\n    // inlining of macro Mvc_CubeBitValue\n    // inlining of macro Mvc_CubeWhichWord\n    // inlining of macro Mvc_CubeWhichBit\n    for  iBit = 0;          iBit \u003c pCover.nBits \u0026\u0026 ((Value = (((pCube).pData[((iBit) \u003e\u003e BITS_PER_WORD_LOG)] \u0026   (((Mvc_CubeWord_t)1)\u003c\u003c(((iBit) \u0026  BITS_PER_WORD_MINUS)))) \u003e 0)), 1);          iBit++  {\n        if Value == 0 {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the cover is a binary buffer.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverIsBinaryBuffer(pCover *Mvc_Cover_t) int32 {\n    var pCube *Mvc_Cube_t;\n    if pCover.nBits != 2 {\n        return 0; }\n    if Mvc_CoverReadCubeNum(pCover) != 1 {\n        return 0; }\n    pCube = pCover.lCubes.pHead;\n    // inlining of macro Mvc_CubeBitValue\n    // inlining of macro Mvc_CubeWhichWord\n    // inlining of macro Mvc_CubeWhichBit\n    if  (((pCube).pData[((0) \u003e\u003e BITS_PER_WORD_LOG)] \u0026   (((Mvc_CubeWord_t)1)\u003c\u003c(((0) \u0026  BITS_PER_WORD_MINUS)))) \u003e 0) == 0 \u0026\u0026 (((pCube).pData[((1) \u003e\u003e BITS_PER_WORD_LOG)] \u0026   (((Mvc_CubeWord_t)1)\u003c\u003c(((1) \u0026  BITS_PER_WORD_MINUS)))) \u003e 0) == 1 {\n        return 1; }\n    return 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverMakeEmpty(pCover *Mvc_Cover_t) {\n    var pCube, pCube2 *Mvc_Cube_t;\n    // inlining of macro Mvc_CoverForEachCubeSafe\n    for  pCube = (pCover).lCubes.pHead, pCube2 = (pCube? pCube.pNext: nil);          (pCube != nil);          pCube = pCube2, pCube2 = (pCube? pCube.pNext: nil)  {\n        Mvc_CubeFree( pCover, pCube );\n    }\n    pCover.lCubes.nItems = 0;\n    pCover.lCubes.pHead = nil;\n    pCover.lCubes.pTail = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverMakeTautology(pCover *Mvc_Cover_t) {\n    var pCubeNew *Mvc_Cube_t;\n    Mvc_CoverMakeEmpty( pCover );\n    pCubeNew = Mvc_CubeAlloc( pCover );\n    // inlining of macro Mvc_CubeBitFill\n    // inlining of macro Mvc_Cube1Words\n    // inlining of macro Mvc_Cube1BitFill\n    // inlining of macro Mvc_Cube2Words\n    // inlining of macro Mvc_Cube2BitFill\n    if  (pCubeNew).iLast == 0      { (pCubeNew).pData[0] = (BITS_FULL \u003e\u003e (pCubeNew).nUnused);; }    else if  (pCubeNew).iLast == 1 { ((pCubeNew).pData[0] =  BITS_FULL);\n// inlining of macro Mvc_CubeNBitFill\n((pCubeNew).pData[1] = (BITS_FULL \u003e\u003e (pCubeNew).nUnused)); ; }    else                             { {    var _i_ int32;    (pCubeNew).pData[(pCubeNew).iLast] = (BITS_FULL \u003e\u003e (pCubeNew).nUnused);    for  _i_ = (pCubeNew).iLast - 1; _i_ \u003e= 0; _i_--  {        (pCubeNew).pData[_i_] =  BITS_FULL; }}; };\n    // inlining of macro Mvc_CoverAddCubeTail\n    // inlining of macro Mvc_ListAddCubeTail\n    // inlining of macro Mvc_CubeSetNext\n    {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeNew; }        else {            ((pList.pTail).pNext = (pCubeNew)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeNew;        ((pCubeNew).pNext = (nil));        pList.nItems++;    };};\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverCreateEmpty(pCover *Mvc_Cover_t) *Mvc_Cover_t {\n    var pCoverNew *Mvc_Cover_t;\n    pCoverNew = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n    return pCoverNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverCreateTautology(pCover *Mvc_Cover_t) *Mvc_Cover_t {\n    var pCubeNew *Mvc_Cube_t;\n    var pCoverNew *Mvc_Cover_t;\n    pCoverNew = Mvc_CoverAlloc( pCover.pMem, pCover.nBits );\n    pCubeNew = Mvc_CubeAlloc( pCoverNew );\n    // inlining of macro Mvc_CubeBitFill\n    // inlining of macro Mvc_Cube1Words\n    // inlining of macro Mvc_Cube1BitFill\n    // inlining of macro Mvc_Cube2Words\n    // inlining of macro Mvc_Cube2BitFill\n    if  (pCubeNew).iLast == 0      { (pCubeNew).pData[0] = (BITS_FULL \u003e\u003e (pCubeNew).nUnused);; }    else if  (pCubeNew).iLast == 1 { ((pCubeNew).pData[0] =  BITS_FULL);\n// inlining of macro Mvc_CubeNBitFill\n((pCubeNew).pData[1] = (BITS_FULL \u003e\u003e (pCubeNew).nUnused)); ; }    else                             { {    var _i_ int32;    (pCubeNew).pData[(pCubeNew).iLast] = (BITS_FULL \u003e\u003e (pCubeNew).nUnused);    for  _i_ = (pCubeNew).iLast - 1; _i_ \u003e= 0; _i_--  {        (pCubeNew).pData[_i_] =  BITS_FULL; }}; };\n    // inlining of macro Mvc_CoverAddCubeTail\n    // inlining of macro Mvc_ListAddCubeTail\n    // inlining of macro Mvc_CubeSetNext\n    {    var pList *Mvc_List_t  = \u0026pCoverNew.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeNew; }        else {            ((pList.pTail).pNext = (pCubeNew)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeNew;        ((pCubeNew).pNext = (nil));        pList.nItems++;    };};\n    return pCoverNew;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

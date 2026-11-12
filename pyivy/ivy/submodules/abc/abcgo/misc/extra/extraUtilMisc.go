@@ -1,0 +1,2719 @@
+package extra
+
+import (
+	"fmt"
+	"math"
+)
+
+import "os"
+
+/**CFile****************************************************************
+
+  FileName    [extraUtilMisc.c]
+
+  SystemName  [ABC: Logic synthesis and verification system.]
+
+  PackageName [extra]
+
+  Synopsis    [Misc procedures.]
+
+  Author      [Alan Mishchenko]
+  
+  Affiliation [UC Berkeley]
+
+  Date        [Ver. 1.0. Started - June 20, 2005.]
+
+  Revision    [$Id: extraUtilMisc.c,v 1.0 2003/09/01 00:00:00 alanmi Exp $]
+
+***********************************************************************/
+
+//#include <math.h>
+
+//#include "extra.h"
+//#include "misc/vec/vec.h"
+
+//ABC_NAMESPACE_IMPL_START
+
+
+/*---------------------------------------------------------------------------*/
+/* Constant declarations                                                     */
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+/* Stucture declarations                                                     */
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+/* Type declarations                                                         */
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+/* Variable declarations                                                     */
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+/* Macro declarations                                                        */
+/*---------------------------------------------------------------------------*/
+
+
+/**AutomaticStart*************************************************************/
+
+/*---------------------------------------------------------------------------*/
+/* Static function prototypes                                                */
+/*---------------------------------------------------------------------------*/
+
+/**AutomaticEnd***************************************************************/
+
+// static void Extra_Permutations_rec( char ** pRes, int nFact, int n, char Array[] );
+
+
+/*---------------------------------------------------------------------------*/
+/* Definition of exported functions                                          */
+/*---------------------------------------------------------------------------*/
+
+/**Function********************************************************************
+
+  Synopsis    [Finds the smallest integer larger of equal than the logarithm.]
+
+  Description []
+
+  SideEffects []
+
+  SeeAlso     []
+
+******************************************************************************/
+func Extra_Base2LogDouble(Num float64) int32 {
+    var Res float64;
+    var ResInt int32;
+
+    Res    = math.Log(float64(Num))/math.Log(float64(2.0));
+    ResInt = int32(Res);
+    if ResInt == Res {
+        return ResInt;
+    } else { 
+        return ResInt+1; }
+}
+
+/**Function********************************************************************
+
+  Synopsis    [Returns the power of two as a double.]
+
+  Description []
+
+  SideEffects []
+
+  SeeAlso     []
+
+******************************************************************************/
+func Extra_Power2(Degree int32) float64 {
+    var Res float64;
+    assert(Degree >= 0, "Degree >= 0");
+    if Degree < 32 {
+        return float64((01<<Degree)); } 
+    for  Res = 1.0; (Degree != 0); Res *= 2.0, Degree--  {}
+    return Res;
+}
+
+
+/**Function*************************************************************
+
+  Synopsis    []
+
+  Description []
+
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_Power3(Num int32) int32 {
+    var i int32;
+    var Res int32;
+    Res = 1;
+    for  i = 0; i < Num; i++  {
+        Res *= 3;
+    }
+    return Res;
+}
+
+/**Function********************************************************************
+
+  Synopsis    [Finds the number of combinations of k elements out of n.]
+
+  Description []
+
+  SideEffects []
+
+  SeeAlso     []
+
+******************************************************************************/
+func Extra_NumCombinations(k int32, n int32) int32 {
+    var i int32;
+    var Res int32 = 1;
+    for  i = 1; i <= k; i++  {
+            Res = Res * (n-i+1) / i;
+    }
+    return Res;
+} /* end of Extra_NumCombinations */
+
+/**Function*************************************************************
+
+  Synopsis    []
+
+  Description []
+
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+var spStatic_Extra_DeriveRadixCode_Code [100]int32;
+func Extra_DeriveRadixCode(Number int32, Radix int32, nDigits int32) *int32 {
+    
+    var i int32;
+    assert(nDigits < 100, "nDigits < 100");
+    for  i = 0; i < nDigits; i++  {
+        spStatic_Extra_DeriveRadixCode_Code[i] = Number % Radix;
+        Number  = Number / Radix;
+    }
+    assert(Number == 0, "Number == 0");
+    return spStatic_Extra_DeriveRadixCode_Code;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Counts the number of ones in the bitstring.]
+
+  Description []
+
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+int Extra_CountOnes( unsigned char * pBytes, int nBytes )
+{
+    static int bit_count[256] = {
+      0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,
+      1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
+      1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
+      2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,
+      1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,
+      2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,
+      2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,
+      3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,4,5,5,6,5,6,6,7,5,6,6,7,6,7,7,8
+    };
+
+    var i, Counter int32;
+    Counter = 0;
+    for  i = 0; i < nBytes; i++  {
+        Counter += bit_count[ *(pBytes+i) ];
+    }
+    return Counter;
+}
+
+/**Function********************************************************************
+
+  Synopsis    [Computes the factorial.]
+
+  Description []
+
+  SideEffects []
+
+  SeeAlso     []
+
+******************************************************************************/
+func Extra_Factorial(n int32) int32 {
+    var i int32;
+    var Res int32 = 1;
+    for  i = 1; i <= n; i++  {
+        Res *= i;
+    }
+    return Res;
+}
+
+/**Function********************************************************************
+
+  Synopsis    [Computes the set of all permutations.]
+
+  Description [The number of permutations in the array is n!. The number of
+  entries in each permutation is n. Therefore, the resulting array is a 
+  two-dimentional array of the size: n! x n. To free the resulting array,
+  call ABC_FREE() on the pointer returned by this procedure.]
+
+  SideEffects []
+
+  SeeAlso     []
+
+******************************************************************************/
+func Extra_Permutations(n int32) *string {
+    var Array [50]byte;
+    var pRes *string;
+    var nFact, i int32;
+    // allocate memory
+    nFact = Extra_Factorial( n );
+    pRes  = (char **)Extra_ArrayAlloc( nFact, n, sizeof(char) );
+    // fill in the permutations
+    for  i = 0; i < n; i++  {
+        Array[i] = i;
+    }
+    Extra_Permutations_rec( pRes, nFact, n, Array );
+    // print the permutations
+/*
+    {
+    int i, k;
+    for ( i = 0; i < nFact; i++ )
+    {
+        printf( "{" );
+        for ( k = 0; k < n; k++ )
+            printf( " %d", pRes[i][k] );
+        printf( " }\n" );
+    }
+    }
+*/
+    return pRes;
+}
+
+/**Function********************************************************************
+
+  Synopsis    [Fills in the array of permutations.]
+
+  Description []
+
+  SideEffects []
+
+  SeeAlso     []
+
+******************************************************************************/
+func Extra_Permutations_rec(pRes *string, nFact int32, n int32, Array []byte) {
+    var pNext *string;
+    var nFactNext int32;
+    var iTemp, iCur, iLast, k int32;
+
+    if n == 1 {
+        pRes[0][0] = Array[0];
+        return;
+    }
+
+    // get the next factorial
+    nFactNext = nFact / n;
+    // get the last entry
+    iLast = n - 1;
+
+    for  iCur = 0; iCur < n; iCur++  {
+        // swap Cur and Last
+        iTemp        = Array[iCur];
+        Array[iCur]  = Array[iLast];
+        Array[iLast] = iTemp;
+
+        // get the pointer to the current section
+        pNext = pRes + (n - 1 - iCur) * nFactNext;
+
+        // set the last entry 
+        for  k = 0; k < nFactNext; k++  {
+            pNext[k][iLast] = Array[iLast];
+        }
+
+        // call recursively for this part
+        Extra_Permutations_rec( pNext, nFactNext, n - 1, Array );
+
+        // swap them back
+        iTemp        = Array[iCur];
+        Array[iCur]  = Array[iLast];
+        Array[iLast] = iTemp;
+    }
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Permutes the given vector of minterms.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_TruthPermute_int(pMints *int32, nMints int32, pPerm string, nVars int32, pMintsP *int32) {
+    var m, v int32;
+    // clean the storage for minterms
+    memset( pMintsP, 0, sizeof(int) * nMints );
+    // go through minterms and add the variables
+    for  m = 0; m < nMints; m++  {
+        for  v = 0; v < nVars; v++  {
+            if pMints[m] & (1 << v) {
+                pMintsP[m] |= (1 << pPerm[v]); }
+        }
+    }
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Permutes the function.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_TruthPermute(Truth uint32, pPerms string, nVars int32, fReverse int32) uint32 {
+    var Result uint32;
+    var pMints *int32;
+    var pMintsP *int32;
+    var nMints int32;
+    var i, m int32;
+
+    assert(nVars < 6, "nVars < 6");
+    nMints  = (1 << nVars);
+    // inlining of macro ABC_ALLOC
+    pMints  = ((int *) malloc(sizeof(int) * (size_t)(nMints)));
+    // inlining of macro ABC_ALLOC
+    pMintsP = ((int *) malloc(sizeof(int) * (size_t)(nMints)));
+    for  i = 0; i < nMints; i++  {
+        pMints[i] = i;
+    }
+
+    Extra_TruthPermute_int( pMints, nMints, pPerms, nVars, pMintsP );
+
+    Result = 0;
+    if fReverse != 0 {
+        for  m = 0; m < nMints; m++  {
+            if Truth & (1 << pMintsP[m]) {
+                Result |= (1 << m); }
+        }
+    
+    } else {
+        for  m = 0; m < nMints; m++  {
+            if Truth & (1 << m) {
+                Result |= (1 << pMintsP[m]); }
+        }
+    }
+
+    // inlining of macro ABC_FREE
+    ((pMints) ? (free((char *) (pMints)), (pMints) = 0) : 0);
+    // inlining of macro ABC_FREE
+    ((pMintsP) ? (free((char *) (pMintsP)), (pMintsP) = 0) : 0);
+
+    return Result;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Changes the phase of the function.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_TruthPolarize(uTruth uint32, Polarity int32, nVars int32) uint32 {
+    // elementary truth tables
+    static unsigned Signs[5] = {
+        0xAAAAAAAA,    // 1010 1010 1010 1010 1010 1010 1010 1010
+        0xCCCCCCCC,    // 1010 1010 1010 1010 1010 1010 1010 1010
+        0xF0F0F0F0,    // 1111 0000 1111 0000 1111 0000 1111 0000
+        0xFF00FF00,    // 1111 1111 0000 0000 1111 1111 0000 0000
+        0xFFFF0000     // 1111 1111 1111 1111 0000 0000 0000 0000
+    };
+    var uTruthRes, uCof0, uCof1 uint32;
+    var nMints, Shift, v int32;
+    assert(nVars < 6, "nVars < 6");
+    nMints = (1 << nVars);
+    uTruthRes = uTruth;
+    for  v = 0; v < nVars; v++  {
+        if Polarity & (1 << v) {
+            uCof0  = uTruth & ~Signs[v];
+            uCof1  = uTruth &  Signs[v];
+            Shift  = (1 << v);
+            uCof0 <<= Shift;
+            uCof1 >>= Shift;
+            uTruth = uCof0 | uCof1;
+        }
+    }
+    return uTruth;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes N-canonical form using brute-force methods.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_TruthCanonN(uTruth uint32, nVars int32) uint32 {
+    var uTruthMin, uPhase uint32;
+    var nMints, i int32;
+    nMints    = (1 << nVars);
+    uTruthMin = 0xFFFFFFFF;
+    for  i = 0; i < nMints; i++  {
+        uPhase = Extra_TruthPolarize( uTruth, i, nVars ); 
+        if uTruthMin > uPhase {
+            uTruthMin = uPhase; }
+    }
+    return uTruthMin;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes NN-canonical form using brute-force methods.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_TruthCanonNN(uTruth uint32, nVars int32) uint32 {
+    var uTruthMin, uTruthC, uPhase uint32;
+    var nMints, i int32;
+    nMints    = (1 << nVars);
+    uTruthC   = uint32(( (~uTruth) & ((~(uint32(0))) >> (32-nMints)) ));
+    uTruthMin = 0xFFFFFFFF;
+    for  i = 0; i < nMints; i++  {
+        uPhase = Extra_TruthPolarize( uTruth, i, nVars ); 
+        if uTruthMin > uPhase {
+            uTruthMin = uPhase; }
+        uPhase = Extra_TruthPolarize( uTruthC, i, nVars ); 
+        if uTruthMin > uPhase {
+            uTruthMin = uPhase; }
+    }
+    return uTruthMin;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes P-canonical form using brute-force methods.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+var spStatic_Extra_TruthCanonP_nVarsOld, spStatic_Extra_TruthCanonP_nPerms int32;
+var spStatic_Extra_TruthCanonP_pPerms *string = nil;
+func Extra_TruthCanonP(uTruth uint32, nVars int32) uint32 {
+    
+    
+
+    var uTruthMin, uPerm uint32;
+    var k int32;
+
+    if spStatic_Extra_TruthCanonP_pPerms == nil {
+        spStatic_Extra_TruthCanonP_nPerms = Extra_Factorial( nVars );   
+        spStatic_Extra_TruthCanonP_pPerms = Extra_Permutations( nVars );
+        spStatic_Extra_TruthCanonP_nVarsOld = nVars;
+    
+    } else if spStatic_Extra_TruthCanonP_nVarsOld != nVars {
+        // inlining of macro ABC_FREE
+        ((spStatic_Extra_TruthCanonP_pPerms) ? (free((char *) (spStatic_Extra_TruthCanonP_pPerms)), (spStatic_Extra_TruthCanonP_pPerms) = 0) : 0);
+        spStatic_Extra_TruthCanonP_nPerms = Extra_Factorial( nVars );   
+        spStatic_Extra_TruthCanonP_pPerms = Extra_Permutations( nVars );
+        spStatic_Extra_TruthCanonP_nVarsOld = nVars;
+    }
+
+    uTruthMin = 0xFFFFFFFF;
+    for  k = 0; k < spStatic_Extra_TruthCanonP_nPerms; k++  {
+        uPerm = Extra_TruthPermute( uTruth, spStatic_Extra_TruthCanonP_pPerms[k], nVars, 0 );
+        if uTruthMin > uPerm {
+            uTruthMin = uPerm; }
+    }
+    return uTruthMin;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes NP-canonical form using brute-force methods.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+var spStatic_Extra_TruthCanonNP_nVarsOld, spStatic_Extra_TruthCanonNP_nPerms int32;
+var spStatic_Extra_TruthCanonNP_pPerms *string = nil;
+func Extra_TruthCanonNP(uTruth uint32, nVars int32) uint32 {
+    
+    
+
+    var uTruthMin, uPhase, uPerm uint32;
+    var nMints, k, i int32;
+
+    if spStatic_Extra_TruthCanonNP_pPerms == nil {
+        spStatic_Extra_TruthCanonNP_nPerms = Extra_Factorial( nVars );   
+        spStatic_Extra_TruthCanonNP_pPerms = Extra_Permutations( nVars );
+        spStatic_Extra_TruthCanonNP_nVarsOld = nVars;
+    
+    } else if spStatic_Extra_TruthCanonNP_nVarsOld != nVars {
+        // inlining of macro ABC_FREE
+        ((spStatic_Extra_TruthCanonNP_pPerms) ? (free((char *) (spStatic_Extra_TruthCanonNP_pPerms)), (spStatic_Extra_TruthCanonNP_pPerms) = 0) : 0);
+        spStatic_Extra_TruthCanonNP_nPerms = Extra_Factorial( nVars );   
+        spStatic_Extra_TruthCanonNP_pPerms = Extra_Permutations( nVars );
+        spStatic_Extra_TruthCanonNP_nVarsOld = nVars;
+    }
+
+    nMints    = (1 << nVars);
+    uTruthMin = 0xFFFFFFFF;
+    for  i = 0; i < nMints; i++  {
+        uPhase = Extra_TruthPolarize( uTruth, i, nVars ); 
+        for  k = 0; k < spStatic_Extra_TruthCanonNP_nPerms; k++  {
+            uPerm = Extra_TruthPermute( uPhase, spStatic_Extra_TruthCanonNP_pPerms[k], nVars, 0 );
+            if uTruthMin > uPerm {
+                uTruthMin = uPerm; }
+        }
+    }
+    return uTruthMin;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes NPN-canonical form using brute-force methods.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+var spStatic_Extra_TruthCanonNPN_nVarsOld, spStatic_Extra_TruthCanonNPN_nPerms int32;
+var spStatic_Extra_TruthCanonNPN_pPerms *string = nil;
+func Extra_TruthCanonNPN(uTruth uint32, nVars int32) uint32 {
+    
+    
+
+    var uTruthMin, uTruthC, uPhase, uPerm uint32;
+    var nMints, k, i int32;
+
+    if spStatic_Extra_TruthCanonNPN_pPerms == nil {
+        spStatic_Extra_TruthCanonNPN_nPerms = Extra_Factorial( nVars );   
+        spStatic_Extra_TruthCanonNPN_pPerms = Extra_Permutations( nVars );
+        spStatic_Extra_TruthCanonNPN_nVarsOld = nVars;
+    
+    } else if spStatic_Extra_TruthCanonNPN_nVarsOld != nVars {
+        // inlining of macro ABC_FREE
+        ((spStatic_Extra_TruthCanonNPN_pPerms) ? (free((char *) (spStatic_Extra_TruthCanonNPN_pPerms)), (spStatic_Extra_TruthCanonNPN_pPerms) = 0) : 0);
+        spStatic_Extra_TruthCanonNPN_nPerms = Extra_Factorial( nVars );   
+        spStatic_Extra_TruthCanonNPN_pPerms = Extra_Permutations( nVars );
+        spStatic_Extra_TruthCanonNPN_nVarsOld = nVars;
+    }
+
+    nMints    = (1 << nVars);
+    uTruthC   = uint32(( (~uTruth) & ((~(uint32(0))) >> (32-nMints)) ));
+    uTruthMin = 0xFFFFFFFF;
+    for  i = 0; i < nMints; i++  {
+        uPhase = Extra_TruthPolarize( uTruth, i, nVars ); 
+        for  k = 0; k < spStatic_Extra_TruthCanonNPN_nPerms; k++  {
+            uPerm = Extra_TruthPermute( uPhase, spStatic_Extra_TruthCanonNPN_pPerms[k], nVars, 0 );
+            if uTruthMin > uPerm {
+                uTruthMin = uPerm; }
+        }
+        uPhase = Extra_TruthPolarize( uTruthC, i, nVars ); 
+        for  k = 0; k < spStatic_Extra_TruthCanonNPN_nPerms; k++  {
+            uPerm = Extra_TruthPermute( uPhase, spStatic_Extra_TruthCanonNPN_pPerms[k], nVars, 0 );
+            if uTruthMin > uPerm {
+                uTruthMin = uPerm; }
+        }
+    }
+    return uTruthMin;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes NPN canonical forms for 4-variable functions.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+void Extra_Truth4VarNPN( unsigned short ** puCanons, char ** puPhases, char ** puPerms, unsigned char ** puMap )
+{
+    unsigned short * uCanons;
+    unsigned char * uMap;
+    var uTruth, uPhase, uPerm uint32;
+    var pPerms4 *string;
+    var uPhases string;
+    var uPerms string;
+    var nFuncs, nClasses int32;
+    var i, k int32;
+
+    nFuncs  = (1 << 16);
+    // inlining of macro ABC_ALLOC
+    uCanons = ((unsigned short *) malloc(sizeof(unsigned short) * (size_t)(nFuncs)));
+    // inlining of macro ABC_ALLOC
+    uPhases = ((char *) malloc(sizeof(char) * (size_t)(nFuncs)));
+    // inlining of macro ABC_ALLOC
+    uPerms  = ((char *) malloc(sizeof(char) * (size_t)(nFuncs)));
+    // inlining of macro ABC_ALLOC
+    uMap    = ((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(nFuncs)));
+    memset( uCanons, 0, sizeof(unsigned short) * nFuncs );
+    memset( uPhases, 0, sizeof(char) * nFuncs );
+    memset( uPerms,  0, sizeof(char) * nFuncs );
+    memset( uMap,    0, sizeof(unsigned char) * nFuncs );
+    pPerms4 = Extra_Permutations( 4 );
+
+    nClasses = 1;
+    nFuncs = (1 << 15);
+    for  uTruth = 1; uTruth < uint32(nFuncs); uTruth++  {
+        // skip already assigned
+        if uCanons[uTruth] {
+            assert(uTruth > uCanons[uTruth], "uTruth > uCanons[uTruth]");
+            uMap[~uTruth & 0xFFFF] = uMap[uTruth] = uMap[uCanons[uTruth]];
+            continue;
+        }
+        uMap[uTruth] = nClasses++;
+        for  i = 0; i < 16; i++  {
+            uPhase = Extra_TruthPolarize( uTruth, i, 4 );
+            for  k = 0; k < 24; k++  {
+                uPerm = Extra_TruthPermute( uPhase, pPerms4[k], 4, 0 );
+                if uCanons[uPerm] == 0 {
+                    uCanons[uPerm] = uTruth;
+                    uPhases[uPerm] = i;
+                    uPerms[uPerm]  = k;
+
+                    uPerm = ~uPerm & 0xFFFF;
+                    uCanons[uPerm] = uTruth;
+                    uPhases[uPerm] = i | 16;
+                    uPerms[uPerm]  = k;
+                
+                } else {
+                    assert(uCanons[uPerm] == uTruth, "uCanons[uPerm] == uTruth"); }
+            }
+            uPhase = Extra_TruthPolarize( ~uTruth & 0xFFFF, i, 4 ); 
+            for  k = 0; k < 24; k++  {
+                uPerm = Extra_TruthPermute( uPhase, pPerms4[k], 4, 0 );
+                if uCanons[uPerm] == 0 {
+                    uCanons[uPerm] = uTruth;
+                    uPhases[uPerm] = i;
+                    uPerms[uPerm]  = k;
+
+                    uPerm = ~uPerm & 0xFFFF;
+                    uCanons[uPerm] = uTruth;
+                    uPhases[uPerm] = i | 16;
+                    uPerms[uPerm]  = k;
+                
+                } else {
+                    assert(uCanons[uPerm] == uTruth, "uCanons[uPerm] == uTruth"); }
+            }
+        }
+    }
+    uPhases[(1<<16)-1] = 16;
+    assert(nClasses == 222, "nClasses == 222");
+    // inlining of macro ABC_FREE
+    ((pPerms4) ? (free((char *) (pPerms4)), (pPerms4) = 0) : 0);
+    if puCanons { 
+        *puCanons = uCanons;
+    } else {
+        // inlining of macro ABC_FREE
+        ((uCanons) ? (free((char *) (uCanons)), (uCanons) = 0) : 0); }
+    if puPhases { 
+        *puPhases = uPhases;
+    } else {
+        // inlining of macro ABC_FREE
+        ((uPhases) ? (free((char *) (uPhases)), (uPhases) = 0) : 0); }
+    if puPerms { 
+        *puPerms = uPerms;
+    } else {
+        // inlining of macro ABC_FREE
+        ((uPerms) ? (free((char *) (uPerms)), (uPerms) = 0) : 0); }
+    if puMap { 
+        *puMap = uMap;
+    } else {
+        // inlining of macro ABC_FREE
+        ((uMap) ? (free((char *) (uMap)), (uMap) = 0) : 0); }
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes NPN canonical forms for 4-variable functions.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_Truth3VarN(puCanons **uint32, puPhases **string, ppCounters *string) {
+    var nPhasesMax int32  = 8;
+    var uCanons *uint32;
+    var uTruth, uPhase, uTruth32 uint32;
+    var uPhases *string;
+    var pCounters string;
+    var nFuncs, nClasses, i int32;
+
+    nFuncs  = (1 << 8);
+    // inlining of macro ABC_ALLOC
+    uCanons = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(nFuncs)));
+    memset( uCanons, 0, sizeof(unsigned) * nFuncs );
+    // inlining of macro ABC_ALLOC
+    pCounters = ((char *) malloc(sizeof(char) * (size_t)(nFuncs)));
+    memset( pCounters, 0, sizeof(char) * nFuncs );
+    uPhases = (char **)Extra_ArrayAlloc( nFuncs, nPhasesMax, sizeof(char) );
+    nClasses = 0;
+    for  uTruth = 0; uTruth < uint32(nFuncs); uTruth++  {
+        // skip already assigned
+        uTruth32 = ((uTruth << 24) | (uTruth << 16) | (uTruth << 8) | uTruth);
+        if uCanons[uTruth] {
+            assert(uTruth32 > uCanons[uTruth], "uTruth32 > uCanons[uTruth]");
+            continue;
+        }
+        nClasses++;
+        for  i = 0; i < 8; i++  {
+            uPhase = Extra_TruthPolarize( uTruth, i, 3 );
+            if uCanons[uPhase] == 0 && (uTruth || i==0) {
+                uCanons[uPhase]    = uTruth32;
+                uPhases[uPhase][0] = i;
+                pCounters[uPhase]  = 1;
+            
+            } else {
+                assert(uCanons[uPhase] == uTruth32, "uCanons[uPhase] == uTruth32");
+                if pCounters[uPhase] < nPhasesMax {
+                    uPhases[uPhase][ int32(pCounters[uPhase]++) ] = i; }
+            }
+        }
+    }
+    if puCanons { 
+        *puCanons = uCanons;
+    } else {
+        // inlining of macro ABC_FREE
+        ((uCanons) ? (free((char *) (uCanons)), (uCanons) = 0) : 0); }
+    if puPhases { 
+        *puPhases = uPhases;
+    } else {
+        // inlining of macro ABC_FREE
+        ((uPhases) ? (free((char *) (uPhases)), (uPhases) = 0) : 0); }
+    if ppCounters != nil { 
+        *ppCounters = pCounters;
+    } else {
+        // inlining of macro ABC_FREE
+        ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0); }
+//    printf( "The number of 3N-classes = %d.\n", nClasses );
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes NPN canonical forms for 4-variable functions.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+void Extra_Truth4VarN( unsigned short ** puCanons, char *** puPhases, char ** ppCounters, int nPhasesMax )
+{
+    unsigned short * uCanons;
+    var uTruth, uPhase uint32;
+    var uPhases *string;
+    var pCounters string;
+    var nFuncs, nClasses, i int32;
+
+    nFuncs  = (1 << 16);
+    // inlining of macro ABC_ALLOC
+    uCanons = ((unsigned short *) malloc(sizeof(unsigned short) * (size_t)(nFuncs)));
+    memset( uCanons, 0, sizeof(unsigned short) * nFuncs );
+    // inlining of macro ABC_ALLOC
+    pCounters = ((char *) malloc(sizeof(char) * (size_t)(nFuncs)));
+    memset( pCounters, 0, sizeof(char) * nFuncs );
+    uPhases = (char **)Extra_ArrayAlloc( nFuncs, nPhasesMax, sizeof(char) );
+    nClasses = 0;
+    for  uTruth = 0; uTruth < uint32(nFuncs); uTruth++  {
+        // skip already assigned
+        if uCanons[uTruth] {
+            assert(uTruth > uCanons[uTruth], "uTruth > uCanons[uTruth]");
+            continue;
+        }
+        nClasses++;
+        for  i = 0; i < 16; i++  {
+            uPhase = Extra_TruthPolarize( uTruth, i, 4 );
+            if uCanons[uPhase] == 0 && (uTruth || i==0) {
+                uCanons[uPhase]    = uTruth;
+                uPhases[uPhase][0] = i;
+                pCounters[uPhase]  = 1;
+            
+            } else {
+                assert(uCanons[uPhase] == uTruth, "uCanons[uPhase] == uTruth");
+                if pCounters[uPhase] < nPhasesMax {
+                    uPhases[uPhase][ int32(pCounters[uPhase]++) ] = i; }
+            }
+        }
+    }
+    if puCanons { 
+        *puCanons = uCanons;
+    } else {
+        // inlining of macro ABC_FREE
+        ((uCanons) ? (free((char *) (uCanons)), (uCanons) = 0) : 0); }
+    if puPhases { 
+        *puPhases = uPhases;
+    } else {
+        // inlining of macro ABC_FREE
+        ((uPhases) ? (free((char *) (uPhases)), (uPhases) = 0) : 0); }
+    if ppCounters != nil { 
+        *ppCounters = pCounters;
+    } else {
+        // inlining of macro ABC_FREE
+        ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0); }
+//    printf( "The number of 4N-classes = %d.\n", nClasses );
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Allocated one-memory-chunk array.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_ArrayAlloc(nCols int32, nRows int32, Size int32) *any {
+    var pRes *any;
+    var pBuffer string;
+    var i int32;
+    assert(nCols > 0 && nRows > 0 && Size > 0, "nCols > 0 && nRows > 0 && Size > 0");
+    // inlining of macro ABC_ALLOC
+    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(nCols * (sizeof(void *) + nRows * Size))));
+    pRes = (void **)pBuffer;
+    pRes[0] = pBuffer + nCols * sizeof(void *);
+    for  i = 1; i < nCols; i++  {
+        pRes[i] = (void *)((char *)pRes[0] + i * nRows * Size);
+    }
+    return pRes;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes a phase of the 3-var function.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_TruthPerm4One(uTruth uint32, Phase int32) unsigned short {
+    // cases
+    static unsigned short Cases[16] = {
+        0,      // 0000  - skip
+        0,      // 0001  - skip
+        0xCCCC, // 0010  - single var
+        0,      // 0011  - skip
+        0xF0F0, // 0100  - single var
+        1,      // 0101
+        1,      // 0110
+        0,      // 0111  - skip
+        0xFF00, // 1000  - single var
+        1,      // 1001
+        1,      // 1010
+        1,      // 1011
+        1,      // 1100
+        1,      // 1101
+        1,      // 1110
+        0       // 1111  - skip
+    };
+    // permutations
+    static int Perms[16][4] = {
+        { 0, 0, 0, 0 }, // 0000  - skip
+        { 0, 0, 0, 0 }, // 0001  - skip
+        { 0, 0, 0, 0 }, // 0010  - single var
+        { 0, 0, 0, 0 }, // 0011  - skip
+        { 0, 0, 0, 0 }, // 0100  - single var
+        { 0, 2, 1, 3 }, // 0101
+        { 2, 0, 1, 3 }, // 0110
+        { 0, 0, 0, 0 }, // 0111  - skip
+        { 0, 0, 0, 0 }, // 1000  - single var
+        { 0, 2, 3, 1 }, // 1001
+        { 2, 0, 3, 1 }, // 1010
+        { 0, 1, 3, 2 }, // 1011
+        { 2, 3, 0, 1 }, // 1100
+        { 0, 3, 1, 2 }, // 1101
+        { 3, 0, 1, 2 }, // 1110
+        { 0, 0, 0, 0 }  // 1111  - skip
+    };
+    var i, k, iRes int32;
+    var uTruthRes uint32;
+    assert(Phase >= 0 && Phase < 16, "Phase >= 0 && Phase < 16");
+    if Cases[Phase] == 0 {
+        return uTruth; }
+    if Cases[Phase] > 1 {
+        return Cases[Phase]; }
+    uTruthRes = 0;
+    for  i = 0; i < 16; i++  {
+        if uTruth & (1 << i) {
+            for  iRes, k = 0, 0; k < 4; k++  {
+                if i & (1 << Perms[Phase][k]) {
+                    iRes |= (1 << k); }
+            }
+            uTruthRes |= (1 << iRes);
+        }
+    }
+    return uTruthRes;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes a phase of the 3-var function.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_TruthPerm5One(uTruth uint32, Phase int32) uint32 {
+    // cases
+    static unsigned Cases[32] = {
+        0,          // 00000  - skip
+        0,          // 00001  - skip
+        0xCCCCCCCC, // 00010  - single var
+        0,          // 00011  - skip
+        0xF0F0F0F0, // 00100  - single var
+        1,          // 00101
+        1,          // 00110
+        0,          // 00111  - skip
+        0xFF00FF00, // 01000  - single var
+        1,          // 01001
+        1,          // 01010
+        1,          // 01011
+        1,          // 01100
+        1,          // 01101
+        1,          // 01110
+        0,          // 01111  - skip
+        0xFFFF0000, // 10000  - skip
+        1,          // 10001
+        1,          // 10010
+        1,          // 10011
+        1,          // 10100
+        1,          // 10101
+        1,          // 10110
+        1,          // 10111  - four var
+        1,          // 11000
+        1,          // 11001
+        1,          // 11010
+        1,          // 11011  - four var
+        1,          // 11100
+        1,          // 11101  - four var
+        1,          // 11110  - four var
+        0           // 11111  - skip
+    };
+    // permutations
+    static int Perms[32][5] = {
+        { 0, 0, 0, 0, 0 }, // 00000  - skip
+        { 0, 0, 0, 0, 0 }, // 00001  - skip
+        { 0, 0, 0, 0, 0 }, // 00010  - single var
+        { 0, 0, 0, 0, 0 }, // 00011  - skip
+        { 0, 0, 0, 0, 0 }, // 00100  - single var
+        { 0, 2, 1, 3, 4 }, // 00101
+        { 2, 0, 1, 3, 4 }, // 00110
+        { 0, 0, 0, 0, 0 }, // 00111  - skip
+        { 0, 0, 0, 0, 0 }, // 01000  - single var
+        { 0, 2, 3, 1, 4 }, // 01001
+        { 2, 0, 3, 1, 4 }, // 01010
+        { 0, 1, 3, 2, 4 }, // 01011
+        { 2, 3, 0, 1, 4 }, // 01100
+        { 0, 3, 1, 2, 4 }, // 01101
+        { 3, 0, 1, 2, 4 }, // 01110
+        { 0, 0, 0, 0, 0 }, // 01111  - skip
+        { 0, 0, 0, 0, 0 }, // 10000  - single var
+        { 0, 4, 2, 3, 1 }, // 10001
+        { 4, 0, 2, 3, 1 }, // 10010
+        { 0, 1, 3, 4, 2 }, // 10011
+        { 2, 3, 0, 4, 1 }, // 10100
+        { 0, 3, 1, 4, 2 }, // 10101
+        { 3, 0, 1, 4, 2 }, // 10110
+        { 0, 1, 2, 4, 3 }, // 10111  - four var
+        { 2, 3, 4, 0, 1 }, // 11000
+        { 0, 3, 4, 1, 2 }, // 11001
+        { 3, 0, 4, 1, 2 }, // 11010
+        { 0, 1, 4, 2, 3 }, // 11011  - four var
+        { 3, 4, 0, 1, 2 }, // 11100
+        { 0, 4, 1, 2, 3 }, // 11101  - four var
+        { 4, 0, 1, 2, 3 }, // 11110  - four var
+        { 0, 0, 0, 0, 0 }  // 11111  - skip
+    };
+    var i, k, iRes int32;
+    var uTruthRes uint32;
+    assert(Phase >= 0 && Phase < 32, "Phase >= 0 && Phase < 32");
+    if Cases[Phase] == 0 {
+        return uTruth; }
+    if Cases[Phase] > 1 {
+        return Cases[Phase]; }
+    uTruthRes = 0;
+    for  i = 0; i < 32; i++  {
+        if uTruth & (1 << i) {
+            for  iRes, k = 0, 0; k < 5; k++  {
+                if i & (1 << Perms[Phase][k]) {
+                    iRes |= (1 << k); }
+            }
+            uTruthRes |= (1 << iRes);
+        }
+    }
+    return uTruthRes;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes a phase of the 3-var function.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_TruthPerm6One(uTruth *uint32, Phase int32, uTruthRes *uint32) {
+    // cases
+    static unsigned Cases[64] = {
+        0,          // 000000  - skip
+        0,          // 000001  - skip
+        0xCCCCCCCC, // 000010  - single var
+        0,          // 000011  - skip
+        0xF0F0F0F0, // 000100  - single var
+        1,          // 000101
+        1,          // 000110
+        0,          // 000111  - skip
+        0xFF00FF00, // 001000  - single var
+        1,          // 001001
+        1,          // 001010
+        1,          // 001011
+        1,          // 001100
+        1,          // 001101
+        1,          // 001110
+        0,          // 001111  - skip
+        0xFFFF0000, // 010000  - skip
+        1,          // 010001
+        1,          // 010010
+        1,          // 010011
+        1,          // 010100
+        1,          // 010101
+        1,          // 010110
+        1,          // 010111  - four var
+        1,          // 011000
+        1,          // 011001
+        1,          // 011010
+        1,          // 011011  - four var
+        1,          // 011100
+        1,          // 011101  - four var
+        1,          // 011110  - four var
+        0,          // 011111  - skip
+        0xFFFFFFFF, // 100000  - single var
+        1,          // 100001 
+        1,          // 100010  
+        1,          // 100011  
+        1,          // 100100  
+        1,          // 100101
+        1,          // 100110
+        1,          // 100111  
+        1,          // 101000  
+        1,          // 101001
+        1,          // 101010
+        1,          // 101011
+        1,          // 101100
+        1,          // 101101
+        1,          // 101110
+        1,          // 101111  
+        1,          // 110000  
+        1,          // 110001
+        1,          // 110010
+        1,          // 110011
+        1,          // 110100
+        1,          // 110101
+        1,          // 110110
+        1,          // 110111  
+        1,          // 111000
+        1,          // 111001
+        1,          // 111010
+        1,          // 111011  
+        1,          // 111100
+        1,          // 111101  
+        1,          // 111110  
+        0           // 111111  - skip
+    };
+    // permutations
+    static int Perms[64][6] = {
+        { 0, 0, 0, 0, 0, 0 }, // 000000  - skip
+        { 0, 0, 0, 0, 0, 0 }, // 000001  - skip
+        { 0, 0, 0, 0, 0, 0 }, // 000010  - single var
+        { 0, 0, 0, 0, 0, 0 }, // 000011  - skip
+        { 0, 0, 0, 0, 0, 0 }, // 000100  - single var
+        { 0, 2, 1, 3, 4, 5 }, // 000101
+        { 2, 0, 1, 3, 4, 5 }, // 000110
+        { 0, 0, 0, 0, 0, 0 }, // 000111  - skip
+        { 0, 0, 0, 0, 0, 0 }, // 001000  - single var
+        { 0, 2, 3, 1, 4, 5 }, // 001001
+        { 2, 0, 3, 1, 4, 5 }, // 001010
+        { 0, 1, 3, 2, 4, 5 }, // 001011
+        { 2, 3, 0, 1, 4, 5 }, // 001100
+        { 0, 3, 1, 2, 4, 5 }, // 001101
+        { 3, 0, 1, 2, 4, 5 }, // 001110
+        { 0, 0, 0, 0, 0, 0 }, // 001111  - skip
+        { 0, 0, 0, 0, 0, 0 }, // 010000  - skip
+        { 0, 4, 2, 3, 1, 5 }, // 010001
+        { 4, 0, 2, 3, 1, 5 }, // 010010
+        { 0, 1, 3, 4, 2, 5 }, // 010011
+        { 2, 3, 0, 4, 1, 5 }, // 010100
+        { 0, 3, 1, 4, 2, 5 }, // 010101
+        { 3, 0, 1, 4, 2, 5 }, // 010110
+        { 0, 1, 2, 4, 3, 5 }, // 010111  - four var
+        { 2, 3, 4, 0, 1, 5 }, // 011000
+        { 0, 3, 4, 1, 2, 5 }, // 011001
+        { 3, 0, 4, 1, 2, 5 }, // 011010
+        { 0, 1, 4, 2, 3, 5 }, // 011011  - four var
+        { 3, 4, 0, 1, 2, 5 }, // 011100
+        { 0, 4, 1, 2, 3, 5 }, // 011101  - four var
+        { 4, 0, 1, 2, 3, 5 }, // 011110  - four var
+        { 0, 0, 0, 0, 0, 0 }, // 011111  - skip
+        { 0, 0, 0, 0, 0, 0 }, // 100000  - single var
+        { 0, 2, 3, 4, 5, 1 }, // 100001 
+        { 2, 0, 3, 4, 5, 1 }, // 100010  
+        { 0, 1, 3, 4, 5, 2 }, // 100011  
+        { 2, 3, 0, 4, 5, 1 }, // 100100  
+        { 0, 3, 1, 4, 5, 2 }, // 100101
+        { 3, 0, 1, 4, 5, 2 }, // 100110
+        { 0, 1, 2, 4, 5, 3 }, // 100111  
+        { 2, 3, 4, 0, 5, 1 }, // 101000  
+        { 0, 3, 4, 1, 5, 2 }, // 101001
+        { 3, 0, 4, 1, 5, 2 }, // 101010
+        { 0, 1, 4, 2, 5, 3 }, // 101011
+        { 3, 4, 0, 1, 5, 2 }, // 101100
+        { 0, 4, 1, 2, 5, 3 }, // 101101
+        { 4, 0, 1, 2, 5, 3 }, // 101110
+        { 0, 1, 2, 3, 5, 4 }, // 101111  
+        { 2, 3, 4, 5, 0, 1 }, // 110000  
+        { 0, 3, 4, 5, 1, 2 }, // 110001
+        { 3, 0, 4, 5, 1, 2 }, // 110010
+        { 0, 1, 4, 5, 2, 3 }, // 110011
+        { 3, 4, 0, 5, 1, 2 }, // 110100
+        { 0, 4, 1, 5, 2, 3 }, // 110101
+        { 4, 0, 1, 5, 2, 3 }, // 110110
+        { 0, 1, 2, 5, 3, 4 }, // 110111  
+        { 3, 4, 5, 0, 1, 2 }, // 111000
+        { 0, 4, 5, 1, 2, 3 }, // 111001
+        { 4, 0, 5, 1, 2, 3 }, // 111010
+        { 0, 1, 5, 2, 3, 4 }, // 111011  
+        { 4, 5, 0, 1, 2, 3 }, // 111100
+        { 0, 5, 1, 2, 3, 4 }, // 111101  
+        { 5, 0, 1, 2, 3, 4 }, // 111110  
+        { 0, 0, 0, 0, 0, 0 }  // 111111  - skip
+    };
+    var i, k, iRes int32;
+    assert(Phase >= 0 && Phase < 64, "Phase >= 0 && Phase < 64");
+    if Cases[Phase] == 0 {
+        uTruthRes[0] = uTruth[0];
+        uTruthRes[1] = uTruth[1];
+        return;
+    }
+    if Cases[Phase] > 1 {
+        if Phase == 32 {
+            uTruthRes[0] = 0x00000000;
+            uTruthRes[1] = 0xFFFFFFFF;
+        
+        } else {
+            uTruthRes[0] = Cases[Phase];
+            uTruthRes[1] = Cases[Phase];
+        }
+        return;
+    }
+    uTruthRes[0] = 0;
+    uTruthRes[1] = 0;
+    for  i = 0; i < 64; i++  {
+        if i < 32 {
+            if uTruth[0] & (1 << i) {
+                for  iRes, k = 0, 0; k < 6; k++  {
+                    if i & (1 << Perms[Phase][k]) {
+                        iRes |= (1 << k); }
+                }
+                if iRes < 32 {
+                    uTruthRes[0] |= (1 << iRes);
+                } else {
+                    uTruthRes[1] |= (1 << (iRes-32)); }
+            }
+        
+        } else {
+            if uTruth[1] & (1 << (i-32)) {
+                for  iRes, k = 0, 0; k < 6; k++  {
+                    if i & (1 << Perms[Phase][k]) {
+                        iRes |= (1 << k); }
+                }
+                if iRes < 32 {
+                    uTruthRes[0] |= (1 << iRes);
+                } else {
+                    uTruthRes[1] |= (1 << (iRes-32)); }
+            }
+        }
+    }
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes a phase of the 8-var function.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+var spStatic_Extra_TruthExpand_uTruths [8][8]uint32 = [8][8]uint32{
+        { 0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA },
+        { 0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC },
+        { 0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0 },
+        { 0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00 },
+        { 0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000 }, 
+        { 0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF }, 
+        { 0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF }, 
+        { 0x00000000,0x00000000,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF }, 
+    };
+func Extra_TruthExpand(nVars int32, nWords int32, puTruth *uint32, uPhase uint32, puTruthR *uint32) {
+    // elementary truth tables
+    
+    static char Cases[256] = {
+         0, // 00000000
+         0, // 00000001
+         1, // 00000010
+         0, // 00000011
+         2, // 00000100
+        -1, // 00000101
+        -1, // 00000110
+         0, // 00000111
+         3, // 00001000
+        -1, // 00001001
+        -1, // 00001010
+        -1, // 00001011
+        -1, // 00001100
+        -1, // 00001101
+        -1, // 00001110
+         0, // 00001111
+         4, // 00010000
+        -1, // 00010001
+        -1, // 00010010
+        -1, // 00010011
+        -1, // 00010100
+        -1, // 00010101
+        -1, // 00010110
+        -1, // 00010111
+        -1, // 00011000
+        -1, // 00011001
+        -1, // 00011010
+        -1, // 00011011
+        -1, // 00011100
+        -1, // 00011101
+        -1, // 00011110
+         0, // 00011111
+         5, // 00100000
+        -1, // 00100001
+        -1, // 00100010
+        -1, // 00100011
+        -1, // 00100100
+        -1, // 00100101
+        -1, // 00100110
+        -1, // 00100111
+        -1, // 00101000
+        -1, // 00101001
+        -1, // 00101010
+        -1, // 00101011
+        -1, // 00101100
+        -1, // 00101101
+        -1, // 00101110
+        -1, // 00101111
+        -1, // 00110000
+        -1, // 00110001
+        -1, // 00110010
+        -1, // 00110011
+        -1, // 00110100
+        -1, // 00110101
+        -1, // 00110110
+        -1, // 00110111
+        -1, // 00111000
+        -1, // 00111001
+        -1, // 00111010
+        -1, // 00111011
+        -1, // 00111100
+        -1, // 00111101
+        -1, // 00111110
+         0, // 00111111
+         6, // 01000000
+        -1, // 01000001
+        -1, // 01000010
+        -1, // 01000011
+        -1, // 01000100
+        -1, // 01000101
+        -1, // 01000110
+        -1, // 01000111
+        -1, // 01001000
+        -1, // 01001001
+        -1, // 01001010
+        -1, // 01001011
+        -1, // 01001100
+        -1, // 01001101
+        -1, // 01001110
+        -1, // 01001111
+        -1, // 01010000
+        -1, // 01010001
+        -1, // 01010010
+        -1, // 01010011
+        -1, // 01010100
+        -1, // 01010101
+        -1, // 01010110
+        -1, // 01010111
+        -1, // 01011000
+        -1, // 01011001
+        -1, // 01011010
+        -1, // 01011011
+        -1, // 01011100
+        -1, // 01011101
+        -1, // 01011110
+        -1, // 01011111
+        -1, // 01100000
+        -1, // 01100001
+        -1, // 01100010
+        -1, // 01100011
+        -1, // 01100100
+        -1, // 01100101
+        -1, // 01100110
+        -1, // 01100111
+        -1, // 01101000
+        -1, // 01101001
+        -1, // 01101010
+        -1, // 01101011
+        -1, // 01101100
+        -1, // 01101101
+        -1, // 01101110
+        -1, // 01101111
+        -1, // 01110000
+        -1, // 01110001
+        -1, // 01110010
+        -1, // 01110011
+        -1, // 01110100
+        -1, // 01110101
+        -1, // 01110110
+        -1, // 01110111
+        -1, // 01111000
+        -1, // 01111001
+        -1, // 01111010
+        -1, // 01111011
+        -1, // 01111100
+        -1, // 01111101
+        -1, // 01111110
+         0, // 01111111
+         7, // 10000000
+        -1, // 10000001
+        -1, // 10000010
+        -1, // 10000011
+        -1, // 10000100
+        -1, // 10000101
+        -1, // 10000110
+        -1, // 10000111
+        -1, // 10001000
+        -1, // 10001001
+        -1, // 10001010
+        -1, // 10001011
+        -1, // 10001100
+        -1, // 10001101
+        -1, // 10001110
+        -1, // 10001111
+        -1, // 10010000
+        -1, // 10010001
+        -1, // 10010010
+        -1, // 10010011
+        -1, // 10010100
+        -1, // 10010101
+        -1, // 10010110
+        -1, // 10010111
+        -1, // 10011000
+        -1, // 10011001
+        -1, // 10011010
+        -1, // 10011011
+        -1, // 10011100
+        -1, // 10011101
+        -1, // 10011110
+        -1, // 10011111
+        -1, // 10100000
+        -1, // 10100001
+        -1, // 10100010
+        -1, // 10100011
+        -1, // 10100100
+        -1, // 10100101
+        -1, // 10100110
+        -1, // 10100111
+        -1, // 10101000
+        -1, // 10101001
+        -1, // 10101010
+        -1, // 10101011
+        -1, // 10101100
+        -1, // 10101101
+        -1, // 10101110
+        -1, // 10101111
+        -1, // 10110000
+        -1, // 10110001
+        -1, // 10110010
+        -1, // 10110011
+        -1, // 10110100
+        -1, // 10110101
+        -1, // 10110110
+        -1, // 10110111
+        -1, // 10111000
+        -1, // 10111001
+        -1, // 10111010
+        -1, // 10111011
+        -1, // 10111100
+        -1, // 10111101
+        -1, // 10111110
+        -1, // 10111111
+        -1, // 11000000
+        -1, // 11000001
+        -1, // 11000010
+        -1, // 11000011
+        -1, // 11000100
+        -1, // 11000101
+        -1, // 11000110
+        -1, // 11000111
+        -1, // 11001000
+        -1, // 11001001
+        -1, // 11001010
+        -1, // 11001011
+        -1, // 11001100
+        -1, // 11001101
+        -1, // 11001110
+        -1, // 11001111
+        -1, // 11010000
+        -1, // 11010001
+        -1, // 11010010
+        -1, // 11010011
+        -1, // 11010100
+        -1, // 11010101
+        -1, // 11010110
+        -1, // 11010111
+        -1, // 11011000
+        -1, // 11011001
+        -1, // 11011010
+        -1, // 11011011
+        -1, // 11011100
+        -1, // 11011101
+        -1, // 11011110
+        -1, // 11011111
+        -1, // 11100000
+        -1, // 11100001
+        -1, // 11100010
+        -1, // 11100011
+        -1, // 11100100
+        -1, // 11100101
+        -1, // 11100110
+        -1, // 11100111
+        -1, // 11101000
+        -1, // 11101001
+        -1, // 11101010
+        -1, // 11101011
+        -1, // 11101100
+        -1, // 11101101
+        -1, // 11101110
+        -1, // 11101111
+        -1, // 11110000
+        -1, // 11110001
+        -1, // 11110010
+        -1, // 11110011
+        -1, // 11110100
+        -1, // 11110101
+        -1, // 11110110
+        -1, // 11110111
+        -1, // 11111000
+        -1, // 11111001
+        -1, // 11111010
+        -1, // 11111011
+        -1, // 11111100
+        -1, // 11111101
+        -1, // 11111110
+         0  // 11111111
+    };
+    static char Perms[256][8] = {
+        { 0, 1, 2, 3, 4, 5, 6, 7 }, // 00000000
+        { 0, 1, 2, 3, 4, 5, 6, 7 }, // 00000001
+        { 1, 0, 2, 3, 4, 5, 6, 7 }, // 00000010
+        { 0, 1, 2, 3, 4, 5, 6, 7 }, // 00000011
+        { 1, 2, 0, 3, 4, 5, 6, 7 }, // 00000100
+        { 0, 2, 1, 3, 4, 5, 6, 7 }, // 00000101
+        { 2, 0, 1, 3, 4, 5, 6, 7 }, // 00000110
+        { 0, 1, 2, 3, 4, 5, 6, 7 }, // 00000111
+        { 1, 2, 3, 0, 4, 5, 6, 7 }, // 00001000
+        { 0, 2, 3, 1, 4, 5, 6, 7 }, // 00001001
+        { 2, 0, 3, 1, 4, 5, 6, 7 }, // 00001010
+        { 0, 1, 3, 2, 4, 5, 6, 7 }, // 00001011
+        { 2, 3, 0, 1, 4, 5, 6, 7 }, // 00001100
+        { 0, 3, 1, 2, 4, 5, 6, 7 }, // 00001101
+        { 3, 0, 1, 2, 4, 5, 6, 7 }, // 00001110
+        { 0, 1, 2, 3, 4, 5, 6, 7 }, // 00001111
+        { 1, 2, 3, 4, 0, 5, 6, 7 }, // 00010000
+        { 0, 2, 3, 4, 1, 5, 6, 7 }, // 00010001
+        { 2, 0, 3, 4, 1, 5, 6, 7 }, // 00010010
+        { 0, 1, 3, 4, 2, 5, 6, 7 }, // 00010011
+        { 2, 3, 0, 4, 1, 5, 6, 7 }, // 00010100
+        { 0, 3, 1, 4, 2, 5, 6, 7 }, // 00010101
+        { 3, 0, 1, 4, 2, 5, 6, 7 }, // 00010110
+        { 0, 1, 2, 4, 3, 5, 6, 7 }, // 00010111
+        { 2, 3, 4, 0, 1, 5, 6, 7 }, // 00011000
+        { 0, 3, 4, 1, 2, 5, 6, 7 }, // 00011001
+        { 3, 0, 4, 1, 2, 5, 6, 7 }, // 00011010
+        { 0, 1, 4, 2, 3, 5, 6, 7 }, // 00011011
+        { 3, 4, 0, 1, 2, 5, 6, 7 }, // 00011100
+        { 0, 4, 1, 2, 3, 5, 6, 7 }, // 00011101
+        { 4, 0, 1, 2, 3, 5, 6, 7 }, // 00011110
+        { 0, 1, 2, 3, 4, 5, 6, 7 }, // 00011111
+        { 1, 2, 3, 4, 5, 0, 6, 7 }, // 00100000
+        { 0, 2, 3, 4, 5, 1, 6, 7 }, // 00100001
+        { 2, 0, 3, 4, 5, 1, 6, 7 }, // 00100010
+        { 0, 1, 3, 4, 5, 2, 6, 7 }, // 00100011
+        { 2, 3, 0, 4, 5, 1, 6, 7 }, // 00100100
+        { 0, 3, 1, 4, 5, 2, 6, 7 }, // 00100101
+        { 3, 0, 1, 4, 5, 2, 6, 7 }, // 00100110
+        { 0, 1, 2, 4, 5, 3, 6, 7 }, // 00100111
+        { 2, 3, 4, 0, 5, 1, 6, 7 }, // 00101000
+        { 0, 3, 4, 1, 5, 2, 6, 7 }, // 00101001
+        { 3, 0, 4, 1, 5, 2, 6, 7 }, // 00101010
+        { 0, 1, 4, 2, 5, 3, 6, 7 }, // 00101011
+        { 3, 4, 0, 1, 5, 2, 6, 7 }, // 00101100
+        { 0, 4, 1, 2, 5, 3, 6, 7 }, // 00101101
+        { 4, 0, 1, 2, 5, 3, 6, 7 }, // 00101110
+        { 0, 1, 2, 3, 5, 4, 6, 7 }, // 00101111
+        { 2, 3, 4, 5, 0, 1, 6, 7 }, // 00110000
+        { 0, 3, 4, 5, 1, 2, 6, 7 }, // 00110001
+        { 3, 0, 4, 5, 1, 2, 6, 7 }, // 00110010
+        { 0, 1, 4, 5, 2, 3, 6, 7 }, // 00110011
+        { 3, 4, 0, 5, 1, 2, 6, 7 }, // 00110100
+        { 0, 4, 1, 5, 2, 3, 6, 7 }, // 00110101
+        { 4, 0, 1, 5, 2, 3, 6, 7 }, // 00110110
+        { 0, 1, 2, 5, 3, 4, 6, 7 }, // 00110111
+        { 3, 4, 5, 0, 1, 2, 6, 7 }, // 00111000
+        { 0, 4, 5, 1, 2, 3, 6, 7 }, // 00111001
+        { 4, 0, 5, 1, 2, 3, 6, 7 }, // 00111010
+        { 0, 1, 5, 2, 3, 4, 6, 7 }, // 00111011
+        { 4, 5, 0, 1, 2, 3, 6, 7 }, // 00111100
+        { 0, 5, 1, 2, 3, 4, 6, 7 }, // 00111101
+        { 5, 0, 1, 2, 3, 4, 6, 7 }, // 00111110
+        { 0, 1, 2, 3, 4, 5, 6, 7 }, // 00111111
+        { 1, 2, 3, 4, 5, 6, 0, 7 }, // 01000000
+        { 0, 2, 3, 4, 5, 6, 1, 7 }, // 01000001
+        { 2, 0, 3, 4, 5, 6, 1, 7 }, // 01000010
+        { 0, 1, 3, 4, 5, 6, 2, 7 }, // 01000011
+        { 2, 3, 0, 4, 5, 6, 1, 7 }, // 01000100
+        { 0, 3, 1, 4, 5, 6, 2, 7 }, // 01000101
+        { 3, 0, 1, 4, 5, 6, 2, 7 }, // 01000110
+        { 0, 1, 2, 4, 5, 6, 3, 7 }, // 01000111
+        { 2, 3, 4, 0, 5, 6, 1, 7 }, // 01001000
+        { 0, 3, 4, 1, 5, 6, 2, 7 }, // 01001001
+        { 3, 0, 4, 1, 5, 6, 2, 7 }, // 01001010
+        { 0, 1, 4, 2, 5, 6, 3, 7 }, // 01001011
+        { 3, 4, 0, 1, 5, 6, 2, 7 }, // 01001100
+        { 0, 4, 1, 2, 5, 6, 3, 7 }, // 01001101
+        { 4, 0, 1, 2, 5, 6, 3, 7 }, // 01001110
+        { 0, 1, 2, 3, 5, 6, 4, 7 }, // 01001111
+        { 2, 3, 4, 5, 0, 6, 1, 7 }, // 01010000
+        { 0, 3, 4, 5, 1, 6, 2, 7 }, // 01010001
+        { 3, 0, 4, 5, 1, 6, 2, 7 }, // 01010010
+        { 0, 1, 4, 5, 2, 6, 3, 7 }, // 01010011
+        { 3, 4, 0, 5, 1, 6, 2, 7 }, // 01010100
+        { 0, 4, 1, 5, 2, 6, 3, 7 }, // 01010101
+        { 4, 0, 1, 5, 2, 6, 3, 7 }, // 01010110
+        { 0, 1, 2, 5, 3, 6, 4, 7 }, // 01010111
+        { 3, 4, 5, 0, 1, 6, 2, 7 }, // 01011000
+        { 0, 4, 5, 1, 2, 6, 3, 7 }, // 01011001
+        { 4, 0, 5, 1, 2, 6, 3, 7 }, // 01011010
+        { 0, 1, 5, 2, 3, 6, 4, 7 }, // 01011011
+        { 4, 5, 0, 1, 2, 6, 3, 7 }, // 01011100
+        { 0, 5, 1, 2, 3, 6, 4, 7 }, // 01011101
+        { 5, 0, 1, 2, 3, 6, 4, 7 }, // 01011110
+        { 0, 1, 2, 3, 4, 6, 5, 7 }, // 01011111
+        { 2, 3, 4, 5, 6, 0, 1, 7 }, // 01100000
+        { 0, 3, 4, 5, 6, 1, 2, 7 }, // 01100001
+        { 3, 0, 4, 5, 6, 1, 2, 7 }, // 01100010
+        { 0, 1, 4, 5, 6, 2, 3, 7 }, // 01100011
+        { 3, 4, 0, 5, 6, 1, 2, 7 }, // 01100100
+        { 0, 4, 1, 5, 6, 2, 3, 7 }, // 01100101
+        { 4, 0, 1, 5, 6, 2, 3, 7 }, // 01100110
+        { 0, 1, 2, 5, 6, 3, 4, 7 }, // 01100111
+        { 3, 4, 5, 0, 6, 1, 2, 7 }, // 01101000
+        { 0, 4, 5, 1, 6, 2, 3, 7 }, // 01101001
+        { 4, 0, 5, 1, 6, 2, 3, 7 }, // 01101010
+        { 0, 1, 5, 2, 6, 3, 4, 7 }, // 01101011
+        { 4, 5, 0, 1, 6, 2, 3, 7 }, // 01101100
+        { 0, 5, 1, 2, 6, 3, 4, 7 }, // 01101101
+        { 5, 0, 1, 2, 6, 3, 4, 7 }, // 01101110
+        { 0, 1, 2, 3, 6, 4, 5, 7 }, // 01101111
+        { 3, 4, 5, 6, 0, 1, 2, 7 }, // 01110000
+        { 0, 4, 5, 6, 1, 2, 3, 7 }, // 01110001
+        { 4, 0, 5, 6, 1, 2, 3, 7 }, // 01110010
+        { 0, 1, 5, 6, 2, 3, 4, 7 }, // 01110011
+        { 4, 5, 0, 6, 1, 2, 3, 7 }, // 01110100
+        { 0, 5, 1, 6, 2, 3, 4, 7 }, // 01110101
+        { 5, 0, 1, 6, 2, 3, 4, 7 }, // 01110110
+        { 0, 1, 2, 6, 3, 4, 5, 7 }, // 01110111
+        { 4, 5, 6, 0, 1, 2, 3, 7 }, // 01111000
+        { 0, 5, 6, 1, 2, 3, 4, 7 }, // 01111001
+        { 5, 0, 6, 1, 2, 3, 4, 7 }, // 01111010
+        { 0, 1, 6, 2, 3, 4, 5, 7 }, // 01111011
+        { 5, 6, 0, 1, 2, 3, 4, 7 }, // 01111100
+        { 0, 6, 1, 2, 3, 4, 5, 7 }, // 01111101
+        { 6, 0, 1, 2, 3, 4, 5, 7 }, // 01111110
+        { 0, 1, 2, 3, 4, 5, 6, 7 }, // 01111111
+        { 1, 2, 3, 4, 5, 6, 7, 0 }, // 10000000
+        { 0, 2, 3, 4, 5, 6, 7, 1 }, // 10000001
+        { 2, 0, 3, 4, 5, 6, 7, 1 }, // 10000010
+        { 0, 1, 3, 4, 5, 6, 7, 2 }, // 10000011
+        { 2, 3, 0, 4, 5, 6, 7, 1 }, // 10000100
+        { 0, 3, 1, 4, 5, 6, 7, 2 }, // 10000101
+        { 3, 0, 1, 4, 5, 6, 7, 2 }, // 10000110
+        { 0, 1, 2, 4, 5, 6, 7, 3 }, // 10000111
+        { 2, 3, 4, 0, 5, 6, 7, 1 }, // 10001000
+        { 0, 3, 4, 1, 5, 6, 7, 2 }, // 10001001
+        { 3, 0, 4, 1, 5, 6, 7, 2 }, // 10001010
+        { 0, 1, 4, 2, 5, 6, 7, 3 }, // 10001011
+        { 3, 4, 0, 1, 5, 6, 7, 2 }, // 10001100
+        { 0, 4, 1, 2, 5, 6, 7, 3 }, // 10001101
+        { 4, 0, 1, 2, 5, 6, 7, 3 }, // 10001110
+        { 0, 1, 2, 3, 5, 6, 7, 4 }, // 10001111
+        { 2, 3, 4, 5, 0, 6, 7, 1 }, // 10010000
+        { 0, 3, 4, 5, 1, 6, 7, 2 }, // 10010001
+        { 3, 0, 4, 5, 1, 6, 7, 2 }, // 10010010
+        { 0, 1, 4, 5, 2, 6, 7, 3 }, // 10010011
+        { 3, 4, 0, 5, 1, 6, 7, 2 }, // 10010100
+        { 0, 4, 1, 5, 2, 6, 7, 3 }, // 10010101
+        { 4, 0, 1, 5, 2, 6, 7, 3 }, // 10010110
+        { 0, 1, 2, 5, 3, 6, 7, 4 }, // 10010111
+        { 3, 4, 5, 0, 1, 6, 7, 2 }, // 10011000
+        { 0, 4, 5, 1, 2, 6, 7, 3 }, // 10011001
+        { 4, 0, 5, 1, 2, 6, 7, 3 }, // 10011010
+        { 0, 1, 5, 2, 3, 6, 7, 4 }, // 10011011
+        { 4, 5, 0, 1, 2, 6, 7, 3 }, // 10011100
+        { 0, 5, 1, 2, 3, 6, 7, 4 }, // 10011101
+        { 5, 0, 1, 2, 3, 6, 7, 4 }, // 10011110
+        { 0, 1, 2, 3, 4, 6, 7, 5 }, // 10011111
+        { 2, 3, 4, 5, 6, 0, 7, 1 }, // 10100000
+        { 0, 3, 4, 5, 6, 1, 7, 2 }, // 10100001
+        { 3, 0, 4, 5, 6, 1, 7, 2 }, // 10100010
+        { 0, 1, 4, 5, 6, 2, 7, 3 }, // 10100011
+        { 3, 4, 0, 5, 6, 1, 7, 2 }, // 10100100
+        { 0, 4, 1, 5, 6, 2, 7, 3 }, // 10100101
+        { 4, 0, 1, 5, 6, 2, 7, 3 }, // 10100110
+        { 0, 1, 2, 5, 6, 3, 7, 4 }, // 10100111
+        { 3, 4, 5, 0, 6, 1, 7, 2 }, // 10101000
+        { 0, 4, 5, 1, 6, 2, 7, 3 }, // 10101001
+        { 4, 0, 5, 1, 6, 2, 7, 3 }, // 10101010
+        { 0, 1, 5, 2, 6, 3, 7, 4 }, // 10101011
+        { 4, 5, 0, 1, 6, 2, 7, 3 }, // 10101100
+        { 0, 5, 1, 2, 6, 3, 7, 4 }, // 10101101
+        { 5, 0, 1, 2, 6, 3, 7, 4 }, // 10101110
+        { 0, 1, 2, 3, 6, 4, 7, 5 }, // 10101111
+        { 3, 4, 5, 6, 0, 1, 7, 2 }, // 10110000
+        { 0, 4, 5, 6, 1, 2, 7, 3 }, // 10110001
+        { 4, 0, 5, 6, 1, 2, 7, 3 }, // 10110010
+        { 0, 1, 5, 6, 2, 3, 7, 4 }, // 10110011
+        { 4, 5, 0, 6, 1, 2, 7, 3 }, // 10110100
+        { 0, 5, 1, 6, 2, 3, 7, 4 }, // 10110101
+        { 5, 0, 1, 6, 2, 3, 7, 4 }, // 10110110
+        { 0, 1, 2, 6, 3, 4, 7, 5 }, // 10110111
+        { 4, 5, 6, 0, 1, 2, 7, 3 }, // 10111000
+        { 0, 5, 6, 1, 2, 3, 7, 4 }, // 10111001
+        { 5, 0, 6, 1, 2, 3, 7, 4 }, // 10111010
+        { 0, 1, 6, 2, 3, 4, 7, 5 }, // 10111011
+        { 5, 6, 0, 1, 2, 3, 7, 4 }, // 10111100
+        { 0, 6, 1, 2, 3, 4, 7, 5 }, // 10111101
+        { 6, 0, 1, 2, 3, 4, 7, 5 }, // 10111110
+        { 0, 1, 2, 3, 4, 5, 7, 6 }, // 10111111
+        { 2, 3, 4, 5, 6, 7, 0, 1 }, // 11000000
+        { 0, 3, 4, 5, 6, 7, 1, 2 }, // 11000001
+        { 3, 0, 4, 5, 6, 7, 1, 2 }, // 11000010
+        { 0, 1, 4, 5, 6, 7, 2, 3 }, // 11000011
+        { 3, 4, 0, 5, 6, 7, 1, 2 }, // 11000100
+        { 0, 4, 1, 5, 6, 7, 2, 3 }, // 11000101
+        { 4, 0, 1, 5, 6, 7, 2, 3 }, // 11000110
+        { 0, 1, 2, 5, 6, 7, 3, 4 }, // 11000111
+        { 3, 4, 5, 0, 6, 7, 1, 2 }, // 11001000
+        { 0, 4, 5, 1, 6, 7, 2, 3 }, // 11001001
+        { 4, 0, 5, 1, 6, 7, 2, 3 }, // 11001010
+        { 0, 1, 5, 2, 6, 7, 3, 4 }, // 11001011
+        { 4, 5, 0, 1, 6, 7, 2, 3 }, // 11001100
+        { 0, 5, 1, 2, 6, 7, 3, 4 }, // 11001101
+        { 5, 0, 1, 2, 6, 7, 3, 4 }, // 11001110
+        { 0, 1, 2, 3, 6, 7, 4, 5 }, // 11001111
+        { 3, 4, 5, 6, 0, 7, 1, 2 }, // 11010000
+        { 0, 4, 5, 6, 1, 7, 2, 3 }, // 11010001
+        { 4, 0, 5, 6, 1, 7, 2, 3 }, // 11010010
+        { 0, 1, 5, 6, 2, 7, 3, 4 }, // 11010011
+        { 4, 5, 0, 6, 1, 7, 2, 3 }, // 11010100
+        { 0, 5, 1, 6, 2, 7, 3, 4 }, // 11010101
+        { 5, 0, 1, 6, 2, 7, 3, 4 }, // 11010110
+        { 0, 1, 2, 6, 3, 7, 4, 5 }, // 11010111
+        { 4, 5, 6, 0, 1, 7, 2, 3 }, // 11011000
+        { 0, 5, 6, 1, 2, 7, 3, 4 }, // 11011001
+        { 5, 0, 6, 1, 2, 7, 3, 4 }, // 11011010
+        { 0, 1, 6, 2, 3, 7, 4, 5 }, // 11011011
+        { 5, 6, 0, 1, 2, 7, 3, 4 }, // 11011100
+        { 0, 6, 1, 2, 3, 7, 4, 5 }, // 11011101
+        { 6, 0, 1, 2, 3, 7, 4, 5 }, // 11011110
+        { 0, 1, 2, 3, 4, 7, 5, 6 }, // 11011111
+        { 3, 4, 5, 6, 7, 0, 1, 2 }, // 11100000
+        { 0, 4, 5, 6, 7, 1, 2, 3 }, // 11100001
+        { 4, 0, 5, 6, 7, 1, 2, 3 }, // 11100010
+        { 0, 1, 5, 6, 7, 2, 3, 4 }, // 11100011
+        { 4, 5, 0, 6, 7, 1, 2, 3 }, // 11100100
+        { 0, 5, 1, 6, 7, 2, 3, 4 }, // 11100101
+        { 5, 0, 1, 6, 7, 2, 3, 4 }, // 11100110
+        { 0, 1, 2, 6, 7, 3, 4, 5 }, // 11100111
+        { 4, 5, 6, 0, 7, 1, 2, 3 }, // 11101000
+        { 0, 5, 6, 1, 7, 2, 3, 4 }, // 11101001
+        { 5, 0, 6, 1, 7, 2, 3, 4 }, // 11101010
+        { 0, 1, 6, 2, 7, 3, 4, 5 }, // 11101011
+        { 5, 6, 0, 1, 7, 2, 3, 4 }, // 11101100
+        { 0, 6, 1, 2, 7, 3, 4, 5 }, // 11101101
+        { 6, 0, 1, 2, 7, 3, 4, 5 }, // 11101110
+        { 0, 1, 2, 3, 7, 4, 5, 6 }, // 11101111
+        { 4, 5, 6, 7, 0, 1, 2, 3 }, // 11110000
+        { 0, 5, 6, 7, 1, 2, 3, 4 }, // 11110001
+        { 5, 0, 6, 7, 1, 2, 3, 4 }, // 11110010
+        { 0, 1, 6, 7, 2, 3, 4, 5 }, // 11110011
+        { 5, 6, 0, 7, 1, 2, 3, 4 }, // 11110100
+        { 0, 6, 1, 7, 2, 3, 4, 5 }, // 11110101
+        { 6, 0, 1, 7, 2, 3, 4, 5 }, // 11110110
+        { 0, 1, 2, 7, 3, 4, 5, 6 }, // 11110111
+        { 5, 6, 7, 0, 1, 2, 3, 4 }, // 11111000
+        { 0, 6, 7, 1, 2, 3, 4, 5 }, // 11111001
+        { 6, 0, 7, 1, 2, 3, 4, 5 }, // 11111010
+        { 0, 1, 7, 2, 3, 4, 5, 6 }, // 11111011
+        { 6, 7, 0, 1, 2, 3, 4, 5 }, // 11111100
+        { 0, 7, 1, 2, 3, 4, 5, 6 }, // 11111101
+        { 7, 0, 1, 2, 3, 4, 5, 6 }, // 11111110
+        { 0, 1, 2, 3, 4, 5, 6, 7 }  // 11111111
+    };
+
+    assert(uPhase > 0 && uPhase < uint32((1 << nVars)), "uPhase > 0 && uPhase < uint32((1 << nVars))");
+
+    // the same function
+    if Cases[uPhase] == 0 {
+        var i int32;
+        for  i = 0; i < nWords; i++  {
+            puTruthR[i] = puTruth[i];
+        }
+        return;
+    }
+
+    // an elementary variable
+    if Cases[uPhase] > 0 {
+        var i int32;
+        for  i = 0; i < nWords; i++  {
+            puTruthR[i] = spStatic_Extra_TruthExpand_uTruths[int32(Cases[uPhase])][i];
+        }
+        return;
+    }
+
+    // truth table takes one word
+    if nWords == 1 {
+        var i, k, nMints, iRes int32;
+        var pPerm string  = Perms[uPhase];
+        puTruthR[0] = 0;
+        nMints = (1 << nVars);
+        for  i = 0; i < nMints; i++  {
+            if puTruth[0] & (1 << i) {
+                for  iRes, k = 0, 0; k < nVars; k++  {
+                    if i & (1 << pPerm[k]) {
+                        iRes |= (1 << k); }
+                }
+                puTruthR[0] |= (1 << iRes);
+            }
+        }
+        return;
+    
+    } else if nWords == 2 {
+        var i, k, iRes int32;
+        var pPerm string  = Perms[uPhase];
+        puTruthR[0] = puTruthR[1] = 0;
+        for  i = 0; i < 32; i++  {
+            if puTruth[0] & (1 << i) {
+                for  iRes, k = 0, 0; k < 6; k++  {
+                    if i & (1 << pPerm[k]) {
+                        iRes |= (1 << k); }
+                }
+                if iRes < 32 {
+                    puTruthR[0] |= (1 << iRes);
+                } else {
+                    puTruthR[1] |= (1 << (iRes-32)); }
+            }
+        }
+        for  ; i < 64; i++  {
+            if puTruth[1] & (1 << (i-32)) {
+                for  iRes, k = 0, 0; k < 6; k++  {
+                    if i & (1 << pPerm[k]) {
+                        iRes |= (1 << k); }
+                }
+                if iRes < 32 {
+                    puTruthR[0] |= (1 << iRes);
+                } else {
+                    puTruthR[1] |= (1 << (iRes-32)); }
+            }
+        }
+    
+    // truth table takes more than one word
+    } else {
+        var i, k, nMints, iRes int32;
+        var pPerm string  = Perms[uPhase];
+        for  i = 0; i < nWords; i++  {
+            puTruthR[i] = 0;
+        }
+        nMints = (1 << nVars);
+        for  i = 0; i < nMints; i++  {
+            if puTruth[i>>5] & (1 << (i&31)) {
+                for  iRes, k = 0, 0; k < 5; k++  {
+                    if i & (1 << pPerm[k]) {
+                        iRes |= (1 << k); }
+                }
+                puTruthR[iRes>>5] |= (1 << (iRes&31));
+            }
+        }
+    }
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Allocated lookup table for truth table permutation.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_TruthPerm43() **unsigned short {
+    unsigned short ** pTable;
+    var uTruth uint32;
+    var i, k int32;
+    pTable = (unsigned short **)Extra_ArrayAlloc( 256, 16, 2 );
+    for  i = 0; i < 256; i++  {
+        uTruth = (i << 8) | i;
+        for  k = 0; k < 16; k++  {
+            pTable[i][k] = Extra_TruthPerm4One( uTruth, k );
+        }
+    }
+    return pTable;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Allocated lookup table for truth table permutation.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_TruthPerm53() **uint32 {
+    var pTable **uint32;
+    var uTruth uint32;
+    var i, k int32;
+    pTable = (unsigned **)Extra_ArrayAlloc( 256, 32, 4 );
+    for  i = 0; i < 256; i++  {
+        uTruth = (i << 24) | (i << 16) | (i << 8) | i;
+        for  k = 0; k < 32; k++  {
+            pTable[i][k] = Extra_TruthPerm5One( uTruth, k );
+        }
+    }
+    return pTable;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Allocated lookup table for truth table permutation.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_TruthPerm54() **uint32 {
+    var pTable **uint32;
+    var uTruth uint32;
+    var i int32;
+    pTable = (unsigned **)Extra_ArrayAlloc( 256*256, 4, 4 );
+    for  i = 0; i < 256*256; i++  {
+        uTruth = (i << 16) | i;
+        pTable[i][0] = Extra_TruthPerm5One( uTruth, 31-8 );
+        pTable[i][1] = Extra_TruthPerm5One( uTruth, 31-4 );
+        pTable[i][2] = Extra_TruthPerm5One( uTruth, 31-2 );
+        pTable[i][3] = Extra_TruthPerm5One( uTruth, 31-1 );
+    }
+    return pTable;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Allocated lookup table for truth table permutation.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_TruthPerm63() **uint32 {
+    var pTable **uint32;
+    var uTruth [2]uint32;
+    var i, k int32;
+    pTable = (unsigned **)Extra_ArrayAlloc( 256, 64, 8 );
+    for  i = 0; i < 256; i++  {
+        uTruth[0] = (i << 24) | (i << 16) | (i << 8) | i;
+        uTruth[1] = uTruth[0];
+        for  k = 0; k < 64; k++  {
+            Extra_TruthPerm6One( uTruth, k, &pTable[i][k] );
+        }
+    }
+    return pTable;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Returns the pointer to the elementary truth tables.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_Truths8() **uint32 {
+    static unsigned uTruths[8][8] = {
+        { 0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA },
+        { 0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC },
+        { 0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0 },
+        { 0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00 },
+        { 0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000 }, 
+        { 0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF }, 
+        { 0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF }, 
+        { 0x00000000,0x00000000,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF } 
+    };
+    static unsigned * puResult[8] = {
+        uTruths[0], uTruths[1], uTruths[2], uTruths[3], uTruths[4], uTruths[5], uTruths[6], uTruths[7] 
+    };
+    return (unsigned **)puResult;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Bubble-sorts components by scores in increasing order.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_BubbleSort(Order []int32, Costs []int32, nSize int32, fIncreasing int32) {
+    var i, Temp, fChanges int32;
+    assert(nSize < 1000, "nSize < 1000");
+    for  i = 0; i < nSize; i++  {
+        Order[i] = i;
+    }
+    if fIncreasing != 0 {
+        do {
+            fChanges = 0;
+            for  i = 0; i < nSize - 1; i++  {
+                if Costs[Order[i]] <= Costs[Order[i+1]] {
+                    continue; }
+                Temp = Order[i];
+                Order[i] = Order[i+1];
+                Order[i+1] = Temp;
+                fChanges = 1;
+            }
+        } while ( fChanges );
+    
+    } else {
+        do {
+            fChanges = 0;
+            for  i = 0; i < nSize - 1; i++  {
+                if Costs[Order[i]] >= Costs[Order[i+1]] {
+                    continue; }
+                Temp = Order[i];
+                Order[i] = Order[i+1];
+                Order[i+1] = Temp;
+                fChanges = 1;
+            }
+        } while ( fChanges );
+    }
+}
+
+
+/*---------------------------------------------------------------------------*/
+/* Definition of internal functions                                          */
+/*---------------------------------------------------------------------------*/
+
+/*---------------------------------------------------------------------------*/
+/* Definition of static Functions                                            */
+/*---------------------------------------------------------------------------*/
+
+
+/**Function*************************************************************
+
+  Synopsis    [Computes the permutation table for 8 variables.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_TruthExpandGeneratePermTable() {
+    var i, k, nOnes, Last1, First0 int32;
+    var iOne, iZero int32;
+
+    fmt.Printf("\nstatic char Cases[256] = {\n");
+    for  i = 0; i < 256; i++  {
+        nOnes = 0;
+        Last1 = First0 = -1;
+        for  k = 0; k < 8; k++  {
+            if i & (1 << k) {
+                nOnes++;
+                Last1 = k;
+            
+            } else if First0 == -1 {
+                First0 = k; }
+        }
+        if Last1 + 1 == First0 || i == 255 {
+            fmt.Printf("     %d%s", 0, (i==255? " ":","));
+        } else if nOnes == 1 {
+            fmt.Printf("     %d,", Last1);
+        } else {
+            fmt.Printf("    -%d,", 1); }
+        fmt.Printf(" // ");
+        Extra_PrintBinary( os.Stdout, (unsigned*)&i, 8 );
+        fmt.Printf("\n");
+    }
+    fmt.Printf("};\n");
+
+    fmt.Printf("\nstatic char Perms[256][8] = {\n");
+    for  i = 0; i < 256; i++  {
+        fmt.Printf("    {");
+        nOnes = 0;
+        for  k = 0; k < 8; k++  {
+            if i & (1 << k) {
+                nOnes++; }
+        }
+        iOne = 0;
+        iZero = nOnes;
+        for  k = 0; k < 8; k++  {
+            if i & (1 << k) {
+                fmt.Printf("%s %d", (k==0? "":","), iOne++);
+            } else {
+                fmt.Printf("%s %d", (k==0? "":","), iZero++); }
+        }
+        assert(iOne + iZero == 8, "iOne + iZero == 8");
+        fmt.Printf(" }%s // ", (i==255? " ":","));
+        Extra_PrintBinary( os.Stdout, (unsigned*)&i, 8 );
+        fmt.Printf("\n");
+    }
+    fmt.Printf("};\n");
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes complementation schedule for 2^n Grey codes.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_GreyCodeSchedule(n int32) *int32 {
+    // inlining of macro ABC_ALLOC
+    var pRes *int32  = ((int *) malloc(sizeof(int) * (size_t)((1<<n))));
+    var i, k, b int32;
+//    pRes[b++] = -1;
+    for  k = 0; k < n; k++  {
+        for  pRes[b++] = k, i = 1; i < (1<<k); i++  {
+            pRes[b++] = pRes[i-1];
+        }
+    } // pRes[i];
+    pRes[b++] = n-1;
+    assert(b == (1<<n), "b == (1<<n)");
+
+    if false {
+        var uSign uint32;
+        for  b = 0; b < (1<<n); b++  {
+            uSign ^= (1 << pRes[b]);
+            fmt.Printf("%3d %3d  ", b, pRes[b]);
+            Extra_PrintBinary( os.Stdout, &uSign, n );
+            fmt.Printf("\n");
+        }
+    }
+    return pRes;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes permutation schedule for n! permutations.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_PermSchedule(n int32) *int32 {
+    var nFact int32    = Extra_Factorial(n);
+    var nGroups int32  = nFact / n / 2;
+    // inlining of macro ABC_ALLOC
+    var pRes *int32  = ((int *) malloc(sizeof(int) * (size_t)(nFact)));
+    var pRes0 *int32;
+    var i int32;
+    var k int32;
+    var b int32;
+    assert(n > 0, "n > 0");
+    if n == 1 {
+        pRes[0] = 0;
+        return pRes;
+    }
+    if n == 2 {
+        pRes[0] = pRes[1] = 0;
+        return pRes;
+    }
+    pRes0 = Extra_PermSchedule( n-1 );
+    for  k = 0; k < nGroups; k++  {
+        for  i = n-1; i > 0; i--  {
+            pRes[b++] = i-1;
+        }
+        pRes[b++] = pRes0[2*k]+1;
+        for  i = 0; i < n-1; i++  {
+            pRes[b++] = i;
+        }
+        pRes[b++] = pRes0[2*k+1];
+    }
+    // inlining of macro ABC_FREE
+    ((pRes0) ? (free((char *) (pRes0)), (pRes0) = 0) : 0);
+    assert(b == nFact, "b == nFact");
+
+    if false {
+        var Perm [16]int32;
+        for  i = 0; i < n; i++  {
+            Perm[i] = i;
+        }
+        for  b = 0; b < nFact; b++  {
+            // inlining of macro ABC_SWAP
+            { var t int32  = Perm[pRes[b]]; Perm[pRes[b]] = Perm[pRes[b]+1]; Perm[pRes[b]+1] = t; };
+            fmt.Printf("%3d %3d    ", b, pRes[b]);
+            for  i = 0; i < n; i++  {
+                fmt.Printf("%d", Perm[i]);
+            }
+            fmt.Printf("\n");
+        }
+    }
+    return pRes;
+}
+
+
+/**Function*************************************************************
+
+  Synopsis    [Finds minimum form of a 6-input function.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_Truth6SwapAdjacent(t word, v int32) word {
+    // variable swapping code
+    static word PMasks[5][3] = {
+        { ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) },
+        { ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030) },
+        { ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00) },
+        { ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) },
+        { ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000) }
+    };
+    assert(v < 5, "v < 5");
+    return (t & PMasks[v][0]) | ((t & PMasks[v][1]) << (1 << v)) | ((t & PMasks[v][2]) >> (1 << v));
+}
+func Extra_Truth6ChangePhase(t word, v int32) word {
+    // elementary truth tables
+    static word Truth6[6] = {
+        ABC_CONST(0xAAAAAAAAAAAAAAAA),
+        ABC_CONST(0xCCCCCCCCCCCCCCCC),
+        ABC_CONST(0xF0F0F0F0F0F0F0F0),
+        ABC_CONST(0xFF00FF00FF00FF00),
+        ABC_CONST(0xFFFF0000FFFF0000),
+        ABC_CONST(0xFFFFFFFF00000000)
+    };
+    assert(v < 6, "v < 6");
+    return ((t & ~Truth6[v]) << (1 << v)) | ((t & Truth6[v]) >> (1 << v));
+}
+func Extra_Truth6MinimumExact(t word, pComp *int32, pPerm *int32) word {
+    var tMin word  = ~(word)0;
+    var tCur, tTemp1, tTemp2 word;
+    var i, p, c int32;
+    for  i = 0; i < 2; i++  {
+        if i {
+            tCur = ~t;
+        } else {
+            tCur = t;
+        }
+        tTemp1 = tCur;
+        for  p = 0; p < 720; p++  {
+//            printf( "Trying perm %d:\n", p );
+//            Kit_DsdPrintFromTruth( &tCur, 6 ), printf( "\n" );;
+            tTemp2 = tCur;
+            for  c = 0; c < 64; c++  {
+                tMin = Abc_MinWord( tMin, tCur );
+                tCur = Extra_Truth6ChangePhase( tCur, pComp[c] );
+            }
+            assert(tTemp2 == tCur, "tTemp2 == tCur");
+            tCur = Extra_Truth6SwapAdjacent( tCur, pPerm[p] );
+        }
+        assert(tTemp1 == tCur, "tTemp1 == tCur");
+    }
+    return tMin;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Perform heuristic TT minimization.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_Truth6Ones(t word) int32 {
+    t =    (t & ABC_CONST(0x5555555555555555)) + ((t>> 1) & ABC_CONST(0x5555555555555555));
+    t =    (t & ABC_CONST(0x3333333333333333)) + ((t>> 2) & ABC_CONST(0x3333333333333333));
+    t =    (t & ABC_CONST(0x0F0F0F0F0F0F0F0F)) + ((t>> 4) & ABC_CONST(0x0F0F0F0F0F0F0F0F));
+    t =    (t & ABC_CONST(0x00FF00FF00FF00FF)) + ((t>> 8) & ABC_CONST(0x00FF00FF00FF00FF));
+    t =    (t & ABC_CONST(0x0000FFFF0000FFFF)) + ((t>>16) & ABC_CONST(0x0000FFFF0000FFFF));
+    return (t & ABC_CONST(0x00000000FFFFFFFF)) +  (t>>32);
+}
+func Extra_Truth6MinimumRoundOne(t word, v int32) word {
+    var tCur word;
+    var tMin word = t; // ab 
+    assert(v >= 0 && v < 5, "v >= 0 && v < 5");
+
+    tCur = Extra_Truth6ChangePhase( t, v );    // !ab
+    tMin = Abc_MinWord( tMin, tCur );
+    tCur = Extra_Truth6ChangePhase( t, v+1 );  // a!b
+    tMin = Abc_MinWord( tMin, tCur );
+    tCur = Extra_Truth6ChangePhase( tCur, v ); // !a!b
+    tMin = Abc_MinWord( tMin, tCur );
+
+    t    = Extra_Truth6SwapAdjacent( t, v );   // ba
+    tMin = Abc_MinWord( tMin, t );
+
+    tCur = Extra_Truth6ChangePhase( t, v );    // !ba
+    tMin = Abc_MinWord( tMin, tCur );
+    tCur = Extra_Truth6ChangePhase( t, v+1 );  // b!a
+    tMin = Abc_MinWord( tMin, tCur );
+    tCur = Extra_Truth6ChangePhase( tCur, v ); // !b!a
+    tMin = Abc_MinWord( tMin, tCur );
+
+    return tMin;
+}
+func Extra_Truth6MinimumRoundMany(t word) word {
+    var i int32;
+    var k int32;
+    var Limit int32 = 10;
+    var tCur word;
+    var tMin word = t;
+    for  i = 0; i < Limit; i++  {
+        var tMin0 word  = tMin;
+        for  k = 4; k >= 0; k--  {
+            tCur = Extra_Truth6MinimumRoundOne( tMin, k );
+            tMin = Abc_MinWord( tMin, tCur );
+        }
+        if tMin0 == tMin {
+            break; }
+    }
+    return tMin;
+}
+func Extra_Truth6MinimumHeuristic(t word) word {
+    var tMin1, tMin2 word;
+    var nOnes int32  = Extra_Truth6Ones( t );
+    if nOnes < 32 {
+        return Extra_Truth6MinimumRoundMany( t ); }
+    if nOnes > 32 {
+        return Extra_Truth6MinimumRoundMany( ~t ); }
+    tMin1 = Extra_Truth6MinimumRoundMany(  t );
+    tMin2 = Extra_Truth6MinimumRoundMany( ~t );
+    return Abc_MinWord( tMin1, tMin2 );
+}
+func Extra_Truth6MinimumHeuristicTest() {
+    var t word  = ABC_CONST(0x5555555555555555) & ~(ABC_CONST(0x3333333333333333) & ABC_CONST(0x0F0F0F0F0F0F0F0F));
+    Extra_Truth6MinimumRoundMany( t );
+    t = 0;
+}
+
+
+/**Function*************************************************************
+
+  Synopsis    [Reads functions from file.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_NpnRead(pFileName string, nFuncs int32) *word {
+    var pFile *os.File;
+    var pFuncs *word;
+    var pBuffer [100]byte;
+    var i int32;
+    // inlining of macro ABC_CALLOC
+    pFuncs = ((word *) calloc((size_t)(nFuncs), sizeof(word)));
+    pFile = os.Open(pFileName);
+    for  fgets( pBuffer, 100, pFile )  {
+        Extra_ReadHex( (unsigned *)(pFuncs + i++), (pBuffer[1] == 'x' ? pBuffer+2 : pBuffer), 16 );
+    }
+    _ = (pFile).Close();
+    assert(i == nFuncs, "i == nFuncs");
+    for  i = 0; i < Abc_MinInt(nFuncs, 10); i++  {
+        fmt.Printf("Line %d : ", i);
+        Extra_PrintHex( os.Stdout, (unsigned *)(pFuncs + i), 6 );
+fmt.Printf("\n");
+    }
+    return pFuncs;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Comparison for words.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func CompareWords(p1 any, p2 any) int32 {
+    var Word1 word  = *(word *)p1;
+    var Word2 word  = *(word *)p2;
+    if Word1 < Word2 {
+        return -1; }
+    if Word1 > Word2 {
+        return 1; }
+    return 0;
+}
+
+/**Function*************************************************************
+
+  Synopsis    [Computes the permutation table for 8 variables.]
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_NpnTest1() {
+    var pComp *int32;
+    pComp = Extra_PermSchedule( 5 );
+//    pComp = Extra_GreyCodeSchedule( 5 );
+    // inlining of macro ABC_FREE
+    ((pComp) ? (free((char *) (pComp)), (pComp) = 0) : 0);
+}
+func Extra_NpnTest2() {
+    var pComp, pPerm *int32;
+    var tMin word;
+    var t word = ABC_CONST(0xa2222aaa08888000);
+    pComp = Extra_GreyCodeSchedule( 6 );
+    pPerm = Extra_PermSchedule( 6 );
+    tMin  = Extra_Truth6MinimumExact( t, pComp, pPerm );
+    // inlining of macro ABC_FREE
+    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);
+    // inlining of macro ABC_FREE
+    ((pComp) ? (free((char *) (pComp)), (pComp) = 0) : 0);
+
+    Extra_PrintHex( os.Stdout, (unsigned *)&t,    6 );
+fmt.Printf("\n");
+    Extra_PrintHex( os.Stdout, (unsigned *)&tMin, 6 );
+fmt.Printf("\n");
+}
+func Extra_NpnTest() {
+//    int nFuncs = 5687661; 
+//    int nFuncs = 400777;
+    var nFuncs int32  = 10;
+    var clk abctime  = Abc_Clock();
+    var pFuncs *word;
+    var pComp, pPerm *int32;
+    var i int32;//, k, nUnique = 0;
+/*
+    // read functions
+    pFuncs = Extra_NpnRead( "C:\\_projects\\abc\\_TEST\\allan\\lib6var5M.txt", nFuncs );
+//    pFuncs = Extra_NpnRead( "C:\\_projects\\abc\\_TEST\\allan\\lib6var5M_out_Total_minimal.txt", nFuncs );
+    qsort( (void *)pFuncs, (size_t)nFuncs, sizeof(word), (int(*)(const void *,const void *))CompareWords );
+
+    // count unique
+    k = 1;
+    for ( i = 1; i < nFuncs; i++ )
+        if ( pFuncs[i] != pFuncs[i-1] )
+            pFuncs[k++] = pFuncs[i];
+    nFuncs = k;
+    printf( "Total number of unique functions = %d\n", nFuncs );
+*/
+//    pFuncs = Extra_NpnRead( "C:\\_projects\\abc\\_TEST\\allan\\lib6var5M_out_Total_minimal.txt", nFuncs );
+    pFuncs = Extra_NpnRead( "C:\\_projects\\abc\\_TEST\\allan\\test.txt", nFuncs );
+    pComp = Extra_GreyCodeSchedule( 6 );
+    pPerm = Extra_PermSchedule( 6 );
+    // compute minimum forms
+    for  i = 0; i < nFuncs; i++  {
+        pFuncs[i] = Extra_Truth6MinimumExact( pFuncs[i], pComp, pPerm );
+        if i % 10000 == 0 {
+            fmt.Printf("%d\n", i); }
+    }
+    fmt.Printf("Finished deriving minimum form\n");
+/*
+    // sort them by value
+    qsort( (void *)pFuncs, (size_t)nFuncs, sizeof(word), (int(*)(const void *,const void *))CompareWords );
+    // count unique
+    nUnique = nFuncs;
+    for ( i = 1; i < nFuncs; i++ )
+        if ( pFuncs[i] == pFuncs[i-1] )
+            nUnique--;
+    printf( "Total number of unique ones = %d\n", nUnique );
+*/
+    for  i = 0; i < Abc_MinInt(nFuncs, 10); i++  {
+        fmt.Printf("Line %d : ", i);
+        Extra_PrintHex( os.Stdout, (unsigned *)(pFuncs + i), 6 );
+fmt.Printf("\n");
+    }
+    // inlining of macro ABC_FREE
+    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);
+    // inlining of macro ABC_FREE
+    ((pComp) ? (free((char *) (pComp)), (pComp) = 0) : 0);
+    // inlining of macro ABC_FREE
+    ((pFuncs) ? (free((char *) (pFuncs)), (pFuncs) = 0) : 0);
+    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
+}
+
+
+/**Function*************************************************************
+
+  Synopsis    []
+
+  Description []
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_NtkPrintBin(pT *word, nBits int32) {
+    var i int32;
+    for  i = nBits - 1; i >= 0; i--  {
+        fmt.Printf("%d", int32(((*pT >> i) & 1)));
+    }
+}
+func Extra_NtkPowerTest() {
+    var i int32;
+    var j int32;
+    var k int32;
+    var n int32 = 4;
+    for  i = 0; i < (1<<n); i++  {
+    for  j = 0; j < (1<<n); j++  {
+        var t word  = (word)i;
+        for  k = 1; k < j; k++  {
+            t *= (word)i;
+        }
+        Extra_NtkPrintBin( (word *)&i, n );
+        Extra_NtkPrintBin( (word *)&j, n );
+        fmt.Printf(" ");
+        Extra_NtkPrintBin( (word *)&t, 64 );
+        fmt.Printf("\n");
+    }
+    }
+}
+
+
+/**Function*************************************************************
+
+  Synopsis    [Tranposing bit matrix.]
+
+  Description [Borrowed from "Hacker's Delight", by Henry S. Warren Jr.]
+               
+  SideEffects []
+
+  SeeAlso     []
+
+***********************************************************************/
+func Extra_Transpose64Simple(A []word, B []word) {
+    var i, k int32;
+    for  i = 0; i < 64; i++  {
+        B[i] = 0;
+    }
+    for  i = 0; i < 64; i++  {
+    for  k = 0; k < 64; k++  {
+        if (A[i] >> k) & 1 {
+            B[k] |= ((word)1 << (63-i)); }
+    }
+    }
+}
+func Extra_BitMatrixTransposeSimple(vSimsIn *Vec_Wrd_t, nWordsIn int32, vSimsOut *Vec_Wrd_t, nWordsOut int32) {
+    var i, k int32;
+    assert(Vec_WrdSize(vSimsIn) == nWordsIn * nWordsOut * 64, "Vec_WrdSize(vSimsIn) == nWordsIn * nWordsOut * 64");
+    assert(Vec_WrdSize(vSimsIn) == Vec_WrdSize(vSimsOut), "Vec_WrdSize(vSimsIn) == Vec_WrdSize(vSimsOut)");
+    assert(Vec_WrdSize(vSimsIn)  % nWordsIn  == 0, "Vec_WrdSize(vSimsIn)  % nWordsIn  == 0");
+    assert(Vec_WrdSize(vSimsOut) % nWordsOut == 0, "Vec_WrdSize(vSimsOut) % nWordsOut == 0");
+    Vec_WrdFill( vSimsOut, Vec_WrdSize(vSimsOut), 0 );
+    for  i = 0; i < 64*nWordsOut; i++  {
+    for  k = 0; k < 64*nWordsIn;  k++  {
+        if Abc_InfoHasBit( (unsigned *)Vec_WrdEntryP(vSimsIn,  i*nWordsIn),  k ) {
+             Abc_InfoSetBit( (unsigned *)Vec_WrdEntryP(vSimsOut, k*nWordsOut), i ); }
+    }
+    }
+}
+func Extra_Transpose32(a []uint32) {
+    var j, k int32;
+    unsigned long m, t;
+    for  j, m = 16, 0x0000FFFF; (j != 0); j >>= 1, m ^= m << j  {
+        for  k = 0; k < 32; k = ((k | j) + 1) & ~j  {
+            t = (a[k] ^ (a[k|j] >> j)) & m;
+            a[k] ^= t;
+            a[k|j] ^= (t << j);
+        }
+    }
+}
+func Extra_Transpose64(A []word) {
+    var j, k int32;
+    var t word;
+    var m word = 0x00000000FFFFFFFF;
+    for  j = 32; j != 0; j = j >> 1, m = m ^ (m << j)  {
+        for  k = 0; k < 64; k = (k + j + 1) & ~j  {
+            t = (A[k] ^ (A[k+j] >> j)) & m;
+            A[k] = A[k] ^ t;
+            A[k+j] = A[k+j] ^ (t << j);
+        }
+    }
+}
+func Extra_Transpose64p(A []*word) {
+    var j, k int32;
+    var t word;
+    var m word = 0x00000000FFFFFFFF;
+    for  j = 32; j != 0; j = j >> 1, m = m ^ (m << j)  {
+        for  k = 0; k < 64; k = (k + j + 1) & ~j  {
+            t = (A[k][0] ^ (A[k+j][0] >> j)) & m;
+            A[k][0] = A[k][0] ^ t;
+            A[k+j][0] = A[k+j][0] ^ (t << j);
+        }
+    }
+}
+func Extra_BitMatrixTransposeP(vSimsIn *Vec_Wrd_t, nWordsIn int32, vSimsOut *Vec_Wrd_t, nWordsOut int32) {    
+    var pM [64]*word;  var i, y, x int32;
+    assert(Vec_WrdSize(vSimsIn) == Vec_WrdSize(vSimsOut), "Vec_WrdSize(vSimsIn) == Vec_WrdSize(vSimsOut)");
+    assert(Vec_WrdSize(vSimsIn) == 64 * nWordsIn * nWordsOut, "Vec_WrdSize(vSimsIn) == 64 * nWordsIn * nWordsOut");
+    for  x = 0; x < nWordsOut; x++  {
+    for  y = 0; y < nWordsIn;  y++  {
+        for  i = 0; i < 64; i++  {
+            pM[i]    = Vec_WrdEntryP( vSimsOut, (64*y+63-i)*nWordsOut + x );
+            pM[i][0] = Vec_WrdEntry ( vSimsIn,  (64*x+63-i)*nWordsIn  + y );
+        }
+        Extra_Transpose64p( pM );
+    }
+    }
+}
+func Extra_BitMatrixTransposePP(vSimsIn *Vec_Ptr_t, nWordsIn int32, vSimsOut *Vec_Wrd_t, nWordsOut int32) {    
+    var pM [64]*word;  var i, y, x int32;
+    assert(Vec_PtrSize(vSimsIn)  == 64 * nWordsOut, "Vec_PtrSize(vSimsIn)  == 64 * nWordsOut");
+    assert(Vec_WrdSize(vSimsOut) == 64 * nWordsOut * nWordsIn, "Vec_WrdSize(vSimsOut) == 64 * nWordsOut * nWordsIn");
+    for  x = 0; x < nWordsOut; x++  {
+    for  y = 0; y < nWordsIn;  y++  {
+        for  i = 0; i < 64; i++  {
+            pM[i]    = Vec_WrdEntryP( vSimsOut, (64*y+63-i)*nWordsOut + x );
+            pM[i][0] = ((word *)Vec_PtrEntry( vSimsIn, 64*x+63-i ))[y];
+        }
+        Extra_Transpose64p( pM );
+    }
+    }
+}
+func Extra_BitMatrixShow(vSims *Vec_Wrd_t, nWords int32) {
+    var i int32;
+    var k int32;
+    var nBits int32 = Vec_WrdSize(vSims)  / nWords;
+    for  i = 0; i < nBits; i++  {
+        if i%64 == 0 {
+            Abc_Print( 1, "\n" ); }
+        for  k = 0; k < nWords; k++  {
+            Extra_PrintBinary2( os.Stdout, (unsigned *)Vec_WrdEntryP(vSims, i*nWords+k), 64 );
+            Abc_Print( 1, " " );
+        }
+        Abc_Print( 1, "\n" );
+    }
+    Abc_Print( 1, "\n" );
+}
+func Extra_BitMatrixTransposeTest() {   
+    var clk abctime  = Abc_Clock();
+
+    var nWordsIn int32   = 100;
+    var nWordsOut int32  = 200;
+    var nItems int32  = 64 * nWordsIn * nWordsOut;
+
+    var vSimsIn *Vec_Wrd_t    = Vec_WrdStartRandom( nItems );
+    var vSimsOut *Vec_Wrd_t   = Vec_WrdStart( nItems );
+    var vSimsOut2 *Vec_Wrd_t  = Vec_WrdStart( nItems );
+
+    Extra_BitMatrixTransposeP     ( vSimsIn, nWordsIn, vSimsOut,  nWordsOut );
+    Extra_BitMatrixTransposeSimple( vSimsIn, nWordsIn, vSimsOut2, nWordsOut );
+
+    if memcmp( Vec_WrdArray(vSimsOut), Vec_WrdArray(vSimsOut2), sizeof(word)*Vec_WrdSize(vSimsOut) ) {
+        fmt.Printf("Verification failed.\n");
+    } else {
+        fmt.Printf("Verification succeeded.\n"); }
+
+    //Extra_BitMatrixShow( vSimsIn,   nWordsIn );
+    //Extra_BitMatrixShow( vSimsOut,  nWordsOut );
+    //Extra_BitMatrixShow( vSimsOut2, nWordsOut );
+
+    Vec_WrdFree( vSimsIn );
+    Vec_WrdFree( vSimsOut );
+    Vec_WrdFree( vSimsOut2 );
+
+    Abc_PrintTime( 1, "Time", Abc_Clock() - clk );
+}
+
+////////////////////////////////////////////////////////////////////////
+///                       END OF FILE                                ///
+////////////////////////////////////////////////////////////////////////
+
+
+//ABC_NAMESPACE_IMPL_END
+

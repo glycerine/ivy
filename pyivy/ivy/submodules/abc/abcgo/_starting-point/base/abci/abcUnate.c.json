@@ -1,0 +1,55 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcUnate.c",
+  "SHA256": "4781e60cc65c92899bb8e919975acbbb40e6cb64a2f4fb94e0e13030e3abefd9",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 23,
+        "Column": 1,
+        "ByteOffset": 516
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 33,
+        "Column": 1,
+        "ByteOffset": 823
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcUnate.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcUnate.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 516,
+      "End": 575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcUnate.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 823,
+      "End": 5029
+    }
+  ],
+  "Draft": "package abci\n\n/**CFile****************************************************************\n\n  FileName    [abcUnate.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcUnate.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n#ifdef ABC_USE_CUDD\n\nstatic void Abc_NtkPrintUnateBdd( Abc_Ntk_t * pNtk, int fUseNaive, int fVerbose );\nstatic void Abc_NtkPrintUnateSat( Abc_Ntk_t * pNtk, int fVerbose );\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Detects unate variables of the multi-output function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_NtkPrintUnate( Abc_Ntk_t * pNtk, int fUseBdds, int fUseNaive, int fVerbose )\n{\n    if ( fUseBdds || fUseNaive )\n        Abc_NtkPrintUnateBdd( pNtk, fUseNaive, fVerbose );\n    else\n        Abc_NtkPrintUnateSat( pNtk, fVerbose );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Detects unate variables using BDDs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_NtkPrintUnateBdd( Abc_Ntk_t * pNtk, int fUseNaive, int fVerbose )\n{\n    Abc_Obj_t * pNode;\n    Extra_UnateInfo_t * p;\n    DdManager * dd;         // the BDD manager used to hold shared BDDs\n//    DdNode ** pbGlobal;     // temporary storage for global BDDs\n    int TotalSupps = 0;\n    int TotalUnate = 0;\n    int i;\n    abctime clk = Abc_Clock();\n    abctime clkBdd, clkUnate;\n\n    // compute the global BDDs\n    dd = (DdManager *)Abc_NtkBuildGlobalBdds(pNtk, 10000000, 1, 1, 0, fVerbose);\n    if ( dd == NULL )\n        return;\nclkBdd = Abc_Clock() - clk;\n\n    // get information about the network\n//    dd       = pNtk-\u003epManGlob;\n//    dd       = (DdManager *)Abc_NtkGlobalBddMan( pNtk );\n//    pbGlobal = (DdNode **)Vec_PtrArray( pNtk-\u003evFuncsGlob );\n\n    // print the size of the BDDs\n    printf( \"Shared BDD size = %6d nodes.\\n\", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );\n\n    // perform naive BDD-based computation\n    if ( fUseNaive )\n    {\n        Abc_NtkForEachCo( pNtk, pNode, i )\n        {\n//            p = Extra_UnateComputeSlow( dd, pbGlobal[i] );\n            p = Extra_UnateComputeSlow( dd, (DdNode *)Abc_ObjGlobalBdd(pNode) );\n            if ( fVerbose )\n            {\n                printf( \"Out%4d : \", i );\n                Extra_UnateInfoPrint( p );\n            }\n            TotalSupps += p-\u003enVars;\n            TotalUnate += p-\u003enUnate;\n            Extra_UnateInfoDissolve( p );\n        }\n    }\n    // perform smart BDD-based computation\n    else \n    {\n        // create ZDD variables in the manager\n        Cudd_zddVarsFromBddVars( dd, 2 );\n        Abc_NtkForEachCo( pNtk, pNode, i )\n        {\n//            p = Extra_UnateComputeFast( dd, pbGlobal[i] );\n            p = Extra_UnateComputeFast( dd, (DdNode *)Abc_ObjGlobalBdd(pNode) );\n            if ( fVerbose )\n            {\n                printf( \"Out%4d : \", i );\n                Extra_UnateInfoPrint( p );\n            }\n            TotalSupps += p-\u003enVars;\n            TotalUnate += p-\u003enUnate;\n            Extra_UnateInfoDissolve( p );\n        }\n    }\nclkUnate = Abc_Clock() - clk - clkBdd;\n\n    // print stats\n    printf( \"Ins/Outs = %4d/%4d.  Total supp = %5d.  Total unate = %5d.\\n\",\n        Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), TotalSupps, TotalUnate );\n    ABC_PRT( \"Glob BDDs\", clkBdd );\n    ABC_PRT( \"Unateness\", clkUnate );\n    ABC_PRT( \"Total    \", Abc_Clock() - clk );\n\n    // deref the PO functions\n//    Abc_NtkFreeGlobalBdds( pNtk );\n    // stop the global BDD manager\n//    Extra_StopManager( pNtk-\u003epManGlob );\n//    pNtk-\u003epManGlob = NULL;\n    Abc_NtkFreeGlobalBdds( pNtk, 1 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Detects unate variables using SAT.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_NtkPrintUnateSat( Abc_Ntk_t * pNtk, int fVerbose )\n{\n}\n\n#else\n\nvoid Abc_NtkPrintUnate( Abc_Ntk_t * pNtk, int fUseBdds, int fUseNaive, int fVerbose ){}\n\n#endif\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

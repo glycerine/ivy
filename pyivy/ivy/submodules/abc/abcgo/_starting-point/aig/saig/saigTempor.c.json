@@ -1,0 +1,333 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c",
+  "SHA256": "c88e3515eaa0aaa4a084d4be623e1a668895f68d51efb550fce152effb9edfc9",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 9,
+        "ByteOffset": 4042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The AIG manager should have no constraints.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 4221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(pFrames) == Aig_ManRegNum(pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 8911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFrames \u003e= 0 ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 207,
+        "Column": 13,
+        "ByteOffset": 9127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The leading sequence has length 0. Temporal decomposition is not performed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 13,
+        "ByteOffset": 9331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The leading sequence has length 1. Temporal decomposition is not performed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 13,
+        "ByteOffset": 10506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"A cex found in the first %d frames.\\n\", nFrames );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 17,
+        "ByteOffset": 10854
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"BMC for %d frames could not be completed. A cex may exist!\\n\", nFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 13,
+        "ByteOffset": 10991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iLastBefore \u003c nFramesFinished );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 13,
+        "ByteOffset": 11044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"BMC succeeded to frame %d. Adjusting frame count to be (%d) based on the last transient signal.\\n\", nFramesFinished, iLastBefore );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Saig_ManTemporFrames",
+      "Start": 1317,
+      "End": 2509,
+      "BodyStart": 1383,
+      "Original": "Aig_Man_t * Saig_ManTemporFrames( Aig_Man_t * pAig, int nFrames )\n{\n    Aig_Man_t * pFrames;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    int i, f;\n    // start the frames package\n    Aig_ManCleanData( pAig );\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) * nFrames );\n    pFrames-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    // initiliaze the flops\n    Saig_ManForEachLo( pAig, pObj, i )\n        pObj-\u003epData = Aig_ManConst0(pFrames);\n    // for each timeframe\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1(pFrames);\n        Saig_ManForEachPi( pAig, pObj, i )\n            pObj-\u003epData = Aig_ObjCreateCi(pFrames);\n        Aig_ManForEachNode( pAig, pObj, i )\n            pObj-\u003epData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n        Aig_ManForEachCo( pAig, pObj, i )\n            pObj-\u003epData = Aig_ObjChild0Copy(pObj);\n        Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n            pObjLo-\u003epData = pObjLi-\u003epData;\n    }\n    // create POs for the flop inputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pFrames, (Aig_Obj_t *)pObj-\u003epData );\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}",
+      "Draft": "func Saig_ManTemporFrames(pAig *Aig_Man_t, nFrames int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i, f int32;\n    // start the frames package\n    Aig_ManCleanData( pAig );\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) * nFrames );\n    pFrames.pName = Abc_UtilStrsav( pAig.pName );\n    // initiliaze the flops\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_ManConst0(pFrames);\n    }\n    // for each timeframe\n    for  f = 0; f \u003c nFrames; f++  {\n        Aig_ManConst1(pAig).pData = Aig_ManConst1(pFrames);\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi(pFrames);\n        }\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n            pObj.pData = Aig_ObjChild0Copy(pObj);\n        }\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLo.pData = pObjLi.pData;\n        }\n    }\n    // create POs for the flop inputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Aig_ObjCreateCo( pFrames, (Aig_Obj_t *)pObj.pData );\n    }\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}"
+    },
+    {
+      "Name": "Saig_ManTemporDecompose",
+      "Start": 2746,
+      "End": 4971,
+      "BodyStart": 2815,
+      "Original": "Aig_Man_t * Saig_ManTemporDecompose( Aig_Man_t * pAig, int nFrames )\n{\n    Aig_Man_t * pAigNew, * pFrames;\n    Aig_Obj_t * pObj, * pReset;\n    int i;\n    if ( pAig-\u003enConstrs \u003e 0 )\n    {\n        printf( \"The AIG manager should have no constraints.\\n\" );\n        return NULL;\n    }\n    // create initialized timeframes\n    pFrames = Saig_ManTemporFrames( pAig, nFrames );\n    assert( Aig_ManCoNum(pFrames) == Aig_ManRegNum(pAig) );\n\n    // start the new manager\n    Aig_ManCleanData( pAig );\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew-\u003epName = Abc_UtilStrsav( pAig-\u003epName );\n    // map the constant node and primary inputs\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pAigNew );\n    Saig_ManForEachPi( pAig, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pAigNew );\n\n    // insert initialization logic\n    Aig_ManConst1(pFrames)-\u003epData = Aig_ManConst1( pAigNew );\n    Aig_ManForEachCi( pFrames, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pAigNew );\n    Aig_ManForEachNode( pFrames, pObj, i )\n        pObj-\u003epData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    Aig_ManForEachCo( pFrames, pObj, i )\n        pObj-\u003epData = Aig_ObjChild0Copy(pObj);\n\n    // create reset latch (the first one among the latches)\n    pReset = Aig_ObjCreateCi( pAigNew );\n\n    // create flop output values\n    Saig_ManForEachLo( pAig, pObj, i )\n        pObj-\u003epData = Aig_Mux( pAigNew, pReset, Aig_ObjCreateCi(pAigNew), (Aig_Obj_t *)Aig_ManCo(pFrames, i)-\u003epData );\n    Aig_ManStop( pFrames );\n\n    // add internal nodes of this frame\n    Aig_ManForEachNode( pAig, pObj, i )\n        pObj-\u003epData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // create primary outputs\n    Saig_ManForEachPo( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n\n    // create reset latch (the first one among the latches)\n    Aig_ObjCreateCo( pAigNew, Aig_ManConst1(pAigNew) );\n    // create latch inputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n\n    // finalize\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig)+1 ); // + reset latch (011111...)\n    return pAigNew;\n}",
+      "Draft": "func Saig_ManTemporDecompose(pAig *Aig_Man_t, nFrames int32) *Aig_Man_t {\n    var pAigNew, pFrames *Aig_Man_t;\n    var pObj, pReset *Aig_Obj_t;\n    var i int32;\n    if pAig.nConstrs \u003e 0 {\n        fmt.Printf(\"The AIG manager should have no constraints.\\n\");\n        return nil;\n    }\n    // create initialized timeframes\n    pFrames = Saig_ManTemporFrames( pAig, nFrames );\n    assert(Aig_ManCoNum(pFrames) == Aig_ManRegNum(pAig), \"Aig_ManCoNum(pFrames) == Aig_ManRegNum(pAig)\");\n\n    // start the new manager\n    Aig_ManCleanData( pAig );\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    // map the constant node and primary inputs\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    }\n\n    // insert initialization logic\n    Aig_ManConst1(pFrames).pData = Aig_ManConst1( pAigNew );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pFrames.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pFrames.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pFrames.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vCos, i)), 1); i++  {\n        pObj.pData = Aig_ObjChild0Copy(pObj);\n    }\n\n    // create reset latch (the first one among the latches)\n    pReset = Aig_ObjCreateCi( pAigNew );\n\n    // create flop output values\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_Mux( pAigNew, pReset, Aig_ObjCreateCi(pAigNew), (Aig_Obj_t *)Aig_ManCo(pFrames, i).pData );\n    }\n    Aig_ManStop( pFrames );\n\n    // add internal nodes of this frame\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // create primary outputs\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    }\n\n    // create reset latch (the first one among the latches)\n    Aig_ObjCreateCo( pAigNew, Aig_ManConst1(pAigNew) );\n    // create latch inputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    }\n\n    // finalize\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig)+1 ); // + reset latch (011111...)\n    return pAigNew;\n}"
+    },
+    {
+      "Name": "Vec_IntLastNonZeroBeforeLimit",
+      "Start": 5242,
+      "End": 5541,
+      "BodyStart": 5308,
+      "Original": "int Vec_IntLastNonZeroBeforeLimit( Vec_Int_t * vTemp, int Limit )\n{\n    int Entry, i;\n    if ( vTemp == NULL )\n        return -1;\n    Vec_IntForEachEntryReverse( vTemp, Entry, i )\n    {\n        if ( i \u003e= Limit )\n            continue;\n        if ( Entry )\n            return i;\n    }\n    return -1;\n}",
+      "Draft": "func Vec_IntLastNonZeroBeforeLimit(vTemp *Vec_Int_t, Limit int32) int32 {\n    var Entry, i int32;\n    if vTemp == nil {\n        return -1; }\n    // inlining of macro Vec_IntForEachEntryReverse\n    for  i = Vec_IntSize(vTemp) - 1; (i \u003e= 0) \u0026\u0026 (((Entry) = Vec_IntEntry(vTemp, i)), 1); i--  {\n        if i \u003e= Limit {\n            continue; }\n        if Entry != 0 {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Saig_ManTempor",
+      "Start": 5777,
+      "End": 8371,
+      "BodyStart": 5930,
+      "Original": "Aig_Man_t * Saig_ManTempor( Aig_Man_t * pAig, int nFrames, int TimeOut, int nConfLimit, int fUseBmc, int fUseTransSigs, int fVerbose, int fVeryVerbose )\n{ \n    extern int Saig_ManPhasePrefixLength( Aig_Man_t * p, int fVerbose, int fVeryVerbose, Vec_Int_t ** pvTrans );\n\n    Vec_Int_t * vTransSigs = NULL;\n    int RetValue, nFramesFinished = -1;\n    assert( nFrames \u003e= 0 ); \n    if ( nFrames == 0 )\n    {\n        nFrames = Saig_ManPhasePrefixLength( pAig, fVerbose, fVeryVerbose, \u0026vTransSigs );\n        if ( nFrames == 0 )\n        {\n            Vec_IntFreeP( \u0026vTransSigs );\n            printf( \"The leading sequence has length 0. Temporal decomposition is not performed.\\n\" );\n            return NULL;\n        }\n        if ( nFrames == 1 )\n        {\n            Vec_IntFreeP( \u0026vTransSigs );\n            printf( \"The leading sequence has length 1. Temporal decomposition is not performed.\\n\" );\n            return NULL;\n        }\n        if ( fUseTransSigs )\n        {\n            int Entry, i, iLast = -1;\n            Vec_IntForEachEntry( vTransSigs, Entry, i )\n                iLast = Entry ? i :iLast;\n            if ( iLast \u003e 0 \u0026\u0026 iLast \u003c nFrames )\n            {\n                Abc_Print( 1, \"Reducing frame count from %d to %d to fit the last transient.\\n\", nFrames, iLast );\n                nFrames = iLast;\n            }\n        }\n        Abc_Print( 1, \"Using computed frame number (%d).\\n\", nFrames );\n    }\n    else\n        Abc_Print( 1, \"Using user-given frame number (%d).\\n\", nFrames );\n    // run BMC2\n    if ( fUseBmc )\n    {\n        RetValue = Saig_BmcPerform( pAig, 0, nFrames, 2000, TimeOut, nConfLimit, 0, fVerbose, 0, \u0026nFramesFinished, 0, 0 );\n        if ( RetValue == 0 )\n        {\n            Vec_IntFreeP( \u0026vTransSigs );\n            printf( \"A cex found in the first %d frames.\\n\", nFrames );\n            return NULL;\n        }\n        if ( nFramesFinished + 1 \u003c nFrames )\n        {\n            int iLastBefore = Vec_IntLastNonZeroBeforeLimit( vTransSigs, nFramesFinished );\n            if ( iLastBefore \u003c 1 || !fUseTransSigs )\n            {\n                Vec_IntFreeP( \u0026vTransSigs );\n                printf( \"BMC for %d frames could not be completed. A cex may exist!\\n\", nFrames );\n                return NULL;\n            }\n            assert( iLastBefore \u003c nFramesFinished );\n            printf( \"BMC succeeded to frame %d. Adjusting frame count to be (%d) based on the last transient signal.\\n\", nFramesFinished, iLastBefore );\n            nFrames = iLastBefore;\n        }\n    }\n    Vec_IntFreeP( \u0026vTransSigs );\n    return Saig_ManTemporDecompose( pAig, nFrames );\n}",
+      "Draft": "func Saig_ManTempor(pAig *Aig_Man_t, nFrames int32, TimeOut int32, nConfLimit int32, fUseBmc int32, fUseTransSigs int32, fVerbose int32, fVeryVerbose int32) *Aig_Man_t { \n    extern int Saig_ManPhasePrefixLength( Aig_Man_t * p, int fVerbose, int fVeryVerbose, Vec_Int_t ** pvTrans );\n\n    var vTransSigs *Vec_Int_t  = nil;\n    var RetValue int32;\n    var nFramesFinished int32 = -1;\n    assert(nFrames \u003e= 0, \"nFrames \u003e= 0\"); \n    if nFrames == 0 {\n        nFrames = Saig_ManPhasePrefixLength( pAig, fVerbose, fVeryVerbose, \u0026vTransSigs );\n        if nFrames == 0 {\n            Vec_IntFreeP( \u0026vTransSigs );\n            fmt.Printf(\"The leading sequence has length 0. Temporal decomposition is not performed.\\n\");\n            return nil;\n        }\n        if nFrames == 1 {\n            Vec_IntFreeP( \u0026vTransSigs );\n            fmt.Printf(\"The leading sequence has length 1. Temporal decomposition is not performed.\\n\");\n            return nil;\n        }\n        if fUseTransSigs != 0 {\n            var Entry int32;\n            var i int32;\n            var iLast int32 = -1;\n            // inlining of macro Vec_IntForEachEntry\n            for  i = 0; (i \u003c Vec_IntSize(vTransSigs)) \u0026\u0026 (((Entry) = Vec_IntEntry(vTransSigs, i)), 1); i++  {\n                if Entry != 0 {\n                    iLast = i;\n                } else {\n                    iLast = iLast;\n                }\n            }\n            if iLast \u003e 0 \u0026\u0026 iLast \u003c nFrames {\n                Abc_Print( 1, \"Reducing frame count from %d to %d to fit the last transient.\\n\", nFrames, iLast );\n                nFrames = iLast;\n            }\n        }\n        Abc_Print( 1, \"Using computed frame number (%d).\\n\", nFrames );\n    \n    } else {\n        Abc_Print( 1, \"Using user-given frame number (%d).\\n\", nFrames ); }\n    // run BMC2\n    if fUseBmc != 0 {\n        RetValue = Saig_BmcPerform( pAig, 0, nFrames, 2000, TimeOut, nConfLimit, 0, fVerbose, 0, \u0026nFramesFinished, 0, 0 );\n        if RetValue == 0 {\n            Vec_IntFreeP( \u0026vTransSigs );\n            fmt.Printf(\"A cex found in the first %d frames.\\n\", nFrames);\n            return nil;\n        }\n        if nFramesFinished + 1 \u003c nFrames {\n            var iLastBefore int32  = Vec_IntLastNonZeroBeforeLimit( vTransSigs, nFramesFinished );\n            if iLastBefore \u003c 1 || !(fUseTransSigs != 0) {\n                Vec_IntFreeP( \u0026vTransSigs );\n                fmt.Printf(\"BMC for %d frames could not be completed. A cex may exist!\\n\", nFrames);\n                return nil;\n            }\n            assert(iLastBefore \u003c nFramesFinished, \"iLastBefore \u003c nFramesFinished\");\n            fmt.Printf(\"BMC succeeded to frame %d. Adjusting frame count to be (%d) based on the last transient signal.\\n\", nFramesFinished, iLastBefore);\n            nFrames = iLastBefore;\n        }\n    }\n    Vec_IntFreeP( \u0026vTransSigs );\n    return Saig_ManTemporDecompose( pAig, nFrames );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::1783",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1676,
+      "End": 1676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::2204",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1894,
+      "End": 1894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::2484",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1989,
+      "End": 1989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::2860",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2129,
+      "End": 2129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::3363",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2360,
+      "End": 2360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::3470",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2429,
+      "End": 2442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::4657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3451,
+      "End": 3451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::5029",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3638,
+      "End": 3638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::5309",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3729,
+      "End": 3729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::5683",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3864,
+      "End": 3864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::6033",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4088,
+      "End": 4088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::6180",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4197,
+      "End": 4210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::6465",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4315,
+      "End": 4315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::6864",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4477,
+      "End": 4477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::pointer-cast::7233",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4721,
+      "End": 4721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::Saig_ManTemporFrames",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManTemporFrames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1317,
+      "End": 2509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::Saig_ManTemporDecompose",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManTemporDecompose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2746,
+      "End": 4971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::Vec_IntLastNonZeroBeforeLimit",
+      "Category": "semantic-review",
+      "Symbol": "Vec_IntLastNonZeroBeforeLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5242,
+      "End": 5541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::Saig_ManTempor",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManTempor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5777,
+      "End": 8371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigTempor.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8617
+    }
+  ],
+  "Draft": "package saig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [saigTempor.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [Temporal decomposition.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saigTempor.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"saig.h\"\n//#include \"sat/bmc/bmc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates initialized timeframes for temporal decomposition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManTemporFrames(pAig *Aig_Man_t, nFrames int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i, f int32;\n    // start the frames package\n    Aig_ManCleanData( pAig );\n    pFrames = Aig_ManStart( Aig_ManObjNumMax(pAig) * nFrames );\n    pFrames.pName = Abc_UtilStrsav( pAig.pName );\n    // initiliaze the flops\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_ManConst0(pFrames);\n    }\n    // for each timeframe\n    for  f = 0; f \u003c nFrames; f++  {\n        Aig_ManConst1(pAig).pData = Aig_ManConst1(pFrames);\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi(pFrames);\n        }\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n            pObj.pData = Aig_ObjChild0Copy(pObj);\n        }\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLo.pData = pObjLi.pData;\n        }\n    }\n    // create POs for the flop inputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Aig_ObjCreateCo( pFrames, (Aig_Obj_t *)pObj.pData );\n    }\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManTemporDecompose(pAig *Aig_Man_t, nFrames int32) *Aig_Man_t {\n    var pAigNew, pFrames *Aig_Man_t;\n    var pObj, pReset *Aig_Obj_t;\n    var i int32;\n    if pAig.nConstrs \u003e 0 {\n        fmt.Printf(\"The AIG manager should have no constraints.\\n\");\n        return nil;\n    }\n    // create initialized timeframes\n    pFrames = Saig_ManTemporFrames( pAig, nFrames );\n    assert(Aig_ManCoNum(pFrames) == Aig_ManRegNum(pAig), \"Aig_ManCoNum(pFrames) == Aig_ManRegNum(pAig)\");\n\n    // start the new manager\n    Aig_ManCleanData( pAig );\n    pAigNew = Aig_ManStart( Aig_ManNodeNum(pAig) );\n    pAigNew.pName = Abc_UtilStrsav( pAig.pName );\n    // map the constant node and primary inputs\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pAigNew );\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    }\n\n    // insert initialization logic\n    Aig_ManConst1(pFrames).pData = Aig_ManConst1( pAigNew );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pFrames.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pAigNew );\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pFrames.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pFrames.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pFrames.vCos, i)), 1); i++  {\n        pObj.pData = Aig_ObjChild0Copy(pObj);\n    }\n\n    // create reset latch (the first one among the latches)\n    pReset = Aig_ObjCreateCi( pAigNew );\n\n    // create flop output values\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_Mux( pAigNew, pReset, Aig_ObjCreateCi(pAigNew), (Aig_Obj_t *)Aig_ManCo(pFrames, i).pData );\n    }\n    Aig_ManStop( pFrames );\n\n    // add internal nodes of this frame\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pAigNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // create primary outputs\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    }\n\n    // create reset latch (the first one among the latches)\n    Aig_ObjCreateCo( pAigNew, Aig_ManConst1(pAigNew) );\n    // create latch inputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Aig_ObjCreateCo( pAigNew, Aig_ObjChild0Copy(pObj) );\n    }\n\n    // finalize\n    Aig_ManCleanup( pAigNew );\n    Aig_ManSetRegNum( pAigNew, Aig_ManRegNum(pAig)+1 ); // + reset latch (011111...)\n    return pAigNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find index of first non-zero entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_IntLastNonZeroBeforeLimit(vTemp *Vec_Int_t, Limit int32) int32 {\n    var Entry, i int32;\n    if vTemp == nil {\n        return -1; }\n    // inlining of macro Vec_IntForEachEntryReverse\n    for  i = Vec_IntSize(vTemp) - 1; (i \u003e= 0) \u0026\u0026 (((Entry) = Vec_IntEntry(vTemp, i)), 1); i--  {\n        if i \u003e= Limit {\n            continue; }\n        if Entry != 0 {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManTempor(pAig *Aig_Man_t, nFrames int32, TimeOut int32, nConfLimit int32, fUseBmc int32, fUseTransSigs int32, fVerbose int32, fVeryVerbose int32) *Aig_Man_t { \n    extern int Saig_ManPhasePrefixLength( Aig_Man_t * p, int fVerbose, int fVeryVerbose, Vec_Int_t ** pvTrans );\n\n    var vTransSigs *Vec_Int_t  = nil;\n    var RetValue int32;\n    var nFramesFinished int32 = -1;\n    assert(nFrames \u003e= 0, \"nFrames \u003e= 0\"); \n    if nFrames == 0 {\n        nFrames = Saig_ManPhasePrefixLength( pAig, fVerbose, fVeryVerbose, \u0026vTransSigs );\n        if nFrames == 0 {\n            Vec_IntFreeP( \u0026vTransSigs );\n            fmt.Printf(\"The leading sequence has length 0. Temporal decomposition is not performed.\\n\");\n            return nil;\n        }\n        if nFrames == 1 {\n            Vec_IntFreeP( \u0026vTransSigs );\n            fmt.Printf(\"The leading sequence has length 1. Temporal decomposition is not performed.\\n\");\n            return nil;\n        }\n        if fUseTransSigs != 0 {\n            var Entry int32;\n            var i int32;\n            var iLast int32 = -1;\n            // inlining of macro Vec_IntForEachEntry\n            for  i = 0; (i \u003c Vec_IntSize(vTransSigs)) \u0026\u0026 (((Entry) = Vec_IntEntry(vTransSigs, i)), 1); i++  {\n                if Entry != 0 {\n                    iLast = i;\n                } else {\n                    iLast = iLast;\n                }\n            }\n            if iLast \u003e 0 \u0026\u0026 iLast \u003c nFrames {\n                Abc_Print( 1, \"Reducing frame count from %d to %d to fit the last transient.\\n\", nFrames, iLast );\n                nFrames = iLast;\n            }\n        }\n        Abc_Print( 1, \"Using computed frame number (%d).\\n\", nFrames );\n    \n    } else {\n        Abc_Print( 1, \"Using user-given frame number (%d).\\n\", nFrames ); }\n    // run BMC2\n    if fUseBmc != 0 {\n        RetValue = Saig_BmcPerform( pAig, 0, nFrames, 2000, TimeOut, nConfLimit, 0, fVerbose, 0, \u0026nFramesFinished, 0, 0 );\n        if RetValue == 0 {\n            Vec_IntFreeP( \u0026vTransSigs );\n            fmt.Printf(\"A cex found in the first %d frames.\\n\", nFrames);\n            return nil;\n        }\n        if nFramesFinished + 1 \u003c nFrames {\n            var iLastBefore int32  = Vec_IntLastNonZeroBeforeLimit( vTransSigs, nFramesFinished );\n            if iLastBefore \u003c 1 || !(fUseTransSigs != 0) {\n                Vec_IntFreeP( \u0026vTransSigs );\n                fmt.Printf(\"BMC for %d frames could not be completed. A cex may exist!\\n\", nFrames);\n                return nil;\n            }\n            assert(iLastBefore \u003c nFramesFinished, \"iLastBefore \u003c nFramesFinished\");\n            fmt.Printf(\"BMC succeeded to frame %d. Adjusting frame count to be (%d) based on the last transient signal.\\n\", nFramesFinished, iLastBefore);\n            nFrames = iLastBefore;\n        }\n    }\n    Vec_IntFreeP( \u0026vTransSigs );\n    return Saig_ManTemporDecompose( pAig, nFrames );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

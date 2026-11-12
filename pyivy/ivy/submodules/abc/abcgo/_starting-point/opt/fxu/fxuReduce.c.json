@@ -1,0 +1,431 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c",
+  "SHA256": "7a49fd265e6203eece281c4d6c3bc464cd50d690eeea9f093469840f9e7644e0",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 70,
+        "Column": 5,
+        "ByteOffset": 2513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nPairsMax \u003c nPairsTotal );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 73,
+        "Column": 83,
+        "ByteOffset": 2676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pnLitsDiff = /*__starting_point_inline_macro:ABC_FALLOC__*/((unsigned char *) memset(malloc(sizeof(unsigned char) * (size_t)(nPairsTotal)), 0xff, sizeof(unsigned char) * (size_t)(nPairsTotal)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 73,
+        "Column": 90,
+        "ByteOffset": 2683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pnLitsDiff = /*__starting_point_inline_macro:ABC_FALLOC__*/((unsigned char *) memset(malloc(sizeof(unsigned char) * (size_t)(nPairsTotal)), 0xff, sizeof(unsigned char) * (size_t)(nPairsTotal)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 3387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPair == nPairsTotal );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 92,
+        "Column": 77,
+        "ByteOffset": 3561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pnPairCounters = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(2 * nBitsMax)), 0xff, sizeof(int) * (size_t)(2 * nBitsMax)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 92,
+        "Column": 84,
+        "ByteOffset": 3568
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pnPairCounters = /*__starting_point_inline_macro:ABC_FALLOC__*/((int *) memset(malloc(sizeof(int) * (size_t)(2 * nBitsMax)), 0xff, sizeof(int) * (size_t)(2 * nBitsMax)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 3664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pnPairCounters, 0, sizeof(int) * 2 * nBitsMax );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 101,
+        "Column": 70,
+        "ByteOffset": 4068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pnLitsDiff) ? (free((char *) (pnLitsDiff)), (pnLitsDiff) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 102,
+        "Column": 74,
+        "ByteOffset": 4194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pnPairCounters) ? (free((char *) (pnPairCounters)), (pnPairCounters) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 9,
+        "ByteOffset": 4263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The SOPs of the nodes contain duplicated cubes. Run \\\"bdd; sop\\\" before \\\"fx\\\".\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 107,
+        "Column": 70,
+        "ByteOffset": 4483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pnLitsDiff) ? (free((char *) (pnLitsDiff)), (pnLitsDiff) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 108,
+        "Column": 74,
+        "ByteOffset": 4609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pnPairCounters) ? (free((char *) (pnPairCounters)), (pnPairCounters) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 9,
+        "ByteOffset": 4678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The SOPs of the nodes are not SCC-free. Run \\\"bdd; sop\\\" before \\\"fx\\\".\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 4793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pnPairCounters[0] == 0 ); // otherwise, covers are not dup-free"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 113,
+        "Column": 5,
+        "ByteOffset": 4869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pnPairCounters[1] == 0 ); // otherwise, covers are not SCC-free"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 123,
+        "Column": 70,
+        "ByteOffset": 5261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pnPairCounters) ? (free((char *) (pnPairCounters)), (pnPairCounters) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 5764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPair == nPairsMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 13,
+        "ByteOffset": 6286
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCubeLast == nil || pCubeLast.pVar != pVar );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 6781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPair == nPairsTotal );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 168,
+        "Column": 66,
+        "ByteOffset": 6878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pnLitsDiff) ? (free((char *) (pnLitsDiff)), (pnLitsDiff) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fxu_PreprocessCubePairs",
+      "Start": 1842,
+      "End": 6115,
+      "BodyStart": 1941,
+      "Original": "int Fxu_PreprocessCubePairs( Fxu_Matrix * p, Vec_Ptr_t * vCovers, int nPairsTotal, int nPairsMax )\n{\n    unsigned char * pnLitsDiff;   // storage for the counters of diff literals\n    int * pnPairCounters;         // the counters of pairs for each number of diff literals\n    Fxu_Cube * pCubeFirst, * pCubeLast;\n    Fxu_Cube * pCube1, * pCube2;\n    Fxu_Var * pVar;\n    int nCubes, nBitsMax, nSum;\n    int CutOffNum = -1, CutOffQuant = -1; // Suppress \"might be used uninitialized\"\n    int iPair, iQuant, k, c;\n//    abctime clk = Abc_Clock();\n    char * pSopCover;\n    int nFanins;\n\n    assert( nPairsMax \u003c nPairsTotal );\n\n    // allocate storage for counter of diffs\n    pnLitsDiff = ABC_FALLOC( unsigned char, nPairsTotal );\n    // go through the covers and precompute the distances between the pairs\n    iPair    =  0;\n    nBitsMax = -1;\n    for ( c = 0; c \u003c vCovers-\u003enSize; c++ )\n        if ( (pSopCover = (char *)vCovers-\u003epArray[c]) )\n        {\n            nFanins = Abc_SopGetVarNum(pSopCover);\n            // precompute the differences\n            Fxu_CountPairDiffs( pSopCover, pnLitsDiff + iPair );\n            // update the counter\n            nCubes = Abc_SopGetCubeNum( pSopCover );\n            iPair += nCubes * (nCubes - 1) / 2;\n            if ( nBitsMax \u003c nFanins )\n                nBitsMax = nFanins;\n        }\n    assert( iPair == nPairsTotal );\n\n    // allocate storage for counters of cube pairs by difference\n    pnPairCounters = ABC_FALLOC( int, 2 * nBitsMax );\n    memset( pnPairCounters, 0, sizeof(int) * 2 * nBitsMax );\n    // count the number of different pairs\n    for ( k = 0; k \u003c nPairsTotal; k++ )\n        pnPairCounters[ pnLitsDiff[k] ]++;\n    // determine what pairs to take starting from the lower\n    // so that there would be exactly pPairsMax pairs\n    if ( pnPairCounters[0] != 0 )\n    {\n        ABC_FREE( pnLitsDiff );\n        ABC_FREE( pnPairCounters );\n        printf( \"The SOPs of the nodes contain duplicated cubes. Run \\\"bdd; sop\\\" before \\\"fx\\\".\\n\" );\n        return 0;\n    }\n    if ( pnPairCounters[1] != 0 )\n    {\n        ABC_FREE( pnLitsDiff );\n        ABC_FREE( pnPairCounters );\n        printf( \"The SOPs of the nodes are not SCC-free. Run \\\"bdd; sop\\\" before \\\"fx\\\".\\n\" );\n        return 0;\n    }\n    assert( pnPairCounters[0] == 0 ); // otherwise, covers are not dup-free\n    assert( pnPairCounters[1] == 0 ); // otherwise, covers are not SCC-free\n    nSum = 0;\n    for ( k = 0; k \u003c 2 * nBitsMax; k++ )\n    {\n        nSum += pnPairCounters[k];\n        if ( nSum \u003e= nPairsMax )\n        {\n            CutOffNum   = k;\n            CutOffQuant = pnPairCounters[k] - (nSum - nPairsMax);\n            break;\n        }\n    }\n    ABC_FREE( pnPairCounters );\n\n    // set to 0 all the pairs above the cut-off number and quantity\n    iQuant = 0;\n    iPair  = 0;\n    for ( k = 0; k \u003c nPairsTotal; k++ )\n        if ( pnLitsDiff[k] \u003e CutOffNum ) \n            pnLitsDiff[k] = 0;\n        else if ( pnLitsDiff[k] == CutOffNum )\n        {\n            if ( iQuant++ \u003e= CutOffQuant )\n                pnLitsDiff[k] = 0;\n            else\n                iPair++;\n        }\n        else\n            iPair++;\n    assert( iPair == nPairsMax );\n\n    // collect the corresponding pairs and add the divisors\n    iPair = 0;\n    for ( c = 0; c \u003c vCovers-\u003enSize; c++ )\n        if ( (pSopCover = (char *)vCovers-\u003epArray[c]) )\n        {\n            // get the var\n            pVar = p-\u003eppVars[2*c+1];\n            // get the first cube\n            pCubeFirst = pVar-\u003epFirst;\n            // get the last cube\n            pCubeLast = pCubeFirst;\n            for ( k = 0; k \u003c pVar-\u003enCubes; k++ )\n                pCubeLast = pCubeLast-\u003epNext;\n            assert( pCubeLast == NULL || pCubeLast-\u003epVar != pVar );\n\n            // go through the cube pairs\n            for ( pCube1 = pCubeFirst; pCube1 != pCubeLast; pCube1 = pCube1-\u003epNext )\n                for ( pCube2 = pCube1-\u003epNext; pCube2 != pCubeLast; pCube2 = pCube2-\u003epNext )\n                    if ( pnLitsDiff[iPair++] )\n                    {   // create the divisors for this pair\n                        Fxu_MatrixAddDivisor( p, pCube1, pCube2 );\n                    }\n        }\n    assert( iPair == nPairsTotal );\n    ABC_FREE( pnLitsDiff );\n//ABC_PRT( \"Preprocess\", Abc_Clock() - clk );\n    return 1;\n}",
+      "Draft": "func Fxu_PreprocessCubePairs(p *Fxu_Matrix, vCovers *Vec_Ptr_t, nPairsTotal int32, nPairsMax int32) int32 {\n    unsigned char * pnLitsDiff;   // storage for the counters of diff literals\n    var pnPairCounters *int32;         // the counters of pairs for each number of diff literals\n    var pCubeFirst, pCubeLast *Fxu_Cube;\n    var pCube1, pCube2 *Fxu_Cube;\n    var pVar *Fxu_Var;\n    var nCubes, nBitsMax, nSum int32;\n    var CutOffNum int32 = -1;\n    var CutOffQuant int32 = -1; // Suppress \"might be used uninitialized\"\n    var iPair, iQuant, k, c int32;\n//    abctime clk = Abc_Clock();\n    var pSopCover string;\n    var nFanins int32;\n\n    assert(nPairsMax \u003c nPairsTotal, \"nPairsMax \u003c nPairsTotal\");\n\n    // allocate storage for counter of diffs\n    // inlining of macro ABC_FALLOC\n    pnLitsDiff = ((unsigned char *) memset(malloc(sizeof(unsigned char) * (size_t)(nPairsTotal)), 0xff, sizeof(unsigned char) * (size_t)(nPairsTotal)));\n    // go through the covers and precompute the distances between the pairs\n    iPair    =  0;\n    nBitsMax = -1;\n    for  c = 0; c \u003c vCovers.nSize; c++  {\n        if pSopCover = (char *)vCovers.pArray[c] {\n            nFanins = Abc_SopGetVarNum(pSopCover);\n            // precompute the differences\n            Fxu_CountPairDiffs( pSopCover, pnLitsDiff + iPair );\n            // update the counter\n            nCubes = Abc_SopGetCubeNum( pSopCover );\n            iPair += nCubes * (nCubes - 1) / 2;\n            if nBitsMax \u003c nFanins {\n                nBitsMax = nFanins; }\n        }\n    }\n    assert(iPair == nPairsTotal, \"iPair == nPairsTotal\");\n\n    // allocate storage for counters of cube pairs by difference\n    // inlining of macro ABC_FALLOC\n    pnPairCounters = ((int *) memset(malloc(sizeof(int) * (size_t)(2 * nBitsMax)), 0xff, sizeof(int) * (size_t)(2 * nBitsMax)));\n    memset( pnPairCounters, 0, sizeof(int) * 2 * nBitsMax );\n    // count the number of different pairs\n    for  k = 0; k \u003c nPairsTotal; k++  {\n        pnPairCounters[ pnLitsDiff[k] ]++;\n    }\n    // determine what pairs to take starting from the lower\n    // so that there would be exactly pPairsMax pairs\n    if pnPairCounters[0] != 0 {\n        // inlining of macro ABC_FREE\n        ((pnLitsDiff) ? (free((char *) (pnLitsDiff)), (pnLitsDiff) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((pnPairCounters) ? (free((char *) (pnPairCounters)), (pnPairCounters) = 0) : 0);\n        fmt.Printf(\"The SOPs of the nodes contain duplicated cubes. Run \\\"bdd; sop\\\" before \\\"fx\\\".\\n\");\n        return 0;\n    }\n    if pnPairCounters[1] != 0 {\n        // inlining of macro ABC_FREE\n        ((pnLitsDiff) ? (free((char *) (pnLitsDiff)), (pnLitsDiff) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((pnPairCounters) ? (free((char *) (pnPairCounters)), (pnPairCounters) = 0) : 0);\n        fmt.Printf(\"The SOPs of the nodes are not SCC-free. Run \\\"bdd; sop\\\" before \\\"fx\\\".\\n\");\n        return 0;\n    }\n    assert(pnPairCounters[0] == 0, \"pnPairCounters[0] == 0\"); // otherwise, covers are not dup-free\n    assert(pnPairCounters[1] == 0, \"pnPairCounters[1] == 0\"); // otherwise, covers are not SCC-free\n    nSum = 0;\n    for  k = 0; k \u003c 2 * nBitsMax; k++  {\n        nSum += pnPairCounters[k];\n        if nSum \u003e= nPairsMax {\n            CutOffNum   = k;\n            CutOffQuant = pnPairCounters[k] - (nSum - nPairsMax);\n            break;\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pnPairCounters) ? (free((char *) (pnPairCounters)), (pnPairCounters) = 0) : 0);\n\n    // set to 0 all the pairs above the cut-off number and quantity\n    iQuant = 0;\n    iPair  = 0;\n    for  k = 0; k \u003c nPairsTotal; k++  {\n        if pnLitsDiff[k] \u003e CutOffNum { \n            pnLitsDiff[k] = 0;\n        } else if pnLitsDiff[k] == CutOffNum {\n            if iQuant++ \u003e= CutOffQuant {\n                pnLitsDiff[k] = 0;\n            } else {\n                iPair++; }\n        \n        } else {\n            iPair++; }\n    }\n    assert(iPair == nPairsMax, \"iPair == nPairsMax\");\n\n    // collect the corresponding pairs and add the divisors\n    iPair = 0;\n    for  c = 0; c \u003c vCovers.nSize; c++  {\n        if pSopCover = (char *)vCovers.pArray[c] {\n            // get the var\n            pVar = p.ppVars[2*c+1];\n            // get the first cube\n            pCubeFirst = pVar.pFirst;\n            // get the last cube\n            pCubeLast = pCubeFirst;\n            for  k = 0; k \u003c pVar.nCubes; k++  {\n                pCubeLast = pCubeLast.pNext;\n            }\n            assert(pCubeLast == nil || pCubeLast.pVar != pVar, \"pCubeLast == nil || pCubeLast.pVar != pVar\");\n\n            // go through the cube pairs\n            for  pCube1 = pCubeFirst; pCube1 != pCubeLast; pCube1 = pCube1.pNext  {\n                for  pCube2 = pCube1.pNext; pCube2 != pCubeLast; pCube2 = pCube2.pNext  {\n                    if pnLitsDiff[iPair++] {   // create the divisors for this pair\n                        Fxu_MatrixAddDivisor( p, pCube1, pCube2 );\n                    }\n                }\n            }\n        }\n    }\n    assert(iPair == nPairsTotal, \"iPair == nPairsTotal\");\n    // inlining of macro ABC_FREE\n    ((pnLitsDiff) ? (free((char *) (pnLitsDiff)), (pnLitsDiff) = 0) : 0);\n//ABC_PRT( \"Preprocess\", Abc_Clock() - clk );\n    return 1;\n}"
+    },
+    {
+      "Name": "Fxu_CountPairDiffs",
+      "Start": 6763,
+      "End": 7282,
+      "BodyStart": 6827,
+      "Original": "int Fxu_CountPairDiffs( char * pCover, unsigned char pDiffs[] )\n{\n    char * pCube1, * pCube2;\n    int nOnes, nCubePairs, nFanins, v;\n    nCubePairs = 0;\n    nFanins = Abc_SopGetVarNum(pCover);\n    Abc_SopForEachCube( pCover, nFanins, pCube1 )\n    Abc_SopForEachCube( pCube1, nFanins, pCube2 )\n    {\n        if ( pCube1 == pCube2 )\n            continue;\n        nOnes = 0;\n        for ( v = 0; v \u003c nFanins; v++ )\n            nOnes += (pCube1[v] != pCube2[v]);\n        pDiffs[nCubePairs++] = nOnes;\n    }\n    return 1;\n}",
+      "Draft": "int Fxu_CountPairDiffs( char * pCover, unsigned char pDiffs[] )\n{\n    var pCube1, pCube2 string;\n    var nOnes, nCubePairs, nFanins, v int32;\n    nCubePairs = 0;\n    nFanins = Abc_SopGetVarNum(pCover);\n    // inlining of macro Abc_SopForEachCube\n    for  pCube1 = (pCover); *pCube1; pCube1 += (nFanins) + 3  {\n    // inlining of macro Abc_SopForEachCube\n    for  pCube2 = (pCube1); *pCube2; pCube2 += (nFanins) + 3  {\n        if pCube1 == pCube2 {\n            continue; }\n        nOnes = 0;\n        for  v = 0; v \u003c nFanins; v++  {\n            nOnes += (pCube1[v] != pCube2[v]);\n        }\n        pDiffs[nCubePairs++] = nOnes;\n    }\n    }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::mechanical::sizeof::2606",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2527,
+      "End": 2527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::mechanical::sizeof::2660",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2527,
+      "End": 2527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::mechanical::sizeof::3501",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3292,
+      "End": 3292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::mechanical::sizeof::3546",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3292,
+      "End": 3292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::mechanical::sizeof::3617",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3356,
+      "End": 3362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::pointer-cast::2892",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2752,
+      "End": 2760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::pointer-cast::3479",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3292,
+      "End": 3292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::pointer-cast::4001",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3674,
+      "End": 3674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::pointer-cast::4127",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3706,
+      "End": 3706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::pointer-cast::4424",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3909,
+      "End": 3909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::pointer-cast::4550",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3941,
+      "End": 3941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::pointer-cast::5220",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4513,
+      "End": 4513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::pointer-cast::5890",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5155,
+      "End": 5163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::pointer-cast::6831",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6030,
+      "End": 6030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::ternary::Fxu_PreprocessCubePairs",
+      "Category": "ternary-review",
+      "Symbol": "Fxu_PreprocessCubePairs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1842,
+      "End": 6115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::Fxu_PreprocessCubePairs",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_PreprocessCubePairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1842,
+      "End": 6115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::Fxu_CountPairDiffs",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_CountPairDiffs",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6763,
+      "End": 7282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuReduce.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7529
+    }
+  ],
+  "Draft": "package fxu\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [fxuReduce.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Procedures to reduce the number of considered cube pairs.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: fxuReduce.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"fxuInt.h\"\n//#include \"fxu.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Fxu_CountPairDiffs( char * pCover, unsigned char pDiffs[] );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Precomputes the pairs to use for creating two-cube divisors.]\n\n  Description [This procedure takes the matrix with variables and cubes \n  allocated (p), the original covers of the nodes (i-sets) and their number \n  (ppCovers,nCovers). The maximum number of pairs to compute and the total \n  number of pairs in existence. This procedure adds to the storage of\n  divisors exactly the given number of pairs (nPairsMax) while taking\n  first those pairs that have the smallest number of literals in their\n  cube-free form.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_PreprocessCubePairs(p *Fxu_Matrix, vCovers *Vec_Ptr_t, nPairsTotal int32, nPairsMax int32) int32 {\n    unsigned char * pnLitsDiff;   // storage for the counters of diff literals\n    var pnPairCounters *int32;         // the counters of pairs for each number of diff literals\n    var pCubeFirst, pCubeLast *Fxu_Cube;\n    var pCube1, pCube2 *Fxu_Cube;\n    var pVar *Fxu_Var;\n    var nCubes, nBitsMax, nSum int32;\n    var CutOffNum int32 = -1;\n    var CutOffQuant int32 = -1; // Suppress \"might be used uninitialized\"\n    var iPair, iQuant, k, c int32;\n//    abctime clk = Abc_Clock();\n    var pSopCover string;\n    var nFanins int32;\n\n    assert(nPairsMax \u003c nPairsTotal, \"nPairsMax \u003c nPairsTotal\");\n\n    // allocate storage for counter of diffs\n    // inlining of macro ABC_FALLOC\n    pnLitsDiff = ((unsigned char *) memset(malloc(sizeof(unsigned char) * (size_t)(nPairsTotal)), 0xff, sizeof(unsigned char) * (size_t)(nPairsTotal)));\n    // go through the covers and precompute the distances between the pairs\n    iPair    =  0;\n    nBitsMax = -1;\n    for  c = 0; c \u003c vCovers.nSize; c++  {\n        if pSopCover = (char *)vCovers.pArray[c] {\n            nFanins = Abc_SopGetVarNum(pSopCover);\n            // precompute the differences\n            Fxu_CountPairDiffs( pSopCover, pnLitsDiff + iPair );\n            // update the counter\n            nCubes = Abc_SopGetCubeNum( pSopCover );\n            iPair += nCubes * (nCubes - 1) / 2;\n            if nBitsMax \u003c nFanins {\n                nBitsMax = nFanins; }\n        }\n    }\n    assert(iPair == nPairsTotal, \"iPair == nPairsTotal\");\n\n    // allocate storage for counters of cube pairs by difference\n    // inlining of macro ABC_FALLOC\n    pnPairCounters = ((int *) memset(malloc(sizeof(int) * (size_t)(2 * nBitsMax)), 0xff, sizeof(int) * (size_t)(2 * nBitsMax)));\n    memset( pnPairCounters, 0, sizeof(int) * 2 * nBitsMax );\n    // count the number of different pairs\n    for  k = 0; k \u003c nPairsTotal; k++  {\n        pnPairCounters[ pnLitsDiff[k] ]++;\n    }\n    // determine what pairs to take starting from the lower\n    // so that there would be exactly pPairsMax pairs\n    if pnPairCounters[0] != 0 {\n        // inlining of macro ABC_FREE\n        ((pnLitsDiff) ? (free((char *) (pnLitsDiff)), (pnLitsDiff) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((pnPairCounters) ? (free((char *) (pnPairCounters)), (pnPairCounters) = 0) : 0);\n        fmt.Printf(\"The SOPs of the nodes contain duplicated cubes. Run \\\"bdd; sop\\\" before \\\"fx\\\".\\n\");\n        return 0;\n    }\n    if pnPairCounters[1] != 0 {\n        // inlining of macro ABC_FREE\n        ((pnLitsDiff) ? (free((char *) (pnLitsDiff)), (pnLitsDiff) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((pnPairCounters) ? (free((char *) (pnPairCounters)), (pnPairCounters) = 0) : 0);\n        fmt.Printf(\"The SOPs of the nodes are not SCC-free. Run \\\"bdd; sop\\\" before \\\"fx\\\".\\n\");\n        return 0;\n    }\n    assert(pnPairCounters[0] == 0, \"pnPairCounters[0] == 0\"); // otherwise, covers are not dup-free\n    assert(pnPairCounters[1] == 0, \"pnPairCounters[1] == 0\"); // otherwise, covers are not SCC-free\n    nSum = 0;\n    for  k = 0; k \u003c 2 * nBitsMax; k++  {\n        nSum += pnPairCounters[k];\n        if nSum \u003e= nPairsMax {\n            CutOffNum   = k;\n            CutOffQuant = pnPairCounters[k] - (nSum - nPairsMax);\n            break;\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pnPairCounters) ? (free((char *) (pnPairCounters)), (pnPairCounters) = 0) : 0);\n\n    // set to 0 all the pairs above the cut-off number and quantity\n    iQuant = 0;\n    iPair  = 0;\n    for  k = 0; k \u003c nPairsTotal; k++  {\n        if pnLitsDiff[k] \u003e CutOffNum { \n            pnLitsDiff[k] = 0;\n        } else if pnLitsDiff[k] == CutOffNum {\n            if iQuant++ \u003e= CutOffQuant {\n                pnLitsDiff[k] = 0;\n            } else {\n                iPair++; }\n        \n        } else {\n            iPair++; }\n    }\n    assert(iPair == nPairsMax, \"iPair == nPairsMax\");\n\n    // collect the corresponding pairs and add the divisors\n    iPair = 0;\n    for  c = 0; c \u003c vCovers.nSize; c++  {\n        if pSopCover = (char *)vCovers.pArray[c] {\n            // get the var\n            pVar = p.ppVars[2*c+1];\n            // get the first cube\n            pCubeFirst = pVar.pFirst;\n            // get the last cube\n            pCubeLast = pCubeFirst;\n            for  k = 0; k \u003c pVar.nCubes; k++  {\n                pCubeLast = pCubeLast.pNext;\n            }\n            assert(pCubeLast == nil || pCubeLast.pVar != pVar, \"pCubeLast == nil || pCubeLast.pVar != pVar\");\n\n            // go through the cube pairs\n            for  pCube1 = pCubeFirst; pCube1 != pCubeLast; pCube1 = pCube1.pNext  {\n                for  pCube2 = pCube1.pNext; pCube2 != pCubeLast; pCube2 = pCube2.pNext  {\n                    if pnLitsDiff[iPair++] {   // create the divisors for this pair\n                        Fxu_MatrixAddDivisor( p, pCube1, pCube2 );\n                    }\n                }\n            }\n        }\n    }\n    assert(iPair == nPairsTotal, \"iPair == nPairsTotal\");\n    // inlining of macro ABC_FREE\n    ((pnLitsDiff) ? (free((char *) (pnLitsDiff)), (pnLitsDiff) = 0) : 0);\n//ABC_PRT( \"Preprocess\", Abc_Clock() - clk );\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the differences in each cube pair in the cover.]\n\n  Description [Takes the cover (pCover) and the array where the\n  diff counters go (pDiffs). The array pDiffs should have as many\n  entries as there are different pairs of cubes in the cover: n(n-1)/2.\n  Fills out the array pDiffs with the following info: For each cube\n  pair, included in the array is the number of literals in both cubes\n  after they are made cube free.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Fxu_CountPairDiffs( char * pCover, unsigned char pDiffs[] )\n{\n    var pCube1, pCube2 string;\n    var nOnes, nCubePairs, nFanins, v int32;\n    nCubePairs = 0;\n    nFanins = Abc_SopGetVarNum(pCover);\n    // inlining of macro Abc_SopForEachCube\n    for  pCube1 = (pCover); *pCube1; pCube1 += (nFanins) + 3  {\n    // inlining of macro Abc_SopForEachCube\n    for  pCube2 = (pCube1); *pCube2; pCube2 += (nFanins) + 3  {\n        if pCube1 == pCube2 {\n            continue; }\n        nOnes = 0;\n        for  v = 0; v \u003c nFanins; v++  {\n            nOnes += (pCube1[v] != pCube2[v]);\n        }\n        pDiffs[nCubePairs++] = nOnes;\n    }\n    }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

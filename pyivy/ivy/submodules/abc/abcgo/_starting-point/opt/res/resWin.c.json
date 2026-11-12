@@ -1,0 +1,593 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c",
+  "SHA256": "878232af48b63bd61af8fb0372d0b90356317f757e7eb8c96e2397eb78feffd1",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 51,
+        "Column": 69,
+        "ByteOffset": 1439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Res_Win_t *) malloc(sizeof(Res_Win_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Res_Win_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 84,
+        "Column": 57,
+        "ByteOffset": 2398
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 2856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nWinTfiMax \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 2888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_VecSize(p.vMatrix) \u003e p.nWinTfiMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 5199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nLevTravMin \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 6637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 7752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(p.vRoots) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 256,
+        "Column": 5,
+        "ByteOffset": 8742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 313,
+        "Column": 5,
+        "ByteOffset": 10714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 314,
+        "Column": 5,
+        "ByteOffset": 10749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NodeIsTravIdCurrent(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 342,
+        "Column": 5,
+        "ByteOffset": 11914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NodeIsTravIdCurrent(p.pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 348,
+        "Column": 5,
+        "ByteOffset": 12160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(p.vRoots) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 374,
+        "Column": 9,
+        "ByteOffset": 12940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrFind(p.vLeaves, pObj) == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 379,
+        "Column": 5,
+        "ByteOffset": 13096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pObj) ); // if this is a CI, then the window is incorrect!"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 449,
+        "Column": 5,
+        "ByteOffset": 15513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 450,
+        "Column": 5,
+        "ByteOffset": 15549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nWinTfiMax \u003e 0 \u0026\u0026 nWinTfiMax \u003c 10 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 451,
+        "Column": 5,
+        "ByteOffset": 15598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nWinTfoMax \u003e= 0 \u0026\u0026 nWinTfoMax \u003c 10 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Res_WinAlloc",
+      "Start": 1272,
+      "End": 1781,
+      "BodyStart": 1299,
+      "Original": "Res_Win_t * Res_WinAlloc()\n{\n    Res_Win_t * p;\n    // start the manager\n    p = ABC_ALLOC( Res_Win_t, 1 );\n    memset( p, 0, sizeof(Res_Win_t) );\n    // set internal parameters\n    p-\u003enFanoutLimit = 10;\n    p-\u003enLevTfiMinus =  3;\n    // allocate storage\n    p-\u003evRoots    = Vec_PtrAlloc( 256 );\n    p-\u003evLeaves   = Vec_PtrAlloc( 256 );\n    p-\u003evBranches = Vec_PtrAlloc( 256 );\n    p-\u003evNodes    = Vec_PtrAlloc( 256 );\n    p-\u003evDivs     = Vec_PtrAlloc( 256 );\n    p-\u003evMatrix   = Vec_VecStart( 128 );\n    return p;\n}",
+      "Draft": "func Res_WinAlloc() *Res_Win_t {\n    var p *Res_Win_t;\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Res_Win_t *) malloc(sizeof(Res_Win_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Res_Win_t) );\n    // set internal parameters\n    p.nFanoutLimit = 10;\n    p.nLevTfiMinus =  3;\n    // allocate storage\n    p.vRoots    = Vec_PtrAlloc( 256 );\n    p.vLeaves   = Vec_PtrAlloc( 256 );\n    p.vBranches = Vec_PtrAlloc( 256 );\n    p.vNodes    = Vec_PtrAlloc( 256 );\n    p.vDivs     = Vec_PtrAlloc( 256 );\n    p.vMatrix   = Vec_VecStart( 128 );\n    return p;\n}"
+    },
+    {
+      "Name": "Res_WinFree",
+      "Start": 2034,
+      "End": 2278,
+      "BodyStart": 2068,
+      "Original": "void Res_WinFree( Res_Win_t * p )\n{\n    Vec_PtrFree( p-\u003evRoots  );\n    Vec_PtrFree( p-\u003evLeaves );\n    Vec_PtrFree( p-\u003evBranches );\n    Vec_PtrFree( p-\u003evNodes  );\n    Vec_PtrFree( p-\u003evDivs   );\n    Vec_VecFree( p-\u003evMatrix );\n    ABC_FREE( p );\n}",
+      "Draft": "func Res_WinFree(p *Res_Win_t) {\n    Vec_PtrFree( p.vRoots  );\n    Vec_PtrFree( p.vLeaves );\n    Vec_PtrFree( p.vBranches );\n    Vec_PtrFree( p.vNodes  );\n    Vec_PtrFree( p.vDivs   );\n    Vec_VecFree( p.vMatrix );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Res_WinCollectLeavesAndNodes",
+      "Start": 2557,
+      "End": 4532,
+      "BodyStart": 2607,
+      "Original": "int Res_WinCollectLeavesAndNodes( Res_Win_t * p )\n{\n    Vec_Ptr_t * vFront;\n    Abc_Obj_t * pObj, * pTemp;\n    int i, k, m;\n\n    assert( p-\u003enWinTfiMax \u003e 0 );\n    assert( Vec_VecSize(p-\u003evMatrix) \u003e p-\u003enWinTfiMax );\n\n    // start matrix with the node\n    Vec_VecClear( p-\u003evMatrix );\n    Vec_VecPush( p-\u003evMatrix, 0, p-\u003epNode );\n    Abc_NtkIncrementTravId( p-\u003epNode-\u003epNtk );\n    Abc_NodeSetTravIdCurrent( p-\u003epNode );\n\n    // collect the leaves (nodes pTemp such that \"p-\u003epNode-\u003eLevel - pTemp-\u003eLevel \u003e p-\u003enWinTfiMax\")\n    Vec_PtrClear( p-\u003evLeaves );\n    Vec_VecForEachLevelStartStop( p-\u003evMatrix, vFront, i, 0, p-\u003enWinTfiMax+1 )\n    {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vFront, pObj, k )\n        {\n            Abc_ObjForEachFanin( pObj, pTemp, m )\n            {\n                if ( Abc_NodeIsTravIdCurrent( pTemp ) )\n                    continue;\n                Abc_NodeSetTravIdCurrent( pTemp );\n                if ( Abc_ObjIsCi(pTemp) || (int)(p-\u003epNode-\u003eLevel - pTemp-\u003eLevel) \u003e p-\u003enWinTfiMax )                    \n                    Vec_PtrPush( p-\u003evLeaves, pTemp );\n                else\n                    Vec_VecPush( p-\u003evMatrix, p-\u003epNode-\u003eLevel - pTemp-\u003eLevel, pTemp );\n            }\n        }\n    }\n    if ( Vec_PtrSize(p-\u003evLeaves) == 0 )\n        return 0;\n\n    // collect the nodes in the reverse order\n    Vec_PtrClear( p-\u003evNodes );\n    Vec_VecForEachLevelReverseStartStop( p-\u003evMatrix, vFront, i, p-\u003enWinTfiMax+1, 0 )\n    {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vFront, pObj, k )\n            Vec_PtrPush( p-\u003evNodes, pObj );\n        Vec_PtrClear( vFront );\n    }\n\n    // get the lowest leaf level\n    p-\u003enLevLeafMin = ABC_INFINITY;\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evLeaves, pObj, k )\n        p-\u003enLevLeafMin = Abc_MinInt( p-\u003enLevLeafMin, (int)pObj-\u003eLevel );\n\n    // set minimum traversal level\n    p-\u003enLevTravMin = Abc_MaxInt( ((int)p-\u003epNode-\u003eLevel) - p-\u003enWinTfiMax - p-\u003enLevTfiMinus, p-\u003enLevLeafMin );\n    assert( p-\u003enLevTravMin \u003e= 0 );\n    return 1;\n}",
+      "Draft": "func Res_WinCollectLeavesAndNodes(p *Res_Win_t) int32 {\n    var vFront *Vec_Ptr_t;\n    var pObj, pTemp *Abc_Obj_t;\n    var i, k, m int32;\n\n    assert(p.nWinTfiMax \u003e 0, \"p.nWinTfiMax \u003e 0\");\n    assert(Vec_VecSize(p.vMatrix) \u003e p.nWinTfiMax, \"Vec_VecSize(p.vMatrix) \u003e p.nWinTfiMax\");\n\n    // start matrix with the node\n    Vec_VecClear( p.vMatrix );\n    Vec_VecPush( p.vMatrix, 0, p.pNode );\n    Abc_NtkIncrementTravId( p.pNode.pNtk );\n    Abc_NodeSetTravIdCurrent( p.pNode );\n\n    // collect the leaves (nodes pTemp such that \"p-\u003epNode-\u003eLevel - pTemp-\u003eLevel \u003e p-\u003enWinTfiMax\")\n    Vec_PtrClear( p.vLeaves );\n    // inlining of macro Vec_VecForEachLevelStartStop\n    for  i = 0; (i \u003c p.nWinTfiMax+1) \u0026\u0026 (((vFront) = Vec_VecEntry(p.vMatrix, i)), 1); i++  {\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFront, k)), 1); k++  {\n            // inlining of macro Abc_ObjForEachFanin\n            for  m = 0; (m \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTemp) = Abc_ObjFanin(pObj, m)), 1); m++  {\n                if Abc_NodeIsTravIdCurrent( pTemp ) {\n                    continue; }\n                Abc_NodeSetTravIdCurrent( pTemp );\n                if Abc_ObjIsCi(pTemp) || int32((p.pNode.Level - pTemp.Level)) \u003e p.nWinTfiMax {                    \n                    Vec_PtrPush( p.vLeaves, pTemp );\n                } else {\n                    Vec_VecPush( p.vMatrix, p.pNode.Level - pTemp.Level, pTemp ); }\n            }\n        }\n    }\n    if Vec_PtrSize(p.vLeaves) == 0 {\n        return 0; }\n\n    // collect the nodes in the reverse order\n    Vec_PtrClear( p.vNodes );\n    // inlining of macro Vec_VecForEachLevelReverseStartStop\n    for  i = p.nWinTfiMax+1-1; (i \u003e= 0) \u0026\u0026 (((vFront) = Vec_VecEntry(p.vMatrix, i)), 1); i--  {\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFront, k)), 1); k++  {\n            Vec_PtrPush( p.vNodes, pObj );\n        }\n        Vec_PtrClear( vFront );\n    }\n\n    // get the lowest leaf level\n    p.nLevLeafMin = ABC_INFINITY;\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(p.vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, k)), 1); k++  {\n        p.nLevLeafMin = Abc_MinInt( p.nLevLeafMin, int32(pObj.Level) );\n    }\n\n    // set minimum traversal level\n    p.nLevTravMin = Abc_MaxInt( (int32(p.pNode.Level)) - p.nWinTfiMax - p.nLevTfiMinus, p.nLevLeafMin );\n    assert(p.nLevTravMin \u003e= 0, \"p.nLevTravMin \u003e= 0\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Res_WinComputeRootsCheck",
+      "Start": 4809,
+      "End": 5374,
+      "BodyStart": 4906,
+      "Original": "static inline int Res_WinComputeRootsCheck( Abc_Obj_t * pNode, int nLevelMax, int nFanoutLimit )\n{\n    Abc_Obj_t * pFanout;\n    int i;\n    // the node is the root if one of the following is true:\n    // (1) the node has more than fanouts than the limit\n    if ( Abc_ObjFanoutNum(pNode) \u003e nFanoutLimit )\n        return 1;\n    // (2) the node has CO fanouts\n    // (3) the node has fanouts above the cutoff level\n    Abc_ObjForEachFanout( pNode, pFanout, i )\n        if ( Abc_ObjIsCo(pFanout) || (int)pFanout-\u003eLevel \u003e nLevelMax )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Res_WinComputeRootsCheck(pNode *Abc_Obj_t, nLevelMax int32, nFanoutLimit int32) int32 {\n    var pFanout *Abc_Obj_t;\n    var i int32;\n    // the node is the root if one of the following is true:\n    // (1) the node has more than fanouts than the limit\n    if Abc_ObjFanoutNum(pNode) \u003e nFanoutLimit {\n        return 1; }\n    // (2) the node has CO fanouts\n    // (3) the node has fanouts above the cutoff level\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pNode)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pNode, i)), 1); i++  {\n        if Abc_ObjIsCo(pFanout) || int32(pFanout.Level) \u003e nLevelMax {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Res_WinComputeRoots_rec",
+      "Start": 5651,
+      "End": 6249,
+      "BodyStart": 5754,
+      "Original": "void Res_WinComputeRoots_rec( Abc_Obj_t * pNode, int nLevelMax, int nFanoutLimit, Vec_Ptr_t * vRoots )\n{\n    Abc_Obj_t * pFanout;\n    int i;\n    assert( Abc_ObjIsNode(pNode) );\n    if ( Abc_NodeIsTravIdCurrent(pNode) )\n        return;\n    Abc_NodeSetTravIdCurrent( pNode );\n    // check if the node should be the root\n    if ( Res_WinComputeRootsCheck( pNode, nLevelMax, nFanoutLimit ) )\n        Vec_PtrPush( vRoots, pNode );\n    else // if not, explore its fanouts\n        Abc_ObjForEachFanout( pNode, pFanout, i )\n            Res_WinComputeRoots_rec( pFanout, nLevelMax, nFanoutLimit, vRoots );\n}",
+      "Draft": "func Res_WinComputeRoots_rec(pNode *Abc_Obj_t, nLevelMax int32, nFanoutLimit int32, vRoots *Vec_Ptr_t) {\n    var pFanout *Abc_Obj_t;\n    var i int32;\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    if Abc_NodeIsTravIdCurrent(pNode) {\n        return; }\n    Abc_NodeSetTravIdCurrent( pNode );\n    // check if the node should be the root\n    if Res_WinComputeRootsCheck( pNode, nLevelMax, nFanoutLimit ) != 0 {\n        Vec_PtrPush( vRoots, pNode );\n    } else { // if not, explore its fanouts\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pNode)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pNode, i)), 1); i++  {\n            Res_WinComputeRoots_rec( pFanout, nLevelMax, nFanoutLimit, vRoots );\n        } }\n}"
+    },
+    {
+      "Name": "Res_WinComputeRoots",
+      "Start": 6566,
+      "End": 6944,
+      "BodyStart": 6607,
+      "Original": "int Res_WinComputeRoots( Res_Win_t * p )\n{\n    Vec_PtrClear( p-\u003evRoots );\n    Abc_NtkIncrementTravId( p-\u003epNode-\u003epNtk );\n    Res_WinComputeRoots_rec( p-\u003epNode, p-\u003epNode-\u003eLevel + p-\u003enWinTfoMax, p-\u003enFanoutLimit, p-\u003evRoots );\n    assert( Vec_PtrSize(p-\u003evRoots) \u003e 0 );\n    if ( Vec_PtrSize(p-\u003evRoots) == 1 \u0026\u0026 Vec_PtrEntry(p-\u003evRoots, 0) == p-\u003epNode )\n        return 0;\n    return 1;\n}",
+      "Draft": "func Res_WinComputeRoots(p *Res_Win_t) int32 {\n    Vec_PtrClear( p.vRoots );\n    Abc_NtkIncrementTravId( p.pNode.pNtk );\n    Res_WinComputeRoots_rec( p.pNode, p.pNode.Level + p.nWinTfoMax, p.nFanoutLimit, p.vRoots );\n    assert(Vec_PtrSize(p.vRoots) \u003e 0, \"Vec_PtrSize(p.vRoots) \u003e 0\");\n    if Vec_PtrSize(p.vRoots) == 1 \u0026\u0026 Vec_PtrEntry(p.vRoots, 0) == p.pNode {\n        return 0; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Res_WinMarkPaths_rec",
+      "Start": 7270,
+      "End": 8129,
+      "BodyStart": 7351,
+      "Original": "int Res_WinMarkPaths_rec( Abc_Obj_t * pNode, Abc_Obj_t * pPivot, int nLevelMin )\n{\n    Abc_Obj_t * pFanin;\n    int i, RetValue;\n    // skip visited nodes\n    if ( Abc_NodeIsTravIdCurrent(pNode) )\n        return 1;\n    if ( Abc_NodeIsTravIdPrevious(pNode) )\n        return 0;\n    // assume that the node does not have access to the leaves\n    Abc_NodeSetTravIdPrevious( pNode );\n    // skip nodes below the given level\n    if ( pNode == pPivot || (int)pNode-\u003eLevel \u003c= nLevelMin )\n        return 0;\n    assert( Abc_ObjIsNode(pNode) );\n    // check if the fanins have access to the leaves\n    RetValue = 0;\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        RetValue |= Res_WinMarkPaths_rec( pFanin, pPivot, nLevelMin );\n    // relabel the node if it has access to the leaves\n    if ( RetValue )\n        Abc_NodeSetTravIdCurrent( pNode );\n    return RetValue;\n}",
+      "Draft": "func Res_WinMarkPaths_rec(pNode *Abc_Obj_t, pPivot *Abc_Obj_t, nLevelMin int32) int32 {\n    var pFanin *Abc_Obj_t;\n    var i, RetValue int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pNode) {\n        return 1; }\n    if Abc_NodeIsTravIdPrevious(pNode) {\n        return 0; }\n    // assume that the node does not have access to the leaves\n    Abc_NodeSetTravIdPrevious( pNode );\n    // skip nodes below the given level\n    if pNode == pPivot || int32(pNode.Level) \u003c= nLevelMin {\n        return 0; }\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    // check if the fanins have access to the leaves\n    RetValue = 0;\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        RetValue |= Res_WinMarkPaths_rec( pFanin, pPivot, nLevelMin );\n    }\n    // relabel the node if it has access to the leaves\n    if RetValue != 0 {\n        Abc_NodeSetTravIdCurrent( pNode ); }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Res_WinMarkPaths",
+      "Start": 8410,
+      "End": 9017,
+      "BodyStart": 8449,
+      "Original": "void Res_WinMarkPaths( Res_Win_t * p )\n{\n    Abc_Obj_t * pObj;\n    int i;\n    // mark the leaves\n    Abc_NtkIncrementTravId( p-\u003epNode-\u003epNtk );\n    Abc_NtkIncrementTravId( p-\u003epNode-\u003epNtk );\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evLeaves, pObj, i )\n        Abc_NodeSetTravIdCurrent( pObj );\n    // traverse from the roots and mark the nodes that can reach leaves\n    // the nodes that do not reach leaves have previous trav ID\n    // the nodes that reach leaves have current trav ID\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evRoots, pObj, i )\n        Res_WinMarkPaths_rec( pObj, p-\u003epNode, p-\u003enLevTravMin );\n}",
+      "Draft": "func Res_WinMarkPaths(p *Res_Win_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // mark the leaves\n    Abc_NtkIncrementTravId( p.pNode.pNtk );\n    Abc_NtkIncrementTravId( p.pNode.pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pObj );\n    }\n    // traverse from the roots and mark the nodes that can reach leaves\n    // the nodes that do not reach leaves have previous trav ID\n    // the nodes that reach leaves have current trav ID\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vRoots)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {\n        Res_WinMarkPaths_rec( pObj, p.pNode, p.nLevTravMin );\n    }\n}"
+    },
+    {
+      "Name": "Res_WinFinalizeRoots_rec",
+      "Start": 9287,
+      "End": 9936,
+      "BodyStart": 9357,
+      "Original": "void Res_WinFinalizeRoots_rec( Abc_Obj_t * pObj, Vec_Ptr_t * vRoots )\n{\n    Abc_Obj_t * pFanout;\n    int i;\n    assert( Abc_ObjIsNode(pObj) );\n    assert( Abc_NodeIsTravIdCurrent(pObj) );\n    // check if the node has all fanouts marked\n    Abc_ObjForEachFanout( pObj, pFanout, i )\n        if ( !Abc_NodeIsTravIdCurrent(pFanout) )\n            break;\n    // if some of the fanouts are unmarked, add the node to the roots\n    if ( i \u003c Abc_ObjFanoutNum(pObj) ) \n        Vec_PtrPushUnique( vRoots, pObj );\n    else  // otherwise, call recursively\n        Abc_ObjForEachFanout( pObj, pFanout, i )\n            Res_WinFinalizeRoots_rec( pFanout, vRoots );\n}",
+      "Draft": "func Res_WinFinalizeRoots_rec(pObj *Abc_Obj_t, vRoots *Vec_Ptr_t) {\n    var pFanout *Abc_Obj_t;\n    var i int32;\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n    assert(Abc_NodeIsTravIdCurrent(pObj), \"Abc_NodeIsTravIdCurrent(pObj)\");\n    // check if the node has all fanouts marked\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        if !Abc_NodeIsTravIdCurrent(pFanout) {\n            break; }\n    }\n    // if some of the fanouts are unmarked, add the node to the roots\n    if i \u003c Abc_ObjFanoutNum(pObj) { \n        Vec_PtrPushUnique( vRoots, pObj );\n    } else {  // otherwise, call recursively\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n            Res_WinFinalizeRoots_rec( pFanout, vRoots );\n        } }\n}"
+    },
+    {
+      "Name": "Res_WinFinalizeRoots",
+      "Start": 10309,
+      "End": 10760,
+      "BodyStart": 10351,
+      "Original": "int Res_WinFinalizeRoots( Res_Win_t * p )\n{\n    assert( !Abc_NodeIsTravIdCurrent(p-\u003epNode) );\n    // mark the node with the old traversal ID\n    Abc_NodeSetTravIdCurrent( p-\u003epNode ); \n    // recollect the roots\n    Vec_PtrClear( p-\u003evRoots );\n    Res_WinFinalizeRoots_rec( p-\u003epNode, p-\u003evRoots );\n    assert( Vec_PtrSize(p-\u003evRoots) \u003e 0 );\n    if ( Vec_PtrSize(p-\u003evRoots) == 1 \u0026\u0026 Vec_PtrEntry(p-\u003evRoots, 0) == p-\u003epNode )\n        return 0;\n    return 1;\n}",
+      "Draft": "func Res_WinFinalizeRoots(p *Res_Win_t) int32 {\n    assert(!Abc_NodeIsTravIdCurrent(p.pNode), \"!Abc_NodeIsTravIdCurrent(p.pNode)\");\n    // mark the node with the old traversal ID\n    Abc_NodeSetTravIdCurrent( p.pNode ); \n    // recollect the roots\n    Vec_PtrClear( p.vRoots );\n    Res_WinFinalizeRoots_rec( p.pNode, p.vRoots );\n    assert(Vec_PtrSize(p.vRoots) \u003e 0, \"Vec_PtrSize(p.vRoots) \u003e 0\");\n    if Vec_PtrSize(p.vRoots) == 1 \u0026\u0026 Vec_PtrEntry(p.vRoots, 0) == p.pNode {\n        return 0; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Res_WinAddMissing_rec",
+      "Start": 11039,
+      "End": 11867,
+      "BodyStart": 11118,
+      "Original": "void Res_WinAddMissing_rec( Res_Win_t * p, Abc_Obj_t * pObj, int nLevTravMin )\n{\n    Abc_Obj_t * pFanin;\n    int i;\n    // skip the already collected leaves, nodes, and branches\n    if ( Abc_NodeIsTravIdCurrent(pObj) )\n        return;\n    // if this is not an internal node - make it a new branch\n    if ( !Abc_NodeIsTravIdPrevious(pObj) )\n    {\n        assert( Vec_PtrFind(p-\u003evLeaves, pObj) == -1 );\n        Abc_NodeSetTravIdCurrent( pObj );\n        Vec_PtrPush( p-\u003evBranches, pObj );\n        return;\n    }\n    assert( Abc_ObjIsNode(pObj) ); // if this is a CI, then the window is incorrect!\n    Abc_NodeSetTravIdCurrent( pObj );\n    // visit the fanins of the node\n    Abc_ObjForEachFanin( pObj, pFanin, i )\n        Res_WinAddMissing_rec( p, pFanin, nLevTravMin );\n    // collect the node\n    Vec_PtrPush( p-\u003evNodes, pObj );\n}",
+      "Draft": "func Res_WinAddMissing_rec(p *Res_Win_t, pObj *Abc_Obj_t, nLevTravMin int32) {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    // skip the already collected leaves, nodes, and branches\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return; }\n    // if this is not an internal node - make it a new branch\n    if !Abc_NodeIsTravIdPrevious(pObj) {\n        assert(Vec_PtrFind(p.vLeaves, pObj) == -1, \"Vec_PtrFind(p.vLeaves, pObj) == -1\");\n        Abc_NodeSetTravIdCurrent( pObj );\n        Vec_PtrPush( p.vBranches, pObj );\n        return;\n    }\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\"); // if this is a CI, then the window is incorrect!\n    Abc_NodeSetTravIdCurrent( pObj );\n    // visit the fanins of the node\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        Res_WinAddMissing_rec( p, pFanin, nLevTravMin );\n    }\n    // collect the node\n    Vec_PtrPush( p.vNodes, pObj );\n}"
+    },
+    {
+      "Name": "Res_WinAddMissing",
+      "Start": 12163,
+      "End": 12748,
+      "BodyStart": 12203,
+      "Original": "void Res_WinAddMissing( Res_Win_t * p )\n{\n    Abc_Obj_t * pObj;\n    int i;\n    // mark the leaves\n    Abc_NtkIncrementTravId( p-\u003epNode-\u003epNtk );\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evLeaves, pObj, i )\n        Abc_NodeSetTravIdCurrent( pObj );        \n    // mark the already collected nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evNodes, pObj, i )\n        Abc_NodeSetTravIdCurrent( pObj );        \n    // explore from the roots\n    Vec_PtrClear( p-\u003evBranches );\n    Vec_PtrForEachEntry( Abc_Obj_t *, p-\u003evRoots, pObj, i )\n        Res_WinAddMissing_rec( p, pObj, p-\u003enLevTravMin );\n}",
+      "Draft": "func Res_WinAddMissing(p *Res_Win_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // mark the leaves\n    Abc_NtkIncrementTravId( p.pNode.pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pObj );\n    }        \n    // mark the already collected nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pObj );\n    }        \n    // explore from the roots\n    Vec_PtrClear( p.vBranches );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vRoots)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {\n        Res_WinAddMissing_rec( p, pObj, p.nLevTravMin );\n    }\n}"
+    },
+    {
+      "Name": "Res_WinIsTrivial",
+      "Start": 13037,
+      "End": 13160,
+      "BodyStart": 13075,
+      "Original": "int Res_WinIsTrivial( Res_Win_t * p )\n{\n    return Vec_PtrSize(p-\u003evRoots) == 1 \u0026\u0026 Vec_PtrEntry(p-\u003evRoots, 0) == p-\u003epNode;\n}",
+      "Draft": "func Res_WinIsTrivial(p *Res_Win_t) int32 {\n    return Vec_PtrSize(p.vRoots) == 1 \u0026\u0026 Vec_PtrEntry(p.vRoots, 0) == p.pNode;\n}"
+    },
+    {
+      "Name": "Res_WinCompute",
+      "Start": 13416,
+      "End": 14330,
+      "BodyStart": 13503,
+      "Original": "int Res_WinCompute( Abc_Obj_t * pNode, int nWinTfiMax, int nWinTfoMax, Res_Win_t * p )\n{\n    assert( Abc_ObjIsNode(pNode) );\n    assert( nWinTfiMax \u003e 0 \u0026\u0026 nWinTfiMax \u003c 10 );\n    assert( nWinTfoMax \u003e= 0 \u0026\u0026 nWinTfoMax \u003c 10 );\n\n    // initialize the window\n    p-\u003epNode      = pNode;\n    p-\u003enWinTfiMax = nWinTfiMax;\n    p-\u003enWinTfoMax = nWinTfoMax;\n\n    Vec_PtrClear( p-\u003evBranches );\n    Vec_PtrClear( p-\u003evDivs );\n    Vec_PtrClear( p-\u003evRoots );\n    Vec_PtrPush( p-\u003evRoots, pNode );\n\n    // compute the leaves\n    if ( !Res_WinCollectLeavesAndNodes( p ) )\n        return 0;\n\n    // compute the candidate roots\n    if ( p-\u003enWinTfoMax \u003e 0 \u0026\u0026 Res_WinComputeRoots(p) )\n    {\n        // mark the paths from the roots to the leaves\n        Res_WinMarkPaths( p );\n        // refine the roots and add branches and missing nodes\n        if ( Res_WinFinalizeRoots( p ) )\n            Res_WinAddMissing( p );\n    }\n\n    return 1;\n}",
+      "Draft": "func Res_WinCompute(pNode *Abc_Obj_t, nWinTfiMax int32, nWinTfoMax int32, p *Res_Win_t) int32 {\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    assert(nWinTfiMax \u003e 0 \u0026\u0026 nWinTfiMax \u003c 10, \"nWinTfiMax \u003e 0 \u0026\u0026 nWinTfiMax \u003c 10\");\n    assert(nWinTfoMax \u003e= 0 \u0026\u0026 nWinTfoMax \u003c 10, \"nWinTfoMax \u003e= 0 \u0026\u0026 nWinTfoMax \u003c 10\");\n\n    // initialize the window\n    p.pNode      = pNode;\n    p.nWinTfiMax = nWinTfiMax;\n    p.nWinTfoMax = nWinTfoMax;\n\n    Vec_PtrClear( p.vBranches );\n    Vec_PtrClear( p.vDivs );\n    Vec_PtrClear( p.vRoots );\n    Vec_PtrPush( p.vRoots, pNode );\n\n    // compute the leaves\n    if !(Res_WinCollectLeavesAndNodes( p ) != 0) {\n        return 0; }\n\n    // compute the candidate roots\n    if p.nWinTfoMax \u003e 0 \u0026\u0026 (Res_WinComputeRoots(p) != 0) {\n        // mark the paths from the roots to the leaves\n        Res_WinMarkPaths( p );\n        // refine the roots and add branches and missing nodes\n        if Res_WinFinalizeRoots( p ) != 0 {\n            Res_WinAddMissing( p ); }\n    }\n\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::mechanical::sizeof::1420",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1353,
+      "End": 1353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::mechanical::sizeof::1473",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1398,
+      "End": 1404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::pointer-cast::1399",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1353,
+      "End": 1353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::pointer-cast::2394",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2262,
+      "End": 2262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::pointer-cast::3529",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3193,
+      "End": 3193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::pointer-cast::4633",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4001,
+      "End": 4001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::pointer-cast::4949",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4208,
+      "End": 4208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::pointer-cast::9781",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8603,
+      "End": 8603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::pointer-cast::10183",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8897,
+      "End": 8897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::pointer-cast::14031",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12311,
+      "End": 12311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::pointer-cast::14289",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12461,
+      "End": 12461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::pointer-cast::14570",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12634,
+      "End": 12634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::Res_WinAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Res_WinAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1272,
+      "End": 1781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::ternary::Res_WinFree",
+      "Category": "ternary-review",
+      "Symbol": "Res_WinFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2034,
+      "End": 2278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::Res_WinFree",
+      "Category": "semantic-review",
+      "Symbol": "Res_WinFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2034,
+      "End": 2278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::Res_WinCollectLeavesAndNodes",
+      "Category": "semantic-review",
+      "Symbol": "Res_WinCollectLeavesAndNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2557,
+      "End": 4532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::Res_WinComputeRootsCheck",
+      "Category": "semantic-review",
+      "Symbol": "Res_WinComputeRootsCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4809,
+      "End": 5374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::Res_WinComputeRoots_rec",
+      "Category": "semantic-review",
+      "Symbol": "Res_WinComputeRoots_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5651,
+      "End": 6249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::Res_WinComputeRoots",
+      "Category": "semantic-review",
+      "Symbol": "Res_WinComputeRoots",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6566,
+      "End": 6944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::Res_WinMarkPaths_rec",
+      "Category": "semantic-review",
+      "Symbol": "Res_WinMarkPaths_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7270,
+      "End": 8129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::Res_WinMarkPaths",
+      "Category": "semantic-review",
+      "Symbol": "Res_WinMarkPaths",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8410,
+      "End": 9017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::Res_WinFinalizeRoots_rec",
+      "Category": "semantic-review",
+      "Symbol": "Res_WinFinalizeRoots_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9287,
+      "End": 9936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::Res_WinFinalizeRoots",
+      "Category": "semantic-review",
+      "Symbol": "Res_WinFinalizeRoots",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10309,
+      "End": 10760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::Res_WinAddMissing_rec",
+      "Category": "semantic-review",
+      "Symbol": "Res_WinAddMissing_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11039,
+      "End": 11867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::Res_WinAddMissing",
+      "Category": "semantic-review",
+      "Symbol": "Res_WinAddMissing",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12163,
+      "End": 12748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::Res_WinIsTrivial",
+      "Category": "semantic-review",
+      "Symbol": "Res_WinIsTrivial",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13037,
+      "End": 13160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::Res_WinCompute",
+      "Category": "semantic-review",
+      "Symbol": "Res_WinCompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13416,
+      "End": 14330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/res/resWin.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14577
+    }
+  ],
+  "Draft": "package res\n\n/**CFile****************************************************************\n\n  FileName    [resWin.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Resynthesis package.]\n\n  Synopsis    [Windowing algorithm.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 15, 2007.]\n\n  Revision    [$Id: resWin.c,v 1.00 2007/01/15 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"resInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the window.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WinAlloc() *Res_Win_t {\n    var p *Res_Win_t;\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Res_Win_t *) malloc(sizeof(Res_Win_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Res_Win_t) );\n    // set internal parameters\n    p.nFanoutLimit = 10;\n    p.nLevTfiMinus =  3;\n    // allocate storage\n    p.vRoots    = Vec_PtrAlloc( 256 );\n    p.vLeaves   = Vec_PtrAlloc( 256 );\n    p.vBranches = Vec_PtrAlloc( 256 );\n    p.vNodes    = Vec_PtrAlloc( 256 );\n    p.vDivs     = Vec_PtrAlloc( 256 );\n    p.vMatrix   = Vec_VecStart( 128 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the window.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WinFree(p *Res_Win_t) {\n    Vec_PtrFree( p.vRoots  );\n    Vec_PtrFree( p.vLeaves );\n    Vec_PtrFree( p.vBranches );\n    Vec_PtrFree( p.vNodes  );\n    Vec_PtrFree( p.vDivs   );\n    Vec_VecFree( p.vMatrix );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collect the limited TFI cone of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WinCollectLeavesAndNodes(p *Res_Win_t) int32 {\n    var vFront *Vec_Ptr_t;\n    var pObj, pTemp *Abc_Obj_t;\n    var i, k, m int32;\n\n    assert(p.nWinTfiMax \u003e 0, \"p.nWinTfiMax \u003e 0\");\n    assert(Vec_VecSize(p.vMatrix) \u003e p.nWinTfiMax, \"Vec_VecSize(p.vMatrix) \u003e p.nWinTfiMax\");\n\n    // start matrix with the node\n    Vec_VecClear( p.vMatrix );\n    Vec_VecPush( p.vMatrix, 0, p.pNode );\n    Abc_NtkIncrementTravId( p.pNode.pNtk );\n    Abc_NodeSetTravIdCurrent( p.pNode );\n\n    // collect the leaves (nodes pTemp such that \"p-\u003epNode-\u003eLevel - pTemp-\u003eLevel \u003e p-\u003enWinTfiMax\")\n    Vec_PtrClear( p.vLeaves );\n    // inlining of macro Vec_VecForEachLevelStartStop\n    for  i = 0; (i \u003c p.nWinTfiMax+1) \u0026\u0026 (((vFront) = Vec_VecEntry(p.vMatrix, i)), 1); i++  {\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFront, k)), 1); k++  {\n            // inlining of macro Abc_ObjForEachFanin\n            for  m = 0; (m \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTemp) = Abc_ObjFanin(pObj, m)), 1); m++  {\n                if Abc_NodeIsTravIdCurrent( pTemp ) {\n                    continue; }\n                Abc_NodeSetTravIdCurrent( pTemp );\n                if Abc_ObjIsCi(pTemp) || int32((p.pNode.Level - pTemp.Level)) \u003e p.nWinTfiMax {                    \n                    Vec_PtrPush( p.vLeaves, pTemp );\n                } else {\n                    Vec_VecPush( p.vMatrix, p.pNode.Level - pTemp.Level, pTemp ); }\n            }\n        }\n    }\n    if Vec_PtrSize(p.vLeaves) == 0 {\n        return 0; }\n\n    // collect the nodes in the reverse order\n    Vec_PtrClear( p.vNodes );\n    // inlining of macro Vec_VecForEachLevelReverseStartStop\n    for  i = p.nWinTfiMax+1-1; (i \u003e= 0) \u0026\u0026 (((vFront) = Vec_VecEntry(p.vMatrix, i)), 1); i--  {\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vFront)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vFront, k)), 1); k++  {\n            Vec_PtrPush( p.vNodes, pObj );\n        }\n        Vec_PtrClear( vFront );\n    }\n\n    // get the lowest leaf level\n    p.nLevLeafMin = ABC_INFINITY;\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(p.vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, k)), 1); k++  {\n        p.nLevLeafMin = Abc_MinInt( p.nLevLeafMin, int32(pObj.Level) );\n    }\n\n    // set minimum traversal level\n    p.nLevTravMin = Abc_MaxInt( (int32(p.pNode.Level)) - p.nWinTfiMax - p.nLevTfiMinus, p.nLevLeafMin );\n    assert(p.nLevTravMin \u003e= 0, \"p.nLevTravMin \u003e= 0\");\n    return 1;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node should be a root.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WinComputeRootsCheck(pNode *Abc_Obj_t, nLevelMax int32, nFanoutLimit int32) int32 {\n    var pFanout *Abc_Obj_t;\n    var i int32;\n    // the node is the root if one of the following is true:\n    // (1) the node has more than fanouts than the limit\n    if Abc_ObjFanoutNum(pNode) \u003e nFanoutLimit {\n        return 1; }\n    // (2) the node has CO fanouts\n    // (3) the node has fanouts above the cutoff level\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pNode)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pNode, i)), 1); i++  {\n        if Abc_ObjIsCo(pFanout) || int32(pFanout.Level) \u003e nLevelMax {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively collects the root candidates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WinComputeRoots_rec(pNode *Abc_Obj_t, nLevelMax int32, nFanoutLimit int32, vRoots *Vec_Ptr_t) {\n    var pFanout *Abc_Obj_t;\n    var i int32;\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    if Abc_NodeIsTravIdCurrent(pNode) {\n        return; }\n    Abc_NodeSetTravIdCurrent( pNode );\n    // check if the node should be the root\n    if Res_WinComputeRootsCheck( pNode, nLevelMax, nFanoutLimit ) != 0 {\n        Vec_PtrPush( vRoots, pNode );\n    } else { // if not, explore its fanouts\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pNode)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pNode, i)), 1); i++  {\n            Res_WinComputeRoots_rec( pFanout, nLevelMax, nFanoutLimit, vRoots );\n        } }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively collects the root candidates.]\n\n  Description [Returns 1 if the only root is this node.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WinComputeRoots(p *Res_Win_t) int32 {\n    Vec_PtrClear( p.vRoots );\n    Abc_NtkIncrementTravId( p.pNode.pNtk );\n    Res_WinComputeRoots_rec( p.pNode, p.pNode.Level + p.nWinTfoMax, p.nFanoutLimit, p.vRoots );\n    assert(Vec_PtrSize(p.vRoots) \u003e 0, \"Vec_PtrSize(p.vRoots) \u003e 0\");\n    if Vec_PtrSize(p.vRoots) == 1 \u0026\u0026 Vec_PtrEntry(p.vRoots, 0) == p.pNode {\n        return 0; }\n    return 1;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the paths from the roots to the leaves.]\n\n  Description [Returns 1 if the the node can reach a leaf.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WinMarkPaths_rec(pNode *Abc_Obj_t, pPivot *Abc_Obj_t, nLevelMin int32) int32 {\n    var pFanin *Abc_Obj_t;\n    var i, RetValue int32;\n    // skip visited nodes\n    if Abc_NodeIsTravIdCurrent(pNode) {\n        return 1; }\n    if Abc_NodeIsTravIdPrevious(pNode) {\n        return 0; }\n    // assume that the node does not have access to the leaves\n    Abc_NodeSetTravIdPrevious( pNode );\n    // skip nodes below the given level\n    if pNode == pPivot || int32(pNode.Level) \u003c= nLevelMin {\n        return 0; }\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    // check if the fanins have access to the leaves\n    RetValue = 0;\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        RetValue |= Res_WinMarkPaths_rec( pFanin, pPivot, nLevelMin );\n    }\n    // relabel the node if it has access to the leaves\n    if RetValue != 0 {\n        Abc_NodeSetTravIdCurrent( pNode ); }\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the paths from the roots to the leaves.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WinMarkPaths(p *Res_Win_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // mark the leaves\n    Abc_NtkIncrementTravId( p.pNode.pNtk );\n    Abc_NtkIncrementTravId( p.pNode.pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pObj );\n    }\n    // traverse from the roots and mark the nodes that can reach leaves\n    // the nodes that do not reach leaves have previous trav ID\n    // the nodes that reach leaves have current trav ID\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vRoots)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {\n        Res_WinMarkPaths_rec( pObj, p.pNode, p.nLevTravMin );\n    }\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively collects the roots.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WinFinalizeRoots_rec(pObj *Abc_Obj_t, vRoots *Vec_Ptr_t) {\n    var pFanout *Abc_Obj_t;\n    var i int32;\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\");\n    assert(Abc_NodeIsTravIdCurrent(pObj), \"Abc_NodeIsTravIdCurrent(pObj)\");\n    // check if the node has all fanouts marked\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        if !Abc_NodeIsTravIdCurrent(pFanout) {\n            break; }\n    }\n    // if some of the fanouts are unmarked, add the node to the roots\n    if i \u003c Abc_ObjFanoutNum(pObj) { \n        Vec_PtrPushUnique( vRoots, pObj );\n    } else {  // otherwise, call recursively\n        // inlining of macro Abc_ObjForEachFanout\n        for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pFanout) = Abc_ObjFanout(pObj, i)), 1); i++  {\n            Res_WinFinalizeRoots_rec( pFanout, vRoots );\n        } }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finalizes the roots of the window.]\n\n  Description [Roots of the window are the nodes that have at least\n  one fanout that it not in the TFO of the leaves.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WinFinalizeRoots(p *Res_Win_t) int32 {\n    assert(!Abc_NodeIsTravIdCurrent(p.pNode), \"!Abc_NodeIsTravIdCurrent(p.pNode)\");\n    // mark the node with the old traversal ID\n    Abc_NodeSetTravIdCurrent( p.pNode ); \n    // recollect the roots\n    Vec_PtrClear( p.vRoots );\n    Res_WinFinalizeRoots_rec( p.pNode, p.vRoots );\n    assert(Vec_PtrSize(p.vRoots) \u003e 0, \"Vec_PtrSize(p.vRoots) \u003e 0\");\n    if Vec_PtrSize(p.vRoots) == 1 \u0026\u0026 Vec_PtrEntry(p.vRoots, 0) == p.pNode {\n        return 0; }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively adds missing nodes and leaves.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WinAddMissing_rec(p *Res_Win_t, pObj *Abc_Obj_t, nLevTravMin int32) {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    // skip the already collected leaves, nodes, and branches\n    if Abc_NodeIsTravIdCurrent(pObj) {\n        return; }\n    // if this is not an internal node - make it a new branch\n    if !Abc_NodeIsTravIdPrevious(pObj) {\n        assert(Vec_PtrFind(p.vLeaves, pObj) == -1, \"Vec_PtrFind(p.vLeaves, pObj) == -1\");\n        Abc_NodeSetTravIdCurrent( pObj );\n        Vec_PtrPush( p.vBranches, pObj );\n        return;\n    }\n    assert(Abc_ObjIsNode(pObj), \"Abc_ObjIsNode(pObj)\"); // if this is a CI, then the window is incorrect!\n    Abc_NodeSetTravIdCurrent( pObj );\n    // visit the fanins of the node\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, i)), 1); i++  {\n        Res_WinAddMissing_rec( p, pFanin, nLevTravMin );\n    }\n    // collect the node\n    Vec_PtrPush( p.vNodes, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds to the window nodes and leaves in the TFI of the roots.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WinAddMissing(p *Res_Win_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // mark the leaves\n    Abc_NtkIncrementTravId( p.pNode.pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vLeaves, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pObj );\n    }        \n    // mark the already collected nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vNodes, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( pObj );\n    }        \n    // explore from the roots\n    Vec_PtrClear( p.vBranches );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vRoots)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(p.vRoots, i)), 1); i++  {\n        Res_WinAddMissing_rec( p, pObj, p.nLevTravMin );\n    }\n}\n\n\n\n \n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the window is trivial (without TFO).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WinIsTrivial(p *Res_Win_t) int32 {\n    return Vec_PtrSize(p.vRoots) == 1 \u0026\u0026 Vec_PtrEntry(p.vRoots, 0) == p.pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the window.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Res_WinCompute(pNode *Abc_Obj_t, nWinTfiMax int32, nWinTfoMax int32, p *Res_Win_t) int32 {\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    assert(nWinTfiMax \u003e 0 \u0026\u0026 nWinTfiMax \u003c 10, \"nWinTfiMax \u003e 0 \u0026\u0026 nWinTfiMax \u003c 10\");\n    assert(nWinTfoMax \u003e= 0 \u0026\u0026 nWinTfoMax \u003c 10, \"nWinTfoMax \u003e= 0 \u0026\u0026 nWinTfoMax \u003c 10\");\n\n    // initialize the window\n    p.pNode      = pNode;\n    p.nWinTfiMax = nWinTfiMax;\n    p.nWinTfoMax = nWinTfoMax;\n\n    Vec_PtrClear( p.vBranches );\n    Vec_PtrClear( p.vDivs );\n    Vec_PtrClear( p.vRoots );\n    Vec_PtrPush( p.vRoots, pNode );\n\n    // compute the leaves\n    if !(Res_WinCollectLeavesAndNodes( p ) != 0) {\n        return 0; }\n\n    // compute the candidate roots\n    if p.nWinTfoMax \u003e 0 \u0026\u0026 (Res_WinComputeRoots(p) != 0) {\n        // mark the paths from the roots to the leaves\n        Res_WinMarkPaths( p );\n        // refine the roots and add branches and missing nodes\n        if Res_WinFinalizeRoots( p ) != 0 {\n            Res_WinAddMissing( p ); }\n    }\n\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

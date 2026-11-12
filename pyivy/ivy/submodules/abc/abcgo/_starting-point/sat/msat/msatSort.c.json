@@ -1,0 +1,140 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSort.c",
+  "SHA256": "0505294989908d162035e69ec87f2231805f498c404804cc35f515223c4b1ef0",
+  "Functions": [
+    {
+      "Name": "drand",
+      "Start": 1043,
+      "End": 1211,
+      "BodyStart": 1076,
+      "Original": "static double drand(double seed) {\n    int q;\n    seed *= 1389796;\n    q = (int)(seed / 2147483647);\n    seed -= (double)q * 2147483647;\n    return seed / 2147483647; }",
+      "Draft": "func drand(seed float64) float64 {\n    var q int32;\n    seed *= 1389796;\n    q = int32((seed / 2147483647));\n    seed -= float64(q) * 2147483647;\n    return seed / 2147483647; }"
+    },
+    {
+      "Name": "irand",
+      "Start": 1278,
+      "End": 1359,
+      "BodyStart": 1318,
+      "Original": "static int irand(double seed, int size) {\n    return (int)(drand(seed) * size); }",
+      "Draft": "func irand(seed float64, size int32) int32 {\n    return int32((drand(seed) * size)); }"
+    },
+    {
+      "Name": "Msat_SolverSortDB",
+      "Start": 1966,
+      "End": 2834,
+      "BodyStart": 2010,
+      "Original": "void Msat_SolverSortDB( Msat_Solver_t * p )\n{\n    Msat_ClauseVec_t * pVecClauses;\n    Msat_Clause_t ** pLearned;\n    int nLearned;\n    // read the parameters\n    pVecClauses = Msat_SolverReadLearned( p );\n    nLearned    = Msat_ClauseVecReadSize( pVecClauses );\n    pLearned    = Msat_ClauseVecReadArray( pVecClauses );\n    // Msat_SolverSort the array\n//    qMsat_SolverSort( (void *)pLearned, nLearned, sizeof(Msat_Clause_t *), \n//            (int (*)(const void *, const void *)) Msat_SolverSortCompare );\n//    printf( \"Msat_SolverSorting.\\n\" );\n    Msat_SolverSort( pLearned, nLearned, 91648253 );\n/*\n    if ( nLearned \u003e 2 )\n    {\n    printf( \"Clause 1: %0.20f\\n\", Msat_ClauseReadActivity(pLearned[0]) );\n    printf( \"Clause 2: %0.20f\\n\", Msat_ClauseReadActivity(pLearned[1]) );\n    printf( \"Clause 3: %0.20f\\n\", Msat_ClauseReadActivity(pLearned[2]) );\n    }\n*/\n}",
+      "Draft": "func Msat_SolverSortDB(p *Msat_Solver_t) {\n    var pVecClauses *Msat_ClauseVec_t;\n    var pLearned **Msat_Clause_t;\n    var nLearned int32;\n    // read the parameters\n    pVecClauses = Msat_SolverReadLearned( p );\n    nLearned    = Msat_ClauseVecReadSize( pVecClauses );\n    pLearned    = Msat_ClauseVecReadArray( pVecClauses );\n    // Msat_SolverSort the array\n//    qMsat_SolverSort( (void *)pLearned, nLearned, sizeof(Msat_Clause_t *), \n//            (int (*)(const void *, const void *)) Msat_SolverSortCompare );\n//    printf( \"Msat_SolverSorting.\\n\" );\n    Msat_SolverSort( pLearned, nLearned, 91648253 );\n/*\n    if ( nLearned \u003e 2 )\n    {\n    printf( \"Clause 1: %0.20f\\n\", Msat_ClauseReadActivity(pLearned[0]) );\n    printf( \"Clause 2: %0.20f\\n\", Msat_ClauseReadActivity(pLearned[1]) );\n    printf( \"Clause 3: %0.20f\\n\", Msat_ClauseReadActivity(pLearned[2]) );\n    }\n*/\n}"
+    },
+    {
+      "Name": "Msat_SolverSortCompare",
+      "Start": 3107,
+      "End": 3396,
+      "BodyStart": 3182,
+      "Original": "int Msat_SolverSortCompare( Msat_Clause_t ** ppC1, Msat_Clause_t ** ppC2 )\n{\n    float Value1 = Msat_ClauseReadActivity( *ppC1 );\n    float Value2 = Msat_ClauseReadActivity( *ppC2 );\n    if ( Value1 \u003c Value2 )\n        return -1;\n    if ( Value1 \u003e Value2 )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Msat_SolverSortCompare(ppC1 **Msat_Clause_t, ppC2 **Msat_Clause_t) int32 {\n    var Value1 float32  = Msat_ClauseReadActivity( *ppC1 );\n    var Value2 float32  = Msat_ClauseReadActivity( *ppC2 );\n    if Value1 \u003c Value2 {\n        return -1; }\n    if Value1 \u003e Value2 {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Msat_SolverSortSelection",
+      "Start": 3669,
+      "End": 4102,
+      "BodyStart": 3735,
+      "Original": "void Msat_SolverSortSelection( Msat_Clause_t ** array, int size )\n{\n    Msat_Clause_t * tmp;\n    int i, j, best_i;\n    for ( i = 0; i \u003c size-1; i++ )\n    {\n        best_i = i;\n        for (j = i+1; j \u003c size; j++)\n        {\n            if ( Msat_ClauseReadActivity(array[j]) \u003c Msat_ClauseReadActivity(array[best_i]) )\n                best_i = j;\n        }\n        tmp = array[i]; array[i] = array[best_i]; array[best_i] = tmp;\n    }\n}",
+      "Draft": "func Msat_SolverSortSelection(array **Msat_Clause_t, size int32) {\n    var tmp *Msat_Clause_t;\n    var i, j, best_i int32;\n    for  i = 0; i \u003c size-1; i++  {\n        best_i = i;\n        for j = i+1; j \u003c size; j++ {\n            if Msat_ClauseReadActivity(array[j]) \u003c Msat_ClauseReadActivity(array[best_i]) {\n                best_i = j; }\n        }\n        tmp = array[i]; array[i] = array[best_i]; array[best_i] = tmp;\n    }\n}"
+    },
+    {
+      "Name": "Msat_SolverSort",
+      "Start": 4481,
+      "End": 5234,
+      "BodyStart": 4551,
+      "Original": "void Msat_SolverSort( Msat_Clause_t ** array, int size, double seed )\n{\n    if (size \u003c= 15)\n        Msat_SolverSortSelection( array, size );\n    else\n    {\n        Msat_Clause_t *   pivot = array[irand(seed, size)];\n        Msat_Clause_t *   tmp;\n        int              i = -1;\n        int              j = size;\n\n        for(;;)\n        {\n            do i++; while( Msat_ClauseReadActivity(array[i]) \u003c Msat_ClauseReadActivity(pivot) );\n            do j--; while( Msat_ClauseReadActivity(pivot) \u003c Msat_ClauseReadActivity(array[j]) );\n\n            if ( i \u003e= j ) break;\n\n            tmp = array[i]; array[i] = array[j]; array[j] = tmp;\n        }\n        Msat_SolverSort(array    , i     , seed);\n        Msat_SolverSort(\u0026array[i], size-i, seed);\n    }\n}",
+      "Draft": "func Msat_SolverSort(array **Msat_Clause_t, size int32, seed float64) {\n    if size \u003c= 15 {\n        Msat_SolverSortSelection( array, size );\n    } else {\n        var pivot *Msat_Clause_t  = array[irand(seed, size)];\n        var tmp *Msat_Clause_t;\n        var i int32  = -1;\n        var j int32  = size;\n\n        for {\n            do i++; while( Msat_ClauseReadActivity(array[i]) \u003c Msat_ClauseReadActivity(pivot) );\n            do j--; while( Msat_ClauseReadActivity(pivot) \u003c Msat_ClauseReadActivity(array[j]) );\n\n            if i \u003e= j { break; }\n\n            tmp = array[i]; array[i] = array[j]; array[j] = tmp;\n        }\n        Msat_SolverSort(array    , i     , seed);\n        Msat_SolverSort(\u0026array[i], size-i, seed);\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSort.c::mechanical::do::4835",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4835,
+      "End": 4837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSort.c::mechanical::do::4932",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 4932,
+      "End": 4934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSort.c::drand",
+      "Category": "semantic-review",
+      "Symbol": "drand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1043,
+      "End": 1211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSort.c::irand",
+      "Category": "semantic-review",
+      "Symbol": "irand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1278,
+      "End": 1359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSort.c::Msat_SolverSortDB",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverSortDB",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1966,
+      "End": 2834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSort.c::Msat_SolverSortCompare",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverSortCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3107,
+      "End": 3396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSort.c::Msat_SolverSortSelection",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverSortSelection",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3669,
+      "End": 4102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSort.c::Msat_SolverSort",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverSort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4481,
+      "End": 5234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSort.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5481
+    }
+  ],
+  "Draft": "package msat\n\n/**CFile****************************************************************\n\n  FileName    [msatSort.c]\n\n  PackageName [A C version of SAT solver MINISAT, originally developed \n  in C++ by Niklas Een and Niklas Sorensson, Chalmers University of \n  Technology, Sweden: http://www.cs.chalmers.se/~een/Satzoo.]\n\n  Synopsis    [Sorting clauses.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2004.]\n\n  Revision    [$Id: msatSort.c,v 1.0 2004/01/01 1:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"msatInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Msat_SolverSortCompare( Msat_Clause_t ** ppC1, Msat_Clause_t ** ppC2 );\n\n\n// Returns a random float 0 \u003c= x \u003c 1. Seed must never be 0.\nfunc drand(seed float64) float64 {\n    var q int32;\n    seed *= 1389796;\n    q = int32((seed / 2147483647));\n    seed -= float64(q) * 2147483647;\n    return seed / 2147483647; }\n\n// Returns a random integer 0 \u003c= x \u003c size. Seed must never be 0.\nfunc irand(seed float64, size int32) int32 {\n    return int32((drand(seed) * size)); }\n\n// static void Msat_SolverSort( Msat_Clause_t ** array, int size, double seed );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Msat_SolverSort the learned clauses in the increasing order of activity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverSortDB(p *Msat_Solver_t) {\n    var pVecClauses *Msat_ClauseVec_t;\n    var pLearned **Msat_Clause_t;\n    var nLearned int32;\n    // read the parameters\n    pVecClauses = Msat_SolverReadLearned( p );\n    nLearned    = Msat_ClauseVecReadSize( pVecClauses );\n    pLearned    = Msat_ClauseVecReadArray( pVecClauses );\n    // Msat_SolverSort the array\n//    qMsat_SolverSort( (void *)pLearned, nLearned, sizeof(Msat_Clause_t *), \n//            (int (*)(const void *, const void *)) Msat_SolverSortCompare );\n//    printf( \"Msat_SolverSorting.\\n\" );\n    Msat_SolverSort( pLearned, nLearned, 91648253 );\n/*\n    if ( nLearned \u003e 2 )\n    {\n    printf( \"Clause 1: %0.20f\\n\", Msat_ClauseReadActivity(pLearned[0]) );\n    printf( \"Clause 2: %0.20f\\n\", Msat_ClauseReadActivity(pLearned[1]) );\n    printf( \"Clause 3: %0.20f\\n\", Msat_ClauseReadActivity(pLearned[2]) );\n    }\n*/\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Comparison procedure for two clauses.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverSortCompare(ppC1 **Msat_Clause_t, ppC2 **Msat_Clause_t) int32 {\n    var Value1 float32  = Msat_ClauseReadActivity( *ppC1 );\n    var Value2 float32  = Msat_ClauseReadActivity( *ppC2 );\n    if Value1 \u003c Value2 {\n        return -1; }\n    if Value1 \u003e Value2 {\n        return 1; }\n    return 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Selection sort for small array size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverSortSelection(array **Msat_Clause_t, size int32) {\n    var tmp *Msat_Clause_t;\n    var i, j, best_i int32;\n    for  i = 0; i \u003c size-1; i++  {\n        best_i = i;\n        for j = i+1; j \u003c size; j++ {\n            if Msat_ClauseReadActivity(array[j]) \u003c Msat_ClauseReadActivity(array[best_i]) {\n                best_i = j; }\n        }\n        tmp = array[i]; array[i] = array[best_i]; array[best_i] = tmp;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [The original MiniSat sorting procedure.]\n\n  Description [This procedure is used to preserve trace-equivalence\n  with the orignal C++ implemenation of the solver.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverSort(array **Msat_Clause_t, size int32, seed float64) {\n    if size \u003c= 15 {\n        Msat_SolverSortSelection( array, size );\n    } else {\n        var pivot *Msat_Clause_t  = array[irand(seed, size)];\n        var tmp *Msat_Clause_t;\n        var i int32  = -1;\n        var j int32  = size;\n\n        for {\n            do i++; while( Msat_ClauseReadActivity(array[i]) \u003c Msat_ClauseReadActivity(pivot) );\n            do j--; while( Msat_ClauseReadActivity(pivot) \u003c Msat_ClauseReadActivity(array[j]) );\n\n            if i \u003e= j { break; }\n\n            tmp = array[i]; array[i] = array[j]; array[j] = tmp;\n        }\n        Msat_SolverSort(array    , i     , seed);\n        Msat_SolverSort(\u0026array[i], size-i, seed);\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

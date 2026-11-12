@@ -1,0 +1,1985 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h",
+  "SHA256": "d7c2065852b75b85cd840600c34dde8b6669a5a616b85310a30909b7851d0604",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 95,
+        "Column": 9,
+        "ByteOffset": 3216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Wrd_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 20,
+        "ByteOffset": 3369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ABC_ALLOC( word, p.nCap );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCap \u003e= 0 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 110,
+        "Column": 9,
+        "ByteOffset": 3558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Wrd_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 20,
+        "ByteOffset": 3659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ABC_ALLOC( word, p.nCap );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 4155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pArray, 0, sizeof(word) * (size_t)nSize );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 155,
+        "Column": 5,
+        "ByteOffset": 4638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pArray, 0xff, sizeof(word) * (size_t)nSize );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 229,
+        "Column": 9,
+        "ByteOffset": 6642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Wrd_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 249,
+        "Column": 9,
+        "ByteOffset": 7143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Wrd_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 16,
+        "ByteOffset": 7229
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pArray = ABC_ALLOC( word, nSize );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 253,
+        "Column": 5,
+        "ByteOffset": 7259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( p.pArray, pArray, sizeof(word) * (size_t)nSize );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 270,
+        "Column": 9,
+        "ByteOffset": 7673
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Wrd_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 274,
+        "Column": 20,
+        "ByteOffset": 7789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pArray = ABC_ALLOC( word, p.nCap );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 278,
+        "Column": 5,
+        "ByteOffset": 7863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( p.pArray, pVec.pArray, sizeof(word) * (size_t)pVec.nSize );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 295,
+        "Column": 9,
+        "ByteOffset": 8303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Vec_Wrd_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 317,
+        "Column": 5,
+        "ByteOffset": 8765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 322,
+        "Column": 5,
+        "ByteOffset": 8859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 5,
+        "ByteOffset": 8885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 340,
+        "Column": 5,
+        "ByteOffset": 9213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( (*p).pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 341,
+        "Column": 5,
+        "ByteOffset": 9242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( (*p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 442,
+        "Column": 5,
+        "ByteOffset": 11303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 458,
+        "Column": 5,
+        "ByteOffset": 11651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 474,
+        "Column": 5,
+        "ByteOffset": 12010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 490,
+        "Column": 5,
+        "ByteOffset": 12377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 506,
+        "Column": 5,
+        "ByteOffset": 12730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nSize \u003e 0 );"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 524,
+        "Column": 16,
+        "ByteOffset": 13171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pArray = ABC_REALLOC( word, p.pArray, nCapMin ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 525,
+        "Column": 5,
+        "ByteOffset": 13216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pArray );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 634,
+        "Column": 5,
+        "ByteOffset": 15892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nSize \u003e= nSizeNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 785,
+        "Column": 5,
+        "ByteOffset": 19369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nWords \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 806,
+        "Column": 5,
+        "ByteOffset": 19879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 849,
+        "Column": 5,
+        "ByteOffset": 20815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 870,
+        "Column": 5,
+        "ByteOffset": 21317
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iHere \u003e= 0 \u0026\u0026 iHere \u003c p.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1050,
+        "Column": 5,
+        "ByteOffset": 25524
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_WrdSize(p1) \u003e= Vec_WrdSize(p2) );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 1114,
+        "Column": 9,
+        "ByteOffset": 27356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(word), "
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 1117,
+        "Column": 9,
+        "ByteOffset": 27499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(word), "
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 1197,
+        "Column": 5,
+        "ByteOffset": 29651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(word), "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1238,
+        "Column": 13,
+        "ByteOffset": 30849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d\", Digit );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1240,
+        "Column": 13,
+        "ByteOffset": 30909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%c\", 'A' + Digit-10 ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1242,
+        "Column": 5,
+        "ByteOffset": 30961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1247,
+        "Column": 5,
+        "ByteOffset": 31107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_WrdSize(p) % nWords == 0 );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 1249,
+        "Column": 32,
+        "ByteOffset": 31213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Gia_ManSimPatWriteOne( stdout, Vec_WrdEntryP(p, i*nWords), nWords );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 1255,
+        "Column": 27,
+        "ByteOffset": 31442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1257,
+        "Column": 9,
+        "ByteOffset": 31498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1260,
+        "Column": 5,
+        "ByteOffset": 31587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_WrdSize(p) % nWords == 0 );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 1264,
+        "Column": 5,
+        "ByteOffset": 31748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1266,
+        "Column": 9,
+        "ByteOffset": 31791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Written %d words of simulation data for %d objects into file \\\"%s\\\".\\n\", nWords, Vec_WrdSize(p)/nWords, pFileName ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1276,
+        "Column": 14,
+        "ByteOffset": 32183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1277,
+        "Column": 5,
+        "ByteOffset": 32202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Digit \u003e= 0 \u0026\u0026 Digit \u003c 16 );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 1285,
+        "Column": 27,
+        "ByteOffset": 32477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1287,
+        "Column": 9,
+        "ByteOffset": 32533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName );"
+    },
+    {
+      "Name": "fgetc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 1291,
+        "Column": 15,
+        "ByteOffset": 32666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(pFile)) != EOF  {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 1291,
+        "Column": 32,
+        "ByteOffset": 32683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = fgetc(pFile)) != EOF  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1311,
+        "Column": 5,
+        "ByteOffset": 33250
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_WrdSize(p) % nWords == 0 );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 1312,
+        "Column": 5,
+        "ByteOffset": 33294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1316,
+        "Column": 9,
+        "ByteOffset": 33383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Read %d words of simulation data for %d objects.\\n\", nWords, Vec_WrdSize(p)/nWords ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Vec_WrdAlloc",
+      "Start": 3074,
+      "End": 3349,
+      "BodyStart": 3125,
+      "Original": "static inline Vec_Wrd_t * Vec_WrdAlloc( int nCap )\n{\n    Vec_Wrd_t * p;\n    p = ABC_ALLOC( Vec_Wrd_t, 1 );\n    if ( nCap \u003e 0 \u0026\u0026 nCap \u003c 16 )\n        nCap = 16;\n    p-\u003enSize  = 0;\n    p-\u003enCap   = nCap;\n    p-\u003epArray = p-\u003enCap? ABC_ALLOC( word, p-\u003enCap ) : NULL;\n    return p;\n}",
+      "Draft": "func Vec_WrdAlloc(nCap int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    p = new(Vec_Wrd_t);\n    if nCap \u003e 0 \u0026\u0026 nCap \u003c 16 {\n        nCap = 16; }\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( word, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_WrdAllocExact",
+      "Start": 3350,
+      "End": 3603,
+      "BodyStart": 3406,
+      "Original": "static inline Vec_Wrd_t * Vec_WrdAllocExact( int nCap )\n{\n    Vec_Wrd_t * p;\n    assert( nCap \u003e= 0 );\n    p = ABC_ALLOC( Vec_Wrd_t, 1 );\n    p-\u003enSize  = 0;\n    p-\u003enCap   = nCap;\n    p-\u003epArray = p-\u003enCap? ABC_ALLOC( word, p-\u003enCap ) : NULL;\n    return p;\n}",
+      "Draft": "func Vec_WrdAllocExact(nCap int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    assert(nCap \u003e= 0, \"nCap \u003e= 0\");\n    p = new(Vec_Wrd_t);\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( word, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_WrdStart",
+      "Start": 3892,
+      "End": 4091,
+      "BodyStart": 3944,
+      "Original": "static inline Vec_Wrd_t * Vec_WrdStart( int nSize )\n{\n    Vec_Wrd_t * p;\n    p = Vec_WrdAlloc( nSize );\n    p-\u003enSize = nSize;\n    memset( p-\u003epArray, 0, sizeof(word) * (size_t)nSize );\n    return p;\n}",
+      "Draft": "func Vec_WrdStart(nSize int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    p = Vec_WrdAlloc( nSize );\n    p.nSize = nSize;\n    memset( p.pArray, 0, sizeof(word) * (size_t)nSize );\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_WrdStartFull",
+      "Start": 4380,
+      "End": 4586,
+      "BodyStart": 4436,
+      "Original": "static inline Vec_Wrd_t * Vec_WrdStartFull( int nSize )\n{\n    Vec_Wrd_t * p;\n    p = Vec_WrdAlloc( nSize );\n    p-\u003enSize = nSize;\n    memset( p-\u003epArray, 0xff, sizeof(word) * (size_t)nSize );\n    return p;\n}",
+      "Draft": "func Vec_WrdStartFull(nSize int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    p = Vec_WrdAlloc( nSize );\n    p.nSize = nSize;\n    memset( p.pArray, 0xff, sizeof(word) * (size_t)nSize );\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_WrdStartNatural",
+      "Start": 4875,
+      "End": 5094,
+      "BodyStart": 4934,
+      "Original": "static inline Vec_Wrd_t * Vec_WrdStartNatural( int nSize )\n{\n    Vec_Wrd_t * p;\n    int i;\n    p = Vec_WrdAlloc( nSize );\n    p-\u003enSize = nSize;\n    for ( i = 0; i \u003c nSize; i++ )\n        p-\u003epArray[i] = i;\n    return p;\n}",
+      "Draft": "func Vec_WrdStartNatural(nSize int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    var i int32;\n    p = Vec_WrdAlloc( nSize );\n    p.nSize = nSize;\n    for  i = 0; i \u003c nSize; i++  {\n        p.pArray[i] = i;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_WrdStartRandom",
+      "Start": 5095,
+      "End": 5305,
+      "BodyStart": 5153,
+      "Original": "static inline Vec_Wrd_t * Vec_WrdStartRandom( int nSize )\n{\n    Vec_Wrd_t * vSims = Vec_WrdStart( nSize ); int i;\n    for ( i = 0; i \u003c nSize; i++ )\n        vSims-\u003epArray[i] = Abc_RandomW(0);\n    return vSims;\n}",
+      "Draft": "func Vec_WrdStartRandom(nSize int32) *Vec_Wrd_t {\n    var vSims *Vec_Wrd_t  = Vec_WrdStart( nSize ); var i int32;\n    for  i = 0; i \u003c nSize; i++  {\n        vSims.pArray[i] = Abc_RandomW(0);\n    }\n    return vSims;\n}"
+    },
+    {
+      "Name": "Vec_WrdStartTruthTables",
+      "Start": 5306,
+      "End": 6061,
+      "BodyStart": 5369,
+      "Original": "static inline Vec_Wrd_t * Vec_WrdStartTruthTables( int nVars )\n{\n    Vec_Wrd_t * p;\n    unsigned Masks[5] = { 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    int i, k, nWords;\n    nWords = nVars \u003c= 6 ? 1 : (1 \u003c\u003c (nVars - 6));\n    p = Vec_WrdStart( nWords * nVars );\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        unsigned * pTruth = (unsigned *)(p-\u003epArray + nWords * i);\n        if ( i \u003c 5 )\n        {\n            for ( k = 0; k \u003c 2*nWords; k++ )\n                pTruth[k] = Masks[i];\n        }\n        else\n        {\n            for ( k = 0; k \u003c 2*nWords; k++ )\n                if ( k \u0026 (1 \u003c\u003c (i-5)) )\n                    pTruth[k] = ~(unsigned)0;\n                else\n                    pTruth[k] = 0;\n        }\n    }\n    return p;\n}",
+      "Draft": "func Vec_WrdStartTruthTables(nVars int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    var Masks [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    var i, k, nWords int32;\n    if nVars \u003c= 6 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars - 6));\n    }\n    p = Vec_WrdStart( nWords * nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        var pTruth *uint32  = (unsigned *)(p.pArray + nWords * i);\n        if i \u003c 5 {\n            for  k = 0; k \u003c 2*nWords; k++  {\n                pTruth[k] = Masks[i];\n            }\n        \n        } else {\n            for  k = 0; k \u003c 2*nWords; k++  {\n                if k \u0026 (1 \u003c\u003c (i-5)) {\n                    pTruth[k] = ~uint32(0);\n                } else {\n                    pTruth[k] = 0; }\n            }\n        }\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_WrdAllocArray",
+      "Start": 6356,
+      "End": 6569,
+      "BodyStart": 6428,
+      "Original": "static inline Vec_Wrd_t * Vec_WrdAllocArray( word * pArray, int nSize )\n{\n    Vec_Wrd_t * p;\n    p = ABC_ALLOC( Vec_Wrd_t, 1 );\n    p-\u003enSize  = nSize;\n    p-\u003enCap   = nSize;\n    p-\u003epArray = pArray;\n    return p;\n}",
+      "Draft": "func Vec_WrdAllocArray(pArray *word, nSize int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    p = new(Vec_Wrd_t);\n    p.nSize  = nSize;\n    p.nCap   = nSize;\n    p.pArray = pArray;\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_WrdAllocArrayCopy",
+      "Start": 6864,
+      "End": 7162,
+      "BodyStart": 6940,
+      "Original": "static inline Vec_Wrd_t * Vec_WrdAllocArrayCopy( word * pArray, int nSize )\n{\n    Vec_Wrd_t * p;\n    p = ABC_ALLOC( Vec_Wrd_t, 1 );\n    p-\u003enSize  = nSize;\n    p-\u003enCap   = nSize;\n    p-\u003epArray = ABC_ALLOC( word, nSize );\n    memcpy( p-\u003epArray, pArray, sizeof(word) * (size_t)nSize );\n    return p;\n}",
+      "Draft": "func Vec_WrdAllocArrayCopy(pArray *word, nSize int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    p = new(Vec_Wrd_t);\n    p.nSize  = nSize;\n    p.nCap   = nSize;\n    p.pArray = ABC_ALLOC( word, nSize );\n    memcpy( p.pArray, pArray, sizeof(word) * (size_t)nSize );\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_WrdDup",
+      "Start": 7427,
+      "End": 7748,
+      "BodyStart": 7484,
+      "Original": "static inline Vec_Wrd_t * Vec_WrdDup( Vec_Wrd_t * pVec )\n{\n    Vec_Wrd_t * p;\n    p = ABC_ALLOC( Vec_Wrd_t, 1 );\n    p-\u003enSize  = pVec-\u003enSize;\n    p-\u003enCap   = pVec-\u003enSize;\n    p-\u003epArray = p-\u003enCap? ABC_ALLOC( word, p-\u003enCap ) : NULL;\n    memcpy( p-\u003epArray, pVec-\u003epArray, sizeof(word) * (size_t)pVec-\u003enSize );\n    return p;\n}",
+      "Draft": "func Vec_WrdDup(pVec *Vec_Wrd_t) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    p = new(Vec_Wrd_t);\n    p.nSize  = pVec.nSize;\n    p.nCap   = pVec.nSize;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( word, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    memcpy( p.pArray, pVec.pArray, sizeof(word) * (size_t)pVec.nSize );\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_WrdDupArray",
+      "Start": 8024,
+      "End": 8313,
+      "BodyStart": 8086,
+      "Original": "static inline Vec_Wrd_t * Vec_WrdDupArray( Vec_Wrd_t * pVec )\n{\n    Vec_Wrd_t * p;\n    p = ABC_ALLOC( Vec_Wrd_t, 1 );\n    p-\u003enSize  = pVec-\u003enSize;\n    p-\u003enCap   = pVec-\u003enCap;\n    p-\u003epArray = pVec-\u003epArray;\n    pVec-\u003enSize  = 0;\n    pVec-\u003enCap   = 0;\n    pVec-\u003epArray = NULL;\n    return p;\n}",
+      "Draft": "func Vec_WrdDupArray(pVec *Vec_Wrd_t) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    p = new(Vec_Wrd_t);\n    p.nSize  = pVec.nSize;\n    p.nCap   = pVec.nCap;\n    p.pArray = pVec.pArray;\n    pVec.nSize  = 0;\n    pVec.nCap   = 0;\n    pVec.pArray = nil;\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_WrdErase",
+      "Start": 8549,
+      "End": 8663,
+      "BodyStart": 8598,
+      "Original": "static inline void Vec_WrdErase( Vec_Wrd_t * p )\n{\n    ABC_FREE( p-\u003epArray );\n    p-\u003enSize = 0;\n    p-\u003enCap = 0;\n}",
+      "Draft": "func Vec_WrdErase(p *Vec_Wrd_t) {\n    ABC_FREE( p.pArray );\n    p.nSize = 0;\n    p.nCap = 0;\n}"
+    },
+    {
+      "Name": "Vec_WrdFree",
+      "Start": 8664,
+      "End": 8761,
+      "BodyStart": 8712,
+      "Original": "static inline void Vec_WrdFree( Vec_Wrd_t * p )\n{\n    ABC_FREE( p-\u003epArray );\n    ABC_FREE( p );\n}",
+      "Draft": "func Vec_WrdFree(p *Vec_Wrd_t) {\n    ABC_FREE( p.pArray );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Vec_WrdFreeP",
+      "Start": 8997,
+      "End": 9140,
+      "BodyStart": 9047,
+      "Original": "static inline void Vec_WrdFreeP( Vec_Wrd_t ** p )\n{\n    if ( *p == NULL )\n        return;\n    ABC_FREE( (*p)-\u003epArray );\n    ABC_FREE( (*p) );\n}",
+      "Draft": "func Vec_WrdFreeP(p **Vec_Wrd_t) {\n    if *p == nil {\n        return; }\n    ABC_FREE( (*p).pArray );\n    ABC_FREE( (*p) );\n}"
+    },
+    {
+      "Name": "Vec_WrdReleaseArray",
+      "Start": 9376,
+      "End": 9544,
+      "BodyStart": 9434,
+      "Original": "static inline word * Vec_WrdReleaseArray( Vec_Wrd_t * p )\n{\n    word * pArray = p-\u003epArray;\n    p-\u003enCap = 0;\n    p-\u003enSize = 0;\n    p-\u003epArray = NULL;\n    return pArray;\n}",
+      "Draft": "func Vec_WrdReleaseArray(p *Vec_Wrd_t) *word {\n    var pArray *word  = p.pArray;\n    p.nCap = 0;\n    p.nSize = 0;\n    p.pArray = nil;\n    return pArray;\n}"
+    },
+    {
+      "Name": "Vec_WrdArray",
+      "Start": 9780,
+      "End": 9856,
+      "BodyStart": 9831,
+      "Original": "static inline word * Vec_WrdArray( Vec_Wrd_t * p )\n{\n    return p-\u003epArray;\n}",
+      "Draft": "func Vec_WrdArray(p *Vec_Wrd_t) *word {\n    return p.pArray;\n}"
+    },
+    {
+      "Name": "Vec_WrdLimit",
+      "Start": 9857,
+      "End": 9944,
+      "BodyStart": 9908,
+      "Original": "static inline word * Vec_WrdLimit( Vec_Wrd_t * p )\n{\n    return p-\u003epArray + p-\u003enSize;\n}",
+      "Draft": "func Vec_WrdLimit(p *Vec_Wrd_t) *word {\n    return p.pArray + p.nSize;\n}"
+    },
+    {
+      "Name": "Vec_WrdSize",
+      "Start": 10180,
+      "End": 10251,
+      "BodyStart": 10227,
+      "Original": "static inline int Vec_WrdSize( Vec_Wrd_t * p )\n{\n    return p-\u003enSize;\n}",
+      "Draft": "func Vec_WrdSize(p *Vec_Wrd_t) int32 {\n    return p.nSize;\n}"
+    },
+    {
+      "Name": "Vec_WrdCap",
+      "Start": 10487,
+      "End": 10556,
+      "BodyStart": 10533,
+      "Original": "static inline int Vec_WrdCap( Vec_Wrd_t * p )\n{\n    return p-\u003enCap;\n}",
+      "Draft": "func Vec_WrdCap(p *Vec_Wrd_t) int32 {\n    return p.nCap;\n}"
+    },
+    {
+      "Name": "Vec_WrdMemory",
+      "Start": 10792,
+      "End": 10927,
+      "BodyStart": 10844,
+      "Original": "static inline double Vec_WrdMemory( Vec_Wrd_t * p )\n{\n    return !p ? 0.0 : 1.0 * sizeof(word) * (size_t)p-\u003enCap + sizeof(Vec_Wrd_t);\n}",
+      "Draft": "func Vec_WrdMemory(p *Vec_Wrd_t) float64 {\n    if !(p != nil) {\n        return 0.0;\n    } else {\n        return 1.0 * sizeof(word) * (size_t)p.nCap + sizeof(Vec_Wrd_t);\n    }\n}"
+    },
+    {
+      "Name": "Vec_WrdEntry",
+      "Start": 11163,
+      "End": 11285,
+      "BodyStart": 11219,
+      "Original": "static inline word Vec_WrdEntry( Vec_Wrd_t * p, int i )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize );\n    return p-\u003epArray[i];\n}",
+      "Draft": "func Vec_WrdEntry(p *Vec_Wrd_t, i int32) word {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray[i];\n}"
+    },
+    {
+      "Name": "Vec_WrdEntryP",
+      "Start": 11521,
+      "End": 11647,
+      "BodyStart": 11580,
+      "Original": "static inline word * Vec_WrdEntryP( Vec_Wrd_t * p, int i )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize );\n    return p-\u003epArray + i;\n}",
+      "Draft": "func Vec_WrdEntryP(p *Vec_Wrd_t, i int32) *word {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray + i;\n}"
+    },
+    {
+      "Name": "Vec_WrdWriteEntry",
+      "Start": 11883,
+      "End": 12023,
+      "BodyStart": 11956,
+      "Original": "static inline void Vec_WrdWriteEntry( Vec_Wrd_t * p, int i, word Entry )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize );\n    p-\u003epArray[i] = Entry;\n}",
+      "Draft": "func Vec_WrdWriteEntry(p *Vec_Wrd_t, i int32, Entry word) {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    p.pArray[i] = Entry;\n}"
+    },
+    {
+      "Name": "Vec_WrdAddToEntry",
+      "Start": 12259,
+      "End": 12413,
+      "BodyStart": 12335,
+      "Original": "static inline word Vec_WrdAddToEntry( Vec_Wrd_t * p, int i, word Addition )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enSize );\n    return p-\u003epArray[i] += Addition;\n}",
+      "Draft": "func Vec_WrdAddToEntry(p *Vec_Wrd_t, i int32, Addition word) word {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray[i] += Addition;\n}"
+    },
+    {
+      "Name": "Vec_WrdEntryLast",
+      "Start": 12649,
+      "End": 12767,
+      "BodyStart": 12702,
+      "Original": "static inline word Vec_WrdEntryLast( Vec_Wrd_t * p )\n{\n    assert( p-\u003enSize \u003e 0 );\n    return p-\u003epArray[p-\u003enSize-1];\n}",
+      "Draft": "func Vec_WrdEntryLast(p *Vec_Wrd_t) word {\n    assert(p.nSize \u003e 0, \"p.nSize \u003e 0\");\n    return p.pArray[p.nSize-1];\n}"
+    },
+    {
+      "Name": "Vec_WrdGrow",
+      "Start": 13044,
+      "End": 13262,
+      "BodyStart": 13105,
+      "Original": "static inline void Vec_WrdGrow( Vec_Wrd_t * p, int nCapMin )\n{\n    if ( p-\u003enCap \u003e= nCapMin )\n        return;\n    p-\u003epArray = ABC_REALLOC( word, p-\u003epArray, nCapMin ); \n    assert( p-\u003epArray );\n    p-\u003enCap   = nCapMin;\n}",
+      "Draft": "func Vec_WrdGrow(p *Vec_Wrd_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    p.pArray = ABC_REALLOC( word, p.pArray, nCapMin ); \n    assert(p.pArray, \"p.pArray\");\n    p.nCap   = nCapMin;\n}"
+    },
+    {
+      "Name": "Vec_WrdFill",
+      "Start": 13544,
+      "End": 13742,
+      "BodyStart": 13614,
+      "Original": "static inline void Vec_WrdFill( Vec_Wrd_t * p, int nSize, word Fill )\n{\n    int i;\n    Vec_WrdGrow( p, nSize );\n    for ( i = 0; i \u003c nSize; i++ )\n        p-\u003epArray[i] = Fill;\n    p-\u003enSize = nSize;\n}",
+      "Draft": "func Vec_WrdFill(p *Vec_Wrd_t, nSize int32, Fill word) {\n    var i int32;\n    Vec_WrdGrow( p, nSize );\n    for  i = 0; i \u003c nSize; i++  {\n        p.pArray[i] = Fill;\n    }\n    p.nSize = nSize;\n}"
+    },
+    {
+      "Name": "Vec_WrdFillExtra",
+      "Start": 14024,
+      "End": 14385,
+      "BodyStart": 14099,
+      "Original": "static inline void Vec_WrdFillExtra( Vec_Wrd_t * p, int nSize, word Fill )\n{\n    int i;\n    if ( nSize \u003c= p-\u003enSize )\n        return;\n    if ( nSize \u003e 2 * p-\u003enCap )\n        Vec_WrdGrow( p, nSize );\n    else if ( nSize \u003e p-\u003enCap )\n        Vec_WrdGrow( p, 2 * p-\u003enCap );\n    for ( i = p-\u003enSize; i \u003c nSize; i++ )\n        p-\u003epArray[i] = Fill;\n    p-\u003enSize = nSize;\n}",
+      "Draft": "func Vec_WrdFillExtra(p *Vec_Wrd_t, nSize int32, Fill word) {\n    var i int32;\n    if nSize \u003c= p.nSize {\n        return; }\n    if nSize \u003e 2 * p.nCap {\n        Vec_WrdGrow( p, nSize );\n    } else if nSize \u003e p.nCap {\n        Vec_WrdGrow( p, 2 * p.nCap ); }\n    for  i = p.nSize; i \u003c nSize; i++  {\n        p.pArray[i] = Fill;\n    }\n    p.nSize = nSize;\n}"
+    },
+    {
+      "Name": "Vec_WrdGetEntry",
+      "Start": 14667,
+      "End": 14799,
+      "BodyStart": 14726,
+      "Original": "static inline word Vec_WrdGetEntry( Vec_Wrd_t * p, int i )\n{\n    Vec_WrdFillExtra( p, i + 1, 0 );\n    return Vec_WrdEntry( p, i );\n}",
+      "Draft": "func Vec_WrdGetEntry(p *Vec_Wrd_t, i int32) word {\n    Vec_WrdFillExtra( p, i + 1, 0 );\n    return Vec_WrdEntry( p, i );\n}"
+    },
+    {
+      "Name": "Vec_WrdGetEntryP",
+      "Start": 15081,
+      "End": 15217,
+      "BodyStart": 15143,
+      "Original": "static inline word * Vec_WrdGetEntryP( Vec_Wrd_t * p, int i )\n{\n    Vec_WrdFillExtra( p, i + 1, 0 );\n    return Vec_WrdEntryP( p, i );\n}",
+      "Draft": "func Vec_WrdGetEntryP(p *Vec_Wrd_t, i int32) *word {\n    Vec_WrdFillExtra( p, i + 1, 0 );\n    return Vec_WrdEntryP( p, i );\n}"
+    },
+    {
+      "Name": "Vec_WrdSetEntry",
+      "Start": 15504,
+      "End": 15653,
+      "BodyStart": 15575,
+      "Original": "static inline void Vec_WrdSetEntry( Vec_Wrd_t * p, int i, word Entry )\n{\n    Vec_WrdFillExtra( p, i + 1, 0 );\n    Vec_WrdWriteEntry( p, i, Entry );\n}",
+      "Draft": "func Vec_WrdSetEntry(p *Vec_Wrd_t, i int32, Entry word) {\n    Vec_WrdFillExtra( p, i + 1, 0 );\n    Vec_WrdWriteEntry( p, i, Entry );\n}"
+    },
+    {
+      "Name": "Vec_WrdShrink",
+      "Start": 15889,
+      "End": 16017,
+      "BodyStart": 15953,
+      "Original": "static inline void Vec_WrdShrink( Vec_Wrd_t * p, int nSizeNew )\n{\n    assert( p-\u003enSize \u003e= nSizeNew );\n    p-\u003enSize = nSizeNew;\n}",
+      "Draft": "func Vec_WrdShrink(p *Vec_Wrd_t, nSizeNew int32) {\n    assert(p.nSize \u003e= nSizeNew, \"p.nSize \u003e= nSizeNew\");\n    p.nSize = nSizeNew;\n}"
+    },
+    {
+      "Name": "Vec_WrdClear",
+      "Start": 16253,
+      "End": 16323,
+      "BodyStart": 16302,
+      "Original": "static inline void Vec_WrdClear( Vec_Wrd_t * p )\n{\n    p-\u003enSize = 0;\n}",
+      "Draft": "func Vec_WrdClear(p *Vec_Wrd_t) {\n    p.nSize = 0;\n}"
+    },
+    {
+      "Name": "Vec_WrdPush",
+      "Start": 16559,
+      "End": 16818,
+      "BodyStart": 16619,
+      "Original": "static inline void Vec_WrdPush( Vec_Wrd_t * p, word Entry )\n{\n    if ( p-\u003enSize == p-\u003enCap )\n    {\n        if ( p-\u003enCap \u003c 16 )\n            Vec_WrdGrow( p, 16 );\n        else\n            Vec_WrdGrow( p, 2 * p-\u003enCap );\n    }\n    p-\u003epArray[p-\u003enSize++] = Entry;\n}",
+      "Draft": "func Vec_WrdPush(p *Vec_Wrd_t, Entry word) {\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_WrdGrow( p, 16 );\n        } else {\n            Vec_WrdGrow( p, 2 * p.nCap ); }\n    }\n    p.pArray[p.nSize++] = Entry;\n}"
+    },
+    {
+      "Name": "Vec_WrdPushFirst",
+      "Start": 17054,
+      "End": 17417,
+      "BodyStart": 17119,
+      "Original": "static inline void Vec_WrdPushFirst( Vec_Wrd_t * p, word Entry )\n{\n    int i;\n    if ( p-\u003enSize == p-\u003enCap )\n    {\n        if ( p-\u003enCap \u003c 16 )\n            Vec_WrdGrow( p, 16 );\n        else\n            Vec_WrdGrow( p, 2 * p-\u003enCap );\n    }\n    p-\u003enSize++;\n    for ( i = p-\u003enSize - 1; i \u003e= 1; i-- )\n        p-\u003epArray[i] = p-\u003epArray[i-1];\n    p-\u003epArray[0] = Entry;\n}",
+      "Draft": "func Vec_WrdPushFirst(p *Vec_Wrd_t, Entry word) {\n    var i int32;\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_WrdGrow( p, 16 );\n        } else {\n            Vec_WrdGrow( p, 2 * p.nCap ); }\n    }\n    p.nSize++;\n    for  i = p.nSize - 1; i \u003e= 1; i--  {\n        p.pArray[i] = p.pArray[i-1];\n    }\n    p.pArray[0] = Entry;\n}"
+    },
+    {
+      "Name": "Vec_WrdPushOrder",
+      "Start": 17709,
+      "End": 18144,
+      "BodyStart": 17774,
+      "Original": "static inline void Vec_WrdPushOrder( Vec_Wrd_t * p, word Entry )\n{\n    int i;\n    if ( p-\u003enSize == p-\u003enCap )\n    {\n        if ( p-\u003enCap \u003c 16 )\n            Vec_WrdGrow( p, 16 );\n        else\n            Vec_WrdGrow( p, 2 * p-\u003enCap );\n    }\n    p-\u003enSize++;\n    for ( i = p-\u003enSize-2; i \u003e= 0; i-- )\n        if ( p-\u003epArray[i] \u003e Entry )\n            p-\u003epArray[i+1] = p-\u003epArray[i];\n        else\n            break;\n    p-\u003epArray[i+1] = Entry;\n}",
+      "Draft": "func Vec_WrdPushOrder(p *Vec_Wrd_t, Entry word) {\n    var i int32;\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_WrdGrow( p, 16 );\n        } else {\n            Vec_WrdGrow( p, 2 * p.nCap ); }\n    }\n    p.nSize++;\n    for  i = p.nSize-2; i \u003e= 0; i--  {\n        if p.pArray[i] \u003e Entry {\n            p.pArray[i+1] = p.pArray[i];\n        } else {\n            break; }\n    }\n    p.pArray[i+1] = Entry;\n}"
+    },
+    {
+      "Name": "Vec_WrdPushUniqueOrder",
+      "Start": 18436,
+      "End": 18664,
+      "BodyStart": 18506,
+      "Original": "static inline int Vec_WrdPushUniqueOrder( Vec_Wrd_t * p, word Entry )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] == Entry )\n            return 1;\n    Vec_WrdPushOrder( p, Entry );\n    return 0;\n}",
+      "Draft": "func Vec_WrdPushUniqueOrder(p *Vec_Wrd_t, Entry word) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return 1; }\n    }\n    Vec_WrdPushOrder( p, Entry );\n    return 0;\n}"
+    },
+    {
+      "Name": "Vec_WrdPushUnique",
+      "Start": 18900,
+      "End": 19118,
+      "BodyStart": 18965,
+      "Original": "static inline int Vec_WrdPushUnique( Vec_Wrd_t * p, word Entry )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] == Entry )\n            return 1;\n    Vec_WrdPush( p, Entry );\n    return 0;\n}",
+      "Draft": "func Vec_WrdPushUnique(p *Vec_Wrd_t, Entry word) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return 1; }\n    }\n    Vec_WrdPush( p, Entry );\n    return 0;\n}"
+    },
+    {
+      "Name": "Vec_WrdFetch",
+      "Start": 19415,
+      "End": 19723,
+      "BodyStart": 19478,
+      "Original": "static inline word * Vec_WrdFetch( Vec_Wrd_t * p, int nWords )\n{\n    if ( nWords == 0 )\n        return NULL;\n    assert( nWords \u003e 0 );\n    p-\u003enSize += nWords;\n    if ( p-\u003enSize \u003e p-\u003enCap )\n    {\n//         Vec_WrdGrow( p, 2 * p-\u003enSize );\n        return NULL;\n    }\n    return p-\u003epArray + p-\u003enSize - nWords;\n}",
+      "Draft": "func Vec_WrdFetch(p *Vec_Wrd_t, nWords int32) *word {\n    if nWords == 0 {\n        return nil; }\n    assert(nWords \u003e 0, \"nWords \u003e 0\");\n    p.nSize += nWords;\n    if p.nSize \u003e p.nCap {\n//         Vec_WrdGrow( p, 2 * p-\u003enSize );\n        return nil;\n    }\n    return p.pArray + p.nSize - nWords;\n}"
+    },
+    {
+      "Name": "Vec_WrdPop",
+      "Start": 20011,
+      "End": 20123,
+      "BodyStart": 20058,
+      "Original": "static inline word Vec_WrdPop( Vec_Wrd_t * p )\n{\n    assert( p-\u003enSize \u003e 0 );\n    return p-\u003epArray[--p-\u003enSize];\n}",
+      "Draft": "func Vec_WrdPop(p *Vec_Wrd_t) word {\n    assert(p.nSize \u003e 0, \"p.nSize \u003e 0\");\n    return p.pArray[--p.nSize];\n}"
+    },
+    {
+      "Name": "Vec_WrdFind",
+      "Start": 20370,
+      "End": 20554,
+      "BodyStart": 20429,
+      "Original": "static inline int Vec_WrdFind( Vec_Wrd_t * p, word Entry )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] == Entry )\n            return i;\n    return -1;\n}",
+      "Draft": "func Vec_WrdFind(p *Vec_Wrd_t, Entry word) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Vec_WrdRemove",
+      "Start": 20790,
+      "End": 21133,
+      "BodyStart": 20851,
+      "Original": "static inline int Vec_WrdRemove( Vec_Wrd_t * p, word Entry )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] == Entry )\n            break;\n    if ( i == p-\u003enSize )\n        return 0;\n    assert( i \u003c p-\u003enSize );\n    for ( i++; i \u003c p-\u003enSize; i++ )\n        p-\u003epArray[i-1] = p-\u003epArray[i];\n    p-\u003enSize--;\n    return 1;\n}",
+      "Draft": "func Vec_WrdRemove(p *Vec_Wrd_t, Entry word) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            break; }\n    }\n    if i == p.nSize {\n        return 0; }\n    assert(i \u003c p.nSize, \"i \u003c p.nSize\");\n    for  i++; i \u003c p.nSize; i++  {\n        p.pArray[i-1] = p.pArray[i];\n    }\n    p.nSize--;\n    return 1;\n}"
+    },
+    {
+      "Name": "Vec_WrdInsert",
+      "Start": 21424,
+      "End": 21692,
+      "BodyStart": 21497,
+      "Original": "static inline void Vec_WrdInsert( Vec_Wrd_t * p, int iHere, word Entry )\n{\n    int i;\n    assert( iHere \u003e= 0 \u0026\u0026 iHere \u003c p-\u003enSize );\n    Vec_WrdPush( p, 0 );\n    for ( i = p-\u003enSize - 1; i \u003e iHere; i-- )\n        p-\u003epArray[i] = p-\u003epArray[i-1];\n    p-\u003epArray[i] = Entry;\n}",
+      "Draft": "func Vec_WrdInsert(p *Vec_Wrd_t, iHere int32, Entry word) {\n    var i int32;\n    assert(iHere \u003e= 0 \u0026\u0026 iHere \u003c p.nSize, \"iHere \u003e= 0 \u0026\u0026 iHere \u003c p.nSize\");\n    Vec_WrdPush( p, 0 );\n    for  i = p.nSize - 1; i \u003e iHere; i--  {\n        p.pArray[i] = p.pArray[i-1];\n    }\n    p.pArray[i] = Entry;\n}"
+    },
+    {
+      "Name": "Vec_WrdFindMax",
+      "Start": 21939,
+      "End": 22209,
+      "BodyStart": 21990,
+      "Original": "static inline word Vec_WrdFindMax( Vec_Wrd_t * p )\n{\n    word Best;\n    int i;\n    if ( p-\u003enSize == 0 )\n        return 0;\n    Best = p-\u003epArray[0];\n    for ( i = 1; i \u003c p-\u003enSize; i++ )\n        if ( Best \u003c p-\u003epArray[i] )\n            Best = p-\u003epArray[i];\n    return Best;\n}",
+      "Draft": "func Vec_WrdFindMax(p *Vec_Wrd_t) word {\n    var Best word;\n    var i int32;\n    if p.nSize == 0 {\n        return 0; }\n    Best = p.pArray[0];\n    for  i = 1; i \u003c p.nSize; i++  {\n        if Best \u003c p.pArray[i] {\n            Best = p.pArray[i]; }\n    }\n    return Best;\n}"
+    },
+    {
+      "Name": "Vec_WrdFindMin",
+      "Start": 22456,
+      "End": 22726,
+      "BodyStart": 22507,
+      "Original": "static inline word Vec_WrdFindMin( Vec_Wrd_t * p )\n{\n    word Best;\n    int i;\n    if ( p-\u003enSize == 0 )\n        return 0;\n    Best = p-\u003epArray[0];\n    for ( i = 1; i \u003c p-\u003enSize; i++ )\n        if ( Best \u003e p-\u003epArray[i] )\n            Best = p-\u003epArray[i];\n    return Best;\n}",
+      "Draft": "func Vec_WrdFindMin(p *Vec_Wrd_t) word {\n    var Best word;\n    var i int32;\n    if p.nSize == 0 {\n        return 0; }\n    Best = p.pArray[0];\n    for  i = 1; i \u003c p.nSize; i++  {\n        if Best \u003e p.pArray[i] {\n            Best = p.pArray[i]; }\n    }\n    return Best;\n}"
+    },
+    {
+      "Name": "Vec_WrdReverseOrder",
+      "Start": 22992,
+      "End": 23245,
+      "BodyStart": 23048,
+      "Original": "static inline void Vec_WrdReverseOrder( Vec_Wrd_t * p )\n{\n    word Temp;\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize/2; i++ )\n    {\n        Temp = p-\u003epArray[i];\n        p-\u003epArray[i] = p-\u003epArray[p-\u003enSize-1-i];\n        p-\u003epArray[p-\u003enSize-1-i] = Temp;\n    }\n}",
+      "Draft": "func Vec_WrdReverseOrder(p *Vec_Wrd_t) {\n    var Temp word;\n    var i int32;\n    for  i = 0; i \u003c p.nSize/2; i++  {\n        Temp = p.pArray[i];\n        p.pArray[i] = p.pArray[p.nSize-1-i];\n        p.pArray[p.nSize-1-i] = Temp;\n    }\n}"
+    },
+    {
+      "Name": "Vec_WrdInvert",
+      "Start": 23481,
+      "End": 23810,
+      "BodyStart": 23550,
+      "Original": "static inline Vec_Wrd_t * Vec_WrdInvert( Vec_Wrd_t * p, word Fill ) \n{\n    int i;\n    word Entry;\n    Vec_Wrd_t * vRes = Vec_WrdAlloc( 0 );\n    Vec_WrdFill( vRes, Vec_WrdFindMax(p) + 1, Fill );\n    Vec_WrdForEachEntry( p, Entry, i )\n        if ( Entry != Fill )\n            Vec_WrdWriteEntry( vRes, Entry, i );\n    return vRes;\n}",
+      "Draft": "func Vec_WrdInvert(p *Vec_Wrd_t, Fill word) *Vec_Wrd_t {\n    var i int32;\n    var Entry word;\n    var vRes *Vec_Wrd_t  = Vec_WrdAlloc( 0 );\n    Vec_WrdFill( vRes, Vec_WrdFindMax(p) + 1, Fill );\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(p)) \u0026\u0026 (((Entry) = Vec_WrdEntry(p, i)), 1); i++  {\n        if Entry != Fill {\n            Vec_WrdWriteEntry( vRes, Entry, i ); }\n    }\n    return vRes;\n}"
+    },
+    {
+      "Name": "Vec_WrdSum",
+      "Start": 24046,
+      "End": 24220,
+      "BodyStart": 24094,
+      "Original": "static inline word Vec_WrdSum( Vec_Wrd_t * p ) \n{\n    word Counter = 0;\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        Counter += p-\u003epArray[i];\n    return Counter;\n}",
+      "Draft": "func Vec_WrdSum(p *Vec_Wrd_t) word {\n    var Counter word;\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        Counter += p.pArray[i];\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Vec_WrdCountZero",
+      "Start": 24456,
+      "End": 24633,
+      "BodyStart": 24509,
+      "Original": "static inline int Vec_WrdCountZero( Vec_Wrd_t * p ) \n{\n    int i, Counter = 0;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n        Counter += (p-\u003epArray[i] == 0);\n    return Counter;\n}",
+      "Draft": "func Vec_WrdCountZero(p *Vec_Wrd_t) int32 {\n    var i, Counter int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        Counter += (p.pArray[i] == 0);\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Vec_WrdEqual",
+      "Start": 24901,
+      "End": 25153,
+      "BodyStart": 24967,
+      "Original": "static inline int Vec_WrdEqual( Vec_Wrd_t * p1, Vec_Wrd_t * p2 ) \n{\n    int i;\n    if ( p1-\u003enSize != p2-\u003enSize )\n        return 0;\n    for ( i = 0; i \u003c p1-\u003enSize; i++ )\n        if ( p1-\u003epArray[i] != p2-\u003epArray[i] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Vec_WrdEqual(p1 *Vec_Wrd_t, p2 *Vec_Wrd_t) int32 {\n    var i int32;\n    if p1.nSize != p2.nSize {\n        return 0; }\n    for  i = 0; i \u003c p1.nSize; i++  {\n        if p1.pArray[i] != p2.pArray[i] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Vec_WrdCountCommon",
+      "Start": 25425,
+      "End": 25968,
+      "BodyStart": 25497,
+      "Original": "static inline int Vec_WrdCountCommon( Vec_Wrd_t * p1, Vec_Wrd_t * p2 ) \n{\n    Vec_Wrd_t * vTemp;\n    word Entry;\n    int i, Counter = 0;\n    if ( Vec_WrdSize(p1) \u003c Vec_WrdSize(p2) )\n        vTemp = p1, p1 = p2, p2 = vTemp;\n    assert( Vec_WrdSize(p1) \u003e= Vec_WrdSize(p2) );\n    vTemp = Vec_WrdInvert( p2, -1 );\n    Vec_WrdFillExtra( vTemp, Vec_WrdFindMax(p1) + 1, ~((word)0) );\n    Vec_WrdForEachEntry( p1, Entry, i )\n        if ( Vec_WrdEntry(vTemp, Entry) != ~((word)0) )\n            Counter++;\n    Vec_WrdFree( vTemp );\n    return Counter;\n}",
+      "Draft": "func Vec_WrdCountCommon(p1 *Vec_Wrd_t, p2 *Vec_Wrd_t) int32 {\n    var vTemp *Vec_Wrd_t;\n    var Entry word;\n    var i, Counter int32;\n    if Vec_WrdSize(p1) \u003c Vec_WrdSize(p2) {\n        vTemp = p1;\np1 = p2;\np2 = vTemp; }\n    assert(Vec_WrdSize(p1) \u003e= Vec_WrdSize(p2), \"Vec_WrdSize(p1) \u003e= Vec_WrdSize(p2)\");\n    vTemp = Vec_WrdInvert( p2, -1 );\n    Vec_WrdFillExtra( vTemp, Vec_WrdFindMax(p1) + 1, ~((word)0) );\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(p1)) \u0026\u0026 (((Entry) = Vec_WrdEntry(p1, i)), 1); i++  {\n        if Vec_WrdEntry(vTemp, Entry) != ~((word)0) {\n            Counter++; }\n    }\n    Vec_WrdFree( vTemp );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Vec_WrdSortCompare1",
+      "Start": 26242,
+      "End": 26499,
+      "BodyStart": 26299,
+      "Original": "static int Vec_WrdSortCompare1( word * pp1, word * pp2 )\n{\n    // for some reason commenting out lines (as shown) led to crashing of the release version\n    if ( *pp1 \u003c *pp2 )\n        return -1;\n    if ( *pp1 \u003e *pp2 ) //\n        return 1;\n    return 0; //\n}",
+      "Draft": "func Vec_WrdSortCompare1(pp1 *word, pp2 *word) int32 {\n    // for some reason commenting out lines (as shown) led to crashing of the release version\n    if *pp1 \u003c *pp2 {\n        return -1; }\n    if *pp1 \u003e *pp2 { //\n        return 1; }\n    return 0; //\n}"
+    },
+    {
+      "Name": "Vec_WrdSortCompare2",
+      "Start": 26773,
+      "End": 27030,
+      "BodyStart": 26830,
+      "Original": "static int Vec_WrdSortCompare2( word * pp1, word * pp2 )\n{\n    // for some reason commenting out lines (as shown) led to crashing of the release version\n    if ( *pp1 \u003e *pp2 )\n        return -1;\n    if ( *pp1 \u003c *pp2 ) //\n        return 1;\n    return 0; //\n}",
+      "Draft": "func Vec_WrdSortCompare2(pp1 *word, pp2 *word) int32 {\n    // for some reason commenting out lines (as shown) led to crashing of the release version\n    if *pp1 \u003e *pp2 {\n        return -1; }\n    if *pp1 \u003c *pp2 { //\n        return 1; }\n    return 0; //\n}"
+    },
+    {
+      "Name": "Vec_WrdSort",
+      "Start": 27309,
+      "End": 27692,
+      "BodyStart": 27371,
+      "Original": "static inline void Vec_WrdSort( Vec_Wrd_t * p, int fReverse )\n{\n    if ( fReverse ) \n        qsort( (void *)p-\u003epArray, (size_t)p-\u003enSize, sizeof(word), \n                (int (*)(const void *, const void *)) Vec_WrdSortCompare2 );\n    else\n        qsort( (void *)p-\u003epArray, (size_t)p-\u003enSize, sizeof(word), \n                (int (*)(const void *, const void *)) Vec_WrdSortCompare1 );\n}",
+      "Draft": "func Vec_WrdSort(p *Vec_Wrd_t, fReverse int32) {\n    if fReverse != 0 { \n        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(word), \n                        (int (*)(void *, void *)) Vec_WrdSortCompare2 );\n    } else {\n        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(word), \n                        (int (*)(void *, void *)) Vec_WrdSortCompare1 ); }\n}"
+    },
+    {
+      "Name": "Vec_WrdUniqify",
+      "Start": 27955,
+      "End": 28236,
+      "BodyStart": 28006,
+      "Original": "static inline void Vec_WrdUniqify( Vec_Wrd_t * p )\n{\n    int i, k;\n    if ( p-\u003enSize \u003c 2 )\n        return;\n    Vec_WrdSort( p, 0 );\n    for ( i = k = 1; i \u003c p-\u003enSize; i++ )\n        if ( p-\u003epArray[i] != p-\u003epArray[i-1] )\n            p-\u003epArray[k++] = p-\u003epArray[i];\n    p-\u003enSize = k;\n}",
+      "Draft": "func Vec_WrdUniqify(p *Vec_Wrd_t) {\n    var i, k int32;\n    if p.nSize \u003c 2 {\n        return; }\n    Vec_WrdSort( p, 0 );\n    for  i = k = 1; i \u003c p.nSize; i++  {\n        if p.pArray[i] != p.pArray[i-1] {\n            p.pArray[k++] = p.pArray[i]; }\n    }\n    p.nSize = k;\n}"
+    },
+    {
+      "Name": "Vec_WrdUniqueCount",
+      "Start": 28237,
+      "End": 28584,
+      "BodyStart": 28330,
+      "Original": "static inline int Vec_WrdUniqueCount( Vec_Wrd_t * vData, int nWordSize, Vec_Int_t ** pvMap )\n{\n    int Result;\n    Vec_Int_t * vDataInt = (Vec_Int_t *)vData;\n    vDataInt-\u003enSize *= 2;\n    vDataInt-\u003enCap *= 2;\n    Result = Vec_IntUniqueCount( vDataInt, 2 * nWordSize, pvMap );\n    vDataInt-\u003enSize /= 2;\n    vDataInt-\u003enCap /= 2;\n    return Result;\n}",
+      "Draft": "func Vec_WrdUniqueCount(vData *Vec_Wrd_t, nWordSize int32, pvMap **Vec_Int_t) int32 {\n    var Result int32;\n    var vDataInt *Vec_Int_t  = (Vec_Int_t *)vData;\n    vDataInt.nSize *= 2;\n    vDataInt.nCap *= 2;\n    Result = Vec_IntUniqueCount( vDataInt, 2 * nWordSize, pvMap );\n    vDataInt.nSize /= 2;\n    vDataInt.nCap /= 2;\n    return Result;\n}"
+    },
+    {
+      "Name": "Vec_WrdUniqifyHash",
+      "Start": 28585,
+      "End": 28986,
+      "BodyStart": 28666,
+      "Original": "static inline Vec_Wrd_t * Vec_WrdUniqifyHash( Vec_Wrd_t * vData, int nWordSize )\n{\n    Vec_Int_t * vResInt;\n    Vec_Int_t * vDataInt = (Vec_Int_t *)vData;\n    vDataInt-\u003enSize *= 2;\n    vDataInt-\u003enCap *= 2;\n    vResInt = Vec_IntUniqifyHash( vDataInt, 2 * nWordSize );\n    vDataInt-\u003enSize /= 2;\n    vDataInt-\u003enCap /= 2;\n    vResInt-\u003enSize /= 2;\n    vResInt-\u003enCap /= 2;\n    return (Vec_Wrd_t *)vResInt;\n}",
+      "Draft": "func Vec_WrdUniqifyHash(vData *Vec_Wrd_t, nWordSize int32) *Vec_Wrd_t {\n    var vResInt *Vec_Int_t;\n    var vDataInt *Vec_Int_t  = (Vec_Int_t *)vData;\n    vDataInt.nSize *= 2;\n    vDataInt.nCap *= 2;\n    vResInt = Vec_IntUniqifyHash( vDataInt, 2 * nWordSize );\n    vDataInt.nSize /= 2;\n    vDataInt.nCap /= 2;\n    vResInt.nSize /= 2;\n    vResInt.nCap /= 2;\n    return (Vec_Wrd_t *)vResInt;\n}"
+    },
+    {
+      "Name": "Vec_WrdSortCompareUnsigned",
+      "Start": 29260,
+      "End": 29424,
+      "BodyStart": 29324,
+      "Original": "static int Vec_WrdSortCompareUnsigned( word * pp1, word * pp2 )\n{\n    if ( *pp1 \u003c *pp2 )\n        return -1;\n    if ( *pp1 \u003e *pp2 )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Vec_WrdSortCompareUnsigned(pp1 *word, pp2 *word) int32 {\n    if *pp1 \u003c *pp2 {\n        return -1; }\n    if *pp1 \u003e *pp2 {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Vec_WrdSortUnsigned",
+      "Start": 29703,
+      "End": 29905,
+      "BodyStart": 29759,
+      "Original": "static inline void Vec_WrdSortUnsigned( Vec_Wrd_t * p )\n{\n    qsort( (void *)p-\u003epArray, (size_t)p-\u003enSize, sizeof(word), \n            (int (*)(const void *, const void *)) Vec_WrdSortCompareUnsigned );\n}",
+      "Draft": "func Vec_WrdSortUnsigned(p *Vec_Wrd_t) {\n    qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(word), \n                (int (*)(void *, void *)) Vec_WrdSortCompareUnsigned );\n}"
+    },
+    {
+      "Name": "Vec_WrdAppend",
+      "Start": 30184,
+      "End": 30363,
+      "BodyStart": 30257,
+      "Original": "static inline void Vec_WrdAppend( Vec_Wrd_t * vVec1, Vec_Wrd_t * vVec2 )\n{\n    word Entry; int i;\n    Vec_WrdForEachEntry( vVec2, Entry, i )\n        Vec_WrdPush( vVec1, Entry );\n}",
+      "Draft": "func Vec_WrdAppend(vVec1 *Vec_Wrd_t, vVec2 *Vec_Wrd_t) {\n    var Entry word; var i int32;\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(vVec2)) \u0026\u0026 (((Entry) = Vec_WrdEntry(vVec2, i)), 1); i++  {\n        Vec_WrdPush( vVec1, Entry );\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManSimPatWriteOne",
+      "Start": 30599,
+      "End": 30991,
+      "BodyStart": 30681,
+      "Original": "static inline void Gia_ManSimPatWriteOne( FILE * pFile, word * pSim, int nWords )\n{\n    int k, Digit, nDigits = nWords*16;\n    for ( k = 0; k \u003c nDigits; k++ )\n    {\n        Digit = (int)((pSim[k/16] \u003e\u003e ((k%16) * 4)) \u0026 15);\n        if ( Digit \u003c 10 )\n            fprintf( pFile, \"%d\", Digit );\n        else\n            fprintf( pFile, \"%c\", 'A' + Digit-10 );\n    }\n    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Gia_ManSimPatWriteOne(pFile *os.File, pSim *word, nWords int32) {\n    var k int32;\n    var Digit int32;\n    var nDigits int32 = nWords*16;\n    for  k = 0; k \u003c nDigits; k++  {\n        Digit = int32(((pSim[k/16] \u003e\u003e ((k%16) * 4)) \u0026 15));\n        if Digit \u003c 10 {\n            fmt.Fprintf(pFile, \"%d\", Digit);\n        } else {\n            fmt.Fprintf(pFile, \"%c\", 'A' + Digit-10); }\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n}"
+    },
+    {
+      "Name": "Vec_WrdPrintHex",
+      "Start": 30992,
+      "End": 31260,
+      "BodyStart": 31056,
+      "Original": "static inline void Vec_WrdPrintHex( Vec_Wrd_t * p, int nWords )\n{\n    int i, nNodes = Vec_WrdSize(p) / nWords;\n    assert( Vec_WrdSize(p) % nWords == 0 );\n    for ( i = 0; i \u003c nNodes; i++ )\n        Gia_ManSimPatWriteOne( stdout, Vec_WrdEntryP(p, i*nWords), nWords );\n}",
+      "Draft": "func Vec_WrdPrintHex(p *Vec_Wrd_t, nWords int32) {\n    var i int32;\n    var nNodes int32 = Vec_WrdSize(p) / nWords;\n    assert(Vec_WrdSize(p) % nWords == 0, \"Vec_WrdSize(p) % nWords == 0\");\n    for  i = 0; i \u003c nNodes; i++  {\n        Gia_ManSimPatWriteOne( os.Stdout, Vec_WrdEntryP(p, i*nWords), nWords );\n    }\n}"
+    },
+    {
+      "Name": "Vec_WrdDumpHex",
+      "Start": 31261,
+      "End": 31903,
+      "BodyStart": 31356,
+      "Original": "static inline void Vec_WrdDumpHex( char * pFileName, Vec_Wrd_t * p, int nWords, int fVerbose )\n{\n    int i, nNodes = Vec_WrdSize(p) / nWords;\n    FILE * pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );\n        return;\n    }\n    assert( Vec_WrdSize(p) % nWords == 0 );\n    for ( i = 0; i \u003c nNodes; i++ )\n        Gia_ManSimPatWriteOne( pFile, Vec_WrdEntryP(p, i*nWords), nWords );\n    fclose( pFile );\n    if ( fVerbose )\n        printf( \"Written %d words of simulation data for %d objects into file \\\"%s\\\".\\n\", nWords, Vec_WrdSize(p)/nWords, pFileName );\n}",
+      "Draft": "func Vec_WrdDumpHex(pFileName string, p *Vec_Wrd_t, nWords int32, fVerbose int32) {\n    var i int32;\n    var nNodes int32 = Vec_WrdSize(p) / nWords;\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        return;\n    }\n    assert(Vec_WrdSize(p) % nWords == 0, \"Vec_WrdSize(p) % nWords == 0\");\n    for  i = 0; i \u003c nNodes; i++  {\n        Gia_ManSimPatWriteOne( pFile, Vec_WrdEntryP(p, i*nWords), nWords );\n    }\n    _ = (pFile).Close();\n    if fVerbose != 0 {\n        fmt.Printf(\"Written %d words of simulation data for %d objects into file \\\"%s\\\".\\n\", nWords, Vec_WrdSize(p)/nWords, pFileName); }\n}"
+    },
+    {
+      "Name": "Vec_WrdReadHexOne",
+      "Start": 31904,
+      "End": 32243,
+      "BodyStart": 31950,
+      "Original": "static inline int Vec_WrdReadHexOne( char c )\n{\n    int Digit = 0;\n    if ( c \u003e= '0' \u0026\u0026 c \u003c= '9' )\n        Digit = c - '0';\n    else if ( c \u003e= 'A' \u0026\u0026 c \u003c= 'F' )\n        Digit = c - 'A' + 10;\n    else if ( c \u003e= 'a' \u0026\u0026 c \u003c= 'f' )\n        Digit = c - 'a' + 10;\n    else assert( 0 );\n    assert( Digit \u003e= 0 \u0026\u0026 Digit \u003c 16 );\n    return Digit;\n}",
+      "Draft": "func Vec_WrdReadHexOne(c byte) int32 {\n    var Digit int32;\n    if c \u003e= '0' \u0026\u0026 c \u003c= '9' {\n        Digit = c - '0';\n    } else if c \u003e= 'A' \u0026\u0026 c \u003c= 'F' {\n        Digit = c - 'A' + 10;\n    } else if c \u003e= 'a' \u0026\u0026 c \u003c= 'f' {\n        Digit = c - 'a' + 10;\n    } else { assert(false, \"0\"); }\n    assert(Digit \u003e= 0 \u0026\u0026 Digit \u003c 16, \"Digit \u003e= 0 \u0026\u0026 Digit \u003c 16\");\n    return Digit;\n}"
+    },
+    {
+      "Name": "Vec_WrdReadHex",
+      "Start": 32244,
+      "End": 33488,
+      "BodyStart": 32334,
+      "Original": "static inline Vec_Wrd_t * Vec_WrdReadHex( char * pFileName, int * pnWords, int fVerbose )\n{\n    Vec_Wrd_t * p = NULL; \n    int c, nWords = -1, nChars = 0; word Num = 0;\n    FILE * pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName );\n        return NULL;\n    }\n    p = Vec_WrdAlloc( 1000 );\n    while ( (c = fgetc(pFile)) != EOF )\n    {\n        if ( c == '\\r' || c == '\\t' || c == ' ' )\n            continue;\n        if ( c == '\\n' )\n        {\n            if ( nChars \u003e 0 )\n            {\n                Vec_WrdPush( p, Num );\n                nChars = 0; \n                Num = 0;\n            }\n            if ( nWords == -1 \u0026\u0026 Vec_WrdSize(p) \u003e 0 )\n                nWords = Vec_WrdSize(p);\n            continue;\n        }\n        Num |= (word)Vec_WrdReadHexOne((char)c) \u003c\u003c (nChars * 4);\n        if ( ++nChars \u003c 16 )\n            continue;\n        Vec_WrdPush( p, Num );\n        nChars = 0; \n        Num = 0;\n    }\n    assert( Vec_WrdSize(p) % nWords == 0 );\n    fclose( pFile );\n    if ( pnWords )\n        *pnWords = nWords;\n    if ( fVerbose )\n        printf( \"Read %d words of simulation data for %d objects.\\n\", nWords, Vec_WrdSize(p)/nWords );\n    return p;\n}",
+      "Draft": "func Vec_WrdReadHex(pFileName string, pnWords *int32, fVerbose int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t  = nil; \n    var c int32;\n    var nWords int32 = -1;\n    var nChars int32; var Num word;\n    var pFile *os.File  = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName);\n        return nil;\n    }\n    p = Vec_WrdAlloc( 1000 );\n    for  (c = fgetc(pFile)) != -1  {\n        if c == '\\r' || c == '\\t' || c == ' ' {\n            continue; }\n        if c == '\\n' {\n            if nChars \u003e 0 {\n                Vec_WrdPush( p, Num );\n                nChars = 0; \n                Num = 0;\n            }\n            if nWords == -1 \u0026\u0026 Vec_WrdSize(p) \u003e 0 {\n                nWords = Vec_WrdSize(p); }\n            continue;\n        }\n        Num |= (word)Vec_WrdReadHexOne(byte(c)) \u003c\u003c (nChars * 4);\n        if nChars++; nChars \u003c 16 {\n            continue; }\n        Vec_WrdPush( p, Num );\n        nChars = 0; \n        Num = 0;\n    }\n    assert(Vec_WrdSize(p) % nWords == 0, \"Vec_WrdSize(p) % nWords == 0\");\n    _ = (pFile).Close();\n    if pnWords != nil {\n        *pnWords = nWords; }\n    if fVerbose != 0 {\n        fmt.Printf(\"Read %d words of simulation data for %d objects.\\n\", nWords, Vec_WrdSize(p)/nWords); }\n    return p;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::struct::Vec_Wrd_t",
+      "Category": "struct-review",
+      "Symbol": "Vec_Wrd_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1298,
+      "End": 1448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::mechanical::sizeof::4044",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4044,
+      "End": 4050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::mechanical::sizeof::4539",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4539,
+      "End": 4545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::mechanical::sizeof::7115",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7115,
+      "End": 7121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::mechanical::sizeof::7695",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7695,
+      "End": 7701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::mechanical::sizeof::10874",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10874,
+      "End": 10880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::mechanical::sizeof::10907",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10907,
+      "End": 10913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::mechanical::sizeof::27647",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 27446,
+      "End": 27452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::mechanical::sizeof::27800",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 27599,
+      "End": 27605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::mechanical::sizeof::30010",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 29809,
+      "End": 29815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::pointer-cast::5658",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5658,
+      "End": 5670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::pointer-cast::27610",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27409,
+      "End": 27417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::pointer-cast::27763",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27562,
+      "End": 27570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::pointer-cast::28576",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28375,
+      "End": 28388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::pointer-cast::28921",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28720,
+      "End": 28733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::pointer-cast::29164",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28963,
+      "End": 28976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::pointer-cast::29973",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29772,
+      "End": 29780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::macro::Vec_WrdForEachEntry",
+      "Category": "macro-review",
+      "Symbol": "Vec_WrdForEachEntry",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1670,
+      "End": 1853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::macro::Vec_WrdForEachEntryStart",
+      "Category": "macro-review",
+      "Symbol": "Vec_WrdForEachEntryStart",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1854,
+      "End": 2041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::macro::Vec_WrdForEachEntryStop",
+      "Category": "macro-review",
+      "Symbol": "Vec_WrdForEachEntryStop",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2042,
+      "End": 2210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::macro::Vec_WrdForEachEntryStartStop",
+      "Category": "macro-review",
+      "Symbol": "Vec_WrdForEachEntryStartStop",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2211,
+      "End": 2385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::macro::Vec_WrdForEachEntryReverse",
+      "Category": "macro-review",
+      "Symbol": "Vec_WrdForEachEntryReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2386,
+      "End": 2575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3074,
+      "End": 3349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdAllocExact",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdAllocExact",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3350,
+      "End": 3603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdStart",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3892,
+      "End": 4091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdStartFull",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdStartFull",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4380,
+      "End": 4586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdStartNatural",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdStartNatural",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4875,
+      "End": 5094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdStartRandom",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdStartRandom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5095,
+      "End": 5305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdStartTruthTables",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdStartTruthTables",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5306,
+      "End": 6061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdAllocArray",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdAllocArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6356,
+      "End": 6569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdAllocArrayCopy",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdAllocArrayCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6864,
+      "End": 7162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdDup",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7427,
+      "End": 7748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdDupArray",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdDupArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8024,
+      "End": 8313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdErase",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdErase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8549,
+      "End": 8663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdFree",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8664,
+      "End": 8761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdFreeP",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdFreeP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8997,
+      "End": 9140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdReleaseArray",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdReleaseArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9376,
+      "End": 9544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdArray",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9780,
+      "End": 9856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdLimit",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9857,
+      "End": 9944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdSize",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10180,
+      "End": 10251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdCap",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdCap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10487,
+      "End": 10556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdMemory",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10792,
+      "End": 10927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11163,
+      "End": 11285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdEntryP",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdEntryP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11521,
+      "End": 11647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdWriteEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdWriteEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11883,
+      "End": 12023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdAddToEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdAddToEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12259,
+      "End": 12413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdEntryLast",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdEntryLast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12649,
+      "End": 12767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdGrow",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdGrow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13044,
+      "End": 13262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdFill",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdFill",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13544,
+      "End": 13742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdFillExtra",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdFillExtra",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14024,
+      "End": 14385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdGetEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdGetEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14667,
+      "End": 14799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdGetEntryP",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdGetEntryP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15081,
+      "End": 15217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdSetEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdSetEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15504,
+      "End": 15653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdShrink",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdShrink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15889,
+      "End": 16017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdClear",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16253,
+      "End": 16323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdPush",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdPush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16559,
+      "End": 16818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdPushFirst",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdPushFirst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17054,
+      "End": 17417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdPushOrder",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdPushOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17709,
+      "End": 18144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdPushUniqueOrder",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdPushUniqueOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18436,
+      "End": 18664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdPushUnique",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdPushUnique",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18900,
+      "End": 19118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdFetch",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19415,
+      "End": 19723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdPop",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdPop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20011,
+      "End": 20123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdFind",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdFind",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20370,
+      "End": 20554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdRemove",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdRemove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20790,
+      "End": 21133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdInsert",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21424,
+      "End": 21692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdFindMax",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdFindMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21939,
+      "End": 22209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdFindMin",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdFindMin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22456,
+      "End": 22726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdReverseOrder",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdReverseOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22992,
+      "End": 23245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdInvert",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdInvert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23481,
+      "End": 23810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdSum",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdSum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24046,
+      "End": 24220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdCountZero",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdCountZero",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24456,
+      "End": 24633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdEqual",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24901,
+      "End": 25153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdCountCommon",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdCountCommon",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25425,
+      "End": 25968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdSortCompare1",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdSortCompare1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26242,
+      "End": 26499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdSortCompare2",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdSortCompare2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26773,
+      "End": 27030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdSort",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdSort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27309,
+      "End": 27692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdUniqify",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdUniqify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27955,
+      "End": 28236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdUniqueCount",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdUniqueCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28237,
+      "End": 28584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdUniqifyHash",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdUniqifyHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28585,
+      "End": 28986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdSortCompareUnsigned",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdSortCompareUnsigned",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29260,
+      "End": 29424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdSortUnsigned",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdSortUnsigned",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29703,
+      "End": 29905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdAppend",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdAppend",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30184,
+      "End": 30363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Gia_ManSimPatWriteOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSimPatWriteOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30599,
+      "End": 30991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdPrintHex",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdPrintHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30992,
+      "End": 31260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdDumpHex",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdDumpHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31261,
+      "End": 31903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdReadHexOne",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdReadHexOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31904,
+      "End": 32243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::Vec_WrdReadHex",
+      "Category": "semantic-review",
+      "Symbol": "Vec_WrdReadHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32244,
+      "End": 33488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecWrd.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 33745
+    }
+  ],
+  "Draft": "package vec\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [vecWrd.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Resizable arrays.]\n\n  Synopsis    [Resizable arrays of long unsigned integers.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: vecWrd.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n         \ntype Vec_Wrd_t struct {\n    nCap              int32;\n    nSize              int32;\n    pArray            *word;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define Vec_WrdForEachEntry( vVec, Entry, i )                                               \\\n//     for ( i = 0; (i \u003c Vec_WrdSize(vVec)) \u0026\u0026 (((Entry) = Vec_WrdEntry(vVec, i)), 1); i++ )\n\n// Original macro:\n// #define Vec_WrdForEachEntryStart( vVec, Entry, i, Start )                                   \\\n//     for ( i = Start; (i \u003c Vec_WrdSize(vVec)) \u0026\u0026 (((Entry) = Vec_WrdEntry(vVec, i)), 1); i++ )\n\n// Original macro:\n// #define Vec_WrdForEachEntryStop( vVec, Entry, i, Stop )                                   \\\n//     for ( i = 0; (i \u003c Stop) \u0026\u0026 (((Entry) = Vec_WrdEntry(vVec, i)), 1); i++ )\n\n// Original macro:\n// #define Vec_WrdForEachEntryStartStop( vVec, Entry, i, Start, Stop )                         \\\n//     for ( i = Start; (i \u003c Stop) \u0026\u0026 (((Entry) = Vec_WrdEntry(vVec, i)), 1); i++ )\n\n// Original macro:\n// #define Vec_WrdForEachEntryReverse( vVec, pEntry, i )                                       \\\n//     for ( i = Vec_WrdSize(vVec) - 1; (i \u003e= 0) \u0026\u0026 (((pEntry) = Vec_WrdEntry(vVec, i)), 1); i-- )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates a vector with the given capacity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdAlloc(nCap int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    p = new(Vec_Wrd_t);\n    if nCap \u003e 0 \u0026\u0026 nCap \u003c 16 {\n        nCap = 16; }\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( word, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}\nfunc Vec_WrdAllocExact(nCap int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    assert(nCap \u003e= 0, \"nCap \u003e= 0\");\n    p = new(Vec_Wrd_t);\n    p.nSize  = 0;\n    p.nCap   = nCap;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( word, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates a vector with the given size and cleans it.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdStart(nSize int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    p = Vec_WrdAlloc( nSize );\n    p.nSize = nSize;\n    memset( p.pArray, 0, sizeof(word) * (size_t)nSize );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates a vector with the given size and cleans it.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdStartFull(nSize int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    p = Vec_WrdAlloc( nSize );\n    p.nSize = nSize;\n    memset( p.pArray, 0xff, sizeof(word) * (size_t)nSize );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates a vector with the given size and cleans it.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdStartNatural(nSize int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    var i int32;\n    p = Vec_WrdAlloc( nSize );\n    p.nSize = nSize;\n    for  i = 0; i \u003c nSize; i++  {\n        p.pArray[i] = i;\n    }\n    return p;\n}\nfunc Vec_WrdStartRandom(nSize int32) *Vec_Wrd_t {\n    var vSims *Vec_Wrd_t  = Vec_WrdStart( nSize ); var i int32;\n    for  i = 0; i \u003c nSize; i++  {\n        vSims.pArray[i] = Abc_RandomW(0);\n    }\n    return vSims;\n}\nfunc Vec_WrdStartTruthTables(nVars int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    var Masks [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    var i, k, nWords int32;\n    if nVars \u003c= 6 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars - 6));\n    }\n    p = Vec_WrdStart( nWords * nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        var pTruth *uint32  = (unsigned *)(p.pArray + nWords * i);\n        if i \u003c 5 {\n            for  k = 0; k \u003c 2*nWords; k++  {\n                pTruth[k] = Masks[i];\n            }\n        \n        } else {\n            for  k = 0; k \u003c 2*nWords; k++  {\n                if k \u0026 (1 \u003c\u003c (i-5)) {\n                    pTruth[k] = ~uint32(0);\n                } else {\n                    pTruth[k] = 0; }\n            }\n        }\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the vector from an integer array of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdAllocArray(pArray *word, nSize int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    p = new(Vec_Wrd_t);\n    p.nSize  = nSize;\n    p.nCap   = nSize;\n    p.pArray = pArray;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the vector from an integer array of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdAllocArrayCopy(pArray *word, nSize int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    p = new(Vec_Wrd_t);\n    p.nSize  = nSize;\n    p.nCap   = nSize;\n    p.pArray = ABC_ALLOC( word, nSize );\n    memcpy( p.pArray, pArray, sizeof(word) * (size_t)nSize );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the integer array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdDup(pVec *Vec_Wrd_t) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    p = new(Vec_Wrd_t);\n    p.nSize  = pVec.nSize;\n    p.nCap   = pVec.nSize;\n    if p.nCap {\n        p.pArray = ABC_ALLOC( word, p.nCap );\n    } else {\n        p.pArray = nil;\n    }\n    memcpy( p.pArray, pVec.pArray, sizeof(word) * (size_t)pVec.nSize );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the array into another vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdDupArray(pVec *Vec_Wrd_t) *Vec_Wrd_t {\n    var p *Vec_Wrd_t;\n    p = new(Vec_Wrd_t);\n    p.nSize  = pVec.nSize;\n    p.nCap   = pVec.nCap;\n    p.pArray = pVec.pArray;\n    pVec.nSize  = 0;\n    pVec.nCap   = 0;\n    pVec.pArray = nil;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdErase(p *Vec_Wrd_t) {\n    ABC_FREE( p.pArray );\n    p.nSize = 0;\n    p.nCap = 0;\n}\nfunc Vec_WrdFree(p *Vec_Wrd_t) {\n    ABC_FREE( p.pArray );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdFreeP(p **Vec_Wrd_t) {\n    if *p == nil {\n        return; }\n    ABC_FREE( (*p).pArray );\n    ABC_FREE( (*p) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdReleaseArray(p *Vec_Wrd_t) *word {\n    var pArray *word  = p.pArray;\n    p.nCap = 0;\n    p.nSize = 0;\n    p.pArray = nil;\n    return pArray;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdArray(p *Vec_Wrd_t) *word {\n    return p.pArray;\n}\nfunc Vec_WrdLimit(p *Vec_Wrd_t) *word {\n    return p.pArray + p.nSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdSize(p *Vec_Wrd_t) int32 {\n    return p.nSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdCap(p *Vec_Wrd_t) int32 {\n    return p.nCap;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdMemory(p *Vec_Wrd_t) float64 {\n    if !(p != nil) {\n        return 0.0;\n    } else {\n        return 1.0 * sizeof(word) * (size_t)p.nCap + sizeof(Vec_Wrd_t);\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdEntry(p *Vec_Wrd_t, i int32) word {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray[i];\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdEntryP(p *Vec_Wrd_t, i int32) *word {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray + i;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdWriteEntry(p *Vec_Wrd_t, i int32, Entry word) {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    p.pArray[i] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdAddToEntry(p *Vec_Wrd_t, i int32, Addition word) word {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nSize, \"i \u003e= 0 \u0026\u0026 i \u003c p.nSize\");\n    return p.pArray[i] += Addition;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdEntryLast(p *Vec_Wrd_t) word {\n    assert(p.nSize \u003e 0, \"p.nSize \u003e 0\");\n    return p.pArray[p.nSize-1];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resizes the vector to the given capacity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdGrow(p *Vec_Wrd_t, nCapMin int32) {\n    if p.nCap \u003e= nCapMin {\n        return; }\n    p.pArray = ABC_REALLOC( word, p.pArray, nCapMin ); \n    assert(p.pArray, \"p.pArray\");\n    p.nCap   = nCapMin;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Fills the vector with given number of entries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdFill(p *Vec_Wrd_t, nSize int32, Fill word) {\n    var i int32;\n    Vec_WrdGrow( p, nSize );\n    for  i = 0; i \u003c nSize; i++  {\n        p.pArray[i] = Fill;\n    }\n    p.nSize = nSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Fills the vector with given number of entries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdFillExtra(p *Vec_Wrd_t, nSize int32, Fill word) {\n    var i int32;\n    if nSize \u003c= p.nSize {\n        return; }\n    if nSize \u003e 2 * p.nCap {\n        Vec_WrdGrow( p, nSize );\n    } else if nSize \u003e p.nCap {\n        Vec_WrdGrow( p, 2 * p.nCap ); }\n    for  i = p.nSize; i \u003c nSize; i++  {\n        p.pArray[i] = Fill;\n    }\n    p.nSize = nSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the entry even if the place not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdGetEntry(p *Vec_Wrd_t, i int32) word {\n    Vec_WrdFillExtra( p, i + 1, 0 );\n    return Vec_WrdEntry( p, i );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the entry even if the place not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdGetEntryP(p *Vec_Wrd_t, i int32) *word {\n    Vec_WrdFillExtra( p, i + 1, 0 );\n    return Vec_WrdEntryP( p, i );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts the entry even if the place does not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdSetEntry(p *Vec_Wrd_t, i int32, Entry word) {\n    Vec_WrdFillExtra( p, i + 1, 0 );\n    Vec_WrdWriteEntry( p, i, Entry );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdShrink(p *Vec_Wrd_t, nSizeNew int32) {\n    assert(p.nSize \u003e= nSizeNew, \"p.nSize \u003e= nSizeNew\");\n    p.nSize = nSizeNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdClear(p *Vec_Wrd_t) {\n    p.nSize = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdPush(p *Vec_Wrd_t, Entry word) {\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_WrdGrow( p, 16 );\n        } else {\n            Vec_WrdGrow( p, 2 * p.nCap ); }\n    }\n    p.pArray[p.nSize++] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdPushFirst(p *Vec_Wrd_t, Entry word) {\n    var i int32;\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_WrdGrow( p, 16 );\n        } else {\n            Vec_WrdGrow( p, 2 * p.nCap ); }\n    }\n    p.nSize++;\n    for  i = p.nSize - 1; i \u003e= 1; i--  {\n        p.pArray[i] = p.pArray[i-1];\n    }\n    p.pArray[0] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts the entry while preserving the increasing order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdPushOrder(p *Vec_Wrd_t, Entry word) {\n    var i int32;\n    if p.nSize == p.nCap {\n        if p.nCap \u003c 16 {\n            Vec_WrdGrow( p, 16 );\n        } else {\n            Vec_WrdGrow( p, 2 * p.nCap ); }\n    }\n    p.nSize++;\n    for  i = p.nSize-2; i \u003e= 0; i--  {\n        if p.pArray[i] \u003e Entry {\n            p.pArray[i+1] = p.pArray[i];\n        } else {\n            break; }\n    }\n    p.pArray[i+1] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts the entry while preserving the increasing order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdPushUniqueOrder(p *Vec_Wrd_t, Entry word) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return 1; }\n    }\n    Vec_WrdPushOrder( p, Entry );\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdPushUnique(p *Vec_Wrd_t, Entry word) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return 1; }\n    }\n    Vec_WrdPush( p, Entry );\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the pointer to the next nWords entries in the vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdFetch(p *Vec_Wrd_t, nWords int32) *word {\n    if nWords == 0 {\n        return nil; }\n    assert(nWords \u003e 0, \"nWords \u003e 0\");\n    p.nSize += nWords;\n    if p.nSize \u003e p.nCap {\n//         Vec_WrdGrow( p, 2 * p-\u003enSize );\n        return nil;\n    }\n    return p.pArray + p.nSize - nWords;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the last entry and removes it from the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdPop(p *Vec_Wrd_t) word {\n    assert(p.nSize \u003e 0, \"p.nSize \u003e 0\");\n    return p.pArray[--p.nSize];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdFind(p *Vec_Wrd_t, Entry word) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdRemove(p *Vec_Wrd_t, Entry word) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if p.pArray[i] == Entry {\n            break; }\n    }\n    if i == p.nSize {\n        return 0; }\n    assert(i \u003c p.nSize, \"i \u003c p.nSize\");\n    for  i++; i \u003c p.nSize; i++  {\n        p.pArray[i-1] = p.pArray[i];\n    }\n    p.nSize--;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Interts entry at the index iHere. Shifts other entries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdInsert(p *Vec_Wrd_t, iHere int32, Entry word) {\n    var i int32;\n    assert(iHere \u003e= 0 \u0026\u0026 iHere \u003c p.nSize, \"iHere \u003e= 0 \u0026\u0026 iHere \u003c p.nSize\");\n    Vec_WrdPush( p, 0 );\n    for  i = p.nSize - 1; i \u003e iHere; i--  {\n        p.pArray[i] = p.pArray[i-1];\n    }\n    p.pArray[i] = Entry;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdFindMax(p *Vec_Wrd_t) word {\n    var Best word;\n    var i int32;\n    if p.nSize == 0 {\n        return 0; }\n    Best = p.pArray[0];\n    for  i = 1; i \u003c p.nSize; i++  {\n        if Best \u003c p.pArray[i] {\n            Best = p.pArray[i]; }\n    }\n    return Best;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdFindMin(p *Vec_Wrd_t) word {\n    var Best word;\n    var i int32;\n    if p.nSize == 0 {\n        return 0; }\n    Best = p.pArray[0];\n    for  i = 1; i \u003c p.nSize; i++  {\n        if Best \u003e p.pArray[i] {\n            Best = p.pArray[i]; }\n    }\n    return Best;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reverses the order of entries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdReverseOrder(p *Vec_Wrd_t) {\n    var Temp word;\n    var i int32;\n    for  i = 0; i \u003c p.nSize/2; i++  {\n        Temp = p.pArray[i];\n        p.pArray[i] = p.pArray[p.nSize-1-i];\n        p.pArray[p.nSize-1-i] = Temp;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdInvert(p *Vec_Wrd_t, Fill word) *Vec_Wrd_t {\n    var i int32;\n    var Entry word;\n    var vRes *Vec_Wrd_t  = Vec_WrdAlloc( 0 );\n    Vec_WrdFill( vRes, Vec_WrdFindMax(p) + 1, Fill );\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(p)) \u0026\u0026 (((Entry) = Vec_WrdEntry(p, i)), 1); i++  {\n        if Entry != Fill {\n            Vec_WrdWriteEntry( vRes, Entry, i ); }\n    }\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdSum(p *Vec_Wrd_t) word {\n    var Counter word;\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        Counter += p.pArray[i];\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdCountZero(p *Vec_Wrd_t) int32 {\n    var i, Counter int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        Counter += (p.pArray[i] == 0);\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if two vectors are equal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdEqual(p1 *Vec_Wrd_t, p2 *Vec_Wrd_t) int32 {\n    var i int32;\n    if p1.nSize != p2.nSize {\n        return 0; }\n    for  i = 0; i \u003c p1.nSize; i++  {\n        if p1.pArray[i] != p2.pArray[i] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of common entries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdCountCommon(p1 *Vec_Wrd_t, p2 *Vec_Wrd_t) int32 {\n    var vTemp *Vec_Wrd_t;\n    var Entry word;\n    var i, Counter int32;\n    if Vec_WrdSize(p1) \u003c Vec_WrdSize(p2) {\n        vTemp = p1;\np1 = p2;\np2 = vTemp; }\n    assert(Vec_WrdSize(p1) \u003e= Vec_WrdSize(p2), \"Vec_WrdSize(p1) \u003e= Vec_WrdSize(p2)\");\n    vTemp = Vec_WrdInvert( p2, -1 );\n    Vec_WrdFillExtra( vTemp, Vec_WrdFindMax(p1) + 1, ~((word)0) );\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(p1)) \u0026\u0026 (((Entry) = Vec_WrdEntry(p1, i)), 1); i++  {\n        if Vec_WrdEntry(vTemp, Entry) != ~((word)0) {\n            Counter++; }\n    }\n    Vec_WrdFree( vTemp );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Comparison procedure for two integers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdSortCompare1(pp1 *word, pp2 *word) int32 {\n    // for some reason commenting out lines (as shown) led to crashing of the release version\n    if *pp1 \u003c *pp2 {\n        return -1; }\n    if *pp1 \u003e *pp2 { //\n        return 1; }\n    return 0; //\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Comparison procedure for two integers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdSortCompare2(pp1 *word, pp2 *word) int32 {\n    // for some reason commenting out lines (as shown) led to crashing of the release version\n    if *pp1 \u003e *pp2 {\n        return -1; }\n    if *pp1 \u003c *pp2 { //\n        return 1; }\n    return 0; //\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorting the entries by their integer value.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdSort(p *Vec_Wrd_t, fReverse int32) {\n    if fReverse != 0 { \n        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(word), \n                        (int (*)(void *, void *)) Vec_WrdSortCompare2 );\n    } else {\n        qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(word), \n                        (int (*)(void *, void *)) Vec_WrdSortCompare1 ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Leaves only unique entries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdUniqify(p *Vec_Wrd_t) {\n    var i, k int32;\n    if p.nSize \u003c 2 {\n        return; }\n    Vec_WrdSort( p, 0 );\n    for  i = k = 1; i \u003c p.nSize; i++  {\n        if p.pArray[i] != p.pArray[i-1] {\n            p.pArray[k++] = p.pArray[i]; }\n    }\n    p.nSize = k;\n}\nfunc Vec_WrdUniqueCount(vData *Vec_Wrd_t, nWordSize int32, pvMap **Vec_Int_t) int32 {\n    var Result int32;\n    var vDataInt *Vec_Int_t  = (Vec_Int_t *)vData;\n    vDataInt.nSize *= 2;\n    vDataInt.nCap *= 2;\n    Result = Vec_IntUniqueCount( vDataInt, 2 * nWordSize, pvMap );\n    vDataInt.nSize /= 2;\n    vDataInt.nCap /= 2;\n    return Result;\n}\nfunc Vec_WrdUniqifyHash(vData *Vec_Wrd_t, nWordSize int32) *Vec_Wrd_t {\n    var vResInt *Vec_Int_t;\n    var vDataInt *Vec_Int_t  = (Vec_Int_t *)vData;\n    vDataInt.nSize *= 2;\n    vDataInt.nCap *= 2;\n    vResInt = Vec_IntUniqifyHash( vDataInt, 2 * nWordSize );\n    vDataInt.nSize /= 2;\n    vDataInt.nCap /= 2;\n    vResInt.nSize /= 2;\n    vResInt.nCap /= 2;\n    return (Vec_Wrd_t *)vResInt;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Comparison procedure for two integers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdSortCompareUnsigned(pp1 *word, pp2 *word) int32 {\n    if *pp1 \u003c *pp2 {\n        return -1; }\n    if *pp1 \u003e *pp2 {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorting the entries by their integer value.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdSortUnsigned(p *Vec_Wrd_t) {\n    qsort( (void *)p.pArray, (size_t)p.nSize, sizeof(word), \n                (int (*)(void *, void *)) Vec_WrdSortCompareUnsigned );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Appends the contents of the second vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_WrdAppend(vVec1 *Vec_Wrd_t, vVec2 *Vec_Wrd_t) {\n    var Entry word; var i int32;\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(vVec2)) \u0026\u0026 (((Entry) = Vec_WrdEntry(vVec2, i)), 1); i++  {\n        Vec_WrdPush( vVec1, Entry );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSimPatWriteOne(pFile *os.File, pSim *word, nWords int32) {\n    var k int32;\n    var Digit int32;\n    var nDigits int32 = nWords*16;\n    for  k = 0; k \u003c nDigits; k++  {\n        Digit = int32(((pSim[k/16] \u003e\u003e ((k%16) * 4)) \u0026 15));\n        if Digit \u003c 10 {\n            fmt.Fprintf(pFile, \"%d\", Digit);\n        } else {\n            fmt.Fprintf(pFile, \"%c\", 'A' + Digit-10); }\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n}\nfunc Vec_WrdPrintHex(p *Vec_Wrd_t, nWords int32) {\n    var i int32;\n    var nNodes int32 = Vec_WrdSize(p) / nWords;\n    assert(Vec_WrdSize(p) % nWords == 0, \"Vec_WrdSize(p) % nWords == 0\");\n    for  i = 0; i \u003c nNodes; i++  {\n        Gia_ManSimPatWriteOne( os.Stdout, Vec_WrdEntryP(p, i*nWords), nWords );\n    }\n}\nfunc Vec_WrdDumpHex(pFileName string, p *Vec_Wrd_t, nWords int32, fVerbose int32) {\n    var i int32;\n    var nNodes int32 = Vec_WrdSize(p) / nWords;\n    var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        return;\n    }\n    assert(Vec_WrdSize(p) % nWords == 0, \"Vec_WrdSize(p) % nWords == 0\");\n    for  i = 0; i \u003c nNodes; i++  {\n        Gia_ManSimPatWriteOne( pFile, Vec_WrdEntryP(p, i*nWords), nWords );\n    }\n    _ = (pFile).Close();\n    if fVerbose != 0 {\n        fmt.Printf(\"Written %d words of simulation data for %d objects into file \\\"%s\\\".\\n\", nWords, Vec_WrdSize(p)/nWords, pFileName); }\n}\nfunc Vec_WrdReadHexOne(c byte) int32 {\n    var Digit int32;\n    if c \u003e= '0' \u0026\u0026 c \u003c= '9' {\n        Digit = c - '0';\n    } else if c \u003e= 'A' \u0026\u0026 c \u003c= 'F' {\n        Digit = c - 'A' + 10;\n    } else if c \u003e= 'a' \u0026\u0026 c \u003c= 'f' {\n        Digit = c - 'a' + 10;\n    } else { assert(false, \"0\"); }\n    assert(Digit \u003e= 0 \u0026\u0026 Digit \u003c 16, \"Digit \u003e= 0 \u0026\u0026 Digit \u003c 16\");\n    return Digit;\n}\nfunc Vec_WrdReadHex(pFileName string, pnWords *int32, fVerbose int32) *Vec_Wrd_t {\n    var p *Vec_Wrd_t  = nil; \n    var c int32;\n    var nWords int32 = -1;\n    var nChars int32; var Num word;\n    var pFile *os.File  = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName);\n        return nil;\n    }\n    p = Vec_WrdAlloc( 1000 );\n    for  (c = fgetc(pFile)) != -1  {\n        if c == '\\r' || c == '\\t' || c == ' ' {\n            continue; }\n        if c == '\\n' {\n            if nChars \u003e 0 {\n                Vec_WrdPush( p, Num );\n                nChars = 0; \n                Num = 0;\n            }\n            if nWords == -1 \u0026\u0026 Vec_WrdSize(p) \u003e 0 {\n                nWords = Vec_WrdSize(p); }\n            continue;\n        }\n        Num |= (word)Vec_WrdReadHexOne(byte(c)) \u003c\u003c (nChars * 4);\n        if nChars++; nChars \u003c 16 {\n            continue; }\n        Vec_WrdPush( p, Num );\n        nChars = 0; \n        Num = 0;\n    }\n    assert(Vec_WrdSize(p) % nWords == 0, \"Vec_WrdSize(p) % nWords == 0\");\n    _ = (pFile).Close();\n    if pnWords != nil {\n        *pnWords = nWords; }\n    if fVerbose != 0 {\n        fmt.Printf(\"Read %d words of simulation data for %d objects.\\n\", nWords, Vec_WrdSize(p)/nWords); }\n    return p;\n}\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

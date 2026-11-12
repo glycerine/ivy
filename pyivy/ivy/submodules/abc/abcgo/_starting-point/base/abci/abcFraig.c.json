@@ -1,0 +1,1290 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c",
+  "SHA256": "4b0cebfa33847c93d7e83c5e9f2694b4bd252cebe16572e3b39610f35557a6f1",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 1,
+        "ByteOffset": 2523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Warning: Networks has no EXDC.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 9,
+        "ByteOffset": 3234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkFraig: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 3946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 137,
+        "Column": 45,
+        "ByteOffset": 4603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pProgress = Extra_ProgressBarStart( stdout, vNodes.nSize ); }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 188,
+        "Column": 16,
+        "ByteOffset": 6967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strcmp( Abc_ObjName(pObj), ppNames[k] ) == 0 {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 9,
+        "ByteOffset": 7141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.pCopy != nil );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 195,
+        "Column": 63,
+        "ByteOffset": 7238
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((ppNames) ? (free((char *) (ppNames)), (ppNames) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 8860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNtk.pExdc );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 305,
+        "Column": 41,
+        "ByteOffset": 12431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkCoNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 346,
+        "Column": 13,
+        "ByteOffset": 14523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Fraig_NodeReadData1(pNodeTemp) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 359,
+        "Column": 13,
+        "ByteOffset": 15133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pResCur );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 365,
+        "Column": 9,
+        "ByteOffset": 15302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *ppTail == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 417,
+        "Column": 17,
+        "ByteOffset": 18009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 430,
+        "Column": 41,
+        "ByteOffset": 18408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkCoNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 465,
+        "Column": 5,
+        "ByteOffset": 19523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode( pNode ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 494,
+        "Column": 9,
+        "ByteOffset": 20492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkFraigTrust: Trust mode works for netlists and logic SOP networks.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 499,
+        "Column": 9,
+        "ByteOffset": 20654
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkFraigTrust: The network does not look like an AIG with choice nodes.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 510,
+        "Column": 5,
+        "ByteOffset": 21034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Warning: The resulting AIG contains %d choice nodes.\\n\", Abc_NtkGetChoiceNum( pNtkNew ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 514,
+        "Column": 9,
+        "ByteOffset": 21218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkFraigTrust: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 567,
+        "Column": 41,
+        "ByteOffset": 22827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, vNodes.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 571,
+        "Column": 9,
+        "ByteOffset": 23099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 580,
+        "Column": 9,
+        "ByteOffset": 23468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.pCopy == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 604,
+        "Column": 5,
+        "ByteOffset": 24110
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 607,
+        "Column": 5,
+        "ByteOffset": 24225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFanins == Abc_SopGetVarNum((char *)pNode.pData) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 617,
+        "Column": 5,
+        "ByteOffset": 24896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_SopIsOrType((char *)pNode.pData) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 632,
+        "Column": 5,
+        "ByteOffset": 25582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *ppTail == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 656,
+        "Column": 9,
+        "ByteOffset": 26128
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkFraigStore: Initial strashing has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 667,
+        "Column": 17,
+        "ByteOffset": 26702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Trying to store the network with different primary inputs.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 668,
+        "Column": 17,
+        "ByteOffset": 26792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"The previously stored networks are deleted and this one is added.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 700,
+        "Column": 9,
+        "ByteOffset": 27815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"There are no network currently in storage.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 791,
+        "Column": 5,
+        "ByteOffset": 31231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nPoFinal % nStored == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 798,
+        "Column": 17,
+        "ByteOffset": 31555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Verification for PO #%d of network #%d has failed. The PO function is not used.\\n\", i+1, k+1 ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkFraig",
+      "Start": 2171,
+      "End": 3315,
+      "BodyStart": 2258,
+      "Original": "Abc_Ntk_t * Abc_NtkFraig( Abc_Ntk_t * pNtk, void * pParams, int fAllNodes, int fExdc )\n{\n    Fraig_Params_t * pPars = (Fraig_Params_t *)pParams;\n    Abc_Ntk_t * pNtkNew;\n    Fraig_Man_t * pMan; \n    // check if EXDC is present\n    if ( fExdc \u0026\u0026 pNtk-\u003epExdc == NULL )\n        fExdc = 0, printf( \"Warning: Networks has no EXDC.\\n\" );\n    // perform fraiging\n    pMan = (Fraig_Man_t *)Abc_NtkToFraig( pNtk, pParams, fAllNodes, fExdc ); \n    // add algebraic choices\n//    if ( pPars-\u003efChoicing )\n//        Fraig_ManAddChoices( pMan, 0, 6 );\n    // prove the miter if asked to\n    if ( pPars-\u003efTryProve )\n        Fraig_ManProveMiter( pMan );\n    // reconstruct FRAIG in the new network\n    if ( fExdc ) \n        pNtkNew = Abc_NtkFromFraig2( pMan, pNtk );\n    else\n        pNtkNew = Abc_NtkFromFraig( pMan, pNtk );\n    Fraig_ManFree( pMan );\n    if ( pNtk-\u003epExdc )\n        pNtkNew-\u003epExdc = Abc_NtkDup( pNtk-\u003epExdc );\n    // make sure that everything is okay\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Abc_NtkFraig: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkFraig(pNtk *Abc_Ntk_t, pParams any, fAllNodes int32, fExdc int32) *Abc_Ntk_t {\n    var pPars *Fraig_Params_t  = (Fraig_Params_t *)pParams;\n    var pNtkNew *Abc_Ntk_t;\n    var pMan *Fraig_Man_t; \n    // check if EXDC is present\n    if (fExdc != 0) \u0026\u0026 pNtk.pExdc == nil {\n        fExdc = 0;\nfmt.Printf(\"Warning: Networks has no EXDC.\\n\"); }\n    // perform fraiging\n    pMan = (Fraig_Man_t *)Abc_NtkToFraig( pNtk, pParams, fAllNodes, fExdc ); \n    // add algebraic choices\n//    if ( pPars-\u003efChoicing )\n//        Fraig_ManAddChoices( pMan, 0, 6 );\n    // prove the miter if asked to\n    if pPars.fTryProve {\n        Fraig_ManProveMiter( pMan ); }\n    // reconstruct FRAIG in the new network\n    if fExdc != 0 { \n        pNtkNew = Abc_NtkFromFraig2( pMan, pNtk );\n    } else {\n        pNtkNew = Abc_NtkFromFraig( pMan, pNtk ); }\n    Fraig_ManFree( pMan );\n    if pNtk.pExdc {\n        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }\n    // make sure that everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkFraig: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkToFraig",
+      "Start": 3594,
+      "End": 5332,
+      "BodyStart": 3678,
+      "Original": "void * Abc_NtkToFraig( Abc_Ntk_t * pNtk, void * pParams, int fAllNodes, int fExdc )\n{\n    int fInternal = ((Fraig_Params_t *)pParams)-\u003efInternal;\n    Fraig_Man_t * pMan;\n    ProgressBar * pProgress = NULL;\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pNode;\n    int i;\n\n    assert( Abc_NtkIsStrash(pNtk) );\n\n    // create the FRAIG manager\n    pMan = Fraig_ManCreate( (Fraig_Params_t *)pParams );\n\n    // map the constant node\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk)-\u003epCopy = (Abc_Obj_t *)Fraig_ManReadConst1(pMan);\n    // create PIs and remember them in the old nodes\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode-\u003epCopy = (Abc_Obj_t *)Fraig_ManReadIthVar(pMan, i);\n \n    // perform strashing\n    vNodes = Abc_AigDfs( pNtk, fAllNodes, 0 );\n    if ( !fInternal )\n        pProgress = Extra_ProgressBarStart( stdout, vNodes-\u003enSize );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        if ( Abc_ObjFaninNum(pNode) == 0 )\n            continue;\n        if ( pProgress ) \n            Extra_ProgressBarUpdate( pProgress, i, NULL );\n        pNode-\u003epCopy = (Abc_Obj_t *)Fraig_NodeAnd( pMan, \n                Fraig_NotCond( Abc_ObjFanin0(pNode)-\u003epCopy, (int)Abc_ObjFaninC0(pNode) ),\n                Fraig_NotCond( Abc_ObjFanin1(pNode)-\u003epCopy, (int)Abc_ObjFaninC1(pNode) ) );\n    }\n    if ( pProgress )\n        Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vNodes );\n\n    // use EXDC to change the mapping of nodes into FRAIG nodes\n    if ( fExdc )\n        Abc_NtkFraigRemapUsingExdc( pMan, pNtk );\n\n    // set the primary outputs\n    Abc_NtkForEachCo( pNtk, pNode, i )\n        Fraig_ManSetPo( pMan, (Fraig_Node_t *)Abc_ObjNotCond( Abc_ObjFanin0(pNode)-\u003epCopy, Abc_ObjFaninC0(pNode) ) );\n    return pMan;\n}",
+      "Draft": "func Abc_NtkToFraig(pNtk *Abc_Ntk_t, pParams any, fAllNodes int32, fExdc int32) any {\n    var fInternal int32  = ((Fraig_Params_t *)pParams).fInternal;\n    var pMan *Fraig_Man_t;\n    var pProgress *ProgressBar  = nil;\n    var vNodes *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var i int32;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // create the FRAIG manager\n    pMan = Fraig_ManCreate( (Fraig_Params_t *)pParams );\n\n    // map the constant node\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk).pCopy = (Abc_Obj_t *)Fraig_ManReadConst1(pMan);\n    // create PIs and remember them in the old nodes\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pNode.pCopy = (Abc_Obj_t *)Fraig_ManReadIthVar(pMan, i);\n    }\n \n    // perform strashing\n    vNodes = Abc_AigDfs( pNtk, fAllNodes, 0 );\n    if !(fInternal != 0) {\n        pProgress = Extra_ProgressBarStart( os.Stdout, vNodes.nSize ); }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Abc_ObjFaninNum(pNode) == 0 {\n            continue; }\n        if pProgress != nil { \n            Extra_ProgressBarUpdate( pProgress, i, nil ); }\n        pNode.pCopy = (Abc_Obj_t *)Fraig_NodeAnd( pMan, \n                // inlining of macro Fraig_NotCond\n                ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pNode).pCopy) ^ (int32(Abc_ObjFaninC0(pNode))))),\n                // inlining of macro Fraig_NotCond\n                ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin1(pNode).pCopy) ^ (int32(Abc_ObjFaninC1(pNode))))) );\n    }\n    if pProgress != nil {\n        Extra_ProgressBarStop( pProgress ); }\n    Vec_PtrFree( vNodes );\n\n    // use EXDC to change the mapping of nodes into FRAIG nodes\n    if fExdc != 0 {\n        Abc_NtkFraigRemapUsingExdc( pMan, pNtk ); }\n\n    // set the primary outputs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Fraig_ManSetPo( pMan, (Fraig_Node_t *)Abc_ObjNotCond( Abc_ObjFanin0(pNode).pCopy, Abc_ObjFaninC0(pNode) ) );\n    }\n    return pMan;\n}"
+    },
+    {
+      "Name": "Abc_NtkToFraigExdc",
+      "Start": 5687,
+      "End": 7083,
+      "BodyStart": 5787,
+      "Original": "Fraig_Node_t * Abc_NtkToFraigExdc( Fraig_Man_t * pMan, Abc_Ntk_t * pNtkMain, Abc_Ntk_t * pNtkExdc )\n{\n    Abc_Ntk_t * pNtkStrash;\n    Abc_Obj_t * pObj;\n    Fraig_Node_t * gResult;\n    char ** ppNames;\n    int i, k;\n    // strash the EXDC network\n    pNtkStrash = Abc_NtkStrash( pNtkExdc, 0, 0, 0 );\n    Abc_NtkCleanCopy( pNtkStrash );\n    Abc_AigConst1(pNtkStrash)-\u003epCopy = (Abc_Obj_t *)Fraig_ManReadConst1(pMan);\n    // set the mapping of the PI nodes\n    ppNames = Abc_NtkCollectCioNames( pNtkMain, 0 );\n    Abc_NtkForEachCi( pNtkStrash, pObj, i )\n    {\n        for ( k = 0; k \u003c Abc_NtkCiNum(pNtkMain); k++ )\n            if ( strcmp( Abc_ObjName(pObj), ppNames[k] ) == 0 )\n            {\n                pObj-\u003epCopy = (Abc_Obj_t *)Fraig_ManReadIthVar(pMan, k);\n                break;\n            }\n        assert( pObj-\u003epCopy != NULL );\n    }\n    ABC_FREE( ppNames );\n    // build FRAIG for each node\n    Abc_AigForEachAnd( pNtkStrash, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)Fraig_NodeAnd( pMan, \n                Fraig_NotCond( Abc_ObjFanin0(pObj)-\u003epCopy, (int)Abc_ObjFaninC0(pObj) ),\n                Fraig_NotCond( Abc_ObjFanin1(pObj)-\u003epCopy, (int)Abc_ObjFaninC1(pObj) ) );\n    // get the EXDC to be returned\n    pObj = Abc_NtkPo( pNtkStrash, 0 );\n    gResult = Fraig_NotCond( Abc_ObjFanin0(pObj)-\u003epCopy, (int)Abc_ObjFaninC0(pObj) );\n    Abc_NtkDelete( pNtkStrash );\n    return gResult;\n}",
+      "Draft": "func Abc_NtkToFraigExdc(pMan *Fraig_Man_t, pNtkMain *Abc_Ntk_t, pNtkExdc *Abc_Ntk_t) *Fraig_Node_t {\n    var pNtkStrash *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var gResult *Fraig_Node_t;\n    var ppNames *string;\n    var i, k int32;\n    // strash the EXDC network\n    pNtkStrash = Abc_NtkStrash( pNtkExdc, 0, 0, 0 );\n    Abc_NtkCleanCopy( pNtkStrash );\n    Abc_AigConst1(pNtkStrash).pCopy = (Abc_Obj_t *)Fraig_ManReadConst1(pMan);\n    // set the mapping of the PI nodes\n    ppNames = Abc_NtkCollectCioNames( pNtkMain, 0 );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtkStrash)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtkStrash, i)), 1); i++  {\n        for  k = 0; k \u003c Abc_NtkCiNum(pNtkMain); k++  {\n            if int32(strings.Compare(Abc_ObjName(pObj), ppNames[k])) == 0 {\n                pObj.pCopy = (Abc_Obj_t *)Fraig_ManReadIthVar(pMan, k);\n                break;\n            }\n        }\n        assert(pObj.pCopy != nil, \"pObj.pCopy != nil\");\n    }\n    // inlining of macro ABC_FREE\n    ((ppNames) ? (free((char *) (ppNames)), (ppNames) = 0) : 0);\n    // build FRAIG for each node\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtkStrash).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtkStrash, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        pObj.pCopy = (Abc_Obj_t *)Fraig_NodeAnd( pMan, \n                // inlining of macro Fraig_NotCond\n                ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pObj).pCopy) ^ (int32(Abc_ObjFaninC0(pObj))))),\n                // inlining of macro Fraig_NotCond\n                ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin1(pObj).pCopy) ^ (int32(Abc_ObjFaninC1(pObj))))) ); }\n    }\n    // get the EXDC to be returned\n    pObj = Abc_NtkPo( pNtkStrash, 0 );\n    // inlining of macro Fraig_NotCond\n    gResult = ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pObj).pCopy) ^ (int32(Abc_ObjFaninC0(pObj)))));\n    Abc_NtkDelete( pNtkStrash );\n    return gResult;\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigRemapUsingExdc",
+      "Start": 7381,
+      "End": 9437,
+      "BodyStart": 7453,
+      "Original": "void Abc_NtkFraigRemapUsingExdc( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk )\n{\n    Fraig_Node_t * gNodeNew, * gNodeExdc;\n    stmm_table * tTable;\n    stmm_generator * gen;\n    Abc_Obj_t * pNode, * pNodeBest;\n    Abc_Obj_t * pClass, ** ppSlot;\n    Vec_Ptr_t * vNexts;\n    int i;\n\n    // get the global don't-cares\n    assert( pNtk-\u003epExdc );\n    gNodeExdc = Abc_NtkToFraigExdc( pMan, pNtk, pNtk-\u003epExdc );\n\n    // save the next pointers\n    vNexts = Vec_PtrStart( Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        Vec_PtrWriteEntry( vNexts, pNode-\u003eId, pNode-\u003epNext );\n\n    // find the classes of AIG nodes which have FRAIG nodes assigned\n    Abc_NtkCleanNext( pNtk );\n    tTable = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( pNode-\u003epCopy )\n        {\n            gNodeNew = Fraig_NodeAnd( pMan, (Fraig_Node_t *)pNode-\u003epCopy, Fraig_Not(gNodeExdc) );\n            if ( !stmm_find_or_add( tTable, (char *)Fraig_Regular(gNodeNew), (char ***)\u0026ppSlot ) )\n                *ppSlot = NULL;\n            pNode-\u003epNext = *ppSlot;\n            *ppSlot = pNode;\n        }\n\n    // for reach non-trival class, find the node with minimum level, and replace other nodes by it\n    Abc_AigSetNodePhases( pNtk );\n    stmm_foreach_item( tTable, gen, (char **)\u0026gNodeNew, (char **)\u0026pClass )\n    {\n        if ( pClass-\u003epNext == NULL )\n            continue;\n        // find the node with minimum level\n        pNodeBest = pClass;\n        for ( pNode = pClass-\u003epNext; pNode; pNode = pNode-\u003epNext )\n            if ( pNodeBest-\u003eLevel \u003e pNode-\u003eLevel )\n                 pNodeBest = pNode;\n        // remap the class nodes\n        for ( pNode = pClass; pNode; pNode = pNode-\u003epNext )\n            pNode-\u003epCopy = Abc_ObjNotCond( pNodeBest-\u003epCopy, pNode-\u003efPhase ^ pNodeBest-\u003efPhase );\n    }\n    stmm_free_table( tTable );\n\n    // restore the next pointers\n    Abc_NtkCleanNext( pNtk );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        pNode-\u003epNext = (Abc_Obj_t *)Vec_PtrEntry( vNexts, pNode-\u003eId );\n    Vec_PtrFree( vNexts );\n}",
+      "Draft": "func Abc_NtkFraigRemapUsingExdc(pMan *Fraig_Man_t, pNtk *Abc_Ntk_t) {\n    var gNodeNew, gNodeExdc *Fraig_Node_t;\n    var tTable *stmm_table;\n    var gen *stmm_generator;\n    var pNode, pNodeBest *Abc_Obj_t;\n    var pClass *Abc_Obj_t;\n    var ppSlot **Abc_Obj_t;\n    var vNexts *Vec_Ptr_t;\n    var i int32;\n\n    // get the global don't-cares\n    assert(pNtk.pExdc, \"pNtk.pExdc\");\n    gNodeExdc = Abc_NtkToFraigExdc( pMan, pNtk, pNtk.pExdc );\n\n    // save the next pointers\n    vNexts = Vec_PtrStart( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Vec_PtrWriteEntry( vNexts, pNode.Id, pNode.pNext ); }\n    }\n\n    // find the classes of AIG nodes which have FRAIG nodes assigned\n    Abc_NtkCleanNext( pNtk );\n    tTable = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else\n        if pNode.pCopy {\n            // inlining of macro Fraig_Not\n            gNodeNew = Fraig_NodeAnd( pMan, (Fraig_Node_t *)pNode.pCopy, ((Fraig_Node_t *)((ABC_PTRUINT_T)(gNodeExdc) ^ 01))  );\n            // inlining of macro Fraig_Regular\n            if !stmm_find_or_add( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(gNodeNew) \u0026 ~01)) , (char ***)\u0026ppSlot ) {\n                *ppSlot = nil; }\n            pNode.pNext = *ppSlot;\n            *ppSlot = pNode;\n        }\n    }\n\n    // for reach non-trival class, find the node with minimum level, and replace other nodes by it\n    Abc_AigSetNodePhases( pNtk );\n    // inlining of macro stmm_foreach_item\n    for gen=stmm_init_gen(tTable); stmm_gen(gen,(char **)\u0026gNodeNew,(char **)\u0026pClass) || (stmm_free_gen(gen),0); {\n        if pClass.pNext == nil {\n            continue; }\n        // find the node with minimum level\n        pNodeBest = pClass;\n        for  pNode = pClass.pNext; (pNode != nil); pNode = pNode.pNext  {\n            if pNodeBest.Level \u003e pNode.Level {\n                 pNodeBest = pNode; }\n        }\n        // remap the class nodes\n        for  pNode = pClass; (pNode != nil); pNode = pNode.pNext  {\n            pNode.pCopy = Abc_ObjNotCond( pNodeBest.pCopy, pNode.fPhase ^ pNodeBest.fPhase );\n        }\n    }\n    stmm_free_table( tTable );\n\n    // restore the next pointers\n    Abc_NtkCleanNext( pNtk );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pNode.pNext = (Abc_Obj_t *)Vec_PtrEntry( vNexts, pNode.Id ); }\n    }\n    Vec_PtrFree( vNexts );\n}"
+    },
+    {
+      "Name": "Abc_NtkFromFraig",
+      "Start": 9725,
+      "End": 10748,
+      "BodyStart": 9794,
+      "Original": "Abc_Ntk_t * Abc_NtkFromFraig( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk )\n{\n    ProgressBar * pProgress;\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pNode, * pNodeNew;\n    int i;\n    // create the new network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // make the mapper point to the new network\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        Fraig_NodeSetData1( Fraig_ManReadIthVar(pMan, i), (Fraig_Node_t *)pNode-\u003epCopy );\n    // set the constant node\n    Fraig_NodeSetData1( Fraig_ManReadConst1(pMan), (Fraig_Node_t *)Abc_AigConst1(pNtkNew) );\n    // process the nodes in topological order\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        pNodeNew = Abc_NodeFromFraig_rec( pNtkNew, Fraig_ManReadOutputs(pMan)[i] );\n        Abc_ObjAddFanin( pNode-\u003epCopy, pNodeNew );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Abc_NtkReassignIds( pNtkNew );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkFromFraig(pMan *Fraig_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pProgress *ProgressBar;\n    var pNtkNew *Abc_Ntk_t;\n    var pNode, pNodeNew *Abc_Obj_t;\n    var i int32;\n    // create the new network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // make the mapper point to the new network\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Fraig_NodeSetData1( Fraig_ManReadIthVar(pMan, i), (Fraig_Node_t *)pNode.pCopy );\n    }\n    // set the constant node\n    Fraig_NodeSetData1( Fraig_ManReadConst1(pMan), (Fraig_Node_t *)Abc_AigConst1(pNtkNew) );\n    // process the nodes in topological order\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCoNum(pNtk) );\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        pNodeNew = Abc_NodeFromFraig_rec( pNtkNew, Fraig_ManReadOutputs(pMan)[i] );\n        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Abc_NtkReassignIds( pNtkNew );\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NodeFromFraig_rec",
+      "Start": 11013,
+      "End": 13346,
+      "BodyStart": 11097,
+      "Original": "Abc_Obj_t * Abc_NodeFromFraig_rec( Abc_Ntk_t * pNtkNew, Fraig_Node_t * pNodeFraig )\n{\n    Abc_Obj_t * pRes, * pRes0, * pRes1, * pResMin, * pResCur;\n    Fraig_Node_t * pNodeTemp, * pNodeFraigR = Fraig_Regular(pNodeFraig);\n    void ** ppTail;\n    // check if the node was already considered\n    if ( (pRes = (Abc_Obj_t *)Fraig_NodeReadData1(pNodeFraigR)) )\n        return Abc_ObjNotCond( pRes, Fraig_IsComplement(pNodeFraig) );\n    // solve the children\n    pRes0 = Abc_NodeFromFraig_rec( pNtkNew, Fraig_NodeReadOne(pNodeFraigR) );\n    pRes1 = Abc_NodeFromFraig_rec( pNtkNew, Fraig_NodeReadTwo(pNodeFraigR) );\n    // derive the new node\n    pRes = Abc_AigAnd( (Abc_Aig_t *)pNtkNew-\u003epManFunc, pRes0, pRes1 );\n    pRes-\u003efPhase = Fraig_NodeReadSimInv( pNodeFraigR );\n    // if the node has an equivalence class, find its representative\n    if ( Fraig_NodeReadRepr(pNodeFraigR) == NULL \u0026\u0026 Fraig_NodeReadNextE(pNodeFraigR) != NULL )\n    {\n        // go through the FRAIG nodes belonging to this equivalence class\n        // and find the representative node (the node with the smallest level)\n        pResMin = pRes;\n        for ( pNodeTemp = Fraig_NodeReadNextE(pNodeFraigR); pNodeTemp; pNodeTemp = Fraig_NodeReadNextE(pNodeTemp) )\n        {\n            assert( Fraig_NodeReadData1(pNodeTemp) == NULL );\n            pResCur = Abc_NodeFromFraig_rec( pNtkNew, pNodeTemp );\n            if ( pResMin-\u003eLevel \u003e pResCur-\u003eLevel )\n                pResMin = pResCur;\n        }\n        // link the nodes in such a way that representative goes first\n        ppTail = \u0026pResMin-\u003epData;\n        if ( pRes != pResMin )\n        {\n            *ppTail = pRes;\n            ppTail = \u0026pRes-\u003epData;\n        }\n        for ( pNodeTemp = Fraig_NodeReadNextE(pNodeFraigR); pNodeTemp; pNodeTemp = Fraig_NodeReadNextE(pNodeTemp) )\n        {\n            pResCur = (Abc_Obj_t *)Fraig_NodeReadData1(pNodeTemp);\n            assert( pResCur );\n            if ( pResMin == pResCur )\n                continue;\n            *ppTail = pResCur;\n            ppTail = \u0026pResCur-\u003epData;\n        }\n        assert( *ppTail == NULL );\n\n        // update the phase of the node\n        pRes = Abc_ObjNotCond( pResMin, (pRes-\u003efPhase ^ pResMin-\u003efPhase) );\n    }\n    Fraig_NodeSetData1( pNodeFraigR, (Fraig_Node_t *)pRes );\n    return Abc_ObjNotCond( pRes, Fraig_IsComplement(pNodeFraig) );\n}",
+      "Draft": "func Abc_NodeFromFraig_rec(pNtkNew *Abc_Ntk_t, pNodeFraig *Fraig_Node_t) *Abc_Obj_t {\n    var pRes, pRes0, pRes1, pResMin, pResCur *Abc_Obj_t;\n    // inlining of macro Fraig_Regular\n    Fraig_Node_t * pNodeTemp, * pNodeFraigR = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNodeFraig) \u0026 ~01)) ;\n    var ppTail *any;\n    // check if the node was already considered\n    if pRes = (Abc_Obj_t *)Fraig_NodeReadData1(pNodeFraigR) {\n        // inlining of macro Fraig_IsComplement\n        return Abc_ObjNotCond( pRes, ((int32(((ABC_PTRUINT_T) (pNodeFraig) \u0026 01)))) ); }\n    // solve the children\n    pRes0 = Abc_NodeFromFraig_rec( pNtkNew, Fraig_NodeReadOne(pNodeFraigR) );\n    pRes1 = Abc_NodeFromFraig_rec( pNtkNew, Fraig_NodeReadTwo(pNodeFraigR) );\n    // derive the new node\n    pRes = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, pRes0, pRes1 );\n    pRes.fPhase = Fraig_NodeReadSimInv( pNodeFraigR );\n    // if the node has an equivalence class, find its representative\n    if Fraig_NodeReadRepr(pNodeFraigR) == nil \u0026\u0026 Fraig_NodeReadNextE(pNodeFraigR) != nil {\n        // go through the FRAIG nodes belonging to this equivalence class\n        // and find the representative node (the node with the smallest level)\n        pResMin = pRes;\n        for  pNodeTemp = Fraig_NodeReadNextE(pNodeFraigR); pNodeTemp; pNodeTemp = Fraig_NodeReadNextE(pNodeTemp)  {\n            assert(Fraig_NodeReadData1(pNodeTemp) == nil, \"Fraig_NodeReadData1(pNodeTemp) == nil\");\n            pResCur = Abc_NodeFromFraig_rec( pNtkNew, pNodeTemp );\n            if pResMin.Level \u003e pResCur.Level {\n                pResMin = pResCur; }\n        }\n        // link the nodes in such a way that representative goes first\n        ppTail = \u0026pResMin.pData;\n        if pRes != pResMin {\n            *ppTail = pRes;\n            ppTail = \u0026pRes.pData;\n        }\n        for  pNodeTemp = Fraig_NodeReadNextE(pNodeFraigR); pNodeTemp; pNodeTemp = Fraig_NodeReadNextE(pNodeTemp)  {\n            pResCur = (Abc_Obj_t *)Fraig_NodeReadData1(pNodeTemp);\n            assert((pResCur != nil), \"pResCur\");\n            if pResMin == pResCur {\n                continue; }\n            *ppTail = pResCur;\n            ppTail = \u0026pResCur.pData;\n        }\n        assert(*ppTail == nil, \"*ppTail == nil\");\n\n        // update the phase of the node\n        pRes = Abc_ObjNotCond( pResMin, (pRes.fPhase ^ pResMin.fPhase) );\n    }\n    Fraig_NodeSetData1( pNodeFraigR, (Fraig_Node_t *)pRes );\n    // inlining of macro Fraig_IsComplement\n    return Abc_ObjNotCond( pRes, ((int32(((ABC_PTRUINT_T) (pNodeFraig) \u0026 01)))) );\n}"
+    },
+    {
+      "Name": "Abc_NtkFromFraig2",
+      "Start": 13637,
+      "End": 15684,
+      "BodyStart": 13707,
+      "Original": "Abc_Ntk_t * Abc_NtkFromFraig2( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk )\n{\n    ProgressBar * pProgress;\n    stmm_table * tTable;\n    Vec_Ptr_t * vNodeReprs;\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pNode, * pRepr, ** ppSlot;\n    int i;\n\n    // map the nodes into their lowest level representives\n    tTable = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    pNode = Abc_AigConst1(pNtk);\n    if ( !stmm_find_or_add( tTable, (char *)Fraig_Regular(pNode-\u003epCopy), (char ***)\u0026ppSlot ) )\n        *ppSlot = pNode;\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        if ( !stmm_find_or_add( tTable, (char *)Fraig_Regular(pNode-\u003epCopy), (char ***)\u0026ppSlot ) )\n            *ppSlot = pNode;\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( pNode-\u003epCopy )\n        {\n            if ( !stmm_find_or_add( tTable, (char *)Fraig_Regular(pNode-\u003epCopy), (char ***)\u0026ppSlot ) )\n                *ppSlot = pNode;\n            else if ( (*ppSlot)-\u003eLevel \u003e pNode-\u003eLevel )\n                *ppSlot = pNode;\n        }\n    // save representatives for each node\n    vNodeReprs = Vec_PtrStart( Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( pNode-\u003epCopy )\n        {           \n            if ( !stmm_lookup( tTable, (char *)Fraig_Regular(pNode-\u003epCopy), (char **)\u0026pRepr ) )\n                assert( 0 );\n            if ( pNode != pRepr )\n                Vec_PtrWriteEntry( vNodeReprs, pNode-\u003eId, pRepr );\n        }\n    stmm_free_table( tTable );\n\n    // create the new network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n\n    // perform strashing\n    Abc_AigSetNodePhases( pNtk );\n    Abc_NtkIncrementTravId( pNtk );\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        Abc_NtkFromFraig2_rec( pNtkNew, Abc_ObjFanin0(pNode), vNodeReprs );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vNodeReprs );\n\n    // finalize the network\n    Abc_NtkFinalize( pNtk, pNtkNew );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkFromFraig2(pMan *Fraig_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pProgress *ProgressBar;\n    var tTable *stmm_table;\n    var vNodeReprs *Vec_Ptr_t;\n    var pNtkNew *Abc_Ntk_t;\n    var pNode *Abc_Obj_t;\n    var pRepr *Abc_Obj_t;\n    var ppSlot **Abc_Obj_t;\n    var i int32;\n\n    // map the nodes into their lowest level representives\n    tTable = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    pNode = Abc_AigConst1(pNtk);\n    // inlining of macro Fraig_Regular\n    if !stmm_find_or_add( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.pCopy) \u0026 ~01)) , (char ***)\u0026ppSlot ) {\n        *ppSlot = pNode; }\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        // inlining of macro Fraig_Regular\n        if !stmm_find_or_add( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.pCopy) \u0026 ~01)) , (char ***)\u0026ppSlot ) {\n            *ppSlot = pNode; }\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else\n        if pNode.pCopy {\n            // inlining of macro Fraig_Regular\n            if !stmm_find_or_add( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.pCopy) \u0026 ~01)) , (char ***)\u0026ppSlot ) {\n                *ppSlot = pNode;\n            } else if (*ppSlot).Level \u003e pNode.Level {\n                *ppSlot = pNode; }\n        }\n    }\n    // save representatives for each node\n    vNodeReprs = Vec_PtrStart( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else\n        if pNode.pCopy {           \n            // inlining of macro Fraig_Regular\n            if !stmm_lookup( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.pCopy) \u0026 ~01)) , (char **)\u0026pRepr ) {\n                assert(false, \"0\"); }\n            if pNode != pRepr {\n                Vec_PtrWriteEntry( vNodeReprs, pNode.Id, pRepr ); }\n        }\n    }\n    stmm_free_table( tTable );\n\n    // create the new network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n\n    // perform strashing\n    Abc_AigSetNodePhases( pNtk );\n    Abc_NtkIncrementTravId( pNtk );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCoNum(pNtk) );\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        Abc_NtkFromFraig2_rec( pNtkNew, Abc_ObjFanin0(pNode), vNodeReprs );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vNodeReprs );\n\n    // finalize the network\n    Abc_NtkFinalize( pNtk, pNtkNew );\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkFromFraig2_rec",
+      "Start": 15950,
+      "End": 16914,
+      "BodyStart": 16043,
+      "Original": "void Abc_NtkFromFraig2_rec( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode, Vec_Ptr_t * vNodeReprs )\n{\n    Abc_Obj_t * pRepr;\n    // skip the PIs and constants\n    if ( Abc_ObjFaninNum(pNode) \u003c 2 )\n        return;\n    // if this node is already visited, skip\n    if ( Abc_NodeIsTravIdCurrent( pNode ) )\n        return;\n    // mark the node as visited\n    Abc_NodeSetTravIdCurrent( pNode );\n    assert( Abc_ObjIsNode( pNode ) );\n    // get the node's representative\n    if ( (pRepr = (Abc_Obj_t *)Vec_PtrEntry(vNodeReprs, pNode-\u003eId)) )\n    {\n        Abc_NtkFromFraig2_rec( pNtkNew, pRepr, vNodeReprs );\n        pNode-\u003epCopy = Abc_ObjNotCond( pRepr-\u003epCopy, pRepr-\u003efPhase ^ pNode-\u003efPhase );\n        return;\n    }\n    Abc_NtkFromFraig2_rec( pNtkNew, Abc_ObjFanin0(pNode), vNodeReprs );\n    Abc_NtkFromFraig2_rec( pNtkNew, Abc_ObjFanin1(pNode), vNodeReprs );\n    pNode-\u003epCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew-\u003epManFunc, Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode) );\n}",
+      "Draft": "func Abc_NtkFromFraig2_rec(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t, vNodeReprs *Vec_Ptr_t) {\n    var pRepr *Abc_Obj_t;\n    // skip the PIs and constants\n    if Abc_ObjFaninNum(pNode) \u003c 2 {\n        return; }\n    // if this node is already visited, skip\n    if Abc_NodeIsTravIdCurrent( pNode ) {\n        return; }\n    // mark the node as visited\n    Abc_NodeSetTravIdCurrent( pNode );\n    assert(Abc_ObjIsNode( pNode ), \"Abc_ObjIsNode( pNode )\");\n    // get the node's representative\n    if pRepr = (Abc_Obj_t *)Vec_PtrEntry(vNodeReprs, pNode.Id) {\n        Abc_NtkFromFraig2_rec( pNtkNew, pRepr, vNodeReprs );\n        pNode.pCopy = Abc_ObjNotCond( pRepr.pCopy, pRepr.fPhase ^ pNode.fPhase );\n        return;\n    }\n    Abc_NtkFromFraig2_rec( pNtkNew, Abc_ObjFanin0(pNode), vNodeReprs );\n    Abc_NtkFromFraig2_rec( pNtkNew, Abc_ObjFanin1(pNode), vNodeReprs );\n    pNode.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode) );\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigTrust",
+      "Start": 17198,
+      "End": 18216,
+      "BodyStart": 17248,
+      "Original": "Abc_Ntk_t * Abc_NtkFraigTrust( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew;\n\n    if ( !Abc_NtkIsSopLogic(pNtk) )\n    {\n        printf( \"Abc_NtkFraigTrust: Trust mode works for netlists and logic SOP networks.\\n\" );\n        return NULL;\n    }\n\n    if ( !Abc_NtkFraigTrustCheck(pNtk) )\n    {\n        printf( \"Abc_NtkFraigTrust: The network does not look like an AIG with choice nodes.\\n\" );\n        return NULL;\n    }\n    \n    // perform strashing\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    Abc_NtkFraigTrustOne( pNtk, pNtkNew );\n    Abc_NtkFinalize( pNtk, pNtkNew );\n    Abc_NtkReassignIds( pNtkNew );\n\n    // print a warning about choice nodes\n    printf( \"Warning: The resulting AIG contains %d choice nodes.\\n\", Abc_NtkGetChoiceNum( pNtkNew ) );\n\n    // make sure that everything is okay\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Abc_NtkFraigTrust: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkFraigTrust(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n\n    if !Abc_NtkIsSopLogic(pNtk) {\n        fmt.Printf(\"Abc_NtkFraigTrust: Trust mode works for netlists and logic SOP networks.\\n\");\n        return nil;\n    }\n\n    if !(Abc_NtkFraigTrustCheck(pNtk) != 0) {\n        fmt.Printf(\"Abc_NtkFraigTrust: The network does not look like an AIG with choice nodes.\\n\");\n        return nil;\n    }\n    \n    // perform strashing\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    Abc_NtkFraigTrustOne( pNtk, pNtkNew );\n    Abc_NtkFinalize( pNtk, pNtkNew );\n    Abc_NtkReassignIds( pNtkNew );\n\n    // print a warning about choice nodes\n    fmt.Printf(\"Warning: The resulting AIG contains %d choice nodes.\\n\", Abc_NtkGetChoiceNum( pNtkNew ));\n\n    // make sure that everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkFraigTrust: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigTrustCheck",
+      "Start": 18511,
+      "End": 18930,
+      "BodyStart": 18558,
+      "Original": "int Abc_NtkFraigTrustCheck( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode;\n    int i, nFanins;\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        nFanins = Abc_ObjFaninNum(pNode);\n        if ( nFanins \u003c 2 )\n            continue;\n        if ( nFanins == 2 \u0026\u0026 Abc_SopIsAndType((char *)pNode-\u003epData) )\n            continue;\n        if ( !Abc_SopIsOrType((char *)pNode-\u003epData) )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkFraigTrustCheck(pNtk *Abc_Ntk_t) int32 {\n    var pNode *Abc_Obj_t;\n    var i, nFanins int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        nFanins = Abc_ObjFaninNum(pNode);\n        if nFanins \u003c 2 {\n            continue; }\n        if nFanins == 2 \u0026\u0026 Abc_SopIsAndType((char *)pNode.pData) {\n            continue; }\n        if !Abc_SopIsOrType((char *)pNode.pData) {\n            return 0; }\n    }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigTrustOne",
+      "Start": 19212,
+      "End": 20220,
+      "BodyStart": 19279,
+      "Original": "void Abc_NtkFraigTrustOne( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkNew )\n{\n    ProgressBar * pProgress;\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pNode, * pNodeNew, * pObj;\n    int i;\n\n    // perform strashing\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    pProgress = Extra_ProgressBarStart( stdout, vNodes-\u003enSize );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        // get the node\n        assert( Abc_ObjIsNode(pNode) );\n         // strash the node\n        pNodeNew = Abc_NodeFraigTrust( pNtkNew, pNode );\n        // get the old object\n        if ( Abc_NtkIsNetlist(pNtk) )\n            pObj = Abc_ObjFanout0( pNode ); // the fanout net \n        else \n            pObj = pNode; // the node itself\n        // make sure the node is not yet strashed\n        assert( pObj-\u003epCopy == NULL );\n        // mark the old object with the new AIG node\n        pObj-\u003epCopy = pNodeNew;\n    }\n    Vec_PtrFree( vNodes );\n    Extra_ProgressBarStop( pProgress );\n}",
+      "Draft": "func Abc_NtkFraigTrustOne(pNtk *Abc_Ntk_t, pNtkNew *Abc_Ntk_t) {\n    var pProgress *ProgressBar;\n    var vNodes *Vec_Ptr_t;\n    var pNode, pNodeNew, pObj *Abc_Obj_t;\n    var i int32;\n\n    // perform strashing\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, vNodes.nSize );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        // get the node\n        assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n         // strash the node\n        pNodeNew = Abc_NodeFraigTrust( pNtkNew, pNode );\n        // get the old object\n        if Abc_NtkIsNetlist(pNtk) {\n            pObj = Abc_ObjFanout0( pNode ); // the fanout net \n        } else { \n            pObj = pNode; } // the node itself\n        // make sure the node is not yet strashed\n        assert(pObj.pCopy == nil, \"pObj.pCopy == nil\");\n        // mark the old object with the new AIG node\n        pObj.pCopy = pNodeNew;\n    }\n    Vec_PtrFree( vNodes );\n    Extra_ProgressBarStop( pProgress );\n}"
+    },
+    {
+      "Name": "Abc_NodeFraigTrust",
+      "Start": 20507,
+      "End": 22102,
+      "BodyStart": 20580,
+      "Original": "Abc_Obj_t * Abc_NodeFraigTrust( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode )\n{\n    Abc_Obj_t * pSum, * pFanin;\n    void ** ppTail;\n    int i, nFanins, fCompl;\n\n    assert( Abc_ObjIsNode(pNode) );\n    // get the number of node's fanins\n    nFanins = Abc_ObjFaninNum( pNode );\n    assert( nFanins == Abc_SopGetVarNum((char *)pNode-\u003epData) );\n    // check if it is a constant\n    if ( nFanins == 0 )\n        return Abc_ObjNotCond( Abc_AigConst1(pNtkNew), Abc_SopIsConst0((char *)pNode-\u003epData) );\n    if ( nFanins == 1 )\n        return Abc_ObjNotCond( Abc_ObjFanin0(pNode)-\u003epCopy, Abc_SopIsInv((char *)pNode-\u003epData) );\n    if ( nFanins == 2 \u0026\u0026 Abc_SopIsAndType((char *)pNode-\u003epData) )\n        return Abc_AigAnd( (Abc_Aig_t *)pNtkNew-\u003epManFunc, \n            Abc_ObjNotCond( Abc_ObjFanin0(pNode)-\u003epCopy, !Abc_SopGetIthCareLit((char *)pNode-\u003epData,0) ),\n            Abc_ObjNotCond( Abc_ObjFanin1(pNode)-\u003epCopy, !Abc_SopGetIthCareLit((char *)pNode-\u003epData,1) )  );\n    assert( Abc_SopIsOrType((char *)pNode-\u003epData) );\n    fCompl = Abc_SopGetIthCareLit((char *)pNode-\u003epData,0);\n    // get the root of the choice node (the first fanin)\n    pSum = Abc_ObjFanin0(pNode)-\u003epCopy;\n    // connect other fanins\n    ppTail = \u0026pSum-\u003epData;\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n    {\n        if ( i == 0 )\n            continue;\n        *ppTail = pFanin-\u003epCopy;\n        ppTail = \u0026pFanin-\u003epCopy-\u003epData;\n        // set the complemented bit of this cut\n        if ( fCompl ^ Abc_SopGetIthCareLit((char *)pNode-\u003epData, i) )\n            pFanin-\u003epCopy-\u003efPhase = 1;\n    }\n    assert( *ppTail == NULL );\n    return pSum;\n}",
+      "Draft": "func Abc_NodeFraigTrust(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t) *Abc_Obj_t {\n    var pSum, pFanin *Abc_Obj_t;\n    var ppTail *any;\n    var i, nFanins, fCompl int32;\n\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    // get the number of node's fanins\n    nFanins = Abc_ObjFaninNum( pNode );\n    assert(nFanins == Abc_SopGetVarNum((char *)pNode.pData), \"nFanins == Abc_SopGetVarNum((char *)pNode.pData)\");\n    // check if it is a constant\n    if nFanins == 0 {\n        return Abc_ObjNotCond( Abc_AigConst1(pNtkNew), Abc_SopIsConst0((char *)pNode.pData) ); }\n    if nFanins == 1 {\n        return Abc_ObjNotCond( Abc_ObjFanin0(pNode).pCopy, Abc_SopIsInv((char *)pNode.pData) ); }\n    if nFanins == 2 \u0026\u0026 Abc_SopIsAndType((char *)pNode.pData) {\n        return Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, \n            Abc_ObjNotCond( Abc_ObjFanin0(pNode).pCopy, !Abc_SopGetIthCareLit((char *)pNode.pData,0) ),\n            Abc_ObjNotCond( Abc_ObjFanin1(pNode).pCopy, !Abc_SopGetIthCareLit((char *)pNode.pData,1) )  ); }\n    assert(Abc_SopIsOrType((char *)pNode.pData), \"Abc_SopIsOrType((char *)pNode.pData)\");\n    fCompl = Abc_SopGetIthCareLit((char *)pNode.pData,0);\n    // get the root of the choice node (the first fanin)\n    pSum = Abc_ObjFanin0(pNode).pCopy;\n    // connect other fanins\n    ppTail = \u0026pSum.pData;\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if i == 0 {\n            continue; }\n        *ppTail = pFanin.pCopy;\n        ppTail = \u0026pFanin.pCopy.pData;\n        // set the complemented bit of this cut\n        if fCompl ^ Abc_SopGetIthCareLit((char *)pNode.pData, i) {\n            pFanin.pCopy.fPhase = 1; }\n    }\n    assert(*ppTail == nil, \"*ppTail == nil\");\n    return pSum;\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigStore",
+      "Start": 22387,
+      "End": 23595,
+      "BodyStart": 22432,
+      "Original": "int Abc_NtkFraigStore( Abc_Ntk_t * pNtkAdd )\n{\n    Vec_Ptr_t * vStore;\n    Abc_Ntk_t * pNtk;\n    // create the network to be stored\n    pNtk = Abc_NtkStrash( pNtkAdd, 0, 0, 0 );\n    if ( pNtk == NULL )\n    {\n        printf( \"Abc_NtkFraigStore: Initial strashing has failed.\\n\" );\n        return 0;\n    }\n    // get the network currently stored\n    vStore = Abc_FrameReadStore();\n    if ( Vec_PtrSize(vStore) \u003e 0 )\n    {\n        // check that the networks have the same PIs\n        extern int Abc_NodeCompareCiCo( Abc_Ntk_t * pNtkOld, Abc_Ntk_t * pNtkNew );\n        if ( !Abc_NodeCompareCiCo(pNtk, (Abc_Ntk_t *)Vec_PtrEntry(vStore, 0)) )\n        {\n            // reorder PIs of pNtk2 according to pNtk1\n            if ( !Abc_NtkCompareSignals( pNtk, (Abc_Ntk_t *)Vec_PtrEntry(vStore, 0), 1, 1 ) )\n            {\n                printf( \"Trying to store the network with different primary inputs.\\n\" );\n                printf( \"The previously stored networks are deleted and this one is added.\\n\" );\n                Abc_NtkFraigStoreClean();\n            }\n        }\n    }\n    Vec_PtrPush( vStore, pNtk );\n//    printf( \"The number of AIG nodes added to storage = %5d.\\n\", Abc_NtkNodeNum(pNtk) );\n    return 1;\n}",
+      "Draft": "func Abc_NtkFraigStore(pNtkAdd *Abc_Ntk_t) int32 {\n    var vStore *Vec_Ptr_t;\n    var pNtk *Abc_Ntk_t;\n    // create the network to be stored\n    pNtk = Abc_NtkStrash( pNtkAdd, 0, 0, 0 );\n    if pNtk == nil {\n        fmt.Printf(\"Abc_NtkFraigStore: Initial strashing has failed.\\n\");\n        return 0;\n    }\n    // get the network currently stored\n    vStore = Abc_FrameReadStore();\n    if Vec_PtrSize(vStore) \u003e 0 {\n        // check that the networks have the same PIs\n        extern int Abc_NodeCompareCiCo( Abc_Ntk_t * pNtkOld, Abc_Ntk_t * pNtkNew );\n        if !Abc_NodeCompareCiCo(pNtk, (Abc_Ntk_t *)Vec_PtrEntry(vStore, 0)) {\n            // reorder PIs of pNtk2 according to pNtk1\n            if !Abc_NtkCompareSignals( pNtk, (Abc_Ntk_t *)Vec_PtrEntry(vStore, 0), 1, 1 ) {\n                fmt.Printf(\"Trying to store the network with different primary inputs.\\n\");\n                fmt.Printf(\"The previously stored networks are deleted and this one is added.\\n\");\n                Abc_NtkFraigStoreClean();\n            }\n        }\n    }\n    Vec_PtrPush( vStore, pNtk );\n//    printf( \"The number of AIG nodes added to storage = %5d.\\n\", Abc_NtkNodeNum(pNtk) );\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigRestore",
+      "Start": 23877,
+      "End": 26428,
+      "BodyStart": 23955,
+      "Original": "Abc_Ntk_t * Abc_NtkFraigRestore( int nPatsRand, int nPatsDyna, int nBTLimit )\n{\n    extern Abc_Ntk_t * Abc_NtkFraigPartitioned( Vec_Ptr_t * vStore, void * pParams );\n    Fraig_Params_t Params;\n    Vec_Ptr_t * vStore;\n    Abc_Ntk_t * pNtk, * pFraig;\n    int nWords1, nWords2, nWordsMin;\n//    abctime clk = Abc_Clock();\n\n    // get the stored network\n    vStore = Abc_FrameReadStore();\n    if ( Vec_PtrSize(vStore) == 0 )\n    {\n        printf( \"There are no network currently in storage.\\n\" );\n        return NULL;\n    }\n//    printf( \"Currently stored %d networks will be fraiged.\\n\", Vec_PtrSize(vStore) );\n    pNtk = (Abc_Ntk_t *)Vec_PtrEntry( vStore, 0 );\n\n    // swap the first and last network\n    // this should lead to the primary choice being \"better\" because of synthesis\n    if ( Vec_PtrSize(vStore) \u003e 1 )\n    {\n        pNtk = (Abc_Ntk_t *)Vec_PtrPop( vStore );\n        Vec_PtrPush( vStore, Vec_PtrEntry(vStore,0) );\n        Vec_PtrWriteEntry( vStore, 0, pNtk );\n    }\n\n    // to determine the number of simulation patterns\n    // use the following strategy\n    // at least 64 words (32 words random and 32 words dynamic)\n    // no more than 256M for one circuit (128M + 128M)\n    nWords1 = 32;\n    nWords2 = (1\u003c\u003c27) / (Abc_NtkNodeNum(pNtk) + Abc_NtkCiNum(pNtk));\n    nWordsMin = Abc_MinInt( nWords1, nWords2 );\n\n    // set parameters for fraiging\n    Fraig_ParamsSetDefault( \u0026Params );\n    Params.nPatsRand  = nPatsRand ? nPatsRand : nWordsMin * 32;    // the number of words of random simulation info\n    Params.nPatsDyna  = nPatsDyna ? nPatsDyna : nWordsMin * 32;    // the number of words of dynamic simulation info\n    Params.nBTLimit   = nBTLimit;          // the max number of backtracks to perform\n    Params.fFuncRed   =    1;              // performs only one level hashing\n    Params.fFeedBack  =    1;              // enables solver feedback\n    Params.fDist1Pats =    1;              // enables distance-1 patterns\n    Params.fDoSparse  =    1;              // performs equiv tests for sparse functions \n    Params.fChoicing  =    1;              // enables recording structural choices\n    Params.fTryProve  =    0;              // tries to solve the final miter\n    Params.fInternal  =    1;              // does not show progress bar\n    Params.fVerbose   =    0;              // the verbosiness flag\n\n    // perform partitioned computation of structural choices\n    pFraig = Abc_NtkFraigPartitioned( vStore, \u0026Params );\n    Abc_NtkFraigStoreClean();\n//ABC_PRT( \"Total choicing time\", Abc_Clock() - clk );\n    return pFraig;\n}",
+      "Draft": "func Abc_NtkFraigRestore(nPatsRand int32, nPatsDyna int32, nBTLimit int32) *Abc_Ntk_t {\n    extern Abc_Ntk_t * Abc_NtkFraigPartitioned( Vec_Ptr_t * vStore, void * pParams );\n    var Params Fraig_Params_t;\n    var vStore *Vec_Ptr_t;\n    var pNtk, pFraig *Abc_Ntk_t;\n    var nWords1, nWords2, nWordsMin int32;\n//    abctime clk = Abc_Clock();\n\n    // get the stored network\n    vStore = Abc_FrameReadStore();\n    if Vec_PtrSize(vStore) == 0 {\n        fmt.Printf(\"There are no network currently in storage.\\n\");\n        return nil;\n    }\n//    printf( \"Currently stored %d networks will be fraiged.\\n\", Vec_PtrSize(vStore) );\n    pNtk = (Abc_Ntk_t *)Vec_PtrEntry( vStore, 0 );\n\n    // swap the first and last network\n    // this should lead to the primary choice being \"better\" because of synthesis\n    if Vec_PtrSize(vStore) \u003e 1 {\n        pNtk = (Abc_Ntk_t *)Vec_PtrPop( vStore );\n        Vec_PtrPush( vStore, Vec_PtrEntry(vStore,0) );\n        Vec_PtrWriteEntry( vStore, 0, pNtk );\n    }\n\n    // to determine the number of simulation patterns\n    // use the following strategy\n    // at least 64 words (32 words random and 32 words dynamic)\n    // no more than 256M for one circuit (128M + 128M)\n    nWords1 = 32;\n    nWords2 = (1\u003c\u003c27) / (Abc_NtkNodeNum(pNtk) + Abc_NtkCiNum(pNtk));\n    nWordsMin = Abc_MinInt( nWords1, nWords2 );\n\n    // set parameters for fraiging\n    Fraig_ParamsSetDefault( \u0026Params );\n    if nPatsRand != 0 {\n        Params.nPatsRand = nPatsRand;\n    } else {\n        Params.nPatsRand = nWordsMin * 32;\n    }    // the number of words of random simulation info\n    if nPatsDyna != 0 {\n        Params.nPatsDyna = nPatsDyna;\n    } else {\n        Params.nPatsDyna = nWordsMin * 32;\n    }    // the number of words of dynamic simulation info\n    Params.nBTLimit   = nBTLimit;          // the max number of backtracks to perform\n    Params.fFuncRed   =    1;              // performs only one level hashing\n    Params.fFeedBack  =    1;              // enables solver feedback\n    Params.fDist1Pats =    1;              // enables distance-1 patterns\n    Params.fDoSparse  =    1;              // performs equiv tests for sparse functions \n    Params.fChoicing  =    1;              // enables recording structural choices\n    Params.fTryProve  =    0;              // tries to solve the final miter\n    Params.fInternal  =    1;              // does not show progress bar\n    Params.fVerbose   =    0;              // the verbosiness flag\n\n    // perform partitioned computation of structural choices\n    pFraig = Abc_NtkFraigPartitioned( vStore, \u0026Params );\n    Abc_NtkFraigStoreClean();\n//ABC_PRT( \"Total choicing time\", Abc_Clock() - clk );\n    return pFraig;\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigStoreClean",
+      "Start": 26710,
+      "End": 26950,
+      "BodyStart": 26740,
+      "Original": "void Abc_NtkFraigStoreClean()\n{\n    Vec_Ptr_t * vStore;\n    Abc_Ntk_t * pNtk;\n    int i;\n    vStore = Abc_FrameReadStore();\n    Vec_PtrForEachEntry( Abc_Ntk_t *, vStore, pNtk, i )\n        Abc_NtkDelete( pNtk );\n    Vec_PtrClear( vStore );\n}",
+      "Draft": "func Abc_NtkFraigStoreClean() {\n    var vStore *Vec_Ptr_t;\n    var pNtk *Abc_Ntk_t;\n    var i int32;\n    vStore = Abc_FrameReadStore();\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vStore)) \u0026\u0026 (((pNtk) = (Abc_Ntk_t *)Vec_PtrEntry(vStore, i)), 1); i++  {\n        Abc_NtkDelete( pNtk );\n    }\n    Vec_PtrClear( vStore );\n}"
+    },
+    {
+      "Name": "Abc_NtkFraigStoreCheck",
+      "Start": 27228,
+      "End": 27958,
+      "BodyStart": 27278,
+      "Original": "void Abc_NtkFraigStoreCheck( Abc_Ntk_t * pFraig )\n{\n    Abc_Obj_t * pNode0, * pNode1;\n    int nPoOrig, nPoFinal, nStored; \n    int i, k;\n    // check that the PO functions are correct\n    nPoFinal = Abc_NtkPoNum(pFraig);\n    nStored  = Abc_FrameReadStoreSize();\n    assert( nPoFinal % nStored == 0 );\n    nPoOrig  = nPoFinal / nStored;\n    for ( i = 0; i \u003c nPoOrig; i++ )\n    {\n        pNode0 = Abc_ObjFanin0( Abc_NtkPo(pFraig, i) ); \n        for ( k = 1; k \u003c nStored; k++ )\n        {\n            pNode1 = Abc_ObjFanin0( Abc_NtkPo(pFraig, k*nPoOrig+i) ); \n            if ( pNode0 != pNode1 )\n                printf( \"Verification for PO #%d of network #%d has failed. The PO function is not used.\\n\", i+1, k+1 );\n        }\n    }\n}",
+      "Draft": "func Abc_NtkFraigStoreCheck(pFraig *Abc_Ntk_t) {\n    var pNode0, pNode1 *Abc_Obj_t;\n    var nPoOrig, nPoFinal, nStored int32; \n    var i, k int32;\n    // check that the PO functions are correct\n    nPoFinal = Abc_NtkPoNum(pFraig);\n    nStored  = Abc_FrameReadStoreSize();\n    assert(nPoFinal % nStored == 0, \"nPoFinal % nStored == 0\");\n    nPoOrig  = nPoFinal / nStored;\n    for  i = 0; i \u003c nPoOrig; i++  {\n        pNode0 = Abc_ObjFanin0( Abc_NtkPo(pFraig, i) ); \n        for  k = 1; k \u003c nStored; k++  {\n            pNode1 = Abc_ObjFanin0( Abc_NtkPo(pFraig, k*nPoOrig+i) ); \n            if pNode0 != pNode1 {\n                fmt.Printf(\"Verification for PO #%d of network #%d has failed. The PO function is not used.\\n\", i+1, k+1); }\n        }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::2289",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2289,
+      "End": 2307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::2538",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2538,
+      "End": 2553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::3701",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3701,
+      "End": 3719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::3957",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3957,
+      "End": 3975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::4079",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4079,
+      "End": 4092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::4335",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4234,
+      "End": 4247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::4656",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4446,
+      "End": 4446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::4884",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4678,
+      "End": 4691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::4985",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4729,
+      "End": 4729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::5147",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4819,
+      "End": 4819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::5677",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5226,
+      "End": 5242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::6512",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6061,
+      "End": 6074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::6964",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6406,
+      "End": 6419
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::7156",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6535,
+      "End": 6535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::7481",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6656,
+      "End": 6669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::7582",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6707,
+      "End": 6707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::7742",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6795,
+      "End": 6795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::7976",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6957,
+      "End": 6957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::9638",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8245,
+      "End": 8261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::9714",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8275,
+      "End": 8275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::9813",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8343,
+      "End": 8351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::9871",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8351,
+      "End": 8351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::9924",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8376,
+      "End": 8386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::10288",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8643,
+      "End": 8643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::10307",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8643,
+      "End": 8643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::11176",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9361,
+      "End": 9374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::12057",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10141,
+      "End": 10157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::12169",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10253,
+      "End": 10269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::13274",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11207,
+      "End": 11207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::13414",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11319,
+      "End": 11332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::13834",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11671,
+      "End": 11684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::15003",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12840,
+      "End": 12853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::15417",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13254,
+      "End": 13270
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::16286",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14055,
+      "End": 14063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::16344",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14063,
+      "End": 14063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::16401",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14092,
+      "End": 14102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::16628",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14218,
+      "End": 14226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::16686",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14226,
+      "End": 14226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::16743",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14255,
+      "End": 14265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::17093",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14429,
+      "End": 14437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::17151",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14437,
+      "End": 14437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::17208",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14466,
+      "End": 14476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::17766",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14848,
+      "End": 14856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::17824",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14856,
+      "End": 14856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::17881",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14885,
+      "End": 14894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::19522",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16425,
+      "End": 16438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::19924",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16827,
+      "End": 16840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::22060",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18787,
+      "End": 18795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::22136",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18863,
+      "End": 18871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::22901",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19519,
+      "End": 19519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::24196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20818,
+      "End": 20826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::24349",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20971,
+      "End": 20979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::24471",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21093,
+      "End": 21101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::24538",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21160,
+      "End": 21168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::24589",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21211,
+      "End": 21224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::24701",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21323,
+      "End": 21331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::24807",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21429,
+      "End": 21437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::24865",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21487,
+      "End": 21495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::24924",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21546,
+      "End": 21554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::25467",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21981,
+      "End": 21989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::26470",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22984,
+      "End": 22997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::26622",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23136,
+      "End": 23149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::27982",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24496,
+      "End": 24509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::28200",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24714,
+      "End": 24727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::pointer-cast::30432",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26838,
+      "End": 26838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::void-pointer::Abc_NtkFraig",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NtkFraig",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2171,
+      "End": 3315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NtkFraig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2171,
+      "End": 3315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::void-pointer::Abc_NtkToFraig",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NtkToFraig",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 3594,
+      "End": 5332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NtkToFraig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkToFraig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3594,
+      "End": 5332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::ternary::Abc_NtkToFraigExdc",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkToFraigExdc",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5687,
+      "End": 7083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NtkToFraigExdc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkToFraigExdc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5687,
+      "End": 7083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NtkFraigRemapUsingExdc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigRemapUsingExdc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7381,
+      "End": 9437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NtkFromFraig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFromFraig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9725,
+      "End": 10748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NodeFromFraig_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFromFraig_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11013,
+      "End": 13346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NtkFromFraig2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFromFraig2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13637,
+      "End": 15684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NtkFromFraig2_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFromFraig2_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15950,
+      "End": 16914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NtkFraigTrust",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigTrust",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17198,
+      "End": 18216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NtkFraigTrustCheck",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigTrustCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18511,
+      "End": 18930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NtkFraigTrustOne",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigTrustOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19212,
+      "End": 20220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NodeFraigTrust",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFraigTrust",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20507,
+      "End": 22102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NtkFraigStore",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigStore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22387,
+      "End": 23595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NtkFraigRestore",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigRestore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23877,
+      "End": 26428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NtkFraigStoreClean",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigStoreClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26710,
+      "End": 26950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::Abc_NtkFraigStoreCheck",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFraigStoreCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27228,
+      "End": 27958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFraig.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 28205
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcFraig.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Procedures interfacing with the FRAIG package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcFraig.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"proof/fraig/fraig.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern Abc_Ntk_t *    Abc_NtkFromFraig( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk );\n\n// static Abc_Ntk_t *    Abc_NtkFromFraig2( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk );\n\n// static Abc_Obj_t *    Abc_NodeFromFraig_rec( Abc_Ntk_t * pNtkNew, Fraig_Node_t * pNodeFraig );\n\n// static void           Abc_NtkFromFraig2_rec( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode, Vec_Ptr_t * vNodeReprs );\n\n// extern Fraig_Node_t * Abc_NtkToFraigExdc( Fraig_Man_t * pMan, Abc_Ntk_t * pNtkMain, Abc_Ntk_t * pNtkExdc );\n\n// static void           Abc_NtkFraigRemapUsingExdc( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk );\n\n\n// static int            Abc_NtkFraigTrustCheck( Abc_Ntk_t * pNtk );\n\n// static void           Abc_NtkFraigTrustOne( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkNew );\n\n// static Abc_Obj_t *    Abc_NodeFraigTrust( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode );\n\n \n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Interfaces the network with the FRAIG package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraig(pNtk *Abc_Ntk_t, pParams any, fAllNodes int32, fExdc int32) *Abc_Ntk_t {\n    var pPars *Fraig_Params_t  = (Fraig_Params_t *)pParams;\n    var pNtkNew *Abc_Ntk_t;\n    var pMan *Fraig_Man_t; \n    // check if EXDC is present\n    if (fExdc != 0) \u0026\u0026 pNtk.pExdc == nil {\n        fExdc = 0;\nfmt.Printf(\"Warning: Networks has no EXDC.\\n\"); }\n    // perform fraiging\n    pMan = (Fraig_Man_t *)Abc_NtkToFraig( pNtk, pParams, fAllNodes, fExdc ); \n    // add algebraic choices\n//    if ( pPars-\u003efChoicing )\n//        Fraig_ManAddChoices( pMan, 0, 6 );\n    // prove the miter if asked to\n    if pPars.fTryProve {\n        Fraig_ManProveMiter( pMan ); }\n    // reconstruct FRAIG in the new network\n    if fExdc != 0 { \n        pNtkNew = Abc_NtkFromFraig2( pMan, pNtk );\n    } else {\n        pNtkNew = Abc_NtkFromFraig( pMan, pNtk ); }\n    Fraig_ManFree( pMan );\n    if pNtk.pExdc {\n        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }\n    // make sure that everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkFraig: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the strashed network into FRAIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkToFraig(pNtk *Abc_Ntk_t, pParams any, fAllNodes int32, fExdc int32) any {\n    var fInternal int32  = ((Fraig_Params_t *)pParams).fInternal;\n    var pMan *Fraig_Man_t;\n    var pProgress *ProgressBar  = nil;\n    var vNodes *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var i int32;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // create the FRAIG manager\n    pMan = Fraig_ManCreate( (Fraig_Params_t *)pParams );\n\n    // map the constant node\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk).pCopy = (Abc_Obj_t *)Fraig_ManReadConst1(pMan);\n    // create PIs and remember them in the old nodes\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pNode.pCopy = (Abc_Obj_t *)Fraig_ManReadIthVar(pMan, i);\n    }\n \n    // perform strashing\n    vNodes = Abc_AigDfs( pNtk, fAllNodes, 0 );\n    if !(fInternal != 0) {\n        pProgress = Extra_ProgressBarStart( os.Stdout, vNodes.nSize ); }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Abc_ObjFaninNum(pNode) == 0 {\n            continue; }\n        if pProgress != nil { \n            Extra_ProgressBarUpdate( pProgress, i, nil ); }\n        pNode.pCopy = (Abc_Obj_t *)Fraig_NodeAnd( pMan, \n                // inlining of macro Fraig_NotCond\n                ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pNode).pCopy) ^ (int32(Abc_ObjFaninC0(pNode))))),\n                // inlining of macro Fraig_NotCond\n                ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin1(pNode).pCopy) ^ (int32(Abc_ObjFaninC1(pNode))))) );\n    }\n    if pProgress != nil {\n        Extra_ProgressBarStop( pProgress ); }\n    Vec_PtrFree( vNodes );\n\n    // use EXDC to change the mapping of nodes into FRAIG nodes\n    if fExdc != 0 {\n        Abc_NtkFraigRemapUsingExdc( pMan, pNtk ); }\n\n    // set the primary outputs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Fraig_ManSetPo( pMan, (Fraig_Node_t *)Abc_ObjNotCond( Abc_ObjFanin0(pNode).pCopy, Abc_ObjFaninC0(pNode) ) );\n    }\n    return pMan;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives EXDC node for the given network.]\n\n  Description [Assumes that EXDCs of all POs are the same.\n  Returns the EXDC of the first PO.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkToFraigExdc(pMan *Fraig_Man_t, pNtkMain *Abc_Ntk_t, pNtkExdc *Abc_Ntk_t) *Fraig_Node_t {\n    var pNtkStrash *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var gResult *Fraig_Node_t;\n    var ppNames *string;\n    var i, k int32;\n    // strash the EXDC network\n    pNtkStrash = Abc_NtkStrash( pNtkExdc, 0, 0, 0 );\n    Abc_NtkCleanCopy( pNtkStrash );\n    Abc_AigConst1(pNtkStrash).pCopy = (Abc_Obj_t *)Fraig_ManReadConst1(pMan);\n    // set the mapping of the PI nodes\n    ppNames = Abc_NtkCollectCioNames( pNtkMain, 0 );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtkStrash)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtkStrash, i)), 1); i++  {\n        for  k = 0; k \u003c Abc_NtkCiNum(pNtkMain); k++  {\n            if int32(strings.Compare(Abc_ObjName(pObj), ppNames[k])) == 0 {\n                pObj.pCopy = (Abc_Obj_t *)Fraig_ManReadIthVar(pMan, k);\n                break;\n            }\n        }\n        assert(pObj.pCopy != nil, \"pObj.pCopy != nil\");\n    }\n    // inlining of macro ABC_FREE\n    ((ppNames) ? (free((char *) (ppNames)), (ppNames) = 0) : 0);\n    // build FRAIG for each node\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtkStrash).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtkStrash, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        pObj.pCopy = (Abc_Obj_t *)Fraig_NodeAnd( pMan, \n                // inlining of macro Fraig_NotCond\n                ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pObj).pCopy) ^ (int32(Abc_ObjFaninC0(pObj))))),\n                // inlining of macro Fraig_NotCond\n                ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin1(pObj).pCopy) ^ (int32(Abc_ObjFaninC1(pObj))))) ); }\n    }\n    // get the EXDC to be returned\n    pObj = Abc_NtkPo( pNtkStrash, 0 );\n    // inlining of macro Fraig_NotCond\n    gResult = ((Fraig_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pObj).pCopy) ^ (int32(Abc_ObjFaninC0(pObj)))));\n    Abc_NtkDelete( pNtkStrash );\n    return gResult;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Changes mapping of the old nodes into FRAIG nodes using EXDC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigRemapUsingExdc(pMan *Fraig_Man_t, pNtk *Abc_Ntk_t) {\n    var gNodeNew, gNodeExdc *Fraig_Node_t;\n    var tTable *stmm_table;\n    var gen *stmm_generator;\n    var pNode, pNodeBest *Abc_Obj_t;\n    var pClass *Abc_Obj_t;\n    var ppSlot **Abc_Obj_t;\n    var vNexts *Vec_Ptr_t;\n    var i int32;\n\n    // get the global don't-cares\n    assert(pNtk.pExdc, \"pNtk.pExdc\");\n    gNodeExdc = Abc_NtkToFraigExdc( pMan, pNtk, pNtk.pExdc );\n\n    // save the next pointers\n    vNexts = Vec_PtrStart( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Vec_PtrWriteEntry( vNexts, pNode.Id, pNode.pNext ); }\n    }\n\n    // find the classes of AIG nodes which have FRAIG nodes assigned\n    Abc_NtkCleanNext( pNtk );\n    tTable = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else\n        if pNode.pCopy {\n            // inlining of macro Fraig_Not\n            gNodeNew = Fraig_NodeAnd( pMan, (Fraig_Node_t *)pNode.pCopy, ((Fraig_Node_t *)((ABC_PTRUINT_T)(gNodeExdc) ^ 01))  );\n            // inlining of macro Fraig_Regular\n            if !stmm_find_or_add( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(gNodeNew) \u0026 ~01)) , (char ***)\u0026ppSlot ) {\n                *ppSlot = nil; }\n            pNode.pNext = *ppSlot;\n            *ppSlot = pNode;\n        }\n    }\n\n    // for reach non-trival class, find the node with minimum level, and replace other nodes by it\n    Abc_AigSetNodePhases( pNtk );\n    // inlining of macro stmm_foreach_item\n    for gen=stmm_init_gen(tTable); stmm_gen(gen,(char **)\u0026gNodeNew,(char **)\u0026pClass) || (stmm_free_gen(gen),0); {\n        if pClass.pNext == nil {\n            continue; }\n        // find the node with minimum level\n        pNodeBest = pClass;\n        for  pNode = pClass.pNext; (pNode != nil); pNode = pNode.pNext  {\n            if pNodeBest.Level \u003e pNode.Level {\n                 pNodeBest = pNode; }\n        }\n        // remap the class nodes\n        for  pNode = pClass; (pNode != nil); pNode = pNode.pNext  {\n            pNode.pCopy = Abc_ObjNotCond( pNodeBest.pCopy, pNode.fPhase ^ pNodeBest.fPhase );\n        }\n    }\n    stmm_free_table( tTable );\n\n    // restore the next pointers\n    Abc_NtkCleanNext( pNtk );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pNode.pNext = (Abc_Obj_t *)Vec_PtrEntry( vNexts, pNode.Id ); }\n    }\n    Vec_PtrFree( vNexts );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms FRAIG into strashed network with choices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFromFraig(pMan *Fraig_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pProgress *ProgressBar;\n    var pNtkNew *Abc_Ntk_t;\n    var pNode, pNodeNew *Abc_Obj_t;\n    var i int32;\n    // create the new network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    // make the mapper point to the new network\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Fraig_NodeSetData1( Fraig_ManReadIthVar(pMan, i), (Fraig_Node_t *)pNode.pCopy );\n    }\n    // set the constant node\n    Fraig_NodeSetData1( Fraig_ManReadConst1(pMan), (Fraig_Node_t *)Abc_AigConst1(pNtkNew) );\n    // process the nodes in topological order\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCoNum(pNtk) );\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        pNodeNew = Abc_NodeFromFraig_rec( pNtkNew, Fraig_ManReadOutputs(pMan)[i] );\n        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Abc_NtkReassignIds( pNtkNew );\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms into AIG one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeFromFraig_rec(pNtkNew *Abc_Ntk_t, pNodeFraig *Fraig_Node_t) *Abc_Obj_t {\n    var pRes, pRes0, pRes1, pResMin, pResCur *Abc_Obj_t;\n    // inlining of macro Fraig_Regular\n    Fraig_Node_t * pNodeTemp, * pNodeFraigR = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNodeFraig) \u0026 ~01)) ;\n    var ppTail *any;\n    // check if the node was already considered\n    if pRes = (Abc_Obj_t *)Fraig_NodeReadData1(pNodeFraigR) {\n        // inlining of macro Fraig_IsComplement\n        return Abc_ObjNotCond( pRes, ((int32(((ABC_PTRUINT_T) (pNodeFraig) \u0026 01)))) ); }\n    // solve the children\n    pRes0 = Abc_NodeFromFraig_rec( pNtkNew, Fraig_NodeReadOne(pNodeFraigR) );\n    pRes1 = Abc_NodeFromFraig_rec( pNtkNew, Fraig_NodeReadTwo(pNodeFraigR) );\n    // derive the new node\n    pRes = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, pRes0, pRes1 );\n    pRes.fPhase = Fraig_NodeReadSimInv( pNodeFraigR );\n    // if the node has an equivalence class, find its representative\n    if Fraig_NodeReadRepr(pNodeFraigR) == nil \u0026\u0026 Fraig_NodeReadNextE(pNodeFraigR) != nil {\n        // go through the FRAIG nodes belonging to this equivalence class\n        // and find the representative node (the node with the smallest level)\n        pResMin = pRes;\n        for  pNodeTemp = Fraig_NodeReadNextE(pNodeFraigR); pNodeTemp; pNodeTemp = Fraig_NodeReadNextE(pNodeTemp)  {\n            assert(Fraig_NodeReadData1(pNodeTemp) == nil, \"Fraig_NodeReadData1(pNodeTemp) == nil\");\n            pResCur = Abc_NodeFromFraig_rec( pNtkNew, pNodeTemp );\n            if pResMin.Level \u003e pResCur.Level {\n                pResMin = pResCur; }\n        }\n        // link the nodes in such a way that representative goes first\n        ppTail = \u0026pResMin.pData;\n        if pRes != pResMin {\n            *ppTail = pRes;\n            ppTail = \u0026pRes.pData;\n        }\n        for  pNodeTemp = Fraig_NodeReadNextE(pNodeFraigR); pNodeTemp; pNodeTemp = Fraig_NodeReadNextE(pNodeTemp)  {\n            pResCur = (Abc_Obj_t *)Fraig_NodeReadData1(pNodeTemp);\n            assert((pResCur != nil), \"pResCur\");\n            if pResMin == pResCur {\n                continue; }\n            *ppTail = pResCur;\n            ppTail = \u0026pResCur.pData;\n        }\n        assert(*ppTail == nil, \"*ppTail == nil\");\n\n        // update the phase of the node\n        pRes = Abc_ObjNotCond( pResMin, (pRes.fPhase ^ pResMin.fPhase) );\n    }\n    Fraig_NodeSetData1( pNodeFraigR, (Fraig_Node_t *)pRes );\n    // inlining of macro Fraig_IsComplement\n    return Abc_ObjNotCond( pRes, ((int32(((ABC_PTRUINT_T) (pNodeFraig) \u0026 01)))) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms FRAIG into strashed network without choices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFromFraig2(pMan *Fraig_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pProgress *ProgressBar;\n    var tTable *stmm_table;\n    var vNodeReprs *Vec_Ptr_t;\n    var pNtkNew *Abc_Ntk_t;\n    var pNode *Abc_Obj_t;\n    var pRepr *Abc_Obj_t;\n    var ppSlot **Abc_Obj_t;\n    var i int32;\n\n    // map the nodes into their lowest level representives\n    tTable = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    pNode = Abc_AigConst1(pNtk);\n    // inlining of macro Fraig_Regular\n    if !stmm_find_or_add( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.pCopy) \u0026 ~01)) , (char ***)\u0026ppSlot ) {\n        *ppSlot = pNode; }\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        // inlining of macro Fraig_Regular\n        if !stmm_find_or_add( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.pCopy) \u0026 ~01)) , (char ***)\u0026ppSlot ) {\n            *ppSlot = pNode; }\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else\n        if pNode.pCopy {\n            // inlining of macro Fraig_Regular\n            if !stmm_find_or_add( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.pCopy) \u0026 ~01)) , (char ***)\u0026ppSlot ) {\n                *ppSlot = pNode;\n            } else if (*ppSlot).Level \u003e pNode.Level {\n                *ppSlot = pNode; }\n        }\n    }\n    // save representatives for each node\n    vNodeReprs = Vec_PtrStart( Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else\n        if pNode.pCopy {           \n            // inlining of macro Fraig_Regular\n            if !stmm_lookup( tTable, (char *)((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.pCopy) \u0026 ~01)) , (char **)\u0026pRepr ) {\n                assert(false, \"0\"); }\n            if pNode != pRepr {\n                Vec_PtrWriteEntry( vNodeReprs, pNode.Id, pRepr ); }\n        }\n    }\n    stmm_free_table( tTable );\n\n    // create the new network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n\n    // perform strashing\n    Abc_AigSetNodePhases( pNtk );\n    Abc_NtkIncrementTravId( pNtk );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCoNum(pNtk) );\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        Abc_NtkFromFraig2_rec( pNtkNew, Abc_ObjFanin0(pNode), vNodeReprs );\n    }\n    Extra_ProgressBarStop( pProgress );\n    Vec_PtrFree( vNodeReprs );\n\n    // finalize the network\n    Abc_NtkFinalize( pNtk, pNtkNew );\n    return pNtkNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms into AIG one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFromFraig2_rec(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t, vNodeReprs *Vec_Ptr_t) {\n    var pRepr *Abc_Obj_t;\n    // skip the PIs and constants\n    if Abc_ObjFaninNum(pNode) \u003c 2 {\n        return; }\n    // if this node is already visited, skip\n    if Abc_NodeIsTravIdCurrent( pNode ) {\n        return; }\n    // mark the node as visited\n    Abc_NodeSetTravIdCurrent( pNode );\n    assert(Abc_ObjIsNode( pNode ), \"Abc_ObjIsNode( pNode )\");\n    // get the node's representative\n    if pRepr = (Abc_Obj_t *)Vec_PtrEntry(vNodeReprs, pNode.Id) {\n        Abc_NtkFromFraig2_rec( pNtkNew, pRepr, vNodeReprs );\n        pNode.pCopy = Abc_ObjNotCond( pRepr.pCopy, pRepr.fPhase ^ pNode.fPhase );\n        return;\n    }\n    Abc_NtkFromFraig2_rec( pNtkNew, Abc_ObjFanin0(pNode), vNodeReprs );\n    Abc_NtkFromFraig2_rec( pNtkNew, Abc_ObjFanin1(pNode), vNodeReprs );\n    pNode.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode) );\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Interfaces the network with the FRAIG package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigTrust(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n\n    if !Abc_NtkIsSopLogic(pNtk) {\n        fmt.Printf(\"Abc_NtkFraigTrust: Trust mode works for netlists and logic SOP networks.\\n\");\n        return nil;\n    }\n\n    if !(Abc_NtkFraigTrustCheck(pNtk) != 0) {\n        fmt.Printf(\"Abc_NtkFraigTrust: The network does not look like an AIG with choice nodes.\\n\");\n        return nil;\n    }\n    \n    // perform strashing\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_STRASH, ABC_FUNC_AIG );\n    Abc_NtkFraigTrustOne( pNtk, pNtkNew );\n    Abc_NtkFinalize( pNtk, pNtkNew );\n    Abc_NtkReassignIds( pNtkNew );\n\n    // print a warning about choice nodes\n    fmt.Printf(\"Warning: The resulting AIG contains %d choice nodes.\\n\", Abc_NtkGetChoiceNum( pNtkNew ));\n\n    // make sure that everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkFraigTrust: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks whether the node can be processed in the trust mode.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigTrustCheck(pNtk *Abc_Ntk_t) int32 {\n    var pNode *Abc_Obj_t;\n    var i, nFanins int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        nFanins = Abc_ObjFaninNum(pNode);\n        if nFanins \u003c 2 {\n            continue; }\n        if nFanins == 2 \u0026\u0026 Abc_SopIsAndType((char *)pNode.pData) {\n            continue; }\n        if !Abc_SopIsOrType((char *)pNode.pData) {\n            return 0; }\n    }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Interfaces the network with the FRAIG package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigTrustOne(pNtk *Abc_Ntk_t, pNtkNew *Abc_Ntk_t) {\n    var pProgress *ProgressBar;\n    var vNodes *Vec_Ptr_t;\n    var pNode, pNodeNew, pObj *Abc_Obj_t;\n    var i int32;\n\n    // perform strashing\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, vNodes.nSize );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        // get the node\n        assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n         // strash the node\n        pNodeNew = Abc_NodeFraigTrust( pNtkNew, pNode );\n        // get the old object\n        if Abc_NtkIsNetlist(pNtk) {\n            pObj = Abc_ObjFanout0( pNode ); // the fanout net \n        } else { \n            pObj = pNode; } // the node itself\n        // make sure the node is not yet strashed\n        assert(pObj.pCopy == nil, \"pObj.pCopy == nil\");\n        // mark the old object with the new AIG node\n        pObj.pCopy = pNodeNew;\n    }\n    Vec_PtrFree( vNodes );\n    Extra_ProgressBarStop( pProgress );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms one node into a FRAIG in the trust mode.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeFraigTrust(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t) *Abc_Obj_t {\n    var pSum, pFanin *Abc_Obj_t;\n    var ppTail *any;\n    var i, nFanins, fCompl int32;\n\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    // get the number of node's fanins\n    nFanins = Abc_ObjFaninNum( pNode );\n    assert(nFanins == Abc_SopGetVarNum((char *)pNode.pData), \"nFanins == Abc_SopGetVarNum((char *)pNode.pData)\");\n    // check if it is a constant\n    if nFanins == 0 {\n        return Abc_ObjNotCond( Abc_AigConst1(pNtkNew), Abc_SopIsConst0((char *)pNode.pData) ); }\n    if nFanins == 1 {\n        return Abc_ObjNotCond( Abc_ObjFanin0(pNode).pCopy, Abc_SopIsInv((char *)pNode.pData) ); }\n    if nFanins == 2 \u0026\u0026 Abc_SopIsAndType((char *)pNode.pData) {\n        return Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, \n            Abc_ObjNotCond( Abc_ObjFanin0(pNode).pCopy, !Abc_SopGetIthCareLit((char *)pNode.pData,0) ),\n            Abc_ObjNotCond( Abc_ObjFanin1(pNode).pCopy, !Abc_SopGetIthCareLit((char *)pNode.pData,1) )  ); }\n    assert(Abc_SopIsOrType((char *)pNode.pData), \"Abc_SopIsOrType((char *)pNode.pData)\");\n    fCompl = Abc_SopGetIthCareLit((char *)pNode.pData,0);\n    // get the root of the choice node (the first fanin)\n    pSum = Abc_ObjFanin0(pNode).pCopy;\n    // connect other fanins\n    ppTail = \u0026pSum.pData;\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        if i == 0 {\n            continue; }\n        *ppTail = pFanin.pCopy;\n        ppTail = \u0026pFanin.pCopy.pData;\n        // set the complemented bit of this cut\n        if fCompl ^ Abc_SopGetIthCareLit((char *)pNode.pData, i) {\n            pFanin.pCopy.fPhase = 1; }\n    }\n    assert(*ppTail == nil, \"*ppTail == nil\");\n    return pSum;\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Interfaces the network with the FRAIG package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigStore(pNtkAdd *Abc_Ntk_t) int32 {\n    var vStore *Vec_Ptr_t;\n    var pNtk *Abc_Ntk_t;\n    // create the network to be stored\n    pNtk = Abc_NtkStrash( pNtkAdd, 0, 0, 0 );\n    if pNtk == nil {\n        fmt.Printf(\"Abc_NtkFraigStore: Initial strashing has failed.\\n\");\n        return 0;\n    }\n    // get the network currently stored\n    vStore = Abc_FrameReadStore();\n    if Vec_PtrSize(vStore) \u003e 0 {\n        // check that the networks have the same PIs\n        extern int Abc_NodeCompareCiCo( Abc_Ntk_t * pNtkOld, Abc_Ntk_t * pNtkNew );\n        if !Abc_NodeCompareCiCo(pNtk, (Abc_Ntk_t *)Vec_PtrEntry(vStore, 0)) {\n            // reorder PIs of pNtk2 according to pNtk1\n            if !Abc_NtkCompareSignals( pNtk, (Abc_Ntk_t *)Vec_PtrEntry(vStore, 0), 1, 1 ) {\n                fmt.Printf(\"Trying to store the network with different primary inputs.\\n\");\n                fmt.Printf(\"The previously stored networks are deleted and this one is added.\\n\");\n                Abc_NtkFraigStoreClean();\n            }\n        }\n    }\n    Vec_PtrPush( vStore, pNtk );\n//    printf( \"The number of AIG nodes added to storage = %5d.\\n\", Abc_NtkNodeNum(pNtk) );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Interfaces the network with the FRAIG package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigRestore(nPatsRand int32, nPatsDyna int32, nBTLimit int32) *Abc_Ntk_t {\n    extern Abc_Ntk_t * Abc_NtkFraigPartitioned( Vec_Ptr_t * vStore, void * pParams );\n    var Params Fraig_Params_t;\n    var vStore *Vec_Ptr_t;\n    var pNtk, pFraig *Abc_Ntk_t;\n    var nWords1, nWords2, nWordsMin int32;\n//    abctime clk = Abc_Clock();\n\n    // get the stored network\n    vStore = Abc_FrameReadStore();\n    if Vec_PtrSize(vStore) == 0 {\n        fmt.Printf(\"There are no network currently in storage.\\n\");\n        return nil;\n    }\n//    printf( \"Currently stored %d networks will be fraiged.\\n\", Vec_PtrSize(vStore) );\n    pNtk = (Abc_Ntk_t *)Vec_PtrEntry( vStore, 0 );\n\n    // swap the first and last network\n    // this should lead to the primary choice being \"better\" because of synthesis\n    if Vec_PtrSize(vStore) \u003e 1 {\n        pNtk = (Abc_Ntk_t *)Vec_PtrPop( vStore );\n        Vec_PtrPush( vStore, Vec_PtrEntry(vStore,0) );\n        Vec_PtrWriteEntry( vStore, 0, pNtk );\n    }\n\n    // to determine the number of simulation patterns\n    // use the following strategy\n    // at least 64 words (32 words random and 32 words dynamic)\n    // no more than 256M for one circuit (128M + 128M)\n    nWords1 = 32;\n    nWords2 = (1\u003c\u003c27) / (Abc_NtkNodeNum(pNtk) + Abc_NtkCiNum(pNtk));\n    nWordsMin = Abc_MinInt( nWords1, nWords2 );\n\n    // set parameters for fraiging\n    Fraig_ParamsSetDefault( \u0026Params );\n    if nPatsRand != 0 {\n        Params.nPatsRand = nPatsRand;\n    } else {\n        Params.nPatsRand = nWordsMin * 32;\n    }    // the number of words of random simulation info\n    if nPatsDyna != 0 {\n        Params.nPatsDyna = nPatsDyna;\n    } else {\n        Params.nPatsDyna = nWordsMin * 32;\n    }    // the number of words of dynamic simulation info\n    Params.nBTLimit   = nBTLimit;          // the max number of backtracks to perform\n    Params.fFuncRed   =    1;              // performs only one level hashing\n    Params.fFeedBack  =    1;              // enables solver feedback\n    Params.fDist1Pats =    1;              // enables distance-1 patterns\n    Params.fDoSparse  =    1;              // performs equiv tests for sparse functions \n    Params.fChoicing  =    1;              // enables recording structural choices\n    Params.fTryProve  =    0;              // tries to solve the final miter\n    Params.fInternal  =    1;              // does not show progress bar\n    Params.fVerbose   =    0;              // the verbosiness flag\n\n    // perform partitioned computation of structural choices\n    pFraig = Abc_NtkFraigPartitioned( vStore, \u0026Params );\n    Abc_NtkFraigStoreClean();\n//ABC_PRT( \"Total choicing time\", Abc_Clock() - clk );\n    return pFraig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Interfaces the network with the FRAIG package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigStoreClean() {\n    var vStore *Vec_Ptr_t;\n    var pNtk *Abc_Ntk_t;\n    var i int32;\n    vStore = Abc_FrameReadStore();\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vStore)) \u0026\u0026 (((pNtk) = (Abc_Ntk_t *)Vec_PtrEntry(vStore, i)), 1); i++  {\n        Abc_NtkDelete( pNtk );\n    }\n    Vec_PtrClear( vStore );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the correctness of stored networks.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFraigStoreCheck(pFraig *Abc_Ntk_t) {\n    var pNode0, pNode1 *Abc_Obj_t;\n    var nPoOrig, nPoFinal, nStored int32; \n    var i, k int32;\n    // check that the PO functions are correct\n    nPoFinal = Abc_NtkPoNum(pFraig);\n    nStored  = Abc_FrameReadStoreSize();\n    assert(nPoFinal % nStored == 0, \"nPoFinal % nStored == 0\");\n    nPoOrig  = nPoFinal / nStored;\n    for  i = 0; i \u003c nPoOrig; i++  {\n        pNode0 = Abc_ObjFanin0( Abc_NtkPo(pFraig, i) ); \n        for  k = 1; k \u003c nStored; k++  {\n            pNode1 = Abc_ObjFanin0( Abc_NtkPo(pFraig, k*nPoOrig+i) ); \n            if pNode0 != pNode1 {\n                fmt.Printf(\"Verification for PO #%d of network #%d has failed. The PO function is not used.\\n\", i+1, k+1); }\n        }\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

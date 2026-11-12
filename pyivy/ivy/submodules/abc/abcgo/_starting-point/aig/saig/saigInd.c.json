@@ -1,0 +1,676 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c",
+  "SHA256": "230c895972f5e400bf20a34da2167e85e0355220ebb7c136cb8156887c362a3e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u0026\u0026 k \u0026\u0026 i \u003c k );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nRegs * k \u003c= Vec_IntSize(vState) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 3188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u0026\u0026 k \u0026\u0026 i \u003c k );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 3219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nRegs * k \u003c= Vec_IntSize(vState) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 17,
+        "ByteOffset": 3429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Cannot constrain an incomplete state.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 21,
+        "ByteOffset": 3838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"SAT solver became UNSAT after adding a uniqueness constraint.\\n\" ); }"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 127,
+        "Column": 69,
+        "ByteOffset": 4097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pClause = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nRegs)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 4244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVars \u003c= nRegs );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 133,
+        "Column": 63,
+        "ByteOffset": 4403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pClause) ? (free((char *) (pClause)), (pClause) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 13,
+        "ByteOffset": 4507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"SAT solver became UNSAT after adding a uniqueness constraint.\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 174,
+        "Column": 34,
+        "ByteOffset": 5706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nTimeToStop = nTimeOut * CLOCKS_PER_SEC + Abc_Clock();"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 178,
+        "Column": 5,
+        "ByteOffset": 5784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( fUnique == 0 || fUniqueAll == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 179,
+        "Column": 5,
+        "ByteOffset": 5831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManPoNum(p) == 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 9,
+        "ByteOffset": 6453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Induction parameters: FramesMax = %5d. ConflictMax = %6d.\\n\", nFramesMax, nConfMax ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 225,
+        "Column": 17,
+        "ByteOffset": 7676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Aig_ObjIsCi(pObjPiCopy) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 230,
+        "Column": 26,
+        "ByteOffset": 8106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 235,
+        "Column": 9,
+        "ByteOffset": 8197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ManCoNum(pAigPart)-1 == Vec_IntSize(vTopVarNums) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 244,
+        "Column": 21,
+        "ByteOffset": 8837
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 251,
+        "Column": 17,
+        "ByteOffset": 9135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 255,
+        "Column": 17,
+        "ByteOffset": 9365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 13,
+        "ByteOffset": 10246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Aig_ObjIsCi(pObjPi) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 17,
+        "ByteOffset": 10390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pObjPiCopy != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 284,
+        "Column": 17,
+        "ByteOffset": 10634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( iReg \u003e= 0 \u0026\u0026 iReg \u003c Aig_ManRegNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 288,
+        "Column": 9,
+        "ByteOffset": 10809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vState)%Aig_ManRegNum(p) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 294,
+        "Column": 21,
+        "ByteOffset": 11066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Adding constaint for state %2d and state %2d.\\n\", i, iLast-1 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 310,
+        "Column": 13,
+        "ByteOffset": 11634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Frame %4d : PI =%5d. PO =%5d. AIG =%5d. Var =%7d. Clau =%7d. Conf =%7d. \","
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 314,
+        "Column": 73,
+        "ByteOffset": 12050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 322,
+        "Column": 9,
+        "ByteOffset": 12226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_True );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 327,
+        "Column": 21,
+        "ByteOffset": 12559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 329,
+        "Column": 21,
+        "ByteOffset": 12646
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"       State %3d : \", i/Aig_ManRegNum(p) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 330,
+        "Column": 17,
+        "ByteOffset": 12717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%c\", (iReg \u003e= 0) ? ('0' + sat_solver_var_value(pSat, iReg)) : 'x' );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 332,
+        "Column": 13,
+        "ByteOffset": 12821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 336,
+        "Column": 13,
+        "ByteOffset": 12944
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( status == l_True );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 347,
+        "Column": 17,
+        "ByteOffset": 13572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( iBit == pCex.nBits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 361,
+        "Column": 25,
+        "ByteOffset": 14087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"Adding constaint for state %2d and state %2d.\\n\", i, k ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 378,
+        "Column": 13,
+        "ByteOffset": 14645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Timeout (%d sec) was reached during iteration %d.\\n\", nTimeOut, f+1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 380,
+        "Column": 13,
+        "ByteOffset": 14775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Conflict limit (%d) was reached during iteration %d.\\n\", nConfMax, f+1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 382,
+        "Column": 13,
+        "ByteOffset": 14912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Completed %d iterations and added %d uniqueness constraints.\\n\", f+1, nConstrs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 384,
+        "Column": 13,
+        "ByteOffset": 15032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Completed %d iterations.\\n\", f+1 ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Saig_ManStatesAreEqual",
+      "Start": 1450,
+      "End": 2469,
+      "BodyStart": 1543,
+      "Original": "int Saig_ManStatesAreEqual( sat_solver * pSat, Vec_Int_t * vState, int nRegs, int i, int k )\n{\n    int * pStateI = (int *)Vec_IntArray(vState) + nRegs * i;\n    int * pStateK = (int *)Vec_IntArray(vState) + nRegs * k;\n    int v;\n    assert( i \u0026\u0026 k \u0026\u0026 i \u003c k );\n    assert( nRegs * k \u003c= Vec_IntSize(vState) );\n    // check if the states are available\n    for ( v = 0; v \u003c nRegs; v++ )\n        if ( pStateI[v] \u003e= 0 \u0026\u0026 pStateK[v] == -1 )\n            return 0;\n/*\n    printf( \"\\nchecking uniqueness\\n\" );\n    printf( \"%3d : \", i );\n    for ( v = 0; v \u003c nRegs; v++ )\n        printf( \"%d\", sat_solver_var_value(pSat, pStateI[v]) );\n    printf( \"\\n\" );\n\n    printf( \"%3d : \", k );\n    for ( v = 0; v \u003c nRegs; v++ )\n        printf( \"%d\", sat_solver_var_value(pSat, pStateK[v]) );\n    printf( \"\\n\" );\n*/\n    for ( v = 0; v \u003c nRegs; v++ )\n        if ( pStateI[v] \u003e= 0 )\n        {\n            if ( sat_solver_var_value(pSat, pStateI[v]) != sat_solver_var_value(pSat, pStateK[v]) )\n                return 0;\n        }\n    return 1;\n}",
+      "Draft": "func Saig_ManStatesAreEqual(pSat *sat_solver, vState *Vec_Int_t, nRegs int32, i int32, k int32) int32 {\n    var pStateI *int32  = (int *)Vec_IntArray(vState) + nRegs * i;\n    var pStateK *int32  = (int *)Vec_IntArray(vState) + nRegs * k;\n    var v int32;\n    assert((i != 0) \u0026\u0026 (k != 0) \u0026\u0026 i \u003c k, \"i \u0026\u0026 k \u0026\u0026 i \u003c k\");\n    assert(nRegs * k \u003c= Vec_IntSize(vState), \"nRegs * k \u003c= Vec_IntSize(vState)\");\n    // check if the states are available\n    for  v = 0; v \u003c nRegs; v++  {\n        if pStateI[v] \u003e= 0 \u0026\u0026 pStateK[v] == -1 {\n            return 0; }\n    }\n/*\n    printf( \"\\nchecking uniqueness\\n\" );\n    printf( \"%3d : \", i );\n    for ( v = 0; v \u003c nRegs; v++ )\n        printf( \"%d\", sat_solver_var_value(pSat, pStateI[v]) );\n    printf( \"\\n\" );\n\n    printf( \"%3d : \", k );\n    for ( v = 0; v \u003c nRegs; v++ )\n        printf( \"%d\", sat_solver_var_value(pSat, pStateK[v]) );\n    printf( \"\\n\" );\n*/\n    for  v = 0; v \u003c nRegs; v++  {\n        if pStateI[v] \u003e= 0 {\n            if sat_solver_var_value(pSat, pStateI[v]) != sat_solver_var_value(pSat, pStateK[v]) {\n                return 0; }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Saig_ManAddUniqueness",
+      "Start": 2731,
+      "End": 4367,
+      "BodyStart": 2873,
+      "Original": "int Saig_ManAddUniqueness( sat_solver * pSat, Vec_Int_t * vState, int nRegs, int i, int k, int * pnSatVarNum, int * pnClauses, int fVerbose )\n{\n    int * pStateI = (int *)Vec_IntArray(vState) + nRegs * i;\n    int * pStateK = (int *)Vec_IntArray(vState) + nRegs * k;\n    int v, iVars, nSatVarsOld, RetValue, * pClause;\n    assert( i \u0026\u0026 k \u0026\u0026 i \u003c k );\n    assert( nRegs * k \u003c= Vec_IntSize(vState) );\n    // check if the states are available\n    for ( v = 0; v \u003c nRegs; v++ )\n        if ( pStateI[v] \u003e= 0 \u0026\u0026 pStateK[v] == -1 )\n        {\n            if ( fVerbose )\n                printf( \"Cannot constrain an incomplete state.\\n\" );\n            return 0;\n        }\n    // add XORs\n    nSatVarsOld = *pnSatVarNum;\n    for ( v = 0; v \u003c nRegs; v++ )\n        if ( pStateI[v] \u003e= 0 )\n        {\n            *pnClauses += 4;\n            RetValue = Cnf_DataAddXorClause( pSat, pStateI[v], pStateK[v], (*pnSatVarNum)++ );\n            if ( RetValue == 0 )\n            {\n                if ( fVerbose )\n                    printf( \"SAT solver became UNSAT after adding a uniqueness constraint.\\n\" );\n                return 1;\n            }\n        }\n    // add OR clause\n    (*pnClauses)++;\n    iVars = 0;\n    pClause = ABC_ALLOC( int, nRegs );\n    for ( v = nSatVarsOld; v \u003c *pnSatVarNum; v++ )\n        pClause[iVars++] = toLitCond( v, 0 );\n    assert( iVars \u003c= nRegs );\n    RetValue = sat_solver_addclause( pSat, pClause, pClause + iVars );\n    ABC_FREE( pClause );\n    if ( RetValue == 0 )\n    {\n        if ( fVerbose )\n            printf( \"SAT solver became UNSAT after adding a uniqueness constraint.\\n\" );\n        return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Saig_ManAddUniqueness(pSat *sat_solver, vState *Vec_Int_t, nRegs int32, i int32, k int32, pnSatVarNum *int32, pnClauses *int32, fVerbose int32) int32 {\n    var pStateI *int32  = (int *)Vec_IntArray(vState) + nRegs * i;\n    var pStateK *int32  = (int *)Vec_IntArray(vState) + nRegs * k;\n    var v int32;\n    var iVars int32;\n    var nSatVarsOld int32;\n    var RetValue int32;\n    var pClause *int32;\n    assert((i != 0) \u0026\u0026 (k != 0) \u0026\u0026 i \u003c k, \"i \u0026\u0026 k \u0026\u0026 i \u003c k\");\n    assert(nRegs * k \u003c= Vec_IntSize(vState), \"nRegs * k \u003c= Vec_IntSize(vState)\");\n    // check if the states are available\n    for  v = 0; v \u003c nRegs; v++  {\n        if pStateI[v] \u003e= 0 \u0026\u0026 pStateK[v] == -1 {\n            if fVerbose != 0 {\n                fmt.Printf(\"Cannot constrain an incomplete state.\\n\"); }\n            return 0;\n        }\n    }\n    // add XORs\n    nSatVarsOld = *pnSatVarNum;\n    for  v = 0; v \u003c nRegs; v++  {\n        if pStateI[v] \u003e= 0 {\n            *pnClauses += 4;\n            RetValue = Cnf_DataAddXorClause( pSat, pStateI[v], pStateK[v], (*pnSatVarNum)++ );\n            if RetValue == 0 {\n                if fVerbose != 0 {\n                    fmt.Printf(\"SAT solver became UNSAT after adding a uniqueness constraint.\\n\"); }\n                return 1;\n            }\n        }\n    }\n    // add OR clause\n    (*pnClauses)++;\n    iVars = 0;\n    // inlining of macro ABC_ALLOC\n    pClause = ((int *) malloc(sizeof(int) * (size_t)(nRegs)));\n    for  v = nSatVarsOld; v \u003c *pnSatVarNum; v++  {\n        pClause[iVars++] = toLitCond( v, 0 );\n    }\n    assert(iVars \u003c= nRegs, \"iVars \u003c= nRegs\");\n    RetValue = sat_solver_addclause( pSat, pClause, pClause + iVars );\n    // inlining of macro ABC_FREE\n    ((pClause) ? (free((char *) (pClause)), (pClause) = 0) : 0);\n    if RetValue == 0 {\n        if fVerbose != 0 {\n            fmt.Printf(\"SAT solver became UNSAT after adding a uniqueness constraint.\\n\"); }\n        return 1;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Saig_ManInduction",
+      "Start": 4655,
+      "End": 14358,
+      "BodyStart": 4812,
+      "Original": "int Saig_ManInduction( Aig_Man_t * p, int nTimeOut, int nFramesMax, int nConfMax, int fUnique, int fUniqueAll, int fGetCex, int fVerbose, int fVeryVerbose )\n{\n    sat_solver * pSat;\n    Aig_Man_t * pAigPart = NULL;\n    Cnf_Dat_t * pCnfPart = NULL;\n    Vec_Int_t * vTopVarNums, * vState, * vTopVarIds = NULL;\n    Vec_Ptr_t * vTop, * vBot;\n    Aig_Obj_t * pObjPi, * pObjPiCopy, * pObjPo;\n    int i, k, f, Lits[2], status = -1, RetValue, nSatVarNum, nConfPrev;\n    int nOldSize, iReg, iLast, fAdded, nConstrs = 0, nClauses = 0;\n    abctime clk, nTimeToStop = nTimeOut ? nTimeOut * CLOCKS_PER_SEC + Abc_Clock() : 0;\n    assert( fUnique == 0 || fUniqueAll == 0 );\n    assert( Saig_ManPoNum(p) == 1 );\n    Aig_ManSetCioIds( p );\n\n    // start the top by including the PO\n    vBot = Vec_PtrAlloc( 100 );\n    vTop = Vec_PtrAlloc( 100 );\n    vState = Vec_IntAlloc( 1000 );\n    Vec_PtrPush( vTop, Aig_ManCo(p, 0) );\n    // start the array of CNF variables\n    vTopVarNums = Vec_IntAlloc( 100 );\n    // start the solver\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, 1000 );\n\n    // set runtime limit\n    if ( nTimeToStop )\n        sat_solver_set_runtime_limit( pSat, nTimeToStop );\n\n    // iterate backward unrolling\n    RetValue = -1;\n    nSatVarNum = 0;\n    if ( fVerbose )\n        printf( \"Induction parameters: FramesMax = %5d. ConflictMax = %6d.\\n\", nFramesMax, nConfMax );\n    for ( f = 0; ; f++ )\n    { \n        if ( f \u003e 0 )\n        {\n            Aig_ManStop( pAigPart );\n            Cnf_DataFree( pCnfPart );\n        }\n        clk = Abc_Clock();\n        // get the bottom\n        Aig_SupportNodes( p, (Aig_Obj_t **)Vec_PtrArray(vTop), Vec_PtrSize(vTop), vBot );\n        // derive AIG for the part between top and bottom\n        pAigPart = Aig_ManDupSimpleDfsPart( p, vBot, vTop );\n        // convert it into CNF\n        pCnfPart = Cnf_Derive( pAigPart, Aig_ManCoNum(pAigPart) );\n        Cnf_DataLift( pCnfPart, nSatVarNum );\n        nSatVarNum += pCnfPart-\u003enVars;\n        nClauses   += pCnfPart-\u003enClauses;\n\n        // remember top frame var IDs\n        if ( fGetCex \u0026\u0026 vTopVarIds == NULL )\n        {\n            vTopVarIds = Vec_IntStartFull( Aig_ManCiNum(p) );\n            Aig_ManForEachCi( p, pObjPi, i )\n            {\n                if ( pObjPi-\u003epData == NULL )\n                    continue;\n                pObjPiCopy = (Aig_Obj_t *)pObjPi-\u003epData;\n                assert( Aig_ObjIsCi(pObjPiCopy) );\n                if ( Saig_ObjIsPi(p, pObjPi) )\n                    Vec_IntWriteEntry( vTopVarIds, Aig_ObjCioId(pObjPi) + Saig_ManRegNum(p), pCnfPart-\u003epVarNums[Aig_ObjId(pObjPiCopy)] );\n                else if ( Saig_ObjIsLo(p, pObjPi) )\n                    Vec_IntWriteEntry( vTopVarIds, Aig_ObjCioId(pObjPi) - Saig_ManPiNum(p), pCnfPart-\u003epVarNums[Aig_ObjId(pObjPiCopy)] );\n                else assert( 0 );\n            }\n        }\n\n        // stitch variables of top and bot\n        assert( Aig_ManCoNum(pAigPart)-1 == Vec_IntSize(vTopVarNums) );\n        Aig_ManForEachCo( pAigPart, pObjPo, i )\n        {\n            if ( i == 0 )\n            {\n                // do not perform inductive strengthening\n//                if ( f \u003e 0 )\n//                    continue;\n                // add topmost literal\n                Lits[0] = toLitCond( pCnfPart-\u003epVarNums[pObjPo-\u003eId], f\u003e0 );\n                if ( !sat_solver_addclause( pSat, Lits, Lits+1 ) )\n                    assert( 0 );\n                nClauses++;\n                continue;\n            }\n            Lits[0] = toLitCond( Vec_IntEntry(vTopVarNums, i-1), 0 );\n            Lits[1] = toLitCond( pCnfPart-\u003epVarNums[pObjPo-\u003eId], 1 );\n            if ( !sat_solver_addclause( pSat, Lits, Lits+2 ) )\n                assert( 0 );\n            Lits[0] = toLitCond( Vec_IntEntry(vTopVarNums, i-1), 1 );\n            Lits[1] = toLitCond( pCnfPart-\u003epVarNums[pObjPo-\u003eId], 0 );\n            if ( !sat_solver_addclause( pSat, Lits, Lits+2 ) )\n                assert( 0 );\n            nClauses += 2;\n        }\n        // add CNF to the SAT solver\n        for ( i = 0; i \u003c pCnfPart-\u003enClauses; i++ )\n            if ( !sat_solver_addclause( pSat, pCnfPart-\u003epClauses[i], pCnfPart-\u003epClauses[i+1] ) )\n                break;\n        if ( i \u003c pCnfPart-\u003enClauses )\n        {\n//            printf( \"SAT solver became UNSAT after adding clauses.\\n\" );\n            RetValue = 1;\n            break;\n        }\n\n        // create new set of POs to derive new top\n        Vec_PtrClear( vTop );\n        Vec_PtrPush( vTop, Aig_ManCo(p, 0) );\n        Vec_IntClear( vTopVarNums );\n        nOldSize = Vec_IntSize(vState);\n        Vec_IntFillExtra( vState, nOldSize + Aig_ManRegNum(p), -1 );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vBot, pObjPi, i )\n        {\n            assert( Aig_ObjIsCi(pObjPi) );\n            if ( Saig_ObjIsLo(p, pObjPi) )\n            {\n                pObjPiCopy = (Aig_Obj_t *)pObjPi-\u003epData;\n                assert( pObjPiCopy != NULL );\n                Vec_PtrPush( vTop, Saig_ObjLoToLi(p, pObjPi) );\n                Vec_IntPush( vTopVarNums, pCnfPart-\u003epVarNums[pObjPiCopy-\u003eId] );\n\n                iReg = pObjPi-\u003eCioId - Saig_ManPiNum(p);\n                assert( iReg \u003e= 0 \u0026\u0026 iReg \u003c Aig_ManRegNum(p) );\n                Vec_IntWriteEntry( vState, nOldSize+iReg, pCnfPart-\u003epVarNums[pObjPiCopy-\u003eId] );\n            }\n        } \n        assert( Vec_IntSize(vState)%Aig_ManRegNum(p) == 0 );\n        iLast = Vec_IntSize(vState)/Aig_ManRegNum(p);\n        if ( fUniqueAll )\n        {\n            for ( i = 1; i \u003c iLast-1; i++ )\n            {\n                nConstrs++;\n                if ( fVeryVerbose )\n                    printf( \"Adding constaint for state %2d and state %2d.\\n\", i, iLast-1 );\n                if ( Saig_ManAddUniqueness( pSat, vState, Aig_ManRegNum(p), i, iLast-1, \u0026nSatVarNum, \u0026nClauses, fVerbose ) )\n                    break;\n            }\n            if ( i \u003c iLast-1 )\n            {\n                RetValue = 1;\n                break;\n            }\n        }\n\nnextrun:\n        fAdded = 0;\n        // run the SAT solver\n        nConfPrev = pSat-\u003estats.conflicts;\n        status = sat_solver_solve( pSat, NULL, NULL, (ABC_INT64_T)nConfMax, 0, 0, 0 );\n        if ( fVerbose )\n        {\n            printf( \"Frame %4d : PI =%5d. PO =%5d. AIG =%5d. Var =%7d. Clau =%7d. Conf =%7d. \",\n                f, Aig_ManCiNum(pAigPart), Aig_ManCoNum(pAigPart), Aig_ManNodeNum(pAigPart), \n                nSatVarNum, nClauses, (int)pSat-\u003estats.conflicts-nConfPrev );\n            ABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n        if ( status == l_Undef )\n            break;\n        if ( status == l_False )\n        {\n            RetValue = 1;\n            break;\n        }\n        assert( status == l_True );\n        // the problem is SAT - add more clauses\n        if ( fVeryVerbose )\n        {\n            Vec_IntForEachEntry( vState, iReg, i )\n            {\n                if ( i \u0026\u0026 (i % Aig_ManRegNum(p)) == 0 )\n                    printf( \"\\n\" );\n                if ( (i % Aig_ManRegNum(p)) == 0 )\n                    printf( \"       State %3d : \", i/Aig_ManRegNum(p) );\n                printf( \"%c\", (iReg \u003e= 0) ? ('0' + sat_solver_var_value(pSat, iReg)) : 'x' );\n            }\n            printf( \"\\n\" );\n        }\n        if ( nFramesMax \u0026\u0026 f == nFramesMax - 1 )\n        {\n            // derive counter-example\n            assert( status == l_True );\n            if ( fGetCex )\n            {\n                int VarNum, iBit = 0;\n                Abc_Cex_t * pCex = Abc_CexAlloc( Aig_ManRegNum(p)-1, Saig_ManPiNum(p), 1 );\n                pCex-\u003eiFrame = 0;\n                pCex-\u003eiPo = 0;\n                Vec_IntForEachEntryStart( vTopVarIds, VarNum, i, 1 )\n                {\n                    if ( VarNum \u003e= 0 \u0026\u0026 sat_solver_var_value( pSat, VarNum ) )\n                        Abc_InfoSetBit( pCex-\u003epData, iBit );\n                    iBit++;\n                }\n                assert( iBit == pCex-\u003enBits );\n                Abc_CexFree( p-\u003epSeqModel );\n                p-\u003epSeqModel = pCex;\n            }\n            break;\n        }\n        if ( fUnique )\n        {\n            for ( i = 1; i \u003c iLast; i++ )\n            {\n                for ( k = i+1; k \u003c iLast; k++ )\n                {\n                    if ( !Saig_ManStatesAreEqual( pSat, vState, Aig_ManRegNum(p), i, k ) )\n                        continue;\n                    nConstrs++;\n                    fAdded = 1;\n                    if ( fVeryVerbose )\n                        printf( \"Adding constaint for state %2d and state %2d.\\n\", i, k );\n                    if ( Saig_ManAddUniqueness( pSat, vState, Aig_ManRegNum(p), i, k, \u0026nSatVarNum, \u0026nClauses, fVerbose ) )\n                        break;\n                }\n                if ( k \u003c iLast )\n                    break;\n            }\n            if ( i \u003c iLast )\n            {\n                RetValue = 1;\n                break;\n            }\n        }\n        if ( fAdded )\n            goto nextrun;\n    }\n    if ( fVerbose )\n    {\n        if ( nTimeToStop \u0026\u0026 Abc_Clock() \u003e= nTimeToStop )\n            printf( \"Timeout (%d sec) was reached during iteration %d.\\n\", nTimeOut, f+1 );\n        else if ( status == l_Undef )\n            printf( \"Conflict limit (%d) was reached during iteration %d.\\n\", nConfMax, f+1 );\n        else if ( fUnique || fUniqueAll )\n            printf( \"Completed %d iterations and added %d uniqueness constraints.\\n\", f+1, nConstrs );\n        else\n            printf( \"Completed %d iterations.\\n\", f+1 );\n    }\n    // cleanup\n    sat_solver_delete( pSat );\n    Aig_ManStop( pAigPart );\n    Cnf_DataFree( pCnfPart );\n    Vec_IntFree( vTopVarNums );\n    Vec_PtrFree( vTop );\n    Vec_PtrFree( vBot );\n    Vec_IntFree( vState );\n    Vec_IntFreeP( \u0026vTopVarIds );\n    return RetValue;\n}",
+      "Draft": "func Saig_ManInduction(p *Aig_Man_t, nTimeOut int32, nFramesMax int32, nConfMax int32, fUnique int32, fUniqueAll int32, fGetCex int32, fVerbose int32, fVeryVerbose int32) int32 {\n    var pSat *sat_solver;\n    var pAigPart *Aig_Man_t  = nil;\n    var pCnfPart *Cnf_Dat_t  = nil;\n    var vTopVarNums *Vec_Int_t;\n    var vState *Vec_Int_t;\n    var vTopVarIds *Vec_Int_t = nil;\n    var vTop, vBot *Vec_Ptr_t;\n    var pObjPi, pObjPiCopy, pObjPo *Aig_Obj_t;\n    var i int32;\n    var k int32;\n    var f int32;\n    var Lits [2]int32;\n    var status int32 = -1;\n    var RetValue int32;\n    var nSatVarNum int32;\n    var nConfPrev int32;\n    var nOldSize, iReg, iLast, fAdded, nConstrs, nClauses int32;\n    var clk abctime;\n    var nTimeToStop abctime;\n    if nTimeOut {\n        nTimeToStop = nTimeOut * int64(time.Second) + Abc_Clock();\n    } else {\n        nTimeToStop = 0;\n    }\n    assert(fUnique == 0 || fUniqueAll == 0, \"fUnique == 0 || fUniqueAll == 0\");\n    assert(Saig_ManPoNum(p) == 1, \"Saig_ManPoNum(p) == 1\");\n    Aig_ManSetCioIds( p );\n\n    // start the top by including the PO\n    vBot = Vec_PtrAlloc( 100 );\n    vTop = Vec_PtrAlloc( 100 );\n    vState = Vec_IntAlloc( 1000 );\n    Vec_PtrPush( vTop, Aig_ManCo(p, 0) );\n    // start the array of CNF variables\n    vTopVarNums = Vec_IntAlloc( 100 );\n    // start the solver\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, 1000 );\n\n    // set runtime limit\n    if nTimeToStop {\n        sat_solver_set_runtime_limit( pSat, nTimeToStop ); }\n\n    // iterate backward unrolling\n    RetValue = -1;\n    nSatVarNum = 0;\n    if fVerbose != 0 {\n        fmt.Printf(\"Induction parameters: FramesMax = %5d. ConflictMax = %6d.\\n\", nFramesMax, nConfMax); }\n    for  f = 0; ; f++  { \n        if f \u003e 0 {\n            Aig_ManStop( pAigPart );\n            Cnf_DataFree( pCnfPart );\n        }\n        clk = Abc_Clock();\n        // get the bottom\n        Aig_SupportNodes( p, (Aig_Obj_t **)Vec_PtrArray(vTop), Vec_PtrSize(vTop), vBot );\n        // derive AIG for the part between top and bottom\n        pAigPart = Aig_ManDupSimpleDfsPart( p, vBot, vTop );\n        // convert it into CNF\n        pCnfPart = Cnf_Derive( pAigPart, Aig_ManCoNum(pAigPart) );\n        Cnf_DataLift( pCnfPart, nSatVarNum );\n        nSatVarNum += pCnfPart.nVars;\n        nClauses   += pCnfPart.nClauses;\n\n        // remember top frame var IDs\n        if (fGetCex != 0) \u0026\u0026 vTopVarIds == nil {\n            vTopVarIds = Vec_IntStartFull( Aig_ManCiNum(p) );\n            // inlining of macro Aig_ManForEachCi\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObjPi) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n                if pObjPi.pData == nil {\n                    continue; }\n                pObjPiCopy = (Aig_Obj_t *)pObjPi.pData;\n                assert(Aig_ObjIsCi(pObjPiCopy), \"Aig_ObjIsCi(pObjPiCopy)\");\n                if Saig_ObjIsPi(p, pObjPi) {\n                    Vec_IntWriteEntry( vTopVarIds, Aig_ObjCioId(pObjPi) + Saig_ManRegNum(p), pCnfPart.pVarNums[Aig_ObjId(pObjPiCopy)] );\n                } else if Saig_ObjIsLo(p, pObjPi) {\n                    Vec_IntWriteEntry( vTopVarIds, Aig_ObjCioId(pObjPi) - Saig_ManPiNum(p), pCnfPart.pVarNums[Aig_ObjId(pObjPiCopy)] );\n                } else { assert(false, \"0\"); }\n            }\n        }\n\n        // stitch variables of top and bot\n        assert(Aig_ManCoNum(pAigPart)-1 == Vec_IntSize(vTopVarNums), \"Aig_ManCoNum(pAigPart)-1 == Vec_IntSize(vTopVarNums)\");\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAigPart.vCos)) \u0026\u0026 (((pObjPo) = (Aig_Obj_t *)Vec_PtrEntry(pAigPart.vCos, i)), 1); i++  {\n            if i == 0 {\n                // do not perform inductive strengthening\n//                if ( f \u003e 0 )\n//                    continue;\n                // add topmost literal\n                Lits[0] = toLitCond( pCnfPart.pVarNums[pObjPo.Id], f\u003e0 );\n                if !sat_solver_addclause( pSat, Lits, Lits+1 ) {\n                    assert(false, \"0\"); }\n                nClauses++;\n                continue;\n            }\n            Lits[0] = toLitCond( Vec_IntEntry(vTopVarNums, i-1), 0 );\n            Lits[1] = toLitCond( pCnfPart.pVarNums[pObjPo.Id], 1 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n            Lits[0] = toLitCond( Vec_IntEntry(vTopVarNums, i-1), 1 );\n            Lits[1] = toLitCond( pCnfPart.pVarNums[pObjPo.Id], 0 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n            nClauses += 2;\n        }\n        // add CNF to the SAT solver\n        for  i = 0; i \u003c pCnfPart.nClauses; i++  {\n            if !sat_solver_addclause( pSat, pCnfPart.pClauses[i], pCnfPart.pClauses[i+1] ) {\n                break; }\n        }\n        if i \u003c pCnfPart.nClauses {\n//            printf( \"SAT solver became UNSAT after adding clauses.\\n\" );\n            RetValue = 1;\n            break;\n        }\n\n        // create new set of POs to derive new top\n        Vec_PtrClear( vTop );\n        Vec_PtrPush( vTop, Aig_ManCo(p, 0) );\n        Vec_IntClear( vTopVarNums );\n        nOldSize = Vec_IntSize(vState);\n        Vec_IntFillExtra( vState, nOldSize + Aig_ManRegNum(p), -1 );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vBot)) \u0026\u0026 (((pObjPi) = (Aig_Obj_t *)Vec_PtrEntry(vBot, i)), 1); i++  {\n            assert(Aig_ObjIsCi(pObjPi), \"Aig_ObjIsCi(pObjPi)\");\n            if Saig_ObjIsLo(p, pObjPi) {\n                pObjPiCopy = (Aig_Obj_t *)pObjPi.pData;\n                assert(pObjPiCopy != nil, \"pObjPiCopy != nil\");\n                Vec_PtrPush( vTop, Saig_ObjLoToLi(p, pObjPi) );\n                Vec_IntPush( vTopVarNums, pCnfPart.pVarNums[pObjPiCopy.Id] );\n\n                iReg = pObjPi.CioId - Saig_ManPiNum(p);\n                assert(iReg \u003e= 0 \u0026\u0026 iReg \u003c Aig_ManRegNum(p), \"iReg \u003e= 0 \u0026\u0026 iReg \u003c Aig_ManRegNum(p)\");\n                Vec_IntWriteEntry( vState, nOldSize+iReg, pCnfPart.pVarNums[pObjPiCopy.Id] );\n            }\n        } \n        assert(Vec_IntSize(vState)%Aig_ManRegNum(p) == 0, \"Vec_IntSize(vState)%Aig_ManRegNum(p) == 0\");\n        iLast = Vec_IntSize(vState)/Aig_ManRegNum(p);\n        if fUniqueAll != 0 {\n            for  i = 1; i \u003c iLast-1; i++  {\n                nConstrs++;\n                if fVeryVerbose != 0 {\n                    fmt.Printf(\"Adding constaint for state %2d and state %2d.\\n\", i, iLast-1); }\n                if Saig_ManAddUniqueness( pSat, vState, Aig_ManRegNum(p), i, iLast-1, \u0026nSatVarNum, \u0026nClauses, fVerbose ) != 0 {\n                    break; }\n            }\n            if i \u003c iLast-1 {\n                RetValue = 1;\n                break;\n            }\n        }\n\nnextrun:\n        fAdded = 0;\n        // run the SAT solver\n        nConfPrev = pSat.stats.conflicts;\n        status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfMax, 0, 0, 0 );\n        if fVerbose != 0 {\n            fmt.Printf(\"Frame %4d : PI =%5d. PO =%5d. AIG =%5d. Var =%7d. Clau =%7d. Conf =%7d. \", f, Aig_ManCiNum(pAigPart), Aig_ManCoNum(pAigPart), Aig_ManNodeNum(pAigPart), nSatVarNum, nClauses, int32(pSat.stats.conflicts)-nConfPrev);\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n        if status == l_Undef {\n            break; }\n        if status == l_False {\n            RetValue = 1;\n            break;\n        }\n        assert(status == l_True, \"status == l_True\");\n        // the problem is SAT - add more clauses\n        if fVeryVerbose != 0 {\n            // inlining of macro Vec_IntForEachEntry\n            for  i = 0; (i \u003c Vec_IntSize(vState)) \u0026\u0026 (((iReg) = Vec_IntEntry(vState, i)), 1); i++  {\n                if (i != 0) \u0026\u0026 (i % Aig_ManRegNum(p)) == 0 {\n                    fmt.Printf(\"\\n\"); }\n                if (i % Aig_ManRegNum(p)) == 0 {\n                    fmt.Printf(\"       State %3d : \", i/Aig_ManRegNum(p)); }\n                fmt.Printf(\"%c\", (iReg \u003e= 0) ? ('0' + sat_solver_var_value(pSat, iReg)) : 'x');\n            }\n            fmt.Printf(\"\\n\");\n        }\n        if (nFramesMax != 0) \u0026\u0026 f == nFramesMax - 1 {\n            // derive counter-example\n            assert(status == l_True, \"status == l_True\");\n            if fGetCex != 0 {\n                var VarNum, iBit int32;\n                var pCex *Abc_Cex_t  = Abc_CexAlloc( Aig_ManRegNum(p)-1, Saig_ManPiNum(p), 1 );\n                pCex.iFrame = 0;\n                pCex.iPo = 0;\n                // inlining of macro Vec_IntForEachEntryStart\n                for  i = 1; (i \u003c Vec_IntSize(vTopVarIds)) \u0026\u0026 (((VarNum) = Vec_IntEntry(vTopVarIds, i)), 1); i++  {\n                    if VarNum \u003e= 0 \u0026\u0026 sat_solver_var_value( pSat, VarNum ) {\n                        Abc_InfoSetBit( pCex.pData, iBit ); }\n                    iBit++;\n                }\n                assert(iBit == pCex.nBits, \"iBit == pCex.nBits\");\n                Abc_CexFree( p.pSeqModel );\n                p.pSeqModel = pCex;\n            }\n            break;\n        }\n        if fUnique != 0 {\n            for  i = 1; i \u003c iLast; i++  {\n                for  k = i+1; k \u003c iLast; k++  {\n                    if !(Saig_ManStatesAreEqual( pSat, vState, Aig_ManRegNum(p), i, k ) != 0) {\n                        continue; }\n                    nConstrs++;\n                    fAdded = 1;\n                    if fVeryVerbose != 0 {\n                        fmt.Printf(\"Adding constaint for state %2d and state %2d.\\n\", i, k); }\n                    if Saig_ManAddUniqueness( pSat, vState, Aig_ManRegNum(p), i, k, \u0026nSatVarNum, \u0026nClauses, fVerbose ) != 0 {\n                        break; }\n                }\n                if k \u003c iLast {\n                    break; }\n            }\n            if i \u003c iLast {\n                RetValue = 1;\n                break;\n            }\n        }\n        if fAdded {\n            goto nextrun; }\n    }\n    if fVerbose != 0 {\n        if nTimeToStop \u0026\u0026 Abc_Clock() \u003e= nTimeToStop {\n            fmt.Printf(\"Timeout (%d sec) was reached during iteration %d.\\n\", nTimeOut, f+1);\n        } else if status == l_Undef {\n            fmt.Printf(\"Conflict limit (%d) was reached during iteration %d.\\n\", nConfMax, f+1);\n        } else if (fUnique != 0) || (fUniqueAll != 0) {\n            fmt.Printf(\"Completed %d iterations and added %d uniqueness constraints.\\n\", f+1, nConstrs);\n        } else {\n            fmt.Printf(\"Completed %d iterations.\\n\", f+1); }\n    }\n    // cleanup\n    sat_solver_delete( pSat );\n    Aig_ManStop( pAigPart );\n    Cnf_DataFree( pCnfPart );\n    Vec_IntFree( vTopVarNums );\n    Vec_PtrFree( vTop );\n    Vec_PtrFree( vBot );\n    Vec_IntFree( vState );\n    Vec_IntFreeP( \u0026vTopVarIds );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::mechanical::sizeof::3997",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3936,
+      "End": 3936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::pointer-cast::1565",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1565,
+      "End": 1572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::pointer-cast::1626",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1626,
+      "End": 1633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::pointer-cast::2895",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2895,
+      "End": 2902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::pointer-cast::2956",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2956,
+      "End": 2963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::pointer-cast::3982",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3936,
+      "End": 3936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::pointer-cast::4295",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4163,
+      "End": 4163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::pointer-cast::6420",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6267,
+      "End": 6281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::pointer-cast::7156",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6840,
+      "End": 6840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::pointer-cast::7324",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6991,
+      "End": 7004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::pointer-cast::8129",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7626,
+      "End": 7626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::pointer-cast::9917",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9289,
+      "End": 9289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::pointer-cast::10103",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9480,
+      "End": 9493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::Saig_ManStatesAreEqual",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManStatesAreEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1450,
+      "End": 2469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::ternary::Saig_ManAddUniqueness",
+      "Category": "ternary-review",
+      "Symbol": "Saig_ManAddUniqueness",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2731,
+      "End": 4367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::Saig_ManAddUniqueness",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManAddUniqueness",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2731,
+      "End": 4367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::ternary::Saig_ManInduction",
+      "Category": "ternary-review",
+      "Symbol": "Saig_ManInduction",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4655,
+      "End": 14358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::Saig_ManInduction",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManInduction",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4655,
+      "End": 14358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigInd.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14606
+    }
+  ],
+  "Draft": "package saig\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [saigLoc.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [K-step induction for one property only.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saigLoc.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"saig.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satSolver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if two state are equal.]\n\n  Description [Array vState contains indexes of CNF variables for each\n  flop in the first N time frames (0 \u003c i \u003c k, i \u003c N, k \u003c N).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManStatesAreEqual(pSat *sat_solver, vState *Vec_Int_t, nRegs int32, i int32, k int32) int32 {\n    var pStateI *int32  = (int *)Vec_IntArray(vState) + nRegs * i;\n    var pStateK *int32  = (int *)Vec_IntArray(vState) + nRegs * k;\n    var v int32;\n    assert((i != 0) \u0026\u0026 (k != 0) \u0026\u0026 i \u003c k, \"i \u0026\u0026 k \u0026\u0026 i \u003c k\");\n    assert(nRegs * k \u003c= Vec_IntSize(vState), \"nRegs * k \u003c= Vec_IntSize(vState)\");\n    // check if the states are available\n    for  v = 0; v \u003c nRegs; v++  {\n        if pStateI[v] \u003e= 0 \u0026\u0026 pStateK[v] == -1 {\n            return 0; }\n    }\n/*\n    printf( \"\\nchecking uniqueness\\n\" );\n    printf( \"%3d : \", i );\n    for ( v = 0; v \u003c nRegs; v++ )\n        printf( \"%d\", sat_solver_var_value(pSat, pStateI[v]) );\n    printf( \"\\n\" );\n\n    printf( \"%3d : \", k );\n    for ( v = 0; v \u003c nRegs; v++ )\n        printf( \"%d\", sat_solver_var_value(pSat, pStateK[v]) );\n    printf( \"\\n\" );\n*/\n    for  v = 0; v \u003c nRegs; v++  {\n        if pStateI[v] \u003e= 0 {\n            if sat_solver_var_value(pSat, pStateI[v]) != sat_solver_var_value(pSat, pStateK[v]) {\n                return 0; }\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Add uniqueness constraint.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManAddUniqueness(pSat *sat_solver, vState *Vec_Int_t, nRegs int32, i int32, k int32, pnSatVarNum *int32, pnClauses *int32, fVerbose int32) int32 {\n    var pStateI *int32  = (int *)Vec_IntArray(vState) + nRegs * i;\n    var pStateK *int32  = (int *)Vec_IntArray(vState) + nRegs * k;\n    var v int32;\n    var iVars int32;\n    var nSatVarsOld int32;\n    var RetValue int32;\n    var pClause *int32;\n    assert((i != 0) \u0026\u0026 (k != 0) \u0026\u0026 i \u003c k, \"i \u0026\u0026 k \u0026\u0026 i \u003c k\");\n    assert(nRegs * k \u003c= Vec_IntSize(vState), \"nRegs * k \u003c= Vec_IntSize(vState)\");\n    // check if the states are available\n    for  v = 0; v \u003c nRegs; v++  {\n        if pStateI[v] \u003e= 0 \u0026\u0026 pStateK[v] == -1 {\n            if fVerbose != 0 {\n                fmt.Printf(\"Cannot constrain an incomplete state.\\n\"); }\n            return 0;\n        }\n    }\n    // add XORs\n    nSatVarsOld = *pnSatVarNum;\n    for  v = 0; v \u003c nRegs; v++  {\n        if pStateI[v] \u003e= 0 {\n            *pnClauses += 4;\n            RetValue = Cnf_DataAddXorClause( pSat, pStateI[v], pStateK[v], (*pnSatVarNum)++ );\n            if RetValue == 0 {\n                if fVerbose != 0 {\n                    fmt.Printf(\"SAT solver became UNSAT after adding a uniqueness constraint.\\n\"); }\n                return 1;\n            }\n        }\n    }\n    // add OR clause\n    (*pnClauses)++;\n    iVars = 0;\n    // inlining of macro ABC_ALLOC\n    pClause = ((int *) malloc(sizeof(int) * (size_t)(nRegs)));\n    for  v = nSatVarsOld; v \u003c *pnSatVarNum; v++  {\n        pClause[iVars++] = toLitCond( v, 0 );\n    }\n    assert(iVars \u003c= nRegs, \"iVars \u003c= nRegs\");\n    RetValue = sat_solver_addclause( pSat, pClause, pClause + iVars );\n    // inlining of macro ABC_FREE\n    ((pClause) ? (free((char *) (pClause)), (pClause) = 0) : 0);\n    if RetValue == 0 {\n        if fVerbose != 0 {\n            fmt.Printf(\"SAT solver became UNSAT after adding a uniqueness constraint.\\n\"); }\n        return 1;\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs induction by unrolling timeframes backward.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManInduction(p *Aig_Man_t, nTimeOut int32, nFramesMax int32, nConfMax int32, fUnique int32, fUniqueAll int32, fGetCex int32, fVerbose int32, fVeryVerbose int32) int32 {\n    var pSat *sat_solver;\n    var pAigPart *Aig_Man_t  = nil;\n    var pCnfPart *Cnf_Dat_t  = nil;\n    var vTopVarNums *Vec_Int_t;\n    var vState *Vec_Int_t;\n    var vTopVarIds *Vec_Int_t = nil;\n    var vTop, vBot *Vec_Ptr_t;\n    var pObjPi, pObjPiCopy, pObjPo *Aig_Obj_t;\n    var i int32;\n    var k int32;\n    var f int32;\n    var Lits [2]int32;\n    var status int32 = -1;\n    var RetValue int32;\n    var nSatVarNum int32;\n    var nConfPrev int32;\n    var nOldSize, iReg, iLast, fAdded, nConstrs, nClauses int32;\n    var clk abctime;\n    var nTimeToStop abctime;\n    if nTimeOut {\n        nTimeToStop = nTimeOut * int64(time.Second) + Abc_Clock();\n    } else {\n        nTimeToStop = 0;\n    }\n    assert(fUnique == 0 || fUniqueAll == 0, \"fUnique == 0 || fUniqueAll == 0\");\n    assert(Saig_ManPoNum(p) == 1, \"Saig_ManPoNum(p) == 1\");\n    Aig_ManSetCioIds( p );\n\n    // start the top by including the PO\n    vBot = Vec_PtrAlloc( 100 );\n    vTop = Vec_PtrAlloc( 100 );\n    vState = Vec_IntAlloc( 1000 );\n    Vec_PtrPush( vTop, Aig_ManCo(p, 0) );\n    // start the array of CNF variables\n    vTopVarNums = Vec_IntAlloc( 100 );\n    // start the solver\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, 1000 );\n\n    // set runtime limit\n    if nTimeToStop {\n        sat_solver_set_runtime_limit( pSat, nTimeToStop ); }\n\n    // iterate backward unrolling\n    RetValue = -1;\n    nSatVarNum = 0;\n    if fVerbose != 0 {\n        fmt.Printf(\"Induction parameters: FramesMax = %5d. ConflictMax = %6d.\\n\", nFramesMax, nConfMax); }\n    for  f = 0; ; f++  { \n        if f \u003e 0 {\n            Aig_ManStop( pAigPart );\n            Cnf_DataFree( pCnfPart );\n        }\n        clk = Abc_Clock();\n        // get the bottom\n        Aig_SupportNodes( p, (Aig_Obj_t **)Vec_PtrArray(vTop), Vec_PtrSize(vTop), vBot );\n        // derive AIG for the part between top and bottom\n        pAigPart = Aig_ManDupSimpleDfsPart( p, vBot, vTop );\n        // convert it into CNF\n        pCnfPart = Cnf_Derive( pAigPart, Aig_ManCoNum(pAigPart) );\n        Cnf_DataLift( pCnfPart, nSatVarNum );\n        nSatVarNum += pCnfPart.nVars;\n        nClauses   += pCnfPart.nClauses;\n\n        // remember top frame var IDs\n        if (fGetCex != 0) \u0026\u0026 vTopVarIds == nil {\n            vTopVarIds = Vec_IntStartFull( Aig_ManCiNum(p) );\n            // inlining of macro Aig_ManForEachCi\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObjPi) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n                if pObjPi.pData == nil {\n                    continue; }\n                pObjPiCopy = (Aig_Obj_t *)pObjPi.pData;\n                assert(Aig_ObjIsCi(pObjPiCopy), \"Aig_ObjIsCi(pObjPiCopy)\");\n                if Saig_ObjIsPi(p, pObjPi) {\n                    Vec_IntWriteEntry( vTopVarIds, Aig_ObjCioId(pObjPi) + Saig_ManRegNum(p), pCnfPart.pVarNums[Aig_ObjId(pObjPiCopy)] );\n                } else if Saig_ObjIsLo(p, pObjPi) {\n                    Vec_IntWriteEntry( vTopVarIds, Aig_ObjCioId(pObjPi) - Saig_ManPiNum(p), pCnfPart.pVarNums[Aig_ObjId(pObjPiCopy)] );\n                } else { assert(false, \"0\"); }\n            }\n        }\n\n        // stitch variables of top and bot\n        assert(Aig_ManCoNum(pAigPart)-1 == Vec_IntSize(vTopVarNums), \"Aig_ManCoNum(pAigPart)-1 == Vec_IntSize(vTopVarNums)\");\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAigPart.vCos)) \u0026\u0026 (((pObjPo) = (Aig_Obj_t *)Vec_PtrEntry(pAigPart.vCos, i)), 1); i++  {\n            if i == 0 {\n                // do not perform inductive strengthening\n//                if ( f \u003e 0 )\n//                    continue;\n                // add topmost literal\n                Lits[0] = toLitCond( pCnfPart.pVarNums[pObjPo.Id], f\u003e0 );\n                if !sat_solver_addclause( pSat, Lits, Lits+1 ) {\n                    assert(false, \"0\"); }\n                nClauses++;\n                continue;\n            }\n            Lits[0] = toLitCond( Vec_IntEntry(vTopVarNums, i-1), 0 );\n            Lits[1] = toLitCond( pCnfPart.pVarNums[pObjPo.Id], 1 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n            Lits[0] = toLitCond( Vec_IntEntry(vTopVarNums, i-1), 1 );\n            Lits[1] = toLitCond( pCnfPart.pVarNums[pObjPo.Id], 0 );\n            if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n                assert(false, \"0\"); }\n            nClauses += 2;\n        }\n        // add CNF to the SAT solver\n        for  i = 0; i \u003c pCnfPart.nClauses; i++  {\n            if !sat_solver_addclause( pSat, pCnfPart.pClauses[i], pCnfPart.pClauses[i+1] ) {\n                break; }\n        }\n        if i \u003c pCnfPart.nClauses {\n//            printf( \"SAT solver became UNSAT after adding clauses.\\n\" );\n            RetValue = 1;\n            break;\n        }\n\n        // create new set of POs to derive new top\n        Vec_PtrClear( vTop );\n        Vec_PtrPush( vTop, Aig_ManCo(p, 0) );\n        Vec_IntClear( vTopVarNums );\n        nOldSize = Vec_IntSize(vState);\n        Vec_IntFillExtra( vState, nOldSize + Aig_ManRegNum(p), -1 );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vBot)) \u0026\u0026 (((pObjPi) = (Aig_Obj_t *)Vec_PtrEntry(vBot, i)), 1); i++  {\n            assert(Aig_ObjIsCi(pObjPi), \"Aig_ObjIsCi(pObjPi)\");\n            if Saig_ObjIsLo(p, pObjPi) {\n                pObjPiCopy = (Aig_Obj_t *)pObjPi.pData;\n                assert(pObjPiCopy != nil, \"pObjPiCopy != nil\");\n                Vec_PtrPush( vTop, Saig_ObjLoToLi(p, pObjPi) );\n                Vec_IntPush( vTopVarNums, pCnfPart.pVarNums[pObjPiCopy.Id] );\n\n                iReg = pObjPi.CioId - Saig_ManPiNum(p);\n                assert(iReg \u003e= 0 \u0026\u0026 iReg \u003c Aig_ManRegNum(p), \"iReg \u003e= 0 \u0026\u0026 iReg \u003c Aig_ManRegNum(p)\");\n                Vec_IntWriteEntry( vState, nOldSize+iReg, pCnfPart.pVarNums[pObjPiCopy.Id] );\n            }\n        } \n        assert(Vec_IntSize(vState)%Aig_ManRegNum(p) == 0, \"Vec_IntSize(vState)%Aig_ManRegNum(p) == 0\");\n        iLast = Vec_IntSize(vState)/Aig_ManRegNum(p);\n        if fUniqueAll != 0 {\n            for  i = 1; i \u003c iLast-1; i++  {\n                nConstrs++;\n                if fVeryVerbose != 0 {\n                    fmt.Printf(\"Adding constaint for state %2d and state %2d.\\n\", i, iLast-1); }\n                if Saig_ManAddUniqueness( pSat, vState, Aig_ManRegNum(p), i, iLast-1, \u0026nSatVarNum, \u0026nClauses, fVerbose ) != 0 {\n                    break; }\n            }\n            if i \u003c iLast-1 {\n                RetValue = 1;\n                break;\n            }\n        }\n\nnextrun:\n        fAdded = 0;\n        // run the SAT solver\n        nConfPrev = pSat.stats.conflicts;\n        status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfMax, 0, 0, 0 );\n        if fVerbose != 0 {\n            fmt.Printf(\"Frame %4d : PI =%5d. PO =%5d. AIG =%5d. Var =%7d. Clau =%7d. Conf =%7d. \", f, Aig_ManCiNum(pAigPart), Aig_ManCoNum(pAigPart), Aig_ManNodeNum(pAigPart), nSatVarNum, nClauses, int32(pSat.stats.conflicts)-nConfPrev);\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n        if status == l_Undef {\n            break; }\n        if status == l_False {\n            RetValue = 1;\n            break;\n        }\n        assert(status == l_True, \"status == l_True\");\n        // the problem is SAT - add more clauses\n        if fVeryVerbose != 0 {\n            // inlining of macro Vec_IntForEachEntry\n            for  i = 0; (i \u003c Vec_IntSize(vState)) \u0026\u0026 (((iReg) = Vec_IntEntry(vState, i)), 1); i++  {\n                if (i != 0) \u0026\u0026 (i % Aig_ManRegNum(p)) == 0 {\n                    fmt.Printf(\"\\n\"); }\n                if (i % Aig_ManRegNum(p)) == 0 {\n                    fmt.Printf(\"       State %3d : \", i/Aig_ManRegNum(p)); }\n                fmt.Printf(\"%c\", (iReg \u003e= 0) ? ('0' + sat_solver_var_value(pSat, iReg)) : 'x');\n            }\n            fmt.Printf(\"\\n\");\n        }\n        if (nFramesMax != 0) \u0026\u0026 f == nFramesMax - 1 {\n            // derive counter-example\n            assert(status == l_True, \"status == l_True\");\n            if fGetCex != 0 {\n                var VarNum, iBit int32;\n                var pCex *Abc_Cex_t  = Abc_CexAlloc( Aig_ManRegNum(p)-1, Saig_ManPiNum(p), 1 );\n                pCex.iFrame = 0;\n                pCex.iPo = 0;\n                // inlining of macro Vec_IntForEachEntryStart\n                for  i = 1; (i \u003c Vec_IntSize(vTopVarIds)) \u0026\u0026 (((VarNum) = Vec_IntEntry(vTopVarIds, i)), 1); i++  {\n                    if VarNum \u003e= 0 \u0026\u0026 sat_solver_var_value( pSat, VarNum ) {\n                        Abc_InfoSetBit( pCex.pData, iBit ); }\n                    iBit++;\n                }\n                assert(iBit == pCex.nBits, \"iBit == pCex.nBits\");\n                Abc_CexFree( p.pSeqModel );\n                p.pSeqModel = pCex;\n            }\n            break;\n        }\n        if fUnique != 0 {\n            for  i = 1; i \u003c iLast; i++  {\n                for  k = i+1; k \u003c iLast; k++  {\n                    if !(Saig_ManStatesAreEqual( pSat, vState, Aig_ManRegNum(p), i, k ) != 0) {\n                        continue; }\n                    nConstrs++;\n                    fAdded = 1;\n                    if fVeryVerbose != 0 {\n                        fmt.Printf(\"Adding constaint for state %2d and state %2d.\\n\", i, k); }\n                    if Saig_ManAddUniqueness( pSat, vState, Aig_ManRegNum(p), i, k, \u0026nSatVarNum, \u0026nClauses, fVerbose ) != 0 {\n                        break; }\n                }\n                if k \u003c iLast {\n                    break; }\n            }\n            if i \u003c iLast {\n                RetValue = 1;\n                break;\n            }\n        }\n        if fAdded {\n            goto nextrun; }\n    }\n    if fVerbose != 0 {\n        if nTimeToStop \u0026\u0026 Abc_Clock() \u003e= nTimeToStop {\n            fmt.Printf(\"Timeout (%d sec) was reached during iteration %d.\\n\", nTimeOut, f+1);\n        } else if status == l_Undef {\n            fmt.Printf(\"Conflict limit (%d) was reached during iteration %d.\\n\", nConfMax, f+1);\n        } else if (fUnique != 0) || (fUniqueAll != 0) {\n            fmt.Printf(\"Completed %d iterations and added %d uniqueness constraints.\\n\", f+1, nConstrs);\n        } else {\n            fmt.Printf(\"Completed %d iterations.\\n\", f+1); }\n    }\n    // cleanup\n    sat_solver_delete( pSat );\n    Aig_ManStop( pAigPart );\n    Cnf_DataFree( pCnfPart );\n    Vec_IntFree( vTopVarNums );\n    Vec_PtrFree( vTop );\n    Vec_PtrFree( vBot );\n    Vec_IntFree( vState );\n    Vec_IntFreeP( \u0026vTopVarIds );\n    return RetValue;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

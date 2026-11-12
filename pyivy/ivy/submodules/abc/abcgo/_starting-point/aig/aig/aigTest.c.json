@@ -1,0 +1,51 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTest.c",
+  "SHA256": "fb32791fb7fc5123fc00b0367c0d425cada6e1cbffbacd69bb943099754ad17a",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 33,
+        "Column": 9,
+        "ByteOffset": 552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Check has failed\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ProcedureTest",
+      "Start": 47,
+      "End": 657,
+      "BodyStart": 72,
+      "Original": "void Aig_ProcedureTest()\n{\n    Aig_Man_t * p;\n    Aig_Obj_t * pA, * pB, * pC;\n    Aig_Obj_t * pFunc;\n    Aig_Obj_t * pFunc2;\n\n    p = Aig_ManStart( 1000 );\n\n    pA = Aig_IthVar( p, 0 );\n    pB = Aig_IthVar( p, 1 );\n    pC = Aig_IthVar( p, 2 );\n\n    pFunc = Aig_Mux( p, pA, pB, pC );\n    pFunc2 = Aig_And( p, pA, pB );\n\n    Aig_ObjCreatePo( p, pFunc );\n    Aig_ObjCreatePo( p, pFunc2 );\n\n    Aig_ManSetRegNum( p, 1 );\n\n    Aig_ManCleanup( p );\n\n    if ( !Aig_ManCheck( p ) )\n    {\n        printf( \"Check has failed\\n\" );\n    }\n\n    Aig_ManDumpBlif( p, \"aig_test_file.blif\", NULL, NULL );\n    Aig_ManStop( p );\n}",
+      "Draft": "func Aig_ProcedureTest() {\n    var p *Aig_Man_t;\n    var pA, pB, pC *Aig_Obj_t;\n    var pFunc *Aig_Obj_t;\n    var pFunc2 *Aig_Obj_t;\n\n    p = Aig_ManStart( 1000 );\n\n    pA = Aig_IthVar( p, 0 );\n    pB = Aig_IthVar( p, 1 );\n    pC = Aig_IthVar( p, 2 );\n\n    pFunc = Aig_Mux( p, pA, pB, pC );\n    pFunc2 = Aig_And( p, pA, pB );\n\n    Aig_ObjCreatePo( p, pFunc );\n    Aig_ObjCreatePo( p, pFunc2 );\n\n    Aig_ManSetRegNum( p, 1 );\n\n    Aig_ManCleanup( p );\n\n    if !Aig_ManCheck( p ) {\n        fmt.Printf(\"Check has failed\\n\");\n    }\n\n    Aig_ManDumpBlif( p, \"aig_test_file.blif\", nil, nil );\n    Aig_ManStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTest.c::Aig_ProcedureTest",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ProcedureTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 47,
+      "End": 657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigTest.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 681
+    }
+  ],
+  "Draft": "package aig\n\nimport \"fmt\"\n\n\n\n//#include \"aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\nfunc Aig_ProcedureTest() {\n    var p *Aig_Man_t;\n    var pA, pB, pC *Aig_Obj_t;\n    var pFunc *Aig_Obj_t;\n    var pFunc2 *Aig_Obj_t;\n\n    p = Aig_ManStart( 1000 );\n\n    pA = Aig_IthVar( p, 0 );\n    pB = Aig_IthVar( p, 1 );\n    pC = Aig_IthVar( p, 2 );\n\n    pFunc = Aig_Mux( p, pA, pB, pC );\n    pFunc2 = Aig_And( p, pA, pB );\n\n    Aig_ObjCreatePo( p, pFunc );\n    Aig_ObjCreatePo( p, pFunc2 );\n\n    Aig_ManSetRegNum( p, 1 );\n\n    Aig_ManCleanup( p );\n\n    if !Aig_ManCheck( p ) {\n        fmt.Printf(\"Check has failed\\n\");\n    }\n\n    Aig_ManDumpBlif( p, \"aig_test_file.blif\", nil, nil );\n    Aig_ManStop( p );\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

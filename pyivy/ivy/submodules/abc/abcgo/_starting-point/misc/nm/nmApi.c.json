@@ -1,0 +1,639 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c",
+  "SHA256": "739db0b837b32dc97839987ac818e875406126d924b8dc81533b91839d789188",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 50,
+        "Column": 68,
+        "ByteOffset": 1417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Nm_Man_t *) malloc(sizeof(Nm_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Nm_Man_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 57,
+        "Column": 81,
+        "ByteOffset": 1846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pBinsI2N = /*__starting_point_inline_macro:ABC_ALLOC__*/((Nm_Entry_t * *) malloc(sizeof(Nm_Entry_t *) * (size_t)(p.nBins)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 58,
+        "Column": 81,
+        "ByteOffset": 1977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pBinsN2I = /*__starting_point_inline_macro:ABC_ALLOC__*/((Nm_Entry_t * *) malloc(sizeof(Nm_Entry_t *) * (size_t)(p.nBins)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 2032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pBinsI2N, 0, sizeof(Nm_Entry_t *) * p.nBins );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 2093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pBinsN2I, 0, sizeof(Nm_Entry_t *) * p.nBins );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 79,
+        "Column": 66,
+        "ByteOffset": 2624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pBinsI2N) ? (free((char *) (p.pBinsI2N)), (p.pBinsI2N) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 80,
+        "Column": 66,
+        "ByteOffset": 2742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pBinsN2I) ? (free((char *) (p.pBinsN2I)), (p.pBinsN2I) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 81,
+        "Column": 57,
+        "ByteOffset": 2851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 9,
+        "ByteOffset": 3870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nm_ManStoreIdName(): Entry with the same ID already exists.\\n\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 120,
+        "Column": 39,
+        "ByteOffset": 4035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nEntrySize = sizeof(Nm_Entry_t) + strlen(pName) + (pSuffix?strlen(pSuffix):0) + 1;"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 120,
+        "Column": 64,
+        "ByteOffset": 4060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nEntrySize = sizeof(Nm_Entry_t) + strlen(pName) + (pSuffix?strlen(pSuffix):0) + 1;"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 4476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( pEntry.Name, \"%s%s\", pName, pSuffix? pSuffix : \"\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 4625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 9,
+        "ByteOffset": 5191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nm_ManDeleteIdName(): This entry is not in the table.\\n\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 177,
+        "Column": 5,
+        "ByteOffset": 5987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( spStatic_Nm_ManCreateUniqueName_NameStr, \"n%d\", ObjId );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 179,
+        "Column": 9,
+        "ByteOffset": 6155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( spStatic_Nm_ManCreateUniqueName_NameStr, \"n%d_%d\", ObjId, i );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Nm_ManCreate",
+      "Start": 1244,
+      "End": 1990,
+      "BodyStart": 1281,
+      "Original": "Nm_Man_t * Nm_ManCreate( int nSize )\n{\n    Nm_Man_t * p;\n    // allocate the table\n    p = ABC_ALLOC( Nm_Man_t, 1 );\n    memset( p, 0, sizeof(Nm_Man_t) );\n    // set the parameters\n    p-\u003enSizeFactor   = 2; // determined the limit on the grow of data before the table resizes\n    p-\u003enGrowthFactor = 3; // determined how much the table grows after resizing\n    // allocate and clean the bins\n    p-\u003enBins = Abc_PrimeCudd(nSize);\n    p-\u003epBinsI2N = ABC_ALLOC( Nm_Entry_t *, p-\u003enBins );\n    p-\u003epBinsN2I = ABC_ALLOC( Nm_Entry_t *, p-\u003enBins );\n    memset( p-\u003epBinsI2N, 0, sizeof(Nm_Entry_t *) * p-\u003enBins );\n    memset( p-\u003epBinsN2I, 0, sizeof(Nm_Entry_t *) * p-\u003enBins );\n    // start the memory manager\n    p-\u003epMem = Extra_MmFlexStart();\n    return p;\n}",
+      "Draft": "func Nm_ManCreate(nSize int32) *Nm_Man_t {\n    var p *Nm_Man_t;\n    // allocate the table\n    // inlining of macro ABC_ALLOC\n    p = ((Nm_Man_t *) malloc(sizeof(Nm_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Nm_Man_t) );\n    // set the parameters\n    p.nSizeFactor   = 2; // determined the limit on the grow of data before the table resizes\n    p.nGrowthFactor = 3; // determined how much the table grows after resizing\n    // allocate and clean the bins\n    p.nBins = Abc_PrimeCudd(nSize);\n    // inlining of macro ABC_ALLOC\n    p.pBinsI2N = ((Nm_Entry_t * *) malloc(sizeof(Nm_Entry_t *) * (size_t)(p.nBins)));\n    // inlining of macro ABC_ALLOC\n    p.pBinsN2I = ((Nm_Entry_t * *) malloc(sizeof(Nm_Entry_t *) * (size_t)(p.nBins)));\n    memset( p.pBinsI2N, 0, sizeof(Nm_Entry_t *) * p.nBins );\n    memset( p.pBinsN2I, 0, sizeof(Nm_Entry_t *) * p.nBins );\n    // start the memory manager\n    p.pMem = Extra_MmFlexStart();\n    return p;\n}"
+    },
+    {
+      "Name": "Nm_ManFree",
+      "Start": 2255,
+      "End": 2400,
+      "BodyStart": 2287,
+      "Original": "void Nm_ManFree( Nm_Man_t * p )\n{\n    Extra_MmFlexStop( p-\u003epMem );\n    ABC_FREE( p-\u003epBinsI2N );\n    ABC_FREE( p-\u003epBinsN2I );\n    ABC_FREE( p );\n}",
+      "Draft": "func Nm_ManFree(p *Nm_Man_t) {\n    Extra_MmFlexStop( p.pMem );\n    // inlining of macro ABC_FREE\n    ((p.pBinsI2N) ? (free((char *) (p.pBinsI2N)), (p.pBinsI2N) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBinsN2I) ? (free((char *) (p.pBinsN2I)), (p.pBinsN2I) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Nm_ManNumEntries",
+      "Start": 2677,
+      "End": 2741,
+      "BodyStart": 2714,
+      "Original": "int Nm_ManNumEntries( Nm_Man_t * p )\n{\n    return p-\u003enEntries;\n}",
+      "Draft": "func Nm_ManNumEntries(p *Nm_Man_t) int32 {\n    return p.nEntries;\n}"
+    },
+    {
+      "Name": "Nm_ManStoreIdName",
+      "Start": 3102,
+      "End": 4190,
+      "BodyStart": 3194,
+      "Original": "char * Nm_ManStoreIdName( Nm_Man_t * p, int ObjId, int Type, char * pName, char * pSuffix )\n{\n    Nm_Entry_t * pEntry;\n    int RetValue, nEntrySize;\n    // check if the object with this ID is already stored\n    if ( (pEntry = Nm_ManTableLookupId(p, ObjId)) )\n    {\n        printf( \"Nm_ManStoreIdName(): Entry with the same ID already exists.\\n\" );\n        return NULL;\n    }\n    // create a new entry\n    nEntrySize = sizeof(Nm_Entry_t) + strlen(pName) + (pSuffix?strlen(pSuffix):0) + 1;\n//    nEntrySize = (nEntrySize / 4 + ((nEntrySize % 4) \u003e 0)) * 4;\n    nEntrySize = (nEntrySize / sizeof(char*) + ((nEntrySize % sizeof(char*)) \u003e 0)) * sizeof(char*); // added by Saurabh on Sep 3, 2009\n    pEntry = (Nm_Entry_t *)Extra_MmFlexEntryFetch( p-\u003epMem, nEntrySize );\n    pEntry-\u003epNextI2N = pEntry-\u003epNextN2I = pEntry-\u003epNameSake = NULL;\n    pEntry-\u003eObjId = ObjId;\n    pEntry-\u003eType = Type;\n    sprintf( pEntry-\u003eName, \"%s%s\", pName, pSuffix? pSuffix : \"\" );\n    // add the entry to the hash table\n    RetValue = Nm_ManTableAdd( p, pEntry );\n    assert( RetValue == 1 );\n    return pEntry-\u003eName;\n}",
+      "Draft": "func Nm_ManStoreIdName(p *Nm_Man_t, ObjId int32, Type int32, pName string, pSuffix string) string {\n    var pEntry *Nm_Entry_t;\n    var RetValue, nEntrySize int32;\n    // check if the object with this ID is already stored\n    if pEntry = Nm_ManTableLookupId(p, ObjId) {\n        fmt.Printf(\"Nm_ManStoreIdName(): Entry with the same ID already exists.\\n\");\n        return nil;\n    }\n    // create a new entry\n    nEntrySize = sizeof(Nm_Entry_t) + len(pName) + (pSuffix?len(pSuffix):0) + 1;\n//    nEntrySize = (nEntrySize / 4 + ((nEntrySize % 4) \u003e 0)) * 4;\n    nEntrySize = (nEntrySize / sizeof(char*) + ((nEntrySize % sizeof(char*)) \u003e 0)) * sizeof(char*); // added by Saurabh on Sep 3, 2009\n    pEntry = (Nm_Entry_t *)Extra_MmFlexEntryFetch( p.pMem, nEntrySize );\n    pEntry.pNextI2N = pEntry.pNextN2I = pEntry.pNameSake = nil;\n    pEntry.ObjId = ObjId;\n    pEntry.Type = Type;\n    sprintf( pEntry.Name, \"%s%s\", pName, pSuffix? pSuffix : \"\" );\n    // add the entry to the hash table\n    RetValue = Nm_ManTableAdd( p, pEntry );\n    assert(RetValue == 1, \"RetValue == 1\");\n    return pEntry.Name;\n}"
+    },
+    {
+      "Name": "Nm_ManDeleteIdName",
+      "Start": 4551,
+      "End": 4875,
+      "BodyStart": 4602,
+      "Original": "void Nm_ManDeleteIdName( Nm_Man_t * p, int ObjId )\n{\n    Nm_Entry_t * pEntry;\n    pEntry = Nm_ManTableLookupId(p, ObjId);\n    if ( pEntry == NULL )\n    {\n        printf( \"Nm_ManDeleteIdName(): This entry is not in the table.\\n\" );\n        return;\n    }\n    // remove entry from the table\n    Nm_ManTableDelete( p, ObjId );\n}",
+      "Draft": "func Nm_ManDeleteIdName(p *Nm_Man_t, ObjId int32) {\n    var pEntry *Nm_Entry_t;\n    pEntry = Nm_ManTableLookupId(p, ObjId);\n    if pEntry == nil {\n        fmt.Printf(\"Nm_ManDeleteIdName(): This entry is not in the table.\\n\");\n        return;\n    }\n    // remove entry from the table\n    Nm_ManTableDelete( p, ObjId );\n}"
+    },
+    {
+      "Name": "Nm_ManCreateUniqueName",
+      "Start": 5258,
+      "End": 5634,
+      "BodyStart": 5315,
+      "Original": "char * Nm_ManCreateUniqueName( Nm_Man_t * p, int ObjId )\n{\n    static char NameStr[1000];\n    Nm_Entry_t * pEntry;\n    int i;\n    if ( (pEntry = Nm_ManTableLookupId(p, ObjId)) )\n        return pEntry-\u003eName;\n    sprintf( NameStr, \"n%d\", ObjId );\n    for ( i = 1; Nm_ManTableLookupName(p, NameStr, -1); i++ )\n        sprintf( NameStr, \"n%d_%d\", ObjId, i );\n    return NameStr;\n}",
+      "Draft": "func Nm_ManCreateUniqueName(p *Nm_Man_t, ObjId int32) string {\n    \n    var pEntry *Nm_Entry_t;\n    var i int32;\n    if pEntry = Nm_ManTableLookupId(p, ObjId) {\n        return pEntry.Name; }\n    spStatic_Nm_ManCreateUniqueName_NameStr = fmt.Sprintf(\"n%d\", ObjId);\n    for  i = 1; Nm_ManTableLookupName(p, spStatic_Nm_ManCreateUniqueName_NameStr, -1); i++  {\n        spStatic_Nm_ManCreateUniqueName_NameStr = fmt.Sprintf(\"n%d_%d\", ObjId, i);\n    }\n    return spStatic_Nm_ManCreateUniqueName_NameStr;\n}"
+    },
+    {
+      "Name": "Nm_ManFindNameById",
+      "Start": 5916,
+      "End": 6095,
+      "BodyStart": 5969,
+      "Original": "char * Nm_ManFindNameById( Nm_Man_t * p, int ObjId )\n{\n    Nm_Entry_t * pEntry;\n    if ( (pEntry = Nm_ManTableLookupId(p, ObjId)) )\n        return pEntry-\u003eName;\n    return NULL;\n}",
+      "Draft": "func Nm_ManFindNameById(p *Nm_Man_t, ObjId int32) string {\n    var pEntry *Nm_Entry_t;\n    if pEntry = Nm_ManTableLookupId(p, ObjId) {\n        return pEntry.Name; }\n    return nil;\n}"
+    },
+    {
+      "Name": "Nm_ManFindIdByName",
+      "Start": 6505,
+      "End": 6701,
+      "BodyStart": 6568,
+      "Original": "int Nm_ManFindIdByName( Nm_Man_t * p, char * pName, int Type )\n{\n    Nm_Entry_t * pEntry;\n    if ( (pEntry = Nm_ManTableLookupName(p, pName, Type)) )\n        return pEntry-\u003eObjId;\n    return -1;\n}",
+      "Draft": "func Nm_ManFindIdByName(p *Nm_Man_t, pName string, Type int32) int32 {\n    var pEntry *Nm_Entry_t;\n    if pEntry = Nm_ManTableLookupName(p, pName, Type) {\n        return pEntry.ObjId; }\n    return -1;\n}"
+    },
+    {
+      "Name": "Nm_ManFindIdByNameTwoTypes",
+      "Start": 7111,
+      "End": 7413,
+      "BodyStart": 7194,
+      "Original": "int Nm_ManFindIdByNameTwoTypes( Nm_Man_t * p, char * pName, int Type1, int Type2 )\n{\n    int iNodeId;\n    iNodeId = Nm_ManFindIdByName( p, pName, Type1 );\n    if ( iNodeId == -1 )\n        iNodeId = Nm_ManFindIdByName( p, pName, Type2 );\n    if ( iNodeId == -1 )\n        return -1;\n    return iNodeId;\n}",
+      "Draft": "func Nm_ManFindIdByNameTwoTypes(p *Nm_Man_t, pName string, Type1 int32, Type2 int32) int32 {\n    var iNodeId int32;\n    iNodeId = Nm_ManFindIdByName( p, pName, Type1 );\n    if iNodeId == -1 {\n        iNodeId = Nm_ManFindIdByName( p, pName, Type2 ); }\n    if iNodeId == -1 {\n        return -1; }\n    return iNodeId;\n}"
+    },
+    {
+      "Name": "Nm_ManReturnNameIds",
+      "Start": 7686,
+      "End": 7966,
+      "BodyStart": 7734,
+      "Original": "Vec_Int_t * Nm_ManReturnNameIds( Nm_Man_t * p )\n{\n    Vec_Int_t * vNameIds;\n    int i;\n    vNameIds = Vec_IntAlloc( p-\u003enEntries );\n    for ( i = 0; i \u003c p-\u003enBins; i++ )\n        if ( p-\u003epBinsI2N[i] )\n            Vec_IntPush( vNameIds, p-\u003epBinsI2N[i]-\u003eObjId );\n    return vNameIds;\n}",
+      "Draft": "func Nm_ManReturnNameIds(p *Nm_Man_t) *Vec_Int_t {\n    var vNameIds *Vec_Int_t;\n    var i int32;\n    vNameIds = Vec_IntAlloc( p.nEntries );\n    for  i = 0; i \u003c p.nBins; i++  {\n        if p.pBinsI2N[i] {\n            Vec_IntPush( vNameIds, p.pBinsI2N[i].ObjId ); }\n    }\n    return vNameIds;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::mechanical::sizeof::1401",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1335,
+      "End": 1335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::mechanical::sizeof::1453",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1379,
+      "End": 1385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::mechanical::sizeof::1834",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1690,
+      "End": 1690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::mechanical::sizeof::1967",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1745,
+      "End": 1745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::mechanical::sizeof::2040",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1810,
+      "End": 1816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::mechanical::sizeof::2103",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1873,
+      "End": 1879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::mechanical::sizeof::4006",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3520,
+      "End": 3526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::mechanical::sizeof::4173",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3687,
+      "End": 3693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::mechanical::sizeof::4204",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3718,
+      "End": 3724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::mechanical::sizeof::4227",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3741,
+      "End": 3747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::mechanical::static::5807",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5321,
+      "End": 5327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::pointer-cast::1381",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1335,
+      "End": 1335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::pointer-cast::1810",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1690,
+      "End": 1690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::pointer-cast::1840",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1690,
+      "End": 1690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::pointer-cast::1943",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1745,
+      "End": 1745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::pointer-cast::1973",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1745,
+      "End": 1745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::pointer-cast::2046",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1816,
+      "End": 1830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::pointer-cast::2109",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1879,
+      "End": 1893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::pointer-cast::2623",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2326,
+      "End": 2326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::pointer-cast::2744",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2355,
+      "End": 2355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::pointer-cast::2855",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2384,
+      "End": 2384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::pointer-cast::4179",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3693,
+      "End": 3700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::pointer-cast::4210",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3724,
+      "End": 3731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::pointer-cast::4233",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3747,
+      "End": 3754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::pointer-cast::4290",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3804,
+      "End": 3818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::Nm_ManCreate",
+      "Category": "semantic-review",
+      "Symbol": "Nm_ManCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1244,
+      "End": 1990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::ternary::Nm_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Nm_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2255,
+      "End": 2400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::Nm_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Nm_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2255,
+      "End": 2400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::Nm_ManNumEntries",
+      "Category": "semantic-review",
+      "Symbol": "Nm_ManNumEntries",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2677,
+      "End": 2741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::ternary::Nm_ManStoreIdName",
+      "Category": "ternary-review",
+      "Symbol": "Nm_ManStoreIdName",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3102,
+      "End": 4190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::Nm_ManStoreIdName",
+      "Category": "semantic-review",
+      "Symbol": "Nm_ManStoreIdName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3102,
+      "End": 4190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::Nm_ManDeleteIdName",
+      "Category": "semantic-review",
+      "Symbol": "Nm_ManDeleteIdName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4551,
+      "End": 4875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::Nm_ManCreateUniqueName",
+      "Category": "semantic-review",
+      "Symbol": "Nm_ManCreateUniqueName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5258,
+      "End": 5634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::Nm_ManFindNameById",
+      "Category": "semantic-review",
+      "Symbol": "Nm_ManFindNameById",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5916,
+      "End": 6095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::Nm_ManFindIdByName",
+      "Category": "semantic-review",
+      "Symbol": "Nm_ManFindIdByName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6505,
+      "End": 6701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::Nm_ManFindIdByNameTwoTypes",
+      "Category": "semantic-review",
+      "Symbol": "Nm_ManFindIdByNameTwoTypes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7111,
+      "End": 7413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::Nm_ManReturnNameIds",
+      "Category": "semantic-review",
+      "Symbol": "Nm_ManReturnNameIds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7686,
+      "End": 7966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/nm/nmApi.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8213
+    }
+  ],
+  "Draft": "package nm\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [nmApi.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Name manager.]\n\n  Synopsis    [APIs of the name manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nmApi.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"nmInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the name manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nm_ManCreate(nSize int32) *Nm_Man_t {\n    var p *Nm_Man_t;\n    // allocate the table\n    // inlining of macro ABC_ALLOC\n    p = ((Nm_Man_t *) malloc(sizeof(Nm_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Nm_Man_t) );\n    // set the parameters\n    p.nSizeFactor   = 2; // determined the limit on the grow of data before the table resizes\n    p.nGrowthFactor = 3; // determined how much the table grows after resizing\n    // allocate and clean the bins\n    p.nBins = Abc_PrimeCudd(nSize);\n    // inlining of macro ABC_ALLOC\n    p.pBinsI2N = ((Nm_Entry_t * *) malloc(sizeof(Nm_Entry_t *) * (size_t)(p.nBins)));\n    // inlining of macro ABC_ALLOC\n    p.pBinsN2I = ((Nm_Entry_t * *) malloc(sizeof(Nm_Entry_t *) * (size_t)(p.nBins)));\n    memset( p.pBinsI2N, 0, sizeof(Nm_Entry_t *) * p.nBins );\n    memset( p.pBinsN2I, 0, sizeof(Nm_Entry_t *) * p.nBins );\n    // start the memory manager\n    p.pMem = Extra_MmFlexStart();\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates the name manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nm_ManFree(p *Nm_Man_t) {\n    Extra_MmFlexStop( p.pMem );\n    // inlining of macro ABC_FREE\n    ((p.pBinsI2N) ? (free((char *) (p.pBinsI2N)), (p.pBinsI2N) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBinsN2I) ? (free((char *) (p.pBinsN2I)), (p.pBinsN2I) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of objects with names.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nm_ManNumEntries(p *Nm_Man_t) int32 {\n    return p.nEntries;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new entry in the name manager.]\n\n  Description [Returns 1 if the entry with the given object ID\n  already exists in the name manager.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nm_ManStoreIdName(p *Nm_Man_t, ObjId int32, Type int32, pName string, pSuffix string) string {\n    var pEntry *Nm_Entry_t;\n    var RetValue, nEntrySize int32;\n    // check if the object with this ID is already stored\n    if pEntry = Nm_ManTableLookupId(p, ObjId) {\n        fmt.Printf(\"Nm_ManStoreIdName(): Entry with the same ID already exists.\\n\");\n        return nil;\n    }\n    // create a new entry\n    nEntrySize = sizeof(Nm_Entry_t) + len(pName) + (pSuffix?len(pSuffix):0) + 1;\n//    nEntrySize = (nEntrySize / 4 + ((nEntrySize % 4) \u003e 0)) * 4;\n    nEntrySize = (nEntrySize / sizeof(char*) + ((nEntrySize % sizeof(char*)) \u003e 0)) * sizeof(char*); // added by Saurabh on Sep 3, 2009\n    pEntry = (Nm_Entry_t *)Extra_MmFlexEntryFetch( p.pMem, nEntrySize );\n    pEntry.pNextI2N = pEntry.pNextN2I = pEntry.pNameSake = nil;\n    pEntry.ObjId = ObjId;\n    pEntry.Type = Type;\n    sprintf( pEntry.Name, \"%s%s\", pName, pSuffix? pSuffix : \"\" );\n    // add the entry to the hash table\n    RetValue = Nm_ManTableAdd( p, pEntry );\n    assert(RetValue == 1, \"RetValue == 1\");\n    return pEntry.Name;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new entry in the name manager.]\n\n  Description [Returns 1 if the entry with the given object ID\n  already exists in the name manager.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nm_ManDeleteIdName(p *Nm_Man_t, ObjId int32) {\n    var pEntry *Nm_Entry_t;\n    pEntry = Nm_ManTableLookupId(p, ObjId);\n    if pEntry == nil {\n        fmt.Printf(\"Nm_ManDeleteIdName(): This entry is not in the table.\\n\");\n        return;\n    }\n    // remove entry from the table\n    Nm_ManTableDelete( p, ObjId );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Finds a unique name for the node.]\n\n  Description [If the name exists, tries appending numbers to it until \n  it becomes unique. The name is not added to the table.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Nm_ManCreateUniqueName_NameStr string // was [1000]byte in C\n\nfunc Nm_ManCreateUniqueName(p *Nm_Man_t, ObjId int32) string {\n    \n    var pEntry *Nm_Entry_t;\n    var i int32;\n    if pEntry = Nm_ManTableLookupId(p, ObjId) {\n        return pEntry.Name; }\n    spStatic_Nm_ManCreateUniqueName_NameStr = fmt.Sprintf(\"n%d\", ObjId);\n    for  i = 1; Nm_ManTableLookupName(p, spStatic_Nm_ManCreateUniqueName_NameStr, -1); i++  {\n        spStatic_Nm_ManCreateUniqueName_NameStr = fmt.Sprintf(\"n%d_%d\", ObjId, i);\n    }\n    return spStatic_Nm_ManCreateUniqueName_NameStr;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns name of the object if the ID is known.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nm_ManFindNameById(p *Nm_Man_t, ObjId int32) string {\n    var pEntry *Nm_Entry_t;\n    if pEntry = Nm_ManTableLookupId(p, ObjId) {\n        return pEntry.Name; }\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns ID of the object if its name is known.]\n\n  Description [This procedure may return two IDs because POs and latches \n  may have the same name (the only allowed case of name duplication).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nm_ManFindIdByName(p *Nm_Man_t, pName string, Type int32) int32 {\n    var pEntry *Nm_Entry_t;\n    if pEntry = Nm_ManTableLookupName(p, pName, Type) {\n        return pEntry.ObjId; }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns ID of the object if its name is known.]\n\n  Description [This procedure may return two IDs because POs and latches \n  may have the same name (the only allowed case of name duplication).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nm_ManFindIdByNameTwoTypes(p *Nm_Man_t, pName string, Type1 int32, Type2 int32) int32 {\n    var iNodeId int32;\n    iNodeId = Nm_ManFindIdByName( p, pName, Type1 );\n    if iNodeId == -1 {\n        iNodeId = Nm_ManFindIdByName( p, pName, Type2 ); }\n    if iNodeId == -1 {\n        return -1; }\n    return iNodeId;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Return the IDs of objects with names.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nm_ManReturnNameIds(p *Nm_Man_t) *Vec_Int_t {\n    var vNameIds *Vec_Int_t;\n    var i int32;\n    vNameIds = Vec_IntAlloc( p.nEntries );\n    for  i = 0; i \u003c p.nBins; i++  {\n        if p.pBinsI2N[i] {\n            Vec_IntPush( vNameIds, p.pBinsI2N[i].ObjId ); }\n    }\n    return vNameIds;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

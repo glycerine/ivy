@@ -1,0 +1,627 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h",
+  "SHA256": "f586aa3943697f35e7a7e1d3c1976ed9feae750a0c9156955a4ea7b54fb2e93a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 45,
+        "ByteOffset": 1675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Xdbl_Create(Exp word, Mnt word) xdbl { assert(!(Exp\u003e\u003e16) \u0026\u0026 (Mnt\u003e\u003e47)==(word)1); return (Exp\u003c\u003c48) | Mnt;  }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 66,
+        "Column": 38,
+        "ByteOffset": 2462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Xdbl_ToDouble(a xdbl) float64 { assert(Xdbl_Exp(a) \u003c 1023); return Abc_Word2Dbl(((Xdbl_Exp(a) + 1023) \u003c\u003c 52) | (((a\u003c\u003c17)\u003e\u003e17) \u003c\u003c 5));                  }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 71,
+        "ByteOffset": 2653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Xdbl_FromDouble(a float64) xdbl { var A word  = Abc_Dbl2Word(a); assert(a \u003e= 1.0); return Xdbl_Create((A \u003e\u003e 52)-1023, (((word)1) \u003c\u003c 47) | ((A \u003c\u003c 12) \u003e\u003e 17)); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 3327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( a \u003e= b );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 4013
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( a \u003e= b );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 6189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ten100 == ten100_ );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 6394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"1 = %lf\\n\",   Xdbl_ToDouble(c1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 5,
+        "ByteOffset": 6442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"2 = %lf\\n\",   Xdbl_ToDouble(c2) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 6490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"3 = %lf\\n\",   Xdbl_ToDouble(c3) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 192,
+        "Column": 5,
+        "ByteOffset": 6538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"12 = %lf\\n\",  Xdbl_ToDouble(c12) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 6587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"1.5 = %lf\\n\", Xdbl_ToDouble(c1p5) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 6637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"2.5 = %lf\\n\", Xdbl_ToDouble(c2p5) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 6688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Converted 1 = %lf\\n\",   Xdbl_ToDouble(c1_) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 197,
+        "Column": 5,
+        "ByteOffset": 6747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Converted 2 = %lf\\n\",   Xdbl_ToDouble(c2_) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 6806
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Converted 3 = %lf\\n\",   Xdbl_ToDouble(c3_) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 5,
+        "ByteOffset": 6865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Converted 12 = %lf\\n\",  Xdbl_ToDouble(c12_) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 200,
+        "Column": 5,
+        "ByteOffset": 6925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Converted 1.5 = %lf\\n\", Xdbl_ToDouble(c1p5_) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 6986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Converted 2.5 = %lf\\n\", Xdbl_ToDouble(c2p5_) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 7048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"1.0 + 1.5 = %lf\\n\", Xdbl_ToDouble(sum1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 204,
+        "Column": 5,
+        "ByteOffset": 7104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"2.0 * 1.5 = %lf\\n\", Xdbl_ToDouble(mul1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 7161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"1.5 + 2.5 = %lf\\n\", Xdbl_ToDouble(sum2) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 207,
+        "Column": 5,
+        "ByteOffset": 7217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"1.5 * 2.5 = %lf\\n\", Xdbl_ToDouble(mul2) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 7273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"12 / 2^2  = %lf\\n\", Xdbl_ToDouble(Xdbl_Div(c12, 2)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 7342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"12 / 2^2  = %lf\\n\", Xdbl_ToDouble(Xdbl_Div(c12, 2)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 5,
+        "ByteOffset": 7411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%.16lf * %.16lf = %.16lf (%.16lf)\\n\", Xdbl_ToDouble(a), Xdbl_ToDouble(b), Xdbl_ToDouble(ab), 1.2929725 * 10.28828287 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 214,
+        "Column": 5,
+        "ByteOffset": 7545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( sum1 == c2p5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 7573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( mul1 == c3 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Xdbl_Exp",
+      "Start": 1558,
+      "End": 1643,
+      "BodyStart": 1614,
+      "Original": "static inline word   Xdbl_Exp( xdbl a )                 { return a \u003e\u003e 48;           }",
+      "Draft": "func Xdbl_Exp(a xdbl) word { return a \u003e\u003e 48;           }"
+    },
+    {
+      "Name": "Xdbl_Mnt",
+      "Start": 1644,
+      "End": 1729,
+      "BodyStart": 1700,
+      "Original": "static inline word   Xdbl_Mnt( xdbl a )                 { return (a \u003c\u003c 16) \u003e\u003e 16;   }",
+      "Draft": "func Xdbl_Mnt(a xdbl) word { return (a \u003c\u003c 16) \u003e\u003e 16;   }"
+    },
+    {
+      "Name": "Xdbl_Create",
+      "Start": 1731,
+      "End": 1857,
+      "BodyStart": 1787,
+      "Original": "static inline xdbl   Xdbl_Create( word Exp, word Mnt )  { assert(!(Exp\u003e\u003e16) \u0026\u0026 (Mnt\u003e\u003e47)==(word)1); return (Exp\u003c\u003c48) | Mnt;  }",
+      "Draft": "func Xdbl_Create(Exp word, Mnt word) xdbl { assert(!(Exp\u003e\u003e16) \u0026\u0026 (Mnt\u003e\u003e47)==(word)1, \"!(Exp\u003e\u003e16) \u0026\u0026 (Mnt\u003e\u003e47)==(word)1\"); return (Exp\u003c\u003c48) | Mnt;  }"
+    },
+    {
+      "Name": "Xdbl_Const1",
+      "Start": 1859,
+      "End": 1985,
+      "BodyStart": 1915,
+      "Original": "static inline xdbl   Xdbl_Const1()                      { return Xdbl_Create( (word)0, (word)1 \u003c\u003c 47 );                      }",
+      "Draft": "func Xdbl_Const1() xdbl { return Xdbl_Create( (word)0, (word)1 \u003c\u003c 47 );                      }"
+    },
+    {
+      "Name": "Xdbl_Const2",
+      "Start": 1986,
+      "End": 2112,
+      "BodyStart": 2042,
+      "Original": "static inline xdbl   Xdbl_Const2()                      { return Xdbl_Create( (word)1, (word)1 \u003c\u003c 47 );                      }",
+      "Draft": "func Xdbl_Const2() xdbl { return Xdbl_Create( (word)1, (word)1 \u003c\u003c 47 );                      }"
+    },
+    {
+      "Name": "Xdbl_Const3",
+      "Start": 2113,
+      "End": 2239,
+      "BodyStart": 2169,
+      "Original": "static inline xdbl   Xdbl_Const3()                      { return Xdbl_Create( (word)1, (word)3 \u003c\u003c 46 );                      }",
+      "Draft": "func Xdbl_Const3() xdbl { return Xdbl_Create( (word)1, (word)3 \u003c\u003c 46 );                      }"
+    },
+    {
+      "Name": "Xdbl_Const12",
+      "Start": 2240,
+      "End": 2366,
+      "BodyStart": 2296,
+      "Original": "static inline xdbl   Xdbl_Const12()                     { return Xdbl_Create( (word)3, (word)3 \u003c\u003c 46 );                      }",
+      "Draft": "func Xdbl_Const12() xdbl { return Xdbl_Create( (word)3, (word)3 \u003c\u003c 46 );                      }"
+    },
+    {
+      "Name": "Xdbl_Const1point5",
+      "Start": 2367,
+      "End": 2493,
+      "BodyStart": 2423,
+      "Original": "static inline xdbl   Xdbl_Const1point5()                { return Xdbl_Create( (word)0, (word)3 \u003c\u003c 46 );                      }",
+      "Draft": "func Xdbl_Const1point5() xdbl { return Xdbl_Create( (word)0, (word)3 \u003c\u003c 46 );                      }"
+    },
+    {
+      "Name": "Xdbl_Const2point5",
+      "Start": 2494,
+      "End": 2620,
+      "BodyStart": 2550,
+      "Original": "static inline xdbl   Xdbl_Const2point5()                { return Xdbl_Create( (word)1, (word)5 \u003c\u003c 45 );                      }",
+      "Draft": "func Xdbl_Const2point5() xdbl { return Xdbl_Create( (word)1, (word)5 \u003c\u003c 45 );                      }"
+    },
+    {
+      "Name": "Xdbl_Maximum",
+      "Start": 2621,
+      "End": 2747,
+      "BodyStart": 2677,
+      "Original": "static inline xdbl   Xdbl_Maximum()                     { return ~(word)0;                                                   }",
+      "Draft": "func Xdbl_Maximum() xdbl { return ~(word)0;                                                   }"
+    },
+    {
+      "Name": "Xdbl_ToDouble",
+      "Start": 2749,
+      "End": 2927,
+      "BodyStart": 2805,
+      "Original": "static inline double Xdbl_ToDouble( xdbl a )            { assert(Xdbl_Exp(a) \u003c 1023); return Abc_Word2Dbl(((Xdbl_Exp(a) + 1023) \u003c\u003c 52) | (((a\u003c\u003c17)\u003e\u003e17) \u003c\u003c 5));                  }",
+      "Draft": "func Xdbl_ToDouble(a xdbl) float64 { assert(Xdbl_Exp(a) \u003c 1023, \"Xdbl_Exp(a) \u003c 1023\"); return Abc_Word2Dbl(((Xdbl_Exp(a) + 1023) \u003c\u003c 52) | (((a\u003c\u003c17)\u003e\u003e17) \u003c\u003c 5));                  }"
+    },
+    {
+      "Name": "Xdbl_FromDouble",
+      "Start": 2928,
+      "End": 3106,
+      "BodyStart": 2984,
+      "Original": "static inline xdbl   Xdbl_FromDouble( double a )        { word A = Abc_Dbl2Word(a); assert(a \u003e= 1.0); return Xdbl_Create((A \u003e\u003e 52)-1023, (((word)1) \u003c\u003c 47) | ((A \u003c\u003c 12) \u003e\u003e 17)); }",
+      "Draft": "func Xdbl_FromDouble(a float64) xdbl { var A word  = Abc_Dbl2Word(a); assert(a \u003e= 1.0, \"a \u003e= 1.0\"); return Xdbl_Create((A \u003e\u003e 52)-1023, (((word)1) \u003c\u003c 47) | ((A \u003c\u003c 12) \u003e\u003e 17)); }"
+    },
+    {
+      "Name": "Xdbl_Add",
+      "Start": 3581,
+      "End": 3974,
+      "BodyStart": 3627,
+      "Original": "static inline xdbl Xdbl_Add( xdbl a, xdbl b )\n{\n    word Exp, Mnt;\n    if ( a \u003c b ) a ^= b, b ^= a, a ^= b;\n    assert( a \u003e= b );\n    Mnt = Xdbl_Mnt(a) + (Xdbl_Mnt(b) \u003e\u003e (Xdbl_Exp(a) - Xdbl_Exp(b)));\n    Exp = Xdbl_Exp(a);\n    if ( Mnt \u003e\u003e 48 ) // new MSB is created\n        Exp++, Mnt \u003e\u003e= 1;\n    if ( Exp \u003e\u003e 16 ) // overflow\n        return Xdbl_Maximum();\n    return Xdbl_Create( Exp, Mnt );\n}",
+      "Draft": "func Xdbl_Add(a xdbl, b xdbl) xdbl {\n    var Exp, Mnt word;\n    if a \u003c b { a ^= b, b ^= a, a ^= b; }\n    assert(a \u003e= b, \"a \u003e= b\");\n    Mnt = Xdbl_Mnt(a) + (Xdbl_Mnt(b) \u003e\u003e (Xdbl_Exp(a) - Xdbl_Exp(b)));\n    Exp = Xdbl_Exp(a);\n    if Mnt \u003e\u003e 48 { // new MSB is created\n        Exp++, Mnt \u003e\u003e= 1; }\n    if Exp \u003e\u003e 16 { // overflow\n        return Xdbl_Maximum(); }\n    return Xdbl_Create( Exp, Mnt );\n}"
+    },
+    {
+      "Name": "Xdbl_Mul",
+      "Start": 4234,
+      "End": 4874,
+      "BodyStart": 4280,
+      "Original": "static inline xdbl Xdbl_Mul( xdbl a, xdbl b )\n{\n    word Exp, Mnt, MntA, MntB, MntAh, MntBh, MntAl, MntBl;\n    if ( a \u003c b ) a ^= b, b ^= a, a ^= b;\n    assert( a \u003e= b );\n    MntA  = Xdbl_Mnt(a);\n    MntB  = Xdbl_Mnt(b);\n    MntAh = MntA\u003e\u003e32;\n    MntBh = MntB\u003e\u003e32;\n    MntAl = (MntA\u003c\u003c32)\u003e\u003e32;\n    MntBl = (MntB\u003c\u003c32)\u003e\u003e32;\n    Mnt = ((MntAh * MntBh) \u003c\u003c 17) + ((MntAl * MntBl) \u003e\u003e 47) + ((MntAl * MntBh) \u003e\u003e 15) + ((MntAh * MntBl) \u003e\u003e 15);\n    Exp = Xdbl_Exp(a) + Xdbl_Exp(b);\n    if ( Mnt \u003e\u003e 48 ) // new MSB is created\n        Exp++, Mnt \u003e\u003e= 1;\n    if ( Exp \u003e\u003e 16 ) // overflow\n        return Xdbl_Maximum();\n    return Xdbl_Create( Exp, Mnt );\n}",
+      "Draft": "func Xdbl_Mul(a xdbl, b xdbl) xdbl {\n    var Exp, Mnt, MntA, MntB, MntAh, MntBh, MntAl, MntBl word;\n    if a \u003c b { a ^= b, b ^= a, a ^= b; }\n    assert(a \u003e= b, \"a \u003e= b\");\n    MntA  = Xdbl_Mnt(a);\n    MntB  = Xdbl_Mnt(b);\n    MntAh = MntA\u003e\u003e32;\n    MntBh = MntB\u003e\u003e32;\n    MntAl = (MntA\u003c\u003c32)\u003e\u003e32;\n    MntBl = (MntB\u003c\u003c32)\u003e\u003e32;\n    Mnt = ((MntAh * MntBh) \u003c\u003c 17) + ((MntAl * MntBl) \u003e\u003e 47) + ((MntAl * MntBh) \u003e\u003e 15) + ((MntAh * MntBl) \u003e\u003e 15);\n    Exp = Xdbl_Exp(a) + Xdbl_Exp(b);\n    if Mnt \u003e\u003e 48 { // new MSB is created\n        Exp++, Mnt \u003e\u003e= 1; }\n    if Exp \u003e\u003e 16 { // overflow\n        return Xdbl_Maximum(); }\n    return Xdbl_Create( Exp, Mnt );\n}"
+    },
+    {
+      "Name": "Xdbl_Div",
+      "Start": 5143,
+      "End": 5338,
+      "BodyStart": 5196,
+      "Original": "static inline xdbl Xdbl_Div( xdbl a, unsigned Deg2 )\n{\n    if ( Xdbl_Exp(a) \u003e= (word)Deg2 )\n        return Xdbl_Create( Xdbl_Exp(a) - Deg2, Xdbl_Mnt(a) );\n    return Xdbl_Const1(); // underflow\n}",
+      "Draft": "func Xdbl_Div(a xdbl, Deg2 uint32) xdbl {\n    if Xdbl_Exp(a) \u003e= (word)Deg2 {\n        return Xdbl_Create( Xdbl_Exp(a) - Deg2, Xdbl_Mnt(a) ); }\n    return Xdbl_Const1(); // underflow\n}"
+    },
+    {
+      "Name": "Xdbl_Test",
+      "Start": 5643,
+      "End": 7891,
+      "BodyStart": 5674,
+      "Original": "static inline void Xdbl_Test()\n{\n    xdbl c1   = Xdbl_Const1();\n    xdbl c2   = Xdbl_Const2();\n    xdbl c3   = Xdbl_Const3();\n    xdbl c12  = Xdbl_Const12();\n    xdbl c1p5 = Xdbl_Const1point5();\n    xdbl c2p5 = Xdbl_Const2point5();\n\n    xdbl c1_   = Xdbl_FromDouble(1.0);\n    xdbl c2_   = Xdbl_FromDouble(2.0);\n    xdbl c3_   = Xdbl_FromDouble(3.0);\n    xdbl c12_  = Xdbl_FromDouble(12.0);\n    xdbl c1p5_ = Xdbl_FromDouble(1.5);\n    xdbl c2p5_ = Xdbl_FromDouble(2.5);\n\n    xdbl sum1 = Xdbl_Add(c1, c1p5);\n    xdbl mul1 = Xdbl_Mul(c2, c1p5);\n\n    xdbl sum2 = Xdbl_Add(c1p5, c2p5);\n    xdbl mul2 = Xdbl_Mul(c1p5, c2p5);\n\n    xdbl a    = Xdbl_FromDouble(1.2929725);\n    xdbl b    = Xdbl_FromDouble(10.28828287);\n    xdbl ab   = Xdbl_Mul(a, b);\n\n    xdbl ten100 = Xdbl_FromDouble( 1e100 );\n    xdbl ten100_ = ABC_CONST(0x014c924d692ca61b);\n\n    assert( ten100 == ten100_ );\n\n//    float f1 = Xdbl_ToDouble(c1);\n//    Extra_PrintBinary( stdout, (int *)\u0026c1, 32 ); printf( \"\\n\" );\n//    Extra_PrintBinary( stdout, (int *)\u0026f1, 32 ); printf( \"\\n\" );\n\n    printf( \"1 = %lf\\n\",   Xdbl_ToDouble(c1) );\n    printf( \"2 = %lf\\n\",   Xdbl_ToDouble(c2) );\n    printf( \"3 = %lf\\n\",   Xdbl_ToDouble(c3) );\n    printf( \"12 = %lf\\n\",  Xdbl_ToDouble(c12) );\n    printf( \"1.5 = %lf\\n\", Xdbl_ToDouble(c1p5) );\n    printf( \"2.5 = %lf\\n\", Xdbl_ToDouble(c2p5) );\n\n    printf( \"Converted 1 = %lf\\n\",   Xdbl_ToDouble(c1_) );\n    printf( \"Converted 2 = %lf\\n\",   Xdbl_ToDouble(c2_) );\n    printf( \"Converted 3 = %lf\\n\",   Xdbl_ToDouble(c3_) );\n    printf( \"Converted 12 = %lf\\n\",  Xdbl_ToDouble(c12_) );\n    printf( \"Converted 1.5 = %lf\\n\", Xdbl_ToDouble(c1p5_) );\n    printf( \"Converted 2.5 = %lf\\n\", Xdbl_ToDouble(c2p5_) );\n\n    printf( \"1.0 + 1.5 = %lf\\n\", Xdbl_ToDouble(sum1) );\n    printf( \"2.0 * 1.5 = %lf\\n\", Xdbl_ToDouble(mul1) );\n\n    printf( \"1.5 + 2.5 = %lf\\n\", Xdbl_ToDouble(sum2) );\n    printf( \"1.5 * 2.5 = %lf\\n\", Xdbl_ToDouble(mul2) );\n    printf( \"12 / 2^2  = %lf\\n\", Xdbl_ToDouble(Xdbl_Div(c12, 2)) );\n\n    printf( \"12 / 2^2  = %lf\\n\", Xdbl_ToDouble(Xdbl_Div(c12, 2)) );\n\n    printf( \"%.16lf * %.16lf = %.16lf (%.16lf)\\n\", Xdbl_ToDouble(a), Xdbl_ToDouble(b), Xdbl_ToDouble(ab), 1.2929725 * 10.28828287 );\n\n    assert( sum1 == c2p5 );\n    assert( mul1 == c3 );\n}",
+      "Draft": "func Xdbl_Test() {\n    var c1 xdbl    = Xdbl_Const1();\n    var c2 xdbl    = Xdbl_Const2();\n    var c3 xdbl    = Xdbl_Const3();\n    var c12 xdbl   = Xdbl_Const12();\n    var c1p5 xdbl  = Xdbl_Const1point5();\n    var c2p5 xdbl  = Xdbl_Const2point5();\n\n    var c1_ xdbl    = Xdbl_FromDouble(1.0);\n    var c2_ xdbl    = Xdbl_FromDouble(2.0);\n    var c3_ xdbl    = Xdbl_FromDouble(3.0);\n    var c12_ xdbl   = Xdbl_FromDouble(12.0);\n    var c1p5_ xdbl  = Xdbl_FromDouble(1.5);\n    var c2p5_ xdbl  = Xdbl_FromDouble(2.5);\n\n    var sum1 xdbl  = Xdbl_Add(c1, c1p5);\n    var mul1 xdbl  = Xdbl_Mul(c2, c1p5);\n\n    var sum2 xdbl  = Xdbl_Add(c1p5, c2p5);\n    var mul2 xdbl  = Xdbl_Mul(c1p5, c2p5);\n\n    var a xdbl     = Xdbl_FromDouble(1.2929725);\n    var b xdbl     = Xdbl_FromDouble(10.28828287);\n    var ab xdbl    = Xdbl_Mul(a, b);\n\n    var ten100 xdbl  = Xdbl_FromDouble( 1e100 );\n    var ten100_ xdbl  = ABC_CONST(0x014c924d692ca61b);\n\n    assert(ten100 == ten100_, \"ten100 == ten100_\");\n\n//    float f1 = Xdbl_ToDouble(c1);\n//    Extra_PrintBinary( stdout, (int *)\u0026c1, 32 ); printf( \"\\n\" );\n//    Extra_PrintBinary( stdout, (int *)\u0026f1, 32 ); printf( \"\\n\" );\n\n    fmt.Printf(\"1 = %f\\n\", Xdbl_ToDouble(c1));\n    fmt.Printf(\"2 = %f\\n\", Xdbl_ToDouble(c2));\n    fmt.Printf(\"3 = %f\\n\", Xdbl_ToDouble(c3));\n    fmt.Printf(\"12 = %f\\n\", Xdbl_ToDouble(c12));\n    fmt.Printf(\"1.5 = %f\\n\", Xdbl_ToDouble(c1p5));\n    fmt.Printf(\"2.5 = %f\\n\", Xdbl_ToDouble(c2p5));\n\n    fmt.Printf(\"Converted 1 = %f\\n\", Xdbl_ToDouble(c1_));\n    fmt.Printf(\"Converted 2 = %f\\n\", Xdbl_ToDouble(c2_));\n    fmt.Printf(\"Converted 3 = %f\\n\", Xdbl_ToDouble(c3_));\n    fmt.Printf(\"Converted 12 = %f\\n\", Xdbl_ToDouble(c12_));\n    fmt.Printf(\"Converted 1.5 = %f\\n\", Xdbl_ToDouble(c1p5_));\n    fmt.Printf(\"Converted 2.5 = %f\\n\", Xdbl_ToDouble(c2p5_));\n\n    fmt.Printf(\"1.0 + 1.5 = %f\\n\", Xdbl_ToDouble(sum1));\n    fmt.Printf(\"2.0 * 1.5 = %f\\n\", Xdbl_ToDouble(mul1));\n\n    fmt.Printf(\"1.5 + 2.5 = %f\\n\", Xdbl_ToDouble(sum2));\n    fmt.Printf(\"1.5 * 2.5 = %f\\n\", Xdbl_ToDouble(mul2));\n    fmt.Printf(\"12 / 2^2  = %f\\n\", Xdbl_ToDouble(Xdbl_Div(c12, 2)));\n\n    fmt.Printf(\"12 / 2^2  = %f\\n\", Xdbl_ToDouble(Xdbl_Div(c12, 2)));\n\n    fmt.Printf(\"%.16f * %.16f = %.16f (%.16f)\\n\", Xdbl_ToDouble(a), Xdbl_ToDouble(b), Xdbl_ToDouble(ab), 1.2929725 * 10.28828287);\n\n    assert(sum1 == c2p5, \"sum1 == c2p5\");\n    assert(mul1 == c3, \"mul1 == c3\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_Exp",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_Exp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1558,
+      "End": 1643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_Mnt",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_Mnt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1644,
+      "End": 1729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_Create",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_Create",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1731,
+      "End": 1857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_Const1",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_Const1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1859,
+      "End": 1985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_Const2",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_Const2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1986,
+      "End": 2112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_Const3",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_Const3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2113,
+      "End": 2239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_Const12",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_Const12",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2240,
+      "End": 2366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_Const1point5",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_Const1point5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2367,
+      "End": 2493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_Const2point5",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_Const2point5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2494,
+      "End": 2620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_Maximum",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_Maximum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2621,
+      "End": 2747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_ToDouble",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_ToDouble",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2749,
+      "End": 2927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_FromDouble",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_FromDouble",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2928,
+      "End": 3106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_Add",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_Add",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3581,
+      "End": 3974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_Mul",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_Mul",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4234,
+      "End": 4874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_Div",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_Div",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5143,
+      "End": 5338
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::Xdbl_Test",
+      "Category": "semantic-review",
+      "Symbol": "Xdbl_Test",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5643,
+      "End": 7891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilDouble.h::macro-inline::6448",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6448,
+      "End": 6477
+    }
+  ],
+  "Draft": "package util\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [utilDouble.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName []\n\n  Synopsis    [Double floating point number implementation.]\n\n  Author      [Alan Mishchenko, Bruno Schmitt]\n\n  Affiliation [UC Berkeley / UFRGS]\n\n  Date        [Ver. 1.0. Started - February 11, 2017.]\n\n  Revision    []\n\n***********************************************************************/\n\n\n\n\n//#include \"misc/util/abc_global.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/* \n    The xdbl floating-point number is represented as a 64-bit unsigned int.\n    The number is (2^Exp)*Mnt, where Exp is a 16-bit exponent and Mnt is a \n    48-bit mantissa.  The decimal point is located between the MSB of Mnt,\n    which is always 1, and the remaining 15 digits of Mnt.\n\n    Currently, only positive numbers are represented.\n\n    The range of possible values is [1.0; 2^(2^16-1)*1.111111111111111]\n    that is, the smallest possible number is 1.0 and the largest possible \n    number is 2^(---16 ones---).(1.---47 ones---)\n\n    Comparison of numbers can be done by comparing the underlying unsigned ints.\n\n    Only addition, multiplication, and division by 2^n are currently implemented.\n*/\n\ntypedef word xdbl;\n\nfunc Xdbl_Exp(a xdbl) word { return a \u003e\u003e 48;           }\nfunc Xdbl_Mnt(a xdbl) word { return (a \u003c\u003c 16) \u003e\u003e 16;   }\n\nfunc Xdbl_Create(Exp word, Mnt word) xdbl { assert(!(Exp\u003e\u003e16) \u0026\u0026 (Mnt\u003e\u003e47)==(word)1, \"!(Exp\u003e\u003e16) \u0026\u0026 (Mnt\u003e\u003e47)==(word)1\"); return (Exp\u003c\u003c48) | Mnt;  }\n\nfunc Xdbl_Const1() xdbl { return Xdbl_Create( (word)0, (word)1 \u003c\u003c 47 );                      }\nfunc Xdbl_Const2() xdbl { return Xdbl_Create( (word)1, (word)1 \u003c\u003c 47 );                      }\nfunc Xdbl_Const3() xdbl { return Xdbl_Create( (word)1, (word)3 \u003c\u003c 46 );                      }\nfunc Xdbl_Const12() xdbl { return Xdbl_Create( (word)3, (word)3 \u003c\u003c 46 );                      }\nfunc Xdbl_Const1point5() xdbl { return Xdbl_Create( (word)0, (word)3 \u003c\u003c 46 );                      }\nfunc Xdbl_Const2point5() xdbl { return Xdbl_Create( (word)1, (word)5 \u003c\u003c 45 );                      }\nfunc Xdbl_Maximum() xdbl { return ~(word)0;                                                   }\n\nfunc Xdbl_ToDouble(a xdbl) float64 { assert(Xdbl_Exp(a) \u003c 1023, \"Xdbl_Exp(a) \u003c 1023\"); return Abc_Word2Dbl(((Xdbl_Exp(a) + 1023) \u003c\u003c 52) | (((a\u003c\u003c17)\u003e\u003e17) \u003c\u003c 5));                  }\nfunc Xdbl_FromDouble(a float64) xdbl { var A word  = Abc_Dbl2Word(a); assert(a \u003e= 1.0, \"a \u003e= 1.0\"); return Xdbl_Create((A \u003e\u003e 52)-1023, (((word)1) \u003c\u003c 47) | ((A \u003c\u003c 12) \u003e\u003e 17)); }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Adding two floating-point numbers.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Xdbl_Add(a xdbl, b xdbl) xdbl {\n    var Exp, Mnt word;\n    if a \u003c b { a ^= b, b ^= a, a ^= b; }\n    assert(a \u003e= b, \"a \u003e= b\");\n    Mnt = Xdbl_Mnt(a) + (Xdbl_Mnt(b) \u003e\u003e (Xdbl_Exp(a) - Xdbl_Exp(b)));\n    Exp = Xdbl_Exp(a);\n    if Mnt \u003e\u003e 48 { // new MSB is created\n        Exp++, Mnt \u003e\u003e= 1; }\n    if Exp \u003e\u003e 16 { // overflow\n        return Xdbl_Maximum(); }\n    return Xdbl_Create( Exp, Mnt );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Multiplying two floating-point numbers.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Xdbl_Mul(a xdbl, b xdbl) xdbl {\n    var Exp, Mnt, MntA, MntB, MntAh, MntBh, MntAl, MntBl word;\n    if a \u003c b { a ^= b, b ^= a, a ^= b; }\n    assert(a \u003e= b, \"a \u003e= b\");\n    MntA  = Xdbl_Mnt(a);\n    MntB  = Xdbl_Mnt(b);\n    MntAh = MntA\u003e\u003e32;\n    MntBh = MntB\u003e\u003e32;\n    MntAl = (MntA\u003c\u003c32)\u003e\u003e32;\n    MntBl = (MntB\u003c\u003c32)\u003e\u003e32;\n    Mnt = ((MntAh * MntBh) \u003c\u003c 17) + ((MntAl * MntBl) \u003e\u003e 47) + ((MntAl * MntBh) \u003e\u003e 15) + ((MntAh * MntBl) \u003e\u003e 15);\n    Exp = Xdbl_Exp(a) + Xdbl_Exp(b);\n    if Mnt \u003e\u003e 48 { // new MSB is created\n        Exp++, Mnt \u003e\u003e= 1; }\n    if Exp \u003e\u003e 16 { // overflow\n        return Xdbl_Maximum(); }\n    return Xdbl_Create( Exp, Mnt );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dividing floating point number by a degree of 2.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Xdbl_Div(a xdbl, Deg2 uint32) xdbl {\n    if Xdbl_Exp(a) \u003e= (word)Deg2 {\n        return Xdbl_Create( Xdbl_Exp(a) - Deg2, Xdbl_Mnt(a) ); }\n    return Xdbl_Const1(); // underflow\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Testing procedure.]\n\n  Description [Helpful link https://www.h-schmidt.net/FloatConverter/IEEE754.html]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Xdbl_Test() {\n    var c1 xdbl    = Xdbl_Const1();\n    var c2 xdbl    = Xdbl_Const2();\n    var c3 xdbl    = Xdbl_Const3();\n    var c12 xdbl   = Xdbl_Const12();\n    var c1p5 xdbl  = Xdbl_Const1point5();\n    var c2p5 xdbl  = Xdbl_Const2point5();\n\n    var c1_ xdbl    = Xdbl_FromDouble(1.0);\n    var c2_ xdbl    = Xdbl_FromDouble(2.0);\n    var c3_ xdbl    = Xdbl_FromDouble(3.0);\n    var c12_ xdbl   = Xdbl_FromDouble(12.0);\n    var c1p5_ xdbl  = Xdbl_FromDouble(1.5);\n    var c2p5_ xdbl  = Xdbl_FromDouble(2.5);\n\n    var sum1 xdbl  = Xdbl_Add(c1, c1p5);\n    var mul1 xdbl  = Xdbl_Mul(c2, c1p5);\n\n    var sum2 xdbl  = Xdbl_Add(c1p5, c2p5);\n    var mul2 xdbl  = Xdbl_Mul(c1p5, c2p5);\n\n    var a xdbl     = Xdbl_FromDouble(1.2929725);\n    var b xdbl     = Xdbl_FromDouble(10.28828287);\n    var ab xdbl    = Xdbl_Mul(a, b);\n\n    var ten100 xdbl  = Xdbl_FromDouble( 1e100 );\n    var ten100_ xdbl  = ABC_CONST(0x014c924d692ca61b);\n\n    assert(ten100 == ten100_, \"ten100 == ten100_\");\n\n//    float f1 = Xdbl_ToDouble(c1);\n//    Extra_PrintBinary( stdout, (int *)\u0026c1, 32 ); printf( \"\\n\" );\n//    Extra_PrintBinary( stdout, (int *)\u0026f1, 32 ); printf( \"\\n\" );\n\n    fmt.Printf(\"1 = %f\\n\", Xdbl_ToDouble(c1));\n    fmt.Printf(\"2 = %f\\n\", Xdbl_ToDouble(c2));\n    fmt.Printf(\"3 = %f\\n\", Xdbl_ToDouble(c3));\n    fmt.Printf(\"12 = %f\\n\", Xdbl_ToDouble(c12));\n    fmt.Printf(\"1.5 = %f\\n\", Xdbl_ToDouble(c1p5));\n    fmt.Printf(\"2.5 = %f\\n\", Xdbl_ToDouble(c2p5));\n\n    fmt.Printf(\"Converted 1 = %f\\n\", Xdbl_ToDouble(c1_));\n    fmt.Printf(\"Converted 2 = %f\\n\", Xdbl_ToDouble(c2_));\n    fmt.Printf(\"Converted 3 = %f\\n\", Xdbl_ToDouble(c3_));\n    fmt.Printf(\"Converted 12 = %f\\n\", Xdbl_ToDouble(c12_));\n    fmt.Printf(\"Converted 1.5 = %f\\n\", Xdbl_ToDouble(c1p5_));\n    fmt.Printf(\"Converted 2.5 = %f\\n\", Xdbl_ToDouble(c2p5_));\n\n    fmt.Printf(\"1.0 + 1.5 = %f\\n\", Xdbl_ToDouble(sum1));\n    fmt.Printf(\"2.0 * 1.5 = %f\\n\", Xdbl_ToDouble(mul1));\n\n    fmt.Printf(\"1.5 + 2.5 = %f\\n\", Xdbl_ToDouble(sum2));\n    fmt.Printf(\"1.5 * 2.5 = %f\\n\", Xdbl_ToDouble(mul2));\n    fmt.Printf(\"12 / 2^2  = %f\\n\", Xdbl_ToDouble(Xdbl_Div(c12, 2)));\n\n    fmt.Printf(\"12 / 2^2  = %f\\n\", Xdbl_ToDouble(Xdbl_Div(c12, 2)));\n\n    fmt.Printf(\"%.16f * %.16f = %.16f (%.16f)\\n\", Xdbl_ToDouble(a), Xdbl_ToDouble(b), Xdbl_ToDouble(ab), 1.2929725 * 10.28828287);\n\n    assert(sum1 == c2p5, \"sum1 == c2p5\");\n    assert(mul1 == c3, \"mul1 == c3\");\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

@@ -1,0 +1,768 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c",
+  "SHA256": "a16d1b8b0a59d0d9543c9b4c998bfcc41f4bd9d702284c72af1e893c471a06cc",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 12322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nBits + 10 \u003c 10000 );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 12356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( spStatic_Ndr_ObjWriteConstant_Buffer, \"%d\\'b\", nBits );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 184,
+        "Column": 11,
+        "ByteOffset": 12431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Len = strlen(spStatic_Ndr_ObjWriteConstant_Buffer);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 220,
+        "Column": 13,
+        "ByteOffset": 14291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(vFanins) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 227,
+        "Column": 9,
+        "ByteOffset": 14552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Type \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 248,
+        "Column": 5,
+        "ByteOffset": 15455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Dumped the current design into file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 28,
+        "ByteOffset": 15723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var ppNames *string  = ABC_ALLOC( char *, Wlc_NtkObjNum(pNtk) + 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 5,
+        "ByteOffset": 16130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( ppNames );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 300,
+        "Column": 15,
+        "ByteOffset": 16960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Len = strlen(pStr);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 309,
+        "Column": 9,
+        "ByteOffset": 17144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Constants should be represented in binary Verilog notation \u003cnbits\u003e\\'b\u003cbits\u003e as char strings (for example, \\\"4'b1010\\\").\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 317,
+        "Column": 13,
+        "ByteOffset": 17540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Wrongn symbol (%c) in binary Verilog constant \\\"%s\\\".\\n\", pStr[i], pStr ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 322,
+        "Column": 5,
+        "ByteOffset": 17721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Node IDs and their fanins:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 9,
+        "ByteOffset": 17967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%5d = \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 327,
+        "Column": 13,
+        "ByteOffset": 18056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%5d \", pFanins[k] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 330,
+        "Column": 13,
+        "ByteOffset": 18142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"      \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 332,
+        "Column": 9,
+        "ByteOffset": 18180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    Name Id %d \", Wlc_ObjNameId(pNtk, i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 334,
+        "Column": 13,
+        "ByteOffset": 18276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  pi  \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 336,
+        "Column": 13,
+        "ByteOffset": 18341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"  po  \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 337,
+        "Column": 9,
+        "ByteOffset": 18371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 350,
+        "Column": 17,
+        "ByteOffset": 18974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Internal object %d of type %s has no output name.\\n\", Obj, Abc_OperName(Type) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 354,
+        "Column": 13,
+        "ByteOffset": 19157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Output name %d is used more than once (obj %d and obj %d).\\n\", NameId, Vec_IntGetEntry(vMap, NameId), Obj ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 365,
+        "Column": 17,
+        "ByteOffset": 19870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Input name %d appearing as fanin %d of obj %d is not used as output name in any object.\\n\", pArray[i], i, Obj ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 423,
+        "Column": 13,
+        "ByteOffset": 22726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Wlc_ObjType(pObj) == WLC_OBJ_FO );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 427,
+        "Column": 13,
+        "ByteOffset": 22911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(vFanins) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 450,
+        "Column": 13,
+        "ByteOffset": 24059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Wlc_ObjFaninNum(pObj) == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 464,
+        "Column": 9,
+        "ByteOffset": 24875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nArray == 1 \u0026\u0026 NameId == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 487,
+        "Column": 9,
+        "ByteOffset": 25920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (Vec_IntSize(\u0026pNtk.vFfs) \u0026 1) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 488,
+        "Column": 9,
+        "ByteOffset": 25974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(\u0026pNtk.vFfs) == 2 * Vec_IntSize(pNtk.vInits) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 507,
+        "Column": 29,
+        "ByteOffset": 26843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pName [20]byte; sprintf( pName, \"s%0*d\", nDigits, i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 509,
+        "Column": 9,
+        "ByteOffset": 26961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !fFound \u0026\u0026 i == NameId );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 526,
+        "Column": 13,
+        "ByteOffset": 27735
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( sizeof(void *) == 8 || Wlc_ObjFaninNum(pObj) \u003c 6 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ndr_TypeNdr2Wlc",
+      "Start": 1282,
+      "End": 6640,
+      "BodyStart": 1314,
+      "Original": "int Ndr_TypeNdr2Wlc( int Type )\n{\n    if ( Type == ABC_OPER_CONST )         return WLC_OBJ_CONST;         // 06: constant\n    if ( Type == ABC_OPER_BIT_BUF )       return WLC_OBJ_BUF;           // 07: buffer\n    if ( Type == ABC_OPER_BIT_MUX )       return WLC_OBJ_MUX;           // 08: multiplexer\n    if ( Type == ABC_OPER_SHIFT_R )       return WLC_OBJ_SHIFT_R;       // 09: shift right\n    if ( Type == ABC_OPER_SHIFT_RA )      return WLC_OBJ_SHIFT_RA;      // 10: shift right (arithmetic)\n    if ( Type == ABC_OPER_SHIFT_L )       return WLC_OBJ_SHIFT_L;       // 11: shift left\n    if ( Type == ABC_OPER_SHIFT_LA )      return WLC_OBJ_SHIFT_LA;      // 12: shift left (arithmetic)\n    if ( Type == ABC_OPER_SHIFT_ROTR )    return WLC_OBJ_ROTATE_R;      // 13: rotate right\n    if ( Type == ABC_OPER_SHIFT_ROTL )    return WLC_OBJ_ROTATE_L;      // 14: rotate left\n    if ( Type == ABC_OPER_BIT_INV )       return WLC_OBJ_BIT_NOT;       // 15: bitwise NOT\n    if ( Type == ABC_OPER_BIT_AND )       return WLC_OBJ_BIT_AND;       // 16: bitwise AND\n    if ( Type == ABC_OPER_BIT_OR )        return WLC_OBJ_BIT_OR;        // 17: bitwise OR\n    if ( Type == ABC_OPER_BIT_XOR )       return WLC_OBJ_BIT_XOR;       // 18: bitwise XOR\n    if ( Type == ABC_OPER_BIT_NAND )      return WLC_OBJ_BIT_NAND;      // 19: bitwise AND\n    if ( Type == ABC_OPER_BIT_NOR )       return WLC_OBJ_BIT_NOR;       // 20: bitwise OR\n    if ( Type == ABC_OPER_BIT_NXOR )      return WLC_OBJ_BIT_NXOR;      // 21: bitwise NXOR\n    if ( Type == ABC_OPER_SLICE )         return WLC_OBJ_BIT_SELECT;    // 22: bit selection\n    if ( Type == ABC_OPER_CONCAT )        return WLC_OBJ_BIT_CONCAT;    // 23: bit concatenation\n    if ( Type == ABC_OPER_ZEROPAD )       return WLC_OBJ_BIT_ZEROPAD;   // 24: zero padding\n    if ( Type == ABC_OPER_SIGNEXT )       return WLC_OBJ_BIT_SIGNEXT;   // 25: sign extension\n    if ( Type == ABC_OPER_LOGIC_NOT )     return WLC_OBJ_LOGIC_NOT;     // 26: logic NOT\n    if ( Type == ABC_OPER_LOGIC_IMPL )    return WLC_OBJ_LOGIC_IMPL;    // 27: logic implication\n    if ( Type == ABC_OPER_LOGIC_AND )     return WLC_OBJ_LOGIC_AND;     // 28: logic AND\n    if ( Type == ABC_OPER_LOGIC_OR )      return WLC_OBJ_LOGIC_OR;      // 29: logic OR\n    if ( Type == ABC_OPER_LOGIC_XOR )     return WLC_OBJ_LOGIC_XOR;     // 30: logic XOR\n    if ( Type == ABC_OPER_SEL_NMUX )      return WLC_OBJ_MUX;           // 08: multiplexer\n    if ( Type == ABC_OPER_SEL_SEL )       return WLC_OBJ_SEL;           // 57: selector\n    if ( Type == ABC_OPER_SEL_DEC )       return WLC_OBJ_DEC;           // 58: decoder\n    if ( Type == ABC_OPER_COMP_EQU )      return WLC_OBJ_COMP_EQU;      // 31: compare equal\n    if ( Type == ABC_OPER_COMP_NOTEQU )   return WLC_OBJ_COMP_NOTEQU;   // 32: compare not equal\n    if ( Type == ABC_OPER_COMP_LESS )     return WLC_OBJ_COMP_LESS;     // 33: compare less\n    if ( Type == ABC_OPER_COMP_MORE )     return WLC_OBJ_COMP_MORE;     // 34: compare more\n    if ( Type == ABC_OPER_COMP_LESSEQU )  return WLC_OBJ_COMP_LESSEQU;  // 35: compare less or equal\n    if ( Type == ABC_OPER_COMP_MOREEQU )  return WLC_OBJ_COMP_MOREEQU;  // 36: compare more or equal\n    if ( Type == ABC_OPER_RED_AND )       return WLC_OBJ_REDUCT_AND;    // 37: reduction AND\n    if ( Type == ABC_OPER_RED_OR )        return WLC_OBJ_REDUCT_OR;     // 38: reduction OR\n    if ( Type == ABC_OPER_RED_XOR )       return WLC_OBJ_REDUCT_XOR;    // 39: reduction XOR\n    if ( Type == ABC_OPER_RED_NAND )      return WLC_OBJ_REDUCT_NAND;   // 40: reduction NAND\n    if ( Type == ABC_OPER_RED_NOR )       return WLC_OBJ_REDUCT_NOR;    // 41: reduction NOR\n    if ( Type == ABC_OPER_RED_NXOR )      return WLC_OBJ_REDUCT_NXOR;   // 42: reduction NXOR\n    if ( Type == ABC_OPER_ARI_ADD )       return WLC_OBJ_ARI_ADD;       // 43: arithmetic addition\n    if ( Type == ABC_OPER_ARI_SUB )       return WLC_OBJ_ARI_SUB;       // 44: arithmetic subtraction\n    if ( Type == ABC_OPER_ARI_MUL )       return WLC_OBJ_ARI_MULTI;     // 45: arithmetic multiplier\n    if ( Type == ABC_OPER_ARI_DIV )       return WLC_OBJ_ARI_DIVIDE;    // 46: arithmetic division\n    if ( Type == ABC_OPER_ARI_REM )       return WLC_OBJ_ARI_REM;       // 47: arithmetic remainder\n    if ( Type == ABC_OPER_ARI_MOD )       return WLC_OBJ_ARI_MODULUS;   // 48: arithmetic modulus\n    if ( Type == ABC_OPER_ARI_POW )       return WLC_OBJ_ARI_POWER;     // 49: arithmetic power\n    if ( Type == ABC_OPER_ARI_MIN )       return WLC_OBJ_ARI_MINUS;     // 50: arithmetic minus\n    if ( Type == ABC_OPER_ARI_SQRT )      return WLC_OBJ_ARI_SQRT;      // 51: integer square root\n    if ( Type == ABC_OPER_ARI_SQUARE )    return WLC_OBJ_ARI_SQUARE;    // 52: integer square\n    if ( Type == ABC_OPER_ARI_ADDSUB )    return WLC_OBJ_ARI_ADDSUB;    // 56: adder-subtractor\n    if ( Type == ABC_OPER_ARI_SMUL )      return WLC_OBJ_ARI_MULTI;     // 45: signed multiplier\n    if ( Type == ABC_OPER_DFF )           return WLC_OBJ_FO;            // 03: flop\n    if ( Type == ABC_OPER_DFFRSE )        return WLC_OBJ_FF;            // 05: flop\n    if ( Type == ABC_OPER_RAMR )          return WLC_OBJ_READ;          // 54: read port\n    if ( Type == ABC_OPER_RAMW )          return WLC_OBJ_WRITE;         // 55: write port\n    if ( Type == ABC_OPER_LUT )           return WLC_OBJ_LUT;           // 59: LUT\n    return -1;\n}",
+      "Draft": "func Ndr_TypeNdr2Wlc(Type int32) int32 {\n    if Type == ABC_OPER_CONST {         return WLC_OBJ_CONST; }         // 06: constant\n    if Type == ABC_OPER_BIT_BUF {       return WLC_OBJ_BUF; }           // 07: buffer\n    if Type == ABC_OPER_BIT_MUX {       return WLC_OBJ_MUX; }           // 08: multiplexer\n    if Type == ABC_OPER_SHIFT_R {       return WLC_OBJ_SHIFT_R; }       // 09: shift right\n    if Type == ABC_OPER_SHIFT_RA {      return WLC_OBJ_SHIFT_RA; }      // 10: shift right (arithmetic)\n    if Type == ABC_OPER_SHIFT_L {       return WLC_OBJ_SHIFT_L; }       // 11: shift left\n    if Type == ABC_OPER_SHIFT_LA {      return WLC_OBJ_SHIFT_LA; }      // 12: shift left (arithmetic)\n    if Type == ABC_OPER_SHIFT_ROTR {    return WLC_OBJ_ROTATE_R; }      // 13: rotate right\n    if Type == ABC_OPER_SHIFT_ROTL {    return WLC_OBJ_ROTATE_L; }      // 14: rotate left\n    if Type == ABC_OPER_BIT_INV {       return WLC_OBJ_BIT_NOT; }       // 15: bitwise NOT\n    if Type == ABC_OPER_BIT_AND {       return WLC_OBJ_BIT_AND; }       // 16: bitwise AND\n    if Type == ABC_OPER_BIT_OR {        return WLC_OBJ_BIT_OR; }        // 17: bitwise OR\n    if Type == ABC_OPER_BIT_XOR {       return WLC_OBJ_BIT_XOR; }       // 18: bitwise XOR\n    if Type == ABC_OPER_BIT_NAND {      return WLC_OBJ_BIT_NAND; }      // 19: bitwise AND\n    if Type == ABC_OPER_BIT_NOR {       return WLC_OBJ_BIT_NOR; }       // 20: bitwise OR\n    if Type == ABC_OPER_BIT_NXOR {      return WLC_OBJ_BIT_NXOR; }      // 21: bitwise NXOR\n    if Type == ABC_OPER_SLICE {         return WLC_OBJ_BIT_SELECT; }    // 22: bit selection\n    if Type == ABC_OPER_CONCAT {        return WLC_OBJ_BIT_CONCAT; }    // 23: bit concatenation\n    if Type == ABC_OPER_ZEROPAD {       return WLC_OBJ_BIT_ZEROPAD; }   // 24: zero padding\n    if Type == ABC_OPER_SIGNEXT {       return WLC_OBJ_BIT_SIGNEXT; }   // 25: sign extension\n    if Type == ABC_OPER_LOGIC_NOT {     return WLC_OBJ_LOGIC_NOT; }     // 26: logic NOT\n    if Type == ABC_OPER_LOGIC_IMPL {    return WLC_OBJ_LOGIC_IMPL; }    // 27: logic implication\n    if Type == ABC_OPER_LOGIC_AND {     return WLC_OBJ_LOGIC_AND; }     // 28: logic AND\n    if Type == ABC_OPER_LOGIC_OR {      return WLC_OBJ_LOGIC_OR; }      // 29: logic OR\n    if Type == ABC_OPER_LOGIC_XOR {     return WLC_OBJ_LOGIC_XOR; }     // 30: logic XOR\n    if Type == ABC_OPER_SEL_NMUX {      return WLC_OBJ_MUX; }           // 08: multiplexer\n    if Type == ABC_OPER_SEL_SEL {       return WLC_OBJ_SEL; }           // 57: selector\n    if Type == ABC_OPER_SEL_DEC {       return WLC_OBJ_DEC; }           // 58: decoder\n    if Type == ABC_OPER_COMP_EQU {      return WLC_OBJ_COMP_EQU; }      // 31: compare equal\n    if Type == ABC_OPER_COMP_NOTEQU {   return WLC_OBJ_COMP_NOTEQU; }   // 32: compare not equal\n    if Type == ABC_OPER_COMP_LESS {     return WLC_OBJ_COMP_LESS; }     // 33: compare less\n    if Type == ABC_OPER_COMP_MORE {     return WLC_OBJ_COMP_MORE; }     // 34: compare more\n    if Type == ABC_OPER_COMP_LESSEQU {  return WLC_OBJ_COMP_LESSEQU; }  // 35: compare less or equal\n    if Type == ABC_OPER_COMP_MOREEQU {  return WLC_OBJ_COMP_MOREEQU; }  // 36: compare more or equal\n    if Type == ABC_OPER_RED_AND {       return WLC_OBJ_REDUCT_AND; }    // 37: reduction AND\n    if Type == ABC_OPER_RED_OR {        return WLC_OBJ_REDUCT_OR; }     // 38: reduction OR\n    if Type == ABC_OPER_RED_XOR {       return WLC_OBJ_REDUCT_XOR; }    // 39: reduction XOR\n    if Type == ABC_OPER_RED_NAND {      return WLC_OBJ_REDUCT_NAND; }   // 40: reduction NAND\n    if Type == ABC_OPER_RED_NOR {       return WLC_OBJ_REDUCT_NOR; }    // 41: reduction NOR\n    if Type == ABC_OPER_RED_NXOR {      return WLC_OBJ_REDUCT_NXOR; }   // 42: reduction NXOR\n    if Type == ABC_OPER_ARI_ADD {       return WLC_OBJ_ARI_ADD; }       // 43: arithmetic addition\n    if Type == ABC_OPER_ARI_SUB {       return WLC_OBJ_ARI_SUB; }       // 44: arithmetic subtraction\n    if Type == ABC_OPER_ARI_MUL {       return WLC_OBJ_ARI_MULTI; }     // 45: arithmetic multiplier\n    if Type == ABC_OPER_ARI_DIV {       return WLC_OBJ_ARI_DIVIDE; }    // 46: arithmetic division\n    if Type == ABC_OPER_ARI_REM {       return WLC_OBJ_ARI_REM; }       // 47: arithmetic remainder\n    if Type == ABC_OPER_ARI_MOD {       return WLC_OBJ_ARI_MODULUS; }   // 48: arithmetic modulus\n    if Type == ABC_OPER_ARI_POW {       return WLC_OBJ_ARI_POWER; }     // 49: arithmetic power\n    if Type == ABC_OPER_ARI_MIN {       return WLC_OBJ_ARI_MINUS; }     // 50: arithmetic minus\n    if Type == ABC_OPER_ARI_SQRT {      return WLC_OBJ_ARI_SQRT; }      // 51: integer square root\n    if Type == ABC_OPER_ARI_SQUARE {    return WLC_OBJ_ARI_SQUARE; }    // 52: integer square\n    if Type == ABC_OPER_ARI_ADDSUB {    return WLC_OBJ_ARI_ADDSUB; }    // 56: adder-subtractor\n    if Type == ABC_OPER_ARI_SMUL {      return WLC_OBJ_ARI_MULTI; }     // 45: signed multiplier\n    if Type == ABC_OPER_DFF {           return WLC_OBJ_FO; }            // 03: flop\n    if Type == ABC_OPER_DFFRSE {        return WLC_OBJ_FF; }            // 05: flop\n    if Type == ABC_OPER_RAMR {          return WLC_OBJ_READ; }          // 54: read port\n    if Type == ABC_OPER_RAMW {          return WLC_OBJ_WRITE; }         // 55: write port\n    if Type == ABC_OPER_LUT {           return WLC_OBJ_LUT; }           // 59: LUT\n    return -1;\n}"
+    },
+    {
+      "Name": "Ndr_TypeWlc2Ndr",
+      "Start": 6641,
+      "End": 11908,
+      "BodyStart": 6673,
+      "Original": "int Ndr_TypeWlc2Ndr( int Type )\n{\n    if ( Type == WLC_OBJ_CONST )          return ABC_OPER_CONST;        // 06: constant\n    if ( Type == WLC_OBJ_BUF )            return ABC_OPER_BIT_BUF;      // 07: buffer\n    if ( Type == WLC_OBJ_MUX )            return ABC_OPER_BIT_MUX;      // 08: multiplexer\n    if ( Type == WLC_OBJ_SHIFT_R )        return ABC_OPER_SHIFT_R;      // 09: shift right\n    if ( Type == WLC_OBJ_SHIFT_RA )       return ABC_OPER_SHIFT_RA;     // 10: shift right (arithmetic)\n    if ( Type == WLC_OBJ_SHIFT_L )        return ABC_OPER_SHIFT_L;      // 11: shift left\n    if ( Type == WLC_OBJ_SHIFT_LA )       return ABC_OPER_SHIFT_LA;     // 12: shift left (arithmetic)\n    if ( Type == WLC_OBJ_ROTATE_R )       return ABC_OPER_SHIFT_ROTR;   // 13: rotate right\n    if ( Type == WLC_OBJ_ROTATE_L )       return ABC_OPER_SHIFT_ROTL;   // 14: rotate left\n    if ( Type == WLC_OBJ_BIT_NOT )        return ABC_OPER_BIT_INV;      // 15: bitwise NOT\n    if ( Type == WLC_OBJ_BIT_AND )        return ABC_OPER_BIT_AND;      // 16: bitwise AND\n    if ( Type == WLC_OBJ_BIT_OR )         return ABC_OPER_BIT_OR;       // 17: bitwise OR\n    if ( Type == WLC_OBJ_BIT_XOR )        return ABC_OPER_BIT_XOR;      // 18: bitwise XOR\n    if ( Type == WLC_OBJ_BIT_NAND )       return ABC_OPER_BIT_NAND;     // 19: bitwise AND\n    if ( Type == WLC_OBJ_BIT_NOR )        return ABC_OPER_BIT_NOR;      // 20: bitwise OR\n    if ( Type == WLC_OBJ_BIT_NXOR )       return ABC_OPER_BIT_NXOR;     // 21: bitwise NXOR\n    if ( Type == WLC_OBJ_BIT_SELECT )     return ABC_OPER_SLICE;        // 22: bit selection\n    if ( Type == WLC_OBJ_BIT_CONCAT )     return ABC_OPER_CONCAT;       // 23: bit concatenation\n    if ( Type == WLC_OBJ_BIT_ZEROPAD )    return ABC_OPER_ZEROPAD;      // 24: zero padding\n    if ( Type == WLC_OBJ_BIT_SIGNEXT )    return ABC_OPER_SIGNEXT;      // 25: sign extension\n    if ( Type == WLC_OBJ_LOGIC_NOT )      return ABC_OPER_LOGIC_NOT;    // 26: logic NOT\n    if ( Type == WLC_OBJ_LOGIC_IMPL )     return ABC_OPER_LOGIC_IMPL;   // 27: logic implication\n    if ( Type == WLC_OBJ_LOGIC_AND )      return ABC_OPER_LOGIC_AND;    // 28: logic AND\n    if ( Type == WLC_OBJ_LOGIC_OR )       return ABC_OPER_LOGIC_OR;     // 29: logic OR\n    if ( Type == WLC_OBJ_LOGIC_XOR )      return ABC_OPER_LOGIC_XOR;    // 30: logic XOR\n    if ( Type == WLC_OBJ_SEL )            return ABC_OPER_SEL_SEL;      // 57: selector\n    if ( Type == WLC_OBJ_DEC )            return ABC_OPER_SEL_DEC;      // 58: decoder\n    if ( Type == WLC_OBJ_COMP_EQU )       return ABC_OPER_COMP_EQU;     // 31: compare equal\n    if ( Type == WLC_OBJ_COMP_NOTEQU )    return ABC_OPER_COMP_NOTEQU;  // 32: compare not equal\n    if ( Type == WLC_OBJ_COMP_LESS )      return ABC_OPER_COMP_LESS;    // 33: compare less\n    if ( Type == WLC_OBJ_COMP_MORE )      return ABC_OPER_COMP_MORE;    // 34: compare more\n    if ( Type == WLC_OBJ_COMP_LESSEQU )   return ABC_OPER_COMP_LESSEQU; // 35: compare less or equal\n    if ( Type == WLC_OBJ_COMP_MOREEQU )   return ABC_OPER_COMP_MOREEQU; // 36: compare more or equal\n    if ( Type == WLC_OBJ_REDUCT_AND )     return ABC_OPER_RED_AND;      // 37: reduction AND\n    if ( Type == WLC_OBJ_REDUCT_OR )      return ABC_OPER_RED_OR;       // 38: reduction OR\n    if ( Type == WLC_OBJ_REDUCT_XOR )     return ABC_OPER_RED_XOR;      // 39: reduction XOR\n    if ( Type == WLC_OBJ_REDUCT_NAND )    return ABC_OPER_RED_NAND;     // 40: reduction NAND\n    if ( Type == WLC_OBJ_REDUCT_NOR )     return ABC_OPER_RED_NOR;      // 41: reduction NOR\n    if ( Type == WLC_OBJ_REDUCT_NXOR )    return ABC_OPER_RED_NXOR;     // 42: reduction NXOR\n    if ( Type == WLC_OBJ_ARI_ADD )        return ABC_OPER_ARI_ADD;      // 43: arithmetic addition\n    if ( Type == WLC_OBJ_ARI_SUB )        return ABC_OPER_ARI_SUB;      // 44: arithmetic subtraction\n    if ( Type == WLC_OBJ_ARI_MULTI )      return ABC_OPER_ARI_MUL;      // 45: arithmetic multiplier\n    if ( Type == WLC_OBJ_ARI_DIVIDE )     return ABC_OPER_ARI_DIV;      // 46: arithmetic division\n    if ( Type == WLC_OBJ_ARI_REM )        return ABC_OPER_ARI_REM;      // 47: arithmetic remainder\n    if ( Type == WLC_OBJ_ARI_MODULUS )    return ABC_OPER_ARI_MOD;      // 48: arithmetic modulus\n    if ( Type == WLC_OBJ_ARI_POWER )      return ABC_OPER_ARI_POW;      // 49: arithmetic power\n    if ( Type == WLC_OBJ_ARI_MINUS )      return ABC_OPER_ARI_MIN;      // 50: arithmetic minus\n    if ( Type == WLC_OBJ_ARI_SQRT )       return ABC_OPER_ARI_SQRT;     // 51: integer square root\n    if ( Type == WLC_OBJ_ARI_SQUARE )     return ABC_OPER_ARI_SQUARE;   // 52: integer square\n    if ( Type == WLC_OBJ_ARI_ADDSUB )     return ABC_OPER_ARI_ADDSUB;   // 56: adder-subtractor\n    if ( Type == WLC_OBJ_ARI_MULTI )      return ABC_OPER_ARI_SMUL;     // 45: signed multiplier\n    if ( Type == WLC_OBJ_FO )             return ABC_OPER_DFFRSE;       // 03: flop\n    if ( Type == WLC_OBJ_FF )             return ABC_OPER_DFFRSE;       // 05: flop\n    if ( Type == WLC_OBJ_READ )           return ABC_OPER_RAMR;         // 54: read port\n    if ( Type == WLC_OBJ_WRITE )          return ABC_OPER_RAMW;         // 55: write port\n    if ( Type == WLC_OBJ_LUT )            return ABC_OPER_LUT;          // 59: LUT\n    return -1;\n}",
+      "Draft": "func Ndr_TypeWlc2Ndr(Type int32) int32 {\n    if Type == WLC_OBJ_CONST {          return ABC_OPER_CONST; }        // 06: constant\n    if Type == WLC_OBJ_BUF {            return ABC_OPER_BIT_BUF; }      // 07: buffer\n    if Type == WLC_OBJ_MUX {            return ABC_OPER_BIT_MUX; }      // 08: multiplexer\n    if Type == WLC_OBJ_SHIFT_R {        return ABC_OPER_SHIFT_R; }      // 09: shift right\n    if Type == WLC_OBJ_SHIFT_RA {       return ABC_OPER_SHIFT_RA; }     // 10: shift right (arithmetic)\n    if Type == WLC_OBJ_SHIFT_L {        return ABC_OPER_SHIFT_L; }      // 11: shift left\n    if Type == WLC_OBJ_SHIFT_LA {       return ABC_OPER_SHIFT_LA; }     // 12: shift left (arithmetic)\n    if Type == WLC_OBJ_ROTATE_R {       return ABC_OPER_SHIFT_ROTR; }   // 13: rotate right\n    if Type == WLC_OBJ_ROTATE_L {       return ABC_OPER_SHIFT_ROTL; }   // 14: rotate left\n    if Type == WLC_OBJ_BIT_NOT {        return ABC_OPER_BIT_INV; }      // 15: bitwise NOT\n    if Type == WLC_OBJ_BIT_AND {        return ABC_OPER_BIT_AND; }      // 16: bitwise AND\n    if Type == WLC_OBJ_BIT_OR {         return ABC_OPER_BIT_OR; }       // 17: bitwise OR\n    if Type == WLC_OBJ_BIT_XOR {        return ABC_OPER_BIT_XOR; }      // 18: bitwise XOR\n    if Type == WLC_OBJ_BIT_NAND {       return ABC_OPER_BIT_NAND; }     // 19: bitwise AND\n    if Type == WLC_OBJ_BIT_NOR {        return ABC_OPER_BIT_NOR; }      // 20: bitwise OR\n    if Type == WLC_OBJ_BIT_NXOR {       return ABC_OPER_BIT_NXOR; }     // 21: bitwise NXOR\n    if Type == WLC_OBJ_BIT_SELECT {     return ABC_OPER_SLICE; }        // 22: bit selection\n    if Type == WLC_OBJ_BIT_CONCAT {     return ABC_OPER_CONCAT; }       // 23: bit concatenation\n    if Type == WLC_OBJ_BIT_ZEROPAD {    return ABC_OPER_ZEROPAD; }      // 24: zero padding\n    if Type == WLC_OBJ_BIT_SIGNEXT {    return ABC_OPER_SIGNEXT; }      // 25: sign extension\n    if Type == WLC_OBJ_LOGIC_NOT {      return ABC_OPER_LOGIC_NOT; }    // 26: logic NOT\n    if Type == WLC_OBJ_LOGIC_IMPL {     return ABC_OPER_LOGIC_IMPL; }   // 27: logic implication\n    if Type == WLC_OBJ_LOGIC_AND {      return ABC_OPER_LOGIC_AND; }    // 28: logic AND\n    if Type == WLC_OBJ_LOGIC_OR {       return ABC_OPER_LOGIC_OR; }     // 29: logic OR\n    if Type == WLC_OBJ_LOGIC_XOR {      return ABC_OPER_LOGIC_XOR; }    // 30: logic XOR\n    if Type == WLC_OBJ_SEL {            return ABC_OPER_SEL_SEL; }      // 57: selector\n    if Type == WLC_OBJ_DEC {            return ABC_OPER_SEL_DEC; }      // 58: decoder\n    if Type == WLC_OBJ_COMP_EQU {       return ABC_OPER_COMP_EQU; }     // 31: compare equal\n    if Type == WLC_OBJ_COMP_NOTEQU {    return ABC_OPER_COMP_NOTEQU; }  // 32: compare not equal\n    if Type == WLC_OBJ_COMP_LESS {      return ABC_OPER_COMP_LESS; }    // 33: compare less\n    if Type == WLC_OBJ_COMP_MORE {      return ABC_OPER_COMP_MORE; }    // 34: compare more\n    if Type == WLC_OBJ_COMP_LESSEQU {   return ABC_OPER_COMP_LESSEQU; } // 35: compare less or equal\n    if Type == WLC_OBJ_COMP_MOREEQU {   return ABC_OPER_COMP_MOREEQU; } // 36: compare more or equal\n    if Type == WLC_OBJ_REDUCT_AND {     return ABC_OPER_RED_AND; }      // 37: reduction AND\n    if Type == WLC_OBJ_REDUCT_OR {      return ABC_OPER_RED_OR; }       // 38: reduction OR\n    if Type == WLC_OBJ_REDUCT_XOR {     return ABC_OPER_RED_XOR; }      // 39: reduction XOR\n    if Type == WLC_OBJ_REDUCT_NAND {    return ABC_OPER_RED_NAND; }     // 40: reduction NAND\n    if Type == WLC_OBJ_REDUCT_NOR {     return ABC_OPER_RED_NOR; }      // 41: reduction NOR\n    if Type == WLC_OBJ_REDUCT_NXOR {    return ABC_OPER_RED_NXOR; }     // 42: reduction NXOR\n    if Type == WLC_OBJ_ARI_ADD {        return ABC_OPER_ARI_ADD; }      // 43: arithmetic addition\n    if Type == WLC_OBJ_ARI_SUB {        return ABC_OPER_ARI_SUB; }      // 44: arithmetic subtraction\n    if Type == WLC_OBJ_ARI_MULTI {      return ABC_OPER_ARI_MUL; }      // 45: arithmetic multiplier\n    if Type == WLC_OBJ_ARI_DIVIDE {     return ABC_OPER_ARI_DIV; }      // 46: arithmetic division\n    if Type == WLC_OBJ_ARI_REM {        return ABC_OPER_ARI_REM; }      // 47: arithmetic remainder\n    if Type == WLC_OBJ_ARI_MODULUS {    return ABC_OPER_ARI_MOD; }      // 48: arithmetic modulus\n    if Type == WLC_OBJ_ARI_POWER {      return ABC_OPER_ARI_POW; }      // 49: arithmetic power\n    if Type == WLC_OBJ_ARI_MINUS {      return ABC_OPER_ARI_MIN; }      // 50: arithmetic minus\n    if Type == WLC_OBJ_ARI_SQRT {       return ABC_OPER_ARI_SQRT; }     // 51: integer square root\n    if Type == WLC_OBJ_ARI_SQUARE {     return ABC_OPER_ARI_SQUARE; }   // 52: integer square\n    if Type == WLC_OBJ_ARI_ADDSUB {     return ABC_OPER_ARI_ADDSUB; }   // 56: adder-subtractor\n    if Type == WLC_OBJ_ARI_MULTI {      return ABC_OPER_ARI_SMUL; }     // 45: signed multiplier\n    if Type == WLC_OBJ_FO {             return ABC_OPER_DFFRSE; }       // 03: flop\n    if Type == WLC_OBJ_FF {             return ABC_OPER_DFFRSE; }       // 05: flop\n    if Type == WLC_OBJ_READ {           return ABC_OPER_RAMR; }         // 54: read port\n    if Type == WLC_OBJ_WRITE {          return ABC_OPER_RAMW; }         // 55: write port\n    if Type == WLC_OBJ_LUT {            return ABC_OPER_LUT; }          // 59: LUT\n    return -1;\n}"
+    },
+    {
+      "Name": "Ndr_ObjWriteConstant",
+      "Start": 12145,
+      "End": 12482,
+      "BodyStart": 12204,
+      "Original": "char * Ndr_ObjWriteConstant( unsigned * pBits, int nBits )\n{\n    static char Buffer[10000]; int i, Len;\n    assert( nBits + 10 \u003c 10000 );\n    sprintf( Buffer, \"%d\\'b\", nBits );\n    Len = strlen(Buffer);\n    for ( i = nBits-1; i \u003e= 0; i-- )\n        Buffer[Len++] = '0' + Abc_InfoHasBit(pBits, i);\n    Buffer[Len] = 0;\n    return Buffer;\n}",
+      "Draft": "func Ndr_ObjWriteConstant(pBits *uint32, nBits int32) string {\n     var i, Len int32;\n    assert(nBits + 10 \u003c 10000, \"nBits + 10 \u003c 10000\");\n    spStatic_Ndr_ObjWriteConstant_Buffer = fmt.Sprintf(\"%d\\'b\", nBits);\n    Len = strlen(spStatic_Ndr_ObjWriteConstant_Buffer);\n    for  i = nBits-1; i \u003e= 0; i--  {\n        spStatic_Ndr_ObjWriteConstant_Buffer[Len++] = '0' + Abc_InfoHasBit(pBits, i);\n    }\n    spStatic_Ndr_ObjWriteConstant_Buffer[Len] = 0;\n    return spStatic_Ndr_ObjWriteConstant_Buffer;\n}"
+    },
+    {
+      "Name": "Wlc_NtkToNdr",
+      "Start": 12483,
+      "End": 14616,
+      "BodyStart": 12523,
+      "Original": "void * Wlc_NtkToNdr( Wlc_Ntk_t * pNtk )\n{\n    Wlc_Obj_t * pObj; \n    int i, k, iFanin, iOutId, Type;\n    // create a new module\n    void * pDesign = Ndr_Create( 1 );\n    int ModId = Ndr_AddModule( pDesign, 1 );\n    // add primary inputs\n    Vec_Int_t * vFanins = Vec_IntAlloc( 10 );\n    Wlc_NtkForEachPi( pNtk, pObj, i ) \n    {\n        iOutId = Wlc_ObjId(pNtk, pObj);\n        Ndr_AddObject( pDesign, ModId, ABC_OPER_CI, 0,   \n            pObj-\u003eEnd, pObj-\u003eBeg, pObj-\u003eSigned,   \n            0, NULL,      1, \u0026iOutId,  NULL  ); // no fanins\n    }\n    // add internal nodes \n    Wlc_NtkForEachObj( pNtk, pObj, iOutId ) \n    {\n        char * pFunction = NULL;\n        if ( Wlc_ObjIsPi(pObj) || pObj-\u003eType == 0 )\n            continue;\n        Vec_IntClear( vFanins );\n        Wlc_ObjForEachFanin( pObj, iFanin, k )\n            Vec_IntPush( vFanins, iFanin );\n        if ( pObj-\u003eType == WLC_OBJ_CONST )\n            pFunction = Ndr_ObjWriteConstant( (unsigned *)Wlc_ObjFanins(pObj), Wlc_ObjRange(pObj) );\n        if ( pObj-\u003eType == WLC_OBJ_MUX \u0026\u0026 Wlc_ObjRange(Wlc_ObjFanin0(pNtk, pObj)) \u003e 1 )\n            Type = ABC_OPER_SEL_NMUX;\n        else if ( pObj-\u003eType == WLC_OBJ_FO )\n        {\n            Wlc_Obj_t * pFi = Wlc_ObjFo2Fi( pNtk, pObj );\n            assert( Vec_IntSize(vFanins) == 0 );\n            Vec_IntPush( vFanins, Wlc_ObjId(pNtk, pFi) );\n            Vec_IntFillExtra( vFanins, 7, 0 );\n            Type = ABC_OPER_DFFRSE;\n        }\n        else\n            Type = Ndr_TypeWlc2Ndr(pObj-\u003eType);\n        assert( Type \u003e 0 );\n        Ndr_AddObject( pDesign, ModId, Type, 0,   \n            pObj-\u003eEnd, pObj-\u003eBeg, pObj-\u003eSigned,   \n            Vec_IntSize(vFanins), Vec_IntArray(vFanins), 1, \u0026iOutId,  pFunction  ); \n    }\n    // add primary outputs\n    Wlc_NtkForEachObj( pNtk, pObj, iOutId ) \n    {\n        if ( !Wlc_ObjIsPo(pObj) )\n            continue;\n        Vec_IntFill( vFanins, 1, iOutId );\n        Ndr_AddObject( pDesign, ModId, ABC_OPER_CO, 0,                   \n            pObj-\u003eEnd, pObj-\u003eBeg, pObj-\u003eSigned,   \n            1, Vec_IntArray(vFanins),  0, NULL,  NULL ); \n    }\n    Vec_IntFree( vFanins );\n    return pDesign;\n}",
+      "Draft": "func Wlc_NtkToNdr(pNtk *Wlc_Ntk_t) any {\n    var pObj *Wlc_Obj_t; \n    var i, k, iFanin, iOutId, Type int32;\n    // create a new module\n    var pDesign any  = Ndr_Create( 1 );\n    var ModId int32  = Ndr_AddModule( pDesign, 1 );\n    // add primary inputs\n    var vFanins *Vec_Int_t  = Vec_IntAlloc( 10 );\n    // inlining of macro Wlc_NtkForEachPi\n    for  i = 0; (i \u003c Wlc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Wlc_NtkPi(pNtk, i)), 1); i++  {\n        iOutId = Wlc_ObjId(pNtk, pObj);\n        Ndr_AddObject( pDesign, ModId, ABC_OPER_CI, 0,   \n            pObj.End, pObj.Beg, pObj.Signed,   \n            0, nil,      1, \u0026iOutId,  nil  ); // no fanins\n    }\n    // add internal nodes \n    // inlining of macro Wlc_NtkForEachObj\n    for  iOutId = 1; (iOutId \u003c Wlc_NtkObjNumMax(pNtk)) \u0026\u0026 (((pObj) = Wlc_NtkObj(pNtk, iOutId)), 1); iOutId++  {\n        var pFunction string  = nil;\n        if Wlc_ObjIsPi(pObj) || pObj.Type == 0 {\n            continue; }\n        Vec_IntClear( vFanins );\n        // inlining of macro Wlc_ObjForEachFanin\n        for  k = 0; (k \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((iFanin) = Wlc_ObjFaninId(pObj, k)), 1); k++  {\n            Vec_IntPush( vFanins, iFanin );\n        }\n        if pObj.Type == WLC_OBJ_CONST {\n            pFunction = Ndr_ObjWriteConstant( (unsigned *)Wlc_ObjFanins(pObj), Wlc_ObjRange(pObj) ); }\n        if pObj.Type == WLC_OBJ_MUX \u0026\u0026 Wlc_ObjRange(Wlc_ObjFanin0(pNtk, pObj)) \u003e 1 {\n            Type = ABC_OPER_SEL_NMUX;\n        } else if pObj.Type == WLC_OBJ_FO {\n            var pFi *Wlc_Obj_t  = Wlc_ObjFo2Fi( pNtk, pObj );\n            assert(Vec_IntSize(vFanins) == 0, \"Vec_IntSize(vFanins) == 0\");\n            Vec_IntPush( vFanins, Wlc_ObjId(pNtk, pFi) );\n            Vec_IntFillExtra( vFanins, 7, 0 );\n            Type = ABC_OPER_DFFRSE;\n        \n        } else {\n            Type = Ndr_TypeWlc2Ndr(pObj.Type); }\n        assert(Type \u003e 0, \"Type \u003e 0\");\n        Ndr_AddObject( pDesign, ModId, Type, 0,   \n            pObj.End, pObj.Beg, pObj.Signed,   \n            Vec_IntSize(vFanins), Vec_IntArray(vFanins), 1, \u0026iOutId,  pFunction  ); \n    }\n    // add primary outputs\n    // inlining of macro Wlc_NtkForEachObj\n    for  iOutId = 1; (iOutId \u003c Wlc_NtkObjNumMax(pNtk)) \u0026\u0026 (((pObj) = Wlc_NtkObj(pNtk, iOutId)), 1); iOutId++  {\n        if !Wlc_ObjIsPo(pObj) {\n            continue; }\n        Vec_IntFill( vFanins, 1, iOutId );\n        Ndr_AddObject( pDesign, ModId, ABC_OPER_CO, 0,                   \n            pObj.End, pObj.Beg, pObj.Signed,   \n            1, Vec_IntArray(vFanins),  0, nil,  nil ); \n    }\n    Vec_IntFree( vFanins );\n    return pDesign;\n}"
+    },
+    {
+      "Name": "Wlc_WriteNdr",
+      "Start": 14617,
+      "End": 14857,
+      "BodyStart": 14673,
+      "Original": "void Wlc_WriteNdr( Wlc_Ntk_t * pNtk, char * pFileName )\n{\n    void * pDesign = Wlc_NtkToNdr( pNtk );\n    Ndr_Write( pFileName, pDesign );\n    Ndr_Delete( pDesign );\n    printf( \"Dumped the current design into file \\\"%s\\\".\\n\", pFileName );\n}",
+      "Draft": "func Wlc_WriteNdr(pNtk *Wlc_Ntk_t, pFileName string) {\n    var pDesign any  = Wlc_NtkToNdr( pNtk );\n    Ndr_Write( pFileName, pDesign );\n    Ndr_Delete( pDesign );\n    fmt.Printf(\"Dumped the current design into file \\\"%s\\\".\\n\", pFileName);\n}"
+    },
+    {
+      "Name": "Wlc_NtkToNdrTest",
+      "Start": 14858,
+      "End": 15359,
+      "BodyStart": 14900,
+      "Original": "void Wlc_NtkToNdrTest( Wlc_Ntk_t * pNtk )\n{\n    // transform\n    void * pDesign = Wlc_NtkToNdr( pNtk );\n\n    // collect names     \n    Wlc_Obj_t * pObj;  int i;\n    char ** ppNames = ABC_ALLOC( char *, Wlc_NtkObjNum(pNtk) + 1 );\n    Wlc_NtkForEachObj( pNtk, pObj, i ) \n        ppNames[i] = Wlc_ObjName(pNtk, i);\n\n    // verify by writing Verilog\n    Ndr_WriteVerilog( NULL, pDesign, ppNames );\n    Ndr_Write( \"test.ndr\", pDesign );\n\n    // cleanup\n    Ndr_Delete( pDesign );\n    ABC_FREE( ppNames );\n}",
+      "Draft": "func Wlc_NtkToNdrTest(pNtk *Wlc_Ntk_t) {\n    // transform\n    var pDesign any  = Wlc_NtkToNdr( pNtk );\n\n    // collect names     \n    var pObj *Wlc_Obj_t;  var i int32;\n    var ppNames *string  = ABC_ALLOC( char *, Wlc_NtkObjNum(pNtk) + 1 );\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(pNtk)) \u0026\u0026 (((pObj) = Wlc_NtkObj(pNtk, i)), 1); i++  { \n        ppNames[i] = Wlc_ObjName(pNtk, i);\n    }\n\n    // verify by writing Verilog\n    Ndr_WriteVerilog( nil, pDesign, ppNames );\n    Ndr_Write( \"test.ndr\", pDesign );\n\n    // cleanup\n    Ndr_Delete( pDesign );\n    ABC_FREE( ppNames );\n}"
+    },
+    {
+      "Name": "Ndr_ObjReadRange",
+      "Start": 15595,
+      "End": 15992,
+      "BodyStart": 15665,
+      "Original": "int Ndr_ObjReadRange( Ndr_Data_t * p, int Obj, int * End, int * Beg )\n{\n    int * pArray, nArray = Ndr_ObjReadArray( p, Obj, NDR_RANGE, \u0026pArray );\n    int Signed = 0; *End = *Beg = 0;\n    if ( nArray == 0 )\n        return 0;\n    if ( nArray == 3 )\n        Signed = 1;\n    if ( nArray == 1 )\n        *End = *Beg = pArray[0];\n    else\n        *End = pArray[0], *Beg = pArray[1];\n    return Signed;\n}",
+      "Draft": "func Ndr_ObjReadRange(p *Ndr_Data_t, Obj int32, End *int32, Beg *int32) int32 {\n    var pArray *int32;\n    var nArray int32 = Ndr_ObjReadArray( p, Obj, NDR_RANGE, \u0026pArray );\n    var Signed int32; *End = *Beg = 0;\n    if nArray == 0 {\n        return 0; }\n    if nArray == 3 {\n        Signed = 1; }\n    if nArray == 1 {\n        *End = *Beg = pArray[0];\n    } else {\n        *End = pArray[0], *Beg = pArray[1]; }\n    return Signed;\n}"
+    },
+    {
+      "Name": "Ndr_ObjReadConstant",
+      "Start": 15993,
+      "End": 16721,
+      "BodyStart": 16054,
+      "Original": "void Ndr_ObjReadConstant( Vec_Int_t * vFanins, char * pStr )\n{\n    int i, k, Len = pStr ? strlen(pStr) : 0;\n    for ( k = 0; k \u003c Len; k++ )\n        if ( pStr[k] == 'b' )\n            break;\n    if ( pStr == NULL || pStr[k] != 'b' )\n    {\n        printf( \"Constants should be represented in binary Verilog notation \u003cnbits\u003e\\'b\u003cbits\u003e as char strings (for example, \\\"4'b1010\\\").\\n\" );\n        return;\n    }\n    Vec_IntFill( vFanins, Abc_BitWordNum(Len-k-1), 0 );\n    for ( i = k+1; i \u003c Len; i++ )\n        if ( pStr[i] == '1' )\n            Abc_InfoSetBit( (unsigned *)Vec_IntArray(vFanins), Len-i-1 );\n        else if ( pStr[i] != '0' )\n            printf( \"Wrongn symbol (%c) in binary Verilog constant \\\"%s\\\".\\n\", pStr[i], pStr );\n}",
+      "Draft": "func Ndr_ObjReadConstant(vFanins *Vec_Int_t, pStr string) {\n    var i int32;\n    var k int32;\n    var Len int32;\n    if pStr {\n        Len = len(pStr);\n    } else {\n        Len = 0;\n    }\n    for  k = 0; k \u003c Len; k++  {\n        if pStr[k] == 'b' {\n            break; }\n    }\n    if pStr == nil || pStr[k] != 'b' {\n        fmt.Printf(\"Constants should be represented in binary Verilog notation \u003cnbits\u003e\\'b\u003cbits\u003e as char strings (for example, \\\"4'b1010\\\").\\n\");\n        return;\n    }\n    Vec_IntFill( vFanins, Abc_BitWordNum(Len-k-1), 0 );\n    for  i = k+1; i \u003c Len; i++  {\n        if pStr[i] == '1' {\n            Abc_InfoSetBit( (unsigned *)Vec_IntArray(vFanins), Len-i-1 );\n        } else if pStr[i] != '0' {\n            fmt.Printf(\"Wrongn symbol (%c) in binary Verilog constant \\\"%s\\\".\\n\", pStr[i], pStr); }\n    }\n}"
+    },
+    {
+      "Name": "Ndr_NtkPrintNodes",
+      "Start": 16722,
+      "End": 17350,
+      "BodyStart": 16765,
+      "Original": "void Ndr_NtkPrintNodes( Wlc_Ntk_t * pNtk )\n{\n    Wlc_Obj_t * pObj; int i, k;\n    printf( \"Node IDs and their fanins:\\n\" );\n    Wlc_NtkForEachObj( pNtk, pObj, i )\n    {\n        int * pFanins = Wlc_ObjFanins(pObj);\n        printf( \"%5d = \", i );\n        for ( k = 0; k \u003c Wlc_ObjFaninNum(pObj); k++ )\n            printf( \"%5d \", pFanins[k] );\n        for (      ; k \u003c 4; k++ )\n            printf( \"      \" );\n        printf( \"    Name Id %d \", Wlc_ObjNameId(pNtk, i) );\n        if ( Wlc_ObjIsPi(pObj) )\n            printf( \"  pi  \" );\n        if ( Wlc_ObjIsPo(pObj) )\n            printf( \"  po  \" );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Ndr_NtkPrintNodes(pNtk *Wlc_Ntk_t) {\n    var pObj *Wlc_Obj_t; var i, k int32;\n    fmt.Printf(\"Node IDs and their fanins:\\n\");\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(pNtk)) \u0026\u0026 (((pObj) = Wlc_NtkObj(pNtk, i)), 1); i++  {\n        var pFanins *int32  = Wlc_ObjFanins(pObj);\n        fmt.Printf(\"%5d = \", i);\n        for  k = 0; k \u003c Wlc_ObjFaninNum(pObj); k++  {\n            fmt.Printf(\"%5d \", pFanins[k]);\n        }\n        for       ; k \u003c 4; k++  {\n            fmt.Printf(\"      \");\n        }\n        fmt.Printf(\"    Name Id %d \", Wlc_ObjNameId(pNtk, i));\n        if Wlc_ObjIsPi(pObj) {\n            fmt.Printf(\"  pi  \"); }\n        if Wlc_ObjIsPo(pObj) {\n            fmt.Printf(\"  po  \"); }\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Wlc_NtkCheckIntegrity",
+      "Start": 17351,
+      "End": 18624,
+      "BodyStart": 17394,
+      "Original": "void Wlc_NtkCheckIntegrity( void * pData )\n{\n    Ndr_Data_t * p = (Ndr_Data_t *)pData;  \n    Vec_Int_t * vMap = Vec_IntAlloc( 100 );\n    int Mod = 2, Obj;\n    Ndr_ModForEachObj( p, Mod, Obj )\n    {\n        int NameId  = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        if ( NameId == -1 )\n        {\n            int Type = Ndr_ObjReadBody( p, Obj, NDR_OPERTYPE );\n            if ( Type != ABC_OPER_CO )\n                printf( \"Internal object %d of type %s has no output name.\\n\", Obj, Abc_OperName(Type) );\n            continue;\n        }\n        if ( Vec_IntGetEntry(vMap, NameId) \u003e 0 )\n            printf( \"Output name %d is used more than once (obj %d and obj %d).\\n\", NameId, Vec_IntGetEntry(vMap, NameId), Obj );\n        Vec_IntSetEntry( vMap, NameId, Obj );\n    }\n    Ndr_ModForEachObj( p, Mod, Obj )\n    {\n        int Type = Ndr_ObjReadBody( p, Obj, NDR_OPERTYPE );\n        int i, * pArray, nArray  = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        for ( i = 0; i \u003c nArray; i++ )\n            if ( Vec_IntGetEntry(vMap, pArray[i]) == 0 \u0026\u0026 !(Type == ABC_OPER_DFFRSE \u0026\u0026 (i \u003e= 5 \u0026\u0026 i \u003c= 7)) )\n                printf( \"Input name %d appearing as fanin %d of obj %d is not used as output name in any object.\\n\", pArray[i], i, Obj );\n    }\n    Vec_IntFree( vMap );\n}",
+      "Draft": "func Wlc_NtkCheckIntegrity(pData any) {\n    var p *Ndr_Data_t  = (Ndr_Data_t *)pData;  \n    var vMap *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var Mod int32 = 2;\n    var Obj int32;\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else {\n        var NameId int32   = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        if NameId == -1 {\n            var Type int32  = Ndr_ObjReadBody( p, Obj, NDR_OPERTYPE );\n            if Type != ABC_OPER_CO {\n                fmt.Printf(\"Internal object %d of type %s has no output name.\\n\", Obj, Abc_OperName(Type)); }\n            continue;\n        }\n        if Vec_IntGetEntry(vMap, NameId) \u003e 0 {\n            fmt.Printf(\"Output name %d is used more than once (obj %d and obj %d).\\n\", NameId, Vec_IntGetEntry(vMap, NameId), Obj); }\n        Vec_IntSetEntry( vMap, NameId, Obj );\n    }\n    }\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else {\n        var Type int32  = Ndr_ObjReadBody( p, Obj, NDR_OPERTYPE );\n        var i int32;\n        var pArray *int32;\n        var nArray int32 = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        for  i = 0; i \u003c nArray; i++  {\n            if Vec_IntGetEntry(vMap, pArray[i]) == 0 \u0026\u0026 !(Type == ABC_OPER_DFFRSE \u0026\u0026 (i \u003e= 5 \u0026\u0026 i \u003c= 7)) {\n                fmt.Printf(\"Input name %d appearing as fanin %d of obj %d is not used as output name in any object.\\n\", pArray[i], i, Obj); }\n        }\n    }\n    }\n    Vec_IntFree( vMap );\n}"
+    },
+    {
+      "Name": "Wlc_NtkFromNdr",
+      "Start": 18625,
+      "End": 25256,
+      "BodyStart": 18668,
+      "Original": "Wlc_Ntk_t * Wlc_NtkFromNdr( void * pData )\n{\n    Ndr_Data_t * p = (Ndr_Data_t *)pData;  \n    Wlc_Obj_t * pObj; Vec_Int_t * vName2Obj, * vFanins = Vec_IntAlloc( 100 );\n    int Mod = 2, i, k, Obj, * pArray, nDigits, fFound, NameId, NameIdMax;\n    Vec_Wrd_t * vTruths = NULL;\n    Wlc_Ntk_t * pTemp, * pNtk = Wlc_NtkAlloc( \"top\", Ndr_DataObjNum(p, Mod)+1 );\n    Wlc_NtkCheckIntegrity( pData );\n    Vec_IntClear( \u0026pNtk-\u003evFfs );\n    //pNtk-\u003epSpec = Abc_UtilStrsav( pFileName );\n    // construct network and save name IDs\n    Wlc_NtkCleanNameId( pNtk );\n    Ndr_ModForEachPi( p, Mod, Obj )\n    {\n        int End, Beg, Signed = Ndr_ObjReadRange(p, Obj, \u0026End, \u0026Beg);\n        int iObj = Wlc_ObjAlloc( pNtk, WLC_OBJ_PI, Signed, End, Beg );\n        int NameId = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        Wlc_ObjSetNameId( pNtk, iObj, NameId );\n    }\n    Ndr_ModForEachNode( p, Mod, Obj )\n    {\n        int End, Beg, Signed = Ndr_ObjReadRange(p, Obj, \u0026End, \u0026Beg);\n        int Type    = Ndr_ObjReadBody( p, Obj, NDR_OPERTYPE );\n        int nArray  = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        Vec_Int_t F = {nArray, nArray, pArray}, * vTemp = \u0026F;\n        int iObj    = Wlc_ObjAlloc( pNtk, Ndr_TypeNdr2Wlc(Type), Signed, End, Beg );\n        int NameId  = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        Vec_IntClear( vFanins );\n        Vec_IntAppend( vFanins, vTemp );\n        if ( Type == ABC_OPER_DFF )\n        {\n            // save init state\n            if ( pNtk-\u003evInits == NULL )\n                pNtk-\u003evInits = Vec_IntAlloc( 100 );\n            if ( Vec_IntSize(vFanins) == 2 )\n                Vec_IntPush( pNtk-\u003evInits, Vec_IntPop(vFanins) );\n            else // assume const0 if init is not given\n                Vec_IntPush( pNtk-\u003evInits, -(End-Beg+1) );\n            // save flop output\n            pObj = Wlc_NtkObj(pNtk, iObj);\n            assert( Wlc_ObjType(pObj) == WLC_OBJ_FO );\n            Wlc_ObjSetNameId( pNtk, iObj, NameId );\n            Vec_IntPush( \u0026pNtk-\u003evFfs, NameId );\n            // save flop input\n            assert( Vec_IntSize(vFanins) == 1 );\n            Vec_IntPush( \u0026pNtk-\u003evFfs, Vec_IntEntry(vFanins, 0) );\n            continue;\n        }\n        if ( Type == ABC_OPER_DFFRSE )\n            Vec_IntPush( \u0026pNtk-\u003evFfs2, iObj );\n        if ( Type == ABC_OPER_LUT )\n        {\n            if ( vTruths == NULL )\n                vTruths = Vec_WrdStart( 1000 );\n            if ( NameId \u003e= Vec_WrdSize(vTruths) )\n                Vec_WrdFillExtra( vTruths, 2*NameId, 0 );\n            Vec_WrdWriteEntry( vTruths, NameId, *((word *)Ndr_ObjReadBodyP(p, Obj, NDR_FUNCTION)) );\n        }\n        if ( Type == ABC_OPER_SLICE )\n            Vec_IntPushTwo( vFanins, End, Beg );\n        else if ( Type == ABC_OPER_CONST )\n            Ndr_ObjReadConstant( vFanins, (char *)Ndr_ObjReadBodyP(p, Obj, NDR_FUNCTION) );\n        else if ( Type == ABC_OPER_BIT_MUX \u0026\u0026 Vec_IntSize(vFanins) == 3 )\n            ABC_SWAP( int, Vec_IntEntryP(vFanins, 1)[0], Vec_IntEntryP(vFanins, 2)[0] );\n        Wlc_ObjAddFanins( pNtk, Wlc_NtkObj(pNtk, iObj), vFanins );\n        Wlc_ObjSetNameId( pNtk, iObj, NameId );\n        if ( Type == ABC_OPER_ARI_SMUL )\n        {\n            pObj = Wlc_NtkObj(pNtk, iObj);\n            assert( Wlc_ObjFaninNum(pObj) == 2 );\n            Wlc_ObjFanin0(pNtk, pObj)-\u003eSigned = 1;\n            Wlc_ObjFanin1(pNtk, pObj)-\u003eSigned = 1;\n        }\n    }\n    // mark primary outputs\n    Ndr_ModForEachPo( p, Mod, Obj )\n    {\n        int End, Beg, Signed = Ndr_ObjReadRange(p, Obj, \u0026End, \u0026Beg);\n        int nArray  = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        int iObj    = Wlc_ObjAlloc( pNtk, WLC_OBJ_BUF, Signed, End, Beg );\n        int NameId  = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        assert( nArray == 1 \u0026\u0026 NameId == -1 );\n        pObj = Wlc_NtkObj( pNtk, iObj );\n        Vec_IntFill( vFanins, 1, pArray[0] );\n        Wlc_ObjAddFanins( pNtk, pObj, vFanins );\n        Wlc_ObjSetCo( pNtk, pObj, 0 );\n    }\n    Vec_IntFree( vFanins );\n    // map name IDs into object IDs\n    vName2Obj = Vec_IntInvert( \u0026pNtk-\u003evNameIds, 0 );\n    Wlc_NtkForEachObj( pNtk, pObj, i )\n    {\n        int * pFanins = Wlc_ObjFanins(pObj);\n        for ( k = 0; k \u003c Wlc_ObjFaninNum(pObj); k++ )\n            pFanins[k] = Vec_IntEntry(vName2Obj, pFanins[k]);\n    }\n    if ( pNtk-\u003evInits )\n    {\n        Vec_IntForEachEntry( \u0026pNtk-\u003evFfs, NameId, i )\n            Vec_IntWriteEntry( \u0026pNtk-\u003evFfs, i, Vec_IntEntry(vName2Obj, NameId) );\n        Vec_IntForEachEntry( pNtk-\u003evInits, NameId, i )\n            if ( NameId \u003e 0 )\n                Vec_IntWriteEntry( pNtk-\u003evInits, i, Vec_IntEntry(vName2Obj, NameId) );\n        // move FO/FI to be part of CI/CO\n        assert( (Vec_IntSize(\u0026pNtk-\u003evFfs) \u0026 1) == 0 );\n        assert( Vec_IntSize(\u0026pNtk-\u003evFfs) == 2 * Vec_IntSize(pNtk-\u003evInits) );\n        Wlc_NtkForEachFf( pNtk, pObj, i )\n            if ( i \u0026 1 )\n                Wlc_ObjSetCo( pNtk, pObj, 1 );\n            //else\n            //    Wlc_ObjSetCi( pNtk, pObj );\n        Vec_IntClear( \u0026pNtk-\u003evFfs );\n        // convert init values into binary string\n        //Vec_IntPrint( \u0026p-\u003epNtk-\u003evInits );\n        pNtk-\u003epInits = Wlc_PrsConvertInitValues( pNtk );\n        //printf( \"%s\", p-\u003epNtk-\u003epInits );\n    }\n    Vec_IntFree(vName2Obj);\n    // create fake object names\n    NameIdMax = Vec_IntFindMax(\u0026pNtk-\u003evNameIds);\n    nDigits = Abc_Base10Log( NameIdMax+1 );\n    pNtk-\u003epManName = Abc_NamStart( NameIdMax+1, 10 );\n    for ( i = 1; i \u003c= NameIdMax; i++ )\n    {\n        char pName[20]; sprintf( pName, \"s%0*d\", nDigits, i );\n        NameId = Abc_NamStrFindOrAdd( pNtk-\u003epManName, pName, \u0026fFound );\n        assert( !fFound \u0026\u0026 i == NameId );\n    }\n    //Ndr_NtkPrintNodes( pNtk );\n    //Wlc_WriteVer( pNtk, \"temp_ndr.v\", 0, 0 );\n    // derive topological order\n    pNtk = Wlc_NtkDupDfs( pTemp = pNtk, 0, 1 );\n    Wlc_NtkFree( pTemp );\n    // copy truth tables\n    if ( vTruths )\n    {\n        pNtk-\u003evLutTruths = Vec_WrdStart( Wlc_NtkObjNumMax(pNtk) );\n        Wlc_NtkForEachObj( pNtk, pObj, i )\n        {\n            int iObj   = Wlc_ObjId(pNtk, pObj);\n            int NameId = Wlc_ObjNameId(pNtk, iObj);\n            word Truth;\n            if ( pObj-\u003eType != WLC_OBJ_LUT || NameId == 0 )\n                continue;\n            Truth = Vec_WrdEntry(vTruths, NameId);\n            assert( sizeof(void *) == 8 || Wlc_ObjFaninNum(pObj) \u003c 6 );\n            Vec_WrdWriteEntry( pNtk-\u003evLutTruths, iObj, Truth );\n        }\n        Vec_WrdFreeP( \u0026vTruths );\n    }\n    //Ndr_NtkPrintNodes( pNtk );\n    pNtk-\u003efMemPorts = 1;          // the network contains memory ports\n    pNtk-\u003efEasyFfs = 1;           // the network contains simple flops\n    return pNtk;\n}",
+      "Draft": "func Wlc_NtkFromNdr(pData any) *Wlc_Ntk_t {\n    var p *Ndr_Data_t  = (Ndr_Data_t *)pData;  \n    var pObj *Wlc_Obj_t; var vName2Obj *Vec_Int_t;\nvar vFanins *Vec_Int_t = Vec_IntAlloc( 100 );\n    var Mod int32 = 2;\n    var i int32;\n    var k int32;\n    var Obj int32;\n    var pArray *int32;\n    var nDigits int32;\n    var fFound int32;\n    var NameId int32;\n    var NameIdMax int32;\n    var vTruths *Vec_Wrd_t  = nil;\n    var pTemp *Wlc_Ntk_t;\n    var pNtk *Wlc_Ntk_t = Wlc_NtkAlloc( \"top\", Ndr_DataObjNum(p, Mod)+1 );\n    Wlc_NtkCheckIntegrity( pData );\n    Vec_IntClear( \u0026pNtk.vFfs );\n    //pNtk-\u003epSpec = Abc_UtilStrsav( pFileName );\n    // construct network and save name IDs\n    Wlc_NtkCleanNameId( pNtk );\n    // inlining of macro Ndr_ModForEachPi\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else if !Ndr_ObjIsType(p, Obj, ABC_OPER_CI) {} else {\n        var End int32;\n        var Beg int32;\n        var Signed int32 = Ndr_ObjReadRange(p, Obj, \u0026End, \u0026Beg);\n        var iObj int32  = Wlc_ObjAlloc( pNtk, WLC_OBJ_PI, Signed, End, Beg );\n        var NameId int32  = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        Wlc_ObjSetNameId( pNtk, iObj, NameId );\n    }\n    }\n    // inlining of macro Ndr_ModForEachNode\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else if Ndr_ObjIsType(p, Obj, ABC_OPER_CI) || Ndr_ObjIsType(p, Obj, ABC_OPER_CO) {} else {\n        var End int32;\n        var Beg int32;\n        var Signed int32 = Ndr_ObjReadRange(p, Obj, \u0026End, \u0026Beg);\n        var Type int32     = Ndr_ObjReadBody( p, Obj, NDR_OPERTYPE );\n        var nArray int32   = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        var F Vec_Int_t = Vec_Int_t{nArray, nArray, pArray};\n        var vTemp *Vec_Int_t = \u0026F;\n        var iObj int32     = Wlc_ObjAlloc( pNtk, Ndr_TypeNdr2Wlc(Type), Signed, End, Beg );\n        var NameId int32   = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        Vec_IntClear( vFanins );\n        Vec_IntAppend( vFanins, vTemp );\n        if Type == ABC_OPER_DFF {\n            // save init state\n            if pNtk.vInits == nil {\n                pNtk.vInits = Vec_IntAlloc( 100 ); }\n            if Vec_IntSize(vFanins) == 2 {\n                Vec_IntPush( pNtk.vInits, Vec_IntPop(vFanins) );\n            } else { // assume const0 if init is not given\n                Vec_IntPush( pNtk.vInits, -(End-Beg+1) ); }\n            // save flop output\n            pObj = Wlc_NtkObj(pNtk, iObj);\n            assert(Wlc_ObjType(pObj) == WLC_OBJ_FO, \"Wlc_ObjType(pObj) == WLC_OBJ_FO\");\n            Wlc_ObjSetNameId( pNtk, iObj, NameId );\n            Vec_IntPush( \u0026pNtk.vFfs, NameId );\n            // save flop input\n            assert(Vec_IntSize(vFanins) == 1, \"Vec_IntSize(vFanins) == 1\");\n            Vec_IntPush( \u0026pNtk.vFfs, Vec_IntEntry(vFanins, 0) );\n            continue;\n        }\n        if Type == ABC_OPER_DFFRSE {\n            Vec_IntPush( \u0026pNtk.vFfs2, iObj ); }\n        if Type == ABC_OPER_LUT {\n            if vTruths == nil {\n                vTruths = Vec_WrdStart( 1000 ); }\n            if NameId \u003e= Vec_WrdSize(vTruths) {\n                Vec_WrdFillExtra( vTruths, 2*NameId, 0 ); }\n            Vec_WrdWriteEntry( vTruths, NameId, *((word *)Ndr_ObjReadBodyP(p, Obj, NDR_FUNCTION)) );\n        }\n        if Type == ABC_OPER_SLICE {\n            Vec_IntPushTwo( vFanins, End, Beg );\n        } else if Type == ABC_OPER_CONST {\n            Ndr_ObjReadConstant( vFanins, (char *)Ndr_ObjReadBodyP(p, Obj, NDR_FUNCTION) );\n        } else if Type == ABC_OPER_BIT_MUX \u0026\u0026 Vec_IntSize(vFanins) == 3 {\n            ABC_SWAP( int, Vec_IntEntryP(vFanins, 1)[0], Vec_IntEntryP(vFanins, 2)[0] ); }\n        Wlc_ObjAddFanins( pNtk, Wlc_NtkObj(pNtk, iObj), vFanins );\n        Wlc_ObjSetNameId( pNtk, iObj, NameId );\n        if Type == ABC_OPER_ARI_SMUL {\n            pObj = Wlc_NtkObj(pNtk, iObj);\n            assert(Wlc_ObjFaninNum(pObj) == 2, \"Wlc_ObjFaninNum(pObj) == 2\");\n            Wlc_ObjFanin0(pNtk, pObj).Signed = 1;\n            Wlc_ObjFanin1(pNtk, pObj).Signed = 1;\n        }\n    }\n    }\n    // mark primary outputs\n    // inlining of macro Ndr_ModForEachPo\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else if !Ndr_ObjIsType(p, Obj, ABC_OPER_CO) {} else {\n        var End int32;\n        var Beg int32;\n        var Signed int32 = Ndr_ObjReadRange(p, Obj, \u0026End, \u0026Beg);\n        var nArray int32   = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        var iObj int32     = Wlc_ObjAlloc( pNtk, WLC_OBJ_BUF, Signed, End, Beg );\n        var NameId int32   = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        assert(nArray == 1 \u0026\u0026 NameId == -1, \"nArray == 1 \u0026\u0026 NameId == -1\");\n        pObj = Wlc_NtkObj( pNtk, iObj );\n        Vec_IntFill( vFanins, 1, pArray[0] );\n        Wlc_ObjAddFanins( pNtk, pObj, vFanins );\n        Wlc_ObjSetCo( pNtk, pObj, 0 );\n    }\n    }\n    Vec_IntFree( vFanins );\n    // map name IDs into object IDs\n    vName2Obj = Vec_IntInvert( \u0026pNtk.vNameIds, 0 );\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(pNtk)) \u0026\u0026 (((pObj) = Wlc_NtkObj(pNtk, i)), 1); i++  {\n        var pFanins *int32  = Wlc_ObjFanins(pObj);\n        for  k = 0; k \u003c Wlc_ObjFaninNum(pObj); k++  {\n            pFanins[k] = Vec_IntEntry(vName2Obj, pFanins[k]);\n        }\n    }\n    if pNtk.vInits {\n        Vec_IntForEachEntry( \u0026pNtk.vFfs, NameId, i )\n            Vec_IntWriteEntry( \u0026pNtk.vFfs, i, Vec_IntEntry(vName2Obj, NameId) );\n        Vec_IntForEachEntry( pNtk.vInits, NameId, i )\n            if ( NameId \u003e 0 )\n                Vec_IntWriteEntry( pNtk.vInits, i, Vec_IntEntry(vName2Obj, NameId) );\n        // move FO/FI to be part of CI/CO\n        assert((Vec_IntSize(\u0026pNtk.vFfs) \u0026 1) == 0, \"(Vec_IntSize(\u0026pNtk.vFfs) \u0026 1) == 0\");\n        assert(Vec_IntSize(\u0026pNtk.vFfs) == 2 * Vec_IntSize(pNtk.vInits), \"Vec_IntSize(\u0026pNtk.vFfs) == 2 * Vec_IntSize(pNtk.vInits)\");\n        // inlining of macro Wlc_NtkForEachFf\n        for  i = 0; (i \u003c Vec_IntSize(\u0026pNtk.vFfs)) \u0026\u0026 (((pObj) = Wlc_NtkFf(pNtk, i)), 1); i++  {\n            if i \u0026 1 {\n                Wlc_ObjSetCo( pNtk, pObj, 1 ); }\n        }\n            //else\n            //    Wlc_ObjSetCi( pNtk, pObj );\n        Vec_IntClear( \u0026pNtk.vFfs );\n        // convert init values into binary string\n        //Vec_IntPrint( \u0026p-\u003epNtk-\u003evInits );\n        pNtk.pInits = Wlc_PrsConvertInitValues( pNtk );\n        //printf( \"%s\", p-\u003epNtk-\u003epInits );\n    }\n    Vec_IntFree(vName2Obj);\n    // create fake object names\n    NameIdMax = Vec_IntFindMax(\u0026pNtk.vNameIds);\n    nDigits = Abc_Base10Log( NameIdMax+1 );\n    pNtk.pManName = Abc_NamStart( NameIdMax+1, 10 );\n    for  i = 1; i \u003c= NameIdMax; i++  {\n        var pName string // was [20]byte in C\n pName = fmt.Sprintf(\"s%0*d\", nDigits, i);\n        NameId = Abc_NamStrFindOrAdd( pNtk.pManName, pName, \u0026fFound );\n        assert(!(fFound != 0) \u0026\u0026 i == NameId, \"!fFound \u0026\u0026 i == NameId\");\n    }\n    //Ndr_NtkPrintNodes( pNtk );\n    //Wlc_WriteVer( pNtk, \"temp_ndr.v\", 0, 0 );\n    // derive topological order\n    pNtk = Wlc_NtkDupDfs( pTemp = pNtk, 0, 1 );\n    Wlc_NtkFree( pTemp );\n    // copy truth tables\n    if vTruths != nil {\n        pNtk.vLutTruths = Vec_WrdStart( Wlc_NtkObjNumMax(pNtk) );\n        // inlining of macro Wlc_NtkForEachObj\n        for  i = 1; (i \u003c Wlc_NtkObjNumMax(pNtk)) \u0026\u0026 (((pObj) = Wlc_NtkObj(pNtk, i)), 1); i++  {\n            var iObj int32    = Wlc_ObjId(pNtk, pObj);\n            var NameId int32  = Wlc_ObjNameId(pNtk, iObj);\n            var Truth word;\n            if pObj.Type != WLC_OBJ_LUT || NameId == 0 {\n                continue; }\n            Truth = Vec_WrdEntry(vTruths, NameId);\n            assert(sizeof(void *) == 8 || Wlc_ObjFaninNum(pObj) \u003c 6, \"sizeof(void *) == 8 || Wlc_ObjFaninNum(pObj) \u003c 6\");\n            Vec_WrdWriteEntry( pNtk.vLutTruths, iObj, Truth );\n        }\n        Vec_WrdFreeP( \u0026vTruths );\n    }\n    //Ndr_NtkPrintNodes( pNtk );\n    pNtk.fMemPorts = 1;          // the network contains memory ports\n    pNtk.fEasyFfs = 1;           // the network contains simple flops\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Wlc_ReadNdr",
+      "Start": 25492,
+      "End": 25862,
+      "BodyStart": 25536,
+      "Original": "Wlc_Ntk_t * Wlc_ReadNdr( char * pFileName )\n{\n    void * pData = Ndr_Read( pFileName );\n    Wlc_Ntk_t * pNtk = Wlc_NtkFromNdr( pData );\n    //char * ppNames[10] = { NULL, \"a\", \"b\", \"c\", \"d\", \"e\", \"f\", \"g\", \"h\", \"i\" };\n    //Ndr_WriteVerilog( NULL, pData, ppNames );\n    //Ndr_Delete( pData );\n    Abc_FrameInputNdr( Abc_FrameGetGlobalFrame(), pData );\n    return pNtk;\n}",
+      "Draft": "func Wlc_ReadNdr(pFileName string) *Wlc_Ntk_t {\n    var pData any  = Ndr_Read( pFileName );\n    var pNtk *Wlc_Ntk_t  = Wlc_NtkFromNdr( pData );\n    //char * ppNames[10] = { NULL, \"a\", \"b\", \"c\", \"d\", \"e\", \"f\", \"g\", \"h\", \"i\" };\n    //Ndr_WriteVerilog( NULL, pData, ppNames );\n    //Ndr_Delete( pData );\n    Abc_FrameInputNdr( Abc_FrameGetGlobalFrame(), pData );\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Wlc_ReadNdrTest",
+      "Start": 25863,
+      "End": 26004,
+      "BodyStart": 25886,
+      "Original": "void Wlc_ReadNdrTest()\n{\n    Wlc_Ntk_t * pNtk = Wlc_ReadNdr( \"top.ndr\" );\n    Wlc_WriteVer( pNtk, \"top.v\", 0, 0 );\n    Wlc_NtkFree( pNtk );\n}",
+      "Draft": "func Wlc_ReadNdrTest() {\n    var pNtk *Wlc_Ntk_t  = Wlc_ReadNdr( \"top.ndr\" );\n    Wlc_WriteVer( pNtk, \"top.v\", 0, 0 );\n    Wlc_NtkFree( pNtk );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::mechanical::static::12210",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 12210,
+      "End": 12216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::mechanical::sizeof::26959",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 24897,
+      "End": 24903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::pointer-cast::13756",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13425,
+      "End": 13437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::pointer-cast::17101",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16543,
+      "End": 16555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::pointer-cast::18081",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17417,
+      "End": 17431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::pointer-cast::19647",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18691,
+      "End": 18705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::pointer-cast::22664",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21171,
+      "End": 21179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::pointer-cast::22897",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21404,
+      "End": 21412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::pointer-cast::26965",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24903,
+      "End": 24911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::Ndr_TypeNdr2Wlc",
+      "Category": "semantic-review",
+      "Symbol": "Ndr_TypeNdr2Wlc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1282,
+      "End": 6640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::Ndr_TypeWlc2Ndr",
+      "Category": "semantic-review",
+      "Symbol": "Ndr_TypeWlc2Ndr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6641,
+      "End": 11908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::Ndr_ObjWriteConstant",
+      "Category": "semantic-review",
+      "Symbol": "Ndr_ObjWriteConstant",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12145,
+      "End": 12482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::void-pointer::Wlc_NtkToNdr",
+      "Category": "void-pointer-review",
+      "Symbol": "Wlc_NtkToNdr",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 12483,
+      "End": 14616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::Wlc_NtkToNdr",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkToNdr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12483,
+      "End": 14616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::Wlc_WriteNdr",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_WriteNdr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14617,
+      "End": 14857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::Wlc_NtkToNdrTest",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkToNdrTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14858,
+      "End": 15359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::Ndr_ObjReadRange",
+      "Category": "semantic-review",
+      "Symbol": "Ndr_ObjReadRange",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15595,
+      "End": 15992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::Ndr_ObjReadConstant",
+      "Category": "semantic-review",
+      "Symbol": "Ndr_ObjReadConstant",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15993,
+      "End": 16721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::Ndr_NtkPrintNodes",
+      "Category": "semantic-review",
+      "Symbol": "Ndr_NtkPrintNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16722,
+      "End": 17350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::void-pointer::Wlc_NtkCheckIntegrity",
+      "Category": "void-pointer-review",
+      "Symbol": "Wlc_NtkCheckIntegrity",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 17351,
+      "End": 18624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::Wlc_NtkCheckIntegrity",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkCheckIntegrity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17351,
+      "End": 18624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::void-pointer::Wlc_NtkFromNdr",
+      "Category": "void-pointer-review",
+      "Symbol": "Wlc_NtkFromNdr",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 18625,
+      "End": 25256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::Wlc_NtkFromNdr",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkFromNdr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18625,
+      "End": 25256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::Wlc_ReadNdr",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ReadNdr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25492,
+      "End": 25862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::Wlc_ReadNdrTest",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ReadNdrTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25863,
+      "End": 26004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 26251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::macro-inline::15041",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15041,
+      "End": 15085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::macro-inline::15337",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15337,
+      "End": 15356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::macro-inline::21540",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_SWAP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21540,
+      "End": 21615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::macro-inline::22934",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22934,
+      "End": 22979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcNdr.c::macro-inline::23070",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23070,
+      "End": 23116
+    }
+  ],
+  "Draft": "package wlc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [wlcNdr.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Experimental procedures.]\n\n  Synopsis    [Constructing WLC network from NDR data structure.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 22, 2014.]\n\n  Revision    [$Id: wlcNdr.c,v 1.00 2014/09/12 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"wlc.h\"\n//#include \"aig/miniaig/ndr.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ndr_TypeNdr2Wlc(Type int32) int32 {\n    if Type == ABC_OPER_CONST {         return WLC_OBJ_CONST; }         // 06: constant\n    if Type == ABC_OPER_BIT_BUF {       return WLC_OBJ_BUF; }           // 07: buffer\n    if Type == ABC_OPER_BIT_MUX {       return WLC_OBJ_MUX; }           // 08: multiplexer\n    if Type == ABC_OPER_SHIFT_R {       return WLC_OBJ_SHIFT_R; }       // 09: shift right\n    if Type == ABC_OPER_SHIFT_RA {      return WLC_OBJ_SHIFT_RA; }      // 10: shift right (arithmetic)\n    if Type == ABC_OPER_SHIFT_L {       return WLC_OBJ_SHIFT_L; }       // 11: shift left\n    if Type == ABC_OPER_SHIFT_LA {      return WLC_OBJ_SHIFT_LA; }      // 12: shift left (arithmetic)\n    if Type == ABC_OPER_SHIFT_ROTR {    return WLC_OBJ_ROTATE_R; }      // 13: rotate right\n    if Type == ABC_OPER_SHIFT_ROTL {    return WLC_OBJ_ROTATE_L; }      // 14: rotate left\n    if Type == ABC_OPER_BIT_INV {       return WLC_OBJ_BIT_NOT; }       // 15: bitwise NOT\n    if Type == ABC_OPER_BIT_AND {       return WLC_OBJ_BIT_AND; }       // 16: bitwise AND\n    if Type == ABC_OPER_BIT_OR {        return WLC_OBJ_BIT_OR; }        // 17: bitwise OR\n    if Type == ABC_OPER_BIT_XOR {       return WLC_OBJ_BIT_XOR; }       // 18: bitwise XOR\n    if Type == ABC_OPER_BIT_NAND {      return WLC_OBJ_BIT_NAND; }      // 19: bitwise AND\n    if Type == ABC_OPER_BIT_NOR {       return WLC_OBJ_BIT_NOR; }       // 20: bitwise OR\n    if Type == ABC_OPER_BIT_NXOR {      return WLC_OBJ_BIT_NXOR; }      // 21: bitwise NXOR\n    if Type == ABC_OPER_SLICE {         return WLC_OBJ_BIT_SELECT; }    // 22: bit selection\n    if Type == ABC_OPER_CONCAT {        return WLC_OBJ_BIT_CONCAT; }    // 23: bit concatenation\n    if Type == ABC_OPER_ZEROPAD {       return WLC_OBJ_BIT_ZEROPAD; }   // 24: zero padding\n    if Type == ABC_OPER_SIGNEXT {       return WLC_OBJ_BIT_SIGNEXT; }   // 25: sign extension\n    if Type == ABC_OPER_LOGIC_NOT {     return WLC_OBJ_LOGIC_NOT; }     // 26: logic NOT\n    if Type == ABC_OPER_LOGIC_IMPL {    return WLC_OBJ_LOGIC_IMPL; }    // 27: logic implication\n    if Type == ABC_OPER_LOGIC_AND {     return WLC_OBJ_LOGIC_AND; }     // 28: logic AND\n    if Type == ABC_OPER_LOGIC_OR {      return WLC_OBJ_LOGIC_OR; }      // 29: logic OR\n    if Type == ABC_OPER_LOGIC_XOR {     return WLC_OBJ_LOGIC_XOR; }     // 30: logic XOR\n    if Type == ABC_OPER_SEL_NMUX {      return WLC_OBJ_MUX; }           // 08: multiplexer\n    if Type == ABC_OPER_SEL_SEL {       return WLC_OBJ_SEL; }           // 57: selector\n    if Type == ABC_OPER_SEL_DEC {       return WLC_OBJ_DEC; }           // 58: decoder\n    if Type == ABC_OPER_COMP_EQU {      return WLC_OBJ_COMP_EQU; }      // 31: compare equal\n    if Type == ABC_OPER_COMP_NOTEQU {   return WLC_OBJ_COMP_NOTEQU; }   // 32: compare not equal\n    if Type == ABC_OPER_COMP_LESS {     return WLC_OBJ_COMP_LESS; }     // 33: compare less\n    if Type == ABC_OPER_COMP_MORE {     return WLC_OBJ_COMP_MORE; }     // 34: compare more\n    if Type == ABC_OPER_COMP_LESSEQU {  return WLC_OBJ_COMP_LESSEQU; }  // 35: compare less or equal\n    if Type == ABC_OPER_COMP_MOREEQU {  return WLC_OBJ_COMP_MOREEQU; }  // 36: compare more or equal\n    if Type == ABC_OPER_RED_AND {       return WLC_OBJ_REDUCT_AND; }    // 37: reduction AND\n    if Type == ABC_OPER_RED_OR {        return WLC_OBJ_REDUCT_OR; }     // 38: reduction OR\n    if Type == ABC_OPER_RED_XOR {       return WLC_OBJ_REDUCT_XOR; }    // 39: reduction XOR\n    if Type == ABC_OPER_RED_NAND {      return WLC_OBJ_REDUCT_NAND; }   // 40: reduction NAND\n    if Type == ABC_OPER_RED_NOR {       return WLC_OBJ_REDUCT_NOR; }    // 41: reduction NOR\n    if Type == ABC_OPER_RED_NXOR {      return WLC_OBJ_REDUCT_NXOR; }   // 42: reduction NXOR\n    if Type == ABC_OPER_ARI_ADD {       return WLC_OBJ_ARI_ADD; }       // 43: arithmetic addition\n    if Type == ABC_OPER_ARI_SUB {       return WLC_OBJ_ARI_SUB; }       // 44: arithmetic subtraction\n    if Type == ABC_OPER_ARI_MUL {       return WLC_OBJ_ARI_MULTI; }     // 45: arithmetic multiplier\n    if Type == ABC_OPER_ARI_DIV {       return WLC_OBJ_ARI_DIVIDE; }    // 46: arithmetic division\n    if Type == ABC_OPER_ARI_REM {       return WLC_OBJ_ARI_REM; }       // 47: arithmetic remainder\n    if Type == ABC_OPER_ARI_MOD {       return WLC_OBJ_ARI_MODULUS; }   // 48: arithmetic modulus\n    if Type == ABC_OPER_ARI_POW {       return WLC_OBJ_ARI_POWER; }     // 49: arithmetic power\n    if Type == ABC_OPER_ARI_MIN {       return WLC_OBJ_ARI_MINUS; }     // 50: arithmetic minus\n    if Type == ABC_OPER_ARI_SQRT {      return WLC_OBJ_ARI_SQRT; }      // 51: integer square root\n    if Type == ABC_OPER_ARI_SQUARE {    return WLC_OBJ_ARI_SQUARE; }    // 52: integer square\n    if Type == ABC_OPER_ARI_ADDSUB {    return WLC_OBJ_ARI_ADDSUB; }    // 56: adder-subtractor\n    if Type == ABC_OPER_ARI_SMUL {      return WLC_OBJ_ARI_MULTI; }     // 45: signed multiplier\n    if Type == ABC_OPER_DFF {           return WLC_OBJ_FO; }            // 03: flop\n    if Type == ABC_OPER_DFFRSE {        return WLC_OBJ_FF; }            // 05: flop\n    if Type == ABC_OPER_RAMR {          return WLC_OBJ_READ; }          // 54: read port\n    if Type == ABC_OPER_RAMW {          return WLC_OBJ_WRITE; }         // 55: write port\n    if Type == ABC_OPER_LUT {           return WLC_OBJ_LUT; }           // 59: LUT\n    return -1;\n}\nfunc Ndr_TypeWlc2Ndr(Type int32) int32 {\n    if Type == WLC_OBJ_CONST {          return ABC_OPER_CONST; }        // 06: constant\n    if Type == WLC_OBJ_BUF {            return ABC_OPER_BIT_BUF; }      // 07: buffer\n    if Type == WLC_OBJ_MUX {            return ABC_OPER_BIT_MUX; }      // 08: multiplexer\n    if Type == WLC_OBJ_SHIFT_R {        return ABC_OPER_SHIFT_R; }      // 09: shift right\n    if Type == WLC_OBJ_SHIFT_RA {       return ABC_OPER_SHIFT_RA; }     // 10: shift right (arithmetic)\n    if Type == WLC_OBJ_SHIFT_L {        return ABC_OPER_SHIFT_L; }      // 11: shift left\n    if Type == WLC_OBJ_SHIFT_LA {       return ABC_OPER_SHIFT_LA; }     // 12: shift left (arithmetic)\n    if Type == WLC_OBJ_ROTATE_R {       return ABC_OPER_SHIFT_ROTR; }   // 13: rotate right\n    if Type == WLC_OBJ_ROTATE_L {       return ABC_OPER_SHIFT_ROTL; }   // 14: rotate left\n    if Type == WLC_OBJ_BIT_NOT {        return ABC_OPER_BIT_INV; }      // 15: bitwise NOT\n    if Type == WLC_OBJ_BIT_AND {        return ABC_OPER_BIT_AND; }      // 16: bitwise AND\n    if Type == WLC_OBJ_BIT_OR {         return ABC_OPER_BIT_OR; }       // 17: bitwise OR\n    if Type == WLC_OBJ_BIT_XOR {        return ABC_OPER_BIT_XOR; }      // 18: bitwise XOR\n    if Type == WLC_OBJ_BIT_NAND {       return ABC_OPER_BIT_NAND; }     // 19: bitwise AND\n    if Type == WLC_OBJ_BIT_NOR {        return ABC_OPER_BIT_NOR; }      // 20: bitwise OR\n    if Type == WLC_OBJ_BIT_NXOR {       return ABC_OPER_BIT_NXOR; }     // 21: bitwise NXOR\n    if Type == WLC_OBJ_BIT_SELECT {     return ABC_OPER_SLICE; }        // 22: bit selection\n    if Type == WLC_OBJ_BIT_CONCAT {     return ABC_OPER_CONCAT; }       // 23: bit concatenation\n    if Type == WLC_OBJ_BIT_ZEROPAD {    return ABC_OPER_ZEROPAD; }      // 24: zero padding\n    if Type == WLC_OBJ_BIT_SIGNEXT {    return ABC_OPER_SIGNEXT; }      // 25: sign extension\n    if Type == WLC_OBJ_LOGIC_NOT {      return ABC_OPER_LOGIC_NOT; }    // 26: logic NOT\n    if Type == WLC_OBJ_LOGIC_IMPL {     return ABC_OPER_LOGIC_IMPL; }   // 27: logic implication\n    if Type == WLC_OBJ_LOGIC_AND {      return ABC_OPER_LOGIC_AND; }    // 28: logic AND\n    if Type == WLC_OBJ_LOGIC_OR {       return ABC_OPER_LOGIC_OR; }     // 29: logic OR\n    if Type == WLC_OBJ_LOGIC_XOR {      return ABC_OPER_LOGIC_XOR; }    // 30: logic XOR\n    if Type == WLC_OBJ_SEL {            return ABC_OPER_SEL_SEL; }      // 57: selector\n    if Type == WLC_OBJ_DEC {            return ABC_OPER_SEL_DEC; }      // 58: decoder\n    if Type == WLC_OBJ_COMP_EQU {       return ABC_OPER_COMP_EQU; }     // 31: compare equal\n    if Type == WLC_OBJ_COMP_NOTEQU {    return ABC_OPER_COMP_NOTEQU; }  // 32: compare not equal\n    if Type == WLC_OBJ_COMP_LESS {      return ABC_OPER_COMP_LESS; }    // 33: compare less\n    if Type == WLC_OBJ_COMP_MORE {      return ABC_OPER_COMP_MORE; }    // 34: compare more\n    if Type == WLC_OBJ_COMP_LESSEQU {   return ABC_OPER_COMP_LESSEQU; } // 35: compare less or equal\n    if Type == WLC_OBJ_COMP_MOREEQU {   return ABC_OPER_COMP_MOREEQU; } // 36: compare more or equal\n    if Type == WLC_OBJ_REDUCT_AND {     return ABC_OPER_RED_AND; }      // 37: reduction AND\n    if Type == WLC_OBJ_REDUCT_OR {      return ABC_OPER_RED_OR; }       // 38: reduction OR\n    if Type == WLC_OBJ_REDUCT_XOR {     return ABC_OPER_RED_XOR; }      // 39: reduction XOR\n    if Type == WLC_OBJ_REDUCT_NAND {    return ABC_OPER_RED_NAND; }     // 40: reduction NAND\n    if Type == WLC_OBJ_REDUCT_NOR {     return ABC_OPER_RED_NOR; }      // 41: reduction NOR\n    if Type == WLC_OBJ_REDUCT_NXOR {    return ABC_OPER_RED_NXOR; }     // 42: reduction NXOR\n    if Type == WLC_OBJ_ARI_ADD {        return ABC_OPER_ARI_ADD; }      // 43: arithmetic addition\n    if Type == WLC_OBJ_ARI_SUB {        return ABC_OPER_ARI_SUB; }      // 44: arithmetic subtraction\n    if Type == WLC_OBJ_ARI_MULTI {      return ABC_OPER_ARI_MUL; }      // 45: arithmetic multiplier\n    if Type == WLC_OBJ_ARI_DIVIDE {     return ABC_OPER_ARI_DIV; }      // 46: arithmetic division\n    if Type == WLC_OBJ_ARI_REM {        return ABC_OPER_ARI_REM; }      // 47: arithmetic remainder\n    if Type == WLC_OBJ_ARI_MODULUS {    return ABC_OPER_ARI_MOD; }      // 48: arithmetic modulus\n    if Type == WLC_OBJ_ARI_POWER {      return ABC_OPER_ARI_POW; }      // 49: arithmetic power\n    if Type == WLC_OBJ_ARI_MINUS {      return ABC_OPER_ARI_MIN; }      // 50: arithmetic minus\n    if Type == WLC_OBJ_ARI_SQRT {       return ABC_OPER_ARI_SQRT; }     // 51: integer square root\n    if Type == WLC_OBJ_ARI_SQUARE {     return ABC_OPER_ARI_SQUARE; }   // 52: integer square\n    if Type == WLC_OBJ_ARI_ADDSUB {     return ABC_OPER_ARI_ADDSUB; }   // 56: adder-subtractor\n    if Type == WLC_OBJ_ARI_MULTI {      return ABC_OPER_ARI_SMUL; }     // 45: signed multiplier\n    if Type == WLC_OBJ_FO {             return ABC_OPER_DFFRSE; }       // 03: flop\n    if Type == WLC_OBJ_FF {             return ABC_OPER_DFFRSE; }       // 05: flop\n    if Type == WLC_OBJ_READ {           return ABC_OPER_RAMR; }         // 54: read port\n    if Type == WLC_OBJ_WRITE {          return ABC_OPER_RAMW; }         // 55: write port\n    if Type == WLC_OBJ_LUT {            return ABC_OPER_LUT; }          // 59: LUT\n    return -1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Ndr_ObjWriteConstant_Buffer string // was [10000]byte in C\n\nfunc Ndr_ObjWriteConstant(pBits *uint32, nBits int32) string {\n     var i, Len int32;\n    assert(nBits + 10 \u003c 10000, \"nBits + 10 \u003c 10000\");\n    spStatic_Ndr_ObjWriteConstant_Buffer = fmt.Sprintf(\"%d\\'b\", nBits);\n    Len = strlen(spStatic_Ndr_ObjWriteConstant_Buffer);\n    for  i = nBits-1; i \u003e= 0; i--  {\n        spStatic_Ndr_ObjWriteConstant_Buffer[Len++] = '0' + Abc_InfoHasBit(pBits, i);\n    }\n    spStatic_Ndr_ObjWriteConstant_Buffer[Len] = 0;\n    return spStatic_Ndr_ObjWriteConstant_Buffer;\n}\nfunc Wlc_NtkToNdr(pNtk *Wlc_Ntk_t) any {\n    var pObj *Wlc_Obj_t; \n    var i, k, iFanin, iOutId, Type int32;\n    // create a new module\n    var pDesign any  = Ndr_Create( 1 );\n    var ModId int32  = Ndr_AddModule( pDesign, 1 );\n    // add primary inputs\n    var vFanins *Vec_Int_t  = Vec_IntAlloc( 10 );\n    // inlining of macro Wlc_NtkForEachPi\n    for  i = 0; (i \u003c Wlc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Wlc_NtkPi(pNtk, i)), 1); i++  {\n        iOutId = Wlc_ObjId(pNtk, pObj);\n        Ndr_AddObject( pDesign, ModId, ABC_OPER_CI, 0,   \n            pObj.End, pObj.Beg, pObj.Signed,   \n            0, nil,      1, \u0026iOutId,  nil  ); // no fanins\n    }\n    // add internal nodes \n    // inlining of macro Wlc_NtkForEachObj\n    for  iOutId = 1; (iOutId \u003c Wlc_NtkObjNumMax(pNtk)) \u0026\u0026 (((pObj) = Wlc_NtkObj(pNtk, iOutId)), 1); iOutId++  {\n        var pFunction string  = nil;\n        if Wlc_ObjIsPi(pObj) || pObj.Type == 0 {\n            continue; }\n        Vec_IntClear( vFanins );\n        // inlining of macro Wlc_ObjForEachFanin\n        for  k = 0; (k \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((iFanin) = Wlc_ObjFaninId(pObj, k)), 1); k++  {\n            Vec_IntPush( vFanins, iFanin );\n        }\n        if pObj.Type == WLC_OBJ_CONST {\n            pFunction = Ndr_ObjWriteConstant( (unsigned *)Wlc_ObjFanins(pObj), Wlc_ObjRange(pObj) ); }\n        if pObj.Type == WLC_OBJ_MUX \u0026\u0026 Wlc_ObjRange(Wlc_ObjFanin0(pNtk, pObj)) \u003e 1 {\n            Type = ABC_OPER_SEL_NMUX;\n        } else if pObj.Type == WLC_OBJ_FO {\n            var pFi *Wlc_Obj_t  = Wlc_ObjFo2Fi( pNtk, pObj );\n            assert(Vec_IntSize(vFanins) == 0, \"Vec_IntSize(vFanins) == 0\");\n            Vec_IntPush( vFanins, Wlc_ObjId(pNtk, pFi) );\n            Vec_IntFillExtra( vFanins, 7, 0 );\n            Type = ABC_OPER_DFFRSE;\n        \n        } else {\n            Type = Ndr_TypeWlc2Ndr(pObj.Type); }\n        assert(Type \u003e 0, \"Type \u003e 0\");\n        Ndr_AddObject( pDesign, ModId, Type, 0,   \n            pObj.End, pObj.Beg, pObj.Signed,   \n            Vec_IntSize(vFanins), Vec_IntArray(vFanins), 1, \u0026iOutId,  pFunction  ); \n    }\n    // add primary outputs\n    // inlining of macro Wlc_NtkForEachObj\n    for  iOutId = 1; (iOutId \u003c Wlc_NtkObjNumMax(pNtk)) \u0026\u0026 (((pObj) = Wlc_NtkObj(pNtk, iOutId)), 1); iOutId++  {\n        if !Wlc_ObjIsPo(pObj) {\n            continue; }\n        Vec_IntFill( vFanins, 1, iOutId );\n        Ndr_AddObject( pDesign, ModId, ABC_OPER_CO, 0,                   \n            pObj.End, pObj.Beg, pObj.Signed,   \n            1, Vec_IntArray(vFanins),  0, nil,  nil ); \n    }\n    Vec_IntFree( vFanins );\n    return pDesign;\n}\nfunc Wlc_WriteNdr(pNtk *Wlc_Ntk_t, pFileName string) {\n    var pDesign any  = Wlc_NtkToNdr( pNtk );\n    Ndr_Write( pFileName, pDesign );\n    Ndr_Delete( pDesign );\n    fmt.Printf(\"Dumped the current design into file \\\"%s\\\".\\n\", pFileName);\n}\nfunc Wlc_NtkToNdrTest(pNtk *Wlc_Ntk_t) {\n    // transform\n    var pDesign any  = Wlc_NtkToNdr( pNtk );\n\n    // collect names     \n    var pObj *Wlc_Obj_t;  var i int32;\n    var ppNames *string  = ABC_ALLOC( char *, Wlc_NtkObjNum(pNtk) + 1 );\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(pNtk)) \u0026\u0026 (((pObj) = Wlc_NtkObj(pNtk, i)), 1); i++  { \n        ppNames[i] = Wlc_ObjName(pNtk, i);\n    }\n\n    // verify by writing Verilog\n    Ndr_WriteVerilog( nil, pDesign, ppNames );\n    Ndr_Write( \"test.ndr\", pDesign );\n\n    // cleanup\n    Ndr_Delete( pDesign );\n    ABC_FREE( ppNames );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ndr_ObjReadRange(p *Ndr_Data_t, Obj int32, End *int32, Beg *int32) int32 {\n    var pArray *int32;\n    var nArray int32 = Ndr_ObjReadArray( p, Obj, NDR_RANGE, \u0026pArray );\n    var Signed int32; *End = *Beg = 0;\n    if nArray == 0 {\n        return 0; }\n    if nArray == 3 {\n        Signed = 1; }\n    if nArray == 1 {\n        *End = *Beg = pArray[0];\n    } else {\n        *End = pArray[0], *Beg = pArray[1]; }\n    return Signed;\n}\nfunc Ndr_ObjReadConstant(vFanins *Vec_Int_t, pStr string) {\n    var i int32;\n    var k int32;\n    var Len int32;\n    if pStr {\n        Len = len(pStr);\n    } else {\n        Len = 0;\n    }\n    for  k = 0; k \u003c Len; k++  {\n        if pStr[k] == 'b' {\n            break; }\n    }\n    if pStr == nil || pStr[k] != 'b' {\n        fmt.Printf(\"Constants should be represented in binary Verilog notation \u003cnbits\u003e\\'b\u003cbits\u003e as char strings (for example, \\\"4'b1010\\\").\\n\");\n        return;\n    }\n    Vec_IntFill( vFanins, Abc_BitWordNum(Len-k-1), 0 );\n    for  i = k+1; i \u003c Len; i++  {\n        if pStr[i] == '1' {\n            Abc_InfoSetBit( (unsigned *)Vec_IntArray(vFanins), Len-i-1 );\n        } else if pStr[i] != '0' {\n            fmt.Printf(\"Wrongn symbol (%c) in binary Verilog constant \\\"%s\\\".\\n\", pStr[i], pStr); }\n    }\n}\nfunc Ndr_NtkPrintNodes(pNtk *Wlc_Ntk_t) {\n    var pObj *Wlc_Obj_t; var i, k int32;\n    fmt.Printf(\"Node IDs and their fanins:\\n\");\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(pNtk)) \u0026\u0026 (((pObj) = Wlc_NtkObj(pNtk, i)), 1); i++  {\n        var pFanins *int32  = Wlc_ObjFanins(pObj);\n        fmt.Printf(\"%5d = \", i);\n        for  k = 0; k \u003c Wlc_ObjFaninNum(pObj); k++  {\n            fmt.Printf(\"%5d \", pFanins[k]);\n        }\n        for       ; k \u003c 4; k++  {\n            fmt.Printf(\"      \");\n        }\n        fmt.Printf(\"    Name Id %d \", Wlc_ObjNameId(pNtk, i));\n        if Wlc_ObjIsPi(pObj) {\n            fmt.Printf(\"  pi  \"); }\n        if Wlc_ObjIsPo(pObj) {\n            fmt.Printf(\"  po  \"); }\n        fmt.Printf(\"\\n\");\n    }\n}\nfunc Wlc_NtkCheckIntegrity(pData any) {\n    var p *Ndr_Data_t  = (Ndr_Data_t *)pData;  \n    var vMap *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var Mod int32 = 2;\n    var Obj int32;\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else {\n        var NameId int32   = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        if NameId == -1 {\n            var Type int32  = Ndr_ObjReadBody( p, Obj, NDR_OPERTYPE );\n            if Type != ABC_OPER_CO {\n                fmt.Printf(\"Internal object %d of type %s has no output name.\\n\", Obj, Abc_OperName(Type)); }\n            continue;\n        }\n        if Vec_IntGetEntry(vMap, NameId) \u003e 0 {\n            fmt.Printf(\"Output name %d is used more than once (obj %d and obj %d).\\n\", NameId, Vec_IntGetEntry(vMap, NameId), Obj); }\n        Vec_IntSetEntry( vMap, NameId, Obj );\n    }\n    }\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else {\n        var Type int32  = Ndr_ObjReadBody( p, Obj, NDR_OPERTYPE );\n        var i int32;\n        var pArray *int32;\n        var nArray int32 = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        for  i = 0; i \u003c nArray; i++  {\n            if Vec_IntGetEntry(vMap, pArray[i]) == 0 \u0026\u0026 !(Type == ABC_OPER_DFFRSE \u0026\u0026 (i \u003e= 5 \u0026\u0026 i \u003c= 7)) {\n                fmt.Printf(\"Input name %d appearing as fanin %d of obj %d is not used as output name in any object.\\n\", pArray[i], i, Obj); }\n        }\n    }\n    }\n    Vec_IntFree( vMap );\n}\nfunc Wlc_NtkFromNdr(pData any) *Wlc_Ntk_t {\n    var p *Ndr_Data_t  = (Ndr_Data_t *)pData;  \n    var pObj *Wlc_Obj_t; var vName2Obj *Vec_Int_t;\nvar vFanins *Vec_Int_t = Vec_IntAlloc( 100 );\n    var Mod int32 = 2;\n    var i int32;\n    var k int32;\n    var Obj int32;\n    var pArray *int32;\n    var nDigits int32;\n    var fFound int32;\n    var NameId int32;\n    var NameIdMax int32;\n    var vTruths *Vec_Wrd_t  = nil;\n    var pTemp *Wlc_Ntk_t;\n    var pNtk *Wlc_Ntk_t = Wlc_NtkAlloc( \"top\", Ndr_DataObjNum(p, Mod)+1 );\n    Wlc_NtkCheckIntegrity( pData );\n    Vec_IntClear( \u0026pNtk.vFfs );\n    //pNtk-\u003epSpec = Abc_UtilStrsav( pFileName );\n    // construct network and save name IDs\n    Wlc_NtkCleanNameId( pNtk );\n    // inlining of macro Ndr_ModForEachPi\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else if !Ndr_ObjIsType(p, Obj, ABC_OPER_CI) {} else {\n        var End int32;\n        var Beg int32;\n        var Signed int32 = Ndr_ObjReadRange(p, Obj, \u0026End, \u0026Beg);\n        var iObj int32  = Wlc_ObjAlloc( pNtk, WLC_OBJ_PI, Signed, End, Beg );\n        var NameId int32  = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        Wlc_ObjSetNameId( pNtk, iObj, NameId );\n    }\n    }\n    // inlining of macro Ndr_ModForEachNode\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else if Ndr_ObjIsType(p, Obj, ABC_OPER_CI) || Ndr_ObjIsType(p, Obj, ABC_OPER_CO) {} else {\n        var End int32;\n        var Beg int32;\n        var Signed int32 = Ndr_ObjReadRange(p, Obj, \u0026End, \u0026Beg);\n        var Type int32     = Ndr_ObjReadBody( p, Obj, NDR_OPERTYPE );\n        var nArray int32   = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        var F Vec_Int_t = Vec_Int_t{nArray, nArray, pArray};\n        var vTemp *Vec_Int_t = \u0026F;\n        var iObj int32     = Wlc_ObjAlloc( pNtk, Ndr_TypeNdr2Wlc(Type), Signed, End, Beg );\n        var NameId int32   = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        Vec_IntClear( vFanins );\n        Vec_IntAppend( vFanins, vTemp );\n        if Type == ABC_OPER_DFF {\n            // save init state\n            if pNtk.vInits == nil {\n                pNtk.vInits = Vec_IntAlloc( 100 ); }\n            if Vec_IntSize(vFanins) == 2 {\n                Vec_IntPush( pNtk.vInits, Vec_IntPop(vFanins) );\n            } else { // assume const0 if init is not given\n                Vec_IntPush( pNtk.vInits, -(End-Beg+1) ); }\n            // save flop output\n            pObj = Wlc_NtkObj(pNtk, iObj);\n            assert(Wlc_ObjType(pObj) == WLC_OBJ_FO, \"Wlc_ObjType(pObj) == WLC_OBJ_FO\");\n            Wlc_ObjSetNameId( pNtk, iObj, NameId );\n            Vec_IntPush( \u0026pNtk.vFfs, NameId );\n            // save flop input\n            assert(Vec_IntSize(vFanins) == 1, \"Vec_IntSize(vFanins) == 1\");\n            Vec_IntPush( \u0026pNtk.vFfs, Vec_IntEntry(vFanins, 0) );\n            continue;\n        }\n        if Type == ABC_OPER_DFFRSE {\n            Vec_IntPush( \u0026pNtk.vFfs2, iObj ); }\n        if Type == ABC_OPER_LUT {\n            if vTruths == nil {\n                vTruths = Vec_WrdStart( 1000 ); }\n            if NameId \u003e= Vec_WrdSize(vTruths) {\n                Vec_WrdFillExtra( vTruths, 2*NameId, 0 ); }\n            Vec_WrdWriteEntry( vTruths, NameId, *((word *)Ndr_ObjReadBodyP(p, Obj, NDR_FUNCTION)) );\n        }\n        if Type == ABC_OPER_SLICE {\n            Vec_IntPushTwo( vFanins, End, Beg );\n        } else if Type == ABC_OPER_CONST {\n            Ndr_ObjReadConstant( vFanins, (char *)Ndr_ObjReadBodyP(p, Obj, NDR_FUNCTION) );\n        } else if Type == ABC_OPER_BIT_MUX \u0026\u0026 Vec_IntSize(vFanins) == 3 {\n            ABC_SWAP( int, Vec_IntEntryP(vFanins, 1)[0], Vec_IntEntryP(vFanins, 2)[0] ); }\n        Wlc_ObjAddFanins( pNtk, Wlc_NtkObj(pNtk, iObj), vFanins );\n        Wlc_ObjSetNameId( pNtk, iObj, NameId );\n        if Type == ABC_OPER_ARI_SMUL {\n            pObj = Wlc_NtkObj(pNtk, iObj);\n            assert(Wlc_ObjFaninNum(pObj) == 2, \"Wlc_ObjFaninNum(pObj) == 2\");\n            Wlc_ObjFanin0(pNtk, pObj).Signed = 1;\n            Wlc_ObjFanin1(pNtk, pObj).Signed = 1;\n        }\n    }\n    }\n    // mark primary outputs\n    // inlining of macro Ndr_ModForEachPo\n    // inlining of macro Ndr_ModForEachObj\n    for  Obj = Mod + 1; Obj \u003c Ndr_DataEnd(p, Mod); Obj += Ndr_DataSize(p, Obj)  { if Ndr_DataType(p, Obj) != NDR_OBJECT {} else if !Ndr_ObjIsType(p, Obj, ABC_OPER_CO) {} else {\n        var End int32;\n        var Beg int32;\n        var Signed int32 = Ndr_ObjReadRange(p, Obj, \u0026End, \u0026Beg);\n        var nArray int32   = Ndr_ObjReadArray( p, Obj, NDR_INPUT, \u0026pArray );\n        var iObj int32     = Wlc_ObjAlloc( pNtk, WLC_OBJ_BUF, Signed, End, Beg );\n        var NameId int32   = Ndr_ObjReadBody( p, Obj, NDR_OUTPUT );\n        assert(nArray == 1 \u0026\u0026 NameId == -1, \"nArray == 1 \u0026\u0026 NameId == -1\");\n        pObj = Wlc_NtkObj( pNtk, iObj );\n        Vec_IntFill( vFanins, 1, pArray[0] );\n        Wlc_ObjAddFanins( pNtk, pObj, vFanins );\n        Wlc_ObjSetCo( pNtk, pObj, 0 );\n    }\n    }\n    Vec_IntFree( vFanins );\n    // map name IDs into object IDs\n    vName2Obj = Vec_IntInvert( \u0026pNtk.vNameIds, 0 );\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(pNtk)) \u0026\u0026 (((pObj) = Wlc_NtkObj(pNtk, i)), 1); i++  {\n        var pFanins *int32  = Wlc_ObjFanins(pObj);\n        for  k = 0; k \u003c Wlc_ObjFaninNum(pObj); k++  {\n            pFanins[k] = Vec_IntEntry(vName2Obj, pFanins[k]);\n        }\n    }\n    if pNtk.vInits {\n        Vec_IntForEachEntry( \u0026pNtk.vFfs, NameId, i )\n            Vec_IntWriteEntry( \u0026pNtk.vFfs, i, Vec_IntEntry(vName2Obj, NameId) );\n        Vec_IntForEachEntry( pNtk.vInits, NameId, i )\n            if ( NameId \u003e 0 )\n                Vec_IntWriteEntry( pNtk.vInits, i, Vec_IntEntry(vName2Obj, NameId) );\n        // move FO/FI to be part of CI/CO\n        assert((Vec_IntSize(\u0026pNtk.vFfs) \u0026 1) == 0, \"(Vec_IntSize(\u0026pNtk.vFfs) \u0026 1) == 0\");\n        assert(Vec_IntSize(\u0026pNtk.vFfs) == 2 * Vec_IntSize(pNtk.vInits), \"Vec_IntSize(\u0026pNtk.vFfs) == 2 * Vec_IntSize(pNtk.vInits)\");\n        // inlining of macro Wlc_NtkForEachFf\n        for  i = 0; (i \u003c Vec_IntSize(\u0026pNtk.vFfs)) \u0026\u0026 (((pObj) = Wlc_NtkFf(pNtk, i)), 1); i++  {\n            if i \u0026 1 {\n                Wlc_ObjSetCo( pNtk, pObj, 1 ); }\n        }\n            //else\n            //    Wlc_ObjSetCi( pNtk, pObj );\n        Vec_IntClear( \u0026pNtk.vFfs );\n        // convert init values into binary string\n        //Vec_IntPrint( \u0026p-\u003epNtk-\u003evInits );\n        pNtk.pInits = Wlc_PrsConvertInitValues( pNtk );\n        //printf( \"%s\", p-\u003epNtk-\u003epInits );\n    }\n    Vec_IntFree(vName2Obj);\n    // create fake object names\n    NameIdMax = Vec_IntFindMax(\u0026pNtk.vNameIds);\n    nDigits = Abc_Base10Log( NameIdMax+1 );\n    pNtk.pManName = Abc_NamStart( NameIdMax+1, 10 );\n    for  i = 1; i \u003c= NameIdMax; i++  {\n        var pName string // was [20]byte in C\n pName = fmt.Sprintf(\"s%0*d\", nDigits, i);\n        NameId = Abc_NamStrFindOrAdd( pNtk.pManName, pName, \u0026fFound );\n        assert(!(fFound != 0) \u0026\u0026 i == NameId, \"!fFound \u0026\u0026 i == NameId\");\n    }\n    //Ndr_NtkPrintNodes( pNtk );\n    //Wlc_WriteVer( pNtk, \"temp_ndr.v\", 0, 0 );\n    // derive topological order\n    pNtk = Wlc_NtkDupDfs( pTemp = pNtk, 0, 1 );\n    Wlc_NtkFree( pTemp );\n    // copy truth tables\n    if vTruths != nil {\n        pNtk.vLutTruths = Vec_WrdStart( Wlc_NtkObjNumMax(pNtk) );\n        // inlining of macro Wlc_NtkForEachObj\n        for  i = 1; (i \u003c Wlc_NtkObjNumMax(pNtk)) \u0026\u0026 (((pObj) = Wlc_NtkObj(pNtk, i)), 1); i++  {\n            var iObj int32    = Wlc_ObjId(pNtk, pObj);\n            var NameId int32  = Wlc_ObjNameId(pNtk, iObj);\n            var Truth word;\n            if pObj.Type != WLC_OBJ_LUT || NameId == 0 {\n                continue; }\n            Truth = Vec_WrdEntry(vTruths, NameId);\n            assert(sizeof(void *) == 8 || Wlc_ObjFaninNum(pObj) \u003c 6, \"sizeof(void *) == 8 || Wlc_ObjFaninNum(pObj) \u003c 6\");\n            Vec_WrdWriteEntry( pNtk.vLutTruths, iObj, Truth );\n        }\n        Vec_WrdFreeP( \u0026vTruths );\n    }\n    //Ndr_NtkPrintNodes( pNtk );\n    pNtk.fMemPorts = 1;          // the network contains memory ports\n    pNtk.fEasyFfs = 1;           // the network contains simple flops\n    return pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_ReadNdr(pFileName string) *Wlc_Ntk_t {\n    var pData any  = Ndr_Read( pFileName );\n    var pNtk *Wlc_Ntk_t  = Wlc_NtkFromNdr( pData );\n    //char * ppNames[10] = { NULL, \"a\", \"b\", \"c\", \"d\", \"e\", \"f\", \"g\", \"h\", \"i\" };\n    //Ndr_WriteVerilog( NULL, pData, ppNames );\n    //Ndr_Delete( pData );\n    Abc_FrameInputNdr( Abc_FrameGetGlobalFrame(), pData );\n    return pNtk;\n}\nfunc Wlc_ReadNdrTest() {\n    var pNtk *Wlc_Ntk_t  = Wlc_ReadNdr( \"top.ndr\" );\n    Wlc_WriteVer( pNtk, \"top.v\", 0, 0 );\n    Wlc_NtkFree( pNtk );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

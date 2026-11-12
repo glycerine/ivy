@@ -1,0 +1,116 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscUtil.c",
+  "SHA256": "756098974423d0afa580011a12e5d3f25c8bdd529d722357a4e14249d577fa1a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 13,
+        "ByteOffset": 3167
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( status == l_True );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 3940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nConstrs == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 3971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"User AIG: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 5,
+        "ByteOffset": 4071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Drop AIG: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 9,
+        "ByteOffset": 4912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"AIG%3d  : \", i );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManDropContained",
+      "Start": 1286,
+      "End": 3356,
+      "BodyStart": 1336,
+      "Original": "Gia_Man_t * Gia_ManDropContained( Gia_Man_t * p )\n{\n    Gia_Man_t * pNew;\n    Aig_Man_t * pMan = Gia_ManToAigSimple( p );\n    Cnf_Dat_t * pDat = Cnf_Derive( pMan, Gia_ManPoNum(p) );\n    Gia_Obj_t * pObj;\n    Vec_Int_t * vLits, * vKeep;\n    sat_solver * pSat;\n    int ConstLit = Abc_Var2Lit(pDat-\u003epVarNums[0], 0);\n    int i, status;//, Count = 0;\n    Aig_ManStop( pMan );\n\n    vLits = Vec_IntAlloc( Gia_ManPoNum(p) );\n    Gia_ManForEachPo( p, pObj, i )\n    {\n        int iObj = Gia_ObjId( p, pObj );\n        Vec_IntPush( vLits, Abc_Var2Lit(pDat-\u003epVarNums[iObj], 1) );\n    }\n\n    // start the SAT solver\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, pDat-\u003enVars );\n    for ( i = 0; i \u003c pDat-\u003enClauses; i++ )\n    {\n        if ( !sat_solver_addclause( pSat, pDat-\u003epClauses[i], pDat-\u003epClauses[i+1] ) )\n        {\n            Cnf_DataFree( pDat );\n            sat_solver_delete( pSat );\n            Vec_IntFree( vLits );\n            return NULL;\n        }\n    }\n    Cnf_DataFree( pDat );\n    status = sat_solver_simplify( pSat );\n    if ( status == 0 )\n    {\n        sat_solver_delete( pSat );\n        Vec_IntFree( vLits );\n        return NULL;\n    }\n\n    // iterate over POs\n    vKeep = Vec_IntAlloc( Gia_ManPoNum(p) );\n    Gia_ManForEachPo( p, pObj, i )\n    {\n        Vec_IntWriteEntry( vLits, i, Abc_LitNot(Vec_IntEntry(vLits,i)) );\n        status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), 0, 0, 0, 0 );\n        Vec_IntWriteEntry( vLits, i, Abc_LitNot(Vec_IntEntry(vLits,i)) );\n        if ( status == l_False )\n            Vec_IntWriteEntry( vLits, i, ConstLit ); // const1 SAT var is always true\n        else \n        {\n            assert( status == l_True );\n            Vec_IntPush( vKeep, i );\n        }\n    }\n    sat_solver_delete( pSat );\n    Vec_IntFree( vLits );\n    if ( Vec_IntSize(vKeep) == Gia_ManPoNum(p) )\n    {\n        Vec_IntFree( vKeep );\n        return Gia_ManDup(p);\n    }\n    pNew = Gia_ManDupCones( p, Vec_IntArray(vKeep), Vec_IntSize(vKeep), 0 );\n    Vec_IntFree( vKeep );\n    return pNew;\n}",
+      "Draft": "func Gia_ManDropContained(p *Gia_Man_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pMan *Aig_Man_t  = Gia_ManToAigSimple( p );\n    var pDat *Cnf_Dat_t  = Cnf_Derive( pMan, Gia_ManPoNum(p) );\n    var pObj *Gia_Obj_t;\n    var vLits, vKeep *Vec_Int_t;\n    var pSat *sat_solver;\n    var ConstLit int32  = Abc_Var2Lit(pDat.pVarNums[0], 0);\n    var i, status int32;//, Count = 0;\n    Aig_ManStop( pMan );\n\n    vLits = Vec_IntAlloc( Gia_ManPoNum(p) );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        var iObj int32  = Gia_ObjId( p, pObj );\n        Vec_IntPush( vLits, Abc_Var2Lit(pDat.pVarNums[iObj], 1) );\n    }\n\n    // start the SAT solver\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, pDat.nVars );\n    for  i = 0; i \u003c pDat.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pDat.pClauses[i], pDat.pClauses[i+1] ) {\n            Cnf_DataFree( pDat );\n            sat_solver_delete( pSat );\n            Vec_IntFree( vLits );\n            return nil;\n        }\n    }\n    Cnf_DataFree( pDat );\n    status = sat_solver_simplify( pSat );\n    if status == 0 {\n        sat_solver_delete( pSat );\n        Vec_IntFree( vLits );\n        return nil;\n    }\n\n    // iterate over POs\n    vKeep = Vec_IntAlloc( Gia_ManPoNum(p) );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Vec_IntWriteEntry( vLits, i, Abc_LitNot(Vec_IntEntry(vLits,i)) );\n        status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), 0, 0, 0, 0 );\n        Vec_IntWriteEntry( vLits, i, Abc_LitNot(Vec_IntEntry(vLits,i)) );\n        if status == l_False {\n            Vec_IntWriteEntry( vLits, i, ConstLit ); // const1 SAT var is always true\n        } else {\n            assert(status == l_True, \"status == l_True\");\n            Vec_IntPush( vKeep, i );\n        }\n    }\n    sat_solver_delete( pSat );\n    Vec_IntFree( vLits );\n    if Vec_IntSize(vKeep) == Gia_ManPoNum(p) {\n        Vec_IntFree( vKeep );\n        return Gia_ManDup(p);\n    }\n    pNew = Gia_ManDupCones( p, Vec_IntArray(vKeep), Vec_IntSize(vKeep), 0 );\n    Vec_IntFree( vKeep );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManOptimizeRing",
+      "Start": 3592,
+      "End": 4830,
+      "BodyStart": 3641,
+      "Original": "Gia_Man_t * Gia_ManOptimizeRing( Gia_Man_t * p )\n{\n    Ssc_Pars_t Pars, * pPars = \u0026Pars;\n    Gia_Man_t * pTemp, * pAux;\n    int i;\n    assert( p-\u003enConstrs == 0 );\n    printf( \"User AIG: \" );\n    Gia_ManPrintStats( p, NULL );\n    pTemp = Gia_ManDropContained( p );\n    printf( \"Drop AIG: \" );\n    Gia_ManPrintStats( pTemp, NULL );\n//    return pTemp;\n    if ( Gia_ManPoNum(pTemp) == 1 )\n        return pTemp;\n    Ssc_ManSetDefaultParams( pPars );\n    pPars-\u003efAppend  = 1;\n    pPars-\u003efVerbose = 0;\n    pTemp-\u003enConstrs = Gia_ManPoNum(pTemp) - 1;    \n    for ( i = 0; i \u003c Gia_ManPoNum(pTemp); i++ )\n    {\n        // move i-th PO forward\n        Gia_ManSwapPos( pTemp, i );\n        pTemp = Gia_ManDupDfs( pAux = pTemp );\n        Gia_ManStop( pAux );\n        // minimize this PO\n        pTemp = Ssc_PerformSweepingConstr( pAux = pTemp, pPars );\n        Gia_ManStop( pAux );\n        pTemp = Gia_ManDupDfs( pAux = pTemp );\n        Gia_ManStop( pAux );\n        // move i-th PO back\n        Gia_ManSwapPos( pTemp, i );\n        pTemp = Gia_ManDupDfs( pAux = pTemp );\n        Gia_ManStop( pAux );\n        // report results\n        printf( \"AIG%3d  : \", i );\n        Gia_ManPrintStats( pTemp, NULL );\n    }\n    pTemp-\u003enConstrs = 0;\n    return pTemp;\n}",
+      "Draft": "func Gia_ManOptimizeRing(p *Gia_Man_t) *Gia_Man_t {\n    var Pars Ssc_Pars_t;\n    var pPars *Ssc_Pars_t = \u0026Pars;\n    var pTemp, pAux *Gia_Man_t;\n    var i int32;\n    assert(p.nConstrs == 0, \"p.nConstrs == 0\");\n    fmt.Printf(\"User AIG: \");\n    Gia_ManPrintStats( p, nil );\n    pTemp = Gia_ManDropContained( p );\n    fmt.Printf(\"Drop AIG: \");\n    Gia_ManPrintStats( pTemp, nil );\n//    return pTemp;\n    if Gia_ManPoNum(pTemp) == 1 {\n        return pTemp; }\n    Ssc_ManSetDefaultParams( pPars );\n    pPars.fAppend  = 1;\n    pPars.fVerbose = 0;\n    pTemp.nConstrs = Gia_ManPoNum(pTemp) - 1;    \n    for  i = 0; i \u003c Gia_ManPoNum(pTemp); i++  {\n        // move i-th PO forward\n        Gia_ManSwapPos( pTemp, i );\n        pTemp = Gia_ManDupDfs( pAux = pTemp );\n        Gia_ManStop( pAux );\n        // minimize this PO\n        pTemp = Ssc_PerformSweepingConstr( pAux = pTemp, pPars );\n        Gia_ManStop( pAux );\n        pTemp = Gia_ManDupDfs( pAux = pTemp );\n        Gia_ManStop( pAux );\n        // move i-th PO back\n        Gia_ManSwapPos( pTemp, i );\n        pTemp = Gia_ManDupDfs( pAux = pTemp );\n        Gia_ManStop( pAux );\n        // report results\n        fmt.Printf(\"AIG%3d  : \", i);\n        Gia_ManPrintStats( pTemp, nil );\n    }\n    pTemp.nConstrs = 0;\n    return pTemp;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscUtil.c::Gia_ManDropContained",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDropContained",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1286,
+      "End": 3356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscUtil.c::Gia_ManOptimizeRing",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManOptimizeRing",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3592,
+      "End": 4830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5077
+    }
+  ],
+  "Draft": "package ssc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sscUtil.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT sweeping under constraints.]\n\n  Synopsis    [Various utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 29, 2008.]\n\n  Revision    [$Id: sscUtil.c,v 1.00 2008/07/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sscInt.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDropContained(p *Gia_Man_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pMan *Aig_Man_t  = Gia_ManToAigSimple( p );\n    var pDat *Cnf_Dat_t  = Cnf_Derive( pMan, Gia_ManPoNum(p) );\n    var pObj *Gia_Obj_t;\n    var vLits, vKeep *Vec_Int_t;\n    var pSat *sat_solver;\n    var ConstLit int32  = Abc_Var2Lit(pDat.pVarNums[0], 0);\n    var i, status int32;//, Count = 0;\n    Aig_ManStop( pMan );\n\n    vLits = Vec_IntAlloc( Gia_ManPoNum(p) );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        var iObj int32  = Gia_ObjId( p, pObj );\n        Vec_IntPush( vLits, Abc_Var2Lit(pDat.pVarNums[iObj], 1) );\n    }\n\n    // start the SAT solver\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, pDat.nVars );\n    for  i = 0; i \u003c pDat.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pDat.pClauses[i], pDat.pClauses[i+1] ) {\n            Cnf_DataFree( pDat );\n            sat_solver_delete( pSat );\n            Vec_IntFree( vLits );\n            return nil;\n        }\n    }\n    Cnf_DataFree( pDat );\n    status = sat_solver_simplify( pSat );\n    if status == 0 {\n        sat_solver_delete( pSat );\n        Vec_IntFree( vLits );\n        return nil;\n    }\n\n    // iterate over POs\n    vKeep = Vec_IntAlloc( Gia_ManPoNum(p) );\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Vec_IntWriteEntry( vLits, i, Abc_LitNot(Vec_IntEntry(vLits,i)) );\n        status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), 0, 0, 0, 0 );\n        Vec_IntWriteEntry( vLits, i, Abc_LitNot(Vec_IntEntry(vLits,i)) );\n        if status == l_False {\n            Vec_IntWriteEntry( vLits, i, ConstLit ); // const1 SAT var is always true\n        } else {\n            assert(status == l_True, \"status == l_True\");\n            Vec_IntPush( vKeep, i );\n        }\n    }\n    sat_solver_delete( pSat );\n    Vec_IntFree( vLits );\n    if Vec_IntSize(vKeep) == Gia_ManPoNum(p) {\n        Vec_IntFree( vKeep );\n        return Gia_ManDup(p);\n    }\n    pNew = Gia_ManDupCones( p, Vec_IntArray(vKeep), Vec_IntSize(vKeep), 0 );\n    Vec_IntFree( vKeep );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManOptimizeRing(p *Gia_Man_t) *Gia_Man_t {\n    var Pars Ssc_Pars_t;\n    var pPars *Ssc_Pars_t = \u0026Pars;\n    var pTemp, pAux *Gia_Man_t;\n    var i int32;\n    assert(p.nConstrs == 0, \"p.nConstrs == 0\");\n    fmt.Printf(\"User AIG: \");\n    Gia_ManPrintStats( p, nil );\n    pTemp = Gia_ManDropContained( p );\n    fmt.Printf(\"Drop AIG: \");\n    Gia_ManPrintStats( pTemp, nil );\n//    return pTemp;\n    if Gia_ManPoNum(pTemp) == 1 {\n        return pTemp; }\n    Ssc_ManSetDefaultParams( pPars );\n    pPars.fAppend  = 1;\n    pPars.fVerbose = 0;\n    pTemp.nConstrs = Gia_ManPoNum(pTemp) - 1;    \n    for  i = 0; i \u003c Gia_ManPoNum(pTemp); i++  {\n        // move i-th PO forward\n        Gia_ManSwapPos( pTemp, i );\n        pTemp = Gia_ManDupDfs( pAux = pTemp );\n        Gia_ManStop( pAux );\n        // minimize this PO\n        pTemp = Ssc_PerformSweepingConstr( pAux = pTemp, pPars );\n        Gia_ManStop( pAux );\n        pTemp = Gia_ManDupDfs( pAux = pTemp );\n        Gia_ManStop( pAux );\n        // move i-th PO back\n        Gia_ManSwapPos( pTemp, i );\n        pTemp = Gia_ManDupDfs( pAux = pTemp );\n        Gia_ManStop( pAux );\n        // report results\n        fmt.Printf(\"AIG%3d  : \", i);\n        Gia_ManPrintStats( pTemp, nil );\n    }\n    pTemp.nConstrs = 0;\n    return pTemp;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

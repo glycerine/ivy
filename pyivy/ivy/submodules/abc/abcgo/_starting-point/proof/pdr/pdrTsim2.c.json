@@ -1,0 +1,789 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c",
+  "SHA256": "2e0bf27e3d6d9ab4a237b99f81b2624b3f73fecbcdc55c868c99aa394d766e0b",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 2120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vPrio) == Aig_ManRegNum(pAig) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 66,
+        "Column": 9,
+        "ByteOffset": 2181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Txs_Man_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 5,
+        "ByteOffset": 3368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 4002
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 9,
+        "ByteOffset": 5552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( ~pObj.Value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 174,
+        "Column": 9,
+        "ByteOffset": 6230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( ~pObj.Value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 181,
+        "Column": 9,
+        "ByteOffset": 6445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( int32(pObj.fMark0) == Vec_IntEntry(vCoVals, i) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 7071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 204,
+        "Column": 5,
+        "ByteOffset": 7173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !pObj.fMark0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 205,
+        "Column": 5,
+        "ByteOffset": 7201
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !value0 || !value1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 7379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !value0 \u0026\u0026 !value1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 9,
+        "ByteOffset": 8132
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !value0 || !value1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 9386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vFfLits) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 302,
+        "Column": 9,
+        "ByteOffset": 10513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !value0 || !value1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 349,
+        "Column": 9,
+        "ByteOffset": 12328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !value0 || !value1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 364,
+        "Column": 9,
+        "ByteOffset": 12945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( ~pObj.Value );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 399,
+        "Column": 5,
+        "ByteOffset": 14386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%3d : \", Vec_IntSize(vFfLits) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 401,
+        "Column": 9,
+        "ByteOffset": 14481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s%d(%d) \", Abc_LitIsCompl(Entry)? \"+\":\"-\", Abc_Lit2Var(Entry), Vec_IntEntry(vPrio, Abc_Lit2Var(Entry)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 402,
+        "Column": 5,
+        "ByteOffset": 14601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 425,
+        "Column": 9,
+        "ByteOffset": 15308
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjTerSimGetX(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 434,
+        "Column": 9,
+        "ByteOffset": 15606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjTerSimGetX(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 446,
+        "Column": 13,
+        "ByteOffset": 15996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjTerSimGet1(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 448,
+        "Column": 13,
+        "ByteOffset": 16060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjTerSimGet0(pObj) ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 493,
+        "Column": 19,
+        "ByteOffset": 17648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Pdr_SetPrint( stdout, pCube, Gia_ManRegNum(p.pGia), nil );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Txs_ManStart",
+      "Start": 1951,
+      "End": 3052,
+      "BodyStart": 2033,
+      "Original": "Txs_Man_t * Txs_ManStart( Pdr_Man_t * pMan, Aig_Man_t * pAig, Vec_Int_t * vPrio )\n{\n    Txs_Man_t * p;\n//    Aig_Obj_t * pObj;\n//    int i;\n    assert( Vec_IntSize(vPrio) == Aig_ManRegNum(pAig) );\n    p = ABC_CALLOC( Txs_Man_t, 1 );\n    p-\u003epGia    = Gia_ManFromAigSimple(pAig); // user's AIG\n//    Aig_ManForEachObj( pAig, pObj, i )\n//        assert( i == 0 || pObj-\u003eiData == Abc_Var2Lit(i, 0) );\n    p-\u003evPrio   = vPrio;                // priority of each flop\n    p-\u003evCiObjs = Vec_IntAlloc( 100 );  // cone leaves (CI obj IDs)\n    p-\u003evCoObjs = Vec_IntAlloc( 100 );  // cone roots (CO obj IDs)\n    p-\u003evCiVals = Vec_IntAlloc( 100 );  // cone leaf values (0/1 CI values)\n    p-\u003evCoVals = Vec_IntAlloc( 100 );  // cone root values (0/1 CO values)\n    p-\u003evNodes  = Vec_IntAlloc( 100 );  // cone nodes (node obj IDs)\n    p-\u003evTemp   = Vec_IntAlloc( 100 );  // cone nodes (node obj IDs)\n    p-\u003evPiLits = Vec_IntAlloc( 100 );  // resulting array of PI literals\n    p-\u003evFfLits = Vec_IntAlloc( 100 );  // resulting array of flop literals\n    p-\u003epMan    = pMan;                 // calling manager\n    return p;\n}",
+      "Draft": "func Txs_ManStart(pMan *Pdr_Man_t, pAig *Aig_Man_t, vPrio *Vec_Int_t) *Txs_Man_t {\n    var p *Txs_Man_t;\n//    Aig_Obj_t * pObj;\n//    int i;\n    assert(Vec_IntSize(vPrio) == Aig_ManRegNum(pAig), \"Vec_IntSize(vPrio) == Aig_ManRegNum(pAig)\");\n    p = new(Txs_Man_t);\n    p.pGia    = Gia_ManFromAigSimple(pAig); // user's AIG\n//    Aig_ManForEachObj( pAig, pObj, i )\n//        assert( i == 0 || pObj-\u003eiData == Abc_Var2Lit(i, 0) );\n    p.vPrio   = vPrio;                // priority of each flop\n    p.vCiObjs = Vec_IntAlloc( 100 );  // cone leaves (CI obj IDs)\n    p.vCoObjs = Vec_IntAlloc( 100 );  // cone roots (CO obj IDs)\n    p.vCiVals = Vec_IntAlloc( 100 );  // cone leaf values (0/1 CI values)\n    p.vCoVals = Vec_IntAlloc( 100 );  // cone root values (0/1 CO values)\n    p.vNodes  = Vec_IntAlloc( 100 );  // cone nodes (node obj IDs)\n    p.vTemp   = Vec_IntAlloc( 100 );  // cone nodes (node obj IDs)\n    p.vPiLits = Vec_IntAlloc( 100 );  // resulting array of PI literals\n    p.vFfLits = Vec_IntAlloc( 100 );  // resulting array of flop literals\n    p.pMan    = pMan;                 // calling manager\n    return p;\n}"
+    },
+    {
+      "Name": "Txs_ManStop",
+      "Start": 3053,
+      "End": 3382,
+      "BodyStart": 3087,
+      "Original": "void Txs_ManStop( Txs_Man_t * p )\n{\n    Gia_ManStop( p-\u003epGia );\n    Vec_IntFree( p-\u003evCiObjs );\n    Vec_IntFree( p-\u003evCoObjs );\n    Vec_IntFree( p-\u003evCiVals );\n    Vec_IntFree( p-\u003evCoVals );\n    Vec_IntFree( p-\u003evNodes );\n    Vec_IntFree( p-\u003evTemp );\n    Vec_IntFree( p-\u003evPiLits );\n    Vec_IntFree( p-\u003evFfLits );\n    ABC_FREE( p );\n}",
+      "Draft": "func Txs_ManStop(p *Txs_Man_t) {\n    Gia_ManStop( p.pGia );\n    Vec_IntFree( p.vCiObjs );\n    Vec_IntFree( p.vCoObjs );\n    Vec_IntFree( p.vCiVals );\n    Vec_IntFree( p.vCoVals );\n    Vec_IntFree( p.vNodes );\n    Vec_IntFree( p.vTemp );\n    Vec_IntFree( p.vPiLits );\n    Vec_IntFree( p.vFfLits );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Txs_ManCollectCone_rec",
+      "Start": 3734,
+      "End": 4236,
+      "BodyStart": 3838,
+      "Original": "void Txs_ManCollectCone_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vCiObjs, Vec_Int_t * vNodes )\n{\n    if ( !~pObj-\u003eValue )\n        return;\n    pObj-\u003eValue = ~0;\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        Vec_IntPush( vCiObjs, Gia_ObjId(p, pObj) );\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Txs_ManCollectCone_rec( p, Gia_ObjFanin0(pObj), vCiObjs, vNodes );\n    Txs_ManCollectCone_rec( p, Gia_ObjFanin1(pObj), vCiObjs, vNodes );\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n}",
+      "Draft": "func Txs_ManCollectCone_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vCiObjs *Vec_Int_t, vNodes *Vec_Int_t) {\n    if !~pObj.Value {\n        return; }\n    pObj.Value = ~0;\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vCiObjs, Gia_ObjId(p, pObj) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Txs_ManCollectCone_rec( p, Gia_ObjFanin0(pObj), vCiObjs, vNodes );\n    Txs_ManCollectCone_rec( p, Gia_ObjFanin1(pObj), vCiObjs, vNodes );\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n}"
+    },
+    {
+      "Name": "Txs_ManCollectCone",
+      "Start": 4237,
+      "End": 4675,
+      "BodyStart": 4340,
+      "Original": "void Txs_ManCollectCone( Gia_Man_t * p, Vec_Int_t * vCoObjs, Vec_Int_t * vCiObjs, Vec_Int_t * vNodes )\n{\n    Gia_Obj_t * pObj; int i;\n//    printf( \"Collecting cones for clause with %d literals.\\n\", Vec_IntSize(vCoObjs) );\n    Vec_IntClear( vCiObjs );\n    Vec_IntClear( vNodes );\n    Gia_ManConst0(p)-\u003eValue = ~0;\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n        Txs_ManCollectCone_rec( p, Gia_ObjFanin0(pObj), vCiObjs, vNodes );\n}",
+      "Draft": "func Txs_ManCollectCone(p *Gia_Man_t, vCoObjs *Vec_Int_t, vCiObjs *Vec_Int_t, vNodes *Vec_Int_t) {\n    var pObj *Gia_Obj_t; var i int32;\n//    printf( \"Collecting cones for clause with %d literals.\\n\", Vec_IntSize(vCoObjs) );\n    Vec_IntClear( vCiObjs );\n    Vec_IntClear( vNodes );\n    Gia_ManConst0(p).Value = ~0;\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n        Txs_ManCollectCone_rec( p, Gia_ObjFanin0(pObj), vCiObjs, vNodes );\n}"
+    },
+    {
+      "Name": "Txs_ManForwardPass",
+      "Start": 4948,
+      "End": 6532,
+      "BodyStart": 5164,
+      "Original": "void Txs_ManForwardPass( Gia_Man_t * p, \n                         Vec_Int_t * vPrio, Vec_Int_t * vCiObjs, Vec_Int_t * vCiVals, \n                         Vec_Int_t * vNodes, Vec_Int_t * vCoObjs, Vec_Int_t * vCoVals )\n{\n    Gia_Obj_t * pObj, * pFan0, * pFan1; \n    int i, value0, value1;\n    pObj = Gia_ManConst0(p);\n    pObj-\u003efMark0 = 0;\n    pObj-\u003efMark1 = 0;\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n    {\n        pObj-\u003efMark0 = Vec_IntEntry(vCiVals, i);\n        pObj-\u003efMark1 = 0;\n        pObj-\u003eValue = Gia_ObjIsPi(p, pObj) ? 0x7FFFFFFF : Vec_IntEntry(vPrio, Gia_ObjCioId(pObj)-Gia_ManPiNum(p));\n        assert( ~pObj-\u003eValue );\n    }\n    Gia_ManForEachObjVec( vNodes, p, pObj, i )\n    {\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        value0 = pFan0-\u003efMark0 ^ Gia_ObjFaninC0(pObj);\n        value1 = pFan1-\u003efMark0 ^ Gia_ObjFaninC1(pObj);\n        pObj-\u003efMark0 = value0 \u0026\u0026 value1;\n        pObj-\u003efMark1 = 0;\n        if ( pObj-\u003efMark0 )\n            pObj-\u003eValue = Abc_MinInt( pFan0-\u003eValue, pFan1-\u003eValue );\n        else if ( value0 )\n            pObj-\u003eValue = pFan1-\u003eValue;\n        else if ( value1 )\n            pObj-\u003eValue = pFan0-\u003eValue;\n        else // if ( value0 == 0 \u0026\u0026 value1 == 0 )\n            pObj-\u003eValue = Abc_MaxInt( pFan0-\u003eValue, pFan1-\u003eValue );\n        assert( ~pObj-\u003eValue );\n    }\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n    {\n        pFan0 = Gia_ObjFanin0(pObj);\n        pObj-\u003efMark0 = (pFan0-\u003efMark0 ^ Gia_ObjFaninC0(pObj));\n        pFan0-\u003efMark1 = 1;\n        assert( (int)pObj-\u003efMark0 == Vec_IntEntry(vCoVals, i) );\n    }\n}",
+      "Draft": "func Txs_ManForwardPass(p *Gia_Man_t, vPrio *Vec_Int_t, vCiObjs *Vec_Int_t, vCiVals *Vec_Int_t, vNodes *Vec_Int_t, vCoObjs *Vec_Int_t, vCoVals *Vec_Int_t) {\n    var pObj, pFan0, pFan1 *Gia_Obj_t; \n    var i, value0, value1 int32;\n    pObj = Gia_ManConst0(p);\n    pObj.fMark0 = 0;\n    pObj.fMark1 = 0;\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n    {\n        pObj.fMark0 = Vec_IntEntry(vCiVals, i);\n        pObj.fMark1 = 0;\n        if Gia_ObjIsPi(p, pObj) {\n            pObj.Value = 0x7FFFFFFF;\n        } else {\n            pObj.Value = Vec_IntEntry(vPrio, Gia_ObjCioId(pObj)-Gia_ManPiNum(p));\n        }\n        assert(~pObj.Value, \"~pObj.Value\");\n    }\n    Gia_ManForEachObjVec( vNodes, p, pObj, i )\n    {\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        value0 = pFan0.fMark0 ^ Gia_ObjFaninC0(pObj);\n        value1 = pFan1.fMark0 ^ Gia_ObjFaninC1(pObj);\n        pObj.fMark0 = value0 \u0026\u0026 value1;\n        pObj.fMark1 = 0;\n        if pObj.fMark0 {\n            pObj.Value = Abc_MinInt( pFan0.Value, pFan1.Value );\n        } else if value0 != 0 {\n            pObj.Value = pFan1.Value;\n        } else if value1 != 0 {\n            pObj.Value = pFan0.Value;\n        } else { // if ( value0 == 0 \u0026\u0026 value1 == 0 )\n            pObj.Value = Abc_MaxInt( pFan0.Value, pFan1.Value ); }\n        assert(~pObj.Value, \"~pObj.Value\");\n    }\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n    {\n        pFan0 = Gia_ObjFanin0(pObj);\n        pObj.fMark0 = (pFan0.fMark0 ^ Gia_ObjFaninC0(pObj));\n        pFan0.fMark1 = 1;\n        assert(int32(pObj.fMark0) == Vec_IntEntry(vCoVals, i), \"int32(pObj.fMark0) == Vec_IntEntry(vCoVals, i)\");\n    }\n}"
+    },
+    {
+      "Name": "Txs_ObjIsJust",
+      "Start": 6811,
+      "End": 7522,
+      "BodyStart": 6878,
+      "Original": "static inline int Txs_ObjIsJust( Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    Gia_Obj_t * pFan0 = Gia_ObjFanin0(pObj);\n    Gia_Obj_t * pFan1 = Gia_ObjFanin1(pObj);\n    int value0 = pFan0-\u003efMark0 ^ Gia_ObjFaninC0(pObj);\n    int value1 = pFan1-\u003efMark0 ^ Gia_ObjFaninC1(pObj);\n    assert( Gia_ObjIsAnd(pObj) );\n    if ( pObj-\u003efMark0 )\n        return pFan0-\u003efMark1 \u0026\u0026 pFan1-\u003efMark1;\n    assert( !pObj-\u003efMark0 );\n    assert( !value0 || !value1 );\n    if ( value0 )\n        return pFan1-\u003efMark1 || Gia_ObjIsPi(p, pFan1);\n    if ( value1 )\n        return pFan0-\u003efMark1 || Gia_ObjIsPi(p, pFan0);\n    assert( !value0 \u0026\u0026 !value1 );\n    return pFan0-\u003efMark1 || pFan1-\u003efMark1 || Gia_ObjIsPi(p, pFan0) || Gia_ObjIsPi(p, pFan1);\n}",
+      "Draft": "func Txs_ObjIsJust(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    var pFan0 *Gia_Obj_t  = Gia_ObjFanin0(pObj);\n    var pFan1 *Gia_Obj_t  = Gia_ObjFanin1(pObj);\n    var value0 int32  = pFan0.fMark0 ^ Gia_ObjFaninC0(pObj);\n    var value1 int32  = pFan1.fMark0 ^ Gia_ObjFaninC1(pObj);\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if pObj.fMark0 {\n        return pFan0.fMark1 \u0026\u0026 pFan1.fMark1; }\n    assert(!pObj.fMark0, \"!pObj.fMark0\");\n    assert(!(value0 != 0) || !(value1 != 0), \"!value0 || !value1\");\n    if value0 != 0 {\n        return pFan1.fMark1 || Gia_ObjIsPi(p, pFan1); }\n    if value1 != 0 {\n        return pFan0.fMark1 || Gia_ObjIsPi(p, pFan0); }\n    assert(!(value0 != 0) \u0026\u0026 !(value1 != 0), \"!value0 \u0026\u0026 !value1\");\n    return pFan0.fMark1 || pFan1.fMark1 || Gia_ObjIsPi(p, pFan0) || Gia_ObjIsPi(p, pFan1);\n}"
+    },
+    {
+      "Name": "Txs_ManBackwardPass",
+      "Start": 7523,
+      "End": 9483,
+      "BodyStart": 7648,
+      "Original": "void Txs_ManBackwardPass( Gia_Man_t * p, Vec_Int_t * vCiObjs, Vec_Int_t * vNodes, Vec_Int_t * vPiLits, Vec_Int_t * vFfLits )\n{\n    Gia_Obj_t * pObj, * pFan0, * pFan1; int i, value0, value1;\n    Gia_ManForEachObjVecReverse( vNodes, p, pObj, i )\n    {\n        if ( !pObj-\u003efMark1 )\n            continue;\n        pObj-\u003efMark1 = 0;\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        if ( pObj-\u003efMark0 )\n        {\n            pFan0-\u003efMark1 = 1;\n            pFan1-\u003efMark1 = 1;\n            continue;\n        }\n        value0 = pFan0-\u003efMark0 ^ Gia_ObjFaninC0(pObj);\n        value1 = pFan1-\u003efMark0 ^ Gia_ObjFaninC1(pObj);\n        assert( !value0 || !value1 );\n        if ( value0 )\n            pFan1-\u003efMark1 = 1;\n        else if ( value1 )\n            pFan0-\u003efMark1 = 1;\n        else // if ( !value0 \u0026\u0026 !value1 )\n        {\n            if ( pFan0-\u003efMark1 || pFan1-\u003efMark1 )\n                continue;\n            if ( Gia_ObjIsPi(p, pFan0) )\n                pFan0-\u003efMark1 = 1;\n            else if ( Gia_ObjIsPi(p, pFan1) )\n                pFan1-\u003efMark1 = 1;\n            else if ( Gia_ObjIsAnd(pFan0) \u0026\u0026 Txs_ObjIsJust(p, pFan0) )\n                pFan0-\u003efMark1 = 1;\n            else if ( Gia_ObjIsAnd(pFan1) \u0026\u0026 Txs_ObjIsJust(p, pFan1) )\n                pFan1-\u003efMark1 = 1;\n            else\n            {\n                if ( pFan0-\u003eValue \u003e= pFan1-\u003eValue )\n                    pFan0-\u003efMark1 = 1;\n                else\n                    pFan1-\u003efMark1 = 1;\n            }\n        }\n    }\n    Vec_IntClear( vPiLits );\n    Vec_IntClear( vFfLits );\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n    {\n        if ( !pObj-\u003efMark1 )\n            continue;\n        if ( Gia_ObjIsPi(p, pObj) )\n            Vec_IntPush( vPiLits, Abc_Var2Lit(Gia_ObjCioId(pObj),                 !pObj-\u003efMark0) );\n        else\n            Vec_IntPush( vFfLits, Abc_Var2Lit(Gia_ObjCioId(pObj)-Gia_ManPiNum(p), !pObj-\u003efMark0) );\n    }\n    assert( Vec_IntSize(vFfLits) \u003e 0 );\n}",
+      "Draft": "func Txs_ManBackwardPass(p *Gia_Man_t, vCiObjs *Vec_Int_t, vNodes *Vec_Int_t, vPiLits *Vec_Int_t, vFfLits *Vec_Int_t) {\n    var pObj, pFan0, pFan1 *Gia_Obj_t; var i, value0, value1 int32;\n    Gia_ManForEachObjVecReverse( vNodes, p, pObj, i )\n    {\n        if !pObj.fMark1 {\n            continue; }\n        pObj.fMark1 = 0;\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        if pObj.fMark0 {\n            pFan0.fMark1 = 1;\n            pFan1.fMark1 = 1;\n            continue;\n        }\n        value0 = pFan0.fMark0 ^ Gia_ObjFaninC0(pObj);\n        value1 = pFan1.fMark0 ^ Gia_ObjFaninC1(pObj);\n        assert(!(value0 != 0) || !(value1 != 0), \"!value0 || !value1\");\n        if value0 != 0 {\n            pFan1.fMark1 = 1;\n        } else if value1 != 0 {\n            pFan0.fMark1 = 1;\n        } else { // if ( !value0 \u0026\u0026 !value1 )\n        \n            if pFan0.fMark1 || pFan1.fMark1 {\n                continue; }\n            if Gia_ObjIsPi(p, pFan0) {\n                pFan0.fMark1 = 1;\n            } else if Gia_ObjIsPi(p, pFan1) {\n                pFan1.fMark1 = 1;\n            } else if Gia_ObjIsAnd(pFan0) \u0026\u0026 (Txs_ObjIsJust(p, pFan0) != 0) {\n                pFan0.fMark1 = 1;\n            } else if Gia_ObjIsAnd(pFan1) \u0026\u0026 (Txs_ObjIsJust(p, pFan1) != 0) {\n                pFan1.fMark1 = 1;\n            } else {\n                if pFan0.Value \u003e= pFan1.Value {\n                    pFan0.fMark1 = 1;\n                } else {\n                    pFan1.fMark1 = 1; }\n            }\n        }\n    }\n    Vec_IntClear( vPiLits );\n    Vec_IntClear( vFfLits );\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n    {\n        if !pObj.fMark1 {\n            continue; }\n        if Gia_ObjIsPi(p, pObj) {\n            Vec_IntPush( vPiLits, Abc_Var2Lit(Gia_ObjCioId(pObj),                 !pObj.fMark0) );\n        } else {\n            Vec_IntPush( vFfLits, Abc_Var2Lit(Gia_ObjCioId(pObj)-Gia_ManPiNum(p), !pObj.fMark0) ); }\n    }\n    assert(Vec_IntSize(vFfLits) \u003e 0, \"Vec_IntSize(vFfLits) \u003e 0\");\n}"
+    },
+    {
+      "Name": "Txs_ManSelectJustPath",
+      "Start": 9747,
+      "End": 10899,
+      "BodyStart": 9850,
+      "Original": "void Txs_ManSelectJustPath( Gia_Man_t * p, Vec_Int_t * vNodes, Vec_Int_t * vCoObjs, Vec_Int_t * vRes )\n{\n    Gia_Obj_t * pObj, * pFan0, * pFan1; \n    int i, value0, value1;\n    // mark CO drivers\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n        Gia_ObjFanin0(pObj)-\u003efMark1 = 1;\n    // collect just paths\n    Vec_IntClear( vRes );\n    Gia_ManForEachObjVecReverse( vNodes, p, pObj, i )\n    {\n        if ( !pObj-\u003efMark1 )\n            continue;\n        pObj-\u003efMark1 = 0;\n        Vec_IntPush( vRes, Gia_ObjId(p, pObj) );\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        if ( pObj-\u003efMark0 )\n        {\n            pFan0-\u003efMark1 = 1;\n            pFan1-\u003efMark1 = 1;\n            continue;\n        }\n        value0 = pFan0-\u003efMark0 ^ Gia_ObjFaninC0(pObj);\n        value1 = pFan1-\u003efMark0 ^ Gia_ObjFaninC1(pObj);\n        assert( !value0 || !value1 );\n        if ( value0 )\n            pFan1-\u003efMark1 = 1;\n        else if ( value1 )\n            pFan0-\u003efMark1 = 1;\n        else // if ( !value0 \u0026\u0026 !value1 )\n        {\n            pFan0-\u003efMark1 = 1;\n            pFan1-\u003efMark1 = 1;\n        }\n    }\n    Vec_IntReverseOrder( vRes );\n}",
+      "Draft": "func Txs_ManSelectJustPath(p *Gia_Man_t, vNodes *Vec_Int_t, vCoObjs *Vec_Int_t, vRes *Vec_Int_t) {\n    var pObj, pFan0, pFan1 *Gia_Obj_t; \n    var i, value0, value1 int32;\n    // mark CO drivers\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n        Gia_ObjFanin0(pObj).fMark1 = 1;\n    // collect just paths\n    Vec_IntClear( vRes );\n    Gia_ManForEachObjVecReverse( vNodes, p, pObj, i )\n    {\n        if !pObj.fMark1 {\n            continue; }\n        pObj.fMark1 = 0;\n        Vec_IntPush( vRes, Gia_ObjId(p, pObj) );\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        if pObj.fMark0 {\n            pFan0.fMark1 = 1;\n            pFan1.fMark1 = 1;\n            continue;\n        }\n        value0 = pFan0.fMark0 ^ Gia_ObjFaninC0(pObj);\n        value1 = pFan1.fMark0 ^ Gia_ObjFaninC1(pObj);\n        assert(!(value0 != 0) || !(value1 != 0), \"!value0 || !value1\");\n        if value0 != 0 {\n            pFan1.fMark1 = 1;\n        } else if value1 != 0 {\n            pFan0.fMark1 = 1;\n        } else { // if ( !value0 \u0026\u0026 !value1 )\n        \n            pFan0.fMark1 = 1;\n            pFan1.fMark1 = 1;\n        }\n    }\n    Vec_IntReverseOrder( vRes );\n}"
+    },
+    {
+      "Name": "Txs_ManCollectJustPis",
+      "Start": 10900,
+      "End": 11231,
+      "BodyStart": 10986,
+      "Original": "void Txs_ManCollectJustPis( Gia_Man_t * p, Vec_Int_t * vCiObjs, Vec_Int_t * vPiLits )\n{\n    Gia_Obj_t * pObj; int i;\n    Vec_IntClear( vPiLits );\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n        if ( pObj-\u003efMark1 \u0026\u0026 Gia_ObjIsPi(p, pObj) )\n            Vec_IntPush( vPiLits, Abc_Var2Lit(Gia_ObjCioId(pObj), !pObj-\u003efMark0) );\n}",
+      "Draft": "func Txs_ManCollectJustPis(p *Gia_Man_t, vCiObjs *Vec_Int_t, vPiLits *Vec_Int_t) {\n    var pObj *Gia_Obj_t; var i int32;\n    Vec_IntClear( vPiLits );\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n        if ( pObj.fMark1 \u0026\u0026 Gia_ObjIsPi(p, pObj) )\n            Vec_IntPush( vPiLits, Abc_Var2Lit(Gia_ObjCioId(pObj), !pObj.fMark0) );\n}"
+    },
+    {
+      "Name": "Txs_ManInitPrio",
+      "Start": 11232,
+      "End": 11509,
+      "BodyStart": 11291,
+      "Original": "void Txs_ManInitPrio( Gia_Man_t * p, Vec_Int_t * vCiObjs )\n{\n    Gia_Obj_t * pObj; int i;\n    Gia_ManConst0(p)-\u003eValue = 0x7FFFFFFF;\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n        pObj-\u003eValue = Gia_ObjIsPi(p, pObj) ? 0x7FFFFFFF : Gia_ObjCioId(pObj) - Gia_ManPiNum(p);\n}",
+      "Draft": "func Txs_ManInitPrio(p *Gia_Man_t, vCiObjs *Vec_Int_t) {\n    var pObj *Gia_Obj_t; var i int32;\n    Gia_ManConst0(p).Value = 0x7FFFFFFF;\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n        pObj.Value = Gia_ObjIsPi(p, pObj) ? 0x7FFFFFFF : Gia_ObjCioId(pObj) - Gia_ManPiNum(p);\n}"
+    },
+    {
+      "Name": "Txs_ManPropagatePrio",
+      "Start": 11510,
+      "End": 13086,
+      "BodyStart": 11592,
+      "Original": "void Txs_ManPropagatePrio( Gia_Man_t * p, Vec_Int_t * vNodes, Vec_Int_t * vPrio )\n{\n    Gia_Obj_t * pObj, * pFan0, * pFan1;\n    int i, value0, value1;\n    Gia_ManForEachObjVec( vNodes, p, pObj, i )\n    {\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        if ( pObj-\u003efMark0 )\n        {\n//            pObj-\u003eValue = Abc_MinInt( pFan0-\u003eValue, pFan1-\u003eValue );\n            if ( pFan0-\u003eValue == 0x7FFFFFFF )\n                pObj-\u003eValue = pFan1-\u003eValue;\n            else if ( pFan1-\u003eValue == 0x7FFFFFFF )\n                pObj-\u003eValue = pFan0-\u003eValue;\n            else if ( Vec_IntEntry(vPrio, pFan0-\u003eValue) \u003c Vec_IntEntry(vPrio, pFan1-\u003eValue) )\n                pObj-\u003eValue = pFan0-\u003eValue;\n            else\n                pObj-\u003eValue = pFan1-\u003eValue;\n            continue;\n        }\n        value0 = pFan0-\u003efMark0 ^ Gia_ObjFaninC0(pObj);\n        value1 = pFan1-\u003efMark0 ^ Gia_ObjFaninC1(pObj);\n        assert( !value0 || !value1 );\n        if ( value0 )\n            pObj-\u003eValue = pFan1-\u003eValue;\n        else if ( value1 )\n            pObj-\u003eValue = pFan0-\u003eValue;\n        else // if ( value0 == 0 \u0026\u0026 value1 == 0 )\n        {\n//            pObj-\u003eValue = Abc_MaxInt( pFan0-\u003eValue, pFan1-\u003eValue );\n            if ( pFan0-\u003eValue == 0x7FFFFFFF || pFan1-\u003eValue == 0x7FFFFFFF )\n                pObj-\u003eValue = 0x7FFFFFFF;\n            else if ( Vec_IntEntry(vPrio, pFan0-\u003eValue) \u003e= Vec_IntEntry(vPrio, pFan1-\u003eValue) )\n                pObj-\u003eValue = pFan0-\u003eValue;\n            else\n                pObj-\u003eValue = pFan1-\u003eValue;\n        }\n        assert( ~pObj-\u003eValue );\n    }\n}",
+      "Draft": "func Txs_ManPropagatePrio(p *Gia_Man_t, vNodes *Vec_Int_t, vPrio *Vec_Int_t) {\n    var pObj, pFan0, pFan1 *Gia_Obj_t;\n    var i, value0, value1 int32;\n    Gia_ManForEachObjVec( vNodes, p, pObj, i )\n    {\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        if pObj.fMark0 {\n//            pObj-\u003eValue = Abc_MinInt( pFan0-\u003eValue, pFan1-\u003eValue );\n            if pFan0.Value == 0x7FFFFFFF {\n                pObj.Value = pFan1.Value;\n            } else if pFan1.Value == 0x7FFFFFFF {\n                pObj.Value = pFan0.Value;\n            } else if Vec_IntEntry(vPrio, pFan0.Value) \u003c Vec_IntEntry(vPrio, pFan1.Value) {\n                pObj.Value = pFan0.Value;\n            } else {\n                pObj.Value = pFan1.Value; }\n            continue;\n        }\n        value0 = pFan0.fMark0 ^ Gia_ObjFaninC0(pObj);\n        value1 = pFan1.fMark0 ^ Gia_ObjFaninC1(pObj);\n        assert(!(value0 != 0) || !(value1 != 0), \"!value0 || !value1\");\n        if value0 != 0 {\n            pObj.Value = pFan1.Value;\n        } else if value1 != 0 {\n            pObj.Value = pFan0.Value;\n        } else { // if ( value0 == 0 \u0026\u0026 value1 == 0 )\n        \n//            pObj-\u003eValue = Abc_MaxInt( pFan0-\u003eValue, pFan1-\u003eValue );\n            if pFan0.Value == 0x7FFFFFFF || pFan1.Value == 0x7FFFFFFF {\n                pObj.Value = 0x7FFFFFFF;\n            } else if Vec_IntEntry(vPrio, pFan0.Value) \u003e= Vec_IntEntry(vPrio, pFan1.Value) {\n                pObj.Value = pFan0.Value;\n            } else {\n                pObj.Value = pFan1.Value; }\n        }\n        assert(~pObj.Value, \"~pObj.Value\");\n    }\n}"
+    },
+    {
+      "Name": "Txs_ManFindMinId",
+      "Start": 13087,
+      "End": 13519,
+      "BodyStart": 13165,
+      "Original": "int Txs_ManFindMinId( Gia_Man_t * p, Vec_Int_t * vCoObjs, Vec_Int_t * vPrio )\n{\n    Gia_Obj_t * pObj; int i, iMinId = -1;\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n        if ( Gia_ObjFanin0(pObj)-\u003eValue != 0x7FFFFFFF )\n        {\n            if ( iMinId == -1 || Vec_IntEntry(vPrio, iMinId) \u003e Vec_IntEntry(vPrio, Gia_ObjFanin0(pObj)-\u003eValue) )\n                iMinId = Gia_ObjFanin0(pObj)-\u003eValue;\n        }\n    return iMinId;\n}",
+      "Draft": "func Txs_ManFindMinId(p *Gia_Man_t, vCoObjs *Vec_Int_t, vPrio *Vec_Int_t) int32 {\n    var pObj *Gia_Obj_t; var i int32;\nvar iMinId int32 = -1;\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n        if Gia_ObjFanin0(pObj).Value != 0x7FFFFFFF {\n            if iMinId == -1 || Vec_IntEntry(vPrio, iMinId) \u003e Vec_IntEntry(vPrio, Gia_ObjFanin0(pObj).Value) {\n                iMinId = Gia_ObjFanin0(pObj).Value; }\n        }\n    return iMinId;\n}"
+    },
+    {
+      "Name": "Txs_ManFindCiReduction",
+      "Start": 13520,
+      "End": 14489,
+      "BodyStart": 13785,
+      "Original": "void Txs_ManFindCiReduction( Gia_Man_t * p, \n                         Vec_Int_t * vPrio, Vec_Int_t * vCiObjs, \n                         Vec_Int_t * vNodes, Vec_Int_t * vCoObjs, \n                         Vec_Int_t * vPiLits, Vec_Int_t * vFfLits, Vec_Int_t * vTemp )\n{\n    Gia_Obj_t * pObj;\n    int iPrioCi;\n    // propagate PI influence\n    Txs_ManSelectJustPath( p, vNodes, vCoObjs, vTemp );\n    Txs_ManCollectJustPis( p, vCiObjs, vPiLits );\n//    printf( \"%d -\u003e %d  \", Vec_IntSize(vNodes), Vec_IntSize(vTemp) );\n    // iteratively detect and remove smallest IDs\n    Vec_IntClear( vFfLits );\n    Txs_ManInitPrio( p, vCiObjs );\n    while ( 1 )\n    {\n        Txs_ManPropagatePrio( p, vTemp, vPrio );\n        iPrioCi = Txs_ManFindMinId( p, vCoObjs, vPrio );\n        if ( iPrioCi == -1 )\n            break;\n        pObj = Gia_ManCi( p, Gia_ManPiNum(p)+iPrioCi );\n        Vec_IntPush( vFfLits, Abc_Var2Lit(iPrioCi, !pObj-\u003efMark0) );\n        pObj-\u003eValue = 0x7FFFFFFF;\n    }\n}",
+      "Draft": "func Txs_ManFindCiReduction(p *Gia_Man_t, vPrio *Vec_Int_t, vCiObjs *Vec_Int_t, vNodes *Vec_Int_t, vCoObjs *Vec_Int_t, vPiLits *Vec_Int_t, vFfLits *Vec_Int_t, vTemp *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var iPrioCi int32;\n    // propagate PI influence\n    Txs_ManSelectJustPath( p, vNodes, vCoObjs, vTemp );\n    Txs_ManCollectJustPis( p, vCiObjs, vPiLits );\n//    printf( \"%d -\u003e %d  \", Vec_IntSize(vNodes), Vec_IntSize(vTemp) );\n    // iteratively detect and remove smallest IDs\n    Vec_IntClear( vFfLits );\n    Txs_ManInitPrio( p, vCiObjs );\n    for {\n        Txs_ManPropagatePrio( p, vTemp, vPrio );\n        iPrioCi = Txs_ManFindMinId( p, vCoObjs, vPrio );\n        if iPrioCi == -1 {\n            break; }\n        pObj = Gia_ManCi( p, Gia_ManPiNum(p)+iPrioCi );\n        Vec_IntPush( vFfLits, Abc_Var2Lit(iPrioCi, !pObj.fMark0) );\n        pObj.Value = 0x7FFFFFFF;\n    }\n}"
+    },
+    {
+      "Name": "Txs_ManPrintFlopLits",
+      "Start": 14490,
+      "End": 14814,
+      "BodyStart": 14558,
+      "Original": "void Txs_ManPrintFlopLits( Vec_Int_t * vFfLits, Vec_Int_t * vPrio )\n{\n    int i, Entry;\n    printf( \"%3d : \", Vec_IntSize(vFfLits) );\n    Vec_IntForEachEntry( vFfLits, Entry, i )\n        printf( \"%s%d(%d) \", Abc_LitIsCompl(Entry)? \"+\":\"-\", Abc_Lit2Var(Entry), Vec_IntEntry(vPrio, Abc_Lit2Var(Entry)) );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Txs_ManPrintFlopLits(vFfLits *Vec_Int_t, vPrio *Vec_Int_t) {\n    var i, Entry int32;\n    fmt.Printf(\"%3d : \", Vec_IntSize(vFfLits));\n    Vec_IntForEachEntry( vFfLits, Entry, i )\n        fmt.Printf(\"%s%d(%d) \", Abc_LitIsCompl(Entry)? \"+\":\"-\", Abc_Lit2Var(Entry), Vec_IntEntry(vPrio, Abc_Lit2Var(Entry)));\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Txs_ManVerify",
+      "Start": 15068,
+      "End": 16288,
+      "BodyStart": 15229,
+      "Original": "void Txs_ManVerify( Gia_Man_t * p, Vec_Int_t * vCiObjs, Vec_Int_t * vNodes, Vec_Int_t * vPiLits, Vec_Int_t * vFfLits, Vec_Int_t * vCoObjs, Vec_Int_t * vCoVals )\n{\n    Gia_Obj_t * pObj;\n    int i, iLit;\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n        Gia_ObjTerSimSetX( pObj );\n    Vec_IntForEachEntry( vPiLits, iLit, i )\n    {\n        pObj = Gia_ManPi( p, Abc_Lit2Var(iLit) );\n        assert( Gia_ObjTerSimGetX(pObj) );\n        if ( Abc_LitIsCompl(iLit) )\n            Gia_ObjTerSimSet0( pObj );\n        else\n            Gia_ObjTerSimSet1( pObj );\n    }\n    Vec_IntForEachEntry( vFfLits, iLit, i )\n    {\n        pObj = Gia_ManCi( p, Gia_ManPiNum(p) + Abc_Lit2Var(iLit) );\n        assert( Gia_ObjTerSimGetX(pObj) );\n        if ( Abc_LitIsCompl(iLit) )\n            Gia_ObjTerSimSet0( pObj );\n        else\n            Gia_ObjTerSimSet1( pObj );\n    }\n    Gia_ManForEachObjVec( vNodes, p, pObj, i )\n        Gia_ObjTerSimAnd( pObj );\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n    {\n        Gia_ObjTerSimCo( pObj );\n        if ( Vec_IntEntry(vCoVals, i) )\n            assert( Gia_ObjTerSimGet1(pObj) );\n        else\n            assert( Gia_ObjTerSimGet0(pObj) );\n    }\n}",
+      "Draft": "func Txs_ManVerify(p *Gia_Man_t, vCiObjs *Vec_Int_t, vNodes *Vec_Int_t, vPiLits *Vec_Int_t, vFfLits *Vec_Int_t, vCoObjs *Vec_Int_t, vCoVals *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var i, iLit int32;\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n        Gia_ObjTerSimSetX( pObj );\n    Vec_IntForEachEntry( vPiLits, iLit, i )\n    {\n        pObj = Gia_ManPi( p, Abc_Lit2Var(iLit) );\n        assert(Gia_ObjTerSimGetX(pObj), \"Gia_ObjTerSimGetX(pObj)\");\n        if Abc_LitIsCompl(iLit) {\n            Gia_ObjTerSimSet0( pObj );\n        } else {\n            Gia_ObjTerSimSet1( pObj ); }\n    }\n    Vec_IntForEachEntry( vFfLits, iLit, i )\n    {\n        pObj = Gia_ManCi( p, Gia_ManPiNum(p) + Abc_Lit2Var(iLit) );\n        assert(Gia_ObjTerSimGetX(pObj), \"Gia_ObjTerSimGetX(pObj)\");\n        if Abc_LitIsCompl(iLit) {\n            Gia_ObjTerSimSet0( pObj );\n        } else {\n            Gia_ObjTerSimSet1( pObj ); }\n    }\n    Gia_ManForEachObjVec( vNodes, p, pObj, i )\n        Gia_ObjTerSimAnd( pObj );\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n    {\n        Gia_ObjTerSimCo( pObj );\n        if Vec_IntEntry(vCoVals, i) {\n            assert(Gia_ObjTerSimGet1(pObj), \"Gia_ObjTerSimGet1(pObj)\");\n        } else {\n            assert(Gia_ObjTerSimGet0(pObj), \"Gia_ObjTerSimGet0(pObj)\"); }\n    }\n}"
+    },
+    {
+      "Name": "Txs_ManTernarySim",
+      "Start": 17017,
+      "End": 18977,
+      "BodyStart": 17090,
+      "Original": "Pdr_Set_t * Txs_ManTernarySim( Txs_Man_t * p, int k, Pdr_Set_t * pCube )\n{\n    int fTryNew = 1;\n    Pdr_Set_t * pRes;\n    Gia_Obj_t * pObj;\n    // collect CO objects\n    Vec_IntClear( p-\u003evCoObjs );\n    if ( pCube == NULL ) // the target is the property output\n    {\n        pObj = Gia_ManCo(p-\u003epGia, p-\u003epMan-\u003eiOutCur);\n        Vec_IntPush( p-\u003evCoObjs, Gia_ObjId(p-\u003epGia, pObj) );\n    }\n    else // the target is the cube\n    {\n        int i;\n        for ( i = 0; i \u003c pCube-\u003enLits; i++ )\n        {\n            if ( pCube-\u003eLits[i] == -1 )\n                continue;\n            pObj = Gia_ManCo(p-\u003epGia, Gia_ManPoNum(p-\u003epGia) + Abc_Lit2Var(pCube-\u003eLits[i]));\n            Vec_IntPush( p-\u003evCoObjs, Gia_ObjId(p-\u003epGia, pObj) );\n        }\n    }\nif ( 0 )\n{\nAbc_Print( 1, \"Trying to justify cube \" );\nif ( pCube )\n    Pdr_SetPrint( stdout, pCube, Gia_ManRegNum(p-\u003epGia), NULL );\nelse\n    Abc_Print( 1, \"\u003cprop=fail\u003e\" );\nAbc_Print( 1, \" in frame %d.\\n\", k );\n}\n\n    // collect CI objects\n    Txs_ManCollectCone( p-\u003epGia, p-\u003evCoObjs, p-\u003evCiObjs, p-\u003evNodes );\n    // collect values\n    Pdr_ManCollectValues( p-\u003epMan, k, p-\u003evCiObjs, p-\u003evCiVals );\n    Pdr_ManCollectValues( p-\u003epMan, k, p-\u003evCoObjs, p-\u003evCoVals );\n\n    // perform two passes\n    Txs_ManForwardPass( p-\u003epGia, p-\u003evPrio, p-\u003evCiObjs, p-\u003evCiVals, p-\u003evNodes, p-\u003evCoObjs, p-\u003evCoVals );\n    if ( fTryNew )\n        Txs_ManFindCiReduction( p-\u003epGia, p-\u003evPrio, p-\u003evCiObjs, p-\u003evNodes, p-\u003evCoObjs, p-\u003evPiLits, p-\u003evFfLits, p-\u003evTemp );\n    else\n        Txs_ManBackwardPass( p-\u003epGia, p-\u003evCiObjs, p-\u003evNodes, p-\u003evPiLits, p-\u003evFfLits );\n    Txs_ManVerify( p-\u003epGia, p-\u003evCiObjs, p-\u003evNodes, p-\u003evPiLits, p-\u003evFfLits, p-\u003evCoObjs, p-\u003evCoVals );\n\n    // derive the final set\n    pRes = Pdr_SetCreate( p-\u003evFfLits, p-\u003evPiLits );\n    //ZH: Disabled assertion because this invariant doesn't hold with down\n    //because of the join operation which can bring in initial states\n    //assert( k == 0 || !Pdr_SetIsInit(pRes, -1) );\n    return pRes;\n}",
+      "Draft": "func Txs_ManTernarySim(p *Txs_Man_t, k int32, pCube *Pdr_Set_t) *Pdr_Set_t {\n    var fTryNew int32  = 1;\n    var pRes *Pdr_Set_t;\n    var pObj *Gia_Obj_t;\n    // collect CO objects\n    Vec_IntClear( p.vCoObjs );\n    if pCube == nil { // the target is the property output\n    \n        pObj = Gia_ManCo(p.pGia, p.pMan.iOutCur);\n        Vec_IntPush( p.vCoObjs, Gia_ObjId(p.pGia, pObj) );\n    \n    } else { // the target is the cube\n    \n        var i int32;\n        for  i = 0; i \u003c pCube.nLits; i++  {\n            if pCube.Lits[i] == -1 {\n                continue; }\n            pObj = Gia_ManCo(p.pGia, Gia_ManPoNum(p.pGia) + Abc_Lit2Var(pCube.Lits[i]));\n            Vec_IntPush( p.vCoObjs, Gia_ObjId(p.pGia, pObj) );\n        }\n    }\nif false {\nAbc_Print( 1, \"Trying to justify cube \" );\nif pCube != nil {\n    Pdr_SetPrint( os.Stdout, pCube, Gia_ManRegNum(p.pGia), nil );\n} else {\n    Abc_Print( 1, \"\u003cprop=fail\u003e\" ); }\nAbc_Print( 1, \" in frame %d.\\n\", k );\n}\n\n    // collect CI objects\n    Txs_ManCollectCone( p.pGia, p.vCoObjs, p.vCiObjs, p.vNodes );\n    // collect values\n    Pdr_ManCollectValues( p.pMan, k, p.vCiObjs, p.vCiVals );\n    Pdr_ManCollectValues( p.pMan, k, p.vCoObjs, p.vCoVals );\n\n    // perform two passes\n    Txs_ManForwardPass( p.pGia, p.vPrio, p.vCiObjs, p.vCiVals, p.vNodes, p.vCoObjs, p.vCoVals );\n    if fTryNew != 0 {\n        Txs_ManFindCiReduction( p.pGia, p.vPrio, p.vCiObjs, p.vNodes, p.vCoObjs, p.vPiLits, p.vFfLits, p.vTemp );\n    } else {\n        Txs_ManBackwardPass( p.pGia, p.vCiObjs, p.vNodes, p.vPiLits, p.vFfLits ); }\n    Txs_ManVerify( p.pGia, p.vCiObjs, p.vNodes, p.vPiLits, p.vFfLits, p.vCoObjs, p.vCoVals );\n\n    // derive the final set\n    pRes = Pdr_SetCreate( p.vFfLits, p.vPiLits );\n    //ZH: Disabled assertion because this invariant doesn't hold with down\n    //because of the join operation which can bring in initial states\n    //assert( k == 0 || !Pdr_SetIsInit(pRes, -1) );\n    return pRes;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::struct::Txs_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Txs_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 818,
+      "End": 1450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1951,
+      "End": 3052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3053,
+      "End": 3382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManCollectCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManCollectCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3734,
+      "End": 4236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManCollectCone",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManCollectCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4237,
+      "End": 4675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManForwardPass",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManForwardPass",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4948,
+      "End": 6532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ObjIsJust",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ObjIsJust",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6811,
+      "End": 7522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManBackwardPass",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManBackwardPass",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7523,
+      "End": 9483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManSelectJustPath",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManSelectJustPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9747,
+      "End": 10899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManCollectJustPis",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManCollectJustPis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10900,
+      "End": 11231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::ternary::Txs_ManInitPrio",
+      "Category": "ternary-review",
+      "Symbol": "Txs_ManInitPrio",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11232,
+      "End": 11509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManInitPrio",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManInitPrio",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11232,
+      "End": 11509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManPropagatePrio",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManPropagatePrio",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11510,
+      "End": 13086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManFindMinId",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManFindMinId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13087,
+      "End": 13519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManFindCiReduction",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManFindCiReduction",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13520,
+      "End": 14489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::ternary::Txs_ManPrintFlopLits",
+      "Category": "ternary-review",
+      "Symbol": "Txs_ManPrintFlopLits",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14490,
+      "End": 14814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManPrintFlopLits",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManPrintFlopLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14490,
+      "End": 14814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManVerify",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15068,
+      "End": 16288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::Txs_ManTernarySim",
+      "Category": "semantic-review",
+      "Symbol": "Txs_ManTernarySim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17017,
+      "End": 18977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::2156",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2156,
+      "End": 2182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::3366",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3366,
+      "End": 3379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::4555",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4555,
+      "End": 4598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::5311",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5311,
+      "End": 5354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::5593",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5593,
+      "End": 5635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::6283",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6283,
+      "End": 6326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::7717",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVecReverse",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7717,
+      "End": 7766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::9086",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9086,
+      "End": 9129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::9947",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9947,
+      "End": 9990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::10088",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVecReverse",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10088,
+      "End": 10137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::11050",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11050,
+      "End": 11093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::11368",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11368,
+      "End": 11411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::11665",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11665,
+      "End": 11707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::13213",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13213,
+      "End": 13256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::14628",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14628,
+      "End": 14668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::15317",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15317,
+      "End": 15360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::15400",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15400,
+      "End": 15439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::15676",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15676,
+      "End": 15715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::15970",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15970,
+      "End": 16012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrTsim2.c::macro-inline::16051",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObjVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16051,
+      "End": 16094
+    }
+  ],
+  "Draft": "package pdr\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [pdrTsim.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Property driven reachability.]\n\n  Synopsis    [Improved ternary simulation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 20, 2010.]\n\n  Revision    [$Id: pdrTsim.c,v 1.00 2010/11/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"pdrInt.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Txs_Man_t_ struct {\n    pGia  *Gia_Man_t;      // user's AIG\n    vPrio  *Vec_Int_t;     // priority of each flop\n    vCiObjs  *Vec_Int_t;   // cone leaves (CI obj IDs)\n    vCoObjs  *Vec_Int_t;   // cone roots (CO obj IDs)\n    vCiVals  *Vec_Int_t;   // cone leaf values (0/1 CI values)\n    vCoVals  *Vec_Int_t;   // cone root values (0/1 CO values)\n    vNodes  *Vec_Int_t;    // cone nodes (node obj IDs)\n    vTemp  *Vec_Int_t;     // cone nodes (node obj IDs)\n    vPiLits  *Vec_Int_t;   // resulting array of PI literals\n    vFfLits  *Vec_Int_t;   // resulting array of flop literals\n    pMan  *Pdr_Man_t;      // calling manager\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Start and stop the ternary simulation engine.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Txs_ManStart(pMan *Pdr_Man_t, pAig *Aig_Man_t, vPrio *Vec_Int_t) *Txs_Man_t {\n    var p *Txs_Man_t;\n//    Aig_Obj_t * pObj;\n//    int i;\n    assert(Vec_IntSize(vPrio) == Aig_ManRegNum(pAig), \"Vec_IntSize(vPrio) == Aig_ManRegNum(pAig)\");\n    p = new(Txs_Man_t);\n    p.pGia    = Gia_ManFromAigSimple(pAig); // user's AIG\n//    Aig_ManForEachObj( pAig, pObj, i )\n//        assert( i == 0 || pObj-\u003eiData == Abc_Var2Lit(i, 0) );\n    p.vPrio   = vPrio;                // priority of each flop\n    p.vCiObjs = Vec_IntAlloc( 100 );  // cone leaves (CI obj IDs)\n    p.vCoObjs = Vec_IntAlloc( 100 );  // cone roots (CO obj IDs)\n    p.vCiVals = Vec_IntAlloc( 100 );  // cone leaf values (0/1 CI values)\n    p.vCoVals = Vec_IntAlloc( 100 );  // cone root values (0/1 CO values)\n    p.vNodes  = Vec_IntAlloc( 100 );  // cone nodes (node obj IDs)\n    p.vTemp   = Vec_IntAlloc( 100 );  // cone nodes (node obj IDs)\n    p.vPiLits = Vec_IntAlloc( 100 );  // resulting array of PI literals\n    p.vFfLits = Vec_IntAlloc( 100 );  // resulting array of flop literals\n    p.pMan    = pMan;                 // calling manager\n    return p;\n}\nfunc Txs_ManStop(p *Txs_Man_t) {\n    Gia_ManStop( p.pGia );\n    Vec_IntFree( p.vCiObjs );\n    Vec_IntFree( p.vCoObjs );\n    Vec_IntFree( p.vCiVals );\n    Vec_IntFree( p.vCoVals );\n    Vec_IntFree( p.vNodes );\n    Vec_IntFree( p.vTemp );\n    Vec_IntFree( p.vPiLits );\n    Vec_IntFree( p.vFfLits );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the TFI cone and collects CIs and nodes.]\n\n  Description [For this procedure to work Value should not be ~0 \n  at the beginning.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Txs_ManCollectCone_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vCiObjs *Vec_Int_t, vNodes *Vec_Int_t) {\n    if !~pObj.Value {\n        return; }\n    pObj.Value = ~0;\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vCiObjs, Gia_ObjId(p, pObj) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Txs_ManCollectCone_rec( p, Gia_ObjFanin0(pObj), vCiObjs, vNodes );\n    Txs_ManCollectCone_rec( p, Gia_ObjFanin1(pObj), vCiObjs, vNodes );\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n}\nfunc Txs_ManCollectCone(p *Gia_Man_t, vCoObjs *Vec_Int_t, vCiObjs *Vec_Int_t, vNodes *Vec_Int_t) {\n    var pObj *Gia_Obj_t; var i int32;\n//    printf( \"Collecting cones for clause with %d literals.\\n\", Vec_IntSize(vCoObjs) );\n    Vec_IntClear( vCiObjs );\n    Vec_IntClear( vNodes );\n    Gia_ManConst0(p).Value = ~0;\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n        Txs_ManCollectCone_rec( p, Gia_ObjFanin0(pObj), vCiObjs, vNodes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Propagate values and assign priority.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Txs_ManForwardPass(p *Gia_Man_t, vPrio *Vec_Int_t, vCiObjs *Vec_Int_t, vCiVals *Vec_Int_t, vNodes *Vec_Int_t, vCoObjs *Vec_Int_t, vCoVals *Vec_Int_t) {\n    var pObj, pFan0, pFan1 *Gia_Obj_t; \n    var i, value0, value1 int32;\n    pObj = Gia_ManConst0(p);\n    pObj.fMark0 = 0;\n    pObj.fMark1 = 0;\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n    {\n        pObj.fMark0 = Vec_IntEntry(vCiVals, i);\n        pObj.fMark1 = 0;\n        if Gia_ObjIsPi(p, pObj) {\n            pObj.Value = 0x7FFFFFFF;\n        } else {\n            pObj.Value = Vec_IntEntry(vPrio, Gia_ObjCioId(pObj)-Gia_ManPiNum(p));\n        }\n        assert(~pObj.Value, \"~pObj.Value\");\n    }\n    Gia_ManForEachObjVec( vNodes, p, pObj, i )\n    {\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        value0 = pFan0.fMark0 ^ Gia_ObjFaninC0(pObj);\n        value1 = pFan1.fMark0 ^ Gia_ObjFaninC1(pObj);\n        pObj.fMark0 = value0 \u0026\u0026 value1;\n        pObj.fMark1 = 0;\n        if pObj.fMark0 {\n            pObj.Value = Abc_MinInt( pFan0.Value, pFan1.Value );\n        } else if value0 != 0 {\n            pObj.Value = pFan1.Value;\n        } else if value1 != 0 {\n            pObj.Value = pFan0.Value;\n        } else { // if ( value0 == 0 \u0026\u0026 value1 == 0 )\n            pObj.Value = Abc_MaxInt( pFan0.Value, pFan1.Value ); }\n        assert(~pObj.Value, \"~pObj.Value\");\n    }\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n    {\n        pFan0 = Gia_ObjFanin0(pObj);\n        pObj.fMark0 = (pFan0.fMark0 ^ Gia_ObjFaninC0(pObj));\n        pFan0.fMark1 = 1;\n        assert(int32(pObj.fMark0) == Vec_IntEntry(vCoVals, i), \"int32(pObj.fMark0) == Vec_IntEntry(vCoVals, i)\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Propagate requirements and collect results.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Txs_ObjIsJust(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    var pFan0 *Gia_Obj_t  = Gia_ObjFanin0(pObj);\n    var pFan1 *Gia_Obj_t  = Gia_ObjFanin1(pObj);\n    var value0 int32  = pFan0.fMark0 ^ Gia_ObjFaninC0(pObj);\n    var value1 int32  = pFan1.fMark0 ^ Gia_ObjFaninC1(pObj);\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if pObj.fMark0 {\n        return pFan0.fMark1 \u0026\u0026 pFan1.fMark1; }\n    assert(!pObj.fMark0, \"!pObj.fMark0\");\n    assert(!(value0 != 0) || !(value1 != 0), \"!value0 || !value1\");\n    if value0 != 0 {\n        return pFan1.fMark1 || Gia_ObjIsPi(p, pFan1); }\n    if value1 != 0 {\n        return pFan0.fMark1 || Gia_ObjIsPi(p, pFan0); }\n    assert(!(value0 != 0) \u0026\u0026 !(value1 != 0), \"!value0 \u0026\u0026 !value1\");\n    return pFan0.fMark1 || pFan1.fMark1 || Gia_ObjIsPi(p, pFan0) || Gia_ObjIsPi(p, pFan1);\n}\nfunc Txs_ManBackwardPass(p *Gia_Man_t, vCiObjs *Vec_Int_t, vNodes *Vec_Int_t, vPiLits *Vec_Int_t, vFfLits *Vec_Int_t) {\n    var pObj, pFan0, pFan1 *Gia_Obj_t; var i, value0, value1 int32;\n    Gia_ManForEachObjVecReverse( vNodes, p, pObj, i )\n    {\n        if !pObj.fMark1 {\n            continue; }\n        pObj.fMark1 = 0;\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        if pObj.fMark0 {\n            pFan0.fMark1 = 1;\n            pFan1.fMark1 = 1;\n            continue;\n        }\n        value0 = pFan0.fMark0 ^ Gia_ObjFaninC0(pObj);\n        value1 = pFan1.fMark0 ^ Gia_ObjFaninC1(pObj);\n        assert(!(value0 != 0) || !(value1 != 0), \"!value0 || !value1\");\n        if value0 != 0 {\n            pFan1.fMark1 = 1;\n        } else if value1 != 0 {\n            pFan0.fMark1 = 1;\n        } else { // if ( !value0 \u0026\u0026 !value1 )\n        \n            if pFan0.fMark1 || pFan1.fMark1 {\n                continue; }\n            if Gia_ObjIsPi(p, pFan0) {\n                pFan0.fMark1 = 1;\n            } else if Gia_ObjIsPi(p, pFan1) {\n                pFan1.fMark1 = 1;\n            } else if Gia_ObjIsAnd(pFan0) \u0026\u0026 (Txs_ObjIsJust(p, pFan0) != 0) {\n                pFan0.fMark1 = 1;\n            } else if Gia_ObjIsAnd(pFan1) \u0026\u0026 (Txs_ObjIsJust(p, pFan1) != 0) {\n                pFan1.fMark1 = 1;\n            } else {\n                if pFan0.Value \u003e= pFan1.Value {\n                    pFan0.fMark1 = 1;\n                } else {\n                    pFan1.fMark1 = 1; }\n            }\n        }\n    }\n    Vec_IntClear( vPiLits );\n    Vec_IntClear( vFfLits );\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n    {\n        if !pObj.fMark1 {\n            continue; }\n        if Gia_ObjIsPi(p, pObj) {\n            Vec_IntPush( vPiLits, Abc_Var2Lit(Gia_ObjCioId(pObj),                 !pObj.fMark0) );\n        } else {\n            Vec_IntPush( vFfLits, Abc_Var2Lit(Gia_ObjCioId(pObj)-Gia_ManPiNum(p), !pObj.fMark0) ); }\n    }\n    assert(Vec_IntSize(vFfLits) \u003e 0, \"Vec_IntSize(vFfLits) \u003e 0\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects justification path.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Txs_ManSelectJustPath(p *Gia_Man_t, vNodes *Vec_Int_t, vCoObjs *Vec_Int_t, vRes *Vec_Int_t) {\n    var pObj, pFan0, pFan1 *Gia_Obj_t; \n    var i, value0, value1 int32;\n    // mark CO drivers\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n        Gia_ObjFanin0(pObj).fMark1 = 1;\n    // collect just paths\n    Vec_IntClear( vRes );\n    Gia_ManForEachObjVecReverse( vNodes, p, pObj, i )\n    {\n        if !pObj.fMark1 {\n            continue; }\n        pObj.fMark1 = 0;\n        Vec_IntPush( vRes, Gia_ObjId(p, pObj) );\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        if pObj.fMark0 {\n            pFan0.fMark1 = 1;\n            pFan1.fMark1 = 1;\n            continue;\n        }\n        value0 = pFan0.fMark0 ^ Gia_ObjFaninC0(pObj);\n        value1 = pFan1.fMark0 ^ Gia_ObjFaninC1(pObj);\n        assert(!(value0 != 0) || !(value1 != 0), \"!value0 || !value1\");\n        if value0 != 0 {\n            pFan1.fMark1 = 1;\n        } else if value1 != 0 {\n            pFan0.fMark1 = 1;\n        } else { // if ( !value0 \u0026\u0026 !value1 )\n        \n            pFan0.fMark1 = 1;\n            pFan1.fMark1 = 1;\n        }\n    }\n    Vec_IntReverseOrder( vRes );\n}\nfunc Txs_ManCollectJustPis(p *Gia_Man_t, vCiObjs *Vec_Int_t, vPiLits *Vec_Int_t) {\n    var pObj *Gia_Obj_t; var i int32;\n    Vec_IntClear( vPiLits );\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n        if ( pObj.fMark1 \u0026\u0026 Gia_ObjIsPi(p, pObj) )\n            Vec_IntPush( vPiLits, Abc_Var2Lit(Gia_ObjCioId(pObj), !pObj.fMark0) );\n}\nfunc Txs_ManInitPrio(p *Gia_Man_t, vCiObjs *Vec_Int_t) {\n    var pObj *Gia_Obj_t; var i int32;\n    Gia_ManConst0(p).Value = 0x7FFFFFFF;\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n        pObj.Value = Gia_ObjIsPi(p, pObj) ? 0x7FFFFFFF : Gia_ObjCioId(pObj) - Gia_ManPiNum(p);\n}\nfunc Txs_ManPropagatePrio(p *Gia_Man_t, vNodes *Vec_Int_t, vPrio *Vec_Int_t) {\n    var pObj, pFan0, pFan1 *Gia_Obj_t;\n    var i, value0, value1 int32;\n    Gia_ManForEachObjVec( vNodes, p, pObj, i )\n    {\n        pFan0 = Gia_ObjFanin0(pObj);\n        pFan1 = Gia_ObjFanin1(pObj);\n        if pObj.fMark0 {\n//            pObj-\u003eValue = Abc_MinInt( pFan0-\u003eValue, pFan1-\u003eValue );\n            if pFan0.Value == 0x7FFFFFFF {\n                pObj.Value = pFan1.Value;\n            } else if pFan1.Value == 0x7FFFFFFF {\n                pObj.Value = pFan0.Value;\n            } else if Vec_IntEntry(vPrio, pFan0.Value) \u003c Vec_IntEntry(vPrio, pFan1.Value) {\n                pObj.Value = pFan0.Value;\n            } else {\n                pObj.Value = pFan1.Value; }\n            continue;\n        }\n        value0 = pFan0.fMark0 ^ Gia_ObjFaninC0(pObj);\n        value1 = pFan1.fMark0 ^ Gia_ObjFaninC1(pObj);\n        assert(!(value0 != 0) || !(value1 != 0), \"!value0 || !value1\");\n        if value0 != 0 {\n            pObj.Value = pFan1.Value;\n        } else if value1 != 0 {\n            pObj.Value = pFan0.Value;\n        } else { // if ( value0 == 0 \u0026\u0026 value1 == 0 )\n        \n//            pObj-\u003eValue = Abc_MaxInt( pFan0-\u003eValue, pFan1-\u003eValue );\n            if pFan0.Value == 0x7FFFFFFF || pFan1.Value == 0x7FFFFFFF {\n                pObj.Value = 0x7FFFFFFF;\n            } else if Vec_IntEntry(vPrio, pFan0.Value) \u003e= Vec_IntEntry(vPrio, pFan1.Value) {\n                pObj.Value = pFan0.Value;\n            } else {\n                pObj.Value = pFan1.Value; }\n        }\n        assert(~pObj.Value, \"~pObj.Value\");\n    }\n}\nfunc Txs_ManFindMinId(p *Gia_Man_t, vCoObjs *Vec_Int_t, vPrio *Vec_Int_t) int32 {\n    var pObj *Gia_Obj_t; var i int32;\nvar iMinId int32 = -1;\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n        if Gia_ObjFanin0(pObj).Value != 0x7FFFFFFF {\n            if iMinId == -1 || Vec_IntEntry(vPrio, iMinId) \u003e Vec_IntEntry(vPrio, Gia_ObjFanin0(pObj).Value) {\n                iMinId = Gia_ObjFanin0(pObj).Value; }\n        }\n    return iMinId;\n}\nfunc Txs_ManFindCiReduction(p *Gia_Man_t, vPrio *Vec_Int_t, vCiObjs *Vec_Int_t, vNodes *Vec_Int_t, vCoObjs *Vec_Int_t, vPiLits *Vec_Int_t, vFfLits *Vec_Int_t, vTemp *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var iPrioCi int32;\n    // propagate PI influence\n    Txs_ManSelectJustPath( p, vNodes, vCoObjs, vTemp );\n    Txs_ManCollectJustPis( p, vCiObjs, vPiLits );\n//    printf( \"%d -\u003e %d  \", Vec_IntSize(vNodes), Vec_IntSize(vTemp) );\n    // iteratively detect and remove smallest IDs\n    Vec_IntClear( vFfLits );\n    Txs_ManInitPrio( p, vCiObjs );\n    for {\n        Txs_ManPropagatePrio( p, vTemp, vPrio );\n        iPrioCi = Txs_ManFindMinId( p, vCoObjs, vPrio );\n        if iPrioCi == -1 {\n            break; }\n        pObj = Gia_ManCi( p, Gia_ManPiNum(p)+iPrioCi );\n        Vec_IntPush( vFfLits, Abc_Var2Lit(iPrioCi, !pObj.fMark0) );\n        pObj.Value = 0x7FFFFFFF;\n    }\n}\nfunc Txs_ManPrintFlopLits(vFfLits *Vec_Int_t, vPrio *Vec_Int_t) {\n    var i, Entry int32;\n    fmt.Printf(\"%3d : \", Vec_IntSize(vFfLits));\n    Vec_IntForEachEntry( vFfLits, Entry, i )\n        fmt.Printf(\"%s%d(%d) \", Abc_LitIsCompl(Entry)? \"+\":\"-\", Abc_Lit2Var(Entry), Vec_IntEntry(vPrio, Abc_Lit2Var(Entry)));\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verify the result.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Txs_ManVerify(p *Gia_Man_t, vCiObjs *Vec_Int_t, vNodes *Vec_Int_t, vPiLits *Vec_Int_t, vFfLits *Vec_Int_t, vCoObjs *Vec_Int_t, vCoVals *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var i, iLit int32;\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    Gia_ManForEachObjVec( vCiObjs, p, pObj, i )\n        Gia_ObjTerSimSetX( pObj );\n    Vec_IntForEachEntry( vPiLits, iLit, i )\n    {\n        pObj = Gia_ManPi( p, Abc_Lit2Var(iLit) );\n        assert(Gia_ObjTerSimGetX(pObj), \"Gia_ObjTerSimGetX(pObj)\");\n        if Abc_LitIsCompl(iLit) {\n            Gia_ObjTerSimSet0( pObj );\n        } else {\n            Gia_ObjTerSimSet1( pObj ); }\n    }\n    Vec_IntForEachEntry( vFfLits, iLit, i )\n    {\n        pObj = Gia_ManCi( p, Gia_ManPiNum(p) + Abc_Lit2Var(iLit) );\n        assert(Gia_ObjTerSimGetX(pObj), \"Gia_ObjTerSimGetX(pObj)\");\n        if Abc_LitIsCompl(iLit) {\n            Gia_ObjTerSimSet0( pObj );\n        } else {\n            Gia_ObjTerSimSet1( pObj ); }\n    }\n    Gia_ManForEachObjVec( vNodes, p, pObj, i )\n        Gia_ObjTerSimAnd( pObj );\n    Gia_ManForEachObjVec( vCoObjs, p, pObj, i )\n    {\n        Gia_ObjTerSimCo( pObj );\n        if Vec_IntEntry(vCoVals, i) {\n            assert(Gia_ObjTerSimGet1(pObj), \"Gia_ObjTerSimGet1(pObj)\");\n        } else {\n            assert(Gia_ObjTerSimGet0(pObj), \"Gia_ObjTerSimGet0(pObj)\"); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Shrinks values using ternary simulation.]\n\n  Description [The cube contains the set of flop index literals which,\n  when converted into a clause and applied to the combinational outputs, \n  led to a satisfiable SAT run in frame k (values stored in the SAT solver).\n  If the cube is NULL, it is assumed that the first property output was\n  asserted and failed.\n  The resulting array is a set of flop index literals that asserts the COs.\n  Priority contains 0 for i-th entry if the i-th FF is desirable to remove.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Txs_ManTernarySim(p *Txs_Man_t, k int32, pCube *Pdr_Set_t) *Pdr_Set_t {\n    var fTryNew int32  = 1;\n    var pRes *Pdr_Set_t;\n    var pObj *Gia_Obj_t;\n    // collect CO objects\n    Vec_IntClear( p.vCoObjs );\n    if pCube == nil { // the target is the property output\n    \n        pObj = Gia_ManCo(p.pGia, p.pMan.iOutCur);\n        Vec_IntPush( p.vCoObjs, Gia_ObjId(p.pGia, pObj) );\n    \n    } else { // the target is the cube\n    \n        var i int32;\n        for  i = 0; i \u003c pCube.nLits; i++  {\n            if pCube.Lits[i] == -1 {\n                continue; }\n            pObj = Gia_ManCo(p.pGia, Gia_ManPoNum(p.pGia) + Abc_Lit2Var(pCube.Lits[i]));\n            Vec_IntPush( p.vCoObjs, Gia_ObjId(p.pGia, pObj) );\n        }\n    }\nif false {\nAbc_Print( 1, \"Trying to justify cube \" );\nif pCube != nil {\n    Pdr_SetPrint( os.Stdout, pCube, Gia_ManRegNum(p.pGia), nil );\n} else {\n    Abc_Print( 1, \"\u003cprop=fail\u003e\" ); }\nAbc_Print( 1, \" in frame %d.\\n\", k );\n}\n\n    // collect CI objects\n    Txs_ManCollectCone( p.pGia, p.vCoObjs, p.vCiObjs, p.vNodes );\n    // collect values\n    Pdr_ManCollectValues( p.pMan, k, p.vCiObjs, p.vCiVals );\n    Pdr_ManCollectValues( p.pMan, k, p.vCoObjs, p.vCoVals );\n\n    // perform two passes\n    Txs_ManForwardPass( p.pGia, p.vPrio, p.vCiObjs, p.vCiVals, p.vNodes, p.vCoObjs, p.vCoVals );\n    if fTryNew != 0 {\n        Txs_ManFindCiReduction( p.pGia, p.vPrio, p.vCiObjs, p.vNodes, p.vCoObjs, p.vPiLits, p.vFfLits, p.vTemp );\n    } else {\n        Txs_ManBackwardPass( p.pGia, p.vCiObjs, p.vNodes, p.vPiLits, p.vFfLits ); }\n    Txs_ManVerify( p.pGia, p.vCiObjs, p.vNodes, p.vPiLits, p.vFfLits, p.vCoObjs, p.vCoVals );\n\n    // derive the final set\n    pRes = Pdr_SetCreate( p.vFfLits, p.vPiLits );\n    //ZH: Disabled assertion because this invariant doesn't hold with down\n    //because of the join operation which can bring in initial states\n    //assert( k == 0 || !Pdr_SetIsInit(pRes, -1) );\n    return pRes;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

@@ -1,0 +1,128 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Refine.c",
+  "SHA256": "84bf7499314124a5da0934dfae122c742f30dfc3ec6a0272946727ad00d9d59b",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 14,
+        "ByteOffset": 2800
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(p) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 3454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vAssign) == Vec_IntSize(vPrio) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 4943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.fMark0 == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 132,
+        "Column": 5,
+        "ByteOffset": 4975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.Value \u003c ABC_INFINITY );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Int2_ManJustify_rec",
+      "Start": 1228,
+      "End": 2862,
+      "BodyStart": 1309,
+      "Original": "void Int2_ManJustify_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vSelect )\n{ \n    if ( pObj-\u003efMark1 )\n        return;\n    pObj-\u003efMark1 = 1;\n    if ( Gia_ObjIsPi(p, pObj) )\n        return;\n    if ( Gia_ObjIsCo(pObj) )\n    {\n        Vec_IntPush( vSelect, Gia_ObjCioId(pObj) );\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    if ( pObj-\u003eValue == 1 )\n    {\n        if ( Gia_ObjFanin0(pObj)-\u003eValue \u003c ABC_INFINITY )\n            Int2_ManJustify_rec( p, Gia_ObjFanin0(pObj), vSelect );\n        if ( Gia_ObjFanin1(pObj)-\u003eValue \u003c ABC_INFINITY )\n            Int2_ManJustify_rec( p, Gia_ObjFanin1(pObj), vSelect );\n        return;\n    }\n    if ( (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (Gia_ObjFanin1(pObj)-\u003efMark0 ^ Gia_ObjFaninC1(pObj)) == 0 )\n    {\n        if ( Gia_ObjFanin0(pObj)-\u003efMark0 \u003c= Gia_ObjFanin1(pObj)-\u003efMark0 ) // choice\n        {\n            if ( Gia_ObjFanin0(pObj)-\u003eValue \u003c ABC_INFINITY )\n                Int2_ManJustify_rec( p, Gia_ObjFanin0(pObj), vSelect );\n        }\n        else\n        {\n            if ( Gia_ObjFanin1(pObj)-\u003eValue \u003c ABC_INFINITY )\n                Int2_ManJustify_rec( p, Gia_ObjFanin1(pObj), vSelect );\n        }\n    }\n    else if ( (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) == 0 )\n    {\n        if ( Gia_ObjFanin0(pObj)-\u003eValue \u003c ABC_INFINITY )\n            Int2_ManJustify_rec( p, Gia_ObjFanin0(pObj), vSelect );\n    }\n    else if ( (Gia_ObjFanin1(pObj)-\u003efMark0 ^ Gia_ObjFaninC1(pObj)) == 0 )\n    {\n        if ( Gia_ObjFanin1(pObj)-\u003eValue \u003c ABC_INFINITY )\n            Int2_ManJustify_rec( p, Gia_ObjFanin1(pObj), vSelect );\n    }\n    else assert( 0 );\n }",
+      "Draft": "func Int2_ManJustify_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSelect *Vec_Int_t) { \n    if pObj.fMark1 {\n        return; }\n    pObj.fMark1 = 1;\n    if Gia_ObjIsPi(p, pObj) {\n        return; }\n    if Gia_ObjIsCo(pObj) {\n        Vec_IntPush( vSelect, Gia_ObjCioId(pObj) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if pObj.Value == 1 {\n        if Gia_ObjFanin0(pObj).Value \u003c ABC_INFINITY {\n            Int2_ManJustify_rec( p, Gia_ObjFanin0(pObj), vSelect ); }\n        if Gia_ObjFanin1(pObj).Value \u003c ABC_INFINITY {\n            Int2_ManJustify_rec( p, Gia_ObjFanin1(pObj), vSelect ); }\n        return;\n    }\n    if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)) == 0 {\n        if Gia_ObjFanin0(pObj).fMark0 \u003c= Gia_ObjFanin1(pObj).fMark0 { // choice\n        \n            if Gia_ObjFanin0(pObj).Value \u003c ABC_INFINITY {\n                Int2_ManJustify_rec( p, Gia_ObjFanin0(pObj), vSelect ); }\n        \n        } else {\n            if Gia_ObjFanin1(pObj).Value \u003c ABC_INFINITY {\n                Int2_ManJustify_rec( p, Gia_ObjFanin1(pObj), vSelect ); }\n        }\n    \n    } else if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 {\n        if Gia_ObjFanin0(pObj).Value \u003c ABC_INFINITY {\n            Int2_ManJustify_rec( p, Gia_ObjFanin0(pObj), vSelect ); }\n    \n    } else if (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)) == 0 {\n        if Gia_ObjFanin1(pObj).Value \u003c ABC_INFINITY {\n            Int2_ManJustify_rec( p, Gia_ObjFanin1(pObj), vSelect ); }\n    \n    } else { assert(false, \"0\"); }\n }"
+    },
+    {
+      "Name": "Int2_ManRefineCube",
+      "Start": 3272,
+      "End": 4995,
+      "BodyStart": 3360,
+      "Original": "Vec_Int_t * Int2_ManRefineCube( Gia_Man_t * p, Vec_Int_t * vAssign, Vec_Int_t * vPrio )\n{\n    Vec_Int_t * vSubset;\n    Gia_Obj_t * pObj;\n    int i;\n    // set values and prios\n    assert( Gia_ManRegNum(p) \u003e 0 );\n    assert( Vec_IntSize(vAssign) == Vec_IntSize(vPrio) );\n    Gia_ManConst0(p)-\u003efMark0 = 0;\n    Gia_ManConst0(p)-\u003efMark1 = 0;\n    Gia_ManConst0(p)-\u003eValue = ABC_INFINITY;\n    Gia_ManForEachCi( p, pObj, i )\n    {\n        pObj-\u003efMark0 = Vec_IntEntry(vAssign, i);\n        pObj-\u003efMark1 = 0;\n        pObj-\u003eValue  = Vec_IntEntry(vPrio, i);        \n    }\n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        pObj-\u003efMark0 = (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Gia_ObjFanin1(pObj)-\u003efMark0 ^ Gia_ObjFaninC1(pObj));\n        pObj-\u003efMark1 = 0;\n        if ( pObj-\u003efMark0 == 1 )\n            pObj-\u003eValue = Abc_MaxInt( Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFanin1(pObj)-\u003eValue );\n        else if ( (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (Gia_ObjFanin1(pObj)-\u003efMark0 ^ Gia_ObjFaninC1(pObj)) == 0 )\n            pObj-\u003eValue = Abc_MinInt( Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFanin1(pObj)-\u003eValue ); // choice\n        else if ( (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) == 0 )\n            pObj-\u003eValue = Gia_ObjFanin0(pObj)-\u003eValue;\n        else \n            pObj-\u003eValue = Gia_ObjFanin1(pObj)-\u003eValue;\n    }\n    pObj = Gia_ManPo( p, 0 );\n    pObj-\u003efMark0 = (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj));\n    pObj-\u003efMark1 = 0;\n    pObj-\u003eValue  = Gia_ObjFanin0(pObj)-\u003eValue;\n    assert( pObj-\u003efMark0 == 1 );\n    assert( pObj-\u003eValue \u003c ABC_INFINITY );\n    // select subset\n    vSubset = Vec_IntAlloc( 100 );\n    Int2_ManJustify_rec( p, Gia_ObjFanin0(pObj), vSubset );\n    return vSubset;\n}",
+      "Draft": "func Int2_ManRefineCube(p *Gia_Man_t, vAssign *Vec_Int_t, vPrio *Vec_Int_t) *Vec_Int_t {\n    var vSubset *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // set values and prios\n    assert(Gia_ManRegNum(p) \u003e 0, \"Gia_ManRegNum(p) \u003e 0\");\n    assert(Vec_IntSize(vAssign) == Vec_IntSize(vPrio), \"Vec_IntSize(vAssign) == Vec_IntSize(vPrio)\");\n    Gia_ManConst0(p).fMark0 = 0;\n    Gia_ManConst0(p).fMark1 = 0;\n    Gia_ManConst0(p).Value = ABC_INFINITY;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.fMark0 = Vec_IntEntry(vAssign, i);\n        pObj.fMark1 = 0;\n        pObj.Value  = Vec_IntEntry(vPrio, i);        \n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj));\n        pObj.fMark1 = 0;\n        if pObj.fMark0 == 1 {\n            pObj.Value = Abc_MaxInt( Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value );\n        } else if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)) == 0 {\n            pObj.Value = Abc_MinInt( Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value ); // choice\n        } else if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 {\n            pObj.Value = Gia_ObjFanin0(pObj).Value;\n        } else { \n            pObj.Value = Gia_ObjFanin1(pObj).Value; }\n    }\n    }\n    pObj = Gia_ManPo( p, 0 );\n    pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj));\n    pObj.fMark1 = 0;\n    pObj.Value  = Gia_ObjFanin0(pObj).Value;\n    assert(pObj.fMark0 == 1, \"pObj.fMark0 == 1\");\n    assert(pObj.Value \u003c ABC_INFINITY, \"pObj.Value \u003c ABC_INFINITY\");\n    // select subset\n    vSubset = Vec_IntAlloc( 100 );\n    Int2_ManJustify_rec( p, Gia_ObjFanin0(pObj), vSubset );\n    return vSubset;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Refine.c::Int2_ManJustify_rec",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManJustify_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1228,
+      "End": 2862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Refine.c::Int2_ManRefineCube",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManRefineCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3272,
+      "End": 4995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Refine.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5244
+    }
+  ],
+  "Draft": "package int2\n\n/**CFile****************************************************************\n\n  FileName    [int2Refine.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [Various utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Dec 1, 2013.]\n\n  Revision    [$Id: int2Refine.c,v 1.00 2013/12/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"int2Int.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int2_ManJustify_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSelect *Vec_Int_t) { \n    if pObj.fMark1 {\n        return; }\n    pObj.fMark1 = 1;\n    if Gia_ObjIsPi(p, pObj) {\n        return; }\n    if Gia_ObjIsCo(pObj) {\n        Vec_IntPush( vSelect, Gia_ObjCioId(pObj) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    if pObj.Value == 1 {\n        if Gia_ObjFanin0(pObj).Value \u003c ABC_INFINITY {\n            Int2_ManJustify_rec( p, Gia_ObjFanin0(pObj), vSelect ); }\n        if Gia_ObjFanin1(pObj).Value \u003c ABC_INFINITY {\n            Int2_ManJustify_rec( p, Gia_ObjFanin1(pObj), vSelect ); }\n        return;\n    }\n    if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)) == 0 {\n        if Gia_ObjFanin0(pObj).fMark0 \u003c= Gia_ObjFanin1(pObj).fMark0 { // choice\n        \n            if Gia_ObjFanin0(pObj).Value \u003c ABC_INFINITY {\n                Int2_ManJustify_rec( p, Gia_ObjFanin0(pObj), vSelect ); }\n        \n        } else {\n            if Gia_ObjFanin1(pObj).Value \u003c ABC_INFINITY {\n                Int2_ManJustify_rec( p, Gia_ObjFanin1(pObj), vSelect ); }\n        }\n    \n    } else if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 {\n        if Gia_ObjFanin0(pObj).Value \u003c ABC_INFINITY {\n            Int2_ManJustify_rec( p, Gia_ObjFanin0(pObj), vSelect ); }\n    \n    } else if (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)) == 0 {\n        if Gia_ObjFanin1(pObj).Value \u003c ABC_INFINITY {\n            Int2_ManJustify_rec( p, Gia_ObjFanin1(pObj), vSelect ); }\n    \n    } else { assert(false, \"0\"); }\n }\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the reduced set of flop variables.]\n\n  Description [Given is a single-output seq AIG manager and an assignment \n  of its CIs.  Returned is a subset of flops that justifies the output.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int2_ManRefineCube(p *Gia_Man_t, vAssign *Vec_Int_t, vPrio *Vec_Int_t) *Vec_Int_t {\n    var vSubset *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // set values and prios\n    assert(Gia_ManRegNum(p) \u003e 0, \"Gia_ManRegNum(p) \u003e 0\");\n    assert(Vec_IntSize(vAssign) == Vec_IntSize(vPrio), \"Vec_IntSize(vAssign) == Vec_IntSize(vPrio)\");\n    Gia_ManConst0(p).fMark0 = 0;\n    Gia_ManConst0(p).fMark1 = 0;\n    Gia_ManConst0(p).Value = ABC_INFINITY;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.fMark0 = Vec_IntEntry(vAssign, i);\n        pObj.fMark1 = 0;\n        pObj.Value  = Vec_IntEntry(vPrio, i);        \n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj));\n        pObj.fMark1 = 0;\n        if pObj.fMark0 == 1 {\n            pObj.Value = Abc_MaxInt( Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value );\n        } else if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)) == 0 {\n            pObj.Value = Abc_MinInt( Gia_ObjFanin0(pObj).Value, Gia_ObjFanin1(pObj).Value ); // choice\n        } else if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 {\n            pObj.Value = Gia_ObjFanin0(pObj).Value;\n        } else { \n            pObj.Value = Gia_ObjFanin1(pObj).Value; }\n    }\n    }\n    pObj = Gia_ManPo( p, 0 );\n    pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj));\n    pObj.fMark1 = 0;\n    pObj.Value  = Gia_ObjFanin0(pObj).Value;\n    assert(pObj.fMark0 == 1, \"pObj.fMark0 == 1\");\n    assert(pObj.Value \u003c ABC_INFINITY, \"pObj.Value \u003c ABC_INFINITY\");\n    // select subset\n    vSubset = Vec_IntAlloc( 100 );\n    Int2_ManJustify_rec( p, Gia_ObjFanin0(pObj), vSubset );\n    return vSubset;\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

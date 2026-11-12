@@ -1,0 +1,38 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperFanout.c",
+  "SHA256": "dc2e330aa107dc1627f0e985bdaabdd37f05ddb5ce85765dee08b56152624e26",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 24,
+        "Column": 1,
+        "ByteOffset": 580
+      },
+      "Directive": "#ifdef MAP_ALLOCATE_FANOUT"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperFanout.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperFanout.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 580,
+      "End": 4131
+    }
+  ],
+  "Draft": "package mapper\n\n/**CFile****************************************************************\n\n  FileName    [mapperFanout.c]\n\n  PackageName [FRAIG: Functionally reduced AND-INV graphs.]\n\n  Synopsis    [Procedures to manipulate fanouts of the FRAIG nodes.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - June 1, 2004.]\n\n  Revision    [$Id: mapperFanout.c,v 1.5 2005/01/23 06:59:43 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mapperInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n#ifdef MAP_ALLOCATE_FANOUT\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Add the fanout to the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Map_NodeAddFaninFanout( Map_Node_t * pFanin, Map_Node_t * pFanout )\n{\n    Map_Node_t * pPivot;\n\n    // pFanins is a fanin of pFanout\n    assert( !Map_IsComplement(pFanin) );\n    assert( !Map_IsComplement(pFanout) );\n    assert( Map_Regular(pFanout-\u003ep1) == pFanin || Map_Regular(pFanout-\u003ep2) == pFanin );\n\n    pPivot = pFanin-\u003epFanPivot;\n    if ( pPivot == NULL )\n    {\n        pFanin-\u003epFanPivot = pFanout;\n        return;\n    }\n\n    if ( Map_Regular(pPivot-\u003ep1) == pFanin )\n    {\n        if ( Map_Regular(pFanout-\u003ep1) == pFanin )\n        {\n            pFanout-\u003epFanFanin1 = pPivot-\u003epFanFanin1;\n            pPivot-\u003epFanFanin1  = pFanout;\n        }\n        else // if ( Map_Regular(pFanout-\u003ep2) == pFanin )\n        {\n            pFanout-\u003epFanFanin2 = pPivot-\u003epFanFanin1;\n            pPivot-\u003epFanFanin1  = pFanout;\n        }\n    }\n    else // if ( Map_Regular(pPivot-\u003ep2) == pFanin )\n    {\n        assert( Map_Regular(pPivot-\u003ep2) == pFanin );\n        if ( Map_Regular(pFanout-\u003ep1) == pFanin )\n        {\n            pFanout-\u003epFanFanin1 = pPivot-\u003epFanFanin2;\n            pPivot-\u003epFanFanin2  = pFanout;\n        }\n        else // if ( Map_Regular(pFanout-\u003ep2) == pFanin )\n        {\n            pFanout-\u003epFanFanin2 = pPivot-\u003epFanFanin2;\n            pPivot-\u003epFanFanin2  = pFanout;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Add the fanout to the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Map_NodeRemoveFaninFanout( Map_Node_t * pFanin, Map_Node_t * pFanoutToRemove )\n{\n    Map_Node_t * pFanout, * pFanout2, ** ppFanList;\n    // start the linked list of fanouts\n    ppFanList = \u0026pFanin-\u003epFanPivot; \n    // go through the fanouts\n    Map_NodeForEachFanoutSafe( pFanin, pFanout, pFanout2 )\n    {\n        // skip the fanout-to-remove\n        if ( pFanout == pFanoutToRemove )\n            continue;\n        // add useful fanouts to the list\n        *ppFanList = pFanout;\n        ppFanList = Map_NodeReadNextFanoutPlace( pFanin, pFanout );\n    }\n    *ppFanList = NULL;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of fanouts of a node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Map_NodeGetFanoutNum( Map_Node_t * pNode )\n{\n    Map_Node_t * pFanout;\n    int Counter = 0;\n    Map_NodeForEachFanout( pNode, pFanout )\n        Counter++;\n    return Counter;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n#endif\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

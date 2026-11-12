@@ -1,0 +1,270 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcPrint.c",
+  "SHA256": "21feec23d3294c3a924de1ac199fc80b693da416975ba6dc918744fdba76bac2",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The cover contains %d cubes (%d bits and %d words)\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 13,
+        "ByteOffset": 1881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %d\", pCover.pLits[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 65,
+        "Column": 9,
+        "ByteOffset": 1933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 1960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"End of cover printout\\n\" ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 2837
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c\", '0' + Value );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 3259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The cover contains %d cubes (%d bits and %d words)\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 13,
+        "ByteOffset": 3694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %d\", pCover.pLits[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 9,
+        "ByteOffset": 3746
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 3773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"End of cover printout\\n\" ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 141,
+        "Column": 9,
+        "ByteOffset": 4660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Value != 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 13,
+        "ByteOffset": 4718
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"-\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 13,
+        "ByteOffset": 4776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"0\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 147,
+        "Column": 13,
+        "ByteOffset": 4821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"1\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 4848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mvc_CoverPrint",
+      "Start": 1308,
+      "End": 1868,
+      "BodyStart": 1352,
+      "Original": "void Mvc_CoverPrint( Mvc_Cover_t * pCover )\n{\n    Mvc_Cube_t * pCube;\n    int i;\n    // print general statistics\n    printf( \"The cover contains %d cubes (%d bits and %d words)\\n\", \n        pCover-\u003elCubes.nItems, pCover-\u003enBits, pCover-\u003enWords );\n    // iterate through the cubes\n    Mvc_CoverForEachCube( pCover, pCube )\n        Mvc_CubePrint( pCover, pCube );\n\n    if ( pCover-\u003epLits )\n    {\n        for ( i = 0; i \u003c pCover-\u003enBits; i++ )\n            printf( \" %d\", pCover-\u003epLits[i] );\n        printf( \"\\n\" ); \n    }\n    printf( \"End of cover printout\\n\" ); \n}",
+      "Draft": "func Mvc_CoverPrint(pCover *Mvc_Cover_t) {\n    var pCube *Mvc_Cube_t;\n    var i int32;\n    // print general statistics\n    fmt.Printf(\"The cover contains %d cubes (%d bits and %d words)\\n\", pCover.lCubes.nItems, pCover.nBits, pCover.nWords);\n    // iterate through the cubes\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCube = (pCover).lCubes.pHead;          (pCube != nil);          pCube = pCube.pNext  {\n        Mvc_CubePrint( pCover, pCube );\n    }\n\n    if pCover.pLits {\n        for  i = 0; i \u003c pCover.nBits; i++  {\n            fmt.Printf(\" %d\", pCover.pLits[i]);\n        }\n        fmt.Printf(\"\\n\"); \n    }\n    fmt.Printf(\"End of cover printout\\n\"); \n}"
+    },
+    {
+      "Name": "Mvc_CubePrint",
+      "Start": 2105,
+      "End": 2396,
+      "BodyStart": 2168,
+      "Original": "void Mvc_CubePrint( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube )\n{\n    int iBit, Value;\n    // iterate through the literals\n//    printf( \"Size = %2d   \", Mvc_CubeReadSize(pCube) );\n    Mvc_CubeForEachBit( pCover, pCube, iBit, Value )\n        printf( \"%c\", '0' + Value );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Mvc_CubePrint(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n    var iBit, Value int32;\n    // iterate through the literals\n//    printf( \"Size = %2d   \", Mvc_CubeReadSize(pCube) );\n    // inlining of macro Mvc_CubeForEachBit\n    // inlining of macro Mvc_CubeBitValue\n    // inlining of macro Mvc_CubeWhichWord\n    // inlining of macro Mvc_CubeWhichBit\n    for  iBit = 0;          iBit \u003c pCover.nBits \u0026\u0026 ((Value = (((pCube).pData[((iBit) \u003e\u003e BITS_PER_WORD_LOG)] \u0026   (((Mvc_CubeWord_t)1)\u003c\u003c(((iBit) \u0026  BITS_PER_WORD_MINUS)))) \u003e 0)), 1);          iBit++  {\n        fmt.Printf(\"%c\", '0' + Value);\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Mvc_CoverPrintBinary",
+      "Start": 2633,
+      "End": 3205,
+      "BodyStart": 2683,
+      "Original": "void Mvc_CoverPrintBinary( Mvc_Cover_t * pCover )\n{\n    Mvc_Cube_t * pCube;\n    int i;\n    // print general statistics\n    printf( \"The cover contains %d cubes (%d bits and %d words)\\n\", \n        pCover-\u003elCubes.nItems, pCover-\u003enBits, pCover-\u003enWords );\n    // iterate through the cubes\n    Mvc_CoverForEachCube( pCover, pCube )\n        Mvc_CubePrintBinary( pCover, pCube );\n\n    if ( pCover-\u003epLits )\n    {\n        for ( i = 0; i \u003c pCover-\u003enBits; i++ )\n            printf( \" %d\", pCover-\u003epLits[i] );\n        printf( \"\\n\" ); \n    }\n    printf( \"End of cover printout\\n\" ); \n}",
+      "Draft": "func Mvc_CoverPrintBinary(pCover *Mvc_Cover_t) {\n    var pCube *Mvc_Cube_t;\n    var i int32;\n    // print general statistics\n    fmt.Printf(\"The cover contains %d cubes (%d bits and %d words)\\n\", pCover.lCubes.nItems, pCover.nBits, pCover.nWords);\n    // iterate through the cubes\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCube = (pCover).lCubes.pHead;          (pCube != nil);          pCube = pCube.pNext  {\n        Mvc_CubePrintBinary( pCover, pCube );\n    }\n\n    if pCover.pLits {\n        for  i = 0; i \u003c pCover.nBits; i++  {\n            fmt.Printf(\" %d\", pCover.pLits[i]);\n        }\n        fmt.Printf(\"\\n\"); \n    }\n    fmt.Printf(\"End of cover printout\\n\"); \n}"
+    },
+    {
+      "Name": "Mvc_CubePrintBinary",
+      "Start": 3442,
+      "End": 3901,
+      "BodyStart": 3511,
+      "Original": "void Mvc_CubePrintBinary( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube )\n{\n    int iVar, Value;\n    // iterate through the literals\n//    printf( \"Size = %2d   \", Mvc_CubeReadSize(pCube) );\n    Mvc_CubeForEachVarValue( pCover, pCube, iVar, Value )\n    {\n        assert( Value != 0 );\n        if ( Value == 3 )\n            printf( \"-\" );\n        else if ( Value == 1 )\n            printf( \"0\" );\n        else \n            printf( \"1\" );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Mvc_CubePrintBinary(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n    var iVar, Value int32;\n    // iterate through the literals\n//    printf( \"Size = %2d   \", Mvc_CubeReadSize(pCube) );\n    // inlining of macro Mvc_CubeForEachVarValue\n    // inlining of macro Mvc_CubeVarValue\n    // inlining of macro Mvc_CubeWhichWord\n    // inlining of macro Mvc_CubeWhichBit\n    for  iVar = 0;          iVar \u003c pCover.nBits/2 \u0026\u0026 (Value = (((pCube).pData[((2*(iVar)) \u003e\u003e BITS_PER_WORD_LOG)] \u003e\u003e (((2*(iVar)) \u0026  BITS_PER_WORD_MINUS))) \u0026 ((Mvc_CubeWord_t)3)));          iVar++  {\n        assert(Value != 0, \"Value != 0\");\n        if Value == 3 {\n            fmt.Printf(\"-\");\n        } else if Value == 1 {\n            fmt.Printf(\"0\");\n        } else { \n            fmt.Printf(\"1\"); }\n    }\n    fmt.Printf(\"\\n\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcPrint.c::Mvc_CoverPrint",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1308,
+      "End": 1868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcPrint.c::Mvc_CubePrint",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CubePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2105,
+      "End": 2396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcPrint.c::Mvc_CoverPrintBinary",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverPrintBinary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2633,
+      "End": 3205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcPrint.c::Mvc_CubePrintBinary",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CubePrintBinary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3442,
+      "End": 3901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcPrint.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5815
+    }
+  ],
+  "Draft": "package mvc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [mvcPrint.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Printing cubes and covers.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: mvcPrint.c,v 1.6 2003/04/09 18:02:06 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mvc.h\"\n//#include \"vm.h\"\n//#include \"vmInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Mvc_CubePrintBinary( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverPrint(pCover *Mvc_Cover_t) {\n    var pCube *Mvc_Cube_t;\n    var i int32;\n    // print general statistics\n    fmt.Printf(\"The cover contains %d cubes (%d bits and %d words)\\n\", pCover.lCubes.nItems, pCover.nBits, pCover.nWords);\n    // iterate through the cubes\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCube = (pCover).lCubes.pHead;          (pCube != nil);          pCube = pCube.pNext  {\n        Mvc_CubePrint( pCover, pCube );\n    }\n\n    if pCover.pLits {\n        for  i = 0; i \u003c pCover.nBits; i++  {\n            fmt.Printf(\" %d\", pCover.pLits[i]);\n        }\n        fmt.Printf(\"\\n\"); \n    }\n    fmt.Printf(\"End of cover printout\\n\"); \n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CubePrint(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n    var iBit, Value int32;\n    // iterate through the literals\n//    printf( \"Size = %2d   \", Mvc_CubeReadSize(pCube) );\n    // inlining of macro Mvc_CubeForEachBit\n    // inlining of macro Mvc_CubeBitValue\n    // inlining of macro Mvc_CubeWhichWord\n    // inlining of macro Mvc_CubeWhichBit\n    for  iBit = 0;          iBit \u003c pCover.nBits \u0026\u0026 ((Value = (((pCube).pData[((iBit) \u003e\u003e BITS_PER_WORD_LOG)] \u0026   (((Mvc_CubeWord_t)1)\u003c\u003c(((iBit) \u0026  BITS_PER_WORD_MINUS)))) \u003e 0)), 1);          iBit++  {\n        fmt.Printf(\"%c\", '0' + Value);\n    }\n    fmt.Printf(\"\\n\");\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverPrintBinary(pCover *Mvc_Cover_t) {\n    var pCube *Mvc_Cube_t;\n    var i int32;\n    // print general statistics\n    fmt.Printf(\"The cover contains %d cubes (%d bits and %d words)\\n\", pCover.lCubes.nItems, pCover.nBits, pCover.nWords);\n    // iterate through the cubes\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCube = (pCover).lCubes.pHead;          (pCube != nil);          pCube = pCube.pNext  {\n        Mvc_CubePrintBinary( pCover, pCube );\n    }\n\n    if pCover.pLits {\n        for  i = 0; i \u003c pCover.nBits; i++  {\n            fmt.Printf(\" %d\", pCover.pLits[i]);\n        }\n        fmt.Printf(\"\\n\"); \n    }\n    fmt.Printf(\"End of cover printout\\n\"); \n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CubePrintBinary(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n    var iVar, Value int32;\n    // iterate through the literals\n//    printf( \"Size = %2d   \", Mvc_CubeReadSize(pCube) );\n    // inlining of macro Mvc_CubeForEachVarValue\n    // inlining of macro Mvc_CubeVarValue\n    // inlining of macro Mvc_CubeWhichWord\n    // inlining of macro Mvc_CubeWhichBit\n    for  iVar = 0;          iVar \u003c pCover.nBits/2 \u0026\u0026 (Value = (((pCube).pData[((2*(iVar)) \u003e\u003e BITS_PER_WORD_LOG)] \u003e\u003e (((2*(iVar)) \u0026  BITS_PER_WORD_MINUS))) \u0026 ((Mvc_CubeWord_t)3)));          iVar++  {\n        assert(Value != 0, \"Value != 0\");\n        if Value == 3 {\n            fmt.Printf(\"-\");\n        } else if Value == 1 {\n            fmt.Printf(\"0\");\n        } else { \n            fmt.Printf(\"1\"); }\n    }\n    fmt.Printf(\"\\n\");\n}\n\n     \n\n                                                                        \n\n                \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                 \n \n                       \n          \n                               \n                                                                    \n                                                               \n                                \n                                         \n                                                \n\n                        \n     \n                                             \n                                              \n                        \n     \n                                         \n \n\n\n                                                                        \n\n                \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                                    \n \n                   \n                                   \n                                                       \n             \n                                                          \n     \n                                                       \n         \n                          \n                   \n         \n                                              \n                                                                        \n            \n                          \n     \n                   \n \n\n      \n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

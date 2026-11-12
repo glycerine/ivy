@@ -1,0 +1,170 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h",
+  "SHA256": "a0388c8d3c9ecfc429ccc2990e3536aa7c9093c981e7d3f03b1cd998af0c6889",
+  "Functions": [
+    {
+      "Name": "Fxch_CountOnes",
+      "Start": 4817,
+      "End": 5171,
+      "BodyStart": 4866,
+      "Original": "static inline int Fxch_CountOnes( unsigned num )\n{\n    num = ( num \u0026 0x55555555 ) + ( ( num \u003e\u003e 1) \u0026 0x55555555 );\n    num = ( num \u0026 0x33333333 ) + ( ( num \u003e\u003e 2) \u0026 0x33333333 );\n    num = ( num \u0026 0x0F0F0F0F ) + ( ( num \u003e\u003e 4) \u0026 0x0F0F0F0F );\n    num = ( num \u0026 0x00FF00FF ) + ( ( num \u003e\u003e 8) \u0026 0x00FF00FF );\n    return  ( num \u0026 0x0000FFFF ) + ( num \u003e\u003e 16 );\n}",
+      "Draft": "func Fxch_CountOnes(num uint32) int32 {\n    num = ( num \u0026 0x55555555 ) + ( ( num \u003e\u003e 1) \u0026 0x55555555 );\n    num = ( num \u0026 0x33333333 ) + ( ( num \u003e\u003e 2) \u0026 0x33333333 );\n    num = ( num \u0026 0x0F0F0F0F ) + ( ( num \u003e\u003e 4) \u0026 0x0F0F0F0F );\n    num = ( num \u0026 0x00FF00FF ) + ( ( num \u003e\u003e 8) \u0026 0x00FF00FF );\n    return  ( num \u0026 0x0000FFFF ) + ( num \u003e\u003e 16 );\n}"
+    },
+    {
+      "Name": "Fxch_ManGetCube",
+      "Start": 6978,
+      "End": 7151,
+      "BodyStart": 7096,
+      "Original": "static inline Vec_Int_t* Fxch_ManGetCube( Fxch_Man_t* pFxchMan,\n                                          int iCube )\n{\n    return Vec_WecEntry( pFxchMan-\u003evCubes, iCube );\n}",
+      "Draft": "func Fxch_ManGetCube(pFxchMan *Fxch_Man_t, iCube int32) *Vec_Int_t {\n    return Vec_WecEntry( pFxchMan.vCubes, iCube );\n}"
+    },
+    {
+      "Name": "Fxch_ManGetLit",
+      "Start": 7153,
+      "End": 7374,
+      "BodyStart": 7299,
+      "Original": "static inline int Fxch_ManGetLit( Fxch_Man_t* pFxchMan,\n                                  int iCube,\n                                  int iLit )\n{\n    return Vec_IntEntry( Vec_WecEntry(pFxchMan-\u003evCubes, iCube), iLit );\n}",
+      "Draft": "func Fxch_ManGetLit(pFxchMan *Fxch_Man_t, iCube int32, iLit int32) int32 {\n    return Vec_IntEntry( Vec_WecEntry(pFxchMan.vCubes, iCube), iLit );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::struct::Fxch_SubCube_t_::uint32_t Id,\n             iCube;",
+      "Category": "struct-field-review",
+      "Symbol": "Fxch_SubCube_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2130,
+      "End": 2167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::struct::Fxch_SubCube_t_::uint32_t iLit0 : 16,\n             iLit1 : 16;",
+      "Category": "struct-field-review",
+      "Symbol": "Fxch_SubCube_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2167,
+      "End": 2217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::struct::Fxch_SubCube_t_",
+      "Category": "struct-review",
+      "Symbol": "Fxch_SubCube_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2106,
+      "End": 2220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::struct::Fxch_SCHashTable_Entry_t_::uint32_t Size : 16,\n             Cap : 16;",
+      "Category": "struct-field-review",
+      "Symbol": "Fxch_SCHashTable_Entry_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2312,
+      "End": 2359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::struct::Fxch_SCHashTable_Entry_t_",
+      "Category": "struct-review",
+      "Symbol": "Fxch_SCHashTable_Entry_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2249,
+      "End": 2362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::struct::Fxch_SCHashTable_t_::unsigned int nEntries,\n                 SizeMask;",
+      "Category": "struct-field-review",
+      "Symbol": "Fxch_SCHashTable_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2479,
+      "End": 2533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::struct::Fxch_SCHashTable_t_",
+      "Category": "struct-review",
+      "Symbol": "Fxch_SCHashTable_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2364,
+      "End": 2618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::struct::Fxch_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Fxch_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2620,
+      "End": 4197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::pointer-cast::7559",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7559,
+      "End": 7582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::pointer-cast::8289",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8289,
+      "End": 8312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::pointer-cast::8340",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8340,
+      "End": 8363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::Fxch_CountOnes",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_CountOnes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4817,
+      "End": 5171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::Fxch_ManGetCube",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManGetCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6978,
+      "End": 7151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::Fxch_ManGetLit",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManGetLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7153,
+      "End": 7374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/Fxch.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8620
+    }
+  ],
+  "Draft": "package fxch\n\n/**CFile****************************************************************\n\n  FileName    [ Fxch.h ]\n\n  PackageName [ Fast eXtract with Cube Hashing (FXCH) ]\n\n  Synopsis    [ External declarations of fast extract with cube hashing. ]\n\n  Author      [ Bruno Schmitt - boschmitt at inf.ufrgs.br ]\n\n  Affiliation [ UFRGS ]\n\n  Date        [ Ver. 1.0. Started - March 6, 2016. ]\n\n  Revision    []\n\n***********************************************************************/\n\n\n\n\n//#include \"base/abc/abc.h\"\n\n//#include \"misc/vec/vecHsh.h\"\n//#include \"misc/vec/vecQue.h\"\n//#include \"misc/vec/vecVec.h\"\n//#include \"misc/vec/vecWec.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\ntypedef unsigned char uint8_t;\ntypedef unsigned int  uint32_t;\n\n////////////////////////////////////////////////////////////////////////\n///                    TYPEDEF DECLARATIONS                          ///\n////////////////////////////////////////////////////////////////////////\ntype Fxch_Man_t =               Fxch_Man_t_;\ntype Fxch_SubCube_t =           Fxch_SubCube_t_;\ntype Fxch_SCHashTable_t =       Fxch_SCHashTable_t_;\ntype Fxch_SCHashTable_Entry_t = Fxch_SCHashTable_Entry_t_;\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURES DEFINITIONS                        ///\n////////////////////////////////////////////////////////////////////////\n/* Sub-Cube Structure\n *\n *   In the context of this program, a sub-cube is a cube derived from\n *   another cube by removing one or two literals. Since a cube is represented\n *   as a vector of literals, one might think that a sub-cube would also be\n *   represented in the same way. However, in order to same memory, we only\n *   store a sub-cube identifier and the data necessary to generate the sub-cube:\n *        - The index number of the orignal cube in the cover. (iCube)\n *        - Identifiers of which literal(s) was(were) removed. (iLit0, iLit1)\n *\n *   The sub-cube identifier is generated by adding the unique identifiers of\n *   its literals.\n *\n */\n\ntype Fxch_SubCube_t_ struct {\n    uint32_t Id,\n             iCube;\n    uint32_t iLit0 : 16,\n             iLit1 : 16;\n}\n\n/* Sub-cube Hash Table\n */\ntype Fxch_SCHashTable_Entry_t_ struct {\n    vSCData *Fxch_SubCube_t;\n    uint32_t Size : 16,\n             Cap : 16;\n}\n\ntype Fxch_SCHashTable_t_ struct {\n    pFxchMan *Fxch_Man_t;\n    /* Internal data */\n    pBins *Fxch_SCHashTable_Entry_t;\n    unsigned int nEntries,\n                 SizeMask;\n\n    /* Temporary data */\n    vSubCube0    Vec_Int_t;\n    vSubCube1    Vec_Int_t;\n}\n\ntype Fxch_Man_t_ struct {\n    /* user's data */\n    vCubes *Vec_Wec_t;\n    nCubesInit int32;\n    LitCountMax int32;\n\n    /* internal data */\n    pSCHashTable *Fxch_SCHashTable_t;\n\n    vLits    *Vec_Wec_t;        /* lit -\u003e cube */\n    vLitCount    *Vec_Int_t;    /* literal counts (currently not used) */\n    vLitHashKeys    *Vec_Int_t; /* Literal hash keys used to generate subcube hash */\n\n    pDivHash *Hsh_VecMan_t;\n    vDivWeights    *Vec_Flt_t;   /* divisor weights */\n    vDivPrio    *Vec_Que_t;      /* priority queue for divisors by weight */\n    vDivCubePairs    *Vec_Wec_t; /* cube pairs for each div */\n\n    vLevels    *Vec_Int_t;       /* variable levels */\n\n    // Cube Grouping\n    vTranslation *Vec_Int_t;\n    vOutputID *Vec_Int_t;\n    pTempOutputID *int32;\n    nSizeOutputID  int32;\n\n    // temporary data to update the data-structure when a divisor is extracted\n    vCubesS *Vec_Int_t;    /* cubes for the given single cube divisor */\n    vPairs *Vec_Int_t;     /* cube pairs for the given double cube divisor */\n    vCubeFree *Vec_Int_t;  // cube-free divisor\n    vDiv *Vec_Int_t;       // selected divisor\n\n    vCubesToRemove *Vec_Int_t;\n    vCubesToUpdate *Vec_Int_t;\n    vSCC *Vec_Int_t;\n\n    /* Statistics */\n    timeInit abctime;   /* Initialization time */\n    timeExt abctime;    /* Extraction time */\n    nVars     int32;      // original problem variables\n    nLits     int32;      // the number of SOP literals\n    nPairsS     int32;    // number of lit pairs\n    nPairsD     int32;    // number of cube pairs\n    nExtDivs     int32;   /* Number of extracted divisor */\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n/* The following functions are from abcFx.c\n * They are use in order to retrive SOP information for fast_extract\n * Since I want an implementation that change only the core part of\n * the algorithm I'm using this */\n// extern Vec_Wec_t* Abc_NtkFxRetrieve( Abc_Ntk_t* pNtk );\n\n// extern void       Abc_NtkFxInsert( Abc_Ntk_t* pNtk, Vec_Wec_t* vCubes );\n\n// extern int        Abc_NtkFxCheck( Abc_Ntk_t* pNtk );\n\n\nfunc Fxch_CountOnes(num uint32) int32 {\n    num = ( num \u0026 0x55555555 ) + ( ( num \u003e\u003e 1) \u0026 0x55555555 );\n    num = ( num \u0026 0x33333333 ) + ( ( num \u003e\u003e 2) \u0026 0x33333333 );\n    num = ( num \u0026 0x0F0F0F0F ) + ( ( num \u003e\u003e 4) \u0026 0x0F0F0F0F );\n    num = ( num \u0026 0x00FF00FF ) + ( ( num \u003e\u003e 8) \u0026 0x00FF00FF );\n    return  ( num \u0026 0x0000FFFF ) + ( num \u003e\u003e 16 );\n}\n\n/*===== Fxch.c =======================================================*/\n// int Abc_NtkFxchPerform( Abc_Ntk_t* pNtk, int nMaxDivExt, int fVerbose, int fVeryVerbose );\n\n// int Fxch_FastExtract( Vec_Wec_t* vCubes, int ObjIdMax, int nMaxDivExt, int fVerbose, int fVeryVerbose );\n\n\n/*===== FxchDiv.c ====================================================================================================*/\n// int  Fxch_DivCreate( Fxch_Man_t* pFxchMan,  Fxch_SubCube_t* pSubCube0, Fxch_SubCube_t* pSubCube1 );\n\n// int  Fxch_DivAdd( Fxch_Man_t* pFxchMan, int fUpdate, int fSingleCube, int fBase );\n\n// int  Fxch_DivRemove( Fxch_Man_t* pFxchMan, int fUpdate, int fSingleCube, int fBase );\n\n// void Fxch_DivSepareteCubes( Vec_Int_t* vDiv, Vec_Int_t* vCube0, Vec_Int_t* vCube1 );\n\n// int  Fxch_DivRemoveLits( Vec_Int_t* vCube0, Vec_Int_t* vCube1, Vec_Int_t* vDiv, int *fCompl );\n\n// void Fxch_DivPrint( Fxch_Man_t* pFxchMan, int iDiv );\n\n// int Fxch_DivIsNotConstant1( Vec_Int_t* vDiv );\n\n\n/*===== FxchMan.c ====================================================================================================*/\n// Fxch_Man_t* Fxch_ManAlloc( Vec_Wec_t* vCubes );\n\n// void  Fxch_ManFree( Fxch_Man_t* pFxchMan );\n\n// void  Fxch_ManMapLiteralsIntoCubes( Fxch_Man_t* pFxchMan, int nVars );\n\n// void  Fxch_ManGenerateLitHashKeys( Fxch_Man_t* pFxchMan );\n\n// void  Fxch_ManSCHashTablesInit( Fxch_Man_t* pFxchMan );\n\n// void  Fxch_ManSCHashTablesFree( Fxch_Man_t* pFxchMan );\n\n// void  Fxch_ManDivCreate( Fxch_Man_t* pFxchMan );\n\n// int   Fxch_ManComputeLevelDiv( Fxch_Man_t* pFxchMan, Vec_Int_t* vCubeFree );\n\n// int   Fxch_ManComputeLevelCube( Fxch_Man_t* pFxchMan, Vec_Int_t* vCube );\n\n// void  Fxch_ManComputeLevel( Fxch_Man_t* pFxchMan );\n\n// void  Fxch_ManUpdate( Fxch_Man_t* pFxchMan, int iDiv );\n\n// void  Fxch_ManPrintDivs( Fxch_Man_t* pFxchMan );\n\n// void  Fxch_ManPrintStats( Fxch_Man_t* pFxchMan );\n\n\nfunc Fxch_ManGetCube(pFxchMan *Fxch_Man_t, iCube int32) *Vec_Int_t {\n    return Vec_WecEntry( pFxchMan.vCubes, iCube );\n}\n\nfunc Fxch_ManGetLit(pFxchMan *Fxch_Man_t, iCube int32, iLit int32) int32 {\n    return Vec_IntEntry( Vec_WecEntry(pFxchMan.vCubes, iCube), iLit );\n}\n\n/*===== FxchSCHashTable.c ============================================*/\n// Fxch_SCHashTable_t* Fxch_SCHashTableCreate( Fxch_Man_t* pFxchMan, int nEntries );\n\n\n// void Fxch_SCHashTableDelete( Fxch_SCHashTable_t* );\n\n\n// int Fxch_SCHashTableInsert( Fxch_SCHashTable_t* pSCHashTable,\n//                             Vec_Wec_t* vCubes,\n//                             uint32_t SubCubeID,\n//                             uint32_t iCube,\n//                             uint32_t iLit0,\n//                             uint32_t iLit1,\n//                             char fUpdate );\n\n\n\n// int Fxch_SCHashTableRemove( Fxch_SCHashTable_t* pSCHashTable,\n//                             Vec_Wec_t* vCubes,\n//                             uint32_t SubCubeID,\n//                             uint32_t iCube,\n//                             uint32_t iLit0,\n//                             uint32_t iLit1,\n//                             char fUpdate );\n\n\n// unsigned int Fxch_SCHashTableMemory( Fxch_SCHashTable_t* );\n\n// void Fxch_SCHashTablePrint( Fxch_SCHashTable_t* );\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

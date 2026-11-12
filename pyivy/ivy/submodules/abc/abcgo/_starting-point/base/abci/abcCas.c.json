@@ -1,0 +1,55 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCas.c",
+  "SHA256": "1da5a7453753eed002d34412c521036cfc32027fff7cff61284d2814ed35e85d",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 23,
+        "Column": 1,
+        "ByteOffset": 558
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 41,
+        "Column": 1,
+        "ByteOffset": 1160
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCas.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCas.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 558,
+      "End": 617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCas.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1160,
+      "End": 3644
+    }
+  ],
+  "Draft": "package abci\n\n/**CFile****************************************************************\n\n  FileName    [abcCas.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Decomposition of shared BDDs into LUT cascade.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcCas.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/* \n    This LUT cascade synthesis algorithm is described in the paper:\n    A. Mishchenko and T. Sasao, \"Encoding of Boolean functions and its \n    application to LUT cascade synthesis\", Proc. IWLS '02, pp. 115-120.\n    http://www.eecs.berkeley.edu/~alanmi/publications/2002/iwls02_enc.pdf\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n#ifdef ABC_USE_CUDD\n\nextern int Abc_CascadeExperiment( char * pFileGeneric, DdManager * dd, DdNode ** pOutputs, int nInputs, int nOutputs, int nLutSize, int fCheck, int fVerbose );\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nAbc_Ntk_t * Abc_NtkCascade( Abc_Ntk_t * pNtk, int nLutSize, int fCheck, int fVerbose )\n{\n    DdManager * dd;\n    DdNode ** ppOutputs;\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pNode;\n    char * pFileGeneric;\n    int fBddSizeMax = 500000;\n    int i, fReorder = 1;\n    abctime clk = Abc_Clock();\n\n    assert( Abc_NtkIsStrash(pNtk) );\n    // compute the global BDDs\n    if ( Abc_NtkBuildGlobalBdds(pNtk, fBddSizeMax, 1, fReorder, 0, fVerbose) == NULL )\n        return NULL;\n\n    if ( fVerbose )\n    {\n        DdManager * dd = (DdManager *)Abc_NtkGlobalBddMan( pNtk );\n        printf( \"Shared BDD size = %6d nodes.  \", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );\n        ABC_PRT( \"BDD construction time\", Abc_Clock() - clk );\n    }\n\n    // collect global BDDs\n    dd = (DdManager *)Abc_NtkGlobalBddMan( pNtk );\n    ppOutputs = ABC_ALLOC( DdNode *, Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n        ppOutputs[i] = (DdNode *)Abc_ObjGlobalBdd(pNode);\n\n    // call the decomposition\n    pFileGeneric = Extra_FileNameGeneric( pNtk-\u003epSpec );\n    if ( !Abc_CascadeExperiment( pFileGeneric, dd, ppOutputs, Abc_NtkCiNum(pNtk), Abc_NtkCoNum(pNtk), nLutSize, fCheck, fVerbose ) )\n    {\n        // the LUT size is too small\n    }\n\n    // for now, duplicate the network\n    pNtkNew = Abc_NtkDup( pNtk );\n\n    // cleanup\n    Abc_NtkFreeGlobalBdds( pNtk, 1 );\n    ABC_FREE( ppOutputs );\n    ABC_FREE( pFileGeneric );\n\n//    if ( pNtk-\u003epExdc )\n//        pNtkNew-\u003epExdc = Abc_NtkDup( pNtk-\u003epExdc );\n    // make sure that everything is okay\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Abc_NtkCollapse: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}\n\n#else\n\nAbc_Ntk_t * Abc_NtkCascade( Abc_Ntk_t * pNtk, int nLutSize, int fCheck, int fVerbose ) { return NULL; }\n\n#endif\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

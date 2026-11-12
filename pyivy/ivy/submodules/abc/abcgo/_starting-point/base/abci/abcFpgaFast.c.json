@@ -1,0 +1,293 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c",
+  "SHA256": "71a41baa7ace1b5e5e49c5c2ee37e4cfa98e5986cfd73524a27782a3f6aaaa43",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 41,
+        "Column": 74,
+        "ByteOffset": 1191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_ObjSetIvy2Abc(p *Ivy_Man_t, IvyId int32, pObjAbc *Abc_Obj_t) {  assert(Vec_PtrEntry((Vec_Ptr_t *)p.pCopy, IvyId) == nil); assert(!Abc_ObjIsComplement(pObjAbc)); Vec_PtrWriteEntry( (Vec_Ptr_t *)p.pCopy, IvyId, pObjAbc );  }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 41,
+        "Column": 132,
+        "ByteOffset": 1249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Abc_ObjSetIvy2Abc(p *Ivy_Man_t, IvyId int32, pObjAbc *Abc_Obj_t) {  assert(Vec_PtrEntry((Vec_Ptr_t *)p.pCopy, IvyId) == nil); assert(!Abc_ObjIsComplement(pObjAbc)); Vec_PtrWriteEntry( (Vec_Ptr_t *)p.pCopy, IvyId, pObjAbc );  }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 2487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 78,
+        "Column": 9,
+        "ByteOffset": 2958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkFastMap: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 6175
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsAnd(pObjIvy) || Ivy_ObjIsExor(pObjIvy) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_ObjSetIvy2Abc",
+      "Start": 1086,
+      "End": 1343,
+      "BodyStart": 1179,
+      "Original": "static inline void        Abc_ObjSetIvy2Abc( Ivy_Man_t * p, int IvyId, Abc_Obj_t * pObjAbc ) {  assert(Vec_PtrEntry((Vec_Ptr_t *)p-\u003epCopy, IvyId) == NULL); assert(!Abc_ObjIsComplement(pObjAbc)); Vec_PtrWriteEntry( (Vec_Ptr_t *)p-\u003epCopy, IvyId, pObjAbc );  }",
+      "Draft": "func Abc_ObjSetIvy2Abc(p *Ivy_Man_t, IvyId int32, pObjAbc *Abc_Obj_t) {  assert(Vec_PtrEntry((Vec_Ptr_t *)p.pCopy, IvyId) == nil, \"Vec_PtrEntry((Vec_Ptr_t *)p.pCopy, IvyId) == nil\"); assert(!Abc_ObjIsComplement(pObjAbc), \"!Abc_ObjIsComplement(pObjAbc)\"); Vec_PtrWriteEntry( (Vec_Ptr_t *)p.pCopy, IvyId, pObjAbc );  }"
+    },
+    {
+      "Name": "Abc_ObjGetIvy2Abc",
+      "Start": 1344,
+      "End": 1515,
+      "BodyStart": 1437,
+      "Original": "static inline Abc_Obj_t * Abc_ObjGetIvy2Abc( Ivy_Man_t * p, int IvyId )                      {  return (Abc_Obj_t *)Vec_PtrEntry( (Vec_Ptr_t *)p-\u003epCopy, IvyId );         }",
+      "Draft": "func Abc_ObjGetIvy2Abc(p *Ivy_Man_t, IvyId int32) *Abc_Obj_t {  return (Abc_Obj_t *)Vec_PtrEntry( (Vec_Ptr_t *)p.pCopy, IvyId );         }"
+    },
+    {
+      "Name": "Abc_NtkFpgaFast",
+      "Start": 2318,
+      "End": 3124,
+      "BodyStart": 2409,
+      "Original": "Abc_Ntk_t * Abc_NtkFpgaFast( Abc_Ntk_t * pNtk, int nLutSize, int fRecovery, int fVerbose )\n{\n    Ivy_Man_t * pMan;\n    Abc_Ntk_t * pNtkNew;\n    // make sure the network is an AIG\n    assert( Abc_NtkIsStrash(pNtk) );\n    // convert the network into the AIG\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    // perform fast FPGA mapping\n    Ivy_FastMapPerform( pMan, nLutSize, fRecovery, fVerbose );\n    // convert back into the ABC network\n    pNtkNew = Ivy_ManFpgaToAbc( pNtk, pMan );\n    Ivy_FastMapStop( pMan );\n    Ivy_ManStop( pMan );  \n    // make sure that the final network passes the test\n    if ( pNtkNew != NULL \u0026\u0026 !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Abc_NtkFastMap: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkFpgaFast(pNtk *Abc_Ntk_t, nLutSize int32, fRecovery int32, fVerbose int32) *Abc_Ntk_t {\n    var pMan *Ivy_Man_t;\n    var pNtkNew *Abc_Ntk_t;\n    // make sure the network is an AIG\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // convert the network into the AIG\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    // perform fast FPGA mapping\n    Ivy_FastMapPerform( pMan, nLutSize, fRecovery, fVerbose );\n    // convert back into the ABC network\n    pNtkNew = Ivy_ManFpgaToAbc( pNtk, pMan );\n    Ivy_FastMapStop( pMan );\n    Ivy_ManStop( pMan );  \n    // make sure that the final network passes the test\n    if pNtkNew != nil \u0026\u0026 !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkFastMap: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Ivy_ManFpgaToAbc",
+      "Start": 3401,
+      "End": 5223,
+      "BodyStart": 3468,
+      "Original": "Abc_Ntk_t * Ivy_ManFpgaToAbc( Abc_Ntk_t * pNtk, Ivy_Man_t * pMan )\n{\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pObjAbc, * pObj;\n    Ivy_Obj_t * pObjIvy;\n    Vec_Int_t * vNodes;\n    int i;\n    // start mapping from Ivy into Abc\n    pMan-\u003epCopy = Vec_PtrStart( Ivy_ManObjIdMax(pMan) + 1 );\n    // start the new ABC network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_AIG );\n    // transfer the pointers to the basic nodes\n    Abc_ObjSetIvy2Abc( pMan, Ivy_ManConst1(pMan)-\u003eId, Abc_NtkCreateNodeConst1(pNtkNew) );\n    Abc_NtkForEachCi( pNtkNew, pObjAbc, i )\n        Abc_ObjSetIvy2Abc( pMan, Ivy_ManPi(pMan, i)-\u003eId, pObjAbc ); \n    // recursively construct the network\n    vNodes = Vec_IntAlloc( 100 );\n    Ivy_ManForEachPo( pMan, pObjIvy, i )\n    {\n        // get the new ABC node corresponding to the old fanin of the PO in IVY\n        pObjAbc = Ivy_ManToAbcFast_rec( pNtkNew, pMan, Ivy_ObjFanin0(pObjIvy), vNodes );\n        // consider the case of complemented fanin of the PO\n        if ( Ivy_ObjFaninC0(pObjIvy) ) // complement\n        {\n            if ( Abc_ObjIsCi(pObjAbc) )\n                pObjAbc = Abc_NtkCreateNodeInv( pNtkNew, pObjAbc );\n            else\n            {\n                // clone the node\n                pObj = Abc_NtkCloneObj( pObjAbc );\n                // set complemented functions\n                pObj-\u003epData = Hop_Not( (Hop_Obj_t *)pObjAbc-\u003epData );\n                // return the new node\n                pObjAbc = pObj;\n            }\n        }\n        Abc_ObjAddFanin( Abc_NtkCo(pNtkNew, i), pObjAbc );\n    }\n    Vec_IntFree( vNodes );\n    Vec_PtrFree( (Vec_Ptr_t *)pMan-\u003epCopy ); \n    pMan-\u003epCopy = NULL;\n    // remove dangling nodes\n    Abc_NtkCleanup( pNtkNew, 0 );\n    // fix CIs feeding directly into COs\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    return pNtkNew;\n}",
+      "Draft": "func Ivy_ManFpgaToAbc(pNtk *Abc_Ntk_t, pMan *Ivy_Man_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pObjAbc, pObj *Abc_Obj_t;\n    var pObjIvy *Ivy_Obj_t;\n    var vNodes *Vec_Int_t;\n    var i int32;\n    // start mapping from Ivy into Abc\n    pMan.pCopy = Vec_PtrStart( Ivy_ManObjIdMax(pMan) + 1 );\n    // start the new ABC network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_AIG );\n    // transfer the pointers to the basic nodes\n    Abc_ObjSetIvy2Abc( pMan, Ivy_ManConst1(pMan).Id, Abc_NtkCreateNodeConst1(pNtkNew) );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtkNew)) \u0026\u0026 (((pObjAbc) = Abc_NtkCi(pNtkNew, i)), 1); i++  {\n        Abc_ObjSetIvy2Abc( pMan, Ivy_ManPi(pMan, i).Id, pObjAbc );\n    } \n    // recursively construct the network\n    vNodes = Vec_IntAlloc( 100 );\n    // inlining of macro Ivy_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vPos)) \u0026\u0026 (((pObjIvy) = (Ivy_Obj_t *)Vec_PtrEntry(pMan.vPos, i)), 1); i++  {\n        // get the new ABC node corresponding to the old fanin of the PO in IVY\n        pObjAbc = Ivy_ManToAbcFast_rec( pNtkNew, pMan, Ivy_ObjFanin0(pObjIvy), vNodes );\n        // consider the case of complemented fanin of the PO\n        if Ivy_ObjFaninC0(pObjIvy) { // complement\n        \n            if Abc_ObjIsCi(pObjAbc) {\n                pObjAbc = Abc_NtkCreateNodeInv( pNtkNew, pObjAbc );\n            } else {\n                // clone the node\n                pObj = Abc_NtkCloneObj( pObjAbc );\n                // set complemented functions\n                pObj.pData = Hop_Not( (Hop_Obj_t *)pObjAbc.pData );\n                // return the new node\n                pObjAbc = pObj;\n            }\n        }\n        Abc_ObjAddFanin( Abc_NtkCo(pNtkNew, i), pObjAbc );\n    }\n    Vec_IntFree( vNodes );\n    Vec_PtrFree( (Vec_Ptr_t *)pMan.pCopy ); \n    pMan.pCopy = nil;\n    // remove dangling nodes\n    Abc_NtkCleanup( pNtkNew, 0 );\n    // fix CIs feeding directly into COs\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Ivy_ManToAbcFast_rec",
+      "Start": 5494,
+      "End": 7002,
+      "BodyStart": 5609,
+      "Original": "Abc_Obj_t * Ivy_ManToAbcFast_rec( Abc_Ntk_t * pNtkNew, Ivy_Man_t * pMan, Ivy_Obj_t * pObjIvy, Vec_Int_t * vNodes )\n{\n    Vec_Int_t Supp, * vSupp = \u0026Supp;\n    Abc_Obj_t * pObjAbc, * pFaninAbc;\n    Ivy_Obj_t * pNodeIvy;\n    int i, Entry;\n    // skip the node if it is a constant or already processed\n    pObjAbc = Abc_ObjGetIvy2Abc( pMan, pObjIvy-\u003eId );\n    if ( pObjAbc )\n        return pObjAbc;\n    assert( Ivy_ObjIsAnd(pObjIvy) || Ivy_ObjIsExor(pObjIvy) );\n    // get the support of K-LUT\n    Ivy_FastMapReadSupp( pMan, pObjIvy, vSupp );\n    // create new ABC node and its fanins\n    pObjAbc = Abc_NtkCreateNode( pNtkNew );\n    Vec_IntForEachEntry( vSupp, Entry, i )\n    {\n        pFaninAbc = Ivy_ManToAbcFast_rec( pNtkNew, pMan, Ivy_ManObj(pMan, Entry), vNodes );\n        Abc_ObjAddFanin( pObjAbc, pFaninAbc );\n    }\n    // collect the nodes used in the cut\n    Ivy_ManCollectCut( pMan, pObjIvy, vSupp, vNodes );\n    // create the local function\n    Ivy_ManForEachNodeVec( pMan, vNodes, pNodeIvy, i )\n    {\n        if ( i \u003c Vec_IntSize(vSupp) )\n            pNodeIvy-\u003epEquiv = (Ivy_Obj_t *)Hop_IthVar( (Hop_Man_t *)pNtkNew-\u003epManFunc, i );\n        else\n            pNodeIvy-\u003epEquiv = (Ivy_Obj_t *)Hop_And( (Hop_Man_t *)pNtkNew-\u003epManFunc, (Hop_Obj_t *)Ivy_ObjChild0Equiv(pNodeIvy), (Hop_Obj_t *)Ivy_ObjChild1Equiv(pNodeIvy) );\n    }\n    // set the local function\n    pObjAbc-\u003epData = (Abc_Obj_t *)pObjIvy-\u003epEquiv;\n    // set the node\n    Abc_ObjSetIvy2Abc( pMan, pObjIvy-\u003eId, pObjAbc ); \n    return pObjAbc;\n}",
+      "Draft": "func Ivy_ManToAbcFast_rec(pNtkNew *Abc_Ntk_t, pMan *Ivy_Man_t, pObjIvy *Ivy_Obj_t, vNodes *Vec_Int_t) *Abc_Obj_t {\n    var Supp Vec_Int_t;\n    var vSupp *Vec_Int_t = \u0026Supp;\n    var pObjAbc, pFaninAbc *Abc_Obj_t;\n    var pNodeIvy *Ivy_Obj_t;\n    var i, Entry int32;\n    // skip the node if it is a constant or already processed\n    pObjAbc = Abc_ObjGetIvy2Abc( pMan, pObjIvy.Id );\n    if pObjAbc != nil {\n        return pObjAbc; }\n    assert(Ivy_ObjIsAnd(pObjIvy) || Ivy_ObjIsExor(pObjIvy), \"Ivy_ObjIsAnd(pObjIvy) || Ivy_ObjIsExor(pObjIvy)\");\n    // get the support of K-LUT\n    Ivy_FastMapReadSupp( pMan, pObjIvy, vSupp );\n    // create new ABC node and its fanins\n    pObjAbc = Abc_NtkCreateNode( pNtkNew );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSupp, i)), 1); i++  {\n        pFaninAbc = Ivy_ManToAbcFast_rec( pNtkNew, pMan, Ivy_ManObj(pMan, Entry), vNodes );\n        Abc_ObjAddFanin( pObjAbc, pFaninAbc );\n    }\n    // collect the nodes used in the cut\n    Ivy_ManCollectCut( pMan, pObjIvy, vSupp, vNodes );\n    // create the local function\n    // inlining of macro Ivy_ManForEachNodeVec\n    for  i = 0; i \u003c Vec_IntSize(vNodes) \u0026\u0026 ((pNodeIvy) = Ivy_ManObj(pMan, Vec_IntEntry(vNodes,i))); i++  {\n        if i \u003c Vec_IntSize(vSupp) {\n            pNodeIvy.pEquiv = (Ivy_Obj_t *)Hop_IthVar( (Hop_Man_t *)pNtkNew.pManFunc, i );\n        } else {\n            pNodeIvy.pEquiv = (Ivy_Obj_t *)Hop_And( (Hop_Man_t *)pNtkNew.pManFunc, (Hop_Obj_t *)Ivy_ObjChild0Equiv(pNodeIvy), (Hop_Obj_t *)Ivy_ObjChild1Equiv(pNodeIvy) ); }\n    }\n    // set the local function\n    pObjAbc.pData = (Abc_Obj_t *)pObjIvy.pEquiv;\n    // set the node\n    Abc_ObjSetIvy2Abc( pMan, pObjIvy.Id, pObjAbc ); \n    return pObjAbc;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::pointer-cast::1202",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1202,
+      "End": 1215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::pointer-cast::1300",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1300,
+      "End": 1313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::pointer-cast::1447",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1447,
+      "End": 1460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::pointer-cast::1474",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1474,
+      "End": 1487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::pointer-cast::4391",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4120,
+      "End": 4120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::pointer-cast::5052",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4765,
+      "End": 4778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::pointer-cast::5287",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5000,
+      "End": 5013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::pointer-cast::7072",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6572,
+      "End": 6585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::pointer-cast::7097",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6597,
+      "End": 6610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::pointer-cast::7178",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6678,
+      "End": 6691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::pointer-cast::7200",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6700,
+      "End": 6713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::pointer-cast::7232",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6732,
+      "End": 6745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::pointer-cast::7275",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6775,
+      "End": 6788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::pointer-cast::7377",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6877,
+      "End": 6890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::Abc_ObjSetIvy2Abc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjSetIvy2Abc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1086,
+      "End": 1343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::Abc_ObjGetIvy2Abc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjGetIvy2Abc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1344,
+      "End": 1515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::Abc_NtkFpgaFast",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFpgaFast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2318,
+      "End": 3124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::Ivy_ManFpgaToAbc",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManFpgaToAbc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3401,
+      "End": 5223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::Ivy_ManToAbcFast_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManToAbcFast_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5494,
+      "End": 7002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcFpgaFast.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7249
+    }
+  ],
+  "Draft": "package abci\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [abcFpgaFast.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Fast FPGA mapper.]\n\n  Author      [Sungmin Cho]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcFpgaFast.c,v 1.00 2006/09/02 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"aig/ivy/ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern Ivy_Man_t * Abc_NtkIvyBefore( Abc_Ntk_t * pNtk, int fSeq, int fUseDc );\n\n\n// static Abc_Ntk_t * Ivy_ManFpgaToAbc( Abc_Ntk_t * pNtk, Ivy_Man_t * pMan );\n\n// static Abc_Obj_t * Ivy_ManToAbcFast_rec( Abc_Ntk_t * pNtkNew, Ivy_Man_t * pMan, Ivy_Obj_t * pObjIvy, Vec_Int_t * vNodes );\n\n\nfunc Abc_ObjSetIvy2Abc(p *Ivy_Man_t, IvyId int32, pObjAbc *Abc_Obj_t) {  assert(Vec_PtrEntry((Vec_Ptr_t *)p.pCopy, IvyId) == nil, \"Vec_PtrEntry((Vec_Ptr_t *)p.pCopy, IvyId) == nil\"); assert(!Abc_ObjIsComplement(pObjAbc), \"!Abc_ObjIsComplement(pObjAbc)\"); Vec_PtrWriteEntry( (Vec_Ptr_t *)p.pCopy, IvyId, pObjAbc );  }\nfunc Abc_ObjGetIvy2Abc(p *Ivy_Man_t, IvyId int32) *Abc_Obj_t {  return (Abc_Obj_t *)Vec_PtrEntry( (Vec_Ptr_t *)p.pCopy, IvyId );         }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Performs fast FPGA mapping of the network.]\n\n  Description [Takes the AIG to be mapped, the LUT size, and verbosity\n  flag. Produces the new network by fast FPGA mapping of the current \n  network. If the current network in ABC in not an AIG, the user should \n  run command \"strash\" to make sure that the current network into an AIG \n  before calling this procedure.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFpgaFast(pNtk *Abc_Ntk_t, nLutSize int32, fRecovery int32, fVerbose int32) *Abc_Ntk_t {\n    var pMan *Ivy_Man_t;\n    var pNtkNew *Abc_Ntk_t;\n    // make sure the network is an AIG\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // convert the network into the AIG\n    pMan = Abc_NtkIvyBefore( pNtk, 0, 0 );\n    // perform fast FPGA mapping\n    Ivy_FastMapPerform( pMan, nLutSize, fRecovery, fVerbose );\n    // convert back into the ABC network\n    pNtkNew = Ivy_ManFpgaToAbc( pNtk, pMan );\n    Ivy_FastMapStop( pMan );\n    Ivy_ManStop( pMan );  \n    // make sure that the final network passes the test\n    if pNtkNew != nil \u0026\u0026 !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkFastMap: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs the ABC network after mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManFpgaToAbc(pNtk *Abc_Ntk_t, pMan *Ivy_Man_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pObjAbc, pObj *Abc_Obj_t;\n    var pObjIvy *Ivy_Obj_t;\n    var vNodes *Vec_Int_t;\n    var i int32;\n    // start mapping from Ivy into Abc\n    pMan.pCopy = Vec_PtrStart( Ivy_ManObjIdMax(pMan) + 1 );\n    // start the new ABC network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_AIG );\n    // transfer the pointers to the basic nodes\n    Abc_ObjSetIvy2Abc( pMan, Ivy_ManConst1(pMan).Id, Abc_NtkCreateNodeConst1(pNtkNew) );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtkNew)) \u0026\u0026 (((pObjAbc) = Abc_NtkCi(pNtkNew, i)), 1); i++  {\n        Abc_ObjSetIvy2Abc( pMan, Ivy_ManPi(pMan, i).Id, pObjAbc );\n    } \n    // recursively construct the network\n    vNodes = Vec_IntAlloc( 100 );\n    // inlining of macro Ivy_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vPos)) \u0026\u0026 (((pObjIvy) = (Ivy_Obj_t *)Vec_PtrEntry(pMan.vPos, i)), 1); i++  {\n        // get the new ABC node corresponding to the old fanin of the PO in IVY\n        pObjAbc = Ivy_ManToAbcFast_rec( pNtkNew, pMan, Ivy_ObjFanin0(pObjIvy), vNodes );\n        // consider the case of complemented fanin of the PO\n        if Ivy_ObjFaninC0(pObjIvy) { // complement\n        \n            if Abc_ObjIsCi(pObjAbc) {\n                pObjAbc = Abc_NtkCreateNodeInv( pNtkNew, pObjAbc );\n            } else {\n                // clone the node\n                pObj = Abc_NtkCloneObj( pObjAbc );\n                // set complemented functions\n                pObj.pData = Hop_Not( (Hop_Obj_t *)pObjAbc.pData );\n                // return the new node\n                pObjAbc = pObj;\n            }\n        }\n        Abc_ObjAddFanin( Abc_NtkCo(pNtkNew, i), pObjAbc );\n    }\n    Vec_IntFree( vNodes );\n    Vec_PtrFree( (Vec_Ptr_t *)pMan.pCopy ); \n    pMan.pCopy = nil;\n    // remove dangling nodes\n    Abc_NtkCleanup( pNtkNew, 0 );\n    // fix CIs feeding directly into COs\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively construct the new node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManToAbcFast_rec(pNtkNew *Abc_Ntk_t, pMan *Ivy_Man_t, pObjIvy *Ivy_Obj_t, vNodes *Vec_Int_t) *Abc_Obj_t {\n    var Supp Vec_Int_t;\n    var vSupp *Vec_Int_t = \u0026Supp;\n    var pObjAbc, pFaninAbc *Abc_Obj_t;\n    var pNodeIvy *Ivy_Obj_t;\n    var i, Entry int32;\n    // skip the node if it is a constant or already processed\n    pObjAbc = Abc_ObjGetIvy2Abc( pMan, pObjIvy.Id );\n    if pObjAbc != nil {\n        return pObjAbc; }\n    assert(Ivy_ObjIsAnd(pObjIvy) || Ivy_ObjIsExor(pObjIvy), \"Ivy_ObjIsAnd(pObjIvy) || Ivy_ObjIsExor(pObjIvy)\");\n    // get the support of K-LUT\n    Ivy_FastMapReadSupp( pMan, pObjIvy, vSupp );\n    // create new ABC node and its fanins\n    pObjAbc = Abc_NtkCreateNode( pNtkNew );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSupp, i)), 1); i++  {\n        pFaninAbc = Ivy_ManToAbcFast_rec( pNtkNew, pMan, Ivy_ManObj(pMan, Entry), vNodes );\n        Abc_ObjAddFanin( pObjAbc, pFaninAbc );\n    }\n    // collect the nodes used in the cut\n    Ivy_ManCollectCut( pMan, pObjIvy, vSupp, vNodes );\n    // create the local function\n    // inlining of macro Ivy_ManForEachNodeVec\n    for  i = 0; i \u003c Vec_IntSize(vNodes) \u0026\u0026 ((pNodeIvy) = Ivy_ManObj(pMan, Vec_IntEntry(vNodes,i))); i++  {\n        if i \u003c Vec_IntSize(vSupp) {\n            pNodeIvy.pEquiv = (Ivy_Obj_t *)Hop_IthVar( (Hop_Man_t *)pNtkNew.pManFunc, i );\n        } else {\n            pNodeIvy.pEquiv = (Ivy_Obj_t *)Hop_And( (Hop_Man_t *)pNtkNew.pManFunc, (Hop_Obj_t *)Ivy_ObjChild0Equiv(pNodeIvy), (Hop_Obj_t *)Ivy_ObjChild1Equiv(pNodeIvy) ); }\n    }\n    // set the local function\n    pObjAbc.pData = (Abc_Obj_t *)pObjIvy.pEquiv;\n    // set the node\n    Abc_ObjSetIvy2Abc( pMan, pObjIvy.Id, pObjAbc ); \n    return pObjAbc;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

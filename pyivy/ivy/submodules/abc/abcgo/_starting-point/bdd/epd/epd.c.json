@@ -1,0 +1,1305 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c",
+  "SHA256": "071d1df7d2155616f6ddb19687d291becdeada7120de4d78cad2e8c260331812",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 76,
+        "Column": 68,
+        "ByteOffset": 2571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  epd = /*__starting_point_inline_macro:ABC_ALLOC__*/((EpDouble *) malloc(sizeof(EpDouble) * (size_t)(1)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 115,
+        "Column": 57,
+        "ByteOffset": 3541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  /*__starting_point_inline_macro:ABC_FREE__*/((epd) ? (free((char *) (epd)), (epd) = 0) : 0);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 4079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf(str, \"NaN\");"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 140,
+        "Column": 7,
+        "ByteOffset": 4193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      sprintf(str, \"-Inf\");"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 142,
+        "Column": 7,
+        "ByteOffset": 4234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      sprintf(str, \"Inf\"); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 146,
+        "Column": 3,
+        "ByteOffset": 4276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd.type.bits.exponent == EPD_MAX_BIN ||"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 150,
+        "Column": 3,
+        "ByteOffset": 4423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  sprintf(str, \"%e\", value);"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 4458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  pos = strstr(str, \"e\");"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 7,
+        "ByteOffset": 4526
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      sprintf(pos + 1, \"+0%d\", exponent);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 7,
+        "ByteOffset": 4581
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      sprintf(pos + 1, \"+%d\", exponent); }"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 7,
+        "ByteOffset": 4678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      sprintf(pos + 1, \"-0%d\", exponent);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 162,
+        "Column": 7,
+        "ByteOffset": 4733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      sprintf(pos + 1, \"-%d\", exponent); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 213,
+        "Column": 3,
+        "ByteOffset": 5925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd1.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 3,
+        "ByteOffset": 6838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd1.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 251,
+        "Column": 3,
+        "ByteOffset": 6888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd2.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 318,
+        "Column": 3,
+        "ByteOffset": 8601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd1.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 319,
+        "Column": 3,
+        "ByteOffset": 8651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd2.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 396,
+        "Column": 3,
+        "ByteOffset": 10601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd1.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 445,
+        "Column": 3,
+        "ByteOffset": 11782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd1.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 446,
+        "Column": 3,
+        "ByteOffset": 11832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd2.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 491,
+        "Column": 3,
+        "ByteOffset": 12961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd1.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 492,
+        "Column": 3,
+        "ByteOffset": 13011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd2.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 533,
+        "Column": 3,
+        "ByteOffset": 14039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd1.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 539,
+        "Column": 49,
+        "ByteOffset": 14272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      tmp = epd1.type.value + epd2.type.value / pow(float64(2.0), float64(diff));"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 546,
+        "Column": 31,
+        "ByteOffset": 14525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      tmp = epd1.type.value / pow(float64(2.0), float64(diff)) + epd2.type.value;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 591,
+        "Column": 3,
+        "ByteOffset": 15608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd1.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 592,
+        "Column": 3,
+        "ByteOffset": 15658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd2.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 598,
+        "Column": 35,
+        "ByteOffset": 15881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                epd2.type.value / pow(float64(2.0), float64(diff));"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 605,
+        "Column": 33,
+        "ByteOffset": 16138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      value = epd1.type.value / pow(float64(2.0), float64(diff)) +"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 655,
+        "Column": 3,
+        "ByteOffset": 17343
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd1.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 656,
+        "Column": 3,
+        "ByteOffset": 17393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd2.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 662,
+        "Column": 35,
+        "ByteOffset": 17616
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                epd2.type.value / pow(float64(2.0), float64(diff));"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 669,
+        "Column": 33,
+        "ByteOffset": 17873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      value = epd1.type.value / pow(float64(2.0), float64(diff)) +"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 717,
+        "Column": 3,
+        "ByteOffset": 19054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd1.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 723,
+        "Column": 49,
+        "ByteOffset": 19287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      tmp = epd1.type.value - epd2.type.value / pow(float64(2.0), float64(diff));"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 730,
+        "Column": 31,
+        "ByteOffset": 19540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      tmp = epd1.type.value / pow(float64(2.0), float64(diff)) - epd2.type.value;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 775,
+        "Column": 3,
+        "ByteOffset": 20656
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd1.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 776,
+        "Column": 3,
+        "ByteOffset": 20706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd2.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 782,
+        "Column": 35,
+        "ByteOffset": 20929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                epd2.type.value / pow(float64(2.0), float64(diff));"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 789,
+        "Column": 33,
+        "ByteOffset": 21186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      value = epd1.type.value / pow(float64(2.0), float64(diff)) -"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 840,
+        "Column": 3,
+        "ByteOffset": 22467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd1.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 841,
+        "Column": 3,
+        "ByteOffset": 22517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(epd2.type.bits.exponent == EPD_MAX_BIN);"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 847,
+        "Column": 35,
+        "ByteOffset": 22740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                epd2.type.value / pow(float64(2.0), float64(diff));"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 854,
+        "Column": 33,
+        "ByteOffset": 22997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      value = epd1.type.value / pow(float64(2.0), float64(diff)) -"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 882,
+        "Column": 16,
+        "ByteOffset": 23729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    EpdConvert(pow(float64(2.0), float64(n)), epd);"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 909,
+        "Column": 22,
+        "ByteOffset": 24365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    epd.type.value = pow(float64(2.0), float64(n));"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 973,
+        "Column": 21,
+        "ByteOffset": 25850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  epd.type.value /= pow(float64(10.0), float64(exponent));"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 1047,
+        "Column": 3,
+        "ByteOffset": 27596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  sprintf(str, \"%E\", value);"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 1048,
+        "Column": 9,
+        "ByteOffset": 27631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  pos = strstr(str, \"E\");"
+    },
+    {
+      "Name": "sscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 1049,
+        "Column": 3,
+        "ByteOffset": 27651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  sscanf(pos, \"E%d\", \u0026exponent);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "EpdAlloc",
+      "Start": 2427,
+      "End": 2526,
+      "BodyStart": 2453,
+      "Original": "EpDouble *\nEpdAlloc(void)\n{\n  EpDouble      *epd;\n\n  epd = ABC_ALLOC(EpDouble, 1);\n  return(epd);\n}",
+      "Draft": "func EpdAlloc() *EpDouble {\n  var epd *EpDouble;\n\n  // inlining of macro ABC_ALLOC\n  epd = ((EpDouble *) malloc(sizeof(EpDouble) * (size_t)(1)));\n  return(epd);\n}"
+    },
+    {
+      "Name": "EpdCmp",
+      "Start": 2820,
+      "End": 3066,
+      "BodyStart": 2867,
+      "Original": "int\nEpdCmp(const char *key1, const char *key2)\n{\n  EpDouble *epd1 = (EpDouble *) key1;\n  EpDouble *epd2 = (EpDouble *) key2;\n  if (epd1-\u003etype.value != epd2-\u003etype.value ||\n      epd1-\u003eexponent != epd2-\u003eexponent) {\n    return(1);\n  }\n  return(0);\n}",
+      "Draft": "func EpdCmp(key1 string, key2 string) int32 {\n  var epd1 *EpDouble  = (EpDouble *) key1;\n  var epd2 *EpDouble  = (EpDouble *) key2;\n  if epd1.type.value != epd2.type.value ||\n      epd1.exponent != epd2.exponent {\n    return(1);\n  }\n  return(0);\n}"
+    },
+    {
+      "Name": "EpdFree",
+      "Start": 3352,
+      "End": 3400,
+      "BodyStart": 3380,
+      "Original": "void\nEpdFree(EpDouble *epd)\n{\n  ABC_FREE(epd);\n}",
+      "Draft": "func EpdFree(epd *EpDouble) {\n  // inlining of macro ABC_FREE\n  ((epd) ? (free((char *) (epd)), (epd) = 0) : 0);\n}"
+    },
+    {
+      "Name": "EpdGetString",
+      "Start": 3750,
+      "End": 4596,
+      "BodyStart": 3794,
+      "Original": "void\nEpdGetString(EpDouble *epd, char *str)\n{\n  double        value;\n  int           exponent;\n  char          *pos;\n\n  if (IsNanDouble(epd-\u003etype.value)) {\n    sprintf(str, \"NaN\");\n    return;\n  } else if (IsInfDouble(epd-\u003etype.value)) {\n    if (epd-\u003etype.bits.sign == 1)\n      sprintf(str, \"-Inf\");\n    else\n      sprintf(str, \"Inf\");\n    return;\n  }\n\n  assert(epd-\u003etype.bits.exponent == EPD_MAX_BIN ||\n         epd-\u003etype.bits.exponent == 0);\n\n  EpdGetValueAndDecimalExponent(epd, \u0026value, \u0026exponent);\n  sprintf(str, \"%e\", value);\n  pos = strstr(str, \"e\");\n  if (exponent \u003e= 0) {\n    if (exponent \u003c 10)\n      sprintf(pos + 1, \"+0%d\", exponent);\n    else\n      sprintf(pos + 1, \"+%d\", exponent);\n  } else {\n    exponent *= -1;\n    if (exponent \u003c 10)\n      sprintf(pos + 1, \"-0%d\", exponent);\n    else\n      sprintf(pos + 1, \"-%d\", exponent);\n  }\n}",
+      "Draft": "func EpdGetString(epd *EpDouble, str string) {\n  var value float64;\n  var exponent int32;\n  var pos string;\n\n  if IsNanDouble(epd.type.value) {\n    str = fmt.Sprintf(\"NaN\");\n    return;\n  } else if IsInfDouble(epd.type.value) {\n    if epd.type.bits.sign == 1 {\n      str = fmt.Sprintf(\"-Inf\");\n    } else {\n      str = fmt.Sprintf(\"Inf\"); }\n    return;\n  }\n\n  assert(epd.type.bits.exponent == EPD_MAX_BIN ||\n           epd.type.bits.exponent == 0, \"epd.type.bits.exponent == EPD_MAX_BIN ||\\n         epd.type.bits.exponent == 0\");\n\n  EpdGetValueAndDecimalExponent(epd, \u0026value, \u0026exponent);\n  str = fmt.Sprintf(\"%e\", value);\n  pos = strstr(str, \"e\");\n  if exponent \u003e= 0 {\n    if exponent \u003c 10 {\n      sprintf(pos + 1, \"+0%d\", exponent);\n    } else {\n      sprintf(pos + 1, \"+%d\", exponent); }\n  } else {\n    exponent *= -1;\n    if exponent \u003c 10 {\n      sprintf(pos + 1, \"-0%d\", exponent);\n    } else {\n      sprintf(pos + 1, \"-%d\", exponent); }\n  }\n}"
+    },
+    {
+      "Name": "EpdConvert",
+      "Start": 4902,
+      "End": 5019,
+      "BodyStart": 4947,
+      "Original": "void\nEpdConvert(double value, EpDouble *epd)\n{\n  epd-\u003etype.value = value;\n  epd-\u003eexponent = 0;\n  EpdNormalize(epd);\n}",
+      "Draft": "func EpdConvert(value float64, epd *EpDouble) {\n  epd.type.value = value;\n  epd.exponent = 0;\n  EpdNormalize(epd);\n}"
+    },
+    {
+      "Name": "EpdMultiply",
+      "Start": 5353,
+      "End": 5997,
+      "BodyStart": 5400,
+      "Original": "void\nEpdMultiply(EpDouble *epd1, double value)\n{\n  EpDouble      epd2;\n  double        tmp;\n  int           exponent;\n\n  if (EpdIsNan(epd1) || IsNanDouble(value)) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) || IsInfDouble(value)) {\n    int sign;\n\n    EpdConvert(value, \u0026epd2);\n    sign = epd1-\u003etype.bits.sign ^ epd2.type.bits.sign;\n    EpdMakeInf(epd1, sign);\n    return;\n  }\n\n  assert(epd1-\u003etype.bits.exponent == EPD_MAX_BIN);\n\n  EpdConvert(value, \u0026epd2);\n  tmp = epd1-\u003etype.value * epd2.type.value;\n  exponent = epd1-\u003eexponent + epd2.exponent;\n  epd1-\u003etype.value = tmp;\n  epd1-\u003eexponent = exponent;\n  EpdNormalize(epd1);\n}",
+      "Draft": "func EpdMultiply(epd1 *EpDouble, value float64) {\n  var epd2 EpDouble;\n  var tmp float64;\n  var exponent int32;\n\n  if (EpdIsNan(epd1) != 0) || (IsNanDouble(value) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (IsInfDouble(value) != 0) {\n    var sign int32;\n\n    EpdConvert(value, \u0026epd2);\n    sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n    EpdMakeInf(epd1, sign);\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n\n  EpdConvert(value, \u0026epd2);\n  tmp = epd1.type.value * epd2.type.value;\n  exponent = epd1.exponent + epd2.exponent;\n  epd1.type.value = tmp;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}"
+    },
+    {
+      "Name": "EpdMultiply2",
+      "Start": 6331,
+      "End": 6950,
+      "BodyStart": 6381,
+      "Original": "void\nEpdMultiply2(EpDouble *epd1, EpDouble *epd2)\n{\n  double        value;\n  int           exponent;\n\n  if (EpdIsNan(epd1) || EpdIsNan(epd2)) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) || EpdIsInf(epd2)) {\n    int sign;\n\n    sign = epd1-\u003etype.bits.sign ^ epd2-\u003etype.bits.sign;\n    EpdMakeInf(epd1, sign);\n    return;\n  }\n\n  assert(epd1-\u003etype.bits.exponent == EPD_MAX_BIN);\n  assert(epd2-\u003etype.bits.exponent == EPD_MAX_BIN);\n\n  value = epd1-\u003etype.value * epd2-\u003etype.value;\n  exponent = epd1-\u003eexponent + epd2-\u003eexponent;\n  epd1-\u003etype.value = value;\n  epd1-\u003eexponent = exponent;\n  EpdNormalize(epd1);\n}",
+      "Draft": "func EpdMultiply2(epd1 *EpDouble, epd2 *EpDouble) {\n  var value float64;\n  var exponent int32;\n\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n    EpdMakeInf(epd1, sign);\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  value = epd1.type.value * epd2.type.value;\n  exponent = epd1.exponent + epd2.exponent;\n  epd1.type.value = value;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}"
+    },
+    {
+      "Name": "EpdMultiply2Decimal",
+      "Start": 7284,
+      "End": 7814,
+      "BodyStart": 7341,
+      "Original": "void\nEpdMultiply2Decimal(EpDouble *epd1, EpDouble *epd2)\n{\n  double        value;\n  int           exponent;\n\n  if (EpdIsNan(epd1) || EpdIsNan(epd2)) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) || EpdIsInf(epd2)) {\n    int sign;\n\n    sign = epd1-\u003etype.bits.sign ^ epd2-\u003etype.bits.sign;\n    EpdMakeInf(epd1, sign);\n    return;\n  }\n\n  value = epd1-\u003etype.value * epd2-\u003etype.value;\n  exponent = epd1-\u003eexponent + epd2-\u003eexponent;\n  epd1-\u003etype.value = value;\n  epd1-\u003eexponent = exponent;\n  EpdNormalizeDecimal(epd1);\n}",
+      "Draft": "func EpdMultiply2Decimal(epd1 *EpDouble, epd2 *EpDouble) {\n  var value float64;\n  var exponent int32;\n\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n    EpdMakeInf(epd1, sign);\n    return;\n  }\n\n  value = epd1.type.value * epd2.type.value;\n  exponent = epd1.exponent + epd2.exponent;\n  epd1.type.value = value;\n  epd1.exponent = exponent;\n  EpdNormalizeDecimal(epd1);\n}"
+    },
+    {
+      "Name": "EpdMultiply3",
+      "Start": 8148,
+      "End": 8693,
+      "BodyStart": 8214,
+      "Original": "void\nEpdMultiply3(EpDouble *epd1, EpDouble *epd2, EpDouble *epd3)\n{\n  if (EpdIsNan(epd1) || EpdIsNan(epd2)) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) || EpdIsInf(epd2)) {\n    int sign;\n\n    sign = epd1-\u003etype.bits.sign ^ epd2-\u003etype.bits.sign;\n    EpdMakeInf(epd3, sign);\n    return;\n  }\n\n  assert(epd1-\u003etype.bits.exponent == EPD_MAX_BIN);\n  assert(epd2-\u003etype.bits.exponent == EPD_MAX_BIN);\n\n  epd3-\u003etype.value = epd1-\u003etype.value * epd2-\u003etype.value;\n  epd3-\u003eexponent = epd1-\u003eexponent + epd2-\u003eexponent;\n  EpdNormalize(epd3);\n}",
+      "Draft": "func EpdMultiply3(epd1 *EpDouble, epd2 *EpDouble, epd3 *EpDouble) {\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n    EpdMakeInf(epd3, sign);\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  epd3.type.value = epd1.type.value * epd2.type.value;\n  epd3.exponent = epd1.exponent + epd2.exponent;\n  EpdNormalize(epd3);\n}"
+    },
+    {
+      "Name": "EpdMultiply3Decimal",
+      "Start": 9027,
+      "End": 9483,
+      "BodyStart": 9100,
+      "Original": "void\nEpdMultiply3Decimal(EpDouble *epd1, EpDouble *epd2, EpDouble *epd3)\n{\n  if (EpdIsNan(epd1) || EpdIsNan(epd2)) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) || EpdIsInf(epd2)) {\n    int sign;\n\n    sign = epd1-\u003etype.bits.sign ^ epd2-\u003etype.bits.sign;\n    EpdMakeInf(epd3, sign);\n    return;\n  }\n\n  epd3-\u003etype.value = epd1-\u003etype.value * epd2-\u003etype.value;\n  epd3-\u003eexponent = epd1-\u003eexponent + epd2-\u003eexponent;\n  EpdNormalizeDecimal(epd3);\n}",
+      "Draft": "func EpdMultiply3Decimal(epd1 *EpDouble, epd2 *EpDouble, epd3 *EpDouble) {\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n    EpdMakeInf(epd3, sign);\n    return;\n  }\n\n  epd3.type.value = epd1.type.value * epd2.type.value;\n  epd3.exponent = epd1.exponent + epd2.exponent;\n  EpdNormalizeDecimal(epd3);\n}"
+    },
+    {
+      "Name": "EpdDivide",
+      "Start": 9811,
+      "End": 10730,
+      "BodyStart": 9856,
+      "Original": "void\nEpdDivide(EpDouble *epd1, double value)\n{\n  EpDouble      epd2;\n  double        tmp;\n  int           exponent;\n\n  if (EpdIsNan(epd1) || IsNanDouble(value)) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) || IsInfDouble(value)) {\n    int sign;\n\n    EpdConvert(value, \u0026epd2);\n    if (EpdIsInf(epd1) \u0026\u0026 IsInfDouble(value)) {\n      EpdMakeNan(epd1);\n    } else if (EpdIsInf(epd1)) {\n      sign = epd1-\u003etype.bits.sign ^ epd2.type.bits.sign;\n      EpdMakeInf(epd1, sign);\n    } else {\n      sign = epd1-\u003etype.bits.sign ^ epd2.type.bits.sign;\n      EpdMakeZero(epd1, sign);\n    }\n    return;\n  }\n\n  if (value == 0.0) {\n    EpdMakeNan(epd1);\n    return;\n  }\n\n  assert(epd1-\u003etype.bits.exponent == EPD_MAX_BIN);\n\n  EpdConvert(value, \u0026epd2);\n  tmp = epd1-\u003etype.value / epd2.type.value;\n  exponent = epd1-\u003eexponent - epd2.exponent;\n  epd1-\u003etype.value = tmp;\n  epd1-\u003eexponent = exponent;\n  EpdNormalize(epd1);\n}",
+      "Draft": "func EpdDivide(epd1 *EpDouble, value float64) {\n  var epd2 EpDouble;\n  var tmp float64;\n  var exponent int32;\n\n  if (EpdIsNan(epd1) != 0) || (IsNanDouble(value) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (IsInfDouble(value) != 0) {\n    var sign int32;\n\n    EpdConvert(value, \u0026epd2);\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (IsInfDouble(value) != 0) {\n      EpdMakeNan(epd1);\n    } else if EpdIsInf(epd1) != 0 {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      EpdMakeInf(epd1, sign);\n    } else {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      EpdMakeZero(epd1, sign);\n    }\n    return;\n  }\n\n  if value == 0.0 {\n    EpdMakeNan(epd1);\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n\n  EpdConvert(value, \u0026epd2);\n  tmp = epd1.type.value / epd2.type.value;\n  exponent = epd1.exponent - epd2.exponent;\n  epd1.type.value = tmp;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}"
+    },
+    {
+      "Name": "EpdDivide2",
+      "Start": 11058,
+      "End": 11960,
+      "BodyStart": 11106,
+      "Original": "void\nEpdDivide2(EpDouble *epd1, EpDouble *epd2)\n{\n  double        value;\n  int           exponent;\n\n  if (EpdIsNan(epd1) || EpdIsNan(epd2)) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) || EpdIsInf(epd2)) {\n    int sign;\n\n    if (EpdIsInf(epd1) \u0026\u0026 EpdIsInf(epd2)) {\n      EpdMakeNan(epd1);\n    } else if (EpdIsInf(epd1)) {\n      sign = epd1-\u003etype.bits.sign ^ epd2-\u003etype.bits.sign;\n      EpdMakeInf(epd1, sign);\n    } else {\n      sign = epd1-\u003etype.bits.sign ^ epd2-\u003etype.bits.sign;\n      EpdMakeZero(epd1, sign);\n    }\n    return;\n  }\n\n  if (epd2-\u003etype.value == 0.0) {\n    EpdMakeNan(epd1);\n    return;\n  }\n\n  assert(epd1-\u003etype.bits.exponent == EPD_MAX_BIN);\n  assert(epd2-\u003etype.bits.exponent == EPD_MAX_BIN);\n\n  value = epd1-\u003etype.value / epd2-\u003etype.value;\n  exponent = epd1-\u003eexponent - epd2-\u003eexponent;\n  epd1-\u003etype.value = value;\n  epd1-\u003eexponent = exponent;\n  EpdNormalize(epd1);\n}",
+      "Draft": "func EpdDivide2(epd1 *EpDouble, epd2 *EpDouble) {\n  var value float64;\n  var exponent int32;\n\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (EpdIsInf(epd2) != 0) {\n      EpdMakeNan(epd1);\n    } else if EpdIsInf(epd1) != 0 {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      EpdMakeInf(epd1, sign);\n    } else {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      EpdMakeZero(epd1, sign);\n    }\n    return;\n  }\n\n  if epd2.type.value == 0.0 {\n    EpdMakeNan(epd1);\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  value = epd1.type.value / epd2.type.value;\n  exponent = epd1.exponent - epd2.exponent;\n  epd1.type.value = value;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}"
+    },
+    {
+      "Name": "EpdDivide3",
+      "Start": 12288,
+      "End": 13116,
+      "BodyStart": 12352,
+      "Original": "void\nEpdDivide3(EpDouble *epd1, EpDouble *epd2, EpDouble *epd3)\n{\n  if (EpdIsNan(epd1) || EpdIsNan(epd2)) {\n    EpdMakeNan(epd3);\n    return;\n  } else if (EpdIsInf(epd1) || EpdIsInf(epd2)) {\n    int sign;\n\n    if (EpdIsInf(epd1) \u0026\u0026 EpdIsInf(epd2)) {\n      EpdMakeNan(epd3);\n    } else if (EpdIsInf(epd1)) {\n      sign = epd1-\u003etype.bits.sign ^ epd2-\u003etype.bits.sign;\n      EpdMakeInf(epd3, sign);\n    } else {\n      sign = epd1-\u003etype.bits.sign ^ epd2-\u003etype.bits.sign;\n      EpdMakeZero(epd3, sign);\n    }\n    return;\n  }\n\n  if (epd2-\u003etype.value == 0.0) {\n    EpdMakeNan(epd3);\n    return;\n  }\n\n  assert(epd1-\u003etype.bits.exponent == EPD_MAX_BIN);\n  assert(epd2-\u003etype.bits.exponent == EPD_MAX_BIN);\n\n  epd3-\u003etype.value = epd1-\u003etype.value / epd2-\u003etype.value;\n  epd3-\u003eexponent = epd1-\u003eexponent - epd2-\u003eexponent;\n  EpdNormalize(epd3);\n}",
+      "Draft": "func EpdDivide3(epd1 *EpDouble, epd2 *EpDouble, epd3 *EpDouble) {\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd3);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (EpdIsInf(epd2) != 0) {\n      EpdMakeNan(epd3);\n    } else if EpdIsInf(epd1) != 0 {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      EpdMakeInf(epd3, sign);\n    } else {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      EpdMakeZero(epd3, sign);\n    }\n    return;\n  }\n\n  if epd2.type.value == 0.0 {\n    EpdMakeNan(epd3);\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  epd3.type.value = epd1.type.value / epd2.type.value;\n  epd3.exponent = epd1.exponent - epd2.exponent;\n  EpdNormalize(epd3);\n}"
+    },
+    {
+      "Name": "EpdAdd",
+      "Start": 13438,
+      "End": 14754,
+      "BodyStart": 13480,
+      "Original": "void\nEpdAdd(EpDouble *epd1, double value)\n{\n  EpDouble      epd2;\n  double        tmp;\n  int           exponent, diff;\n\n  if (EpdIsNan(epd1) || IsNanDouble(value)) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) || IsInfDouble(value)) {\n    int sign;\n\n    EpdConvert(value, \u0026epd2);\n    if (EpdIsInf(epd1) \u0026\u0026 IsInfDouble(value)) {\n      sign = epd1-\u003etype.bits.sign ^ epd2.type.bits.sign;\n      if (sign == 1)\n        EpdMakeNan(epd1);\n    } else if (EpdIsInf(\u0026epd2)) {\n      EpdCopy(\u0026epd2, epd1);\n    }\n    return;\n  }\n\n  assert(epd1-\u003etype.bits.exponent == EPD_MAX_BIN);\n\n  EpdConvert(value, \u0026epd2);\n  if (epd1-\u003eexponent \u003e epd2.exponent) {\n    diff = epd1-\u003eexponent - epd2.exponent;\n    if (diff \u003c= EPD_MAX_BIN)\n      tmp = epd1-\u003etype.value + epd2.type.value / pow((double)2.0, (double)diff);\n    else\n      tmp = epd1-\u003etype.value;\n    exponent = epd1-\u003eexponent;\n  } else if (epd1-\u003eexponent \u003c epd2.exponent) {\n    diff = epd2.exponent - epd1-\u003eexponent;\n    if (diff \u003c= EPD_MAX_BIN)\n      tmp = epd1-\u003etype.value / pow((double)2.0, (double)diff) + epd2.type.value;\n    else\n      tmp = epd2.type.value;\n    exponent = epd2.exponent;\n  } else {\n    tmp = epd1-\u003etype.value + epd2.type.value;\n    exponent = epd1-\u003eexponent;\n  }\n  epd1-\u003etype.value = tmp;\n  epd1-\u003eexponent = exponent;\n  EpdNormalize(epd1);\n}",
+      "Draft": "func EpdAdd(epd1 *EpDouble, value float64) {\n  var epd2 EpDouble;\n  var tmp float64;\n  var exponent, diff int32;\n\n  if (EpdIsNan(epd1) != 0) || (IsNanDouble(value) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (IsInfDouble(value) != 0) {\n    var sign int32;\n\n    EpdConvert(value, \u0026epd2);\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (IsInfDouble(value) != 0) {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      if sign == 1 {\n        EpdMakeNan(epd1); }\n    } else if EpdIsInf(\u0026epd2) != 0 {\n      EpdCopy(\u0026epd2, epd1);\n    }\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n\n  EpdConvert(value, \u0026epd2);\n  if epd1.exponent \u003e epd2.exponent {\n    diff = epd1.exponent - epd2.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      tmp = epd1.type.value + epd2.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff)));\n    } else {\n      tmp = epd1.type.value; }\n    exponent = epd1.exponent;\n  } else if epd1.exponent \u003c epd2.exponent {\n    diff = epd2.exponent - epd1.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      tmp = epd1.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff))) + epd2.type.value;\n    } else {\n      tmp = epd2.type.value; }\n    exponent = epd2.exponent;\n  } else {\n    tmp = epd1.type.value + epd2.type.value;\n    exponent = epd1.exponent;\n  }\n  epd1.type.value = tmp;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}"
+    },
+    {
+      "Name": "EpdAdd2",
+      "Start": 15076,
+      "End": 16416,
+      "BodyStart": 15121,
+      "Original": "void\nEpdAdd2(EpDouble *epd1, EpDouble *epd2)\n{\n  double        value;\n  int           exponent, diff;\n\n  if (EpdIsNan(epd1) || EpdIsNan(epd2)) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) || EpdIsInf(epd2)) {\n    int sign;\n\n    if (EpdIsInf(epd1) \u0026\u0026 EpdIsInf(epd2)) {\n      sign = epd1-\u003etype.bits.sign ^ epd2-\u003etype.bits.sign;\n      if (sign == 1)\n        EpdMakeNan(epd1);\n    } else if (EpdIsInf(epd2)) {\n      EpdCopy(epd2, epd1);\n    }\n    return;\n  }\n\n  assert(epd1-\u003etype.bits.exponent == EPD_MAX_BIN);\n  assert(epd2-\u003etype.bits.exponent == EPD_MAX_BIN);\n\n  if (epd1-\u003eexponent \u003e epd2-\u003eexponent) {\n    diff = epd1-\u003eexponent - epd2-\u003eexponent;\n    if (diff \u003c= EPD_MAX_BIN) {\n      value = epd1-\u003etype.value +\n                epd2-\u003etype.value / pow((double)2.0, (double)diff);\n    } else\n      value = epd1-\u003etype.value;\n    exponent = epd1-\u003eexponent;\n  } else if (epd1-\u003eexponent \u003c epd2-\u003eexponent) {\n    diff = epd2-\u003eexponent - epd1-\u003eexponent;\n    if (diff \u003c= EPD_MAX_BIN) {\n      value = epd1-\u003etype.value / pow((double)2.0, (double)diff) +\n                epd2-\u003etype.value;\n    } else\n      value = epd2-\u003etype.value;\n    exponent = epd2-\u003eexponent;\n  } else {\n    value = epd1-\u003etype.value + epd2-\u003etype.value;\n    exponent = epd1-\u003eexponent;\n  }\n  epd1-\u003etype.value = value;\n  epd1-\u003eexponent = exponent;\n  EpdNormalize(epd1);\n}",
+      "Draft": "func EpdAdd2(epd1 *EpDouble, epd2 *EpDouble) {\n  var value float64;\n  var exponent, diff int32;\n\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (EpdIsInf(epd2) != 0) {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      if sign == 1 {\n        EpdMakeNan(epd1); }\n    } else if EpdIsInf(epd2) != 0 {\n      EpdCopy(epd2, epd1);\n    }\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  if epd1.exponent \u003e epd2.exponent {\n    diff = epd1.exponent - epd2.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value +\n                epd2.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff)));\n    } else {\n      value = epd1.type.value; }\n    exponent = epd1.exponent;\n  } else if epd1.exponent \u003c epd2.exponent {\n    diff = epd2.exponent - epd1.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff))) +\n                epd2.type.value;\n    } else {\n      value = epd2.type.value; }\n    exponent = epd2.exponent;\n  } else {\n    value = epd1.type.value + epd2.type.value;\n    exponent = epd1.exponent;\n  }\n  epd1.type.value = value;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}"
+    },
+    {
+      "Name": "EpdAdd3",
+      "Start": 16738,
+      "End": 18174,
+      "BodyStart": 16799,
+      "Original": "void\nEpdAdd3(EpDouble *epd1, EpDouble *epd2, EpDouble *epd3)\n{\n  double        value;\n  int           exponent, diff;\n\n  if (EpdIsNan(epd1) || EpdIsNan(epd2)) {\n    EpdMakeNan(epd3);\n    return;\n  } else if (EpdIsInf(epd1) || EpdIsInf(epd2)) {\n    int sign;\n\n    if (EpdIsInf(epd1) \u0026\u0026 EpdIsInf(epd2)) {\n      sign = epd1-\u003etype.bits.sign ^ epd2-\u003etype.bits.sign;\n      if (sign == 1)\n        EpdMakeNan(epd3);\n      else\n        EpdCopy(epd1, epd3);\n    } else if (EpdIsInf(epd1)) {\n      EpdCopy(epd1, epd3);\n    } else {\n      EpdCopy(epd2, epd3);\n    }\n    return;\n  }\n\n  assert(epd1-\u003etype.bits.exponent == EPD_MAX_BIN);\n  assert(epd2-\u003etype.bits.exponent == EPD_MAX_BIN);\n\n  if (epd1-\u003eexponent \u003e epd2-\u003eexponent) {\n    diff = epd1-\u003eexponent - epd2-\u003eexponent;\n    if (diff \u003c= EPD_MAX_BIN) {\n      value = epd1-\u003etype.value +\n                epd2-\u003etype.value / pow((double)2.0, (double)diff);\n    } else\n      value = epd1-\u003etype.value;\n    exponent = epd1-\u003eexponent;\n  } else if (epd1-\u003eexponent \u003c epd2-\u003eexponent) {\n    diff = epd2-\u003eexponent - epd1-\u003eexponent;\n    if (diff \u003c= EPD_MAX_BIN) {\n      value = epd1-\u003etype.value / pow((double)2.0, (double)diff) +\n                epd2-\u003etype.value;\n    } else\n      value = epd2-\u003etype.value;\n    exponent = epd2-\u003eexponent;\n  } else {\n    value = epd1-\u003etype.value + epd2-\u003etype.value;\n    exponent = epd1-\u003eexponent;\n  }\n  epd3-\u003etype.value = value;\n  epd3-\u003eexponent = exponent;\n  EpdNormalize(epd3);\n}",
+      "Draft": "func EpdAdd3(epd1 *EpDouble, epd2 *EpDouble, epd3 *EpDouble) {\n  var value float64;\n  var exponent, diff int32;\n\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd3);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (EpdIsInf(epd2) != 0) {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      if sign == 1 {\n        EpdMakeNan(epd3);\n      } else {\n        EpdCopy(epd1, epd3); }\n    } else if EpdIsInf(epd1) != 0 {\n      EpdCopy(epd1, epd3);\n    } else {\n      EpdCopy(epd2, epd3);\n    }\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  if epd1.exponent \u003e epd2.exponent {\n    diff = epd1.exponent - epd2.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value +\n                epd2.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff)));\n    } else {\n      value = epd1.type.value; }\n    exponent = epd1.exponent;\n  } else if epd1.exponent \u003c epd2.exponent {\n    diff = epd2.exponent - epd1.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff))) +\n                epd2.type.value;\n    } else {\n      value = epd2.type.value; }\n    exponent = epd2.exponent;\n  } else {\n    value = epd1.type.value + epd2.type.value;\n    exponent = epd1.exponent;\n  }\n  epd3.type.value = value;\n  epd3.exponent = exponent;\n  EpdNormalize(epd3);\n}"
+    },
+    {
+      "Name": "EpdSubtract",
+      "Start": 18506,
+      "End": 19844,
+      "BodyStart": 18553,
+      "Original": "void\nEpdSubtract(EpDouble *epd1, double value)\n{\n  EpDouble      epd2;\n  double        tmp;\n  int           exponent, diff;\n\n  if (EpdIsNan(epd1) || IsNanDouble(value)) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) || IsInfDouble(value)) {\n    int sign;\n\n    EpdConvert(value, \u0026epd2);\n    if (EpdIsInf(epd1) \u0026\u0026 IsInfDouble(value)) {\n      sign = epd1-\u003etype.bits.sign ^ epd2.type.bits.sign;\n      if (sign == 0)\n        EpdMakeNan(epd1);\n    } else if (EpdIsInf(\u0026epd2)) {\n      EpdCopy(\u0026epd2, epd1);\n    }\n    return;\n  }\n\n  assert(epd1-\u003etype.bits.exponent == EPD_MAX_BIN);\n\n  EpdConvert(value, \u0026epd2);\n  if (epd1-\u003eexponent \u003e epd2.exponent) {\n    diff = epd1-\u003eexponent - epd2.exponent;\n    if (diff \u003c= EPD_MAX_BIN)\n      tmp = epd1-\u003etype.value - epd2.type.value / pow((double)2.0, (double)diff);\n    else\n      tmp = epd1-\u003etype.value;\n    exponent = epd1-\u003eexponent;\n  } else if (epd1-\u003eexponent \u003c epd2.exponent) {\n    diff = epd2.exponent - epd1-\u003eexponent;\n    if (diff \u003c= EPD_MAX_BIN)\n      tmp = epd1-\u003etype.value / pow((double)2.0, (double)diff) - epd2.type.value;\n    else\n      tmp = epd2.type.value * (double)(-1.0);\n    exponent = epd2.exponent;\n  } else {\n    tmp = epd1-\u003etype.value - epd2.type.value;\n    exponent = epd1-\u003eexponent;\n  }\n  epd1-\u003etype.value = tmp;\n  epd1-\u003eexponent = exponent;\n  EpdNormalize(epd1);\n}",
+      "Draft": "func EpdSubtract(epd1 *EpDouble, value float64) {\n  var epd2 EpDouble;\n  var tmp float64;\n  var exponent, diff int32;\n\n  if (EpdIsNan(epd1) != 0) || (IsNanDouble(value) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (IsInfDouble(value) != 0) {\n    var sign int32;\n\n    EpdConvert(value, \u0026epd2);\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (IsInfDouble(value) != 0) {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      if sign == 0 {\n        EpdMakeNan(epd1); }\n    } else if EpdIsInf(\u0026epd2) != 0 {\n      EpdCopy(\u0026epd2, epd1);\n    }\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n\n  EpdConvert(value, \u0026epd2);\n  if epd1.exponent \u003e epd2.exponent {\n    diff = epd1.exponent - epd2.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      tmp = epd1.type.value - epd2.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff)));\n    } else {\n      tmp = epd1.type.value; }\n    exponent = epd1.exponent;\n  } else if epd1.exponent \u003c epd2.exponent {\n    diff = epd2.exponent - epd1.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      tmp = epd1.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff))) - epd2.type.value;\n    } else {\n      tmp = epd2.type.value * float64((-1.0)); }\n    exponent = epd2.exponent;\n  } else {\n    tmp = epd1.type.value - epd2.type.value;\n    exponent = epd1.exponent;\n  }\n  epd1.type.value = tmp;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}"
+    },
+    {
+      "Name": "EpdSubtract2",
+      "Start": 20176,
+      "End": 21538,
+      "BodyStart": 20226,
+      "Original": "void\nEpdSubtract2(EpDouble *epd1, EpDouble *epd2)\n{\n  double        value;\n  int           exponent, diff;\n\n  if (EpdIsNan(epd1) || EpdIsNan(epd2)) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) || EpdIsInf(epd2)) {\n    int sign;\n\n    if (EpdIsInf(epd1) \u0026\u0026 EpdIsInf(epd2)) {\n      sign = epd1-\u003etype.bits.sign ^ epd2-\u003etype.bits.sign;\n      if (sign == 0)\n        EpdMakeNan(epd1);\n    } else if (EpdIsInf(epd2)) {\n      EpdCopy(epd2, epd1);\n    }\n    return;\n  }\n\n  assert(epd1-\u003etype.bits.exponent == EPD_MAX_BIN);\n  assert(epd2-\u003etype.bits.exponent == EPD_MAX_BIN);\n\n  if (epd1-\u003eexponent \u003e epd2-\u003eexponent) {\n    diff = epd1-\u003eexponent - epd2-\u003eexponent;\n    if (diff \u003c= EPD_MAX_BIN) {\n      value = epd1-\u003etype.value -\n                epd2-\u003etype.value / pow((double)2.0, (double)diff);\n    } else\n      value = epd1-\u003etype.value;\n    exponent = epd1-\u003eexponent;\n  } else if (epd1-\u003eexponent \u003c epd2-\u003eexponent) {\n    diff = epd2-\u003eexponent - epd1-\u003eexponent;\n    if (diff \u003c= EPD_MAX_BIN) {\n      value = epd1-\u003etype.value / pow((double)2.0, (double)diff) -\n                epd2-\u003etype.value;\n    } else\n      value = epd2-\u003etype.value * (double)(-1.0);\n    exponent = epd2-\u003eexponent;\n  } else {\n    value = epd1-\u003etype.value - epd2-\u003etype.value;\n    exponent = epd1-\u003eexponent;\n  }\n  epd1-\u003etype.value = value;\n  epd1-\u003eexponent = exponent;\n  EpdNormalize(epd1);\n}",
+      "Draft": "func EpdSubtract2(epd1 *EpDouble, epd2 *EpDouble) {\n  var value float64;\n  var exponent, diff int32;\n\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (EpdIsInf(epd2) != 0) {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      if sign == 0 {\n        EpdMakeNan(epd1); }\n    } else if EpdIsInf(epd2) != 0 {\n      EpdCopy(epd2, epd1);\n    }\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  if epd1.exponent \u003e epd2.exponent {\n    diff = epd1.exponent - epd2.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value -\n                epd2.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff)));\n    } else {\n      value = epd1.type.value; }\n    exponent = epd1.exponent;\n  } else if epd1.exponent \u003c epd2.exponent {\n    diff = epd2.exponent - epd1.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff))) -\n                epd2.type.value;\n    } else {\n      value = epd2.type.value * float64((-1.0)); }\n    exponent = epd2.exponent;\n  } else {\n    value = epd1.type.value - epd2.type.value;\n    exponent = epd1.exponent;\n  }\n  epd1.type.value = value;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}"
+    },
+    {
+      "Name": "EpdSubtract3",
+      "Start": 21870,
+      "End": 23372,
+      "BodyStart": 21936,
+      "Original": "void\nEpdSubtract3(EpDouble *epd1, EpDouble *epd2, EpDouble *epd3)\n{\n  double        value;\n  int           exponent, diff;\n\n  if (EpdIsNan(epd1) || EpdIsNan(epd2)) {\n    EpdMakeNan(epd3);\n    return;\n  } else if (EpdIsInf(epd1) || EpdIsInf(epd2)) {\n    int sign;\n\n    if (EpdIsInf(epd1) \u0026\u0026 EpdIsInf(epd2)) {\n      sign = epd1-\u003etype.bits.sign ^ epd2-\u003etype.bits.sign;\n      if (sign == 0)\n        EpdCopy(epd1, epd3);\n      else\n        EpdMakeNan(epd3);\n    } else if (EpdIsInf(epd1)) {\n      EpdCopy(epd1, epd1);\n    } else {\n      sign = epd2-\u003etype.bits.sign ^ 0x1;\n      EpdMakeInf(epd3, sign);\n    }\n    return;\n  }\n\n  assert(epd1-\u003etype.bits.exponent == EPD_MAX_BIN);\n  assert(epd2-\u003etype.bits.exponent == EPD_MAX_BIN);\n\n  if (epd1-\u003eexponent \u003e epd2-\u003eexponent) {\n    diff = epd1-\u003eexponent - epd2-\u003eexponent;\n    if (diff \u003c= EPD_MAX_BIN) {\n      value = epd1-\u003etype.value -\n                epd2-\u003etype.value / pow((double)2.0, (double)diff);\n    } else\n      value = epd1-\u003etype.value;\n    exponent = epd1-\u003eexponent;\n  } else if (epd1-\u003eexponent \u003c epd2-\u003eexponent) {\n    diff = epd2-\u003eexponent - epd1-\u003eexponent;\n    if (diff \u003c= EPD_MAX_BIN) {\n      value = epd1-\u003etype.value / pow((double)2.0, (double)diff) -\n                epd2-\u003etype.value;\n    } else\n      value = epd2-\u003etype.value * (double)(-1.0);\n    exponent = epd2-\u003eexponent;\n  } else {\n    value = epd1-\u003etype.value - epd2-\u003etype.value;\n    exponent = epd1-\u003eexponent;\n  }\n  epd3-\u003etype.value = value;\n  epd3-\u003eexponent = exponent;\n  EpdNormalize(epd3);\n}",
+      "Draft": "func EpdSubtract3(epd1 *EpDouble, epd2 *EpDouble, epd3 *EpDouble) {\n  var value float64;\n  var exponent, diff int32;\n\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd3);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (EpdIsInf(epd2) != 0) {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      if sign == 0 {\n        EpdCopy(epd1, epd3);\n      } else {\n        EpdMakeNan(epd3); }\n    } else if EpdIsInf(epd1) != 0 {\n      EpdCopy(epd1, epd1);\n    } else {\n      sign = epd2.type.bits.sign ^ 0x1;\n      EpdMakeInf(epd3, sign);\n    }\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  if epd1.exponent \u003e epd2.exponent {\n    diff = epd1.exponent - epd2.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value -\n                epd2.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff)));\n    } else {\n      value = epd1.type.value; }\n    exponent = epd1.exponent;\n  } else if epd1.exponent \u003c epd2.exponent {\n    diff = epd2.exponent - epd1.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff))) -\n                epd2.type.value;\n    } else {\n      value = epd2.type.value * float64((-1.0)); }\n    exponent = epd2.exponent;\n  } else {\n    value = epd1.type.value - epd2.type.value;\n    exponent = epd1.exponent;\n  }\n  epd3.type.value = value;\n  epd3.exponent = exponent;\n  EpdNormalize(epd3);\n}"
+    },
+    {
+      "Name": "EpdPow2",
+      "Start": 23694,
+      "End": 23994,
+      "BodyStart": 23729,
+      "Original": "void\nEpdPow2(int n, EpDouble *epd)\n{\n  if (n \u003c= EPD_MAX_BIN) {\n    EpdConvert(pow((double)2.0, (double)n), epd);\n  } else {\n    EpDouble    epd1, epd2;\n    int         n1, n2;\n\n    n1 = n / 2;\n    n2 = n - n1;\n    EpdPow2(n1, \u0026epd1);\n    EpdPow2(n2, \u0026epd2);\n    EpdMultiply3(\u0026epd1, \u0026epd2, epd);\n  }\n}",
+      "Draft": "func EpdPow2(n int32, epd *EpDouble) {\n  if n \u003c= EPD_MAX_BIN {\n    EpdConvert(math.Pow(float64(float64(2.0)), float64(float64(n))), epd);\n  } else {\n    var epd1, epd2 EpDouble;\n    var n1, n2 int32;\n\n    n1 = n / 2;\n    n2 = n - n1;\n    EpdPow2(n1, \u0026epd1);\n    EpdPow2(n2, \u0026epd2);\n    EpdMultiply3(\u0026epd1, \u0026epd2, epd);\n  }\n}"
+    },
+    {
+      "Name": "EpdPow2Decimal",
+      "Start": 24316,
+      "End": 24698,
+      "BodyStart": 24358,
+      "Original": "void\nEpdPow2Decimal(int n, EpDouble *epd)\n{\n  if (n \u003c= EPD_MAX_BIN) {\n    epd-\u003etype.value = pow((double)2.0, (double)n);\n    epd-\u003eexponent = 0;\n    EpdNormalizeDecimal(epd);\n  } else {\n    EpDouble    epd1, epd2;\n    int         n1, n2;\n\n    n1 = n / 2;\n    n2 = n - n1;\n    EpdPow2Decimal(n1, \u0026epd1);\n    EpdPow2Decimal(n2, \u0026epd2);\n    EpdMultiply3Decimal(\u0026epd1, \u0026epd2, epd);\n  }\n}",
+      "Draft": "func EpdPow2Decimal(n int32, epd *EpDouble) {\n  if n \u003c= EPD_MAX_BIN {\n    epd.type.value = math.Pow(float64(float64(2.0)), float64(float64(n)));\n    epd.exponent = 0;\n    EpdNormalizeDecimal(epd);\n  } else {\n    var epd1, epd2 EpDouble;\n    var n1, n2 int32;\n\n    n1 = n / 2;\n    n2 = n - n1;\n    EpdPow2Decimal(n1, \u0026epd1);\n    EpdPow2Decimal(n2, \u0026epd2);\n    EpdMultiply3Decimal(\u0026epd1, \u0026epd2, epd);\n  }\n}"
+    },
+    {
+      "Name": "EpdNormalize",
+      "Start": 25026,
+      "End": 25358,
+      "BodyStart": 25059,
+      "Original": "void\nEpdNormalize(EpDouble *epd)\n{\n  int           exponent;\n\n  if (IsNanOrInfDouble(epd-\u003etype.value)) {\n    epd-\u003eexponent = 0;\n    return;\n  }\n\n  exponent = EpdGetExponent(epd-\u003etype.value);\n  if (exponent == EPD_MAX_BIN)\n    return;\n  exponent -= EPD_MAX_BIN;\n  epd-\u003etype.bits.exponent = EPD_MAX_BIN;\n  epd-\u003eexponent += exponent;\n}",
+      "Draft": "func EpdNormalize(epd *EpDouble) {\n  var exponent int32;\n\n  if IsNanOrInfDouble(epd.type.value) {\n    epd.exponent = 0;\n    return;\n  }\n\n  exponent = EpdGetExponent(epd.type.value);\n  if exponent == EPD_MAX_BIN {\n    return; }\n  exponent -= EPD_MAX_BIN;\n  epd.type.bits.exponent = EPD_MAX_BIN;\n  epd.exponent += exponent;\n}"
+    },
+    {
+      "Name": "EpdNormalizeDecimal",
+      "Start": 25686,
+      "End": 25979,
+      "BodyStart": 25726,
+      "Original": "void\nEpdNormalizeDecimal(EpDouble *epd)\n{\n  int           exponent;\n\n  if (IsNanOrInfDouble(epd-\u003etype.value)) {\n    epd-\u003eexponent = 0;\n    return;\n  }\n\n  exponent = EpdGetExponentDecimal(epd-\u003etype.value);\n  epd-\u003etype.value /= pow((double)10.0, (double)exponent);\n  epd-\u003eexponent += exponent;\n}",
+      "Draft": "func EpdNormalizeDecimal(epd *EpDouble) {\n  var exponent int32;\n\n  if IsNanOrInfDouble(epd.type.value) {\n    epd.exponent = 0;\n    return;\n  }\n\n  exponent = EpdGetExponentDecimal(epd.type.value);\n  epd.type.value /= math.Pow(float64(float64(10.0)), float64(float64(exponent)));\n  epd.exponent += exponent;\n}"
+    },
+    {
+      "Name": "EpdGetValueAndDecimalExponent",
+      "Start": 26309,
+      "End": 26731,
+      "BodyStart": 26389,
+      "Original": "void\nEpdGetValueAndDecimalExponent(EpDouble *epd, double *value, int *exponent)\n{\n  EpDouble      epd1, epd2;\n\n  if (EpdIsNanOrInf(epd))\n    return;\n\n  if (EpdIsZero(epd)) {\n    *value = 0.0;\n    *exponent = 0;\n    return;\n  }\n\n  epd1.type.value = epd-\u003etype.value;\n  epd1.exponent = 0;\n  EpdPow2Decimal(epd-\u003eexponent, \u0026epd2);\n  EpdMultiply2Decimal(\u0026epd1, \u0026epd2);\n\n  *value = epd1.type.value;\n  *exponent = epd1.exponent;\n}",
+      "Draft": "func EpdGetValueAndDecimalExponent(epd *EpDouble, value *float64, exponent *int32) {\n  var epd1, epd2 EpDouble;\n\n  if EpdIsNanOrInf(epd) != 0 {\n    return; }\n\n  if EpdIsZero(epd) != 0 {\n    *value = 0.0;\n    *exponent = 0;\n    return;\n  }\n\n  epd1.type.value = epd.type.value;\n  epd1.exponent = 0;\n  EpdPow2Decimal(epd.exponent, \u0026epd2);\n  EpdMultiply2Decimal(\u0026epd1, \u0026epd2);\n\n  *value = epd1.type.value;\n  *exponent = epd1.exponent;\n}"
+    },
+    {
+      "Name": "EpdGetExponent",
+      "Start": 27044,
+      "End": 27211,
+      "BodyStart": 27077,
+      "Original": "int\nEpdGetExponent(double value)\n{\n  int           exponent;\n  EpDouble      epd;\n\n  epd.type.value = value;\n  exponent = epd.type.bits.exponent;\n  return(exponent);\n}",
+      "Draft": "func EpdGetExponent(value float64) int32 {\n  var exponent int32;\n  var epd EpDouble;\n\n  epd.type.value = value;\n  exponent = epd.type.bits.exponent;\n  return(exponent);\n}"
+    },
+    {
+      "Name": "EpdGetExponentDecimal",
+      "Start": 27541,
+      "End": 27734,
+      "BodyStart": 27581,
+      "Original": "int\nEpdGetExponentDecimal(double value)\n{\n  char  *pos, str[24];\n  int   exponent;\n\n  sprintf(str, \"%E\", value);\n  pos = strstr(str, \"E\");\n  sscanf(pos, \"E%d\", \u0026exponent);\n  return(exponent);\n}",
+      "Draft": "func EpdGetExponentDecimal(value float64) int32 {\n  var pos string;\n  var str string // was [24]byte in C\n\n  var exponent int32;\n\n  str = fmt.Sprintf(\"%E\", value);\n  pos = strstr(str, \"E\");\n  sscanf(pos, \"E%d\", \u0026exponent);\n  return(exponent);\n}"
+    },
+    {
+      "Name": "EpdMakeInf",
+      "Start": 28008,
+      "End": 28208,
+      "BodyStart": 28049,
+      "Original": "void\nEpdMakeInf(EpDouble *epd, int sign)\n{\n  epd-\u003etype.bits.mantissa1 = 0;\n  epd-\u003etype.bits.mantissa0 = 0;\n  epd-\u003etype.bits.exponent = EPD_EXP_INF;\n  epd-\u003etype.bits.sign = sign;\n  epd-\u003eexponent = 0;\n}",
+      "Draft": "func EpdMakeInf(epd *EpDouble, sign int32) {\n  epd.type.bits.mantissa1 = 0;\n  epd.type.bits.mantissa0 = 0;\n  epd.type.bits.exponent = EPD_EXP_INF;\n  epd.type.bits.sign = sign;\n  epd.exponent = 0;\n}"
+    },
+    {
+      "Name": "EpdMakeZero",
+      "Start": 28484,
+      "End": 28675,
+      "BodyStart": 28526,
+      "Original": "void\nEpdMakeZero(EpDouble *epd, int sign)\n{\n  epd-\u003etype.bits.mantissa1 = 0;\n  epd-\u003etype.bits.mantissa0 = 0;\n  epd-\u003etype.bits.exponent = 0;\n  epd-\u003etype.bits.sign = sign;\n  epd-\u003eexponent = 0;\n}",
+      "Draft": "func EpdMakeZero(epd *EpDouble, sign int32) {\n  epd.type.bits.mantissa1 = 0;\n  epd.type.bits.mantissa0 = 0;\n  epd.type.bits.exponent = 0;\n  epd.type.bits.sign = sign;\n  epd.exponent = 0;\n}"
+    },
+    {
+      "Name": "EpdMakeNan",
+      "Start": 28949,
+      "End": 29163,
+      "BodyStart": 28980,
+      "Original": "void\nEpdMakeNan(EpDouble *epd)\n{\n  epd-\u003etype.nan.mantissa1 = 0;\n  epd-\u003etype.nan.mantissa0 = 0;\n  epd-\u003etype.nan.quiet_bit = 1;\n  epd-\u003etype.nan.exponent = EPD_EXP_INF;\n  epd-\u003etype.nan.sign = 1;\n  epd-\u003eexponent = 0;\n}",
+      "Draft": "func EpdMakeNan(epd *EpDouble) {\n  epd.type.nan.mantissa1 = 0;\n  epd.type.nan.mantissa0 = 0;\n  epd.type.nan.quiet_bit = 1;\n  epd.type.nan.exponent = EPD_EXP_INF;\n  epd.type.nan.sign = 1;\n  epd.exponent = 0;\n}"
+    },
+    {
+      "Name": "EpdCopy",
+      "Start": 29449,
+      "End": 29565,
+      "BodyStart": 29492,
+      "Original": "void\nEpdCopy(EpDouble *from, EpDouble *to)\n{\n  to-\u003etype.value = from-\u003etype.value;\n  to-\u003eexponent = from-\u003eexponent;\n}",
+      "Draft": "func EpdCopy(from *EpDouble, to *EpDouble) {\n  to.type.value = from.type.value;\n  to.exponent = from.exponent;\n}"
+    },
+    {
+      "Name": "EpdIsInf",
+      "Start": 29865,
+      "End": 29936,
+      "BodyStart": 29893,
+      "Original": "int\nEpdIsInf(EpDouble *epd)\n{\n  return(IsInfDouble(epd-\u003etype.value));\n}",
+      "Draft": "func EpdIsInf(epd *EpDouble) int32 {\n  return(IsInfDouble(epd.type.value));\n}"
+    },
+    {
+      "Name": "EpdIsZero",
+      "Start": 30238,
+      "End": 30337,
+      "BodyStart": 30267,
+      "Original": "int\nEpdIsZero(EpDouble *epd)\n{\n  if (epd-\u003etype.value == 0.0)\n    return(1);\n  else\n    return(0);\n}",
+      "Draft": "func EpdIsZero(epd *EpDouble) int32 {\n  if epd.type.value == 0.0 {\n    return(1);\n  } else {\n    return(0); }\n}"
+    },
+    {
+      "Name": "EpdIsNan",
+      "Start": 30637,
+      "End": 30708,
+      "BodyStart": 30665,
+      "Original": "int\nEpdIsNan(EpDouble *epd)\n{\n  return(IsNanDouble(epd-\u003etype.value));\n}",
+      "Draft": "func EpdIsNan(epd *EpDouble) int32 {\n  return(IsNanDouble(epd.type.value));\n}"
+    },
+    {
+      "Name": "EpdIsNanOrInf",
+      "Start": 31022,
+      "End": 31103,
+      "BodyStart": 31055,
+      "Original": "int\nEpdIsNanOrInf(EpDouble *epd)\n{\n  return(IsNanOrInfDouble(epd-\u003etype.value));\n}",
+      "Draft": "func EpdIsNanOrInf(epd *EpDouble) int32 {\n  return(IsNanOrInfDouble(epd.type.value));\n}"
+    },
+    {
+      "Name": "IsInfDouble",
+      "Start": 31403,
+      "End": 31669,
+      "BodyStart": 31433,
+      "Original": "int\nIsInfDouble(double value)\n{\n  EpType val;\n\n  val.value = value;\n  if (val.bits.exponent == EPD_EXP_INF \u0026\u0026\n      val.bits.mantissa0 == 0 \u0026\u0026\n      val.bits.mantissa1 == 0) {\n    if (val.bits.sign == 0)\n      return(1);\n    else\n      return(-1);\n  }\n  return(0);\n}",
+      "Draft": "func IsInfDouble(value float64) int32 {\n  var val EpType;\n\n  val.value = value;\n  if val.bits.exponent == EPD_EXP_INF \u0026\u0026\n      val.bits.mantissa0 == 0 \u0026\u0026\n      val.bits.mantissa1 == 0 {\n    if val.bits.sign == 0 {\n      return(1);\n    } else {\n      return(-1); }\n  }\n  return(0);\n}"
+    },
+    {
+      "Name": "IsNanDouble",
+      "Start": 31969,
+      "End": 32243,
+      "BodyStart": 31999,
+      "Original": "int\nIsNanDouble(double value)\n{\n  EpType        val;\n  \n  val.value = value;\n  if (val.nan.exponent == EPD_EXP_INF \u0026\u0026\n      val.nan.sign == 1 \u0026\u0026\n      val.nan.quiet_bit == 1 \u0026\u0026\n      val.nan.mantissa0 == 0 \u0026\u0026\n      val.nan.mantissa1 == 0) {\n    return(1);\n  }\n  return(0);\n}",
+      "Draft": "func IsNanDouble(value float64) int32 {\n  var val EpType;\n  \n  val.value = value;\n  if val.nan.exponent == EPD_EXP_INF \u0026\u0026\n      val.nan.sign == 1 \u0026\u0026\n      val.nan.quiet_bit == 1 \u0026\u0026\n      val.nan.mantissa0 == 0 \u0026\u0026\n      val.nan.mantissa1 == 0 {\n    return(1);\n  }\n  return(0);\n}"
+    },
+    {
+      "Name": "IsNanOrInfDouble",
+      "Start": 32557,
+      "End": 32830,
+      "BodyStart": 32592,
+      "Original": "int\nIsNanOrInfDouble(double value)\n{\n  EpType        val;\n\n  val.value = value;\n  if (val.nan.exponent == EPD_EXP_INF \u0026\u0026\n      val.nan.mantissa0 == 0 \u0026\u0026\n      val.nan.mantissa1 == 0 \u0026\u0026\n      (val.nan.sign == 1 || val.nan.quiet_bit == 0)) {\n    return(1);\n  }\n  return(0);\n}",
+      "Draft": "func IsNanOrInfDouble(value float64) int32 {\n  var val EpType;\n\n  val.value = value;\n  if val.nan.exponent == EPD_EXP_INF \u0026\u0026\n      val.nan.mantissa0 == 0 \u0026\u0026\n      val.nan.mantissa1 == 0 \u0026\u0026\n      (val.nan.sign == 1 || val.nan.quiet_bit == 0) {\n    return(1);\n  }\n  return(0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::mechanical::sizeof::2552",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2486,
+      "End": 2486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::pointer-cast::2532",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2486,
+      "End": 2486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::pointer-cast::2964",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2888,
+      "End": 2900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::pointer-cast::3002",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2926,
+      "End": 2938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::pointer-cast::3519",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3384,
+      "End": 3384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdAlloc",
+      "Category": "semantic-review",
+      "Symbol": "EpdAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2427,
+      "End": 2526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdCmp",
+      "Category": "semantic-review",
+      "Symbol": "EpdCmp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2820,
+      "End": 3066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::ternary::EpdFree",
+      "Category": "ternary-review",
+      "Symbol": "EpdFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3352,
+      "End": 3400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdFree",
+      "Category": "semantic-review",
+      "Symbol": "EpdFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3352,
+      "End": 3400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdGetString",
+      "Category": "semantic-review",
+      "Symbol": "EpdGetString",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3750,
+      "End": 4596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdConvert",
+      "Category": "semantic-review",
+      "Symbol": "EpdConvert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4902,
+      "End": 5019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdMultiply",
+      "Category": "semantic-review",
+      "Symbol": "EpdMultiply",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5353,
+      "End": 5997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdMultiply2",
+      "Category": "semantic-review",
+      "Symbol": "EpdMultiply2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6331,
+      "End": 6950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdMultiply2Decimal",
+      "Category": "semantic-review",
+      "Symbol": "EpdMultiply2Decimal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7284,
+      "End": 7814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdMultiply3",
+      "Category": "semantic-review",
+      "Symbol": "EpdMultiply3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8148,
+      "End": 8693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdMultiply3Decimal",
+      "Category": "semantic-review",
+      "Symbol": "EpdMultiply3Decimal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9027,
+      "End": 9483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdDivide",
+      "Category": "semantic-review",
+      "Symbol": "EpdDivide",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9811,
+      "End": 10730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdDivide2",
+      "Category": "semantic-review",
+      "Symbol": "EpdDivide2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11058,
+      "End": 11960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdDivide3",
+      "Category": "semantic-review",
+      "Symbol": "EpdDivide3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12288,
+      "End": 13116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdAdd",
+      "Category": "semantic-review",
+      "Symbol": "EpdAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13438,
+      "End": 14754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdAdd2",
+      "Category": "semantic-review",
+      "Symbol": "EpdAdd2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15076,
+      "End": 16416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdAdd3",
+      "Category": "semantic-review",
+      "Symbol": "EpdAdd3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16738,
+      "End": 18174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdSubtract",
+      "Category": "semantic-review",
+      "Symbol": "EpdSubtract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18506,
+      "End": 19844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdSubtract2",
+      "Category": "semantic-review",
+      "Symbol": "EpdSubtract2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20176,
+      "End": 21538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdSubtract3",
+      "Category": "semantic-review",
+      "Symbol": "EpdSubtract3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21870,
+      "End": 23372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdPow2",
+      "Category": "semantic-review",
+      "Symbol": "EpdPow2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23694,
+      "End": 23994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdPow2Decimal",
+      "Category": "semantic-review",
+      "Symbol": "EpdPow2Decimal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24316,
+      "End": 24698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdNormalize",
+      "Category": "semantic-review",
+      "Symbol": "EpdNormalize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25026,
+      "End": 25358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdNormalizeDecimal",
+      "Category": "semantic-review",
+      "Symbol": "EpdNormalizeDecimal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25686,
+      "End": 25979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdGetValueAndDecimalExponent",
+      "Category": "semantic-review",
+      "Symbol": "EpdGetValueAndDecimalExponent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26309,
+      "End": 26731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdGetExponent",
+      "Category": "semantic-review",
+      "Symbol": "EpdGetExponent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27044,
+      "End": 27211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdGetExponentDecimal",
+      "Category": "semantic-review",
+      "Symbol": "EpdGetExponentDecimal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27541,
+      "End": 27734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdMakeInf",
+      "Category": "semantic-review",
+      "Symbol": "EpdMakeInf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28008,
+      "End": 28208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdMakeZero",
+      "Category": "semantic-review",
+      "Symbol": "EpdMakeZero",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28484,
+      "End": 28675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdMakeNan",
+      "Category": "semantic-review",
+      "Symbol": "EpdMakeNan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28949,
+      "End": 29163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdCopy",
+      "Category": "semantic-review",
+      "Symbol": "EpdCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29449,
+      "End": 29565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdIsInf",
+      "Category": "semantic-review",
+      "Symbol": "EpdIsInf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29865,
+      "End": 29936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdIsZero",
+      "Category": "semantic-review",
+      "Symbol": "EpdIsZero",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30238,
+      "End": 30337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdIsNan",
+      "Category": "semantic-review",
+      "Symbol": "EpdIsNan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30637,
+      "End": 30708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::EpdIsNanOrInf",
+      "Category": "semantic-review",
+      "Symbol": "EpdIsNanOrInf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31022,
+      "End": 31103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::IsInfDouble",
+      "Category": "semantic-review",
+      "Symbol": "IsInfDouble",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31403,
+      "End": 31669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::IsNanDouble",
+      "Category": "semantic-review",
+      "Symbol": "IsNanDouble",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31969,
+      "End": 32243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::IsNanOrInfDouble",
+      "Category": "semantic-review",
+      "Symbol": "IsNanOrInfDouble",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32557,
+      "End": 32830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/epd/epd.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 32855
+    }
+  ],
+  "Draft": "package epd\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\n/**CFile***********************************************************************\n\n  FileName    [epd.c]\n\n  PackageName [epd]\n\n  Synopsis    [Arithmetic functions with extended double precision.]\n\n  Description []\n\n  SeeAlso     []\n\n  Author      [In-Ho Moon]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n  Revision    [$Id: epd.c,v 1.10 2004/08/13 18:20:30 fabio Exp $]\n\n******************************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cmath.h\u003e\n//#include \"misc/util/util_hack.h\"\n//#include \"epd.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/**Function********************************************************************\n\n  Synopsis    [Allocates an EpDouble struct.]\n\n  Description [Allocates an EpDouble struct.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdAlloc() *EpDouble {\n  var epd *EpDouble;\n\n  // inlining of macro ABC_ALLOC\n  epd = ((EpDouble *) malloc(sizeof(EpDouble) * (size_t)(1)));\n  return(epd);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Compares two EpDouble struct.]\n\n  Description [Compares two EpDouble struct.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdCmp(key1 string, key2 string) int32 {\n  var epd1 *EpDouble  = (EpDouble *) key1;\n  var epd2 *EpDouble  = (EpDouble *) key2;\n  if epd1.type.value != epd2.type.value ||\n      epd1.exponent != epd2.exponent {\n    return(1);\n  }\n  return(0);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Frees an EpDouble struct.]\n\n  Description [Frees an EpDouble struct.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdFree(epd *EpDouble) {\n  // inlining of macro ABC_FREE\n  ((epd) ? (free((char *) (epd)), (epd) = 0) : 0);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Converts an arbitrary precision double value to a string.]\n\n  Description [Converts an arbitrary precision double value to a string.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdGetString(epd *EpDouble, str string) {\n  var value float64;\n  var exponent int32;\n  var pos string;\n\n  if IsNanDouble(epd.type.value) {\n    str = fmt.Sprintf(\"NaN\");\n    return;\n  } else if IsInfDouble(epd.type.value) {\n    if epd.type.bits.sign == 1 {\n      str = fmt.Sprintf(\"-Inf\");\n    } else {\n      str = fmt.Sprintf(\"Inf\"); }\n    return;\n  }\n\n  assert(epd.type.bits.exponent == EPD_MAX_BIN ||\n           epd.type.bits.exponent == 0, \"epd.type.bits.exponent == EPD_MAX_BIN ||\\n         epd.type.bits.exponent == 0\");\n\n  EpdGetValueAndDecimalExponent(epd, \u0026value, \u0026exponent);\n  str = fmt.Sprintf(\"%e\", value);\n  pos = strstr(str, \"e\");\n  if exponent \u003e= 0 {\n    if exponent \u003c 10 {\n      sprintf(pos + 1, \"+0%d\", exponent);\n    } else {\n      sprintf(pos + 1, \"+%d\", exponent); }\n  } else {\n    exponent *= -1;\n    if exponent \u003c 10 {\n      sprintf(pos + 1, \"-0%d\", exponent);\n    } else {\n      sprintf(pos + 1, \"-%d\", exponent); }\n  }\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Converts double to EpDouble struct.]\n\n  Description [Converts double to EpDouble struct.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdConvert(value float64, epd *EpDouble) {\n  epd.type.value = value;\n  epd.exponent = 0;\n  EpdNormalize(epd);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Multiplies two arbitrary precision double values.]\n\n  Description [Multiplies two arbitrary precision double values.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdMultiply(epd1 *EpDouble, value float64) {\n  var epd2 EpDouble;\n  var tmp float64;\n  var exponent int32;\n\n  if (EpdIsNan(epd1) != 0) || (IsNanDouble(value) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (IsInfDouble(value) != 0) {\n    var sign int32;\n\n    EpdConvert(value, \u0026epd2);\n    sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n    EpdMakeInf(epd1, sign);\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n\n  EpdConvert(value, \u0026epd2);\n  tmp = epd1.type.value * epd2.type.value;\n  exponent = epd1.exponent + epd2.exponent;\n  epd1.type.value = tmp;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Multiplies two arbitrary precision double values.]\n\n  Description [Multiplies two arbitrary precision double values.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdMultiply2(epd1 *EpDouble, epd2 *EpDouble) {\n  var value float64;\n  var exponent int32;\n\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n    EpdMakeInf(epd1, sign);\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  value = epd1.type.value * epd2.type.value;\n  exponent = epd1.exponent + epd2.exponent;\n  epd1.type.value = value;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Multiplies two arbitrary precision double values.]\n\n  Description [Multiplies two arbitrary precision double values.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdMultiply2Decimal(epd1 *EpDouble, epd2 *EpDouble) {\n  var value float64;\n  var exponent int32;\n\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n    EpdMakeInf(epd1, sign);\n    return;\n  }\n\n  value = epd1.type.value * epd2.type.value;\n  exponent = epd1.exponent + epd2.exponent;\n  epd1.type.value = value;\n  epd1.exponent = exponent;\n  EpdNormalizeDecimal(epd1);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Multiplies two arbitrary precision double values.]\n\n  Description [Multiplies two arbitrary precision double values.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdMultiply3(epd1 *EpDouble, epd2 *EpDouble, epd3 *EpDouble) {\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n    EpdMakeInf(epd3, sign);\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  epd3.type.value = epd1.type.value * epd2.type.value;\n  epd3.exponent = epd1.exponent + epd2.exponent;\n  EpdNormalize(epd3);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Multiplies two arbitrary precision double values.]\n\n  Description [Multiplies two arbitrary precision double values.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdMultiply3Decimal(epd1 *EpDouble, epd2 *EpDouble, epd3 *EpDouble) {\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n    EpdMakeInf(epd3, sign);\n    return;\n  }\n\n  epd3.type.value = epd1.type.value * epd2.type.value;\n  epd3.exponent = epd1.exponent + epd2.exponent;\n  EpdNormalizeDecimal(epd3);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Divides two arbitrary precision double values.]\n\n  Description [Divides two arbitrary precision double values.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdDivide(epd1 *EpDouble, value float64) {\n  var epd2 EpDouble;\n  var tmp float64;\n  var exponent int32;\n\n  if (EpdIsNan(epd1) != 0) || (IsNanDouble(value) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (IsInfDouble(value) != 0) {\n    var sign int32;\n\n    EpdConvert(value, \u0026epd2);\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (IsInfDouble(value) != 0) {\n      EpdMakeNan(epd1);\n    } else if EpdIsInf(epd1) != 0 {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      EpdMakeInf(epd1, sign);\n    } else {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      EpdMakeZero(epd1, sign);\n    }\n    return;\n  }\n\n  if value == 0.0 {\n    EpdMakeNan(epd1);\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n\n  EpdConvert(value, \u0026epd2);\n  tmp = epd1.type.value / epd2.type.value;\n  exponent = epd1.exponent - epd2.exponent;\n  epd1.type.value = tmp;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Divides two arbitrary precision double values.]\n\n  Description [Divides two arbitrary precision double values.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdDivide2(epd1 *EpDouble, epd2 *EpDouble) {\n  var value float64;\n  var exponent int32;\n\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (EpdIsInf(epd2) != 0) {\n      EpdMakeNan(epd1);\n    } else if EpdIsInf(epd1) != 0 {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      EpdMakeInf(epd1, sign);\n    } else {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      EpdMakeZero(epd1, sign);\n    }\n    return;\n  }\n\n  if epd2.type.value == 0.0 {\n    EpdMakeNan(epd1);\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  value = epd1.type.value / epd2.type.value;\n  exponent = epd1.exponent - epd2.exponent;\n  epd1.type.value = value;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Divides two arbitrary precision double values.]\n\n  Description [Divides two arbitrary precision double values.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdDivide3(epd1 *EpDouble, epd2 *EpDouble, epd3 *EpDouble) {\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd3);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (EpdIsInf(epd2) != 0) {\n      EpdMakeNan(epd3);\n    } else if EpdIsInf(epd1) != 0 {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      EpdMakeInf(epd3, sign);\n    } else {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      EpdMakeZero(epd3, sign);\n    }\n    return;\n  }\n\n  if epd2.type.value == 0.0 {\n    EpdMakeNan(epd3);\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  epd3.type.value = epd1.type.value / epd2.type.value;\n  epd3.exponent = epd1.exponent - epd2.exponent;\n  EpdNormalize(epd3);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Adds two arbitrary precision double values.]\n\n  Description [Adds two arbitrary precision double values.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdAdd(epd1 *EpDouble, value float64) {\n  var epd2 EpDouble;\n  var tmp float64;\n  var exponent, diff int32;\n\n  if (EpdIsNan(epd1) != 0) || (IsNanDouble(value) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (IsInfDouble(value) != 0) {\n    var sign int32;\n\n    EpdConvert(value, \u0026epd2);\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (IsInfDouble(value) != 0) {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      if sign == 1 {\n        EpdMakeNan(epd1); }\n    } else if EpdIsInf(\u0026epd2) != 0 {\n      EpdCopy(\u0026epd2, epd1);\n    }\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n\n  EpdConvert(value, \u0026epd2);\n  if epd1.exponent \u003e epd2.exponent {\n    diff = epd1.exponent - epd2.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      tmp = epd1.type.value + epd2.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff)));\n    } else {\n      tmp = epd1.type.value; }\n    exponent = epd1.exponent;\n  } else if epd1.exponent \u003c epd2.exponent {\n    diff = epd2.exponent - epd1.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      tmp = epd1.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff))) + epd2.type.value;\n    } else {\n      tmp = epd2.type.value; }\n    exponent = epd2.exponent;\n  } else {\n    tmp = epd1.type.value + epd2.type.value;\n    exponent = epd1.exponent;\n  }\n  epd1.type.value = tmp;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Adds two arbitrary precision double values.]\n\n  Description [Adds two arbitrary precision double values.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdAdd2(epd1 *EpDouble, epd2 *EpDouble) {\n  var value float64;\n  var exponent, diff int32;\n\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (EpdIsInf(epd2) != 0) {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      if sign == 1 {\n        EpdMakeNan(epd1); }\n    } else if EpdIsInf(epd2) != 0 {\n      EpdCopy(epd2, epd1);\n    }\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  if epd1.exponent \u003e epd2.exponent {\n    diff = epd1.exponent - epd2.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value +\n                epd2.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff)));\n    } else {\n      value = epd1.type.value; }\n    exponent = epd1.exponent;\n  } else if epd1.exponent \u003c epd2.exponent {\n    diff = epd2.exponent - epd1.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff))) +\n                epd2.type.value;\n    } else {\n      value = epd2.type.value; }\n    exponent = epd2.exponent;\n  } else {\n    value = epd1.type.value + epd2.type.value;\n    exponent = epd1.exponent;\n  }\n  epd1.type.value = value;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Adds two arbitrary precision double values.]\n\n  Description [Adds two arbitrary precision double values.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdAdd3(epd1 *EpDouble, epd2 *EpDouble, epd3 *EpDouble) {\n  var value float64;\n  var exponent, diff int32;\n\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd3);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (EpdIsInf(epd2) != 0) {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      if sign == 1 {\n        EpdMakeNan(epd3);\n      } else {\n        EpdCopy(epd1, epd3); }\n    } else if EpdIsInf(epd1) != 0 {\n      EpdCopy(epd1, epd3);\n    } else {\n      EpdCopy(epd2, epd3);\n    }\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  if epd1.exponent \u003e epd2.exponent {\n    diff = epd1.exponent - epd2.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value +\n                epd2.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff)));\n    } else {\n      value = epd1.type.value; }\n    exponent = epd1.exponent;\n  } else if epd1.exponent \u003c epd2.exponent {\n    diff = epd2.exponent - epd1.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff))) +\n                epd2.type.value;\n    } else {\n      value = epd2.type.value; }\n    exponent = epd2.exponent;\n  } else {\n    value = epd1.type.value + epd2.type.value;\n    exponent = epd1.exponent;\n  }\n  epd3.type.value = value;\n  epd3.exponent = exponent;\n  EpdNormalize(epd3);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Subtracts two arbitrary precision double values.]\n\n  Description [Subtracts two arbitrary precision double values.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdSubtract(epd1 *EpDouble, value float64) {\n  var epd2 EpDouble;\n  var tmp float64;\n  var exponent, diff int32;\n\n  if (EpdIsNan(epd1) != 0) || (IsNanDouble(value) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (IsInfDouble(value) != 0) {\n    var sign int32;\n\n    EpdConvert(value, \u0026epd2);\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (IsInfDouble(value) != 0) {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      if sign == 0 {\n        EpdMakeNan(epd1); }\n    } else if EpdIsInf(\u0026epd2) != 0 {\n      EpdCopy(\u0026epd2, epd1);\n    }\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n\n  EpdConvert(value, \u0026epd2);\n  if epd1.exponent \u003e epd2.exponent {\n    diff = epd1.exponent - epd2.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      tmp = epd1.type.value - epd2.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff)));\n    } else {\n      tmp = epd1.type.value; }\n    exponent = epd1.exponent;\n  } else if epd1.exponent \u003c epd2.exponent {\n    diff = epd2.exponent - epd1.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      tmp = epd1.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff))) - epd2.type.value;\n    } else {\n      tmp = epd2.type.value * float64((-1.0)); }\n    exponent = epd2.exponent;\n  } else {\n    tmp = epd1.type.value - epd2.type.value;\n    exponent = epd1.exponent;\n  }\n  epd1.type.value = tmp;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Subtracts two arbitrary precision double values.]\n\n  Description [Subtracts two arbitrary precision double values.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdSubtract2(epd1 *EpDouble, epd2 *EpDouble) {\n  var value float64;\n  var exponent, diff int32;\n\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd1);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (EpdIsInf(epd2) != 0) {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      if sign == 0 {\n        EpdMakeNan(epd1); }\n    } else if EpdIsInf(epd2) != 0 {\n      EpdCopy(epd2, epd1);\n    }\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  if epd1.exponent \u003e epd2.exponent {\n    diff = epd1.exponent - epd2.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value -\n                epd2.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff)));\n    } else {\n      value = epd1.type.value; }\n    exponent = epd1.exponent;\n  } else if epd1.exponent \u003c epd2.exponent {\n    diff = epd2.exponent - epd1.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff))) -\n                epd2.type.value;\n    } else {\n      value = epd2.type.value * float64((-1.0)); }\n    exponent = epd2.exponent;\n  } else {\n    value = epd1.type.value - epd2.type.value;\n    exponent = epd1.exponent;\n  }\n  epd1.type.value = value;\n  epd1.exponent = exponent;\n  EpdNormalize(epd1);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Subtracts two arbitrary precision double values.]\n\n  Description [Subtracts two arbitrary precision double values.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdSubtract3(epd1 *EpDouble, epd2 *EpDouble, epd3 *EpDouble) {\n  var value float64;\n  var exponent, diff int32;\n\n  if (EpdIsNan(epd1) != 0) || (EpdIsNan(epd2) != 0) {\n    EpdMakeNan(epd3);\n    return;\n  } else if (EpdIsInf(epd1) != 0) || (EpdIsInf(epd2) != 0) {\n    var sign int32;\n\n    if (EpdIsInf(epd1) != 0) \u0026\u0026 (EpdIsInf(epd2) != 0) {\n      sign = epd1.type.bits.sign ^ epd2.type.bits.sign;\n      if sign == 0 {\n        EpdCopy(epd1, epd3);\n      } else {\n        EpdMakeNan(epd3); }\n    } else if EpdIsInf(epd1) != 0 {\n      EpdCopy(epd1, epd1);\n    } else {\n      sign = epd2.type.bits.sign ^ 0x1;\n      EpdMakeInf(epd3, sign);\n    }\n    return;\n  }\n\n  assert(epd1.type.bits.exponent == EPD_MAX_BIN, \"epd1.type.bits.exponent == EPD_MAX_BIN\");\n  assert(epd2.type.bits.exponent == EPD_MAX_BIN, \"epd2.type.bits.exponent == EPD_MAX_BIN\");\n\n  if epd1.exponent \u003e epd2.exponent {\n    diff = epd1.exponent - epd2.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value -\n                epd2.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff)));\n    } else {\n      value = epd1.type.value; }\n    exponent = epd1.exponent;\n  } else if epd1.exponent \u003c epd2.exponent {\n    diff = epd2.exponent - epd1.exponent;\n    if diff \u003c= EPD_MAX_BIN {\n      value = epd1.type.value / math.Pow(float64(float64(2.0)), float64(float64(diff))) -\n                epd2.type.value;\n    } else {\n      value = epd2.type.value * float64((-1.0)); }\n    exponent = epd2.exponent;\n  } else {\n    value = epd1.type.value - epd2.type.value;\n    exponent = epd1.exponent;\n  }\n  epd3.type.value = value;\n  epd3.exponent = exponent;\n  EpdNormalize(epd3);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes arbitrary precision pow of base 2.]\n\n  Description [Computes arbitrary precision pow of base 2.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdPow2(n int32, epd *EpDouble) {\n  if n \u003c= EPD_MAX_BIN {\n    EpdConvert(math.Pow(float64(float64(2.0)), float64(float64(n))), epd);\n  } else {\n    var epd1, epd2 EpDouble;\n    var n1, n2 int32;\n\n    n1 = n / 2;\n    n2 = n - n1;\n    EpdPow2(n1, \u0026epd1);\n    EpdPow2(n2, \u0026epd2);\n    EpdMultiply3(\u0026epd1, \u0026epd2, epd);\n  }\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes arbitrary precision pow of base 2.]\n\n  Description [Computes arbitrary precision pow of base 2.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdPow2Decimal(n int32, epd *EpDouble) {\n  if n \u003c= EPD_MAX_BIN {\n    epd.type.value = math.Pow(float64(float64(2.0)), float64(float64(n)));\n    epd.exponent = 0;\n    EpdNormalizeDecimal(epd);\n  } else {\n    var epd1, epd2 EpDouble;\n    var n1, n2 int32;\n\n    n1 = n / 2;\n    n2 = n - n1;\n    EpdPow2Decimal(n1, \u0026epd1);\n    EpdPow2Decimal(n2, \u0026epd2);\n    EpdMultiply3Decimal(\u0026epd1, \u0026epd2, epd);\n  }\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Normalize an arbitrary precision double value.]\n\n  Description [Normalize an arbitrary precision double value.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdNormalize(epd *EpDouble) {\n  var exponent int32;\n\n  if IsNanOrInfDouble(epd.type.value) {\n    epd.exponent = 0;\n    return;\n  }\n\n  exponent = EpdGetExponent(epd.type.value);\n  if exponent == EPD_MAX_BIN {\n    return; }\n  exponent -= EPD_MAX_BIN;\n  epd.type.bits.exponent = EPD_MAX_BIN;\n  epd.exponent += exponent;\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Normalize an arbitrary precision double value.]\n\n  Description [Normalize an arbitrary precision double value.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdNormalizeDecimal(epd *EpDouble) {\n  var exponent int32;\n\n  if IsNanOrInfDouble(epd.type.value) {\n    epd.exponent = 0;\n    return;\n  }\n\n  exponent = EpdGetExponentDecimal(epd.type.value);\n  epd.type.value /= math.Pow(float64(float64(10.0)), float64(float64(exponent)));\n  epd.exponent += exponent;\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns value and decimal exponent of EpDouble.]\n\n  Description [Returns value and decimal exponent of EpDouble.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdGetValueAndDecimalExponent(epd *EpDouble, value *float64, exponent *int32) {\n  var epd1, epd2 EpDouble;\n\n  if EpdIsNanOrInf(epd) != 0 {\n    return; }\n\n  if EpdIsZero(epd) != 0 {\n    *value = 0.0;\n    *exponent = 0;\n    return;\n  }\n\n  epd1.type.value = epd.type.value;\n  epd1.exponent = 0;\n  EpdPow2Decimal(epd.exponent, \u0026epd2);\n  EpdMultiply2Decimal(\u0026epd1, \u0026epd2);\n\n  *value = epd1.type.value;\n  *exponent = epd1.exponent;\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Returns the exponent value of a double.]\n\n  Description [Returns the exponent value of a double.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdGetExponent(value float64) int32 {\n  var exponent int32;\n  var epd EpDouble;\n\n  epd.type.value = value;\n  exponent = epd.type.bits.exponent;\n  return(exponent);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns the decimal exponent value of a double.]\n\n  Description [Returns the decimal exponent value of a double.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdGetExponentDecimal(value float64) int32 {\n  var pos string;\n  var str string // was [24]byte in C\n\n  var exponent int32;\n\n  str = fmt.Sprintf(\"%E\", value);\n  pos = strstr(str, \"E\");\n  sscanf(pos, \"E%d\", \u0026exponent);\n  return(exponent);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Makes EpDouble Inf.]\n\n  Description [Makes EpDouble Inf.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdMakeInf(epd *EpDouble, sign int32) {\n  epd.type.bits.mantissa1 = 0;\n  epd.type.bits.mantissa0 = 0;\n  epd.type.bits.exponent = EPD_EXP_INF;\n  epd.type.bits.sign = sign;\n  epd.exponent = 0;\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Makes EpDouble Zero.]\n\n  Description [Makes EpDouble Zero.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdMakeZero(epd *EpDouble, sign int32) {\n  epd.type.bits.mantissa1 = 0;\n  epd.type.bits.mantissa0 = 0;\n  epd.type.bits.exponent = 0;\n  epd.type.bits.sign = sign;\n  epd.exponent = 0;\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Makes EpDouble NaN.]\n\n  Description [Makes EpDouble NaN.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdMakeNan(epd *EpDouble) {\n  epd.type.nan.mantissa1 = 0;\n  epd.type.nan.mantissa0 = 0;\n  epd.type.nan.quiet_bit = 1;\n  epd.type.nan.exponent = EPD_EXP_INF;\n  epd.type.nan.sign = 1;\n  epd.exponent = 0;\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Copies a EpDouble struct.]\n\n  Description [Copies a EpDouble struct.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdCopy(from *EpDouble, to *EpDouble) {\n  to.type.value = from.type.value;\n  to.exponent = from.exponent;\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks whether the value is Inf.]\n\n  Description [Checks whether the value is Inf.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdIsInf(epd *EpDouble) int32 {\n  return(IsInfDouble(epd.type.value));\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks whether the value is Zero.]\n\n  Description [Checks whether the value is Zero.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdIsZero(epd *EpDouble) int32 {\n  if epd.type.value == 0.0 {\n    return(1);\n  } else {\n    return(0); }\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks whether the value is NaN.]\n\n  Description [Checks whether the value is NaN.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdIsNan(epd *EpDouble) int32 {\n  return(IsNanDouble(epd.type.value));\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks whether the value is NaN or Inf.]\n\n  Description [Checks whether the value is NaN or Inf.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc EpdIsNanOrInf(epd *EpDouble) int32 {\n  return(IsNanOrInfDouble(epd.type.value));\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks whether the value is Inf.]\n\n  Description [Checks whether the value is Inf.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc IsInfDouble(value float64) int32 {\n  var val EpType;\n\n  val.value = value;\n  if val.bits.exponent == EPD_EXP_INF \u0026\u0026\n      val.bits.mantissa0 == 0 \u0026\u0026\n      val.bits.mantissa1 == 0 {\n    if val.bits.sign == 0 {\n      return(1);\n    } else {\n      return(-1); }\n  }\n  return(0);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks whether the value is NaN.]\n\n  Description [Checks whether the value is NaN.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc IsNanDouble(value float64) int32 {\n  var val EpType;\n  \n  val.value = value;\n  if val.nan.exponent == EPD_EXP_INF \u0026\u0026\n      val.nan.sign == 1 \u0026\u0026\n      val.nan.quiet_bit == 1 \u0026\u0026\n      val.nan.mantissa0 == 0 \u0026\u0026\n      val.nan.mantissa1 == 0 {\n    return(1);\n  }\n  return(0);\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks whether the value is NaN or Inf.]\n\n  Description [Checks whether the value is NaN or Inf.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc IsNanOrInfDouble(value float64) int32 {\n  var val EpType;\n\n  val.value = value;\n  if val.nan.exponent == EPD_EXP_INF \u0026\u0026\n      val.nan.mantissa0 == 0 \u0026\u0026\n      val.nan.mantissa1 == 0 \u0026\u0026\n      (val.nan.sign == 1 || val.nan.quiet_bit == 0) {\n    return(1);\n  }\n  return(0);\n}\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

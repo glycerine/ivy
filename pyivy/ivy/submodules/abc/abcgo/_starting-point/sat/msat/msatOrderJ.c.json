@@ -1,0 +1,545 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c",
+  "SHA256": "e22e1e2071fe35d2f714e75c81449c6c380106bbdf4b49c4c82b4a664648c71b",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Msat_Order_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 189,
+        "Column": 9,
+        "ByteOffset": 6524
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !/*__starting_point_inline_macro:Msat_OrderVarIsAssigned__*/((p).pSat.pAssigns[pVar.Num] != MSAT_VAR_UNASSIGNED) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 9,
+        "ByteOffset": 7484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d(%d) \", Counter, p.rVars.nItems ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 216,
+        "Column": 9,
+        "ByteOffset": 7853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( /*__starting_point_inline_macro:Msat_OrderVarIsUsedInCone__*/((p).pSat.vVarsUsed.pArray[pVars[i]]) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 9311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free( p.pVars );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 251,
+        "Column": 5,
+        "ByteOffset": 9332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 287,
+        "Column": 9,
+        "ByteOffset": 10564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( /*__starting_point_inline_macro:Msat_OrderVarIsUsedInCone__*/((p).pSat.vVarsUsed.pArray[pVarBest.Num]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 309,
+        "Column": 5,
+        "ByteOffset": 11207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var \u003c p.nVarsAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 345,
+        "Column": 5,
+        "ByteOffset": 12797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var \u003c p.nVarsAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 346,
+        "Column": 5,
+        "ByteOffset": 12831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Msat_OrderVarIsInBoundary__*/((p).pVars[Var].pNext) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 362,
+        "Column": 13,
+        "ByteOffset": 13848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !/*__starting_point_inline_macro:Msat_OrderVarIsAssigned__*/((p).pSat.pAssigns[vRound.pArray[i]] != MSAT_VAR_UNASSIGNED) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 406,
+        "Column": 5,
+        "ByteOffset": 15396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pVar.pPrev == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 407,
+        "Column": 5,
+        "ByteOffset": 15429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pVar.pNext == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 440,
+        "Column": 5,
+        "ByteOffset": 16380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pVar.pPrev );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 441,
+        "Column": 5,
+        "ByteOffset": 16406
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pVar.pNext );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 444,
+        "Column": 9,
+        "ByteOffset": 16483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pRing.pRoot == pVar );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Msat_OrderAlloc",
+      "Start": 3594,
+      "End": 3832,
+      "BodyStart": 3649,
+      "Original": "Msat_Order_t * Msat_OrderAlloc( Msat_Solver_t * pSat )\n{\n    Msat_Order_t * p;\n    p = ALLOC( Msat_Order_t, 1 );\n    memset( p, 0, sizeof(Msat_Order_t) );\n    p-\u003epSat = pSat;\n    Msat_OrderSetBounds( p, pSat-\u003enVarsAlloc );\n    return p;\n}",
+      "Draft": "func Msat_OrderAlloc(pSat *Msat_Solver_t) *Msat_Order_t {\n    var p *Msat_Order_t;\n    p = ALLOC( Msat_Order_t, 1 );\n    memset( p, 0, sizeof(Msat_Order_t) );\n    p.pSat = pSat;\n    Msat_OrderSetBounds( p, pSat.nVarsAlloc );\n    return p;\n}"
+    },
+    {
+      "Name": "Msat_OrderSetBounds",
+      "Start": 4161,
+      "End": 4588,
+      "BodyStart": 4220,
+      "Original": "void Msat_OrderSetBounds( Msat_Order_t * p, int nVarsMax )\n{\n    int i;\n    // add variables if they are missing\n    if ( p-\u003enVarsAlloc \u003c nVarsMax )\n    {\n        p-\u003epVars = REALLOC( Msat_OrderVar_t, p-\u003epVars, nVarsMax );\n        for ( i = p-\u003enVarsAlloc; i \u003c nVarsMax; i++ )\n        {\n            p-\u003epVars[i].pNext = p-\u003epVars[i].pPrev = NULL;\n            p-\u003epVars[i].Num = i;\n        }\n        p-\u003enVarsAlloc = nVarsMax;\n    }\n}",
+      "Draft": "func Msat_OrderSetBounds(p *Msat_Order_t, nVarsMax int32) {\n    var i int32;\n    // add variables if they are missing\n    if p.nVarsAlloc \u003c nVarsMax {\n        p.pVars = REALLOC( Msat_OrderVar_t, p.pVars, nVarsMax );\n        for  i = p.nVarsAlloc; i \u003c nVarsMax; i++  {\n            p.pVars[i].pNext = p.pVars[i].pPrev = nil;\n            p.pVars[i].Num = i;\n        }\n        p.nVarsAlloc = nVarsMax;\n    }\n}"
+    },
+    {
+      "Name": "Msat_OrderClean",
+      "Start": 4854,
+      "End": 5144,
+      "BodyStart": 4918,
+      "Original": "void Msat_OrderClean( Msat_Order_t * p, Msat_IntVec_t * vCone )\n{\n    Msat_OrderVar_t * pVar, * pNext;\n    // quickly undo the ring\n    Msat_OrderRingForEachEntry( p-\u003erVars.pRoot, pVar, pNext )\n        pVar-\u003epNext = pVar-\u003epPrev = NULL;\n    p-\u003erVars.pRoot  = NULL;\n    p-\u003erVars.nItems = 0;\n}",
+      "Draft": "func Msat_OrderClean(p *Msat_Order_t, vCone *Msat_IntVec_t) {\n    var pVar, pNext *Msat_OrderVar_t;\n    // quickly undo the ring\n    // inlining of macro Msat_OrderRingForEachEntry\n    for  pVar = p.rVars.pRoot,                                                   pNext = pVar? pVar.pNext : nil;                               (pVar != nil);                                                           pVar = (pNext != p.rVars.pRoot)? pNext : nil,                          pNext = pVar? pVar.pNext : nil  {\n        pVar.pNext = pVar.pPrev = nil;\n    }\n    p.rVars.pRoot  = nil;\n    p.rVars.nItems = 0;\n}"
+    },
+    {
+      "Name": "Msat_OrderCheck",
+      "Start": 5415,
+      "End": 7715,
+      "BodyStart": 5455,
+      "Original": "int Msat_OrderCheck( Msat_Order_t * p )\n{\n    Msat_OrderVar_t * pVar, * pNext;\n    Msat_IntVec_t * vRound;\n    int * pRound, nRound;\n    int * pVars, nVars, i, k;\n    int Counter = 0;\n\n    // go through all the variables in the boundary\n    Msat_OrderRingForEachEntry( p-\u003erVars.pRoot, pVar, pNext )\n    {\n        assert( !Msat_OrderVarIsAssigned(p, pVar-\u003eNum) );\n        // go though all the variables in the neighborhood\n        // and check that it is true that there is least one assigned\n        vRound = (Msat_IntVec_t *)Msat_ClauseVecReadEntry( p-\u003epSat-\u003evAdjacents, pVar-\u003eNum );\n        nRound = Msat_IntVecReadSize( vRound );\n        pRound = Msat_IntVecReadArray( vRound );\n        for ( i = 0; i \u003c nRound; i++ )\n        {\n            if ( !Msat_OrderVarIsUsedInCone(p, pRound[i]) )\n                continue;\n            if ( Msat_OrderVarIsAssigned(p, pRound[i]) )\n                break;\n        }\n//        assert( i != nRound );\n//        if ( i == nRound )\n//            return 0;\n        if ( i == nRound )\n            Counter++;\n    }\n    if ( Counter \u003e 0 )\n        printf( \"%d(%d) \", Counter, p-\u003erVars.nItems );\n\n    // we may also check other unassigned variables in the cone\n    // to make sure that if they are not in J-boundary, \n    // then they do not have an assigned neighbor\n    nVars = Msat_IntVecReadSize( p-\u003epSat-\u003evConeVars );\n    pVars = Msat_IntVecReadArray( p-\u003epSat-\u003evConeVars );\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        assert( Msat_OrderVarIsUsedInCone(p, pVars[i]) );\n        // skip assigned vars, vars in the boundary, and vars not used in the cone\n        if ( Msat_OrderVarIsAssigned(p, pVars[i]) || \n             Msat_OrderVarIsInBoundary(p, pVars[i]) )\n            continue;\n        // make sure, it does not have assigned neighbors\n        vRound = (Msat_IntVec_t *)Msat_ClauseVecReadEntry( p-\u003epSat-\u003evAdjacents, pVars[i] );\n        nRound = Msat_IntVecReadSize( vRound );\n        pRound = Msat_IntVecReadArray( vRound );\n        for ( k = 0; k \u003c nRound; k++ )\n        {\n            if ( !Msat_OrderVarIsUsedInCone(p, pRound[k]) )\n                continue;\n            if ( Msat_OrderVarIsAssigned(p, pRound[k]) )\n                break;\n        }\n//        assert( k == nRound );\n//        if ( k != nRound )\n//            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Msat_OrderCheck(p *Msat_Order_t) int32 {\n    var pVar, pNext *Msat_OrderVar_t;\n    var vRound *Msat_IntVec_t;\n    var pRound *int32;\n    var nRound int32;\n    var pVars *int32;\n    var nVars int32;\n    var i int32;\n    var k int32;\n    var Counter int32;\n\n    // go through all the variables in the boundary\n    // inlining of macro Msat_OrderRingForEachEntry\n    for  pVar = p.rVars.pRoot,                                                   pNext = pVar? pVar.pNext : nil;                               (pVar != nil);                                                           pVar = (pNext != p.rVars.pRoot)? pNext : nil,                          pNext = pVar? pVar.pNext : nil  {\n        // inlining of macro Msat_OrderVarIsAssigned\n        assert(!((p).pSat.pAssigns[pVar.Num] != MSAT_VAR_UNASSIGNED), \"!/*__starting_point_inline_macro:Msat_OrderVarIsAssigned__*/((p).pSat.pAssigns[pVar.Num] != MSAT_VAR_UNASSIGNED)\");\n        // go though all the variables in the neighborhood\n        // and check that it is true that there is least one assigned\n        vRound = (Msat_IntVec_t *)Msat_ClauseVecReadEntry( p.pSat.vAdjacents, pVar.Num );\n        nRound = Msat_IntVecReadSize( vRound );\n        pRound = Msat_IntVecReadArray( vRound );\n        for  i = 0; i \u003c nRound; i++  {\n            // inlining of macro Msat_OrderVarIsUsedInCone\n            if !((p).pSat.vVarsUsed.pArray[pRound[i]]) {\n                continue; }\n            // inlining of macro Msat_OrderVarIsAssigned\n            if  (p).pSat.pAssigns[pRound[i]] != MSAT_VAR_UNASSIGNED {\n                break; }\n        }\n//        assert( i != nRound );\n//        if ( i == nRound )\n//            return 0;\n        if i == nRound {\n            Counter++; }\n    }\n    if Counter \u003e 0 {\n        fmt.Printf(\"%d(%d) \", Counter, p.rVars.nItems); }\n\n    // we may also check other unassigned variables in the cone\n    // to make sure that if they are not in J-boundary, \n    // then they do not have an assigned neighbor\n    nVars = Msat_IntVecReadSize( p.pSat.vConeVars );\n    pVars = Msat_IntVecReadArray( p.pSat.vConeVars );\n    for  i = 0; i \u003c nVars; i++  {\n        // inlining of macro Msat_OrderVarIsUsedInCone\n        assert(((p).pSat.vVarsUsed.pArray[pVars[i]]), \"/*__starting_point_inline_macro:Msat_OrderVarIsUsedInCone__*/((p).pSat.vVarsUsed.pArray[pVars[i]])\");\n        // skip assigned vars, vars in the boundary, and vars not used in the cone\n        // inlining of macro Msat_OrderVarIsAssigned\n        if  ((p).pSat.pAssigns[pVars[i]] != MSAT_VAR_UNASSIGNED) || \n             // inlining of macro Msat_OrderVarIsInBoundary\n             ((p).pVars[pVars[i]].pNext) {\n            continue; }\n        // make sure, it does not have assigned neighbors\n        vRound = (Msat_IntVec_t *)Msat_ClauseVecReadEntry( p.pSat.vAdjacents, pVars[i] );\n        nRound = Msat_IntVecReadSize( vRound );\n        pRound = Msat_IntVecReadArray( vRound );\n        for  k = 0; k \u003c nRound; k++  {\n            // inlining of macro Msat_OrderVarIsUsedInCone\n            if !((p).pSat.vVarsUsed.pArray[pRound[k]]) {\n                continue; }\n            // inlining of macro Msat_OrderVarIsAssigned\n            if  (p).pSat.pAssigns[pRound[k]] != MSAT_VAR_UNASSIGNED {\n                break; }\n        }\n//        assert( k == nRound );\n//        if ( k != nRound )\n//            return 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Msat_OrderFree",
+      "Start": 7980,
+      "End": 8060,
+      "BodyStart": 8020,
+      "Original": "void Msat_OrderFree( Msat_Order_t * p )\n{\n    free( p-\u003epVars );\n    free( p );\n}",
+      "Draft": "func Msat_OrderFree(p *Msat_Order_t) {\n    free( p.pVars );\n    free( p );\n}"
+    },
+    {
+      "Name": "Msat_OrderVarSelect",
+      "Start": 8332,
+      "End": 9109,
+      "BodyStart": 8376,
+      "Original": "int Msat_OrderVarSelect( Msat_Order_t * p )\n{\n    Msat_OrderVar_t * pVar, * pNext, * pVarBest;\n    double * pdActs = p-\u003epSat-\u003epdActivity;\n    double dfActBest;\n//    clock_t clk = clock();\n\n    pVarBest = NULL;\n    dfActBest = -1.0;\n    Msat_OrderRingForEachEntry( p-\u003erVars.pRoot, pVar, pNext )\n    {\n        if ( dfActBest \u003c pdActs[pVar-\u003eNum] )\n        {\n            dfActBest = pdActs[pVar-\u003eNum];\n            pVarBest  = pVar;\n        }\n    }\n//timeSelect += clock() - clk;\n//timeAssign += clock() - clk;\n\n//if ( pVarBest \u0026\u0026 pVarBest-\u003eNum % 1000 == 0 )\n//printf( \"%d \", p-\u003erVars.nItems );\n\n//    Msat_OrderCheck( p );\n    if ( pVarBest )\n    {\n        assert( Msat_OrderVarIsUsedInCone(p, pVarBest-\u003eNum) );\n        return pVarBest-\u003eNum;\n    }\n    return MSAT_ORDER_UNKNOWN;\n}",
+      "Draft": "func Msat_OrderVarSelect(p *Msat_Order_t) int32 {\n    var pVar, pNext, pVarBest *Msat_OrderVar_t;\n    var pdActs *float64  = p.pSat.pdActivity;\n    var dfActBest float64;\n//    clock_t clk = clock();\n\n    pVarBest = nil;\n    dfActBest = -1.0;\n    // inlining of macro Msat_OrderRingForEachEntry\n    for  pVar = p.rVars.pRoot,                                                   pNext = pVar? pVar.pNext : nil;                               (pVar != nil);                                                           pVar = (pNext != p.rVars.pRoot)? pNext : nil,                          pNext = pVar? pVar.pNext : nil  {\n        if dfActBest \u003c pdActs[pVar.Num] {\n            dfActBest = pdActs[pVar.Num];\n            pVarBest  = pVar;\n        }\n    }\n//timeSelect += clock() - clk;\n//timeAssign += clock() - clk;\n\n//if ( pVarBest \u0026\u0026 pVarBest-\u003eNum % 1000 == 0 )\n//printf( \"%d \", p-\u003erVars.nItems );\n\n//    Msat_OrderCheck( p );\n    if pVarBest != nil {\n        // inlining of macro Msat_OrderVarIsUsedInCone\n        assert(((p).pSat.vVarsUsed.pArray[pVarBest.Num]), \"/*__starting_point_inline_macro:Msat_OrderVarIsUsedInCone__*/((p).pSat.vVarsUsed.pArray[pVarBest.Num])\");\n        return pVarBest.Num;\n    }\n    return MSAT_ORDER_UNKNOWN;\n}"
+    },
+    {
+      "Name": "Msat_OrderVarAssigned",
+      "Start": 9394,
+      "End": 10462,
+      "BodyStart": 9450,
+      "Original": "void Msat_OrderVarAssigned( Msat_Order_t * p, int Var )\n{\n    Msat_IntVec_t * vRound;\n    int i;//, clk = clock();\n\n    // make sure the variable is in the boundary\n    assert( Var \u003c p-\u003enVarsAlloc );\n    // if it is not in the boundary (initial decision, random decision), do not remove\n    if ( Msat_OrderVarIsInBoundary( p, Var ) )\n        Msat_OrderRingRemove( \u0026p-\u003erVars, \u0026p-\u003epVars[Var] );\n    // add to the boundary those neighbors that are (1) unassigned, (2) not in boundary\n    // because for them we know that there is a variable (Var) which is assigned\n    vRound = (Msat_IntVec_t *)p-\u003epSat-\u003evAdjacents-\u003epArray[Var];\n    for ( i = 0; i \u003c vRound-\u003enSize; i++ )\n    {\n        if ( !Msat_OrderVarIsUsedInCone(p, vRound-\u003epArray[i]) )\n            continue;\n        if ( Msat_OrderVarIsAssigned(p, vRound-\u003epArray[i]) )\n            continue;\n        if ( Msat_OrderVarIsInBoundary(p, vRound-\u003epArray[i]) )\n            continue;\n        Msat_OrderRingAddLast( \u0026p-\u003erVars, \u0026p-\u003epVars[vRound-\u003epArray[i]] );\n    }\n//timeSelect += clock() - clk;\n//    Msat_OrderCheck( p );\n}",
+      "Draft": "func Msat_OrderVarAssigned(p *Msat_Order_t, Var int32) {\n    var vRound *Msat_IntVec_t;\n    var i int32;//, clk = clock();\n\n    // make sure the variable is in the boundary\n    assert(Var \u003c p.nVarsAlloc, \"Var \u003c p.nVarsAlloc\");\n    // if it is not in the boundary (initial decision, random decision), do not remove\n    // inlining of macro Msat_OrderVarIsInBoundary\n    if  (p).pVars[Var].pNext {\n        Msat_OrderRingRemove( \u0026p.rVars, \u0026p.pVars[Var] ); }\n    // add to the boundary those neighbors that are (1) unassigned, (2) not in boundary\n    // because for them we know that there is a variable (Var) which is assigned\n    vRound = (Msat_IntVec_t *)p.pSat.vAdjacents.pArray[Var];\n    for  i = 0; i \u003c vRound.nSize; i++  {\n        // inlining of macro Msat_OrderVarIsUsedInCone\n        if !((p).pSat.vVarsUsed.pArray[vRound.pArray[i]]) {\n            continue; }\n        // inlining of macro Msat_OrderVarIsAssigned\n        if  (p).pSat.pAssigns[vRound.pArray[i]] != MSAT_VAR_UNASSIGNED {\n            continue; }\n        // inlining of macro Msat_OrderVarIsInBoundary\n        if  (p).pVars[vRound.pArray[i]].pNext {\n            continue; }\n        Msat_OrderRingAddLast( \u0026p.rVars, \u0026p.pVars[vRound.pArray[i]] );\n    }\n//timeSelect += clock() - clk;\n//    Msat_OrderCheck( p );\n}"
+    },
+    {
+      "Name": "Msat_OrderVarUnassigned",
+      "Start": 10747,
+      "End": 12451,
+      "BodyStart": 10805,
+      "Original": "void Msat_OrderVarUnassigned( Msat_Order_t * p, int Var )\n{\n    Msat_IntVec_t * vRound, * vRound2;\n    int i, k;//, clk = clock();\n\n    // make sure the variable is not in the boundary\n    assert( Var \u003c p-\u003enVarsAlloc );\n    assert( !Msat_OrderVarIsInBoundary( p, Var ) );\n    // go through its neigbors - if one of them is assigned add this var\n    // add to the boundary those neighbors that are not there already\n    // this will also get rid of variable outside of the current cone\n    // because they are unassigned in Msat_SolverPrepare()\n    vRound = (Msat_IntVec_t *)p-\u003epSat-\u003evAdjacents-\u003epArray[Var];\n    for ( i = 0; i \u003c vRound-\u003enSize; i++ )\n        if ( Msat_OrderVarIsAssigned(p, vRound-\u003epArray[i]) ) \n            break;\n    if ( i != vRound-\u003enSize )\n        Msat_OrderRingAddLast( \u0026p-\u003erVars, \u0026p-\u003epVars[Var] );\n\n    // unassigning a variable may lead to its adjacents dropping from the boundary\n    for ( i = 0; i \u003c vRound-\u003enSize; i++ )\n        if ( Msat_OrderVarIsInBoundary(p, vRound-\u003epArray[i]) )\n        { // the neighbor is in the J-boundary (and unassigned)\n            assert( !Msat_OrderVarIsAssigned(p, vRound-\u003epArray[i]) );\n            vRound2 = (Msat_IntVec_t *)p-\u003epSat-\u003evAdjacents-\u003epArray[vRound-\u003epArray[i]];\n            // go through its neighbors and determine if there is at least one assigned\n            for ( k = 0; k \u003c vRound2-\u003enSize; k++ )\n                if ( Msat_OrderVarIsAssigned(p, vRound2-\u003epArray[k]) ) \n                    break;\n            if ( k == vRound2-\u003enSize ) // there is no assigned vars, delete this one\n                Msat_OrderRingRemove( \u0026p-\u003erVars, \u0026p-\u003epVars[vRound-\u003epArray[i]] );\n        }\n//timeSelect += clock() - clk;\n//    Msat_OrderCheck( p );\n}",
+      "Draft": "func Msat_OrderVarUnassigned(p *Msat_Order_t, Var int32) {\n    var vRound, vRound2 *Msat_IntVec_t;\n    var i, k int32;//, clk = clock();\n\n    // make sure the variable is not in the boundary\n    assert(Var \u003c p.nVarsAlloc, \"Var \u003c p.nVarsAlloc\");\n    // inlining of macro Msat_OrderVarIsInBoundary\n    assert(!((p).pVars[Var].pNext), \"!/*__starting_point_inline_macro:Msat_OrderVarIsInBoundary__*/((p).pVars[Var].pNext)\");\n    // go through its neigbors - if one of them is assigned add this var\n    // add to the boundary those neighbors that are not there already\n    // this will also get rid of variable outside of the current cone\n    // because they are unassigned in Msat_SolverPrepare()\n    vRound = (Msat_IntVec_t *)p.pSat.vAdjacents.pArray[Var];\n    for  i = 0; i \u003c vRound.nSize; i++  {\n        // inlining of macro Msat_OrderVarIsAssigned\n        if  (p).pSat.pAssigns[vRound.pArray[i]] != MSAT_VAR_UNASSIGNED { \n            break; }\n    }\n    if i != vRound.nSize {\n        Msat_OrderRingAddLast( \u0026p.rVars, \u0026p.pVars[Var] ); }\n\n    // unassigning a variable may lead to its adjacents dropping from the boundary\n    for  i = 0; i \u003c vRound.nSize; i++  {\n        // inlining of macro Msat_OrderVarIsInBoundary\n        if  (p).pVars[vRound.pArray[i]].pNext { // the neighbor is in the J-boundary (and unassigned)\n            // inlining of macro Msat_OrderVarIsAssigned\n            assert(!((p).pSat.pAssigns[vRound.pArray[i]] != MSAT_VAR_UNASSIGNED), \"!/*__starting_point_inline_macro:Msat_OrderVarIsAssigned__*/((p).pSat.pAssigns[vRound.pArray[i]] != MSAT_VAR_UNASSIGNED)\");\n            vRound2 = (Msat_IntVec_t *)p.pSat.vAdjacents.pArray[vRound.pArray[i]];\n            // go through its neighbors and determine if there is at least one assigned\n            for  k = 0; k \u003c vRound2.nSize; k++  {\n                // inlining of macro Msat_OrderVarIsAssigned\n                if  (p).pSat.pAssigns[vRound2.pArray[k]] != MSAT_VAR_UNASSIGNED { \n                    break; }\n            }\n            if k == vRound2.nSize { // there is no assigned vars, delete this one\n                Msat_OrderRingRemove( \u0026p.rVars, \u0026p.pVars[vRound.pArray[i]] ); }\n        }\n    }\n//timeSelect += clock() - clk;\n//    Msat_OrderCheck( p );\n}"
+    },
+    {
+      "Name": "Msat_OrderUpdate",
+      "Start": 12737,
+      "End": 12791,
+      "BodyStart": 12788,
+      "Original": "void Msat_OrderUpdate( Msat_Order_t * p, int Var )\n{\n}",
+      "Draft": "func Msat_OrderUpdate(p *Msat_Order_t, Var int32) {\n}"
+    },
+    {
+      "Name": "Msat_OrderRingAddLast",
+      "Start": 13061,
+      "End": 13813,
+      "BodyStart": 13140,
+      "Original": "void Msat_OrderRingAddLast( Msat_OrderRing_t * pRing, Msat_OrderVar_t * pVar )\n{\n//printf( \"adding %d\\n\", pVar-\u003eNum );\n    // check that the node is not in a ring\n    assert( pVar-\u003epPrev == NULL );\n    assert( pVar-\u003epNext == NULL );\n    // if the ring is empty, make the node point to itself\n    pRing-\u003enItems++;\n    if ( pRing-\u003epRoot == NULL )\n    {\n        pRing-\u003epRoot  = pVar;\n        pVar-\u003epPrev  = pVar;\n        pVar-\u003epNext  = pVar;\n        return;\n    }\n    // if the ring is not empty, add it as the last entry\n    pVar-\u003epPrev = pRing-\u003epRoot-\u003epPrev;\n    pVar-\u003epNext = pRing-\u003epRoot;\n    pVar-\u003epPrev-\u003epNext = pVar;\n    pVar-\u003epNext-\u003epPrev = pVar;\n\n    // move the root so that it points to the new entry\n//    pRing-\u003epRoot = pRing-\u003epRoot-\u003epPrev;\n}",
+      "Draft": "func Msat_OrderRingAddLast(pRing *Msat_OrderRing_t, pVar *Msat_OrderVar_t) {\n//printf( \"adding %d\\n\", pVar-\u003eNum );\n    // check that the node is not in a ring\n    assert(pVar.pPrev == nil, \"pVar.pPrev == nil\");\n    assert(pVar.pNext == nil, \"pVar.pNext == nil\");\n    // if the ring is empty, make the node point to itself\n    pRing.nItems++;\n    if pRing.pRoot == nil {\n        pRing.pRoot  = pVar;\n        pVar.pPrev  = pVar;\n        pVar.pNext  = pVar;\n        return;\n    }\n    // if the ring is not empty, add it as the last entry\n    pVar.pPrev = pRing.pRoot.pPrev;\n    pVar.pNext = pRing.pRoot;\n    pVar.pPrev.pNext = pVar;\n    pVar.pNext.pPrev = pVar;\n\n    // move the root so that it points to the new entry\n//    pRing-\u003epRoot = pRing-\u003epRoot-\u003epPrev;\n}"
+    },
+    {
+      "Name": "Msat_OrderRingRemove",
+      "Start": 14080,
+      "End": 14898,
+      "BodyStart": 14158,
+      "Original": "void Msat_OrderRingRemove( Msat_OrderRing_t * pRing, Msat_OrderVar_t * pVar )\n{\n//printf( \"removing %d\\n\", pVar-\u003eNum );\n    // check that the var is in a ring\n    assert( pVar-\u003epPrev );\n    assert( pVar-\u003epNext );\n    pRing-\u003enItems--;\n    if ( pRing-\u003enItems == 0 )\n    {\n        assert( pRing-\u003epRoot == pVar );\n        pVar-\u003epPrev = NULL;\n        pVar-\u003epNext = NULL;\n        pRing-\u003epRoot = NULL;\n        return;\n    }\n    // move the root if needed\n    if ( pRing-\u003epRoot == pVar )\n        pRing-\u003epRoot = pVar-\u003epNext;\n    // move the root to the next entry after pVar\n    // this way all the additions to the list will be traversed first\n//    pRing-\u003epRoot = pVar-\u003epPrev;\n    // delete the node\n    pVar-\u003epPrev-\u003epNext = pVar-\u003epNext;\n    pVar-\u003epNext-\u003epPrev = pVar-\u003epPrev;\n    pVar-\u003epPrev = NULL;\n    pVar-\u003epNext = NULL;\n}",
+      "Draft": "func Msat_OrderRingRemove(pRing *Msat_OrderRing_t, pVar *Msat_OrderVar_t) {\n//printf( \"removing %d\\n\", pVar-\u003eNum );\n    // check that the var is in a ring\n    assert(pVar.pPrev, \"pVar.pPrev\");\n    assert(pVar.pNext, \"pVar.pNext\");\n    pRing.nItems--;\n    if pRing.nItems == 0 {\n        assert(pRing.pRoot == pVar, \"pRing.pRoot == pVar\");\n        pVar.pPrev = nil;\n        pVar.pNext = nil;\n        pRing.pRoot = nil;\n        return;\n    }\n    // move the root if needed\n    if pRing.pRoot == pVar {\n        pRing.pRoot = pVar.pNext; }\n    // move the root to the next entry after pVar\n    // this way all the additions to the list will be traversed first\n//    pRing-\u003epRoot = pVar-\u003epPrev;\n    // delete the node\n    pVar.pPrev.pNext = pVar.pNext;\n    pVar.pNext.pPrev = pVar.pPrev;\n    pVar.pPrev = nil;\n    pVar.pNext = nil;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::struct::Msat_OrderVar_t_",
+      "Category": "struct-review",
+      "Symbol": "Msat_OrderVar_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1276,
+      "End": 1398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::struct::Msat_OrderRing_t_",
+      "Category": "struct-review",
+      "Symbol": "Msat_OrderRing_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1453,
+      "End": 1547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::struct::Msat_Order_t_",
+      "Category": "struct-review",
+      "Symbol": "Msat_Order_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1588,
+      "End": 1894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::mechanical::sizeof::3725",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3725,
+      "End": 3731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::pointer-cast::6639",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5924,
+      "End": 5941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::pointer-cast::8257",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7211,
+      "End": 7228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::pointer-cast::11586",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9969,
+      "End": 9986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::pointer-cast::13161",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11304,
+      "End": 11321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::pointer-cast::13975",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11913,
+      "End": 11930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::macro::Msat_OrderVarIsInBoundary",
+      "Category": "macro-review",
+      "Symbol": "Msat_OrderVarIsInBoundary",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2218,
+      "End": 2283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::macro::Msat_OrderVarIsAssigned",
+      "Category": "macro-review",
+      "Symbol": "Msat_OrderVarIsAssigned",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2284,
+      "End": 2375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::macro::Msat_OrderVarIsUsedInCone",
+      "Category": "macro-review",
+      "Symbol": "Msat_OrderVarIsUsedInCone",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2376,
+      "End": 2453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::macro::Msat_OrderRingForEachEntry",
+      "Category": "macro-review",
+      "Symbol": "Msat_OrderRingForEachEntry",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2501,
+      "End": 2876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::Msat_OrderAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3594,
+      "End": 3832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::Msat_OrderSetBounds",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderSetBounds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4161,
+      "End": 4588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::ternary::Msat_OrderClean",
+      "Category": "ternary-review",
+      "Symbol": "Msat_OrderClean",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4854,
+      "End": 5144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::Msat_OrderClean",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4854,
+      "End": 5144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::ternary::Msat_OrderCheck",
+      "Category": "ternary-review",
+      "Symbol": "Msat_OrderCheck",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5415,
+      "End": 7715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::Msat_OrderCheck",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5415,
+      "End": 7715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::Msat_OrderFree",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7980,
+      "End": 8060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::ternary::Msat_OrderVarSelect",
+      "Category": "ternary-review",
+      "Symbol": "Msat_OrderVarSelect",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8332,
+      "End": 9109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::Msat_OrderVarSelect",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderVarSelect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8332,
+      "End": 9109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::Msat_OrderVarAssigned",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderVarAssigned",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9394,
+      "End": 10462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::Msat_OrderVarUnassigned",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderVarUnassigned",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10747,
+      "End": 12451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::Msat_OrderUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12737,
+      "End": 12791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::Msat_OrderRingAddLast",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderRingAddLast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13061,
+      "End": 13813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::Msat_OrderRingRemove",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderRingRemove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14080,
+      "End": 14898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderJ.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15146
+    }
+  ],
+  "Draft": "package msat\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [msatOrder.c]\n\n  PackageName [A C version of SAT solver MINISAT, originally developed \n  in C++ by Niklas Een and Niklas Sorensson, Chalmers University of \n  Technology, Sweden: http://www.cs.chalmers.se/~een/Satzoo.]\n\n  Synopsis    [The manager of variable assignment.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2004.]\n\n  Revision    [$Id: msatOrder.c,v 1.0 2005/05/30 1:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"msatInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/* \nThe J-boundary (justification boundary) is defined as a set of unassigned \nvariables belonging to the cone of interest, such that for each of them,\nthere exist an adjacent assigned variable in the cone of interest.\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Msat_OrderVar_t =  Msat_OrderVar_t_;\ntype Msat_OrderRing_t = Msat_OrderRing_t_;\n\n// the variable data structure\ntype Msat_OrderVar_t_ struct {\n    pNext     *Msat_OrderVar_t;\n    pPrev     *Msat_OrderVar_t;\n    Num                  int32;\n}\n\n// the ring of variables data structure (J-boundary)\ntype Msat_OrderRing_t_ struct {\n    pRoot     *Msat_OrderVar_t; \n    nItems                 int32;\n}\n\n// the variable package data structure\ntype Msat_Order_t_ struct {\n    pSat       *Msat_Solver_t;         // the SAT solver \n    pVars     *Msat_OrderVar_t;        // the storage for variables\n    nVarsAlloc                 int32;   // the number of variables allocated\n    rVars     Msat_OrderRing_t;        // the J-boundary as a ring of variables\n}\n\n//The solver can communicate to the variable order the following parts:\n//- the array of current assignments (pSat-\u003epAssigns)\n//- the array of variable activities (pSat-\u003epdActivity)\n//- the array of variables currently in the cone (pSat-\u003evConeVars)\n//- the array of arrays of variables adjucent to each(pSat-\u003evAdjacents)\n\n// Original macro:\n// #define Msat_OrderVarIsInBoundary( p, i )   ((p)-\u003epVars[i].pNext)\n\n// Original macro:\n// #define Msat_OrderVarIsAssigned( p, i )     ((p)-\u003epSat-\u003epAssigns[i] != MSAT_VAR_UNASSIGNED)\n\n// Original macro:\n// #define Msat_OrderVarIsUsedInCone( p, i )   ((p)-\u003epSat-\u003evVarsUsed-\u003epArray[i])\n\n\n// iterator through the entries in J-boundary\n// Original macro:\n// #define Msat_OrderRingForEachEntry( pRing, pVar, pNext )         \\\n//     for ( pVar = pRing,                                         \\\n//           pNext = pVar? pVar-\u003epNext : NULL;                     \\\n//           pVar;                                                 \\\n//           pVar = (pNext != pRing)? pNext : NULL,                \\\n//           pNext = pVar? pVar-\u003epNext : NULL )\n\n\n// static void Msat_OrderRingAddLast( Msat_OrderRing_t * pRing, Msat_OrderVar_t * pVar );\n\n// static void Msat_OrderRingRemove( Msat_OrderRing_t * pRing, Msat_OrderVar_t * pVar );\n\n\nvar timeSelect int64;\nvar timeAssign int64;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the ordering structure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderAlloc(pSat *Msat_Solver_t) *Msat_Order_t {\n    var p *Msat_Order_t;\n    p = ALLOC( Msat_Order_t, 1 );\n    memset( p, 0, sizeof(Msat_Order_t) );\n    p.pSat = pSat;\n    Msat_OrderSetBounds( p, pSat.nVarsAlloc );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the bound of the ordering structure.]\n\n  Description [Should be called whenever the SAT solver is resized.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderSetBounds(p *Msat_Order_t, nVarsMax int32) {\n    var i int32;\n    // add variables if they are missing\n    if p.nVarsAlloc \u003c nVarsMax {\n        p.pVars = REALLOC( Msat_OrderVar_t, p.pVars, nVarsMax );\n        for  i = p.nVarsAlloc; i \u003c nVarsMax; i++  {\n            p.pVars[i].pNext = p.pVars[i].pPrev = nil;\n            p.pVars[i].Num = i;\n        }\n        p.nVarsAlloc = nVarsMax;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans the ordering structure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderClean(p *Msat_Order_t, vCone *Msat_IntVec_t) {\n    var pVar, pNext *Msat_OrderVar_t;\n    // quickly undo the ring\n    // inlining of macro Msat_OrderRingForEachEntry\n    for  pVar = p.rVars.pRoot,                                                   pNext = pVar? pVar.pNext : nil;                               (pVar != nil);                                                           pVar = (pNext != p.rVars.pRoot)? pNext : nil,                          pNext = pVar? pVar.pNext : nil  {\n        pVar.pNext = pVar.pPrev = nil;\n    }\n    p.rVars.pRoot  = nil;\n    p.rVars.nItems = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks that the J-boundary is okay.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderCheck(p *Msat_Order_t) int32 {\n    var pVar, pNext *Msat_OrderVar_t;\n    var vRound *Msat_IntVec_t;\n    var pRound *int32;\n    var nRound int32;\n    var pVars *int32;\n    var nVars int32;\n    var i int32;\n    var k int32;\n    var Counter int32;\n\n    // go through all the variables in the boundary\n    // inlining of macro Msat_OrderRingForEachEntry\n    for  pVar = p.rVars.pRoot,                                                   pNext = pVar? pVar.pNext : nil;                               (pVar != nil);                                                           pVar = (pNext != p.rVars.pRoot)? pNext : nil,                          pNext = pVar? pVar.pNext : nil  {\n        // inlining of macro Msat_OrderVarIsAssigned\n        assert(!((p).pSat.pAssigns[pVar.Num] != MSAT_VAR_UNASSIGNED), \"!/*__starting_point_inline_macro:Msat_OrderVarIsAssigned__*/((p).pSat.pAssigns[pVar.Num] != MSAT_VAR_UNASSIGNED)\");\n        // go though all the variables in the neighborhood\n        // and check that it is true that there is least one assigned\n        vRound = (Msat_IntVec_t *)Msat_ClauseVecReadEntry( p.pSat.vAdjacents, pVar.Num );\n        nRound = Msat_IntVecReadSize( vRound );\n        pRound = Msat_IntVecReadArray( vRound );\n        for  i = 0; i \u003c nRound; i++  {\n            // inlining of macro Msat_OrderVarIsUsedInCone\n            if !((p).pSat.vVarsUsed.pArray[pRound[i]]) {\n                continue; }\n            // inlining of macro Msat_OrderVarIsAssigned\n            if  (p).pSat.pAssigns[pRound[i]] != MSAT_VAR_UNASSIGNED {\n                break; }\n        }\n//        assert( i != nRound );\n//        if ( i == nRound )\n//            return 0;\n        if i == nRound {\n            Counter++; }\n    }\n    if Counter \u003e 0 {\n        fmt.Printf(\"%d(%d) \", Counter, p.rVars.nItems); }\n\n    // we may also check other unassigned variables in the cone\n    // to make sure that if they are not in J-boundary, \n    // then they do not have an assigned neighbor\n    nVars = Msat_IntVecReadSize( p.pSat.vConeVars );\n    pVars = Msat_IntVecReadArray( p.pSat.vConeVars );\n    for  i = 0; i \u003c nVars; i++  {\n        // inlining of macro Msat_OrderVarIsUsedInCone\n        assert(((p).pSat.vVarsUsed.pArray[pVars[i]]), \"/*__starting_point_inline_macro:Msat_OrderVarIsUsedInCone__*/((p).pSat.vVarsUsed.pArray[pVars[i]])\");\n        // skip assigned vars, vars in the boundary, and vars not used in the cone\n        // inlining of macro Msat_OrderVarIsAssigned\n        if  ((p).pSat.pAssigns[pVars[i]] != MSAT_VAR_UNASSIGNED) || \n             // inlining of macro Msat_OrderVarIsInBoundary\n             ((p).pVars[pVars[i]].pNext) {\n            continue; }\n        // make sure, it does not have assigned neighbors\n        vRound = (Msat_IntVec_t *)Msat_ClauseVecReadEntry( p.pSat.vAdjacents, pVars[i] );\n        nRound = Msat_IntVecReadSize( vRound );\n        pRound = Msat_IntVecReadArray( vRound );\n        for  k = 0; k \u003c nRound; k++  {\n            // inlining of macro Msat_OrderVarIsUsedInCone\n            if !((p).pSat.vVarsUsed.pArray[pRound[k]]) {\n                continue; }\n            // inlining of macro Msat_OrderVarIsAssigned\n            if  (p).pSat.pAssigns[pRound[k]] != MSAT_VAR_UNASSIGNED {\n                break; }\n        }\n//        assert( k == nRound );\n//        if ( k != nRound )\n//            return 0;\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the ordering structure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderFree(p *Msat_Order_t) {\n    free( p.pVars );\n    free( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Selects the next variable to assign.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderVarSelect(p *Msat_Order_t) int32 {\n    var pVar, pNext, pVarBest *Msat_OrderVar_t;\n    var pdActs *float64  = p.pSat.pdActivity;\n    var dfActBest float64;\n//    clock_t clk = clock();\n\n    pVarBest = nil;\n    dfActBest = -1.0;\n    // inlining of macro Msat_OrderRingForEachEntry\n    for  pVar = p.rVars.pRoot,                                                   pNext = pVar? pVar.pNext : nil;                               (pVar != nil);                                                           pVar = (pNext != p.rVars.pRoot)? pNext : nil,                          pNext = pVar? pVar.pNext : nil  {\n        if dfActBest \u003c pdActs[pVar.Num] {\n            dfActBest = pdActs[pVar.Num];\n            pVarBest  = pVar;\n        }\n    }\n//timeSelect += clock() - clk;\n//timeAssign += clock() - clk;\n\n//if ( pVarBest \u0026\u0026 pVarBest-\u003eNum % 1000 == 0 )\n//printf( \"%d \", p-\u003erVars.nItems );\n\n//    Msat_OrderCheck( p );\n    if pVarBest != nil {\n        // inlining of macro Msat_OrderVarIsUsedInCone\n        assert(((p).pSat.vVarsUsed.pArray[pVarBest.Num]), \"/*__starting_point_inline_macro:Msat_OrderVarIsUsedInCone__*/((p).pSat.vVarsUsed.pArray[pVarBest.Num])\");\n        return pVarBest.Num;\n    }\n    return MSAT_ORDER_UNKNOWN;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates J-boundary when the variable is assigned.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderVarAssigned(p *Msat_Order_t, Var int32) {\n    var vRound *Msat_IntVec_t;\n    var i int32;//, clk = clock();\n\n    // make sure the variable is in the boundary\n    assert(Var \u003c p.nVarsAlloc, \"Var \u003c p.nVarsAlloc\");\n    // if it is not in the boundary (initial decision, random decision), do not remove\n    // inlining of macro Msat_OrderVarIsInBoundary\n    if  (p).pVars[Var].pNext {\n        Msat_OrderRingRemove( \u0026p.rVars, \u0026p.pVars[Var] ); }\n    // add to the boundary those neighbors that are (1) unassigned, (2) not in boundary\n    // because for them we know that there is a variable (Var) which is assigned\n    vRound = (Msat_IntVec_t *)p.pSat.vAdjacents.pArray[Var];\n    for  i = 0; i \u003c vRound.nSize; i++  {\n        // inlining of macro Msat_OrderVarIsUsedInCone\n        if !((p).pSat.vVarsUsed.pArray[vRound.pArray[i]]) {\n            continue; }\n        // inlining of macro Msat_OrderVarIsAssigned\n        if  (p).pSat.pAssigns[vRound.pArray[i]] != MSAT_VAR_UNASSIGNED {\n            continue; }\n        // inlining of macro Msat_OrderVarIsInBoundary\n        if  (p).pVars[vRound.pArray[i]].pNext {\n            continue; }\n        Msat_OrderRingAddLast( \u0026p.rVars, \u0026p.pVars[vRound.pArray[i]] );\n    }\n//timeSelect += clock() - clk;\n//    Msat_OrderCheck( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the order after a variable is unassigned.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderVarUnassigned(p *Msat_Order_t, Var int32) {\n    var vRound, vRound2 *Msat_IntVec_t;\n    var i, k int32;//, clk = clock();\n\n    // make sure the variable is not in the boundary\n    assert(Var \u003c p.nVarsAlloc, \"Var \u003c p.nVarsAlloc\");\n    // inlining of macro Msat_OrderVarIsInBoundary\n    assert(!((p).pVars[Var].pNext), \"!/*__starting_point_inline_macro:Msat_OrderVarIsInBoundary__*/((p).pVars[Var].pNext)\");\n    // go through its neigbors - if one of them is assigned add this var\n    // add to the boundary those neighbors that are not there already\n    // this will also get rid of variable outside of the current cone\n    // because they are unassigned in Msat_SolverPrepare()\n    vRound = (Msat_IntVec_t *)p.pSat.vAdjacents.pArray[Var];\n    for  i = 0; i \u003c vRound.nSize; i++  {\n        // inlining of macro Msat_OrderVarIsAssigned\n        if  (p).pSat.pAssigns[vRound.pArray[i]] != MSAT_VAR_UNASSIGNED { \n            break; }\n    }\n    if i != vRound.nSize {\n        Msat_OrderRingAddLast( \u0026p.rVars, \u0026p.pVars[Var] ); }\n\n    // unassigning a variable may lead to its adjacents dropping from the boundary\n    for  i = 0; i \u003c vRound.nSize; i++  {\n        // inlining of macro Msat_OrderVarIsInBoundary\n        if  (p).pVars[vRound.pArray[i]].pNext { // the neighbor is in the J-boundary (and unassigned)\n            // inlining of macro Msat_OrderVarIsAssigned\n            assert(!((p).pSat.pAssigns[vRound.pArray[i]] != MSAT_VAR_UNASSIGNED), \"!/*__starting_point_inline_macro:Msat_OrderVarIsAssigned__*/((p).pSat.pAssigns[vRound.pArray[i]] != MSAT_VAR_UNASSIGNED)\");\n            vRound2 = (Msat_IntVec_t *)p.pSat.vAdjacents.pArray[vRound.pArray[i]];\n            // go through its neighbors and determine if there is at least one assigned\n            for  k = 0; k \u003c vRound2.nSize; k++  {\n                // inlining of macro Msat_OrderVarIsAssigned\n                if  (p).pSat.pAssigns[vRound2.pArray[k]] != MSAT_VAR_UNASSIGNED { \n                    break; }\n            }\n            if k == vRound2.nSize { // there is no assigned vars, delete this one\n                Msat_OrderRingRemove( \u0026p.rVars, \u0026p.pVars[vRound.pArray[i]] ); }\n        }\n    }\n//timeSelect += clock() - clk;\n//    Msat_OrderCheck( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the order after a variable changed weight.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderUpdate(p *Msat_Order_t, Var int32) {\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Adds node to the end of the ring.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderRingAddLast(pRing *Msat_OrderRing_t, pVar *Msat_OrderVar_t) {\n//printf( \"adding %d\\n\", pVar-\u003eNum );\n    // check that the node is not in a ring\n    assert(pVar.pPrev == nil, \"pVar.pPrev == nil\");\n    assert(pVar.pNext == nil, \"pVar.pNext == nil\");\n    // if the ring is empty, make the node point to itself\n    pRing.nItems++;\n    if pRing.pRoot == nil {\n        pRing.pRoot  = pVar;\n        pVar.pPrev  = pVar;\n        pVar.pNext  = pVar;\n        return;\n    }\n    // if the ring is not empty, add it as the last entry\n    pVar.pPrev = pRing.pRoot.pPrev;\n    pVar.pNext = pRing.pRoot;\n    pVar.pPrev.pNext = pVar;\n    pVar.pNext.pPrev = pVar;\n\n    // move the root so that it points to the new entry\n//    pRing-\u003epRoot = pRing-\u003epRoot-\u003epPrev;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes the node from the ring.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderRingRemove(pRing *Msat_OrderRing_t, pVar *Msat_OrderVar_t) {\n//printf( \"removing %d\\n\", pVar-\u003eNum );\n    // check that the var is in a ring\n    assert(pVar.pPrev, \"pVar.pPrev\");\n    assert(pVar.pNext, \"pVar.pNext\");\n    pRing.nItems--;\n    if pRing.nItems == 0 {\n        assert(pRing.pRoot == pVar, \"pRing.pRoot == pVar\");\n        pVar.pPrev = nil;\n        pVar.pNext = nil;\n        pRing.pRoot = nil;\n        return;\n    }\n    // move the root if needed\n    if pRing.pRoot == pVar {\n        pRing.pRoot = pVar.pNext; }\n    // move the root to the next entry after pVar\n    // this way all the additions to the list will be traversed first\n//    pRing-\u003epRoot = pVar-\u003epPrev;\n    // delete the node\n    pVar.pPrev.pNext = pVar.pNext;\n    pVar.pNext.pPrev = pVar.pPrev;\n    pVar.pPrev = nil;\n    pVar.pNext = nil;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

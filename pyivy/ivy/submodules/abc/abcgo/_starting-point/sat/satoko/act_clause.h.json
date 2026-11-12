@@ -1,0 +1,71 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/act_clause.h",
+  "SHA256": "8c53d827eb14a79920c4ad589e711007db96c5e7370b985de7153bf42947d1ab",
+  "Functions": [
+    {
+      "Name": "clause_act_rescale",
+      "Start": 473,
+      "End": 790,
+      "BodyStart": 524,
+      "Original": "static inline void clause_act_rescale(solver_t *s)\n{\n    unsigned i, cref;\n    struct clause *clause;\n\n    vec_uint_foreach(s-\u003elearnts, cref, i) {\n        clause = clause_fetch(s, cref);\n        clause-\u003edata[clause-\u003esize].act \u003e\u003e= 10;\n    }\n    s-\u003eclause_act_inc = stk_uint_max((s-\u003eclause_act_inc \u003e\u003e 10), (1 \u003c\u003c 11));\n}",
+      "Draft": "func clause_act_rescale(s *solver_t) {\n    var i, cref uint32;\n    struct clause *clause;\n\n    // inlining of macro vec_uint_foreach\n    for i = 0; (i \u003c vec_uint_size(s.learnts)) \u0026\u0026 (((cref) = vec_uint_at(s.learnts, i)), 1); i++ {\n        clause = clause_fetch(s, cref);\n        clause.data[clause.size].act \u003e\u003e= 10;\n    }\n    s.clause_act_inc = stk_uint_max((s.clause_act_inc \u003e\u003e 10), (1 \u003c\u003c 11));\n}"
+    },
+    {
+      "Name": "clause_act_bump",
+      "Start": 792,
+      "End": 1007,
+      "BodyStart": 863,
+      "Original": "static inline void clause_act_bump(solver_t *s, struct clause *clause)\n{\n    clause-\u003edata[clause-\u003esize].act += s-\u003eclause_act_inc;\n    if (clause-\u003edata[clause-\u003esize].act \u0026 0x80000000)\n        clause_act_rescale(s);\n}",
+      "Draft": "static inline void clause_act_bump(solver_t *s, struct clause *clause)\n{\n    clause.data[clause.size].act += s.clause_act_inc;\n    if clause.data[clause.size].act \u0026 0x80000000 {\n        clause_act_rescale(s); }\n}"
+    },
+    {
+      "Name": "clause_act_decay",
+      "Start": 1009,
+      "End": 1113,
+      "BodyStart": 1058,
+      "Original": "static inline void clause_act_decay(solver_t *s)\n{\n    s-\u003eclause_act_inc += (s-\u003eclause_act_inc \u003e\u003e 10);\n}",
+      "Draft": "func clause_act_decay(s *solver_t) {\n    s.clause_act_inc += (s.clause_act_inc \u003e\u003e 10);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/act_clause.h::clause_act_rescale",
+      "Category": "semantic-review",
+      "Symbol": "clause_act_rescale",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 473,
+      "End": 790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/act_clause.h::clause_act_bump",
+      "Category": "semantic-review",
+      "Symbol": "clause_act_bump",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 792,
+      "End": 1007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/act_clause.h::clause_act_decay",
+      "Category": "semantic-review",
+      "Symbol": "clause_act_decay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1009,
+      "End": 1113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/act_clause.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1174
+    }
+  ],
+  "Draft": "package satoko\n\n//===--- act_var.h ----------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n\n\n\n//#include \"solver.h\"\n//#include \"types.h\"\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_HEADER_START\n\nfunc clause_act_rescale(s *solver_t) {\n    var i, cref uint32;\n    struct clause *clause;\n\n    // inlining of macro vec_uint_foreach\n    for i = 0; (i \u003c vec_uint_size(s.learnts)) \u0026\u0026 (((cref) = vec_uint_at(s.learnts, i)), 1); i++ {\n        clause = clause_fetch(s, cref);\n        clause.data[clause.size].act \u003e\u003e= 10;\n    }\n    s.clause_act_inc = stk_uint_max((s.clause_act_inc \u003e\u003e 10), (1 \u003c\u003c 11));\n}\n\nstatic inline void clause_act_bump(solver_t *s, struct clause *clause)\n{\n    clause.data[clause.size].act += s.clause_act_inc;\n    if clause.data[clause.size].act \u0026 0x80000000 {\n        clause_act_rescale(s); }\n}\n\nfunc clause_act_decay(s *solver_t) {\n    s.clause_act_inc += (s.clause_act_inc \u003e\u003e 10);\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

@@ -1,0 +1,898 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c",
+  "SHA256": "4dc02e9b5c78a081d2ca470fe22510f86e6abf8eb6198715ac560662e628b0e3",
+  "Library": [
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 51,
+        "Column": 26,
+        "ByteOffset": 1492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var nFrames int32  = strlen(pSim);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPiNum(p) == nInputs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Simulating string \\\"%s\\\":\\n\", pSim );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 74,
+        "Column": 9,
+        "ByteOffset": 2892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Frame %d : %c %d\\n\", i, pSim[i], Gia_ManPo(p, 0).fMark0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vLits) \u003e 0 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 125,
+        "Column": 24,
+        "ByteOffset": 4696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var Length int32 = strlen(pStr);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 143,
+        "Column": 25,
+        "ByteOffset": 5362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var nLength int32 = strlen(pStr);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 9,
+        "ByteOffset": 5420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d \\'%c\\' \", i, pStr[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 147,
+        "Column": 13,
+        "ByteOffset": 5513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"-\u003e %d \\'%c\\' \", Vec_IntEntry(vStaTrans, i), pStr[Vec_IntEntry(vStaTrans, i)] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 9,
+        "ByteOffset": 5612
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 5788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Reached from state %d \\'%c\\':  \", iState, pStr[iState] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 9,
+        "ByteOffset": 6016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d \\'%c\\'  \", Entry, pStr[Entry] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 6071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 5,
+        "ByteOffset": 7059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iState == 0 || !Gia_SymbSpecial(pStr[iState]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 176,
+        "Column": 5,
+        "ByteOffset": 7120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntEntry(vVisited, iState) != TravId );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 182,
+        "Column": 81,
+        "ByteOffset": 7459
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pCopy string  = /*__starting_point_inline_macro:ABC_CALLOC__*/((char *) calloc((size_t)(strlen(pStr) * 2 + 10), sizeof(char)));"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 182,
+        "Column": 97,
+        "ByteOffset": 7475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pCopy string  = /*__starting_point_inline_macro:ABC_CALLOC__*/((char *) calloc((size_t)(strlen(pStr) * 2 + 10), sizeof(char)));"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 212,
+        "Column": 25,
+        "ByteOffset": 8487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var nLength int32 = strlen(pStr);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 218,
+        "Column": 9,
+        "ByteOffset": 8617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Input variable order: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 220,
+        "Column": 13,
+        "ByteOffset": 8820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", byte(Entry) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 9,
+        "ByteOffset": 8867
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 9956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vStack) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 301,
+        "Column": 9,
+        "ByteOffset": 12207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Init state = %s\\n\", Vec_StrArray(vInit) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 305,
+        "Column": 5,
+        "ByteOffset": 12341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vStaLits) == nStates + 1 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 340,
+        "Column": 60,
+        "ByteOffset": 13699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pStr) ? (free((char *) (pStr)), (pStr) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 396,
+        "Column": 5,
+        "ByteOffset": 15335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(p) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 397,
+        "Column": 5,
+        "ByteOffset": 15371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_WrdSize(vTemp) \u003e= Gia_ManObjNum(p) );"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 446,
+        "Column": 112,
+        "ByteOffset": 17772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if CountMin \u003e Count || (CountMin != ABC_INFINITY \u0026\u0026 Count \u0026\u0026 (float32(CountMin) / Count) \u003e float32(rand())/RAND_MAX ) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 458,
+        "Column": 21,
+        "ByteOffset": 18154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%c\", 'a' + k );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 459,
+        "Column": 21,
+        "ByteOffset": 18199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"!\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 464,
+        "Column": 9,
+        "ByteOffset": 18295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( CountMin \u003c ABC_INFINITY );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 466,
+        "Column": 13,
+        "ByteOffset": 18370
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( CountMin == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 475,
+        "Column": 9,
+        "ByteOffset": 18731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c\", 'a' + kMin );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 477,
+        "Column": 13,
+        "ByteOffset": 18810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"!\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 479,
+        "Column": 5,
+        "ByteOffset": 18837
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 505,
+        "Column": 9,
+        "ByteOffset": 19885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"AIG should have one primary output.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 509,
+        "Column": 9,
+        "ByteOffset": 19996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot simulate an automaton with more than 64 inputs.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 513,
+        "Column": 9,
+        "ByteOffset": 20127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot simulate an automaton with more than 63 states.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 529,
+        "Column": 13,
+        "ByteOffset": 20785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%3d : \", i );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 530,
+        "Column": 32,
+        "ByteOffset": 20839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Extra_PrintBinary( stdout, (unsigned *)\u0026State, 64 ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 531,
+        "Column": 13,
+        "ByteOffset": 20886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %d  \", Vec_IntEntry(vCounts, i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 532,
+        "Column": 13,
+        "ByteOffset": 20943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 534,
+        "Column": 9,
+        "ByteOffset": 20977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManAutomSimulate",
+      "Start": 1287,
+      "End": 2351,
+      "BodyStart": 1363,
+      "Original": "void Gia_ManAutomSimulate( Gia_Man_t * p, Vec_Int_t * vAlpha, char * pSim )\n{\n    Gia_Obj_t * pObj, * pObjRi, * pObjRo;\n    int nInputs = Vec_IntSize(vAlpha);\n    int nFrames = strlen(pSim);\n    int i, k;\n    assert( Gia_ManPiNum(p) == nInputs );\n    printf( \"Simulating string \\\"%s\\\":\\n\", pSim );\n    Gia_ManCleanMark0(p);\n    Gia_ManForEachRo( p, pObj, i )\n        pObj-\u003efMark0 = 0;\n    for ( i = 0; i \u003c nFrames; i++ )\n    {\n        Gia_ManForEachPi( p, pObj, k )\n            pObj-\u003efMark0 = (int)(Vec_IntFind(vAlpha, pSim[i]) == k);\n        Gia_ManForEachAnd( p, pObj, k )\n            pObj-\u003efMark0 = (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 \n                           (Gia_ObjFanin1(pObj)-\u003efMark0 ^ Gia_ObjFaninC1(pObj));\n        Gia_ManForEachCo( p, pObj, k )\n            pObj-\u003efMark0 = Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj);\n        Gia_ManForEachRiRo( p, pObjRi, pObjRo, k )\n            pObjRo-\u003efMark0 = pObjRi-\u003efMark0;\n\n        printf( \"Frame %d : %c %d\\n\", i, pSim[i], Gia_ManPo(p, 0)-\u003efMark0 );\n    }\n    Gia_ManCleanMark0(p);\n}",
+      "Draft": "func Gia_ManAutomSimulate(p *Gia_Man_t, vAlpha *Vec_Int_t, pSim string) {\n    var pObj, pObjRi, pObjRo *Gia_Obj_t;\n    var nInputs int32  = Vec_IntSize(vAlpha);\n    var nFrames int32  = len(pSim);\n    var i, k int32;\n    assert(Gia_ManPiNum(p) == nInputs, \"Gia_ManPiNum(p) == nInputs\");\n    fmt.Printf(\"Simulating string \\\"%s\\\":\\n\", pSim);\n    Gia_ManCleanMark0(p);\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        pObj.fMark0 = 0;\n    }\n    for  i = 0; i \u003c nFrames; i++  {\n        // inlining of macro Gia_ManForEachPi\n        for  k = 0; (k \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, k)); k++  {\n            pObj.fMark0 = int32((Vec_IntFind(vAlpha, pSim[i]) == k));\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  k = 0; (k \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, k)); k++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 \n                           (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)); }\n        }\n        // inlining of macro Gia_ManForEachCo\n        for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, k)); k++  {\n            pObj.fMark0 = Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj);\n        }\n        // inlining of macro Gia_ManForEachRiRo\n        for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {\n            pObjRo.fMark0 = pObjRi.fMark0;\n        }\n\n        fmt.Printf(\"Frame %d : %c %d\\n\", i, pSim[i], Gia_ManPo(p, 0).fMark0);\n    }\n    Gia_ManCleanMark0(p);\n}"
+    },
+    {
+      "Name": "Gia_ManBuild1Hot_rec",
+      "Start": 2614,
+      "End": 3164,
+      "BodyStart": 2706,
+      "Original": "void Gia_ManBuild1Hot_rec( Gia_Man_t * p, int * pLits, int nLits, int * pZero, int * pOne )\n{\n    int Zero0, One0, Zero1, One1;\n    if ( nLits == 1 )\n    {\n        *pZero = Abc_LitNot(pLits[0]);\n        *pOne  = pLits[0];\n        return;\n    }\n    Gia_ManBuild1Hot_rec( p, pLits,           nLits/2,         \u0026Zero0, \u0026One0 );\n    Gia_ManBuild1Hot_rec( p, pLits + nLits/2, nLits - nLits/2, \u0026Zero1, \u0026One1 );\n    *pZero = Gia_ManHashAnd( p, Zero0, Zero1 );\n    *pOne  = Gia_ManHashOr( p, Gia_ManHashAnd(p, Zero0, One1), Gia_ManHashAnd(p, Zero1, One0) );\n}",
+      "Draft": "func Gia_ManBuild1Hot_rec(p *Gia_Man_t, pLits *int32, nLits int32, pZero *int32, pOne *int32) {\n    var Zero0, One0, Zero1, One1 int32;\n    if nLits == 1 {\n        *pZero = Abc_LitNot(pLits[0]);\n        *pOne  = pLits[0];\n        return;\n    }\n    Gia_ManBuild1Hot_rec( p, pLits,           nLits/2,         \u0026Zero0, \u0026One0 );\n    Gia_ManBuild1Hot_rec( p, pLits + nLits/2, nLits - nLits/2, \u0026Zero1, \u0026One1 );\n    *pZero = Gia_ManHashAnd( p, Zero0, Zero1 );\n    *pOne  = Gia_ManHashOr( p, Gia_ManHashAnd(p, Zero0, One1), Gia_ManHashAnd(p, Zero1, One0) );\n}"
+    },
+    {
+      "Name": "Gia_ManBuild1Hot",
+      "Start": 3165,
+      "End": 3383,
+      "BodyStart": 3222,
+      "Original": "int Gia_ManBuild1Hot( Gia_Man_t * p, Vec_Int_t * vLits )\n{\n    int Zero, One;\n    assert( Vec_IntSize(vLits) \u003e 0 );\n    Gia_ManBuild1Hot_rec( p, Vec_IntArray(vLits), Vec_IntSize(vLits), \u0026Zero, \u0026One );\n    return One;\n}",
+      "Draft": "func Gia_ManBuild1Hot(p *Gia_Man_t, vLits *Vec_Int_t) int32 {\n    var Zero, One int32;\n    assert(Vec_IntSize(vLits) \u003e 0, \"Vec_IntSize(vLits) \u003e 0\");\n    Gia_ManBuild1Hot_rec( p, Vec_IntArray(vLits), Vec_IntSize(vLits), \u0026Zero, \u0026One );\n    return One;\n}"
+    },
+    {
+      "Name": "Gia_SymbSpecial",
+      "Start": 3734,
+      "End": 3834,
+      "BodyStart": 3778,
+      "Original": "static inline int Gia_SymbSpecial( char c ) { return c == '(' || c == ')' || c == '*' || c == '|'; }",
+      "Draft": "func Gia_SymbSpecial(c byte) int32 { return c == '(' || c == ')' || c == '*' || c == '|'; }"
+    },
+    {
+      "Name": "Gia_ManRexNumInputs",
+      "Start": 3900,
+      "End": 4563,
+      "BodyStart": 3986,
+      "Original": "int Gia_ManRexNumInputs( char * pStr, Vec_Int_t ** pvAlphas, Vec_Int_t ** pvStr2Sta )\n{\n    int i, nStates = 0, Length = strlen(pStr);\n    Vec_Int_t * vAlphas  = Vec_IntAlloc( 100 );            // alphabet\n    Vec_Int_t * vStr2Sta = Vec_IntStartFull( Length + 1 ); // symbol to state\n    for ( i = 0; i \u003c Length; i++ )\n    {\n        if ( Gia_SymbSpecial(pStr[i]) )\n            continue;\n        if ( Vec_IntFind(vAlphas, pStr[i]) == -1 )\n            Vec_IntPush( vAlphas, pStr[i] );\n        Vec_IntWriteEntry( vStr2Sta, i, nStates++ );\n    }\n    Vec_IntWriteEntry( vStr2Sta, i, nStates );\n    *pvAlphas  = vAlphas;\n    *pvStr2Sta = vStr2Sta;\n    return nStates;\n}",
+      "Draft": "func Gia_ManRexNumInputs(pStr string, pvAlphas **Vec_Int_t, pvStr2Sta **Vec_Int_t) int32 {\n    var i int32;\n    var nStates int32;\n    var Length int32 = len(pStr);\n    var vAlphas *Vec_Int_t   = Vec_IntAlloc( 100 );            // alphabet\n    var vStr2Sta *Vec_Int_t  = Vec_IntStartFull( Length + 1 ); // symbol to state\n    for  i = 0; i \u003c Length; i++  {\n        if Gia_SymbSpecial(pStr[i]) != 0 {\n            continue; }\n        if Vec_IntFind(vAlphas, pStr[i]) == -1 {\n            Vec_IntPush( vAlphas, pStr[i] ); }\n        Vec_IntWriteEntry( vStr2Sta, i, nStates++ );\n    }\n    Vec_IntWriteEntry( vStr2Sta, i, nStates );\n    *pvAlphas  = vAlphas;\n    *pvStr2Sta = vStr2Sta;\n    return nStates;\n}"
+    },
+    {
+      "Name": "Gia_ManPrintAutom",
+      "Start": 4584,
+      "End": 4951,
+      "BodyStart": 4645,
+      "Original": "void Gia_ManPrintAutom( char * pStr, Vec_Int_t * vStaTrans )\n{\n    int i = 0, nLength = strlen(pStr);\n    for ( i = 0; i \u003c nLength; i++ )\n    {\n        printf( \"%d \\'%c\\' \", i, pStr[i] );\n        if ( Vec_IntEntry(vStaTrans, i) \u003e= 0 )\n            printf( \"-\u003e %d \\'%c\\' \", Vec_IntEntry(vStaTrans, i), pStr[Vec_IntEntry(vStaTrans, i)] );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Gia_ManPrintAutom(pStr string, vStaTrans *Vec_Int_t) {\n    var i int32;\n    var nLength int32 = len(pStr);\n    for  i = 0; i \u003c nLength; i++  {\n        fmt.Printf(\"%d \\'%c\\' \", i, pStr[i]);\n        if Vec_IntEntry(vStaTrans, i) \u003e= 0 {\n            fmt.Printf(\"-\u003e %d \\'%c\\' \", Vec_IntEntry(vStaTrans, i), pStr[Vec_IntEntry(vStaTrans, i)]); }\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManPrintReached",
+      "Start": 5001,
+      "End": 5286,
+      "BodyStart": 5075,
+      "Original": "void Gia_ManPrintReached( char * pStr, int iState, Vec_Int_t * vReached )\n{\n    int i, Entry;\n    printf( \"Reached from state %d \\'%c\\':  \", iState, pStr[iState] );\n    Vec_IntForEachEntry( vReached, Entry, i )\n        printf( \"%d \\'%c\\'  \", Entry, pStr[Entry] );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Gia_ManPrintReached(pStr string, iState int32, vReached *Vec_Int_t) {\n    var i, Entry int32;\n    fmt.Printf(\"Reached from state %d \\'%c\\':  \", iState, pStr[iState]);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vReached)) \u0026\u0026 (((Entry) = Vec_IntEntry(vReached, i)), 1); i++  {\n        fmt.Printf(\"%d \\'%c\\'  \", Entry, pStr[Entry]);\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Gia_ManPrintReached_rec",
+      "Start": 5351,
+      "End": 6119,
+      "BodyStart": 5486,
+      "Original": "void Gia_ManPrintReached_rec( char * pStr, Vec_Int_t * vStaTrans, int iState, Vec_Int_t * vReached, Vec_Int_t * vVisited, int TravId )\n{\n    if ( Vec_IntEntry(vVisited, iState) == TravId )\n        return;\n    Vec_IntWriteEntry( vVisited, iState, TravId );\n    if ( !Gia_SymbSpecial(pStr[iState]) ) // read state\n        Vec_IntPush( vReached, iState );\n    if ( pStr[iState] == '\\0' )\n        return;\n    if ( Gia_SymbSpecial(pStr[iState]) \u0026\u0026 pStr[iState] != '|' ) // regular e-transition\n       Gia_ManPrintReached_rec( pStr, vStaTrans, iState + 1, vReached, vVisited, TravId );\n    if ( Vec_IntEntry(vStaTrans, iState) \u003e= 0 ) // additional e-transition\n       Gia_ManPrintReached_rec( pStr, vStaTrans, Vec_IntEntry(vStaTrans, iState), vReached, vVisited, TravId );\n}",
+      "Draft": "func Gia_ManPrintReached_rec(pStr string, vStaTrans *Vec_Int_t, iState int32, vReached *Vec_Int_t, vVisited *Vec_Int_t, TravId int32) {\n    if Vec_IntEntry(vVisited, iState) == TravId {\n        return; }\n    Vec_IntWriteEntry( vVisited, iState, TravId );\n    if !(Gia_SymbSpecial(pStr[iState]) != 0) { // read state\n        Vec_IntPush( vReached, iState ); }\n    if pStr[iState] == '\\0' {\n        return; }\n    if (Gia_SymbSpecial(pStr[iState]) != 0) \u0026\u0026 pStr[iState] != '|' { // regular e-transition\n       Gia_ManPrintReached_rec( pStr, vStaTrans, iState + 1, vReached, vVisited, TravId ); }\n    if Vec_IntEntry(vStaTrans, iState) \u003e= 0 { // additional e-transition\n       Gia_ManPrintReached_rec( pStr, vStaTrans, Vec_IntEntry(vStaTrans, iState), vReached, vVisited, TravId ); }\n}"
+    },
+    {
+      "Name": "Gia_ManCollectReached",
+      "Start": 6120,
+      "End": 6491,
+      "BodyStart": 6253,
+      "Original": "void Gia_ManCollectReached( char * pStr, Vec_Int_t * vStaTrans, int iState, Vec_Int_t * vReached, Vec_Int_t * vVisited, int TravId )\n{\n    assert( iState == 0 || !Gia_SymbSpecial(pStr[iState]) );\n    assert( Vec_IntEntry(vVisited, iState) != TravId );\n    Vec_IntClear( vReached );\n    Gia_ManPrintReached_rec( pStr, vStaTrans, iState + 1, vReached, vVisited, TravId );\n}",
+      "Draft": "func Gia_ManCollectReached(pStr string, vStaTrans *Vec_Int_t, iState int32, vReached *Vec_Int_t, vVisited *Vec_Int_t, TravId int32) {\n    assert(iState == 0 || !(Gia_SymbSpecial(pStr[iState]) != 0), \"iState == 0 || !Gia_SymbSpecial(pStr[iState])\");\n    assert(Vec_IntEntry(vVisited, iState) != TravId, \"Vec_IntEntry(vVisited, iState) != TravId\");\n    Vec_IntClear( vReached );\n    Gia_ManPrintReached_rec( pStr, vStaTrans, iState + 1, vReached, vVisited, TravId );\n}"
+    },
+    {
+      "Name": "Gia_ManRexPreprocess",
+      "Start": 6531,
+      "End": 7076,
+      "BodyStart": 6574,
+      "Original": "char * Gia_ManRexPreprocess( char * pStr )\n{\n    char * pCopy = ABC_CALLOC( char, strlen(pStr) * 2 + 10 );\n    int i, k = 0;\n    pCopy[k++] = '(';\n    pCopy[k++] = '(';\n    for ( i = 0; pStr[i]; i++ )\n    {\n        if ( pStr[i] == '(' )\n            pCopy[k++] = '(';\n        else if ( pStr[i] == ')' )\n            pCopy[k++] = ')';\n        if ( pStr[i] != ' ' \u0026\u0026 pStr[i] != '\\t' \u0026\u0026 pStr[i] != '\\n' \u0026\u0026 pStr[i] != '\\r' )\n            pCopy[k++] = pStr[i];\n    }\n    pCopy[k++] = ')';\n    pCopy[k++] = ')';\n    pCopy[k++] = '\\0';\n    return pCopy;\n}",
+      "Draft": "func Gia_ManRexPreprocess(pStr string) string {\n    // inlining of macro ABC_CALLOC\n    var pCopy string  = ((char *) calloc((size_t)(len(pStr) * 2 + 10), sizeof(char)));\n    var i, k int32;\n    pCopy[k++] = '(';\n    pCopy[k++] = '(';\n    for  i = 0; pStr[i]; i++  {\n        if pStr[i] == '(' {\n            pCopy[k++] = '(';\n        } else if pStr[i] == ')' {\n            pCopy[k++] = ')'; }\n        if pStr[i] != ' ' \u0026\u0026 pStr[i] != '\\t' \u0026\u0026 pStr[i] != '\\n' \u0026\u0026 pStr[i] != '\\r' {\n            pCopy[k++] = pStr[i]; }\n    }\n    pCopy[k++] = ')';\n    pCopy[k++] = ')';\n    pCopy[k++] = '\\0';\n    return pCopy;\n}"
+    },
+    {
+      "Name": "Gia_ManRex2Gia",
+      "Start": 7123,
+      "End": 12161,
+      "BodyStart": 7195,
+      "Original": "Gia_Man_t * Gia_ManRex2Gia( char * pStrInit, int fOrder, int fVerbose )\n{\n    Gia_Man_t * pNew = NULL, * pTemp; \n    Vec_Int_t * vAlphas, * vStr2Sta, * vStaLits;\n    Vec_Int_t * vStaTrans, * vStack, * vVisited;\n    Vec_Str_t * vInit;\n    char * pStr = Gia_ManRexPreprocess( pStrInit );\n    int nStates = Gia_ManRexNumInputs( pStr, \u0026vAlphas, \u0026vStr2Sta );\n    int i, k, iLit, Entry, nLength = strlen(pStr), nTravId = 1;\n    if ( fOrder )\n        Vec_IntSort( vAlphas, 0 );\n//    if ( fVerbose )\n    {\n        printf( \"Input variable order: \" );\n        Vec_IntForEachEntry( vAlphas, Entry, k )\n            printf( \"%c\", (char)Entry );\n        printf( \"\\n\" );\n    }\n    // start AIG\n    pNew = Gia_ManStart( 1000 );\n    pNew-\u003epName = Abc_UtilStrsav( pStrInit );\n    for ( i = 0; i \u003c Vec_IntSize(vAlphas) + nStates; i++ )\n        Gia_ManAppendCi( pNew );\n    // prepare automaton\n    vStaLits  = Vec_IntStart( nStates + 1 );\n    vStaTrans = Vec_IntStartFull( nLength );\n    vStack    = Vec_IntAlloc( nLength );\n    vVisited  = Vec_IntStartFull( nLength + 1 );\n    for ( i = 0; i \u003c nLength; i++ )\n    {\n        int Lp = i;\n        if ( pStr[i] == '(' || pStr[i] == '|' )\n            Vec_IntPush( vStack, i );\n        else if ( pStr[i] == ')' )\n        {\n            int Or = Vec_IntPop( vStack );\n            if ( pStr[Or] == '|' )\n            {\n                Lp = Vec_IntPop( vStack );\n                Vec_IntWriteEntry( vStaTrans, Lp, Or + 1 );\n                Vec_IntWriteEntry( vStaTrans, Or, i );\n            }\n            else\n                Lp = Or;\n        }\n        if ( i \u003c nLength - 1 \u0026\u0026 pStr[i+1] == '*' )\n        {\n            Vec_IntWriteEntry( vStaTrans, Lp, i+1 );\n            Vec_IntWriteEntry( vStaTrans, i+1, Lp );\n        }\n    }\n    assert( Vec_IntSize(vStack) == 0 );\n    if ( fVerbose )\n        Gia_ManPrintAutom( pStr, vStaTrans );\n\n    // create next-state functions for each state\n    Gia_ManHashAlloc( pNew );\n    for ( i = 1; i \u003c nLength; i++ )\n    {\n        int iThis, iThat, iThisLit, iInputLit;\n        if ( Gia_SymbSpecial(pStr[i]) )\n            continue;\n        Gia_ManCollectReached( pStr, vStaTrans, i, vStack, vVisited, nTravId++ );\n        if ( fVerbose )\n            Gia_ManPrintReached( pStr, i, vStack );\n        // create transitions from this state under this input\n        iThis = Vec_IntEntry(vStr2Sta, i);\n        iThisLit = Gia_Obj2Lit(pNew, Gia_ManPi(pNew, Vec_IntSize(vAlphas) + iThis));\n        iInputLit = Gia_Obj2Lit(pNew, Gia_ManPi(pNew, Vec_IntFind(vAlphas, pStr[i])));\n        iLit = Gia_ManHashAnd( pNew, iThisLit, iInputLit );\n        Vec_IntForEachEntry( vStack, Entry, k )\n        {\n            iThat = Vec_IntEntry(vStr2Sta, Entry);\n            iLit = Gia_ManHashOr( pNew, iLit, Vec_IntEntry(vStaLits, iThat) );\n            Vec_IntWriteEntry( vStaLits, iThat, iLit );\n        }\n    }\n    // create one-hotness\n    Vec_IntClear( vStack );\n    for ( i = 0; i \u003c Vec_IntSize(vAlphas); i++ )\n        Vec_IntPush( vStack, Gia_Obj2Lit(pNew, Gia_ManPi(pNew, i)) );\n    iLit = Gia_ManBuild1Hot( pNew, vStack );\n    // combine with outputs\n    Vec_IntForEachEntry( vStaLits, Entry, k )\n        Vec_IntWriteEntry( vStaLits, k, Gia_ManHashAnd(pNew, iLit, Entry) );\n    Gia_ManHashStop( pNew );\n\n    // collect initial state\n    Gia_ManCollectReached( pStr, vStaTrans, 0, vStack, vVisited, nTravId++ );\n    if ( fVerbose )\n        Gia_ManPrintReached( pStr, 0, vStack );\n    vInit = Vec_StrStart( nStates + 1 );\n    Vec_StrFill( vInit, nStates, '0' );\n    Vec_IntForEachEntry( vStack, Entry, k )\n        if ( pStr[Entry] != '\\0' )\n            Vec_StrWriteEntry( vInit, Vec_IntEntry(vStr2Sta, Entry), '1' );\n    if ( fVerbose )\n        printf( \"Init state = %s\\n\", Vec_StrArray(vInit) );\n\n    // add outputs\n    Vec_IntPushFirst( vStaLits, Vec_IntPop(vStaLits) );\n    assert( Vec_IntSize(vStaLits) == nStates + 1 );\n    Vec_IntForEachEntry( vStaLits, iLit, i )\n        Gia_ManAppendCo( pNew, iLit );\n    Gia_ManSetRegNum( pNew, nStates );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n\n    // add initial state\n    pNew = Gia_ManDupZeroUndc( pTemp = pNew, Vec_StrArray(vInit), 0, 0, 0 );\n    Gia_ManStop( pTemp );\n    Vec_StrFree( vInit );\n/*\n    Gia_ManAutomSimulate( pNew, vAlphas, \"0\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"01\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"110\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"011\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"111\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"1111\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"1010\" );\n\n    Gia_ManAutomSimulate( pNew, vAlphas, \"A\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"AD\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"ABCD\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"BCD\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"CD\" );\n*/\n\n    // cleanup\n    Vec_IntFree( vAlphas );\n    Vec_IntFree( vStr2Sta );\n    Vec_IntFree( vStaLits );\n    Vec_IntFree( vStaTrans );\n    Vec_IntFree( vStack );\n    Vec_IntFree( vVisited );\n    ABC_FREE( pStr );\n    return pNew;\n}",
+      "Draft": "func Gia_ManRex2Gia(pStrInit string, fOrder int32, fVerbose int32) *Gia_Man_t {\n    var pNew *Gia_Man_t = nil;\n    var pTemp *Gia_Man_t; \n    var vAlphas, vStr2Sta, vStaLits *Vec_Int_t;\n    var vStaTrans, vStack, vVisited *Vec_Int_t;\n    var vInit *Vec_Str_t;\n    var pStr string  = Gia_ManRexPreprocess( pStrInit );\n    var nStates int32  = Gia_ManRexNumInputs( pStr, \u0026vAlphas, \u0026vStr2Sta );\n    var i int32;\n    var k int32;\n    var iLit int32;\n    var Entry int32;\n    var nLength int32 = len(pStr);\n    var nTravId int32 = 1;\n    if fOrder != 0 {\n        Vec_IntSort( vAlphas, 0 ); }\n//    if ( fVerbose )\n    {\n        fmt.Printf(\"Input variable order: \");\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vAlphas)) \u0026\u0026 (((Entry) = Vec_IntEntry(vAlphas, k)), 1); k++  {\n            fmt.Printf(\"%c\", byte(Entry));\n        }\n        fmt.Printf(\"\\n\");\n    }\n    // start AIG\n    pNew = Gia_ManStart( 1000 );\n    pNew.pName = Abc_UtilStrsav( pStrInit );\n    for  i = 0; i \u003c Vec_IntSize(vAlphas) + nStates; i++  {\n        Gia_ManAppendCi( pNew );\n    }\n    // prepare automaton\n    vStaLits  = Vec_IntStart( nStates + 1 );\n    vStaTrans = Vec_IntStartFull( nLength );\n    vStack    = Vec_IntAlloc( nLength );\n    vVisited  = Vec_IntStartFull( nLength + 1 );\n    for  i = 0; i \u003c nLength; i++  {\n        var Lp int32  = i;\n        if pStr[i] == '(' || pStr[i] == '|' {\n            Vec_IntPush( vStack, i );\n        } else if pStr[i] == ')' {\n            var Or int32  = Vec_IntPop( vStack );\n            if pStr[Or] == '|' {\n                Lp = Vec_IntPop( vStack );\n                Vec_IntWriteEntry( vStaTrans, Lp, Or + 1 );\n                Vec_IntWriteEntry( vStaTrans, Or, i );\n            \n            } else {\n                Lp = Or; }\n        }\n        if i \u003c nLength - 1 \u0026\u0026 pStr[i+1] == '*' {\n            Vec_IntWriteEntry( vStaTrans, Lp, i+1 );\n            Vec_IntWriteEntry( vStaTrans, i+1, Lp );\n        }\n    }\n    assert(Vec_IntSize(vStack) == 0, \"Vec_IntSize(vStack) == 0\");\n    if fVerbose != 0 {\n        Gia_ManPrintAutom( pStr, vStaTrans ); }\n\n    // create next-state functions for each state\n    Gia_ManHashAlloc( pNew );\n    for  i = 1; i \u003c nLength; i++  {\n        var iThis, iThat, iThisLit, iInputLit int32;\n        if Gia_SymbSpecial(pStr[i]) != 0 {\n            continue; }\n        Gia_ManCollectReached( pStr, vStaTrans, i, vStack, vVisited, nTravId++ );\n        if fVerbose != 0 {\n            Gia_ManPrintReached( pStr, i, vStack ); }\n        // create transitions from this state under this input\n        iThis = Vec_IntEntry(vStr2Sta, i);\n        iThisLit = Gia_Obj2Lit(pNew, Gia_ManPi(pNew, Vec_IntSize(vAlphas) + iThis));\n        iInputLit = Gia_Obj2Lit(pNew, Gia_ManPi(pNew, Vec_IntFind(vAlphas, pStr[i])));\n        iLit = Gia_ManHashAnd( pNew, iThisLit, iInputLit );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vStack)) \u0026\u0026 (((Entry) = Vec_IntEntry(vStack, k)), 1); k++  {\n            iThat = Vec_IntEntry(vStr2Sta, Entry);\n            iLit = Gia_ManHashOr( pNew, iLit, Vec_IntEntry(vStaLits, iThat) );\n            Vec_IntWriteEntry( vStaLits, iThat, iLit );\n        }\n    }\n    // create one-hotness\n    Vec_IntClear( vStack );\n    for  i = 0; i \u003c Vec_IntSize(vAlphas); i++  {\n        Vec_IntPush( vStack, Gia_Obj2Lit(pNew, Gia_ManPi(pNew, i)) );\n    }\n    iLit = Gia_ManBuild1Hot( pNew, vStack );\n    // combine with outputs\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vStaLits)) \u0026\u0026 (((Entry) = Vec_IntEntry(vStaLits, k)), 1); k++  {\n        Vec_IntWriteEntry( vStaLits, k, Gia_ManHashAnd(pNew, iLit, Entry) );\n    }\n    Gia_ManHashStop( pNew );\n\n    // collect initial state\n    Gia_ManCollectReached( pStr, vStaTrans, 0, vStack, vVisited, nTravId++ );\n    if fVerbose != 0 {\n        Gia_ManPrintReached( pStr, 0, vStack ); }\n    vInit = Vec_StrStart( nStates + 1 );\n    Vec_StrFill( vInit, nStates, '0' );\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vStack)) \u0026\u0026 (((Entry) = Vec_IntEntry(vStack, k)), 1); k++  {\n        if pStr[Entry] != '\\0' {\n            Vec_StrWriteEntry( vInit, Vec_IntEntry(vStr2Sta, Entry), '1' ); }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Init state = %s\\n\", Vec_StrArray(vInit)); }\n\n    // add outputs\n    Vec_IntPushFirst( vStaLits, Vec_IntPop(vStaLits) );\n    assert(Vec_IntSize(vStaLits) == nStates + 1, \"Vec_IntSize(vStaLits) == nStates + 1\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vStaLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vStaLits, i)), 1); i++  {\n        Gia_ManAppendCo( pNew, iLit );\n    }\n    Gia_ManSetRegNum( pNew, nStates );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n\n    // add initial state\n    pNew = Gia_ManDupZeroUndc( pTemp = pNew, Vec_StrArray(vInit), 0, 0, 0 );\n    Gia_ManStop( pTemp );\n    Vec_StrFree( vInit );\n/*\n    Gia_ManAutomSimulate( pNew, vAlphas, \"0\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"01\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"110\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"011\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"111\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"1111\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"1010\" );\n\n    Gia_ManAutomSimulate( pNew, vAlphas, \"A\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"AD\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"ABCD\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"BCD\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"CD\" );\n*/\n\n    // cleanup\n    Vec_IntFree( vAlphas );\n    Vec_IntFree( vStr2Sta );\n    Vec_IntFree( vStaLits );\n    Vec_IntFree( vStaTrans );\n    Vec_IntFree( vStack );\n    Vec_IntFree( vVisited );\n    // inlining of macro ABC_FREE\n    ((pStr) ? (free((char *) (pStr)), (pStr) = 0) : 0);\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManAutomTranspose64",
+      "Start": 12474,
+      "End": 12824,
+      "BodyStart": 12517,
+      "Original": "void Gia_ManAutomTranspose64( word A[64] )\n{\n    int j, k;\n    word t, m = 0x00000000FFFFFFFF;\n    for ( j = 32; j != 0; j = j \u003e\u003e 1, m = m ^ (m \u003c\u003c j) )\n    {\n        for ( k = 0; k \u003c 64; k = (k + j + 1) \u0026 ~j )\n        {\n            t = (A[k] ^ (A[k+j] \u003e\u003e j)) \u0026 m;\n            A[k] = A[k] ^ t;\n            A[k+j] = A[k+j] ^ (t \u003c\u003c j);\n        }\n    }\n}",
+      "Draft": "func Gia_ManAutomTranspose64(A []word) {\n    var j, k int32;\n    var t word;\n    var m word = 0x00000000FFFFFFFF;\n    for  j = 32; j != 0; j = j \u003e\u003e 1, m = m ^ (m \u003c\u003c j)  {\n        for  k = 0; k \u003c 64; k = (k + j + 1) \u0026 ~j  {\n            t = (A[k] ^ (A[k+j] \u003e\u003e j)) \u0026 m;\n            A[k] = A[k] ^ t;\n            A[k+j] = A[k+j] ^ (t \u003c\u003c j);\n        }\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManAutomSim0",
+      "Start": 13097,
+      "End": 13322,
+      "BodyStart": 13187,
+      "Original": "static inline word Gia_ManAutomSim0( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Wrd_t * vTemp )\n{\n    return Gia_ObjFaninC0(pObj) ? ~Vec_WrdEntry(vTemp, Gia_ObjFaninId0p(p, pObj)) : Vec_WrdEntry(vTemp, Gia_ObjFaninId0p(p, pObj));\n}",
+      "Draft": "func Gia_ManAutomSim0(p *Gia_Man_t, pObj *Gia_Obj_t, vTemp *Vec_Wrd_t) word {\n    if Gia_ObjFaninC0(pObj) {\n        return ~Vec_WrdEntry(vTemp, Gia_ObjFaninId0p(p, pObj));\n    } else {\n        return Vec_WrdEntry(vTemp, Gia_ObjFaninId0p(p, pObj));\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManAutomSim1",
+      "Start": 13323,
+      "End": 13548,
+      "BodyStart": 13413,
+      "Original": "static inline word Gia_ManAutomSim1( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Wrd_t * vTemp )\n{\n    return Gia_ObjFaninC1(pObj) ? ~Vec_WrdEntry(vTemp, Gia_ObjFaninId1p(p, pObj)) : Vec_WrdEntry(vTemp, Gia_ObjFaninId1p(p, pObj));\n}",
+      "Draft": "func Gia_ManAutomSim1(p *Gia_Man_t, pObj *Gia_Obj_t, vTemp *Vec_Wrd_t) word {\n    if Gia_ObjFaninC1(pObj) {\n        return ~Vec_WrdEntry(vTemp, Gia_ObjFaninId1p(p, pObj));\n    } else {\n        return Vec_WrdEntry(vTemp, Gia_ObjFaninId1p(p, pObj));\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManAutomStep",
+      "Start": 13549,
+      "End": 14739,
+      "BodyStart": 13631,
+      "Original": "word Gia_ManAutomStep( Gia_Man_t * p, word Cur, word * pNext, Vec_Wrd_t * vTemp )\n{\n    Gia_Obj_t * pObj; int i;\n    assert( Gia_ManPoNum(p) == 1 );\n    assert( Vec_WrdSize(vTemp) \u003e= Gia_ManObjNum(p) );\n    Vec_WrdWriteEntry( vTemp, 0, 0 );\n    Gia_ManForEachPi( p, pObj, i )\n        Vec_WrdWriteEntry( vTemp, Gia_ObjId(p, pObj), ((word)1) \u003c\u003c (63-i) );\n    Gia_ManForEachRo( p, pObj, i )\n        Vec_WrdWriteEntry( vTemp, Gia_ObjId(p, pObj), ((Cur \u003e\u003e (63-i)) \u0026 1) ? ~((word)0) : 0 );\n    Gia_ManForEachAnd( p, pObj, i )\n        Vec_WrdWriteEntry( vTemp, i, Gia_ManAutomSim0(p, pObj, vTemp) \u0026 Gia_ManAutomSim1(p, pObj, vTemp) );\n    Gia_ManForEachRi( p, pObj, i )\n        pNext[i] = Gia_ManAutomSim0(p, pObj, vTemp);\n    for ( ; i \u003c 64; i++ )\n        pNext[i] = 0;\n    // transpose\n//    for ( i = 0; i \u003c 64; i++ )\n//        Extra_PrintBinary( stdout, (unsigned *)\u0026pNext[i], 64 ), Abc_Print( 1, \"\\n\" );\n//    printf( \"\\n\" );\n    Gia_ManAutomTranspose64( pNext );\n//    for ( i = 0; i \u003c 64; i++ )\n//        Extra_PrintBinary( stdout, (unsigned *)\u0026pNext[i], 64 ), Abc_Print( 1, \"\\n\" );\n//    printf( \"\\n\" );\n    // return output values\n    return Gia_ManAutomSim0(p, Gia_ManPo(p, 0), vTemp);\n}",
+      "Draft": "func Gia_ManAutomStep(p *Gia_Man_t, Cur word, pNext *word, vTemp *Vec_Wrd_t) word {\n    var pObj *Gia_Obj_t; var i int32;\n    assert(Gia_ManPoNum(p) == 1, \"Gia_ManPoNum(p) == 1\");\n    assert(Vec_WrdSize(vTemp) \u003e= Gia_ManObjNum(p), \"Vec_WrdSize(vTemp) \u003e= Gia_ManObjNum(p)\");\n    Vec_WrdWriteEntry( vTemp, 0, 0 );\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        Vec_WrdWriteEntry( vTemp, Gia_ObjId(p, pObj), ((word)1) \u003c\u003c (63-i) );\n    }\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        Vec_WrdWriteEntry( vTemp, Gia_ObjId(p, pObj), ((Cur \u003e\u003e (63-i)) \u0026 1) ? ~((word)0) : 0 );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Vec_WrdWriteEntry( vTemp, i, Gia_ManAutomSim0(p, pObj, vTemp) \u0026 Gia_ManAutomSim1(p, pObj, vTemp) ); }\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pNext[i] = Gia_ManAutomSim0(p, pObj, vTemp);\n    }\n    for  ; i \u003c 64; i++  {\n        pNext[i] = 0;\n    }\n    // transpose\n//    for ( i = 0; i \u003c 64; i++ )\n//        Extra_PrintBinary( stdout, (unsigned *)\u0026pNext[i], 64 ), Abc_Print( 1, \"\\n\" );\n//    printf( \"\\n\" );\n    Gia_ManAutomTranspose64( pNext );\n//    for ( i = 0; i \u003c 64; i++ )\n//        Extra_PrintBinary( stdout, (unsigned *)\u0026pNext[i], 64 ), Abc_Print( 1, \"\\n\" );\n//    printf( \"\\n\" );\n    // return output values\n    return Gia_ManAutomSim0(p, Gia_ManPo(p, 0), vTemp);\n}"
+    },
+    {
+      "Name": "Gia_ManAutomWalkOne",
+      "Start": 14740,
+      "End": 16663,
+      "BodyStart": 14866,
+      "Original": "void Gia_ManAutomWalkOne( Gia_Man_t * p, int nSteps, Vec_Wrd_t * vStates, Vec_Int_t * vCounts, Vec_Wrd_t * vTemp, word Init )\n{\n    word iState = 0, Output, pNext[64]; \n    int i, k, kMin, Index, IndexMin;\n    int Count, CountMin; \n    for ( i = 0; i \u003c nSteps; i++ )\n    {\n        Output = Gia_ManAutomStep( p, iState, pNext, vTemp );\n        // check visited states\n        kMin = -1;\n        IndexMin = -1;\n        CountMin = ABC_INFINITY;  \n        for ( k = 0; k \u003c Gia_ManPiNum(p); k++ )\n        {\n            if ( pNext[k] == Init )\n                continue;\n            Index = Vec_WrdFind( vStates, pNext[k] );\n            Count = Index == -1 ? 0 : Vec_IntEntry( vCounts, Index );\n            if ( CountMin \u003e Count || (CountMin != ABC_INFINITY \u0026\u0026 Count \u0026\u0026 ((float)CountMin / Count) \u003e (float)rand()/RAND_MAX ) )\n            {\n                CountMin = Count;\n                IndexMin = Index;\n                kMin = k;\n            }\n            if ( CountMin == 0 )\n                break;\n        }\n        // choose the best state\n        if ( CountMin == ABC_INFINITY )\n        {\n            for ( k = 0; k \u003c Gia_ManPiNum(p); k++ )\n                if ( (Output \u003e\u003e (63-k)) \u0026 1 )\n                {\n                    printf( \"%c\", 'a' + k );\n                    printf( \"!\" );\n                }            \n            break;\n        }\n        assert( CountMin \u003c ABC_INFINITY );\n        if ( IndexMin == -1 )\n        {\n            assert( CountMin == 0 );\n            IndexMin = Vec_IntSize(vCounts);\n            Vec_IntPush( vCounts, 0 );\n            Vec_WrdPush( vStates, pNext[kMin] );\n        }\n        Vec_IntAddToEntry( vCounts, IndexMin, 1 );\n        iState = pNext[kMin];\n//Extra_PrintBinary( stdout, (unsigned *)\u0026iState, 64 ); printf( \"\\n\" );\n        // print the transition\n        printf( \"%c\", 'a' + kMin );\n        if ( (Output \u003e\u003e (63-kMin)) \u0026 1 )\n            printf( \"!\" );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Gia_ManAutomWalkOne(p *Gia_Man_t, nSteps int32, vStates *Vec_Wrd_t, vCounts *Vec_Int_t, vTemp *Vec_Wrd_t, Init word) {\n    var iState word;\n    var Output word;\n    var pNext [64]word; \n    var i, k, kMin, Index, IndexMin int32;\n    var Count, CountMin int32; \n    for  i = 0; i \u003c nSteps; i++  {\n        Output = Gia_ManAutomStep( p, iState, pNext, vTemp );\n        // check visited states\n        kMin = -1;\n        IndexMin = -1;\n        CountMin = ABC_INFINITY;  \n        for  k = 0; k \u003c Gia_ManPiNum(p); k++  {\n            if pNext[k] == Init {\n                continue; }\n            Index = Vec_WrdFind( vStates, pNext[k] );\n            if Index == -1 {\n                Count = 0;\n            } else {\n                Count = Vec_IntEntry( vCounts, Index );\n            }\n            if CountMin \u003e Count || (CountMin != ABC_INFINITY \u0026\u0026 Count \u0026\u0026 (float32(CountMin) / Count) \u003e float32(rand())/RAND_MAX ) {\n                CountMin = Count;\n                IndexMin = Index;\n                kMin = k;\n            }\n            if CountMin == 0 {\n                break; }\n        }\n        // choose the best state\n        if CountMin == ABC_INFINITY {\n            for  k = 0; k \u003c Gia_ManPiNum(p); k++  {\n                if (Output \u003e\u003e (63-k)) \u0026 1 {\n                    fmt.Printf(\"%c\", 'a' + k);\n                    fmt.Printf(\"!\");\n                }\n            }            \n            break;\n        }\n        assert(CountMin \u003c ABC_INFINITY, \"CountMin \u003c ABC_INFINITY\");\n        if IndexMin == -1 {\n            assert(CountMin == 0, \"CountMin == 0\");\n            IndexMin = Vec_IntSize(vCounts);\n            Vec_IntPush( vCounts, 0 );\n            Vec_WrdPush( vStates, pNext[kMin] );\n        }\n        Vec_IntAddToEntry( vCounts, IndexMin, 1 );\n        iState = pNext[kMin];\n//Extra_PrintBinary( stdout, (unsigned *)\u0026iState, 64 ); printf( \"\\n\" );\n        // print the transition\n        fmt.Printf(\"%c\", 'a' + kMin);\n        if (Output \u003e\u003e (63-kMin)) \u0026 1 {\n            fmt.Printf(\"!\"); }\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Gia_ManAutomInit",
+      "Start": 16716,
+      "End": 17371,
+      "BodyStart": 16755,
+      "Original": "word Gia_ManAutomInit( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj; \n    int i, Index;\n    word Init = 0;\n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        if ( Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjIsCi(Gia_ObjFanin0(pObj)) )\n        {\n            Index = Gia_ObjCioId(Gia_ObjFanin0(pObj)) - Gia_ManPiNum(p);\n            if ( Index \u003e= 0 )\n                Init |= ((word)1 \u003c\u003c (63-Index));\n        }\n        if ( Gia_ObjFaninC1(pObj) \u0026\u0026 Gia_ObjIsCi(Gia_ObjFanin1(pObj)) )\n        {\n            Index = Gia_ObjCioId(Gia_ObjFanin1(pObj)) - Gia_ManPiNum(p);\n            if ( Index \u003e= 0 )\n                Init |= ((word)1 \u003c\u003c (63-Index));\n        }\n    }\n    return Init;\n}",
+      "Draft": "func Gia_ManAutomInit(p *Gia_Man_t) word {\n    var pObj *Gia_Obj_t; \n    var i, Index int32;\n    var Init word;\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjIsCi(Gia_ObjFanin0(pObj)) {\n            Index = Gia_ObjCioId(Gia_ObjFanin0(pObj)) - Gia_ManPiNum(p);\n            if Index \u003e= 0 {\n                Init |= ((word)1 \u003c\u003c (63-Index)); }\n        }\n        if Gia_ObjFaninC1(pObj) \u0026\u0026 Gia_ObjIsCi(Gia_ObjFanin1(pObj)) {\n            Index = Gia_ObjCioId(Gia_ObjFanin1(pObj)) - Gia_ManPiNum(p);\n            if Index \u003e= 0 {\n                Init |= ((word)1 \u003c\u003c (63-Index)); }\n        }\n    }\n    }\n    return Init;\n}"
+    },
+    {
+      "Name": "Gia_ManAutomWalk",
+      "Start": 17372,
+      "End": 18689,
+      "BodyStart": 17449,
+      "Original": "void Gia_ManAutomWalk( Gia_Man_t * p, int nSteps, int nWalks, int fVerbose )\n{\n    Vec_Wrd_t * vTemp, * vStates;\n    Vec_Int_t * vCounts; int i; word Init;\n    if ( Gia_ManPoNum(p) != 1 )\n    {\n        printf( \"AIG should have one primary output.\\n\" );\n        return;\n    }\n    if ( Gia_ManPiNum(p) \u003e 64 )\n    {\n        printf( \"Cannot simulate an automaton with more than 64 inputs.\\n\" );\n        return;\n    }\n    if ( Gia_ManRegNum(p) \u003e 64 )\n    {\n        printf( \"Cannot simulate an automaton with more than 63 states.\\n\" );\n        return;\n    }\n    vTemp   = Vec_WrdStart( Gia_ManObjNum(p) );\n    vStates = Vec_WrdAlloc( 1000 );\n    vCounts = Vec_IntAlloc( 1000 );\n    Vec_WrdPush( vStates, 0 );\n    Vec_IntPush( vCounts, 1 );\n    Init = Gia_ManAutomInit( p );\n    for ( i = 0; i \u003c nWalks; i++ )\n        Gia_ManAutomWalkOne( p, nSteps, vStates, vCounts, vTemp, Init );\n    if ( fVerbose )\n    {\n        word State;\n        Vec_WrdForEachEntry( vStates, State, i )\n        {\n            State ^= Init;\n            printf( \"%3d : \", i );\n            Extra_PrintBinary( stdout, (unsigned *)\u0026State, 64 ); \n            printf( \" %d  \", Vec_IntEntry(vCounts, i) );\n            printf( \"\\n\" );\n        }\n        printf( \"\\n\" );\n    }\n    Vec_WrdFree( vTemp );\n    Vec_WrdFree( vStates );\n    Vec_IntFree( vCounts );\n}",
+      "Draft": "func Gia_ManAutomWalk(p *Gia_Man_t, nSteps int32, nWalks int32, fVerbose int32) {\n    var vTemp, vStates *Vec_Wrd_t;\n    var vCounts *Vec_Int_t; var i int32; var Init word;\n    if Gia_ManPoNum(p) != 1 {\n        fmt.Printf(\"AIG should have one primary output.\\n\");\n        return;\n    }\n    if Gia_ManPiNum(p) \u003e 64 {\n        fmt.Printf(\"Cannot simulate an automaton with more than 64 inputs.\\n\");\n        return;\n    }\n    if Gia_ManRegNum(p) \u003e 64 {\n        fmt.Printf(\"Cannot simulate an automaton with more than 63 states.\\n\");\n        return;\n    }\n    vTemp   = Vec_WrdStart( Gia_ManObjNum(p) );\n    vStates = Vec_WrdAlloc( 1000 );\n    vCounts = Vec_IntAlloc( 1000 );\n    Vec_WrdPush( vStates, 0 );\n    Vec_IntPush( vCounts, 1 );\n    Init = Gia_ManAutomInit( p );\n    for  i = 0; i \u003c nWalks; i++  {\n        Gia_ManAutomWalkOne( p, nSteps, vStates, vCounts, vTemp, Init );\n    }\n    if fVerbose != 0 {\n        var State word;\n        // inlining of macro Vec_WrdForEachEntry\n        for  i = 0; (i \u003c Vec_WrdSize(vStates)) \u0026\u0026 (((State) = Vec_WrdEntry(vStates, i)), 1); i++  {\n            State ^= Init;\n            fmt.Printf(\"%3d : \", i);\n            Extra_PrintBinary( os.Stdout, (unsigned *)\u0026State, 64 ); \n            fmt.Printf(\" %d  \", Vec_IntEntry(vCounts, i));\n            fmt.Printf(\"\\n\");\n        }\n        fmt.Printf(\"\\n\");\n    }\n    Vec_WrdFree( vTemp );\n    Vec_WrdFree( vStates );\n    Vec_IntFree( vCounts );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::mechanical::sizeof::7376",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6595,
+      "End": 6595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::pointer-cast::7327",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6595,
+      "End": 6595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::pointer-cast::13469",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12125,
+      "End": 12125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::pointer-cast::20489",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18454,
+      "End": 18466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManAutomSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAutomSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1287,
+      "End": 2351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManBuild1Hot_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManBuild1Hot_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2614,
+      "End": 3164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManBuild1Hot",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManBuild1Hot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3165,
+      "End": 3383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_SymbSpecial",
+      "Category": "semantic-review",
+      "Symbol": "Gia_SymbSpecial",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3734,
+      "End": 3834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManRexNumInputs",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManRexNumInputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3900,
+      "End": 4563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManPrintAutom",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPrintAutom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4584,
+      "End": 4951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManPrintReached",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPrintReached",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5001,
+      "End": 5286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManPrintReached_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPrintReached_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5351,
+      "End": 6119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManCollectReached",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCollectReached",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6120,
+      "End": 6491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManRexPreprocess",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManRexPreprocess",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6531,
+      "End": 7076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::ternary::Gia_ManRex2Gia",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManRex2Gia",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7123,
+      "End": 12161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManRex2Gia",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManRex2Gia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7123,
+      "End": 12161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManAutomTranspose64",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAutomTranspose64",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12474,
+      "End": 12824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManAutomSim0",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAutomSim0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13097,
+      "End": 13322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManAutomSim1",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAutomSim1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13323,
+      "End": 13548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::ternary::Gia_ManAutomStep",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManAutomStep",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13549,
+      "End": 14739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManAutomStep",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAutomStep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13549,
+      "End": 14739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManAutomWalkOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAutomWalkOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14740,
+      "End": 16663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManAutomInit",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAutomInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16716,
+      "End": 17371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::Gia_ManAutomWalk",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManAutomWalk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17372,
+      "End": 18689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaRex.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18936
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [giaRex.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Regular expressions.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaRex.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"misc/extra/extra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Simulate AIG with the given sequence.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManAutomSimulate(p *Gia_Man_t, vAlpha *Vec_Int_t, pSim string) {\n    var pObj, pObjRi, pObjRo *Gia_Obj_t;\n    var nInputs int32  = Vec_IntSize(vAlpha);\n    var nFrames int32  = len(pSim);\n    var i, k int32;\n    assert(Gia_ManPiNum(p) == nInputs, \"Gia_ManPiNum(p) == nInputs\");\n    fmt.Printf(\"Simulating string \\\"%s\\\":\\n\", pSim);\n    Gia_ManCleanMark0(p);\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        pObj.fMark0 = 0;\n    }\n    for  i = 0; i \u003c nFrames; i++  {\n        // inlining of macro Gia_ManForEachPi\n        for  k = 0; (k \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, k)); k++  {\n            pObj.fMark0 = int32((Vec_IntFind(vAlpha, pSim[i]) == k));\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  k = 0; (k \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, k)); k++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 \n                           (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)); }\n        }\n        // inlining of macro Gia_ManForEachCo\n        for  k = 0; (k \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, k)); k++  {\n            pObj.fMark0 = Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj);\n        }\n        // inlining of macro Gia_ManForEachRiRo\n        for  k = 0; (k \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+k)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+k)); k++  {\n            pObjRo.fMark0 = pObjRi.fMark0;\n        }\n\n        fmt.Printf(\"Frame %d : %c %d\\n\", i, pSim[i], Gia_ManPo(p, 0).fMark0);\n    }\n    Gia_ManCleanMark0(p);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Builds 1-hotness contraint.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManBuild1Hot_rec(p *Gia_Man_t, pLits *int32, nLits int32, pZero *int32, pOne *int32) {\n    var Zero0, One0, Zero1, One1 int32;\n    if nLits == 1 {\n        *pZero = Abc_LitNot(pLits[0]);\n        *pOne  = pLits[0];\n        return;\n    }\n    Gia_ManBuild1Hot_rec( p, pLits,           nLits/2,         \u0026Zero0, \u0026One0 );\n    Gia_ManBuild1Hot_rec( p, pLits + nLits/2, nLits - nLits/2, \u0026Zero1, \u0026One1 );\n    *pZero = Gia_ManHashAnd( p, Zero0, Zero1 );\n    *pOne  = Gia_ManHashOr( p, Gia_ManHashAnd(p, Zero0, One1), Gia_ManHashAnd(p, Zero1, One0) );\n}\nfunc Gia_ManBuild1Hot(p *Gia_Man_t, vLits *Vec_Int_t) int32 {\n    var Zero, One int32;\n    assert(Vec_IntSize(vLits) \u003e 0, \"Vec_IntSize(vLits) \u003e 0\");\n    Gia_ManBuild1Hot_rec( p, Vec_IntArray(vLits), Vec_IntSize(vLits), \u0026Zero, \u0026One );\n    return One;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converting regular expressions into sequential AIGs.]\n\n  Description [http://algs4.cs.princeton.edu/lectures/54RegularExpressions.pdf]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_SymbSpecial(c byte) int32 { return c == '(' || c == ')' || c == '*' || c == '|'; }\n// collects info about input alphabet and state of the automaton\nfunc Gia_ManRexNumInputs(pStr string, pvAlphas **Vec_Int_t, pvStr2Sta **Vec_Int_t) int32 {\n    var i int32;\n    var nStates int32;\n    var Length int32 = len(pStr);\n    var vAlphas *Vec_Int_t   = Vec_IntAlloc( 100 );            // alphabet\n    var vStr2Sta *Vec_Int_t  = Vec_IntStartFull( Length + 1 ); // symbol to state\n    for  i = 0; i \u003c Length; i++  {\n        if Gia_SymbSpecial(pStr[i]) != 0 {\n            continue; }\n        if Vec_IntFind(vAlphas, pStr[i]) == -1 {\n            Vec_IntPush( vAlphas, pStr[i] ); }\n        Vec_IntWriteEntry( vStr2Sta, i, nStates++ );\n    }\n    Vec_IntWriteEntry( vStr2Sta, i, nStates );\n    *pvAlphas  = vAlphas;\n    *pvStr2Sta = vStr2Sta;\n    return nStates;\n}\n// prints automaton\nfunc Gia_ManPrintAutom(pStr string, vStaTrans *Vec_Int_t) {\n    var i int32;\n    var nLength int32 = len(pStr);\n    for  i = 0; i \u003c nLength; i++  {\n        fmt.Printf(\"%d \\'%c\\' \", i, pStr[i]);\n        if Vec_IntEntry(vStaTrans, i) \u003e= 0 {\n            fmt.Printf(\"-\u003e %d \\'%c\\' \", Vec_IntEntry(vStaTrans, i), pStr[Vec_IntEntry(vStaTrans, i)]); }\n        fmt.Printf(\"\\n\");\n    }\n}\n// prints states reachable through e-transitions\nfunc Gia_ManPrintReached(pStr string, iState int32, vReached *Vec_Int_t) {\n    var i, Entry int32;\n    fmt.Printf(\"Reached from state %d \\'%c\\':  \", iState, pStr[iState]);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vReached)) \u0026\u0026 (((Entry) = Vec_IntEntry(vReached, i)), 1); i++  {\n        fmt.Printf(\"%d \\'%c\\'  \", Entry, pStr[Entry]);\n    }\n    fmt.Printf(\"\\n\");\n}\n// collect states reachable from the given one by e-transitions\nfunc Gia_ManPrintReached_rec(pStr string, vStaTrans *Vec_Int_t, iState int32, vReached *Vec_Int_t, vVisited *Vec_Int_t, TravId int32) {\n    if Vec_IntEntry(vVisited, iState) == TravId {\n        return; }\n    Vec_IntWriteEntry( vVisited, iState, TravId );\n    if !(Gia_SymbSpecial(pStr[iState]) != 0) { // read state\n        Vec_IntPush( vReached, iState ); }\n    if pStr[iState] == '\\0' {\n        return; }\n    if (Gia_SymbSpecial(pStr[iState]) != 0) \u0026\u0026 pStr[iState] != '|' { // regular e-transition\n       Gia_ManPrintReached_rec( pStr, vStaTrans, iState + 1, vReached, vVisited, TravId ); }\n    if Vec_IntEntry(vStaTrans, iState) \u003e= 0 { // additional e-transition\n       Gia_ManPrintReached_rec( pStr, vStaTrans, Vec_IntEntry(vStaTrans, iState), vReached, vVisited, TravId ); }\n}\nfunc Gia_ManCollectReached(pStr string, vStaTrans *Vec_Int_t, iState int32, vReached *Vec_Int_t, vVisited *Vec_Int_t, TravId int32) {\n    assert(iState == 0 || !(Gia_SymbSpecial(pStr[iState]) != 0), \"iState == 0 || !Gia_SymbSpecial(pStr[iState])\");\n    assert(Vec_IntEntry(vVisited, iState) != TravId, \"Vec_IntEntry(vVisited, iState) != TravId\");\n    Vec_IntClear( vReached );\n    Gia_ManPrintReached_rec( pStr, vStaTrans, iState + 1, vReached, vVisited, TravId );\n}\n// preprocesses the regular expression\nfunc Gia_ManRexPreprocess(pStr string) string {\n    // inlining of macro ABC_CALLOC\n    var pCopy string  = ((char *) calloc((size_t)(len(pStr) * 2 + 10), sizeof(char)));\n    var i, k int32;\n    pCopy[k++] = '(';\n    pCopy[k++] = '(';\n    for  i = 0; pStr[i]; i++  {\n        if pStr[i] == '(' {\n            pCopy[k++] = '(';\n        } else if pStr[i] == ')' {\n            pCopy[k++] = ')'; }\n        if pStr[i] != ' ' \u0026\u0026 pStr[i] != '\\t' \u0026\u0026 pStr[i] != '\\n' \u0026\u0026 pStr[i] != '\\r' {\n            pCopy[k++] = pStr[i]; }\n    }\n    pCopy[k++] = ')';\n    pCopy[k++] = ')';\n    pCopy[k++] = '\\0';\n    return pCopy;\n}\n// construct sequential AIG for the automaton\nfunc Gia_ManRex2Gia(pStrInit string, fOrder int32, fVerbose int32) *Gia_Man_t {\n    var pNew *Gia_Man_t = nil;\n    var pTemp *Gia_Man_t; \n    var vAlphas, vStr2Sta, vStaLits *Vec_Int_t;\n    var vStaTrans, vStack, vVisited *Vec_Int_t;\n    var vInit *Vec_Str_t;\n    var pStr string  = Gia_ManRexPreprocess( pStrInit );\n    var nStates int32  = Gia_ManRexNumInputs( pStr, \u0026vAlphas, \u0026vStr2Sta );\n    var i int32;\n    var k int32;\n    var iLit int32;\n    var Entry int32;\n    var nLength int32 = len(pStr);\n    var nTravId int32 = 1;\n    if fOrder != 0 {\n        Vec_IntSort( vAlphas, 0 ); }\n//    if ( fVerbose )\n    {\n        fmt.Printf(\"Input variable order: \");\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vAlphas)) \u0026\u0026 (((Entry) = Vec_IntEntry(vAlphas, k)), 1); k++  {\n            fmt.Printf(\"%c\", byte(Entry));\n        }\n        fmt.Printf(\"\\n\");\n    }\n    // start AIG\n    pNew = Gia_ManStart( 1000 );\n    pNew.pName = Abc_UtilStrsav( pStrInit );\n    for  i = 0; i \u003c Vec_IntSize(vAlphas) + nStates; i++  {\n        Gia_ManAppendCi( pNew );\n    }\n    // prepare automaton\n    vStaLits  = Vec_IntStart( nStates + 1 );\n    vStaTrans = Vec_IntStartFull( nLength );\n    vStack    = Vec_IntAlloc( nLength );\n    vVisited  = Vec_IntStartFull( nLength + 1 );\n    for  i = 0; i \u003c nLength; i++  {\n        var Lp int32  = i;\n        if pStr[i] == '(' || pStr[i] == '|' {\n            Vec_IntPush( vStack, i );\n        } else if pStr[i] == ')' {\n            var Or int32  = Vec_IntPop( vStack );\n            if pStr[Or] == '|' {\n                Lp = Vec_IntPop( vStack );\n                Vec_IntWriteEntry( vStaTrans, Lp, Or + 1 );\n                Vec_IntWriteEntry( vStaTrans, Or, i );\n            \n            } else {\n                Lp = Or; }\n        }\n        if i \u003c nLength - 1 \u0026\u0026 pStr[i+1] == '*' {\n            Vec_IntWriteEntry( vStaTrans, Lp, i+1 );\n            Vec_IntWriteEntry( vStaTrans, i+1, Lp );\n        }\n    }\n    assert(Vec_IntSize(vStack) == 0, \"Vec_IntSize(vStack) == 0\");\n    if fVerbose != 0 {\n        Gia_ManPrintAutom( pStr, vStaTrans ); }\n\n    // create next-state functions for each state\n    Gia_ManHashAlloc( pNew );\n    for  i = 1; i \u003c nLength; i++  {\n        var iThis, iThat, iThisLit, iInputLit int32;\n        if Gia_SymbSpecial(pStr[i]) != 0 {\n            continue; }\n        Gia_ManCollectReached( pStr, vStaTrans, i, vStack, vVisited, nTravId++ );\n        if fVerbose != 0 {\n            Gia_ManPrintReached( pStr, i, vStack ); }\n        // create transitions from this state under this input\n        iThis = Vec_IntEntry(vStr2Sta, i);\n        iThisLit = Gia_Obj2Lit(pNew, Gia_ManPi(pNew, Vec_IntSize(vAlphas) + iThis));\n        iInputLit = Gia_Obj2Lit(pNew, Gia_ManPi(pNew, Vec_IntFind(vAlphas, pStr[i])));\n        iLit = Gia_ManHashAnd( pNew, iThisLit, iInputLit );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vStack)) \u0026\u0026 (((Entry) = Vec_IntEntry(vStack, k)), 1); k++  {\n            iThat = Vec_IntEntry(vStr2Sta, Entry);\n            iLit = Gia_ManHashOr( pNew, iLit, Vec_IntEntry(vStaLits, iThat) );\n            Vec_IntWriteEntry( vStaLits, iThat, iLit );\n        }\n    }\n    // create one-hotness\n    Vec_IntClear( vStack );\n    for  i = 0; i \u003c Vec_IntSize(vAlphas); i++  {\n        Vec_IntPush( vStack, Gia_Obj2Lit(pNew, Gia_ManPi(pNew, i)) );\n    }\n    iLit = Gia_ManBuild1Hot( pNew, vStack );\n    // combine with outputs\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vStaLits)) \u0026\u0026 (((Entry) = Vec_IntEntry(vStaLits, k)), 1); k++  {\n        Vec_IntWriteEntry( vStaLits, k, Gia_ManHashAnd(pNew, iLit, Entry) );\n    }\n    Gia_ManHashStop( pNew );\n\n    // collect initial state\n    Gia_ManCollectReached( pStr, vStaTrans, 0, vStack, vVisited, nTravId++ );\n    if fVerbose != 0 {\n        Gia_ManPrintReached( pStr, 0, vStack ); }\n    vInit = Vec_StrStart( nStates + 1 );\n    Vec_StrFill( vInit, nStates, '0' );\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vStack)) \u0026\u0026 (((Entry) = Vec_IntEntry(vStack, k)), 1); k++  {\n        if pStr[Entry] != '\\0' {\n            Vec_StrWriteEntry( vInit, Vec_IntEntry(vStr2Sta, Entry), '1' ); }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Init state = %s\\n\", Vec_StrArray(vInit)); }\n\n    // add outputs\n    Vec_IntPushFirst( vStaLits, Vec_IntPop(vStaLits) );\n    assert(Vec_IntSize(vStaLits) == nStates + 1, \"Vec_IntSize(vStaLits) == nStates + 1\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vStaLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vStaLits, i)), 1); i++  {\n        Gia_ManAppendCo( pNew, iLit );\n    }\n    Gia_ManSetRegNum( pNew, nStates );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n\n    // add initial state\n    pNew = Gia_ManDupZeroUndc( pTemp = pNew, Vec_StrArray(vInit), 0, 0, 0 );\n    Gia_ManStop( pTemp );\n    Vec_StrFree( vInit );\n/*\n    Gia_ManAutomSimulate( pNew, vAlphas, \"0\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"01\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"110\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"011\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"111\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"1111\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"1010\" );\n\n    Gia_ManAutomSimulate( pNew, vAlphas, \"A\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"AD\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"ABCD\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"BCD\" );\n    Gia_ManAutomSimulate( pNew, vAlphas, \"CD\" );\n*/\n\n    // cleanup\n    Vec_IntFree( vAlphas );\n    Vec_IntFree( vStr2Sta );\n    Vec_IntFree( vStaLits );\n    Vec_IntFree( vStaTrans );\n    Vec_IntFree( vStack );\n    Vec_IntFree( vVisited );\n    // inlining of macro ABC_FREE\n    ((pStr) ? (free((char *) (pStr)), (pStr) = 0) : 0);\n    return pNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transposing 64-bit matrix.]\n\n  Description [Borrowed from \"Hacker's Delight\", by Henry Warren.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManAutomTranspose64(A []word) {\n    var j, k int32;\n    var t word;\n    var m word = 0x00000000FFFFFFFF;\n    for  j = 32; j != 0; j = j \u003e\u003e 1, m = m ^ (m \u003c\u003c j)  {\n        for  k = 0; k \u003c 64; k = (k + j + 1) \u0026 ~j  {\n            t = (A[k] ^ (A[k+j] \u003e\u003e j)) \u0026 m;\n            A[k] = A[k] ^ t;\n            A[k+j] = A[k+j] ^ (t \u003c\u003c j);\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulate AIG with the given sequence.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManAutomSim0(p *Gia_Man_t, pObj *Gia_Obj_t, vTemp *Vec_Wrd_t) word {\n    if Gia_ObjFaninC0(pObj) {\n        return ~Vec_WrdEntry(vTemp, Gia_ObjFaninId0p(p, pObj));\n    } else {\n        return Vec_WrdEntry(vTemp, Gia_ObjFaninId0p(p, pObj));\n    }\n}\nfunc Gia_ManAutomSim1(p *Gia_Man_t, pObj *Gia_Obj_t, vTemp *Vec_Wrd_t) word {\n    if Gia_ObjFaninC1(pObj) {\n        return ~Vec_WrdEntry(vTemp, Gia_ObjFaninId1p(p, pObj));\n    } else {\n        return Vec_WrdEntry(vTemp, Gia_ObjFaninId1p(p, pObj));\n    }\n}\nfunc Gia_ManAutomStep(p *Gia_Man_t, Cur word, pNext *word, vTemp *Vec_Wrd_t) word {\n    var pObj *Gia_Obj_t; var i int32;\n    assert(Gia_ManPoNum(p) == 1, \"Gia_ManPoNum(p) == 1\");\n    assert(Vec_WrdSize(vTemp) \u003e= Gia_ManObjNum(p), \"Vec_WrdSize(vTemp) \u003e= Gia_ManObjNum(p)\");\n    Vec_WrdWriteEntry( vTemp, 0, 0 );\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        Vec_WrdWriteEntry( vTemp, Gia_ObjId(p, pObj), ((word)1) \u003c\u003c (63-i) );\n    }\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        Vec_WrdWriteEntry( vTemp, Gia_ObjId(p, pObj), ((Cur \u003e\u003e (63-i)) \u0026 1) ? ~((word)0) : 0 );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        Vec_WrdWriteEntry( vTemp, i, Gia_ManAutomSim0(p, pObj, vTemp) \u0026 Gia_ManAutomSim1(p, pObj, vTemp) ); }\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pNext[i] = Gia_ManAutomSim0(p, pObj, vTemp);\n    }\n    for  ; i \u003c 64; i++  {\n        pNext[i] = 0;\n    }\n    // transpose\n//    for ( i = 0; i \u003c 64; i++ )\n//        Extra_PrintBinary( stdout, (unsigned *)\u0026pNext[i], 64 ), Abc_Print( 1, \"\\n\" );\n//    printf( \"\\n\" );\n    Gia_ManAutomTranspose64( pNext );\n//    for ( i = 0; i \u003c 64; i++ )\n//        Extra_PrintBinary( stdout, (unsigned *)\u0026pNext[i], 64 ), Abc_Print( 1, \"\\n\" );\n//    printf( \"\\n\" );\n    // return output values\n    return Gia_ManAutomSim0(p, Gia_ManPo(p, 0), vTemp);\n}\nfunc Gia_ManAutomWalkOne(p *Gia_Man_t, nSteps int32, vStates *Vec_Wrd_t, vCounts *Vec_Int_t, vTemp *Vec_Wrd_t, Init word) {\n    var iState word;\n    var Output word;\n    var pNext [64]word; \n    var i, k, kMin, Index, IndexMin int32;\n    var Count, CountMin int32; \n    for  i = 0; i \u003c nSteps; i++  {\n        Output = Gia_ManAutomStep( p, iState, pNext, vTemp );\n        // check visited states\n        kMin = -1;\n        IndexMin = -1;\n        CountMin = ABC_INFINITY;  \n        for  k = 0; k \u003c Gia_ManPiNum(p); k++  {\n            if pNext[k] == Init {\n                continue; }\n            Index = Vec_WrdFind( vStates, pNext[k] );\n            if Index == -1 {\n                Count = 0;\n            } else {\n                Count = Vec_IntEntry( vCounts, Index );\n            }\n            if CountMin \u003e Count || (CountMin != ABC_INFINITY \u0026\u0026 Count \u0026\u0026 (float32(CountMin) / Count) \u003e float32(rand())/RAND_MAX ) {\n                CountMin = Count;\n                IndexMin = Index;\n                kMin = k;\n            }\n            if CountMin == 0 {\n                break; }\n        }\n        // choose the best state\n        if CountMin == ABC_INFINITY {\n            for  k = 0; k \u003c Gia_ManPiNum(p); k++  {\n                if (Output \u003e\u003e (63-k)) \u0026 1 {\n                    fmt.Printf(\"%c\", 'a' + k);\n                    fmt.Printf(\"!\");\n                }\n            }            \n            break;\n        }\n        assert(CountMin \u003c ABC_INFINITY, \"CountMin \u003c ABC_INFINITY\");\n        if IndexMin == -1 {\n            assert(CountMin == 0, \"CountMin == 0\");\n            IndexMin = Vec_IntSize(vCounts);\n            Vec_IntPush( vCounts, 0 );\n            Vec_WrdPush( vStates, pNext[kMin] );\n        }\n        Vec_IntAddToEntry( vCounts, IndexMin, 1 );\n        iState = pNext[kMin];\n//Extra_PrintBinary( stdout, (unsigned *)\u0026iState, 64 ); printf( \"\\n\" );\n        // print the transition\n        fmt.Printf(\"%c\", 'a' + kMin);\n        if (Output \u003e\u003e (63-kMin)) \u0026 1 {\n            fmt.Printf(\"!\"); }\n    }\n    fmt.Printf(\"\\n\");\n}\n// find flop variables pointed to by negative edges\nfunc Gia_ManAutomInit(p *Gia_Man_t) word {\n    var pObj *Gia_Obj_t; \n    var i, Index int32;\n    var Init word;\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        if Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjIsCi(Gia_ObjFanin0(pObj)) {\n            Index = Gia_ObjCioId(Gia_ObjFanin0(pObj)) - Gia_ManPiNum(p);\n            if Index \u003e= 0 {\n                Init |= ((word)1 \u003c\u003c (63-Index)); }\n        }\n        if Gia_ObjFaninC1(pObj) \u0026\u0026 Gia_ObjIsCi(Gia_ObjFanin1(pObj)) {\n            Index = Gia_ObjCioId(Gia_ObjFanin1(pObj)) - Gia_ManPiNum(p);\n            if Index \u003e= 0 {\n                Init |= ((word)1 \u003c\u003c (63-Index)); }\n        }\n    }\n    }\n    return Init;\n}\nfunc Gia_ManAutomWalk(p *Gia_Man_t, nSteps int32, nWalks int32, fVerbose int32) {\n    var vTemp, vStates *Vec_Wrd_t;\n    var vCounts *Vec_Int_t; var i int32; var Init word;\n    if Gia_ManPoNum(p) != 1 {\n        fmt.Printf(\"AIG should have one primary output.\\n\");\n        return;\n    }\n    if Gia_ManPiNum(p) \u003e 64 {\n        fmt.Printf(\"Cannot simulate an automaton with more than 64 inputs.\\n\");\n        return;\n    }\n    if Gia_ManRegNum(p) \u003e 64 {\n        fmt.Printf(\"Cannot simulate an automaton with more than 63 states.\\n\");\n        return;\n    }\n    vTemp   = Vec_WrdStart( Gia_ManObjNum(p) );\n    vStates = Vec_WrdAlloc( 1000 );\n    vCounts = Vec_IntAlloc( 1000 );\n    Vec_WrdPush( vStates, 0 );\n    Vec_IntPush( vCounts, 1 );\n    Init = Gia_ManAutomInit( p );\n    for  i = 0; i \u003c nWalks; i++  {\n        Gia_ManAutomWalkOne( p, nSteps, vStates, vCounts, vTemp, Init );\n    }\n    if fVerbose != 0 {\n        var State word;\n        // inlining of macro Vec_WrdForEachEntry\n        for  i = 0; (i \u003c Vec_WrdSize(vStates)) \u0026\u0026 (((State) = Vec_WrdEntry(vStates, i)), 1); i++  {\n            State ^= Init;\n            fmt.Printf(\"%3d : \", i);\n            Extra_PrintBinary( os.Stdout, (unsigned *)\u0026State, 64 ); \n            fmt.Printf(\" %d  \", Vec_IntEntry(vCounts, i));\n            fmt.Printf(\"\\n\");\n        }\n        fmt.Printf(\"\\n\");\n    }\n    Vec_WrdFree( vTemp );\n    Vec_WrdFree( vStates );\n    Vec_IntFree( vCounts );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,224 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdApi.c",
+  "SHA256": "0f6a80b529c3ba1e79da00cca53ca86310485c15cd48bb77039eca0d45c50a22",
+  "Functions": [
+    {
+      "Name": "Dsd_NodeReadType",
+      "Start": 1938,
+      "End": 2018,
+      "BodyStart": 1995,
+      "Original": "Dsd_Type_t    Dsd_NodeReadType( Dsd_Node_t * p )         { return p-\u003eType;     }",
+      "Draft": "func Dsd_NodeReadType(p *Dsd_Node_t) Dsd_Type_t { return p.Type;     }"
+    },
+    {
+      "Name": "Dsd_NodeReadFunc",
+      "Start": 2020,
+      "End": 2100,
+      "BodyStart": 2077,
+      "Original": "DdNode *      Dsd_NodeReadFunc( Dsd_Node_t * p )         { return p-\u003eG;        }",
+      "Draft": "func Dsd_NodeReadFunc(p *Dsd_Node_t) *DdNode { return p.G;        }"
+    },
+    {
+      "Name": "Dsd_NodeReadSupp",
+      "Start": 2102,
+      "End": 2182,
+      "BodyStart": 2159,
+      "Original": "DdNode *      Dsd_NodeReadSupp( Dsd_Node_t * p )         { return p-\u003eS;        }",
+      "Draft": "func Dsd_NodeReadSupp(p *Dsd_Node_t) *DdNode { return p.S;        }"
+    },
+    {
+      "Name": "Dsd_NodeReadDecs",
+      "Start": 2184,
+      "End": 2264,
+      "BodyStart": 2241,
+      "Original": "Dsd_Node_t ** Dsd_NodeReadDecs( Dsd_Node_t * p )         { return p-\u003epDecs;    }",
+      "Draft": "func Dsd_NodeReadDecs(p *Dsd_Node_t) **Dsd_Node_t { return p.pDecs;    }"
+    },
+    {
+      "Name": "Dsd_NodeReadDec",
+      "Start": 2266,
+      "End": 2346,
+      "BodyStart": 2323,
+      "Original": "Dsd_Node_t *  Dsd_NodeReadDec ( Dsd_Node_t * p, int i )  { return p-\u003epDecs[i]; }",
+      "Draft": "func Dsd_NodeReadDec(p *Dsd_Node_t, i int32) *Dsd_Node_t { return p.pDecs[i]; }"
+    },
+    {
+      "Name": "Dsd_NodeReadDecsNum",
+      "Start": 2348,
+      "End": 2428,
+      "BodyStart": 2405,
+      "Original": "int           Dsd_NodeReadDecsNum( Dsd_Node_t * p )      { return p-\u003enDecs;    }",
+      "Draft": "func Dsd_NodeReadDecsNum(p *Dsd_Node_t) int32 { return p.nDecs;    }"
+    },
+    {
+      "Name": "Dsd_NodeReadMark",
+      "Start": 2430,
+      "End": 2510,
+      "BodyStart": 2487,
+      "Original": "int           Dsd_NodeReadMark( Dsd_Node_t * p )         { return p-\u003eMark;     }",
+      "Draft": "func Dsd_NodeReadMark(p *Dsd_Node_t) int32 { return p.Mark;     }"
+    },
+    {
+      "Name": "Dsd_NodeSetMark",
+      "Start": 3148,
+      "End": 3228,
+      "BodyStart": 3205,
+      "Original": "void          Dsd_NodeSetMark( Dsd_Node_t * p, int Mark ){ p-\u003eMark = Mark;     }",
+      "Draft": "func Dsd_NodeSetMark(p *Dsd_Node_t, Mark int32) { p.Mark = Mark;     }"
+    },
+    {
+      "Name": "Dsd_ManagerReadRoot",
+      "Start": 3702,
+      "End": 3796,
+      "BodyStart": 3768,
+      "Original": "Dsd_Node_t *  Dsd_ManagerReadRoot( Dsd_Manager_t * pMan, int i )  { return pMan-\u003epRoots[i];  }",
+      "Draft": "func Dsd_ManagerReadRoot(pMan *Dsd_Manager_t, i int32) *Dsd_Node_t { return pMan.pRoots[i];  }"
+    },
+    {
+      "Name": "Dsd_ManagerReadInput",
+      "Start": 3798,
+      "End": 3892,
+      "BodyStart": 3864,
+      "Original": "Dsd_Node_t *  Dsd_ManagerReadInput( Dsd_Manager_t * pMan, int i ) { return pMan-\u003epInputs[i]; }",
+      "Draft": "func Dsd_ManagerReadInput(pMan *Dsd_Manager_t, i int32) *Dsd_Node_t { return pMan.pInputs[i]; }"
+    },
+    {
+      "Name": "Dsd_ManagerReadConst1",
+      "Start": 3894,
+      "End": 3988,
+      "BodyStart": 3960,
+      "Original": "Dsd_Node_t *  Dsd_ManagerReadConst1( Dsd_Manager_t * pMan )       { return pMan-\u003epConst1;    }",
+      "Draft": "func Dsd_ManagerReadConst1(pMan *Dsd_Manager_t) *Dsd_Node_t { return pMan.pConst1;    }"
+    },
+    {
+      "Name": "Dsd_ManagerReadDd",
+      "Start": 3990,
+      "End": 4084,
+      "BodyStart": 4056,
+      "Original": "DdManager *   Dsd_ManagerReadDd( Dsd_Manager_t * pMan )           { return pMan-\u003edd;         }",
+      "Draft": "func Dsd_ManagerReadDd(pMan *Dsd_Manager_t) *DdManager { return pMan.dd;         }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdApi.c::Dsd_NodeReadType",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_NodeReadType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1938,
+      "End": 2018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdApi.c::Dsd_NodeReadFunc",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_NodeReadFunc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2020,
+      "End": 2100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdApi.c::Dsd_NodeReadSupp",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_NodeReadSupp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2102,
+      "End": 2182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdApi.c::Dsd_NodeReadDecs",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_NodeReadDecs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2184,
+      "End": 2264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdApi.c::Dsd_NodeReadDec",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_NodeReadDec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2266,
+      "End": 2346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdApi.c::Dsd_NodeReadDecsNum",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_NodeReadDecsNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2348,
+      "End": 2428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdApi.c::Dsd_NodeReadMark",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_NodeReadMark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2430,
+      "End": 2510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdApi.c::Dsd_NodeSetMark",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_NodeSetMark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3148,
+      "End": 3228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdApi.c::Dsd_ManagerReadRoot",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_ManagerReadRoot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3702,
+      "End": 3796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdApi.c::Dsd_ManagerReadInput",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_ManagerReadInput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3798,
+      "End": 3892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdApi.c::Dsd_ManagerReadConst1",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_ManagerReadConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3894,
+      "End": 3988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdApi.c::Dsd_ManagerReadDd",
+      "Category": "semantic-review",
+      "Symbol": "Dsd_ManagerReadDd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3990,
+      "End": 4084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsdApi.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4330
+    }
+  ],
+  "Draft": "package dsd\n\n/**CFile****************************************************************\n\n  FileName    [dsdApi.c]\n\n  PackageName [DSD: Disjoint-support decomposition package.]\n\n  Synopsis    [Implementation of API functions.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 8.0. Started - September 22, 2003.]\n\n  Revision    [$Id: dsdApi.c,v 1.0 2002/22/09 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dsdInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n \n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [APIs of the DSD node.]\n\n  Description [The node's type can be retrieved by calling\n  Dsd_NodeReadType(). The type is one of the following: constant 1 node, \n  the buffer (or the elementary variable), OR gate, EXOR gate, or \n  PRIME function (a non-DSD-decomposable function with more than two \n  inputs). The return value of Dsd_NodeReadFunc() is the global function \n  of the DSD node. The return value of Dsd_NodeReadSupp() is the support \n  of the global function of the DSD node. The array of DSD nodes\n  returned by Dsd_NodeReadDecs() is the array of decomposition nodes for \n  the formal inputs of the given node. The number of decomposition entries \n  returned by Dsd_NodeReadDecsNum() is the number of formal inputs. \n  The mark is explained below.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dsd_NodeReadType(p *Dsd_Node_t) Dsd_Type_t { return p.Type;     } \nfunc Dsd_NodeReadFunc(p *Dsd_Node_t) *DdNode { return p.G;        } \nfunc Dsd_NodeReadSupp(p *Dsd_Node_t) *DdNode { return p.S;        } \nfunc Dsd_NodeReadDecs(p *Dsd_Node_t) **Dsd_Node_t { return p.pDecs;    } \nfunc Dsd_NodeReadDec(p *Dsd_Node_t, i int32) *Dsd_Node_t { return p.pDecs[i]; } \nfunc Dsd_NodeReadDecsNum(p *Dsd_Node_t) int32 { return p.nDecs;    } \nfunc Dsd_NodeReadMark(p *Dsd_Node_t) int32 { return p.Mark;     } \n\n/**Function*************************************************************\n\n  Synopsis    [APIs of the DSD node.]\n\n  Description [This API allows the user to set the integer mark in the\n  given DSD node. The mark is guaranteed to persist as long as the\n  calls to the decomposition are not performed. In any case, the mark \n  is useful to associate the node with some temporary information, such \n  as its number in the DFS ordered list of the DSD nodes or its number in \n  the BLIF file that it being written.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dsd_NodeSetMark(p *Dsd_Node_t, Mark int32) { p.Mark = Mark;     } \n\n/**Function*************************************************************\n\n  Synopsis    [APIs of the DSD manager.]\n\n  Description [Allows the use to get hold of an individual leave of\n  the DSD tree (Dsd_ManagerReadInput) or an individual root of the \n  decomposition tree (Dsd_ManagerReadRoot). The root may have the \n  complemented attribute.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dsd_ManagerReadRoot(pMan *Dsd_Manager_t, i int32) *Dsd_Node_t { return pMan.pRoots[i];  } \nfunc Dsd_ManagerReadInput(pMan *Dsd_Manager_t, i int32) *Dsd_Node_t { return pMan.pInputs[i]; } \nfunc Dsd_ManagerReadConst1(pMan *Dsd_Manager_t) *Dsd_Node_t { return pMan.pConst1;    } \nfunc Dsd_ManagerReadDd(pMan *Dsd_Manager_t) *DdManager { return pMan.dd;         } \n\n////////////////////////////////////////////////////////////////////////\n///                           END OF FILE                            ///\n////////////////////////////////////////////////////////////////////////\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

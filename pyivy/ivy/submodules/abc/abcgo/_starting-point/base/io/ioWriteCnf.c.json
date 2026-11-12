@@ -1,0 +1,209 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteCnf.c",
+  "SHA256": "a8cdba59902eb0bcb1d3c11cd9d78d0d54006f7e07fbcc26e4e2dfe4e23a27ba",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 55,
+        "Column": 9,
+        "ByteOffset": 1552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_WriteCnf() warning: Generating CNF by applying heuristic AIG to CNF conversion.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 57,
+        "Column": 9,
+        "ByteOffset": 1671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_WriteCnf() warning: Generating CNF by convering logic nodes into CNF clauses.\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 59,
+        "Column": 9,
+        "ByteOffset": 1810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteCnf(): Currently can only process the miter (the network with one PO).\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 59,
+        "Column": 18,
+        "ByteOffset": 1819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteCnf(): Currently can only process the miter (the network with one PO).\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 9,
+        "ByteOffset": 1981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteCnf(): Currently can only process the miter for combinational circuits.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 63,
+        "Column": 18,
+        "ByteOffset": 1990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteCnf(): Currently can only process the miter for combinational circuits.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 67,
+        "Column": 9,
+        "ByteOffset": 2152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"The network has no logic nodes. No CNF file is generaled.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 67,
+        "Column": 18,
+        "ByteOffset": 2161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"The network has no logic nodes. No CNF file is generaled.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 9,
+        "ByteOffset": 2487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"The problem is trivially UNSAT. No CNF file is generated.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 76,
+        "Column": 18,
+        "ByteOffset": 2496
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"The problem is trivially UNSAT. No CNF file is generated.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 3362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"c PI variable numbers: \u003cPI_name\u003e \u003cSAT_var_number\u003e\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 9,
+        "ByteOffset": 3582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"c %s %d\\n\", Abc_ObjName(pObj), Vec_IntEntry(vCiIds, i) + int32((incrementVars \u003e 0)) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Io_WriteCnf",
+      "Start": 1383,
+      "End": 2782,
+      "BodyStart": 1453,
+      "Original": "int Io_WriteCnf( Abc_Ntk_t * pNtk, char * pFileName, int fAllPrimes )\n{\n    sat_solver * pSat;\n    if ( Abc_NtkIsStrash(pNtk) )\n        printf( \"Io_WriteCnf() warning: Generating CNF by applying heuristic AIG to CNF conversion.\\n\" );\n    else\n        printf( \"Io_WriteCnf() warning: Generating CNF by convering logic nodes into CNF clauses.\\n\" );\n    if ( Abc_NtkPoNum(pNtk) != 1 )\n    {\n        fprintf( stdout, \"Io_WriteCnf(): Currently can only process the miter (the network with one PO).\\n\" );\n        return 0;\n    }\n    if ( Abc_NtkLatchNum(pNtk) != 0 )\n    {\n        fprintf( stdout, \"Io_WriteCnf(): Currently can only process the miter for combinational circuits.\\n\" );\n        return 0;\n    }\n    if ( Abc_NtkNodeNum(pNtk) == 0 )\n    {\n        fprintf( stdout, \"The network has no logic nodes. No CNF file is generaled.\\n\" );\n        return 0;\n    }\n    // convert to logic BDD network\n    if ( Abc_NtkIsLogic(pNtk) )\n        Abc_NtkToBdd( pNtk );\n    // create solver with clauses\n    pSat = (sat_solver *)Abc_NtkMiterSatCreate( pNtk, fAllPrimes );\n    if ( pSat == NULL )\n    {\n        fprintf( stdout, \"The problem is trivially UNSAT. No CNF file is generated.\\n\" );\n        return 1;\n    }        \n    // write the clauses\n    s_pNtk = pNtk;\n    Sat_SolverWriteDimacs( pSat, pFileName, 0, 0, 1 );\n    s_pNtk = NULL;\n    // free the solver\n    sat_solver_delete( pSat );\n    return 1;\n}",
+      "Draft": "func Io_WriteCnf(pNtk *Abc_Ntk_t, pFileName string, fAllPrimes int32) int32 {\n    var pSat *sat_solver;\n    if Abc_NtkIsStrash(pNtk) {\n        fmt.Printf(\"Io_WriteCnf() warning: Generating CNF by applying heuristic AIG to CNF conversion.\\n\");\n    } else {\n        fmt.Printf(\"Io_WriteCnf() warning: Generating CNF by convering logic nodes into CNF clauses.\\n\"); }\n    if Abc_NtkPoNum(pNtk) != 1 {\n        fmt.Fprintf(os.Stdout, \"Io_WriteCnf(): Currently can only process the miter (the network with one PO).\\n\");\n        return 0;\n    }\n    if Abc_NtkLatchNum(pNtk) != 0 {\n        fmt.Fprintf(os.Stdout, \"Io_WriteCnf(): Currently can only process the miter for combinational circuits.\\n\");\n        return 0;\n    }\n    if Abc_NtkNodeNum(pNtk) == 0 {\n        fmt.Fprintf(os.Stdout, \"The network has no logic nodes. No CNF file is generaled.\\n\");\n        return 0;\n    }\n    // convert to logic BDD network\n    if Abc_NtkIsLogic(pNtk) {\n        Abc_NtkToBdd( pNtk ); }\n    // create solver with clauses\n    pSat = (sat_solver *)Abc_NtkMiterSatCreate( pNtk, fAllPrimes );\n    if pSat == nil {\n        fmt.Fprintf(os.Stdout, \"The problem is trivially UNSAT. No CNF file is generated.\\n\");\n        return 1;\n    }        \n    // write the clauses\n    s_pNtk = pNtk;\n    Sat_SolverWriteDimacs( pSat, pFileName, 0, 0, 1 );\n    s_pNtk = nil;\n    // free the solver\n    sat_solver_delete( pSat );\n    return 1;\n}"
+    },
+    {
+      "Name": "Io_WriteCnfOutputPiMapping",
+      "Start": 3066,
+      "End": 3588,
+      "BodyStart": 3133,
+      "Original": "void Io_WriteCnfOutputPiMapping( FILE * pFile, int incrementVars )\n{\n    extern Vec_Int_t * Abc_NtkGetCiSatVarNums( Abc_Ntk_t * pNtk );\n    Abc_Ntk_t * pNtk = s_pNtk;\n    Vec_Int_t * vCiIds;\n    Abc_Obj_t * pObj;\n    int i;\n    vCiIds = Abc_NtkGetCiSatVarNums( pNtk );\n    fprintf( pFile, \"c PI variable numbers: \u003cPI_name\u003e \u003cSAT_var_number\u003e\\n\" );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        fprintf( pFile, \"c %s %d\\n\", Abc_ObjName(pObj), Vec_IntEntry(vCiIds, i) + (int)(incrementVars \u003e 0) );\n    Vec_IntFree( vCiIds );\n}",
+      "Draft": "func Io_WriteCnfOutputPiMapping(pFile *os.File, incrementVars int32) {\n    extern Vec_Int_t * Abc_NtkGetCiSatVarNums( Abc_Ntk_t * pNtk );\n    var pNtk *Abc_Ntk_t  = s_pNtk;\n    var vCiIds *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    vCiIds = Abc_NtkGetCiSatVarNums( pNtk );\n    fmt.Fprintf(pFile, \"c PI variable numbers: \u003cPI_name\u003e \u003cSAT_var_number\u003e\\n\");\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"c %s %d\\n\", Abc_ObjName(pObj), Vec_IntEntry(vCiIds, i) + int32((incrementVars \u003e 0)));\n    }\n    Vec_IntFree( vCiIds );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteCnf.c::pointer-cast::2386",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2386,
+      "End": 2400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteCnf.c::Io_WriteCnf",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1383,
+      "End": 2782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteCnf.c::Io_WriteCnfOutputPiMapping",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteCnfOutputPiMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3066,
+      "End": 3588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteCnf.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3835
+    }
+  ],
+  "Draft": "package io\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ioWriteCnf.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to output CNF of the miter cone.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: ioWriteCnf.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioAbc.h\"\n//#include \"sat/bsat/satSolver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \nvar s_pNtk *Abc_Ntk_t = nil;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Write the miter cone into a CNF file for the SAT solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteCnf(pNtk *Abc_Ntk_t, pFileName string, fAllPrimes int32) int32 {\n    var pSat *sat_solver;\n    if Abc_NtkIsStrash(pNtk) {\n        fmt.Printf(\"Io_WriteCnf() warning: Generating CNF by applying heuristic AIG to CNF conversion.\\n\");\n    } else {\n        fmt.Printf(\"Io_WriteCnf() warning: Generating CNF by convering logic nodes into CNF clauses.\\n\"); }\n    if Abc_NtkPoNum(pNtk) != 1 {\n        fmt.Fprintf(os.Stdout, \"Io_WriteCnf(): Currently can only process the miter (the network with one PO).\\n\");\n        return 0;\n    }\n    if Abc_NtkLatchNum(pNtk) != 0 {\n        fmt.Fprintf(os.Stdout, \"Io_WriteCnf(): Currently can only process the miter for combinational circuits.\\n\");\n        return 0;\n    }\n    if Abc_NtkNodeNum(pNtk) == 0 {\n        fmt.Fprintf(os.Stdout, \"The network has no logic nodes. No CNF file is generaled.\\n\");\n        return 0;\n    }\n    // convert to logic BDD network\n    if Abc_NtkIsLogic(pNtk) {\n        Abc_NtkToBdd( pNtk ); }\n    // create solver with clauses\n    pSat = (sat_solver *)Abc_NtkMiterSatCreate( pNtk, fAllPrimes );\n    if pSat == nil {\n        fmt.Fprintf(os.Stdout, \"The problem is trivially UNSAT. No CNF file is generated.\\n\");\n        return 1;\n    }        \n    // write the clauses\n    s_pNtk = pNtk;\n    Sat_SolverWriteDimacs( pSat, pFileName, 0, 0, 1 );\n    s_pNtk = nil;\n    // free the solver\n    sat_solver_delete( pSat );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Output the mapping of PIs into variable numbers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteCnfOutputPiMapping(pFile *os.File, incrementVars int32) {\n    extern Vec_Int_t * Abc_NtkGetCiSatVarNums( Abc_Ntk_t * pNtk );\n    var pNtk *Abc_Ntk_t  = s_pNtk;\n    var vCiIds *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    vCiIds = Abc_NtkGetCiSatVarNums( pNtk );\n    fmt.Fprintf(pFile, \"c PI variable numbers: \u003cPI_name\u003e \u003cSAT_var_number\u003e\\n\");\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"c %s %d\\n\", Abc_ObjName(pObj), Vec_IntEntry(vCiIds, i) + int32((incrementVars \u003e 0)));\n    }\n    Vec_IntFree( vCiIds );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

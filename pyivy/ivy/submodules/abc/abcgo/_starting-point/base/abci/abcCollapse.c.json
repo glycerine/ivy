@@ -1,0 +1,685 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c",
+  "SHA256": "b60ea0b3d25034c349bc0806a7b518d4b8a5d806632eb7acd8f297ec6cafeb42",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 351,
+        "Column": 5,
+        "ByteOffset": 12267
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode( pNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 362,
+        "Column": 5,
+        "ByteOffset": 12737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 495,
+        "Column": 9,
+        "ByteOffset": 17330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iClaBeg \u003c iClaEnd );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 502,
+        "Column": 13,
+        "ByteOffset": 17736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( status );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 511,
+        "Column": 5,
+        "ByteOffset": 18212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars == sat_solver_nvars(pSat) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 532,
+        "Column": 9,
+        "ByteOffset": 19010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Output %4d:  Supp = %4d. Cone =%6d.\\n\", iCo, Vec_IntSize(vSupp), Gia_ManAndNum(pGia) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 539,
+        "Column": 9,
+        "ByteOffset": 19348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Supp new = %4d. Sop = %4d.  \", Vec_IntSize(vSupp), Vec_StrSize(vSop)/(Vec_IntSize(vSupp) +3) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 563,
+        "Column": 5,
+        "ByteOffset": 20874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vAnds) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 568,
+        "Column": 9,
+        "ByteOffset": 21165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Output %4d:  Supp = %4d. Cone =%6d.\\n\", iCo, Vec_IntSize(vSupp), Vec_IntSize(vAnds) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 581,
+        "Column": 9,
+        "ByteOffset": 21940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Supp new = %4d. Sop = %4d.  \", Vec_IntSize(vSupp), Vec_StrSize(vSop)/(Vec_IntSize(vSupp) +3) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 603,
+        "Column": 9,
+        "ByteOffset": 22831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Considering %d (out of %d) outputs. \", Vec_WecSize(vClasses), Gia_ManCoNum(p) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 619,
+        "Column": 41,
+        "ByteOffset": 23660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Vec_IntSize(vReprs) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 636,
+        "Column": 9,
+        "ByteOffset": 24602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize( Vec_WecEntry(vSupps, iCoThis) ) == Abc_SopGetVarNum(Vec_StrArray(vSop)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 651,
+        "Column": 5,
+        "ByteOffset": 25282
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrCountZero(vSops) == 0 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 663,
+        "Column": 5,
+        "ByteOffset": 25600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pOrder );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 687,
+        "Column": 13,
+        "ByteOffset": 26663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cost of the largest output cone exceeded the limit (%d * %d * %d  \u003e  %d).\\n\", "
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 705,
+        "Column": 37,
+        "ByteOffset": 27373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if Abc_ObjIsCi(pDriver) \u0026\u0026 !strcmp(Abc_ObjName(pNode), Abc_ObjName(pDriver)) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 727,
+        "Column": 9,
+        "ByteOffset": 28492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNodeNew.pData != (void *)(ABC_PTRINT_T)1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 737,
+        "Column": 5,
+        "ByteOffset": 28906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 744,
+        "Column": 9,
+        "ByteOffset": 29211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkCollapseSat: The network check has failed.\\n\" );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 27,
+        "Column": 1,
+        "ByteOffset": 671
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 37,
+        "Column": 1,
+        "ByteOffset": 978
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkClpGia_rec",
+      "Start": 19697,
+      "End": 20187,
+      "BodyStart": 19758,
+      "Original": "int Abc_NtkClpGia_rec( Gia_Man_t * pNew, Abc_Obj_t * pNode )\n{\n    int iLit0, iLit1;\n    if ( pNode-\u003eiTemp \u003e= 0 )\n        return pNode-\u003eiTemp;\n    assert( Abc_ObjIsNode( pNode ) );\n    iLit0 = Abc_NtkClpGia_rec( pNew, Abc_ObjFanin0(pNode) );\n    iLit1 = Abc_NtkClpGia_rec( pNew, Abc_ObjFanin1(pNode) );\n    iLit0 = Abc_LitNotCond( iLit0, Abc_ObjFaninC0(pNode) );\n    iLit1 = Abc_LitNotCond( iLit1, Abc_ObjFaninC1(pNode) );\n    return (pNode-\u003eiTemp = Gia_ManAppendAnd(pNew, iLit0, iLit1));\n}",
+      "Draft": "func Abc_NtkClpGia_rec(pNew *Gia_Man_t, pNode *Abc_Obj_t) int32 {\n    var iLit0, iLit1 int32;\n    if pNode.iTemp \u003e= 0 {\n        return pNode.iTemp; }\n    assert(Abc_ObjIsNode( pNode ), \"Abc_ObjIsNode( pNode )\");\n    iLit0 = Abc_NtkClpGia_rec( pNew, Abc_ObjFanin0(pNode) );\n    iLit1 = Abc_NtkClpGia_rec( pNew, Abc_ObjFanin1(pNode) );\n    iLit0 = Abc_LitNotCond( iLit0, Abc_ObjFaninC0(pNode) );\n    iLit1 = Abc_LitNotCond( iLit1, Abc_ObjFaninC1(pNode) );\n    return (pNode.iTemp = Gia_ManAppendAnd(pNew, iLit0, iLit1));\n}"
+    },
+    {
+      "Name": "Abc_NtkClpGia",
+      "Start": 20188,
+      "End": 20888,
+      "BodyStart": 20234,
+      "Original": "Gia_Man_t * Abc_NtkClpGia( Abc_Ntk_t * pNtk )\n{\n    int i, iLit;\n    Gia_Man_t * pNew;\n    Abc_Obj_t * pNode;\n    assert( Abc_NtkIsStrash(pNtk) );\n    pNew = Gia_ManStart( 1000 );\n    pNew-\u003epName = Abc_UtilStrsav( pNtk-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( pNtk-\u003epSpec );\n    Abc_NtkForEachObj( pNtk, pNode, i )\n        pNode-\u003eiTemp = -1;\n    Abc_AigConst1(pNtk)-\u003eiTemp = 1;\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode-\u003eiTemp = Gia_ManAppendCi(pNew);\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        iLit = Abc_NtkClpGia_rec( pNew, Abc_ObjFanin0(pNode) );\n        iLit = Abc_LitNotCond( iLit, Abc_ObjFaninC0(pNode) );\n        Gia_ManAppendCo( pNew, iLit );\n    }\n    return pNew;\n}",
+      "Draft": "func Abc_NtkClpGia(pNtk *Abc_Ntk_t) *Gia_Man_t {\n    var i, iLit int32;\n    var pNew *Gia_Man_t;\n    var pNode *Abc_Obj_t;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    pNew = Gia_ManStart( 1000 );\n    pNew.pName = Abc_UtilStrsav( pNtk.pName );\n    pNew.pSpec = Abc_UtilStrsav( pNtk.pSpec );\n    Abc_NtkForEachObj( pNtk, pNode, i )\n        pNode.iTemp = -1;\n    Abc_AigConst1(pNtk).iTemp = 1;\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode.iTemp = Gia_ManAppendCi(pNew);\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        iLit = Abc_NtkClpGia_rec( pNew, Abc_ObjFanin0(pNode) );\n        iLit = Abc_LitNotCond( iLit, Abc_ObjFaninC0(pNode) );\n        Gia_ManAppendCo( pNew, iLit );\n    }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkCollapseReduce",
+      "Start": 21276,
+      "End": 22756,
+      "BodyStart": 21381,
+      "Original": "int Abc_NtkCollapseReduce( Vec_Str_t * vSop, Vec_Int_t * vSupp, Vec_Int_t * vClass, Vec_Wec_t * vSupps )\n{\n    int j = 0, i, k, iCo, iVar, nVars = Vec_IntSize(vSupp);\n    char * pCube, * pSop = Vec_StrArray(vSop);\n    Vec_Int_t * vPres;\n    if ( Vec_StrSize(vSop) == 4 ) // constant\n    {\n        Vec_IntForEachEntry( vClass, iCo, i )\n            Vec_IntClear( Vec_WecEntry(vSupps, iCo) );\n        return 1;\n    }\n    vPres = Vec_IntStart( nVars );\n    Abc_NtkSopForEachCube( pSop, nVars, pCube )\n        for ( k = 0; k \u003c nVars; k++ )\n            if ( pCube[k] != '-' )\n                Vec_IntWriteEntry( vPres, k, 1 );\n    if ( Vec_IntCountZero(vPres) == 0 )\n    {\n        Vec_IntFree( vPres );\n        return 0;\n    }\n    // reduce cubes\n    Abc_NtkSopForEachCube( pSop, nVars, pCube )\n        for ( k = 0; k \u003c nVars + 3; k++ )\n            if ( k \u003e= nVars || Vec_IntEntry(vPres, k) )\n                Vec_StrWriteEntry( vSop, j++, pCube[k] );\n    Vec_StrWriteEntry( vSop, j++, '\\0' );\n    Vec_StrShrink( vSop, j );\n    // reduce support\n    Vec_IntForEachEntry( vClass, iCo, i )\n    {\n        j = 0;\n        vSupp = Vec_WecEntry( vSupps, iCo );\n        Vec_IntForEachEntry( vSupp, iVar, k )\n            if ( Vec_IntEntry(vPres, k) )\n                Vec_IntWriteEntry( vSupp, j++, iVar );\n        Vec_IntShrink( vSupp, j );\n    }\n    Vec_IntFree( vPres );\n//    if ( Vec_IntSize(vSupp) != Abc_SopGetVarNum(Vec_StrArray(vSop)) )\n//        printf( \"Mismatch!!!\\n\" );\n    return 1;\n}",
+      "Draft": "func Abc_NtkCollapseReduce(vSop *Vec_Str_t, vSupp *Vec_Int_t, vClass *Vec_Int_t, vSupps *Vec_Wec_t) int32 {\n    var j int32;\n    var i int32;\n    var k int32;\n    var iCo int32;\n    var iVar int32;\n    var nVars int32 = Vec_IntSize(vSupp);\n    var pCube string;\n    var pSop string = Vec_StrArray(vSop);\n    var vPres *Vec_Int_t;\n    if Vec_StrSize(vSop) == 4 { // constant\n    \n        Vec_IntForEachEntry( vClass, iCo, i )\n            Vec_IntClear( Vec_WecEntry(vSupps, iCo) );\n        return 1;\n    }\n    vPres = Vec_IntStart( nVars );\n    // inlining of macro Abc_NtkSopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n        for  k = 0; k \u003c nVars; k++  {\n            if pCube[k] != '-' {\n                Vec_IntWriteEntry( vPres, k, 1 ); }\n        }\n    }\n    if Vec_IntCountZero(vPres) == 0 {\n        Vec_IntFree( vPres );\n        return 0;\n    }\n    // reduce cubes\n    // inlining of macro Abc_NtkSopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n        for  k = 0; k \u003c nVars + 3; k++  {\n            if k \u003e= nVars || Vec_IntEntry(vPres, k) {\n                Vec_StrWriteEntry( vSop, j++, pCube[k] ); }\n        }\n    }\n    Vec_StrWriteEntry( vSop, j++, '\\0' );\n    Vec_StrShrink( vSop, j );\n    // reduce support\n    Vec_IntForEachEntry( vClass, iCo, i )\n    {\n        j = 0;\n        vSupp = Vec_WecEntry( vSupps, iCo );\n        Vec_IntForEachEntry( vSupp, iVar, k )\n            if ( Vec_IntEntry(vPres, k) )\n                Vec_IntWriteEntry( vSupp, j++, iVar );\n        Vec_IntShrink( vSupp, j );\n    }\n    Vec_IntFree( vPres );\n//    if ( Vec_IntSize(vSupp) != Abc_SopGetVarNum(Vec_StrArray(vSop)) )\n//        printf( \"Mismatch!!!\\n\" );\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkClpDeriveSatSolver",
+      "Start": 23047,
+      "End": 25470,
+      "BodyStart": 23242,
+      "Original": "sat_solver * Abc_NtkClpDeriveSatSolver( Cnf_Dat_t * pCnf, int iCoObjId, Vec_Int_t * vSupp, Vec_Int_t * vAnds, Vec_Int_t * vMap, sat_solver ** ppSat1, sat_solver ** ppSat2, sat_solver ** ppSat3 )\n{\n    int i, k, iObj, status, nVars = 2;\n//    int i, k, iObj, status, nVars = 1;\n    Vec_Int_t * vLits = Vec_IntAlloc( 16 );\n    sat_solver * pSat = sat_solver_new();\n    if ( ppSat1 ) *ppSat1 = sat_solver_new();\n    if ( ppSat2 ) *ppSat2 = sat_solver_new();\n    if ( ppSat3 ) *ppSat3 = sat_solver_new();\n    // assign SAT variable numbers\n    Vec_IntWriteEntry( vMap, iCoObjId, nVars++ );\n    Vec_IntForEachEntry( vSupp, iObj, k )\n        Vec_IntWriteEntry( vMap, iObj, nVars++ );\n    Vec_IntForEachEntry( vAnds, iObj, k )\n        if ( pCnf-\u003epObj2Clause[iObj] != -1 )\n            Vec_IntWriteEntry( vMap, iObj, nVars++ );\n//    Vec_IntForEachEntry( vSupp, iObj, k )\n//        Vec_IntWriteEntry( vMap, iObj, nVars++ );\n    // create clauses for the internal nodes and for the output\n    sat_solver_setnvars( pSat, nVars );\n    if ( ppSat1 ) sat_solver_setnvars( *ppSat1, nVars );\n    if ( ppSat2 ) sat_solver_setnvars( *ppSat2, nVars );\n    if ( ppSat3 ) sat_solver_setnvars( *ppSat3, nVars );\n    Vec_IntPush( vAnds, iCoObjId );\n    Vec_IntForEachEntry( vAnds, iObj, k )\n    {\n        int iClaBeg, iClaEnd, * pLit;\n        if ( pCnf-\u003epObj2Clause[iObj] == -1 )\n            continue;\n        iClaBeg = pCnf-\u003epObj2Clause[iObj];\n        iClaEnd = iClaBeg + pCnf-\u003epObj2Count[iObj];\n        assert( iClaBeg \u003c iClaEnd );\n        for ( i = iClaBeg; i \u003c iClaEnd; i++ )\n        {\n            Vec_IntClear( vLits );\n            for ( pLit = pCnf-\u003epClauses[i]; pLit \u003c pCnf-\u003epClauses[i+1]; pLit++ )\n                Vec_IntPush( vLits, Abc_Lit2LitV(Vec_IntArray(vMap), *pLit) );\n            status = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) );\n            assert( status );\n            (void) status;\n            if ( ppSat1 ) sat_solver_addclause( *ppSat1, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) );\n            if ( ppSat2 ) sat_solver_addclause( *ppSat2, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) );\n            if ( ppSat3 ) sat_solver_addclause( *ppSat3, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) );\n        }\n    }\n    Vec_IntPop( vAnds );\n    Vec_IntFree( vLits );\n    assert( nVars == sat_solver_nvars(pSat) );\n    return pSat;\n}",
+      "Draft": "func Abc_NtkClpDeriveSatSolver(pCnf *Cnf_Dat_t, iCoObjId int32, vSupp *Vec_Int_t, vAnds *Vec_Int_t, vMap *Vec_Int_t, ppSat1 **sat_solver, ppSat2 **sat_solver, ppSat3 **sat_solver) *sat_solver {\n    var i int32;\n    var k int32;\n    var iObj int32;\n    var status int32;\n    var nVars int32 = 2;\n//    int i, k, iObj, status, nVars = 1;\n    var vLits *Vec_Int_t  = Vec_IntAlloc( 16 );\n    var pSat *sat_solver  = sat_solver_new();\n    if ppSat1 { *ppSat1 = sat_solver_new(); }\n    if ppSat2 { *ppSat2 = sat_solver_new(); }\n    if ppSat3 { *ppSat3 = sat_solver_new(); }\n    // assign SAT variable numbers\n    Vec_IntWriteEntry( vMap, iCoObjId, nVars++ );\n    Vec_IntForEachEntry( vSupp, iObj, k )\n        Vec_IntWriteEntry( vMap, iObj, nVars++ );\n    Vec_IntForEachEntry( vAnds, iObj, k )\n        if ( pCnf.pObj2Clause[iObj] != -1 )\n            Vec_IntWriteEntry( vMap, iObj, nVars++ );\n//    Vec_IntForEachEntry( vSupp, iObj, k )\n//        Vec_IntWriteEntry( vMap, iObj, nVars++ );\n    // create clauses for the internal nodes and for the output\n    sat_solver_setnvars( pSat, nVars );\n    if ppSat1 { sat_solver_setnvars( *ppSat1, nVars ); }\n    if ppSat2 { sat_solver_setnvars( *ppSat2, nVars ); }\n    if ppSat3 { sat_solver_setnvars( *ppSat3, nVars ); }\n    Vec_IntPush( vAnds, iCoObjId );\n    Vec_IntForEachEntry( vAnds, iObj, k )\n    {\n        var iClaBeg int32;\n        var iClaEnd int32;\n        var pLit *int32;\n        if pCnf.pObj2Clause[iObj] == -1 {\n            continue; }\n        iClaBeg = pCnf.pObj2Clause[iObj];\n        iClaEnd = iClaBeg + pCnf.pObj2Count[iObj];\n        assert(iClaBeg \u003c iClaEnd, \"iClaBeg \u003c iClaEnd\");\n        for  i = iClaBeg; i \u003c iClaEnd; i++  {\n            Vec_IntClear( vLits );\n            for  pLit = pCnf.pClauses[i]; pLit \u003c pCnf.pClauses[i+1]; pLit++  {\n                Vec_IntPush( vLits, Abc_Lit2LitV(Vec_IntArray(vMap), *pLit) );\n            }\n            status = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) );\n            assert((status != 0), \"status\");\n            (void) status;\n            if ppSat1 { sat_solver_addclause( *ppSat1, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) ); }\n            if ppSat2 { sat_solver_addclause( *ppSat2, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) ); }\n            if ppSat3 { sat_solver_addclause( *ppSat3, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) ); }\n        }\n    }\n    Vec_IntPop( vAnds );\n    Vec_IntFree( vLits );\n    assert(nVars == sat_solver_nvars(pSat), \"nVars == sat_solver_nvars(pSat)\");\n    return pSat;\n}"
+    },
+    {
+      "Name": "Abc_NtkClpGiaOne",
+      "Start": 25736,
+      "End": 26726,
+      "BodyStart": 25918,
+      "Original": "Vec_Str_t * Abc_NtkClpGiaOne( Gia_Man_t * p, int iCo, int nCubeLim, int nBTLimit, int fCanon, int fReverse, Vec_Int_t * vSupp, int fVerbose, Vec_Int_t * vClass, Vec_Wec_t * vSupps )\n{\n    Vec_Str_t * vSop;\n    abctime clk = Abc_Clock();\n    extern Vec_Str_t * Bmc_CollapseOneOld( Gia_Man_t * p, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );\n    Gia_Man_t * pGia  = Gia_ManDupCones( p, \u0026iCo, 1, 1 );\n    if ( fVerbose )\n        printf( \"Output %4d:  Supp = %4d. Cone =%6d.\\n\", iCo, Vec_IntSize(vSupp), Gia_ManAndNum(pGia) );\n    vSop = Bmc_CollapseOneOld( pGia, nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );\n    Gia_ManStop( pGia );\n    if ( vSop == NULL )\n        return NULL;\n    Abc_NtkCollapseReduce( vSop, vSupp, vClass, vSupps );\n    if ( fVerbose )\n        printf( \"Supp new = %4d. Sop = %4d.  \", Vec_IntSize(vSupp), Vec_StrSize(vSop)/(Vec_IntSize(vSupp) +3) );\n    if ( fVerbose )\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return vSop; \n}",
+      "Draft": "func Abc_NtkClpGiaOne(p *Gia_Man_t, iCo int32, nCubeLim int32, nBTLimit int32, fCanon int32, fReverse int32, vSupp *Vec_Int_t, fVerbose int32, vClass *Vec_Int_t, vSupps *Vec_Wec_t) *Vec_Str_t {\n    var vSop *Vec_Str_t;\n    var clk abctime  = Abc_Clock();\n    extern Vec_Str_t * Bmc_CollapseOneOld( Gia_Man_t * p, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );\n    var pGia *Gia_Man_t   = Gia_ManDupCones( p, \u0026iCo, 1, 1 );\n    if fVerbose != 0 {\n        fmt.Printf(\"Output %4d:  Supp = %4d. Cone =%6d.\\n\", iCo, Vec_IntSize(vSupp), Gia_ManAndNum(pGia)); }\n    vSop = Bmc_CollapseOneOld( pGia, nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );\n    Gia_ManStop( pGia );\n    if vSop == nil {\n        return nil; }\n    Abc_NtkCollapseReduce( vSop, vSupp, vClass, vSupps );\n    if fVerbose != 0 {\n        fmt.Printf(\"Supp new = %4d. Sop = %4d.  \", Vec_IntSize(vSupp), Vec_StrSize(vSop)/(Vec_IntSize(vSupp) +3)); }\n    if fVerbose != 0 {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n    return vSop; \n}"
+    },
+    {
+      "Name": "Abc_NtkClpGiaOne2",
+      "Start": 26727,
+      "End": 29223,
+      "BodyStart": 26946,
+      "Original": "Vec_Str_t * Abc_NtkClpGiaOne2( Cnf_Dat_t * pCnf, Gia_Man_t * p, int iCo, int nCubeLim, int nBTLimit, int fCanon, int fReverse, Vec_Int_t * vSupp, Vec_Int_t * vMap, int fVerbose, Vec_Int_t * vClass, Vec_Wec_t * vSupps )\n{\n    Vec_Str_t * vSop;\n    sat_solver * pSat, * pSat1 = NULL, * pSat2 = NULL, * pSat3 = NULL;\n    Gia_Obj_t * pObj;\n    abctime clk = Abc_Clock();\n    extern Vec_Str_t * Bmc_CollapseOne_int( sat_solver * pSat, int nVars, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );\n    extern Vec_Str_t * Bmc_CollapseOne_int2( sat_solver * pSat, sat_solver * pSat2, int nVars, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );\n    extern Vec_Str_t * Bmc_CollapseOne_int3( sat_solver * pSat, sat_solver * pSat1, sat_solver * pSat2, sat_solver * pSat3, int nVars, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );\n    int i, iCoObjId = Gia_ObjId( p, Gia_ManCo(p, iCo) );\n    Vec_Int_t * vAnds = Vec_IntAlloc( 100 );\n    Vec_Int_t * vSuppObjs = Vec_IntAlloc( 100 );\n    Gia_ManForEachCiVec( vSupp, p, pObj, i )\n        Vec_IntPush( vSuppObjs, Gia_ObjId(p, pObj) );\n    Gia_ManIncrementTravId( p );\n    Gia_ManCollectAnds( p, \u0026iCoObjId, 1, vAnds, NULL );\n    assert( Vec_IntSize(vAnds) \u003e 0 );\n//    pSat = Abc_NtkClpDeriveSatSolver( pCnf, iCoObjId, vSuppObjs, vAnds, vMap, \u0026pSat1, \u0026pSat2, \u0026pSat3 );\n    pSat = Abc_NtkClpDeriveSatSolver( pCnf, iCoObjId, vSuppObjs, vAnds, vMap, NULL, NULL, NULL );\n    Vec_IntFree( vSuppObjs );\n    if ( fVerbose )\n        printf( \"Output %4d:  Supp = %4d. Cone =%6d.\\n\", iCo, Vec_IntSize(vSupp), Vec_IntSize(vAnds) );\n//    vSop = Bmc_CollapseOne_int3( pSat, pSat1, pSat2, pSat3, Vec_IntSize(vSupp), nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );\n//    vSop = Bmc_CollapseOne_int2( pSat, pSat1, Vec_IntSize(vSupp), nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );\n    vSop = Bmc_CollapseOne_int( pSat, Vec_IntSize(vSupp), nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );\n    sat_solver_delete( pSat );\n    if ( pSat1 ) sat_solver_delete( pSat1 );\n    if ( pSat2 ) sat_solver_delete( pSat2 );\n    if ( pSat3 ) sat_solver_delete( pSat3 );\n    Vec_IntFree( vAnds );\n    if ( vSop == NULL )\n        return NULL;\n    Abc_NtkCollapseReduce( vSop, vSupp, vClass, vSupps );\n    if ( fVerbose )\n        printf( \"Supp new = %4d. Sop = %4d.  \", Vec_IntSize(vSupp), Vec_StrSize(vSop)/(Vec_IntSize(vSupp) +3) );\n    if ( fVerbose )\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return vSop; \n}",
+      "Draft": "func Abc_NtkClpGiaOne2(pCnf *Cnf_Dat_t, p *Gia_Man_t, iCo int32, nCubeLim int32, nBTLimit int32, fCanon int32, fReverse int32, vSupp *Vec_Int_t, vMap *Vec_Int_t, fVerbose int32, vClass *Vec_Int_t, vSupps *Vec_Wec_t) *Vec_Str_t {\n    var vSop *Vec_Str_t;\n    var pSat *sat_solver;\n    var pSat1 *sat_solver = nil;\n    var pSat2 *sat_solver = nil;\n    var pSat3 *sat_solver = nil;\n    var pObj *Gia_Obj_t;\n    var clk abctime  = Abc_Clock();\n    extern Vec_Str_t * Bmc_CollapseOne_int( sat_solver * pSat, int nVars, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );\n    extern Vec_Str_t * Bmc_CollapseOne_int2( sat_solver * pSat, sat_solver * pSat2, int nVars, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );\n    extern Vec_Str_t * Bmc_CollapseOne_int3( sat_solver * pSat, sat_solver * pSat1, sat_solver * pSat2, sat_solver * pSat3, int nVars, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );\n    var i int32;\n    var iCoObjId int32 = Gia_ObjId( p, Gia_ManCo(p, iCo) );\n    var vAnds *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vSuppObjs *Vec_Int_t  = Vec_IntAlloc( 100 );\n    Gia_ManForEachCiVec( vSupp, p, pObj, i )\n        Vec_IntPush( vSuppObjs, Gia_ObjId(p, pObj) );\n    Gia_ManIncrementTravId( p );\n    Gia_ManCollectAnds( p, \u0026iCoObjId, 1, vAnds, nil );\n    assert(Vec_IntSize(vAnds) \u003e 0, \"Vec_IntSize(vAnds) \u003e 0\");\n//    pSat = Abc_NtkClpDeriveSatSolver( pCnf, iCoObjId, vSuppObjs, vAnds, vMap, \u0026pSat1, \u0026pSat2, \u0026pSat3 );\n    pSat = Abc_NtkClpDeriveSatSolver( pCnf, iCoObjId, vSuppObjs, vAnds, vMap, nil, nil, nil );\n    Vec_IntFree( vSuppObjs );\n    if fVerbose != 0 {\n        fmt.Printf(\"Output %4d:  Supp = %4d. Cone =%6d.\\n\", iCo, Vec_IntSize(vSupp), Vec_IntSize(vAnds)); }\n//    vSop = Bmc_CollapseOne_int3( pSat, pSat1, pSat2, pSat3, Vec_IntSize(vSupp), nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );\n//    vSop = Bmc_CollapseOne_int2( pSat, pSat1, Vec_IntSize(vSupp), nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );\n    vSop = Bmc_CollapseOne_int( pSat, Vec_IntSize(vSupp), nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );\n    sat_solver_delete( pSat );\n    if pSat1 != nil { sat_solver_delete( pSat1 ); }\n    if pSat2 != nil { sat_solver_delete( pSat2 ); }\n    if pSat3 != nil { sat_solver_delete( pSat3 ); }\n    Vec_IntFree( vAnds );\n    if vSop == nil {\n        return nil; }\n    Abc_NtkCollapseReduce( vSop, vSupp, vClass, vSupps );\n    if fVerbose != 0 {\n        fmt.Printf(\"Supp new = %4d. Sop = %4d.  \", Vec_IntSize(vSupp), Vec_StrSize(vSop)/(Vec_IntSize(vSupp) +3)); }\n    if fVerbose != 0 {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n    return vSop; \n}"
+    },
+    {
+      "Name": "Abc_GiaDeriveSops",
+      "Start": 29224,
+      "End": 32719,
+      "BodyStart": 29410,
+      "Original": "Vec_Ptr_t * Abc_GiaDeriveSops( Abc_Ntk_t * pNtkNew, Gia_Man_t * p, Vec_Wec_t * vSupps, int nCubeLim, int nBTLimit, int nCostMax, int fCanon, int fReverse, int fCnfShared, int fVerbose )\n{\n    ProgressBar * pProgress;\n    abctime clk = Abc_Clock();\n    Vec_Ptr_t * vSops = NULL, * vSopsRepr;\n    Vec_Int_t * vReprs, * vClass, * vReprSuppSizes;\n    int i, k, Entry, iCo, * pOrder;\n    Vec_Wec_t * vClasses;\n    Cnf_Dat_t * pCnf = NULL;\n    Vec_Int_t * vMap = NULL;\n    // derive classes of outputs\n    vClasses = Gia_ManIsoStrashReduceInt( p, vSupps, 0 );\n    if ( fVerbose )\n    {\n        printf( \"Considering %d (out of %d) outputs. \", Vec_WecSize(vClasses), Gia_ManCoNum(p) );\n        Abc_PrintTime( 1, \"Reduction time\", Abc_Clock() - clk );\n    }\n    // derive representatives\n    vReprs = Vec_WecCollectFirsts( vClasses );\n    vReprSuppSizes = Vec_IntAlloc( Vec_IntSize(vReprs) );\n    Vec_IntForEachEntry( vReprs, Entry, i )\n        Vec_IntPush( vReprSuppSizes, Vec_IntSize(Vec_WecEntry(vSupps, Entry)) );\n    pOrder = Abc_MergeSortCost( Vec_IntArray(vReprSuppSizes), Vec_IntSize(vReprSuppSizes) );\n    Vec_IntFree( vReprSuppSizes );\n    // consider SOPs for representatives\n    if ( fCnfShared )\n    {\n        vMap = Vec_IntStartFull( Gia_ManObjNum(p) );\n        pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 1, 0, 0, 0 );\n    }\n    vSopsRepr = Vec_PtrStart( Vec_IntSize(vReprs) );\n    pProgress = Extra_ProgressBarStart( stdout, Vec_IntSize(vReprs) );\n    Extra_ProgressBarUpdate( pProgress, 0, NULL );\n    for ( i = 0; i \u003c Vec_IntSize(vReprs); i++ )\n    {\n        int iEntry        = pOrder[Vec_IntSize(vReprs) - 1 - i];\n        int iCoThis       = Vec_IntEntry( vReprs, iEntry );\n        Vec_Int_t * vSupp = Vec_WecEntry( vSupps, iCoThis );\n        Vec_Str_t * vSop;\n        if ( Vec_IntSize(vSupp) \u003c 2 )\n        {\n            Vec_PtrWriteEntry( vSopsRepr, iEntry, (void *)(ABC_PTRINT_T)1 );\n            continue;\n        }\n        if ( fCnfShared \u0026\u0026 !fCanon )\n            vSop = Abc_NtkClpGiaOne2( pCnf, p, iCoThis, nCubeLim, nBTLimit, fCanon, fReverse, vSupp, vMap, i ? 0 : fVerbose, Vec_WecEntry(vClasses, iEntry), vSupps );\n        else\n            vSop = Abc_NtkClpGiaOne( p, iCoThis, nCubeLim, nBTLimit, fCanon, fReverse, vSupp, i ? 0 : fVerbose, Vec_WecEntry(vClasses, iEntry), vSupps );\n        if ( vSop == NULL )\n            goto finish;\n        assert( Vec_IntSize( Vec_WecEntry(vSupps, iCoThis) ) == Abc_SopGetVarNum(Vec_StrArray(vSop)) );\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        Vec_PtrWriteEntry( vSopsRepr, iEntry, Abc_SopRegister( (Mem_Flex_t *)pNtkNew-\u003epManFunc, Vec_StrArray(vSop) ) );\n        Vec_StrFree( vSop );\n    }\n    Extra_ProgressBarStop( pProgress );\n    if ( fCnfShared )\n    {\n        Cnf_DataFree( pCnf );\n        Vec_IntFree( vMap );\n    }\n    // derive SOPs for each output\n    vSops = Vec_PtrStart( Gia_ManCoNum(p) );\n    Vec_WecForEachLevel ( vClasses, vClass, i )\n        Vec_IntForEachEntry( vClass, iCo, k )\n            Vec_PtrWriteEntry( vSops, iCo, Vec_PtrEntry(vSopsRepr, i) );\n    assert( Vec_PtrCountZero(vSops) == 0 );\n/*\n    // verify\n    for ( i = 0; i \u003c Gia_ManCoNum(p); i++ )\n    {\n        Vec_Int_t * vSupp = Vec_WecEntry( vSupps, i );\n        char * pSop = (char *)Vec_PtrEntry( vSops, i );\n        assert( Vec_IntSize(vSupp) == Abc_SopGetVarNum(pSop) );\n    }\n*/\n    // cleanup\nfinish:\n    ABC_FREE( pOrder );\n    Vec_IntFree( vReprs );\n    Vec_WecFree( vClasses );\n    Vec_PtrFree( vSopsRepr );\n    return vSops;\n}",
+      "Draft": "func Abc_GiaDeriveSops(pNtkNew *Abc_Ntk_t, p *Gia_Man_t, vSupps *Vec_Wec_t, nCubeLim int32, nBTLimit int32, nCostMax int32, fCanon int32, fReverse int32, fCnfShared int32, fVerbose int32) *Vec_Ptr_t {\n    var pProgress *ProgressBar;\n    var clk abctime  = Abc_Clock();\n    var vSops *Vec_Ptr_t = nil;\n    var vSopsRepr *Vec_Ptr_t;\n    var vReprs, vClass, vReprSuppSizes *Vec_Int_t;\n    var i int32;\n    var k int32;\n    var Entry int32;\n    var iCo int32;\n    var pOrder *int32;\n    var vClasses *Vec_Wec_t;\n    var pCnf *Cnf_Dat_t  = nil;\n    var vMap *Vec_Int_t  = nil;\n    // derive classes of outputs\n    vClasses = Gia_ManIsoStrashReduceInt( p, vSupps, 0 );\n    if fVerbose != 0 {\n        fmt.Printf(\"Considering %d (out of %d) outputs. \", Vec_WecSize(vClasses), Gia_ManCoNum(p));\n        Abc_PrintTime( 1, \"Reduction time\", Abc_Clock() - clk );\n    }\n    // derive representatives\n    vReprs = Vec_WecCollectFirsts( vClasses );\n    vReprSuppSizes = Vec_IntAlloc( Vec_IntSize(vReprs) );\n    Vec_IntForEachEntry( vReprs, Entry, i )\n        Vec_IntPush( vReprSuppSizes, Vec_IntSize(Vec_WecEntry(vSupps, Entry)) );\n    pOrder = Abc_MergeSortCost( Vec_IntArray(vReprSuppSizes), Vec_IntSize(vReprSuppSizes) );\n    Vec_IntFree( vReprSuppSizes );\n    // consider SOPs for representatives\n    if fCnfShared != 0 {\n        vMap = Vec_IntStartFull( Gia_ManObjNum(p) );\n        pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 1, 0, 0, 0 );\n    }\n    vSopsRepr = Vec_PtrStart( Vec_IntSize(vReprs) );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Vec_IntSize(vReprs) );\n    Extra_ProgressBarUpdate( pProgress, 0, nil );\n    for  i = 0; i \u003c Vec_IntSize(vReprs); i++  {\n        var iEntry int32         = pOrder[Vec_IntSize(vReprs) - 1 - i];\n        var iCoThis int32        = Vec_IntEntry( vReprs, iEntry );\n        var vSupp *Vec_Int_t  = Vec_WecEntry( vSupps, iCoThis );\n        var vSop *Vec_Str_t;\n        if Vec_IntSize(vSupp) \u003c 2 {\n            Vec_PtrWriteEntry( vSopsRepr, iEntry, (void *)(ABC_PTRINT_T)1 );\n            continue;\n        }\n        if (fCnfShared != 0) \u0026\u0026 !(fCanon != 0) {\n            vSop = Abc_NtkClpGiaOne2( pCnf, p, iCoThis, nCubeLim, nBTLimit, fCanon, fReverse, vSupp, vMap, i ? 0 : fVerbose, Vec_WecEntry(vClasses, iEntry), vSupps );\n        } else {\n            vSop = Abc_NtkClpGiaOne( p, iCoThis, nCubeLim, nBTLimit, fCanon, fReverse, vSupp, i ? 0 : fVerbose, Vec_WecEntry(vClasses, iEntry), vSupps ); }\n        if vSop == nil {\n            goto finish; }\n        assert(Vec_IntSize( Vec_WecEntry(vSupps, iCoThis) ) == Abc_SopGetVarNum(Vec_StrArray(vSop)), \"Vec_IntSize( Vec_WecEntry(vSupps, iCoThis) ) == Abc_SopGetVarNum(Vec_StrArray(vSop))\");\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        Vec_PtrWriteEntry( vSopsRepr, iEntry, Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, Vec_StrArray(vSop) ) );\n        Vec_StrFree( vSop );\n    }\n    Extra_ProgressBarStop( pProgress );\n    if fCnfShared != 0 {\n        Cnf_DataFree( pCnf );\n        Vec_IntFree( vMap );\n    }\n    // derive SOPs for each output\n    vSops = Vec_PtrStart( Gia_ManCoNum(p) );\n    Vec_WecForEachLevel ( vClasses, vClass, i )\n        Vec_IntForEachEntry( vClass, iCo, k )\n            Vec_PtrWriteEntry( vSops, iCo, Vec_PtrEntry(vSopsRepr, i) );\n    assert(Vec_PtrCountZero(vSops) == 0, \"Vec_PtrCountZero(vSops) == 0\");\n/*\n    // verify\n    for ( i = 0; i \u003c Gia_ManCoNum(p); i++ )\n    {\n        Vec_Int_t * vSupp = Vec_WecEntry( vSupps, i );\n        char * pSop = (char *)Vec_PtrEntry( vSops, i );\n        assert( Vec_IntSize(vSupp) == Abc_SopGetVarNum(pSop) );\n    }\n*/\n    // cleanup\nfinish:\n    ABC_FREE( pOrder );\n    Vec_IntFree( vReprs );\n    Vec_WecFree( vClasses );\n    Vec_PtrFree( vSopsRepr );\n    return vSops;\n}"
+    },
+    {
+      "Name": "Abc_NtkFromSopsInt",
+      "Start": 32720,
+      "End": 35719,
+      "BodyStart": 32869,
+      "Original": "Abc_Ntk_t * Abc_NtkFromSopsInt( Abc_Ntk_t * pNtk, int nCubeLim, int nBTLimit, int nCostMax, int fCanon, int fReverse, int fCnfShared, int fVerbose )\n{\n    Abc_Ntk_t * pNtkNew;\n    Gia_Man_t * pGia;\n    Vec_Wec_t * vSupps;\n    Vec_Int_t * vSupp;\n    Vec_Ptr_t * vSops;\n    Abc_Obj_t * pNode, * pNodeNew, * pDriver;\n    int i, k, iCi; \n    pGia    = Abc_NtkClpGia( pNtk );\n    vSupps  = Gia_ManCreateCoSupps( pGia, fVerbose );\n    // check the largest output\n    if ( nCubeLim \u003e 0 \u0026\u0026 nCostMax \u003e 0 )\n    {\n        int iCoMax   = Gia_ManCoLargestSupp( pGia, vSupps );\n        int iObjMax  = Gia_ObjId( pGia, Gia_ManCo(pGia, iCoMax) );\n        int nSuppMax = Vec_IntSize( Vec_WecEntry(vSupps, iCoMax) );\n        int nNodeMax = Gia_ManConeSize( pGia, \u0026iObjMax, 1 );\n        word Cost = (word)nNodeMax * (word)nSuppMax * (word)nCubeLim;\n        if ( Cost \u003e (word)nCostMax )\n        {\n            printf( \"Cost of the largest output cone exceeded the limit (%d * %d * %d  \u003e  %d).\\n\", \n                nNodeMax, nSuppMax, nCubeLim, nCostMax );\n            Gia_ManStop( pGia );\n            Vec_WecFree( vSupps );\n            return NULL;\n        }\n    }\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    vSops   = Abc_GiaDeriveSops( pNtkNew, pGia, vSupps, nCubeLim, nBTLimit, nCostMax, fCanon, fReverse, fCnfShared, fVerbose );\n    Gia_ManStop( pGia );\n    if ( vSops == NULL )\n    {\n        Vec_WecFree( vSupps );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        pDriver = Abc_ObjFanin0(pNode);\n        if ( Abc_ObjIsCi(pDriver) \u0026\u0026 !strcmp(Abc_ObjName(pNode), Abc_ObjName(pDriver)) )\n        {\n            Abc_ObjAddFanin( pNode-\u003epCopy, pDriver-\u003epCopy );\n            continue;\n        }\n        if ( Abc_ObjIsCi(pDriver) )\n        {\n            pNodeNew = Abc_NtkCreateNode( pNtkNew );\n            Abc_ObjAddFanin( pNodeNew, pDriver-\u003epCopy ); \n            pNodeNew-\u003epData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew-\u003epManFunc, Abc_ObjFaninC0(pNode) ? \"0 1\\n\" : \"1 1\\n\" );\n            Abc_ObjAddFanin( pNode-\u003epCopy, pNodeNew );\n            continue;\n        }\n        if ( pDriver == Abc_AigConst1(pNtk) )\n        {\n            pNodeNew = Abc_NtkCreateNode( pNtkNew );\n            pNodeNew-\u003epData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew-\u003epManFunc, Abc_ObjFaninC0(pNode) ? \" 0\\n\" : \" 1\\n\" );\n            Abc_ObjAddFanin( pNode-\u003epCopy, pNodeNew );\n            continue;\n        }\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        vSupp = Vec_WecEntry( vSupps, i );\n        Vec_IntForEachEntry( vSupp, iCi, k )\n            Abc_ObjAddFanin( pNodeNew, Abc_NtkCi(pNtkNew, iCi) );\n        pNodeNew-\u003epData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew-\u003epManFunc, (const char*)Vec_PtrEntry( vSops, i ) );\n        assert( pNodeNew-\u003epData != (void *)(ABC_PTRINT_T)1 );\n        Abc_ObjAddFanin( pNode-\u003epCopy, pNodeNew );\n    }\n    Vec_WecFree( vSupps );\n    Vec_PtrFree( vSops );\n    Abc_NtkSortSops( pNtkNew );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkFromSopsInt(pNtk *Abc_Ntk_t, nCubeLim int32, nBTLimit int32, nCostMax int32, fCanon int32, fReverse int32, fCnfShared int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pGia *Gia_Man_t;\n    var vSupps *Vec_Wec_t;\n    var vSupp *Vec_Int_t;\n    var vSops *Vec_Ptr_t;\n    var pNode, pNodeNew, pDriver *Abc_Obj_t;\n    var i, k, iCi int32; \n    pGia    = Abc_NtkClpGia( pNtk );\n    vSupps  = Gia_ManCreateCoSupps( pGia, fVerbose );\n    // check the largest output\n    if nCubeLim \u003e 0 \u0026\u0026 nCostMax \u003e 0 {\n        var iCoMax int32    = Gia_ManCoLargestSupp( pGia, vSupps );\n        var iObjMax int32   = Gia_ObjId( pGia, Gia_ManCo(pGia, iCoMax) );\n        var nSuppMax int32  = Vec_IntSize( Vec_WecEntry(vSupps, iCoMax) );\n        var nNodeMax int32  = Gia_ManConeSize( pGia, \u0026iObjMax, 1 );\n        var Cost word  = (word)nNodeMax * (word)nSuppMax * (word)nCubeLim;\n        if Cost \u003e (word)nCostMax {\n            fmt.Printf(\"Cost of the largest output cone exceeded the limit (%d * %d * %d  \u003e  %d).\\n\", nNodeMax, nSuppMax, nCubeLim, nCostMax);\n            Gia_ManStop( pGia );\n            Vec_WecFree( vSupps );\n            return nil;\n        }\n    }\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    vSops   = Abc_GiaDeriveSops( pNtkNew, pGia, vSupps, nCubeLim, nBTLimit, nCostMax, fCanon, fReverse, fCnfShared, fVerbose );\n    Gia_ManStop( pGia );\n    if vSops == nil {\n        Vec_WecFree( vSupps );\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        pDriver = Abc_ObjFanin0(pNode);\n        if Abc_ObjIsCi(pDriver) \u0026\u0026 !(int32(strings.Compare(Abc_ObjName(pNode), Abc_ObjName(pDriver))) != 0) {\n            Abc_ObjAddFanin( pNode.pCopy, pDriver.pCopy );\n            continue;\n        }\n        if Abc_ObjIsCi(pDriver) {\n            pNodeNew = Abc_NtkCreateNode( pNtkNew );\n            Abc_ObjAddFanin( pNodeNew, pDriver.pCopy ); \n            pNodeNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, Abc_ObjFaninC0(pNode) ? \"0 1\\n\" : \"1 1\\n\" );\n            Abc_ObjAddFanin( pNode.pCopy, pNodeNew );\n            continue;\n        }\n        if pDriver == Abc_AigConst1(pNtk) {\n            pNodeNew = Abc_NtkCreateNode( pNtkNew );\n            pNodeNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, Abc_ObjFaninC0(pNode) ? \" 0\\n\" : \" 1\\n\" );\n            Abc_ObjAddFanin( pNode.pCopy, pNodeNew );\n            continue;\n        }\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        vSupp = Vec_WecEntry( vSupps, i );\n        Vec_IntForEachEntry( vSupp, iCi, k )\n            Abc_ObjAddFanin( pNodeNew, Abc_NtkCi(pNtkNew, iCi) );\n        pNodeNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, (char*)Vec_PtrEntry( vSops, i ) );\n        assert(pNodeNew.pData != (void *)(ABC_PTRINT_T)1, \"pNodeNew.pData != (void *)(ABC_PTRINT_T)1\");\n        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );\n    }\n    Vec_WecFree( vSupps );\n    Vec_PtrFree( vSops );\n    Abc_NtkSortSops( pNtkNew );\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkCollapseSat",
+      "Start": 35720,
+      "End": 36365,
+      "BodyStart": 35869,
+      "Original": "Abc_Ntk_t * Abc_NtkCollapseSat( Abc_Ntk_t * pNtk, int nCubeLim, int nBTLimit, int nCostMax, int fCanon, int fReverse, int fCnfShared, int fVerbose )\n{\n    Abc_Ntk_t * pNtkNew;\n    assert( Abc_NtkIsStrash(pNtk) );\n    pNtkNew = Abc_NtkFromSopsInt( pNtk, nCubeLim, nBTLimit, nCostMax, fCanon, fReverse, fCnfShared, fVerbose );\n    if ( pNtkNew == NULL )\n        return NULL;\n    if ( pNtk-\u003epExdc )\n        pNtkNew-\u003epExdc = Abc_NtkDup( pNtk-\u003epExdc );\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Abc_NtkCollapseSat: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkCollapseSat(pNtk *Abc_Ntk_t, nCubeLim int32, nBTLimit int32, nCostMax int32, fCanon int32, fReverse int32, fCnfShared int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    pNtkNew = Abc_NtkFromSopsInt( pNtk, nCubeLim, nBTLimit, nCostMax, fCanon, fReverse, fCnfShared, fVerbose );\n    if pNtkNew == nil {\n        return nil; }\n    if pNtk.pExdc {\n        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkCollapseSat: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::pointer-cast::23008",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30498,
+      "End": 30511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::pointer-cast::23605",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31095,
+      "End": 31103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::pointer-cast::24310",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31800,
+      "End": 31814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::pointer-cast::27200",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34690,
+      "End": 34704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::pointer-cast::27521",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35011,
+      "End": 35025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::pointer-cast::27930",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35420,
+      "End": 35434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::pointer-cast::28039",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35529,
+      "End": 35537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro::Abc_NtkSopForEachCube",
+      "Category": "macro-review",
+      "Symbol": "Abc_NtkSopForEachCube",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 21169,
+      "End": 21274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::Abc_NtkClpGia_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkClpGia_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19697,
+      "End": 20187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::Abc_NtkClpGia",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkClpGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20188,
+      "End": 20888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::Abc_NtkCollapseReduce",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCollapseReduce",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21276,
+      "End": 22756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::Abc_NtkClpDeriveSatSolver",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkClpDeriveSatSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23047,
+      "End": 25470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::Abc_NtkClpGiaOne",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkClpGiaOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25736,
+      "End": 26726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::Abc_NtkClpGiaOne2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkClpGiaOne2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26727,
+      "End": 29223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::ternary::Abc_GiaDeriveSops",
+      "Category": "ternary-review",
+      "Symbol": "Abc_GiaDeriveSops",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 29224,
+      "End": 32719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::Abc_GiaDeriveSops",
+      "Category": "semantic-review",
+      "Symbol": "Abc_GiaDeriveSops",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29224,
+      "End": 32719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::ternary::Abc_NtkFromSopsInt",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkFromSopsInt",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 32720,
+      "End": 35719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::Abc_NtkFromSopsInt",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFromSopsInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32720,
+      "End": 35719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::Abc_NtkCollapseSat",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCollapseSat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35720,
+      "End": 36365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 36613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 671,
+      "End": 730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 978,
+      "End": 8689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::20470",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20470,
+      "End": 20505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::20573",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20573,
+      "End": 20607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::20658",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20658,
+      "End": 20692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::21573",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21573,
+      "End": 21610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::22318",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22318,
+      "End": 22355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::22430",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22430,
+      "End": 22467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::23637",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23637,
+      "End": 23674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::23729",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23729,
+      "End": 23766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::24277",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24277,
+      "End": 24314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::27763",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachCiVec",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27763,
+      "End": 27803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::30112",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30112,
+      "End": 30151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::32109",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WecForEachLevel",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32109,
+      "End": 32152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::32161",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32161,
+      "End": 32198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::32594",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32594,
+      "End": 32612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::34213",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 34213,
+      "End": 34247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcCollapse.c::macro-inline::35274",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 35274,
+      "End": 35310
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcCollapse.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Collapsing the network into two-levels.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcCollapse.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"aig/gia/gia.h\"\n//#include \"misc/vec/vecWec.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satStore.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n#ifdef ABC_USE_CUDD\n\nextern int Abc_NodeSupport( DdNode * bFunc, Vec_Str_t * vSupport, int nVars );\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Makes nodes minimum base.]\n\n  Description [Returns the number of changed nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Abc_NodeMinimumBase2( Abc_Obj_t * pNode )\n{\n    Vec_Str_t * vSupport;\n    Vec_Ptr_t * vFanins;\n    DdNode * bTemp;\n    int i, nVars;\n\n    assert( Abc_NtkIsBddLogic(pNode-\u003epNtk) );\n    assert( Abc_ObjIsNode(pNode) );\n\n    // compute support\n    vSupport = Vec_StrAlloc( 10 );\n    nVars = Abc_NodeSupport( Cudd_Regular(pNode-\u003epData), vSupport, Abc_ObjFaninNum(pNode) );\n    if ( nVars == Abc_ObjFaninNum(pNode) )\n    {\n        Vec_StrFree( vSupport );\n        return 0;\n    }\n\n    // add fanins\n    vFanins = Vec_PtrAlloc( Abc_ObjFaninNum(pNode) );\n    Abc_NodeCollectFanins( pNode, vFanins );\n    Vec_IntClear( \u0026pNode-\u003evFanins );\n    for ( i = 0; i \u003c vFanins-\u003enSize; i++ )\n        if ( vSupport-\u003epArray[i] != 0 ) // useful\n            Vec_IntPush( \u0026pNode-\u003evFanins, Abc_ObjId((Abc_Obj_t *)vFanins-\u003epArray[i]) );\n    assert( nVars == Abc_ObjFaninNum(pNode) );\n\n    // update the function of the node\n    pNode-\u003epData = Extra_bddRemapUp( (DdManager *)pNode-\u003epNtk-\u003epManFunc, bTemp = (DdNode *)pNode-\u003epData );   Cudd_Ref( (DdNode *)pNode-\u003epData );\n    Cudd_RecursiveDeref( (DdManager *)pNode-\u003epNtk-\u003epManFunc, bTemp );\n    Vec_PtrFree( vFanins );\n    Vec_StrFree( vSupport );\n    return 1;\n}\nint Abc_NtkMinimumBase2( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode, * pFanin;\n    int i, k, Counter;\n    assert( Abc_NtkIsBddLogic(pNtk) );\n    // remove all fanouts\n    Abc_NtkForEachObj( pNtk, pNode, i )\n        Vec_IntClear( \u0026pNode-\u003evFanouts );\n    // add useful fanins\n    Counter = 0;\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        Counter += Abc_NodeMinimumBase2( pNode );\n    // add fanouts\n    Abc_NtkForEachObj( pNtk, pNode, i )\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n            Vec_IntPush( \u0026pFanin-\u003evFanouts, Abc_ObjId(pNode) );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collapses the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nAbc_Obj_t * Abc_NodeFromGlobalBdds( Abc_Ntk_t * pNtkNew, DdManager * dd, DdNode * bFunc, int fReverse )\n{\n    Abc_Obj_t * pNodeNew, * pTemp;\n    int i;\n    // create a new node\n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n    // add the fanins in the order, in which they appear in the reordered manager\n    Abc_NtkForEachCi( pNtkNew, pTemp, i )\n        Abc_ObjAddFanin( pNodeNew, Abc_NtkCi(pNtkNew, fReverse ? Abc_NtkCiNum(pNtkNew)-1-dd-\u003einvperm[i] : dd-\u003einvperm[i]) );\n    // transfer the function\n    pNodeNew-\u003epData = Extra_TransferLevelByLevel( dd, (DdManager *)pNtkNew-\u003epManFunc, bFunc );  Cudd_Ref( (DdNode *)pNodeNew-\u003epData );\n    return pNodeNew;\n}\nAbc_Ntk_t * Abc_NtkFromGlobalBdds( Abc_Ntk_t * pNtk, int fReverse )\n{\n    ProgressBar * pProgress;\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pNode, * pDriver, * pNodeNew;\n    DdManager * dd = (DdManager *)Abc_NtkGlobalBddMan( pNtk );\n    int i;\n\n    // extract don't-care and compute ISOP\n    if ( pNtk-\u003epExdc )\n    {\n        DdManager * ddExdc = NULL;\n        DdNode * bBddMin, * bBddDc, * bBddL, * bBddU;\n        assert( Abc_NtkIsStrash(pNtk-\u003epExdc) );\n        assert( Abc_NtkCoNum(pNtk-\u003epExdc) == 1 );\n        // compute the global BDDs\n        if ( Abc_NtkBuildGlobalBdds(pNtk-\u003epExdc, 10000000, 1, 1, 0, 0) == NULL )\n            return NULL;\n        // transfer tot the same manager\n        ddExdc = (DdManager *)Abc_NtkGlobalBddMan( pNtk-\u003epExdc );\n        bBddDc = (DdNode *)Abc_ObjGlobalBdd(Abc_NtkCo(pNtk-\u003epExdc, 0));\n        bBddDc = Cudd_bddTransfer( ddExdc, dd, bBddDc );  Cudd_Ref( bBddDc );\n        Abc_NtkFreeGlobalBdds( pNtk-\u003epExdc, 1 );\n        // minimize the output\n        Abc_NtkForEachCo( pNtk, pNode, i )\n        {\n            bBddMin = (DdNode *)Abc_ObjGlobalBdd(pNode);\n            // derive lower and uppwer bound\n            bBddL = Cudd_bddAnd( dd, bBddMin,           Cudd_Not(bBddDc) );  Cudd_Ref( bBddL );\n            bBddU = Cudd_bddAnd( dd, Cudd_Not(bBddMin), Cudd_Not(bBddDc) );  Cudd_Ref( bBddU );\n            Cudd_RecursiveDeref( dd, bBddMin );\n            // compute new one\n            bBddMin = Cudd_bddIsop( dd, bBddL, Cudd_Not(bBddU) );            Cudd_Ref( bBddMin );\n            Cudd_RecursiveDeref( dd, bBddL );\n            Cudd_RecursiveDeref( dd, bBddU );\n            // update global BDD\n            Abc_ObjSetGlobalBdd( pNode, bBddMin );\n            //Extra_bddPrint( dd, bBddMin ); printf( \"\\n\" );\n        }\n        Cudd_RecursiveDeref( dd, bBddDc );\n    }\n\n    // start the new network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_BDD );\n    // make sure the new manager has the same number of inputs\n    Cudd_bddIthVar( (DdManager *)pNtkNew-\u003epManFunc, dd-\u003esize-1 );\n    // process the POs\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        pDriver = Abc_ObjFanin0(pNode);\n        if ( Abc_ObjIsCi(pDriver) \u0026\u0026 !strcmp(Abc_ObjName(pNode), Abc_ObjName(pDriver)) )\n        {\n            Abc_ObjAddFanin( pNode-\u003epCopy, pDriver-\u003epCopy );\n            continue;\n        }\n        pNodeNew = Abc_NodeFromGlobalBdds( pNtkNew, dd, (DdNode *)Abc_ObjGlobalBdd(pNode), fReverse );\n        Abc_ObjAddFanin( pNode-\u003epCopy, pNodeNew );\n\n    }\n    Extra_ProgressBarStop( pProgress );\n    return pNtkNew;\n}\nvoid Abc_NtkDumpVariableOrder( Abc_Ntk_t * pNtk )\n{\n    DdManager * dd = (DdManager *)Abc_NtkGlobalBddMan( pNtk );\n    FILE * pFile = fopen( \"order.txt\", \"wb\" ); int i;\n    for ( i = 0; i \u003c dd-\u003esize; i++ )\n        fprintf( pFile, \"%d \", dd-\u003einvperm[i] );\n    fprintf( pFile, \"\\n\" );\n    fclose( pFile );\n}\nAbc_Ntk_t * Abc_NtkCollapse( Abc_Ntk_t * pNtk, int fBddSizeMax, int fDualRail, int fReorder, int fReverse, int fDumpOrder, int fVerbose )\n{\n    Abc_Ntk_t * pNtkNew;\n    abctime clk = Abc_Clock();\n\n    assert( Abc_NtkIsStrash(pNtk) );\n    // compute the global BDDs\n    if ( Abc_NtkBuildGlobalBdds(pNtk, fBddSizeMax, 1, fReorder, fReverse, fVerbose) == NULL )\n        return NULL;\n    if ( fVerbose )\n    {\n        DdManager * dd = (DdManager *)Abc_NtkGlobalBddMan( pNtk );\n        printf( \"Shared BDD size = %6d nodes.  \", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );\n        ABC_PRT( \"BDD construction time\", Abc_Clock() - clk );\n    }\n    if ( fDumpOrder ) \n        Abc_NtkDumpVariableOrder( pNtk );\n\n    // create the new network\n    pNtkNew = Abc_NtkFromGlobalBdds( pNtk, fReverse );\n    Abc_NtkFreeGlobalBdds( pNtk, 1 );\n    if ( pNtkNew == NULL )\n        return NULL;\n\n    // make the network minimum base\n    Abc_NtkMinimumBase2( pNtkNew );\n\n    if ( pNtk-\u003epExdc )\n        pNtkNew-\u003epExdc = Abc_NtkDup( pNtk-\u003epExdc );\n\n    // make sure that everything is okay\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Abc_NtkCollapse: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}\n\n\n#else\n\nAbc_Ntk_t * Abc_NtkCollapse( Abc_Ntk_t * pNtk, int fBddSizeMax, int fDualRail, int fReorder, int fReverse, int fDumpOrder, int fVerbose )\n{\n    return NULL;\n}\n\n#endif\n\n\n     \n\n                                                                        \n\n                                                                            \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                               \n \n                     \n                                                                                              \n                            \n                                     \n                                      \n                                                               \n                                                               \n                                                           \n                                                           \n                                                               \n \n                                                                            \n \n                     \n                      \n                              \n                                \n                                                \n                                                \n                             \n                     \n                                   \n                                        \n                                                            \n                            \n                                   \n                                   \n                                                              \n                                                         \n                                  \n                      \n                                          \n                         \n                \n \n                                                                                                                                             \n \n                     \n                              \n                                                                                                                            \n                                                             \n                   \n                                                                                                        \n                                                                                   \n                        \n                       \n                    \n                                             \n                            \n                   \n                                                      \n                 \n \n\n                                                                        \n\n                                                         \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                  \n \n                              \n                             \n                                                                \n                                      \n                                                          \n                                        \n                                                                          \n                                                                          \n                                                             \n                   \n                                                                     \n                  \n \n\n                                                                        \n\n                                                                             \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                               \n \n                                             \n                   \n                  \n                    \n                 \n                                                          \n                   \n                  \n                    \n                 \n              \n \n                                                                        \n \n                             \n                                                            \n                                      \n     \n                                                                                   \n                                     \n     \n                                   \n                                                                                           \n                                                                      \n              \n                                                          \n                                                               \n                     \n                  \n \n\n                                                                        \n\n                                     \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                                                                                                                       \n \n                         \n                     \n               \n                              \n                                                                                             \n                       \n                    \n                        \n                                            \n                 \n                                                    \n                                            \n                                                                 \n                            \n                                                                                             \n                        \n                    \n \n                                                                                                                                 \n \n                            \n                        \n                                             \n                                                     \n                                     \n                       \n           \n\n                                        \n                                                   \n                     \n\n                                  \n                                                    \n                                     \n                                                    \n                                       \n                       \n     \n                  \n                                                             \n                                                       \n                                                                   \n                                                                                              \n                                    \n         \n                                                                                                   \n                                                                                  \n                                     \n                                    \n                                  \n                        \n         \n                                 \n     \n                                   \n                                                    \n                                      \n                         \n                                                          \n                                                \n\n                            \n                                                                    \n                            \n                                                     \n                                        \n                                                          \n                                                                \n                      \n                                                                     \n                                        \n                                                          \n     \n                                                      \n                                       \n                                                                                        \n         \n                                                                                       \n                     \n         \n                                   \n         \n                                                    \n                                                                                    \n                                                                                                                            \n                                                      \n                     \n         \n                                             \n         \n                                                    \n                                                                                                                          \n                                                      \n                     \n         \n                                                                                                                                                                                            \n                               \n         \n                                     \n                           \n                  \n         \n                                                  \n     \n                               \n                            \n                              \n                          \n                                       \n                   \n \n                                                                                                                                    \n \n                        \n                                    \n                             \n                                                                                                \n                          \n                    \n                      \n                                                   \n                                        \n                                   \n     \n                                                                        \n                                 \n                    \n     \n                   \n \n\n      \n\n\n\n// extern Vec_Wec_t * Gia_ManCreateCoSupps( Gia_Man_t * p, int fVerbose );\n\n// extern int         Gia_ManCoLargestSupp( Gia_Man_t * p, Vec_Wec_t * vSupps );\n\n// extern Vec_Wec_t * Gia_ManIsoStrashReduceInt( Gia_Man_t * p, Vec_Wec_t * vSupps, int fVerbose );\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derives GIA for the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkClpGia_rec(pNew *Gia_Man_t, pNode *Abc_Obj_t) int32 {\n    var iLit0, iLit1 int32;\n    if pNode.iTemp \u003e= 0 {\n        return pNode.iTemp; }\n    assert(Abc_ObjIsNode( pNode ), \"Abc_ObjIsNode( pNode )\");\n    iLit0 = Abc_NtkClpGia_rec( pNew, Abc_ObjFanin0(pNode) );\n    iLit1 = Abc_NtkClpGia_rec( pNew, Abc_ObjFanin1(pNode) );\n    iLit0 = Abc_LitNotCond( iLit0, Abc_ObjFaninC0(pNode) );\n    iLit1 = Abc_LitNotCond( iLit1, Abc_ObjFaninC1(pNode) );\n    return (pNode.iTemp = Gia_ManAppendAnd(pNew, iLit0, iLit1));\n}\nfunc Abc_NtkClpGia(pNtk *Abc_Ntk_t) *Gia_Man_t {\n    var i, iLit int32;\n    var pNew *Gia_Man_t;\n    var pNode *Abc_Obj_t;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    pNew = Gia_ManStart( 1000 );\n    pNew.pName = Abc_UtilStrsav( pNtk.pName );\n    pNew.pSpec = Abc_UtilStrsav( pNtk.pSpec );\n    Abc_NtkForEachObj( pNtk, pNode, i )\n        pNode.iTemp = -1;\n    Abc_AigConst1(pNtk).iTemp = 1;\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode.iTemp = Gia_ManAppendCi(pNew);\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        iLit = Abc_NtkClpGia_rec( pNew, Abc_ObjFanin0(pNode) );\n        iLit = Abc_LitNotCond( iLit, Abc_ObjFaninC0(pNode) );\n        Gia_ManAppendCo( pNew, iLit );\n    }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Minimize SOP by removing redundant variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n// Original macro:\n// #define Abc_NtkSopForEachCube( pSop, nVars, pCube )  for ( pCube = (pSop); *pCube; pCube += (nVars) + 3 )\n\n\nfunc Abc_NtkCollapseReduce(vSop *Vec_Str_t, vSupp *Vec_Int_t, vClass *Vec_Int_t, vSupps *Vec_Wec_t) int32 {\n    var j int32;\n    var i int32;\n    var k int32;\n    var iCo int32;\n    var iVar int32;\n    var nVars int32 = Vec_IntSize(vSupp);\n    var pCube string;\n    var pSop string = Vec_StrArray(vSop);\n    var vPres *Vec_Int_t;\n    if Vec_StrSize(vSop) == 4 { // constant\n    \n        Vec_IntForEachEntry( vClass, iCo, i )\n            Vec_IntClear( Vec_WecEntry(vSupps, iCo) );\n        return 1;\n    }\n    vPres = Vec_IntStart( nVars );\n    // inlining of macro Abc_NtkSopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n        for  k = 0; k \u003c nVars; k++  {\n            if pCube[k] != '-' {\n                Vec_IntWriteEntry( vPres, k, 1 ); }\n        }\n    }\n    if Vec_IntCountZero(vPres) == 0 {\n        Vec_IntFree( vPres );\n        return 0;\n    }\n    // reduce cubes\n    // inlining of macro Abc_NtkSopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n        for  k = 0; k \u003c nVars + 3; k++  {\n            if k \u003e= nVars || Vec_IntEntry(vPres, k) {\n                Vec_StrWriteEntry( vSop, j++, pCube[k] ); }\n        }\n    }\n    Vec_StrWriteEntry( vSop, j++, '\\0' );\n    Vec_StrShrink( vSop, j );\n    // reduce support\n    Vec_IntForEachEntry( vClass, iCo, i )\n    {\n        j = 0;\n        vSupp = Vec_WecEntry( vSupps, iCo );\n        Vec_IntForEachEntry( vSupp, iVar, k )\n            if ( Vec_IntEntry(vPres, k) )\n                Vec_IntWriteEntry( vSupp, j++, iVar );\n        Vec_IntShrink( vSupp, j );\n    }\n    Vec_IntFree( vPres );\n//    if ( Vec_IntSize(vSupp) != Abc_SopGetVarNum(Vec_StrArray(vSop)) )\n//        printf( \"Mismatch!!!\\n\" );\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derives SAT solver for one output from the shared CNF.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkClpDeriveSatSolver(pCnf *Cnf_Dat_t, iCoObjId int32, vSupp *Vec_Int_t, vAnds *Vec_Int_t, vMap *Vec_Int_t, ppSat1 **sat_solver, ppSat2 **sat_solver, ppSat3 **sat_solver) *sat_solver {\n    var i int32;\n    var k int32;\n    var iObj int32;\n    var status int32;\n    var nVars int32 = 2;\n//    int i, k, iObj, status, nVars = 1;\n    var vLits *Vec_Int_t  = Vec_IntAlloc( 16 );\n    var pSat *sat_solver  = sat_solver_new();\n    if ppSat1 { *ppSat1 = sat_solver_new(); }\n    if ppSat2 { *ppSat2 = sat_solver_new(); }\n    if ppSat3 { *ppSat3 = sat_solver_new(); }\n    // assign SAT variable numbers\n    Vec_IntWriteEntry( vMap, iCoObjId, nVars++ );\n    Vec_IntForEachEntry( vSupp, iObj, k )\n        Vec_IntWriteEntry( vMap, iObj, nVars++ );\n    Vec_IntForEachEntry( vAnds, iObj, k )\n        if ( pCnf.pObj2Clause[iObj] != -1 )\n            Vec_IntWriteEntry( vMap, iObj, nVars++ );\n//    Vec_IntForEachEntry( vSupp, iObj, k )\n//        Vec_IntWriteEntry( vMap, iObj, nVars++ );\n    // create clauses for the internal nodes and for the output\n    sat_solver_setnvars( pSat, nVars );\n    if ppSat1 { sat_solver_setnvars( *ppSat1, nVars ); }\n    if ppSat2 { sat_solver_setnvars( *ppSat2, nVars ); }\n    if ppSat3 { sat_solver_setnvars( *ppSat3, nVars ); }\n    Vec_IntPush( vAnds, iCoObjId );\n    Vec_IntForEachEntry( vAnds, iObj, k )\n    {\n        var iClaBeg int32;\n        var iClaEnd int32;\n        var pLit *int32;\n        if pCnf.pObj2Clause[iObj] == -1 {\n            continue; }\n        iClaBeg = pCnf.pObj2Clause[iObj];\n        iClaEnd = iClaBeg + pCnf.pObj2Count[iObj];\n        assert(iClaBeg \u003c iClaEnd, \"iClaBeg \u003c iClaEnd\");\n        for  i = iClaBeg; i \u003c iClaEnd; i++  {\n            Vec_IntClear( vLits );\n            for  pLit = pCnf.pClauses[i]; pLit \u003c pCnf.pClauses[i+1]; pLit++  {\n                Vec_IntPush( vLits, Abc_Lit2LitV(Vec_IntArray(vMap), *pLit) );\n            }\n            status = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) );\n            assert((status != 0), \"status\");\n            (void) status;\n            if ppSat1 { sat_solver_addclause( *ppSat1, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) ); }\n            if ppSat2 { sat_solver_addclause( *ppSat2, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) ); }\n            if ppSat3 { sat_solver_addclause( *ppSat3, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) ); }\n        }\n    }\n    Vec_IntPop( vAnds );\n    Vec_IntFree( vLits );\n    assert(nVars == sat_solver_nvars(pSat), \"nVars == sat_solver_nvars(pSat)\");\n    return pSat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes SOPs for each output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkClpGiaOne(p *Gia_Man_t, iCo int32, nCubeLim int32, nBTLimit int32, fCanon int32, fReverse int32, vSupp *Vec_Int_t, fVerbose int32, vClass *Vec_Int_t, vSupps *Vec_Wec_t) *Vec_Str_t {\n    var vSop *Vec_Str_t;\n    var clk abctime  = Abc_Clock();\n    extern Vec_Str_t * Bmc_CollapseOneOld( Gia_Man_t * p, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );\n    var pGia *Gia_Man_t   = Gia_ManDupCones( p, \u0026iCo, 1, 1 );\n    if fVerbose != 0 {\n        fmt.Printf(\"Output %4d:  Supp = %4d. Cone =%6d.\\n\", iCo, Vec_IntSize(vSupp), Gia_ManAndNum(pGia)); }\n    vSop = Bmc_CollapseOneOld( pGia, nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );\n    Gia_ManStop( pGia );\n    if vSop == nil {\n        return nil; }\n    Abc_NtkCollapseReduce( vSop, vSupp, vClass, vSupps );\n    if fVerbose != 0 {\n        fmt.Printf(\"Supp new = %4d. Sop = %4d.  \", Vec_IntSize(vSupp), Vec_StrSize(vSop)/(Vec_IntSize(vSupp) +3)); }\n    if fVerbose != 0 {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n    return vSop; \n}\nfunc Abc_NtkClpGiaOne2(pCnf *Cnf_Dat_t, p *Gia_Man_t, iCo int32, nCubeLim int32, nBTLimit int32, fCanon int32, fReverse int32, vSupp *Vec_Int_t, vMap *Vec_Int_t, fVerbose int32, vClass *Vec_Int_t, vSupps *Vec_Wec_t) *Vec_Str_t {\n    var vSop *Vec_Str_t;\n    var pSat *sat_solver;\n    var pSat1 *sat_solver = nil;\n    var pSat2 *sat_solver = nil;\n    var pSat3 *sat_solver = nil;\n    var pObj *Gia_Obj_t;\n    var clk abctime  = Abc_Clock();\n    extern Vec_Str_t * Bmc_CollapseOne_int( sat_solver * pSat, int nVars, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );\n    extern Vec_Str_t * Bmc_CollapseOne_int2( sat_solver * pSat, sat_solver * pSat2, int nVars, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );\n    extern Vec_Str_t * Bmc_CollapseOne_int3( sat_solver * pSat, sat_solver * pSat1, sat_solver * pSat2, sat_solver * pSat3, int nVars, int nCubeLim, int nBTLimit, int fCanon, int fReverse, int fVerbose );\n    var i int32;\n    var iCoObjId int32 = Gia_ObjId( p, Gia_ManCo(p, iCo) );\n    var vAnds *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vSuppObjs *Vec_Int_t  = Vec_IntAlloc( 100 );\n    Gia_ManForEachCiVec( vSupp, p, pObj, i )\n        Vec_IntPush( vSuppObjs, Gia_ObjId(p, pObj) );\n    Gia_ManIncrementTravId( p );\n    Gia_ManCollectAnds( p, \u0026iCoObjId, 1, vAnds, nil );\n    assert(Vec_IntSize(vAnds) \u003e 0, \"Vec_IntSize(vAnds) \u003e 0\");\n//    pSat = Abc_NtkClpDeriveSatSolver( pCnf, iCoObjId, vSuppObjs, vAnds, vMap, \u0026pSat1, \u0026pSat2, \u0026pSat3 );\n    pSat = Abc_NtkClpDeriveSatSolver( pCnf, iCoObjId, vSuppObjs, vAnds, vMap, nil, nil, nil );\n    Vec_IntFree( vSuppObjs );\n    if fVerbose != 0 {\n        fmt.Printf(\"Output %4d:  Supp = %4d. Cone =%6d.\\n\", iCo, Vec_IntSize(vSupp), Vec_IntSize(vAnds)); }\n//    vSop = Bmc_CollapseOne_int3( pSat, pSat1, pSat2, pSat3, Vec_IntSize(vSupp), nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );\n//    vSop = Bmc_CollapseOne_int2( pSat, pSat1, Vec_IntSize(vSupp), nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );\n    vSop = Bmc_CollapseOne_int( pSat, Vec_IntSize(vSupp), nCubeLim, nBTLimit, fCanon, fReverse, fVerbose );\n    sat_solver_delete( pSat );\n    if pSat1 != nil { sat_solver_delete( pSat1 ); }\n    if pSat2 != nil { sat_solver_delete( pSat2 ); }\n    if pSat3 != nil { sat_solver_delete( pSat3 ); }\n    Vec_IntFree( vAnds );\n    if vSop == nil {\n        return nil; }\n    Abc_NtkCollapseReduce( vSop, vSupp, vClass, vSupps );\n    if fVerbose != 0 {\n        fmt.Printf(\"Supp new = %4d. Sop = %4d.  \", Vec_IntSize(vSupp), Vec_StrSize(vSop)/(Vec_IntSize(vSupp) +3)); }\n    if fVerbose != 0 {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n    return vSop; \n}\nfunc Abc_GiaDeriveSops(pNtkNew *Abc_Ntk_t, p *Gia_Man_t, vSupps *Vec_Wec_t, nCubeLim int32, nBTLimit int32, nCostMax int32, fCanon int32, fReverse int32, fCnfShared int32, fVerbose int32) *Vec_Ptr_t {\n    var pProgress *ProgressBar;\n    var clk abctime  = Abc_Clock();\n    var vSops *Vec_Ptr_t = nil;\n    var vSopsRepr *Vec_Ptr_t;\n    var vReprs, vClass, vReprSuppSizes *Vec_Int_t;\n    var i int32;\n    var k int32;\n    var Entry int32;\n    var iCo int32;\n    var pOrder *int32;\n    var vClasses *Vec_Wec_t;\n    var pCnf *Cnf_Dat_t  = nil;\n    var vMap *Vec_Int_t  = nil;\n    // derive classes of outputs\n    vClasses = Gia_ManIsoStrashReduceInt( p, vSupps, 0 );\n    if fVerbose != 0 {\n        fmt.Printf(\"Considering %d (out of %d) outputs. \", Vec_WecSize(vClasses), Gia_ManCoNum(p));\n        Abc_PrintTime( 1, \"Reduction time\", Abc_Clock() - clk );\n    }\n    // derive representatives\n    vReprs = Vec_WecCollectFirsts( vClasses );\n    vReprSuppSizes = Vec_IntAlloc( Vec_IntSize(vReprs) );\n    Vec_IntForEachEntry( vReprs, Entry, i )\n        Vec_IntPush( vReprSuppSizes, Vec_IntSize(Vec_WecEntry(vSupps, Entry)) );\n    pOrder = Abc_MergeSortCost( Vec_IntArray(vReprSuppSizes), Vec_IntSize(vReprSuppSizes) );\n    Vec_IntFree( vReprSuppSizes );\n    // consider SOPs for representatives\n    if fCnfShared != 0 {\n        vMap = Vec_IntStartFull( Gia_ManObjNum(p) );\n        pCnf = (Cnf_Dat_t *)Mf_ManGenerateCnf( p, 8, 1, 0, 0, 0 );\n    }\n    vSopsRepr = Vec_PtrStart( Vec_IntSize(vReprs) );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Vec_IntSize(vReprs) );\n    Extra_ProgressBarUpdate( pProgress, 0, nil );\n    for  i = 0; i \u003c Vec_IntSize(vReprs); i++  {\n        var iEntry int32         = pOrder[Vec_IntSize(vReprs) - 1 - i];\n        var iCoThis int32        = Vec_IntEntry( vReprs, iEntry );\n        var vSupp *Vec_Int_t  = Vec_WecEntry( vSupps, iCoThis );\n        var vSop *Vec_Str_t;\n        if Vec_IntSize(vSupp) \u003c 2 {\n            Vec_PtrWriteEntry( vSopsRepr, iEntry, (void *)(ABC_PTRINT_T)1 );\n            continue;\n        }\n        if (fCnfShared != 0) \u0026\u0026 !(fCanon != 0) {\n            vSop = Abc_NtkClpGiaOne2( pCnf, p, iCoThis, nCubeLim, nBTLimit, fCanon, fReverse, vSupp, vMap, i ? 0 : fVerbose, Vec_WecEntry(vClasses, iEntry), vSupps );\n        } else {\n            vSop = Abc_NtkClpGiaOne( p, iCoThis, nCubeLim, nBTLimit, fCanon, fReverse, vSupp, i ? 0 : fVerbose, Vec_WecEntry(vClasses, iEntry), vSupps ); }\n        if vSop == nil {\n            goto finish; }\n        assert(Vec_IntSize( Vec_WecEntry(vSupps, iCoThis) ) == Abc_SopGetVarNum(Vec_StrArray(vSop)), \"Vec_IntSize( Vec_WecEntry(vSupps, iCoThis) ) == Abc_SopGetVarNum(Vec_StrArray(vSop))\");\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        Vec_PtrWriteEntry( vSopsRepr, iEntry, Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, Vec_StrArray(vSop) ) );\n        Vec_StrFree( vSop );\n    }\n    Extra_ProgressBarStop( pProgress );\n    if fCnfShared != 0 {\n        Cnf_DataFree( pCnf );\n        Vec_IntFree( vMap );\n    }\n    // derive SOPs for each output\n    vSops = Vec_PtrStart( Gia_ManCoNum(p) );\n    Vec_WecForEachLevel ( vClasses, vClass, i )\n        Vec_IntForEachEntry( vClass, iCo, k )\n            Vec_PtrWriteEntry( vSops, iCo, Vec_PtrEntry(vSopsRepr, i) );\n    assert(Vec_PtrCountZero(vSops) == 0, \"Vec_PtrCountZero(vSops) == 0\");\n/*\n    // verify\n    for ( i = 0; i \u003c Gia_ManCoNum(p); i++ )\n    {\n        Vec_Int_t * vSupp = Vec_WecEntry( vSupps, i );\n        char * pSop = (char *)Vec_PtrEntry( vSops, i );\n        assert( Vec_IntSize(vSupp) == Abc_SopGetVarNum(pSop) );\n    }\n*/\n    // cleanup\nfinish:\n    ABC_FREE( pOrder );\n    Vec_IntFree( vReprs );\n    Vec_WecFree( vClasses );\n    Vec_PtrFree( vSopsRepr );\n    return vSops;\n}\nfunc Abc_NtkFromSopsInt(pNtk *Abc_Ntk_t, nCubeLim int32, nBTLimit int32, nCostMax int32, fCanon int32, fReverse int32, fCnfShared int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pGia *Gia_Man_t;\n    var vSupps *Vec_Wec_t;\n    var vSupp *Vec_Int_t;\n    var vSops *Vec_Ptr_t;\n    var pNode, pNodeNew, pDriver *Abc_Obj_t;\n    var i, k, iCi int32; \n    pGia    = Abc_NtkClpGia( pNtk );\n    vSupps  = Gia_ManCreateCoSupps( pGia, fVerbose );\n    // check the largest output\n    if nCubeLim \u003e 0 \u0026\u0026 nCostMax \u003e 0 {\n        var iCoMax int32    = Gia_ManCoLargestSupp( pGia, vSupps );\n        var iObjMax int32   = Gia_ObjId( pGia, Gia_ManCo(pGia, iCoMax) );\n        var nSuppMax int32  = Vec_IntSize( Vec_WecEntry(vSupps, iCoMax) );\n        var nNodeMax int32  = Gia_ManConeSize( pGia, \u0026iObjMax, 1 );\n        var Cost word  = (word)nNodeMax * (word)nSuppMax * (word)nCubeLim;\n        if Cost \u003e (word)nCostMax {\n            fmt.Printf(\"Cost of the largest output cone exceeded the limit (%d * %d * %d  \u003e  %d).\\n\", nNodeMax, nSuppMax, nCubeLim, nCostMax);\n            Gia_ManStop( pGia );\n            Vec_WecFree( vSupps );\n            return nil;\n        }\n    }\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    vSops   = Abc_GiaDeriveSops( pNtkNew, pGia, vSupps, nCubeLim, nBTLimit, nCostMax, fCanon, fReverse, fCnfShared, fVerbose );\n    Gia_ManStop( pGia );\n    if vSops == nil {\n        Vec_WecFree( vSupps );\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        pDriver = Abc_ObjFanin0(pNode);\n        if Abc_ObjIsCi(pDriver) \u0026\u0026 !(int32(strings.Compare(Abc_ObjName(pNode), Abc_ObjName(pDriver))) != 0) {\n            Abc_ObjAddFanin( pNode.pCopy, pDriver.pCopy );\n            continue;\n        }\n        if Abc_ObjIsCi(pDriver) {\n            pNodeNew = Abc_NtkCreateNode( pNtkNew );\n            Abc_ObjAddFanin( pNodeNew, pDriver.pCopy ); \n            pNodeNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, Abc_ObjFaninC0(pNode) ? \"0 1\\n\" : \"1 1\\n\" );\n            Abc_ObjAddFanin( pNode.pCopy, pNodeNew );\n            continue;\n        }\n        if pDriver == Abc_AigConst1(pNtk) {\n            pNodeNew = Abc_NtkCreateNode( pNtkNew );\n            pNodeNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, Abc_ObjFaninC0(pNode) ? \" 0\\n\" : \" 1\\n\" );\n            Abc_ObjAddFanin( pNode.pCopy, pNodeNew );\n            continue;\n        }\n        pNodeNew = Abc_NtkCreateNode( pNtkNew );\n        vSupp = Vec_WecEntry( vSupps, i );\n        Vec_IntForEachEntry( vSupp, iCi, k )\n            Abc_ObjAddFanin( pNodeNew, Abc_NtkCi(pNtkNew, iCi) );\n        pNodeNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, (char*)Vec_PtrEntry( vSops, i ) );\n        assert(pNodeNew.pData != (void *)(ABC_PTRINT_T)1, \"pNodeNew.pData != (void *)(ABC_PTRINT_T)1\");\n        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );\n    }\n    Vec_WecFree( vSupps );\n    Vec_PtrFree( vSops );\n    Abc_NtkSortSops( pNtkNew );\n    return pNtkNew;\n}\nfunc Abc_NtkCollapseSat(pNtk *Abc_Ntk_t, nCubeLim int32, nBTLimit int32, nCostMax int32, fCanon int32, fReverse int32, fCnfShared int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    pNtkNew = Abc_NtkFromSopsInt( pNtk, nCubeLim, nBTLimit, nCostMax, fCanon, fReverse, fCnfShared, fVerbose );\n    if pNtkNew == nil {\n        return nil; }\n    if pNtk.pExdc {\n        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkCollapseSat: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

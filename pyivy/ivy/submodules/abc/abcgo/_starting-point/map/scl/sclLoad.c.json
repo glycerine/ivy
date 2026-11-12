@@ -1,0 +1,193 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLoad.c",
+  "SHA256": "326389d5d24321382304d0183b837259bf62cd215437cfc5d18bf378706e3f15",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pWL != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 2273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_FltEntry(vCaps, 1) != 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 17,
+        "ByteOffset": 6497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Maximum input drive strength is exceeded at primary input %d.\\n\", i ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 213,
+        "Column": 5,
+        "ByteOffset": 8836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFanin \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 214,
+        "Column": 5,
+        "ByteOffset": 8863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjFaninNum(pBuffer) == 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_SclFindWireCaps",
+      "Start": 1322,
+      "End": 2755,
+      "BodyStart": 1391,
+      "Original": "Vec_Flt_t * Abc_SclFindWireCaps( SC_WireLoad * pWL, int nFanoutMax )\n{\n    Vec_Flt_t * vCaps = NULL;\n    float EntryPrev, EntryCur, Slope;\n    int i, iPrev, k, Entry, EntryMax;\n    assert( pWL != NULL );\n    // find the biggest fanout count\n    EntryMax = 0;\n    Vec_IntForEachEntry( \u0026pWL-\u003evFanout, Entry, i )\n        EntryMax = Abc_MaxInt( EntryMax, Entry );\n    // create the array\n    vCaps = Vec_FltStart( Abc_MaxInt(nFanoutMax, EntryMax) + 1 );\n    Vec_IntForEachEntry( \u0026pWL-\u003evFanout, Entry, i )\n        Vec_FltWriteEntry( vCaps, Entry, Vec_FltEntry(\u0026pWL-\u003evLen, i) * pWL-\u003ecap );\n    if ( Vec_FltEntry(vCaps, 1) == 0 )\n        return vCaps;\n    // interpolate between the values\n    assert( Vec_FltEntry(vCaps, 1) != 0 );\n    iPrev = 1;\n    EntryPrev = Vec_FltEntry(vCaps, 1);\n    Vec_FltForEachEntryStart( vCaps, EntryCur, i, 2 )\n    {\n        if ( EntryCur == 0 )\n            continue;\n        Slope = (EntryCur - EntryPrev) / (i - iPrev);\n        for ( k = iPrev + 1; k \u003c i; k++ )\n            Vec_FltWriteEntry( vCaps, k, EntryPrev + Slope * (k - iPrev) );\n        EntryPrev = EntryCur;\n        iPrev = i;\n    }\n    // extrapolate after the largest value\n    Slope = pWL-\u003ecap * pWL-\u003eslope;\n    for ( k = iPrev + 1; k \u003c i; k++ )\n        Vec_FltWriteEntry( vCaps, k, EntryPrev + Slope * (k - iPrev) );\n    // show\n//    Vec_FltForEachEntry( vCaps, EntryCur, i )\n//        printf( \"%3d : %f\\n\", i, EntryCur );\n    return vCaps;\n}",
+      "Draft": "func Abc_SclFindWireCaps(pWL *SC_WireLoad, nFanoutMax int32) *Vec_Flt_t {\n    var vCaps *Vec_Flt_t  = nil;\n    var EntryPrev, EntryCur, Slope float32;\n    var i, iPrev, k, Entry, EntryMax int32;\n    assert(pWL != nil, \"pWL != nil\");\n    // find the biggest fanout count\n    EntryMax = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026pWL.vFanout)) \u0026\u0026 (((Entry) = Vec_IntEntry(\u0026pWL.vFanout, i)), 1); i++  {\n        EntryMax = Abc_MaxInt( EntryMax, Entry );\n    }\n    // create the array\n    vCaps = Vec_FltStart( Abc_MaxInt(nFanoutMax, EntryMax) + 1 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026pWL.vFanout)) \u0026\u0026 (((Entry) = Vec_IntEntry(\u0026pWL.vFanout, i)), 1); i++  {\n        Vec_FltWriteEntry( vCaps, Entry, Vec_FltEntry(\u0026pWL.vLen, i) * pWL.cap );\n    }\n    if Vec_FltEntry(vCaps, 1) == 0 {\n        return vCaps; }\n    // interpolate between the values\n    assert(Vec_FltEntry(vCaps, 1) != 0, \"Vec_FltEntry(vCaps, 1) != 0\");\n    iPrev = 1;\n    EntryPrev = Vec_FltEntry(vCaps, 1);\n    // inlining of macro Vec_FltForEachEntryStart\n    for  i = 2; (i \u003c Vec_FltSize(vCaps)) \u0026\u0026 (((EntryCur) = Vec_FltEntry(vCaps, i)), 1); i++  {\n        if EntryCur == 0 {\n            continue; }\n        Slope = (EntryCur - EntryPrev) / (i - iPrev);\n        for  k = iPrev + 1; k \u003c i; k++  {\n            Vec_FltWriteEntry( vCaps, k, EntryPrev + Slope * (k - iPrev) );\n        }\n        EntryPrev = EntryCur;\n        iPrev = i;\n    }\n    // extrapolate after the largest value\n    Slope = pWL.cap * pWL.slope;\n    for  k = iPrev + 1; k \u003c i; k++  {\n        Vec_FltWriteEntry( vCaps, k, EntryPrev + Slope * (k - iPrev) );\n    }\n    // show\n//    Vec_FltForEachEntry( vCaps, EntryCur, i )\n//        printf( \"%3d : %f\\n\", i, EntryCur );\n    return vCaps;\n}"
+    },
+    {
+      "Name": "Abc_SclFindWireLoad",
+      "Start": 3034,
+      "End": 3229,
+      "BodyStart": 3096,
+      "Original": "float Abc_SclFindWireLoad( Vec_Flt_t * vWireCaps, int nFans )\n{\n    if ( vWireCaps == NULL )\n        return 0;\n    return Vec_FltEntry( vWireCaps, Abc_MinInt(nFans, Vec_FltSize(vWireCaps)-1) );\n}",
+      "Draft": "func Abc_SclFindWireLoad(vWireCaps *Vec_Flt_t, nFans int32) float32 {\n    if vWireCaps == nil {\n        return 0; }\n    return Vec_FltEntry( vWireCaps, Abc_MinInt(nFans, Vec_FltSize(vWireCaps)-1) );\n}"
+    },
+    {
+      "Name": "Abc_SclAddWireLoad",
+      "Start": 3230,
+      "End": 3499,
+      "BodyStart": 3298,
+      "Original": "void Abc_SclAddWireLoad( SC_Man * p, Abc_Obj_t * pObj, int fSubtr )\n{\n    float Load = Abc_SclFindWireLoad( p-\u003evWireCaps, Abc_ObjFanoutNum(pObj) );\n    Abc_SclObjLoad(p, pObj)-\u003erise += fSubtr ? -Load : Load;\n    Abc_SclObjLoad(p, pObj)-\u003efall += fSubtr ? -Load : Load;\n}",
+      "Draft": "func Abc_SclAddWireLoad(p *SC_Man, pObj *Abc_Obj_t, fSubtr int32) {\n    var Load float32  = Abc_SclFindWireLoad( p.vWireCaps, Abc_ObjFanoutNum(pObj) );\n    Abc_SclObjLoad(p, pObj).rise += fSubtr ? -Load : Load;\n    Abc_SclObjLoad(p, pObj).fall += fSubtr ? -Load : Load;\n}"
+    },
+    {
+      "Name": "Abc_SclComputeLoad",
+      "Start": 3500,
+      "End": 6179,
+      "BodyStart": 3538,
+      "Original": "void Abc_SclComputeLoad( SC_Man * p )\n{\n    Abc_Obj_t * pObj, * pFanin;\n    int i, k;\n    // clear load storage\n    Abc_NtkForEachObj( p-\u003epNtk, pObj, i )\n    {\n        SC_Pair * pLoad = Abc_SclObjLoad( p, pObj );\n        if ( !Abc_ObjIsPo(pObj) )\n            pLoad-\u003erise = pLoad-\u003efall = 0.0;\n    }\n    // add cell load\n    Abc_NtkForEachNode1( p-\u003epNtk, pObj, i )\n    {\n        SC_Cell * pCell = Abc_SclObjCell( pObj );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            SC_Pair * pLoad = Abc_SclObjLoad( p, pFanin );\n            SC_Pin * pPin = SC_CellPin( pCell, k );\n            pLoad-\u003erise += pPin-\u003erise_cap;\n            pLoad-\u003efall += pPin-\u003efall_cap;\n        }\n    }\n    // add PO load\n    Abc_NtkForEachCo( p-\u003epNtk, pObj, i )\n    {\n        SC_Pair * pLoadPo = Abc_SclObjLoad( p, pObj );\n        SC_Pair * pLoad = Abc_SclObjLoad( p, Abc_ObjFanin0(pObj) );\n        pLoad-\u003erise += pLoadPo-\u003erise;\n        pLoad-\u003efall += pLoadPo-\u003efall;\n    }\n    // add wire load\n    if ( p-\u003epWLoadUsed != NULL )\n    {\n        if ( p-\u003evWireCaps == NULL )\n            p-\u003evWireCaps = Abc_SclFindWireCaps( p-\u003epWLoadUsed, Abc_NtkGetFanoutMax(p-\u003epNtk) );\n        Abc_NtkForEachNode1( p-\u003epNtk, pObj, i )\n            Abc_SclAddWireLoad( p, pObj, 0 );\n        Abc_NtkForEachPi( p-\u003epNtk, pObj, i )\n            Abc_SclAddWireLoad( p, pObj, 0 );\n    }\n    // check input loads\n    if ( p-\u003evInDrive != NULL )\n    {\n        Abc_NtkForEachPi( p-\u003epNtk, pObj, i )\n        {\n            SC_Pair * pLoad = Abc_SclObjLoad( p, pObj );\n            if ( Abc_SclObjInDrive(p, pObj) != 0 \u0026\u0026 (pLoad-\u003erise \u003e Abc_SclObjInDrive(p, pObj) || pLoad-\u003efall \u003e Abc_SclObjInDrive(p, pObj)) )\n                printf( \"Maximum input drive strength is exceeded at primary input %d.\\n\", i );\n        }\n    }\n/*\n    // transfer load from barbufs\n    Abc_NtkForEachBarBuf( p-\u003epNtk, pObj, i )\n    {\n        SC_Pair * pLoad = Abc_SclObjLoad( p, pObj );\n        SC_Pair * pLoadF = Abc_SclObjLoad( p, Abc_ObjFanin(pObj, 0) );\n        SC_PairAdd( pLoadF, pLoad );\n    }\n*/\n    // calculate average load\n//    if ( p-\u003eEstLoadMax )\n    {\n        double TotalLoad = 0;\n        int nObjs = 0;\n        Abc_NtkForEachNode1( p-\u003epNtk, pObj, i )\n        {\n            SC_Pair * pLoad = Abc_SclObjLoad( p, pObj );\n            TotalLoad += 0.5 * pLoad-\u003efall + 0.5 * pLoad-\u003erise;\n            nObjs++;\n        }\n        Abc_NtkForEachPi( p-\u003epNtk, pObj, i )\n        {\n            SC_Pair * pLoad = Abc_SclObjLoad( p, pObj );\n            TotalLoad += 0.5 * pLoad-\u003efall + 0.5 * pLoad-\u003erise;\n            nObjs++;\n        }\n        p-\u003eEstLoadAve = (float)(TotalLoad / nObjs);\n//        printf( \"Average load = %.2f\\n\", p-\u003eEstLoadAve );\n    }\n}",
+      "Draft": "func Abc_SclComputeLoad(p *SC_Man) {\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k int32;\n    // clear load storage\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((p.pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        var pLoad *SC_Pair  = Abc_SclObjLoad( p, pObj );\n        if !Abc_ObjIsPo(pObj) {\n            pLoad.rise = pLoad.fall = 0.0; }\n    }\n    }\n    // add cell load\n    // inlining of macro Abc_NtkForEachNode1\n    for  i = 0; (i \u003c Vec_PtrSize((p.pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) {} else {\n        var pCell *SC_Cell  = Abc_SclObjCell( pObj );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            var pLoad *SC_Pair  = Abc_SclObjLoad( p, pFanin );\n            var pPin *SC_Pin  = SC_CellPin( pCell, k );\n            pLoad.rise += pPin.rise_cap;\n            pLoad.fall += pPin.fall_cap;\n        }\n    }\n    }\n    // add PO load\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n        var pLoadPo *SC_Pair  = Abc_SclObjLoad( p, pObj );\n        var pLoad *SC_Pair  = Abc_SclObjLoad( p, Abc_ObjFanin0(pObj) );\n        pLoad.rise += pLoadPo.rise;\n        pLoad.fall += pLoadPo.fall;\n    }\n    // add wire load\n    if p.pWLoadUsed != nil {\n        if p.vWireCaps == nil {\n            p.vWireCaps = Abc_SclFindWireCaps( p.pWLoadUsed, Abc_NtkGetFanoutMax(p.pNtk) ); }\n        // inlining of macro Abc_NtkForEachNode1\n        for  i = 0; (i \u003c Vec_PtrSize((p.pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) {} else {\n            Abc_SclAddWireLoad( p, pObj, 0 ); }\n        }\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(p.pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(p.pNtk, i)), 1); i++  {\n            Abc_SclAddWireLoad( p, pObj, 0 );\n        }\n    }\n    // check input loads\n    if p.vInDrive != nil {\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(p.pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(p.pNtk, i)), 1); i++  {\n            var pLoad *SC_Pair  = Abc_SclObjLoad( p, pObj );\n            if Abc_SclObjInDrive(p, pObj) != 0 \u0026\u0026 (pLoad.rise \u003e Abc_SclObjInDrive(p, pObj) || pLoad.fall \u003e Abc_SclObjInDrive(p, pObj)) {\n                fmt.Printf(\"Maximum input drive strength is exceeded at primary input %d.\\n\", i); }\n        }\n    }\n/*\n    // transfer load from barbufs\n    Abc_NtkForEachBarBuf( p-\u003epNtk, pObj, i )\n    {\n        SC_Pair * pLoad = Abc_SclObjLoad( p, pObj );\n        SC_Pair * pLoadF = Abc_SclObjLoad( p, Abc_ObjFanin(pObj, 0) );\n        SC_PairAdd( pLoadF, pLoad );\n    }\n*/\n    // calculate average load\n//    if ( p-\u003eEstLoadMax )\n    {\n        var TotalLoad float64;\n        var nObjs int32;\n        // inlining of macro Abc_NtkForEachNode1\n        for  i = 0; (i \u003c Vec_PtrSize((p.pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) {} else {\n            var pLoad *SC_Pair  = Abc_SclObjLoad( p, pObj );\n            TotalLoad += 0.5 * pLoad.fall + 0.5 * pLoad.rise;\n            nObjs++;\n        }\n        }\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(p.pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(p.pNtk, i)), 1); i++  {\n            var pLoad *SC_Pair  = Abc_SclObjLoad( p, pObj );\n            TotalLoad += 0.5 * pLoad.fall + 0.5 * pLoad.rise;\n            nObjs++;\n        }\n        p.EstLoadAve = float32((TotalLoad / nObjs));\n//        printf( \"Average load = %.2f\\n\", p-\u003eEstLoadAve );\n    }\n}"
+    },
+    {
+      "Name": "Abc_SclUpdateLoad",
+      "Start": 6449,
+      "End": 6908,
+      "BodyStart": 6536,
+      "Original": "void Abc_SclUpdateLoad( SC_Man * p, Abc_Obj_t * pObj, SC_Cell * pOld, SC_Cell * pNew )\n{\n    Abc_Obj_t * pFanin;\n    int k;\n    Abc_ObjForEachFanin( pObj, pFanin, k )\n    {\n        SC_Pair * pLoad = Abc_SclObjLoad( p, pFanin );\n        SC_Pin * pPinOld = SC_CellPin( pOld, k );\n        SC_Pin * pPinNew = SC_CellPin( pNew, k );\n        pLoad-\u003erise += pPinNew-\u003erise_cap - pPinOld-\u003erise_cap;\n        pLoad-\u003efall += pPinNew-\u003efall_cap - pPinOld-\u003efall_cap;\n    }\n}",
+      "Draft": "func Abc_SclUpdateLoad(p *SC_Man, pObj *Abc_Obj_t, pOld *SC_Cell, pNew *SC_Cell) {\n    var pFanin *Abc_Obj_t;\n    var k int32;\n    // inlining of macro Abc_ObjForEachFanin\n    for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n        var pLoad *SC_Pair  = Abc_SclObjLoad( p, pFanin );\n        var pPinOld *SC_Pin  = SC_CellPin( pOld, k );\n        var pPinNew *SC_Pin  = SC_CellPin( pNew, k );\n        pLoad.rise += pPinNew.rise_cap - pPinOld.rise_cap;\n        pLoad.fall += pPinNew.fall_cap - pPinOld.fall_cap;\n    }\n}"
+    },
+    {
+      "Name": "Abc_SclUpdateLoadSplit",
+      "Start": 6909,
+      "End": 7526,
+      "BodyStart": 6993,
+      "Original": "void Abc_SclUpdateLoadSplit( SC_Man * p, Abc_Obj_t * pBuffer, Abc_Obj_t * pFanout )\n{\n    SC_Pin * pPin;\n    SC_Pair * pLoad;\n    int iFanin = Abc_NodeFindFanin( pFanout, pBuffer );\n    assert( iFanin \u003e= 0 );\n    assert( Abc_ObjFaninNum(pBuffer) == 1 );\n    pPin = SC_CellPin( Abc_SclObjCell(pFanout), iFanin );\n    // update load of the buffer\n    pLoad = Abc_SclObjLoad( p, pBuffer );\n    pLoad-\u003erise -= pPin-\u003erise_cap;\n    pLoad-\u003efall -= pPin-\u003efall_cap;\n    // update load of the fanin\n    pLoad = Abc_SclObjLoad( p, Abc_ObjFanin0(pBuffer) );\n    pLoad-\u003erise += pPin-\u003erise_cap;\n    pLoad-\u003efall += pPin-\u003efall_cap;\n}",
+      "Draft": "func Abc_SclUpdateLoadSplit(p *SC_Man, pBuffer *Abc_Obj_t, pFanout *Abc_Obj_t) {\n    var pPin *SC_Pin;\n    var pLoad *SC_Pair;\n    var iFanin int32  = Abc_NodeFindFanin( pFanout, pBuffer );\n    assert(iFanin \u003e= 0, \"iFanin \u003e= 0\");\n    assert(Abc_ObjFaninNum(pBuffer) == 1, \"Abc_ObjFaninNum(pBuffer) == 1\");\n    pPin = SC_CellPin( Abc_SclObjCell(pFanout), iFanin );\n    // update load of the buffer\n    pLoad = Abc_SclObjLoad( p, pBuffer );\n    pLoad.rise -= pPin.rise_cap;\n    pLoad.fall -= pPin.fall_cap;\n    // update load of the fanin\n    pLoad = Abc_SclObjLoad( p, Abc_ObjFanin0(pBuffer) );\n    pLoad.rise += pPin.rise_cap;\n    pLoad.fall += pPin.fall_cap;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLoad.c::Abc_SclFindWireCaps",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclFindWireCaps",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1322,
+      "End": 2755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLoad.c::Abc_SclFindWireLoad",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclFindWireLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3034,
+      "End": 3229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLoad.c::ternary::Abc_SclAddWireLoad",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclAddWireLoad",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3230,
+      "End": 3499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLoad.c::Abc_SclAddWireLoad",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclAddWireLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3230,
+      "End": 3499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLoad.c::Abc_SclComputeLoad",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclComputeLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3500,
+      "End": 6179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLoad.c::Abc_SclUpdateLoad",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclUpdateLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6449,
+      "End": 6908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLoad.c::Abc_SclUpdateLoadSplit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclUpdateLoadSplit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6909,
+      "End": 7526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclLoad.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7773
+    }
+  ],
+  "Draft": "package scl\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sclLoad.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Standard-cell library representation.]\n\n  Synopsis    [Wire/gate load computations.]\n\n  Author      [Alan Mishchenko, Niklas Een]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 24, 2012.]\n\n  Revision    [$Id: sclLoad.c,v 1.0 2012/08/24 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sclSize.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns estimated wire capacitances for each fanout count.]\n\n  Description []\n               \n  SideEffects []`\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclFindWireCaps(pWL *SC_WireLoad, nFanoutMax int32) *Vec_Flt_t {\n    var vCaps *Vec_Flt_t  = nil;\n    var EntryPrev, EntryCur, Slope float32;\n    var i, iPrev, k, Entry, EntryMax int32;\n    assert(pWL != nil, \"pWL != nil\");\n    // find the biggest fanout count\n    EntryMax = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026pWL.vFanout)) \u0026\u0026 (((Entry) = Vec_IntEntry(\u0026pWL.vFanout, i)), 1); i++  {\n        EntryMax = Abc_MaxInt( EntryMax, Entry );\n    }\n    // create the array\n    vCaps = Vec_FltStart( Abc_MaxInt(nFanoutMax, EntryMax) + 1 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026pWL.vFanout)) \u0026\u0026 (((Entry) = Vec_IntEntry(\u0026pWL.vFanout, i)), 1); i++  {\n        Vec_FltWriteEntry( vCaps, Entry, Vec_FltEntry(\u0026pWL.vLen, i) * pWL.cap );\n    }\n    if Vec_FltEntry(vCaps, 1) == 0 {\n        return vCaps; }\n    // interpolate between the values\n    assert(Vec_FltEntry(vCaps, 1) != 0, \"Vec_FltEntry(vCaps, 1) != 0\");\n    iPrev = 1;\n    EntryPrev = Vec_FltEntry(vCaps, 1);\n    // inlining of macro Vec_FltForEachEntryStart\n    for  i = 2; (i \u003c Vec_FltSize(vCaps)) \u0026\u0026 (((EntryCur) = Vec_FltEntry(vCaps, i)), 1); i++  {\n        if EntryCur == 0 {\n            continue; }\n        Slope = (EntryCur - EntryPrev) / (i - iPrev);\n        for  k = iPrev + 1; k \u003c i; k++  {\n            Vec_FltWriteEntry( vCaps, k, EntryPrev + Slope * (k - iPrev) );\n        }\n        EntryPrev = EntryCur;\n        iPrev = i;\n    }\n    // extrapolate after the largest value\n    Slope = pWL.cap * pWL.slope;\n    for  k = iPrev + 1; k \u003c i; k++  {\n        Vec_FltWriteEntry( vCaps, k, EntryPrev + Slope * (k - iPrev) );\n    }\n    // show\n//    Vec_FltForEachEntry( vCaps, EntryCur, i )\n//        printf( \"%3d : %f\\n\", i, EntryCur );\n    return vCaps;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes load for all nodes in the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclFindWireLoad(vWireCaps *Vec_Flt_t, nFans int32) float32 {\n    if vWireCaps == nil {\n        return 0; }\n    return Vec_FltEntry( vWireCaps, Abc_MinInt(nFans, Vec_FltSize(vWireCaps)-1) );\n}\nfunc Abc_SclAddWireLoad(p *SC_Man, pObj *Abc_Obj_t, fSubtr int32) {\n    var Load float32  = Abc_SclFindWireLoad( p.vWireCaps, Abc_ObjFanoutNum(pObj) );\n    Abc_SclObjLoad(p, pObj).rise += fSubtr ? -Load : Load;\n    Abc_SclObjLoad(p, pObj).fall += fSubtr ? -Load : Load;\n}\nfunc Abc_SclComputeLoad(p *SC_Man) {\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k int32;\n    // clear load storage\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((p.pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        var pLoad *SC_Pair  = Abc_SclObjLoad( p, pObj );\n        if !Abc_ObjIsPo(pObj) {\n            pLoad.rise = pLoad.fall = 0.0; }\n    }\n    }\n    // add cell load\n    // inlining of macro Abc_NtkForEachNode1\n    for  i = 0; (i \u003c Vec_PtrSize((p.pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) {} else {\n        var pCell *SC_Cell  = Abc_SclObjCell( pObj );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            var pLoad *SC_Pair  = Abc_SclObjLoad( p, pFanin );\n            var pPin *SC_Pin  = SC_CellPin( pCell, k );\n            pLoad.rise += pPin.rise_cap;\n            pLoad.fall += pPin.fall_cap;\n        }\n    }\n    }\n    // add PO load\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n        var pLoadPo *SC_Pair  = Abc_SclObjLoad( p, pObj );\n        var pLoad *SC_Pair  = Abc_SclObjLoad( p, Abc_ObjFanin0(pObj) );\n        pLoad.rise += pLoadPo.rise;\n        pLoad.fall += pLoadPo.fall;\n    }\n    // add wire load\n    if p.pWLoadUsed != nil {\n        if p.vWireCaps == nil {\n            p.vWireCaps = Abc_SclFindWireCaps( p.pWLoadUsed, Abc_NtkGetFanoutMax(p.pNtk) ); }\n        // inlining of macro Abc_NtkForEachNode1\n        for  i = 0; (i \u003c Vec_PtrSize((p.pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) {} else {\n            Abc_SclAddWireLoad( p, pObj, 0 ); }\n        }\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(p.pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(p.pNtk, i)), 1); i++  {\n            Abc_SclAddWireLoad( p, pObj, 0 );\n        }\n    }\n    // check input loads\n    if p.vInDrive != nil {\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(p.pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(p.pNtk, i)), 1); i++  {\n            var pLoad *SC_Pair  = Abc_SclObjLoad( p, pObj );\n            if Abc_SclObjInDrive(p, pObj) != 0 \u0026\u0026 (pLoad.rise \u003e Abc_SclObjInDrive(p, pObj) || pLoad.fall \u003e Abc_SclObjInDrive(p, pObj)) {\n                fmt.Printf(\"Maximum input drive strength is exceeded at primary input %d.\\n\", i); }\n        }\n    }\n/*\n    // transfer load from barbufs\n    Abc_NtkForEachBarBuf( p-\u003epNtk, pObj, i )\n    {\n        SC_Pair * pLoad = Abc_SclObjLoad( p, pObj );\n        SC_Pair * pLoadF = Abc_SclObjLoad( p, Abc_ObjFanin(pObj, 0) );\n        SC_PairAdd( pLoadF, pLoad );\n    }\n*/\n    // calculate average load\n//    if ( p-\u003eEstLoadMax )\n    {\n        var TotalLoad float64;\n        var nObjs int32;\n        // inlining of macro Abc_NtkForEachNode1\n        for  i = 0; (i \u003c Vec_PtrSize((p.pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(p.pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) || !Abc_ObjFaninNum(pObj) {} else {\n            var pLoad *SC_Pair  = Abc_SclObjLoad( p, pObj );\n            TotalLoad += 0.5 * pLoad.fall + 0.5 * pLoad.rise;\n            nObjs++;\n        }\n        }\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(p.pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(p.pNtk, i)), 1); i++  {\n            var pLoad *SC_Pair  = Abc_SclObjLoad( p, pObj );\n            TotalLoad += 0.5 * pLoad.fall + 0.5 * pLoad.rise;\n            nObjs++;\n        }\n        p.EstLoadAve = float32((TotalLoad / nObjs));\n//        printf( \"Average load = %.2f\\n\", p-\u003eEstLoadAve );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates load of the node's fanins.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclUpdateLoad(p *SC_Man, pObj *Abc_Obj_t, pOld *SC_Cell, pNew *SC_Cell) {\n    var pFanin *Abc_Obj_t;\n    var k int32;\n    // inlining of macro Abc_ObjForEachFanin\n    for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n        var pLoad *SC_Pair  = Abc_SclObjLoad( p, pFanin );\n        var pPinOld *SC_Pin  = SC_CellPin( pOld, k );\n        var pPinNew *SC_Pin  = SC_CellPin( pNew, k );\n        pLoad.rise += pPinNew.rise_cap - pPinOld.rise_cap;\n        pLoad.fall += pPinNew.fall_cap - pPinOld.fall_cap;\n    }\n}\nfunc Abc_SclUpdateLoadSplit(p *SC_Man, pBuffer *Abc_Obj_t, pFanout *Abc_Obj_t) {\n    var pPin *SC_Pin;\n    var pLoad *SC_Pair;\n    var iFanin int32  = Abc_NodeFindFanin( pFanout, pBuffer );\n    assert(iFanin \u003e= 0, \"iFanin \u003e= 0\");\n    assert(Abc_ObjFaninNum(pBuffer) == 1, \"Abc_ObjFaninNum(pBuffer) == 1\");\n    pPin = SC_CellPin( Abc_SclObjCell(pFanout), iFanin );\n    // update load of the buffer\n    pLoad = Abc_SclObjLoad( p, pBuffer );\n    pLoad.rise -= pPin.rise_cap;\n    pLoad.fall -= pPin.fall_cap;\n    // update load of the fanin\n    pLoad = Abc_SclObjLoad( p, Abc_ObjFanin0(pBuffer) );\n    pLoad.rise += pPin.rise_cap;\n    pLoad.fall += pPin.fall_cap;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

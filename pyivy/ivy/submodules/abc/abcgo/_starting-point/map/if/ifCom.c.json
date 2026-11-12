@@ -1,0 +1,766 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c",
+  "SHA256": "31733ff5071cad6a6753be952f78a770c77aa636b6cd0c95bac94ff8c46eed24",
+  "Library": [
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 114,
+        "Column": 54,
+        "ByteOffset": 3367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = Extra_UtilGetopt(argc, argv, \"vh\")) != EOF  {"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 132,
+        "Column": 17,
+        "ByteOffset": 3755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( FileName, \"r\" )) == nil {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 9,
+        "ByteOffset": 3796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Cannot open input file \\\"%s\\\". \", FileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 13,
+        "ByteOffset": 3969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pErr, \"Did you mean \\\"%s\\\"?\", FileName ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 4030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 139,
+        "Column": 5,
+        "ByteOffset": 4081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 144,
+        "Column": 9,
+        "ByteOffset": 4193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Reading LUT library has failed.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 4425
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\nusage: read_lut [-vh]\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 4474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          read the LUT library from the file\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 5,
+        "ByteOffset": 4549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 4663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-h      : print the command usage\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 4724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t                                        \\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 4792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          File format for a LUT library:\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 4860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          (the default library is shown)\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 4928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t                                        \\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 4996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          # The area/delay of k-variable LUTs:\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 162,
+        "Column": 5,
+        "ByteOffset": 5070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          # k  area   delay\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 5125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          1      1      1\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 5178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          2      2      2\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 5231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          3      4      3\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 5284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          4      8      4\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 5337
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          5     16      5\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 5390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          6     32      6\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 196,
+        "Column": 54,
+        "ByteOffset": 6156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = Extra_UtilGetopt(argc, argv, \"vh\")) != EOF  {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 5,
+        "ByteOffset": 6567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\nusage: print_lut [-vh]\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 6617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          print the current LUT library\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 219,
+        "Column": 5,
+        "ByteOffset": 6687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 220,
+        "Column": 5,
+        "ByteOffset": 6801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-h      : print the command usage\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 253,
+        "Column": 55,
+        "ByteOffset": 7655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = Extra_UtilGetopt(argc, argv, \"evh\")) != EOF  {"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 274,
+        "Column": 17,
+        "ByteOffset": 8120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( FileName, \"r\" )) == nil {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 275,
+        "Column": 9,
+        "ByteOffset": 8161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Cannot open input file \\\"%s\\\". \", FileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 13,
+        "ByteOffset": 8334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pErr, \"Did you mean \\\"%s\\\"?\", FileName ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 278,
+        "Column": 9,
+        "ByteOffset": 8395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 281,
+        "Column": 5,
+        "ByteOffset": 8446
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 290,
+        "Column": 9,
+        "ByteOffset": 8643
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Reading box library has failed.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 299,
+        "Column": 5,
+        "ByteOffset": 8875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\nusage: read_box [-evh]\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 8925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          read the box library from the file\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 301,
+        "Column": 5,
+        "ByteOffset": 9000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-e      : toggles reading extended format [default = %s]\\n\", (fExtended? \"yes\" : \"no\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 302,
+        "Column": 5,
+        "ByteOffset": 9112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 303,
+        "Column": 5,
+        "ByteOffset": 9226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-h      : print the command usage\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 331,
+        "Column": 54,
+        "ByteOffset": 10000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = Extra_UtilGetopt(argc, argv, \"vh\")) != EOF  {"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 348,
+        "Column": 21,
+        "ByteOffset": 10345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    If_LibBoxPrint( stdout, (If_LibBox_t *)Abc_FrameReadLibBox() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 5,
+        "ByteOffset": 10419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\nusage: print_box [-vh]\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 353,
+        "Column": 5,
+        "ByteOffset": 10469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          print the current box library\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 354,
+        "Column": 5,
+        "ByteOffset": 10539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 355,
+        "Column": 5,
+        "ByteOffset": 10653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-h      : print the command usage\\n\");"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_Init",
+      "Start": 1599,
+      "End": 2136,
+      "BodyStart": 1634,
+      "Original": "void If_Init( Abc_Frame_t * pAbc )\n{\n    // set the default library\n    If_LibLut_t s_LutLib = { \"lutlib\", 4, 0, {0,1,1,1,1}, {{0},{1},{1},{1},{1}} };\n    Abc_FrameSetLibLut( If_LibLutDup(\u0026s_LutLib) );\n\n    Cmd_CommandAdd( pAbc, \"FPGA mapping\", \"read_lut\",   If_CommandReadLut,   0 ); \n    Cmd_CommandAdd( pAbc, \"FPGA mapping\", \"print_lut\",  If_CommandPrintLut,  0 ); \n\n    Cmd_CommandAdd( pAbc, \"FPGA mapping\", \"read_box\",   If_CommandReadBox,   0 ); \n    Cmd_CommandAdd( pAbc, \"FPGA mapping\", \"print_box\",  If_CommandPrintBox,  0 ); \n}",
+      "Draft": "func If_Init(pAbc *Abc_Frame_t) {\n    // set the default library\n    var s_LutLib If_LibLut_t  = If_LibLut_t{ \"lutlib\", 4, 0, {0,1,1,1,1}, {{0},{1},{1},{1},{1}} };\n    Abc_FrameSetLibLut( If_LibLutDup(\u0026s_LutLib) );\n\n    Cmd_CommandAdd( pAbc, \"FPGA mapping\", \"read_lut\",   If_CommandReadLut,   0 ); \n    Cmd_CommandAdd( pAbc, \"FPGA mapping\", \"print_lut\",  If_CommandPrintLut,  0 ); \n\n    Cmd_CommandAdd( pAbc, \"FPGA mapping\", \"read_box\",   If_CommandReadBox,   0 ); \n    Cmd_CommandAdd( pAbc, \"FPGA mapping\", \"print_box\",  If_CommandPrintBox,  0 ); \n}"
+    },
+    {
+      "Name": "If_End",
+      "Start": 2397,
+      "End": 2555,
+      "BodyStart": 2431,
+      "Original": "void If_End( Abc_Frame_t * pAbc )\n{\n    If_LibLutFree( (If_LibLut_t *)   Abc_FrameReadLibLut() );\n    If_LibBoxFree( (If_LibBox_t *)Abc_FrameReadLibBox() );\n}",
+      "Draft": "func If_End(pAbc *Abc_Frame_t) {\n    If_LibLutFree( (If_LibLut_t *)   Abc_FrameReadLibLut() );\n    If_LibBoxFree( (If_LibBox_t *)Abc_FrameReadLibBox() );\n}"
+    },
+    {
+      "Name": "If_CommandReadLut",
+      "Start": 2831,
+      "End": 5421,
+      "BodyStart": 2898,
+      "Original": "int If_CommandReadLut( Abc_Frame_t * pAbc, int argc, char **argv )\n{\n    FILE * pFile;\n    FILE * pOut, * pErr;\n    If_LibLut_t * pLib;\n    Abc_Ntk_t * pNet;\n    char * FileName;\n    int fVerbose;\n    int c;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 1;\n    Extra_UtilGetoptReset();\n    while ( (c = Extra_UtilGetopt(argc, argv, \"vh\")) != EOF ) \n    {\n        switch (c) \n        {\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if ( argc != globalUtilOptind + 1 )\n        goto usage;\n\n    // get the input file name\n    FileName = argv[globalUtilOptind];\n    if ( (pFile = fopen( FileName, \"r\" )) == NULL )\n    {\n        fprintf( pErr, \"Cannot open input file \\\"%s\\\". \", FileName );\n        if ( (FileName = Extra_FileGetSimilarName( FileName, \".genlib\", \".lib\", \".gen\", \".g\", NULL )) )\n            fprintf( pErr, \"Did you mean \\\"%s\\\"?\", FileName );\n        fprintf( pErr, \"\\n\" );\n        return 1;\n    }\n    fclose( pFile );\n\n    // set the new network\n    pLib = If_LibLutRead( FileName );\n    if ( pLib == NULL )\n    {\n        fprintf( pErr, \"Reading LUT library has failed.\\n\" );\n        goto usage;\n    }\n    // replace the current library\n    If_LibLutFree( (If_LibLut_t *)Abc_FrameReadLibLut() );\n    Abc_FrameSetLibLut( pLib );\n    return 0;\n\nusage:\n    fprintf( pErr, \"\\nusage: read_lut [-vh]\\n\");\n    fprintf( pErr, \"\\t          read the LUT library from the file\\n\" );  \n    fprintf( pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\") );\n    fprintf( pErr, \"\\t-h      : print the command usage\\n\");\n    fprintf( pErr, \"\\t                                        \\n\");\n    fprintf( pErr, \"\\t          File format for a LUT library:\\n\");\n    fprintf( pErr, \"\\t          (the default library is shown)\\n\");\n    fprintf( pErr, \"\\t                                        \\n\");\n    fprintf( pErr, \"\\t          # The area/delay of k-variable LUTs:\\n\");\n    fprintf( pErr, \"\\t          # k  area   delay\\n\");\n    fprintf( pErr, \"\\t          1      1      1\\n\");\n    fprintf( pErr, \"\\t          2      2      2\\n\");\n    fprintf( pErr, \"\\t          3      4      3\\n\");\n    fprintf( pErr, \"\\t          4      8      4\\n\");\n    fprintf( pErr, \"\\t          5     16      5\\n\");\n    fprintf( pErr, \"\\t          6     32      6\\n\");\n    return 1;       /* error exit */\n}",
+      "Draft": "func If_CommandReadLut(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var pOut, pErr *os.File;\n    var pLib *If_LibLut_t;\n    var pNet *Abc_Ntk_t;\n    var FileName string;\n    var fVerbose int32;\n    var c int32;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 1;\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"vh\")) != -1  {\n        switch c {\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if argc != globalUtilOptind + 1 {\n        goto usage; }\n\n    // get the input file name\n    FileName = argv[globalUtilOptind];\n    if (pFile = os.Open(FileName)) == nil {\n        fmt.Fprintf(pErr, \"Cannot open input file \\\"%s\\\". \", FileName);\n        if FileName = Extra_FileGetSimilarName( FileName, \".genlib\", \".lib\", \".gen\", \".g\", nil ) {\n            fmt.Fprintf(pErr, \"Did you mean \\\"%s\\\"?\", FileName); }\n        fmt.Fprintf(pErr, \"\\n\");\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    // set the new network\n    pLib = If_LibLutRead( FileName );\n    if pLib == nil {\n        fmt.Fprintf(pErr, \"Reading LUT library has failed.\\n\");\n        goto usage;\n    }\n    // replace the current library\n    If_LibLutFree( (If_LibLut_t *)Abc_FrameReadLibLut() );\n    Abc_FrameSetLibLut( pLib );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: read_lut [-vh]\\n\");\n    fmt.Fprintf(pErr, \"\\t          read the LUT library from the file\\n\");  \n    fmt.Fprintf(pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\"));\n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    fmt.Fprintf(pErr, \"\\t                                        \\n\");\n    fmt.Fprintf(pErr, \"\\t          File format for a LUT library:\\n\");\n    fmt.Fprintf(pErr, \"\\t          (the default library is shown)\\n\");\n    fmt.Fprintf(pErr, \"\\t                                        \\n\");\n    fmt.Fprintf(pErr, \"\\t          # The area/delay of k-variable LUTs:\\n\");\n    fmt.Fprintf(pErr, \"\\t          # k  area   delay\\n\");\n    fmt.Fprintf(pErr, \"\\t          1      1      1\\n\");\n    fmt.Fprintf(pErr, \"\\t          2      2      2\\n\");\n    fmt.Fprintf(pErr, \"\\t          3      4      3\\n\");\n    fmt.Fprintf(pErr, \"\\t          4      8      4\\n\");\n    fmt.Fprintf(pErr, \"\\t          5     16      5\\n\");\n    fmt.Fprintf(pErr, \"\\t          6     32      6\\n\");\n    return 1;       /* error exit */\n}"
+    },
+    {
+      "Name": "If_CommandPrintLut",
+      "Start": 5697,
+      "End": 6834,
+      "BodyStart": 5765,
+      "Original": "int If_CommandPrintLut( Abc_Frame_t * pAbc, int argc, char **argv )\n{\n    FILE * pOut, * pErr;\n    Abc_Ntk_t * pNet;\n    int fVerbose;\n    int c;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 1;\n    Extra_UtilGetoptReset();\n    while ( (c = Extra_UtilGetopt(argc, argv, \"vh\")) != EOF ) \n    {\n        switch (c) \n        {\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if ( argc != globalUtilOptind )\n        goto usage;\n\n    // set the new network\n    If_LibLutPrint( (If_LibLut_t *)Abc_FrameReadLibLut() );\n    return 0;\n\nusage:\n    fprintf( pErr, \"\\nusage: print_lut [-vh]\\n\");\n    fprintf( pErr, \"\\t          print the current LUT library\\n\" );  \n    fprintf( pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\") );\n    fprintf( pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       /* error exit */\n}",
+      "Draft": "func If_CommandPrintLut(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr *os.File;\n    var pNet *Abc_Ntk_t;\n    var fVerbose int32;\n    var c int32;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 1;\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"vh\")) != -1  {\n        switch c {\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if argc != globalUtilOptind {\n        goto usage; }\n\n    // set the new network\n    If_LibLutPrint( (If_LibLut_t *)Abc_FrameReadLibLut() );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: print_lut [-vh]\\n\");\n    fmt.Fprintf(pErr, \"\\t          print the current LUT library\\n\");  \n    fmt.Fprintf(pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\"));\n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       /* error exit */\n}"
+    },
+    {
+      "Name": "If_CommandReadBox",
+      "Start": 7070,
+      "End": 9211,
+      "BodyStart": 7137,
+      "Original": "int If_CommandReadBox( Abc_Frame_t * pAbc, int argc, char **argv )\n{\n    FILE * pFile;\n    FILE * pOut, * pErr;\n    If_LibBox_t * pLib;\n    Abc_Ntk_t * pNet;\n    char * FileName;\n    int fExtended;\n    int fVerbose;\n    int c;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fExtended = 0;\n    fVerbose = 1;\n    Extra_UtilGetoptReset();\n    while ( (c = Extra_UtilGetopt(argc, argv, \"evh\")) != EOF ) \n    {\n        switch (c) \n        {\n            case 'e':\n                fExtended ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if ( argc != globalUtilOptind + 1 )\n        goto usage;\n\n    // get the input file name\n    FileName = argv[globalUtilOptind];\n    if ( (pFile = fopen( FileName, \"r\" )) == NULL )\n    {\n        fprintf( pErr, \"Cannot open input file \\\"%s\\\". \", FileName );\n        if ( (FileName = Extra_FileGetSimilarName( FileName, \".genlib\", \".lib\", \".gen\", \".g\", NULL )) )\n            fprintf( pErr, \"Did you mean \\\"%s\\\"?\", FileName );\n        fprintf( pErr, \"\\n\" );\n        return 1;\n    }\n    fclose( pFile );\n\n    // set the new network\n    pLib = fExtended ? If_LibBoxRead2( FileName ) : If_LibBoxRead( FileName );\n    if ( pLib == NULL )\n    {\n        fprintf( pErr, \"Reading box library has failed.\\n\" );\n        goto usage;\n    }\n    // replace the current library\n    If_LibBoxFree( (If_LibBox_t *)Abc_FrameReadLibBox() );\n    Abc_FrameSetLibBox( pLib );\n    return 0;\n\nusage:\n    fprintf( pErr, \"\\nusage: read_box [-evh]\\n\");\n    fprintf( pErr, \"\\t          read the box library from the file\\n\" );  \n    fprintf( pErr, \"\\t-e      : toggles reading extended format [default = %s]\\n\", (fExtended? \"yes\" : \"no\") );\n    fprintf( pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\") );\n    fprintf( pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       /* error exit */\n}",
+      "Draft": "func If_CommandReadBox(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var pOut, pErr *os.File;\n    var pLib *If_LibBox_t;\n    var pNet *Abc_Ntk_t;\n    var FileName string;\n    var fExtended int32;\n    var fVerbose int32;\n    var c int32;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fExtended = 0;\n    fVerbose = 1;\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"evh\")) != -1  {\n        switch c {\n            case 'e':\n                fExtended ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if argc != globalUtilOptind + 1 {\n        goto usage; }\n\n    // get the input file name\n    FileName = argv[globalUtilOptind];\n    if (pFile = os.Open(FileName)) == nil {\n        fmt.Fprintf(pErr, \"Cannot open input file \\\"%s\\\". \", FileName);\n        if FileName = Extra_FileGetSimilarName( FileName, \".genlib\", \".lib\", \".gen\", \".g\", nil ) {\n            fmt.Fprintf(pErr, \"Did you mean \\\"%s\\\"?\", FileName); }\n        fmt.Fprintf(pErr, \"\\n\");\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    // set the new network\n    if fExtended != 0 {\n        pLib = If_LibBoxRead2( FileName );\n    } else {\n        pLib = If_LibBoxRead( FileName );\n    }\n    if pLib == nil {\n        fmt.Fprintf(pErr, \"Reading box library has failed.\\n\");\n        goto usage;\n    }\n    // replace the current library\n    If_LibBoxFree( (If_LibBox_t *)Abc_FrameReadLibBox() );\n    Abc_FrameSetLibBox( pLib );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: read_box [-evh]\\n\");\n    fmt.Fprintf(pErr, \"\\t          read the box library from the file\\n\");  \n    fmt.Fprintf(pErr, \"\\t-e      : toggles reading extended format [default = %s]\\n\", (fExtended? \"yes\" : \"no\"));\n    fmt.Fprintf(pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\"));\n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       /* error exit */\n}"
+    },
+    {
+      "Name": "If_CommandPrintBox",
+      "Start": 9487,
+      "End": 10632,
+      "BodyStart": 9555,
+      "Original": "int If_CommandPrintBox( Abc_Frame_t * pAbc, int argc, char **argv )\n{\n    FILE * pOut, * pErr;\n    Abc_Ntk_t * pNet;\n    int fVerbose;\n    int c;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 1;\n    Extra_UtilGetoptReset();\n    while ( (c = Extra_UtilGetopt(argc, argv, \"vh\")) != EOF ) \n    {\n        switch (c) \n        {\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if ( argc != globalUtilOptind )\n        goto usage;\n\n    // set the new network\n    If_LibBoxPrint( stdout, (If_LibBox_t *)Abc_FrameReadLibBox() );\n    return 0;\n\nusage:\n    fprintf( pErr, \"\\nusage: print_box [-vh]\\n\");\n    fprintf( pErr, \"\\t          print the current box library\\n\" );  \n    fprintf( pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\") );\n    fprintf( pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       /* error exit */\n}",
+      "Draft": "func If_CommandPrintBox(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr *os.File;\n    var pNet *Abc_Ntk_t;\n    var fVerbose int32;\n    var c int32;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 1;\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"vh\")) != -1  {\n        switch c {\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if argc != globalUtilOptind {\n        goto usage; }\n\n    // set the new network\n    If_LibBoxPrint( os.Stdout, (If_LibBox_t *)Abc_FrameReadLibBox() );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: print_box [-vh]\\n\");\n    fmt.Fprintf(pErr, \"\\t          print the current box library\\n\");  \n    fmt.Fprintf(pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\"));\n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       /* error exit */\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::pointer-cast::2452",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2452,
+      "End": 2467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::pointer-cast::2514",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2514,
+      "End": 2529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::pointer-cast::4271",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4271,
+      "End": 4286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::pointer-cast::6439",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6439,
+      "End": 6454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::pointer-cast::8667",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8667,
+      "End": 8682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::pointer-cast::10237",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10237,
+      "End": 10252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::If_Init",
+      "Category": "semantic-review",
+      "Symbol": "If_Init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1599,
+      "End": 2136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::If_End",
+      "Category": "semantic-review",
+      "Symbol": "If_End",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2397,
+      "End": 2555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::ternary::If_CommandReadLut",
+      "Category": "ternary-review",
+      "Symbol": "If_CommandReadLut",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2831,
+      "End": 5421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::If_CommandReadLut",
+      "Category": "semantic-review",
+      "Symbol": "If_CommandReadLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2831,
+      "End": 5421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::ternary::If_CommandPrintLut",
+      "Category": "ternary-review",
+      "Symbol": "If_CommandPrintLut",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5697,
+      "End": 6834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::If_CommandPrintLut",
+      "Category": "semantic-review",
+      "Symbol": "If_CommandPrintLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5697,
+      "End": 6834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::ternary::If_CommandReadBox",
+      "Category": "ternary-review",
+      "Symbol": "If_CommandReadBox",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7070,
+      "End": 9211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::If_CommandReadBox",
+      "Category": "semantic-review",
+      "Symbol": "If_CommandReadBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7070,
+      "End": 9211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::ternary::If_CommandPrintBox",
+      "Category": "ternary-review",
+      "Symbol": "If_CommandPrintBox",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9487,
+      "End": 10632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::If_CommandPrintBox",
+      "Category": "semantic-review",
+      "Symbol": "If_CommandPrintBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9487,
+      "End": 10632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifCom.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10880
+    }
+  ],
+  "Draft": "package if_\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ifCom.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [Command handlers.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifCom.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int If_CommandReadLut ( Abc_Frame_t * pAbc, int argc, char **argv );\n\n// static int If_CommandPrintLut( Abc_Frame_t * pAbc, int argc, char **argv );\n\n// static int If_CommandReadBox ( Abc_Frame_t * pAbc, int argc, char **argv );\n\n// static int If_CommandPrintBox( Abc_Frame_t * pAbc, int argc, char **argv );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Package initialization procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_Init(pAbc *Abc_Frame_t) {\n    // set the default library\n    var s_LutLib If_LibLut_t  = If_LibLut_t{ \"lutlib\", 4, 0, {0,1,1,1,1}, {{0},{1},{1},{1},{1}} };\n    Abc_FrameSetLibLut( If_LibLutDup(\u0026s_LutLib) );\n\n    Cmd_CommandAdd( pAbc, \"FPGA mapping\", \"read_lut\",   If_CommandReadLut,   0 ); \n    Cmd_CommandAdd( pAbc, \"FPGA mapping\", \"print_lut\",  If_CommandPrintLut,  0 ); \n\n    Cmd_CommandAdd( pAbc, \"FPGA mapping\", \"read_box\",   If_CommandReadBox,   0 ); \n    Cmd_CommandAdd( pAbc, \"FPGA mapping\", \"print_box\",  If_CommandPrintBox,  0 ); \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Package ending procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_End(pAbc *Abc_Frame_t) {\n    If_LibLutFree( (If_LibLut_t *)   Abc_FrameReadLibLut() );\n    If_LibBoxFree( (If_LibBox_t *)Abc_FrameReadLibBox() );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Command procedure to read LUT libraries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CommandReadLut(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var pOut, pErr *os.File;\n    var pLib *If_LibLut_t;\n    var pNet *Abc_Ntk_t;\n    var FileName string;\n    var fVerbose int32;\n    var c int32;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 1;\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"vh\")) != -1  {\n        switch c {\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if argc != globalUtilOptind + 1 {\n        goto usage; }\n\n    // get the input file name\n    FileName = argv[globalUtilOptind];\n    if (pFile = os.Open(FileName)) == nil {\n        fmt.Fprintf(pErr, \"Cannot open input file \\\"%s\\\". \", FileName);\n        if FileName = Extra_FileGetSimilarName( FileName, \".genlib\", \".lib\", \".gen\", \".g\", nil ) {\n            fmt.Fprintf(pErr, \"Did you mean \\\"%s\\\"?\", FileName); }\n        fmt.Fprintf(pErr, \"\\n\");\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    // set the new network\n    pLib = If_LibLutRead( FileName );\n    if pLib == nil {\n        fmt.Fprintf(pErr, \"Reading LUT library has failed.\\n\");\n        goto usage;\n    }\n    // replace the current library\n    If_LibLutFree( (If_LibLut_t *)Abc_FrameReadLibLut() );\n    Abc_FrameSetLibLut( pLib );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: read_lut [-vh]\\n\");\n    fmt.Fprintf(pErr, \"\\t          read the LUT library from the file\\n\");  \n    fmt.Fprintf(pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\"));\n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    fmt.Fprintf(pErr, \"\\t                                        \\n\");\n    fmt.Fprintf(pErr, \"\\t          File format for a LUT library:\\n\");\n    fmt.Fprintf(pErr, \"\\t          (the default library is shown)\\n\");\n    fmt.Fprintf(pErr, \"\\t                                        \\n\");\n    fmt.Fprintf(pErr, \"\\t          # The area/delay of k-variable LUTs:\\n\");\n    fmt.Fprintf(pErr, \"\\t          # k  area   delay\\n\");\n    fmt.Fprintf(pErr, \"\\t          1      1      1\\n\");\n    fmt.Fprintf(pErr, \"\\t          2      2      2\\n\");\n    fmt.Fprintf(pErr, \"\\t          3      4      3\\n\");\n    fmt.Fprintf(pErr, \"\\t          4      8      4\\n\");\n    fmt.Fprintf(pErr, \"\\t          5     16      5\\n\");\n    fmt.Fprintf(pErr, \"\\t          6     32      6\\n\");\n    return 1;       /* error exit */\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Command procedure to read LUT libraries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CommandPrintLut(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr *os.File;\n    var pNet *Abc_Ntk_t;\n    var fVerbose int32;\n    var c int32;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 1;\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"vh\")) != -1  {\n        switch c {\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if argc != globalUtilOptind {\n        goto usage; }\n\n    // set the new network\n    If_LibLutPrint( (If_LibLut_t *)Abc_FrameReadLibLut() );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: print_lut [-vh]\\n\");\n    fmt.Fprintf(pErr, \"\\t          print the current LUT library\\n\");  \n    fmt.Fprintf(pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\"));\n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       /* error exit */\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CommandReadBox(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var pOut, pErr *os.File;\n    var pLib *If_LibBox_t;\n    var pNet *Abc_Ntk_t;\n    var FileName string;\n    var fExtended int32;\n    var fVerbose int32;\n    var c int32;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fExtended = 0;\n    fVerbose = 1;\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"evh\")) != -1  {\n        switch c {\n            case 'e':\n                fExtended ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if argc != globalUtilOptind + 1 {\n        goto usage; }\n\n    // get the input file name\n    FileName = argv[globalUtilOptind];\n    if (pFile = os.Open(FileName)) == nil {\n        fmt.Fprintf(pErr, \"Cannot open input file \\\"%s\\\". \", FileName);\n        if FileName = Extra_FileGetSimilarName( FileName, \".genlib\", \".lib\", \".gen\", \".g\", nil ) {\n            fmt.Fprintf(pErr, \"Did you mean \\\"%s\\\"?\", FileName); }\n        fmt.Fprintf(pErr, \"\\n\");\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    // set the new network\n    if fExtended != 0 {\n        pLib = If_LibBoxRead2( FileName );\n    } else {\n        pLib = If_LibBoxRead( FileName );\n    }\n    if pLib == nil {\n        fmt.Fprintf(pErr, \"Reading box library has failed.\\n\");\n        goto usage;\n    }\n    // replace the current library\n    If_LibBoxFree( (If_LibBox_t *)Abc_FrameReadLibBox() );\n    Abc_FrameSetLibBox( pLib );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: read_box [-evh]\\n\");\n    fmt.Fprintf(pErr, \"\\t          read the box library from the file\\n\");  \n    fmt.Fprintf(pErr, \"\\t-e      : toggles reading extended format [default = %s]\\n\", (fExtended? \"yes\" : \"no\"));\n    fmt.Fprintf(pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\"));\n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       /* error exit */\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Command procedure to read LUT libraries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CommandPrintBox(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr *os.File;\n    var pNet *Abc_Ntk_t;\n    var fVerbose int32;\n    var c int32;\n\n    pNet = Abc_FrameReadNtk(pAbc);\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 1;\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"vh\")) != -1  {\n        switch c {\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if argc != globalUtilOptind {\n        goto usage; }\n\n    // set the new network\n    If_LibBoxPrint( os.Stdout, (If_LibBox_t *)Abc_FrameReadLibBox() );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: print_box [-vh]\\n\");\n    fmt.Fprintf(pErr, \"\\t          print the current box library\\n\");  \n    fmt.Fprintf(pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\"));\n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       /* error exit */\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

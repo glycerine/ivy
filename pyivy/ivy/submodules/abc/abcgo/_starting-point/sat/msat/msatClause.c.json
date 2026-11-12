@@ -1,0 +1,781 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c",
+  "SHA256": "0ff8e4543d51ba9eec33072dfe9c055ea342f6a12a20a9b54cc31d58b2694395",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 9,
+        "ByteOffset": 2939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Msat_SolverReadDecisionLevel(p) == 0 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 6220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pC.pData, pLits, sizeof(int)*nLits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 13,
+        "ByteOffset": 6777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iLevelCur != -1 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 284,
+        "Column": 5,
+        "ByteOffset": 10648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( \u0026f, pC.pData + pC.nSize, sizeof (f));"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 11045
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pC.pData + pC.nSize, \u0026Num, sizeof (Num) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 324,
+        "Column": 5,
+        "ByteOffset": 12087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pC.pData[1] == LitF );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 9,
+        "ByteOffset": 13772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i \u003e= 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 400,
+        "Column": 5,
+        "ByteOffset": 14862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Lit == MSAT_LIT_UNASSIGNED || Lit == pC.pData[0] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 402,
+        "Column": 9,
+        "ByteOffset": 15001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Msat_SolverReadAssignsArray(p)[/*__starting_point_inline_macro:MSAT_LIT2VAR__*/((pC.pData[i])\u003e\u003e1)] == /*__starting_point_inline_macro:MSAT_LITNOT__*/((pC.pData[i])^1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 426,
+        "Column": 9,
+        "ByteOffset": 15933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i \u003c nClauses );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 448,
+        "Column": 9,
+        "ByteOffset": 16430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"NULL pointer\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 451,
+        "Column": 13,
+        "ByteOffset": 16506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Act = %.4f  \", Msat_ClauseReadActivity(pC) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 453,
+        "Column": 13,
+        "ByteOffset": 16623
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %s%d\", ((pC.pData[i]\u00261)? \"-\": \"\"),  pC.pData[i]/2 + 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 456,
+        "Column": 5,
+        "ByteOffset": 16710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 473,
+        "Column": 9,
+        "ByteOffset": 17166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s%d \", ((pC.pData[i]\u00261)? \"-\": \"\"),  pC.pData[i]/2 + int32((fIncrement\u003e0)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 476,
+        "Column": 9,
+        "ByteOffset": 17295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"0\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 477,
+        "Column": 5,
+        "ByteOffset": 17324
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 494,
+        "Column": 9,
+        "ByteOffset": 17703
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"NULL pointer\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 499,
+        "Column": 13,
+        "ByteOffset": 17901
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\" \"L_LIT, /*__starting_point_inline_macro:L_lit__*//*__starting_point_inline_macro:MSAT_LITSIGN__*/((pC.pData[i])\u00261)     ?\"-\":\"\", /*__starting_point_inline_macro:MSAT_LIT2VAR__*/((pC.pData[i])\u003e\u003e1)+1);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 502,
+        "Column": 5,
+        "ByteOffset": 18129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 157,
+        "Column": 1,
+        "ByteOffset": 5638
+      },
+      "Directive": "#ifdef USE_SYSTEM_MEMORY_MANAGEMENT"
+    },
+    {
+      "Location": {
+        "Line": 236,
+        "Column": 1,
+        "ByteOffset": 8170
+      },
+      "Directive": "#ifdef USE_SYSTEM_MEMORY_MANAGEMENT"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Msat_ClauseCreate",
+      "Start": 2120,
+      "End": 7475,
+      "BodyStart": 2232,
+      "Original": "int  Msat_ClauseCreate( Msat_Solver_t * p, Msat_IntVec_t * vLits, int  fLearned, Msat_Clause_t ** pClause_out )\n{\n    int * pAssigns = Msat_SolverReadAssignsArray(p);\n    Msat_ClauseVec_t ** pvWatched;\n    Msat_Clause_t * pC;\n    int * pLits;\n    int nLits, i, j;\n    int nBytes;\n    Msat_Var_t Var;\n    int  Sign;\n\n    *pClause_out = NULL;\n\n    nLits = Msat_IntVecReadSize(vLits);\n    pLits = Msat_IntVecReadArray(vLits);\n\n    if ( !fLearned ) \n    {\n        int * pSeen = Msat_SolverReadSeenArray( p );\n        int nSeenId;\n        assert( Msat_SolverReadDecisionLevel(p) == 0 );\n        // sorting literals makes the code trace-equivalent \n        // with to the original C++ solver\n        Msat_IntVecSort( vLits, 0 );\n        // increment the counter of seen twice\n        nSeenId = Msat_SolverIncrementSeenId( p );\n        nSeenId = Msat_SolverIncrementSeenId( p );\n        // nSeenId - 1 stands for negative\n        // nSeenId     stands for positive\n        // Remove false literals\n\n        // there is a bug here!!!!\n        // when the same var in opposite polarities is given, it drops one polarity!!!\n\n        for ( i = j = 0; i \u003c nLits; i++ ) {\n            // get the corresponding variable\n            Var  = MSAT_LIT2VAR(pLits[i]);\n            Sign = MSAT_LITSIGN(pLits[i]); // Sign=0 for positive\n            // check if we already saw this variable in the this clause\n            if ( pSeen[Var] \u003e= nSeenId - 1 )\n            {\n                if ( (pSeen[Var] != nSeenId) == Sign ) // the same lit\n                    continue;\n                return 1; // two opposite polarity lits -- don't add the clause\n            }\n            // mark the variable as seen\n            pSeen[Var] = nSeenId - !Sign;\n\n            // analize the value of this literal\n            if ( pAssigns[Var] != MSAT_VAR_UNASSIGNED )\n            {\n                if ( pAssigns[Var] == pLits[i] )\n                    return 1;  // the clause is always true -- don't add anything\n                // the literal has no impact - skip it\n                continue;\n            }\n            // otherwise, add this literal to the clause\n            pLits[j++] = pLits[i];\n        }\n        Msat_IntVecShrink( vLits, j );\n        nLits = j;\n/*\n        // the problem with this code is that performance is very\n        // sensitive to the ordering of adjacency lits\n        // the best ordering requires fanins first, next fanouts\n        // this ordering is more convenient to make from FRAIG\n\n        // create the adjacency information\n        if ( nLits \u003e 2 )\n        {\n            Msat_Var_t VarI, VarJ;\n            Msat_IntVec_t * pAdjI, * pAdjJ;\n\n            for ( i = 0; i \u003c nLits; i++ )\n            {\n                VarI = MSAT_LIT2VAR(pLits[i]);\n                pAdjI = (Msat_IntVec_t *)p-\u003evAdjacents-\u003epArray[VarI];\n\n                for ( j = i+1; j \u003c nLits; j++ )\n                {\n                    VarJ = MSAT_LIT2VAR(pLits[j]);\n                    pAdjJ = (Msat_IntVec_t *)p-\u003evAdjacents-\u003epArray[VarJ];\n\n                    Msat_IntVecPushUniqueOrder( pAdjI, VarJ, 1 );\n                    Msat_IntVecPushUniqueOrder( pAdjJ, VarI, 1 );\n                }\n            }\n        }\n*/\n    }\n    // 'vLits' is now the (possibly) reduced vector of literals.\n    if ( nLits == 0 )\n        return 0;\n    if ( nLits == 1 )\n        return Msat_SolverEnqueue( p, pLits[0], NULL );\n\n    // Allocate clause:\n//    nBytes = sizeof(unsigned)*(nLits + 1 + (int)fLearned);\n    nBytes = sizeof(unsigned)*(nLits + 2 + (int)fLearned);\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    pC = (Msat_Clause_t *)ABC_ALLOC( char, nBytes );\n#else\n    pC = (Msat_Clause_t *)Msat_MmStepEntryFetch( Msat_SolverReadMem(p), nBytes );\n#endif\n    pC-\u003eNum        = p-\u003enClauses++;\n    pC-\u003efTypeA     = 0;\n    pC-\u003efMark      = 0;\n    pC-\u003efLearned   = fLearned;\n    pC-\u003enSize      = nLits;\n    pC-\u003enSizeAlloc = nBytes;\n    memcpy( pC-\u003epData, pLits, sizeof(int)*nLits );\n\n    // For learnt clauses only:\n    if ( fLearned )\n    {\n        int * pLevel = Msat_SolverReadDecisionLevelArray( p );\n        int iLevelMax, iLevelCur, iLitMax;\n\n        // Put the second watch on the literal with highest decision level:\n        iLitMax = 1;\n        iLevelMax = pLevel[ MSAT_LIT2VAR(pLits[1]) ];\n        for ( i = 2; i \u003c nLits; i++ )\n        {\n            iLevelCur = pLevel[ MSAT_LIT2VAR(pLits[i]) ];\n            assert( iLevelCur != -1 );\n            if ( iLevelMax \u003c iLevelCur )\n            // this is very strange - shouldn't it be???\n            // if ( iLevelMax \u003e iLevelCur )\n                iLevelMax = iLevelCur, iLitMax = i;\n        }\n        pC-\u003epData[1]       = pLits[iLitMax];\n        pC-\u003epData[iLitMax] = pLits[1];\n\n        // Bumping:\n        // (newly learnt clauses should be considered active)\n        Msat_ClauseWriteActivity( pC, 0.0 );\n        Msat_SolverClaBumpActivity( p, pC ); \n//        if ( nLits \u003c 20 )\n        for ( i = 0; i \u003c nLits; i++ )\n        {\n            Msat_SolverVarBumpActivity( p, pLits[i] );\n//            Msat_SolverVarBumpActivity( p, pLits[i] );\n//            p-\u003epFreq[ MSAT_LIT2VAR(pLits[i]) ]++;\n        }\n    }\n\n    // Store clause:\n    pvWatched = Msat_SolverReadWatchedArray( p );\n    Msat_ClauseVecPush( pvWatched[ MSAT_LITNOT(pC-\u003epData[0]) ], pC );\n    Msat_ClauseVecPush( pvWatched[ MSAT_LITNOT(pC-\u003epData[1]) ], pC );\n    *pClause_out = pC;\n    return 1;\n}",
+      "Draft": "func Msat_ClauseCreate(p *Msat_Solver_t, vLits *Msat_IntVec_t, fLearned int32, pClause_out **Msat_Clause_t) int32 {\n    var pAssigns *int32  = Msat_SolverReadAssignsArray(p);\n    var pvWatched **Msat_ClauseVec_t;\n    var pC *Msat_Clause_t;\n    var pLits *int32;\n    var nLits, i, j int32;\n    var nBytes int32;\n    var Var Msat_Var_t;\n    var Sign int32;\n\n    *pClause_out = nil;\n\n    nLits = Msat_IntVecReadSize(vLits);\n    pLits = Msat_IntVecReadArray(vLits);\n\n    if !fLearned {\n        var pSeen *int32  = Msat_SolverReadSeenArray( p );\n        var nSeenId int32;\n        assert(Msat_SolverReadDecisionLevel(p) == 0, \"Msat_SolverReadDecisionLevel(p) == 0\");\n        // sorting literals makes the code trace-equivalent \n        // with to the original C++ solver\n        Msat_IntVecSort( vLits, 0 );\n        // increment the counter of seen twice\n        nSeenId = Msat_SolverIncrementSeenId( p );\n        nSeenId = Msat_SolverIncrementSeenId( p );\n        // nSeenId - 1 stands for negative\n        // nSeenId     stands for positive\n        // Remove false literals\n\n        // there is a bug here!!!!\n        // when the same var in opposite polarities is given, it drops one polarity!!!\n\n        for  i = j = 0; i \u003c nLits; i++  {\n            // get the corresponding variable\n            // inlining of macro MSAT_LIT2VAR\n            Var  = ((pLits[i])\u003e\u003e1);\n            // inlining of macro MSAT_LITSIGN\n            Sign = ((pLits[i])\u00261)     ; // Sign=0 for positive\n            // check if we already saw this variable in the this clause\n            if pSeen[Var] \u003e= nSeenId - 1 {\n                if (pSeen[Var] != nSeenId) == Sign { // the same lit\n                    continue; }\n                return 1; // two opposite polarity lits -- don't add the clause\n            }\n            // mark the variable as seen\n            pSeen[Var] = nSeenId - !Sign;\n\n            // analize the value of this literal\n            if pAssigns[Var] != MSAT_VAR_UNASSIGNED {\n                if pAssigns[Var] == pLits[i] {\n                    return 1; }  // the clause is always true -- don't add anything\n                // the literal has no impact - skip it\n                continue;\n            }\n            // otherwise, add this literal to the clause\n            pLits[j++] = pLits[i];\n        }\n        Msat_IntVecShrink( vLits, j );\n        nLits = j;\n/*\n        // the problem with this code is that performance is very\n        // sensitive to the ordering of adjacency lits\n        // the best ordering requires fanins first, next fanouts\n        // this ordering is more convenient to make from FRAIG\n\n        // create the adjacency information\n        if ( nLits \u003e 2 )\n        {\n            Msat_Var_t VarI, VarJ;\n            Msat_IntVec_t * pAdjI, * pAdjJ;\n\n            for ( i = 0; i \u003c nLits; i++ )\n            {\n                VarI = MSAT_LIT2VAR(pLits[i]);\n                pAdjI = (Msat_IntVec_t *)p-\u003evAdjacents-\u003epArray[VarI];\n\n                for ( j = i+1; j \u003c nLits; j++ )\n                {\n                    VarJ = MSAT_LIT2VAR(pLits[j]);\n                    pAdjJ = (Msat_IntVec_t *)p-\u003evAdjacents-\u003epArray[VarJ];\n\n                    Msat_IntVecPushUniqueOrder( pAdjI, VarJ, 1 );\n                    Msat_IntVecPushUniqueOrder( pAdjJ, VarI, 1 );\n                }\n            }\n        }\n*/\n    }\n    // 'vLits' is now the (possibly) reduced vector of literals.\n    if nLits == 0 {\n        return 0; }\n    if nLits == 1 {\n        return Msat_SolverEnqueue( p, pLits[0], nil ); }\n\n    // Allocate clause:\n//    nBytes = sizeof(unsigned)*(nLits + 1 + (int)fLearned);\n    nBytes = sizeof(unsigned)*(nLits + 2 + int32(fLearned));\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    pC = (Msat_Clause_t *)ABC_ALLOC( char, nBytes );\n#else\n    pC = (Msat_Clause_t *)Msat_MmStepEntryFetch( Msat_SolverReadMem(p), nBytes );\n#endif\n    pC.Num        = p.nClauses++;\n    pC.fTypeA     = 0;\n    pC.fMark      = 0;\n    pC.fLearned   = fLearned;\n    pC.nSize      = nLits;\n    pC.nSizeAlloc = nBytes;\n    memcpy( pC.pData, pLits, sizeof(int)*nLits );\n\n    // For learnt clauses only:\n    if fLearned {\n        var pLevel *int32  = Msat_SolverReadDecisionLevelArray( p );\n        var iLevelMax, iLevelCur, iLitMax int32;\n\n        // Put the second watch on the literal with highest decision level:\n        iLitMax = 1;\n        // inlining of macro MSAT_LIT2VAR\n        iLevelMax = pLevel[ ((pLits[1])\u003e\u003e1) ];\n        for  i = 2; i \u003c nLits; i++  {\n            // inlining of macro MSAT_LIT2VAR\n            iLevelCur = pLevel[ ((pLits[i])\u003e\u003e1) ];\n            assert(iLevelCur != -1, \"iLevelCur != -1\");\n            if iLevelMax \u003c iLevelCur {\n            // this is very strange - shouldn't it be???\n            // if ( iLevelMax \u003e iLevelCur )\n                iLevelMax = iLevelCur;\niLitMax = i; }\n        }\n        pC.pData[1]       = pLits[iLitMax];\n        pC.pData[iLitMax] = pLits[1];\n\n        // Bumping:\n        // (newly learnt clauses should be considered active)\n        Msat_ClauseWriteActivity( pC, 0.0 );\n        Msat_SolverClaBumpActivity( p, pC ); \n//        if ( nLits \u003c 20 )\n        for  i = 0; i \u003c nLits; i++  {\n            Msat_SolverVarBumpActivity( p, pLits[i] );\n//            Msat_SolverVarBumpActivity( p, pLits[i] );\n//            p-\u003epFreq[ MSAT_LIT2VAR(pLits[i]) ]++;\n        }\n    }\n\n    // Store clause:\n    pvWatched = Msat_SolverReadWatchedArray( p );\n    // inlining of macro MSAT_LITNOT\n    Msat_ClauseVecPush( pvWatched[ ((pC.pData[0])^1) ], pC );\n    // inlining of macro MSAT_LITNOT\n    Msat_ClauseVecPush( pvWatched[ ((pC.pData[1])^1) ], pC );\n    *pClause_out = pC;\n    return 1;\n}"
+    },
+    {
+      "Name": "Msat_ClauseFree",
+      "Start": 7734,
+      "End": 8323,
+      "BodyStart": 7817,
+      "Original": "void Msat_ClauseFree( Msat_Solver_t * p, Msat_Clause_t * pC, int  fRemoveWatched )\n{\n    if ( fRemoveWatched )\n    {\n        Msat_Lit_t Lit;\n        Msat_ClauseVec_t ** pvWatched;\n        pvWatched = Msat_SolverReadWatchedArray( p );\n        Lit = MSAT_LITNOT( pC-\u003epData[0] );\n        Msat_ClauseRemoveWatch( pvWatched[Lit], pC );\n        Lit = MSAT_LITNOT( pC-\u003epData[1] );\n        Msat_ClauseRemoveWatch( pvWatched[Lit], pC ); \n    }\n\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    ABC_FREE( pC );\n#else\n    Msat_MmStepEntryRecycle( Msat_SolverReadMem(p), (char *)pC, pC-\u003enSizeAlloc );\n#endif\n\n}",
+      "Draft": "func Msat_ClauseFree(p *Msat_Solver_t, pC *Msat_Clause_t, fRemoveWatched int32) {\n    if fRemoveWatched != 0 {\n        var Lit Msat_Lit_t;\n        var pvWatched **Msat_ClauseVec_t;\n        pvWatched = Msat_SolverReadWatchedArray( p );\n        // inlining of macro MSAT_LITNOT\n        Lit = ((pC.pData[0])^1);\n        Msat_ClauseRemoveWatch( pvWatched[Lit], pC );\n        // inlining of macro MSAT_LITNOT\n        Lit = ((pC.pData[1])^1);\n        Msat_ClauseRemoveWatch( pvWatched[Lit], pC ); \n    }\n\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    ABC_FREE( pC );\n#else\n    Msat_MmStepEntryRecycle( Msat_SolverReadMem(p), (char *)pC, pC-\u003enSizeAlloc );\n#endif\n\n}"
+    },
+    {
+      "Name": "Msat_ClauseReadLearned",
+      "Start": 8595,
+      "End": 8672,
+      "BodyStart": 8647,
+      "Original": "int   Msat_ClauseReadLearned( Msat_Clause_t * pC )  {  return pC-\u003efLearned; }",
+      "Draft": "func Msat_ClauseReadLearned(pC *Msat_Clause_t) int32 {  return pC.fLearned; }"
+    },
+    {
+      "Name": "Msat_ClauseReadSize",
+      "Start": 8673,
+      "End": 8750,
+      "BodyStart": 8725,
+      "Original": "int   Msat_ClauseReadSize( Msat_Clause_t * pC )     {  return pC-\u003enSize;    }",
+      "Draft": "func Msat_ClauseReadSize(pC *Msat_Clause_t) int32 {  return pC.nSize;    }"
+    },
+    {
+      "Name": "Msat_ClauseReadLits",
+      "Start": 8751,
+      "End": 8828,
+      "BodyStart": 8803,
+      "Original": "int * Msat_ClauseReadLits( Msat_Clause_t * pC )     {  return pC-\u003epData;    }",
+      "Draft": "func Msat_ClauseReadLits(pC *Msat_Clause_t) *int32 {  return pC.pData;    }"
+    },
+    {
+      "Name": "Msat_ClauseReadMark",
+      "Start": 8829,
+      "End": 8906,
+      "BodyStart": 8881,
+      "Original": "int   Msat_ClauseReadMark( Msat_Clause_t * pC )     {  return pC-\u003efMark;    }",
+      "Draft": "func Msat_ClauseReadMark(pC *Msat_Clause_t) int32 {  return pC.fMark;    }"
+    },
+    {
+      "Name": "Msat_ClauseReadNum",
+      "Start": 8907,
+      "End": 8984,
+      "BodyStart": 8959,
+      "Original": "int   Msat_ClauseReadNum( Msat_Clause_t * pC )      {  return pC-\u003eNum;      }",
+      "Draft": "func Msat_ClauseReadNum(pC *Msat_Clause_t) int32 {  return pC.Num;      }"
+    },
+    {
+      "Name": "Msat_ClauseReadTypeA",
+      "Start": 8985,
+      "End": 9063,
+      "BodyStart": 9037,
+      "Original": "int   Msat_ClauseReadTypeA( Msat_Clause_t * pC )    {  return pC-\u003efTypeA;    }",
+      "Draft": "func Msat_ClauseReadTypeA(pC *Msat_Clause_t) int32 {  return pC.fTypeA;    }"
+    },
+    {
+      "Name": "Msat_ClauseSetMark",
+      "Start": 9065,
+      "End": 9151,
+      "BodyStart": 9126,
+      "Original": "void  Msat_ClauseSetMark( Msat_Clause_t * pC, int  fMark )   {  pC-\u003efMark = fMark;   }",
+      "Draft": "func Msat_ClauseSetMark(pC *Msat_Clause_t, fMark int32) {  pC.fMark = fMark;   }"
+    },
+    {
+      "Name": "Msat_ClauseSetNum",
+      "Start": 9152,
+      "End": 9238,
+      "BodyStart": 9213,
+      "Original": "void  Msat_ClauseSetNum( Msat_Clause_t * pC, int Num )       {  pC-\u003eNum = Num;       }",
+      "Draft": "func Msat_ClauseSetNum(pC *Msat_Clause_t, Num int32) {  pC.Num = Num;       }"
+    },
+    {
+      "Name": "Msat_ClauseSetTypeA",
+      "Start": 9239,
+      "End": 9325,
+      "BodyStart": 9300,
+      "Original": "void  Msat_ClauseSetTypeA( Msat_Clause_t * pC, int  fTypeA ) {  pC-\u003efTypeA = fTypeA; }",
+      "Draft": "func Msat_ClauseSetTypeA(pC *Msat_Clause_t, fTypeA int32) {  pC.fTypeA = fTypeA; }"
+    },
+    {
+      "Name": "Msat_ClauseIsLocked",
+      "Start": 9722,
+      "End": 9919,
+      "BodyStart": 9788,
+      "Original": "int  Msat_ClauseIsLocked( Msat_Solver_t * p, Msat_Clause_t * pC )\n{\n    Msat_Clause_t ** pReasons = Msat_SolverReadReasonArray( p );\n    return (int )(pReasons[MSAT_LIT2VAR(pC-\u003epData[0])] == pC);\n}",
+      "Draft": "func Msat_ClauseIsLocked(p *Msat_Solver_t, pC *Msat_Clause_t) int32 {\n    var pReasons **Msat_Clause_t  = Msat_SolverReadReasonArray( p );\n    // inlining of macro MSAT_LIT2VAR\n    return int32( (pReasons[((pC.pData[0])\u003e\u003e1)] == pC));\n}"
+    },
+    {
+      "Name": "Msat_ClauseReadActivity",
+      "Start": 10194,
+      "End": 10329,
+      "BodyStart": 10246,
+      "Original": "float Msat_ClauseReadActivity( Msat_Clause_t * pC )\n{\n    float f;\n\n    memcpy( \u0026f, pC-\u003epData + pC-\u003enSize, sizeof (f));\n    return f;\n}",
+      "Draft": "func Msat_ClauseReadActivity(pC *Msat_Clause_t) float32 {\n    var f float32;\n\n    memcpy( \u0026f, pC.pData + pC.nSize, sizeof (f));\n    return f;\n}"
+    },
+    {
+      "Name": "Msat_ClauseWriteActivity",
+      "Start": 10597,
+      "End": 10720,
+      "BodyStart": 10660,
+      "Original": "void Msat_ClauseWriteActivity( Msat_Clause_t * pC, float Num )\n{\n    memcpy( pC-\u003epData + pC-\u003enSize, \u0026Num, sizeof (Num) );\n}",
+      "Draft": "func Msat_ClauseWriteActivity(pC *Msat_Clause_t, Num float32) {\n    memcpy( pC.pData + pC.nSize, \u0026Num, sizeof (Num) );\n}"
+    },
+    {
+      "Name": "Msat_ClausePropagate",
+      "Start": 11375,
+      "End": 12315,
+      "BodyStart": 11478,
+      "Original": "int  Msat_ClausePropagate( Msat_Clause_t * pC, Msat_Lit_t Lit, int * pAssigns, Msat_Lit_t * pLit_out )\n{\n    // make sure the false literal is pC-\u003epData[1]\n    Msat_Lit_t LitF = MSAT_LITNOT(Lit);\n    if ( pC-\u003epData[0] == LitF )\n         pC-\u003epData[0] = pC-\u003epData[1], pC-\u003epData[1] = LitF;\n    assert( pC-\u003epData[1] == LitF );\n    // if the 0-th watch is true, clause is already satisfied\n    if ( pAssigns[MSAT_LIT2VAR(pC-\u003epData[0])] == pC-\u003epData[0] )\n        return 1; \n    // look for a new watch\n    if ( pC-\u003enSize \u003e 2 )\n    {\n        int i;\n        for ( i = 2; i \u003c (int)pC-\u003enSize; i++ )\n            if ( pAssigns[MSAT_LIT2VAR(pC-\u003epData[i])] != MSAT_LITNOT(pC-\u003epData[i]) )\n            {\n                pC-\u003epData[1] = pC-\u003epData[i], pC-\u003epData[i] = LitF;\n                *pLit_out = MSAT_LITNOT(pC-\u003epData[1]);\n                return 1; \n            }\n    }\n    // clause is unit under assignment\n    *pLit_out = pC-\u003epData[0];\n    return 0;\n}",
+      "Draft": "func Msat_ClausePropagate(pC *Msat_Clause_t, Lit Msat_Lit_t, pAssigns *int32, pLit_out *Msat_Lit_t) int32 {\n    // make sure the false literal is pC-\u003epData[1]\n    // inlining of macro MSAT_LITNOT\n    var LitF Msat_Lit_t  = ((Lit)^1);\n    if pC.pData[0] == LitF {\n         pC.pData[0] = pC.pData[1], pC.pData[1] = LitF; }\n    assert(pC.pData[1] == LitF, \"pC.pData[1] == LitF\");\n    // if the 0-th watch is true, clause is already satisfied\n    // inlining of macro MSAT_LIT2VAR\n    if pAssigns[((pC.pData[0])\u003e\u003e1)] == pC.pData[0] {\n        return 1; } \n    // look for a new watch\n    if pC.nSize \u003e 2 {\n        var i int32;\n        for  i = 2; i \u003c int32(pC.nSize); i++  {\n            // inlining of macro MSAT_LIT2VAR\n            // inlining of macro MSAT_LITNOT\n            if pAssigns[((pC.pData[i])\u003e\u003e1)] != ((pC.pData[i])^1) {\n                pC.pData[1] = pC.pData[i], pC.pData[i] = LitF;\n                // inlining of macro MSAT_LITNOT\n                *pLit_out = ((pC.pData[1])^1);\n                return 1; \n            }\n        }\n    }\n    // clause is unit under assignment\n    *pLit_out = pC.pData[0];\n    return 0;\n}"
+    },
+    {
+      "Name": "Msat_ClauseSimplify",
+      "Start": 12661,
+      "End": 13433,
+      "BodyStart": 12724,
+      "Original": "int  Msat_ClauseSimplify( Msat_Clause_t * pC, int * pAssigns )\n{\n    Msat_Var_t Var;\n    int i, j;\n    for ( i = j = 0; i \u003c (int)pC-\u003enSize; i++ )\n    {\n        Var = MSAT_LIT2VAR(pC-\u003epData[i]);\n        if ( pAssigns[Var] == MSAT_VAR_UNASSIGNED )\n        {\n            pC-\u003epData[j++] = pC-\u003epData[i];\n            continue;\n        }\n        if ( pAssigns[Var] == pC-\u003epData[i] )\n            return 1;\n        // otherwise, the value of the literal is false\n        // make sure, this literal is not watched\n        assert( i \u003e= 2 );\n    }\n    // if the size has changed, update it and move activity\n    if ( j \u003c (int)pC-\u003enSize )\n    {\n        float Activ = Msat_ClauseReadActivity(pC);\n        pC-\u003enSize = j;\n        Msat_ClauseWriteActivity(pC, Activ);\n    }\n    return 0;\n}",
+      "Draft": "func Msat_ClauseSimplify(pC *Msat_Clause_t, pAssigns *int32) int32 {\n    var Var Msat_Var_t;\n    var i, j int32;\n    for  i = j = 0; i \u003c int32(pC.nSize); i++  {\n        // inlining of macro MSAT_LIT2VAR\n        Var = ((pC.pData[i])\u003e\u003e1);\n        if pAssigns[Var] == MSAT_VAR_UNASSIGNED {\n            pC.pData[j++] = pC.pData[i];\n            continue;\n        }\n        if pAssigns[Var] == pC.pData[i] {\n            return 1; }\n        // otherwise, the value of the literal is false\n        // make sure, this literal is not watched\n        assert(i \u003e= 2, \"i \u003e= 2\");\n    }\n    // if the size has changed, update it and move activity\n    if j \u003c int32(pC.nSize) {\n        var Activ float32  = Msat_ClauseReadActivity(pC);\n        pC.nSize = j;\n        Msat_ClauseWriteActivity(pC, Activ);\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Msat_ClauseCalcReason",
+      "Start": 14076,
+      "End": 14649,
+      "BodyStart": 14187,
+      "Original": "void Msat_ClauseCalcReason( Msat_Solver_t * p, Msat_Clause_t * pC, Msat_Lit_t Lit, Msat_IntVec_t * vLits_out )\n{\n    int i;\n    // clear the reason\n    Msat_IntVecClear( vLits_out );\n    assert( Lit == MSAT_LIT_UNASSIGNED || Lit == pC-\u003epData[0] );\n    for ( i = (Lit != MSAT_LIT_UNASSIGNED); i \u003c (int)pC-\u003enSize; i++ )\n    {\n        assert( Msat_SolverReadAssignsArray(p)[MSAT_LIT2VAR(pC-\u003epData[i])] == MSAT_LITNOT(pC-\u003epData[i]) );\n        Msat_IntVecPush( vLits_out, MSAT_LITNOT(pC-\u003epData[i]) );\n    }\n    if ( pC-\u003efLearned ) \n        Msat_SolverClaBumpActivity( p, pC );\n}",
+      "Draft": "func Msat_ClauseCalcReason(p *Msat_Solver_t, pC *Msat_Clause_t, Lit Msat_Lit_t, vLits_out *Msat_IntVec_t) {\n    var i int32;\n    // clear the reason\n    Msat_IntVecClear( vLits_out );\n    assert(Lit == MSAT_LIT_UNASSIGNED || Lit == pC.pData[0], \"Lit == MSAT_LIT_UNASSIGNED || Lit == pC.pData[0]\");\n    for  i = (Lit != MSAT_LIT_UNASSIGNED); i \u003c int32(pC.nSize); i++  {\n        // inlining of macro MSAT_LIT2VAR\n        // inlining of macro MSAT_LITNOT\n        assert(Msat_SolverReadAssignsArray(p)[((pC.pData[i])\u003e\u003e1)] == ((pC.pData[i])^1), \"Msat_SolverReadAssignsArray(p)[/*__starting_point_inline_macro:MSAT_LIT2VAR__*/((pC.pData[i])\u003e\u003e1)] == /*__starting_point_inline_macro:MSAT_LITNOT__*/((pC.pData[i])^1)\");\n        // inlining of macro MSAT_LITNOT\n        Msat_IntVecPush( vLits_out, ((pC.pData[i])^1) );\n    }\n    if pC.fLearned { \n        Msat_SolverClaBumpActivity( p, pC ); }\n}"
+    },
+    {
+      "Name": "Msat_ClauseRemoveWatch",
+      "Start": 14932,
+      "End": 15356,
+      "BodyStart": 15011,
+      "Original": "void Msat_ClauseRemoveWatch( Msat_ClauseVec_t * vClauses, Msat_Clause_t * pC )\n{\n    Msat_Clause_t ** pClauses;\n    int nClauses, i;\n    nClauses = Msat_ClauseVecReadSize( vClauses );\n    pClauses = Msat_ClauseVecReadArray( vClauses );\n    for ( i = 0; pClauses[i] != pC; i++ )\n        assert( i \u003c nClauses );\n    for (      ; i \u003c nClauses - 1; i++ )\n        pClauses[i] = pClauses[i+1];\n    Msat_ClauseVecPop( vClauses );\n}",
+      "Draft": "func Msat_ClauseRemoveWatch(vClauses *Msat_ClauseVec_t, pC *Msat_Clause_t) {\n    var pClauses **Msat_Clause_t;\n    var nClauses, i int32;\n    nClauses = Msat_ClauseVecReadSize( vClauses );\n    pClauses = Msat_ClauseVecReadArray( vClauses );\n    for  i = 0; pClauses[i] != pC; i++  {\n        assert(i \u003c nClauses, \"i \u003c nClauses\");\n    }\n    for       ; i \u003c nClauses - 1; i++  {\n        pClauses[i] = pClauses[i+1];\n    }\n    Msat_ClauseVecPop( vClauses );\n}"
+    },
+    {
+      "Name": "Msat_ClausePrint",
+      "Start": 15616,
+      "End": 15995,
+      "BodyStart": 15660,
+      "Original": "void Msat_ClausePrint( Msat_Clause_t * pC )\n{\n    int i;\n    if ( pC == NULL )\n        printf( \"NULL pointer\" );\n    else \n    {\n        if ( pC-\u003efLearned )\n            printf( \"Act = %.4f  \", Msat_ClauseReadActivity(pC) );\n        for ( i = 0; i \u003c (int)pC-\u003enSize; i++ )\n            printf( \" %s%d\", ((pC-\u003epData[i]\u00261)? \"-\": \"\"),  pC-\u003epData[i]/2 + 1 );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Msat_ClausePrint(pC *Msat_Clause_t) {\n    var i int32;\n    if pC == nil {\n        fmt.Printf(\"NULL pointer\");\n    } else {\n        if pC.fLearned {\n            fmt.Printf(\"Act = %.4f  \", Msat_ClauseReadActivity(pC)); }\n        for  i = 0; i \u003c int32(pC.nSize); i++  {\n            fmt.Printf(\" %s%d\", ((pC.pData[i]\u00261)? \"-\": \"\"), pC.pData[i]/2 + 1);\n        }\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Msat_ClauseWriteDimacs",
+      "Start": 16282,
+      "End": 16604,
+      "BodyStart": 16363,
+      "Original": "void Msat_ClauseWriteDimacs( FILE * pFile, Msat_Clause_t * pC, int  fIncrement )\n{\n    int i;\n    for ( i = 0; i \u003c (int)pC-\u003enSize; i++ )\n        fprintf( pFile, \"%s%d \", ((pC-\u003epData[i]\u00261)? \"-\": \"\"),  pC-\u003epData[i]/2 + (int)(fIncrement\u003e0) );\n    if ( fIncrement )\n        fprintf( pFile, \"0\" );\n    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Msat_ClauseWriteDimacs(pFile *os.File, pC *Msat_Clause_t, fIncrement int32) {\n    var i int32;\n    for  i = 0; i \u003c int32(pC.nSize); i++  {\n        fmt.Fprintf(pFile, \"%s%d \", ((pC.pData[i]\u00261)? \"-\": \"\"), pC.pData[i]/2 + int32((fIncrement\u003e0)));\n    }\n    if fIncrement != 0 {\n        fmt.Fprintf(pFile, \"0\"); }\n    fmt.Fprintf(pFile, \"\\n\");\n}"
+    },
+    {
+      "Name": "Msat_ClausePrintSymbols",
+      "Start": 16864,
+      "End": 17224,
+      "BodyStart": 16915,
+      "Original": "void Msat_ClausePrintSymbols( Msat_Clause_t * pC )\n{\n    int i;\n    if ( pC == NULL )\n        printf( \"NULL pointer\" );\n    else \n    {\n//        if ( pC-\u003efLearned )\n//            printf( \"Act = %.4f  \", Msat_ClauseReadActivity(pC) );\n        for ( i = 0; i \u003c (int)pC-\u003enSize; i++ )\n            printf(\" \"L_LIT, L_lit(pC-\u003epData[i]));\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Msat_ClausePrintSymbols(pC *Msat_Clause_t) {\n    var i int32;\n    if pC == nil {\n        fmt.Printf(\"NULL pointer\");\n    } else {\n//        if ( pC-\u003efLearned )\n//            printf( \"Act = %.4f  \", Msat_ClauseReadActivity(pC) );\n        for  i = 0; i \u003c int32(pC.nSize); i++  {\n            // inlining of macro L_lit\n            // inlining of macro MSAT_LITSIGN\n            // inlining of macro MSAT_LIT2VAR\n            fmt.Printf(\" \"L_LIT, ((pC.pData[i])\u00261)     ?\"-\":\"\", ((pC.pData[i])\u003e\u003e1)+1);\n        }\n    }\n    fmt.Printf(\"\\n\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::struct::Msat_Clause_t_::// unique number of the clause\n    unsigned      fLearned   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Msat_Clause_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 969,
+      "End": 1048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::struct::Msat_Clause_t_::// 1 if the clause is learned\n    unsigned      fMark      :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Msat_Clause_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1048,
+      "End": 1114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::struct::Msat_Clause_t_::// used to mark visited clauses during proof recording\n    unsigned      fTypeA     :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Msat_Clause_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1114,
+      "End": 1205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::struct::Msat_Clause_t_::// used to mark clauses belonging to A for interpolant computation\n    unsigned      nSize      : 14;",
+      "Category": "struct-field-review",
+      "Symbol": "Msat_Clause_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1205,
+      "End": 1308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::struct::Msat_Clause_t_::// the number of literals in the clause\n    unsigned      nSizeAlloc : 15;",
+      "Category": "struct-field-review",
+      "Symbol": "Msat_Clause_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1308,
+      "End": 1384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::struct::Msat_Clause_t_::// the number of bytes allocated for the clause\n    Msat_Lit_t     pData[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Msat_Clause_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1384,
+      "End": 1462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::struct::Msat_Clause_t_",
+      "Category": "struct-review",
+      "Symbol": "Msat_Clause_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 923,
+      "End": 1465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::mechanical::sizeof::5678",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5592,
+      "End": 5598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::mechanical::sizeof::6001",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6024,
+      "End": 6030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::mechanical::sizeof::10481",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10301,
+      "End": 10307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::mechanical::sizeof::10883",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10703,
+      "End": 10709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseCreate",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2120,
+      "End": 7475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseFree",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7734,
+      "End": 8323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseReadLearned",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseReadLearned",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8595,
+      "End": 8672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseReadSize",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseReadSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8673,
+      "End": 8750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseReadLits",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseReadLits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8751,
+      "End": 8828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseReadMark",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseReadMark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8829,
+      "End": 8906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseReadNum",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseReadNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8907,
+      "End": 8984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseReadTypeA",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseReadTypeA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8985,
+      "End": 9063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseSetMark",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseSetMark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9065,
+      "End": 9151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseSetNum",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseSetNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9152,
+      "End": 9238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseSetTypeA",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseSetTypeA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9239,
+      "End": 9325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseIsLocked",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseIsLocked",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9722,
+      "End": 9919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseReadActivity",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseReadActivity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10194,
+      "End": 10329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseWriteActivity",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseWriteActivity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10597,
+      "End": 10720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClausePropagate",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClausePropagate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11375,
+      "End": 12315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseSimplify",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseSimplify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12661,
+      "End": 13433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseCalcReason",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseCalcReason",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14076,
+      "End": 14649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseRemoveWatch",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseRemoveWatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14932,
+      "End": 15356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::ternary::Msat_ClausePrint",
+      "Category": "ternary-review",
+      "Symbol": "Msat_ClausePrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15616,
+      "End": 15995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClausePrint",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClausePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15616,
+      "End": 15995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::ternary::Msat_ClauseWriteDimacs",
+      "Category": "ternary-review",
+      "Symbol": "Msat_ClauseWriteDimacs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16282,
+      "End": 16604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClauseWriteDimacs",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClauseWriteDimacs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16282,
+      "End": 16604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::ternary::Msat_ClausePrintSymbols",
+      "Category": "ternary-review",
+      "Symbol": "Msat_ClausePrintSymbols",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16864,
+      "End": 17224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::Msat_ClausePrintSymbols",
+      "Category": "semantic-review",
+      "Symbol": "Msat_ClausePrintSymbols",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16864,
+      "End": 17224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5638,
+      "End": 5821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatClause.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8170,
+      "End": 8320
+    }
+  ],
+  "Draft": "package msat\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [msatClause.c]\n\n  PackageName [A C version of SAT solver MINISAT, originally developed \n  in C++ by Niklas Een and Niklas Sorensson, Chalmers University of \n  Technology, Sweden: http://www.cs.chalmers.se/~een/Satzoo.]\n\n  Synopsis    [Procedures working with SAT clauses.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2004.]\n\n  Revision    [$Id: msatClause.c,v 1.0 2004/01/01 1:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"msatInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Msat_Clause_t_ struct {\n    Num           int32;              // unique number of the clause\n    fLearned uint32; /* C bitfield: 1 bits; review packing and truncation */  // 1 if the clause is learned\n    fMark uint32; /* C bitfield: 1 bits; review packing and truncation */  // used to mark visited clauses during proof recording\n    fTypeA uint32; /* C bitfield: 1 bits; review packing and truncation */  // used to mark clauses belonging to A for interpolant computation\n    nSize uint32; /* C bitfield: 14 bits; review packing and truncation */  // the number of literals in the clause\n    nSizeAlloc uint32; /* C bitfield: 15 bits; review packing and truncation */  // the number of bytes allocated for the clause\n    Msat_Lit_t     pData[0];\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new clause.]\n\n  Description [Returns FALSE if top-level conflict detected (must be handled); \n  TRUE otherwise. 'pClause_out' may be set to NULL if clause is already \n  satisfied by the top-level assignment.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseCreate(p *Msat_Solver_t, vLits *Msat_IntVec_t, fLearned int32, pClause_out **Msat_Clause_t) int32 {\n    var pAssigns *int32  = Msat_SolverReadAssignsArray(p);\n    var pvWatched **Msat_ClauseVec_t;\n    var pC *Msat_Clause_t;\n    var pLits *int32;\n    var nLits, i, j int32;\n    var nBytes int32;\n    var Var Msat_Var_t;\n    var Sign int32;\n\n    *pClause_out = nil;\n\n    nLits = Msat_IntVecReadSize(vLits);\n    pLits = Msat_IntVecReadArray(vLits);\n\n    if !fLearned {\n        var pSeen *int32  = Msat_SolverReadSeenArray( p );\n        var nSeenId int32;\n        assert(Msat_SolverReadDecisionLevel(p) == 0, \"Msat_SolverReadDecisionLevel(p) == 0\");\n        // sorting literals makes the code trace-equivalent \n        // with to the original C++ solver\n        Msat_IntVecSort( vLits, 0 );\n        // increment the counter of seen twice\n        nSeenId = Msat_SolverIncrementSeenId( p );\n        nSeenId = Msat_SolverIncrementSeenId( p );\n        // nSeenId - 1 stands for negative\n        // nSeenId     stands for positive\n        // Remove false literals\n\n        // there is a bug here!!!!\n        // when the same var in opposite polarities is given, it drops one polarity!!!\n\n        for  i = j = 0; i \u003c nLits; i++  {\n            // get the corresponding variable\n            // inlining of macro MSAT_LIT2VAR\n            Var  = ((pLits[i])\u003e\u003e1);\n            // inlining of macro MSAT_LITSIGN\n            Sign = ((pLits[i])\u00261)     ; // Sign=0 for positive\n            // check if we already saw this variable in the this clause\n            if pSeen[Var] \u003e= nSeenId - 1 {\n                if (pSeen[Var] != nSeenId) == Sign { // the same lit\n                    continue; }\n                return 1; // two opposite polarity lits -- don't add the clause\n            }\n            // mark the variable as seen\n            pSeen[Var] = nSeenId - !Sign;\n\n            // analize the value of this literal\n            if pAssigns[Var] != MSAT_VAR_UNASSIGNED {\n                if pAssigns[Var] == pLits[i] {\n                    return 1; }  // the clause is always true -- don't add anything\n                // the literal has no impact - skip it\n                continue;\n            }\n            // otherwise, add this literal to the clause\n            pLits[j++] = pLits[i];\n        }\n        Msat_IntVecShrink( vLits, j );\n        nLits = j;\n/*\n        // the problem with this code is that performance is very\n        // sensitive to the ordering of adjacency lits\n        // the best ordering requires fanins first, next fanouts\n        // this ordering is more convenient to make from FRAIG\n\n        // create the adjacency information\n        if ( nLits \u003e 2 )\n        {\n            Msat_Var_t VarI, VarJ;\n            Msat_IntVec_t * pAdjI, * pAdjJ;\n\n            for ( i = 0; i \u003c nLits; i++ )\n            {\n                VarI = MSAT_LIT2VAR(pLits[i]);\n                pAdjI = (Msat_IntVec_t *)p-\u003evAdjacents-\u003epArray[VarI];\n\n                for ( j = i+1; j \u003c nLits; j++ )\n                {\n                    VarJ = MSAT_LIT2VAR(pLits[j]);\n                    pAdjJ = (Msat_IntVec_t *)p-\u003evAdjacents-\u003epArray[VarJ];\n\n                    Msat_IntVecPushUniqueOrder( pAdjI, VarJ, 1 );\n                    Msat_IntVecPushUniqueOrder( pAdjJ, VarI, 1 );\n                }\n            }\n        }\n*/\n    }\n    // 'vLits' is now the (possibly) reduced vector of literals.\n    if nLits == 0 {\n        return 0; }\n    if nLits == 1 {\n        return Msat_SolverEnqueue( p, pLits[0], nil ); }\n\n    // Allocate clause:\n//    nBytes = sizeof(unsigned)*(nLits + 1 + (int)fLearned);\n    nBytes = sizeof(unsigned)*(nLits + 2 + int32(fLearned));\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    pC = (Msat_Clause_t *)ABC_ALLOC( char, nBytes );\n#else\n    pC = (Msat_Clause_t *)Msat_MmStepEntryFetch( Msat_SolverReadMem(p), nBytes );\n#endif\n    pC.Num        = p.nClauses++;\n    pC.fTypeA     = 0;\n    pC.fMark      = 0;\n    pC.fLearned   = fLearned;\n    pC.nSize      = nLits;\n    pC.nSizeAlloc = nBytes;\n    memcpy( pC.pData, pLits, sizeof(int)*nLits );\n\n    // For learnt clauses only:\n    if fLearned {\n        var pLevel *int32  = Msat_SolverReadDecisionLevelArray( p );\n        var iLevelMax, iLevelCur, iLitMax int32;\n\n        // Put the second watch on the literal with highest decision level:\n        iLitMax = 1;\n        // inlining of macro MSAT_LIT2VAR\n        iLevelMax = pLevel[ ((pLits[1])\u003e\u003e1) ];\n        for  i = 2; i \u003c nLits; i++  {\n            // inlining of macro MSAT_LIT2VAR\n            iLevelCur = pLevel[ ((pLits[i])\u003e\u003e1) ];\n            assert(iLevelCur != -1, \"iLevelCur != -1\");\n            if iLevelMax \u003c iLevelCur {\n            // this is very strange - shouldn't it be???\n            // if ( iLevelMax \u003e iLevelCur )\n                iLevelMax = iLevelCur;\niLitMax = i; }\n        }\n        pC.pData[1]       = pLits[iLitMax];\n        pC.pData[iLitMax] = pLits[1];\n\n        // Bumping:\n        // (newly learnt clauses should be considered active)\n        Msat_ClauseWriteActivity( pC, 0.0 );\n        Msat_SolverClaBumpActivity( p, pC ); \n//        if ( nLits \u003c 20 )\n        for  i = 0; i \u003c nLits; i++  {\n            Msat_SolverVarBumpActivity( p, pLits[i] );\n//            Msat_SolverVarBumpActivity( p, pLits[i] );\n//            p-\u003epFreq[ MSAT_LIT2VAR(pLits[i]) ]++;\n        }\n    }\n\n    // Store clause:\n    pvWatched = Msat_SolverReadWatchedArray( p );\n    // inlining of macro MSAT_LITNOT\n    Msat_ClauseVecPush( pvWatched[ ((pC.pData[0])^1) ], pC );\n    // inlining of macro MSAT_LITNOT\n    Msat_ClauseVecPush( pvWatched[ ((pC.pData[1])^1) ], pC );\n    *pClause_out = pC;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates the clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseFree(p *Msat_Solver_t, pC *Msat_Clause_t, fRemoveWatched int32) {\n    if fRemoveWatched != 0 {\n        var Lit Msat_Lit_t;\n        var pvWatched **Msat_ClauseVec_t;\n        pvWatched = Msat_SolverReadWatchedArray( p );\n        // inlining of macro MSAT_LITNOT\n        Lit = ((pC.pData[0])^1);\n        Msat_ClauseRemoveWatch( pvWatched[Lit], pC );\n        // inlining of macro MSAT_LITNOT\n        Lit = ((pC.pData[1])^1);\n        Msat_ClauseRemoveWatch( pvWatched[Lit], pC ); \n    }\n\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    ABC_FREE( pC );\n#else\n    Msat_MmStepEntryRecycle( Msat_SolverReadMem(p), (char *)pC, pC-\u003enSizeAlloc );\n#endif\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Access the data field of the clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseReadLearned(pC *Msat_Clause_t) int32 {  return pC.fLearned; }\nfunc Msat_ClauseReadSize(pC *Msat_Clause_t) int32 {  return pC.nSize;    }\nfunc Msat_ClauseReadLits(pC *Msat_Clause_t) *int32 {  return pC.pData;    }\nfunc Msat_ClauseReadMark(pC *Msat_Clause_t) int32 {  return pC.fMark;    }\nfunc Msat_ClauseReadNum(pC *Msat_Clause_t) int32 {  return pC.Num;      }\nfunc Msat_ClauseReadTypeA(pC *Msat_Clause_t) int32 {  return pC.fTypeA;    }\n\nfunc Msat_ClauseSetMark(pC *Msat_Clause_t, fMark int32) {  pC.fMark = fMark;   }\nfunc Msat_ClauseSetNum(pC *Msat_Clause_t, Num int32) {  pC.Num = Num;       }\nfunc Msat_ClauseSetTypeA(pC *Msat_Clause_t, fTypeA int32) {  pC.fTypeA = fTypeA; }\n\n/**Function*************************************************************\n\n  Synopsis    [Checks whether the learned clause is locked.]\n\n  Description [The clause may be locked if it is the reason of a\n  recent conflict. Such clause cannot be removed from the database.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseIsLocked(p *Msat_Solver_t, pC *Msat_Clause_t) int32 {\n    var pReasons **Msat_Clause_t  = Msat_SolverReadReasonArray( p );\n    // inlining of macro MSAT_LIT2VAR\n    return int32( (pReasons[((pC.pData[0])\u003e\u003e1)] == pC));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the activity of the given clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseReadActivity(pC *Msat_Clause_t) float32 {\n    var f float32;\n\n    memcpy( \u0026f, pC.pData + pC.nSize, sizeof (f));\n    return f;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the activity of the clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseWriteActivity(pC *Msat_Clause_t, Num float32) {\n    memcpy( pC.pData + pC.nSize, \u0026Num, sizeof (Num) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Propages the assignment.]\n\n  Description [The literal that has become true (Lit) is given to this \n  procedure. The array of current variable assignments is given for\n  efficiency. The output literal (pLit_out) can be the second watched\n  literal (if TRUE is returned) or the conflict literal (if FALSE is \n  returned). This messy interface is used to improve performance.\n  This procedure accounts for ~50% of the runtime of the solver.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClausePropagate(pC *Msat_Clause_t, Lit Msat_Lit_t, pAssigns *int32, pLit_out *Msat_Lit_t) int32 {\n    // make sure the false literal is pC-\u003epData[1]\n    // inlining of macro MSAT_LITNOT\n    var LitF Msat_Lit_t  = ((Lit)^1);\n    if pC.pData[0] == LitF {\n         pC.pData[0] = pC.pData[1], pC.pData[1] = LitF; }\n    assert(pC.pData[1] == LitF, \"pC.pData[1] == LitF\");\n    // if the 0-th watch is true, clause is already satisfied\n    // inlining of macro MSAT_LIT2VAR\n    if pAssigns[((pC.pData[0])\u003e\u003e1)] == pC.pData[0] {\n        return 1; } \n    // look for a new watch\n    if pC.nSize \u003e 2 {\n        var i int32;\n        for  i = 2; i \u003c int32(pC.nSize); i++  {\n            // inlining of macro MSAT_LIT2VAR\n            // inlining of macro MSAT_LITNOT\n            if pAssigns[((pC.pData[i])\u003e\u003e1)] != ((pC.pData[i])^1) {\n                pC.pData[1] = pC.pData[i], pC.pData[i] = LitF;\n                // inlining of macro MSAT_LITNOT\n                *pLit_out = ((pC.pData[1])^1);\n                return 1; \n            }\n        }\n    }\n    // clause is unit under assignment\n    *pLit_out = pC.pData[0];\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simplifies the clause.]\n\n  Description [Assumes everything has been propagated! (esp. watches \n  in clauses are NOT unsatisfied)]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseSimplify(pC *Msat_Clause_t, pAssigns *int32) int32 {\n    var Var Msat_Var_t;\n    var i, j int32;\n    for  i = j = 0; i \u003c int32(pC.nSize); i++  {\n        // inlining of macro MSAT_LIT2VAR\n        Var = ((pC.pData[i])\u003e\u003e1);\n        if pAssigns[Var] == MSAT_VAR_UNASSIGNED {\n            pC.pData[j++] = pC.pData[i];\n            continue;\n        }\n        if pAssigns[Var] == pC.pData[i] {\n            return 1; }\n        // otherwise, the value of the literal is false\n        // make sure, this literal is not watched\n        assert(i \u003e= 2, \"i \u003e= 2\");\n    }\n    // if the size has changed, update it and move activity\n    if j \u003c int32(pC.nSize) {\n        var Activ float32  = Msat_ClauseReadActivity(pC);\n        pC.nSize = j;\n        Msat_ClauseWriteActivity(pC, Activ);\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes reason of conflict in the given clause.]\n\n  Description [If the literal is unassigned, finds the reason by \n  complementing literals in the given cluase (pC). If the literal is\n  assigned, makes sure that this literal is the first one in the clause\n  and computes the complement of all other literals in the clause.\n  Returns the reason in the given array (vLits_out). If the clause is\n  learned, bumps its activity.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseCalcReason(p *Msat_Solver_t, pC *Msat_Clause_t, Lit Msat_Lit_t, vLits_out *Msat_IntVec_t) {\n    var i int32;\n    // clear the reason\n    Msat_IntVecClear( vLits_out );\n    assert(Lit == MSAT_LIT_UNASSIGNED || Lit == pC.pData[0], \"Lit == MSAT_LIT_UNASSIGNED || Lit == pC.pData[0]\");\n    for  i = (Lit != MSAT_LIT_UNASSIGNED); i \u003c int32(pC.nSize); i++  {\n        // inlining of macro MSAT_LIT2VAR\n        // inlining of macro MSAT_LITNOT\n        assert(Msat_SolverReadAssignsArray(p)[((pC.pData[i])\u003e\u003e1)] == ((pC.pData[i])^1), \"Msat_SolverReadAssignsArray(p)[/*__starting_point_inline_macro:MSAT_LIT2VAR__*/((pC.pData[i])\u003e\u003e1)] == /*__starting_point_inline_macro:MSAT_LITNOT__*/((pC.pData[i])^1)\");\n        // inlining of macro MSAT_LITNOT\n        Msat_IntVecPush( vLits_out, ((pC.pData[i])^1) );\n    }\n    if pC.fLearned { \n        Msat_SolverClaBumpActivity( p, pC ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes the given clause from the watched list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseRemoveWatch(vClauses *Msat_ClauseVec_t, pC *Msat_Clause_t) {\n    var pClauses **Msat_Clause_t;\n    var nClauses, i int32;\n    nClauses = Msat_ClauseVecReadSize( vClauses );\n    pClauses = Msat_ClauseVecReadArray( vClauses );\n    for  i = 0; pClauses[i] != pC; i++  {\n        assert(i \u003c nClauses, \"i \u003c nClauses\");\n    }\n    for       ; i \u003c nClauses - 1; i++  {\n        pClauses[i] = pClauses[i+1];\n    }\n    Msat_ClauseVecPop( vClauses );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the given clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClausePrint(pC *Msat_Clause_t) {\n    var i int32;\n    if pC == nil {\n        fmt.Printf(\"NULL pointer\");\n    } else {\n        if pC.fLearned {\n            fmt.Printf(\"Act = %.4f  \", Msat_ClauseReadActivity(pC)); }\n        for  i = 0; i \u003c int32(pC.nSize); i++  {\n            fmt.Printf(\" %s%d\", ((pC.pData[i]\u00261)? \"-\": \"\"), pC.pData[i]/2 + 1);\n        }\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the given clause in a file in DIMACS format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClauseWriteDimacs(pFile *os.File, pC *Msat_Clause_t, fIncrement int32) {\n    var i int32;\n    for  i = 0; i \u003c int32(pC.nSize); i++  {\n        fmt.Fprintf(pFile, \"%s%d \", ((pC.pData[i]\u00261)? \"-\": \"\"), pC.pData[i]/2 + int32((fIncrement\u003e0)));\n    }\n    if fIncrement != 0 {\n        fmt.Fprintf(pFile, \"0\"); }\n    fmt.Fprintf(pFile, \"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the given clause.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_ClausePrintSymbols(pC *Msat_Clause_t) {\n    var i int32;\n    if pC == nil {\n        fmt.Printf(\"NULL pointer\");\n    } else {\n//        if ( pC-\u003efLearned )\n//            printf( \"Act = %.4f  \", Msat_ClauseReadActivity(pC) );\n        for  i = 0; i \u003c int32(pC.nSize); i++  {\n            // inlining of macro L_lit\n            // inlining of macro MSAT_LITSIGN\n            // inlining of macro MSAT_LIT2VAR\n            fmt.Printf(\" \"L_LIT, ((pC.pData[i])\u00261)     ?\"-\":\"\", ((pC.pData[i])\u003e\u003e1)+1);\n        }\n    }\n    fmt.Printf(\"\\n\");\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

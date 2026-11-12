@@ -1,0 +1,1385 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c",
+  "SHA256": "c23d1407e7ec2a0fe5fcc193a29b48cb0fbc76781bd957519c7b6ee2b0ed2e74",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 569,
+        "Column": 11,
+        "ByteOffset": 20650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var = ABC_ALLOC(int,nvars);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 574,
+        "Column": 13,
+        "ByteOffset": 20791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    entry = ABC_ALLOC(int,nvars);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 579,
+        "Column": 14,
+        "ByteOffset": 20935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sifted = ABC_ALLOC(int,nvars);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 596,
+        "Column": 5,
+        "ByteOffset": 21403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort((void *)var,(size_t)classes,sizeof(int),(DD_QSFP)zddUniqueCompareGroup);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 631,
+        "Column": 5,
+        "ByteOffset": 22771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(sifted);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 632,
+        "Column": 5,
+        "ByteOffset": 22793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(var);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 633,
+        "Column": 5,
+        "ByteOffset": 22812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(entry);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 638,
+        "Column": 24,
+        "ByteOffset": 22894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if entry != nil {  ABC_FREE(entry); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 639,
+        "Column": 24,
+        "ByteOffset": 22936
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if var != nil {    ABC_FREE(var); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 640,
+        "Column": 24,
+        "ByteOffset": 22976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if sifted != nil { ABC_FREE(sifted); }"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 93,
+        "Column": 1,
+        "ByteOffset": 3841
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 99,
+        "Column": 1,
+        "ByteOffset": 4020
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 106,
+        "Column": 1,
+        "ByteOffset": 4185
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 122,
+        "Column": 1,
+        "ByteOffset": 4994
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 252,
+        "Column": 1,
+        "ByteOffset": 10009
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 288,
+        "Column": 1,
+        "ByteOffset": 11341
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 311,
+        "Column": 1,
+        "ByteOffset": 12000
+      },
+      "Directive": "#ifdef DD_STATS         /* print stats */"
+    },
+    {
+      "Location": {
+        "Line": 357,
+        "Column": 1,
+        "ByteOffset": 13547
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 381,
+        "Column": 1,
+        "ByteOffset": 14154
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 451,
+        "Column": 1,
+        "ByteOffset": 16043
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 468,
+        "Column": 1,
+        "ByteOffset": 16634
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 492,
+        "Column": 1,
+        "ByteOffset": 17501
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 509,
+        "Column": 1,
+        "ByteOffset": 17941
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 586,
+        "Column": 1,
+        "ByteOffset": 20563
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 648,
+        "Column": 1,
+        "ByteOffset": 22237
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 697,
+        "Column": 1,
+        "ByteOffset": 23698
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 700,
+        "Column": 1,
+        "ByteOffset": 23758
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 707,
+        "Column": 1,
+        "ByteOffset": 23984
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 729,
+        "Column": 1,
+        "ByteOffset": 24635
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 778,
+        "Column": 1,
+        "ByteOffset": 25914
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 787,
+        "Column": 1,
+        "ByteOffset": 26199
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 799,
+        "Column": 1,
+        "ByteOffset": 26662
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 805,
+        "Column": 1,
+        "ByteOffset": 26861
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 818,
+        "Column": 1,
+        "ByteOffset": 27329
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 835,
+        "Column": 1,
+        "ByteOffset": 27921
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 845,
+        "Column": 1,
+        "ByteOffset": 28268
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 863,
+        "Column": 1,
+        "ByteOffset": 28833
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 873,
+        "Column": 1,
+        "ByteOffset": 29175
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 936,
+        "Column": 1,
+        "ByteOffset": 30866
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 950,
+        "Column": 1,
+        "ByteOffset": 31371
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1018,
+        "Column": 1,
+        "ByteOffset": 33375
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1034,
+        "Column": 1,
+        "ByteOffset": 33917
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1088,
+        "Column": 1,
+        "ByteOffset": 35414
+      },
+      "Directive": "#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)"
+    },
+    {
+      "Location": {
+        "Line": 1092,
+        "Column": 1,
+        "ByteOffset": 35498
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1106,
+        "Column": 1,
+        "ByteOffset": 35868
+      },
+      "Directive": "#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)"
+    },
+    {
+      "Location": {
+        "Line": 1114,
+        "Column": 1,
+        "ByteOffset": 36217
+      },
+      "Directive": "#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)"
+    },
+    {
+      "Location": {
+        "Line": 1125,
+        "Column": 1,
+        "ByteOffset": 36504
+      },
+      "Directive": "#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)"
+    },
+    {
+      "Location": {
+        "Line": 1146,
+        "Column": 1,
+        "ByteOffset": 37435
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1193,
+        "Column": 1,
+        "ByteOffset": 38483
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1237,
+        "Column": 1,
+        "ByteOffset": 39873
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1279,
+        "Column": 1,
+        "ByteOffset": 40998
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_MakeZddTreeNode",
+      "Start": 7040,
+      "End": 8639,
+      "BodyStart": 7279,
+      "Original": "MtrNode *\nCudd_MakeZddTreeNode(\n  DdManager * dd /* manager */,\n  unsigned int  low /* index of the first group variable */,\n  unsigned int  size /* number of variables in the group */,\n  unsigned int  type /* MTR_DEFAULT or MTR_FIXED */)\n{\n    MtrNode *group;\n    MtrNode *tree;\n    unsigned int level;\n\n    /* If the variable does not exist yet, the position is assumed to be\n    ** the same as the index. Therefore, applications that rely on\n    ** Cudd_bddNewVarAtLevel or Cudd_addNewVarAtLevel to create new\n    ** variables have to create the variables before they group them.\n    */\n    level = (low \u003c (unsigned int) dd-\u003esizeZ) ? dd-\u003epermZ[low] : low;\n\n    if (level + size - 1\u003e (int) MTR_MAXHIGH)\n        return(NULL);\n\n    /* If the tree does not exist yet, create it. */\n    tree = dd-\u003etreeZ;\n    if (tree == NULL) {\n        dd-\u003etreeZ = tree = Mtr_InitGroupTree(0, dd-\u003esizeZ);\n        if (tree == NULL)\n            return(NULL);\n        tree-\u003eindex = dd-\u003einvpermZ[0];\n    }\n\n    /* Extend the upper bound of the tree if necessary. This allows the\n    ** application to create groups even before the variables are created.\n    */\n    tree-\u003esize = ddMax(tree-\u003esize, level + size);\n\n    /* Create the group. */\n    group = Mtr_MakeGroup(tree, level, size, type);\n    if (group == NULL)\n        return(NULL);\n\n    /* Initialize the index field to the index of the variable currently\n    ** in position low. This field will be updated by the reordering\n    ** procedure to provide a handle to the group once it has been moved.\n    */\n    group-\u003eindex = (MtrHalfWord) low;\n\n    return(group);\n\n}",
+      "Draft": "MtrNode *\nCudd_MakeZddTreeNode(\n  DdManager * dd /* manager */,\n  unsigned int  low /* index of the first group variable */,\n  unsigned int  size /* number of variables in the group */,\n  unsigned int  type /* MTR_DEFAULT or MTR_FIXED */)\n{\n    var group *MtrNode;\n    var tree *MtrNode;\n    unsigned int level;\n\n    /* If the variable does not exist yet, the position is assumed to be\n    ** the same as the index. Therefore, applications that rely on\n    ** Cudd_bddNewVarAtLevel or Cudd_addNewVarAtLevel to create new\n    ** variables have to create the variables before they group them.\n    */\n    if low \u003c (unsigned int) dd.sizeZ {\n        level = dd.permZ[low];\n    } else {\n        level = low;\n    }\n\n    if level + size - 1\u003e int32( MTR_MAXHIGH) {\n        return(nil); }\n\n    /* If the tree does not exist yet, create it. */\n    tree = dd.treeZ;\n    if tree == nil {\n        dd.treeZ = tree = Mtr_InitGroupTree(0, dd.sizeZ);\n        if tree == nil {\n            return(nil); }\n        tree.index = dd.invpermZ[0];\n    }\n\n    /* Extend the upper bound of the tree if necessary. This allows the\n    ** application to create groups even before the variables are created.\n    */\n    // inlining of macro ddMax\n    \n    if (level + size) \u003e (tree.size) {\n        tree.size = (level + size);\n    } else {\n        tree.size = (tree.size);\n    }\n\n    /* Create the group. */\n    group = Mtr_MakeGroup(tree, level, size, type);\n    if group == nil {\n        return(nil); }\n\n    /* Initialize the index field to the index of the variable currently\n    ** in position low. This field will be updated by the reordering\n    ** procedure to provide a handle to the group once it has been moved.\n    */\n    group.index = (MtrHalfWord) low;\n\n    return(group);\n\n}"
+    },
+    {
+      "Name": "cuddZddTreeSifting",
+      "Start": 9445,
+      "End": 12743,
+      "BodyStart": 9584,
+      "Original": "int\ncuddZddTreeSifting(\n  DdManager * table /* DD table */,\n  Cudd_ReorderingType method /* reordering method for the groups of leaves */)\n{\n    int i;\n    int nvars;\n    int result;\n    int tempTree;\n\n    /* If no tree is provided we create a temporary one in which all\n    ** variables are in a single group. After reordering this tree is\n    ** destroyed.\n    */\n    tempTree = table-\u003etreeZ == NULL;\n    if (tempTree) {\n        table-\u003etreeZ = Mtr_InitGroupTree(0,table-\u003esizeZ);\n        table-\u003etreeZ-\u003eindex = table-\u003einvpermZ[0];\n    }\n    nvars = table-\u003esizeZ;\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0 \u0026\u0026 !tempTree)\n        (void) fprintf(table-\u003eout,\"cuddZddTreeSifting:\");\n    Mtr_PrintGroups(table-\u003etreeZ,pr \u003c= 0);\n#endif\n#if 0\n    /* Debugging code. */\n    if (table-\u003etree \u0026\u0026 table-\u003etreeZ) {\n        (void) fprintf(table-\u003eout,\"\\n\");\n        Mtr_PrintGroups(table-\u003etree, 0);\n        cuddPrintVarGroups(table,table-\u003etree,0,0);\n        for (i = 0; i \u003c table-\u003esize; i++) {\n            (void) fprintf(table-\u003eout,\"%s%d\",\n                           (i == 0) ? \"\" : \",\", table-\u003einvperm[i]);\n        }\n        (void) fprintf(table-\u003eout,\"\\n\");\n        for (i = 0; i \u003c table-\u003esize; i++) {\n            (void) fprintf(table-\u003eout,\"%s%d\",\n                           (i == 0) ? \"\" : \",\", table-\u003eperm[i]);\n        }\n        (void) fprintf(table-\u003eout,\"\\n\\n\");\n        Mtr_PrintGroups(table-\u003etreeZ,0);\n        cuddPrintVarGroups(table,table-\u003etreeZ,1,0);\n        for (i = 0; i \u003c table-\u003esizeZ; i++) {\n            (void) fprintf(table-\u003eout,\"%s%d\",\n                           (i == 0) ? \"\" : \",\", table-\u003einvpermZ[i]);\n        }\n        (void) fprintf(table-\u003eout,\"\\n\");\n        for (i = 0; i \u003c table-\u003esizeZ; i++) {\n            (void) fprintf(table-\u003eout,\"%s%d\",\n                           (i == 0) ? \"\" : \",\", table-\u003epermZ[i]);\n        }\n        (void) fprintf(table-\u003eout,\"\\n\");\n    }\n    /* End of debugging code. */\n#endif\n#ifdef DD_STATS\n    extsymmcalls = 0;\n    extsymm = 0;\n    secdiffcalls = 0;\n    secdiff = 0;\n    secdiffmisfire = 0;\n\n    (void) fprintf(table-\u003eout,\"\\n\");\n    if (!tempTree)\n        (void) fprintf(table-\u003eout,\"#:IM_NODES  %8d: group tree nodes\\n\",\n                       zddCountInternalMtrNodes(table,table-\u003etreeZ));\n#endif\n\n    /* Initialize the group of each subtable to itself. Initially\n    ** there are no groups. Groups are created according to the tree\n    ** structure in postorder fashion.\n    */\n    for (i = 0; i \u003c nvars; i++)\n        table-\u003esubtableZ[i].next = i;\n\n    /* Reorder. */\n    result = zddTreeSiftingAux(table, table-\u003etreeZ, method);\n\n#ifdef DD_STATS         /* print stats */\n    if (!tempTree \u0026\u0026 method == CUDD_REORDER_GROUP_SIFT \u0026\u0026\n        (table-\u003egroupcheck == CUDD_GROUP_CHECK7 ||\n         table-\u003egroupcheck == CUDD_GROUP_CHECK5)) {\n        (void) fprintf(table-\u003eout,\"\\nextsymmcalls = %d\\n\",extsymmcalls);\n        (void) fprintf(table-\u003eout,\"extsymm = %d\",extsymm);\n    }\n    if (!tempTree \u0026\u0026 method == CUDD_REORDER_GROUP_SIFT \u0026\u0026\n        table-\u003egroupcheck == CUDD_GROUP_CHECK7) {\n        (void) fprintf(table-\u003eout,\"\\nsecdiffcalls = %d\\n\",secdiffcalls);\n        (void) fprintf(table-\u003eout,\"secdiff = %d\\n\",secdiff);\n        (void) fprintf(table-\u003eout,\"secdiffmisfire = %d\",secdiffmisfire);\n    }\n#endif\n\n    if (tempTree)\n        Cudd_FreeZddTree(table);\n    return(result);\n\n}",
+      "Draft": "int\ncuddZddTreeSifting(\n  DdManager * table /* DD table */,\n  Cudd_ReorderingType method /* reordering method for the groups of leaves */)\n{\n    var i int32;\n    var nvars int32;\n    var result int32;\n    var tempTree int32;\n\n    /* If no tree is provided we create a temporary one in which all\n    ** variables are in a single group. After reordering this tree is\n    ** destroyed.\n    */\n    tempTree = table.treeZ == nil;\n    if tempTree != 0 {\n        table.treeZ = Mtr_InitGroupTree(0,table.sizeZ);\n        table.treeZ.index = table.invpermZ[0];\n    }\n    nvars = table.sizeZ;\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0 \u0026\u0026 !tempTree)\n        (void) fprintf(table-\u003eout,\"cuddZddTreeSifting:\");\n    Mtr_PrintGroups(table-\u003etreeZ,pr \u003c= 0);\n#endif\n     \n                         \n                                      \n                                        \n                                        \n                                                  \n                                           \n                                             \n                                                                   \n         \n                                        \n                                           \n                                             \n                                                                \n         \n                                          \n                                        \n                                                   \n                                            \n                                             \n                                                                    \n         \n                                        \n                                            \n                                             \n                                                                 \n         \n                                        \n     \n                                \n      \n#ifdef DD_STATS\n    extsymmcalls = 0;\n    extsymm = 0;\n    secdiffcalls = 0;\n    secdiff = 0;\n    secdiffmisfire = 0;\n\n    (void) fprintf(table-\u003eout,\"\\n\");\n    if (!tempTree)\n        (void) fprintf(table-\u003eout,\"#:IM_NODES  %8d: group tree nodes\\n\",\n                       zddCountInternalMtrNodes(table,table-\u003etreeZ));\n#endif\n\n    /* Initialize the group of each subtable to itself. Initially\n    ** there are no groups. Groups are created according to the tree\n    ** structure in postorder fashion.\n    */\n    for i = 0; i \u003c nvars; i++ {\n        table.subtableZ[i].next = i;\n    }\n\n    /* Reorder. */\n    result = zddTreeSiftingAux(table, table.treeZ, method);\n\n#ifdef DD_STATS         /* print stats */\n    if (!tempTree \u0026\u0026 method == CUDD_REORDER_GROUP_SIFT \u0026\u0026\n        (table-\u003egroupcheck == CUDD_GROUP_CHECK7 ||\n         table-\u003egroupcheck == CUDD_GROUP_CHECK5)) {\n        (void) fprintf(table-\u003eout,\"\\nextsymmcalls = %d\\n\",extsymmcalls);\n        (void) fprintf(table-\u003eout,\"extsymm = %d\",extsymm);\n    }\n    if (!tempTree \u0026\u0026 method == CUDD_REORDER_GROUP_SIFT \u0026\u0026\n        table-\u003egroupcheck == CUDD_GROUP_CHECK7) {\n        (void) fprintf(table-\u003eout,\"\\nsecdiffcalls = %d\\n\",secdiffcalls);\n        (void) fprintf(table-\u003eout,\"secdiff = %d\\n\",secdiff);\n        (void) fprintf(table-\u003eout,\"secdiffmisfire = %d\",secdiffmisfire);\n    }\n#endif\n\n    if tempTree != 0 {\n        Cudd_FreeZddTree(table); }\n    return(result);\n\n}"
+    },
+    {
+      "Name": "zddTreeSiftingAux",
+      "Start": 13405,
+      "End": 14120,
+      "BodyStart": 13508,
+      "Original": "static int\nzddTreeSiftingAux(\n  DdManager * table,\n  MtrNode * treenode,\n  Cudd_ReorderingType method)\n{\n    MtrNode  *auxnode;\n    int res;\n\n#ifdef DD_DEBUG\n    Mtr_PrintGroups(treenode,1);\n#endif\n\n    auxnode = treenode;\n    while (auxnode != NULL) {\n        if (auxnode-\u003echild != NULL) {\n            if (!zddTreeSiftingAux(table, auxnode-\u003echild, method))\n                return(0);\n            res = zddReorderChildren(table, auxnode, CUDD_REORDER_GROUP_SIFT);\n            if (res == 0)\n                return(0);\n        } else if (auxnode-\u003esize \u003e 1) {\n            if (!zddReorderChildren(table, auxnode, method))\n                return(0);\n        }\n        auxnode = auxnode-\u003eyounger;\n    }\n\n    return(1);\n\n}",
+      "Draft": "func zddTreeSiftingAux(table *DdManager, treenode *MtrNode, method Cudd_ReorderingType) int32 {\n    var auxnode *MtrNode;\n    var res int32;\n\n#ifdef DD_DEBUG\n    Mtr_PrintGroups(treenode,1);\n#endif\n\n    auxnode = treenode;\n    for auxnode != nil {\n        if auxnode.child != nil {\n            if !(zddTreeSiftingAux(table, auxnode.child, method) != 0) {\n                return(0); }\n            res = zddReorderChildren(table, auxnode, CUDD_REORDER_GROUP_SIFT);\n            if res == 0 {\n                return(0); }\n        } else if auxnode.size \u003e 1 {\n            if !(zddReorderChildren(table, auxnode, method) != 0) {\n                return(0); }\n        }\n        auxnode = auxnode.younger;\n    }\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "zddReorderChildren",
+      "Start": 15631,
+      "End": 18053,
+      "BodyStart": 15735,
+      "Original": "static int\nzddReorderChildren(\n  DdManager * table,\n  MtrNode * treenode,\n  Cudd_ReorderingType method)\n{\n    int lower;\n    int upper = -1;\n    int result;\n    unsigned int initialSize;\n\n    zddFindNodeHiLo(table,treenode,\u0026lower,\u0026upper);\n    /* If upper == -1 these variables do not exist yet. */\n    if (upper == -1)\n        return(1);\n\n    if (treenode-\u003eflags == MTR_FIXED) {\n        result = 1;\n    } else {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\" \");\n#endif\n        switch (method) {\n        case CUDD_REORDER_RANDOM:\n        case CUDD_REORDER_RANDOM_PIVOT:\n            result = cuddZddSwapping(table,lower,upper,method);\n            break;\n        case CUDD_REORDER_SIFT:\n            result = cuddZddSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_SIFT_CONVERGE:\n            do {\n                initialSize = table-\u003ekeysZ;\n                result = cuddZddSifting(table,lower,upper);\n                if (initialSize \u003c= table-\u003ekeysZ)\n                    break;\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            } while (result != 0);\n            break;\n        case CUDD_REORDER_SYMM_SIFT:\n            result = cuddZddSymmSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_SYMM_SIFT_CONV:\n            result = cuddZddSymmSiftingConv(table,lower,upper);\n            break;\n        case CUDD_REORDER_GROUP_SIFT:\n            result = zddGroupSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_LINEAR:\n            result = cuddZddLinearSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_LINEAR_CONVERGE:\n            do {\n                initialSize = table-\u003ekeysZ;\n                result = cuddZddLinearSifting(table,lower,upper);\n                if (initialSize \u003c= table-\u003ekeysZ)\n                    break;\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            } while (result != 0);\n            break;\n        default:\n            return(0);\n        }\n    }\n\n    /* Create a single group for all the variables that were sifted,\n    ** so that they will be treated as a single block by successive\n    ** invocations of zddGroupSifting.\n    */\n    zddMergeGroups(table,treenode,lower,upper);\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddReorderChildren:\");\n#endif\n\n    return(result);\n\n}",
+      "Draft": "func zddReorderChildren(table *DdManager, treenode *MtrNode, method Cudd_ReorderingType) int32 {\n    var lower int32;\n    var upper int32  = -1;\n    var result int32;\n    unsigned int initialSize;\n\n    zddFindNodeHiLo(table,treenode,\u0026lower,\u0026upper);\n    /* If upper == -1 these variables do not exist yet. */\n    if upper == -1 {\n        return(1); }\n\n    if treenode.flags == MTR_FIXED {\n        result = 1;\n    } else {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\" \");\n#endif\n        switch method {\n        case CUDD_REORDER_RANDOM,\n         CUDD_REORDER_RANDOM_PIVOT:\n            result = cuddZddSwapping(table,lower,upper,method);\n            break;\n        case CUDD_REORDER_SIFT:\n            result = cuddZddSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_SIFT_CONVERGE:\n            for {\n                initialSize = table.keysZ;\n                result = cuddZddSifting(table,lower,upper);\n                if initialSize \u003c= table.keysZ {\n                    break; }\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            \nif !(result != 0) { break }\n} \n            break;\n        case CUDD_REORDER_SYMM_SIFT:\n            result = cuddZddSymmSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_SYMM_SIFT_CONV:\n            result = cuddZddSymmSiftingConv(table,lower,upper);\n            break;\n        case CUDD_REORDER_GROUP_SIFT:\n            result = zddGroupSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_LINEAR:\n            result = cuddZddLinearSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_LINEAR_CONVERGE:\n            for {\n                initialSize = table.keysZ;\n                result = cuddZddLinearSifting(table,lower,upper);\n                if initialSize \u003c= table.keysZ {\n                    break; }\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            \nif !(result != 0) { break }\n} \n            break;\n        default:\n            return(0);\n        }\n    }\n\n    /* Create a single group for all the variables that were sifted,\n    ** so that they will be treated as a single block by successive\n    ** invocations of zddGroupSifting.\n    */\n    zddMergeGroups(table,treenode,lower,upper);\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddReorderChildren:\");\n#endif\n\n    return(result);\n\n}"
+    },
+    {
+      "Name": "zddFindNodeHiLo",
+      "Start": 18642,
+      "End": 20716,
+      "BodyStart": 18744,
+      "Original": "static void\nzddFindNodeHiLo(\n  DdManager * table,\n  MtrNode * treenode,\n  int * lower,\n  int * upper)\n{\n    int low;\n    int high;\n\n    /* Check whether no variables in this group already exist.\n    ** If so, return immediately. The calling procedure will know from\n    ** the values of upper that no reordering is needed.\n    */\n    if ((int) treenode-\u003elow \u003e= table-\u003esizeZ) {\n        *lower = table-\u003esizeZ;\n        *upper = -1;\n        return;\n    }\n\n    *lower = low = (unsigned int) table-\u003epermZ[treenode-\u003eindex];\n    high = (int) (low + treenode-\u003esize - 1);\n\n    if (high \u003e= table-\u003esizeZ) {\n        /* This is the case of a partially existing group. The aim is to\n        ** reorder as many variables as safely possible.  If the tree\n        ** node is terminal, we just reorder the subset of the group\n        ** that is currently in existence.  If the group has\n        ** subgroups, then we only reorder those subgroups that are\n        ** fully instantiated.  This way we avoid breaking up a group.\n        */\n        MtrNode *auxnode = treenode-\u003echild;\n        if (auxnode == NULL) {\n            *upper = (unsigned int) table-\u003esizeZ - 1;\n        } else {\n            /* Search the subgroup that strands the table-\u003esizeZ line.\n            ** If the first group starts at 0 and goes past table-\u003esizeZ\n            ** upper will get -1, thus correctly signaling that no reordering\n            ** should take place.\n            */\n            while (auxnode != NULL) {\n                int thisLower = table-\u003epermZ[auxnode-\u003elow];\n                int thisUpper = thisLower + auxnode-\u003esize - 1;\n                if (thisUpper \u003e= table-\u003esizeZ \u0026\u0026 thisLower \u003c table-\u003esizeZ)\n                    *upper = (unsigned int) thisLower - 1;\n                auxnode = auxnode-\u003eyounger;\n            }\n        }\n    } else {\n        /* Normal case: All the variables of the group exist. */\n        *upper = (unsigned int) high;\n    }\n\n#ifdef DD_DEBUG\n    /* Make sure that all variables in group are contiguous. */\n    assert(treenode-\u003esize \u003e= *upper - *lower + 1);\n#endif\n\n    return;\n\n}",
+      "Draft": "func zddFindNodeHiLo(table *DdManager, treenode *MtrNode, lower *int32, upper *int32) {\n    var low int32;\n    var high int32;\n\n    /* Check whether no variables in this group already exist.\n    ** If so, return immediately. The calling procedure will know from\n    ** the values of upper that no reordering is needed.\n    */\n    if int32( treenode.low) \u003e= table.sizeZ {\n        *lower = table.sizeZ;\n        *upper = -1;\n        return;\n    }\n\n    *lower = low = (unsigned int) table.permZ[treenode.index];\n    high = int32( (low + treenode.size - 1));\n\n    if high \u003e= table.sizeZ {\n        /* This is the case of a partially existing group. The aim is to\n        ** reorder as many variables as safely possible.  If the tree\n        ** node is terminal, we just reorder the subset of the group\n        ** that is currently in existence.  If the group has\n        ** subgroups, then we only reorder those subgroups that are\n        ** fully instantiated.  This way we avoid breaking up a group.\n        */\n        var auxnode *MtrNode  = treenode.child;\n        if auxnode == nil {\n            *upper = (unsigned int) table.sizeZ - 1;\n        } else {\n            /* Search the subgroup that strands the table-\u003esizeZ line.\n            ** If the first group starts at 0 and goes past table-\u003esizeZ\n            ** upper will get -1, thus correctly signaling that no reordering\n            ** should take place.\n            */\n            for auxnode != nil {\n                var thisLower int32  = table.permZ[auxnode.low];\n                var thisUpper int32  = thisLower + auxnode.size - 1;\n                if thisUpper \u003e= table.sizeZ \u0026\u0026 thisLower \u003c table.sizeZ {\n                    *upper = (unsigned int) thisLower - 1; }\n                auxnode = auxnode.younger;\n            }\n        }\n    } else {\n        /* Normal case: All the variables of the group exist. */\n        *upper = (unsigned int) high;\n    }\n\n#ifdef DD_DEBUG\n    /* Make sure that all variables in group are contiguous. */\n    assert(treenode-\u003esize \u003e= *upper - *lower + 1);\n#endif\n\n    return;\n\n}"
+    },
+    {
+      "Name": "zddUniqueCompareGroup",
+      "Start": 21197,
+      "End": 21398,
+      "BodyStart": 21259,
+      "Original": "static int\nzddUniqueCompareGroup(\n  int * ptrX,\n  int * ptrY)\n{\n#if 0\n    if (entry[*ptrY] == entry[*ptrX]) {\n        return((*ptrX) - (*ptrY));\n    }\n#endif\n    return(entry[*ptrY] - entry[*ptrX]);\n\n}",
+      "Draft": "func zddUniqueCompareGroup(ptrX *int32, ptrY *int32) int32 {\n     \n                                       \n                                  \n     \n      \n    return(entry[*ptrY] - entry[*ptrX]);\n\n}"
+    },
+    {
+      "Name": "zddGroupSifting",
+      "Start": 22010,
+      "End": 24986,
+      "BodyStart": 22087,
+      "Original": "static int\nzddGroupSifting(\n  DdManager * table,\n  int  lower,\n  int  upper)\n{\n    int         *var;\n    int         i,j,x,xInit;\n    int         nvars;\n    int         classes;\n    int         result;\n    int         *sifted;\n#ifdef DD_STATS\n    unsigned    previousSize;\n#endif\n    int         xindex;\n\n    nvars = table-\u003esizeZ;\n\n    /* Order variables to sift. */\n    entry = NULL;\n    sifted = NULL;\n    var = ABC_ALLOC(int,nvars);\n    if (var == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        goto zddGroupSiftingOutOfMem;\n    }\n    entry = ABC_ALLOC(int,nvars);\n    if (entry == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        goto zddGroupSiftingOutOfMem;\n    }\n    sifted = ABC_ALLOC(int,nvars);\n    if (sifted == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        goto zddGroupSiftingOutOfMem;\n    }\n\n    /* Here we consider only one representative for each group. */\n    for (i = 0, classes = 0; i \u003c nvars; i++) {\n        sifted[i] = 0;\n        x = table-\u003epermZ[i];\n        if ((unsigned) x \u003e= table-\u003esubtableZ[x].next) {\n            entry[i] = table-\u003esubtableZ[x].keys;\n            var[classes] = i;\n            classes++;\n        }\n    }\n\n    qsort((void *)var,(size_t)classes,sizeof(int),(DD_QSFP)zddUniqueCompareGroup);\n\n    /* Now sift. */\n    for (i = 0; i \u003c ddMin(table-\u003esiftMaxVar,classes); i++) {\n        if (zddTotalNumberSwapping \u003e= table-\u003esiftMaxSwap)\n            break;\n        xindex = var[i];\n        if (sifted[xindex] == 1) /* variable already sifted as part of group */\n            continue;\n        x = table-\u003epermZ[xindex]; /* find current level of this variable */\n        if (x \u003c lower || x \u003e upper)\n            continue;\n#ifdef DD_STATS\n        previousSize = table-\u003ekeysZ;\n#endif\n#ifdef DD_DEBUG\n        /* x is bottom of group */\n        assert((unsigned) x \u003e= table-\u003esubtableZ[x].next);\n#endif\n        result = zddGroupSiftingAux(table,x,lower,upper);\n        if (!result) goto zddGroupSiftingOutOfMem;\n\n#ifdef DD_STATS\n        if (table-\u003ekeysZ \u003c previousSize) {\n            (void) fprintf(table-\u003eout,\"-\");\n        } else if (table-\u003ekeysZ \u003e previousSize) {\n            (void) fprintf(table-\u003eout,\"+\");\n        } else {\n            (void) fprintf(table-\u003eout,\"=\");\n        }\n        fflush(table-\u003eout);\n#endif\n\n        /* Mark variables in the group just sifted. */\n        x = table-\u003epermZ[xindex];\n        if ((unsigned) x != table-\u003esubtableZ[x].next) {\n            xInit = x;\n            do {\n                j = table-\u003einvpermZ[x];\n                sifted[j] = 1;\n                x = table-\u003esubtableZ[x].next;\n            } while (x != xInit);\n        }\n\n#ifdef DD_DEBUG\n        if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSifting:\");\n#endif\n    } /* for */\n\n    ABC_FREE(sifted);\n    ABC_FREE(var);\n    ABC_FREE(entry);\n\n    return(1);\n\nzddGroupSiftingOutOfMem:\n    if (entry != NULL)  ABC_FREE(entry);\n    if (var != NULL)    ABC_FREE(var);\n    if (sifted != NULL) ABC_FREE(sifted);\n\n    return(0);\n\n}",
+      "Draft": "func zddGroupSifting(table *DdManager, lower int32, upper int32) int32 {\n    var var *int32;\n    var i, j, x, xInit int32;\n    var nvars int32;\n    var classes int32;\n    var result int32;\n    var sifted *int32;\n#ifdef DD_STATS\n    unsigned    previousSize;\n#endif\n    var xindex int32;\n\n    nvars = table.sizeZ;\n\n    /* Order variables to sift. */\n    entry = nil;\n    sifted = nil;\n    var = ABC_ALLOC(int,nvars);\n    if var == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        goto zddGroupSiftingOutOfMem;\n    }\n    entry = ABC_ALLOC(int,nvars);\n    if entry == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        goto zddGroupSiftingOutOfMem;\n    }\n    sifted = ABC_ALLOC(int,nvars);\n    if sifted == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        goto zddGroupSiftingOutOfMem;\n    }\n\n    /* Here we consider only one representative for each group. */\n    for i, classes = 0, 0; i \u003c nvars; i++ {\n        sifted[i] = 0;\n        x = table.permZ[i];\n        if uint32( x) \u003e= table.subtableZ[x].next {\n            entry[i] = table.subtableZ[x].keys;\n            var[classes] = i;\n            classes++;\n        }\n    }\n\n    qsort((void *)var,(size_t)classes,sizeof(int),(DD_QSFP)zddUniqueCompareGroup);\n\n    /* Now sift. */\n    // inlining of macro ddMin\n    for i = 0; i \u003c (((classes) \u003c (table.siftMaxVar)) ? (classes) : (table.siftMaxVar)); i++ {\n        if zddTotalNumberSwapping \u003e= table.siftMaxSwap {\n            break; }\n        xindex = var[i];\n        if sifted[xindex] == 1 { /* variable already sifted as part of group */\n            continue; }\n        x = table.permZ[xindex]; /* find current level of this variable */\n        if x \u003c lower || x \u003e upper {\n            continue; }\n#ifdef DD_STATS\n        previousSize = table-\u003ekeysZ;\n#endif\n#ifdef DD_DEBUG\n        /* x is bottom of group */\n        assert((unsigned) x \u003e= table-\u003esubtableZ[x].next);\n#endif\n        result = zddGroupSiftingAux(table,x,lower,upper);\n        if !(result != 0) { goto zddGroupSiftingOutOfMem; }\n\n#ifdef DD_STATS\n        if (table-\u003ekeysZ \u003c previousSize) {\n            (void) fprintf(table-\u003eout,\"-\");\n        } else if (table-\u003ekeysZ \u003e previousSize) {\n            (void) fprintf(table-\u003eout,\"+\");\n        } else {\n            (void) fprintf(table-\u003eout,\"=\");\n        }\n        fflush(table-\u003eout);\n#endif\n\n        /* Mark variables in the group just sifted. */\n        x = table.permZ[xindex];\n        if uint32( x) != table.subtableZ[x].next {\n            xInit = x;\n            for {\n                j = table.invpermZ[x];\n                sifted[j] = 1;\n                x = table.subtableZ[x].next;\n            \nif !(x != xInit) { break }\n} \n        }\n\n#ifdef DD_DEBUG\n        if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSifting:\");\n#endif\n    } /* for */\n\n    ABC_FREE(sifted);\n    ABC_FREE(var);\n    ABC_FREE(entry);\n\n    return(1);\n\nzddGroupSiftingOutOfMem:\n    if entry != nil {  ABC_FREE(entry); }\n    if var != nil {    ABC_FREE(var); }\n    if sifted != nil { ABC_FREE(sifted); }\n\n    return(0);\n\n}"
+    },
+    {
+      "Name": "zddGroupSiftingAux",
+      "Start": 25722,
+      "End": 29624,
+      "BodyStart": 25811,
+      "Original": "static int\nzddGroupSiftingAux(\n  DdManager * table,\n  int  x,\n  int  xLow,\n  int  xHigh)\n{\n    Move *move;\n    Move *moves;        /* list of moves */\n    int  initialSize;\n    int  result;\n\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSiftingAux from %d to %d\\n\",xLow,xHigh);\n    assert((unsigned) x \u003e= table-\u003esubtableZ[x].next); /* x is bottom of group */\n#endif\n\n    initialSize = table-\u003ekeysZ;\n    moves = NULL;\n\n    if (x == xLow) { /* Sift down */\n#ifdef DD_DEBUG\n        /* x must be a singleton */\n        assert((unsigned) x == table-\u003esubtableZ[x].next);\n#endif\n        if (x == xHigh) return(1);      /* just one variable */\n\n        if (!zddGroupSiftingDown(table,x,xHigh,\u0026moves))\n            goto zddGroupSiftingAuxOutOfMem;\n        /* at this point x == xHigh, unless early term */\n\n        /* move backward and stop at best position */\n        result = zddGroupSiftingBackward(table,moves,initialSize);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeysZ \u003c= (unsigned) initialSize);\n#endif\n        if (!result) goto zddGroupSiftingAuxOutOfMem;\n\n    } else if (cuddZddNextHigh(table,x) \u003e xHigh) { /* Sift up */\n#ifdef DD_DEBUG\n        /* x is bottom of group */\n        assert((unsigned) x \u003e= table-\u003esubtableZ[x].next);\n#endif\n        /* Find top of x's group */\n        x = table-\u003esubtableZ[x].next;\n\n        if (!zddGroupSiftingUp(table,x,xLow,\u0026moves))\n            goto zddGroupSiftingAuxOutOfMem;\n        /* at this point x == xLow, unless early term */\n\n        /* move backward and stop at best position */\n        result = zddGroupSiftingBackward(table,moves,initialSize);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeysZ \u003c= (unsigned) initialSize);\n#endif\n        if (!result) goto zddGroupSiftingAuxOutOfMem;\n\n    } else if (x - xLow \u003e xHigh - x) { /* must go down first: shorter */\n        if (!zddGroupSiftingDown(table,x,xHigh,\u0026moves))\n            goto zddGroupSiftingAuxOutOfMem;\n        /* at this point x == xHigh, unless early term */\n\n        /* Find top of group */\n        if (moves) {\n            x = moves-\u003ey;\n        }\n        while ((unsigned) x \u003c table-\u003esubtableZ[x].next)\n            x = table-\u003esubtableZ[x].next;\n        x = table-\u003esubtableZ[x].next;\n#ifdef DD_DEBUG\n        /* x should be the top of a group */\n        assert((unsigned) x \u003c= table-\u003esubtableZ[x].next);\n#endif\n\n        if (!zddGroupSiftingUp(table,x,xLow,\u0026moves))\n            goto zddGroupSiftingAuxOutOfMem;\n\n        /* move backward and stop at best position */\n        result = zddGroupSiftingBackward(table,moves,initialSize);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeysZ \u003c= (unsigned) initialSize);\n#endif\n        if (!result) goto zddGroupSiftingAuxOutOfMem;\n\n    } else { /* moving up first: shorter */\n        /* Find top of x's group */\n        x = table-\u003esubtableZ[x].next;\n\n        if (!zddGroupSiftingUp(table,x,xLow,\u0026moves))\n            goto zddGroupSiftingAuxOutOfMem;\n        /* at this point x == xHigh, unless early term */\n\n        if (moves) {\n            x = moves-\u003ex;\n        }\n        while ((unsigned) x \u003c table-\u003esubtableZ[x].next)\n            x = table-\u003esubtableZ[x].next;\n#ifdef DD_DEBUG\n        /* x is bottom of a group */\n        assert((unsigned) x \u003e= table-\u003esubtableZ[x].next);\n#endif\n\n        if (!zddGroupSiftingDown(table,x,xHigh,\u0026moves))\n            goto zddGroupSiftingAuxOutOfMem;\n\n        /* move backward and stop at best position */\n        result = zddGroupSiftingBackward(table,moves,initialSize);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeysZ \u003c= (unsigned) initialSize);\n#endif\n        if (!result) goto zddGroupSiftingAuxOutOfMem;\n    }\n\n    while (moves != NULL) {\n        move = moves-\u003enext;\n        cuddDeallocMove(table, moves);\n        moves = move;\n    }\n\n    return(1);\n\nzddGroupSiftingAuxOutOfMem:\n    while (moves != NULL) {\n        move = moves-\u003enext;\n        cuddDeallocMove(table, moves);\n        moves = move;\n    }\n\n    return(0);\n\n}",
+      "Draft": "func zddGroupSiftingAux(table *DdManager, x int32, xLow int32, xHigh int32) int32 {\n    var move *Move;\n    var moves *Move;        /* list of moves */\n    var initialSize int32;\n    var result int32;\n\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSiftingAux from %d to %d\\n\",xLow,xHigh);\n    assert((unsigned) x \u003e= table-\u003esubtableZ[x].next); /* x is bottom of group */\n#endif\n\n    initialSize = table.keysZ;\n    moves = nil;\n\n    if x == xLow { /* Sift down */\n#ifdef DD_DEBUG\n        /* x must be a singleton */\n        assert((unsigned) x == table-\u003esubtableZ[x].next);\n#endif\n        if x == xHigh { return(1); }      /* just one variable */\n\n        if !(zddGroupSiftingDown(table,x,xHigh,\u0026moves) != 0) {\n            goto zddGroupSiftingAuxOutOfMem; }\n        /* at this point x == xHigh, unless early term */\n\n        /* move backward and stop at best position */\n        result = zddGroupSiftingBackward(table,moves,initialSize);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeysZ \u003c= (unsigned) initialSize);\n#endif\n        if !(result != 0) { goto zddGroupSiftingAuxOutOfMem; }\n\n    } else if cuddZddNextHigh(table,x) \u003e xHigh { /* Sift up */\n#ifdef DD_DEBUG\n        /* x is bottom of group */\n        assert((unsigned) x \u003e= table-\u003esubtableZ[x].next);\n#endif\n        /* Find top of x's group */\n        x = table.subtableZ[x].next;\n\n        if !(zddGroupSiftingUp(table,x,xLow,\u0026moves) != 0) {\n            goto zddGroupSiftingAuxOutOfMem; }\n        /* at this point x == xLow, unless early term */\n\n        /* move backward and stop at best position */\n        result = zddGroupSiftingBackward(table,moves,initialSize);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeysZ \u003c= (unsigned) initialSize);\n#endif\n        if !(result != 0) { goto zddGroupSiftingAuxOutOfMem; }\n\n    } else if x - xLow \u003e xHigh - x { /* must go down first: shorter */\n        if !(zddGroupSiftingDown(table,x,xHigh,\u0026moves) != 0) {\n            goto zddGroupSiftingAuxOutOfMem; }\n        /* at this point x == xHigh, unless early term */\n\n        /* Find top of group */\n        if moves != nil {\n            x = moves.y;\n        }\n        for uint32( x) \u003c table.subtableZ[x].next {\n            x = table.subtableZ[x].next;\n        }\n        x = table.subtableZ[x].next;\n#ifdef DD_DEBUG\n        /* x should be the top of a group */\n        assert((unsigned) x \u003c= table-\u003esubtableZ[x].next);\n#endif\n\n        if !(zddGroupSiftingUp(table,x,xLow,\u0026moves) != 0) {\n            goto zddGroupSiftingAuxOutOfMem; }\n\n        /* move backward and stop at best position */\n        result = zddGroupSiftingBackward(table,moves,initialSize);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeysZ \u003c= (unsigned) initialSize);\n#endif\n        if !(result != 0) { goto zddGroupSiftingAuxOutOfMem; }\n\n    } else { /* moving up first: shorter */\n        /* Find top of x's group */\n        x = table.subtableZ[x].next;\n\n        if !(zddGroupSiftingUp(table,x,xLow,\u0026moves) != 0) {\n            goto zddGroupSiftingAuxOutOfMem; }\n        /* at this point x == xHigh, unless early term */\n\n        if moves != nil {\n            x = moves.x;\n        }\n        for uint32( x) \u003c table.subtableZ[x].next {\n            x = table.subtableZ[x].next;\n        }\n#ifdef DD_DEBUG\n        /* x is bottom of a group */\n        assert((unsigned) x \u003e= table-\u003esubtableZ[x].next);\n#endif\n\n        if !(zddGroupSiftingDown(table,x,xHigh,\u0026moves) != 0) {\n            goto zddGroupSiftingAuxOutOfMem; }\n\n        /* move backward and stop at best position */\n        result = zddGroupSiftingBackward(table,moves,initialSize);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeysZ \u003c= (unsigned) initialSize);\n#endif\n        if !(result != 0) { goto zddGroupSiftingAuxOutOfMem; }\n    }\n\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n\n    return(1);\n\nzddGroupSiftingAuxOutOfMem:\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n\n    return(0);\n\n}"
+    },
+    {
+      "Name": "zddGroupSiftingUp",
+      "Start": 30359,
+      "End": 32192,
+      "BodyStart": 30450,
+      "Original": "static int\nzddGroupSiftingUp(\n  DdManager * table,\n  int  y,\n  int  xLow,\n  Move ** moves)\n{\n    Move *move;\n    int  x;\n    int  size;\n    int  gxtop;\n    int  limitSize;\n\n    limitSize = table-\u003ekeysZ;\n\n    x = cuddZddNextLow(table,y);\n    while (x \u003e= xLow) {\n        gxtop = table-\u003esubtableZ[x].next;\n        if (table-\u003esubtableZ[x].next == (unsigned) x \u0026\u0026\n            table-\u003esubtableZ[y].next == (unsigned) y) {\n            /* x and y are self groups */\n            size = cuddZddSwapInPlace(table,x,y);\n#ifdef DD_DEBUG\n            assert(table-\u003esubtableZ[x].next == (unsigned) x);\n            assert(table-\u003esubtableZ[y].next == (unsigned) y);\n#endif\n            if (size == 0) goto zddGroupSiftingUpOutOfMem;\n            move = (Move *)cuddDynamicAllocNode(table);\n            if (move == NULL) goto zddGroupSiftingUpOutOfMem;\n            move-\u003ex = x;\n            move-\u003ey = y;\n            move-\u003eflags = MTR_DEFAULT;\n            move-\u003esize = size;\n            move-\u003enext = *moves;\n            *moves = move;\n\n#ifdef DD_DEBUG\n            if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSiftingUp (2 single groups):\\n\");\n#endif\n            if ((double) size \u003e (double) limitSize * table-\u003emaxGrowth)\n                return(1);\n            if (size \u003c limitSize) limitSize = size;\n        } else { /* group move */\n            size = zddGroupMove(table,x,y,moves);\n            if (size == 0) goto zddGroupSiftingUpOutOfMem;\n            if ((double) size \u003e (double) limitSize * table-\u003emaxGrowth)\n                return(1);\n            if (size \u003c limitSize) limitSize = size;\n        }\n        y = gxtop;\n        x = cuddZddNextLow(table,y);\n    }\n\n    return(1);\n\nzddGroupSiftingUpOutOfMem:\n    while (*moves != NULL) {\n        move = (*moves)-\u003enext;\n        cuddDeallocMove(table, *moves);\n        *moves = move;\n    }\n    return(0);\n\n}",
+      "Draft": "func zddGroupSiftingUp(table *DdManager, y int32, xLow int32, moves **Move) int32 {\n    var move *Move;\n    var x int32;\n    var size int32;\n    var gxtop int32;\n    var limitSize int32;\n\n    limitSize = table.keysZ;\n\n    x = cuddZddNextLow(table,y);\n    for x \u003e= xLow {\n        gxtop = table.subtableZ[x].next;\n        if table.subtableZ[x].next == uint32( x) \u0026\u0026\n            table.subtableZ[y].next == uint32( y) {\n            /* x and y are self groups */\n            size = cuddZddSwapInPlace(table,x,y);\n#ifdef DD_DEBUG\n            assert(table-\u003esubtableZ[x].next == (unsigned) x);\n            assert(table-\u003esubtableZ[y].next == (unsigned) y);\n#endif\n            if size == 0 { goto zddGroupSiftingUpOutOfMem; }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if move == nil { goto zddGroupSiftingUpOutOfMem; }\n            move.x = x;\n            move.y = y;\n            move.flags = MTR_DEFAULT;\n            move.size = size;\n            move.next = *moves;\n            *moves = move;\n\n#ifdef DD_DEBUG\n            if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSiftingUp (2 single groups):\\n\");\n#endif\n            if float64( size) \u003e float64( limitSize) * table.maxGrowth {\n                return(1); }\n            if size \u003c limitSize { limitSize = size; }\n        } else { /* group move */\n            size = zddGroupMove(table,x,y,moves);\n            if size == 0 { goto zddGroupSiftingUpOutOfMem; }\n            if float64( size) \u003e float64( limitSize) * table.maxGrowth {\n                return(1); }\n            if size \u003c limitSize { limitSize = size; }\n        }\n        y = gxtop;\n        x = cuddZddNextLow(table,y);\n    }\n\n    return(1);\n\nzddGroupSiftingUpOutOfMem:\n    for *moves != nil {\n        move = (*moves).next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(*moves)).ref = 0;     ((DdNode *)(*moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(*moves);;\n        *moves = move;\n    }\n    return(0);\n\n}"
+    },
+    {
+      "Name": "zddGroupSiftingDown",
+      "Start": 32683,
+      "End": 34807,
+      "BodyStart": 32777,
+      "Original": "static int\nzddGroupSiftingDown(\n  DdManager * table,\n  int  x,\n  int  xHigh,\n  Move ** moves)\n{\n    Move *move;\n    int  y;\n    int  size;\n    int  limitSize;\n    int  gybot;\n\n\n    /* Initialize R */\n    limitSize = size = table-\u003ekeysZ;\n    y = cuddZddNextHigh(table,x);\n    while (y \u003c= xHigh) {\n        /* Find bottom of y group. */\n        gybot = table-\u003esubtableZ[y].next;\n        while (table-\u003esubtableZ[gybot].next != (unsigned) y)\n            gybot = table-\u003esubtableZ[gybot].next;\n\n        if (table-\u003esubtableZ[x].next == (unsigned) x \u0026\u0026\n            table-\u003esubtableZ[y].next == (unsigned) y) {\n            /* x and y are self groups */\n            size = cuddZddSwapInPlace(table,x,y);\n#ifdef DD_DEBUG\n            assert(table-\u003esubtableZ[x].next == (unsigned) x);\n            assert(table-\u003esubtableZ[y].next == (unsigned) y);\n#endif\n            if (size == 0) goto zddGroupSiftingDownOutOfMem;\n\n            /* Record move. */\n            move = (Move *) cuddDynamicAllocNode(table);\n            if (move == NULL) goto zddGroupSiftingDownOutOfMem;\n            move-\u003ex = x;\n            move-\u003ey = y;\n            move-\u003eflags = MTR_DEFAULT;\n            move-\u003esize = size;\n            move-\u003enext = *moves;\n            *moves = move;\n\n#ifdef DD_DEBUG\n            if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSiftingDown (2 single groups):\\n\");\n#endif\n            if ((double) size \u003e (double) limitSize * table-\u003emaxGrowth)\n                return(1);\n            if (size \u003c limitSize) limitSize = size;\n            x = y;\n            y = cuddZddNextHigh(table,x);\n        } else { /* Group move */\n            size = zddGroupMove(table,x,y,moves);\n            if (size == 0) goto zddGroupSiftingDownOutOfMem;\n            if ((double) size \u003e (double) limitSize * table-\u003emaxGrowth)\n                return(1);\n            if (size \u003c limitSize) limitSize = size;\n        }\n        x = gybot;\n        y = cuddZddNextHigh(table,x);\n    }\n\n    return(1);\n\nzddGroupSiftingDownOutOfMem:\n    while (*moves != NULL) {\n        move = (*moves)-\u003enext;\n        cuddDeallocMove(table, *moves);\n        *moves = move;\n    }\n\n    return(0);\n\n}",
+      "Draft": "func zddGroupSiftingDown(table *DdManager, x int32, xHigh int32, moves **Move) int32 {\n    var move *Move;\n    var y int32;\n    var size int32;\n    var limitSize int32;\n    var gybot int32;\n\n\n    /* Initialize R */\n    limitSize = size = table.keysZ;\n    y = cuddZddNextHigh(table,x);\n    for y \u003c= xHigh {\n        /* Find bottom of y group. */\n        gybot = table.subtableZ[y].next;\n        for table.subtableZ[gybot].next != uint32( y) {\n            gybot = table.subtableZ[gybot].next;\n        }\n\n        if table.subtableZ[x].next == uint32( x) \u0026\u0026\n            table.subtableZ[y].next == uint32( y) {\n            /* x and y are self groups */\n            size = cuddZddSwapInPlace(table,x,y);\n#ifdef DD_DEBUG\n            assert(table-\u003esubtableZ[x].next == (unsigned) x);\n            assert(table-\u003esubtableZ[y].next == (unsigned) y);\n#endif\n            if size == 0 { goto zddGroupSiftingDownOutOfMem; }\n\n            /* Record move. */\n            move = (Move *) cuddDynamicAllocNode(table);\n            if move == nil { goto zddGroupSiftingDownOutOfMem; }\n            move.x = x;\n            move.y = y;\n            move.flags = MTR_DEFAULT;\n            move.size = size;\n            move.next = *moves;\n            *moves = move;\n\n#ifdef DD_DEBUG\n            if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSiftingDown (2 single groups):\\n\");\n#endif\n            if float64( size) \u003e float64( limitSize) * table.maxGrowth {\n                return(1); }\n            if size \u003c limitSize { limitSize = size; }\n            x = y;\n            y = cuddZddNextHigh(table,x);\n        } else { /* Group move */\n            size = zddGroupMove(table,x,y,moves);\n            if size == 0 { goto zddGroupSiftingDownOutOfMem; }\n            if float64( size) \u003e float64( limitSize) * table.maxGrowth {\n                return(1); }\n            if size \u003c limitSize { limitSize = size; }\n        }\n        x = gybot;\n        y = cuddZddNextHigh(table,x);\n    }\n\n    return(1);\n\nzddGroupSiftingDownOutOfMem:\n    for *moves != nil {\n        move = (*moves).next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(*moves)).ref = 0;     ((DdNode *)(*moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(*moves);;\n        *moves = move;\n    }\n\n    return(0);\n\n}"
+    },
+    {
+      "Name": "zddGroupMove",
+      "Start": 35216,
+      "End": 37990,
+      "BodyStart": 35299,
+      "Original": "static int\nzddGroupMove(\n  DdManager * table,\n  int  x,\n  int  y,\n  Move ** moves)\n{\n    Move *move;\n    int  size;\n    int  i,j,xtop,xbot,xsize,ytop,ybot,ysize,newxtop;\n    int  swapx=-1,swapy=-1;\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n    int  initialSize,bestSize;\n#endif\n\n#ifdef DD_DEBUG\n    /* We assume that x \u003c y */\n    assert(x \u003c y);\n#endif\n    /* Find top, bottom, and size for the two groups. */\n    xbot = x;\n    xtop = table-\u003esubtableZ[x].next;\n    xsize = xbot - xtop + 1;\n    ybot = y;\n    while ((unsigned) ybot \u003c table-\u003esubtableZ[ybot].next)\n        ybot = table-\u003esubtableZ[ybot].next;\n    ytop = y;\n    ysize = ybot - ytop + 1;\n\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n    initialSize = bestSize = table-\u003ekeysZ;\n#endif\n    /* Sift the variables of the second group up through the first group */\n    for (i = 1; i \u003c= ysize; i++) {\n        for (j = 1; j \u003c= xsize; j++) {\n            size = cuddZddSwapInPlace(table,x,y);\n            if (size == 0) goto zddGroupMoveOutOfMem;\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n            if (size \u003c bestSize)\n                bestSize = size;\n#endif\n            swapx = x; swapy = y;\n            y = x;\n            x = cuddZddNextLow(table,y);\n        }\n        y = ytop + i;\n        x = cuddZddNextLow(table,y);\n    }\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n    if ((bestSize \u003c initialSize) \u0026\u0026 (bestSize \u003c size))\n        (void) fprintf(table-\u003eout,\"Missed local minimum: initialSize:%d  bestSize:%d  finalSize:%d\\n\",initialSize,bestSize,size);\n#endif\n\n    /* fix groups */\n    y = xtop; /* ytop is now where xtop used to be */\n    for (i = 0; i \u003c ysize - 1; i++) {\n        table-\u003esubtableZ[y].next = cuddZddNextHigh(table,y);\n        y = cuddZddNextHigh(table,y);\n    }\n    table-\u003esubtableZ[y].next = xtop; /* y is bottom of its group, join */\n                                    /* it to top of its group */\n    x = cuddZddNextHigh(table,y);\n    newxtop = x;\n    for (i = 0; i \u003c xsize - 1; i++) {\n        table-\u003esubtableZ[x].next = cuddZddNextHigh(table,x);\n        x = cuddZddNextHigh(table,x);\n    }\n    table-\u003esubtableZ[x].next = newxtop; /* x is bottom of its group, join */\n                                    /* it to top of its group */\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupMove:\\n\");\n#endif\n\n    /* Store group move */\n    move = (Move *) cuddDynamicAllocNode(table);\n    if (move == NULL) goto zddGroupMoveOutOfMem;\n    move-\u003ex = swapx;\n    move-\u003ey = swapy;\n    move-\u003eflags = MTR_DEFAULT;\n    move-\u003esize = table-\u003ekeysZ;\n    move-\u003enext = *moves;\n    *moves = move;\n\n    return(table-\u003ekeysZ);\n\nzddGroupMoveOutOfMem:\n    while (*moves != NULL) {\n        move = (*moves)-\u003enext;\n        cuddDeallocMove(table, *moves);\n        *moves = move;\n    }\n    return(0);\n\n}",
+      "Draft": "func zddGroupMove(table *DdManager, x int32, y int32, moves **Move) int32 {\n    var move *Move;\n    var size int32;\n    var i, j, xtop, xbot, xsize, ytop, ybot, ysize, newxtop int32;\n    var swapx int32 = -1;\n    var swapy int32 = -1;\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n    int  initialSize,bestSize;\n#endif\n\n#ifdef DD_DEBUG\n    /* We assume that x \u003c y */\n    assert(x \u003c y);\n#endif\n    /* Find top, bottom, and size for the two groups. */\n    xbot = x;\n    xtop = table.subtableZ[x].next;\n    xsize = xbot - xtop + 1;\n    ybot = y;\n    for uint32( ybot) \u003c table.subtableZ[ybot].next {\n        ybot = table.subtableZ[ybot].next;\n    }\n    ytop = y;\n    ysize = ybot - ytop + 1;\n\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n    initialSize = bestSize = table-\u003ekeysZ;\n#endif\n    /* Sift the variables of the second group up through the first group */\n    for i = 1; i \u003c= ysize; i++ {\n        for j = 1; j \u003c= xsize; j++ {\n            size = cuddZddSwapInPlace(table,x,y);\n            if size == 0 { goto zddGroupMoveOutOfMem; }\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n            if (size \u003c bestSize)\n                bestSize = size;\n#endif\n            swapx = x; swapy = y;\n            y = x;\n            x = cuddZddNextLow(table,y);\n        }\n        y = ytop + i;\n        x = cuddZddNextLow(table,y);\n    }\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n    if ((bestSize \u003c initialSize) \u0026\u0026 (bestSize \u003c size))\n        (void) fprintf(table-\u003eout,\"Missed local minimum: initialSize:%d  bestSize:%d  finalSize:%d\\n\",initialSize,bestSize,size);\n#endif\n\n    /* fix groups */\n    y = xtop; /* ytop is now where xtop used to be */\n    for i = 0; i \u003c ysize - 1; i++ {\n        table.subtableZ[y].next = cuddZddNextHigh(table,y);\n        y = cuddZddNextHigh(table,y);\n    }\n    table.subtableZ[y].next = xtop; /* y is bottom of its group, join */\n                                    /* it to top of its group */\n    x = cuddZddNextHigh(table,y);\n    newxtop = x;\n    for i = 0; i \u003c xsize - 1; i++ {\n        table.subtableZ[x].next = cuddZddNextHigh(table,x);\n        x = cuddZddNextHigh(table,x);\n    }\n    table.subtableZ[x].next = newxtop; /* x is bottom of its group, join */\n                                    /* it to top of its group */\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupMove:\\n\");\n#endif\n\n    /* Store group move */\n    move = (Move *) cuddDynamicAllocNode(table);\n    if move == nil { goto zddGroupMoveOutOfMem; }\n    move.x = swapx;\n    move.y = swapy;\n    move.flags = MTR_DEFAULT;\n    move.size = table.keysZ;\n    move.next = *moves;\n    *moves = move;\n\n    return(table.keysZ);\n\nzddGroupMoveOutOfMem:\n    for *moves != nil {\n        move = (*moves).next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(*moves)).ref = 0;     ((DdNode *)(*moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(*moves);;\n        *moves = move;\n    }\n    return(0);\n\n}"
+    },
+    {
+      "Name": "zddGroupMoveBackward",
+      "Start": 38338,
+      "End": 39984,
+      "BodyStart": 38412,
+      "Original": "static int\nzddGroupMoveBackward(\n  DdManager * table,\n  int  x,\n  int  y)\n{\n    int size;\n    int i,j,xtop,xbot,xsize,ytop,ybot,ysize,newxtop;\n\n\n#ifdef DD_DEBUG\n    /* We assume that x \u003c y */\n    assert(x \u003c y);\n#endif\n\n    /* Find top, bottom, and size for the two groups. */\n    xbot = x;\n    xtop = table-\u003esubtableZ[x].next;\n    xsize = xbot - xtop + 1;\n    ybot = y;\n    while ((unsigned) ybot \u003c table-\u003esubtableZ[ybot].next)\n        ybot = table-\u003esubtableZ[ybot].next;\n    ytop = y;\n    ysize = ybot - ytop + 1;\n\n    /* Sift the variables of the second group up through the first group */\n    for (i = 1; i \u003c= ysize; i++) {\n        for (j = 1; j \u003c= xsize; j++) {\n            size = cuddZddSwapInPlace(table,x,y);\n            if (size == 0)\n                return(0);\n            y = x;\n            x = cuddZddNextLow(table,y);\n        }\n        y = ytop + i;\n        x = cuddZddNextLow(table,y);\n    }\n\n    /* fix groups */\n    y = xtop;\n    for (i = 0; i \u003c ysize - 1; i++) {\n        table-\u003esubtableZ[y].next = cuddZddNextHigh(table,y);\n        y = cuddZddNextHigh(table,y);\n    }\n    table-\u003esubtableZ[y].next = xtop; /* y is bottom of its group, join */\n                                    /* to its top */\n    x = cuddZddNextHigh(table,y);\n    newxtop = x;\n    for (i = 0; i \u003c xsize - 1; i++) {\n        table-\u003esubtableZ[x].next = cuddZddNextHigh(table,x);\n        x = cuddZddNextHigh(table,x);\n    }\n    table-\u003esubtableZ[x].next = newxtop; /* x is bottom of its group, join */\n                                    /* to its top */\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupMoveBackward:\\n\");\n#endif\n\n    return(1);\n\n}",
+      "Draft": "func zddGroupMoveBackward(table *DdManager, x int32, y int32) int32 {\n    var size int32;\n    var i, j, xtop, xbot, xsize, ytop, ybot, ysize, newxtop int32;\n\n\n#ifdef DD_DEBUG\n    /* We assume that x \u003c y */\n    assert(x \u003c y);\n#endif\n\n    /* Find top, bottom, and size for the two groups. */\n    xbot = x;\n    xtop = table.subtableZ[x].next;\n    xsize = xbot - xtop + 1;\n    ybot = y;\n    for uint32( ybot) \u003c table.subtableZ[ybot].next {\n        ybot = table.subtableZ[ybot].next;\n    }\n    ytop = y;\n    ysize = ybot - ytop + 1;\n\n    /* Sift the variables of the second group up through the first group */\n    for i = 1; i \u003c= ysize; i++ {\n        for j = 1; j \u003c= xsize; j++ {\n            size = cuddZddSwapInPlace(table,x,y);\n            if size == 0 {\n                return(0); }\n            y = x;\n            x = cuddZddNextLow(table,y);\n        }\n        y = ytop + i;\n        x = cuddZddNextLow(table,y);\n    }\n\n    /* fix groups */\n    y = xtop;\n    for i = 0; i \u003c ysize - 1; i++ {\n        table.subtableZ[y].next = cuddZddNextHigh(table,y);\n        y = cuddZddNextHigh(table,y);\n    }\n    table.subtableZ[y].next = xtop; /* y is bottom of its group, join */\n                                    /* to its top */\n    x = cuddZddNextHigh(table,y);\n    newxtop = x;\n    for i = 0; i \u003c xsize - 1; i++ {\n        table.subtableZ[x].next = cuddZddNextHigh(table,x);\n        x = cuddZddNextHigh(table,x);\n    }\n    table.subtableZ[x].next = newxtop; /* x is bottom of its group, join */\n                                    /* to its top */\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupMoveBackward:\\n\");\n#endif\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "zddGroupSiftingBackward",
+      "Start": 40420,
+      "End": 41412,
+      "BodyStart": 40506,
+      "Original": "static int\nzddGroupSiftingBackward(\n  DdManager * table,\n  Move * moves,\n  int  size)\n{\n    Move *move;\n    int  res;\n\n\n    for (move = moves; move != NULL; move = move-\u003enext) {\n        if (move-\u003esize \u003c size) {\n            size = move-\u003esize;\n        }\n    }\n\n    for (move = moves; move != NULL; move = move-\u003enext) {\n        if (move-\u003esize == size) return(1);\n        if ((table-\u003esubtableZ[move-\u003ex].next == move-\u003ex) \u0026\u0026\n        (table-\u003esubtableZ[move-\u003ey].next == move-\u003ey)) {\n            res = cuddZddSwapInPlace(table,(int)move-\u003ex,(int)move-\u003ey);\n            if (!res) return(0);\n#ifdef DD_DEBUG\n            if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSiftingBackward:\\n\");\n            assert(table-\u003esubtableZ[move-\u003ex].next == move-\u003ex);\n            assert(table-\u003esubtableZ[move-\u003ey].next == move-\u003ey);\n#endif\n        } else { /* Group move necessary */\n            res = zddGroupMoveBackward(table,(int)move-\u003ex,(int)move-\u003ey);\n            if (!res) return(0);\n        }\n    }\n\n    return(1);\n\n}",
+      "Draft": "func zddGroupSiftingBackward(table *DdManager, moves *Move, size int32) int32 {\n    var move *Move;\n    var res int32;\n\n\n    for move = moves; move != nil; move = move.next {\n        if move.size \u003c size {\n            size = move.size;\n        }\n    }\n\n    for move = moves; move != nil; move = move.next {\n        if move.size == size { return(1); }\n        if (table.subtableZ[move.x].next == move.x) \u0026\u0026\n        (table.subtableZ[move.y].next == move.y) {\n            res = cuddZddSwapInPlace(table,int32(move.x),int32(move.y));\n            if !(res != 0) { return(0); }\n#ifdef DD_DEBUG\n            if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSiftingBackward:\\n\");\n            assert(table-\u003esubtableZ[move-\u003ex].next == move-\u003ex);\n            assert(table-\u003esubtableZ[move-\u003ey].next == move-\u003ey);\n#endif\n        } else { /* Group move necessary */\n            res = zddGroupMoveBackward(table,int32(move.x),int32(move.y));\n            if !(res != 0) { return(0); }\n        }\n    }\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "zddMergeGroups",
+      "Start": 41787,
+      "End": 42769,
+      "BodyStart": 41883,
+      "Original": "static void\nzddMergeGroups(\n  DdManager * table,\n  MtrNode * treenode,\n  int  low,\n  int  high)\n{\n    int i;\n    MtrNode *auxnode;\n    int saveindex;\n    int newindex;\n\n    /* Merge all variables from low to high in one group, unless\n    ** this is the topmost group. In such a case we do not merge lest\n    ** we lose the symmetry information. */\n    if (treenode != table-\u003etreeZ) {\n        for (i = low; i \u003c high; i++)\n            table-\u003esubtableZ[i].next = i+1;\n        table-\u003esubtableZ[high].next = low;\n    }\n\n    /* Adjust the index fields of the tree nodes. If a node is the\n    ** first child of its parent, then the parent may also need adjustment. */\n    saveindex = treenode-\u003eindex;\n    newindex = table-\u003einvpermZ[low];\n    auxnode = treenode;\n    do {\n        auxnode-\u003eindex = newindex;\n        if (auxnode-\u003eparent == NULL ||\n                (int) auxnode-\u003eparent-\u003eindex != saveindex)\n            break;\n        auxnode = auxnode-\u003eparent;\n    } while (1);\n    return;\n\n}",
+      "Draft": "func zddMergeGroups(table *DdManager, treenode *MtrNode, low int32, high int32) {\n    var i int32;\n    var auxnode *MtrNode;\n    var saveindex int32;\n    var newindex int32;\n\n    /* Merge all variables from low to high in one group, unless\n    ** this is the topmost group. In such a case we do not merge lest\n    ** we lose the symmetry information. */\n    if treenode != table.treeZ {\n        for i = low; i \u003c high; i++ {\n            table.subtableZ[i].next = i+1;\n        }\n        table.subtableZ[high].next = low;\n    }\n\n    /* Adjust the index fields of the tree nodes. If a node is the\n    ** first child of its parent, then the parent may also need adjustment. */\n    saveindex = treenode.index;\n    newindex = table.invpermZ[low];\n    auxnode = treenode;\n    for {\n        auxnode.index = newindex;\n        if auxnode.parent == nil ||\n                int32( auxnode.parent.index) != saveindex {\n            break; }\n        auxnode = auxnode.parent;\n    \nif !(true) { break }\n} \n    return;\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::mechanical::do::14612",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 16449,
+      "End": 16451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::mechanical::do::15453",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 17310,
+      "End": 17312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::mechanical::sizeof::21307",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23233,
+      "End": 23239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::mechanical::do::22372",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 24468,
+      "End": 24470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::mechanical::do::40258",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 42546,
+      "End": 42548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::21279",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23205,
+      "End": 23213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::27026",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29379,
+      "End": 29379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::27060",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29379,
+      "End": 29379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::27130",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29379,
+      "End": 29379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::27339",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29547,
+      "End": 29547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::27373",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29547,
+      "End": 29547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::27443",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29547,
+      "End": 29547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::28906",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31091,
+      "End": 31099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::29942",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32114,
+      "End": 32114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::29977",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32114,
+      "End": 32114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::30048",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32114,
+      "End": 32114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::31487",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33634,
+      "End": 33642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::32592",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34728,
+      "End": 34728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::32627",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34728,
+      "End": 34728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::32698",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34728,
+      "End": 34728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::35289",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37559,
+      "End": 37567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::35694",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37912,
+      "End": 37912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::35729",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37912,
+      "End": 37912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::pointer-cast::35800",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37912,
+      "End": 37912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::Cudd_MakeZddTreeNode",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_MakeZddTreeNode",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 7040,
+      "End": 8639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::cuddZddTreeSifting",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddTreeSifting",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 9445,
+      "End": 12743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::zddTreeSiftingAux",
+      "Category": "semantic-review",
+      "Symbol": "zddTreeSiftingAux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13405,
+      "End": 14120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::zddReorderChildren",
+      "Category": "semantic-review",
+      "Symbol": "zddReorderChildren",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15631,
+      "End": 18053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::zddFindNodeHiLo",
+      "Category": "semantic-review",
+      "Symbol": "zddFindNodeHiLo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18642,
+      "End": 20716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::zddUniqueCompareGroup",
+      "Category": "semantic-review",
+      "Symbol": "zddUniqueCompareGroup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21197,
+      "End": 21398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::ternary::zddGroupSifting",
+      "Category": "ternary-review",
+      "Symbol": "zddGroupSifting",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 22010,
+      "End": 24986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::zddGroupSifting",
+      "Category": "semantic-review",
+      "Symbol": "zddGroupSifting",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22010,
+      "End": 24986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::zddGroupSiftingAux",
+      "Category": "semantic-review",
+      "Symbol": "zddGroupSiftingAux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25722,
+      "End": 29624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::zddGroupSiftingUp",
+      "Category": "semantic-review",
+      "Symbol": "zddGroupSiftingUp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30359,
+      "End": 32192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::zddGroupSiftingDown",
+      "Category": "semantic-review",
+      "Symbol": "zddGroupSiftingDown",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32683,
+      "End": 34807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::zddGroupMove",
+      "Category": "semantic-review",
+      "Symbol": "zddGroupMove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35216,
+      "End": 37990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::zddGroupMoveBackward",
+      "Category": "semantic-review",
+      "Symbol": "zddGroupMoveBackward",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 38338,
+      "End": 39984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::zddGroupSiftingBackward",
+      "Category": "semantic-review",
+      "Symbol": "zddGroupSiftingBackward",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 40420,
+      "End": 41412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::zddMergeGroups",
+      "Category": "semantic-review",
+      "Symbol": "zddMergeGroups",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 41787,
+      "End": 42769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 42824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3841,
+      "End": 3954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4020,
+      "End": 4184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4185,
+      "End": 4333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4994,
+      "End": 5091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 10009,
+      "End": 10161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11341,
+      "End": 11665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 12000,
+      "End": 12668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13547,
+      "End": 13602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 14154,
+      "End": 15023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16043,
+      "End": 16105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16634,
+      "End": 16730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17501,
+      "End": 17597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17941,
+      "End": 18029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::13",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 20563,
+      "End": 20700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::14",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 22237,
+      "End": 22289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::15",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 23698,
+      "End": 23757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::16",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 23758,
+      "End": 23873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::17",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 23984,
+      "End": 24286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::18",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 24635,
+      "End": 24724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::19",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 25914,
+      "End": 26109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::20",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 26199,
+      "End": 26315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::21",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 26662,
+      "End": 26740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::22",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 26861,
+      "End": 26976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::23",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 27329,
+      "End": 27407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::24",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 27921,
+      "End": 28046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::25",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 28268,
+      "End": 28346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::26",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 28833,
+      "End": 28950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::27",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 29175,
+      "End": 29253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::28",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 30866,
+      "End": 31012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::29",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 31371,
+      "End": 31486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::30",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 33375,
+      "End": 33521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::31",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 33917,
+      "End": 34034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::32",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 35414,
+      "End": 35496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::33",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 35498,
+      "End": 35570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::34",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 35868,
+      "End": 35962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::35",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 36217,
+      "End": 36334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::36",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 36504,
+      "End": 36740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::37",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 37435,
+      "End": 37519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::38",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 38483,
+      "End": 38555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::39",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 39873,
+      "End": 39965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::conditional::40",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 40998,
+      "End": 41227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::macro-inline::22424",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22424,
+      "End": 22444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::macro-inline::22569",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22569,
+      "End": 22589
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::macro-inline::22717",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22717,
+      "End": 22737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::macro-inline::24746",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24746,
+      "End": 24762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::macro-inline::24768",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24768,
+      "End": 24781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::macro-inline::24787",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24787,
+      "End": 24802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::macro-inline::24870",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24870,
+      "End": 24885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::macro-inline::24911",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24911,
+      "End": 24924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddGroup.c::macro-inline::24950",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24950,
+      "End": 24966
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddZddGroup.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions for ZDD group sifting.]\n\n  Description [External procedures included in this file:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_MakeZddTreeNode()\n                \u003c/ul\u003e\n        Internal procedures included in this file:\n                \u003cul\u003e\n                \u003cli\u003e cuddZddTreeSifting()\n                \u003c/ul\u003e\n        Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e zddTreeSiftingAux()\n                \u003cli\u003e zddCountInternalMtrNodes()\n                \u003cli\u003e zddReorderChildren()\n                \u003cli\u003e zddFindNodeHiLo()\n                \u003cli\u003e zddUniqueCompareGroup()\n                \u003cli\u003e zddGroupSifting()\n                \u003cli\u003e zddGroupSiftingAux()\n                \u003cli\u003e zddGroupSiftingUp()\n                \u003cli\u003e zddGroupSiftingDown()\n                \u003cli\u003e zddGroupMove()\n                \u003cli\u003e zddGroupMoveBackward()\n                \u003cli\u003e zddGroupSiftingBackward()\n                \u003cli\u003e zddMergeGroups()\n                \u003c/ul\u003e]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddZddGroup.c,v 1.20 2009/02/19 16:25:36 fabio Exp $\";\n#endif\n\nvar entry *int32;\nvar zddTotalNumberSwapping int32;\n#ifdef DD_STATS\nstatic  int     extsymmcalls;\nstatic  int     extsymm;\nstatic  int     secdiffcalls;\nstatic  int     secdiff;\nstatic  int     secdiffmisfire;\n#endif\n#ifdef DD_DEBUG\nstatic  int     pr = 0; /* flag to enable printing while debugging */\n                        /* by depositing a 1 into it */\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static int zddTreeSiftingAux (DdManager *table, MtrNode *treenode, Cudd_ReorderingType method);\n\n#ifdef DD_STATS\nstatic int zddCountInternalMtrNodes (DdManager *table, MtrNode *treenode);\n#endif\n// static int zddReorderChildren (DdManager *table, MtrNode *treenode, Cudd_ReorderingType method);\n\n// static void zddFindNodeHiLo (DdManager *table, MtrNode *treenode, int *lower, int *upper);\n\n// static int zddUniqueCompareGroup (int *ptrX, int *ptrY);\n\n// static int zddGroupSifting (DdManager *table, int lower, int upper);\n\n// static int zddGroupSiftingAux (DdManager *table, int x, int xLow, int xHigh);\n\n// static int zddGroupSiftingUp (DdManager *table, int y, int xLow, Move **moves);\n\n// static int zddGroupSiftingDown (DdManager *table, int x, int xHigh, Move **moves);\n\n// static int zddGroupMove (DdManager *table, int x, int y, Move **moves);\n\n// static int zddGroupMoveBackward (DdManager *table, int x, int y);\n\n// static int zddGroupSiftingBackward (DdManager *table, Move *moves, int size);\n\n// static void zddMergeGroups (DdManager *table, MtrNode *treenode, int low, int high);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Creates a new ZDD variable group.]\n\n  Description [Creates a new ZDD variable group. The group starts at\n  variable and contains size variables. The parameter low is the index\n  of the first variable. If the variable already exists, its current\n  position in the order is known to the manager. If the variable does\n  not exist yet, the position is assumed to be the same as the index.\n  The group tree is created if it does not exist yet.\n  Returns a pointer to the group if successful; NULL otherwise.]\n\n  SideEffects [The ZDD variable tree is changed.]\n\n  SeeAlso     [Cudd_MakeTreeNode]\n\n******************************************************************************/\nMtrNode *\nCudd_MakeZddTreeNode(\n  DdManager * dd /* manager */,\n  unsigned int  low /* index of the first group variable */,\n  unsigned int  size /* number of variables in the group */,\n  unsigned int  type /* MTR_DEFAULT or MTR_FIXED */)\n{\n    var group *MtrNode;\n    var tree *MtrNode;\n    unsigned int level;\n\n    /* If the variable does not exist yet, the position is assumed to be\n    ** the same as the index. Therefore, applications that rely on\n    ** Cudd_bddNewVarAtLevel or Cudd_addNewVarAtLevel to create new\n    ** variables have to create the variables before they group them.\n    */\n    if low \u003c (unsigned int) dd.sizeZ {\n        level = dd.permZ[low];\n    } else {\n        level = low;\n    }\n\n    if level + size - 1\u003e int32( MTR_MAXHIGH) {\n        return(nil); }\n\n    /* If the tree does not exist yet, create it. */\n    tree = dd.treeZ;\n    if tree == nil {\n        dd.treeZ = tree = Mtr_InitGroupTree(0, dd.sizeZ);\n        if tree == nil {\n            return(nil); }\n        tree.index = dd.invpermZ[0];\n    }\n\n    /* Extend the upper bound of the tree if necessary. This allows the\n    ** application to create groups even before the variables are created.\n    */\n    // inlining of macro ddMax\n    \n    if (level + size) \u003e (tree.size) {\n        tree.size = (level + size);\n    } else {\n        tree.size = (tree.size);\n    }\n\n    /* Create the group. */\n    group = Mtr_MakeGroup(tree, level, size, type);\n    if group == nil {\n        return(nil); }\n\n    /* Initialize the index field to the index of the variable currently\n    ** in position low. This field will be updated by the reordering\n    ** procedure to provide a handle to the group once it has been moved.\n    */\n    group.index = (MtrHalfWord) low;\n\n    return(group);\n\n} /* end of Cudd_MakeZddTreeNode */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Tree sifting algorithm for ZDDs.]\n\n  Description [Tree sifting algorithm for ZDDs. Assumes that a tree\n  representing a group hierarchy is passed as a parameter. It then\n  reorders each group in postorder fashion by calling\n  zddTreeSiftingAux.  Assumes that no dead nodes are present.  Returns\n  1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nint\ncuddZddTreeSifting(\n  DdManager * table /* DD table */,\n  Cudd_ReorderingType method /* reordering method for the groups of leaves */)\n{\n    var i int32;\n    var nvars int32;\n    var result int32;\n    var tempTree int32;\n\n    /* If no tree is provided we create a temporary one in which all\n    ** variables are in a single group. After reordering this tree is\n    ** destroyed.\n    */\n    tempTree = table.treeZ == nil;\n    if tempTree != 0 {\n        table.treeZ = Mtr_InitGroupTree(0,table.sizeZ);\n        table.treeZ.index = table.invpermZ[0];\n    }\n    nvars = table.sizeZ;\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0 \u0026\u0026 !tempTree)\n        (void) fprintf(table-\u003eout,\"cuddZddTreeSifting:\");\n    Mtr_PrintGroups(table-\u003etreeZ,pr \u003c= 0);\n#endif\n     \n                         \n                                      \n                                        \n                                        \n                                                  \n                                           \n                                             \n                                                                   \n         \n                                        \n                                           \n                                             \n                                                                \n         \n                                          \n                                        \n                                                   \n                                            \n                                             \n                                                                    \n         \n                                        \n                                            \n                                             \n                                                                 \n         \n                                        \n     \n                                \n      \n#ifdef DD_STATS\n    extsymmcalls = 0;\n    extsymm = 0;\n    secdiffcalls = 0;\n    secdiff = 0;\n    secdiffmisfire = 0;\n\n    (void) fprintf(table-\u003eout,\"\\n\");\n    if (!tempTree)\n        (void) fprintf(table-\u003eout,\"#:IM_NODES  %8d: group tree nodes\\n\",\n                       zddCountInternalMtrNodes(table,table-\u003etreeZ));\n#endif\n\n    /* Initialize the group of each subtable to itself. Initially\n    ** there are no groups. Groups are created according to the tree\n    ** structure in postorder fashion.\n    */\n    for i = 0; i \u003c nvars; i++ {\n        table.subtableZ[i].next = i;\n    }\n\n    /* Reorder. */\n    result = zddTreeSiftingAux(table, table.treeZ, method);\n\n#ifdef DD_STATS         /* print stats */\n    if (!tempTree \u0026\u0026 method == CUDD_REORDER_GROUP_SIFT \u0026\u0026\n        (table-\u003egroupcheck == CUDD_GROUP_CHECK7 ||\n         table-\u003egroupcheck == CUDD_GROUP_CHECK5)) {\n        (void) fprintf(table-\u003eout,\"\\nextsymmcalls = %d\\n\",extsymmcalls);\n        (void) fprintf(table-\u003eout,\"extsymm = %d\",extsymm);\n    }\n    if (!tempTree \u0026\u0026 method == CUDD_REORDER_GROUP_SIFT \u0026\u0026\n        table-\u003egroupcheck == CUDD_GROUP_CHECK7) {\n        (void) fprintf(table-\u003eout,\"\\nsecdiffcalls = %d\\n\",secdiffcalls);\n        (void) fprintf(table-\u003eout,\"secdiff = %d\\n\",secdiff);\n        (void) fprintf(table-\u003eout,\"secdiffmisfire = %d\",secdiffmisfire);\n    }\n#endif\n\n    if tempTree != 0 {\n        Cudd_FreeZddTree(table); }\n    return(result);\n\n} /* end of cuddZddTreeSifting */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Visits the group tree and reorders each group.]\n\n  Description [Recursively visits the group tree and reorders each\n  group in postorder fashion.  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc zddTreeSiftingAux(table *DdManager, treenode *MtrNode, method Cudd_ReorderingType) int32 {\n    var auxnode *MtrNode;\n    var res int32;\n\n#ifdef DD_DEBUG\n    Mtr_PrintGroups(treenode,1);\n#endif\n\n    auxnode = treenode;\n    for auxnode != nil {\n        if auxnode.child != nil {\n            if !(zddTreeSiftingAux(table, auxnode.child, method) != 0) {\n                return(0); }\n            res = zddReorderChildren(table, auxnode, CUDD_REORDER_GROUP_SIFT);\n            if res == 0 {\n                return(0); }\n        } else if auxnode.size \u003e 1 {\n            if !(zddReorderChildren(table, auxnode, method) != 0) {\n                return(0); }\n        }\n        auxnode = auxnode.younger;\n    }\n\n    return(1);\n\n} /* end of zddTreeSiftingAux */\n\n\n#ifdef DD_STATS\n/**Function********************************************************************\n\n  Synopsis    [Counts the number of internal nodes of the group tree.]\n\n  Description [Counts the number of internal nodes of the group tree.\n  Returns the count.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic int\nzddCountInternalMtrNodes(\n  DdManager * table,\n  MtrNode * treenode)\n{\n    MtrNode *auxnode;\n    int     count,nodeCount;\n\n\n    nodeCount = 0;\n    auxnode = treenode;\n    while (auxnode != NULL) {\n        if (!(MTR_TEST(auxnode,MTR_TERMINAL))) {\n            nodeCount++;\n            count = zddCountInternalMtrNodes(table,auxnode-\u003echild);\n            nodeCount += count;\n        }\n        auxnode = auxnode-\u003eyounger;\n    }\n\n    return(nodeCount);\n\n} /* end of zddCountInternalMtrNodes */\n#endif\n\n\n/**Function********************************************************************\n\n  Synopsis    [Reorders the children of a group tree node according to\n  the options.]\n\n  Description [Reorders the children of a group tree node according to\n  the options. After reordering puts all the variables in the group\n  and/or its descendents in a single group. This allows hierarchical\n  reordering.  If the variables in the group do not exist yet, simply\n  does nothing. Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc zddReorderChildren(table *DdManager, treenode *MtrNode, method Cudd_ReorderingType) int32 {\n    var lower int32;\n    var upper int32  = -1;\n    var result int32;\n    unsigned int initialSize;\n\n    zddFindNodeHiLo(table,treenode,\u0026lower,\u0026upper);\n    /* If upper == -1 these variables do not exist yet. */\n    if upper == -1 {\n        return(1); }\n\n    if treenode.flags == MTR_FIXED {\n        result = 1;\n    } else {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\" \");\n#endif\n        switch method {\n        case CUDD_REORDER_RANDOM,\n         CUDD_REORDER_RANDOM_PIVOT:\n            result = cuddZddSwapping(table,lower,upper,method);\n            break;\n        case CUDD_REORDER_SIFT:\n            result = cuddZddSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_SIFT_CONVERGE:\n            for {\n                initialSize = table.keysZ;\n                result = cuddZddSifting(table,lower,upper);\n                if initialSize \u003c= table.keysZ {\n                    break; }\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            \nif !(result != 0) { break }\n} \n            break;\n        case CUDD_REORDER_SYMM_SIFT:\n            result = cuddZddSymmSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_SYMM_SIFT_CONV:\n            result = cuddZddSymmSiftingConv(table,lower,upper);\n            break;\n        case CUDD_REORDER_GROUP_SIFT:\n            result = zddGroupSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_LINEAR:\n            result = cuddZddLinearSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_LINEAR_CONVERGE:\n            for {\n                initialSize = table.keysZ;\n                result = cuddZddLinearSifting(table,lower,upper);\n                if initialSize \u003c= table.keysZ {\n                    break; }\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            \nif !(result != 0) { break }\n} \n            break;\n        default:\n            return(0);\n        }\n    }\n\n    /* Create a single group for all the variables that were sifted,\n    ** so that they will be treated as a single block by successive\n    ** invocations of zddGroupSifting.\n    */\n    zddMergeGroups(table,treenode,lower,upper);\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddReorderChildren:\");\n#endif\n\n    return(result);\n\n} /* end of zddReorderChildren */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Finds the lower and upper bounds of the group represented\n  by treenode.]\n\n  Description [Finds the lower and upper bounds of the group represented\n  by treenode.  The high and low fields of treenode are indices.  From\n  those we need to derive the current positions, and find maximum and\n  minimum.]\n\n  SideEffects [The bounds are returned as side effects.]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc zddFindNodeHiLo(table *DdManager, treenode *MtrNode, lower *int32, upper *int32) {\n    var low int32;\n    var high int32;\n\n    /* Check whether no variables in this group already exist.\n    ** If so, return immediately. The calling procedure will know from\n    ** the values of upper that no reordering is needed.\n    */\n    if int32( treenode.low) \u003e= table.sizeZ {\n        *lower = table.sizeZ;\n        *upper = -1;\n        return;\n    }\n\n    *lower = low = (unsigned int) table.permZ[treenode.index];\n    high = int32( (low + treenode.size - 1));\n\n    if high \u003e= table.sizeZ {\n        /* This is the case of a partially existing group. The aim is to\n        ** reorder as many variables as safely possible.  If the tree\n        ** node is terminal, we just reorder the subset of the group\n        ** that is currently in existence.  If the group has\n        ** subgroups, then we only reorder those subgroups that are\n        ** fully instantiated.  This way we avoid breaking up a group.\n        */\n        var auxnode *MtrNode  = treenode.child;\n        if auxnode == nil {\n            *upper = (unsigned int) table.sizeZ - 1;\n        } else {\n            /* Search the subgroup that strands the table-\u003esizeZ line.\n            ** If the first group starts at 0 and goes past table-\u003esizeZ\n            ** upper will get -1, thus correctly signaling that no reordering\n            ** should take place.\n            */\n            for auxnode != nil {\n                var thisLower int32  = table.permZ[auxnode.low];\n                var thisUpper int32  = thisLower + auxnode.size - 1;\n                if thisUpper \u003e= table.sizeZ \u0026\u0026 thisLower \u003c table.sizeZ {\n                    *upper = (unsigned int) thisLower - 1; }\n                auxnode = auxnode.younger;\n            }\n        }\n    } else {\n        /* Normal case: All the variables of the group exist. */\n        *upper = (unsigned int) high;\n    }\n\n#ifdef DD_DEBUG\n    /* Make sure that all variables in group are contiguous. */\n    assert(treenode-\u003esize \u003e= *upper - *lower + 1);\n#endif\n\n    return;\n\n} /* end of zddFindNodeHiLo */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Comparison function used by qsort.]\n\n  Description [Comparison function used by qsort to order the variables\n  according to the number of keys in the subtables.  Returns the\n  difference in number of keys between the two variables being\n  compared.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc zddUniqueCompareGroup(ptrX *int32, ptrY *int32) int32 {\n     \n                                       \n                                  \n     \n      \n    return(entry[*ptrY] - entry[*ptrX]);\n\n} /* end of zddUniqueCompareGroup */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Sifts from treenode-\u003elow to treenode-\u003ehigh.]\n\n  Description [Sifts from treenode-\u003elow to treenode-\u003ehigh. If\n  croupcheck == CUDD_GROUP_CHECK7, it checks for group creation at the\n  end of the initial sifting. If a group is created, it is then sifted\n  again. After sifting one variable, the group that contains it is\n  dissolved.  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc zddGroupSifting(table *DdManager, lower int32, upper int32) int32 {\n    var var *int32;\n    var i, j, x, xInit int32;\n    var nvars int32;\n    var classes int32;\n    var result int32;\n    var sifted *int32;\n#ifdef DD_STATS\n    unsigned    previousSize;\n#endif\n    var xindex int32;\n\n    nvars = table.sizeZ;\n\n    /* Order variables to sift. */\n    entry = nil;\n    sifted = nil;\n    var = ABC_ALLOC(int,nvars);\n    if var == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        goto zddGroupSiftingOutOfMem;\n    }\n    entry = ABC_ALLOC(int,nvars);\n    if entry == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        goto zddGroupSiftingOutOfMem;\n    }\n    sifted = ABC_ALLOC(int,nvars);\n    if sifted == nil {\n        table.errorCode = CUDD_MEMORY_OUT;\n        goto zddGroupSiftingOutOfMem;\n    }\n\n    /* Here we consider only one representative for each group. */\n    for i, classes = 0, 0; i \u003c nvars; i++ {\n        sifted[i] = 0;\n        x = table.permZ[i];\n        if uint32( x) \u003e= table.subtableZ[x].next {\n            entry[i] = table.subtableZ[x].keys;\n            var[classes] = i;\n            classes++;\n        }\n    }\n\n    qsort((void *)var,(size_t)classes,sizeof(int),(DD_QSFP)zddUniqueCompareGroup);\n\n    /* Now sift. */\n    // inlining of macro ddMin\n    for i = 0; i \u003c (((classes) \u003c (table.siftMaxVar)) ? (classes) : (table.siftMaxVar)); i++ {\n        if zddTotalNumberSwapping \u003e= table.siftMaxSwap {\n            break; }\n        xindex = var[i];\n        if sifted[xindex] == 1 { /* variable already sifted as part of group */\n            continue; }\n        x = table.permZ[xindex]; /* find current level of this variable */\n        if x \u003c lower || x \u003e upper {\n            continue; }\n#ifdef DD_STATS\n        previousSize = table-\u003ekeysZ;\n#endif\n#ifdef DD_DEBUG\n        /* x is bottom of group */\n        assert((unsigned) x \u003e= table-\u003esubtableZ[x].next);\n#endif\n        result = zddGroupSiftingAux(table,x,lower,upper);\n        if !(result != 0) { goto zddGroupSiftingOutOfMem; }\n\n#ifdef DD_STATS\n        if (table-\u003ekeysZ \u003c previousSize) {\n            (void) fprintf(table-\u003eout,\"-\");\n        } else if (table-\u003ekeysZ \u003e previousSize) {\n            (void) fprintf(table-\u003eout,\"+\");\n        } else {\n            (void) fprintf(table-\u003eout,\"=\");\n        }\n        fflush(table-\u003eout);\n#endif\n\n        /* Mark variables in the group just sifted. */\n        x = table.permZ[xindex];\n        if uint32( x) != table.subtableZ[x].next {\n            xInit = x;\n            for {\n                j = table.invpermZ[x];\n                sifted[j] = 1;\n                x = table.subtableZ[x].next;\n            \nif !(x != xInit) { break }\n} \n        }\n\n#ifdef DD_DEBUG\n        if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSifting:\");\n#endif\n    } /* for */\n\n    ABC_FREE(sifted);\n    ABC_FREE(var);\n    ABC_FREE(entry);\n\n    return(1);\n\nzddGroupSiftingOutOfMem:\n    if entry != nil {  ABC_FREE(entry); }\n    if var != nil {    ABC_FREE(var); }\n    if sifted != nil { ABC_FREE(sifted); }\n\n    return(0);\n\n} /* end of zddGroupSifting */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Sifts one variable up and down until it has taken all\n  positions. Checks for aggregation.]\n\n  Description [Sifts one variable up and down until it has taken all\n  positions. Checks for aggregation. There may be at most two sweeps,\n  even if the group grows.  Assumes that x is either an isolated\n  variable, or it is the bottom of a group. All groups may not have\n  been found. The variable being moved is returned to the best position\n  seen during sifting.  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc zddGroupSiftingAux(table *DdManager, x int32, xLow int32, xHigh int32) int32 {\n    var move *Move;\n    var moves *Move;        /* list of moves */\n    var initialSize int32;\n    var result int32;\n\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSiftingAux from %d to %d\\n\",xLow,xHigh);\n    assert((unsigned) x \u003e= table-\u003esubtableZ[x].next); /* x is bottom of group */\n#endif\n\n    initialSize = table.keysZ;\n    moves = nil;\n\n    if x == xLow { /* Sift down */\n#ifdef DD_DEBUG\n        /* x must be a singleton */\n        assert((unsigned) x == table-\u003esubtableZ[x].next);\n#endif\n        if x == xHigh { return(1); }      /* just one variable */\n\n        if !(zddGroupSiftingDown(table,x,xHigh,\u0026moves) != 0) {\n            goto zddGroupSiftingAuxOutOfMem; }\n        /* at this point x == xHigh, unless early term */\n\n        /* move backward and stop at best position */\n        result = zddGroupSiftingBackward(table,moves,initialSize);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeysZ \u003c= (unsigned) initialSize);\n#endif\n        if !(result != 0) { goto zddGroupSiftingAuxOutOfMem; }\n\n    } else if cuddZddNextHigh(table,x) \u003e xHigh { /* Sift up */\n#ifdef DD_DEBUG\n        /* x is bottom of group */\n        assert((unsigned) x \u003e= table-\u003esubtableZ[x].next);\n#endif\n        /* Find top of x's group */\n        x = table.subtableZ[x].next;\n\n        if !(zddGroupSiftingUp(table,x,xLow,\u0026moves) != 0) {\n            goto zddGroupSiftingAuxOutOfMem; }\n        /* at this point x == xLow, unless early term */\n\n        /* move backward and stop at best position */\n        result = zddGroupSiftingBackward(table,moves,initialSize);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeysZ \u003c= (unsigned) initialSize);\n#endif\n        if !(result != 0) { goto zddGroupSiftingAuxOutOfMem; }\n\n    } else if x - xLow \u003e xHigh - x { /* must go down first: shorter */\n        if !(zddGroupSiftingDown(table,x,xHigh,\u0026moves) != 0) {\n            goto zddGroupSiftingAuxOutOfMem; }\n        /* at this point x == xHigh, unless early term */\n\n        /* Find top of group */\n        if moves != nil {\n            x = moves.y;\n        }\n        for uint32( x) \u003c table.subtableZ[x].next {\n            x = table.subtableZ[x].next;\n        }\n        x = table.subtableZ[x].next;\n#ifdef DD_DEBUG\n        /* x should be the top of a group */\n        assert((unsigned) x \u003c= table-\u003esubtableZ[x].next);\n#endif\n\n        if !(zddGroupSiftingUp(table,x,xLow,\u0026moves) != 0) {\n            goto zddGroupSiftingAuxOutOfMem; }\n\n        /* move backward and stop at best position */\n        result = zddGroupSiftingBackward(table,moves,initialSize);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeysZ \u003c= (unsigned) initialSize);\n#endif\n        if !(result != 0) { goto zddGroupSiftingAuxOutOfMem; }\n\n    } else { /* moving up first: shorter */\n        /* Find top of x's group */\n        x = table.subtableZ[x].next;\n\n        if !(zddGroupSiftingUp(table,x,xLow,\u0026moves) != 0) {\n            goto zddGroupSiftingAuxOutOfMem; }\n        /* at this point x == xHigh, unless early term */\n\n        if moves != nil {\n            x = moves.x;\n        }\n        for uint32( x) \u003c table.subtableZ[x].next {\n            x = table.subtableZ[x].next;\n        }\n#ifdef DD_DEBUG\n        /* x is bottom of a group */\n        assert((unsigned) x \u003e= table-\u003esubtableZ[x].next);\n#endif\n\n        if !(zddGroupSiftingDown(table,x,xHigh,\u0026moves) != 0) {\n            goto zddGroupSiftingAuxOutOfMem; }\n\n        /* move backward and stop at best position */\n        result = zddGroupSiftingBackward(table,moves,initialSize);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeysZ \u003c= (unsigned) initialSize);\n#endif\n        if !(result != 0) { goto zddGroupSiftingAuxOutOfMem; }\n    }\n\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n\n    return(1);\n\nzddGroupSiftingAuxOutOfMem:\n    for moves != nil {\n        move = moves.next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(moves)).ref = 0;     ((DdNode *)(moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(moves);;\n        moves = move;\n    }\n\n    return(0);\n\n} /* end of zddGroupSiftingAux */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Sifts up a variable until either it reaches position xLow\n  or the size of the DD heap increases too much.]\n\n  Description [Sifts up a variable until either it reaches position\n  xLow or the size of the DD heap increases too much. Assumes that y is\n  the top of a group (or a singleton).  Checks y for aggregation to the\n  adjacent variables. Records all the moves that are appended to the\n  list of moves received as input and returned as a side effect.\n  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc zddGroupSiftingUp(table *DdManager, y int32, xLow int32, moves **Move) int32 {\n    var move *Move;\n    var x int32;\n    var size int32;\n    var gxtop int32;\n    var limitSize int32;\n\n    limitSize = table.keysZ;\n\n    x = cuddZddNextLow(table,y);\n    for x \u003e= xLow {\n        gxtop = table.subtableZ[x].next;\n        if table.subtableZ[x].next == uint32( x) \u0026\u0026\n            table.subtableZ[y].next == uint32( y) {\n            /* x and y are self groups */\n            size = cuddZddSwapInPlace(table,x,y);\n#ifdef DD_DEBUG\n            assert(table-\u003esubtableZ[x].next == (unsigned) x);\n            assert(table-\u003esubtableZ[y].next == (unsigned) y);\n#endif\n            if size == 0 { goto zddGroupSiftingUpOutOfMem; }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if move == nil { goto zddGroupSiftingUpOutOfMem; }\n            move.x = x;\n            move.y = y;\n            move.flags = MTR_DEFAULT;\n            move.size = size;\n            move.next = *moves;\n            *moves = move;\n\n#ifdef DD_DEBUG\n            if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSiftingUp (2 single groups):\\n\");\n#endif\n            if float64( size) \u003e float64( limitSize) * table.maxGrowth {\n                return(1); }\n            if size \u003c limitSize { limitSize = size; }\n        } else { /* group move */\n            size = zddGroupMove(table,x,y,moves);\n            if size == 0 { goto zddGroupSiftingUpOutOfMem; }\n            if float64( size) \u003e float64( limitSize) * table.maxGrowth {\n                return(1); }\n            if size \u003c limitSize { limitSize = size; }\n        }\n        y = gxtop;\n        x = cuddZddNextLow(table,y);\n    }\n\n    return(1);\n\nzddGroupSiftingUpOutOfMem:\n    for *moves != nil {\n        move = (*moves).next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(*moves)).ref = 0;     ((DdNode *)(*moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(*moves);;\n        *moves = move;\n    }\n    return(0);\n\n} /* end of zddGroupSiftingUp */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Sifts down a variable until it reaches position xHigh.]\n\n  Description [Sifts down a variable until it reaches position xHigh.\n  Assumes that x is the bottom of a group (or a singleton).  Records\n  all the moves.  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc zddGroupSiftingDown(table *DdManager, x int32, xHigh int32, moves **Move) int32 {\n    var move *Move;\n    var y int32;\n    var size int32;\n    var limitSize int32;\n    var gybot int32;\n\n\n    /* Initialize R */\n    limitSize = size = table.keysZ;\n    y = cuddZddNextHigh(table,x);\n    for y \u003c= xHigh {\n        /* Find bottom of y group. */\n        gybot = table.subtableZ[y].next;\n        for table.subtableZ[gybot].next != uint32( y) {\n            gybot = table.subtableZ[gybot].next;\n        }\n\n        if table.subtableZ[x].next == uint32( x) \u0026\u0026\n            table.subtableZ[y].next == uint32( y) {\n            /* x and y are self groups */\n            size = cuddZddSwapInPlace(table,x,y);\n#ifdef DD_DEBUG\n            assert(table-\u003esubtableZ[x].next == (unsigned) x);\n            assert(table-\u003esubtableZ[y].next == (unsigned) y);\n#endif\n            if size == 0 { goto zddGroupSiftingDownOutOfMem; }\n\n            /* Record move. */\n            move = (Move *) cuddDynamicAllocNode(table);\n            if move == nil { goto zddGroupSiftingDownOutOfMem; }\n            move.x = x;\n            move.y = y;\n            move.flags = MTR_DEFAULT;\n            move.size = size;\n            move.next = *moves;\n            *moves = move;\n\n#ifdef DD_DEBUG\n            if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSiftingDown (2 single groups):\\n\");\n#endif\n            if float64( size) \u003e float64( limitSize) * table.maxGrowth {\n                return(1); }\n            if size \u003c limitSize { limitSize = size; }\n            x = y;\n            y = cuddZddNextHigh(table,x);\n        } else { /* Group move */\n            size = zddGroupMove(table,x,y,moves);\n            if size == 0 { goto zddGroupSiftingDownOutOfMem; }\n            if float64( size) \u003e float64( limitSize) * table.maxGrowth {\n                return(1); }\n            if size \u003c limitSize { limitSize = size; }\n        }\n        x = gybot;\n        y = cuddZddNextHigh(table,x);\n    }\n\n    return(1);\n\nzddGroupSiftingDownOutOfMem:\n    for *moves != nil {\n        move = (*moves).next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(*moves)).ref = 0;     ((DdNode *)(*moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(*moves);;\n        *moves = move;\n    }\n\n    return(0);\n\n} /* end of zddGroupSiftingDown */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Swaps two groups and records the move.]\n\n  Description [Swaps two groups and records the move. Returns the\n  number of keys in the DD table in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc zddGroupMove(table *DdManager, x int32, y int32, moves **Move) int32 {\n    var move *Move;\n    var size int32;\n    var i, j, xtop, xbot, xsize, ytop, ybot, ysize, newxtop int32;\n    var swapx int32 = -1;\n    var swapy int32 = -1;\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n    int  initialSize,bestSize;\n#endif\n\n#ifdef DD_DEBUG\n    /* We assume that x \u003c y */\n    assert(x \u003c y);\n#endif\n    /* Find top, bottom, and size for the two groups. */\n    xbot = x;\n    xtop = table.subtableZ[x].next;\n    xsize = xbot - xtop + 1;\n    ybot = y;\n    for uint32( ybot) \u003c table.subtableZ[ybot].next {\n        ybot = table.subtableZ[ybot].next;\n    }\n    ytop = y;\n    ysize = ybot - ytop + 1;\n\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n    initialSize = bestSize = table-\u003ekeysZ;\n#endif\n    /* Sift the variables of the second group up through the first group */\n    for i = 1; i \u003c= ysize; i++ {\n        for j = 1; j \u003c= xsize; j++ {\n            size = cuddZddSwapInPlace(table,x,y);\n            if size == 0 { goto zddGroupMoveOutOfMem; }\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n            if (size \u003c bestSize)\n                bestSize = size;\n#endif\n            swapx = x; swapy = y;\n            y = x;\n            x = cuddZddNextLow(table,y);\n        }\n        y = ytop + i;\n        x = cuddZddNextLow(table,y);\n    }\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n    if ((bestSize \u003c initialSize) \u0026\u0026 (bestSize \u003c size))\n        (void) fprintf(table-\u003eout,\"Missed local minimum: initialSize:%d  bestSize:%d  finalSize:%d\\n\",initialSize,bestSize,size);\n#endif\n\n    /* fix groups */\n    y = xtop; /* ytop is now where xtop used to be */\n    for i = 0; i \u003c ysize - 1; i++ {\n        table.subtableZ[y].next = cuddZddNextHigh(table,y);\n        y = cuddZddNextHigh(table,y);\n    }\n    table.subtableZ[y].next = xtop; /* y is bottom of its group, join */\n                                    /* it to top of its group */\n    x = cuddZddNextHigh(table,y);\n    newxtop = x;\n    for i = 0; i \u003c xsize - 1; i++ {\n        table.subtableZ[x].next = cuddZddNextHigh(table,x);\n        x = cuddZddNextHigh(table,x);\n    }\n    table.subtableZ[x].next = newxtop; /* x is bottom of its group, join */\n                                    /* it to top of its group */\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupMove:\\n\");\n#endif\n\n    /* Store group move */\n    move = (Move *) cuddDynamicAllocNode(table);\n    if move == nil { goto zddGroupMoveOutOfMem; }\n    move.x = swapx;\n    move.y = swapy;\n    move.flags = MTR_DEFAULT;\n    move.size = table.keysZ;\n    move.next = *moves;\n    *moves = move;\n\n    return(table.keysZ);\n\nzddGroupMoveOutOfMem:\n    for *moves != nil {\n        move = (*moves).next;\n        // inlining of macro cuddDeallocMove\n        ((DdNode *)(*moves)).ref = 0;     ((DdNode *)(*moves)).next = (table).nextFree;     (table).nextFree = (DdNode *)(*moves);;\n        *moves = move;\n    }\n    return(0);\n\n} /* end of zddGroupMove */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Undoes the swap two groups.]\n\n  Description [Undoes the swap two groups.  Returns 1 in case of\n  success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc zddGroupMoveBackward(table *DdManager, x int32, y int32) int32 {\n    var size int32;\n    var i, j, xtop, xbot, xsize, ytop, ybot, ysize, newxtop int32;\n\n\n#ifdef DD_DEBUG\n    /* We assume that x \u003c y */\n    assert(x \u003c y);\n#endif\n\n    /* Find top, bottom, and size for the two groups. */\n    xbot = x;\n    xtop = table.subtableZ[x].next;\n    xsize = xbot - xtop + 1;\n    ybot = y;\n    for uint32( ybot) \u003c table.subtableZ[ybot].next {\n        ybot = table.subtableZ[ybot].next;\n    }\n    ytop = y;\n    ysize = ybot - ytop + 1;\n\n    /* Sift the variables of the second group up through the first group */\n    for i = 1; i \u003c= ysize; i++ {\n        for j = 1; j \u003c= xsize; j++ {\n            size = cuddZddSwapInPlace(table,x,y);\n            if size == 0 {\n                return(0); }\n            y = x;\n            x = cuddZddNextLow(table,y);\n        }\n        y = ytop + i;\n        x = cuddZddNextLow(table,y);\n    }\n\n    /* fix groups */\n    y = xtop;\n    for i = 0; i \u003c ysize - 1; i++ {\n        table.subtableZ[y].next = cuddZddNextHigh(table,y);\n        y = cuddZddNextHigh(table,y);\n    }\n    table.subtableZ[y].next = xtop; /* y is bottom of its group, join */\n                                    /* to its top */\n    x = cuddZddNextHigh(table,y);\n    newxtop = x;\n    for i = 0; i \u003c xsize - 1; i++ {\n        table.subtableZ[x].next = cuddZddNextHigh(table,x);\n        x = cuddZddNextHigh(table,x);\n    }\n    table.subtableZ[x].next = newxtop; /* x is bottom of its group, join */\n                                    /* to its top */\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupMoveBackward:\\n\");\n#endif\n\n    return(1);\n\n} /* end of zddGroupMoveBackward */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Determines the best position for a variables and returns\n  it there.]\n\n  Description [Determines the best position for a variables and returns\n  it there.  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc zddGroupSiftingBackward(table *DdManager, moves *Move, size int32) int32 {\n    var move *Move;\n    var res int32;\n\n\n    for move = moves; move != nil; move = move.next {\n        if move.size \u003c size {\n            size = move.size;\n        }\n    }\n\n    for move = moves; move != nil; move = move.next {\n        if move.size == size { return(1); }\n        if (table.subtableZ[move.x].next == move.x) \u0026\u0026\n        (table.subtableZ[move.y].next == move.y) {\n            res = cuddZddSwapInPlace(table,int32(move.x),int32(move.y));\n            if !(res != 0) { return(0); }\n#ifdef DD_DEBUG\n            if (pr \u003e 0) (void) fprintf(table-\u003eout,\"zddGroupSiftingBackward:\\n\");\n            assert(table-\u003esubtableZ[move-\u003ex].next == move-\u003ex);\n            assert(table-\u003esubtableZ[move-\u003ey].next == move-\u003ey);\n#endif\n        } else { /* Group move necessary */\n            res = zddGroupMoveBackward(table,int32(move.x),int32(move.y));\n            if !(res != 0) { return(0); }\n        }\n    }\n\n    return(1);\n\n} /* end of zddGroupSiftingBackward */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Merges groups in the DD table.]\n\n  Description [Creates a single group from low to high and adjusts the\n  idex field of the tree node.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc zddMergeGroups(table *DdManager, treenode *MtrNode, low int32, high int32) {\n    var i int32;\n    var auxnode *MtrNode;\n    var saveindex int32;\n    var newindex int32;\n\n    /* Merge all variables from low to high in one group, unless\n    ** this is the topmost group. In such a case we do not merge lest\n    ** we lose the symmetry information. */\n    if treenode != table.treeZ {\n        for i = low; i \u003c high; i++ {\n            table.subtableZ[i].next = i+1;\n        }\n        table.subtableZ[high].next = low;\n    }\n\n    /* Adjust the index fields of the tree nodes. If a node is the\n    ** first child of its parent, then the parent may also need adjustment. */\n    saveindex = treenode.index;\n    newindex = table.invpermZ[low];\n    auxnode = treenode;\n    for {\n        auxnode.index = newindex;\n        if auxnode.parent == nil ||\n                int32( auxnode.parent.index) != saveindex {\n            break; }\n        auxnode = auxnode.parent;\n    \nif !(true) { break }\n} \n    return;\n\n} /* end of zddMergeGroups */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/int.h",
+  "SHA256": "93e53cc546050a68dc7bb88bfb67fb0ea048d4c7ca7b4f2061cd87eaf6bd3c52",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/int.h::struct::Inter_ManParams_t",
+      "Category": "struct-review",
+      "Symbol": "Inter_ManParams_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1439,
+      "End": 2692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/int.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3652
+    }
+  ],
+  "Draft": "package int\n\n/**CFile****************************************************************\n\n  FileName    [int.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 24, 2008.]\n\n  Revision    [$Id: int.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n/* \n    The interpolation algorithm implemented here was introduced in the paper:\n    K. L. McMillan. Interpolation and SAT-based model checking. CAV_03, pp. 1-13.\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// simulation manager\n   \ntype Inter_ManParams_t struct {\n    nBTLimit  int32;      // limit on the number of conflicts\n    nFramesMax  int32;    // the max number timeframes to unroll\n    nSecLimit  int32;     // time limit in seconds\n    nFramesK  int32;      // the number of timeframes to use in induction\n    fRewrite  int32;      // use additional rewriting to simplify timeframes\n    fTransLoop  int32;    // add transition into the init state under new PI var\n    fUsePudlak  int32;    // use Pudluk interpolation procedure\n    fUseOther  int32;     // use other undisclosed option\n    fUseMiniSat  int32;   // use MiniSat-1.14p instead of internal proof engine\n    fCheckKstep  int32;   // check using K-step induction\n    fUseBias  int32;      // bias decisions to global variables\n    fUseBackward  int32;  // perform backward interpolation\n    fUseSeparate  int32;  // solve each output separately\n    fUseTwoFrames  int32; // create the OR of two last timeframes\n    fDropSatOuts  int32;  // replace by 1 the solved outputs\n    fDropInvar  int32;    // dump inductive invariant into file\n    fVerbose  int32;      // print verbose statistics\n    iFrameMax  int32;     // the time frame reached\n    pFileName  string;   // file name to dump interpolant\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== intCore.c ==========================================================*/\n// extern void       Inter_ManSetDefaultParams( Inter_ManParams_t * p );\n\n// extern int        Inter_ManPerformInterpolation( Aig_Man_t * pAig, Inter_ManParams_t * pPars, int * piFrame );\n\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

@@ -1,0 +1,678 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c",
+  "SHA256": "0f556a3fe28fe5f692ab1a1376108e1b28fde556ad09e22da1b3cb261fc5aaa3",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 164,
+        "Column": 57,
+        "ByteOffset": 4940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 179,
+        "Column": 86,
+        "ByteOffset": 5361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    char * pLine, * pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(MAX_LINE))); var Type int32;"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 181,
+        "Column": 5,
+        "ByteOffset": 5477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCounts, 0, sizeof(int)*GLS_FINAL );"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "fgets needs a known byte array/slice; string mutation or raw-pointer capacity requires a representation decision.",
+      "Location": {
+        "Line": 182,
+        "Column": 10,
+        "ByteOffset": 5531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fgets( pBuffer, MAX_LINE, pFile ) != nil  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 22,
+        "ByteOffset": 5939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 203,
+        "Column": 22,
+        "ByteOffset": 6153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 22,
+        "ByteOffset": 6369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 217,
+        "Column": 22,
+        "ByteOffset": 6585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 221,
+        "Column": 18,
+        "ByteOffset": 6688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 225,
+        "Column": 63,
+        "ByteOffset": 6839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 239,
+        "Column": 17,
+        "ByteOffset": 7238
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Entry = atoi(++pLine);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 240,
+        "Column": 14,
+        "ByteOffset": 7266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 247,
+        "Column": 86,
+        "ByteOffset": 7577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    char * pLine, * pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(MAX_LINE))); "
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "fgets needs a known byte array/slice; string mutation or raw-pointer capacity requires a representation decision.",
+      "Location": {
+        "Line": 249,
+        "Column": 17,
+        "ByteOffset": 7701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  i = 0; fgets( pBuffer, MAX_LINE, pFile ) != nil; i++  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 278,
+        "Column": 26,
+        "ByteOffset": 8999
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 292,
+        "Column": 13,
+        "ByteOffset": 9499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( *pLine == ')' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 293,
+        "Column": 13,
+        "ByteOffset": 9536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( k == 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 312,
+        "Column": 13,
+        "ByteOffset": 10224
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( *pLine == ')' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 313,
+        "Column": 13,
+        "ByteOffset": 10261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( k == 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 332,
+        "Column": 13,
+        "ByteOffset": 10940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( *pLine == ')' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 333,
+        "Column": 13,
+        "ByteOffset": 10977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( k == 4 || k == 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 351,
+        "Column": 13,
+        "ByteOffset": 11725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( *pLine == ')' );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 357,
+        "Column": 21,
+        "ByteOffset": 11898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            iItem = atoi(pLine);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 362,
+        "Column": 18,
+        "ByteOffset": 12103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 364,
+        "Column": 63,
+        "ByteOffset": 12186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 404,
+        "Column": 9,
+        "ByteOffset": 13948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Index == Vec_IntEntry(p.vIndexes, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 451,
+        "Column": 9,
+        "ByteOffset": 16185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vArray) \u003e 0 );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 492,
+        "Column": 27,
+        "ByteOffset": 17819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 494,
+        "Column": 9,
+        "ByteOffset": 17875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot read file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 498,
+        "Column": 5,
+        "ByteOffset": 18001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 502,
+        "Column": 13,
+        "ByteOffset": 18110
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s=%d  \", s_Strs[i], pCounts[i] ); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 510,
+        "Column": 5,
+        "ByteOffset": 18400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gls_ManAlloc",
+      "Start": 3142,
+      "End": 4261,
+      "BodyStart": 3204,
+      "Original": "Gls_Man_t * Gls_ManAlloc( Vec_Str_t * vLines, int * pCounts )\n{\n    Gls_Man_t * p = ABC_CALLOC( Gls_Man_t, 1 );\n    p-\u003evLines     = vLines;\n    p-\u003evTypes     = Vec_StrStart( Vec_StrSize(vLines)+100 ); \n    p-\u003evIndexes   = Vec_IntStart( Vec_StrSize(vLines)+100 ); \n    p-\u003evLut4s     = Vec_IntAlloc( 4 * pCounts[GLS_LUT4] );\n    p-\u003evLut4TTs   = Vec_IntAlloc( pCounts[GLS_LUT4] );\n    p-\u003evLut6s     = Vec_IntAlloc( 6 * pCounts[GLS_LUT6] );\n    p-\u003evLut6TTs   = Vec_WrdAlloc( pCounts[GLS_LUT6] );\n    p-\u003evBoxes     = Vec_IntAlloc( 5 * pCounts[GLS_BOX] );\n    p-\u003evDelays    = Vec_IntAlloc( pCounts[GLS_DEL] );\n    p-\u003evDelayIns  = Vec_WecAlloc( pCounts[GLS_DEL] );\n    p-\u003evDelayOuts = Vec_WecAlloc( pCounts[GLS_DEL] );\n    // ordering\n    p-\u003evOrderPis    = Vec_IntAlloc( pCounts[GLS_PI] );\n    p-\u003evOrderPos    = Vec_IntAlloc( pCounts[GLS_PO] );\n    p-\u003evOrderBoxes  = Vec_IntAlloc( pCounts[GLS_BOX] );\n    p-\u003evOrderDelays = Vec_IntAlloc( pCounts[GLS_DEL] );\n    p-\u003evOrderLuts   = Vec_IntAlloc( pCounts[GLS_LUT4] + pCounts[GLS_LUT6] + 2*pCounts[GLS_BAR] );\n    p-\u003evOrderSeqs   = Vec_IntAlloc( pCounts[GLS_SEQ] );\n    return p;\n}",
+      "Draft": "func Gls_ManAlloc(vLines *Vec_Str_t, pCounts *int32) *Gls_Man_t {\n    // inlining of macro ABC_CALLOC\n    var p *Gls_Man_t  = \u0026Gls_Man_t{};\n    p.vLines     = vLines;\n    p.vTypes     = Vec_StrStart( Vec_StrSize(vLines)+100 ); \n    p.vIndexes   = Vec_IntStart( Vec_StrSize(vLines)+100 ); \n    p.vLut4s     = Vec_IntAlloc( 4 * pCounts[GLS_LUT4] );\n    p.vLut4TTs   = Vec_IntAlloc( pCounts[GLS_LUT4] );\n    p.vLut6s     = Vec_IntAlloc( 6 * pCounts[GLS_LUT6] );\n    p.vLut6TTs   = Vec_WrdAlloc( pCounts[GLS_LUT6] );\n    p.vBoxes     = Vec_IntAlloc( 5 * pCounts[GLS_BOX] );\n    p.vDelays    = Vec_IntAlloc( pCounts[GLS_DEL] );\n    p.vDelayIns  = Vec_WecAlloc( pCounts[GLS_DEL] );\n    p.vDelayOuts = Vec_WecAlloc( pCounts[GLS_DEL] );\n    // ordering\n    p.vOrderPis    = Vec_IntAlloc( pCounts[GLS_PI] );\n    p.vOrderPos    = Vec_IntAlloc( pCounts[GLS_PO] );\n    p.vOrderBoxes  = Vec_IntAlloc( pCounts[GLS_BOX] );\n    p.vOrderDelays = Vec_IntAlloc( pCounts[GLS_DEL] );\n    p.vOrderLuts   = Vec_IntAlloc( pCounts[GLS_LUT4] + pCounts[GLS_LUT6] + 2*pCounts[GLS_BAR] );\n    p.vOrderSeqs   = Vec_IntAlloc( pCounts[GLS_SEQ] );\n    return p;\n}"
+    },
+    {
+      "Name": "Gls_ManStop",
+      "Start": 4262,
+      "End": 4883,
+      "BodyStart": 4296,
+      "Original": "void Gls_ManStop( Gls_Man_t * p )\n{\n    Vec_StrFree( p-\u003evLines );\n    Vec_StrFree( p-\u003evTypes );\n    Vec_IntFree( p-\u003evIndexes );\n    Vec_IntFree( p-\u003evLut4s );\n    Vec_IntFree( p-\u003evLut4TTs );\n    Vec_IntFree( p-\u003evLut6s );\n    Vec_WrdFree( p-\u003evLut6TTs );\n    Vec_IntFree( p-\u003evBoxes );\n    Vec_IntFree( p-\u003evDelays );\n    Vec_WecFree( p-\u003evDelayIns );\n    Vec_WecFree( p-\u003evDelayOuts );\n    // ordering\n    Vec_IntFree( p-\u003evOrderPis );\n    Vec_IntFree( p-\u003evOrderPos );\n    Vec_IntFree( p-\u003evOrderBoxes );\n    Vec_IntFree( p-\u003evOrderDelays );\n    Vec_IntFree( p-\u003evOrderLuts );\n    Vec_IntFree( p-\u003evOrderSeqs );\n    ABC_FREE( p );\n}",
+      "Draft": "func Gls_ManStop(p *Gls_Man_t) {\n    Vec_StrFree( p.vLines );\n    Vec_StrFree( p.vTypes );\n    Vec_IntFree( p.vIndexes );\n    Vec_IntFree( p.vLut4s );\n    Vec_IntFree( p.vLut4TTs );\n    Vec_IntFree( p.vLut6s );\n    Vec_WrdFree( p.vLut6TTs );\n    Vec_IntFree( p.vBoxes );\n    Vec_IntFree( p.vDelays );\n    Vec_WecFree( p.vDelayIns );\n    Vec_WecFree( p.vDelayOuts );\n    // ordering\n    Vec_IntFree( p.vOrderPis );\n    Vec_IntFree( p.vOrderPos );\n    Vec_IntFree( p.vOrderBoxes );\n    Vec_IntFree( p.vOrderDelays );\n    Vec_IntFree( p.vOrderLuts );\n    Vec_IntFree( p.vOrderSeqs );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Gls_ManCount",
+      "Start": 5119,
+      "End": 6667,
+      "BodyStart": 5184,
+      "Original": "Vec_Str_t * Gls_ManCount( FILE * pFile, int pCounts[GLS_FINAL] )\n{\n    char * pLine, * pBuffer = ABC_ALLOC(char, MAX_LINE); int Type;\n    Vec_Str_t * vLines = Vec_StrAlloc( 10000 );\n    memset( pCounts, 0, sizeof(int)*GLS_FINAL );\n    while ( fgets( pBuffer, MAX_LINE, pFile ) != NULL )\n    {\n        pLine = pBuffer;\n        while ( *pLine )\n            if ( *pLine++ == '=' )\n                break;\n        while ( *pLine == ' ' )\n            pLine++;\n        if ( *pLine == 'L' )\n        {\n            if ( pLine[3] == '4' )\n                Type = GLS_LUT4;\n            else if ( pLine[3] == '6' )\n                Type = GLS_LUT6;\n            else assert( 0 );\n        }\n        else if ( *pLine == 'P' )\n        {\n            if ( pLine[1] == 'I' )\n                Type = GLS_PI;\n            else if ( pLine[1] == 'O' )\n                Type = GLS_PO;\n            else assert( 0 );\n        }\n        else if ( *pLine == 'B' )\n        {\n            if ( pLine[1] == 'o' )\n                Type = GLS_BOX;\n            else if ( pLine[1] == 'a' )\n                Type = GLS_BAR;\n            else assert( 0 );\n        }\n        else if ( *pLine == 'S' )\n        {\n            if ( pLine[2] == 'l' )\n                Type = GLS_SEL;\n            else if ( pLine[2] == 'q' )\n                Type = GLS_SEQ;\n            else assert( 0 );\n        }\n        else if ( *pLine == 'D' )\n            Type = GLS_DEL;\n        else assert( 0 );\n        Vec_StrPush( vLines, (char)Type );\n        pCounts[Type]++;\n    }\n    ABC_FREE( pBuffer );\n    return vLines;\n}",
+      "Draft": "func Gls_ManCount(pFile *os.File, pCounts []int32) *Vec_Str_t {\n    // inlining of macro ABC_ALLOC\n    char * pLine, * pBuffer = ((char *) malloc(sizeof(char) * (size_t)(MAX_LINE))); var Type int32;\n    var vLines *Vec_Str_t  = Vec_StrAlloc( 10000 );\n    memset( pCounts, 0, sizeof(int)*GLS_FINAL );\n    for  fgets( pBuffer, MAX_LINE, pFile ) != nil  {\n        pLine = pBuffer;\n        for  *pLine  {\n            if *pLine++ == '=' {\n                break; }\n        }\n        for  *pLine == ' '  {\n            pLine++;\n        }\n        if *pLine == 'L' {\n            if pLine[3] == '4' {\n                Type = GLS_LUT4;\n            } else if pLine[3] == '6' {\n                Type = GLS_LUT6;\n            } else { assert(false, \"0\"); }\n        \n        } else if *pLine == 'P' {\n            if pLine[1] == 'I' {\n                Type = GLS_PI;\n            } else if pLine[1] == 'O' {\n                Type = GLS_PO;\n            } else { assert(false, \"0\"); }\n        \n        } else if *pLine == 'B' {\n            if pLine[1] == 'o' {\n                Type = GLS_BOX;\n            } else if pLine[1] == 'a' {\n                Type = GLS_BAR;\n            } else { assert(false, \"0\"); }\n        \n        } else if *pLine == 'S' {\n            if pLine[2] == 'l' {\n                Type = GLS_SEL;\n            } else if pLine[2] == 'q' {\n                Type = GLS_SEQ;\n            } else { assert(false, \"0\"); }\n        \n        } else if *pLine == 'D' {\n            Type = GLS_DEL;\n        } else { assert(false, \"0\"); }\n        Vec_StrPush( vLines, byte(Type) );\n        pCounts[Type]++;\n    }\n    // inlining of macro ABC_FREE\n    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);\n    return vLines;\n}"
+    },
+    {
+      "Name": "Gls_ManParseOne",
+      "Start": 6668,
+      "End": 7176,
+      "BodyStart": 6706,
+      "Original": "int Gls_ManParseOne( char ** ppLine )\n{\n    int Entry;\n    char * pLine = *ppLine;\n    while ( *pLine == ' ' )   pLine++;\n    if ( *pLine == '-' )\n        Entry = GLS_NONE;\n    else if ( *pLine == '0' )\n        Entry = 0;\n    else if ( *pLine == '1' )\n        Entry = 1;\n    else if ( *pLine == 'w' )\n        Entry = atoi(++pLine);\n    else assert( 0 );\n    while ( *pLine == '-' || (*pLine \u003e= '0' \u0026\u0026 *pLine \u003c= '9') )   pLine++;\n    while ( *pLine == ' ' )   pLine++;\n    *ppLine = pLine;\n    return Entry;\n}",
+      "Draft": "func Gls_ManParseOne(ppLine *string) int32 {\n    var Entry int32;\n    var pLine string  = *ppLine;\n    for  *pLine == ' '  {   pLine++; }\n    if *pLine == '-' {\n        Entry = GLS_NONE;\n    } else if *pLine == '0' {\n        Entry = 0;\n    } else if *pLine == '1' {\n        Entry = 1;\n    } else if *pLine == 'w' {\n        Entry = strconv.Atoi(++pLine);\n    } else { assert(false, \"0\"); }\n    for  *pLine == '-' || (*pLine \u003e= '0' \u0026\u0026 *pLine \u003c= '9')  {   pLine++; }\n    for  *pLine == ' '  {   pLine++; }\n    *ppLine = pLine;\n    return Entry;\n}"
+    },
+    {
+      "Name": "Gls_ManParse",
+      "Start": 7177,
+      "End": 11974,
+      "BodyStart": 7225,
+      "Original": "int Gls_ManParse( FILE * pFile, Gls_Man_t * p )\n{\n    char * pLine, * pBuffer = ABC_ALLOC(char, MAX_LINE); \n    int i, k, Type, iObj, Entry, iItem;  word Truth;\n    for ( i = 0; fgets( pBuffer, MAX_LINE, pFile ) != NULL; i++ )\n    {\n        pLine = pBuffer;\n        Type = Vec_StrEntry( p-\u003evLines, i );\n        iObj = Gls_ManParseOne( \u0026pLine );\n        Vec_StrWriteEntry( p-\u003evTypes, iObj, (char)Type );\n        if ( Type == GLS_PI )\n        {\n            Vec_IntPush( p-\u003evOrderPis, iObj );\n            Vec_IntWriteEntry( p-\u003evIndexes, iObj, -1 );\n            continue;\n        }\n        while ( *pLine )\n            if ( *pLine++ == '(' )\n                break;\n        Entry = Gls_ManParseOne( \u0026pLine );\n        if ( Type == GLS_PO || Type == GLS_BAR || Type == GLS_SEQ || Type == GLS_SEL )\n        {\n            if ( Type == GLS_PO )\n                Vec_IntPush( p-\u003evOrderPos, iObj );\n            else if ( Type == GLS_BAR )\n                Vec_IntPush( p-\u003evOrderLuts, iObj );\n            else if ( Type == GLS_SEQ )\n                Vec_IntPush( p-\u003evOrderSeqs, iObj );\n            else if ( Type == GLS_SEL )\n            {\n                if ( (int)Vec_StrEntry(p-\u003evTypes, Entry) == GLS_DEL )\n                {\n                    Vec_Int_t * vOuts = Vec_WecEntry( p-\u003evDelayOuts, Vec_IntEntry(p-\u003evIndexes, Entry) );\n                    Vec_IntPush( vOuts, iObj );\n                }\n                else if ( (int)Vec_StrEntry(p-\u003evTypes, Entry) == GLS_BAR )\n                    Vec_IntPush( p-\u003evOrderLuts, iObj );\n                else assert( 0 );\n            }\n            Vec_IntWriteEntry( p-\u003evIndexes, iObj, Entry );\n            continue;\n        }\n        if ( Type == GLS_LUT4 )\n        {\n            Vec_IntWriteEntry( p-\u003evIndexes, iObj, Vec_IntSize(p-\u003evLut4TTs) );\n            Vec_IntPush( p-\u003evLut4s, Entry );\n            for ( k = 1; ; k++ )\n            {\n                if ( *pLine != ',' )     break;\n                pLine++;\n                Entry = Gls_ManParseOne( \u0026pLine );\n                Vec_IntPush( p-\u003evLut4s, Entry );\n            }\n            assert( *pLine == ')' );\n            assert( k == 4 );\n            pLine++;\n            while ( *pLine )\n                if ( *pLine++ == '[' )\n                    break;\n            Abc_TtReadHex( \u0026Truth, pLine );\n            Vec_IntPush( p-\u003evLut4TTs, (unsigned)Truth );\n            Vec_IntPush( p-\u003evOrderLuts, iObj );\n        }\n        else if ( Type == GLS_LUT6 )\n        {\n            Vec_IntWriteEntry( p-\u003evIndexes, iObj, Vec_WrdSize(p-\u003evLut6TTs) );\n            Vec_IntPush( p-\u003evLut6s, Entry );\n            for ( k = 1; ; k++ )\n            {\n                if ( *pLine != ',' )     break;\n                pLine++;\n                Entry = Gls_ManParseOne( \u0026pLine );\n                Vec_IntPush( p-\u003evLut6s, Entry );\n            }\n            assert( *pLine == ')' );\n            assert( k == 4 );\n            pLine++;\n            while ( *pLine )\n                if ( *pLine++ == '[' )\n                    break;\n            Abc_TtReadHex( \u0026Truth, pLine );\n            Vec_WrdPush( p-\u003evLut6TTs, Truth );\n            Vec_IntPush( p-\u003evOrderLuts, iObj );\n        }\n        else if ( Type == GLS_BOX )\n        {\n            Vec_IntWriteEntry( p-\u003evIndexes, iObj, Vec_IntSize(p-\u003evBoxes)/5 );\n            Vec_IntPush( p-\u003evBoxes, Entry );\n            for ( k = 1; ; k++ )\n            {\n                if ( *pLine != ',' )     break;\n                pLine++;\n                Entry = Gls_ManParseOne( \u0026pLine );\n                Vec_IntPush( p-\u003evBoxes, Entry );\n            }\n            assert( *pLine == ')' );\n            assert( k == 4 || k == 5 );\n            if ( k == 4 )\n                Vec_IntPush( p-\u003evBoxes, GLS_NONE );\n            Vec_IntPush( p-\u003evOrderBoxes, iObj );\n        }\n        else if ( Type == GLS_DEL )\n        {\n            Vec_Int_t * vIns  = Vec_WecPushLevel( p-\u003evDelayIns );\n            Vec_Int_t * vOuts = Vec_WecPushLevel( p-\u003evDelayOuts );\n            Vec_IntWriteEntry( p-\u003evIndexes, iObj, Vec_IntSize(p-\u003evDelays) );\n            Vec_IntPush( vIns, Entry );\n            if ( *pLine != ')' )\n            {\n                for ( k = 1; ; k++ )\n                {\n                    if ( *pLine != ',' )     break;\n                    pLine++;\n                    Entry = Gls_ManParseOne( \u0026pLine );\n                    Vec_IntPush( vIns, Entry );\n                }\n            }\n            assert( *pLine == ')' );\n            pLine++;\n            while ( *pLine )\n                if ( *pLine++ == '[' )\n                    break;\n            iItem = atoi(pLine);\n            Vec_IntPush( p-\u003evDelays, iItem );\n            Vec_IntPush( p-\u003evOrderDelays, iObj );\n            vOuts = vIns; // harmless use to prevent a compiler warning\n        }\n        else assert( 0 );\n    }\n    ABC_FREE( pBuffer );\n    return 1;\n}",
+      "Draft": "func Gls_ManParse(pFile *os.File, p *Gls_Man_t) int32 {\n    // inlining of macro ABC_ALLOC\n    char * pLine, * pBuffer = ((char *) malloc(sizeof(char) * (size_t)(MAX_LINE))); \n    var i, k, Type, iObj, Entry, iItem int32;  var Truth word;\n    for  i = 0; fgets( pBuffer, MAX_LINE, pFile ) != nil; i++  {\n        pLine = pBuffer;\n        Type = Vec_StrEntry( p.vLines, i );\n        iObj = Gls_ManParseOne( \u0026pLine );\n        Vec_StrWriteEntry( p.vTypes, iObj, byte(Type) );\n        if Type == GLS_PI {\n            Vec_IntPush( p.vOrderPis, iObj );\n            Vec_IntWriteEntry( p.vIndexes, iObj, -1 );\n            continue;\n        }\n        for  *pLine  {\n            if *pLine++ == '(' {\n                break; }\n        }\n        Entry = Gls_ManParseOne( \u0026pLine );\n        if Type == GLS_PO || Type == GLS_BAR || Type == GLS_SEQ || Type == GLS_SEL {\n            if Type == GLS_PO {\n                Vec_IntPush( p.vOrderPos, iObj );\n            } else if Type == GLS_BAR {\n                Vec_IntPush( p.vOrderLuts, iObj );\n            } else if Type == GLS_SEQ {\n                Vec_IntPush( p.vOrderSeqs, iObj );\n            } else if Type == GLS_SEL {\n                if int32(Vec_StrEntry(p.vTypes, Entry)) == GLS_DEL {\n                    var vOuts *Vec_Int_t  = Vec_WecEntry( p.vDelayOuts, Vec_IntEntry(p.vIndexes, Entry) );\n                    Vec_IntPush( vOuts, iObj );\n                \n                } else if int32(Vec_StrEntry(p.vTypes, Entry)) == GLS_BAR {\n                    Vec_IntPush( p.vOrderLuts, iObj );\n                } else { assert(false, \"0\"); }\n            }\n            Vec_IntWriteEntry( p.vIndexes, iObj, Entry );\n            continue;\n        }\n        if Type == GLS_LUT4 {\n            Vec_IntWriteEntry( p.vIndexes, iObj, Vec_IntSize(p.vLut4TTs) );\n            Vec_IntPush( p.vLut4s, Entry );\n            for  k = 1; ; k++  {\n                if *pLine != ',' {     break; }\n                pLine++;\n                Entry = Gls_ManParseOne( \u0026pLine );\n                Vec_IntPush( p.vLut4s, Entry );\n            }\n            assert(*pLine == ')', \"*pLine == ')'\");\n            assert(k == 4, \"k == 4\");\n            pLine++;\n            for  *pLine  {\n                if *pLine++ == '[' {\n                    break; }\n            }\n            Abc_TtReadHex( \u0026Truth, pLine );\n            Vec_IntPush( p.vLut4TTs, uint32(Truth) );\n            Vec_IntPush( p.vOrderLuts, iObj );\n        \n        } else if Type == GLS_LUT6 {\n            Vec_IntWriteEntry( p.vIndexes, iObj, Vec_WrdSize(p.vLut6TTs) );\n            Vec_IntPush( p.vLut6s, Entry );\n            for  k = 1; ; k++  {\n                if *pLine != ',' {     break; }\n                pLine++;\n                Entry = Gls_ManParseOne( \u0026pLine );\n                Vec_IntPush( p.vLut6s, Entry );\n            }\n            assert(*pLine == ')', \"*pLine == ')'\");\n            assert(k == 4, \"k == 4\");\n            pLine++;\n            for  *pLine  {\n                if *pLine++ == '[' {\n                    break; }\n            }\n            Abc_TtReadHex( \u0026Truth, pLine );\n            Vec_WrdPush( p.vLut6TTs, Truth );\n            Vec_IntPush( p.vOrderLuts, iObj );\n        \n        } else if Type == GLS_BOX {\n            Vec_IntWriteEntry( p.vIndexes, iObj, Vec_IntSize(p.vBoxes)/5 );\n            Vec_IntPush( p.vBoxes, Entry );\n            for  k = 1; ; k++  {\n                if *pLine != ',' {     break; }\n                pLine++;\n                Entry = Gls_ManParseOne( \u0026pLine );\n                Vec_IntPush( p.vBoxes, Entry );\n            }\n            assert(*pLine == ')', \"*pLine == ')'\");\n            assert(k == 4 || k == 5, \"k == 4 || k == 5\");\n            if k == 4 {\n                Vec_IntPush( p.vBoxes, GLS_NONE ); }\n            Vec_IntPush( p.vOrderBoxes, iObj );\n        \n        } else if Type == GLS_DEL {\n            var vIns *Vec_Int_t   = Vec_WecPushLevel( p.vDelayIns );\n            var vOuts *Vec_Int_t  = Vec_WecPushLevel( p.vDelayOuts );\n            Vec_IntWriteEntry( p.vIndexes, iObj, Vec_IntSize(p.vDelays) );\n            Vec_IntPush( vIns, Entry );\n            if *pLine != ')' {\n                for  k = 1; ; k++  {\n                    if *pLine != ',' {     break; }\n                    pLine++;\n                    Entry = Gls_ManParseOne( \u0026pLine );\n                    Vec_IntPush( vIns, Entry );\n                }\n            }\n            assert(*pLine == ')', \"*pLine == ')'\");\n            pLine++;\n            for  *pLine  {\n                if *pLine++ == '[' {\n                    break; }\n            }\n            iItem = strconv.Atoi(pLine);\n            Vec_IntPush( p.vDelays, iItem );\n            Vec_IntPush( p.vOrderDelays, iObj );\n            vOuts = vIns; // harmless use to prevent a compiler warning\n        \n        } else { assert(false, \"0\"); }\n    }\n    // inlining of macro ABC_FREE\n    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);\n    return 1;\n}"
+    },
+    {
+      "Name": "Gls_ManConstruct",
+      "Start": 12210,
+      "End": 15693,
+      "BodyStart": 12274,
+      "Original": "Gia_Man_t * Gls_ManConstruct( Gls_Man_t * p, char * pFileName )\n{\n    extern int Kit_TruthToGia( Gia_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory, Vec_Int_t * vLeaves, int fHash );\n    Gia_Man_t * pGia = NULL;  \n    Vec_Int_t * vMap, * vArray;\n    Vec_Int_t * vCover = Vec_IntAlloc(0);\n    Vec_Int_t * vLeaves = Vec_IntAlloc(6);\n    int  k, iObj, iLit, Index;  char Type;\n    // create new manager\n    pGia = Gia_ManStart( Vec_StrSize(p-\u003evTypes) );\n    pGia-\u003epName = Abc_UtilStrsav( pFileName );\n    pGia-\u003epSpec = Abc_UtilStrsav( pFileName );\n    // create constants\n    vMap = Vec_IntStartFull( Vec_StrSize(p-\u003evTypes) );\n    Vec_IntWriteEntry( vMap, 0, 0 );\n    Vec_IntWriteEntry( vMap, 1, 1 );\n    // create primary inputs\n    Vec_IntForEachEntry( p-\u003evOrderPis, iObj, k )\n        Vec_IntWriteEntry( vMap, iObj, Gia_ManAppendCi(pGia) );\n    // create box outputs\n    Vec_IntForEachEntry( p-\u003evOrderBoxes, iObj, k )\n        Vec_IntWriteEntry( vMap, iObj, Gia_ManAppendCi(pGia) );\n    // create delay outputs\n    Vec_IntForEachEntry( p-\u003evOrderDelays, iObj, Index )\n    {\n        assert( Index == Vec_IntEntry(p-\u003evIndexes, iObj) );\n        vArray = Vec_WecEntry(p-\u003evDelayOuts, Index);\n        if ( Vec_IntSize(vArray) == 0 )\n            Vec_IntWriteEntry( vMap, iObj, Gia_ManAppendCi(pGia) );\n        else\n            Vec_IntForEachEntry( vArray, iObj, k )\n                Vec_IntWriteEntry( vMap, iObj, Gia_ManAppendCi(pGia) );\n    }\n    // construct LUTs\n    Vec_IntForEachEntry( p-\u003evOrderLuts, iObj, Index )\n    {\n        Type = Vec_StrEntry( p-\u003evTypes, iObj );\n        if ( Type == GLS_LUT4 || Type == GLS_LUT6 )\n        {\n            int Limit = Type == GLS_LUT4 ? 4 : 6;\n            int Index = Vec_IntEntry(p-\u003evIndexes, iObj);\n            int * pFanins = Type == GLS_LUT4 ? Vec_IntEntryP(p-\u003evLut4s, 4*Index) : Vec_IntEntryP(p-\u003evLut6s, 6*Index);\n            word Truth = Type == GLS_LUT4 ? (word)Vec_IntEntry(p-\u003evLut4TTs, Index) : Vec_WrdEntry(p-\u003evLut6TTs, Index);\n            Vec_IntClear( vLeaves );\n            for ( k = 0; k \u003c Limit; k++ )\n                Vec_IntPush( vLeaves, pFanins[k] == GLS_NONE ? 0 : Vec_IntEntry(vMap, pFanins[k]) );\n            iLit = Kit_TruthToGia( pGia, (unsigned *)\u0026Truth, Vec_IntSize(vLeaves), vCover, vLeaves, 0 );\n            Vec_IntWriteEntry( vMap, iObj, iLit );\n        }\n        else if ( Type == GLS_BAR || Type == GLS_SEL )\n        {\n            iLit = Vec_IntEntry( vMap, Vec_IntEntry(p-\u003evIndexes, iObj) );\n            Vec_IntWriteEntry( vMap, iObj, iLit );\n        }\n    }\n    // delay inputs\n    Vec_IntForEachEntry( p-\u003evOrderDelays, iObj, Index )\n    {\n        vArray = Vec_WecEntry(p-\u003evDelayIns, Index);\n        assert( Vec_IntSize(vArray) \u003e 0 );\n        Vec_IntForEachEntry( vArray, iObj, k )\n            Gia_ManAppendCo( pGia, Vec_IntEntry(vMap, iObj) );\n    }\n    // create primary outputs\n    Vec_IntForEachEntry( p-\u003evOrderPos, iObj, k )\n        Gia_ManAppendCo( pGia, Vec_IntEntry(vMap, Vec_IntEntry(p-\u003evIndexes, iObj)) );\n    // create sequential nodes\n    Vec_IntForEachEntry( p-\u003evOrderSeqs, iObj, k )\n        Gia_ManAppendCo( pGia, Vec_IntEntry(vMap, Vec_IntEntry(p-\u003evIndexes, iObj)) );\n    Vec_IntFree( vMap );\n    Vec_IntFree( vCover );\n    Vec_IntFree( vLeaves );\n    // print delay boxes\n//    for ( k = 0; k \u003c Vec_IntSize(p-\u003evDelays); k++ )\n//        printf( \"%d:%d  \", Vec_IntSize(Vec_WecEntry(p-\u003evDelayIns, k)), Vec_IntSize(Vec_WecEntry(p-\u003evDelayOuts, k)) );\n//    printf( \"\\n\" );\n    return pGia;\n}",
+      "Draft": "func Gls_ManConstruct(p *Gls_Man_t, pFileName string) *Gia_Man_t {\n    extern int Kit_TruthToGia( Gia_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory, Vec_Int_t * vLeaves, int fHash );\n    var pGia *Gia_Man_t  = nil;  \n    var vMap, vArray *Vec_Int_t;\n    var vCover *Vec_Int_t  = Vec_IntAlloc(0);\n    var vLeaves *Vec_Int_t  = Vec_IntAlloc(6);\n    var k, iObj, iLit, Index int32;  var Type byte;\n    // create new manager\n    pGia = Gia_ManStart( Vec_StrSize(p.vTypes) );\n    pGia.pName = Abc_UtilStrsav( pFileName );\n    pGia.pSpec = Abc_UtilStrsav( pFileName );\n    // create constants\n    vMap = Vec_IntStartFull( Vec_StrSize(p.vTypes) );\n    Vec_IntWriteEntry( vMap, 0, 0 );\n    Vec_IntWriteEntry( vMap, 1, 1 );\n    // create primary inputs\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(p.vOrderPis)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrderPis, k)), 1); k++  {\n        Vec_IntWriteEntry( vMap, iObj, Gia_ManAppendCi(pGia) );\n    }\n    // create box outputs\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(p.vOrderBoxes)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrderBoxes, k)), 1); k++  {\n        Vec_IntWriteEntry( vMap, iObj, Gia_ManAppendCi(pGia) );\n    }\n    // create delay outputs\n    // inlining of macro Vec_IntForEachEntry\n    for  Index = 0; (Index \u003c Vec_IntSize(p.vOrderDelays)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrderDelays, Index)), 1); Index++  {\n        assert(Index == Vec_IntEntry(p.vIndexes, iObj), \"Index == Vec_IntEntry(p.vIndexes, iObj)\");\n        vArray = Vec_WecEntry(p.vDelayOuts, Index);\n        if Vec_IntSize(vArray) == 0 {\n            Vec_IntWriteEntry( vMap, iObj, Gia_ManAppendCi(pGia) );\n        } else {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((iObj) = Vec_IntEntry(vArray, k)), 1); k++  {\n                Vec_IntWriteEntry( vMap, iObj, Gia_ManAppendCi(pGia) );\n            } }\n    }\n    // construct LUTs\n    // inlining of macro Vec_IntForEachEntry\n    for  Index = 0; (Index \u003c Vec_IntSize(p.vOrderLuts)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrderLuts, Index)), 1); Index++  {\n        Type = Vec_StrEntry( p.vTypes, iObj );\n        if Type == GLS_LUT4 || Type == GLS_LUT6 {\n            var Limit int32;\n            if Type == GLS_LUT4 {\n                Limit = 4;\n            } else {\n                Limit = 6;\n            }\n            var Index int32  = Vec_IntEntry(p.vIndexes, iObj);\n            var pFanins *int32;\n            if Type == GLS_LUT4 {\n                pFanins = Vec_IntEntryP(p.vLut4s, 4*Index);\n            } else {\n                pFanins = Vec_IntEntryP(p.vLut6s, 6*Index);\n            }\n            var Truth word;\n            if Type == GLS_LUT4 {\n                Truth = (word)Vec_IntEntry(p.vLut4TTs, Index);\n            } else {\n                Truth = Vec_WrdEntry(p.vLut6TTs, Index);\n            }\n            Vec_IntClear( vLeaves );\n            for  k = 0; k \u003c Limit; k++  {\n                Vec_IntPush( vLeaves, pFanins[k] == GLS_NONE ? 0 : Vec_IntEntry(vMap, pFanins[k]) );\n            }\n            iLit = Kit_TruthToGia( pGia, (unsigned *)\u0026Truth, Vec_IntSize(vLeaves), vCover, vLeaves, 0 );\n            Vec_IntWriteEntry( vMap, iObj, iLit );\n        \n        } else if Type == GLS_BAR || Type == GLS_SEL {\n            iLit = Vec_IntEntry( vMap, Vec_IntEntry(p.vIndexes, iObj) );\n            Vec_IntWriteEntry( vMap, iObj, iLit );\n        }\n    }\n    // delay inputs\n    // inlining of macro Vec_IntForEachEntry\n    for  Index = 0; (Index \u003c Vec_IntSize(p.vOrderDelays)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrderDelays, Index)), 1); Index++  {\n        vArray = Vec_WecEntry(p.vDelayIns, Index);\n        assert(Vec_IntSize(vArray) \u003e 0, \"Vec_IntSize(vArray) \u003e 0\");\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((iObj) = Vec_IntEntry(vArray, k)), 1); k++  {\n            Gia_ManAppendCo( pGia, Vec_IntEntry(vMap, iObj) );\n        }\n    }\n    // create primary outputs\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(p.vOrderPos)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrderPos, k)), 1); k++  {\n        Gia_ManAppendCo( pGia, Vec_IntEntry(vMap, Vec_IntEntry(p.vIndexes, iObj)) );\n    }\n    // create sequential nodes\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(p.vOrderSeqs)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrderSeqs, k)), 1); k++  {\n        Gia_ManAppendCo( pGia, Vec_IntEntry(vMap, Vec_IntEntry(p.vIndexes, iObj)) );\n    }\n    Vec_IntFree( vMap );\n    Vec_IntFree( vCover );\n    Vec_IntFree( vLeaves );\n    // print delay boxes\n//    for ( k = 0; k \u003c Vec_IntSize(p-\u003evDelays); k++ )\n//        printf( \"%d:%d  \", Vec_IntSize(Vec_WecEntry(p-\u003evDelayIns, k)), Vec_IntSize(Vec_WecEntry(p-\u003evDelayOuts, k)) );\n//    printf( \"\\n\" );\n    return pGia;\n}"
+    },
+    {
+      "Name": "Gia_ManReadGig",
+      "Start": 15929,
+      "End": 16780,
+      "BodyStart": 15976,
+      "Original": "Gia_Man_t * Gia_ManReadGig( char * pFileName )\n{\n    abctime clk = Abc_Clock();\n    Gls_Man_t * p = NULL;\n    Gia_Man_t * pGia = NULL;\n    Vec_Str_t * vLines;\n    int i, pCounts[GLS_FINAL];\n    FILE * pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot read file \\\"%s\\\".\\n\", pFileName );\n        return NULL;\n    }\n    vLines = Gls_ManCount( pFile, pCounts );\n    rewind( pFile );\n    // statistics\n    for ( i = 0; i \u003c GLS_FINAL; i++ )\n        if ( pCounts[i] )\n            printf( \"%s=%d  \", s_Strs[i], pCounts[i] );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // collect data and derive AIG\n    p = Gls_ManAlloc( vLines, pCounts );\n    if ( Gls_ManParse( pFile, p ) )\n        pGia = Gls_ManConstruct( p, pFileName );\n    Gls_ManStop( p );\n    fclose( pFile );\n    //printf( \"\\n\" );\n    return pGia;\n}",
+      "Draft": "func Gia_ManReadGig(pFileName string) *Gia_Man_t {\n    var clk abctime  = Abc_Clock();\n    var p *Gls_Man_t  = nil;\n    var pGia *Gia_Man_t  = nil;\n    var vLines *Vec_Str_t;\n    var i int32;\n    var pCounts [GLS_FINAL]int32;\n    var pFile *os.File  = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot read file \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    vLines = Gls_ManCount( pFile, pCounts );\n    rewind( pFile );\n    // statistics\n    for  i = 0; i \u003c GLS_FINAL; i++  {\n        if pCounts[i] {\n            fmt.Printf(\"%s=%d  \", s_Strs[i], pCounts[i]); }\n    }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // collect data and derive AIG\n    p = Gls_ManAlloc( vLines, pCounts );\n    if Gls_ManParse( pFile, p ) != 0 {\n        pGia = Gls_ManConstruct( p, pFileName ); }\n    Gls_ManStop( p );\n    _ = (pFile).Close();\n    //printf( \"\\n\" );\n    return pGia;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::struct::Gls_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Gls_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1825,
+      "End": 2686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::mechanical::enum::897",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 897,
+      "End": 901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::mechanical::sizeof::3307",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3226,
+      "End": 3226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::mechanical::sizeof::5424",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5216,
+      "End": 5216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::mechanical::sizeof::5543",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5325,
+      "End": 5331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::mechanical::sizeof::7621",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7257,
+      "End": 7257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::pointer-cast::3273",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3226,
+      "End": 3226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::pointer-cast::4998",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4867,
+      "End": 4867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::pointer-cast::5408",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5216,
+      "End": 5216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::pointer-cast::6907",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6626,
+      "End": 6626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::pointer-cast::7605",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7257,
+      "End": 7257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::pointer-cast::12375",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11938,
+      "End": 11938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::pointer-cast::15455",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14418,
+      "End": 14430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::Gls_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Gls_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3142,
+      "End": 4261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::ternary::Gls_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Gls_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4262,
+      "End": 4883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::Gls_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Gls_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4262,
+      "End": 4883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::ternary::Gls_ManCount",
+      "Category": "ternary-review",
+      "Symbol": "Gls_ManCount",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5119,
+      "End": 6667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::Gls_ManCount",
+      "Category": "semantic-review",
+      "Symbol": "Gls_ManCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5119,
+      "End": 6667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::Gls_ManParseOne",
+      "Category": "semantic-review",
+      "Symbol": "Gls_ManParseOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6668,
+      "End": 7176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::ternary::Gls_ManParse",
+      "Category": "ternary-review",
+      "Symbol": "Gls_ManParse",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7177,
+      "End": 11974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::Gls_ManParse",
+      "Category": "semantic-review",
+      "Symbol": "Gls_ManParse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7177,
+      "End": 11974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::ternary::Gls_ManConstruct",
+      "Category": "ternary-review",
+      "Symbol": "Gls_ManConstruct",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12210,
+      "End": 15693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::Gls_ManConstruct",
+      "Category": "semantic-review",
+      "Symbol": "Gls_ManConstruct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12210,
+      "End": 15693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::Gia_ManReadGig",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManReadGig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15929,
+      "End": 16780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaGig.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17027
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [giaGig.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Parser for Gate-Inverter Graph by Niklas Een.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaGig.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst MAX_LINE = 1000000\n\n// network types\nconst ( \n    GLS_NONE = -1\n  // not used\n    GLS_ZERO =  0\n  // zero\n    GLS_ONE  =  1\n  // one\n    GLS_PI   =  2\n  // primary input\n    GLS_PO   =  3\n  // primary output\n    GLS_BAR  =  4\n  // barrier\n    GLS_SEQ  =  5\n  // sequential\n    GLS_SEL  =  6\n  // fan\n    GLS_LUT4 =  7\n  // LUT4\n    GLS_LUT6 =  8\n  // LUT6\n    GLS_BOX  =  9\n  // sequential box\n    GLS_DEL  = 10\n  // delay box\n    GLS_FINAL = GLS_DEL + 1\n\n)\n\n\nstatic char * s_Strs[GLS_FINAL] =\n{\n    \"0\",     // GLS_ZERO =  0,  // zero\n    \"1\",     // GLS_ONE  =  1,  // one\n    \"PI\",    // GLS_PI   =  2,  // primary input\n    \"PO\",    // GLS_PO   =  3,  // primary output\n    \"Bar\",   // GLS_BAR  =  4,  // barrier\n    \"Seq\",   // GLS_SEQ  =  5,  // sequential\n    \"Sel\",   // GLS_SEL  =  6,  // fan\n    \"Lut4\",  // GLS_LUT4 =  7,  // LUT4\n    \"Lut6\",  // GLS_LUT6 =  8,  // LUT6\n    \"Box\",   // GLS_BOX  =  9,  // sequential box\n    \"Del\"    // GLS_DEL  = 10,  // delay box\n};\n\n   \ntype Gls_Man_t struct {\n    // general\n    vLines     *Vec_Str_t;       // line types\n    vTypes     *Vec_Str_t;       // gate types\n    vIndexes     *Vec_Int_t;     // gate indexes\n    // specific types\n    vLut4s     *Vec_Int_t;       // 4-LUTs (4-tuples)\n    vLut4TTs     *Vec_Int_t;     // truth tables\n    vLut6s     *Vec_Int_t;       // 6-LUTs (6-tuples)\n    vLut6TTs     *Vec_Wrd_t;     // truth tables\n    vBoxes     *Vec_Int_t;       // boxes (5-tuples)\n    vDelayIns     *Vec_Wec_t;    // delay fanins\n    vDelayOuts     *Vec_Wec_t;   // delay fanouts\n    vDelays     *Vec_Int_t;      // delay values\n    // ordering\n    vOrderPis     *Vec_Int_t;  \n    vOrderPos     *Vec_Int_t;  \n    vOrderBoxes     *Vec_Int_t;  \n    vOrderDelays     *Vec_Int_t;  \n    vOrderLuts     *Vec_Int_t;  \n    vOrderSeqs     *Vec_Int_t;  \n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gls_ManAlloc(vLines *Vec_Str_t, pCounts *int32) *Gls_Man_t {\n    // inlining of macro ABC_CALLOC\n    var p *Gls_Man_t  = \u0026Gls_Man_t{};\n    p.vLines     = vLines;\n    p.vTypes     = Vec_StrStart( Vec_StrSize(vLines)+100 ); \n    p.vIndexes   = Vec_IntStart( Vec_StrSize(vLines)+100 ); \n    p.vLut4s     = Vec_IntAlloc( 4 * pCounts[GLS_LUT4] );\n    p.vLut4TTs   = Vec_IntAlloc( pCounts[GLS_LUT4] );\n    p.vLut6s     = Vec_IntAlloc( 6 * pCounts[GLS_LUT6] );\n    p.vLut6TTs   = Vec_WrdAlloc( pCounts[GLS_LUT6] );\n    p.vBoxes     = Vec_IntAlloc( 5 * pCounts[GLS_BOX] );\n    p.vDelays    = Vec_IntAlloc( pCounts[GLS_DEL] );\n    p.vDelayIns  = Vec_WecAlloc( pCounts[GLS_DEL] );\n    p.vDelayOuts = Vec_WecAlloc( pCounts[GLS_DEL] );\n    // ordering\n    p.vOrderPis    = Vec_IntAlloc( pCounts[GLS_PI] );\n    p.vOrderPos    = Vec_IntAlloc( pCounts[GLS_PO] );\n    p.vOrderBoxes  = Vec_IntAlloc( pCounts[GLS_BOX] );\n    p.vOrderDelays = Vec_IntAlloc( pCounts[GLS_DEL] );\n    p.vOrderLuts   = Vec_IntAlloc( pCounts[GLS_LUT4] + pCounts[GLS_LUT6] + 2*pCounts[GLS_BAR] );\n    p.vOrderSeqs   = Vec_IntAlloc( pCounts[GLS_SEQ] );\n    return p;\n}\nfunc Gls_ManStop(p *Gls_Man_t) {\n    Vec_StrFree( p.vLines );\n    Vec_StrFree( p.vTypes );\n    Vec_IntFree( p.vIndexes );\n    Vec_IntFree( p.vLut4s );\n    Vec_IntFree( p.vLut4TTs );\n    Vec_IntFree( p.vLut6s );\n    Vec_WrdFree( p.vLut6TTs );\n    Vec_IntFree( p.vBoxes );\n    Vec_IntFree( p.vDelays );\n    Vec_WecFree( p.vDelayIns );\n    Vec_WecFree( p.vDelayOuts );\n    // ordering\n    Vec_IntFree( p.vOrderPis );\n    Vec_IntFree( p.vOrderPos );\n    Vec_IntFree( p.vOrderBoxes );\n    Vec_IntFree( p.vOrderDelays );\n    Vec_IntFree( p.vOrderLuts );\n    Vec_IntFree( p.vOrderSeqs );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gls_ManCount(pFile *os.File, pCounts []int32) *Vec_Str_t {\n    // inlining of macro ABC_ALLOC\n    char * pLine, * pBuffer = ((char *) malloc(sizeof(char) * (size_t)(MAX_LINE))); var Type int32;\n    var vLines *Vec_Str_t  = Vec_StrAlloc( 10000 );\n    memset( pCounts, 0, sizeof(int)*GLS_FINAL );\n    for  fgets( pBuffer, MAX_LINE, pFile ) != nil  {\n        pLine = pBuffer;\n        for  *pLine  {\n            if *pLine++ == '=' {\n                break; }\n        }\n        for  *pLine == ' '  {\n            pLine++;\n        }\n        if *pLine == 'L' {\n            if pLine[3] == '4' {\n                Type = GLS_LUT4;\n            } else if pLine[3] == '6' {\n                Type = GLS_LUT6;\n            } else { assert(false, \"0\"); }\n        \n        } else if *pLine == 'P' {\n            if pLine[1] == 'I' {\n                Type = GLS_PI;\n            } else if pLine[1] == 'O' {\n                Type = GLS_PO;\n            } else { assert(false, \"0\"); }\n        \n        } else if *pLine == 'B' {\n            if pLine[1] == 'o' {\n                Type = GLS_BOX;\n            } else if pLine[1] == 'a' {\n                Type = GLS_BAR;\n            } else { assert(false, \"0\"); }\n        \n        } else if *pLine == 'S' {\n            if pLine[2] == 'l' {\n                Type = GLS_SEL;\n            } else if pLine[2] == 'q' {\n                Type = GLS_SEQ;\n            } else { assert(false, \"0\"); }\n        \n        } else if *pLine == 'D' {\n            Type = GLS_DEL;\n        } else { assert(false, \"0\"); }\n        Vec_StrPush( vLines, byte(Type) );\n        pCounts[Type]++;\n    }\n    // inlining of macro ABC_FREE\n    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);\n    return vLines;\n}\nfunc Gls_ManParseOne(ppLine *string) int32 {\n    var Entry int32;\n    var pLine string  = *ppLine;\n    for  *pLine == ' '  {   pLine++; }\n    if *pLine == '-' {\n        Entry = GLS_NONE;\n    } else if *pLine == '0' {\n        Entry = 0;\n    } else if *pLine == '1' {\n        Entry = 1;\n    } else if *pLine == 'w' {\n        Entry = strconv.Atoi(++pLine);\n    } else { assert(false, \"0\"); }\n    for  *pLine == '-' || (*pLine \u003e= '0' \u0026\u0026 *pLine \u003c= '9')  {   pLine++; }\n    for  *pLine == ' '  {   pLine++; }\n    *ppLine = pLine;\n    return Entry;\n}\nfunc Gls_ManParse(pFile *os.File, p *Gls_Man_t) int32 {\n    // inlining of macro ABC_ALLOC\n    char * pLine, * pBuffer = ((char *) malloc(sizeof(char) * (size_t)(MAX_LINE))); \n    var i, k, Type, iObj, Entry, iItem int32;  var Truth word;\n    for  i = 0; fgets( pBuffer, MAX_LINE, pFile ) != nil; i++  {\n        pLine = pBuffer;\n        Type = Vec_StrEntry( p.vLines, i );\n        iObj = Gls_ManParseOne( \u0026pLine );\n        Vec_StrWriteEntry( p.vTypes, iObj, byte(Type) );\n        if Type == GLS_PI {\n            Vec_IntPush( p.vOrderPis, iObj );\n            Vec_IntWriteEntry( p.vIndexes, iObj, -1 );\n            continue;\n        }\n        for  *pLine  {\n            if *pLine++ == '(' {\n                break; }\n        }\n        Entry = Gls_ManParseOne( \u0026pLine );\n        if Type == GLS_PO || Type == GLS_BAR || Type == GLS_SEQ || Type == GLS_SEL {\n            if Type == GLS_PO {\n                Vec_IntPush( p.vOrderPos, iObj );\n            } else if Type == GLS_BAR {\n                Vec_IntPush( p.vOrderLuts, iObj );\n            } else if Type == GLS_SEQ {\n                Vec_IntPush( p.vOrderSeqs, iObj );\n            } else if Type == GLS_SEL {\n                if int32(Vec_StrEntry(p.vTypes, Entry)) == GLS_DEL {\n                    var vOuts *Vec_Int_t  = Vec_WecEntry( p.vDelayOuts, Vec_IntEntry(p.vIndexes, Entry) );\n                    Vec_IntPush( vOuts, iObj );\n                \n                } else if int32(Vec_StrEntry(p.vTypes, Entry)) == GLS_BAR {\n                    Vec_IntPush( p.vOrderLuts, iObj );\n                } else { assert(false, \"0\"); }\n            }\n            Vec_IntWriteEntry( p.vIndexes, iObj, Entry );\n            continue;\n        }\n        if Type == GLS_LUT4 {\n            Vec_IntWriteEntry( p.vIndexes, iObj, Vec_IntSize(p.vLut4TTs) );\n            Vec_IntPush( p.vLut4s, Entry );\n            for  k = 1; ; k++  {\n                if *pLine != ',' {     break; }\n                pLine++;\n                Entry = Gls_ManParseOne( \u0026pLine );\n                Vec_IntPush( p.vLut4s, Entry );\n            }\n            assert(*pLine == ')', \"*pLine == ')'\");\n            assert(k == 4, \"k == 4\");\n            pLine++;\n            for  *pLine  {\n                if *pLine++ == '[' {\n                    break; }\n            }\n            Abc_TtReadHex( \u0026Truth, pLine );\n            Vec_IntPush( p.vLut4TTs, uint32(Truth) );\n            Vec_IntPush( p.vOrderLuts, iObj );\n        \n        } else if Type == GLS_LUT6 {\n            Vec_IntWriteEntry( p.vIndexes, iObj, Vec_WrdSize(p.vLut6TTs) );\n            Vec_IntPush( p.vLut6s, Entry );\n            for  k = 1; ; k++  {\n                if *pLine != ',' {     break; }\n                pLine++;\n                Entry = Gls_ManParseOne( \u0026pLine );\n                Vec_IntPush( p.vLut6s, Entry );\n            }\n            assert(*pLine == ')', \"*pLine == ')'\");\n            assert(k == 4, \"k == 4\");\n            pLine++;\n            for  *pLine  {\n                if *pLine++ == '[' {\n                    break; }\n            }\n            Abc_TtReadHex( \u0026Truth, pLine );\n            Vec_WrdPush( p.vLut6TTs, Truth );\n            Vec_IntPush( p.vOrderLuts, iObj );\n        \n        } else if Type == GLS_BOX {\n            Vec_IntWriteEntry( p.vIndexes, iObj, Vec_IntSize(p.vBoxes)/5 );\n            Vec_IntPush( p.vBoxes, Entry );\n            for  k = 1; ; k++  {\n                if *pLine != ',' {     break; }\n                pLine++;\n                Entry = Gls_ManParseOne( \u0026pLine );\n                Vec_IntPush( p.vBoxes, Entry );\n            }\n            assert(*pLine == ')', \"*pLine == ')'\");\n            assert(k == 4 || k == 5, \"k == 4 || k == 5\");\n            if k == 4 {\n                Vec_IntPush( p.vBoxes, GLS_NONE ); }\n            Vec_IntPush( p.vOrderBoxes, iObj );\n        \n        } else if Type == GLS_DEL {\n            var vIns *Vec_Int_t   = Vec_WecPushLevel( p.vDelayIns );\n            var vOuts *Vec_Int_t  = Vec_WecPushLevel( p.vDelayOuts );\n            Vec_IntWriteEntry( p.vIndexes, iObj, Vec_IntSize(p.vDelays) );\n            Vec_IntPush( vIns, Entry );\n            if *pLine != ')' {\n                for  k = 1; ; k++  {\n                    if *pLine != ',' {     break; }\n                    pLine++;\n                    Entry = Gls_ManParseOne( \u0026pLine );\n                    Vec_IntPush( vIns, Entry );\n                }\n            }\n            assert(*pLine == ')', \"*pLine == ')'\");\n            pLine++;\n            for  *pLine  {\n                if *pLine++ == '[' {\n                    break; }\n            }\n            iItem = strconv.Atoi(pLine);\n            Vec_IntPush( p.vDelays, iItem );\n            Vec_IntPush( p.vOrderDelays, iObj );\n            vOuts = vIns; // harmless use to prevent a compiler warning\n        \n        } else { assert(false, \"0\"); }\n    }\n    // inlining of macro ABC_FREE\n    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gls_ManConstruct(p *Gls_Man_t, pFileName string) *Gia_Man_t {\n    extern int Kit_TruthToGia( Gia_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory, Vec_Int_t * vLeaves, int fHash );\n    var pGia *Gia_Man_t  = nil;  \n    var vMap, vArray *Vec_Int_t;\n    var vCover *Vec_Int_t  = Vec_IntAlloc(0);\n    var vLeaves *Vec_Int_t  = Vec_IntAlloc(6);\n    var k, iObj, iLit, Index int32;  var Type byte;\n    // create new manager\n    pGia = Gia_ManStart( Vec_StrSize(p.vTypes) );\n    pGia.pName = Abc_UtilStrsav( pFileName );\n    pGia.pSpec = Abc_UtilStrsav( pFileName );\n    // create constants\n    vMap = Vec_IntStartFull( Vec_StrSize(p.vTypes) );\n    Vec_IntWriteEntry( vMap, 0, 0 );\n    Vec_IntWriteEntry( vMap, 1, 1 );\n    // create primary inputs\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(p.vOrderPis)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrderPis, k)), 1); k++  {\n        Vec_IntWriteEntry( vMap, iObj, Gia_ManAppendCi(pGia) );\n    }\n    // create box outputs\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(p.vOrderBoxes)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrderBoxes, k)), 1); k++  {\n        Vec_IntWriteEntry( vMap, iObj, Gia_ManAppendCi(pGia) );\n    }\n    // create delay outputs\n    // inlining of macro Vec_IntForEachEntry\n    for  Index = 0; (Index \u003c Vec_IntSize(p.vOrderDelays)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrderDelays, Index)), 1); Index++  {\n        assert(Index == Vec_IntEntry(p.vIndexes, iObj), \"Index == Vec_IntEntry(p.vIndexes, iObj)\");\n        vArray = Vec_WecEntry(p.vDelayOuts, Index);\n        if Vec_IntSize(vArray) == 0 {\n            Vec_IntWriteEntry( vMap, iObj, Gia_ManAppendCi(pGia) );\n        } else {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((iObj) = Vec_IntEntry(vArray, k)), 1); k++  {\n                Vec_IntWriteEntry( vMap, iObj, Gia_ManAppendCi(pGia) );\n            } }\n    }\n    // construct LUTs\n    // inlining of macro Vec_IntForEachEntry\n    for  Index = 0; (Index \u003c Vec_IntSize(p.vOrderLuts)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrderLuts, Index)), 1); Index++  {\n        Type = Vec_StrEntry( p.vTypes, iObj );\n        if Type == GLS_LUT4 || Type == GLS_LUT6 {\n            var Limit int32;\n            if Type == GLS_LUT4 {\n                Limit = 4;\n            } else {\n                Limit = 6;\n            }\n            var Index int32  = Vec_IntEntry(p.vIndexes, iObj);\n            var pFanins *int32;\n            if Type == GLS_LUT4 {\n                pFanins = Vec_IntEntryP(p.vLut4s, 4*Index);\n            } else {\n                pFanins = Vec_IntEntryP(p.vLut6s, 6*Index);\n            }\n            var Truth word;\n            if Type == GLS_LUT4 {\n                Truth = (word)Vec_IntEntry(p.vLut4TTs, Index);\n            } else {\n                Truth = Vec_WrdEntry(p.vLut6TTs, Index);\n            }\n            Vec_IntClear( vLeaves );\n            for  k = 0; k \u003c Limit; k++  {\n                Vec_IntPush( vLeaves, pFanins[k] == GLS_NONE ? 0 : Vec_IntEntry(vMap, pFanins[k]) );\n            }\n            iLit = Kit_TruthToGia( pGia, (unsigned *)\u0026Truth, Vec_IntSize(vLeaves), vCover, vLeaves, 0 );\n            Vec_IntWriteEntry( vMap, iObj, iLit );\n        \n        } else if Type == GLS_BAR || Type == GLS_SEL {\n            iLit = Vec_IntEntry( vMap, Vec_IntEntry(p.vIndexes, iObj) );\n            Vec_IntWriteEntry( vMap, iObj, iLit );\n        }\n    }\n    // delay inputs\n    // inlining of macro Vec_IntForEachEntry\n    for  Index = 0; (Index \u003c Vec_IntSize(p.vOrderDelays)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrderDelays, Index)), 1); Index++  {\n        vArray = Vec_WecEntry(p.vDelayIns, Index);\n        assert(Vec_IntSize(vArray) \u003e 0, \"Vec_IntSize(vArray) \u003e 0\");\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((iObj) = Vec_IntEntry(vArray, k)), 1); k++  {\n            Gia_ManAppendCo( pGia, Vec_IntEntry(vMap, iObj) );\n        }\n    }\n    // create primary outputs\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(p.vOrderPos)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrderPos, k)), 1); k++  {\n        Gia_ManAppendCo( pGia, Vec_IntEntry(vMap, Vec_IntEntry(p.vIndexes, iObj)) );\n    }\n    // create sequential nodes\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(p.vOrderSeqs)) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vOrderSeqs, k)), 1); k++  {\n        Gia_ManAppendCo( pGia, Vec_IntEntry(vMap, Vec_IntEntry(p.vIndexes, iObj)) );\n    }\n    Vec_IntFree( vMap );\n    Vec_IntFree( vCover );\n    Vec_IntFree( vLeaves );\n    // print delay boxes\n//    for ( k = 0; k \u003c Vec_IntSize(p-\u003evDelays); k++ )\n//        printf( \"%d:%d  \", Vec_IntSize(Vec_WecEntry(p-\u003evDelayIns, k)), Vec_IntSize(Vec_WecEntry(p-\u003evDelayOuts, k)) );\n//    printf( \"\\n\" );\n    return pGia;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManReadGig(pFileName string) *Gia_Man_t {\n    var clk abctime  = Abc_Clock();\n    var p *Gls_Man_t  = nil;\n    var pGia *Gia_Man_t  = nil;\n    var vLines *Vec_Str_t;\n    var i int32;\n    var pCounts [GLS_FINAL]int32;\n    var pFile *os.File  = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot read file \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    vLines = Gls_ManCount( pFile, pCounts );\n    rewind( pFile );\n    // statistics\n    for  i = 0; i \u003c GLS_FINAL; i++  {\n        if pCounts[i] {\n            fmt.Printf(\"%s=%d  \", s_Strs[i], pCounts[i]); }\n    }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // collect data and derive AIG\n    p = Gls_ManAlloc( vLines, pCounts );\n    if Gls_ManParse( pFile, p ) != 0 {\n        pGia = Gls_ManConstruct( p, pFileName ); }\n    Gls_ManStop( p );\n    _ = (pFile).Close();\n    //printf( \"\\n\" );\n    return pGia;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

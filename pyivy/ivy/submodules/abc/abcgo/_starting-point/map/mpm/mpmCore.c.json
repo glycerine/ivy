@@ -1,0 +1,127 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmCore.c",
+  "SHA256": "0c4259ca17edef20addae4b18acbd3a61e78161332297a851954b04acd85de22",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Mpm_Par_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 2825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPars.pLib.LutMax \u003c= MPM_VAR_MAX );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 2873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPars.nNumCuts \u003c= MPM_CUT_MAX );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mpm_ManSetParsDefault",
+      "Start": 1255,
+      "End": 2037,
+      "BodyStart": 1299,
+      "Original": "void Mpm_ManSetParsDefault( Mpm_Par_t * p )\n{\n    memset( p, 0, sizeof(Mpm_Par_t) );\n    p-\u003epLib           =   NULL;  // LUT library\n    p-\u003enNumCuts       =      8;  // cut number\n    p-\u003efUseTruth      =      0;  // uses truth tables\n    p-\u003efUseDsd        =      0;  // uses DSDs\n    p-\u003efCutMin        =      0;  // enables cut minimization\n    p-\u003efOneRound      =      0;  // enabled one round\n    p-\u003eDelayTarget    =     -1;  // delay target\n    p-\u003efDeriveLuts    =      0;  // use truth tables to derive AIG structure\n    p-\u003efMap4Cnf       =      0;  // mapping for CNF\n    p-\u003efMap4Aig       =      0;  // mapping for AIG\n    p-\u003efMap4Gates     =      0;  // mapping for gates\n    p-\u003efVerbose       =      0;  // verbose output\n    p-\u003efVeryVerbose   =      0;  // verbose output\n}",
+      "Draft": "func Mpm_ManSetParsDefault(p *Mpm_Par_t) {\n    memset( p, 0, sizeof(Mpm_Par_t) );\n    p.pLib           =   nil;  // LUT library\n    p.nNumCuts       =      8;  // cut number\n    p.fUseTruth      =      0;  // uses truth tables\n    p.fUseDsd        =      0;  // uses DSDs\n    p.fCutMin        =      0;  // enables cut minimization\n    p.fOneRound      =      0;  // enabled one round\n    p.DelayTarget    =     -1;  // delay target\n    p.fDeriveLuts    =      0;  // use truth tables to derive AIG structure\n    p.fMap4Cnf       =      0;  // mapping for CNF\n    p.fMap4Aig       =      0;  // mapping for AIG\n    p.fMap4Gates     =      0;  // mapping for gates\n    p.fVerbose       =      0;  // verbose output\n    p.fVeryVerbose   =      0;  // verbose output\n}"
+    },
+    {
+      "Name": "Mpm_ManPerformLutMapping",
+      "Start": 2273,
+      "End": 2698,
+      "BodyStart": 2349,
+      "Original": "Gia_Man_t * Mpm_ManPerformLutMapping( Mig_Man_t * pMig, Mpm_Par_t * pPars )\n{\n    Gia_Man_t * pNew;\n    Mpm_Man_t * p;\n    p = Mpm_ManStart( pMig, pPars );\n    if ( p-\u003epPars-\u003efVerbose ) \n        Mpm_ManPrintStatsInit( p );\n    Mpm_ManPrepare( p );\n    Mpm_ManPerform( p );\n    if ( p-\u003epPars-\u003efVerbose ) \n        Mpm_ManPrintStats( p );\n    pNew = (Gia_Man_t *)Mpm_ManFromIfLogic( p );\n    Mpm_ManStop( p );\n    return pNew;\n}",
+      "Draft": "func Mpm_ManPerformLutMapping(pMig *Mig_Man_t, pPars *Mpm_Par_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var p *Mpm_Man_t;\n    p = Mpm_ManStart( pMig, pPars );\n    if p.pPars.fVerbose { \n        Mpm_ManPrintStatsInit( p ); }\n    Mpm_ManPrepare( p );\n    Mpm_ManPerform( p );\n    if p.pPars.fVerbose { \n        Mpm_ManPrintStats( p ); }\n    pNew = (Gia_Man_t *)Mpm_ManFromIfLogic( p );\n    Mpm_ManStop( p );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Mpm_ManLutMapping",
+      "Start": 2699,
+      "End": 3187,
+      "BodyStart": 2768,
+      "Original": "Gia_Man_t * Mpm_ManLutMapping( Gia_Man_t * pGia, Mpm_Par_t * pPars )\n{\n    Mig_Man_t * p;\n    Gia_Man_t * pNew;\n    assert( pPars-\u003epLib-\u003eLutMax \u003c= MPM_VAR_MAX );\n    assert( pPars-\u003enNumCuts \u003c= MPM_CUT_MAX );\n    if ( pPars-\u003efUseGates )\n    {\n        pGia = Gia_ManDupMuxes( pGia, 2 );\n        p = Mig_ManCreate( pGia );\n        Gia_ManStop( pGia );\n    }\n    else\n        p = Mig_ManCreate( pGia );\n    pNew = Mpm_ManPerformLutMapping( p, pPars );\n    Mig_ManStop( p );\n    return pNew;\n}",
+      "Draft": "func Mpm_ManLutMapping(pGia *Gia_Man_t, pPars *Mpm_Par_t) *Gia_Man_t {\n    var p *Mig_Man_t;\n    var pNew *Gia_Man_t;\n    assert(pPars.pLib.LutMax \u003c= MPM_VAR_MAX, \"pPars.pLib.LutMax \u003c= MPM_VAR_MAX\");\n    assert(pPars.nNumCuts \u003c= MPM_CUT_MAX, \"pPars.nNumCuts \u003c= MPM_CUT_MAX\");\n    if pPars.fUseGates {\n        pGia = Gia_ManDupMuxes( pGia, 2 );\n        p = Mig_ManCreate( pGia );\n        Gia_ManStop( pGia );\n    \n    } else {\n        p = Mig_ManCreate( pGia ); }\n    pNew = Mpm_ManPerformLutMapping( p, pPars );\n    Mig_ManStop( p );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmCore.c::mechanical::sizeof::1319",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1319,
+      "End": 1325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmCore.c::pointer-cast::2620",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2620,
+      "End": 2633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmCore.c::Mpm_ManSetParsDefault",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManSetParsDefault",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1255,
+      "End": 2037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmCore.c::Mpm_ManPerformLutMapping",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManPerformLutMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2273,
+      "End": 2698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmCore.c::Mpm_ManLutMapping",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManLutMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2699,
+      "End": 3187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3434
+    }
+  ],
+  "Draft": "package mpm\n\n/**CFile****************************************************************\n\n  FileName    [mpmCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Configurable technology mapper.]\n\n  Synopsis    [Core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 1, 2013.]\n\n  Revision    [$Id: mpmCore.c,v 1.00 2013/06/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig/gia/gia.h\"\n//#include \"mpmInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mpm_ManSetParsDefault(p *Mpm_Par_t) {\n    memset( p, 0, sizeof(Mpm_Par_t) );\n    p.pLib           =   nil;  // LUT library\n    p.nNumCuts       =      8;  // cut number\n    p.fUseTruth      =      0;  // uses truth tables\n    p.fUseDsd        =      0;  // uses DSDs\n    p.fCutMin        =      0;  // enables cut minimization\n    p.fOneRound      =      0;  // enabled one round\n    p.DelayTarget    =     -1;  // delay target\n    p.fDeriveLuts    =      0;  // use truth tables to derive AIG structure\n    p.fMap4Cnf       =      0;  // mapping for CNF\n    p.fMap4Aig       =      0;  // mapping for AIG\n    p.fMap4Gates     =      0;  // mapping for gates\n    p.fVerbose       =      0;  // verbose output\n    p.fVeryVerbose   =      0;  // verbose output\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mpm_ManPerformLutMapping(pMig *Mig_Man_t, pPars *Mpm_Par_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var p *Mpm_Man_t;\n    p = Mpm_ManStart( pMig, pPars );\n    if p.pPars.fVerbose { \n        Mpm_ManPrintStatsInit( p ); }\n    Mpm_ManPrepare( p );\n    Mpm_ManPerform( p );\n    if p.pPars.fVerbose { \n        Mpm_ManPrintStats( p ); }\n    pNew = (Gia_Man_t *)Mpm_ManFromIfLogic( p );\n    Mpm_ManStop( p );\n    return pNew;\n}\nfunc Mpm_ManLutMapping(pGia *Gia_Man_t, pPars *Mpm_Par_t) *Gia_Man_t {\n    var p *Mig_Man_t;\n    var pNew *Gia_Man_t;\n    assert(pPars.pLib.LutMax \u003c= MPM_VAR_MAX, \"pPars.pLib.LutMax \u003c= MPM_VAR_MAX\");\n    assert(pPars.nNumCuts \u003c= MPM_CUT_MAX, \"pPars.nNumCuts \u003c= MPM_CUT_MAX\");\n    if pPars.fUseGates {\n        pGia = Gia_ManDupMuxes( pGia, 2 );\n        p = Mig_ManCreate( pGia );\n        Gia_ManStop( pGia );\n    \n    } else {\n        p = Mig_ManCreate( pGia ); }\n    pNew = Mpm_ManPerformLutMapping( p, pPars );\n    Mig_ManStop( p );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

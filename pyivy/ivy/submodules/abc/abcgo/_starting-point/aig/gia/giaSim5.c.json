@@ -1,0 +1,71 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSim5.c",
+  "SHA256": "31d02b098d114bf39cb2005b92c8034412b155f62e242dee5f22a9d399c05ce9",
+  "Functions": [
+    {
+      "Name": "Sim_Init",
+      "Start": 793,
+      "End": 831,
+      "BodyStart": 829,
+      "Original": "void Sim_Init( Abc_Frame_t * pAbc ) {}",
+      "Draft": "func Sim_Init(pAbc *Abc_Frame_t) {}"
+    },
+    {
+      "Name": "Sim_End",
+      "Start": 832,
+      "End": 870,
+      "BodyStart": 868,
+      "Original": "void Sim_End( Abc_Frame_t * pAbc )  {}",
+      "Draft": "func Sim_End(pAbc *Abc_Frame_t) {}"
+    },
+    {
+      "Name": "Gia_DatFree",
+      "Start": 871,
+      "End": 909,
+      "BodyStart": 907,
+      "Original": "void Gia_DatFree( Gia_Dat_t * p )   {}",
+      "Draft": "func Gia_DatFree(p *Gia_Dat_t) {}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSim5.c::Sim_Init",
+      "Category": "semantic-review",
+      "Symbol": "Sim_Init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 793,
+      "End": 831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSim5.c::Sim_End",
+      "Category": "semantic-review",
+      "Symbol": "Sim_End",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 832,
+      "End": 870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSim5.c::Gia_DatFree",
+      "Category": "semantic-review",
+      "Symbol": "Gia_DatFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 871,
+      "End": 909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSim5.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1596
+    }
+  ],
+  "Draft": "package gia\n\n/**CFile****************************************************************\n\n  FileName    [giaSim5.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Simulation engine.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaSim5.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Sim_Init(pAbc *Abc_Frame_t) {}\nfunc Sim_End(pAbc *Abc_Frame_t) {}\nfunc Gia_DatFree(p *Gia_Dat_t) {}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

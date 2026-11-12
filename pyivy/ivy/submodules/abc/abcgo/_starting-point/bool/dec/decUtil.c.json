@@ -1,0 +1,147 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decUtil.c",
+  "SHA256": "c38f464ba1fc69843d570e3014b7f9c69c8717c772a4a3fdffeec9ea40b66f52",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Dec_GraphLeaveNum(pGraph) \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1779
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Dec_GraphLeaveNum(pGraph) \u003c= pGraph.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Dec_GraphLeaveNum(pGraph) \u003c= 5 );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 22,
+        "Column": 1,
+        "ByteOffset": 512
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 37,
+        "Column": 1,
+        "ByteOffset": 1040
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dec_GraphDeriveTruth",
+      "Start": 3095,
+      "End": 4613,
+      "BodyStart": 3149,
+      "Original": "unsigned Dec_GraphDeriveTruth( Dec_Graph_t * pGraph )\n{\n    unsigned uTruths[5] = { 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    unsigned uTruth = 0; // Suppress \"might be used uninitialized\"\n    unsigned uTruth0, uTruth1;\n    Dec_Node_t * pNode;\n    int i;\n\n    // sanity checks\n    assert( Dec_GraphLeaveNum(pGraph) \u003e= 0 );\n    assert( Dec_GraphLeaveNum(pGraph) \u003c= pGraph-\u003enSize );\n    assert( Dec_GraphLeaveNum(pGraph) \u003c= 5 );\n\n    // check for constant function\n    if ( Dec_GraphIsConst(pGraph) )\n        return Dec_GraphIsComplement(pGraph)? 0 : ~((unsigned)0);\n    // check for a literal\n    if ( Dec_GraphIsVar(pGraph) )\n        return Dec_GraphIsComplement(pGraph)? ~uTruths[Dec_GraphVarInt(pGraph)] : uTruths[Dec_GraphVarInt(pGraph)];\n\n    // assign the elementary variables\n    Dec_GraphForEachLeaf( pGraph, pNode, i )\n        pNode-\u003epFunc = (void *)(ABC_PTRUINT_T)uTruths[i];\n\n    // compute the function for each internal node\n    Dec_GraphForEachNode( pGraph, pNode, i )\n    {\n        uTruth0 = (unsigned)(ABC_PTRUINT_T)Dec_GraphNode(pGraph, pNode-\u003eeEdge0.Node)-\u003epFunc;\n        uTruth1 = (unsigned)(ABC_PTRUINT_T)Dec_GraphNode(pGraph, pNode-\u003eeEdge1.Node)-\u003epFunc;\n        uTruth0 = pNode-\u003eeEdge0.fCompl? ~uTruth0 : uTruth0;\n        uTruth1 = pNode-\u003eeEdge1.fCompl? ~uTruth1 : uTruth1;\n        uTruth = uTruth0 \u0026 uTruth1;\n        pNode-\u003epFunc = (void *)(ABC_PTRUINT_T)uTruth;\n    }\n\n    // complement the result if necessary\n    return Dec_GraphIsComplement(pGraph)? ~uTruth : uTruth;\n}",
+      "Draft": "func Dec_GraphDeriveTruth(pGraph *Dec_Graph_t) uint32 {\n    var uTruths [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    var uTruth uint32; // Suppress \"might be used uninitialized\"\n    var uTruth0, uTruth1 uint32;\n    var pNode *Dec_Node_t;\n    var i int32;\n\n    // sanity checks\n    assert(Dec_GraphLeaveNum(pGraph) \u003e= 0, \"Dec_GraphLeaveNum(pGraph) \u003e= 0\");\n    assert(Dec_GraphLeaveNum(pGraph) \u003c= pGraph.nSize, \"Dec_GraphLeaveNum(pGraph) \u003c= pGraph.nSize\");\n    assert(Dec_GraphLeaveNum(pGraph) \u003c= 5, \"Dec_GraphLeaveNum(pGraph) \u003c= 5\");\n\n    // check for constant function\n    if Dec_GraphIsConst(pGraph) {\n        if Dec_GraphIsComplement(pGraph) {\n            return 0;\n        } else {\n            return ~(uint32(0));\n        } }\n    // check for a literal\n    if Dec_GraphIsVar(pGraph) {\n        if Dec_GraphIsComplement(pGraph) {\n            return ~uTruths[Dec_GraphVarInt(pGraph)];\n        } else {\n            return uTruths[Dec_GraphVarInt(pGraph)];\n        } }\n\n    // assign the elementary variables\n    Dec_GraphForEachLeaf( pGraph, pNode, i )\n        pNode.pFunc = (void *)(ABC_PTRUINT_T)uTruths[i];\n\n    // compute the function for each internal node\n    Dec_GraphForEachNode( pGraph, pNode, i )\n    {\n        uTruth0 = uint32((ABC_PTRUINT_T))Dec_GraphNode(pGraph, pNode.eEdge0.Node).pFunc;\n        uTruth1 = uint32((ABC_PTRUINT_T))Dec_GraphNode(pGraph, pNode.eEdge1.Node).pFunc;\n        if pNode.eEdge0.fCompl {\n            uTruth0 = ~uTruth0;\n        } else {\n            uTruth0 = uTruth0;\n        }\n        if pNode.eEdge1.fCompl {\n            uTruth1 = ~uTruth1;\n        } else {\n            uTruth1 = uTruth1;\n        }\n        uTruth = uTruth0 \u0026 uTruth1;\n        pNode.pFunc = (void *)(ABC_PTRUINT_T)uTruth;\n    }\n\n    // complement the result if necessary\n    if Dec_GraphIsComplement(pGraph) {\n        return ~uTruth;\n    } else {\n        return uTruth;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decUtil.c::pointer-cast::2263",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3969,
+      "End": 3977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decUtil.c::pointer-cast::2766",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4472,
+      "End": 4480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decUtil.c::Dec_GraphDeriveTruth",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphDeriveTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3095,
+      "End": 4613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decUtil.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 512,
+      "End": 571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decUtil.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1040,
+      "End": 2835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decUtil.c::macro-inline::3905",
+      "Category": "macro-inline-review",
+      "Symbol": "Dec_GraphForEachLeaf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3905,
+      "End": 3945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decUtil.c::macro-inline::4060",
+      "Category": "macro-inline-review",
+      "Symbol": "Dec_GraphForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4060,
+      "End": 4100
+    }
+  ],
+  "Draft": "package dec\n\n/**CFile****************************************************************\n\n  FileName    [decUtil.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Decomposition unitilies.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: decUtil.c,v 1.1 2003/05/22 19:20:05 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"dec.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n#ifdef ABC_USE_CUDD\n\n/**Function*************************************************************\n\n  Synopsis    [Converts graph to BDD.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nDdNode * Dec_GraphDeriveBdd( DdManager * dd, Dec_Graph_t * pGraph )\n{\n    DdNode * bFunc, * bFunc0, * bFunc1;\n    Dec_Node_t * pNode = NULL; // Suppress \"might be used uninitialized\"\n    int i;\n\n    // sanity checks\n    assert( Dec_GraphLeaveNum(pGraph) \u003e= 0 );\n    assert( Dec_GraphLeaveNum(pGraph) \u003c= pGraph-\u003enSize );\n\n    // check for constant function\n    if ( Dec_GraphIsConst(pGraph) )\n        return Cudd_NotCond( b1, Dec_GraphIsComplement(pGraph) );\n    // check for a literal\n    if ( Dec_GraphIsVar(pGraph) )\n        return Cudd_NotCond( Cudd_bddIthVar(dd, Dec_GraphVarInt(pGraph)), Dec_GraphIsComplement(pGraph) );\n\n    // assign the elementary variables\n    Dec_GraphForEachLeaf( pGraph, pNode, i )\n        pNode-\u003epFunc = Cudd_bddIthVar( dd, i );\n\n    // compute the function for each internal node\n    Dec_GraphForEachNode( pGraph, pNode, i )\n    {\n        bFunc0 = Cudd_NotCond( Dec_GraphNode(pGraph, pNode-\u003eeEdge0.Node)-\u003epFunc, pNode-\u003eeEdge0.fCompl ); \n        bFunc1 = Cudd_NotCond( Dec_GraphNode(pGraph, pNode-\u003eeEdge1.Node)-\u003epFunc, pNode-\u003eeEdge1.fCompl ); \n        pNode-\u003epFunc = Cudd_bddAnd( dd, bFunc0, bFunc1 );   Cudd_Ref( (DdNode *)pNode-\u003epFunc );\n    }\n\n    // deref the intermediate results\n    bFunc = (DdNode *)pNode-\u003epFunc;   Cudd_Ref( bFunc );\n    Dec_GraphForEachNode( pGraph, pNode, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pNode-\u003epFunc );\n    Cudd_Deref( bFunc );\n\n    // complement the result if necessary\n    return Cudd_NotCond( bFunc, Dec_GraphIsComplement(pGraph) );\n}\n\n#endif\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphDeriveTruth(pGraph *Dec_Graph_t) uint32 {\n    var uTruths [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    var uTruth uint32; // Suppress \"might be used uninitialized\"\n    var uTruth0, uTruth1 uint32;\n    var pNode *Dec_Node_t;\n    var i int32;\n\n    // sanity checks\n    assert(Dec_GraphLeaveNum(pGraph) \u003e= 0, \"Dec_GraphLeaveNum(pGraph) \u003e= 0\");\n    assert(Dec_GraphLeaveNum(pGraph) \u003c= pGraph.nSize, \"Dec_GraphLeaveNum(pGraph) \u003c= pGraph.nSize\");\n    assert(Dec_GraphLeaveNum(pGraph) \u003c= 5, \"Dec_GraphLeaveNum(pGraph) \u003c= 5\");\n\n    // check for constant function\n    if Dec_GraphIsConst(pGraph) {\n        if Dec_GraphIsComplement(pGraph) {\n            return 0;\n        } else {\n            return ~(uint32(0));\n        } }\n    // check for a literal\n    if Dec_GraphIsVar(pGraph) {\n        if Dec_GraphIsComplement(pGraph) {\n            return ~uTruths[Dec_GraphVarInt(pGraph)];\n        } else {\n            return uTruths[Dec_GraphVarInt(pGraph)];\n        } }\n\n    // assign the elementary variables\n    Dec_GraphForEachLeaf( pGraph, pNode, i )\n        pNode.pFunc = (void *)(ABC_PTRUINT_T)uTruths[i];\n\n    // compute the function for each internal node\n    Dec_GraphForEachNode( pGraph, pNode, i )\n    {\n        uTruth0 = uint32((ABC_PTRUINT_T))Dec_GraphNode(pGraph, pNode.eEdge0.Node).pFunc;\n        uTruth1 = uint32((ABC_PTRUINT_T))Dec_GraphNode(pGraph, pNode.eEdge1.Node).pFunc;\n        if pNode.eEdge0.fCompl {\n            uTruth0 = ~uTruth0;\n        } else {\n            uTruth0 = uTruth0;\n        }\n        if pNode.eEdge1.fCompl {\n            uTruth1 = ~uTruth1;\n        } else {\n            uTruth1 = uTruth1;\n        }\n        uTruth = uTruth0 \u0026 uTruth1;\n        pNode.pFunc = (void *)(ABC_PTRUINT_T)uTruth;\n    }\n\n    // complement the result if necessary\n    if Dec_GraphIsComplement(pGraph) {\n        return ~uTruth;\n    } else {\n        return uTruth;\n    }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

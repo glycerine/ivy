@@ -1,0 +1,218 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h",
+  "SHA256": "5ecfe2e702b8cb3907446236e13e0e1ac48dc38c8e3bb6076e1d2cdeed4df3c6",
+  "Functions": [
+    {
+      "Name": "Fsim_SimData",
+      "Start": 3742,
+      "End": 3850,
+      "BodyStart": 3808,
+      "Original": "static inline unsigned * Fsim_SimData( Fsim_Man_t * p, int i )    { return p-\u003epDataSim + i * p-\u003enWords;    }",
+      "Draft": "func Fsim_SimData(p *Fsim_Man_t, i int32) *uint32 { return p.pDataSim + i * p.nWords;    }"
+    },
+    {
+      "Name": "Fsim_SimDataCi",
+      "Start": 3851,
+      "End": 3959,
+      "BodyStart": 3917,
+      "Original": "static inline unsigned * Fsim_SimDataCi( Fsim_Man_t * p, int i )  { return p-\u003epDataSimCis + i * p-\u003enWords; }",
+      "Draft": "func Fsim_SimDataCi(p *Fsim_Man_t, i int32) *uint32 { return p.pDataSimCis + i * p.nWords; }"
+    },
+    {
+      "Name": "Fsim_SimDataCo",
+      "Start": 3960,
+      "End": 4068,
+      "BodyStart": 4026,
+      "Original": "static inline unsigned * Fsim_SimDataCo( Fsim_Man_t * p, int i )  { return p-\u003epDataSimCos + i * p-\u003enWords; }",
+      "Draft": "func Fsim_SimDataCo(p *Fsim_Man_t, i int32) *uint32 { return p.pDataSimCos + i * p.nWords; }"
+    },
+    {
+      "Name": "Fsim_Var2Lit",
+      "Start": 4290,
+      "End": 4376,
+      "BodyStart": 4346,
+      "Original": "static inline int  Fsim_Var2Lit( int Var, int fCompl )  { return Var + Var + fCompl; }",
+      "Draft": "func Fsim_Var2Lit(Var int32, fCompl int32) int32 { return Var + Var + fCompl; }"
+    },
+    {
+      "Name": "Fsim_Lit2Var",
+      "Start": 4377,
+      "End": 4463,
+      "BodyStart": 4433,
+      "Original": "static inline int  Fsim_Lit2Var( int Lit )              { return Lit \u003e\u003e 1;           }",
+      "Draft": "func Fsim_Lit2Var(Lit int32) int32 { return Lit \u003e\u003e 1;           }"
+    },
+    {
+      "Name": "Fsim_LitIsCompl",
+      "Start": 4464,
+      "End": 4550,
+      "BodyStart": 4520,
+      "Original": "static inline int  Fsim_LitIsCompl( int Lit )           { return Lit \u0026 1;            }",
+      "Draft": "func Fsim_LitIsCompl(Lit int32) int32 { return Lit \u0026 1;            }"
+    },
+    {
+      "Name": "Fsim_LitNot",
+      "Start": 4551,
+      "End": 4637,
+      "BodyStart": 4607,
+      "Original": "static inline int  Fsim_LitNot( int Lit )               { return Lit ^ 1;            }",
+      "Draft": "func Fsim_LitNot(Lit int32) int32 { return Lit ^ 1;            }"
+    },
+    {
+      "Name": "Fsim_LitNotCond",
+      "Start": 4638,
+      "End": 4724,
+      "BodyStart": 4694,
+      "Original": "static inline int  Fsim_LitNotCond( int Lit, int c )    { return Lit ^ (int)(c \u003e 0); }",
+      "Draft": "func Fsim_LitNotCond(Lit int32, c int32) int32 { return Lit ^ int32((c \u003e 0)); }"
+    },
+    {
+      "Name": "Fsim_LitRegular",
+      "Start": 4725,
+      "End": 4811,
+      "BodyStart": 4781,
+      "Original": "static inline int  Fsim_LitRegular( int Lit )           { return Lit \u0026 ~01;          }",
+      "Draft": "func Fsim_LitRegular(Lit int32) int32 { return Lit \u0026 ~01;          }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::struct::Fsim_Obj_t",
+      "Category": "struct-review",
+      "Symbol": "Fsim_Obj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1343,
+      "End": 1561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::struct::Fsim_Man_t_::// the length of allocated data\n    unsigned char * pDataAig;",
+      "Category": "struct-field-review",
+      "Symbol": "Fsim_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2930,
+      "End": 2996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::struct::Fsim_Man_t_::// AIG representation\n    unsigned char * pDataCur;",
+      "Category": "struct-field-review",
+      "Symbol": "Fsim_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2996,
+      "End": 3052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::struct::Fsim_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Fsim_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1601,
+      "End": 3740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::macro::Fsim_ManForEachObj",
+      "Category": "macro-review",
+      "Symbol": "Fsim_ManForEachObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4813,
+      "End": 4994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::Fsim_SimData",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_SimData",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3742,
+      "End": 3850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::Fsim_SimDataCi",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_SimDataCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3851,
+      "End": 3959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::Fsim_SimDataCo",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_SimDataCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3960,
+      "End": 4068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::Fsim_Var2Lit",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_Var2Lit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4290,
+      "End": 4376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::Fsim_Lit2Var",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_Lit2Var",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4377,
+      "End": 4463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::Fsim_LitIsCompl",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_LitIsCompl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4464,
+      "End": 4550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::Fsim_LitNot",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_LitNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4551,
+      "End": 4637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::Fsim_LitNotCond",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_LitNotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4638,
+      "End": 4724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::Fsim_LitRegular",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_LitRegular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4725,
+      "End": 4811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5893
+    }
+  ],
+  "Draft": "package fsim\n\n/**CFile****************************************************************\n\n  FileName    [fsimInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast sequential AIG simulator.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: fsimInt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/saig/saig.h\"\n//#include \"fsim.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// simulation object\n   \ntype Fsim_Obj_t struct {\n    iNode             int32;        // the node ID\n    iFan0             int32;        // the first fanin\n    iFan1             int32;        // the second fanin\n}\n\n// fast sequential simulation manager\ntype Fsim_Man_t_ struct {\n    // parameters\n    pAig      *Aig_Man_t;         // the AIG to be used for simulation\n    nWords             int32;       // the number of simulation words\n    // AIG representation\n    nPis             int32;         // the number of primary inputs\n    nPos             int32;         // the number of primary outputs\n    nCis             int32;         // the number of combinational inputs\n    nCos             int32;         // the number of combinational outputs\n    nNodes             int32;       // the number of internal nodes\n    nObjs             int32;        // nCis + nNodes + nCos + 2\n    pFans0            *int32;       // fanin0 for all objects\n    pFans1            *int32;       // fanin1 for all objects\n    pRefs            *int32;        // reference counter for each node\n    pRefsCopy            *int32;    // reference counter for each node\n    vCis2Ids      *Vec_Int_t;     // mapping of CIs into their PI ids\n    vLos      *Vec_Int_t;         // register outputs\n    vLis      *Vec_Int_t;         // register inputs\n    // cross-cut representation\n    nCrossCut             int32;    // temporary cross-cut variable \n    nCrossCutMax             int32; // maximum cross-cut variable\n    nFront             int32;       // the size of frontier\n    // derived AIG representation\n    nDataAig             int32;     // the length of allocated data\n    unsigned char * pDataAig;     // AIG representation\n    unsigned char * pDataCur;     // AIG representation (current position)\n    iNodePrev             int32;    // previous extracted value\n    iNumber             int32;      // the number of the last object\n    Obj      Fsim_Obj_t;          // current object\n    // temporary AIG representation\n    pDataAig2            *int32;    // temporary representation\n    pDataCur2            *int32;    // AIG representation (current position)\n    // simulation information\n    pDataSim       *uint32;     // simulation data\n    pDataSimCis       *uint32;  // simulation data for CIs\n    pDataSimCos       *uint32;  // simulation data for COs\n    // other information\n    pData1            *int32;\n    pData2            *int32;\n}\n\nfunc Fsim_SimData(p *Fsim_Man_t, i int32) *uint32 { return p.pDataSim + i * p.nWords;    }\nfunc Fsim_SimDataCi(p *Fsim_Man_t, i int32) *uint32 { return p.pDataSimCis + i * p.nWords; }\nfunc Fsim_SimDataCo(p *Fsim_Man_t, i int32) *uint32 { return p.pDataSimCos + i * p.nWords; }\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Fsim_Var2Lit(Var int32, fCompl int32) int32 { return Var + Var + fCompl; }\nfunc Fsim_Lit2Var(Lit int32) int32 { return Lit \u003e\u003e 1;           }\nfunc Fsim_LitIsCompl(Lit int32) int32 { return Lit \u0026 1;            }\nfunc Fsim_LitNot(Lit int32) int32 { return Lit ^ 1;            }\nfunc Fsim_LitNotCond(Lit int32, c int32) int32 { return Lit ^ int32((c \u003e 0)); }\nfunc Fsim_LitRegular(Lit int32) int32 { return Lit \u0026 ~01;          }\n\n// Original macro:\n// #define Fsim_ManForEachObj( p, pObj, i )\\\n//     for ( i = 2, p-\u003epDataCur = p-\u003epDataAig, p-\u003eiNodePrev = 0, pObj = \u0026p-\u003eObj;\\\n//         i \u003c p-\u003enObjs \u0026\u0026 Fsim_ManRestoreObj( p, pObj ); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== fsimFront.c ========================================================*/\n// extern void                Fsim_ManFront( Fsim_Man_t * p, int fCompressAig );\n\n/*=== fsimMan.c ==========================================================*/\n// extern Fsim_Man_t *        Fsim_ManCreate( Aig_Man_t * pAig );\n\n// extern void                Fsim_ManDelete( Fsim_Man_t * p );\n\n// extern void                Fsim_ManTest( Aig_Man_t * pAig );\n\n \n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

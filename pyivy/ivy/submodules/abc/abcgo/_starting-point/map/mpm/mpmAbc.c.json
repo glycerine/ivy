@@ -1,0 +1,364 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c",
+  "SHA256": "f1e2c3eef72d73ba8d8b59f972190623db1afbdc2bebcf54904b03f87cff325b",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Mig_ManObjNum(pMig) == Gia_ManObjNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(\u0026pMig.vSibls) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 9,
+        "ByteOffset": 1748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_Lit2Var(pObj.Value) == i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 18,
+        "ByteOffset": 3794
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 4601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( fHash == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 186,
+        "Column": 5,
+        "ByteOffset": 6994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nLeaves \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 263,
+        "Column": 21,
+        "ByteOffset": 11547
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Abc_Lit2Var(Entry) \u003c Abc_Lit2Var(iLitNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 282,
+        "Column": 18,
+        "ByteOffset": 12470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 296,
+        "Column": 5,
+        "ByteOffset": 13017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vMapping) == Gia_ManObjNum(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 304,
+        "Column": 5,
+        "ByteOffset": 13434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew.vMapping == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 305,
+        "Column": 5,
+        "ByteOffset": 13470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew.vPacking == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 312,
+        "Column": 12,
+        "ByteOffset": 13786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "           assert( !Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) || Gia_ObjIsLut(pNew, Gia_ObjFaninId0p(pNew, pObj)) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mig_ManCreateChoices",
+      "Start": 1272,
+      "End": 2164,
+      "BodyStart": 1333,
+      "Original": "void Mig_ManCreateChoices( Mig_Man_t * pMig, Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    assert( Mig_ManObjNum(pMig) == Gia_ManObjNum(p) );\n    assert( Vec_IntSize(\u0026pMig-\u003evSibls) == 0 );\n    Vec_IntFill( \u0026pMig-\u003evSibls, Gia_ManObjNum(p), 0 );\n    Gia_ManMarkFanoutDrivers( p );\n    Gia_ManForEachObj( p, pObj, i )\n    {\n        Gia_ObjSetPhase( p, pObj );\n        assert( Abc_Lit2Var(pObj-\u003eValue) == i );\n        Mig_ObjSetPhase( Mig_ManObj(pMig, i), pObj-\u003efPhase );\n        if ( Gia_ObjSibl(p, i) \u0026\u0026 pObj-\u003efMark0 )\n        {\n            Gia_Obj_t * pSibl, * pPrev;\n            for ( pPrev = pObj, pSibl = Gia_ObjSiblObj(p, i); pSibl; pPrev = pSibl, pSibl = Gia_ObjSiblObj(p, Gia_ObjId(p, pSibl)) )\n                Mig_ObjSetSiblId( Mig_ManObj(pMig, Abc_Lit2Var(pPrev-\u003eValue)), Abc_Lit2Var(pSibl-\u003eValue) );\n            pMig-\u003enChoices++;\n        }\n    }\n    Gia_ManCleanMark0( p );\n}",
+      "Draft": "func Mig_ManCreateChoices(pMig *Mig_Man_t, p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(Mig_ManObjNum(pMig) == Gia_ManObjNum(p), \"Mig_ManObjNum(pMig) == Gia_ManObjNum(p)\");\n    assert(Vec_IntSize(\u0026pMig.vSibls) == 0, \"Vec_IntSize(\u0026pMig.vSibls) == 0\");\n    Vec_IntFill( \u0026pMig.vSibls, Gia_ManObjNum(p), 0 );\n    Gia_ManMarkFanoutDrivers( p );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        Gia_ObjSetPhase( p, pObj );\n        assert(Abc_Lit2Var(pObj.Value) == i, \"Abc_Lit2Var(pObj.Value) == i\");\n        Mig_ObjSetPhase( Mig_ManObj(pMig, i), pObj.fPhase );\n        if Gia_ObjSibl(p, i) \u0026\u0026 pObj.fMark0 {\n            var pSibl, pPrev *Gia_Obj_t;\n            for  pPrev = pObj, pSibl = Gia_ObjSiblObj(p, i); pSibl; pPrev = pSibl, pSibl = Gia_ObjSiblObj(p, Gia_ObjId(p, pSibl))  {\n                Mig_ObjSetSiblId( Mig_ManObj(pMig, Abc_Lit2Var(pPrev.Value)), Abc_Lit2Var(pSibl.Value) );\n            }\n            pMig.nChoices++;\n        }\n    }\n    Gia_ManCleanMark0( p );\n}"
+    },
+    {
+      "Name": "Mig_ObjFanin0Copy",
+      "Start": 2400,
+      "End": 2538,
+      "BodyStart": 2456,
+      "Original": "static inline int Mig_ObjFanin0Copy( Gia_Obj_t * pObj ) { return Abc_LitNotCond( Gia_ObjFanin0(pObj)-\u003eValue, Gia_ObjFaninC0(pObj) );     }",
+      "Draft": "func Mig_ObjFanin0Copy(pObj *Gia_Obj_t) int32 { return Abc_LitNotCond( Gia_ObjFanin0(pObj).Value, Gia_ObjFaninC0(pObj) );     }"
+    },
+    {
+      "Name": "Mig_ObjFanin1Copy",
+      "Start": 2539,
+      "End": 2677,
+      "BodyStart": 2595,
+      "Original": "static inline int Mig_ObjFanin1Copy( Gia_Obj_t * pObj ) { return Abc_LitNotCond( Gia_ObjFanin1(pObj)-\u003eValue, Gia_ObjFaninC1(pObj) );     }",
+      "Draft": "func Mig_ObjFanin1Copy(pObj *Gia_Obj_t) int32 { return Abc_LitNotCond( Gia_ObjFanin1(pObj).Value, Gia_ObjFaninC1(pObj) );     }"
+    },
+    {
+      "Name": "Mig_ManCreate",
+      "Start": 2678,
+      "End": 3786,
+      "BodyStart": 2719,
+      "Original": "Mig_Man_t * Mig_ManCreate( void * pGia )\n{\n    Gia_Man_t * p = (Gia_Man_t *)pGia;\n    Mig_Man_t * pNew;\n    Gia_Obj_t * pObj;\n    int i;\n    pNew = Mig_ManStart();\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachObj1( p, pObj, i )\n    {\n        if ( Gia_ObjIsMuxId(p, i) )\n            pObj-\u003eValue = Mig_ManAppendMux( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj), Gia_ObjFanin2Copy(p, pObj) );\n        else if ( Gia_ObjIsXor(pObj) )\n            pObj-\u003eValue = Mig_ManAppendXor( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        else if ( Gia_ObjIsAnd(pObj) )\n            pObj-\u003eValue = Mig_ManAppendAnd( pNew, Mig_ObjFanin0Copy(pObj), Mig_ObjFanin1Copy(pObj) );\n        else if ( Gia_ObjIsCi(pObj) )\n            pObj-\u003eValue = Mig_ManAppendCi( pNew );\n        else if ( Gia_ObjIsCo(pObj) )\n            pObj-\u003eValue = Mig_ManAppendCo( pNew, Mig_ObjFanin0Copy(pObj) );\n        else assert( 0 );\n    }\n    Mig_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    if ( Gia_ManHasChoices(p) )\n        Mig_ManCreateChoices( pNew, p );\n    return pNew;\n}",
+      "Draft": "func Mig_ManCreate(pGia any) *Mig_Man_t {\n    var p *Gia_Man_t  = (Gia_Man_t *)pGia;\n    var pNew *Mig_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    pNew = Mig_ManStart();\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsMuxId(p, i) {\n            pObj.Value = Mig_ManAppendMux( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj), Gia_ObjFanin2Copy(p, pObj) );\n        } else if Gia_ObjIsXor(pObj) {\n            pObj.Value = Mig_ManAppendXor( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Mig_ManAppendAnd( pNew, Mig_ObjFanin0Copy(pObj), Mig_ObjFanin1Copy(pObj) );\n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Mig_ManAppendCi( pNew );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Mig_ManAppendCo( pNew, Mig_ObjFanin0Copy(pObj) );\n        } else { assert(false, \"0\"); }\n    }\n    Mig_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    if Gia_ManHasChoices(p) {\n        Mig_ManCreateChoices( pNew, p ); }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Mpm_CutDataInt",
+      "Start": 4068,
+      "End": 4169,
+      "BodyStart": 4145,
+      "Original": "static inline unsigned Mpm_CutDataInt( Mpm_Cut_t * pCut )                    { return pCut-\u003ehNext;  }",
+      "Draft": "func Mpm_CutDataInt(pCut *Mpm_Cut_t) uint32 { return pCut.hNext;  }"
+    },
+    {
+      "Name": "Mpm_CutSetDataInt",
+      "Start": 4170,
+      "End": 4271,
+      "BodyStart": 4247,
+      "Original": "static inline void     Mpm_CutSetDataInt( Mpm_Cut_t * pCut, int Data )       { pCut-\u003ehNext = Data;  }",
+      "Draft": "func Mpm_CutSetDataInt(pCut *Mpm_Cut_t, Data int32) { pCut.hNext = Data;  }"
+    },
+    {
+      "Name": "Mpm_ManNodeIfToGia_rec",
+      "Start": 4272,
+      "End": 6642,
+      "BodyStart": 4388,
+      "Original": "int Mpm_ManNodeIfToGia_rec( Gia_Man_t * pNew, Mpm_Man_t * pMan, Mig_Obj_t * pObj, Vec_Ptr_t * vVisited, int fHash )\n{\n    Mig_Obj_t * pTemp;\n    Mpm_Cut_t * pCut;\n    int iFunc, iFunc0, iFunc1, iFunc2 = 0;\n    assert( fHash == 0 );\n    // get the best cut\n    pCut = Mpm_ObjCutBestP( pMan, pObj );\n    // if the cut is visited, return the result\n    if ( Mpm_CutDataInt(pCut) )\n        return Mpm_CutDataInt(pCut);\n    // mark the node as visited\n    Vec_PtrPush( vVisited, pCut );\n    // insert the worst case\n    Mpm_CutSetDataInt( pCut, ~0 );\n    // skip in case of primary input\n    if ( Mig_ObjIsCi(pObj) )\n        return Mpm_CutDataInt(pCut);\n    // compute the functions of the children\n    for ( pTemp = pObj; pTemp; pTemp = Mig_ObjSibl(pTemp) )\n    {\n        iFunc0 = Mpm_ManNodeIfToGia_rec( pNew, pMan, Mig_ObjFanin0(pTemp), vVisited, fHash );\n        if ( iFunc0 == ~0 )\n            continue;\n        iFunc1 = Mpm_ManNodeIfToGia_rec( pNew, pMan, Mig_ObjFanin1(pTemp), vVisited, fHash );\n        if ( iFunc1 == ~0 )\n            continue;\n        if ( Mig_ObjIsNode3(pTemp) )\n        {\n            iFunc2 = Mpm_ManNodeIfToGia_rec( pNew, pMan, Mig_ObjFanin2(pTemp), vVisited, fHash );\n            if ( iFunc2 == ~0 )\n                continue;\n            iFunc2 = Abc_LitNotCond(iFunc2, Mig_ObjFaninC2(pTemp));\n        }\n        iFunc0 = Abc_LitNotCond(iFunc0, Mig_ObjFaninC0(pTemp));\n        iFunc1 = Abc_LitNotCond(iFunc1, Mig_ObjFaninC1(pTemp));\n        // both branches are solved\n        if ( fHash )\n        {\n            if ( Mig_ObjIsMux(pTemp) )\n                iFunc = Gia_ManHashMux( pNew, iFunc2, iFunc1, iFunc0 );\n            else if ( Mig_ObjIsXor(pTemp) )\n                iFunc = Gia_ManHashXor( pNew, iFunc0, iFunc1 );\n            else \n                iFunc = Gia_ManHashAnd( pNew, iFunc0, iFunc1 ); \n        }\n        else\n        {\n            if ( Mig_ObjIsMux(pTemp) )\n                iFunc = Gia_ManAppendMux( pNew, iFunc2, iFunc1, iFunc0 );\n            else if ( Mig_ObjIsXor(pTemp) )\n                iFunc = Gia_ManAppendXor( pNew, iFunc0, iFunc1 );\n            else \n                iFunc = Gia_ManAppendAnd( pNew, iFunc0, iFunc1 ); \n        }\n        if ( Mig_ObjPhase(pTemp) != Mig_ObjPhase(pObj) )\n            iFunc = Abc_LitNot(iFunc);\n        Mpm_CutSetDataInt( pCut, iFunc );\n        break;\n    }\n    return Mpm_CutDataInt(pCut);\n}",
+      "Draft": "func Mpm_ManNodeIfToGia_rec(pNew *Gia_Man_t, pMan *Mpm_Man_t, pObj *Mig_Obj_t, vVisited *Vec_Ptr_t, fHash int32) int32 {\n    var pTemp *Mig_Obj_t;\n    var pCut *Mpm_Cut_t;\n    var iFunc, iFunc0, iFunc1, iFunc2 int32;\n    assert(fHash == 0, \"fHash == 0\");\n    // get the best cut\n    pCut = Mpm_ObjCutBestP( pMan, pObj );\n    // if the cut is visited, return the result\n    if Mpm_CutDataInt(pCut) != 0 {\n        return Mpm_CutDataInt(pCut); }\n    // mark the node as visited\n    Vec_PtrPush( vVisited, pCut );\n    // insert the worst case\n    Mpm_CutSetDataInt( pCut, ~0 );\n    // skip in case of primary input\n    if Mig_ObjIsCi(pObj) {\n        return Mpm_CutDataInt(pCut); }\n    // compute the functions of the children\n    for  pTemp = pObj; (pTemp != nil); pTemp = Mig_ObjSibl(pTemp)  {\n        iFunc0 = Mpm_ManNodeIfToGia_rec( pNew, pMan, Mig_ObjFanin0(pTemp), vVisited, fHash );\n        if iFunc0 == ~0 {\n            continue; }\n        iFunc1 = Mpm_ManNodeIfToGia_rec( pNew, pMan, Mig_ObjFanin1(pTemp), vVisited, fHash );\n        if iFunc1 == ~0 {\n            continue; }\n        if Mig_ObjIsNode3(pTemp) {\n            iFunc2 = Mpm_ManNodeIfToGia_rec( pNew, pMan, Mig_ObjFanin2(pTemp), vVisited, fHash );\n            if iFunc2 == ~0 {\n                continue; }\n            iFunc2 = Abc_LitNotCond(iFunc2, Mig_ObjFaninC2(pTemp));\n        }\n        iFunc0 = Abc_LitNotCond(iFunc0, Mig_ObjFaninC0(pTemp));\n        iFunc1 = Abc_LitNotCond(iFunc1, Mig_ObjFaninC1(pTemp));\n        // both branches are solved\n        if fHash != 0 {\n            if Mig_ObjIsMux(pTemp) {\n                iFunc = Gia_ManHashMux( pNew, iFunc2, iFunc1, iFunc0 );\n            } else if Mig_ObjIsXor(pTemp) {\n                iFunc = Gia_ManHashXor( pNew, iFunc0, iFunc1 );\n            } else { \n                iFunc = Gia_ManHashAnd( pNew, iFunc0, iFunc1 ); } \n        \n        } else {\n            if Mig_ObjIsMux(pTemp) {\n                iFunc = Gia_ManAppendMux( pNew, iFunc2, iFunc1, iFunc0 );\n            } else if Mig_ObjIsXor(pTemp) {\n                iFunc = Gia_ManAppendXor( pNew, iFunc0, iFunc1 );\n            } else { \n                iFunc = Gia_ManAppendAnd( pNew, iFunc0, iFunc1 ); } \n        }\n        if Mig_ObjPhase(pTemp) != Mig_ObjPhase(pObj) {\n            iFunc = Abc_LitNot(iFunc); }\n        Mpm_CutSetDataInt( pCut, iFunc );\n        break;\n    }\n    return Mpm_CutDataInt(pCut);\n}"
+    },
+    {
+      "Name": "Mpm_ManNodeIfToGia",
+      "Start": 6643,
+      "End": 7660,
+      "BodyStart": 6754,
+      "Original": "int Mpm_ManNodeIfToGia( Gia_Man_t * pNew, Mpm_Man_t * pMan, Mig_Obj_t * pObj, Vec_Int_t * vLeaves, int fHash )\n{\n    Mpm_Cut_t * pCut;\n    Mig_Obj_t * pFanin;\n    int i, iRes;\n    // get the best cut\n    pCut = Mpm_ObjCutBestP( pMan, pObj );\n    assert( pCut-\u003enLeaves \u003e 1 );\n    // set the leaf variables\n    Mpm_CutForEachLeaf( pMan-\u003epMig, pCut, pFanin, i )\n        Mpm_CutSetDataInt( Mpm_ObjCutBestP(pMan, pFanin), Vec_IntEntry(vLeaves, i) );\n    // recursively compute the function while collecting visited cuts\n    Vec_PtrClear( pMan-\u003evTemp );\n    iRes = Mpm_ManNodeIfToGia_rec( pNew, pMan, pObj, pMan-\u003evTemp, fHash ); \n    if ( iRes == ~0 )\n    {\n        Abc_Print( -1, \"Mpm_ManNodeIfToGia(): Computing local AIG has failed.\\n\" );\n        return ~0;\n    }\n    // clean the cuts\n    Mpm_CutForEachLeaf( pMan-\u003epMig, pCut, pFanin, i )\n        Mpm_CutSetDataInt( Mpm_ObjCutBestP(pMan, pFanin), 0 );\n    Vec_PtrForEachEntry( Mpm_Cut_t *, pMan-\u003evTemp, pCut, i )\n        Mpm_CutSetDataInt( pCut, 0 );\n    return iRes;\n}",
+      "Draft": "func Mpm_ManNodeIfToGia(pNew *Gia_Man_t, pMan *Mpm_Man_t, pObj *Mig_Obj_t, vLeaves *Vec_Int_t, fHash int32) int32 {\n    var pCut *Mpm_Cut_t;\n    var pFanin *Mig_Obj_t;\n    var i, iRes int32;\n    // get the best cut\n    pCut = Mpm_ObjCutBestP( pMan, pObj );\n    assert(pCut.nLeaves \u003e 1, \"pCut.nLeaves \u003e 1\");\n    // set the leaf variables\n    // inlining of macro Mpm_CutForEachLeaf\n    for  i = 0; i \u003c int32(pCut.nLeaves) \u0026\u0026 (pFanin = Mig_ManObj(pMan.pMig, Abc_Lit2Var(pCut.pLeaves[i]))); i++  {\n        Mpm_CutSetDataInt( Mpm_ObjCutBestP(pMan, pFanin), Vec_IntEntry(vLeaves, i) );\n    }\n    // recursively compute the function while collecting visited cuts\n    Vec_PtrClear( pMan.vTemp );\n    iRes = Mpm_ManNodeIfToGia_rec( pNew, pMan, pObj, pMan.vTemp, fHash ); \n    if iRes == ~0 {\n        Abc_Print( -1, \"Mpm_ManNodeIfToGia(): Computing local AIG has failed.\\n\" );\n        return ~0;\n    }\n    // clean the cuts\n    // inlining of macro Mpm_CutForEachLeaf\n    for  i = 0; i \u003c int32(pCut.nLeaves) \u0026\u0026 (pFanin = Mig_ManObj(pMan.pMig, Abc_Lit2Var(pCut.pLeaves[i]))); i++  {\n        Mpm_CutSetDataInt( Mpm_ObjCutBestP(pMan, pFanin), 0 );\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vTemp)) \u0026\u0026 (((pCut) = (Mpm_Cut_t *)Vec_PtrEntry(pMan.vTemp, i)), 1); i++  {\n        Mpm_CutSetDataInt( pCut, 0 );\n    }\n    return iRes;\n}"
+    },
+    {
+      "Name": "Mpm_ManFromIfLogic",
+      "Start": 7661,
+      "End": 12578,
+      "BodyStart": 7707,
+      "Original": "void * Mpm_ManFromIfLogic( Mpm_Man_t * pMan )\n{\n    Gia_Man_t * pNew;\n    Mpm_Cut_t * pCutBest;\n    Mig_Obj_t * pObj, * pFanin;\n    Vec_Int_t * vMapping, * vMapping2, * vPacking = NULL;\n    Vec_Int_t * vLeaves, * vLeaves2, * vCover;\n    word uTruth, * pTruth = \u0026uTruth;\n    int i, k, Entry, iLitNew = 0;\n//    assert( !pMan-\u003epPars-\u003efDeriveLuts || pMan-\u003epPars-\u003efTruth );\n    // start mapping and packing\n    vMapping  = Vec_IntStart( Mig_ManObjNum(pMan-\u003epMig) );\n    vMapping2 = Vec_IntStart( 1 );\n    if ( 0 ) // pMan-\u003epPars-\u003efDeriveLuts \u0026\u0026 pMan-\u003epPars-\u003epLutStruct )\n    {\n        vPacking = Vec_IntAlloc( 1000 );\n        Vec_IntPush( vPacking, 0 );\n    }\n    // create new manager\n    pNew = Gia_ManStart( Mig_ManObjNum(pMan-\u003epMig) );\n    // iterate through nodes used in the mapping\n    vCover   = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vLeaves  = Vec_IntAlloc( 16 );\n    vLeaves2 = Vec_IntAlloc( 16 );\n    Mig_ManCleanCopy( pMan-\u003epMig );\n    Mig_ManForEachObj( pMan-\u003epMig, pObj )\n    {\n        if ( !Mpm_ObjMapRef(pMan, pObj) \u0026\u0026 !Mig_ObjIsTerm(pObj) )\n            continue;\n        if ( Mig_ObjIsNode(pObj) )\n        {\n            // collect leaves of the best cut\n            Vec_IntClear( vLeaves );\n            pCutBest = Mpm_ObjCutBestP( pMan, pObj );\n            Mpm_CutForEachLeaf( pMan-\u003epMig, pCutBest, pFanin, k )\n                Vec_IntPush( vLeaves, Mig_ObjCopy(pFanin) );\n            if ( pMan-\u003epPars-\u003efDeriveLuts \u0026\u0026 (pMan-\u003epPars-\u003efUseTruth || pMan-\u003epPars-\u003efUseDsd) )\n            {\n                extern int Gia_ManFromIfLogicNode( void * p, Gia_Man_t * pNew, int iObj, Vec_Int_t * vLeaves, Vec_Int_t * vLeavesTemp, \n                    word * pRes, char * pStr, Vec_Int_t * vCover, Vec_Int_t * vMapping, Vec_Int_t * vMapping2, Vec_Int_t * vPacking, int fCheck75, int fCheck44e );\n                if ( pMan-\u003epPars-\u003efUseTruth )\n                    pTruth = Mpm_CutTruth(pMan, Abc_Lit2Var(pCutBest-\u003eiFunc));\n                else\n                    uTruth = Mpm_CutTruthFromDsd( pMan, pCutBest, Abc_Lit2Var(pCutBest-\u003eiFunc) );\n//                Kit_DsdPrintFromTruth( pTruth, Vec_IntSize(vLeaves) );  printf( \"\\n\" );\n                // perform decomposition of the cut\n                iLitNew = Gia_ManFromIfLogicNode( NULL, pNew, Mig_ObjId(pObj), vLeaves, vLeaves2, pTruth, NULL, vCover, vMapping, vMapping2, vPacking, 0, 0 );\n                iLitNew = Abc_LitNotCond( iLitNew, pCutBest-\u003efCompl ^ Abc_LitIsCompl(pCutBest-\u003eiFunc) );\n            }\n            else\n            {\n                // perform one of the two types of mapping: with and without structures\n                iLitNew = Mpm_ManNodeIfToGia( pNew, pMan, pObj, vLeaves, 0 );\n                // write mapping\n                Vec_IntSetEntry( vMapping, Abc_Lit2Var(iLitNew), Vec_IntSize(vMapping2) );\n                Vec_IntPush( vMapping2, Vec_IntSize(vLeaves) );\n                Vec_IntForEachEntry( vLeaves, Entry, k )\n                    assert( Abc_Lit2Var(Entry) \u003c Abc_Lit2Var(iLitNew) );\n                Vec_IntForEachEntry( vLeaves, Entry, k )\n                    Vec_IntPush( vMapping2, Abc_Lit2Var(Entry)  );\n                Vec_IntPush( vMapping2, Abc_Lit2Var(iLitNew) );\n            }\n        }\n        else if ( Mig_ObjIsCi(pObj) )\n            iLitNew = Gia_ManAppendCi(pNew);\n        else if ( Mig_ObjIsCo(pObj) )\n            iLitNew = Gia_ManAppendCo( pNew, Abc_LitNotCond(Mig_ObjCopy(Mig_ObjFanin0(pObj)), Mig_ObjFaninC0(pObj)) );\n        else if ( Mig_ObjIsConst0(pObj) )\n        {\n            iLitNew = 0;\n            // create const LUT\n            Vec_IntWriteEntry( vMapping, 0, Vec_IntSize(vMapping2) );\n            Vec_IntPush( vMapping2, 0 );\n            Vec_IntPush( vMapping2, 0 );\n        }\n        else assert( 0 );\n        Mig_ObjSetCopy( pObj, iLitNew );\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vLeaves2 );\n//    printf( \"Mapping array size:  IfMan = %d. Gia = %d. Increase = %.2f\\n\", \n//        Mig_ManObjNum(pMan), Gia_ManObjNum(pNew), 1.0 * Gia_ManObjNum(pNew) / Mig_ManObjNum(pMan) );\n    // finish mapping \n    if ( Vec_IntSize(vMapping) \u003e Gia_ManObjNum(pNew) )\n        Vec_IntShrink( vMapping, Gia_ManObjNum(pNew) );\n    else\n        Vec_IntFillExtra( vMapping, Gia_ManObjNum(pNew), 0 );\n    assert( Vec_IntSize(vMapping) == Gia_ManObjNum(pNew) );\n    Vec_IntForEachEntry( vMapping, Entry, i )\n        if ( Entry \u003e 0 )\n            Vec_IntAddToEntry( vMapping, i, Gia_ManObjNum(pNew) );\n    Vec_IntAppend( vMapping, vMapping2 );\n    Vec_IntFree( vMapping2 );\n    // attach mapping and packing\n    assert( pNew-\u003evMapping == NULL );\n    assert( pNew-\u003evPacking == NULL );\n    pNew-\u003evMapping = vMapping;\n    pNew-\u003evPacking = vPacking;\n    // verify that COs have mapping\n    {\n        Gia_Obj_t * pObj;\n        Gia_ManForEachCo( pNew, pObj, i )\n           assert( !Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) || Gia_ObjIsLut(pNew, Gia_ObjFaninId0p(pNew, pObj)) );\n    }\n    return pNew;\n}",
+      "Draft": "func Mpm_ManFromIfLogic(pMan *Mpm_Man_t) any {\n    var pNew *Gia_Man_t;\n    var pCutBest *Mpm_Cut_t;\n    var pObj, pFanin *Mig_Obj_t;\n    var vMapping *Vec_Int_t;\n    var vMapping2 *Vec_Int_t;\n    var vPacking *Vec_Int_t = nil;\n    var vLeaves, vLeaves2, vCover *Vec_Int_t;\n    var uTruth word;\n    var pTruth *word = \u0026uTruth;\n    var i, k, Entry, iLitNew int32;\n//    assert( !pMan-\u003epPars-\u003efDeriveLuts || pMan-\u003epPars-\u003efTruth );\n    // start mapping and packing\n    vMapping  = Vec_IntStart( Mig_ManObjNum(pMan.pMig) );\n    vMapping2 = Vec_IntStart( 1 );\n    if false { // pMan-\u003epPars-\u003efDeriveLuts \u0026\u0026 pMan-\u003epPars-\u003epLutStruct )\n    \n        vPacking = Vec_IntAlloc( 1000 );\n        Vec_IntPush( vPacking, 0 );\n    }\n    // create new manager\n    pNew = Gia_ManStart( Mig_ManObjNum(pMan.pMig) );\n    // iterate through nodes used in the mapping\n    vCover   = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vLeaves  = Vec_IntAlloc( 16 );\n    vLeaves2 = Vec_IntAlloc( 16 );\n    Mig_ManCleanCopy( pMan.pMig );\n    // inlining of macro Mig_ManForEachObj\n    for  pMan.pMig.iPage = 0; pMan.pMig.iPage \u003c Vec_PtrSize(\u0026pMan.pMig.vPages) \u0026\u0026                   ((pMan.pMig.pPage) = (Mig_Obj_t *)Vec_PtrEntry(\u0026pMan.pMig.vPages, pMan.pMig.iPage)); pMan.pMig.iPage++  {         for  pObj = pMan.pMig.pPage; !Mig_ObjIsNone(pObj); pObj++  {\n        if !Mpm_ObjMapRef(pMan, pObj) \u0026\u0026 !Mig_ObjIsTerm(pObj) {\n            continue; }\n        if Mig_ObjIsNode(pObj) {\n            // collect leaves of the best cut\n            Vec_IntClear( vLeaves );\n            pCutBest = Mpm_ObjCutBestP( pMan, pObj );\n            // inlining of macro Mpm_CutForEachLeaf\n            for  k = 0; k \u003c int32(pCutBest.nLeaves) \u0026\u0026 (pFanin = Mig_ManObj(pMan.pMig, Abc_Lit2Var(pCutBest.pLeaves[k]))); k++  {\n                Vec_IntPush( vLeaves, Mig_ObjCopy(pFanin) );\n            }\n            if pMan.pPars.fDeriveLuts \u0026\u0026 (pMan.pPars.fUseTruth || pMan.pPars.fUseDsd) {\n                extern int Gia_ManFromIfLogicNode( void * p, Gia_Man_t * pNew, int iObj, Vec_Int_t * vLeaves, Vec_Int_t * vLeavesTemp, \n                    word * pRes, char * pStr, Vec_Int_t * vCover, Vec_Int_t * vMapping, Vec_Int_t * vMapping2, Vec_Int_t * vPacking, int fCheck75, int fCheck44e );\n                if pMan.pPars.fUseTruth {\n                    pTruth = Mpm_CutTruth(pMan, Abc_Lit2Var(pCutBest.iFunc));\n                } else {\n                    uTruth = Mpm_CutTruthFromDsd( pMan, pCutBest, Abc_Lit2Var(pCutBest.iFunc) ); }\n//                Kit_DsdPrintFromTruth( pTruth, Vec_IntSize(vLeaves) );  printf( \"\\n\" );\n                // perform decomposition of the cut\n                iLitNew = Gia_ManFromIfLogicNode( nil, pNew, Mig_ObjId(pObj), vLeaves, vLeaves2, pTruth, nil, vCover, vMapping, vMapping2, vPacking, 0, 0 );\n                iLitNew = Abc_LitNotCond( iLitNew, pCutBest.fCompl ^ Abc_LitIsCompl(pCutBest.iFunc) );\n            \n            } else {\n                // perform one of the two types of mapping: with and without structures\n                iLitNew = Mpm_ManNodeIfToGia( pNew, pMan, pObj, vLeaves, 0 );\n                // write mapping\n                Vec_IntSetEntry( vMapping, Abc_Lit2Var(iLitNew), Vec_IntSize(vMapping2) );\n                Vec_IntPush( vMapping2, Vec_IntSize(vLeaves) );\n                // inlining of macro Vec_IntForEachEntry\n                for  k = 0; (k \u003c Vec_IntSize(vLeaves)) \u0026\u0026 (((Entry) = Vec_IntEntry(vLeaves, k)), 1); k++  {\n                    assert(Abc_Lit2Var(Entry) \u003c Abc_Lit2Var(iLitNew), \"Abc_Lit2Var(Entry) \u003c Abc_Lit2Var(iLitNew)\");\n                }\n                // inlining of macro Vec_IntForEachEntry\n                for  k = 0; (k \u003c Vec_IntSize(vLeaves)) \u0026\u0026 (((Entry) = Vec_IntEntry(vLeaves, k)), 1); k++  {\n                    Vec_IntPush( vMapping2, Abc_Lit2Var(Entry)  );\n                }\n                Vec_IntPush( vMapping2, Abc_Lit2Var(iLitNew) );\n            }\n        \n        } else if Mig_ObjIsCi(pObj) {\n            iLitNew = Gia_ManAppendCi(pNew);\n        } else if Mig_ObjIsCo(pObj) {\n            iLitNew = Gia_ManAppendCo( pNew, Abc_LitNotCond(Mig_ObjCopy(Mig_ObjFanin0(pObj)), Mig_ObjFaninC0(pObj)) );\n        } else if Mig_ObjIsConst0(pObj) {\n            iLitNew = 0;\n            // create const LUT\n            Vec_IntWriteEntry( vMapping, 0, Vec_IntSize(vMapping2) );\n            Vec_IntPush( vMapping2, 0 );\n            Vec_IntPush( vMapping2, 0 );\n        \n        } else { assert(false, \"0\"); }\n        Mig_ObjSetCopy( pObj, iLitNew );\n    }\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vLeaves2 );\n//    printf( \"Mapping array size:  IfMan = %d. Gia = %d. Increase = %.2f\\n\", \n//        Mig_ManObjNum(pMan), Gia_ManObjNum(pNew), 1.0 * Gia_ManObjNum(pNew) / Mig_ManObjNum(pMan) );\n    // finish mapping \n    if Vec_IntSize(vMapping) \u003e Gia_ManObjNum(pNew) {\n        Vec_IntShrink( vMapping, Gia_ManObjNum(pNew) );\n    } else {\n        Vec_IntFillExtra( vMapping, Gia_ManObjNum(pNew), 0 ); }\n    assert(Vec_IntSize(vMapping) == Gia_ManObjNum(pNew), \"Vec_IntSize(vMapping) == Gia_ManObjNum(pNew)\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vMapping)) \u0026\u0026 (((Entry) = Vec_IntEntry(vMapping, i)), 1); i++  {\n        if Entry \u003e 0 {\n            Vec_IntAddToEntry( vMapping, i, Gia_ManObjNum(pNew) ); }\n    }\n    Vec_IntAppend( vMapping, vMapping2 );\n    Vec_IntFree( vMapping2 );\n    // attach mapping and packing\n    assert(pNew.vMapping == nil, \"pNew.vMapping == nil\");\n    assert(pNew.vPacking == nil, \"pNew.vPacking == nil\");\n    pNew.vMapping = vMapping;\n    pNew.vPacking = vPacking;\n    // verify that COs have mapping\n    {\n        var pObj *Gia_Obj_t;\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(pNew.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pNew, i)); i++  {\n           assert(!Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) || Gia_ObjIsLut(pNew, Gia_ObjFaninId0p(pNew, pObj)), \"!Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) || Gia_ObjIsLut(pNew, Gia_ObjFaninId0p(pNew, pObj))\");\n        }\n    }\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::pointer-cast::2828",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2741,
+      "End": 2754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::pointer-cast::8064",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7547,
+      "End": 7547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::pointer-cast::9289",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8596,
+      "End": 8596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::Mig_ManCreateChoices",
+      "Category": "semantic-review",
+      "Symbol": "Mig_ManCreateChoices",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1272,
+      "End": 2164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::Mig_ObjFanin0Copy",
+      "Category": "semantic-review",
+      "Symbol": "Mig_ObjFanin0Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2400,
+      "End": 2538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::Mig_ObjFanin1Copy",
+      "Category": "semantic-review",
+      "Symbol": "Mig_ObjFanin1Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2539,
+      "End": 2677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::void-pointer::Mig_ManCreate",
+      "Category": "void-pointer-review",
+      "Symbol": "Mig_ManCreate",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2678,
+      "End": 3786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::Mig_ManCreate",
+      "Category": "semantic-review",
+      "Symbol": "Mig_ManCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2678,
+      "End": 3786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::Mpm_CutDataInt",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_CutDataInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4068,
+      "End": 4169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::Mpm_CutSetDataInt",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_CutSetDataInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4170,
+      "End": 4271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::Mpm_ManNodeIfToGia_rec",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManNodeIfToGia_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4272,
+      "End": 6642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::Mpm_ManNodeIfToGia",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManNodeIfToGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6643,
+      "End": 7660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::void-pointer::Mpm_ManFromIfLogic",
+      "Category": "void-pointer-review",
+      "Symbol": "Mpm_ManFromIfLogic",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 7661,
+      "End": 12578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::Mpm_ManFromIfLogic",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManFromIfLogic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7661,
+      "End": 12578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmAbc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13296
+    }
+  ],
+  "Draft": "package mpm\n\n/**CFile****************************************************************\n\n  FileName    [mpmAbc.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Configurable technology mapper.]\n\n  Synopsis    [Interface with ABC data structures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 1, 2013.]\n\n  Revision    [$Id: mpmAbc.c,v 1.00 2013/06/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig/gia/gia.h\"\n//#include \"mpmInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mig_ManCreateChoices(pMig *Mig_Man_t, p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(Mig_ManObjNum(pMig) == Gia_ManObjNum(p), \"Mig_ManObjNum(pMig) == Gia_ManObjNum(p)\");\n    assert(Vec_IntSize(\u0026pMig.vSibls) == 0, \"Vec_IntSize(\u0026pMig.vSibls) == 0\");\n    Vec_IntFill( \u0026pMig.vSibls, Gia_ManObjNum(p), 0 );\n    Gia_ManMarkFanoutDrivers( p );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        Gia_ObjSetPhase( p, pObj );\n        assert(Abc_Lit2Var(pObj.Value) == i, \"Abc_Lit2Var(pObj.Value) == i\");\n        Mig_ObjSetPhase( Mig_ManObj(pMig, i), pObj.fPhase );\n        if Gia_ObjSibl(p, i) \u0026\u0026 pObj.fMark0 {\n            var pSibl, pPrev *Gia_Obj_t;\n            for  pPrev = pObj, pSibl = Gia_ObjSiblObj(p, i); pSibl; pPrev = pSibl, pSibl = Gia_ObjSiblObj(p, Gia_ObjId(p, pSibl))  {\n                Mig_ObjSetSiblId( Mig_ManObj(pMig, Abc_Lit2Var(pPrev.Value)), Abc_Lit2Var(pSibl.Value) );\n            }\n            pMig.nChoices++;\n        }\n    }\n    Gia_ManCleanMark0( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mig_ObjFanin0Copy(pObj *Gia_Obj_t) int32 { return Abc_LitNotCond( Gia_ObjFanin0(pObj).Value, Gia_ObjFaninC0(pObj) );     }\nfunc Mig_ObjFanin1Copy(pObj *Gia_Obj_t) int32 { return Abc_LitNotCond( Gia_ObjFanin1(pObj).Value, Gia_ObjFaninC1(pObj) );     }\nfunc Mig_ManCreate(pGia any) *Mig_Man_t {\n    var p *Gia_Man_t  = (Gia_Man_t *)pGia;\n    var pNew *Mig_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    pNew = Mig_ManStart();\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsMuxId(p, i) {\n            pObj.Value = Mig_ManAppendMux( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj), Gia_ObjFanin2Copy(p, pObj) );\n        } else if Gia_ObjIsXor(pObj) {\n            pObj.Value = Mig_ManAppendXor( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Mig_ManAppendAnd( pNew, Mig_ObjFanin0Copy(pObj), Mig_ObjFanin1Copy(pObj) );\n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Mig_ManAppendCi( pNew );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Mig_ManAppendCo( pNew, Mig_ObjFanin0Copy(pObj) );\n        } else { assert(false, \"0\"); }\n    }\n    Mig_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    if Gia_ManHasChoices(p) {\n        Mig_ManCreateChoices( pNew, p ); }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively derives the local AIG for the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mpm_CutDataInt(pCut *Mpm_Cut_t) uint32 { return pCut.hNext;  }\nfunc Mpm_CutSetDataInt(pCut *Mpm_Cut_t, Data int32) { pCut.hNext = Data;  }\nfunc Mpm_ManNodeIfToGia_rec(pNew *Gia_Man_t, pMan *Mpm_Man_t, pObj *Mig_Obj_t, vVisited *Vec_Ptr_t, fHash int32) int32 {\n    var pTemp *Mig_Obj_t;\n    var pCut *Mpm_Cut_t;\n    var iFunc, iFunc0, iFunc1, iFunc2 int32;\n    assert(fHash == 0, \"fHash == 0\");\n    // get the best cut\n    pCut = Mpm_ObjCutBestP( pMan, pObj );\n    // if the cut is visited, return the result\n    if Mpm_CutDataInt(pCut) != 0 {\n        return Mpm_CutDataInt(pCut); }\n    // mark the node as visited\n    Vec_PtrPush( vVisited, pCut );\n    // insert the worst case\n    Mpm_CutSetDataInt( pCut, ~0 );\n    // skip in case of primary input\n    if Mig_ObjIsCi(pObj) {\n        return Mpm_CutDataInt(pCut); }\n    // compute the functions of the children\n    for  pTemp = pObj; (pTemp != nil); pTemp = Mig_ObjSibl(pTemp)  {\n        iFunc0 = Mpm_ManNodeIfToGia_rec( pNew, pMan, Mig_ObjFanin0(pTemp), vVisited, fHash );\n        if iFunc0 == ~0 {\n            continue; }\n        iFunc1 = Mpm_ManNodeIfToGia_rec( pNew, pMan, Mig_ObjFanin1(pTemp), vVisited, fHash );\n        if iFunc1 == ~0 {\n            continue; }\n        if Mig_ObjIsNode3(pTemp) {\n            iFunc2 = Mpm_ManNodeIfToGia_rec( pNew, pMan, Mig_ObjFanin2(pTemp), vVisited, fHash );\n            if iFunc2 == ~0 {\n                continue; }\n            iFunc2 = Abc_LitNotCond(iFunc2, Mig_ObjFaninC2(pTemp));\n        }\n        iFunc0 = Abc_LitNotCond(iFunc0, Mig_ObjFaninC0(pTemp));\n        iFunc1 = Abc_LitNotCond(iFunc1, Mig_ObjFaninC1(pTemp));\n        // both branches are solved\n        if fHash != 0 {\n            if Mig_ObjIsMux(pTemp) {\n                iFunc = Gia_ManHashMux( pNew, iFunc2, iFunc1, iFunc0 );\n            } else if Mig_ObjIsXor(pTemp) {\n                iFunc = Gia_ManHashXor( pNew, iFunc0, iFunc1 );\n            } else { \n                iFunc = Gia_ManHashAnd( pNew, iFunc0, iFunc1 ); } \n        \n        } else {\n            if Mig_ObjIsMux(pTemp) {\n                iFunc = Gia_ManAppendMux( pNew, iFunc2, iFunc1, iFunc0 );\n            } else if Mig_ObjIsXor(pTemp) {\n                iFunc = Gia_ManAppendXor( pNew, iFunc0, iFunc1 );\n            } else { \n                iFunc = Gia_ManAppendAnd( pNew, iFunc0, iFunc1 ); } \n        }\n        if Mig_ObjPhase(pTemp) != Mig_ObjPhase(pObj) {\n            iFunc = Abc_LitNot(iFunc); }\n        Mpm_CutSetDataInt( pCut, iFunc );\n        break;\n    }\n    return Mpm_CutDataInt(pCut);\n}\nfunc Mpm_ManNodeIfToGia(pNew *Gia_Man_t, pMan *Mpm_Man_t, pObj *Mig_Obj_t, vLeaves *Vec_Int_t, fHash int32) int32 {\n    var pCut *Mpm_Cut_t;\n    var pFanin *Mig_Obj_t;\n    var i, iRes int32;\n    // get the best cut\n    pCut = Mpm_ObjCutBestP( pMan, pObj );\n    assert(pCut.nLeaves \u003e 1, \"pCut.nLeaves \u003e 1\");\n    // set the leaf variables\n    // inlining of macro Mpm_CutForEachLeaf\n    for  i = 0; i \u003c int32(pCut.nLeaves) \u0026\u0026 (pFanin = Mig_ManObj(pMan.pMig, Abc_Lit2Var(pCut.pLeaves[i]))); i++  {\n        Mpm_CutSetDataInt( Mpm_ObjCutBestP(pMan, pFanin), Vec_IntEntry(vLeaves, i) );\n    }\n    // recursively compute the function while collecting visited cuts\n    Vec_PtrClear( pMan.vTemp );\n    iRes = Mpm_ManNodeIfToGia_rec( pNew, pMan, pObj, pMan.vTemp, fHash ); \n    if iRes == ~0 {\n        Abc_Print( -1, \"Mpm_ManNodeIfToGia(): Computing local AIG has failed.\\n\" );\n        return ~0;\n    }\n    // clean the cuts\n    // inlining of macro Mpm_CutForEachLeaf\n    for  i = 0; i \u003c int32(pCut.nLeaves) \u0026\u0026 (pFanin = Mig_ManObj(pMan.pMig, Abc_Lit2Var(pCut.pLeaves[i]))); i++  {\n        Mpm_CutSetDataInt( Mpm_ObjCutBestP(pMan, pFanin), 0 );\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vTemp)) \u0026\u0026 (((pCut) = (Mpm_Cut_t *)Vec_PtrEntry(pMan.vTemp, i)), 1); i++  {\n        Mpm_CutSetDataInt( pCut, 0 );\n    }\n    return iRes;\n}\nfunc Mpm_ManFromIfLogic(pMan *Mpm_Man_t) any {\n    var pNew *Gia_Man_t;\n    var pCutBest *Mpm_Cut_t;\n    var pObj, pFanin *Mig_Obj_t;\n    var vMapping *Vec_Int_t;\n    var vMapping2 *Vec_Int_t;\n    var vPacking *Vec_Int_t = nil;\n    var vLeaves, vLeaves2, vCover *Vec_Int_t;\n    var uTruth word;\n    var pTruth *word = \u0026uTruth;\n    var i, k, Entry, iLitNew int32;\n//    assert( !pMan-\u003epPars-\u003efDeriveLuts || pMan-\u003epPars-\u003efTruth );\n    // start mapping and packing\n    vMapping  = Vec_IntStart( Mig_ManObjNum(pMan.pMig) );\n    vMapping2 = Vec_IntStart( 1 );\n    if false { // pMan-\u003epPars-\u003efDeriveLuts \u0026\u0026 pMan-\u003epPars-\u003epLutStruct )\n    \n        vPacking = Vec_IntAlloc( 1000 );\n        Vec_IntPush( vPacking, 0 );\n    }\n    // create new manager\n    pNew = Gia_ManStart( Mig_ManObjNum(pMan.pMig) );\n    // iterate through nodes used in the mapping\n    vCover   = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vLeaves  = Vec_IntAlloc( 16 );\n    vLeaves2 = Vec_IntAlloc( 16 );\n    Mig_ManCleanCopy( pMan.pMig );\n    // inlining of macro Mig_ManForEachObj\n    for  pMan.pMig.iPage = 0; pMan.pMig.iPage \u003c Vec_PtrSize(\u0026pMan.pMig.vPages) \u0026\u0026                   ((pMan.pMig.pPage) = (Mig_Obj_t *)Vec_PtrEntry(\u0026pMan.pMig.vPages, pMan.pMig.iPage)); pMan.pMig.iPage++  {         for  pObj = pMan.pMig.pPage; !Mig_ObjIsNone(pObj); pObj++  {\n        if !Mpm_ObjMapRef(pMan, pObj) \u0026\u0026 !Mig_ObjIsTerm(pObj) {\n            continue; }\n        if Mig_ObjIsNode(pObj) {\n            // collect leaves of the best cut\n            Vec_IntClear( vLeaves );\n            pCutBest = Mpm_ObjCutBestP( pMan, pObj );\n            // inlining of macro Mpm_CutForEachLeaf\n            for  k = 0; k \u003c int32(pCutBest.nLeaves) \u0026\u0026 (pFanin = Mig_ManObj(pMan.pMig, Abc_Lit2Var(pCutBest.pLeaves[k]))); k++  {\n                Vec_IntPush( vLeaves, Mig_ObjCopy(pFanin) );\n            }\n            if pMan.pPars.fDeriveLuts \u0026\u0026 (pMan.pPars.fUseTruth || pMan.pPars.fUseDsd) {\n                extern int Gia_ManFromIfLogicNode( void * p, Gia_Man_t * pNew, int iObj, Vec_Int_t * vLeaves, Vec_Int_t * vLeavesTemp, \n                    word * pRes, char * pStr, Vec_Int_t * vCover, Vec_Int_t * vMapping, Vec_Int_t * vMapping2, Vec_Int_t * vPacking, int fCheck75, int fCheck44e );\n                if pMan.pPars.fUseTruth {\n                    pTruth = Mpm_CutTruth(pMan, Abc_Lit2Var(pCutBest.iFunc));\n                } else {\n                    uTruth = Mpm_CutTruthFromDsd( pMan, pCutBest, Abc_Lit2Var(pCutBest.iFunc) ); }\n//                Kit_DsdPrintFromTruth( pTruth, Vec_IntSize(vLeaves) );  printf( \"\\n\" );\n                // perform decomposition of the cut\n                iLitNew = Gia_ManFromIfLogicNode( nil, pNew, Mig_ObjId(pObj), vLeaves, vLeaves2, pTruth, nil, vCover, vMapping, vMapping2, vPacking, 0, 0 );\n                iLitNew = Abc_LitNotCond( iLitNew, pCutBest.fCompl ^ Abc_LitIsCompl(pCutBest.iFunc) );\n            \n            } else {\n                // perform one of the two types of mapping: with and without structures\n                iLitNew = Mpm_ManNodeIfToGia( pNew, pMan, pObj, vLeaves, 0 );\n                // write mapping\n                Vec_IntSetEntry( vMapping, Abc_Lit2Var(iLitNew), Vec_IntSize(vMapping2) );\n                Vec_IntPush( vMapping2, Vec_IntSize(vLeaves) );\n                // inlining of macro Vec_IntForEachEntry\n                for  k = 0; (k \u003c Vec_IntSize(vLeaves)) \u0026\u0026 (((Entry) = Vec_IntEntry(vLeaves, k)), 1); k++  {\n                    assert(Abc_Lit2Var(Entry) \u003c Abc_Lit2Var(iLitNew), \"Abc_Lit2Var(Entry) \u003c Abc_Lit2Var(iLitNew)\");\n                }\n                // inlining of macro Vec_IntForEachEntry\n                for  k = 0; (k \u003c Vec_IntSize(vLeaves)) \u0026\u0026 (((Entry) = Vec_IntEntry(vLeaves, k)), 1); k++  {\n                    Vec_IntPush( vMapping2, Abc_Lit2Var(Entry)  );\n                }\n                Vec_IntPush( vMapping2, Abc_Lit2Var(iLitNew) );\n            }\n        \n        } else if Mig_ObjIsCi(pObj) {\n            iLitNew = Gia_ManAppendCi(pNew);\n        } else if Mig_ObjIsCo(pObj) {\n            iLitNew = Gia_ManAppendCo( pNew, Abc_LitNotCond(Mig_ObjCopy(Mig_ObjFanin0(pObj)), Mig_ObjFaninC0(pObj)) );\n        } else if Mig_ObjIsConst0(pObj) {\n            iLitNew = 0;\n            // create const LUT\n            Vec_IntWriteEntry( vMapping, 0, Vec_IntSize(vMapping2) );\n            Vec_IntPush( vMapping2, 0 );\n            Vec_IntPush( vMapping2, 0 );\n        \n        } else { assert(false, \"0\"); }\n        Mig_ObjSetCopy( pObj, iLitNew );\n    }\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vLeaves2 );\n//    printf( \"Mapping array size:  IfMan = %d. Gia = %d. Increase = %.2f\\n\", \n//        Mig_ManObjNum(pMan), Gia_ManObjNum(pNew), 1.0 * Gia_ManObjNum(pNew) / Mig_ManObjNum(pMan) );\n    // finish mapping \n    if Vec_IntSize(vMapping) \u003e Gia_ManObjNum(pNew) {\n        Vec_IntShrink( vMapping, Gia_ManObjNum(pNew) );\n    } else {\n        Vec_IntFillExtra( vMapping, Gia_ManObjNum(pNew), 0 ); }\n    assert(Vec_IntSize(vMapping) == Gia_ManObjNum(pNew), \"Vec_IntSize(vMapping) == Gia_ManObjNum(pNew)\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vMapping)) \u0026\u0026 (((Entry) = Vec_IntEntry(vMapping, i)), 1); i++  {\n        if Entry \u003e 0 {\n            Vec_IntAddToEntry( vMapping, i, Gia_ManObjNum(pNew) ); }\n    }\n    Vec_IntAppend( vMapping, vMapping2 );\n    Vec_IntFree( vMapping2 );\n    // attach mapping and packing\n    assert(pNew.vMapping == nil, \"pNew.vMapping == nil\");\n    assert(pNew.vPacking == nil, \"pNew.vPacking == nil\");\n    pNew.vMapping = vMapping;\n    pNew.vPacking = vPacking;\n    // verify that COs have mapping\n    {\n        var pObj *Gia_Obj_t;\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(pNew.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pNew, i)); i++  {\n           assert(!Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) || Gia_ObjIsLut(pNew, Gia_ObjFaninId0p(pNew, pObj)), \"!Gia_ObjIsAnd(Gia_ObjFanin0(pObj)) || Gia_ObjIsLut(pNew, Gia_ObjFaninId0p(pNew, pObj))\");\n        }\n    }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n/*\nvoid Mig_ManTest2( Gia_Man_t * pGia )\n{\n    extern int Gia_ManSuppSizeTest( Gia_Man_t * p );\n    Mig_Man_t * p;\n    Gia_ManSuppSizeTest( pGia );\n    p = Mig_ManCreate( pGia );\n    Mig_ManSuppSizeTest( p );\n    Mig_ManStop( p );\n}\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

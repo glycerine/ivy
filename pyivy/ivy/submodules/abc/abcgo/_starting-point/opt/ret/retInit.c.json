@@ -1,0 +1,513 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c",
+  "SHA256": "506c0ec2d517bcc0093a71b522864413c8973ddc0152dafd71268af4f015950e",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 9,
+        "ByteOffset": 1926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The miter for initial state computation has %d AIG nodes. \", Abc_NtkNodeNum(pNtkMiter) ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 68,
+        "Column": 73,
+        "ByteOffset": 2352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 71,
+        "Column": 9,
+        "ByteOffset": 2431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkRetimeInitialValues(): The problem is unsatisfiable. DC latch values are used.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 73,
+        "Column": 9,
+        "ByteOffset": 2571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkRetimeInitialValues(): The SAT problem timed out. DC latch values are used.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 75,
+        "Column": 9,
+        "ByteOffset": 2758
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkRetimeInitialValues(): The computed counter-example is incorrect.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 3652
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pSop \u0026\u0026 !Abc_SopIsExorType(pSop) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 141,
+        "Column": 5,
+        "ByteOffset": 4937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsSopLogic(pNtkCone) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 9,
+        "ByteOffset": 6047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d outputs (out of %d) have a value mismatch.\\n\", Counter, Abc_NtkPoNum(pNtkCone) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 301,
+        "Column": 9,
+        "ByteOffset": 11263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkRetimeBackwardInitialFinish(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 301,
+        "Column": 18,
+        "ByteOffset": 11272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkRetimeBackwardInitialFinish(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 326,
+        "Column": 5,
+        "ByteOffset": 12153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsSopLogic(pNtk) );"
+    },
+    {
+      "Name": "srand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 327,
+        "Column": 5,
+        "ByteOffset": 12192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    srand( 0x12341234 );"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 330,
+        "Column": 51,
+        "ByteOffset": 12431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)(rand() \u0026 1);"
+    },
+    {
+      "Name": "rand",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 348,
+        "Column": 55,
+        "ByteOffset": 13611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)(rand() \u0026 1);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkRetimeInitialValues",
+      "Start": 1388,
+      "End": 2952,
+      "BodyStart": 1486,
+      "Original": "Vec_Int_t * Abc_NtkRetimeInitialValues( Abc_Ntk_t * pNtkCone, Vec_Int_t * vValues, int fVerbose )\n{\n    Vec_Int_t * vSolution;\n    Abc_Ntk_t * pNtkMiter, * pNtkLogic;\n    int RetValue;\n    abctime clk;\n    if ( pNtkCone == NULL )\n        return Vec_IntDup( vValues );\n    // convert the target network to AIG\n    pNtkLogic = Abc_NtkDup( pNtkCone );\n    Abc_NtkToAig( pNtkLogic );\n    // get the miter\n    pNtkMiter = Abc_NtkCreateTarget( pNtkLogic, pNtkLogic-\u003evCos, vValues );\n    if ( fVerbose )\n        printf( \"The miter for initial state computation has %d AIG nodes. \", Abc_NtkNodeNum(pNtkMiter) );\n    // solve the miter\n    clk = Abc_Clock();\n    RetValue = Abc_NtkMiterSat( pNtkMiter, (ABC_INT64_T)500000, (ABC_INT64_T)50000000, 0, NULL, NULL );\n    if ( fVerbose ) \n        { ABC_PRT( \"SAT solving time\", Abc_Clock() - clk ); }\n    // analyze the result\n    if ( RetValue == 1 )\n        printf( \"Abc_NtkRetimeInitialValues(): The problem is unsatisfiable. DC latch values are used.\\n\" );\n    else if ( RetValue == -1 )\n        printf( \"Abc_NtkRetimeInitialValues(): The SAT problem timed out. DC latch values are used.\\n\" );\n    else if ( !Abc_NtkRetimeVerifyModel( pNtkCone, vValues, pNtkMiter-\u003epModel ) )\n        printf( \"Abc_NtkRetimeInitialValues(): The computed counter-example is incorrect.\\n\" );\n    // set the values of the latches\n    vSolution = RetValue? NULL : Vec_IntAllocArray( pNtkMiter-\u003epModel, Abc_NtkPiNum(pNtkLogic) );\n    pNtkMiter-\u003epModel = NULL;\n    Abc_NtkDelete( pNtkMiter );\n    Abc_NtkDelete( pNtkLogic );\n    return vSolution;\n}",
+      "Draft": "func Abc_NtkRetimeInitialValues(pNtkCone *Abc_Ntk_t, vValues *Vec_Int_t, fVerbose int32) *Vec_Int_t {\n    var vSolution *Vec_Int_t;\n    var pNtkMiter, pNtkLogic *Abc_Ntk_t;\n    var RetValue int32;\n    var clk abctime;\n    if pNtkCone == nil {\n        return Vec_IntDup( vValues ); }\n    // convert the target network to AIG\n    pNtkLogic = Abc_NtkDup( pNtkCone );\n    Abc_NtkToAig( pNtkLogic );\n    // get the miter\n    pNtkMiter = Abc_NtkCreateTarget( pNtkLogic, pNtkLogic.vCos, vValues );\n    if fVerbose != 0 {\n        fmt.Printf(\"The miter for initial state computation has %d AIG nodes. \", Abc_NtkNodeNum(pNtkMiter)); }\n    // solve the miter\n    clk = Abc_Clock();\n    RetValue = Abc_NtkMiterSat( pNtkMiter, (ABC_INT64_T)500000, (ABC_INT64_T)50000000, 0, nil, nil );\n    // inlining of macro ABC_PRT\n    if fVerbose != 0 { Abc_Print(1, \"%s =\", (\"SAT solving time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\n    // analyze the result\n    if RetValue == 1 {\n        fmt.Printf(\"Abc_NtkRetimeInitialValues(): The problem is unsatisfiable. DC latch values are used.\\n\");\n    } else if RetValue == -1 {\n        fmt.Printf(\"Abc_NtkRetimeInitialValues(): The SAT problem timed out. DC latch values are used.\\n\");\n    } else if !(Abc_NtkRetimeVerifyModel( pNtkCone, vValues, pNtkMiter.pModel ) != 0) {\n        fmt.Printf(\"Abc_NtkRetimeInitialValues(): The computed counter-example is incorrect.\\n\"); }\n    // set the values of the latches\n    if RetValue != 0 {\n        vSolution = nil;\n    } else {\n        vSolution = Vec_IntAllocArray( pNtkMiter.pModel, Abc_NtkPiNum(pNtkLogic) );\n    }\n    pNtkMiter.pModel = nil;\n    Abc_NtkDelete( pNtkMiter );\n    Abc_NtkDelete( pNtkLogic );\n    return vSolution;\n}"
+    },
+    {
+      "Name": "Abc_ObjSopSimulate",
+      "Start": 3287,
+      "End": 4144,
+      "BodyStart": 3330,
+      "Original": "int Abc_ObjSopSimulate( Abc_Obj_t * pObj )\n{\n    char * pCube, * pSop = (char *)pObj-\u003epData;\n    int nVars, Value, v, ResOr, ResAnd, ResVar;\n    assert( pSop \u0026\u0026 !Abc_SopIsExorType(pSop) );\n    // simulate the SOP of the node\n    ResOr = 0;\n    nVars = Abc_SopGetVarNum(pSop);\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        ResAnd = 1;\n        Abc_CubeForEachVar( pCube, Value, v )\n        {\n            if ( Value == '0' )\n                ResVar = 1 ^ ((int)(ABC_PTRUINT_T)Abc_ObjFanin(pObj, v)-\u003epCopy);\n            else if ( Value == '1' )\n                ResVar = (int)(ABC_PTRUINT_T)Abc_ObjFanin(pObj, v)-\u003epCopy;\n            else\n                continue;\n            ResAnd \u0026= ResVar;\n        }\n        ResOr |= ResAnd;\n    }\n    // complement the result if necessary\n    if ( !Abc_SopGetPhase(pSop) )\n        ResOr ^= 1;\n    return ResOr;\n}",
+      "Draft": "func Abc_ObjSopSimulate(pObj *Abc_Obj_t) int32 {\n    var pCube string;\n    var pSop string = (char *)pObj.pData;\n    var nVars, Value, v, ResOr, ResAnd, ResVar int32;\n    assert(pSop \u0026\u0026 !Abc_SopIsExorType(pSop), \"pSop \u0026\u0026 !Abc_SopIsExorType(pSop)\");\n    // simulate the SOP of the node\n    ResOr = 0;\n    nVars = Abc_SopGetVarNum(pSop);\n    // inlining of macro Abc_SopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n        ResAnd = 1;\n        // inlining of macro Abc_CubeForEachVar\n        for  v = 0; (pCube[v] != ' ') \u0026\u0026 (Value = pCube[v]); v++  {\n            if Value == '0' {\n                ResVar = 1 ^ (int32((ABC_PTRUINT_T))Abc_ObjFanin(pObj, v).pCopy);\n            } else if Value == '1' {\n                ResVar = int32((ABC_PTRUINT_T))Abc_ObjFanin(pObj, v).pCopy;\n            } else {\n                continue; }\n            ResAnd \u0026= ResVar;\n        }\n        ResOr |= ResAnd;\n    }\n    // complement the result if necessary\n    if !Abc_SopGetPhase(pSop) {\n        ResOr ^= 1; }\n    return ResOr;\n}"
+    },
+    {
+      "Name": "Abc_NtkRetimeVerifyModel",
+      "Start": 4409,
+      "End": 5353,
+      "BodyStart": 4497,
+      "Original": "int Abc_NtkRetimeVerifyModel( Abc_Ntk_t * pNtkCone, Vec_Int_t * vValues, int * pModel )\n{\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj;\n    int i, Counter = 0;\n    assert( Abc_NtkIsSopLogic(pNtkCone) );\n    // set the PIs\n    Abc_NtkForEachPi( pNtkCone, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)pModel[i];\n    // simulate the internal nodes\n    vNodes = Abc_NtkDfs( pNtkCone, 0 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Abc_ObjSopSimulate( pObj );\n    Vec_PtrFree( vNodes );\n    // compare the outputs\n    Abc_NtkForEachPo( pNtkCone, pObj, i )\n        pObj-\u003epCopy = Abc_ObjFanin0(pObj)-\u003epCopy;\n    Abc_NtkForEachPo( pNtkCone, pObj, i )\n        Counter += (Vec_IntEntry(vValues, i) != (int)(ABC_PTRUINT_T)pObj-\u003epCopy);\n    if ( Counter \u003e 0 )\n        printf( \"%d outputs (out of %d) have a value mismatch.\\n\", Counter, Abc_NtkPoNum(pNtkCone) );\n    return 1;\n}",
+      "Draft": "func Abc_NtkRetimeVerifyModel(pNtkCone *Abc_Ntk_t, vValues *Vec_Int_t, pModel *int32) int32 {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, Counter int32;\n    assert(Abc_NtkIsSopLogic(pNtkCone), \"Abc_NtkIsSopLogic(pNtkCone)\");\n    // set the PIs\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtkCone)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtkCone, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)pModel[i];\n    }\n    // simulate the internal nodes\n    vNodes = Abc_NtkDfs( pNtkCone, 0 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Abc_ObjSopSimulate( pObj );\n    }\n    Vec_PtrFree( vNodes );\n    // compare the outputs\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtkCone)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtkCone, i)), 1); i++  {\n        pObj.pCopy = Abc_ObjFanin0(pObj).pCopy;\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtkCone)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtkCone, i)), 1); i++  {\n        Counter += (Vec_IntEntry(vValues, i) != int32((ABC_PTRUINT_T))pObj.pCopy);\n    }\n    if Counter \u003e 0 {\n        fmt.Printf(\"%d outputs (out of %d) have a value mismatch.\\n\", Counter, Abc_NtkPoNum(pNtkCone)); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkRetimeTranferToCopy",
+      "Start": 5628,
+      "End": 5869,
+      "BodyStart": 5680,
+      "Original": "void Abc_NtkRetimeTranferToCopy( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj;\n    int i;\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( Abc_ObjIsLatch(pObj) )\n            pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Abc_LatchIsInit1(pObj);\n}",
+      "Draft": "func Abc_NtkRetimeTranferToCopy(pNtk *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if Abc_ObjIsLatch(pObj) {\n            pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Abc_LatchIsInit1(pObj); }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkRetimeTranferFromCopy",
+      "Start": 6146,
+      "End": 6405,
+      "BodyStart": 6200,
+      "Original": "void Abc_NtkRetimeTranferFromCopy( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj;\n    int i;\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( Abc_ObjIsLatch(pObj) )\n            pObj-\u003epData = (void *)(ABC_PTRUINT_T)(pObj-\u003epCopy? ABC_INIT_ONE : ABC_INIT_ZERO);\n}",
+      "Draft": "func Abc_NtkRetimeTranferFromCopy(pNtk *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if Abc_ObjIsLatch(pObj) {\n            pObj.pData = (void *)(ABC_PTRUINT_T)(pObj.pCopy? ABC_INIT_ONE : ABC_INIT_ZERO); }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkRetimeCollectLatchValues",
+      "Start": 6680,
+      "End": 7013,
+      "BodyStart": 6744,
+      "Original": "Vec_Int_t * Abc_NtkRetimeCollectLatchValues( Abc_Ntk_t * pNtk )\n{\n    Vec_Int_t * vValues;\n    Abc_Obj_t * pObj;\n    int i;\n    vValues = Vec_IntAlloc( Abc_NtkLatchNum(pNtk) );\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( Abc_ObjIsLatch(pObj) )\n            Vec_IntPush( vValues, Abc_LatchIsInit1(pObj) );\n    return vValues;\n}",
+      "Draft": "func Abc_NtkRetimeCollectLatchValues(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vValues *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    vValues = Vec_IntAlloc( Abc_NtkLatchNum(pNtk) );\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if Abc_ObjIsLatch(pObj) {\n            Vec_IntPush( vValues, Abc_LatchIsInit1(pObj) ); }\n    }\n    return vValues;\n}"
+    },
+    {
+      "Name": "Abc_NtkRetimeInsertLatchValues",
+      "Start": 7290,
+      "End": 7797,
+      "BodyStart": 7367,
+      "Original": "void Abc_NtkRetimeInsertLatchValues( Abc_Ntk_t * pNtk, Vec_Int_t * vValues )\n{\n    Abc_Obj_t * pObj;\n    int i, Counter = 0;\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( Abc_ObjIsLatch(pObj) )\n            pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Counter++;\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( Abc_ObjIsLatch(pObj) )\n            pObj-\u003epData = (Abc_Obj_t *)(ABC_PTRUINT_T)(vValues? (Vec_IntEntry(vValues,(int)(ABC_PTRUINT_T)pObj-\u003epCopy)? ABC_INIT_ONE : ABC_INIT_ZERO) : ABC_INIT_DC);\n}",
+      "Draft": "func Abc_NtkRetimeInsertLatchValues(pNtk *Abc_Ntk_t, vValues *Vec_Int_t) {\n    var pObj *Abc_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if Abc_ObjIsLatch(pObj) {\n            pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Counter++; }\n    }\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if Abc_ObjIsLatch(pObj) {\n            pObj.pData = (Abc_Obj_t *)(ABC_PTRUINT_T)(vValues? (Vec_IntEntry(vValues,int32((ABC_PTRUINT_T))pObj.pCopy)? ABC_INIT_ONE : ABC_INIT_ZERO) : ABC_INIT_DC); }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkRetimeBackwardInitialStart",
+      "Start": 8072,
+      "End": 8527,
+      "BodyStart": 8138,
+      "Original": "Abc_Ntk_t * Abc_NtkRetimeBackwardInitialStart( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew;\n    Abc_Obj_t * pObj;\n    int i;\n    // create the network used for the initial state computation\n    pNtkNew = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );\n    // create POs corresponding to the initial values\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( Abc_ObjIsLatch(pObj) )\n            pObj-\u003epCopy = Abc_NtkCreatePo(pNtkNew);\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkRetimeBackwardInitialStart(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // create the network used for the initial state computation\n    pNtkNew = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );\n    // create POs corresponding to the initial values\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if Abc_ObjIsLatch(pObj) {\n            pObj.pCopy = Abc_NtkCreatePo(pNtkNew); }\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkRetimeBackwardInitialFinish",
+      "Start": 8802,
+      "End": 9699,
+      "BodyStart": 8921,
+      "Original": "void Abc_NtkRetimeBackwardInitialFinish( Abc_Ntk_t * pNtk, Abc_Ntk_t * pNtkNew, Vec_Int_t * vValuesOld, int fVerbose )\n{\n    Vec_Int_t * vValuesNew;\n    Abc_Obj_t * pObj;\n    int i;\n    // create PIs corresponding to the initial values\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        if ( Abc_ObjIsLatch(pObj) )\n            Abc_ObjAddFanin( pObj-\u003epCopy, Abc_NtkCreatePi(pNtkNew) );\n    // assign dummy node names\n    Abc_NtkAddDummyPiNames( pNtkNew );\n    Abc_NtkAddDummyPoNames( pNtkNew );\n    // check the network\n    if ( !Abc_NtkCheck( pNtkNew ) )\n        fprintf( stdout, \"Abc_NtkRetimeBackwardInitialFinish(): Network check has failed.\\n\" );\n    // derive new initial values\n    vValuesNew = Abc_NtkRetimeInitialValues( pNtkNew, vValuesOld, fVerbose );\n    // insert new initial values\n    Abc_NtkRetimeInsertLatchValues( pNtk, vValuesNew );\n    if ( vValuesNew ) Vec_IntFree( vValuesNew );\n}",
+      "Draft": "func Abc_NtkRetimeBackwardInitialFinish(pNtk *Abc_Ntk_t, pNtkNew *Abc_Ntk_t, vValuesOld *Vec_Int_t, fVerbose int32) {\n    var vValuesNew *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // create PIs corresponding to the initial values\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if Abc_ObjIsLatch(pObj) {\n            Abc_ObjAddFanin( pObj.pCopy, Abc_NtkCreatePi(pNtkNew) ); }\n    }\n    // assign dummy node names\n    Abc_NtkAddDummyPiNames( pNtkNew );\n    Abc_NtkAddDummyPoNames( pNtkNew );\n    // check the network\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkRetimeBackwardInitialFinish(): Network check has failed.\\n\"); }\n    // derive new initial values\n    vValuesNew = Abc_NtkRetimeInitialValues( pNtkNew, vValuesOld, fVerbose );\n    // insert new initial values\n    Abc_NtkRetimeInsertLatchValues( pNtk, vValuesNew );\n    if vValuesNew != nil { Vec_IntFree( vValuesNew ); }\n}"
+    },
+    {
+      "Name": "Abc_NtkCycleInitStateSop",
+      "Start": 10093,
+      "End": 11484,
+      "BodyStart": 10170,
+      "Original": "void Abc_NtkCycleInitStateSop( Abc_Ntk_t * pNtk, int nFrames, int fVerbose )\n{\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj;\n    int i, f;\n    assert( Abc_NtkIsSopLogic(pNtk) );\n    srand( 0x12341234 );\n    // initialize the values\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)(rand() \u0026 1);\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Abc_LatchIsInit1(pObj);\n    // simulate for the given number of timeframes\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        // simulate internal nodes\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n            pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Abc_ObjSopSimulate( pObj );\n        // bring the results to the COs\n        Abc_NtkForEachCo( pNtk, pObj, i )\n            pObj-\u003epCopy = Abc_ObjFanin0(pObj)-\u003epCopy;\n        // assign PI values\n        Abc_NtkForEachPi( pNtk, pObj, i )\n            pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)(rand() \u0026 1);\n        // transfer the latch values\n        Abc_NtkForEachLatch( pNtk, pObj, i )\n            Abc_ObjFanout0(pObj)-\u003epCopy = Abc_ObjFanin0(pObj)-\u003epCopy;\n    }\n    Vec_PtrFree( vNodes );\n    // set the final values\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        pObj-\u003epData = (void *)(ABC_PTRUINT_T)(Abc_ObjFanout0(pObj)-\u003epCopy ? ABC_INIT_ONE : ABC_INIT_ZERO);\n}",
+      "Draft": "func Abc_NtkCycleInitStateSop(pNtk *Abc_Ntk_t, nFrames int32, fVerbose int32) {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, f int32;\n    assert(Abc_NtkIsSopLogic(pNtk), \"Abc_NtkIsSopLogic(pNtk)\");\n    srand( 0x12341234 );\n    // initialize the values\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)(rand() \u0026 1);\n    }\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Abc_LatchIsInit1(pObj); }\n    }\n    // simulate for the given number of timeframes\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    for  f = 0; f \u003c nFrames; f++  {\n        // simulate internal nodes\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n            pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Abc_ObjSopSimulate( pObj );\n        }\n        // bring the results to the COs\n        // inlining of macro Abc_NtkForEachCo\n        for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n            pObj.pCopy = Abc_ObjFanin0(pObj).pCopy;\n        }\n        // assign PI values\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n            pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)(rand() \u0026 1);\n        }\n        // transfer the latch values\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n            Abc_ObjFanout0(pObj).pCopy = Abc_ObjFanin0(pObj).pCopy; }\n        }\n    }\n    Vec_PtrFree( vNodes );\n    // set the final values\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n        pObj.pData = (void *)(ABC_PTRUINT_T)(Abc_ObjFanout0(pObj).pCopy ? ABC_INIT_ONE : ABC_INIT_ZERO); }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::pointer-cast::3487",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3359,
+      "End": 3367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::pointer-cast::5081",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4695,
+      "End": 4708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::pointer-cast::5307",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4813,
+      "End": 4813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::pointer-cast::5378",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4887,
+      "End": 4900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::pointer-cast::6668",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5816,
+      "End": 5829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::pointer-cast::7339",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6336,
+      "End": 6344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::pointer-cast::8821",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7516,
+      "End": 7529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::pointer-cast::9112",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7656,
+      "End": 7669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::pointer-cast::12244",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10385,
+      "End": 10398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::pointer-cast::12507",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10490,
+      "End": 10503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::pointer-cast::12839",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10714,
+      "End": 10714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::pointer-cast::12914",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10792,
+      "End": 10805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::pointer-cast::13404",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11080,
+      "End": 11093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::pointer-cast::14038",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11398,
+      "End": 11406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::Abc_NtkRetimeInitialValues",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeInitialValues",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1388,
+      "End": 2952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::Abc_ObjSopSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjSopSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3287,
+      "End": 4144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::Abc_NtkRetimeVerifyModel",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeVerifyModel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4409,
+      "End": 5353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::Abc_NtkRetimeTranferToCopy",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeTranferToCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5628,
+      "End": 5869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::ternary::Abc_NtkRetimeTranferFromCopy",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkRetimeTranferFromCopy",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6146,
+      "End": 6405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::Abc_NtkRetimeTranferFromCopy",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeTranferFromCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6146,
+      "End": 6405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::Abc_NtkRetimeCollectLatchValues",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeCollectLatchValues",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6680,
+      "End": 7013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::ternary::Abc_NtkRetimeInsertLatchValues",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkRetimeInsertLatchValues",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7290,
+      "End": 7797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::Abc_NtkRetimeInsertLatchValues",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeInsertLatchValues",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7290,
+      "End": 7797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::Abc_NtkRetimeBackwardInitialStart",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeBackwardInitialStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8072,
+      "End": 8527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::Abc_NtkRetimeBackwardInitialFinish",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeBackwardInitialFinish",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8802,
+      "End": 9699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::ternary::Abc_NtkCycleInitStateSop",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkCycleInitStateSop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10093,
+      "End": 11484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::Abc_NtkCycleInitStateSop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCycleInitStateSop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10093,
+      "End": 11484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retInit.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11731
+    }
+  ],
+  "Draft": "package ret\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [retInit.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Retiming package.]\n\n  Synopsis    [Initial state computation for backward retiming.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Oct 31, 2006.]\n\n  Revision    [$Id: retInit.c,v 1.00 2006/10/31 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"retInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Abc_NtkRetimeVerifyModel( Abc_Ntk_t * pNtkCone, Vec_Int_t * vValues, int * pModel );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes initial values of the new latches.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeInitialValues(pNtkCone *Abc_Ntk_t, vValues *Vec_Int_t, fVerbose int32) *Vec_Int_t {\n    var vSolution *Vec_Int_t;\n    var pNtkMiter, pNtkLogic *Abc_Ntk_t;\n    var RetValue int32;\n    var clk abctime;\n    if pNtkCone == nil {\n        return Vec_IntDup( vValues ); }\n    // convert the target network to AIG\n    pNtkLogic = Abc_NtkDup( pNtkCone );\n    Abc_NtkToAig( pNtkLogic );\n    // get the miter\n    pNtkMiter = Abc_NtkCreateTarget( pNtkLogic, pNtkLogic.vCos, vValues );\n    if fVerbose != 0 {\n        fmt.Printf(\"The miter for initial state computation has %d AIG nodes. \", Abc_NtkNodeNum(pNtkMiter)); }\n    // solve the miter\n    clk = Abc_Clock();\n    RetValue = Abc_NtkMiterSat( pNtkMiter, (ABC_INT64_T)500000, (ABC_INT64_T)50000000, 0, nil, nil );\n    // inlining of macro ABC_PRT\n    if fVerbose != 0 { Abc_Print(1, \"%s =\", (\"SAT solving time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\n    // analyze the result\n    if RetValue == 1 {\n        fmt.Printf(\"Abc_NtkRetimeInitialValues(): The problem is unsatisfiable. DC latch values are used.\\n\");\n    } else if RetValue == -1 {\n        fmt.Printf(\"Abc_NtkRetimeInitialValues(): The SAT problem timed out. DC latch values are used.\\n\");\n    } else if !(Abc_NtkRetimeVerifyModel( pNtkCone, vValues, pNtkMiter.pModel ) != 0) {\n        fmt.Printf(\"Abc_NtkRetimeInitialValues(): The computed counter-example is incorrect.\\n\"); }\n    // set the values of the latches\n    if RetValue != 0 {\n        vSolution = nil;\n    } else {\n        vSolution = Vec_IntAllocArray( pNtkMiter.pModel, Abc_NtkPiNum(pNtkLogic) );\n    }\n    pNtkMiter.pModel = nil;\n    Abc_NtkDelete( pNtkMiter );\n    Abc_NtkDelete( pNtkLogic );\n    return vSolution;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the results of simulating one node.]\n\n  Description [Assumes that fanins have pCopy set to the input values.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ObjSopSimulate(pObj *Abc_Obj_t) int32 {\n    var pCube string;\n    var pSop string = (char *)pObj.pData;\n    var nVars, Value, v, ResOr, ResAnd, ResVar int32;\n    assert(pSop \u0026\u0026 !Abc_SopIsExorType(pSop), \"pSop \u0026\u0026 !Abc_SopIsExorType(pSop)\");\n    // simulate the SOP of the node\n    ResOr = 0;\n    nVars = Abc_SopGetVarNum(pSop);\n    // inlining of macro Abc_SopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n        ResAnd = 1;\n        // inlining of macro Abc_CubeForEachVar\n        for  v = 0; (pCube[v] != ' ') \u0026\u0026 (Value = pCube[v]); v++  {\n            if Value == '0' {\n                ResVar = 1 ^ (int32((ABC_PTRUINT_T))Abc_ObjFanin(pObj, v).pCopy);\n            } else if Value == '1' {\n                ResVar = int32((ABC_PTRUINT_T))Abc_ObjFanin(pObj, v).pCopy;\n            } else {\n                continue; }\n            ResAnd \u0026= ResVar;\n        }\n        ResOr |= ResAnd;\n    }\n    // complement the result if necessary\n    if !Abc_SopGetPhase(pSop) {\n        ResOr ^= 1; }\n    return ResOr;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeVerifyModel(pNtkCone *Abc_Ntk_t, vValues *Vec_Int_t, pModel *int32) int32 {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, Counter int32;\n    assert(Abc_NtkIsSopLogic(pNtkCone), \"Abc_NtkIsSopLogic(pNtkCone)\");\n    // set the PIs\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtkCone)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtkCone, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)pModel[i];\n    }\n    // simulate the internal nodes\n    vNodes = Abc_NtkDfs( pNtkCone, 0 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Abc_ObjSopSimulate( pObj );\n    }\n    Vec_PtrFree( vNodes );\n    // compare the outputs\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtkCone)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtkCone, i)), 1); i++  {\n        pObj.pCopy = Abc_ObjFanin0(pObj).pCopy;\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtkCone)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtkCone, i)), 1); i++  {\n        Counter += (Vec_IntEntry(vValues, i) != int32((ABC_PTRUINT_T))pObj.pCopy);\n    }\n    if Counter \u003e 0 {\n        fmt.Printf(\"%d outputs (out of %d) have a value mismatch.\\n\", Counter, Abc_NtkPoNum(pNtkCone)); }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfer latch initial values to pCopy.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeTranferToCopy(pNtk *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if Abc_ObjIsLatch(pObj) {\n            pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Abc_LatchIsInit1(pObj); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfer latch initial values from pCopy.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeTranferFromCopy(pNtk *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if Abc_ObjIsLatch(pObj) {\n            pObj.pData = (void *)(ABC_PTRUINT_T)(pObj.pCopy? ABC_INIT_ONE : ABC_INIT_ZERO); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfer latch initial values to pCopy.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeCollectLatchValues(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vValues *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    vValues = Vec_IntAlloc( Abc_NtkLatchNum(pNtk) );\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if Abc_ObjIsLatch(pObj) {\n            Vec_IntPush( vValues, Abc_LatchIsInit1(pObj) ); }\n    }\n    return vValues;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfer latch initial values from pCopy.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeInsertLatchValues(pNtk *Abc_Ntk_t, vValues *Vec_Int_t) {\n    var pObj *Abc_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if Abc_ObjIsLatch(pObj) {\n            pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Counter++; }\n    }\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if Abc_ObjIsLatch(pObj) {\n            pObj.pData = (Abc_Obj_t *)(ABC_PTRUINT_T)(vValues? (Vec_IntEntry(vValues,int32((ABC_PTRUINT_T))pObj.pCopy)? ABC_INIT_ONE : ABC_INIT_ZERO) : ABC_INIT_DC); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfer latch initial values to pCopy.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeBackwardInitialStart(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // create the network used for the initial state computation\n    pNtkNew = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );\n    // create POs corresponding to the initial values\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if Abc_ObjIsLatch(pObj) {\n            pObj.pCopy = Abc_NtkCreatePo(pNtkNew); }\n    }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfer latch initial values to pCopy.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeBackwardInitialFinish(pNtk *Abc_Ntk_t, pNtkNew *Abc_Ntk_t, vValuesOld *Vec_Int_t, fVerbose int32) {\n    var vValuesNew *Vec_Int_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // create PIs corresponding to the initial values\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else\n        if Abc_ObjIsLatch(pObj) {\n            Abc_ObjAddFanin( pObj.pCopy, Abc_NtkCreatePi(pNtkNew) ); }\n    }\n    // assign dummy node names\n    Abc_NtkAddDummyPiNames( pNtkNew );\n    Abc_NtkAddDummyPoNames( pNtkNew );\n    // check the network\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkRetimeBackwardInitialFinish(): Network check has failed.\\n\"); }\n    // derive new initial values\n    vValuesNew = Abc_NtkRetimeInitialValues( pNtkNew, vValuesOld, fVerbose );\n    // insert new initial values\n    Abc_NtkRetimeInsertLatchValues( pNtk, vValuesNew );\n    if vValuesNew != nil { Vec_IntFree( vValuesNew ); }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Cycles the circuit to create a new initial state.]\n\n  Description [Simulates the circuit with random input for the given \n  number of timeframes to get a better initial state.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCycleInitStateSop(pNtk *Abc_Ntk_t, nFrames int32, fVerbose int32) {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, f int32;\n    assert(Abc_NtkIsSopLogic(pNtk), \"Abc_NtkIsSopLogic(pNtk)\");\n    srand( 0x12341234 );\n    // initialize the values\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)(rand() \u0026 1);\n    }\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n        pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Abc_LatchIsInit1(pObj); }\n    }\n    // simulate for the given number of timeframes\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    for  f = 0; f \u003c nFrames; f++  {\n        // simulate internal nodes\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n            pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)Abc_ObjSopSimulate( pObj );\n        }\n        // bring the results to the COs\n        // inlining of macro Abc_NtkForEachCo\n        for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n            pObj.pCopy = Abc_ObjFanin0(pObj).pCopy;\n        }\n        // assign PI values\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n            pObj.pCopy = (Abc_Obj_t *)(ABC_PTRUINT_T)(rand() \u0026 1);\n        }\n        // transfer the latch values\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n            Abc_ObjFanout0(pObj).pCopy = Abc_ObjFanin0(pObj).pCopy; }\n        }\n    }\n    Vec_PtrFree( vNodes );\n    // set the final values\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n        pObj.pData = (void *)(ABC_PTRUINT_T)(Abc_ObjFanout0(pObj).pCopy ? ABC_INIT_ONE : ABC_INIT_ZERO); }\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

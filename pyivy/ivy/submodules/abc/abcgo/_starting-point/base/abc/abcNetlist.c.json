@@ -1,0 +1,611 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c",
+  "SHA256": "63370af16147ea305cb39693e90aa79e0ff7797bf5981e2046aee84452a30916",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 1885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 2014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkWhiteboxNum(pNtk) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 5,
+        "ByteOffset": 2059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkBlackboxNum(pNtk) == 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 9,
+        "ByteOffset": 3383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkToLogic(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 92,
+        "Column": 18,
+        "ByteOffset": 3392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkToLogic(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 132,
+        "Column": 5,
+        "ByteOffset": 4555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 5443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 13,
+        "ByteOffset": 5844
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Abc_NtkLogicToNetlist() warning: The network is converted to have simple COs.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 192,
+        "Column": 13,
+        "ByteOffset": 7030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !strcmp( Abc_ObjName(pDriver), Abc_ObjName(pObj) ) );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 192,
+        "Column": 22,
+        "ByteOffset": 7039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !strcmp( Abc_ObjName(pDriver), Abc_ObjName(pObj) ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 9,
+        "ByteOffset": 7196
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjIsNode(pDriver) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 13,
+        "ByteOffset": 7888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !strcmp( Abc_ObjName(pDriver.pCopy.pCopy), Abc_ObjName(pObj) ) );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 210,
+        "Column": 22,
+        "ByteOffset": 7897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !strcmp( Abc_ObjName(pDriver.pCopy.pCopy), Abc_ObjName(pObj) ) );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 220,
+        "Column": 9,
+        "ByteOffset": 8454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Buffer, \"new_%s_\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 237,
+        "Column": 9,
+        "ByteOffset": 9425
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkLogicToNetlist(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 237,
+        "Column": 18,
+        "ByteOffset": 9434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkLogicToNetlist(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 10120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 9,
+        "ByteOffset": 13384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkAigToLogicSop(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 325,
+        "Column": 18,
+        "ByteOffset": 13393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkAigToLogicSop(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 345,
+        "Column": 5,
+        "ByteOffset": 14000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 347,
+        "Column": 9,
+        "ByteOffset": 14076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: Choice nodes are skipped.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 392,
+        "Column": 9,
+        "ByteOffset": 16558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: The EXDc network is skipped.\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 394,
+        "Column": 9,
+        "ByteOffset": 16655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkAigToLogicSopBench(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 394,
+        "Column": 18,
+        "ByteOffset": 16664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkAigToLogicSopBench(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 414,
+        "Column": 5,
+        "ByteOffset": 17275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 416,
+        "Column": 9,
+        "ByteOffset": 17351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: Choice nodes are skipped.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 475,
+        "Column": 9,
+        "ByteOffset": 20785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: The EXDc network is skipped.\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 477,
+        "Column": 9,
+        "ByteOffset": 20882
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkAigToLogicSopBench(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 477,
+        "Column": 18,
+        "ByteOffset": 20891
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkAigToLogicSopBench(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 495,
+        "Column": 5,
+        "ByteOffset": 21354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkToLogic",
+      "Start": 1600,
+      "End": 2971,
+      "BodyStart": 1647,
+      "Original": "Abc_Ntk_t * Abc_NtkToLogic( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew; \n    Abc_Obj_t * pObj, * pFanin;\n    int i, k;\n    // consider the case of the AIG\n    if ( Abc_NtkIsStrash(pNtk) )\n        return Abc_NtkAigToLogicSop( pNtk );\n    assert( Abc_NtkIsNetlist(pNtk) );\n    // consider simple case when there is hierarchy\n//    assert( pNtk-\u003epDesign == NULL );\n    assert( Abc_NtkWhiteboxNum(pNtk) == 0 );\n    assert( Abc_NtkBlackboxNum(pNtk) == 0 );\n    // start the network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, pNtk-\u003entkFunc );\n    // duplicate the nodes \n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        Abc_NtkDupObj(pNtkNew, pObj, 0);\n        Abc_ObjAssignName( pObj-\u003epCopy, Abc_ObjName(Abc_ObjFanout0(pObj)), NULL );\n    }\n    // reconnect the internal nodes in the new network\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Abc_ObjAddFanin( pObj-\u003epCopy, Abc_ObjFanin0(pFanin)-\u003epCopy );\n    // collect the CO nodes\n    Abc_NtkFinalize( pNtk, pNtkNew );\n    // fix the problem with CO pointing directly to CIs\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // duplicate EXDC \n    if ( pNtk-\u003epExdc )\n        pNtkNew-\u003epExdc = Abc_NtkToLogic( pNtk-\u003epExdc );\n    if ( !Abc_NtkCheck( pNtkNew ) )\n        fprintf( stdout, \"Abc_NtkToLogic(): Network check has failed.\\n\" );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkToLogic(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t; \n    var pObj, pFanin *Abc_Obj_t;\n    var i, k int32;\n    // consider the case of the AIG\n    if Abc_NtkIsStrash(pNtk) {\n        return Abc_NtkAigToLogicSop( pNtk ); }\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    // consider simple case when there is hierarchy\n//    assert( pNtk-\u003epDesign == NULL );\n    assert(Abc_NtkWhiteboxNum(pNtk) == 0, \"Abc_NtkWhiteboxNum(pNtk) == 0\");\n    assert(Abc_NtkBlackboxNum(pNtk) == 0, \"Abc_NtkBlackboxNum(pNtk) == 0\");\n    // start the network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, pNtk.ntkFunc );\n    // duplicate the nodes \n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Abc_NtkDupObj(pNtkNew, pObj, 0);\n        Abc_ObjAssignName( pObj.pCopy, Abc_ObjName(Abc_ObjFanout0(pObj)), nil );\n    }\n    }\n    // reconnect the internal nodes in the new network\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Abc_ObjAddFanin( pObj.pCopy, Abc_ObjFanin0(pFanin).pCopy );\n        } }\n    }\n    // collect the CO nodes\n    Abc_NtkFinalize( pNtk, pNtkNew );\n    // fix the problem with CO pointing directly to CIs\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // duplicate EXDC \n    if pNtk.pExdc {\n        pNtkNew.pExdc = Abc_NtkToLogic( pNtk.pExdc ); }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkToLogic(): Network check has failed.\\n\"); }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkToNetlist",
+      "Start": 3250,
+      "End": 3647,
+      "BodyStart": 3299,
+      "Original": "Abc_Ntk_t * Abc_NtkToNetlist( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew, * pNtkTemp; \n    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsStrash(pNtk) );\n    if ( Abc_NtkIsStrash(pNtk) )\n    {\n        pNtkTemp = Abc_NtkAigToLogicSop(pNtk);\n        pNtkNew = Abc_NtkLogicToNetlist( pNtkTemp );\n        Abc_NtkDelete( pNtkTemp );\n        return pNtkNew;\n    }\n    return Abc_NtkLogicToNetlist( pNtk );\n}",
+      "Draft": "func Abc_NtkToNetlist(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew, pNtkTemp *Abc_Ntk_t; \n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsStrash(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsStrash(pNtk)\");\n    if Abc_NtkIsStrash(pNtk) {\n        pNtkTemp = Abc_NtkAigToLogicSop(pNtk);\n        pNtkNew = Abc_NtkLogicToNetlist( pNtkTemp );\n        Abc_NtkDelete( pNtkTemp );\n        return pNtkNew;\n    }\n    return Abc_NtkLogicToNetlist( pNtk );\n}"
+    },
+    {
+      "Name": "Abc_NtkToNetlistBench",
+      "Start": 3958,
+      "End": 4240,
+      "BodyStart": 4012,
+      "Original": "Abc_Ntk_t * Abc_NtkToNetlistBench( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew, * pNtkTemp; \n    assert( Abc_NtkIsStrash(pNtk) );\n    pNtkTemp = Abc_NtkAigToLogicSopBench( pNtk );\n    pNtkNew = Abc_NtkLogicToNetlist( pNtkTemp );\n    Abc_NtkDelete( pNtkTemp );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkToNetlistBench(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew, pNtkTemp *Abc_Ntk_t; \n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    pNtkTemp = Abc_NtkAigToLogicSopBench( pNtk );\n    pNtkNew = Abc_NtkLogicToNetlist( pNtkTemp );\n    Abc_NtkDelete( pNtkTemp );\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkLogicToNetlist",
+      "Start": 4785,
+      "End": 8249,
+      "BodyStart": 4839,
+      "Original": "Abc_Ntk_t * Abc_NtkLogicToNetlist( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew; \n    Abc_Obj_t * pObj, * pNet, * pDriver, * pFanin;\n    int i, k;\n\n    assert( Abc_NtkIsLogic(pNtk) );\n\n    // remove dangling nodes\n    Abc_NtkCleanup( pNtk, 0 );\n\n    // make sure the CO names are unique\n    Abc_NtkCheckUniqueCiNames( pNtk );\n    Abc_NtkCheckUniqueCoNames( pNtk );\n    Abc_NtkCheckUniqueCioNames( pNtk );\n\n//    assert( Abc_NtkLogicHasSimpleCos(pNtk) );\n    if ( !Abc_NtkLogicHasSimpleCos(pNtk) )\n    {\n        if ( !Abc_FrameReadFlag(\"silentmode\") )\n            printf( \"Abc_NtkLogicToNetlist() warning: The network is converted to have simple COs.\\n\" );\n        Abc_NtkLogicMakeSimpleCos( pNtk, 0 );\n    }\n\n    // start the netlist by creating PI/PO/Latch objects\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_NETLIST, pNtk-\u003entkFunc );\n    // create the CI nets and remember them in the new CI nodes\n    Abc_NtkForEachCi( pNtk, pObj, i )\n    {\n        pNet = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pObj) );\n        Abc_ObjAddFanin( pNet, pObj-\u003epCopy );\n        pObj-\u003epCopy-\u003epCopy = pNet;\n    }\n    // duplicate all nodes\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        Abc_NtkDupObj(pNtkNew, pObj, 0);\n    // first add the nets to the CO drivers\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        pDriver = Abc_ObjFanin0(pObj);\n        if ( Abc_ObjIsCi(pDriver) )\n        {\n            assert( !strcmp( Abc_ObjName(pDriver), Abc_ObjName(pObj) ) );\n            Abc_ObjAddFanin( pObj-\u003epCopy, pDriver-\u003epCopy-\u003epCopy );\n            continue;\n        }\n        assert( Abc_ObjIsNode(pDriver) );\n        // if the CO driver has no net, create it\n        if ( pDriver-\u003epCopy-\u003epCopy == NULL )\n        {\n            // create the CO net and connect it to CO\n            //if ( Abc_NtkFindNet(pNtkNew, Abc_ObjName(pDriver)) == NULL )\n            //    pNet = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pDriver) );\n            //else\n            pNet = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pObj) );\n            Abc_ObjAddFanin( pObj-\u003epCopy, pNet );\n            // connect the CO net to the new driver and remember it in the new driver\n            Abc_ObjAddFanin( pNet, pDriver-\u003epCopy );\n            pDriver-\u003epCopy-\u003epCopy = pNet;\n        }\n        else\n        {\n            assert( !strcmp( Abc_ObjName(pDriver-\u003epCopy-\u003epCopy), Abc_ObjName(pObj) ) );\n            Abc_ObjAddFanin( pObj-\u003epCopy, pDriver-\u003epCopy-\u003epCopy );\n        }\n    }\n    // create the missing nets\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        char Buffer[1000];\n        if ( pObj-\u003epCopy-\u003epCopy ) // the net of the new object is already created\n            continue;\n        // create the new net\n        sprintf( Buffer, \"new_%s_\", Abc_ObjName(pObj) );\n        //pNet = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pObj) ); // here we create net names such as \"n48\", where 48 is the ID of the node\n        pNet = Abc_NtkFindOrCreateNet( pNtkNew, Buffer ); \n        Abc_ObjAddFanin( pNet, pObj-\u003epCopy );\n        pObj-\u003epCopy-\u003epCopy = pNet;\n    }\n    // connect nodes to the fanins nets\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy-\u003epCopy );\n    // duplicate EXDC \n    if ( pNtk-\u003epExdc )\n        pNtkNew-\u003epExdc = Abc_NtkToNetlist( pNtk-\u003epExdc );\n    if ( !Abc_NtkCheck( pNtkNew ) )\n        fprintf( stdout, \"Abc_NtkLogicToNetlist(): Network check has failed.\\n\" );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkLogicToNetlist(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t; \n    var pObj, pNet, pDriver, pFanin *Abc_Obj_t;\n    var i, k int32;\n\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n\n    // remove dangling nodes\n    Abc_NtkCleanup( pNtk, 0 );\n\n    // make sure the CO names are unique\n    Abc_NtkCheckUniqueCiNames( pNtk );\n    Abc_NtkCheckUniqueCoNames( pNtk );\n    Abc_NtkCheckUniqueCioNames( pNtk );\n\n//    assert( Abc_NtkLogicHasSimpleCos(pNtk) );\n    if !Abc_NtkLogicHasSimpleCos(pNtk) {\n        if !Abc_FrameReadFlag(\"silentmode\") {\n            fmt.Printf(\"Abc_NtkLogicToNetlist() warning: The network is converted to have simple COs.\\n\"); }\n        Abc_NtkLogicMakeSimpleCos( pNtk, 0 );\n    }\n\n    // start the netlist by creating PI/PO/Latch objects\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_NETLIST, pNtk.ntkFunc );\n    // create the CI nets and remember them in the new CI nodes\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pNet = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pObj) );\n        Abc_ObjAddFanin( pNet, pObj.pCopy );\n        pObj.pCopy.pCopy = pNet;\n    }\n    // duplicate all nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Abc_NtkDupObj(pNtkNew, pObj, 0); }\n    }\n    // first add the nets to the CO drivers\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pDriver = Abc_ObjFanin0(pObj);\n        if Abc_ObjIsCi(pDriver) {\n            assert(!(int32(strings.Compare(Abc_ObjName(pDriver), Abc_ObjName(pObj))) != 0), \"!strcmp( Abc_ObjName(pDriver), Abc_ObjName(pObj) )\");\n            Abc_ObjAddFanin( pObj.pCopy, pDriver.pCopy.pCopy );\n            continue;\n        }\n        assert(Abc_ObjIsNode(pDriver), \"Abc_ObjIsNode(pDriver)\");\n        // if the CO driver has no net, create it\n        if pDriver.pCopy.pCopy == nil {\n            // create the CO net and connect it to CO\n            //if ( Abc_NtkFindNet(pNtkNew, Abc_ObjName(pDriver)) == NULL )\n            //    pNet = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pDriver) );\n            //else\n            pNet = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pObj) );\n            Abc_ObjAddFanin( pObj.pCopy, pNet );\n            // connect the CO net to the new driver and remember it in the new driver\n            Abc_ObjAddFanin( pNet, pDriver.pCopy );\n            pDriver.pCopy.pCopy = pNet;\n        \n        } else {\n            assert(!(int32(strings.Compare(Abc_ObjName(pDriver.pCopy.pCopy), Abc_ObjName(pObj))) != 0), \"!strcmp( Abc_ObjName(pDriver.pCopy.pCopy), Abc_ObjName(pObj) )\");\n            Abc_ObjAddFanin( pObj.pCopy, pDriver.pCopy.pCopy );\n        }\n    }\n    // create the missing nets\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        var Buffer string // was [1000]byte in C\n\n        if pObj.pCopy.pCopy { // the net of the new object is already created\n            continue; }\n        // create the new net\n        Buffer = fmt.Sprintf(\"new_%s_\", Abc_ObjName(pObj));\n        //pNet = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pObj) ); // here we create net names such as \"n48\", where 48 is the ID of the node\n        pNet = Abc_NtkFindOrCreateNet( pNtkNew, Buffer ); \n        Abc_ObjAddFanin( pNet, pObj.pCopy );\n        pObj.pCopy.pCopy = pNet;\n    }\n    }\n    // connect nodes to the fanins nets\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy.pCopy );\n        } }\n    }\n    // duplicate EXDC \n    if pNtk.pExdc {\n        pNtkNew.pExdc = Abc_NtkToNetlist( pNtk.pExdc ); }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkLogicToNetlist(): Network check has failed.\\n\"); }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkAigToLogicSop",
+      "Start": 8578,
+      "End": 11500,
+      "BodyStart": 8631,
+      "Original": "Abc_Ntk_t * Abc_NtkAigToLogicSop( Abc_Ntk_t * pNtk )\n{\n    extern int Abc_NtkLogicMakeSimpleCos2( Abc_Ntk_t * pNtk, int fDuplicate );\n\n    Abc_Ntk_t * pNtkNew; \n    Abc_Obj_t * pObj, * pFanin, * pNodeNew;\n    Vec_Int_t * vInts;\n    int i, k, fChoices = 0;\n    assert( Abc_NtkIsStrash(pNtk) );\n    // start the network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // if the constant node is used, duplicate it\n    pObj = Abc_AigConst1(pNtk);\n    if ( Abc_ObjFanoutNum(pObj) \u003e 0 )\n        pObj-\u003epCopy = Abc_NtkCreateNodeConst1(pNtkNew);\n    // duplicate the nodes and create node functions\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        Abc_NtkDupObj(pNtkNew, pObj, 0);\n        pObj-\u003epCopy-\u003epData = Abc_SopCreateAnd2( (Mem_Flex_t *)pNtkNew-\u003epManFunc, Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n    }\n    // create the choice nodes\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        if ( !Abc_AigNodeIsChoice(pObj) )\n            continue;\n        // create an OR gate\n        pNodeNew = Abc_NtkCreateNode(pNtkNew);\n        // add fanins\n        vInts = Vec_IntAlloc( 10 );\n        for ( pFanin = pObj; pFanin; pFanin = (Abc_Obj_t *)pFanin-\u003epData )\n        {\n            Vec_IntPush( vInts, (int)(pObj-\u003efPhase != pFanin-\u003efPhase) );\n            Abc_ObjAddFanin( pNodeNew, pFanin-\u003epCopy );\n        }\n        // create the logic function\n        pNodeNew-\u003epData = Abc_SopCreateOrMultiCube( (Mem_Flex_t *)pNtkNew-\u003epManFunc, Vec_IntSize(vInts), Vec_IntArray(vInts) );\n        // set the new node\n        pObj-\u003epCopy-\u003epCopy = pNodeNew;\n        Vec_IntFree( vInts );\n        fChoices = 1;\n    }\n    // connect the internal nodes\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            if ( pFanin-\u003epCopy-\u003epCopy )\n                Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy-\u003epCopy );\n            else\n                Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy );\n    // connect the COs\n//    Abc_NtkFinalize( pNtk, pNtkNew );\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        pFanin = Abc_ObjFanin0(pObj);\n        if ( pFanin-\u003epCopy-\u003epCopy )\n            pNodeNew = Abc_ObjNotCond(pFanin-\u003epCopy-\u003epCopy, Abc_ObjFaninC0(pObj));\n        else\n            pNodeNew = Abc_ObjNotCond(pFanin-\u003epCopy, Abc_ObjFaninC0(pObj));\n        Abc_ObjAddFanin( pObj-\u003epCopy, pNodeNew );\n    }\n\n    // fix the problem with complemented and duplicated CO edges\n    if ( fChoices )\n        Abc_NtkLogicMakeSimpleCos2( pNtkNew, 0 );\n    else\n        Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // duplicate the EXDC Ntk\n    if ( pNtk-\u003epExdc )\n    {\n        if ( Abc_NtkIsStrash(pNtk-\u003epExdc) )\n            pNtkNew-\u003epExdc = Abc_NtkAigToLogicSop( pNtk-\u003epExdc );\n        else\n            pNtkNew-\u003epExdc = Abc_NtkDup( pNtk-\u003epExdc );\n    }\n    if ( !Abc_NtkCheck( pNtkNew ) )\n        fprintf( stdout, \"Abc_NtkAigToLogicSop(): Network check has failed.\\n\" );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkAigToLogicSop(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    extern int Abc_NtkLogicMakeSimpleCos2( Abc_Ntk_t * pNtk, int fDuplicate );\n\n    var pNtkNew *Abc_Ntk_t; \n    var pObj, pFanin, pNodeNew *Abc_Obj_t;\n    var vInts *Vec_Int_t;\n    var i, k, fChoices int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // start the network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // if the constant node is used, duplicate it\n    pObj = Abc_AigConst1(pNtk);\n    if Abc_ObjFanoutNum(pObj) \u003e 0 {\n        pObj.pCopy = Abc_NtkCreateNodeConst1(pNtkNew); }\n    // duplicate the nodes and create node functions\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Abc_NtkDupObj(pNtkNew, pObj, 0);\n        pObj.pCopy.pData = Abc_SopCreateAnd2( (Mem_Flex_t *)pNtkNew.pManFunc, Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n    }\n    }\n    // create the choice nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if !Abc_AigNodeIsChoice(pObj) {\n            continue; }\n        // create an OR gate\n        pNodeNew = Abc_NtkCreateNode(pNtkNew);\n        // add fanins\n        vInts = Vec_IntAlloc( 10 );\n        for  pFanin = pObj; (pFanin != nil); pFanin = (Abc_Obj_t *)pFanin.pData  {\n            Vec_IntPush( vInts, int32((pObj.fPhase != pFanin.fPhase)) );\n            Abc_ObjAddFanin( pNodeNew, pFanin.pCopy );\n        }\n        // create the logic function\n        pNodeNew.pData = Abc_SopCreateOrMultiCube( (Mem_Flex_t *)pNtkNew.pManFunc, Vec_IntSize(vInts), Vec_IntArray(vInts) );\n        // set the new node\n        pObj.pCopy.pCopy = pNodeNew;\n        Vec_IntFree( vInts );\n        fChoices = 1;\n    }\n    }\n    // connect the internal nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if pFanin.pCopy.pCopy {\n                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy.pCopy );\n            } else {\n                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }\n        } }\n    }\n    // connect the COs\n//    Abc_NtkFinalize( pNtk, pNtkNew );\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pFanin = Abc_ObjFanin0(pObj);\n        if pFanin.pCopy.pCopy {\n            pNodeNew = Abc_ObjNotCond(pFanin.pCopy.pCopy, Abc_ObjFaninC0(pObj));\n        } else {\n            pNodeNew = Abc_ObjNotCond(pFanin.pCopy, Abc_ObjFaninC0(pObj)); }\n        Abc_ObjAddFanin( pObj.pCopy, pNodeNew );\n    }\n\n    // fix the problem with complemented and duplicated CO edges\n    if fChoices != 0 {\n        Abc_NtkLogicMakeSimpleCos2( pNtkNew, 0 );\n    } else {\n        Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 ); }\n    // duplicate the EXDC Ntk\n    if pNtk.pExdc {\n        if Abc_NtkIsStrash(pNtk.pExdc) {\n            pNtkNew.pExdc = Abc_NtkAigToLogicSop( pNtk.pExdc );\n        } else {\n            pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }\n    }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkAigToLogicSop(): Network check has failed.\\n\"); }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkAigToLogicSopBench",
+      "Start": 11845,
+      "End": 14270,
+      "BodyStart": 11903,
+      "Original": "Abc_Ntk_t * Abc_NtkAigToLogicSopBench( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew; \n    Abc_Obj_t * pObj, * pFanin;\n    Vec_Ptr_t * vNodes;\n    int i, k;\n    assert( Abc_NtkIsStrash(pNtk) );\n    if ( Abc_NtkGetChoiceNum(pNtk) )\n        printf( \"Warning: Choice nodes are skipped.\\n\" );\n    // start the network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // collect the nodes to be used (marks all nodes with current TravId)\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    // create inverters for the constant node\n    pObj = Abc_AigConst1(pNtk);\n    if ( Abc_ObjFanoutNum(pObj) \u003e 0 )\n        pObj-\u003epCopy = Abc_NtkCreateNodeConst1(pNtkNew);\n    if ( Abc_AigNodeHasComplFanoutEdgeTrav(pObj) )\n        pObj-\u003epCopy-\u003epCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj-\u003epCopy );\n    // create inverters for the CIs\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        if ( Abc_AigNodeHasComplFanoutEdgeTrav(pObj) )\n            pObj-\u003epCopy-\u003epCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj-\u003epCopy );\n    // duplicate the nodes, create node functions, and inverters\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        Abc_NtkDupObj( pNtkNew, pObj, 0 );\n        pObj-\u003epCopy-\u003epData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew-\u003epManFunc, 2, NULL );\n        if ( Abc_AigNodeHasComplFanoutEdgeTrav(pObj) )\n            pObj-\u003epCopy-\u003epCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj-\u003epCopy );\n    }\n    // connect the objects\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            if ( Abc_ObjFaninC( pObj, k ) )\n                Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy-\u003epCopy );\n            else\n                Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy );\n        }\n    Vec_PtrFree( vNodes );\n    // connect the COs\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        pFanin = Abc_ObjFanin0(pObj);\n        if ( Abc_ObjFaninC0( pObj ) )\n            Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy-\u003epCopy );\n        else\n            Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy );\n    }\n    // fix the problem with complemented and duplicated CO edges\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // duplicate the EXDC Ntk\n    if ( pNtk-\u003epExdc )\n        printf( \"Warning: The EXDc network is skipped.\\n\" );\n    if ( !Abc_NtkCheck( pNtkNew ) )\n        fprintf( stdout, \"Abc_NtkAigToLogicSopBench(): Network check has failed.\\n\" );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkAigToLogicSopBench(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t; \n    var pObj, pFanin *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var i, k int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    if Abc_NtkGetChoiceNum(pNtk) {\n        fmt.Printf(\"Warning: Choice nodes are skipped.\\n\"); }\n    // start the network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // collect the nodes to be used (marks all nodes with current TravId)\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    // create inverters for the constant node\n    pObj = Abc_AigConst1(pNtk);\n    if Abc_ObjFanoutNum(pObj) \u003e 0 {\n        pObj.pCopy = Abc_NtkCreateNodeConst1(pNtkNew); }\n    if Abc_AigNodeHasComplFanoutEdgeTrav(pObj) {\n        pObj.pCopy.pCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj.pCopy ); }\n    // create inverters for the CIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if Abc_AigNodeHasComplFanoutEdgeTrav(pObj) {\n            pObj.pCopy.pCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj.pCopy ); }\n    }\n    // duplicate the nodes, create node functions, and inverters\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Abc_NtkDupObj( pNtkNew, pObj, 0 );\n        pObj.pCopy.pData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew.pManFunc, 2, nil );\n        if Abc_AigNodeHasComplFanoutEdgeTrav(pObj) {\n            pObj.pCopy.pCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj.pCopy ); }\n    }\n    // connect the objects\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if Abc_ObjFaninC( pObj, k ) {\n                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy.pCopy );\n            } else {\n                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }\n        }\n    }\n    Vec_PtrFree( vNodes );\n    // connect the COs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pFanin = Abc_ObjFanin0(pObj);\n        if Abc_ObjFaninC0( pObj ) {\n            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy.pCopy );\n        } else {\n            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }\n    }\n    // fix the problem with complemented and duplicated CO edges\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // duplicate the EXDC Ntk\n    if pNtk.pExdc {\n        fmt.Printf(\"Warning: The EXDc network is skipped.\\n\"); }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkAigToLogicSopBench(): Network check has failed.\\n\"); }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkAigToLogicSopNand",
+      "Start": 14615,
+      "End": 17446,
+      "BodyStart": 14672,
+      "Original": "Abc_Ntk_t * Abc_NtkAigToLogicSopNand( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew; \n    Abc_Obj_t * pObj, * pFanin;\n    Vec_Ptr_t * vNodes;\n    int i, k;\n    assert( Abc_NtkIsStrash(pNtk) );\n    if ( Abc_NtkGetChoiceNum(pNtk) )\n        printf( \"Warning: Choice nodes are skipped.\\n\" );\n    // convert complemented edges\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            if ( Abc_ObjIsNode(pFanin) )\n                Abc_ObjXorFaninC( pObj, k );\n    // start the network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // collect the nodes to be used (marks all nodes with current TravId)\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    // create inverters for the constant node\n    pObj = Abc_AigConst1(pNtk);\n    if ( Abc_ObjFanoutNum(pObj) \u003e 0 )\n        pObj-\u003epCopy = Abc_NtkCreateNodeConst1(pNtkNew);\n    if ( Abc_AigNodeHasComplFanoutEdgeTrav(pObj) )\n        pObj-\u003epCopy-\u003epCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj-\u003epCopy );\n    // create inverters for the CIs\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        if ( Abc_AigNodeHasComplFanoutEdgeTrav(pObj) )\n            pObj-\u003epCopy-\u003epCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj-\u003epCopy );\n    // duplicate the nodes, create node functions, and inverters\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        Abc_NtkDupObj( pNtkNew, pObj, 0 );\n        pObj-\u003epCopy-\u003epData = Abc_SopCreateNand( (Mem_Flex_t *)pNtkNew-\u003epManFunc, 2 );\n        if ( Abc_AigNodeHasComplFanoutEdgeTrav(pObj) )\n            pObj-\u003epCopy-\u003epCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj-\u003epCopy );\n    }\n    // connect the objects\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n        {\n            if ( Abc_ObjFaninC( pObj, k ) )\n                Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy-\u003epCopy );\n            else\n                Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy );\n        }\n    Vec_PtrFree( vNodes );\n    // connect the COs\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        pFanin = Abc_ObjFanin0(pObj);\n        if ( Abc_ObjFaninC0( pObj ) )\n            Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy-\u003epCopy );\n        else\n            Abc_ObjAddFanin( pObj-\u003epCopy, pFanin-\u003epCopy );\n    }\n    // fix the problem with complemented and duplicated CO edges\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // convert complemented edges\n    Abc_NtkForEachObj( pNtk, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            if ( Abc_ObjIsNode(pFanin) )\n                Abc_ObjXorFaninC( pObj, k );\n    // duplicate the EXDC Ntk\n    if ( pNtk-\u003epExdc )\n        printf( \"Warning: The EXDc network is skipped.\\n\" );\n    if ( !Abc_NtkCheck( pNtkNew ) )\n        fprintf( stdout, \"Abc_NtkAigToLogicSopBench(): Network check has failed.\\n\" );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkAigToLogicSopNand(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t; \n    var pObj, pFanin *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var i, k int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    if Abc_NtkGetChoiceNum(pNtk) {\n        fmt.Printf(\"Warning: Choice nodes are skipped.\\n\"); }\n    // convert complemented edges\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if Abc_ObjIsNode(pFanin) {\n                Abc_ObjXorFaninC( pObj, k ); }\n        } }\n    }\n    // start the network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // collect the nodes to be used (marks all nodes with current TravId)\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    // create inverters for the constant node\n    pObj = Abc_AigConst1(pNtk);\n    if Abc_ObjFanoutNum(pObj) \u003e 0 {\n        pObj.pCopy = Abc_NtkCreateNodeConst1(pNtkNew); }\n    if Abc_AigNodeHasComplFanoutEdgeTrav(pObj) {\n        pObj.pCopy.pCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj.pCopy ); }\n    // create inverters for the CIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if Abc_AigNodeHasComplFanoutEdgeTrav(pObj) {\n            pObj.pCopy.pCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj.pCopy ); }\n    }\n    // duplicate the nodes, create node functions, and inverters\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Abc_NtkDupObj( pNtkNew, pObj, 0 );\n        pObj.pCopy.pData = Abc_SopCreateNand( (Mem_Flex_t *)pNtkNew.pManFunc, 2 );\n        if Abc_AigNodeHasComplFanoutEdgeTrav(pObj) {\n            pObj.pCopy.pCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj.pCopy ); }\n    }\n    // connect the objects\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if Abc_ObjFaninC( pObj, k ) {\n                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy.pCopy );\n            } else {\n                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }\n        }\n    }\n    Vec_PtrFree( vNodes );\n    // connect the COs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pFanin = Abc_ObjFanin0(pObj);\n        if Abc_ObjFaninC0( pObj ) {\n            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy.pCopy );\n        } else {\n            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }\n    }\n    // fix the problem with complemented and duplicated CO edges\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // convert complemented edges\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if Abc_ObjIsNode(pFanin) {\n                Abc_ObjXorFaninC( pObj, k ); }\n        } }\n    }\n    // duplicate the EXDC Ntk\n    if pNtk.pExdc {\n        fmt.Printf(\"Warning: The EXDc network is skipped.\\n\"); }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkAigToLogicSopBench(): Network check has failed.\\n\"); }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkAddPoBuffers",
+      "Start": 17707,
+      "End": 18081,
+      "BodyStart": 17752,
+      "Original": "void Abc_NtkAddPoBuffers( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj, * pFanin, * pFaninNew;\n    int i;\n    assert( Abc_NtkIsStrash(pNtk) );\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        pFanin = Abc_ObjChild0(pObj);\n        pFaninNew = Abc_NtkCreateNode(pNtk);\n        Abc_ObjAddFanin( pFaninNew, pFanin );\n        Abc_ObjPatchFanin( pObj, pFanin, pFaninNew );\n    }\n}",
+      "Draft": "func Abc_NtkAddPoBuffers(pNtk *Abc_Ntk_t) {\n    var pObj, pFanin, pFaninNew *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pFanin = Abc_ObjChild0(pObj);\n        pFaninNew = Abc_NtkCreateNode(pNtk);\n        Abc_ObjAddFanin( pFaninNew, pFanin );\n        Abc_ObjPatchFanin( pObj, pFanin, pFaninNew );\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::pointer-cast::10789",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9329,
+      "End": 9343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::pointer-cast::11369",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9735,
+      "End": 9748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::pointer-cast::11636",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10002,
+      "End": 10016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::pointer-cast::15137",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12912,
+      "End": 12912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::pointer-cast::15282",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13060,
+      "End": 13074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::pointer-cast::15605",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13275,
+      "End": 13275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::pointer-cast::18889",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15887,
+      "End": 15887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::pointer-cast::19035",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16036,
+      "End": 16050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::pointer-cast::19352",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16245,
+      "End": 16245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::Abc_NtkToLogic",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkToLogic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1600,
+      "End": 2971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::Abc_NtkToNetlist",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkToNetlist",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3250,
+      "End": 3647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::Abc_NtkToNetlistBench",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkToNetlistBench",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3958,
+      "End": 4240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::Abc_NtkLogicToNetlist",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkLogicToNetlist",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4785,
+      "End": 8249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::Abc_NtkAigToLogicSop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkAigToLogicSop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8578,
+      "End": 11500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::Abc_NtkAigToLogicSopBench",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkAigToLogicSopBench",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11845,
+      "End": 14270
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::Abc_NtkAigToLogicSopNand",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkAigToLogicSopNand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14615,
+      "End": 17446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::Abc_NtkAddPoBuffers",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkAddPoBuffers",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17707,
+      "End": 18081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcNetlist.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18328
+    }
+  ],
+  "Draft": "package abc\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcNetlist.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Transforms netlist into a logic network and vice versa.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcNetlist.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"abc.h\"\n//#include \"base/main/main.h\"\n//#include \"seq.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Abc_NtkAddPoBuffers( Abc_Ntk_t * pNtk );\n\n// static Abc_Ntk_t * Abc_NtkLogicToNetlist( Abc_Ntk_t * pNtk );\n\n// static Abc_Ntk_t * Abc_NtkAigToLogicSop( Abc_Ntk_t * pNtk );\n\n// static Abc_Ntk_t * Abc_NtkAigToLogicSopBench( Abc_Ntk_t * pNtk );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Transform the netlist into a logic network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkToLogic(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t; \n    var pObj, pFanin *Abc_Obj_t;\n    var i, k int32;\n    // consider the case of the AIG\n    if Abc_NtkIsStrash(pNtk) {\n        return Abc_NtkAigToLogicSop( pNtk ); }\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    // consider simple case when there is hierarchy\n//    assert( pNtk-\u003epDesign == NULL );\n    assert(Abc_NtkWhiteboxNum(pNtk) == 0, \"Abc_NtkWhiteboxNum(pNtk) == 0\");\n    assert(Abc_NtkBlackboxNum(pNtk) == 0, \"Abc_NtkBlackboxNum(pNtk) == 0\");\n    // start the network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, pNtk.ntkFunc );\n    // duplicate the nodes \n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Abc_NtkDupObj(pNtkNew, pObj, 0);\n        Abc_ObjAssignName( pObj.pCopy, Abc_ObjName(Abc_ObjFanout0(pObj)), nil );\n    }\n    }\n    // reconnect the internal nodes in the new network\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Abc_ObjAddFanin( pObj.pCopy, Abc_ObjFanin0(pFanin).pCopy );\n        } }\n    }\n    // collect the CO nodes\n    Abc_NtkFinalize( pNtk, pNtkNew );\n    // fix the problem with CO pointing directly to CIs\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // duplicate EXDC \n    if pNtk.pExdc {\n        pNtkNew.pExdc = Abc_NtkToLogic( pNtk.pExdc ); }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkToLogic(): Network check has failed.\\n\"); }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transform the logic network into a netlist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkToNetlist(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew, pNtkTemp *Abc_Ntk_t; \n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsStrash(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsStrash(pNtk)\");\n    if Abc_NtkIsStrash(pNtk) {\n        pNtkTemp = Abc_NtkAigToLogicSop(pNtk);\n        pNtkNew = Abc_NtkLogicToNetlist( pNtkTemp );\n        Abc_NtkDelete( pNtkTemp );\n        return pNtkNew;\n    }\n    return Abc_NtkLogicToNetlist( pNtk );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the AIG into the netlist.]\n\n  Description [This procedure does not copy the choices.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkToNetlistBench(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew, pNtkTemp *Abc_Ntk_t; \n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    pNtkTemp = Abc_NtkAigToLogicSopBench( pNtk );\n    pNtkNew = Abc_NtkLogicToNetlist( pNtkTemp );\n    Abc_NtkDelete( pNtkTemp );\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transform the logic network into a netlist.]\n\n  Description [The logic network given to this procedure should\n  have exactly the same structure as the resulting netlist. The COs\n  can only point to CIs if they have identical names. Otherwise, \n  they should have a node between them, even if this node is \n  inverter or buffer.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkLogicToNetlist(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t; \n    var pObj, pNet, pDriver, pFanin *Abc_Obj_t;\n    var i, k int32;\n\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n\n    // remove dangling nodes\n    Abc_NtkCleanup( pNtk, 0 );\n\n    // make sure the CO names are unique\n    Abc_NtkCheckUniqueCiNames( pNtk );\n    Abc_NtkCheckUniqueCoNames( pNtk );\n    Abc_NtkCheckUniqueCioNames( pNtk );\n\n//    assert( Abc_NtkLogicHasSimpleCos(pNtk) );\n    if !Abc_NtkLogicHasSimpleCos(pNtk) {\n        if !Abc_FrameReadFlag(\"silentmode\") {\n            fmt.Printf(\"Abc_NtkLogicToNetlist() warning: The network is converted to have simple COs.\\n\"); }\n        Abc_NtkLogicMakeSimpleCos( pNtk, 0 );\n    }\n\n    // start the netlist by creating PI/PO/Latch objects\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_NETLIST, pNtk.ntkFunc );\n    // create the CI nets and remember them in the new CI nodes\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pNet = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pObj) );\n        Abc_ObjAddFanin( pNet, pObj.pCopy );\n        pObj.pCopy.pCopy = pNet;\n    }\n    // duplicate all nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Abc_NtkDupObj(pNtkNew, pObj, 0); }\n    }\n    // first add the nets to the CO drivers\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pDriver = Abc_ObjFanin0(pObj);\n        if Abc_ObjIsCi(pDriver) {\n            assert(!(int32(strings.Compare(Abc_ObjName(pDriver), Abc_ObjName(pObj))) != 0), \"!strcmp( Abc_ObjName(pDriver), Abc_ObjName(pObj) )\");\n            Abc_ObjAddFanin( pObj.pCopy, pDriver.pCopy.pCopy );\n            continue;\n        }\n        assert(Abc_ObjIsNode(pDriver), \"Abc_ObjIsNode(pDriver)\");\n        // if the CO driver has no net, create it\n        if pDriver.pCopy.pCopy == nil {\n            // create the CO net and connect it to CO\n            //if ( Abc_NtkFindNet(pNtkNew, Abc_ObjName(pDriver)) == NULL )\n            //    pNet = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pDriver) );\n            //else\n            pNet = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pObj) );\n            Abc_ObjAddFanin( pObj.pCopy, pNet );\n            // connect the CO net to the new driver and remember it in the new driver\n            Abc_ObjAddFanin( pNet, pDriver.pCopy );\n            pDriver.pCopy.pCopy = pNet;\n        \n        } else {\n            assert(!(int32(strings.Compare(Abc_ObjName(pDriver.pCopy.pCopy), Abc_ObjName(pObj))) != 0), \"!strcmp( Abc_ObjName(pDriver.pCopy.pCopy), Abc_ObjName(pObj) )\");\n            Abc_ObjAddFanin( pObj.pCopy, pDriver.pCopy.pCopy );\n        }\n    }\n    // create the missing nets\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        var Buffer string // was [1000]byte in C\n\n        if pObj.pCopy.pCopy { // the net of the new object is already created\n            continue; }\n        // create the new net\n        Buffer = fmt.Sprintf(\"new_%s_\", Abc_ObjName(pObj));\n        //pNet = Abc_NtkFindOrCreateNet( pNtkNew, Abc_ObjName(pObj) ); // here we create net names such as \"n48\", where 48 is the ID of the node\n        pNet = Abc_NtkFindOrCreateNet( pNtkNew, Buffer ); \n        Abc_ObjAddFanin( pNet, pObj.pCopy );\n        pObj.pCopy.pCopy = pNet;\n    }\n    }\n    // connect nodes to the fanins nets\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy.pCopy );\n        } }\n    }\n    // duplicate EXDC \n    if pNtk.pExdc {\n        pNtkNew.pExdc = Abc_NtkToNetlist( pNtk.pExdc ); }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkLogicToNetlist(): Network check has failed.\\n\"); }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the AIG into the logic network with SOPs.]\n\n  Description [Correctly handles the case of choice nodes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkAigToLogicSop(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    extern int Abc_NtkLogicMakeSimpleCos2( Abc_Ntk_t * pNtk, int fDuplicate );\n\n    var pNtkNew *Abc_Ntk_t; \n    var pObj, pFanin, pNodeNew *Abc_Obj_t;\n    var vInts *Vec_Int_t;\n    var i, k, fChoices int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // start the network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // if the constant node is used, duplicate it\n    pObj = Abc_AigConst1(pNtk);\n    if Abc_ObjFanoutNum(pObj) \u003e 0 {\n        pObj.pCopy = Abc_NtkCreateNodeConst1(pNtkNew); }\n    // duplicate the nodes and create node functions\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Abc_NtkDupObj(pNtkNew, pObj, 0);\n        pObj.pCopy.pData = Abc_SopCreateAnd2( (Mem_Flex_t *)pNtkNew.pManFunc, Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n    }\n    }\n    // create the choice nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if !Abc_AigNodeIsChoice(pObj) {\n            continue; }\n        // create an OR gate\n        pNodeNew = Abc_NtkCreateNode(pNtkNew);\n        // add fanins\n        vInts = Vec_IntAlloc( 10 );\n        for  pFanin = pObj; (pFanin != nil); pFanin = (Abc_Obj_t *)pFanin.pData  {\n            Vec_IntPush( vInts, int32((pObj.fPhase != pFanin.fPhase)) );\n            Abc_ObjAddFanin( pNodeNew, pFanin.pCopy );\n        }\n        // create the logic function\n        pNodeNew.pData = Abc_SopCreateOrMultiCube( (Mem_Flex_t *)pNtkNew.pManFunc, Vec_IntSize(vInts), Vec_IntArray(vInts) );\n        // set the new node\n        pObj.pCopy.pCopy = pNodeNew;\n        Vec_IntFree( vInts );\n        fChoices = 1;\n    }\n    }\n    // connect the internal nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if pFanin.pCopy.pCopy {\n                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy.pCopy );\n            } else {\n                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }\n        } }\n    }\n    // connect the COs\n//    Abc_NtkFinalize( pNtk, pNtkNew );\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pFanin = Abc_ObjFanin0(pObj);\n        if pFanin.pCopy.pCopy {\n            pNodeNew = Abc_ObjNotCond(pFanin.pCopy.pCopy, Abc_ObjFaninC0(pObj));\n        } else {\n            pNodeNew = Abc_ObjNotCond(pFanin.pCopy, Abc_ObjFaninC0(pObj)); }\n        Abc_ObjAddFanin( pObj.pCopy, pNodeNew );\n    }\n\n    // fix the problem with complemented and duplicated CO edges\n    if fChoices != 0 {\n        Abc_NtkLogicMakeSimpleCos2( pNtkNew, 0 );\n    } else {\n        Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 ); }\n    // duplicate the EXDC Ntk\n    if pNtk.pExdc {\n        if Abc_NtkIsStrash(pNtk.pExdc) {\n            pNtkNew.pExdc = Abc_NtkAigToLogicSop( pNtk.pExdc );\n        } else {\n            pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }\n    }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkAigToLogicSop(): Network check has failed.\\n\"); }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the AIG into the logic network with SOPs for bench writing.]\n\n  Description [This procedure does not copy the choices.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkAigToLogicSopBench(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t; \n    var pObj, pFanin *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var i, k int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    if Abc_NtkGetChoiceNum(pNtk) {\n        fmt.Printf(\"Warning: Choice nodes are skipped.\\n\"); }\n    // start the network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // collect the nodes to be used (marks all nodes with current TravId)\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    // create inverters for the constant node\n    pObj = Abc_AigConst1(pNtk);\n    if Abc_ObjFanoutNum(pObj) \u003e 0 {\n        pObj.pCopy = Abc_NtkCreateNodeConst1(pNtkNew); }\n    if Abc_AigNodeHasComplFanoutEdgeTrav(pObj) {\n        pObj.pCopy.pCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj.pCopy ); }\n    // create inverters for the CIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if Abc_AigNodeHasComplFanoutEdgeTrav(pObj) {\n            pObj.pCopy.pCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj.pCopy ); }\n    }\n    // duplicate the nodes, create node functions, and inverters\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Abc_NtkDupObj( pNtkNew, pObj, 0 );\n        pObj.pCopy.pData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtkNew.pManFunc, 2, nil );\n        if Abc_AigNodeHasComplFanoutEdgeTrav(pObj) {\n            pObj.pCopy.pCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj.pCopy ); }\n    }\n    // connect the objects\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if Abc_ObjFaninC( pObj, k ) {\n                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy.pCopy );\n            } else {\n                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }\n        }\n    }\n    Vec_PtrFree( vNodes );\n    // connect the COs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pFanin = Abc_ObjFanin0(pObj);\n        if Abc_ObjFaninC0( pObj ) {\n            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy.pCopy );\n        } else {\n            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }\n    }\n    // fix the problem with complemented and duplicated CO edges\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // duplicate the EXDC Ntk\n    if pNtk.pExdc {\n        fmt.Printf(\"Warning: The EXDc network is skipped.\\n\"); }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkAigToLogicSopBench(): Network check has failed.\\n\"); }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the AIG into the logic network with SOPs for bench writing.]\n\n  Description [This procedure does not copy the choices.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkAigToLogicSopNand(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t; \n    var pObj, pFanin *Abc_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var i, k int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    if Abc_NtkGetChoiceNum(pNtk) {\n        fmt.Printf(\"Warning: Choice nodes are skipped.\\n\"); }\n    // convert complemented edges\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if Abc_ObjIsNode(pFanin) {\n                Abc_ObjXorFaninC( pObj, k ); }\n        } }\n    }\n    // start the network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_SOP );\n    // collect the nodes to be used (marks all nodes with current TravId)\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    // create inverters for the constant node\n    pObj = Abc_AigConst1(pNtk);\n    if Abc_ObjFanoutNum(pObj) \u003e 0 {\n        pObj.pCopy = Abc_NtkCreateNodeConst1(pNtkNew); }\n    if Abc_AigNodeHasComplFanoutEdgeTrav(pObj) {\n        pObj.pCopy.pCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj.pCopy ); }\n    // create inverters for the CIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if Abc_AigNodeHasComplFanoutEdgeTrav(pObj) {\n            pObj.pCopy.pCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj.pCopy ); }\n    }\n    // duplicate the nodes, create node functions, and inverters\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Abc_NtkDupObj( pNtkNew, pObj, 0 );\n        pObj.pCopy.pData = Abc_SopCreateNand( (Mem_Flex_t *)pNtkNew.pManFunc, 2 );\n        if Abc_AigNodeHasComplFanoutEdgeTrav(pObj) {\n            pObj.pCopy.pCopy = Abc_NtkCreateNodeInv( pNtkNew, pObj.pCopy ); }\n    }\n    // connect the objects\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if Abc_ObjFaninC( pObj, k ) {\n                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy.pCopy );\n            } else {\n                Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }\n        }\n    }\n    Vec_PtrFree( vNodes );\n    // connect the COs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pFanin = Abc_ObjFanin0(pObj);\n        if Abc_ObjFaninC0( pObj ) {\n            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy.pCopy );\n        } else {\n            Abc_ObjAddFanin( pObj.pCopy, pFanin.pCopy ); }\n    }\n    // fix the problem with complemented and duplicated CO edges\n    Abc_NtkLogicMakeSimpleCos( pNtkNew, 0 );\n    // convert complemented edges\n    // inlining of macro Abc_NtkForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {            if (pObj) == nil {} else {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if Abc_ObjIsNode(pFanin) {\n                Abc_ObjXorFaninC( pObj, k ); }\n        } }\n    }\n    // duplicate the EXDC Ntk\n    if pNtk.pExdc {\n        fmt.Printf(\"Warning: The EXDc network is skipped.\\n\"); }\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkAigToLogicSopBench(): Network check has failed.\\n\"); }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds buffers for each PO.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkAddPoBuffers(pNtk *Abc_Ntk_t) {\n    var pObj, pFanin, pFaninNew *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pFanin = Abc_ObjChild0(pObj);\n        pFaninNew = Abc_NtkCreateNode(pNtk);\n        Abc_ObjAddFanin( pFaninNew, pFanin );\n        Abc_ObjPatchFanin( pObj, pFanin, pFaninNew );\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

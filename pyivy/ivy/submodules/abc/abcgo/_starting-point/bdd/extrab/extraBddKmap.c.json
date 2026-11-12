@@ -1,0 +1,1763 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddKmap.c",
+  "SHA256": "b3bab498616ab76a2a5e6dfbdb7deb7c5bc7ae0930c94d2c158f5fd428ea0f0b",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 219,
+        "Column": 9,
+        "ByteOffset": 7223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"PrintKMap(): The on-set and the off-set overlap\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 21,
+        "ByteOffset": 7337
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if nVars == 0 { printf( \"Function is constant %d.\\n\", !Cudd_IsComplement(OnSet) ); return; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 9,
+        "ByteOffset": 7517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Truth table: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 13,
+        "ByteOffset": 7580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Constant\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 231,
+        "Column": 13,
+        "ByteOffset": 7645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"1-var function\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 244,
+        "Column": 21,
+        "ByteOffset": 8292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( stdout, \"%d\", Value );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 244,
+        "Column": 30,
+        "ByteOffset": 8301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( stdout, \"%d\", Value );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 246,
+        "Column": 21,
+        "ByteOffset": 8369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( stdout, \"%c\", 'a' + Value-10 ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 246,
+        "Column": 30,
+        "ByteOffset": 8378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( stdout, \"%c\", 'a' + Value-10 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 9,
+        "ByteOffset": 8444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 266,
+        "Column": 9,
+        "ByteOffset": 8735
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"PrintKMap(): The number of variables is less than zero or more than %d\\n\", MAXVARS );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 273,
+        "Column": 13,
+        "ByteOffset": 9041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 13,
+        "ByteOffset": 9295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nVars );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 299,
+        "Column": 17,
+        "ByteOffset": 10060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"PrintKMap(): The number of variables is more than %d\\n\", MAXVARS );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 314,
+        "Column": 9,
+        "ByteOffset": 10557
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( XVars );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 331,
+        "Column": 5,
+        "ByteOffset": 11040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 334,
+        "Column": 13,
+        "ByteOffset": 11144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \"%c\", 'a'+nVarsHor+w );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 336,
+        "Column": 13,
+        "ByteOffset": 11214
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \" %s\", pVarNames[nVarsHor+w] ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 340,
+        "Column": 9,
+        "ByteOffset": 11321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \" \\\\ \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 343,
+        "Column": 17,
+        "ByteOffset": 11439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", 'a'+w );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 345,
+        "Column": 17,
+        "ByteOffset": 11508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%s \", pVarNames[w] ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 348,
+        "Column": 5,
+        "ByteOffset": 11570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 357,
+        "Column": 21,
+        "ByteOffset": 11988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"1   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 359,
+        "Column": 21,
+        "ByteOffset": 12060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"0   \" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 361,
+        "Column": 13,
+        "ByteOffset": 12115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 368,
+        "Column": 5,
+        "ByteOffset": 12327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"%c\", DOUBLE_TOP_LEFT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 370,
+        "Column": 9,
+        "ByteOffset": 12415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 371,
+        "Column": 9,
+        "ByteOffset": 12467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 372,
+        "Column": 9,
+        "ByteOffset": 12519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 375,
+        "Column": 17,
+        "ByteOffset": 12630
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", D_JOINS_D_HOR_BOT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 377,
+        "Column": 17,
+        "ByteOffset": 12711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", S_JOINS_D_HOR_BOT ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 380,
+        "Column": 5,
+        "ByteOffset": 12777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"%c\", DOUBLE_TOP_RIGHT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 381,
+        "Column": 5,
+        "ByteOffset": 12824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 392,
+        "Column": 17,
+        "ByteOffset": 13227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"1\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 394,
+        "Column": 17,
+        "ByteOffset": 13288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"0\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 396,
+        "Column": 9,
+        "ByteOffset": 13332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 402,
+        "Column": 9,
+        "ByteOffset": 13542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_VERTICAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 406,
+        "Column": 13,
+        "ByteOffset": 13706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 423,
+        "Column": 13,
+        "ByteOffset": 14677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 427,
+        "Column": 21,
+        "ByteOffset": 14781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", DOUBLE_VERTICAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 429,
+        "Column": 21,
+        "ByteOffset": 14868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", SINGLE_VERTICAL ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 432,
+        "Column": 9,
+        "ByteOffset": 14944
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_VERTICAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 433,
+        "Column": 9,
+        "ByteOffset": 14994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 442,
+        "Column": 17,
+        "ByteOffset": 15249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", D_JOINS_D_VER_RIGHT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 444,
+        "Column": 21,
+        "ByteOffset": 15365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 445,
+        "Column": 21,
+        "ByteOffset": 15429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 446,
+        "Column": 21,
+        "ByteOffset": 15493
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 449,
+        "Column": 29,
+        "ByteOffset": 15640
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            fprintf( Output, \"%c\", DOUBLES_CROSS );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 451,
+        "Column": 29,
+        "ByteOffset": 15741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            fprintf( Output, \"%c\", S_VER_CROSS_D_HOR ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 454,
+        "Column": 17,
+        "ByteOffset": 15843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", D_JOINS_D_VER_LEFT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 457,
+        "Column": 17,
+        "ByteOffset": 15938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", S_JOINS_D_VER_RIGHT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 459,
+        "Column": 21,
+        "ByteOffset": 16054
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", SINGLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 460,
+        "Column": 21,
+        "ByteOffset": 16118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", SINGLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 461,
+        "Column": 21,
+        "ByteOffset": 16182
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", SINGLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 464,
+        "Column": 29,
+        "ByteOffset": 16329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            fprintf( Output, \"%c\", S_HOR_CROSS_D_VER );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 466,
+        "Column": 29,
+        "ByteOffset": 16434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            fprintf( Output, \"%c\", SINGLES_CROSS ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 469,
+        "Column": 17,
+        "ByteOffset": 16532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", S_JOINS_D_VER_LEFT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 471,
+        "Column": 13,
+        "ByteOffset": 16603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 478,
+        "Column": 5,
+        "ByteOffset": 16819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"%c\", DOUBLE_BOT_LEFT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 480,
+        "Column": 9,
+        "ByteOffset": 16907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 481,
+        "Column": 9,
+        "ByteOffset": 16959
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 482,
+        "Column": 9,
+        "ByteOffset": 17011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 485,
+        "Column": 17,
+        "ByteOffset": 17122
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", D_JOINS_D_HOR_TOP );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 487,
+        "Column": 17,
+        "ByteOffset": 17203
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", S_JOINS_D_HOR_TOP ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 490,
+        "Column": 5,
+        "ByteOffset": 17269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"%c\", DOUBLE_BOT_RIGHT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 491,
+        "Column": 5,
+        "ByteOffset": 17316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 500,
+        "Column": 21,
+        "ByteOffset": 17735
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"1   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 502,
+        "Column": 21,
+        "ByteOffset": 17807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"0   \" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 506,
+        "Column": 13,
+        "ByteOffset": 17909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \"%c\", byte(('a'+d)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 508,
+        "Column": 13,
+        "ByteOffset": 18007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 547,
+        "Column": 9,
+        "ByteOffset": 19023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"PrintKMap(): The on-set and the off-set overlap\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 552,
+        "Column": 9,
+        "ByteOffset": 19147
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"PrintKMap(): Constant 1\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 556,
+        "Column": 9,
+        "ByteOffset": 19247
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"PrintKMap(): Constant 0\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 562,
+        "Column": 9,
+        "ByteOffset": 19393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"PrintKMap(): The number of variables is less than zero or more than %d\\n\", MAXVARS );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 577,
+        "Column": 5,
+        "ByteOffset": 19885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 579,
+        "Column": 9,
+        "ByteOffset": 19955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", 'a'+nVarsHor+w );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 582,
+        "Column": 9,
+        "ByteOffset": 20051
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \" \\\\ \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 584,
+        "Column": 13,
+        "ByteOffset": 20131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \"%c\", 'a'+w );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 587,
+        "Column": 5,
+        "ByteOffset": 20183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 596,
+        "Column": 21,
+        "ByteOffset": 20601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"1   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 598,
+        "Column": 21,
+        "ByteOffset": 20673
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"0   \" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 600,
+        "Column": 13,
+        "ByteOffset": 20728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 607,
+        "Column": 5,
+        "ByteOffset": 20940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"%c\", DOUBLE_TOP_LEFT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 609,
+        "Column": 9,
+        "ByteOffset": 21028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 610,
+        "Column": 9,
+        "ByteOffset": 21080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 611,
+        "Column": 9,
+        "ByteOffset": 21132
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 614,
+        "Column": 17,
+        "ByteOffset": 21243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", D_JOINS_D_HOR_BOT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 616,
+        "Column": 17,
+        "ByteOffset": 21324
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", S_JOINS_D_HOR_BOT ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 619,
+        "Column": 5,
+        "ByteOffset": 21390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"%c\", DOUBLE_TOP_RIGHT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 620,
+        "Column": 5,
+        "ByteOffset": 21437
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 631,
+        "Column": 17,
+        "ByteOffset": 21840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"1\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 633,
+        "Column": 17,
+        "ByteOffset": 21901
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"0\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 635,
+        "Column": 9,
+        "ByteOffset": 21945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 642,
+        "Column": 9,
+        "ByteOffset": 22271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_VERTICAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 646,
+        "Column": 13,
+        "ByteOffset": 22435
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 660,
+        "Column": 17,
+        "ByteOffset": 23330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", SYMBOL_ONE );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 662,
+        "Column": 17,
+        "ByteOffset": 23445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", SYMBOL_ZERO );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 664,
+        "Column": 17,
+        "ByteOffset": 23562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", SYMBOL_DC );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 666,
+        "Column": 17,
+        "ByteOffset": 23677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", SYMBOL_OVERLAP );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 668,
+        "Column": 17,
+        "ByteOffset": 23755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert(0); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 673,
+        "Column": 13,
+        "ByteOffset": 23960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 677,
+        "Column": 21,
+        "ByteOffset": 24064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", DOUBLE_VERTICAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 679,
+        "Column": 21,
+        "ByteOffset": 24151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", SINGLE_VERTICAL ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 682,
+        "Column": 9,
+        "ByteOffset": 24227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_VERTICAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 683,
+        "Column": 9,
+        "ByteOffset": 24277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 692,
+        "Column": 17,
+        "ByteOffset": 24532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", D_JOINS_D_VER_RIGHT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 694,
+        "Column": 21,
+        "ByteOffset": 24648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 695,
+        "Column": 21,
+        "ByteOffset": 24712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 696,
+        "Column": 21,
+        "ByteOffset": 24776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 699,
+        "Column": 29,
+        "ByteOffset": 24923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            fprintf( Output, \"%c\", DOUBLES_CROSS );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 701,
+        "Column": 29,
+        "ByteOffset": 25024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            fprintf( Output, \"%c\", S_VER_CROSS_D_HOR ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 704,
+        "Column": 17,
+        "ByteOffset": 25126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", D_JOINS_D_VER_LEFT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 707,
+        "Column": 17,
+        "ByteOffset": 25221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", S_JOINS_D_VER_RIGHT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 709,
+        "Column": 21,
+        "ByteOffset": 25337
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", SINGLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 710,
+        "Column": 21,
+        "ByteOffset": 25401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", SINGLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 711,
+        "Column": 21,
+        "ByteOffset": 25465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"%c\", SINGLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 714,
+        "Column": 29,
+        "ByteOffset": 25612
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            fprintf( Output, \"%c\", S_HOR_CROSS_D_VER );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 716,
+        "Column": 29,
+        "ByteOffset": 25717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            fprintf( Output, \"%c\", SINGLES_CROSS ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 719,
+        "Column": 17,
+        "ByteOffset": 25815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", S_JOINS_D_VER_LEFT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 721,
+        "Column": 13,
+        "ByteOffset": 25886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 728,
+        "Column": 5,
+        "ByteOffset": 26102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"%c\", DOUBLE_BOT_LEFT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 730,
+        "Column": 9,
+        "ByteOffset": 26190
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 731,
+        "Column": 9,
+        "ByteOffset": 26242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 732,
+        "Column": 9,
+        "ByteOffset": 26294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 735,
+        "Column": 17,
+        "ByteOffset": 26405
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", D_JOINS_D_HOR_TOP );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 737,
+        "Column": 17,
+        "ByteOffset": 26486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( Output, \"%c\", S_JOINS_D_HOR_TOP ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 740,
+        "Column": 5,
+        "ByteOffset": 26552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"%c\", DOUBLE_BOT_RIGHT );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 741,
+        "Column": 5,
+        "ByteOffset": 26599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( Output, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 750,
+        "Column": 21,
+        "ByteOffset": 27018
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"1   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 752,
+        "Column": 21,
+        "ByteOffset": 27090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( Output, \"0   \" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 756,
+        "Column": 13,
+        "ByteOffset": 27192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \"%c\", byte(('a'+d)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 758,
+        "Column": 13,
+        "ByteOffset": 27290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( Output, \"\\n\" );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 25,
+        "Column": 1,
+        "ByteOffset": 643
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 126,
+        "Column": 1,
+        "ByteOffset": 3590
+      },
+      "Directive": "#ifdef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 431,
+        "Column": 1,
+        "ByteOffset": 14403
+      },
+      "Directive": "#ifdef WIN32"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_PrintKMap",
+      "Start": 6629,
+      "End": 19469,
+      "BodyStart": 6881,
+      "Original": "void Extra_PrintKMap( \n  FILE * Output,  /* the output stream */\n  DdManager * dd, \n  DdNode * OnSet, \n  DdNode * OffSet, \n  int nVars, \n  DdNode ** XVars, \n  int fSuppType, /* the flag which determines how support is computed */\n  char ** pVarNames )\n{\n    int fPrintTruth = 1;\n    int d, p, n, s, v, h, w;\n    int nVarsVer;\n    int nVarsHor;\n    int nCellsVer;\n    int nCellsHor;\n    int nSkipSpaces;\n\n    // make sure that on-set and off-set do not overlap\n    if ( !Cudd_bddLeq( dd, OnSet, Cudd_Not(OffSet) ) )\n    {\n        fprintf( Output, \"PrintKMap(): The on-set and the off-set overlap\\n\" );\n        return;\n    }\n    if ( nVars == 0 )\n        { printf( \"Function is constant %d.\\n\", !Cudd_IsComplement(OnSet) ); return; }\n\n    // print truth table for debugging\n    if ( fPrintTruth )\n    {\n        DdNode * bCube, * bPart;\n        printf( \"Truth table: \" );\n        if ( nVars == 0 )\n            printf( \"Constant\" );\n        else if ( nVars == 1 )\n            printf( \"1-var function\" );\n        else\n        {\n//            printf( \"0x\" );\n            for ( d = (1\u003c\u003c(nVars-2)) - 1; d \u003e= 0; d-- )\n            {\n                int Value = 0;\n                for ( s = 0; s \u003c 4; s++ )\n                {\n                    bCube = Extra_bddBitsToCube( dd, 4*d+s, nVars, dd-\u003evars, 0 );   Cudd_Ref( bCube );\n                    bPart = Cudd_Cofactor( dd, OnSet, bCube );                      Cudd_Ref( bPart );\n                    Value |= ((int)(bPart == b1) \u003c\u003c s);\n                    Cudd_RecursiveDeref( dd, bPart );\n                    Cudd_RecursiveDeref( dd, bCube );\n                }\n                if ( Value \u003c 10 )\n                    fprintf( stdout, \"%d\", Value );\n                else\n                    fprintf( stdout, \"%c\", 'a' + Value-10 );\n            }\n        }\n        printf( \"\\n\" );\n    }\n\n\n/*\n    if ( OnSet == b1 )\n    {\n        fprintf( Output, \"PrintKMap(): Constant 1\\n\" );\n        return;\n    }\n    if ( OffSet == b1 )\n    {\n        fprintf( Output, \"PrintKMap(): Constant 0\\n\" );\n        return;\n    }\n*/\n    if ( nVars \u003c 0 || nVars \u003e MAXVARS )\n    {\n        fprintf( Output, \"PrintKMap(): The number of variables is less than zero or more than %d\\n\", MAXVARS );\n        return;\n    }\n\n    // determine the support if it is not given\n    if ( XVars == NULL )\n    {\n        if ( fSuppType == 0 )\n        {   // assume that the support includes the first nVars of the manager\n            assert( nVars );\n            for ( v = 0; v \u003c nVars; v++ )\n                s_XVars[v] = Cudd_bddIthVar( dd, v );\n        }\n        else if ( fSuppType == 1 )\n        {   // assume that the support includes the topmost nVars of the manager\n            assert( nVars );\n            for ( v = 0; v \u003c nVars; v++ )\n                s_XVars[v] = Cudd_bddIthVar( dd, dd-\u003einvperm[v] );\n        }\n        else // determine the support\n        {\n            DdNode * SuppOn, * SuppOff, * Supp;\n            int cVars = 0;\n            DdNode * TempSupp;\n\n            // determine support\n            SuppOn = Cudd_Support( dd, OnSet );         Cudd_Ref( SuppOn );\n            SuppOff = Cudd_Support( dd, OffSet );       Cudd_Ref( SuppOff );\n            Supp = Cudd_bddAnd( dd, SuppOn, SuppOff );  Cudd_Ref( Supp );\n            Cudd_RecursiveDeref( dd, SuppOn );\n            Cudd_RecursiveDeref( dd, SuppOff );\n\n            nVars = Cudd_SupportSize( dd, Supp );\n            if ( nVars \u003e MAXVARS )\n            {\n                fprintf( Output, \"PrintKMap(): The number of variables is more than %d\\n\", MAXVARS );\n                Cudd_RecursiveDeref( dd, Supp );\n                return;\n            }\n\n            // assign variables\n            for ( TempSupp = Supp; TempSupp != dd-\u003eone; TempSupp = Cudd_T(TempSupp), cVars++ )\n                s_XVars[cVars] = Cudd_bddIthVar( dd, TempSupp-\u003eindex );\n\n            Cudd_RecursiveDeref( dd, TempSupp );\n        }\n    }\n    else\n    {\n        // copy variables\n        assert( XVars );\n        for ( v = 0; v \u003c nVars; v++ )\n            s_XVars[v] = XVars[v];\n    }\n\n    ////////////////////////////////////////////////////////////////////\n    // determine the Karnaugh map parameters\n    nVarsVer = nVars/2;\n    nVarsHor = nVars - nVarsVer;\n\n    nCellsVer = (1\u003c\u003cnVarsVer);\n    nCellsHor = (1\u003c\u003cnVarsHor);\n    nSkipSpaces = nVarsVer + 1;\n\n    ////////////////////////////////////////////////////////////////////\n    // print variable names\n    fprintf( Output, \"\\n\" );\n    for ( w = 0; w \u003c nVarsVer; w++ )\n        if ( pVarNames == NULL )\n            fprintf( Output, \"%c\", 'a'+nVarsHor+w );\n        else\n            fprintf( Output, \" %s\", pVarNames[nVarsHor+w] );\n\n    if ( fHorizontalVarNamesPrintedAbove )\n    {\n        fprintf( Output, \" \\\\ \" );\n        for ( w = 0; w \u003c nVarsHor; w++ )\n            if ( pVarNames == NULL )\n                fprintf( Output, \"%c\", 'a'+w );\n            else\n                fprintf( Output, \"%s \", pVarNames[w] );\n    }\n    fprintf( Output, \"\\n\" );\n\n    if ( fHorizontalVarNamesPrintedAbove )\n    {\n        ////////////////////////////////////////////////////////////////////\n        // print horizontal digits\n        for ( d = 0; d \u003c nVarsHor; d++ )\n        {\n            for ( p = 0; p \u003c nSkipSpaces + 2; p++, fprintf( Output, \" \" ) );\n            for ( n = 0; n \u003c nCellsHor; n++ )\n                if ( GrayCode(n) \u0026 (1\u003c\u003c(nVarsHor-1-d)) )\n                    fprintf( Output, \"1   \" );\n                else\n                    fprintf( Output, \"0   \" );\n            fprintf( Output, \"\\n\" );\n        }\n    }\n\n    ////////////////////////////////////////////////////////////////////\n    // print the upper line\n    for ( p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" ) );\n    fprintf( Output, \"%c\", DOUBLE_TOP_LEFT );\n    for ( s = 0; s \u003c nCellsHor; s++ )\n    {\n        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n        if ( s != nCellsHor-1 )\n        {\n            if ( s\u00261 )\n                fprintf( Output, \"%c\", D_JOINS_D_HOR_BOT );\n            else\n                fprintf( Output, \"%c\", S_JOINS_D_HOR_BOT );\n        }\n    }\n    fprintf( Output, \"%c\", DOUBLE_TOP_RIGHT );\n    fprintf( Output, \"\\n\" );\n\n    ////////////////////////////////////////////////////////////////////\n    // print the map\n    for ( v = 0; v \u003c nCellsVer; v++ )\n    {\n        DdNode * CubeVerBDD;\n\n        // print horizontal digits\n//      for ( p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" ) );\n        for ( n = 0; n \u003c nVarsVer; n++ )\n            if ( GrayCode(v) \u0026 (1\u003c\u003c(nVarsVer-1-n)) )\n                fprintf( Output, \"1\" );\n            else\n                fprintf( Output, \"0\" );\n        fprintf( Output, \" \" );\n\n        // find vertical cube\n        CubeVerBDD = Extra_bddBitsToCube( dd, GrayCode(v), nVarsVer, s_XVars+nVarsHor, 1 );    Cudd_Ref( CubeVerBDD );\n\n        // print text line\n        fprintf( Output, \"%c\", DOUBLE_VERTICAL );\n        for ( h = 0; h \u003c nCellsHor; h++ )\n        {\n            DdNode * CubeHorBDD, * Prod, * ValueOnSet, * ValueOffSet;\n\n            fprintf( Output, \" \" );\n//          fprintf( Output, \"x\" );\n            ///////////////////////////////////////////////////////////////\n            // determine what should be printed\n            CubeHorBDD  = Extra_bddBitsToCube( dd, GrayCode(h), nVarsHor, s_XVars, 1 );    Cudd_Ref( CubeHorBDD );\n            Prod = Cudd_bddAnd( dd, CubeHorBDD, CubeVerBDD );                   Cudd_Ref( Prod );\n            Cudd_RecursiveDeref( dd, CubeHorBDD );\n\n            ValueOnSet  = Cudd_Cofactor( dd, OnSet, Prod );                     Cudd_Ref( ValueOnSet );\n            ValueOffSet = Cudd_Cofactor( dd, OffSet, Prod );                    Cudd_Ref( ValueOffSet );\n            Cudd_RecursiveDeref( dd, Prod );\n\n#ifdef WIN32\n            {\n            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);\n            char Symb = 0, Color = 0;\n            if ( ValueOnSet == b1 \u0026\u0026 ValueOffSet == b0 )\n                Symb = SYMBOL_ONE,     Color = 14;  // yellow\n            else if ( ValueOnSet == b0 \u0026\u0026 ValueOffSet == b1 )\n                Symb = SYMBOL_ZERO,    Color = 11;  // blue\n            else if ( ValueOnSet == b0 \u0026\u0026 ValueOffSet == b0 ) \n                Symb = SYMBOL_DC,      Color = 10;  // green\n            else if ( ValueOnSet == b1 \u0026\u0026 ValueOffSet == b1 ) \n                Symb = SYMBOL_OVERLAP, Color = 12;  // red\n            else\n                assert(0);\n            SetConsoleTextAttribute( hConsole, Color );\n            fprintf( Output, \"%c\", Symb );\n            SetConsoleTextAttribute( hConsole, 7 );\n            }\n#else\n            {\n            if ( ValueOnSet == b1 \u0026\u0026 ValueOffSet == b0 )\n                fprintf( Output, \"%c\", SYMBOL_ONE );\n            else if ( ValueOnSet == b0 \u0026\u0026 ValueOffSet == b1 )\n                fprintf( Output, \"%c\", SYMBOL_ZERO );\n            else if ( ValueOnSet == b0 \u0026\u0026 ValueOffSet == b0 ) \n                fprintf( Output, \"%c\", SYMBOL_DC );\n            else if ( ValueOnSet == b1 \u0026\u0026 ValueOffSet == b1 ) \n                fprintf( Output, \"%c\", SYMBOL_OVERLAP );\n            else\n                assert(0);\n            }\n#endif\n\n            Cudd_RecursiveDeref( dd, ValueOnSet );\n            Cudd_RecursiveDeref( dd, ValueOffSet );\n            ///////////////////////////////////////////////////////////////\n            fprintf( Output, \" \" );\n\n            if ( h != nCellsHor-1 )\n            {\n                if ( h\u00261 )\n                    fprintf( Output, \"%c\", DOUBLE_VERTICAL );\n                else\n                    fprintf( Output, \"%c\", SINGLE_VERTICAL );\n            }\n        }\n        fprintf( Output, \"%c\", DOUBLE_VERTICAL );\n        fprintf( Output, \"\\n\" );\n\n        Cudd_RecursiveDeref( dd, CubeVerBDD );\n\n        if ( v != nCellsVer-1 )\n        // print separator line\n        {\n            for ( p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" ) );\n            if ( v\u00261 )\n            {\n                fprintf( Output, \"%c\", D_JOINS_D_VER_RIGHT );\n                for ( s = 0; s \u003c nCellsHor; s++ )\n                {\n                    fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n                    fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n                    fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n                    if ( s != nCellsHor-1 )\n                    {\n                        if ( s\u00261 )\n                            fprintf( Output, \"%c\", DOUBLES_CROSS );\n                        else\n                            fprintf( Output, \"%c\", S_VER_CROSS_D_HOR );\n                    }\n                }\n                fprintf( Output, \"%c\", D_JOINS_D_VER_LEFT );\n            }\n            else\n            {\n                fprintf( Output, \"%c\", S_JOINS_D_VER_RIGHT );\n                for ( s = 0; s \u003c nCellsHor; s++ )\n                {\n                    fprintf( Output, \"%c\", SINGLE_HORIZONTAL );\n                    fprintf( Output, \"%c\", SINGLE_HORIZONTAL );\n                    fprintf( Output, \"%c\", SINGLE_HORIZONTAL );\n                    if ( s != nCellsHor-1 )\n                    {\n                        if ( s\u00261 )\n                            fprintf( Output, \"%c\", S_HOR_CROSS_D_VER );\n                        else\n                            fprintf( Output, \"%c\", SINGLES_CROSS );\n                    }\n                }\n                fprintf( Output, \"%c\", S_JOINS_D_VER_LEFT );\n            }\n            fprintf( Output, \"\\n\" );\n        }\n    }\n    \n    ////////////////////////////////////////////////////////////////////\n    // print the lower line\n    for ( p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" ) );\n    fprintf( Output, \"%c\", DOUBLE_BOT_LEFT );\n    for ( s = 0; s \u003c nCellsHor; s++ )\n    {\n        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n        if ( s != nCellsHor-1 )\n        {\n            if ( s\u00261 )\n                fprintf( Output, \"%c\", D_JOINS_D_HOR_TOP );\n            else\n                fprintf( Output, \"%c\", S_JOINS_D_HOR_TOP );\n        }\n    }\n    fprintf( Output, \"%c\", DOUBLE_BOT_RIGHT );\n    fprintf( Output, \"\\n\" );\n\n    if ( !fHorizontalVarNamesPrintedAbove )\n    {\n        ////////////////////////////////////////////////////////////////////\n        // print horizontal digits\n        for ( d = 0; d \u003c nVarsHor; d++ )\n        {\n            for ( p = 0; p \u003c nSkipSpaces + 2; p++, fprintf( Output, \" \" ) );\n            for ( n = 0; n \u003c nCellsHor; n++ )\n                if ( GrayCode(n) \u0026 (1\u003c\u003c(nVarsHor-1-d)) )\n                    fprintf( Output, \"1   \" );\n                else\n                    fprintf( Output, \"0   \" );\n\n            /////////////////////////////////\n            fprintf( Output, \"%c\", (char)('a'+d) );\n            /////////////////////////////////\n            fprintf( Output, \"\\n\" );\n        }\n    }\n}",
+      "Draft": "void Extra_PrintKMap( \n  FILE * Output,  /* the output stream */\n  DdManager * dd, \n  DdNode * OnSet, \n  DdNode * OffSet, \n  int nVars, \n  DdNode ** XVars, \n  int fSuppType, /* the flag which determines how support is computed */\n  char ** pVarNames )\n{\n    var fPrintTruth int32  = 1;\n    var d, p, n, s, v, h, w int32;\n    var nVarsVer int32;\n    var nVarsHor int32;\n    var nCellsVer int32;\n    var nCellsHor int32;\n    var nSkipSpaces int32;\n\n    // make sure that on-set and off-set do not overlap\n    if !Cudd_bddLeq( dd, OnSet, Cudd_Not(OffSet) ) {\n        fmt.Fprintf(Output, \"PrintKMap(): The on-set and the off-set overlap\\n\");\n        return;\n    }\n    if nVars == 0 { fmt.Printf(\"Function is constant %d.\\n\", !Cudd_IsComplement(OnSet)); return; }\n\n    // print truth table for debugging\n    if fPrintTruth != 0 {\n        var bCube, bPart *DdNode;\n        fmt.Printf(\"Truth table: \");\n        if nVars == 0 {\n            fmt.Printf(\"Constant\");\n        } else if nVars == 1 {\n            fmt.Printf(\"1-var function\");\n        } else {\n//            printf( \"0x\" );\n            for  d = (1\u003c\u003c(nVars-2)) - 1; d \u003e= 0; d--  {\n                var Value int32;\n                for  s = 0; s \u003c 4; s++  {\n                    bCube = Extra_bddBitsToCube( dd, 4*d+s, nVars, dd.vars, 0 );   Cudd_Ref( bCube );\n                    bPart = Cudd_Cofactor( dd, OnSet, bCube );                      Cudd_Ref( bPart );\n                    Value |= (int32((bPart == b1)) \u003c\u003c s);\n                    Cudd_RecursiveDeref( dd, bPart );\n                    Cudd_RecursiveDeref( dd, bCube );\n                }\n                if Value \u003c 10 {\n                    fmt.Fprintf(os.Stdout, \"%d\", Value);\n                } else {\n                    fmt.Fprintf(os.Stdout, \"%c\", 'a' + Value-10); }\n            }\n        }\n        fmt.Printf(\"\\n\");\n    }\n\n\n/*\n    if ( OnSet == b1 )\n    {\n        fprintf( Output, \"PrintKMap(): Constant 1\\n\" );\n        return;\n    }\n    if ( OffSet == b1 )\n    {\n        fprintf( Output, \"PrintKMap(): Constant 0\\n\" );\n        return;\n    }\n*/\n    if nVars \u003c 0 || nVars \u003e MAXVARS {\n        fmt.Fprintf(Output, \"PrintKMap(): The number of variables is less than zero or more than %d\\n\", MAXVARS);\n        return;\n    }\n\n    // determine the support if it is not given\n    if XVars == nil {\n        if fSuppType == 0 {   // assume that the support includes the first nVars of the manager\n            assert((nVars != 0), \"nVars\");\n            for  v = 0; v \u003c nVars; v++  {\n                s_XVars[v] = Cudd_bddIthVar( dd, v );\n            }\n        \n        } else if fSuppType == 1 {   // assume that the support includes the topmost nVars of the manager\n            assert((nVars != 0), \"nVars\");\n            for  v = 0; v \u003c nVars; v++  {\n                s_XVars[v] = Cudd_bddIthVar( dd, dd.invperm[v] );\n            }\n        \n        } else { // determine the support\n        \n            var SuppOn, SuppOff, Supp *DdNode;\n            var cVars int32;\n            var TempSupp *DdNode;\n\n            // determine support\n            SuppOn = Cudd_Support( dd, OnSet );         Cudd_Ref( SuppOn );\n            SuppOff = Cudd_Support( dd, OffSet );       Cudd_Ref( SuppOff );\n            Supp = Cudd_bddAnd( dd, SuppOn, SuppOff );  Cudd_Ref( Supp );\n            Cudd_RecursiveDeref( dd, SuppOn );\n            Cudd_RecursiveDeref( dd, SuppOff );\n\n            nVars = Cudd_SupportSize( dd, Supp );\n            if nVars \u003e MAXVARS {\n                fmt.Fprintf(Output, \"PrintKMap(): The number of variables is more than %d\\n\", MAXVARS);\n                Cudd_RecursiveDeref( dd, Supp );\n                return;\n            }\n\n            // assign variables\n            for  TempSupp = Supp; TempSupp != dd.one; TempSupp = Cudd_T(TempSupp), cVars++  {\n                s_XVars[cVars] = Cudd_bddIthVar( dd, TempSupp.index );\n            }\n\n            Cudd_RecursiveDeref( dd, TempSupp );\n        }\n    \n    } else {\n        // copy variables\n        assert(XVars, \"XVars\");\n        for  v = 0; v \u003c nVars; v++  {\n            s_XVars[v] = XVars[v];\n        }\n    }\n\n    ////////////////////////////////////////////////////////////////////\n    // determine the Karnaugh map parameters\n    nVarsVer = nVars/2;\n    nVarsHor = nVars - nVarsVer;\n\n    nCellsVer = (1\u003c\u003cnVarsVer);\n    nCellsHor = (1\u003c\u003cnVarsHor);\n    nSkipSpaces = nVarsVer + 1;\n\n    ////////////////////////////////////////////////////////////////////\n    // print variable names\n    fmt.Fprintf(Output, \"\\n\");\n    for  w = 0; w \u003c nVarsVer; w++  {\n        if pVarNames == nil {\n            fmt.Fprintf(Output, \"%c\", 'a'+nVarsHor+w);\n        } else {\n            fmt.Fprintf(Output, \" %s\", pVarNames[nVarsHor+w]); }\n    }\n\n    if fHorizontalVarNamesPrintedAbove != 0 {\n        fmt.Fprintf(Output, \" \\\\ \");\n        for  w = 0; w \u003c nVarsHor; w++  {\n            if pVarNames == nil {\n                fmt.Fprintf(Output, \"%c\", 'a'+w);\n            } else {\n                fmt.Fprintf(Output, \"%s \", pVarNames[w]); }\n        }\n    }\n    fmt.Fprintf(Output, \"\\n\");\n\n    if fHorizontalVarNamesPrintedAbove != 0 {\n        ////////////////////////////////////////////////////////////////////\n        // print horizontal digits\n        for  d = 0; d \u003c nVarsHor; d++  {\n            for  p = 0; p \u003c nSkipSpaces + 2; p++, fprintf( Output, \" \" )  {}\n            for  n = 0; n \u003c nCellsHor; n++  {\n                if GrayCode(n) \u0026 (1\u003c\u003c(nVarsHor-1-d)) {\n                    fmt.Fprintf(Output, \"1   \");\n                } else {\n                    fmt.Fprintf(Output, \"0   \"); }\n            }\n            fmt.Fprintf(Output, \"\\n\");\n        }\n    }\n\n    ////////////////////////////////////////////////////////////////////\n    // print the upper line\n    for  p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" )  {}\n    fmt.Fprintf(Output, \"%c\", DOUBLE_TOP_LEFT);\n    for  s = 0; s \u003c nCellsHor; s++  {\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        if s != nCellsHor-1 {\n            if s\u00261 {\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_HOR_BOT);\n            } else {\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_HOR_BOT); }\n        }\n    }\n    fmt.Fprintf(Output, \"%c\", DOUBLE_TOP_RIGHT);\n    fmt.Fprintf(Output, \"\\n\");\n\n    ////////////////////////////////////////////////////////////////////\n    // print the map\n    for  v = 0; v \u003c nCellsVer; v++  {\n        var CubeVerBDD *DdNode;\n\n        // print horizontal digits\n//      for ( p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" ) );\n        for  n = 0; n \u003c nVarsVer; n++  {\n            if GrayCode(v) \u0026 (1\u003c\u003c(nVarsVer-1-n)) {\n                fmt.Fprintf(Output, \"1\");\n            } else {\n                fmt.Fprintf(Output, \"0\"); }\n        }\n        fmt.Fprintf(Output, \" \");\n\n        // find vertical cube\n        CubeVerBDD = Extra_bddBitsToCube( dd, GrayCode(v), nVarsVer, s_XVars+nVarsHor, 1 );    Cudd_Ref( CubeVerBDD );\n\n        // print text line\n        fmt.Fprintf(Output, \"%c\", DOUBLE_VERTICAL);\n        for  h = 0; h \u003c nCellsHor; h++  {\n            var CubeHorBDD, Prod, ValueOnSet, ValueOffSet *DdNode;\n\n            fmt.Fprintf(Output, \" \");\n//          fprintf( Output, \"x\" );\n            ///////////////////////////////////////////////////////////////\n            // determine what should be printed\n            CubeHorBDD  = Extra_bddBitsToCube( dd, GrayCode(h), nVarsHor, s_XVars, 1 );    Cudd_Ref( CubeHorBDD );\n            Prod = Cudd_bddAnd( dd, CubeHorBDD, CubeVerBDD );                   Cudd_Ref( Prod );\n            Cudd_RecursiveDeref( dd, CubeHorBDD );\n\n            ValueOnSet  = Cudd_Cofactor( dd, OnSet, Prod );                     Cudd_Ref( ValueOnSet );\n            ValueOffSet = Cudd_Cofactor( dd, OffSet, Prod );                    Cudd_Ref( ValueOffSet );\n            Cudd_RecursiveDeref( dd, Prod );\n\n#ifdef WIN32\n            {\n            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);\n            char Symb = 0, Color = 0;\n            if ( ValueOnSet == b1 \u0026\u0026 ValueOffSet == b0 )\n                Symb = SYMBOL_ONE,     Color = 14;  // yellow\n            else if ( ValueOnSet == b0 \u0026\u0026 ValueOffSet == b1 )\n                Symb = SYMBOL_ZERO,    Color = 11;  // blue\n            else if ( ValueOnSet == b0 \u0026\u0026 ValueOffSet == b0 ) \n                Symb = SYMBOL_DC,      Color = 10;  // green\n            else if ( ValueOnSet == b1 \u0026\u0026 ValueOffSet == b1 ) \n                Symb = SYMBOL_OVERLAP, Color = 12;  // red\n            else\n                assert(0);\n            SetConsoleTextAttribute( hConsole, Color );\n            fprintf( Output, \"%c\", Symb );\n            SetConsoleTextAttribute( hConsole, 7 );\n            }\n#else\n            {\n            if ( ValueOnSet == b1 \u0026\u0026 ValueOffSet == b0 )\n                fprintf( Output, \"%c\", SYMBOL_ONE );\n            else if ( ValueOnSet == b0 \u0026\u0026 ValueOffSet == b1 )\n                fprintf( Output, \"%c\", SYMBOL_ZERO );\n            else if ( ValueOnSet == b0 \u0026\u0026 ValueOffSet == b0 ) \n                fprintf( Output, \"%c\", SYMBOL_DC );\n            else if ( ValueOnSet == b1 \u0026\u0026 ValueOffSet == b1 ) \n                fprintf( Output, \"%c\", SYMBOL_OVERLAP );\n            else\n                assert(0);\n            }\n#endif\n\n            Cudd_RecursiveDeref( dd, ValueOnSet );\n            Cudd_RecursiveDeref( dd, ValueOffSet );\n            ///////////////////////////////////////////////////////////////\n            fmt.Fprintf(Output, \" \");\n\n            if h != nCellsHor-1 {\n                if h\u00261 {\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_VERTICAL);\n                } else {\n                    fmt.Fprintf(Output, \"%c\", SINGLE_VERTICAL); }\n            }\n        }\n        fmt.Fprintf(Output, \"%c\", DOUBLE_VERTICAL);\n        fmt.Fprintf(Output, \"\\n\");\n\n        Cudd_RecursiveDeref( dd, CubeVerBDD );\n\n        if v != nCellsVer-1 {\n        // print separator line\n        \n            for  p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" )  {}\n            if v\u00261 {\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_VER_RIGHT);\n                for  s = 0; s \u003c nCellsHor; s++  {\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n                    if s != nCellsHor-1 {\n                        if s\u00261 {\n                            fmt.Fprintf(Output, \"%c\", DOUBLES_CROSS);\n                        } else {\n                            fmt.Fprintf(Output, \"%c\", S_VER_CROSS_D_HOR); }\n                    }\n                }\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_VER_LEFT);\n            \n            } else {\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_VER_RIGHT);\n                for  s = 0; s \u003c nCellsHor; s++  {\n                    fmt.Fprintf(Output, \"%c\", SINGLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", SINGLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", SINGLE_HORIZONTAL);\n                    if s != nCellsHor-1 {\n                        if s\u00261 {\n                            fmt.Fprintf(Output, \"%c\", S_HOR_CROSS_D_VER);\n                        } else {\n                            fmt.Fprintf(Output, \"%c\", SINGLES_CROSS); }\n                    }\n                }\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_VER_LEFT);\n            }\n            fmt.Fprintf(Output, \"\\n\");\n        }\n    }\n    \n    ////////////////////////////////////////////////////////////////////\n    // print the lower line\n    for  p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" )  {}\n    fmt.Fprintf(Output, \"%c\", DOUBLE_BOT_LEFT);\n    for  s = 0; s \u003c nCellsHor; s++  {\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        if s != nCellsHor-1 {\n            if s\u00261 {\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_HOR_TOP);\n            } else {\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_HOR_TOP); }\n        }\n    }\n    fmt.Fprintf(Output, \"%c\", DOUBLE_BOT_RIGHT);\n    fmt.Fprintf(Output, \"\\n\");\n\n    if !(fHorizontalVarNamesPrintedAbove != 0) {\n        ////////////////////////////////////////////////////////////////////\n        // print horizontal digits\n        for  d = 0; d \u003c nVarsHor; d++  {\n            for  p = 0; p \u003c nSkipSpaces + 2; p++, fprintf( Output, \" \" )  {}\n            for  n = 0; n \u003c nCellsHor; n++  {\n                if GrayCode(n) \u0026 (1\u003c\u003c(nVarsHor-1-d)) {\n                    fmt.Fprintf(Output, \"1   \");\n                } else {\n                    fmt.Fprintf(Output, \"0   \"); }\n            }\n\n            /////////////////////////////////\n            fmt.Fprintf(Output, \"%c\", byte(('a'+d)));\n            /////////////////////////////////\n            fmt.Fprintf(Output, \"\\n\");\n        }\n    }\n}"
+    },
+    {
+      "Name": "Extra_PrintKMapRelation",
+      "Start": 19885,
+      "End": 28878,
+      "BodyStart": 20142,
+      "Original": "void Extra_PrintKMapRelation( \n  FILE * Output,  /* the output stream */\n  DdManager * dd, \n  DdNode * OnSet, \n  DdNode * OffSet, \n  int nXVars, \n  int nYVars, \n  DdNode ** XVars, \n  DdNode ** YVars ) /* the flag which determines how support is computed */\n{\n    int d, p, n, s, v, h, w;\n    int nVars;\n    int nVarsVer;\n    int nVarsHor;\n    int nCellsVer;\n    int nCellsHor;\n    int nSkipSpaces;\n\n    // make sure that on-set and off-set do not overlap\n    if ( !Cudd_bddLeq( dd, OnSet, Cudd_Not(OffSet) ) )\n    {\n        fprintf( Output, \"PrintKMap(): The on-set and the off-set overlap\\n\" );\n        return;\n    }\n\n    if ( OnSet == b1 )\n    {\n        fprintf( Output, \"PrintKMap(): Constant 1\\n\" );\n        return;\n    }\n    if ( OffSet == b1 )\n    {\n        fprintf( Output, \"PrintKMap(): Constant 0\\n\" );\n        return;\n    }\n\n    nVars = nXVars + nYVars;\n    if ( nVars \u003c 0 || nVars \u003e MAXVARS )\n    {\n        fprintf( Output, \"PrintKMap(): The number of variables is less than zero or more than %d\\n\", MAXVARS );\n        return;\n    }\n\n\n    ////////////////////////////////////////////////////////////////////\n    // determine the Karnaugh map parameters\n    nVarsVer = nXVars;\n    nVarsHor = nYVars;\n    nCellsVer = (1\u003c\u003cnVarsVer);\n    nCellsHor = (1\u003c\u003cnVarsHor);\n    nSkipSpaces = nVarsVer + 1;\n\n    ////////////////////////////////////////////////////////////////////\n    // print variable names\n    fprintf( Output, \"\\n\" );\n    for ( w = 0; w \u003c nVarsVer; w++ )\n        fprintf( Output, \"%c\", 'a'+nVarsHor+w );\n    if ( fHorizontalVarNamesPrintedAbove )\n    {\n        fprintf( Output, \" \\\\ \" );\n        for ( w = 0; w \u003c nVarsHor; w++ )\n            fprintf( Output, \"%c\", 'a'+w );\n    }\n    fprintf( Output, \"\\n\" );\n\n    if ( fHorizontalVarNamesPrintedAbove )\n    {\n        ////////////////////////////////////////////////////////////////////\n        // print horizontal digits\n        for ( d = 0; d \u003c nVarsHor; d++ )\n        {\n            for ( p = 0; p \u003c nSkipSpaces + 2; p++, fprintf( Output, \" \" ) );\n            for ( n = 0; n \u003c nCellsHor; n++ )\n                if ( GrayCode(n) \u0026 (1\u003c\u003c(nVarsHor-1-d)) )\n                    fprintf( Output, \"1   \" );\n                else\n                    fprintf( Output, \"0   \" );\n            fprintf( Output, \"\\n\" );\n        }\n    }\n\n    ////////////////////////////////////////////////////////////////////\n    // print the upper line\n    for ( p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" ) );\n    fprintf( Output, \"%c\", DOUBLE_TOP_LEFT );\n    for ( s = 0; s \u003c nCellsHor; s++ )\n    {\n        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n        if ( s != nCellsHor-1 )\n        {\n            if ( s\u00261 )\n                fprintf( Output, \"%c\", D_JOINS_D_HOR_BOT );\n            else\n                fprintf( Output, \"%c\", S_JOINS_D_HOR_BOT );\n        }\n    }\n    fprintf( Output, \"%c\", DOUBLE_TOP_RIGHT );\n    fprintf( Output, \"\\n\" );\n\n    ////////////////////////////////////////////////////////////////////\n    // print the map\n    for ( v = 0; v \u003c nCellsVer; v++ )\n    {\n        DdNode * CubeVerBDD;\n\n        // print horizontal digits\n//      for ( p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" ) );\n        for ( n = 0; n \u003c nVarsVer; n++ )\n            if ( GrayCode(v) \u0026 (1\u003c\u003c(nVarsVer-1-n)) )\n                fprintf( Output, \"1\" );\n            else\n                fprintf( Output, \"0\" );\n        fprintf( Output, \" \" );\n\n        // find vertical cube\n//      CubeVerBDD = Extra_bddBitsToCube( dd, GrayCode(v), nVarsVer, s_XVars+nVarsHor );    Cudd_Ref( CubeVerBDD );\n        CubeVerBDD = Extra_bddBitsToCube( dd, GrayCode(v), nXVars, XVars, 1 );                 Cudd_Ref( CubeVerBDD );\n\n        // print text line\n        fprintf( Output, \"%c\", DOUBLE_VERTICAL );\n        for ( h = 0; h \u003c nCellsHor; h++ )\n        {\n            DdNode * CubeHorBDD, * Prod, * ValueOnSet, * ValueOffSet;\n\n            fprintf( Output, \" \" );\n//          fprintf( Output, \"x\" );\n            ///////////////////////////////////////////////////////////////\n            // determine what should be printed\n//          CubeHorBDD  = Extra_bddBitsToCube( dd, GrayCode(h), nVarsHor, s_XVars );    Cudd_Ref( CubeHorBDD );\n            CubeHorBDD  = Extra_bddBitsToCube( dd, GrayCode(h), nYVars, YVars, 1 );        Cudd_Ref( CubeHorBDD );\n            Prod = Cudd_bddAnd( dd, CubeHorBDD, CubeVerBDD );                           Cudd_Ref( Prod );\n            Cudd_RecursiveDeref( dd, CubeHorBDD );\n\n            ValueOnSet  = Cudd_Cofactor( dd, OnSet, Prod );                     Cudd_Ref( ValueOnSet );\n            ValueOffSet = Cudd_Cofactor( dd, OffSet, Prod );                    Cudd_Ref( ValueOffSet );\n            Cudd_RecursiveDeref( dd, Prod );\n\n            if ( ValueOnSet == b1 \u0026\u0026 ValueOffSet == b0 )\n                fprintf( Output, \"%c\", SYMBOL_ONE );\n            else if ( ValueOnSet == b0 \u0026\u0026 ValueOffSet == b1 )\n                fprintf( Output, \"%c\", SYMBOL_ZERO );\n            else if ( ValueOnSet == b0 \u0026\u0026 ValueOffSet == b0 ) \n                fprintf( Output, \"%c\", SYMBOL_DC );\n            else if ( ValueOnSet == b1 \u0026\u0026 ValueOffSet == b1 ) \n                fprintf( Output, \"%c\", SYMBOL_OVERLAP );\n            else\n                assert(0);\n\n            Cudd_RecursiveDeref( dd, ValueOnSet );\n            Cudd_RecursiveDeref( dd, ValueOffSet );\n            ///////////////////////////////////////////////////////////////\n            fprintf( Output, \" \" );\n\n            if ( h != nCellsHor-1 )\n            {\n                if ( h\u00261 )\n                    fprintf( Output, \"%c\", DOUBLE_VERTICAL );\n                else\n                    fprintf( Output, \"%c\", SINGLE_VERTICAL );\n            }\n        }\n        fprintf( Output, \"%c\", DOUBLE_VERTICAL );\n        fprintf( Output, \"\\n\" );\n\n        Cudd_RecursiveDeref( dd, CubeVerBDD );\n\n        if ( v != nCellsVer-1 )\n        // print separator line\n        {\n            for ( p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" ) );\n            if ( v\u00261 )\n            {\n                fprintf( Output, \"%c\", D_JOINS_D_VER_RIGHT );\n                for ( s = 0; s \u003c nCellsHor; s++ )\n                {\n                    fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n                    fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n                    fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n                    if ( s != nCellsHor-1 )\n                    {\n                        if ( s\u00261 )\n                            fprintf( Output, \"%c\", DOUBLES_CROSS );\n                        else\n                            fprintf( Output, \"%c\", S_VER_CROSS_D_HOR );\n                    }\n                }\n                fprintf( Output, \"%c\", D_JOINS_D_VER_LEFT );\n            }\n            else\n            {\n                fprintf( Output, \"%c\", S_JOINS_D_VER_RIGHT );\n                for ( s = 0; s \u003c nCellsHor; s++ )\n                {\n                    fprintf( Output, \"%c\", SINGLE_HORIZONTAL );\n                    fprintf( Output, \"%c\", SINGLE_HORIZONTAL );\n                    fprintf( Output, \"%c\", SINGLE_HORIZONTAL );\n                    if ( s != nCellsHor-1 )\n                    {\n                        if ( s\u00261 )\n                            fprintf( Output, \"%c\", S_HOR_CROSS_D_VER );\n                        else\n                            fprintf( Output, \"%c\", SINGLES_CROSS );\n                    }\n                }\n                fprintf( Output, \"%c\", S_JOINS_D_VER_LEFT );\n            }\n            fprintf( Output, \"\\n\" );\n        }\n    }\n    \n    ////////////////////////////////////////////////////////////////////\n    // print the lower line\n    for ( p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" ) );\n    fprintf( Output, \"%c\", DOUBLE_BOT_LEFT );\n    for ( s = 0; s \u003c nCellsHor; s++ )\n    {\n        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n        fprintf( Output, \"%c\", DOUBLE_HORIZONTAL );\n        if ( s != nCellsHor-1 )\n        {\n            if ( s\u00261 )\n                fprintf( Output, \"%c\", D_JOINS_D_HOR_TOP );\n            else\n                fprintf( Output, \"%c\", S_JOINS_D_HOR_TOP );\n        }\n    }\n    fprintf( Output, \"%c\", DOUBLE_BOT_RIGHT );\n    fprintf( Output, \"\\n\" );\n\n    if ( !fHorizontalVarNamesPrintedAbove )\n    {\n        ////////////////////////////////////////////////////////////////////\n        // print horizontal digits\n        for ( d = 0; d \u003c nVarsHor; d++ )\n        {\n            for ( p = 0; p \u003c nSkipSpaces + 2; p++, fprintf( Output, \" \" ) );\n            for ( n = 0; n \u003c nCellsHor; n++ )\n                if ( GrayCode(n) \u0026 (1\u003c\u003c(nVarsHor-1-d)) )\n                    fprintf( Output, \"1   \" );\n                else\n                    fprintf( Output, \"0   \" );\n\n            /////////////////////////////////\n            fprintf( Output, \"%c\", (char)('a'+d) );\n            /////////////////////////////////\n            fprintf( Output, \"\\n\" );\n        }\n    }\n}",
+      "Draft": "void Extra_PrintKMapRelation( \n  FILE * Output,  /* the output stream */\n  DdManager * dd, \n  DdNode * OnSet, \n  DdNode * OffSet, \n  int nXVars, \n  int nYVars, \n  DdNode ** XVars, \n  DdNode ** YVars ) /* the flag which determines how support is computed */\n{\n    var d, p, n, s, v, h, w int32;\n    var nVars int32;\n    var nVarsVer int32;\n    var nVarsHor int32;\n    var nCellsVer int32;\n    var nCellsHor int32;\n    var nSkipSpaces int32;\n\n    // make sure that on-set and off-set do not overlap\n    if !Cudd_bddLeq( dd, OnSet, Cudd_Not(OffSet) ) {\n        fmt.Fprintf(Output, \"PrintKMap(): The on-set and the off-set overlap\\n\");\n        return;\n    }\n\n    if OnSet == b1 {\n        fmt.Fprintf(Output, \"PrintKMap(): Constant 1\\n\");\n        return;\n    }\n    if OffSet == b1 {\n        fmt.Fprintf(Output, \"PrintKMap(): Constant 0\\n\");\n        return;\n    }\n\n    nVars = nXVars + nYVars;\n    if nVars \u003c 0 || nVars \u003e MAXVARS {\n        fmt.Fprintf(Output, \"PrintKMap(): The number of variables is less than zero or more than %d\\n\", MAXVARS);\n        return;\n    }\n\n\n    ////////////////////////////////////////////////////////////////////\n    // determine the Karnaugh map parameters\n    nVarsVer = nXVars;\n    nVarsHor = nYVars;\n    nCellsVer = (1\u003c\u003cnVarsVer);\n    nCellsHor = (1\u003c\u003cnVarsHor);\n    nSkipSpaces = nVarsVer + 1;\n\n    ////////////////////////////////////////////////////////////////////\n    // print variable names\n    fmt.Fprintf(Output, \"\\n\");\n    for  w = 0; w \u003c nVarsVer; w++  {\n        fmt.Fprintf(Output, \"%c\", 'a'+nVarsHor+w);\n    }\n    if fHorizontalVarNamesPrintedAbove != 0 {\n        fmt.Fprintf(Output, \" \\\\ \");\n        for  w = 0; w \u003c nVarsHor; w++  {\n            fmt.Fprintf(Output, \"%c\", 'a'+w);\n        }\n    }\n    fmt.Fprintf(Output, \"\\n\");\n\n    if fHorizontalVarNamesPrintedAbove != 0 {\n        ////////////////////////////////////////////////////////////////////\n        // print horizontal digits\n        for  d = 0; d \u003c nVarsHor; d++  {\n            for  p = 0; p \u003c nSkipSpaces + 2; p++, fprintf( Output, \" \" )  {}\n            for  n = 0; n \u003c nCellsHor; n++  {\n                if GrayCode(n) \u0026 (1\u003c\u003c(nVarsHor-1-d)) {\n                    fmt.Fprintf(Output, \"1   \");\n                } else {\n                    fmt.Fprintf(Output, \"0   \"); }\n            }\n            fmt.Fprintf(Output, \"\\n\");\n        }\n    }\n\n    ////////////////////////////////////////////////////////////////////\n    // print the upper line\n    for  p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" )  {}\n    fmt.Fprintf(Output, \"%c\", DOUBLE_TOP_LEFT);\n    for  s = 0; s \u003c nCellsHor; s++  {\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        if s != nCellsHor-1 {\n            if s\u00261 {\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_HOR_BOT);\n            } else {\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_HOR_BOT); }\n        }\n    }\n    fmt.Fprintf(Output, \"%c\", DOUBLE_TOP_RIGHT);\n    fmt.Fprintf(Output, \"\\n\");\n\n    ////////////////////////////////////////////////////////////////////\n    // print the map\n    for  v = 0; v \u003c nCellsVer; v++  {\n        var CubeVerBDD *DdNode;\n\n        // print horizontal digits\n//      for ( p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" ) );\n        for  n = 0; n \u003c nVarsVer; n++  {\n            if GrayCode(v) \u0026 (1\u003c\u003c(nVarsVer-1-n)) {\n                fmt.Fprintf(Output, \"1\");\n            } else {\n                fmt.Fprintf(Output, \"0\"); }\n        }\n        fmt.Fprintf(Output, \" \");\n\n        // find vertical cube\n//      CubeVerBDD = Extra_bddBitsToCube( dd, GrayCode(v), nVarsVer, s_XVars+nVarsHor );    Cudd_Ref( CubeVerBDD );\n        CubeVerBDD = Extra_bddBitsToCube( dd, GrayCode(v), nXVars, XVars, 1 );                 Cudd_Ref( CubeVerBDD );\n\n        // print text line\n        fmt.Fprintf(Output, \"%c\", DOUBLE_VERTICAL);\n        for  h = 0; h \u003c nCellsHor; h++  {\n            var CubeHorBDD, Prod, ValueOnSet, ValueOffSet *DdNode;\n\n            fmt.Fprintf(Output, \" \");\n//          fprintf( Output, \"x\" );\n            ///////////////////////////////////////////////////////////////\n            // determine what should be printed\n//          CubeHorBDD  = Extra_bddBitsToCube( dd, GrayCode(h), nVarsHor, s_XVars );    Cudd_Ref( CubeHorBDD );\n            CubeHorBDD  = Extra_bddBitsToCube( dd, GrayCode(h), nYVars, YVars, 1 );        Cudd_Ref( CubeHorBDD );\n            Prod = Cudd_bddAnd( dd, CubeHorBDD, CubeVerBDD );                           Cudd_Ref( Prod );\n            Cudd_RecursiveDeref( dd, CubeHorBDD );\n\n            ValueOnSet  = Cudd_Cofactor( dd, OnSet, Prod );                     Cudd_Ref( ValueOnSet );\n            ValueOffSet = Cudd_Cofactor( dd, OffSet, Prod );                    Cudd_Ref( ValueOffSet );\n            Cudd_RecursiveDeref( dd, Prod );\n\n            if ValueOnSet == b1 \u0026\u0026 ValueOffSet == b0 {\n                fmt.Fprintf(Output, \"%c\", SYMBOL_ONE);\n            } else if ValueOnSet == b0 \u0026\u0026 ValueOffSet == b1 {\n                fmt.Fprintf(Output, \"%c\", SYMBOL_ZERO);\n            } else if ValueOnSet == b0 \u0026\u0026 ValueOffSet == b0 { \n                fmt.Fprintf(Output, \"%c\", SYMBOL_DC);\n            } else if ValueOnSet == b1 \u0026\u0026 ValueOffSet == b1 { \n                fmt.Fprintf(Output, \"%c\", SYMBOL_OVERLAP);\n            } else {\n                assert(false, \"0\"); }\n\n            Cudd_RecursiveDeref( dd, ValueOnSet );\n            Cudd_RecursiveDeref( dd, ValueOffSet );\n            ///////////////////////////////////////////////////////////////\n            fmt.Fprintf(Output, \" \");\n\n            if h != nCellsHor-1 {\n                if h\u00261 {\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_VERTICAL);\n                } else {\n                    fmt.Fprintf(Output, \"%c\", SINGLE_VERTICAL); }\n            }\n        }\n        fmt.Fprintf(Output, \"%c\", DOUBLE_VERTICAL);\n        fmt.Fprintf(Output, \"\\n\");\n\n        Cudd_RecursiveDeref( dd, CubeVerBDD );\n\n        if v != nCellsVer-1 {\n        // print separator line\n        \n            for  p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" )  {}\n            if v\u00261 {\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_VER_RIGHT);\n                for  s = 0; s \u003c nCellsHor; s++  {\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n                    if s != nCellsHor-1 {\n                        if s\u00261 {\n                            fmt.Fprintf(Output, \"%c\", DOUBLES_CROSS);\n                        } else {\n                            fmt.Fprintf(Output, \"%c\", S_VER_CROSS_D_HOR); }\n                    }\n                }\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_VER_LEFT);\n            \n            } else {\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_VER_RIGHT);\n                for  s = 0; s \u003c nCellsHor; s++  {\n                    fmt.Fprintf(Output, \"%c\", SINGLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", SINGLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", SINGLE_HORIZONTAL);\n                    if s != nCellsHor-1 {\n                        if s\u00261 {\n                            fmt.Fprintf(Output, \"%c\", S_HOR_CROSS_D_VER);\n                        } else {\n                            fmt.Fprintf(Output, \"%c\", SINGLES_CROSS); }\n                    }\n                }\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_VER_LEFT);\n            }\n            fmt.Fprintf(Output, \"\\n\");\n        }\n    }\n    \n    ////////////////////////////////////////////////////////////////////\n    // print the lower line\n    for  p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" )  {}\n    fmt.Fprintf(Output, \"%c\", DOUBLE_BOT_LEFT);\n    for  s = 0; s \u003c nCellsHor; s++  {\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        if s != nCellsHor-1 {\n            if s\u00261 {\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_HOR_TOP);\n            } else {\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_HOR_TOP); }\n        }\n    }\n    fmt.Fprintf(Output, \"%c\", DOUBLE_BOT_RIGHT);\n    fmt.Fprintf(Output, \"\\n\");\n\n    if !(fHorizontalVarNamesPrintedAbove != 0) {\n        ////////////////////////////////////////////////////////////////////\n        // print horizontal digits\n        for  d = 0; d \u003c nVarsHor; d++  {\n            for  p = 0; p \u003c nSkipSpaces + 2; p++, fprintf( Output, \" \" )  {}\n            for  n = 0; n \u003c nCellsHor; n++  {\n                if GrayCode(n) \u0026 (1\u003c\u003c(nVarsHor-1-d)) {\n                    fmt.Fprintf(Output, \"1   \");\n                } else {\n                    fmt.Fprintf(Output, \"0   \"); }\n            }\n\n            /////////////////////////////////\n            fmt.Fprintf(Output, \"%c\", byte(('a'+d)));\n            /////////////////////////////////\n            fmt.Fprintf(Output, \"\\n\");\n        }\n    }\n}"
+    },
+    {
+      "Name": "GrayCode",
+      "Start": 29356,
+      "End": 29425,
+      "BodyStart": 29385,
+      "Original": "int GrayCode ( int BinCode )\n{\n  return BinCode ^ ( BinCode \u003e\u003e 1 );\n}",
+      "Draft": "func GrayCode(BinCode int32) int32 {\n  return BinCode ^ ( BinCode \u003e\u003e 1 );\n}"
+    },
+    {
+      "Name": "BinCode",
+      "Start": 29660,
+      "End": 29768,
+      "BodyStart": 29689,
+      "Original": "int BinCode ( int GrayCode )\n{\n  int bc = GrayCode;\n  while( GrayCode \u003e\u003e= 1 ) bc ^= GrayCode;\n  return bc;\n}",
+      "Draft": "func BinCode(GrayCode int32) int32 {\n  var bc int32  = GrayCode;\n  for  GrayCode \u003e\u003e= 1  { bc ^= GrayCode; }\n  return bc;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddKmap.c::Extra_PrintKMap",
+      "Category": "semantic-review",
+      "Symbol": "Extra_PrintKMap",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6629,
+      "End": 19469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddKmap.c::Extra_PrintKMapRelation",
+      "Category": "semantic-review",
+      "Symbol": "Extra_PrintKMapRelation",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 19885,
+      "End": 28878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddKmap.c::GrayCode",
+      "Category": "semantic-review",
+      "Symbol": "GrayCode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29356,
+      "End": 29425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddKmap.c::BinCode",
+      "Category": "semantic-review",
+      "Symbol": "BinCode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29660,
+      "End": 29768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddKmap.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 29795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddKmap.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 643,
+      "End": 683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddKmap.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3590,
+      "End": 3691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddKmap.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 14403,
+      "End": 15772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddKmap.c::macro-inline::7123",
+      "Category": "macro-inline-review",
+      "Symbol": "Cudd_Not",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7123,
+      "End": 7139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddKmap.c::macro-inline::7323",
+      "Category": "macro-inline-review",
+      "Symbol": "Cudd_IsComplement",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7323,
+      "End": 7347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddKmap.c::macro-inline::10343",
+      "Category": "macro-inline-review",
+      "Symbol": "Cudd_T",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10343,
+      "End": 10359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddKmap.c::macro-inline::20374",
+      "Category": "macro-inline-review",
+      "Symbol": "Cudd_Not",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20374,
+      "End": 20390
+    }
+  ],
+  "Draft": "package extrab\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [extraBddKmap.c]\n\n  PackageName [extra]\n\n  Synopsis    [Visualizing the K-map.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - September 1, 2003.]\n\n  Revision    [$Id: extraBddKmap.c,v 1.0 2003/05/21 18:03:50 alanmi Exp $]\n\n***********************************************************************/\n\n///      K-map visualization using pseudo graphics      ///\n///       Version 1.0. Started - August 20, 2000        ///\n///     Version 2.0. Added to EXTRA - July 17, 2001     ///\n\n//#include \"extraBdd.h\"\n\n#ifdef WIN32\n#include \u003cwindows.h\u003e\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n// the maximum number of variables in the Karnaugh Map\nconst MAXVARS = 20\n\n/*\n// single line\n#define SINGLE_VERTICAL     (char)179\n#define SINGLE_HORIZONTAL   (char)196\n#define SINGLE_TOP_LEFT     (char)218\n#define SINGLE_TOP_RIGHT    (char)191\n#define SINGLE_BOT_LEFT     (char)192\n#define SINGLE_BOT_RIGHT    (char)217\n\n// double line\n#define DOUBLE_VERTICAL     (char)186\n#define DOUBLE_HORIZONTAL   (char)205\n#define DOUBLE_TOP_LEFT     (char)201\n#define DOUBLE_TOP_RIGHT    (char)187\n#define DOUBLE_BOT_LEFT     (char)200\n#define DOUBLE_BOT_RIGHT    (char)188\n\n// line intersections\n#define SINGLES_CROSS       (char)197\n#define DOUBLES_CROSS       (char)206\n#define S_HOR_CROSS_D_VER   (char)215\n#define S_VER_CROSS_D_HOR   (char)216\n\n// single line joining\n#define S_JOINS_S_VER_LEFT  (char)180\n#define S_JOINS_S_VER_RIGHT (char)195\n#define S_JOINS_S_HOR_TOP   (char)193\n#define S_JOINS_S_HOR_BOT   (char)194\n\n// double line joining\n#define D_JOINS_D_VER_LEFT  (char)185\n#define D_JOINS_D_VER_RIGHT (char)204\n#define D_JOINS_D_HOR_TOP   (char)202\n#define D_JOINS_D_HOR_BOT   (char)203\n\n// single line joining double line\n#define S_JOINS_D_VER_LEFT  (char)182\n#define S_JOINS_D_VER_RIGHT (char)199\n#define S_JOINS_D_HOR_TOP   (char)207\n#define S_JOINS_D_HOR_BOT   (char)209\n*/\n\n// single line\n#define SINGLE_VERTICAL     (char)'|'\n#define SINGLE_HORIZONTAL   (char)'-'\n#define SINGLE_TOP_LEFT     (char)'+'\n#define SINGLE_TOP_RIGHT    (char)'+'\n#define SINGLE_BOT_LEFT     (char)'+'\n#define SINGLE_BOT_RIGHT    (char)'+'\n\n// double line\n#define DOUBLE_VERTICAL     (char)'|'\n#define DOUBLE_HORIZONTAL   (char)'-'\n#define DOUBLE_TOP_LEFT     (char)'+'\n#define DOUBLE_TOP_RIGHT    (char)'+'\n#define DOUBLE_BOT_LEFT     (char)'+'\n#define DOUBLE_BOT_RIGHT    (char)'+'\n\n// line intersections\n#define SINGLES_CROSS       (char)'+'\n#define DOUBLES_CROSS       (char)'+'\n#define S_HOR_CROSS_D_VER   (char)'+'\n#define S_VER_CROSS_D_HOR   (char)'+'\n\n// single line joining\n#define S_JOINS_S_VER_LEFT  (char)'+'\n#define S_JOINS_S_VER_RIGHT (char)'+'\n#define S_JOINS_S_HOR_TOP   (char)'+'\n#define S_JOINS_S_HOR_BOT   (char)'+'\n\n// double line joining\n#define D_JOINS_D_VER_LEFT  (char)'+'\n#define D_JOINS_D_VER_RIGHT (char)'+'\n#define D_JOINS_D_HOR_TOP   (char)'+'\n#define D_JOINS_D_HOR_BOT   (char)'+'\n\n// single line joining double line\n#define S_JOINS_D_VER_LEFT  (char)'+'\n#define S_JOINS_D_VER_RIGHT (char)'+'\n#define S_JOINS_D_HOR_TOP   (char)'+'\n#define S_JOINS_D_HOR_BOT   (char)'+'\n\n\n// other symbols\n#define UNDERSCORE          (char)95\n//#define SYMBOL_ZERO       (char)248   // degree sign\n//#define SYMBOL_ZERO         (char)'o'\n#ifdef WIN32\n#define SYMBOL_ZERO         (char)'0'\n#else\n#define SYMBOL_ZERO         (char)' '\n#endif\n#define SYMBOL_ONE          (char)'1'\n#define SYMBOL_DC           (char)'-'\n#define SYMBOL_OVERLAP      (char)'?'\n\n// full cells and half cells\n#define CELL_FREE           (char)32\n#define CELL_FULL           (char)219\n#define HALF_UPPER          (char)223\n#define HALF_LOWER          (char)220\n#define HALF_LEFT           (char)221\n#define HALF_RIGHT          (char)222\n\n\n/*---------------------------------------------------------------------------*/\n/* Structure declarations                                                    */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n// the array of BDD variables used internally\nvar s_XVars [MAXVARS]*DdNode;\n\n// flag which determines where the horizontal variable names are printed\nvar fHorizontalVarNamesPrintedAbove int32 = 1;\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// Oleg's way of generating the gray code\n// static int GrayCode( int BinCode );\n\n// static int BinCode ( int GrayCode );\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints the K-map of the function.]\n\n  Description [If the pointer to the array of variables XVars is NULL,\n               fSuppType determines how the support will be determined.\n               fSuppType == 0 -- takes the first nVars of the manager\n               fSuppType == 1 -- takes the topmost nVars of the manager\n               fSuppType == 2 -- determines support from the on-set and the offset\n               ]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nvoid Extra_PrintKMap( \n  FILE * Output,  /* the output stream */\n  DdManager * dd, \n  DdNode * OnSet, \n  DdNode * OffSet, \n  int nVars, \n  DdNode ** XVars, \n  int fSuppType, /* the flag which determines how support is computed */\n  char ** pVarNames )\n{\n    var fPrintTruth int32  = 1;\n    var d, p, n, s, v, h, w int32;\n    var nVarsVer int32;\n    var nVarsHor int32;\n    var nCellsVer int32;\n    var nCellsHor int32;\n    var nSkipSpaces int32;\n\n    // make sure that on-set and off-set do not overlap\n    if !Cudd_bddLeq( dd, OnSet, Cudd_Not(OffSet) ) {\n        fmt.Fprintf(Output, \"PrintKMap(): The on-set and the off-set overlap\\n\");\n        return;\n    }\n    if nVars == 0 { fmt.Printf(\"Function is constant %d.\\n\", !Cudd_IsComplement(OnSet)); return; }\n\n    // print truth table for debugging\n    if fPrintTruth != 0 {\n        var bCube, bPart *DdNode;\n        fmt.Printf(\"Truth table: \");\n        if nVars == 0 {\n            fmt.Printf(\"Constant\");\n        } else if nVars == 1 {\n            fmt.Printf(\"1-var function\");\n        } else {\n//            printf( \"0x\" );\n            for  d = (1\u003c\u003c(nVars-2)) - 1; d \u003e= 0; d--  {\n                var Value int32;\n                for  s = 0; s \u003c 4; s++  {\n                    bCube = Extra_bddBitsToCube( dd, 4*d+s, nVars, dd.vars, 0 );   Cudd_Ref( bCube );\n                    bPart = Cudd_Cofactor( dd, OnSet, bCube );                      Cudd_Ref( bPart );\n                    Value |= (int32((bPart == b1)) \u003c\u003c s);\n                    Cudd_RecursiveDeref( dd, bPart );\n                    Cudd_RecursiveDeref( dd, bCube );\n                }\n                if Value \u003c 10 {\n                    fmt.Fprintf(os.Stdout, \"%d\", Value);\n                } else {\n                    fmt.Fprintf(os.Stdout, \"%c\", 'a' + Value-10); }\n            }\n        }\n        fmt.Printf(\"\\n\");\n    }\n\n\n/*\n    if ( OnSet == b1 )\n    {\n        fprintf( Output, \"PrintKMap(): Constant 1\\n\" );\n        return;\n    }\n    if ( OffSet == b1 )\n    {\n        fprintf( Output, \"PrintKMap(): Constant 0\\n\" );\n        return;\n    }\n*/\n    if nVars \u003c 0 || nVars \u003e MAXVARS {\n        fmt.Fprintf(Output, \"PrintKMap(): The number of variables is less than zero or more than %d\\n\", MAXVARS);\n        return;\n    }\n\n    // determine the support if it is not given\n    if XVars == nil {\n        if fSuppType == 0 {   // assume that the support includes the first nVars of the manager\n            assert((nVars != 0), \"nVars\");\n            for  v = 0; v \u003c nVars; v++  {\n                s_XVars[v] = Cudd_bddIthVar( dd, v );\n            }\n        \n        } else if fSuppType == 1 {   // assume that the support includes the topmost nVars of the manager\n            assert((nVars != 0), \"nVars\");\n            for  v = 0; v \u003c nVars; v++  {\n                s_XVars[v] = Cudd_bddIthVar( dd, dd.invperm[v] );\n            }\n        \n        } else { // determine the support\n        \n            var SuppOn, SuppOff, Supp *DdNode;\n            var cVars int32;\n            var TempSupp *DdNode;\n\n            // determine support\n            SuppOn = Cudd_Support( dd, OnSet );         Cudd_Ref( SuppOn );\n            SuppOff = Cudd_Support( dd, OffSet );       Cudd_Ref( SuppOff );\n            Supp = Cudd_bddAnd( dd, SuppOn, SuppOff );  Cudd_Ref( Supp );\n            Cudd_RecursiveDeref( dd, SuppOn );\n            Cudd_RecursiveDeref( dd, SuppOff );\n\n            nVars = Cudd_SupportSize( dd, Supp );\n            if nVars \u003e MAXVARS {\n                fmt.Fprintf(Output, \"PrintKMap(): The number of variables is more than %d\\n\", MAXVARS);\n                Cudd_RecursiveDeref( dd, Supp );\n                return;\n            }\n\n            // assign variables\n            for  TempSupp = Supp; TempSupp != dd.one; TempSupp = Cudd_T(TempSupp), cVars++  {\n                s_XVars[cVars] = Cudd_bddIthVar( dd, TempSupp.index );\n            }\n\n            Cudd_RecursiveDeref( dd, TempSupp );\n        }\n    \n    } else {\n        // copy variables\n        assert(XVars, \"XVars\");\n        for  v = 0; v \u003c nVars; v++  {\n            s_XVars[v] = XVars[v];\n        }\n    }\n\n    ////////////////////////////////////////////////////////////////////\n    // determine the Karnaugh map parameters\n    nVarsVer = nVars/2;\n    nVarsHor = nVars - nVarsVer;\n\n    nCellsVer = (1\u003c\u003cnVarsVer);\n    nCellsHor = (1\u003c\u003cnVarsHor);\n    nSkipSpaces = nVarsVer + 1;\n\n    ////////////////////////////////////////////////////////////////////\n    // print variable names\n    fmt.Fprintf(Output, \"\\n\");\n    for  w = 0; w \u003c nVarsVer; w++  {\n        if pVarNames == nil {\n            fmt.Fprintf(Output, \"%c\", 'a'+nVarsHor+w);\n        } else {\n            fmt.Fprintf(Output, \" %s\", pVarNames[nVarsHor+w]); }\n    }\n\n    if fHorizontalVarNamesPrintedAbove != 0 {\n        fmt.Fprintf(Output, \" \\\\ \");\n        for  w = 0; w \u003c nVarsHor; w++  {\n            if pVarNames == nil {\n                fmt.Fprintf(Output, \"%c\", 'a'+w);\n            } else {\n                fmt.Fprintf(Output, \"%s \", pVarNames[w]); }\n        }\n    }\n    fmt.Fprintf(Output, \"\\n\");\n\n    if fHorizontalVarNamesPrintedAbove != 0 {\n        ////////////////////////////////////////////////////////////////////\n        // print horizontal digits\n        for  d = 0; d \u003c nVarsHor; d++  {\n            for  p = 0; p \u003c nSkipSpaces + 2; p++, fprintf( Output, \" \" )  {}\n            for  n = 0; n \u003c nCellsHor; n++  {\n                if GrayCode(n) \u0026 (1\u003c\u003c(nVarsHor-1-d)) {\n                    fmt.Fprintf(Output, \"1   \");\n                } else {\n                    fmt.Fprintf(Output, \"0   \"); }\n            }\n            fmt.Fprintf(Output, \"\\n\");\n        }\n    }\n\n    ////////////////////////////////////////////////////////////////////\n    // print the upper line\n    for  p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" )  {}\n    fmt.Fprintf(Output, \"%c\", DOUBLE_TOP_LEFT);\n    for  s = 0; s \u003c nCellsHor; s++  {\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        if s != nCellsHor-1 {\n            if s\u00261 {\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_HOR_BOT);\n            } else {\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_HOR_BOT); }\n        }\n    }\n    fmt.Fprintf(Output, \"%c\", DOUBLE_TOP_RIGHT);\n    fmt.Fprintf(Output, \"\\n\");\n\n    ////////////////////////////////////////////////////////////////////\n    // print the map\n    for  v = 0; v \u003c nCellsVer; v++  {\n        var CubeVerBDD *DdNode;\n\n        // print horizontal digits\n//      for ( p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" ) );\n        for  n = 0; n \u003c nVarsVer; n++  {\n            if GrayCode(v) \u0026 (1\u003c\u003c(nVarsVer-1-n)) {\n                fmt.Fprintf(Output, \"1\");\n            } else {\n                fmt.Fprintf(Output, \"0\"); }\n        }\n        fmt.Fprintf(Output, \" \");\n\n        // find vertical cube\n        CubeVerBDD = Extra_bddBitsToCube( dd, GrayCode(v), nVarsVer, s_XVars+nVarsHor, 1 );    Cudd_Ref( CubeVerBDD );\n\n        // print text line\n        fmt.Fprintf(Output, \"%c\", DOUBLE_VERTICAL);\n        for  h = 0; h \u003c nCellsHor; h++  {\n            var CubeHorBDD, Prod, ValueOnSet, ValueOffSet *DdNode;\n\n            fmt.Fprintf(Output, \" \");\n//          fprintf( Output, \"x\" );\n            ///////////////////////////////////////////////////////////////\n            // determine what should be printed\n            CubeHorBDD  = Extra_bddBitsToCube( dd, GrayCode(h), nVarsHor, s_XVars, 1 );    Cudd_Ref( CubeHorBDD );\n            Prod = Cudd_bddAnd( dd, CubeHorBDD, CubeVerBDD );                   Cudd_Ref( Prod );\n            Cudd_RecursiveDeref( dd, CubeHorBDD );\n\n            ValueOnSet  = Cudd_Cofactor( dd, OnSet, Prod );                     Cudd_Ref( ValueOnSet );\n            ValueOffSet = Cudd_Cofactor( dd, OffSet, Prod );                    Cudd_Ref( ValueOffSet );\n            Cudd_RecursiveDeref( dd, Prod );\n\n#ifdef WIN32\n            {\n            HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);\n            char Symb = 0, Color = 0;\n            if ( ValueOnSet == b1 \u0026\u0026 ValueOffSet == b0 )\n                Symb = SYMBOL_ONE,     Color = 14;  // yellow\n            else if ( ValueOnSet == b0 \u0026\u0026 ValueOffSet == b1 )\n                Symb = SYMBOL_ZERO,    Color = 11;  // blue\n            else if ( ValueOnSet == b0 \u0026\u0026 ValueOffSet == b0 ) \n                Symb = SYMBOL_DC,      Color = 10;  // green\n            else if ( ValueOnSet == b1 \u0026\u0026 ValueOffSet == b1 ) \n                Symb = SYMBOL_OVERLAP, Color = 12;  // red\n            else\n                assert(0);\n            SetConsoleTextAttribute( hConsole, Color );\n            fprintf( Output, \"%c\", Symb );\n            SetConsoleTextAttribute( hConsole, 7 );\n            }\n#else\n            {\n            if ( ValueOnSet == b1 \u0026\u0026 ValueOffSet == b0 )\n                fprintf( Output, \"%c\", SYMBOL_ONE );\n            else if ( ValueOnSet == b0 \u0026\u0026 ValueOffSet == b1 )\n                fprintf( Output, \"%c\", SYMBOL_ZERO );\n            else if ( ValueOnSet == b0 \u0026\u0026 ValueOffSet == b0 ) \n                fprintf( Output, \"%c\", SYMBOL_DC );\n            else if ( ValueOnSet == b1 \u0026\u0026 ValueOffSet == b1 ) \n                fprintf( Output, \"%c\", SYMBOL_OVERLAP );\n            else\n                assert(0);\n            }\n#endif\n\n            Cudd_RecursiveDeref( dd, ValueOnSet );\n            Cudd_RecursiveDeref( dd, ValueOffSet );\n            ///////////////////////////////////////////////////////////////\n            fmt.Fprintf(Output, \" \");\n\n            if h != nCellsHor-1 {\n                if h\u00261 {\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_VERTICAL);\n                } else {\n                    fmt.Fprintf(Output, \"%c\", SINGLE_VERTICAL); }\n            }\n        }\n        fmt.Fprintf(Output, \"%c\", DOUBLE_VERTICAL);\n        fmt.Fprintf(Output, \"\\n\");\n\n        Cudd_RecursiveDeref( dd, CubeVerBDD );\n\n        if v != nCellsVer-1 {\n        // print separator line\n        \n            for  p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" )  {}\n            if v\u00261 {\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_VER_RIGHT);\n                for  s = 0; s \u003c nCellsHor; s++  {\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n                    if s != nCellsHor-1 {\n                        if s\u00261 {\n                            fmt.Fprintf(Output, \"%c\", DOUBLES_CROSS);\n                        } else {\n                            fmt.Fprintf(Output, \"%c\", S_VER_CROSS_D_HOR); }\n                    }\n                }\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_VER_LEFT);\n            \n            } else {\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_VER_RIGHT);\n                for  s = 0; s \u003c nCellsHor; s++  {\n                    fmt.Fprintf(Output, \"%c\", SINGLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", SINGLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", SINGLE_HORIZONTAL);\n                    if s != nCellsHor-1 {\n                        if s\u00261 {\n                            fmt.Fprintf(Output, \"%c\", S_HOR_CROSS_D_VER);\n                        } else {\n                            fmt.Fprintf(Output, \"%c\", SINGLES_CROSS); }\n                    }\n                }\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_VER_LEFT);\n            }\n            fmt.Fprintf(Output, \"\\n\");\n        }\n    }\n    \n    ////////////////////////////////////////////////////////////////////\n    // print the lower line\n    for  p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" )  {}\n    fmt.Fprintf(Output, \"%c\", DOUBLE_BOT_LEFT);\n    for  s = 0; s \u003c nCellsHor; s++  {\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        if s != nCellsHor-1 {\n            if s\u00261 {\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_HOR_TOP);\n            } else {\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_HOR_TOP); }\n        }\n    }\n    fmt.Fprintf(Output, \"%c\", DOUBLE_BOT_RIGHT);\n    fmt.Fprintf(Output, \"\\n\");\n\n    if !(fHorizontalVarNamesPrintedAbove != 0) {\n        ////////////////////////////////////////////////////////////////////\n        // print horizontal digits\n        for  d = 0; d \u003c nVarsHor; d++  {\n            for  p = 0; p \u003c nSkipSpaces + 2; p++, fprintf( Output, \" \" )  {}\n            for  n = 0; n \u003c nCellsHor; n++  {\n                if GrayCode(n) \u0026 (1\u003c\u003c(nVarsHor-1-d)) {\n                    fmt.Fprintf(Output, \"1   \");\n                } else {\n                    fmt.Fprintf(Output, \"0   \"); }\n            }\n\n            /////////////////////////////////\n            fmt.Fprintf(Output, \"%c\", byte(('a'+d)));\n            /////////////////////////////////\n            fmt.Fprintf(Output, \"\\n\");\n        }\n    }\n}\n\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints the K-map of the relation.]\n\n  Description [Assumes that the relation depends the first nXVars of XVars and \n  the first nYVars of YVars. Draws X and Y vars and vertical and horizontal vars.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nvoid Extra_PrintKMapRelation( \n  FILE * Output,  /* the output stream */\n  DdManager * dd, \n  DdNode * OnSet, \n  DdNode * OffSet, \n  int nXVars, \n  int nYVars, \n  DdNode ** XVars, \n  DdNode ** YVars ) /* the flag which determines how support is computed */\n{\n    var d, p, n, s, v, h, w int32;\n    var nVars int32;\n    var nVarsVer int32;\n    var nVarsHor int32;\n    var nCellsVer int32;\n    var nCellsHor int32;\n    var nSkipSpaces int32;\n\n    // make sure that on-set and off-set do not overlap\n    if !Cudd_bddLeq( dd, OnSet, Cudd_Not(OffSet) ) {\n        fmt.Fprintf(Output, \"PrintKMap(): The on-set and the off-set overlap\\n\");\n        return;\n    }\n\n    if OnSet == b1 {\n        fmt.Fprintf(Output, \"PrintKMap(): Constant 1\\n\");\n        return;\n    }\n    if OffSet == b1 {\n        fmt.Fprintf(Output, \"PrintKMap(): Constant 0\\n\");\n        return;\n    }\n\n    nVars = nXVars + nYVars;\n    if nVars \u003c 0 || nVars \u003e MAXVARS {\n        fmt.Fprintf(Output, \"PrintKMap(): The number of variables is less than zero or more than %d\\n\", MAXVARS);\n        return;\n    }\n\n\n    ////////////////////////////////////////////////////////////////////\n    // determine the Karnaugh map parameters\n    nVarsVer = nXVars;\n    nVarsHor = nYVars;\n    nCellsVer = (1\u003c\u003cnVarsVer);\n    nCellsHor = (1\u003c\u003cnVarsHor);\n    nSkipSpaces = nVarsVer + 1;\n\n    ////////////////////////////////////////////////////////////////////\n    // print variable names\n    fmt.Fprintf(Output, \"\\n\");\n    for  w = 0; w \u003c nVarsVer; w++  {\n        fmt.Fprintf(Output, \"%c\", 'a'+nVarsHor+w);\n    }\n    if fHorizontalVarNamesPrintedAbove != 0 {\n        fmt.Fprintf(Output, \" \\\\ \");\n        for  w = 0; w \u003c nVarsHor; w++  {\n            fmt.Fprintf(Output, \"%c\", 'a'+w);\n        }\n    }\n    fmt.Fprintf(Output, \"\\n\");\n\n    if fHorizontalVarNamesPrintedAbove != 0 {\n        ////////////////////////////////////////////////////////////////////\n        // print horizontal digits\n        for  d = 0; d \u003c nVarsHor; d++  {\n            for  p = 0; p \u003c nSkipSpaces + 2; p++, fprintf( Output, \" \" )  {}\n            for  n = 0; n \u003c nCellsHor; n++  {\n                if GrayCode(n) \u0026 (1\u003c\u003c(nVarsHor-1-d)) {\n                    fmt.Fprintf(Output, \"1   \");\n                } else {\n                    fmt.Fprintf(Output, \"0   \"); }\n            }\n            fmt.Fprintf(Output, \"\\n\");\n        }\n    }\n\n    ////////////////////////////////////////////////////////////////////\n    // print the upper line\n    for  p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" )  {}\n    fmt.Fprintf(Output, \"%c\", DOUBLE_TOP_LEFT);\n    for  s = 0; s \u003c nCellsHor; s++  {\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        if s != nCellsHor-1 {\n            if s\u00261 {\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_HOR_BOT);\n            } else {\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_HOR_BOT); }\n        }\n    }\n    fmt.Fprintf(Output, \"%c\", DOUBLE_TOP_RIGHT);\n    fmt.Fprintf(Output, \"\\n\");\n\n    ////////////////////////////////////////////////////////////////////\n    // print the map\n    for  v = 0; v \u003c nCellsVer; v++  {\n        var CubeVerBDD *DdNode;\n\n        // print horizontal digits\n//      for ( p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" ) );\n        for  n = 0; n \u003c nVarsVer; n++  {\n            if GrayCode(v) \u0026 (1\u003c\u003c(nVarsVer-1-n)) {\n                fmt.Fprintf(Output, \"1\");\n            } else {\n                fmt.Fprintf(Output, \"0\"); }\n        }\n        fmt.Fprintf(Output, \" \");\n\n        // find vertical cube\n//      CubeVerBDD = Extra_bddBitsToCube( dd, GrayCode(v), nVarsVer, s_XVars+nVarsHor );    Cudd_Ref( CubeVerBDD );\n        CubeVerBDD = Extra_bddBitsToCube( dd, GrayCode(v), nXVars, XVars, 1 );                 Cudd_Ref( CubeVerBDD );\n\n        // print text line\n        fmt.Fprintf(Output, \"%c\", DOUBLE_VERTICAL);\n        for  h = 0; h \u003c nCellsHor; h++  {\n            var CubeHorBDD, Prod, ValueOnSet, ValueOffSet *DdNode;\n\n            fmt.Fprintf(Output, \" \");\n//          fprintf( Output, \"x\" );\n            ///////////////////////////////////////////////////////////////\n            // determine what should be printed\n//          CubeHorBDD  = Extra_bddBitsToCube( dd, GrayCode(h), nVarsHor, s_XVars );    Cudd_Ref( CubeHorBDD );\n            CubeHorBDD  = Extra_bddBitsToCube( dd, GrayCode(h), nYVars, YVars, 1 );        Cudd_Ref( CubeHorBDD );\n            Prod = Cudd_bddAnd( dd, CubeHorBDD, CubeVerBDD );                           Cudd_Ref( Prod );\n            Cudd_RecursiveDeref( dd, CubeHorBDD );\n\n            ValueOnSet  = Cudd_Cofactor( dd, OnSet, Prod );                     Cudd_Ref( ValueOnSet );\n            ValueOffSet = Cudd_Cofactor( dd, OffSet, Prod );                    Cudd_Ref( ValueOffSet );\n            Cudd_RecursiveDeref( dd, Prod );\n\n            if ValueOnSet == b1 \u0026\u0026 ValueOffSet == b0 {\n                fmt.Fprintf(Output, \"%c\", SYMBOL_ONE);\n            } else if ValueOnSet == b0 \u0026\u0026 ValueOffSet == b1 {\n                fmt.Fprintf(Output, \"%c\", SYMBOL_ZERO);\n            } else if ValueOnSet == b0 \u0026\u0026 ValueOffSet == b0 { \n                fmt.Fprintf(Output, \"%c\", SYMBOL_DC);\n            } else if ValueOnSet == b1 \u0026\u0026 ValueOffSet == b1 { \n                fmt.Fprintf(Output, \"%c\", SYMBOL_OVERLAP);\n            } else {\n                assert(false, \"0\"); }\n\n            Cudd_RecursiveDeref( dd, ValueOnSet );\n            Cudd_RecursiveDeref( dd, ValueOffSet );\n            ///////////////////////////////////////////////////////////////\n            fmt.Fprintf(Output, \" \");\n\n            if h != nCellsHor-1 {\n                if h\u00261 {\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_VERTICAL);\n                } else {\n                    fmt.Fprintf(Output, \"%c\", SINGLE_VERTICAL); }\n            }\n        }\n        fmt.Fprintf(Output, \"%c\", DOUBLE_VERTICAL);\n        fmt.Fprintf(Output, \"\\n\");\n\n        Cudd_RecursiveDeref( dd, CubeVerBDD );\n\n        if v != nCellsVer-1 {\n        // print separator line\n        \n            for  p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" )  {}\n            if v\u00261 {\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_VER_RIGHT);\n                for  s = 0; s \u003c nCellsHor; s++  {\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n                    if s != nCellsHor-1 {\n                        if s\u00261 {\n                            fmt.Fprintf(Output, \"%c\", DOUBLES_CROSS);\n                        } else {\n                            fmt.Fprintf(Output, \"%c\", S_VER_CROSS_D_HOR); }\n                    }\n                }\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_VER_LEFT);\n            \n            } else {\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_VER_RIGHT);\n                for  s = 0; s \u003c nCellsHor; s++  {\n                    fmt.Fprintf(Output, \"%c\", SINGLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", SINGLE_HORIZONTAL);\n                    fmt.Fprintf(Output, \"%c\", SINGLE_HORIZONTAL);\n                    if s != nCellsHor-1 {\n                        if s\u00261 {\n                            fmt.Fprintf(Output, \"%c\", S_HOR_CROSS_D_VER);\n                        } else {\n                            fmt.Fprintf(Output, \"%c\", SINGLES_CROSS); }\n                    }\n                }\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_VER_LEFT);\n            }\n            fmt.Fprintf(Output, \"\\n\");\n        }\n    }\n    \n    ////////////////////////////////////////////////////////////////////\n    // print the lower line\n    for  p = 0; p \u003c nSkipSpaces; p++, fprintf( Output, \" \" )  {}\n    fmt.Fprintf(Output, \"%c\", DOUBLE_BOT_LEFT);\n    for  s = 0; s \u003c nCellsHor; s++  {\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        fmt.Fprintf(Output, \"%c\", DOUBLE_HORIZONTAL);\n        if s != nCellsHor-1 {\n            if s\u00261 {\n                fmt.Fprintf(Output, \"%c\", D_JOINS_D_HOR_TOP);\n            } else {\n                fmt.Fprintf(Output, \"%c\", S_JOINS_D_HOR_TOP); }\n        }\n    }\n    fmt.Fprintf(Output, \"%c\", DOUBLE_BOT_RIGHT);\n    fmt.Fprintf(Output, \"\\n\");\n\n    if !(fHorizontalVarNamesPrintedAbove != 0) {\n        ////////////////////////////////////////////////////////////////////\n        // print horizontal digits\n        for  d = 0; d \u003c nVarsHor; d++  {\n            for  p = 0; p \u003c nSkipSpaces + 2; p++, fprintf( Output, \" \" )  {}\n            for  n = 0; n \u003c nCellsHor; n++  {\n                if GrayCode(n) \u0026 (1\u003c\u003c(nVarsHor-1-d)) {\n                    fmt.Fprintf(Output, \"1   \");\n                } else {\n                    fmt.Fprintf(Output, \"0   \"); }\n            }\n\n            /////////////////////////////////\n            fmt.Fprintf(Output, \"%c\", byte(('a'+d)));\n            /////////////////////////////////\n            fmt.Fprintf(Output, \"\\n\");\n        }\n    }\n}\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc GrayCode(BinCode int32) int32 {\n  return BinCode ^ ( BinCode \u003e\u003e 1 );\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc BinCode(GrayCode int32) int32 {\n  var bc int32  = GrayCode;\n  for  GrayCode \u003e\u003e= 1  { bc ^= GrayCode; }\n  return bc;\n}\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

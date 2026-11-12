@@ -1,0 +1,322 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h",
+  "SHA256": "ab0678a7e0e133e5a6468696186cef631ccddb3cbd1b33ea7516ee4f87461b40",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 5,
+        "ByteOffset": 8150
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ssw_ObjIsConst1Cand( pAig, pObj ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 76,
+        "ByteOffset": 8582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Ssw_ObjChild0Fra(p *Ssw_Man_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin0(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 187,
+        "Column": 76,
+        "ByteOffset": 8834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Ssw_ObjChild1Fra(p *Ssw_Man_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin1(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 77,
+        "ByteOffset": 9382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Ssw_ObjChild0Fra_(p *Ssw_Frm_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin0(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 201,
+        "Column": 77,
+        "ByteOffset": 9636
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Ssw_ObjChild1Fra_(p *Ssw_Frm_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin1(pObj) {"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssw_ObjSatNum",
+      "Start": 7692,
+      "End": 7825,
+      "BodyStart": 7772,
+      "Original": "static inline int  Ssw_ObjSatNum( Ssw_Sat_t * p, Aig_Obj_t * pObj )             { return Vec_IntGetEntry( p-\u003evSatVars, pObj-\u003eId );  }",
+      "Draft": "func Ssw_ObjSatNum(p *Ssw_Sat_t, pObj *Aig_Obj_t) int32 { return Vec_IntGetEntry( p.vSatVars, pObj.Id );  }"
+    },
+    {
+      "Name": "Ssw_ObjSetSatNum",
+      "Start": 7826,
+      "End": 7959,
+      "BodyStart": 7906,
+      "Original": "static inline void Ssw_ObjSetSatNum( Ssw_Sat_t * p, Aig_Obj_t * pObj, int Num ) { Vec_IntSetEntry(p-\u003evSatVars, pObj-\u003eId, Num);      }",
+      "Draft": "func Ssw_ObjSetSatNum(p *Ssw_Sat_t, pObj *Aig_Obj_t, Num int32) { Vec_IntSetEntry(p.vSatVars, pObj.Id, Num);      }"
+    },
+    {
+      "Name": "Ssw_ObjIsConst1Cand",
+      "Start": 7961,
+      "End": 8101,
+      "BodyStart": 8039,
+      "Original": "static inline int  Ssw_ObjIsConst1Cand( Aig_Man_t * pAig, Aig_Obj_t * pObj ) \n{\n    return Aig_ObjRepr(pAig, pObj) == Aig_ManConst1(pAig);\n}",
+      "Draft": "func Ssw_ObjIsConst1Cand(pAig *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    return Aig_ObjRepr(pAig, pObj) == Aig_ManConst1(pAig);\n}"
+    },
+    {
+      "Name": "Ssw_ObjSetConst1Cand",
+      "Start": 8102,
+      "End": 8289,
+      "BodyStart": 8181,
+      "Original": "static inline void Ssw_ObjSetConst1Cand( Aig_Man_t * pAig, Aig_Obj_t * pObj ) \n{\n    assert( !Ssw_ObjIsConst1Cand( pAig, pObj ) );\n    Aig_ObjSetRepr( pAig, pObj, Aig_ManConst1(pAig) );\n}",
+      "Draft": "func Ssw_ObjSetConst1Cand(pAig *Aig_Man_t, pObj *Aig_Obj_t) {\n    assert(!(Ssw_ObjIsConst1Cand( pAig, pObj ) != 0), \"!Ssw_ObjIsConst1Cand( pAig, pObj )\");\n    Aig_ObjSetRepr( pAig, pObj, Aig_ManConst1(pAig) );\n}"
+    },
+    {
+      "Name": "Ssw_ObjFrame",
+      "Start": 8291,
+      "End": 8448,
+      "BodyStart": 8394,
+      "Original": "static inline Aig_Obj_t * Ssw_ObjFrame( Ssw_Man_t * p, Aig_Obj_t * pObj, int i )                       { return p-\u003epNodeToFrames[p-\u003enFrames*pObj-\u003eId + i];  }",
+      "Draft": "func Ssw_ObjFrame(p *Ssw_Man_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return p.pNodeToFrames[p.nFrames*pObj.Id + i];  }"
+    },
+    {
+      "Name": "Ssw_ObjSetFrame",
+      "Start": 8449,
+      "End": 8606,
+      "BodyStart": 8552,
+      "Original": "static inline void        Ssw_ObjSetFrame( Ssw_Man_t * p, Aig_Obj_t * pObj, int i, Aig_Obj_t * pNode ) { p-\u003epNodeToFrames[p-\u003enFrames*pObj-\u003eId + i] = pNode; }",
+      "Draft": "func Ssw_ObjSetFrame(p *Ssw_Man_t, pObj *Aig_Obj_t, i int32, pNode *Aig_Obj_t) { p.pNodeToFrames[p.nFrames*pObj.Id + i] = pNode; }"
+    },
+    {
+      "Name": "Ssw_ObjChild0Fra",
+      "Start": 8608,
+      "End": 8843,
+      "BodyStart": 8693,
+      "Original": "static inline Aig_Obj_t * Ssw_ObjChild0Fra( Ssw_Man_t * p, Aig_Obj_t * pObj, int i ) { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin0(pObj)? Aig_NotCond(Ssw_ObjFrame(p, Aig_ObjFanin0(pObj), i), Aig_ObjFaninC0(pObj)) : NULL;  }",
+      "Draft": "func Ssw_ObjChild0Fra(p *Ssw_Man_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Ssw_ObjFrame(p, Aig_ObjFanin0(pObj), i), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Ssw_ObjChild1Fra",
+      "Start": 8844,
+      "End": 9079,
+      "BodyStart": 8929,
+      "Original": "static inline Aig_Obj_t * Ssw_ObjChild1Fra( Ssw_Man_t * p, Aig_Obj_t * pObj, int i ) { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin1(pObj)? Aig_NotCond(Ssw_ObjFrame(p, Aig_ObjFanin1(pObj), i), Aig_ObjFaninC1(pObj)) : NULL;  }",
+      "Draft": "func Ssw_ObjChild1Fra(p *Ssw_Man_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Ssw_ObjFrame(p, Aig_ObjFanin1(pObj), i), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Ssw_ObjFrame_",
+      "Start": 9081,
+      "End": 9265,
+      "BodyStart": 9185,
+      "Original": "static inline Aig_Obj_t * Ssw_ObjFrame_( Ssw_Frm_t * p, Aig_Obj_t * pObj, int i )                       { return (Aig_Obj_t *)Vec_PtrGetEntry( p-\u003evAig2Frm, p-\u003enObjs*i+pObj-\u003eId );     }",
+      "Draft": "func Ssw_ObjFrame_(p *Ssw_Frm_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrGetEntry( p.vAig2Frm, p.nObjs*i+pObj.Id );     }"
+    },
+    {
+      "Name": "Ssw_ObjSetFrame_",
+      "Start": 9266,
+      "End": 9437,
+      "BodyStart": 9370,
+      "Original": "static inline void        Ssw_ObjSetFrame_( Ssw_Frm_t * p, Aig_Obj_t * pObj, int i, Aig_Obj_t * pNode ) { Vec_PtrSetEntry( p-\u003evAig2Frm, p-\u003enObjs*i+pObj-\u003eId, pNode );     }",
+      "Draft": "func Ssw_ObjSetFrame_(p *Ssw_Frm_t, pObj *Aig_Obj_t, i int32, pNode *Aig_Obj_t) { Vec_PtrSetEntry( p.vAig2Frm, p.nObjs*i+pObj.Id, pNode );     }"
+    },
+    {
+      "Name": "Ssw_ObjChild0Fra_",
+      "Start": 9439,
+      "End": 9676,
+      "BodyStart": 9525,
+      "Original": "static inline Aig_Obj_t * Ssw_ObjChild0Fra_( Ssw_Frm_t * p, Aig_Obj_t * pObj, int i ) { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin0(pObj)? Aig_NotCond(Ssw_ObjFrame_(p, Aig_ObjFanin0(pObj), i), Aig_ObjFaninC0(pObj)) : NULL;  }",
+      "Draft": "func Ssw_ObjChild0Fra_(p *Ssw_Frm_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Ssw_ObjFrame_(p, Aig_ObjFanin0(pObj), i), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Ssw_ObjChild1Fra_",
+      "Start": 9677,
+      "End": 9914,
+      "BodyStart": 9763,
+      "Original": "static inline Aig_Obj_t * Ssw_ObjChild1Fra_( Ssw_Frm_t * p, Aig_Obj_t * pObj, int i ) { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin1(pObj)? Aig_NotCond(Ssw_ObjFrame_(p, Aig_ObjFanin1(pObj), i), Aig_ObjFaninC1(pObj)) : NULL;  }",
+      "Draft": "func Ssw_ObjChild1Fra_(p *Ssw_Frm_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Ssw_ObjFrame_(p, Aig_ObjFanin1(pObj), i), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::struct::Ssw_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Ssw_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1641,
+      "End": 6512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::struct::Ssw_Sat_t_",
+      "Category": "struct-review",
+      "Symbol": "Ssw_Sat_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 6538,
+      "End": 7082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::struct::Ssw_Frm_t_",
+      "Category": "struct-review",
+      "Symbol": "Ssw_Frm_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 7111,
+      "End": 7470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::pointer-cast::9194",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9194,
+      "End": 9207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::Ssw_ObjSatNum",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjSatNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7692,
+      "End": 7825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::Ssw_ObjSetSatNum",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjSetSatNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7826,
+      "End": 7959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::Ssw_ObjIsConst1Cand",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjIsConst1Cand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7961,
+      "End": 8101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::Ssw_ObjSetConst1Cand",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjSetConst1Cand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8102,
+      "End": 8289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::Ssw_ObjFrame",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8291,
+      "End": 8448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::Ssw_ObjSetFrame",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjSetFrame",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8449,
+      "End": 8606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::Ssw_ObjChild0Fra",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjChild0Fra",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8608,
+      "End": 8843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::Ssw_ObjChild1Fra",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjChild1Fra",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8844,
+      "End": 9079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::Ssw_ObjFrame_",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjFrame_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9081,
+      "End": 9265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::Ssw_ObjSetFrame_",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjSetFrame_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9266,
+      "End": 9437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::Ssw_ObjChild0Fra_",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjChild0Fra_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9439,
+      "End": 9676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::Ssw_ObjChild1Fra_",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ObjChild1Fra_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9677,
+      "End": 9914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17441
+    }
+  ],
+  "Draft": "package ssw\n\n/**CFile****************************************************************\n\n  FileName    [sswInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Inductive prover with constraints.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 1, 2008.]\n\n  Revision    [$Id: sswInt.h,v 1.00 2008/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/saig/saig.h\"\n//#include \"sat/bsat/satSolver.h\"\n//#include \"ssw.h\"\n//#include \"aig/ioa/ioa.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Ssw_Man_t = Ssw_Man_t_; // signal correspondence manager\ntype Ssw_Frm_t = Ssw_Frm_t_; // unrolled frames manager\ntype Ssw_Sat_t = Ssw_Sat_t_; // SAT solver manager\ntype Ssw_Cla_t = Ssw_Cla_t_; // equivalence classe manager\n\ntype Ssw_Man_t_ struct {\n    // parameters\n    pPars      *Ssw_Pars_t;          // parameters\n    nFrames              int32;        // for quick lookup\n    // AIGs used in the package\n    pAig       *Aig_Man_t;           // user-given AIG\n    pFrames       *Aig_Man_t;        // final AIG\n    pNodeToFrames      **Aig_Obj_t;  // mapping of AIG nodes into FRAIG nodes\n    // equivalence classes\n    ppClasses       *Ssw_Cla_t;      // equivalence classes of nodes\n    fRefined              int32;       // is set to 1 when refinement happens\n    // SAT solving \n    pMSatBmc       *Ssw_Sat_t;       // SAT manager for base case\n    pMSat       *Ssw_Sat_t;          // SAT manager for inductive case\n    // SAT solving (latch corr only)\n    vSimInfo       *Vec_Ptr_t;       // simulation information for the framed PIs\n    nPatterns              int32;      // the number of patterns saved\n    nSimRounds              int32;     // the number of simulation rounds performed\n    nCallsCount              int32;    // the number of calls in this round\n    nCallsDelta              int32;    // the number of calls to skip\n    nCallsSat              int32;      // the number of SAT calls in this round\n    nCallsUnsat              int32;    // the number of UNSAT calls in this round\n    nRecycleCalls              int32;  // the number of calls since last recycling\n    nRecycles              int32;      // the number of time SAT solver was recycled\n    nRecyclesTotal              int32; // the number of time SAT solver was recycled\n    nVarsMax              int32;       // the maximum variables in the solver\n    nCallsMax              int32;      // the maximum number of SAT calls\n    // uniqueness\n    vCommon       *Vec_Ptr_t;        // the set of common variables in the logic cones\n    iOutputLit              int32;     // the output literal of the uniqueness constraint\n    vDiffPairs       *Vec_Int_t;     // is set to 1 if reg pair can be diff\n    nUniques              int32;       // the number of uniqueness constraints used \n    nUniquesAdded              int32;  // useful uniqueness constraints\n    nUniquesUseful              int32; // useful uniqueness constraints\n    // dynamic constraint addition\n    nSRMiterMaxId              int32;  // max ID after which the last frame begins\n    vNewLos       *Vec_Ptr_t;        // new time frame LOs of to constrain\n    vNewPos       *Vec_Int_t;        // new time frame POs of to add constraints\n    pVisited             *int32;       // flags to label visited nodes in each frame\n    nVisCounter              int32;    // the traversal ID\n    // sequential simulation\n    pSml       *Ssw_Sml_t;           // the simulator\n    iNodeStart              int32;     // the first node considered\n    iNodeLast              int32;      // the last node considered\n    vResimConsts       *Vec_Ptr_t;   // resimulation constants\n    vResimClasses       *Vec_Ptr_t;  // resimulation classes\n    vInits       *Vec_Int_t;         // the init values of primary inputs under constraints\n    // counter example storage\n    nPatWords              int32;      // the number of words in the counter example\n    pPatWords        *uint32;      // the counter example\n    // constraints\n    nConstrTotal              int32;   // the number of total constraints\n    nConstrReduced              int32; // the number of reduced constraints\n    nStrangers              int32;     // the number of strange situations\n    // SAT calls statistics\n    nSatCalls              int32;      // the number of SAT calls\n    nSatProof              int32;      // the number of proofs\n    nSatFailsReal              int32;  // the number of timeouts\n    nSatCallsUnsat              int32; // the number of unsat SAT calls\n    nSatCallsSat              int32;   // the number of sat SAT calls\n    // node/register/lit statistics\n    nLitsBeg              int32;\n    nLitsEnd              int32;\n    nNodesBeg              int32;\n    nNodesEnd              int32;\n    nRegsBeg              int32;\n    nRegsEnd              int32;\n    // equiv statistis\n    nConesTotal              int32;\n    nConesConstr              int32;\n    nEquivsTotal              int32;\n    nEquivsConstr              int32;\n    nNodesBegC              int32;\n    nNodesEndC              int32;\n    nRegsBegC              int32;\n    nRegsEndC              int32;\n    // runtime stats\n    timeBmc          abctime;        // bounded model checking\n    timeReduce          abctime;     // speculative reduction\n    timeMarkCones          abctime;  // marking the cones not to be refined\n    timeSimSat          abctime;     // simulation of the counter-examples\n    timeSat          abctime;        // solving SAT\n    timeSatSat          abctime;     // sat\n    timeSatUnsat          abctime;   // unsat\n    timeSatUndec          abctime;   // undecided\n    timeOther          abctime;      // other runtime\n    timeTotal          abctime;      // total runtime\n}\n\n// internal SAT manager\ntype Ssw_Sat_t_ struct {\n    pAig       *Aig_Man_t;           // the AIG manager\n    fPolarFlip              int32;     // flips polarity \n    pSat      *sat_solver;           // recyclable SAT solver\n    nSatVars              int32;       // the counter of SAT variables\n    vSatVars       *Vec_Int_t;       // mapping of each node into its SAT var\n    vFanins       *Vec_Ptr_t;        // fanins of the CNF node\n    vUsedPis       *Vec_Ptr_t;       // the PIs with SAT variables \n    nSolverCalls              int32;   // the total number of SAT calls\n}\n\n// internal frames manager\ntype Ssw_Frm_t_ struct {\n    pAig       *Aig_Man_t;           // user-given AIG\n    nObjs              int32;          // offset in terms of AIG nodes\n    nFrames              int32;        // the number of frames in current unrolling\n    pFrames       *Aig_Man_t;        // unrolled AIG\n    vAig2Frm       *Vec_Ptr_t;       // mapping of AIG nodes into frame nodes\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Ssw_ObjSatNum(p *Ssw_Sat_t, pObj *Aig_Obj_t) int32 { return Vec_IntGetEntry( p.vSatVars, pObj.Id );  }\nfunc Ssw_ObjSetSatNum(p *Ssw_Sat_t, pObj *Aig_Obj_t, Num int32) { Vec_IntSetEntry(p.vSatVars, pObj.Id, Num);      }\n\nfunc Ssw_ObjIsConst1Cand(pAig *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    return Aig_ObjRepr(pAig, pObj) == Aig_ManConst1(pAig);\n}\nfunc Ssw_ObjSetConst1Cand(pAig *Aig_Man_t, pObj *Aig_Obj_t) {\n    assert(!(Ssw_ObjIsConst1Cand( pAig, pObj ) != 0), \"!Ssw_ObjIsConst1Cand( pAig, pObj )\");\n    Aig_ObjSetRepr( pAig, pObj, Aig_ManConst1(pAig) );\n}\n\nfunc Ssw_ObjFrame(p *Ssw_Man_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return p.pNodeToFrames[p.nFrames*pObj.Id + i];  }\nfunc Ssw_ObjSetFrame(p *Ssw_Man_t, pObj *Aig_Obj_t, i int32, pNode *Aig_Obj_t) { p.pNodeToFrames[p.nFrames*pObj.Id + i] = pNode; }\n\nfunc Ssw_ObjChild0Fra(p *Ssw_Man_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Ssw_ObjFrame(p, Aig_ObjFanin0(pObj), i), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }\nfunc Ssw_ObjChild1Fra(p *Ssw_Man_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Ssw_ObjFrame(p, Aig_ObjFanin1(pObj), i), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }\n\nfunc Ssw_ObjFrame_(p *Ssw_Frm_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return (Aig_Obj_t *)Vec_PtrGetEntry( p.vAig2Frm, p.nObjs*i+pObj.Id );     }\nfunc Ssw_ObjSetFrame_(p *Ssw_Frm_t, pObj *Aig_Obj_t, i int32, pNode *Aig_Obj_t) { Vec_PtrSetEntry( p.vAig2Frm, p.nObjs*i+pObj.Id, pNode );     }\n\nfunc Ssw_ObjChild0Fra_(p *Ssw_Frm_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Ssw_ObjFrame_(p, Aig_ObjFanin0(pObj), i), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }\nfunc Ssw_ObjChild1Fra_(p *Ssw_Frm_t, pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Ssw_ObjFrame_(p, Aig_ObjFanin1(pObj), i), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== sswAig.c ===================================================*/\n// extern Ssw_Frm_t *   Ssw_FrmStart( Aig_Man_t * pAig );\n\n// extern void          Ssw_FrmStop( Ssw_Frm_t * p );\n\n// extern Aig_Man_t *   Ssw_FramesWithClasses( Ssw_Man_t * p );\n\n// extern Aig_Man_t *   Ssw_SpeculativeReduction( Ssw_Man_t * p );\n\n/*=== sswBmc.c ===================================================*/\n/*=== sswClass.c =================================================*/\n// extern Ssw_Cla_t *   Ssw_ClassesStart( Aig_Man_t * pAig );\n\n// extern void          Ssw_ClassesSetData( Ssw_Cla_t * p, void * pManData,\n//                          unsigned (*pFuncNodeHash)(void *,Aig_Obj_t *),\n//                          int (*pFuncNodeIsConst)(void *,Aig_Obj_t *),\n//                          int (*pFuncNodesAreEqual)(void *,Aig_Obj_t *, Aig_Obj_t *) );\n\n// extern void          Ssw_ClassesStop( Ssw_Cla_t * p );\n\n// extern Aig_Man_t *   Ssw_ClassesReadAig( Ssw_Cla_t * p );\n\n// extern Vec_Ptr_t *   Ssw_ClassesGetRefined( Ssw_Cla_t * p );\n\n// extern void          Ssw_ClassesClearRefined( Ssw_Cla_t * p );\n\n// extern int           Ssw_ClassesCand1Num( Ssw_Cla_t * p );\n\n// extern int           Ssw_ClassesClassNum( Ssw_Cla_t * p );\n\n// extern int           Ssw_ClassesLitNum( Ssw_Cla_t * p );\n\n// extern Aig_Obj_t **  Ssw_ClassesReadClass( Ssw_Cla_t * p, Aig_Obj_t * pRepr, int * pnSize );\n\n// extern void          Ssw_ClassesCollectClass( Ssw_Cla_t * p, Aig_Obj_t * pRepr, Vec_Ptr_t * vClass );\n\n// extern void          Ssw_ClassesCheck( Ssw_Cla_t * p );\n\n// extern void          Ssw_ClassesPrint( Ssw_Cla_t * p, int fVeryVerbose );\n\n// extern void          Ssw_ClassesRemoveNode( Ssw_Cla_t * p, Aig_Obj_t * pObj );\n\n// extern Ssw_Cla_t *   Ssw_ClassesPrepare( Aig_Man_t * pAig, int nFramesK, int fLatchCorr, int fConstCorr, int fOutputCorr, int nMaxLevs, int fVerbose );\n\n// extern Ssw_Cla_t *   Ssw_ClassesPrepareSimple( Aig_Man_t * pAig, int fLatchCorr, int nMaxLevs );\n\n// extern Ssw_Cla_t *   Ssw_ClassesPrepareFromReprs( Aig_Man_t * pAig );\n\n// extern Ssw_Cla_t *   Ssw_ClassesPrepareTargets( Aig_Man_t * pAig );\n\n// extern Ssw_Cla_t *   Ssw_ClassesPreparePairs( Aig_Man_t * pAig, Vec_Int_t ** pvClasses );\n\n// extern Ssw_Cla_t *   Ssw_ClassesPreparePairsSimple( Aig_Man_t * pMiter, Vec_Int_t * vPairs );\n\n// extern int           Ssw_ClassesRefine( Ssw_Cla_t * p, int fRecursive );\n\n// extern int           Ssw_ClassesRefineGroup( Ssw_Cla_t * p, Vec_Ptr_t * vReprs, int fRecursive );\n\n// extern int           Ssw_ClassesRefineOneClass( Ssw_Cla_t * p, Aig_Obj_t * pRepr, int fRecursive );\n\n// extern int           Ssw_ClassesRefineConst1Group( Ssw_Cla_t * p, Vec_Ptr_t * vRoots, int fRecursive );\n\n// extern int           Ssw_ClassesRefineConst1( Ssw_Cla_t * p, int fRecursive );\n\n// extern int           Ssw_ClassesPrepareRehash( Ssw_Cla_t * p, Vec_Ptr_t * vCands, int fConstCorr );\n\n/*=== sswCnf.c ===================================================*/\n// extern Ssw_Sat_t *   Ssw_SatStart( int fPolarFlip );\n\n// extern void          Ssw_SatStop( Ssw_Sat_t * p );\n\n// extern void          Ssw_CnfNodeAddToSolver( Ssw_Sat_t * p, Aig_Obj_t * pObj );\n\n// extern int           Ssw_CnfGetNodeValue( Ssw_Sat_t * p, Aig_Obj_t * pObjFraig );\n\n/*=== sswConstr.c ===================================================*/\n// extern int           Ssw_ManSweepBmcConstr( Ssw_Man_t * p );\n\n// extern int           Ssw_ManSweepConstr( Ssw_Man_t * p );\n\n// extern void          Ssw_ManRefineByConstrSim( Ssw_Man_t * p );\n\n/*=== sswCore.c ===================================================*/\n// extern Aig_Man_t *   Ssw_SignalCorrespondenceRefine( Ssw_Man_t * p );\n\n/*=== sswDyn.c ===================================================*/\n// extern void          Ssw_ManLoadSolver( Ssw_Man_t * p, Aig_Obj_t * pRepr, Aig_Obj_t * pObj );\n\n// extern int           Ssw_ManSweepDyn( Ssw_Man_t * p );\n\n/*=== sswLcorr.c ==========================================================*/\n// extern int           Ssw_ManSweepLatch( Ssw_Man_t * p );\n\n/*=== sswMan.c ===================================================*/\n// extern Ssw_Man_t *   Ssw_ManCreate( Aig_Man_t * pAig, Ssw_Pars_t * pPars );\n\n// extern void          Ssw_ManCleanup( Ssw_Man_t * p );\n\n// extern void          Ssw_ManStop( Ssw_Man_t * p );\n\n/*=== sswSat.c ===================================================*/\n// extern int           Ssw_NodesAreEquiv( Ssw_Man_t * p, Aig_Obj_t * pOld, Aig_Obj_t * pNew );\n\n// extern int           Ssw_NodesAreConstrained( Ssw_Man_t * p, Aig_Obj_t * pOld, Aig_Obj_t * pNew );\n\n// extern int           Ssw_NodeIsConstrained( Ssw_Man_t * p, Aig_Obj_t * pPoObj );\n\n/*=== sswSemi.c ===================================================*/\n// extern int           Ssw_FilterUsingSemi( Ssw_Man_t * pMan, int fCheckTargets, int nConfMax, int fVerbose );\n\n/*=== sswSim.c ===================================================*/\n// extern unsigned      Ssw_SmlObjHashWord( Ssw_Sml_t * p, Aig_Obj_t * pObj );\n\n// extern int           Ssw_SmlObjIsConstWord( Ssw_Sml_t * p, Aig_Obj_t * pObj );\n\n// extern int           Ssw_SmlObjsAreEqualWord( Ssw_Sml_t * p, Aig_Obj_t * pObj0, Aig_Obj_t * pObj1 );\n\n// extern int           Ssw_SmlObjIsConstBit( void * p, Aig_Obj_t * pObj );\n\n// extern int           Ssw_SmlObjsAreEqualBit( void * p, Aig_Obj_t * pObj0, Aig_Obj_t * pObj1 );\n\n// extern void          Ssw_SmlAssignRandomFrame( Ssw_Sml_t * p, Aig_Obj_t * pObj, int iFrame );\n\n// extern Ssw_Sml_t *   Ssw_SmlStart( Aig_Man_t * pAig, int nPref, int nFrames, int nWordsFrame );\n\n// extern void          Ssw_SmlClean( Ssw_Sml_t * p );\n\n// extern void          Ssw_SmlStop( Ssw_Sml_t * p );\n\n// extern void          Ssw_SmlObjAssignConst( Ssw_Sml_t * p, Aig_Obj_t * pObj, int fConst1, int iFrame );\n\n// extern void          Ssw_SmlObjSetWord( Ssw_Sml_t * p, Aig_Obj_t * pObj, unsigned Word, int iWord, int iFrame );\n\n// extern void          Ssw_SmlAssignDist1Plus( Ssw_Sml_t * p, unsigned * pPat );\n\n// extern void          Ssw_SmlSimulateOne( Ssw_Sml_t * p );\n\n// extern void          Ssw_SmlSimulateOneFrame( Ssw_Sml_t * p );\n\n// extern void          Ssw_SmlSimulateOneDyn_rec( Ssw_Sml_t * p, Aig_Obj_t * pObj, int f, int * pVisited, int nVisCounter );\n\n// extern void          Ssw_SmlResimulateSeq( Ssw_Sml_t * p );\n\n/*=== sswSimSat.c ===================================================*/\n// extern void          Ssw_ManResimulateBit( Ssw_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pRepr );\n\n// extern void          Ssw_ManResimulateWord( Ssw_Man_t * p, Aig_Obj_t * pCand, Aig_Obj_t * pRepr, int f );\n\n/*=== sswSweep.c ===================================================*/\n// extern int           Ssw_ManGetSatVarValue( Ssw_Man_t * p, Aig_Obj_t * pObj, int f );\n\n// extern void          Ssw_SmlSavePatternAig( Ssw_Man_t * p, int f );\n\n// extern int           Ssw_ManSweepNode( Ssw_Man_t * p, Aig_Obj_t * pObj, int f, int fBmc, Vec_Int_t * vPairs );\n\n// extern int           Ssw_ManSweepBmc( Ssw_Man_t * p );\n\n// extern int           Ssw_ManSweep( Ssw_Man_t * p );\n\n/*=== sswUnique.c ===================================================*/\n// extern void          Ssw_UniqueRegisterPairInfo( Ssw_Man_t * p );\n\n// extern int           Ssw_ManUniqueOne( Ssw_Man_t * p, Aig_Obj_t * pRepr, Aig_Obj_t * pObj, int fVerbose );\n\n// extern int           Ssw_ManUniqueAddConstraint( Ssw_Man_t * p, Vec_Ptr_t * vCommon, int f1, int f2 );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

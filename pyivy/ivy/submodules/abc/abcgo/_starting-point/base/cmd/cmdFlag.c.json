@@ -1,0 +1,136 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdFlag.c",
+  "SHA256": "d2060bed44bd1ee8c617a5d83027c0869d90dae81e40bfb6299ccfcc517c5f5a",
+  "Library": [
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 9,
+        "ByteOffset": 2377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(oldValue); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 9,
+        "ByteOffset": 2946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(key);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 9,
+        "ByteOffset": 2969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(value);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cmd_FlagReadByName",
+      "Start": 1518,
+      "End": 1689,
+      "BodyStart": 1579,
+      "Original": "char * Cmd_FlagReadByName( Abc_Frame_t * pAbc, char * flag )\n{\n    char * value;\n    if ( st__lookup(pAbc-\u003etFlags, flag, \u0026value) )\n        return value;\n    return NULL;\n}",
+      "Draft": "func Cmd_FlagReadByName(pAbc *Abc_Frame_t, flag string) string {\n    var value string;\n    if st__lookup(pAbc.tFlags, flag, \u0026value) {\n        return value; }\n    return nil;\n}"
+    },
+    {
+      "Name": "Cmd_FlagUpdateValue",
+      "Start": 2015,
+      "End": 2428,
+      "BodyStart": 2094,
+      "Original": "void Cmd_FlagUpdateValue( Abc_Frame_t * pAbc, const char * key, char * value )\n{\n    char * oldValue, * newValue;\n    if ( !key )\n        return;\n    if ( value )\n        newValue = Extra_UtilStrsav(value);\n    else\n        newValue = Extra_UtilStrsav(\"\");\n//        newValue = NULL;\n    if ( st__delete(pAbc-\u003etFlags, \u0026key, \u0026oldValue) )\n        ABC_FREE(oldValue);\n    st__insert( pAbc-\u003etFlags, key, newValue );\n}",
+      "Draft": "func Cmd_FlagUpdateValue(pAbc *Abc_Frame_t, key string, value string) {\n    var oldValue, newValue string;\n    if !key {\n        return; }\n    if value {\n        newValue = Extra_UtilStrsav(value);\n    } else {\n        newValue = Extra_UtilStrsav(\"\"); }\n//        newValue = NULL;\n    if st__delete(pAbc.tFlags, \u0026key, \u0026oldValue) {\n        ABC_FREE(oldValue); }\n    st__insert( pAbc.tFlags, key, newValue );\n}"
+    },
+    {
+      "Name": "Cmd_FlagDeleteByName",
+      "Start": 2758,
+      "End": 2989,
+      "BodyStart": 2824,
+      "Original": "void Cmd_FlagDeleteByName( Abc_Frame_t * pAbc, const char * key )\n{\n    char *value;\n    if ( !key )\n        return;\n    if ( st__delete( pAbc-\u003etFlags, \u0026key, \u0026value ) ) \n    {\n        ABC_FREE(key);\n        ABC_FREE(value);\n    }\n}",
+      "Draft": "func Cmd_FlagDeleteByName(pAbc *Abc_Frame_t, key string) {\n    var value string;\n    if !key {\n        return; }\n    if st__delete( pAbc.tFlags, \u0026key, \u0026value ) {\n        ABC_FREE(key);\n        ABC_FREE(value);\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdFlag.c::Cmd_FlagReadByName",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_FlagReadByName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1518,
+      "End": 1689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdFlag.c::Cmd_FlagUpdateValue",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_FlagUpdateValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2015,
+      "End": 2428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdFlag.c::Cmd_FlagDeleteByName",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_FlagDeleteByName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2758,
+      "End": 2989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdFlag.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdFlag.c::macro-inline::2360",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2360,
+      "End": 2378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdFlag.c::macro-inline::2942",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2942,
+      "End": 2955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdFlag.c::macro-inline::2965",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2965,
+      "End": 2980
+    }
+  ],
+  "Draft": "package cmd\n\n/**CFile****************************************************************\n\n  FileName    [cmdFlag.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures working with flags.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cmdFlag.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/mainInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function********************************************************************\n\n  Synopsis    [Looks up value of flag in table of named values.]\n\n  Description [The command parser maintains a table of named values.  These\n  are manipulated using the 'set' and 'unset' commands.  The value of the\n  named flag is returned, or NULL is returned if the flag has not been set.]\n\n  SideEffects []\n\n******************************************************************************/\nfunc Cmd_FlagReadByName(pAbc *Abc_Frame_t, flag string) string {\n    var value string;\n    if st__lookup(pAbc.tFlags, flag, \u0026value) {\n        return value; }\n    return nil;\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Updates a set value by calling instead of set command.]\n\n  Description [Updates a set value by calling instead of set command.]\n\n  SideEffects []\n\n******************************************************************************/\nfunc Cmd_FlagUpdateValue(pAbc *Abc_Frame_t, key string, value string) {\n    var oldValue, newValue string;\n    if !key {\n        return; }\n    if value {\n        newValue = Extra_UtilStrsav(value);\n    } else {\n        newValue = Extra_UtilStrsav(\"\"); }\n//        newValue = NULL;\n    if st__delete(pAbc.tFlags, \u0026key, \u0026oldValue) {\n        ABC_FREE(oldValue); }\n    st__insert( pAbc.tFlags, key, newValue );\n}\n\n\n/**Function********************************************************************\n\n  Synopsis    [Deletes a set value by calling instead of unset command.]\n\n  Description [Deletes a set value by calling instead of unset command.]\n\n  SideEffects []\n\n******************************************************************************/\nfunc Cmd_FlagDeleteByName(pAbc *Abc_Frame_t, key string) {\n    var value string;\n    if !key {\n        return; }\n    if st__delete( pAbc.tFlags, \u0026key, \u0026value ) {\n        ABC_FREE(key);\n        ABC_FREE(value);\n    }\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

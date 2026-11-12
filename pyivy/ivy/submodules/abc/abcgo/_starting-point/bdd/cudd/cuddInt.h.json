@@ -1,0 +1,882 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h",
+  "SHA256": "9db3b8ffe9e95471698911b339f5f7e9b144ae4883c2d8f0a94d330f70f1fefb",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 59,
+        "Column": 1,
+        "ByteOffset": 2299
+      },
+      "Directive": "#ifdef DD_MIS"
+    },
+    {
+      "Location": {
+        "Line": 65,
+        "Column": 1,
+        "ByteOffset": 2428
+      },
+      "Directive": "#ifdef SIS"
+    },
+    {
+      "Location": {
+        "Line": 79,
+        "Column": 1,
+        "ByteOffset": 2602
+      },
+      "Directive": "#if defined(__GNUC__)"
+    },
+    {
+      "Location": {
+        "Line": 81,
+        "Column": 1,
+        "ByteOffset": 2654
+      },
+      "Directive": "# if (__GNUC__ \u003e2 || __GNUC_MINOR__ \u003e=7)"
+    },
+    {
+      "Location": {
+        "Line": 87,
+        "Column": 1,
+        "ByteOffset": 2787
+      },
+      "Directive": "# if defined(__cplusplus)"
+    },
+    {
+      "Location": {
+        "Line": 114,
+        "Column": 1,
+        "ByteOffset": 3693
+      },
+      "Directive": "#ifdef HAVE_IEEE_754"
+    },
+    {
+      "Location": {
+        "Line": 223,
+        "Column": 1,
+        "ByteOffset": 8487
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 228,
+        "Column": 1,
+        "ByteOffset": 8587
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 263,
+        "Column": 1,
+        "ByteOffset": 9556
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 273,
+        "Column": 1,
+        "ByteOffset": 9745
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 320,
+        "Column": 1,
+        "ByteOffset": 10819
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 400,
+        "Column": 1,
+        "ByteOffset": 15428
+      },
+      "Directive": "#ifndef DD_NO_DEATH_ROW"
+    },
+    {
+      "Location": {
+        "Line": 433,
+        "Column": 1,
+        "ByteOffset": 17551
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 443,
+        "Column": 1,
+        "ByteOffset": 18087
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 461,
+        "Column": 1,
+        "ByteOffset": 19087
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 466,
+        "Column": 1,
+        "ByteOffset": 19335
+      },
+      "Directive": "#ifdef DD_UNIQUE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 470,
+        "Column": 1,
+        "ByteOffset": 19514
+      },
+      "Directive": "#ifdef DD_COUNT"
+    },
+    {
+      "Location": {
+        "Line": 472,
+        "Column": 1,
+        "ByteOffset": 19594
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 477,
+        "Column": 1,
+        "ByteOffset": 19771
+      },
+      "Directive": "#ifdef DD_MIS"
+    },
+    {
+      "Location": {
+        "Line": 521,
+        "Column": 1,
+        "ByteOffset": 20881
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 732,
+        "Column": 1,
+        "ByteOffset": 27793
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4"
+    },
+    {
+      "Location": {
+        "Line": 778,
+        "Column": 1,
+        "ByteOffset": 29010
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4"
+    },
+    {
+      "Location": {
+        "Line": 875,
+        "Column": 1,
+        "ByteOffset": 31506
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4"
+    },
+    {
+      "Location": {
+        "Line": 893,
+        "Column": 1,
+        "ByteOffset": 31930
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4"
+    },
+    {
+      "Location": {
+        "Line": 976,
+        "Column": 1,
+        "ByteOffset": 34412
+      },
+      "Directive": "#ifdef HAVE_IEEE_754"
+    },
+    {
+      "Location": {
+        "Line": 1026,
+        "Column": 1,
+        "ByteOffset": 35917
+      },
+      "Directive": "#ifdef DD_COUNT"
+    },
+    {
+      "Location": {
+        "Line": 1027,
+        "Column": 1,
+        "ByteOffset": 35933
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 1118,
+        "Column": 1,
+        "ByteOffset": 43324
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 1157,
+        "Column": 1,
+        "ByteOffset": 46567
+      },
+      "Directive": "#ifdef st__INCLUDED"
+    },
+    {
+      "Location": {
+        "Line": 1182,
+        "Column": 1,
+        "ByteOffset": 48600
+      },
+      "Directive": "#ifdef st__INCLUDED"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdGen::union {\n        struct {\n            int                 *cube;\n            CUDD_VALUE_TYPE     value;\n        } cubes;\n        struct {\n            int                 *cube;\n            DdNode              *ub;\n        } primes;\n        struct {\n            int                 size;\n        } nodes;\n    } gen;",
+      "Category": "struct-field-review",
+      "Symbol": "DdGen",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8135,
+      "End": 8453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdGen::struct {\n        int     sp;\n/*SP_OPAQUE_9db3b8ffe9e95471_3_BEGIN*//*SP_OPAQUE_9db3b8ffe9e95471_3_END*/\n        DdNode  **stack;\n/*SP_OPAQUE_9db3b8ffe9e95471_4_BEGIN*//*SP_OPAQUE_9db3b8ffe9e95471_4_END*/\n    } stack;",
+      "Category": "struct-field-review",
+      "Symbol": "DdGen",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8453,
+      "End": 8650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdGen",
+      "Category": "struct-review",
+      "Symbol": "DdGen",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 8049,
+      "End": 8676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* the cache-based computed table */\n    unsigned int cacheSlots;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12360,
+      "End": 12438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* slots still available for resizing */\n    unsigned int maxCacheHard;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12800,
+      "End": 12884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* unique subtable for the constants */\n    unsigned int slots;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13311,
+      "End": 13381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* total number of hash buckets */\n    unsigned int keys;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13381,
+      "End": 13447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* total number of BDD and ADD nodes */\n    unsigned int keysZ;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13447,
+      "End": 13520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* total number of ZDD nodes */\n    unsigned int dead;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13520,
+      "End": 13583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* total number of dead BDD and ADD nodes */\n    unsigned int deadZ;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13583,
+      "End": 13661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* total number of dead ZDD nodes */\n    unsigned int maxLive;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13661,
+      "End": 13732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* maximum number of live nodes */\n    unsigned int minDead;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13732,
+      "End": 13799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* gc is enabled */\n    unsigned int looseUpTo;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13933,
+      "End": 13994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* slow growth beyond this limit */\n                                /* (measured w.r.t. slots, not keys) */\n    unsigned int initSlots;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13994,
+      "End": 14134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* realign BDD order after ZDD reordering */\n    unsigned int nextDyn;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 16753,
+      "End": 16838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* reorder if this size is reached */\n    unsigned int countDead;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 16838,
+      "End": 16910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* info on last error */\n    /* Statistical counters. */\n    unsigned long memused;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 18191,
+      "End": 18277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* total memory allocated for the manager */\n    unsigned long maxmem;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 18277,
+      "End": 18353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* target maximum memory */\n    unsigned long maxmemhard;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 18353,
+      "End": 18417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager::/* number of deletions during garbage coll. */\n/*SP_OPAQUE_9db3b8ffe9e95471_11_BEGIN*//*SP_OPAQUE_9db3b8ffe9e95471_11_END*/\n    unsigned int peakLiveNodes;",
+      "Category": "struct-field-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 19034,
+      "End": 19299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::struct::DdManager",
+      "Category": "struct-review",
+      "Symbol": "DdManager",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 11846,
+      "End": 20337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::mechanical::union::7641",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 8140,
+      "End": 8145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::cuddDeallocNode",
+      "Category": "macro-review",
+      "Symbol": "cuddDeallocNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 21903,
+      "End": 22013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::cuddDeallocMove",
+      "Category": "macro-review",
+      "Symbol": "cuddDeallocMove",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22488,
+      "End": 22657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::cuddRef",
+      "Category": "macro-review",
+      "Symbol": "cuddRef",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23150,
+      "End": 23201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::cuddDeref",
+      "Category": "macro-review",
+      "Symbol": "cuddDeref",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23874,
+      "End": 23927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::cuddIsConstant",
+      "Category": "macro-review",
+      "Symbol": "cuddIsConstant",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 24416,
+      "End": 24480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::cuddT",
+      "Category": "macro-review",
+      "Symbol": "cuddT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 24935,
+      "End": 24976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::cuddE",
+      "Category": "macro-review",
+      "Symbol": "cuddE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 25431,
+      "End": 25472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::cuddV",
+      "Category": "macro-review",
+      "Symbol": "cuddV",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 25916,
+      "End": 25956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::cuddI",
+      "Category": "macro-review",
+      "Symbol": "cuddI",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 26466,
+      "End": 26552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::cuddIZ",
+      "Category": "macro-review",
+      "Symbol": "cuddIZ",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 27076,
+      "End": 27164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::cuddF2L",
+      "Category": "macro-review",
+      "Symbol": "cuddF2L",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 27432,
+      "End": 27502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::cuddClean",
+      "Category": "macro-review",
+      "Symbol": "cuddClean",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 29821,
+      "End": 29875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::ddMin",
+      "Category": "macro-review",
+      "Symbol": "ddMin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 30156,
+      "End": 30200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::ddMax",
+      "Category": "macro-review",
+      "Symbol": "ddMax",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 30481,
+      "End": 30525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::ddAbs",
+      "Category": "macro-review",
+      "Symbol": "ddAbs",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 30805,
+      "End": 30844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::ddEqualVal",
+      "Category": "macro-review",
+      "Symbol": "ddEqualVal",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 31180,
+      "End": 31226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::DD_ONE",
+      "Category": "macro-review",
+      "Symbol": "DD_ONE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 32384,
+      "End": 32427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::DD_ZERO",
+      "Category": "macro-review",
+      "Symbol": "DD_ZERO",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 32888,
+      "End": 32920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::DD_PLUS_INFINITY",
+      "Category": "macro-review",
+      "Symbol": "DD_PLUS_INFINITY",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 33232,
+      "End": 33281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::DD_MINUS_INFINITY",
+      "Category": "macro-review",
+      "Symbol": "DD_MINUS_INFINITY",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 33593,
+      "End": 33644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::DD_LSDIGIT",
+      "Category": "macro-review",
+      "Symbol": "DD_LSDIGIT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 35020,
+      "End": 35063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::macro::DD_MSDIGIT",
+      "Category": "macro-review",
+      "Symbol": "DD_MSDIGIT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 35479,
+      "End": 35523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 52137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2299,
+      "End": 2510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2602,
+      "End": 2902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3693,
+      "End": 3903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8487,
+      "End": 8561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8587,
+      "End": 8637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9556,
+      "End": 9630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9745,
+      "End": 9793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 10819,
+      "End": 10867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 15428,
+      "End": 15713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17551,
+      "End": 17601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 18087,
+      "End": 18161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 19087,
+      "End": 19267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 19335,
+      "End": 19513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::13",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 19514,
+      "End": 19770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::14",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 19771,
+      "End": 20232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::15",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 20881,
+      "End": 20931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::16",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 27793,
+      "End": 28036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::17",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 29010,
+      "End": 29532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::18",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 31506,
+      "End": 31650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::19",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 31930,
+      "End": 32074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::20",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 34412,
+      "End": 34602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::21",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 35917,
+      "End": 36325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::22",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 43324,
+      "End": 43424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::23",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 46567,
+      "End": 46738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddInt.h::conditional::24",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 48600,
+      "End": 48783
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"os\"\n\n/**CHeaderFile*****************************************************************\n\n  FileName    [cuddInt.h]\n\n  PackageName [cudd]\n\n  Synopsis    [Internal data structures of the CUDD package.]\n\n  Description []\n\n  SeeAlso     []\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n  Revision    [$Id: cuddInt.h,v 1.139 2009/03/08 02:49:02 fabio Exp $]\n\n******************************************************************************/\n\n\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Nested includes                                                           */\n/*---------------------------------------------------------------------------*/\n\n#ifdef DD_MIS\n#include \"array.h\"\n#include \"list.h\"\n#include \"misc/st/st.h\"\n#include \"misc/espresso/espresso.h\"\n#include \"node.h\"\n#ifdef SIS\n#include \"graph.h\"\n#include \"astg.h\"\n#endif\n#include \"network.h\"\n#endif\n\n//#include \u003cmath.h\u003e\n//#include \"cudd.h\"\n//#include \"misc/st/st.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n#if defined(__GNUC__)\n# define DD_INLINE __inline__\n# if (__GNUC__ \u003e2 || __GNUC_MINOR__ \u003e=7)\n#   define DD_UNUSED __attribute__ ((__unused__))\n# else\n#   define DD_UNUSED\n# endif\n#else\n# if defined(__cplusplus)\n#   define DD_INLINE inline\n# else\n#   define DD_INLINE\n# endif\n# define DD_UNUSED\n#endif\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#define DD_MAXREF               ((DdHalfWord) ~0)\n\nconst DD_DEFAULT_RESIZE =       10      /* how many extra variables */\n                                        /* should be added when resizing */\nconst DD_MEM_CHUNK =            1022\n\n/* These definitions work for CUDD_VALUE_TYPE == double */\n#define DD_ONE_VAL              (1.0)\n#define DD_ZERO_VAL             (0.0)\n#define DD_EPSILON              (1.0e-12)\n\n/* The definitions of +/- infinity in terms of HUGE_VAL work on\n** the DECstations and on many other combinations of OS/compiler.\n*/\n#ifdef HAVE_IEEE_754\n#  define DD_PLUS_INF_VAL       (HUGE_VAL)\n#else\n#  define DD_PLUS_INF_VAL       (10e301)\n#  define DD_CRI_HI_MARK        (10e150)\n#  define DD_CRI_LO_MARK        (-(DD_CRI_HI_MARK))\n#endif\n#define DD_MINUS_INF_VAL        (-(DD_PLUS_INF_VAL))\n\n#define DD_NON_CONSTANT         ((DdNode *) 1)  /* for Cudd_bddIteConstant */\n\n/* Unique table and cache management constants. */\nconst DD_MAX_SUBTABLE_DENSITY = 4       /* tells when to resize a subtable */\n/* gc when this percent are dead (measured w.r.t. slots, not keys)\n** The first limit (LO) applies normally. The second limit applies when\n** the package believes more space for the unique table (i.e., more dead\n** nodes) would improve performance, and the unique table is not already\n** too large. The third limit applies when memory is low.\n*/\n#define DD_GC_FRAC_LO           DD_MAX_SUBTABLE_DENSITY * 0.25\n#define DD_GC_FRAC_HI           DD_MAX_SUBTABLE_DENSITY * 1.0\nconst DD_GC_FRAC_MIN =          0.2\nconst DD_MIN_HIT =              30      /* resize cache when hit ratio\n                                           above this percentage (default) */\nconst DD_MAX_LOOSE_FRACTION =   5 /* 1 / (max fraction of memory used for\n                                     unique table in fast growth mode) */\nconst DD_MAX_CACHE_FRACTION =   3 /* 1 / (max fraction of memory used for\n                                     computed table if resizing enabled) */\nconst DD_STASH_FRACTION =       64 /* 1 / (fraction of memory set\n                                      aside for emergencies) */\nconst DD_MAX_CACHE_TO_SLOTS_RATIO = 4 /* used to limit the cache size */\n\n/* Variable ordering default parameter values. */\nconst DD_SIFT_MAX_VAR =         1000\nconst DD_SIFT_MAX_SWAPS =       2000000\nconst DD_DEFAULT_RECOMB =       0\nconst DD_MAX_REORDER_GROWTH =   1.1\nconst DD_FIRST_REORDER =        4004    /* 4 for the constants */\nconst DD_DYN_RATIO =            2       /* when to dynamically reorder */\n\n/* Primes for cache hash functions. */\nconst DD_P1 =                   12582917\nconst DD_P2 =                   4256249\nconst DD_P3 =                   741457\nconst DD_P4 =                   1618033999\n\n/* Cache tags for 3-operand operators.  These tags are stored in the\n** least significant bits of the cache operand pointers according to\n** the following scheme.  The tag consists of two hex digits.  Both digits\n** must be even, so that they do not interfere with complementation bits.\n** The least significant one is stored in Bits 3:1 of the f operand in the\n** cache entry.  Bit 1 is always 1, so that we can differentiate\n** three-operand operations from one- and two-operand operations.\n** Therefore, the least significant digit is one of {2,6,a,e}.  The most\n** significant digit occupies Bits 3:1 of the g operand in the cache\n** entry.  It can by any even digit between 0 and e.  This gives a total\n** of 5 bits for the tag proper, which means a maximum of 32 three-operand\n** operations. */\nconst DD_ADD_ITE_TAG =                          0x02\nconst DD_BDD_AND_ABSTRACT_TAG =                 0x06\nconst DD_BDD_XOR_EXIST_ABSTRACT_TAG =           0x0a\nconst DD_BDD_ITE_TAG =                          0x0e\nconst DD_ADD_BDD_DO_INTERVAL_TAG =              0x22\nconst DD_BDD_CLIPPING_AND_ABSTRACT_UP_TAG =     0x26\nconst DD_BDD_CLIPPING_AND_ABSTRACT_DOWN_TAG =   0x2a\nconst DD_BDD_COMPOSE_RECUR_TAG =                0x2e\nconst DD_ADD_COMPOSE_RECUR_TAG =                0x42\nconst DD_ADD_NON_SIM_COMPOSE_TAG =              0x46\nconst DD_EQUIV_DC_TAG =                         0x4a\nconst DD_ZDD_ITE_TAG =                          0x4e\nconst DD_ADD_ITE_CONSTANT_TAG =                 0x62\nconst DD_ADD_EVAL_CONST_TAG =                   0x66\nconst DD_BDD_ITE_CONSTANT_TAG =                 0x6a\nconst DD_ADD_OUT_SUM_TAG =                      0x6e\nconst DD_BDD_LEQ_UNLESS_TAG =                   0x82\nconst DD_ADD_TRIANGLE_TAG =                     0x86\n\n/* Generator constants. */\nconst CUDD_GEN_CUBES = 0\nconst CUDD_GEN_PRIMES = 1\nconst CUDD_GEN_NODES = 2\nconst CUDD_GEN_ZDD_PATHS = 3\nconst CUDD_GEN_EMPTY = 0\nconst CUDD_GEN_NONEMPTY = 1\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\ntype DdGen struct {\n    manager   *DdManager;\n    type         int32;\n    status         int32;\n    union {\n        struct {\n            int                 *cube;\n            CUDD_VALUE_TYPE     value;\n        }\n cubes;\n        struct {\n            int                 *cube;\n            DdNode              *ub;\n        }\n primes;\n        struct {\n            int                 size;\n        }\n nodes;\n    }\n gen;\n    struct {\n        int     sp;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n        DdNode  **stack;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    }\n stack;\n    node      *DdNode;\n}\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/* Hooks in CUDD are functions that the application registers with the\n** manager so that they are called at appropriate times. The functions\n** are passed the manager as argument; they should return 1 if\n** successful and 0 otherwise.\n*/\ntypedef struct DdHook {         /* hook list element */\n    DD_HFP f; /* function to be called */\n    struct DdHook *next;        /* next element in the list */\n}\n DdHook;\n\n/*\n#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4\ntypedef long ptrint;\ntypedef unsigned long ptruint;\n#else\ntypedef int ptrint;\ntypedef unsigned int ptruint;\n#endif\n*/\n\ntypedef ABC_PTRINT_T ptrint;\ntypedef ABC_PTRUINT_T ptruint;\n\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n\ntypedef DdNode *DdNodePtr;\n\n/* Generic local cache item. */\ntypedef struct DdLocalCacheItem {\n    DdNode *value;\n#ifdef DD_CACHE_PROFILE\n    ptrint count;\n#endif\n    DdNode *key[1];\n}\n DdLocalCacheItem;\n\n/* Local cache. */\ntypedef struct DdLocalCache {\n    DdLocalCacheItem *item;\n    unsigned int itemsize;\n    unsigned int keysize;\n    unsigned int slots;\n    int shift;\n    double lookUps;\n    double minHit;\n    double hits;\n    unsigned int maxslots;\n    DdManager *manager;\n    struct DdLocalCache *next;\n}\n DdLocalCache;\n\n/* Generic hash item. */\ntypedef struct DdHashItem {\n    struct DdHashItem *next;\n    ptrint count;\n    DdNode *value;\n    DdNode *key[1];\n}\n DdHashItem;\n\n/* Local hash table */\ntypedef struct DdHashTable {\n    unsigned int keysize;\n    unsigned int itemsize;\n    DdHashItem **bucket;\n    DdHashItem *nextFree;\n    DdHashItem **memoryList;\n    unsigned int numBuckets;\n    int shift;\n    unsigned int size;\n    unsigned int maxsize;\n    DdManager *manager;\n}\n DdHashTable;\n\ntypedef struct DdCache {\n    DdNode *f,*g;               /* DDs */\n    ptruint h;                  /* either operator or DD */\n    DdNode *data;               /* already constructed DD */\n#ifdef DD_CACHE_PROFILE\n    ptrint count;\n#endif\n    unsigned hash;\n}\n DdCache;\n\ntypedef struct DdSubtable {     /* subtable for one index */\n    DdNode **nodelist;          /* hash table */\n    int shift;                  /* shift for hash function */\n    unsigned int slots;         /* size of the hash table */\n    unsigned int keys;          /* number of nodes stored in this table */\n    unsigned int maxKeys;       /* slots * DD_MAX_SUBTABLE_DENSITY */\n    unsigned int dead;          /* number of dead nodes in this table */\n    unsigned int next;          /* index of next variable in group */\n    int bindVar;                /* flag to bind this variable to its level */\n    /* Fields for lazy sifting. */\n    Cudd_VariableType varType;  /* variable type (ps, ns, pi) */\n    int pairIndex;              /* corresponding variable index (ps \u003c-\u003e ns) */\n    int varHandled;             /* flag: 1 means variable is already handled */\n    Cudd_LazyGroupType varToBeGrouped; /* tells what grouping to apply */\n}\n DdSubtable;\n\ntype DdManager struct {      /* specialized DD symbol table */\n    /* Constants */\n    sentinel DdNode;            /* for collision lists */\n    one *DdNode;                /* constant 1 */\n    zero *DdNode;               /* constant 0 */\n    plusinfinity *DdNode;       /* plus infinity */\n    minusinfinity *DdNode;      /* minus infinity */\n    background *DdNode;         /* background value */\n    /* Computed Table */\n    acache *DdCache;            /* address of allocated memory for cache */\n    cache *DdCache;             /* the cache-based computed table */\n    unsigned int cacheSlots;    /* total number of cache entries */\n    cacheShift int32;             /* shift value for cache hash function */\n    cacheMisses float64;         /* number of cache misses (since resizing) */\n    cacheHits float64;           /* number of cache hits (since resizing) */\n    minHit float64;              /* hit percentage above which to resize */\n    cacheSlack int32;             /* slots still available for resizing */\n    unsigned int maxCacheHard;  /* hard limit for cache size */\n    /* Unique Table */\n    size int32;                   /* number of unique subtables */\n    sizeZ int32;                  /* for ZDD */\n    maxSize int32;                /* max number of subtables before resizing */\n    maxSizeZ int32;               /* for ZDD */\n    subtables *DdSubtable;      /* array of unique subtables */\n    subtableZ *DdSubtable;      /* for ZDD */\n    constants DdSubtable;       /* unique subtable for the constants */\n    unsigned int slots;         /* total number of hash buckets */\n    unsigned int keys;          /* total number of BDD and ADD nodes */\n    unsigned int keysZ;         /* total number of ZDD nodes */\n    unsigned int dead;          /* total number of dead BDD and ADD nodes */\n    unsigned int deadZ;         /* total number of dead ZDD nodes */\n    unsigned int maxLive;       /* maximum number of live nodes */\n    unsigned int minDead;       /* do not GC if fewer than these dead */\n    gcFrac float64;              /* gc when this fraction is dead */\n    gcEnabled int32;              /* gc is enabled */\n    unsigned int looseUpTo;     /* slow growth beyond this limit */\n                                /* (measured w.r.t. slots, not keys) */\n    unsigned int initSlots;     /* initial size of a subtable */\n    stack **DdNode;             /* stack for iterative procedures */\n//    double allocated;           /* number of nodes allocated */\n    allocated ABC_INT64_T;      /* number of nodes allocated */\n                                /* (not during reordering) */\n    reclaimed float64;           /* number of nodes brought back from the dead */\n    isolated int32;               /* isolated projection functions */\n    perm *int32;                  /* current variable perm. (index to level) */\n    permZ *int32;                 /* for ZDD */\n    invperm *int32;               /* current inv. var. perm. (level to index) */\n    invpermZ *int32;              /* for ZDD */\n    vars **DdNode;              /* projection functions */\n    map *int32;                   /* variable map for fast swap */\n    univ **DdNode;              /* ZDD 1 for each variable */\n    linearSize int32;             /* number of rows and columns of linear */\n    interact *long;             /* interacting variable matrix */\n    linear *long;               /* linear transform matrix */\n    /* Memory Management */\n    memoryList **DdNode;        /* memory manager for symbol table */\n    nextFree *DdNode;           /* list of free nodes */\n    stash string;                /* memory reserve */\n#ifndef DD_NO_DEATH_ROW\n    DdNode **deathRow;          /* queue for dereferencing */\n    int deathRowDepth;          /* number of slots in the queue */\n    int nextDead;               /* index in the queue */\n    unsigned deadMask;          /* mask for circular index update */\n#endif\n    /* General Parameters */\n    epsilon CUDD_VALUE_TYPE;    /* tolerance on comparisons */\n    /* Dynamic Reordering Parameters */\n    reordered int32;              /* flag set at the end of reordering */\n    reorderings int32;            /* number of calls to Cudd_ReduceHeap */\n    siftMaxVar int32;             /* maximum number of vars sifted */\n    siftMaxSwap int32;            /* maximum number of swaps per sifting */\n    maxGrowth float64;           /* maximum growth during reordering */\n    maxGrowthAlt float64;        /* alternate maximum growth for reordering */\n    reordCycle int32;             /* how often to apply alternate threshold */\n    autoDyn int32;                /* automatic dynamic reordering flag (BDD) */\n    autoDynZ int32;               /* automatic dynamic reordering flag (ZDD) */\n    autoMethod Cudd_ReorderingType;  /* default reordering method */\n    autoMethodZ Cudd_ReorderingType; /* default reordering method (ZDD) */\n    realign int32;                /* realign ZDD order after BDD reordering */\n    realignZ int32;               /* realign BDD order after ZDD reordering */\n    unsigned int nextDyn;       /* reorder if this size is reached */\n    unsigned int countDead;     /* if 0, count deads to trigger reordering */\n    tree *MtrNode;              /* Variable group tree (BDD) */\n    treeZ *MtrNode;             /* Variable group tree (ZDD) */\n    groupcheck Cudd_AggregationType; /* Used during group sifting */\n    recomb int32;                 /* Used during group sifting */\n    symmviolation int32;          /* Used during group sifting */\n    arcviolation int32;           /* Used during group sifting */\n    populationSize int32;         /* population size for GA */\n    numberXovers int32;           /* number of crossovers for GA */\n    localCaches *DdLocalCache;  /* local caches currently in existence */\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    hooks string;                /* application-specific field (used by vis) */\n    preGCHook *DdHook;          /* hooks to be called before GC */\n    postGCHook *DdHook;         /* hooks to be called after GC */\n    preReorderingHook *DdHook;  /* hooks to be called before reordering */\n    postReorderingHook *DdHook; /* hooks to be called after reordering */\n    out *os.File;                  /* stdout for this manager */\n    err *os.File;                  /* stderr for this manager */\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    errorCode Cudd_ErrorType;   /* info on last error */\n    /* Statistical counters. */\n    unsigned long memused;      /* total memory allocated for the manager */\n    unsigned long maxmem;       /* target maximum memory */\n    unsigned long maxmemhard;   /* hard limit for maximum memory */\n    garbageCollections int32;     /* number of garbage collections */\n    GCTime long;                /* total time spent in garbage collection */\n    reordTime long;             /* total time spent in reordering */\n    totCachehits float64;        /* total number of cache hits */\n    totCacheMisses float64;      /* total number of cache misses */\n    cachecollisions float64;     /* number of cache collisions */\n    cacheinserts float64;        /* number of cache insertions */\n    cacheLastInserts float64;    /* insertions at the last cache resizing */\n    cachedeletions float64;      /* number of deletions during garbage coll. */\n#ifdef DD_STATS\n    double nodesFreed;          /* number of nodes returned to the free list */\n    double nodesDropped;        /* number of nodes killed by dereferencing */\n#endif\n    unsigned int peakLiveNodes; /* maximum number of live nodes */\n#ifdef DD_UNIQUE_PROFILE\n    double uniqueLookUps;       /* number of unique table lookups */\n    double uniqueLinks;         /* total distance traveled in coll. chains */\n#endif\n#ifdef DD_COUNT\n    double recursiveCalls;      /* number of recursive calls */\n#ifdef DD_STATS\n    double nextSample;          /* when to write next line of stats */\n#endif\n    double swapSteps;           /* number of elementary reordering steps */\n#endif\n#ifdef DD_MIS\n    /* mis/verif compatibility fields */\n    array_t *iton;              /* maps ids in ddNode to node_t */\n    array_t *order;             /* copy of order_list */\n    lsHandle handle;            /* where it is in network BDD list */\n    network_t *network;\n    st__table *local_order;      /* for local BDDs */\n    int nvars;                  /* variables used so far */\n    int threshold;              /* for pseudo var threshold value*/\n#endif\n    bFunc  *DdNode;\n    bFunc2  *DdNode;\n    TimeStop abctime;           /* timeout for reordering */\n}\n\ntypedef struct Move {\n    DdHalfWord x;\n    DdHalfWord y;\n    unsigned int flags;\n    int size;\n    struct Move *next;\n}\n Move;\n\n/* Generic level queue item. */\ntypedef struct DdQueueItem {\n    struct DdQueueItem *next;\n    struct DdQueueItem *cnext;\n    void *key;\n}\n DdQueueItem;\n\n/* Level queue. */\ntypedef struct DdLevelQueue {\n    void *first;\n    DdQueueItem **last;\n    DdQueueItem *freelist;\n    DdQueueItem **buckets;\n    int levels;\n    int itemsize;\n    int size;\n    int maxsize;\n    int numBuckets;\n    int shift;\n}\n DdLevelQueue;\n\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/**Macro***********************************************************************\n\n  Synopsis    [Adds node to the head of the free list.]\n\n  Description [Adds node to the head of the free list.  Does not\n  deallocate memory chunks that become free.  This function is also\n  used by the dynamic reordering functions.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddAllocNode cuddDynamicAllocNode cuddDeallocMove]\n\n******************************************************************************/\n// Original macro:\n// #define cuddDeallocNode(unique,node) \\\n//     (node)-\u003enext = (unique)-\u003enextFree; \\\n//     (unique)-\u003enextFree = node;\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Adds node to the head of the free list.]\n\n  Description [Adds node to the head of the free list.  Does not\n  deallocate memory chunks that become free.  This function is also\n  used by the dynamic reordering functions.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddDeallocNode cuddDynamicAllocNode]\n\n******************************************************************************/\n// Original macro:\n// #define cuddDeallocMove(unique,node) \\\n//     ((DdNode *)(node))-\u003eref = 0; \\\n//     ((DdNode *)(node))-\u003enext = (unique)-\u003enextFree; \\\n//     (unique)-\u003enextFree = (DdNode *)(node);\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis     [Increases the reference count of a node, if it is not\n  saturated.]\n\n  Description  [Increases the reference count of a node, if it is not\n  saturated. This being a macro, it is faster than Cudd_Ref, but it\n  cannot be used in constructs like cuddRef(a = b()).]\n\n  SideEffects  [none]\n\n  SeeAlso      [Cudd_Ref]\n\n******************************************************************************/\n// Original macro:\n// #define cuddRef(n) cuddSatInc(Cudd_Regular(n)-\u003eref)\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis     [Decreases the reference count of a node, if it is not\n  saturated.]\n\n  Description  [Decreases the reference count of node. It is primarily\n  used in recursive procedures to decrease the ref count of a result\n  node before returning it. This accomplishes the goal of removing the\n  protection applied by a previous cuddRef. This being a macro, it is\n  faster than Cudd_Deref, but it cannot be used in constructs like\n  cuddDeref(a = b()).]\n\n  SideEffects  [none]\n\n  SeeAlso      [Cudd_Deref]\n\n******************************************************************************/\n// Original macro:\n// #define cuddDeref(n) cuddSatDec(Cudd_Regular(n)-\u003eref)\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis     [Returns 1 if the node is a constant node.]\n\n  Description  [Returns 1 if the node is a constant node (rather than an\n  internal node). All constant nodes have the same index\n  (CUDD_CONST_INDEX). The pointer passed to cuddIsConstant must be regular.]\n\n  SideEffects  [none]\n\n  SeeAlso      [Cudd_IsConstant]\n\n******************************************************************************/\n// Original macro:\n// #define cuddIsConstant(node) ((node)-\u003eindex == CUDD_CONST_INDEX)\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis     [Returns the then child of an internal node.]\n\n  Description  [Returns the then child of an internal node. If\n  \u003ccode\u003enode\u003c/code\u003e is a constant node, the result is unpredictable.\n  The pointer passed to cuddT must be regular.]\n\n  SideEffects  [none]\n\n  SeeAlso      [Cudd_T]\n\n******************************************************************************/\n// Original macro:\n// #define cuddT(node) ((node)-\u003etype.kids.T)\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis     [Returns the else child of an internal node.]\n\n  Description  [Returns the else child of an internal node. If\n  \u003ccode\u003enode\u003c/code\u003e is a constant node, the result is unpredictable.\n  The pointer passed to cuddE must be regular.]\n\n  SideEffects  [none]\n\n  SeeAlso      [Cudd_E]\n\n******************************************************************************/\n// Original macro:\n// #define cuddE(node) ((node)-\u003etype.kids.E)\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis     [Returns the value of a constant node.]\n\n  Description  [Returns the value of a constant node. If\n  \u003ccode\u003enode\u003c/code\u003e is an internal node, the result is unpredictable.\n  The pointer passed to cuddV must be regular.]\n\n  SideEffects  [none]\n\n  SeeAlso      [Cudd_V]\n\n******************************************************************************/\n// Original macro:\n// #define cuddV(node) ((node)-\u003etype.value)\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Finds the current position of variable index in the\n  order.]\n\n  Description [Finds the current position of variable index in the\n  order.  This macro duplicates the functionality of Cudd_ReadPerm,\n  but it does not check for out-of-bounds indices and it is more\n  efficient.]\n\n  SideEffects [none]\n\n  SeeAlso     [Cudd_ReadPerm]\n\n******************************************************************************/\n// Original macro:\n// #define cuddI(dd,index) (((index)==CUDD_CONST_INDEX)?(int)(index):(dd)-\u003eperm[(index)])\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Finds the current position of ZDD variable index in the\n  order.]\n\n  Description [Finds the current position of ZDD variable index in the\n  order.  This macro duplicates the functionality of Cudd_ReadPermZdd,\n  but it does not check for out-of-bounds indices and it is more\n  efficient.]\n\n  SideEffects [none]\n\n  SeeAlso     [Cudd_ReadPermZdd]\n\n******************************************************************************/\n// Original macro:\n// #define cuddIZ(dd,index) (((index)==CUDD_CONST_INDEX)?(int)(index):(dd)-\u003epermZ[(index)])\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Converts pointer into a literal.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\n// Original macro:\n// #define cuddF2L(f) ((Cudd_Regular(f)-\u003eId \u003c\u003c 1) | Cudd_IsComplement(f))\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Hash function for the unique table.]\n\n  Description []\n\n  SideEffects [none]\n\n  SeeAlso     [ddCHash ddCHash2]\n\n******************************************************************************/\n#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4\n#define ddHash(f,g,s) \\\n((((unsigned)(ptruint)(f) * DD_P1 + \\\n   (unsigned)(ptruint)(g)) * DD_P2) \u003e\u003e (s))\n#else\n#define ddHash(f,g,s) \\\n((((unsigned)(f) * DD_P1 + (unsigned)(g)) * DD_P2) \u003e\u003e (s))\n#endif\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Hash function for the cache.]\n\n  Description []\n\n  SideEffects [none]\n\n  SeeAlso     [ddHash ddCHash2]\n\n******************************************************************************/\n/*\n#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4\n#define ddCHash(o,f,g,h,s) \\\n((((((unsigned)(ptruint)(f) + (unsigned)(ptruint)(o)) * DD_P1 + \\\n    (unsigned)(ptruint)(g)) * DD_P2 + \\\n   (unsigned)(ptruint)(h)) * DD_P3) \u003e\u003e (s))\n#else\n#define ddCHash(o,f,g,h,s) \\\n((((((unsigned)(f) + (unsigned)(o)) * DD_P1 + (unsigned)(g)) * DD_P2 + \\\n   (unsigned)(h)) * DD_P3) \u003e\u003e (s))\n#endif\n*/\n\n/**Macro***********************************************************************\n\n  Synopsis    [Hash function for the cache for functions with two\n  operands.]\n\n  Description []\n\n  SideEffects [none]\n\n  SeeAlso     [ddHash ddCHash]\n\n******************************************************************************/\n#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4\n#define ddCHash2(o,f,g,s) \\\n(((((unsigned)(ptruint)(f) + (unsigned)(ptruint)(o)) * DD_P1 + \\\n   (unsigned)(ptruint)(g)) * DD_P2) \u003e\u003e (s))\n#define ddCHash2_(o,f,g) \\\n(((((unsigned)(ptruint)(f) + (unsigned)(ptruint)(o)) * DD_P1 + \\\n   (unsigned)(ptruint)(g)) * DD_P2))\n#else\n#define ddCHash2(o,f,g,s) \\\n(((((unsigned)(f) + (unsigned)(o)) * DD_P1 + (unsigned)(g)) * DD_P2) \u003e\u003e (s))\n#define ddCHash2_(o,f,g) \\\n(((((unsigned)(f) + (unsigned)(o)) * DD_P1 + (unsigned)(g)) * DD_P2))\n#endif\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Clears the 4 least significant bits of a pointer.]\n\n  Description []\n\n  SideEffects [none]\n\n  SeeAlso     []\n\n******************************************************************************/\n// Original macro:\n// #define cuddClean(p) ((DdNode *)((ptruint)(p) \u0026 ~0xf))\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Computes the minimum of two numbers.]\n\n  Description []\n\n  SideEffects [none]\n\n  SeeAlso     [ddMax]\n\n******************************************************************************/\n// Original macro:\n// #define ddMin(x,y) (((y) \u003c (x)) ? (y) : (x))\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Computes the maximum of two numbers.]\n\n  Description []\n\n  SideEffects [none]\n\n  SeeAlso     [ddMin]\n\n******************************************************************************/\n// Original macro:\n// #define ddMax(x,y) (((y) \u003e (x)) ? (y) : (x))\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Computes the absolute value of a number.]\n\n  Description []\n\n  SideEffects [none]\n\n  SeeAlso     []\n\n******************************************************************************/\n// Original macro:\n// #define ddAbs(x) (((x)\u003c0) ? -(x) : (x))\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Returns 1 if the absolute value of the difference of the two\n  arguments x and y is less than e.]\n\n  Description []\n\n  SideEffects [none]\n\n  SeeAlso     []\n\n******************************************************************************/\n// Original macro:\n// #define ddEqualVal(x,y,e) (ddAbs((x)-(y))\u003c(e))\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Saturating increment operator.]\n\n  Description []\n\n  SideEffects [none]\n\n  SeeAlso     [cuddSatDec]\n\n******************************************************************************/\n#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4\n#define cuddSatInc(x) ((x)++)\n#else\n#define cuddSatInc(x) ((x) += (x) != (DdHalfWord)DD_MAXREF)\n#endif\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Saturating decrement operator.]\n\n  Description []\n\n  SideEffects [none]\n\n  SeeAlso     [cuddSatInc]\n\n******************************************************************************/\n#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4\n#define cuddSatDec(x) ((x)--)\n#else\n#define cuddSatDec(x) ((x) -= (x) != (DdHalfWord)DD_MAXREF)\n#endif\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Returns the constant 1 node.]\n\n  Description []\n\n  SideEffects [none]\n\n  SeeAlso     [DD_ZERO DD_PLUS_INFINITY DD_MINUS_INFINITY]\n\n******************************************************************************/\n// Original macro:\n// #define DD_ONE(dd)              ((dd)-\u003eone)\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Returns the arithmetic 0 constant node.]\n\n  Description [Returns the arithmetic 0 constant node. This is different\n  from the logical zero. The latter is obtained by\n  Cudd_Not(DD_ONE(dd)).]\n\n  SideEffects [none]\n\n  SeeAlso     [DD_ONE Cudd_Not DD_PLUS_INFINITY DD_MINUS_INFINITY]\n\n******************************************************************************/\n// Original macro:\n// #define DD_ZERO(dd) ((dd)-\u003ezero)\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Returns the plus infinity constant node.]\n\n  Description []\n\n  SideEffects [none]\n\n  SeeAlso     [DD_ONE DD_ZERO DD_MINUS_INFINITY]\n\n******************************************************************************/\n// Original macro:\n// #define DD_PLUS_INFINITY(dd) ((dd)-\u003eplusinfinity)\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Returns the minus infinity constant node.]\n\n  Description []\n\n  SideEffects [none]\n\n  SeeAlso     [DD_ONE DD_ZERO DD_PLUS_INFINITY]\n\n******************************************************************************/\n// Original macro:\n// #define DD_MINUS_INFINITY(dd) ((dd)-\u003eminusinfinity)\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Enforces DD_MINUS_INF_VAL \u003c= x \u003c= DD_PLUS_INF_VAL.]\n\n  Description [Enforces DD_MINUS_INF_VAL \u003c= x \u003c= DD_PLUS_INF_VAL.\n  Furthermore, if x \u003c= DD_MINUS_INF_VAL/2, x is set to\n  DD_MINUS_INF_VAL. Similarly, if DD_PLUS_INF_VAL/2 \u003c= x, x is set to\n  DD_PLUS_INF_VAL.  Normally this macro is a NOOP. However, if\n  HAVE_IEEE_754 is not defined, it makes sure that a value does not\n  get larger than infinity in absolute value, and once it gets to\n  infinity, stays there.  If the value overflows before this macro is\n  applied, no recovery is possible.]\n\n  SideEffects [none]\n\n  SeeAlso     []\n\n******************************************************************************/\n#ifdef HAVE_IEEE_754\n#define cuddAdjust(x)\n#else\n#define cuddAdjust(x)           ((x) = ((x) \u003e= DD_CRI_HI_MARK) ? DD_PLUS_INF_VAL : (((x) \u003c= DD_CRI_LO_MARK) ? DD_MINUS_INF_VAL : (x)))\n#endif\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Extract the least significant digit of a double digit.]\n\n  Description [Extract the least significant digit of a double digit. Used\n  in the manipulation of arbitrary precision integers.]\n\n  SideEffects [None]\n\n  SeeAlso     [DD_MSDIGIT]\n\n******************************************************************************/\n// Original macro:\n// #define DD_LSDIGIT(x)   ((x) \u0026 DD_APA_MASK)\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Extract the most significant digit of a double digit.]\n\n  Description [Extract the most significant digit of a double digit. Used\n  in the manipulation of arbitrary precision integers.]\n\n  SideEffects [None]\n\n  SeeAlso     [DD_LSDIGIT]\n\n******************************************************************************/\n// Original macro:\n// #define DD_MSDIGIT(x)   ((x) \u003e\u003e DD_APA_BITS)\n\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Outputs a line of stats.]\n\n  Description [Outputs a line of stats if DD_COUNT and DD_STATS are\n  defined. Increments the number of recursive calls if DD_COUNT is\n  defined.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\n#ifdef DD_COUNT\n#ifdef DD_STATS\n#define statLine(dd) dd-\u003erecursiveCalls++; \\\nif (dd-\u003erecursiveCalls == dd-\u003enextSample) {(void) fprintf(dd-\u003eerr, \\\n\"@%.0f: %u nodes %u live %.0f dropped %.0f reclaimed\\n\", dd-\u003erecursiveCalls, \\\ndd-\u003ekeys, dd-\u003ekeys - dd-\u003edead, dd-\u003enodesDropped, dd-\u003ereclaimed); \\\ndd-\u003enextSample += 250000;}\n#else\n#define statLine(dd) dd-\u003erecursiveCalls++;\n#endif\n#else\n#define statLine(dd)\n#endif\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Function prototypes                                                       */\n/*---------------------------------------------------------------------------*/\n\n// extern DdNode *        cuddAddExistAbstractRecur( DdManager * manager, DdNode * f, DdNode * cube );\n\n// extern DdNode *        cuddAddUnivAbstractRecur( DdManager * manager, DdNode * f, DdNode * cube );\n\n// extern DdNode *        cuddAddOrAbstractRecur( DdManager * manager, DdNode * f, DdNode * cube );\n\n// extern DdNode *        cuddAddApplyRecur( DdManager * dd, DdNode * (*)(DdManager * , DdNode ** , DdNode **), DdNode * f, DdNode * g );\n\n// extern DdNode *        cuddAddMonadicApplyRecur( DdManager *  dd, DdNode * (*)(DdManager * , DdNode *), DdNode *  f );\n\n// extern DdNode *        cuddAddScalarInverseRecur( DdManager * dd, DdNode * f, DdNode * epsilon );\n\n// extern DdNode *        cuddAddIteRecur( DdManager * dd, DdNode * f, DdNode * g, DdNode * h );\n\n// extern DdNode *        cuddAddCmplRecur( DdManager * dd, DdNode * f );\n\n// extern DdNode *        cuddAddNegateRecur( DdManager * dd, DdNode * f );\n\n// extern DdNode *        cuddAddRoundOffRecur( DdManager * dd, DdNode * f, double trunc );\n\n// extern DdNode *        cuddUnderApprox( DdManager * dd, DdNode * f, int numVars, int threshold, int safe, double quality );\n\n// extern DdNode *        cuddRemapUnderApprox( DdManager * dd, DdNode * f, int numVars, int threshold, double quality );\n\n// extern DdNode *        cuddBiasedUnderApprox( DdManager * dd, DdNode * f, DdNode * b, int numVars, int threshold, double quality1, double quality0 );\n\n// extern DdNode *        cuddBddAndAbstractRecur( DdManager * manager, DdNode * f, DdNode * g, DdNode * cube );\n\n// extern int             cuddAnnealing( DdManager * table, int lower, int upper );\n\n// extern DdNode *        cuddBddExistAbstractRecur( DdManager * manager, DdNode * f, DdNode * cube );\n\n// extern DdNode *        cuddBddXorExistAbstractRecur( DdManager * manager, DdNode * f, DdNode * g, DdNode * cube );\n\n// extern DdNode *        cuddBddBooleanDiffRecur( DdManager * manager, DdNode * f, DdNode * var );\n\n// extern DdNode *        cuddBddIteRecur( DdManager * dd, DdNode * f, DdNode * g, DdNode * h );\n\n// extern DdNode *        cuddBddIntersectRecur( DdManager * dd, DdNode * f, DdNode * g );\n\n// extern DdNode *        cuddBddAndRecur( DdManager * manager, DdNode * f, DdNode * g );\n\n// extern DdNode *        cuddBddXorRecur( DdManager * manager, DdNode * f, DdNode * g );\n\n// extern DdNode *        cuddBddTransfer( DdManager * ddS, DdManager * ddD, DdNode * f );\n\n// extern DdNode *        cuddAddBddDoPattern( DdManager * dd, DdNode * f );\n\n// extern int             cuddInitCache( DdManager * unique, unsigned int cacheSize, unsigned int maxCacheSize );\n\n// extern void            cuddCacheInsert( DdManager * table, ptruint op, DdNode * f, DdNode * g, DdNode * h, DdNode * data );\n\n// extern void            cuddCacheInsert2( DdManager * table, DdNode * (*)(DdManager * , DdNode * , DdNode *), DdNode * f, DdNode * g, DdNode * data );\n\n// extern void            cuddCacheInsert1( DdManager * table, DdNode * (*)(DdManager * , DdNode *), DdNode * f, DdNode * data );\n\n// extern DdNode *        cuddCacheLookup( DdManager * table, ptruint op, DdNode * f, DdNode * g, DdNode * h );\n\n// extern DdNode *        cuddCacheLookupZdd( DdManager * table, ptruint op, DdNode * f, DdNode * g, DdNode * h );\n\n// extern DdNode *        cuddCacheLookup2( DdManager * table, DdNode * (*)(DdManager * , DdNode * , DdNode *), DdNode * f, DdNode * g );\n\n// extern DdNode *        cuddCacheLookup1( DdManager * table, DdNode * (*)(DdManager * , DdNode *), DdNode * f );\n\n// extern DdNode *        cuddCacheLookup2Zdd( DdManager * table, DdNode * (*)(DdManager * , DdNode * , DdNode *), DdNode * f, DdNode * g );\n\n// extern DdNode *        cuddCacheLookup1Zdd( DdManager * table, DdNode * (*)(DdManager * , DdNode *), DdNode * f );\n\n// extern DdNode *        cuddConstantLookup( DdManager * table, ptruint op, DdNode * f, DdNode * g, DdNode * h );\n\n// extern int             cuddCacheProfile( DdManager * table, FILE * fp );\n\n// extern void            cuddCacheResize( DdManager * table );\n\n// extern void            cuddCacheFlush( DdManager * table );\n\n// extern int             cuddComputeFloorLog2( unsigned int value );\n\n// extern int             cuddHeapProfile( DdManager * dd );\n\n// extern void            cuddPrintNode( DdNode * f, FILE * fp );\n\n// extern void            cuddPrintVarGroups( DdManager *  dd, MtrNode *  root, int zdd, int silent );\n\n// extern DdNode *        cuddBddClippingAnd( DdManager * dd, DdNode * f, DdNode * g, int maxDepth, int direction );\n\n// extern DdNode *        cuddBddClippingAndAbstract( DdManager * dd, DdNode * f, DdNode * g, DdNode * cube, int maxDepth, int direction );\n\n// extern void            cuddGetBranches( DdNode * g, DdNode ** g1, DdNode ** g0 );\n\n// extern int             cuddCheckCube( DdManager * dd, DdNode * g );\n\n// extern DdNode *        cuddCofactorRecur( DdManager * dd, DdNode * f, DdNode * g );\n\n// extern DdNode *        cuddBddComposeRecur( DdManager * dd, DdNode * f, DdNode * g, DdNode * proj );\n\n// extern DdNode *        cuddAddComposeRecur( DdManager * dd, DdNode * f, DdNode * g, DdNode * proj );\n\n// extern int             cuddExact( DdManager * table, int lower, int upper );\n\n// extern DdNode *        cuddBddConstrainRecur( DdManager * dd, DdNode * f, DdNode * c );\n\n// extern DdNode *        cuddBddRestrictRecur( DdManager * dd, DdNode * f, DdNode * c );\n\n// extern DdNode *        cuddBddNPAndRecur( DdManager * dd, DdNode * f, DdNode * c );\n\n// extern DdNode *        cuddAddConstrainRecur( DdManager * dd, DdNode * f, DdNode * c );\n\n// extern DdNode *        cuddAddRestrictRecur( DdManager * dd, DdNode * f, DdNode * c );\n\n// extern DdNode *        cuddBddLICompaction( DdManager * dd, DdNode * f, DdNode * c );\n\n// extern int             cuddGa( DdManager * table, int lower, int upper );\n\n// extern int             cuddTreeSifting( DdManager * table, Cudd_ReorderingType method );\n\n// extern int             cuddZddInitUniv( DdManager * zdd );\n\n// extern void            cuddZddFreeUniv( DdManager * zdd );\n\n// extern void            cuddSetInteract( DdManager * table, int x, int y );\n\n// extern int             cuddTestInteract( DdManager * table, int x, int y );\n\n// extern int             cuddInitInteract( DdManager * table );\n\n// extern DdLocalCache *  cuddLocalCacheInit( DdManager * manager, unsigned int keySize, unsigned int cacheSize, unsigned int maxCacheSize );\n\n// extern void            cuddLocalCacheQuit( DdLocalCache * cache );\n\n// extern void            cuddLocalCacheInsert( DdLocalCache * cache, DdNodePtr * key, DdNode * value );\n\n// extern DdNode *        cuddLocalCacheLookup( DdLocalCache * cache, DdNodePtr * key );\n\n// extern void            cuddLocalCacheClearDead( DdManager * manager );\n\n// extern int             cuddIsInDeathRow( DdManager * dd, DdNode * f );\n\n// extern int             cuddTimesInDeathRow( DdManager * dd, DdNode * f );\n\n// extern void            cuddLocalCacheClearAll( DdManager * manager );\n\n#ifdef DD_CACHE_PROFILE\nextern int             cuddLocalCacheProfile( DdLocalCache * cache );\n#endif\n// extern DdHashTable *   cuddHashTableInit( DdManager * manager, unsigned int keySize, unsigned int initSize );\n\n// extern void            cuddHashTableQuit( DdHashTable * hash );\n\n// extern int             cuddHashTableInsert( DdHashTable * hash, DdNodePtr * key, DdNode * value, ptrint count );\n\n// extern DdNode *        cuddHashTableLookup( DdHashTable * hash, DdNodePtr * key );\n\n// extern int             cuddHashTableInsert1( DdHashTable * hash, DdNode * f, DdNode * value, ptrint count );\n\n// extern DdNode *        cuddHashTableLookup1( DdHashTable * hash, DdNode * f );\n\n// extern int             cuddHashTableInsert2( DdHashTable * hash, DdNode * f, DdNode * g, DdNode * value, ptrint count );\n\n// extern DdNode *        cuddHashTableLookup2( DdHashTable * hash, DdNode * f, DdNode * g );\n\n// extern int             cuddHashTableInsert3( DdHashTable * hash, DdNode * f, DdNode * g, DdNode * h, DdNode * value, ptrint count );\n\n// extern DdNode *        cuddHashTableLookup3( DdHashTable * hash, DdNode * f, DdNode * g, DdNode * h );\n\n// extern DdLevelQueue *  cuddLevelQueueInit( int levels, int itemSize, int numBuckets );\n\n// extern void            cuddLevelQueueQuit( DdLevelQueue * queue );\n\n// extern void *          cuddLevelQueueEnqueue( DdLevelQueue * queue, void * key, int level );\n\n// extern void            cuddLevelQueueDequeue( DdLevelQueue * queue, int level );\n\n// extern int             cuddLinearAndSifting( DdManager * table, int lower, int upper );\n\n// extern int             cuddLinearInPlace( DdManager *  table, int  x, int  y );\n\n// extern void            cuddUpdateInteractionMatrix( DdManager *  table, int  xindex, int  yindex );\n\n// extern int             cuddInitLinear( DdManager * table );\n\n// extern int             cuddResizeLinear( DdManager * table );\n\n// extern DdNode *        cuddBddLiteralSetIntersectionRecur( DdManager * dd, DdNode * f, DdNode * g );\n\n// extern DdNode *        cuddCProjectionRecur( DdManager * dd, DdNode * R, DdNode * Y, DdNode * Ysupp );\n\n// extern DdNode *        cuddBddClosestCube( DdManager * dd, DdNode * f, DdNode * g, CUDD_VALUE_TYPE bound );\n\n// extern void            cuddReclaim( DdManager * table, DdNode * n );\n\n// extern void            cuddReclaimZdd( DdManager * table, DdNode * n );\n\n// extern void            cuddClearDeathRow( DdManager * table );\n\n// extern void            cuddShrinkDeathRow( DdManager * table );\n\n// extern DdNode *        cuddDynamicAllocNode( DdManager * table );\n\n// extern int             cuddSifting( DdManager * table, int lower, int upper );\n\n// extern int             cuddSwapping( DdManager * table, int lower, int upper, Cudd_ReorderingType heuristic );\n\n// extern int             cuddNextHigh( DdManager * table, int x );\n\n// extern int             cuddNextLow( DdManager * table, int x );\n\n// extern int             cuddSwapInPlace( DdManager * table, int x, int y );\n\n// extern int             cuddBddAlignToZdd( DdManager * table );\n\n// extern DdNode *        cuddBddMakePrime( DdManager * dd, DdNode * cube, DdNode * f );\n\n// extern DdNode *        cuddSolveEqnRecur( DdManager * bdd, DdNode * F, DdNode * Y, DdNode ** G, int n, int * yIndex, int i );\n\n// extern DdNode *        cuddVerifySol( DdManager * bdd, DdNode * F, DdNode ** G, int * yIndex, int n );\n\n#ifdef st__INCLUDED\nextern DdNode *        cuddSplitSetRecur( DdManager * manager, st__table * mtable, int * varSeen, DdNode * p, double n, double max, int index );\n#endif\n// extern DdNode *        cuddSubsetHeavyBranch( DdManager * dd, DdNode * f, int numVars, int threshold );\n\n// extern DdNode *        cuddSubsetShortPaths( DdManager * dd, DdNode * f, int numVars, int threshold, int hardlimit );\n\n// extern int             cuddSymmCheck( DdManager * table, int x, int y );\n\n// extern int             cuddSymmSifting( DdManager * table, int lower, int upper );\n\n// extern int             cuddSymmSiftingConv( DdManager * table, int lower, int upper );\n\n// extern DdNode *        cuddAllocNode( DdManager * unique );\n\n// extern DdManager *     cuddInitTable( unsigned int numVars, unsigned int numVarsZ, unsigned int numSlots, unsigned int looseUpTo );\n\n// extern void            cuddFreeTable( DdManager * unique );\n\n// extern int             cuddGarbageCollect( DdManager * unique, int clearCache );\n\n// extern DdNode *        cuddZddGetNode( DdManager * zdd, int id, DdNode * T, DdNode * E );\n\n// extern DdNode *        cuddZddGetNodeIVO( DdManager * dd, int index, DdNode * g, DdNode * h );\n\n// extern DdNode *        cuddUniqueInter( DdManager * unique, int index, DdNode * T, DdNode * E );\n\n// extern DdNode *        cuddUniqueInterIVO( DdManager * unique, int index, DdNode * T, DdNode * E );\n\n// extern DdNode *        cuddUniqueInterZdd( DdManager * unique, int index, DdNode * T, DdNode * E );\n\n// extern DdNode *        cuddUniqueConst( DdManager * unique, CUDD_VALUE_TYPE value );\n\n// extern void            cuddRehash( DdManager * unique, int i );\n\n// extern void            cuddShrinkSubtable( DdManager * unique, int i );\n\n// extern int             cuddInsertSubtables( DdManager * unique, int n, int level );\n\n// extern int             cuddDestroySubtables( DdManager * unique, int n );\n\n// extern int             cuddResizeTableZdd( DdManager * unique, int index );\n\n// extern void            cuddSlowTableGrowth( DdManager * unique );\n\n// extern int             cuddP( DdManager * dd, DdNode * f );\n\n#ifdef st__INCLUDED\nextern enum st__retval  cuddStCountfree( char * key, char * value, char * arg );\nextern int             cuddCollectNodes( DdNode * f, st__table * visited );\n#endif\n// extern DdNodePtr *     cuddNodeArray( DdNode * f, int * n );\n\n// extern int             cuddWindowReorder( DdManager * table, int low, int high, Cudd_ReorderingType submethod );\n\n// extern DdNode *        cuddZddProduct( DdManager * dd, DdNode * f, DdNode * g );\n\n// extern DdNode *        cuddZddUnateProduct( DdManager * dd, DdNode * f, DdNode * g );\n\n// extern DdNode *        cuddZddWeakDiv( DdManager * dd, DdNode * f, DdNode * g );\n\n// extern DdNode *        cuddZddWeakDivF( DdManager * dd, DdNode * f, DdNode * g );\n\n// extern DdNode *        cuddZddDivide( DdManager * dd, DdNode * f, DdNode * g );\n\n// extern DdNode *        cuddZddDivideF( DdManager * dd, DdNode * f, DdNode * g );\n\n// extern int             cuddZddGetCofactors3( DdManager * dd, DdNode * f, int v, DdNode ** f1, DdNode ** f0, DdNode ** fd );\n\n// extern int             cuddZddGetCofactors2( DdManager * dd, DdNode * f, int v, DdNode ** f1, DdNode ** f0 );\n\n// extern DdNode *        cuddZddComplement( DdManager * dd, DdNode * node );\n\n// extern int             cuddZddGetPosVarIndex(DdManager *  dd, int index );\n\n// extern int             cuddZddGetNegVarIndex(DdManager *  dd, int index );\n\n// extern int             cuddZddGetPosVarLevel(DdManager *  dd, int index );\n\n// extern int             cuddZddGetNegVarLevel(DdManager *  dd, int index );\n\n// extern int             cuddZddTreeSifting( DdManager * table, Cudd_ReorderingType method );\n\n// extern DdNode *        cuddZddIsop( DdManager * dd, DdNode * L, DdNode * U, DdNode ** zdd_I );\n\n// extern DdNode *        cuddBddIsop( DdManager * dd, DdNode * L, DdNode * U );\n\n// extern DdNode *        cuddMakeBddFromZddCover( DdManager * dd, DdNode * node );\n\n// extern int             cuddZddLinearSifting( DdManager * table, int lower, int upper );\n\n// extern int             cuddZddAlignToBdd( DdManager * table );\n\n// extern int             cuddZddNextHigh( DdManager * table, int x );\n\n// extern int             cuddZddNextLow( DdManager * table, int x );\n\n// extern int             cuddZddUniqueCompare( int * ptr_x, int * ptr_y );\n\n// extern int             cuddZddSwapInPlace( DdManager * table, int x, int y );\n\n// extern int             cuddZddSwapping( DdManager * table, int lower, int upper, Cudd_ReorderingType heuristic );\n\n// extern int             cuddZddSifting( DdManager * table, int lower, int upper );\n\n// extern DdNode *        cuddZddIte( DdManager * dd, DdNode * f, DdNode * g, DdNode * h );\n\n// extern DdNode *        cuddZddUnion( DdManager * zdd, DdNode * P, DdNode * Q );\n\n// extern DdNode *        cuddZddIntersect( DdManager * zdd, DdNode * P, DdNode * Q );\n\n// extern DdNode *        cuddZddDiff( DdManager * zdd, DdNode * P, DdNode * Q );\n\n// extern DdNode *        cuddZddChangeAux( DdManager * zdd, DdNode * P, DdNode * zvar );\n\n// extern DdNode *        cuddZddSubset1( DdManager * dd, DdNode * P, int var );\n\n// extern DdNode *        cuddZddSubset0( DdManager * dd, DdNode * P, int var );\n\n// extern DdNode *        cuddZddChange( DdManager * dd, DdNode * P, int var );\n\n// extern int             cuddZddSymmCheck( DdManager * table, int x, int y );\n\n// extern int             cuddZddSymmSifting( DdManager * table, int lower, int upper );\n\n// extern int             cuddZddSymmSiftingConv( DdManager * table, int lower, int upper );\n\n// extern int             cuddZddP( DdManager * zdd, DdNode * f );\n\n\n/**AutomaticEnd***************************************************************/\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

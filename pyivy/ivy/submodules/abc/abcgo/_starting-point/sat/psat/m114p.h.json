@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/psat/m114p.h",
+  "SHA256": "0c364fb920564f4c1f13674d200499e417587e0371f0ffe7956e830bd2e9fb33",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/psat/m114p.h::macro::M114p_SolverForEachRoot",
+      "Category": "macro-review",
+      "Symbol": "M114p_SolverForEachRoot",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1472,
+      "End": 1697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/psat/m114p.h::macro::M114p_SolverForEachChain",
+      "Category": "macro-review",
+      "Symbol": "M114p_SolverForEachChain",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1782,
+      "End": 2019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/psat/m114p.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2055
+    }
+  ],
+  "Draft": "package psat\n\n// C-language header for MiniSat 1.14p\n\n\n\n\n\n//#include \"m114p_types.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n// SAT solver APIs\n// extern M114p_Solver_t M114p_SolverNew( int fRecordProof );\n\n// extern void           M114p_SolverDelete( M114p_Solver_t s );\n\n// extern void           M114p_SolverPrintStats( M114p_Solver_t s, double Time );\n\n// extern void           M114p_SolverSetVarNum( M114p_Solver_t s, int nVars );\n\n// extern int            M114p_SolverAddClause( M114p_Solver_t s, lit* begin, lit* end );\n\n// extern int            M114p_SolverSimplify( M114p_Solver_t s );\n\n// extern int            M114p_SolverSolve( M114p_Solver_t s, lit* begin, lit* end, int nConfLimit );\n\n// extern int            M114p_SolverGetConflictNum( M114p_Solver_t s );\n\n\n// proof status APIs\n// extern int            M114p_SolverProofIsReady( M114p_Solver_t s );\n\n// extern void           M114p_SolverProofSave( M114p_Solver_t s, char * pFileName );\n\n// extern int            M114p_SolverProofClauseNum( M114p_Solver_t s );\n\n\n// proof traversal APIs\n// extern int            M114p_SolverGetFirstRoot( M114p_Solver_t s, int ** ppLits );\n\n// extern int            M114p_SolverGetNextRoot( M114p_Solver_t s, int ** ppLits );\n\n// extern int            M114p_SolverGetFirstChain( M114p_Solver_t s, int ** ppClauses, int ** ppVars );\n\n// extern int            M114p_SolverGetNextChain( M114p_Solver_t s, int ** ppClauses, int ** ppVars );\n\n\n// iterator over the root clauses (should be called first)\n// Original macro:\n// #define M114p_SolverForEachRoot( s, ppLits, nLits, i )                           \\\n//     for ( i = 0, nLits = M114p_SolverGetFirstRoot(s, ppLits); nLits;             \\\n//           i++, nLits = M114p_SolverGetNextRoot(s, ppLits) )\n\n\n// iterator over the learned clauses (should be called after iterating over roots)\n// Original macro:\n// #define M114p_SolverForEachChain( s, ppClauses, ppVars, nVars, i )               \\\n//     for ( i = 0, nVars = M114p_SolverGetFirstChain(s, ppClauses, ppVars); nVars; \\\n//           i++, nVars = M114p_SolverGetNextChain(s, ppClauses, ppVars) )\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

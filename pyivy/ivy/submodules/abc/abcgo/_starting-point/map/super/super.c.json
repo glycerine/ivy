@@ -1,0 +1,831 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/super/super.c",
+  "SHA256": "759d4aa78ef347b433fcf6ad5f635074cdbfe0307967fc2edd3151d92c33afa2",
+  "Library": [
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 100,
+        "Column": 56,
+        "ByteOffset": 2607
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = Extra_UtilGetopt(argc, argv, \"ILvh\")) != EOF  {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 103,
+        "Column": 28,
+        "ByteOffset": 2682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                nVarsMax = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 109,
+        "Column": 27,
+        "ByteOffset": 2888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                nLevels = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 3341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"usage: super2 [-IL num] [-vh]\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 3396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t         precomputes the supergates composed of AND2s and INVs\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 5,
+        "ByteOffset": 3489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-I num : the max number of inputs to the supergate [default = %d]\\n\", nVarsMax );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 5,
+        "ByteOffset": 3593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-L num : the max number of logic levels of gates [default = %d]\\n\", nLevels );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 3694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-v     : enable verbose output\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 3752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-h     : print the help message\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 180,
+        "Column": 63,
+        "ByteOffset": 4886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = Extra_UtilGetopt(argc, argv, \"ILNTDAEsovh\")) != EOF  {"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 183,
+        "Column": 28,
+        "ByteOffset": 4961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                nVarsMax = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 189,
+        "Column": 27,
+        "ByteOffset": 5167
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                nLevels = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 195,
+        "Column": 29,
+        "ByteOffset": 5374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                nGatesMax = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 201,
+        "Column": 29,
+        "ByteOffset": 5583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                TimeLimit = atoi(argv[globalUtilOptind]);"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 207,
+        "Column": 38,
+        "ByteOffset": 5801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                DelayLimit = float32(atof(argv[globalUtilOptind]));"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 213,
+        "Column": 37,
+        "ByteOffset": 6023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                AreaLimit = float32(atof(argv[globalUtilOptind]));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 9,
+        "ByteOffset": 6815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"The genlib library file should be given on the command line.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 248,
+        "Column": 9,
+        "ByteOffset": 6971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"The max number of variables (%d) should be more than 1 and less than 7.\\n\", nVarsMax );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 257,
+        "Column": 9,
+        "ByteOffset": 7310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Cannot open input file \\\"%s\\\". \", FileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 13,
+        "ByteOffset": 7483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pErr, \"Did you mean \\\"%s\\\"?\", FileName ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 260,
+        "Column": 9,
+        "ByteOffset": 7544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 263,
+        "Column": 5,
+        "ByteOffset": 7595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 9,
+        "ByteOffset": 7737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Reading library has failed.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 281,
+        "Column": 5,
+        "ByteOffset": 8129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"usage: super [-ILNT num] [-DA float] [-E file] [-sovh] \u003cgenlib_file\u003e\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 282,
+        "Column": 5,
+        "ByteOffset": 8223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t         precomputes the supergates for the given genlib library\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 8318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-I num   : the max number of supergate inputs [default = %d]\\n\", nVarsMax );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 284,
+        "Column": 5,
+        "ByteOffset": 8417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-L num   : the max number of levels of gates [default = %d]\\n\", nLevels );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 5,
+        "ByteOffset": 8514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-N num   : the limit on the number of considered supergates [default = %d]\\n\", nGatesMax );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 5,
+        "ByteOffset": 8628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-T num   : the approximate runtime limit in seconds [default = %d]\\n\", TimeLimit );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 5,
+        "ByteOffset": 8734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-D float : the max delay of the supergates [default = %.2f]\\n\", DelayLimit );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 8834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-A float : the max area of the supergates [default = %.2f]\\n\", AreaLimit );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 289,
+        "Column": 5,
+        "ByteOffset": 8932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-E file  : file contains list of genlib gates to exclude\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 290,
+        "Column": 5,
+        "ByteOffset": 9017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-s       : toggle the use of inverters at the inputs [default = %s]\\n\", (fSkipInvs? \"no\": \"yes\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 291,
+        "Column": 5,
+        "ByteOffset": 9139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-o       : toggle dumping the supergate library in old format [default = %s]\\n\", (fWriteOldFormat? \"yes\": \"no\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 292,
+        "Column": 5,
+        "ByteOffset": 9276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-v       : enable verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 293,
+        "Column": 5,
+        "ByteOffset": 9378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-h       : print the help message\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 294,
+        "Column": 5,
+        "ByteOffset": 9439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 295,
+        "Column": 5,
+        "ByteOffset": 9465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tHere is a piece of advice on precomputing supergate libraries:\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 296,
+        "Column": 5,
+        "ByteOffset": 9555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 297,
+        "Column": 5,
+        "ByteOffset": 9583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tStart with the number of inputs equal to 5 (-I 5), the number of \\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 298,
+        "Column": 5,
+        "ByteOffset": 9676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tlevels equal to 2 (-L 2), the delay equal to 2-3 delays of inverter, \\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 299,
+        "Column": 5,
+        "ByteOffset": 9773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tthe area equal to 2-3 areas of two input NAND, and runtime limit equal \\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 9872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tto 10 seconds (-T 10). Run precomputation and learn from the result.\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 301,
+        "Column": 5,
+        "ByteOffset": 9968
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tDetermine what parameter is most constraining and try to increase \\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 302,
+        "Column": 5,
+        "ByteOffset": 10062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tthe value of that parameter. The goal is to have a well-balanced\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 303,
+        "Column": 5,
+        "ByteOffset": 10154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tset of constraints and the resulting supergate library containing\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 304,
+        "Column": 5,
+        "ByteOffset": 10247
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tapproximately 5K-20K supergates. Typically, it is better to increase\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 5,
+        "ByteOffset": 10343
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tdelay limit rather than area limit, because having large-area supergates\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 5,
+        "ByteOffset": 10443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tmay result in a considerable increase in area.\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 307,
+        "Column": 5,
+        "ByteOffset": 10517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 308,
+        "Column": 5,
+        "ByteOffset": 10545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tNote that a good supergate library for experiments typically can be \\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 309,
+        "Column": 5,
+        "ByteOffset": 10641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tprecomputed in 30 sec or less. Increasing runtime limit makes sense when\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 310,
+        "Column": 5,
+        "ByteOffset": 10741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tother parameters are well-balanced and it is needed to enumerate more\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 311,
+        "Column": 5,
+        "ByteOffset": 10838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tchoices to have a good result. In the end, to compute the final library\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 312,
+        "Column": 5,
+        "ByteOffset": 10937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tthe runtime can be set to 300 sec to ensure the ultimate quality.\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 313,
+        "Column": 5,
+        "ByteOffset": 11030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tIn some cases, the runtime has to be reduced if the supergate library\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 314,
+        "Column": 5,
+        "ByteOffset": 11127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tcontains too many supergates (\u003e 500K).\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 315,
+        "Column": 5,
+        "ByteOffset": 11193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 316,
+        "Column": 5,
+        "ByteOffset": 11221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\tWhen precomputing libraries of 6 inputs (-i 6), start with even more \\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 317,
+        "Column": 5,
+        "ByteOffset": 11318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\trestricted parameters and gradually increase them until the goal is met.\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 318,
+        "Column": 5,
+        "ByteOffset": 11418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t\\n\");"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Super_Init",
+      "Start": 1420,
+      "End": 1633,
+      "BodyStart": 1458,
+      "Original": "void Super_Init( Abc_Frame_t * pAbc )\n{\n    Cmd_CommandAdd( pAbc, \"SC mapping\",  \"super\",   Super_CommandSupergates,    0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\",  \"super2\",  Super_CommandSupergatesAnd, 0 ); \n}",
+      "Draft": "func Super_Init(pAbc *Abc_Frame_t) {\n    Cmd_CommandAdd( pAbc, \"SC mapping\",  \"super\",   Super_CommandSupergates,    0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\",  \"super2\",  Super_CommandSupergatesAnd, 0 ); \n}"
+    },
+    {
+      "Name": "Super_End",
+      "Start": 1869,
+      "End": 1909,
+      "BodyStart": 1906,
+      "Original": "void Super_End( Abc_Frame_t * pAbc )\n{\n}",
+      "Draft": "func Super_End(pAbc *Abc_Frame_t) {\n}"
+    },
+    {
+      "Name": "Super_CommandSupergatesAnd",
+      "Start": 2147,
+      "End": 3798,
+      "BodyStart": 2223,
+      "Original": "int Super_CommandSupergatesAnd( Abc_Frame_t * pAbc, int argc, char **argv )\n{\n    FILE * pOut, * pErr;\n    int nVarsMax, nLevels;\n    int fVerbose;\n    int c;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    nVarsMax = 4;\n    nLevels  = 3;\n    fVerbose = 0;\n    Extra_UtilGetoptReset();\n    while ( (c = Extra_UtilGetopt(argc, argv, \"ILvh\")) != EOF ) \n    {\n        switch (c) \n        {\n            case 'I':\n                nVarsMax = atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if ( nVarsMax \u003c 0 ) \n                    goto usage;\n                break;\n            case 'L':\n                nLevels = atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if ( nLevels \u003c 0 ) \n                    goto usage;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    Super2_Precompute( nVarsMax, nLevels, fVerbose );\n\n    return 0;\n\nusage:\n    fprintf( pErr, \"usage: super2 [-IL num] [-vh]\\n\");\n    fprintf( pErr, \"\\t         precomputes the supergates composed of AND2s and INVs\\n\" );  \n    fprintf( pErr, \"\\t-I num : the max number of inputs to the supergate [default = %d]\\n\", nVarsMax );\n    fprintf( pErr, \"\\t-L num : the max number of logic levels of gates [default = %d]\\n\", nLevels );\n    fprintf( pErr, \"\\t-v     : enable verbose output\\n\");\n    fprintf( pErr, \"\\t-h     : print the help message\\n\");\n    return 1;       /* error exit */\n}",
+      "Draft": "func Super_CommandSupergatesAnd(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr *os.File;\n    var nVarsMax, nLevels int32;\n    var fVerbose int32;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    nVarsMax = 4;\n    nLevels  = 3;\n    fVerbose = 0;\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"ILvh\")) != -1  {\n        switch c {\n            case 'I':\n                nVarsMax = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if nVarsMax \u003c 0 { \n                    goto usage; }\n                break;\n            case 'L':\n                nLevels = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if nLevels \u003c 0 { \n                    goto usage; }\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    Super2_Precompute( nVarsMax, nLevels, fVerbose );\n\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"usage: super2 [-IL num] [-vh]\\n\");\n    fmt.Fprintf(pErr, \"\\t         precomputes the supergates composed of AND2s and INVs\\n\");  \n    fmt.Fprintf(pErr, \"\\t-I num : the max number of inputs to the supergate [default = %d]\\n\", nVarsMax);\n    fmt.Fprintf(pErr, \"\\t-L num : the max number of logic levels of gates [default = %d]\\n\", nLevels);\n    fmt.Fprintf(pErr, \"\\t-v     : enable verbose output\\n\");\n    fmt.Fprintf(pErr, \"\\t-h     : print the help message\\n\");\n    return 1;       /* error exit */\n}"
+    },
+    {
+      "Name": "Super_CommandSupergates",
+      "Start": 4035,
+      "End": 11418,
+      "BodyStart": 4108,
+      "Original": "int Super_CommandSupergates( Abc_Frame_t * pAbc, int argc, char **argv )\n{\n    FILE * pFile;\n    FILE * pOut, * pErr;\n    Mio_Library_t * pLib;\n    char * FileName, * ExcludeFile;\n    float DelayLimit;\n    float AreaLimit;\n    int fSkipInvs;\n    int fWriteOldFormat; \n    int nVarsMax, nLevels, nGatesMax, TimeLimit;\n    int fVerbose;\n    int c;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    nVarsMax   = 5;\n    nLevels    = 2;\n    DelayLimit = 0;\n    AreaLimit  = 0;\n    nGatesMax  = 0;\n    TimeLimit  = 0;\n    fSkipInvs  = 1;\n    fVerbose   = 0;\n    fWriteOldFormat = 0;\n    ExcludeFile = 0;\n\n    Extra_UtilGetoptReset();\n    while ( (c = Extra_UtilGetopt(argc, argv, \"ILNTDAEsovh\")) != EOF ) \n    {\n        switch (c) \n        {\n            case 'I':\n                nVarsMax = atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if ( nVarsMax \u003c 0 ) \n                    goto usage;\n                break;\n            case 'L':\n                nLevels = atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if ( nLevels \u003c 0 ) \n                    goto usage;\n                break;\n            case 'N':\n                nGatesMax = atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if ( nGatesMax \u003c 0 ) \n                    goto usage;\n                break;\n            case 'T':\n                TimeLimit = atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if ( TimeLimit \u003c 0 ) \n                    goto usage;\n                break;\n            case 'D':\n                DelayLimit = (float)atof(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if ( DelayLimit \u003c= 0.0 ) \n                    goto usage;\n                break;\n            case 'A':\n                AreaLimit = (float)atof(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if ( AreaLimit \u003c= 0.0 ) \n                    goto usage;\n                break;\n            case 'E':\n                ExcludeFile = argv[globalUtilOptind];\n                if ( ExcludeFile == 0 )\n                    goto usage;\n                globalUtilOptind++;\n                break;\n            case 's':\n                fSkipInvs ^= 1;\n                break;\n            case 'o':\n                fWriteOldFormat ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n\n    if ( argc != globalUtilOptind + 1 )\n    {\n        fprintf( pErr, \"The genlib library file should be given on the command line.\\n\" );\n        goto usage;\n    }\n\n    if ( nVarsMax \u003c 2 || nVarsMax \u003e 6 )\n    {\n        fprintf( pErr, \"The max number of variables (%d) should be more than 1 and less than 7.\\n\", nVarsMax );\n        goto usage;\n    }\n\n    // get the input file name\n    FileName = argv[globalUtilOptind];\n    if ( (pFile = Io_FileOpen( FileName, \"open_path\", \"r\", 0 )) == NULL )\n//    if ( (pFile = fopen( FileName, \"r\" )) == NULL )\n    {\n        fprintf( pErr, \"Cannot open input file \\\"%s\\\". \", FileName );\n        if (( FileName = Extra_FileGetSimilarName( FileName, \".genlib\", \".lib\", \".gen\", \".g\", NULL ) ))\n            fprintf( pErr, \"Did you mean \\\"%s\\\"?\", FileName );\n        fprintf( pErr, \"\\n\" );\n        return 1;\n    }\n    fclose( pFile );\n\n    // set the new network\n    pLib = Mio_LibraryRead( FileName, NULL, ExcludeFile, fVerbose );\n    if ( pLib == NULL )\n    {\n        fprintf( pErr, \"Reading library has failed.\\n\" );\n        goto usage;\n    }\n\n    // compute the gates\n    FileName = Extra_FileNameGenericAppend(Mio_LibraryReadName(pLib), \".super\");\n    Super_Precompute( pLib, nVarsMax, nLevels, nGatesMax, DelayLimit, AreaLimit, TimeLimit, fSkipInvs, fVerbose, FileName );\n\n    // delete the library\n    Mio_LibraryDelete( pLib );\n    return 0;\n\nusage:\n    fprintf( pErr, \"usage: super [-ILNT num] [-DA float] [-E file] [-sovh] \u003cgenlib_file\u003e\\n\");\n    fprintf( pErr, \"\\t         precomputes the supergates for the given genlib library\\n\" );  \n    fprintf( pErr, \"\\t-I num   : the max number of supergate inputs [default = %d]\\n\", nVarsMax );\n    fprintf( pErr, \"\\t-L num   : the max number of levels of gates [default = %d]\\n\", nLevels );\n    fprintf( pErr, \"\\t-N num   : the limit on the number of considered supergates [default = %d]\\n\", nGatesMax );\n    fprintf( pErr, \"\\t-T num   : the approximate runtime limit in seconds [default = %d]\\n\", TimeLimit );\n    fprintf( pErr, \"\\t-D float : the max delay of the supergates [default = %.2f]\\n\", DelayLimit );\n    fprintf( pErr, \"\\t-A float : the max area of the supergates [default = %.2f]\\n\", AreaLimit );\n    fprintf( pErr, \"\\t-E file  : file contains list of genlib gates to exclude\\n\" );\n    fprintf( pErr, \"\\t-s       : toggle the use of inverters at the inputs [default = %s]\\n\", (fSkipInvs? \"no\": \"yes\") );\n    fprintf( pErr, \"\\t-o       : toggle dumping the supergate library in old format [default = %s]\\n\", (fWriteOldFormat? \"yes\": \"no\") );\n    fprintf( pErr, \"\\t-v       : enable verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\") );\n    fprintf( pErr, \"\\t-h       : print the help message\\n\");\n    fprintf( pErr, \"\\n\");\n    fprintf( pErr, \"\\tHere is a piece of advice on precomputing supergate libraries:\\n\");\n    fprintf( pErr, \"\\t\\n\");\n    fprintf( pErr, \"\\tStart with the number of inputs equal to 5 (-I 5), the number of \\n\");\n    fprintf( pErr, \"\\tlevels equal to 2 (-L 2), the delay equal to 2-3 delays of inverter, \\n\");\n    fprintf( pErr, \"\\tthe area equal to 2-3 areas of two input NAND, and runtime limit equal \\n\");\n    fprintf( pErr, \"\\tto 10 seconds (-T 10). Run precomputation and learn from the result.\\n\");\n    fprintf( pErr, \"\\tDetermine what parameter is most constraining and try to increase \\n\");\n    fprintf( pErr, \"\\tthe value of that parameter. The goal is to have a well-balanced\\n\");\n    fprintf( pErr, \"\\tset of constraints and the resulting supergate library containing\\n\");\n    fprintf( pErr, \"\\tapproximately 5K-20K supergates. Typically, it is better to increase\\n\");\n    fprintf( pErr, \"\\tdelay limit rather than area limit, because having large-area supergates\\n\");\n    fprintf( pErr, \"\\tmay result in a considerable increase in area.\\n\");\n    fprintf( pErr, \"\\t\\n\");\n    fprintf( pErr, \"\\tNote that a good supergate library for experiments typically can be \\n\");\n    fprintf( pErr, \"\\tprecomputed in 30 sec or less. Increasing runtime limit makes sense when\\n\");\n    fprintf( pErr, \"\\tother parameters are well-balanced and it is needed to enumerate more\\n\");\n    fprintf( pErr, \"\\tchoices to have a good result. In the end, to compute the final library\\n\");\n    fprintf( pErr, \"\\tthe runtime can be set to 300 sec to ensure the ultimate quality.\\n\");\n    fprintf( pErr, \"\\tIn some cases, the runtime has to be reduced if the supergate library\\n\");\n    fprintf( pErr, \"\\tcontains too many supergates (\u003e 500K).\\n\");\n    fprintf( pErr, \"\\t\\n\");\n    fprintf( pErr, \"\\tWhen precomputing libraries of 6 inputs (-i 6), start with even more \\n\");\n    fprintf( pErr, \"\\trestricted parameters and gradually increase them until the goal is met.\\n\");\n    fprintf( pErr, \"\\t\\n\");\n    return 1;       /* error exit */\n}",
+      "Draft": "func Super_CommandSupergates(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var pOut, pErr *os.File;\n    var pLib *Mio_Library_t;\n    var FileName, ExcludeFile string;\n    var DelayLimit float32;\n    var AreaLimit float32;\n    var fSkipInvs int32;\n    var fWriteOldFormat int32; \n    var nVarsMax, nLevels, nGatesMax, TimeLimit int32;\n    var fVerbose int32;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    nVarsMax   = 5;\n    nLevels    = 2;\n    DelayLimit = 0;\n    AreaLimit  = 0;\n    nGatesMax  = 0;\n    TimeLimit  = 0;\n    fSkipInvs  = 1;\n    fVerbose   = 0;\n    fWriteOldFormat = 0;\n    ExcludeFile = 0;\n\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"ILNTDAEsovh\")) != -1  {\n        switch c {\n            case 'I':\n                nVarsMax = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if nVarsMax \u003c 0 { \n                    goto usage; }\n                break;\n            case 'L':\n                nLevels = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if nLevels \u003c 0 { \n                    goto usage; }\n                break;\n            case 'N':\n                nGatesMax = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if nGatesMax \u003c 0 { \n                    goto usage; }\n                break;\n            case 'T':\n                TimeLimit = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if TimeLimit \u003c 0 { \n                    goto usage; }\n                break;\n            case 'D':\n                DelayLimit = float32(atof(argv[globalUtilOptind]));\n                globalUtilOptind++;\n                if DelayLimit \u003c= 0.0 { \n                    goto usage; }\n                break;\n            case 'A':\n                AreaLimit = float32(atof(argv[globalUtilOptind]));\n                globalUtilOptind++;\n                if AreaLimit \u003c= 0.0 { \n                    goto usage; }\n                break;\n            case 'E':\n                ExcludeFile = argv[globalUtilOptind];\n                if ExcludeFile == 0 {\n                    goto usage; }\n                globalUtilOptind++;\n                break;\n            case 's':\n                fSkipInvs ^= 1;\n                break;\n            case 'o':\n                fWriteOldFormat ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n\n    if argc != globalUtilOptind + 1 {\n        fmt.Fprintf(pErr, \"The genlib library file should be given on the command line.\\n\");\n        goto usage;\n    }\n\n    if nVarsMax \u003c 2 || nVarsMax \u003e 6 {\n        fmt.Fprintf(pErr, \"The max number of variables (%d) should be more than 1 and less than 7.\\n\", nVarsMax);\n        goto usage;\n    }\n\n    // get the input file name\n    FileName = argv[globalUtilOptind];\n    if (pFile = Io_FileOpen( FileName, \"open_path\", \"r\", 0 )) == nil {\n//    if ( (pFile = fopen( FileName, \"r\" )) == NULL )\n    \n        fmt.Fprintf(pErr, \"Cannot open input file \\\"%s\\\". \", FileName);\n        if FileName = Extra_FileGetSimilarName( FileName, \".genlib\", \".lib\", \".gen\", \".g\", nil ) {\n            fmt.Fprintf(pErr, \"Did you mean \\\"%s\\\"?\", FileName); }\n        fmt.Fprintf(pErr, \"\\n\");\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    // set the new network\n    pLib = Mio_LibraryRead( FileName, nil, ExcludeFile, fVerbose );\n    if pLib == nil {\n        fmt.Fprintf(pErr, \"Reading library has failed.\\n\");\n        goto usage;\n    }\n\n    // compute the gates\n    FileName = Extra_FileNameGenericAppend(Mio_LibraryReadName(pLib), \".super\");\n    Super_Precompute( pLib, nVarsMax, nLevels, nGatesMax, DelayLimit, AreaLimit, TimeLimit, fSkipInvs, fVerbose, FileName );\n\n    // delete the library\n    Mio_LibraryDelete( pLib );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"usage: super [-ILNT num] [-DA float] [-E file] [-sovh] \u003cgenlib_file\u003e\\n\");\n    fmt.Fprintf(pErr, \"\\t         precomputes the supergates for the given genlib library\\n\");  \n    fmt.Fprintf(pErr, \"\\t-I num   : the max number of supergate inputs [default = %d]\\n\", nVarsMax);\n    fmt.Fprintf(pErr, \"\\t-L num   : the max number of levels of gates [default = %d]\\n\", nLevels);\n    fmt.Fprintf(pErr, \"\\t-N num   : the limit on the number of considered supergates [default = %d]\\n\", nGatesMax);\n    fmt.Fprintf(pErr, \"\\t-T num   : the approximate runtime limit in seconds [default = %d]\\n\", TimeLimit);\n    fmt.Fprintf(pErr, \"\\t-D float : the max delay of the supergates [default = %.2f]\\n\", DelayLimit);\n    fmt.Fprintf(pErr, \"\\t-A float : the max area of the supergates [default = %.2f]\\n\", AreaLimit);\n    fmt.Fprintf(pErr, \"\\t-E file  : file contains list of genlib gates to exclude\\n\");\n    fmt.Fprintf(pErr, \"\\t-s       : toggle the use of inverters at the inputs [default = %s]\\n\", (fSkipInvs? \"no\": \"yes\"));\n    fmt.Fprintf(pErr, \"\\t-o       : toggle dumping the supergate library in old format [default = %s]\\n\", (fWriteOldFormat? \"yes\": \"no\"));\n    fmt.Fprintf(pErr, \"\\t-v       : enable verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\"));\n    fmt.Fprintf(pErr, \"\\t-h       : print the help message\\n\");\n    fmt.Fprintf(pErr, \"\\n\");\n    fmt.Fprintf(pErr, \"\\tHere is a piece of advice on precomputing supergate libraries:\\n\");\n    fmt.Fprintf(pErr, \"\\t\\n\");\n    fmt.Fprintf(pErr, \"\\tStart with the number of inputs equal to 5 (-I 5), the number of \\n\");\n    fmt.Fprintf(pErr, \"\\tlevels equal to 2 (-L 2), the delay equal to 2-3 delays of inverter, \\n\");\n    fmt.Fprintf(pErr, \"\\tthe area equal to 2-3 areas of two input NAND, and runtime limit equal \\n\");\n    fmt.Fprintf(pErr, \"\\tto 10 seconds (-T 10). Run precomputation and learn from the result.\\n\");\n    fmt.Fprintf(pErr, \"\\tDetermine what parameter is most constraining and try to increase \\n\");\n    fmt.Fprintf(pErr, \"\\tthe value of that parameter. The goal is to have a well-balanced\\n\");\n    fmt.Fprintf(pErr, \"\\tset of constraints and the resulting supergate library containing\\n\");\n    fmt.Fprintf(pErr, \"\\tapproximately 5K-20K supergates. Typically, it is better to increase\\n\");\n    fmt.Fprintf(pErr, \"\\tdelay limit rather than area limit, because having large-area supergates\\n\");\n    fmt.Fprintf(pErr, \"\\tmay result in a considerable increase in area.\\n\");\n    fmt.Fprintf(pErr, \"\\t\\n\");\n    fmt.Fprintf(pErr, \"\\tNote that a good supergate library for experiments typically can be \\n\");\n    fmt.Fprintf(pErr, \"\\tprecomputed in 30 sec or less. Increasing runtime limit makes sense when\\n\");\n    fmt.Fprintf(pErr, \"\\tother parameters are well-balanced and it is needed to enumerate more\\n\");\n    fmt.Fprintf(pErr, \"\\tchoices to have a good result. In the end, to compute the final library\\n\");\n    fmt.Fprintf(pErr, \"\\tthe runtime can be set to 300 sec to ensure the ultimate quality.\\n\");\n    fmt.Fprintf(pErr, \"\\tIn some cases, the runtime has to be reduced if the supergate library\\n\");\n    fmt.Fprintf(pErr, \"\\tcontains too many supergates (\u003e 500K).\\n\");\n    fmt.Fprintf(pErr, \"\\t\\n\");\n    fmt.Fprintf(pErr, \"\\tWhen precomputing libraries of 6 inputs (-i 6), start with even more \\n\");\n    fmt.Fprintf(pErr, \"\\trestricted parameters and gradually increase them until the goal is met.\\n\");\n    fmt.Fprintf(pErr, \"\\t\\n\");\n    return 1;       /* error exit */\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/super/super.c::Super_Init",
+      "Category": "semantic-review",
+      "Symbol": "Super_Init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1420,
+      "End": 1633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/super/super.c::Super_End",
+      "Category": "semantic-review",
+      "Symbol": "Super_End",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1869,
+      "End": 1909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/super/super.c::Super_CommandSupergatesAnd",
+      "Category": "semantic-review",
+      "Symbol": "Super_CommandSupergatesAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2147,
+      "End": 3798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/super/super.c::ternary::Super_CommandSupergates",
+      "Category": "ternary-review",
+      "Symbol": "Super_CommandSupergates",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4035,
+      "End": 11418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/super/super.c::Super_CommandSupergates",
+      "Category": "semantic-review",
+      "Symbol": "Super_CommandSupergates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4035,
+      "End": 11418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/super/super.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11665
+    }
+  ],
+  "Draft": "package super\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [super.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Pre-computation of supergates.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 18, 2003.]\n\n  Revision    [$Id: super.c,v 1.6 2004/10/30 20:51:11 satrajit Exp $]\n\n***********************************************************************/\n\n//#include \"superInt.h\"\n//#include \"base/main/mainInt.h\"\n//#include \"map/mio/mio.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Super_CommandSupergates   ( Abc_Frame_t * pAbc, int argc, char **argv );\n\n// static int Super_CommandSupergatesAnd( Abc_Frame_t * pAbc, int argc, char **argv );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Super_Init(pAbc *Abc_Frame_t) {\n    Cmd_CommandAdd( pAbc, \"SC mapping\",  \"super\",   Super_CommandSupergates,    0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\",  \"super2\",  Super_CommandSupergatesAnd, 0 ); \n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Super_End(pAbc *Abc_Frame_t) {\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Super_CommandSupergatesAnd(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr *os.File;\n    var nVarsMax, nLevels int32;\n    var fVerbose int32;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    nVarsMax = 4;\n    nLevels  = 3;\n    fVerbose = 0;\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"ILvh\")) != -1  {\n        switch c {\n            case 'I':\n                nVarsMax = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if nVarsMax \u003c 0 { \n                    goto usage; }\n                break;\n            case 'L':\n                nLevels = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if nLevels \u003c 0 { \n                    goto usage; }\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    Super2_Precompute( nVarsMax, nLevels, fVerbose );\n\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"usage: super2 [-IL num] [-vh]\\n\");\n    fmt.Fprintf(pErr, \"\\t         precomputes the supergates composed of AND2s and INVs\\n\");  \n    fmt.Fprintf(pErr, \"\\t-I num : the max number of inputs to the supergate [default = %d]\\n\", nVarsMax);\n    fmt.Fprintf(pErr, \"\\t-L num : the max number of logic levels of gates [default = %d]\\n\", nLevels);\n    fmt.Fprintf(pErr, \"\\t-v     : enable verbose output\\n\");\n    fmt.Fprintf(pErr, \"\\t-h     : print the help message\\n\");\n    return 1;       /* error exit */\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Super_CommandSupergates(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var pOut, pErr *os.File;\n    var pLib *Mio_Library_t;\n    var FileName, ExcludeFile string;\n    var DelayLimit float32;\n    var AreaLimit float32;\n    var fSkipInvs int32;\n    var fWriteOldFormat int32; \n    var nVarsMax, nLevels, nGatesMax, TimeLimit int32;\n    var fVerbose int32;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    nVarsMax   = 5;\n    nLevels    = 2;\n    DelayLimit = 0;\n    AreaLimit  = 0;\n    nGatesMax  = 0;\n    TimeLimit  = 0;\n    fSkipInvs  = 1;\n    fVerbose   = 0;\n    fWriteOldFormat = 0;\n    ExcludeFile = 0;\n\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"ILNTDAEsovh\")) != -1  {\n        switch c {\n            case 'I':\n                nVarsMax = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if nVarsMax \u003c 0 { \n                    goto usage; }\n                break;\n            case 'L':\n                nLevels = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if nLevels \u003c 0 { \n                    goto usage; }\n                break;\n            case 'N':\n                nGatesMax = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if nGatesMax \u003c 0 { \n                    goto usage; }\n                break;\n            case 'T':\n                TimeLimit = strconv.Atoi(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if TimeLimit \u003c 0 { \n                    goto usage; }\n                break;\n            case 'D':\n                DelayLimit = float32(atof(argv[globalUtilOptind]));\n                globalUtilOptind++;\n                if DelayLimit \u003c= 0.0 { \n                    goto usage; }\n                break;\n            case 'A':\n                AreaLimit = float32(atof(argv[globalUtilOptind]));\n                globalUtilOptind++;\n                if AreaLimit \u003c= 0.0 { \n                    goto usage; }\n                break;\n            case 'E':\n                ExcludeFile = argv[globalUtilOptind];\n                if ExcludeFile == 0 {\n                    goto usage; }\n                globalUtilOptind++;\n                break;\n            case 's':\n                fSkipInvs ^= 1;\n                break;\n            case 'o':\n                fWriteOldFormat ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n\n    if argc != globalUtilOptind + 1 {\n        fmt.Fprintf(pErr, \"The genlib library file should be given on the command line.\\n\");\n        goto usage;\n    }\n\n    if nVarsMax \u003c 2 || nVarsMax \u003e 6 {\n        fmt.Fprintf(pErr, \"The max number of variables (%d) should be more than 1 and less than 7.\\n\", nVarsMax);\n        goto usage;\n    }\n\n    // get the input file name\n    FileName = argv[globalUtilOptind];\n    if (pFile = Io_FileOpen( FileName, \"open_path\", \"r\", 0 )) == nil {\n//    if ( (pFile = fopen( FileName, \"r\" )) == NULL )\n    \n        fmt.Fprintf(pErr, \"Cannot open input file \\\"%s\\\". \", FileName);\n        if FileName = Extra_FileGetSimilarName( FileName, \".genlib\", \".lib\", \".gen\", \".g\", nil ) {\n            fmt.Fprintf(pErr, \"Did you mean \\\"%s\\\"?\", FileName); }\n        fmt.Fprintf(pErr, \"\\n\");\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    // set the new network\n    pLib = Mio_LibraryRead( FileName, nil, ExcludeFile, fVerbose );\n    if pLib == nil {\n        fmt.Fprintf(pErr, \"Reading library has failed.\\n\");\n        goto usage;\n    }\n\n    // compute the gates\n    FileName = Extra_FileNameGenericAppend(Mio_LibraryReadName(pLib), \".super\");\n    Super_Precompute( pLib, nVarsMax, nLevels, nGatesMax, DelayLimit, AreaLimit, TimeLimit, fSkipInvs, fVerbose, FileName );\n\n    // delete the library\n    Mio_LibraryDelete( pLib );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"usage: super [-ILNT num] [-DA float] [-E file] [-sovh] \u003cgenlib_file\u003e\\n\");\n    fmt.Fprintf(pErr, \"\\t         precomputes the supergates for the given genlib library\\n\");  \n    fmt.Fprintf(pErr, \"\\t-I num   : the max number of supergate inputs [default = %d]\\n\", nVarsMax);\n    fmt.Fprintf(pErr, \"\\t-L num   : the max number of levels of gates [default = %d]\\n\", nLevels);\n    fmt.Fprintf(pErr, \"\\t-N num   : the limit on the number of considered supergates [default = %d]\\n\", nGatesMax);\n    fmt.Fprintf(pErr, \"\\t-T num   : the approximate runtime limit in seconds [default = %d]\\n\", TimeLimit);\n    fmt.Fprintf(pErr, \"\\t-D float : the max delay of the supergates [default = %.2f]\\n\", DelayLimit);\n    fmt.Fprintf(pErr, \"\\t-A float : the max area of the supergates [default = %.2f]\\n\", AreaLimit);\n    fmt.Fprintf(pErr, \"\\t-E file  : file contains list of genlib gates to exclude\\n\");\n    fmt.Fprintf(pErr, \"\\t-s       : toggle the use of inverters at the inputs [default = %s]\\n\", (fSkipInvs? \"no\": \"yes\"));\n    fmt.Fprintf(pErr, \"\\t-o       : toggle dumping the supergate library in old format [default = %s]\\n\", (fWriteOldFormat? \"yes\": \"no\"));\n    fmt.Fprintf(pErr, \"\\t-v       : enable verbose output [default = %s]\\n\", (fVerbose? \"yes\" : \"no\"));\n    fmt.Fprintf(pErr, \"\\t-h       : print the help message\\n\");\n    fmt.Fprintf(pErr, \"\\n\");\n    fmt.Fprintf(pErr, \"\\tHere is a piece of advice on precomputing supergate libraries:\\n\");\n    fmt.Fprintf(pErr, \"\\t\\n\");\n    fmt.Fprintf(pErr, \"\\tStart with the number of inputs equal to 5 (-I 5), the number of \\n\");\n    fmt.Fprintf(pErr, \"\\tlevels equal to 2 (-L 2), the delay equal to 2-3 delays of inverter, \\n\");\n    fmt.Fprintf(pErr, \"\\tthe area equal to 2-3 areas of two input NAND, and runtime limit equal \\n\");\n    fmt.Fprintf(pErr, \"\\tto 10 seconds (-T 10). Run precomputation and learn from the result.\\n\");\n    fmt.Fprintf(pErr, \"\\tDetermine what parameter is most constraining and try to increase \\n\");\n    fmt.Fprintf(pErr, \"\\tthe value of that parameter. The goal is to have a well-balanced\\n\");\n    fmt.Fprintf(pErr, \"\\tset of constraints and the resulting supergate library containing\\n\");\n    fmt.Fprintf(pErr, \"\\tapproximately 5K-20K supergates. Typically, it is better to increase\\n\");\n    fmt.Fprintf(pErr, \"\\tdelay limit rather than area limit, because having large-area supergates\\n\");\n    fmt.Fprintf(pErr, \"\\tmay result in a considerable increase in area.\\n\");\n    fmt.Fprintf(pErr, \"\\t\\n\");\n    fmt.Fprintf(pErr, \"\\tNote that a good supergate library for experiments typically can be \\n\");\n    fmt.Fprintf(pErr, \"\\tprecomputed in 30 sec or less. Increasing runtime limit makes sense when\\n\");\n    fmt.Fprintf(pErr, \"\\tother parameters are well-balanced and it is needed to enumerate more\\n\");\n    fmt.Fprintf(pErr, \"\\tchoices to have a good result. In the end, to compute the final library\\n\");\n    fmt.Fprintf(pErr, \"\\tthe runtime can be set to 300 sec to ensure the ultimate quality.\\n\");\n    fmt.Fprintf(pErr, \"\\tIn some cases, the runtime has to be reduced if the supergate library\\n\");\n    fmt.Fprintf(pErr, \"\\tcontains too many supergates (\u003e 500K).\\n\");\n    fmt.Fprintf(pErr, \"\\t\\n\");\n    fmt.Fprintf(pErr, \"\\tWhen precomputing libraries of 6 inputs (-i 6), start with even more \\n\");\n    fmt.Fprintf(pErr, \"\\trestricted parameters and gradually increase them until the goal is met.\\n\");\n    fmt.Fprintf(pErr, \"\\t\\n\");\n    return 1;       /* error exit */\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

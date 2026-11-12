@@ -1,0 +1,397 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c",
+  "SHA256": "0ac9af6d474c5caa97b624bdf3880879d10deb9bc4c3a4728fe585e097ff7cc9",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 63,
+        "Column": 5,
+        "ByteOffset": 2009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 92,
+        "Column": 5,
+        "ByteOffset": 2931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 6077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(pOld) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 197,
+        "Column": 5,
+        "ByteOffset": 7629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nRegs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 200,
+        "Column": 5,
+        "ByteOffset": 7753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vMapRegs) == (nSteps + 1) * nRegs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 10202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 285,
+        "Column": 5,
+        "ByteOffset": 10316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 286,
+        "Column": 5,
+        "ByteOffset": 10352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p) \u003c Aig_ManCiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 293,
+        "Column": 5,
+        "ByteOffset": 10762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vPis) == Aig_ManRegNum(p) + nFrames * Saig_ManPiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 310,
+        "Column": 5,
+        "ByteOffset": 11821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == Aig_ManCiNum(pCnf.pMan) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 331,
+        "Column": 5,
+        "ByteOffset": 12458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Uniquness does not hold in %d frames.\\n\", Counter );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 334,
+        "Column": 66,
+        "ByteOffset": 12611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pCounterEx) ? (free((char *) (pCounterEx)), (pCounterEx) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Inter_ManCheckContainment",
+      "Start": 1415,
+      "End": 2059,
+      "BodyStart": 1483,
+      "Original": "int Inter_ManCheckContainment( Aig_Man_t * pNew, Aig_Man_t * pOld )\n{\n    Aig_Man_t * pMiter, * pAigTemp;\n    int RetValue;\n    pMiter = Aig_ManCreateMiter( pNew, pOld, 1 );\n//    pMiter = Dar_ManRwsat( pAigTemp = pMiter, 1, 0 );\n//    Aig_ManStop( pAigTemp );\n    RetValue = Fra_FraigMiterStatus( pMiter );\n    if ( RetValue == -1 )\n    {\n        pAigTemp = Fra_FraigEquivence( pMiter, 1000000, 1 );\n        RetValue = Fra_FraigMiterStatus( pAigTemp );\n        Aig_ManStop( pAigTemp );\n//        RetValue = Fra_FraigSat( pMiter, 1000000, 0, 0, 0, 0, 0, 0 );\n    }\n    assert( RetValue != -1 );\n    Aig_ManStop( pMiter );\n    return RetValue;\n}",
+      "Draft": "func Inter_ManCheckContainment(pNew *Aig_Man_t, pOld *Aig_Man_t) int32 {\n    var pMiter, pAigTemp *Aig_Man_t;\n    var RetValue int32;\n    pMiter = Aig_ManCreateMiter( pNew, pOld, 1 );\n//    pMiter = Dar_ManRwsat( pAigTemp = pMiter, 1, 0 );\n//    Aig_ManStop( pAigTemp );\n    RetValue = Fra_FraigMiterStatus( pMiter );\n    if RetValue == -1 {\n        pAigTemp = Fra_FraigEquivence( pMiter, 1000000, 1 );\n        RetValue = Fra_FraigMiterStatus( pAigTemp );\n        Aig_ManStop( pAigTemp );\n//        RetValue = Fra_FraigSat( pMiter, 1000000, 0, 0, 0, 0, 0, 0 );\n    }\n    assert(RetValue != -1, \"RetValue != -1\");\n    Aig_ManStop( pMiter );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Inter_ManCheckEquivalence",
+      "Start": 2335,
+      "End": 2979,
+      "BodyStart": 2403,
+      "Original": "int Inter_ManCheckEquivalence( Aig_Man_t * pNew, Aig_Man_t * pOld )\n{\n    Aig_Man_t * pMiter, * pAigTemp;\n    int RetValue;\n    pMiter = Aig_ManCreateMiter( pNew, pOld, 0 );\n//    pMiter = Dar_ManRwsat( pAigTemp = pMiter, 1, 0 );\n//    Aig_ManStop( pAigTemp );\n    RetValue = Fra_FraigMiterStatus( pMiter );\n    if ( RetValue == -1 )\n    {\n        pAigTemp = Fra_FraigEquivence( pMiter, 1000000, 1 );\n        RetValue = Fra_FraigMiterStatus( pAigTemp );\n        Aig_ManStop( pAigTemp );\n//        RetValue = Fra_FraigSat( pMiter, 1000000, 0, 0, 0, 0, 0, 0 );\n    }\n    assert( RetValue != -1 );\n    Aig_ManStop( pMiter );\n    return RetValue;\n}",
+      "Draft": "func Inter_ManCheckEquivalence(pNew *Aig_Man_t, pOld *Aig_Man_t) int32 {\n    var pMiter, pAigTemp *Aig_Man_t;\n    var RetValue int32;\n    pMiter = Aig_ManCreateMiter( pNew, pOld, 0 );\n//    pMiter = Dar_ManRwsat( pAigTemp = pMiter, 1, 0 );\n//    Aig_ManStop( pAigTemp );\n    RetValue = Fra_FraigMiterStatus( pMiter );\n    if RetValue == -1 {\n        pAigTemp = Fra_FraigEquivence( pMiter, 1000000, 1 );\n        RetValue = Fra_FraigMiterStatus( pAigTemp );\n        Aig_ManStop( pAigTemp );\n//        RetValue = Fra_FraigSat( pMiter, 1000000, 0, 0, 0, 0, 0, 0 );\n    }\n    assert(RetValue != -1, \"RetValue != -1\");\n    Aig_ManStop( pMiter );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Inter_ManFramesLatches",
+      "Start": 3380,
+      "End": 4757,
+      "BodyStart": 3471,
+      "Original": "Aig_Man_t * Inter_ManFramesLatches( Aig_Man_t * pAig, int nFrames, Vec_Ptr_t ** pvMapReg )\n{\n    Aig_Man_t * pFrames;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    int i, f;\n    assert( Saig_ManRegNum(pAig) \u003e 0 );\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    *pvMapReg = Vec_PtrAlloc( (nFrames+1) * Saig_ManRegNum(pAig) );\n    Saig_ManForEachLo( pAig, pObj, i )\n    {\n        pObj-\u003epData = Aig_ObjCreateCi( pFrames );\n        Vec_PtrPush( *pvMapReg, pObj-\u003epData );\n    }\n    // add timeframes\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        // create PI nodes for this frame\n        Saig_ManForEachPi( pAig, pObj, i )\n            pObj-\u003epData = Aig_ObjCreateCi( pFrames );\n        // add internal nodes of this frame\n        Aig_ManForEachNode( pAig, pObj, i )\n            pObj-\u003epData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n        // save register inputs\n        Saig_ManForEachLi( pAig, pObj, i )\n            pObj-\u003epData = Aig_ObjChild0Copy(pObj);\n        // transfer to register outputs\n        Saig_ManForEachLiLo(  pAig, pObjLi, pObjLo, i )\n        {\n            pObjLo-\u003epData = pObjLi-\u003epData;\n            Vec_PtrPush( *pvMapReg, pObjLo-\u003epData );\n        }\n    }\n    return pFrames;\n}",
+      "Draft": "func Inter_ManFramesLatches(pAig *Aig_Man_t, nFrames int32, pvMapReg **Vec_Ptr_t) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i, f int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    *pvMapReg = Vec_PtrAlloc( (nFrames+1) * Saig_ManRegNum(pAig) );\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pFrames );\n        Vec_PtrPush( *pvMapReg, pObj.pData );\n    }\n    // add timeframes\n    for  f = 0; f \u003c nFrames; f++  {\n        // create PI nodes for this frame\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi( pFrames );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n        // save register inputs\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            pObj.pData = Aig_ObjChild0Copy(pObj);\n        }\n        // transfer to register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLo.pData = pObjLi.pData;\n            Vec_PtrPush( *pvMapReg, pObjLo.pData );\n        }\n    }\n    return pFrames;\n}"
+    },
+    {
+      "Name": "Inter_ManAppendCone",
+      "Start": 5047,
+      "End": 5695,
+      "BodyStart": 5145,
+      "Original": "void Inter_ManAppendCone( Aig_Man_t * pOld, Aig_Man_t * pNew, Aig_Obj_t ** ppNewPis, int fCompl )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    assert( Aig_ManCoNum(pOld) == 1 );\n    // create the PIs\n    Aig_ManCleanData( pOld );\n    Aig_ManConst1(pOld)-\u003epData = Aig_ManConst1(pNew);\n    Aig_ManForEachCi( pOld, pObj, i )\n        pObj-\u003epData = ppNewPis[i];\n    // duplicate internal nodes\n    Aig_ManForEachNode( pOld, pObj, i )\n        pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // add one PO to new\n    pObj = Aig_ManCo( pOld, 0 );\n    Aig_ObjCreateCo( pNew, Aig_NotCond( Aig_ObjChild0Copy(pObj), fCompl ) );\n}",
+      "Draft": "func Inter_ManAppendCone(pOld *Aig_Man_t, pNew *Aig_Man_t, ppNewPis **Aig_Obj_t, fCompl int32) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManCoNum(pOld) == 1, \"Aig_ManCoNum(pOld) == 1\");\n    // create the PIs\n    Aig_ManCleanData( pOld );\n    Aig_ManConst1(pOld).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pOld.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pOld.vCis, i)), 1); i++  {\n        pObj.pData = ppNewPis[i];\n    }\n    // duplicate internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pOld.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pOld.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // add one PO to new\n    pObj = Aig_ManCo( pOld, 0 );\n    Aig_ObjCreateCo( pNew, Aig_NotCond( Aig_ObjChild0Copy(pObj), fCompl ) );\n}"
+    },
+    {
+      "Name": "Inter_ManCheckInductiveContainment",
+      "Start": 5984,
+      "End": 7789,
+      "BodyStart": 6092,
+      "Original": "int Inter_ManCheckInductiveContainment( Aig_Man_t * pTrans, Aig_Man_t * pInter, int nSteps, int fBackward )\n{\n    Aig_Man_t * pFrames;\n    Aig_Obj_t ** ppNodes;\n    Vec_Ptr_t * vMapRegs;\n    Cnf_Dat_t * pCnf;\n    sat_solver * pSat;\n    int f, nRegs, status;\n    nRegs = Saig_ManRegNum(pTrans);\n    assert( nRegs \u003e 0 );\n    // generate the timeframes \n    pFrames = Inter_ManFramesLatches( pTrans, nSteps, \u0026vMapRegs );\n    assert( Vec_PtrSize(vMapRegs) == (nSteps + 1) * nRegs );\n    // add main constraints to the timeframes\n    ppNodes = (Aig_Obj_t **)Vec_PtrArray(vMapRegs);\n    if ( !fBackward )\n    { \n        // forward inductive check: p -\u003e p -\u003e ... -\u003e !p\n        for ( f = 0; f \u003c nSteps; f++ )\n            Inter_ManAppendCone( pInter, pFrames, ppNodes + f * nRegs, 0 );\n        Inter_ManAppendCone( pInter, pFrames, ppNodes + f * nRegs, 1 );\n    }\n    else\n    {\n        // backward inductive check: p -\u003e !p -\u003e ... -\u003e !p\n        Inter_ManAppendCone( pInter, pFrames, ppNodes + 0 * nRegs, 1 );\n        for ( f = 1; f \u003c= nSteps; f++ )\n            Inter_ManAppendCone( pInter, pFrames, ppNodes + f * nRegs, 0 );\n    }\n    Vec_PtrFree( vMapRegs );\n    Aig_ManCleanup( pFrames );\n\n    // convert to CNF\n    pCnf = Cnf_Derive( pFrames, 0 ); \n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n//    Cnf_DataFree( pCnf );\n//    Aig_ManStop( pFrames );\n\n    if ( pSat == NULL )\n    {\n        Cnf_DataFree( pCnf );\n        Aig_ManStop( pFrames );\n        return 1;\n    }\n\n     // solve the problem\n    status = sat_solver_solve( pSat, NULL, NULL, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n\n//    Inter_ManCheckUniqueness( pTrans, pSat, pCnf, nSteps );\n\n    Cnf_DataFree( pCnf );\n    Aig_ManStop( pFrames );\n\n    sat_solver_delete( pSat );\n    return status == l_False;\n}",
+      "Draft": "func Inter_ManCheckInductiveContainment(pTrans *Aig_Man_t, pInter *Aig_Man_t, nSteps int32, fBackward int32) int32 {\n    var pFrames *Aig_Man_t;\n    var ppNodes **Aig_Obj_t;\n    var vMapRegs *Vec_Ptr_t;\n    var pCnf *Cnf_Dat_t;\n    var pSat *sat_solver;\n    var f, nRegs, status int32;\n    nRegs = Saig_ManRegNum(pTrans);\n    assert(nRegs \u003e 0, \"nRegs \u003e 0\");\n    // generate the timeframes \n    pFrames = Inter_ManFramesLatches( pTrans, nSteps, \u0026vMapRegs );\n    assert(Vec_PtrSize(vMapRegs) == (nSteps + 1) * nRegs, \"Vec_PtrSize(vMapRegs) == (nSteps + 1) * nRegs\");\n    // add main constraints to the timeframes\n    ppNodes = (Aig_Obj_t **)Vec_PtrArray(vMapRegs);\n    if !(fBackward != 0) { \n        // forward inductive check: p -\u003e p -\u003e ... -\u003e !p\n        for  f = 0; f \u003c nSteps; f++  {\n            Inter_ManAppendCone( pInter, pFrames, ppNodes + f * nRegs, 0 );\n        }\n        Inter_ManAppendCone( pInter, pFrames, ppNodes + f * nRegs, 1 );\n    \n    } else {\n        // backward inductive check: p -\u003e !p -\u003e ... -\u003e !p\n        Inter_ManAppendCone( pInter, pFrames, ppNodes + 0 * nRegs, 1 );\n        for  f = 1; f \u003c= nSteps; f++  {\n            Inter_ManAppendCone( pInter, pFrames, ppNodes + f * nRegs, 0 );\n        }\n    }\n    Vec_PtrFree( vMapRegs );\n    Aig_ManCleanup( pFrames );\n\n    // convert to CNF\n    pCnf = Cnf_Derive( pFrames, 0 ); \n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n//    Cnf_DataFree( pCnf );\n//    Aig_ManStop( pFrames );\n\n    if pSat == nil {\n        Cnf_DataFree( pCnf );\n        Aig_ManStop( pFrames );\n        return 1;\n    }\n\n     // solve the problem\n    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n\n//    Inter_ManCheckUniqueness( pTrans, pSat, pCnf, nSteps );\n\n    Cnf_DataFree( pCnf );\n    Aig_ManStop( pFrames );\n\n    sat_solver_delete( pSat );\n    return status == l_False;\n}"
+    },
+    {
+      "Name": "Inter_ManCheckUniqueness",
+      "Start": 8149,
+      "End": 10552,
+      "BodyStart": 8245,
+      "Original": "int Inter_ManCheckUniqueness( Aig_Man_t * p, sat_solver * pSat, Cnf_Dat_t * pCnf, int nFrames )\n{\n    extern int Fra_SmlNodesCompareInFrame( Fra_Sml_t * p, Aig_Obj_t * pObj0, Aig_Obj_t * pObj1, int iFrame0, int iFrame1 );\n    extern void Fra_SmlAssignConst( Fra_Sml_t * p, Aig_Obj_t * pObj, int fConst1, int iFrame );\n    extern void Fra_SmlSimulateOne( Fra_Sml_t * p );\n\n    Fra_Sml_t * pSml;\n    Vec_Int_t * vPis;\n    Aig_Obj_t * pObj, * pObj0;\n    int i, k, v, iBit, * pCounterEx;\n    int Counter;\n    if ( nFrames == 1 )\n        return 1;\n//    if ( pSat-\u003emodel.size == 0 )\n    \n    // possible consequences here!!!\n    assert( 0 );\n\n    if ( sat_solver_nvars(pSat) == 0 )\n        return 1;\n//    assert( Saig_ManPoNum(p) == 1 );\n    assert( Aig_ManRegNum(p) \u003e 0 );\n    assert( Aig_ManRegNum(p) \u003c Aig_ManCiNum(p) );\n\n    // get the counter-example\n    vPis = Vec_IntAlloc( 100 );\n    Aig_ManForEachCi( pCnf-\u003epMan, pObj, k )\n        Vec_IntPush( vPis, pCnf-\u003epVarNums[Aig_ObjId(pObj)] );\n    assert( Vec_IntSize(vPis) == Aig_ManRegNum(p) + nFrames * Saig_ManPiNum(p) );\n    pCounterEx = Sat_SolverGetModel( pSat, vPis-\u003epArray, vPis-\u003enSize );\n    Vec_IntFree( vPis );\n\n    // start a new sequential simulator\n    pSml = Fra_SmlStart( p, 0, nFrames, 1 );\n    // assign simulation info for the registers\n    iBit = 0;\n    Aig_ManForEachLoSeq( p, pObj, i )\n        Fra_SmlAssignConst( pSml, pObj, pCounterEx[iBit++], 0 );\n    // assign simulation info for the primary inputs\n    for ( i = 0; i \u003c nFrames; i++ )\n        Aig_ManForEachPiSeq( p, pObj, k )\n            Fra_SmlAssignConst( pSml, pObj, pCounterEx[iBit++], i );\n    assert( iBit == Aig_ManCiNum(pCnf-\u003epMan) );\n    // run simulation\n    Fra_SmlSimulateOne( pSml );\n\n    // check if the given output has failed\n//    RetValue = !Fra_SmlNodeIsZero( pSml, Aig_ManCo(pAig, 0) );\n//    assert( RetValue );\n\n    // check values at the internal nodes\n    Counter = 0;\n    for ( i = 0; i \u003c nFrames; i++ )\n    for ( k = i+1; k \u003c nFrames; k++ )\n    {\n        for ( v = 0; v \u003c Aig_ManRegNum(p); v++ )\n        {\n            pObj0 = Aig_ManLo(p, v);\n            if ( !Fra_SmlNodesCompareInFrame( pSml, pObj0, pObj0, i, k ) )\n                break;\n        }\n        if ( v == Aig_ManRegNum(p) )\n            Counter++;\n    }\n    printf( \"Uniquness does not hold in %d frames.\\n\", Counter );\n\n    Fra_SmlStop( pSml );\n    ABC_FREE( pCounterEx );\n    return 1;\n}",
+      "Draft": "func Inter_ManCheckUniqueness(p *Aig_Man_t, pSat *sat_solver, pCnf *Cnf_Dat_t, nFrames int32) int32 {\n    extern int Fra_SmlNodesCompareInFrame( Fra_Sml_t * p, Aig_Obj_t * pObj0, Aig_Obj_t * pObj1, int iFrame0, int iFrame1 );\n    extern void Fra_SmlAssignConst( Fra_Sml_t * p, Aig_Obj_t * pObj, int fConst1, int iFrame );\n    extern void Fra_SmlSimulateOne( Fra_Sml_t * p );\n\n    var pSml *Fra_Sml_t;\n    var vPis *Vec_Int_t;\n    var pObj, pObj0 *Aig_Obj_t;\n    var i int32;\n    var k int32;\n    var v int32;\n    var iBit int32;\n    var pCounterEx *int32;\n    var Counter int32;\n    if nFrames == 1 {\n        return 1; }\n//    if ( pSat-\u003emodel.size == 0 )\n    \n    // possible consequences here!!!\n    assert(false, \"0\");\n\n    if sat_solver_nvars(pSat) == 0 {\n        return 1; }\n//    assert( Saig_ManPoNum(p) == 1 );\n    assert(Aig_ManRegNum(p) \u003e 0, \"Aig_ManRegNum(p) \u003e 0\");\n    assert(Aig_ManRegNum(p) \u003c Aig_ManCiNum(p), \"Aig_ManRegNum(p) \u003c Aig_ManCiNum(p)\");\n\n    // get the counter-example\n    vPis = Vec_IntAlloc( 100 );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(pCnf.pMan.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pCnf.pMan.vCis, k)), 1); k++  {\n        Vec_IntPush( vPis, pCnf.pVarNums[Aig_ObjId(pObj)] );\n    }\n    assert(Vec_IntSize(vPis) == Aig_ManRegNum(p) + nFrames * Saig_ManPiNum(p), \"Vec_IntSize(vPis) == Aig_ManRegNum(p) + nFrames * Saig_ManPiNum(p)\");\n    pCounterEx = Sat_SolverGetModel( pSat, vPis.pArray, vPis.nSize );\n    Vec_IntFree( vPis );\n\n    // start a new sequential simulator\n    pSml = Fra_SmlStart( p, 0, nFrames, 1 );\n    // assign simulation info for the registers\n    iBit = 0;\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        Fra_SmlAssignConst( pSml, pObj, pCounterEx[iBit++], 0 );\n    }\n    // assign simulation info for the primary inputs\n    for  i = 0; i \u003c nFrames; i++  {\n        // inlining of macro Aig_ManForEachPiSeq\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Aig_ManCiNum(p)-Aig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, k)), 1); k++  {\n            Fra_SmlAssignConst( pSml, pObj, pCounterEx[iBit++], i );\n        }\n    }\n    assert(iBit == Aig_ManCiNum(pCnf.pMan), \"iBit == Aig_ManCiNum(pCnf.pMan)\");\n    // run simulation\n    Fra_SmlSimulateOne( pSml );\n\n    // check if the given output has failed\n//    RetValue = !Fra_SmlNodeIsZero( pSml, Aig_ManCo(pAig, 0) );\n//    assert( RetValue );\n\n    // check values at the internal nodes\n    Counter = 0;\n    for  i = 0; i \u003c nFrames; i++  {\n    for  k = i+1; k \u003c nFrames; k++  {\n        for  v = 0; v \u003c Aig_ManRegNum(p); v++  {\n            pObj0 = Aig_ManLo(p, v);\n            if !Fra_SmlNodesCompareInFrame( pSml, pObj0, pObj0, i, k ) {\n                break; }\n        }\n        if v == Aig_ManRegNum(p) {\n            Counter++; }\n    }\n    }\n    fmt.Printf(\"Uniquness does not hold in %d frames.\\n\", Counter);\n\n    Fra_SmlStop( pSml );\n    // inlining of macro ABC_FREE\n    ((pCounterEx) ? (free((char *) (pCounterEx)), (pCounterEx) = 0) : 0);\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::pointer-cast::3968",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3861,
+      "End": 3861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::pointer-cast::4429",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4119,
+      "End": 4119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::pointer-cast::4755",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4260,
+      "End": 4260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::pointer-cast::5106",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4432,
+      "End": 4432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::pointer-cast::6350",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5329,
+      "End": 5329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::pointer-cast::6641",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5434,
+      "End": 5434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::pointer-cast::7802",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6523,
+      "End": 6537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::pointer-cast::8517",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7238,
+      "End": 7252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::pointer-cast::10486",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9037,
+      "End": 9037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::pointer-cast::11138",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9470,
+      "End": 9470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::pointer-cast::11530",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9666,
+      "End": 9666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::pointer-cast::12459",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10513,
+      "End": 10513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::Inter_ManCheckContainment",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManCheckContainment",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1415,
+      "End": 2059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::Inter_ManCheckEquivalence",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManCheckEquivalence",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2335,
+      "End": 2979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::Inter_ManFramesLatches",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManFramesLatches",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3380,
+      "End": 4757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::Inter_ManAppendCone",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManAppendCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5047,
+      "End": 5695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::Inter_ManCheckInductiveContainment",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManCheckInductiveContainment",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5984,
+      "End": 7789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::ternary::Inter_ManCheckUniqueness",
+      "Category": "ternary-review",
+      "Symbol": "Inter_ManCheckUniqueness",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8149,
+      "End": 10552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::Inter_ManCheckUniqueness",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManCheckUniqueness",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8149,
+      "End": 10552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intContain.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10799
+    }
+  ],
+  "Draft": "package int\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [intContain.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [Interpolant containment checking.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 24, 2008.]\n\n  Revision    [$Id: intContain.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"intInt.h\"\n//#include \"proof/fra/fra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern int Inter_ManCheckUniqueness( Aig_Man_t * p, sat_solver * pSat, Cnf_Dat_t * pCnf, int nFrames );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Checks constainment of two interpolants.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManCheckContainment(pNew *Aig_Man_t, pOld *Aig_Man_t) int32 {\n    var pMiter, pAigTemp *Aig_Man_t;\n    var RetValue int32;\n    pMiter = Aig_ManCreateMiter( pNew, pOld, 1 );\n//    pMiter = Dar_ManRwsat( pAigTemp = pMiter, 1, 0 );\n//    Aig_ManStop( pAigTemp );\n    RetValue = Fra_FraigMiterStatus( pMiter );\n    if RetValue == -1 {\n        pAigTemp = Fra_FraigEquivence( pMiter, 1000000, 1 );\n        RetValue = Fra_FraigMiterStatus( pAigTemp );\n        Aig_ManStop( pAigTemp );\n//        RetValue = Fra_FraigSat( pMiter, 1000000, 0, 0, 0, 0, 0, 0 );\n    }\n    assert(RetValue != -1, \"RetValue != -1\");\n    Aig_ManStop( pMiter );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks constainment of two interpolants.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManCheckEquivalence(pNew *Aig_Man_t, pOld *Aig_Man_t) int32 {\n    var pMiter, pAigTemp *Aig_Man_t;\n    var RetValue int32;\n    pMiter = Aig_ManCreateMiter( pNew, pOld, 0 );\n//    pMiter = Dar_ManRwsat( pAigTemp = pMiter, 1, 0 );\n//    Aig_ManStop( pAigTemp );\n    RetValue = Fra_FraigMiterStatus( pMiter );\n    if RetValue == -1 {\n        pAigTemp = Fra_FraigEquivence( pMiter, 1000000, 1 );\n        RetValue = Fra_FraigMiterStatus( pAigTemp );\n        Aig_ManStop( pAigTemp );\n//        RetValue = Fra_FraigSat( pMiter, 1000000, 0, 0, 0, 0, 0, 0 );\n    }\n    assert(RetValue != -1, \"RetValue != -1\");\n    Aig_ManStop( pMiter );\n    return RetValue;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Create timeframes of the manager for interpolation.]\n\n  Description [The resulting manager is combinational. The primary inputs\n  corresponding to register outputs are ordered first.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManFramesLatches(pAig *Aig_Man_t, nFrames int32, pvMapReg **Vec_Ptr_t) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i, f int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    *pvMapReg = Vec_PtrAlloc( (nFrames+1) * Saig_ManRegNum(pAig) );\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pFrames );\n        Vec_PtrPush( *pvMapReg, pObj.pData );\n    }\n    // add timeframes\n    for  f = 0; f \u003c nFrames; f++  {\n        // create PI nodes for this frame\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi( pFrames );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n        // save register inputs\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            pObj.pData = Aig_ObjChild0Copy(pObj);\n        }\n        // transfer to register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLo.pData = pObjLi.pData;\n            Vec_PtrPush( *pvMapReg, pObjLo.pData );\n        }\n    }\n    return pFrames;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates AIG while mapping PIs into the given array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManAppendCone(pOld *Aig_Man_t, pNew *Aig_Man_t, ppNewPis **Aig_Obj_t, fCompl int32) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManCoNum(pOld) == 1, \"Aig_ManCoNum(pOld) == 1\");\n    // create the PIs\n    Aig_ManCleanData( pOld );\n    Aig_ManConst1(pOld).pData = Aig_ManConst1(pNew);\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pOld.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pOld.vCis, i)), 1); i++  {\n        pObj.pData = ppNewPis[i];\n    }\n    // duplicate internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pOld.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pOld.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // add one PO to new\n    pObj = Aig_ManCo( pOld, 0 );\n    Aig_ObjCreateCo( pNew, Aig_NotCond( Aig_ObjChild0Copy(pObj), fCompl ) );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks constainment of two interpolants inductively.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManCheckInductiveContainment(pTrans *Aig_Man_t, pInter *Aig_Man_t, nSteps int32, fBackward int32) int32 {\n    var pFrames *Aig_Man_t;\n    var ppNodes **Aig_Obj_t;\n    var vMapRegs *Vec_Ptr_t;\n    var pCnf *Cnf_Dat_t;\n    var pSat *sat_solver;\n    var f, nRegs, status int32;\n    nRegs = Saig_ManRegNum(pTrans);\n    assert(nRegs \u003e 0, \"nRegs \u003e 0\");\n    // generate the timeframes \n    pFrames = Inter_ManFramesLatches( pTrans, nSteps, \u0026vMapRegs );\n    assert(Vec_PtrSize(vMapRegs) == (nSteps + 1) * nRegs, \"Vec_PtrSize(vMapRegs) == (nSteps + 1) * nRegs\");\n    // add main constraints to the timeframes\n    ppNodes = (Aig_Obj_t **)Vec_PtrArray(vMapRegs);\n    if !(fBackward != 0) { \n        // forward inductive check: p -\u003e p -\u003e ... -\u003e !p\n        for  f = 0; f \u003c nSteps; f++  {\n            Inter_ManAppendCone( pInter, pFrames, ppNodes + f * nRegs, 0 );\n        }\n        Inter_ManAppendCone( pInter, pFrames, ppNodes + f * nRegs, 1 );\n    \n    } else {\n        // backward inductive check: p -\u003e !p -\u003e ... -\u003e !p\n        Inter_ManAppendCone( pInter, pFrames, ppNodes + 0 * nRegs, 1 );\n        for  f = 1; f \u003c= nSteps; f++  {\n            Inter_ManAppendCone( pInter, pFrames, ppNodes + f * nRegs, 0 );\n        }\n    }\n    Vec_PtrFree( vMapRegs );\n    Aig_ManCleanup( pFrames );\n\n    // convert to CNF\n    pCnf = Cnf_Derive( pFrames, 0 ); \n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n//    Cnf_DataFree( pCnf );\n//    Aig_ManStop( pFrames );\n\n    if pSat == nil {\n        Cnf_DataFree( pCnf );\n        Aig_ManStop( pFrames );\n        return 1;\n    }\n\n     // solve the problem\n    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n\n//    Inter_ManCheckUniqueness( pTrans, pSat, pCnf, nSteps );\n\n    Cnf_DataFree( pCnf );\n    Aig_ManStop( pFrames );\n\n    sat_solver_delete( pSat );\n    return status == l_False;\n}\n//ABC_NAMESPACE_IMPL_END\n\n//#include \"proof/fra/fra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/**Function*************************************************************\n\n  Synopsis    [Check if cex satisfies uniqueness constraints.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManCheckUniqueness(p *Aig_Man_t, pSat *sat_solver, pCnf *Cnf_Dat_t, nFrames int32) int32 {\n    extern int Fra_SmlNodesCompareInFrame( Fra_Sml_t * p, Aig_Obj_t * pObj0, Aig_Obj_t * pObj1, int iFrame0, int iFrame1 );\n    extern void Fra_SmlAssignConst( Fra_Sml_t * p, Aig_Obj_t * pObj, int fConst1, int iFrame );\n    extern void Fra_SmlSimulateOne( Fra_Sml_t * p );\n\n    var pSml *Fra_Sml_t;\n    var vPis *Vec_Int_t;\n    var pObj, pObj0 *Aig_Obj_t;\n    var i int32;\n    var k int32;\n    var v int32;\n    var iBit int32;\n    var pCounterEx *int32;\n    var Counter int32;\n    if nFrames == 1 {\n        return 1; }\n//    if ( pSat-\u003emodel.size == 0 )\n    \n    // possible consequences here!!!\n    assert(false, \"0\");\n\n    if sat_solver_nvars(pSat) == 0 {\n        return 1; }\n//    assert( Saig_ManPoNum(p) == 1 );\n    assert(Aig_ManRegNum(p) \u003e 0, \"Aig_ManRegNum(p) \u003e 0\");\n    assert(Aig_ManRegNum(p) \u003c Aig_ManCiNum(p), \"Aig_ManRegNum(p) \u003c Aig_ManCiNum(p)\");\n\n    // get the counter-example\n    vPis = Vec_IntAlloc( 100 );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(pCnf.pMan.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pCnf.pMan.vCis, k)), 1); k++  {\n        Vec_IntPush( vPis, pCnf.pVarNums[Aig_ObjId(pObj)] );\n    }\n    assert(Vec_IntSize(vPis) == Aig_ManRegNum(p) + nFrames * Saig_ManPiNum(p), \"Vec_IntSize(vPis) == Aig_ManRegNum(p) + nFrames * Saig_ManPiNum(p)\");\n    pCounterEx = Sat_SolverGetModel( pSat, vPis.pArray, vPis.nSize );\n    Vec_IntFree( vPis );\n\n    // start a new sequential simulator\n    pSml = Fra_SmlStart( p, 0, nFrames, 1 );\n    // assign simulation info for the registers\n    iBit = 0;\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        Fra_SmlAssignConst( pSml, pObj, pCounterEx[iBit++], 0 );\n    }\n    // assign simulation info for the primary inputs\n    for  i = 0; i \u003c nFrames; i++  {\n        // inlining of macro Aig_ManForEachPiSeq\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Aig_ManCiNum(p)-Aig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, k)), 1); k++  {\n            Fra_SmlAssignConst( pSml, pObj, pCounterEx[iBit++], i );\n        }\n    }\n    assert(iBit == Aig_ManCiNum(pCnf.pMan), \"iBit == Aig_ManCiNum(pCnf.pMan)\");\n    // run simulation\n    Fra_SmlSimulateOne( pSml );\n\n    // check if the given output has failed\n//    RetValue = !Fra_SmlNodeIsZero( pSml, Aig_ManCo(pAig, 0) );\n//    assert( RetValue );\n\n    // check values at the internal nodes\n    Counter = 0;\n    for  i = 0; i \u003c nFrames; i++  {\n    for  k = i+1; k \u003c nFrames; k++  {\n        for  v = 0; v \u003c Aig_ManRegNum(p); v++  {\n            pObj0 = Aig_ManLo(p, v);\n            if !Fra_SmlNodesCompareInFrame( pSml, pObj0, pObj0, i, k ) {\n                break; }\n        }\n        if v == Aig_ManRegNum(p) {\n            Counter++; }\n    }\n    }\n    fmt.Printf(\"Uniquness does not hold in %d frames.\\n\", Counter);\n\n    Fra_SmlStop( pSml );\n    // inlining of macro ABC_FREE\n    ((pCounterEx) ? (free((char *) (pCounterEx)), (pCounterEx) = 0) : 0);\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

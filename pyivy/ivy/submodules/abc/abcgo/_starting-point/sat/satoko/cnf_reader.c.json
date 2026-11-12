@@ -1,0 +1,445 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cnf_reader.c",
+  "SHA256": "ccb3423a125d5a8de431cf724eb5135e65cafbbc0166358d45202127e01814dd",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 34,
+        "Column": 26,
+        "ByteOffset": 825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var file *os.File  = fopen(fname, \"rb\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 40,
+        "Column": 9,
+        "ByteOffset": 940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"Couldn't open file: %s\\n\", fname);"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 43,
+        "Column": 5,
+        "ByteOffset": 1013
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek(file, 0, SEEK_END);"
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 44,
+        "Column": 15,
+        "ByteOffset": 1053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sz_file = ftell(file);"
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 45,
+        "Column": 5,
+        "ByteOffset": 1070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind(file);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 46,
+        "Column": 72,
+        "ByteOffset": 1155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    buffer = /*__starting_point_inline_macro:satoko_alloc__*/((char *) malloc((sz_file + 3) * sizeof(char)));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 47,
+        "Column": 11,
+        "ByteOffset": 1204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ret = fread(buffer, sz_file, 1, file);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pos != nil);"
+    },
+    {
+      "Name": "isspace",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 55,
+        "Column": 11,
+        "ByteOffset": 1389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for ; isspace(**pos); (*pos)++ {}"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pos != nil);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 60,
+        "Column": 54,
+        "ByteOffset": 1527
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for ; **pos != '\\n' \u0026\u0026 **pos != '\\r' \u0026\u0026 **pos != EOF; (*pos)++ {}"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 61,
+        "Column": 17,
+        "ByteOffset": 1560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if **pos != EOF {"
+    },
+    {
+      "Name": "isdigit",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 77,
+        "Column": 9,
+        "ByteOffset": 1826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !isdigit(**token) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 78,
+        "Column": 9,
+        "ByteOffset": 1853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"Parsing error. Unexpected char: %c.\\n\", **token);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 79,
+        "Column": 9,
+        "ByteOffset": 1919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(EXIT_FAILURE);"
+    },
+    {
+      "Name": "EXIT_FAILURE",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 79,
+        "Column": 14,
+        "ByteOffset": 1924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        exit(EXIT_FAILURE);"
+    },
+    {
+      "Name": "isdigit",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 81,
+        "Column": 9,
+        "ByteOffset": 1953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for isdigit(**token) {"
+    },
+    {
+      "Name": "abs",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 102,
+        "Column": 15,
+        "ByteOffset": 2369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var = abs(var) - 1;"
+    },
+    {
+      "Name": "isspace",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 132,
+        "Column": 20,
+        "ByteOffset": 3116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            for ; !isspace(*token); token++ {} /* skip 'cnf' */"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 141,
+        "Column": 17,
+        "ByteOffset": 3418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(\"There is no parameter line.\\n\");"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 142,
+        "Column": 70,
+        "ByteOffset": 3528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                /*__starting_point_inline_macro:satoko_free__*/for { free(buffer); buffer = nil; "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 149,
+        "Column": 17,
+        "ByteOffset": 3761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(\"Unable to add clause: \");"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 156,
+        "Column": 58,
+        "ByteOffset": 3984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:satoko_free__*/for { free(buffer); buffer = nil; "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "file_open",
+      "Start": 711,
+      "End": 1192,
+      "BodyStart": 754,
+      "Original": "static char * file_open(const char *fname)\n{\n    FILE *file = fopen(fname, \"rb\");\n    char *buffer;\n    int sz_file;\n    int ret;\n\n    if (file == NULL) {\n        printf(\"Couldn't open file: %s\\n\", fname);\n        return NULL;\n    }\n    fseek(file, 0, SEEK_END);\n    sz_file = ftell(file);\n    rewind(file);\n    buffer = satoko_alloc(char, sz_file + 3);\n    ret = fread(buffer, sz_file, 1, file);\n    buffer[sz_file + 0] = '\\n';\n    buffer[sz_file + 1] = '\\0';\n    return buffer;\n}",
+      "Draft": "func file_open(fname string) string {\n    var file *os.File  = os.Open(fname);\n    var buffer string;\n    var sz_file int32;\n    var ret int32;\n\n    if file == nil {\n        fmt.Printf(\"Couldn't open file: %s\\n\", fname);\n        return nil;\n    }\n    fseek(file, 0, SEEK_END);\n    sz_file = ftell(file);\n    rewind(file);\n    // inlining of macro satoko_alloc\n    buffer = ((char *) malloc((sz_file + 3) * sizeof(char)));\n    ret = fread(buffer, sz_file, 1, file);\n    buffer[sz_file + 0] = '\\n';\n    buffer[sz_file + 1] = '\\0';\n    return buffer;\n}"
+    },
+    {
+      "Name": "skip_spaces",
+      "Start": 1194,
+      "End": 1296,
+      "BodyStart": 1230,
+      "Original": "static void skip_spaces(char **pos)\n{\n    assert(pos != NULL);\n    for (; isspace(**pos); (*pos)++);\n}",
+      "Draft": "func skip_spaces(pos *string) {\n    assert(pos != nil, \"pos != nil\");\n    for ; isspace(**pos); (*pos)++ {}\n}"
+    },
+    {
+      "Name": "skip_line",
+      "Start": 1298,
+      "End": 1481,
+      "BodyStart": 1332,
+      "Original": "static void skip_line(char **pos)\n{\n    assert(pos != NULL);\n    for(; **pos != '\\n' \u0026\u0026 **pos != '\\r' \u0026\u0026 **pos != EOF; (*pos)++);\n    if (**pos != EOF)\n        (*pos)++;\n    return;\n}",
+      "Draft": "func skip_line(pos *string) {\n    assert(pos != nil, \"pos != nil\");\n    for ; **pos != '\\n' \u0026\u0026 **pos != '\\r' \u0026\u0026 **pos != -1; (*pos)++ {}\n    if **pos != -1 {\n        (*pos)++; }\n    return;\n}"
+    },
+    {
+      "Name": "read_int",
+      "Start": 1483,
+      "End": 1963,
+      "BodyStart": 1517,
+      "Original": "static int read_int(char **token)\n{\n    int value = 0;\n    int neg = 0;\n\n    skip_spaces(token);\n    if (**token == '-') {\n        neg = 1;\n        (*token)++;\n    } else if (**token == '+')\n        (*token)++;\n\n    if (!isdigit(**token)) {\n        printf(\"Parsing error. Unexpected char: %c.\\n\", **token);\n        exit(EXIT_FAILURE);\n    }\n    while (isdigit(**token)) {\n        value = (value * 10) + (**token - '0');\n        (*token)++;\n    }\n    return neg ? -value : value;\n}",
+      "Draft": "func read_int(token *string) int32 {\n    var value int32;\n    var neg int32;\n\n    skip_spaces(token);\n    if **token == '-' {\n        neg = 1;\n        (*token)++;\n    } else if **token == '+' {\n        (*token)++; }\n\n    if !isdigit(**token) {\n        fmt.Printf(\"Parsing error. Unexpected char: %c.\\n\", **token);\n        os.Exit(int(1));\n    }\n    for isdigit(**token) {\n        value = (value * 10) + (**token - '0');\n        (*token)++;\n    }\n    if neg != 0 {\n        return -value;\n    } else {\n        return value;\n    }\n}"
+    },
+    {
+      "Name": "read_clause",
+      "Start": 1965,
+      "End": 2303,
+      "BodyStart": 2021,
+      "Original": "static void read_clause(char **token, vec_uint_t *lits)\n{\n    int var;\n    unsigned sign;\n\n    vec_uint_clear(lits);\n    while (1) {\n        var = read_int(token);\n        if (var == 0)\n            break;\n        sign = (var \u003e 0);\n        var = abs(var) - 1;\n        vec_uint_push_back(lits, var2lit((unsigned) var, (char)!sign));\n    }\n}",
+      "Draft": "func read_clause(token *string, lits *vec_uint_t) {\n    var var int32;\n    var sign uint32;\n\n    vec_uint_clear(lits);\n    for {\n        var = read_int(token);\n        if var == 0 {\n            break; }\n        sign = (var \u003e 0);\n        var = abs(var) - 1;\n        vec_uint_push_back(lits, var2lit(uint32( var), byte(!sign)));\n    }\n}"
+    },
+    {
+      "Name": "satoko_parse_dimacs",
+      "Start": 2401,
+      "End": 3723,
+      "BodyStart": 2457,
+      "Original": "int satoko_parse_dimacs(char *fname, satoko_t **solver)\n{\n    satoko_t *p = NULL;\n    vec_uint_t *lits = NULL;\n    int n_var;\n    int n_clause;\n    char *buffer = file_open(fname);\n    char *token;\n\n    if (buffer == NULL)\n        return -1;\n\n    token = buffer;\n    while (1) {\n        skip_spaces(\u0026token);\n        if (*token == 0)\n            break;\n        else if (*token == 'c')\n            skip_line(\u0026token);\n        else if (*token == 'p') {\n            token++;\n            skip_spaces(\u0026token);\n            for(; !isspace(*token); token++); /* skip 'cnf' */\n\n            n_var = read_int(\u0026token);\n            n_clause = read_int(\u0026token);\n            skip_line(\u0026token);\n            lits = vec_uint_alloc((unsigned) n_var);\n            p = satoko_create();\n        } else {\n            if (lits == NULL) {\n                printf(\"There is no parameter line.\\n\");\n                satoko_free(buffer);\n                return -1;\n            }\n            read_clause(\u0026token, lits);\n            if (!satoko_add_clause(p, (int*)vec_uint_data(lits), vec_uint_size(lits))) {\n                printf(\"Unable to add clause: \");\n                vec_uint_print(lits);\n                return SATOKO_ERR;\n            }\n            }\n    }\n    vec_uint_free(lits);\n    satoko_free(buffer);\n    *solver = p;\n    return SATOKO_OK;\n}",
+      "Draft": "func satoko_parse_dimacs(fname string, solver **satoko_t) int32 {\n    var p *satoko_t  = nil;\n    var lits *vec_uint_t  = nil;\n    var n_var int32;\n    var n_clause int32;\n    var buffer string  = file_open(fname);\n    var token string;\n\n    if buffer == nil {\n        return -1; }\n\n    token = buffer;\n    for {\n        skip_spaces(\u0026token);\n        if *token == 0 {\n            break;\n        } else if *token == 'c' {\n            skip_line(\u0026token);\n        } else if *token == 'p' {\n            token++;\n            skip_spaces(\u0026token);\n            for ; !isspace(*token); token++ {} /* skip 'cnf' */\n\n            n_var = read_int(\u0026token);\n            n_clause = read_int(\u0026token);\n            skip_line(\u0026token);\n            lits = vec_uint_alloc(uint32( n_var));\n            p = satoko_create();\n        } else {\n            if lits == nil {\n                fmt.Printf(\"There is no parameter line.\\n\");\n                // inlining of macro satoko_free\n                for { free(buffer); buffer = nil; \nif !(false) { break }\n} \n                return -1;\n            }\n            read_clause(\u0026token, lits);\n            if !satoko_add_clause(p, (int*)vec_uint_data(lits), vec_uint_size(lits)) {\n                fmt.Printf(\"Unable to add clause: \");\n                vec_uint_print(lits);\n                return SATOKO_ERR;\n            }\n            }\n    }\n    vec_uint_free(lits);\n    // inlining of macro satoko_free\n    for { free(buffer); buffer = nil; \nif !(false) { break }\n} \n    *solver = p;\n    return SATOKO_OK;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cnf_reader.c::mechanical::sizeof::1113",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1032,
+      "End": 1032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cnf_reader.c::mechanical::do::3397",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3286,
+      "End": 3286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cnf_reader.c::mechanical::do::3845",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3662,
+      "End": 3662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cnf_reader.c::pointer-cast::1081",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1032,
+      "End": 1032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cnf_reader.c::pointer-cast::3561",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3425,
+      "End": 3431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cnf_reader.c::file_open",
+      "Category": "semantic-review",
+      "Symbol": "file_open",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 711,
+      "End": 1192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cnf_reader.c::skip_spaces",
+      "Category": "semantic-review",
+      "Symbol": "skip_spaces",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1194,
+      "End": 1296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cnf_reader.c::skip_line",
+      "Category": "semantic-review",
+      "Symbol": "skip_line",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1298,
+      "End": 1481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cnf_reader.c::read_int",
+      "Category": "semantic-review",
+      "Symbol": "read_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1483,
+      "End": 1963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cnf_reader.c::read_clause",
+      "Category": "semantic-review",
+      "Symbol": "read_clause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1965,
+      "End": 2303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cnf_reader.c::satoko_parse_dimacs",
+      "Category": "semantic-review",
+      "Symbol": "satoko_parse_dimacs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2401,
+      "End": 3723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/cnf_reader.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3748
+    }
+  ],
+  "Draft": "package satoko\n\nimport \"fmt\"\n\nimport \"os\"\n\n//===--- cnf_reader.h -------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n//#include \u003cassert.h\u003e\n//#include \u003cctype.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstdio.h\u003e\n//#include \u003cstring.h\u003e\n\n//#include \"satoko.h\"\n//#include \"solver.h\"\n//#include \"utils/mem.h\"\n//#include \"utils/vec/vec_uint.h\"\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_IMPL_START\n\n/** Read the file into an internal buffer.\n *\n * This function will receive a file name. The return data is a string ended\n * with '\\0'.\n *\n */\nfunc file_open(fname string) string {\n    var file *os.File  = os.Open(fname);\n    var buffer string;\n    var sz_file int32;\n    var ret int32;\n\n    if file == nil {\n        fmt.Printf(\"Couldn't open file: %s\\n\", fname);\n        return nil;\n    }\n    fseek(file, 0, SEEK_END);\n    sz_file = ftell(file);\n    rewind(file);\n    // inlining of macro satoko_alloc\n    buffer = ((char *) malloc((sz_file + 3) * sizeof(char)));\n    ret = fread(buffer, sz_file, 1, file);\n    buffer[sz_file + 0] = '\\n';\n    buffer[sz_file + 1] = '\\0';\n    return buffer;\n}\n\nfunc skip_spaces(pos *string) {\n    assert(pos != nil, \"pos != nil\");\n    for ; isspace(**pos); (*pos)++ {}\n}\n\nfunc skip_line(pos *string) {\n    assert(pos != nil, \"pos != nil\");\n    for ; **pos != '\\n' \u0026\u0026 **pos != '\\r' \u0026\u0026 **pos != -1; (*pos)++ {}\n    if **pos != -1 {\n        (*pos)++; }\n    return;\n}\n\nfunc read_int(token *string) int32 {\n    var value int32;\n    var neg int32;\n\n    skip_spaces(token);\n    if **token == '-' {\n        neg = 1;\n        (*token)++;\n    } else if **token == '+' {\n        (*token)++; }\n\n    if !isdigit(**token) {\n        fmt.Printf(\"Parsing error. Unexpected char: %c.\\n\", **token);\n        os.Exit(int(1));\n    }\n    for isdigit(**token) {\n        value = (value * 10) + (**token - '0');\n        (*token)++;\n    }\n    if neg != 0 {\n        return -value;\n    } else {\n        return value;\n    }\n}\n\nfunc read_clause(token *string, lits *vec_uint_t) {\n    var var int32;\n    var sign uint32;\n\n    vec_uint_clear(lits);\n    for {\n        var = read_int(token);\n        if var == 0 {\n            break; }\n        sign = (var \u003e 0);\n        var = abs(var) - 1;\n        vec_uint_push_back(lits, var2lit(uint32( var), byte(!sign)));\n    }\n}\n\n/** Start the solver and reads the DIMAC file.\n *\n * Returns false upon immediate conflict.\n */\nfunc satoko_parse_dimacs(fname string, solver **satoko_t) int32 {\n    var p *satoko_t  = nil;\n    var lits *vec_uint_t  = nil;\n    var n_var int32;\n    var n_clause int32;\n    var buffer string  = file_open(fname);\n    var token string;\n\n    if buffer == nil {\n        return -1; }\n\n    token = buffer;\n    for {\n        skip_spaces(\u0026token);\n        if *token == 0 {\n            break;\n        } else if *token == 'c' {\n            skip_line(\u0026token);\n        } else if *token == 'p' {\n            token++;\n            skip_spaces(\u0026token);\n            for ; !isspace(*token); token++ {} /* skip 'cnf' */\n\n            n_var = read_int(\u0026token);\n            n_clause = read_int(\u0026token);\n            skip_line(\u0026token);\n            lits = vec_uint_alloc(uint32( n_var));\n            p = satoko_create();\n        } else {\n            if lits == nil {\n                fmt.Printf(\"There is no parameter line.\\n\");\n                // inlining of macro satoko_free\n                for { free(buffer); buffer = nil; \nif !(false) { break }\n} \n                return -1;\n            }\n            read_clause(\u0026token, lits);\n            if !satoko_add_clause(p, (int*)vec_uint_data(lits), vec_uint_size(lits)) {\n                fmt.Printf(\"Unable to add clause: \");\n                vec_uint_print(lits);\n                return SATOKO_ERR;\n            }\n            }\n    }\n    vec_uint_free(lits);\n    // inlining of macro satoko_free\n    for { free(buffer); buffer = nil; \nif !(false) { break }\n} \n    *solver = p;\n    return SATOKO_OK;\n}\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaMerge.c",
+  "SHA256": "ade6f17c57ca85f8174dc81dce54fd401b38d8ca5388b862f3234f1379eadbfa",
+  "Functions": [
+    {
+      "Name": "Pla_ManDist1Merge",
+      "Start": 1224,
+      "End": 1280,
+      "BodyStart": 1263,
+      "Original": "int Pla_ManDist1Merge( Pla_Man_t * p )\n{\n    return 0;\n}",
+      "Draft": "func Pla_ManDist1Merge(p *Pla_Man_t) int32 {\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaMerge.c::Pla_ManDist1Merge",
+      "Category": "semantic-review",
+      "Symbol": "Pla_ManDist1Merge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1224,
+      "End": 1280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaMerge.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1527
+    }
+  ],
+  "Draft": "package pla\n\n/**CFile****************************************************************\n\n  FileName    [plaMerge.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SOP manager.]\n\n  Synopsis    [Scalable SOP transformations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - March 18, 2015.]\n\n  Revision    [$Id: plaMerge.c,v 1.00 2014/09/12 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"pla.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pla_ManDist1Merge(p *Pla_Man_t) int32 {\n    return 0;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

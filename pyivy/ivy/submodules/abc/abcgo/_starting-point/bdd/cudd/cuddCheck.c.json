@@ -1,0 +1,1149 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c",
+  "SHA256": "7451e1939095aa01bd7a272f5be504d6c3b35088ccc1dacba724e8c13c248a7b",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 20,
+        "ByteOffset": 6102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 181,
+        "Column": 32,
+        "ByteOffset": 6827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 189,
+        "Column": 32,
+        "ByteOffset": 7971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 195,
+        "Column": 32,
+        "ByteOffset": 8432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 32,
+        "ByteOffset": 8810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 207,
+        "Column": 32,
+        "ByteOffset": 9291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 246,
+        "Column": 21,
+        "ByteOffset": 11385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 257,
+        "Column": 13,
+        "ByteOffset": 11787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(table.err,\"Error: wrong number of total nodes\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 13,
+        "ByteOffset": 11948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(table.err,\"Error: wrong number of dead nodes\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 20,
+        "ByteOffset": 12261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 32,
+        "ByteOffset": 12991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 292,
+        "Column": 32,
+        "ByteOffset": 13560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 299,
+        "Column": 32,
+        "ByteOffset": 14455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 307,
+        "Column": 32,
+        "ByteOffset": 15058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 313,
+        "Column": 32,
+        "ByteOffset": 15461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 21,
+        "ByteOffset": 17421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 363,
+        "Column": 13,
+        "ByteOffset": 17827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 368,
+        "Column": 13,
+        "ByteOffset": 18016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 386,
+        "Column": 21,
+        "ByteOffset": 18523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf(table.err,\"Error: node has illegal index\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 397,
+        "Column": 16,
+        "ByteOffset": 18870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 402,
+        "Column": 16,
+        "ByteOffset": 19056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 475,
+        "Column": 20,
+        "ByteOffset": 21276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 477,
+        "Column": 20,
+        "ByteOffset": 21394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 496,
+        "Column": 20,
+        "ByteOffset": 21945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(table.err, \"Wrong number of keys found \\"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 501,
+        "Column": 20,
+        "ByteOffset": 22116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(table.err, \"Wrong number of dead found \\"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 531,
+        "Column": 20,
+        "ByteOffset": 22984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(table.err, \"Wrong number of keys found \\"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 536,
+        "Column": 20,
+        "ByteOffset": 23163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(table.err, \"Wrong number of dead found \\"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 563,
+        "Column": 16,
+        "ByteOffset": 23885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(table.err, \"Wrong number of keys found \\"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 568,
+        "Column": 16,
+        "ByteOffset": 24040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(table.err, \"Wrong number of dead found \\"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 572,
+        "Column": 16,
+        "ByteOffset": 24215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(table.err, \"Wrong number of total keys found \\"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 576,
+        "Column": 16,
+        "ByteOffset": 24388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(table.err, \"Wrong number of total slots found \\"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 580,
+        "Column": 16,
+        "ByteOffset": 24584
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(table.err, \"Wrong number of minimum dead found \\"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 585,
+        "Column": 16,
+        "ByteOffset": 24807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(table.err, \"Wrong number of total dead found \\"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 588,
+        "Column": 11,
+        "ByteOffset": 24931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void)printf(\"Average length of non-empty lists = %g\\n\","
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 635,
+        "Column": 18,
+        "ByteOffset": 26693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if retval == EOF { return 0; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 642,
+        "Column": 22,
+        "ByteOffset": 26923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            retval = fprintf(dd.out,\"%5d: %5d nodes\\n\", i, nodes);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 643,
+        "Column": 26,
+        "ByteOffset": 26994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if retval == EOF { return 0; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 654,
+        "Column": 18,
+        "ByteOffset": 27243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        retval = fprintf(dd.out,\"const: %5d nodes\\n\", nodes);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 655,
+        "Column": 22,
+        "ByteOffset": 27309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if retval == EOF { return 0; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 663,
+        "Column": 14,
+        "ByteOffset": 27482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    retval = fprintf(dd.out,\"Summary: %d tables, %d non-empty, largest: %d \","
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 665,
+        "Column": 18,
+        "ByteOffset": 27605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if retval == EOF { return 0; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 666,
+        "Column": 14,
+        "ByteOffset": 27636
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    retval = fprintf(dd.out,\"(with %d nodes)\\n\", maxnodes);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 667,
+        "Column": 18,
+        "ByteOffset": 27700
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if retval == EOF { return 0; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 724,
+        "Column": 5,
+        "ByteOffset": 29286
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(root != nil);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 725,
+        "Column": 5,
+        "ByteOffset": 29311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(root.younger == nil || root.younger.elder == root);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 726,
+        "Column": 5,
+        "ByteOffset": 29374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(root.elder == nil || root.elder.younger == root);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 732,
+        "Column": 25,
+        "ByteOffset": 29562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !silent { (void) printf(\"(%d\",level); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 734,
+        "Column": 29,
+        "ByteOffset": 29717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !silent { (void) printf(\",\"); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 738,
+        "Column": 13,
+        "ByteOffset": 29810
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(node.low \u003e= root.low \u0026\u0026 int32( (node.low + node.size)) \u003c= int32( (root.low + root.size)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 739,
+        "Column": 13,
+        "ByteOffset": 29920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(node.parent == root);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 745,
+        "Column": 16,
+        "ByteOffset": 30082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf(\"%d\", int32( (level + root.size - 1)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 747,
+        "Column": 20,
+        "ByteOffset": 30187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) printf(\"|\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 748,
+        "Column": 94,
+        "ByteOffset": 30293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if /*__starting_point_inline_macro:MTR_TEST__*/root.flags \u0026 (MTR_FIXED) { (void) printf(\"F\"); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 749,
+        "Column": 96,
+        "ByteOffset": 30403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if /*__starting_point_inline_macro:MTR_TEST__*/root.flags \u0026 (MTR_NEWNODE) { (void) printf(\"N\"); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 750,
+        "Column": 93,
+        "ByteOffset": 30510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if /*__starting_point_inline_macro:MTR_TEST__*/root.flags \u0026 (MTR_SOFT) { (void) printf(\"S\"); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 752,
+        "Column": 16,
+        "ByteOffset": 30550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf(\")\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 753,
+        "Column": 40,
+        "ByteOffset": 30602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if root.parent == nil { (void) printf(\"\\n\"); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 755,
+        "Column": 5,
+        "ByteOffset": 30628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert((root.flags \u0026~(MTR_TERMINAL | MTR_SOFT | MTR_FIXED | MTR_NEWNODE)) == 0);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 90,
+        "Column": 1,
+        "ByteOffset": 3515
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 387,
+        "Column": 1,
+        "ByteOffset": 15645
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8"
+    },
+    {
+      "Location": {
+        "Line": 417,
+        "Column": 1,
+        "ByteOffset": 16753
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8"
+    },
+    {
+      "Location": {
+        "Line": 652,
+        "Column": 1,
+        "ByteOffset": 24423
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8"
+    },
+    {
+      "Location": {
+        "Line": 715,
+        "Column": 1,
+        "ByteOffset": 26140
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8"
+    },
+    {
+      "Location": {
+        "Line": 827,
+        "Column": 1,
+        "ByteOffset": 29803
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_DebugCheck",
+      "Start": 5399,
+      "End": 17330,
+      "BodyStart": 5441,
+      "Original": "int\nCudd_DebugCheck(\n  DdManager * table)\n{\n    unsigned int i;\n    int         j,count;\n    int         slots;\n    DdNodePtr   *nodelist;\n    DdNode      *f;\n    DdNode      *sentinel = \u0026(table-\u003esentinel);\n    st__table    *edgeTable;     /* stores internal ref count for each node */\n    st__generator        *gen;\n    int         flag = 0;\n    int         totalNode;\n    int         deadNode;\n    int         index;\n\n\n    edgeTable = st__init_table( st__ptrcmp, st__ptrhash);\n    if (edgeTable == NULL) return(CUDD_OUT_OF_MEM);\n\n    /* Check the BDD/ADD subtables. */\n    for (i = 0; i \u003c (unsigned) table-\u003esize; i++) {\n        index = table-\u003einvperm[i];\n        if (i != (unsigned) table-\u003eperm[index]) {\n            (void) fprintf(table-\u003eerr,\n                           \"Permutation corrupted: invperm[%u] = %d\\t perm[%d] = %d\\n\",\n                           i, index, index, table-\u003eperm[index]);\n        }\n        nodelist = table-\u003esubtables[i].nodelist;\n        slots = table-\u003esubtables[i].slots;\n\n        totalNode = 0;\n        deadNode = 0;\n        for (j = 0; j \u003c slots; j++) {   /* for each subtable slot */\n            f = nodelist[j];\n            while (f != sentinel) {\n                totalNode++;\n                if (cuddT(f) != NULL \u0026\u0026 cuddE(f) != NULL \u0026\u0026 f-\u003eref != 0) {\n                    if ((int) f-\u003eindex != index) {\n                        (void) fprintf(table-\u003eerr,\n                                       \"Error: node has illegal index\\n\");\n                        cuddPrintNode(f,table-\u003eerr);\n                        flag = 1;\n                    }\n                    if ((unsigned) cuddI(table,cuddT(f)-\u003eindex) \u003c= i ||\n                        (unsigned) cuddI(table,Cudd_Regular(cuddE(f))-\u003eindex)\n                        \u003c= i) {\n                        (void) fprintf(table-\u003eerr,\n                                       \"Error: node has illegal children\\n\");\n                        cuddPrintNode(f,table-\u003eerr);\n                        flag = 1;\n                    }\n                    if (Cudd_Regular(cuddT(f)) != cuddT(f)) {\n                        (void) fprintf(table-\u003eerr,\n                                       \"Error: node has illegal form\\n\");\n                        cuddPrintNode(f,table-\u003eerr);\n                        flag = 1;\n                    }\n                    if (cuddT(f) == cuddE(f)) {\n                        (void) fprintf(table-\u003eerr,\n                                       \"Error: node has identical children\\n\");\n                        cuddPrintNode(f,table-\u003eerr);\n                        flag = 1;\n                    }\n                    if (cuddT(f)-\u003eref == 0 || Cudd_Regular(cuddE(f))-\u003eref == 0) {\n                        (void) fprintf(table-\u003eerr,\n                                       \"Error: live node has dead children\\n\");\n                        cuddPrintNode(f,table-\u003eerr);\n                        flag =1;\n                    }\n                    /* Increment the internal reference count for the\n                    ** then child of the current node.\n                    */\n                    if ( st__lookup_int(edgeTable,(char *)cuddT(f),\u0026count)) {\n                        count++;\n                    } else {\n                        count = 1;\n                    }\n                    if ( st__insert(edgeTable,(char *)cuddT(f),\n                    (char *)(long)count) == st__OUT_OF_MEM) {\n                        st__free_table(edgeTable);\n                        return(CUDD_OUT_OF_MEM);\n                    }\n\n                    /* Increment the internal reference count for the\n                    ** else child of the current node.\n                    */\n                    if ( st__lookup_int(edgeTable,(char *)Cudd_Regular(cuddE(f)),\n                                      \u0026count)) {\n                        count++;\n                    } else {\n                        count = 1;\n                    }\n                    if ( st__insert(edgeTable,(char *)Cudd_Regular(cuddE(f)),\n                    (char *)(long)count) == st__OUT_OF_MEM) {\n                        st__free_table(edgeTable);\n                        return(CUDD_OUT_OF_MEM);\n                    }\n                } else if (cuddT(f) != NULL \u0026\u0026 cuddE(f) != NULL \u0026\u0026 f-\u003eref == 0) {\n                    deadNode++;\n#if 0\n                    debugCheckParent(table,f);\n#endif\n                } else {\n                    fprintf(table-\u003eerr,\n                            \"Error: node has illegal Then or Else pointers\\n\");\n                    cuddPrintNode(f,table-\u003eerr);\n                    flag = 1;\n                }\n\n                f = f-\u003enext;\n            }   /* for each element of the collision list */\n        }       /* for each subtable slot */\n\n        if ((unsigned) totalNode != table-\u003esubtables[i].keys) {\n            fprintf(table-\u003eerr,\"Error: wrong number of total nodes\\n\");\n            flag = 1;\n        }\n        if ((unsigned) deadNode != table-\u003esubtables[i].dead) {\n            fprintf(table-\u003eerr,\"Error: wrong number of dead nodes\\n\");\n            flag = 1;\n        }\n    }   /* for each BDD/ADD subtable */\n\n    /* Check the ZDD subtables. */\n    for (i = 0; i \u003c (unsigned) table-\u003esizeZ; i++) {\n        index = table-\u003einvpermZ[i];\n        if (i != (unsigned) table-\u003epermZ[index]) {\n            (void) fprintf(table-\u003eerr,\n                           \"Permutation corrupted: invpermZ[%u] = %d\\t permZ[%d] = %d in ZDD\\n\",\n                           i, index, index, table-\u003epermZ[index]);\n        }\n        nodelist = table-\u003esubtableZ[i].nodelist;\n        slots = table-\u003esubtableZ[i].slots;\n\n        totalNode = 0;\n        deadNode = 0;\n        for (j = 0; j \u003c slots; j++) {   /* for each subtable slot */\n            f = nodelist[j];\n            while (f != NULL) {\n                totalNode++;\n                if (cuddT(f) != NULL \u0026\u0026 cuddE(f) != NULL \u0026\u0026 f-\u003eref != 0) {\n                    if ((int) f-\u003eindex != index) {\n                        (void) fprintf(table-\u003eerr,\n                                       \"Error: ZDD node has illegal index\\n\");\n                        cuddPrintNode(f,table-\u003eerr);\n                        flag = 1;\n                    }\n                    if (Cudd_IsComplement(cuddT(f)) ||\n                        Cudd_IsComplement(cuddE(f))) {\n                        (void) fprintf(table-\u003eerr,\n                                       \"Error: ZDD node has complemented children\\n\");\n                        cuddPrintNode(f,table-\u003eerr);\n                        flag = 1;\n                    }\n                    if ((unsigned) cuddIZ(table,cuddT(f)-\u003eindex) \u003c= i ||\n                    (unsigned) cuddIZ(table,cuddE(f)-\u003eindex) \u003c= i) {\n                        (void) fprintf(table-\u003eerr,\n                                       \"Error: ZDD node has illegal children\\n\");\n                        cuddPrintNode(f,table-\u003eerr);\n                        cuddPrintNode(cuddT(f),table-\u003eerr);\n                        cuddPrintNode(cuddE(f),table-\u003eerr);\n                        flag = 1;\n                    }\n                    if (cuddT(f) == DD_ZERO(table)) {\n                        (void) fprintf(table-\u003eerr,\n                                       \"Error: ZDD node has zero then child\\n\");\n                        cuddPrintNode(f,table-\u003eerr);\n                        flag = 1;\n                    }\n                    if (cuddT(f)-\u003eref == 0 || cuddE(f)-\u003eref == 0) {\n                        (void) fprintf(table-\u003eerr,\n                                       \"Error: ZDD live node has dead children\\n\");\n                        cuddPrintNode(f,table-\u003eerr);\n                        flag =1;\n                    }\n                    /* Increment the internal reference count for the\n                    ** then child of the current node.\n                    */\n                    if ( st__lookup_int(edgeTable,(char *)cuddT(f),\u0026count)) {\n                        count++;\n                    } else {\n                        count = 1;\n                    }\n                    if ( st__insert(edgeTable,(char *)cuddT(f),\n                    (char *)(long)count) == st__OUT_OF_MEM) {\n                        st__free_table(edgeTable);\n                        return(CUDD_OUT_OF_MEM);\n                    }\n\n                    /* Increment the internal reference count for the\n                    ** else child of the current node.\n                    */\n                    if ( st__lookup_int(edgeTable,(char *)cuddE(f),\u0026count)) {\n                        count++;\n                    } else {\n                        count = 1;\n                    }\n                    if ( st__insert(edgeTable,(char *)cuddE(f),\n                    (char *)(long)count) == st__OUT_OF_MEM) {\n                        st__free_table(edgeTable);\n                        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n                        return(CUDD_OUT_OF_MEM);\n                    }\n                } else if (cuddT(f) != NULL \u0026\u0026 cuddE(f) != NULL \u0026\u0026 f-\u003eref == 0) {\n                    deadNode++;\n#if 0\n                    debugCheckParent(table,f);\n#endif\n                } else {\n                    fprintf(table-\u003eerr,\n                            \"Error: ZDD node has illegal Then or Else pointers\\n\");\n                    cuddPrintNode(f,table-\u003eerr);\n                    flag = 1;\n                }\n\n                f = f-\u003enext;\n            }   /* for each element of the collision list */\n        }       /* for each subtable slot */\n\n        if ((unsigned) totalNode != table-\u003esubtableZ[i].keys) {\n            fprintf(table-\u003eerr,\n                    \"Error: wrong number of total nodes in ZDD\\n\");\n            flag = 1;\n        }\n        if ((unsigned) deadNode != table-\u003esubtableZ[i].dead) {\n            fprintf(table-\u003eerr,\n                    \"Error: wrong number of dead nodes in ZDD\\n\");\n            flag = 1;\n        }\n    }   /* for each ZDD subtable */\n\n    /* Check the constant table. */\n    nodelist = table-\u003econstants.nodelist;\n    slots = table-\u003econstants.slots;\n\n    totalNode = 0;\n    deadNode = 0;\n    for (j = 0; j \u003c slots; j++) {\n        f = nodelist[j];\n        while (f != NULL) {\n            totalNode++;\n            if (f-\u003eref != 0) {\n                if (f-\u003eindex != CUDD_CONST_INDEX) {\n                    fprintf(table-\u003eerr,\"Error: node has illegal index\\n\");\n#if SIZEOF_VOID_P == 8\n                    fprintf(table-\u003eerr,\n                            \"       node 0x%lx, id = %u, ref = %u, value = %g\\n\",\n                            (ptruint)f,f-\u003eindex,f-\u003eref,cuddV(f));\n#else\n                    fprintf(table-\u003eerr,\n                            \"       node 0x%x, id = %hu, ref = %hu, value = %g\\n\",\n                            (ptruint)f,f-\u003eindex,f-\u003eref,cuddV(f));\n#endif\n                    flag = 1;\n                }\n            } else {\n                deadNode++;\n            }\n            f = f-\u003enext;\n        }\n    }\n    if ((unsigned) totalNode != table-\u003econstants.keys) {\n        (void) fprintf(table-\u003eerr,\n                       \"Error: wrong number of total nodes in constants\\n\");\n        flag = 1;\n    }\n    if ((unsigned) deadNode != table-\u003econstants.dead) {\n        (void) fprintf(table-\u003eerr,\n                       \"Error: wrong number of dead nodes in constants\\n\");\n        flag = 1;\n    }\n    gen = st__init_gen(edgeTable);\n    while ( st__gen(gen, (const char **)\u0026f, (char **)\u0026count)) {\n        if (count \u003e (int)(f-\u003eref) \u0026\u0026 f-\u003eref != DD_MAXREF) {\n#if SIZEOF_VOID_P == 8\n            fprintf(table-\u003eerr,\"ref count error at node 0x%lx, count = %d, id = %u, ref = %u, then = 0x%lx, else = 0x%lx\\n\",(ptruint)f,count,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#else\n            fprintf(table-\u003eerr,\"ref count error at node 0x%x, count = %d, id = %hu, ref = %hu, then = 0x%x, else = 0x%x\\n\",(ptruint)f,count,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#endif\n            debugFindParent(table,f);\n            flag = 1;\n        }\n    }\n    st__free_gen(gen);\n    st__free_table(edgeTable);\n\n    return (flag);\n\n}",
+      "Draft": "func Cudd_DebugCheck(table *DdManager) int32 {\n    unsigned int i;\n    var j, count int32;\n    var slots int32;\n    var nodelist *DdNodePtr;\n    var f *DdNode;\n    var sentinel *DdNode  = \u0026(table.sentinel);\n    var edgeTable *st__table;     /* stores internal ref count for each node */\n    var gen *st__generator;\n    var flag int32;\n    var totalNode int32;\n    var deadNode int32;\n    var index int32;\n\n\n    edgeTable = st__init_table( st__ptrcmp, st__ptrhash);\n    if edgeTable == nil { return(CUDD_OUT_OF_MEM); }\n\n    /* Check the BDD/ADD subtables. */\n    for i = 0; i \u003c uint32( table.size); i++ {\n        index = table.invperm[i];\n        if i != uint32( table.perm[index]) {\n            (void) fmt.Fprintf(table.err, \"Permutation corrupted: invperm[%d] = %d\\t perm[%d] = %d\\n\", i, index, index, table.perm[index]);\n        }\n        nodelist = table.subtables[i].nodelist;\n        slots = table.subtables[i].slots;\n\n        totalNode = 0;\n        deadNode = 0;\n        for j = 0; j \u003c slots; j++ {   /* for each subtable slot */\n            f = nodelist[j];\n            for f != sentinel {\n                totalNode++;\n                // inlining of macro cuddT\n                // inlining of macro cuddE\n                if ((f).type.kids.T) != nil \u0026\u0026 ((f).type.kids.E) != nil \u0026\u0026 f.ref != 0 {\n                    if int32( f.index) != index {\n                        (void) fmt.Fprintf(table.err, \"Error: node has illegal index\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro cuddI\n                    // inlining of macro cuddT\n                    if uint32( (((((f).type.kids.T).index)==CUDD_CONST_INDEX)?int32((((f).type.kids.T).index)):(table).perm[(((f).type.kids.T).index)])) \u003c= i ||\n                        // inlining of macro cuddI\n                        // inlining of macro Cudd_Regular\n                        // inlining of macro cuddE\n                        uint32( (((((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).index)):(table).perm[(((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).index)]))\n                        \u003c= i {\n                        (void) fmt.Fprintf(table.err, \"Error: node has illegal children\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro Cudd_Regular\n                    // inlining of macro cuddT\n                    if ((DdNode *)((ptruint)(((f).type.kids.T)) \u0026 ~01)) != ((f).type.kids.T) {\n                        (void) fmt.Fprintf(table.err, \"Error: node has illegal form\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro cuddT\n                    // inlining of macro cuddE\n                    if ((f).type.kids.T) == ((f).type.kids.E) {\n                        (void) fmt.Fprintf(table.err, \"Error: node has identical children\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro cuddT\n                    // inlining of macro Cudd_Regular\n                    // inlining of macro cuddE\n                    if ((f).type.kids.T).ref == 0 || ((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).ref == 0 {\n                        (void) fmt.Fprintf(table.err, \"Error: live node has dead children\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag =1;\n                    }\n                    /* Increment the internal reference count for the\n                    ** then child of the current node.\n                    */\n                    // inlining of macro cuddT\n                    if st__lookup_int(edgeTable,(char *)((f).type.kids.T),\u0026count) {\n                        count++;\n                    } else {\n                        count = 1;\n                    }\n                    // inlining of macro cuddT\n                    if st__insert(edgeTable,(char *)((f).type.kids.T),\n                    (char *)int64(count)) == st__OUT_OF_MEM {\n                        st__free_table(edgeTable);\n                        return(CUDD_OUT_OF_MEM);\n                    }\n\n                    /* Increment the internal reference count for the\n                    ** else child of the current node.\n                    */\n                    // inlining of macro Cudd_Regular\n                    // inlining of macro cuddE\n                    if st__lookup_int(edgeTable,(char *)((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)),\n                                      \u0026count) {\n                        count++;\n                    } else {\n                        count = 1;\n                    }\n                    // inlining of macro Cudd_Regular\n                    // inlining of macro cuddE\n                    if st__insert(edgeTable,(char *)((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)),\n                    (char *)int64(count)) == st__OUT_OF_MEM {\n                        st__free_table(edgeTable);\n                        return(CUDD_OUT_OF_MEM);\n                    }\n                // inlining of macro cuddT\n                // inlining of macro cuddE\n                } else if ((f).type.kids.T) != nil \u0026\u0026 ((f).type.kids.E) != nil \u0026\u0026 f.ref == 0 {\n                    deadNode++;\n     \n                                              \n      \n                } else {\n                    fmt.Fprintf(table.err, \"Error: node has illegal Then or Else pointers\\n\");\n                    cuddPrintNode(f,table.err);\n                    flag = 1;\n                }\n\n                f = f.next;\n            }   /* for each element of the collision list */\n        }       /* for each subtable slot */\n\n        if uint32( totalNode) != table.subtables[i].keys {\n            fmt.Fprintf(table.err, \"Error: wrong number of total nodes\\n\");\n            flag = 1;\n        }\n        if uint32( deadNode) != table.subtables[i].dead {\n            fmt.Fprintf(table.err, \"Error: wrong number of dead nodes\\n\");\n            flag = 1;\n        }\n    }   /* for each BDD/ADD subtable */\n\n    /* Check the ZDD subtables. */\n    for i = 0; i \u003c uint32( table.sizeZ); i++ {\n        index = table.invpermZ[i];\n        if i != uint32( table.permZ[index]) {\n            (void) fmt.Fprintf(table.err, \"Permutation corrupted: invpermZ[%d] = %d\\t permZ[%d] = %d in ZDD\\n\", i, index, index, table.permZ[index]);\n        }\n        nodelist = table.subtableZ[i].nodelist;\n        slots = table.subtableZ[i].slots;\n\n        totalNode = 0;\n        deadNode = 0;\n        for j = 0; j \u003c slots; j++ {   /* for each subtable slot */\n            f = nodelist[j];\n            for f != nil {\n                totalNode++;\n                // inlining of macro cuddT\n                // inlining of macro cuddE\n                if ((f).type.kids.T) != nil \u0026\u0026 ((f).type.kids.E) != nil \u0026\u0026 f.ref != 0 {\n                    if int32( f.index) != index {\n                        (void) fmt.Fprintf(table.err, \"Error: ZDD node has illegal index\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro Cudd_IsComplement\n                    // inlining of macro cuddT\n                    if (int32( ((ptrint) (((f).type.kids.T)) \u0026 01))) ||\n                        // inlining of macro Cudd_IsComplement\n                        // inlining of macro cuddE\n                        (int32( ((ptrint) (((f).type.kids.E)) \u0026 01))) {\n                        (void) fmt.Fprintf(table.err, \"Error: ZDD node has complemented children\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro cuddIZ\n                    // inlining of macro cuddT\n                    if uint32( (((((f).type.kids.T).index)==CUDD_CONST_INDEX)?int32((((f).type.kids.T).index)):(table).permZ[(((f).type.kids.T).index)])) \u003c= i ||\n                    // inlining of macro cuddIZ\n                    // inlining of macro cuddE\n                    uint32( (((((f).type.kids.E).index)==CUDD_CONST_INDEX)?int32((((f).type.kids.E).index)):(table).permZ[(((f).type.kids.E).index)])) \u003c= i {\n                        (void) fmt.Fprintf(table.err, \"Error: ZDD node has illegal children\\n\");\n                        cuddPrintNode(f,table.err);\n                        // inlining of macro cuddT\n                        cuddPrintNode(((f).type.kids.T),table.err);\n                        // inlining of macro cuddE\n                        cuddPrintNode(((f).type.kids.E),table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro cuddT\n                    // inlining of macro DD_ZERO\n                    if ((f).type.kids.T) == ((table).zero) {\n                        (void) fmt.Fprintf(table.err, \"Error: ZDD node has zero then child\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro cuddT\n                    // inlining of macro cuddE\n                    if ((f).type.kids.T).ref == 0 || ((f).type.kids.E).ref == 0 {\n                        (void) fmt.Fprintf(table.err, \"Error: ZDD live node has dead children\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag =1;\n                    }\n                    /* Increment the internal reference count for the\n                    ** then child of the current node.\n                    */\n                    // inlining of macro cuddT\n                    if st__lookup_int(edgeTable,(char *)((f).type.kids.T),\u0026count) {\n                        count++;\n                    } else {\n                        count = 1;\n                    }\n                    // inlining of macro cuddT\n                    if st__insert(edgeTable,(char *)((f).type.kids.T),\n                    (char *)int64(count)) == st__OUT_OF_MEM {\n                        st__free_table(edgeTable);\n                        return(CUDD_OUT_OF_MEM);\n                    }\n\n                    /* Increment the internal reference count for the\n                    ** else child of the current node.\n                    */\n                    // inlining of macro cuddE\n                    if st__lookup_int(edgeTable,(char *)((f).type.kids.E),\u0026count) {\n                        count++;\n                    } else {\n                        count = 1;\n                    }\n                    // inlining of macro cuddE\n                    if st__insert(edgeTable,(char *)((f).type.kids.E),\n                    (char *)int64(count)) == st__OUT_OF_MEM {\n                        st__free_table(edgeTable);\n                        table.errorCode = CUDD_MEMORY_OUT;\n                        return(CUDD_OUT_OF_MEM);\n                    }\n                // inlining of macro cuddT\n                // inlining of macro cuddE\n                } else if ((f).type.kids.T) != nil \u0026\u0026 ((f).type.kids.E) != nil \u0026\u0026 f.ref == 0 {\n                    deadNode++;\n     \n                                              \n      \n                } else {\n                    fmt.Fprintf(table.err, \"Error: ZDD node has illegal Then or Else pointers\\n\");\n                    cuddPrintNode(f,table.err);\n                    flag = 1;\n                }\n\n                f = f.next;\n            }   /* for each element of the collision list */\n        }       /* for each subtable slot */\n\n        if uint32( totalNode) != table.subtableZ[i].keys {\n            fmt.Fprintf(table.err, \"Error: wrong number of total nodes in ZDD\\n\");\n            flag = 1;\n        }\n        if uint32( deadNode) != table.subtableZ[i].dead {\n            fmt.Fprintf(table.err, \"Error: wrong number of dead nodes in ZDD\\n\");\n            flag = 1;\n        }\n    }   /* for each ZDD subtable */\n\n    /* Check the constant table. */\n    nodelist = table.constants.nodelist;\n    slots = table.constants.slots;\n\n    totalNode = 0;\n    deadNode = 0;\n    for j = 0; j \u003c slots; j++ {\n        f = nodelist[j];\n        for f != nil {\n            totalNode++;\n            if f.ref != 0 {\n                if f.index != CUDD_CONST_INDEX {\n                    fmt.Fprintf(table.err, \"Error: node has illegal index\\n\");\n#if SIZEOF_VOID_P == 8\n                    fprintf(table-\u003eerr,\n                            \"       node 0x%lx, id = %u, ref = %u, value = %g\\n\",\n                            (ptruint)f,f-\u003eindex,f-\u003eref,cuddV(f));\n#else\n                    fprintf(table-\u003eerr,\n                            \"       node 0x%x, id = %hu, ref = %hu, value = %g\\n\",\n                            (ptruint)f,f-\u003eindex,f-\u003eref,cuddV(f));\n#endif\n                    flag = 1;\n                }\n            } else {\n                deadNode++;\n            }\n            f = f.next;\n        }\n    }\n    if uint32( totalNode) != table.constants.keys {\n        (void) fmt.Fprintf(table.err, \"Error: wrong number of total nodes in constants\\n\");\n        flag = 1;\n    }\n    if uint32( deadNode) != table.constants.dead {\n        (void) fmt.Fprintf(table.err, \"Error: wrong number of dead nodes in constants\\n\");\n        flag = 1;\n    }\n    gen = st__init_gen(edgeTable);\n    for  st__gen(gen, (char **)\u0026f, (char **)\u0026count) {\n        if count \u003e int32((f.ref)) \u0026\u0026 f.ref != DD_MAXREF {\n#if SIZEOF_VOID_P == 8\n            fprintf(table-\u003eerr,\"ref count error at node 0x%lx, count = %d, id = %u, ref = %u, then = 0x%lx, else = 0x%lx\\n\",(ptruint)f,count,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#else\n            fprintf(table-\u003eerr,\"ref count error at node 0x%x, count = %d, id = %hu, ref = %hu, then = 0x%x, else = 0x%x\\n\",(ptruint)f,count,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#endif\n            debugFindParent(table,f);\n            flag = 1;\n        }\n    }\n    st__free_gen(gen);\n    st__free_table(edgeTable);\n\n    return (flag);\n\n}"
+    },
+    {
+      "Name": "Cudd_CheckKeys",
+      "Start": 18207,
+      "End": 22887,
+      "BodyStart": 18248,
+      "Original": "int\nCudd_CheckKeys(\n  DdManager * table)\n{\n    int size;\n    int i,j;\n    DdNodePtr *nodelist;\n    DdNode *node;\n    DdNode *sentinel = \u0026(table-\u003esentinel);\n    DdSubtable *subtable;\n    int keys;\n    int dead;\n    int count = 0;\n    int totalKeys = 0;\n    int totalSlots = 0;\n    int totalDead = 0;\n    int nonEmpty = 0;\n    unsigned int slots;\n    int logSlots;\n    int shift;\n\n    size = table-\u003esize;\n\n    for (i = 0; i \u003c size; i++) {\n        subtable = \u0026(table-\u003esubtables[i]);\n        nodelist = subtable-\u003enodelist;\n        keys = subtable-\u003ekeys;\n        dead = subtable-\u003edead;\n        totalKeys += keys;\n        slots = subtable-\u003eslots;\n        shift = subtable-\u003eshift;\n        logSlots = sizeof(int) * 8 - shift;\n        if (((slots \u003e\u003e logSlots) \u003c\u003c logSlots) != slots) {\n            (void) fprintf(table-\u003eerr,\n                           \"Unique table %d is not the right power of 2\\n\", i);\n            (void) fprintf(table-\u003eerr,\n                           \"    slots = %u shift = %d\\n\", slots, shift);\n        }\n        totalSlots += slots;\n        totalDead += dead;\n        for (j = 0; (unsigned) j \u003c slots; j++) {\n            node = nodelist[j];\n            if (node != sentinel) {\n                nonEmpty++;\n            }\n            while (node != sentinel) {\n                keys--;\n                if (node-\u003eref == 0) {\n                    dead--;\n                }\n                node = node-\u003enext;\n            }\n        }\n        if (keys != 0) {\n            (void) fprintf(table-\u003eerr, \"Wrong number of keys found \\\nin unique table %d (difference=%d)\\n\", i, keys);\n            count++;\n        }\n        if (dead != 0) {\n            (void) fprintf(table-\u003eerr, \"Wrong number of dead found \\\nin unique table no. %d (difference=%d)\\n\", i, dead);\n        }\n    }   /* for each BDD/ADD subtable */\n\n    /* Check the ZDD subtables. */\n    size = table-\u003esizeZ;\n\n    for (i = 0; i \u003c size; i++) {\n        subtable = \u0026(table-\u003esubtableZ[i]);\n        nodelist = subtable-\u003enodelist;\n        keys = subtable-\u003ekeys;\n        dead = subtable-\u003edead;\n        totalKeys += keys;\n        totalSlots += subtable-\u003eslots;\n        totalDead += dead;\n        for (j = 0; (unsigned) j \u003c subtable-\u003eslots; j++) {\n            node = nodelist[j];\n            if (node != NULL) {\n                nonEmpty++;\n            }\n            while (node != NULL) {\n                keys--;\n                if (node-\u003eref == 0) {\n                    dead--;\n                }\n                node = node-\u003enext;\n            }\n        }\n        if (keys != 0) {\n            (void) fprintf(table-\u003eerr, \"Wrong number of keys found \\\nin ZDD unique table no. %d (difference=%d)\\n\", i, keys);\n            count++;\n        }\n        if (dead != 0) {\n            (void) fprintf(table-\u003eerr, \"Wrong number of dead found \\\nin ZDD unique table no. %d (difference=%d)\\n\", i, dead);\n        }\n    }   /* for each ZDD subtable */\n\n    /* Check the constant table. */\n    subtable = \u0026(table-\u003econstants);\n    nodelist = subtable-\u003enodelist;\n    keys = subtable-\u003ekeys;\n    dead = subtable-\u003edead;\n    totalKeys += keys;\n    totalSlots += subtable-\u003eslots;\n    totalDead += dead;\n    for (j = 0; (unsigned) j \u003c subtable-\u003eslots; j++) {\n        node = nodelist[j];\n        if (node != NULL) {\n            nonEmpty++;\n        }\n        while (node != NULL) {\n            keys--;\n            if (node-\u003eref == 0) {\n                dead--;\n            }\n            node = node-\u003enext;\n        }\n    }\n    if (keys != 0) {\n        (void) fprintf(table-\u003eerr, \"Wrong number of keys found \\\nin the constant table (difference=%d)\\n\", keys);\n        count++;\n    }\n    if (dead != 0) {\n        (void) fprintf(table-\u003eerr, \"Wrong number of dead found \\\nin the constant table (difference=%d)\\n\", dead);\n    }\n    if ((unsigned) totalKeys != table-\u003ekeys + table-\u003ekeysZ) {\n        (void) fprintf(table-\u003eerr, \"Wrong number of total keys found \\\n(difference=%d)\\n\", (int) (totalKeys-table-\u003ekeys));\n    }\n    if ((unsigned) totalSlots != table-\u003eslots) {\n        (void) fprintf(table-\u003eerr, \"Wrong number of total slots found \\\n(difference=%d)\\n\", (int) (totalSlots-table-\u003eslots));\n    }\n    if (table-\u003eminDead != (unsigned) (table-\u003egcFrac * table-\u003eslots)) {\n        (void) fprintf(table-\u003eerr, \"Wrong number of minimum dead found \\\n(%u vs. %u)\\n\", table-\u003eminDead,\n        (unsigned) (table-\u003egcFrac * (double) table-\u003eslots));\n    }\n    if ((unsigned) totalDead != table-\u003edead + table-\u003edeadZ) {\n        (void) fprintf(table-\u003eerr, \"Wrong number of total dead found \\\n(difference=%d)\\n\", (int) (totalDead-table-\u003edead));\n    }\n    (void)printf(\"Average length of non-empty lists = %g\\n\",\n    (double) table-\u003ekeys / (double) nonEmpty);\n\n    return(count);\n\n}",
+      "Draft": "func Cudd_CheckKeys(table *DdManager) int32 {\n    var size int32;\n    var i, j int32;\n    var nodelist *DdNodePtr;\n    var node *DdNode;\n    var sentinel *DdNode  = \u0026(table.sentinel);\n    var subtable *DdSubtable;\n    var keys int32;\n    var dead int32;\n    var count int32;\n    var totalKeys int32;\n    var totalSlots int32;\n    var totalDead int32;\n    var nonEmpty int32;\n    unsigned int slots;\n    var logSlots int32;\n    var shift int32;\n\n    size = table.size;\n\n    for i = 0; i \u003c size; i++ {\n        subtable = \u0026(table.subtables[i]);\n        nodelist = subtable.nodelist;\n        keys = subtable.keys;\n        dead = subtable.dead;\n        totalKeys += keys;\n        slots = subtable.slots;\n        shift = subtable.shift;\n        logSlots = sizeof(int) * 8 - shift;\n        if ((slots \u003e\u003e logSlots) \u003c\u003c logSlots) != slots {\n            (void) fmt.Fprintf(table.err, \"Unique table %d is not the right power of 2\\n\", i);\n            (void) fmt.Fprintf(table.err, \"    slots = %d shift = %d\\n\", slots, shift);\n        }\n        totalSlots += slots;\n        totalDead += dead;\n        for j = 0; uint32( j) \u003c slots; j++ {\n            node = nodelist[j];\n            if node != sentinel {\n                nonEmpty++;\n            }\n            for node != sentinel {\n                keys--;\n                if node.ref == 0 {\n                    dead--;\n                }\n                node = node.next;\n            }\n        }\n        if keys != 0 {\n            (void) fmt.Fprintf(table.err, \"Wrong number of keys found \\\n            in unique table %d (difference=%d)\\n\", i, keys);\n            count++;\n        }\n        if dead != 0 {\n            (void) fmt.Fprintf(table.err, \"Wrong number of dead found \\\n            in unique table no. %d (difference=%d)\\n\", i, dead);\n        }\n    }   /* for each BDD/ADD subtable */\n\n    /* Check the ZDD subtables. */\n    size = table.sizeZ;\n\n    for i = 0; i \u003c size; i++ {\n        subtable = \u0026(table.subtableZ[i]);\n        nodelist = subtable.nodelist;\n        keys = subtable.keys;\n        dead = subtable.dead;\n        totalKeys += keys;\n        totalSlots += subtable.slots;\n        totalDead += dead;\n        for j = 0; uint32( j) \u003c subtable.slots; j++ {\n            node = nodelist[j];\n            if node != nil {\n                nonEmpty++;\n            }\n            for node != nil {\n                keys--;\n                if node.ref == 0 {\n                    dead--;\n                }\n                node = node.next;\n            }\n        }\n        if keys != 0 {\n            (void) fmt.Fprintf(table.err, \"Wrong number of keys found \\\n            in ZDD unique table no. %d (difference=%d)\\n\", i, keys);\n            count++;\n        }\n        if dead != 0 {\n            (void) fmt.Fprintf(table.err, \"Wrong number of dead found \\\n            in ZDD unique table no. %d (difference=%d)\\n\", i, dead);\n        }\n    }   /* for each ZDD subtable */\n\n    /* Check the constant table. */\n    subtable = \u0026(table.constants);\n    nodelist = subtable.nodelist;\n    keys = subtable.keys;\n    dead = subtable.dead;\n    totalKeys += keys;\n    totalSlots += subtable.slots;\n    totalDead += dead;\n    for j = 0; uint32( j) \u003c subtable.slots; j++ {\n        node = nodelist[j];\n        if node != nil {\n            nonEmpty++;\n        }\n        for node != nil {\n            keys--;\n            if node.ref == 0 {\n                dead--;\n            }\n            node = node.next;\n        }\n    }\n    if keys != 0 {\n        (void) fmt.Fprintf(table.err, \"Wrong number of keys found \\\n        in the constant table (difference=%d)\\n\", keys);\n        count++;\n    }\n    if dead != 0 {\n        (void) fmt.Fprintf(table.err, \"Wrong number of dead found \\\n        in the constant table (difference=%d)\\n\", dead);\n    }\n    if uint32( totalKeys) != table.keys + table.keysZ {\n        (void) fmt.Fprintf(table.err, \"Wrong number of total keys found \\\n        (difference=%d)\\n\", int32( (totalKeys-table.keys)));\n    }\n    if uint32( totalSlots) != table.slots {\n        (void) fmt.Fprintf(table.err, \"Wrong number of total slots found \\\n        (difference=%d)\\n\", int32( (totalSlots-table.slots)));\n    }\n    if table.minDead != uint32( (table.gcFrac * table.slots)) {\n        (void) fmt.Fprintf(table.err, \"Wrong number of minimum dead found \\\n        (%u vs. %u)\\n\", table.minDead, uint32( (table.gcFrac * float64( table.slots))));\n    }\n    if uint32( totalDead) != table.dead + table.deadZ {\n        (void) fmt.Fprintf(table.err, \"Wrong number of total dead found \\\n        (difference=%d)\\n\", int32( (totalDead-table.dead)));\n    }\n    (void)fmt.Printf(\"Average length of non-empty lists = %g\\n\", float64( table.keys) / float64( nonEmpty));\n\n    return(count);\n\n}"
+    },
+    {
+      "Name": "cuddHeapProfile",
+      "Start": 23933,
+      "End": 25732,
+      "BodyStart": 23972,
+      "Original": "int\ncuddHeapProfile(\n  DdManager * dd)\n{\n    int ntables = dd-\u003esize;\n    DdSubtable *subtables = dd-\u003esubtables;\n    int i,              /* loop index */\n        nodes,          /* live nodes in i-th layer */\n        retval,         /* return value of fprintf */\n        largest = -1,   /* index of the table with most live nodes */\n        maxnodes = -1,  /* maximum number of live nodes in a table */\n        nonempty = 0;   /* number of tables with live nodes */\n\n    /* Print header. */\n#if SIZEOF_VOID_P == 8\n    retval = fprintf(dd-\u003eout,\"*** DD heap profile for 0x%lx ***\\n\",\n                     (ptruint) dd);\n#else\n    retval = fprintf(dd-\u003eout,\"*** DD heap profile for 0x%x ***\\n\",\n                     (ptruint) dd);\n#endif\n    if (retval == EOF) return 0;\n\n    /* Print number of live nodes for each nonempty table. */\n    for (i=0; i\u003cntables; i++) {\n        nodes = subtables[i].keys - subtables[i].dead;\n        if (nodes) {\n            nonempty++;\n            retval = fprintf(dd-\u003eout,\"%5d: %5d nodes\\n\", i, nodes);\n            if (retval == EOF) return 0;\n            if (nodes \u003e maxnodes) {\n                maxnodes = nodes;\n                largest = i;\n            }\n        }\n    }\n\n    nodes = dd-\u003econstants.keys - dd-\u003econstants.dead;\n    if (nodes) {\n        nonempty++;\n        retval = fprintf(dd-\u003eout,\"const: %5d nodes\\n\", nodes);\n        if (retval == EOF) return 0;\n        if (nodes \u003e maxnodes) {\n            maxnodes = nodes;\n            largest = CUDD_CONST_INDEX;\n        }\n    }\n\n    /* Print summary. */\n    retval = fprintf(dd-\u003eout,\"Summary: %d tables, %d non-empty, largest: %d \",\n          ntables+1, nonempty, largest);\n    if (retval == EOF) return 0;\n    retval = fprintf(dd-\u003eout,\"(with %d nodes)\\n\", maxnodes);\n    if (retval == EOF) return 0;\n\n    return(1);\n\n}",
+      "Draft": "func cuddHeapProfile(dd *DdManager) int32 {\n    var ntables int32  = dd.size;\n    var subtables *DdSubtable  = dd.subtables;\n    int i,              /* loop index */\n        nodes,          /* live nodes in i-th layer */\n        retval,         /* return value of fprintf */\n        largest = -1,   /* index of the table with most live nodes */\n        maxnodes = -1,  /* maximum number of live nodes in a table */\n        nonempty = 0;   /* number of tables with live nodes */\n\n    /* Print header. */\n#if SIZEOF_VOID_P == 8\n    retval = fprintf(dd-\u003eout,\"*** DD heap profile for 0x%lx ***\\n\",\n                     (ptruint) dd);\n#else\n    retval = fprintf(dd-\u003eout,\"*** DD heap profile for 0x%x ***\\n\",\n                     (ptruint) dd);\n#endif\n    if retval == -1 { return 0; }\n\n    /* Print number of live nodes for each nonempty table. */\n    for i=0; i\u003cntables; i++ {\n        nodes = subtables[i].keys - subtables[i].dead;\n        if nodes {\n            nonempty++;\n            retval = fmt.Fprintf(dd.out, \"%5d: %5d nodes\\n\", i, nodes);\n            if retval == -1 { return 0; }\n            if nodes \u003e maxnodes {\n                maxnodes = nodes;\n                largest = i;\n            }\n        }\n    }\n\n    nodes = dd.constants.keys - dd.constants.dead;\n    if nodes {\n        nonempty++;\n        retval = fmt.Fprintf(dd.out, \"const: %5d nodes\\n\", nodes);\n        if retval == -1 { return 0; }\n        if nodes \u003e maxnodes {\n            maxnodes = nodes;\n            largest = CUDD_CONST_INDEX;\n        }\n    }\n\n    /* Print summary. */\n    retval = fmt.Fprintf(dd.out, \"Summary: %d tables, %d non-empty, largest: %d \", ntables+1, nonempty, largest);\n    if retval == -1 { return 0; }\n    retval = fmt.Fprintf(dd.out, \"(with %d nodes)\\n\", maxnodes);\n    if retval == -1 { return 0; }\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "cuddPrintNode",
+      "Start": 26067,
+      "End": 26489,
+      "BodyStart": 26113,
+      "Original": "void\ncuddPrintNode(\n  DdNode * f,\n  FILE *fp)\n{\n    f = Cudd_Regular(f);\n#if SIZEOF_VOID_P == 8\n    (void) fprintf(fp,\"       node 0x%lx, id = %u, ref = %u, then = 0x%lx, else = 0x%lx\\n\",(ptruint)f,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#else\n    (void) fprintf(fp,\"       node 0x%x, id = %hu, ref = %hu, then = 0x%x, else = 0x%x\\n\",(ptruint)f,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#endif\n\n}",
+      "Draft": "func cuddPrintNode(f *DdNode, fp *os.File) {\n    // inlining of macro Cudd_Regular\n    f = ((DdNode *)((ptruint)(f) \u0026 ~01));\n#if SIZEOF_VOID_P == 8\n    (void) fprintf(fp,\"       node 0x%lx, id = %u, ref = %u, then = 0x%lx, else = 0x%lx\\n\",(ptruint)f,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#else\n    (void) fprintf(fp,\"       node 0x%x, id = %hu, ref = %hu, then = 0x%x, else = 0x%x\\n\",(ptruint)f,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#endif\n\n}"
+    },
+    {
+      "Name": "cuddPrintVarGroups",
+      "Start": 27254,
+      "End": 28765,
+      "BodyStart": 27441,
+      "Original": "void\ncuddPrintVarGroups(\n  DdManager * dd /* manager */,\n  MtrNode * root /* root of the group tree */,\n  int zdd /* 0: BDD; 1: ZDD */,\n  int silent /* flag to check tree syntax only */)\n{\n    MtrNode *node;\n    int level;\n\n    assert(root != NULL);\n    assert(root-\u003eyounger == NULL || root-\u003eyounger-\u003eelder == root);\n    assert(root-\u003eelder == NULL || root-\u003eelder-\u003eyounger == root);\n    if (zdd) {\n        level = dd-\u003epermZ[root-\u003eindex];\n    } else {\n        level = dd-\u003eperm[root-\u003eindex];\n    }\n    if (!silent) (void) printf(\"(%d\",level);\n    if (MTR_TEST(root,MTR_TERMINAL) || root-\u003echild == NULL) {\n        if (!silent) (void) printf(\",\");\n    } else {\n        node = root-\u003echild;\n        while (node != NULL) {\n            assert(node-\u003elow \u003e= root-\u003elow \u0026\u0026 (int) (node-\u003elow + node-\u003esize) \u003c= (int) (root-\u003elow + root-\u003esize));\n            assert(node-\u003eparent == root);\n            cuddPrintVarGroups(dd,node,zdd,silent);\n            node = node-\u003eyounger;\n        }\n    }\n    if (!silent) {\n        (void) printf(\"%d\", (int) (level + root-\u003esize - 1));\n        if (root-\u003eflags != MTR_DEFAULT) {\n            (void) printf(\"|\");\n            if (MTR_TEST(root,MTR_FIXED)) (void) printf(\"F\");\n            if (MTR_TEST(root,MTR_NEWNODE)) (void) printf(\"N\");\n            if (MTR_TEST(root,MTR_SOFT)) (void) printf(\"S\");\n        }\n        (void) printf(\")\");\n        if (root-\u003eparent == NULL) (void) printf(\"\\n\");\n    }\n    assert((root-\u003eflags \u0026~(MTR_TERMINAL | MTR_SOFT | MTR_FIXED | MTR_NEWNODE)) == 0);\n    return;\n\n}",
+      "Draft": "void\ncuddPrintVarGroups(\n  DdManager * dd /* manager */,\n  MtrNode * root /* root of the group tree */,\n  int zdd /* 0: BDD; 1: ZDD */,\n  int silent /* flag to check tree syntax only */)\n{\n    var node *MtrNode;\n    var level int32;\n\n    assert(root != nil, \"root != nil\");\n    assert(root.younger == nil || root.younger.elder == root, \"root.younger == nil || root.younger.elder == root\");\n    assert(root.elder == nil || root.elder.younger == root, \"root.elder == nil || root.elder.younger == root\");\n    if zdd {\n        level = dd.permZ[root.index];\n    } else {\n        level = dd.perm[root.index];\n    }\n    if !silent { (void) fmt.Printf(\"(%d\", level); }\n    // inlining of macro MTR_TEST\n    if (root.flags \u0026 (MTR_TERMINAL)) || root.child == nil {\n        if !silent { (void) fmt.Printf(\",\"); }\n    } else {\n        node = root.child;\n        for node != nil {\n            assert(node.low \u003e= root.low \u0026\u0026 int32( (node.low + node.size)) \u003c= int32( (root.low + root.size)), \"node.low \u003e= root.low \u0026\u0026 int32( (node.low + node.size)) \u003c= int32( (root.low + root.size))\");\n            assert(node.parent == root, \"node.parent == root\");\n            cuddPrintVarGroups(dd,node,zdd,silent);\n            node = node.younger;\n        }\n    }\n    if !silent {\n        (void) fmt.Printf(\"%d\", int32( (level + root.size - 1)));\n        if root.flags != MTR_DEFAULT {\n            (void) fmt.Printf(\"|\");\n            // inlining of macro MTR_TEST\n            if root.flags \u0026 (MTR_FIXED) { (void) fmt.Printf(\"F\"); }\n            // inlining of macro MTR_TEST\n            if root.flags \u0026 (MTR_NEWNODE) { (void) fmt.Printf(\"N\"); }\n            // inlining of macro MTR_TEST\n            if root.flags \u0026 (MTR_SOFT) { (void) fmt.Printf(\"S\"); }\n        }\n        (void) fmt.Printf(\")\");\n        if root.parent == nil { (void) fmt.Printf(\"\\n\"); }\n    }\n    assert((root.flags \u0026~(MTR_TERMINAL | MTR_SOFT | MTR_FIXED | MTR_NEWNODE)) == 0, \"(root.flags \u0026~(MTR_TERMINAL | MTR_SOFT | MTR_FIXED | MTR_NEWNODE)) == 0\");\n    return;\n\n}"
+    },
+    {
+      "Name": "debugFindParent",
+      "Start": 29329,
+      "End": 30329,
+      "BodyStart": 29396,
+      "Original": "static void\ndebugFindParent(\n  DdManager * table,\n  DdNode * node)\n{\n    int         i,j;\n    int         slots;\n    DdNodePtr   *nodelist;\n    DdNode      *f;\n\n    for (i = 0; i \u003c cuddI(table,node-\u003eindex); i++) {\n        nodelist = table-\u003esubtables[i].nodelist;\n        slots = table-\u003esubtables[i].slots;\n\n        for (j=0;j\u003cslots;j++) {\n            f = nodelist[j];\n            while (f != NULL) {\n                if (cuddT(f) == node || Cudd_Regular(cuddE(f)) == node) {\n#if SIZEOF_VOID_P == 8\n                    (void) fprintf(table-\u003eout,\"parent is at 0x%lx, id = %u, ref = %u, then = 0x%lx, else = 0x%lx\\n\",\n                        (ptruint)f,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#else\n                    (void) fprintf(table-\u003eout,\"parent is at 0x%x, id = %hu, ref = %hu, then = 0x%x, else = 0x%x\\n\",\n                        (ptruint)f,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#endif\n                }\n                f = f-\u003enext;\n            }\n        }\n    }\n\n}",
+      "Draft": "func debugFindParent(table *DdManager, node *DdNode) {\n    var i, j int32;\n    var slots int32;\n    var nodelist *DdNodePtr;\n    var f *DdNode;\n\n    // inlining of macro cuddI\n    for i = 0; i \u003c (((node.index)==CUDD_CONST_INDEX)?int32((node.index)):(table).perm[(node.index)]); i++ {\n        nodelist = table.subtables[i].nodelist;\n        slots = table.subtables[i].slots;\n\n        for j=0;j\u003cslots;j++ {\n            f = nodelist[j];\n            for f != nil {\n                // inlining of macro cuddT\n                // inlining of macro Cudd_Regular\n                // inlining of macro cuddE\n                if ((f).type.kids.T) == node || ((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)) == node {\n#if SIZEOF_VOID_P == 8\n                    (void) fprintf(table-\u003eout,\"parent is at 0x%lx, id = %u, ref = %u, then = 0x%lx, else = 0x%lx\\n\",\n                        (ptruint)f,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#else\n                    (void) fprintf(table-\u003eout,\"parent is at 0x%x, id = %hu, ref = %hu, then = 0x%x, else = 0x%x\\n\",\n                        (ptruint)f,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#endif\n                }\n                f = f.next;\n            }\n        }\n    }\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::mechanical::sizeof::21348",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18900,
+      "End": 18906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::7497",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7077,
+      "End": 7077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::7669",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7077,
+      "End": 7077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::7831",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7077,
+      "End": 7077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::8274",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7414,
+      "End": 7414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::9200",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8020,
+      "End": 8020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::9740",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8493,
+      "End": 8501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::9984",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8686,
+      "End": 8694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::10073",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8724,
+      "End": 8732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::10436",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9087,
+      "End": 9095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::10493",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9095,
+      "End": 9095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::10798",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9333,
+      "End": 9341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::10855",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9341,
+      "End": 9341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::10966",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9385,
+      "End": 9393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::16020",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13190,
+      "End": 13198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::16264",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13383,
+      "End": 13391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::16353",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13421,
+      "End": 13429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::16716",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13784,
+      "End": 13792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::16960",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13977,
+      "End": 13985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::17049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14015,
+      "End": 14023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::19471",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16673,
+      "End": 16682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::28452",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26123,
+      "End": 26123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::pointer-cast::32230",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29769,
+      "End": 29769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::ternary::Cudd_DebugCheck",
+      "Category": "ternary-review",
+      "Symbol": "Cudd_DebugCheck",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5399,
+      "End": 17330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::Cudd_DebugCheck",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_DebugCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5399,
+      "End": 17330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::Cudd_CheckKeys",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_CheckKeys",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18207,
+      "End": 22887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::cuddHeapProfile",
+      "Category": "semantic-review",
+      "Symbol": "cuddHeapProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23933,
+      "End": 25732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::cuddPrintNode",
+      "Category": "semantic-review",
+      "Symbol": "cuddPrintNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26067,
+      "End": 26489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::cuddPrintVarGroups",
+      "Category": "semantic-review",
+      "Symbol": "cuddPrintVarGroups",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 27254,
+      "End": 28765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::ternary::debugFindParent",
+      "Category": "ternary-review",
+      "Symbol": "debugFindParent",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 29329,
+      "End": 30329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::debugFindParent",
+      "Category": "semantic-review",
+      "Symbol": "debugFindParent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29329,
+      "End": 30329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 31812
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3515,
+      "End": 3625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 15645,
+      "End": 16057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16753,
+      "End": 17177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 24423,
+      "End": 24665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 26140,
+      "End": 26486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCheck.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 29803,
+      "End": 30249
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddCheck.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions to check consistency of data structures.]\n\n  Description [External procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_DebugCheck()\n                \u003cli\u003e Cudd_CheckKeys()\n                \u003c/ul\u003e\n               Internal procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddHeapProfile()\n                \u003cli\u003e cuddPrintNode()\n                \u003cli\u003e cuddPrintVarGroups()\n                \u003c/ul\u003e\n               Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e debugFindParent()\n                \u003c/ul\u003e\n                ]\n\n  SeeAlso     []\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddCheck.c,v 1.35 2009/03/08 02:49:01 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static void debugFindParent (DdManager *table, DdNode *node);\n\n     \n                                                              \n      \n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks for inconsistencies in the DD heap.]\n\n  Description [Checks for inconsistencies in the DD heap:\n  \u003cul\u003e\n  \u003cli\u003e node has illegal index\n  \u003cli\u003e live node has dead children\n  \u003cli\u003e node has illegal Then or Else pointers\n  \u003cli\u003e BDD/ADD node has identical children\n  \u003cli\u003e ZDD node has zero then child\n  \u003cli\u003e wrong number of total nodes\n  \u003cli\u003e wrong number of dead nodes\n  \u003cli\u003e ref count error at node\n  \u003c/ul\u003e\n  Returns 0 if no inconsistencies are found; DD_OUT_OF_MEM if there is\n  not enough memory; 1 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_CheckKeys]\n\n******************************************************************************/\nfunc Cudd_DebugCheck(table *DdManager) int32 {\n    unsigned int i;\n    var j, count int32;\n    var slots int32;\n    var nodelist *DdNodePtr;\n    var f *DdNode;\n    var sentinel *DdNode  = \u0026(table.sentinel);\n    var edgeTable *st__table;     /* stores internal ref count for each node */\n    var gen *st__generator;\n    var flag int32;\n    var totalNode int32;\n    var deadNode int32;\n    var index int32;\n\n\n    edgeTable = st__init_table( st__ptrcmp, st__ptrhash);\n    if edgeTable == nil { return(CUDD_OUT_OF_MEM); }\n\n    /* Check the BDD/ADD subtables. */\n    for i = 0; i \u003c uint32( table.size); i++ {\n        index = table.invperm[i];\n        if i != uint32( table.perm[index]) {\n            (void) fmt.Fprintf(table.err, \"Permutation corrupted: invperm[%d] = %d\\t perm[%d] = %d\\n\", i, index, index, table.perm[index]);\n        }\n        nodelist = table.subtables[i].nodelist;\n        slots = table.subtables[i].slots;\n\n        totalNode = 0;\n        deadNode = 0;\n        for j = 0; j \u003c slots; j++ {   /* for each subtable slot */\n            f = nodelist[j];\n            for f != sentinel {\n                totalNode++;\n                // inlining of macro cuddT\n                // inlining of macro cuddE\n                if ((f).type.kids.T) != nil \u0026\u0026 ((f).type.kids.E) != nil \u0026\u0026 f.ref != 0 {\n                    if int32( f.index) != index {\n                        (void) fmt.Fprintf(table.err, \"Error: node has illegal index\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro cuddI\n                    // inlining of macro cuddT\n                    if uint32( (((((f).type.kids.T).index)==CUDD_CONST_INDEX)?int32((((f).type.kids.T).index)):(table).perm[(((f).type.kids.T).index)])) \u003c= i ||\n                        // inlining of macro cuddI\n                        // inlining of macro Cudd_Regular\n                        // inlining of macro cuddE\n                        uint32( (((((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).index)==CUDD_CONST_INDEX)?int32((((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).index)):(table).perm[(((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).index)]))\n                        \u003c= i {\n                        (void) fmt.Fprintf(table.err, \"Error: node has illegal children\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro Cudd_Regular\n                    // inlining of macro cuddT\n                    if ((DdNode *)((ptruint)(((f).type.kids.T)) \u0026 ~01)) != ((f).type.kids.T) {\n                        (void) fmt.Fprintf(table.err, \"Error: node has illegal form\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro cuddT\n                    // inlining of macro cuddE\n                    if ((f).type.kids.T) == ((f).type.kids.E) {\n                        (void) fmt.Fprintf(table.err, \"Error: node has identical children\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro cuddT\n                    // inlining of macro Cudd_Regular\n                    // inlining of macro cuddE\n                    if ((f).type.kids.T).ref == 0 || ((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).ref == 0 {\n                        (void) fmt.Fprintf(table.err, \"Error: live node has dead children\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag =1;\n                    }\n                    /* Increment the internal reference count for the\n                    ** then child of the current node.\n                    */\n                    // inlining of macro cuddT\n                    if st__lookup_int(edgeTable,(char *)((f).type.kids.T),\u0026count) {\n                        count++;\n                    } else {\n                        count = 1;\n                    }\n                    // inlining of macro cuddT\n                    if st__insert(edgeTable,(char *)((f).type.kids.T),\n                    (char *)int64(count)) == st__OUT_OF_MEM {\n                        st__free_table(edgeTable);\n                        return(CUDD_OUT_OF_MEM);\n                    }\n\n                    /* Increment the internal reference count for the\n                    ** else child of the current node.\n                    */\n                    // inlining of macro Cudd_Regular\n                    // inlining of macro cuddE\n                    if st__lookup_int(edgeTable,(char *)((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)),\n                                      \u0026count) {\n                        count++;\n                    } else {\n                        count = 1;\n                    }\n                    // inlining of macro Cudd_Regular\n                    // inlining of macro cuddE\n                    if st__insert(edgeTable,(char *)((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)),\n                    (char *)int64(count)) == st__OUT_OF_MEM {\n                        st__free_table(edgeTable);\n                        return(CUDD_OUT_OF_MEM);\n                    }\n                // inlining of macro cuddT\n                // inlining of macro cuddE\n                } else if ((f).type.kids.T) != nil \u0026\u0026 ((f).type.kids.E) != nil \u0026\u0026 f.ref == 0 {\n                    deadNode++;\n     \n                                              \n      \n                } else {\n                    fmt.Fprintf(table.err, \"Error: node has illegal Then or Else pointers\\n\");\n                    cuddPrintNode(f,table.err);\n                    flag = 1;\n                }\n\n                f = f.next;\n            }   /* for each element of the collision list */\n        }       /* for each subtable slot */\n\n        if uint32( totalNode) != table.subtables[i].keys {\n            fmt.Fprintf(table.err, \"Error: wrong number of total nodes\\n\");\n            flag = 1;\n        }\n        if uint32( deadNode) != table.subtables[i].dead {\n            fmt.Fprintf(table.err, \"Error: wrong number of dead nodes\\n\");\n            flag = 1;\n        }\n    }   /* for each BDD/ADD subtable */\n\n    /* Check the ZDD subtables. */\n    for i = 0; i \u003c uint32( table.sizeZ); i++ {\n        index = table.invpermZ[i];\n        if i != uint32( table.permZ[index]) {\n            (void) fmt.Fprintf(table.err, \"Permutation corrupted: invpermZ[%d] = %d\\t permZ[%d] = %d in ZDD\\n\", i, index, index, table.permZ[index]);\n        }\n        nodelist = table.subtableZ[i].nodelist;\n        slots = table.subtableZ[i].slots;\n\n        totalNode = 0;\n        deadNode = 0;\n        for j = 0; j \u003c slots; j++ {   /* for each subtable slot */\n            f = nodelist[j];\n            for f != nil {\n                totalNode++;\n                // inlining of macro cuddT\n                // inlining of macro cuddE\n                if ((f).type.kids.T) != nil \u0026\u0026 ((f).type.kids.E) != nil \u0026\u0026 f.ref != 0 {\n                    if int32( f.index) != index {\n                        (void) fmt.Fprintf(table.err, \"Error: ZDD node has illegal index\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro Cudd_IsComplement\n                    // inlining of macro cuddT\n                    if (int32( ((ptrint) (((f).type.kids.T)) \u0026 01))) ||\n                        // inlining of macro Cudd_IsComplement\n                        // inlining of macro cuddE\n                        (int32( ((ptrint) (((f).type.kids.E)) \u0026 01))) {\n                        (void) fmt.Fprintf(table.err, \"Error: ZDD node has complemented children\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro cuddIZ\n                    // inlining of macro cuddT\n                    if uint32( (((((f).type.kids.T).index)==CUDD_CONST_INDEX)?int32((((f).type.kids.T).index)):(table).permZ[(((f).type.kids.T).index)])) \u003c= i ||\n                    // inlining of macro cuddIZ\n                    // inlining of macro cuddE\n                    uint32( (((((f).type.kids.E).index)==CUDD_CONST_INDEX)?int32((((f).type.kids.E).index)):(table).permZ[(((f).type.kids.E).index)])) \u003c= i {\n                        (void) fmt.Fprintf(table.err, \"Error: ZDD node has illegal children\\n\");\n                        cuddPrintNode(f,table.err);\n                        // inlining of macro cuddT\n                        cuddPrintNode(((f).type.kids.T),table.err);\n                        // inlining of macro cuddE\n                        cuddPrintNode(((f).type.kids.E),table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro cuddT\n                    // inlining of macro DD_ZERO\n                    if ((f).type.kids.T) == ((table).zero) {\n                        (void) fmt.Fprintf(table.err, \"Error: ZDD node has zero then child\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag = 1;\n                    }\n                    // inlining of macro cuddT\n                    // inlining of macro cuddE\n                    if ((f).type.kids.T).ref == 0 || ((f).type.kids.E).ref == 0 {\n                        (void) fmt.Fprintf(table.err, \"Error: ZDD live node has dead children\\n\");\n                        cuddPrintNode(f,table.err);\n                        flag =1;\n                    }\n                    /* Increment the internal reference count for the\n                    ** then child of the current node.\n                    */\n                    // inlining of macro cuddT\n                    if st__lookup_int(edgeTable,(char *)((f).type.kids.T),\u0026count) {\n                        count++;\n                    } else {\n                        count = 1;\n                    }\n                    // inlining of macro cuddT\n                    if st__insert(edgeTable,(char *)((f).type.kids.T),\n                    (char *)int64(count)) == st__OUT_OF_MEM {\n                        st__free_table(edgeTable);\n                        return(CUDD_OUT_OF_MEM);\n                    }\n\n                    /* Increment the internal reference count for the\n                    ** else child of the current node.\n                    */\n                    // inlining of macro cuddE\n                    if st__lookup_int(edgeTable,(char *)((f).type.kids.E),\u0026count) {\n                        count++;\n                    } else {\n                        count = 1;\n                    }\n                    // inlining of macro cuddE\n                    if st__insert(edgeTable,(char *)((f).type.kids.E),\n                    (char *)int64(count)) == st__OUT_OF_MEM {\n                        st__free_table(edgeTable);\n                        table.errorCode = CUDD_MEMORY_OUT;\n                        return(CUDD_OUT_OF_MEM);\n                    }\n                // inlining of macro cuddT\n                // inlining of macro cuddE\n                } else if ((f).type.kids.T) != nil \u0026\u0026 ((f).type.kids.E) != nil \u0026\u0026 f.ref == 0 {\n                    deadNode++;\n     \n                                              \n      \n                } else {\n                    fmt.Fprintf(table.err, \"Error: ZDD node has illegal Then or Else pointers\\n\");\n                    cuddPrintNode(f,table.err);\n                    flag = 1;\n                }\n\n                f = f.next;\n            }   /* for each element of the collision list */\n        }       /* for each subtable slot */\n\n        if uint32( totalNode) != table.subtableZ[i].keys {\n            fmt.Fprintf(table.err, \"Error: wrong number of total nodes in ZDD\\n\");\n            flag = 1;\n        }\n        if uint32( deadNode) != table.subtableZ[i].dead {\n            fmt.Fprintf(table.err, \"Error: wrong number of dead nodes in ZDD\\n\");\n            flag = 1;\n        }\n    }   /* for each ZDD subtable */\n\n    /* Check the constant table. */\n    nodelist = table.constants.nodelist;\n    slots = table.constants.slots;\n\n    totalNode = 0;\n    deadNode = 0;\n    for j = 0; j \u003c slots; j++ {\n        f = nodelist[j];\n        for f != nil {\n            totalNode++;\n            if f.ref != 0 {\n                if f.index != CUDD_CONST_INDEX {\n                    fmt.Fprintf(table.err, \"Error: node has illegal index\\n\");\n#if SIZEOF_VOID_P == 8\n                    fprintf(table-\u003eerr,\n                            \"       node 0x%lx, id = %u, ref = %u, value = %g\\n\",\n                            (ptruint)f,f-\u003eindex,f-\u003eref,cuddV(f));\n#else\n                    fprintf(table-\u003eerr,\n                            \"       node 0x%x, id = %hu, ref = %hu, value = %g\\n\",\n                            (ptruint)f,f-\u003eindex,f-\u003eref,cuddV(f));\n#endif\n                    flag = 1;\n                }\n            } else {\n                deadNode++;\n            }\n            f = f.next;\n        }\n    }\n    if uint32( totalNode) != table.constants.keys {\n        (void) fmt.Fprintf(table.err, \"Error: wrong number of total nodes in constants\\n\");\n        flag = 1;\n    }\n    if uint32( deadNode) != table.constants.dead {\n        (void) fmt.Fprintf(table.err, \"Error: wrong number of dead nodes in constants\\n\");\n        flag = 1;\n    }\n    gen = st__init_gen(edgeTable);\n    for  st__gen(gen, (char **)\u0026f, (char **)\u0026count) {\n        if count \u003e int32((f.ref)) \u0026\u0026 f.ref != DD_MAXREF {\n#if SIZEOF_VOID_P == 8\n            fprintf(table-\u003eerr,\"ref count error at node 0x%lx, count = %d, id = %u, ref = %u, then = 0x%lx, else = 0x%lx\\n\",(ptruint)f,count,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#else\n            fprintf(table-\u003eerr,\"ref count error at node 0x%x, count = %d, id = %hu, ref = %hu, then = 0x%x, else = 0x%x\\n\",(ptruint)f,count,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#endif\n            debugFindParent(table,f);\n            flag = 1;\n        }\n    }\n    st__free_gen(gen);\n    st__free_table(edgeTable);\n\n    return (flag);\n\n} /* end of Cudd_DebugCheck */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks for several conditions that should not occur.]\n\n  Description [Checks for the following conditions:\n  \u003cul\u003e\n  \u003cli\u003eWrong sizes of subtables.\n  \u003cli\u003eWrong number of keys found in unique subtable.\n  \u003cli\u003eWrong number of dead found in unique subtable.\n  \u003cli\u003eWrong number of keys found in the constant table\n  \u003cli\u003eWrong number of dead found in the constant table\n  \u003cli\u003eWrong number of total slots found\n  \u003cli\u003eWrong number of maximum keys found\n  \u003cli\u003eWrong number of total dead found\n  \u003c/ul\u003e\n  Reports the average length of non-empty lists. Returns the number of\n  subtables for which the number of keys is wrong.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_DebugCheck]\n\n******************************************************************************/\nfunc Cudd_CheckKeys(table *DdManager) int32 {\n    var size int32;\n    var i, j int32;\n    var nodelist *DdNodePtr;\n    var node *DdNode;\n    var sentinel *DdNode  = \u0026(table.sentinel);\n    var subtable *DdSubtable;\n    var keys int32;\n    var dead int32;\n    var count int32;\n    var totalKeys int32;\n    var totalSlots int32;\n    var totalDead int32;\n    var nonEmpty int32;\n    unsigned int slots;\n    var logSlots int32;\n    var shift int32;\n\n    size = table.size;\n\n    for i = 0; i \u003c size; i++ {\n        subtable = \u0026(table.subtables[i]);\n        nodelist = subtable.nodelist;\n        keys = subtable.keys;\n        dead = subtable.dead;\n        totalKeys += keys;\n        slots = subtable.slots;\n        shift = subtable.shift;\n        logSlots = sizeof(int) * 8 - shift;\n        if ((slots \u003e\u003e logSlots) \u003c\u003c logSlots) != slots {\n            (void) fmt.Fprintf(table.err, \"Unique table %d is not the right power of 2\\n\", i);\n            (void) fmt.Fprintf(table.err, \"    slots = %d shift = %d\\n\", slots, shift);\n        }\n        totalSlots += slots;\n        totalDead += dead;\n        for j = 0; uint32( j) \u003c slots; j++ {\n            node = nodelist[j];\n            if node != sentinel {\n                nonEmpty++;\n            }\n            for node != sentinel {\n                keys--;\n                if node.ref == 0 {\n                    dead--;\n                }\n                node = node.next;\n            }\n        }\n        if keys != 0 {\n            (void) fmt.Fprintf(table.err, \"Wrong number of keys found \\\n            in unique table %d (difference=%d)\\n\", i, keys);\n            count++;\n        }\n        if dead != 0 {\n            (void) fmt.Fprintf(table.err, \"Wrong number of dead found \\\n            in unique table no. %d (difference=%d)\\n\", i, dead);\n        }\n    }   /* for each BDD/ADD subtable */\n\n    /* Check the ZDD subtables. */\n    size = table.sizeZ;\n\n    for i = 0; i \u003c size; i++ {\n        subtable = \u0026(table.subtableZ[i]);\n        nodelist = subtable.nodelist;\n        keys = subtable.keys;\n        dead = subtable.dead;\n        totalKeys += keys;\n        totalSlots += subtable.slots;\n        totalDead += dead;\n        for j = 0; uint32( j) \u003c subtable.slots; j++ {\n            node = nodelist[j];\n            if node != nil {\n                nonEmpty++;\n            }\n            for node != nil {\n                keys--;\n                if node.ref == 0 {\n                    dead--;\n                }\n                node = node.next;\n            }\n        }\n        if keys != 0 {\n            (void) fmt.Fprintf(table.err, \"Wrong number of keys found \\\n            in ZDD unique table no. %d (difference=%d)\\n\", i, keys);\n            count++;\n        }\n        if dead != 0 {\n            (void) fmt.Fprintf(table.err, \"Wrong number of dead found \\\n            in ZDD unique table no. %d (difference=%d)\\n\", i, dead);\n        }\n    }   /* for each ZDD subtable */\n\n    /* Check the constant table. */\n    subtable = \u0026(table.constants);\n    nodelist = subtable.nodelist;\n    keys = subtable.keys;\n    dead = subtable.dead;\n    totalKeys += keys;\n    totalSlots += subtable.slots;\n    totalDead += dead;\n    for j = 0; uint32( j) \u003c subtable.slots; j++ {\n        node = nodelist[j];\n        if node != nil {\n            nonEmpty++;\n        }\n        for node != nil {\n            keys--;\n            if node.ref == 0 {\n                dead--;\n            }\n            node = node.next;\n        }\n    }\n    if keys != 0 {\n        (void) fmt.Fprintf(table.err, \"Wrong number of keys found \\\n        in the constant table (difference=%d)\\n\", keys);\n        count++;\n    }\n    if dead != 0 {\n        (void) fmt.Fprintf(table.err, \"Wrong number of dead found \\\n        in the constant table (difference=%d)\\n\", dead);\n    }\n    if uint32( totalKeys) != table.keys + table.keysZ {\n        (void) fmt.Fprintf(table.err, \"Wrong number of total keys found \\\n        (difference=%d)\\n\", int32( (totalKeys-table.keys)));\n    }\n    if uint32( totalSlots) != table.slots {\n        (void) fmt.Fprintf(table.err, \"Wrong number of total slots found \\\n        (difference=%d)\\n\", int32( (totalSlots-table.slots)));\n    }\n    if table.minDead != uint32( (table.gcFrac * table.slots)) {\n        (void) fmt.Fprintf(table.err, \"Wrong number of minimum dead found \\\n        (%u vs. %u)\\n\", table.minDead, uint32( (table.gcFrac * float64( table.slots))));\n    }\n    if uint32( totalDead) != table.dead + table.deadZ {\n        (void) fmt.Fprintf(table.err, \"Wrong number of total dead found \\\n        (difference=%d)\\n\", int32( (totalDead-table.dead)));\n    }\n    (void)fmt.Printf(\"Average length of non-empty lists = %g\\n\", float64( table.keys) / float64( nonEmpty));\n\n    return(count);\n\n} /* end of Cudd_CheckKeys */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints information about the heap.]\n\n  Description [Prints to the manager's stdout the number of live nodes for each\n  level of the DD heap that contains at least one live node.  It also\n  prints a summary containing:\n  \u003cul\u003e\n  \u003cli\u003e total number of tables;\n  \u003cli\u003e number of tables with live nodes;\n  \u003cli\u003e table with the largest number of live nodes;\n  \u003cli\u003e number of nodes in that table.\n  \u003c/ul\u003e\n  If more than one table contains the maximum number of live nodes,\n  only the one of lowest index is reported. Returns 1 in case of success\n  and 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddHeapProfile(dd *DdManager) int32 {\n    var ntables int32  = dd.size;\n    var subtables *DdSubtable  = dd.subtables;\n    int i,              /* loop index */\n        nodes,          /* live nodes in i-th layer */\n        retval,         /* return value of fprintf */\n        largest = -1,   /* index of the table with most live nodes */\n        maxnodes = -1,  /* maximum number of live nodes in a table */\n        nonempty = 0;   /* number of tables with live nodes */\n\n    /* Print header. */\n#if SIZEOF_VOID_P == 8\n    retval = fprintf(dd-\u003eout,\"*** DD heap profile for 0x%lx ***\\n\",\n                     (ptruint) dd);\n#else\n    retval = fprintf(dd-\u003eout,\"*** DD heap profile for 0x%x ***\\n\",\n                     (ptruint) dd);\n#endif\n    if retval == -1 { return 0; }\n\n    /* Print number of live nodes for each nonempty table. */\n    for i=0; i\u003cntables; i++ {\n        nodes = subtables[i].keys - subtables[i].dead;\n        if nodes {\n            nonempty++;\n            retval = fmt.Fprintf(dd.out, \"%5d: %5d nodes\\n\", i, nodes);\n            if retval == -1 { return 0; }\n            if nodes \u003e maxnodes {\n                maxnodes = nodes;\n                largest = i;\n            }\n        }\n    }\n\n    nodes = dd.constants.keys - dd.constants.dead;\n    if nodes {\n        nonempty++;\n        retval = fmt.Fprintf(dd.out, \"const: %5d nodes\\n\", nodes);\n        if retval == -1 { return 0; }\n        if nodes \u003e maxnodes {\n            maxnodes = nodes;\n            largest = CUDD_CONST_INDEX;\n        }\n    }\n\n    /* Print summary. */\n    retval = fmt.Fprintf(dd.out, \"Summary: %d tables, %d non-empty, largest: %d \", ntables+1, nonempty, largest);\n    if retval == -1 { return 0; }\n    retval = fmt.Fprintf(dd.out, \"(with %d nodes)\\n\", maxnodes);\n    if retval == -1 { return 0; }\n\n    return(1);\n\n} /* end of cuddHeapProfile */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints out information on a node.]\n\n  Description [Prints out information on a node.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddPrintNode(f *DdNode, fp *os.File) {\n    // inlining of macro Cudd_Regular\n    f = ((DdNode *)((ptruint)(f) \u0026 ~01));\n#if SIZEOF_VOID_P == 8\n    (void) fprintf(fp,\"       node 0x%lx, id = %u, ref = %u, then = 0x%lx, else = 0x%lx\\n\",(ptruint)f,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#else\n    (void) fprintf(fp,\"       node 0x%x, id = %hu, ref = %hu, then = 0x%x, else = 0x%x\\n\",(ptruint)f,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#endif\n\n} /* end of cuddPrintNode */\n\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints the variable groups as a parenthesized list.]\n\n  Description [Prints the variable groups as a parenthesized list.\n  For each group the level range that it represents is printed. After\n  each group, the group's flags are printed, preceded by a `|'.  For\n  each flag (except MTR_TERMINAL) a character is printed.\n  \u003cul\u003e\n  \u003cli\u003eF: MTR_FIXED\n  \u003cli\u003eN: MTR_NEWNODE\n  \u003cli\u003eS: MTR_SOFT\n  \u003c/ul\u003e\n  The second argument, silent, if different from 0, causes\n  Cudd_PrintVarGroups to only check the syntax of the group tree.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nvoid\ncuddPrintVarGroups(\n  DdManager * dd /* manager */,\n  MtrNode * root /* root of the group tree */,\n  int zdd /* 0: BDD; 1: ZDD */,\n  int silent /* flag to check tree syntax only */)\n{\n    var node *MtrNode;\n    var level int32;\n\n    assert(root != nil, \"root != nil\");\n    assert(root.younger == nil || root.younger.elder == root, \"root.younger == nil || root.younger.elder == root\");\n    assert(root.elder == nil || root.elder.younger == root, \"root.elder == nil || root.elder.younger == root\");\n    if zdd {\n        level = dd.permZ[root.index];\n    } else {\n        level = dd.perm[root.index];\n    }\n    if !silent { (void) fmt.Printf(\"(%d\", level); }\n    // inlining of macro MTR_TEST\n    if (root.flags \u0026 (MTR_TERMINAL)) || root.child == nil {\n        if !silent { (void) fmt.Printf(\",\"); }\n    } else {\n        node = root.child;\n        for node != nil {\n            assert(node.low \u003e= root.low \u0026\u0026 int32( (node.low + node.size)) \u003c= int32( (root.low + root.size)), \"node.low \u003e= root.low \u0026\u0026 int32( (node.low + node.size)) \u003c= int32( (root.low + root.size))\");\n            assert(node.parent == root, \"node.parent == root\");\n            cuddPrintVarGroups(dd,node,zdd,silent);\n            node = node.younger;\n        }\n    }\n    if !silent {\n        (void) fmt.Printf(\"%d\", int32( (level + root.size - 1)));\n        if root.flags != MTR_DEFAULT {\n            (void) fmt.Printf(\"|\");\n            // inlining of macro MTR_TEST\n            if root.flags \u0026 (MTR_FIXED) { (void) fmt.Printf(\"F\"); }\n            // inlining of macro MTR_TEST\n            if root.flags \u0026 (MTR_NEWNODE) { (void) fmt.Printf(\"N\"); }\n            // inlining of macro MTR_TEST\n            if root.flags \u0026 (MTR_SOFT) { (void) fmt.Printf(\"S\"); }\n        }\n        (void) fmt.Printf(\")\");\n        if root.parent == nil { (void) fmt.Printf(\"\\n\"); }\n    }\n    assert((root.flags \u0026~(MTR_TERMINAL | MTR_SOFT | MTR_FIXED | MTR_NEWNODE)) == 0, \"(root.flags \u0026~(MTR_TERMINAL | MTR_SOFT | MTR_FIXED | MTR_NEWNODE)) == 0\");\n    return;\n\n} /* end of cuddPrintVarGroups */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Searches the subtables above node for its parents.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc debugFindParent(table *DdManager, node *DdNode) {\n    var i, j int32;\n    var slots int32;\n    var nodelist *DdNodePtr;\n    var f *DdNode;\n\n    // inlining of macro cuddI\n    for i = 0; i \u003c (((node.index)==CUDD_CONST_INDEX)?int32((node.index)):(table).perm[(node.index)]); i++ {\n        nodelist = table.subtables[i].nodelist;\n        slots = table.subtables[i].slots;\n\n        for j=0;j\u003cslots;j++ {\n            f = nodelist[j];\n            for f != nil {\n                // inlining of macro cuddT\n                // inlining of macro Cudd_Regular\n                // inlining of macro cuddE\n                if ((f).type.kids.T) == node || ((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)) == node {\n#if SIZEOF_VOID_P == 8\n                    (void) fprintf(table-\u003eout,\"parent is at 0x%lx, id = %u, ref = %u, then = 0x%lx, else = 0x%lx\\n\",\n                        (ptruint)f,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#else\n                    (void) fprintf(table-\u003eout,\"parent is at 0x%x, id = %hu, ref = %hu, then = 0x%x, else = 0x%x\\n\",\n                        (ptruint)f,f-\u003eindex,f-\u003eref,(ptruint)cuddT(f),(ptruint)cuddE(f));\n#endif\n                }\n                f = f.next;\n            }\n        }\n    }\n\n} /* end of debugFindParent */\n\n\n     \n                                                                               \n\n                                                                        \n\n                                                                     \n                                                                      \n\n                    \n\n                               \n\n                                                                               \n           \n                 \n                    \n                \n \n                    \n                      \n                              \n\n                                                    \n                                                \n                                          \n\n                               \n                            \n                               \n                                                                                          \n                                              \n                                                                  \n                                                                                                                                                   \n                                                                                                                                                                  \n                 \n                            \n             \n         \n     \n \n      \n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

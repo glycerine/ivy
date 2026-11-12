@@ -1,0 +1,466 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c",
+  "SHA256": "e33d1042d6436cf363f672f343288ba679578e1fdc9dca861c1b0c36192a1ce9",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 3073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iSatVar \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 3296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RegId \u003e= 0 \u0026\u0026 RegId \u003c Aig_ManRegNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 3847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iSatVar \u003e 0 \u0026\u0026 iSatVar \u003c Vec_IntSize(vVar2Ids) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 138,
+        "Column": 5,
+        "ByteOffset": 4158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 ); // should be called for register inputs only"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 5706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pSat );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 202,
+        "Column": 9,
+        "ByteOffset": 5950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.vVar2Reg == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 6827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pSat );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 232,
+        "Column": 23,
+        "ByteOffset": 7034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pvId2Vars = ABC_CALLOC( Vec_Int_t, Aig_ManObjNumMax(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 245,
+        "Column": 9,
+        "ByteOffset": 7465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry( p.pvId2Vars + Entry, k ) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 5,
+        "ByteOffset": 8270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pSat != nil );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 71,
+        "Column": 1,
+        "ByteOffset": 2119
+      },
+      "Directive": "#ifdef USE_PG"
+    },
+    {
+      "Location": {
+        "Line": 397,
+        "Column": 1,
+        "ByteOffset": 13637
+      },
+      "Directive": "#ifdef USE_PG"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Pdr_ObjSatVar1",
+      "Start": 1697,
+      "End": 1825,
+      "BodyStart": 1772,
+      "Original": "static inline int Pdr_ObjSatVar1( Pdr_Man_t * p, int k, Aig_Obj_t * pObj )\n{\n    return p-\u003epCnf1-\u003epVarNums[ Aig_ObjId(pObj) ];\n}",
+      "Draft": "func Pdr_ObjSatVar1(p *Pdr_Man_t, k int32, pObj *Aig_Obj_t) int32 {\n    return p.pCnf1.pVarNums[ Aig_ObjId(pObj) ];\n}"
+    },
+    {
+      "Name": "Pdr_ObjSatVar",
+      "Start": 9155,
+      "End": 9364,
+      "BodyStart": 9224,
+      "Original": "int Pdr_ObjSatVar( Pdr_Man_t * p, int k, int Pol, Aig_Obj_t * pObj )\n{\n    if ( p-\u003epPars-\u003efMonoCnf )\n        return Pdr_ObjSatVar1( p, k, pObj );\n    else\n        return Pdr_ObjSatVar2( p, k, pObj, 0, Pol );\n}",
+      "Draft": "func Pdr_ObjSatVar(p *Pdr_Man_t, k int32, Pol int32, pObj *Aig_Obj_t) int32 {\n    if p.pPars.fMonoCnf {\n        return Pdr_ObjSatVar1( p, k, pObj );\n    } else {\n        return Pdr_ObjSatVar2( p, k, pObj, 0, Pol ); }\n}"
+    },
+    {
+      "Name": "Pdr_ObjRegNum1",
+      "Start": 9652,
+      "End": 10044,
+      "BodyStart": 9722,
+      "Original": "static inline int Pdr_ObjRegNum1( Pdr_Man_t * p, int k, int iSatVar )\n{\n    int RegId;\n    assert( iSatVar \u003e= 0 );\n    // consider the case of auxiliary variable\n    if ( iSatVar \u003e= p-\u003epCnf1-\u003enVars )\n        return -1;\n    // consider the case of register output\n    RegId = Vec_IntEntry( p-\u003evVar2Reg, iSatVar );\n    assert( RegId \u003e= 0 \u0026\u0026 RegId \u003c Aig_ManRegNum(p-\u003epAig) );\n    return RegId;\n}",
+      "Draft": "func Pdr_ObjRegNum1(p *Pdr_Man_t, k int32, iSatVar int32) int32 {\n    var RegId int32;\n    assert(iSatVar \u003e= 0, \"iSatVar \u003e= 0\");\n    // consider the case of auxiliary variable\n    if iSatVar \u003e= p.pCnf1.nVars {\n        return -1; }\n    // consider the case of register output\n    RegId = Vec_IntEntry( p.vVar2Reg, iSatVar );\n    assert(RegId \u003e= 0 \u0026\u0026 RegId \u003c Aig_ManRegNum(p.pAig), \"RegId \u003e= 0 \u0026\u0026 RegId \u003c Aig_ManRegNum(p.pAig)\");\n    return RegId;\n}"
+    },
+    {
+      "Name": "Pdr_ObjRegNum2",
+      "Start": 10331,
+      "End": 10903,
+      "BodyStart": 10401,
+      "Original": "static inline int Pdr_ObjRegNum2( Pdr_Man_t * p, int k, int iSatVar )\n{\n    Aig_Obj_t * pObj;\n    int ObjId;\n    Vec_Int_t * vVar2Ids = (Vec_Int_t *)Vec_PtrEntry(\u0026p-\u003evVar2Ids, k);\n    assert( iSatVar \u003e 0 \u0026\u0026 iSatVar \u003c Vec_IntSize(vVar2Ids) );\n    ObjId = Vec_IntEntry( vVar2Ids, iSatVar );\n    if ( ObjId == -1 ) // activation variable\n        return -1;\n    pObj = Aig_ManObj( p-\u003epAig, ObjId );\n    if ( Saig_ObjIsLi( p-\u003epAig, pObj ) )\n        return Aig_ObjCioId(pObj)-Saig_ManPoNum(p-\u003epAig);\n    assert( 0 ); // should be called for register inputs only\n    return -1;\n}",
+      "Draft": "func Pdr_ObjRegNum2(p *Pdr_Man_t, k int32, iSatVar int32) int32 {\n    var pObj *Aig_Obj_t;\n    var ObjId int32;\n    var vVar2Ids *Vec_Int_t  = (Vec_Int_t *)Vec_PtrEntry(\u0026p.vVar2Ids, k);\n    assert(iSatVar \u003e 0 \u0026\u0026 iSatVar \u003c Vec_IntSize(vVar2Ids), \"iSatVar \u003e 0 \u0026\u0026 iSatVar \u003c Vec_IntSize(vVar2Ids)\");\n    ObjId = Vec_IntEntry( vVar2Ids, iSatVar );\n    if ObjId == -1 { // activation variable\n        return -1; }\n    pObj = Aig_ManObj( p.pAig, ObjId );\n    if Saig_ObjIsLi( p.pAig, pObj ) {\n        return Aig_ObjCioId(pObj)-Saig_ManPoNum(p.pAig); }\n    assert(false, \"0\"); // should be called for register inputs only\n    return -1;\n}"
+    },
+    {
+      "Name": "Pdr_ObjRegNum",
+      "Start": 11190,
+      "End": 11383,
+      "BodyStart": 11245,
+      "Original": "int Pdr_ObjRegNum( Pdr_Man_t * p, int k, int iSatVar )\n{\n    if ( p-\u003epPars-\u003efMonoCnf )\n        return Pdr_ObjRegNum1( p, k, iSatVar );\n    else\n        return Pdr_ObjRegNum2( p, k, iSatVar );\n}",
+      "Draft": "func Pdr_ObjRegNum(p *Pdr_Man_t, k int32, iSatVar int32) int32 {\n    if p.pPars.fMonoCnf {\n        return Pdr_ObjRegNum1( p, k, iSatVar );\n    } else {\n        return Pdr_ObjRegNum2( p, k, iSatVar ); }\n}"
+    },
+    {
+      "Name": "Pdr_ManFreeVar",
+      "Start": 11661,
+      "End": 11972,
+      "BodyStart": 11704,
+      "Original": "int Pdr_ManFreeVar( Pdr_Man_t * p, int k )\n{\n    if ( p-\u003epPars-\u003efMonoCnf )\n        return sat_solver_nvars( Pdr_ManSolver(p, k) );\n    else\n    {\n        Vec_Int_t * vVar2Ids = (Vec_Int_t *)Vec_PtrEntry( \u0026p-\u003evVar2Ids, k );\n        Vec_IntPush( vVar2Ids, -1 );\n        return Vec_IntSize( vVar2Ids ) - 1;\n    }\n}",
+      "Draft": "func Pdr_ManFreeVar(p *Pdr_Man_t, k int32) int32 {\n    if p.pPars.fMonoCnf {\n        return sat_solver_nvars( Pdr_ManSolver(p, k) );\n    } else {\n        var vVar2Ids *Vec_Int_t  = (Vec_Int_t *)Vec_PtrEntry( \u0026p.vVar2Ids, k );\n        Vec_IntPush( vVar2Ids, -1 );\n        return Vec_IntSize( vVar2Ids ) - 1;\n    }\n}"
+    },
+    {
+      "Name": "Pdr_ManNewSolver1",
+      "Start": 12227,
+      "End": 13110,
+      "BodyStart": 12326,
+      "Original": "static inline sat_solver * Pdr_ManNewSolver1( sat_solver * pSat, Pdr_Man_t * p, int k, int fInit )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    assert( pSat );\n    if ( p-\u003epCnf1 == NULL )\n    {\n        int nRegs = p-\u003epAig-\u003enRegs;\n        p-\u003epAig-\u003enRegs = Aig_ManCoNum(p-\u003epAig);\n        p-\u003epCnf1 = Cnf_DeriveWithMan( p-\u003epCnfMan, p-\u003epAig, Aig_ManCoNum(p-\u003epAig) );\n        p-\u003epAig-\u003enRegs = nRegs;\n        assert( p-\u003evVar2Reg == NULL );\n        p-\u003evVar2Reg = Vec_IntStartFull( p-\u003epCnf1-\u003enVars );\n        Saig_ManForEachLi( p-\u003epAig, pObj, i )\n            Vec_IntWriteEntry( p-\u003evVar2Reg, Pdr_ObjSatVar(p, k, 3, pObj), i );\n    }\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolverInt( pSat, p-\u003epCnf1, 1, fInit );\n    sat_solver_set_runtime_limit( pSat, p-\u003etimeToStop );\n    sat_solver_set_runid( pSat, p-\u003epPars-\u003eRunId );\n    sat_solver_set_stop_func( pSat, p-\u003epPars-\u003epFuncStop );\n    return pSat;\n}",
+      "Draft": "func Pdr_ManNewSolver1(pSat *sat_solver, p *Pdr_Man_t, k int32, fInit int32) *sat_solver {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert((pSat != nil), \"pSat\");\n    if p.pCnf1 == nil {\n        var nRegs int32  = p.pAig.nRegs;\n        p.pAig.nRegs = Aig_ManCoNum(p.pAig);\n        p.pCnf1 = Cnf_DeriveWithMan( p.pCnfMan, p.pAig, Aig_ManCoNum(p.pAig) );\n        p.pAig.nRegs = nRegs;\n        assert(p.vVar2Reg == nil, \"p.vVar2Reg == nil\");\n        p.vVar2Reg = Vec_IntStartFull( p.pCnf1.nVars );\n        Saig_ManForEachLi( p.pAig, pObj, i )\n            Vec_IntWriteEntry( p.vVar2Reg, Pdr_ObjSatVar(p, k, 3, pObj), i );\n    }\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolverInt( pSat, p.pCnf1, 1, fInit );\n    sat_solver_set_runtime_limit( pSat, p.timeToStop );\n    sat_solver_set_runid( pSat, p.pPars.RunId );\n    sat_solver_set_stop_func( pSat, p.pPars.pFuncStop );\n    return pSat;\n}"
+    },
+    {
+      "Name": "Pdr_ManNewSolver2",
+      "Start": 13365,
+      "End": 14658,
+      "BodyStart": 13464,
+      "Original": "static inline sat_solver * Pdr_ManNewSolver2( sat_solver * pSat, Pdr_Man_t * p, int k, int fInit )\n{\n    Vec_Int_t * vVar2Ids;\n    int i, Entry;\n    assert( pSat );\n    if ( p-\u003epCnf2 == NULL )\n    {\n        p-\u003epCnf2     = Cnf_DeriveOtherWithMan( p-\u003epCnfMan, p-\u003epAig, 0 );\n#ifdef USE_PG\n        p-\u003epCnf2-\u003epClaPols = Cnf_DataDeriveLitPolarities( p-\u003epCnf2 );\n#endif\n        p-\u003epvId2Vars = ABC_CALLOC( Vec_Int_t, Aig_ManObjNumMax(p-\u003epAig) );\n        Vec_PtrGrow( \u0026p-\u003evVar2Ids, 256 );\n    }\n    // update the variable mapping\n    vVar2Ids = (Vec_Int_t *)Vec_PtrGetEntry( \u0026p-\u003evVar2Ids, k );\n    if ( vVar2Ids == NULL )\n    {\n        vVar2Ids = Vec_IntAlloc( 500 );\n        Vec_PtrWriteEntry( \u0026p-\u003evVar2Ids, k, vVar2Ids );\n    }\n    Vec_IntForEachEntry( vVar2Ids, Entry, i )\n    {\n        if ( Entry == -1 )\n            continue;\n        assert( Vec_IntEntry( p-\u003epvId2Vars + Entry, k ) \u003e 0 );\n        Vec_IntWriteEntry( p-\u003epvId2Vars + Entry, k, 0 );\n    }\n    Vec_IntClear( vVar2Ids );\n    Vec_IntPush( vVar2Ids, -1 );\n    // start the SAT solver\n//    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, 500 );\n    sat_solver_set_runtime_limit( pSat, p-\u003etimeToStop );\n    sat_solver_set_runid( pSat, p-\u003epPars-\u003eRunId );\n    sat_solver_set_stop_func( pSat, p-\u003epPars-\u003epFuncStop );\n    return pSat;\n}",
+      "Draft": "func Pdr_ManNewSolver2(pSat *sat_solver, p *Pdr_Man_t, k int32, fInit int32) *sat_solver {\n    var vVar2Ids *Vec_Int_t;\n    var i, Entry int32;\n    assert((pSat != nil), \"pSat\");\n    if p.pCnf2 == nil {\n        p.pCnf2     = Cnf_DeriveOtherWithMan( p.pCnfMan, p.pAig, 0 );\n#ifdef USE_PG\n        p-\u003epCnf2-\u003epClaPols = Cnf_DataDeriveLitPolarities( p-\u003epCnf2 );\n#endif\n        p.pvId2Vars = ABC_CALLOC( Vec_Int_t, Aig_ManObjNumMax(p.pAig) );\n        Vec_PtrGrow( \u0026p.vVar2Ids, 256 );\n    }\n    // update the variable mapping\n    vVar2Ids = (Vec_Int_t *)Vec_PtrGetEntry( \u0026p.vVar2Ids, k );\n    if vVar2Ids == nil {\n        vVar2Ids = Vec_IntAlloc( 500 );\n        Vec_PtrWriteEntry( \u0026p.vVar2Ids, k, vVar2Ids );\n    }\n    Vec_IntForEachEntry( vVar2Ids, Entry, i )\n    {\n        if Entry == -1 {\n            continue; }\n        assert(Vec_IntEntry( p.pvId2Vars + Entry, k ) \u003e 0, \"Vec_IntEntry( p.pvId2Vars + Entry, k ) \u003e 0\");\n        Vec_IntWriteEntry( p.pvId2Vars + Entry, k, 0 );\n    }\n    Vec_IntClear( vVar2Ids );\n    Vec_IntPush( vVar2Ids, -1 );\n    // start the SAT solver\n//    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, 500 );\n    sat_solver_set_runtime_limit( pSat, p.timeToStop );\n    sat_solver_set_runid( pSat, p.pPars.RunId );\n    sat_solver_set_stop_func( pSat, p.pPars.pFuncStop );\n    return pSat;\n}"
+    },
+    {
+      "Name": "Pdr_ManNewSolver",
+      "Start": 14913,
+      "End": 15177,
+      "BodyStart": 14997,
+      "Original": "sat_solver * Pdr_ManNewSolver( sat_solver * pSat, Pdr_Man_t * p, int k, int fInit )\n{\n    assert( pSat != NULL );\n    if ( p-\u003epPars-\u003efMonoCnf )\n        return Pdr_ManNewSolver1( pSat, p, k, fInit );\n    else\n        return Pdr_ManNewSolver2( pSat, p, k, fInit );\n}",
+      "Draft": "func Pdr_ManNewSolver(pSat *sat_solver, p *Pdr_Man_t, k int32, fInit int32) *sat_solver {\n    assert(pSat != nil, \"pSat != nil\");\n    if p.pPars.fMonoCnf {\n        return Pdr_ManNewSolver1( pSat, p, k, fInit );\n    } else {\n        return Pdr_ManNewSolver2( pSat, p, k, fInit ); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::pointer-cast::3782",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10467,
+      "End": 10480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::pointer-cast::5153",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11838,
+      "End": 11851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::pointer-cast::6170",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12855,
+      "End": 12869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::pointer-cast::7200",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13901,
+      "End": 13914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::Pdr_ObjSatVar1",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ObjSatVar1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1697,
+      "End": 1825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::Pdr_ObjSatVar",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ObjSatVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9155,
+      "End": 9364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::Pdr_ObjRegNum1",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ObjRegNum1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9652,
+      "End": 10044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::Pdr_ObjRegNum2",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ObjRegNum2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10331,
+      "End": 10903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::Pdr_ObjRegNum",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ObjRegNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11190,
+      "End": 11383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::Pdr_ManFreeVar",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManFreeVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11661,
+      "End": 11972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::Pdr_ManNewSolver1",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManNewSolver1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12227,
+      "End": 13110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::Pdr_ManNewSolver2",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManNewSolver2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13365,
+      "End": 14658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::Pdr_ManNewSolver",
+      "Category": "semantic-review",
+      "Symbol": "Pdr_ManNewSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14913,
+      "End": 15177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2119,
+      "End": 8878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13637,
+      "End": 13727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::macro-inline::11751",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_nvars",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11751,
+      "End": 11790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::macro-inline::12721",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12721,
+      "End": 12758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::macro-inline::12929",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_set_runtime_limit",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12929,
+      "End": 12980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::macro-inline::12986",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_set_runid",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12986,
+      "End": 13031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::macro-inline::13037",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_set_stop_func",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13037,
+      "End": 13090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::macro-inline::13751",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13751,
+      "End": 13801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::macro-inline::14090",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14090,
+      "End": 14131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::macro-inline::14439",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_setnvars",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14439,
+      "End": 14471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::macro-inline::14477",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_set_runtime_limit",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14477,
+      "End": 14528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::macro-inline::14534",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_set_runid",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14534,
+      "End": 14579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdrCnf.c::macro-inline::14585",
+      "Category": "macro-inline-review",
+      "Symbol": "sat_solver_set_stop_func",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14585,
+      "End": 14638
+    }
+  ],
+  "Draft": "package pdr\n\n/**CFile****************************************************************\n\n  FileName    [pdrCnf.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Property driven reachability.]\n\n  Synopsis    [CNF computation on demand.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 20, 2010.]\n\n  Revision    [$Id: pdrCnf.c,v 1.00 2010/11/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"pdrInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n/*\n    The CNF (p-\u003epCnf2) is expressed in terms of object IDs.\n    Each node in the CNF is marked if it has clauses (p-\u003epCnf2-\u003epObj2Count[Id] \u003e 0).\n    Each node in the CNF has the first clause (p-\u003epCnf2-\u003epObj2Clause) \n    and the number of clauses (p-\u003epCnf2-\u003epObj2Count).\n    Each node used in a CNF of any timeframe has its SAT var recorded.\n    Each frame has a reserve mapping of SAT variables into ObjIds.\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns SAT variable of the given object.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ObjSatVar1(p *Pdr_Man_t, k int32, pObj *Aig_Obj_t) int32 {\n    return p.pCnf1.pVarNums[ Aig_ObjId(pObj) ];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns SAT variable of the given object.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n//#define USE_PG\n#ifdef USE_PG\nstatic inline int Pdr_ObjSatVar2FindOrAdd( Pdr_Man_t * p, int k, Aig_Obj_t * pObj )\n{ \n    Vec_Int_t * vId2Vars = p-\u003epvId2Vars + Aig_ObjId(pObj);\n    assert( p-\u003epCnf2-\u003epObj2Count[Aig_ObjId(pObj)] \u003e= 0 );\n    if ( Vec_IntSize(vId2Vars) == 0 )\n        Vec_IntGrow(vId2Vars, 2 * k + 1);\n    if ( Vec_IntGetEntry(vId2Vars, k) == 0 )\n    {\n        sat_solver * pSat = Pdr_ManSolver(p, k);\n        Vec_Int_t * vVar2Ids = (Vec_Int_t *)Vec_PtrEntry(\u0026p-\u003evVar2Ids, k);\n        int iVarNew = Vec_IntSize( vVar2Ids );\n        assert( iVarNew \u003e 0 );\n        Vec_IntPush( vVar2Ids, Aig_ObjId(pObj) );\n        Vec_IntWriteEntry( vId2Vars, k, iVarNew \u003c\u003c 2 );\n        sat_solver_setnvars( pSat, iVarNew + 1 );\n        if ( k == 0 \u0026\u0026 Saig_ObjIsLo(p-\u003epAig, pObj) ) // initialize the register output\n        {\n            int Lit = Abc_Var2Lit( iVarNew, 1 );\n            int RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n            assert( RetValue == 1 );\n            (void) RetValue;\n            sat_solver_compress( pSat );\n        }\n    }\n    return Vec_IntEntry( vId2Vars, k );\n}\nint Pdr_ObjSatVar2( Pdr_Man_t * p, int k, Aig_Obj_t * pObj, int Level, int Pol )\n{\n    Vec_Int_t * vLits;\n    sat_solver * pSat;\n    Vec_Int_t * vVar2Ids = (Vec_Int_t *)Vec_PtrEntry(\u0026p-\u003evVar2Ids, k);\n    int nVarCount = Vec_IntSize(vVar2Ids);\n    int iVarThis  = Pdr_ObjSatVar2FindOrAdd( p, k, pObj );\n    int * pLit, i, iVar, iClaBeg, iClaEnd, RetValue;\n    int PolPres = (iVarThis \u0026 3);\n    iVarThis \u003e\u003e= 2;\n    if ( Aig_ObjIsCi(pObj) )\n        return iVarThis;\n//    Pol = 3;\n//    if ( nVarCount != Vec_IntSize(vVar2Ids) || (Pol \u0026 ~PolPres) )\n    if ( (Pol \u0026 ~PolPres) )\n    {\n        *Vec_IntEntryP( p-\u003epvId2Vars + Aig_ObjId(pObj), k ) |= Pol;\n        iClaBeg = p-\u003epCnf2-\u003epObj2Clause[Aig_ObjId(pObj)];\n        iClaEnd = iClaBeg + p-\u003epCnf2-\u003epObj2Count[Aig_ObjId(pObj)];\n        assert( iClaBeg \u003c iClaEnd );\n/*\n        if ( (Pol \u0026 ~PolPres) != 3 )\n        for ( i = iFirstClause; i \u003c iFirstClause + nClauses; i++ )\n        {\n            printf( \"Clause %5d : \", i );\n            for ( iVar = 0; iVar \u003c 4; iVar++ )\n                printf( \"%d \", ((unsigned)p-\u003epCnf2-\u003epClaPols[i] \u003e\u003e (2*iVar)) \u0026 3 );\n            printf( \"  \" );\n            for ( pLit = p-\u003epCnf2-\u003epClauses[i]; pLit \u003c p-\u003epCnf2-\u003epClauses[i+1]; pLit++ )\n                printf( \"%6d \", *pLit );\n            printf( \"\\n\" );\n        }\n*/\n        pSat = Pdr_ManSolver(p, k);\n        vLits = Vec_WecEntry( p-\u003evVLits, Level );\n        if ( (Pol \u0026 ~PolPres) == 3 )\n        {\n            assert( nVarCount + 1 == Vec_IntSize(vVar2Ids) );\n            for ( i = iClaBeg; i \u003c iClaEnd; i++ )\n            {\n                Vec_IntClear( vLits );\n                Vec_IntPush( vLits, Abc_Var2Lit( iVarThis, Abc_LitIsCompl(p-\u003epCnf2-\u003epClauses[i][0]) ) );\n                for ( pLit = p-\u003epCnf2-\u003epClauses[i]+1; pLit \u003c p-\u003epCnf2-\u003epClauses[i+1]; pLit++ )\n                {\n                    iVar = Pdr_ObjSatVar2( p, k, Aig_ManObj(p-\u003epAig, Abc_Lit2Var(*pLit)), Level+1, 3 );\n                    Vec_IntPush( vLits, Abc_Var2Lit( iVar, Abc_LitIsCompl(*pLit) ) );\n                }\n                RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) );\n                assert( RetValue );\n                (void) RetValue;\n            }\n        }\n        else // if ( (Pol \u0026 ~PolPres) == 2 || (Pol \u0026 ~PolPres) == 1 ) // write pos/neg polarity\n        {\n            assert( (Pol \u0026 ~PolPres) );\n            for ( i = iClaBeg; i \u003c iClaEnd; i++ )\n            if ( 2 - !Abc_LitIsCompl(p-\u003epCnf2-\u003epClauses[i][0]) == (Pol \u0026 ~PolPres) ) // taking opposite literal\n            {\n                Vec_IntClear( vLits );\n                Vec_IntPush( vLits, Abc_Var2Lit( iVarThis, Abc_LitIsCompl(p-\u003epCnf2-\u003epClauses[i][0]) ) );\n                for ( pLit = p-\u003epCnf2-\u003epClauses[i]+1; pLit \u003c p-\u003epCnf2-\u003epClauses[i+1]; pLit++ )\n                {\n                    iVar = Pdr_ObjSatVar2( p, k, Aig_ManObj(p-\u003epAig, Abc_Lit2Var(*pLit)), Level+1, ((unsigned)p-\u003epCnf2-\u003epClaPols[i] \u003e\u003e (2*(pLit-p-\u003epCnf2-\u003epClauses[i]-1))) \u0026 3 );\n                    Vec_IntPush( vLits, Abc_Var2Lit( iVar, Abc_LitIsCompl(*pLit) ) );\n                }\n                RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) );\n                assert( RetValue );\n                (void) RetValue;\n            }\n        }\n    }\n    return iVarThis;\n}\n\n#else\nstatic inline int Pdr_ObjSatVar2FindOrAdd( Pdr_Man_t * p, int k, Aig_Obj_t * pObj, int * pfNewVar )\n{ \n    Vec_Int_t * vId2Vars = p-\u003epvId2Vars + Aig_ObjId(pObj);\n    assert( p-\u003epCnf2-\u003epObj2Count[Aig_ObjId(pObj)] \u003e= 0 );\n    if ( Vec_IntSize(vId2Vars) == 0 )\n        Vec_IntGrow(vId2Vars, 2 * k + 1);\n    if ( Vec_IntGetEntry(vId2Vars, k) == 0 )\n    {\n        sat_solver * pSat = Pdr_ManSolver(p, k);\n        Vec_Int_t * vVar2Ids = (Vec_Int_t *)Vec_PtrEntry(\u0026p-\u003evVar2Ids, k);\n        int iVarNew = Vec_IntSize( vVar2Ids );\n        assert( iVarNew \u003e 0 );\n        Vec_IntPush( vVar2Ids, Aig_ObjId(pObj) );\n        Vec_IntWriteEntry( vId2Vars, k, iVarNew );\n        sat_solver_setnvars( pSat, iVarNew + 1 );\n        if ( k == 0 \u0026\u0026 Saig_ObjIsLo(p-\u003epAig, pObj) ) // initialize the register output\n        {\n            int Lit = Abc_Var2Lit( iVarNew, 1 );\n            int RetValue = sat_solver_addclause( pSat, \u0026Lit, \u0026Lit + 1 );\n            assert( RetValue == 1 );\n            (void) RetValue;\n            sat_solver_compress( pSat );\n        }\n        *pfNewVar = 1;\n    }\n    return Vec_IntEntry( vId2Vars, k );\n}\nint Pdr_ObjSatVar2( Pdr_Man_t * p, int k, Aig_Obj_t * pObj, int Level, int Pol )\n{\n    Vec_Int_t * vLits;\n    sat_solver * pSat;\n    int fNewVar = 0, iVarThis  = Pdr_ObjSatVar2FindOrAdd( p, k, pObj, \u0026fNewVar );\n    int * pLit, i, iVar, iClaBeg, iClaEnd, RetValue;\n    if ( Aig_ObjIsCi(pObj) || !fNewVar )\n        return iVarThis;\n    iClaBeg = p-\u003epCnf2-\u003epObj2Clause[Aig_ObjId(pObj)];\n    iClaEnd = iClaBeg + p-\u003epCnf2-\u003epObj2Count[Aig_ObjId(pObj)];\n    assert( iClaBeg \u003c iClaEnd );\n    pSat = Pdr_ManSolver(p, k);\n    vLits = Vec_WecEntry( p-\u003evVLits, Level );\n    for ( i = iClaBeg; i \u003c iClaEnd; i++ )\n    {\n        Vec_IntClear( vLits );\n        Vec_IntPush( vLits, Abc_Var2Lit( iVarThis, Abc_LitIsCompl(p-\u003epCnf2-\u003epClauses[i][0]) ) );\n        for ( pLit = p-\u003epCnf2-\u003epClauses[i]+1; pLit \u003c p-\u003epCnf2-\u003epClauses[i+1]; pLit++ )\n        {\n            iVar = Pdr_ObjSatVar2( p, k, Aig_ManObj(p-\u003epAig, Abc_Lit2Var(*pLit)), Level+1, Pol );\n            Vec_IntPush( vLits, Abc_Var2Lit( iVar, Abc_LitIsCompl(*pLit) ) );\n        }\n        RetValue = sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits)+Vec_IntSize(vLits) );\n        assert( RetValue );\n        (void) RetValue;\n    }\n    return iVarThis;\n}\n#endif\n\n/**Function*************************************************************\n\n  Synopsis    [Returns SAT variable of the given object.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ObjSatVar(p *Pdr_Man_t, k int32, Pol int32, pObj *Aig_Obj_t) int32 {\n    if p.pPars.fMonoCnf {\n        return Pdr_ObjSatVar1( p, k, pObj );\n    } else {\n        return Pdr_ObjSatVar2( p, k, pObj, 0, Pol ); }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns register number for the given SAT variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ObjRegNum1(p *Pdr_Man_t, k int32, iSatVar int32) int32 {\n    var RegId int32;\n    assert(iSatVar \u003e= 0, \"iSatVar \u003e= 0\");\n    // consider the case of auxiliary variable\n    if iSatVar \u003e= p.pCnf1.nVars {\n        return -1; }\n    // consider the case of register output\n    RegId = Vec_IntEntry( p.vVar2Reg, iSatVar );\n    assert(RegId \u003e= 0 \u0026\u0026 RegId \u003c Aig_ManRegNum(p.pAig), \"RegId \u003e= 0 \u0026\u0026 RegId \u003c Aig_ManRegNum(p.pAig)\");\n    return RegId;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns register number for the given SAT variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ObjRegNum2(p *Pdr_Man_t, k int32, iSatVar int32) int32 {\n    var pObj *Aig_Obj_t;\n    var ObjId int32;\n    var vVar2Ids *Vec_Int_t  = (Vec_Int_t *)Vec_PtrEntry(\u0026p.vVar2Ids, k);\n    assert(iSatVar \u003e 0 \u0026\u0026 iSatVar \u003c Vec_IntSize(vVar2Ids), \"iSatVar \u003e 0 \u0026\u0026 iSatVar \u003c Vec_IntSize(vVar2Ids)\");\n    ObjId = Vec_IntEntry( vVar2Ids, iSatVar );\n    if ObjId == -1 { // activation variable\n        return -1; }\n    pObj = Aig_ManObj( p.pAig, ObjId );\n    if Saig_ObjIsLi( p.pAig, pObj ) {\n        return Aig_ObjCioId(pObj)-Saig_ManPoNum(p.pAig); }\n    assert(false, \"0\"); // should be called for register inputs only\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns register number for the given SAT variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ObjRegNum(p *Pdr_Man_t, k int32, iSatVar int32) int32 {\n    if p.pPars.fMonoCnf {\n        return Pdr_ObjRegNum1( p, k, iSatVar );\n    } else {\n        return Pdr_ObjRegNum2( p, k, iSatVar ); }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the index of unused SAT variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManFreeVar(p *Pdr_Man_t, k int32) int32 {\n    if p.pPars.fMonoCnf {\n        return sat_solver_nvars( Pdr_ManSolver(p, k) );\n    } else {\n        var vVar2Ids *Vec_Int_t  = (Vec_Int_t *)Vec_PtrEntry( \u0026p.vVar2Ids, k );\n        Vec_IntPush( vVar2Ids, -1 );\n        return Vec_IntSize( vVar2Ids ) - 1;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates SAT solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManNewSolver1(pSat *sat_solver, p *Pdr_Man_t, k int32, fInit int32) *sat_solver {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert((pSat != nil), \"pSat\");\n    if p.pCnf1 == nil {\n        var nRegs int32  = p.pAig.nRegs;\n        p.pAig.nRegs = Aig_ManCoNum(p.pAig);\n        p.pCnf1 = Cnf_DeriveWithMan( p.pCnfMan, p.pAig, Aig_ManCoNum(p.pAig) );\n        p.pAig.nRegs = nRegs;\n        assert(p.vVar2Reg == nil, \"p.vVar2Reg == nil\");\n        p.vVar2Reg = Vec_IntStartFull( p.pCnf1.nVars );\n        Saig_ManForEachLi( p.pAig, pObj, i )\n            Vec_IntWriteEntry( p.vVar2Reg, Pdr_ObjSatVar(p, k, 3, pObj), i );\n    }\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolverInt( pSat, p.pCnf1, 1, fInit );\n    sat_solver_set_runtime_limit( pSat, p.timeToStop );\n    sat_solver_set_runid( pSat, p.pPars.RunId );\n    sat_solver_set_stop_func( pSat, p.pPars.pFuncStop );\n    return pSat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates SAT solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManNewSolver2(pSat *sat_solver, p *Pdr_Man_t, k int32, fInit int32) *sat_solver {\n    var vVar2Ids *Vec_Int_t;\n    var i, Entry int32;\n    assert((pSat != nil), \"pSat\");\n    if p.pCnf2 == nil {\n        p.pCnf2     = Cnf_DeriveOtherWithMan( p.pCnfMan, p.pAig, 0 );\n#ifdef USE_PG\n        p-\u003epCnf2-\u003epClaPols = Cnf_DataDeriveLitPolarities( p-\u003epCnf2 );\n#endif\n        p.pvId2Vars = ABC_CALLOC( Vec_Int_t, Aig_ManObjNumMax(p.pAig) );\n        Vec_PtrGrow( \u0026p.vVar2Ids, 256 );\n    }\n    // update the variable mapping\n    vVar2Ids = (Vec_Int_t *)Vec_PtrGetEntry( \u0026p.vVar2Ids, k );\n    if vVar2Ids == nil {\n        vVar2Ids = Vec_IntAlloc( 500 );\n        Vec_PtrWriteEntry( \u0026p.vVar2Ids, k, vVar2Ids );\n    }\n    Vec_IntForEachEntry( vVar2Ids, Entry, i )\n    {\n        if Entry == -1 {\n            continue; }\n        assert(Vec_IntEntry( p.pvId2Vars + Entry, k ) \u003e 0, \"Vec_IntEntry( p.pvId2Vars + Entry, k ) \u003e 0\");\n        Vec_IntWriteEntry( p.pvId2Vars + Entry, k, 0 );\n    }\n    Vec_IntClear( vVar2Ids );\n    Vec_IntPush( vVar2Ids, -1 );\n    // start the SAT solver\n//    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, 500 );\n    sat_solver_set_runtime_limit( pSat, p.timeToStop );\n    sat_solver_set_runid( pSat, p.pPars.RunId );\n    sat_solver_set_stop_func( pSat, p.pPars.pFuncStop );\n    return pSat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates SAT solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pdr_ManNewSolver(pSat *sat_solver, p *Pdr_Man_t, k int32, fInit int32) *sat_solver {\n    assert(pSat != nil, \"pSat != nil\");\n    if p.pPars.fMonoCnf {\n        return Pdr_ManNewSolver1( pSat, p, k, fInit );\n    } else {\n        return Pdr_ManNewSolver2( pSat, p, k, fInit ); }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

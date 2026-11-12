@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb.h",
+  "SHA256": "28b1678d9c7494f54f6b9367a2f059c7b2d082c2520920b47903c745de07baa4",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb.h::struct::Gia_ParLlb_t",
+      "Category": "struct-review",
+      "Symbol": "Gia_ParLlb_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1251,
+      "End": 2878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3881
+    }
+  ],
+  "Draft": "package llb\n\n/**CFile****************************************************************\n\n  FileName    [llb.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD-based reachability.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 8, 2010.]\n\n  Revision    [$Id: llb.h,v 1.00 2010/05/08 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n \n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n  \n   \ntype Gia_ParLlb_t struct {\n    nBddMax         int32;       // maximum BDD size\n    nIterMax         int32;      // maximum iteration count\n    nClusterMax         int32;   // maximum cluster size\n    nHintDepth         int32;    // the number of times to cofactor\n    HintFirst         int32;     // the number of first hint to use\n    fUseFlow         int32;      // use flow computation\n    nVolumeMax         int32;    // the largest volume\n    nVolumeMin         int32;    // the smallest volume\n    nPartValue         int32;    // partitioning value\n    fBackward         int32;     // enable backward reachability\n    fReorder         int32;      // enable dynamic variable reordering\n    fIndConstr         int32;    // extract inductive constraints\n    fUsePivots         int32;    // use internal pivot variables\n    fCluster         int32;      // use partition clustering\n    fSchedule         int32;     // use cluster scheduling\n    fDumpReached         int32;  // dump reached states into a file\n    fVerbose         int32;      // print verbose information\n    fVeryVerbose         int32;  // print dependency matrices\n    fSilent         int32;       // do not print any infomation\n    fSkipReach         int32;    // skip reachability (preparation phase only)\n    fSkipOutCheck         int32; // does not check the property output\n    TimeLimit         int32;     // time limit for one reachability run\n    TimeLimitGlo         int32;  // time limit for all reachability runs\n    // internal parameters\n    TimeTarget     abctime;    // the time to stop\n    iFrame         int32;        // explored up to this frame\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== llbCore.c ==========================================================*/\n// extern void     Llb_ManSetDefaultParams( Gia_ParLlb_t * pPars );\n\n/*=== llb4Nonlin.c ==========================================================*/\n// extern int      Llb_Nonlin4CoreReach( Aig_Man_t * pAig, Gia_ParLlb_t * pPars );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

@@ -1,0 +1,411 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c",
+  "SHA256": "3e3f0d823c647210838a3e3f495259eb52361eafa68b0dcfb9444cd8c56547ba",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 68,
+        "Column": 68,
+        "ByteOffset": 2212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pOuts0 = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(Aig_ManPoNum(p))));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 13,
+        "ByteOffset": 2930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 83,
+        "Column": 68,
+        "ByteOffset": 3050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pOuts1 = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(Aig_ManPoNum(p))));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 13,
+        "ByteOffset": 3768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 106,
+        "Column": 62,
+        "ByteOffset": 4221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pOuts0) ? (free((char *) (pOuts0)), (pOuts0) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 107,
+        "Column": 62,
+        "ByteOffset": 4327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pOuts1) ? (free((char *) (pOuts1)), (pOuts1) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 4782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pGia == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 5490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pGia != nil );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 212,
+        "Column": 22,
+        "ByteOffset": 7452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var clk int64  = clock();"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 7501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pGia != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 216,
+        "Column": 5,
+        "ByteOffset": 7530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pTas != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 9,
+        "ByteOffset": 8324
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"t\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 9,
+        "ByteOffset": 8587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"u\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 9,
+        "ByteOffset": 8793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"s\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 21,
+        "ByteOffset": 10075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Aig_InfoHasBit(pData, p.nCexes) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ObjChild0Copy",
+      "Start": 854,
+      "End": 989,
+      "BodyStart": 911,
+      "Original": "static inline int Gia_ObjChild0Copy( Aig_Obj_t * pObj )  { return Gia_LitNotCond( Aig_ObjFanin0(pObj)-\u003eiData, Aig_ObjFaninC0(pObj) ); }",
+      "Draft": "func Gia_ObjChild0Copy(pObj *Aig_Obj_t) int32 { return Gia_LitNotCond( Aig_ObjFanin0(pObj).iData, Aig_ObjFaninC0(pObj) ); }"
+    },
+    {
+      "Name": "Gia_ObjChild1Copy",
+      "Start": 990,
+      "End": 1125,
+      "BodyStart": 1047,
+      "Original": "static inline int Gia_ObjChild1Copy( Aig_Obj_t * pObj )  { return Gia_LitNotCond( Aig_ObjFanin1(pObj)-\u003eiData, Aig_ObjFaninC1(pObj) ); }",
+      "Draft": "func Gia_ObjChild1Copy(pObj *Aig_Obj_t) int32 { return Gia_LitNotCond( Aig_ObjFanin1(pObj).iData, Aig_ObjFaninC1(pObj) ); }"
+    },
+    {
+      "Name": "Gia_ManCreateResubMiter",
+      "Start": 1719,
+      "End": 3709,
+      "BodyStart": 1772,
+      "Original": "Gia_Man_t * Gia_ManCreateResubMiter( Aig_Man_t * p )\n{\n    Gia_Man_t * pNew;//, * pTemp;\n    Aig_Obj_t * pObj;\n    int i, * pOuts0, * pOuts1;\n    Aig_ManSetPioNumbers( p );\n    // create the new manager\n    pNew = Gia_ManStart( Aig_ManObjNum(p) );\n    pNew-\u003epName = Gia_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Gia_UtilStrsav( p-\u003epSpec );\n    Gia_ManHashAlloc( pNew );\n    // create the objects\n    pOuts0 = ABC_ALLOC( int, Aig_ManPoNum(p) );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if ( Aig_ObjIsAnd(pObj) )\n            pObj-\u003eiData = Gia_ManHashAnd( pNew, Gia_ObjChild0Copy(pObj), Gia_ObjChild1Copy(pObj) );\n        else if ( Aig_ObjIsPi(pObj) )\n            pObj-\u003eiData = Gia_ManAppendCi( pNew );\n        else if ( Aig_ObjIsPo(pObj) )\n            pOuts0[ Aig_ObjPioNum(pObj) ] = Gia_ObjChild0Copy(pObj);\n        else if ( Aig_ObjIsConst1(pObj) )\n            pObj-\u003eiData = 1;\n        else\n            assert( 0 );\n    }\n    // create the objects\n    pOuts1 = ABC_ALLOC( int, Aig_ManPoNum(p) );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if ( Aig_ObjIsAnd(pObj) )\n            pObj-\u003eiData = Gia_ManHashAnd( pNew, Gia_ObjChild0Copy(pObj), Gia_ObjChild1Copy(pObj) );\n        else if ( Aig_ObjIsPi(pObj) )\n            pObj-\u003eiData = Gia_ManAppendCi( pNew );\n        else if ( Aig_ObjIsPo(pObj) )\n            pOuts1[ Aig_ObjPioNum(pObj) ] = Gia_ObjChild0Copy(pObj);\n        else if ( Aig_ObjIsConst1(pObj) )\n            pObj-\u003eiData = 1;\n        else\n            assert( 0 );\n    }\n    // add the outputs\n    Gia_ManAppendCo( pNew, pOuts0[0] );\n    Gia_ManAppendCo( pNew, pOuts1[0] );\n    Gia_ManAppendCo( pNew, pOuts0[1] );\n    Gia_ManAppendCo( pNew, Gia_LitNot(pOuts1[1]) );\n    for ( i = 2; i \u003c Aig_ManPoNum(p); i++ )\n        Gia_ManAppendCo( pNew, Gia_LitNot( Gia_ManHashXor(pNew, pOuts0[i], pOuts1[i]) ) );\n    Gia_ManHashStop( pNew );\n    ABC_FREE( pOuts0 );\n    ABC_FREE( pOuts1 );\n//    pNew = Gia_ManCleanup( pTemp = pNew );\n//    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Gia_ManCreateResubMiter(p *Aig_Man_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;//, * pTemp;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var pOuts0 *int32;\n    var pOuts1 *int32;\n    Aig_ManSetPioNumbers( p );\n    // create the new manager\n    pNew = Gia_ManStart( Aig_ManObjNum(p) );\n    pNew.pName = Gia_UtilStrsav( p.pName );\n    pNew.pSpec = Gia_UtilStrsav( p.pSpec );\n    Gia_ManHashAlloc( pNew );\n    // create the objects\n    // inlining of macro ABC_ALLOC\n    pOuts0 = ((int *) malloc(sizeof(int) * (size_t)(Aig_ManPoNum(p))));\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjIsAnd(pObj) {\n            pObj.iData = Gia_ManHashAnd( pNew, Gia_ObjChild0Copy(pObj), Gia_ObjChild1Copy(pObj) );\n        } else if Aig_ObjIsPi(pObj) {\n            pObj.iData = Gia_ManAppendCi( pNew );\n        } else if Aig_ObjIsPo(pObj) {\n            pOuts0[ Aig_ObjPioNum(pObj) ] = Gia_ObjChild0Copy(pObj);\n        } else if Aig_ObjIsConst1(pObj) {\n            pObj.iData = 1;\n        } else {\n            assert(false, \"0\"); }\n    }\n    }\n    // create the objects\n    // inlining of macro ABC_ALLOC\n    pOuts1 = ((int *) malloc(sizeof(int) * (size_t)(Aig_ManPoNum(p))));\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjIsAnd(pObj) {\n            pObj.iData = Gia_ManHashAnd( pNew, Gia_ObjChild0Copy(pObj), Gia_ObjChild1Copy(pObj) );\n        } else if Aig_ObjIsPi(pObj) {\n            pObj.iData = Gia_ManAppendCi( pNew );\n        } else if Aig_ObjIsPo(pObj) {\n            pOuts1[ Aig_ObjPioNum(pObj) ] = Gia_ObjChild0Copy(pObj);\n        } else if Aig_ObjIsConst1(pObj) {\n            pObj.iData = 1;\n        } else {\n            assert(false, \"0\"); }\n    }\n    }\n    // add the outputs\n    Gia_ManAppendCo( pNew, pOuts0[0] );\n    Gia_ManAppendCo( pNew, pOuts1[0] );\n    Gia_ManAppendCo( pNew, pOuts0[1] );\n    Gia_ManAppendCo( pNew, Gia_LitNot(pOuts1[1]) );\n    for  i = 2; i \u003c Aig_ManPoNum(p); i++  {\n        Gia_ManAppendCo( pNew, Gia_LitNot( Gia_ManHashXor(pNew, pOuts0[i], pOuts1[i]) ) );\n    }\n    Gia_ManHashStop( pNew );\n    // inlining of macro ABC_FREE\n    ((pOuts0) ? (free((char *) (pOuts0)), (pOuts0) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pOuts1) ? (free((char *) (pOuts1)), (pOuts1) = 0) : 0);\n//    pNew = Gia_ManCleanup( pTemp = pNew );\n//    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsConstructGia",
+      "Start": 3930,
+      "End": 4474,
+      "BodyStart": 3975,
+      "Original": "void Abc_NtkMfsConstructGia( Mfs_Man_t * p )\n{\n    int nBTLimit = 500;\n    // prepare AIG\n    assert( p-\u003epGia == NULL );\n    p-\u003epGia = Gia_ManCreateResubMiter( p-\u003epAigWin );\n    // prepare AIG\n    Gia_ManCreateRefs( p-\u003epGia );\n    Gia_ManCleanMark0( p-\u003epGia );\n    Gia_ManCleanMark1( p-\u003epGia );\n    Gia_ManFillValue ( p-\u003epGia ); // maps nodes into trail ids\n    Gia_ManCleanPhase( p-\u003epGia ); \n    // prepare solver\n    p-\u003epTas = Tas_ManAlloc( p-\u003epGia, nBTLimit );\n    p-\u003evCex = Tas_ReadModel( p-\u003epTas );\n    p-\u003evGiaLits = Vec_PtrAlloc( 100 );\n}",
+      "Draft": "func Abc_NtkMfsConstructGia(p *Mfs_Man_t) {\n    var nBTLimit int32  = 500;\n    // prepare AIG\n    assert(p.pGia == nil, \"p.pGia == nil\");\n    p.pGia = Gia_ManCreateResubMiter( p.pAigWin );\n    // prepare AIG\n    Gia_ManCreateRefs( p.pGia );\n    Gia_ManCleanMark0( p.pGia );\n    Gia_ManCleanMark1( p.pGia );\n    Gia_ManFillValue ( p.pGia ); // maps nodes into trail ids\n    Gia_ManCleanPhase( p.pGia ); \n    // prepare solver\n    p.pTas = Tas_ManAlloc( p.pGia, nBTLimit );\n    p.vCex = Tas_ReadModel( p.pTas );\n    p.vGiaLits = Vec_PtrAlloc( 100 );\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsDeconstructGia",
+      "Start": 4696,
+      "End": 4897,
+      "BodyStart": 4743,
+      "Original": "void Abc_NtkMfsDeconstructGia( Mfs_Man_t * p )\n{\n    assert( p-\u003epGia != NULL );\n    Gia_ManStop( p-\u003epGia ); p-\u003epGia = NULL;\n    Tas_ManStop( p-\u003epTas ); p-\u003epTas = NULL;\n    Vec_PtrFree( p-\u003evGiaLits );\n}",
+      "Draft": "func Abc_NtkMfsDeconstructGia(p *Mfs_Man_t) {\n    assert(p.pGia != nil, \"p.pGia != nil\");\n    Gia_ManStop( p.pGia ); p.pGia = nil;\n    Tas_ManStop( p.pTas ); p.pTas = nil;\n    Vec_PtrFree( p.vGiaLits );\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsResimulate",
+      "Start": 5118,
+      "End": 5845,
+      "BodyStart": 5179,
+      "Original": "void Abc_NtkMfsResimulate( Gia_Man_t * p, Vec_Int_t * vCex )\n{\n    Gia_Obj_t * pObj;\n    int i, Entry;\n//    Gia_ManCleanMark1( p );\n    Gia_ManConst0(p)-\u003efMark1 = 0;\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003efMark1 = 0;\n//        pObj-\u003efMark1 = Gia_ManRandom(0);\n    Vec_IntForEachEntry( vCex, Entry, i )\n    {\n        pObj = Gia_ManCi( p, Gia_Lit2Var(Entry) );\n        pObj-\u003efMark1 = !Gia_LitIsCompl(Entry);\n    }\n    Gia_ManForEachAnd( p, pObj, i )\n        pObj-\u003efMark1 = (Gia_ObjFanin0(pObj)-\u003efMark1 ^ Gia_ObjFaninC0(pObj)) \u0026 \n                       (Gia_ObjFanin1(pObj)-\u003efMark1 ^ Gia_ObjFaninC1(pObj));\n    Gia_ManForEachCo( p, pObj, i )\n        pObj-\u003efMark1 =  Gia_ObjFanin0(pObj)-\u003efMark1 ^ Gia_ObjFaninC0(pObj);\n}",
+      "Draft": "func Abc_NtkMfsResimulate(p *Gia_Man_t, vCex *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var i, Entry int32;\n//    Gia_ManCleanMark1( p );\n    Gia_ManConst0(p).fMark1 = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.fMark1 = 0;\n    }\n//        pObj-\u003efMark1 = Gia_ManRandom(0);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCex)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCex, i)), 1); i++  {\n        pObj = Gia_ManCi( p, Gia_Lit2Var(Entry) );\n        pObj.fMark1 = !Gia_LitIsCompl(Entry);\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.fMark1 = (Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) \u0026 \n                       (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.fMark1 =  Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj);\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkMfsTryResubOnceGia",
+      "Start": 6069,
+      "End": 9049,
+      "BodyStart": 6142,
+      "Original": "int Abc_NtkMfsTryResubOnceGia( Mfs_Man_t * p, int * pCands, int nCands )\n{\n    int fVeryVerbose = 0;\n    int fUseGia = 1;\n    unsigned * pData;\n    int i, iVar, status, iOut;\n    clock_t clk = clock();\n    p-\u003enSatCalls++;\n//    return -1;\n    assert( p-\u003epGia != NULL );\n    assert( p-\u003epTas != NULL );\n    // convert to literals\n    Vec_PtrClear( p-\u003evGiaLits );\n    // create the first four literals\n    Vec_PtrPush( p-\u003evGiaLits, Gia_ObjChild0(Gia_ManPo(p-\u003epGia, 0)) );\n    Vec_PtrPush( p-\u003evGiaLits, Gia_ObjChild0(Gia_ManPo(p-\u003epGia, 1)) );\n    Vec_PtrPush( p-\u003evGiaLits, Gia_ObjChild0(Gia_ManPo(p-\u003epGia, 2)) );\n    Vec_PtrPush( p-\u003evGiaLits, Gia_ObjChild0(Gia_ManPo(p-\u003epGia, 3)) );\n    for ( i = 0; i \u003c nCands; i++ )\n    {\n        // get the output number\n        iOut = Gia_Lit2Var(pCands[i]) - 2 * p-\u003epCnf-\u003enVars;\n        // write the literal\n        Vec_PtrPush( p-\u003evGiaLits, Gia_ObjChild0(Gia_ManPo(p-\u003epGia, 4 + iOut)) );\n    }\n    // perform SAT solving\n    status = Tas_ManSolveArray( p-\u003epTas, p-\u003evGiaLits );\n    if ( status == -1 )\n    {\n        p-\u003enTimeOuts++;\n        if ( fVeryVerbose )\n        printf( \"t\" );\n//        p-\u003enSatUndec++;\n//        p-\u003enConfUndec += p-\u003ePars.nBTThis;\n//        Cec_ManSatAddToStore( vCexStore, NULL, i ); // timeout\n//        p-\u003etimeSatUndec += clock() - clk;\n    }\n    else if ( status == 1 )\n    {\n        if ( fVeryVerbose )\n        printf( \"u\" );\n//        p-\u003enSatUnsat++;\n//        p-\u003enConfUnsat += p-\u003ePars.nBTThis;\n//        p-\u003etimeSatUnsat += clock() - clk;\n    }\n    else\n    {\n        p-\u003enSatCexes++;\n        if ( fVeryVerbose )\n        printf( \"s\" );\n//        p-\u003enSatSat++;\n//        p-\u003enConfSat += p-\u003ePars.nBTThis;\n//        Gia_SatVerifyPattern( pAig, pRoot, vCex, vVisit );\n//        Cec_ManSatAddToStore( vCexStore, vCex, i );\n//        p-\u003etimeSatSat += clock() - clk;\n\n        // resimulate the counter-example\n        Abc_NtkMfsResimulate( p-\u003epGia, Tas_ReadModel(p-\u003epTas) );\n   \n        if ( fUseGia )\n        {\n/*\n            int Val0 = Gia_ManPo(p-\u003epGia, 0)-\u003efMark1;\n            int Val1 = Gia_ManPo(p-\u003epGia, 1)-\u003efMark1;\n            int Val2 = Gia_ManPo(p-\u003epGia, 2)-\u003efMark1;\n            int Val3 = Gia_ManPo(p-\u003epGia, 3)-\u003efMark1;\n            assert( Val0 == 1 );\n            assert( Val1 == 1 );\n            assert( Val2 == 1 );\n            assert( Val3 == 1 );\n*/\n            // store the counter-example\n            Vec_IntForEachEntry( p-\u003evProjVarsSat, iVar, i )\n            {\n                pData = (unsigned *)Vec_PtrEntry( p-\u003evDivCexes, i );\n                iOut = iVar - 2 * p-\u003epCnf-\u003enVars;\n//                if ( !Gia_ManPo( p-\u003epGia, 4 + iOut )-\u003efMark1 ) // remove 0s!!!\n                if ( Gia_ManPo( p-\u003epGia, 4 + iOut )-\u003efMark1 ) // remove 0s!!!  - rememeber complemented attribute\n                {\n                    assert( Aig_InfoHasBit(pData, p-\u003enCexes) );\n                    Aig_InfoXorBit( pData, p-\u003enCexes );\n                }\n            }\n            p-\u003enCexes++;\n        }\n\n    }\n    return status;\n}",
+      "Draft": "func Abc_NtkMfsTryResubOnceGia(p *Mfs_Man_t, pCands *int32, nCands int32) int32 {\n    var fVeryVerbose int32;\n    var fUseGia int32  = 1;\n    var pData *uint32;\n    var i, iVar, status, iOut int32;\n    var clk int64  = time.Now().UnixNano();\n    p.nSatCalls++;\n//    return -1;\n    assert(p.pGia != nil, \"p.pGia != nil\");\n    assert(p.pTas != nil, \"p.pTas != nil\");\n    // convert to literals\n    Vec_PtrClear( p.vGiaLits );\n    // create the first four literals\n    Vec_PtrPush( p.vGiaLits, Gia_ObjChild0(Gia_ManPo(p.pGia, 0)) );\n    Vec_PtrPush( p.vGiaLits, Gia_ObjChild0(Gia_ManPo(p.pGia, 1)) );\n    Vec_PtrPush( p.vGiaLits, Gia_ObjChild0(Gia_ManPo(p.pGia, 2)) );\n    Vec_PtrPush( p.vGiaLits, Gia_ObjChild0(Gia_ManPo(p.pGia, 3)) );\n    for  i = 0; i \u003c nCands; i++  {\n        // get the output number\n        iOut = Gia_Lit2Var(pCands[i]) - 2 * p.pCnf.nVars;\n        // write the literal\n        Vec_PtrPush( p.vGiaLits, Gia_ObjChild0(Gia_ManPo(p.pGia, 4 + iOut)) );\n    }\n    // perform SAT solving\n    status = Tas_ManSolveArray( p.pTas, p.vGiaLits );\n    if status == -1 {\n        p.nTimeOuts++;\n        if fVeryVerbose != 0 {\n        fmt.Printf(\"t\"); }\n//        p-\u003enSatUndec++;\n//        p-\u003enConfUndec += p-\u003ePars.nBTThis;\n//        Cec_ManSatAddToStore( vCexStore, NULL, i ); // timeout\n//        p-\u003etimeSatUndec += clock() - clk;\n    \n    } else if status == 1 {\n        if fVeryVerbose != 0 {\n        fmt.Printf(\"u\"); }\n//        p-\u003enSatUnsat++;\n//        p-\u003enConfUnsat += p-\u003ePars.nBTThis;\n//        p-\u003etimeSatUnsat += clock() - clk;\n    \n    } else {\n        p.nSatCexes++;\n        if fVeryVerbose != 0 {\n        fmt.Printf(\"s\"); }\n//        p-\u003enSatSat++;\n//        p-\u003enConfSat += p-\u003ePars.nBTThis;\n//        Gia_SatVerifyPattern( pAig, pRoot, vCex, vVisit );\n//        Cec_ManSatAddToStore( vCexStore, vCex, i );\n//        p-\u003etimeSatSat += clock() - clk;\n\n        // resimulate the counter-example\n        Abc_NtkMfsResimulate( p.pGia, Tas_ReadModel(p.pTas) );\n   \n        if fUseGia != 0 {\n/*\n            int Val0 = Gia_ManPo(p-\u003epGia, 0)-\u003efMark1;\n            int Val1 = Gia_ManPo(p-\u003epGia, 1)-\u003efMark1;\n            int Val2 = Gia_ManPo(p-\u003epGia, 2)-\u003efMark1;\n            int Val3 = Gia_ManPo(p-\u003epGia, 3)-\u003efMark1;\n            assert( Val0 == 1 );\n            assert( Val1 == 1 );\n            assert( Val2 == 1 );\n            assert( Val3 == 1 );\n*/\n            // store the counter-example\n            // inlining of macro Vec_IntForEachEntry\n            for  i = 0; (i \u003c Vec_IntSize(p.vProjVarsSat)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vProjVarsSat, i)), 1); i++  {\n                pData = (unsigned *)Vec_PtrEntry( p.vDivCexes, i );\n                iOut = iVar - 2 * p.pCnf.nVars;\n//                if ( !Gia_ManPo( p-\u003epGia, 4 + iOut )-\u003efMark1 ) // remove 0s!!!\n                if Gia_ManPo( p.pGia, 4 + iOut ).fMark1 { // remove 0s!!!  - rememeber complemented attribute\n                \n                    assert(Aig_InfoHasBit(pData, p.nCexes), \"Aig_InfoHasBit(pData, p.nCexes)\");\n                    Aig_InfoXorBit( pData, p.nCexes );\n                }\n            }\n            p.nCexes++;\n        }\n\n    }\n    return status;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::mechanical::sizeof::2189",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2128,
+      "End": 2128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::mechanical::sizeof::3031",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2689,
+      "End": 2689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::pointer-cast::2174",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2128,
+      "End": 2128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::pointer-cast::2399",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2167,
+      "End": 2167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::pointer-cast::3016",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2689,
+      "End": 2689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::pointer-cast::3241",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2728,
+      "End": 2728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::pointer-cast::4198",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3574,
+      "End": 3574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::pointer-cast::4304",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3598,
+      "End": 3598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::pointer-cast::9793",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8527,
+      "End": 8539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::Gia_ObjChild0Copy",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjChild0Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 854,
+      "End": 989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::Gia_ObjChild1Copy",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjChild1Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 990,
+      "End": 1125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::ternary::Gia_ManCreateResubMiter",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManCreateResubMiter",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1719,
+      "End": 3709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::Gia_ManCreateResubMiter",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCreateResubMiter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1719,
+      "End": 3709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::Abc_NtkMfsConstructGia",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsConstructGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3930,
+      "End": 4474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::Abc_NtkMfsDeconstructGia",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsDeconstructGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4696,
+      "End": 4897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::Abc_NtkMfsResimulate",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsResimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5118,
+      "End": 5845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::Abc_NtkMfsTryResubOnceGia",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMfsTryResubOnceGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6069,
+      "End": 9049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/mfs/mfsGia.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9297
+    }
+  ],
+  "Draft": "package mfs\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [mfsGia.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [The good old minimization with complete don't-cares.]\n\n  Synopsis    [Experimental code based on the new AIG package.]\n\n  Author      [Alan Mishchenko]\n\n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - July 29, 2009.]\n\n  Revision    [$Id: mfsGia.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n//#include \"mfsInt.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Gia_ObjChild0Copy(pObj *Aig_Obj_t) int32 { return Gia_LitNotCond( Aig_ObjFanin0(pObj).iData, Aig_ObjFaninC0(pObj) ); }\nfunc Gia_ObjChild1Copy(pObj *Aig_Obj_t) int32 { return Gia_LitNotCond( Aig_ObjFanin1(pObj).iData, Aig_ObjFaninC1(pObj) ); }\n\n// r i10_if6.blif;  ps; mfs -v\n// r pj1_if6.blif;  ps; mfs -v\n// r x/01_if6.blif; ps; mfs -v\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the resubstitution miter as an GIA.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n \n***********************************************************************/\nfunc Gia_ManCreateResubMiter(p *Aig_Man_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;//, * pTemp;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var pOuts0 *int32;\n    var pOuts1 *int32;\n    Aig_ManSetPioNumbers( p );\n    // create the new manager\n    pNew = Gia_ManStart( Aig_ManObjNum(p) );\n    pNew.pName = Gia_UtilStrsav( p.pName );\n    pNew.pSpec = Gia_UtilStrsav( p.pSpec );\n    Gia_ManHashAlloc( pNew );\n    // create the objects\n    // inlining of macro ABC_ALLOC\n    pOuts0 = ((int *) malloc(sizeof(int) * (size_t)(Aig_ManPoNum(p))));\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjIsAnd(pObj) {\n            pObj.iData = Gia_ManHashAnd( pNew, Gia_ObjChild0Copy(pObj), Gia_ObjChild1Copy(pObj) );\n        } else if Aig_ObjIsPi(pObj) {\n            pObj.iData = Gia_ManAppendCi( pNew );\n        } else if Aig_ObjIsPo(pObj) {\n            pOuts0[ Aig_ObjPioNum(pObj) ] = Gia_ObjChild0Copy(pObj);\n        } else if Aig_ObjIsConst1(pObj) {\n            pObj.iData = 1;\n        } else {\n            assert(false, \"0\"); }\n    }\n    }\n    // create the objects\n    // inlining of macro ABC_ALLOC\n    pOuts1 = ((int *) malloc(sizeof(int) * (size_t)(Aig_ManPoNum(p))));\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjIsAnd(pObj) {\n            pObj.iData = Gia_ManHashAnd( pNew, Gia_ObjChild0Copy(pObj), Gia_ObjChild1Copy(pObj) );\n        } else if Aig_ObjIsPi(pObj) {\n            pObj.iData = Gia_ManAppendCi( pNew );\n        } else if Aig_ObjIsPo(pObj) {\n            pOuts1[ Aig_ObjPioNum(pObj) ] = Gia_ObjChild0Copy(pObj);\n        } else if Aig_ObjIsConst1(pObj) {\n            pObj.iData = 1;\n        } else {\n            assert(false, \"0\"); }\n    }\n    }\n    // add the outputs\n    Gia_ManAppendCo( pNew, pOuts0[0] );\n    Gia_ManAppendCo( pNew, pOuts1[0] );\n    Gia_ManAppendCo( pNew, pOuts0[1] );\n    Gia_ManAppendCo( pNew, Gia_LitNot(pOuts1[1]) );\n    for  i = 2; i \u003c Aig_ManPoNum(p); i++  {\n        Gia_ManAppendCo( pNew, Gia_LitNot( Gia_ManHashXor(pNew, pOuts0[i], pOuts1[i]) ) );\n    }\n    Gia_ManHashStop( pNew );\n    // inlining of macro ABC_FREE\n    ((pOuts0) ? (free((char *) (pOuts0)), (pOuts0) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pOuts1) ? (free((char *) (pOuts1)), (pOuts1) = 0) : 0);\n//    pNew = Gia_ManCleanup( pTemp = pNew );\n//    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsConstructGia(p *Mfs_Man_t) {\n    var nBTLimit int32  = 500;\n    // prepare AIG\n    assert(p.pGia == nil, \"p.pGia == nil\");\n    p.pGia = Gia_ManCreateResubMiter( p.pAigWin );\n    // prepare AIG\n    Gia_ManCreateRefs( p.pGia );\n    Gia_ManCleanMark0( p.pGia );\n    Gia_ManCleanMark1( p.pGia );\n    Gia_ManFillValue ( p.pGia ); // maps nodes into trail ids\n    Gia_ManCleanPhase( p.pGia ); \n    // prepare solver\n    p.pTas = Tas_ManAlloc( p.pGia, nBTLimit );\n    p.vCex = Tas_ReadModel( p.pTas );\n    p.vGiaLits = Vec_PtrAlloc( 100 );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsDeconstructGia(p *Mfs_Man_t) {\n    assert(p.pGia != nil, \"p.pGia != nil\");\n    Gia_ManStop( p.pGia ); p.pGia = nil;\n    Tas_ManStop( p.pTas ); p.pTas = nil;\n    Vec_PtrFree( p.vGiaLits );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsResimulate(p *Gia_Man_t, vCex *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var i, Entry int32;\n//    Gia_ManCleanMark1( p );\n    Gia_ManConst0(p).fMark1 = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.fMark1 = 0;\n    }\n//        pObj-\u003efMark1 = Gia_ManRandom(0);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCex)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCex, i)), 1); i++  {\n        pObj = Gia_ManCi( p, Gia_Lit2Var(Entry) );\n        pObj.fMark1 = !Gia_LitIsCompl(Entry);\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.fMark1 = (Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj)) \u0026 \n                       (Gia_ObjFanin1(pObj).fMark1 ^ Gia_ObjFaninC1(pObj)); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.fMark1 =  Gia_ObjFanin0(pObj).fMark1 ^ Gia_ObjFaninC0(pObj);\n    }\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMfsTryResubOnceGia(p *Mfs_Man_t, pCands *int32, nCands int32) int32 {\n    var fVeryVerbose int32;\n    var fUseGia int32  = 1;\n    var pData *uint32;\n    var i, iVar, status, iOut int32;\n    var clk int64  = time.Now().UnixNano();\n    p.nSatCalls++;\n//    return -1;\n    assert(p.pGia != nil, \"p.pGia != nil\");\n    assert(p.pTas != nil, \"p.pTas != nil\");\n    // convert to literals\n    Vec_PtrClear( p.vGiaLits );\n    // create the first four literals\n    Vec_PtrPush( p.vGiaLits, Gia_ObjChild0(Gia_ManPo(p.pGia, 0)) );\n    Vec_PtrPush( p.vGiaLits, Gia_ObjChild0(Gia_ManPo(p.pGia, 1)) );\n    Vec_PtrPush( p.vGiaLits, Gia_ObjChild0(Gia_ManPo(p.pGia, 2)) );\n    Vec_PtrPush( p.vGiaLits, Gia_ObjChild0(Gia_ManPo(p.pGia, 3)) );\n    for  i = 0; i \u003c nCands; i++  {\n        // get the output number\n        iOut = Gia_Lit2Var(pCands[i]) - 2 * p.pCnf.nVars;\n        // write the literal\n        Vec_PtrPush( p.vGiaLits, Gia_ObjChild0(Gia_ManPo(p.pGia, 4 + iOut)) );\n    }\n    // perform SAT solving\n    status = Tas_ManSolveArray( p.pTas, p.vGiaLits );\n    if status == -1 {\n        p.nTimeOuts++;\n        if fVeryVerbose != 0 {\n        fmt.Printf(\"t\"); }\n//        p-\u003enSatUndec++;\n//        p-\u003enConfUndec += p-\u003ePars.nBTThis;\n//        Cec_ManSatAddToStore( vCexStore, NULL, i ); // timeout\n//        p-\u003etimeSatUndec += clock() - clk;\n    \n    } else if status == 1 {\n        if fVeryVerbose != 0 {\n        fmt.Printf(\"u\"); }\n//        p-\u003enSatUnsat++;\n//        p-\u003enConfUnsat += p-\u003ePars.nBTThis;\n//        p-\u003etimeSatUnsat += clock() - clk;\n    \n    } else {\n        p.nSatCexes++;\n        if fVeryVerbose != 0 {\n        fmt.Printf(\"s\"); }\n//        p-\u003enSatSat++;\n//        p-\u003enConfSat += p-\u003ePars.nBTThis;\n//        Gia_SatVerifyPattern( pAig, pRoot, vCex, vVisit );\n//        Cec_ManSatAddToStore( vCexStore, vCex, i );\n//        p-\u003etimeSatSat += clock() - clk;\n\n        // resimulate the counter-example\n        Abc_NtkMfsResimulate( p.pGia, Tas_ReadModel(p.pTas) );\n   \n        if fUseGia != 0 {\n/*\n            int Val0 = Gia_ManPo(p-\u003epGia, 0)-\u003efMark1;\n            int Val1 = Gia_ManPo(p-\u003epGia, 1)-\u003efMark1;\n            int Val2 = Gia_ManPo(p-\u003epGia, 2)-\u003efMark1;\n            int Val3 = Gia_ManPo(p-\u003epGia, 3)-\u003efMark1;\n            assert( Val0 == 1 );\n            assert( Val1 == 1 );\n            assert( Val2 == 1 );\n            assert( Val3 == 1 );\n*/\n            // store the counter-example\n            // inlining of macro Vec_IntForEachEntry\n            for  i = 0; (i \u003c Vec_IntSize(p.vProjVarsSat)) \u0026\u0026 (((iVar) = Vec_IntEntry(p.vProjVarsSat, i)), 1); i++  {\n                pData = (unsigned *)Vec_PtrEntry( p.vDivCexes, i );\n                iOut = iVar - 2 * p.pCnf.nVars;\n//                if ( !Gia_ManPo( p-\u003epGia, 4 + iOut )-\u003efMark1 ) // remove 0s!!!\n                if Gia_ManPo( p.pGia, 4 + iOut ).fMark1 { // remove 0s!!!  - rememeber complemented attribute\n                \n                    assert(Aig_InfoHasBit(pData, p.nCexes), \"Aig_InfoHasBit(pData, p.nCexes)\");\n                    Aig_InfoXorBit( pData, p.nCexes );\n                }\n            }\n            p.nCexes++;\n        }\n\n    }\n    return status;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

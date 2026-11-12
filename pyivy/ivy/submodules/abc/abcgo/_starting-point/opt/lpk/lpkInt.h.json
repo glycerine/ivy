@@ -1,0 +1,418 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h",
+  "SHA256": "0d4a898aaae0835494fd4fb74ea7492ba147f9ca9a9dbcaabe04824cbe8ef49b",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 178,
+        "Column": 54,
+        "ByteOffset": 7944
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Lpk_FunTruth(p *Lpk_Fun_t, Num int32) *uint32 { assert( Num \u003c 3 ); return p.pTruth + Kit_TruthWordNum(p.nVars) * Num;        }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Lpk_LutNumVars",
+      "Start": 7268,
+      "End": 7417,
+      "BodyStart": 7335,
+      "Original": "static inline int        Lpk_LutNumVars( int nLutsLim, int nLutK ) { return  nLutsLim * (nLutK - 1) + 1;                                            }",
+      "Draft": "func Lpk_LutNumVars(nLutsLim int32, nLutK int32) int32 { return  nLutsLim * (nLutK - 1) + 1;                                            }"
+    },
+    {
+      "Name": "Lpk_LutNumLuts",
+      "Start": 7418,
+      "End": 7567,
+      "BodyStart": 7485,
+      "Original": "static inline int        Lpk_LutNumLuts( int nVarsMax, int nLutK ) { return (nVarsMax - 1) / (nLutK - 1) + (int)((nVarsMax - 1) % (nLutK - 1) \u003e 0); }",
+      "Draft": "func Lpk_LutNumLuts(nVarsMax int32, nLutK int32) int32 { return (nVarsMax - 1) / (nLutK - 1) + int32(((nVarsMax - 1) % (nLutK - 1) \u003e 0)); }"
+    },
+    {
+      "Name": "Lpk_FunTruth",
+      "Start": 7568,
+      "End": 7717,
+      "BodyStart": 7635,
+      "Original": "static inline unsigned * Lpk_FunTruth( Lpk_Fun_t * p, int Num )    { assert( Num \u003c 3 ); return p-\u003epTruth + Kit_TruthWordNum(p-\u003enVars) * Num;        }",
+      "Draft": "func Lpk_FunTruth(p *Lpk_Fun_t, Num int32) *uint32 { assert(Num \u003c 3, \"Num \u003c 3\"); return p.pTruth + Kit_TruthWordNum(p.nVars) * Num;        }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Cut_t::unsigned     nLeaves       : 6;",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1626,
+      "End": 1662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Cut_t::// (L) the number of leaves\n    unsigned     nNodes        : 6;",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1662,
+      "End": 1730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Cut_t::// (M) the number of nodes\n    unsigned     nNodesDup     : 6;",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1730,
+      "End": 1797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Cut_t::// (Q) nodes outside of MFFC\n    unsigned     nLuts         : 6;",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1797,
+      "End": 1866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Cut_t::// (N) the number of LUTs to try\n    unsigned     unused        : 6;",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1866,
+      "End": 1939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Cut_t::// unused\n    unsigned     fHasDsd       : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1939,
+      "End": 1989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Cut_t::// set to 1 if the cut has structural DSD (and so cannot be used)\n    unsigned     fMark         : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1989,
+      "End": 2095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Cut_t::// multipurpose mark\n    unsigned     uSign[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2095,
+      "End": 2147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Cut_t::// the gain achieved using this cut\n    int          pLeaves[LPK_SIZE_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2305,
+      "End": 2398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Cut_t::// the leaves of the cut\n    int          pNodes[LPK_SIZE_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2398,
+      "End": 2462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Cut_t",
+      "Category": "struct-review",
+      "Symbol": "Lpk_Cut_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1569,
+      "End": 2490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Fun_t::// the array of leaves and decomposition nodes\n    unsigned     Id         :  7;",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Fun_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5550,
+      "End": 5641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Fun_t::// the ID of this node\n    unsigned     nVars      :  5;",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Fun_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5641,
+      "End": 5699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Fun_t::// the number of variables\n    unsigned     nLutK      :  4;",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Fun_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5699,
+      "End": 5761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Fun_t::// the number of LUT inputs\n    unsigned     nAreaLim   : 14;",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Fun_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5761,
+      "End": 5824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Fun_t::// the area limit (the largest allowed)\n    unsigned     fSupports  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Fun_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5824,
+      "End": 5899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Fun_t::// supports of cofactors were precomputed\n    unsigned     fMark      :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Fun_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5899,
+      "End": 5976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Fun_t::// the support of this component\n    unsigned     puSupps[32];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Fun_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6028,
+      "End": 6102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Fun_t::// the delay limit (the largest allowed)\n    int          pDelays[16];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Fun_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6168,
+      "End": 6246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Fun_t::// the delays of the inputs\n    char         pFanins[16];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Fun_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6246,
+      "End": 6309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Fun_t::// the fanins of this function\n    unsigned     pTruth[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Fun_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6309,
+      "End": 6373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Fun_t",
+      "Category": "struct-review",
+      "Symbol": "Lpk_Fun_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 5469,
+      "End": 6445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Res_t::// the number of cofactoring variables\n    char         pCofVars[4];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Res_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6690,
+      "End": 6767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Res_t",
+      "Category": "struct-review",
+      "Symbol": "Lpk_Res_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 6483,
+      "End": 7266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Man_t_::// the number of good cuts\n    Lpk_Cut_t    pCuts[LPK_CUTS_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3022,
+      "End": 3102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Man_t_::// the storage for cuts\n    int          pEvals[LPK_CUTS_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3102,
+      "End": 3167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Man_t_::// the number of called to SRed\n    int          pRefs[LPK_SIZE_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3545,
+      "End": 3625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Man_t_::// fanin reference counters \n    int          pCands[LPK_SIZE_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3625,
+      "End": 3695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Man_t_::unsigned     puSupps[32];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4063,
+      "End": 4093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Man_t_::// the supports of the cofactors\n    unsigned *   ppTruths[5][16];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4093,
+      "End": 4170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Man_t_::// variable sets\n    Vec_Int_t *  vSets[8];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4170,
+      "End": 4218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Man_t_::// counter of non-DSD blocks\n    int          nBlocks[17];",
+      "Category": "struct-field-review",
+      "Symbol": "Lpk_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4922,
+      "End": 4985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::struct::Lpk_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Lpk_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2492,
+      "End": 5406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::macro::Lpk_CutForEachLeaf",
+      "Category": "macro-review",
+      "Symbol": "Lpk_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8159,
+      "End": 8356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::macro::Lpk_CutForEachNode",
+      "Category": "macro-review",
+      "Symbol": "Lpk_CutForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8357,
+      "End": 8552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::macro::Lpk_CutForEachNodeReverse",
+      "Category": "macro-review",
+      "Symbol": "Lpk_CutForEachNodeReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8553,
+      "End": 8753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::macro::Lpk_SuppForEachVar",
+      "Category": "macro-review",
+      "Symbol": "Lpk_SuppForEachVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8754,
+      "End": 8874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::Lpk_LutNumVars",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_LutNumVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7268,
+      "End": 7417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::Lpk_LutNumLuts",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_LutNumLuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7418,
+      "End": 7567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::Lpk_FunTruth",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_FunTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7568,
+      "End": 7717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12188
+    }
+  ],
+  "Draft": "package lpk\n\n/**CFile****************************************************************\n\n  FileName    [lpkInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast Boolean matching for LUT structures.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: lpkInt.h,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"base/abc/abc.h\"\n//#include \"bool/kit/kit.h\"\n//#include \"map/if/if.h\"\n//#include \"lpk.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst LPK_SIZE_MAX =            100    // the largest size of the function\nconst LPK_CUTS_MAX =          10000    // the largest number of cuts considered\n\ntype Lpk_Man_t = Lpk_Man_t_;\n   \n\ntype Lpk_Cut_t struct {\n    nLeaves uint32; /* C bitfield: 6 bits; review packing and truncation */     // (L) the number of leaves\n    nNodes uint32; /* C bitfield: 6 bits; review packing and truncation */     // (M) the number of nodes\n    nNodesDup uint32; /* C bitfield: 6 bits; review packing and truncation */     // (Q) nodes outside of MFFC\n    nLuts uint32; /* C bitfield: 6 bits; review packing and truncation */     // (N) the number of LUTs to try\n    unused uint32; /* C bitfield: 6 bits; review packing and truncation */     // unused\n    fHasDsd uint32; /* C bitfield: 1 bits; review packing and truncation */     // set to 1 if the cut has structural DSD (and so cannot be used)\n    fMark uint32; /* C bitfield: 1 bits; review packing and truncation */     // multipurpose mark\n    uSign [2]uint32;              // the signature\n    Weight        float32;                // the weight of the cut: (M - Q)/N(V)   (the larger the better)\n    Gain          int32;                  // the gain achieved using this cut\n    pLeaves [LPK_SIZE_MAX]int32; // the leaves of the cut\n    pNodes [LPK_SIZE_MAX]int32;  // the nodes of the cut\n}\n\ntype Lpk_Man_t_ struct {\n    // parameters\n    pPars   *Lpk_Par_t;                 // the set of parameters\n    // current representation\n    pNtk   *Abc_Ntk_t;                  // the network\n    pObj   *Abc_Obj_t;                  // the node to resynthesize \n    // cut representation\n    nMffc          int32;                 // the size of MFFC of the node\n    nCuts          int32;                 // the total number of cuts    \n    nCutsMax          int32;              // the largest possible number of cuts\n    nEvals          int32;                // the number of good cuts\n    pCuts [LPK_CUTS_MAX]Lpk_Cut_t;   // the storage for cuts\n    pEvals [LPK_CUTS_MAX]int32;  // the good cuts\n    // visited nodes \n    vVisited   *Vec_Vec_t;\n    // mapping manager\n    pIfMan    *If_Man_t;\n    vCover   *Vec_Int_t; \n    vLevels   *Vec_Vec_t;\n    // temporary variables\n    fCofactoring          int32;          // working in the cofactoring mode\n    fCalledOnce          int32;           // limits the depth of MUX cofactoring\n    nCalledSRed          int32;           // the number of called to SRed\n    pRefs [LPK_SIZE_MAX]int32;   // fanin reference counters \n    pCands [LPK_SIZE_MAX]int32;  // internal nodes pointing only to the leaves\n    vLeaves   *Vec_Ptr_t;\n    vTemp   *Vec_Ptr_t;\n    // truth table representation\n    vTtElems   *Vec_Ptr_t;              // elementary truth tables\n    vTtNodes   *Vec_Ptr_t;              // storage for temporary truth tables of the nodes \n    vMemory   *Vec_Int_t;\n    vBddDir   *Vec_Int_t;\n    vBddInv   *Vec_Int_t;\n    puSupps [32]uint32;           // the supports of the cofactors\n    ppTruths [5][16]*uint32;\n    // variable sets\n    Vec_Int_t *  vSets[8];\n    pDsdMan *Kit_DsdMan_t;\n    // statistics\n    nNodesTotal          int32;           // total number of nodes\n    nNodesOver          int32;            // nodes with cuts over the limit \n    nCutsTotal          int32;            // total number of cuts\n    nCutsUseful          int32;           // useful cuts \n    nGainTotal          int32;            // the gain in LUTs\n    nChanges          int32;              // the number of changed nodes\n    nBenefited          int32;            // the number of gainful that benefited from decomposition\n    nMuxes          int32;\n    nDsds          int32;\n    nTotalNets          int32;\n    nTotalNets2          int32;\n    nTotalNodes          int32;\n    nTotalNodes2          int32;\n    // counter of non-DSD blocks\n    nBlocks [17]int32;\n    // runtime\n    timeCuts      abctime;\n    timeTruth      abctime;\n    timeSupps      abctime;\n    timeTruth2      abctime;\n    timeTruth3      abctime;\n    timeEval      abctime;\n    timeMap      abctime;\n    timeOther      abctime;\n    timeTotal      abctime;\n    // runtime of eval\n    timeEvalMuxAn      abctime;\n    timeEvalMuxSp      abctime;\n    timeEvalDsdAn      abctime;\n    timeEvalDsdSp      abctime;\n \n}\n\n\n// internal representation of the function to be decomposed\n   \ntype Lpk_Fun_t struct {\n    vNodes   *Vec_Ptr_t;           // the array of leaves and decomposition nodes\n    Id uint32; /* C bitfield: 7 bits; review packing and truncation */  // the ID of this node\n    nVars uint32; /* C bitfield: 5 bits; review packing and truncation */  // the number of variables\n    nLutK uint32; /* C bitfield: 4 bits; review packing and truncation */  // the number of LUT inputs\n    nAreaLim uint32; /* C bitfield: 14 bits; review packing and truncation */  // the area limit (the largest allowed)\n    fSupports uint32; /* C bitfield: 1 bits; review packing and truncation */  // supports of cofactors were precomputed\n    fMark uint32; /* C bitfield: 1 bits; review packing and truncation */  // marks the MUX-based dec\n    uSupp     uint32;            // the support of this component\n    puSupps [32]uint32;      // the supports of the cofactors\n    nDelayLim     uint32;        // the delay limit (the largest allowed)\n    pDelays [16]int32;      // the delays of the inputs\n    pFanins [16]byte;      // the fanins of this function\n    pTruth [0]uint32;        // the truth table (contains room for three truth tables)    \n}\n\n// preliminary decomposition result\n   \ntype Lpk_Res_t struct {\n    nBSVars          int32;          // the number of bound set variables\n    BSVars     uint32;           // the bound set\n    nCofVars          int32;         // the number of cofactoring variables\n    pCofVars [4]byte;      // the cofactoring variables\n    nSuppSizeS          int32;       // support size of the smaller (decomposed) function \n    nSuppSizeL          int32;       // support size of the larger (composition) function\n    DelayEst          int32;         // estimated delay of the decomposition\n    AreaEst          int32;          // estimated area of the decomposition\n    Variable          int32;         // variable in MUX decomposition\n    Polarity          int32;         // polarity in MUX decomposition\n}\n\nfunc Lpk_LutNumVars(nLutsLim int32, nLutK int32) int32 { return  nLutsLim * (nLutK - 1) + 1;                                            }\nfunc Lpk_LutNumLuts(nVarsMax int32, nLutK int32) int32 { return (nVarsMax - 1) / (nLutK - 1) + int32(((nVarsMax - 1) % (nLutK - 1) \u003e 0)); }\nfunc Lpk_FunTruth(p *Lpk_Fun_t, Num int32) *uint32 { assert(Num \u003c 3, \"Num \u003c 3\"); return p.pTruth + Kit_TruthWordNum(p.nVars) * Num;        }\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                           ITERATORS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define Lpk_CutForEachLeaf( pNtk, pCut, pObj, i )                                        \\\n//     for ( i = 0; (i \u003c (int)(pCut)-\u003enLeaves) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, (pCut)-\u003epLeaves[i])), 1); i++ )\n\n// Original macro:\n// #define Lpk_CutForEachNode( pNtk, pCut, pObj, i )                                        \\\n//     for ( i = 0; (i \u003c (int)(pCut)-\u003enNodes) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, (pCut)-\u003epNodes[i])), 1); i++ )\n\n// Original macro:\n// #define Lpk_CutForEachNodeReverse( pNtk, pCut, pObj, i )                                 \\\n//     for ( i = (int)(pCut)-\u003enNodes - 1; (i \u003e= 0) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, (pCut)-\u003epNodes[i])), 1); i-- )\n\n// Original macro:\n// #define Lpk_SuppForEachVar( Supp, Var )\\\n//     for ( Var = 0; Var \u003c 16; Var++ )\\\n//         if ( !(Supp \u0026 (1\u003c\u003cVar)) ) {} else\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== lpkAbcDec.c ============================================================*/\n// extern Abc_Obj_t *    Lpk_Decompose( Lpk_Man_t * pMan, Abc_Ntk_t * pNtk, Vec_Ptr_t * vLeaves, unsigned * pTruth, unsigned * puSupps, int nLutK, int AreaLim, int DelayLim );\n\n/*=== lpkAbcDsd.c ============================================================*/\n// extern Lpk_Res_t *    Lpk_DsdAnalize( Lpk_Man_t * pMan, Lpk_Fun_t * p, int nShared );\n\n// extern Lpk_Fun_t *    Lpk_DsdSplit( Lpk_Man_t * pMan, Lpk_Fun_t * p, char * pCofVars, int nCofVars, unsigned uBoundSet );\n\n/*=== lpkAbcMux.c ============================================================*/\n// extern Lpk_Res_t *    Lpk_MuxAnalize( Lpk_Man_t * pMan, Lpk_Fun_t * p );\n\n// extern Lpk_Fun_t *    Lpk_MuxSplit( Lpk_Man_t * pMan, Lpk_Fun_t * p, int Var, int Pol );\n\n/*=== lpkAbcUtil.c ============================================================*/\n// extern Lpk_Fun_t *    Lpk_FunAlloc( int nVars );\n\n// extern void           Lpk_FunFree( Lpk_Fun_t * p );\n\n// extern Lpk_Fun_t *    Lpk_FunCreate( Abc_Ntk_t * pNtk, Vec_Ptr_t * vLeaves, unsigned * pTruth, int nLutK, int AreaLim, int DelayLim );\n\n// extern Lpk_Fun_t *    Lpk_FunDup( Lpk_Fun_t * p, unsigned * pTruth );\n\n// extern int            Lpk_FunSuppMinimize( Lpk_Fun_t * p );\n\n// extern void           Lpk_FunComputeCofSupps( Lpk_Fun_t * p );\n\n// extern int            Lpk_SuppDelay( unsigned uSupp, int * pDelays );\n\n// extern int            Lpk_SuppToVars( unsigned uBoundSet, char * pVars );\n\n\n\n/*=== lpkCut.c =========================================================*/\n// extern unsigned *     Lpk_CutTruth( Lpk_Man_t * p, Lpk_Cut_t * pCut, int fInv );\n\n// extern int            Lpk_NodeCuts( Lpk_Man_t * p );\n\n/*=== lpkMap.c =========================================================*/\n// extern Lpk_Man_t *    Lpk_ManStart( Lpk_Par_t * pPars );\n\n// extern void           Lpk_ManStop( Lpk_Man_t * p );\n\n/*=== lpkMap.c =========================================================*/\n// extern If_Obj_t *     Lpk_MapPrime( Lpk_Man_t * p, unsigned * pTruth, int nVars, If_Obj_t ** ppLeaves );\n\n// extern If_Obj_t *     Lpk_MapTree_rec( Lpk_Man_t * p, Kit_DsdNtk_t * pNtk, If_Obj_t ** ppLeaves, int iLit, If_Obj_t * pResult );\n\n/*=== lpkMulti.c =======================================================*/\n// extern If_Obj_t *     Lpk_MapTreeMulti( Lpk_Man_t * p, unsigned * pTruth, int nLeaves, If_Obj_t ** ppLeaves );\n\n/*=== lpkMux.c =========================================================*/\n// extern If_Obj_t *     Lpk_MapTreeMux_rec( Lpk_Man_t * p, unsigned * pTruth, int nVars, If_Obj_t ** ppLeaves );\n\n// extern If_Obj_t *     Lpk_MapSuppRedDec_rec( Lpk_Man_t * p, unsigned * pTruth, int nVars, If_Obj_t ** ppLeaves );\n\n/*=== lpkSets.c =========================================================*/\n// extern unsigned       Lpk_MapSuppRedDecSelect( Lpk_Man_t * p, unsigned * pTruth, int nVars, int * piVar, int * piVarReused );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

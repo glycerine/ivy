@@ -1,0 +1,902 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c",
+  "SHA256": "80d7f8514166291d3ba7bc9cebb371591d0496feac8983fc264b9f4f4653c78e",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 102,
+        "Column": 1,
+        "ByteOffset": 4048
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_zddIte",
+      "Start": 5655,
+      "End": 5885,
+      "BodyStart": 5737,
+      "Original": "DdNode *\nCudd_zddIte(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * g,\n  DdNode * h)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddZddIte(dd, f, g, h);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_zddIte(dd *DdManager, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddZddIte(dd, f, g, h);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddUnion",
+      "Start": 6274,
+      "End": 6491,
+      "BodyStart": 6344,
+      "Original": "DdNode *\nCudd_zddUnion(\n  DdManager * dd,\n  DdNode * P,\n  DdNode * Q)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddZddUnion(dd, P, Q);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_zddUnion(dd *DdManager, P *DdNode, Q *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddZddUnion(dd, P, Q);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddIntersect",
+      "Start": 6896,
+      "End": 7121,
+      "BodyStart": 6970,
+      "Original": "DdNode *\nCudd_zddIntersect(\n  DdManager * dd,\n  DdNode * P,\n  DdNode * Q)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddZddIntersect(dd, P, Q);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_zddIntersect(dd *DdManager, P *DdNode, Q *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddZddIntersect(dd, P, Q);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddDiff",
+      "Start": 7543,
+      "End": 7758,
+      "BodyStart": 7612,
+      "Original": "DdNode *\nCudd_zddDiff(\n  DdManager * dd,\n  DdNode * P,\n  DdNode * Q)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddZddDiff(dd, P, Q);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_zddDiff(dd *DdManager, P *DdNode, Q *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddZddDiff(dd, P, Q);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddDiffConst",
+      "Start": 8262,
+      "End": 9374,
+      "BodyStart": 8337,
+      "Original": "DdNode *\nCudd_zddDiffConst(\n  DdManager * zdd,\n  DdNode * P,\n  DdNode * Q)\n{\n    int         p_top, q_top;\n    DdNode      *empty = DD_ZERO(zdd), *t, *res;\n    DdManager   *table = zdd;\n\n    statLine(zdd);\n    if (P == empty)\n        return(empty);\n    if (Q == empty)\n        return(P);\n    if (P == Q)\n        return(empty);\n\n    /* Check cache.  The cache is shared by cuddZddDiff(). */\n    res = cuddCacheLookup2Zdd(table, cuddZddDiff, P, Q);\n    if (res != NULL)\n        return(res);\n\n    if (cuddIsConstant(P))\n        p_top = P-\u003eindex;\n    else\n        p_top = zdd-\u003epermZ[P-\u003eindex];\n    if (cuddIsConstant(Q))\n        q_top = Q-\u003eindex;\n    else\n        q_top = zdd-\u003epermZ[Q-\u003eindex];\n    if (p_top \u003c q_top) {\n        res = DD_NON_CONSTANT;\n    } else if (p_top \u003e q_top) {\n        res = Cudd_zddDiffConst(zdd, P, cuddE(Q));\n    } else {\n        t = Cudd_zddDiffConst(zdd, cuddT(P), cuddT(Q));\n        if (t != empty)\n            res = DD_NON_CONSTANT;\n        else\n            res = Cudd_zddDiffConst(zdd, cuddE(P), cuddE(Q));\n    }\n\n    cuddCacheInsert2(table, cuddZddDiff, P, Q, res);\n\n    return(res);\n\n}",
+      "Draft": "func Cudd_zddDiffConst(zdd *DdManager, P *DdNode, Q *DdNode) *DdNode {\n    var p_top, q_top int32;\n    // inlining of macro DD_ZERO\n    var empty *DdNode  = ((zdd).zero), *t, *res;\n    var table *DdManager  = zdd;\n\n    statLine(zdd);\n    if P == empty {\n        return(empty); }\n    if Q == empty {\n        return(P); }\n    if P == Q {\n        return(empty); }\n\n    /* Check cache.  The cache is shared by cuddZddDiff(). */\n    res = cuddCacheLookup2Zdd(table, cuddZddDiff, P, Q);\n    if res != nil {\n        return(res); }\n\n    // inlining of macro cuddIsConstant\n    if (P).index == CUDD_CONST_INDEX {\n        p_top = P.index;\n    } else {\n        p_top = zdd.permZ[P.index]; }\n    // inlining of macro cuddIsConstant\n    if (Q).index == CUDD_CONST_INDEX {\n        q_top = Q.index;\n    } else {\n        q_top = zdd.permZ[Q.index]; }\n    if p_top \u003c q_top {\n        res = DD_NON_CONSTANT;\n    } else if p_top \u003e q_top {\n        // inlining of macro cuddE\n        res = Cudd_zddDiffConst(zdd, P, ((Q).type.kids.E));\n    } else {\n        // inlining of macro cuddT\n        t = Cudd_zddDiffConst(zdd, ((P).type.kids.T), ((Q).type.kids.T));\n        if t != empty {\n            res = DD_NON_CONSTANT;\n        } else {\n            // inlining of macro cuddE\n            res = Cudd_zddDiffConst(zdd, ((P).type.kids.E), ((Q).type.kids.E)); }\n    }\n\n    cuddCacheInsert2(table, cuddZddDiff, P, Q, res);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddSubset1",
+      "Start": 9945,
+      "End": 10166,
+      "BodyStart": 10015,
+      "Original": "DdNode *\nCudd_zddSubset1(\n  DdManager * dd,\n  DdNode * P,\n  int  var)\n{\n    DdNode      *r;\n\n    do {\n        dd-\u003ereordered = 0;\n        r = cuddZddSubset1(dd, P, var);\n    } while (dd-\u003ereordered == 1);\n\n    return(r);\n\n}",
+      "Draft": "func Cudd_zddSubset1(dd *DdManager, P *DdNode, var int32) *DdNode {\n    var r *DdNode;\n\n    for {\n        dd.reordered = 0;\n        r = cuddZddSubset1(dd, P, var);\n    \nif !(dd.reordered == 1) { break }\n} \n\n    return(r);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddSubset0",
+      "Start": 10734,
+      "End": 10955,
+      "BodyStart": 10804,
+      "Original": "DdNode *\nCudd_zddSubset0(\n  DdManager * dd,\n  DdNode * P,\n  int  var)\n{\n    DdNode      *r;\n\n    do {\n        dd-\u003ereordered = 0;\n        r = cuddZddSubset0(dd, P, var);\n    } while (dd-\u003ereordered == 1);\n\n    return(r);\n\n}",
+      "Draft": "func Cudd_zddSubset0(dd *DdManager, P *DdNode, var int32) *DdNode {\n    var r *DdNode;\n\n    for {\n        dd.reordered = 0;\n        r = cuddZddSubset0(dd, P, var);\n    \nif !(dd.reordered == 1) { break }\n} \n\n    return(r);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddChange",
+      "Start": 11390,
+      "End": 11682,
+      "BodyStart": 11459,
+      "Original": "DdNode *\nCudd_zddChange(\n  DdManager * dd,\n  DdNode * P,\n  int  var)\n{\n    DdNode      *res;\n\n    if ((unsigned int) var \u003e= CUDD_MAXINDEX - 1) return(NULL);\n    \n    do {\n        dd-\u003ereordered = 0;\n        res = cuddZddChange(dd, P, var);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_zddChange(dd *DdManager, P *DdNode, var int32) *DdNode {\n    var res *DdNode;\n\n    if (unsigned int) var \u003e= CUDD_MAXINDEX - 1 { return(nil); }\n    \n    for {\n        dd.reordered = 0;\n        res = cuddZddChange(dd, P, var);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddZddIte",
+      "Start": 12235,
+      "End": 15088,
+      "BodyStart": 12316,
+      "Original": "DdNode *\ncuddZddIte(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * g,\n  DdNode * h)\n{\n    DdNode *tautology, *empty;\n    DdNode *r,*Gv,*Gvn,*Hv,*Hvn,*t,*e;\n    unsigned int topf,topg,toph,v,top;\n    int index;\n\n    statLine(dd);\n    /* Trivial cases. */\n    /* One variable cases. */\n    if (f == (empty = DD_ZERO(dd))) {   /* ITE(0,G,H) = H */\n        return(h);\n    }\n    topf = cuddIZ(dd,f-\u003eindex);\n    topg = cuddIZ(dd,g-\u003eindex);\n    toph = cuddIZ(dd,h-\u003eindex);\n    v = ddMin(topg,toph);\n    top  = ddMin(topf,v);\n\n    tautology = (top == CUDD_MAXINDEX) ? DD_ONE(dd) : dd-\u003euniv[top];\n    if (f == tautology) {                       /* ITE(1,G,H) = G */\n        return(g);\n    }\n\n    /* From now on, f is known to not be a constant. */\n    zddVarToConst(f,\u0026g,\u0026h,tautology,empty);\n\n    /* Check remaining one variable cases. */\n    if (g == h) {                       /* ITE(F,G,G) = G */\n        return(g);\n    }\n\n    if (g == tautology) {                       /* ITE(F,1,0) = F */\n        if (h == empty) return(f);\n    }\n\n    /* Check cache. */\n    r = cuddCacheLookupZdd(dd,DD_ZDD_ITE_TAG,f,g,h);\n    if (r != NULL) {\n        return(r);\n    }\n\n    /* Recompute these because they may have changed in zddVarToConst. */\n    topg = cuddIZ(dd,g-\u003eindex);\n    toph = cuddIZ(dd,h-\u003eindex);\n    v = ddMin(topg,toph);\n\n    if (topf \u003c v) {\n        r = cuddZddIte(dd,cuddE(f),g,h);\n        if (r == NULL) return(NULL);\n    } else if (topf \u003e v) {\n        if (topg \u003e v) {\n            Gvn = g;\n            index = h-\u003eindex;\n        } else {\n            Gvn = cuddE(g);\n            index = g-\u003eindex;\n        }\n        if (toph \u003e v) {\n            Hv = empty; Hvn = h;\n        } else {\n            Hv = cuddT(h); Hvn = cuddE(h);\n        }\n        e = cuddZddIte(dd,f,Gvn,Hvn);\n        if (e == NULL) return(NULL);\n        cuddRef(e);\n        r = cuddZddGetNode(dd,index,Hv,e);\n        if (r == NULL) {\n            Cudd_RecursiveDerefZdd(dd,e);\n            return(NULL);\n        }\n        cuddDeref(e);\n    } else {\n        index = f-\u003eindex;\n        if (topg \u003e v) {\n            Gv = empty; Gvn = g;\n        } else {\n            Gv = cuddT(g); Gvn = cuddE(g);\n        }\n        if (toph \u003e v) {\n            Hv = empty; Hvn = h;\n        } else {\n            Hv = cuddT(h); Hvn = cuddE(h);\n        }\n        e = cuddZddIte(dd,cuddE(f),Gvn,Hvn);\n        if (e == NULL) return(NULL);\n        cuddRef(e);\n        t = cuddZddIte(dd,cuddT(f),Gv,Hv);\n        if (t == NULL) {\n            Cudd_RecursiveDerefZdd(dd,e);\n            return(NULL);\n        }\n        cuddRef(t);\n        r = cuddZddGetNode(dd,index,t,e);\n        if (r == NULL) {\n            Cudd_RecursiveDerefZdd(dd,e);\n            Cudd_RecursiveDerefZdd(dd,t);\n            return(NULL);\n        }\n        cuddDeref(t);\n        cuddDeref(e);\n    }\n\n    cuddCacheInsert(dd,DD_ZDD_ITE_TAG,f,g,h,r);\n\n    return(r);\n\n}",
+      "Draft": "func cuddZddIte(dd *DdManager, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var tautology, empty *DdNode;\n    var r, Gv, Gvn, Hv, Hvn, t, e *DdNode;\n    unsigned int topf,topg,toph,v,top;\n    var index int32;\n\n    statLine(dd);\n    /* Trivial cases. */\n    /* One variable cases. */\n    // inlining of macro DD_ZERO\n    if f == (empty = ((dd).zero)) {   /* ITE(0,G,H) = H */\n        return(h);\n    }\n    // inlining of macro cuddIZ\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        topf = int32((f.index));\n    } else {\n        topf = (dd).permZ[(f.index)];\n    }\n    // inlining of macro cuddIZ\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).permZ[(g.index)];\n    }\n    // inlining of macro cuddIZ\n    \n    if (h.index)==CUDD_CONST_INDEX {\n        toph = int32((h.index));\n    } else {\n        toph = (dd).permZ[(h.index)];\n    }\n    // inlining of macro ddMin\n    \n    if (toph) \u003c (topg) {\n        v = (toph);\n    } else {\n        v = (topg);\n    }\n    // inlining of macro ddMin\n    \n    if (v) \u003c (topf) {\n        top = (v);\n    } else {\n        top = (topf);\n    }\n\n    if top == CUDD_MAXINDEX {\n        // inlining of macro DD_ONE\n        tautology = ((dd).one);\n    } else {\n        tautology = dd.univ[top];\n    }\n    if f == tautology {                       /* ITE(1,G,H) = G */\n        return(g);\n    }\n\n    /* From now on, f is known to not be a constant. */\n    zddVarToConst(f,\u0026g,\u0026h,tautology,empty);\n\n    /* Check remaining one variable cases. */\n    if g == h {                       /* ITE(F,G,G) = G */\n        return(g);\n    }\n\n    if g == tautology {                       /* ITE(F,1,0) = F */\n        if h == empty { return(f); }\n    }\n\n    /* Check cache. */\n    r = cuddCacheLookupZdd(dd,DD_ZDD_ITE_TAG,f,g,h);\n    if r != nil {\n        return(r);\n    }\n\n    /* Recompute these because they may have changed in zddVarToConst. */\n    // inlining of macro cuddIZ\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).permZ[(g.index)];\n    }\n    // inlining of macro cuddIZ\n    \n    if (h.index)==CUDD_CONST_INDEX {\n        toph = int32((h.index));\n    } else {\n        toph = (dd).permZ[(h.index)];\n    }\n    // inlining of macro ddMin\n    \n    if (toph) \u003c (topg) {\n        v = (toph);\n    } else {\n        v = (topg);\n    }\n\n    if topf \u003c v {\n        // inlining of macro cuddE\n        r = cuddZddIte(dd,((f).type.kids.E),g,h);\n        if r == nil { return(nil); }\n    } else if topf \u003e v {\n        if topg \u003e v {\n            Gvn = g;\n            index = h.index;\n        } else {\n            // inlining of macro cuddE\n            Gvn = ((g).type.kids.E);\n            index = g.index;\n        }\n        if toph \u003e v {\n            Hv = empty; Hvn = h;\n        } else {\n            // inlining of macro cuddT\n            // inlining of macro cuddE\n            Hv = ((h).type.kids.T); Hvn = ((h).type.kids.E);\n        }\n        e = cuddZddIte(dd,f,Gvn,Hvn);\n        if e == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        r = cuddZddGetNode(dd,index,Hv,e);\n        if r == nil {\n            Cudd_RecursiveDerefZdd(dd,e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    } else {\n        index = f.index;\n        if topg \u003e v {\n            Gv = empty; Gvn = g;\n        } else {\n            // inlining of macro cuddT\n            // inlining of macro cuddE\n            Gv = ((g).type.kids.T); Gvn = ((g).type.kids.E);\n        }\n        if toph \u003e v {\n            Hv = empty; Hvn = h;\n        } else {\n            // inlining of macro cuddT\n            // inlining of macro cuddE\n            Hv = ((h).type.kids.T); Hvn = ((h).type.kids.E);\n        }\n        // inlining of macro cuddE\n        e = cuddZddIte(dd,((f).type.kids.E),Gvn,Hvn);\n        if e == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        // inlining of macro cuddT\n        t = cuddZddIte(dd,((f).type.kids.T),Gv,Hv);\n        if t == nil {\n            Cudd_RecursiveDerefZdd(dd,e);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        r = cuddZddGetNode(dd,index,t,e);\n        if r == nil {\n            Cudd_RecursiveDerefZdd(dd,e);\n            Cudd_RecursiveDerefZdd(dd,t);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert(dd,DD_ZDD_ITE_TAG,f,g,h,r);\n\n    return(r);\n\n}"
+    },
+    {
+      "Name": "cuddZddUnion",
+      "Start": 15394,
+      "End": 17304,
+      "BodyStart": 15464,
+      "Original": "DdNode *\ncuddZddUnion(\n  DdManager * zdd,\n  DdNode * P,\n  DdNode * Q)\n{\n    int         p_top, q_top;\n    DdNode      *empty = DD_ZERO(zdd), *t, *e, *res;\n    DdManager   *table = zdd;\n\n    statLine(zdd);\n    if (P == empty)\n        return(Q);\n    if (Q == empty)\n        return(P);\n    if (P == Q)\n        return(P);\n\n    /* Check cache */\n    res = cuddCacheLookup2Zdd(table, cuddZddUnion, P, Q);\n    if (res != NULL)\n        return(res);\n\n    if (cuddIsConstant(P))\n        p_top = P-\u003eindex;\n    else\n        p_top = zdd-\u003epermZ[P-\u003eindex];\n    if (cuddIsConstant(Q))\n        q_top = Q-\u003eindex;\n    else\n        q_top = zdd-\u003epermZ[Q-\u003eindex];\n    if (p_top \u003c q_top) {\n        e = cuddZddUnion(zdd, cuddE(P), Q);\n        if (e == NULL) return (NULL);\n        cuddRef(e);\n        res = cuddZddGetNode(zdd, P-\u003eindex, cuddT(P), e);\n        if (res == NULL) {\n            Cudd_RecursiveDerefZdd(table, e);\n            return(NULL);\n        }\n        cuddDeref(e);\n    } else if (p_top \u003e q_top) {\n        e = cuddZddUnion(zdd, P, cuddE(Q));\n        if (e == NULL) return(NULL);\n        cuddRef(e);\n        res = cuddZddGetNode(zdd, Q-\u003eindex, cuddT(Q), e);\n        if (res == NULL) {\n            Cudd_RecursiveDerefZdd(table, e);\n            return(NULL);\n        }\n        cuddDeref(e);\n    } else {\n        t = cuddZddUnion(zdd, cuddT(P), cuddT(Q));\n        if (t == NULL) return(NULL);\n        cuddRef(t);\n        e = cuddZddUnion(zdd, cuddE(P), cuddE(Q));\n        if (e == NULL) {\n            Cudd_RecursiveDerefZdd(table, t);\n            return(NULL);\n        }\n        cuddRef(e);\n        res = cuddZddGetNode(zdd, P-\u003eindex, t, e);\n        if (res == NULL) {\n            Cudd_RecursiveDerefZdd(table, t);\n            Cudd_RecursiveDerefZdd(table, e);\n            return(NULL);\n        }\n        cuddDeref(t);\n        cuddDeref(e);\n    }\n\n    cuddCacheInsert2(table, cuddZddUnion, P, Q, res);\n\n    return(res);\n\n}",
+      "Draft": "func cuddZddUnion(zdd *DdManager, P *DdNode, Q *DdNode) *DdNode {\n    var p_top, q_top int32;\n    // inlining of macro DD_ZERO\n    var empty *DdNode  = ((zdd).zero), *t, *e, *res;\n    var table *DdManager  = zdd;\n\n    statLine(zdd);\n    if P == empty {\n        return(Q); }\n    if Q == empty {\n        return(P); }\n    if P == Q {\n        return(P); }\n\n    /* Check cache */\n    res = cuddCacheLookup2Zdd(table, cuddZddUnion, P, Q);\n    if res != nil {\n        return(res); }\n\n    // inlining of macro cuddIsConstant\n    if (P).index == CUDD_CONST_INDEX {\n        p_top = P.index;\n    } else {\n        p_top = zdd.permZ[P.index]; }\n    // inlining of macro cuddIsConstant\n    if (Q).index == CUDD_CONST_INDEX {\n        q_top = Q.index;\n    } else {\n        q_top = zdd.permZ[Q.index]; }\n    if p_top \u003c q_top {\n        // inlining of macro cuddE\n        e = cuddZddUnion(zdd, ((P).type.kids.E), Q);\n        if e == nil { return (nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        // inlining of macro cuddT\n        res = cuddZddGetNode(zdd, P.index, ((P).type.kids.T), e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(table, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    } else if p_top \u003e q_top {\n        // inlining of macro cuddE\n        e = cuddZddUnion(zdd, P, ((Q).type.kids.E));\n        if e == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        // inlining of macro cuddT\n        res = cuddZddGetNode(zdd, Q.index, ((Q).type.kids.T), e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(table, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    } else {\n        // inlining of macro cuddT\n        t = cuddZddUnion(zdd, ((P).type.kids.T), ((Q).type.kids.T));\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        // inlining of macro cuddE\n        e = cuddZddUnion(zdd, ((P).type.kids.E), ((Q).type.kids.E));\n        if e == nil {\n            Cudd_RecursiveDerefZdd(table, t);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        res = cuddZddGetNode(zdd, P.index, t, e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(table, t);\n            Cudd_RecursiveDerefZdd(table, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert2(table, cuddZddUnion, P, Q, res);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddZddIntersect",
+      "Start": 17616,
+      "End": 19152,
+      "BodyStart": 17690,
+      "Original": "DdNode *\ncuddZddIntersect(\n  DdManager * zdd,\n  DdNode * P,\n  DdNode * Q)\n{\n    int         p_top, q_top;\n    DdNode      *empty = DD_ZERO(zdd), *t, *e, *res;\n    DdManager   *table = zdd;\n\n    statLine(zdd);\n    if (P == empty)\n        return(empty);\n    if (Q == empty)\n        return(empty);\n    if (P == Q)\n        return(P);\n\n    /* Check cache. */\n    res = cuddCacheLookup2Zdd(table, cuddZddIntersect, P, Q);\n    if (res != NULL)\n        return(res);\n\n    if (cuddIsConstant(P))\n        p_top = P-\u003eindex;\n    else\n        p_top = zdd-\u003epermZ[P-\u003eindex];\n    if (cuddIsConstant(Q))\n        q_top = Q-\u003eindex;\n    else\n        q_top = zdd-\u003epermZ[Q-\u003eindex];\n    if (p_top \u003c q_top) {\n        res = cuddZddIntersect(zdd, cuddE(P), Q);\n        if (res == NULL) return(NULL);\n    } else if (p_top \u003e q_top) {\n        res = cuddZddIntersect(zdd, P, cuddE(Q));\n        if (res == NULL) return(NULL);\n    } else {\n        t = cuddZddIntersect(zdd, cuddT(P), cuddT(Q));\n        if (t == NULL) return(NULL);\n        cuddRef(t);\n        e = cuddZddIntersect(zdd, cuddE(P), cuddE(Q));\n        if (e == NULL) {\n            Cudd_RecursiveDerefZdd(table, t);\n            return(NULL);\n        }\n        cuddRef(e);\n        res = cuddZddGetNode(zdd, P-\u003eindex, t, e);\n        if (res == NULL) {\n            Cudd_RecursiveDerefZdd(table, t);\n            Cudd_RecursiveDerefZdd(table, e);\n            return(NULL);\n        }\n        cuddDeref(t);\n        cuddDeref(e);\n    }\n\n    cuddCacheInsert2(table, cuddZddIntersect, P, Q, res);\n\n    return(res);\n\n}",
+      "Draft": "func cuddZddIntersect(zdd *DdManager, P *DdNode, Q *DdNode) *DdNode {\n    var p_top, q_top int32;\n    // inlining of macro DD_ZERO\n    var empty *DdNode  = ((zdd).zero), *t, *e, *res;\n    var table *DdManager  = zdd;\n\n    statLine(zdd);\n    if P == empty {\n        return(empty); }\n    if Q == empty {\n        return(empty); }\n    if P == Q {\n        return(P); }\n\n    /* Check cache. */\n    res = cuddCacheLookup2Zdd(table, cuddZddIntersect, P, Q);\n    if res != nil {\n        return(res); }\n\n    // inlining of macro cuddIsConstant\n    if (P).index == CUDD_CONST_INDEX {\n        p_top = P.index;\n    } else {\n        p_top = zdd.permZ[P.index]; }\n    // inlining of macro cuddIsConstant\n    if (Q).index == CUDD_CONST_INDEX {\n        q_top = Q.index;\n    } else {\n        q_top = zdd.permZ[Q.index]; }\n    if p_top \u003c q_top {\n        // inlining of macro cuddE\n        res = cuddZddIntersect(zdd, ((P).type.kids.E), Q);\n        if res == nil { return(nil); }\n    } else if p_top \u003e q_top {\n        // inlining of macro cuddE\n        res = cuddZddIntersect(zdd, P, ((Q).type.kids.E));\n        if res == nil { return(nil); }\n    } else {\n        // inlining of macro cuddT\n        t = cuddZddIntersect(zdd, ((P).type.kids.T), ((Q).type.kids.T));\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        // inlining of macro cuddE\n        e = cuddZddIntersect(zdd, ((P).type.kids.E), ((Q).type.kids.E));\n        if e == nil {\n            Cudd_RecursiveDerefZdd(table, t);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        res = cuddZddGetNode(zdd, P.index, t, e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(table, t);\n            Cudd_RecursiveDerefZdd(table, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert2(table, cuddZddIntersect, P, Q, res);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddZddDiff",
+      "Start": 19463,
+      "End": 21240,
+      "BodyStart": 19532,
+      "Original": "DdNode *\ncuddZddDiff(\n  DdManager * zdd,\n  DdNode * P,\n  DdNode * Q)\n{\n    int         p_top, q_top;\n    DdNode      *empty = DD_ZERO(zdd), *t, *e, *res;\n    DdManager   *table = zdd;\n\n    statLine(zdd);\n    if (P == empty)\n        return(empty);\n    if (Q == empty)\n        return(P);\n    if (P == Q)\n        return(empty);\n\n    /* Check cache.  The cache is shared by Cudd_zddDiffConst(). */\n    res = cuddCacheLookup2Zdd(table, cuddZddDiff, P, Q);\n    if (res != NULL \u0026\u0026 res != DD_NON_CONSTANT)\n        return(res);\n\n    if (cuddIsConstant(P))\n        p_top = P-\u003eindex;\n    else\n        p_top = zdd-\u003epermZ[P-\u003eindex];\n    if (cuddIsConstant(Q))\n        q_top = Q-\u003eindex;\n    else\n        q_top = zdd-\u003epermZ[Q-\u003eindex];\n    if (p_top \u003c q_top) {\n        e = cuddZddDiff(zdd, cuddE(P), Q);\n        if (e == NULL) return(NULL);\n        cuddRef(e);\n        res = cuddZddGetNode(zdd, P-\u003eindex, cuddT(P), e);\n        if (res == NULL) {\n            Cudd_RecursiveDerefZdd(table, e);\n            return(NULL);\n        }\n        cuddDeref(e);\n    } else if (p_top \u003e q_top) {\n        res = cuddZddDiff(zdd, P, cuddE(Q));\n        if (res == NULL) return(NULL);\n    } else {\n        t = cuddZddDiff(zdd, cuddT(P), cuddT(Q));\n        if (t == NULL) return(NULL);\n        cuddRef(t);\n        e = cuddZddDiff(zdd, cuddE(P), cuddE(Q));\n        if (e == NULL) {\n            Cudd_RecursiveDerefZdd(table, t);\n            return(NULL);\n        }\n        cuddRef(e);\n        res = cuddZddGetNode(zdd, P-\u003eindex, t, e);\n        if (res == NULL) {\n            Cudd_RecursiveDerefZdd(table, t);\n            Cudd_RecursiveDerefZdd(table, e);\n            return(NULL);\n        }\n        cuddDeref(t);\n        cuddDeref(e);\n    }\n\n    cuddCacheInsert2(table, cuddZddDiff, P, Q, res);\n\n    return(res);\n\n}",
+      "Draft": "func cuddZddDiff(zdd *DdManager, P *DdNode, Q *DdNode) *DdNode {\n    var p_top, q_top int32;\n    // inlining of macro DD_ZERO\n    var empty *DdNode  = ((zdd).zero), *t, *e, *res;\n    var table *DdManager  = zdd;\n\n    statLine(zdd);\n    if P == empty {\n        return(empty); }\n    if Q == empty {\n        return(P); }\n    if P == Q {\n        return(empty); }\n\n    /* Check cache.  The cache is shared by Cudd_zddDiffConst(). */\n    res = cuddCacheLookup2Zdd(table, cuddZddDiff, P, Q);\n    if res != nil \u0026\u0026 res != DD_NON_CONSTANT {\n        return(res); }\n\n    // inlining of macro cuddIsConstant\n    if (P).index == CUDD_CONST_INDEX {\n        p_top = P.index;\n    } else {\n        p_top = zdd.permZ[P.index]; }\n    // inlining of macro cuddIsConstant\n    if (Q).index == CUDD_CONST_INDEX {\n        q_top = Q.index;\n    } else {\n        q_top = zdd.permZ[Q.index]; }\n    if p_top \u003c q_top {\n        // inlining of macro cuddE\n        e = cuddZddDiff(zdd, ((P).type.kids.E), Q);\n        if e == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        // inlining of macro cuddT\n        res = cuddZddGetNode(zdd, P.index, ((P).type.kids.T), e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(table, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    } else if p_top \u003e q_top {\n        // inlining of macro cuddE\n        res = cuddZddDiff(zdd, P, ((Q).type.kids.E));\n        if res == nil { return(nil); }\n    } else {\n        // inlining of macro cuddT\n        t = cuddZddDiff(zdd, ((P).type.kids.T), ((Q).type.kids.T));\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        // inlining of macro cuddE\n        e = cuddZddDiff(zdd, ((P).type.kids.E), ((Q).type.kids.E));\n        if e == nil {\n            Cudd_RecursiveDerefZdd(table, t);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        res = cuddZddGetNode(zdd, P.index, t, e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(table, t);\n            Cudd_RecursiveDerefZdd(table, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert2(table, cuddZddDiff, P, Q, res);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddZddChangeAux",
+      "Start": 21548,
+      "End": 22975,
+      "BodyStart": 21625,
+      "Original": "DdNode *\ncuddZddChangeAux(\n  DdManager * zdd,\n  DdNode * P,\n  DdNode * zvar)\n{\n    int         top_var, level;\n    DdNode      *res, *t, *e;\n    DdNode      *base = DD_ONE(zdd);\n    DdNode      *empty = DD_ZERO(zdd);\n\n    statLine(zdd);\n    if (P == empty)\n        return(empty);\n    if (P == base)\n        return(zvar);\n\n    /* Check cache. */\n    res = cuddCacheLookup2Zdd(zdd, cuddZddChangeAux, P, zvar);\n    if (res != NULL)\n        return(res);\n\n    top_var = zdd-\u003epermZ[P-\u003eindex];\n    level = zdd-\u003epermZ[zvar-\u003eindex];\n\n    if (top_var \u003e level) {\n        res = cuddZddGetNode(zdd, zvar-\u003eindex, P, DD_ZERO(zdd));\n        if (res == NULL) return(NULL);\n    } else if (top_var == level) {\n        res = cuddZddGetNode(zdd, zvar-\u003eindex, cuddE(P), cuddT(P));\n        if (res == NULL) return(NULL);\n    } else {\n        t = cuddZddChangeAux(zdd, cuddT(P), zvar);\n        if (t == NULL) return(NULL);\n        cuddRef(t);\n        e = cuddZddChangeAux(zdd, cuddE(P), zvar);\n        if (e == NULL) {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            return(NULL);\n        }\n        cuddRef(e);\n        res = cuddZddGetNode(zdd, P-\u003eindex, t, e);\n        if (res == NULL) {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            Cudd_RecursiveDerefZdd(zdd, e);\n            return(NULL);\n        }\n        cuddDeref(t);\n        cuddDeref(e);\n    }\n\n    cuddCacheInsert2(zdd, cuddZddChangeAux, P, zvar, res);\n\n    return(res);\n\n}",
+      "Draft": "func cuddZddChangeAux(zdd *DdManager, P *DdNode, zvar *DdNode) *DdNode {\n    var top_var, level int32;\n    var res, t, e *DdNode;\n    // inlining of macro DD_ONE\n    var base *DdNode  = ((zdd).one);\n    // inlining of macro DD_ZERO\n    var empty *DdNode  = ((zdd).zero);\n\n    statLine(zdd);\n    if P == empty {\n        return(empty); }\n    if P == base {\n        return(zvar); }\n\n    /* Check cache. */\n    res = cuddCacheLookup2Zdd(zdd, cuddZddChangeAux, P, zvar);\n    if res != nil {\n        return(res); }\n\n    top_var = zdd.permZ[P.index];\n    level = zdd.permZ[zvar.index];\n\n    if top_var \u003e level {\n        // inlining of macro DD_ZERO\n        res = cuddZddGetNode(zdd, zvar.index, P, ((zdd).zero));\n        if res == nil { return(nil); }\n    } else if top_var == level {\n        // inlining of macro cuddE\n        // inlining of macro cuddT\n        res = cuddZddGetNode(zdd, zvar.index, ((P).type.kids.E), ((P).type.kids.T));\n        if res == nil { return(nil); }\n    } else {\n        // inlining of macro cuddT\n        t = cuddZddChangeAux(zdd, ((P).type.kids.T), zvar);\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        // inlining of macro cuddE\n        e = cuddZddChangeAux(zdd, ((P).type.kids.E), zvar);\n        if e == nil {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        res = cuddZddGetNode(zdd, P.index, t, e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            Cudd_RecursiveDerefZdd(zdd, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert2(zdd, cuddZddChangeAux, P, zvar, res);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddZddSubset1",
+      "Start": 23742,
+      "End": 24309,
+      "BodyStart": 23811,
+      "Original": "DdNode *\ncuddZddSubset1(\n  DdManager * dd,\n  DdNode * P,\n  int  var)\n{\n    DdNode      *zvar, *r;\n    DdNode      *base, *empty;\n\n    base = DD_ONE(dd);\n    empty = DD_ZERO(dd);\n\n    zvar = cuddUniqueInterZdd(dd, var, base, empty);\n    if (zvar == NULL) {\n        return(NULL);\n    } else {\n        cuddRef(zvar);\n        r = zdd_subset1_aux(dd, P, zvar);\n        if (r == NULL) {\n            Cudd_RecursiveDerefZdd(dd, zvar);\n            return(NULL);\n        }\n        cuddRef(r);\n        Cudd_RecursiveDerefZdd(dd, zvar);\n    }\n\n    cuddDeref(r);\n    return(r);\n\n}",
+      "Draft": "func cuddZddSubset1(dd *DdManager, P *DdNode, var int32) *DdNode {\n    var zvar, r *DdNode;\n    var base, empty *DdNode;\n\n    // inlining of macro DD_ONE\n    base = ((dd).one);\n    // inlining of macro DD_ZERO\n    empty = ((dd).zero);\n\n    zvar = cuddUniqueInterZdd(dd, var, base, empty);\n    if zvar == nil {\n        return(nil);\n    } else {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zvar).ref);\n        r = zdd_subset1_aux(dd, P, zvar);\n        if r == nil {\n            Cudd_RecursiveDerefZdd(dd, zvar);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(r).ref);\n        Cudd_RecursiveDerefZdd(dd, zvar);\n    }\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(r).ref);\n    return(r);\n\n}"
+    },
+    {
+      "Name": "cuddZddSubset0",
+      "Start": 25073,
+      "End": 25640,
+      "BodyStart": 25142,
+      "Original": "DdNode *\ncuddZddSubset0(\n  DdManager * dd,\n  DdNode * P,\n  int  var)\n{\n    DdNode      *zvar, *r;\n    DdNode      *base, *empty;\n\n    base = DD_ONE(dd);\n    empty = DD_ZERO(dd);\n\n    zvar = cuddUniqueInterZdd(dd, var, base, empty);\n    if (zvar == NULL) {\n        return(NULL);\n    } else {\n        cuddRef(zvar);\n        r = zdd_subset0_aux(dd, P, zvar);\n        if (r == NULL) {\n            Cudd_RecursiveDerefZdd(dd, zvar);\n            return(NULL);\n        }\n        cuddRef(r);\n        Cudd_RecursiveDerefZdd(dd, zvar);\n    }\n\n    cuddDeref(r);\n    return(r);\n\n}",
+      "Draft": "func cuddZddSubset0(dd *DdManager, P *DdNode, var int32) *DdNode {\n    var zvar, r *DdNode;\n    var base, empty *DdNode;\n\n    // inlining of macro DD_ONE\n    base = ((dd).one);\n    // inlining of macro DD_ZERO\n    empty = ((dd).zero);\n\n    zvar = cuddUniqueInterZdd(dd, var, base, empty);\n    if zvar == nil {\n        return(nil);\n    } else {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zvar).ref);\n        r = zdd_subset0_aux(dd, P, zvar);\n        if r == nil {\n            Cudd_RecursiveDerefZdd(dd, zvar);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(r).ref);\n        Cudd_RecursiveDerefZdd(dd, zvar);\n    }\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(r).ref);\n    return(r);\n\n}"
+    },
+    {
+      "Name": "cuddZddChange",
+      "Start": 26270,
+      "End": 26718,
+      "BodyStart": 26338,
+      "Original": "DdNode *\ncuddZddChange(\n  DdManager * dd,\n  DdNode * P,\n  int  var)\n{\n    DdNode      *zvar, *res;\n\n    zvar = cuddUniqueInterZdd(dd, var, DD_ONE(dd), DD_ZERO(dd));\n    if (zvar == NULL) return(NULL);\n    cuddRef(zvar);\n\n    res = cuddZddChangeAux(dd, P, zvar);\n    if (res == NULL) {\n        Cudd_RecursiveDerefZdd(dd,zvar);\n        return(NULL);\n    }\n    cuddRef(res);\n    Cudd_RecursiveDerefZdd(dd,zvar);\n    cuddDeref(res);\n    return(res);\n\n}",
+      "Draft": "func cuddZddChange(dd *DdManager, P *DdNode, var int32) *DdNode {\n    var zvar, res *DdNode;\n\n    // inlining of macro DD_ONE\n    // inlining of macro DD_ZERO\n    zvar = cuddUniqueInterZdd(dd, var, ((dd).one), ((dd).zero));\n    if zvar == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(zvar).ref);\n\n    res = cuddZddChangeAux(dd, P, zvar);\n    if res == nil {\n        Cudd_RecursiveDerefZdd(dd,zvar);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(res).ref);\n    Cudd_RecursiveDerefZdd(dd,zvar);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(res).ref);\n    return(res);\n\n}"
+    },
+    {
+      "Name": "zdd_subset1_aux",
+      "Start": 27271,
+      "End": 28564,
+      "BodyStart": 27354,
+      "Original": "static DdNode *\nzdd_subset1_aux(\n  DdManager * zdd,\n  DdNode * P,\n  DdNode * zvar)\n{\n    int         top_var, level;\n    DdNode      *res, *t, *e;\n    DdNode      *empty;\n\n    statLine(zdd);\n    empty = DD_ZERO(zdd);\n\n    /* Check cache. */\n    res = cuddCacheLookup2Zdd(zdd, zdd_subset1_aux, P, zvar);\n    if (res != NULL)\n        return(res);\n\n    if (cuddIsConstant(P)) {\n        res = empty;\n        cuddCacheInsert2(zdd, zdd_subset1_aux, P, zvar, res);\n        return(res);\n    }\n\n    top_var = zdd-\u003epermZ[P-\u003eindex];\n    level = zdd-\u003epermZ[zvar-\u003eindex];\n\n    if (top_var \u003e level) {\n        res = empty;\n    } else if (top_var == level) {\n        res = cuddT(P);\n    } else {\n        t = zdd_subset1_aux(zdd, cuddT(P), zvar);\n        if (t == NULL) return(NULL);\n        cuddRef(t);\n        e = zdd_subset1_aux(zdd, cuddE(P), zvar);\n        if (e == NULL) {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            return(NULL);\n        }\n        cuddRef(e);\n        res = cuddZddGetNode(zdd, P-\u003eindex, t, e);\n        if (res == NULL) {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            Cudd_RecursiveDerefZdd(zdd, e);\n            return(NULL);\n        }\n        cuddDeref(t);\n        cuddDeref(e);\n    }\n\n    cuddCacheInsert2(zdd, zdd_subset1_aux, P, zvar, res);\n\n    return(res);\n\n}",
+      "Draft": "func zdd_subset1_aux(zdd *DdManager, P *DdNode, zvar *DdNode) *DdNode {\n    var top_var, level int32;\n    var res, t, e *DdNode;\n    var empty *DdNode;\n\n    statLine(zdd);\n    // inlining of macro DD_ZERO\n    empty = ((zdd).zero);\n\n    /* Check cache. */\n    res = cuddCacheLookup2Zdd(zdd, zdd_subset1_aux, P, zvar);\n    if res != nil {\n        return(res); }\n\n    // inlining of macro cuddIsConstant\n    if (P).index == CUDD_CONST_INDEX {\n        res = empty;\n        cuddCacheInsert2(zdd, zdd_subset1_aux, P, zvar, res);\n        return(res);\n    }\n\n    top_var = zdd.permZ[P.index];\n    level = zdd.permZ[zvar.index];\n\n    if top_var \u003e level {\n        res = empty;\n    } else if top_var == level {\n        // inlining of macro cuddT\n        res = ((P).type.kids.T);\n    } else {\n        // inlining of macro cuddT\n        t = zdd_subset1_aux(zdd, ((P).type.kids.T), zvar);\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        // inlining of macro cuddE\n        e = zdd_subset1_aux(zdd, ((P).type.kids.E), zvar);\n        if e == nil {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        res = cuddZddGetNode(zdd, P.index, t, e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            Cudd_RecursiveDerefZdd(zdd, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert2(zdd, zdd_subset1_aux, P, zvar, res);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "zdd_subset0_aux",
+      "Start": 28877,
+      "End": 30120,
+      "BodyStart": 28960,
+      "Original": "static DdNode *\nzdd_subset0_aux(\n  DdManager * zdd,\n  DdNode * P,\n  DdNode * zvar)\n{\n    int         top_var, level;\n    DdNode      *res, *t, *e;\n\n    statLine(zdd);\n\n    /* Check cache. */\n    res = cuddCacheLookup2Zdd(zdd, zdd_subset0_aux, P, zvar);\n    if (res != NULL)\n        return(res);\n\n    if (cuddIsConstant(P)) {\n        res = P;\n        cuddCacheInsert2(zdd, zdd_subset0_aux, P, zvar, res);\n        return(res);\n    }\n\n    top_var = zdd-\u003epermZ[P-\u003eindex];\n    level = zdd-\u003epermZ[zvar-\u003eindex];\n\n    if (top_var \u003e level) {\n        res = P;\n    }\n    else if (top_var == level) {\n        res = cuddE(P);\n    }\n    else {\n        t = zdd_subset0_aux(zdd, cuddT(P), zvar);\n        if (t == NULL) return(NULL);\n        cuddRef(t);\n        e = zdd_subset0_aux(zdd, cuddE(P), zvar);\n        if (e == NULL) {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            return(NULL);\n        }\n        cuddRef(e);\n        res = cuddZddGetNode(zdd, P-\u003eindex, t, e);\n        if (res == NULL) {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            Cudd_RecursiveDerefZdd(zdd, e);\n            return(NULL);\n        }\n        cuddDeref(t);\n        cuddDeref(e);\n    }\n\n    cuddCacheInsert2(zdd, zdd_subset0_aux, P, zvar, res);\n\n    return(res);\n\n}",
+      "Draft": "func zdd_subset0_aux(zdd *DdManager, P *DdNode, zvar *DdNode) *DdNode {\n    var top_var, level int32;\n    var res, t, e *DdNode;\n\n    statLine(zdd);\n\n    /* Check cache. */\n    res = cuddCacheLookup2Zdd(zdd, zdd_subset0_aux, P, zvar);\n    if res != nil {\n        return(res); }\n\n    // inlining of macro cuddIsConstant\n    if (P).index == CUDD_CONST_INDEX {\n        res = P;\n        cuddCacheInsert2(zdd, zdd_subset0_aux, P, zvar, res);\n        return(res);\n    }\n\n    top_var = zdd.permZ[P.index];\n    level = zdd.permZ[zvar.index];\n\n    if top_var \u003e level {\n        res = P;\n    \n    } else if top_var == level {\n        // inlining of macro cuddE\n        res = ((P).type.kids.E);\n    \n    } else {\n        // inlining of macro cuddT\n        t = zdd_subset0_aux(zdd, ((P).type.kids.T), zvar);\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        // inlining of macro cuddE\n        e = zdd_subset0_aux(zdd, ((P).type.kids.E), zvar);\n        if e == nil {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        res = cuddZddGetNode(zdd, P.index, t, e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            Cudd_RecursiveDerefZdd(zdd, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert2(zdd, zdd_subset0_aux, P, zvar, res);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "zddVarToConst",
+      "Start": 30462,
+      "End": 30783,
+      "BodyStart": 30570,
+      "Original": "static void\nzddVarToConst(\n  DdNode * f,\n  DdNode ** gp,\n  DdNode ** hp,\n  DdNode * base,\n  DdNode * empty)\n{\n    DdNode *g = *gp;\n    DdNode *h = *hp;\n\n    if (f == g) { /* ITE(F,F,H) = ITE(F,1,H) = F + H */\n        *gp = base;\n    }\n\n    if (f == h) { /* ITE(F,G,F) = ITE(F,G,0) = F * G */\n        *hp = empty;\n    }\n\n}",
+      "Draft": "func zddVarToConst(f *DdNode, gp **DdNode, hp **DdNode, base *DdNode, empty *DdNode) {\n    var g *DdNode  = *gp;\n    var h *DdNode  = *hp;\n\n    if f == g { /* ITE(F,F,H) = ITE(F,1,H) = F + H */\n        *gp = base;\n    }\n\n    if f == h { /* ITE(F,G,F) = ITE(F,G,0) = F * G */\n        *hp = empty;\n    }\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::mechanical::do::5722",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5761,
+      "End": 5763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::mechanical::do::6329",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6368,
+      "End": 6370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::mechanical::do::6955",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6994,
+      "End": 6996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::mechanical::do::7597",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 7636,
+      "End": 7638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::mechanical::do::10432",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 10042,
+      "End": 10044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::mechanical::do::11221",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 10831,
+      "End": 10833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::mechanical::do::11946",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11556,
+      "End": 11558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::Cudd_zddIte",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddIte",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5655,
+      "End": 5885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::Cudd_zddUnion",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddUnion",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6274,
+      "End": 6491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::Cudd_zddIntersect",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddIntersect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6896,
+      "End": 7121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::Cudd_zddDiff",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddDiff",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7543,
+      "End": 7758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::Cudd_zddDiffConst",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddDiffConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8262,
+      "End": 9374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::Cudd_zddSubset1",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddSubset1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9945,
+      "End": 10166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::Cudd_zddSubset0",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddSubset0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10734,
+      "End": 10955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::Cudd_zddChange",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddChange",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11390,
+      "End": 11682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::cuddZddIte",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddIte",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12235,
+      "End": 15088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::cuddZddUnion",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddUnion",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15394,
+      "End": 17304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::cuddZddIntersect",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddIntersect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17616,
+      "End": 19152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::cuddZddDiff",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddDiff",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19463,
+      "End": 21240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::cuddZddChangeAux",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddChangeAux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21548,
+      "End": 22975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::cuddZddSubset1",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddSubset1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23742,
+      "End": 24309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::cuddZddSubset0",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddSubset0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25073,
+      "End": 25640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::cuddZddChange",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddChange",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26270,
+      "End": 26718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::zdd_subset1_aux",
+      "Category": "semantic-review",
+      "Symbol": "zdd_subset1_aux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27271,
+      "End": 28564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::zdd_subset0_aux",
+      "Category": "semantic-review",
+      "Symbol": "zdd_subset0_aux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28877,
+      "End": 30120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::zddVarToConst",
+      "Category": "semantic-review",
+      "Symbol": "zddVarToConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30462,
+      "End": 30783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 30838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4048,
+      "End": 4161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::8453",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8453,
+      "End": 8466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::12447",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12447,
+      "End": 12459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::14043",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14043,
+      "End": 14053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::14209",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14209,
+      "End": 14221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::14606",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14606,
+      "End": 14616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::14772",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14772,
+      "End": 14782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::14979",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14979,
+      "End": 14991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::15001",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15001,
+      "End": 15013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::15584",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15584,
+      "End": 15597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::16151",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16151,
+      "End": 16161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::16338",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16338,
+      "End": 16350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::16473",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16473,
+      "End": 16483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::16660",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16660,
+      "End": 16672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::16783",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16783,
+      "End": 16793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::16961",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16961,
+      "End": 16971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::17187",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17187,
+      "End": 17199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::17209",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17209,
+      "End": 17221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::17810",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17810,
+      "End": 17823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::18623",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18623,
+      "End": 18633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::18805",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18805,
+      "End": 18815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::19031",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19031,
+      "End": 19043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::19053",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19053,
+      "End": 19065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::19652",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19652,
+      "End": 19665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::20296",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20296,
+      "End": 20306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::20483",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20483,
+      "End": 20495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::20721",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20721,
+      "End": 20731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::20898",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20898,
+      "End": 20908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::21124",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21124,
+      "End": 21136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::21146",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21146,
+      "End": 21158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::21770",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21770,
+      "End": 21783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::22455",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22455,
+      "End": 22465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::22631",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22631,
+      "End": 22641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::22853",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22853,
+      "End": 22865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::22875",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22875,
+      "End": 22887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::24041",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24041,
+      "End": 24054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::24213",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24213,
+      "End": 24223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::24278",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24278,
+      "End": 24290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::25372",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25372,
+      "End": 25385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::25544",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25544,
+      "End": 25554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::25609",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 25609,
+      "End": 25621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::26475",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 26475,
+      "End": 26488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::26628",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 26628,
+      "End": 26640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::26683",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 26683,
+      "End": 26697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::27447",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 27447,
+      "End": 27460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::28046",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 28046,
+      "End": 28056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::28221",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 28221,
+      "End": 28231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::28443",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 28443,
+      "End": 28455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::28465",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 28465,
+      "End": 28477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::29029",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 29029,
+      "End": 29042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::29602",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 29602,
+      "End": 29612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::29777",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 29777,
+      "End": 29787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::29999",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 29999,
+      "End": 30011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddSetop.c::macro-inline::30021",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 30021,
+      "End": 30033
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddZddSetop.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Set operations on ZDDs.]\n\n  Description [External procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e Cudd_zddIte()\n                    \u003cli\u003e Cudd_zddUnion()\n                    \u003cli\u003e Cudd_zddIntersect()\n                    \u003cli\u003e Cudd_zddDiff()\n                    \u003cli\u003e Cudd_zddDiffConst()\n                    \u003cli\u003e Cudd_zddSubset1()\n                    \u003cli\u003e Cudd_zddSubset0()\n                    \u003cli\u003e Cudd_zddChange()\n                    \u003c/ul\u003e\n               Internal procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e cuddZddIte()\n                    \u003cli\u003e cuddZddUnion()\n                    \u003cli\u003e cuddZddIntersect()\n                    \u003cli\u003e cuddZddDiff()\n                    \u003cli\u003e cuddZddChangeAux()\n                    \u003cli\u003e cuddZddSubset1()\n                    \u003cli\u003e cuddZddSubset0()\n                    \u003c/ul\u003e\n               Static procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e zdd_subset1_aux()\n                    \u003cli\u003e zdd_subset0_aux()\n                    \u003cli\u003e zddVarToConst()\n                    \u003c/ul\u003e\n              ]\n\n  SeeAlso     []\n\n  Author      [Hyong-Kyoon Shin, In-Ho Moon]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddZddSetop.c,v 1.25 2004/08/13 18:04:54 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static DdNode * zdd_subset1_aux (DdManager *zdd, DdNode *P, DdNode *zvar);\n\n// static DdNode * zdd_subset0_aux (DdManager *zdd, DdNode *P, DdNode *zvar);\n\n// static void zddVarToConst (DdNode *f, DdNode **gp, DdNode **hp, DdNode *base, DdNode *empty);\n\n\n/**AutomaticEnd***************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis [Computes the ITE of three ZDDs.]\n\n  Description [Computes the ITE of three ZDDs. Returns a pointer to the\n  result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_zddIte(dd *DdManager, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddZddIte(dd, f, g, h);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_zddIte */\n\n\n/**Function********************************************************************\n\n  Synopsis [Computes the union of two ZDDs.]\n\n  Description [Computes the union of two ZDDs. Returns a pointer to the\n  result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_zddUnion(dd *DdManager, P *DdNode, Q *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddZddUnion(dd, P, Q);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_zddUnion */\n\n\n/**Function********************************************************************\n\n  Synopsis [Computes the intersection of two ZDDs.]\n\n  Description [Computes the intersection of two ZDDs. Returns a pointer to\n  the result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_zddIntersect(dd *DdManager, P *DdNode, Q *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddZddIntersect(dd, P, Q);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_zddIntersect */\n\n\n/**Function********************************************************************\n\n  Synopsis [Computes the difference of two ZDDs.]\n\n  Description [Computes the difference of two ZDDs. Returns a pointer to the\n  result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddDiffConst]\n\n******************************************************************************/\nfunc Cudd_zddDiff(dd *DdManager, P *DdNode, Q *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddZddDiff(dd, P, Q);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_zddDiff */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the inclusion test for ZDDs (P implies Q).]\n\n  Description [Inclusion test for ZDDs (P implies Q). No new nodes are\n  generated by this procedure. Returns empty if true;\n  a valid pointer different from empty or DD_NON_CONSTANT otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddDiff]\n\n******************************************************************************/\nfunc Cudd_zddDiffConst(zdd *DdManager, P *DdNode, Q *DdNode) *DdNode {\n    var p_top, q_top int32;\n    // inlining of macro DD_ZERO\n    var empty *DdNode  = ((zdd).zero), *t, *res;\n    var table *DdManager  = zdd;\n\n    statLine(zdd);\n    if P == empty {\n        return(empty); }\n    if Q == empty {\n        return(P); }\n    if P == Q {\n        return(empty); }\n\n    /* Check cache.  The cache is shared by cuddZddDiff(). */\n    res = cuddCacheLookup2Zdd(table, cuddZddDiff, P, Q);\n    if res != nil {\n        return(res); }\n\n    // inlining of macro cuddIsConstant\n    if (P).index == CUDD_CONST_INDEX {\n        p_top = P.index;\n    } else {\n        p_top = zdd.permZ[P.index]; }\n    // inlining of macro cuddIsConstant\n    if (Q).index == CUDD_CONST_INDEX {\n        q_top = Q.index;\n    } else {\n        q_top = zdd.permZ[Q.index]; }\n    if p_top \u003c q_top {\n        res = DD_NON_CONSTANT;\n    } else if p_top \u003e q_top {\n        // inlining of macro cuddE\n        res = Cudd_zddDiffConst(zdd, P, ((Q).type.kids.E));\n    } else {\n        // inlining of macro cuddT\n        t = Cudd_zddDiffConst(zdd, ((P).type.kids.T), ((Q).type.kids.T));\n        if t != empty {\n            res = DD_NON_CONSTANT;\n        } else {\n            // inlining of macro cuddE\n            res = Cudd_zddDiffConst(zdd, ((P).type.kids.E), ((Q).type.kids.E)); }\n    }\n\n    cuddCacheInsert2(table, cuddZddDiff, P, Q, res);\n\n    return(res);\n\n} /* end of Cudd_zddDiffConst */\n\n\n/**Function********************************************************************\n\n  Synopsis [Computes the positive cofactor of a ZDD w.r.t. a variable.]\n\n  Description [Computes the positive cofactor of a ZDD w.r.t. a\n  variable. In terms of combinations, the result is the set of all\n  combinations in which the variable is asserted. Returns a pointer to\n  the result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddSubset0]\n\n******************************************************************************/\nfunc Cudd_zddSubset1(dd *DdManager, P *DdNode, var int32) *DdNode {\n    var r *DdNode;\n\n    for {\n        dd.reordered = 0;\n        r = cuddZddSubset1(dd, P, var);\n    \nif !(dd.reordered == 1) { break }\n} \n\n    return(r);\n\n} /* end of Cudd_zddSubset1 */\n\n\n/**Function********************************************************************\n\n  Synopsis [Computes the negative cofactor of a ZDD w.r.t. a variable.]\n\n  Description [Computes the negative cofactor of a ZDD w.r.t. a\n  variable. In terms of combinations, the result is the set of all\n  combinations in which the variable is negated. Returns a pointer to\n  the result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddSubset1]\n\n******************************************************************************/\nfunc Cudd_zddSubset0(dd *DdManager, P *DdNode, var int32) *DdNode {\n    var r *DdNode;\n\n    for {\n        dd.reordered = 0;\n        r = cuddZddSubset0(dd, P, var);\n    \nif !(dd.reordered == 1) { break }\n} \n\n    return(r);\n\n} /* end of Cudd_zddSubset0 */\n\n\n/**Function********************************************************************\n\n  Synopsis [Substitutes a variable with its complement in a ZDD.]\n\n  Description [Substitutes a variable with its complement in a ZDD.\n  returns a pointer to the result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_zddChange(dd *DdManager, P *DdNode, var int32) *DdNode {\n    var res *DdNode;\n\n    if (unsigned int) var \u003e= CUDD_MAXINDEX - 1 { return(nil); }\n    \n    for {\n        dd.reordered = 0;\n        res = cuddZddChange(dd, P, var);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_zddChange */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_zddIte.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddZddIte(dd *DdManager, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    var tautology, empty *DdNode;\n    var r, Gv, Gvn, Hv, Hvn, t, e *DdNode;\n    unsigned int topf,topg,toph,v,top;\n    var index int32;\n\n    statLine(dd);\n    /* Trivial cases. */\n    /* One variable cases. */\n    // inlining of macro DD_ZERO\n    if f == (empty = ((dd).zero)) {   /* ITE(0,G,H) = H */\n        return(h);\n    }\n    // inlining of macro cuddIZ\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        topf = int32((f.index));\n    } else {\n        topf = (dd).permZ[(f.index)];\n    }\n    // inlining of macro cuddIZ\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).permZ[(g.index)];\n    }\n    // inlining of macro cuddIZ\n    \n    if (h.index)==CUDD_CONST_INDEX {\n        toph = int32((h.index));\n    } else {\n        toph = (dd).permZ[(h.index)];\n    }\n    // inlining of macro ddMin\n    \n    if (toph) \u003c (topg) {\n        v = (toph);\n    } else {\n        v = (topg);\n    }\n    // inlining of macro ddMin\n    \n    if (v) \u003c (topf) {\n        top = (v);\n    } else {\n        top = (topf);\n    }\n\n    if top == CUDD_MAXINDEX {\n        // inlining of macro DD_ONE\n        tautology = ((dd).one);\n    } else {\n        tautology = dd.univ[top];\n    }\n    if f == tautology {                       /* ITE(1,G,H) = G */\n        return(g);\n    }\n\n    /* From now on, f is known to not be a constant. */\n    zddVarToConst(f,\u0026g,\u0026h,tautology,empty);\n\n    /* Check remaining one variable cases. */\n    if g == h {                       /* ITE(F,G,G) = G */\n        return(g);\n    }\n\n    if g == tautology {                       /* ITE(F,1,0) = F */\n        if h == empty { return(f); }\n    }\n\n    /* Check cache. */\n    r = cuddCacheLookupZdd(dd,DD_ZDD_ITE_TAG,f,g,h);\n    if r != nil {\n        return(r);\n    }\n\n    /* Recompute these because they may have changed in zddVarToConst. */\n    // inlining of macro cuddIZ\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        topg = int32((g.index));\n    } else {\n        topg = (dd).permZ[(g.index)];\n    }\n    // inlining of macro cuddIZ\n    \n    if (h.index)==CUDD_CONST_INDEX {\n        toph = int32((h.index));\n    } else {\n        toph = (dd).permZ[(h.index)];\n    }\n    // inlining of macro ddMin\n    \n    if (toph) \u003c (topg) {\n        v = (toph);\n    } else {\n        v = (topg);\n    }\n\n    if topf \u003c v {\n        // inlining of macro cuddE\n        r = cuddZddIte(dd,((f).type.kids.E),g,h);\n        if r == nil { return(nil); }\n    } else if topf \u003e v {\n        if topg \u003e v {\n            Gvn = g;\n            index = h.index;\n        } else {\n            // inlining of macro cuddE\n            Gvn = ((g).type.kids.E);\n            index = g.index;\n        }\n        if toph \u003e v {\n            Hv = empty; Hvn = h;\n        } else {\n            // inlining of macro cuddT\n            // inlining of macro cuddE\n            Hv = ((h).type.kids.T); Hvn = ((h).type.kids.E);\n        }\n        e = cuddZddIte(dd,f,Gvn,Hvn);\n        if e == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        r = cuddZddGetNode(dd,index,Hv,e);\n        if r == nil {\n            Cudd_RecursiveDerefZdd(dd,e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    } else {\n        index = f.index;\n        if topg \u003e v {\n            Gv = empty; Gvn = g;\n        } else {\n            // inlining of macro cuddT\n            // inlining of macro cuddE\n            Gv = ((g).type.kids.T); Gvn = ((g).type.kids.E);\n        }\n        if toph \u003e v {\n            Hv = empty; Hvn = h;\n        } else {\n            // inlining of macro cuddT\n            // inlining of macro cuddE\n            Hv = ((h).type.kids.T); Hvn = ((h).type.kids.E);\n        }\n        // inlining of macro cuddE\n        e = cuddZddIte(dd,((f).type.kids.E),Gvn,Hvn);\n        if e == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        // inlining of macro cuddT\n        t = cuddZddIte(dd,((f).type.kids.T),Gv,Hv);\n        if t == nil {\n            Cudd_RecursiveDerefZdd(dd,e);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        r = cuddZddGetNode(dd,index,t,e);\n        if r == nil {\n            Cudd_RecursiveDerefZdd(dd,e);\n            Cudd_RecursiveDerefZdd(dd,t);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert(dd,DD_ZDD_ITE_TAG,f,g,h,r);\n\n    return(r);\n\n} /* end of cuddZddIte */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Cudd_zddUnion.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddZddUnion(zdd *DdManager, P *DdNode, Q *DdNode) *DdNode {\n    var p_top, q_top int32;\n    // inlining of macro DD_ZERO\n    var empty *DdNode  = ((zdd).zero), *t, *e, *res;\n    var table *DdManager  = zdd;\n\n    statLine(zdd);\n    if P == empty {\n        return(Q); }\n    if Q == empty {\n        return(P); }\n    if P == Q {\n        return(P); }\n\n    /* Check cache */\n    res = cuddCacheLookup2Zdd(table, cuddZddUnion, P, Q);\n    if res != nil {\n        return(res); }\n\n    // inlining of macro cuddIsConstant\n    if (P).index == CUDD_CONST_INDEX {\n        p_top = P.index;\n    } else {\n        p_top = zdd.permZ[P.index]; }\n    // inlining of macro cuddIsConstant\n    if (Q).index == CUDD_CONST_INDEX {\n        q_top = Q.index;\n    } else {\n        q_top = zdd.permZ[Q.index]; }\n    if p_top \u003c q_top {\n        // inlining of macro cuddE\n        e = cuddZddUnion(zdd, ((P).type.kids.E), Q);\n        if e == nil { return (nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        // inlining of macro cuddT\n        res = cuddZddGetNode(zdd, P.index, ((P).type.kids.T), e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(table, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    } else if p_top \u003e q_top {\n        // inlining of macro cuddE\n        e = cuddZddUnion(zdd, P, ((Q).type.kids.E));\n        if e == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        // inlining of macro cuddT\n        res = cuddZddGetNode(zdd, Q.index, ((Q).type.kids.T), e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(table, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    } else {\n        // inlining of macro cuddT\n        t = cuddZddUnion(zdd, ((P).type.kids.T), ((Q).type.kids.T));\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        // inlining of macro cuddE\n        e = cuddZddUnion(zdd, ((P).type.kids.E), ((Q).type.kids.E));\n        if e == nil {\n            Cudd_RecursiveDerefZdd(table, t);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        res = cuddZddGetNode(zdd, P.index, t, e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(table, t);\n            Cudd_RecursiveDerefZdd(table, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert2(table, cuddZddUnion, P, Q, res);\n\n    return(res);\n\n} /* end of cuddZddUnion */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Cudd_zddIntersect.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddZddIntersect(zdd *DdManager, P *DdNode, Q *DdNode) *DdNode {\n    var p_top, q_top int32;\n    // inlining of macro DD_ZERO\n    var empty *DdNode  = ((zdd).zero), *t, *e, *res;\n    var table *DdManager  = zdd;\n\n    statLine(zdd);\n    if P == empty {\n        return(empty); }\n    if Q == empty {\n        return(empty); }\n    if P == Q {\n        return(P); }\n\n    /* Check cache. */\n    res = cuddCacheLookup2Zdd(table, cuddZddIntersect, P, Q);\n    if res != nil {\n        return(res); }\n\n    // inlining of macro cuddIsConstant\n    if (P).index == CUDD_CONST_INDEX {\n        p_top = P.index;\n    } else {\n        p_top = zdd.permZ[P.index]; }\n    // inlining of macro cuddIsConstant\n    if (Q).index == CUDD_CONST_INDEX {\n        q_top = Q.index;\n    } else {\n        q_top = zdd.permZ[Q.index]; }\n    if p_top \u003c q_top {\n        // inlining of macro cuddE\n        res = cuddZddIntersect(zdd, ((P).type.kids.E), Q);\n        if res == nil { return(nil); }\n    } else if p_top \u003e q_top {\n        // inlining of macro cuddE\n        res = cuddZddIntersect(zdd, P, ((Q).type.kids.E));\n        if res == nil { return(nil); }\n    } else {\n        // inlining of macro cuddT\n        t = cuddZddIntersect(zdd, ((P).type.kids.T), ((Q).type.kids.T));\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        // inlining of macro cuddE\n        e = cuddZddIntersect(zdd, ((P).type.kids.E), ((Q).type.kids.E));\n        if e == nil {\n            Cudd_RecursiveDerefZdd(table, t);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        res = cuddZddGetNode(zdd, P.index, t, e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(table, t);\n            Cudd_RecursiveDerefZdd(table, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert2(table, cuddZddIntersect, P, Q, res);\n\n    return(res);\n\n} /* end of cuddZddIntersect */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Cudd_zddDiff.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddZddDiff(zdd *DdManager, P *DdNode, Q *DdNode) *DdNode {\n    var p_top, q_top int32;\n    // inlining of macro DD_ZERO\n    var empty *DdNode  = ((zdd).zero), *t, *e, *res;\n    var table *DdManager  = zdd;\n\n    statLine(zdd);\n    if P == empty {\n        return(empty); }\n    if Q == empty {\n        return(P); }\n    if P == Q {\n        return(empty); }\n\n    /* Check cache.  The cache is shared by Cudd_zddDiffConst(). */\n    res = cuddCacheLookup2Zdd(table, cuddZddDiff, P, Q);\n    if res != nil \u0026\u0026 res != DD_NON_CONSTANT {\n        return(res); }\n\n    // inlining of macro cuddIsConstant\n    if (P).index == CUDD_CONST_INDEX {\n        p_top = P.index;\n    } else {\n        p_top = zdd.permZ[P.index]; }\n    // inlining of macro cuddIsConstant\n    if (Q).index == CUDD_CONST_INDEX {\n        q_top = Q.index;\n    } else {\n        q_top = zdd.permZ[Q.index]; }\n    if p_top \u003c q_top {\n        // inlining of macro cuddE\n        e = cuddZddDiff(zdd, ((P).type.kids.E), Q);\n        if e == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        // inlining of macro cuddT\n        res = cuddZddGetNode(zdd, P.index, ((P).type.kids.T), e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(table, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    } else if p_top \u003e q_top {\n        // inlining of macro cuddE\n        res = cuddZddDiff(zdd, P, ((Q).type.kids.E));\n        if res == nil { return(nil); }\n    } else {\n        // inlining of macro cuddT\n        t = cuddZddDiff(zdd, ((P).type.kids.T), ((Q).type.kids.T));\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        // inlining of macro cuddE\n        e = cuddZddDiff(zdd, ((P).type.kids.E), ((Q).type.kids.E));\n        if e == nil {\n            Cudd_RecursiveDerefZdd(table, t);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        res = cuddZddGetNode(zdd, P.index, t, e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(table, t);\n            Cudd_RecursiveDerefZdd(table, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert2(table, cuddZddDiff, P, Q, res);\n\n    return(res);\n\n} /* end of cuddZddDiff */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Cudd_zddChange.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddZddChangeAux(zdd *DdManager, P *DdNode, zvar *DdNode) *DdNode {\n    var top_var, level int32;\n    var res, t, e *DdNode;\n    // inlining of macro DD_ONE\n    var base *DdNode  = ((zdd).one);\n    // inlining of macro DD_ZERO\n    var empty *DdNode  = ((zdd).zero);\n\n    statLine(zdd);\n    if P == empty {\n        return(empty); }\n    if P == base {\n        return(zvar); }\n\n    /* Check cache. */\n    res = cuddCacheLookup2Zdd(zdd, cuddZddChangeAux, P, zvar);\n    if res != nil {\n        return(res); }\n\n    top_var = zdd.permZ[P.index];\n    level = zdd.permZ[zvar.index];\n\n    if top_var \u003e level {\n        // inlining of macro DD_ZERO\n        res = cuddZddGetNode(zdd, zvar.index, P, ((zdd).zero));\n        if res == nil { return(nil); }\n    } else if top_var == level {\n        // inlining of macro cuddE\n        // inlining of macro cuddT\n        res = cuddZddGetNode(zdd, zvar.index, ((P).type.kids.E), ((P).type.kids.T));\n        if res == nil { return(nil); }\n    } else {\n        // inlining of macro cuddT\n        t = cuddZddChangeAux(zdd, ((P).type.kids.T), zvar);\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        // inlining of macro cuddE\n        e = cuddZddChangeAux(zdd, ((P).type.kids.E), zvar);\n        if e == nil {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        res = cuddZddGetNode(zdd, P.index, t, e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            Cudd_RecursiveDerefZdd(zdd, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert2(zdd, cuddZddChangeAux, P, zvar, res);\n\n    return(res);\n\n} /* end of cuddZddChangeAux */\n\n\n/**Function********************************************************************\n\n  Synopsis [Computes the positive cofactor of a ZDD w.r.t. a variable.]\n\n  Description [Computes the positive cofactor of a ZDD w.r.t. a\n  variable. In terms of combinations, the result is the set of all\n  combinations in which the variable is asserted. Returns a pointer to\n  the result if successful; NULL otherwise. cuddZddSubset1 performs\n  the same function as Cudd_zddSubset1, but does not restart if\n  reordering has taken place. Therefore it can be called from within a\n  recursive procedure.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddZddSubset0 Cudd_zddSubset1]\n\n******************************************************************************/\nfunc cuddZddSubset1(dd *DdManager, P *DdNode, var int32) *DdNode {\n    var zvar, r *DdNode;\n    var base, empty *DdNode;\n\n    // inlining of macro DD_ONE\n    base = ((dd).one);\n    // inlining of macro DD_ZERO\n    empty = ((dd).zero);\n\n    zvar = cuddUniqueInterZdd(dd, var, base, empty);\n    if zvar == nil {\n        return(nil);\n    } else {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zvar).ref);\n        r = zdd_subset1_aux(dd, P, zvar);\n        if r == nil {\n            Cudd_RecursiveDerefZdd(dd, zvar);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(r).ref);\n        Cudd_RecursiveDerefZdd(dd, zvar);\n    }\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(r).ref);\n    return(r);\n\n} /* end of cuddZddSubset1 */\n\n\n/**Function********************************************************************\n\n  Synopsis [Computes the negative cofactor of a ZDD w.r.t. a variable.]\n\n  Description [Computes the negative cofactor of a ZDD w.r.t. a\n  variable. In terms of combinations, the result is the set of all\n  combinations in which the variable is negated. Returns a pointer to\n  the result if successful; NULL otherwise. cuddZddSubset0 performs\n  the same function as Cudd_zddSubset0, but does not restart if\n  reordering has taken place. Therefore it can be called from within a\n  recursive procedure.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddZddSubset1 Cudd_zddSubset0]\n\n******************************************************************************/\nfunc cuddZddSubset0(dd *DdManager, P *DdNode, var int32) *DdNode {\n    var zvar, r *DdNode;\n    var base, empty *DdNode;\n\n    // inlining of macro DD_ONE\n    base = ((dd).one);\n    // inlining of macro DD_ZERO\n    empty = ((dd).zero);\n\n    zvar = cuddUniqueInterZdd(dd, var, base, empty);\n    if zvar == nil {\n        return(nil);\n    } else {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(zvar).ref);\n        r = zdd_subset0_aux(dd, P, zvar);\n        if r == nil {\n            Cudd_RecursiveDerefZdd(dd, zvar);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(r).ref);\n        Cudd_RecursiveDerefZdd(dd, zvar);\n    }\n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(r).ref);\n    return(r);\n\n} /* end of cuddZddSubset0 */\n\n\n/**Function********************************************************************\n\n  Synopsis [Substitutes a variable with its complement in a ZDD.]\n\n  Description [Substitutes a variable with its complement in a ZDD.\n  returns a pointer to the result if successful; NULL\n  otherwise. cuddZddChange performs the same function as\n  Cudd_zddChange, but does not restart if reordering has taken\n  place. Therefore it can be called from within a recursive\n  procedure.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddChange]\n\n******************************************************************************/\nfunc cuddZddChange(dd *DdManager, P *DdNode, var int32) *DdNode {\n    var zvar, res *DdNode;\n\n    // inlining of macro DD_ONE\n    // inlining of macro DD_ZERO\n    zvar = cuddUniqueInterZdd(dd, var, ((dd).one), ((dd).zero));\n    if zvar == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(zvar).ref);\n\n    res = cuddZddChangeAux(dd, P, zvar);\n    if res == nil {\n        Cudd_RecursiveDerefZdd(dd,zvar);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(res).ref);\n    Cudd_RecursiveDerefZdd(dd,zvar);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(res).ref);\n    return(res);\n\n} /* end of cuddZddChange */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Cudd_zddSubset1.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc zdd_subset1_aux(zdd *DdManager, P *DdNode, zvar *DdNode) *DdNode {\n    var top_var, level int32;\n    var res, t, e *DdNode;\n    var empty *DdNode;\n\n    statLine(zdd);\n    // inlining of macro DD_ZERO\n    empty = ((zdd).zero);\n\n    /* Check cache. */\n    res = cuddCacheLookup2Zdd(zdd, zdd_subset1_aux, P, zvar);\n    if res != nil {\n        return(res); }\n\n    // inlining of macro cuddIsConstant\n    if (P).index == CUDD_CONST_INDEX {\n        res = empty;\n        cuddCacheInsert2(zdd, zdd_subset1_aux, P, zvar, res);\n        return(res);\n    }\n\n    top_var = zdd.permZ[P.index];\n    level = zdd.permZ[zvar.index];\n\n    if top_var \u003e level {\n        res = empty;\n    } else if top_var == level {\n        // inlining of macro cuddT\n        res = ((P).type.kids.T);\n    } else {\n        // inlining of macro cuddT\n        t = zdd_subset1_aux(zdd, ((P).type.kids.T), zvar);\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        // inlining of macro cuddE\n        e = zdd_subset1_aux(zdd, ((P).type.kids.E), zvar);\n        if e == nil {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        res = cuddZddGetNode(zdd, P.index, t, e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            Cudd_RecursiveDerefZdd(zdd, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert2(zdd, zdd_subset1_aux, P, zvar, res);\n\n    return(res);\n\n} /* end of zdd_subset1_aux */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Cudd_zddSubset0.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc zdd_subset0_aux(zdd *DdManager, P *DdNode, zvar *DdNode) *DdNode {\n    var top_var, level int32;\n    var res, t, e *DdNode;\n\n    statLine(zdd);\n\n    /* Check cache. */\n    res = cuddCacheLookup2Zdd(zdd, zdd_subset0_aux, P, zvar);\n    if res != nil {\n        return(res); }\n\n    // inlining of macro cuddIsConstant\n    if (P).index == CUDD_CONST_INDEX {\n        res = P;\n        cuddCacheInsert2(zdd, zdd_subset0_aux, P, zvar, res);\n        return(res);\n    }\n\n    top_var = zdd.permZ[P.index];\n    level = zdd.permZ[zvar.index];\n\n    if top_var \u003e level {\n        res = P;\n    \n    } else if top_var == level {\n        // inlining of macro cuddE\n        res = ((P).type.kids.E);\n    \n    } else {\n        // inlining of macro cuddT\n        t = zdd_subset0_aux(zdd, ((P).type.kids.T), zvar);\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        // inlining of macro cuddE\n        e = zdd_subset0_aux(zdd, ((P).type.kids.E), zvar);\n        if e == nil {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n        res = cuddZddGetNode(zdd, P.index, t, e);\n        if res == nil {\n            Cudd_RecursiveDerefZdd(zdd, t);\n            Cudd_RecursiveDerefZdd(zdd, e);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert2(zdd, zdd_subset0_aux, P, zvar, res);\n\n    return(res);\n\n} /* end of zdd_subset0_aux */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Replaces variables with constants if possible (part of\n  canonical form).]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc zddVarToConst(f *DdNode, gp **DdNode, hp **DdNode, base *DdNode, empty *DdNode) {\n    var g *DdNode  = *gp;\n    var h *DdNode  = *hp;\n\n    if f == g { /* ITE(F,F,H) = ITE(F,1,H) = F + H */\n        *gp = base;\n    }\n\n    if f == h { /* ITE(F,G,F) = ITE(F,G,0) = F * G */\n        *hp = empty;\n    }\n\n} /* end of zddVarToConst */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

@@ -1,0 +1,500 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c",
+  "SHA256": "466a8912f292bd60bf363cc93275e86ed3adb776e6c5780001f449465283295a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFanin.nRefs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 1988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 5,
+        "ByteOffset": 2092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFanin.nRefs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 3095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 4097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 5135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 6006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 186,
+        "Column": 5,
+        "ByteOffset": 6046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 6294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ConeSize1 == ConeSize2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 192,
+        "Column": 5,
+        "ByteOffset": 6332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ConeSize1 \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 6814
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (pPower != nil) == (p.vProbs != nil) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 6866
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 211,
+        "Column": 5,
+        "ByteOffset": 6906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 7125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ConeSize1 == ConeSize2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 216,
+        "Column": 5,
+        "ByteOffset": 7163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ConeSize1 \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 234,
+        "Column": 5,
+        "ByteOffset": 7679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 235,
+        "Column": 5,
+        "ByteOffset": 7719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 245,
+        "Column": 5,
+        "ByteOffset": 8280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ConeSize1 == ConeSize2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 246,
+        "Column": 5,
+        "ByteOffset": 8318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ConeSize1 \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 285,
+        "Column": 9,
+        "ByteOffset": 9866
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( ConeCur1 == ConeCur2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 287,
+        "Column": 5,
+        "ByteOffset": 9908
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pLeafBest != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 9940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pLeafBest) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 297,
+        "Column": 5,
+        "ByteOffset": 10291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ConeCur1 == ConeCur2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 10401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( ConeSize1 == ConeSize2 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_NodeDeref_rec",
+      "Start": 1244,
+      "End": 2354,
+      "BodyStart": 1338,
+      "Original": "int Aig_NodeDeref_rec( Aig_Obj_t * pNode, unsigned LevelMin, float * pPower, float * pProbs )\n{\n    float Power0 = 0.0, Power1 = 0.0;\n    Aig_Obj_t * pFanin;\n    int Counter = 0;\n    if ( pProbs )\n        *pPower = 0.0;\n    if ( Aig_ObjIsCi(pNode) )\n        return 0;\n    // consider the first fanin\n    pFanin = Aig_ObjFanin0(pNode);\n    assert( pFanin-\u003enRefs \u003e 0 );\n    if ( --pFanin-\u003enRefs == 0 \u0026\u0026 (!LevelMin || pFanin-\u003eLevel \u003e LevelMin) )\n        Counter += Aig_NodeDeref_rec( pFanin, LevelMin, \u0026Power0, pProbs );\n    if ( pProbs )\n        *pPower += Power0 + 2.0 * pProbs[pFanin-\u003eId] * (1.0 - pProbs[pFanin-\u003eId]);\n    // skip the buffer\n    if ( Aig_ObjIsBuf(pNode) )\n        return Counter;\n    assert( Aig_ObjIsNode(pNode) );\n    // consider the second fanin\n    pFanin = Aig_ObjFanin1(pNode);\n    assert( pFanin-\u003enRefs \u003e 0 );\n    if ( --pFanin-\u003enRefs == 0 \u0026\u0026 (!LevelMin || pFanin-\u003eLevel \u003e LevelMin) )\n        Counter += Aig_NodeDeref_rec( pFanin, LevelMin, \u0026Power1, pProbs );\n    if ( pProbs )\n        *pPower += Power1 + 2.0 * pProbs[pFanin-\u003eId] * (1.0 - pProbs[pFanin-\u003eId]);\n    return Counter + 1;\n}",
+      "Draft": "func Aig_NodeDeref_rec(pNode *Aig_Obj_t, LevelMin uint32, pPower *float32, pProbs *float32) int32 {\n    var Power0 float32 = 0.0;\n    var Power1 float32 = 0.0;\n    var pFanin *Aig_Obj_t;\n    var Counter int32;\n    if pProbs != nil {\n        *pPower = 0.0; }\n    if Aig_ObjIsCi(pNode) {\n        return 0; }\n    // consider the first fanin\n    pFanin = Aig_ObjFanin0(pNode);\n    assert(pFanin.nRefs \u003e 0, \"pFanin.nRefs \u003e 0\");\n    if --pFanin.nRefs == 0 \u0026\u0026 (!LevelMin || pFanin.Level \u003e LevelMin) {\n        Counter += Aig_NodeDeref_rec( pFanin, LevelMin, \u0026Power0, pProbs ); }\n    if pProbs != nil {\n        *pPower += Power0 + 2.0 * pProbs[pFanin.Id] * (1.0 - pProbs[pFanin.Id]); }\n    // skip the buffer\n    if Aig_ObjIsBuf(pNode) {\n        return Counter; }\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    // consider the second fanin\n    pFanin = Aig_ObjFanin1(pNode);\n    assert(pFanin.nRefs \u003e 0, \"pFanin.nRefs \u003e 0\");\n    if --pFanin.nRefs == 0 \u0026\u0026 (!LevelMin || pFanin.Level \u003e LevelMin) {\n        Counter += Aig_NodeDeref_rec( pFanin, LevelMin, \u0026Power1, pProbs ); }\n    if pProbs != nil {\n        *pPower += Power1 + 2.0 * pProbs[pFanin.Id] * (1.0 - pProbs[pFanin.Id]); }\n    return Counter + 1;\n}"
+    },
+    {
+      "Name": "Aig_NodeRef_rec",
+      "Start": 2617,
+      "End": 3308,
+      "BodyStart": 2677,
+      "Original": "int Aig_NodeRef_rec( Aig_Obj_t * pNode, unsigned LevelMin )\n{\n    Aig_Obj_t * pFanin;\n    int Counter = 0;\n    if ( Aig_ObjIsCi(pNode) )\n        return 0;\n    // consider the first fanin\n    pFanin = Aig_ObjFanin0(pNode);\n    if ( pFanin-\u003enRefs++ == 0 \u0026\u0026 (!LevelMin || pFanin-\u003eLevel \u003e LevelMin) )\n        Counter += Aig_NodeRef_rec( pFanin, LevelMin );\n    // skip the buffer\n    if ( Aig_ObjIsBuf(pNode) )\n        return Counter;\n    assert( Aig_ObjIsNode(pNode) );\n    // consider the second fanin\n    pFanin = Aig_ObjFanin1(pNode);\n    if ( pFanin-\u003enRefs++ == 0 \u0026\u0026 (!LevelMin || pFanin-\u003eLevel \u003e LevelMin) )\n        Counter += Aig_NodeRef_rec( pFanin, LevelMin );\n    return Counter + 1;\n}",
+      "Draft": "func Aig_NodeRef_rec(pNode *Aig_Obj_t, LevelMin uint32) int32 {\n    var pFanin *Aig_Obj_t;\n    var Counter int32;\n    if Aig_ObjIsCi(pNode) {\n        return 0; }\n    // consider the first fanin\n    pFanin = Aig_ObjFanin0(pNode);\n    if pFanin.nRefs++ == 0 \u0026\u0026 (!LevelMin || pFanin.Level \u003e LevelMin) {\n        Counter += Aig_NodeRef_rec( pFanin, LevelMin ); }\n    // skip the buffer\n    if Aig_ObjIsBuf(pNode) {\n        return Counter; }\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    // consider the second fanin\n    pFanin = Aig_ObjFanin1(pNode);\n    if pFanin.nRefs++ == 0 \u0026\u0026 (!LevelMin || pFanin.Level \u003e LevelMin) {\n        Counter += Aig_NodeRef_rec( pFanin, LevelMin ); }\n    return Counter + 1;\n}"
+    },
+    {
+      "Name": "Aig_NodeRefLabel_rec",
+      "Start": 3571,
+      "End": 4316,
+      "BodyStart": 3651,
+      "Original": "int Aig_NodeRefLabel_rec( Aig_Man_t * p, Aig_Obj_t * pNode, unsigned LevelMin )\n{\n    Aig_Obj_t * pFanin;\n    int Counter = 0;\n    if ( Aig_ObjIsCi(pNode) )\n        return 0;\n    Aig_ObjSetTravIdCurrent( p, pNode );\n    // consider the first fanin\n    pFanin = Aig_ObjFanin0(pNode);\n    if ( pFanin-\u003enRefs++ == 0 \u0026\u0026 (!LevelMin || pFanin-\u003eLevel \u003e LevelMin) )\n        Counter += Aig_NodeRefLabel_rec( p, pFanin, LevelMin );\n    if ( Aig_ObjIsBuf(pNode) )\n        return Counter;\n    assert( Aig_ObjIsNode(pNode) );\n    // consider the second fanin\n    pFanin = Aig_ObjFanin1(pNode);\n    if ( pFanin-\u003enRefs++ == 0 \u0026\u0026 (!LevelMin || pFanin-\u003eLevel \u003e LevelMin) )\n        Counter += Aig_NodeRefLabel_rec( p, pFanin, LevelMin );\n    return Counter + 1;\n}",
+      "Draft": "func Aig_NodeRefLabel_rec(p *Aig_Man_t, pNode *Aig_Obj_t, LevelMin uint32) int32 {\n    var pFanin *Aig_Obj_t;\n    var Counter int32;\n    if Aig_ObjIsCi(pNode) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent( p, pNode );\n    // consider the first fanin\n    pFanin = Aig_ObjFanin0(pNode);\n    if pFanin.nRefs++ == 0 \u0026\u0026 (!LevelMin || pFanin.Level \u003e LevelMin) {\n        Counter += Aig_NodeRefLabel_rec( p, pFanin, LevelMin ); }\n    if Aig_ObjIsBuf(pNode) {\n        return Counter; }\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    // consider the second fanin\n    pFanin = Aig_ObjFanin1(pNode);\n    if pFanin.nRefs++ == 0 \u0026\u0026 (!LevelMin || pFanin.Level \u003e LevelMin) {\n        Counter += Aig_NodeRefLabel_rec( p, pFanin, LevelMin ); }\n    return Counter + 1;\n}"
+    },
+    {
+      "Name": "Aig_NodeMffcSupp_rec",
+      "Start": 4613,
+      "End": 5336,
+      "BodyStart": 4749,
+      "Original": "void Aig_NodeMffcSupp_rec( Aig_Man_t * p, Aig_Obj_t * pNode, unsigned LevelMin, Vec_Ptr_t * vSupp, int fTopmost, Aig_Obj_t * pObjSkip )\n{\n    // skip visited nodes\n    if ( Aig_ObjIsTravIdCurrent(p, pNode) )\n        return;\n    Aig_ObjSetTravIdCurrent(p, pNode);\n    // add to the new support nodes\n    if ( !fTopmost \u0026\u0026 pNode != pObjSkip \u0026\u0026 (Aig_ObjIsCi(pNode) || pNode-\u003enRefs \u003e 0 || pNode-\u003eLevel \u003c= LevelMin) )\n    {\n        if ( vSupp ) Vec_PtrPush( vSupp, pNode );\n        return;\n    }\n    assert( Aig_ObjIsNode(pNode) );\n    // recur on the children\n    Aig_NodeMffcSupp_rec( p, Aig_ObjFanin0(pNode), LevelMin, vSupp, 0, pObjSkip );\n    Aig_NodeMffcSupp_rec( p, Aig_ObjFanin1(pNode), LevelMin, vSupp, 0, pObjSkip );\n}",
+      "Draft": "func Aig_NodeMffcSupp_rec(p *Aig_Man_t, pNode *Aig_Obj_t, LevelMin uint32, vSupp *Vec_Ptr_t, fTopmost int32, pObjSkip *Aig_Obj_t) {\n    // skip visited nodes\n    if Aig_ObjIsTravIdCurrent(p, pNode) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pNode);\n    // add to the new support nodes\n    if !(fTopmost != 0) \u0026\u0026 pNode != pObjSkip \u0026\u0026 (Aig_ObjIsCi(pNode) || pNode.nRefs \u003e 0 || pNode.Level \u003c= LevelMin) {\n        if vSupp != nil { Vec_PtrPush( vSupp, pNode ); }\n        return;\n    }\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    // recur on the children\n    Aig_NodeMffcSupp_rec( p, Aig_ObjFanin0(pNode), LevelMin, vSupp, 0, pObjSkip );\n    Aig_NodeMffcSupp_rec( p, Aig_ObjFanin1(pNode), LevelMin, vSupp, 0, pObjSkip );\n}"
+    },
+    {
+      "Name": "Aig_NodeMffcSupp",
+      "Start": 5664,
+      "End": 6354,
+      "BodyStart": 5754,
+      "Original": "int Aig_NodeMffcSupp( Aig_Man_t * p, Aig_Obj_t * pNode, int LevelMin, Vec_Ptr_t * vSupp )\n{\n    int ConeSize1, ConeSize2;\n    if ( vSupp ) Vec_PtrClear( vSupp );\n    if ( !Aig_ObjIsNode(pNode) )\n    {\n        if ( Aig_ObjIsCi(pNode) \u0026\u0026 vSupp )\n            Vec_PtrPush( vSupp, pNode );\n        return 0;\n    }\n    assert( !Aig_IsComplement(pNode) );\n    assert( Aig_ObjIsNode(pNode) );\n    Aig_ManIncrementTravId( p );\n    ConeSize1 = Aig_NodeDeref_rec( pNode, LevelMin, NULL, NULL );\n    Aig_NodeMffcSupp_rec( p, pNode, LevelMin, vSupp, 1, NULL );\n    ConeSize2 = Aig_NodeRef_rec( pNode, LevelMin );\n    assert( ConeSize1 == ConeSize2 );\n    assert( ConeSize1 \u003e 0 );\n    return ConeSize1;\n}",
+      "Draft": "func Aig_NodeMffcSupp(p *Aig_Man_t, pNode *Aig_Obj_t, LevelMin int32, vSupp *Vec_Ptr_t) int32 {\n    var ConeSize1, ConeSize2 int32;\n    if vSupp != nil { Vec_PtrClear( vSupp ); }\n    if !Aig_ObjIsNode(pNode) {\n        if Aig_ObjIsCi(pNode) \u0026\u0026 (vSupp != nil) {\n            Vec_PtrPush( vSupp, pNode ); }\n        return 0;\n    }\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    Aig_ManIncrementTravId( p );\n    ConeSize1 = Aig_NodeDeref_rec( pNode, LevelMin, nil, nil );\n    Aig_NodeMffcSupp_rec( p, pNode, LevelMin, vSupp, 1, nil );\n    ConeSize2 = Aig_NodeRef_rec( pNode, LevelMin );\n    assert(ConeSize1 == ConeSize2, \"ConeSize1 == ConeSize2\");\n    assert(ConeSize1 \u003e 0, \"ConeSize1 \u003e 0\");\n    return ConeSize1;\n}"
+    },
+    {
+      "Name": "Aig_NodeMffcLabel",
+      "Start": 6668,
+      "End": 7182,
+      "BodyStart": 6742,
+      "Original": "int Aig_NodeMffcLabel( Aig_Man_t * p, Aig_Obj_t * pNode, float * pPower )\n{\n    int ConeSize1, ConeSize2;\n    assert( (pPower != NULL) == (p-\u003evProbs != NULL) );\n    assert( !Aig_IsComplement(pNode) );\n    assert( Aig_ObjIsNode(pNode) );\n    Aig_ManIncrementTravId( p );\n    ConeSize1 = Aig_NodeDeref_rec( pNode, 0, pPower, p-\u003evProbs? (float *)p-\u003evProbs-\u003epArray : NULL );\n    ConeSize2 = Aig_NodeRefLabel_rec( p, pNode, 0 );\n    assert( ConeSize1 == ConeSize2 );\n    assert( ConeSize1 \u003e 0 );\n    return ConeSize1;\n}",
+      "Draft": "func Aig_NodeMffcLabel(p *Aig_Man_t, pNode *Aig_Obj_t, pPower *float32) int32 {\n    var ConeSize1, ConeSize2 int32;\n    assert((pPower != nil) == (p.vProbs != nil), \"(pPower != nil) == (p.vProbs != nil)\");\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    Aig_ManIncrementTravId( p );\n    ConeSize1 = Aig_NodeDeref_rec( pNode, 0, pPower, p.vProbs? (float *)p.vProbs.pArray : nil );\n    ConeSize2 = Aig_NodeRefLabel_rec( p, pNode, 0 );\n    assert(ConeSize1 == ConeSize2, \"ConeSize1 == ConeSize2\");\n    assert(ConeSize1 \u003e 0, \"ConeSize1 \u003e 0\");\n    return ConeSize1;\n}"
+    },
+    {
+      "Name": "Aig_NodeMffcLabelCut",
+      "Start": 7496,
+      "End": 8106,
+      "BodyStart": 7578,
+      "Original": "int Aig_NodeMffcLabelCut( Aig_Man_t * p, Aig_Obj_t * pNode, Vec_Ptr_t * vLeaves )\n{\n    Aig_Obj_t * pObj;\n    int i, ConeSize1, ConeSize2;\n    assert( !Aig_IsComplement(pNode) );\n    assert( Aig_ObjIsNode(pNode) );\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLeaves, pObj, i )\n        pObj-\u003enRefs++;\n    ConeSize1 = Aig_NodeDeref_rec( pNode, 0, NULL, NULL );\n    ConeSize2 = Aig_NodeRefLabel_rec( p, pNode, 0 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLeaves, pObj, i )\n        pObj-\u003enRefs--;\n    assert( ConeSize1 == ConeSize2 );\n    assert( ConeSize1 \u003e 0 );\n    return ConeSize1;\n}",
+      "Draft": "func Aig_NodeMffcLabelCut(p *Aig_Man_t, pNode *Aig_Obj_t, vLeaves *Vec_Ptr_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, ConeSize1, ConeSize2 int32;\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pObj.nRefs++;\n    }\n    ConeSize1 = Aig_NodeDeref_rec( pNode, 0, nil, nil );\n    ConeSize2 = Aig_NodeRefLabel_rec( p, pNode, 0 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pObj.nRefs--;\n    }\n    assert(ConeSize1 == ConeSize2, \"ConeSize1 == ConeSize2\");\n    assert(ConeSize1 \u003e 0, \"ConeSize1 \u003e 0\");\n    return ConeSize1;\n}"
+    },
+    {
+      "Name": "Aig_NodeMffcExtendCut",
+      "Start": 8426,
+      "End": 9988,
+      "BodyStart": 8530,
+      "Original": "int Aig_NodeMffcExtendCut( Aig_Man_t * p, Aig_Obj_t * pNode, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vResult )\n{\n    Aig_Obj_t * pObj, * pLeafBest;\n    int i, LevelMax, ConeSize1, ConeSize2, ConeCur1, ConeCur2, ConeBest;\n    // dereference the current cut\n    LevelMax = 0;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLeaves, pObj, i )\n        LevelMax = Abc_MaxInt( LevelMax, (int)pObj-\u003eLevel );\n    if ( LevelMax == 0 )\n        return 0;\n    // dereference the cut\n    ConeSize1 = Aig_NodeDeref_rec( pNode, 0, NULL, NULL );\n    // try expanding each node in the boundary\n    ConeBest = ABC_INFINITY;\n    pLeafBest = NULL;\n    Vec_PtrForEachEntry( Aig_Obj_t *, vLeaves, pObj, i )\n    {\n        if ( (int)pObj-\u003eLevel != LevelMax )\n            continue;\n        ConeCur1 = Aig_NodeDeref_rec( pObj, 0, NULL, NULL );\n        if ( ConeBest \u003e ConeCur1 )\n        {\n            ConeBest = ConeCur1;\n            pLeafBest = pObj;\n        }\n        ConeCur2 = Aig_NodeRef_rec( pObj, 0 );\n        assert( ConeCur1 == ConeCur2 );\n    }\n    assert( pLeafBest != NULL );\n    assert( Aig_ObjIsNode(pLeafBest) );\n    // deref the best leaf\n    ConeCur1 = Aig_NodeDeref_rec( pLeafBest, 0, NULL, NULL );\n    // collect the cut nodes\n    Vec_PtrClear( vResult );\n    Aig_ManIncrementTravId( p );\n    Aig_NodeMffcSupp_rec( p, pNode, 0, vResult, 1, pLeafBest );\n    // ref the nodes\n    ConeCur2 = Aig_NodeRef_rec( pLeafBest, 0 );\n    assert( ConeCur1 == ConeCur2 );\n    // ref the original node\n    ConeSize2 = Aig_NodeRef_rec( pNode, 0 );\n    assert( ConeSize1 == ConeSize2 );\n    return 1;\n}",
+      "Draft": "func Aig_NodeMffcExtendCut(p *Aig_Man_t, pNode *Aig_Obj_t, vLeaves *Vec_Ptr_t, vResult *Vec_Ptr_t) int32 {\n    var pObj, pLeafBest *Aig_Obj_t;\n    var i, LevelMax, ConeSize1, ConeSize2, ConeCur1, ConeCur2, ConeBest int32;\n    // dereference the current cut\n    LevelMax = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        LevelMax = Abc_MaxInt( LevelMax, int32(pObj.Level) );\n    }\n    if LevelMax == 0 {\n        return 0; }\n    // dereference the cut\n    ConeSize1 = Aig_NodeDeref_rec( pNode, 0, nil, nil );\n    // try expanding each node in the boundary\n    ConeBest = ABC_INFINITY;\n    pLeafBest = nil;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        if int32(pObj.Level) != LevelMax {\n            continue; }\n        ConeCur1 = Aig_NodeDeref_rec( pObj, 0, nil, nil );\n        if ConeBest \u003e ConeCur1 {\n            ConeBest = ConeCur1;\n            pLeafBest = pObj;\n        }\n        ConeCur2 = Aig_NodeRef_rec( pObj, 0 );\n        assert(ConeCur1 == ConeCur2, \"ConeCur1 == ConeCur2\");\n    }\n    assert(pLeafBest != nil, \"pLeafBest != nil\");\n    assert(Aig_ObjIsNode(pLeafBest), \"Aig_ObjIsNode(pLeafBest)\");\n    // deref the best leaf\n    ConeCur1 = Aig_NodeDeref_rec( pLeafBest, 0, nil, nil );\n    // collect the cut nodes\n    Vec_PtrClear( vResult );\n    Aig_ManIncrementTravId( p );\n    Aig_NodeMffcSupp_rec( p, pNode, 0, vResult, 1, pLeafBest );\n    // ref the nodes\n    ConeCur2 = Aig_NodeRef_rec( pLeafBest, 0 );\n    assert(ConeCur1 == ConeCur2, \"ConeCur1 == ConeCur2\");\n    // ref the original node\n    ConeSize2 = Aig_NodeRef_rec( pNode, 0 );\n    assert(ConeSize1 == ConeSize2, \"ConeSize1 == ConeSize2\");\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::pointer-cast::7002",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7002,
+      "End": 7011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::pointer-cast::7857",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7748,
+      "End": 7748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::pointer-cast::8155",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7940,
+      "End": 7940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::pointer-cast::9018",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8697,
+      "End": 8697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::pointer-cast::9469",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9042,
+      "End": 9042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::Aig_NodeDeref_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_NodeDeref_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1244,
+      "End": 2354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::Aig_NodeRef_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_NodeRef_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2617,
+      "End": 3308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::Aig_NodeRefLabel_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_NodeRefLabel_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3571,
+      "End": 4316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::Aig_NodeMffcSupp_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_NodeMffcSupp_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4613,
+      "End": 5336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::Aig_NodeMffcSupp",
+      "Category": "semantic-review",
+      "Symbol": "Aig_NodeMffcSupp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5664,
+      "End": 6354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::ternary::Aig_NodeMffcLabel",
+      "Category": "ternary-review",
+      "Symbol": "Aig_NodeMffcLabel",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6668,
+      "End": 7182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::Aig_NodeMffcLabel",
+      "Category": "semantic-review",
+      "Symbol": "Aig_NodeMffcLabel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6668,
+      "End": 7182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::Aig_NodeMffcLabelCut",
+      "Category": "semantic-review",
+      "Symbol": "Aig_NodeMffcLabelCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7496,
+      "End": 8106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::Aig_NodeMffcExtendCut",
+      "Category": "semantic-review",
+      "Symbol": "Aig_NodeMffcExtendCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8426,
+      "End": 9988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigMffc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10235
+    }
+  ],
+  "Draft": "package aig\n\n/**CFile****************************************************************\n\n  FileName    [aigMffc.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Computation of MFFCs.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigMffc.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Dereferences the node's MFFC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_NodeDeref_rec(pNode *Aig_Obj_t, LevelMin uint32, pPower *float32, pProbs *float32) int32 {\n    var Power0 float32 = 0.0;\n    var Power1 float32 = 0.0;\n    var pFanin *Aig_Obj_t;\n    var Counter int32;\n    if pProbs != nil {\n        *pPower = 0.0; }\n    if Aig_ObjIsCi(pNode) {\n        return 0; }\n    // consider the first fanin\n    pFanin = Aig_ObjFanin0(pNode);\n    assert(pFanin.nRefs \u003e 0, \"pFanin.nRefs \u003e 0\");\n    if --pFanin.nRefs == 0 \u0026\u0026 (!LevelMin || pFanin.Level \u003e LevelMin) {\n        Counter += Aig_NodeDeref_rec( pFanin, LevelMin, \u0026Power0, pProbs ); }\n    if pProbs != nil {\n        *pPower += Power0 + 2.0 * pProbs[pFanin.Id] * (1.0 - pProbs[pFanin.Id]); }\n    // skip the buffer\n    if Aig_ObjIsBuf(pNode) {\n        return Counter; }\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    // consider the second fanin\n    pFanin = Aig_ObjFanin1(pNode);\n    assert(pFanin.nRefs \u003e 0, \"pFanin.nRefs \u003e 0\");\n    if --pFanin.nRefs == 0 \u0026\u0026 (!LevelMin || pFanin.Level \u003e LevelMin) {\n        Counter += Aig_NodeDeref_rec( pFanin, LevelMin, \u0026Power1, pProbs ); }\n    if pProbs != nil {\n        *pPower += Power1 + 2.0 * pProbs[pFanin.Id] * (1.0 - pProbs[pFanin.Id]); }\n    return Counter + 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [References the node's MFFC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_NodeRef_rec(pNode *Aig_Obj_t, LevelMin uint32) int32 {\n    var pFanin *Aig_Obj_t;\n    var Counter int32;\n    if Aig_ObjIsCi(pNode) {\n        return 0; }\n    // consider the first fanin\n    pFanin = Aig_ObjFanin0(pNode);\n    if pFanin.nRefs++ == 0 \u0026\u0026 (!LevelMin || pFanin.Level \u003e LevelMin) {\n        Counter += Aig_NodeRef_rec( pFanin, LevelMin ); }\n    // skip the buffer\n    if Aig_ObjIsBuf(pNode) {\n        return Counter; }\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    // consider the second fanin\n    pFanin = Aig_ObjFanin1(pNode);\n    if pFanin.nRefs++ == 0 \u0026\u0026 (!LevelMin || pFanin.Level \u003e LevelMin) {\n        Counter += Aig_NodeRef_rec( pFanin, LevelMin ); }\n    return Counter + 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [References the node's MFFC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_NodeRefLabel_rec(p *Aig_Man_t, pNode *Aig_Obj_t, LevelMin uint32) int32 {\n    var pFanin *Aig_Obj_t;\n    var Counter int32;\n    if Aig_ObjIsCi(pNode) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent( p, pNode );\n    // consider the first fanin\n    pFanin = Aig_ObjFanin0(pNode);\n    if pFanin.nRefs++ == 0 \u0026\u0026 (!LevelMin || pFanin.Level \u003e LevelMin) {\n        Counter += Aig_NodeRefLabel_rec( p, pFanin, LevelMin ); }\n    if Aig_ObjIsBuf(pNode) {\n        return Counter; }\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    // consider the second fanin\n    pFanin = Aig_ObjFanin1(pNode);\n    if pFanin.nRefs++ == 0 \u0026\u0026 (!LevelMin || pFanin.Level \u003e LevelMin) {\n        Counter += Aig_NodeRefLabel_rec( p, pFanin, LevelMin ); }\n    return Counter + 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the internal and boundary nodes in the derefed MFFC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_NodeMffcSupp_rec(p *Aig_Man_t, pNode *Aig_Obj_t, LevelMin uint32, vSupp *Vec_Ptr_t, fTopmost int32, pObjSkip *Aig_Obj_t) {\n    // skip visited nodes\n    if Aig_ObjIsTravIdCurrent(p, pNode) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p, pNode);\n    // add to the new support nodes\n    if !(fTopmost != 0) \u0026\u0026 pNode != pObjSkip \u0026\u0026 (Aig_ObjIsCi(pNode) || pNode.nRefs \u003e 0 || pNode.Level \u003c= LevelMin) {\n        if vSupp != nil { Vec_PtrPush( vSupp, pNode ); }\n        return;\n    }\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    // recur on the children\n    Aig_NodeMffcSupp_rec( p, Aig_ObjFanin0(pNode), LevelMin, vSupp, 0, pObjSkip );\n    Aig_NodeMffcSupp_rec( p, Aig_ObjFanin1(pNode), LevelMin, vSupp, 0, pObjSkip );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the support of depth-limited MFFC.]\n\n  Description [Returns the number of internal nodes in the MFFC.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_NodeMffcSupp(p *Aig_Man_t, pNode *Aig_Obj_t, LevelMin int32, vSupp *Vec_Ptr_t) int32 {\n    var ConeSize1, ConeSize2 int32;\n    if vSupp != nil { Vec_PtrClear( vSupp ); }\n    if !Aig_ObjIsNode(pNode) {\n        if Aig_ObjIsCi(pNode) \u0026\u0026 (vSupp != nil) {\n            Vec_PtrPush( vSupp, pNode ); }\n        return 0;\n    }\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    Aig_ManIncrementTravId( p );\n    ConeSize1 = Aig_NodeDeref_rec( pNode, LevelMin, nil, nil );\n    Aig_NodeMffcSupp_rec( p, pNode, LevelMin, vSupp, 1, nil );\n    ConeSize2 = Aig_NodeRef_rec( pNode, LevelMin );\n    assert(ConeSize1 == ConeSize2, \"ConeSize1 == ConeSize2\");\n    assert(ConeSize1 \u003e 0, \"ConeSize1 \u003e 0\");\n    return ConeSize1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Labels the nodes in the MFFC.]\n\n  Description [Returns the number of internal nodes in the MFFC.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_NodeMffcLabel(p *Aig_Man_t, pNode *Aig_Obj_t, pPower *float32) int32 {\n    var ConeSize1, ConeSize2 int32;\n    assert((pPower != nil) == (p.vProbs != nil), \"(pPower != nil) == (p.vProbs != nil)\");\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    Aig_ManIncrementTravId( p );\n    ConeSize1 = Aig_NodeDeref_rec( pNode, 0, pPower, p.vProbs? (float *)p.vProbs.pArray : nil );\n    ConeSize2 = Aig_NodeRefLabel_rec( p, pNode, 0 );\n    assert(ConeSize1 == ConeSize2, \"ConeSize1 == ConeSize2\");\n    assert(ConeSize1 \u003e 0, \"ConeSize1 \u003e 0\");\n    return ConeSize1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Labels the nodes in the MFFC.]\n\n  Description [Returns the number of internal nodes in the MFFC.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_NodeMffcLabelCut(p *Aig_Man_t, pNode *Aig_Obj_t, vLeaves *Vec_Ptr_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, ConeSize1, ConeSize2 int32;\n    assert(!Aig_IsComplement(pNode), \"!Aig_IsComplement(pNode)\");\n    assert(Aig_ObjIsNode(pNode), \"Aig_ObjIsNode(pNode)\");\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pObj.nRefs++;\n    }\n    ConeSize1 = Aig_NodeDeref_rec( pNode, 0, nil, nil );\n    ConeSize2 = Aig_NodeRefLabel_rec( p, pNode, 0 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        pObj.nRefs--;\n    }\n    assert(ConeSize1 == ConeSize2, \"ConeSize1 == ConeSize2\");\n    assert(ConeSize1 \u003e 0, \"ConeSize1 \u003e 0\");\n    return ConeSize1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Expands the cut by adding the most closely related node.]\n\n  Description [Returns 1 if the cut exists.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_NodeMffcExtendCut(p *Aig_Man_t, pNode *Aig_Obj_t, vLeaves *Vec_Ptr_t, vResult *Vec_Ptr_t) int32 {\n    var pObj, pLeafBest *Aig_Obj_t;\n    var i, LevelMax, ConeSize1, ConeSize2, ConeCur1, ConeCur2, ConeBest int32;\n    // dereference the current cut\n    LevelMax = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        LevelMax = Abc_MaxInt( LevelMax, int32(pObj.Level) );\n    }\n    if LevelMax == 0 {\n        return 0; }\n    // dereference the cut\n    ConeSize1 = Aig_NodeDeref_rec( pNode, 0, nil, nil );\n    // try expanding each node in the boundary\n    ConeBest = ABC_INFINITY;\n    pLeafBest = nil;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        if int32(pObj.Level) != LevelMax {\n            continue; }\n        ConeCur1 = Aig_NodeDeref_rec( pObj, 0, nil, nil );\n        if ConeBest \u003e ConeCur1 {\n            ConeBest = ConeCur1;\n            pLeafBest = pObj;\n        }\n        ConeCur2 = Aig_NodeRef_rec( pObj, 0 );\n        assert(ConeCur1 == ConeCur2, \"ConeCur1 == ConeCur2\");\n    }\n    assert(pLeafBest != nil, \"pLeafBest != nil\");\n    assert(Aig_ObjIsNode(pLeafBest), \"Aig_ObjIsNode(pLeafBest)\");\n    // deref the best leaf\n    ConeCur1 = Aig_NodeDeref_rec( pLeafBest, 0, nil, nil );\n    // collect the cut nodes\n    Vec_PtrClear( vResult );\n    Aig_ManIncrementTravId( p );\n    Aig_NodeMffcSupp_rec( p, pNode, 0, vResult, 1, pLeafBest );\n    // ref the nodes\n    ConeCur2 = Aig_NodeRef_rec( pLeafBest, 0 );\n    assert(ConeCur1 == ConeCur2, \"ConeCur1 == ConeCur2\");\n    // ref the original node\n    ConeSize2 = Aig_NodeRef_rec( pNode, 0 );\n    assert(ConeSize1 == ConeSize2, \"ConeSize1 == ConeSize2\");\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

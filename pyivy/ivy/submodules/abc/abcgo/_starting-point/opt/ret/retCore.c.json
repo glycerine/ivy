@@ -1,0 +1,140 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retCore.c",
+  "SHA256": "faf46a526bd88d34bb7b6931be0d0c5a9279c11df0a00f6c3f85cbc8b49c2e12",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Mode \u003e 0 \u0026\u0026 Mode \u003c 7 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !fForwardOnly || !fBackwardOnly );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 9,
+        "ByteOffset": 1981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cleanup before retiming removed %d dangling nodes and %d dangling latches.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 9,
+        "ByteOffset": 3480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Unknown retiming option.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 9,
+        "ByteOffset": 3567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Reduction in area = %3d. Reduction in delay = %3d. \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 101,
+        "Column": 78,
+        "ByteOffset": 3878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 4426
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkRetime",
+      "Start": 1281,
+      "End": 3790,
+      "BodyStart": 1427,
+      "Original": "int Abc_NtkRetime( Abc_Ntk_t * pNtk, int Mode, int nDelayLim, int fForwardOnly, int fBackwardOnly, int fOneStep, int fUseOldNames, int fVerbose )\n{\n    int nLatches = Abc_NtkLatchNum(pNtk);\n    int nLevels  = Abc_NtkLevel(pNtk);\n    int RetValue = 0;\n    abctime clkTotal = Abc_Clock();\n    int nNodesOld, nLatchesOld;\n    assert( Mode \u003e 0 \u0026\u0026 Mode \u003c 7 );\n    assert( !fForwardOnly || !fBackwardOnly );\n\n    // cleanup the network\n    nNodesOld   = Abc_NtkNodeNum(pNtk);\n    nLatchesOld = Abc_NtkLatchNum(pNtk);\n    Abc_NtkCleanupSeq(pNtk, 0, 0, 0);\n    if ( nNodesOld \u003e Abc_NtkNodeNum(pNtk) || nLatchesOld \u003e Abc_NtkLatchNum(pNtk) )\n        printf( \"Cleanup before retiming removed %d dangling nodes and %d dangling latches.\\n\",\n            nNodesOld - Abc_NtkNodeNum(pNtk), nLatchesOld - Abc_NtkLatchNum(pNtk) );\n\n    // perform retiming\n    switch ( Mode )\n    {\n    case 1: // forward \n        RetValue = Abc_NtkRetimeIncremental( pNtk, nDelayLim, 1, 0, 0, fUseOldNames, fVerbose );\n        break;\n    case 2: // backward \n        RetValue = Abc_NtkRetimeIncremental( pNtk, nDelayLim, 0, 0, 0, fUseOldNames, fVerbose );\n        break;\n    case 3: // min-area \n        RetValue = Abc_NtkRetimeMinArea( pNtk, fForwardOnly, fBackwardOnly, fUseOldNames, fVerbose );\n        break;\n    case 4: // min-delay\n        if ( !fBackwardOnly )\n            RetValue += Abc_NtkRetimeIncremental( pNtk, nDelayLim, 1, 1, fOneStep, fUseOldNames, fVerbose );\n        if ( !fForwardOnly )\n            RetValue += Abc_NtkRetimeIncremental( pNtk, nDelayLim, 0, 1, fOneStep, fUseOldNames, fVerbose );\n        break;\n    case 5: // min-area + min-delay\n        RetValue  = Abc_NtkRetimeMinArea( pNtk, fForwardOnly, fBackwardOnly, fUseOldNames, fVerbose );\n        if ( !fBackwardOnly )\n            RetValue += Abc_NtkRetimeIncremental( pNtk, nDelayLim, 1, 1, 0, fUseOldNames, fVerbose );\n        if ( !fForwardOnly )\n            RetValue += Abc_NtkRetimeIncremental( pNtk, nDelayLim, 0, 1, 0, fUseOldNames, fVerbose );\n        break;\n    case 6: // Pan's algorithm\n        RetValue = Abc_NtkRetimeLValue( pNtk, 500, fVerbose );\n        break;\n    default:\n        printf( \"Unknown retiming option.\\n\" );\n        break;\n    }\n    if ( fVerbose )\n    {\n        printf( \"Reduction in area = %3d. Reduction in delay = %3d. \", \n            nLatches - Abc_NtkLatchNum(pNtk), nLevels - Abc_NtkLevel(pNtk) );\n        ABC_PRT( \"Total runtime\", Abc_Clock() - clkTotal );\n    }\n    timeRetime = Abc_Clock() - clkTotal;\n    return RetValue;\n}",
+      "Draft": "func Abc_NtkRetime(pNtk *Abc_Ntk_t, Mode int32, nDelayLim int32, fForwardOnly int32, fBackwardOnly int32, fOneStep int32, fUseOldNames int32, fVerbose int32) int32 {\n    var nLatches int32  = Abc_NtkLatchNum(pNtk);\n    var nLevels int32   = Abc_NtkLevel(pNtk);\n    var RetValue int32;\n    var clkTotal abctime  = Abc_Clock();\n    var nNodesOld, nLatchesOld int32;\n    assert(Mode \u003e 0 \u0026\u0026 Mode \u003c 7, \"Mode \u003e 0 \u0026\u0026 Mode \u003c 7\");\n    assert(!(fForwardOnly != 0) || !(fBackwardOnly != 0), \"!fForwardOnly || !fBackwardOnly\");\n\n    // cleanup the network\n    nNodesOld   = Abc_NtkNodeNum(pNtk);\n    nLatchesOld = Abc_NtkLatchNum(pNtk);\n    Abc_NtkCleanupSeq(pNtk, 0, 0, 0);\n    if nNodesOld \u003e Abc_NtkNodeNum(pNtk) || nLatchesOld \u003e Abc_NtkLatchNum(pNtk) {\n        fmt.Printf(\"Cleanup before retiming removed %d dangling nodes and %d dangling latches.\\n\", nNodesOld - Abc_NtkNodeNum(pNtk), nLatchesOld - Abc_NtkLatchNum(pNtk)); }\n\n    // perform retiming\n    switch  Mode  {\n    case 1: // forward \n        RetValue = Abc_NtkRetimeIncremental( pNtk, nDelayLim, 1, 0, 0, fUseOldNames, fVerbose );\n        break;\n    case 2: // backward \n        RetValue = Abc_NtkRetimeIncremental( pNtk, nDelayLim, 0, 0, 0, fUseOldNames, fVerbose );\n        break;\n    case 3: // min-area \n        RetValue = Abc_NtkRetimeMinArea( pNtk, fForwardOnly, fBackwardOnly, fUseOldNames, fVerbose );\n        break;\n    case 4: // min-delay\n        if ( !fBackwardOnly )\n            RetValue += Abc_NtkRetimeIncremental( pNtk, nDelayLim, 1, 1, fOneStep, fUseOldNames, fVerbose );\n        if !(fForwardOnly != 0) {\n            RetValue += Abc_NtkRetimeIncremental( pNtk, nDelayLim, 0, 1, fOneStep, fUseOldNames, fVerbose ); }\n        break;\n    case 5: // min-area + min-delay\n        RetValue  = Abc_NtkRetimeMinArea( pNtk, fForwardOnly, fBackwardOnly, fUseOldNames, fVerbose );\n        if !(fBackwardOnly != 0) {\n            RetValue += Abc_NtkRetimeIncremental( pNtk, nDelayLim, 1, 1, 0, fUseOldNames, fVerbose ); }\n        if !(fForwardOnly != 0) {\n            RetValue += Abc_NtkRetimeIncremental( pNtk, nDelayLim, 0, 1, 0, fUseOldNames, fVerbose ); }\n        break;\n    case 6: // Pan's algorithm\n        RetValue = Abc_NtkRetimeLValue( pNtk, 500, fVerbose );\n        break;\n    default:\n        fmt.Printf(\"Unknown retiming option.\\n\");\n        break;\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Reduction in area = %3d. Reduction in delay = %3d. \", nLatches - Abc_NtkLatchNum(pNtk), nLevels - Abc_NtkLevel(pNtk));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Total runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    }\n    timeRetime = Abc_Clock() - clkTotal;\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Abc_NtkRetimeDebug",
+      "Start": 4055,
+      "End": 4662,
+      "BodyStart": 4098,
+      "Original": "int Abc_NtkRetimeDebug( Abc_Ntk_t * pNtk )\n{\n    extern int Abc_NtkSecFraig( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int nSeconds, int nFrames, int fVerbose );\n    Abc_Ntk_t * pNtkRet;\n    assert( Abc_NtkIsLogic(pNtk) );\n    Abc_NtkToSop( pNtk, -1, ABC_INFINITY );\n//    if ( !Abc_NtkCheck( pNtk ) )\n//        fprintf( stdout, \"Abc_NtkRetimeDebug(): Network check has failed.\\n\" );\n//    Io_WriteBlifLogic( pNtk, \"debug_temp.blif\", 1 );\n    pNtkRet = Abc_NtkDup( pNtk );\n    Abc_NtkRetime( pNtkRet, 3, 0, 0, 1, 0, 1, 0 ); // debugging backward flow\n    return !Abc_NtkSecFraig( pNtk, pNtkRet, 10000, 3, 0 );\n}",
+      "Draft": "func Abc_NtkRetimeDebug(pNtk *Abc_Ntk_t) int32 {\n    extern int Abc_NtkSecFraig( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int nSeconds, int nFrames, int fVerbose );\n    var pNtkRet *Abc_Ntk_t;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    Abc_NtkToSop( pNtk, -1, ABC_INFINITY );\n//    if ( !Abc_NtkCheck( pNtk ) )\n//        fprintf( stdout, \"Abc_NtkRetimeDebug(): Network check has failed.\\n\" );\n//    Io_WriteBlifLogic( pNtk, \"debug_temp.blif\", 1 );\n    pNtkRet = Abc_NtkDup( pNtk );\n    Abc_NtkRetime( pNtkRet, 3, 0, 0, 1, 0, 1, 0 ); // debugging backward flow\n    return !Abc_NtkSecFraig( pNtk, pNtkRet, 10000, 3, 0 );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retCore.c::Abc_NtkRetime",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1281,
+      "End": 3790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retCore.c::Abc_NtkRetimeDebug",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRetimeDebug",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4055,
+      "End": 4662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/ret/retCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4909
+    }
+  ],
+  "Draft": "package ret\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [retCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Retiming package.]\n\n  Synopsis    [The core retiming procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Oct 31, 2006.]\n\n  Revision    [$Id: retCore.c,v 1.00 2006/10/31 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"retInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nvar timeRetime abctime;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Implementation of retiming.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetime(pNtk *Abc_Ntk_t, Mode int32, nDelayLim int32, fForwardOnly int32, fBackwardOnly int32, fOneStep int32, fUseOldNames int32, fVerbose int32) int32 {\n    var nLatches int32  = Abc_NtkLatchNum(pNtk);\n    var nLevels int32   = Abc_NtkLevel(pNtk);\n    var RetValue int32;\n    var clkTotal abctime  = Abc_Clock();\n    var nNodesOld, nLatchesOld int32;\n    assert(Mode \u003e 0 \u0026\u0026 Mode \u003c 7, \"Mode \u003e 0 \u0026\u0026 Mode \u003c 7\");\n    assert(!(fForwardOnly != 0) || !(fBackwardOnly != 0), \"!fForwardOnly || !fBackwardOnly\");\n\n    // cleanup the network\n    nNodesOld   = Abc_NtkNodeNum(pNtk);\n    nLatchesOld = Abc_NtkLatchNum(pNtk);\n    Abc_NtkCleanupSeq(pNtk, 0, 0, 0);\n    if nNodesOld \u003e Abc_NtkNodeNum(pNtk) || nLatchesOld \u003e Abc_NtkLatchNum(pNtk) {\n        fmt.Printf(\"Cleanup before retiming removed %d dangling nodes and %d dangling latches.\\n\", nNodesOld - Abc_NtkNodeNum(pNtk), nLatchesOld - Abc_NtkLatchNum(pNtk)); }\n\n    // perform retiming\n    switch  Mode  {\n    case 1: // forward \n        RetValue = Abc_NtkRetimeIncremental( pNtk, nDelayLim, 1, 0, 0, fUseOldNames, fVerbose );\n        break;\n    case 2: // backward \n        RetValue = Abc_NtkRetimeIncremental( pNtk, nDelayLim, 0, 0, 0, fUseOldNames, fVerbose );\n        break;\n    case 3: // min-area \n        RetValue = Abc_NtkRetimeMinArea( pNtk, fForwardOnly, fBackwardOnly, fUseOldNames, fVerbose );\n        break;\n    case 4: // min-delay\n        if ( !fBackwardOnly )\n            RetValue += Abc_NtkRetimeIncremental( pNtk, nDelayLim, 1, 1, fOneStep, fUseOldNames, fVerbose );\n        if !(fForwardOnly != 0) {\n            RetValue += Abc_NtkRetimeIncremental( pNtk, nDelayLim, 0, 1, fOneStep, fUseOldNames, fVerbose ); }\n        break;\n    case 5: // min-area + min-delay\n        RetValue  = Abc_NtkRetimeMinArea( pNtk, fForwardOnly, fBackwardOnly, fUseOldNames, fVerbose );\n        if !(fBackwardOnly != 0) {\n            RetValue += Abc_NtkRetimeIncremental( pNtk, nDelayLim, 1, 1, 0, fUseOldNames, fVerbose ); }\n        if !(fForwardOnly != 0) {\n            RetValue += Abc_NtkRetimeIncremental( pNtk, nDelayLim, 0, 1, 0, fUseOldNames, fVerbose ); }\n        break;\n    case 6: // Pan's algorithm\n        RetValue = Abc_NtkRetimeLValue( pNtk, 500, fVerbose );\n        break;\n    default:\n        fmt.Printf(\"Unknown retiming option.\\n\");\n        break;\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Reduction in area = %3d. Reduction in delay = %3d. \", nLatches - Abc_NtkLatchNum(pNtk), nLevels - Abc_NtkLevel(pNtk));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Total runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    }\n    timeRetime = Abc_Clock() - clkTotal;\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Used for automated debugging.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRetimeDebug(pNtk *Abc_Ntk_t) int32 {\n    extern int Abc_NtkSecFraig( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int nSeconds, int nFrames, int fVerbose );\n    var pNtkRet *Abc_Ntk_t;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    Abc_NtkToSop( pNtk, -1, ABC_INFINITY );\n//    if ( !Abc_NtkCheck( pNtk ) )\n//        fprintf( stdout, \"Abc_NtkRetimeDebug(): Network check has failed.\\n\" );\n//    Io_WriteBlifLogic( pNtk, \"debug_temp.blif\", 1 );\n    pNtkRet = Abc_NtkDup( pNtk );\n    Abc_NtkRetime( pNtkRet, 3, 0, 0, 1, 0, 1, 0 ); // debugging backward flow\n    return !Abc_NtkSecFraig( pNtk, pNtkRet, 10000, 3, 0 );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

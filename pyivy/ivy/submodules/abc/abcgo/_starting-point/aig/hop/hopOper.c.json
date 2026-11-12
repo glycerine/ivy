@@ -1,0 +1,359 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c",
+  "SHA256": "4ba76df9a566bedbbdba5503fcaab0416daa137b5893a5b1d7cefce942c979ef",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 5,
+        "ByteOffset": 2079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003c Vec_PtrSize(p.vPis) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 282,
+        "Column": 5,
+        "ByteOffset": 8898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Type == AIG_AND || Type == AIG_EXOR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 8949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nArgs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 9361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vPairs.nSize \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 301,
+        "Column": 5,
+        "ByteOffset": 9393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vPairs.nSize % 2 == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Hop_ObjIsExorType",
+      "Start": 817,
+      "End": 1432,
+      "BodyStart": 929,
+      "Original": "static inline int Hop_ObjIsExorType( Hop_Obj_t * p0, Hop_Obj_t * p1, Hop_Obj_t ** ppFan0, Hop_Obj_t ** ppFan1 )\n{\n    if ( !Hop_IsComplement(p0) || !Hop_IsComplement(p1) )\n        return 0;\n    p0 = Hop_Regular(p0);\n    p1 = Hop_Regular(p1);\n    if ( !Hop_ObjIsAnd(p0) || !Hop_ObjIsAnd(p1) )\n        return 0;\n    if ( Hop_ObjFanin0(p0) != Hop_ObjFanin0(p1) || Hop_ObjFanin1(p0) != Hop_ObjFanin1(p1) )\n        return 0;\n    if ( Hop_ObjFaninC0(p0) == Hop_ObjFaninC0(p1) || Hop_ObjFaninC1(p0) == Hop_ObjFaninC1(p1) )\n        return 0;\n    *ppFan0 = Hop_ObjChild0(p0);\n    *ppFan1 = Hop_ObjChild1(p0);\n    return 1;\n}",
+      "Draft": "func Hop_ObjIsExorType(p0 *Hop_Obj_t, p1 *Hop_Obj_t, ppFan0 **Hop_Obj_t, ppFan1 **Hop_Obj_t) int32 {\n    if !Hop_IsComplement(p0) || !Hop_IsComplement(p1) {\n        return 0; }\n    p0 = Hop_Regular(p0);\n    p1 = Hop_Regular(p1);\n    if !Hop_ObjIsAnd(p0) || !Hop_ObjIsAnd(p1) {\n        return 0; }\n    if Hop_ObjFanin0(p0) != Hop_ObjFanin0(p1) || Hop_ObjFanin1(p0) != Hop_ObjFanin1(p1) {\n        return 0; }\n    if Hop_ObjFaninC0(p0) == Hop_ObjFaninC0(p1) || Hop_ObjFaninC1(p0) == Hop_ObjFaninC1(p1) {\n        return 0; }\n    *ppFan0 = Hop_ObjChild0(p0);\n    *ppFan1 = Hop_ObjChild1(p0);\n    return 1;\n}"
+    },
+    {
+      "Name": "Hop_IthVar",
+      "Start": 1921,
+      "End": 2127,
+      "BodyStart": 1968,
+      "Original": "Hop_Obj_t * Hop_IthVar( Hop_Man_t * p, int i )\n{\n    int v;\n    for ( v = Hop_ManPiNum(p); v \u003c= i; v++ )\n        Hop_ObjCreatePi( p );\n    assert( i \u003c Vec_PtrSize(p-\u003evPis) );\n    return Hop_ManPi( p, i );\n}",
+      "Draft": "func Hop_IthVar(p *Hop_Man_t, i int32) *Hop_Obj_t {\n    var v int32;\n    for  v = Hop_ManPiNum(p); v \u003c= i; v++  {\n        Hop_ObjCreatePi( p );\n    }\n    assert(i \u003c Vec_PtrSize(p.vPis), \"i \u003c Vec_PtrSize(p.vPis)\");\n    return Hop_ManPi( p, i );\n}"
+    },
+    {
+      "Name": "Hop_Oper",
+      "Start": 2424,
+      "End": 2678,
+      "BodyStart": 2511,
+      "Original": "Hop_Obj_t * Hop_Oper( Hop_Man_t * p, Hop_Obj_t * p0, Hop_Obj_t * p1, Hop_Type_t Type )\n{\n    if ( Type == AIG_AND )\n        return Hop_And( p, p0, p1 );\n    if ( Type == AIG_EXOR )\n        return Hop_Exor( p, p0, p1 );\n    assert( 0 );\n    return NULL;\n}",
+      "Draft": "func Hop_Oper(p *Hop_Man_t, p0 *Hop_Obj_t, p1 *Hop_Obj_t, Type Hop_Type_t) *Hop_Obj_t {\n    if Type == AIG_AND {\n        return Hop_And( p, p0, p1 ); }\n    if Type == AIG_EXOR {\n        return Hop_Exor( p, p0, p1 ); }\n    assert(false, \"0\");\n    return nil;\n}"
+    },
+    {
+      "Name": "Hop_And",
+      "Start": 2982,
+      "End": 3791,
+      "BodyStart": 3051,
+      "Original": "Hop_Obj_t * Hop_And( Hop_Man_t * p, Hop_Obj_t * p0, Hop_Obj_t * p1 )\n{\n    Hop_Obj_t * pGhost, * pResult;\n//    Hop_Obj_t * pFan0, * pFan1;\n    // check trivial cases\n    if ( p0 == p1 )\n        return p0;\n    if ( p0 == Hop_Not(p1) )\n        return Hop_Not(p-\u003epConst1);\n    if ( Hop_Regular(p0) == p-\u003epConst1 )\n        return p0 == p-\u003epConst1 ? p1 : Hop_Not(p-\u003epConst1);\n    if ( Hop_Regular(p1) == p-\u003epConst1 )\n        return p1 == p-\u003epConst1 ? p0 : Hop_Not(p-\u003epConst1);\n    // check if it can be an EXOR gate\n//    if ( Hop_ObjIsExorType( p0, p1, \u0026pFan0, \u0026pFan1 ) )\n//        return Hop_Exor( p, pFan0, pFan1 );\n    // check the table\n    pGhost = Hop_ObjCreateGhost( p, p0, p1, AIG_AND );\n    if ( (pResult = Hop_TableLookup( p, pGhost )) )\n        return pResult;\n    return Hop_ObjCreate( p, pGhost );\n}",
+      "Draft": "func Hop_And(p *Hop_Man_t, p0 *Hop_Obj_t, p1 *Hop_Obj_t) *Hop_Obj_t {\n    var pGhost, pResult *Hop_Obj_t;\n//    Hop_Obj_t * pFan0, * pFan1;\n    // check trivial cases\n    if p0 == p1 {\n        return p0; }\n    if p0 == Hop_Not(p1) {\n        return Hop_Not(p.pConst1); }\n    if Hop_Regular(p0) == p.pConst1 {\n        if p0 == p.pConst1 {\n            return p1;\n        } else {\n            return Hop_Not(p.pConst1);\n        } }\n    if Hop_Regular(p1) == p.pConst1 {\n        if p1 == p.pConst1 {\n            return p0;\n        } else {\n            return Hop_Not(p.pConst1);\n        } }\n    // check if it can be an EXOR gate\n//    if ( Hop_ObjIsExorType( p0, p1, \u0026pFan0, \u0026pFan1 ) )\n//        return Hop_Exor( p, pFan0, pFan1 );\n    // check the table\n    pGhost = Hop_ObjCreateGhost( p, p0, p1, AIG_AND );\n    if pResult = Hop_TableLookup( p, pGhost ) {\n        return pResult; }\n    return Hop_ObjCreate( p, pGhost );\n}"
+    },
+    {
+      "Name": "Hop_Exor",
+      "Start": 4095,
+      "End": 4808,
+      "BodyStart": 4165,
+      "Original": "Hop_Obj_t * Hop_Exor( Hop_Man_t * p, Hop_Obj_t * p0, Hop_Obj_t * p1 )\n{\n/*\n    Hop_Obj_t * pGhost, * pResult;\n    // check trivial cases\n    if ( p0 == p1 )\n        return Hop_Not(p-\u003epConst1);\n    if ( p0 == Hop_Not(p1) )\n        return p-\u003epConst1;\n    if ( Hop_Regular(p0) == p-\u003epConst1 )\n        return Hop_NotCond( p1, p0 == p-\u003epConst1 );\n    if ( Hop_Regular(p1) == p-\u003epConst1 )\n        return Hop_NotCond( p0, p1 == p-\u003epConst1 );\n    // check the table\n    pGhost = Hop_ObjCreateGhost( p, p0, p1, AIG_EXOR );\n    if ( pResult = Hop_TableLookup( p, pGhost ) )\n        return pResult;\n    return Hop_ObjCreate( p, pGhost );\n*/\n    return Hop_Or( p, Hop_And(p, p0, Hop_Not(p1)), Hop_And(p, Hop_Not(p0), p1) );\n}",
+      "Draft": "func Hop_Exor(p *Hop_Man_t, p0 *Hop_Obj_t, p1 *Hop_Obj_t) *Hop_Obj_t {\n/*\n    Hop_Obj_t * pGhost, * pResult;\n    // check trivial cases\n    if ( p0 == p1 )\n        return Hop_Not(p-\u003epConst1);\n    if ( p0 == Hop_Not(p1) )\n        return p-\u003epConst1;\n    if ( Hop_Regular(p0) == p-\u003epConst1 )\n        return Hop_NotCond( p1, p0 == p-\u003epConst1 );\n    if ( Hop_Regular(p1) == p-\u003epConst1 )\n        return Hop_NotCond( p0, p1 == p-\u003epConst1 );\n    // check the table\n    pGhost = Hop_ObjCreateGhost( p, p0, p1, AIG_EXOR );\n    if ( pResult = Hop_TableLookup( p, pGhost ) )\n        return pResult;\n    return Hop_ObjCreate( p, pGhost );\n*/\n    return Hop_Or( p, Hop_And(p, p0, Hop_Not(p1)), Hop_And(p, Hop_Not(p0), p1) );\n}"
+    },
+    {
+      "Name": "Hop_Or",
+      "Start": 5066,
+      "End": 5199,
+      "BodyStart": 5134,
+      "Original": "Hop_Obj_t * Hop_Or( Hop_Man_t * p, Hop_Obj_t * p0, Hop_Obj_t * p1 )\n{\n    return Hop_Not( Hop_And( p, Hop_Not(p0), Hop_Not(p1) ) );\n}",
+      "Draft": "func Hop_Or(p *Hop_Man_t, p0 *Hop_Obj_t, p1 *Hop_Obj_t) *Hop_Obj_t {\n    return Hop_Not( Hop_And( p, Hop_Not(p0), Hop_Not(p1) ) );\n}"
+    },
+    {
+      "Name": "Hop_Mux",
+      "Start": 5460,
+      "End": 7299,
+      "BodyStart": 5545,
+      "Original": "Hop_Obj_t * Hop_Mux( Hop_Man_t * p, Hop_Obj_t * pC, Hop_Obj_t * p1, Hop_Obj_t * p0 )\n{\n/*    \n    Hop_Obj_t * pTempA1, * pTempA2, * pTempB1, * pTempB2, * pTemp;\n    int Count0, Count1;\n    // consider trivial cases\n    if ( p0 == Hop_Not(p1) )\n        return Hop_Exor( p, pC, p0 );\n    // other cases can be added\n    // implement the first MUX (F = C * x1 + C' * x0)\n\n    // check for constants here!!!\n\n    pTempA1 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, pC,          p1, AIG_AND) );\n    pTempA2 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pC), p0, AIG_AND) );\n    if ( pTempA1 \u0026\u0026 pTempA2 )\n    {\n        pTemp = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pTempA1), Hop_Not(pTempA2), AIG_AND) );\n        if ( pTemp ) return Hop_Not(pTemp);\n    }\n    Count0 = (pTempA1 != NULL) + (pTempA2 != NULL);\n    // implement the second MUX (F' = C * x1' + C' * x0')\n    pTempB1 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, pC,          Hop_Not(p1), AIG_AND) );\n    pTempB2 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pC), Hop_Not(p0), AIG_AND) );\n    if ( pTempB1 \u0026\u0026 pTempB2 )\n    {\n        pTemp = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pTempB1), Hop_Not(pTempB2), AIG_AND) );\n        if ( pTemp ) return pTemp;\n    }\n    Count1 = (pTempB1 != NULL) + (pTempB2 != NULL);\n    // compare and decide which one to implement\n    if ( Count0 \u003e= Count1 )\n    {\n        pTempA1 = pTempA1? pTempA1 : Hop_And(p, pC,          p1);\n        pTempA2 = pTempA2? pTempA2 : Hop_And(p, Hop_Not(pC), p0);\n        return Hop_Or( p, pTempA1, pTempA2 );\n    }\n    pTempB1 = pTempB1? pTempB1 : Hop_And(p, pC,          Hop_Not(p1));\n    pTempB2 = pTempB2? pTempB2 : Hop_And(p, Hop_Not(pC), Hop_Not(p0));\n    return Hop_Not( Hop_Or( p, pTempB1, pTempB2 ) );\n*/\n    return Hop_Or( p, Hop_And(p, pC, p1), Hop_And(p, Hop_Not(pC), p0) );\n}",
+      "Draft": "func Hop_Mux(p *Hop_Man_t, pC *Hop_Obj_t, p1 *Hop_Obj_t, p0 *Hop_Obj_t) *Hop_Obj_t {\n/*    \n    Hop_Obj_t * pTempA1, * pTempA2, * pTempB1, * pTempB2, * pTemp;\n    int Count0, Count1;\n    // consider trivial cases\n    if ( p0 == Hop_Not(p1) )\n        return Hop_Exor( p, pC, p0 );\n    // other cases can be added\n    // implement the first MUX (F = C * x1 + C' * x0)\n\n    // check for constants here!!!\n\n    pTempA1 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, pC,          p1, AIG_AND) );\n    pTempA2 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pC), p0, AIG_AND) );\n    if ( pTempA1 \u0026\u0026 pTempA2 )\n    {\n        pTemp = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pTempA1), Hop_Not(pTempA2), AIG_AND) );\n        if ( pTemp ) return Hop_Not(pTemp);\n    }\n    Count0 = (pTempA1 != NULL) + (pTempA2 != NULL);\n    // implement the second MUX (F' = C * x1' + C' * x0')\n    pTempB1 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, pC,          Hop_Not(p1), AIG_AND) );\n    pTempB2 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pC), Hop_Not(p0), AIG_AND) );\n    if ( pTempB1 \u0026\u0026 pTempB2 )\n    {\n        pTemp = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pTempB1), Hop_Not(pTempB2), AIG_AND) );\n        if ( pTemp ) return pTemp;\n    }\n    Count1 = (pTempB1 != NULL) + (pTempB2 != NULL);\n    // compare and decide which one to implement\n    if ( Count0 \u003e= Count1 )\n    {\n        pTempA1 = pTempA1? pTempA1 : Hop_And(p, pC,          p1);\n        pTempA2 = pTempA2? pTempA2 : Hop_And(p, Hop_Not(pC), p0);\n        return Hop_Or( p, pTempA1, pTempA2 );\n    }\n    pTempB1 = pTempB1? pTempB1 : Hop_And(p, pC,          Hop_Not(p1));\n    pTempB2 = pTempB2? pTempB2 : Hop_And(p, Hop_Not(pC), Hop_Not(p0));\n    return Hop_Not( Hop_Or( p, pTempB1, pTempB2 ) );\n*/\n    return Hop_Or( p, Hop_And(p, pC, p1), Hop_And(p, Hop_Not(pC), p0) );\n}"
+    },
+    {
+      "Name": "Hop_Maj",
+      "Start": 7560,
+      "End": 7743,
+      "BodyStart": 7645,
+      "Original": "Hop_Obj_t * Hop_Maj( Hop_Man_t * p, Hop_Obj_t * pA, Hop_Obj_t * pB, Hop_Obj_t * pC )\n{\n    return Hop_Or( p, Hop_Or(p, Hop_And(p, pA, pB), Hop_And(p, pA, pC)), Hop_And(p, pB, pC) );\n}",
+      "Draft": "func Hop_Maj(p *Hop_Man_t, pA *Hop_Obj_t, pB *Hop_Obj_t, pC *Hop_Obj_t) *Hop_Obj_t {\n    return Hop_Or( p, Hop_Or(p, Hop_And(p, pA, pB), Hop_And(p, pA, pC)), Hop_And(p, pB, pC) );\n}"
+    },
+    {
+      "Name": "Hop_Multi_rec",
+      "Start": 8067,
+      "End": 8434,
+      "BodyStart": 8159,
+      "Original": "Hop_Obj_t * Hop_Multi_rec( Hop_Man_t * p, Hop_Obj_t ** ppObjs, int nObjs, Hop_Type_t Type )\n{\n    Hop_Obj_t * pObj1, * pObj2;\n    if ( nObjs == 1 )\n        return ppObjs[0];\n    pObj1 = Hop_Multi_rec( p, ppObjs,           nObjs/2,         Type );\n    pObj2 = Hop_Multi_rec( p, ppObjs + nObjs/2, nObjs - nObjs/2, Type );\n    return Hop_Oper( p, pObj1, pObj2, Type );\n}",
+      "Draft": "func Hop_Multi_rec(p *Hop_Man_t, ppObjs **Hop_Obj_t, nObjs int32, Type Hop_Type_t) *Hop_Obj_t {\n    var pObj1, pObj2 *Hop_Obj_t;\n    if nObjs == 1 {\n        return ppObjs[0]; }\n    pObj1 = Hop_Multi_rec( p, ppObjs,           nObjs/2,         Type );\n    pObj2 = Hop_Multi_rec( p, ppObjs + nObjs/2, nObjs - nObjs/2, Type );\n    return Hop_Oper( p, pObj1, pObj2, Type );\n}"
+    },
+    {
+      "Name": "Hop_Multi",
+      "Start": 8679,
+      "End": 8896,
+      "BodyStart": 8766,
+      "Original": "Hop_Obj_t * Hop_Multi( Hop_Man_t * p, Hop_Obj_t ** pArgs, int nArgs, Hop_Type_t Type )\n{\n    assert( Type == AIG_AND || Type == AIG_EXOR );\n    assert( nArgs \u003e 0 );\n    return Hop_Multi_rec( p, pArgs, nArgs, Type );\n}",
+      "Draft": "func Hop_Multi(p *Hop_Man_t, pArgs **Hop_Obj_t, nArgs int32, Type Hop_Type_t) *Hop_Obj_t {\n    assert(Type == AIG_AND || Type == AIG_EXOR, \"Type == AIG_AND || Type == AIG_EXOR\");\n    assert(nArgs \u003e 0, \"nArgs \u003e 0\");\n    return Hop_Multi_rec( p, pArgs, nArgs, Type );\n}"
+    },
+    {
+      "Name": "Hop_Miter",
+      "Start": 9153,
+      "End": 9643,
+      "BodyStart": 9212,
+      "Original": "Hop_Obj_t * Hop_Miter( Hop_Man_t * p, Vec_Ptr_t * vPairs )\n{\n    int i;\n    assert( vPairs-\u003enSize \u003e 0 );\n    assert( vPairs-\u003enSize % 2 == 0 );\n    // go through the cubes of the node's SOP\n    for ( i = 0; i \u003c vPairs-\u003enSize; i += 2 )\n        vPairs-\u003epArray[i/2] = Hop_Not( Hop_Exor( p, (Hop_Obj_t *)vPairs-\u003epArray[i], (Hop_Obj_t *)vPairs-\u003epArray[i+1] ) );\n    vPairs-\u003enSize = vPairs-\u003enSize/2;\n    return Hop_Not( Hop_Multi_rec( p, (Hop_Obj_t **)vPairs-\u003epArray, vPairs-\u003enSize, AIG_AND ) );\n}",
+      "Draft": "func Hop_Miter(p *Hop_Man_t, vPairs *Vec_Ptr_t) *Hop_Obj_t {\n    var i int32;\n    assert(vPairs.nSize \u003e 0, \"vPairs.nSize \u003e 0\");\n    assert(vPairs.nSize % 2 == 0, \"vPairs.nSize % 2 == 0\");\n    // go through the cubes of the node's SOP\n    for  i = 0; i \u003c vPairs.nSize; i += 2  {\n        vPairs.pArray[i/2] = Hop_Not( Hop_Exor( p, (Hop_Obj_t *)vPairs.pArray[i], (Hop_Obj_t *)vPairs.pArray[i+1] ) );\n    }\n    vPairs.nSize = vPairs.nSize/2;\n    return Hop_Not( Hop_Multi_rec( p, (Hop_Obj_t **)vPairs.pArray, vPairs.nSize, AIG_AND ) );\n}"
+    },
+    {
+      "Name": "Hop_CreateAnd",
+      "Start": 9918,
+      "End": 10148,
+      "BodyStart": 9972,
+      "Original": "Hop_Obj_t * Hop_CreateAnd( Hop_Man_t * p, int nVars )\n{\n    Hop_Obj_t * pFunc;\n    int i;\n    pFunc = Hop_ManConst1( p );\n    for ( i = 0; i \u003c nVars; i++ )\n        pFunc = Hop_And( p, pFunc, Hop_IthVar(p, i) );\n    return pFunc;\n}",
+      "Draft": "func Hop_CreateAnd(p *Hop_Man_t, nVars int32) *Hop_Obj_t {\n    var pFunc *Hop_Obj_t;\n    var i int32;\n    pFunc = Hop_ManConst1( p );\n    for  i = 0; i \u003c nVars; i++  {\n        pFunc = Hop_And( p, pFunc, Hop_IthVar(p, i) );\n    }\n    return pFunc;\n}"
+    },
+    {
+      "Name": "Hop_CreateOr",
+      "Start": 10423,
+      "End": 10651,
+      "BodyStart": 10476,
+      "Original": "Hop_Obj_t * Hop_CreateOr( Hop_Man_t * p, int nVars )\n{\n    Hop_Obj_t * pFunc;\n    int i;\n    pFunc = Hop_ManConst0( p );\n    for ( i = 0; i \u003c nVars; i++ )\n        pFunc = Hop_Or( p, pFunc, Hop_IthVar(p, i) );\n    return pFunc;\n}",
+      "Draft": "func Hop_CreateOr(p *Hop_Man_t, nVars int32) *Hop_Obj_t {\n    var pFunc *Hop_Obj_t;\n    var i int32;\n    pFunc = Hop_ManConst0( p );\n    for  i = 0; i \u003c nVars; i++  {\n        pFunc = Hop_Or( p, pFunc, Hop_IthVar(p, i) );\n    }\n    return pFunc;\n}"
+    },
+    {
+      "Name": "Hop_CreateExor",
+      "Start": 10926,
+      "End": 11158,
+      "BodyStart": 10981,
+      "Original": "Hop_Obj_t * Hop_CreateExor( Hop_Man_t * p, int nVars )\n{\n    Hop_Obj_t * pFunc;\n    int i;\n    pFunc = Hop_ManConst0( p );\n    for ( i = 0; i \u003c nVars; i++ )\n        pFunc = Hop_Exor( p, pFunc, Hop_IthVar(p, i) );\n    return pFunc;\n}",
+      "Draft": "func Hop_CreateExor(p *Hop_Man_t, nVars int32) *Hop_Obj_t {\n    var pFunc *Hop_Obj_t;\n    var i int32;\n    pFunc = Hop_ManConst0( p );\n    for  i = 0; i \u003c nVars; i++  {\n        pFunc = Hop_Exor( p, pFunc, Hop_IthVar(p, i) );\n    }\n    return pFunc;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::pointer-cast::9439",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9439,
+      "End": 9452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::pointer-cast::9471",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9471,
+      "End": 9484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::pointer-cast::9584",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9584,
+      "End": 9598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::Hop_ObjIsExorType",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjIsExorType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 817,
+      "End": 1432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::Hop_IthVar",
+      "Category": "semantic-review",
+      "Symbol": "Hop_IthVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1921,
+      "End": 2127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::Hop_Oper",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Oper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2424,
+      "End": 2678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::Hop_And",
+      "Category": "semantic-review",
+      "Symbol": "Hop_And",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2982,
+      "End": 3791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::Hop_Exor",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Exor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4095,
+      "End": 4808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::Hop_Or",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Or",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5066,
+      "End": 5199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::Hop_Mux",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Mux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5460,
+      "End": 7299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::Hop_Maj",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Maj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7560,
+      "End": 7743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::Hop_Multi_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Multi_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8067,
+      "End": 8434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::Hop_Multi",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Multi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8679,
+      "End": 8896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::Hop_Miter",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Miter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9153,
+      "End": 9643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::Hop_CreateAnd",
+      "Category": "semantic-review",
+      "Symbol": "Hop_CreateAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9918,
+      "End": 10148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::Hop_CreateOr",
+      "Category": "semantic-review",
+      "Symbol": "Hop_CreateOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10423,
+      "End": 10651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::Hop_CreateExor",
+      "Category": "semantic-review",
+      "Symbol": "Hop_CreateExor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10926,
+      "End": 11158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopOper.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11405
+    }
+  ],
+  "Draft": "package hop\n\n/**CFile****************************************************************\n\n  FileName    [hopOper.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Minimalistic And-Inverter Graph package.]\n\n  Synopsis    [AIG operations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: hopOper.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"hop.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// procedure to detect an EXOR gate\nfunc Hop_ObjIsExorType(p0 *Hop_Obj_t, p1 *Hop_Obj_t, ppFan0 **Hop_Obj_t, ppFan1 **Hop_Obj_t) int32 {\n    if !Hop_IsComplement(p0) || !Hop_IsComplement(p1) {\n        return 0; }\n    p0 = Hop_Regular(p0);\n    p1 = Hop_Regular(p1);\n    if !Hop_ObjIsAnd(p0) || !Hop_ObjIsAnd(p1) {\n        return 0; }\n    if Hop_ObjFanin0(p0) != Hop_ObjFanin0(p1) || Hop_ObjFanin1(p0) != Hop_ObjFanin1(p1) {\n        return 0; }\n    if Hop_ObjFaninC0(p0) == Hop_ObjFaninC0(p1) || Hop_ObjFaninC1(p0) == Hop_ObjFaninC1(p1) {\n        return 0; }\n    *ppFan0 = Hop_ObjChild0(p0);\n    *ppFan1 = Hop_ObjChild1(p0);\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns i-th elementary variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_IthVar(p *Hop_Man_t, i int32) *Hop_Obj_t {\n    var v int32;\n    for  v = Hop_ManPiNum(p); v \u003c= i; v++  {\n        Hop_ObjCreatePi( p );\n    }\n    assert(i \u003c Vec_PtrSize(p.vPis), \"i \u003c Vec_PtrSize(p.vPis)\");\n    return Hop_ManPi( p, i );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform one operation.]\n\n  Description [The argument nodes can be complemented.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Oper(p *Hop_Man_t, p0 *Hop_Obj_t, p1 *Hop_Obj_t, Type Hop_Type_t) *Hop_Obj_t {\n    if Type == AIG_AND {\n        return Hop_And( p, p0, p1 ); }\n    if Type == AIG_EXOR {\n        return Hop_Exor( p, p0, p1 ); }\n    assert(false, \"0\");\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs canonicization step.]\n\n  Description [The argument nodes can be complemented.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_And(p *Hop_Man_t, p0 *Hop_Obj_t, p1 *Hop_Obj_t) *Hop_Obj_t {\n    var pGhost, pResult *Hop_Obj_t;\n//    Hop_Obj_t * pFan0, * pFan1;\n    // check trivial cases\n    if p0 == p1 {\n        return p0; }\n    if p0 == Hop_Not(p1) {\n        return Hop_Not(p.pConst1); }\n    if Hop_Regular(p0) == p.pConst1 {\n        if p0 == p.pConst1 {\n            return p1;\n        } else {\n            return Hop_Not(p.pConst1);\n        } }\n    if Hop_Regular(p1) == p.pConst1 {\n        if p1 == p.pConst1 {\n            return p0;\n        } else {\n            return Hop_Not(p.pConst1);\n        } }\n    // check if it can be an EXOR gate\n//    if ( Hop_ObjIsExorType( p0, p1, \u0026pFan0, \u0026pFan1 ) )\n//        return Hop_Exor( p, pFan0, pFan1 );\n    // check the table\n    pGhost = Hop_ObjCreateGhost( p, p0, p1, AIG_AND );\n    if pResult = Hop_TableLookup( p, pGhost ) {\n        return pResult; }\n    return Hop_ObjCreate( p, pGhost );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs canonicization step.]\n\n  Description [The argument nodes can be complemented.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Exor(p *Hop_Man_t, p0 *Hop_Obj_t, p1 *Hop_Obj_t) *Hop_Obj_t {\n/*\n    Hop_Obj_t * pGhost, * pResult;\n    // check trivial cases\n    if ( p0 == p1 )\n        return Hop_Not(p-\u003epConst1);\n    if ( p0 == Hop_Not(p1) )\n        return p-\u003epConst1;\n    if ( Hop_Regular(p0) == p-\u003epConst1 )\n        return Hop_NotCond( p1, p0 == p-\u003epConst1 );\n    if ( Hop_Regular(p1) == p-\u003epConst1 )\n        return Hop_NotCond( p0, p1 == p-\u003epConst1 );\n    // check the table\n    pGhost = Hop_ObjCreateGhost( p, p0, p1, AIG_EXOR );\n    if ( pResult = Hop_TableLookup( p, pGhost ) )\n        return pResult;\n    return Hop_ObjCreate( p, pGhost );\n*/\n    return Hop_Or( p, Hop_And(p, p0, Hop_Not(p1)), Hop_And(p, Hop_Not(p0), p1) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements Boolean OR.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Or(p *Hop_Man_t, p0 *Hop_Obj_t, p1 *Hop_Obj_t) *Hop_Obj_t {\n    return Hop_Not( Hop_And( p, Hop_Not(p0), Hop_Not(p1) ) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements ITE operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Mux(p *Hop_Man_t, pC *Hop_Obj_t, p1 *Hop_Obj_t, p0 *Hop_Obj_t) *Hop_Obj_t {\n/*    \n    Hop_Obj_t * pTempA1, * pTempA2, * pTempB1, * pTempB2, * pTemp;\n    int Count0, Count1;\n    // consider trivial cases\n    if ( p0 == Hop_Not(p1) )\n        return Hop_Exor( p, pC, p0 );\n    // other cases can be added\n    // implement the first MUX (F = C * x1 + C' * x0)\n\n    // check for constants here!!!\n\n    pTempA1 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, pC,          p1, AIG_AND) );\n    pTempA2 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pC), p0, AIG_AND) );\n    if ( pTempA1 \u0026\u0026 pTempA2 )\n    {\n        pTemp = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pTempA1), Hop_Not(pTempA2), AIG_AND) );\n        if ( pTemp ) return Hop_Not(pTemp);\n    }\n    Count0 = (pTempA1 != NULL) + (pTempA2 != NULL);\n    // implement the second MUX (F' = C * x1' + C' * x0')\n    pTempB1 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, pC,          Hop_Not(p1), AIG_AND) );\n    pTempB2 = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pC), Hop_Not(p0), AIG_AND) );\n    if ( pTempB1 \u0026\u0026 pTempB2 )\n    {\n        pTemp = Hop_TableLookup( p, Hop_ObjCreateGhost(p, Hop_Not(pTempB1), Hop_Not(pTempB2), AIG_AND) );\n        if ( pTemp ) return pTemp;\n    }\n    Count1 = (pTempB1 != NULL) + (pTempB2 != NULL);\n    // compare and decide which one to implement\n    if ( Count0 \u003e= Count1 )\n    {\n        pTempA1 = pTempA1? pTempA1 : Hop_And(p, pC,          p1);\n        pTempA2 = pTempA2? pTempA2 : Hop_And(p, Hop_Not(pC), p0);\n        return Hop_Or( p, pTempA1, pTempA2 );\n    }\n    pTempB1 = pTempB1? pTempB1 : Hop_And(p, pC,          Hop_Not(p1));\n    pTempB2 = pTempB2? pTempB2 : Hop_And(p, Hop_Not(pC), Hop_Not(p0));\n    return Hop_Not( Hop_Or( p, pTempB1, pTempB2 ) );\n*/\n    return Hop_Or( p, Hop_And(p, pC, p1), Hop_And(p, Hop_Not(pC), p0) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements ITE operation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Maj(p *Hop_Man_t, pA *Hop_Obj_t, pB *Hop_Obj_t, pC *Hop_Obj_t) *Hop_Obj_t {\n    return Hop_Or( p, Hop_Or(p, Hop_And(p, pA, pB), Hop_And(p, pA, pC)), Hop_And(p, pB, pC) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs the well-balanced tree of gates.]\n\n  Description [Disregards levels and possible logic sharing.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Multi_rec(p *Hop_Man_t, ppObjs **Hop_Obj_t, nObjs int32, Type Hop_Type_t) *Hop_Obj_t {\n    var pObj1, pObj2 *Hop_Obj_t;\n    if nObjs == 1 {\n        return ppObjs[0]; }\n    pObj1 = Hop_Multi_rec( p, ppObjs,           nObjs/2,         Type );\n    pObj2 = Hop_Multi_rec( p, ppObjs + nObjs/2, nObjs - nObjs/2, Type );\n    return Hop_Oper( p, pObj1, pObj2, Type );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Old code.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Multi(p *Hop_Man_t, pArgs **Hop_Obj_t, nArgs int32, Type Hop_Type_t) *Hop_Obj_t {\n    assert(Type == AIG_AND || Type == AIG_EXOR, \"Type == AIG_AND || Type == AIG_EXOR\");\n    assert(nArgs \u003e 0, \"nArgs \u003e 0\");\n    return Hop_Multi_rec( p, pArgs, nArgs, Type );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements the miter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Miter(p *Hop_Man_t, vPairs *Vec_Ptr_t) *Hop_Obj_t {\n    var i int32;\n    assert(vPairs.nSize \u003e 0, \"vPairs.nSize \u003e 0\");\n    assert(vPairs.nSize % 2 == 0, \"vPairs.nSize % 2 == 0\");\n    // go through the cubes of the node's SOP\n    for  i = 0; i \u003c vPairs.nSize; i += 2  {\n        vPairs.pArray[i/2] = Hop_Not( Hop_Exor( p, (Hop_Obj_t *)vPairs.pArray[i], (Hop_Obj_t *)vPairs.pArray[i+1] ) );\n    }\n    vPairs.nSize = vPairs.nSize/2;\n    return Hop_Not( Hop_Multi_rec( p, (Hop_Obj_t **)vPairs.pArray, vPairs.nSize, AIG_AND ) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates AND function with nVars inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_CreateAnd(p *Hop_Man_t, nVars int32) *Hop_Obj_t {\n    var pFunc *Hop_Obj_t;\n    var i int32;\n    pFunc = Hop_ManConst1( p );\n    for  i = 0; i \u003c nVars; i++  {\n        pFunc = Hop_And( p, pFunc, Hop_IthVar(p, i) );\n    }\n    return pFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates AND function with nVars inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_CreateOr(p *Hop_Man_t, nVars int32) *Hop_Obj_t {\n    var pFunc *Hop_Obj_t;\n    var i int32;\n    pFunc = Hop_ManConst0( p );\n    for  i = 0; i \u003c nVars; i++  {\n        pFunc = Hop_Or( p, pFunc, Hop_IthVar(p, i) );\n    }\n    return pFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates AND function with nVars inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_CreateExor(p *Hop_Man_t, nVars int32) *Hop_Obj_t {\n    var pFunc *Hop_Obj_t;\n    var i int32;\n    pFunc = Hop_ManConst0( p );\n    for  i = 0; i \u003c nVars; i++  {\n        pFunc = Hop_Exor( p, pFunc, Hop_IthVar(p, i) );\n    }\n    return pFunc;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

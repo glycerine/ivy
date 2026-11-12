@@ -1,0 +1,165 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_pads.c",
+  "SHA256": "c7ddd1d33c49409c66328e4ef1b6c50feafcbfa7a7e94f8294dd89ef815acc85",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 44,
+        "Column": 3,
+        "ByteOffset": 1157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"PLAC-00 : Placing IO pads\\n\");;"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 82,
+        "Column": 18,
+        "ByteOffset": 2382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      padCells = realloc(padCells, sizeof(ConcreteCell **)*(padCount+1));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"ERROR: No pad cells\\n\");"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 90,
+        "Column": 5,
+        "ByteOffset": 2568
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(1);"
+    },
+    {
+      "Name": "sqrt",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 98,
+        "Column": 13,
+        "ByteOffset": 2748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  numRows = sqrt(coreArea)/g_place_rowHeight+1;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 5,
+        "ByteOffset": 3254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"PLAC-05 : \\tpreplacing %d pad cells\\n\", padCount);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 3,
+        "ByteOffset": 3542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"PLAC-05 : \\tplaceable rows  : %d\\n\", numRows);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 3,
+        "ByteOffset": 3599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"PLAC-05 : \\tcore dimensions : %.0fx%.0f\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 3,
+        "ByteOffset": 3707
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  printf(\"PLAC-05 : \\tchip dimensions : %.0fx%.0f\\n\","
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "globalPreplace",
+      "Start": 785,
+      "End": 4931,
+      "BodyStart": 824,
+      "Original": "void globalPreplace(float utilization) {\n  int i, c, h, numRows;\n  float coreArea = 0, totalArea = 0;\n  int padCount = 0;\n  float area;\n  ConcreteCell **padCells = NULL;\n  AbstractCell *padType = NULL;\n  ConcreteCell *cell;\n  float nextPos;\n  int remainingPads, northPads, southPads, eastPads, westPads;\n\n  printf(\"PLAC-00 : Placing IO pads\\n\");;\n\n  // identify the pads and compute the total core area\n  g_place_coreBounds.x = g_place_coreBounds.y = 0;\n  g_place_coreBounds.w = g_place_coreBounds.h = -INT_MAX;\n\n  for(c=0; c\u003cg_place_numCells; c++) if (g_place_concreteCells[c]) {\n    cell = g_place_concreteCells[c];\n    area = getCellArea(cell);\n    if (cell-\u003em_parent-\u003em_pad) {\n      padType = cell-\u003em_parent;\n    } else {\n      coreArea += area;\n      g_place_rowHeight = cell-\u003em_parent-\u003em_height;\n    }\n\n    if (cell-\u003em_fixed) {\n      g_place_coreBounds.x = g_place_coreBounds.x \u003c cell-\u003em_x ? g_place_coreBounds.x : cell-\u003em_x;\n      g_place_coreBounds.y = g_place_coreBounds.y \u003c cell-\u003em_y ? g_place_coreBounds.y : cell-\u003em_y;\n      g_place_coreBounds.w = g_place_coreBounds.w \u003e cell-\u003em_x ? g_place_coreBounds.w : cell-\u003em_x;\n      g_place_coreBounds.h = g_place_coreBounds.h \u003e cell-\u003em_y ? g_place_coreBounds.h : cell-\u003em_y;\n    } else if (cell-\u003em_parent-\u003em_pad) {\n      padCells = realloc(padCells, sizeof(ConcreteCell **)*(padCount+1));\n      padCells[padCount++] = cell;\n    }\n    totalArea += area;\n  }\n  if (!padType) {\n    printf(\"ERROR: No pad cells\\n\");\n    exit(1);\n  }\n  g_place_padBounds.w -= g_place_padBounds.x;\n  g_place_padBounds.h -= g_place_padBounds.y;\n\n  coreArea /= utilization;\n\n  // create the design boundaries\n  numRows = sqrt(coreArea)/g_place_rowHeight+1;\n  h = numRows * g_place_rowHeight;\n  g_place_coreBounds.h = g_place_coreBounds.h \u003e h ? g_place_coreBounds.h : h;\n  g_place_coreBounds.w = g_place_coreBounds.w \u003e coreArea/g_place_coreBounds.h ? \n    g_place_coreBounds.w : coreArea/g_place_coreBounds.h;\n  // increase the dimensions by the width of the padring\n  g_place_padBounds = g_place_coreBounds;\n  if (padCount) {\n    printf(\"PLAC-05 : \\tpreplacing %d pad cells\\n\", padCount);\n    g_place_padBounds.x -= padType-\u003em_width;\n    g_place_padBounds.y -= padType-\u003em_height;\n    g_place_padBounds.w = g_place_coreBounds.w+2*padType-\u003em_width;\n    g_place_padBounds.h = g_place_coreBounds.h+2*padType-\u003em_height;\n  }\n\n  printf(\"PLAC-05 : \\tplaceable rows  : %d\\n\", numRows);\n  printf(\"PLAC-05 : \\tcore dimensions : %.0fx%.0f\\n\",\n         g_place_coreBounds.w, g_place_coreBounds.h);\n  printf(\"PLAC-05 : \\tchip dimensions : %.0fx%.0f\\n\",\n         g_place_padBounds.w, g_place_padBounds.h);\n  \n  remainingPads = padCount;\n  c = 0;\n\n  // north pads\n  northPads = remainingPads/4; remainingPads -= northPads;\n  nextPos = 0;\n  for(i=0; i\u003cnorthPads; i++) {\n    cell = padCells[c++];\n    cell-\u003em_x = g_place_padBounds.x+cell-\u003em_parent-\u003em_width*0.5 + nextPos;\n    cell-\u003em_y = g_place_padBounds.y+cell-\u003em_parent-\u003em_height*0.5;\n    nextPos += (g_place_padBounds.w-padType-\u003em_width) / northPads;\n  }\n  \n  // south pads\n  southPads = remainingPads/3; remainingPads -= southPads;\n  nextPos = 0;\n  for(i=0; i\u003csouthPads; i++) {\n    cell = padCells[c++];\n    cell-\u003em_x = g_place_padBounds.w+g_place_padBounds.x-cell-\u003em_parent-\u003em_width*0.5 - nextPos;\n    cell-\u003em_y = g_place_padBounds.h+g_place_padBounds.y-cell-\u003em_parent-\u003em_height*0.5;\n    nextPos += (g_place_padBounds.w-2*padType-\u003em_width) / southPads;\n  }\n\n  // east pads\n  eastPads = remainingPads/2; remainingPads -= eastPads;\n  nextPos = 0;\n  for(i=0; i\u003ceastPads; i++) {\n    cell = padCells[c++];\n    cell-\u003em_x = g_place_padBounds.w+g_place_padBounds.x-cell-\u003em_parent-\u003em_width*0.5;\n    cell-\u003em_y = g_place_padBounds.y+cell-\u003em_parent-\u003em_height*0.5 + nextPos;\n    nextPos += (g_place_padBounds.h-padType-\u003em_height) / eastPads;\n  }\n\n  // west pads\n  westPads = remainingPads;\n  nextPos = 0;\n  for(i=0; i\u003cwestPads; i++) {\n    cell = padCells[c++];\n    cell-\u003em_x = g_place_padBounds.x+cell-\u003em_parent-\u003em_width*0.5;\n    cell-\u003em_y = g_place_padBounds.h+g_place_padBounds.y-cell-\u003em_parent-\u003em_height*0.5 - nextPos;\n    nextPos += (g_place_padBounds.h-padType-\u003em_height) / westPads;\n  }\n\n}",
+      "Draft": "func globalPreplace(utilization float32) {\n  var i, c, h, numRows int32;\n  var coreArea, totalArea float32;\n  var padCount int32;\n  var area float32;\n  var padCells **ConcreteCell  = nil;\n  var padType *AbstractCell  = nil;\n  var cell *ConcreteCell;\n  var nextPos float32;\n  var remainingPads, northPads, southPads, eastPads, westPads int32;\n\n  fmt.Printf(\"PLAC-00 : Placing IO pads\\n\");;\n\n  // identify the pads and compute the total core area\n  g_place_coreBounds.x = g_place_coreBounds.y = 0;\n  g_place_coreBounds.w = g_place_coreBounds.h = -INT_MAX;\n\n  for c=0; c\u003cg_place_numCells; c++ { if g_place_concreteCells[c] {\n    cell = g_place_concreteCells[c];\n    area = getCellArea(cell);\n    if cell.m_parent.m_pad {\n      padType = cell.m_parent;\n    } else {\n      coreArea += area;\n      g_place_rowHeight = cell.m_parent.m_height;\n    }\n\n    if cell.m_fixed {\n      if g_place_coreBounds.x \u003c cell.m_x {\n          g_place_coreBounds.x = g_place_coreBounds.x;\n      } else {\n          g_place_coreBounds.x = cell.m_x;\n      }\n      if g_place_coreBounds.y \u003c cell.m_y {\n          g_place_coreBounds.y = g_place_coreBounds.y;\n      } else {\n          g_place_coreBounds.y = cell.m_y;\n      }\n      if g_place_coreBounds.w \u003e cell.m_x {\n          g_place_coreBounds.w = g_place_coreBounds.w;\n      } else {\n          g_place_coreBounds.w = cell.m_x;\n      }\n      if g_place_coreBounds.h \u003e cell.m_y {\n          g_place_coreBounds.h = g_place_coreBounds.h;\n      } else {\n          g_place_coreBounds.h = cell.m_y;\n      }\n    } else if cell.m_parent.m_pad {\n      padCells = realloc(padCells, sizeof(ConcreteCell **)*(padCount+1));\n      padCells[padCount++] = cell;\n    }\n    totalArea += area;\n  }\n  }\n  if !(padType != nil) {\n    fmt.Printf(\"ERROR: No pad cells\\n\");\n    os.Exit(int(1));\n  }\n  g_place_padBounds.w -= g_place_padBounds.x;\n  g_place_padBounds.h -= g_place_padBounds.y;\n\n  coreArea /= utilization;\n\n  // create the design boundaries\n  numRows = math.Sqrt(float64(coreArea))/g_place_rowHeight+1;\n  h = numRows * g_place_rowHeight;\n  if g_place_coreBounds.h \u003e h {\n      g_place_coreBounds.h = g_place_coreBounds.h;\n  } else {\n      g_place_coreBounds.h = h;\n  }\n  if g_place_coreBounds.w \u003e coreArea/g_place_coreBounds.h {\n      g_place_coreBounds.w = g_place_coreBounds.w;\n  } else {\n      g_place_coreBounds.w = coreArea/g_place_coreBounds.h;\n  }\n  // increase the dimensions by the width of the padring\n  g_place_padBounds = g_place_coreBounds;\n  if padCount != 0 {\n    fmt.Printf(\"PLAC-05 : \\tpreplacing %d pad cells\\n\", padCount);\n    g_place_padBounds.x -= padType.m_width;\n    g_place_padBounds.y -= padType.m_height;\n    g_place_padBounds.w = g_place_coreBounds.w+2*padType.m_width;\n    g_place_padBounds.h = g_place_coreBounds.h+2*padType.m_height;\n  }\n\n  fmt.Printf(\"PLAC-05 : \\tplaceable rows  : %d\\n\", numRows);\n  fmt.Printf(\"PLAC-05 : \\tcore dimensions : %.0fx%.0f\\n\", g_place_coreBounds.w, g_place_coreBounds.h);\n  fmt.Printf(\"PLAC-05 : \\tchip dimensions : %.0fx%.0f\\n\", g_place_padBounds.w, g_place_padBounds.h);\n  \n  remainingPads = padCount;\n  c = 0;\n\n  // north pads\n  northPads = remainingPads/4; remainingPads -= northPads;\n  nextPos = 0;\n  for i=0; i\u003cnorthPads; i++ {\n    cell = padCells[c]; c++;\n    cell.m_x = g_place_padBounds.x+cell.m_parent.m_width*0.5 + nextPos;\n    cell.m_y = g_place_padBounds.y+cell.m_parent.m_height*0.5;\n    nextPos += (g_place_padBounds.w-padType.m_width) / northPads;\n  }\n  \n  // south pads\n  southPads = remainingPads/3; remainingPads -= southPads;\n  nextPos = 0;\n  for i=0; i\u003csouthPads; i++ {\n    cell = padCells[c]; c++;\n    cell.m_x = g_place_padBounds.w+g_place_padBounds.x-cell.m_parent.m_width*0.5 - nextPos;\n    cell.m_y = g_place_padBounds.h+g_place_padBounds.y-cell.m_parent.m_height*0.5;\n    nextPos += (g_place_padBounds.w-2*padType.m_width) / southPads;\n  }\n\n  // east pads\n  eastPads = remainingPads/2; remainingPads -= eastPads;\n  nextPos = 0;\n  for i=0; i\u003ceastPads; i++ {\n    cell = padCells[c]; c++;\n    cell.m_x = g_place_padBounds.w+g_place_padBounds.x-cell.m_parent.m_width*0.5;\n    cell.m_y = g_place_padBounds.y+cell.m_parent.m_height*0.5 + nextPos;\n    nextPos += (g_place_padBounds.h-padType.m_height) / eastPads;\n  }\n\n  // west pads\n  westPads = remainingPads;\n  nextPos = 0;\n  for i=0; i\u003cwestPads; i++ {\n    cell = padCells[c]; c++;\n    cell.m_x = g_place_padBounds.x+cell.m_parent.m_width*0.5;\n    cell.m_y = g_place_padBounds.h+g_place_padBounds.y-cell.m_parent.m_height*0.5 - nextPos;\n    nextPos += (g_place_padBounds.h-padType.m_height) / westPads;\n  }\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_pads.c::mechanical::sizeof::2086",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2086,
+      "End": 2092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_pads.c::pointer-cast::2092",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2092,
+      "End": 2109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_pads.c::globalPreplace",
+      "Category": "semantic-review",
+      "Symbol": "globalPreplace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 785,
+      "End": 4931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_pads.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4957
+    }
+  ],
+  "Draft": "package place\n\nimport (\n\t\"fmt\"\n\t\"math\"\n\t\"os\"\n)\n\n/*===================================================================*/\n//  \n//     place_pads.c\n//\n//        Aaron P. Hurst, 2003-2007\n//              ahurst@eecs.berkeley.edu\n//\n/*===================================================================*/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cmath.h\u003e\n//#include \u003climits.h\u003e\n\n//#include \"place_base.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n// --------------------------------------------------------------------\n// globalPreplace()\n//\n/// \\brief Place pad ring, leaving a core area to meet a desired utilization.\n//\n/// Sets the position of pads that aren't already fixed.\n///\n/// Computes g_place_coreBounds and g_place_padBounds.  Determines\n/// g_place_rowHeight.\n//\n// --------------------------------------------------------------------\nfunc globalPreplace(utilization float32) {\n  var i, c, h, numRows int32;\n  var coreArea, totalArea float32;\n  var padCount int32;\n  var area float32;\n  var padCells **ConcreteCell  = nil;\n  var padType *AbstractCell  = nil;\n  var cell *ConcreteCell;\n  var nextPos float32;\n  var remainingPads, northPads, southPads, eastPads, westPads int32;\n\n  fmt.Printf(\"PLAC-00 : Placing IO pads\\n\");;\n\n  // identify the pads and compute the total core area\n  g_place_coreBounds.x = g_place_coreBounds.y = 0;\n  g_place_coreBounds.w = g_place_coreBounds.h = -INT_MAX;\n\n  for c=0; c\u003cg_place_numCells; c++ { if g_place_concreteCells[c] {\n    cell = g_place_concreteCells[c];\n    area = getCellArea(cell);\n    if cell.m_parent.m_pad {\n      padType = cell.m_parent;\n    } else {\n      coreArea += area;\n      g_place_rowHeight = cell.m_parent.m_height;\n    }\n\n    if cell.m_fixed {\n      if g_place_coreBounds.x \u003c cell.m_x {\n          g_place_coreBounds.x = g_place_coreBounds.x;\n      } else {\n          g_place_coreBounds.x = cell.m_x;\n      }\n      if g_place_coreBounds.y \u003c cell.m_y {\n          g_place_coreBounds.y = g_place_coreBounds.y;\n      } else {\n          g_place_coreBounds.y = cell.m_y;\n      }\n      if g_place_coreBounds.w \u003e cell.m_x {\n          g_place_coreBounds.w = g_place_coreBounds.w;\n      } else {\n          g_place_coreBounds.w = cell.m_x;\n      }\n      if g_place_coreBounds.h \u003e cell.m_y {\n          g_place_coreBounds.h = g_place_coreBounds.h;\n      } else {\n          g_place_coreBounds.h = cell.m_y;\n      }\n    } else if cell.m_parent.m_pad {\n      padCells = realloc(padCells, sizeof(ConcreteCell **)*(padCount+1));\n      padCells[padCount++] = cell;\n    }\n    totalArea += area;\n  }\n  }\n  if !(padType != nil) {\n    fmt.Printf(\"ERROR: No pad cells\\n\");\n    os.Exit(int(1));\n  }\n  g_place_padBounds.w -= g_place_padBounds.x;\n  g_place_padBounds.h -= g_place_padBounds.y;\n\n  coreArea /= utilization;\n\n  // create the design boundaries\n  numRows = math.Sqrt(float64(coreArea))/g_place_rowHeight+1;\n  h = numRows * g_place_rowHeight;\n  if g_place_coreBounds.h \u003e h {\n      g_place_coreBounds.h = g_place_coreBounds.h;\n  } else {\n      g_place_coreBounds.h = h;\n  }\n  if g_place_coreBounds.w \u003e coreArea/g_place_coreBounds.h {\n      g_place_coreBounds.w = g_place_coreBounds.w;\n  } else {\n      g_place_coreBounds.w = coreArea/g_place_coreBounds.h;\n  }\n  // increase the dimensions by the width of the padring\n  g_place_padBounds = g_place_coreBounds;\n  if padCount != 0 {\n    fmt.Printf(\"PLAC-05 : \\tpreplacing %d pad cells\\n\", padCount);\n    g_place_padBounds.x -= padType.m_width;\n    g_place_padBounds.y -= padType.m_height;\n    g_place_padBounds.w = g_place_coreBounds.w+2*padType.m_width;\n    g_place_padBounds.h = g_place_coreBounds.h+2*padType.m_height;\n  }\n\n  fmt.Printf(\"PLAC-05 : \\tplaceable rows  : %d\\n\", numRows);\n  fmt.Printf(\"PLAC-05 : \\tcore dimensions : %.0fx%.0f\\n\", g_place_coreBounds.w, g_place_coreBounds.h);\n  fmt.Printf(\"PLAC-05 : \\tchip dimensions : %.0fx%.0f\\n\", g_place_padBounds.w, g_place_padBounds.h);\n  \n  remainingPads = padCount;\n  c = 0;\n\n  // north pads\n  northPads = remainingPads/4; remainingPads -= northPads;\n  nextPos = 0;\n  for i=0; i\u003cnorthPads; i++ {\n    cell = padCells[c]; c++;\n    cell.m_x = g_place_padBounds.x+cell.m_parent.m_width*0.5 + nextPos;\n    cell.m_y = g_place_padBounds.y+cell.m_parent.m_height*0.5;\n    nextPos += (g_place_padBounds.w-padType.m_width) / northPads;\n  }\n  \n  // south pads\n  southPads = remainingPads/3; remainingPads -= southPads;\n  nextPos = 0;\n  for i=0; i\u003csouthPads; i++ {\n    cell = padCells[c]; c++;\n    cell.m_x = g_place_padBounds.w+g_place_padBounds.x-cell.m_parent.m_width*0.5 - nextPos;\n    cell.m_y = g_place_padBounds.h+g_place_padBounds.y-cell.m_parent.m_height*0.5;\n    nextPos += (g_place_padBounds.w-2*padType.m_width) / southPads;\n  }\n\n  // east pads\n  eastPads = remainingPads/2; remainingPads -= eastPads;\n  nextPos = 0;\n  for i=0; i\u003ceastPads; i++ {\n    cell = padCells[c]; c++;\n    cell.m_x = g_place_padBounds.w+g_place_padBounds.x-cell.m_parent.m_width*0.5;\n    cell.m_y = g_place_padBounds.y+cell.m_parent.m_height*0.5 + nextPos;\n    nextPos += (g_place_padBounds.h-padType.m_height) / eastPads;\n  }\n\n  // west pads\n  westPads = remainingPads;\n  nextPos = 0;\n  for i=0; i\u003cwestPads; i++ {\n    cell = padCells[c]; c++;\n    cell.m_x = g_place_padBounds.x+cell.m_parent.m_width*0.5;\n    cell.m_y = g_place_padBounds.h+g_place_padBounds.y-cell.m_parent.m_height*0.5 - nextPos;\n    nextPos += (g_place_padBounds.h-padType.m_height) / westPads;\n  }\n\n}\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

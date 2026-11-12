@@ -1,0 +1,634 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c",
+  "SHA256": "f387205ae518491fdf997858c8c6fec5122767bb9d435ee46e2b582cd9e16543",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 13,
+        "ByteOffset": 4479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Node reduction after sweep %6d -\u003e %6d.\\n\", Gia_ManAndNum(pTemp), Gia_ManAndNum(p.pNew) ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 154,
+        "Column": 57,
+        "ByteOffset": 5120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 7314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Limit \u003e 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 235,
+        "Column": 9,
+        "ByteOffset": 7896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsTravIdCurrentId(p.pNew, iDiv) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 242,
+        "Column": 13,
+        "ByteOffset": 8293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjIsAnd(pFan) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 243,
+        "Column": 13,
+        "ByteOffset": 8335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjLevel(p.pNew, Gia_ManObj(p.pNew, iDiv)) \u003c Gia_ObjLevel(p.pNew, pFan) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 13,
+        "ByteOffset": 8782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( i \u003c iPlace );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 9507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( uTruth1 != 0 \u0026\u0026 uTruthC != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 288,
+        "Column": 9,
+        "ByteOffset": 10307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iLast + 1 == Gia_ManObjNum(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 293,
+        "Column": 9,
+        "ByteOffset": 10621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ManObjNum(pNew) \u003c p.nNewSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 317,
+        "Column": 5,
+        "ByteOffset": 11289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 329,
+        "Column": 5,
+        "ByteOffset": 11815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 397,
+        "Column": 5,
+        "ByteOffset": 14329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManHasMapping(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 416,
+        "Column": 13,
+        "ByteOffset": 15297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(pMan.vLeaves) \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 419,
+        "Column": 13,
+        "ByteOffset": 15477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pObj.Value == ~0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 438,
+        "Column": 13,
+        "ByteOffset": 16696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nDivs \u003c= pMan.nDivMax );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 461,
+        "Column": 9,
+        "ByteOffset": 17932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Performed %d resubs and %d decomps.  \", Counter1, Counter2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 462,
+        "Column": 9,
+        "ByteOffset": 18011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gain in AIG nodes = %d.  \", Gia_ManObjNum(p)-Gia_ManObjNum(pMan.pNew) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 464,
+        "Column": 73,
+        "ByteOffset": 18251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Shr_ManAlloc",
+      "Start": 3012,
+      "End": 4172,
+      "BodyStart": 3057,
+      "Original": "Shr_Man_t * Shr_ManAlloc( Gia_Man_t * pGia )\n{\n    Shr_Man_t * p;\n    p = ABC_CALLOC( Shr_Man_t, 1 );\n    p-\u003enDivMax     = 64;\n    p-\u003enNewSize    = 2 * Gia_ManObjNum(pGia);\n    p-\u003epGia        = pGia;\n    p-\u003evFanMem     = Vec_WrdAlloc( 1000 );   Vec_WrdPush(p-\u003evFanMem, -1); \n    p-\u003evObj2Fan    = Vec_IntStart( p-\u003enNewSize );\n    p-\u003evDivs       = Vec_IntAlloc( 1000 );\n    p-\u003evPrio       = Vec_IntAlloc( 1000 );\n    p-\u003evTruths     = Vec_WrdStart( p-\u003enNewSize );\n    p-\u003evDivTruths  = Vec_WrdAlloc( 100 );\n    p-\u003evDivResub   = Vec_IntAlloc( 6 );\n    p-\u003evLeaves     = Vec_IntAlloc( 6 );\n    // start new manager\n    p-\u003epNew        = Gia_ManStart( p-\u003enNewSize );\n    p-\u003epNew-\u003epName = Abc_UtilStrsav( pGia-\u003epName );\n    p-\u003epNew-\u003epSpec = Abc_UtilStrsav( pGia-\u003epSpec );\n    Gia_ManHashAlloc( p-\u003epNew );\n    Gia_ManCleanLevels( p-\u003epNew, p-\u003enNewSize );\n    // allocate traversal IDs\n    p-\u003epNew-\u003enObjs = p-\u003enNewSize;\n    Gia_ManIncrementTravId( p-\u003epNew );\n    p-\u003epNew-\u003enObjs = 1;\n    // start decompostion\n    p-\u003ePars.nVarsMax = 6;\n    p-\u003ePars.fVerbose = 0;\n    p-\u003epManDec = Bdc_ManAlloc( \u0026p-\u003ePars );\n    p-\u003epManRsb = Rsb_ManAlloc( 6, p-\u003enDivMax, 4, 1 );\n    return p;\n}",
+      "Draft": "func Shr_ManAlloc(pGia *Gia_Man_t) *Shr_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Shr_Man_t{};\n    p.nDivMax     = 64;\n    p.nNewSize    = 2 * Gia_ManObjNum(pGia);\n    p.pGia        = pGia;\n    p.vFanMem     = Vec_WrdAlloc( 1000 );   Vec_WrdPush(p.vFanMem, -1); \n    p.vObj2Fan    = Vec_IntStart( p.nNewSize );\n    p.vDivs       = Vec_IntAlloc( 1000 );\n    p.vPrio       = Vec_IntAlloc( 1000 );\n    p.vTruths     = Vec_WrdStart( p.nNewSize );\n    p.vDivTruths  = Vec_WrdAlloc( 100 );\n    p.vDivResub   = Vec_IntAlloc( 6 );\n    p.vLeaves     = Vec_IntAlloc( 6 );\n    // start new manager\n    p.pNew        = Gia_ManStart( p.nNewSize );\n    p.pNew.pName = Abc_UtilStrsav( pGia.pName );\n    p.pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );\n    Gia_ManHashAlloc( p.pNew );\n    Gia_ManCleanLevels( p.pNew, p.nNewSize );\n    // allocate traversal IDs\n    p.pNew.nObjs = p.nNewSize;\n    Gia_ManIncrementTravId( p.pNew );\n    p.pNew.nObjs = 1;\n    // start decompostion\n    p.Pars.nVarsMax = 6;\n    p.Pars.fVerbose = 0;\n    p.pManDec = Bdc_ManAlloc( \u0026p.Pars );\n    p.pManRsb = Rsb_ManAlloc( 6, p.nDivMax, 4, 1 );\n    return p;\n}"
+    },
+    {
+      "Name": "Shr_ManFree",
+      "Start": 4173,
+      "End": 5147,
+      "BodyStart": 4214,
+      "Original": "Gia_Man_t * Shr_ManFree( Shr_Man_t * p )\n{\n    // prepare the manager\n    Gia_Man_t * pTemp;\n    Gia_ManHashStop( p-\u003epNew );\n    Vec_IntFreeP( \u0026p-\u003epNew-\u003evLevels );\n    if ( Gia_ManHasDangling(p-\u003epNew) )\n    {\n        p-\u003epNew = Gia_ManCleanup( pTemp = p-\u003epNew );\n        if ( Gia_ManAndNum(p-\u003epNew) != Gia_ManAndNum(pTemp) )\n            printf( \"Node reduction after sweep %6d -\u003e %6d.\\n\", Gia_ManAndNum(pTemp), Gia_ManAndNum(p-\u003epNew) );\n        Gia_ManStop( pTemp );\n    }\n    Gia_ManSetRegNum( p-\u003epNew, Gia_ManRegNum(p-\u003epGia) );\n    pTemp = p-\u003epNew; p-\u003epNew = NULL;\n    // free data structures\n    Rsb_ManFree( p-\u003epManRsb );\n    Bdc_ManFree( p-\u003epManDec );\n    Gia_ManStopP( \u0026p-\u003epNew );\n    Vec_WrdFree( p-\u003evFanMem );\n    Vec_IntFree( p-\u003evObj2Fan );\n    Vec_IntFree( p-\u003evDivs );\n    Vec_IntFree( p-\u003evPrio );\n    Vec_WrdFree( p-\u003evTruths );\n    Vec_WrdFree( p-\u003evDivTruths );\n    Vec_IntFree( p-\u003evDivResub );\n    Vec_IntFree( p-\u003evLeaves );\n    ABC_FREE( p );\n    return pTemp;\n}",
+      "Draft": "func Shr_ManFree(p *Shr_Man_t) *Gia_Man_t {\n    // prepare the manager\n    var pTemp *Gia_Man_t;\n    Gia_ManHashStop( p.pNew );\n    Vec_IntFreeP( \u0026p.pNew.vLevels );\n    if Gia_ManHasDangling(p.pNew) {\n        p.pNew = Gia_ManCleanup( pTemp = p.pNew );\n        if Gia_ManAndNum(p.pNew) != Gia_ManAndNum(pTemp) {\n            fmt.Printf(\"Node reduction after sweep %6d -\u003e %6d.\\n\", Gia_ManAndNum(pTemp), Gia_ManAndNum(p.pNew)); }\n        Gia_ManStop( pTemp );\n    }\n    Gia_ManSetRegNum( p.pNew, Gia_ManRegNum(p.pGia) );\n    pTemp = p.pNew; p.pNew = nil;\n    // free data structures\n    Rsb_ManFree( p.pManRsb );\n    Bdc_ManFree( p.pManDec );\n    Gia_ManStopP( \u0026p.pNew );\n    Vec_WrdFree( p.vFanMem );\n    Vec_IntFree( p.vObj2Fan );\n    Vec_IntFree( p.vDivs );\n    Vec_IntFree( p.vPrio );\n    Vec_WrdFree( p.vTruths );\n    Vec_WrdFree( p.vDivTruths );\n    Vec_IntFree( p.vDivResub );\n    Vec_IntFree( p.vLeaves );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n    return pTemp;\n}"
+    },
+    {
+      "Name": "Shr_ManAddFanout",
+      "Start": 5389,
+      "End": 5750,
+      "BodyStart": 5467,
+      "Original": "static inline void Shr_ManAddFanout( Shr_Man_t * p, int iFanin, int iFanout )\n{\n    union {\n        Shr_Fan_t sFan;\n        word      sWord;\n    } FanStr;\n    FanStr.sFan.iFan = iFanout;\n    FanStr.sFan.Next = Vec_IntEntry(p-\u003evObj2Fan, iFanin);\n    Vec_IntWriteEntry( p-\u003evObj2Fan, iFanin, Vec_WrdSize(p-\u003evFanMem) );\n    Vec_WrdPush(p-\u003evFanMem, FanStr.sWord );\n}",
+      "Draft": "func Shr_ManAddFanout(p *Shr_Man_t, iFanin int32, iFanout int32) {\n    union {\n        var sFan Shr_Fan_t;\n        var sWord word;\n    }\n FanStr;\n    FanStr.sFan.iFan = iFanout;\n    FanStr.sFan.Next = Vec_IntEntry(p.vObj2Fan, iFanin);\n    Vec_IntWriteEntry( p.vObj2Fan, iFanin, Vec_WrdSize(p.vFanMem) );\n    Vec_WrdPush(p.vFanMem, FanStr.sWord );\n}"
+    },
+    {
+      "Name": "Shr_ManFanIterStart",
+      "Start": 5751,
+      "End": 6011,
+      "BodyStart": 5817,
+      "Original": "static inline int Shr_ManFanIterStart( Shr_Man_t * p, int iNode )\n{\n    if ( Vec_IntEntry(p-\u003evObj2Fan, iNode) == 0 )\n        return 0;\n    p-\u003epFanTemp = (Shr_Fan_t *)Vec_WrdEntryP( p-\u003evFanMem, Vec_IntEntry(p-\u003evObj2Fan, iNode) );\n    return p-\u003epFanTemp-\u003eiFan;\n}",
+      "Draft": "func Shr_ManFanIterStart(p *Shr_Man_t, iNode int32) int32 {\n    if Vec_IntEntry(p.vObj2Fan, iNode) == 0 {\n        return 0; }\n    p.pFanTemp = (Shr_Fan_t *)Vec_WrdEntryP( p.vFanMem, Vec_IntEntry(p.vObj2Fan, iNode) );\n    return p.pFanTemp.iFan;\n}"
+    },
+    {
+      "Name": "Shr_ManFanIterNext",
+      "Start": 6012,
+      "End": 6230,
+      "BodyStart": 6066,
+      "Original": "static inline int Shr_ManFanIterNext( Shr_Man_t * p )\n{\n    if ( p-\u003epFanTemp-\u003eNext == 0 )\n        return 0;\n    p-\u003epFanTemp = (Shr_Fan_t *)Vec_WrdEntryP( p-\u003evFanMem, p-\u003epFanTemp-\u003eNext );\n    return p-\u003epFanTemp-\u003eiFan;\n}",
+      "Draft": "func Shr_ManFanIterNext(p *Shr_Man_t) int32 {\n    if p.pFanTemp.Next == 0 {\n        return 0; }\n    p.pFanTemp = (Shr_Fan_t *)Vec_WrdEntryP( p.vFanMem, p.pFanTemp.Next );\n    return p.pFanTemp.iFan;\n}"
+    },
+    {
+      "Name": "Shr_ManDivPushOrderByLevel",
+      "Start": 6468,
+      "End": 7064,
+      "BodyStart": 6540,
+      "Original": "static inline int Shr_ManDivPushOrderByLevel( Shr_Man_t * p, int iDiv )\n{\n    int iPlace, * pArray;\n    Vec_IntPush( p-\u003evPrio, iDiv );\n    if ( Vec_IntSize(p-\u003evPrio) == 1 )\n        return 0; \n    pArray = Vec_IntArray(p-\u003evPrio);\n    for ( iPlace = Vec_IntSize(p-\u003evPrio) - 1; iPlace \u003e 0; iPlace-- )\n        if ( Gia_ObjLevel(p-\u003epNew, Gia_ManObj(p-\u003epNew, pArray[iPlace-1])) \u003e \n             Gia_ObjLevel(p-\u003epNew, Gia_ManObj(p-\u003epNew, pArray[iPlace])) )\n             ABC_SWAP( int, pArray[iPlace-1], pArray[iPlace] )\n        else\n            break;\n    return iPlace; // the place of the new divisor\n}",
+      "Draft": "func Shr_ManDivPushOrderByLevel(p *Shr_Man_t, iDiv int32) int32 {\n    var iPlace int32;\n    var pArray *int32;\n    Vec_IntPush( p.vPrio, iDiv );\n    if Vec_IntSize(p.vPrio) == 1 {\n        return 0; } \n    pArray = Vec_IntArray(p.vPrio);\n    for  iPlace = Vec_IntSize(p.vPrio) - 1; iPlace \u003e 0; iPlace--  {\n        if Gia_ObjLevel(p.pNew, Gia_ManObj(p.pNew, pArray[iPlace-1])) \u003e \n             Gia_ObjLevel(p.pNew, Gia_ManObj(p.pNew, pArray[iPlace])) {\n             // inlining of macro ABC_SWAP\n              var t int32  = pArray[iPlace-1]; pArray[iPlace-1] = pArray[iPlace]; pArray[iPlace] = t; \n        } else {\n            break; }\n    }\n    return iPlace; // the place of the new divisor\n}"
+    },
+    {
+      "Name": "Shr_ManCollectDivisors",
+      "Start": 7065,
+      "End": 8598,
+      "BodyStart": 7171,
+      "Original": "static inline int Shr_ManCollectDivisors( Shr_Man_t * p, Vec_Int_t * vLeaves, int Limit, int nFanoutMax )\n{\n    Gia_Obj_t * pFan;\n    int i, c, iDiv, iFan, iPlace;\n    assert( Limit \u003e 6 );\n    Vec_IntClear( p-\u003evDivs );\n    Vec_IntClear( p-\u003evPrio );\n    Gia_ManIncrementTravId( p-\u003epNew );\n    Vec_IntForEachEntry( vLeaves, iDiv, i )\n    {\n        Vec_IntPush( p-\u003evDivs, iDiv );\n        Shr_ManDivPushOrderByLevel( p, iDiv );\n        Gia_ObjSetTravIdCurrentId( p-\u003epNew, iDiv );\n    }\n    Vec_IntForEachEntry( p-\u003evPrio, iDiv, i )\n    {\n        c = 0;\n        assert( Gia_ObjIsTravIdCurrentId(p-\u003epNew, iDiv) );\n        Shr_ObjForEachFanout( p, iDiv, iFan )\n        {\n            if ( c++ == nFanoutMax )\n                break;\n            if ( Gia_ObjIsTravIdCurrentId(p-\u003epNew, iFan) )\n                continue;\n            pFan = Gia_ManObj( p-\u003epNew, iFan );\n            assert( Gia_ObjIsAnd(pFan) );\n            assert( Gia_ObjLevel(p-\u003epNew, Gia_ManObj(p-\u003epNew, iDiv)) \u003c Gia_ObjLevel(p-\u003epNew, pFan) );\n            if ( !Gia_ObjIsTravIdCurrentId(p-\u003epNew, Gia_ObjFaninId0(pFan, iFan)) ||\n                 !Gia_ObjIsTravIdCurrentId(p-\u003epNew, Gia_ObjFaninId1(pFan, iFan)) )\n                continue;\n            Vec_IntPush( p-\u003evDivs, iFan );\n            Gia_ObjSetTravIdCurrentId( p-\u003epNew, iFan );\n            iPlace = Shr_ManDivPushOrderByLevel( p, iFan );\n            assert( i \u003c iPlace );\n            if ( Vec_IntSize(p-\u003evDivs) == Limit )\n                return Vec_IntSize(p-\u003evDivs);\n        }\n    }\n    return Vec_IntSize(p-\u003evDivs);\n}",
+      "Draft": "func Shr_ManCollectDivisors(p *Shr_Man_t, vLeaves *Vec_Int_t, Limit int32, nFanoutMax int32) int32 {\n    var pFan *Gia_Obj_t;\n    var i, c, iDiv, iFan, iPlace int32;\n    assert(Limit \u003e 6, \"Limit \u003e 6\");\n    Vec_IntClear( p.vDivs );\n    Vec_IntClear( p.vPrio );\n    Gia_ManIncrementTravId( p.pNew );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLeaves)) \u0026\u0026 (((iDiv) = Vec_IntEntry(vLeaves, i)), 1); i++  {\n        Vec_IntPush( p.vDivs, iDiv );\n        Shr_ManDivPushOrderByLevel( p, iDiv );\n        Gia_ObjSetTravIdCurrentId( p.pNew, iDiv );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vPrio)) \u0026\u0026 (((iDiv) = Vec_IntEntry(p.vPrio, i)), 1); i++  {\n        c = 0;\n        assert(Gia_ObjIsTravIdCurrentId(p.pNew, iDiv), \"Gia_ObjIsTravIdCurrentId(p.pNew, iDiv)\");\n        // inlining of macro Shr_ObjForEachFanout\n        for  iFan = Shr_ManFanIterStart(p, iDiv); (iFan != 0); iFan = Shr_ManFanIterNext(p)  {\n            if c++ == nFanoutMax {\n                break; }\n            if Gia_ObjIsTravIdCurrentId(p.pNew, iFan) {\n                continue; }\n            pFan = Gia_ManObj( p.pNew, iFan );\n            assert(Gia_ObjIsAnd(pFan), \"Gia_ObjIsAnd(pFan)\");\n            assert(Gia_ObjLevel(p.pNew, Gia_ManObj(p.pNew, iDiv)) \u003c Gia_ObjLevel(p.pNew, pFan), \"Gia_ObjLevel(p.pNew, Gia_ManObj(p.pNew, iDiv)) \u003c Gia_ObjLevel(p.pNew, pFan)\");\n            if !Gia_ObjIsTravIdCurrentId(p.pNew, Gia_ObjFaninId0(pFan, iFan)) ||\n                 !Gia_ObjIsTravIdCurrentId(p.pNew, Gia_ObjFaninId1(pFan, iFan)) {\n                continue; }\n            Vec_IntPush( p.vDivs, iFan );\n            Gia_ObjSetTravIdCurrentId( p.pNew, iFan );\n            iPlace = Shr_ManDivPushOrderByLevel( p, iFan );\n            assert(i \u003c iPlace, \"i \u003c iPlace\");\n            if Vec_IntSize(p.vDivs) == Limit {\n                return Vec_IntSize(p.vDivs); }\n        }\n    }\n    return Vec_IntSize(p.vDivs);\n}"
+    },
+    {
+      "Name": "Shr_ObjPerformBidec",
+      "Start": 8877,
+      "End": 10247,
+      "BodyStart": 9008,
+      "Original": "int Shr_ObjPerformBidec( Shr_Man_t * p, Bdc_Man_t * pManDec, Gia_Man_t * pNew, Vec_Int_t * vLeafLits, word uTruth1, word uTruthC )\n{\n    Bdc_Fun_t * pFunc;\n    Gia_Obj_t * pObj;\n    int i, iVar, iLit, nNodes, iLast;\n    int nVars = Vec_IntSize(vLeafLits);\n    assert( uTruth1 != 0 \u0026\u0026 uTruthC != 0 );\n    Bdc_ManDecompose( pManDec, (unsigned *)\u0026uTruth1, (unsigned *)\u0026uTruthC, nVars, NULL, 1000 );\n    Bdc_FuncSetCopyInt( Bdc_ManFunc(pManDec, 0), 1 );\n    Vec_IntForEachEntry( vLeafLits, iVar, i )\n        Bdc_FuncSetCopyInt( Bdc_ManFunc(pManDec, i+1), Abc_Var2Lit(iVar, 0) );\n    nNodes = Bdc_ManNodeNum( pManDec );\n    for ( i = nVars + 1; i \u003c nNodes; i++ )\n    {\n        pFunc = Bdc_ManFunc( pManDec, i );\n        iLast = Gia_ManObjNum(pNew);\n        iLit  = Gia_ManHashAnd( pNew, Bdc_FunFanin0Copy(pFunc), Bdc_FunFanin1Copy(pFunc) );\n        Bdc_FuncSetCopyInt( pFunc, iLit );\n        if ( iLast == Gia_ManObjNum(pNew) )\n            continue;\n        assert( iLast + 1 == Gia_ManObjNum(pNew) );\n        pObj = Gia_ManObj(pNew, Abc_Lit2Var(iLit));\n        Gia_ObjSetAndLevel( pNew, pObj );\n        Shr_ManAddFanout( p, Gia_ObjFaninId0p(pNew, pObj), Gia_ObjId(pNew, pObj) );\n        Shr_ManAddFanout( p, Gia_ObjFaninId1p(pNew, pObj), Gia_ObjId(pNew, pObj) );\n        assert( Gia_ManObjNum(pNew) \u003c p-\u003enNewSize );\n    }\n    return Bdc_FunObjCopy( Bdc_ManRoot(pManDec) );\n}",
+      "Draft": "func Shr_ObjPerformBidec(p *Shr_Man_t, pManDec *Bdc_Man_t, pNew *Gia_Man_t, vLeafLits *Vec_Int_t, uTruth1 word, uTruthC word) int32 {\n    var pFunc *Bdc_Fun_t;\n    var pObj *Gia_Obj_t;\n    var i, iVar, iLit, nNodes, iLast int32;\n    var nVars int32  = Vec_IntSize(vLeafLits);\n    assert(uTruth1 != 0 \u0026\u0026 uTruthC != 0, \"uTruth1 != 0 \u0026\u0026 uTruthC != 0\");\n    Bdc_ManDecompose( pManDec, (unsigned *)\u0026uTruth1, (unsigned *)\u0026uTruthC, nVars, nil, 1000 );\n    Bdc_FuncSetCopyInt( Bdc_ManFunc(pManDec, 0), 1 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLeafLits)) \u0026\u0026 (((iVar) = Vec_IntEntry(vLeafLits, i)), 1); i++  {\n        Bdc_FuncSetCopyInt( Bdc_ManFunc(pManDec, i+1), Abc_Var2Lit(iVar, 0) );\n    }\n    nNodes = Bdc_ManNodeNum( pManDec );\n    for  i = nVars + 1; i \u003c nNodes; i++  {\n        pFunc = Bdc_ManFunc( pManDec, i );\n        iLast = Gia_ManObjNum(pNew);\n        iLit  = Gia_ManHashAnd( pNew, Bdc_FunFanin0Copy(pFunc), Bdc_FunFanin1Copy(pFunc) );\n        Bdc_FuncSetCopyInt( pFunc, iLit );\n        if iLast == Gia_ManObjNum(pNew) {\n            continue; }\n        assert(iLast + 1 == Gia_ManObjNum(pNew), \"iLast + 1 == Gia_ManObjNum(pNew)\");\n        pObj = Gia_ManObj(pNew, Abc_Lit2Var(iLit));\n        Gia_ObjSetAndLevel( pNew, pObj );\n        Shr_ManAddFanout( p, Gia_ObjFaninId0p(pNew, pObj), Gia_ObjId(pNew, pObj) );\n        Shr_ManAddFanout( p, Gia_ObjFaninId1p(pNew, pObj), Gia_ObjId(pNew, pObj) );\n        assert(Gia_ManObjNum(pNew) \u003c p.nNewSize, \"Gia_ManObjNum(pNew) \u003c p.nNewSize\");\n    }\n    return Bdc_FunObjCopy( Bdc_ManRoot(pManDec) );\n}"
+    },
+    {
+      "Name": "Shr_ManComputeTruth6_rec",
+      "Start": 10504,
+      "End": 11196,
+      "BodyStart": 10583,
+      "Original": "word Shr_ManComputeTruth6_rec( Gia_Man_t * p, int iNode, Vec_Wrd_t * vTruths )\n{\n    Gia_Obj_t * pObj;\n    word Truth0, Truth1;\n    if ( Gia_ObjIsTravIdCurrentId(p, iNode) )\n        return Vec_WrdEntry(vTruths, iNode);\n    Gia_ObjSetTravIdCurrentId(p, iNode);\n    pObj = Gia_ManObj( p, iNode );\n    assert( Gia_ObjIsAnd(pObj) );\n    Truth0 = Shr_ManComputeTruth6_rec( p, Gia_ObjFaninId0p(p, pObj), vTruths );\n    Truth1 = Shr_ManComputeTruth6_rec( p, Gia_ObjFaninId1p(p, pObj), vTruths );\n    if ( Gia_ObjFaninC0(pObj) )\n        Truth0 = ~Truth0;\n    if ( Gia_ObjFaninC1(pObj) )\n        Truth1 = ~Truth1;\n    Vec_WrdWriteEntry( vTruths, iNode, Truth0 \u0026 Truth1 );\n    return Truth0 \u0026 Truth1;\n}",
+      "Draft": "func Shr_ManComputeTruth6_rec(p *Gia_Man_t, iNode int32, vTruths *Vec_Wrd_t) word {\n    var pObj *Gia_Obj_t;\n    var Truth0, Truth1 word;\n    if Gia_ObjIsTravIdCurrentId(p, iNode) {\n        return Vec_WrdEntry(vTruths, iNode); }\n    Gia_ObjSetTravIdCurrentId(p, iNode);\n    pObj = Gia_ManObj( p, iNode );\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Truth0 = Shr_ManComputeTruth6_rec( p, Gia_ObjFaninId0p(p, pObj), vTruths );\n    Truth1 = Shr_ManComputeTruth6_rec( p, Gia_ObjFaninId1p(p, pObj), vTruths );\n    if Gia_ObjFaninC0(pObj) {\n        Truth0 = ~Truth0; }\n    if Gia_ObjFaninC1(pObj) {\n        Truth1 = ~Truth1; }\n    Vec_WrdWriteEntry( vTruths, iNode, Truth0 \u0026 Truth1 );\n    return Truth0 \u0026 Truth1;\n}"
+    },
+    {
+      "Name": "Shr_ManComputeTruth6",
+      "Start": 11197,
+      "End": 11618,
+      "BodyStart": 11300,
+      "Original": "word Shr_ManComputeTruth6( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vLeaves, Vec_Wrd_t * vTruths )\n{\n    int i, iLeaf;\n    assert( Gia_ObjIsAnd(pObj) );\n    Gia_ManIncrementTravId( p );\n    Vec_IntForEachEntry( vLeaves, iLeaf, i )\n    {\n        Gia_ObjSetTravIdCurrentId( p, iLeaf );\n        Vec_WrdWriteEntry( vTruths, iLeaf, Truth[i] );\n    }\n    return Shr_ManComputeTruth6_rec( p, Gia_ObjId(p, pObj), vTruths );\n}",
+      "Draft": "func Shr_ManComputeTruth6(p *Gia_Man_t, pObj *Gia_Obj_t, vLeaves *Vec_Int_t, vTruths *Vec_Wrd_t) word {\n    var i, iLeaf int32;\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLeaves)) \u0026\u0026 (((iLeaf) = Vec_IntEntry(vLeaves, i)), 1); i++  {\n        Gia_ObjSetTravIdCurrentId( p, iLeaf );\n        Vec_WrdWriteEntry( vTruths, iLeaf, Truth[i] );\n    }\n    return Shr_ManComputeTruth6_rec( p, Gia_ObjId(p, pObj), vTruths );\n}"
+    },
+    {
+      "Name": "Shr_ManComputeTruths",
+      "Start": 11874,
+      "End": 12953,
+      "BodyStart": 11992,
+      "Original": "void Shr_ManComputeTruths( Gia_Man_t * p, int nVars, Vec_Int_t * vDivs, Vec_Wrd_t * vDivTruths, Vec_Wrd_t * vTruths )\n{\n    Gia_Obj_t * pObj;\n    word Truth0, Truth1;//, Truthh;\n    int i, iDiv;\n    Vec_WrdClear( vDivTruths );\n    Vec_IntForEachEntryStop( vDivs, iDiv, i, nVars )\n    {\n        Vec_WrdWriteEntry( vTruths, iDiv, Truth[i] );\n        Vec_WrdPush( vDivTruths, Truth[i] );\n    }\n    Vec_IntForEachEntryStart( vDivs, iDiv, i, nVars )\n    {\n        pObj = Gia_ManObj( p, iDiv );\n        Truth0 = Vec_WrdEntry( vTruths, Gia_ObjFaninId0(pObj, iDiv) );\n        Truth1 = Vec_WrdEntry( vTruths, Gia_ObjFaninId1(pObj, iDiv) );\n        if ( Gia_ObjFaninC0(pObj) )\n            Truth0 = ~Truth0;\n        if ( Gia_ObjFaninC1(pObj) )\n            Truth1 = ~Truth1;\n        Vec_WrdWriteEntry( vTruths, iDiv, Truth0 \u0026 Truth1 );\n        Vec_WrdPush( vDivTruths, Truth0 \u0026 Truth1 );\n\n//        Truthh = Truth0 \u0026 Truth1;\n//        Abc_TtPrintBinary( \u0026Truthh, nVars );   //printf( \"\\n\" );\n//        Kit_DsdPrintFromTruth( \u0026Truthh, nVars );    printf( \"\\n\" );\n    }\n//    printf( \"\\n\" );\n}",
+      "Draft": "func Shr_ManComputeTruths(p *Gia_Man_t, nVars int32, vDivs *Vec_Int_t, vDivTruths *Vec_Wrd_t, vTruths *Vec_Wrd_t) {\n    var pObj *Gia_Obj_t;\n    var Truth0, Truth1 word;//, Truthh;\n    var i, iDiv int32;\n    Vec_WrdClear( vDivTruths );\n    // inlining of macro Vec_IntForEachEntryStop\n    for  i = 0; (i \u003c nVars) \u0026\u0026 (((iDiv) = Vec_IntEntry(vDivs, i)), 1); i++  {\n        Vec_WrdWriteEntry( vTruths, iDiv, Truth[i] );\n        Vec_WrdPush( vDivTruths, Truth[i] );\n    }\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = nVars; (i \u003c Vec_IntSize(vDivs)) \u0026\u0026 (((iDiv) = Vec_IntEntry(vDivs, i)), 1); i++  {\n        pObj = Gia_ManObj( p, iDiv );\n        Truth0 = Vec_WrdEntry( vTruths, Gia_ObjFaninId0(pObj, iDiv) );\n        Truth1 = Vec_WrdEntry( vTruths, Gia_ObjFaninId1(pObj, iDiv) );\n        if Gia_ObjFaninC0(pObj) {\n            Truth0 = ~Truth0; }\n        if Gia_ObjFaninC1(pObj) {\n            Truth1 = ~Truth1; }\n        Vec_WrdWriteEntry( vTruths, iDiv, Truth0 \u0026 Truth1 );\n        Vec_WrdPush( vDivTruths, Truth0 \u0026 Truth1 );\n\n//        Truthh = Truth0 \u0026 Truth1;\n//        Abc_TtPrintBinary( \u0026Truthh, nVars );   //printf( \"\\n\" );\n//        Kit_DsdPrintFromTruth( \u0026Truthh, nVars );    printf( \"\\n\" );\n    }\n//    printf( \"\\n\" );\n}"
+    },
+    {
+      "Name": "Gia_ManMapShrink6",
+      "Start": 13190,
+      "End": 16959,
+      "BodyStart": 13283,
+      "Original": "Gia_Man_t * Gia_ManMapShrink6( Gia_Man_t * p, int nFanoutMax, int fKeepLevel, int fVerbose )\n{\n    Shr_Man_t * pMan;\n    Gia_Obj_t * pObj, * pFanin;\n    word uTruth, uTruth0, uTruth1;\n    int i, k, nDivs, iNode;\n    int RetValue, Counter1 = 0, Counter2 = 0;\n    abctime clk2, clk = Abc_Clock();\n    abctime timeFanout = 0;\n    assert( Gia_ManHasMapping(p) );\n    pMan = Shr_ManAlloc( p );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachObj1( p, pObj, i )\n    {\n        if ( Gia_ObjIsCi(pObj) )\n        {\n            pObj-\u003eValue = Gia_ManAppendCi( pMan-\u003epNew );\n            if ( p-\u003evLevels )\n                Gia_ObjSetLevel( pMan-\u003epNew, Gia_ObjFromLit(pMan-\u003epNew, Gia_ObjValue(pObj)), Gia_ObjLevel(p, pObj) );\n        }\n        else if ( Gia_ObjIsCo(pObj) )\n        {\n            pObj-\u003eValue = Gia_ManAppendCo( pMan-\u003epNew, Gia_ObjFanin0Copy(pObj) );\n        }\n        else if ( Gia_ObjIsLut(p, i) )\n        {\n            // collect leaves of this gate  \n            Vec_IntClear( pMan-\u003evLeaves );\n            Gia_LutForEachFanin( p, i, iNode, k )\n                Vec_IntPush( pMan-\u003evLeaves, iNode );\n            assert( Vec_IntSize(pMan-\u003evLeaves) \u003c= 6 );\n            // compute truth table \n            uTruth = Shr_ManComputeTruth6( pMan-\u003epGia, pObj, pMan-\u003evLeaves, pMan-\u003evTruths );\n            assert( pObj-\u003eValue == ~0 );\n            if ( uTruth == 0 || ~uTruth == 0 )\n                pObj-\u003eValue = Abc_LitNotCond( 0, ~uTruth == 0 );\n            else\n                Gia_ManForEachObjVec( pMan-\u003evLeaves, p, pFanin, k )\n                    if ( uTruth == Truth[k] || ~uTruth == Truth[k] )\n                        pObj-\u003eValue = Abc_LitNotCond( pFanin-\u003eValue, ~uTruth == Truth[k] );\n            if ( pObj-\u003eValue != ~0 )\n                continue;\n            // translate into new nodes\n            Gia_ManForEachObjVec( pMan-\u003evLeaves, p, pFanin, k )\n            {\n                if ( Abc_LitIsCompl(pFanin-\u003eValue) )\n                    uTruth = ((uTruth \u0026 Truth[k]) \u003e\u003e (1 \u003c\u003c k)) | ((uTruth \u0026 ~Truth[k]) \u003c\u003c (1 \u003c\u003c k));\n                Vec_IntWriteEntry( pMan-\u003evLeaves, k, Abc_Lit2Var(pFanin-\u003eValue) );\n            }\n            // compute divisors\n            clk2 = Abc_Clock();\n            nDivs = Shr_ManCollectDivisors( pMan, pMan-\u003evLeaves, pMan-\u003enDivMax, nFanoutMax );\n            assert( nDivs \u003c= pMan-\u003enDivMax );\n            timeFanout += Abc_Clock() - clk2;\n            // compute truth tables\n            Shr_ManComputeTruths( pMan-\u003epNew, Vec_IntSize(pMan-\u003evLeaves), pMan-\u003evDivs, pMan-\u003evDivTruths, pMan-\u003evTruths );\n            // perform resubstitution\n            RetValue = Rsb_ManPerformResub6( pMan-\u003epManRsb, Vec_IntSize(pMan-\u003evLeaves), uTruth, pMan-\u003evDivTruths, \u0026uTruth0, \u0026uTruth1, 0 );\n            if ( RetValue ) // resub exists\n            {\n                Vec_Int_t * vResult = Rsb_ManGetFanins(pMan-\u003epManRsb);\n                Vec_IntClear( pMan-\u003evDivResub );\n                Vec_IntForEachEntry( vResult, iNode, k )\n                    Vec_IntPush( pMan-\u003evDivResub, Vec_IntEntry(pMan-\u003evDivs, iNode) );\n                pObj-\u003eValue = Shr_ObjPerformBidec( pMan, pMan-\u003epManDec, pMan-\u003epNew, pMan-\u003evDivResub, uTruth1, uTruth0 | uTruth1 );\n                Counter1++;\n            }\n            else\n            {\n                pObj-\u003eValue = Shr_ObjPerformBidec( pMan, pMan-\u003epManDec, pMan-\u003epNew, pMan-\u003evLeaves, uTruth, ~(word)0 );\n                Counter2++;\n            }\n        }\n    }\n    if ( fVerbose )\n    {\n        printf( \"Performed %d resubs and %d decomps.  \", Counter1, Counter2 );\n        printf( \"Gain in AIG nodes = %d.  \", Gia_ManObjNum(p)-Gia_ManObjNum(pMan-\u003epNew) );\n        ABC_PRT( \"Runtime\", Abc_Clock() - clk );\n//        ABC_PRT( \"Divisors\", timeFanout );        \n    }\n    return Shr_ManFree( pMan );\n}",
+      "Draft": "func Gia_ManMapShrink6(p *Gia_Man_t, nFanoutMax int32, fKeepLevel int32, fVerbose int32) *Gia_Man_t {\n    var pMan *Shr_Man_t;\n    var pObj, pFanin *Gia_Obj_t;\n    var uTruth, uTruth0, uTruth1 word;\n    var i, k, nDivs, iNode int32;\n    var RetValue, Counter1, Counter2 int32;\n    var clk2 abctime;\n    var clk abctime = Abc_Clock();\n    var timeFanout abctime;\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");\n    pMan = Shr_ManAlloc( p );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pMan.pNew );\n            if p.vLevels {\n                Gia_ObjSetLevel( pMan.pNew, Gia_ObjFromLit(pMan.pNew, Gia_ObjValue(pObj)), Gia_ObjLevel(p, pObj) ); }\n        \n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pMan.pNew, Gia_ObjFanin0Copy(pObj) );\n        \n        } else if Gia_ObjIsLut(p, i) {\n            // collect leaves of this gate  \n            Vec_IntClear( pMan.vLeaves );\n            // inlining of macro Gia_LutForEachFanin\n            for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iNode = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n                Vec_IntPush( pMan.vLeaves, iNode );\n            }\n            assert(Vec_IntSize(pMan.vLeaves) \u003c= 6, \"Vec_IntSize(pMan.vLeaves) \u003c= 6\");\n            // compute truth table \n            uTruth = Shr_ManComputeTruth6( pMan.pGia, pObj, pMan.vLeaves, pMan.vTruths );\n            assert(pObj.Value == ~0, \"pObj.Value == ~0\");\n            if uTruth == 0 || ~uTruth == 0 {\n                pObj.Value = Abc_LitNotCond( 0, ~uTruth == 0 );\n            } else {\n                // inlining of macro Gia_ManForEachObjVec\n                for  k = 0; (k \u003c Vec_IntSize(pMan.vLeaves)) \u0026\u0026 ((pFanin) = Gia_ManObj(p, Vec_IntEntry(pMan.vLeaves,k))); k++  {\n                    if uTruth == Truth[k] || ~uTruth == Truth[k] {\n                        pObj.Value = Abc_LitNotCond( pFanin.Value, ~uTruth == Truth[k] ); }\n                } }\n            if pObj.Value != ~0 {\n                continue; }\n            // translate into new nodes\n            // inlining of macro Gia_ManForEachObjVec\n            for  k = 0; (k \u003c Vec_IntSize(pMan.vLeaves)) \u0026\u0026 ((pFanin) = Gia_ManObj(p, Vec_IntEntry(pMan.vLeaves,k))); k++  {\n                if Abc_LitIsCompl(pFanin.Value) {\n                    uTruth = ((uTruth \u0026 Truth[k]) \u003e\u003e (1 \u003c\u003c k)) | ((uTruth \u0026 ~Truth[k]) \u003c\u003c (1 \u003c\u003c k)); }\n                Vec_IntWriteEntry( pMan.vLeaves, k, Abc_Lit2Var(pFanin.Value) );\n            }\n            // compute divisors\n            clk2 = Abc_Clock();\n            nDivs = Shr_ManCollectDivisors( pMan, pMan.vLeaves, pMan.nDivMax, nFanoutMax );\n            assert(nDivs \u003c= pMan.nDivMax, \"nDivs \u003c= pMan.nDivMax\");\n            timeFanout += Abc_Clock() - clk2;\n            // compute truth tables\n            Shr_ManComputeTruths( pMan.pNew, Vec_IntSize(pMan.vLeaves), pMan.vDivs, pMan.vDivTruths, pMan.vTruths );\n            // perform resubstitution\n            RetValue = Rsb_ManPerformResub6( pMan.pManRsb, Vec_IntSize(pMan.vLeaves), uTruth, pMan.vDivTruths, \u0026uTruth0, \u0026uTruth1, 0 );\n            if RetValue { // resub exists\n            \n                var vResult *Vec_Int_t  = Rsb_ManGetFanins(pMan.pManRsb);\n                Vec_IntClear( pMan.vDivResub );\n                // inlining of macro Vec_IntForEachEntry\n                for  k = 0; (k \u003c Vec_IntSize(vResult)) \u0026\u0026 (((iNode) = Vec_IntEntry(vResult, k)), 1); k++  {\n                    Vec_IntPush( pMan.vDivResub, Vec_IntEntry(pMan.vDivs, iNode) );\n                }\n                pObj.Value = Shr_ObjPerformBidec( pMan, pMan.pManDec, pMan.pNew, pMan.vDivResub, uTruth1, uTruth0 | uTruth1 );\n                Counter1++;\n            \n            } else {\n                pObj.Value = Shr_ObjPerformBidec( pMan, pMan.pManDec, pMan.pNew, pMan.vLeaves, uTruth, ~(word)0 );\n                Counter2++;\n            }\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Performed %d resubs and %d decomps.  \", Counter1, Counter2);\n        fmt.Printf(\"Gain in AIG nodes = %d.  \", Gia_ManObjNum(p)-Gia_ManObjNum(pMan.pNew));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n//        ABC_PRT( \"Divisors\", timeFanout );        \n    }\n    return Shr_ManFree( pMan );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::struct::Shr_Fan_t",
+      "Category": "struct-review",
+      "Symbol": "Shr_Fan_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1223,
+      "End": 1391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::struct::Shr_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Shr_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1414,
+      "End": 2415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::mechanical::sizeof::3167",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3086,
+      "End": 3086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::mechanical::union::5619",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 5473,
+      "End": 5478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::pointer-cast::3133",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3086,
+      "End": 3086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::pointer-cast::5244",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5113,
+      "End": 5113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::pointer-cast::6050",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5904,
+      "End": 5917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::pointer-cast::6284",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6138,
+      "End": 6151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::pointer-cast::9744",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9208,
+      "End": 9220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::pointer-cast::9766",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9230,
+      "End": 9242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::macro::Shr_ObjForEachFanout",
+      "Category": "macro-review",
+      "Symbol": "Shr_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2417,
+      "End": 2571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::Shr_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Shr_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3012,
+      "End": 4172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::ternary::Shr_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Shr_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4173,
+      "End": 5147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::Shr_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Shr_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4173,
+      "End": 5147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::Shr_ManAddFanout",
+      "Category": "semantic-review",
+      "Symbol": "Shr_ManAddFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5389,
+      "End": 5750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::Shr_ManFanIterStart",
+      "Category": "semantic-review",
+      "Symbol": "Shr_ManFanIterStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5751,
+      "End": 6011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::Shr_ManFanIterNext",
+      "Category": "semantic-review",
+      "Symbol": "Shr_ManFanIterNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6012,
+      "End": 6230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::Shr_ManDivPushOrderByLevel",
+      "Category": "semantic-review",
+      "Symbol": "Shr_ManDivPushOrderByLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6468,
+      "End": 7064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::Shr_ManCollectDivisors",
+      "Category": "semantic-review",
+      "Symbol": "Shr_ManCollectDivisors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7065,
+      "End": 8598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::Shr_ObjPerformBidec",
+      "Category": "semantic-review",
+      "Symbol": "Shr_ObjPerformBidec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8877,
+      "End": 10247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::Shr_ManComputeTruth6_rec",
+      "Category": "semantic-review",
+      "Symbol": "Shr_ManComputeTruth6_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10504,
+      "End": 11196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::Shr_ManComputeTruth6",
+      "Category": "semantic-review",
+      "Symbol": "Shr_ManComputeTruth6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11197,
+      "End": 11618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::Shr_ManComputeTruths",
+      "Category": "semantic-review",
+      "Symbol": "Shr_ManComputeTruths",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11874,
+      "End": 12953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::Gia_ManMapShrink6",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMapShrink6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13190,
+      "End": 16959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::macro-inline::924",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 924,
+      "End": 953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::macro-inline::959",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 959,
+      "End": 988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::macro-inline::994",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 994,
+      "End": 1023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::macro-inline::1029",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1029,
+      "End": 1058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::macro-inline::1064",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1064,
+      "End": 1093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::macro-inline::1099",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1099,
+      "End": 1128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::macro-inline::1134",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1134,
+      "End": 1163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaShrink6.c::macro-inline::1169",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1169,
+      "End": 1198
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [giaShrink6.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Implementation of DAG-aware unmapping for 6-input cuts.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaShrink6.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"bool/bdc/bdc.h\"\n//#include \"bool/rsb/rsb.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nvar Truth [8]word = [8]word{\n    ABC_CONST(0xAAAAAAAAAAAAAAAA),\n    ABC_CONST(0xCCCCCCCCCCCCCCCC),\n    ABC_CONST(0xF0F0F0F0F0F0F0F0),\n    ABC_CONST(0xFF00FF00FF00FF00),\n    ABC_CONST(0xFFFF0000FFFF0000),\n    ABC_CONST(0xFFFFFFFF00000000),\n    ABC_CONST(0x0000000000000000),\n    ABC_CONST(0xFFFFFFFFFFFFFFFF),\n};\n\n// fanout structure\n   \ntype Shr_Fan_t struct {\n    iFan                int32;           // fanout ID\n    Next                int32;           // next structure\n}\n\n// operation manager\n   \ntype Shr_Man_t struct {\n    pGia         *Gia_Man_t;           // user's AIG\n    pNew         *Gia_Man_t;           // constructed AIG\n    nDivMax                int32;        // max number of divisors\n    nNewSize                int32;       // max growth size\n    // dynamic fanout (can only grow)\n    vFanMem         *Vec_Wrd_t;        // fanout memory\n    vObj2Fan         *Vec_Int_t;       // fanout\n    pFanTemp         *Shr_Fan_t;       // temporary fanout\n    // divisors\n    vDivs         *Vec_Int_t;          // divisors\n    vPrio         *Vec_Int_t;          // priority queue\n    vDivResub         *Vec_Int_t;      // resubstitution\n    vLeaves         *Vec_Int_t;        // cut leaves\n    // truth tables\n    vTruths         *Vec_Wrd_t;        // truth tables\n    vDivTruths         *Vec_Wrd_t;     // truth tables\n    // bidecomposition\n    pManRsb         *Rsb_Man_t;\n    pManDec         *Bdc_Man_t;       \n    Pars          Bdc_Par_t;\n    // statistics \n}\n\n// Original macro:\n// #define Shr_ObjForEachFanout( p, iNode, iFan )                      \\\n//     for ( iFan = Shr_ManFanIterStart(p, iNode); iFan; iFan = Shr_ManFanIterNext(p) )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Shr_ManAlloc(pGia *Gia_Man_t) *Shr_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Shr_Man_t{};\n    p.nDivMax     = 64;\n    p.nNewSize    = 2 * Gia_ManObjNum(pGia);\n    p.pGia        = pGia;\n    p.vFanMem     = Vec_WrdAlloc( 1000 );   Vec_WrdPush(p.vFanMem, -1); \n    p.vObj2Fan    = Vec_IntStart( p.nNewSize );\n    p.vDivs       = Vec_IntAlloc( 1000 );\n    p.vPrio       = Vec_IntAlloc( 1000 );\n    p.vTruths     = Vec_WrdStart( p.nNewSize );\n    p.vDivTruths  = Vec_WrdAlloc( 100 );\n    p.vDivResub   = Vec_IntAlloc( 6 );\n    p.vLeaves     = Vec_IntAlloc( 6 );\n    // start new manager\n    p.pNew        = Gia_ManStart( p.nNewSize );\n    p.pNew.pName = Abc_UtilStrsav( pGia.pName );\n    p.pNew.pSpec = Abc_UtilStrsav( pGia.pSpec );\n    Gia_ManHashAlloc( p.pNew );\n    Gia_ManCleanLevels( p.pNew, p.nNewSize );\n    // allocate traversal IDs\n    p.pNew.nObjs = p.nNewSize;\n    Gia_ManIncrementTravId( p.pNew );\n    p.pNew.nObjs = 1;\n    // start decompostion\n    p.Pars.nVarsMax = 6;\n    p.Pars.fVerbose = 0;\n    p.pManDec = Bdc_ManAlloc( \u0026p.Pars );\n    p.pManRsb = Rsb_ManAlloc( 6, p.nDivMax, 4, 1 );\n    return p;\n}\nfunc Shr_ManFree(p *Shr_Man_t) *Gia_Man_t {\n    // prepare the manager\n    var pTemp *Gia_Man_t;\n    Gia_ManHashStop( p.pNew );\n    Vec_IntFreeP( \u0026p.pNew.vLevels );\n    if Gia_ManHasDangling(p.pNew) {\n        p.pNew = Gia_ManCleanup( pTemp = p.pNew );\n        if Gia_ManAndNum(p.pNew) != Gia_ManAndNum(pTemp) {\n            fmt.Printf(\"Node reduction after sweep %6d -\u003e %6d.\\n\", Gia_ManAndNum(pTemp), Gia_ManAndNum(p.pNew)); }\n        Gia_ManStop( pTemp );\n    }\n    Gia_ManSetRegNum( p.pNew, Gia_ManRegNum(p.pGia) );\n    pTemp = p.pNew; p.pNew = nil;\n    // free data structures\n    Rsb_ManFree( p.pManRsb );\n    Bdc_ManFree( p.pManDec );\n    Gia_ManStopP( \u0026p.pNew );\n    Vec_WrdFree( p.vFanMem );\n    Vec_IntFree( p.vObj2Fan );\n    Vec_IntFree( p.vDivs );\n    Vec_IntFree( p.vPrio );\n    Vec_WrdFree( p.vTruths );\n    Vec_WrdFree( p.vDivTruths );\n    Vec_IntFree( p.vDivResub );\n    Vec_IntFree( p.vLeaves );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n    return pTemp;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Fanout manipulation.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Shr_ManAddFanout(p *Shr_Man_t, iFanin int32, iFanout int32) {\n    union {\n        var sFan Shr_Fan_t;\n        var sWord word;\n    }\n FanStr;\n    FanStr.sFan.iFan = iFanout;\n    FanStr.sFan.Next = Vec_IntEntry(p.vObj2Fan, iFanin);\n    Vec_IntWriteEntry( p.vObj2Fan, iFanin, Vec_WrdSize(p.vFanMem) );\n    Vec_WrdPush(p.vFanMem, FanStr.sWord );\n}\nfunc Shr_ManFanIterStart(p *Shr_Man_t, iNode int32) int32 {\n    if Vec_IntEntry(p.vObj2Fan, iNode) == 0 {\n        return 0; }\n    p.pFanTemp = (Shr_Fan_t *)Vec_WrdEntryP( p.vFanMem, Vec_IntEntry(p.vObj2Fan, iNode) );\n    return p.pFanTemp.iFan;\n}\nfunc Shr_ManFanIterNext(p *Shr_Man_t) int32 {\n    if p.pFanTemp.Next == 0 {\n        return 0; }\n    p.pFanTemp = (Shr_Fan_t *)Vec_WrdEntryP( p.vFanMem, p.pFanTemp.Next );\n    return p.pFanTemp.iFan;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect divisors.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Shr_ManDivPushOrderByLevel(p *Shr_Man_t, iDiv int32) int32 {\n    var iPlace int32;\n    var pArray *int32;\n    Vec_IntPush( p.vPrio, iDiv );\n    if Vec_IntSize(p.vPrio) == 1 {\n        return 0; } \n    pArray = Vec_IntArray(p.vPrio);\n    for  iPlace = Vec_IntSize(p.vPrio) - 1; iPlace \u003e 0; iPlace--  {\n        if Gia_ObjLevel(p.pNew, Gia_ManObj(p.pNew, pArray[iPlace-1])) \u003e \n             Gia_ObjLevel(p.pNew, Gia_ManObj(p.pNew, pArray[iPlace])) {\n             // inlining of macro ABC_SWAP\n              var t int32  = pArray[iPlace-1]; pArray[iPlace-1] = pArray[iPlace]; pArray[iPlace] = t; \n        } else {\n            break; }\n    }\n    return iPlace; // the place of the new divisor\n}\nfunc Shr_ManCollectDivisors(p *Shr_Man_t, vLeaves *Vec_Int_t, Limit int32, nFanoutMax int32) int32 {\n    var pFan *Gia_Obj_t;\n    var i, c, iDiv, iFan, iPlace int32;\n    assert(Limit \u003e 6, \"Limit \u003e 6\");\n    Vec_IntClear( p.vDivs );\n    Vec_IntClear( p.vPrio );\n    Gia_ManIncrementTravId( p.pNew );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLeaves)) \u0026\u0026 (((iDiv) = Vec_IntEntry(vLeaves, i)), 1); i++  {\n        Vec_IntPush( p.vDivs, iDiv );\n        Shr_ManDivPushOrderByLevel( p, iDiv );\n        Gia_ObjSetTravIdCurrentId( p.pNew, iDiv );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vPrio)) \u0026\u0026 (((iDiv) = Vec_IntEntry(p.vPrio, i)), 1); i++  {\n        c = 0;\n        assert(Gia_ObjIsTravIdCurrentId(p.pNew, iDiv), \"Gia_ObjIsTravIdCurrentId(p.pNew, iDiv)\");\n        // inlining of macro Shr_ObjForEachFanout\n        for  iFan = Shr_ManFanIterStart(p, iDiv); (iFan != 0); iFan = Shr_ManFanIterNext(p)  {\n            if c++ == nFanoutMax {\n                break; }\n            if Gia_ObjIsTravIdCurrentId(p.pNew, iFan) {\n                continue; }\n            pFan = Gia_ManObj( p.pNew, iFan );\n            assert(Gia_ObjIsAnd(pFan), \"Gia_ObjIsAnd(pFan)\");\n            assert(Gia_ObjLevel(p.pNew, Gia_ManObj(p.pNew, iDiv)) \u003c Gia_ObjLevel(p.pNew, pFan), \"Gia_ObjLevel(p.pNew, Gia_ManObj(p.pNew, iDiv)) \u003c Gia_ObjLevel(p.pNew, pFan)\");\n            if !Gia_ObjIsTravIdCurrentId(p.pNew, Gia_ObjFaninId0(pFan, iFan)) ||\n                 !Gia_ObjIsTravIdCurrentId(p.pNew, Gia_ObjFaninId1(pFan, iFan)) {\n                continue; }\n            Vec_IntPush( p.vDivs, iFan );\n            Gia_ObjSetTravIdCurrentId( p.pNew, iFan );\n            iPlace = Shr_ManDivPushOrderByLevel( p, iFan );\n            assert(i \u003c iPlace, \"i \u003c iPlace\");\n            if Vec_IntSize(p.vDivs) == Limit {\n                return Vec_IntSize(p.vDivs); }\n        }\n    }\n    return Vec_IntSize(p.vDivs);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resynthesizes nodes using bi-decomposition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Shr_ObjPerformBidec(p *Shr_Man_t, pManDec *Bdc_Man_t, pNew *Gia_Man_t, vLeafLits *Vec_Int_t, uTruth1 word, uTruthC word) int32 {\n    var pFunc *Bdc_Fun_t;\n    var pObj *Gia_Obj_t;\n    var i, iVar, iLit, nNodes, iLast int32;\n    var nVars int32  = Vec_IntSize(vLeafLits);\n    assert(uTruth1 != 0 \u0026\u0026 uTruthC != 0, \"uTruth1 != 0 \u0026\u0026 uTruthC != 0\");\n    Bdc_ManDecompose( pManDec, (unsigned *)\u0026uTruth1, (unsigned *)\u0026uTruthC, nVars, nil, 1000 );\n    Bdc_FuncSetCopyInt( Bdc_ManFunc(pManDec, 0), 1 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLeafLits)) \u0026\u0026 (((iVar) = Vec_IntEntry(vLeafLits, i)), 1); i++  {\n        Bdc_FuncSetCopyInt( Bdc_ManFunc(pManDec, i+1), Abc_Var2Lit(iVar, 0) );\n    }\n    nNodes = Bdc_ManNodeNum( pManDec );\n    for  i = nVars + 1; i \u003c nNodes; i++  {\n        pFunc = Bdc_ManFunc( pManDec, i );\n        iLast = Gia_ManObjNum(pNew);\n        iLit  = Gia_ManHashAnd( pNew, Bdc_FunFanin0Copy(pFunc), Bdc_FunFanin1Copy(pFunc) );\n        Bdc_FuncSetCopyInt( pFunc, iLit );\n        if iLast == Gia_ManObjNum(pNew) {\n            continue; }\n        assert(iLast + 1 == Gia_ManObjNum(pNew), \"iLast + 1 == Gia_ManObjNum(pNew)\");\n        pObj = Gia_ManObj(pNew, Abc_Lit2Var(iLit));\n        Gia_ObjSetAndLevel( pNew, pObj );\n        Shr_ManAddFanout( p, Gia_ObjFaninId0p(pNew, pObj), Gia_ObjId(pNew, pObj) );\n        Shr_ManAddFanout( p, Gia_ObjFaninId1p(pNew, pObj), Gia_ObjId(pNew, pObj) );\n        assert(Gia_ManObjNum(pNew) \u003c p.nNewSize, \"Gia_ManObjNum(pNew) \u003c p.nNewSize\");\n    }\n    return Bdc_FunObjCopy( Bdc_ManRoot(pManDec) );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compute truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Shr_ManComputeTruth6_rec(p *Gia_Man_t, iNode int32, vTruths *Vec_Wrd_t) word {\n    var pObj *Gia_Obj_t;\n    var Truth0, Truth1 word;\n    if Gia_ObjIsTravIdCurrentId(p, iNode) {\n        return Vec_WrdEntry(vTruths, iNode); }\n    Gia_ObjSetTravIdCurrentId(p, iNode);\n    pObj = Gia_ManObj( p, iNode );\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Truth0 = Shr_ManComputeTruth6_rec( p, Gia_ObjFaninId0p(p, pObj), vTruths );\n    Truth1 = Shr_ManComputeTruth6_rec( p, Gia_ObjFaninId1p(p, pObj), vTruths );\n    if Gia_ObjFaninC0(pObj) {\n        Truth0 = ~Truth0; }\n    if Gia_ObjFaninC1(pObj) {\n        Truth1 = ~Truth1; }\n    Vec_WrdWriteEntry( vTruths, iNode, Truth0 \u0026 Truth1 );\n    return Truth0 \u0026 Truth1;\n}\nfunc Shr_ManComputeTruth6(p *Gia_Man_t, pObj *Gia_Obj_t, vLeaves *Vec_Int_t, vTruths *Vec_Wrd_t) word {\n    var i, iLeaf int32;\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLeaves)) \u0026\u0026 (((iLeaf) = Vec_IntEntry(vLeaves, i)), 1); i++  {\n        Gia_ObjSetTravIdCurrentId( p, iLeaf );\n        Vec_WrdWriteEntry( vTruths, iLeaf, Truth[i] );\n    }\n    return Shr_ManComputeTruth6_rec( p, Gia_ObjId(p, pObj), vTruths );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Shr_ManComputeTruths(p *Gia_Man_t, nVars int32, vDivs *Vec_Int_t, vDivTruths *Vec_Wrd_t, vTruths *Vec_Wrd_t) {\n    var pObj *Gia_Obj_t;\n    var Truth0, Truth1 word;//, Truthh;\n    var i, iDiv int32;\n    Vec_WrdClear( vDivTruths );\n    // inlining of macro Vec_IntForEachEntryStop\n    for  i = 0; (i \u003c nVars) \u0026\u0026 (((iDiv) = Vec_IntEntry(vDivs, i)), 1); i++  {\n        Vec_WrdWriteEntry( vTruths, iDiv, Truth[i] );\n        Vec_WrdPush( vDivTruths, Truth[i] );\n    }\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = nVars; (i \u003c Vec_IntSize(vDivs)) \u0026\u0026 (((iDiv) = Vec_IntEntry(vDivs, i)), 1); i++  {\n        pObj = Gia_ManObj( p, iDiv );\n        Truth0 = Vec_WrdEntry( vTruths, Gia_ObjFaninId0(pObj, iDiv) );\n        Truth1 = Vec_WrdEntry( vTruths, Gia_ObjFaninId1(pObj, iDiv) );\n        if Gia_ObjFaninC0(pObj) {\n            Truth0 = ~Truth0; }\n        if Gia_ObjFaninC1(pObj) {\n            Truth1 = ~Truth1; }\n        Vec_WrdWriteEntry( vTruths, iDiv, Truth0 \u0026 Truth1 );\n        Vec_WrdPush( vDivTruths, Truth0 \u0026 Truth1 );\n\n//        Truthh = Truth0 \u0026 Truth1;\n//        Abc_TtPrintBinary( \u0026Truthh, nVars );   //printf( \"\\n\" );\n//        Kit_DsdPrintFromTruth( \u0026Truthh, nVars );    printf( \"\\n\" );\n    }\n//    printf( \"\\n\" );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManMapShrink6(p *Gia_Man_t, nFanoutMax int32, fKeepLevel int32, fVerbose int32) *Gia_Man_t {\n    var pMan *Shr_Man_t;\n    var pObj, pFanin *Gia_Obj_t;\n    var uTruth, uTruth0, uTruth1 word;\n    var i, k, nDivs, iNode int32;\n    var RetValue, Counter1, Counter2 int32;\n    var clk2 abctime;\n    var clk abctime = Abc_Clock();\n    var timeFanout abctime;\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");\n    pMan = Shr_ManAlloc( p );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pMan.pNew );\n            if p.vLevels {\n                Gia_ObjSetLevel( pMan.pNew, Gia_ObjFromLit(pMan.pNew, Gia_ObjValue(pObj)), Gia_ObjLevel(p, pObj) ); }\n        \n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Gia_ManAppendCo( pMan.pNew, Gia_ObjFanin0Copy(pObj) );\n        \n        } else if Gia_ObjIsLut(p, i) {\n            // collect leaves of this gate  \n            Vec_IntClear( pMan.vLeaves );\n            // inlining of macro Gia_LutForEachFanin\n            for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iNode = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n                Vec_IntPush( pMan.vLeaves, iNode );\n            }\n            assert(Vec_IntSize(pMan.vLeaves) \u003c= 6, \"Vec_IntSize(pMan.vLeaves) \u003c= 6\");\n            // compute truth table \n            uTruth = Shr_ManComputeTruth6( pMan.pGia, pObj, pMan.vLeaves, pMan.vTruths );\n            assert(pObj.Value == ~0, \"pObj.Value == ~0\");\n            if uTruth == 0 || ~uTruth == 0 {\n                pObj.Value = Abc_LitNotCond( 0, ~uTruth == 0 );\n            } else {\n                // inlining of macro Gia_ManForEachObjVec\n                for  k = 0; (k \u003c Vec_IntSize(pMan.vLeaves)) \u0026\u0026 ((pFanin) = Gia_ManObj(p, Vec_IntEntry(pMan.vLeaves,k))); k++  {\n                    if uTruth == Truth[k] || ~uTruth == Truth[k] {\n                        pObj.Value = Abc_LitNotCond( pFanin.Value, ~uTruth == Truth[k] ); }\n                } }\n            if pObj.Value != ~0 {\n                continue; }\n            // translate into new nodes\n            // inlining of macro Gia_ManForEachObjVec\n            for  k = 0; (k \u003c Vec_IntSize(pMan.vLeaves)) \u0026\u0026 ((pFanin) = Gia_ManObj(p, Vec_IntEntry(pMan.vLeaves,k))); k++  {\n                if Abc_LitIsCompl(pFanin.Value) {\n                    uTruth = ((uTruth \u0026 Truth[k]) \u003e\u003e (1 \u003c\u003c k)) | ((uTruth \u0026 ~Truth[k]) \u003c\u003c (1 \u003c\u003c k)); }\n                Vec_IntWriteEntry( pMan.vLeaves, k, Abc_Lit2Var(pFanin.Value) );\n            }\n            // compute divisors\n            clk2 = Abc_Clock();\n            nDivs = Shr_ManCollectDivisors( pMan, pMan.vLeaves, pMan.nDivMax, nFanoutMax );\n            assert(nDivs \u003c= pMan.nDivMax, \"nDivs \u003c= pMan.nDivMax\");\n            timeFanout += Abc_Clock() - clk2;\n            // compute truth tables\n            Shr_ManComputeTruths( pMan.pNew, Vec_IntSize(pMan.vLeaves), pMan.vDivs, pMan.vDivTruths, pMan.vTruths );\n            // perform resubstitution\n            RetValue = Rsb_ManPerformResub6( pMan.pManRsb, Vec_IntSize(pMan.vLeaves), uTruth, pMan.vDivTruths, \u0026uTruth0, \u0026uTruth1, 0 );\n            if RetValue { // resub exists\n            \n                var vResult *Vec_Int_t  = Rsb_ManGetFanins(pMan.pManRsb);\n                Vec_IntClear( pMan.vDivResub );\n                // inlining of macro Vec_IntForEachEntry\n                for  k = 0; (k \u003c Vec_IntSize(vResult)) \u0026\u0026 (((iNode) = Vec_IntEntry(vResult, k)), 1); k++  {\n                    Vec_IntPush( pMan.vDivResub, Vec_IntEntry(pMan.vDivs, iNode) );\n                }\n                pObj.Value = Shr_ObjPerformBidec( pMan, pMan.pManDec, pMan.pNew, pMan.vDivResub, uTruth1, uTruth0 | uTruth1 );\n                Counter1++;\n            \n            } else {\n                pObj.Value = Shr_ObjPerformBidec( pMan, pMan.pManDec, pMan.pNew, pMan.vLeaves, uTruth, ~(word)0 );\n                Counter2++;\n            }\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Performed %d resubs and %d decomps.  \", Counter1, Counter2);\n        fmt.Printf(\"Gain in AIG nodes = %d.  \", Gia_ManObjNum(p)-Gia_ManObjNum(pMan.pNew));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n//        ABC_PRT( \"Divisors\", timeFanout );        \n    }\n    return Shr_ManFree( pMan );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,90 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSwitch.c",
+  "SHA256": "1a712df298b06080bb1bb3894dce23300e53f1d62e7a7e68a1357981ce2b1469",
+  "Functions": [
+    {
+      "Name": "Sim_NtkComputeSwitching",
+      "Start": 1719,
+      "End": 2968,
+      "BodyStart": 1790,
+      "Original": "Vec_Int_t * Sim_NtkComputeSwitching( Abc_Ntk_t * pNtk, int nPatterns )\n{\n    Vec_Int_t * vSwitching;\n    float * pSwitching;\n    Vec_Ptr_t * vNodes;\n    Vec_Ptr_t * vSimInfo;\n    Abc_Obj_t * pNode;\n    unsigned * pSimInfo;\n    int nSimWords, i;\n\n    // allocate space for simulation info of all nodes\n    nSimWords = SIM_NUM_WORDS(nPatterns);\n    vSimInfo = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), nSimWords, 0 );\n    // assign the random simulation to the CIs\n    vSwitching = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    pSwitching = (float *)vSwitching-\u003epArray;\n    Abc_NtkForEachCi( pNtk, pNode, i )\n    {\n        pSimInfo = (unsigned *)Vec_PtrEntry(vSimInfo, pNode-\u003eId);\n        Sim_UtilSetRandom( pSimInfo, nSimWords );\n        pSwitching[pNode-\u003eId] = Sim_ComputeSwitching( pSimInfo, nSimWords );\n    }\n    // simulate the internal nodes\n    vNodes  = Abc_AigDfs( pNtk, 1, 0 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        pSimInfo = (unsigned *)Vec_PtrEntry(vSimInfo, pNode-\u003eId);\n        Sim_UtilSimulateNodeOne( pNode, vSimInfo, nSimWords, 0 );\n        pSwitching[pNode-\u003eId] = Sim_ComputeSwitching( pSimInfo, nSimWords );\n    }\n    Vec_PtrFree( vNodes );\n    Sim_UtilInfoFree( vSimInfo );\n    return vSwitching;\n}",
+      "Draft": "func Sim_NtkComputeSwitching(pNtk *Abc_Ntk_t, nPatterns int32) *Vec_Int_t {\n    var vSwitching *Vec_Int_t;\n    var pSwitching *float32;\n    var vNodes *Vec_Ptr_t;\n    var vSimInfo *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var pSimInfo *uint32;\n    var nSimWords, i int32;\n\n    // allocate space for simulation info of all nodes\n    // inlining of macro SIM_NUM_WORDS\n    nSimWords = (((nPatterns)\u003e\u003e5) + (((nPatterns)\u002631) \u003e 0));\n    vSimInfo = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), nSimWords, 0 );\n    // assign the random simulation to the CIs\n    vSwitching = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    pSwitching = (float *)vSwitching.pArray;\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pSimInfo = (unsigned *)Vec_PtrEntry(vSimInfo, pNode.Id);\n        Sim_UtilSetRandom( pSimInfo, nSimWords );\n        pSwitching[pNode.Id] = Sim_ComputeSwitching( pSimInfo, nSimWords );\n    }\n    // simulate the internal nodes\n    vNodes  = Abc_AigDfs( pNtk, 1, 0 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pSimInfo = (unsigned *)Vec_PtrEntry(vSimInfo, pNode.Id);\n        Sim_UtilSimulateNodeOne( pNode, vSimInfo, nSimWords, 0 );\n        pSwitching[pNode.Id] = Sim_ComputeSwitching( pSimInfo, nSimWords );\n    }\n    Vec_PtrFree( vNodes );\n    Sim_UtilInfoFree( vSimInfo );\n    return vSwitching;\n}"
+    },
+    {
+      "Name": "Sim_ComputeSwitching",
+      "Start": 3308,
+      "End": 3550,
+      "BodyStart": 3373,
+      "Original": "float Sim_ComputeSwitching( unsigned * pSimInfo, int nSimWords )\n{\n    int nOnes, nTotal;\n    nTotal = 32 * nSimWords;\n    nOnes = Sim_UtilCountOnes( pSimInfo, nSimWords );\n    return (float)2.0 * nOnes / nTotal * (nTotal - nOnes) / nTotal;\n}",
+      "Draft": "func Sim_ComputeSwitching(pSimInfo *uint32, nSimWords int32) float32 {\n    var nOnes, nTotal int32;\n    nTotal = 32 * nSimWords;\n    nOnes = Sim_UtilCountOnes( pSimInfo, nSimWords );\n    return float32(2.0) * nOnes / nTotal * (nTotal - nOnes) / nTotal;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSwitch.c::pointer-cast::2325",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2257,
+      "End": 2266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSwitch.c::pointer-cast::2519",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2350,
+      "End": 2362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSwitch.c::pointer-cast::2887",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2609,
+      "End": 2609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSwitch.c::pointer-cast::2961",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2687,
+      "End": 2699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSwitch.c::Sim_NtkComputeSwitching",
+      "Category": "semantic-review",
+      "Symbol": "Sim_NtkComputeSwitching",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1719,
+      "End": 2968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSwitch.c::Sim_ComputeSwitching",
+      "Category": "semantic-review",
+      "Symbol": "Sim_ComputeSwitching",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3308,
+      "End": 3550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simSwitch.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3797
+    }
+  ],
+  "Draft": "package sim\n\n/**CFile****************************************************************\n\n  FileName    [simSwitch.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Computes switching activity of nodes in the ABC network.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: simSwitch.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"sim.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Sim_NodeSimulate( Abc_Obj_t * pNode, Vec_Ptr_t * vSimInfo, int nSimWords );\n\n// static float Sim_ComputeSwitching( unsigned * pSimInfo, int nSimWords );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes switching activity using simulation.]\n\n  Description [Computes switching activity, which is understood as the\n  probability of switching under random simulation. Assigns the\n  random simulation information at the CI and propagates it through\n  the internal nodes of the AIG.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_NtkComputeSwitching(pNtk *Abc_Ntk_t, nPatterns int32) *Vec_Int_t {\n    var vSwitching *Vec_Int_t;\n    var pSwitching *float32;\n    var vNodes *Vec_Ptr_t;\n    var vSimInfo *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var pSimInfo *uint32;\n    var nSimWords, i int32;\n\n    // allocate space for simulation info of all nodes\n    // inlining of macro SIM_NUM_WORDS\n    nSimWords = (((nPatterns)\u003e\u003e5) + (((nPatterns)\u002631) \u003e 0));\n    vSimInfo = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), nSimWords, 0 );\n    // assign the random simulation to the CIs\n    vSwitching = Vec_IntStart( Abc_NtkObjNumMax(pNtk) );\n    pSwitching = (float *)vSwitching.pArray;\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pSimInfo = (unsigned *)Vec_PtrEntry(vSimInfo, pNode.Id);\n        Sim_UtilSetRandom( pSimInfo, nSimWords );\n        pSwitching[pNode.Id] = Sim_ComputeSwitching( pSimInfo, nSimWords );\n    }\n    // simulate the internal nodes\n    vNodes  = Abc_AigDfs( pNtk, 1, 0 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pSimInfo = (unsigned *)Vec_PtrEntry(vSimInfo, pNode.Id);\n        Sim_UtilSimulateNodeOne( pNode, vSimInfo, nSimWords, 0 );\n        pSwitching[pNode.Id] = Sim_ComputeSwitching( pSimInfo, nSimWords );\n    }\n    Vec_PtrFree( vNodes );\n    Sim_UtilInfoFree( vSimInfo );\n    return vSwitching;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes switching activity of one node.]\n\n  Description [Uses the formula: Switching = 2 * nOnes * nZeros / (nTotal ^ 2) ]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_ComputeSwitching(pSimInfo *uint32, nSimWords int32) float32 {\n    var nOnes, nTotal int32;\n    nTotal = 32 * nSimWords;\n    nOnes = Sim_UtilCountOnes( pSimInfo, nSimWords );\n    return float32(2.0) * nOnes / nTotal * (nTotal - nOnes) / nTotal;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,536 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c",
+  "SHA256": "c623b39db3c809d6e419fe5d57c03f947afcc61f491253e132139f129caa5a68",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pCube.nLits) == Min_CubeCountLits(pCube) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2493
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCover != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 3159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pCube.nLits) == Min_CubeCountLits(pCube) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 17,
+        "ByteOffset": 3366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"-\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 17,
+        "ByteOffset": 3426
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"0\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 17,
+        "ByteOffset": 3539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"1\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 17,
+        "ByteOffset": 3599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"?\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 3644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" 1\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 5,
+        "ByteOffset": 4304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 13,
+        "ByteOffset": 4933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%2d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 17,
+        "ByteOffset": 5008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Bubble\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 5133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 5558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( Buffer, \"%s.%s\", pName, fEsop? \"esop\" : \"pla\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 192,
+        "Column": 14,
+        "ByteOffset": 5629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  i = strlen(Buffer) - 1; i \u003e= 0; i--  {"
+    },
+    {
+      "Name": "fopen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 196,
+        "Column": 13,
+        "ByteOffset": 5763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( Buffer, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 197,
+        "Column": 5,
+        "ByteOffset": 5789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# %s cover for output %s generated by ABC on %s\\n\", fEsop? \"ESOP\":\"SOP\", pName, Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 5911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".i %d\\n\", pCover? pCover.nVars : 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 5,
+        "ByteOffset": 5970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".o %d\\n\", 1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 200,
+        "Column": 5,
+        "ByteOffset": 6006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".p %d\\n\", Min_CoverCountCubes(pCover) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 16,
+        "ByteOffset": 6079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fEsop { fprintf( pFile, \".type esop\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 205,
+        "Column": 5,
+        "ByteOffset": 6380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".e\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 6410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 225,
+        "Column": 13,
+        "ByteOffset": 7019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( i == int32(pCube.nLits) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 13,
+        "ByteOffset": 8397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( i == int32(pCube.nLits) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 272,
+        "Column": 13,
+        "ByteOffset": 8509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCube.uData[0] ); // not a bubble"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Min_CubeCreate",
+      "Start": 1235,
+      "End": 2124,
+      "BodyStart": 1308,
+      "Original": "void Min_CubeCreate( Vec_Str_t * vCover, Min_Cube_t * pCube, char Type )\n{\n    int i;\n    assert( (int)pCube-\u003enLits == Min_CubeCountLits(pCube) );\n    for ( i = 0; i \u003c (int)pCube-\u003enVars; i++ )\n        if ( Min_CubeHasBit(pCube, i*2) )\n        {\n            if ( Min_CubeHasBit(pCube, i*2+1) )\n//                fprintf( pFile, \"-\" );\n                Vec_StrPush( vCover, '-' );\n            else\n//                fprintf( pFile, \"0\" );\n                Vec_StrPush( vCover, '0' );\n        }\n        else\n        {\n            if ( Min_CubeHasBit(pCube, i*2+1) )\n //               fprintf( pFile, \"1\" );\n                Vec_StrPush( vCover, '1' );\n            else\n//                fprintf( pFile, \"?\" );\n                Vec_StrPush( vCover, '?' );\n        }\n//    fprintf( pFile, \" 1\\n\" );\n    Vec_StrPush( vCover, ' ' );\n    Vec_StrPush( vCover, Type );\n    Vec_StrPush( vCover, '\\n' );\n}",
+      "Draft": "func Min_CubeCreate(vCover *Vec_Str_t, pCube *Min_Cube_t, Type byte) {\n    var i int32;\n    assert(int32(pCube.nLits) == Min_CubeCountLits(pCube), \"int32(pCube.nLits) == Min_CubeCountLits(pCube)\");\n    for  i = 0; i \u003c int32(pCube.nVars); i++  {\n        if Min_CubeHasBit(pCube, i*2) {\n            if Min_CubeHasBit(pCube, i*2+1) {\n//                fprintf( pFile, \"-\" );\n                Vec_StrPush( vCover, '-' );\n            } else {\n//                fprintf( pFile, \"0\" );\n                Vec_StrPush( vCover, '0' ); }\n        \n        } else {\n            if Min_CubeHasBit(pCube, i*2+1) {\n //               fprintf( pFile, \"1\" );\n                Vec_StrPush( vCover, '1' );\n            } else {\n//                fprintf( pFile, \"?\" );\n                Vec_StrPush( vCover, '?' ); }\n        }\n    }\n//    fprintf( pFile, \" 1\\n\" );\n    Vec_StrPush( vCover, ' ' );\n    Vec_StrPush( vCover, Type );\n    Vec_StrPush( vCover, '\\n' );\n}"
+    },
+    {
+      "Name": "Min_CoverCreate",
+      "Start": 2360,
+      "End": 2639,
+      "BodyStart": 2435,
+      "Original": "void Min_CoverCreate( Vec_Str_t * vCover, Min_Cube_t * pCover, char Type )\n{\n    Min_Cube_t * pCube;\n    assert( pCover != NULL );\n    Vec_StrClear( vCover );\n    Min_CoverForEachCube( pCover, pCube )\n        Min_CubeCreate( vCover, pCube, Type );\n    Vec_StrPush( vCover, 0 );\n}",
+      "Draft": "func Min_CoverCreate(vCover *Vec_Str_t, pCover *Min_Cube_t, Type byte) {\n    var pCube *Min_Cube_t;\n    assert(pCover != nil, \"pCover != nil\");\n    Vec_StrClear( vCover );\n    // inlining of macro Min_CoverForEachCube\n    for  pCube = pCover;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n        Min_CubeCreate( vCover, pCube, Type );\n    }\n    Vec_StrPush( vCover, 0 );\n}"
+    },
+    {
+      "Name": "Min_CubeWrite",
+      "Start": 2875,
+      "End": 3509,
+      "BodyStart": 2930,
+      "Original": "void Min_CubeWrite( FILE * pFile, Min_Cube_t * pCube )\n{\n    int i;\n    assert( (int)pCube-\u003enLits == Min_CubeCountLits(pCube) );\n    for ( i = 0; i \u003c (int)pCube-\u003enVars; i++ )\n        if ( Min_CubeHasBit(pCube, i*2) )\n        {\n            if ( Min_CubeHasBit(pCube, i*2+1) )\n                fprintf( pFile, \"-\" );\n            else\n                fprintf( pFile, \"0\" );\n        }\n        else\n        {\n            if ( Min_CubeHasBit(pCube, i*2+1) )\n                fprintf( pFile, \"1\" );\n            else\n                fprintf( pFile, \"?\" );\n        }\n    fprintf( pFile, \" 1\\n\" );\n//    fprintf( pFile, \" %d\\n\", pCube-\u003enLits );\n}",
+      "Draft": "func Min_CubeWrite(pFile *os.File, pCube *Min_Cube_t) {\n    var i int32;\n    assert(int32(pCube.nLits) == Min_CubeCountLits(pCube), \"int32(pCube.nLits) == Min_CubeCountLits(pCube)\");\n    for  i = 0; i \u003c int32(pCube.nVars); i++  {\n        if Min_CubeHasBit(pCube, i*2) {\n            if Min_CubeHasBit(pCube, i*2+1) {\n                fmt.Fprintf(pFile, \"-\");\n            } else {\n                fmt.Fprintf(pFile, \"0\"); }\n        \n        } else {\n            if Min_CubeHasBit(pCube, i*2+1) {\n                fmt.Fprintf(pFile, \"1\");\n            } else {\n                fmt.Fprintf(pFile, \"?\"); }\n        }\n    }\n    fmt.Fprintf(pFile, \" 1\\n\");\n//    fprintf( pFile, \" %d\\n\", pCube-\u003enLits );\n}"
+    },
+    {
+      "Name": "Min_CoverWrite",
+      "Start": 3745,
+      "End": 3930,
+      "BodyStart": 3802,
+      "Original": "void Min_CoverWrite( FILE * pFile, Min_Cube_t * pCover )\n{\n    Min_Cube_t * pCube;\n    Min_CoverForEachCube( pCover, pCube )\n        Min_CubeWrite( pFile, pCube );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Min_CoverWrite(pFile *os.File, pCover *Min_Cube_t) {\n    var pCube *Min_Cube_t;\n    // inlining of macro Min_CoverForEachCube\n    for  pCube = pCover;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n        Min_CubeWrite( pFile, pCube );\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Min_CoverWriteStore",
+      "Start": 4166,
+      "End": 4612,
+      "BodyStart": 4222,
+      "Original": "void Min_CoverWriteStore( FILE * pFile, Min_Man_t * p )\n{\n    Min_Cube_t * pCube;\n    int i;\n    for ( i = 0; i \u003c= p-\u003enVars; i++ )\n    {\n        Min_CoverForEachCube( p-\u003eppStore[i], pCube )\n        {\n            printf( \"%2d : \", i );\n            if ( pCube == p-\u003epBubble )\n            {\n                printf( \"Bubble\\n\" );\n                continue;\n            }\n            Min_CubeWrite( pFile, pCube );\n        }\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Min_CoverWriteStore(pFile *os.File, p *Min_Man_t) {\n    var pCube *Min_Cube_t;\n    var i int32;\n    for  i = 0; i \u003c= p.nVars; i++  {\n        // inlining of macro Min_CoverForEachCube\n        for  pCube = p.ppStore[i];                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n            fmt.Printf(\"%2d : \", i);\n            if pCube == p.pBubble {\n                fmt.Printf(\"Bubble\\n\");\n                continue;\n            }\n            Min_CubeWrite( pFile, pCube );\n        }\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Min_CoverWriteFile",
+      "Start": 4848,
+      "End": 5687,
+      "BodyStart": 4920,
+      "Original": "void Min_CoverWriteFile( Min_Cube_t * pCover, char * pName, int fEsop )\n{\n    char Buffer[1000];\n    Min_Cube_t * pCube;\n    FILE * pFile;\n    int i;\n    sprintf( Buffer, \"%s.%s\", pName, fEsop? \"esop\" : \"pla\" );\n    for ( i = strlen(Buffer) - 1; i \u003e= 0; i-- )\n        if ( Buffer[i] == '\u003c' || Buffer[i] == '\u003e' )\n            Buffer[i] = '_';\n    pFile = fopen( Buffer, \"w\" );\n    fprintf( pFile, \"# %s cover for output %s generated by ABC on %s\\n\", fEsop? \"ESOP\":\"SOP\", pName, Extra_TimeStamp() );\n    fprintf( pFile, \".i %d\\n\", pCover? pCover-\u003enVars : 0 );\n    fprintf( pFile, \".o %d\\n\", 1 );\n    fprintf( pFile, \".p %d\\n\", Min_CoverCountCubes(pCover) );\n    if ( fEsop ) fprintf( pFile, \".type esop\\n\" );\n    Min_CoverForEachCube( pCover, pCube )\n        Min_CubeWrite( pFile, pCube );\n    fprintf( pFile, \".e\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func Min_CoverWriteFile(pCover *Min_Cube_t, pName string, fEsop int32) {\n    var Buffer string // was [1000]byte in C\n\n    var pCube *Min_Cube_t;\n    var pFile *os.File;\n    var i int32;\n    Buffer = fmt.Sprintf(\"%s.%s\", pName, fEsop? \"esop\" : \"pla\");\n    for  i = strlen(Buffer) - 1; i \u003e= 0; i--  {\n        if Buffer[i] == '\u003c' || Buffer[i] == '\u003e' {\n            Buffer[i] = '_'; }\n    }\n    pFile = fopen( Buffer, \"w\" );\n    fmt.Fprintf(pFile, \"# %s cover for output %s generated by ABC on %s\\n\", fEsop? \"ESOP\":\"SOP\", pName, Extra_TimeStamp());\n    fmt.Fprintf(pFile, \".i %d\\n\", pCover? pCover.nVars : 0);\n    fmt.Fprintf(pFile, \".o %d\\n\", 1);\n    fmt.Fprintf(pFile, \".p %d\\n\", Min_CoverCountCubes(pCover));\n    if fEsop != 0 { fmt.Fprintf(pFile, \".type esop\\n\"); }\n    // inlining of macro Min_CoverForEachCube\n    for  pCube = pCover;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n        Min_CubeWrite( pFile, pCube );\n    }\n    fmt.Fprintf(pFile, \".e\\n\");\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Min_CoverCheck",
+      "Start": 5923,
+      "End": 6135,
+      "BodyStart": 5960,
+      "Original": "void Min_CoverCheck( Min_Man_t * p )\n{\n    Min_Cube_t * pCube;\n    int i;\n    for ( i = 0; i \u003c= p-\u003enVars; i++ )\n        Min_CoverForEachCube( p-\u003eppStore[i], pCube )\n            assert( i == (int)pCube-\u003enLits );\n}",
+      "Draft": "func Min_CoverCheck(p *Min_Man_t) {\n    var pCube *Min_Cube_t;\n    var i int32;\n    for  i = 0; i \u003c= p.nVars; i++  {\n        // inlining of macro Min_CoverForEachCube\n        for  pCube = p.ppStore[i];                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n            assert(i == int32(pCube.nLits), \"i == int32(pCube.nLits)\");\n        }\n    }\n}"
+    },
+    {
+      "Name": "Min_CubeCheck",
+      "Start": 6372,
+      "End": 6555,
+      "BodyStart": 6412,
+      "Original": "int Min_CubeCheck( Min_Cube_t * pCube )\n{\n    int i;\n    for ( i = 0; i \u003c (int)pCube-\u003enVars; i++ )\n        if ( Min_CubeGetVar( pCube, i ) == 0 )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Min_CubeCheck(pCube *Min_Cube_t) int32 {\n    var i int32;\n    for  i = 0; i \u003c int32(pCube.nVars); i++  {\n        if Min_CubeGetVar( pCube, i ) == 0 {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Min_CoverCollect",
+      "Start": 6836,
+      "End": 7335,
+      "BodyStart": 6898,
+      "Original": "Min_Cube_t * Min_CoverCollect( Min_Man_t * p, int nSuppSize )\n{\n    Min_Cube_t * pCov = NULL, ** ppTail = \u0026pCov;\n    Min_Cube_t * pCube, * pCube2;\n    int i;\n    for ( i = 0; i \u003c= nSuppSize; i++ )\n    {\n        Min_CoverForEachCubeSafe( p-\u003eppStore[i], pCube, pCube2 )\n        {\n            assert( i == (int)pCube-\u003enLits );\n            *ppTail = pCube; \n            ppTail = \u0026pCube-\u003epNext;\n            assert( pCube-\u003euData[0] ); // not a bubble\n        }\n    }\n    *ppTail = NULL;\n    return pCov;\n}",
+      "Draft": "func Min_CoverCollect(p *Min_Man_t, nSuppSize int32) *Min_Cube_t {\n    var pCov *Min_Cube_t = nil;\n    var ppTail **Min_Cube_t = \u0026pCov;\n    var pCube, pCube2 *Min_Cube_t;\n    var i int32;\n    for  i = 0; i \u003c= nSuppSize; i++  {\n        // inlining of macro Min_CoverForEachCubeSafe\n        for  pCube = p.ppStore[i],                                                 pCube2 = pCube? pCube.pNext: nil;                             (pCube != nil);                                                          pCube = pCube2,                                                 pCube2 = pCube? pCube.pNext: nil  {\n            assert(i == int32(pCube.nLits), \"i == int32(pCube.nLits)\");\n            *ppTail = pCube; \n            ppTail = \u0026pCube.pNext;\n            assert(pCube.uData[0], \"pCube.uData[0]\"); // not a bubble\n        }\n    }\n    *ppTail = nil;\n    return pCov;\n}"
+    },
+    {
+      "Name": "Min_CoverExpand",
+      "Start": 7624,
+      "End": 7931,
+      "BodyStart": 7683,
+      "Original": "void Min_CoverExpand( Min_Man_t * p, Min_Cube_t * pCover )\n{\n    Min_Cube_t * pCube, * pCube2;\n    Min_ManClean( p, p-\u003enVars );\n    Min_CoverForEachCubeSafe( pCover, pCube, pCube2 )\n    {\n        pCube-\u003epNext = p-\u003eppStore[pCube-\u003enLits];\n        p-\u003eppStore[pCube-\u003enLits] = pCube;\n        p-\u003enCubes++;\n    }\n}",
+      "Draft": "func Min_CoverExpand(p *Min_Man_t, pCover *Min_Cube_t) {\n    var pCube, pCube2 *Min_Cube_t;\n    Min_ManClean( p, p.nVars );\n    // inlining of macro Min_CoverForEachCubeSafe\n    for  pCube = pCover,                                                 pCube2 = pCube? pCube.pNext: nil;                             (pCube != nil);                                                          pCube = pCube2,                                                 pCube2 = pCube? pCube.pNext: nil  {\n        pCube.pNext = p.ppStore[pCube.nLits];\n        p.ppStore[pCube.nLits] = pCube;\n        p.nCubes++;\n    }\n}"
+    },
+    {
+      "Name": "Min_CoverSuppVarNum",
+      "Start": 8220,
+      "End": 8821,
+      "BodyStart": 8282,
+      "Original": "int Min_CoverSuppVarNum( Min_Man_t * p, Min_Cube_t * pCover )\n{\n    Min_Cube_t * pCube;\n    int i, Counter;\n    if ( pCover == NULL )\n        return 0;\n    // clean the cube\n    for ( i = 0; i \u003c (int)pCover-\u003enWords; i++ )\n        p-\u003epTemp-\u003euData[i]  = ~((unsigned)0);\n    // add the bit data\n    Min_CoverForEachCube( pCover, pCube )\n        for ( i = 0; i \u003c (int)pCover-\u003enWords; i++ )\n            p-\u003epTemp-\u003euData[i] \u0026= pCube-\u003euData[i];\n    // count the vars\n    Counter = 0;\n    for ( i = 0; i \u003c (int)pCover-\u003enVars; i++ )\n        Counter += ( Min_CubeGetVar(p-\u003epTemp, i) != 3 );\n    return Counter;\n}",
+      "Draft": "func Min_CoverSuppVarNum(p *Min_Man_t, pCover *Min_Cube_t) int32 {\n    var pCube *Min_Cube_t;\n    var i, Counter int32;\n    if pCover == nil {\n        return 0; }\n    // clean the cube\n    for  i = 0; i \u003c int32(pCover.nWords); i++  {\n        p.pTemp.uData[i]  = ~(uint32(0));\n    }\n    // add the bit data\n    // inlining of macro Min_CoverForEachCube\n    for  pCube = pCover;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n        for  i = 0; i \u003c int32(pCover.nWords); i++  {\n            p.pTemp.uData[i] \u0026= pCube.uData[i];\n        }\n    }\n    // count the vars\n    Counter = 0;\n    for  i = 0; i \u003c int32(pCover.nVars); i++  {\n        Counter += ( Min_CubeGetVar(p.pTemp, i) != 3 );\n    }\n    return Counter;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::Min_CubeCreate",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1235,
+      "End": 2124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::Min_CoverCreate",
+      "Category": "semantic-review",
+      "Symbol": "Min_CoverCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2360,
+      "End": 2639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::Min_CubeWrite",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeWrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2875,
+      "End": 3509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::Min_CoverWrite",
+      "Category": "semantic-review",
+      "Symbol": "Min_CoverWrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3745,
+      "End": 3930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::Min_CoverWriteStore",
+      "Category": "semantic-review",
+      "Symbol": "Min_CoverWriteStore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4166,
+      "End": 4612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::ternary::Min_CoverWriteFile",
+      "Category": "ternary-review",
+      "Symbol": "Min_CoverWriteFile",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4848,
+      "End": 5687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::Min_CoverWriteFile",
+      "Category": "semantic-review",
+      "Symbol": "Min_CoverWriteFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4848,
+      "End": 5687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::Min_CoverCheck",
+      "Category": "semantic-review",
+      "Symbol": "Min_CoverCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5923,
+      "End": 6135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::Min_CubeCheck",
+      "Category": "semantic-review",
+      "Symbol": "Min_CubeCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6372,
+      "End": 6555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::ternary::Min_CoverCollect",
+      "Category": "ternary-review",
+      "Symbol": "Min_CoverCollect",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6836,
+      "End": 7335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::Min_CoverCollect",
+      "Category": "semantic-review",
+      "Symbol": "Min_CoverCollect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6836,
+      "End": 7335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::ternary::Min_CoverExpand",
+      "Category": "ternary-review",
+      "Symbol": "Min_CoverExpand",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7624,
+      "End": 7931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::Min_CoverExpand",
+      "Category": "semantic-review",
+      "Symbol": "Min_CoverExpand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7624,
+      "End": 7931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::Min_CoverSuppVarNum",
+      "Category": "semantic-review",
+      "Symbol": "Min_CoverSuppVarNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8220,
+      "End": 8821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9068
+    }
+  ],
+  "Draft": "package cov\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [covMinUtil.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Mapping into network of SOPs/ESOPs.]\n\n  Synopsis    [Utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: covMinUtil.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"covInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubeCreate(vCover *Vec_Str_t, pCube *Min_Cube_t, Type byte) {\n    var i int32;\n    assert(int32(pCube.nLits) == Min_CubeCountLits(pCube), \"int32(pCube.nLits) == Min_CubeCountLits(pCube)\");\n    for  i = 0; i \u003c int32(pCube.nVars); i++  {\n        if Min_CubeHasBit(pCube, i*2) {\n            if Min_CubeHasBit(pCube, i*2+1) {\n//                fprintf( pFile, \"-\" );\n                Vec_StrPush( vCover, '-' );\n            } else {\n//                fprintf( pFile, \"0\" );\n                Vec_StrPush( vCover, '0' ); }\n        \n        } else {\n            if Min_CubeHasBit(pCube, i*2+1) {\n //               fprintf( pFile, \"1\" );\n                Vec_StrPush( vCover, '1' );\n            } else {\n//                fprintf( pFile, \"?\" );\n                Vec_StrPush( vCover, '?' ); }\n        }\n    }\n//    fprintf( pFile, \" 1\\n\" );\n    Vec_StrPush( vCover, ' ' );\n    Vec_StrPush( vCover, Type );\n    Vec_StrPush( vCover, '\\n' );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CoverCreate(vCover *Vec_Str_t, pCover *Min_Cube_t, Type byte) {\n    var pCube *Min_Cube_t;\n    assert(pCover != nil, \"pCover != nil\");\n    Vec_StrClear( vCover );\n    // inlining of macro Min_CoverForEachCube\n    for  pCube = pCover;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n        Min_CubeCreate( vCover, pCube, Type );\n    }\n    Vec_StrPush( vCover, 0 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubeWrite(pFile *os.File, pCube *Min_Cube_t) {\n    var i int32;\n    assert(int32(pCube.nLits) == Min_CubeCountLits(pCube), \"int32(pCube.nLits) == Min_CubeCountLits(pCube)\");\n    for  i = 0; i \u003c int32(pCube.nVars); i++  {\n        if Min_CubeHasBit(pCube, i*2) {\n            if Min_CubeHasBit(pCube, i*2+1) {\n                fmt.Fprintf(pFile, \"-\");\n            } else {\n                fmt.Fprintf(pFile, \"0\"); }\n        \n        } else {\n            if Min_CubeHasBit(pCube, i*2+1) {\n                fmt.Fprintf(pFile, \"1\");\n            } else {\n                fmt.Fprintf(pFile, \"?\"); }\n        }\n    }\n    fmt.Fprintf(pFile, \" 1\\n\");\n//    fprintf( pFile, \" %d\\n\", pCube-\u003enLits );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CoverWrite(pFile *os.File, pCover *Min_Cube_t) {\n    var pCube *Min_Cube_t;\n    // inlining of macro Min_CoverForEachCube\n    for  pCube = pCover;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n        Min_CubeWrite( pFile, pCube );\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CoverWriteStore(pFile *os.File, p *Min_Man_t) {\n    var pCube *Min_Cube_t;\n    var i int32;\n    for  i = 0; i \u003c= p.nVars; i++  {\n        // inlining of macro Min_CoverForEachCube\n        for  pCube = p.ppStore[i];                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n            fmt.Printf(\"%2d : \", i);\n            if pCube == p.pBubble {\n                fmt.Printf(\"Bubble\\n\");\n                continue;\n            }\n            Min_CubeWrite( pFile, pCube );\n        }\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CoverWriteFile(pCover *Min_Cube_t, pName string, fEsop int32) {\n    var Buffer string // was [1000]byte in C\n\n    var pCube *Min_Cube_t;\n    var pFile *os.File;\n    var i int32;\n    Buffer = fmt.Sprintf(\"%s.%s\", pName, fEsop? \"esop\" : \"pla\");\n    for  i = strlen(Buffer) - 1; i \u003e= 0; i--  {\n        if Buffer[i] == '\u003c' || Buffer[i] == '\u003e' {\n            Buffer[i] = '_'; }\n    }\n    pFile = fopen( Buffer, \"w\" );\n    fmt.Fprintf(pFile, \"# %s cover for output %s generated by ABC on %s\\n\", fEsop? \"ESOP\":\"SOP\", pName, Extra_TimeStamp());\n    fmt.Fprintf(pFile, \".i %d\\n\", pCover? pCover.nVars : 0);\n    fmt.Fprintf(pFile, \".o %d\\n\", 1);\n    fmt.Fprintf(pFile, \".p %d\\n\", Min_CoverCountCubes(pCover));\n    if fEsop != 0 { fmt.Fprintf(pFile, \".type esop\\n\"); }\n    // inlining of macro Min_CoverForEachCube\n    for  pCube = pCover;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n        Min_CubeWrite( pFile, pCube );\n    }\n    fmt.Fprintf(pFile, \".e\\n\");\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CoverCheck(p *Min_Man_t) {\n    var pCube *Min_Cube_t;\n    var i int32;\n    for  i = 0; i \u003c= p.nVars; i++  {\n        // inlining of macro Min_CoverForEachCube\n        for  pCube = p.ppStore[i];                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n            assert(i == int32(pCube.nLits), \"i == int32(pCube.nLits)\");\n        }\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CubeCheck(pCube *Min_Cube_t) int32 {\n    var i int32;\n    for  i = 0; i \u003c int32(pCube.nVars); i++  {\n        if Min_CubeGetVar( pCube, i ) == 0 {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the cover from the sorted structure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CoverCollect(p *Min_Man_t, nSuppSize int32) *Min_Cube_t {\n    var pCov *Min_Cube_t = nil;\n    var ppTail **Min_Cube_t = \u0026pCov;\n    var pCube, pCube2 *Min_Cube_t;\n    var i int32;\n    for  i = 0; i \u003c= nSuppSize; i++  {\n        // inlining of macro Min_CoverForEachCubeSafe\n        for  pCube = p.ppStore[i],                                                 pCube2 = pCube? pCube.pNext: nil;                             (pCube != nil);                                                          pCube = pCube2,                                                 pCube2 = pCube? pCube.pNext: nil  {\n            assert(i == int32(pCube.nLits), \"i == int32(pCube.nLits)\");\n            *ppTail = pCube; \n            ppTail = \u0026pCube.pNext;\n            assert(pCube.uData[0], \"pCube.uData[0]\"); // not a bubble\n        }\n    }\n    *ppTail = nil;\n    return pCov;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorts the cover in the increasing number of literals.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CoverExpand(p *Min_Man_t, pCover *Min_Cube_t) {\n    var pCube, pCube2 *Min_Cube_t;\n    Min_ManClean( p, p.nVars );\n    // inlining of macro Min_CoverForEachCubeSafe\n    for  pCube = pCover,                                                 pCube2 = pCube? pCube.pNext: nil;                             (pCube != nil);                                                          pCube = pCube2,                                                 pCube2 = pCube? pCube.pNext: nil  {\n        pCube.pNext = p.ppStore[pCube.nLits];\n        p.ppStore[pCube.nLits] = pCube;\n        p.nCubes++;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorts the cover in the increasing number of literals.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_CoverSuppVarNum(p *Min_Man_t, pCover *Min_Cube_t) int32 {\n    var pCube *Min_Cube_t;\n    var i, Counter int32;\n    if pCover == nil {\n        return 0; }\n    // clean the cube\n    for  i = 0; i \u003c int32(pCover.nWords); i++  {\n        p.pTemp.uData[i]  = ~(uint32(0));\n    }\n    // add the bit data\n    // inlining of macro Min_CoverForEachCube\n    for  pCube = pCover;                                                 (pCube != nil);                                                          pCube = pCube.pNext  {\n        for  i = 0; i \u003c int32(pCover.nWords); i++  {\n            p.pTemp.uData[i] \u0026= pCube.uData[i];\n        }\n    }\n    // count the vars\n    Counter = 0;\n    for  i = 0; i \u003c int32(pCover.nVars); i++  {\n        Counter += ( Min_CubeGetVar(p.pTemp, i) != 3 );\n    }\n    return Counter;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,290 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h",
+  "SHA256": "5878b81f88606c6c9abc503500d4ea89d4b988aae32ad6a992d0d25b95a349d2",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 19,
+        "Column": 1,
+        "ByteOffset": 295
+      },
+      "Directive": "#ifndef ARGS"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::struct::avl_node::avl_node *left, *right;",
+      "Category": "struct-field-review",
+      "Symbol": "avl_node",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 723,
+      "End": 751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::struct::avl_node",
+      "Category": "struct-review",
+      "Symbol": "avl_node",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 658,
+      "End": 802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::struct::avl_tree::int (*compar)();",
+      "Category": "struct-field-review",
+      "Symbol": "avl_tree",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 890,
+      "End": 911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::struct::avl_tree",
+      "Category": "struct-review",
+      "Symbol": "avl_tree",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 805,
+      "End": 953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::struct::avl_generator",
+      "Category": "struct-review",
+      "Symbol": "avl_generator",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 956,
+      "End": 1099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::pointer-cast::1620",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1593,
+      "End": 1605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::pointer-cast::1905",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1878,
+      "End": 1895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro::MAX",
+      "Category": "macro-review",
+      "Symbol": "MAX",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 344,
+      "End": 387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro::NIL",
+      "Category": "macro-review",
+      "Symbol": "NIL",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 389,
+      "End": 432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro::ALLOC",
+      "Category": "macro-review",
+      "Symbol": "ALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 433,
+      "End": 506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro::REALLOC",
+      "Category": "macro-review",
+      "Symbol": "REALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 507,
+      "End": 602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro::FREE",
+      "Category": "macro-review",
+      "Symbol": "FREE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 603,
+      "End": 654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro::avl_is_member",
+      "Category": "macro-review",
+      "Symbol": "avl_is_member",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1959,
+      "End": 2029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro::avl_foreach_item",
+      "Category": "macro-review",
+      "Symbol": "avl_foreach_item",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2031,
+      "End": 2212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 295,
+      "End": 342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro-inline::1189",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1189,
+      "End": 1206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro-inline::1230",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1230,
+      "End": 1266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro-inline::1290",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1290,
+      "End": 1324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro-inline::1348",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1348,
+      "End": 1383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro-inline::1406",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1406,
+      "End": 1442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro-inline::1464",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1464,
+      "End": 1500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro-inline::1529",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1529,
+      "End": 1565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro-inline::1588",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1588,
+      "End": 1606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro-inline::1630",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1630,
+      "End": 1652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro-inline::1673",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1673,
+      "End": 1714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro-inline::1740",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1740,
+      "End": 1775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro-inline::1804",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1804,
+      "End": 1846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro-inline::1873",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1873,
+      "End": 1896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/avl/avl.h::macro-inline::1933",
+      "Category": "macro-inline-review",
+      "Symbol": "ARGS",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1933,
+      "End": 1956
+    }
+  ],
+  "Draft": "package avl\n\n/*\n * Revision Control Information\n *\n * $Source: /vol/opua/opua2/sis/sis-1.2/common/src/sis/avl/RCS/avl.h,v $\n * $Author: sis $\n * $Revision: 1.3 $\n * $Date: 1994/07/15 23:00:40 $\n *\n */\n\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n#define EXTERN\n\n#ifndef ARGS\n#define ARGS(protos) protos\n#endif\n\n// Original macro:\n// #define MAX(a,b)    ((a) \u003e (b) ? (a) : (b))\n\n\n// Original macro:\n// #define NIL(type)        \\\n//     ((type *) 0)\n\n// Original macro:\n// #define ALLOC(type, num)    \\\n//     ((type *) malloc(sizeof(type) * (num)))\n\n// Original macro:\n// #define REALLOC(type, obj, num)    \\\n//     ((type *) realloc((char *) obj, sizeof(type) * (num)))\n\n// Original macro:\n// #define FREE(obj)        \\\n//     free((char *) (obj))\n\n\n\n\n   \ntype avl_node struct {\n    left, right *avl_node;\n    key string;\n    value string;\n    height int32;\n}\n\n\n   \ntype avl_tree struct {\n    root *avl_node;\n    int (*compar)();\n    num_entries int32;\n    modified int32;\n}\n\n\n   \ntype avl_generator struct {\n    tree *avl_tree;\n    nodelist **avl_node;\n    count int32;\n}\n\n\nconst AVL_FORWARD =     0\nconst AVL_BACKWARD =     1\n\n\nEXTERN avl_tree *avl_init_table ARGS((int (*)()));\nEXTERN int avl_delete ARGS((avl_tree *, char **, char **));\nEXTERN int avl_insert ARGS((avl_tree *, char *, char *));\nEXTERN int avl_lookup ARGS((avl_tree *, char *, char **));\nEXTERN int avl_first ARGS((avl_tree *, char **, char **));\nEXTERN int avl_last ARGS((avl_tree *, char **, char **));\nEXTERN int avl_find_or_add ARGS((avl_tree *, char *, char ***));\nEXTERN int avl_count ARGS((avl_tree *));\nEXTERN int avl_numcmp ARGS((char *, char *));\nEXTERN int avl_gen ARGS((avl_generator *, char **, char **));\nEXTERN void avl_foreach ARGS((avl_tree *, void (*)(), int));\nEXTERN void avl_free_table ARGS((avl_tree *, void (*)(), void (*)()));\nEXTERN void avl_free_gen ARGS((avl_generator *));\nEXTERN avl_generator *avl_init_gen ARGS((avl_tree *, int));\n\n// Original macro:\n// #define avl_is_member(tree, key)    avl_lookup(tree, key, (char **) 0)\n\n\n// Original macro:\n// #define avl_foreach_item(table, gen, dir, key_p, value_p)     \\\n//     for(gen = avl_init_gen(table, dir);             \\\n//         avl_gen(gen, key_p, value_p) || (avl_free_gen(gen),0);)\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

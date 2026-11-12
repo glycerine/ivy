@@ -1,0 +1,92 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDarUnfold2.c",
+  "SHA256": "e8fd0de85959b8b157e34c6e1e5da90c52fc8b7bd4f05bf5665d2bf21ea3fad7",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 21,
+        "Column": 5,
+        "ByteOffset": 631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 26,
+        "Column": 7,
+        "ByteOffset": 768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      assert(0);//pMan = Saig_ManDupUnfoldConstrs( pTemp = pMan );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkDarUnfold2",
+      "Start": 355,
+      "End": 1297,
+      "BodyStart": 483,
+      "Original": "Abc_Ntk_t * Abc_NtkDarUnfold2( Abc_Ntk_t * pNtk, int nFrames, int nConfs, int nProps, int fStruct, int fOldAlgo, int fVerbose )\n{\n    Abc_Ntk_t * pNtkAig;\n    Aig_Man_t * pMan, * pTemp = NULL;\n    int typeII_cnt = 0;\n    assert( Abc_NtkIsStrash(pNtk) );\n    pMan = Abc_NtkToDar( pNtk, 0, 1 );\n    if ( pMan == NULL )\n        return NULL;\n    if ( fStruct ){\n      assert(0);//pMan = Saig_ManDupUnfoldConstrs( pTemp = pMan );\n    }else\n      pMan = Saig_ManDupUnfoldConstrsFunc2( pTemp = pMan, nFrames, nConfs, nProps, fOldAlgo, fVerbose , \u0026typeII_cnt);\n    Aig_ManStop( pTemp );\n    if ( pMan == NULL )\n        return NULL;\n    //    typeII_cnt = pMan-\u003enConstrsTypeII;\n    pNtkAig = Abc_NtkFromAigPhase( pMan );\n    pNtkAig-\u003epName = Extra_UtilStrsav(pMan-\u003epName);\n    pNtkAig-\u003epSpec = Extra_UtilStrsav(pMan-\u003epSpec);\n    Aig_ManStop( pMan );\n\n    return pNtkAig;//Abc_NtkDarFold2(pNtkAig, 0, fVerbose, typeII_cnt);\n    \n    //return pNtkAig;\n}",
+      "Draft": "func Abc_NtkDarUnfold2(pNtk *Abc_Ntk_t, nFrames int32, nConfs int32, nProps int32, fStruct int32, fOldAlgo int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan *Aig_Man_t;\n    var pTemp *Aig_Man_t = nil;\n    var typeII_cnt int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    pMan = Abc_NtkToDar( pNtk, 0, 1 );\n    if pMan == nil {\n        return nil; }\n    if fStruct != 0{\n      assert(false, \"0\");//pMan = Saig_ManDupUnfoldConstrs( pTemp = pMan );\n    }else {\n      pMan = Saig_ManDupUnfoldConstrsFunc2( pTemp = pMan, nFrames, nConfs, nProps, fOldAlgo, fVerbose , \u0026typeII_cnt); }\n    Aig_ManStop( pTemp );\n    if pMan == nil {\n        return nil; }\n    //    typeII_cnt = pMan-\u003enConstrsTypeII;\n    pNtkAig = Abc_NtkFromAigPhase( pMan );\n    pNtkAig.pName = Extra_UtilStrsav(pMan.pName);\n    pNtkAig.pSpec = Extra_UtilStrsav(pMan.pSpec);\n    Aig_ManStop( pMan );\n\n    return pNtkAig;//Abc_NtkDarFold2(pNtkAig, 0, fVerbose, typeII_cnt);\n    \n    //return pNtkAig;\n}"
+    },
+    {
+      "Name": "Abc_NtkDarFold2",
+      "Start": 1574,
+      "End": 2207,
+      "BodyStart": 1723,
+      "Original": "Abc_Ntk_t * Abc_NtkDarFold2( Abc_Ntk_t * pNtk, int fCompl, int fVerbose\n                             , int typeII_cnt\n                             )\n{\n    Abc_Ntk_t * pNtkAig;\n    Aig_Man_t * pMan, * pTemp;\n    assert( Abc_NtkIsStrash(pNtk) );\n    pMan = Abc_NtkToDar( pNtk, 0, 1 );\n    if ( pMan == NULL )\n        return NULL;\n    pMan = Saig_ManDupFoldConstrsFunc2( pTemp = pMan, fCompl, fVerbose, typeII_cnt );\n    Aig_ManStop( pTemp );\n    pNtkAig = Abc_NtkFromAigPhase( pMan );\n    pNtkAig-\u003epName = Extra_UtilStrsav(pMan-\u003epName);\n    pNtkAig-\u003epSpec = Extra_UtilStrsav(pMan-\u003epSpec);\n    Aig_ManStop( pMan );\n    return pNtkAig;\n}",
+      "Draft": "func Abc_NtkDarFold2(pNtk *Abc_Ntk_t, fCompl int32, fVerbose int32, typeII_cnt int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan, pTemp *Aig_Man_t;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    pMan = Abc_NtkToDar( pNtk, 0, 1 );\n    if pMan == nil {\n        return nil; }\n    pMan = Saig_ManDupFoldConstrsFunc2( pTemp = pMan, fCompl, fVerbose, typeII_cnt );\n    Aig_ManStop( pTemp );\n    pNtkAig = Abc_NtkFromAigPhase( pMan );\n    pNtkAig.pName = Extra_UtilStrsav(pMan.pName);\n    pNtkAig.pSpec = Extra_UtilStrsav(pMan.pSpec);\n    Aig_ManStop( pMan );\n    return pNtkAig;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDarUnfold2.c::Abc_NtkDarUnfold2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDarUnfold2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 355,
+      "End": 1297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDarUnfold2.c::Abc_NtkDarFold2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDarFold2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1574,
+      "End": 2207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDarUnfold2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2209
+    }
+  ],
+  "Draft": "package abci\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BDD-based reachability analysis.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n// Abc_Ntk_t * Abc_NtkDarFold2( Abc_Ntk_t * pNtk, int fCompl, int fVerbose , int);\n\nfunc Abc_NtkDarUnfold2(pNtk *Abc_Ntk_t, nFrames int32, nConfs int32, nProps int32, fStruct int32, fOldAlgo int32, fVerbose int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan *Aig_Man_t;\n    var pTemp *Aig_Man_t = nil;\n    var typeII_cnt int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    pMan = Abc_NtkToDar( pNtk, 0, 1 );\n    if pMan == nil {\n        return nil; }\n    if fStruct != 0{\n      assert(false, \"0\");//pMan = Saig_ManDupUnfoldConstrs( pTemp = pMan );\n    }else {\n      pMan = Saig_ManDupUnfoldConstrsFunc2( pTemp = pMan, nFrames, nConfs, nProps, fOldAlgo, fVerbose , \u0026typeII_cnt); }\n    Aig_ManStop( pTemp );\n    if pMan == nil {\n        return nil; }\n    //    typeII_cnt = pMan-\u003enConstrsTypeII;\n    pNtkAig = Abc_NtkFromAigPhase( pMan );\n    pNtkAig.pName = Extra_UtilStrsav(pMan.pName);\n    pNtkAig.pSpec = Extra_UtilStrsav(pMan.pSpec);\n    Aig_ManStop( pMan );\n\n    return pNtkAig;//Abc_NtkDarFold2(pNtkAig, 0, fVerbose, typeII_cnt);\n    \n    //return pNtkAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BDD-based reachability analysis.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDarFold2(pNtk *Abc_Ntk_t, fCompl int32, fVerbose int32, typeII_cnt int32) *Abc_Ntk_t {\n    var pNtkAig *Abc_Ntk_t;\n    var pMan, pTemp *Aig_Man_t;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    pMan = Abc_NtkToDar( pNtk, 0, 1 );\n    if pMan == nil {\n        return nil; }\n    pMan = Saig_ManDupFoldConstrsFunc2( pTemp = pMan, fCompl, fVerbose, typeII_cnt );\n    Aig_ManStop( pTemp );\n    pNtkAig = Abc_NtkFromAigPhase( pMan );\n    pNtkAig.pName = Extra_UtilStrsav(pMan.pName);\n    pNtkAig.pSpec = Extra_UtilStrsav(pMan.pSpec);\n    Aig_ManStop( pMan );\n    return pNtkAig;\n}\n\n"
+}

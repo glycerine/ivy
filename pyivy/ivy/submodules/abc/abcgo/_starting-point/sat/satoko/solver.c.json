@@ -1,0 +1,972 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c",
+  "SHA256": "72f27b9767d54dfa70dcad2c966171ea1e2202e2dd070a2be962e255eb3480b0",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 37,
+        "Column": 5,
+        "ByteOffset": 1107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(lit_reason(s, lit) != UNDEF);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 46,
+        "Column": 9,
+        "ByteOffset": 1448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(var_reason(s, var) != UNDEF);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 48,
+        "Column": 13,
+        "ByteOffset": 1567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(lit_value(s, lits[1]) == SATOKO_LIT_TRUE);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 179,
+        "Column": 5,
+        "ByteOffset": 6839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(new_clause, old_clause, (size_t)((3 + old_clause.f_learnt + old_clause.size) * 4));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 7824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(var_value(s, lit2var(lit)) == SATOKO_VAR_UNASSING);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 267,
+        "Column": 9,
+        "ByteOffset": 10027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(cref != UNDEF);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 272,
+        "Column": 13,
+        "ByteOffset": 10230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(lit_value(s, lits[1]) == SATOKO_LIT_TRUE);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 375,
+        "Column": 17,
+        "ByteOffset": 14053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert(var_dlevel(s, var) \u003e 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 434,
+        "Column": 88,
+        "ByteOffset": 16223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    learnts_cls = /*__starting_point_inline_macro:satoko_alloc__*/((struct clause * *) malloc((n_learnts) * sizeof(struct clause *)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 453,
+        "Column": 9,
+        "ByteOffset": 17007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(clause.f_mark == 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 466,
+        "Column": 58,
+        "ByteOffset": 17568
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:satoko_free__*/for { free(learnts_cls); learnts_cls = nil; "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 471,
+        "Column": 9,
+        "ByteOffset": 17661
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"reduceDB: Keeping %7d out of %7d clauses (%5.2f %%) \\n\","
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 474,
+        "Column": 9,
+        "ByteOffset": 17848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 474,
+        "Column": 16,
+        "ByteOffset": 17855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush(stdout);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 488,
+        "Column": 5,
+        "ByteOffset": 18349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(vec_uint_size(lits) \u003e 1);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 489,
+        "Column": 5,
+        "ByteOffset": 18386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(f_learnt == 0 || f_learnt == 1);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 499,
+        "Column": 5,
+        "ByteOffset": 18720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(\u0026(clause.data[0].lit), vec_uint_data(lits), sizeof(unsigned) * vec_uint_size(lits));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 578,
+        "Column": 13,
+        "ByteOffset": 21679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(lits[1] == neg_lit);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 697,
+        "Column": 5,
+        "ByteOffset": 26073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \"[Satoko] Checking for trail(%u) inconsistencies...\\n\", vec_uint_size(s.trail));"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 697,
+        "Column": 13,
+        "ByteOffset": 26081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \"[Satoko] Checking for trail(%u) inconsistencies...\\n\", vec_uint_size(s.trail));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 703,
+        "Column": 13,
+        "ByteOffset": 26397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stdout, \"[Satoko] Inconsistent trail: %u %u\\n\", array[i - 1], array[i]);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 703,
+        "Column": 21,
+        "ByteOffset": 26405
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stdout, \"[Satoko] Inconsistent trail: %u %u\\n\", array[i - 1], array[i]);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 704,
+        "Column": 13,
+        "ByteOffset": 26490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(0);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 710,
+        "Column": 13,
+        "ByteOffset": 26671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stdout, \"[Satoko] Inconsistent trail assignment: %u, %u\\n\", vec_char_at(s.assigns, lit2var(array[i])), array[i]);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 710,
+        "Column": 21,
+        "ByteOffset": 26679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stdout, \"[Satoko] Inconsistent trail assignment: %u, %u\\n\", vec_char_at(s.assigns, lit2var(array[i])), array[i]);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 711,
+        "Column": 13,
+        "ByteOffset": 26805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(0);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 715,
+        "Column": 5,
+        "ByteOffset": 26856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \"[Satoko] Trail OK.\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 715,
+        "Column": 13,
+        "ByteOffset": 26864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \"[Satoko] Trail OK.\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 724,
+        "Column": 5,
+        "ByteOffset": 27038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \"[Satoko] Checking clauses (%d)...\\n\", vec_uint_size(s.originals));"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 724,
+        "Column": 13,
+        "ByteOffset": 27046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \"[Satoko] Checking clauses (%d)...\\n\", vec_uint_size(s.originals));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 736,
+        "Column": 13,
+        "ByteOffset": 27614
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stdout, \"[Satoko] FOUND UNSAT CLAUSE]: (%d) \", i);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 736,
+        "Column": 21,
+        "ByteOffset": 27622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stdout, \"[Satoko] FOUND UNSAT CLAUSE]: (%d) \", i);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 738,
+        "Column": 13,
+        "ByteOffset": 27719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(0);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 741,
+        "Column": 5,
+        "ByteOffset": 27750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \"[Satoko] All SAT - OK\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 741,
+        "Column": 13,
+        "ByteOffset": 27758
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \"[Satoko] All SAT - OK\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 747,
+        "Column": 5,
+        "ByteOffset": 27911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \"[Satoko] Checking clauses (%d)... \\n\", vec_uint_size(s.originals));"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 747,
+        "Column": 13,
+        "ByteOffset": 27919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \"[Satoko] Checking clauses (%d)... \\n\", vec_uint_size(s.originals));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 757,
+        "Column": 13,
+        "ByteOffset": 28442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stdout, \"[Satoko] FOUND UNSAT CLAUSE: (%d) \", i);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 757,
+        "Column": 21,
+        "ByteOffset": 28450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stdout, \"[Satoko] FOUND UNSAT CLAUSE: (%d) \", i);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 759,
+        "Column": 13,
+        "ByteOffset": 28546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(0);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 762,
+        "Column": 5,
+        "ByteOffset": 28577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \"[Satoko] All SAT - OK\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 762,
+        "Column": 13,
+        "ByteOffset": 28585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stdout, \"[Satoko] All SAT - OK\\n\");"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "lit_is_removable",
+      "Start": 942,
+      "End": 2920,
+      "BodyStart": 1024,
+      "Original": "static inline int lit_is_removable(solver_t* s, unsigned lit, unsigned min_level)\n{\n    unsigned top = vec_uint_size(s-\u003etagged);\n\n    assert(lit_reason(s, lit) != UNDEF);\n    vec_uint_clear(s-\u003estack);\n    vec_uint_push_back(s-\u003estack, lit2var(lit));\n    while (vec_uint_size(s-\u003estack)) {\n        unsigned i;\n        unsigned var = vec_uint_pop_back(s-\u003estack);\n        struct clause *c = clause_fetch(s, var_reason(s, var));\n        unsigned *lits = \u0026(c-\u003edata[0].lit);\n\n        assert(var_reason(s, var) != UNDEF);\n        if (c-\u003esize == 2 \u0026\u0026 lit_value(s, lits[0]) == SATOKO_LIT_FALSE) {\n            assert(lit_value(s, lits[1]) == SATOKO_LIT_TRUE);\n            stk_swap(unsigned, lits[0], lits[1]);\n        }\n\n        /* Check scan the literals of the reason clause.\n         * The first literal is skiped because is the literal itself. */\n        for (i = 1; i \u003c c-\u003esize; i++) {\n            var = lit2var(lits[i]);\n\n            /* Check if the variable has already been seen or if it\n             * was assinged a value at the decision level 0. In a\n             * positive case, there is no need to look any further */\n            if (vec_char_at(s-\u003eseen, var) || var_dlevel(s, var) == 0)\n                continue;\n\n            /* If the variable has a reason clause and if it was\n             * assingned at a 'possible' level, then we need to\n             * check if it is recursively redundant, otherwise the\n             * literal being checked is not redundant */\n            if (var_reason(s, var) != UNDEF \u0026\u0026 ((1 \u003c\u003c (var_dlevel(s, var) \u0026 31)) \u0026 min_level)) {\n                vec_uint_push_back(s-\u003estack, var);\n                vec_uint_push_back(s-\u003etagged, var);\n                vec_char_assign(s-\u003eseen, var, 1);\n            } else {\n                vec_uint_foreach_start(s-\u003etagged, var, i, top)\n                    vec_char_assign(s-\u003eseen, var, 0);\n                vec_uint_shrink(s-\u003etagged, top);\n                return 0;\n            }\n        }\n    }\n    return 1;\n}",
+      "Draft": "func lit_is_removable(s *solver_t, lit uint32, min_level uint32) int32 {\n    var top uint32  = vec_uint_size(s.tagged);\n\n    assert(lit_reason(s, lit) != UNDEF, \"lit_reason(s, lit) != UNDEF\");\n    vec_uint_clear(s.stack);\n    vec_uint_push_back(s.stack, lit2var(lit));\n    for vec_uint_size(s.stack) {\n        var i uint32;\n        var var uint32  = vec_uint_pop_back(s.stack);\n        struct clause *c = clause_fetch(s, var_reason(s, var));\n        var lits *uint32  = \u0026(c.data[0].lit);\n\n        assert(var_reason(s, var) != UNDEF, \"var_reason(s, var) != UNDEF\");\n        if c.size == 2 \u0026\u0026 lit_value(s, lits[0]) == SATOKO_LIT_FALSE {\n            assert(lit_value(s, lits[1]) == SATOKO_LIT_TRUE, \"lit_value(s, lits[1]) == SATOKO_LIT_TRUE\");\n            // inlining of macro stk_swap\n            { var t uint32  = lits[0]; lits[0] = lits[1]; lits[1] = t; };\n        }\n\n        /* Check scan the literals of the reason clause.\n         * The first literal is skiped because is the literal itself. */\n        for i = 1; i \u003c c.size; i++ {\n            var = lit2var(lits[i]);\n\n            /* Check if the variable has already been seen or if it\n             * was assinged a value at the decision level 0. In a\n             * positive case, there is no need to look any further */\n            if vec_char_at(s.seen, var) || var_dlevel(s, var) == 0 {\n                continue; }\n\n            /* If the variable has a reason clause and if it was\n             * assingned at a 'possible' level, then we need to\n             * check if it is recursively redundant, otherwise the\n             * literal being checked is not redundant */\n            if var_reason(s, var) != UNDEF \u0026\u0026 ((1 \u003c\u003c (var_dlevel(s, var) \u0026 31)) \u0026 min_level) {\n                vec_uint_push_back(s.stack, var);\n                vec_uint_push_back(s.tagged, var);\n                vec_char_assign(s.seen, var, 1);\n            } else {\n                // inlining of macro vec_uint_foreach_start\n                for i = top; (i \u003c vec_uint_size(s.tagged)) \u0026\u0026 (((var) = vec_uint_at(s.tagged, i)), 1); i++ {\n                    vec_char_assign(s.seen, var, 0);\n                }\n                vec_uint_shrink(s.tagged, top);\n                return 0;\n            }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "clause_clac_lbd",
+      "Start": 3265,
+      "End": 3665,
+      "BodyStart": 3348,
+      "Original": "static inline unsigned clause_clac_lbd(solver_t *s, unsigned *lits, unsigned size)\n{\n    unsigned i;\n    unsigned lbd = 0;\n\n    s-\u003ecur_stamp++;\n    for (i = 0; i \u003c size; i++) {\n        unsigned level = lit_dlevel(s, lits[i]);\n        if (vec_uint_at(s-\u003estamps, level) != s-\u003ecur_stamp) {\n            vec_uint_assign(s-\u003estamps, level, s-\u003ecur_stamp);\n            lbd++;\n        }\n    }\n    return lbd;\n}",
+      "Draft": "func clause_clac_lbd(s *solver_t, lits *uint32, size uint32) uint32 {\n    var i uint32;\n    var lbd uint32;\n\n    s.cur_stamp++;\n    for i = 0; i \u003c size; i++ {\n        var level uint32  = lit_dlevel(s, lits[i]);\n        if vec_uint_at(s.stamps, level) != s.cur_stamp {\n            vec_uint_assign(s.stamps, level, s.cur_stamp);\n            lbd++;\n        }\n    }\n    return lbd;\n}"
+    },
+    {
+      "Name": "clause_bin_resolution",
+      "Start": 3667,
+      "End": 4798,
+      "BodyStart": 3746,
+      "Original": "static inline void clause_bin_resolution(solver_t *s, vec_uint_t *clause_lits)\n{\n    unsigned *lits = vec_uint_data(clause_lits);\n    unsigned counter, sz, i;\n    unsigned lit;\n    unsigned neg_lit = lit_compl(lits[0]);\n    struct watcher *w;\n\n    s-\u003ecur_stamp++;\n    vec_uint_foreach(clause_lits, lit, i)\n        vec_uint_assign(s-\u003estamps, lit2var(lit), s-\u003ecur_stamp);\n\n    counter = 0;\n    watch_list_foreach_bin(s-\u003ewatches, w, neg_lit) {\n        unsigned imp_lit = w-\u003eblocker;\n        if (vec_uint_at(s-\u003estamps, lit2var(imp_lit)) == s-\u003ecur_stamp \u0026\u0026\n            lit_value(s, imp_lit) == SATOKO_LIT_TRUE) {\n            counter++;\n            vec_uint_assign(s-\u003estamps, lit2var(imp_lit), (s-\u003ecur_stamp - 1));\n        }\n    }\n    if (counter \u003e 0) {\n        sz = vec_uint_size(clause_lits) - 1;\n        for (i = 1; i \u003c vec_uint_size(clause_lits) - counter; i++)\n            if (vec_uint_at(s-\u003estamps, lit2var(lits[i])) != s-\u003ecur_stamp) {\n                stk_swap(unsigned, lits[i], lits[sz]);\n                i--;\n                sz--;\n            }\n        vec_uint_shrink(clause_lits, vec_uint_size(clause_lits) - counter);\n    }\n}",
+      "Draft": "func clause_bin_resolution(s *solver_t, clause_lits *vec_uint_t) {\n    var lits *uint32  = vec_uint_data(clause_lits);\n    var counter, sz, i uint32;\n    var lit uint32;\n    var neg_lit uint32  = lit_compl(lits[0]);\n    struct watcher *w;\n\n    s.cur_stamp++;\n    // inlining of macro vec_uint_foreach\n    for i = 0; (i \u003c vec_uint_size(clause_lits)) \u0026\u0026 (((lit) = vec_uint_at(clause_lits, i)), 1); i++ {\n        vec_uint_assign(s.stamps, lit2var(lit), s.cur_stamp);\n    }\n\n    counter = 0;\n    // inlining of macro watch_list_foreach_bin\n    for w = watch_list_array(vec_wl_at(s.watches, neg_lit));          w \u003c watch_list_array(vec_wl_at(s.watches, neg_lit)) + vec_wl_at(s.watches, neg_lit).n_bin;      w++ {\n        var imp_lit uint32  = w.blocker;\n        if vec_uint_at(s.stamps, lit2var(imp_lit)) == s.cur_stamp \u0026\u0026\n            lit_value(s, imp_lit) == SATOKO_LIT_TRUE {\n            counter++;\n            vec_uint_assign(s.stamps, lit2var(imp_lit), (s.cur_stamp - 1));\n        }\n    }\n    if counter \u003e 0 {\n        sz = vec_uint_size(clause_lits) - 1;\n        for i = 1; i \u003c vec_uint_size(clause_lits) - counter; i++ {\n            if vec_uint_at(s.stamps, lit2var(lits[i])) != s.cur_stamp {\n                // inlining of macro stk_swap\n                { var t uint32  = lits[i]; lits[i] = lits[sz]; lits[sz] = t; };\n                i--;\n                sz--;\n            }\n        }\n        vec_uint_shrink(clause_lits, vec_uint_size(clause_lits) - counter);\n    }\n}"
+    },
+    {
+      "Name": "clause_minimize",
+      "Start": 4800,
+      "End": 5756,
+      "BodyStart": 4873,
+      "Original": "static inline void clause_minimize(solver_t *s, vec_uint_t *clause_lits)\n{\n    unsigned i, j;\n    unsigned *lits = vec_uint_data(clause_lits);\n    unsigned min_level = 0;\n    unsigned clause_size;\n\n    for (i = 1; i \u003c vec_uint_size(clause_lits); i++) {\n        unsigned level = lit_dlevel(s, lits[i]);\n        min_level |= 1 \u003c\u003c (level \u0026 31);\n    }\n\n    /* Remove reduntant literals */\n    vec_uint_foreach(clause_lits, i, j)\n        vec_uint_push_back(s-\u003etagged, lit2var(i));\n    for (i = j = 1; i \u003c vec_uint_size(clause_lits); i++)\n        if (lit_reason(s, lits[i]) == UNDEF || !lit_is_removable(s, lits[i], min_level))\n            lits[j++] = lits[i];\n    vec_uint_shrink(clause_lits, j);\n\n    /* Binary Resolution */\n    clause_size = vec_uint_size(clause_lits);\n    if (clause_size \u003c= s-\u003eopts.clause_max_sz_bin_resol \u0026\u0026\n        clause_clac_lbd(s, lits, clause_size) \u003c= s-\u003eopts.clause_min_lbd_bin_resol)\n        clause_bin_resolution(s, clause_lits);\n}",
+      "Draft": "func clause_minimize(s *solver_t, clause_lits *vec_uint_t) {\n    var i, j uint32;\n    var lits *uint32  = vec_uint_data(clause_lits);\n    var min_level uint32;\n    var clause_size uint32;\n\n    for i = 1; i \u003c vec_uint_size(clause_lits); i++ {\n        var level uint32  = lit_dlevel(s, lits[i]);\n        min_level |= 1 \u003c\u003c (level \u0026 31);\n    }\n\n    /* Remove reduntant literals */\n    // inlining of macro vec_uint_foreach\n    for j = 0; (j \u003c vec_uint_size(clause_lits)) \u0026\u0026 (((i) = vec_uint_at(clause_lits, j)), 1); j++ {\n        vec_uint_push_back(s.tagged, lit2var(i));\n    }\n    for i = j = 1; i \u003c vec_uint_size(clause_lits); i++ {\n        if lit_reason(s, lits[i]) == UNDEF || !(lit_is_removable(s, lits[i], min_level) != 0) {\n            lits[j++] = lits[i]; }\n    }\n    vec_uint_shrink(clause_lits, j);\n\n    /* Binary Resolution */\n    clause_size = vec_uint_size(clause_lits);\n    if clause_size \u003c= s.opts.clause_max_sz_bin_resol \u0026\u0026\n        clause_clac_lbd(s, lits, clause_size) \u003c= s.opts.clause_min_lbd_bin_resol {\n        clause_bin_resolution(s, clause_lits); }\n}"
+    },
+    {
+      "Name": "clause_realloc",
+      "Start": 5758,
+      "End": 6378,
+      "BodyStart": 5843,
+      "Original": "static inline void clause_realloc(struct cdb *dest, struct cdb *src, unsigned *cref)\n{\n    unsigned new_cref;\n    struct clause *new_clause;\n    struct clause *old_clause = cdb_handler(src, *cref);\n\n    if (old_clause-\u003ef_reallocd) {\n        *cref = (unsigned) old_clause-\u003esize;\n        return;\n    }\n    new_cref = cdb_append(dest, 3 + old_clause-\u003ef_learnt + old_clause-\u003esize);\n    new_clause = cdb_handler(dest, new_cref);\n    memcpy(new_clause, old_clause, (size_t)((3 + old_clause-\u003ef_learnt + old_clause-\u003esize) * 4));\n    old_clause-\u003ef_reallocd = 1;\n    old_clause-\u003esize = (unsigned) new_cref;\n    *cref = new_cref;\n}",
+      "Draft": "static inline void clause_realloc(struct cdb *dest, struct cdb *src, unsigned *cref)\n{\n    var new_cref uint32;\n    struct clause *new_clause;\n    struct clause *old_clause = cdb_handler(src, *cref);\n\n    if old_clause.f_reallocd {\n        *cref = uint32( old_clause.size);\n        return;\n    }\n    new_cref = cdb_append(dest, 3 + old_clause.f_learnt + old_clause.size);\n    new_clause = cdb_handler(dest, new_cref);\n    memcpy(new_clause, old_clause, (size_t)((3 + old_clause.f_learnt + old_clause.size) * 4));\n    old_clause.f_reallocd = 1;\n    old_clause.size = uint32( new_cref);\n    *cref = new_cref;\n}"
+    },
+    {
+      "Name": "solver_decide",
+      "Start": 6571,
+      "End": 7056,
+      "BodyStart": 6621,
+      "Original": "static inline unsigned solver_decide(solver_t *s)\n{\n    unsigned next_var = UNDEF;\n\n    while (next_var == UNDEF || var_value(s, next_var) != SATOKO_VAR_UNASSING) {\n        if (heap_size(s-\u003evar_order) == 0) {\n            next_var = UNDEF;\n            return UNDEF;\n        }\n        next_var = heap_remove_min(s-\u003evar_order);\n        if (solver_has_marks(s) \u0026\u0026 !var_mark(s, next_var))\n            next_var = UNDEF;\n    }\n    return var2lit(next_var, satoko_var_polarity(s, next_var));\n}",
+      "Draft": "func solver_decide(s *solver_t) uint32 {\n    var next_var uint32  = UNDEF;\n\n    for next_var == UNDEF || var_value(s, next_var) != SATOKO_VAR_UNASSING {\n        if heap_size(s.var_order) == 0 {\n            next_var = UNDEF;\n            return UNDEF;\n        }\n        next_var = heap_remove_min(s.var_order);\n        if solver_has_marks(s) \u0026\u0026 !var_mark(s, next_var) {\n            next_var = UNDEF; }\n    }\n    return var2lit(next_var, satoko_var_polarity(s, next_var));\n}"
+    },
+    {
+      "Name": "solver_new_decision",
+      "Start": 7058,
+      "End": 7363,
+      "BodyStart": 7124,
+      "Original": "static inline void solver_new_decision(solver_t *s, unsigned lit)\n{\n    if (solver_has_marks(s) \u0026\u0026 !var_mark(s, lit2var(lit)))\n        return;\n    assert(var_value(s, lit2var(lit)) == SATOKO_VAR_UNASSING);\n    vec_uint_push_back(s-\u003etrail_lim, vec_uint_size(s-\u003etrail));\n    solver_enqueue(s, lit, UNDEF);\n}",
+      "Draft": "func solver_new_decision(s *solver_t, lit uint32) {\n    if solver_has_marks(s) \u0026\u0026 !var_mark(s, lit2var(lit)) {\n        return; }\n    assert(var_value(s, lit2var(lit)) == SATOKO_VAR_UNASSING, \"var_value(s, lit2var(lit)) == SATOKO_VAR_UNASSING\");\n    vec_uint_push_back(s.trail_lim, vec_uint_size(s.trail));\n    solver_enqueue(s, lit, UNDEF);\n}"
+    },
+    {
+      "Name": "solver_calc_bt_level",
+      "Start": 7420,
+      "End": 8004,
+      "BodyStart": 7497,
+      "Original": "static inline unsigned solver_calc_bt_level(solver_t *s, vec_uint_t *learnt)\n{\n    unsigned i, tmp;\n        unsigned i_max = 1;\n    unsigned *lits = vec_uint_data(learnt);\n        unsigned max = lit_dlevel(s, lits[1]);\n\n    if (vec_uint_size(learnt) == 1)\n        return 0;\n    for (i = 2; i \u003c vec_uint_size(learnt); i++) {\n        if (lit_dlevel(s, lits[i]) \u003e max) {\n            max   = lit_dlevel(s, lits[i]);\n            i_max = i;\n        }\n    }\n        tmp         = lits[1];\n        lits[1]     = lits[i_max];\n        lits[i_max] = tmp;\n        return lit_dlevel(s, lits[1]);\n}",
+      "Draft": "func solver_calc_bt_level(s *solver_t, learnt *vec_uint_t) uint32 {\n    var i, tmp uint32;\n        var i_max uint32  = 1;\n    var lits *uint32  = vec_uint_data(learnt);\n        var max uint32  = lit_dlevel(s, lits[1]);\n\n    if vec_uint_size(learnt) == 1 {\n        return 0; }\n    for i = 2; i \u003c vec_uint_size(learnt); i++ {\n        if lit_dlevel(s, lits[i]) \u003e max {\n            max   = lit_dlevel(s, lits[i]);\n            i_max = i;\n        }\n    }\n        tmp         = lits[1];\n        lits[1]     = lits[i_max];\n        lits[i_max] = tmp;\n        return lit_dlevel(s, lits[1]);\n}"
+    },
+    {
+      "Name": "solver_analyze",
+      "Start": 8988,
+      "End": 11568,
+      "BodyStart": 9127,
+      "Original": "static inline void solver_analyze(solver_t *s, unsigned cref, vec_uint_t *learnt,\n                      unsigned *bt_level, unsigned *lbd)\n{\n    unsigned i;\n    unsigned *trail = vec_uint_data(s-\u003etrail);\n    unsigned idx = vec_uint_size(s-\u003etrail) - 1;\n    unsigned n_paths = 0;\n    unsigned p = UNDEF;\n    unsigned var;\n\n    vec_uint_push_back(learnt, UNDEF);\n    do {\n        struct clause *clause;\n        unsigned *lits;\n        unsigned j;\n\n        assert(cref != UNDEF);\n        clause = clause_fetch(s, cref);\n        lits = \u0026(clause-\u003edata[0].lit);\n\n        if (p != UNDEF \u0026\u0026 clause-\u003esize == 2 \u0026\u0026 lit_value(s, lits[0]) == SATOKO_LIT_FALSE) {\n            assert(lit_value(s, lits[1]) == SATOKO_LIT_TRUE);\n            stk_swap(unsigned, lits[0], lits[1] );\n        }\n\n        if (clause-\u003ef_learnt)\n            clause_act_bump(s, clause);\n\n        if (clause-\u003ef_learnt \u0026\u0026 clause-\u003elbd \u003e 2) {\n            unsigned n_levels = clause_clac_lbd(s, lits, clause-\u003esize);\n            if (n_levels + 1 \u003c clause-\u003elbd) {\n                if (clause-\u003elbd \u003c= s-\u003eopts.lbd_freeze_clause)\n                    clause-\u003ef_deletable = 0;\n                clause-\u003elbd = n_levels;\n            }\n        }\n\n        for (j = (p == UNDEF ? 0 : 1); j \u003c clause-\u003esize; j++) {\n            var = lit2var(lits[j]);\n            if (vec_char_at(s-\u003eseen, var) || var_dlevel(s, var) == 0)\n                continue;\n            vec_char_assign(s-\u003eseen, var, 1);\n            var_act_bump(s, var);\n            if (var_dlevel(s, var) == solver_dlevel(s)) {\n                n_paths++;\n                if (var_reason(s, var) != UNDEF \u0026\u0026 clause_fetch(s, var_reason(s, var))-\u003ef_learnt)\n                    vec_uint_push_back(s-\u003elast_dlevel, var);\n            } else\n                vec_uint_push_back(learnt, lits[j]);\n        }\n\n        while (!vec_char_at(s-\u003eseen, lit2var(trail[idx--])));\n\n        p = trail[idx + 1];\n        cref = lit_reason(s, p);\n        vec_char_assign(s-\u003eseen, lit2var(p), 0);\n        n_paths--;\n    } while (n_paths \u003e 0);\n\n    vec_uint_data(learnt)[0] = lit_compl(p);\n    clause_minimize(s, learnt);\n    *bt_level = solver_calc_bt_level(s, learnt);\n    *lbd = clause_clac_lbd(s, vec_uint_data(learnt), vec_uint_size(learnt));\n\n    if (vec_uint_size(s-\u003elast_dlevel) \u003e 0) {\n        vec_uint_foreach(s-\u003elast_dlevel, var, i) {\n            if (clause_fetch(s, var_reason(s, var))-\u003elbd \u003c *lbd)\n                var_act_bump(s, var);\n        }\n        vec_uint_clear(s-\u003elast_dlevel);\n    }\n    vec_uint_foreach(s-\u003etagged, var, i)\n        vec_char_assign(s-\u003eseen, var, 0);\n    vec_uint_clear(s-\u003etagged);\n}",
+      "Draft": "func solver_analyze(s *solver_t, cref uint32, learnt *vec_uint_t, bt_level *uint32, lbd *uint32) {\n    var i uint32;\n    var trail *uint32  = vec_uint_data(s.trail);\n    var idx uint32  = vec_uint_size(s.trail) - 1;\n    var n_paths uint32;\n    var p uint32  = UNDEF;\n    var var uint32;\n\n    vec_uint_push_back(learnt, UNDEF);\n    do {\n        struct clause *clause;\n        var lits *uint32;\n        var j uint32;\n\n        assert(cref != UNDEF, \"cref != UNDEF\");\n        clause = clause_fetch(s, cref);\n        lits = \u0026(clause.data[0].lit);\n\n        if p != UNDEF \u0026\u0026 clause.size == 2 \u0026\u0026 lit_value(s, lits[0]) == SATOKO_LIT_FALSE {\n            assert(lit_value(s, lits[1]) == SATOKO_LIT_TRUE, \"lit_value(s, lits[1]) == SATOKO_LIT_TRUE\");\n            // inlining of macro stk_swap\n            { var t uint32  = lits[0]; lits[0] = lits[1]; lits[1] = t; };\n        }\n\n        if clause.f_learnt {\n            clause_act_bump(s, clause); }\n\n        if clause.f_learnt \u0026\u0026 clause.lbd \u003e 2 {\n            var n_levels uint32  = clause_clac_lbd(s, lits, clause.size);\n            if n_levels + 1 \u003c clause.lbd {\n                if clause.lbd \u003c= s.opts.lbd_freeze_clause {\n                    clause.f_deletable = 0; }\n                clause.lbd = n_levels;\n            }\n        }\n\n        for j = (p == UNDEF ? 0 : 1); j \u003c clause.size; j++ {\n            var = lit2var(lits[j]);\n            if vec_char_at(s.seen, var) || var_dlevel(s, var) == 0 {\n                continue; }\n            vec_char_assign(s.seen, var, 1);\n            var_act_bump(s, var);\n            if var_dlevel(s, var) == solver_dlevel(s) {\n                n_paths++;\n                if var_reason(s, var) != UNDEF \u0026\u0026 clause_fetch(s, var_reason(s, var)).f_learnt {\n                    vec_uint_push_back(s.last_dlevel, var); }\n            } else {\n                vec_uint_push_back(learnt, lits[j]); }\n        }\n\n        for !vec_char_at(s.seen, lit2var(trail[idx--])) {; }\n\n        p = trail[idx + 1];\n        cref = lit_reason(s, p);\n        vec_char_assign(s.seen, lit2var(p), 0);\n        n_paths--;\n    } while (n_paths \u003e 0);\n\n    vec_uint_data(learnt)[0] = lit_compl(p);\n    clause_minimize(s, learnt);\n    *bt_level = solver_calc_bt_level(s, learnt);\n    *lbd = clause_clac_lbd(s, vec_uint_data(learnt), vec_uint_size(learnt));\n\n    if vec_uint_size(s.last_dlevel) \u003e 0 {\n        // inlining of macro vec_uint_foreach\n        for i = 0; (i \u003c vec_uint_size(s.last_dlevel)) \u0026\u0026 (((var) = vec_uint_at(s.last_dlevel, i)), 1); i++ {\n            if clause_fetch(s, var_reason(s, var)).lbd \u003c *lbd {\n                var_act_bump(s, var); }\n        }\n        vec_uint_clear(s.last_dlevel);\n    }\n    // inlining of macro vec_uint_foreach\n    for i = 0; (i \u003c vec_uint_size(s.tagged)) \u0026\u0026 (((var) = vec_uint_at(s.tagged, i)), 1); i++ {\n        vec_char_assign(s.seen, var, 0);\n    }\n    vec_uint_clear(s.tagged);\n}"
+    },
+    {
+      "Name": "solver_rst",
+      "Start": 11570,
+      "End": 11756,
+      "BodyStart": 11612,
+      "Original": "static inline int solver_rst(solver_t *s)\n{\n    return b_queue_is_valid(s-\u003ebq_lbd) \u0026\u0026\n           (((long)b_queue_avg(s-\u003ebq_lbd) * s-\u003eopts.f_rst) \u003e (s-\u003esum_lbd / s-\u003estats.n_conflicts));\n}",
+      "Draft": "func solver_rst(s *solver_t) int32 {\n    return b_queue_is_valid(s.bq_lbd) \u0026\u0026\n           ((int64(b_queue_avg(s.bq_lbd)) * s.opts.f_rst) \u003e (s.sum_lbd / s.stats.n_conflicts));\n}"
+    },
+    {
+      "Name": "solver_block_rst",
+      "Start": 11758,
+      "End": 12010,
+      "BodyStart": 11806,
+      "Original": "static inline int solver_block_rst(solver_t *s)\n{\n    return s-\u003estats.n_conflicts \u003e (int)s-\u003eopts.fst_block_rst \u0026\u0026\n           b_queue_is_valid(s-\u003ebq_lbd) \u0026\u0026\n           ((long)vec_uint_size(s-\u003etrail) \u003e (s-\u003eopts.b_rst * (long)b_queue_avg(s-\u003ebq_trail)));\n}",
+      "Draft": "func solver_block_rst(s *solver_t) int32 {\n    return s.stats.n_conflicts \u003e int32(s.opts.fst_block_rst) \u0026\u0026\n           b_queue_is_valid(s.bq_lbd) \u0026\u0026\n           (int64(vec_uint_size(s.trail)) \u003e (s.opts.b_rst * int64(b_queue_avg(s.bq_trail))));\n}"
+    },
+    {
+      "Name": "solver_handle_conflict",
+      "Start": 12012,
+      "End": 12608,
+      "BodyStart": 12088,
+      "Original": "static inline void solver_handle_conflict(solver_t *s, unsigned confl_cref)\n{\n    unsigned bt_level;\n    unsigned lbd;\n    unsigned cref;\n\n    vec_uint_clear(s-\u003etemp_lits);\n    solver_analyze(s, confl_cref, s-\u003etemp_lits, \u0026bt_level, \u0026lbd);\n    s-\u003esum_lbd += lbd;\n    b_queue_push(s-\u003ebq_lbd, lbd);\n    solver_cancel_until(s, bt_level);\n    cref = UNDEF;\n    if (vec_uint_size(s-\u003etemp_lits) \u003e 1) {\n        cref = solver_clause_create(s, s-\u003etemp_lits, 1);\n        clause_watch(s, cref);\n    }\n    solver_enqueue(s, vec_uint_at(s-\u003etemp_lits, 0), cref);\n    var_act_decay(s);\n    clause_act_decay(s);\n}",
+      "Draft": "func solver_handle_conflict(s *solver_t, confl_cref uint32) {\n    var bt_level uint32;\n    var lbd uint32;\n    var cref uint32;\n\n    vec_uint_clear(s.temp_lits);\n    solver_analyze(s, confl_cref, s.temp_lits, \u0026bt_level, \u0026lbd);\n    s.sum_lbd += lbd;\n    b_queue_push(s.bq_lbd, lbd);\n    solver_cancel_until(s, bt_level);\n    cref = UNDEF;\n    if vec_uint_size(s.temp_lits) \u003e 1 {\n        cref = solver_clause_create(s, s.temp_lits, 1);\n        clause_watch(s, cref);\n    }\n    solver_enqueue(s, vec_uint_at(s.temp_lits, 0), cref);\n    var_act_decay(s);\n    clause_act_decay(s);\n}"
+    },
+    {
+      "Name": "solver_analyze_final",
+      "Start": 12610,
+      "End": 13896,
+      "BodyStart": 12677,
+      "Original": "static inline void solver_analyze_final(solver_t *s, unsigned lit)\n{\n    unsigned i;\n\n    // printf(\"[Satoko] Analize final..\\n\");\n    // printf(\"[Satoko] Conflicting lit: %d\\n\", lit);\n    vec_uint_clear(s-\u003efinal_conflict);\n    vec_uint_push_back(s-\u003efinal_conflict, lit);\n    if (solver_dlevel(s) == 0)\n        return;\n    vec_char_assign(s-\u003eseen, lit2var(lit), 1);\n    for (i = vec_uint_size(s-\u003etrail); i --\u003e vec_uint_at(s-\u003etrail_lim, 0);) {\n        unsigned var = lit2var(vec_uint_at(s-\u003etrail, i));\n\n        if (vec_char_at(s-\u003eseen, var)) {\n            unsigned reason = var_reason(s, var);\n            if (reason == UNDEF) {\n                assert(var_dlevel(s, var) \u003e 0);\n                vec_uint_push_back(s-\u003efinal_conflict, lit_compl(vec_uint_at(s-\u003etrail, i)));\n            } else {\n                unsigned j;\n                struct clause *clause = clause_fetch(s, reason);\n                for (j = (clause-\u003esize == 2 ? 0 : 1); j \u003c clause-\u003esize; j++) {\n                    if (lit_dlevel(s, clause-\u003edata[j].lit) \u003e 0)\n                        vec_char_assign(s-\u003eseen, lit2var(clause-\u003edata[j].lit), 1);\n                }\n            }\n            vec_char_assign(s-\u003eseen, var, 0);\n        }\n    }\n    vec_char_assign(s-\u003eseen, lit2var(lit), 0);\n    // solver_debug_check_unsat(s);\n}",
+      "Draft": "func solver_analyze_final(s *solver_t, lit uint32) {\n    var i uint32;\n\n    // printf(\"[Satoko] Analize final..\\n\");\n    // printf(\"[Satoko] Conflicting lit: %d\\n\", lit);\n    vec_uint_clear(s.final_conflict);\n    vec_uint_push_back(s.final_conflict, lit);\n    if solver_dlevel(s) == 0 {\n        return; }\n    vec_char_assign(s.seen, lit2var(lit), 1);\n    for i = vec_uint_size(s.trail); i -. vec_uint_at(s.trail_lim, 0); {\n        var var uint32  = lit2var(vec_uint_at(s.trail, i));\n\n        if vec_char_at(s.seen, var) {\n            var reason uint32  = var_reason(s, var);\n            if reason == UNDEF {\n                assert(var_dlevel(s, var) \u003e 0, \"var_dlevel(s, var) \u003e 0\");\n                vec_uint_push_back(s.final_conflict, lit_compl(vec_uint_at(s.trail, i)));\n            } else {\n                var j uint32;\n                struct clause *clause = clause_fetch(s, reason);\n                for j = (clause.size == 2 ? 0 : 1); j \u003c clause.size; j++ {\n                    if lit_dlevel(s, clause.data[j].lit) \u003e 0 {\n                        vec_char_assign(s.seen, lit2var(clause.data[j].lit), 1); }\n                }\n            }\n            vec_char_assign(s.seen, var, 0);\n        }\n    }\n    vec_char_assign(s.seen, lit2var(lit), 0);\n    // solver_debug_check_unsat(s);\n}"
+    },
+    {
+      "Name": "solver_garbage_collect",
+      "Start": 13898,
+      "End": 14965,
+      "BodyStart": 13953,
+      "Original": "static inline void solver_garbage_collect(solver_t *s)\n{\n    unsigned i;\n    unsigned *array;\n    struct cdb *new_cdb = cdb_alloc(cdb_capacity(s-\u003eall_clauses) - cdb_wasted(s-\u003eall_clauses));\n\n    if (s-\u003ebook_cdb)\n        s-\u003ebook_cdb = 0;\n\n    for (i = 0; i \u003c 2 * vec_char_size(s-\u003eassigns); i++) {\n        struct watcher *w;\n        watch_list_foreach(s-\u003ewatches, w, i)\n            clause_realloc(new_cdb, s-\u003eall_clauses, \u0026(w-\u003ecref));\n    }\n\n    /* Update CREFS */\n    for (i = 0; i \u003c vec_uint_size(s-\u003etrail); i++)\n        if (lit_reason(s, vec_uint_at(s-\u003etrail, i)) != UNDEF)\n            clause_realloc(new_cdb, s-\u003eall_clauses, \u0026(vec_uint_data(s-\u003ereasons)[lit2var(vec_uint_at(s-\u003etrail, i))]));\n\n    array = vec_uint_data(s-\u003elearnts);\n    for (i = 0; i \u003c vec_uint_size(s-\u003elearnts); i++)\n        clause_realloc(new_cdb, s-\u003eall_clauses, \u0026(array[i]));\n\n    array = vec_uint_data(s-\u003eoriginals);\n    for (i = 0; i \u003c vec_uint_size(s-\u003eoriginals); i++)\n        clause_realloc(new_cdb, s-\u003eall_clauses, \u0026(array[i]));\n\n    cdb_free(s-\u003eall_clauses);\n    s-\u003eall_clauses = new_cdb;\n}",
+      "Draft": "func solver_garbage_collect(s *solver_t) {\n    var i uint32;\n    var array *uint32;\n    struct cdb *new_cdb = cdb_alloc(cdb_capacity(s.all_clauses) - cdb_wasted(s.all_clauses));\n\n    if s.book_cdb {\n        s.book_cdb = 0; }\n\n    for i = 0; i \u003c 2 * vec_char_size(s.assigns); i++ {\n        struct watcher *w;\n        // inlining of macro watch_list_foreach\n        for w = watch_list_array(vec_wl_at(s.watches, i));          w \u003c watch_list_array(vec_wl_at(s.watches, i)) + watch_list_size(vec_wl_at(s.watches, i));      w++ {\n            clause_realloc(new_cdb, s.all_clauses, \u0026(w.cref));\n        }\n    }\n\n    /* Update CREFS */\n    for i = 0; i \u003c vec_uint_size(s.trail); i++ {\n        if lit_reason(s, vec_uint_at(s.trail, i)) != UNDEF {\n            clause_realloc(new_cdb, s.all_clauses, \u0026(vec_uint_data(s.reasons)[lit2var(vec_uint_at(s.trail, i))])); }\n    }\n\n    array = vec_uint_data(s.learnts);\n    for i = 0; i \u003c vec_uint_size(s.learnts); i++ {\n        clause_realloc(new_cdb, s.all_clauses, \u0026(array[i]));\n    }\n\n    array = vec_uint_data(s.originals);\n    for i = 0; i \u003c vec_uint_size(s.originals); i++ {\n        clause_realloc(new_cdb, s.all_clauses, \u0026(array[i]));\n    }\n\n    cdb_free(s.all_clauses);\n    s.all_clauses = new_cdb;\n}"
+    },
+    {
+      "Name": "solver_reduce_cdb",
+      "Start": 14967,
+      "End": 16801,
+      "BodyStart": 15017,
+      "Original": "static inline void solver_reduce_cdb(solver_t *s)\n{\n    unsigned i, limit;\n    unsigned n_learnts = vec_uint_size(s-\u003elearnts);\n    unsigned cref;\n    struct clause *clause;\n    struct clause **learnts_cls;\n\n    learnts_cls = satoko_alloc(struct clause *, n_learnts);\n    vec_uint_foreach_start(s-\u003elearnts, cref, i, s-\u003ebook_cl_lrnt)\n        learnts_cls[i] = clause_fetch(s, cref);\n\n    limit = (unsigned)(n_learnts * s-\u003eopts.learnt_ratio);\n\n    satoko_sort((void **)learnts_cls, n_learnts,\n            (int (*)(const void *, const void *)) clause_compare);\n\n    if (learnts_cls[n_learnts / 2]-\u003elbd \u003c= 3)\n        s-\u003eRC2 += s-\u003eopts.inc_special_reduce;\n    if (learnts_cls[n_learnts - 1]-\u003elbd \u003c= 6)\n        s-\u003eRC2 += s-\u003eopts.inc_special_reduce;\n\n    vec_uint_clear(s-\u003elearnts);\n    for (i = 0; i \u003c n_learnts; i++) {\n        clause = learnts_cls[i];\n        cref = cdb_cref(s-\u003eall_clauses, (unsigned *)clause);\n        assert(clause-\u003ef_mark == 0);\n        if (clause-\u003ef_deletable \u0026\u0026 clause-\u003elbd \u003e 2 \u0026\u0026 clause-\u003esize \u003e 2 \u0026\u0026 lit_reason(s, clause-\u003edata[0].lit) != cref \u0026\u0026 (i \u003c limit)) {\n            clause-\u003ef_mark = 1;\n            s-\u003estats.n_learnt_lits -= clause-\u003esize;\n            clause_unwatch(s, cref);\n            cdb_remove(s-\u003eall_clauses, clause);\n        } else {\n            if (!clause-\u003ef_deletable)\n                limit++;\n            clause-\u003ef_deletable = 1;\n            vec_uint_push_back(s-\u003elearnts, cref);\n        }\n    }\n    satoko_free(learnts_cls);\n\n    if (s-\u003eopts.verbose) {\n        printf(\"reduceDB: Keeping %7d out of %7d clauses (%5.2f %%) \\n\",\n               vec_uint_size(s-\u003elearnts), n_learnts,\n               100.0 * vec_uint_size(s-\u003elearnts) / n_learnts);\n        fflush(stdout);\n    }\n    if (cdb_wasted(s-\u003eall_clauses) \u003e cdb_size(s-\u003eall_clauses) * s-\u003eopts.garbage_max_ratio)\n        solver_garbage_collect(s);\n}",
+      "Draft": "func solver_reduce_cdb(s *solver_t) {\n    var i, limit uint32;\n    var n_learnts uint32  = vec_uint_size(s.learnts);\n    var cref uint32;\n    struct clause *clause;\n    struct clause **learnts_cls;\n\n    // inlining of macro satoko_alloc\n    learnts_cls = ((struct clause * *) malloc((n_learnts) * sizeof(struct clause *)));\n    // inlining of macro vec_uint_foreach_start\n    for i = s.book_cl_lrnt; (i \u003c vec_uint_size(s.learnts)) \u0026\u0026 (((cref) = vec_uint_at(s.learnts, i)), 1); i++ {\n        learnts_cls[i] = clause_fetch(s, cref);\n    }\n\n    limit = uint32((n_learnts * s.opts.learnt_ratio));\n\n    satoko_sort((void **)learnts_cls, n_learnts,\n            (int (*)(void *, void *)) clause_compare);\n\n    if learnts_cls[n_learnts / 2].lbd \u003c= 3 {\n        s.RC2 += s.opts.inc_special_reduce; }\n    if learnts_cls[n_learnts - 1].lbd \u003c= 6 {\n        s.RC2 += s.opts.inc_special_reduce; }\n\n    vec_uint_clear(s.learnts);\n    for i = 0; i \u003c n_learnts; i++ {\n        clause = learnts_cls[i];\n        cref = cdb_cref(s.all_clauses, (unsigned *)clause);\n        assert(clause.f_mark == 0, \"clause.f_mark == 0\");\n        if clause.f_deletable \u0026\u0026 clause.lbd \u003e 2 \u0026\u0026 clause.size \u003e 2 \u0026\u0026 lit_reason(s, clause.data[0].lit) != cref \u0026\u0026 (i \u003c limit) {\n            clause.f_mark = 1;\n            s.stats.n_learnt_lits -= clause.size;\n            clause_unwatch(s, cref);\n            cdb_remove(s.all_clauses, clause);\n        } else {\n            if !clause.f_deletable {\n                limit++; }\n            clause.f_deletable = 1;\n            vec_uint_push_back(s.learnts, cref);\n        }\n    }\n    // inlining of macro satoko_free\n    for { free(learnts_cls); learnts_cls = nil; \nif !(false) { break }\n} \n\n    if s.opts.verbose {\n        fmt.Printf(\"reduceDB: Keeping %7d out of %7d clauses (%5.2f %%) \\n\", vec_uint_size(s.learnts), n_learnts, 100.0 * vec_uint_size(s.learnts) / n_learnts);\n        fflush(os.Stdout);\n    }\n    if cdb_wasted(s.all_clauses) \u003e cdb_size(s.all_clauses) * s.opts.garbage_max_ratio {\n        solver_garbage_collect(s); }\n}"
+    },
+    {
+      "Name": "solver_clause_create",
+      "Start": 16994,
+      "End": 18047,
+      "BodyStart": 17074,
+      "Original": "unsigned solver_clause_create(solver_t *s, vec_uint_t *lits, unsigned f_learnt)\n{\n    struct clause *clause;\n    unsigned cref;\n    unsigned n_words;\n\n    assert(vec_uint_size(lits) \u003e 1);\n    assert(f_learnt == 0 || f_learnt == 1);\n\n    n_words = 3 + f_learnt + vec_uint_size(lits);\n    cref = cdb_append(s-\u003eall_clauses, n_words);\n    clause = clause_fetch(s, cref);\n    clause-\u003ef_learnt = f_learnt;\n    clause-\u003ef_mark = 0;\n    clause-\u003ef_reallocd = 0;\n    clause-\u003ef_deletable = f_learnt;\n    clause-\u003esize = vec_uint_size(lits);\n    memcpy(\u0026(clause-\u003edata[0].lit), vec_uint_data(lits), sizeof(unsigned) * vec_uint_size(lits));\n\n    if (f_learnt) {\n        vec_uint_push_back(s-\u003elearnts, cref);\n        clause-\u003elbd = clause_clac_lbd(s, vec_uint_data(lits), vec_uint_size(lits));\n        clause-\u003edata[clause-\u003esize].act = 0;\n        s-\u003estats.n_learnt_lits += vec_uint_size(lits);\n        clause_act_bump(s, clause);\n    } else {\n        vec_uint_push_back(s-\u003eoriginals, cref);\n        s-\u003estats.n_original_lits += vec_uint_size(lits);\n    }\n    return cref;\n}",
+      "Draft": "func solver_clause_create(s *solver_t, lits *vec_uint_t, f_learnt uint32) uint32 {\n    struct clause *clause;\n    var cref uint32;\n    var n_words uint32;\n\n    assert(vec_uint_size(lits) \u003e 1, \"vec_uint_size(lits) \u003e 1\");\n    assert(f_learnt == 0 || f_learnt == 1, \"f_learnt == 0 || f_learnt == 1\");\n\n    n_words = 3 + f_learnt + vec_uint_size(lits);\n    cref = cdb_append(s.all_clauses, n_words);\n    clause = clause_fetch(s, cref);\n    clause.f_learnt = f_learnt;\n    clause.f_mark = 0;\n    clause.f_reallocd = 0;\n    clause.f_deletable = f_learnt;\n    clause.size = vec_uint_size(lits);\n    memcpy(\u0026(clause.data[0].lit), vec_uint_data(lits), sizeof(unsigned) * vec_uint_size(lits));\n\n    if f_learnt != 0 {\n        vec_uint_push_back(s.learnts, cref);\n        clause.lbd = clause_clac_lbd(s, vec_uint_data(lits), vec_uint_size(lits));\n        clause.data[clause.size].act = 0;\n        s.stats.n_learnt_lits += vec_uint_size(lits);\n        clause_act_bump(s, clause);\n    } else {\n        vec_uint_push_back(s.originals, cref);\n        s.stats.n_original_lits += vec_uint_size(lits);\n    }\n    return cref;\n}"
+    },
+    {
+      "Name": "solver_cancel_until",
+      "Start": 18049,
+      "End": 18680,
+      "BodyStart": 18103,
+      "Original": "void solver_cancel_until(solver_t *s, unsigned level)\n{\n    unsigned i;\n\n    if (solver_dlevel(s) \u003c= level)\n        return;\n    for (i = vec_uint_size(s-\u003etrail); i --\u003e vec_uint_at(s-\u003etrail_lim, level);) {\n        unsigned var = lit2var(vec_uint_at(s-\u003etrail, i));\n\n        vec_char_assign(s-\u003eassigns, var, SATOKO_VAR_UNASSING);\n        vec_uint_assign(s-\u003ereasons, var, UNDEF);\n        if (!heap_in_heap(s-\u003evar_order, var))\n            heap_insert(s-\u003evar_order, var);\n    }\n    s-\u003ei_qhead = vec_uint_at(s-\u003etrail_lim, level);\n    vec_uint_shrink(s-\u003etrail, vec_uint_at(s-\u003etrail_lim, level));\n    vec_uint_shrink(s-\u003etrail_lim, level);\n}",
+      "Draft": "func solver_cancel_until(s *solver_t, level uint32) {\n    var i uint32;\n\n    if solver_dlevel(s) \u003c= level {\n        return; }\n    for i = vec_uint_size(s.trail); i -. vec_uint_at(s.trail_lim, level); {\n        var var uint32  = lit2var(vec_uint_at(s.trail, i));\n\n        vec_char_assign(s.assigns, var, SATOKO_VAR_UNASSING);\n        vec_uint_assign(s.reasons, var, UNDEF);\n        if !heap_in_heap(s.var_order, var) {\n            heap_insert(s.var_order, var); }\n    }\n    s.i_qhead = vec_uint_at(s.trail_lim, level);\n    vec_uint_shrink(s.trail, vec_uint_at(s.trail_lim, level));\n    vec_uint_shrink(s.trail_lim, level);\n}"
+    },
+    {
+      "Name": "solver_propagate",
+      "Start": 18682,
+      "End": 21842,
+      "BodyStart": 18721,
+      "Original": "unsigned solver_propagate(solver_t *s)\n{\n    unsigned conf_cref = UNDEF;\n    unsigned *lits;\n    unsigned neg_lit;\n    unsigned n_propagations = 0;\n\n    while (s-\u003ei_qhead \u003c vec_uint_size(s-\u003etrail)) {\n        unsigned p = vec_uint_at(s-\u003etrail, s-\u003ei_qhead++);\n        struct watch_list *ws;\n        struct watcher *begin;\n        struct watcher *end;\n        struct watcher *i, *j;\n\n        n_propagations++;\n        watch_list_foreach_bin(s-\u003ewatches, i, p) {\n            if (solver_has_marks(s) \u0026\u0026 !var_mark(s, lit2var(i-\u003eblocker)))\n                continue;\n            if (var_value(s, lit2var(i-\u003eblocker)) == SATOKO_VAR_UNASSING)\n                solver_enqueue(s, i-\u003eblocker, i-\u003ecref);\n            else if (lit_value(s, i-\u003eblocker) == SATOKO_LIT_FALSE)\n                return i-\u003ecref;\n        }\n\n        ws = vec_wl_at(s-\u003ewatches, p);\n        begin = watch_list_array(ws);\n        end = begin + watch_list_size(ws);\n        for (i = j = begin + ws-\u003en_bin; i \u003c end;) {\n            struct clause *clause;\n            struct watcher w;\n\n            if (solver_has_marks(s) \u0026\u0026 !var_mark(s, lit2var(i-\u003eblocker))) {\n                *j++ = *i++;\n                continue;\n            }\n            if (lit_value(s, i-\u003eblocker) == SATOKO_LIT_TRUE) {\n                *j++ = *i++;\n                continue;\n            }\n\n            clause = clause_fetch(s, i-\u003ecref);\n            lits = \u0026(clause-\u003edata[0].lit);\n\n            // Make sure the false literal is data[1]:\n            neg_lit = lit_compl(p);\n            if (lits[0] == neg_lit)\n                stk_swap(unsigned, lits[0], lits[1]);\n            assert(lits[1] == neg_lit);\n\n            w.cref = i-\u003ecref;\n            w.blocker = lits[0];\n\n            /* If 0th watch is true, then clause is already satisfied. */\n            if (lits[0] != i-\u003eblocker \u0026\u0026 lit_value(s, lits[0]) == SATOKO_LIT_TRUE)\n                *j++ = w;\n            else {\n                /* Look for new watch */\n                unsigned k;\n                for (k = 2; k \u003c clause-\u003esize; k++) {\n                    if (lit_value(s, lits[k]) != SATOKO_LIT_FALSE) {\n                        lits[1] = lits[k];\n                        lits[k] = neg_lit;\n                        watch_list_push(vec_wl_at(s-\u003ewatches, lit_compl(lits[1])), w, 0);\n                        goto next;\n                    }\n                }\n\n                *j++ = w;\n\n                /* Clause becomes unit under this assignment */\n                if (lit_value(s, lits[0]) == SATOKO_LIT_FALSE) {\n                    conf_cref = i-\u003ecref;\n                    s-\u003ei_qhead = vec_uint_size(s-\u003etrail);\n                    i++;\n                    // Copy the remaining watches:\n                    while (i \u003c end)\n                        *j++ = *i++;\n                } else\n                    solver_enqueue(s, lits[0], i-\u003ecref);\n            }\n        next:\n            i++;\n        }\n\n        s-\u003estats.n_inspects += j - watch_list_array(ws);\n        watch_list_shrink(ws, j - watch_list_array(ws));\n    }\n    s-\u003estats.n_propagations += n_propagations;\n    s-\u003estats.n_propagations_all += n_propagations;\n    s-\u003en_props_simplify -= n_propagations;\n    return conf_cref;\n}",
+      "Draft": "func solver_propagate(s *solver_t) uint32 {\n    var conf_cref uint32  = UNDEF;\n    var lits *uint32;\n    var neg_lit uint32;\n    var n_propagations uint32;\n\n    for s.i_qhead \u003c vec_uint_size(s.trail) {\n        var p uint32  = vec_uint_at(s.trail, s.i_qhead++);\n        struct watch_list *ws;\n        struct watcher *begin;\n        struct watcher *end;\n        struct watcher *i, *j;\n\n        n_propagations++;\n        // inlining of macro watch_list_foreach_bin\n        for i = watch_list_array(vec_wl_at(s.watches, p));          i \u003c watch_list_array(vec_wl_at(s.watches, p)) + vec_wl_at(s.watches, p).n_bin;      i++ {\n            if solver_has_marks(s) \u0026\u0026 !var_mark(s, lit2var(i.blocker)) {\n                continue; }\n            if var_value(s, lit2var(i.blocker)) == SATOKO_VAR_UNASSING {\n                solver_enqueue(s, i.blocker, i.cref);\n            } else if lit_value(s, i.blocker) == SATOKO_LIT_FALSE {\n                return i.cref; }\n        }\n\n        ws = vec_wl_at(s.watches, p);\n        begin = watch_list_array(ws);\n        end = begin + watch_list_size(ws);\n        for i = j = begin + ws.n_bin; i \u003c end; {\n            struct clause *clause;\n            struct watcher w;\n\n            if solver_has_marks(s) \u0026\u0026 !var_mark(s, lit2var(i.blocker)) {\n                *j++ = *i++;\n                continue;\n            }\n            if lit_value(s, i.blocker) == SATOKO_LIT_TRUE {\n                *j++ = *i++;\n                continue;\n            }\n\n            clause = clause_fetch(s, i.cref);\n            lits = \u0026(clause.data[0].lit);\n\n            // Make sure the false literal is data[1]:\n            neg_lit = lit_compl(p);\n            if lits[0] == neg_lit {\n                // inlining of macro stk_swap\n                 var t uint32  = lits[0]; lits[0] = lits[1]; lits[1] = t; };\n            assert(lits[1] == neg_lit, \"lits[1] == neg_lit\");\n\n            w.cref = i.cref;\n            w.blocker = lits[0];\n\n            /* If 0th watch is true, then clause is already satisfied. */\n            if lits[0] != i.blocker \u0026\u0026 lit_value(s, lits[0]) == SATOKO_LIT_TRUE {\n                *j++ = w;\n            } else {\n                /* Look for new watch */\n                var k uint32;\n                for k = 2; k \u003c clause.size; k++ {\n                    if lit_value(s, lits[k]) != SATOKO_LIT_FALSE {\n                        lits[1] = lits[k];\n                        lits[k] = neg_lit;\n                        watch_list_push(vec_wl_at(s.watches, lit_compl(lits[1])), w, 0);\n                        goto next;\n                    }\n                }\n\n                *j++ = w;\n\n                /* Clause becomes unit under this assignment */\n                if lit_value(s, lits[0]) == SATOKO_LIT_FALSE {\n                    conf_cref = i.cref;\n                    s.i_qhead = vec_uint_size(s.trail);\n                    i++;\n                    // Copy the remaining watches:\n                    for i \u003c end {\n                        *j++ = *i++;\n                    }\n                } else {\n                    solver_enqueue(s, lits[0], i.cref); }\n            }\n        next:\n            i++;\n        }\n\n        s.stats.n_inspects += j - watch_list_array(ws);\n        watch_list_shrink(ws, j - watch_list_array(ws));\n    }\n    s.stats.n_propagations += n_propagations;\n    s.stats.n_propagations_all += n_propagations;\n    s.n_props_simplify -= n_propagations;\n    return conf_cref;\n}"
+    },
+    {
+      "Name": "solver_search",
+      "Start": 21844,
+      "End": 24371,
+      "BodyStart": 21876,
+      "Original": "char solver_search(solver_t *s)\n{\n    s-\u003estats.n_starts++;\n    while (1) {\n        unsigned confl_cref = solver_propagate(s);\n        if (confl_cref != UNDEF) {\n            s-\u003estats.n_conflicts++;\n            s-\u003estats.n_conflicts_all++;\n            if (solver_dlevel(s) == 0)\n                return SATOKO_UNSAT;\n            /* Restart heuristic */\n            b_queue_push(s-\u003ebq_trail, vec_uint_size(s-\u003etrail));\n            if (solver_block_rst(s))\n                b_queue_clean(s-\u003ebq_lbd);\n            solver_handle_conflict(s, confl_cref);\n        } else {\n            // solver_debug_check_clauses(s);\n            /* No conflict */\n            unsigned next_lit;\n\n            if (solver_rst(s) || solver_check_limits(s) == 0 || solver_stop(s) || \n                (s-\u003enRuntimeLimit \u0026\u0026 (s-\u003estats.n_conflicts \u0026 63) == 0 \u0026\u0026 Abc_Clock() \u003e s-\u003enRuntimeLimit)) {\n                b_queue_clean(s-\u003ebq_lbd);\n                solver_cancel_until(s, 0);\n                return SATOKO_UNDEC;\n            }\n            if (!s-\u003eopts.no_simplify \u0026\u0026 solver_dlevel(s) == 0)\n                satoko_simplify(s);\n\n            /* Reduce the set of learnt clauses */\n            if (s-\u003eopts.learnt_ratio \u0026\u0026 vec_uint_size(s-\u003elearnts) \u003e 100 \u0026\u0026\n                s-\u003estats.n_conflicts \u003e= s-\u003en_confl_bfr_reduce) {\n                s-\u003eRC1 = (s-\u003estats.n_conflicts / s-\u003eRC2) + 1;\n                solver_reduce_cdb(s);\n                s-\u003eRC2 += s-\u003eopts.inc_reduce;\n                s-\u003en_confl_bfr_reduce = s-\u003eRC1 * s-\u003eRC2;\n            }\n\n            /* Make decisions based on user assumptions */\n            next_lit = UNDEF;\n            while (solver_dlevel(s) \u003c vec_uint_size(s-\u003eassumptions)) {\n                unsigned lit = vec_uint_at(s-\u003eassumptions, solver_dlevel(s));\n                if (lit_value(s, lit) == SATOKO_LIT_TRUE) {\n                    vec_uint_push_back(s-\u003etrail_lim, vec_uint_size(s-\u003etrail));\n                } else if (lit_value(s, lit) == SATOKO_LIT_FALSE) {\n                    solver_analyze_final(s, lit_compl(lit));\n                    return SATOKO_UNSAT;\n                } else {\n                    next_lit = lit;\n                    break;\n                }\n\n            }\n            if (next_lit == UNDEF) {\n                s-\u003estats.n_decisions++;\n                next_lit = solver_decide(s);\n                if (next_lit == UNDEF) {\n                    // solver_debug_check(s, SATOKO_SAT);\n                    return SATOKO_SAT;\n                }\n            }\n            solver_new_decision(s, next_lit);\n        }\n    }\n}",
+      "Draft": "func solver_search(s *solver_t) byte {\n    s.stats.n_starts++;\n    for {\n        var confl_cref uint32  = solver_propagate(s);\n        if confl_cref != UNDEF {\n            s.stats.n_conflicts++;\n            s.stats.n_conflicts_all++;\n            if solver_dlevel(s) == 0 {\n                return SATOKO_UNSAT; }\n            /* Restart heuristic */\n            b_queue_push(s.bq_trail, vec_uint_size(s.trail));\n            if solver_block_rst(s) != 0 {\n                b_queue_clean(s.bq_lbd); }\n            solver_handle_conflict(s, confl_cref);\n        } else {\n            // solver_debug_check_clauses(s);\n            /* No conflict */\n            var next_lit uint32;\n\n            if (solver_rst(s) != 0) || solver_check_limits(s) == 0 || solver_stop(s) || \n                (s.nRuntimeLimit \u0026\u0026 (s.stats.n_conflicts \u0026 63) == 0 \u0026\u0026 Abc_Clock() \u003e s.nRuntimeLimit) {\n                b_queue_clean(s.bq_lbd);\n                solver_cancel_until(s, 0);\n                return SATOKO_UNDEC;\n            }\n            if !s.opts.no_simplify \u0026\u0026 solver_dlevel(s) == 0 {\n                satoko_simplify(s); }\n\n            /* Reduce the set of learnt clauses */\n            if s.opts.learnt_ratio \u0026\u0026 vec_uint_size(s.learnts) \u003e 100 \u0026\u0026\n                s.stats.n_conflicts \u003e= s.n_confl_bfr_reduce {\n                s.RC1 = (s.stats.n_conflicts / s.RC2) + 1;\n                solver_reduce_cdb(s);\n                s.RC2 += s.opts.inc_reduce;\n                s.n_confl_bfr_reduce = s.RC1 * s.RC2;\n            }\n\n            /* Make decisions based on user assumptions */\n            next_lit = UNDEF;\n            for solver_dlevel(s) \u003c vec_uint_size(s.assumptions) {\n                var lit uint32  = vec_uint_at(s.assumptions, solver_dlevel(s));\n                if lit_value(s, lit) == SATOKO_LIT_TRUE {\n                    vec_uint_push_back(s.trail_lim, vec_uint_size(s.trail));\n                } else if lit_value(s, lit) == SATOKO_LIT_FALSE {\n                    solver_analyze_final(s, lit_compl(lit));\n                    return SATOKO_UNSAT;\n                } else {\n                    next_lit = lit;\n                    break;\n                }\n\n            }\n            if next_lit == UNDEF {\n                s.stats.n_decisions++;\n                next_lit = solver_decide(s);\n                if next_lit == UNDEF {\n                    // solver_debug_check(s, SATOKO_SAT);\n                    return SATOKO_SAT;\n                }\n            }\n            solver_new_decision(s, next_lit);\n        }\n    }\n}"
+    },
+    {
+      "Name": "solver_debug_check_trail",
+      "Start": 24555,
+      "End": 25586,
+      "BodyStart": 24598,
+      "Original": "void solver_debug_check_trail(solver_t *s)\n{\n    unsigned i;\n    unsigned *array;\n    vec_uint_t *trail_dup = vec_uint_alloc(0);\n    fprintf(stdout, \"[Satoko] Checking for trail(%u) inconsistencies...\\n\", vec_uint_size(s-\u003etrail));\n    vec_uint_duplicate(trail_dup, s-\u003etrail);\n    vec_uint_sort(trail_dup, 1);\n    array = vec_uint_data(trail_dup);\n    for (i = 1; i \u003c vec_uint_size(trail_dup); i++) {\n        if (array[i - 1] == lit_compl(array[i])) {\n            fprintf(stdout, \"[Satoko] Inconsistent trail: %u %u\\n\", array[i - 1], array[i]);\n            assert(0);\n            return;\n        }\n    }\n    for (i = 0; i \u003c vec_uint_size(trail_dup); i++) {\n        if (var_value(s, lit2var(array[i])) != lit_polarity(array[i])) {\n            fprintf(stdout, \"[Satoko] Inconsistent trail assignment: %u, %u\\n\", vec_char_at(s-\u003eassigns, lit2var(array[i])), array[i]);\n            assert(0);\n            return;\n        }\n    }\n    fprintf(stdout, \"[Satoko] Trail OK.\\n\");\n    vec_uint_print(trail_dup);\n    vec_uint_free(trail_dup);\n\n}",
+      "Draft": "func solver_debug_check_trail(s *solver_t) {\n    var i uint32;\n    var array *uint32;\n    var trail_dup *vec_uint_t  = vec_uint_alloc(0);\n    fmt.Fprintf(os.Stdout, \"[Satoko] Checking for trail(%d) inconsistencies...\\n\", vec_uint_size(s.trail));\n    vec_uint_duplicate(trail_dup, s.trail);\n    vec_uint_sort(trail_dup, 1);\n    array = vec_uint_data(trail_dup);\n    for i = 1; i \u003c vec_uint_size(trail_dup); i++ {\n        if array[i - 1] == lit_compl(array[i]) {\n            fmt.Fprintf(os.Stdout, \"[Satoko] Inconsistent trail: %d %d\\n\", array[i - 1], array[i]);\n            assert(false, \"0\");\n            return;\n        }\n    }\n    for i = 0; i \u003c vec_uint_size(trail_dup); i++ {\n        if var_value(s, lit2var(array[i])) != lit_polarity(array[i]) {\n            fmt.Fprintf(os.Stdout, \"[Satoko] Inconsistent trail assignment: %d, %d\\n\", vec_char_at(s.assigns, lit2var(array[i])), array[i]);\n            assert(false, \"0\");\n            return;\n        }\n    }\n    fmt.Fprintf(os.Stdout, \"[Satoko] Trail OK.\\n\");\n    vec_uint_print(trail_dup);\n    vec_uint_free(trail_dup);\n\n}"
+    },
+    {
+      "Name": "solver_debug_check_clauses",
+      "Start": 25588,
+      "End": 26321,
+      "BodyStart": 25633,
+      "Original": "void solver_debug_check_clauses(solver_t *s)\n{\n    unsigned cref, i;\n\n    fprintf(stdout, \"[Satoko] Checking clauses (%d)...\\n\", vec_uint_size(s-\u003eoriginals));\n    vec_uint_foreach(s-\u003eoriginals, cref, i) {\n        unsigned j;\n        struct clause *clause = clause_fetch(s, cref);\n        for (j = 0; j \u003c clause-\u003esize; j++) {\n            if (vec_uint_find(s-\u003etrail, lit_compl(clause-\u003edata[j].lit))) {\n                continue;\n            }\n            break;\n        }\n        if (j == clause-\u003esize) {\n            vec_uint_print(s-\u003etrail);\n            fprintf(stdout, \"[Satoko] FOUND UNSAT CLAUSE]: (%d) \", i);\n            clause_print(clause);\n            assert(0);\n        }\n    }\n    fprintf(stdout, \"[Satoko] All SAT - OK\\n\");\n}",
+      "Draft": "func solver_debug_check_clauses(s *solver_t) {\n    var cref, i uint32;\n\n    fmt.Fprintf(os.Stdout, \"[Satoko] Checking clauses (%d)...\\n\", vec_uint_size(s.originals));\n    // inlining of macro vec_uint_foreach\n    for i = 0; (i \u003c vec_uint_size(s.originals)) \u0026\u0026 (((cref) = vec_uint_at(s.originals, i)), 1); i++ {\n        var j uint32;\n        struct clause *clause = clause_fetch(s, cref);\n        for j = 0; j \u003c clause.size; j++ {\n            if vec_uint_find(s.trail, lit_compl(clause.data[j].lit)) {\n                continue;\n            }\n            break;\n        }\n        if j == clause.size {\n            vec_uint_print(s.trail);\n            fmt.Fprintf(os.Stdout, \"[Satoko] FOUND UNSAT CLAUSE]: (%d) \", i);\n            clause_print(clause);\n            assert(false, \"0\");\n        }\n    }\n    fmt.Fprintf(os.Stdout, \"[Satoko] All SAT - OK\\n\");\n}"
+    },
+    {
+      "Name": "solver_debug_check",
+      "Start": 26323,
+      "End": 27045,
+      "BodyStart": 26372,
+      "Original": "void solver_debug_check(solver_t *s, int result)\n{\n    unsigned cref, i;\n    solver_debug_check_trail(s);\n    fprintf(stdout, \"[Satoko] Checking clauses (%d)... \\n\", vec_uint_size(s-\u003eoriginals));\n    vec_uint_foreach(s-\u003eoriginals, cref, i) {\n        unsigned j;\n        struct clause *clause = clause_fetch(s, cref);\n        for (j = 0; j \u003c clause-\u003esize; j++) {\n            if (vec_uint_find(s-\u003etrail, clause-\u003edata[j].lit)) {\n                break;\n            }\n        }\n        if (result == SATOKO_SAT \u0026\u0026 j == clause-\u003esize) {\n            fprintf(stdout, \"[Satoko] FOUND UNSAT CLAUSE: (%d) \", i);\n            clause_print(clause);\n            assert(0);\n        }\n    }\n    fprintf(stdout, \"[Satoko] All SAT - OK\\n\");\n}",
+      "Draft": "func solver_debug_check(s *solver_t, result int32) {\n    var cref, i uint32;\n    solver_debug_check_trail(s);\n    fmt.Fprintf(os.Stdout, \"[Satoko] Checking clauses (%d)... \\n\", vec_uint_size(s.originals));\n    // inlining of macro vec_uint_foreach\n    for i = 0; (i \u003c vec_uint_size(s.originals)) \u0026\u0026 (((cref) = vec_uint_at(s.originals, i)), 1); i++ {\n        var j uint32;\n        struct clause *clause = clause_fetch(s, cref);\n        for j = 0; j \u003c clause.size; j++ {\n            if vec_uint_find(s.trail, clause.data[j].lit) {\n                break;\n            }\n        }\n        if result == SATOKO_SAT \u0026\u0026 j == clause.size {\n            fmt.Fprintf(os.Stdout, \"[Satoko] FOUND UNSAT CLAUSE: (%d) \", i);\n            clause_print(clause);\n            assert(false, \"0\");\n        }\n    }\n    fmt.Fprintf(os.Stdout, \"[Satoko] All SAT - OK\\n\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::mechanical::do::9994",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9352,
+      "End": 9354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::mechanical::sizeof::16392",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15192,
+      "End": 15192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::mechanical::do::17740",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 16401,
+      "End": 16401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::mechanical::sizeof::18947",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17578,
+      "End": 17584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::pointer-cast::16715",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15423,
+      "End": 15432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::pointer-cast::17144",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15852,
+      "End": 15864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::lit_is_removable",
+      "Category": "semantic-review",
+      "Symbol": "lit_is_removable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 942,
+      "End": 2920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::clause_clac_lbd",
+      "Category": "semantic-review",
+      "Symbol": "clause_clac_lbd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3265,
+      "End": 3665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::clause_bin_resolution",
+      "Category": "semantic-review",
+      "Symbol": "clause_bin_resolution",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3667,
+      "End": 4798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::clause_minimize",
+      "Category": "semantic-review",
+      "Symbol": "clause_minimize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4800,
+      "End": 5756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::clause_realloc",
+      "Category": "semantic-review",
+      "Symbol": "clause_realloc",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5758,
+      "End": 6378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_decide",
+      "Category": "semantic-review",
+      "Symbol": "solver_decide",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6571,
+      "End": 7056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_new_decision",
+      "Category": "semantic-review",
+      "Symbol": "solver_new_decision",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7058,
+      "End": 7363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_calc_bt_level",
+      "Category": "semantic-review",
+      "Symbol": "solver_calc_bt_level",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7420,
+      "End": 8004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::ternary::solver_analyze",
+      "Category": "ternary-review",
+      "Symbol": "solver_analyze",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8988,
+      "End": 11568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_analyze",
+      "Category": "semantic-review",
+      "Symbol": "solver_analyze",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8988,
+      "End": 11568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_rst",
+      "Category": "semantic-review",
+      "Symbol": "solver_rst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11570,
+      "End": 11756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_block_rst",
+      "Category": "semantic-review",
+      "Symbol": "solver_block_rst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11758,
+      "End": 12010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_handle_conflict",
+      "Category": "semantic-review",
+      "Symbol": "solver_handle_conflict",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12012,
+      "End": 12608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::ternary::solver_analyze_final",
+      "Category": "ternary-review",
+      "Symbol": "solver_analyze_final",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12610,
+      "End": 13896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_analyze_final",
+      "Category": "semantic-review",
+      "Symbol": "solver_analyze_final",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12610,
+      "End": 13896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_garbage_collect",
+      "Category": "semantic-review",
+      "Symbol": "solver_garbage_collect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13898,
+      "End": 14965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_reduce_cdb",
+      "Category": "semantic-review",
+      "Symbol": "solver_reduce_cdb",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14967,
+      "End": 16801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_clause_create",
+      "Category": "semantic-review",
+      "Symbol": "solver_clause_create",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16994,
+      "End": 18047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_cancel_until",
+      "Category": "semantic-review",
+      "Symbol": "solver_cancel_until",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18049,
+      "End": 18680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_propagate",
+      "Category": "semantic-review",
+      "Symbol": "solver_propagate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18682,
+      "End": 21842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_search",
+      "Category": "semantic-review",
+      "Symbol": "solver_search",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21844,
+      "End": 24371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_debug_check_trail",
+      "Category": "semantic-review",
+      "Symbol": "solver_debug_check_trail",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24555,
+      "End": 25586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_debug_check_clauses",
+      "Category": "semantic-review",
+      "Symbol": "solver_debug_check_clauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25588,
+      "End": 26321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::solver_debug_check",
+      "Category": "semantic-review",
+      "Symbol": "solver_debug_check",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26323,
+      "End": 27045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 27070
+    }
+  ],
+  "Draft": "package satoko\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n//===--- solver.c -----------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n//#include \u003cstdio.h\u003e\n//#include \u003cassert.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cmath.h\u003e\n\n//#include \"act_clause.h\"\n//#include \"act_var.h\"\n//#include \"solver.h\"\n//#include \"utils/heap.h\"\n//#include \"utils/mem.h\"\n//#include \"utils/sort.h\"\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_IMPL_START\n\n//===------------------------------------------------------------------------===\n// Lit funtions\n//===------------------------------------------------------------------------===\n/**\n *  A literal is said to be redundant in a given clause if and only if all\n *  variables in its reason are either present in that clause or (recursevely)\n *  redundant.\n */\nfunc lit_is_removable(s *solver_t, lit uint32, min_level uint32) int32 {\n    var top uint32  = vec_uint_size(s.tagged);\n\n    assert(lit_reason(s, lit) != UNDEF, \"lit_reason(s, lit) != UNDEF\");\n    vec_uint_clear(s.stack);\n    vec_uint_push_back(s.stack, lit2var(lit));\n    for vec_uint_size(s.stack) {\n        var i uint32;\n        var var uint32  = vec_uint_pop_back(s.stack);\n        struct clause *c = clause_fetch(s, var_reason(s, var));\n        var lits *uint32  = \u0026(c.data[0].lit);\n\n        assert(var_reason(s, var) != UNDEF, \"var_reason(s, var) != UNDEF\");\n        if c.size == 2 \u0026\u0026 lit_value(s, lits[0]) == SATOKO_LIT_FALSE {\n            assert(lit_value(s, lits[1]) == SATOKO_LIT_TRUE, \"lit_value(s, lits[1]) == SATOKO_LIT_TRUE\");\n            // inlining of macro stk_swap\n            { var t uint32  = lits[0]; lits[0] = lits[1]; lits[1] = t; };\n        }\n\n        /* Check scan the literals of the reason clause.\n         * The first literal is skiped because is the literal itself. */\n        for i = 1; i \u003c c.size; i++ {\n            var = lit2var(lits[i]);\n\n            /* Check if the variable has already been seen or if it\n             * was assinged a value at the decision level 0. In a\n             * positive case, there is no need to look any further */\n            if vec_char_at(s.seen, var) || var_dlevel(s, var) == 0 {\n                continue; }\n\n            /* If the variable has a reason clause and if it was\n             * assingned at a 'possible' level, then we need to\n             * check if it is recursively redundant, otherwise the\n             * literal being checked is not redundant */\n            if var_reason(s, var) != UNDEF \u0026\u0026 ((1 \u003c\u003c (var_dlevel(s, var) \u0026 31)) \u0026 min_level) {\n                vec_uint_push_back(s.stack, var);\n                vec_uint_push_back(s.tagged, var);\n                vec_char_assign(s.seen, var, 1);\n            } else {\n                // inlining of macro vec_uint_foreach_start\n                for i = top; (i \u003c vec_uint_size(s.tagged)) \u0026\u0026 (((var) = vec_uint_at(s.tagged, i)), 1); i++ {\n                    vec_char_assign(s.seen, var, 0);\n                }\n                vec_uint_shrink(s.tagged, top);\n                return 0;\n            }\n        }\n    }\n    return 1;\n}\n\n//===------------------------------------------------------------------------===\n// Clause functions\n//===------------------------------------------------------------------------===\n/* Calculate clause LBD (Literal Block Distance):\n * - It's the number of variables in the final conflict clause that come from\n * different decision levels\n */\nfunc clause_clac_lbd(s *solver_t, lits *uint32, size uint32) uint32 {\n    var i uint32;\n    var lbd uint32;\n\n    s.cur_stamp++;\n    for i = 0; i \u003c size; i++ {\n        var level uint32  = lit_dlevel(s, lits[i]);\n        if vec_uint_at(s.stamps, level) != s.cur_stamp {\n            vec_uint_assign(s.stamps, level, s.cur_stamp);\n            lbd++;\n        }\n    }\n    return lbd;\n}\n\nfunc clause_bin_resolution(s *solver_t, clause_lits *vec_uint_t) {\n    var lits *uint32  = vec_uint_data(clause_lits);\n    var counter, sz, i uint32;\n    var lit uint32;\n    var neg_lit uint32  = lit_compl(lits[0]);\n    struct watcher *w;\n\n    s.cur_stamp++;\n    // inlining of macro vec_uint_foreach\n    for i = 0; (i \u003c vec_uint_size(clause_lits)) \u0026\u0026 (((lit) = vec_uint_at(clause_lits, i)), 1); i++ {\n        vec_uint_assign(s.stamps, lit2var(lit), s.cur_stamp);\n    }\n\n    counter = 0;\n    // inlining of macro watch_list_foreach_bin\n    for w = watch_list_array(vec_wl_at(s.watches, neg_lit));          w \u003c watch_list_array(vec_wl_at(s.watches, neg_lit)) + vec_wl_at(s.watches, neg_lit).n_bin;      w++ {\n        var imp_lit uint32  = w.blocker;\n        if vec_uint_at(s.stamps, lit2var(imp_lit)) == s.cur_stamp \u0026\u0026\n            lit_value(s, imp_lit) == SATOKO_LIT_TRUE {\n            counter++;\n            vec_uint_assign(s.stamps, lit2var(imp_lit), (s.cur_stamp - 1));\n        }\n    }\n    if counter \u003e 0 {\n        sz = vec_uint_size(clause_lits) - 1;\n        for i = 1; i \u003c vec_uint_size(clause_lits) - counter; i++ {\n            if vec_uint_at(s.stamps, lit2var(lits[i])) != s.cur_stamp {\n                // inlining of macro stk_swap\n                { var t uint32  = lits[i]; lits[i] = lits[sz]; lits[sz] = t; };\n                i--;\n                sz--;\n            }\n        }\n        vec_uint_shrink(clause_lits, vec_uint_size(clause_lits) - counter);\n    }\n}\n\nfunc clause_minimize(s *solver_t, clause_lits *vec_uint_t) {\n    var i, j uint32;\n    var lits *uint32  = vec_uint_data(clause_lits);\n    var min_level uint32;\n    var clause_size uint32;\n\n    for i = 1; i \u003c vec_uint_size(clause_lits); i++ {\n        var level uint32  = lit_dlevel(s, lits[i]);\n        min_level |= 1 \u003c\u003c (level \u0026 31);\n    }\n\n    /* Remove reduntant literals */\n    // inlining of macro vec_uint_foreach\n    for j = 0; (j \u003c vec_uint_size(clause_lits)) \u0026\u0026 (((i) = vec_uint_at(clause_lits, j)), 1); j++ {\n        vec_uint_push_back(s.tagged, lit2var(i));\n    }\n    for i = j = 1; i \u003c vec_uint_size(clause_lits); i++ {\n        if lit_reason(s, lits[i]) == UNDEF || !(lit_is_removable(s, lits[i], min_level) != 0) {\n            lits[j++] = lits[i]; }\n    }\n    vec_uint_shrink(clause_lits, j);\n\n    /* Binary Resolution */\n    clause_size = vec_uint_size(clause_lits);\n    if clause_size \u003c= s.opts.clause_max_sz_bin_resol \u0026\u0026\n        clause_clac_lbd(s, lits, clause_size) \u003c= s.opts.clause_min_lbd_bin_resol {\n        clause_bin_resolution(s, clause_lits); }\n}\n\nstatic inline void clause_realloc(struct cdb *dest, struct cdb *src, unsigned *cref)\n{\n    var new_cref uint32;\n    struct clause *new_clause;\n    struct clause *old_clause = cdb_handler(src, *cref);\n\n    if old_clause.f_reallocd {\n        *cref = uint32( old_clause.size);\n        return;\n    }\n    new_cref = cdb_append(dest, 3 + old_clause.f_learnt + old_clause.size);\n    new_clause = cdb_handler(dest, new_cref);\n    memcpy(new_clause, old_clause, (size_t)((3 + old_clause.f_learnt + old_clause.size) * 4));\n    old_clause.f_reallocd = 1;\n    old_clause.size = uint32( new_cref);\n    *cref = new_cref;\n}\n\n//===------------------------------------------------------------------------===\n// Solver internal functions\n//===------------------------------------------------------------------------===\nfunc solver_decide(s *solver_t) uint32 {\n    var next_var uint32  = UNDEF;\n\n    for next_var == UNDEF || var_value(s, next_var) != SATOKO_VAR_UNASSING {\n        if heap_size(s.var_order) == 0 {\n            next_var = UNDEF;\n            return UNDEF;\n        }\n        next_var = heap_remove_min(s.var_order);\n        if solver_has_marks(s) \u0026\u0026 !var_mark(s, next_var) {\n            next_var = UNDEF; }\n    }\n    return var2lit(next_var, satoko_var_polarity(s, next_var));\n}\n\nfunc solver_new_decision(s *solver_t, lit uint32) {\n    if solver_has_marks(s) \u0026\u0026 !var_mark(s, lit2var(lit)) {\n        return; }\n    assert(var_value(s, lit2var(lit)) == SATOKO_VAR_UNASSING, \"var_value(s, lit2var(lit)) == SATOKO_VAR_UNASSING\");\n    vec_uint_push_back(s.trail_lim, vec_uint_size(s.trail));\n    solver_enqueue(s, lit, UNDEF);\n}\n\n/* Calculate Backtrack Level from the learnt clause */\nfunc solver_calc_bt_level(s *solver_t, learnt *vec_uint_t) uint32 {\n    var i, tmp uint32;\n        var i_max uint32  = 1;\n    var lits *uint32  = vec_uint_data(learnt);\n        var max uint32  = lit_dlevel(s, lits[1]);\n\n    if vec_uint_size(learnt) == 1 {\n        return 0; }\n    for i = 2; i \u003c vec_uint_size(learnt); i++ {\n        if lit_dlevel(s, lits[i]) \u003e max {\n            max   = lit_dlevel(s, lits[i]);\n            i_max = i;\n        }\n    }\n        tmp         = lits[1];\n        lits[1]     = lits[i_max];\n        lits[i_max] = tmp;\n        return lit_dlevel(s, lits[1]);\n}\n\n/**\n *  Most books and papers explain conflict analysis and the calculation of the\n *  1UIP (first Unique Implication Point) using an implication graph. This\n *  function, however, do not explicity constructs the graph! It inspects the\n *  trail in reverse and figure out which literals should be added to the\n *  to-be-learnt clause using the reasons of each assignment.\n *\n *  cur_lit: current literal being analyzed.\n *  n_paths: number of unprocessed paths from conlfict node to the current\n *           literal being analyzed (cur_lit).\n *\n *  This functions performs a backward BFS (breadth-first search) for 1UIP node.\n *  The trail works as the BFS queue. The counter of unprocessed but seen\n *  variables (n_paths) allows us to identify when 'cur_lit' is the closest\n *  cause of conflict.\n *\n *  When 'n_paths' reaches zero it means there are no unprocessed reverse paths\n *  back from the conflict node to 'cur_lit' - meaning it is the 1UIP decision\n *  variable.\n *\n */\nfunc solver_analyze(s *solver_t, cref uint32, learnt *vec_uint_t, bt_level *uint32, lbd *uint32) {\n    var i uint32;\n    var trail *uint32  = vec_uint_data(s.trail);\n    var idx uint32  = vec_uint_size(s.trail) - 1;\n    var n_paths uint32;\n    var p uint32  = UNDEF;\n    var var uint32;\n\n    vec_uint_push_back(learnt, UNDEF);\n    do {\n        struct clause *clause;\n        var lits *uint32;\n        var j uint32;\n\n        assert(cref != UNDEF, \"cref != UNDEF\");\n        clause = clause_fetch(s, cref);\n        lits = \u0026(clause.data[0].lit);\n\n        if p != UNDEF \u0026\u0026 clause.size == 2 \u0026\u0026 lit_value(s, lits[0]) == SATOKO_LIT_FALSE {\n            assert(lit_value(s, lits[1]) == SATOKO_LIT_TRUE, \"lit_value(s, lits[1]) == SATOKO_LIT_TRUE\");\n            // inlining of macro stk_swap\n            { var t uint32  = lits[0]; lits[0] = lits[1]; lits[1] = t; };\n        }\n\n        if clause.f_learnt {\n            clause_act_bump(s, clause); }\n\n        if clause.f_learnt \u0026\u0026 clause.lbd \u003e 2 {\n            var n_levels uint32  = clause_clac_lbd(s, lits, clause.size);\n            if n_levels + 1 \u003c clause.lbd {\n                if clause.lbd \u003c= s.opts.lbd_freeze_clause {\n                    clause.f_deletable = 0; }\n                clause.lbd = n_levels;\n            }\n        }\n\n        for j = (p == UNDEF ? 0 : 1); j \u003c clause.size; j++ {\n            var = lit2var(lits[j]);\n            if vec_char_at(s.seen, var) || var_dlevel(s, var) == 0 {\n                continue; }\n            vec_char_assign(s.seen, var, 1);\n            var_act_bump(s, var);\n            if var_dlevel(s, var) == solver_dlevel(s) {\n                n_paths++;\n                if var_reason(s, var) != UNDEF \u0026\u0026 clause_fetch(s, var_reason(s, var)).f_learnt {\n                    vec_uint_push_back(s.last_dlevel, var); }\n            } else {\n                vec_uint_push_back(learnt, lits[j]); }\n        }\n\n        for !vec_char_at(s.seen, lit2var(trail[idx--])) {; }\n\n        p = trail[idx + 1];\n        cref = lit_reason(s, p);\n        vec_char_assign(s.seen, lit2var(p), 0);\n        n_paths--;\n    } while (n_paths \u003e 0);\n\n    vec_uint_data(learnt)[0] = lit_compl(p);\n    clause_minimize(s, learnt);\n    *bt_level = solver_calc_bt_level(s, learnt);\n    *lbd = clause_clac_lbd(s, vec_uint_data(learnt), vec_uint_size(learnt));\n\n    if vec_uint_size(s.last_dlevel) \u003e 0 {\n        // inlining of macro vec_uint_foreach\n        for i = 0; (i \u003c vec_uint_size(s.last_dlevel)) \u0026\u0026 (((var) = vec_uint_at(s.last_dlevel, i)), 1); i++ {\n            if clause_fetch(s, var_reason(s, var)).lbd \u003c *lbd {\n                var_act_bump(s, var); }\n        }\n        vec_uint_clear(s.last_dlevel);\n    }\n    // inlining of macro vec_uint_foreach\n    for i = 0; (i \u003c vec_uint_size(s.tagged)) \u0026\u0026 (((var) = vec_uint_at(s.tagged, i)), 1); i++ {\n        vec_char_assign(s.seen, var, 0);\n    }\n    vec_uint_clear(s.tagged);\n}\n\nfunc solver_rst(s *solver_t) int32 {\n    return b_queue_is_valid(s.bq_lbd) \u0026\u0026\n           ((int64(b_queue_avg(s.bq_lbd)) * s.opts.f_rst) \u003e (s.sum_lbd / s.stats.n_conflicts));\n}\n\nfunc solver_block_rst(s *solver_t) int32 {\n    return s.stats.n_conflicts \u003e int32(s.opts.fst_block_rst) \u0026\u0026\n           b_queue_is_valid(s.bq_lbd) \u0026\u0026\n           (int64(vec_uint_size(s.trail)) \u003e (s.opts.b_rst * int64(b_queue_avg(s.bq_trail))));\n}\n\nfunc solver_handle_conflict(s *solver_t, confl_cref uint32) {\n    var bt_level uint32;\n    var lbd uint32;\n    var cref uint32;\n\n    vec_uint_clear(s.temp_lits);\n    solver_analyze(s, confl_cref, s.temp_lits, \u0026bt_level, \u0026lbd);\n    s.sum_lbd += lbd;\n    b_queue_push(s.bq_lbd, lbd);\n    solver_cancel_until(s, bt_level);\n    cref = UNDEF;\n    if vec_uint_size(s.temp_lits) \u003e 1 {\n        cref = solver_clause_create(s, s.temp_lits, 1);\n        clause_watch(s, cref);\n    }\n    solver_enqueue(s, vec_uint_at(s.temp_lits, 0), cref);\n    var_act_decay(s);\n    clause_act_decay(s);\n}\n\nfunc solver_analyze_final(s *solver_t, lit uint32) {\n    var i uint32;\n\n    // printf(\"[Satoko] Analize final..\\n\");\n    // printf(\"[Satoko] Conflicting lit: %d\\n\", lit);\n    vec_uint_clear(s.final_conflict);\n    vec_uint_push_back(s.final_conflict, lit);\n    if solver_dlevel(s) == 0 {\n        return; }\n    vec_char_assign(s.seen, lit2var(lit), 1);\n    for i = vec_uint_size(s.trail); i -. vec_uint_at(s.trail_lim, 0); {\n        var var uint32  = lit2var(vec_uint_at(s.trail, i));\n\n        if vec_char_at(s.seen, var) {\n            var reason uint32  = var_reason(s, var);\n            if reason == UNDEF {\n                assert(var_dlevel(s, var) \u003e 0, \"var_dlevel(s, var) \u003e 0\");\n                vec_uint_push_back(s.final_conflict, lit_compl(vec_uint_at(s.trail, i)));\n            } else {\n                var j uint32;\n                struct clause *clause = clause_fetch(s, reason);\n                for j = (clause.size == 2 ? 0 : 1); j \u003c clause.size; j++ {\n                    if lit_dlevel(s, clause.data[j].lit) \u003e 0 {\n                        vec_char_assign(s.seen, lit2var(clause.data[j].lit), 1); }\n                }\n            }\n            vec_char_assign(s.seen, var, 0);\n        }\n    }\n    vec_char_assign(s.seen, lit2var(lit), 0);\n    // solver_debug_check_unsat(s);\n}\n\nfunc solver_garbage_collect(s *solver_t) {\n    var i uint32;\n    var array *uint32;\n    struct cdb *new_cdb = cdb_alloc(cdb_capacity(s.all_clauses) - cdb_wasted(s.all_clauses));\n\n    if s.book_cdb {\n        s.book_cdb = 0; }\n\n    for i = 0; i \u003c 2 * vec_char_size(s.assigns); i++ {\n        struct watcher *w;\n        // inlining of macro watch_list_foreach\n        for w = watch_list_array(vec_wl_at(s.watches, i));          w \u003c watch_list_array(vec_wl_at(s.watches, i)) + watch_list_size(vec_wl_at(s.watches, i));      w++ {\n            clause_realloc(new_cdb, s.all_clauses, \u0026(w.cref));\n        }\n    }\n\n    /* Update CREFS */\n    for i = 0; i \u003c vec_uint_size(s.trail); i++ {\n        if lit_reason(s, vec_uint_at(s.trail, i)) != UNDEF {\n            clause_realloc(new_cdb, s.all_clauses, \u0026(vec_uint_data(s.reasons)[lit2var(vec_uint_at(s.trail, i))])); }\n    }\n\n    array = vec_uint_data(s.learnts);\n    for i = 0; i \u003c vec_uint_size(s.learnts); i++ {\n        clause_realloc(new_cdb, s.all_clauses, \u0026(array[i]));\n    }\n\n    array = vec_uint_data(s.originals);\n    for i = 0; i \u003c vec_uint_size(s.originals); i++ {\n        clause_realloc(new_cdb, s.all_clauses, \u0026(array[i]));\n    }\n\n    cdb_free(s.all_clauses);\n    s.all_clauses = new_cdb;\n}\n\nfunc solver_reduce_cdb(s *solver_t) {\n    var i, limit uint32;\n    var n_learnts uint32  = vec_uint_size(s.learnts);\n    var cref uint32;\n    struct clause *clause;\n    struct clause **learnts_cls;\n\n    // inlining of macro satoko_alloc\n    learnts_cls = ((struct clause * *) malloc((n_learnts) * sizeof(struct clause *)));\n    // inlining of macro vec_uint_foreach_start\n    for i = s.book_cl_lrnt; (i \u003c vec_uint_size(s.learnts)) \u0026\u0026 (((cref) = vec_uint_at(s.learnts, i)), 1); i++ {\n        learnts_cls[i] = clause_fetch(s, cref);\n    }\n\n    limit = uint32((n_learnts * s.opts.learnt_ratio));\n\n    satoko_sort((void **)learnts_cls, n_learnts,\n            (int (*)(void *, void *)) clause_compare);\n\n    if learnts_cls[n_learnts / 2].lbd \u003c= 3 {\n        s.RC2 += s.opts.inc_special_reduce; }\n    if learnts_cls[n_learnts - 1].lbd \u003c= 6 {\n        s.RC2 += s.opts.inc_special_reduce; }\n\n    vec_uint_clear(s.learnts);\n    for i = 0; i \u003c n_learnts; i++ {\n        clause = learnts_cls[i];\n        cref = cdb_cref(s.all_clauses, (unsigned *)clause);\n        assert(clause.f_mark == 0, \"clause.f_mark == 0\");\n        if clause.f_deletable \u0026\u0026 clause.lbd \u003e 2 \u0026\u0026 clause.size \u003e 2 \u0026\u0026 lit_reason(s, clause.data[0].lit) != cref \u0026\u0026 (i \u003c limit) {\n            clause.f_mark = 1;\n            s.stats.n_learnt_lits -= clause.size;\n            clause_unwatch(s, cref);\n            cdb_remove(s.all_clauses, clause);\n        } else {\n            if !clause.f_deletable {\n                limit++; }\n            clause.f_deletable = 1;\n            vec_uint_push_back(s.learnts, cref);\n        }\n    }\n    // inlining of macro satoko_free\n    for { free(learnts_cls); learnts_cls = nil; \nif !(false) { break }\n} \n\n    if s.opts.verbose {\n        fmt.Printf(\"reduceDB: Keeping %7d out of %7d clauses (%5.2f %%) \\n\", vec_uint_size(s.learnts), n_learnts, 100.0 * vec_uint_size(s.learnts) / n_learnts);\n        fflush(os.Stdout);\n    }\n    if cdb_wasted(s.all_clauses) \u003e cdb_size(s.all_clauses) * s.opts.garbage_max_ratio {\n        solver_garbage_collect(s); }\n}\n\n//===------------------------------------------------------------------------===\n// Solver external functions\n//===------------------------------------------------------------------------===\nfunc solver_clause_create(s *solver_t, lits *vec_uint_t, f_learnt uint32) uint32 {\n    struct clause *clause;\n    var cref uint32;\n    var n_words uint32;\n\n    assert(vec_uint_size(lits) \u003e 1, \"vec_uint_size(lits) \u003e 1\");\n    assert(f_learnt == 0 || f_learnt == 1, \"f_learnt == 0 || f_learnt == 1\");\n\n    n_words = 3 + f_learnt + vec_uint_size(lits);\n    cref = cdb_append(s.all_clauses, n_words);\n    clause = clause_fetch(s, cref);\n    clause.f_learnt = f_learnt;\n    clause.f_mark = 0;\n    clause.f_reallocd = 0;\n    clause.f_deletable = f_learnt;\n    clause.size = vec_uint_size(lits);\n    memcpy(\u0026(clause.data[0].lit), vec_uint_data(lits), sizeof(unsigned) * vec_uint_size(lits));\n\n    if f_learnt != 0 {\n        vec_uint_push_back(s.learnts, cref);\n        clause.lbd = clause_clac_lbd(s, vec_uint_data(lits), vec_uint_size(lits));\n        clause.data[clause.size].act = 0;\n        s.stats.n_learnt_lits += vec_uint_size(lits);\n        clause_act_bump(s, clause);\n    } else {\n        vec_uint_push_back(s.originals, cref);\n        s.stats.n_original_lits += vec_uint_size(lits);\n    }\n    return cref;\n}\n\nfunc solver_cancel_until(s *solver_t, level uint32) {\n    var i uint32;\n\n    if solver_dlevel(s) \u003c= level {\n        return; }\n    for i = vec_uint_size(s.trail); i -. vec_uint_at(s.trail_lim, level); {\n        var var uint32  = lit2var(vec_uint_at(s.trail, i));\n\n        vec_char_assign(s.assigns, var, SATOKO_VAR_UNASSING);\n        vec_uint_assign(s.reasons, var, UNDEF);\n        if !heap_in_heap(s.var_order, var) {\n            heap_insert(s.var_order, var); }\n    }\n    s.i_qhead = vec_uint_at(s.trail_lim, level);\n    vec_uint_shrink(s.trail, vec_uint_at(s.trail_lim, level));\n    vec_uint_shrink(s.trail_lim, level);\n}\n\nfunc solver_propagate(s *solver_t) uint32 {\n    var conf_cref uint32  = UNDEF;\n    var lits *uint32;\n    var neg_lit uint32;\n    var n_propagations uint32;\n\n    for s.i_qhead \u003c vec_uint_size(s.trail) {\n        var p uint32  = vec_uint_at(s.trail, s.i_qhead++);\n        struct watch_list *ws;\n        struct watcher *begin;\n        struct watcher *end;\n        struct watcher *i, *j;\n\n        n_propagations++;\n        // inlining of macro watch_list_foreach_bin\n        for i = watch_list_array(vec_wl_at(s.watches, p));          i \u003c watch_list_array(vec_wl_at(s.watches, p)) + vec_wl_at(s.watches, p).n_bin;      i++ {\n            if solver_has_marks(s) \u0026\u0026 !var_mark(s, lit2var(i.blocker)) {\n                continue; }\n            if var_value(s, lit2var(i.blocker)) == SATOKO_VAR_UNASSING {\n                solver_enqueue(s, i.blocker, i.cref);\n            } else if lit_value(s, i.blocker) == SATOKO_LIT_FALSE {\n                return i.cref; }\n        }\n\n        ws = vec_wl_at(s.watches, p);\n        begin = watch_list_array(ws);\n        end = begin + watch_list_size(ws);\n        for i = j = begin + ws.n_bin; i \u003c end; {\n            struct clause *clause;\n            struct watcher w;\n\n            if solver_has_marks(s) \u0026\u0026 !var_mark(s, lit2var(i.blocker)) {\n                *j++ = *i++;\n                continue;\n            }\n            if lit_value(s, i.blocker) == SATOKO_LIT_TRUE {\n                *j++ = *i++;\n                continue;\n            }\n\n            clause = clause_fetch(s, i.cref);\n            lits = \u0026(clause.data[0].lit);\n\n            // Make sure the false literal is data[1]:\n            neg_lit = lit_compl(p);\n            if lits[0] == neg_lit {\n                // inlining of macro stk_swap\n                 var t uint32  = lits[0]; lits[0] = lits[1]; lits[1] = t; };\n            assert(lits[1] == neg_lit, \"lits[1] == neg_lit\");\n\n            w.cref = i.cref;\n            w.blocker = lits[0];\n\n            /* If 0th watch is true, then clause is already satisfied. */\n            if lits[0] != i.blocker \u0026\u0026 lit_value(s, lits[0]) == SATOKO_LIT_TRUE {\n                *j++ = w;\n            } else {\n                /* Look for new watch */\n                var k uint32;\n                for k = 2; k \u003c clause.size; k++ {\n                    if lit_value(s, lits[k]) != SATOKO_LIT_FALSE {\n                        lits[1] = lits[k];\n                        lits[k] = neg_lit;\n                        watch_list_push(vec_wl_at(s.watches, lit_compl(lits[1])), w, 0);\n                        goto next;\n                    }\n                }\n\n                *j++ = w;\n\n                /* Clause becomes unit under this assignment */\n                if lit_value(s, lits[0]) == SATOKO_LIT_FALSE {\n                    conf_cref = i.cref;\n                    s.i_qhead = vec_uint_size(s.trail);\n                    i++;\n                    // Copy the remaining watches:\n                    for i \u003c end {\n                        *j++ = *i++;\n                    }\n                } else {\n                    solver_enqueue(s, lits[0], i.cref); }\n            }\n        next:\n            i++;\n        }\n\n        s.stats.n_inspects += j - watch_list_array(ws);\n        watch_list_shrink(ws, j - watch_list_array(ws));\n    }\n    s.stats.n_propagations += n_propagations;\n    s.stats.n_propagations_all += n_propagations;\n    s.n_props_simplify -= n_propagations;\n    return conf_cref;\n}\n\nfunc solver_search(s *solver_t) byte {\n    s.stats.n_starts++;\n    for {\n        var confl_cref uint32  = solver_propagate(s);\n        if confl_cref != UNDEF {\n            s.stats.n_conflicts++;\n            s.stats.n_conflicts_all++;\n            if solver_dlevel(s) == 0 {\n                return SATOKO_UNSAT; }\n            /* Restart heuristic */\n            b_queue_push(s.bq_trail, vec_uint_size(s.trail));\n            if solver_block_rst(s) != 0 {\n                b_queue_clean(s.bq_lbd); }\n            solver_handle_conflict(s, confl_cref);\n        } else {\n            // solver_debug_check_clauses(s);\n            /* No conflict */\n            var next_lit uint32;\n\n            if (solver_rst(s) != 0) || solver_check_limits(s) == 0 || solver_stop(s) || \n                (s.nRuntimeLimit \u0026\u0026 (s.stats.n_conflicts \u0026 63) == 0 \u0026\u0026 Abc_Clock() \u003e s.nRuntimeLimit) {\n                b_queue_clean(s.bq_lbd);\n                solver_cancel_until(s, 0);\n                return SATOKO_UNDEC;\n            }\n            if !s.opts.no_simplify \u0026\u0026 solver_dlevel(s) == 0 {\n                satoko_simplify(s); }\n\n            /* Reduce the set of learnt clauses */\n            if s.opts.learnt_ratio \u0026\u0026 vec_uint_size(s.learnts) \u003e 100 \u0026\u0026\n                s.stats.n_conflicts \u003e= s.n_confl_bfr_reduce {\n                s.RC1 = (s.stats.n_conflicts / s.RC2) + 1;\n                solver_reduce_cdb(s);\n                s.RC2 += s.opts.inc_reduce;\n                s.n_confl_bfr_reduce = s.RC1 * s.RC2;\n            }\n\n            /* Make decisions based on user assumptions */\n            next_lit = UNDEF;\n            for solver_dlevel(s) \u003c vec_uint_size(s.assumptions) {\n                var lit uint32  = vec_uint_at(s.assumptions, solver_dlevel(s));\n                if lit_value(s, lit) == SATOKO_LIT_TRUE {\n                    vec_uint_push_back(s.trail_lim, vec_uint_size(s.trail));\n                } else if lit_value(s, lit) == SATOKO_LIT_FALSE {\n                    solver_analyze_final(s, lit_compl(lit));\n                    return SATOKO_UNSAT;\n                } else {\n                    next_lit = lit;\n                    break;\n                }\n\n            }\n            if next_lit == UNDEF {\n                s.stats.n_decisions++;\n                next_lit = solver_decide(s);\n                if next_lit == UNDEF {\n                    // solver_debug_check(s, SATOKO_SAT);\n                    return SATOKO_SAT;\n                }\n            }\n            solver_new_decision(s, next_lit);\n        }\n    }\n}\n\n//===------------------------------------------------------------------------===\n// Debug procedures\n//===------------------------------------------------------------------------===\nfunc solver_debug_check_trail(s *solver_t) {\n    var i uint32;\n    var array *uint32;\n    var trail_dup *vec_uint_t  = vec_uint_alloc(0);\n    fmt.Fprintf(os.Stdout, \"[Satoko] Checking for trail(%d) inconsistencies...\\n\", vec_uint_size(s.trail));\n    vec_uint_duplicate(trail_dup, s.trail);\n    vec_uint_sort(trail_dup, 1);\n    array = vec_uint_data(trail_dup);\n    for i = 1; i \u003c vec_uint_size(trail_dup); i++ {\n        if array[i - 1] == lit_compl(array[i]) {\n            fmt.Fprintf(os.Stdout, \"[Satoko] Inconsistent trail: %d %d\\n\", array[i - 1], array[i]);\n            assert(false, \"0\");\n            return;\n        }\n    }\n    for i = 0; i \u003c vec_uint_size(trail_dup); i++ {\n        if var_value(s, lit2var(array[i])) != lit_polarity(array[i]) {\n            fmt.Fprintf(os.Stdout, \"[Satoko] Inconsistent trail assignment: %d, %d\\n\", vec_char_at(s.assigns, lit2var(array[i])), array[i]);\n            assert(false, \"0\");\n            return;\n        }\n    }\n    fmt.Fprintf(os.Stdout, \"[Satoko] Trail OK.\\n\");\n    vec_uint_print(trail_dup);\n    vec_uint_free(trail_dup);\n\n}\n\nfunc solver_debug_check_clauses(s *solver_t) {\n    var cref, i uint32;\n\n    fmt.Fprintf(os.Stdout, \"[Satoko] Checking clauses (%d)...\\n\", vec_uint_size(s.originals));\n    // inlining of macro vec_uint_foreach\n    for i = 0; (i \u003c vec_uint_size(s.originals)) \u0026\u0026 (((cref) = vec_uint_at(s.originals, i)), 1); i++ {\n        var j uint32;\n        struct clause *clause = clause_fetch(s, cref);\n        for j = 0; j \u003c clause.size; j++ {\n            if vec_uint_find(s.trail, lit_compl(clause.data[j].lit)) {\n                continue;\n            }\n            break;\n        }\n        if j == clause.size {\n            vec_uint_print(s.trail);\n            fmt.Fprintf(os.Stdout, \"[Satoko] FOUND UNSAT CLAUSE]: (%d) \", i);\n            clause_print(clause);\n            assert(false, \"0\");\n        }\n    }\n    fmt.Fprintf(os.Stdout, \"[Satoko] All SAT - OK\\n\");\n}\n\nfunc solver_debug_check(s *solver_t, result int32) {\n    var cref, i uint32;\n    solver_debug_check_trail(s);\n    fmt.Fprintf(os.Stdout, \"[Satoko] Checking clauses (%d)... \\n\", vec_uint_size(s.originals));\n    // inlining of macro vec_uint_foreach\n    for i = 0; (i \u003c vec_uint_size(s.originals)) \u0026\u0026 (((cref) = vec_uint_at(s.originals, i)), 1); i++ {\n        var j uint32;\n        struct clause *clause = clause_fetch(s, cref);\n        for j = 0; j \u003c clause.size; j++ {\n            if vec_uint_find(s.trail, clause.data[j].lit) {\n                break;\n            }\n        }\n        if result == SATOKO_SAT \u0026\u0026 j == clause.size {\n            fmt.Fprintf(os.Stdout, \"[Satoko] FOUND UNSAT CLAUSE: (%d) \", i);\n            clause_print(clause);\n            assert(false, \"0\");\n        }\n    }\n    fmt.Fprintf(os.Stdout, \"[Satoko] All SAT - OK\\n\");\n}\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

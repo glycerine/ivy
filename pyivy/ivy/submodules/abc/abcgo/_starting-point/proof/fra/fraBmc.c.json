@@ -1,0 +1,1034 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c",
+  "SHA256": "26e1c13bfff91444b49cd2b899cda1bdb9fd6a128605d451e82102aceb5b8009",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 65,
+        "ByteOffset": 2192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Bmc_ObjChild0Frames(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin0(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 65,
+        "ByteOffset": 2430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Bmc_ObjChild1Frames(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert( !Aig_IsComplement(pObj) ); if Aig_ObjFanin1(pObj) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 133,
+        "Column": 5,
+        "ByteOffset": 4809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nFramesAll == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 4842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pManAig == pBmc.pAigFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 158,
+        "Column": 17,
+        "ByteOffset": 6129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( fComplL != fComplR );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 194,
+        "Column": 69,
+        "ByteOffset": 7427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fra_Bmc_t *) malloc(sizeof(Fra_Bmc_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 195,
+        "Column": 5,
+        "ByteOffset": 7473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Fra_Bmc_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 200,
+        "Column": 85,
+        "ByteOffset": 7690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pObjToFrames  = /*__starting_point_inline_macro:ABC_ALLOC__*/((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(p.nFramesAll * Aig_ManObjNumMax(pAig))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 7774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pObjToFrames, 0, sizeof(Aig_Obj_t *) * p.nFramesAll * Aig_ManObjNumMax(pAig) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 220,
+        "Column": 70,
+        "ByteOffset": 8331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pObjToFrames) ? (free((char *) (p.pObjToFrames)), (p.pObjToFrames) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 221,
+        "Column": 69,
+        "ByteOffset": 8460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pObjToFraig) ? (free((char *) (p.pObjToFraig)), (p.pObjToFraig) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 222,
+        "Column": 57,
+        "ByteOffset": 8575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 261,
+        "Column": 78,
+        "ByteOffset": 10316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pLatches = /*__starting_point_inline_macro:ABC_ALLOC__*/((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManRegNum(p.pAig))));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 9,
+        "ByteOffset": 11381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( k == Aig_ManRegNum(p.pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 282,
+        "Column": 9,
+        "ByteOffset": 11836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( k == Aig_ManRegNum(p.pAig) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 284,
+        "Column": 64,
+        "ByteOffset": 11943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pLatches) ? (free((char *) (pLatches)), (pLatches) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 319,
+        "Column": 5,
+        "ByteOffset": 13393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pBmc == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 339,
+        "Column": 9,
+        "ByteOffset": 14478
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Original AIG = %d. Init %d frames = %d. Fraig = %d.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 343,
+        "Column": 73,
+        "ByteOffset": 14843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 344,
+        "Column": 9,
+        "ByteOffset": 14871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Before BMC: \" );  "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 346,
+        "Column": 9,
+        "ByteOffset": 14949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Const = %5d. Class = %5d. Lit = %5d. \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 349,
+        "Column": 13,
+        "ByteOffset": 15142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Imp = %5d. \", nImpsOld ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 350,
+        "Column": 9,
+        "ByteOffset": 15187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 361,
+        "Column": 9,
+        "ByteOffset": 15582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"After  BMC: \" );  "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 363,
+        "Column": 9,
+        "ByteOffset": 15660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Const = %5d. Class = %5d. Lit = %5d. \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 366,
+        "Column": 13,
+        "ByteOffset": 15853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Imp = %5d. \", Vec_IntSize(p.pCla.vImps) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 367,
+        "Column": 9,
+        "ByteOffset": 15915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 399,
+        "Column": 9,
+        "ByteOffset": 16813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"AIG:  PI/PO/Reg = %d/%d/%d.  Node = %6d. Lev = %5d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 402,
+        "Column": 9,
+        "ByteOffset": 17059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Time-frames (%d):  PI/PO = %d/%d.  Node = %6d. Lev = %5d.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 406,
+        "Column": 73,
+        "ByteOffset": 17451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 413,
+        "Column": 13,
+        "ByteOffset": 17665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Time-frames after rewriting:  Node = %6d. Lev = %5d.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 416,
+        "Column": 73,
+        "ByteOffset": 17976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 428,
+        "Column": 84,
+        "ByteOffset": 18657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:ABC_FREE__*/((pBmc.pAigFraig.pData) ? (free((char *) (pBmc.pAigFraig.pData)), (pBmc.pAigFraig.pData) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 434,
+        "Column": 9,
+        "ByteOffset": 18964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fraiged init frames: Node = %6d. Lev = %5d.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 438,
+        "Column": 73,
+        "ByteOffset": 19310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 441,
+        "Column": 61,
+        "ByteOffset": 19423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bmc_ObjFrames",
+      "Start": 1521,
+      "End": 1729,
+      "BodyStart": 1611,
+      "Original": "static inline Aig_Obj_t *  Bmc_ObjFrames( Aig_Obj_t * pObj, int i )                       { return ((Fra_Man_t *)pObj-\u003epData)-\u003epBmc-\u003epObjToFrames[((Fra_Man_t *)pObj-\u003epData)-\u003epBmc-\u003enFramesAll*pObj-\u003eId + i];  }",
+      "Draft": "func Bmc_ObjFrames(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return ((Fra_Man_t *)pObj.pData).pBmc.pObjToFrames[((Fra_Man_t *)pObj.pData).pBmc.nFramesAll*pObj.Id + i];  }"
+    },
+    {
+      "Name": "Bmc_ObjSetFrames",
+      "Start": 1730,
+      "End": 1938,
+      "BodyStart": 1820,
+      "Original": "static inline void         Bmc_ObjSetFrames( Aig_Obj_t * pObj, int i, Aig_Obj_t * pNode ) { ((Fra_Man_t *)pObj-\u003epData)-\u003epBmc-\u003epObjToFrames[((Fra_Man_t *)pObj-\u003epData)-\u003epBmc-\u003enFramesAll*pObj-\u003eId + i] = pNode; }",
+      "Draft": "func Bmc_ObjSetFrames(pObj *Aig_Obj_t, i int32, pNode *Aig_Obj_t) { ((Fra_Man_t *)pObj.pData).pBmc.pObjToFrames[((Fra_Man_t *)pObj.pData).pBmc.nFramesAll*pObj.Id + i] = pNode; }"
+    },
+    {
+      "Name": "Bmc_ObjFraig",
+      "Start": 1940,
+      "End": 2098,
+      "BodyStart": 2030,
+      "Original": "static inline Aig_Obj_t *  Bmc_ObjFraig( Aig_Obj_t * pObj )                               { return ((Fra_Man_t *)pObj-\u003epData)-\u003epBmc-\u003epObjToFraig[pObj-\u003eId];  }",
+      "Draft": "func Bmc_ObjFraig(pObj *Aig_Obj_t) *Aig_Obj_t { return ((Fra_Man_t *)pObj.pData).pBmc.pObjToFraig[pObj.Id];  }"
+    },
+    {
+      "Name": "Bmc_ObjSetFraig",
+      "Start": 2099,
+      "End": 2257,
+      "BodyStart": 2189,
+      "Original": "static inline void         Bmc_ObjSetFraig( Aig_Obj_t * pObj, Aig_Obj_t * pNode )         { ((Fra_Man_t *)pObj-\u003epData)-\u003epBmc-\u003epObjToFraig[pObj-\u003eId] = pNode; }",
+      "Draft": "func Bmc_ObjSetFraig(pObj *Aig_Obj_t, pNode *Aig_Obj_t) { ((Fra_Man_t *)pObj.pData).pBmc.pObjToFraig[pObj.Id] = pNode; }"
+    },
+    {
+      "Name": "Bmc_ObjChild0Frames",
+      "Start": 2259,
+      "End": 2480,
+      "BodyStart": 2333,
+      "Original": "static inline Aig_Obj_t *  Bmc_ObjChild0Frames( Aig_Obj_t * pObj, int i ) { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin0(pObj)? Aig_NotCond(Bmc_ObjFrames(Aig_ObjFanin0(pObj),i), Aig_ObjFaninC0(pObj)) : NULL;  }",
+      "Draft": "func Bmc_ObjChild0Frames(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Bmc_ObjFrames(Aig_ObjFanin0(pObj),i), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Bmc_ObjChild1Frames",
+      "Start": 2481,
+      "End": 2702,
+      "BodyStart": 2555,
+      "Original": "static inline Aig_Obj_t *  Bmc_ObjChild1Frames( Aig_Obj_t * pObj, int i ) { assert( !Aig_IsComplement(pObj) ); return Aig_ObjFanin1(pObj)? Aig_NotCond(Bmc_ObjFrames(Aig_ObjFanin1(pObj),i), Aig_ObjFaninC1(pObj)) : NULL;  }",
+      "Draft": "func Bmc_ObjChild1Frames(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Bmc_ObjFrames(Aig_ObjFanin1(pObj),i), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }"
+    },
+    {
+      "Name": "Fra_BmcNodesAreEqual",
+      "Start": 3196,
+      "End": 3871,
+      "BodyStart": 3261,
+      "Original": "int Fra_BmcNodesAreEqual( Aig_Obj_t * pObj0, Aig_Obj_t * pObj1 )\n{\n    Fra_Man_t * p = (Fra_Man_t *)pObj0-\u003epData;\n    Aig_Obj_t * pObjFrames0, * pObjFrames1;\n    Aig_Obj_t * pObjFraig0, * pObjFraig1;\n    int i;\n    for ( i = p-\u003epBmc-\u003enPref; i \u003c p-\u003epBmc-\u003enFramesAll; i++ )\n    {\n        pObjFrames0 = Aig_Regular( Bmc_ObjFrames(pObj0, i) );\n        pObjFrames1 = Aig_Regular( Bmc_ObjFrames(pObj1, i) );\n        if ( pObjFrames0 == pObjFrames1 )\n            continue;\n        pObjFraig0 = Aig_Regular( Bmc_ObjFraig(pObjFrames0) );\n        pObjFraig1 = Aig_Regular( Bmc_ObjFraig(pObjFrames1) );\n        if ( pObjFraig0 != pObjFraig1 )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Fra_BmcNodesAreEqual(pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {\n    var p *Fra_Man_t  = (Fra_Man_t *)pObj0.pData;\n    var pObjFrames0, pObjFrames1 *Aig_Obj_t;\n    var pObjFraig0, pObjFraig1 *Aig_Obj_t;\n    var i int32;\n    for  i = p.pBmc.nPref; i \u003c p.pBmc.nFramesAll; i++  {\n        pObjFrames0 = Aig_Regular( Bmc_ObjFrames(pObj0, i) );\n        pObjFrames1 = Aig_Regular( Bmc_ObjFrames(pObj1, i) );\n        if pObjFrames0 == pObjFrames1 {\n            continue; }\n        pObjFraig0 = Aig_Regular( Bmc_ObjFraig(pObjFrames0) );\n        pObjFraig1 = Aig_Regular( Bmc_ObjFraig(pObjFrames1) );\n        if pObjFraig0 != pObjFraig1 {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Fra_BmcNodeIsConst",
+      "Start": 4140,
+      "End": 4300,
+      "BodyStart": 4183,
+      "Original": "int Fra_BmcNodeIsConst( Aig_Obj_t * pObj )\n{\n    Fra_Man_t * p = (Fra_Man_t *)pObj-\u003epData;\n    return Fra_BmcNodesAreEqual( pObj, Aig_ManConst1(p-\u003epManAig) );\n}",
+      "Draft": "func Fra_BmcNodeIsConst(pObj *Aig_Obj_t) int32 {\n    var p *Fra_Man_t  = (Fra_Man_t *)pObj.pData;\n    return Fra_BmcNodesAreEqual( pObj, Aig_ManConst1(p.pManAig) );\n}"
+    },
+    {
+      "Name": "Fra_BmcFilterImplications",
+      "Start": 4654,
+      "End": 7032,
+      "BodyStart": 4720,
+      "Original": "void Fra_BmcFilterImplications( Fra_Man_t * p, Fra_Bmc_t * pBmc )\n{\n    Aig_Obj_t * pLeft, * pRight;\n    Aig_Obj_t * pLeftT, * pRightT;\n    Aig_Obj_t * pLeftF, * pRightF;\n    int i, f, Imp, Left, Right;\n    int fComplL, fComplR;\n    assert( p-\u003enFramesAll == 1 );\n    assert( p-\u003epManAig == pBmc-\u003epAigFrames );\n    Vec_IntForEachEntry( pBmc-\u003evImps, Imp, i )\n    {\n        if ( Imp == 0 )\n            continue;\n        Left  = Fra_ImpLeft(Imp);\n        Right = Fra_ImpRight(Imp);\n        // get the corresponding nodes\n        pLeft  = Aig_ManObj( pBmc-\u003epAig, Left );\n        pRight = Aig_ManObj( pBmc-\u003epAig, Right );\n        // iterate through the timeframes\n        for ( f = pBmc-\u003enPref; f \u003c pBmc-\u003enFramesAll; f++ )\n        {\n            // get timeframe nodes\n            pLeftT  = Bmc_ObjFrames( pLeft, f );\n            pRightT = Bmc_ObjFrames( pRight, f );\n            // get the corresponding FRAIG nodes\n            pLeftF  = Fra_ObjFraig( Aig_Regular(pLeftT), 0 );\n            pRightF = Fra_ObjFraig( Aig_Regular(pRightT), 0 );\n            // get the complemented attributes\n            fComplL = pLeft-\u003efPhase ^ Aig_IsComplement(pLeftF) ^ Aig_IsComplement(pLeftT);\n            fComplR = pRight-\u003efPhase ^ Aig_IsComplement(pRightF) ^ Aig_IsComplement(pRightT);\n            // check equality\n            if ( Aig_Regular(pLeftF) == Aig_Regular(pRightF) )\n            {\n                if ( fComplL == fComplR ) // x =\u003e x  - always true\n                    continue;\n                assert( fComplL != fComplR );\n                // consider 4 possibilities:\n                // NOT(1) =\u003e 1    or   0 =\u003e 1  - always true\n                // 1 =\u003e NOT(1)    or   1 =\u003e 0  - never true\n                // NOT(x) =\u003e x    or   x       - not always true\n                // x =\u003e NOT(x)    or   NOT(x)  - not always true\n                if ( Aig_ObjIsConst1(Aig_Regular(pLeftF)) \u0026\u0026 fComplL ) // proved implication\n                    continue;\n                // disproved implication\n                Vec_IntWriteEntry( pBmc-\u003evImps, i, 0 ); \n                break;\n            }\n            // check the implication \n            if ( Fra_NodesAreImp( p, Aig_Regular(pLeftF), Aig_Regular(pRightF), fComplL, fComplR ) != 1 )\n            {\n                Vec_IntWriteEntry( pBmc-\u003evImps, i, 0 );\n                break;\n            }\n        }\n    }\n    Fra_ImpCompactArray( pBmc-\u003evImps );\n}",
+      "Draft": "func Fra_BmcFilterImplications(p *Fra_Man_t, pBmc *Fra_Bmc_t) {\n    var pLeft, pRight *Aig_Obj_t;\n    var pLeftT, pRightT *Aig_Obj_t;\n    var pLeftF, pRightF *Aig_Obj_t;\n    var i, f, Imp, Left, Right int32;\n    var fComplL, fComplR int32;\n    assert(p.nFramesAll == 1, \"p.nFramesAll == 1\");\n    assert(p.pManAig == pBmc.pAigFrames, \"p.pManAig == pBmc.pAigFrames\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(pBmc.vImps)) \u0026\u0026 (((Imp) = Vec_IntEntry(pBmc.vImps, i)), 1); i++  {\n        if Imp == 0 {\n            continue; }\n        Left  = Fra_ImpLeft(Imp);\n        Right = Fra_ImpRight(Imp);\n        // get the corresponding nodes\n        pLeft  = Aig_ManObj( pBmc.pAig, Left );\n        pRight = Aig_ManObj( pBmc.pAig, Right );\n        // iterate through the timeframes\n        for  f = pBmc.nPref; f \u003c pBmc.nFramesAll; f++  {\n            // get timeframe nodes\n            pLeftT  = Bmc_ObjFrames( pLeft, f );\n            pRightT = Bmc_ObjFrames( pRight, f );\n            // get the corresponding FRAIG nodes\n            pLeftF  = Fra_ObjFraig( Aig_Regular(pLeftT), 0 );\n            pRightF = Fra_ObjFraig( Aig_Regular(pRightT), 0 );\n            // get the complemented attributes\n            fComplL = pLeft.fPhase ^ Aig_IsComplement(pLeftF) ^ Aig_IsComplement(pLeftT);\n            fComplR = pRight.fPhase ^ Aig_IsComplement(pRightF) ^ Aig_IsComplement(pRightT);\n            // check equality\n            if Aig_Regular(pLeftF) == Aig_Regular(pRightF) {\n                if fComplL == fComplR { // x =\u003e x  - always true\n                    continue; }\n                assert(fComplL != fComplR, \"fComplL != fComplR\");\n                // consider 4 possibilities:\n                // NOT(1) =\u003e 1    or   0 =\u003e 1  - always true\n                // 1 =\u003e NOT(1)    or   1 =\u003e 0  - never true\n                // NOT(x) =\u003e x    or   x       - not always true\n                // x =\u003e NOT(x)    or   NOT(x)  - not always true\n                if Aig_ObjIsConst1(Aig_Regular(pLeftF)) \u0026\u0026 fComplL { // proved implication\n                    continue; }\n                // disproved implication\n                Vec_IntWriteEntry( pBmc.vImps, i, 0 ); \n                break;\n            }\n            // check the implication \n            if Fra_NodesAreImp( p, Aig_Regular(pLeftF), Aig_Regular(pRightF), fComplL, fComplR ) != 1 {\n                Vec_IntWriteEntry( pBmc.vImps, i, 0 );\n                break;\n            }\n        }\n    }\n    Fra_ImpCompactArray( pBmc.vImps );\n}"
+    },
+    {
+      "Name": "Fra_BmcStart",
+      "Start": 7292,
+      "End": 7757,
+      "BodyStart": 7360,
+      "Original": "Fra_Bmc_t * Fra_BmcStart( Aig_Man_t * pAig, int nPref, int nDepth )\n{\n    Fra_Bmc_t * p;\n    p = ABC_ALLOC( Fra_Bmc_t, 1 );\n    memset( p, 0, sizeof(Fra_Bmc_t) );\n    p-\u003epAig = pAig;\n    p-\u003enPref = nPref;\n    p-\u003enDepth = nDepth;\n    p-\u003enFramesAll = nPref + nDepth;\n    p-\u003epObjToFrames  = ABC_ALLOC( Aig_Obj_t *, p-\u003enFramesAll * Aig_ManObjNumMax(pAig) );\n    memset( p-\u003epObjToFrames, 0, sizeof(Aig_Obj_t *) * p-\u003enFramesAll * Aig_ManObjNumMax(pAig) );\n    return p;\n}",
+      "Draft": "func Fra_BmcStart(pAig *Aig_Man_t, nPref int32, nDepth int32) *Fra_Bmc_t {\n    var p *Fra_Bmc_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Fra_Bmc_t *) malloc(sizeof(Fra_Bmc_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fra_Bmc_t) );\n    p.pAig = pAig;\n    p.nPref = nPref;\n    p.nDepth = nDepth;\n    p.nFramesAll = nPref + nDepth;\n    // inlining of macro ABC_ALLOC\n    p.pObjToFrames  = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(p.nFramesAll * Aig_ManObjNumMax(pAig))));\n    memset( p.pObjToFrames, 0, sizeof(Aig_Obj_t *) * p.nFramesAll * Aig_ManObjNumMax(pAig) );\n    return p;\n}"
+    },
+    {
+      "Name": "Fra_BmcStop",
+      "Start": 8015,
+      "End": 8231,
+      "BodyStart": 8049,
+      "Original": "void Fra_BmcStop( Fra_Bmc_t * p )\n{\n    Aig_ManStop( p-\u003epAigFrames );\n    if ( p-\u003epAigFraig )\n        Aig_ManStop( p-\u003epAigFraig );\n    ABC_FREE( p-\u003epObjToFrames );\n    ABC_FREE( p-\u003epObjToFraig );\n    ABC_FREE( p );\n}",
+      "Draft": "func Fra_BmcStop(p *Fra_Bmc_t) {\n    Aig_ManStop( p.pAigFrames );\n    if p.pAigFraig {\n        Aig_ManStop( p.pAigFraig ); }\n    // inlining of macro ABC_FREE\n    ((p.pObjToFrames) ? (free((char *) (p.pObjToFrames)), (p.pObjToFrames) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pObjToFraig) ? (free((char *) (p.pObjToFraig)), (p.pObjToFraig) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Fra_BmcFrames",
+      "Start": 8512,
+      "End": 10821,
+      "BodyStart": 8569,
+      "Original": "Aig_Man_t * Fra_BmcFrames( Fra_Bmc_t * p, int fKeepPos )\n{\n    Aig_Man_t * pAigFrames;\n    Aig_Obj_t * pObj, * pObjNew;\n    Aig_Obj_t ** pLatches;\n    int i, k, f;\n\n    // start the fraig package\n    pAigFrames = Aig_ManStart( Aig_ManObjNumMax(p-\u003epAig) * p-\u003enFramesAll );\n    pAigFrames-\u003epName = Abc_UtilStrsav( p-\u003epAig-\u003epName );\n    pAigFrames-\u003epSpec = Abc_UtilStrsav( p-\u003epAig-\u003epSpec );\n    // create PI nodes for the frames\n    for ( f = 0; f \u003c p-\u003enFramesAll; f++ )\n        Bmc_ObjSetFrames( Aig_ManConst1(p-\u003epAig), f, Aig_ManConst1(pAigFrames) );\n    for ( f = 0; f \u003c p-\u003enFramesAll; f++ )\n        Aig_ManForEachPiSeq( p-\u003epAig, pObj, i )\n            Bmc_ObjSetFrames( pObj, f, Aig_ObjCreateCi(pAigFrames) );\n    // set initial state for the latches\n    Aig_ManForEachLoSeq( p-\u003epAig, pObj, i )\n        Bmc_ObjSetFrames( pObj, 0, Aig_ManConst0(pAigFrames) );\n\n    // add timeframes\n    pLatches = ABC_ALLOC( Aig_Obj_t *, Aig_ManRegNum(p-\u003epAig) );\n    for ( f = 0; f \u003c p-\u003enFramesAll; f++ )\n    {\n        // add internal nodes of this frame\n        Aig_ManForEachNode( p-\u003epAig, pObj, i )\n        {\n            pObjNew = Aig_And( pAigFrames, Bmc_ObjChild0Frames(pObj,f), Bmc_ObjChild1Frames(pObj,f) );\n            Bmc_ObjSetFrames( pObj, f, pObjNew );\n        }\n        if ( f == p-\u003enFramesAll - 1 )\n            break;\n        // save the latch input values\n        k = 0;\n        Aig_ManForEachLiSeq( p-\u003epAig, pObj, i )\n            pLatches[k++] = Bmc_ObjChild0Frames(pObj,f);\n        assert( k == Aig_ManRegNum(p-\u003epAig) );\n        // insert them to the latch output values\n        k = 0;\n        Aig_ManForEachLoSeq( p-\u003epAig, pObj, i )\n            Bmc_ObjSetFrames( pObj, f+1, pLatches[k++] );\n        assert( k == Aig_ManRegNum(p-\u003epAig) );\n    }\n    ABC_FREE( pLatches );\n    if ( fKeepPos )\n    {\n        for ( f = 0; f \u003c p-\u003enFramesAll; f++ )\n            Aig_ManForEachPoSeq( p-\u003epAig, pObj, i )\n                Aig_ObjCreateCo( pAigFrames, Bmc_ObjChild0Frames(pObj,f) );\n        Aig_ManCleanup( pAigFrames );\n    }\n    else\n    {\n        // add POs to all the dangling nodes\n        Aig_ManForEachObj( pAigFrames, pObjNew, i )\n            if ( Aig_ObjIsNode(pObjNew) \u0026\u0026 pObjNew-\u003enRefs == 0 )\n                Aig_ObjCreateCo( pAigFrames, pObjNew );\n    }\n    // return the new manager\n    return pAigFrames;\n}",
+      "Draft": "func Fra_BmcFrames(p *Fra_Bmc_t, fKeepPos int32) *Aig_Man_t {\n    var pAigFrames *Aig_Man_t;\n    var pObj, pObjNew *Aig_Obj_t;\n    var pLatches **Aig_Obj_t;\n    var i, k, f int32;\n\n    // start the fraig package\n    pAigFrames = Aig_ManStart( Aig_ManObjNumMax(p.pAig) * p.nFramesAll );\n    pAigFrames.pName = Abc_UtilStrsav( p.pAig.pName );\n    pAigFrames.pSpec = Abc_UtilStrsav( p.pAig.pSpec );\n    // create PI nodes for the frames\n    for  f = 0; f \u003c p.nFramesAll; f++  {\n        Bmc_ObjSetFrames( Aig_ManConst1(p.pAig), f, Aig_ManConst1(pAigFrames) );\n    }\n    for  f = 0; f \u003c p.nFramesAll; f++  {\n        // inlining of macro Aig_ManForEachPiSeq\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Bmc_ObjSetFrames( pObj, f, Aig_ObjCreateCi(pAigFrames) );\n        }\n    }\n    // set initial state for the latches\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig); (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Bmc_ObjSetFrames( pObj, 0, Aig_ManConst0(pAigFrames) );\n    }\n\n    // add timeframes\n    // inlining of macro ABC_ALLOC\n    pLatches = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManRegNum(p.pAig))));\n    for  f = 0; f \u003c p.nFramesAll; f++  {\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObjNew = Aig_And( pAigFrames, Bmc_ObjChild0Frames(pObj,f), Bmc_ObjChild1Frames(pObj,f) );\n            Bmc_ObjSetFrames( pObj, f, pObjNew );\n        }\n        }\n        if f == p.nFramesAll - 1 {\n            break; }\n        // save the latch input values\n        k = 0;\n        // inlining of macro Aig_ManForEachLiSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig); (i \u003c Vec_PtrSize(p.pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n            pLatches[k++] = Bmc_ObjChild0Frames(pObj,f);\n        }\n        assert(k == Aig_ManRegNum(p.pAig), \"k == Aig_ManRegNum(p.pAig)\");\n        // insert them to the latch output values\n        k = 0;\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig); (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Bmc_ObjSetFrames( pObj, f+1, pLatches[k++] );\n        }\n        assert(k == Aig_ManRegNum(p.pAig), \"k == Aig_ManRegNum(p.pAig)\");\n    }\n    // inlining of macro ABC_FREE\n    ((pLatches) ? (free((char *) (pLatches)), (pLatches) = 0) : 0);\n    if fKeepPos != 0 {\n        for  f = 0; f \u003c p.nFramesAll; f++  {\n            // inlining of macro Aig_ManForEachPoSeq\n            // inlining of macro Vec_PtrForEachEntryStop\n            for  i = 0; (i \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n                Aig_ObjCreateCo( pAigFrames, Bmc_ObjChild0Frames(pObj,f) );\n            }\n        }\n        Aig_ManCleanup( pAigFrames );\n    \n    } else {\n        // add POs to all the dangling nodes\n        // inlining of macro Aig_ManForEachObj\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAigFrames.vObjs)) \u0026\u0026 (((pObjNew) = (Aig_Obj_t *)Vec_PtrEntry(pAigFrames.vObjs, i)), 1); i++  { if (pObjNew) == nil {} else\n            if Aig_ObjIsNode(pObjNew) \u0026\u0026 pObjNew.nRefs == 0 {\n                Aig_ObjCreateCo( pAigFrames, pObjNew ); }\n        }\n    }\n    // return the new manager\n    return pAigFrames;\n}"
+    },
+    {
+      "Name": "Fra_BmcPerform",
+      "Start": 11088,
+      "End": 13596,
+      "BodyStart": 11148,
+      "Original": "void Fra_BmcPerform( Fra_Man_t * p, int nPref, int nDepth )\n{\n    Aig_Obj_t * pObj;\n    int i, nImpsOld = 0;\n    abctime clk = Abc_Clock();\n    assert( p-\u003epBmc == NULL );\n    // derive and fraig the frames\n    p-\u003epBmc = Fra_BmcStart( p-\u003epManAig, nPref, nDepth );\n    p-\u003epBmc-\u003epAigFrames = Fra_BmcFrames( p-\u003epBmc, 0 );\n    // if implications are present, configure the AIG manager to check them\n    if ( p-\u003epCla-\u003evImps )\n    {\n        p-\u003epBmc-\u003epAigFrames-\u003epImpFunc = (void (*) (void*, void*))Fra_BmcFilterImplications;\n        p-\u003epBmc-\u003epAigFrames-\u003epImpData = p-\u003epBmc;\n        p-\u003epBmc-\u003evImps = p-\u003epCla-\u003evImps;\n        nImpsOld = Vec_IntSize(p-\u003epCla-\u003evImps);\n    } \n    p-\u003epBmc-\u003epAigFraig = Fra_FraigEquivence( p-\u003epBmc-\u003epAigFrames, 1000000, 0 );\n    p-\u003epBmc-\u003epObjToFraig = p-\u003epBmc-\u003epAigFrames-\u003epObjCopies;\n    p-\u003epBmc-\u003epAigFrames-\u003epObjCopies = NULL;\n    // annotate frames nodes with pointers to the manager\n    Aig_ManForEachObj( p-\u003epBmc-\u003epAigFrames, pObj, i )\n        pObj-\u003epData = p;\n    // report the results\n    if ( p-\u003epPars-\u003efVerbose )\n    {\n        printf( \"Original AIG = %d. Init %d frames = %d. Fraig = %d.  \", \n            Aig_ManNodeNum(p-\u003epBmc-\u003epAig), p-\u003epBmc-\u003enFramesAll, \n            Aig_ManNodeNum(p-\u003epBmc-\u003epAigFrames), Aig_ManNodeNum(p-\u003epBmc-\u003epAigFraig) );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n        printf( \"Before BMC: \" );  \n//        Fra_ClassesPrint( p-\u003epCla, 0 );\n        printf( \"Const = %5d. Class = %5d. Lit = %5d. \", \n            Vec_PtrSize(p-\u003epCla-\u003evClasses1), Vec_PtrSize(p-\u003epCla-\u003evClasses), Fra_ClassesCountLits(p-\u003epCla) );\n        if ( p-\u003epCla-\u003evImps )\n            printf( \"Imp = %5d. \", nImpsOld );\n        printf( \"\\n\" );\n    }\n    // refine the classes\n    p-\u003epCla-\u003epFuncNodeIsConst   = Fra_BmcNodeIsConst;\n    p-\u003epCla-\u003epFuncNodesAreEqual = Fra_BmcNodesAreEqual;\n    Fra_ClassesRefine( p-\u003epCla );\n    Fra_ClassesRefine1( p-\u003epCla, 1, NULL );\n    p-\u003epCla-\u003epFuncNodeIsConst   = Fra_SmlNodeIsConst;\n    p-\u003epCla-\u003epFuncNodesAreEqual = Fra_SmlNodesAreEqual;\n    // report the results\n    if ( p-\u003epPars-\u003efVerbose )\n    {\n        printf( \"After  BMC: \" );  \n//        Fra_ClassesPrint( p-\u003epCla, 0 );\n        printf( \"Const = %5d. Class = %5d. Lit = %5d. \", \n            Vec_PtrSize(p-\u003epCla-\u003evClasses1), Vec_PtrSize(p-\u003epCla-\u003evClasses), Fra_ClassesCountLits(p-\u003epCla) );\n        if ( p-\u003epCla-\u003evImps )\n            printf( \"Imp = %5d. \", Vec_IntSize(p-\u003epCla-\u003evImps) );\n        printf( \"\\n\" );\n    }\n    // free the BMC manager\n    Fra_BmcStop( p-\u003epBmc );  \n    p-\u003epBmc = NULL;\n}",
+      "Draft": "func Fra_BmcPerform(p *Fra_Man_t, nPref int32, nDepth int32) {\n    var pObj *Aig_Obj_t;\n    var i, nImpsOld int32;\n    var clk abctime  = Abc_Clock();\n    assert(p.pBmc == nil, \"p.pBmc == nil\");\n    // derive and fraig the frames\n    p.pBmc = Fra_BmcStart( p.pManAig, nPref, nDepth );\n    p.pBmc.pAigFrames = Fra_BmcFrames( p.pBmc, 0 );\n    // if implications are present, configure the AIG manager to check them\n    if p.pCla.vImps {\n        p.pBmc.pAigFrames.pImpFunc = (void (*) (void*, void*))Fra_BmcFilterImplications;\n        p.pBmc.pAigFrames.pImpData = p.pBmc;\n        p.pBmc.vImps = p.pCla.vImps;\n        nImpsOld = Vec_IntSize(p.pCla.vImps);\n    } \n    p.pBmc.pAigFraig = Fra_FraigEquivence( p.pBmc.pAigFrames, 1000000, 0 );\n    p.pBmc.pObjToFraig = p.pBmc.pAigFrames.pObjCopies;\n    p.pBmc.pAigFrames.pObjCopies = nil;\n    // annotate frames nodes with pointers to the manager\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pBmc.pAigFrames.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pBmc.pAigFrames.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.pData = p; }\n    }\n    // report the results\n    if p.pPars.fVerbose {\n        fmt.Printf(\"Original AIG = %d. Init %d frames = %d. Fraig = %d.  \", Aig_ManNodeNum(p.pBmc.pAig), p.pBmc.nFramesAll, Aig_ManNodeNum(p.pBmc.pAigFrames), Aig_ManNodeNum(p.pBmc.pAigFraig));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        fmt.Printf(\"Before BMC: \");  \n//        Fra_ClassesPrint( p-\u003epCla, 0 );\n        fmt.Printf(\"Const = %5d. Class = %5d. Lit = %5d. \", Vec_PtrSize(p.pCla.vClasses1), Vec_PtrSize(p.pCla.vClasses), Fra_ClassesCountLits(p.pCla));\n        if p.pCla.vImps {\n            fmt.Printf(\"Imp = %5d. \", nImpsOld); }\n        fmt.Printf(\"\\n\");\n    }\n    // refine the classes\n    p.pCla.pFuncNodeIsConst   = Fra_BmcNodeIsConst;\n    p.pCla.pFuncNodesAreEqual = Fra_BmcNodesAreEqual;\n    Fra_ClassesRefine( p.pCla );\n    Fra_ClassesRefine1( p.pCla, 1, nil );\n    p.pCla.pFuncNodeIsConst   = Fra_SmlNodeIsConst;\n    p.pCla.pFuncNodesAreEqual = Fra_SmlNodesAreEqual;\n    // report the results\n    if p.pPars.fVerbose {\n        fmt.Printf(\"After  BMC: \");  \n//        Fra_ClassesPrint( p-\u003epCla, 0 );\n        fmt.Printf(\"Const = %5d. Class = %5d. Lit = %5d. \", Vec_PtrSize(p.pCla.vClasses1), Vec_PtrSize(p.pCla.vClasses), Fra_ClassesCountLits(p.pCla));\n        if p.pCla.vImps {\n            fmt.Printf(\"Imp = %5d. \", Vec_IntSize(p.pCla.vImps)); }\n        fmt.Printf(\"\\n\");\n    }\n    // free the BMC manager\n    Fra_BmcStop( p.pBmc );  \n    p.pBmc = nil;\n}"
+    },
+    {
+      "Name": "Fra_BmcPerformSimple",
+      "Start": 13863,
+      "End": 16528,
+      "BodyStart": 13964,
+      "Original": "void Fra_BmcPerformSimple( Aig_Man_t * pAig, int nFrames, int nBTLimit, int fRewrite, int fVerbose )\n{\n    extern Fra_Man_t * Fra_LcrAigPrepare( Aig_Man_t * pAig );\n    Fra_Man_t * pTemp;\n    Fra_Bmc_t * pBmc;\n    Aig_Man_t * pAigTemp;\n    abctime clk;\n    int iOutput;\n    // derive and fraig the frames\n    clk = Abc_Clock();\n    pBmc = Fra_BmcStart( pAig, 0, nFrames );\n    pTemp = Fra_LcrAigPrepare( pAig );\n    pTemp-\u003epBmc = pBmc;\n    pBmc-\u003epAigFrames = Fra_BmcFrames( pBmc, 1 );\n    if ( fVerbose )\n    {\n        printf( \"AIG:  PI/PO/Reg = %d/%d/%d.  Node = %6d. Lev = %5d.\\n\", \n            Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig), Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig), Aig_ManRegNum(pAig),\n            Aig_ManNodeNum(pAig), Aig_ManLevelNum(pAig) );\n        printf( \"Time-frames (%d):  PI/PO = %d/%d.  Node = %6d. Lev = %5d.  \", \n            nFrames, Aig_ManCiNum(pBmc-\u003epAigFrames), Aig_ManCoNum(pBmc-\u003epAigFrames), \n            Aig_ManNodeNum(pBmc-\u003epAigFrames), Aig_ManLevelNum(pBmc-\u003epAigFrames) );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    if ( fRewrite )\n    {\n        clk = Abc_Clock();\n        pBmc-\u003epAigFrames = Dar_ManRwsat( pAigTemp = pBmc-\u003epAigFrames, 1, 0 );\n        Aig_ManStop( pAigTemp );\n        if ( fVerbose )\n        {\n            printf( \"Time-frames after rewriting:  Node = %6d. Lev = %5d.  \", \n                Aig_ManNodeNum(pBmc-\u003epAigFrames), Aig_ManLevelNum(pBmc-\u003epAigFrames) );\n            ABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n    }\n    clk = Abc_Clock();\n    iOutput = Fra_FraigMiterAssertedOutput( pBmc-\u003epAigFrames );\n    if ( iOutput \u003e= 0 )\n        pAig-\u003epSeqModel = Abc_CexMakeTriv( Aig_ManRegNum(pAig), Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig), Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig), iOutput );\n    else\n    {\n        pBmc-\u003epAigFraig = Fra_FraigEquivence( pBmc-\u003epAigFrames, nBTLimit, 1 );\n        iOutput = Fra_FraigMiterAssertedOutput( pBmc-\u003epAigFraig );\n        if ( pBmc-\u003epAigFraig-\u003epData )\n        {\n            pAig-\u003epSeqModel = Fra_SmlCopyCounterExample( pAig, pBmc-\u003epAigFrames, (int *)pBmc-\u003epAigFraig-\u003epData );\n            ABC_FREE( pBmc-\u003epAigFraig-\u003epData );\n        }\n        else if ( iOutput \u003e= 0 )\n            pAig-\u003epSeqModel = Abc_CexMakeTriv( Aig_ManRegNum(pAig), Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig), Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig), iOutput );\n    }\n    if ( fVerbose )\n    {\n        printf( \"Fraiged init frames: Node = %6d. Lev = %5d.  \", \n            pBmc-\u003epAigFraig? Aig_ManNodeNum(pBmc-\u003epAigFraig) : -1,\n            pBmc-\u003epAigFraig? Aig_ManLevelNum(pBmc-\u003epAigFraig) : -1 );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    Fra_BmcStop( pBmc );  \n    ABC_FREE( pTemp );\n}",
+      "Draft": "func Fra_BmcPerformSimple(pAig *Aig_Man_t, nFrames int32, nBTLimit int32, fRewrite int32, fVerbose int32) {\n    extern Fra_Man_t * Fra_LcrAigPrepare( Aig_Man_t * pAig );\n    var pTemp *Fra_Man_t;\n    var pBmc *Fra_Bmc_t;\n    var pAigTemp *Aig_Man_t;\n    var clk abctime;\n    var iOutput int32;\n    // derive and fraig the frames\n    clk = Abc_Clock();\n    pBmc = Fra_BmcStart( pAig, 0, nFrames );\n    pTemp = Fra_LcrAigPrepare( pAig );\n    pTemp.pBmc = pBmc;\n    pBmc.pAigFrames = Fra_BmcFrames( pBmc, 1 );\n    if fVerbose != 0 {\n        fmt.Printf(\"AIG:  PI/PO/Reg = %d/%d/%d.  Node = %6d. Lev = %5d.\\n\", Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig), Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig), Aig_ManRegNum(pAig), Aig_ManNodeNum(pAig), Aig_ManLevelNum(pAig));\n        fmt.Printf(\"Time-frames (%d):  PI/PO = %d/%d.  Node = %6d. Lev = %5d.  \", nFrames, Aig_ManCiNum(pBmc.pAigFrames), Aig_ManCoNum(pBmc.pAigFrames), Aig_ManNodeNum(pBmc.pAigFrames), Aig_ManLevelNum(pBmc.pAigFrames));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    if fRewrite != 0 {\n        clk = Abc_Clock();\n        pBmc.pAigFrames = Dar_ManRwsat( pAigTemp = pBmc.pAigFrames, 1, 0 );\n        Aig_ManStop( pAigTemp );\n        if fVerbose != 0 {\n            fmt.Printf(\"Time-frames after rewriting:  Node = %6d. Lev = %5d.  \", Aig_ManNodeNum(pBmc.pAigFrames), Aig_ManLevelNum(pBmc.pAigFrames));\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n    }\n    clk = Abc_Clock();\n    iOutput = Fra_FraigMiterAssertedOutput( pBmc.pAigFrames );\n    if iOutput \u003e= 0 {\n        pAig.pSeqModel = Abc_CexMakeTriv( Aig_ManRegNum(pAig), Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig), Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig), iOutput );\n    } else {\n        pBmc.pAigFraig = Fra_FraigEquivence( pBmc.pAigFrames, nBTLimit, 1 );\n        iOutput = Fra_FraigMiterAssertedOutput( pBmc.pAigFraig );\n        if pBmc.pAigFraig.pData {\n            pAig.pSeqModel = Fra_SmlCopyCounterExample( pAig, pBmc.pAigFrames, (int *)pBmc.pAigFraig.pData );\n            // inlining of macro ABC_FREE\n            ((pBmc.pAigFraig.pData) ? (free((char *) (pBmc.pAigFraig.pData)), (pBmc.pAigFraig.pData) = 0) : 0);\n        \n        } else if iOutput \u003e= 0 {\n            pAig.pSeqModel = Abc_CexMakeTriv( Aig_ManRegNum(pAig), Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig), Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig), iOutput ); }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Fraiged init frames: Node = %6d. Lev = %5d.  \", pBmc.pAigFraig? Aig_ManNodeNum(pBmc.pAigFraig) : -1, pBmc.pAigFraig? Aig_ManLevelNum(pBmc.pAigFraig) : -1);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    Fra_BmcStop( pBmc );  \n    // inlining of macro ABC_FREE\n    ((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::struct::Fra_Bmc_t_",
+      "Category": "struct-review",
+      "Symbol": "Fra_Bmc_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 788,
+      "End": 1519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::mechanical::sizeof::7566",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7389,
+      "End": 7389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::mechanical::sizeof::7619",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7434,
+      "End": 7440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::mechanical::sizeof::7834",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7580,
+      "End": 7580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::mechanical::sizeof::7940",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7678,
+      "End": 7684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::mechanical::sizeof::10452",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9409,
+      "End": 9409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::1621",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1621,
+      "End": 1634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::1668",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1668,
+      "End": 1681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::1823",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1823,
+      "End": 1836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::1870",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1870,
+      "End": 1883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::2040",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2040,
+      "End": 2053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::2192",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2192,
+      "End": 2205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::3283",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3283,
+      "End": 3296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::4205",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4205,
+      "End": 4218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::7545",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7389,
+      "End": 7389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::7811",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7580,
+      "End": 7580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::7840",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7580,
+      "End": 7580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::7946",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7684,
+      "End": 7697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::8483",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8150,
+      "End": 8150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::8615",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8183,
+      "End": 8183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::8732",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8215,
+      "End": 8215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::9836",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9112,
+      "End": 9112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::10225",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9267,
+      "End": 9267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::10429",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9409,
+      "End": 9409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::10458",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9409,
+      "End": 9409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::10780",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9559,
+      "End": 9559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::11401",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9890,
+      "End": 9890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::11852",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10107,
+      "End": 10107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::12087",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10262,
+      "End": 10262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::12407",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10368,
+      "End": 10368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::12826",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10596,
+      "End": 10596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::14457",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11997,
+      "End": 11997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::18800",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15907,
+      "End": 15914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::18923",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15952,
+      "End": 15952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::pointer-cast::19704",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16508,
+      "End": 16508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::Bmc_ObjFrames",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_ObjFrames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1521,
+      "End": 1729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::Bmc_ObjSetFrames",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_ObjSetFrames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1730,
+      "End": 1938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::Bmc_ObjFraig",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_ObjFraig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1940,
+      "End": 2098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::Bmc_ObjSetFraig",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_ObjSetFraig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2099,
+      "End": 2257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::Bmc_ObjChild0Frames",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_ObjChild0Frames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2259,
+      "End": 2480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::Bmc_ObjChild1Frames",
+      "Category": "semantic-review",
+      "Symbol": "Bmc_ObjChild1Frames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2481,
+      "End": 2702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::Fra_BmcNodesAreEqual",
+      "Category": "semantic-review",
+      "Symbol": "Fra_BmcNodesAreEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3196,
+      "End": 3871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::Fra_BmcNodeIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Fra_BmcNodeIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4140,
+      "End": 4300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::Fra_BmcFilterImplications",
+      "Category": "semantic-review",
+      "Symbol": "Fra_BmcFilterImplications",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4654,
+      "End": 7032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::Fra_BmcStart",
+      "Category": "semantic-review",
+      "Symbol": "Fra_BmcStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7292,
+      "End": 7757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::ternary::Fra_BmcStop",
+      "Category": "ternary-review",
+      "Symbol": "Fra_BmcStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8015,
+      "End": 8231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::Fra_BmcStop",
+      "Category": "semantic-review",
+      "Symbol": "Fra_BmcStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8015,
+      "End": 8231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::ternary::Fra_BmcFrames",
+      "Category": "ternary-review",
+      "Symbol": "Fra_BmcFrames",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8512,
+      "End": 10821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::Fra_BmcFrames",
+      "Category": "semantic-review",
+      "Symbol": "Fra_BmcFrames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8512,
+      "End": 10821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::Fra_BmcPerform",
+      "Category": "semantic-review",
+      "Symbol": "Fra_BmcPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11088,
+      "End": 13596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::ternary::Fra_BmcPerformSimple",
+      "Category": "ternary-review",
+      "Symbol": "Fra_BmcPerformSimple",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13863,
+      "End": 16528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::Fra_BmcPerformSimple",
+      "Category": "semantic-review",
+      "Symbol": "Fra_BmcPerformSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13863,
+      "End": 16528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraBmc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16776
+    }
+  ],
+  "Draft": "package fra\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [fraBmc.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [New FRAIG package.]\n\n  Synopsis    [Bounded model checking.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 30, 2007.]\n\n  Revision    [$Id: fraBmc.c,v 1.00 2007/06/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// simulation manager\ntype Fra_Bmc_t_ struct {\n    // parameters\n    nPref              int32;             // the size of the prefix\n    nDepth              int32;            // the depth of the frames\n    nFramesAll              int32;        // the total number of timeframes\n    // implications to be filtered\n    vImps       *Vec_Int_t;\n    // AIG managers\n    pAig       *Aig_Man_t;              // the original AIG manager\n    pAigFrames       *Aig_Man_t;        // initialized timeframes\n    pAigFraig       *Aig_Man_t;         // the fraiged initialized timeframes\n    // mapping of nodes\n    pObjToFrames      **Aig_Obj_t;      // mapping of the original node into frames\n    pObjToFraig      **Aig_Obj_t;       // mapping of the frames node into fraig\n}\n\nfunc Bmc_ObjFrames(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { return ((Fra_Man_t *)pObj.pData).pBmc.pObjToFrames[((Fra_Man_t *)pObj.pData).pBmc.nFramesAll*pObj.Id + i];  }\nfunc Bmc_ObjSetFrames(pObj *Aig_Obj_t, i int32, pNode *Aig_Obj_t) { ((Fra_Man_t *)pObj.pData).pBmc.pObjToFrames[((Fra_Man_t *)pObj.pData).pBmc.nFramesAll*pObj.Id + i] = pNode; }\n\nfunc Bmc_ObjFraig(pObj *Aig_Obj_t) *Aig_Obj_t { return ((Fra_Man_t *)pObj.pData).pBmc.pObjToFraig[pObj.Id];  }\nfunc Bmc_ObjSetFraig(pObj *Aig_Obj_t, pNode *Aig_Obj_t) { ((Fra_Man_t *)pObj.pData).pBmc.pObjToFraig[pObj.Id] = pNode; }\n\nfunc Bmc_ObjChild0Frames(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin0(pObj) {\n    return Aig_NotCond(Bmc_ObjFrames(Aig_ObjFanin0(pObj),i), Aig_ObjFaninC0(pObj));\n} else {\n    return nil;\n}  }\nfunc Bmc_ObjChild1Frames(pObj *Aig_Obj_t, i int32) *Aig_Obj_t { assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\"); if Aig_ObjFanin1(pObj) {\n    return Aig_NotCond(Bmc_ObjFrames(Aig_ObjFanin1(pObj),i), Aig_ObjFaninC1(pObj));\n} else {\n    return nil;\n}  }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the nodes are equivalent.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_BmcNodesAreEqual(pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {\n    var p *Fra_Man_t  = (Fra_Man_t *)pObj0.pData;\n    var pObjFrames0, pObjFrames1 *Aig_Obj_t;\n    var pObjFraig0, pObjFraig1 *Aig_Obj_t;\n    var i int32;\n    for  i = p.pBmc.nPref; i \u003c p.pBmc.nFramesAll; i++  {\n        pObjFrames0 = Aig_Regular( Bmc_ObjFrames(pObj0, i) );\n        pObjFrames1 = Aig_Regular( Bmc_ObjFrames(pObj1, i) );\n        if pObjFrames0 == pObjFrames1 {\n            continue; }\n        pObjFraig0 = Aig_Regular( Bmc_ObjFraig(pObjFrames0) );\n        pObjFraig1 = Aig_Regular( Bmc_ObjFraig(pObjFrames1) );\n        if pObjFraig0 != pObjFraig1 {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node is costant.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_BmcNodeIsConst(pObj *Aig_Obj_t) int32 {\n    var p *Fra_Man_t  = (Fra_Man_t *)pObj.pData;\n    return Fra_BmcNodesAreEqual( pObj, Aig_ManConst1(p.pManAig) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Refines implications using BMC.]\n\n  Description [The input is the combinational FRAIG manager,\n  which is used to FRAIG the timeframes. ]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_BmcFilterImplications(p *Fra_Man_t, pBmc *Fra_Bmc_t) {\n    var pLeft, pRight *Aig_Obj_t;\n    var pLeftT, pRightT *Aig_Obj_t;\n    var pLeftF, pRightF *Aig_Obj_t;\n    var i, f, Imp, Left, Right int32;\n    var fComplL, fComplR int32;\n    assert(p.nFramesAll == 1, \"p.nFramesAll == 1\");\n    assert(p.pManAig == pBmc.pAigFrames, \"p.pManAig == pBmc.pAigFrames\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(pBmc.vImps)) \u0026\u0026 (((Imp) = Vec_IntEntry(pBmc.vImps, i)), 1); i++  {\n        if Imp == 0 {\n            continue; }\n        Left  = Fra_ImpLeft(Imp);\n        Right = Fra_ImpRight(Imp);\n        // get the corresponding nodes\n        pLeft  = Aig_ManObj( pBmc.pAig, Left );\n        pRight = Aig_ManObj( pBmc.pAig, Right );\n        // iterate through the timeframes\n        for  f = pBmc.nPref; f \u003c pBmc.nFramesAll; f++  {\n            // get timeframe nodes\n            pLeftT  = Bmc_ObjFrames( pLeft, f );\n            pRightT = Bmc_ObjFrames( pRight, f );\n            // get the corresponding FRAIG nodes\n            pLeftF  = Fra_ObjFraig( Aig_Regular(pLeftT), 0 );\n            pRightF = Fra_ObjFraig( Aig_Regular(pRightT), 0 );\n            // get the complemented attributes\n            fComplL = pLeft.fPhase ^ Aig_IsComplement(pLeftF) ^ Aig_IsComplement(pLeftT);\n            fComplR = pRight.fPhase ^ Aig_IsComplement(pRightF) ^ Aig_IsComplement(pRightT);\n            // check equality\n            if Aig_Regular(pLeftF) == Aig_Regular(pRightF) {\n                if fComplL == fComplR { // x =\u003e x  - always true\n                    continue; }\n                assert(fComplL != fComplR, \"fComplL != fComplR\");\n                // consider 4 possibilities:\n                // NOT(1) =\u003e 1    or   0 =\u003e 1  - always true\n                // 1 =\u003e NOT(1)    or   1 =\u003e 0  - never true\n                // NOT(x) =\u003e x    or   x       - not always true\n                // x =\u003e NOT(x)    or   NOT(x)  - not always true\n                if Aig_ObjIsConst1(Aig_Regular(pLeftF)) \u0026\u0026 fComplL { // proved implication\n                    continue; }\n                // disproved implication\n                Vec_IntWriteEntry( pBmc.vImps, i, 0 ); \n                break;\n            }\n            // check the implication \n            if Fra_NodesAreImp( p, Aig_Regular(pLeftF), Aig_Regular(pRightF), fComplL, fComplR ) != 1 {\n                Vec_IntWriteEntry( pBmc.vImps, i, 0 );\n                break;\n            }\n        }\n    }\n    Fra_ImpCompactArray( pBmc.vImps );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the BMC manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_BmcStart(pAig *Aig_Man_t, nPref int32, nDepth int32) *Fra_Bmc_t {\n    var p *Fra_Bmc_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Fra_Bmc_t *) malloc(sizeof(Fra_Bmc_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fra_Bmc_t) );\n    p.pAig = pAig;\n    p.nPref = nPref;\n    p.nDepth = nDepth;\n    p.nFramesAll = nPref + nDepth;\n    // inlining of macro ABC_ALLOC\n    p.pObjToFrames  = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(p.nFramesAll * Aig_ManObjNumMax(pAig))));\n    memset( p.pObjToFrames, 0, sizeof(Aig_Obj_t *) * p.nFramesAll * Aig_ManObjNumMax(pAig) );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the BMC manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_BmcStop(p *Fra_Bmc_t) {\n    Aig_ManStop( p.pAigFrames );\n    if p.pAigFraig {\n        Aig_ManStop( p.pAigFraig ); }\n    // inlining of macro ABC_FREE\n    ((p.pObjToFrames) ? (free((char *) (p.pObjToFrames)), (p.pObjToFrames) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pObjToFraig) ? (free((char *) (p.pObjToFraig)), (p.pObjToFraig) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs initialized timeframes of the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_BmcFrames(p *Fra_Bmc_t, fKeepPos int32) *Aig_Man_t {\n    var pAigFrames *Aig_Man_t;\n    var pObj, pObjNew *Aig_Obj_t;\n    var pLatches **Aig_Obj_t;\n    var i, k, f int32;\n\n    // start the fraig package\n    pAigFrames = Aig_ManStart( Aig_ManObjNumMax(p.pAig) * p.nFramesAll );\n    pAigFrames.pName = Abc_UtilStrsav( p.pAig.pName );\n    pAigFrames.pSpec = Abc_UtilStrsav( p.pAig.pSpec );\n    // create PI nodes for the frames\n    for  f = 0; f \u003c p.nFramesAll; f++  {\n        Bmc_ObjSetFrames( Aig_ManConst1(p.pAig), f, Aig_ManConst1(pAigFrames) );\n    }\n    for  f = 0; f \u003c p.nFramesAll; f++  {\n        // inlining of macro Aig_ManForEachPiSeq\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Bmc_ObjSetFrames( pObj, f, Aig_ObjCreateCi(pAigFrames) );\n        }\n    }\n    // set initial state for the latches\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig); (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Bmc_ObjSetFrames( pObj, 0, Aig_ManConst0(pAigFrames) );\n    }\n\n    // add timeframes\n    // inlining of macro ABC_ALLOC\n    pLatches = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(Aig_ManRegNum(p.pAig))));\n    for  f = 0; f \u003c p.nFramesAll; f++  {\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObjNew = Aig_And( pAigFrames, Bmc_ObjChild0Frames(pObj,f), Bmc_ObjChild1Frames(pObj,f) );\n            Bmc_ObjSetFrames( pObj, f, pObjNew );\n        }\n        }\n        if f == p.nFramesAll - 1 {\n            break; }\n        // save the latch input values\n        k = 0;\n        // inlining of macro Aig_ManForEachLiSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig); (i \u003c Vec_PtrSize(p.pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n            pLatches[k++] = Bmc_ObjChild0Frames(pObj,f);\n        }\n        assert(k == Aig_ManRegNum(p.pAig), \"k == Aig_ManRegNum(p.pAig)\");\n        // insert them to the latch output values\n        k = 0;\n        // inlining of macro Aig_ManForEachLoSeq\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  i = Aig_ManCiNum(p.pAig)-Aig_ManRegNum(p.pAig); (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n            Bmc_ObjSetFrames( pObj, f+1, pLatches[k++] );\n        }\n        assert(k == Aig_ManRegNum(p.pAig), \"k == Aig_ManRegNum(p.pAig)\");\n    }\n    // inlining of macro ABC_FREE\n    ((pLatches) ? (free((char *) (pLatches)), (pLatches) = 0) : 0);\n    if fKeepPos != 0 {\n        for  f = 0; f \u003c p.nFramesAll; f++  {\n            // inlining of macro Aig_ManForEachPoSeq\n            // inlining of macro Vec_PtrForEachEntryStop\n            for  i = 0; (i \u003c Aig_ManCoNum(p.pAig)-Aig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n                Aig_ObjCreateCo( pAigFrames, Bmc_ObjChild0Frames(pObj,f) );\n            }\n        }\n        Aig_ManCleanup( pAigFrames );\n    \n    } else {\n        // add POs to all the dangling nodes\n        // inlining of macro Aig_ManForEachObj\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAigFrames.vObjs)) \u0026\u0026 (((pObjNew) = (Aig_Obj_t *)Vec_PtrEntry(pAigFrames.vObjs, i)), 1); i++  { if (pObjNew) == nil {} else\n            if Aig_ObjIsNode(pObjNew) \u0026\u0026 pObjNew.nRefs == 0 {\n                Aig_ObjCreateCo( pAigFrames, pObjNew ); }\n        }\n    }\n    // return the new manager\n    return pAigFrames;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BMC for the given AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_BmcPerform(p *Fra_Man_t, nPref int32, nDepth int32) {\n    var pObj *Aig_Obj_t;\n    var i, nImpsOld int32;\n    var clk abctime  = Abc_Clock();\n    assert(p.pBmc == nil, \"p.pBmc == nil\");\n    // derive and fraig the frames\n    p.pBmc = Fra_BmcStart( p.pManAig, nPref, nDepth );\n    p.pBmc.pAigFrames = Fra_BmcFrames( p.pBmc, 0 );\n    // if implications are present, configure the AIG manager to check them\n    if p.pCla.vImps {\n        p.pBmc.pAigFrames.pImpFunc = (void (*) (void*, void*))Fra_BmcFilterImplications;\n        p.pBmc.pAigFrames.pImpData = p.pBmc;\n        p.pBmc.vImps = p.pCla.vImps;\n        nImpsOld = Vec_IntSize(p.pCla.vImps);\n    } \n    p.pBmc.pAigFraig = Fra_FraigEquivence( p.pBmc.pAigFrames, 1000000, 0 );\n    p.pBmc.pObjToFraig = p.pBmc.pAigFrames.pObjCopies;\n    p.pBmc.pAigFrames.pObjCopies = nil;\n    // annotate frames nodes with pointers to the manager\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pBmc.pAigFrames.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pBmc.pAigFrames.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.pData = p; }\n    }\n    // report the results\n    if p.pPars.fVerbose {\n        fmt.Printf(\"Original AIG = %d. Init %d frames = %d. Fraig = %d.  \", Aig_ManNodeNum(p.pBmc.pAig), p.pBmc.nFramesAll, Aig_ManNodeNum(p.pBmc.pAigFrames), Aig_ManNodeNum(p.pBmc.pAigFraig));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        fmt.Printf(\"Before BMC: \");  \n//        Fra_ClassesPrint( p-\u003epCla, 0 );\n        fmt.Printf(\"Const = %5d. Class = %5d. Lit = %5d. \", Vec_PtrSize(p.pCla.vClasses1), Vec_PtrSize(p.pCla.vClasses), Fra_ClassesCountLits(p.pCla));\n        if p.pCla.vImps {\n            fmt.Printf(\"Imp = %5d. \", nImpsOld); }\n        fmt.Printf(\"\\n\");\n    }\n    // refine the classes\n    p.pCla.pFuncNodeIsConst   = Fra_BmcNodeIsConst;\n    p.pCla.pFuncNodesAreEqual = Fra_BmcNodesAreEqual;\n    Fra_ClassesRefine( p.pCla );\n    Fra_ClassesRefine1( p.pCla, 1, nil );\n    p.pCla.pFuncNodeIsConst   = Fra_SmlNodeIsConst;\n    p.pCla.pFuncNodesAreEqual = Fra_SmlNodesAreEqual;\n    // report the results\n    if p.pPars.fVerbose {\n        fmt.Printf(\"After  BMC: \");  \n//        Fra_ClassesPrint( p-\u003epCla, 0 );\n        fmt.Printf(\"Const = %5d. Class = %5d. Lit = %5d. \", Vec_PtrSize(p.pCla.vClasses1), Vec_PtrSize(p.pCla.vClasses), Fra_ClassesCountLits(p.pCla));\n        if p.pCla.vImps {\n            fmt.Printf(\"Imp = %5d. \", Vec_IntSize(p.pCla.vImps)); }\n        fmt.Printf(\"\\n\");\n    }\n    // free the BMC manager\n    Fra_BmcStop( p.pBmc );  \n    p.pBmc = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BMC for the given AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_BmcPerformSimple(pAig *Aig_Man_t, nFrames int32, nBTLimit int32, fRewrite int32, fVerbose int32) {\n    extern Fra_Man_t * Fra_LcrAigPrepare( Aig_Man_t * pAig );\n    var pTemp *Fra_Man_t;\n    var pBmc *Fra_Bmc_t;\n    var pAigTemp *Aig_Man_t;\n    var clk abctime;\n    var iOutput int32;\n    // derive and fraig the frames\n    clk = Abc_Clock();\n    pBmc = Fra_BmcStart( pAig, 0, nFrames );\n    pTemp = Fra_LcrAigPrepare( pAig );\n    pTemp.pBmc = pBmc;\n    pBmc.pAigFrames = Fra_BmcFrames( pBmc, 1 );\n    if fVerbose != 0 {\n        fmt.Printf(\"AIG:  PI/PO/Reg = %d/%d/%d.  Node = %6d. Lev = %5d.\\n\", Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig), Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig), Aig_ManRegNum(pAig), Aig_ManNodeNum(pAig), Aig_ManLevelNum(pAig));\n        fmt.Printf(\"Time-frames (%d):  PI/PO = %d/%d.  Node = %6d. Lev = %5d.  \", nFrames, Aig_ManCiNum(pBmc.pAigFrames), Aig_ManCoNum(pBmc.pAigFrames), Aig_ManNodeNum(pBmc.pAigFrames), Aig_ManLevelNum(pBmc.pAigFrames));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    if fRewrite != 0 {\n        clk = Abc_Clock();\n        pBmc.pAigFrames = Dar_ManRwsat( pAigTemp = pBmc.pAigFrames, 1, 0 );\n        Aig_ManStop( pAigTemp );\n        if fVerbose != 0 {\n            fmt.Printf(\"Time-frames after rewriting:  Node = %6d. Lev = %5d.  \", Aig_ManNodeNum(pBmc.pAigFrames), Aig_ManLevelNum(pBmc.pAigFrames));\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n    }\n    clk = Abc_Clock();\n    iOutput = Fra_FraigMiterAssertedOutput( pBmc.pAigFrames );\n    if iOutput \u003e= 0 {\n        pAig.pSeqModel = Abc_CexMakeTriv( Aig_ManRegNum(pAig), Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig), Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig), iOutput );\n    } else {\n        pBmc.pAigFraig = Fra_FraigEquivence( pBmc.pAigFrames, nBTLimit, 1 );\n        iOutput = Fra_FraigMiterAssertedOutput( pBmc.pAigFraig );\n        if pBmc.pAigFraig.pData {\n            pAig.pSeqModel = Fra_SmlCopyCounterExample( pAig, pBmc.pAigFrames, (int *)pBmc.pAigFraig.pData );\n            // inlining of macro ABC_FREE\n            ((pBmc.pAigFraig.pData) ? (free((char *) (pBmc.pAigFraig.pData)), (pBmc.pAigFraig.pData) = 0) : 0);\n        \n        } else if iOutput \u003e= 0 {\n            pAig.pSeqModel = Abc_CexMakeTriv( Aig_ManRegNum(pAig), Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig), Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig), iOutput ); }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Fraiged init frames: Node = %6d. Lev = %5d.  \", pBmc.pAigFraig? Aig_ManNodeNum(pBmc.pAigFraig) : -1, pBmc.pAigFraig? Aig_ManLevelNum(pBmc.pAigFraig) : -1);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    Fra_BmcStop( pBmc );  \n    // inlining of macro ABC_FREE\n    ((pTemp) ? (free((char *) (pTemp)), (pTemp) = 0) : 0);\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

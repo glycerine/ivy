@@ -1,0 +1,122 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Int.h",
+  "SHA256": "896c83b48c488d1edf020b476fc9e867bf0f39f009e9be272b4130922f4b07e3",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 129,
+        "Column": 57,
+        "ByteOffset": 4449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Int2_ManCreate",
+      "Start": 2743,
+      "End": 3737,
+      "BodyStart": 2829,
+      "Original": "static inline Int2_Man_t * Int2_ManCreate( Gia_Man_t * pGia, Int2_ManPars_t * pPars )\n{\n    Int2_Man_t * p;\n    p = ABC_CALLOC( Int2_Man_t, 1 );\n    p-\u003epPars       = pPars;\n    p-\u003epGia        = pGia;\n    p-\u003epGiaPref    = Gia_ManStart( 10000 );\n    // perform structural hashing\n    Gia_ManHashAlloc( pFrames );\n    // subset of the manager\n    p-\u003evSuffCis    = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p-\u003evSuffCos    = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p-\u003evPrefCos    = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p-\u003evStack      = Vec_IntAlloc( 10000 );\n    // preimages\n    p-\u003evImageOne   = Vec_IntAlloc( 1000 );\n    p-\u003evImagesAll  = Vec_IntAlloc( 1000 );\n    // variable maps\n    p-\u003evMapFrames  = Vec_PtrAlloc( 100 );\n    p-\u003evMapPref    = Vec_IntAlloc( Gia_ManRegNum(pGia) );\n    p-\u003evMapSuff    = Vec_IntAlloc( Gia_ManRegNum(pGia) );\n    // initial minimization\n    p-\u003evAssign     = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p-\u003evPrio       = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    return p;\n}",
+      "Draft": "func Int2_ManCreate(pGia *Gia_Man_t, pPars *Int2_ManPars_t) *Int2_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Int2_Man_t{};\n    p.pPars       = pPars;\n    p.pGia        = pGia;\n    p.pGiaPref    = Gia_ManStart( 10000 );\n    // perform structural hashing\n    Gia_ManHashAlloc( pFrames );\n    // subset of the manager\n    p.vSuffCis    = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p.vSuffCos    = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p.vPrefCos    = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p.vStack      = Vec_IntAlloc( 10000 );\n    // preimages\n    p.vImageOne   = Vec_IntAlloc( 1000 );\n    p.vImagesAll  = Vec_IntAlloc( 1000 );\n    // variable maps\n    p.vMapFrames  = Vec_PtrAlloc( 100 );\n    p.vMapPref    = Vec_IntAlloc( Gia_ManRegNum(pGia) );\n    p.vMapSuff    = Vec_IntAlloc( Gia_ManRegNum(pGia) );\n    // initial minimization\n    p.vAssign     = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p.vPrio       = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    return p;\n}"
+    },
+    {
+      "Name": "Int2_ManStop",
+      "Start": 3738,
+      "End": 4529,
+      "BodyStart": 3788,
+      "Original": "static inline void Int2_ManStop( Int2_Man_t * p )\n{\n    // GIA managers\n    Gia_ManStopP( \u0026p-\u003epGiaPref );\n    Gia_ManStopP( \u0026p-\u003epGiaSuff );\n    // subset of the manager\n    Vec_IntFreeP( \u0026p-\u003evSuffCis );\n    Vec_IntFreeP( \u0026p-\u003evSuffCos );\n    Vec_IntFreeP( \u0026p-\u003evPrefCos );\n    Vec_IntFreeP( \u0026p-\u003evStack );\n    // preimages\n    Vec_IntFreeP( \u0026p-\u003evImageOne );\n    Vec_IntFreeP( \u0026p-\u003evImagesAll );\n    // variable maps\n    Vec_VecFree( (Vec_Vec_t *)p-\u003evMapFrames );\n    Vec_IntFreeP( \u0026p-\u003evMapPref );\n    Vec_IntFreeP( \u0026p-\u003evMapSuff );\n    // initial minimization\n    Vec_IntFreeP( \u0026p-\u003evAssign );\n    Vec_IntFreeP( \u0026p-\u003evPrio );\n    // SAT solving\n    if ( p-\u003epSatPref )\n        sat_solver_delete( p-\u003epSatPref );\n    if ( p-\u003etimeSatSuff )\n        sat_solver_delete( p-\u003epSatSuff );\n    ABC_FREE( p );\n}",
+      "Draft": "func Int2_ManStop(p *Int2_Man_t) {\n    // GIA managers\n    Gia_ManStopP( \u0026p.pGiaPref );\n    Gia_ManStopP( \u0026p.pGiaSuff );\n    // subset of the manager\n    Vec_IntFreeP( \u0026p.vSuffCis );\n    Vec_IntFreeP( \u0026p.vSuffCos );\n    Vec_IntFreeP( \u0026p.vPrefCos );\n    Vec_IntFreeP( \u0026p.vStack );\n    // preimages\n    Vec_IntFreeP( \u0026p.vImageOne );\n    Vec_IntFreeP( \u0026p.vImagesAll );\n    // variable maps\n    Vec_VecFree( (Vec_Vec_t *)p.vMapFrames );\n    Vec_IntFreeP( \u0026p.vMapPref );\n    Vec_IntFreeP( \u0026p.vMapSuff );\n    // initial minimization\n    Vec_IntFreeP( \u0026p.vAssign );\n    Vec_IntFreeP( \u0026p.vPrio );\n    // SAT solving\n    if p.pSatPref {\n        sat_solver_delete( p.pSatPref ); }\n    if p.timeSatSuff {\n        sat_solver_delete( p.pSatSuff ); }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Int.h::struct::Int2_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Int2_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1386,
+      "End": 2741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Int.h::mechanical::sizeof::2941",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2859,
+      "End": 2859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Int.h::pointer-cast::2906",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2859,
+      "End": 2859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Int.h::pointer-cast::4242",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4167,
+      "End": 4180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Int.h::pointer-cast::4645",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4513,
+      "End": 4513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Int.h::Int2_ManCreate",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2743,
+      "End": 3737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Int.h::ternary::Int2_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Int2_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3738,
+      "End": 4529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Int.h::Int2_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3738,
+      "End": 4529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Int.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6019
+    }
+  ],
+  "Draft": "package int2\n\n/**CFile****************************************************************\n\n  FileName    [int2Int.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Dec 1, 2013.]\n\n  Revision    [$Id: int2Int.h,v 1.00 2013/12/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/gia/gia.h\"\n//#include \"sat/bsat/satSolver.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"int2.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// interpolation manager\n   \ntype Int2_Man_t struct {\n    // parameters\n    pPars  *Int2_ManPars_t;        // parameters\n    // GIA managers\n    pGia       *Gia_Man_t;         // original manager\n    pGiaPref       *Gia_Man_t;     // prefix manager\n    pGiaSuff       *Gia_Man_t;     // suffix manager\n    // subset of the manager\n    vSuffCis       *Vec_Int_t;     // suffix CIs\n    vSuffCos       *Vec_Int_t;     // suffix COs\n    vPrefCos       *Vec_Int_t;     // suffix POs\n    vStack       *Vec_Int_t;       // temporary stack\n    // preimages\n    vImageOne       *Vec_Int_t;    // latest preimage\n    vImagesAll       *Vec_Int_t;   // cumulative preimage\n    // variable maps\n    vMapFrames       *Vec_Ptr_t;   // mapping of GIA IDs into frame IDs\n    vMapPref       *Vec_Int_t;     // mapping of flop inputs into SAT variables\n    vMapSuff       *Vec_Int_t;     // mapping of flop outputs into SAT variables\n    // initial minimization\n    vAssign       *Vec_Int_t;      // assignment of PIs in pGiaSuff\n    vPrio       *Vec_Int_t;        // priority of PIs in pGiaSuff\n    // SAT solving\n    pSatPref      *sat_solver;     // prefix solver\n    pSatSuff      *sat_solver;     // suffix solver\n    // runtime\n    timeSatPref          abctime;\n    timeSatSuff          abctime;\n    timeOther          abctime;\n    timeTotal          abctime;\n}\n\nfunc Int2_ManCreate(pGia *Gia_Man_t, pPars *Int2_ManPars_t) *Int2_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Int2_Man_t{};\n    p.pPars       = pPars;\n    p.pGia        = pGia;\n    p.pGiaPref    = Gia_ManStart( 10000 );\n    // perform structural hashing\n    Gia_ManHashAlloc( pFrames );\n    // subset of the manager\n    p.vSuffCis    = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p.vSuffCos    = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p.vPrefCos    = Vec_IntAlloc( Gia_ManCoNum(pGia) );\n    p.vStack      = Vec_IntAlloc( 10000 );\n    // preimages\n    p.vImageOne   = Vec_IntAlloc( 1000 );\n    p.vImagesAll  = Vec_IntAlloc( 1000 );\n    // variable maps\n    p.vMapFrames  = Vec_PtrAlloc( 100 );\n    p.vMapPref    = Vec_IntAlloc( Gia_ManRegNum(pGia) );\n    p.vMapSuff    = Vec_IntAlloc( Gia_ManRegNum(pGia) );\n    // initial minimization\n    p.vAssign     = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    p.vPrio       = Vec_IntAlloc( Gia_ManCiNum(pGia) );\n    return p;\n}\nfunc Int2_ManStop(p *Int2_Man_t) {\n    // GIA managers\n    Gia_ManStopP( \u0026p.pGiaPref );\n    Gia_ManStopP( \u0026p.pGiaSuff );\n    // subset of the manager\n    Vec_IntFreeP( \u0026p.vSuffCis );\n    Vec_IntFreeP( \u0026p.vSuffCos );\n    Vec_IntFreeP( \u0026p.vPrefCos );\n    Vec_IntFreeP( \u0026p.vStack );\n    // preimages\n    Vec_IntFreeP( \u0026p.vImageOne );\n    Vec_IntFreeP( \u0026p.vImagesAll );\n    // variable maps\n    Vec_VecFree( (Vec_Vec_t *)p.vMapFrames );\n    Vec_IntFreeP( \u0026p.vMapPref );\n    Vec_IntFreeP( \u0026p.vMapSuff );\n    // initial minimization\n    Vec_IntFreeP( \u0026p.vAssign );\n    Vec_IntFreeP( \u0026p.vPrio );\n    // SAT solving\n    if p.pSatPref {\n        sat_solver_delete( p.pSatPref ); }\n    if p.timeSatSuff {\n        sat_solver_delete( p.pSatSuff ); }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== int2Bmc.c =============================================================*/\n// extern int           Int2_ManCheckInit( Gia_Man_t * p );\n\n// extern Gia_Man_t *   Int2_ManDupInit( Gia_Man_t * p, int fVerbose );\n\n// extern sat_solver *  Int2_ManSetupBmcSolver( Gia_Man_t * p, int nFrames );\n\n// extern void          Int2_ManCreateFrames( Int2_Man_t * p, int iFrame, Vec_Int_t * vPrefCos );\n\n// extern int           Int2_ManCheckBmc( Int2_Man_t * p, Vec_Int_t * vCube );\n\n\n/*=== int2Refine.c =============================================================*/\n// extern Vec_Int_t *   Int2_ManRefineCube( Gia_Man_t * p, Vec_Int_t * vAssign, Vec_Int_t * vPrio );\n\n\n/*=== int2Util.c ============================================================*/\n// extern Gia_Man_t *   Int2_ManProbToGia( Gia_Man_t * p, Vec_Int_t * vSop );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

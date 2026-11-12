@@ -1,0 +1,782 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c",
+  "SHA256": "f81ec56b43ac0f2de79ac99498b63928fb29417dd2709e806a3f06a9abd6315e",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1370
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Ssc_Pars_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 78,
+        "Column": 57,
+        "ByteOffset": 2352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 2658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(\u0026p.pFraig.vHTable) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 2709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ManHasDangling(p.pFraig) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 9,
+        "ByteOffset": 2844
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Constraints are UNSAT after propagation.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 9,
+        "ByteOffset": 3163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Constraints are UNSAT.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 9,
+        "ByteOffset": 3311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Conflict limit is reached while trying to find one SAT assignment.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 9,
+        "ByteOffset": 3656
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Computed reference pattern violates %d constraints (this is a bug!).\\n\", Gia_ManCheckCoPhase(p.pCare) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 137,
+        "Column": 80,
+        "ByteOffset": 4987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSimInit)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimInit)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 139,
+        "Column": 79,
+        "ByteOffset": 5267
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSimSat)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimSat)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 141,
+        "Column": 79,
+        "ByteOffset": 5546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSimSat)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimSat)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 143,
+        "Column": 89,
+        "ByteOffset": 5835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSat-p.timeCnfGen)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSat-p.timeCnfGen)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 145,
+        "Column": 81,
+        "ByteOffset": 6126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 147,
+        "Column": 79,
+        "ByteOffset": 6407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatSat)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 149,
+        "Column": 81,
+        "ByteOffset": 6688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUndec)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 151,
+        "Column": 78,
+        "ByteOffset": 6968
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 153,
+        "Column": 78,
+        "ByteOffset": 7245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 173,
+        "Column": 5,
+        "ByteOffset": 7928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 199,
+        "Column": 5,
+        "ByteOffset": 9097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iRepr == Gia_ObjRepr(p.pAig, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 200,
+        "Column": 5,
+        "ByteOffset": 9147
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsHead( p.pAig, iRepr ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 203,
+        "Column": 65,
+        "ByteOffset": 9359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Gia_ClassForEachObj__*/for  assert(Gia_ObjIsHead(p.pAig, iRepr) \u0026\u0026 iRepr), Ent = iRepr; Ent \u003e 0; Ent = Gia_ObjNext(p.pAig, Ent)  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 9708
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iRepr != Gia_ObjRepr(p.pAig, iObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 245,
+        "Column": 9,
+        "ByteOffset": 10947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification succeeded.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 9,
+        "ByteOffset": 11022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 9,
+        "ByteOffset": 11095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification undecided.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 14,
+        "ByteOffset": 11147
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 273,
+        "Column": 5,
+        "ByteOffset": 11729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(pCare) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 11770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCiNum(pAig) == Gia_ManCiNum(pCare) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 275,
+        "Column": 5,
+        "ByteOffset": 11827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManIsNormalized(pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 5,
+        "ByteOffset": 11868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManIsNormalized(pCare) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 9,
+        "ByteOffset": 12219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Care set produced %d hits out of %d.\\n\", Ssc_GiaEstimateCare(p.pFraig, 5), 640 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 341,
+        "Column": 9,
+        "ByteOffset": 14610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_Lit2Var(pRepr.Value) != Abc_Lit2Var(pObj.Value) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 365,
+        "Column": 18,
+        "ByteOffset": 15712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 388,
+        "Column": 9,
+        "ByteOffset": 16409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"There is no equivalences.\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 389,
+        "Column": 71,
+        "ByteOffset": 16520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pAig.pReprs) ? (free((char *) (pAig.pReprs)), (pAig.pReprs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 390,
+        "Column": 71,
+        "ByteOffset": 16645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pAig.pNexts) ? (free((char *) (pAig.pNexts)), (pAig.pNexts) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 435,
+        "Column": 9,
+        "ByteOffset": 18461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"User AIG: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 437,
+        "Column": 9,
+        "ByteOffset": 18533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Care AIG: \" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssc_ManSetDefaultParams",
+      "Start": 1301,
+      "End": 1713,
+      "BodyStart": 1348,
+      "Original": "void Ssc_ManSetDefaultParams( Ssc_Pars_t * p )\n{\n    memset( p, 0, sizeof(Ssc_Pars_t) );\n    p-\u003enWords         =     1;  // the number of simulation words\n    p-\u003enBTLimit       =  1000;  // conflict limit at a node\n    p-\u003enSatVarMax     =  5000;  // the max number of SAT variables\n    p-\u003enCallsRecycle  =   100;  // calls to perform before recycling SAT solver\n    p-\u003efVerbose       =     0;  // verbose stats\n}",
+      "Draft": "func Ssc_ManSetDefaultParams(p *Ssc_Pars_t) {\n    memset( p, 0, sizeof(Ssc_Pars_t) );\n    p.nWords         =     1;  // the number of simulation words\n    p.nBTLimit       =  1000;  // conflict limit at a node\n    p.nSatVarMax     =  5000;  // the max number of SAT variables\n    p.nCallsRecycle  =   100;  // calls to perform before recycling SAT solver\n    p.fVerbose       =     0;  // verbose stats\n}"
+    },
+    {
+      "Name": "Ssc_ManStop",
+      "Start": 1949,
+      "End": 2318,
+      "BodyStart": 1983,
+      "Original": "void Ssc_ManStop( Ssc_Man_t * p )\n{\n    Vec_IntFreeP( \u0026p-\u003evFront );\n    Vec_IntFreeP( \u0026p-\u003evFanins );\n    Vec_IntFreeP( \u0026p-\u003evPattern );\n    Vec_IntFreeP( \u0026p-\u003evDisPairs );\n    Vec_IntFreeP( \u0026p-\u003evPivot );\n    Vec_IntFreeP( \u0026p-\u003evId2Var );\n    Vec_IntFreeP( \u0026p-\u003evVar2Id );\n    if ( p-\u003epSat ) sat_solver_delete( p-\u003epSat );\n    Gia_ManStopP( \u0026p-\u003epFraig );\n    ABC_FREE( p );\n}",
+      "Draft": "func Ssc_ManStop(p *Ssc_Man_t) {\n    Vec_IntFreeP( \u0026p.vFront );\n    Vec_IntFreeP( \u0026p.vFanins );\n    Vec_IntFreeP( \u0026p.vPattern );\n    Vec_IntFreeP( \u0026p.vDisPairs );\n    Vec_IntFreeP( \u0026p.vPivot );\n    Vec_IntFreeP( \u0026p.vId2Var );\n    Vec_IntFreeP( \u0026p.vVar2Id );\n    if p.pSat { sat_solver_delete( p.pSat ); }\n    Gia_ManStopP( \u0026p.pFraig );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Ssc_ManStart",
+      "Start": 2319,
+      "End": 4067,
+      "BodyStart": 2403,
+      "Original": "Ssc_Man_t * Ssc_ManStart( Gia_Man_t * pAig, Gia_Man_t * pCare, Ssc_Pars_t * pPars )\n{\n    Ssc_Man_t * p;\n    p = ABC_CALLOC( Ssc_Man_t, 1 );\n    p-\u003epPars  = pPars;\n    p-\u003epAig   = pAig;\n    p-\u003epCare  = pCare;\n    p-\u003epFraig = Gia_ManDupDfs( p-\u003epCare );\n    assert( Vec_IntSize(\u0026p-\u003epFraig-\u003evHTable) == 0 );\n    assert( !Gia_ManHasDangling(p-\u003epFraig) );\n    Gia_ManInvertPos( p-\u003epFraig );\n    Ssc_ManStartSolver( p );\n    if ( p-\u003epSat == NULL )\n    {\n        printf( \"Constraints are UNSAT after propagation.\\n\" );\n        Ssc_ManStop( p );\n        return (Ssc_Man_t *)(ABC_PTRINT_T)1;\n    }\n//    p-\u003evPivot = Ssc_GiaFindPivotSim( p-\u003epFraig );\n//    Vec_IntFreeP( \u0026p-\u003evPivot  );\n    p-\u003evPivot = Ssc_ManFindPivotSat( p );\n    if ( p-\u003evPivot == (Vec_Int_t *)(ABC_PTRINT_T)1 )\n    {\n        printf( \"Constraints are UNSAT.\\n\" );\n        Ssc_ManStop( p );\n        return (Ssc_Man_t *)(ABC_PTRINT_T)1;\n    }\n    if ( p-\u003evPivot == NULL )\n    {\n        printf( \"Conflict limit is reached while trying to find one SAT assignment.\\n\" );\n        Ssc_ManStop( p );\n        return NULL;\n    }\n    sat_solver_bookmark( p-\u003epSat );\n//    Vec_IntPrint( p-\u003evPivot );\n    Gia_ManSetPhasePattern( p-\u003epAig, p-\u003evPivot );\n    Gia_ManSetPhasePattern( p-\u003epCare, p-\u003evPivot );\n    if ( Gia_ManCheckCoPhase(p-\u003epCare) )\n    {\n        printf( \"Computed reference pattern violates %d constraints (this is a bug!).\\n\", Gia_ManCheckCoPhase(p-\u003epCare) );\n        Ssc_ManStop( p );\n        return NULL;\n    }\n    // other things\n    p-\u003evDisPairs = Vec_IntAlloc( 100 );\n    p-\u003evPattern = Vec_IntAlloc( 100 );\n    p-\u003evFanins = Vec_IntAlloc( 100 );\n    p-\u003evFront = Vec_IntAlloc( 100 );\n    Ssc_GiaClassesInit( pAig );\n    // now it is ready for refinement using simulation \n    return p;\n}",
+      "Draft": "func Ssc_ManStart(pAig *Gia_Man_t, pCare *Gia_Man_t, pPars *Ssc_Pars_t) *Ssc_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Ssc_Man_t{};\n    p.pPars  = pPars;\n    p.pAig   = pAig;\n    p.pCare  = pCare;\n    p.pFraig = Gia_ManDupDfs( p.pCare );\n    assert(Vec_IntSize(\u0026p.pFraig.vHTable) == 0, \"Vec_IntSize(\u0026p.pFraig.vHTable) == 0\");\n    assert(!Gia_ManHasDangling(p.pFraig), \"!Gia_ManHasDangling(p.pFraig)\");\n    Gia_ManInvertPos( p.pFraig );\n    Ssc_ManStartSolver( p );\n    if p.pSat == nil {\n        fmt.Printf(\"Constraints are UNSAT after propagation.\\n\");\n        Ssc_ManStop( p );\n        return (Ssc_Man_t *)(ABC_PTRINT_T)1;\n    }\n//    p-\u003evPivot = Ssc_GiaFindPivotSim( p-\u003epFraig );\n//    Vec_IntFreeP( \u0026p-\u003evPivot  );\n    p.vPivot = Ssc_ManFindPivotSat( p );\n    if p.vPivot == (Vec_Int_t *)(ABC_PTRINT_T)1 {\n        fmt.Printf(\"Constraints are UNSAT.\\n\");\n        Ssc_ManStop( p );\n        return (Ssc_Man_t *)(ABC_PTRINT_T)1;\n    }\n    if p.vPivot == nil {\n        fmt.Printf(\"Conflict limit is reached while trying to find one SAT assignment.\\n\");\n        Ssc_ManStop( p );\n        return nil;\n    }\n    sat_solver_bookmark( p.pSat );\n//    Vec_IntPrint( p-\u003evPivot );\n    Gia_ManSetPhasePattern( p.pAig, p.vPivot );\n    Gia_ManSetPhasePattern( p.pCare, p.vPivot );\n    if Gia_ManCheckCoPhase(p.pCare) {\n        fmt.Printf(\"Computed reference pattern violates %d constraints (this is a bug!).\\n\", Gia_ManCheckCoPhase(p.pCare));\n        Ssc_ManStop( p );\n        return nil;\n    }\n    // other things\n    p.vDisPairs = Vec_IntAlloc( 100 );\n    p.vPattern = Vec_IntAlloc( 100 );\n    p.vFanins = Vec_IntAlloc( 100 );\n    p.vFront = Vec_IntAlloc( 100 );\n    Ssc_GiaClassesInit( pAig );\n    // now it is ready for refinement using simulation \n    return p;\n}"
+    },
+    {
+      "Name": "Ssc_ManPrintStats",
+      "Start": 4068,
+      "End": 5503,
+      "BodyStart": 4108,
+      "Original": "void Ssc_ManPrintStats( Ssc_Man_t * p )\n{\n    Abc_Print( 1, \"Parameters: SimWords = %d. SatConfs = %d. SatVarMax = %d. CallsRec = %d. Verbose = %d.\\n\",\n        p-\u003epPars-\u003enWords, p-\u003epPars-\u003enBTLimit, p-\u003epPars-\u003enSatVarMax, p-\u003epPars-\u003enCallsRecycle, p-\u003epPars-\u003efVerbose );\n    Abc_Print( 1, \"SAT calls : Total = %d. Proof = %d. Cex = %d. Undec = %d.\\n\",\n        p-\u003enSatCalls, p-\u003enSatCallsUnsat, p-\u003enSatCallsSat, p-\u003enSatCallsUndec );\n    Abc_Print( 1, \"SAT solver: Vars = %d. Clauses = %d. Recycles = %d. Sim rounds = %d.\\n\",\n        sat_solver_nvars(p-\u003epSat), sat_solver_nclauses(p-\u003epSat), p-\u003enRecycles, p-\u003enSimRounds );\n\n    p-\u003etimeOther = p-\u003etimeTotal - p-\u003etimeSimInit - p-\u003etimeSimSat - p-\u003etimeCnfGen - p-\u003etimeSatSat - p-\u003etimeSatUnsat - p-\u003etimeSatUndec;\n    ABC_PRTP( \"Initialization \", p-\u003etimeSimInit,            p-\u003etimeTotal );\n    ABC_PRTP( \"SAT simulation \", p-\u003etimeSimSat,             p-\u003etimeTotal );\n    ABC_PRTP( \"CNF generation \", p-\u003etimeSimSat,             p-\u003etimeTotal );\n    ABC_PRTP( \"SAT solving    \", p-\u003etimeSat-p-\u003etimeCnfGen,  p-\u003etimeTotal );\n    ABC_PRTP( \"  unsat        \", p-\u003etimeSatUnsat,           p-\u003etimeTotal );\n    ABC_PRTP( \"  sat          \", p-\u003etimeSatSat,             p-\u003etimeTotal );\n    ABC_PRTP( \"  undecided    \", p-\u003etimeSatUndec,           p-\u003etimeTotal );\n    ABC_PRTP( \"Other          \", p-\u003etimeOther,              p-\u003etimeTotal );\n    ABC_PRTP( \"TOTAL          \", p-\u003etimeTotal,              p-\u003etimeTotal );\n}",
+      "Draft": "func Ssc_ManPrintStats(p *Ssc_Man_t) {\n    Abc_Print( 1, \"Parameters: SimWords = %d. SatConfs = %d. SatVarMax = %d. CallsRec = %d. Verbose = %d.\\n\",\n        p.pPars.nWords, p.pPars.nBTLimit, p.pPars.nSatVarMax, p.pPars.nCallsRecycle, p.pPars.fVerbose );\n    Abc_Print( 1, \"SAT calls : Total = %d. Proof = %d. Cex = %d. Undec = %d.\\n\",\n        p.nSatCalls, p.nSatCallsUnsat, p.nSatCallsSat, p.nSatCallsUndec );\n    Abc_Print( 1, \"SAT solver: Vars = %d. Clauses = %d. Recycles = %d. Sim rounds = %d.\\n\",\n        sat_solver_nvars(p.pSat), sat_solver_nclauses(p.pSat), p.nRecycles, p.nSimRounds );\n\n    p.timeOther = p.timeTotal - p.timeSimInit - p.timeSimSat - p.timeCnfGen - p.timeSatSat - p.timeSatUnsat - p.timeSatUndec;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Initialization \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSimInit)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimInit)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"SAT simulation \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSimSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimSat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"CNF generation \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSimSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimSat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"SAT solving    \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSat-p.timeCnfGen)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSat-p.timeCnfGen)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"  unsat        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"  sat          \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"  undecided    \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUndec)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Other          \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"TOTAL          \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n}"
+    },
+    {
+      "Name": "Ssc_GiaSimulatePatternFraig_rec",
+      "Start": 5784,
+      "End": 6367,
+      "BodyStart": 5852,
+      "Original": "int Ssc_GiaSimulatePatternFraig_rec( Ssc_Man_t * p, int iFraigObj )\n{\n    Gia_Obj_t * pObj;\n    int Res0, Res1;\n    if ( Ssc_ObjSatVar(p, iFraigObj) )\n        return sat_solver_var_value( p-\u003epSat, Ssc_ObjSatVar(p, iFraigObj) );\n    pObj = Gia_ManObj( p-\u003epFraig, iFraigObj );\n    assert( Gia_ObjIsAnd(pObj) );\n    Res0 = Ssc_GiaSimulatePatternFraig_rec( p, Gia_ObjFaninId0(pObj, iFraigObj) );\n    Res1 = Ssc_GiaSimulatePatternFraig_rec( p, Gia_ObjFaninId1(pObj, iFraigObj) );\n    pObj-\u003efMark0 = (Res0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Res1 ^ Gia_ObjFaninC1(pObj));\n    return pObj-\u003efMark0;\n}",
+      "Draft": "func Ssc_GiaSimulatePatternFraig_rec(p *Ssc_Man_t, iFraigObj int32) int32 {\n    var pObj *Gia_Obj_t;\n    var Res0, Res1 int32;\n    if Ssc_ObjSatVar(p, iFraigObj) {\n        return sat_solver_var_value( p.pSat, Ssc_ObjSatVar(p, iFraigObj) ); }\n    pObj = Gia_ManObj( p.pFraig, iFraigObj );\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Res0 = Ssc_GiaSimulatePatternFraig_rec( p, Gia_ObjFaninId0(pObj, iFraigObj) );\n    Res1 = Ssc_GiaSimulatePatternFraig_rec( p, Gia_ObjFaninId1(pObj, iFraigObj) );\n    pObj.fMark0 = (Res0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Res1 ^ Gia_ObjFaninC1(pObj));\n    return pObj.fMark0;\n}"
+    },
+    {
+      "Name": "Ssc_GiaSimulatePattern_rec",
+      "Start": 6368,
+      "End": 7123,
+      "BodyStart": 6434,
+      "Original": "int Ssc_GiaSimulatePattern_rec( Ssc_Man_t * p, Gia_Obj_t * pObj )\n{\n    int Res0, Res1;\n    if ( Gia_ObjIsTravIdCurrent(p-\u003epAig, pObj) )\n        return pObj-\u003efMark0;\n    Gia_ObjSetTravIdCurrent(p-\u003epAig, pObj);\n    if ( ~pObj-\u003eValue )  // mapping into FRAIG exists - simulate FRAIG\n    { \n        Res0 = Ssc_GiaSimulatePatternFraig_rec( p, Abc_Lit2Var(pObj-\u003eValue) );\n        pObj-\u003efMark0 = Res0 ^ Abc_LitIsCompl(pObj-\u003eValue);\n    }\n    else // mapping into FRAIG does not exist - simulate AIG\n    {\n        Res0 = Ssc_GiaSimulatePattern_rec( p, Gia_ObjFanin0(pObj) );\n        Res1 = Ssc_GiaSimulatePattern_rec( p, Gia_ObjFanin1(pObj) );\n        pObj-\u003efMark0 = (Res0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Res1 ^ Gia_ObjFaninC1(pObj));\n    }\n    return pObj-\u003efMark0;\n}",
+      "Draft": "func Ssc_GiaSimulatePattern_rec(p *Ssc_Man_t, pObj *Gia_Obj_t) int32 {\n    var Res0, Res1 int32;\n    if Gia_ObjIsTravIdCurrent(p.pAig, pObj) {\n        return pObj.fMark0; }\n    Gia_ObjSetTravIdCurrent(p.pAig, pObj);\n    if ~pObj.Value {  // mapping into FRAIG exists - simulate FRAIG\n     \n        Res0 = Ssc_GiaSimulatePatternFraig_rec( p, Abc_Lit2Var(pObj.Value) );\n        pObj.fMark0 = Res0 ^ Abc_LitIsCompl(pObj.Value);\n    \n    } else { // mapping into FRAIG does not exist - simulate AIG\n    \n        Res0 = Ssc_GiaSimulatePattern_rec( p, Gia_ObjFanin0(pObj) );\n        Res1 = Ssc_GiaSimulatePattern_rec( p, Gia_ObjFanin1(pObj) );\n        pObj.fMark0 = (Res0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Res1 ^ Gia_ObjFaninC1(pObj));\n    }\n    return pObj.fMark0;\n}"
+    },
+    {
+      "Name": "Ssc_GiaResimulateOneClass",
+      "Start": 7124,
+      "End": 7780,
+      "BodyStart": 7192,
+      "Original": "int Ssc_GiaResimulateOneClass( Ssc_Man_t * p, int iRepr, int iObj )\n{\n    int Ent, RetValue;\n    assert( iRepr == Gia_ObjRepr(p-\u003epAig, iObj) );\n    assert( Gia_ObjIsHead( p-\u003epAig, iRepr ) );\n    // set bit-values at the nodes according to the counter-example\n    Gia_ManIncrementTravId( p-\u003epAig );\n    Gia_ClassForEachObj( p-\u003epAig, iRepr, Ent )\n        Ssc_GiaSimulatePattern_rec( p, Gia_ManObj(p-\u003epAig, Ent) );\n    // refine one class using these bit-values\n    RetValue = Ssc_GiaSimClassRefineOneBit( p-\u003epAig, iRepr );\n    // check that the candidate equivalence is indeed refined\n    assert( iRepr != Gia_ObjRepr(p-\u003epAig, iObj) );\n    return RetValue;\n}",
+      "Draft": "func Ssc_GiaResimulateOneClass(p *Ssc_Man_t, iRepr int32, iObj int32) int32 {\n    var Ent, RetValue int32;\n    assert(iRepr == Gia_ObjRepr(p.pAig, iObj), \"iRepr == Gia_ObjRepr(p.pAig, iObj)\");\n    assert(Gia_ObjIsHead( p.pAig, iRepr ), \"Gia_ObjIsHead( p.pAig, iRepr )\");\n    // set bit-values at the nodes according to the counter-example\n    Gia_ManIncrementTravId( p.pAig );\n    // inlining of macro Gia_ClassForEachObj\n    for  assert(Gia_ObjIsHead(p.pAig, iRepr) \u0026\u0026 (iRepr != 0), \"Gia_ObjIsHead(p.pAig, iRepr) \u0026\u0026 iRepr\"), Ent = iRepr; Ent \u003e 0; Ent = Gia_ObjNext(p.pAig, Ent)  {\n        Ssc_GiaSimulatePattern_rec( p, Gia_ManObj(p.pAig, Ent) );\n    }\n    // refine one class using these bit-values\n    RetValue = Ssc_GiaSimClassRefineOneBit( p.pAig, iRepr );\n    // check that the candidate equivalence is indeed refined\n    assert(iRepr != Gia_ObjRepr(p.pAig, iObj), \"iRepr != Gia_ObjRepr(p.pAig, iObj)\");\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Ssc_PerformVerification",
+      "Start": 8061,
+      "End": 9134,
+      "BodyStart": 8139,
+      "Original": "int Ssc_PerformVerification( Gia_Man_t * p0, Gia_Man_t * p1, Gia_Man_t * pC )\n{\n    int Status;\n    Cec_ParCec_t ParsCec, * pPars = \u0026ParsCec;\n    // derive the OR of constraint outputs\n    Gia_Man_t * pCond = Gia_ManDupAndOr( pC, Gia_ManPoNum(p0), 1, 0 );\n    // derive F = F \u0026 !OR(c0, c1, c2, ...)\n    Gia_Man_t * p0c = Gia_ManMiter( p0, pCond, 0, 0, 0, 1, 0 );\n    // derive F = F \u0026 !OR(c0, c1, c2, ...)\n    Gia_Man_t * p1c = Gia_ManMiter( p1, pCond, 0, 0, 0, 1, 0 );\n    // derive dual-output miter\n    Gia_Man_t * pMiter = Gia_ManMiter( p0c, p1c, 0, 1, 0, 0, 0 );\n    Gia_ManStop( p0c );\n    Gia_ManStop( p1c );\n    Gia_ManStop( pCond );\n    // run equivalence checking\n    Cec_ManCecSetDefaultParams( pPars );\n    Status = Cec_ManVerify( pMiter, pPars );\n    Gia_ManStop( pMiter );\n    // report the results\n    if ( Status == 1 )\n        printf( \"Verification succeeded.\\n\" );\n    else if ( Status == 0 )\n        printf( \"Verification failed.\\n\" );\n    else if ( Status == -1 )\n        printf( \"Verification undecided.\\n\" );\n    else assert( 0 );\n    return Status;\n}",
+      "Draft": "func Ssc_PerformVerification(p0 *Gia_Man_t, p1 *Gia_Man_t, pC *Gia_Man_t) int32 {\n    var Status int32;\n    var ParsCec Cec_ParCec_t;\n    var pPars *Cec_ParCec_t = \u0026ParsCec;\n    // derive the OR of constraint outputs\n    var pCond *Gia_Man_t  = Gia_ManDupAndOr( pC, Gia_ManPoNum(p0), 1, 0 );\n    // derive F = F \u0026 !OR(c0, c1, c2, ...)\n    var p0c *Gia_Man_t  = Gia_ManMiter( p0, pCond, 0, 0, 0, 1, 0 );\n    // derive F = F \u0026 !OR(c0, c1, c2, ...)\n    var p1c *Gia_Man_t  = Gia_ManMiter( p1, pCond, 0, 0, 0, 1, 0 );\n    // derive dual-output miter\n    var pMiter *Gia_Man_t  = Gia_ManMiter( p0c, p1c, 0, 1, 0, 0, 0 );\n    Gia_ManStop( p0c );\n    Gia_ManStop( p1c );\n    Gia_ManStop( pCond );\n    // run equivalence checking\n    Cec_ManCecSetDefaultParams( pPars );\n    Status = Cec_ManVerify( pMiter, pPars );\n    Gia_ManStop( pMiter );\n    // report the results\n    if Status == 1 {\n        fmt.Printf(\"Verification succeeded.\\n\");\n    } else if Status == 0 {\n        fmt.Printf(\"Verification failed.\\n\");\n    } else if Status == -1 {\n        fmt.Printf(\"Verification undecided.\\n\");\n    } else { assert(false, \"0\"); }\n    return Status;\n}"
+    },
+    {
+      "Name": "Ssc_PerformSweepingInt",
+      "Start": 9370,
+      "End": 14946,
+      "BodyStart": 9464,
+      "Original": "Gia_Man_t * Ssc_PerformSweepingInt( Gia_Man_t * pAig, Gia_Man_t * pCare, Ssc_Pars_t * pPars )\n{\n    Ssc_Man_t * p;\n    Gia_Man_t * pResult, * pTemp;\n    Gia_Obj_t * pObj, * pRepr;\n    abctime clk, clkTotal = Abc_Clock();\n    int i, fCompl, nRefined, status;\nclk = Abc_Clock();\n    assert( Gia_ManRegNum(pCare) == 0 );\n    assert( Gia_ManCiNum(pAig) == Gia_ManCiNum(pCare) );\n    assert( Gia_ManIsNormalized(pAig) );\n    assert( Gia_ManIsNormalized(pCare) );\n    // reset random numbers\n    Gia_ManRandom( 1 );\n    // sweeping manager\n    p = Ssc_ManStart( pAig, pCare, pPars );\n    if ( p == (Ssc_Man_t *)(ABC_PTRINT_T)1 ) // UNSAT\n        return Gia_ManDupZero( pAig );\n    if ( p == NULL ) // timeout\n        return Gia_ManDup( pAig );\n    if ( p-\u003epPars-\u003efVerbose )\n        printf( \"Care set produced %d hits out of %d.\\n\", Ssc_GiaEstimateCare(p-\u003epFraig, 5), 640 );\n    // perform simulation \n    while ( 1 ) \n    {\n        // simulate care set\n        Ssc_GiaRandomPiPattern( p-\u003epFraig, 5, NULL );\n        Ssc_GiaSimRound( p-\u003epFraig );\n        // transfer care patterns to user's AIG\n        if ( !Ssc_GiaTransferPiPattern( pAig, p-\u003epFraig, p-\u003evPivot ) )\n            break;\n        // simulate the main AIG\n        Ssc_GiaSimRound( pAig );\n        nRefined = Ssc_GiaClassesRefine( pAig );\n        if ( pPars-\u003efVerbose ) \n            Gia_ManEquivPrintClasses( pAig, 0, 0 );\n        if ( nRefined \u003c= Gia_ManCandNum(pAig) / 100 )\n            break;\n    }\np-\u003etimeSimInit += Abc_Clock() - clk;\n\n    // prepare user's AIG\n    Gia_ManFillValue(pAig);\n    Gia_ManConst0(pAig)-\u003eValue = 0;\n    Gia_ManForEachCi( pAig, pObj, i )\n        pObj-\u003eValue = Gia_Obj2Lit( p-\u003epFraig, Gia_ManCi(p-\u003epFraig, i) );\n//    Gia_ManLevelNum(pAig);\n    // prepare swept AIG (should be done after starting SAT solver in Ssc_ManStart)\n    Gia_ManHashStart( p-\u003epFraig );\n    // perform sweeping\n    Ssc_GiaResetPiPattern( pAig, pPars-\u003enWords );\n    Ssc_GiaSavePiPattern( pAig, p-\u003evPivot );\n    Gia_ManForEachCand( pAig, pObj, i )\n    {\n        if ( pAig-\u003eiPatsPi == 64 * pPars-\u003enWords )\n        {\nclk = Abc_Clock();\n            Ssc_GiaSimRound( pAig );\n            Ssc_GiaClassesRefine( pAig );\n            if ( pPars-\u003efVerbose ) \n                Gia_ManEquivPrintClasses( pAig, 0, 0 );\n            Ssc_GiaClassesCheckPairs( pAig, p-\u003evDisPairs );\n            Vec_IntClear( p-\u003evDisPairs );\n            // prepare next patterns\n            Ssc_GiaResetPiPattern( pAig, pPars-\u003enWords );\n            Ssc_GiaSavePiPattern( pAig, p-\u003evPivot );\np-\u003etimeSimSat += Abc_Clock() - clk;\n//printf( \"\\n\" );\n        }\n        if ( Gia_ObjIsAnd(pObj) )\n            pObj-\u003eValue = Gia_ManHashAnd( p-\u003epFraig, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        if ( !Gia_ObjHasRepr(pAig, i) )\n            continue;\n        pRepr = Gia_ObjReprObj(pAig, i);\n        if ( (int)pObj-\u003eValue == Abc_LitNotCond( pRepr-\u003eValue, pRepr-\u003efPhase ^ pObj-\u003efPhase ) )\n        {\n            Gia_ObjSetProved( pAig, i );\n            continue;\n        }\n        assert( Abc_Lit2Var(pRepr-\u003eValue) != Abc_Lit2Var(pObj-\u003eValue) );\n        fCompl = pRepr-\u003efPhase ^ pObj-\u003efPhase ^ Abc_LitIsCompl(pRepr-\u003eValue) ^ Abc_LitIsCompl(pObj-\u003eValue);\n\n        // perform SAT call\nclk = Abc_Clock();\n        p-\u003enSatCalls++;\n        status = Ssc_ManCheckEquivalence( p, Abc_Lit2Var(pRepr-\u003eValue), Abc_Lit2Var(pObj-\u003eValue), fCompl );\n        if ( status == l_False )\n        {\n            p-\u003enSatCallsUnsat++;\n            pObj-\u003eValue = Abc_LitNotCond( pRepr-\u003eValue, pRepr-\u003efPhase ^ pObj-\u003efPhase );\n            Gia_ObjSetProved( pAig, i );\n        }\n        else if ( status == l_True )\n        {\n            p-\u003enSatCallsSat++;\n            Ssc_GiaSavePiPattern( pAig, p-\u003evPattern );\n            Vec_IntPush( p-\u003evDisPairs, Gia_ObjRepr(p-\u003epAig, i) );\n            Vec_IntPush( p-\u003evDisPairs, i );\n//            printf( \"Try %2d and %2d: \", Gia_ObjRepr(p-\u003epAig, i), i );\n//            Vec_IntPrint( p-\u003evPattern );\n            if ( Gia_ObjRepr(p-\u003epAig, i) \u003e 0 )\n                Ssc_GiaResimulateOneClass( p, Gia_ObjRepr(p-\u003epAig, i), i );\n        }\n        else if ( status == l_Undef )\n            p-\u003enSatCallsUndec++;\n        else assert( 0 );\np-\u003etimeSat += Abc_Clock() - clk;\n    }\n    if ( pAig-\u003eiPatsPi \u003e 1 )\n    {\nclk = Abc_Clock();\n        while ( pAig-\u003eiPatsPi \u003c 64 * pPars-\u003enWords )\n            Ssc_GiaSavePiPattern( pAig, p-\u003evPivot );\n        Ssc_GiaSimRound( pAig );\n        Ssc_GiaClassesRefine( pAig );\n        if ( pPars-\u003efVerbose ) \n            Gia_ManEquivPrintClasses( pAig, 0, 0 );\n        Ssc_GiaClassesCheckPairs( pAig, p-\u003evDisPairs );\n        Vec_IntClear( p-\u003evDisPairs );\np-\u003etimeSimSat += Abc_Clock() - clk;\n    }\n//    Gia_ManEquivPrintClasses( pAig, 1, 0 );\n//    Gia_ManPrint( pAig );\n\n    // generate the resulting AIG\n    pResult = Gia_ManEquivReduce( pAig, 0, 0, 1, 0 );\n    if ( pResult == NULL )\n    {\n        printf( \"There is no equivalences.\\n\" );\n        ABC_FREE( pAig-\u003epReprs );\n        ABC_FREE( pAig-\u003epNexts );\n        pResult = Gia_ManDup( pAig );\n    }\n    pResult = Gia_ManCleanup( pTemp = pResult );\n    Gia_ManStop( pTemp );\n    p-\u003etimeTotal = Abc_Clock() - clkTotal;\n    if ( pPars-\u003efVerbose )\n        Ssc_ManPrintStats( p );\n    Ssc_ManStop( p );\n    // count the number of representatives\n    if ( pPars-\u003efVerbose ) \n    {\n        Abc_Print( 1, \"Reduction in AIG nodes:%8d  -\u003e%8d (%6.2f %%).  \", \n            Gia_ManAndNum(pAig), Gia_ManAndNum(pResult), \n            100.0 - 100.0 * Gia_ManAndNum(pResult) / Gia_ManAndNum(pAig) );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n    }\n    return pResult;\n}",
+      "Draft": "func Ssc_PerformSweepingInt(pAig *Gia_Man_t, pCare *Gia_Man_t, pPars *Ssc_Pars_t) *Gia_Man_t {\n    var p *Ssc_Man_t;\n    var pResult, pTemp *Gia_Man_t;\n    var pObj, pRepr *Gia_Obj_t;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    var i, fCompl, nRefined, status int32;\nclk = Abc_Clock();\n    assert(Gia_ManRegNum(pCare) == 0, \"Gia_ManRegNum(pCare) == 0\");\n    assert(Gia_ManCiNum(pAig) == Gia_ManCiNum(pCare), \"Gia_ManCiNum(pAig) == Gia_ManCiNum(pCare)\");\n    assert(Gia_ManIsNormalized(pAig), \"Gia_ManIsNormalized(pAig)\");\n    assert(Gia_ManIsNormalized(pCare), \"Gia_ManIsNormalized(pCare)\");\n    // reset random numbers\n    Gia_ManRandom( 1 );\n    // sweeping manager\n    p = Ssc_ManStart( pAig, pCare, pPars );\n    if p == (Ssc_Man_t *)(ABC_PTRINT_T)1 { // UNSAT\n        return Gia_ManDupZero( pAig ); }\n    if p == nil { // timeout\n        return Gia_ManDup( pAig ); }\n    if p.pPars.fVerbose {\n        fmt.Printf(\"Care set produced %d hits out of %d.\\n\", Ssc_GiaEstimateCare(p.pFraig, 5), 640); }\n    // perform simulation \n    for {\n        // simulate care set\n        Ssc_GiaRandomPiPattern( p.pFraig, 5, nil );\n        Ssc_GiaSimRound( p.pFraig );\n        // transfer care patterns to user's AIG\n        if !Ssc_GiaTransferPiPattern( pAig, p.pFraig, p.vPivot ) {\n            break; }\n        // simulate the main AIG\n        Ssc_GiaSimRound( pAig );\n        nRefined = Ssc_GiaClassesRefine( pAig );\n        if pPars.fVerbose { \n            Gia_ManEquivPrintClasses( pAig, 0, 0 ); }\n        if nRefined \u003c= Gia_ManCandNum(pAig) / 100 {\n            break; }\n    }\np.timeSimInit += Abc_Clock() - clk;\n\n    // prepare user's AIG\n    Gia_ManFillValue(pAig);\n    Gia_ManConst0(pAig).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pAig.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pAig, i)); i++  {\n        pObj.Value = Gia_Obj2Lit( p.pFraig, Gia_ManCi(p.pFraig, i) );\n    }\n//    Gia_ManLevelNum(pAig);\n    // prepare swept AIG (should be done after starting SAT solver in Ssc_ManStart)\n    Gia_ManHashStart( p.pFraig );\n    // perform sweeping\n    Ssc_GiaResetPiPattern( pAig, pPars.nWords );\n    Ssc_GiaSavePiPattern( pAig, p.vPivot );\n    // inlining of macro Gia_ManForEachCand\n    for  i = 0; (i \u003c pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pAig, i)); i++  {      if !Gia_ObjIsCand(pObj) {} else {\n        if pAig.iPatsPi == 64 * pPars.nWords {\nclk = Abc_Clock();\n            Ssc_GiaSimRound( pAig );\n            Ssc_GiaClassesRefine( pAig );\n            if pPars.fVerbose { \n                Gia_ManEquivPrintClasses( pAig, 0, 0 ); }\n            Ssc_GiaClassesCheckPairs( pAig, p.vDisPairs );\n            Vec_IntClear( p.vDisPairs );\n            // prepare next patterns\n            Ssc_GiaResetPiPattern( pAig, pPars.nWords );\n            Ssc_GiaSavePiPattern( pAig, p.vPivot );\np.timeSimSat += Abc_Clock() - clk;\n//printf( \"\\n\" );\n        }\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Gia_ManHashAnd( p.pFraig, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        if !Gia_ObjHasRepr(pAig, i) {\n            continue; }\n        pRepr = Gia_ObjReprObj(pAig, i);\n        if int32(pObj.Value) == Abc_LitNotCond( pRepr.Value, pRepr.fPhase ^ pObj.fPhase ) {\n            Gia_ObjSetProved( pAig, i );\n            continue;\n        }\n        assert(Abc_Lit2Var(pRepr.Value) != Abc_Lit2Var(pObj.Value), \"Abc_Lit2Var(pRepr.Value) != Abc_Lit2Var(pObj.Value)\");\n        fCompl = pRepr.fPhase ^ pObj.fPhase ^ Abc_LitIsCompl(pRepr.Value) ^ Abc_LitIsCompl(pObj.Value);\n\n        // perform SAT call\nclk = Abc_Clock();\n        p.nSatCalls++;\n        status = Ssc_ManCheckEquivalence( p, Abc_Lit2Var(pRepr.Value), Abc_Lit2Var(pObj.Value), fCompl );\n        if status == l_False {\n            p.nSatCallsUnsat++;\n            pObj.Value = Abc_LitNotCond( pRepr.Value, pRepr.fPhase ^ pObj.fPhase );\n            Gia_ObjSetProved( pAig, i );\n        \n        } else if status == l_True {\n            p.nSatCallsSat++;\n            Ssc_GiaSavePiPattern( pAig, p.vPattern );\n            Vec_IntPush( p.vDisPairs, Gia_ObjRepr(p.pAig, i) );\n            Vec_IntPush( p.vDisPairs, i );\n//            printf( \"Try %2d and %2d: \", Gia_ObjRepr(p-\u003epAig, i), i );\n//            Vec_IntPrint( p-\u003evPattern );\n            if Gia_ObjRepr(p.pAig, i) \u003e 0 {\n                Ssc_GiaResimulateOneClass( p, Gia_ObjRepr(p.pAig, i), i ); }\n        \n        } else if status == l_Undef {\n            p.nSatCallsUndec++;\n        } else { assert(false, \"0\"); }\np.timeSat += Abc_Clock() - clk;\n    }\n    }\n    if pAig.iPatsPi \u003e 1 {\nclk = Abc_Clock();\n        for  pAig.iPatsPi \u003c 64 * pPars.nWords  {\n            Ssc_GiaSavePiPattern( pAig, p.vPivot );\n        }\n        Ssc_GiaSimRound( pAig );\n        Ssc_GiaClassesRefine( pAig );\n        if pPars.fVerbose { \n            Gia_ManEquivPrintClasses( pAig, 0, 0 ); }\n        Ssc_GiaClassesCheckPairs( pAig, p.vDisPairs );\n        Vec_IntClear( p.vDisPairs );\np.timeSimSat += Abc_Clock() - clk;\n    }\n//    Gia_ManEquivPrintClasses( pAig, 1, 0 );\n//    Gia_ManPrint( pAig );\n\n    // generate the resulting AIG\n    pResult = Gia_ManEquivReduce( pAig, 0, 0, 1, 0 );\n    if pResult == nil {\n        fmt.Printf(\"There is no equivalences.\\n\");\n        // inlining of macro ABC_FREE\n        ((pAig.pReprs) ? (free((char *) (pAig.pReprs)), (pAig.pReprs) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((pAig.pNexts) ? (free((char *) (pAig.pNexts)), (pAig.pNexts) = 0) : 0);\n        pResult = Gia_ManDup( pAig );\n    }\n    pResult = Gia_ManCleanup( pTemp = pResult );\n    Gia_ManStop( pTemp );\n    p.timeTotal = Abc_Clock() - clkTotal;\n    if pPars.fVerbose {\n        Ssc_ManPrintStats( p ); }\n    Ssc_ManStop( p );\n    // count the number of representatives\n    if pPars.fVerbose {\n        Abc_Print( 1, \"Reduction in AIG nodes:%8d  -\u003e%8d (%6.2f %%).  \", \n            Gia_ManAndNum(pAig), Gia_ManAndNum(pResult), \n            100.0 - 100.0 * Gia_ManAndNum(pResult) / Gia_ManAndNum(pAig) );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n    }\n    return pResult;\n}"
+    },
+    {
+      "Name": "Ssc_PerformSweeping",
+      "Start": 14947,
+      "End": 15216,
+      "BodyStart": 15038,
+      "Original": "Gia_Man_t * Ssc_PerformSweeping( Gia_Man_t * pAig, Gia_Man_t * pCare, Ssc_Pars_t * pPars )\n{\n    Gia_Man_t * pResult = Ssc_PerformSweepingInt( pAig, pCare, pPars );\n    if ( pPars-\u003efVerify )\n        Ssc_PerformVerification( pAig, pResult, pCare );\n    return pResult;\n}",
+      "Draft": "func Ssc_PerformSweeping(pAig *Gia_Man_t, pCare *Gia_Man_t, pPars *Ssc_Pars_t) *Gia_Man_t {\n    var pResult *Gia_Man_t  = Ssc_PerformSweepingInt( pAig, pCare, pPars );\n    if pPars.fVerify {\n        Ssc_PerformVerification( pAig, pResult, pCare ); }\n    return pResult;\n}"
+    },
+    {
+      "Name": "Ssc_PerformSweepingConstr",
+      "Start": 15217,
+      "End": 16599,
+      "BodyStart": 15292,
+      "Original": "Gia_Man_t * Ssc_PerformSweepingConstr( Gia_Man_t * p, Ssc_Pars_t * pPars )\n{\n    Gia_Man_t * pAig, * pCare, * pResult;\n    int i;\n    if ( pPars-\u003efVerbose )\n        Abc_Print( 0, \"SAT sweeping AIG with %d constraints.\\n\", p-\u003enConstrs );\n    if ( p-\u003enConstrs == 0 )\n    {\n        pAig = Gia_ManDup( p );\n        pCare = Gia_ManStart( Gia_ManCiNum(p) + 2 );\n        pCare-\u003epName = Abc_UtilStrsav( \"care\" );\n        for ( i = 0; i \u003c Gia_ManCiNum(p); i++ )\n            Gia_ManAppendCi( pCare );\n        Gia_ManAppendCo( pCare, 0 );\n    }\n    else\n    {\n        Vec_Int_t * vOuts = Vec_IntStartNatural( Gia_ManPoNum(p) );\n        pAig = Gia_ManDupCones( p, Vec_IntArray(vOuts), Gia_ManPoNum(p) - p-\u003enConstrs, 0 );\n        pCare = Gia_ManDupCones( p, Vec_IntArray(vOuts) + Gia_ManPoNum(p) - p-\u003enConstrs, p-\u003enConstrs, 0 );\n        Vec_IntFree( vOuts );\n    }\n    if ( pPars-\u003efVerbose )\n    {\n        printf( \"User AIG: \" );\n        Gia_ManPrintStats( pAig, NULL );\n        printf( \"Care AIG: \" );\n        Gia_ManPrintStats( pCare, NULL );\n    }\n\n    pAig = Gia_ManDupLevelized( pResult = pAig );\n    Gia_ManStop( pResult );\n    pResult = Ssc_PerformSweeping( pAig, pCare, pPars );\n    if ( pPars-\u003efAppend )\n    {\n        Gia_ManDupAppendShare( pResult, pCare );\n        pResult-\u003enConstrs = Gia_ManPoNum(pCare);\n    }\n    Gia_ManStop( pAig );\n    Gia_ManStop( pCare );\n    return pResult;\n}",
+      "Draft": "func Ssc_PerformSweepingConstr(p *Gia_Man_t, pPars *Ssc_Pars_t) *Gia_Man_t {\n    var pAig, pCare, pResult *Gia_Man_t;\n    var i int32;\n    if pPars.fVerbose {\n        Abc_Print( 0, \"SAT sweeping AIG with %d constraints.\\n\", p.nConstrs ); }\n    if p.nConstrs == 0 {\n        pAig = Gia_ManDup( p );\n        pCare = Gia_ManStart( Gia_ManCiNum(p) + 2 );\n        pCare.pName = Abc_UtilStrsav( \"care\" );\n        for  i = 0; i \u003c Gia_ManCiNum(p); i++  {\n            Gia_ManAppendCi( pCare );\n        }\n        Gia_ManAppendCo( pCare, 0 );\n    \n    } else {\n        var vOuts *Vec_Int_t  = Vec_IntStartNatural( Gia_ManPoNum(p) );\n        pAig = Gia_ManDupCones( p, Vec_IntArray(vOuts), Gia_ManPoNum(p) - p.nConstrs, 0 );\n        pCare = Gia_ManDupCones( p, Vec_IntArray(vOuts) + Gia_ManPoNum(p) - p.nConstrs, p.nConstrs, 0 );\n        Vec_IntFree( vOuts );\n    }\n    if pPars.fVerbose {\n        fmt.Printf(\"User AIG: \");\n        Gia_ManPrintStats( pAig, nil );\n        fmt.Printf(\"Care AIG: \");\n        Gia_ManPrintStats( pCare, nil );\n    }\n\n    pAig = Gia_ManDupLevelized( pResult = pAig );\n    Gia_ManStop( pResult );\n    pResult = Ssc_PerformSweeping( pAig, pCare, pPars );\n    if pPars.fAppend {\n        Gia_ManDupAppendShare( pResult, pCare );\n        pResult.nConstrs = Gia_ManPoNum(pCare);\n    }\n    Gia_ManStop( pAig );\n    Gia_ManStop( pCare );\n    return pResult;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::mechanical::sizeof::1368",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1368,
+      "End": 1374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::mechanical::sizeof::2585",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2432,
+      "End": 2432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::pointer-cast::2359",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2302,
+      "End": 2302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::pointer-cast::2551",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2432,
+      "End": 2432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::pointer-cast::3018",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2872,
+      "End": 2885
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::pointer-cast::3205",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3059,
+      "End": 3072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::pointer-cast::3329",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3183,
+      "End": 3196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::pointer-cast::12085",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9962,
+      "End": 9975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::pointer-cast::16694",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14271,
+      "End": 14271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::pointer-cast::16822",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14305,
+      "End": 14305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::Ssc_ManSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ManSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1301,
+      "End": 1713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::ternary::Ssc_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Ssc_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1949,
+      "End": 2318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::Ssc_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1949,
+      "End": 2318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::Ssc_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2319,
+      "End": 4067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::ternary::Ssc_ManPrintStats",
+      "Category": "ternary-review",
+      "Symbol": "Ssc_ManPrintStats",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4068,
+      "End": 5503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::Ssc_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4068,
+      "End": 5503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::Ssc_GiaSimulatePatternFraig_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaSimulatePatternFraig_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5784,
+      "End": 6367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::Ssc_GiaSimulatePattern_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaSimulatePattern_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6368,
+      "End": 7123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::Ssc_GiaResimulateOneClass",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_GiaResimulateOneClass",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7124,
+      "End": 7780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::Ssc_PerformVerification",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_PerformVerification",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8061,
+      "End": 9134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::ternary::Ssc_PerformSweepingInt",
+      "Category": "ternary-review",
+      "Symbol": "Ssc_PerformSweepingInt",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9370,
+      "End": 14946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::Ssc_PerformSweepingInt",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_PerformSweepingInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9370,
+      "End": 14946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::Ssc_PerformSweeping",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_PerformSweeping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14947,
+      "End": 15216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::Ssc_PerformSweepingConstr",
+      "Category": "semantic-review",
+      "Symbol": "Ssc_PerformSweepingConstr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15217,
+      "End": 16599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/sscCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16846
+    }
+  ],
+  "Draft": "package ssc\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [sscCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT sweeping under constraints.]\n\n  Synopsis    [The core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 29, 2008.]\n\n  Revision    [$Id: sscCore.c,v 1.00 2008/07/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sscInt.h\"\n//#include \"proof/cec/cec.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_ManSetDefaultParams(p *Ssc_Pars_t) {\n    memset( p, 0, sizeof(Ssc_Pars_t) );\n    p.nWords         =     1;  // the number of simulation words\n    p.nBTLimit       =  1000;  // conflict limit at a node\n    p.nSatVarMax     =  5000;  // the max number of SAT variables\n    p.nCallsRecycle  =   100;  // calls to perform before recycling SAT solver\n    p.fVerbose       =     0;  // verbose stats\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_ManStop(p *Ssc_Man_t) {\n    Vec_IntFreeP( \u0026p.vFront );\n    Vec_IntFreeP( \u0026p.vFanins );\n    Vec_IntFreeP( \u0026p.vPattern );\n    Vec_IntFreeP( \u0026p.vDisPairs );\n    Vec_IntFreeP( \u0026p.vPivot );\n    Vec_IntFreeP( \u0026p.vId2Var );\n    Vec_IntFreeP( \u0026p.vVar2Id );\n    if p.pSat { sat_solver_delete( p.pSat ); }\n    Gia_ManStopP( \u0026p.pFraig );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Ssc_ManStart(pAig *Gia_Man_t, pCare *Gia_Man_t, pPars *Ssc_Pars_t) *Ssc_Man_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Ssc_Man_t{};\n    p.pPars  = pPars;\n    p.pAig   = pAig;\n    p.pCare  = pCare;\n    p.pFraig = Gia_ManDupDfs( p.pCare );\n    assert(Vec_IntSize(\u0026p.pFraig.vHTable) == 0, \"Vec_IntSize(\u0026p.pFraig.vHTable) == 0\");\n    assert(!Gia_ManHasDangling(p.pFraig), \"!Gia_ManHasDangling(p.pFraig)\");\n    Gia_ManInvertPos( p.pFraig );\n    Ssc_ManStartSolver( p );\n    if p.pSat == nil {\n        fmt.Printf(\"Constraints are UNSAT after propagation.\\n\");\n        Ssc_ManStop( p );\n        return (Ssc_Man_t *)(ABC_PTRINT_T)1;\n    }\n//    p-\u003evPivot = Ssc_GiaFindPivotSim( p-\u003epFraig );\n//    Vec_IntFreeP( \u0026p-\u003evPivot  );\n    p.vPivot = Ssc_ManFindPivotSat( p );\n    if p.vPivot == (Vec_Int_t *)(ABC_PTRINT_T)1 {\n        fmt.Printf(\"Constraints are UNSAT.\\n\");\n        Ssc_ManStop( p );\n        return (Ssc_Man_t *)(ABC_PTRINT_T)1;\n    }\n    if p.vPivot == nil {\n        fmt.Printf(\"Conflict limit is reached while trying to find one SAT assignment.\\n\");\n        Ssc_ManStop( p );\n        return nil;\n    }\n    sat_solver_bookmark( p.pSat );\n//    Vec_IntPrint( p-\u003evPivot );\n    Gia_ManSetPhasePattern( p.pAig, p.vPivot );\n    Gia_ManSetPhasePattern( p.pCare, p.vPivot );\n    if Gia_ManCheckCoPhase(p.pCare) {\n        fmt.Printf(\"Computed reference pattern violates %d constraints (this is a bug!).\\n\", Gia_ManCheckCoPhase(p.pCare));\n        Ssc_ManStop( p );\n        return nil;\n    }\n    // other things\n    p.vDisPairs = Vec_IntAlloc( 100 );\n    p.vPattern = Vec_IntAlloc( 100 );\n    p.vFanins = Vec_IntAlloc( 100 );\n    p.vFront = Vec_IntAlloc( 100 );\n    Ssc_GiaClassesInit( pAig );\n    // now it is ready for refinement using simulation \n    return p;\n}\nfunc Ssc_ManPrintStats(p *Ssc_Man_t) {\n    Abc_Print( 1, \"Parameters: SimWords = %d. SatConfs = %d. SatVarMax = %d. CallsRec = %d. Verbose = %d.\\n\",\n        p.pPars.nWords, p.pPars.nBTLimit, p.pPars.nSatVarMax, p.pPars.nCallsRecycle, p.pPars.fVerbose );\n    Abc_Print( 1, \"SAT calls : Total = %d. Proof = %d. Cex = %d. Undec = %d.\\n\",\n        p.nSatCalls, p.nSatCallsUnsat, p.nSatCallsSat, p.nSatCallsUndec );\n    Abc_Print( 1, \"SAT solver: Vars = %d. Clauses = %d. Recycles = %d. Sim rounds = %d.\\n\",\n        sat_solver_nvars(p.pSat), sat_solver_nclauses(p.pSat), p.nRecycles, p.nSimRounds );\n\n    p.timeOther = p.timeTotal - p.timeSimInit - p.timeSimSat - p.timeCnfGen - p.timeSatSat - p.timeSatUnsat - p.timeSatUndec;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Initialization \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSimInit)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimInit)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"SAT simulation \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSimSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimSat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"CNF generation \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSimSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSimSat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"SAT solving    \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSat-p.timeCnfGen)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSat-p.timeCnfGen)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"  unsat        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUnsat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"  sat          \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatSat)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatSat)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"  undecided    \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSatUndec)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSatUndec)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"Other          \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;\n    // inlining of macro ABC_PRTP\n    Abc_Print(1, \"%s =\", (\"TOTAL          \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Refine one class by resimulating one pattern.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_GiaSimulatePatternFraig_rec(p *Ssc_Man_t, iFraigObj int32) int32 {\n    var pObj *Gia_Obj_t;\n    var Res0, Res1 int32;\n    if Ssc_ObjSatVar(p, iFraigObj) {\n        return sat_solver_var_value( p.pSat, Ssc_ObjSatVar(p, iFraigObj) ); }\n    pObj = Gia_ManObj( p.pFraig, iFraigObj );\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Res0 = Ssc_GiaSimulatePatternFraig_rec( p, Gia_ObjFaninId0(pObj, iFraigObj) );\n    Res1 = Ssc_GiaSimulatePatternFraig_rec( p, Gia_ObjFaninId1(pObj, iFraigObj) );\n    pObj.fMark0 = (Res0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Res1 ^ Gia_ObjFaninC1(pObj));\n    return pObj.fMark0;\n}\nfunc Ssc_GiaSimulatePattern_rec(p *Ssc_Man_t, pObj *Gia_Obj_t) int32 {\n    var Res0, Res1 int32;\n    if Gia_ObjIsTravIdCurrent(p.pAig, pObj) {\n        return pObj.fMark0; }\n    Gia_ObjSetTravIdCurrent(p.pAig, pObj);\n    if ~pObj.Value {  // mapping into FRAIG exists - simulate FRAIG\n     \n        Res0 = Ssc_GiaSimulatePatternFraig_rec( p, Abc_Lit2Var(pObj.Value) );\n        pObj.fMark0 = Res0 ^ Abc_LitIsCompl(pObj.Value);\n    \n    } else { // mapping into FRAIG does not exist - simulate AIG\n    \n        Res0 = Ssc_GiaSimulatePattern_rec( p, Gia_ObjFanin0(pObj) );\n        Res1 = Ssc_GiaSimulatePattern_rec( p, Gia_ObjFanin1(pObj) );\n        pObj.fMark0 = (Res0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Res1 ^ Gia_ObjFaninC1(pObj));\n    }\n    return pObj.fMark0;\n}\nfunc Ssc_GiaResimulateOneClass(p *Ssc_Man_t, iRepr int32, iObj int32) int32 {\n    var Ent, RetValue int32;\n    assert(iRepr == Gia_ObjRepr(p.pAig, iObj), \"iRepr == Gia_ObjRepr(p.pAig, iObj)\");\n    assert(Gia_ObjIsHead( p.pAig, iRepr ), \"Gia_ObjIsHead( p.pAig, iRepr )\");\n    // set bit-values at the nodes according to the counter-example\n    Gia_ManIncrementTravId( p.pAig );\n    // inlining of macro Gia_ClassForEachObj\n    for  assert(Gia_ObjIsHead(p.pAig, iRepr) \u0026\u0026 (iRepr != 0), \"Gia_ObjIsHead(p.pAig, iRepr) \u0026\u0026 iRepr\"), Ent = iRepr; Ent \u003e 0; Ent = Gia_ObjNext(p.pAig, Ent)  {\n        Ssc_GiaSimulatePattern_rec( p, Gia_ManObj(p.pAig, Ent) );\n    }\n    // refine one class using these bit-values\n    RetValue = Ssc_GiaSimClassRefineOneBit( p.pAig, iRepr );\n    // check that the candidate equivalence is indeed refined\n    assert(iRepr != Gia_ObjRepr(p.pAig, iObj), \"iRepr != Gia_ObjRepr(p.pAig, iObj)\");\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform verification of conditional sweeping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_PerformVerification(p0 *Gia_Man_t, p1 *Gia_Man_t, pC *Gia_Man_t) int32 {\n    var Status int32;\n    var ParsCec Cec_ParCec_t;\n    var pPars *Cec_ParCec_t = \u0026ParsCec;\n    // derive the OR of constraint outputs\n    var pCond *Gia_Man_t  = Gia_ManDupAndOr( pC, Gia_ManPoNum(p0), 1, 0 );\n    // derive F = F \u0026 !OR(c0, c1, c2, ...)\n    var p0c *Gia_Man_t  = Gia_ManMiter( p0, pCond, 0, 0, 0, 1, 0 );\n    // derive F = F \u0026 !OR(c0, c1, c2, ...)\n    var p1c *Gia_Man_t  = Gia_ManMiter( p1, pCond, 0, 0, 0, 1, 0 );\n    // derive dual-output miter\n    var pMiter *Gia_Man_t  = Gia_ManMiter( p0c, p1c, 0, 1, 0, 0, 0 );\n    Gia_ManStop( p0c );\n    Gia_ManStop( p1c );\n    Gia_ManStop( pCond );\n    // run equivalence checking\n    Cec_ManCecSetDefaultParams( pPars );\n    Status = Cec_ManVerify( pMiter, pPars );\n    Gia_ManStop( pMiter );\n    // report the results\n    if Status == 1 {\n        fmt.Printf(\"Verification succeeded.\\n\");\n    } else if Status == 0 {\n        fmt.Printf(\"Verification failed.\\n\");\n    } else if Status == -1 {\n        fmt.Printf(\"Verification undecided.\\n\");\n    } else { assert(false, \"0\"); }\n    return Status;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssc_PerformSweepingInt(pAig *Gia_Man_t, pCare *Gia_Man_t, pPars *Ssc_Pars_t) *Gia_Man_t {\n    var p *Ssc_Man_t;\n    var pResult, pTemp *Gia_Man_t;\n    var pObj, pRepr *Gia_Obj_t;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    var i, fCompl, nRefined, status int32;\nclk = Abc_Clock();\n    assert(Gia_ManRegNum(pCare) == 0, \"Gia_ManRegNum(pCare) == 0\");\n    assert(Gia_ManCiNum(pAig) == Gia_ManCiNum(pCare), \"Gia_ManCiNum(pAig) == Gia_ManCiNum(pCare)\");\n    assert(Gia_ManIsNormalized(pAig), \"Gia_ManIsNormalized(pAig)\");\n    assert(Gia_ManIsNormalized(pCare), \"Gia_ManIsNormalized(pCare)\");\n    // reset random numbers\n    Gia_ManRandom( 1 );\n    // sweeping manager\n    p = Ssc_ManStart( pAig, pCare, pPars );\n    if p == (Ssc_Man_t *)(ABC_PTRINT_T)1 { // UNSAT\n        return Gia_ManDupZero( pAig ); }\n    if p == nil { // timeout\n        return Gia_ManDup( pAig ); }\n    if p.pPars.fVerbose {\n        fmt.Printf(\"Care set produced %d hits out of %d.\\n\", Ssc_GiaEstimateCare(p.pFraig, 5), 640); }\n    // perform simulation \n    for {\n        // simulate care set\n        Ssc_GiaRandomPiPattern( p.pFraig, 5, nil );\n        Ssc_GiaSimRound( p.pFraig );\n        // transfer care patterns to user's AIG\n        if !Ssc_GiaTransferPiPattern( pAig, p.pFraig, p.vPivot ) {\n            break; }\n        // simulate the main AIG\n        Ssc_GiaSimRound( pAig );\n        nRefined = Ssc_GiaClassesRefine( pAig );\n        if pPars.fVerbose { \n            Gia_ManEquivPrintClasses( pAig, 0, 0 ); }\n        if nRefined \u003c= Gia_ManCandNum(pAig) / 100 {\n            break; }\n    }\np.timeSimInit += Abc_Clock() - clk;\n\n    // prepare user's AIG\n    Gia_ManFillValue(pAig);\n    Gia_ManConst0(pAig).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pAig.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pAig, i)); i++  {\n        pObj.Value = Gia_Obj2Lit( p.pFraig, Gia_ManCi(p.pFraig, i) );\n    }\n//    Gia_ManLevelNum(pAig);\n    // prepare swept AIG (should be done after starting SAT solver in Ssc_ManStart)\n    Gia_ManHashStart( p.pFraig );\n    // perform sweeping\n    Ssc_GiaResetPiPattern( pAig, pPars.nWords );\n    Ssc_GiaSavePiPattern( pAig, p.vPivot );\n    // inlining of macro Gia_ManForEachCand\n    for  i = 0; (i \u003c pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pAig, i)); i++  {      if !Gia_ObjIsCand(pObj) {} else {\n        if pAig.iPatsPi == 64 * pPars.nWords {\nclk = Abc_Clock();\n            Ssc_GiaSimRound( pAig );\n            Ssc_GiaClassesRefine( pAig );\n            if pPars.fVerbose { \n                Gia_ManEquivPrintClasses( pAig, 0, 0 ); }\n            Ssc_GiaClassesCheckPairs( pAig, p.vDisPairs );\n            Vec_IntClear( p.vDisPairs );\n            // prepare next patterns\n            Ssc_GiaResetPiPattern( pAig, pPars.nWords );\n            Ssc_GiaSavePiPattern( pAig, p.vPivot );\np.timeSimSat += Abc_Clock() - clk;\n//printf( \"\\n\" );\n        }\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Gia_ManHashAnd( p.pFraig, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        if !Gia_ObjHasRepr(pAig, i) {\n            continue; }\n        pRepr = Gia_ObjReprObj(pAig, i);\n        if int32(pObj.Value) == Abc_LitNotCond( pRepr.Value, pRepr.fPhase ^ pObj.fPhase ) {\n            Gia_ObjSetProved( pAig, i );\n            continue;\n        }\n        assert(Abc_Lit2Var(pRepr.Value) != Abc_Lit2Var(pObj.Value), \"Abc_Lit2Var(pRepr.Value) != Abc_Lit2Var(pObj.Value)\");\n        fCompl = pRepr.fPhase ^ pObj.fPhase ^ Abc_LitIsCompl(pRepr.Value) ^ Abc_LitIsCompl(pObj.Value);\n\n        // perform SAT call\nclk = Abc_Clock();\n        p.nSatCalls++;\n        status = Ssc_ManCheckEquivalence( p, Abc_Lit2Var(pRepr.Value), Abc_Lit2Var(pObj.Value), fCompl );\n        if status == l_False {\n            p.nSatCallsUnsat++;\n            pObj.Value = Abc_LitNotCond( pRepr.Value, pRepr.fPhase ^ pObj.fPhase );\n            Gia_ObjSetProved( pAig, i );\n        \n        } else if status == l_True {\n            p.nSatCallsSat++;\n            Ssc_GiaSavePiPattern( pAig, p.vPattern );\n            Vec_IntPush( p.vDisPairs, Gia_ObjRepr(p.pAig, i) );\n            Vec_IntPush( p.vDisPairs, i );\n//            printf( \"Try %2d and %2d: \", Gia_ObjRepr(p-\u003epAig, i), i );\n//            Vec_IntPrint( p-\u003evPattern );\n            if Gia_ObjRepr(p.pAig, i) \u003e 0 {\n                Ssc_GiaResimulateOneClass( p, Gia_ObjRepr(p.pAig, i), i ); }\n        \n        } else if status == l_Undef {\n            p.nSatCallsUndec++;\n        } else { assert(false, \"0\"); }\np.timeSat += Abc_Clock() - clk;\n    }\n    }\n    if pAig.iPatsPi \u003e 1 {\nclk = Abc_Clock();\n        for  pAig.iPatsPi \u003c 64 * pPars.nWords  {\n            Ssc_GiaSavePiPattern( pAig, p.vPivot );\n        }\n        Ssc_GiaSimRound( pAig );\n        Ssc_GiaClassesRefine( pAig );\n        if pPars.fVerbose { \n            Gia_ManEquivPrintClasses( pAig, 0, 0 ); }\n        Ssc_GiaClassesCheckPairs( pAig, p.vDisPairs );\n        Vec_IntClear( p.vDisPairs );\np.timeSimSat += Abc_Clock() - clk;\n    }\n//    Gia_ManEquivPrintClasses( pAig, 1, 0 );\n//    Gia_ManPrint( pAig );\n\n    // generate the resulting AIG\n    pResult = Gia_ManEquivReduce( pAig, 0, 0, 1, 0 );\n    if pResult == nil {\n        fmt.Printf(\"There is no equivalences.\\n\");\n        // inlining of macro ABC_FREE\n        ((pAig.pReprs) ? (free((char *) (pAig.pReprs)), (pAig.pReprs) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((pAig.pNexts) ? (free((char *) (pAig.pNexts)), (pAig.pNexts) = 0) : 0);\n        pResult = Gia_ManDup( pAig );\n    }\n    pResult = Gia_ManCleanup( pTemp = pResult );\n    Gia_ManStop( pTemp );\n    p.timeTotal = Abc_Clock() - clkTotal;\n    if pPars.fVerbose {\n        Ssc_ManPrintStats( p ); }\n    Ssc_ManStop( p );\n    // count the number of representatives\n    if pPars.fVerbose {\n        Abc_Print( 1, \"Reduction in AIG nodes:%8d  -\u003e%8d (%6.2f %%).  \", \n            Gia_ManAndNum(pAig), Gia_ManAndNum(pResult), \n            100.0 - 100.0 * Gia_ManAndNum(pResult) / Gia_ManAndNum(pAig) );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n    }\n    return pResult;\n}\nfunc Ssc_PerformSweeping(pAig *Gia_Man_t, pCare *Gia_Man_t, pPars *Ssc_Pars_t) *Gia_Man_t {\n    var pResult *Gia_Man_t  = Ssc_PerformSweepingInt( pAig, pCare, pPars );\n    if pPars.fVerify {\n        Ssc_PerformVerification( pAig, pResult, pCare ); }\n    return pResult;\n}\nfunc Ssc_PerformSweepingConstr(p *Gia_Man_t, pPars *Ssc_Pars_t) *Gia_Man_t {\n    var pAig, pCare, pResult *Gia_Man_t;\n    var i int32;\n    if pPars.fVerbose {\n        Abc_Print( 0, \"SAT sweeping AIG with %d constraints.\\n\", p.nConstrs ); }\n    if p.nConstrs == 0 {\n        pAig = Gia_ManDup( p );\n        pCare = Gia_ManStart( Gia_ManCiNum(p) + 2 );\n        pCare.pName = Abc_UtilStrsav( \"care\" );\n        for  i = 0; i \u003c Gia_ManCiNum(p); i++  {\n            Gia_ManAppendCi( pCare );\n        }\n        Gia_ManAppendCo( pCare, 0 );\n    \n    } else {\n        var vOuts *Vec_Int_t  = Vec_IntStartNatural( Gia_ManPoNum(p) );\n        pAig = Gia_ManDupCones( p, Vec_IntArray(vOuts), Gia_ManPoNum(p) - p.nConstrs, 0 );\n        pCare = Gia_ManDupCones( p, Vec_IntArray(vOuts) + Gia_ManPoNum(p) - p.nConstrs, p.nConstrs, 0 );\n        Vec_IntFree( vOuts );\n    }\n    if pPars.fVerbose {\n        fmt.Printf(\"User AIG: \");\n        Gia_ManPrintStats( pAig, nil );\n        fmt.Printf(\"Care AIG: \");\n        Gia_ManPrintStats( pCare, nil );\n    }\n\n    pAig = Gia_ManDupLevelized( pResult = pAig );\n    Gia_ManStop( pResult );\n    pResult = Ssc_PerformSweeping( pAig, pCare, pPars );\n    if pPars.fAppend {\n        Gia_ManDupAppendShare( pResult, pCare );\n        pResult.nConstrs = Gia_ManPoNum(pCare);\n    }\n    Gia_ManStop( pAig );\n    Gia_ManStop( pCare );\n    return pResult;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,384 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c",
+  "SHA256": "bec7ede4f6363c28b6de6b1abc7058e7f9caf7b3a629712b6d451ae045bd1109",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 5,
+        "ByteOffset": 2401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 2932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 133,
+        "Column": 5,
+        "ByteOffset": 4148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 9,
+        "ByteOffset": 6401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nNodes == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 6657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= Hop_ManPiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 8479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Hop_ObjIsNode(pObj) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Hop_ManTruthWordNum",
+      "Start": 768,
+      "End": 868,
+      "BodyStart": 821,
+      "Original": "static inline int  Hop_ManTruthWordNum( int nVars )  { return nVars \u003c= 5 ? 1 : (1 \u003c\u003c (nVars - 5)); }",
+      "Draft": "func Hop_ManTruthWordNum(nVars int32) int32 { if nVars \u003c= 5 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 5));\n} }"
+    },
+    {
+      "Name": "Hop_ManTruthCopy",
+      "Start": 870,
+      "End": 1050,
+      "BodyStart": 952,
+      "Original": "static inline void Hop_ManTruthCopy( unsigned * pOut, unsigned * pIn, int nVars )\n{\n    int w;\n    for ( w = Hop_ManTruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = pIn[w];\n}",
+      "Draft": "func Hop_ManTruthCopy(pOut *uint32, pIn *uint32, nVars int32) {\n    var w int32;\n    for  w = Hop_ManTruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn[w];\n    }\n}"
+    },
+    {
+      "Name": "Hop_ManTruthClear",
+      "Start": 1051,
+      "End": 1211,
+      "BodyStart": 1118,
+      "Original": "static inline void Hop_ManTruthClear( unsigned * pOut, int nVars )\n{\n    int w;\n    for ( w = Hop_ManTruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = 0;\n}",
+      "Draft": "func Hop_ManTruthClear(pOut *uint32, nVars int32) {\n    var w int32;\n    for  w = Hop_ManTruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = 0;\n    }\n}"
+    },
+    {
+      "Name": "Hop_ManTruthFill",
+      "Start": 1212,
+      "End": 1382,
+      "BodyStart": 1278,
+      "Original": "static inline void Hop_ManTruthFill( unsigned * pOut, int nVars )\n{\n    int w;\n    for ( w = Hop_ManTruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = ~(unsigned)0;\n}",
+      "Draft": "func Hop_ManTruthFill(pOut *uint32, nVars int32) {\n    var w int32;\n    for  w = Hop_ManTruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = ~uint32(0);\n    }\n}"
+    },
+    {
+      "Name": "Hop_ManTruthNot",
+      "Start": 1383,
+      "End": 1563,
+      "BodyStart": 1464,
+      "Original": "static inline void Hop_ManTruthNot( unsigned * pOut, unsigned * pIn, int nVars )\n{\n    int w;\n    for ( w = Hop_ManTruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = ~pIn[w];\n}",
+      "Draft": "func Hop_ManTruthNot(pOut *uint32, pIn *uint32, nVars int32) {\n    var w int32;\n    for  w = Hop_ManTruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = ~pIn[w];\n    }\n}"
+    },
+    {
+      "Name": "Hop_ManConvertAigToTruth_rec1",
+      "Start": 2054,
+      "End": 2492,
+      "BodyStart": 2108,
+      "Original": "int Hop_ManConvertAigToTruth_rec1( Hop_Obj_t * pObj )\n{\n    int Counter = 0;\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return 0;\n    Counter += Hop_ManConvertAigToTruth_rec1( Hop_ObjFanin0(pObj) ); \n    Counter += Hop_ManConvertAigToTruth_rec1( Hop_ObjFanin1(pObj) );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n    return Counter + 1;\n}",
+      "Draft": "func Hop_ManConvertAigToTruth_rec1(pObj *Hop_Obj_t) int32 {\n    var Counter int32;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return 0; }\n    Counter += Hop_ManConvertAigToTruth_rec1( Hop_ObjFanin0(pObj) ); \n    Counter += Hop_ManConvertAigToTruth_rec1( Hop_ObjFanin1(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n    return Counter + 1;\n}"
+    },
+    {
+      "Name": "Hop_ManConvertAigToTruth_rec2",
+      "Start": 2760,
+      "End": 4205,
+      "BodyStart": 2853,
+      "Original": "unsigned * Hop_ManConvertAigToTruth_rec2( Hop_Obj_t * pObj, Vec_Int_t * vTruth, int nWords )\n{\n    unsigned * pTruth, * pTruth0, * pTruth1;\n    int i;\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) )\n        return (unsigned *)pObj-\u003epData;\n    // compute the truth tables of the fanins\n    pTruth0 = Hop_ManConvertAigToTruth_rec2( Hop_ObjFanin0(pObj), vTruth, nWords );\n    pTruth1 = Hop_ManConvertAigToTruth_rec2( Hop_ObjFanin1(pObj), vTruth, nWords );\n    // creat the truth table of the node\n    pTruth  = Vec_IntFetch( vTruth, nWords );\n    if ( Hop_ObjIsExor(pObj) )\n        for ( i = 0; i \u003c nWords; i++ )\n            pTruth[i] = pTruth0[i] ^ pTruth1[i];\n    else if ( !Hop_ObjFaninC0(pObj) \u0026\u0026 !Hop_ObjFaninC1(pObj) )\n        for ( i = 0; i \u003c nWords; i++ )\n            pTruth[i] = pTruth0[i] \u0026 pTruth1[i];\n    else if ( !Hop_ObjFaninC0(pObj) \u0026\u0026 Hop_ObjFaninC1(pObj) )\n        for ( i = 0; i \u003c nWords; i++ )\n            pTruth[i] = pTruth0[i] \u0026 ~pTruth1[i];\n    else if ( Hop_ObjFaninC0(pObj) \u0026\u0026 !Hop_ObjFaninC1(pObj) )\n        for ( i = 0; i \u003c nWords; i++ )\n            pTruth[i] = ~pTruth0[i] \u0026 pTruth1[i];\n    else // if ( Hop_ObjFaninC0(pObj) \u0026\u0026 Hop_ObjFaninC1(pObj) )\n        for ( i = 0; i \u003c nWords; i++ )\n            pTruth[i] = ~pTruth0[i] \u0026 ~pTruth1[i];\n    assert( Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjClearMarkA( pObj );\n    pObj-\u003epData = pTruth;\n    return pTruth;\n}",
+      "Draft": "func Hop_ManConvertAigToTruth_rec2(pObj *Hop_Obj_t, vTruth *Vec_Int_t, nWords int32) *uint32 {\n    var pTruth, pTruth0, pTruth1 *uint32;\n    var i int32;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) {\n        return (unsigned *)pObj.pData; }\n    // compute the truth tables of the fanins\n    pTruth0 = Hop_ManConvertAigToTruth_rec2( Hop_ObjFanin0(pObj), vTruth, nWords );\n    pTruth1 = Hop_ManConvertAigToTruth_rec2( Hop_ObjFanin1(pObj), vTruth, nWords );\n    // creat the truth table of the node\n    pTruth  = Vec_IntFetch( vTruth, nWords );\n    if Hop_ObjIsExor(pObj) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = pTruth0[i] ^ pTruth1[i];\n        }\n    } else if !Hop_ObjFaninC0(pObj) \u0026\u0026 !Hop_ObjFaninC1(pObj) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = pTruth0[i] \u0026 pTruth1[i];\n        }\n    } else if !Hop_ObjFaninC0(pObj) \u0026\u0026 Hop_ObjFaninC1(pObj) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = pTruth0[i] \u0026 ~pTruth1[i];\n        }\n    } else if Hop_ObjFaninC0(pObj) \u0026\u0026 !Hop_ObjFaninC1(pObj) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = ~pTruth0[i] \u0026 pTruth1[i];\n        }\n    } else { // if ( Hop_ObjFaninC0(pObj) \u0026\u0026 Hop_ObjFaninC1(pObj) )\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = ~pTruth0[i] \u0026 ~pTruth1[i];\n        } }\n    assert(Hop_ObjIsMarkA(pObj), \"Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjClearMarkA( pObj );\n    pObj.pData = pTruth;\n    return pTruth;\n}"
+    },
+    {
+      "Name": "Hop_ManConvertAigToTruth",
+      "Start": 4640,
+      "End": 7693,
+      "BodyStart": 4758,
+      "Original": "unsigned * Hop_ManConvertAigToTruth( Hop_Man_t * p, Hop_Obj_t * pRoot, int nVars, Vec_Int_t * vTruth, int fMsbFirst )\n{\n    static unsigned uTruths[8][8] = { // elementary truth tables\n        { 0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA },\n        { 0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC },\n        { 0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0 },\n        { 0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00 },\n        { 0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000 }, \n        { 0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF }, \n        { 0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF }, \n        { 0x00000000,0x00000000,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF } \n    };\n    Hop_Obj_t * pObj;\n    unsigned * pTruth, * pTruth2;\n    int i, nWords, nNodes;\n    Vec_Ptr_t * vTtElems;\n\n    // if the number of variables is more than 8, allocate truth tables\n    if ( nVars \u003e 8 )\n        vTtElems = Vec_PtrAllocTruthTables( nVars );\n    else\n        vTtElems = NULL;\n\n    // clear the data fields and set marks\n    nNodes = Hop_ManConvertAigToTruth_rec1( Hop_Regular(pRoot) );\n    // prepare memory\n    nWords = Hop_TruthWordNum( nVars );\n    Vec_IntClear( vTruth );\n    Vec_IntGrow( vTruth, nWords * (nNodes+1) );\n    pTruth = Vec_IntFetch( vTruth, nWords );\n    // check the case of a constant\n    if ( Hop_ObjIsConst1( Hop_Regular(pRoot) ) )\n    {\n        assert( nNodes == 0 );\n        if ( Hop_IsComplement(pRoot) )\n            Hop_ManTruthClear( pTruth, nVars );\n        else\n            Hop_ManTruthFill( pTruth, nVars );\n        return pTruth;\n    }\n    // set elementary truth tables at the leaves\n    assert( nVars \u003c= Hop_ManPiNum(p) );\n//    assert( Hop_ManPiNum(p) \u003c= 8 ); \n    if ( fMsbFirst )\n    {\n//        Hop_ManForEachPi( p, pObj, i )\n        for ( i = 0; i \u003c nVars; i++ )\n        {\n            pObj = Hop_ManPi( p, i );\n            if ( vTtElems )\n                pObj-\u003epData = Vec_PtrEntry(vTtElems, nVars-1-i);\n            else               \n                pObj-\u003epData = (void *)uTruths[nVars-1-i];\n        }\n    }\n    else\n    {\n//        Hop_ManForEachPi( p, pObj, i )\n        for ( i = 0; i \u003c nVars; i++ )\n        {\n            pObj = Hop_ManPi( p, i );\n            if ( vTtElems )\n                pObj-\u003epData = Vec_PtrEntry(vTtElems, i);\n            else               \n                pObj-\u003epData = (void *)uTruths[i];\n        }\n    }\n    // clear the marks and compute the truth table\n    pTruth2 = Hop_ManConvertAigToTruth_rec2( Hop_Regular(pRoot), vTruth, nWords );\n    // copy the result\n    Hop_ManTruthCopy( pTruth, pTruth2, nVars );\n    if ( Hop_IsComplement(pRoot) )\n        Hop_ManTruthNot( pTruth, pTruth, nVars );\n    if ( vTtElems )\n        Vec_PtrFree( vTtElems );\n    return pTruth;\n}",
+      "Draft": "func Hop_ManConvertAigToTruth(p *Hop_Man_t, pRoot *Hop_Obj_t, nVars int32, vTruth *Vec_Int_t, fMsbFirst int32) *uint32 {\n    static unsigned uTruths[8][8] = { // elementary truth tables\n        { 0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA },\n        { 0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC },\n        { 0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0 },\n        { 0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00 },\n        { 0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000 }, \n        { 0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF }, \n        { 0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF }, \n        { 0x00000000,0x00000000,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF } \n    };\n    var pObj *Hop_Obj_t;\n    var pTruth, pTruth2 *uint32;\n    var i, nWords, nNodes int32;\n    var vTtElems *Vec_Ptr_t;\n\n    // if the number of variables is more than 8, allocate truth tables\n    if nVars \u003e 8 {\n        vTtElems = Vec_PtrAllocTruthTables( nVars );\n    } else {\n        vTtElems = nil; }\n\n    // clear the data fields and set marks\n    nNodes = Hop_ManConvertAigToTruth_rec1( Hop_Regular(pRoot) );\n    // prepare memory\n    nWords = Hop_TruthWordNum( nVars );\n    Vec_IntClear( vTruth );\n    Vec_IntGrow( vTruth, nWords * (nNodes+1) );\n    pTruth = Vec_IntFetch( vTruth, nWords );\n    // check the case of a constant\n    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {\n        assert(nNodes == 0, \"nNodes == 0\");\n        if Hop_IsComplement(pRoot) {\n            Hop_ManTruthClear( pTruth, nVars );\n        } else {\n            Hop_ManTruthFill( pTruth, nVars ); }\n        return pTruth;\n    }\n    // set elementary truth tables at the leaves\n    assert(nVars \u003c= Hop_ManPiNum(p), \"nVars \u003c= Hop_ManPiNum(p)\");\n//    assert( Hop_ManPiNum(p) \u003c= 8 ); \n    if fMsbFirst != 0 {\n//        Hop_ManForEachPi( p, pObj, i )\n        for  i = 0; i \u003c nVars; i++  {\n            pObj = Hop_ManPi( p, i );\n            if vTtElems != nil {\n                pObj.pData = Vec_PtrEntry(vTtElems, nVars-1-i);\n            } else {               \n                pObj.pData = (void *)uTruths[nVars-1-i]; }\n        }\n    \n    } else {\n//        Hop_ManForEachPi( p, pObj, i )\n        for  i = 0; i \u003c nVars; i++  {\n            pObj = Hop_ManPi( p, i );\n            if vTtElems != nil {\n                pObj.pData = Vec_PtrEntry(vTtElems, i);\n            } else {               \n                pObj.pData = (void *)uTruths[i]; }\n        }\n    }\n    // clear the marks and compute the truth table\n    pTruth2 = Hop_ManConvertAigToTruth_rec2( Hop_Regular(pRoot), vTruth, nWords );\n    // copy the result\n    Hop_ManTruthCopy( pTruth, pTruth2, nVars );\n    if Hop_IsComplement(pRoot) {\n        Hop_ManTruthNot( pTruth, pTruth, nVars ); }\n    if vTtElems != nil {\n        Vec_PtrFree( vTtElems ); }\n    return pTruth;\n}"
+    },
+    {
+      "Name": "Hop_ManComputeTruth6_rec",
+      "Start": 8258,
+      "End": 8716,
+      "BodyStart": 8323,
+      "Original": "word Hop_ManComputeTruth6_rec( Hop_Man_t * p, Hop_Obj_t * pObj )\n{\n    word Truth0, Truth1;\n    if ( Hop_ObjIsPi(pObj) )\n        return Truth[pObj-\u003eiData];\n    assert( Hop_ObjIsNode(pObj) );\n    Truth0 = Hop_ManComputeTruth6_rec( p, Hop_ObjFanin0(pObj) );\n    Truth1 = Hop_ManComputeTruth6_rec( p, Hop_ObjFanin1(pObj) );\n    Truth0 = Hop_ObjFaninC0(pObj) ? ~Truth0 : Truth0;\n    Truth1 = Hop_ObjFaninC1(pObj) ? ~Truth1 : Truth1;\n    return Truth0 \u0026 Truth1;\n}",
+      "Draft": "func Hop_ManComputeTruth6_rec(p *Hop_Man_t, pObj *Hop_Obj_t) word {\n    var Truth0, Truth1 word;\n    if Hop_ObjIsPi(pObj) {\n        return Truth[pObj.iData]; }\n    assert(Hop_ObjIsNode(pObj), \"Hop_ObjIsNode(pObj)\");\n    Truth0 = Hop_ManComputeTruth6_rec( p, Hop_ObjFanin0(pObj) );\n    Truth1 = Hop_ManComputeTruth6_rec( p, Hop_ObjFanin1(pObj) );\n    if Hop_ObjFaninC0(pObj) {\n        Truth0 = ~Truth0;\n    } else {\n        Truth0 = Truth0;\n    }\n    if Hop_ObjFaninC1(pObj) {\n        Truth1 = ~Truth1;\n    } else {\n        Truth1 = Truth1;\n    }\n    return Truth0 \u0026 Truth1;\n}"
+    },
+    {
+      "Name": "Hop_ManComputeTruth6",
+      "Start": 8717,
+      "End": 9107,
+      "BodyStart": 8789,
+      "Original": "word Hop_ManComputeTruth6( Hop_Man_t * p, Hop_Obj_t * pObj, int nVars )\n{\n    word Truth;\n    int i;\n    if ( Hop_ObjIsConst1( Hop_Regular(pObj) ) )\n        return Hop_IsComplement(pObj) ? 0 : ~(word)0;\n    for ( i = 0; i \u003c nVars; i++ )\n        Hop_ManPi( p, i )-\u003eiData = i;\n    Truth = Hop_ManComputeTruth6_rec( p, Hop_Regular(pObj) );\n    return Hop_IsComplement(pObj) ? ~Truth : Truth;\n}",
+      "Draft": "func Hop_ManComputeTruth6(p *Hop_Man_t, pObj *Hop_Obj_t, nVars int32) word {\n    var Truth word;\n    var i int32;\n    if Hop_ObjIsConst1( Hop_Regular(pObj) ) {\n        if Hop_IsComplement(pObj) {\n            return 0;\n        } else {\n            return ~(word)0;\n        } }\n    for  i = 0; i \u003c nVars; i++  {\n        Hop_ManPi( p, i ).iData = i;\n    }\n    Truth = Hop_ManComputeTruth6_rec( p, Hop_Regular(pObj) );\n    if Hop_IsComplement(pObj) {\n        return ~Truth;\n    } else {\n        return Truth;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::mechanical::static::4764",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4764,
+      "End": 4770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::pointer-cast::3022",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3022,
+      "End": 3034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::pointer-cast::6961",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6961,
+      "End": 6969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::pointer-cast::7294",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7294,
+      "End": 7302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::Hop_ManTruthWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManTruthWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 768,
+      "End": 868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::Hop_ManTruthCopy",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManTruthCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 870,
+      "End": 1050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::Hop_ManTruthClear",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManTruthClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1051,
+      "End": 1211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::Hop_ManTruthFill",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManTruthFill",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1212,
+      "End": 1382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::Hop_ManTruthNot",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManTruthNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1383,
+      "End": 1563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::Hop_ManConvertAigToTruth_rec1",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManConvertAigToTruth_rec1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2054,
+      "End": 2492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::Hop_ManConvertAigToTruth_rec2",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManConvertAigToTruth_rec2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2760,
+      "End": 4205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::Hop_ManConvertAigToTruth",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManConvertAigToTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4640,
+      "End": 7693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::Hop_ManComputeTruth6_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManComputeTruth6_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8258,
+      "End": 8716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::Hop_ManComputeTruth6",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManComputeTruth6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8717,
+      "End": 9107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::macro-inline::7980",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7980,
+      "End": 8009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::macro-inline::8015",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8015,
+      "End": 8044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::macro-inline::8050",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8050,
+      "End": 8079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::macro-inline::8085",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8085,
+      "End": 8114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::macro-inline::8120",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8120,
+      "End": 8149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::macro-inline::8155",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8155,
+      "End": 8184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::macro-inline::8190",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8190,
+      "End": 8219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopTruth.c::macro-inline::8225",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8225,
+      "End": 8254
+    }
+  ],
+  "Draft": "package hop\n\n/**CFile****************************************************************\n\n  FileName    [hopTruth.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Minimalistic And-Inverter Graph package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: hopTruth.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"hop.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Hop_ManTruthWordNum(nVars int32) int32 { if nVars \u003c= 5 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 5));\n} }\n\nfunc Hop_ManTruthCopy(pOut *uint32, pIn *uint32, nVars int32) {\n    var w int32;\n    for  w = Hop_ManTruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn[w];\n    }\n}\nfunc Hop_ManTruthClear(pOut *uint32, nVars int32) {\n    var w int32;\n    for  w = Hop_ManTruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = 0;\n    }\n}\nfunc Hop_ManTruthFill(pOut *uint32, nVars int32) {\n    var w int32;\n    for  w = Hop_ManTruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = ~uint32(0);\n    }\n}\nfunc Hop_ManTruthNot(pOut *uint32, pIn *uint32, nVars int32) {\n    var w int32;\n    for  w = Hop_ManTruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = ~pIn[w];\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [Construct BDDs and mark AIG nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManConvertAigToTruth_rec1(pObj *Hop_Obj_t) int32 {\n    var Counter int32;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return 0; }\n    Counter += Hop_ManConvertAigToTruth_rec1( Hop_ObjFanin0(pObj) ); \n    Counter += Hop_ManConvertAigToTruth_rec1( Hop_ObjFanin1(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n    return Counter + 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes truth table of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManConvertAigToTruth_rec2(pObj *Hop_Obj_t, vTruth *Vec_Int_t, nWords int32) *uint32 {\n    var pTruth, pTruth0, pTruth1 *uint32;\n    var i int32;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) {\n        return (unsigned *)pObj.pData; }\n    // compute the truth tables of the fanins\n    pTruth0 = Hop_ManConvertAigToTruth_rec2( Hop_ObjFanin0(pObj), vTruth, nWords );\n    pTruth1 = Hop_ManConvertAigToTruth_rec2( Hop_ObjFanin1(pObj), vTruth, nWords );\n    // creat the truth table of the node\n    pTruth  = Vec_IntFetch( vTruth, nWords );\n    if Hop_ObjIsExor(pObj) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = pTruth0[i] ^ pTruth1[i];\n        }\n    } else if !Hop_ObjFaninC0(pObj) \u0026\u0026 !Hop_ObjFaninC1(pObj) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = pTruth0[i] \u0026 pTruth1[i];\n        }\n    } else if !Hop_ObjFaninC0(pObj) \u0026\u0026 Hop_ObjFaninC1(pObj) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = pTruth0[i] \u0026 ~pTruth1[i];\n        }\n    } else if Hop_ObjFaninC0(pObj) \u0026\u0026 !Hop_ObjFaninC1(pObj) {\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = ~pTruth0[i] \u0026 pTruth1[i];\n        }\n    } else { // if ( Hop_ObjFaninC0(pObj) \u0026\u0026 Hop_ObjFaninC1(pObj) )\n        for  i = 0; i \u003c nWords; i++  {\n            pTruth[i] = ~pTruth0[i] \u0026 ~pTruth1[i];\n        } }\n    assert(Hop_ObjIsMarkA(pObj), \"Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjClearMarkA( pObj );\n    pObj.pData = pTruth;\n    return pTruth;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes truth table of the node.]\n\n  Description [Assumes that the structural support is no more than 8 inputs.\n  Uses array vTruth to store temporary truth tables. The returned pointer should \n  be used immediately.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManConvertAigToTruth(p *Hop_Man_t, pRoot *Hop_Obj_t, nVars int32, vTruth *Vec_Int_t, fMsbFirst int32) *uint32 {\n    static unsigned uTruths[8][8] = { // elementary truth tables\n        { 0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA,0xAAAAAAAA },\n        { 0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC,0xCCCCCCCC },\n        { 0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0,0xF0F0F0F0 },\n        { 0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00,0xFF00FF00 },\n        { 0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000,0xFFFF0000 }, \n        { 0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF,0x00000000,0xFFFFFFFF }, \n        { 0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF }, \n        { 0x00000000,0x00000000,0x00000000,0x00000000,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF,0xFFFFFFFF } \n    };\n    var pObj *Hop_Obj_t;\n    var pTruth, pTruth2 *uint32;\n    var i, nWords, nNodes int32;\n    var vTtElems *Vec_Ptr_t;\n\n    // if the number of variables is more than 8, allocate truth tables\n    if nVars \u003e 8 {\n        vTtElems = Vec_PtrAllocTruthTables( nVars );\n    } else {\n        vTtElems = nil; }\n\n    // clear the data fields and set marks\n    nNodes = Hop_ManConvertAigToTruth_rec1( Hop_Regular(pRoot) );\n    // prepare memory\n    nWords = Hop_TruthWordNum( nVars );\n    Vec_IntClear( vTruth );\n    Vec_IntGrow( vTruth, nWords * (nNodes+1) );\n    pTruth = Vec_IntFetch( vTruth, nWords );\n    // check the case of a constant\n    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {\n        assert(nNodes == 0, \"nNodes == 0\");\n        if Hop_IsComplement(pRoot) {\n            Hop_ManTruthClear( pTruth, nVars );\n        } else {\n            Hop_ManTruthFill( pTruth, nVars ); }\n        return pTruth;\n    }\n    // set elementary truth tables at the leaves\n    assert(nVars \u003c= Hop_ManPiNum(p), \"nVars \u003c= Hop_ManPiNum(p)\");\n//    assert( Hop_ManPiNum(p) \u003c= 8 ); \n    if fMsbFirst != 0 {\n//        Hop_ManForEachPi( p, pObj, i )\n        for  i = 0; i \u003c nVars; i++  {\n            pObj = Hop_ManPi( p, i );\n            if vTtElems != nil {\n                pObj.pData = Vec_PtrEntry(vTtElems, nVars-1-i);\n            } else {               \n                pObj.pData = (void *)uTruths[nVars-1-i]; }\n        }\n    \n    } else {\n//        Hop_ManForEachPi( p, pObj, i )\n        for  i = 0; i \u003c nVars; i++  {\n            pObj = Hop_ManPi( p, i );\n            if vTtElems != nil {\n                pObj.pData = Vec_PtrEntry(vTtElems, i);\n            } else {               \n                pObj.pData = (void *)uTruths[i]; }\n        }\n    }\n    // clear the marks and compute the truth table\n    pTruth2 = Hop_ManConvertAigToTruth_rec2( Hop_Regular(pRoot), vTruth, nWords );\n    // copy the result\n    Hop_ManTruthCopy( pTruth, pTruth2, nVars );\n    if Hop_IsComplement(pRoot) {\n        Hop_ManTruthNot( pTruth, pTruth, nVars ); }\n    if vTtElems != nil {\n        Vec_PtrFree( vTtElems ); }\n    return pTruth;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compute truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar Truth [8]word = [8]word{\n    ABC_CONST(0xAAAAAAAAAAAAAAAA),\n    ABC_CONST(0xCCCCCCCCCCCCCCCC),\n    ABC_CONST(0xF0F0F0F0F0F0F0F0),\n    ABC_CONST(0xFF00FF00FF00FF00),\n    ABC_CONST(0xFFFF0000FFFF0000),\n    ABC_CONST(0xFFFFFFFF00000000),\n    ABC_CONST(0x0000000000000000),\n    ABC_CONST(0xFFFFFFFFFFFFFFFF),\n};\nfunc Hop_ManComputeTruth6_rec(p *Hop_Man_t, pObj *Hop_Obj_t) word {\n    var Truth0, Truth1 word;\n    if Hop_ObjIsPi(pObj) {\n        return Truth[pObj.iData]; }\n    assert(Hop_ObjIsNode(pObj), \"Hop_ObjIsNode(pObj)\");\n    Truth0 = Hop_ManComputeTruth6_rec( p, Hop_ObjFanin0(pObj) );\n    Truth1 = Hop_ManComputeTruth6_rec( p, Hop_ObjFanin1(pObj) );\n    if Hop_ObjFaninC0(pObj) {\n        Truth0 = ~Truth0;\n    } else {\n        Truth0 = Truth0;\n    }\n    if Hop_ObjFaninC1(pObj) {\n        Truth1 = ~Truth1;\n    } else {\n        Truth1 = Truth1;\n    }\n    return Truth0 \u0026 Truth1;\n}\nfunc Hop_ManComputeTruth6(p *Hop_Man_t, pObj *Hop_Obj_t, nVars int32) word {\n    var Truth word;\n    var i int32;\n    if Hop_ObjIsConst1( Hop_Regular(pObj) ) {\n        if Hop_IsComplement(pObj) {\n            return 0;\n        } else {\n            return ~(word)0;\n        } }\n    for  i = 0; i \u003c nVars; i++  {\n        Hop_ManPi( p, i ).iData = i;\n    }\n    Truth = Hop_ManComputeTruth6_rec( p, Hop_Regular(pObj) );\n    if Hop_IsComplement(pObj) {\n        return ~Truth;\n    } else {\n        return Truth;\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,2049 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c",
+  "SHA256": "bd0869a426d1859de3d564e269024fc745cd918f6d9ffa3a22bc081ea14d3715",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 191,
+        "Column": 13,
+        "ByteOffset": 7269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    cache = ABC_ALLOC(DdLocalCache,1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 9,
+        "ByteOffset": 7802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_ALLOC(char, cacheSize * cache.itemsize);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 9,
+        "ByteOffset": 7927
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(cache);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 8539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(cache.item, 0, (size_t)(cacheSize * cache.itemsize));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 9393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(cache.item);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 5,
+        "ByteOffset": 9419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(cache);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 10064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(entry.key,key,cache.keysize * sizeof(DdNode *));"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 309,
+        "Column": 9,
+        "ByteOffset": 10992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcmp(key,entry.key,cache.keysize*sizeof(DdNode *)) == 0 {"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 395,
+        "Column": 9,
+        "ByteOffset": 13589
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset(cache.item, 0, (size_t)(cache.slots * cache.itemsize));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 428,
+        "Column": 12,
+        "ByteOffset": 14434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    hash = ABC_ALLOC(DdHashTable, 1);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 444,
+        "Column": 19,
+        "ByteOffset": 15001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    hash.bucket = ABC_ALLOC(DdHashItem *, hash.numBuckets);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 447,
+        "Column": 9,
+        "ByteOffset": 15124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(hash);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 450,
+        "Column": 5,
+        "ByteOffset": 15171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(hash.bucket, 0, (size_t)(hash.numBuckets * sizeof(DdHashItem *)));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 489,
+        "Column": 9,
+        "ByteOffset": 16391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(memlist);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 493,
+        "Column": 5,
+        "ByteOffset": 16448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(hash.bucket);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 494,
+        "Column": 5,
+        "ByteOffset": 16475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(hash);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 922,
+        "Column": 30,
+        "ByteOffset": 31628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (DdLocalCacheItem *) ABC_ALLOC(char, slots * cache.itemsize);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 937,
+        "Column": 5,
+        "ByteOffset": 32156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(item, 0, (size_t)(slots * cache.itemsize));"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 946,
+        "Column": 13,
+        "ByteOffset": 32594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(entry.key,old.key,cache.keysize*sizeof(DdNode *));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 951,
+        "Column": 5,
+        "ByteOffset": 32710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(olditem);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 1081,
+        "Column": 15,
+        "ByteOffset": 36272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    buckets = ABC_ALLOC(DdHashItem *, numBuckets);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 1092,
+        "Column": 5,
+        "ByteOffset": 36537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(buckets, 0, numBuckets * sizeof(DdHashItem *));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1142,
+        "Column": 5,
+        "ByteOffset": 38979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(oldBuckets);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 1177,
+        "Column": 31,
+        "ByteOffset": 40134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        mem = (DdHashItem **) ABC_ALLOC(char,(DD_MEM_CHUNK+1) * itemsize);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 1182,
+        "Column": 17,
+        "ByteOffset": 40376
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(hash.manager.stash);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 1194,
+        "Column": 39,
+        "ByteOffset": 41053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                mem = (DdHashItem **) ABC_ALLOC(char,(DD_MEM_CHUNK+1) * itemsize);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 102,
+        "Column": 1,
+        "ByteOffset": 4126
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 121,
+        "Column": 1,
+        "ByteOffset": 4783
+      },
+      "Directive": "#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4"
+    },
+    {
+      "Location": {
+        "Line": 200,
+        "Column": 1,
+        "ByteOffset": 7670
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 285,
+        "Column": 1,
+        "ByteOffset": 10132
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 418,
+        "Column": 1,
+        "ByteOffset": 13559
+      },
+      "Directive": "#ifdef DD_CACHE_PROFILE"
+    },
+    {
+      "Location": {
+        "Line": 546,
+        "Column": 1,
+        "ByteOffset": 17099
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 575,
+        "Column": 1,
+        "ByteOffset": 18103
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 598,
+        "Column": 1,
+        "ByteOffset": 18588
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 625,
+        "Column": 1,
+        "ByteOffset": 19255
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 659,
+        "Column": 1,
+        "ByteOffset": 20008
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 711,
+        "Column": 1,
+        "ByteOffset": 21485
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 777,
+        "Column": 1,
+        "ByteOffset": 23142
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 826,
+        "Column": 1,
+        "ByteOffset": 24548
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 885,
+        "Column": 1,
+        "ByteOffset": 26041
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 936,
+        "Column": 1,
+        "ByteOffset": 27484
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 996,
+        "Column": 1,
+        "ByteOffset": 29012
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1049,
+        "Column": 1,
+        "ByteOffset": 30507
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1114,
+        "Column": 1,
+        "ByteOffset": 32256
+      },
+      "Directive": "#ifdef DD_VERBOSE"
+    },
+    {
+      "Location": {
+        "Line": 1130,
+        "Column": 1,
+        "ByteOffset": 32903
+      },
+      "Directive": "#ifdef DD_VERBOSE"
+    },
+    {
+      "Location": {
+        "Line": 1239,
+        "Column": 1,
+        "ByteOffset": 35701
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 1244,
+        "Column": 1,
+        "ByteOffset": 35818
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 1284,
+        "Column": 1,
+        "ByteOffset": 36750
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 1292,
+        "Column": 1,
+        "ByteOffset": 36933
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 1304,
+        "Column": 1,
+        "ByteOffset": 37253
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 1320,
+        "Column": 1,
+        "ByteOffset": 37670
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 1400,
+        "Column": 1,
+        "ByteOffset": 40229
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 1411,
+        "Column": 1,
+        "ByteOffset": 40573
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 1427,
+        "Column": 1,
+        "ByteOffset": 41301
+      },
+      "Directive": "#ifdef __osf__"
+    },
+    {
+      "Location": {
+        "Line": 1432,
+        "Column": 1,
+        "ByteOffset": 41459
+      },
+      "Directive": "#ifdef __osf__"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "cuddLocalCacheInit",
+      "Start": 7086,
+      "End": 8684,
+      "BodyStart": 7371,
+      "Original": "DdLocalCache *\ncuddLocalCacheInit(\n  DdManager * manager /* manager */,\n  unsigned int  keySize /* size of the key (number of operands) */,\n  unsigned int  cacheSize /* Initial size of the cache */,\n  unsigned int  maxCacheSize /* Size of the cache beyond which no resizing occurs */)\n{\n    DdLocalCache *cache;\n    int logSize;\n\n    cache = ABC_ALLOC(DdLocalCache,1);\n    if (cache == NULL) {\n        manager-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(NULL);\n    }\n    cache-\u003emanager = manager;\n    cache-\u003ekeysize = keySize;\n    cache-\u003eitemsize = (keySize + 1) * sizeof(DdNode *);\n#ifdef DD_CACHE_PROFILE\n    cache-\u003eitemsize += sizeof(ptrint);\n#endif\n    logSize = cuddComputeFloorLog2(ddMax(cacheSize,manager-\u003eslots/2));\n    cacheSize = 1 \u003c\u003c logSize;\n    cache-\u003eitem = (DdLocalCacheItem *)\n        ABC_ALLOC(char, cacheSize * cache-\u003eitemsize);\n    if (cache-\u003eitem == NULL) {\n        manager-\u003eerrorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(cache);\n        return(NULL);\n    }\n    cache-\u003eslots = cacheSize;\n    cache-\u003eshift = sizeof(int) * 8 - logSize;\n    cache-\u003emaxslots = ddMin(maxCacheSize,manager-\u003eslots);\n    cache-\u003eminHit = manager-\u003eminHit;\n    /* Initialize to avoid division by 0 and immediate resizing. */\n    cache-\u003elookUps = (double) (int) (cacheSize * cache-\u003eminHit + 1);\n    cache-\u003ehits = 0;\n    manager-\u003ememused += cacheSize * cache-\u003eitemsize + sizeof(DdLocalCache);\n\n    /* Initialize the cache. */\n    memset(cache-\u003eitem, 0, (size_t)(cacheSize * cache-\u003eitemsize));\n\n    /* Add to manager's list of local caches for GC. */\n    cuddLocalCacheAddToList(cache);\n\n    return(cache);\n\n}",
+      "Draft": "DdLocalCache *\ncuddLocalCacheInit(\n  DdManager * manager /* manager */,\n  unsigned int  keySize /* size of the key (number of operands) */,\n  unsigned int  cacheSize /* Initial size of the cache */,\n  unsigned int  maxCacheSize /* Size of the cache beyond which no resizing occurs */)\n{\n    var cache *DdLocalCache;\n    var logSize int32;\n\n    cache = new(DdLocalCache);\n    if cache == nil {\n        manager.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n    cache.manager = manager;\n    cache.keysize = keySize;\n    cache.itemsize = (keySize + 1) * sizeof(DdNode *);\n#ifdef DD_CACHE_PROFILE\n    cache-\u003eitemsize += sizeof(ptrint);\n#endif\n    // inlining of macro ddMax\n    logSize = cuddComputeFloorLog2((((manager.slots/2) \u003e (cacheSize)) ? (manager.slots/2) : (cacheSize)));\n    cacheSize = 1 \u003c\u003c logSize;\n    cache.item = (DdLocalCacheItem *)\n        ABC_ALLOC(char, cacheSize * cache.itemsize);\n    if cache.item == nil {\n        manager.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(cache);\n        return(nil);\n    }\n    cache.slots = cacheSize;\n    cache.shift = sizeof(int) * 8 - logSize;\n    // inlining of macro ddMin\n    \n    if (manager.slots) \u003c (maxCacheSize) {\n        cache.maxslots = (manager.slots);\n    } else {\n        cache.maxslots = (maxCacheSize);\n    }\n    cache.minHit = manager.minHit;\n    /* Initialize to avoid division by 0 and immediate resizing. */\n    cache.lookUps = float64( int32( (cacheSize * cache.minHit + 1)));\n    cache.hits = 0;\n    manager.memused += cacheSize * cache.itemsize + sizeof(DdLocalCache);\n\n    /* Initialize the cache. */\n    memset(cache.item, 0, (size_t)(cacheSize * cache.itemsize));\n\n    /* Add to manager's list of local caches for GC. */\n    cuddLocalCacheAddToList(cache);\n\n    return(cache);\n\n}"
+    },
+    {
+      "Name": "cuddLocalCacheQuit",
+      "Start": 9148,
+      "End": 9425,
+      "BodyStart": 9225,
+      "Original": "void\ncuddLocalCacheQuit(\n  DdLocalCache * cache /* cache to be shut down */)\n{\n    cache-\u003emanager-\u003ememused -=\n        cache-\u003eslots * cache-\u003eitemsize + sizeof(DdLocalCache);\n    cuddLocalCacheRemoveFromList(cache);\n    ABC_FREE(cache-\u003eitem);\n    ABC_FREE(cache);\n\n    return;\n\n}",
+      "Draft": "void\ncuddLocalCacheQuit(\n  DdLocalCache * cache /* cache to be shut down */)\n{\n    cache.manager.memused -=\n        cache.slots * cache.itemsize + sizeof(DdLocalCache);\n    cuddLocalCacheRemoveFromList(cache);\n    ABC_FREE(cache.item);\n    ABC_FREE(cache);\n\n    return;\n\n}"
+    },
+    {
+      "Name": "cuddLocalCacheInsert",
+      "Start": 9731,
+      "End": 10185,
+      "BodyStart": 9819,
+      "Original": "void\ncuddLocalCacheInsert(\n  DdLocalCache * cache,\n  DdNodePtr * key,\n  DdNode * value)\n{\n    unsigned int posn;\n    DdLocalCacheItem *entry;\n\n    posn = ddLCHash(key,cache-\u003ekeysize,cache-\u003eshift);\n    entry = (DdLocalCacheItem *) ((char *) cache-\u003eitem +\n                                  posn * cache-\u003eitemsize);\n    memcpy(entry-\u003ekey,key,cache-\u003ekeysize * sizeof(DdNode *));\n    entry-\u003evalue = value;\n#ifdef DD_CACHE_PROFILE\n    entry-\u003ecount++;\n#endif\n\n}",
+      "Draft": "func cuddLocalCacheInsert(cache *DdLocalCache, key *DdNodePtr, value *DdNode) {\n    unsigned int posn;\n    var entry *DdLocalCacheItem;\n\n    posn = ddLCHash(key,cache.keysize,cache.shift);\n    entry = (DdLocalCacheItem *) ((char *) cache.item +\n                                  posn * cache.itemsize);\n    memcpy(entry.key,key,cache.keysize * sizeof(DdNode *));\n    entry.value = value;\n#ifdef DD_CACHE_PROFILE\n    entry-\u003ecount++;\n#endif\n\n}"
+    },
+    {
+      "Name": "cuddLocalCacheLookup",
+      "Start": 10578,
+      "End": 11423,
+      "BodyStart": 10652,
+      "Original": "DdNode *\ncuddLocalCacheLookup(\n  DdLocalCache * cache,\n  DdNodePtr * key)\n{\n    unsigned int posn;\n    DdLocalCacheItem *entry;\n    DdNode *value;\n\n    cache-\u003elookUps++;\n    posn = ddLCHash(key,cache-\u003ekeysize,cache-\u003eshift);\n    entry = (DdLocalCacheItem *) ((char *) cache-\u003eitem +\n                                  posn * cache-\u003eitemsize);\n    if (entry-\u003evalue != NULL \u0026\u0026\n        memcmp(key,entry-\u003ekey,cache-\u003ekeysize*sizeof(DdNode *)) == 0) {\n        cache-\u003ehits++;\n        value = Cudd_Regular(entry-\u003evalue);\n        if (value-\u003eref == 0) {\n            cuddReclaim(cache-\u003emanager,value);\n        }\n        return(entry-\u003evalue);\n    }\n\n    /* Cache miss: decide whether to resize */\n\n    if (cache-\u003eslots \u003c cache-\u003emaxslots \u0026\u0026\n        cache-\u003ehits \u003e cache-\u003elookUps * cache-\u003eminHit) {\n        cuddLocalCacheResize(cache);\n    }\n\n    return(NULL);\n\n}",
+      "Draft": "func cuddLocalCacheLookup(cache *DdLocalCache, key *DdNodePtr) *DdNode {\n    unsigned int posn;\n    var entry *DdLocalCacheItem;\n    var value *DdNode;\n\n    cache.lookUps++;\n    posn = ddLCHash(key,cache.keysize,cache.shift);\n    entry = (DdLocalCacheItem *) ((char *) cache.item +\n                                  posn * cache.itemsize);\n    if entry.value != nil \u0026\u0026\n        memcmp(key,entry.key,cache.keysize*sizeof(DdNode *)) == 0 {\n        cache.hits++;\n        // inlining of macro Cudd_Regular\n        value = ((DdNode *)((ptruint)(entry.value) \u0026 ~01));\n        if value.ref == 0 {\n            cuddReclaim(cache.manager,value);\n        }\n        return(entry.value);\n    }\n\n    /* Cache miss: decide whether to resize */\n\n    if cache.slots \u003c cache.maxslots \u0026\u0026\n        cache.hits \u003e cache.lookUps * cache.minHit {\n        cuddLocalCacheResize(cache);\n    }\n\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "cuddLocalCacheClearDead",
+      "Start": 11842,
+      "End": 12892,
+      "BodyStart": 11895,
+      "Original": "void\ncuddLocalCacheClearDead(\n  DdManager * manager)\n{\n    DdLocalCache *cache = manager-\u003elocalCaches;\n    unsigned int keysize;\n    unsigned int itemsize;\n    unsigned int slots;\n    DdLocalCacheItem *item;\n    DdNodePtr *key;\n    unsigned int i, j;\n\n    while (cache != NULL) {\n        keysize = cache-\u003ekeysize;\n        itemsize = cache-\u003eitemsize;\n        slots = cache-\u003eslots;\n        item = cache-\u003eitem;\n        for (i = 0; i \u003c slots; i++) {\n            if (item-\u003evalue != NULL) {\n                if (Cudd_Regular(item-\u003evalue)-\u003eref == 0) {\n                    item-\u003evalue = NULL;\n                } else {\n                    key = item-\u003ekey;\n                    for (j = 0; j \u003c keysize; j++) {\n                        if (Cudd_Regular(key[j])-\u003eref == 0) {\n                            item-\u003evalue = NULL;\n                            break;\n                        }\n                    }\n                }\n            }\n            item = (DdLocalCacheItem *) ((char *) item + itemsize);\n        }\n        cache = cache-\u003enext;\n    }\n    return;\n\n}",
+      "Draft": "func cuddLocalCacheClearDead(manager *DdManager) {\n    var cache *DdLocalCache  = manager.localCaches;\n    unsigned int keysize;\n    unsigned int itemsize;\n    unsigned int slots;\n    var item *DdLocalCacheItem;\n    var key *DdNodePtr;\n    unsigned int i, j;\n\n    for cache != nil {\n        keysize = cache.keysize;\n        itemsize = cache.itemsize;\n        slots = cache.slots;\n        item = cache.item;\n        for i = 0; i \u003c slots; i++ {\n            if item.value != nil {\n                // inlining of macro Cudd_Regular\n                if ((DdNode *)((ptruint)(item.value) \u0026 ~01)).ref == 0 {\n                    item.value = nil;\n                } else {\n                    key = item.key;\n                    for j = 0; j \u003c keysize; j++ {\n                        // inlining of macro Cudd_Regular\n                        if ((DdNode *)((ptruint)(key[j]) \u0026 ~01)).ref == 0 {\n                            item.value = nil;\n                            break;\n                        }\n                    }\n                }\n            }\n            item = (DdLocalCacheItem *) ((char *) item + itemsize);\n        }\n        cache = cache.next;\n    }\n    return;\n\n}"
+    },
+    {
+      "Name": "cuddLocalCacheClearAll",
+      "Start": 13266,
+      "End": 13520,
+      "BodyStart": 13318,
+      "Original": "void\ncuddLocalCacheClearAll(\n  DdManager * manager)\n{\n    DdLocalCache *cache = manager-\u003elocalCaches;\n\n    while (cache != NULL) {\n        memset(cache-\u003eitem, 0, (size_t)(cache-\u003eslots * cache-\u003eitemsize));\n        cache = cache-\u003enext;\n    }\n    return;\n\n}",
+      "Draft": "func cuddLocalCacheClearAll(manager *DdManager) {\n    var cache *DdLocalCache  = manager.localCaches;\n\n    for cache != nil {\n        memset(cache.item, 0, (size_t)(cache.slots * cache.itemsize));\n        cache = cache.next;\n    }\n    return;\n\n}"
+    },
+    {
+      "Name": "cuddHashTableInit",
+      "Start": 16949,
+      "End": 18174,
+      "BodyStart": 17056,
+      "Original": "DdHashTable *\ncuddHashTableInit(\n  DdManager * manager,\n  unsigned int  keySize,\n  unsigned int  initSize)\n{\n    DdHashTable *hash;\n    int logSize;\n\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    hash = ABC_ALLOC(DdHashTable, 1);\n    if (hash == NULL) {\n        manager-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(NULL);\n    }\n    hash-\u003ekeysize = keySize;\n    hash-\u003emanager = manager;\n    hash-\u003ememoryList = NULL;\n    hash-\u003enextFree = NULL;\n    hash-\u003eitemsize = (keySize + 1) * sizeof(DdNode *) +\n        sizeof(ptrint) + sizeof(DdHashItem *);\n    /* We have to guarantee that the shift be \u003c 32. */\n    if (initSize \u003c 2) initSize = 2;\n    logSize = cuddComputeFloorLog2(initSize);\n    hash-\u003enumBuckets = 1 \u003c\u003c logSize;\n    hash-\u003eshift = sizeof(int) * 8 - logSize;\n    hash-\u003ebucket = ABC_ALLOC(DdHashItem *, hash-\u003enumBuckets);\n    if (hash-\u003ebucket == NULL) {\n        manager-\u003eerrorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(hash);\n        return(NULL);\n    }\n    memset(hash-\u003ebucket, 0, (size_t)(hash-\u003enumBuckets * sizeof(DdHashItem *)));\n    hash-\u003esize = 0;\n    hash-\u003emaxsize = hash-\u003enumBuckets * DD_MAX_HASHTABLE_DENSITY;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    return(hash);\n\n}",
+      "Draft": "DdHashTable *\ncuddHashTableInit(\n  DdManager * manager,\n  unsigned int  keySize,\n  unsigned int  initSize)\n{\n    var hash *DdHashTable;\n    var logSize int32;\n\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    hash = new(DdHashTable);\n    if hash == nil {\n        manager.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n    hash.keysize = keySize;\n    hash.manager = manager;\n    hash.memoryList = nil;\n    hash.nextFree = nil;\n    hash.itemsize = (keySize + 1) * sizeof(DdNode *) +\n        sizeof(ptrint) + sizeof(DdHashItem *);\n    /* We have to guarantee that the shift be \u003c 32. */\n    if initSize \u003c 2 { initSize = 2; }\n    logSize = cuddComputeFloorLog2(initSize);\n    hash.numBuckets = 1 \u003c\u003c logSize;\n    hash.shift = sizeof(int) * 8 - logSize;\n    hash.bucket = ABC_ALLOC(DdHashItem *, hash.numBuckets);\n    if hash.bucket == nil {\n        manager.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(hash);\n        return(nil);\n    }\n    memset(hash.bucket, 0, (size_t)(hash.numBuckets * sizeof(DdHashItem *)));\n    hash.size = 0;\n    hash.maxsize = hash.numBuckets * DD_MAX_HASHTABLE_DENSITY;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    return(hash);\n\n}"
+    },
+    {
+      "Name": "cuddHashTableQuit",
+      "Start": 18540,
+      "End": 19321,
+      "BodyStart": 18586,
+      "Original": "void\ncuddHashTableQuit(\n  DdHashTable * hash)\n{\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    unsigned int i;\n    DdManager *dd = hash-\u003emanager;\n    DdHashItem *bucket;\n    DdHashItem **memlist, **nextmem;\n    unsigned int numBuckets = hash-\u003enumBuckets;\n\n    for (i = 0; i \u003c numBuckets; i++) {\n        bucket = hash-\u003ebucket[i];\n        while (bucket != NULL) {\n            Cudd_RecursiveDeref(dd, bucket-\u003evalue);\n            bucket = bucket-\u003enext;\n        }\n    }\n\n    memlist = hash-\u003ememoryList;\n    while (memlist != NULL) {\n        nextmem = (DdHashItem **) memlist[0];\n        ABC_FREE(memlist);\n        memlist = nextmem;\n    }\n\n    ABC_FREE(hash-\u003ebucket);\n    ABC_FREE(hash);\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n\n    return;\n\n}",
+      "Draft": "func cuddHashTableQuit(hash *DdHashTable) {\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    unsigned int i;\n    var dd *DdManager  = hash.manager;\n    var bucket *DdHashItem;\n    var memlist, nextmem **DdHashItem;\n    unsigned int numBuckets = hash.numBuckets;\n\n    for i = 0; i \u003c numBuckets; i++ {\n        bucket = hash.bucket[i];\n        for bucket != nil {\n            Cudd_RecursiveDeref(dd, bucket.value);\n            bucket = bucket.next;\n        }\n    }\n\n    memlist = hash.memoryList;\n    for memlist != nil {\n        nextmem = (DdHashItem **) memlist[0];\n        ABC_FREE(memlist);\n        memlist = nextmem;\n    }\n\n    ABC_FREE(hash.bucket);\n    ABC_FREE(hash);\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n\n    return;\n\n}"
+    },
+    {
+      "Name": "cuddHashTableInsert",
+      "Start": 19824,
+      "End": 20562,
+      "BodyStart": 19924,
+      "Original": "int\ncuddHashTableInsert(\n  DdHashTable * hash,\n  DdNodePtr * key,\n  DdNode * value,\n  ptrint count)\n{\n    int result;\n    unsigned int posn;\n    DdHashItem *item;\n    unsigned int i;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize \u003e 3);\n#endif\n\n    if (hash-\u003esize \u003e hash-\u003emaxsize) {\n        result = cuddHashTableResize(hash);\n        if (result == 0) return(0);\n    }\n    item = cuddHashTableAlloc(hash);\n    if (item == NULL) return(0);\n    hash-\u003esize++;\n    item-\u003evalue = value;\n    cuddRef(value);\n    item-\u003ecount = count;\n    for (i = 0; i \u003c hash-\u003ekeysize; i++) {\n        item-\u003ekey[i] = key[i];\n    }\n    posn = ddLCHash(key,hash-\u003ekeysize,hash-\u003eshift);\n    item-\u003enext = hash-\u003ebucket[posn];\n    hash-\u003ebucket[posn] = item;\n\n    return(1);\n\n}",
+      "Draft": "func cuddHashTableInsert(hash *DdHashTable, key *DdNodePtr, value *DdNode, count ptrint) int32 {\n    var result int32;\n    unsigned int posn;\n    var item *DdHashItem;\n    unsigned int i;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize \u003e 3);\n#endif\n\n    if hash.size \u003e hash.maxsize {\n        result = cuddHashTableResize(hash);\n        if result == 0 { return(0); }\n    }\n    item = cuddHashTableAlloc(hash);\n    if item == nil { return(0); }\n    hash.size++;\n    item.value = value;\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(value).ref);\n    item.count = count;\n    for i = 0; i \u003c hash.keysize; i++ {\n        item.key[i] = key[i];\n    }\n    posn = ddLCHash(key,hash.keysize,hash.shift);\n    item.next = hash.bucket[posn];\n    hash.bucket[posn] = item;\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "cuddHashTableLookup",
+      "Start": 21330,
+      "End": 22493,
+      "BodyStart": 21401,
+      "Original": "DdNode *\ncuddHashTableLookup(\n  DdHashTable * hash,\n  DdNodePtr * key)\n{\n    unsigned int posn;\n    DdHashItem *item, *prev;\n    unsigned int i, keysize;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize \u003e 3);\n#endif\n\n    posn = ddLCHash(key,hash-\u003ekeysize,hash-\u003eshift);\n    item = hash-\u003ebucket[posn];\n    prev = NULL;\n\n    keysize = hash-\u003ekeysize;\n    while (item != NULL) {\n        DdNodePtr *key2 = item-\u003ekey;\n        int equal = 1;\n        for (i = 0; i \u003c keysize; i++) {\n            if (key[i] != key2[i]) {\n                equal = 0;\n                break;\n            }\n        }\n        if (equal) {\n            DdNode *value = item-\u003evalue;\n            cuddSatDec(item-\u003ecount);\n            if (item-\u003ecount == 0) {\n                cuddDeref(value);\n                if (prev == NULL) {\n                    hash-\u003ebucket[posn] = item-\u003enext;\n                } else {\n                    prev-\u003enext = item-\u003enext;\n                }\n                item-\u003enext = hash-\u003enextFree;\n                hash-\u003enextFree = item;\n                hash-\u003esize--;\n            }\n            return(value);\n        }\n        prev = item;\n        item = item-\u003enext;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func cuddHashTableLookup(hash *DdHashTable, key *DdNodePtr) *DdNode {\n    unsigned int posn;\n    var item, prev *DdHashItem;\n    unsigned int i, keysize;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize \u003e 3);\n#endif\n\n    posn = ddLCHash(key,hash.keysize,hash.shift);\n    item = hash.bucket[posn];\n    prev = nil;\n\n    keysize = hash.keysize;\n    for item != nil {\n        var key2 *DdNodePtr  = item.key;\n        var equal int32  = 1;\n        for i = 0; i \u003c keysize; i++ {\n            if key[i] != key2[i] {\n                equal = 0;\n                break;\n            }\n        }\n        if equal != 0 {\n            var value *DdNode  = item.value;\n            cuddSatDec(item.count);\n            if item.count == 0 {\n                // inlining of macro cuddDeref\n                cuddSatDec(Cudd_Regular(value).ref);\n                if prev == nil {\n                    hash.bucket[posn] = item.next;\n                } else {\n                    prev.next = item.next;\n                }\n                item.next = hash.nextFree;\n                hash.nextFree = item;\n                hash.size--;\n            }\n            return(value);\n        }\n        prev = item;\n        item = item.next;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "cuddHashTableInsert1",
+      "Start": 22982,
+      "End": 23645,
+      "BodyStart": 23078,
+      "Original": "int\ncuddHashTableInsert1(\n  DdHashTable * hash,\n  DdNode * f,\n  DdNode * value,\n  ptrint count)\n{\n    int result;\n    unsigned int posn;\n    DdHashItem *item;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 1);\n#endif\n\n    if (hash-\u003esize \u003e hash-\u003emaxsize) {\n        result = cuddHashTableResize(hash);\n        if (result == 0) return(0);\n    }\n    item = cuddHashTableAlloc(hash);\n    if (item == NULL) return(0);\n    hash-\u003esize++;\n    item-\u003evalue = value;\n    cuddRef(value);\n    item-\u003ecount = count;\n    item-\u003ekey[0] = f;\n    posn = ddLCHash2(cuddF2L(f),cuddF2L(f),hash-\u003eshift);\n    item-\u003enext = hash-\u003ebucket[posn];\n    hash-\u003ebucket[posn] = item;\n\n    return(1);\n\n}",
+      "Draft": "func cuddHashTableInsert1(hash *DdHashTable, f *DdNode, value *DdNode, count ptrint) int32 {\n    var result int32;\n    unsigned int posn;\n    var item *DdHashItem;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 1);\n#endif\n\n    if hash.size \u003e hash.maxsize {\n        result = cuddHashTableResize(hash);\n        if result == 0 { return(0); }\n    }\n    item = cuddHashTableAlloc(hash);\n    if item == nil { return(0); }\n    hash.size++;\n    item.value = value;\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(value).ref);\n    item.count = count;\n    item.key[0] = f;\n    posn = ddLCHash2(cuddF2L(f),cuddF2L(f),hash.shift);\n    item.next = hash.bucket[posn];\n    hash.bucket[posn] = item;\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "cuddHashTableLookup1",
+      "Start": 24426,
+      "End": 25364,
+      "BodyStart": 24493,
+      "Original": "DdNode *\ncuddHashTableLookup1(\n  DdHashTable * hash,\n  DdNode * f)\n{\n    unsigned int posn;\n    DdHashItem *item, *prev;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 1);\n#endif\n\n    posn = ddLCHash2(cuddF2L(f),cuddF2L(f),hash-\u003eshift);\n    item = hash-\u003ebucket[posn];\n    prev = NULL;\n\n    while (item != NULL) {\n        DdNodePtr *key = item-\u003ekey;\n        if (f == key[0]) {\n            DdNode *value = item-\u003evalue;\n            cuddSatDec(item-\u003ecount);\n            if (item-\u003ecount == 0) {\n                cuddDeref(value);\n                if (prev == NULL) {\n                    hash-\u003ebucket[posn] = item-\u003enext;\n                } else {\n                    prev-\u003enext = item-\u003enext;\n                }\n                item-\u003enext = hash-\u003enextFree;\n                hash-\u003enextFree = item;\n                hash-\u003esize--;\n            }\n            return(value);\n        }\n        prev = item;\n        item = item-\u003enext;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func cuddHashTableLookup1(hash *DdHashTable, f *DdNode) *DdNode {\n    unsigned int posn;\n    var item, prev *DdHashItem;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 1);\n#endif\n\n    posn = ddLCHash2(cuddF2L(f),cuddF2L(f),hash.shift);\n    item = hash.bucket[posn];\n    prev = nil;\n\n    for item != nil {\n        var key *DdNodePtr  = item.key;\n        if f == key[0] {\n            var value *DdNode  = item.value;\n            cuddSatDec(item.count);\n            if item.count == 0 {\n                // inlining of macro cuddDeref\n                cuddSatDec(Cudd_Regular(value).ref);\n                if prev == nil {\n                    hash.bucket[posn] = item.next;\n                } else {\n                    prev.next = item.next;\n                }\n                item.next = hash.nextFree;\n                hash.nextFree = item;\n                hash.size--;\n            }\n            return(value);\n        }\n        prev = item;\n        item = item.next;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "cuddHashTableInsert2",
+      "Start": 25867,
+      "End": 26566,
+      "BodyStart": 25977,
+      "Original": "int\ncuddHashTableInsert2(\n  DdHashTable * hash,\n  DdNode * f,\n  DdNode * g,\n  DdNode * value,\n  ptrint count)\n{\n    int result;\n    unsigned int posn;\n    DdHashItem *item;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 2);\n#endif\n\n    if (hash-\u003esize \u003e hash-\u003emaxsize) {\n        result = cuddHashTableResize(hash);\n        if (result == 0) return(0);\n    }\n    item = cuddHashTableAlloc(hash);\n    if (item == NULL) return(0);\n    hash-\u003esize++;\n    item-\u003evalue = value;\n    cuddRef(value);\n    item-\u003ecount = count;\n    item-\u003ekey[0] = f;\n    item-\u003ekey[1] = g;\n    posn = ddLCHash2(cuddF2L(f),cuddF2L(g),hash-\u003eshift);\n    item-\u003enext = hash-\u003ebucket[posn];\n    hash-\u003ebucket[posn] = item;\n\n    return(1);\n\n}",
+      "Draft": "func cuddHashTableInsert2(hash *DdHashTable, f *DdNode, g *DdNode, value *DdNode, count ptrint) int32 {\n    var result int32;\n    unsigned int posn;\n    var item *DdHashItem;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 2);\n#endif\n\n    if hash.size \u003e hash.maxsize {\n        result = cuddHashTableResize(hash);\n        if result == 0 { return(0); }\n    }\n    item = cuddHashTableAlloc(hash);\n    if item == nil { return(0); }\n    hash.size++;\n    item.value = value;\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(value).ref);\n    item.count = count;\n    item.key[0] = f;\n    item.key[1] = g;\n    posn = ddLCHash2(cuddF2L(f),cuddF2L(g),hash.shift);\n    item.next = hash.bucket[posn];\n    hash.bucket[posn] = item;\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "cuddHashTableLookup2",
+      "Start": 27348,
+      "End": 28319,
+      "BodyStart": 27429,
+      "Original": "DdNode *\ncuddHashTableLookup2(\n  DdHashTable * hash,\n  DdNode * f,\n  DdNode * g)\n{\n    unsigned int posn;\n    DdHashItem *item, *prev;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 2);\n#endif\n\n    posn = ddLCHash2(cuddF2L(f),cuddF2L(g),hash-\u003eshift);\n    item = hash-\u003ebucket[posn];\n    prev = NULL;\n\n    while (item != NULL) {\n        DdNodePtr *key = item-\u003ekey;\n        if ((f == key[0]) \u0026\u0026 (g == key[1])) {\n            DdNode *value = item-\u003evalue;\n            cuddSatDec(item-\u003ecount);\n            if (item-\u003ecount == 0) {\n                cuddDeref(value);\n                if (prev == NULL) {\n                    hash-\u003ebucket[posn] = item-\u003enext;\n                } else {\n                    prev-\u003enext = item-\u003enext;\n                }\n                item-\u003enext = hash-\u003enextFree;\n                hash-\u003enextFree = item;\n                hash-\u003esize--;\n            }\n            return(value);\n        }\n        prev = item;\n        item = item-\u003enext;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func cuddHashTableLookup2(hash *DdHashTable, f *DdNode, g *DdNode) *DdNode {\n    unsigned int posn;\n    var item, prev *DdHashItem;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 2);\n#endif\n\n    posn = ddLCHash2(cuddF2L(f),cuddF2L(g),hash.shift);\n    item = hash.bucket[posn];\n    prev = nil;\n\n    for item != nil {\n        var key *DdNodePtr  = item.key;\n        if (f == key[0]) \u0026\u0026 (g == key[1]) {\n            var value *DdNode  = item.value;\n            cuddSatDec(item.count);\n            if item.count == 0 {\n                // inlining of macro cuddDeref\n                cuddSatDec(Cudd_Regular(value).ref);\n                if prev == nil {\n                    hash.bucket[posn] = item.next;\n                } else {\n                    prev.next = item.next;\n                }\n                item.next = hash.nextFree;\n                hash.nextFree = item;\n                hash.size--;\n            }\n            return(value);\n        }\n        prev = item;\n        item = item.next;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "cuddHashTableInsert3",
+      "Start": 28824,
+      "End": 29570,
+      "BodyStart": 28948,
+      "Original": "int\ncuddHashTableInsert3(\n  DdHashTable * hash,\n  DdNode * f,\n  DdNode * g,\n  DdNode * h,\n  DdNode * value,\n  ptrint count)\n{\n    int result;\n    unsigned int posn;\n    DdHashItem *item;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 3);\n#endif\n\n    if (hash-\u003esize \u003e hash-\u003emaxsize) {\n        result = cuddHashTableResize(hash);\n        if (result == 0) return(0);\n    }\n    item = cuddHashTableAlloc(hash);\n    if (item == NULL) return(0);\n    hash-\u003esize++;\n    item-\u003evalue = value;\n    cuddRef(value);\n    item-\u003ecount = count;\n    item-\u003ekey[0] = f;\n    item-\u003ekey[1] = g;\n    item-\u003ekey[2] = h;\n    posn = ddLCHash3(cuddF2L(f),cuddF2L(g),cuddF2L(h),hash-\u003eshift);\n    item-\u003enext = hash-\u003ebucket[posn];\n    hash-\u003ebucket[posn] = item;\n\n    return(1);\n\n}",
+      "Draft": "func cuddHashTableInsert3(hash *DdHashTable, f *DdNode, g *DdNode, h *DdNode, value *DdNode, count ptrint) int32 {\n    var result int32;\n    unsigned int posn;\n    var item *DdHashItem;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 3);\n#endif\n\n    if hash.size \u003e hash.maxsize {\n        result = cuddHashTableResize(hash);\n        if result == 0 { return(0); }\n    }\n    item = cuddHashTableAlloc(hash);\n    if item == nil { return(0); }\n    hash.size++;\n    item.value = value;\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(value).ref);\n    item.count = count;\n    item.key[0] = f;\n    item.key[1] = g;\n    item.key[2] = h;\n    // inlining of macro ddLCHash3\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    posn = ddCHash2(((((DdNode *)((ptruint)(f) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (f) \u0026 01)))),((((DdNode *)((ptruint)(g) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (g) \u0026 01)))),((((DdNode *)((ptruint)(h) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (h) \u0026 01)))),hash.shift);\n    item.next = hash.bucket[posn];\n    hash.bucket[posn] = item;\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "cuddHashTableLookup3",
+      "Start": 30357,
+      "End": 31370,
+      "BodyStart": 30452,
+      "Original": "DdNode *\ncuddHashTableLookup3(\n  DdHashTable * hash,\n  DdNode * f,\n  DdNode * g,\n  DdNode * h)\n{\n    unsigned int posn;\n    DdHashItem *item, *prev;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 3);\n#endif\n\n    posn = ddLCHash3(cuddF2L(f),cuddF2L(g),cuddF2L(h),hash-\u003eshift);\n    item = hash-\u003ebucket[posn];\n    prev = NULL;\n\n    while (item != NULL) {\n        DdNodePtr *key = item-\u003ekey;\n        if ((f == key[0]) \u0026\u0026 (g == key[1]) \u0026\u0026 (h == key[2])) {\n            DdNode *value = item-\u003evalue;\n            cuddSatDec(item-\u003ecount);\n            if (item-\u003ecount == 0) {\n                cuddDeref(value);\n                if (prev == NULL) {\n                    hash-\u003ebucket[posn] = item-\u003enext;\n                } else {\n                    prev-\u003enext = item-\u003enext;\n                }\n                item-\u003enext = hash-\u003enextFree;\n                hash-\u003enextFree = item;\n                hash-\u003esize--;\n            }\n            return(value);\n        }\n        prev = item;\n        item = item-\u003enext;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func cuddHashTableLookup3(hash *DdHashTable, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    unsigned int posn;\n    var item, prev *DdHashItem;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 3);\n#endif\n\n    // inlining of macro ddLCHash3\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    posn = ddCHash2(((((DdNode *)((ptruint)(f) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (f) \u0026 01)))),((((DdNode *)((ptruint)(g) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (g) \u0026 01)))),((((DdNode *)((ptruint)(h) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (h) \u0026 01)))),hash.shift);\n    item = hash.bucket[posn];\n    prev = nil;\n\n    for item != nil {\n        var key *DdNodePtr  = item.key;\n        if (f == key[0]) \u0026\u0026 (g == key[1]) \u0026\u0026 (h == key[2]) {\n            var value *DdNode  = item.value;\n            cuddSatDec(item.count);\n            if item.count == 0 {\n                // inlining of macro cuddDeref\n                cuddSatDec(Cudd_Regular(value).ref);\n                if prev == nil {\n                    hash.bucket[posn] = item.next;\n                } else {\n                    prev.next = item.next;\n                }\n                item.next = hash.nextFree;\n                hash.nextFree = item;\n                hash.size--;\n            }\n            return(value);\n        }\n        prev = item;\n        item = item.next;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "cuddLocalCacheResize",
+      "Start": 31908,
+      "End": 34084,
+      "BodyStart": 31966,
+      "Original": "static void\ncuddLocalCacheResize(\n  DdLocalCache * cache)\n{\n    DdLocalCacheItem *item, *olditem, *entry, *old;\n    int i, shift;\n    unsigned int posn;\n    unsigned int slots, oldslots;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n\n    olditem = cache-\u003eitem;\n    oldslots = cache-\u003eslots;\n    slots = cache-\u003eslots = oldslots \u003c\u003c 1;\n\n#ifdef DD_VERBOSE\n    (void) fprintf(cache-\u003emanager-\u003eerr,\n                   \"Resizing local cache from %d to %d entries\\n\",\n                   oldslots, slots);\n    (void) fprintf(cache-\u003emanager-\u003eerr,\n                   \"\\thits = %.0f\\tlookups = %.0f\\thit ratio = %5.3f\\n\",\n                   cache-\u003ehits, cache-\u003elookUps, cache-\u003ehits / cache-\u003elookUps);\n#endif\n\n    saveHandler = MMoutOfMemory;\n    MMoutOfMemory = Cudd_OutOfMem;\n    cache-\u003eitem = item =\n        (DdLocalCacheItem *) ABC_ALLOC(char, slots * cache-\u003eitemsize);\n    MMoutOfMemory = saveHandler;\n    /* If we fail to allocate the new table we just give up. */\n    if (item == NULL) {\n#ifdef DD_VERBOSE\n        (void) fprintf(cache-\u003emanager-\u003eerr,\"Resizing failed. Giving up.\\n\");\n#endif\n        cache-\u003eslots = oldslots;\n        cache-\u003eitem = olditem;\n        /* Do not try to resize again. */\n        cache-\u003emaxslots = oldslots - 1;\n        return;\n    }\n    shift = --(cache-\u003eshift);\n    cache-\u003emanager-\u003ememused += (slots - oldslots) * cache-\u003eitemsize;\n\n    /* Clear new cache. */\n    memset(item, 0, (size_t)(slots * cache-\u003eitemsize));\n\n    /* Copy from old cache to new one. */\n    for (i = 0; (unsigned) i \u003c oldslots; i++) {\n        old = (DdLocalCacheItem *) ((char *) olditem + i * cache-\u003eitemsize);\n        if (old-\u003evalue != NULL) {\n            posn = ddLCHash(old-\u003ekey,cache-\u003ekeysize,shift);\n            entry = (DdLocalCacheItem *) ((char *) item +\n                                          posn * cache-\u003eitemsize);\n            memcpy(entry-\u003ekey,old-\u003ekey,cache-\u003ekeysize*sizeof(DdNode *));\n            entry-\u003evalue = old-\u003evalue;\n        }\n    }\n\n    ABC_FREE(olditem);\n\n    /* Reinitialize measurements so as to avoid division by 0 and\n    ** immediate resizing.\n    */\n    cache-\u003elookUps = (double) (int) (slots * cache-\u003eminHit + 1);\n    cache-\u003ehits = 0;\n\n}",
+      "Draft": "func cuddLocalCacheResize(cache *DdLocalCache) {\n    var item, olditem, entry, old *DdLocalCacheItem;\n    var i, shift int32;\n    unsigned int posn;\n    unsigned int slots, oldslots;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n\n    olditem = cache.item;\n    oldslots = cache.slots;\n    slots = cache.slots = oldslots \u003c\u003c 1;\n\n#ifdef DD_VERBOSE\n    (void) fprintf(cache-\u003emanager-\u003eerr,\n                   \"Resizing local cache from %d to %d entries\\n\",\n                   oldslots, slots);\n    (void) fprintf(cache-\u003emanager-\u003eerr,\n                   \"\\thits = %.0f\\tlookups = %.0f\\thit ratio = %5.3f\\n\",\n                   cache-\u003ehits, cache-\u003elookUps, cache-\u003ehits / cache-\u003elookUps);\n#endif\n\n    saveHandler = MMoutOfMemory;\n    MMoutOfMemory = Cudd_OutOfMem;\n    cache.item = item =\n        (DdLocalCacheItem *) ABC_ALLOC(char, slots * cache.itemsize);\n    MMoutOfMemory = saveHandler;\n    /* If we fail to allocate the new table we just give up. */\n    if item == nil {\n#ifdef DD_VERBOSE\n        (void) fprintf(cache-\u003emanager-\u003eerr,\"Resizing failed. Giving up.\\n\");\n#endif\n        cache.slots = oldslots;\n        cache.item = olditem;\n        /* Do not try to resize again. */\n        cache.maxslots = oldslots - 1;\n        return;\n    }\n    shift = --(cache.shift);\n    cache.manager.memused += (slots - oldslots) * cache.itemsize;\n\n    /* Clear new cache. */\n    memset(item, 0, (size_t)(slots * cache.itemsize));\n\n    /* Copy from old cache to new one. */\n    for i = 0; uint32( i) \u003c oldslots; i++ {\n        old = (DdLocalCacheItem *) ((char *) olditem + i * cache.itemsize);\n        if old.value != nil {\n            posn = ddLCHash(old.key,cache.keysize,shift);\n            entry = (DdLocalCacheItem *) ((char *) item +\n                                          posn * cache.itemsize);\n            memcpy(entry.key,old.key,cache.keysize*sizeof(DdNode *));\n            entry.value = old.value;\n        }\n    }\n\n    ABC_FREE(olditem);\n\n    /* Reinitialize measurements so as to avoid division by 0 and\n    ** immediate resizing.\n    */\n    cache.lookUps = float64( int32( (slots * cache.minHit + 1)));\n    cache.hits = 0;\n\n}"
+    },
+    {
+      "Name": "ddLCHash",
+      "Start": 34480,
+      "End": 34774,
+      "BodyStart": 34566,
+      "Original": "static unsigned int\nddLCHash(\n  DdNodePtr * key,\n  unsigned int keysize,\n  int shift)\n{\n    unsigned int val = (unsigned int) (ptrint) key[0] * DD_P2;\n    unsigned int i;\n\n    for (i = 1; i \u003c keysize; i++) {\n        val = val * DD_P1 + (int) (ptrint) key[i];\n    }\n\n    return(val \u003e\u003e shift);\n\n}",
+      "Draft": "static unsigned int\nddLCHash(\n  DdNodePtr * key,\n  unsigned int keysize,\n  int shift)\n{\n    unsigned int val = (unsigned int) (ptrint) key[0] * DD_P2;\n    unsigned int i;\n\n    for i = 1; i \u003c keysize; i++ {\n        val = val * DD_P1 + int32( (ptrint)) key[i];\n    }\n\n    return(val \u003e\u003e shift);\n\n}"
+    },
+    {
+      "Name": "cuddLocalCacheAddToList",
+      "Start": 35078,
+      "End": 35271,
+      "BodyStart": 35139,
+      "Original": "static void\ncuddLocalCacheAddToList(\n  DdLocalCache * cache)\n{\n    DdManager *manager = cache-\u003emanager;\n\n    cache-\u003enext = manager-\u003elocalCaches;\n    manager-\u003elocalCaches = cache;\n    return;\n\n}",
+      "Draft": "func cuddLocalCacheAddToList(cache *DdLocalCache) {\n    var manager *DdManager  = cache.manager;\n\n    cache.next = manager.localCaches;\n    manager.localCaches = cache;\n    return;\n\n}"
+    },
+    {
+      "Name": "cuddLocalCacheRemoveFromList",
+      "Start": 35592,
+      "End": 36233,
+      "BodyStart": 35658,
+      "Original": "static void\ncuddLocalCacheRemoveFromList(\n  DdLocalCache * cache)\n{\n    DdManager *manager = cache-\u003emanager;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    DdLocalCache **prevCache, *nextCache;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n\n    prevCache = \u0026(manager-\u003elocalCaches);\n    nextCache = manager-\u003elocalCaches;\n\n    while (nextCache != NULL) {\n        if (nextCache == cache) {\n            *prevCache = nextCache-\u003enext;\n            return;\n        }\n        prevCache = \u0026(nextCache-\u003enext);\n        nextCache = nextCache-\u003enext;\n    }\n    return;                     /* should never get here */\n\n}",
+      "Draft": "func cuddLocalCacheRemoveFromList(cache *DdLocalCache) {\n    var manager *DdManager  = cache.manager;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    var prevCache **DdLocalCache;\n    var nextCache *DdLocalCache;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n\n    prevCache = \u0026(manager.localCaches);\n    nextCache = manager.localCaches;\n\n    for nextCache != nil {\n        if nextCache == cache {\n            *prevCache = nextCache.next;\n            return;\n        }\n        prevCache = \u0026(nextCache.next);\n        nextCache = nextCache.next;\n    }\n    return;                     /* should never get here */\n\n}"
+    },
+    {
+      "Name": "cuddHashTableResize",
+      "Start": 36616,
+      "End": 39434,
+      "BodyStart": 36670,
+      "Original": "static int\ncuddHashTableResize(\n  DdHashTable * hash)\n{\n    int j;\n    unsigned int posn;\n    DdHashItem *item;\n    DdHashItem *next;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    DdNode **key;\n    int numBuckets;\n    DdHashItem **buckets;\n    DdHashItem **oldBuckets = hash-\u003ebucket;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    int shift;\n    int oldNumBuckets = hash-\u003enumBuckets;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n\n    /* Compute the new size of the table. */\n    numBuckets = oldNumBuckets \u003c\u003c 1;\n    saveHandler = MMoutOfMemory;\n    MMoutOfMemory = Cudd_OutOfMem;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    buckets = ABC_ALLOC(DdHashItem *, numBuckets);\n    MMoutOfMemory = saveHandler;\n    if (buckets == NULL) {\n        hash-\u003emaxsize \u003c\u003c= 1;\n        return(1);\n    }\n\n    hash-\u003ebucket = buckets;\n    hash-\u003enumBuckets = numBuckets;\n    shift = --(hash-\u003eshift);\n    hash-\u003emaxsize \u003c\u003c= 1;\n    memset(buckets, 0, numBuckets * sizeof(DdHashItem *));\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    if (hash-\u003ekeysize == 1) {\n        for (j = 0; j \u003c oldNumBuckets; j++) {\n            item = oldBuckets[j];\n            while (item != NULL) {\n                next = item-\u003enext;\n                key = item-\u003ekey;\n                posn = ddLCHash2(cuddF2L(key[0]), cuddF2L(key[0]), shift);\n                item-\u003enext = buckets[posn];\n                buckets[posn] = item;\n                item = next;\n            }\n        }\n    } else if (hash-\u003ekeysize == 2) {\n        for (j = 0; j \u003c oldNumBuckets; j++) {\n            item = oldBuckets[j];\n            while (item != NULL) {\n                next = item-\u003enext;\n                key = item-\u003ekey;\n                posn = ddLCHash2(cuddF2L(key[0]), cuddF2L(key[1]), shift);\n                item-\u003enext = buckets[posn];\n                buckets[posn] = item;\n                item = next;\n            }\n        }\n    } else if (hash-\u003ekeysize == 3) {\n        for (j = 0; j \u003c oldNumBuckets; j++) {\n            item = oldBuckets[j];\n            while (item != NULL) {\n                next = item-\u003enext;\n                key = item-\u003ekey;\n                posn = ddLCHash3(cuddF2L(key[0]), cuddF2L(key[1]), cuddF2L(key[2]), shift);\n                item-\u003enext = buckets[posn];\n                buckets[posn] = item;\n                item = next;\n            }\n        }\n    } else {\n        for (j = 0; j \u003c oldNumBuckets; j++) {\n            item = oldBuckets[j];\n            while (item != NULL) {\n                next = item-\u003enext;\n                posn = ddLCHash(item-\u003ekey, hash-\u003ekeysize, shift);\n                item-\u003enext = buckets[posn];\n                buckets[posn] = item;\n                item = next;\n            }\n        }\n    }\n    ABC_FREE(oldBuckets);\n    return(1);\n\n}",
+      "Draft": "func cuddHashTableResize(hash *DdHashTable) int32 {\n    var j int32;\n    unsigned int posn;\n    var item *DdHashItem;\n    var next *DdHashItem;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    var key **DdNode;\n    var numBuckets int32;\n    var buckets **DdHashItem;\n    var oldBuckets **DdHashItem  = hash.bucket;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    var shift int32;\n    var oldNumBuckets int32  = hash.numBuckets;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n\n    /* Compute the new size of the table. */\n    numBuckets = oldNumBuckets \u003c\u003c 1;\n    saveHandler = MMoutOfMemory;\n    MMoutOfMemory = Cudd_OutOfMem;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    buckets = ABC_ALLOC(DdHashItem *, numBuckets);\n    MMoutOfMemory = saveHandler;\n    if buckets == nil {\n        hash.maxsize \u003c\u003c= 1;\n        return(1);\n    }\n\n    hash.bucket = buckets;\n    hash.numBuckets = numBuckets;\n    shift = --(hash.shift);\n    hash.maxsize \u003c\u003c= 1;\n    memset(buckets, 0, numBuckets * sizeof(DdHashItem *));\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    if hash.keysize == 1 {\n        for j = 0; j \u003c oldNumBuckets; j++ {\n            item = oldBuckets[j];\n            for item != nil {\n                next = item.next;\n                key = item.key;\n                posn = ddLCHash2(cuddF2L(key[0]), cuddF2L(key[0]), shift);\n                item.next = buckets[posn];\n                buckets[posn] = item;\n                item = next;\n            }\n        }\n    } else if hash.keysize == 2 {\n        for j = 0; j \u003c oldNumBuckets; j++ {\n            item = oldBuckets[j];\n            for item != nil {\n                next = item.next;\n                key = item.key;\n                posn = ddLCHash2(cuddF2L(key[0]), cuddF2L(key[1]), shift);\n                item.next = buckets[posn];\n                buckets[posn] = item;\n                item = next;\n            }\n        }\n    } else if hash.keysize == 3 {\n        for j = 0; j \u003c oldNumBuckets; j++ {\n            item = oldBuckets[j];\n            for item != nil {\n                next = item.next;\n                key = item.key;\n                // inlining of macro ddLCHash3\n                // inlining of macro cuddF2L\n                // inlining of macro Cudd_Regular\n                // inlining of macro Cudd_IsComplement\n                posn = ddCHash2(((((DdNode *)((ptruint)(key[0]) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (key[0]) \u0026 01)))),((((DdNode *)((ptruint)(key[1]) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (key[1]) \u0026 01)))),((((DdNode *)((ptruint)(key[2]) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (key[2]) \u0026 01)))),shift);\n                item.next = buckets[posn];\n                buckets[posn] = item;\n                item = next;\n            }\n        }\n    } else {\n        for j = 0; j \u003c oldNumBuckets; j++ {\n            item = oldBuckets[j];\n            for item != nil {\n                next = item.next;\n                posn = ddLCHash(item.key, hash.keysize, shift);\n                item.next = buckets[posn];\n                buckets[posn] = item;\n                item = next;\n            }\n        }\n    }\n    ABC_FREE(oldBuckets);\n    return(1);\n\n}"
+    },
+    {
+      "Name": "cuddHashTableAlloc",
+      "Start": 40049,
+      "End": 42220,
+      "BodyStart": 40111,
+      "Original": "static DdHashItem *\ncuddHashTableAlloc(\n  DdHashTable * hash)\n{\n    int i;\n    unsigned int itemsize = hash-\u003eitemsize;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    DdHashItem **mem, *thisOne, *next, *item;\n\n    if (hash-\u003enextFree == NULL) {\n        saveHandler = MMoutOfMemory;\n        MMoutOfMemory = Cudd_OutOfMem;\n        mem = (DdHashItem **) ABC_ALLOC(char,(DD_MEM_CHUNK+1) * itemsize);\n        MMoutOfMemory = saveHandler;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n        if (mem == NULL) {\n            if (hash-\u003emanager-\u003estash != NULL) {\n                ABC_FREE(hash-\u003emanager-\u003estash);\n                hash-\u003emanager-\u003estash = NULL;\n                /* Inhibit resizing of tables. */\n                hash-\u003emanager-\u003emaxCacheHard = hash-\u003emanager-\u003ecacheSlots - 1;\n                hash-\u003emanager-\u003ecacheSlack = - (int) (hash-\u003emanager-\u003ecacheSlots + 1);\n                for (i = 0; i \u003c hash-\u003emanager-\u003esize; i++) {\n                    hash-\u003emanager-\u003esubtables[i].maxKeys \u003c\u003c= 2;\n                }\n                hash-\u003emanager-\u003egcFrac = 0.2;\n                hash-\u003emanager-\u003eminDead =\n                    (unsigned) (0.2 * (double) hash-\u003emanager-\u003eslots);\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n                mem = (DdHashItem **) ABC_ALLOC(char,(DD_MEM_CHUNK+1) * itemsize);\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n            }\n            if (mem == NULL) {\n                (*MMoutOfMemory)((long)((DD_MEM_CHUNK + 1) * itemsize));\n                hash-\u003emanager-\u003eerrorCode = CUDD_MEMORY_OUT;\n                return(NULL);\n            }\n        }\n\n        mem[0] = (DdHashItem *) hash-\u003ememoryList;\n        hash-\u003ememoryList = mem;\n\n        thisOne = (DdHashItem *) ((char *) mem + itemsize);\n        hash-\u003enextFree = thisOne;\n        for (i = 1; i \u003c DD_MEM_CHUNK; i++) {\n            next = (DdHashItem *) ((char *) thisOne + itemsize);\n            thisOne-\u003enext = next;\n            thisOne = next;\n        }\n\n        thisOne-\u003enext = NULL;\n\n    }\n    item = hash-\u003enextFree;\n    hash-\u003enextFree = item-\u003enext;\n    return(item);\n\n}",
+      "Draft": "func cuddHashTableAlloc(hash *DdHashTable) *DdHashItem {\n    var i int32;\n    unsigned int itemsize = hash.itemsize;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    var mem **DdHashItem;\n    var thisOne *DdHashItem;\n    var next *DdHashItem;\n    var item *DdHashItem;\n\n    if hash.nextFree == nil {\n        saveHandler = MMoutOfMemory;\n        MMoutOfMemory = Cudd_OutOfMem;\n        mem = (DdHashItem **) ABC_ALLOC(char,(DD_MEM_CHUNK+1) * itemsize);\n        MMoutOfMemory = saveHandler;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n        if mem == nil {\n            if hash.manager.stash != nil {\n                ABC_FREE(hash.manager.stash);\n                hash.manager.stash = nil;\n                /* Inhibit resizing of tables. */\n                hash.manager.maxCacheHard = hash.manager.cacheSlots - 1;\n                hash.manager.cacheSlack = - int32( (hash.manager.cacheSlots + 1));\n                for i = 0; i \u003c hash.manager.size; i++ {\n                    hash.manager.subtables[i].maxKeys \u003c\u003c= 2;\n                }\n                hash.manager.gcFrac = 0.2;\n                hash.manager.minDead =\n                    uint32( (0.2 * float64( hash.manager.slots)));\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n                mem = (DdHashItem **) ABC_ALLOC(char,(DD_MEM_CHUNK+1) * itemsize);\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n            }\n            if mem == nil {\n                (*MMoutOfMemory)(int64(((DD_MEM_CHUNK + 1) * itemsize)));\n                hash.manager.errorCode = CUDD_MEMORY_OUT;\n                return(nil);\n            }\n        }\n\n        mem[0] = (DdHashItem *) hash.memoryList;\n        hash.memoryList = mem;\n\n        thisOne = (DdHashItem *) ((char *) mem + itemsize);\n        hash.nextFree = thisOne;\n        for i = 1; i \u003c DD_MEM_CHUNK; i++ {\n            next = (DdHashItem *) ((char *) thisOne + itemsize);\n            thisOne.next = next;\n            thisOne = next;\n        }\n\n        thisOne.next = nil;\n\n    }\n    item = hash.nextFree;\n    hash.nextFree = item.next;\n    return(item);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::mechanical::sizeof::7424",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7652,
+      "End": 7658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::mechanical::sizeof::7969",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8113,
+      "End": 8119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::mechanical::sizeof::8383",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8447,
+      "End": 8453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::mechanical::sizeof::9235",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9299,
+      "End": 9305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::mechanical::sizeof::10023",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10087,
+      "End": 10093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::mechanical::sizeof::10955",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10995,
+      "End": 11001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::mechanical::sizeof::14675",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17461,
+      "End": 17467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::mechanical::sizeof::14702",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17488,
+      "End": 17494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::mechanical::sizeof::14719",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17505,
+      "End": 17511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::mechanical::sizeof::14933",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17719,
+      "End": 17725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::mechanical::sizeof::15208",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17994,
+      "End": 18000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::mechanical::sizeof::32788",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 33797,
+      "End": 33803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::mechanical::sizeof::36696",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 37647,
+      "End": 37653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::7430",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7658,
+      "End": 7668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::7715",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7859,
+      "End": 7879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::9876",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9940,
+      "End": 9960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::9898",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9962,
+      "End": 9970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::10029",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10093,
+      "End": 10103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::10774",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10814,
+      "End": 10834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::10796",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10836,
+      "End": 10844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::10961",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11001,
+      "End": 11011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::11069",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11060,
+      "End": 11060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::12421",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12347,
+      "End": 12347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::12707",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12568,
+      "End": 12568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::12939",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12784,
+      "End": 12804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::12961",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12806,
+      "End": 12814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::14681",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17467,
+      "End": 17477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::14725",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17511,
+      "End": 17525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::15214",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18000,
+      "End": 18014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::16356",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19118,
+      "End": 19133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::27446",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29427,
+      "End": 29427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::27666",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29427,
+      "End": 29427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::27886",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29427,
+      "End": 29427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::29286",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30574,
+      "End": 30574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::29506",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30574,
+      "End": 30574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::29726",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30574,
+      "End": 30574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::31735",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32719,
+      "End": 32739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::32452",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33461,
+      "End": 33481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::32474",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33483,
+      "End": 33491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::32629",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33638,
+      "End": 33658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::32651",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33660,
+      "End": 33668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::32794",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33803,
+      "End": 33813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::36702",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 37653,
+      "End": 37667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::38040",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 38817,
+      "End": 38817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::38270",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 38817,
+      "End": 38817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::38500",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 38817,
+      "End": 38817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::40235",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 40475,
+      "End": 40490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::41186",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 41398,
+      "End": 41413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::41574",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 41760,
+      "End": 41774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::41658",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 41844,
+      "End": 41858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::41674",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 41860,
+      "End": 41868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::41798",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 41984,
+      "End": 41998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::pointer-cast::41814",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 42000,
+      "End": 42008
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro::ddLCHash3",
+      "Category": "macro-review",
+      "Symbol": "ddLCHash3",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5356,
+      "End": 5409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::ternary::cuddLocalCacheInit",
+      "Category": "ternary-review",
+      "Symbol": "cuddLocalCacheInit",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7086,
+      "End": 8684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddLocalCacheInit",
+      "Category": "semantic-review",
+      "Symbol": "cuddLocalCacheInit",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 7086,
+      "End": 8684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddLocalCacheQuit",
+      "Category": "semantic-review",
+      "Symbol": "cuddLocalCacheQuit",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 9148,
+      "End": 9425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddLocalCacheInsert",
+      "Category": "semantic-review",
+      "Symbol": "cuddLocalCacheInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9731,
+      "End": 10185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddLocalCacheLookup",
+      "Category": "semantic-review",
+      "Symbol": "cuddLocalCacheLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10578,
+      "End": 11423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddLocalCacheClearDead",
+      "Category": "semantic-review",
+      "Symbol": "cuddLocalCacheClearDead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11842,
+      "End": 12892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddLocalCacheClearAll",
+      "Category": "semantic-review",
+      "Symbol": "cuddLocalCacheClearAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13266,
+      "End": 13520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddHashTableInit",
+      "Category": "semantic-review",
+      "Symbol": "cuddHashTableInit",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 16949,
+      "End": 18174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddHashTableQuit",
+      "Category": "semantic-review",
+      "Symbol": "cuddHashTableQuit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18540,
+      "End": 19321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddHashTableInsert",
+      "Category": "semantic-review",
+      "Symbol": "cuddHashTableInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19824,
+      "End": 20562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddHashTableLookup",
+      "Category": "semantic-review",
+      "Symbol": "cuddHashTableLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21330,
+      "End": 22493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddHashTableInsert1",
+      "Category": "semantic-review",
+      "Symbol": "cuddHashTableInsert1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22982,
+      "End": 23645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddHashTableLookup1",
+      "Category": "semantic-review",
+      "Symbol": "cuddHashTableLookup1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24426,
+      "End": 25364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddHashTableInsert2",
+      "Category": "semantic-review",
+      "Symbol": "cuddHashTableInsert2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25867,
+      "End": 26566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddHashTableLookup2",
+      "Category": "semantic-review",
+      "Symbol": "cuddHashTableLookup2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27348,
+      "End": 28319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddHashTableInsert3",
+      "Category": "semantic-review",
+      "Symbol": "cuddHashTableInsert3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28824,
+      "End": 29570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddHashTableLookup3",
+      "Category": "semantic-review",
+      "Symbol": "cuddHashTableLookup3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30357,
+      "End": 31370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddLocalCacheResize",
+      "Category": "semantic-review",
+      "Symbol": "cuddLocalCacheResize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31908,
+      "End": 34084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::ddLCHash",
+      "Category": "semantic-review",
+      "Symbol": "ddLCHash",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 34480,
+      "End": 34774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddLocalCacheAddToList",
+      "Category": "semantic-review",
+      "Symbol": "cuddLocalCacheAddToList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35078,
+      "End": 35271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddLocalCacheRemoveFromList",
+      "Category": "semantic-review",
+      "Symbol": "cuddLocalCacheRemoveFromList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35592,
+      "End": 36233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddHashTableResize",
+      "Category": "semantic-review",
+      "Symbol": "cuddHashTableResize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36616,
+      "End": 39434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::cuddHashTableAlloc",
+      "Category": "semantic-review",
+      "Symbol": "cuddHashTableAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 40049,
+      "End": 42220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 42279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4126,
+      "End": 4237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4783,
+      "End": 5048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7670,
+      "End": 7739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 10132,
+      "End": 10182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13559,
+      "End": 16574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17099,
+      "End": 17173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 18103,
+      "End": 18153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 18588,
+      "End": 18662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 19255,
+      "End": 19305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 20008,
+      "End": 20061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 21485,
+      "End": 21538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 23142,
+      "End": 23196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 24548,
+      "End": 24602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::13",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 26041,
+      "End": 26095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::14",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 27484,
+      "End": 27538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::15",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 29012,
+      "End": 29066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::16",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 30507,
+      "End": 30561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::17",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 32256,
+      "End": 32616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::18",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 32903,
+      "End": 33004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::19",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 35701,
+      "End": 35775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::20",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 35818,
+      "End": 35868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::21",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 36750,
+      "End": 36824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::22",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 36933,
+      "End": 36983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::23",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 37253,
+      "End": 37327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::24",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 37670,
+      "End": 37720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::25",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 40229,
+      "End": 40303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::26",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 40573,
+      "End": 40623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::27",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 41301,
+      "End": 41375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::conditional::28",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 41459,
+      "End": 41509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::7428",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7428,
+      "End": 7453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::7888",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7888,
+      "End": 7932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::8019",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8019,
+      "End": 8034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::9366",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9366,
+      "End": 9387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::9393",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9393,
+      "End": 9408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::17185",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17185,
+      "End": 17210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::17765",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17765,
+      "End": 17806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::17894",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17894,
+      "End": 17908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::19154",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19154,
+      "End": 19171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::19211",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19211,
+      "End": 19233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::19239",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19239,
+      "End": 19253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::20304",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20304,
+      "End": 20318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::21982",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21982,
+      "End": 22005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::22059",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22059,
+      "End": 22075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::23439",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23439,
+      "End": 23453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::23513",
+      "Category": "macro-inline-review",
+      "Symbol": "ddLCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23513,
+      "End": 23557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::24615",
+      "Category": "macro-inline-review",
+      "Symbol": "ddLCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24615,
+      "End": 24659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::24853",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24853,
+      "End": 24876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::24930",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24930,
+      "End": 24946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::26338",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 26338,
+      "End": 26352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::26434",
+      "Category": "macro-inline-review",
+      "Symbol": "ddLCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 26434,
+      "End": 26478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::27551",
+      "Category": "macro-inline-review",
+      "Symbol": "ddLCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 27551,
+      "End": 27595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::27808",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 27808,
+      "End": 27831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::27885",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 27885,
+      "End": 27901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::29309",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 29309,
+      "End": 29323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::29427",
+      "Category": "macro-inline-review",
+      "Symbol": "ddCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 29427,
+      "End": 29482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::30574",
+      "Category": "macro-inline-review",
+      "Symbol": "ddCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 30574,
+      "End": 30629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::30859",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 30859,
+      "End": 30882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::30936",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 30936,
+      "End": 30952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::32740",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32740,
+      "End": 32780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::33876",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33876,
+      "End": 33893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::37342",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 37342,
+      "End": 37377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::37957",
+      "Category": "macro-inline-review",
+      "Symbol": "ddLCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 37957,
+      "End": 38007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::38387",
+      "Category": "macro-inline-review",
+      "Symbol": "ddLCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 38387,
+      "End": 38437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::38817",
+      "Category": "macro-inline-review",
+      "Symbol": "ddCHash2",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 38817,
+      "End": 38884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::39395",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 39395,
+      "End": 39415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::40491",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 40491,
+      "End": 40534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::40715",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 40715,
+      "End": 40745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLCache.c::macro-inline::41414",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 41414,
+      "End": 41457
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddLCache.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions for local caches.]\n\n  Description [Internal procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddLocalCacheInit()\n                \u003cli\u003e cuddLocalCacheQuit()\n                \u003cli\u003e cuddLocalCacheInsert()\n                \u003cli\u003e cuddLocalCacheLookup()\n                \u003cli\u003e cuddLocalCacheClearDead()\n                \u003cli\u003e cuddLocalCacheClearAll()\n                \u003cli\u003e cuddLocalCacheProfile()\n                \u003cli\u003e cuddHashTableInit()\n                \u003cli\u003e cuddHashTableQuit()\n                \u003cli\u003e cuddHashTableInsert()\n                \u003cli\u003e cuddHashTableLookup()\n                \u003cli\u003e cuddHashTableInsert2()\n                \u003cli\u003e cuddHashTableLookup2()\n                \u003cli\u003e cuddHashTableInsert3()\n                \u003cli\u003e cuddHashTableLookup3()\n                \u003c/ul\u003e\n            Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddLocalCacheResize()\n                \u003cli\u003e ddLCHash()\n                \u003cli\u003e cuddLocalCacheAddToList()\n                \u003cli\u003e cuddLocalCacheRemoveFromList()\n                \u003cli\u003e cuddHashTableResize()\n                \u003cli\u003e cuddHashTableAlloc()\n                \u003c/ul\u003e ]\n\n  SeeAlso     []\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\nconst DD_MAX_HASHTABLE_DENSITY = 2      /* tells when to resize a table */\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddLCache.c,v 1.24 2009/03/08 02:49:02 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/**Macro***********************************************************************\n\n  Synopsis    [Computes hash function for keys of two operands.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [ddLCHash3 ddLCHash]\n\n******************************************************************************/\n#if SIZEOF_VOID_P == 8 \u0026\u0026 SIZEOF_INT == 4\n#define ddLCHash2(f,g,shift) \\\n((((unsigned)(ptruint)(f) * DD_P1 + \\\n   (unsigned)(ptruint)(g)) * DD_P2) \u003e\u003e (shift))\n#else\n#define ddLCHash2(f,g,shift) \\\n((((unsigned)(f) * DD_P1 + (unsigned)(g)) * DD_P2) \u003e\u003e (shift))\n#endif\n\n\n/**Macro***********************************************************************\n\n  Synopsis    [Computes hash function for keys of three operands.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [ddLCHash2 ddLCHash]\n\n******************************************************************************/\n// Original macro:\n// #define ddLCHash3(f,g,h,shift)  ddCHash2(f,g,h,shift)\n\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static void cuddLocalCacheResize (DdLocalCache *cache);\n\nDD_INLINE static unsigned int ddLCHash (DdNodePtr *key, unsigned int keysize, int shift);\n// static void cuddLocalCacheAddToList (DdLocalCache *cache);\n\n// static void cuddLocalCacheRemoveFromList (DdLocalCache *cache);\n\n// static int cuddHashTableResize (DdHashTable *hash);\n\nDD_INLINE static DdHashItem * cuddHashTableAlloc (DdHashTable *hash);\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Initializes a local computed table.]\n\n  Description [Initializes a computed table.  Returns a pointer the\n  the new local cache in case of success; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddInitCache]\n\n******************************************************************************/\nDdLocalCache *\ncuddLocalCacheInit(\n  DdManager * manager /* manager */,\n  unsigned int  keySize /* size of the key (number of operands) */,\n  unsigned int  cacheSize /* Initial size of the cache */,\n  unsigned int  maxCacheSize /* Size of the cache beyond which no resizing occurs */)\n{\n    var cache *DdLocalCache;\n    var logSize int32;\n\n    cache = new(DdLocalCache);\n    if cache == nil {\n        manager.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n    cache.manager = manager;\n    cache.keysize = keySize;\n    cache.itemsize = (keySize + 1) * sizeof(DdNode *);\n#ifdef DD_CACHE_PROFILE\n    cache-\u003eitemsize += sizeof(ptrint);\n#endif\n    // inlining of macro ddMax\n    logSize = cuddComputeFloorLog2((((manager.slots/2) \u003e (cacheSize)) ? (manager.slots/2) : (cacheSize)));\n    cacheSize = 1 \u003c\u003c logSize;\n    cache.item = (DdLocalCacheItem *)\n        ABC_ALLOC(char, cacheSize * cache.itemsize);\n    if cache.item == nil {\n        manager.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(cache);\n        return(nil);\n    }\n    cache.slots = cacheSize;\n    cache.shift = sizeof(int) * 8 - logSize;\n    // inlining of macro ddMin\n    \n    if (manager.slots) \u003c (maxCacheSize) {\n        cache.maxslots = (manager.slots);\n    } else {\n        cache.maxslots = (maxCacheSize);\n    }\n    cache.minHit = manager.minHit;\n    /* Initialize to avoid division by 0 and immediate resizing. */\n    cache.lookUps = float64( int32( (cacheSize * cache.minHit + 1)));\n    cache.hits = 0;\n    manager.memused += cacheSize * cache.itemsize + sizeof(DdLocalCache);\n\n    /* Initialize the cache. */\n    memset(cache.item, 0, (size_t)(cacheSize * cache.itemsize));\n\n    /* Add to manager's list of local caches for GC. */\n    cuddLocalCacheAddToList(cache);\n\n    return(cache);\n\n} /* end of cuddLocalCacheInit */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Shuts down a local computed table.]\n\n  Description [Initializes the computed table. It is called by\n  Cudd_Init. Returns a pointer the the new local cache in case of\n  success; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddLocalCacheInit]\n\n******************************************************************************/\nvoid\ncuddLocalCacheQuit(\n  DdLocalCache * cache /* cache to be shut down */)\n{\n    cache.manager.memused -=\n        cache.slots * cache.itemsize + sizeof(DdLocalCache);\n    cuddLocalCacheRemoveFromList(cache);\n    ABC_FREE(cache.item);\n    ABC_FREE(cache);\n\n    return;\n\n} /* end of cuddLocalCacheQuit */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Inserts a result in a local cache.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddLocalCacheInsert(cache *DdLocalCache, key *DdNodePtr, value *DdNode) {\n    unsigned int posn;\n    var entry *DdLocalCacheItem;\n\n    posn = ddLCHash(key,cache.keysize,cache.shift);\n    entry = (DdLocalCacheItem *) ((char *) cache.item +\n                                  posn * cache.itemsize);\n    memcpy(entry.key,key,cache.keysize * sizeof(DdNode *));\n    entry.value = value;\n#ifdef DD_CACHE_PROFILE\n    entry-\u003ecount++;\n#endif\n\n} /* end of cuddLocalCacheInsert */\n\n\n/**Function********************************************************************\n\n  Synopsis [Looks up in a local cache.]\n\n  Description [Looks up in a local cache. Returns the result if found;\n  it returns NULL if no result is found.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddLocalCacheLookup(cache *DdLocalCache, key *DdNodePtr) *DdNode {\n    unsigned int posn;\n    var entry *DdLocalCacheItem;\n    var value *DdNode;\n\n    cache.lookUps++;\n    posn = ddLCHash(key,cache.keysize,cache.shift);\n    entry = (DdLocalCacheItem *) ((char *) cache.item +\n                                  posn * cache.itemsize);\n    if entry.value != nil \u0026\u0026\n        memcmp(key,entry.key,cache.keysize*sizeof(DdNode *)) == 0 {\n        cache.hits++;\n        // inlining of macro Cudd_Regular\n        value = ((DdNode *)((ptruint)(entry.value) \u0026 ~01));\n        if value.ref == 0 {\n            cuddReclaim(cache.manager,value);\n        }\n        return(entry.value);\n    }\n\n    /* Cache miss: decide whether to resize */\n\n    if cache.slots \u003c cache.maxslots \u0026\u0026\n        cache.hits \u003e cache.lookUps * cache.minHit {\n        cuddLocalCacheResize(cache);\n    }\n\n    return(nil);\n\n} /* end of cuddLocalCacheLookup */\n\n\n/**Function********************************************************************\n\n  Synopsis [Clears the dead entries of the local caches of a manager.]\n\n  Description [Clears the dead entries of the local caches of a manager.\n  Used during garbage collection.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddLocalCacheClearDead(manager *DdManager) {\n    var cache *DdLocalCache  = manager.localCaches;\n    unsigned int keysize;\n    unsigned int itemsize;\n    unsigned int slots;\n    var item *DdLocalCacheItem;\n    var key *DdNodePtr;\n    unsigned int i, j;\n\n    for cache != nil {\n        keysize = cache.keysize;\n        itemsize = cache.itemsize;\n        slots = cache.slots;\n        item = cache.item;\n        for i = 0; i \u003c slots; i++ {\n            if item.value != nil {\n                // inlining of macro Cudd_Regular\n                if ((DdNode *)((ptruint)(item.value) \u0026 ~01)).ref == 0 {\n                    item.value = nil;\n                } else {\n                    key = item.key;\n                    for j = 0; j \u003c keysize; j++ {\n                        // inlining of macro Cudd_Regular\n                        if ((DdNode *)((ptruint)(key[j]) \u0026 ~01)).ref == 0 {\n                            item.value = nil;\n                            break;\n                        }\n                    }\n                }\n            }\n            item = (DdLocalCacheItem *) ((char *) item + itemsize);\n        }\n        cache = cache.next;\n    }\n    return;\n\n} /* end of cuddLocalCacheClearDead */\n\n\n/**Function********************************************************************\n\n  Synopsis [Clears the local caches of a manager.]\n\n  Description [Clears the local caches of a manager.\n  Used before reordering.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddLocalCacheClearAll(manager *DdManager) {\n    var cache *DdLocalCache  = manager.localCaches;\n\n    for cache != nil {\n        memset(cache.item, 0, (size_t)(cache.slots * cache.itemsize));\n        cache = cache.next;\n    }\n    return;\n\n} /* end of cuddLocalCacheClearAll */\n\n\n#ifdef DD_CACHE_PROFILE\n\n#define DD_HYSTO_BINS 8\n\n/**Function********************************************************************\n\n  Synopsis    [Computes and prints a profile of a local cache usage.]\n\n  Description [Computes and prints a profile of a local cache usage.\n  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nint\ncuddLocalCacheProfile(\n  DdLocalCache * cache)\n{\n    double count, mean, meansq, stddev, expected;\n    long max, min;\n    int imax, imin;\n    int i, retval, slots;\n    long *hystogram;\n    int nbins = DD_HYSTO_BINS;\n    int bin;\n    long thiscount;\n    double totalcount;\n    int nzeroes;\n    DdLocalCacheItem *entry;\n    FILE *fp = cache-\u003emanager-\u003eout;\n\n    slots = cache-\u003eslots;\n\n    meansq = mean = expected = 0.0;\n    max = min = (long) cache-\u003eitem[0].count;\n    imax = imin = nzeroes = 0;\n    totalcount = 0.0;\n\n    hystogram = ABC_ALLOC(long, nbins);\n    if (hystogram == NULL) {\n        return(0);\n    }\n    for (i = 0; i \u003c nbins; i++) {\n        hystogram[i] = 0;\n    }\n\n    for (i = 0; i \u003c slots; i++) {\n        entry = (DdLocalCacheItem *) ((char *) cache-\u003eitem +\n                                      i * cache-\u003eitemsize);\n        thiscount = (long) entry-\u003ecount;\n        if (thiscount \u003e max) {\n            max = thiscount;\n            imax = i;\n        }\n        if (thiscount \u003c min) {\n            min = thiscount;\n            imin = i;\n        }\n        if (thiscount == 0) {\n            nzeroes++;\n        }\n        count = (double) thiscount;\n        mean += count;\n        meansq += count * count;\n        totalcount += count;\n        expected += count * (double) i;\n        bin = (i * nbins) / slots;\n        hystogram[bin] += thiscount;\n    }\n    mean /= (double) slots;\n    meansq /= (double) slots;\n    stddev = sqrt(meansq - mean*mean);\n\n    retval = fprintf(fp,\"Cache stats: slots = %d average = %g \", slots, mean);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"standard deviation = %g\\n\", stddev);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"Cache max accesses = %ld for slot %d\\n\", max, imax);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"Cache min accesses = %ld for slot %d\\n\", min, imin);\n    if (retval == EOF) return(0);\n    retval = fprintf(fp,\"Cache unused slots = %d\\n\", nzeroes);\n    if (retval == EOF) return(0);\n\n    if (totalcount) {\n        expected /= totalcount;\n        retval = fprintf(fp,\"Cache access hystogram for %d bins\", nbins);\n        if (retval == EOF) return(0);\n        retval = fprintf(fp,\" (expected bin value = %g)\\n# \", expected);\n        if (retval == EOF) return(0);\n        for (i = nbins - 1; i\u003e=0; i--) {\n            retval = fprintf(fp,\"%ld \", hystogram[i]);\n            if (retval == EOF) return(0);\n        }\n        retval = fprintf(fp,\"\\n\");\n        if (retval == EOF) return(0);\n    }\n\n    ABC_FREE(hystogram);\n    return(1);\n\n} /* end of cuddLocalCacheProfile */\n#endif\n\n\n/**Function********************************************************************\n\n  Synopsis    [Initializes a hash table.]\n\n  Description [Initializes a hash table. Returns a pointer to the new\n  table if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddHashTableQuit]\n\n******************************************************************************/\nDdHashTable *\ncuddHashTableInit(\n  DdManager * manager,\n  unsigned int  keySize,\n  unsigned int  initSize)\n{\n    var hash *DdHashTable;\n    var logSize int32;\n\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    hash = new(DdHashTable);\n    if hash == nil {\n        manager.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n    hash.keysize = keySize;\n    hash.manager = manager;\n    hash.memoryList = nil;\n    hash.nextFree = nil;\n    hash.itemsize = (keySize + 1) * sizeof(DdNode *) +\n        sizeof(ptrint) + sizeof(DdHashItem *);\n    /* We have to guarantee that the shift be \u003c 32. */\n    if initSize \u003c 2 { initSize = 2; }\n    logSize = cuddComputeFloorLog2(initSize);\n    hash.numBuckets = 1 \u003c\u003c logSize;\n    hash.shift = sizeof(int) * 8 - logSize;\n    hash.bucket = ABC_ALLOC(DdHashItem *, hash.numBuckets);\n    if hash.bucket == nil {\n        manager.errorCode = CUDD_MEMORY_OUT;\n        ABC_FREE(hash);\n        return(nil);\n    }\n    memset(hash.bucket, 0, (size_t)(hash.numBuckets * sizeof(DdHashItem *)));\n    hash.size = 0;\n    hash.maxsize = hash.numBuckets * DD_MAX_HASHTABLE_DENSITY;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    return(hash);\n\n} /* end of cuddHashTableInit */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Shuts down a hash table.]\n\n  Description [Shuts down a hash table, dereferencing all the values.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddHashTableInit]\n\n******************************************************************************/\nfunc cuddHashTableQuit(hash *DdHashTable) {\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    unsigned int i;\n    var dd *DdManager  = hash.manager;\n    var bucket *DdHashItem;\n    var memlist, nextmem **DdHashItem;\n    unsigned int numBuckets = hash.numBuckets;\n\n    for i = 0; i \u003c numBuckets; i++ {\n        bucket = hash.bucket[i];\n        for bucket != nil {\n            Cudd_RecursiveDeref(dd, bucket.value);\n            bucket = bucket.next;\n        }\n    }\n\n    memlist = hash.memoryList;\n    for memlist != nil {\n        nextmem = (DdHashItem **) memlist[0];\n        ABC_FREE(memlist);\n        memlist = nextmem;\n    }\n\n    ABC_FREE(hash.bucket);\n    ABC_FREE(hash);\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n\n    return;\n\n} /* end of cuddHashTableQuit */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Inserts an item in a hash table.]\n\n  Description [Inserts an item in a hash table when the key has more than\n  three pointers.  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [[cuddHashTableInsert1 cuddHashTableInsert2 cuddHashTableInsert3\n  cuddHashTableLookup]\n\n******************************************************************************/\nfunc cuddHashTableInsert(hash *DdHashTable, key *DdNodePtr, value *DdNode, count ptrint) int32 {\n    var result int32;\n    unsigned int posn;\n    var item *DdHashItem;\n    unsigned int i;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize \u003e 3);\n#endif\n\n    if hash.size \u003e hash.maxsize {\n        result = cuddHashTableResize(hash);\n        if result == 0 { return(0); }\n    }\n    item = cuddHashTableAlloc(hash);\n    if item == nil { return(0); }\n    hash.size++;\n    item.value = value;\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(value).ref);\n    item.count = count;\n    for i = 0; i \u003c hash.keysize; i++ {\n        item.key[i] = key[i];\n    }\n    posn = ddLCHash(key,hash.keysize,hash.shift);\n    item.next = hash.bucket[posn];\n    hash.bucket[posn] = item;\n\n    return(1);\n\n} /* end of cuddHashTableInsert */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Looks up a key in a hash table.]\n\n  Description [Looks up a key consisting of more than three pointers\n  in a hash table.  Returns the value associated to the key if there\n  is an entry for the given key in the table; NULL otherwise. If the\n  entry is present, its reference counter is decremented if not\n  saturated. If the counter reaches 0, the value of the entry is\n  dereferenced, and the entry is returned to the free list.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddHashTableLookup1 cuddHashTableLookup2 cuddHashTableLookup3\n  cuddHashTableInsert]\n\n******************************************************************************/\nfunc cuddHashTableLookup(hash *DdHashTable, key *DdNodePtr) *DdNode {\n    unsigned int posn;\n    var item, prev *DdHashItem;\n    unsigned int i, keysize;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize \u003e 3);\n#endif\n\n    posn = ddLCHash(key,hash.keysize,hash.shift);\n    item = hash.bucket[posn];\n    prev = nil;\n\n    keysize = hash.keysize;\n    for item != nil {\n        var key2 *DdNodePtr  = item.key;\n        var equal int32  = 1;\n        for i = 0; i \u003c keysize; i++ {\n            if key[i] != key2[i] {\n                equal = 0;\n                break;\n            }\n        }\n        if equal != 0 {\n            var value *DdNode  = item.value;\n            cuddSatDec(item.count);\n            if item.count == 0 {\n                // inlining of macro cuddDeref\n                cuddSatDec(Cudd_Regular(value).ref);\n                if prev == nil {\n                    hash.bucket[posn] = item.next;\n                } else {\n                    prev.next = item.next;\n                }\n                item.next = hash.nextFree;\n                hash.nextFree = item;\n                hash.size--;\n            }\n            return(value);\n        }\n        prev = item;\n        item = item.next;\n    }\n    return(nil);\n\n} /* end of cuddHashTableLookup */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Inserts an item in a hash table.]\n\n  Description [Inserts an item in a hash table when the key is one pointer.\n  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddHashTableInsert cuddHashTableInsert2 cuddHashTableInsert3\n  cuddHashTableLookup1]\n\n******************************************************************************/\nfunc cuddHashTableInsert1(hash *DdHashTable, f *DdNode, value *DdNode, count ptrint) int32 {\n    var result int32;\n    unsigned int posn;\n    var item *DdHashItem;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 1);\n#endif\n\n    if hash.size \u003e hash.maxsize {\n        result = cuddHashTableResize(hash);\n        if result == 0 { return(0); }\n    }\n    item = cuddHashTableAlloc(hash);\n    if item == nil { return(0); }\n    hash.size++;\n    item.value = value;\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(value).ref);\n    item.count = count;\n    item.key[0] = f;\n    posn = ddLCHash2(cuddF2L(f),cuddF2L(f),hash.shift);\n    item.next = hash.bucket[posn];\n    hash.bucket[posn] = item;\n\n    return(1);\n\n} /* end of cuddHashTableInsert1 */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Looks up a key consisting of one pointer in a hash table.]\n\n  Description [Looks up a key consisting of one pointer in a hash table.\n  Returns the value associated to the key if there is an entry for the given\n  key in the table; NULL otherwise. If the entry is present, its reference\n  counter is decremented if not saturated. If the counter reaches 0, the\n  value of the entry is dereferenced, and the entry is returned to the free\n  list.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddHashTableLookup cuddHashTableLookup2 cuddHashTableLookup3\n  cuddHashTableInsert1]\n\n******************************************************************************/\nfunc cuddHashTableLookup1(hash *DdHashTable, f *DdNode) *DdNode {\n    unsigned int posn;\n    var item, prev *DdHashItem;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 1);\n#endif\n\n    posn = ddLCHash2(cuddF2L(f),cuddF2L(f),hash.shift);\n    item = hash.bucket[posn];\n    prev = nil;\n\n    for item != nil {\n        var key *DdNodePtr  = item.key;\n        if f == key[0] {\n            var value *DdNode  = item.value;\n            cuddSatDec(item.count);\n            if item.count == 0 {\n                // inlining of macro cuddDeref\n                cuddSatDec(Cudd_Regular(value).ref);\n                if prev == nil {\n                    hash.bucket[posn] = item.next;\n                } else {\n                    prev.next = item.next;\n                }\n                item.next = hash.nextFree;\n                hash.nextFree = item;\n                hash.size--;\n            }\n            return(value);\n        }\n        prev = item;\n        item = item.next;\n    }\n    return(nil);\n\n} /* end of cuddHashTableLookup1 */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Inserts an item in a hash table.]\n\n  Description [Inserts an item in a hash table when the key is\n  composed of two pointers. Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddHashTableInsert cuddHashTableInsert1 cuddHashTableInsert3\n  cuddHashTableLookup2]\n\n******************************************************************************/\nfunc cuddHashTableInsert2(hash *DdHashTable, f *DdNode, g *DdNode, value *DdNode, count ptrint) int32 {\n    var result int32;\n    unsigned int posn;\n    var item *DdHashItem;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 2);\n#endif\n\n    if hash.size \u003e hash.maxsize {\n        result = cuddHashTableResize(hash);\n        if result == 0 { return(0); }\n    }\n    item = cuddHashTableAlloc(hash);\n    if item == nil { return(0); }\n    hash.size++;\n    item.value = value;\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(value).ref);\n    item.count = count;\n    item.key[0] = f;\n    item.key[1] = g;\n    posn = ddLCHash2(cuddF2L(f),cuddF2L(g),hash.shift);\n    item.next = hash.bucket[posn];\n    hash.bucket[posn] = item;\n\n    return(1);\n\n} /* end of cuddHashTableInsert2 */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Looks up a key consisting of two pointers in a hash table.]\n\n  Description [Looks up a key consisting of two pointer in a hash table.\n  Returns the value associated to the key if there is an entry for the given\n  key in the table; NULL otherwise. If the entry is present, its reference\n  counter is decremented if not saturated. If the counter reaches 0, the\n  value of the entry is dereferenced, and the entry is returned to the free\n  list.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddHashTableLookup cuddHashTableLookup1 cuddHashTableLookup3\n  cuddHashTableInsert2]\n\n******************************************************************************/\nfunc cuddHashTableLookup2(hash *DdHashTable, f *DdNode, g *DdNode) *DdNode {\n    unsigned int posn;\n    var item, prev *DdHashItem;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 2);\n#endif\n\n    posn = ddLCHash2(cuddF2L(f),cuddF2L(g),hash.shift);\n    item = hash.bucket[posn];\n    prev = nil;\n\n    for item != nil {\n        var key *DdNodePtr  = item.key;\n        if (f == key[0]) \u0026\u0026 (g == key[1]) {\n            var value *DdNode  = item.value;\n            cuddSatDec(item.count);\n            if item.count == 0 {\n                // inlining of macro cuddDeref\n                cuddSatDec(Cudd_Regular(value).ref);\n                if prev == nil {\n                    hash.bucket[posn] = item.next;\n                } else {\n                    prev.next = item.next;\n                }\n                item.next = hash.nextFree;\n                hash.nextFree = item;\n                hash.size--;\n            }\n            return(value);\n        }\n        prev = item;\n        item = item.next;\n    }\n    return(nil);\n\n} /* end of cuddHashTableLookup2 */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Inserts an item in a hash table.]\n\n  Description [Inserts an item in a hash table when the key is\n  composed of three pointers. Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddHashTableInsert cuddHashTableInsert1 cuddHashTableInsert2\n  cuddHashTableLookup3]\n\n******************************************************************************/\nfunc cuddHashTableInsert3(hash *DdHashTable, f *DdNode, g *DdNode, h *DdNode, value *DdNode, count ptrint) int32 {\n    var result int32;\n    unsigned int posn;\n    var item *DdHashItem;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 3);\n#endif\n\n    if hash.size \u003e hash.maxsize {\n        result = cuddHashTableResize(hash);\n        if result == 0 { return(0); }\n    }\n    item = cuddHashTableAlloc(hash);\n    if item == nil { return(0); }\n    hash.size++;\n    item.value = value;\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(value).ref);\n    item.count = count;\n    item.key[0] = f;\n    item.key[1] = g;\n    item.key[2] = h;\n    // inlining of macro ddLCHash3\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    posn = ddCHash2(((((DdNode *)((ptruint)(f) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (f) \u0026 01)))),((((DdNode *)((ptruint)(g) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (g) \u0026 01)))),((((DdNode *)((ptruint)(h) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (h) \u0026 01)))),hash.shift);\n    item.next = hash.bucket[posn];\n    hash.bucket[posn] = item;\n\n    return(1);\n\n} /* end of cuddHashTableInsert3 */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Looks up a key consisting of three pointers in a hash table.]\n\n  Description [Looks up a key consisting of three pointers in a hash table.\n  Returns the value associated to the key if there is an entry for the given\n  key in the table; NULL otherwise. If the entry is present, its reference\n  counter is decremented if not saturated. If the counter reaches 0, the\n  value of the entry is dereferenced, and the entry is returned to the free\n  list.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddHashTableLookup cuddHashTableLookup1 cuddHashTableLookup2\n  cuddHashTableInsert3]\n\n******************************************************************************/\nfunc cuddHashTableLookup3(hash *DdHashTable, f *DdNode, g *DdNode, h *DdNode) *DdNode {\n    unsigned int posn;\n    var item, prev *DdHashItem;\n\n#ifdef DD_DEBUG\n    assert(hash-\u003ekeysize == 3);\n#endif\n\n    // inlining of macro ddLCHash3\n    // inlining of macro cuddF2L\n    // inlining of macro Cudd_Regular\n    // inlining of macro Cudd_IsComplement\n    posn = ddCHash2(((((DdNode *)((ptruint)(f) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (f) \u0026 01)))),((((DdNode *)((ptruint)(g) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (g) \u0026 01)))),((((DdNode *)((ptruint)(h) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (h) \u0026 01)))),hash.shift);\n    item = hash.bucket[posn];\n    prev = nil;\n\n    for item != nil {\n        var key *DdNodePtr  = item.key;\n        if (f == key[0]) \u0026\u0026 (g == key[1]) \u0026\u0026 (h == key[2]) {\n            var value *DdNode  = item.value;\n            cuddSatDec(item.count);\n            if item.count == 0 {\n                // inlining of macro cuddDeref\n                cuddSatDec(Cudd_Regular(value).ref);\n                if prev == nil {\n                    hash.bucket[posn] = item.next;\n                } else {\n                    prev.next = item.next;\n                }\n                item.next = hash.nextFree;\n                hash.nextFree = item;\n                hash.size--;\n            }\n            return(value);\n        }\n        prev = item;\n        item = item.next;\n    }\n    return(nil);\n\n} /* end of cuddHashTableLookup3 */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Resizes a local cache.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddLocalCacheResize(cache *DdLocalCache) {\n    var item, olditem, entry, old *DdLocalCacheItem;\n    var i, shift int32;\n    unsigned int posn;\n    unsigned int slots, oldslots;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n\n    olditem = cache.item;\n    oldslots = cache.slots;\n    slots = cache.slots = oldslots \u003c\u003c 1;\n\n#ifdef DD_VERBOSE\n    (void) fprintf(cache-\u003emanager-\u003eerr,\n                   \"Resizing local cache from %d to %d entries\\n\",\n                   oldslots, slots);\n    (void) fprintf(cache-\u003emanager-\u003eerr,\n                   \"\\thits = %.0f\\tlookups = %.0f\\thit ratio = %5.3f\\n\",\n                   cache-\u003ehits, cache-\u003elookUps, cache-\u003ehits / cache-\u003elookUps);\n#endif\n\n    saveHandler = MMoutOfMemory;\n    MMoutOfMemory = Cudd_OutOfMem;\n    cache.item = item =\n        (DdLocalCacheItem *) ABC_ALLOC(char, slots * cache.itemsize);\n    MMoutOfMemory = saveHandler;\n    /* If we fail to allocate the new table we just give up. */\n    if item == nil {\n#ifdef DD_VERBOSE\n        (void) fprintf(cache-\u003emanager-\u003eerr,\"Resizing failed. Giving up.\\n\");\n#endif\n        cache.slots = oldslots;\n        cache.item = olditem;\n        /* Do not try to resize again. */\n        cache.maxslots = oldslots - 1;\n        return;\n    }\n    shift = --(cache.shift);\n    cache.manager.memused += (slots - oldslots) * cache.itemsize;\n\n    /* Clear new cache. */\n    memset(item, 0, (size_t)(slots * cache.itemsize));\n\n    /* Copy from old cache to new one. */\n    for i = 0; uint32( i) \u003c oldslots; i++ {\n        old = (DdLocalCacheItem *) ((char *) olditem + i * cache.itemsize);\n        if old.value != nil {\n            posn = ddLCHash(old.key,cache.keysize,shift);\n            entry = (DdLocalCacheItem *) ((char *) item +\n                                          posn * cache.itemsize);\n            memcpy(entry.key,old.key,cache.keysize*sizeof(DdNode *));\n            entry.value = old.value;\n        }\n    }\n\n    ABC_FREE(olditem);\n\n    /* Reinitialize measurements so as to avoid division by 0 and\n    ** immediate resizing.\n    */\n    cache.lookUps = float64( int32( (slots * cache.minHit + 1)));\n    cache.hits = 0;\n\n} /* end of cuddLocalCacheResize */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the hash value for a local cache.]\n\n  Description [Computes the hash value for a local cache. Returns the\n  bucket index.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\n//DD_INLINE\nstatic unsigned int\nddLCHash(\n  DdNodePtr * key,\n  unsigned int keysize,\n  int shift)\n{\n    unsigned int val = (unsigned int) (ptrint) key[0] * DD_P2;\n    unsigned int i;\n\n    for i = 1; i \u003c keysize; i++ {\n        val = val * DD_P1 + int32( (ptrint)) key[i];\n    }\n\n    return(val \u003e\u003e shift);\n\n} /* end of ddLCHash */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Inserts a local cache in the manager list.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddLocalCacheAddToList(cache *DdLocalCache) {\n    var manager *DdManager  = cache.manager;\n\n    cache.next = manager.localCaches;\n    manager.localCaches = cache;\n    return;\n\n} /* end of cuddLocalCacheAddToList */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Removes a local cache from the manager list.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddLocalCacheRemoveFromList(cache *DdLocalCache) {\n    var manager *DdManager  = cache.manager;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    var prevCache **DdLocalCache;\n    var nextCache *DdLocalCache;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n\n    prevCache = \u0026(manager.localCaches);\n    nextCache = manager.localCaches;\n\n    for nextCache != nil {\n        if nextCache == cache {\n            *prevCache = nextCache.next;\n            return;\n        }\n        prevCache = \u0026(nextCache.next);\n        nextCache = nextCache.next;\n    }\n    return;                     /* should never get here */\n\n} /* end of cuddLocalCacheRemoveFromList */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Resizes a hash table.]\n\n  Description [Resizes a hash table. Returns 1 if successful; 0\n  otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddHashTableInsert]\n\n******************************************************************************/\nfunc cuddHashTableResize(hash *DdHashTable) int32 {\n    var j int32;\n    unsigned int posn;\n    var item *DdHashItem;\n    var next *DdHashItem;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    var key **DdNode;\n    var numBuckets int32;\n    var buckets **DdHashItem;\n    var oldBuckets **DdHashItem  = hash.bucket;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    var shift int32;\n    var oldNumBuckets int32  = hash.numBuckets;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n\n    /* Compute the new size of the table. */\n    numBuckets = oldNumBuckets \u003c\u003c 1;\n    saveHandler = MMoutOfMemory;\n    MMoutOfMemory = Cudd_OutOfMem;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    buckets = ABC_ALLOC(DdHashItem *, numBuckets);\n    MMoutOfMemory = saveHandler;\n    if buckets == nil {\n        hash.maxsize \u003c\u003c= 1;\n        return(1);\n    }\n\n    hash.bucket = buckets;\n    hash.numBuckets = numBuckets;\n    shift = --(hash.shift);\n    hash.maxsize \u003c\u003c= 1;\n    memset(buckets, 0, numBuckets * sizeof(DdHashItem *));\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n    if hash.keysize == 1 {\n        for j = 0; j \u003c oldNumBuckets; j++ {\n            item = oldBuckets[j];\n            for item != nil {\n                next = item.next;\n                key = item.key;\n                posn = ddLCHash2(cuddF2L(key[0]), cuddF2L(key[0]), shift);\n                item.next = buckets[posn];\n                buckets[posn] = item;\n                item = next;\n            }\n        }\n    } else if hash.keysize == 2 {\n        for j = 0; j \u003c oldNumBuckets; j++ {\n            item = oldBuckets[j];\n            for item != nil {\n                next = item.next;\n                key = item.key;\n                posn = ddLCHash2(cuddF2L(key[0]), cuddF2L(key[1]), shift);\n                item.next = buckets[posn];\n                buckets[posn] = item;\n                item = next;\n            }\n        }\n    } else if hash.keysize == 3 {\n        for j = 0; j \u003c oldNumBuckets; j++ {\n            item = oldBuckets[j];\n            for item != nil {\n                next = item.next;\n                key = item.key;\n                // inlining of macro ddLCHash3\n                // inlining of macro cuddF2L\n                // inlining of macro Cudd_Regular\n                // inlining of macro Cudd_IsComplement\n                posn = ddCHash2(((((DdNode *)((ptruint)(key[0]) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (key[0]) \u0026 01)))),((((DdNode *)((ptruint)(key[1]) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (key[1]) \u0026 01)))),((((DdNode *)((ptruint)(key[2]) \u0026 ~01)).Id \u003c\u003c 1) | (int32( ((ptrint) (key[2]) \u0026 01)))),shift);\n                item.next = buckets[posn];\n                buckets[posn] = item;\n                item = next;\n            }\n        }\n    } else {\n        for j = 0; j \u003c oldNumBuckets; j++ {\n            item = oldBuckets[j];\n            for item != nil {\n                next = item.next;\n                posn = ddLCHash(item.key, hash.keysize, shift);\n                item.next = buckets[posn];\n                buckets[posn] = item;\n                item = next;\n            }\n        }\n    }\n    ABC_FREE(oldBuckets);\n    return(1);\n\n} /* end of cuddHashTableResize */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Fast storage allocation for items in a hash table.]\n\n  Description [Fast storage allocation for items in a hash table. The\n  first 4 bytes of a chunk contain a pointer to the next block; the\n  rest contains DD_MEM_CHUNK spaces for hash items.  Returns a pointer to\n  a new item if successful; NULL is memory is full.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddAllocNode cuddDynamicAllocNode]\n\n******************************************************************************/\n//DD_INLINE\nfunc cuddHashTableAlloc(hash *DdHashTable) *DdHashItem {\n    var i int32;\n    unsigned int itemsize = hash.itemsize;\n    extern DD_OOMFP MMoutOfMemory;\n    DD_OOMFP saveHandler;\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n    var mem **DdHashItem;\n    var thisOne *DdHashItem;\n    var next *DdHashItem;\n    var item *DdHashItem;\n\n    if hash.nextFree == nil {\n        saveHandler = MMoutOfMemory;\n        MMoutOfMemory = Cudd_OutOfMem;\n        mem = (DdHashItem **) ABC_ALLOC(char,(DD_MEM_CHUNK+1) * itemsize);\n        MMoutOfMemory = saveHandler;\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n        if mem == nil {\n            if hash.manager.stash != nil {\n                ABC_FREE(hash.manager.stash);\n                hash.manager.stash = nil;\n                /* Inhibit resizing of tables. */\n                hash.manager.maxCacheHard = hash.manager.cacheSlots - 1;\n                hash.manager.cacheSlack = - int32( (hash.manager.cacheSlots + 1));\n                for i = 0; i \u003c hash.manager.size; i++ {\n                    hash.manager.subtables[i].maxKeys \u003c\u003c= 2;\n                }\n                hash.manager.gcFrac = 0.2;\n                hash.manager.minDead =\n                    uint32( (0.2 * float64( hash.manager.slots)));\n#ifdef __osf__\n#pragma pointer_size save\n#pragma pointer_size short\n#endif\n                mem = (DdHashItem **) ABC_ALLOC(char,(DD_MEM_CHUNK+1) * itemsize);\n#ifdef __osf__\n#pragma pointer_size restore\n#endif\n            }\n            if mem == nil {\n                (*MMoutOfMemory)(int64(((DD_MEM_CHUNK + 1) * itemsize)));\n                hash.manager.errorCode = CUDD_MEMORY_OUT;\n                return(nil);\n            }\n        }\n\n        mem[0] = (DdHashItem *) hash.memoryList;\n        hash.memoryList = mem;\n\n        thisOne = (DdHashItem *) ((char *) mem + itemsize);\n        hash.nextFree = thisOne;\n        for i = 1; i \u003c DD_MEM_CHUNK; i++ {\n            next = (DdHashItem *) ((char *) thisOne + itemsize);\n            thisOne.next = next;\n            thisOne = next;\n        }\n\n        thisOne.next = nil;\n\n    }\n    item = hash.nextFree;\n    hash.nextFree = item.next;\n    return(item);\n\n} /* end of cuddHashTableAlloc */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

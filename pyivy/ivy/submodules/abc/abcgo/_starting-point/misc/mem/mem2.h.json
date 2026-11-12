@@ -1,0 +1,958 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h",
+  "SHA256": "59a122daba7d08093f6551cda02f96290422a1eb991e7e7583b7dbb6c85741f3",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 9,
+        "ByteOffset": 2937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Using %3d pages of %6d words each with %6d entries (max = %6d). Total memory = %5.2f MB.\\n\", "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 98,
+        "Column": 65,
+        "ByteOffset": 3450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pPage) ? (free((char *) (pPage)), (pPage) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 100,
+        "Column": 71,
+        "ByteOffset": 3569
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vPages.pArray) ? (free((char *) (p.vPages.pArray)), (p.vPages.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 101,
+        "Column": 57,
+        "ByteOffset": 3688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( h \u003e 0 \u0026\u0026 h \u003c p.iNext );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nWords \u003e 0 \u0026\u0026 nWords \u003c p.PageMask );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 111,
+        "Column": 89,
+        "ByteOffset": 4152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Vec_PtrPush( \u0026p.vPages, /*__starting_point_inline_macro:ABC_FALLOC__*/((word *) memset(malloc(sizeof(word) * (size_t)(p.PageMask + 1)), 0xff, sizeof(word) * (size_t)(p.PageMask + 1))) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 111,
+        "Column": 96,
+        "ByteOffset": 4159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Vec_PtrPush( \u0026p.vPages, /*__starting_point_inline_macro:ABC_FALLOC__*/((word *) memset(malloc(sizeof(word) * (size_t)(p.PageMask + 1)), 0xff, sizeof(word) * (size_t)(p.PageMask + 1))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 4530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( h \u003e 0 \u0026\u0026 h \u003c p.iNext );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 125,
+        "Column": 65,
+        "ByteOffset": 4858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pPage) ? (free((char *) (pPage)), (pPage) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 5225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nEntryWords \u003e 0 \u0026\u0026 nEntryWords \u003c (1 \u003c\u003c nPageBase) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 9,
+        "ByteOffset": 5756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Using %3d pages of %6d words each with %6d entries (max = %6d) of size %d. Total memory = %5.2f MB.\\n\", "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 160,
+        "Column": 65,
+        "ByteOffset": 6294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pPage) ? (free((char *) (pPage)), (pPage) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 162,
+        "Column": 71,
+        "ByteOffset": 6413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vPages.pArray) ? (free((char *) (p.vPages.pArray)), (p.vPages.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 163,
+        "Column": 71,
+        "ByteOffset": 6546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vFrees.pArray) ? (free((char *) (p.vFrees.pArray)), (p.vFrees.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 165,
+        "Column": 61,
+        "ByteOffset": 6688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 6784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( h \u003e 0 \u0026\u0026 h \u003c (Vec_PtrSize(\u0026p.vPages) \u003c\u003c p.nPageBase) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 175,
+        "Column": 89,
+        "ByteOffset": 7189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Vec_PtrPush( \u0026p.vPages, /*__starting_point_inline_macro:ABC_FALLOC__*/((word *) memset(malloc(sizeof(word) * (size_t)(p.PageMask + 1)), 0xff, sizeof(word) * (size_t)(p.PageMask + 1))) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 175,
+        "Column": 96,
+        "ByteOffset": 7196
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Vec_PtrPush( \u0026p.vPages, /*__starting_point_inline_macro:ABC_FALLOC__*/((word *) memset(malloc(sizeof(word) * (size_t)(p.PageMask + 1)), 0xff, sizeof(word) * (size_t)(p.PageMask + 1))) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 187,
+        "Column": 5,
+        "ByteOffset": 7667
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( Mmr_FixedEntry(p, h), 0xFF, sizeof(word) * p.nEntryWords );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 207,
+        "Column": 83,
+        "ByteOffset": 8257
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pMemory string  = /*__starting_point_inline_macro:ABC_CALLOC__*/((char *) calloc((size_t)(sizeof(Mmr_Step_t) + sizeof(Mmr_Fixed_t) * (1 \u003c\u003c nWordBase)), sizeof(char)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 222,
+        "Column": 57,
+        "ByteOffset": 8782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 225,
+        "Column": 5,
+        "ByteOffset": 8874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (h \u0026 p.uMask) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 5,
+        "ByteOffset": 9035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nWords \u003e 0 \u0026\u0026 nWords \u003c= p.uMask );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mmr_FlexStart",
+      "Start": 2598,
+      "End": 2838,
+      "BodyStart": 2656,
+      "Original": "static inline Mmr_Flex_t * Mmr_FlexStart( int nPageBase )\n{\n    Mmr_Flex_t * p;\n    p = ABC_CALLOC( Mmr_Flex_t, 1 );\n    p-\u003enPageBase = nPageBase;\n    p-\u003ePageMask  = (1 \u003c\u003c nPageBase) - 1;\n    p-\u003eiNext     = (1 \u003c\u003c nPageBase);\n    return p;\n}",
+      "Draft": "func Mmr_FlexStart(nPageBase int32) *Mmr_Flex_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Mmr_Flex_t{};\n    p.nPageBase = nPageBase;\n    p.PageMask  = (1 \u003c\u003c nPageBase) - 1;\n    p.iNext     = (1 \u003c\u003c nPageBase);\n    return p;\n}"
+    },
+    {
+      "Name": "Mmr_FlexStop",
+      "Start": 2839,
+      "End": 3396,
+      "BodyStart": 2889,
+      "Original": "static inline void Mmr_FlexStop( Mmr_Flex_t * p )\n{\n    word * pPage;\n    int i;\n    if ( 0 \u0026\u0026 Vec_PtrSize(\u0026p-\u003evPages) )\n        printf( \"Using %3d pages of %6d words each with %6d entries (max = %6d). Total memory = %5.2f MB.\\n\", \n            Vec_PtrSize(\u0026p-\u003evPages), p-\u003enPageBase ? 1 \u003c\u003c p-\u003enPageBase : 0, p-\u003enEntries, p-\u003enEntriesMax, \n            1.0 * Vec_PtrSize(\u0026p-\u003evPages) * (1 \u003c\u003c p-\u003enPageBase) * 8 / (1 \u003c\u003c 20) );\n    Vec_PtrForEachEntry( word *, \u0026p-\u003evPages, pPage, i )\n        ABC_FREE( pPage );\n    ABC_FREE( p-\u003evPages.pArray );\n    ABC_FREE( p );\n}",
+      "Draft": "func Mmr_FlexStop(p *Mmr_Flex_t) {\n    var pPage *word;\n    var i int32;\n    if false \u0026\u0026 Vec_PtrSize(\u0026p.vPages) {\n        fmt.Printf(\"Using %3d pages of %6d words each with %6d entries (max = %6d). Total memory = %5.2f MB.\\n\", Vec_PtrSize(\u0026p.vPages), p.nPageBase ? 1 \u003c\u003c p.nPageBase : 0, p.nEntries, p.nEntriesMax, 1.0 * Vec_PtrSize(\u0026p.vPages) * (1 \u003c\u003c p.nPageBase) * 8 / (1 \u003c\u003c 20)); }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vPages)) \u0026\u0026 (((pPage) = (word *)Vec_PtrEntry(\u0026p.vPages, i)), 1); i++  {\n        // inlining of macro ABC_FREE\n        ((pPage) ? (free((char *) (pPage)), (pPage) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.vPages.pArray) ? (free((char *) (p.vPages.pArray)), (p.vPages.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Mmr_FlexEntry",
+      "Start": 3397,
+      "End": 3583,
+      "BodyStart": 3457,
+      "Original": "static inline word * Mmr_FlexEntry( Mmr_Flex_t * p, int h )\n{\n    assert( h \u003e 0 \u0026\u0026 h \u003c p-\u003eiNext );\n    return (word *)Vec_PtrEntry(\u0026p-\u003evPages, (h \u003e\u003e p-\u003enPageBase)) + (h \u0026 p-\u003ePageMask);\n}",
+      "Draft": "func Mmr_FlexEntry(p *Mmr_Flex_t, h int32) *word {\n    assert(h \u003e 0 \u0026\u0026 h \u003c p.iNext, \"h \u003e 0 \u0026\u0026 h \u003c p.iNext\");\n    return (word *)Vec_PtrEntry(\u0026p.vPages, (h \u003e\u003e p.nPageBase)) + (h \u0026 p.PageMask);\n}"
+    },
+    {
+      "Name": "Mmr_FlexFetch",
+      "Start": 3584,
+      "End": 4064,
+      "BodyStart": 3646,
+      "Original": "static inline int Mmr_FlexFetch( Mmr_Flex_t * p, int nWords )\n{\n    int hEntry;\n    assert( nWords \u003e 0 \u0026\u0026 nWords \u003c p-\u003ePageMask );\n    if ( p-\u003eiNext + nWords \u003e= p-\u003ePageMask )\n    {\n        Vec_PtrPush( \u0026p-\u003evPages, ABC_FALLOC( word, p-\u003ePageMask + 1 ) );\n        p-\u003eiNext = 1;\n    }\n    hEntry = ((Vec_PtrSize(\u0026p-\u003evPages) - 1) \u003c\u003c p-\u003enPageBase) | p-\u003eiNext;\n    p-\u003eiNext += nWords;\n    p-\u003enEntries++;\n    p-\u003enEntriesMax = Abc_MaxInt( p-\u003enEntriesMax, p-\u003enEntries );\n    return hEntry;\n}",
+      "Draft": "func Mmr_FlexFetch(p *Mmr_Flex_t, nWords int32) int32 {\n    var hEntry int32;\n    assert(nWords \u003e 0 \u0026\u0026 nWords \u003c p.PageMask, \"nWords \u003e 0 \u0026\u0026 nWords \u003c p.PageMask\");\n    if p.iNext + nWords \u003e= p.PageMask {\n        // inlining of macro ABC_FALLOC\n        Vec_PtrPush( \u0026p.vPages, ((word *) memset(malloc(sizeof(word) * (size_t)(p.PageMask + 1)), 0xff, sizeof(word) * (size_t)(p.PageMask + 1))) );\n        p.iNext = 1;\n    }\n    hEntry = ((Vec_PtrSize(\u0026p.vPages) - 1) \u003c\u003c p.nPageBase) | p.iNext;\n    p.iNext += nWords;\n    p.nEntries++;\n    p.nEntriesMax = Abc_MaxInt( p.nEntriesMax, p.nEntries );\n    return hEntry;\n}"
+    },
+    {
+      "Name": "Mmr_FlexRelease",
+      "Start": 4065,
+      "End": 4442,
+      "BodyStart": 4125,
+      "Original": "static inline void Mmr_FlexRelease( Mmr_Flex_t * p, int h )\n{\n    assert( h \u003e 0 \u0026\u0026 h \u003c p-\u003eiNext );\n    if ( (h \u003e\u003e p-\u003enPageBase) \u0026\u0026 Vec_PtrEntry(\u0026p-\u003evPages, (h \u003e\u003e p-\u003enPageBase) - 1) )\n    {\n        word * pPage = (word *)Vec_PtrEntry(\u0026p-\u003evPages, (h \u003e\u003e p-\u003enPageBase) - 1);\n        Vec_PtrWriteEntry( \u0026p-\u003evPages, (h \u003e\u003e p-\u003enPageBase) - 1, NULL );\n        ABC_FREE( pPage );\n    }\n}",
+      "Draft": "func Mmr_FlexRelease(p *Mmr_Flex_t, h int32) {\n    assert(h \u003e 0 \u0026\u0026 h \u003c p.iNext, \"h \u003e 0 \u0026\u0026 h \u003c p.iNext\");\n    if (h \u003e\u003e p.nPageBase) \u0026\u0026 Vec_PtrEntry(\u0026p.vPages, (h \u003e\u003e p.nPageBase) - 1) {\n        var pPage *word  = (word *)Vec_PtrEntry(\u0026p.vPages, (h \u003e\u003e p.nPageBase) - 1);\n        Vec_PtrWriteEntry( \u0026p.vPages, (h \u003e\u003e p.nPageBase) - 1, nil );\n        // inlining of macro ABC_FREE\n        ((pPage) ? (free((char *) (pPage)), (pPage) = 0) : 0);\n    }\n}"
+    },
+    {
+      "Name": "Mmr_FixedCreate",
+      "Start": 4680,
+      "End": 4943,
+      "BodyStart": 4766,
+      "Original": "static inline void Mmr_FixedCreate( Mmr_Fixed_t * p, int nPageBase, int nEntryWords )\n{\n    assert( nEntryWords \u003e 0 \u0026\u0026 nEntryWords \u003c (1 \u003c\u003c nPageBase) );\n    p-\u003enPageBase   = nPageBase;\n    p-\u003ePageMask    = (1 \u003c\u003c nPageBase) - 1;\n    p-\u003enEntryWords = nEntryWords;\n}",
+      "Draft": "func Mmr_FixedCreate(p *Mmr_Fixed_t, nPageBase int32, nEntryWords int32) {\n    assert(nEntryWords \u003e 0 \u0026\u0026 nEntryWords \u003c (1 \u003c\u003c nPageBase), \"nEntryWords \u003e 0 \u0026\u0026 nEntryWords \u003c (1 \u003c\u003c nPageBase)\");\n    p.nPageBase   = nPageBase;\n    p.PageMask    = (1 \u003c\u003c nPageBase) - 1;\n    p.nEntryWords = nEntryWords;\n}"
+    },
+    {
+      "Name": "Mmr_FixedStart",
+      "Start": 4944,
+      "End": 5140,
+      "BodyStart": 5021,
+      "Original": "static inline Mmr_Fixed_t * Mmr_FixedStart( int nPageBase, int nEntryWords )\n{\n    Mmr_Fixed_t * p = ABC_CALLOC( Mmr_Fixed_t, 1 );\n    Mmr_FixedCreate( p, nPageBase, nEntryWords );\n    return p;\n}",
+      "Draft": "func Mmr_FixedStart(nPageBase int32, nEntryWords int32) *Mmr_Fixed_t {\n    // inlining of macro ABC_CALLOC\n    var p *Mmr_Fixed_t  = \u0026Mmr_Fixed_t{};\n    Mmr_FixedCreate( p, nPageBase, nEntryWords );\n    return p;\n}"
+    },
+    {
+      "Name": "Mmr_FixedStop",
+      "Start": 5141,
+      "End": 5800,
+      "BodyStart": 5208,
+      "Original": "static inline void Mmr_FixedStop( Mmr_Fixed_t * p, int fFreeLast )\n{\n    word * pPage;\n    int i;\n    if ( 0 \u0026\u0026 Vec_PtrSize(\u0026p-\u003evPages) )\n        printf( \"Using %3d pages of %6d words each with %6d entries (max = %6d) of size %d. Total memory = %5.2f MB.\\n\", \n            Vec_PtrSize(\u0026p-\u003evPages), p-\u003enPageBase ? 1 \u003c\u003c p-\u003enPageBase : 0, p-\u003enEntries, p-\u003enEntriesMax, p-\u003enEntryWords,\n            1.0 * Vec_PtrSize(\u0026p-\u003evPages) * (1 \u003c\u003c p-\u003enPageBase) * 8 / (1 \u003c\u003c 20) );\n    Vec_PtrForEachEntry( word *, \u0026p-\u003evPages, pPage, i )\n        ABC_FREE( pPage );\n    ABC_FREE( p-\u003evPages.pArray );\n    ABC_FREE( p-\u003evFrees.pArray );\n    if ( fFreeLast )\n        ABC_FREE( p );\n}",
+      "Draft": "func Mmr_FixedStop(p *Mmr_Fixed_t, fFreeLast int32) {\n    var pPage *word;\n    var i int32;\n    if false \u0026\u0026 Vec_PtrSize(\u0026p.vPages) {\n        fmt.Printf(\"Using %3d pages of %6d words each with %6d entries (max = %6d) of size %d. Total memory = %5.2f MB.\\n\", Vec_PtrSize(\u0026p.vPages), p.nPageBase ? 1 \u003c\u003c p.nPageBase : 0, p.nEntries, p.nEntriesMax, p.nEntryWords, 1.0 * Vec_PtrSize(\u0026p.vPages) * (1 \u003c\u003c p.nPageBase) * 8 / (1 \u003c\u003c 20)); }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vPages)) \u0026\u0026 (((pPage) = (word *)Vec_PtrEntry(\u0026p.vPages, i)), 1); i++  {\n        // inlining of macro ABC_FREE\n        ((pPage) ? (free((char *) (pPage)), (pPage) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.vPages.pArray) ? (free((char *) (p.vPages.pArray)), (p.vPages.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFrees.pArray) ? (free((char *) (p.vFrees.pArray)), (p.vFrees.pArray) = 0) : 0);\n    if fFreeLast != 0 {\n        // inlining of macro ABC_FREE\n        ((p) ? (free((char *) (p)), (p) = 0) : 0); }\n}"
+    },
+    {
+      "Name": "Mmr_FixedEntry",
+      "Start": 5801,
+      "End": 6022,
+      "BodyStart": 5863,
+      "Original": "static inline word * Mmr_FixedEntry( Mmr_Fixed_t * p, int h )\n{\n    assert( h \u003e 0 \u0026\u0026 h \u003c (Vec_PtrSize(\u0026p-\u003evPages) \u003c\u003c p-\u003enPageBase) );\n    return (word *)Vec_PtrEntry(\u0026p-\u003evPages, (h \u003e\u003e p-\u003enPageBase)) + (h \u0026 p-\u003ePageMask);\n}",
+      "Draft": "func Mmr_FixedEntry(p *Mmr_Fixed_t, h int32) *word {\n    assert(h \u003e 0 \u0026\u0026 h \u003c (Vec_PtrSize(\u0026p.vPages) \u003c\u003c p.nPageBase), \"h \u003e 0 \u0026\u0026 h \u003c (Vec_PtrSize(\u0026p.vPages) \u003c\u003c p.nPageBase)\");\n    return (word *)Vec_PtrEntry(\u0026p.vPages, (h \u003e\u003e p.nPageBase)) + (h \u0026 p.PageMask);\n}"
+    },
+    {
+      "Name": "Mmr_FixedFetch",
+      "Start": 6023,
+      "End": 6559,
+      "BodyStart": 6075,
+      "Original": "static inline int Mmr_FixedFetch( Mmr_Fixed_t * p )\n{\n    if ( Vec_IntSize(\u0026p-\u003evFrees) == 0 )\n    {\n        int i, hEntry = Vec_PtrSize(\u0026p-\u003evPages) \u003c\u003c p-\u003enPageBase;\n        Vec_PtrPush( \u0026p-\u003evPages, ABC_FALLOC( word, p-\u003ePageMask + 1 ) );\n        for ( i = 1; i + p-\u003enEntryWords \u003c= p-\u003ePageMask; i += p-\u003enEntryWords )\n            Vec_IntPush( \u0026p-\u003evFrees, hEntry | i );\n        Vec_IntReverseOrder( \u0026p-\u003evFrees );\n    }\n    p-\u003enEntries++;\n    p-\u003enEntriesMax = Abc_MaxInt( p-\u003enEntriesMax, p-\u003enEntries );\n    return Vec_IntPop( \u0026p-\u003evFrees );\n}",
+      "Draft": "func Mmr_FixedFetch(p *Mmr_Fixed_t) int32 {\n    if Vec_IntSize(\u0026p.vFrees) == 0 {\n        var i int32;\n        var hEntry int32 = Vec_PtrSize(\u0026p.vPages) \u003c\u003c p.nPageBase;\n        // inlining of macro ABC_FALLOC\n        Vec_PtrPush( \u0026p.vPages, ((word *) memset(malloc(sizeof(word) * (size_t)(p.PageMask + 1)), 0xff, sizeof(word) * (size_t)(p.PageMask + 1))) );\n        for  i = 1; i + p.nEntryWords \u003c= p.PageMask; i += p.nEntryWords  {\n            Vec_IntPush( \u0026p.vFrees, hEntry | i );\n        }\n        Vec_IntReverseOrder( \u0026p.vFrees );\n    }\n    p.nEntries++;\n    p.nEntriesMax = Abc_MaxInt( p.nEntriesMax, p.nEntries );\n    return Vec_IntPop( \u0026p.vFrees );\n}"
+    },
+    {
+      "Name": "Mmr_FixedRecycle",
+      "Start": 6560,
+      "End": 6751,
+      "BodyStart": 6622,
+      "Original": "static inline void Mmr_FixedRecycle( Mmr_Fixed_t * p, int h )\n{\n    p-\u003enEntries--;\n    memset( Mmr_FixedEntry(p, h), 0xFF, sizeof(word) * p-\u003enEntryWords );\n    Vec_IntPush( \u0026p-\u003evFrees, h );\n}",
+      "Draft": "func Mmr_FixedRecycle(p *Mmr_Fixed_t, h int32) {\n    p.nEntries--;\n    memset( Mmr_FixedEntry(p, h), 0xFF, sizeof(word) * p.nEntryWords );\n    Vec_IntPush( \u0026p.vFrees, h );\n}"
+    },
+    {
+      "Name": "Mmr_FixedMemory",
+      "Start": 6752,
+      "End": 6864,
+      "BodyStart": 6805,
+      "Original": "static inline int Mmr_FixedMemory( Mmr_Fixed_t * p )\n{\n    return Vec_PtrSize(\u0026p-\u003evPages) * (p-\u003ePageMask + 1);\n}",
+      "Draft": "func Mmr_FixedMemory(p *Mmr_Fixed_t) int32 {\n    return Vec_PtrSize(\u0026p.vPages) * (p.PageMask + 1);\n}"
+    },
+    {
+      "Name": "Mmr_StepStart",
+      "Start": 7102,
+      "End": 7505,
+      "BodyStart": 7175,
+      "Original": "static inline Mmr_Step_t * Mmr_StepStart( int nPageBase, int nWordBase )\n{\n    char * pMemory = ABC_CALLOC( char, sizeof(Mmr_Step_t) + sizeof(Mmr_Fixed_t) * (1 \u003c\u003c nWordBase) );\n    Mmr_Step_t * p = (Mmr_Step_t *)pMemory;\n    int i;\n    p-\u003enBits = nWordBase;\n    p-\u003euMask = (1 \u003c\u003c nWordBase) - 1;\n    for ( i = 1; i \u003c= p-\u003euMask; i++ )\n        Mmr_FixedCreate( p-\u003epMems + i, nPageBase, i );\n    return p;\n}",
+      "Draft": "func Mmr_StepStart(nPageBase int32, nWordBase int32) *Mmr_Step_t {\n    // inlining of macro ABC_CALLOC\n    var pMemory string  = ((char *) calloc((size_t)(sizeof(Mmr_Step_t) + sizeof(Mmr_Fixed_t) * (1 \u003c\u003c nWordBase)), sizeof(char)));\n    var p *Mmr_Step_t  = (Mmr_Step_t *)pMemory;\n    var i int32;\n    p.nBits = nWordBase;\n    p.uMask = (1 \u003c\u003c nWordBase) - 1;\n    for  i = 1; i \u003c= p.uMask; i++  {\n        Mmr_FixedCreate( p.pMems + i, nPageBase, i );\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Mmr_StepStop",
+      "Start": 7506,
+      "End": 7669,
+      "BodyStart": 7556,
+      "Original": "static inline void Mmr_StepStop( Mmr_Step_t * p )\n{\n    int i;\n    for ( i = 0; i \u003c= p-\u003euMask; i++ )\n        Mmr_FixedStop( p-\u003epMems + i, 0 );\n    ABC_FREE( p );\n}",
+      "Draft": "func Mmr_StepStop(p *Mmr_Step_t) {\n    var i int32;\n    for  i = 0; i \u003c= p.uMask; i++  {\n        Mmr_FixedStop( p.pMems + i, 0 );\n    }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Mmr_StepEntry",
+      "Start": 7670,
+      "End": 7840,
+      "BodyStart": 7730,
+      "Original": "static inline word * Mmr_StepEntry( Mmr_Step_t * p, int h )\n{\n    assert( (h \u0026 p-\u003euMask) \u003e 0 );\n    return Mmr_FixedEntry( p-\u003epMems + (h \u0026 p-\u003euMask), (h \u003e\u003e p-\u003enBits) );\n}",
+      "Draft": "func Mmr_StepEntry(p *Mmr_Step_t, h int32) *word {\n    assert((h \u0026 p.uMask) \u003e 0, \"(h \u0026 p.uMask) \u003e 0\");\n    return Mmr_FixedEntry( p.pMems + (h \u0026 p.uMask), (h \u003e\u003e p.nBits) );\n}"
+    },
+    {
+      "Name": "Mmr_StepFetch",
+      "Start": 7841,
+      "End": 8128,
+      "BodyStart": 7903,
+      "Original": "static inline int Mmr_StepFetch( Mmr_Step_t * p, int nWords )\n{\n    assert( nWords \u003e 0 \u0026\u0026 nWords \u003c= p-\u003euMask );\n    p-\u003enEntries++;\n    p-\u003enEntriesAll++;\n    p-\u003enEntriesMax = Abc_MaxInt( p-\u003enEntriesMax, p-\u003enEntries );\n    return (Mmr_FixedFetch(p-\u003epMems + nWords) \u003c\u003c p-\u003enBits) | nWords;\n}",
+      "Draft": "func Mmr_StepFetch(p *Mmr_Step_t, nWords int32) int32 {\n    assert(nWords \u003e 0 \u0026\u0026 nWords \u003c= p.uMask, \"nWords \u003e 0 \u0026\u0026 nWords \u003c= p.uMask\");\n    p.nEntries++;\n    p.nEntriesAll++;\n    p.nEntriesMax = Abc_MaxInt( p.nEntriesMax, p.nEntries );\n    return (Mmr_FixedFetch(p.pMems + nWords) \u003c\u003c p.nBits) | nWords;\n}"
+    },
+    {
+      "Name": "Mmr_StepRecycle",
+      "Start": 8129,
+      "End": 8279,
+      "BodyStart": 8189,
+      "Original": "static inline void Mmr_StepRecycle( Mmr_Step_t * p, int h )\n{\n    p-\u003enEntries--;\n    Mmr_FixedRecycle( p-\u003epMems + (h \u0026 p-\u003euMask), (h \u003e\u003e p-\u003enBits) );\n}",
+      "Draft": "func Mmr_StepRecycle(p *Mmr_Step_t, h int32) {\n    p.nEntries--;\n    Mmr_FixedRecycle( p.pMems + (h \u0026 p.uMask), (h \u003e\u003e p.nBits) );\n}"
+    },
+    {
+      "Name": "Mmr_StepMemory",
+      "Start": 8280,
+      "End": 8456,
+      "BodyStart": 8331,
+      "Original": "static inline int Mmr_StepMemory( Mmr_Step_t * p )\n{\n    int i, Mem = 0;\n    for ( i = 1; i \u003c= p-\u003euMask; i++ )\n        Mem += Mmr_FixedMemory( p-\u003epMems + i );\n    return Mem;\n}",
+      "Draft": "func Mmr_StepMemory(p *Mmr_Step_t) int32 {\n    var i, Mem int32;\n    for  i = 1; i \u003c= p.uMask; i++  {\n        Mem += Mmr_FixedMemory( p.pMems + i );\n    }\n    return Mem;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::struct::Mmr_Flex_t_",
+      "Category": "struct-review",
+      "Symbol": "Mmr_Flex_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 978,
+      "End": 1329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::struct::Mmr_Fixed_t_",
+      "Category": "struct-review",
+      "Symbol": "Mmr_Fixed_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1331,
+      "End": 1731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::struct::Mmr_Step_t_::// the total number of entries\n    Mmr_Fixed_t   pMems[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Mmr_Step_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2026,
+      "End": 2087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::struct::Mmr_Step_t_",
+      "Category": "struct-review",
+      "Symbol": "Mmr_Step_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1733,
+      "End": 2141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::mechanical::sizeof::2768",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2686,
+      "End": 2686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::mechanical::sizeof::4305",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3797,
+      "End": 3797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::mechanical::sizeof::4354",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3797,
+      "End": 3797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::mechanical::sizeof::5772",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5045,
+      "End": 5045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::mechanical::sizeof::7476",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6221,
+      "End": 6221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::mechanical::sizeof::7525",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6221,
+      "End": 6221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::mechanical::sizeof::7994",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6683,
+      "End": 6689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::mechanical::sizeof::8581",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7198,
+      "End": 7198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::mechanical::sizeof::8602",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7198,
+      "End": 7198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::mechanical::sizeof::8643",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7198,
+      "End": 7198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::2733",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2686,
+      "End": 2686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::3451",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3263,
+      "End": 3263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::3568",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3323,
+      "End": 3323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::3682",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3346,
+      "End": 3346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::3803",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3380,
+      "End": 3380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::3945",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3507,
+      "End": 3515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::4282",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3797,
+      "End": 3797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::4841",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4277,
+      "End": 4285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::5041",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4416,
+      "End": 4416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::5736",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5045,
+      "End": 5045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::6441",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5608,
+      "End": 5608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::6558",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5668,
+      "End": 5668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::6672",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5691,
+      "End": 5691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::6808",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5725,
+      "End": 5725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::6954",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5784,
+      "End": 5784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::7131",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5946,
+      "End": 5954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::7453",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6221,
+      "End": 6221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::8556",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7198,
+      "End": 7198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::8680",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7300,
+      "End": 7314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::pointer-cast::9090",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7653,
+      "End": 7653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_FlexStart",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_FlexStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2598,
+      "End": 2838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::ternary::Mmr_FlexStop",
+      "Category": "ternary-review",
+      "Symbol": "Mmr_FlexStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2839,
+      "End": 3396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_FlexStop",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_FlexStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2839,
+      "End": 3396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_FlexEntry",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_FlexEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3397,
+      "End": 3583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_FlexFetch",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_FlexFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3584,
+      "End": 4064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::ternary::Mmr_FlexRelease",
+      "Category": "ternary-review",
+      "Symbol": "Mmr_FlexRelease",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4065,
+      "End": 4442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_FlexRelease",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_FlexRelease",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4065,
+      "End": 4442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_FixedCreate",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_FixedCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4680,
+      "End": 4943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_FixedStart",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_FixedStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4944,
+      "End": 5140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::ternary::Mmr_FixedStop",
+      "Category": "ternary-review",
+      "Symbol": "Mmr_FixedStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5141,
+      "End": 5800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_FixedStop",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_FixedStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5141,
+      "End": 5800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_FixedEntry",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_FixedEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5801,
+      "End": 6022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_FixedFetch",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_FixedFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6023,
+      "End": 6559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_FixedRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_FixedRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6560,
+      "End": 6751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_FixedMemory",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_FixedMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6752,
+      "End": 6864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_StepStart",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_StepStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7102,
+      "End": 7505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::ternary::Mmr_StepStop",
+      "Category": "ternary-review",
+      "Symbol": "Mmr_StepStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7506,
+      "End": 7669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_StepStop",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_StepStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7506,
+      "End": 7669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_StepEntry",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_StepEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7670,
+      "End": 7840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_StepFetch",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_StepFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7841,
+      "End": 8128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_StepRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_StepRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8129,
+      "End": 8279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::Mmr_StepMemory",
+      "Category": "semantic-review",
+      "Symbol": "Mmr_StepMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8280,
+      "End": 8456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mem/mem2.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8714
+    }
+  ],
+  "Draft": "package mem\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [mem2.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Memory management.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: mem2.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n//#include \"misc/vec/vec.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Mmr_Flex_t =     Mmr_Flex_t_;     \ntype Mmr_Fixed_t =    Mmr_Fixed_t_;    \ntype Mmr_Step_t =     Mmr_Step_t_;     \n\ntype Mmr_Flex_t_ struct {\n    nPageBase           int32;     // log2 page size in words\n    PageMask           int32;      // page mask\n    nEntries           int32;      // entries allocated\n    nEntriesMax           int32;   // max number of enries used\n    iNext           int32;         // next word to be used\n    vPages     Vec_Ptr_t;        // memory pages\n}\n\ntype Mmr_Fixed_t_ struct {\n    nPageBase           int32;     // log2 page size in words\n    PageMask           int32;      // page mask\n    nEntryWords           int32;   // entry size in words\n    nEntries           int32;      // entries allocated\n    nEntriesMax           int32;   // max number of enries used\n    vPages     Vec_Ptr_t;        // memory pages\n    vFrees     Vec_Int_t;        // free entries\n}\n\ntype Mmr_Step_t_ struct {\n    nBits           int32;         // the number of bits\n    uMask           int32;         // the number of managers minus 1\n    nEntries           int32;      // the number of entries\n    nEntriesMax           int32;   // the max number of entries\n    nEntriesAll           int32;   // the total number of entries\n    pMems [0]Mmr_Fixed_t;      // memory managers: 2^0 words, 2^1 words, etc\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mmr_FlexStart(nPageBase int32) *Mmr_Flex_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Mmr_Flex_t{};\n    p.nPageBase = nPageBase;\n    p.PageMask  = (1 \u003c\u003c nPageBase) - 1;\n    p.iNext     = (1 \u003c\u003c nPageBase);\n    return p;\n}\nfunc Mmr_FlexStop(p *Mmr_Flex_t) {\n    var pPage *word;\n    var i int32;\n    if false \u0026\u0026 Vec_PtrSize(\u0026p.vPages) {\n        fmt.Printf(\"Using %3d pages of %6d words each with %6d entries (max = %6d). Total memory = %5.2f MB.\\n\", Vec_PtrSize(\u0026p.vPages), p.nPageBase ? 1 \u003c\u003c p.nPageBase : 0, p.nEntries, p.nEntriesMax, 1.0 * Vec_PtrSize(\u0026p.vPages) * (1 \u003c\u003c p.nPageBase) * 8 / (1 \u003c\u003c 20)); }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vPages)) \u0026\u0026 (((pPage) = (word *)Vec_PtrEntry(\u0026p.vPages, i)), 1); i++  {\n        // inlining of macro ABC_FREE\n        ((pPage) ? (free((char *) (pPage)), (pPage) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.vPages.pArray) ? (free((char *) (p.vPages.pArray)), (p.vPages.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Mmr_FlexEntry(p *Mmr_Flex_t, h int32) *word {\n    assert(h \u003e 0 \u0026\u0026 h \u003c p.iNext, \"h \u003e 0 \u0026\u0026 h \u003c p.iNext\");\n    return (word *)Vec_PtrEntry(\u0026p.vPages, (h \u003e\u003e p.nPageBase)) + (h \u0026 p.PageMask);\n}\nfunc Mmr_FlexFetch(p *Mmr_Flex_t, nWords int32) int32 {\n    var hEntry int32;\n    assert(nWords \u003e 0 \u0026\u0026 nWords \u003c p.PageMask, \"nWords \u003e 0 \u0026\u0026 nWords \u003c p.PageMask\");\n    if p.iNext + nWords \u003e= p.PageMask {\n        // inlining of macro ABC_FALLOC\n        Vec_PtrPush( \u0026p.vPages, ((word *) memset(malloc(sizeof(word) * (size_t)(p.PageMask + 1)), 0xff, sizeof(word) * (size_t)(p.PageMask + 1))) );\n        p.iNext = 1;\n    }\n    hEntry = ((Vec_PtrSize(\u0026p.vPages) - 1) \u003c\u003c p.nPageBase) | p.iNext;\n    p.iNext += nWords;\n    p.nEntries++;\n    p.nEntriesMax = Abc_MaxInt( p.nEntriesMax, p.nEntries );\n    return hEntry;\n}\nfunc Mmr_FlexRelease(p *Mmr_Flex_t, h int32) {\n    assert(h \u003e 0 \u0026\u0026 h \u003c p.iNext, \"h \u003e 0 \u0026\u0026 h \u003c p.iNext\");\n    if (h \u003e\u003e p.nPageBase) \u0026\u0026 Vec_PtrEntry(\u0026p.vPages, (h \u003e\u003e p.nPageBase) - 1) {\n        var pPage *word  = (word *)Vec_PtrEntry(\u0026p.vPages, (h \u003e\u003e p.nPageBase) - 1);\n        Vec_PtrWriteEntry( \u0026p.vPages, (h \u003e\u003e p.nPageBase) - 1, nil );\n        // inlining of macro ABC_FREE\n        ((pPage) ? (free((char *) (pPage)), (pPage) = 0) : 0);\n    }\n}\n\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mmr_FixedCreate(p *Mmr_Fixed_t, nPageBase int32, nEntryWords int32) {\n    assert(nEntryWords \u003e 0 \u0026\u0026 nEntryWords \u003c (1 \u003c\u003c nPageBase), \"nEntryWords \u003e 0 \u0026\u0026 nEntryWords \u003c (1 \u003c\u003c nPageBase)\");\n    p.nPageBase   = nPageBase;\n    p.PageMask    = (1 \u003c\u003c nPageBase) - 1;\n    p.nEntryWords = nEntryWords;\n}\nfunc Mmr_FixedStart(nPageBase int32, nEntryWords int32) *Mmr_Fixed_t {\n    // inlining of macro ABC_CALLOC\n    var p *Mmr_Fixed_t  = \u0026Mmr_Fixed_t{};\n    Mmr_FixedCreate( p, nPageBase, nEntryWords );\n    return p;\n}\nfunc Mmr_FixedStop(p *Mmr_Fixed_t, fFreeLast int32) {\n    var pPage *word;\n    var i int32;\n    if false \u0026\u0026 Vec_PtrSize(\u0026p.vPages) {\n        fmt.Printf(\"Using %3d pages of %6d words each with %6d entries (max = %6d) of size %d. Total memory = %5.2f MB.\\n\", Vec_PtrSize(\u0026p.vPages), p.nPageBase ? 1 \u003c\u003c p.nPageBase : 0, p.nEntries, p.nEntriesMax, p.nEntryWords, 1.0 * Vec_PtrSize(\u0026p.vPages) * (1 \u003c\u003c p.nPageBase) * 8 / (1 \u003c\u003c 20)); }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(\u0026p.vPages)) \u0026\u0026 (((pPage) = (word *)Vec_PtrEntry(\u0026p.vPages, i)), 1); i++  {\n        // inlining of macro ABC_FREE\n        ((pPage) ? (free((char *) (pPage)), (pPage) = 0) : 0);\n    }\n    // inlining of macro ABC_FREE\n    ((p.vPages.pArray) ? (free((char *) (p.vPages.pArray)), (p.vPages.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vFrees.pArray) ? (free((char *) (p.vFrees.pArray)), (p.vFrees.pArray) = 0) : 0);\n    if fFreeLast != 0 {\n        // inlining of macro ABC_FREE\n        ((p) ? (free((char *) (p)), (p) = 0) : 0); }\n}\nfunc Mmr_FixedEntry(p *Mmr_Fixed_t, h int32) *word {\n    assert(h \u003e 0 \u0026\u0026 h \u003c (Vec_PtrSize(\u0026p.vPages) \u003c\u003c p.nPageBase), \"h \u003e 0 \u0026\u0026 h \u003c (Vec_PtrSize(\u0026p.vPages) \u003c\u003c p.nPageBase)\");\n    return (word *)Vec_PtrEntry(\u0026p.vPages, (h \u003e\u003e p.nPageBase)) + (h \u0026 p.PageMask);\n}\nfunc Mmr_FixedFetch(p *Mmr_Fixed_t) int32 {\n    if Vec_IntSize(\u0026p.vFrees) == 0 {\n        var i int32;\n        var hEntry int32 = Vec_PtrSize(\u0026p.vPages) \u003c\u003c p.nPageBase;\n        // inlining of macro ABC_FALLOC\n        Vec_PtrPush( \u0026p.vPages, ((word *) memset(malloc(sizeof(word) * (size_t)(p.PageMask + 1)), 0xff, sizeof(word) * (size_t)(p.PageMask + 1))) );\n        for  i = 1; i + p.nEntryWords \u003c= p.PageMask; i += p.nEntryWords  {\n            Vec_IntPush( \u0026p.vFrees, hEntry | i );\n        }\n        Vec_IntReverseOrder( \u0026p.vFrees );\n    }\n    p.nEntries++;\n    p.nEntriesMax = Abc_MaxInt( p.nEntriesMax, p.nEntries );\n    return Vec_IntPop( \u0026p.vFrees );\n}\nfunc Mmr_FixedRecycle(p *Mmr_Fixed_t, h int32) {\n    p.nEntries--;\n    memset( Mmr_FixedEntry(p, h), 0xFF, sizeof(word) * p.nEntryWords );\n    Vec_IntPush( \u0026p.vFrees, h );\n}\nfunc Mmr_FixedMemory(p *Mmr_Fixed_t) int32 {\n    return Vec_PtrSize(\u0026p.vPages) * (p.PageMask + 1);\n}\n\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mmr_StepStart(nPageBase int32, nWordBase int32) *Mmr_Step_t {\n    // inlining of macro ABC_CALLOC\n    var pMemory string  = ((char *) calloc((size_t)(sizeof(Mmr_Step_t) + sizeof(Mmr_Fixed_t) * (1 \u003c\u003c nWordBase)), sizeof(char)));\n    var p *Mmr_Step_t  = (Mmr_Step_t *)pMemory;\n    var i int32;\n    p.nBits = nWordBase;\n    p.uMask = (1 \u003c\u003c nWordBase) - 1;\n    for  i = 1; i \u003c= p.uMask; i++  {\n        Mmr_FixedCreate( p.pMems + i, nPageBase, i );\n    }\n    return p;\n}\nfunc Mmr_StepStop(p *Mmr_Step_t) {\n    var i int32;\n    for  i = 0; i \u003c= p.uMask; i++  {\n        Mmr_FixedStop( p.pMems + i, 0 );\n    }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Mmr_StepEntry(p *Mmr_Step_t, h int32) *word {\n    assert((h \u0026 p.uMask) \u003e 0, \"(h \u0026 p.uMask) \u003e 0\");\n    return Mmr_FixedEntry( p.pMems + (h \u0026 p.uMask), (h \u003e\u003e p.nBits) );\n}\nfunc Mmr_StepFetch(p *Mmr_Step_t, nWords int32) int32 {\n    assert(nWords \u003e 0 \u0026\u0026 nWords \u003c= p.uMask, \"nWords \u003e 0 \u0026\u0026 nWords \u003c= p.uMask\");\n    p.nEntries++;\n    p.nEntriesAll++;\n    p.nEntriesMax = Abc_MaxInt( p.nEntriesMax, p.nEntries );\n    return (Mmr_FixedFetch(p.pMems + nWords) \u003c\u003c p.nBits) | nWords;\n}\nfunc Mmr_StepRecycle(p *Mmr_Step_t, h int32) {\n    p.nEntries--;\n    Mmr_FixedRecycle( p.pMems + (h \u0026 p.uMask), (h \u003e\u003e p.nBits) );\n}\nfunc Mmr_StepMemory(p *Mmr_Step_t) int32 {\n    var i, Mem int32;\n    for  i = 1; i \u003c= p.uMask; i++  {\n        Mem += Mmr_FixedMemory( p.pMems + i );\n    }\n    return Mem;\n}\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n"
+}

@@ -1,0 +1,2616 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c",
+  "SHA256": "0777928f8a327e74e0353820b89bb73253d4f6fb59210d1110140e2788c7304c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 128,
+        "Column": 67,
+        "ByteOffset": 6890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Map_NodeComparePhase(p1 *Map_Node_t, p2 *Map_Node_t) int32 { assert( !/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (p1) \u0026 01)))) ); assert( !/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (p2) \u0026 01)))) ); return p1.fInv ^ p2.fInv; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 128,
+        "Column": 170,
+        "ByteOffset": 6993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Map_NodeComparePhase(p1 *Map_Node_t, p2 *Map_Node_t) int32 { assert( !/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (p1) \u0026 01)))) ); assert( !/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (p2) \u0026 01)))) ); return p1.fInv ^ p2.fInv; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 9,
+        "ByteOffset": 10323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The supergate library is not specified. Use \\\"read_super\\\".\\n\" );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 207,
+        "Column": 69,
+        "ByteOffset": 10518
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Map_Man_t *) malloc(sizeof(Map_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 10564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Map_Man_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 213,
+        "Column": 5,
+        "ByteOffset": 10766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nVarsMax \u003e 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 236,
+        "Column": 80,
+        "ByteOffset": 11728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pInputs = /*__starting_point_inline_macro:ABC_ALLOC__*/((Map_Node_t * *) malloc(sizeof(Map_Node_t *) * (size_t)(nInputs)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 243,
+        "Column": 81,
+        "ByteOffset": 12028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pOutputs = /*__starting_point_inline_macro:ABC_ALLOC__*/((Map_Node_t * *) malloc(sizeof(Map_Node_t *) * (size_t)(nOutputs)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 244,
+        "Column": 5,
+        "ByteOffset": 12084
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pOutputs, 0, sizeof(Map_Node_t *) * nOutputs );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 267,
+        "Column": 82,
+        "ByteOffset": 12816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.uCanons {   /*__starting_point_inline_macro:ABC_FREE__*/((p.uCanons) ? (free((char *) (p.uCanons)), (p.uCanons) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 268,
+        "Column": 82,
+        "ByteOffset": 12950
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.uPhases {   /*__starting_point_inline_macro:ABC_FREE__*/((p.uPhases) ? (free((char *) (p.uPhases)), (p.uPhases) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 269,
+        "Column": 84,
+        "ByteOffset": 13086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.pCounters { /*__starting_point_inline_macro:ABC_FREE__*/((p.pCounters) ? (free((char *) (p.pCounters)), (p.pCounters) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 272,
+        "Column": 69,
+        "ByteOffset": 13282
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pNodeDelays) ? (free((char *) (p.pNodeDelays)), (p.pNodeDelays) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 273,
+        "Column": 72,
+        "ByteOffset": 13412
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pInputArrivals) ? (free((char *) (p.pInputArrivals)), (p.pInputArrivals) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 274,
+        "Column": 74,
+        "ByteOffset": 13550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pOutputRequireds) ? (free((char *) (p.pOutputRequireds)), (p.pOutputRequireds) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 275,
+        "Column": 65,
+        "ByteOffset": 13683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pInputs) ? (free((char *) (p.pInputs)), (p.pInputs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 276,
+        "Column": 66,
+        "ByteOffset": 13799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pOutputs) ? (free((char *) (p.pOutputs)), (p.pOutputs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 277,
+        "Column": 63,
+        "ByteOffset": 13914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 278,
+        "Column": 71,
+        "ByteOffset": 14031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.ppOutputNames) ? (free((char *) (p.ppOutputNames)), (p.ppOutputNames) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 279,
+        "Column": 57,
+        "ByteOffset": 14150
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 297,
+        "Column": 5,
+        "ByteOffset": 14550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pNodeDelays == nil );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 298,
+        "Column": 78,
+        "ByteOffset": 14659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pNodeDelays = /*__starting_point_inline_macro:ABC_CALLOC__*/((float *) calloc((size_t)(p.vMapObjs.nSize), sizeof(float)));"
+    },
+    {
+      "Name": "log",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 303,
+        "Column": 78,
+        "ByteOffset": 14925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pNodeDelays[k] = 0.014426 * LogFan * p.pSuperLib.tDelayInv.Worst * log( float64(pNode.nRefs) ); // 1.4426 = 1/ln(2)"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 322,
+        "Column": 5,
+        "ByteOffset": 15395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"N-canonical = %d. Matchings = %d.  Phases = %d.  \", p.nCanons, p.nMatches, p.nPhases );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 5,
+        "ByteOffset": 15496
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Choice nodes = %d. Choices = %d.\\n\", p.nChoiceNodes, p.nChoices );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 325,
+        "Column": 67,
+        "ByteOffset": 15718
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeToMap)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 327,
+        "Column": 66,
+        "ByteOffset": 15883
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCuts)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 329,
+        "Column": 67,
+        "ByteOffset": 16049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTruth)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 331,
+        "Column": 67,
+        "ByteOffset": 16215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMatch)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 333,
+        "Column": 66,
+        "ByteOffset": 16380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeArea)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 335,
+        "Column": 67,
+        "ByteOffset": 16546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSweep)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 337,
+        "Column": 67,
+        "ByteOffset": 16712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeToNet)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 339,
+        "Column": 67,
+        "ByteOffset": 16878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 341,
+        "Column": 63,
+        "ByteOffset": 17053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time1)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 343,
+        "Column": 63,
+        "ByteOffset": 17230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time2)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 345,
+        "Column": 63,
+        "ByteOffset": 17407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time3)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 361,
+        "Column": 14,
+        "ByteOffset": 17817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTable = fopen( \"map_stats.txt\", \"a+\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 362,
+        "Column": 5,
+        "ByteOffset": 17853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%s \", pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 363,
+        "Column": 5,
+        "ByteOffset": 17890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%4.2f \", Area );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 364,
+        "Column": 5,
+        "ByteOffset": 17929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%4.2f \", Delay );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 365,
+        "Column": 5,
+        "ByteOffset": 17969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%4.2f\\n\", float32((Time))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 365,
+        "Column": 58,
+        "ByteOffset": 18022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pTable, \"%4.2f\\n\", float32((Time))/float32((CLOCKS_PER_SEC)) );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 366,
+        "Column": 5,
+        "ByteOffset": 18046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pTable );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 385,
+        "Column": 5,
+        "ByteOffset": 18603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pNode, 0, sizeof(Map_Node_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 438,
+        "Column": 5,
+        "ByteOffset": 21750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pMan.pBins == nil );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 440,
+        "Column": 81,
+        "ByteOffset": 21897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMan.pBins = /*__starting_point_inline_macro:ABC_ALLOC__*/((Map_Node_t * *) malloc(sizeof(Map_Node_t *) * (size_t)(pMan.nBins)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 441,
+        "Column": 5,
+        "ByteOffset": 21955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pMan.pBins, 0, sizeof(Map_Node_t *) * pMan.nBins );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 524,
+        "Column": 79,
+        "ByteOffset": 24819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBinsNew = /*__starting_point_inline_macro:ABC_ALLOC__*/((Map_Node_t * *) malloc(sizeof(Map_Node_t *) * (size_t)(nBinsNew)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 525,
+        "Column": 5,
+        "ByteOffset": 24875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pBinsNew, 0, sizeof(Map_Node_t *) * nBinsNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 537,
+        "Column": 5,
+        "ByteOffset": 25345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Counter == pMan.nNodes - pMan.nInputs );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 543,
+        "Column": 66,
+        "ByteOffset": 25677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pMan.pBins) ? (free((char *) (pMan.pBins)), (pMan.pBins) = 0) : 0);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 389,
+        "Column": 1,
+        "ByteOffset": 17030
+      },
+      "Directive": "#ifdef MAP_ALLOCATE_FANOUT"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Map_HashKey2",
+      "Start": 913,
+      "End": 1090,
+      "BodyStart": 1000,
+      "Original": "static inline unsigned Map_HashKey2( Map_Node_t * p0, Map_Node_t * p1, int TableSize ) { return (unsigned)(((ABC_PTRUINT_T)(p0) + (ABC_PTRUINT_T)(p1) * 12582917) % TableSize); }",
+      "Draft": "func Map_HashKey2(p0 *Map_Node_t, p1 *Map_Node_t, TableSize int32) uint32 { return uint32((((ABC_PTRUINT_T)(p0) + (ABC_PTRUINT_T)(p1) * 12582917) % TableSize)); }"
+    },
+    {
+      "Name": "Map_ManReadInputNum",
+      "Start": 1588,
+      "End": 1685,
+      "BodyStart": 1660,
+      "Original": "int             Map_ManReadInputNum( Map_Man_t * p )                    { return p-\u003enInputs;    }",
+      "Draft": "func Map_ManReadInputNum(p *Map_Man_t) int32 { return p.nInputs;    }"
+    },
+    {
+      "Name": "Map_ManReadOutputNum",
+      "Start": 1686,
+      "End": 1783,
+      "BodyStart": 1758,
+      "Original": "int             Map_ManReadOutputNum( Map_Man_t * p )                   { return p-\u003enOutputs;   }",
+      "Draft": "func Map_ManReadOutputNum(p *Map_Man_t) int32 { return p.nOutputs;   }"
+    },
+    {
+      "Name": "Map_ManReadBufNum",
+      "Start": 1784,
+      "End": 1902,
+      "BodyStart": 1856,
+      "Original": "int             Map_ManReadBufNum( Map_Man_t * p )                      { return Map_NodeVecReadSize(p-\u003evMapBufs);   }",
+      "Draft": "func Map_ManReadBufNum(p *Map_Man_t) int32 { return Map_NodeVecReadSize(p.vMapBufs);   }"
+    },
+    {
+      "Name": "Map_ManReadInputs",
+      "Start": 1903,
+      "End": 2000,
+      "BodyStart": 1975,
+      "Original": "Map_Node_t **   Map_ManReadInputs ( Map_Man_t * p )                     { return p-\u003epInputs;    }",
+      "Draft": "func Map_ManReadInputs(p *Map_Man_t) **Map_Node_t { return p.pInputs;    }"
+    },
+    {
+      "Name": "Map_ManReadOutputs",
+      "Start": 2001,
+      "End": 2098,
+      "BodyStart": 2073,
+      "Original": "Map_Node_t **   Map_ManReadOutputs( Map_Man_t * p )                     { return p-\u003epOutputs;   }",
+      "Draft": "func Map_ManReadOutputs(p *Map_Man_t) **Map_Node_t { return p.pOutputs;   }"
+    },
+    {
+      "Name": "Map_ManReadBufs",
+      "Start": 2099,
+      "End": 2217,
+      "BodyStart": 2171,
+      "Original": "Map_Node_t **   Map_ManReadBufs( Map_Man_t * p )                        { return Map_NodeVecReadArray(p-\u003evMapBufs);  }",
+      "Draft": "func Map_ManReadBufs(p *Map_Man_t) **Map_Node_t { return Map_NodeVecReadArray(p.vMapBufs);  }"
+    },
+    {
+      "Name": "Map_ManReadBufDriver",
+      "Start": 2218,
+      "End": 2337,
+      "BodyStart": 2290,
+      "Original": "Map_Node_t *    Map_ManReadBufDriver( Map_Man_t * p, int i )            { return Map_ManReadBufs(p)[i]-\u003ep1;           }",
+      "Draft": "func Map_ManReadBufDriver(p *Map_Man_t, i int32) *Map_Node_t { return Map_ManReadBufs(p)[i].p1;           }"
+    },
+    {
+      "Name": "Map_ManReadConst1",
+      "Start": 2338,
+      "End": 2435,
+      "BodyStart": 2410,
+      "Original": "Map_Node_t *    Map_ManReadConst1 ( Map_Man_t * p )                     { return p-\u003epConst1;    }",
+      "Draft": "func Map_ManReadConst1(p *Map_Man_t) *Map_Node_t { return p.pConst1;    }"
+    },
+    {
+      "Name": "Map_ManReadInputArrivals",
+      "Start": 2436,
+      "End": 2537,
+      "BodyStart": 2508,
+      "Original": "Map_Time_t *    Map_ManReadInputArrivals( Map_Man_t * p )               { return p-\u003epInputArrivals; }",
+      "Draft": "func Map_ManReadInputArrivals(p *Map_Man_t) *Map_Time_t { return p.pInputArrivals; }"
+    },
+    {
+      "Name": "Map_ManReadOutputRequireds",
+      "Start": 2538,
+      "End": 2641,
+      "BodyStart": 2610,
+      "Original": "Map_Time_t *    Map_ManReadOutputRequireds( Map_Man_t * p )             { return p-\u003epOutputRequireds; }",
+      "Draft": "func Map_ManReadOutputRequireds(p *Map_Man_t) *Map_Time_t { return p.pOutputRequireds; }"
+    },
+    {
+      "Name": "Map_ManReadGenLib",
+      "Start": 2642,
+      "End": 2747,
+      "BodyStart": 2714,
+      "Original": "Mio_Library_t * Map_ManReadGenLib ( Map_Man_t * p )                     { return p-\u003epSuperLib-\u003epGenlib; }",
+      "Draft": "func Map_ManReadGenLib(p *Map_Man_t) *Mio_Library_t { return p.pSuperLib.pGenlib; }"
+    },
+    {
+      "Name": "Map_ManReadVerbose",
+      "Start": 2748,
+      "End": 2845,
+      "BodyStart": 2820,
+      "Original": "int             Map_ManReadVerbose( Map_Man_t * p )                     { return p-\u003efVerbose;   }",
+      "Draft": "func Map_ManReadVerbose(p *Map_Man_t) int32 { return p.fVerbose;   }"
+    },
+    {
+      "Name": "Map_ManReadAreaFinal",
+      "Start": 2846,
+      "End": 2943,
+      "BodyStart": 2918,
+      "Original": "float           Map_ManReadAreaFinal( Map_Man_t * p )                   { return p-\u003eAreaFinal;  }",
+      "Draft": "func Map_ManReadAreaFinal(p *Map_Man_t) float32 { return p.AreaFinal;  }"
+    },
+    {
+      "Name": "Map_ManReadRequiredGlo",
+      "Start": 2944,
+      "End": 3043,
+      "BodyStart": 3016,
+      "Original": "float           Map_ManReadRequiredGlo( Map_Man_t * p )                 { return p-\u003efRequiredGlo; }",
+      "Draft": "func Map_ManReadRequiredGlo(p *Map_Man_t) float32 { return p.fRequiredGlo; }"
+    },
+    {
+      "Name": "Map_ManSetOutputNames",
+      "Start": 3044,
+      "End": 3146,
+      "BodyStart": 3116,
+      "Original": "void            Map_ManSetOutputNames( Map_Man_t * p, char ** ppNames ) { p-\u003eppOutputNames = ppNames;}",
+      "Draft": "func Map_ManSetOutputNames(p *Map_Man_t, ppNames *string) { p.ppOutputNames = ppNames;}"
+    },
+    {
+      "Name": "Map_ManSetAreaRecovery",
+      "Start": 3147,
+      "End": 3258,
+      "BodyStart": 3222,
+      "Original": "void            Map_ManSetAreaRecovery( Map_Man_t * p, int fAreaRecovery ) { p-\u003efAreaRecovery = fAreaRecovery;}",
+      "Draft": "func Map_ManSetAreaRecovery(p *Map_Man_t, fAreaRecovery int32) { p.fAreaRecovery = fAreaRecovery;}"
+    },
+    {
+      "Name": "Map_ManSetDelayTarget",
+      "Start": 3259,
+      "End": 3365,
+      "BodyStart": 3333,
+      "Original": "void            Map_ManSetDelayTarget( Map_Man_t * p, float DelayTarget ) { p-\u003eDelayTarget = DelayTarget;}",
+      "Draft": "func Map_ManSetDelayTarget(p *Map_Man_t, DelayTarget float32) { p.DelayTarget = DelayTarget;}"
+    },
+    {
+      "Name": "Map_ManSetInputArrivals",
+      "Start": 3366,
+      "End": 3488,
+      "BodyStart": 3451,
+      "Original": "void            Map_ManSetInputArrivals( Map_Man_t * p, Map_Time_t * pArrivals )     { p-\u003epInputArrivals = pArrivals;    }",
+      "Draft": "func Map_ManSetInputArrivals(p *Map_Man_t, pArrivals *Map_Time_t) { p.pInputArrivals = pArrivals;    }"
+    },
+    {
+      "Name": "Map_ManSetOutputRequireds",
+      "Start": 3489,
+      "End": 3611,
+      "BodyStart": 3574,
+      "Original": "void            Map_ManSetOutputRequireds( Map_Man_t * p, Map_Time_t * pRequireds )  { p-\u003epOutputRequireds = pRequireds; }",
+      "Draft": "func Map_ManSetOutputRequireds(p *Map_Man_t, pRequireds *Map_Time_t) { p.pOutputRequireds = pRequireds; }"
+    },
+    {
+      "Name": "Map_ManSetObeyFanoutLimits",
+      "Start": 3612,
+      "End": 3746,
+      "BodyStart": 3697,
+      "Original": "void            Map_ManSetObeyFanoutLimits( Map_Man_t * p, int  fObeyFanoutLimits )  { p-\u003efObeyFanoutLimits = fObeyFanoutLimits;     }",
+      "Draft": "func Map_ManSetObeyFanoutLimits(p *Map_Man_t, fObeyFanoutLimits int32) { p.fObeyFanoutLimits = fObeyFanoutLimits;     }"
+    },
+    {
+      "Name": "Map_ManSetNumIterations",
+      "Start": 3747,
+      "End": 3869,
+      "BodyStart": 3832,
+      "Original": "void            Map_ManSetNumIterations( Map_Man_t * p, int nIterations )            { p-\u003enIterations = nIterations;     }",
+      "Draft": "func Map_ManSetNumIterations(p *Map_Man_t, nIterations int32) { p.nIterations = nIterations;     }"
+    },
+    {
+      "Name": "Map_ManReadFanoutViolations",
+      "Start": 3870,
+      "End": 3976,
+      "BodyStart": 3942,
+      "Original": "int             Map_ManReadFanoutViolations( Map_Man_t * p )            { return p-\u003enFanoutViolations;   }",
+      "Draft": "func Map_ManReadFanoutViolations(p *Map_Man_t) int32 { return p.nFanoutViolations;   }"
+    },
+    {
+      "Name": "Map_ManSetFanoutViolations",
+      "Start": 3979,
+      "End": 4085,
+      "BodyStart": 4051,
+      "Original": "void            Map_ManSetFanoutViolations( Map_Man_t * p, int nVio )   { p-\u003enFanoutViolations = nVio;   }",
+      "Draft": "func Map_ManSetFanoutViolations(p *Map_Man_t, nVio int32) { p.nFanoutViolations = nVio;   }"
+    },
+    {
+      "Name": "Map_ManSetChoiceNodeNum",
+      "Start": 4088,
+      "End": 4198,
+      "BodyStart": 4163,
+      "Original": "void            Map_ManSetChoiceNodeNum( Map_Man_t * p, int nChoiceNodes ) { p-\u003enChoiceNodes = nChoiceNodes; }",
+      "Draft": "func Map_ManSetChoiceNodeNum(p *Map_Man_t, nChoiceNodes int32) { p.nChoiceNodes = nChoiceNodes; }"
+    },
+    {
+      "Name": "Map_ManSetChoiceNum",
+      "Start": 4201,
+      "End": 4307,
+      "BodyStart": 4276,
+      "Original": "void            Map_ManSetChoiceNum( Map_Man_t * p, int nChoices )         { p-\u003enChoices = nChoices;     }",
+      "Draft": "func Map_ManSetChoiceNum(p *Map_Man_t, nChoices int32) { p.nChoices = nChoices;     }"
+    },
+    {
+      "Name": "Map_ManSetVerbose",
+      "Start": 4311,
+      "End": 4417,
+      "BodyStart": 4386,
+      "Original": "void            Map_ManSetVerbose( Map_Man_t * p, int fVerbose )           { p-\u003efVerbose = fVerbose;     }",
+      "Draft": "func Map_ManSetVerbose(p *Map_Man_t, fVerbose int32) { p.fVerbose = fVerbose;     }"
+    },
+    {
+      "Name": "Map_ManSetSwitching",
+      "Start": 4421,
+      "End": 4527,
+      "BodyStart": 4496,
+      "Original": "void            Map_ManSetSwitching( Map_Man_t * p, int fSwitching )       { p-\u003efSwitching = fSwitching; }",
+      "Draft": "func Map_ManSetSwitching(p *Map_Man_t, fSwitching int32) { p.fSwitching = fSwitching; }"
+    },
+    {
+      "Name": "Map_ManSetSkipFanout",
+      "Start": 4531,
+      "End": 4639,
+      "BodyStart": 4606,
+      "Original": "void            Map_ManSetSkipFanout( Map_Man_t * p, int fSkipFanout )     { p-\u003efSkipFanout = fSkipFanout; }",
+      "Draft": "func Map_ManSetSkipFanout(p *Map_Man_t, fSkipFanout int32) { p.fSkipFanout = fSkipFanout; }"
+    },
+    {
+      "Name": "Map_ManSetUseProfile",
+      "Start": 4643,
+      "End": 4749,
+      "BodyStart": 4718,
+      "Original": "void            Map_ManSetUseProfile( Map_Man_t * p )                      { p-\u003efUseProfile = 1;         }",
+      "Draft": "func Map_ManSetUseProfile(p *Map_Man_t) { p.fUseProfile = 1;         }"
+    },
+    {
+      "Name": "Map_NodeReadMan",
+      "Start": 5027,
+      "End": 5130,
+      "BodyStart": 5097,
+      "Original": "Map_Man_t *     Map_NodeReadMan( Map_Node_t * p )                     { return p-\u003ep;                  }",
+      "Draft": "func Map_NodeReadMan(p *Map_Node_t) *Map_Man_t { return p.p;                  }"
+    },
+    {
+      "Name": "Map_NodeReadData",
+      "Start": 5131,
+      "End": 5243,
+      "BodyStart": 5201,
+      "Original": "char *          Map_NodeReadData( Map_Node_t * p, int fPhase )        { return fPhase? p-\u003epData1 : p-\u003epData0;  }",
+      "Draft": "func Map_NodeReadData(p *Map_Node_t, fPhase int32) string { if fPhase != 0 {\n    return p.pData1;\n} else {\n    return p.pData0;\n}  }"
+    },
+    {
+      "Name": "Map_NodeReadNum",
+      "Start": 5244,
+      "End": 5347,
+      "BodyStart": 5314,
+      "Original": "int             Map_NodeReadNum( Map_Node_t * p )                     { return p-\u003eNum;                }",
+      "Draft": "func Map_NodeReadNum(p *Map_Node_t) int32 { return p.Num;                }"
+    },
+    {
+      "Name": "Map_NodeReadLevel",
+      "Start": 5348,
+      "End": 5451,
+      "BodyStart": 5418,
+      "Original": "int             Map_NodeReadLevel( Map_Node_t * p )                   { return Map_Regular(p)-\u003eLevel; }",
+      "Draft": "// inlining of macro Map_Regular\nfunc Map_NodeReadLevel(p *Map_Node_t) int32 { return ((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) .Level; }"
+    },
+    {
+      "Name": "Map_NodeReadCuts",
+      "Start": 5452,
+      "End": 5555,
+      "BodyStart": 5522,
+      "Original": "Map_Cut_t *     Map_NodeReadCuts( Map_Node_t * p )                    { return p-\u003epCuts;              }",
+      "Draft": "func Map_NodeReadCuts(p *Map_Node_t) *Map_Cut_t { return p.pCuts;              }"
+    },
+    {
+      "Name": "Map_NodeReadCutBest",
+      "Start": 5556,
+      "End": 5659,
+      "BodyStart": 5626,
+      "Original": "Map_Cut_t *     Map_NodeReadCutBest( Map_Node_t * p, int fPhase )     { return p-\u003epCutBest[fPhase];   }",
+      "Draft": "func Map_NodeReadCutBest(p *Map_Node_t, fPhase int32) *Map_Cut_t { return p.pCutBest[fPhase];   }"
+    },
+    {
+      "Name": "Map_NodeReadOne",
+      "Start": 5660,
+      "End": 5763,
+      "BodyStart": 5730,
+      "Original": "Map_Node_t *    Map_NodeReadOne( Map_Node_t * p )                     { return p-\u003ep1;                 }",
+      "Draft": "func Map_NodeReadOne(p *Map_Node_t) *Map_Node_t { return p.p1;                 }"
+    },
+    {
+      "Name": "Map_NodeReadTwo",
+      "Start": 5764,
+      "End": 5867,
+      "BodyStart": 5834,
+      "Original": "Map_Node_t *    Map_NodeReadTwo( Map_Node_t * p )                     { return p-\u003ep2;                 }",
+      "Draft": "func Map_NodeReadTwo(p *Map_Node_t) *Map_Node_t { return p.p2;                 }"
+    },
+    {
+      "Name": "Map_NodeSetData",
+      "Start": 5868,
+      "End": 6002,
+      "BodyStart": 5944,
+      "Original": "void            Map_NodeSetData( Map_Node_t * p, int fPhase, char * pData ) { if (fPhase) p-\u003epData1 = pData; else p-\u003epData0 = pData; }",
+      "Draft": "func Map_NodeSetData(p *Map_Node_t, fPhase int32, pData string) { if fPhase != 0 { p.pData1 = pData; } else { p.pData0 = pData; } }"
+    },
+    {
+      "Name": "Map_NodeSetNextE",
+      "Start": 6003,
+      "End": 6108,
+      "BodyStart": 6079,
+      "Original": "void            Map_NodeSetNextE( Map_Node_t * p, Map_Node_t * pNextE )     { p-\u003epNextE = pNextE;       }",
+      "Draft": "func Map_NodeSetNextE(p *Map_Node_t, pNextE *Map_Node_t) { p.pNextE = pNextE;       }"
+    },
+    {
+      "Name": "Map_NodeSetRepr",
+      "Start": 6109,
+      "End": 6214,
+      "BodyStart": 6185,
+      "Original": "void            Map_NodeSetRepr( Map_Node_t * p, Map_Node_t * pRepr )       { p-\u003epRepr = pRepr;         }",
+      "Draft": "func Map_NodeSetRepr(p *Map_Node_t, pRepr *Map_Node_t) { p.pRepr = pRepr;         }"
+    },
+    {
+      "Name": "Map_NodeSetSwitching",
+      "Start": 6215,
+      "End": 6320,
+      "BodyStart": 6291,
+      "Original": "void            Map_NodeSetSwitching( Map_Node_t * p, float Switching )     { p-\u003eSwitching = Switching; }",
+      "Draft": "func Map_NodeSetSwitching(p *Map_Node_t, Switching float32) { p.Switching = Switching; }"
+    },
+    {
+      "Name": "Map_NodeIsConst",
+      "Start": 6584,
+      "End": 6680,
+      "BodyStart": 6637,
+      "Original": "int             Map_NodeIsConst( Map_Node_t * p )    {  return (Map_Regular(p))-\u003eNum == -1;    }",
+      "Draft": "// inlining of macro Map_Regular\nfunc Map_NodeIsConst(p *Map_Node_t) int32 {  return (((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).Num == -1;    }"
+    },
+    {
+      "Name": "Map_NodeIsVar",
+      "Start": 6681,
+      "End": 6805,
+      "BodyStart": 6734,
+      "Original": "int             Map_NodeIsVar( Map_Node_t * p )      {  return (Map_Regular(p))-\u003ep1 == NULL \u0026\u0026 (Map_Regular(p))-\u003eNum \u003e= 0; }",
+      "Draft": "// inlining of macro Map_Regular\nfunc Map_NodeIsVar(p *Map_Node_t) int32 {  return (((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).p1 == nil \u0026\u0026 (((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).Num \u003e= 0; }"
+    },
+    {
+      "Name": "Map_NodeIsBuf",
+      "Start": 6806,
+      "End": 6933,
+      "BodyStart": 6859,
+      "Original": "int             Map_NodeIsBuf( Map_Node_t * p )      {  return (Map_Regular(p))-\u003ep1 != NULL \u0026\u0026 (Map_Regular(p))-\u003ep2 == NULL;  }",
+      "Draft": "// inlining of macro Map_Regular\nfunc Map_NodeIsBuf(p *Map_Node_t) int32 {  return (((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).p1 != nil \u0026\u0026 (((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).p2 == nil;  }"
+    },
+    {
+      "Name": "Map_NodeIsAnd",
+      "Start": 6934,
+      "End": 7061,
+      "BodyStart": 6987,
+      "Original": "int             Map_NodeIsAnd( Map_Node_t * p )      {  return (Map_Regular(p))-\u003ep1 != NULL \u0026\u0026 (Map_Regular(p))-\u003ep2 != NULL;  }",
+      "Draft": "// inlining of macro Map_Regular\nfunc Map_NodeIsAnd(p *Map_Node_t) int32 {  return (((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).p1 != nil \u0026\u0026 (((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).p2 != nil;  }"
+    },
+    {
+      "Name": "Map_NodeComparePhase",
+      "Start": 7062,
+      "End": 7232,
+      "BodyStart": 7135,
+      "Original": "int             Map_NodeComparePhase( Map_Node_t * p1, Map_Node_t * p2 ) { assert( !Map_IsComplement(p1) ); assert( !Map_IsComplement(p2) ); return p1-\u003efInv ^ p2-\u003efInv; }",
+      "Draft": "// inlining of macro Map_IsComplement\nfunc Map_NodeComparePhase(p1 *Map_Node_t, p2 *Map_Node_t) int32 { assert(!(((int32(((ABC_PTRUINT_T) (p1) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (p1) \u0026 01))))\"); assert(!(((int32(((ABC_PTRUINT_T) (p2) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (p2) \u0026 01))))\"); return p1.fInv ^ p2.fInv; }"
+    },
+    {
+      "Name": "Map_CutReadSuperBest",
+      "Start": 7498,
+      "End": 7598,
+      "BodyStart": 7564,
+      "Original": "Map_Super_t *   Map_CutReadSuperBest( Map_Cut_t * p, int fPhase ) { return p-\u003eM[fPhase].pSuperBest;}",
+      "Draft": "func Map_CutReadSuperBest(p *Map_Cut_t, fPhase int32) *Map_Super_t { return p.M[fPhase].pSuperBest;}"
+    },
+    {
+      "Name": "Map_CutReadSuper0",
+      "Start": 7599,
+      "End": 7694,
+      "BodyStart": 7665,
+      "Original": "Map_Super_t *   Map_CutReadSuper0( Map_Cut_t * p )                { return p-\u003eM[0].pSuperBest;}",
+      "Draft": "func Map_CutReadSuper0(p *Map_Cut_t) *Map_Super_t { return p.M[0].pSuperBest;}"
+    },
+    {
+      "Name": "Map_CutReadSuper1",
+      "Start": 7695,
+      "End": 7790,
+      "BodyStart": 7761,
+      "Original": "Map_Super_t *   Map_CutReadSuper1( Map_Cut_t * p )                { return p-\u003eM[1].pSuperBest;}",
+      "Draft": "func Map_CutReadSuper1(p *Map_Cut_t) *Map_Super_t { return p.M[1].pSuperBest;}"
+    },
+    {
+      "Name": "Map_CutReadLeavesNum",
+      "Start": 7791,
+      "End": 7880,
+      "BodyStart": 7857,
+      "Original": "int             Map_CutReadLeavesNum( Map_Cut_t * p )             { return p-\u003enLeaves;  }",
+      "Draft": "func Map_CutReadLeavesNum(p *Map_Cut_t) int32 { return p.nLeaves;  }"
+    },
+    {
+      "Name": "Map_CutReadLeaves",
+      "Start": 7881,
+      "End": 7970,
+      "BodyStart": 7947,
+      "Original": "Map_Node_t **   Map_CutReadLeaves( Map_Cut_t * p )                { return p-\u003eppLeaves; }",
+      "Draft": "func Map_CutReadLeaves(p *Map_Cut_t) **Map_Node_t { return p.ppLeaves; }"
+    },
+    {
+      "Name": "Map_CutReadPhaseBest",
+      "Start": 7971,
+      "End": 8071,
+      "BodyStart": 8037,
+      "Original": "unsigned        Map_CutReadPhaseBest( Map_Cut_t * p, int fPhase ) { return p-\u003eM[fPhase].uPhaseBest;}",
+      "Draft": "func Map_CutReadPhaseBest(p *Map_Cut_t, fPhase int32) uint32 { return p.M[fPhase].uPhaseBest;}"
+    },
+    {
+      "Name": "Map_CutReadPhase0",
+      "Start": 8072,
+      "End": 8167,
+      "BodyStart": 8138,
+      "Original": "unsigned        Map_CutReadPhase0( Map_Cut_t * p )                { return p-\u003eM[0].uPhaseBest;}",
+      "Draft": "func Map_CutReadPhase0(p *Map_Cut_t) uint32 { return p.M[0].uPhaseBest;}"
+    },
+    {
+      "Name": "Map_CutReadPhase1",
+      "Start": 8168,
+      "End": 8263,
+      "BodyStart": 8234,
+      "Original": "unsigned        Map_CutReadPhase1( Map_Cut_t * p )                { return p-\u003eM[1].uPhaseBest;}",
+      "Draft": "func Map_CutReadPhase1(p *Map_Cut_t) uint32 { return p.M[1].uPhaseBest;}"
+    },
+    {
+      "Name": "Map_CutReadNext",
+      "Start": 8264,
+      "End": 8359,
+      "BodyStart": 8330,
+      "Original": "Map_Cut_t *     Map_CutReadNext( Map_Cut_t * p )                  { return p-\u003epNext;          }",
+      "Draft": "func Map_CutReadNext(p *Map_Cut_t) *Map_Cut_t { return p.pNext;          }"
+    },
+    {
+      "Name": "Map_SuperReadFormula",
+      "Start": 8631,
+      "End": 8720,
+      "BodyStart": 8696,
+      "Original": "char *          Map_SuperReadFormula( Map_Super_t * p )          {  return p-\u003epFormula; }",
+      "Draft": "func Map_SuperReadFormula(p *Map_Super_t) string {  return p.pFormula; }"
+    },
+    {
+      "Name": "Map_SuperReadRoot",
+      "Start": 8721,
+      "End": 8810,
+      "BodyStart": 8786,
+      "Original": "Mio_Gate_t *    Map_SuperReadRoot( Map_Super_t * p )             {  return p-\u003epRoot;    }",
+      "Draft": "func Map_SuperReadRoot(p *Map_Super_t) *Mio_Gate_t {  return p.pRoot;    }"
+    },
+    {
+      "Name": "Map_SuperReadNum",
+      "Start": 8811,
+      "End": 8900,
+      "BodyStart": 8876,
+      "Original": "int             Map_SuperReadNum( Map_Super_t * p )              {  return p-\u003eNum;      }",
+      "Draft": "func Map_SuperReadNum(p *Map_Super_t) int32 {  return p.Num;      }"
+    },
+    {
+      "Name": "Map_SuperReadFanins",
+      "Start": 8901,
+      "End": 8990,
+      "BodyStart": 8966,
+      "Original": "Map_Super_t **  Map_SuperReadFanins( Map_Super_t * p )           {  return p-\u003epFanins;  }",
+      "Draft": "func Map_SuperReadFanins(p *Map_Super_t) **Map_Super_t {  return p.pFanins;  }"
+    },
+    {
+      "Name": "Map_SuperReadFaninNum",
+      "Start": 8991,
+      "End": 9080,
+      "BodyStart": 9056,
+      "Original": "int             Map_SuperReadFaninNum( Map_Super_t * p )         {  return p-\u003enFanins;  }",
+      "Draft": "func Map_SuperReadFaninNum(p *Map_Super_t) int32 {  return p.nFanins;  }"
+    },
+    {
+      "Name": "Map_SuperReadNext",
+      "Start": 9081,
+      "End": 9170,
+      "BodyStart": 9146,
+      "Original": "Map_Super_t *   Map_SuperReadNext( Map_Super_t * p )             {  return p-\u003epNext;    }",
+      "Draft": "func Map_SuperReadNext(p *Map_Super_t) *Map_Super_t {  return p.pNext;    }"
+    },
+    {
+      "Name": "Map_SuperReadNumPhases",
+      "Start": 9171,
+      "End": 9260,
+      "BodyStart": 9236,
+      "Original": "int             Map_SuperReadNumPhases( Map_Super_t * p )        {  return p-\u003enPhases;  }",
+      "Draft": "func Map_SuperReadNumPhases(p *Map_Super_t) int32 {  return p.nPhases;  }"
+    },
+    {
+      "Name": "Map_SuperReadPhases",
+      "Start": 9261,
+      "End": 9350,
+      "BodyStart": 9326,
+      "Original": "unsigned char * Map_SuperReadPhases( Map_Super_t * p )           {  return p-\u003euPhases;  }",
+      "Draft": "func Map_SuperReadPhases(p *Map_Super_t) *unsigned char {  return p.uPhases;  }"
+    },
+    {
+      "Name": "Map_SuperReadFanoutLimit",
+      "Start": 9351,
+      "End": 9440,
+      "BodyStart": 9416,
+      "Original": "int             Map_SuperReadFanoutLimit( Map_Super_t * p )      {  return p-\u003enFanLimit;}",
+      "Draft": "func Map_SuperReadFanoutLimit(p *Map_Super_t) int32 {  return p.nFanLimit;}"
+    },
+    {
+      "Name": "Map_SuperLibReadGenLib",
+      "Start": 9442,
+      "End": 9531,
+      "BodyStart": 9507,
+      "Original": "Mio_Library_t * Map_SuperLibReadGenLib( Map_SuperLib_t * p )     {  return p-\u003epGenlib;  }",
+      "Draft": "func Map_SuperLibReadGenLib(p *Map_SuperLib_t) *Mio_Library_t {  return p.pGenlib;  }"
+    },
+    {
+      "Name": "Map_SuperLibReadAreaInv",
+      "Start": 9532,
+      "End": 9621,
+      "BodyStart": 9597,
+      "Original": "float           Map_SuperLibReadAreaInv( Map_SuperLib_t * p )    {  return p-\u003eAreaInv;  }",
+      "Draft": "func Map_SuperLibReadAreaInv(p *Map_SuperLib_t) float32 {  return p.AreaInv;  }"
+    },
+    {
+      "Name": "Map_SuperLibReadDelayInv",
+      "Start": 9622,
+      "End": 9711,
+      "BodyStart": 9687,
+      "Original": "Map_Time_t      Map_SuperLibReadDelayInv( Map_SuperLib_t * p )   {  return p-\u003etDelayInv;}",
+      "Draft": "func Map_SuperLibReadDelayInv(p *Map_SuperLib_t) Map_Time_t {  return p.tDelayInv;}"
+    },
+    {
+      "Name": "Map_SuperLibReadVarsMax",
+      "Start": 9712,
+      "End": 9801,
+      "BodyStart": 9777,
+      "Original": "int             Map_SuperLibReadVarsMax( Map_SuperLib_t * p )    {  return p-\u003enVarsMax; }",
+      "Draft": "func Map_SuperLibReadVarsMax(p *Map_SuperLib_t) int32 {  return p.nVarsMax; }"
+    },
+    {
+      "Name": "Map_ManCreate",
+      "Start": 10542,
+      "End": 12363,
+      "BodyStart": 10611,
+      "Original": "Map_Man_t * Map_ManCreate( int nInputs, int nOutputs, int fVerbose )\n{\n    Map_Man_t * p;\n    int i;\n\n    // derive the supergate library\n    if ( Abc_FrameReadLibSuper() == NULL )\n    {\n        printf( \"The supergate library is not specified. Use \\\"read_super\\\".\\n\" );\n        return NULL;\n    }\n\n    // start the manager\n    p = ABC_ALLOC( Map_Man_t, 1 );\n    memset( p, 0, sizeof(Map_Man_t) );\n    p-\u003epSuperLib = (Map_SuperLib_t *)Abc_FrameReadLibSuper();\n    p-\u003enVarsMax  = p-\u003epSuperLib-\u003enVarsMax;\n    p-\u003efVerbose  = fVerbose;\n    p-\u003efEpsilon  = (float)0.001;\n    assert( p-\u003enVarsMax \u003e 0 );\n\n    if ( p-\u003enVarsMax == 5 )\n        Extra_Truth4VarN( \u0026p-\u003euCanons, \u0026p-\u003euPhases, \u0026p-\u003epCounters, 8 );\n\n    // start various data structures\n    Map_TableCreate( p );\n    Map_MappingSetupTruthTables( p-\u003euTruths );\n    Map_MappingSetupTruthTablesLarge( p-\u003euTruthsLarge );\n//    printf( \"Node = %d bytes. Cut = %d bytes. Super = %d bytes.\\n\", sizeof(Map_Node_t), sizeof(Map_Cut_t), sizeof(Map_Super_t) ); \n    p-\u003emmNodes    = Extra_MmFixedStart( sizeof(Map_Node_t) );\n    p-\u003emmCuts     = Extra_MmFixedStart( sizeof(Map_Cut_t) );\n\n    // make sure the constant node will get index -1\n    p-\u003enNodes = -1;\n    // create the constant node\n    p-\u003epConst1    = Map_NodeCreate( p, NULL, NULL );\n    p-\u003evMapObjs   = Map_NodeVecAlloc( 100 );\n    p-\u003evMapBufs   = Map_NodeVecAlloc( 100 );\n    p-\u003evVisited   = Map_NodeVecAlloc( 100 );\n\n    // create the PI nodes\n    p-\u003enInputs = nInputs;\n    p-\u003epInputs = ABC_ALLOC( Map_Node_t *, nInputs );\n    for ( i = 0; i \u003c nInputs; i++ )\n        p-\u003epInputs[i] = Map_NodeCreate( p, NULL, NULL );\n\n    // create the place for the output nodes\n    p-\u003enOutputs = nOutputs;\n    p-\u003epOutputs = ABC_ALLOC( Map_Node_t *, nOutputs );\n    memset( p-\u003epOutputs, 0, sizeof(Map_Node_t *) * nOutputs );\n    return p;\n}",
+      "Draft": "func Map_ManCreate(nInputs int32, nOutputs int32, fVerbose int32) *Map_Man_t {\n    var p *Map_Man_t;\n    var i int32;\n\n    // derive the supergate library\n    if Abc_FrameReadLibSuper() == nil {\n        fmt.Printf(\"The supergate library is not specified. Use \\\"read_super\\\".\\n\");\n        return nil;\n    }\n\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Map_Man_t *) malloc(sizeof(Map_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Map_Man_t) );\n    p.pSuperLib = (Map_SuperLib_t *)Abc_FrameReadLibSuper();\n    p.nVarsMax  = p.pSuperLib.nVarsMax;\n    p.fVerbose  = fVerbose;\n    p.fEpsilon  = float32(0.001);\n    assert(p.nVarsMax \u003e 0, \"p.nVarsMax \u003e 0\");\n\n    if p.nVarsMax == 5 {\n        Extra_Truth4VarN( \u0026p.uCanons, \u0026p.uPhases, \u0026p.pCounters, 8 ); }\n\n    // start various data structures\n    Map_TableCreate( p );\n    Map_MappingSetupTruthTables( p.uTruths );\n    Map_MappingSetupTruthTablesLarge( p.uTruthsLarge );\n//    printf( \"Node = %d bytes. Cut = %d bytes. Super = %d bytes.\\n\", sizeof(Map_Node_t), sizeof(Map_Cut_t), sizeof(Map_Super_t) ); \n    p.mmNodes    = Extra_MmFixedStart( sizeof(Map_Node_t) );\n    p.mmCuts     = Extra_MmFixedStart( sizeof(Map_Cut_t) );\n\n    // make sure the constant node will get index -1\n    p.nNodes = -1;\n    // create the constant node\n    p.pConst1    = Map_NodeCreate( p, nil, nil );\n    p.vMapObjs   = Map_NodeVecAlloc( 100 );\n    p.vMapBufs   = Map_NodeVecAlloc( 100 );\n    p.vVisited   = Map_NodeVecAlloc( 100 );\n\n    // create the PI nodes\n    p.nInputs = nInputs;\n    // inlining of macro ABC_ALLOC\n    p.pInputs = ((Map_Node_t * *) malloc(sizeof(Map_Node_t *) * (size_t)(nInputs)));\n    for  i = 0; i \u003c nInputs; i++  {\n        p.pInputs[i] = Map_NodeCreate( p, nil, nil );\n    }\n\n    // create the place for the output nodes\n    p.nOutputs = nOutputs;\n    // inlining of macro ABC_ALLOC\n    p.pOutputs = ((Map_Node_t * *) malloc(sizeof(Map_Node_t *) * (size_t)(nOutputs)));\n    memset( p.pOutputs, 0, sizeof(Map_Node_t *) * nOutputs );\n    return p;\n}"
+    },
+    {
+      "Name": "Map_ManFree",
+      "Start": 12631,
+      "End": 13407,
+      "BodyStart": 12665,
+      "Original": "void Map_ManFree( Map_Man_t * p )\n{\n//    int i;\n//    for ( i = 0; i \u003c p-\u003evMapObjs-\u003enSize; i++ )\n//        Map_NodeVecFree( p-\u003evMapObjs-\u003epArray[i]-\u003evFanouts );\n//    Map_NodeVecFree( p-\u003epConst1-\u003evFanouts );\n    Map_NodeVecFree( p-\u003evMapObjs );\n    Map_NodeVecFree( p-\u003evMapBufs );\n    Map_NodeVecFree( p-\u003evVisited );\n    if ( p-\u003euCanons )   ABC_FREE( p-\u003euCanons );\n    if ( p-\u003euPhases )   ABC_FREE( p-\u003euPhases );\n    if ( p-\u003epCounters ) ABC_FREE( p-\u003epCounters );\n    Extra_MmFixedStop( p-\u003emmNodes );\n    Extra_MmFixedStop( p-\u003emmCuts );\n    ABC_FREE( p-\u003epNodeDelays );\n    ABC_FREE( p-\u003epInputArrivals );\n    ABC_FREE( p-\u003epOutputRequireds );\n    ABC_FREE( p-\u003epInputs );\n    ABC_FREE( p-\u003epOutputs );\n    ABC_FREE( p-\u003epBins );\n    ABC_FREE( p-\u003eppOutputNames );\n    ABC_FREE( p );\n}",
+      "Draft": "func Map_ManFree(p *Map_Man_t) {\n//    int i;\n//    for ( i = 0; i \u003c p-\u003evMapObjs-\u003enSize; i++ )\n//        Map_NodeVecFree( p-\u003evMapObjs-\u003epArray[i]-\u003evFanouts );\n//    Map_NodeVecFree( p-\u003epConst1-\u003evFanouts );\n    Map_NodeVecFree( p.vMapObjs );\n    Map_NodeVecFree( p.vMapBufs );\n    Map_NodeVecFree( p.vVisited );\n    // inlining of macro ABC_FREE\n    if p.uCanons {   ((p.uCanons) ? (free((char *) (p.uCanons)), (p.uCanons) = 0) : 0); }\n    // inlining of macro ABC_FREE\n    if p.uPhases {   ((p.uPhases) ? (free((char *) (p.uPhases)), (p.uPhases) = 0) : 0); }\n    // inlining of macro ABC_FREE\n    if p.pCounters { ((p.pCounters) ? (free((char *) (p.pCounters)), (p.pCounters) = 0) : 0); }\n    Extra_MmFixedStop( p.mmNodes );\n    Extra_MmFixedStop( p.mmCuts );\n    // inlining of macro ABC_FREE\n    ((p.pNodeDelays) ? (free((char *) (p.pNodeDelays)), (p.pNodeDelays) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pInputArrivals) ? (free((char *) (p.pInputArrivals)), (p.pInputArrivals) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pOutputRequireds) ? (free((char *) (p.pOutputRequireds)), (p.pOutputRequireds) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pInputs) ? (free((char *) (p.pInputs)), (p.pInputs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pOutputs) ? (free((char *) (p.pOutputs)), (p.pOutputs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.ppOutputNames) ? (free((char *) (p.ppOutputNames)), (p.ppOutputNames) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Map_ManCreateNodeDelays",
+      "Start": 13664,
+      "End": 14241,
+      "BodyStart": 13722,
+      "Original": "void Map_ManCreateNodeDelays( Map_Man_t * p, int LogFan )\n{\n    Map_Node_t * pNode;\n    int k;\n    assert( p-\u003epNodeDelays == NULL );\n    p-\u003epNodeDelays = ABC_CALLOC( float, p-\u003evMapObjs-\u003enSize );\n    for ( k = 0; k \u003c p-\u003evMapObjs-\u003enSize; k++ )\n    {\n        pNode = p-\u003evMapObjs-\u003epArray[k];\n        if ( pNode-\u003enRefs == 0 )\n            continue;\n        p-\u003epNodeDelays[k] = 0.014426 * LogFan * p-\u003epSuperLib-\u003etDelayInv.Worst * log( (double)pNode-\u003enRefs ); // 1.4426 = 1/ln(2)\n//        printf( \"%d = %d (%.2f)  \", k, pNode-\u003enRefs, p-\u003epNodeDelays[k] );\n    }\n//    printf( \"\\n\" );\n}",
+      "Draft": "func Map_ManCreateNodeDelays(p *Map_Man_t, LogFan int32) {\n    var pNode *Map_Node_t;\n    var k int32;\n    assert(p.pNodeDelays == nil, \"p.pNodeDelays == nil\");\n    // inlining of macro ABC_CALLOC\n    p.pNodeDelays = ((float *) calloc((size_t)(p.vMapObjs.nSize), sizeof(float)));\n    for  k = 0; k \u003c p.vMapObjs.nSize; k++  {\n        pNode = p.vMapObjs.pArray[k];\n        if pNode.nRefs == 0 {\n            continue; }\n        p.pNodeDelays[k] = 0.014426 * LogFan * p.pSuperLib.tDelayInv.Worst * math.Log(float64(float64(pNode.nRefs))); // 1.4426 = 1/ln(2)\n//        printf( \"%d = %d (%.2f)  \", k, pNode-\u003enRefs, p-\u003epNodeDelays[k] );\n    }\n//    printf( \"\\n\" );\n}"
+    },
+    {
+      "Name": "Map_ManPrintTimeStats",
+      "Start": 14510,
+      "End": 15209,
+      "BodyStart": 14554,
+      "Original": "void Map_ManPrintTimeStats( Map_Man_t * p )\n{\n    printf( \"N-canonical = %d. Matchings = %d.  Phases = %d.  \", p-\u003enCanons, p-\u003enMatches, p-\u003enPhases );\n    printf( \"Choice nodes = %d. Choices = %d.\\n\", p-\u003enChoiceNodes, p-\u003enChoices );\n    ABC_PRT( \"ToMap\", p-\u003etimeToMap );\n    ABC_PRT( \"Cuts \", p-\u003etimeCuts  );\n    ABC_PRT( \"Truth\", p-\u003etimeTruth );\n    ABC_PRT( \"Match\", p-\u003etimeMatch );\n    ABC_PRT( \"Area \", p-\u003etimeArea  );\n    ABC_PRT( \"Sweep\", p-\u003etimeSweep );\n    ABC_PRT( \"ToNet\", p-\u003etimeToNet );\n    ABC_PRT( \"TOTAL\", p-\u003etimeTotal );\n    if ( p-\u003etime1 ) { ABC_PRT( \"time1\", p-\u003etime1 ); }\n    if ( p-\u003etime2 ) { ABC_PRT( \"time2\", p-\u003etime2 ); }\n    if ( p-\u003etime3 ) { ABC_PRT( \"time3\", p-\u003etime3 ); }\n}",
+      "Draft": "func Map_ManPrintTimeStats(p *Map_Man_t) {\n    fmt.Printf(\"N-canonical = %d. Matchings = %d.  Phases = %d.  \", p.nCanons, p.nMatches, p.nPhases);\n    fmt.Printf(\"Choice nodes = %d. Choices = %d.\\n\", p.nChoiceNodes, p.nChoices);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"ToMap\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeToMap)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Cuts \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCuts)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Truth\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTruth)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Match\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMatch)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Area \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeArea)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Sweep\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSweep)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"ToNet\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeToNet)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"TOTAL\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    if p.time1 { Abc_Print(1, \"%s =\", (\"time1\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time1)))/(float64(int64(time.Second))));; }\n    // inlining of macro ABC_PRT\n    if p.time2 { Abc_Print(1, \"%s =\", (\"time2\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time2)))/(float64(int64(time.Second))));; }\n    // inlining of macro ABC_PRT\n    if p.time3 { Abc_Print(1, \"%s =\", (\"time3\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time3)))/(float64(int64(time.Second))));; }\n}"
+    },
+    {
+      "Name": "Map_ManPrintStatsToFile",
+      "Start": 15470,
+      "End": 15832,
+      "BodyStart": 15554,
+      "Original": "void Map_ManPrintStatsToFile( char * pName, float Area, float Delay, abctime Time )\n{\n    FILE * pTable;\n    pTable = fopen( \"map_stats.txt\", \"a+\" );\n    fprintf( pTable, \"%s \", pName );\n    fprintf( pTable, \"%4.2f \", Area );\n    fprintf( pTable, \"%4.2f \", Delay );\n    fprintf( pTable, \"%4.2f\\n\", (float)(Time)/(float)(CLOCKS_PER_SEC) );\n    fclose( pTable );\n}",
+      "Draft": "func Map_ManPrintStatsToFile(pName string, Area float32, Delay float32, Time abctime) {\n    var pTable *os.File;\n    pTable = os.OpenFile(\"map_stats.txt\", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666);\n    fmt.Fprintf(pTable, \"%s \", pName);\n    fmt.Fprintf(pTable, \"%4.2f \", Area);\n    fmt.Fprintf(pTable, \"%4.2f \", Delay);\n    fmt.Fprintf(pTable, \"%4.2f\\n\", float32((Time))/float32((int64(time.Second))));\n    _ = (pTable).Close();\n}"
+    },
+    {
+      "Name": "Map_NodeCreate",
+      "Start": 16172,
+      "End": 17818,
+      "BodyStart": 16251,
+      "Original": "Map_Node_t * Map_NodeCreate( Map_Man_t * p, Map_Node_t * p1, Map_Node_t * p2 )\n{\n    Map_Node_t * pNode;\n    // create the node\n    pNode = (Map_Node_t *)Extra_MmFixedEntryFetch( p-\u003emmNodes );\n    memset( pNode, 0, sizeof(Map_Node_t) );\n    pNode-\u003etRequired[0].Rise = pNode-\u003etRequired[0].Fall = pNode-\u003etRequired[0].Worst = MAP_FLOAT_LARGE;\n    pNode-\u003etRequired[1].Rise = pNode-\u003etRequired[1].Fall = pNode-\u003etRequired[1].Worst = MAP_FLOAT_LARGE;\n    pNode-\u003ep1  = p1; \n    pNode-\u003ep2  = p2;\n    pNode-\u003ep = p;\n    // set the number of this node\n    pNode-\u003eNum = p-\u003enNodes++;\n    // place to store the fanouts\n//    pNode-\u003evFanouts = Map_NodeVecAlloc( 5 );\n    // store this node in the internal array\n    if ( pNode-\u003eNum \u003e= 0 )\n        Map_NodeVecPush( p-\u003evMapObjs, pNode );\n    else\n        pNode-\u003efInv = 1;\n    // set the level of this node\n    if ( p1 ) \n    {\n#ifdef MAP_ALLOCATE_FANOUT\n        // create the fanout info\n        Map_NodeAddFaninFanout( Map_Regular(p1), pNode );\n        if ( p2 )\n        Map_NodeAddFaninFanout( Map_Regular(p2), pNode );\n#endif\n\n        if ( p2 )\n        {\n            pNode-\u003eLevel = 1 + MAP_MAX(Map_Regular(pNode-\u003ep1)-\u003eLevel, Map_Regular(pNode-\u003ep2)-\u003eLevel);\n            pNode-\u003efInv  = Map_NodeIsSimComplement(p1) \u0026 Map_NodeIsSimComplement(p2);\n        }\n        else\n        {\n            pNode-\u003eLevel = Map_Regular(pNode-\u003ep1)-\u003eLevel;\n            pNode-\u003efInv  = Map_NodeIsSimComplement(p1);\n        }\n    }\n    // reference the inputs (will be used to compute the number of fanouts)\n    if ( p1 ) Map_NodeRef(p1);\n    if ( p2 ) Map_NodeRef(p2);\n\n    pNode-\u003enRefEst[0] = pNode-\u003enRefEst[1] = -1;\n    return pNode;\n}",
+      "Draft": "func Map_NodeCreate(p *Map_Man_t, p1 *Map_Node_t, p2 *Map_Node_t) *Map_Node_t {\n    var pNode *Map_Node_t;\n    // create the node\n    pNode = (Map_Node_t *)Extra_MmFixedEntryFetch( p.mmNodes );\n    memset( pNode, 0, sizeof(Map_Node_t) );\n    pNode.tRequired[0].Rise = pNode.tRequired[0].Fall = pNode.tRequired[0].Worst = MAP_FLOAT_LARGE;\n    pNode.tRequired[1].Rise = pNode.tRequired[1].Fall = pNode.tRequired[1].Worst = MAP_FLOAT_LARGE;\n    pNode.p1  = p1; \n    pNode.p2  = p2;\n    pNode.p = p;\n    // set the number of this node\n    pNode.Num = p.nNodes++;\n    // place to store the fanouts\n//    pNode-\u003evFanouts = Map_NodeVecAlloc( 5 );\n    // store this node in the internal array\n    if pNode.Num \u003e= 0 {\n        Map_NodeVecPush( p.vMapObjs, pNode );\n    } else {\n        pNode.fInv = 1; }\n    // set the level of this node\n    if p1 != nil {\n#ifdef MAP_ALLOCATE_FANOUT\n        // create the fanout info\n        Map_NodeAddFaninFanout( Map_Regular(p1), pNode );\n        if ( p2 )\n        Map_NodeAddFaninFanout( Map_Regular(p2), pNode );\n#endif\n\n        if p2 != nil {\n            // inlining of macro MAP_MAX\n            // inlining of macro Map_Regular\n            pNode.Level = 1 + (((((Map_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .Level) \u003e (((Map_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .Level))? (((Map_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .Level) : (((Map_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .Level));\n            // inlining of macro Map_NodeIsSimComplement\n            // inlining of macro Map_IsComplement\n            // inlining of macro Map_Regular\n            pNode.fInv  = (((int32(((ABC_PTRUINT_T) (p1) \u0026 01))))? !(((Map_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .fInv) : (p1).fInv) \u0026 (((int32(((ABC_PTRUINT_T) (p2) \u0026 01))))? !(((Map_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .fInv) : (p2).fInv);\n        \n        } else {\n            // inlining of macro Map_Regular\n            pNode.Level = ((Map_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .Level;\n            // inlining of macro Map_NodeIsSimComplement\n            \n            // inlining of macro Map_IsComplement\n            if (int32(((ABC_PTRUINT_T) (p1) \u0026 01)) != 0) {\n                // inlining of macro Map_Regular\n                pNode.fInv = !(((Map_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .fInv);\n            } else {\n                pNode.fInv = (p1).fInv;\n            }\n        }\n    }\n    // reference the inputs (will be used to compute the number of fanouts)\n    // inlining of macro Map_NodeRef\n    // inlining of macro Map_Regular\n    if p1 != nil { ((((Map_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) ).nRefs++); }\n    // inlining of macro Map_NodeRef\n    // inlining of macro Map_Regular\n    if p2 != nil { ((((Map_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) ).nRefs++); }\n\n    pNode.nRefEst[0] = pNode.nRefEst[1] = -1;\n    return pNode;\n}"
+    },
+    {
+      "Name": "Map_TableCreate",
+      "Start": 18091,
+      "End": 18355,
+      "BodyStart": 18132,
+      "Original": "void Map_TableCreate( Map_Man_t * pMan )\n{\n    assert( pMan-\u003epBins == NULL );\n    pMan-\u003enBins = Abc_PrimeCudd(5000);\n    pMan-\u003epBins = ABC_ALLOC( Map_Node_t *, pMan-\u003enBins );\n    memset( pMan-\u003epBins, 0, sizeof(Map_Node_t *) * pMan-\u003enBins );\n    pMan-\u003enNodes = 0;\n}",
+      "Draft": "func Map_TableCreate(pMan *Map_Man_t) {\n    assert(pMan.pBins == nil, \"pMan.pBins == nil\");\n    pMan.nBins = Abc_PrimeCudd(5000);\n    // inlining of macro ABC_ALLOC\n    pMan.pBins = ((Map_Node_t * *) malloc(sizeof(Map_Node_t *) * (size_t)(pMan.nBins)));\n    memset( pMan.pBins, 0, sizeof(Map_Node_t *) * pMan.nBins );\n    pMan.nNodes = 0;\n}"
+    },
+    {
+      "Name": "Map_NodeAnd",
+      "Start": 18908,
+      "End": 20078,
+      "BodyStart": 18987,
+      "Original": "Map_Node_t * Map_NodeAnd( Map_Man_t * pMan, Map_Node_t * p1, Map_Node_t * p2 )\n{\n    Map_Node_t * pEnt;\n    unsigned Key;\n\n    if ( p1 == p2 )\n        return p1;\n    if ( p1 == Map_Not(p2) )\n        return Map_Not(pMan-\u003epConst1);\n    if ( Map_NodeIsConst(p1) )\n    {\n        if ( p1 == pMan-\u003epConst1 )\n            return p2;\n        return Map_Not(pMan-\u003epConst1);\n    }\n    if ( Map_NodeIsConst(p2) )\n    {\n        if ( p2 == pMan-\u003epConst1 )\n            return p1;\n        return Map_Not(pMan-\u003epConst1);\n    }\n\n    if ( Map_Regular(p1)-\u003eNum \u003e Map_Regular(p2)-\u003eNum )\n        pEnt = p1, p1 = p2, p2 = pEnt;\n\n    Key = Map_HashKey2( p1, p2, pMan-\u003enBins );\n    for ( pEnt = pMan-\u003epBins[Key]; pEnt; pEnt = pEnt-\u003epNext )\n        if ( pEnt-\u003ep1 == p1 \u0026\u0026 pEnt-\u003ep2 == p2 )\n            return pEnt;\n    // resize the table\n    if ( pMan-\u003enNodes \u003e= 2 * pMan-\u003enBins )\n    {\n        Map_TableResize( pMan );\n        Key = Map_HashKey2( p1, p2, pMan-\u003enBins );\n    }\n    // create the new node\n    pEnt = Map_NodeCreate( pMan, p1, p2 );\n    // add the node to the corresponding linked list in the table\n    pEnt-\u003epNext = pMan-\u003epBins[Key];\n    pMan-\u003epBins[Key] = pEnt;\n    return pEnt;\n}",
+      "Draft": "func Map_NodeAnd(pMan *Map_Man_t, p1 *Map_Node_t, p2 *Map_Node_t) *Map_Node_t {\n    var pEnt *Map_Node_t;\n    var Key uint32;\n\n    if p1 == p2 {\n        return p1; }\n    // inlining of macro Map_Not\n    if p1 == ((Map_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01)) {\n        // inlining of macro Map_Not\n        return ((Map_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ; }\n    if Map_NodeIsConst(p1) != 0 {\n        if p1 == pMan.pConst1 {\n            return p2; }\n        // inlining of macro Map_Not\n        return ((Map_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ;\n    }\n    if Map_NodeIsConst(p2) != 0 {\n        if p2 == pMan.pConst1 {\n            return p1; }\n        // inlining of macro Map_Not\n        return ((Map_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ;\n    }\n\n    // inlining of macro Map_Regular\n    if  ((Map_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .Num \u003e ((Map_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .Num {\n        pEnt = p1;\np1 = p2;\np2 = pEnt; }\n\n    Key = Map_HashKey2( p1, p2, pMan.nBins );\n    for  pEnt = pMan.pBins[Key]; (pEnt != nil); pEnt = pEnt.pNext  {\n        if pEnt.p1 == p1 \u0026\u0026 pEnt.p2 == p2 {\n            return pEnt; }\n    }\n    // resize the table\n    if pMan.nNodes \u003e= 2 * pMan.nBins {\n        Map_TableResize( pMan );\n        Key = Map_HashKey2( p1, p2, pMan.nBins );\n    }\n    // create the new node\n    pEnt = Map_NodeCreate( pMan, p1, p2 );\n    // add the node to the corresponding linked list in the table\n    pEnt.pNext = pMan.pBins[Key];\n    pMan.pBins[Key] = pEnt;\n    return pEnt;\n}"
+    },
+    {
+      "Name": "Map_TableResize",
+      "Start": 20333,
+      "End": 21530,
+      "BodyStart": 20374,
+      "Original": "void Map_TableResize( Map_Man_t * pMan )\n{\n    Map_Node_t ** pBinsNew;\n    Map_Node_t * pEnt, * pEnt2;\n    int nBinsNew, Counter, i;\n    abctime clk;\n    unsigned Key;\n\nclk = Abc_Clock();\n    // get the new table size\n    nBinsNew = Abc_PrimeCudd(2 * pMan-\u003enBins); \n    // allocate a new array\n    pBinsNew = ABC_ALLOC( Map_Node_t *, nBinsNew );\n    memset( pBinsNew, 0, sizeof(Map_Node_t *) * nBinsNew );\n    // rehash the entries from the old table\n    Counter = 0;\n    for ( i = 0; i \u003c pMan-\u003enBins; i++ )\n        for ( pEnt = pMan-\u003epBins[i], pEnt2 = pEnt? pEnt-\u003epNext: NULL; pEnt; \n              pEnt = pEnt2, pEnt2 = pEnt? pEnt-\u003epNext: NULL )\n        {\n            Key = Map_HashKey2( pEnt-\u003ep1, pEnt-\u003ep2, nBinsNew );\n            pEnt-\u003epNext = pBinsNew[Key];\n            pBinsNew[Key] = pEnt;\n            Counter++;\n        }\n    assert( Counter == pMan-\u003enNodes - pMan-\u003enInputs );\n    if ( pMan-\u003efVerbose )\n    {\n//        printf( \"Increasing the unique table size from %6d to %6d. \", pMan-\u003enBins, nBinsNew );\n//        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    // replace the table and the parameters\n    ABC_FREE( pMan-\u003epBins );\n    pMan-\u003epBins = pBinsNew;\n    pMan-\u003enBins = nBinsNew;\n}",
+      "Draft": "func Map_TableResize(pMan *Map_Man_t) {\n    var pBinsNew **Map_Node_t;\n    var pEnt, pEnt2 *Map_Node_t;\n    var nBinsNew, Counter, i int32;\n    var clk abctime;\n    var Key uint32;\n\nclk = Abc_Clock();\n    // get the new table size\n    nBinsNew = Abc_PrimeCudd(2 * pMan.nBins); \n    // allocate a new array\n    // inlining of macro ABC_ALLOC\n    pBinsNew = ((Map_Node_t * *) malloc(sizeof(Map_Node_t *) * (size_t)(nBinsNew)));\n    memset( pBinsNew, 0, sizeof(Map_Node_t *) * nBinsNew );\n    // rehash the entries from the old table\n    Counter = 0;\n    for  i = 0; i \u003c pMan.nBins; i++  {\n        for  pEnt = pMan.pBins[i], pEnt2 = pEnt? pEnt.pNext: nil; (pEnt != nil); \n              pEnt = pEnt2, pEnt2 = pEnt? pEnt.pNext: nil  {\n            Key = Map_HashKey2( pEnt.p1, pEnt.p2, nBinsNew );\n            pEnt.pNext = pBinsNew[Key];\n            pBinsNew[Key] = pEnt;\n            Counter++;\n        }\n    }\n    assert(Counter == pMan.nNodes - pMan.nInputs, \"Counter == pMan.nNodes - pMan.nInputs\");\n    if pMan.fVerbose {\n//        printf( \"Increasing the unique table size from %6d to %6d. \", pMan-\u003enBins, nBinsNew );\n//        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    // replace the table and the parameters\n    // inlining of macro ABC_FREE\n    ((pMan.pBins) ? (free((char *) (pMan.pBins)), (pMan.pBins) = 0) : 0);\n    pMan.pBins = pBinsNew;\n    pMan.nBins = nBinsNew;\n}"
+    },
+    {
+      "Name": "Map_NodeBuf",
+      "Start": 21768,
+      "End": 21947,
+      "BodyStart": 21827,
+      "Original": "Map_Node_t * Map_NodeBuf( Map_Man_t * p, Map_Node_t * p1 )\n{\n    Map_Node_t * pNode = Map_NodeCreate( p, p1, NULL );\n    Map_NodeVecPush( p-\u003evMapBufs, pNode );\n    return pNode;\n}",
+      "Draft": "func Map_NodeBuf(p *Map_Man_t, p1 *Map_Node_t) *Map_Node_t {\n    var pNode *Map_Node_t  = Map_NodeCreate( p, p1, nil );\n    Map_NodeVecPush( p.vMapBufs, pNode );\n    return pNode;\n}"
+    },
+    {
+      "Name": "Map_NodeSetChoice",
+      "Start": 22348,
+      "End": 22547,
+      "BodyStart": 22437,
+      "Original": "void Map_NodeSetChoice( Map_Man_t * pMan, Map_Node_t * pNodeOld, Map_Node_t * pNodeNew )\n{\n    pNodeNew-\u003epNextE = pNodeOld-\u003epNextE;\n    pNodeOld-\u003epNextE = pNodeNew;\n    pNodeNew-\u003epRepr  = pNodeOld;\n}",
+      "Draft": "func Map_NodeSetChoice(pMan *Map_Man_t, pNodeOld *Map_Node_t, pNodeNew *Map_Node_t) {\n    pNodeNew.pNextE = pNodeOld.pNextE;\n    pNodeOld.pNextE = pNodeNew;\n    pNodeNew.pRepr  = pNodeOld;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::mechanical::sizeof::11684",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10873,
+      "End": 10873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::mechanical::sizeof::11737",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10918,
+      "End": 10924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::mechanical::sizeof::12398",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11579,
+      "End": 11585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::mechanical::sizeof::12460",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11641,
+      "End": 11647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::mechanical::sizeof::12916",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12027,
+      "End": 12027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::mechanical::sizeof::13215",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12248,
+      "End": 12248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::mechanical::sizeof::13288",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12313,
+      "End": 12319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::mechanical::sizeof::15913",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13818,
+      "End": 13818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::mechanical::sizeof::19864",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16387,
+      "End": 16393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::mechanical::sizeof::23119",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18226,
+      "End": 18226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::mechanical::sizeof::23195",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 18294,
+      "End": 18300
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::mechanical::sizeof::26065",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 20642,
+      "End": 20642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::mechanical::sizeof::26135",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 20704,
+      "End": 20710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::5475",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5427,
+      "End": 5427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::6772",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6648,
+      "End": 6648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::6945",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6745,
+      "End": 6745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::7053",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6777,
+      "End": 6777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::7222",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6870,
+      "End": 6870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::7330",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6902,
+      "End": 6902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::7502",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6998,
+      "End": 6998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::7610",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7030,
+      "End": 7030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::11663",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10873,
+      "End": 10873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::11777",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10958,
+      "End": 10976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::12892",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12027,
+      "End": 12027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::12922",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12027,
+      "End": 12027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::13191",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12248,
+      "End": 12248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::13221",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12248,
+      "End": 12248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::13294",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12319,
+      "End": 12333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::14012",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12971,
+      "End": 12971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::14150",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13019,
+      "End": 13019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::14290",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13067,
+      "End": 13067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::14489",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13170,
+      "End": 13170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::14622",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13202,
+      "End": 13202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::14763",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13237,
+      "End": 13237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::14899",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13274,
+      "End": 13274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::15018",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13302,
+      "End": 13302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::15136",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13331,
+      "End": 13331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::15256",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13357,
+      "End": 13357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::15377",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13391,
+      "End": 13391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::15866",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13818,
+      "End": 13818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::19789",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16312,
+      "End": 16326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::20736",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17292,
+      "End": 17292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::20846",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17292,
+      "End": 17292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::20956",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17292,
+      "End": 17292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::21066",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17292,
+      "End": 17292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::21354",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17390,
+      "End": 17390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::21621",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17420,
+      "End": 17420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::21795",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17509,
+      "End": 17509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::22081",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17567,
+      "End": 17567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::22350",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17702,
+      "End": 17702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::22517",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17733,
+      "End": 17733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::23095",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18226,
+      "End": 18226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::23125",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18226,
+      "End": 18226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::23201",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18300,
+      "End": 18314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::24030",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19085,
+      "End": 19085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::24134",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19114,
+      "End": 19114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::24343",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19248,
+      "End": 19248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::24558",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19388,
+      "End": 19388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::24677",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19428,
+      "End": 19428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::24776",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19451,
+      "End": 19451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::26041",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20642,
+      "End": 20642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::26071",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20642,
+      "End": 20642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::26141",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20710,
+      "End": 20724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::pointer-cast::26946",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21448,
+      "End": 21448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_HashKey2",
+      "Category": "semantic-review",
+      "Symbol": "Map_HashKey2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 913,
+      "End": 1090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadInputNum",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadInputNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1588,
+      "End": 1685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadOutputNum",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadOutputNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1686,
+      "End": 1783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadBufNum",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadBufNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1784,
+      "End": 1902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadInputs",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadInputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1903,
+      "End": 2000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2001,
+      "End": 2098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadBufs",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadBufs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2099,
+      "End": 2217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadBufDriver",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadBufDriver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2218,
+      "End": 2337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadConst1",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2338,
+      "End": 2435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadInputArrivals",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadInputArrivals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2436,
+      "End": 2537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadOutputRequireds",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadOutputRequireds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2538,
+      "End": 2641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadGenLib",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadGenLib",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2642,
+      "End": 2747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadVerbose",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadVerbose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2748,
+      "End": 2845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadAreaFinal",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadAreaFinal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2846,
+      "End": 2943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadRequiredGlo",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadRequiredGlo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2944,
+      "End": 3043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManSetOutputNames",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManSetOutputNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3044,
+      "End": 3146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManSetAreaRecovery",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManSetAreaRecovery",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3147,
+      "End": 3258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManSetDelayTarget",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManSetDelayTarget",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3259,
+      "End": 3365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManSetInputArrivals",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManSetInputArrivals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3366,
+      "End": 3488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManSetOutputRequireds",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManSetOutputRequireds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3489,
+      "End": 3611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManSetObeyFanoutLimits",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManSetObeyFanoutLimits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3612,
+      "End": 3746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManSetNumIterations",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManSetNumIterations",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3747,
+      "End": 3869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManReadFanoutViolations",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManReadFanoutViolations",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3870,
+      "End": 3976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManSetFanoutViolations",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManSetFanoutViolations",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3979,
+      "End": 4085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManSetChoiceNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManSetChoiceNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4088,
+      "End": 4198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManSetChoiceNum",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManSetChoiceNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4201,
+      "End": 4307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManSetVerbose",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManSetVerbose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4311,
+      "End": 4417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManSetSwitching",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManSetSwitching",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4421,
+      "End": 4527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManSetSkipFanout",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManSetSkipFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4531,
+      "End": 4639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManSetUseProfile",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManSetUseProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4643,
+      "End": 4749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeReadMan",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeReadMan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5027,
+      "End": 5130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeReadData",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeReadData",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5131,
+      "End": 5243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeReadNum",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeReadNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5244,
+      "End": 5347
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeReadLevel",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeReadLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5348,
+      "End": 5451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeReadCuts",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeReadCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5452,
+      "End": 5555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeReadCutBest",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeReadCutBest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5556,
+      "End": 5659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeReadOne",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeReadOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5660,
+      "End": 5763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeReadTwo",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeReadTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5764,
+      "End": 5867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeSetData",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeSetData",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5868,
+      "End": 6002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeSetNextE",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeSetNextE",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6003,
+      "End": 6108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeSetRepr",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeSetRepr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6109,
+      "End": 6214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeSetSwitching",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeSetSwitching",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6215,
+      "End": 6320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6584,
+      "End": 6680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeIsVar",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeIsVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6681,
+      "End": 6805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeIsBuf",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeIsBuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6806,
+      "End": 6933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeIsAnd",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeIsAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6934,
+      "End": 7061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeComparePhase",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeComparePhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7062,
+      "End": 7232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_CutReadSuperBest",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutReadSuperBest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7498,
+      "End": 7598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_CutReadSuper0",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutReadSuper0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7599,
+      "End": 7694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_CutReadSuper1",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutReadSuper1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7695,
+      "End": 7790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_CutReadLeavesNum",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutReadLeavesNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7791,
+      "End": 7880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_CutReadLeaves",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutReadLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7881,
+      "End": 7970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_CutReadPhaseBest",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutReadPhaseBest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7971,
+      "End": 8071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_CutReadPhase0",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutReadPhase0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8072,
+      "End": 8167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_CutReadPhase1",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutReadPhase1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8168,
+      "End": 8263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_CutReadNext",
+      "Category": "semantic-review",
+      "Symbol": "Map_CutReadNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8264,
+      "End": 8359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_SuperReadFormula",
+      "Category": "semantic-review",
+      "Symbol": "Map_SuperReadFormula",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8631,
+      "End": 8720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_SuperReadRoot",
+      "Category": "semantic-review",
+      "Symbol": "Map_SuperReadRoot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8721,
+      "End": 8810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_SuperReadNum",
+      "Category": "semantic-review",
+      "Symbol": "Map_SuperReadNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8811,
+      "End": 8900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_SuperReadFanins",
+      "Category": "semantic-review",
+      "Symbol": "Map_SuperReadFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8901,
+      "End": 8990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_SuperReadFaninNum",
+      "Category": "semantic-review",
+      "Symbol": "Map_SuperReadFaninNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8991,
+      "End": 9080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_SuperReadNext",
+      "Category": "semantic-review",
+      "Symbol": "Map_SuperReadNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9081,
+      "End": 9170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_SuperReadNumPhases",
+      "Category": "semantic-review",
+      "Symbol": "Map_SuperReadNumPhases",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9171,
+      "End": 9260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_SuperReadPhases",
+      "Category": "semantic-review",
+      "Symbol": "Map_SuperReadPhases",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9261,
+      "End": 9350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_SuperReadFanoutLimit",
+      "Category": "semantic-review",
+      "Symbol": "Map_SuperReadFanoutLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9351,
+      "End": 9440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_SuperLibReadGenLib",
+      "Category": "semantic-review",
+      "Symbol": "Map_SuperLibReadGenLib",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9442,
+      "End": 9531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_SuperLibReadAreaInv",
+      "Category": "semantic-review",
+      "Symbol": "Map_SuperLibReadAreaInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9532,
+      "End": 9621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_SuperLibReadDelayInv",
+      "Category": "semantic-review",
+      "Symbol": "Map_SuperLibReadDelayInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9622,
+      "End": 9711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_SuperLibReadVarsMax",
+      "Category": "semantic-review",
+      "Symbol": "Map_SuperLibReadVarsMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9712,
+      "End": 9801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManCreate",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10542,
+      "End": 12363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::ternary::Map_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Map_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12631,
+      "End": 13407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12631,
+      "End": 13407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManCreateNodeDelays",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManCreateNodeDelays",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13664,
+      "End": 14241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManPrintTimeStats",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManPrintTimeStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14510,
+      "End": 15209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_ManPrintStatsToFile",
+      "Category": "semantic-review",
+      "Symbol": "Map_ManPrintStatsToFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15470,
+      "End": 15832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::ternary::Map_NodeCreate",
+      "Category": "ternary-review",
+      "Symbol": "Map_NodeCreate",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16172,
+      "End": 17818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeCreate",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16172,
+      "End": 17818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_TableCreate",
+      "Category": "semantic-review",
+      "Symbol": "Map_TableCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18091,
+      "End": 18355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeAnd",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18908,
+      "End": 20078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::ternary::Map_TableResize",
+      "Category": "ternary-review",
+      "Symbol": "Map_TableResize",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 20333,
+      "End": 21530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_TableResize",
+      "Category": "semantic-review",
+      "Symbol": "Map_TableResize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20333,
+      "End": 21530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeBuf",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeBuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21768,
+      "End": 21947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::Map_NodeSetChoice",
+      "Category": "semantic-review",
+      "Symbol": "Map_NodeSetChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22348,
+      "End": 22547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 22795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperCreate.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17030,
+      "End": 17231
+    }
+  ],
+  "Draft": "package mapper\n\nimport (\n\t\"fmt\"\n\t\"math\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [mapperCreate.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Generic technology mapping engine.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - June 1, 2004.]\n\n  Revision    [$Id: mapperCreate.c,v 1.15 2005/02/28 05:34:26 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mapperInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void            Map_TableCreate( Map_Man_t * p );\n\n// static void            Map_TableResize( Map_Man_t * p );\n\n\n// hash key for the structural hash table\nfunc Map_HashKey2(p0 *Map_Node_t, p1 *Map_Node_t, TableSize int32) uint32 { return uint32((((ABC_PTRUINT_T)(p0) + (ABC_PTRUINT_T)(p1) * 12582917) % TableSize)); }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reads parameters from the mapping manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_ManReadInputNum(p *Map_Man_t) int32 { return p.nInputs;    }\nfunc Map_ManReadOutputNum(p *Map_Man_t) int32 { return p.nOutputs;   }\nfunc Map_ManReadBufNum(p *Map_Man_t) int32 { return Map_NodeVecReadSize(p.vMapBufs);   }\nfunc Map_ManReadInputs(p *Map_Man_t) **Map_Node_t { return p.pInputs;    }\nfunc Map_ManReadOutputs(p *Map_Man_t) **Map_Node_t { return p.pOutputs;   }\nfunc Map_ManReadBufs(p *Map_Man_t) **Map_Node_t { return Map_NodeVecReadArray(p.vMapBufs);  }\nfunc Map_ManReadBufDriver(p *Map_Man_t, i int32) *Map_Node_t { return Map_ManReadBufs(p)[i].p1;           }\nfunc Map_ManReadConst1(p *Map_Man_t) *Map_Node_t { return p.pConst1;    }\nfunc Map_ManReadInputArrivals(p *Map_Man_t) *Map_Time_t { return p.pInputArrivals; }\nfunc Map_ManReadOutputRequireds(p *Map_Man_t) *Map_Time_t { return p.pOutputRequireds; }\nfunc Map_ManReadGenLib(p *Map_Man_t) *Mio_Library_t { return p.pSuperLib.pGenlib; }\nfunc Map_ManReadVerbose(p *Map_Man_t) int32 { return p.fVerbose;   }\nfunc Map_ManReadAreaFinal(p *Map_Man_t) float32 { return p.AreaFinal;  }\nfunc Map_ManReadRequiredGlo(p *Map_Man_t) float32 { return p.fRequiredGlo; }\nfunc Map_ManSetOutputNames(p *Map_Man_t, ppNames *string) { p.ppOutputNames = ppNames;}\nfunc Map_ManSetAreaRecovery(p *Map_Man_t, fAreaRecovery int32) { p.fAreaRecovery = fAreaRecovery;}\nfunc Map_ManSetDelayTarget(p *Map_Man_t, DelayTarget float32) { p.DelayTarget = DelayTarget;}\nfunc Map_ManSetInputArrivals(p *Map_Man_t, pArrivals *Map_Time_t) { p.pInputArrivals = pArrivals;    }\nfunc Map_ManSetOutputRequireds(p *Map_Man_t, pRequireds *Map_Time_t) { p.pOutputRequireds = pRequireds; }\nfunc Map_ManSetObeyFanoutLimits(p *Map_Man_t, fObeyFanoutLimits int32) { p.fObeyFanoutLimits = fObeyFanoutLimits;     }\nfunc Map_ManSetNumIterations(p *Map_Man_t, nIterations int32) { p.nIterations = nIterations;     }\nfunc Map_ManReadFanoutViolations(p *Map_Man_t) int32 { return p.nFanoutViolations;   }  \nfunc Map_ManSetFanoutViolations(p *Map_Man_t, nVio int32) { p.nFanoutViolations = nVio;   }  \nfunc Map_ManSetChoiceNodeNum(p *Map_Man_t, nChoiceNodes int32) { p.nChoiceNodes = nChoiceNodes; }  \nfunc Map_ManSetChoiceNum(p *Map_Man_t, nChoices int32) { p.nChoices = nChoices;     }   \nfunc Map_ManSetVerbose(p *Map_Man_t, fVerbose int32) { p.fVerbose = fVerbose;     }   \nfunc Map_ManSetSwitching(p *Map_Man_t, fSwitching int32) { p.fSwitching = fSwitching; }   \nfunc Map_ManSetSkipFanout(p *Map_Man_t, fSkipFanout int32) { p.fSkipFanout = fSkipFanout; }   \nfunc Map_ManSetUseProfile(p *Map_Man_t) { p.fUseProfile = 1;         }   \n\n/**Function*************************************************************\n\n  Synopsis    [Reads parameters from the mapping node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_NodeReadMan(p *Map_Node_t) *Map_Man_t { return p.p;                  }\nfunc Map_NodeReadData(p *Map_Node_t, fPhase int32) string { if fPhase != 0 {\n    return p.pData1;\n} else {\n    return p.pData0;\n}  }\nfunc Map_NodeReadNum(p *Map_Node_t) int32 { return p.Num;                }\n// inlining of macro Map_Regular\nfunc Map_NodeReadLevel(p *Map_Node_t) int32 { return ((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) .Level; }\nfunc Map_NodeReadCuts(p *Map_Node_t) *Map_Cut_t { return p.pCuts;              }\nfunc Map_NodeReadCutBest(p *Map_Node_t, fPhase int32) *Map_Cut_t { return p.pCutBest[fPhase];   }\nfunc Map_NodeReadOne(p *Map_Node_t) *Map_Node_t { return p.p1;                 }\nfunc Map_NodeReadTwo(p *Map_Node_t) *Map_Node_t { return p.p2;                 }\nfunc Map_NodeSetData(p *Map_Node_t, fPhase int32, pData string) { if fPhase != 0 { p.pData1 = pData; } else { p.pData0 = pData; } }\nfunc Map_NodeSetNextE(p *Map_Node_t, pNextE *Map_Node_t) { p.pNextE = pNextE;       }\nfunc Map_NodeSetRepr(p *Map_Node_t, pRepr *Map_Node_t) { p.pRepr = pRepr;         }\nfunc Map_NodeSetSwitching(p *Map_Node_t, Switching float32) { p.Switching = Switching; }\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the type of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n// inlining of macro Map_Regular\nfunc Map_NodeIsConst(p *Map_Node_t) int32 {  return (((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).Num == -1;    }\n// inlining of macro Map_Regular\nfunc Map_NodeIsVar(p *Map_Node_t) int32 {  return (((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).p1 == nil \u0026\u0026 (((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).Num \u003e= 0; }\n// inlining of macro Map_Regular\nfunc Map_NodeIsBuf(p *Map_Node_t) int32 {  return (((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).p1 != nil \u0026\u0026 (((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).p2 == nil;  }\n// inlining of macro Map_Regular\nfunc Map_NodeIsAnd(p *Map_Node_t) int32 {  return (((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).p1 != nil \u0026\u0026 (((Map_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) ).p2 != nil;  }\n// inlining of macro Map_IsComplement\nfunc Map_NodeComparePhase(p1 *Map_Node_t, p2 *Map_Node_t) int32 { assert(!(((int32(((ABC_PTRUINT_T) (p1) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (p1) \u0026 01))))\"); assert(!(((int32(((ABC_PTRUINT_T) (p2) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Map_IsComplement__*/((int32(((ABC_PTRUINT_T) (p2) \u0026 01))))\"); return p1.fInv ^ p2.fInv; }\n\n/**Function*************************************************************\n\n  Synopsis    [Reads parameters from the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_CutReadSuperBest(p *Map_Cut_t, fPhase int32) *Map_Super_t { return p.M[fPhase].pSuperBest;}\nfunc Map_CutReadSuper0(p *Map_Cut_t) *Map_Super_t { return p.M[0].pSuperBest;}\nfunc Map_CutReadSuper1(p *Map_Cut_t) *Map_Super_t { return p.M[1].pSuperBest;}\nfunc Map_CutReadLeavesNum(p *Map_Cut_t) int32 { return p.nLeaves;  }\nfunc Map_CutReadLeaves(p *Map_Cut_t) **Map_Node_t { return p.ppLeaves; }\nfunc Map_CutReadPhaseBest(p *Map_Cut_t, fPhase int32) uint32 { return p.M[fPhase].uPhaseBest;}\nfunc Map_CutReadPhase0(p *Map_Cut_t) uint32 { return p.M[0].uPhaseBest;}\nfunc Map_CutReadPhase1(p *Map_Cut_t) uint32 { return p.M[1].uPhaseBest;}\nfunc Map_CutReadNext(p *Map_Cut_t) *Map_Cut_t { return p.pNext;          }\n\n/**Function*************************************************************\n\n  Synopsis    [Reads parameters from the supergate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_SuperReadFormula(p *Map_Super_t) string {  return p.pFormula; }\nfunc Map_SuperReadRoot(p *Map_Super_t) *Mio_Gate_t {  return p.pRoot;    }\nfunc Map_SuperReadNum(p *Map_Super_t) int32 {  return p.Num;      }\nfunc Map_SuperReadFanins(p *Map_Super_t) **Map_Super_t {  return p.pFanins;  }\nfunc Map_SuperReadFaninNum(p *Map_Super_t) int32 {  return p.nFanins;  }\nfunc Map_SuperReadNext(p *Map_Super_t) *Map_Super_t {  return p.pNext;    }\nfunc Map_SuperReadNumPhases(p *Map_Super_t) int32 {  return p.nPhases;  }\nfunc Map_SuperReadPhases(p *Map_Super_t) *unsigned char {  return p.uPhases;  }\nfunc Map_SuperReadFanoutLimit(p *Map_Super_t) int32 {  return p.nFanLimit;}\n\nfunc Map_SuperLibReadGenLib(p *Map_SuperLib_t) *Mio_Library_t {  return p.pGenlib;  }\nfunc Map_SuperLibReadAreaInv(p *Map_SuperLib_t) float32 {  return p.AreaInv;  }\nfunc Map_SuperLibReadDelayInv(p *Map_SuperLib_t) Map_Time_t {  return p.tDelayInv;}\nfunc Map_SuperLibReadVarsMax(p *Map_SuperLib_t) int32 {  return p.nVarsMax; }\n\n\n/**Function*************************************************************\n\n  Synopsis    [Create the mapping manager.]\n\n  Description [The number of inputs and outputs is assumed to be\n  known is advance. It is much simpler to have them fixed upfront.\n  When it comes to representing the object graph in the form of\n  AIG, the resulting manager is similar to the regular AIG manager, \n  except that it does not use reference counting (and therefore\n  does not have garbage collections). It does have table resizing.\n  The data structure is more flexible to represent additional \n  information needed for mapping.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_ManCreate(nInputs int32, nOutputs int32, fVerbose int32) *Map_Man_t {\n    var p *Map_Man_t;\n    var i int32;\n\n    // derive the supergate library\n    if Abc_FrameReadLibSuper() == nil {\n        fmt.Printf(\"The supergate library is not specified. Use \\\"read_super\\\".\\n\");\n        return nil;\n    }\n\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Map_Man_t *) malloc(sizeof(Map_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Map_Man_t) );\n    p.pSuperLib = (Map_SuperLib_t *)Abc_FrameReadLibSuper();\n    p.nVarsMax  = p.pSuperLib.nVarsMax;\n    p.fVerbose  = fVerbose;\n    p.fEpsilon  = float32(0.001);\n    assert(p.nVarsMax \u003e 0, \"p.nVarsMax \u003e 0\");\n\n    if p.nVarsMax == 5 {\n        Extra_Truth4VarN( \u0026p.uCanons, \u0026p.uPhases, \u0026p.pCounters, 8 ); }\n\n    // start various data structures\n    Map_TableCreate( p );\n    Map_MappingSetupTruthTables( p.uTruths );\n    Map_MappingSetupTruthTablesLarge( p.uTruthsLarge );\n//    printf( \"Node = %d bytes. Cut = %d bytes. Super = %d bytes.\\n\", sizeof(Map_Node_t), sizeof(Map_Cut_t), sizeof(Map_Super_t) ); \n    p.mmNodes    = Extra_MmFixedStart( sizeof(Map_Node_t) );\n    p.mmCuts     = Extra_MmFixedStart( sizeof(Map_Cut_t) );\n\n    // make sure the constant node will get index -1\n    p.nNodes = -1;\n    // create the constant node\n    p.pConst1    = Map_NodeCreate( p, nil, nil );\n    p.vMapObjs   = Map_NodeVecAlloc( 100 );\n    p.vMapBufs   = Map_NodeVecAlloc( 100 );\n    p.vVisited   = Map_NodeVecAlloc( 100 );\n\n    // create the PI nodes\n    p.nInputs = nInputs;\n    // inlining of macro ABC_ALLOC\n    p.pInputs = ((Map_Node_t * *) malloc(sizeof(Map_Node_t *) * (size_t)(nInputs)));\n    for  i = 0; i \u003c nInputs; i++  {\n        p.pInputs[i] = Map_NodeCreate( p, nil, nil );\n    }\n\n    // create the place for the output nodes\n    p.nOutputs = nOutputs;\n    // inlining of macro ABC_ALLOC\n    p.pOutputs = ((Map_Node_t * *) malloc(sizeof(Map_Node_t *) * (size_t)(nOutputs)));\n    memset( p.pOutputs, 0, sizeof(Map_Node_t *) * nOutputs );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates the mapping manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_ManFree(p *Map_Man_t) {\n//    int i;\n//    for ( i = 0; i \u003c p-\u003evMapObjs-\u003enSize; i++ )\n//        Map_NodeVecFree( p-\u003evMapObjs-\u003epArray[i]-\u003evFanouts );\n//    Map_NodeVecFree( p-\u003epConst1-\u003evFanouts );\n    Map_NodeVecFree( p.vMapObjs );\n    Map_NodeVecFree( p.vMapBufs );\n    Map_NodeVecFree( p.vVisited );\n    // inlining of macro ABC_FREE\n    if p.uCanons {   ((p.uCanons) ? (free((char *) (p.uCanons)), (p.uCanons) = 0) : 0); }\n    // inlining of macro ABC_FREE\n    if p.uPhases {   ((p.uPhases) ? (free((char *) (p.uPhases)), (p.uPhases) = 0) : 0); }\n    // inlining of macro ABC_FREE\n    if p.pCounters { ((p.pCounters) ? (free((char *) (p.pCounters)), (p.pCounters) = 0) : 0); }\n    Extra_MmFixedStop( p.mmNodes );\n    Extra_MmFixedStop( p.mmCuts );\n    // inlining of macro ABC_FREE\n    ((p.pNodeDelays) ? (free((char *) (p.pNodeDelays)), (p.pNodeDelays) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pInputArrivals) ? (free((char *) (p.pInputArrivals)), (p.pInputArrivals) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pOutputRequireds) ? (free((char *) (p.pOutputRequireds)), (p.pOutputRequireds) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pInputs) ? (free((char *) (p.pInputs)), (p.pInputs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pOutputs) ? (free((char *) (p.pOutputs)), (p.pOutputs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.ppOutputNames) ? (free((char *) (p.ppOutputNames)), (p.ppOutputNames) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates node delays.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_ManCreateNodeDelays(p *Map_Man_t, LogFan int32) {\n    var pNode *Map_Node_t;\n    var k int32;\n    assert(p.pNodeDelays == nil, \"p.pNodeDelays == nil\");\n    // inlining of macro ABC_CALLOC\n    p.pNodeDelays = ((float *) calloc((size_t)(p.vMapObjs.nSize), sizeof(float)));\n    for  k = 0; k \u003c p.vMapObjs.nSize; k++  {\n        pNode = p.vMapObjs.pArray[k];\n        if pNode.nRefs == 0 {\n            continue; }\n        p.pNodeDelays[k] = 0.014426 * LogFan * p.pSuperLib.tDelayInv.Worst * math.Log(float64(float64(pNode.nRefs))); // 1.4426 = 1/ln(2)\n//        printf( \"%d = %d (%.2f)  \", k, pNode-\u003enRefs, p-\u003epNodeDelays[k] );\n    }\n//    printf( \"\\n\" );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates the mapping manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_ManPrintTimeStats(p *Map_Man_t) {\n    fmt.Printf(\"N-canonical = %d. Matchings = %d.  Phases = %d.  \", p.nCanons, p.nMatches, p.nPhases);\n    fmt.Printf(\"Choice nodes = %d. Choices = %d.\\n\", p.nChoiceNodes, p.nChoices);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"ToMap\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeToMap)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Cuts \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCuts)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Truth\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTruth)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Match\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMatch)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Area \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeArea)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Sweep\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSweep)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"ToNet\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeToNet)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"TOTAL\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    if p.time1 { Abc_Print(1, \"%s =\", (\"time1\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time1)))/(float64(int64(time.Second))));; }\n    // inlining of macro ABC_PRT\n    if p.time2 { Abc_Print(1, \"%s =\", (\"time2\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time2)))/(float64(int64(time.Second))));; }\n    // inlining of macro ABC_PRT\n    if p.time3 { Abc_Print(1, \"%s =\", (\"time3\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time3)))/(float64(int64(time.Second))));; }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the mapping stats.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_ManPrintStatsToFile(pName string, Area float32, Delay float32, Time abctime) {\n    var pTable *os.File;\n    pTable = os.OpenFile(\"map_stats.txt\", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666);\n    fmt.Fprintf(pTable, \"%s \", pName);\n    fmt.Fprintf(pTable, \"%4.2f \", Area);\n    fmt.Fprintf(pTable, \"%4.2f \", Delay);\n    fmt.Fprintf(pTable, \"%4.2f\\n\", float32((Time))/float32((int64(time.Second))));\n    _ = (pTable).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new node.]\n\n  Description [This procedure should be called to create the constant\n  node and the PI nodes first.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_NodeCreate(p *Map_Man_t, p1 *Map_Node_t, p2 *Map_Node_t) *Map_Node_t {\n    var pNode *Map_Node_t;\n    // create the node\n    pNode = (Map_Node_t *)Extra_MmFixedEntryFetch( p.mmNodes );\n    memset( pNode, 0, sizeof(Map_Node_t) );\n    pNode.tRequired[0].Rise = pNode.tRequired[0].Fall = pNode.tRequired[0].Worst = MAP_FLOAT_LARGE;\n    pNode.tRequired[1].Rise = pNode.tRequired[1].Fall = pNode.tRequired[1].Worst = MAP_FLOAT_LARGE;\n    pNode.p1  = p1; \n    pNode.p2  = p2;\n    pNode.p = p;\n    // set the number of this node\n    pNode.Num = p.nNodes++;\n    // place to store the fanouts\n//    pNode-\u003evFanouts = Map_NodeVecAlloc( 5 );\n    // store this node in the internal array\n    if pNode.Num \u003e= 0 {\n        Map_NodeVecPush( p.vMapObjs, pNode );\n    } else {\n        pNode.fInv = 1; }\n    // set the level of this node\n    if p1 != nil {\n#ifdef MAP_ALLOCATE_FANOUT\n        // create the fanout info\n        Map_NodeAddFaninFanout( Map_Regular(p1), pNode );\n        if ( p2 )\n        Map_NodeAddFaninFanout( Map_Regular(p2), pNode );\n#endif\n\n        if p2 != nil {\n            // inlining of macro MAP_MAX\n            // inlining of macro Map_Regular\n            pNode.Level = 1 + (((((Map_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .Level) \u003e (((Map_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .Level))? (((Map_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .Level) : (((Map_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .Level));\n            // inlining of macro Map_NodeIsSimComplement\n            // inlining of macro Map_IsComplement\n            // inlining of macro Map_Regular\n            pNode.fInv  = (((int32(((ABC_PTRUINT_T) (p1) \u0026 01))))? !(((Map_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .fInv) : (p1).fInv) \u0026 (((int32(((ABC_PTRUINT_T) (p2) \u0026 01))))? !(((Map_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .fInv) : (p2).fInv);\n        \n        } else {\n            // inlining of macro Map_Regular\n            pNode.Level = ((Map_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .Level;\n            // inlining of macro Map_NodeIsSimComplement\n            \n            // inlining of macro Map_IsComplement\n            if (int32(((ABC_PTRUINT_T) (p1) \u0026 01)) != 0) {\n                // inlining of macro Map_Regular\n                pNode.fInv = !(((Map_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .fInv);\n            } else {\n                pNode.fInv = (p1).fInv;\n            }\n        }\n    }\n    // reference the inputs (will be used to compute the number of fanouts)\n    // inlining of macro Map_NodeRef\n    // inlining of macro Map_Regular\n    if p1 != nil { ((((Map_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) ).nRefs++); }\n    // inlining of macro Map_NodeRef\n    // inlining of macro Map_Regular\n    if p2 != nil { ((((Map_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) ).nRefs++); }\n\n    pNode.nRefEst[0] = pNode.nRefEst[1] = -1;\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create the unique table of AND gates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_TableCreate(pMan *Map_Man_t) {\n    assert(pMan.pBins == nil, \"pMan.pBins == nil\");\n    pMan.nBins = Abc_PrimeCudd(5000);\n    // inlining of macro ABC_ALLOC\n    pMan.pBins = ((Map_Node_t * *) malloc(sizeof(Map_Node_t *) * (size_t)(pMan.nBins)));\n    memset( pMan.pBins, 0, sizeof(Map_Node_t *) * pMan.nBins );\n    pMan.nNodes = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Looks up the AND2 node in the unique table.]\n\n  Description [This procedure implements one-level hashing. All the nodes\n  are hashed by their children. If the node with the same children was already\n  created, it is returned by the call to this procedure. If it does not exist,\n  this procedure creates a new node with these children. ]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_NodeAnd(pMan *Map_Man_t, p1 *Map_Node_t, p2 *Map_Node_t) *Map_Node_t {\n    var pEnt *Map_Node_t;\n    var Key uint32;\n\n    if p1 == p2 {\n        return p1; }\n    // inlining of macro Map_Not\n    if p1 == ((Map_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01)) {\n        // inlining of macro Map_Not\n        return ((Map_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ; }\n    if Map_NodeIsConst(p1) != 0 {\n        if p1 == pMan.pConst1 {\n            return p2; }\n        // inlining of macro Map_Not\n        return ((Map_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ;\n    }\n    if Map_NodeIsConst(p2) != 0 {\n        if p2 == pMan.pConst1 {\n            return p1; }\n        // inlining of macro Map_Not\n        return ((Map_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ;\n    }\n\n    // inlining of macro Map_Regular\n    if  ((Map_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .Num \u003e ((Map_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .Num {\n        pEnt = p1;\np1 = p2;\np2 = pEnt; }\n\n    Key = Map_HashKey2( p1, p2, pMan.nBins );\n    for  pEnt = pMan.pBins[Key]; (pEnt != nil); pEnt = pEnt.pNext  {\n        if pEnt.p1 == p1 \u0026\u0026 pEnt.p2 == p2 {\n            return pEnt; }\n    }\n    // resize the table\n    if pMan.nNodes \u003e= 2 * pMan.nBins {\n        Map_TableResize( pMan );\n        Key = Map_HashKey2( p1, p2, pMan.nBins );\n    }\n    // create the new node\n    pEnt = Map_NodeCreate( pMan, p1, p2 );\n    // add the node to the corresponding linked list in the table\n    pEnt.pNext = pMan.pBins[Key];\n    pMan.pBins[Key] = pEnt;\n    return pEnt;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Resizes the table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_TableResize(pMan *Map_Man_t) {\n    var pBinsNew **Map_Node_t;\n    var pEnt, pEnt2 *Map_Node_t;\n    var nBinsNew, Counter, i int32;\n    var clk abctime;\n    var Key uint32;\n\nclk = Abc_Clock();\n    // get the new table size\n    nBinsNew = Abc_PrimeCudd(2 * pMan.nBins); \n    // allocate a new array\n    // inlining of macro ABC_ALLOC\n    pBinsNew = ((Map_Node_t * *) malloc(sizeof(Map_Node_t *) * (size_t)(nBinsNew)));\n    memset( pBinsNew, 0, sizeof(Map_Node_t *) * nBinsNew );\n    // rehash the entries from the old table\n    Counter = 0;\n    for  i = 0; i \u003c pMan.nBins; i++  {\n        for  pEnt = pMan.pBins[i], pEnt2 = pEnt? pEnt.pNext: nil; (pEnt != nil); \n              pEnt = pEnt2, pEnt2 = pEnt? pEnt.pNext: nil  {\n            Key = Map_HashKey2( pEnt.p1, pEnt.p2, nBinsNew );\n            pEnt.pNext = pBinsNew[Key];\n            pBinsNew[Key] = pEnt;\n            Counter++;\n        }\n    }\n    assert(Counter == pMan.nNodes - pMan.nInputs, \"Counter == pMan.nNodes - pMan.nInputs\");\n    if pMan.fVerbose {\n//        printf( \"Increasing the unique table size from %6d to %6d. \", pMan-\u003enBins, nBinsNew );\n//        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    // replace the table and the parameters\n    // inlining of macro ABC_FREE\n    ((pMan.pBins) ? (free((char *) (pMan.pBins)), (pMan.pBins) = 0) : 0);\n    pMan.pBins = pBinsNew;\n    pMan.nBins = nBinsNew;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_NodeBuf(p *Map_Man_t, p1 *Map_Node_t) *Map_Node_t {\n    var pNode *Map_Node_t  = Map_NodeCreate( p, p1, nil );\n    Map_NodeVecPush( p.vMapBufs, pNode );\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the node to be equivalent to the given one.]\n\n  Description [This procedure is a work-around for the equivalence check.\n  Does not verify the equivalence. Use at the user's risk.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_NodeSetChoice(pMan *Map_Man_t, pNodeOld *Map_Node_t, pNodeNew *Map_Node_t) {\n    pNodeNew.pNextE = pNodeOld.pNextE;\n    pNodeOld.pNextE = pNodeNew;\n    pNodeNew.pRepr  = pNodeOld;\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

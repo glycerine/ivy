@@ -1,0 +1,711 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c",
+  "SHA256": "85e56898c11a20d25eb2d17ff3dfdaf0146916ca5fb2a5e4b0d29dcf68bb5763",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 58,
+        "Column": 9,
+        "ByteOffset": 1635
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s%d \", (lit_sign(pC.lits[i])? \"-\": \"\"),  lit_var(pC.lits[i]) + (fIncrement\u003e0) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 61,
+        "Column": 9,
+        "ByteOffset": 1768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"0\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 94,
+        "Column": 17,
+        "ByteOffset": 2828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 96,
+        "Column": 17,
+        "ByteOffset": 2883
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pFile = stdout;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 9,
+        "ByteOffset": 2927
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Sat_SolverWriteDimacs(): Cannot open the ouput file.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 3098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"p cnf %d %d\\n\", p.size, Sat_MemEntryNum(\u0026p.Mem, 0)-1+Sat_MemEntryNum(\u0026p.Mem, 1)+nUnits+int32((assumpEnd-assumpBegin)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 13,
+        "ByteOffset": 3894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s%d%s\\n\","
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 13,
+        "ByteOffset": 4208
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s%d%s\\n\","
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 4433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 135,
+        "Column": 20,
+        "ByteOffset": 4476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFileName { fclose( pFile ); }"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 151,
+        "Column": 13,
+        "ByteOffset": 4931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 9,
+        "ByteOffset": 4987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Sat_SolverWriteDimacs(): Cannot open the ouput file.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 5158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"p cnf %d %d\\n\", p.size, Sat_MemEntryNum(\u0026p.Mem, 0)-1+Sat_MemEntryNum(\u0026p.Mem, 1)+nUnits+int32((assumpEnd-assumpBegin)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 13,
+        "ByteOffset": 5956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s%d%s\\n\","
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 181,
+        "Column": 13,
+        "ByteOffset": 6270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s%d%s\\n\","
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 188,
+        "Column": 5,
+        "ByteOffset": 6495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 6523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 207,
+        "Column": 5,
+        "ByteOffset": 7010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"starts        : %16.0f\\n\", Sat_Wrd2Dbl(p.stats.starts) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 7081
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"conflicts     : %16.0f\\n\", Sat_Wrd2Dbl(p.stats.conflicts) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 7155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"decisions     : %16.0f\\n\", Sat_Wrd2Dbl(p.stats.decisions) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 7229
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"propagations  : %16.0f\\n\", Sat_Wrd2Dbl(p.stats.propagations) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 5,
+        "ByteOffset": 7788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"starts        : %10d\\n\", int32(s.stats.starts) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 7851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"conflicts     : %10d\\n\", int32(s.stats.conflicts) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 5,
+        "ByteOffset": 7917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"decisions     : %10d\\n\", int32(s.stats.decisions) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 230,
+        "Column": 5,
+        "ByteOffset": 7983
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"propagations  : %10d\\n\", int32(s.stats.propagations) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 283,
+        "Column": 69,
+        "ByteOffset": 9841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pModel = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(nVars+1), sizeof(int)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 304,
+        "Column": 69,
+        "ByteOffset": 10448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pModel = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(nVars+1), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 323,
+        "Column": 5,
+        "ByteOffset": 10972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sat_SolverClauseWriteDimacs",
+      "Start": 1445,
+      "End": 1769,
+      "BodyStart": 1523,
+      "Original": "void Sat_SolverClauseWriteDimacs( FILE * pFile, clause * pC, int fIncrement )\n{\n    int i;\n    for ( i = 0; i \u003c (int)pC-\u003esize; i++ )\n        fprintf( pFile, \"%s%d \", (lit_sign(pC-\u003elits[i])? \"-\": \"\"),  lit_var(pC-\u003elits[i]) + (fIncrement\u003e0) );\n    if ( fIncrement )\n        fprintf( pFile, \"0\" );\n    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Sat_SolverClauseWriteDimacs(pFile *os.File, pC *clause, fIncrement int32) {\n    var i int32;\n    for  i = 0; i \u003c int32(pC.size); i++  {\n        fmt.Fprintf(pFile, \"%s%d \", (lit_sign(pC.lits[i])? \"-\": \"\"), lit_var(pC.lits[i]) + (fIncrement\u003e0));\n    }\n    if fIncrement != 0 {\n        fmt.Fprintf(pFile, \"0\"); }\n    fmt.Fprintf(pFile, \"\\n\");\n}"
+    },
+    {
+      "Name": "Sat_SolverWriteDimacs",
+      "Start": 2321,
+      "End": 4156,
+      "BodyStart": 2437,
+      "Original": "void Sat_SolverWriteDimacs( sat_solver * p, char * pFileName, lit* assumpBegin, lit* assumpEnd, int incrementVars )\n{\n    Sat_Mem_t * pMem = \u0026p-\u003eMem;\n    FILE * pFile;\n    clause * c;\n    int i, k, nUnits;\n\n    // count the number of unit clauses\n    nUnits = 0;\n    for ( i = 0; i \u003c p-\u003esize; i++ )\n        if ( p-\u003elevels[i] == 0 \u0026\u0026 p-\u003eassigns[i] != 3 )\n            nUnits++;\n\n    // start the file\n    pFile = pFileName ? fopen( pFileName, \"wb\" ) : stdout;\n    if ( pFile == NULL )\n    {\n        printf( \"Sat_SolverWriteDimacs(): Cannot open the ouput file.\\n\" );\n        return;\n    }\n//    fprintf( pFile, \"c CNF generated by ABC on %s\\n\", Extra_TimeStamp() );\n    fprintf( pFile, \"p cnf %d %d\\n\", p-\u003esize, Sat_MemEntryNum(\u0026p-\u003eMem, 0)-1+Sat_MemEntryNum(\u0026p-\u003eMem, 1)+nUnits+(int)(assumpEnd-assumpBegin) );\n\n    // write the original clauses\n    Sat_MemForEachClause( pMem, c, i, k )\n        Sat_SolverClauseWriteDimacs( pFile, c, incrementVars );\n\n    // write the learned clauses\n//    Sat_MemForEachLearned( pMem, c, i, k )\n//        Sat_SolverClauseWriteDimacs( pFile, c, incrementVars );\n\n    // write zero-level assertions\n    for ( i = 0; i \u003c p-\u003esize; i++ )\n        if ( p-\u003elevels[i] == 0 \u0026\u0026 p-\u003eassigns[i] != 3 ) // varX\n            fprintf( pFile, \"%s%d%s\\n\",\n                     (p-\u003eassigns[i] == 1)? \"-\": \"\",    // var0\n                     i + (int)(incrementVars\u003e0),\n                     (incrementVars) ? \" 0\" : \"\");\n\n    // write the assump\n    if (assumpBegin) {\n        for (; assumpBegin != assumpEnd; assumpBegin++) {\n            fprintf( pFile, \"%s%d%s\\n\",\n                     lit_sign(*assumpBegin)? \"-\": \"\",\n                     lit_var(*assumpBegin) + (int)(incrementVars\u003e0),\n                     (incrementVars) ? \" 0\" : \"\");\n        }\n    }\n\n    fprintf( pFile, \"\\n\" );\n    if ( pFileName ) fclose( pFile );\n}",
+      "Draft": "func Sat_SolverWriteDimacs(p *sat_solver, pFileName string, assumpBegin *lit, assumpEnd *lit, incrementVars int32) {\n    var pMem *Sat_Mem_t  = \u0026p.Mem;\n    var pFile *os.File;\n    var c *clause;\n    var i, k, nUnits int32;\n\n    // count the number of unit clauses\n    nUnits = 0;\n    for  i = 0; i \u003c p.size; i++  {\n        if p.levels[i] == 0 \u0026\u0026 p.assigns[i] != 3 {\n            nUnits++; }\n    }\n\n    // start the file\n    if pFileName {\n        pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    } else {\n        pFile = os.Stdout;\n    }\n    if pFile == nil {\n        fmt.Printf(\"Sat_SolverWriteDimacs(): Cannot open the ouput file.\\n\");\n        return;\n    }\n//    fprintf( pFile, \"c CNF generated by ABC on %s\\n\", Extra_TimeStamp() );\n    fmt.Fprintf(pFile, \"p cnf %d %d\\n\", p.size, Sat_MemEntryNum(\u0026p.Mem, 0)-1+Sat_MemEntryNum(\u0026p.Mem, 1)+nUnits+int32((assumpEnd-assumpBegin)));\n\n    // write the original clauses\n    // inlining of macro Sat_MemForEachClause\n    for  i = 0; i \u003c= pMem.iPage[0]; i += 2  {             for  k = 2; k \u003c Sat_MemLimit(pMem.pPages[i]) \u0026\u0026 ((c) = Sat_MemClause( pMem, i, k )); k += Sat_MemClauseSize(c)  { if i == 0 \u0026\u0026 k == 2 {} else {\n        Sat_SolverClauseWriteDimacs( pFile, c, incrementVars ); }\n    }\n    }\n\n    // write the learned clauses\n//    Sat_MemForEachLearned( pMem, c, i, k )\n//        Sat_SolverClauseWriteDimacs( pFile, c, incrementVars );\n\n    // write zero-level assertions\n    for  i = 0; i \u003c p.size; i++  {\n        if p.levels[i] == 0 \u0026\u0026 p.assigns[i] != 3 { // varX\n            fmt.Fprintf(pFile, \"%s%d%s\\n\", (p.assigns[i] == 1)? \"-\": \"\", // var0\n                                 i + int32((incrementVars\u003e0)), (incrementVars) ? \" 0\" : \"\"); }\n    }\n\n    // write the assump\n    if assumpBegin != nil {\n        for ; assumpBegin != assumpEnd; assumpBegin++ {\n            fmt.Fprintf(pFile, \"%s%d%s\\n\", lit_sign(*assumpBegin)? \"-\": \"\", lit_var(*assumpBegin) + int32((incrementVars\u003e0)), (incrementVars) ? \" 0\" : \"\");\n        }\n    }\n\n    fmt.Fprintf(pFile, \"\\n\");\n    if pFileName { _ = (pFile).Close(); }\n}"
+    },
+    {
+      "Name": "Sat_Solver2WriteDimacs",
+      "Start": 4158,
+      "End": 5958,
+      "BodyStart": 4276,
+      "Original": "void Sat_Solver2WriteDimacs( sat_solver2 * p, char * pFileName, lit* assumpBegin, lit* assumpEnd, int incrementVars )\n{\n    Sat_Mem_t * pMem = \u0026p-\u003eMem;\n    FILE * pFile;\n    clause * c;\n    int i, k, nUnits;\n\n    // count the number of unit clauses\n    nUnits = 0;\n    for ( i = 0; i \u003c p-\u003esize; i++ )\n        if ( p-\u003elevels[i] == 0 \u0026\u0026 p-\u003eassigns[i] != 3 )\n            nUnits++;\n\n    // start the file\n    pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Sat_SolverWriteDimacs(): Cannot open the ouput file.\\n\" );\n        return;\n    }\n//    fprintf( pFile, \"c CNF generated by ABC on %s\\n\", Extra_TimeStamp() );\n    fprintf( pFile, \"p cnf %d %d\\n\", p-\u003esize, Sat_MemEntryNum(\u0026p-\u003eMem, 0)-1+Sat_MemEntryNum(\u0026p-\u003eMem, 1)+nUnits+(int)(assumpEnd-assumpBegin) );\n\n    // write the original clauses\n    Sat_MemForEachClause2( pMem, c, i, k )\n        Sat_SolverClauseWriteDimacs( pFile, c, incrementVars );\n\n    // write the learned clauses\n//    Sat_MemForEachLearned( pMem, c, i, k )\n//        Sat_SolverClauseWriteDimacs( pFile, c, incrementVars );\n\n    // write zero-level assertions\n    for ( i = 0; i \u003c p-\u003esize; i++ )\n        if ( p-\u003elevels[i] == 0 \u0026\u0026 p-\u003eassigns[i] != 3 ) // varX\n            fprintf( pFile, \"%s%d%s\\n\",\n                     (p-\u003eassigns[i] == 1)? \"-\": \"\",    // var0\n                     i + (int)(incrementVars\u003e0),\n                     (incrementVars) ? \" 0\" : \"\");\n\n    // write the assump\n    if (assumpBegin) {\n        for (; assumpBegin != assumpEnd; assumpBegin++) {\n            fprintf( pFile, \"%s%d%s\\n\",\n                     lit_sign(*assumpBegin)? \"-\": \"\",\n                     lit_var(*assumpBegin) + (int)(incrementVars\u003e0),\n                     (incrementVars) ? \" 0\" : \"\");\n        }\n    }\n\n    fprintf( pFile, \"\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func Sat_Solver2WriteDimacs(p *sat_solver2, pFileName string, assumpBegin *lit, assumpEnd *lit, incrementVars int32) {\n    var pMem *Sat_Mem_t  = \u0026p.Mem;\n    var pFile *os.File;\n    var c *clause;\n    var i, k, nUnits int32;\n\n    // count the number of unit clauses\n    nUnits = 0;\n    for  i = 0; i \u003c p.size; i++  {\n        if p.levels[i] == 0 \u0026\u0026 p.assigns[i] != 3 {\n            nUnits++; }\n    }\n\n    // start the file\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Sat_SolverWriteDimacs(): Cannot open the ouput file.\\n\");\n        return;\n    }\n//    fprintf( pFile, \"c CNF generated by ABC on %s\\n\", Extra_TimeStamp() );\n    fmt.Fprintf(pFile, \"p cnf %d %d\\n\", p.size, Sat_MemEntryNum(\u0026p.Mem, 0)-1+Sat_MemEntryNum(\u0026p.Mem, 1)+nUnits+int32((assumpEnd-assumpBegin)));\n\n    // write the original clauses\n    // inlining of macro Sat_MemForEachClause2\n    for  i = 0; i \u003c= pMem.iPage[0]; i += 2  {             for  k = 2; k \u003c Sat_MemLimit(pMem.pPages[i]) \u0026\u0026 ((c) = Sat_MemClause( pMem, i, k )); k += Sat_MemClauseSize2(c)  { if i == 0 \u0026\u0026 k == 2 {} else {\n        Sat_SolverClauseWriteDimacs( pFile, c, incrementVars ); }\n    }\n    }\n\n    // write the learned clauses\n//    Sat_MemForEachLearned( pMem, c, i, k )\n//        Sat_SolverClauseWriteDimacs( pFile, c, incrementVars );\n\n    // write zero-level assertions\n    for  i = 0; i \u003c p.size; i++  {\n        if p.levels[i] == 0 \u0026\u0026 p.assigns[i] != 3 { // varX\n            fmt.Fprintf(pFile, \"%s%d%s\\n\", (p.assigns[i] == 1)? \"-\": \"\", // var0\n                                 i + int32((incrementVars\u003e0)), (incrementVars) ? \" 0\" : \"\"); }\n    }\n\n    // write the assump\n    if assumpBegin != nil {\n        for ; assumpBegin != assumpEnd; assumpBegin++ {\n            fmt.Fprintf(pFile, \"%s%d%s\\n\", lit_sign(*assumpBegin)? \"-\": \"\", lit_var(*assumpBegin) + int32((incrementVars\u003e0)), (incrementVars) ? \" 0\" : \"\");\n        }\n    }\n\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Sat_Wrd2Dbl",
+      "Start": 6251,
+      "End": 6375,
+      "BodyStart": 6295,
+      "Original": "static inline double Sat_Wrd2Dbl( word w )  { return (double)(unsigned)(w\u00260x3FFFFFFF) + (double)(1\u003c\u003c30)*(unsigned)(w\u003e\u003e30); }",
+      "Draft": "func Sat_Wrd2Dbl(w word) float64 { return float64(uint32((w\u00260x3FFFFFFF))) + float64((1\u003c\u003c30))*uint32((w\u003e\u003e30)); }"
+    },
+    {
+      "Name": "Sat_SolverPrintStats",
+      "Start": 6377,
+      "End": 6871,
+      "BodyStart": 6435,
+      "Original": "void Sat_SolverPrintStats( FILE * pFile, sat_solver * p )\n{\n    printf( \"starts        : %16.0f\\n\", Sat_Wrd2Dbl(p-\u003estats.starts) );\n    printf( \"conflicts     : %16.0f\\n\", Sat_Wrd2Dbl(p-\u003estats.conflicts) );\n    printf( \"decisions     : %16.0f\\n\", Sat_Wrd2Dbl(p-\u003estats.decisions) );\n    printf( \"propagations  : %16.0f\\n\", Sat_Wrd2Dbl(p-\u003estats.propagations) );\n//    printf( \"inspects      : %10d\\n\", (int)p-\u003estats.inspects );\n//    printf( \"inspects2     : %10d\\n\", (int)p-\u003estats.inspects2 );\n}",
+      "Draft": "func Sat_SolverPrintStats(pFile *os.File, p *sat_solver) {\n    fmt.Printf(\"starts        : %16.0f\\n\", Sat_Wrd2Dbl(p.stats.starts));\n    fmt.Printf(\"conflicts     : %16.0f\\n\", Sat_Wrd2Dbl(p.stats.conflicts));\n    fmt.Printf(\"decisions     : %16.0f\\n\", Sat_Wrd2Dbl(p.stats.decisions));\n    fmt.Printf(\"propagations  : %16.0f\\n\", Sat_Wrd2Dbl(p.stats.propagations));\n//    printf( \"inspects      : %10d\\n\", (int)p-\u003estats.inspects );\n//    printf( \"inspects2     : %10d\\n\", (int)p-\u003estats.inspects2 );\n}"
+    },
+    {
+      "Name": "Sat_Solver2PrintStats",
+      "Start": 7158,
+      "End": 8042,
+      "BodyStart": 7218,
+      "Original": "void Sat_Solver2PrintStats( FILE * pFile, sat_solver2 * s )\n{\n    printf( \"starts        : %10d\\n\", (int)s-\u003estats.starts );\n    printf( \"conflicts     : %10d\\n\", (int)s-\u003estats.conflicts );\n    printf( \"decisions     : %10d\\n\", (int)s-\u003estats.decisions );\n    printf( \"propagations  : %10d\\n\", (int)s-\u003estats.propagations );\n//    printf( \"inspects      : %10d\\n\", (int)s-\u003estats.inspects );\n//    printf( \"inspects2     : %10d\\n\", (int)s-\u003estats.inspects2 );\n/*\n    printf( \"memory for variables %.1f MB (free %6.2f %%) and clauses %.1f MB (free %6.2f %%)\\n\", \n        1.0 * Sat_Solver2GetVarMem(s) * s-\u003esize / (1\u003c\u003c20),\n        100.0 * (s-\u003ecap - s-\u003esize) / s-\u003ecap,\n        4.0 * (s-\u003eclauses.cap + s-\u003elearnts.cap) / (1\u003c\u003c20),\n        100.0 * (s-\u003eclauses.cap - s-\u003eclauses.size + \n                 s-\u003elearnts.cap - s-\u003elearnts.size) / \n                (s-\u003eclauses.cap + s-\u003elearnts.cap) );\n*/\n}",
+      "Draft": "func Sat_Solver2PrintStats(pFile *os.File, s *sat_solver2) {\n    fmt.Printf(\"starts        : %10d\\n\", int32(s.stats.starts));\n    fmt.Printf(\"conflicts     : %10d\\n\", int32(s.stats.conflicts));\n    fmt.Printf(\"decisions     : %10d\\n\", int32(s.stats.decisions));\n    fmt.Printf(\"propagations  : %10d\\n\", int32(s.stats.propagations));\n//    printf( \"inspects      : %10d\\n\", (int)s-\u003estats.inspects );\n//    printf( \"inspects2     : %10d\\n\", (int)s-\u003estats.inspects2 );\n/*\n    printf( \"memory for variables %.1f MB (free %6.2f %%) and clauses %.1f MB (free %6.2f %%)\\n\", \n        1.0 * Sat_Solver2GetVarMem(s) * s-\u003esize / (1\u003c\u003c20),\n        100.0 * (s-\u003ecap - s-\u003esize) / s-\u003ecap,\n        4.0 * (s-\u003eclauses.cap + s-\u003elearnts.cap) / (1\u003c\u003c20),\n        100.0 * (s-\u003eclauses.cap - s-\u003eclauses.size + \n                 s-\u003elearnts.cap - s-\u003elearnts.size) / \n                (s-\u003eclauses.cap + s-\u003elearnts.cap) );\n*/\n}"
+    },
+    {
+      "Name": "Sat_Solver2GetVarMem",
+      "Start": 8329,
+      "End": 8823,
+      "BodyStart": 8373,
+      "Original": "int Sat_Solver2GetVarMem( sat_solver2 * s )\n{\n    int Mem = 0;\n    Mem += (sizeof(s-\u003eactivity[0]) == 4) ? sizeof(unsigned) : sizeof(double);  // activity\n    Mem += 2 * sizeof(veci); // wlists\n    Mem += sizeof(int);      // vi (variable info)\n    Mem += sizeof(int);      // trail\n    Mem += sizeof(int);      // orderpos\n    Mem += sizeof(int);      // reasons\n    Mem += sizeof(int);      // units\n    Mem += sizeof(int);      // order\n    Mem += sizeof(int);      // model\n    return Mem;\n}",
+      "Draft": "func Sat_Solver2GetVarMem(s *sat_solver2) int32 {\n    var Mem int32;\n    Mem += (sizeof(s.activity[0]) == 4) ? sizeof(unsigned) : sizeof(double);  // activity\n    Mem += 2 * sizeof(veci); // wlists\n    Mem += sizeof(int);      // vi (variable info)\n    Mem += sizeof(int);      // trail\n    Mem += sizeof(int);      // orderpos\n    Mem += sizeof(int);      // reasons\n    Mem += sizeof(int);      // units\n    Mem += sizeof(int);      // order\n    Mem += sizeof(int);      // model\n    return Mem;\n}"
+    },
+    {
+      "Name": "Sat_SolverGetModel",
+      "Start": 9085,
+      "End": 9337,
+      "BodyStart": 9152,
+      "Original": "int * Sat_SolverGetModel( sat_solver * p, int * pVars, int nVars )\n{\n    int * pModel;\n    int i;\n    pModel = ABC_CALLOC( int, nVars+1 );\n    for ( i = 0; i \u003c nVars; i++ )\n        pModel[i] = sat_solver_var_value(p, pVars[i]);\n    return pModel;    \n}",
+      "Draft": "func Sat_SolverGetModel(p *sat_solver, pVars *int32, nVars int32) *int32 {\n    var pModel *int32;\n    var i int32;\n    // inlining of macro ABC_CALLOC\n    pModel = ((int *) calloc((size_t)(nVars+1), sizeof(int)));\n    for  i = 0; i \u003c nVars; i++  {\n        pModel[i] = sat_solver_var_value(p, pVars[i]);\n    }\n    return pModel;    \n}"
+    },
+    {
+      "Name": "Sat_Solver2GetModel",
+      "Start": 9599,
+      "End": 9854,
+      "BodyStart": 9668,
+      "Original": "int * Sat_Solver2GetModel( sat_solver2 * p, int * pVars, int nVars )\n{\n    int * pModel;\n    int i;\n    pModel = ABC_CALLOC( int, nVars+1 );\n    for ( i = 0; i \u003c nVars; i++ )\n        pModel[i] = sat_solver2_var_value(p, pVars[i]);\n    return pModel;    \n}",
+      "Draft": "func Sat_Solver2GetModel(p *sat_solver2, pVars *int32, nVars int32) *int32 {\n    var pModel *int32;\n    var i int32;\n    // inlining of macro ABC_CALLOC\n    pModel = ((int *) calloc((size_t)(nVars+1), sizeof(int)));\n    for  i = 0; i \u003c nVars; i++  {\n        pModel[i] = sat_solver2_var_value(p, pVars[i]);\n    }\n    return pModel;    \n}"
+    },
+    {
+      "Name": "Sat_SolverDoubleClauses",
+      "Start": 10155,
+      "End": 11369,
+      "BodyStart": 10212,
+      "Original": "void Sat_SolverDoubleClauses( sat_solver * p, int iVar )\n{\n    assert( 0 );\n/*\n    clause * pClause;\n    lit Lit, * pLits;\n    int RetValue, nClauses, nVarsOld, nLitsOld, nLits, c, v;\n    // get the number of variables\n    nVarsOld = p-\u003esize;\n    nLitsOld = 2 * p-\u003esize;\n    // extend the solver to depend on two sets of variables\n    sat_solver_setnvars( p, 2 * p-\u003esize );\n    // duplicate implications\n    for ( v = 0; v \u003c nVarsOld; v++ )\n        if ( p-\u003eassigns[v] != l_Undef )\n        {\n            Lit = nLitsOld + toLitCond( v, p-\u003eassigns[v]==l_False );\n            if ( v == iVar )\n                Lit = lit_neg(Lit);\n            RetValue = sat_solver_addclause( p, \u0026Lit, \u0026Lit + 1 );\n            assert( RetValue );\n        }\n    // duplicate clauses\n    nClauses = vecp_size(\u0026p-\u003eclauses);\n    for ( c = 0; c \u003c nClauses; c++ )\n    {\n        pClause = (clause *)p-\u003eclauses.ptr[c];\n        nLits = clause_size(pClause);\n        pLits = clause_begin(pClause);\n        for ( v = 0; v \u003c nLits; v++ )\n            pLits[v] += nLitsOld;\n        RetValue = sat_solver_addclause( p, pLits, pLits + nLits );\n        assert( RetValue );\n        for ( v = 0; v \u003c nLits; v++ )\n            pLits[v] -= nLitsOld;\n    }\n*/\n}",
+      "Draft": "func Sat_SolverDoubleClauses(p *sat_solver, iVar int32) {\n    assert(false, \"0\");\n/*\n    clause * pClause;\n    lit Lit, * pLits;\n    int RetValue, nClauses, nVarsOld, nLitsOld, nLits, c, v;\n    // get the number of variables\n    nVarsOld = p-\u003esize;\n    nLitsOld = 2 * p-\u003esize;\n    // extend the solver to depend on two sets of variables\n    sat_solver_setnvars( p, 2 * p-\u003esize );\n    // duplicate implications\n    for ( v = 0; v \u003c nVarsOld; v++ )\n        if ( p-\u003eassigns[v] != l_Undef )\n        {\n            Lit = nLitsOld + toLitCond( v, p-\u003eassigns[v]==l_False );\n            if ( v == iVar )\n                Lit = lit_neg(Lit);\n            RetValue = sat_solver_addclause( p, \u0026Lit, \u0026Lit + 1 );\n            assert( RetValue );\n        }\n    // duplicate clauses\n    nClauses = vecp_size(\u0026p-\u003eclauses);\n    for ( c = 0; c \u003c nClauses; c++ )\n    {\n        pClause = (clause *)p-\u003eclauses.ptr[c];\n        nLits = clause_size(pClause);\n        pLits = clause_begin(pClause);\n        for ( v = 0; v \u003c nLits; v++ )\n            pLits[v] += nLitsOld;\n        RetValue = sat_solver_addclause( p, pLits, pLits + nLits );\n        assert( RetValue );\n        for ( v = 0; v \u003c nLits; v++ )\n            pLits[v] -= nLitsOld;\n    }\n*/\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::mechanical::sizeof::8845",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8404,
+      "End": 8410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::mechanical::sizeof::8876",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8435,
+      "End": 8441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::mechanical::sizeof::8895",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8454,
+      "End": 8460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::mechanical::sizeof::8939",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8498,
+      "End": 8504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::mechanical::sizeof::8974",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8533,
+      "End": 8539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::mechanical::sizeof::9025",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8584,
+      "End": 8590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::mechanical::sizeof::9063",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8622,
+      "End": 8628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::mechanical::sizeof::9104",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8663,
+      "End": 8669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::mechanical::sizeof::9144",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8703,
+      "End": 8709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::mechanical::sizeof::9182",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8741,
+      "End": 8747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::mechanical::sizeof::9220",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8779,
+      "End": 8785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::mechanical::sizeof::9718",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9196,
+      "End": 9196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::mechanical::sizeof::10302",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9712,
+      "End": 9712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::pointer-cast::9684",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9196,
+      "End": 9196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::pointer-cast::10268",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9712,
+      "End": 9712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::ternary::Sat_SolverClauseWriteDimacs",
+      "Category": "ternary-review",
+      "Symbol": "Sat_SolverClauseWriteDimacs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1445,
+      "End": 1769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::Sat_SolverClauseWriteDimacs",
+      "Category": "semantic-review",
+      "Symbol": "Sat_SolverClauseWriteDimacs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1445,
+      "End": 1769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::ternary::Sat_SolverWriteDimacs",
+      "Category": "ternary-review",
+      "Symbol": "Sat_SolverWriteDimacs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2321,
+      "End": 4156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::Sat_SolverWriteDimacs",
+      "Category": "semantic-review",
+      "Symbol": "Sat_SolverWriteDimacs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2321,
+      "End": 4156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::ternary::Sat_Solver2WriteDimacs",
+      "Category": "ternary-review",
+      "Symbol": "Sat_Solver2WriteDimacs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4158,
+      "End": 5958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::Sat_Solver2WriteDimacs",
+      "Category": "semantic-review",
+      "Symbol": "Sat_Solver2WriteDimacs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4158,
+      "End": 5958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::Sat_Wrd2Dbl",
+      "Category": "semantic-review",
+      "Symbol": "Sat_Wrd2Dbl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6251,
+      "End": 6375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::Sat_SolverPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Sat_SolverPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6377,
+      "End": 6871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::Sat_Solver2PrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Sat_Solver2PrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7158,
+      "End": 8042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::ternary::Sat_Solver2GetVarMem",
+      "Category": "ternary-review",
+      "Symbol": "Sat_Solver2GetVarMem",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8329,
+      "End": 8823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::Sat_Solver2GetVarMem",
+      "Category": "semantic-review",
+      "Symbol": "Sat_Solver2GetVarMem",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8329,
+      "End": 8823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::Sat_SolverGetModel",
+      "Category": "semantic-review",
+      "Symbol": "Sat_SolverGetModel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9085,
+      "End": 9337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::Sat_Solver2GetModel",
+      "Category": "semantic-review",
+      "Symbol": "Sat_Solver2GetModel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9599,
+      "End": 9854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::Sat_SolverDoubleClauses",
+      "Category": "semantic-review",
+      "Symbol": "Sat_SolverDoubleClauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10155,
+      "End": 11369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11617
+    }
+  ],
+  "Draft": "package bsat\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [satUtil.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [C-language MiniSat solver.]\n\n  Synopsis    [Additional SAT solver procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: satUtil.c,v 1.4 2005/09/16 22:55:03 casem Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cassert.h\u003e\n//#include \"satSolver.h\"\n//#include \"satSolver2.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Sat_SolverClauseWriteDimacs( FILE * pFile, clause * pC, int fIncrement );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the given clause in a file in DIMACS format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_SolverClauseWriteDimacs(pFile *os.File, pC *clause, fIncrement int32) {\n    var i int32;\n    for  i = 0; i \u003c int32(pC.size); i++  {\n        fmt.Fprintf(pFile, \"%s%d \", (lit_sign(pC.lits[i])? \"-\": \"\"), lit_var(pC.lits[i]) + (fIncrement\u003e0));\n    }\n    if fIncrement != 0 {\n        fmt.Fprintf(pFile, \"0\"); }\n    fmt.Fprintf(pFile, \"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Write the clauses in the solver into a file in DIMACS format.]\n\n  Description [This procedure by default does not print binary clauses. To enable \n  printing of binary clauses, please set fUseBinaryClauses to 0 in the body of \n  procedure sat_solver_clause_new(sat_solver* s, lit* begin, lit* end, int learnt)\n  in file \"satSolver.c\".]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_SolverWriteDimacs(p *sat_solver, pFileName string, assumpBegin *lit, assumpEnd *lit, incrementVars int32) {\n    var pMem *Sat_Mem_t  = \u0026p.Mem;\n    var pFile *os.File;\n    var c *clause;\n    var i, k, nUnits int32;\n\n    // count the number of unit clauses\n    nUnits = 0;\n    for  i = 0; i \u003c p.size; i++  {\n        if p.levels[i] == 0 \u0026\u0026 p.assigns[i] != 3 {\n            nUnits++; }\n    }\n\n    // start the file\n    if pFileName {\n        pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    } else {\n        pFile = os.Stdout;\n    }\n    if pFile == nil {\n        fmt.Printf(\"Sat_SolverWriteDimacs(): Cannot open the ouput file.\\n\");\n        return;\n    }\n//    fprintf( pFile, \"c CNF generated by ABC on %s\\n\", Extra_TimeStamp() );\n    fmt.Fprintf(pFile, \"p cnf %d %d\\n\", p.size, Sat_MemEntryNum(\u0026p.Mem, 0)-1+Sat_MemEntryNum(\u0026p.Mem, 1)+nUnits+int32((assumpEnd-assumpBegin)));\n\n    // write the original clauses\n    // inlining of macro Sat_MemForEachClause\n    for  i = 0; i \u003c= pMem.iPage[0]; i += 2  {             for  k = 2; k \u003c Sat_MemLimit(pMem.pPages[i]) \u0026\u0026 ((c) = Sat_MemClause( pMem, i, k )); k += Sat_MemClauseSize(c)  { if i == 0 \u0026\u0026 k == 2 {} else {\n        Sat_SolverClauseWriteDimacs( pFile, c, incrementVars ); }\n    }\n    }\n\n    // write the learned clauses\n//    Sat_MemForEachLearned( pMem, c, i, k )\n//        Sat_SolverClauseWriteDimacs( pFile, c, incrementVars );\n\n    // write zero-level assertions\n    for  i = 0; i \u003c p.size; i++  {\n        if p.levels[i] == 0 \u0026\u0026 p.assigns[i] != 3 { // varX\n            fmt.Fprintf(pFile, \"%s%d%s\\n\", (p.assigns[i] == 1)? \"-\": \"\", // var0\n                                 i + int32((incrementVars\u003e0)), (incrementVars) ? \" 0\" : \"\"); }\n    }\n\n    // write the assump\n    if assumpBegin != nil {\n        for ; assumpBegin != assumpEnd; assumpBegin++ {\n            fmt.Fprintf(pFile, \"%s%d%s\\n\", lit_sign(*assumpBegin)? \"-\": \"\", lit_var(*assumpBegin) + int32((incrementVars\u003e0)), (incrementVars) ? \" 0\" : \"\");\n        }\n    }\n\n    fmt.Fprintf(pFile, \"\\n\");\n    if pFileName { _ = (pFile).Close(); }\n} \nfunc Sat_Solver2WriteDimacs(p *sat_solver2, pFileName string, assumpBegin *lit, assumpEnd *lit, incrementVars int32) {\n    var pMem *Sat_Mem_t  = \u0026p.Mem;\n    var pFile *os.File;\n    var c *clause;\n    var i, k, nUnits int32;\n\n    // count the number of unit clauses\n    nUnits = 0;\n    for  i = 0; i \u003c p.size; i++  {\n        if p.levels[i] == 0 \u0026\u0026 p.assigns[i] != 3 {\n            nUnits++; }\n    }\n\n    // start the file\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Sat_SolverWriteDimacs(): Cannot open the ouput file.\\n\");\n        return;\n    }\n//    fprintf( pFile, \"c CNF generated by ABC on %s\\n\", Extra_TimeStamp() );\n    fmt.Fprintf(pFile, \"p cnf %d %d\\n\", p.size, Sat_MemEntryNum(\u0026p.Mem, 0)-1+Sat_MemEntryNum(\u0026p.Mem, 1)+nUnits+int32((assumpEnd-assumpBegin)));\n\n    // write the original clauses\n    // inlining of macro Sat_MemForEachClause2\n    for  i = 0; i \u003c= pMem.iPage[0]; i += 2  {             for  k = 2; k \u003c Sat_MemLimit(pMem.pPages[i]) \u0026\u0026 ((c) = Sat_MemClause( pMem, i, k )); k += Sat_MemClauseSize2(c)  { if i == 0 \u0026\u0026 k == 2 {} else {\n        Sat_SolverClauseWriteDimacs( pFile, c, incrementVars ); }\n    }\n    }\n\n    // write the learned clauses\n//    Sat_MemForEachLearned( pMem, c, i, k )\n//        Sat_SolverClauseWriteDimacs( pFile, c, incrementVars );\n\n    // write zero-level assertions\n    for  i = 0; i \u003c p.size; i++  {\n        if p.levels[i] == 0 \u0026\u0026 p.assigns[i] != 3 { // varX\n            fmt.Fprintf(pFile, \"%s%d%s\\n\", (p.assigns[i] == 1)? \"-\": \"\", // var0\n                                 i + int32((incrementVars\u003e0)), (incrementVars) ? \" 0\" : \"\"); }\n    }\n\n    // write the assump\n    if assumpBegin != nil {\n        for ; assumpBegin != assumpEnd; assumpBegin++ {\n            fmt.Fprintf(pFile, \"%s%d%s\\n\", lit_sign(*assumpBegin)? \"-\": \"\", lit_var(*assumpBegin) + int32((incrementVars\u003e0)), (incrementVars) ? \" 0\" : \"\");\n        }\n    }\n\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}   \n  \n\n/**Function*************************************************************\n\n  Synopsis    [Writes the given clause in a file in DIMACS format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_Wrd2Dbl(w word) float64 { return float64(uint32((w\u00260x3FFFFFFF))) + float64((1\u003c\u003c30))*uint32((w\u003e\u003e30)); }\n\nfunc Sat_SolverPrintStats(pFile *os.File, p *sat_solver) {\n    fmt.Printf(\"starts        : %16.0f\\n\", Sat_Wrd2Dbl(p.stats.starts));\n    fmt.Printf(\"conflicts     : %16.0f\\n\", Sat_Wrd2Dbl(p.stats.conflicts));\n    fmt.Printf(\"decisions     : %16.0f\\n\", Sat_Wrd2Dbl(p.stats.decisions));\n    fmt.Printf(\"propagations  : %16.0f\\n\", Sat_Wrd2Dbl(p.stats.propagations));\n//    printf( \"inspects      : %10d\\n\", (int)p-\u003estats.inspects );\n//    printf( \"inspects2     : %10d\\n\", (int)p-\u003estats.inspects2 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the given clause in a file in DIMACS format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_Solver2PrintStats(pFile *os.File, s *sat_solver2) {\n    fmt.Printf(\"starts        : %10d\\n\", int32(s.stats.starts));\n    fmt.Printf(\"conflicts     : %10d\\n\", int32(s.stats.conflicts));\n    fmt.Printf(\"decisions     : %10d\\n\", int32(s.stats.decisions));\n    fmt.Printf(\"propagations  : %10d\\n\", int32(s.stats.propagations));\n//    printf( \"inspects      : %10d\\n\", (int)s-\u003estats.inspects );\n//    printf( \"inspects2     : %10d\\n\", (int)s-\u003estats.inspects2 );\n/*\n    printf( \"memory for variables %.1f MB (free %6.2f %%) and clauses %.1f MB (free %6.2f %%)\\n\", \n        1.0 * Sat_Solver2GetVarMem(s) * s-\u003esize / (1\u003c\u003c20),\n        100.0 * (s-\u003ecap - s-\u003esize) / s-\u003ecap,\n        4.0 * (s-\u003eclauses.cap + s-\u003elearnts.cap) / (1\u003c\u003c20),\n        100.0 * (s-\u003eclauses.cap - s-\u003eclauses.size + \n                 s-\u003elearnts.cap - s-\u003elearnts.size) / \n                (s-\u003eclauses.cap + s-\u003elearnts.cap) );\n*/\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of bytes used for each variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_Solver2GetVarMem(s *sat_solver2) int32 {\n    var Mem int32;\n    Mem += (sizeof(s.activity[0]) == 4) ? sizeof(unsigned) : sizeof(double);  // activity\n    Mem += 2 * sizeof(veci); // wlists\n    Mem += sizeof(int);      // vi (variable info)\n    Mem += sizeof(int);      // trail\n    Mem += sizeof(int);      // orderpos\n    Mem += sizeof(int);      // reasons\n    Mem += sizeof(int);      // units\n    Mem += sizeof(int);      // order\n    Mem += sizeof(int);      // model\n    return Mem;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns a counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_SolverGetModel(p *sat_solver, pVars *int32, nVars int32) *int32 {\n    var pModel *int32;\n    var i int32;\n    // inlining of macro ABC_CALLOC\n    pModel = ((int *) calloc((size_t)(nVars+1), sizeof(int)));\n    for  i = 0; i \u003c nVars; i++  {\n        pModel[i] = sat_solver_var_value(p, pVars[i]);\n    }\n    return pModel;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns a counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_Solver2GetModel(p *sat_solver2, pVars *int32, nVars int32) *int32 {\n    var pModel *int32;\n    var i int32;\n    // inlining of macro ABC_CALLOC\n    pModel = ((int *) calloc((size_t)(nVars+1), sizeof(int)));\n    for  i = 0; i \u003c nVars; i++  {\n        pModel[i] = sat_solver2_var_value(p, pVars[i]);\n    }\n    return pModel;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates all clauses, complements unit clause of the given var.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_SolverDoubleClauses(p *sat_solver, iVar int32) {\n    assert(false, \"0\");\n/*\n    clause * pClause;\n    lit Lit, * pLits;\n    int RetValue, nClauses, nVarsOld, nLitsOld, nLits, c, v;\n    // get the number of variables\n    nVarsOld = p-\u003esize;\n    nLitsOld = 2 * p-\u003esize;\n    // extend the solver to depend on two sets of variables\n    sat_solver_setnvars( p, 2 * p-\u003esize );\n    // duplicate implications\n    for ( v = 0; v \u003c nVarsOld; v++ )\n        if ( p-\u003eassigns[v] != l_Undef )\n        {\n            Lit = nLitsOld + toLitCond( v, p-\u003eassigns[v]==l_False );\n            if ( v == iVar )\n                Lit = lit_neg(Lit);\n            RetValue = sat_solver_addclause( p, \u0026Lit, \u0026Lit + 1 );\n            assert( RetValue );\n        }\n    // duplicate clauses\n    nClauses = vecp_size(\u0026p-\u003eclauses);\n    for ( c = 0; c \u003c nClauses; c++ )\n    {\n        pClause = (clause *)p-\u003eclauses.ptr[c];\n        nLits = clause_size(pClause);\n        pLits = clause_begin(pClause);\n        for ( v = 0; v \u003c nLits; v++ )\n            pLits[v] += nLitsOld;\n        RetValue = sat_solver_addclause( p, pLits, pLits + nLits );\n        assert( RetValue );\n        for ( v = 0; v \u003c nLits; v++ )\n            pLits[v] -= nLitsOld;\n    }\n*/\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

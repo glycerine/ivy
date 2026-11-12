@@ -1,0 +1,339 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c",
+  "SHA256": "4af344f61ef26e0bb85f508e368277418bf818f8f460a1b5aae376d5d8fb5307",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 1369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(setp_equal(p1, p));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 1804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"# IRRED: F=%d E=%d R=%d Rt=%d Rp=%d Rc=%d Final=%d Bound=%d\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 16,
+        "ByteOffset": 3452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf(\"IRRED1: zr=%d ze=%d to-go=%d time=%s\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 16,
+        "ByteOffset": 4007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf(\"IRRED1: zr=%d zrt=%d to-go=%d time=%s\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 16,
+        "ByteOffset": 5838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf(\"IRRED1: %d of %d to-go=%d, table=%dx%d time=%s\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 16,
+        "ByteOffset": 6244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf(\"IRRED1: delete redundant rows, now %dx%d\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 245,
+        "Column": 5,
+        "ByteOffset": 7742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"exit TAUTOLOGY[%d]: %s\\n\", --taut_level, /*__starting_point_inline_macro:print_bool__*/((result) == 0 ? \"FALSE\" : ((result) == 1 ? \"TRUE\" : \"MAYBE\")));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 314,
+        "Column": 9,
+        "ByteOffset": 9949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"UNATE_REDUCTION: %d unate variables, reduced to %d\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 376,
+        "Column": 12,
+        "ByteOffset": 12128
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\"exit FIND_TAUTOLOGY[%d]: table is %d by %d\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 440,
+        "Column": 9,
+        "ByteOffset": 14273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"UNATE_REDUCTION: %d unate variables, reduced to %d\\n\","
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::mechanical::static::6870",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5061,
+      "End": 5067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::mechanical::static::11263",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 8429,
+      "End": 8435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::pointer-cast::10184",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7524,
+      "End": 7524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::pointer-cast::10369",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7650,
+      "End": 7650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::pointer-cast::14529",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10956,
+      "End": 10956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::1010",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1010,
+      "End": 1028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::1010",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1010,
+      "End": 1028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::1159",
+      "Category": "macro-inline-review",
+      "Symbol": "sm_foreach_row_element",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1159,
+      "End": 1192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::2073",
+      "Category": "macro-inline-review",
+      "Symbol": "PUTSIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2073,
+      "End": 2090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::2576",
+      "Category": "macro-inline-review",
+      "Symbol": "print_time",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2576,
+      "End": 2595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::3019",
+      "Category": "macro-inline-review",
+      "Symbol": "print_time",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3019,
+      "End": 3038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::3977",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3977,
+      "End": 3984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::4265",
+      "Category": "macro-inline-review",
+      "Symbol": "print_time",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4265,
+      "End": 4284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::5229",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5229,
+      "End": 5239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::5250",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5250,
+      "End": 5260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::6140",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_copy",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6140,
+      "End": 6166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::6215",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_or",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6215,
+      "End": 6242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::7068",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_or",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7068,
+      "End": 7112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::8601",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8601,
+      "End": 8611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::8622",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8622,
+      "End": 8632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::10116",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10116,
+      "End": 10123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/irred.c::macro-inline::10503",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_or",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10503,
+      "End": 10547
+    }
+  ],
+  "Draft": "package espresso\n\nimport \"fmt\"\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n// static void fcube_is_covered();\n\n// static void ftautology();\n\n// static bool ftaut_special_cases();\n\n\n\nvar Rp_current int32;\n\f\n/*\n *   irredundant -- Return a minimal subset of F\n */\n\npcover\nirredundant(F, D)\npcover F, D;\n{\n    mark_irredundant(F, D);\n    return sf_inactive(F);\n}\n\n\n/*\n *   mark_irredundant -- find redundant cubes, and mark them \"INACTIVE\"\n */\n\nvoid\nmark_irredundant(F, D)\npcover F, D;\n{\n    pcover E, Rt, Rp;\n    pset p, p1, last;\n    sm_matrix *table;\n    sm_row *cover;\n    sm_element *pe;\n\n    /* extract a minimum cover */\n    irred_split_cover(F, D, \u0026E, \u0026Rt, \u0026Rp);\n    table = irred_derive_table(D, E, Rp);\n    cover = sm_minimum_cover(table, NIL(int), /* heuristic */ 1, /* debug */ 0);\n\n    /* mark the cubes for the result */\n    // inlining of macro foreach_set\n    for p=F.data,last=p+F.count*F.wsize;p\u003clast;p+=F.wsize {\n    // inlining of macro RESET\n    (p[0] \u0026= ~ (ACTIVE));\n    // inlining of macro RESET\n    (p[0] \u0026= ~ (RELESSEN));\n    }\n    // inlining of macro foreach_set\n    for p=E.data,last=p+E.count*E.wsize;p\u003clast;p+=E.wsize {\n    // inlining of macro GETSET\n    p1 = ((F).data + (F).wsize * (SIZE(p)));\n    assert(setp_equal(p1, p), \"setp_equal(p1, p)\");\n    // inlining of macro SET\n    (p1[0] |= (ACTIVE));\n    // inlining of macro SET\n    (p1[0] |= (RELESSEN));        /* for essen(), mark as rel. ess. */\n    }\n    sm_foreach_row_element(cover, pe) {\n    // inlining of macro GETSET\n    p1 = ((F).data + (F).wsize * (pe.col_num));\n    // inlining of macro SET\n    (p1[0] |= (ACTIVE));\n    }\n\n    if debug \u0026 IRRED {\n    fmt.Printf(\"# IRRED: F=%d E=%d R=%d Rt=%d Rp=%d Rc=%d Final=%d Bound=%d\\n\", F.count, E.count, Rt.count+Rp.count, Rt.count, Rp.count, cover.length, E.count + cover.length, 0);\n    }\n\n    // inlining of macro free_cover\n    sf_free(E);\n    // inlining of macro free_cover\n    sf_free(Rt);\n    // inlining of macro free_cover\n    sf_free(Rp);\n    sm_free(table);\n    sm_row_free(cover);\n}\n\f\n/*\n *  irred_split_cover -- find E, Rt, and Rp from the cover F, D\n *\n *    E  -- relatively essential cubes\n *    Rt  -- totally redundant cubes\n *    Rp  -- partially redundant cubes\n */\n\nvoid\nirred_split_cover(F, D, E, Rt, Rp)\npcover F, D;\npcover *E, *Rt, *Rp;\n{\n    register pcube p, last;\n    register int index;\n    pcover R;\n    pcube *FD, *ED;\n\n    /* number the cubes of F -- these numbers track into E, Rp, Rt, etc. */\n    index = 0;\n    // inlining of macro foreach_set\n    for p=F.data,last=p+F.count*F.wsize;p\u003clast;p+=F.wsize {\n    PUTSIZE(p, index);\n    index++;\n    }\n\n    // inlining of macro new_cover\n    *E = sf_new(10, cube.size);\n    // inlining of macro new_cover\n    *Rt = sf_new(10, cube.size);\n    // inlining of macro new_cover\n    *Rp = sf_new(10, cube.size);\n    // inlining of macro new_cover\n    R = sf_new(10, cube.size);\n\n    /* Split F into E and R */\n    FD = cube2list(F, D);\n    // inlining of macro foreach_set\n    for p=F.data,last=p+F.count*F.wsize;p\u003clast;p+=F.wsize {\n    if cube_is_covered(FD, p) {\n        R = sf_addset(R, p);\n    } else {\n        *E = sf_addset(*E, p);\n    }\n    if debug \u0026 IRRED1 {\n        (void) fmt.Printf(\"IRRED1: zr=%d ze=%d to-go=%d time=%s\\n\", R.count, (*E).count, F.count - (R.count + (*E).count), print_time(ptime()));\n    }\n    }\n    // inlining of macro free_cubelist\n    FREE(FD[0]); FREE(FD);;\n\n    /* Split R into Rt and Rp */\n    ED = cube2list(*E, D);\n    // inlining of macro foreach_set\n    for p=R.data,last=p+R.count*R.wsize;p\u003clast;p+=R.wsize {\n    if cube_is_covered(ED, p) {\n        *Rt = sf_addset(*Rt, p);\n    } else {\n        *Rp = sf_addset(*Rp, p);\n    }\n    if debug \u0026 IRRED1 {\n        (void) fmt.Printf(\"IRRED1: zr=%d zrt=%d to-go=%d time=%s\\n\", (*Rp).count, (*Rt).count, R.count - ((*Rp).count +(*Rt).count), print_time(ptime()));\n    }\n    }\n    // inlining of macro free_cubelist\n    FREE(ED[0]); FREE(ED);;\n\n    // inlining of macro free_cover\n    sf_free(R);\n}\n\f\n/*\n *  irred_derive_table -- given the covers D, E and the set of\n *  partially redundant primes Rp, build a covering table showing\n *  possible selections of primes to cover Rp.\n */\n\nsm_matrix *\nirred_derive_table(D, E, Rp)\npcover D, E, Rp;\n{\n    register pcube last, p, *list;\n    sm_matrix *table;\n    int size_last_dominance, i;\n\n    /* Mark each cube in DE as not part of the redundant set */\n    // inlining of macro foreach_set\n    for p=D.data,last=p+D.count*D.wsize;p\u003clast;p+=D.wsize {\n    // inlining of macro RESET\n    (p[0] \u0026= ~ (REDUND));\n    }\n    // inlining of macro foreach_set\n    for p=E.data,last=p+E.count*E.wsize;p\u003clast;p+=E.wsize {\n    // inlining of macro RESET\n    (p[0] \u0026= ~ (REDUND));\n    }\n\n    /* Mark each cube in Rp as partially redundant */\n    // inlining of macro foreach_set\n    for p=Rp.data,last=p+Rp.count*Rp.wsize;p\u003clast;p+=Rp.wsize {\n    // inlining of macro SET\n    (p[0] |= (REDUND));             /* belongs to redundant set */\n    }\n\n    /* For each cube in Rp, find ways to cover its minterms */\n    list = cube3list(D, E, Rp);\n    table = sm_alloc();\n    size_last_dominance = 0;\n    i = 0;\n    // inlining of macro foreach_set\n    for p=Rp.data,last=p+Rp.count*Rp.wsize;p\u003clast;p+=Rp.wsize {\n    Rp_current = SIZE(p);\n    fcube_is_covered(list, p, table);\n    // inlining of macro RESET\n    (p[0] \u0026= ~ (REDUND));    /* can now consider this cube redundant */\n    if debug \u0026 IRRED1 {\n        (void) fmt.Printf(\"IRRED1: %d of %d to-go=%d, table=%dx%d time=%s\\n\", i, Rp.count, Rp.count - i, table.nrows, table.ncols, print_time(ptime()));\n    }\n    /* try to keep memory limits down by reducing table as we go along */\n    if table.nrows - size_last_dominance \u003e 1000 {\n        (void) sm_row_dominance(table);\n        size_last_dominance = table.nrows;\n        if debug \u0026 IRRED1 {\n        (void) fmt.Printf(\"IRRED1: delete redundant rows, now %dx%d\\n\", table.nrows, table.ncols);\n        }\n    }\n    i++;\n    }\n    // inlining of macro free_cubelist\n    FREE(list[0]); FREE(list);;\n\n    return table;\n}\n\f\n/* cube_is_covered -- determine if a cubelist \"covers\" a single cube */\nbool\ncube_is_covered(T, c)\npcube *T, c;\n{\n    return tautology(cofactor(T,c));\n}\n\n\n\n/* tautology -- answer the tautology question for T */\nbool\ntautology(T)\npcube *T;         /* T will be disposed of */\n{\n    register pcube cl, cr;\n    register int best, result;\n    static int taut_level = 0;\n\n    if debug \u0026 TAUT {\n    debug_print(T, \"TAUTOLOGY\", taut_level++);\n    }\n\n    if (result = taut_special_cases(T)) == MAYBE {\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cl = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cr = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    best = binate_split_select(T, cl, cr, TAUT);\n    result = tautology(scofactor(T, cl, best)) \u0026\u0026\n         tautology(scofactor(T, cr, best));\n    // inlining of macro free_cubelist\n    FREE(T[0]); FREE(T);;\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cl);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cr);\n    }\n\n    if debug \u0026 TAUT {\n    // inlining of macro print_bool\n    fmt.Printf(\"exit TAUTOLOGY[%d]: %s\\n\", --taut_level, ((result) == 0 ? \"FALSE\" : ((result) == 1 ? \"TRUE\" : \"MAYBE\")));\n    }\n    return result;\n}\n\f\n/*\n *  taut_special_cases -- check special cases for tautology\n */\n\nbool\ntaut_special_cases(T)\npcube *T;            /* will be disposed if answer is determined */\n{\n    register pcube *T1, *Tsave, p, ceil=cube.temp[0], temp=cube.temp[1];\n    pcube *A, *B;\n    int var;\n\n    /* Check for a row of all 1's which implies tautology */\n    for T1 = T+2; (p = *T1++) != NULL;  {\n    if full_row(p, T[0]) {\n        // inlining of macro free_cubelist\n        FREE(T[0]); FREE(T);;\n        return TRUE;\n    }\n    }\n\n    /* Check for a column of all 0's which implies no tautology */\nstart:\n    INLINEset_copy(ceil, T[0]);\n    for T1 = T+2; (p = *T1++) != NULL;  {\n    INLINEset_or(ceil, ceil, p);\n    }\n    if ! setp_equal(ceil, cube.fullset) {\n    // inlining of macro free_cubelist\n    FREE(T[0]); FREE(T);;\n    return FALSE;\n    }\n\n    /* Collect column counts, determine unate variables, etc. */\n    massive_count(T);\n\n    /* If function is unate (and no row of all 1's), then no tautology */\n    if cdata.vars_unate == cdata.vars_active {\n    // inlining of macro free_cubelist\n    FREE(T[0]); FREE(T);;\n    return FALSE;\n\n    /* If active in a single variable (and no column of 0's) then tautology */\n    } else if cdata.vars_active == 1 {\n    // inlining of macro free_cubelist\n    FREE(T[0]); FREE(T);;\n    return TRUE;\n\n    /* Check for unate variables, and reduce cover if there are any */\n    } else if cdata.vars_unate != 0 {\n    /* Form a cube \"ceil\" with full variables in the unate variables */\n    (void) set_copy(ceil, cube.emptyset);\n    for var = 0; var \u003c cube.num_vars; var++ {\n        if cdata.is_unate[var] {\n        INLINEset_or(ceil, ceil, cube.var_mask[var]);\n        }\n    }\n\n    /* Save only those cubes that are \"full\" in all unate variables */\n    for Tsave = T1 = T+2; (p = *T1++) != 0;  {\n        if setp_implies(ceil, set_or(temp, p, T[0])) {\n        *Tsave++ = p;\n        }\n    }\n    *Tsave++ = NULL;\n    T[1] = (pcube) Tsave;\n\n    if debug \u0026 TAUT {\n        // inlining of macro CUBELISTSIZE\n        fmt.Printf(\"UNATE_REDUCTION: %d unate variables, reduced to %d\\n\", int32(cdata.vars_unate), int32((((pcube *) T[1] - T) - 3)));\n    }\n    goto start;\n\n    /* Check for component reduction */\n    // inlining of macro CUBELISTSIZE\n    } else if cdata.var_zeros[cdata.best] \u003c (((pcube *) T[1] - T) - 3) / 2 {\n    if cubelist_partition(T, \u0026A, \u0026B, debug \u0026 TAUT) == 0 {\n        return MAYBE;\n    } else {\n        // inlining of macro free_cubelist\n        FREE(T[0]); FREE(T);;\n        if tautology(A) {\n        // inlining of macro free_cubelist\n        FREE(B[0]); FREE(B);;\n        return TRUE;\n        } else {\n        return tautology(B);\n        }\n    }\n    }\n\n    /* We tried as hard as we could, but must recurse from here on */\n    return MAYBE;\n}\n\f\n/* fcube_is_covered -- determine exactly how a cubelist \"covers\" a cube */\nstatic void\nfcube_is_covered(T, c, table)\npcube *T, c;\nvar table *sm_matrix;\n{\n    ftautology(cofactor(T,c), table);\n}\n\n\n/* ftautology -- find ways to make a tautology */\nstatic void\nftautology(T, table)\npcube *T;             /* T will be disposed of */\nvar table *sm_matrix;\n{\n    register pcube cl, cr;\n    register int best;\n    static int ftaut_level = 0;\n\n    if debug \u0026 TAUT {\n    debug_print(T, \"FIND_TAUTOLOGY\", ftaut_level++);\n    }\n\n    if ftaut_special_cases(T, table) == MAYBE {\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cl = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    cr = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    best = binate_split_select(T, cl, cr, TAUT);\n\n    ftautology(scofactor(T, cl, best), table);\n    ftautology(scofactor(T, cr, best), table);\n\n    // inlining of macro free_cubelist\n    FREE(T[0]); FREE(T);;\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cl);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(cr);\n    }\n\n    if debug \u0026 TAUT {\n    (void) fmt.Printf(\"exit FIND_TAUTOLOGY[%d]: table is %d by %d\\n\", --ftaut_level, table.nrows, table.ncols);\n    }\n}\n\f\nstatic bool\nftaut_special_cases(T, table)\npcube *T;                 /* will be disposed if answer is determined */\nvar table *sm_matrix;\n{\n    register pcube *T1, *Tsave, p, temp = cube.temp[0], ceil = cube.temp[1];\n    int var, rownum;\n\n    /* Check for a row of all 1's in the essential cubes */\n    for T1 = T+2; (p = *T1++) != 0;  {\n    // inlining of macro TESTP\n    if ! (p[0] \u0026 (REDUND)) {\n        if full_row(p, T[0]) {\n        /* subspace is covered by essentials -- no new rows for table */\n        // inlining of macro free_cubelist\n        FREE(T[0]); FREE(T);;\n        return TRUE;\n        }\n    }\n    }\n\n    /* Collect column counts, determine unate variables, etc. */\nstart:\n    massive_count(T);\n\n    /* If function is unate, find the rows of all 1's */\n    if cdata.vars_unate == cdata.vars_active {\n    /* find which nonessentials cover this subspace */\n    rownum = table.last_row ? table.last_row.row_num+1 : 0;\n    (void) sm_insert(table, rownum, Rp_current);\n    for T1 = T+2; (p = *T1++) != 0;  {\n        // inlining of macro TESTP\n        if p[0] \u0026 (REDUND) {\n        /* See if a redundant cube covers this leaf */\n        if full_row(p, T[0]) {\n            (void) sm_insert(table, rownum, int32( SIZE(p)));\n        }\n        }\n    }\n    // inlining of macro free_cubelist\n    FREE(T[0]); FREE(T);;\n    return TRUE;\n\n    /* Perform unate reduction if there are any unate variables */\n    } else if cdata.vars_unate != 0 {\n    /* Form a cube \"ceil\" with full variables in the unate variables */\n    (void) set_copy(ceil, cube.emptyset);\n    for var = 0; var \u003c cube.num_vars; var++ {\n        if cdata.is_unate[var] {\n        INLINEset_or(ceil, ceil, cube.var_mask[var]);\n        }\n    }\n\n    /* Save only those cubes that are \"full\" in all unate variables */\n    for Tsave = T1 = T+2; (p = *T1++) != 0;  {\n        if setp_implies(ceil, set_or(temp, p, T[0])) {\n        *Tsave++ = p;\n        }\n    }\n    *Tsave++ = 0;\n    T[1] = (pcube) Tsave;\n\n    if debug \u0026 TAUT {\n        // inlining of macro CUBELISTSIZE\n        fmt.Printf(\"UNATE_REDUCTION: %d unate variables, reduced to %d\\n\", int32(cdata.vars_unate), int32((((pcube *) T[1] - T) - 3)));\n    }\n    goto start;\n    }\n\n    /* Not much we can do about it */\n    return MAYBE;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,190 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h",
+  "SHA256": "320789e080139bb572c80f1f11372f3525f0b5868fffb0bd9ff20b4f8d74d68c",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 33,
+        "Column": 1,
+        "ByteOffset": 1024
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 205,
+        "Column": 1,
+        "ByteOffset": 11192
+      },
+      "Directive": "#ifndef ABC_PRB"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::struct::Extra_SymmInfo_t",
+      "Category": "struct-review",
+      "Symbol": "Extra_SymmInfo_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 14306,
+      "End": 14760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::struct::Extra_UnateVar_t::unsigned    iVar : 30;",
+      "Category": "struct-field-review",
+      "Symbol": "Extra_UnateVar_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 18058,
+      "End": 18085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::struct::Extra_UnateVar_t::// index of the variable\n    unsigned    Pos  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Extra_UnateVar_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 18085,
+      "End": 18138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::struct::Extra_UnateVar_t::// 1 if positive unate\n    unsigned    Neg  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Extra_UnateVar_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 18138,
+      "End": 18189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::struct::Extra_UnateVar_t",
+      "Category": "struct-review",
+      "Symbol": "Extra_UnateVar_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 17980,
+      "End": 18216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::struct::Extra_UnateInfo_t",
+      "Category": "struct-review",
+      "Symbol": "Extra_UnateInfo_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 18218,
+      "End": 18564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::pointer-cast::15361",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15392,
+      "End": 15414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::pointer-cast::15468",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15499,
+      "End": 15521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::pointer-cast::18715",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18746,
+      "End": 18769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::pointer-cast::18823",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18854,
+      "End": 18877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::macro::hashKey1",
+      "Category": "macro-review",
+      "Symbol": "hashKey1",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3022,
+      "End": 3078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::macro::hashKey2",
+      "Category": "macro-review",
+      "Symbol": "hashKey2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3080,
+      "End": 3169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::macro::hashKey3",
+      "Category": "macro-review",
+      "Symbol": "hashKey3",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3171,
+      "End": 3296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::macro::hashKey4",
+      "Category": "macro-review",
+      "Symbol": "hashKey4",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3298,
+      "End": 3460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::macro::hashKey5",
+      "Category": "macro-review",
+      "Symbol": "hashKey5",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3462,
+      "End": 3657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1024,
+      "End": 1097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBdd.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11192,
+      "End": 11298
+    }
+  ],
+  "Draft": "package extrab\n\n/**CFile****************************************************************\n\n  FileName    [extraBdd.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [extra]\n\n  Synopsis    [Various reusable software utilities.]\n\n  Description [This library contains a number of operators and \n  traversal routines developed to extend the functionality of \n  CUDD v.2.3.x, by Fabio Somenzi (http://vlsi.colorado.edu/~fabio/)\n  To compile your code with the library, #include \"extra.h\" \n  in your source files and link your project to CUDD and this \n  library. Use the library at your own risk and with caution. \n  Note that debugging of some operators still continues.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: extraBdd.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n#ifdef _WIN32\n#define inline __inline // compatible with MS VS 6.0\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Nested includes                                                           */\n/*---------------------------------------------------------------------------*/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/st/st.h\"\n//#include \"bdd/cudd/cuddInt.h\"\n//#include \"misc/extra/extra.h\"\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/* constants of the manager */\n#define     b0     Cudd_Not((dd)-\u003eone)\n#define     b1              (dd)-\u003eone\n#define     z0              (dd)-\u003ezero\n#define     z1              (dd)-\u003eone\n#define     a0              (dd)-\u003ezero\n#define     a1              (dd)-\u003eone\n\n// hash key macros\n// Original macro:\n// #define hashKey1(a,TSIZE) \\\n// ((ABC_PTRUINT_T)(a) % TSIZE)\n\n\n// Original macro:\n// #define hashKey2(a,b,TSIZE) \\\n// (((ABC_PTRUINT_T)(a) + (ABC_PTRUINT_T)(b) * DD_P1) % TSIZE)\n\n\n// Original macro:\n// #define hashKey3(a,b,c,TSIZE) \\\n// (((((ABC_PTRUINT_T)(a) + (ABC_PTRUINT_T)(b)) * DD_P1 + (ABC_PTRUINT_T)(c)) * DD_P2 ) % TSIZE)\n\n\n// Original macro:\n// #define hashKey4(a,b,c,d,TSIZE) \\\n// ((((((ABC_PTRUINT_T)(a) + (ABC_PTRUINT_T)(b)) * DD_P1 + (ABC_PTRUINT_T)(c)) * DD_P2 + \\\n//    (ABC_PTRUINT_T)(d)) * DD_P3) % TSIZE)\n\n\n// Original macro:\n// #define hashKey5(a,b,c,d,e,TSIZE) \\\n// (((((((ABC_PTRUINT_T)(a) + (ABC_PTRUINT_T)(b)) * DD_P1 + (ABC_PTRUINT_T)(c)) * DD_P2 + \\\n//    (ABC_PTRUINT_T)(d)) * DD_P3 + (ABC_PTRUINT_T)(e)) * DD_P1) % TSIZE)\n\n\n/*===========================================================================*/\n/*     Various Utilities                                                     */\n/*===========================================================================*/\n\n/*=== extraBddAuto.c ========================================================*/\n\n// extern DdNode *     Extra_bddSpaceFromFunctionFast( DdManager * dd, DdNode * bFunc );\n\n// extern DdNode *     Extra_bddSpaceFromFunction( DdManager * dd, DdNode * bF, DdNode * bG );\n\n// extern DdNode *      extraBddSpaceFromFunction( DdManager * dd, DdNode * bF, DdNode * bG );\n\n// extern DdNode *     Extra_bddSpaceFromFunctionPos( DdManager * dd, DdNode * bFunc );\n\n// extern DdNode *      extraBddSpaceFromFunctionPos( DdManager * dd, DdNode * bFunc );\n\n// extern DdNode *     Extra_bddSpaceFromFunctionNeg( DdManager * dd, DdNode * bFunc );\n\n// extern DdNode *      extraBddSpaceFromFunctionNeg( DdManager * dd, DdNode * bFunc );\n\n\n// extern DdNode *     Extra_bddSpaceCanonVars( DdManager * dd, DdNode * bSpace );\n\n// extern DdNode *      extraBddSpaceCanonVars( DdManager * dd, DdNode * bSpace );\n\n\n// extern DdNode *     Extra_bddSpaceEquations( DdManager * dd, DdNode * bSpace );\n\n// extern DdNode *     Extra_bddSpaceEquationsNeg( DdManager * dd, DdNode * bSpace );\n\n// extern DdNode *      extraBddSpaceEquationsNeg( DdManager * dd, DdNode * bSpace );\n\n// extern DdNode *     Extra_bddSpaceEquationsPos( DdManager * dd, DdNode * bSpace );\n\n// extern DdNode *      extraBddSpaceEquationsPos( DdManager * dd, DdNode * bSpace );\n\n\n// extern DdNode *     Extra_bddSpaceFromMatrixPos( DdManager * dd, DdNode * zA );\n\n// extern DdNode *      extraBddSpaceFromMatrixPos( DdManager * dd, DdNode * zA );\n\n// extern DdNode *     Extra_bddSpaceFromMatrixNeg( DdManager * dd, DdNode * zA );\n\n// extern DdNode *      extraBddSpaceFromMatrixNeg( DdManager * dd, DdNode * zA );\n\n\n// extern DdNode *     Extra_bddSpaceReduce( DdManager * dd, DdNode * bFunc, DdNode * bCanonVars );\n\n// extern DdNode **    Extra_bddSpaceExorGates( DdManager * dd, DdNode * bFuncRed, DdNode * zEquations );\n\n\n/*=== extraBddCas.c =============================================================*/\n\n/* performs the binary encoding of the set of function using the given vars */\n// extern DdNode *     Extra_bddEncodingBinary( DdManager * dd, DdNode ** pbFuncs, int nFuncs, DdNode ** pbVars, int nVars );\n\n/* solves the column encoding problem using a sophisticated method */\n// extern DdNode *     Extra_bddEncodingNonStrict( DdManager * dd, DdNode ** pbColumns, int nColumns, DdNode * bVarsCol, DdNode ** pCVars, int nMulti, int * pSimple );\n\n/* collects the nodes under the cut and, for each node, computes the sum of paths leading to it from the root */\n// extern st__table *   Extra_bddNodePathsUnderCut( DdManager * dd, DdNode * bFunc, int CutLevel );\n\n/* collects the nodes under the cut starting from the given set of ADD nodes */\n// extern int          Extra_bddNodePathsUnderCutArray( DdManager * dd, DdNode ** paNodes, DdNode ** pbCubes, int nNodes, DdNode ** paNodesRes, DdNode ** pbCubesRes, int CutLevel );\n\n/* find the profile of a DD (the number of edges crossing each level) */\n// extern int          Extra_ProfileWidth( DdManager * dd, DdNode * F, int * Profile, int CutLevel );\n\n\n/*=== extraBddImage.c ================================================================*/\n\ntype Extra_ImageTree_t =  Extra_ImageTree_t_;\n// extern Extra_ImageTree_t * Extra_bddImageStart( \n//     DdManager * dd, DdNode * bCare,\n//     int nParts, DdNode ** pbParts,\n//     int nVars, DdNode ** pbVars, int fVerbose );\n\n// extern DdNode *    Extra_bddImageCompute( Extra_ImageTree_t * pTree, DdNode * bCare );\n\n// extern void        Extra_bddImageTreeDelete( Extra_ImageTree_t * pTree );\n\n// extern DdNode *    Extra_bddImageRead( Extra_ImageTree_t * pTree );\n\n\ntype Extra_ImageTree2_t =  Extra_ImageTree2_t_;\n// extern Extra_ImageTree2_t * Extra_bddImageStart2( \n//     DdManager * dd, DdNode * bCare,\n//     int nParts, DdNode ** pbParts,\n//     int nVars, DdNode ** pbVars, int fVerbose );\n\n// extern DdNode *    Extra_bddImageCompute2( Extra_ImageTree2_t * pTree, DdNode * bCare );\n\n// extern void        Extra_bddImageTreeDelete2( Extra_ImageTree2_t * pTree );\n\n// extern DdNode *    Extra_bddImageRead2( Extra_ImageTree2_t * pTree );\n\n\n/*=== extraBddMisc.c ========================================================*/\n\n// extern DdNode *     Extra_TransferPermute( DdManager * ddSource, DdManager * ddDestination, DdNode * f, int * Permute );\n\n// extern DdNode *     Extra_TransferLevelByLevel( DdManager * ddSource, DdManager * ddDestination, DdNode * f );\n\n// extern DdNode *     Extra_bddRemapUp( DdManager * dd, DdNode * bF );\n\n// extern DdNode *     Extra_bddMove( DdManager * dd, DdNode * bF, int nVars );\n\n// extern DdNode *     extraBddMove( DdManager * dd, DdNode * bF, DdNode * bFlag );\n\n// extern void         Extra_StopManager( DdManager * dd );\n\n// extern void         Extra_bddPrint( DdManager * dd, DdNode * F );\n\n// extern void         Extra_bddPrintSupport( DdManager * dd, DdNode * F );\n\n// extern void         extraDecomposeCover( DdManager* dd, DdNode*  zC, DdNode** zC0, DdNode** zC1, DdNode** zC2 );\n\n// extern int          Extra_bddSuppSize( DdManager * dd, DdNode * bSupp );\n\n// extern int          Extra_bddSuppContainVar( DdManager * dd, DdNode * bS, DdNode * bVar );\n\n// extern int          Extra_bddSuppOverlapping( DdManager * dd, DdNode * S1, DdNode * S2 );\n\n// extern int          Extra_bddSuppDifferentVars( DdManager * dd, DdNode * S1, DdNode * S2, int DiffMax );\n\n// extern int          Extra_bddSuppCheckContainment( DdManager * dd, DdNode * bL, DdNode * bH, DdNode ** bLarge, DdNode ** bSmall );\n\n// extern int *        Extra_SupportArray( DdManager * dd, DdNode * F, int * support );\n\n// extern int *        Extra_VectorSupportArray( DdManager * dd, DdNode ** F, int n, int * support );\n\n// extern DdNode *     Extra_bddFindOneCube( DdManager * dd, DdNode * bF );\n\n// extern DdNode *     Extra_bddGetOneCube( DdManager * dd, DdNode * bFunc );\n\n// extern DdNode *     Extra_bddComputeRangeCube( DdManager * dd, int iStart, int iStop );\n\n// extern DdNode *     Extra_bddBitsToCube( DdManager * dd, int Code, int CodeWidth, DdNode ** pbVars, int fMsbFirst );\n\n// extern DdNode *     Extra_bddSupportNegativeCube( DdManager * dd, DdNode * f );\n\n// extern int          Extra_bddIsVar( DdNode * bFunc );\n\n// extern DdNode *     Extra_bddCreateAnd( DdManager * dd, int nVars );\n\n// extern DdNode *     Extra_bddCreateOr( DdManager * dd, int nVars );\n\n// extern DdNode *     Extra_bddCreateExor( DdManager * dd, int nVars );\n\n// extern DdNode *     Extra_zddPrimes( DdManager * dd, DdNode * F );\n\n// extern void         Extra_bddPermuteArray( DdManager * dd, DdNode ** bNodesIn, DdNode ** bNodesOut, int nNodes, int *permut );\n\n// extern DdNode *     Extra_bddComputeCube( DdManager * dd, DdNode ** bXVars, int nVars );\n\n// extern DdNode *     Extra_bddChangePolarity( DdManager * dd, DdNode * bFunc, DdNode * bVars );\n\n// extern DdNode *     extraBddChangePolarity( DdManager * dd, DdNode * bFunc, DdNode * bVars );\n\n// extern int          Extra_bddVarIsInCube( DdNode * bCube, int iVar );\n\n// extern DdNode *     Extra_bddAndPermute( DdManager * ddF, DdNode * bF, DdManager * ddG, DdNode * bG, int * pPermute );\n\n// extern int          Extra_bddCountCubes( DdManager * dd, DdNode ** pFuncs, int nFuncs, int fMode, int nLimit, int * pGuide );\n\n// extern void         Extra_zddDumpPla( DdManager * dd, DdNode * zCover, int nVars, char * pFileName );\n\n\n/* build the set of all tuples of K variables out of N */\n// extern DdNode *     Extra_bddTuples( DdManager * dd, int K, DdNode * bVarsN );\n\n// extern DdNode *      extraBddTuples( DdManager * dd, DdNode * bVarsK, DdNode * bVarsN );\n\n\n#ifndef ABC_PRB\n#define ABC_PRB(dd,f)       printf(\"%s = \", #f); Extra_bddPrint(dd,f); printf(\"\\n\")\n#endif\n\n/*=== extraMaxMin.c ==============================================================*/\n\n/* maximal/minimimal */\n// extern DdNode * Extra_zddMaximal       (DdManager *dd, DdNode *S);\n\n// extern DdNode *  extraZddMaximal       (DdManager *dd, DdNode *S);\n\n// extern DdNode * Extra_zddMinimal       (DdManager *dd, DdNode *S);\n\n// extern DdNode *  extraZddMinimal       (DdManager *dd, DdNode *S);\n\n/* maximal/minimal of the union of two sets of subsets */\n// extern DdNode * Extra_zddMaxUnion      (DdManager *dd, DdNode *S, DdNode *T);\n\n// extern DdNode *  extraZddMaxUnion      (DdManager *dd, DdNode *S, DdNode *T);\n\n// extern DdNode * Extra_zddMinUnion      (DdManager *dd, DdNode *S, DdNode *T);\n\n// extern DdNode *  extraZddMinUnion      (DdManager *dd, DdNode *S, DdNode *T);\n\n/* dot/cross products */\n// extern DdNode * Extra_zddDotProduct    (DdManager *dd, DdNode *S, DdNode *T);\n\n// extern DdNode *  extraZddDotProduct    (DdManager *dd, DdNode *S, DdNode *T);\n\n// extern DdNode * Extra_zddCrossProduct  (DdManager *dd, DdNode *S, DdNode *T);\n\n// extern DdNode *  extraZddCrossProduct  (DdManager *dd, DdNode *S, DdNode *T);\n\n// extern DdNode * Extra_zddMaxDotProduct (DdManager *dd, DdNode *S, DdNode *T);\n\n// extern DdNode *  extraZddMaxDotProduct (DdManager *dd, DdNode *S, DdNode *T);\n\n\n/*=== extraBddSet.c ==============================================================*/\n\n/* subset/supset operations */\n// extern DdNode * Extra_zddSubSet        (DdManager *dd, DdNode *X, DdNode *Y);\n\n// extern DdNode *  extraZddSubSet        (DdManager *dd, DdNode *X, DdNode *Y);\n\n// extern DdNode * Extra_zddSupSet        (DdManager *dd, DdNode *X, DdNode *Y);\n\n// extern DdNode *  extraZddSupSet        (DdManager *dd, DdNode *X, DdNode *Y);\n\n// extern DdNode * Extra_zddNotSubSet     (DdManager *dd, DdNode *X, DdNode *Y);\n\n// extern DdNode *  extraZddNotSubSet     (DdManager *dd, DdNode *X, DdNode *Y);\n\n// extern DdNode * Extra_zddNotSupSet     (DdManager *dd, DdNode *X, DdNode *Y);\n\n// extern DdNode *  extraZddNotSupSet     (DdManager *dd, DdNode *X, DdNode *Y);\n\n// extern DdNode * Extra_zddMaxNotSupSet  (DdManager *dd, DdNode *X, DdNode *Y);\n\n// extern DdNode *  extraZddMaxNotSupSet  (DdManager *dd, DdNode *X, DdNode *Y);\n\n/* check whether the empty combination belongs to the set of subsets */\n// extern int Extra_zddEmptyBelongs       (DdManager *dd, DdNode* zS);\n\n/* check whether the set consists of one subset only */\n// extern int Extra_zddIsOneSubset        (DdManager *dd, DdNode* zS);\n\n\n/*=== extraBddKmap.c ================================================================*/\n\n/* displays the Karnaugh Map of a function */\n// extern void        Extra_PrintKMap( FILE * pFile, DdManager * dd, DdNode * OnSet, DdNode * OffSet, int nVars, DdNode ** XVars, int fSuppType, char ** pVarNames );\n\n/* displays the Karnaugh Map of a relation */\n// extern void        Extra_PrintKMapRelation( FILE * pFile, DdManager * dd, DdNode * OnSet, DdNode * OffSet, int nXVars, int nYVars, DdNode ** XVars, DdNode ** YVars );\n\n\n/*=== extraBddSymm.c =================================================================*/\n\n    \ntype Extra_SymmInfo_t struct {\n    nVars int32;      // the number of variables in the support\n    nVarsMax int32;   // the number of variables in the DD manager\n    nSymms int32;     // the number of pair-wise symmetries\n    nNodes int32;     // the number of nodes in a ZDD (if applicable)\n    pVars  *int32;    // the list of all variables present in the support\n    pSymms  *string; // the symmetry information\n}\n\n/* computes the classical symmetry information for the function - recursive */\n// extern Extra_SymmInfo_t *  Extra_SymmPairsCompute( DdManager * dd, DdNode * bFunc );\n\n/* computes the classical symmetry information for the function - using naive approach */\n// extern Extra_SymmInfo_t *  Extra_SymmPairsComputeNaive( DdManager * dd, DdNode * bFunc );\n\n// extern int         Extra_bddCheckVarsSymmetricNaive( DdManager * dd, DdNode * bF, int iVar1, int iVar2 );\n\n\n/* allocates the data structure */\n// extern Extra_SymmInfo_t *  Extra_SymmPairsAllocate( int nVars );\n\n/* deallocates the data structure */\n// extern void        Extra_SymmPairsDissolve( Extra_SymmInfo_t * );\n\n/* print the contents the data structure */\n// extern void        Extra_SymmPairsPrint( Extra_SymmInfo_t * );\n\n/* converts the ZDD into the Extra_SymmInfo_t structure */\n// extern Extra_SymmInfo_t *  Extra_SymmPairsCreateFromZdd( DdManager * dd, DdNode * zPairs, DdNode * bVars );\n\n\n/* computes the classical symmetry information as a ZDD */\n// extern DdNode *    Extra_zddSymmPairsCompute( DdManager * dd, DdNode * bF, DdNode * bVars );\n\n// extern DdNode *     extraZddSymmPairsCompute( DdManager * dd, DdNode * bF, DdNode * bVars );\n\n/* returns a singleton-set ZDD containing all variables that are symmetric with the given one */\n// extern DdNode *    Extra_zddGetSymmetricVars( DdManager * dd, DdNode * bF, DdNode * bG, DdNode * bVars );\n\n// extern DdNode *     extraZddGetSymmetricVars( DdManager * dd, DdNode * bF, DdNode * bG, DdNode * bVars );\n\n/* converts a set of variables into a set of singleton subsets */\n// extern DdNode *    Extra_zddGetSingletons( DdManager * dd, DdNode * bVars );\n\n// extern DdNode *     extraZddGetSingletons( DdManager * dd, DdNode * bVars );\n\n/* filters the set of variables using the support of the function */\n// extern DdNode *    Extra_bddReduceVarSet( DdManager * dd, DdNode * bVars, DdNode * bF );\n\n// extern DdNode *     extraBddReduceVarSet( DdManager * dd, DdNode * bVars, DdNode * bF );\n\n\n/* checks the possibility that the two vars are symmetric */\n// extern int         Extra_bddCheckVarsSymmetric( DdManager * dd, DdNode * bF, int iVar1, int iVar2 );\n\n// extern DdNode *     extraBddCheckVarsSymmetric( DdManager * dd, DdNode * bF, DdNode * bVars );\n\n\n/* build the set of all tuples of K variables out of N from the BDD cube */\n// extern DdNode *    Extra_zddTuplesFromBdd( DdManager * dd, int K, DdNode * bVarsN );\n\n// extern DdNode *     extraZddTuplesFromBdd( DdManager * dd, DdNode * bVarsK, DdNode * bVarsN );\n\n/* selects one subset from a ZDD representing the set of subsets */\n// extern DdNode *    Extra_zddSelectOneSubset( DdManager * dd, DdNode * zS );\n\n// extern DdNode *     extraZddSelectOneSubset( DdManager * dd, DdNode * zS );\n\n\n/*=== extraBddUnate.c =================================================================*/\n\n// extern DdNode *    Extra_bddAndTime( DdManager * dd, DdNode * f, DdNode * g, int TimeOut );\n\n// extern DdNode *    Extra_bddAndAbstractTime( DdManager * manager, DdNode * f, DdNode * g, DdNode * cube, int TimeOut );\n\n// extern DdNode *    Extra_TransferPermuteTime( DdManager * ddSource, DdManager * ddDestination, DdNode * f, int * Permute, int TimeOut );\n\n\n/*=== extraBddUnate.c =================================================================*/\n\n    \ntype Extra_UnateVar_t struct {\n    iVar uint32; /* C bitfield: 30 bits; review packing and truncation */  // index of the variable\n    Pos uint32; /* C bitfield: 1 bits; review packing and truncation */  // 1 if positive unate\n    Neg uint32; /* C bitfield: 1 bits; review packing and truncation */  // 1 if negative unate\n}\n\n    \ntype Extra_UnateInfo_t struct {\n    nVars int32;      // the number of variables in the support\n    nVarsMax int32;   // the number of variables in the DD manager\n    nUnate int32;     // the number of unate variables\n    pVars  *Extra_UnateVar_t;    // the array of variables present in the support\n}\n\n/* allocates the data structure */\n// extern Extra_UnateInfo_t *  Extra_UnateInfoAllocate( int nVars );\n\n/* deallocates the data structure */\n// extern void        Extra_UnateInfoDissolve( Extra_UnateInfo_t * );\n\n/* print the contents the data structure */\n// extern void        Extra_UnateInfoPrint( Extra_UnateInfo_t * );\n\n/* converts the ZDD into the Extra_SymmInfo_t structure */\n// extern Extra_UnateInfo_t *  Extra_UnateInfoCreateFromZdd( DdManager * dd, DdNode * zUnate, DdNode * bVars );\n\n/* naive check of unateness of one variable */\n// extern int         Extra_bddCheckUnateNaive( DdManager * dd, DdNode * bF, int iVar );\n\n\n/* computes the unateness information for the function */\n// extern Extra_UnateInfo_t *  Extra_UnateComputeFast( DdManager * dd, DdNode * bFunc );\n\n// extern Extra_UnateInfo_t *  Extra_UnateComputeSlow( DdManager * dd, DdNode * bFunc );\n\n\n/* computes the classical symmetry information as a ZDD */\n// extern DdNode *    Extra_zddUnateInfoCompute( DdManager * dd, DdNode * bF, DdNode * bVars );\n\n// extern DdNode *     extraZddUnateInfoCompute( DdManager * dd, DdNode * bF, DdNode * bVars );\n\n\n/* converts a set of variables into a set of singleton subsets */\n// extern DdNode *    Extra_zddGetSingletonsBoth( DdManager * dd, DdNode * bVars );\n\n// extern DdNode *     extraZddGetSingletonsBoth( DdManager * dd, DdNode * bVars );\n\n\n/**AutomaticEnd***************************************************************/\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n"
+}

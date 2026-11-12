@@ -1,0 +1,1815 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c",
+  "SHA256": "b67213ba5997ca72faaeca1100f306e5ca5fec5e1740b2aa9b12c18fc237f381",
+  "Library": [
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 57,
+        "Column": 9,
+        "ByteOffset": 1579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"aig\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 59,
+        "Column": 9,
+        "ByteOffset": 1643
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"baf\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 61,
+        "Column": 9,
+        "ByteOffset": 1705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"bblif\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 63,
+        "Column": 9,
+        "ByteOffset": 1771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"blif\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 65,
+        "Column": 9,
+        "ByteOffset": 1835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"bench\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 67,
+        "Column": 9,
+        "ByteOffset": 1901
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"cnf\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 69,
+        "Column": 9,
+        "ByteOffset": 1963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"dot\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 71,
+        "Column": 9,
+        "ByteOffset": 2025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"edif\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 73,
+        "Column": 9,
+        "ByteOffset": 2089
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"eqn\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 75,
+        "Column": 9,
+        "ByteOffset": 2151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"gml\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 77,
+        "Column": 9,
+        "ByteOffset": 2213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"list\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 79,
+        "Column": 9,
+        "ByteOffset": 2277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"mv\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 81,
+        "Column": 9,
+        "ByteOffset": 2341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"pla\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 83,
+        "Column": 9,
+        "ByteOffset": 2403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"smv\" ) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 85,
+        "Column": 9,
+        "ByteOffset": 2465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp( pExt, \"v\" ) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 9,
+        "ByteOffset": 3026
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Generic file reader requires a known file extension to open \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 105,
+        "Column": 18,
+        "ByteOffset": 3035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Generic file reader requires a known file extension to open \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 109,
+        "Column": 13,
+        "ByteOffset": 3199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"r\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 9,
+        "ByteOffset": 3254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open input file \\\"%s\\\". \", pFileName );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 111,
+        "Column": 18,
+        "ByteOffset": 3263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open input file \\\"%s\\\". \", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 13,
+        "ByteOffset": 3437
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Did you mean \\\"%s\\\"?\", pFileName ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 113,
+        "Column": 22,
+        "ByteOffset": 3446
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Did you mean \\\"%s\\\"?\", pFileName ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 9,
+        "ByteOffset": 3501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 114,
+        "Column": 18,
+        "ByteOffset": 3510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 3555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 13,
+        "ByteOffset": 4018
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Reading AIG from file has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 127,
+        "Column": 22,
+        "ByteOffset": 4027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Reading AIG from file has failed.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 149,
+        "Column": 9,
+        "ByteOffset": 4906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stderr, \"Unknown file format.\\n\" );"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 149,
+        "Column": 18,
+        "ByteOffset": 4915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stderr, \"Unknown file format.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 9,
+        "ByteOffset": 5006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Reading network from file has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 153,
+        "Column": 18,
+        "ByteOffset": 5015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Reading network from file has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 9,
+        "ByteOffset": 6465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize( tempStore ) == Vec_PtrSize( pNtk.vLtlProperties ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 6958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( tempLtlStore != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 246,
+        "Column": 9,
+        "ByteOffset": 7989
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 8083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 13,
+        "ByteOffset": 8285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Flattening logic hierarchy has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 255,
+        "Column": 22,
+        "ByteOffset": 8294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Flattening logic hierarchy has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 9,
+        "ByteOffset": 8460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Hierarchy reader converted %d instances of blackboxes.\\n\", Abc_NtkBlackboxNum(pNtk) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 265,
+        "Column": 13,
+        "ByteOffset": 8682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Converting blackboxes has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 265,
+        "Column": 22,
+        "ByteOffset": 8691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Converting blackboxes has failed.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 274,
+        "Column": 13,
+        "ByteOffset": 8991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Converting BLIF-MV to AIG has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 274,
+        "Column": 22,
+        "ByteOffset": 9000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Converting BLIF-MV to AIG has failed.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 9,
+        "ByteOffset": 9323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Converting netlist to logic network after reading has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 285,
+        "Column": 18,
+        "ByteOffset": 9332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Converting netlist to logic network after reading has failed.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 9,
+        "ByteOffset": 9909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Empty network.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 306,
+        "Column": 18,
+        "ByteOffset": 9918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Empty network.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 311,
+        "Column": 9,
+        "ByteOffset": 10087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"The generic file writer requires a known file extension.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 311,
+        "Column": 18,
+        "ByteOffset": 10096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"The generic file writer requires a known file extension.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 317,
+        "Column": 13,
+        "ByteOffset": 10329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Writing this format is only possible for structurally hashed AIGs.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 317,
+        "Column": 22,
+        "ByteOffset": 10338
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Writing this format is only possible for structurally hashed AIGs.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 341,
+        "Column": 13,
+        "ByteOffset": 11063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Writing Binary BLIF is only possible for logic networks.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 341,
+        "Column": 22,
+        "ByteOffset": 11072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Writing Binary BLIF is only possible for logic networks.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 359,
+        "Column": 13,
+        "ByteOffset": 11564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"PLA writing is available for collapsed networks.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 359,
+        "Column": 22,
+        "ByteOffset": 11573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"PLA writing is available for collapsed networks.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 365,
+        "Column": 13,
+        "ByteOffset": 11778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Latches are writen into the PLA file at PI/PO pairs.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 365,
+        "Column": 22,
+        "ByteOffset": 11787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Latches are writen into the PLA file at PI/PO pairs.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 379,
+        "Column": 13,
+        "ByteOffset": 12311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Writing traditional BENCH is available for AIGs only (use \\\"write_bench\\\").\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 379,
+        "Column": 22,
+        "ByteOffset": 12320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Writing traditional BENCH is available for AIGs only (use \\\"write_bench\\\").\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 386,
+        "Column": 13,
+        "ByteOffset": 12584
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Writing traditional SMV is available for AIGs only.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 386,
+        "Column": 22,
+        "ByteOffset": 12593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Writing traditional SMV is available for AIGs only.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 395,
+        "Column": 9,
+        "ByteOffset": 12839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Converting to netlist has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 395,
+        "Column": 18,
+        "ByteOffset": 12848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Converting to netlist has failed.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 430,
+        "Column": 9,
+        "ByteOffset": 14136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stderr, \"Unknown file format.\\n\" ); }"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 430,
+        "Column": 18,
+        "ByteOffset": 14145
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stderr, \"Unknown file format.\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 452,
+        "Column": 9,
+        "ByteOffset": 14741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Empty network.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 452,
+        "Column": 18,
+        "ByteOffset": 14750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Empty network.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 457,
+        "Column": 5,
+        "ByteOffset": 14836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 465,
+        "Column": 9,
+        "ByteOffset": 15247
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stderr, \"Unknown input file format.\\n\" ); }"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 465,
+        "Column": 18,
+        "ByteOffset": 15256
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stderr, \"Unknown input file format.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 484,
+        "Column": 13,
+        "ByteOffset": 15912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Hierarchy writer replaced %d barbufs by hierarchy boundaries.\\n\", pNtk.nBarBufs ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 488,
+        "Column": 13,
+        "ByteOffset": 16130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Hierarchy writer does not support BLIF-MV with blackboxes.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 493,
+        "Column": 9,
+        "ByteOffset": 16331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 509,
+        "Column": 13,
+        "ByteOffset": 16961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Hierarchy writer reintroduced %d instances of blackboxes.\\n\", Abc_NtkBlackboxNum(pNtkBase) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 512,
+        "Column": 9,
+        "ByteOffset": 17092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: The output network does not contain blackboxes.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 550,
+        "Column": 9,
+        "ByteOffset": 18829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stderr, \"Unknown output file format.\\n\" ); }"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 550,
+        "Column": 18,
+        "ByteOffset": 18838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stderr, \"Unknown output file format.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 571,
+        "Column": 9,
+        "ByteOffset": 19366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: PI \\\"%s\\\" appears twice in the list.\\n\", pName ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 595,
+        "Column": 9,
+        "ByteOffset": 20080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: PO \\\"%s\\\" appears twice in the list.\\n\", pName ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 711,
+        "Column": 45,
+        "ByteOffset": 23938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNet  = Abc_NtkFindNet(pNtk, pName);    assert( pNet );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 729,
+        "Column": 48,
+        "ByteOffset": 24492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNet  = Abc_NtkFindNet(pNtk, pNameIn);     assert( pNet );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 731,
+        "Column": 48,
+        "ByteOffset": 24601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNet  = Abc_NtkFindNet(pNtk, pNameOut);    assert( pNet );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 749,
+        "Column": 48,
+        "ByteOffset": 25155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNet  = Abc_NtkFindNet(pNtk, pNameIn);     assert( pNet );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 751,
+        "Column": 48,
+        "ByteOffset": 25264
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNet  = Abc_NtkFindNet(pNtk, pNameOut);    assert( pNet );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "review",
+      "Message": "Dynamic fopen mode retained; choose OpenFile flags explicitly.",
+      "Location": {
+        "Line": 774,
+        "Column": 16,
+        "ByteOffset": 25951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        return fopen( FileName, Mode );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 781,
+        "Column": 21,
+        "ByteOffset": 26178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            for i = strtok( t, \":\" ); i != 0; i = strtok( 0, \":\")  {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 785,
+        "Column": 21,
+        "ByteOffset": 26413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf ( stdout, \"Using file %s\\n\", ActualFileName ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 785,
+        "Column": 31,
+        "ByteOffset": 26423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf ( stdout, \"Using file %s\\n\", ActualFileName ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 786,
+        "Column": 73,
+        "ByteOffset": 26542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    /*__starting_point_inline_macro:ABC_FREE__*/((t) ? (free((char *) (t)), (t) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 790,
+        "Column": 65,
+        "ByteOffset": 26704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:ABC_FREE__*/((t) ? (free((char *) (t)), (t) = 0) : 0);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "review",
+      "Message": "Dynamic fopen mode retained; choose OpenFile flags explicitly.",
+      "Location": {
+        "Line": 794,
+        "Column": 20,
+        "ByteOffset": 26806
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            return fopen( FileName, Mode );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 814,
+        "Column": 30,
+        "ByteOffset": 27277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFileIn *os.File   = fopen( pNameIn,  \"rb\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 815,
+        "Column": 30,
+        "ByteOffset": 27331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFileOut *os.File  = fopen( pNameOut, \"wb\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 817,
+        "Column": 23,
+        "ByteOffset": 27402
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pFileOut { fclose( pFileOut ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 818,
+        "Column": 9,
+        "ByteOffset": 27432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" for reading.\\n\", pNameIn );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 822,
+        "Column": 23,
+        "ByteOffset": 27562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pFileIn {  fclose( pFileIn ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 823,
+        "Column": 9,
+        "ByteOffset": 27591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" for reading.\\n\", pNameOut );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 826,
+        "Column": 70,
+        "ByteOffset": 27744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(Size)));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 827,
+        "Column": 5,
+        "ByteOffset": 27788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFileOut, \".type fd\\n\" );"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "fgets needs a known byte array/slice; string mutation or raw-pointer capacity requires a representation decision.",
+      "Location": {
+        "Line": 828,
+        "Column": 10,
+        "ByteOffset": 27832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fgets(pBuffer, Size, pFileIn)  {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 829,
+        "Column": 12,
+        "ByteOffset": 27876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strstr(pBuffer, \"END_SDF\") {"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 831,
+        "Column": 12,
+        "ByteOffset": 27937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strstr(pBuffer, \"SDF\") {"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "fgets needs a known byte array/slice; string mutation or raw-pointer capacity requires a representation decision.",
+      "Location": {
+        "Line": 832,
+        "Column": 32,
+        "ByteOffset": 27993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            var pRes string  = fgets(pBuffer, Size, pFileIn);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 833,
+        "Column": 13,
+        "ByteOffset": 28036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pRes != nil );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 835,
+        "Column": 17,
+        "ByteOffset": 28130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFileOut, \".i %d\\n\", atoi(pToken) ); }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 835,
+        "Column": 47,
+        "ByteOffset": 28160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFileOut, \".i %d\\n\", atoi(pToken) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 837,
+        "Column": 17,
+        "ByteOffset": 28245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFileOut, \".o %d\\n\", atoi(pToken) ); }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 837,
+        "Column": 47,
+        "ByteOffset": 28275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFileOut, \".o %d\\n\", atoi(pToken) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 839,
+        "Column": 17,
+        "ByteOffset": 28360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFileOut, \".p %d\\n\", atoi(pToken) ); }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 839,
+        "Column": 47,
+        "ByteOffset": 28390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFileOut, \".p %d\\n\", atoi(pToken) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 843,
+        "Column": 13,
+        "ByteOffset": 28480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFileOut, \"%s\", pBuffer ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 845,
+        "Column": 5,
+        "ByteOffset": 28528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFileOut, \".e\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 846,
+        "Column": 5,
+        "ByteOffset": 28561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFileIn );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 847,
+        "Column": 5,
+        "ByteOffset": 28584
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFileOut );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 848,
+        "Column": 63,
+        "ByteOffset": 28666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 842,
+        "Column": 1,
+        "ByteOffset": 25911
+      },
+      "Directive": "#ifdef WIN32"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Io_ReadFileType",
+      "Start": 1306,
+      "End": 2514,
+      "BodyStart": 1356,
+      "Original": "Io_FileType_t Io_ReadFileType( char * pFileName )\n{\n    char * pExt;\n    if ( pFileName == NULL )\n        return IO_FILE_NONE;\n    pExt = Extra_FileNameExtension( pFileName );\n    if ( pExt == NULL )\n        return IO_FILE_NONE;\n    if ( !strcmp( pExt, \"aig\" ) )\n        return IO_FILE_AIGER;\n    if ( !strcmp( pExt, \"baf\" ) )\n        return IO_FILE_BAF;\n    if ( !strcmp( pExt, \"bblif\" ) )\n        return IO_FILE_BBLIF;\n    if ( !strcmp( pExt, \"blif\" ) )\n        return IO_FILE_BLIF;\n    if ( !strcmp( pExt, \"bench\" ) )\n        return IO_FILE_BENCH;\n    if ( !strcmp( pExt, \"cnf\" ) )\n        return IO_FILE_CNF;\n    if ( !strcmp( pExt, \"dot\" ) )\n        return IO_FILE_DOT;\n    if ( !strcmp( pExt, \"edif\" ) )\n        return IO_FILE_EDIF;\n    if ( !strcmp( pExt, \"eqn\" ) )\n        return IO_FILE_EQN;\n    if ( !strcmp( pExt, \"gml\" ) )\n        return IO_FILE_GML;\n    if ( !strcmp( pExt, \"list\" ) )\n        return IO_FILE_LIST;\n    if ( !strcmp( pExt, \"mv\" ) )\n        return IO_FILE_BLIFMV;\n    if ( !strcmp( pExt, \"pla\" ) )\n        return IO_FILE_PLA;\n    if ( !strcmp( pExt, \"smv\" ) )\n        return IO_FILE_SMV;\n    if ( !strcmp( pExt, \"v\" ) )\n        return IO_FILE_VERILOG;\n    return IO_FILE_UNKNOWN;\n}",
+      "Draft": "func Io_ReadFileType(pFileName string) Io_FileType_t {\n    var pExt string;\n    if pFileName == nil {\n        return IO_FILE_NONE; }\n    pExt = Extra_FileNameExtension( pFileName );\n    if pExt == nil {\n        return IO_FILE_NONE; }\n    if !(int32(strings.Compare(pExt, \"aig\")) != 0) {\n        return IO_FILE_AIGER; }\n    if !(int32(strings.Compare(pExt, \"baf\")) != 0) {\n        return IO_FILE_BAF; }\n    if !(int32(strings.Compare(pExt, \"bblif\")) != 0) {\n        return IO_FILE_BBLIF; }\n    if !(int32(strings.Compare(pExt, \"blif\")) != 0) {\n        return IO_FILE_BLIF; }\n    if !(int32(strings.Compare(pExt, \"bench\")) != 0) {\n        return IO_FILE_BENCH; }\n    if !(int32(strings.Compare(pExt, \"cnf\")) != 0) {\n        return IO_FILE_CNF; }\n    if !(int32(strings.Compare(pExt, \"dot\")) != 0) {\n        return IO_FILE_DOT; }\n    if !(int32(strings.Compare(pExt, \"edif\")) != 0) {\n        return IO_FILE_EDIF; }\n    if !(int32(strings.Compare(pExt, \"eqn\")) != 0) {\n        return IO_FILE_EQN; }\n    if !(int32(strings.Compare(pExt, \"gml\")) != 0) {\n        return IO_FILE_GML; }\n    if !(int32(strings.Compare(pExt, \"list\")) != 0) {\n        return IO_FILE_LIST; }\n    if !(int32(strings.Compare(pExt, \"mv\")) != 0) {\n        return IO_FILE_BLIFMV; }\n    if !(int32(strings.Compare(pExt, \"pla\")) != 0) {\n        return IO_FILE_PLA; }\n    if !(int32(strings.Compare(pExt, \"smv\")) != 0) {\n        return IO_FILE_SMV; }\n    if !(int32(strings.Compare(pExt, \"v\")) != 0) {\n        return IO_FILE_VERILOG; }\n    return IO_FILE_UNKNOWN;\n}"
+    },
+    {
+      "Name": "Io_ReadNetlist",
+      "Start": 2779,
+      "End": 5613,
+      "BodyStart": 2862,
+      "Original": "Abc_Ntk_t * Io_ReadNetlist( char * pFileName, Io_FileType_t FileType, int fCheck )\n{\n    FILE * pFile;\n    Abc_Ntk_t * pNtk;\n    if ( FileType == IO_FILE_NONE || FileType == IO_FILE_UNKNOWN )\n    {\n        fprintf( stdout, \"Generic file reader requires a known file extension to open \\\"%s\\\".\\n\", pFileName );\n        return NULL;\n    }\n    // check if the file exists\n    pFile = fopen( pFileName, \"r\" );\n    if ( pFile == NULL )\n    {\n        fprintf( stdout, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if ( (pFileName = Extra_FileGetSimilarName( pFileName, \".blif\", \".bench\", \".pla\", \".baf\", \".aig\" )) )\n            fprintf( stdout, \"Did you mean \\\"%s\\\"?\", pFileName );\n        fprintf( stdout, \"\\n\" );\n       return NULL;\n    }\n    fclose( pFile );\n    // read the AIG\n    if ( FileType == IO_FILE_AIGER || FileType == IO_FILE_BAF || FileType == IO_FILE_BBLIF )\n    {\n        if ( FileType == IO_FILE_AIGER )\n            pNtk = Io_ReadAiger( pFileName, fCheck );\n        else if ( FileType == IO_FILE_BAF )\n            pNtk = Io_ReadBaf( pFileName, fCheck );\n        else // if ( FileType == IO_FILE_BBLIF )\n            pNtk = Io_ReadBblif( pFileName, fCheck );\n        if ( pNtk == NULL )\n        {\n            fprintf( stdout, \"Reading AIG from file has failed.\\n\" );\n            return NULL;\n        }\n        return pNtk;\n    }\n    // read the new netlist\n    if ( FileType == IO_FILE_BLIF )\n//        pNtk = Io_ReadBlif( pFileName, fCheck );\n        pNtk = Io_ReadBlifMv( pFileName, 0, fCheck );\n    else if ( Io_ReadFileType(pFileName) == IO_FILE_BLIFMV )\n        pNtk = Io_ReadBlifMv( pFileName, 1, fCheck );\n    else if ( FileType == IO_FILE_BENCH )\n        pNtk = Io_ReadBench( pFileName, fCheck );\n    else if ( FileType == IO_FILE_EDIF )\n        pNtk = Io_ReadEdif( pFileName, fCheck );\n    else if ( FileType == IO_FILE_EQN )\n        pNtk = Io_ReadEqn( pFileName, fCheck );\n    else if ( FileType == IO_FILE_PLA )\n        pNtk = Io_ReadPla( pFileName, 0, 0, 0, 0, fCheck );\n    else if ( FileType == IO_FILE_VERILOG )\n        pNtk = Io_ReadVerilog( pFileName, fCheck );\n    else \n    {\n        fprintf( stderr, \"Unknown file format.\\n\" );\n        return NULL;\n    }\n    if ( pNtk == NULL )\n    {\n        fprintf( stdout, \"Reading network from file has failed.\\n\" );\n        return NULL;\n    }\n    if ( fCheck \u0026\u0026 (Abc_NtkBlackboxNum(pNtk) || Abc_NtkWhiteboxNum(pNtk)) )\n    {\n        int i, fCycle = 0;\n        Abc_Ntk_t * pModel;\n//        fprintf( stdout, \"Warning: The network contains hierarchy.\\n\" );\n        Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk-\u003epDesign-\u003evModules, pModel, i )\n                if ( !Abc_NtkIsAcyclicWithBoxes( pModel ) )\n                    fCycle = 1;\n        if ( fCycle )\n        {\n            Abc_NtkDelete( pNtk );\n            return NULL;    \n        }\n    }\n    return pNtk;\n}",
+      "Draft": "func Io_ReadNetlist(pFileName string, FileType Io_FileType_t, fCheck int32) *Abc_Ntk_t {\n    var pFile *os.File;\n    var pNtk *Abc_Ntk_t;\n    if FileType == IO_FILE_NONE || FileType == IO_FILE_UNKNOWN {\n        fmt.Fprintf(os.Stdout, \"Generic file reader requires a known file extension to open \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    // check if the file exists\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Cannot open input file \\\"%s\\\". \", pFileName);\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".blif\", \".bench\", \".pla\", \".baf\", \".aig\" ) {\n            fmt.Fprintf(os.Stdout, \"Did you mean \\\"%s\\\"?\", pFileName); }\n        fmt.Fprintf(os.Stdout, \"\\n\");\n       return nil;\n    }\n    _ = (pFile).Close();\n    // read the AIG\n    if FileType == IO_FILE_AIGER || FileType == IO_FILE_BAF || FileType == IO_FILE_BBLIF {\n        if FileType == IO_FILE_AIGER {\n            pNtk = Io_ReadAiger( pFileName, fCheck );\n        } else if FileType == IO_FILE_BAF {\n            pNtk = Io_ReadBaf( pFileName, fCheck );\n        } else { // if ( FileType == IO_FILE_BBLIF )\n            pNtk = Io_ReadBblif( pFileName, fCheck ); }\n        if pNtk == nil {\n            fmt.Fprintf(os.Stdout, \"Reading AIG from file has failed.\\n\");\n            return nil;\n        }\n        return pNtk;\n    }\n    // read the new netlist\n    if FileType == IO_FILE_BLIF {\n//        pNtk = Io_ReadBlif( pFileName, fCheck );\n        pNtk = Io_ReadBlifMv( pFileName, 0, fCheck );\n    } else if Io_ReadFileType(pFileName) == IO_FILE_BLIFMV {\n        pNtk = Io_ReadBlifMv( pFileName, 1, fCheck );\n    } else if FileType == IO_FILE_BENCH {\n        pNtk = Io_ReadBench( pFileName, fCheck );\n    } else if FileType == IO_FILE_EDIF {\n        pNtk = Io_ReadEdif( pFileName, fCheck );\n    } else if FileType == IO_FILE_EQN {\n        pNtk = Io_ReadEqn( pFileName, fCheck );\n    } else if FileType == IO_FILE_PLA {\n        pNtk = Io_ReadPla( pFileName, 0, 0, 0, 0, fCheck );\n    } else if FileType == IO_FILE_VERILOG {\n        pNtk = Io_ReadVerilog( pFileName, fCheck );\n    } else {\n        fmt.Fprintf(os.Stderr, \"Unknown file format.\\n\");\n        return nil;\n    }\n    if pNtk == nil {\n        fmt.Fprintf(os.Stdout, \"Reading network from file has failed.\\n\");\n        return nil;\n    }\n    if (fCheck != 0) \u0026\u0026 (Abc_NtkBlackboxNum(pNtk) || Abc_NtkWhiteboxNum(pNtk)) {\n        var i, fCycle int32;\n        var pModel *Abc_Ntk_t;\n//        fprintf( stdout, \"Warning: The network contains hierarchy.\\n\" );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.pDesign.vModules)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {\n                if !Abc_NtkIsAcyclicWithBoxes( pModel ) {\n                    fCycle = 1; }\n        }\n        if fCycle != 0 {\n            Abc_NtkDelete( pNtk );\n            return nil;    \n        }\n    }\n    return pNtk;\n}"
+    },
+    {
+      "Name": "temporaryLtlStore",
+      "Start": 5849,
+      "End": 6361,
+      "BodyStart": 5897,
+      "Original": "Vec_Ptr_t *temporaryLtlStore( Abc_Ntk_t *pNtk )\n{\n    Vec_Ptr_t *tempStore;\n    char *pFormula;\n    int i;\n\n    if( pNtk \u0026\u0026 Vec_PtrSize( pNtk-\u003evLtlProperties ) \u003e 0 )\n    {\n        tempStore = Vec_PtrAlloc( Vec_PtrSize( pNtk-\u003evLtlProperties ) );\n        Vec_PtrForEachEntry( char *, pNtk-\u003evLtlProperties, pFormula, i )\n            Vec_PtrPush( tempStore, pFormula );\n        assert( Vec_PtrSize( tempStore ) == Vec_PtrSize( pNtk-\u003evLtlProperties ) );\n        return tempStore;\n    }\n    else\n        return NULL;\n}",
+      "Draft": "func temporaryLtlStore(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var tempStore *Vec_Ptr_t;\n    var pFormula string;\n    var i int32;\n\n    if (pNtk != nil) \u0026\u0026 Vec_PtrSize( pNtk.vLtlProperties ) \u003e 0 {\n        tempStore = Vec_PtrAlloc( Vec_PtrSize( pNtk.vLtlProperties ) );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.vLtlProperties)) \u0026\u0026 (((pFormula) = (char *)Vec_PtrEntry(pNtk.vLtlProperties, i)), 1); i++  {\n            Vec_PtrPush( tempStore, pFormula );\n        }\n        assert(Vec_PtrSize( tempStore ) == Vec_PtrSize( pNtk.vLtlProperties ), \"Vec_PtrSize( tempStore ) == Vec_PtrSize( pNtk.vLtlProperties )\");\n        return tempStore;\n    \n    } else {\n        return nil; }\n}"
+    },
+    {
+      "Name": "updateLtlStoreOfNtk",
+      "Start": 6597,
+      "End": 6853,
+      "BodyStart": 6666,
+      "Original": "void updateLtlStoreOfNtk( Abc_Ntk_t *pNtk, Vec_Ptr_t *tempLtlStore )\n{\n    int i;\n    char *pFormula;\n\n    assert( tempLtlStore != NULL );\n    Vec_PtrForEachEntry( char *, tempLtlStore, pFormula, i )\n        Vec_PtrPush( pNtk-\u003evLtlProperties, pFormula );\n}",
+      "Draft": "func updateLtlStoreOfNtk(pNtk *Abc_Ntk_t, tempLtlStore *Vec_Ptr_t) {\n    var i int32;\n    var pFormula string;\n\n    assert(tempLtlStore != nil, \"tempLtlStore != nil\");\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(tempLtlStore)) \u0026\u0026 (((pFormula) = (char *)Vec_PtrEntry(tempLtlStore, i)), 1); i++  {\n        Vec_PtrPush( pNtk.vLtlProperties, pFormula );\n    }\n}"
+    },
+    {
+      "Name": "Io_Read",
+      "Start": 7118,
+      "End": 9159,
+      "BodyStart": 7208,
+      "Original": "Abc_Ntk_t * Io_Read( char * pFileName, Io_FileType_t FileType, int fCheck, int fBarBufs )\n{\n    Abc_Ntk_t * pNtk, * pTemp;\n    Vec_Ptr_t * vLtl;\n    // get the netlist\n    pNtk = Io_ReadNetlist( pFileName, FileType, fCheck );\n    if ( pNtk == NULL )\n        return NULL;\n    vLtl = temporaryLtlStore( pNtk );\n    if ( !Abc_NtkIsNetlist(pNtk) )\n        return pNtk;\n    // derive barbufs\n    if ( fBarBufs )\n    {\n        pNtk = Abc_NtkToBarBufs( pTemp = pNtk );\n        Abc_NtkDelete( pTemp );\n        assert( Abc_NtkIsLogic(pNtk) );\n        return pNtk;\n    }\n    // flatten logic hierarchy\n    assert( Abc_NtkIsNetlist(pNtk) );\n    if ( Abc_NtkWhiteboxNum(pNtk) \u003e 0 )\n    {\n        pNtk = Abc_NtkFlattenLogicHierarchy( pTemp = pNtk );\n        Abc_NtkDelete( pTemp );\n        if ( pNtk == NULL )\n        {\n            fprintf( stdout, \"Flattening logic hierarchy has failed.\\n\" );\n            return NULL;\n        }\n    }\n    // convert blackboxes\n    if ( Abc_NtkBlackboxNum(pNtk) \u003e 0 )\n    {\n        printf( \"Hierarchy reader converted %d instances of blackboxes.\\n\", Abc_NtkBlackboxNum(pNtk) );\n        pNtk = Abc_NtkConvertBlackboxes( pTemp = pNtk );\n        Abc_NtkDelete( pTemp );\n        if ( pNtk == NULL )\n        {\n            fprintf( stdout, \"Converting blackboxes has failed.\\n\" );\n            return NULL;\n        }\n    }\n    // consider the case of BLIF-MV\n    if ( Io_ReadFileType(pFileName) == IO_FILE_BLIFMV )\n    {\n        pNtk = Abc_NtkStrashBlifMv( pTemp = pNtk );\n        Abc_NtkDelete( pTemp );\n        if ( pNtk == NULL )\n        {\n            fprintf( stdout, \"Converting BLIF-MV to AIG has failed.\\n\" );\n            return NULL;\n        }\n        return pNtk;\n    }\n    // convert the netlist into the logic network\n    pNtk = Abc_NtkToLogic( pTemp = pNtk );\n    if( vLtl )\n        updateLtlStoreOfNtk( pNtk, vLtl );\n    Abc_NtkDelete( pTemp );\n    if ( pNtk == NULL )\n    {\n        fprintf( stdout, \"Converting netlist to logic network after reading has failed.\\n\" );\n        return NULL;\n    }\n    return pNtk;\n}",
+      "Draft": "func Io_Read(pFileName string, FileType Io_FileType_t, fCheck int32, fBarBufs int32) *Abc_Ntk_t {\n    var pNtk, pTemp *Abc_Ntk_t;\n    var vLtl *Vec_Ptr_t;\n    // get the netlist\n    pNtk = Io_ReadNetlist( pFileName, FileType, fCheck );\n    if pNtk == nil {\n        return nil; }\n    vLtl = temporaryLtlStore( pNtk );\n    if !Abc_NtkIsNetlist(pNtk) {\n        return pNtk; }\n    // derive barbufs\n    if fBarBufs != 0 {\n        pNtk = Abc_NtkToBarBufs( pTemp = pNtk );\n        Abc_NtkDelete( pTemp );\n        assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n        return pNtk;\n    }\n    // flatten logic hierarchy\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    if Abc_NtkWhiteboxNum(pNtk) \u003e 0 {\n        pNtk = Abc_NtkFlattenLogicHierarchy( pTemp = pNtk );\n        Abc_NtkDelete( pTemp );\n        if pNtk == nil {\n            fmt.Fprintf(os.Stdout, \"Flattening logic hierarchy has failed.\\n\");\n            return nil;\n        }\n    }\n    // convert blackboxes\n    if Abc_NtkBlackboxNum(pNtk) \u003e 0 {\n        fmt.Printf(\"Hierarchy reader converted %d instances of blackboxes.\\n\", Abc_NtkBlackboxNum(pNtk));\n        pNtk = Abc_NtkConvertBlackboxes( pTemp = pNtk );\n        Abc_NtkDelete( pTemp );\n        if pNtk == nil {\n            fmt.Fprintf(os.Stdout, \"Converting blackboxes has failed.\\n\");\n            return nil;\n        }\n    }\n    // consider the case of BLIF-MV\n    if Io_ReadFileType(pFileName) == IO_FILE_BLIFMV {\n        pNtk = Abc_NtkStrashBlifMv( pTemp = pNtk );\n        Abc_NtkDelete( pTemp );\n        if pNtk == nil {\n            fmt.Fprintf(os.Stdout, \"Converting BLIF-MV to AIG has failed.\\n\");\n            return nil;\n        }\n        return pNtk;\n    }\n    // convert the netlist into the logic network\n    pNtk = Abc_NtkToLogic( pTemp = pNtk );\n    if vLtl != nil {\n        updateLtlStoreOfNtk( pNtk, vLtl ); }\n    Abc_NtkDelete( pTemp );\n    if pNtk == nil {\n        fmt.Fprintf(os.Stdout, \"Converting netlist to logic network after reading has failed.\\n\");\n        return nil;\n    }\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Io_Write",
+      "Start": 9423,
+      "End": 14101,
+      "BodyStart": 9499,
+      "Original": "void Io_Write( Abc_Ntk_t * pNtk, char * pFileName, Io_FileType_t FileType )\n{\n    Abc_Ntk_t * pNtkTemp, * pNtkCopy;\n    // check if the current network is available\n    if ( pNtk == NULL )\n    {\n        fprintf( stdout, \"Empty network.\\n\" );\n        return;\n    }\n    // check if the file extension if given\n    if ( FileType == IO_FILE_NONE || FileType == IO_FILE_UNKNOWN )\n    {\n        fprintf( stdout, \"The generic file writer requires a known file extension.\\n\" );\n        return;\n    }\n    // write the AIG formats\n    if ( FileType == IO_FILE_AIGER || FileType == IO_FILE_BAF )\n    {\n        if ( !Abc_NtkIsStrash(pNtk) )\n        {\n            fprintf( stdout, \"Writing this format is only possible for structurally hashed AIGs.\\n\" );\n            return;\n        }\n        if ( FileType == IO_FILE_AIGER )\n            Io_WriteAiger( pNtk, pFileName, 1, 0, 0 );\n        else //if ( FileType == IO_FILE_BAF )\n            Io_WriteBaf( pNtk, pFileName );\n        return;\n    }\n    // write non-netlist types\n    if ( FileType == IO_FILE_CNF )\n    {\n        Io_WriteCnf( pNtk, pFileName, 0 );\n        return;\n    }\n    if ( FileType == IO_FILE_DOT )\n    {\n        Io_WriteDot( pNtk, pFileName );\n        return;\n    }\n    if ( FileType == IO_FILE_GML )\n    {\n        Io_WriteGml( pNtk, pFileName );\n        return;\n    }\n    if ( FileType == IO_FILE_BBLIF )\n    {\n        if ( !Abc_NtkIsLogic(pNtk) )\n        {\n            fprintf( stdout, \"Writing Binary BLIF is only possible for logic networks.\\n\" );\n            return;\n        }\n        if ( !Abc_NtkHasSop(pNtk) )\n            Abc_NtkToSop( pNtk, -1, ABC_INFINITY );\n        Io_WriteBblif( pNtk, pFileName );\n        return;\n    }\n/*\n    if ( FileType == IO_FILE_BLIFMV )\n    {\n        Io_WriteBlifMv( pNtk, pFileName );\n        return;\n    }\n*/\n    // convert logic network into netlist\n    if ( FileType == IO_FILE_PLA )\n    {\n        if ( Abc_NtkLevel(pNtk) \u003e 1 )\n        {\n            fprintf( stdout, \"PLA writing is available for collapsed networks.\\n\" );\n            return;\n        }\n        if ( Abc_NtkIsComb(pNtk) )\n            pNtkTemp = Abc_NtkToNetlist( pNtk );\n        else\n        {\n            fprintf( stdout, \"Latches are writen into the PLA file at PI/PO pairs.\\n\" );\n            pNtkCopy = Abc_NtkDup( pNtk );\n            Abc_NtkMakeComb( pNtkCopy, 0 );\n            pNtkTemp = Abc_NtkToNetlist( pNtk );\n            Abc_NtkDelete( pNtkCopy );\n        }\n        if ( !Abc_NtkToSop( pNtkTemp, 1, ABC_INFINITY ) )\n            return;\n    }\n    else if ( FileType == IO_FILE_MOPLA )\n    {\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n    }\n    else if ( FileType == IO_FILE_BENCH )\n    {\n        if ( !Abc_NtkIsStrash(pNtk) )\n        {\n            fprintf( stdout, \"Writing traditional BENCH is available for AIGs only (use \\\"write_bench\\\").\\n\" );\n            return;\n        }\n        pNtkTemp = Abc_NtkToNetlistBench( pNtk );\n    }\n    else if ( FileType == IO_FILE_SMV )\n    {\n        if ( !Abc_NtkIsStrash(pNtk) )\n        {\n            fprintf( stdout, \"Writing traditional SMV is available for AIGs only.\\n\" );\n            return;\n        }\n        pNtkTemp = Abc_NtkToNetlistBench( pNtk );\n    }\n    else\n        pNtkTemp = Abc_NtkToNetlist( pNtk );\n\n    if ( pNtkTemp == NULL )\n    {\n        fprintf( stdout, \"Converting to netlist has failed.\\n\" );\n        return;\n    }\n\n    if ( FileType == IO_FILE_BLIF )\n    {\n        if ( !Abc_NtkHasSop(pNtkTemp) \u0026\u0026 !Abc_NtkHasMapping(pNtkTemp) )\n            Abc_NtkToSop( pNtkTemp, -1, ABC_INFINITY );\n        Io_WriteBlif( pNtkTemp, pFileName, 1, 0, 0 );\n    }\n    else if ( FileType == IO_FILE_BLIFMV )\n    {\n        if ( !Abc_NtkConvertToBlifMv( pNtkTemp ) )\n            return;\n        Io_WriteBlifMv( pNtkTemp, pFileName );\n    }\n    else if ( FileType == IO_FILE_BENCH )\n        Io_WriteBench( pNtkTemp, pFileName );\n    else if ( FileType == IO_FILE_BOOK )\n        Io_WriteBook( pNtkTemp, pFileName );\n    else if ( FileType == IO_FILE_PLA )\n        Io_WritePla( pNtkTemp, pFileName );\n    else if ( FileType == IO_FILE_MOPLA )\n        Io_WriteMoPla( pNtkTemp, pFileName );\n    else if ( FileType == IO_FILE_EQN )\n    {\n        if ( !Abc_NtkHasAig(pNtkTemp) )\n            Abc_NtkToAig( pNtkTemp );\n        Io_WriteEqn( pNtkTemp, pFileName );\n    }\n    else if ( FileType == IO_FILE_SMV )\n        Io_WriteSmv( pNtkTemp, pFileName );\n    else if ( FileType == IO_FILE_VERILOG )\n    {\n        if ( !Abc_NtkHasAig(pNtkTemp) \u0026\u0026 !Abc_NtkHasMapping(pNtkTemp) )\n            Abc_NtkToAig( pNtkTemp );\n        Io_WriteVerilog( pNtkTemp, pFileName, 0 );\n    }\n    else \n        fprintf( stderr, \"Unknown file format.\\n\" );\n    Abc_NtkDelete( pNtkTemp );\n}",
+      "Draft": "func Io_Write(pNtk *Abc_Ntk_t, pFileName string, FileType Io_FileType_t) {\n    var pNtkTemp, pNtkCopy *Abc_Ntk_t;\n    // check if the current network is available\n    if pNtk == nil {\n        fmt.Fprintf(os.Stdout, \"Empty network.\\n\");\n        return;\n    }\n    // check if the file extension if given\n    if FileType == IO_FILE_NONE || FileType == IO_FILE_UNKNOWN {\n        fmt.Fprintf(os.Stdout, \"The generic file writer requires a known file extension.\\n\");\n        return;\n    }\n    // write the AIG formats\n    if FileType == IO_FILE_AIGER || FileType == IO_FILE_BAF {\n        if !Abc_NtkIsStrash(pNtk) {\n            fmt.Fprintf(os.Stdout, \"Writing this format is only possible for structurally hashed AIGs.\\n\");\n            return;\n        }\n        if FileType == IO_FILE_AIGER {\n            Io_WriteAiger( pNtk, pFileName, 1, 0, 0 );\n        } else { //if ( FileType == IO_FILE_BAF )\n            Io_WriteBaf( pNtk, pFileName ); }\n        return;\n    }\n    // write non-netlist types\n    if FileType == IO_FILE_CNF {\n        Io_WriteCnf( pNtk, pFileName, 0 );\n        return;\n    }\n    if FileType == IO_FILE_DOT {\n        Io_WriteDot( pNtk, pFileName );\n        return;\n    }\n    if FileType == IO_FILE_GML {\n        Io_WriteGml( pNtk, pFileName );\n        return;\n    }\n    if FileType == IO_FILE_BBLIF {\n        if !Abc_NtkIsLogic(pNtk) {\n            fmt.Fprintf(os.Stdout, \"Writing Binary BLIF is only possible for logic networks.\\n\");\n            return;\n        }\n        if !Abc_NtkHasSop(pNtk) {\n            Abc_NtkToSop( pNtk, -1, ABC_INFINITY ); }\n        Io_WriteBblif( pNtk, pFileName );\n        return;\n    }\n/*\n    if ( FileType == IO_FILE_BLIFMV )\n    {\n        Io_WriteBlifMv( pNtk, pFileName );\n        return;\n    }\n*/\n    // convert logic network into netlist\n    if FileType == IO_FILE_PLA {\n        if Abc_NtkLevel(pNtk) \u003e 1 {\n            fmt.Fprintf(os.Stdout, \"PLA writing is available for collapsed networks.\\n\");\n            return;\n        }\n        if Abc_NtkIsComb(pNtk) {\n            pNtkTemp = Abc_NtkToNetlist( pNtk );\n        } else {\n            fmt.Fprintf(os.Stdout, \"Latches are writen into the PLA file at PI/PO pairs.\\n\");\n            pNtkCopy = Abc_NtkDup( pNtk );\n            Abc_NtkMakeComb( pNtkCopy, 0 );\n            pNtkTemp = Abc_NtkToNetlist( pNtk );\n            Abc_NtkDelete( pNtkCopy );\n        }\n        if !Abc_NtkToSop( pNtkTemp, 1, ABC_INFINITY ) {\n            return; }\n    \n    } else if FileType == IO_FILE_MOPLA {\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n    \n    } else if FileType == IO_FILE_BENCH {\n        if !Abc_NtkIsStrash(pNtk) {\n            fmt.Fprintf(os.Stdout, \"Writing traditional BENCH is available for AIGs only (use \\\"write_bench\\\").\\n\");\n            return;\n        }\n        pNtkTemp = Abc_NtkToNetlistBench( pNtk );\n    \n    } else if FileType == IO_FILE_SMV {\n        if !Abc_NtkIsStrash(pNtk) {\n            fmt.Fprintf(os.Stdout, \"Writing traditional SMV is available for AIGs only.\\n\");\n            return;\n        }\n        pNtkTemp = Abc_NtkToNetlistBench( pNtk );\n    \n    } else {\n        pNtkTemp = Abc_NtkToNetlist( pNtk ); }\n\n    if pNtkTemp == nil {\n        fmt.Fprintf(os.Stdout, \"Converting to netlist has failed.\\n\");\n        return;\n    }\n\n    if FileType == IO_FILE_BLIF {\n        if !Abc_NtkHasSop(pNtkTemp) \u0026\u0026 !Abc_NtkHasMapping(pNtkTemp) {\n            Abc_NtkToSop( pNtkTemp, -1, ABC_INFINITY ); }\n        Io_WriteBlif( pNtkTemp, pFileName, 1, 0, 0 );\n    \n    } else if FileType == IO_FILE_BLIFMV {\n        if !Abc_NtkConvertToBlifMv( pNtkTemp ) {\n            return; }\n        Io_WriteBlifMv( pNtkTemp, pFileName );\n    \n    } else if FileType == IO_FILE_BENCH {\n        Io_WriteBench( pNtkTemp, pFileName );\n    } else if FileType == IO_FILE_BOOK {\n        Io_WriteBook( pNtkTemp, pFileName );\n    } else if FileType == IO_FILE_PLA {\n        Io_WritePla( pNtkTemp, pFileName );\n    } else if FileType == IO_FILE_MOPLA {\n        Io_WriteMoPla( pNtkTemp, pFileName );\n    } else if FileType == IO_FILE_EQN {\n        if !Abc_NtkHasAig(pNtkTemp) {\n            Abc_NtkToAig( pNtkTemp ); }\n        Io_WriteEqn( pNtkTemp, pFileName );\n    \n    } else if FileType == IO_FILE_SMV {\n        Io_WriteSmv( pNtkTemp, pFileName );\n    } else if FileType == IO_FILE_VERILOG {\n        if !Abc_NtkHasAig(pNtkTemp) \u0026\u0026 !Abc_NtkHasMapping(pNtkTemp) {\n            Abc_NtkToAig( pNtkTemp ); }\n        Io_WriteVerilog( pNtkTemp, pFileName, 0 );\n    \n    } else { \n        fmt.Fprintf(os.Stderr, \"Unknown file format.\\n\"); }\n    Abc_NtkDelete( pNtkTemp );\n}"
+    },
+    {
+      "Name": "Io_WriteHie",
+      "Start": 14365,
+      "End": 18615,
+      "BodyStart": 14438,
+      "Original": "void Io_WriteHie( Abc_Ntk_t * pNtk, char * pBaseName, char * pFileName )\n{\n    Abc_Ntk_t * pNtkTemp, * pNtkResult, * pNtkBase = NULL;\n    int i;\n    // check if the current network is available\n    if ( pNtk == NULL )\n    {\n        fprintf( stdout, \"Empty network.\\n\" );\n        return;\n    }\n\n    // read the base network\n    assert( Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk) );\n    if ( Io_ReadFileType(pBaseName) == IO_FILE_BLIF )\n        pNtkBase = Io_ReadBlifMv( pBaseName, 0, 1 );\n    else if ( Io_ReadFileType(pBaseName) == IO_FILE_BLIFMV )\n        pNtkBase = Io_ReadBlifMv( pBaseName, 1, 1 );\n    else if ( Io_ReadFileType(pBaseName) == IO_FILE_VERILOG )\n        pNtkBase = Io_ReadVerilog( pBaseName, 1 );\n    else \n        fprintf( stderr, \"Unknown input file format.\\n\" );\n    if ( pNtkBase == NULL )\n        return;\n\n    // flatten logic hierarchy if present\n    if ( Abc_NtkWhiteboxNum(pNtkBase) \u003e 0 \u0026\u0026 pNtk-\u003enBarBufs == 0 )\n    {\n        pNtkBase = Abc_NtkFlattenLogicHierarchy( pNtkTemp = pNtkBase );\n        Abc_NtkDelete( pNtkTemp );\n        if ( pNtkBase == NULL )\n            return;\n    }\n\n    // reintroduce the boxes into the netlist\n    if ( pNtk-\u003enBarBufs \u003e 0 )\n    {\n        // derive the netlist\n        pNtkResult = Abc_NtkToNetlist( pNtk );\n        pNtkResult = Abc_NtkFromBarBufs( pNtkBase, pNtkTemp = pNtkResult );\n        Abc_NtkDelete( pNtkTemp );\n        if ( pNtkResult )\n            printf( \"Hierarchy writer replaced %d barbufs by hierarchy boundaries.\\n\", pNtk-\u003enBarBufs );\n    }\n    else if ( Io_ReadFileType(pBaseName) == IO_FILE_BLIFMV ) \n    {\n        if ( Abc_NtkBlackboxNum(pNtkBase) \u003e 0 )\n        {\n            printf( \"Hierarchy writer does not support BLIF-MV with blackboxes.\\n\" );\n            Abc_NtkDelete( pNtkBase );\n            return;\n        }\n        // convert the current network to BLIF-MV\n        assert( !Abc_NtkIsNetlist(pNtk) );\n        pNtkResult = Abc_NtkToNetlist( pNtk );\n        if ( !Abc_NtkConvertToBlifMv( pNtkResult ) )\n        {\n            Abc_NtkDelete( pNtkBase );\n            return;\n        }\n        // reintroduce the network\n        pNtkResult = Abc_NtkInsertBlifMv( pNtkBase, pNtkTemp = pNtkResult );\n        Abc_NtkDelete( pNtkTemp );\n    }\n    else if ( Abc_NtkBlackboxNum(pNtkBase) \u003e 0 )\n    {\n        // derive the netlist\n        pNtkResult = Abc_NtkToNetlist( pNtk );\n        pNtkResult = Abc_NtkInsertNewLogic( pNtkBase, pNtkTemp = pNtkResult );\n        Abc_NtkDelete( pNtkTemp );\n        if ( pNtkResult )\n            printf( \"Hierarchy writer reintroduced %d instances of blackboxes.\\n\", Abc_NtkBlackboxNum(pNtkBase) );\n    }\n    else\n    {\n        printf( \"Warning: The output network does not contain blackboxes.\\n\" );\n        pNtkResult = Abc_NtkToNetlist( pNtk );\n    }\n    Abc_NtkDelete( pNtkBase );\n    if ( pNtkResult == NULL )\n        return;\n\n    // write the resulting network\n    if ( Io_ReadFileType(pFileName) == IO_FILE_BLIF )\n    {\n        if ( pNtkResult-\u003epDesign )\n        {\n            Vec_PtrForEachEntry( Abc_Ntk_t *, pNtkResult-\u003epDesign-\u003evModules, pNtkTemp, i )\n                if ( !Abc_NtkHasSop(pNtkTemp) \u0026\u0026 !Abc_NtkHasMapping(pNtkTemp) )\n                    Abc_NtkToSop( pNtkTemp, -1, ABC_INFINITY );\n        }\n        else\n        {\n            if ( !Abc_NtkHasSop(pNtkResult) \u0026\u0026 !Abc_NtkHasMapping(pNtkResult) )\n                Abc_NtkToSop( pNtkResult, -1, ABC_INFINITY );\n        }\n        Io_WriteBlif( pNtkResult, pFileName, 1, 0, 0 );\n    }\n    else if ( Io_ReadFileType(pFileName) == IO_FILE_VERILOG )\n    {\n        if ( pNtkResult-\u003epDesign )\n        {\n            Vec_PtrForEachEntry( Abc_Ntk_t *, pNtkResult-\u003epDesign-\u003evModules, pNtkTemp, i )\n                if ( !Abc_NtkHasAig(pNtkTemp) \u0026\u0026 !Abc_NtkHasMapping(pNtkTemp) )\n                    Abc_NtkToAig( pNtkTemp );\n        }\n        else\n        {\n            if ( !Abc_NtkHasAig(pNtkResult) \u0026\u0026 !Abc_NtkHasMapping(pNtkResult) )\n                Abc_NtkToAig( pNtkResult );\n        }\n        Io_WriteVerilog( pNtkResult, pFileName, 0 );\n    }\n    else if ( Io_ReadFileType(pFileName) == IO_FILE_BLIFMV )\n    {\n        Io_WriteBlifMv( pNtkResult, pFileName );\n    }\n    else \n        fprintf( stderr, \"Unknown output file format.\\n\" );\n\n    Abc_NtkDelete( pNtkResult );\n}",
+      "Draft": "func Io_WriteHie(pNtk *Abc_Ntk_t, pBaseName string, pFileName string) {\n    var pNtkTemp *Abc_Ntk_t;\n    var pNtkResult *Abc_Ntk_t;\n    var pNtkBase *Abc_Ntk_t = nil;\n    var i int32;\n    // check if the current network is available\n    if pNtk == nil {\n        fmt.Fprintf(os.Stdout, \"Empty network.\\n\");\n        return;\n    }\n\n    // read the base network\n    assert(Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk), \"Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk)\");\n    if Io_ReadFileType(pBaseName) == IO_FILE_BLIF {\n        pNtkBase = Io_ReadBlifMv( pBaseName, 0, 1 );\n    } else if Io_ReadFileType(pBaseName) == IO_FILE_BLIFMV {\n        pNtkBase = Io_ReadBlifMv( pBaseName, 1, 1 );\n    } else if Io_ReadFileType(pBaseName) == IO_FILE_VERILOG {\n        pNtkBase = Io_ReadVerilog( pBaseName, 1 );\n    } else { \n        fmt.Fprintf(os.Stderr, \"Unknown input file format.\\n\"); }\n    if pNtkBase == nil {\n        return; }\n\n    // flatten logic hierarchy if present\n    if Abc_NtkWhiteboxNum(pNtkBase) \u003e 0 \u0026\u0026 pNtk.nBarBufs == 0 {\n        pNtkBase = Abc_NtkFlattenLogicHierarchy( pNtkTemp = pNtkBase );\n        Abc_NtkDelete( pNtkTemp );\n        if pNtkBase == nil {\n            return; }\n    }\n\n    // reintroduce the boxes into the netlist\n    if pNtk.nBarBufs \u003e 0 {\n        // derive the netlist\n        pNtkResult = Abc_NtkToNetlist( pNtk );\n        pNtkResult = Abc_NtkFromBarBufs( pNtkBase, pNtkTemp = pNtkResult );\n        Abc_NtkDelete( pNtkTemp );\n        if pNtkResult != nil {\n            fmt.Printf(\"Hierarchy writer replaced %d barbufs by hierarchy boundaries.\\n\", pNtk.nBarBufs); }\n    \n    } else if Io_ReadFileType(pBaseName) == IO_FILE_BLIFMV {\n        if Abc_NtkBlackboxNum(pNtkBase) \u003e 0 {\n            fmt.Printf(\"Hierarchy writer does not support BLIF-MV with blackboxes.\\n\");\n            Abc_NtkDelete( pNtkBase );\n            return;\n        }\n        // convert the current network to BLIF-MV\n        assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n        pNtkResult = Abc_NtkToNetlist( pNtk );\n        if !Abc_NtkConvertToBlifMv( pNtkResult ) {\n            Abc_NtkDelete( pNtkBase );\n            return;\n        }\n        // reintroduce the network\n        pNtkResult = Abc_NtkInsertBlifMv( pNtkBase, pNtkTemp = pNtkResult );\n        Abc_NtkDelete( pNtkTemp );\n    \n    } else if Abc_NtkBlackboxNum(pNtkBase) \u003e 0 {\n        // derive the netlist\n        pNtkResult = Abc_NtkToNetlist( pNtk );\n        pNtkResult = Abc_NtkInsertNewLogic( pNtkBase, pNtkTemp = pNtkResult );\n        Abc_NtkDelete( pNtkTemp );\n        if pNtkResult != nil {\n            fmt.Printf(\"Hierarchy writer reintroduced %d instances of blackboxes.\\n\", Abc_NtkBlackboxNum(pNtkBase)); }\n    \n    } else {\n        fmt.Printf(\"Warning: The output network does not contain blackboxes.\\n\");\n        pNtkResult = Abc_NtkToNetlist( pNtk );\n    }\n    Abc_NtkDelete( pNtkBase );\n    if pNtkResult == nil {\n        return; }\n\n    // write the resulting network\n    if Io_ReadFileType(pFileName) == IO_FILE_BLIF {\n        if pNtkResult.pDesign {\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(pNtkResult.pDesign.vModules)) \u0026\u0026 (((pNtkTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pNtkResult.pDesign.vModules, i)), 1); i++  {\n                if !Abc_NtkHasSop(pNtkTemp) \u0026\u0026 !Abc_NtkHasMapping(pNtkTemp) {\n                    Abc_NtkToSop( pNtkTemp, -1, ABC_INFINITY ); }\n            }\n        \n        } else {\n            if !Abc_NtkHasSop(pNtkResult) \u0026\u0026 !Abc_NtkHasMapping(pNtkResult) {\n                Abc_NtkToSop( pNtkResult, -1, ABC_INFINITY ); }\n        }\n        Io_WriteBlif( pNtkResult, pFileName, 1, 0, 0 );\n    \n    } else if Io_ReadFileType(pFileName) == IO_FILE_VERILOG {\n        if pNtkResult.pDesign {\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(pNtkResult.pDesign.vModules)) \u0026\u0026 (((pNtkTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pNtkResult.pDesign.vModules, i)), 1); i++  {\n                if !Abc_NtkHasAig(pNtkTemp) \u0026\u0026 !Abc_NtkHasMapping(pNtkTemp) {\n                    Abc_NtkToAig( pNtkTemp ); }\n            }\n        \n        } else {\n            if !Abc_NtkHasAig(pNtkResult) \u0026\u0026 !Abc_NtkHasMapping(pNtkResult) {\n                Abc_NtkToAig( pNtkResult ); }\n        }\n        Io_WriteVerilog( pNtkResult, pFileName, 0 );\n    \n    } else if Io_ReadFileType(pFileName) == IO_FILE_BLIFMV {\n        Io_WriteBlifMv( pNtkResult, pFileName );\n    \n    } else { \n        fmt.Fprintf(os.Stderr, \"Unknown output file format.\\n\"); }\n\n    Abc_NtkDelete( pNtkResult );\n}"
+    },
+    {
+      "Name": "Io_ReadCreatePi",
+      "Start": 18879,
+      "End": 19297,
+      "BodyStart": 18941,
+      "Original": "Abc_Obj_t * Io_ReadCreatePi( Abc_Ntk_t * pNtk, char * pName )\n{\n    Abc_Obj_t * pNet, * pTerm;\n    // get the PI net\n    pNet  = Abc_NtkFindNet( pNtk, pName );\n    if ( pNet )\n        printf( \"Warning: PI \\\"%s\\\" appears twice in the list.\\n\", pName );\n    pNet  = Abc_NtkFindOrCreateNet( pNtk, pName );\n    // add the PI node\n    pTerm = Abc_NtkCreatePi( pNtk );\n    Abc_ObjAddFanin( pNet, pTerm );\n    return pTerm;\n}",
+      "Draft": "func Io_ReadCreatePi(pNtk *Abc_Ntk_t, pName string) *Abc_Obj_t {\n    var pNet, pTerm *Abc_Obj_t;\n    // get the PI net\n    pNet  = Abc_NtkFindNet( pNtk, pName );\n    if pNet != nil {\n        fmt.Printf(\"Warning: PI \\\"%s\\\" appears twice in the list.\\n\", pName); }\n    pNet  = Abc_NtkFindOrCreateNet( pNtk, pName );\n    // add the PI node\n    pTerm = Abc_NtkCreatePi( pNtk );\n    Abc_ObjAddFanin( pNet, pTerm );\n    return pTerm;\n}"
+    },
+    {
+      "Name": "Io_ReadCreatePo",
+      "Start": 19561,
+      "End": 20009,
+      "BodyStart": 19623,
+      "Original": "Abc_Obj_t * Io_ReadCreatePo( Abc_Ntk_t * pNtk, char * pName )\n{\n    Abc_Obj_t * pNet, * pTerm;\n    // get the PO net\n    pNet  = Abc_NtkFindNet( pNtk, pName );\n    if ( pNet \u0026\u0026 Abc_ObjFaninNum(pNet) == 0 )\n        printf( \"Warning: PO \\\"%s\\\" appears twice in the list.\\n\", pName );\n    pNet  = Abc_NtkFindOrCreateNet( pNtk, pName );\n    // add the PO node\n    pTerm = Abc_NtkCreatePo( pNtk );\n    Abc_ObjAddFanin( pTerm, pNet );\n    return pTerm;\n}",
+      "Draft": "func Io_ReadCreatePo(pNtk *Abc_Ntk_t, pName string) *Abc_Obj_t {\n    var pNet, pTerm *Abc_Obj_t;\n    // get the PO net\n    pNet  = Abc_NtkFindNet( pNtk, pName );\n    if (pNet != nil) \u0026\u0026 Abc_ObjFaninNum(pNet) == 0 {\n        fmt.Printf(\"Warning: PO \\\"%s\\\" appears twice in the list.\\n\", pName); }\n    pNet  = Abc_NtkFindOrCreateNet( pNtk, pName );\n    // add the PO node\n    pTerm = Abc_NtkCreatePo( pNtk );\n    Abc_ObjAddFanin( pTerm, pNet );\n    return pTerm;\n}"
+    },
+    {
+      "Name": "Io_ReadCreateLatch",
+      "Start": 20343,
+      "End": 21044,
+      "BodyStart": 20424,
+      "Original": "Abc_Obj_t * Io_ReadCreateLatch( Abc_Ntk_t * pNtk, char * pNetLI, char * pNetLO )\n{\n    Abc_Obj_t * pLatch, * pTerm, * pNet;\n    // get the LI net\n    pNet = Abc_NtkFindOrCreateNet( pNtk, pNetLI );\n    // add the BO terminal\n    pTerm = Abc_NtkCreateBi( pNtk );\n    Abc_ObjAddFanin( pTerm, pNet );\n    // add the latch box\n    pLatch = Abc_NtkCreateLatch( pNtk );\n    Abc_ObjAddFanin( pLatch, pTerm  );\n    // add the BI terminal\n    pTerm = Abc_NtkCreateBo( pNtk );\n    Abc_ObjAddFanin( pTerm, pLatch );\n    // get the LO net\n    pNet = Abc_NtkFindOrCreateNet( pNtk, pNetLO );\n    Abc_ObjAddFanin( pNet, pTerm );\n    // set latch name\n    Abc_ObjAssignName( pLatch, pNetLO, \"L\" );\n    return pLatch;\n}",
+      "Draft": "func Io_ReadCreateLatch(pNtk *Abc_Ntk_t, pNetLI string, pNetLO string) *Abc_Obj_t {\n    var pLatch, pTerm, pNet *Abc_Obj_t;\n    // get the LI net\n    pNet = Abc_NtkFindOrCreateNet( pNtk, pNetLI );\n    // add the BO terminal\n    pTerm = Abc_NtkCreateBi( pNtk );\n    Abc_ObjAddFanin( pTerm, pNet );\n    // add the latch box\n    pLatch = Abc_NtkCreateLatch( pNtk );\n    Abc_ObjAddFanin( pLatch, pTerm  );\n    // add the BI terminal\n    pTerm = Abc_NtkCreateBo( pNtk );\n    Abc_ObjAddFanin( pTerm, pLatch );\n    // get the LO net\n    pNet = Abc_NtkFindOrCreateNet( pNtk, pNetLO );\n    Abc_ObjAddFanin( pNet, pTerm );\n    // set latch name\n    Abc_ObjAssignName( pLatch, pNetLO, \"L\" );\n    return pLatch;\n}"
+    },
+    {
+      "Name": "Io_ReadCreateResetLatch",
+      "Start": 21326,
+      "End": 22218,
+      "BodyStart": 21395,
+      "Original": "Abc_Obj_t * Io_ReadCreateResetLatch( Abc_Ntk_t * pNtk, int fBlifMv )\n{\n    Abc_Obj_t * pLatch, * pNode;\n    Abc_Obj_t * pNetLI, * pNetLO;\n    // create latch with 0 init value\n//    pLatch = Io_ReadCreateLatch( pNtk, \"_resetLI_\", \"_resetLO_\" );\n    pNetLI = Abc_NtkCreateNet( pNtk );\n    pNetLO = Abc_NtkCreateNet( pNtk );\n    Abc_ObjAssignName( pNetLI, Abc_ObjName(pNetLI), NULL );\n    Abc_ObjAssignName( pNetLO, Abc_ObjName(pNetLO), NULL );\n    pLatch = Io_ReadCreateLatch( pNtk, Abc_ObjName(pNetLI), Abc_ObjName(pNetLO) );\n    // set the initial value\n    Abc_LatchSetInit0( pLatch );\n    // feed the latch with constant1- node\n//    pNode = Abc_NtkCreateNode( pNtk );   \n//    pNode-\u003epData = Abc_SopRegister( (Extra_MmFlex_t *)pNtk-\u003epManFunc, \"2\\n1\\n\" );\n    pNode = Abc_NtkCreateNodeConst1( pNtk );\n    Abc_ObjAddFanin( Abc_ObjFanin0(Abc_ObjFanin0(pLatch)), pNode );\n    return pLatch;\n}",
+      "Draft": "func Io_ReadCreateResetLatch(pNtk *Abc_Ntk_t, fBlifMv int32) *Abc_Obj_t {\n    var pLatch, pNode *Abc_Obj_t;\n    var pNetLI, pNetLO *Abc_Obj_t;\n    // create latch with 0 init value\n//    pLatch = Io_ReadCreateLatch( pNtk, \"_resetLI_\", \"_resetLO_\" );\n    pNetLI = Abc_NtkCreateNet( pNtk );\n    pNetLO = Abc_NtkCreateNet( pNtk );\n    Abc_ObjAssignName( pNetLI, Abc_ObjName(pNetLI), nil );\n    Abc_ObjAssignName( pNetLO, Abc_ObjName(pNetLO), nil );\n    pLatch = Io_ReadCreateLatch( pNtk, Abc_ObjName(pNetLI), Abc_ObjName(pNetLO) );\n    // set the initial value\n    Abc_LatchSetInit0( pLatch );\n    // feed the latch with constant1- node\n//    pNode = Abc_NtkCreateNode( pNtk );   \n//    pNode-\u003epData = Abc_SopRegister( (Extra_MmFlex_t *)pNtk-\u003epManFunc, \"2\\n1\\n\" );\n    pNode = Abc_NtkCreateNodeConst1( pNtk );\n    Abc_ObjAddFanin( Abc_ObjFanin0(Abc_ObjFanin0(pLatch)), pNode );\n    return pLatch;\n}"
+    },
+    {
+      "Name": "Io_ReadCreateNode",
+      "Start": 22491,
+      "End": 23007,
+      "BodyStart": 22590,
+      "Original": "Abc_Obj_t * Io_ReadCreateNode( Abc_Ntk_t * pNtk, char * pNameOut, char * pNamesIn[], int nInputs )\n{\n    Abc_Obj_t * pNet, * pNode;\n    int i;\n    // create a new node \n    pNode = Abc_NtkCreateNode( pNtk );\n    // add the fanin nets\n    for ( i = 0; i \u003c nInputs; i++ )\n    {\n        pNet = Abc_NtkFindOrCreateNet( pNtk, pNamesIn[i] );\n        Abc_ObjAddFanin( pNode, pNet );\n    }\n    // add the fanout net\n    pNet = Abc_NtkFindOrCreateNet( pNtk, pNameOut );\n    Abc_ObjAddFanin( pNet, pNode );\n    return pNode;\n}",
+      "Draft": "func Io_ReadCreateNode(pNtk *Abc_Ntk_t, pNameOut string, pNamesIn []string, nInputs int32) *Abc_Obj_t {\n    var pNet, pNode *Abc_Obj_t;\n    var i int32;\n    // create a new node \n    pNode = Abc_NtkCreateNode( pNtk );\n    // add the fanin nets\n    for  i = 0; i \u003c nInputs; i++  {\n        pNet = Abc_NtkFindOrCreateNet( pNtk, pNamesIn[i] );\n        Abc_ObjAddFanin( pNode, pNet );\n    }\n    // add the fanout net\n    pNet = Abc_NtkFindOrCreateNet( pNtk, pNameOut );\n    Abc_ObjAddFanin( pNet, pNode );\n    return pNode;\n}"
+    },
+    {
+      "Name": "Io_ReadCreateConst",
+      "Start": 23335,
+      "End": 23645,
+      "BodyStart": 23413,
+      "Original": "Abc_Obj_t * Io_ReadCreateConst( Abc_Ntk_t * pNtk, char * pName, int fConst1 )\n{\n    Abc_Obj_t * pNet, * pTerm;\n    pTerm = fConst1? Abc_NtkCreateNodeConst1(pNtk) : Abc_NtkCreateNodeConst0(pNtk);\n    pNet  = Abc_NtkFindNet(pNtk, pName);    assert( pNet );\n    Abc_ObjAddFanin( pNet, pTerm );\n    return pTerm;\n}",
+      "Draft": "func Io_ReadCreateConst(pNtk *Abc_Ntk_t, pName string, fConst1 int32) *Abc_Obj_t {\n    var pNet, pTerm *Abc_Obj_t;\n    if fConst1 != 0 {\n        pTerm = Abc_NtkCreateNodeConst1(pNtk);\n    } else {\n        pTerm = Abc_NtkCreateNodeConst0(pNtk);\n    }\n    pNet  = Abc_NtkFindNet(pNtk, pName);    assert((pNet != nil), \"pNet\");\n    Abc_ObjAddFanin( pNet, pTerm );\n    return pTerm;\n}"
+    },
+    {
+      "Name": "Io_ReadCreateInv",
+      "Start": 23964,
+      "End": 24306,
+      "BodyStart": 24046,
+      "Original": "Abc_Obj_t * Io_ReadCreateInv( Abc_Ntk_t * pNtk, char * pNameIn, char * pNameOut )\n{\n    Abc_Obj_t * pNet, * pNode;\n    pNet  = Abc_NtkFindNet(pNtk, pNameIn);     assert( pNet );\n    pNode = Abc_NtkCreateNodeInv(pNtk, pNet);\n    pNet  = Abc_NtkFindNet(pNtk, pNameOut);    assert( pNet );\n    Abc_ObjAddFanin( pNet, pNode );\n    return pNode;\n}",
+      "Draft": "func Io_ReadCreateInv(pNtk *Abc_Ntk_t, pNameIn string, pNameOut string) *Abc_Obj_t {\n    var pNet, pNode *Abc_Obj_t;\n    pNet  = Abc_NtkFindNet(pNtk, pNameIn);     assert((pNet != nil), \"pNet\");\n    pNode = Abc_NtkCreateNodeInv(pNtk, pNet);\n    pNet  = Abc_NtkFindNet(pNtk, pNameOut);    assert((pNet != nil), \"pNet\");\n    Abc_ObjAddFanin( pNet, pNode );\n    return pNode;\n}"
+    },
+    {
+      "Name": "Io_ReadCreateBuf",
+      "Start": 24625,
+      "End": 24966,
+      "BodyStart": 24707,
+      "Original": "Abc_Obj_t * Io_ReadCreateBuf( Abc_Ntk_t * pNtk, char * pNameIn, char * pNameOut )\n{\n    Abc_Obj_t * pNet, * pNode;\n    pNet  = Abc_NtkFindNet(pNtk, pNameIn);     assert( pNet );\n    pNode = Abc_NtkCreateNodeBuf(pNtk, pNet);\n    pNet  = Abc_NtkFindNet(pNtk, pNameOut);    assert( pNet );\n    Abc_ObjAddFanin( pNet, pNode );\n    return pNet;\n}",
+      "Draft": "func Io_ReadCreateBuf(pNtk *Abc_Ntk_t, pNameIn string, pNameOut string) *Abc_Obj_t {\n    var pNet, pNode *Abc_Obj_t;\n    pNet  = Abc_NtkFindNet(pNtk, pNameIn);     assert((pNet != nil), \"pNet\");\n    pNode = Abc_NtkCreateNodeBuf(pNtk, pNet);\n    pNet  = Abc_NtkFindNet(pNtk, pNameOut);    assert((pNet != nil), \"pNet\");\n    Abc_ObjAddFanin( pNet, pNode );\n    return pNet;\n}"
+    },
+    {
+      "Name": "Io_FileOpen",
+      "Start": 25431,
+      "End": 26517,
+      "BodyStart": 25530,
+      "Original": "FILE * Io_FileOpen( const char * FileName, const char * PathVar, const char * Mode, int fVerbose )\n{\n    char * t = 0, * c = 0, * i;\n\n    if ( PathVar == 0 )\n    {\n        return fopen( FileName, Mode );\n    }\n    else\n    {\n        if ( (c = Abc_FrameReadFlag( (char*)PathVar )) )\n        {\n            char ActualFileName[4096];\n            FILE * fp = 0;\n            t = Extra_UtilStrsav( c );\n            for (i = strtok( t, \":\" ); i != 0; i = strtok( 0, \":\") )\n            {\n#ifdef WIN32\n                _snprintf ( ActualFileName, 4096, \"%s/%s\", i, FileName );\n#else\n                snprintf ( ActualFileName, 4096, \"%s/%s\", i, FileName );\n#endif\n                if ( ( fp = fopen ( ActualFileName, Mode ) ) )\n                {\n                    if ( fVerbose )\n                    fprintf ( stdout, \"Using file %s\\n\", ActualFileName );\n                    ABC_FREE( t );\n                    return fp;\n                }\n            }\n            ABC_FREE( t );\n            return 0;\n        }\n        else\n        {\n            return fopen( FileName, Mode );\n        }\n    }\n}",
+      "Draft": "func Io_FileOpen(FileName string, PathVar string, Mode string, fVerbose int32) *os.File {\n    var t, c, i string;\n\n    if PathVar == 0 {\n        return fopen( FileName, Mode );\n    \n    } else {\n        if c = Abc_FrameReadFlag( (char*)PathVar ) {\n            var ActualFileName [4096]byte;\n            var fp *os.File;\n            t = Extra_UtilStrsav( c );\n            for i = strtok( t, \":\" ); i != 0; i = strtok( 0, \":\")  {\n#ifdef WIN32\n                _snprintf ( ActualFileName, 4096, \"%s/%s\", i, FileName );\n#else\n                snprintf ( ActualFileName, 4096, \"%s/%s\", i, FileName );\n#endif\n                if fp = fopen ( ActualFileName, Mode ) {\n                    if fVerbose != 0 {\n                    fprintf ( os.Stdout, \"Using file %s\\n\", ActualFileName ); }\n                    // inlining of macro ABC_FREE\n                    ((t) ? (free((char *) (t)), (t) = 0) : 0);\n                    return fp;\n                }\n            }\n            // inlining of macro ABC_FREE\n            ((t) ? (free((char *) (t)), (t) = 0) : 0);\n            return 0;\n        \n        } else {\n            return fopen( FileName, Mode );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Io_TransformSF2PLA",
+      "Start": 26774,
+      "End": 28240,
+      "BodyStart": 26833,
+      "Original": "void Io_TransformSF2PLA( char * pNameIn, char * pNameOut )\n{\n    int fStart = 0, Size = 1000000;\n    char * pBuffer, * pToken;\n    FILE * pFileIn  = fopen( pNameIn,  \"rb\" );\n    FILE * pFileOut = fopen( pNameOut, \"wb\" );\n    if ( pFileIn == NULL )\n    {\n        if ( pFileOut ) fclose( pFileOut );\n        printf( \"Cannot open file \\\"%s\\\" for reading.\\n\", pNameIn );\n        return;\n    }\n    if ( pFileOut == NULL )\n    {\n        if ( pFileIn )  fclose( pFileIn );\n        printf( \"Cannot open file \\\"%s\\\" for reading.\\n\", pNameOut );\n        return;\n    }\n    pBuffer = ABC_ALLOC( char, Size );\n    fprintf( pFileOut, \".type fd\\n\" );\n    while ( fgets(pBuffer, Size, pFileIn) )\n    {\n        if ( strstr(pBuffer, \"END_SDF\") )\n            break;\n        if ( strstr(pBuffer, \"SDF\") )\n        {\n            char * pRes = fgets(pBuffer, Size, pFileIn);\n            assert( pRes != NULL );\n            if ( (pToken = strtok( pBuffer, \" \\t\\r\\n\" )) )\n                fprintf( pFileOut, \".i %d\\n\", atoi(pToken) );\n            if ( (pToken = strtok( NULL, \" \\t\\r\\n\" )) )\n                fprintf( pFileOut, \".o %d\\n\", atoi(pToken) );\n            if ( (pToken = strtok( NULL, \" \\t\\r\\n\" )) )\n                fprintf( pFileOut, \".p %d\\n\", atoi(pToken) );\n            fStart = 1;\n        }\n        else if ( fStart )\n            fprintf( pFileOut, \"%s\", pBuffer );\n    }\n    fprintf( pFileOut, \".e\\n\" );\n    fclose( pFileIn );\n    fclose( pFileOut );\n    ABC_FREE( pBuffer );\n}",
+      "Draft": "func Io_TransformSF2PLA(pNameIn string, pNameOut string) {\n    var fStart int32;\n    var Size int32 = 1000000;\n    var pBuffer, pToken string;\n    var pFileIn *os.File   = os.Open(pNameIn);\n    var pFileOut *os.File  = os.OpenFile(pNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFileIn == nil {\n        if pFileOut != nil { _ = (pFileOut).Close(); }\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for reading.\\n\", pNameIn);\n        return;\n    }\n    if pFileOut == nil {\n        if pFileIn != nil {  _ = (pFileIn).Close(); }\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for reading.\\n\", pNameOut);\n        return;\n    }\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(Size)));\n    fmt.Fprintf(pFileOut, \".type fd\\n\");\n    for  fgets(pBuffer, Size, pFileIn)  {\n        if strstr(pBuffer, \"END_SDF\") {\n            break; }\n        if strstr(pBuffer, \"SDF\") {\n            var pRes string  = fgets(pBuffer, Size, pFileIn);\n            assert(pRes != nil, \"pRes != nil\");\n            if pToken = strtok( pBuffer, \" \\t\\r\\n\" ) {\n                fmt.Fprintf(pFileOut, \".i %d\\n\", strconv.Atoi(pToken)); }\n            if pToken = strtok( nil, \" \\t\\r\\n\" ) {\n                fmt.Fprintf(pFileOut, \".o %d\\n\", strconv.Atoi(pToken)); }\n            if pToken = strtok( nil, \" \\t\\r\\n\" ) {\n                fmt.Fprintf(pFileOut, \".p %d\\n\", strconv.Atoi(pToken)); }\n            fStart = 1;\n        \n        } else if fStart != 0 {\n            fmt.Fprintf(pFileOut, \"%s\", pBuffer); }\n    }\n    fmt.Fprintf(pFileOut, \".e\\n\");\n    _ = (pFileIn).Close();\n    _ = (pFileOut).Close();\n    // inlining of macro ABC_FREE\n    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::mechanical::sizeof::28062",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 27346,
+      "End": 27346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::pointer-cast::5447",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5320,
+      "End": 5320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::pointer-cast::6350",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6102,
+      "End": 6102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::pointer-cast::7099",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6740,
+      "End": 6740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::pointer-cast::17849",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17362,
+      "End": 17362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::pointer-cast::18572",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17957,
+      "End": 17957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::pointer-cast::26301",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25693,
+      "End": 25700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::pointer-cast::26863",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26296,
+      "End": 26296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::pointer-cast::27025",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26386,
+      "End": 26386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::pointer-cast::28046",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27346,
+      "End": 27346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::pointer-cast::29005",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28218,
+      "End": 28218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_ReadFileType",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadFileType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1306,
+      "End": 2514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_ReadNetlist",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadNetlist",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2779,
+      "End": 5613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::temporaryLtlStore",
+      "Category": "semantic-review",
+      "Symbol": "temporaryLtlStore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5849,
+      "End": 6361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::updateLtlStoreOfNtk",
+      "Category": "semantic-review",
+      "Symbol": "updateLtlStoreOfNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6597,
+      "End": 6853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_Read",
+      "Category": "semantic-review",
+      "Symbol": "Io_Read",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7118,
+      "End": 9159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_Write",
+      "Category": "semantic-review",
+      "Symbol": "Io_Write",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9423,
+      "End": 14101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_WriteHie",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteHie",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14365,
+      "End": 18615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_ReadCreatePi",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadCreatePi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18879,
+      "End": 19297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_ReadCreatePo",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadCreatePo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19561,
+      "End": 20009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_ReadCreateLatch",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadCreateLatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20343,
+      "End": 21044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_ReadCreateResetLatch",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadCreateResetLatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21326,
+      "End": 22218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_ReadCreateNode",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadCreateNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22491,
+      "End": 23007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_ReadCreateConst",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadCreateConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23335,
+      "End": 23645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_ReadCreateInv",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadCreateInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23964,
+      "End": 24306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_ReadCreateBuf",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadCreateBuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24625,
+      "End": 24966
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::ternary::Io_FileOpen",
+      "Category": "ternary-review",
+      "Symbol": "Io_FileOpen",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 25431,
+      "End": 26517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_FileOpen",
+      "Category": "semantic-review",
+      "Symbol": "Io_FileOpen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25431,
+      "End": 26517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::ternary::Io_TransformSF2PLA",
+      "Category": "ternary-review",
+      "Symbol": "Io_TransformSF2PLA",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 26774,
+      "End": 28240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::Io_TransformSF2PLA",
+      "Category": "semantic-review",
+      "Symbol": "Io_TransformSF2PLA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26774,
+      "End": 28240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 28487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioUtil.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 25911,
+      "End": 26083
+    }
+  ],
+  "Draft": "package io\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ioUtil.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to write the network in BENCH format.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: ioUtil.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioAbc.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the file type.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadFileType(pFileName string) Io_FileType_t {\n    var pExt string;\n    if pFileName == nil {\n        return IO_FILE_NONE; }\n    pExt = Extra_FileNameExtension( pFileName );\n    if pExt == nil {\n        return IO_FILE_NONE; }\n    if !(int32(strings.Compare(pExt, \"aig\")) != 0) {\n        return IO_FILE_AIGER; }\n    if !(int32(strings.Compare(pExt, \"baf\")) != 0) {\n        return IO_FILE_BAF; }\n    if !(int32(strings.Compare(pExt, \"bblif\")) != 0) {\n        return IO_FILE_BBLIF; }\n    if !(int32(strings.Compare(pExt, \"blif\")) != 0) {\n        return IO_FILE_BLIF; }\n    if !(int32(strings.Compare(pExt, \"bench\")) != 0) {\n        return IO_FILE_BENCH; }\n    if !(int32(strings.Compare(pExt, \"cnf\")) != 0) {\n        return IO_FILE_CNF; }\n    if !(int32(strings.Compare(pExt, \"dot\")) != 0) {\n        return IO_FILE_DOT; }\n    if !(int32(strings.Compare(pExt, \"edif\")) != 0) {\n        return IO_FILE_EDIF; }\n    if !(int32(strings.Compare(pExt, \"eqn\")) != 0) {\n        return IO_FILE_EQN; }\n    if !(int32(strings.Compare(pExt, \"gml\")) != 0) {\n        return IO_FILE_GML; }\n    if !(int32(strings.Compare(pExt, \"list\")) != 0) {\n        return IO_FILE_LIST; }\n    if !(int32(strings.Compare(pExt, \"mv\")) != 0) {\n        return IO_FILE_BLIFMV; }\n    if !(int32(strings.Compare(pExt, \"pla\")) != 0) {\n        return IO_FILE_PLA; }\n    if !(int32(strings.Compare(pExt, \"smv\")) != 0) {\n        return IO_FILE_SMV; }\n    if !(int32(strings.Compare(pExt, \"v\")) != 0) {\n        return IO_FILE_VERILOG; }\n    return IO_FILE_UNKNOWN;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read the network from a file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadNetlist(pFileName string, FileType Io_FileType_t, fCheck int32) *Abc_Ntk_t {\n    var pFile *os.File;\n    var pNtk *Abc_Ntk_t;\n    if FileType == IO_FILE_NONE || FileType == IO_FILE_UNKNOWN {\n        fmt.Fprintf(os.Stdout, \"Generic file reader requires a known file extension to open \\\"%s\\\".\\n\", pFileName);\n        return nil;\n    }\n    // check if the file exists\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Cannot open input file \\\"%s\\\". \", pFileName);\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".blif\", \".bench\", \".pla\", \".baf\", \".aig\" ) {\n            fmt.Fprintf(os.Stdout, \"Did you mean \\\"%s\\\"?\", pFileName); }\n        fmt.Fprintf(os.Stdout, \"\\n\");\n       return nil;\n    }\n    _ = (pFile).Close();\n    // read the AIG\n    if FileType == IO_FILE_AIGER || FileType == IO_FILE_BAF || FileType == IO_FILE_BBLIF {\n        if FileType == IO_FILE_AIGER {\n            pNtk = Io_ReadAiger( pFileName, fCheck );\n        } else if FileType == IO_FILE_BAF {\n            pNtk = Io_ReadBaf( pFileName, fCheck );\n        } else { // if ( FileType == IO_FILE_BBLIF )\n            pNtk = Io_ReadBblif( pFileName, fCheck ); }\n        if pNtk == nil {\n            fmt.Fprintf(os.Stdout, \"Reading AIG from file has failed.\\n\");\n            return nil;\n        }\n        return pNtk;\n    }\n    // read the new netlist\n    if FileType == IO_FILE_BLIF {\n//        pNtk = Io_ReadBlif( pFileName, fCheck );\n        pNtk = Io_ReadBlifMv( pFileName, 0, fCheck );\n    } else if Io_ReadFileType(pFileName) == IO_FILE_BLIFMV {\n        pNtk = Io_ReadBlifMv( pFileName, 1, fCheck );\n    } else if FileType == IO_FILE_BENCH {\n        pNtk = Io_ReadBench( pFileName, fCheck );\n    } else if FileType == IO_FILE_EDIF {\n        pNtk = Io_ReadEdif( pFileName, fCheck );\n    } else if FileType == IO_FILE_EQN {\n        pNtk = Io_ReadEqn( pFileName, fCheck );\n    } else if FileType == IO_FILE_PLA {\n        pNtk = Io_ReadPla( pFileName, 0, 0, 0, 0, fCheck );\n    } else if FileType == IO_FILE_VERILOG {\n        pNtk = Io_ReadVerilog( pFileName, fCheck );\n    } else {\n        fmt.Fprintf(os.Stderr, \"Unknown file format.\\n\");\n        return nil;\n    }\n    if pNtk == nil {\n        fmt.Fprintf(os.Stdout, \"Reading network from file has failed.\\n\");\n        return nil;\n    }\n    if (fCheck != 0) \u0026\u0026 (Abc_NtkBlackboxNum(pNtk) || Abc_NtkWhiteboxNum(pNtk)) {\n        var i, fCycle int32;\n        var pModel *Abc_Ntk_t;\n//        fprintf( stdout, \"Warning: The network contains hierarchy.\\n\" );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.pDesign.vModules)) \u0026\u0026 (((pModel) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {\n                if !Abc_NtkIsAcyclicWithBoxes( pModel ) {\n                    fCycle = 1; }\n        }\n        if fCycle != 0 {\n            Abc_NtkDelete( pNtk );\n            return nil;    \n        }\n    }\n    return pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc temporaryLtlStore(pNtk *Abc_Ntk_t) *Vec_Ptr_t {\n    var tempStore *Vec_Ptr_t;\n    var pFormula string;\n    var i int32;\n\n    if (pNtk != nil) \u0026\u0026 Vec_PtrSize( pNtk.vLtlProperties ) \u003e 0 {\n        tempStore = Vec_PtrAlloc( Vec_PtrSize( pNtk.vLtlProperties ) );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.vLtlProperties)) \u0026\u0026 (((pFormula) = (char *)Vec_PtrEntry(pNtk.vLtlProperties, i)), 1); i++  {\n            Vec_PtrPush( tempStore, pFormula );\n        }\n        assert(Vec_PtrSize( tempStore ) == Vec_PtrSize( pNtk.vLtlProperties ), \"Vec_PtrSize( tempStore ) == Vec_PtrSize( pNtk.vLtlProperties )\");\n        return tempStore;\n    \n    } else {\n        return nil; }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc updateLtlStoreOfNtk(pNtk *Abc_Ntk_t, tempLtlStore *Vec_Ptr_t) {\n    var i int32;\n    var pFormula string;\n\n    assert(tempLtlStore != nil, \"tempLtlStore != nil\");\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(tempLtlStore)) \u0026\u0026 (((pFormula) = (char *)Vec_PtrEntry(tempLtlStore, i)), 1); i++  {\n        Vec_PtrPush( pNtk.vLtlProperties, pFormula );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read the network from a file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_Read(pFileName string, FileType Io_FileType_t, fCheck int32, fBarBufs int32) *Abc_Ntk_t {\n    var pNtk, pTemp *Abc_Ntk_t;\n    var vLtl *Vec_Ptr_t;\n    // get the netlist\n    pNtk = Io_ReadNetlist( pFileName, FileType, fCheck );\n    if pNtk == nil {\n        return nil; }\n    vLtl = temporaryLtlStore( pNtk );\n    if !Abc_NtkIsNetlist(pNtk) {\n        return pNtk; }\n    // derive barbufs\n    if fBarBufs != 0 {\n        pNtk = Abc_NtkToBarBufs( pTemp = pNtk );\n        Abc_NtkDelete( pTemp );\n        assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n        return pNtk;\n    }\n    // flatten logic hierarchy\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    if Abc_NtkWhiteboxNum(pNtk) \u003e 0 {\n        pNtk = Abc_NtkFlattenLogicHierarchy( pTemp = pNtk );\n        Abc_NtkDelete( pTemp );\n        if pNtk == nil {\n            fmt.Fprintf(os.Stdout, \"Flattening logic hierarchy has failed.\\n\");\n            return nil;\n        }\n    }\n    // convert blackboxes\n    if Abc_NtkBlackboxNum(pNtk) \u003e 0 {\n        fmt.Printf(\"Hierarchy reader converted %d instances of blackboxes.\\n\", Abc_NtkBlackboxNum(pNtk));\n        pNtk = Abc_NtkConvertBlackboxes( pTemp = pNtk );\n        Abc_NtkDelete( pTemp );\n        if pNtk == nil {\n            fmt.Fprintf(os.Stdout, \"Converting blackboxes has failed.\\n\");\n            return nil;\n        }\n    }\n    // consider the case of BLIF-MV\n    if Io_ReadFileType(pFileName) == IO_FILE_BLIFMV {\n        pNtk = Abc_NtkStrashBlifMv( pTemp = pNtk );\n        Abc_NtkDelete( pTemp );\n        if pNtk == nil {\n            fmt.Fprintf(os.Stdout, \"Converting BLIF-MV to AIG has failed.\\n\");\n            return nil;\n        }\n        return pNtk;\n    }\n    // convert the netlist into the logic network\n    pNtk = Abc_NtkToLogic( pTemp = pNtk );\n    if vLtl != nil {\n        updateLtlStoreOfNtk( pNtk, vLtl ); }\n    Abc_NtkDelete( pTemp );\n    if pNtk == nil {\n        fmt.Fprintf(os.Stdout, \"Converting netlist to logic network after reading has failed.\\n\");\n        return nil;\n    }\n    return pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Write the network into file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_Write(pNtk *Abc_Ntk_t, pFileName string, FileType Io_FileType_t) {\n    var pNtkTemp, pNtkCopy *Abc_Ntk_t;\n    // check if the current network is available\n    if pNtk == nil {\n        fmt.Fprintf(os.Stdout, \"Empty network.\\n\");\n        return;\n    }\n    // check if the file extension if given\n    if FileType == IO_FILE_NONE || FileType == IO_FILE_UNKNOWN {\n        fmt.Fprintf(os.Stdout, \"The generic file writer requires a known file extension.\\n\");\n        return;\n    }\n    // write the AIG formats\n    if FileType == IO_FILE_AIGER || FileType == IO_FILE_BAF {\n        if !Abc_NtkIsStrash(pNtk) {\n            fmt.Fprintf(os.Stdout, \"Writing this format is only possible for structurally hashed AIGs.\\n\");\n            return;\n        }\n        if FileType == IO_FILE_AIGER {\n            Io_WriteAiger( pNtk, pFileName, 1, 0, 0 );\n        } else { //if ( FileType == IO_FILE_BAF )\n            Io_WriteBaf( pNtk, pFileName ); }\n        return;\n    }\n    // write non-netlist types\n    if FileType == IO_FILE_CNF {\n        Io_WriteCnf( pNtk, pFileName, 0 );\n        return;\n    }\n    if FileType == IO_FILE_DOT {\n        Io_WriteDot( pNtk, pFileName );\n        return;\n    }\n    if FileType == IO_FILE_GML {\n        Io_WriteGml( pNtk, pFileName );\n        return;\n    }\n    if FileType == IO_FILE_BBLIF {\n        if !Abc_NtkIsLogic(pNtk) {\n            fmt.Fprintf(os.Stdout, \"Writing Binary BLIF is only possible for logic networks.\\n\");\n            return;\n        }\n        if !Abc_NtkHasSop(pNtk) {\n            Abc_NtkToSop( pNtk, -1, ABC_INFINITY ); }\n        Io_WriteBblif( pNtk, pFileName );\n        return;\n    }\n/*\n    if ( FileType == IO_FILE_BLIFMV )\n    {\n        Io_WriteBlifMv( pNtk, pFileName );\n        return;\n    }\n*/\n    // convert logic network into netlist\n    if FileType == IO_FILE_PLA {\n        if Abc_NtkLevel(pNtk) \u003e 1 {\n            fmt.Fprintf(os.Stdout, \"PLA writing is available for collapsed networks.\\n\");\n            return;\n        }\n        if Abc_NtkIsComb(pNtk) {\n            pNtkTemp = Abc_NtkToNetlist( pNtk );\n        } else {\n            fmt.Fprintf(os.Stdout, \"Latches are writen into the PLA file at PI/PO pairs.\\n\");\n            pNtkCopy = Abc_NtkDup( pNtk );\n            Abc_NtkMakeComb( pNtkCopy, 0 );\n            pNtkTemp = Abc_NtkToNetlist( pNtk );\n            Abc_NtkDelete( pNtkCopy );\n        }\n        if !Abc_NtkToSop( pNtkTemp, 1, ABC_INFINITY ) {\n            return; }\n    \n    } else if FileType == IO_FILE_MOPLA {\n        pNtkTemp = Abc_NtkStrash( pNtk, 0, 0, 0 );\n    \n    } else if FileType == IO_FILE_BENCH {\n        if !Abc_NtkIsStrash(pNtk) {\n            fmt.Fprintf(os.Stdout, \"Writing traditional BENCH is available for AIGs only (use \\\"write_bench\\\").\\n\");\n            return;\n        }\n        pNtkTemp = Abc_NtkToNetlistBench( pNtk );\n    \n    } else if FileType == IO_FILE_SMV {\n        if !Abc_NtkIsStrash(pNtk) {\n            fmt.Fprintf(os.Stdout, \"Writing traditional SMV is available for AIGs only.\\n\");\n            return;\n        }\n        pNtkTemp = Abc_NtkToNetlistBench( pNtk );\n    \n    } else {\n        pNtkTemp = Abc_NtkToNetlist( pNtk ); }\n\n    if pNtkTemp == nil {\n        fmt.Fprintf(os.Stdout, \"Converting to netlist has failed.\\n\");\n        return;\n    }\n\n    if FileType == IO_FILE_BLIF {\n        if !Abc_NtkHasSop(pNtkTemp) \u0026\u0026 !Abc_NtkHasMapping(pNtkTemp) {\n            Abc_NtkToSop( pNtkTemp, -1, ABC_INFINITY ); }\n        Io_WriteBlif( pNtkTemp, pFileName, 1, 0, 0 );\n    \n    } else if FileType == IO_FILE_BLIFMV {\n        if !Abc_NtkConvertToBlifMv( pNtkTemp ) {\n            return; }\n        Io_WriteBlifMv( pNtkTemp, pFileName );\n    \n    } else if FileType == IO_FILE_BENCH {\n        Io_WriteBench( pNtkTemp, pFileName );\n    } else if FileType == IO_FILE_BOOK {\n        Io_WriteBook( pNtkTemp, pFileName );\n    } else if FileType == IO_FILE_PLA {\n        Io_WritePla( pNtkTemp, pFileName );\n    } else if FileType == IO_FILE_MOPLA {\n        Io_WriteMoPla( pNtkTemp, pFileName );\n    } else if FileType == IO_FILE_EQN {\n        if !Abc_NtkHasAig(pNtkTemp) {\n            Abc_NtkToAig( pNtkTemp ); }\n        Io_WriteEqn( pNtkTemp, pFileName );\n    \n    } else if FileType == IO_FILE_SMV {\n        Io_WriteSmv( pNtkTemp, pFileName );\n    } else if FileType == IO_FILE_VERILOG {\n        if !Abc_NtkHasAig(pNtkTemp) \u0026\u0026 !Abc_NtkHasMapping(pNtkTemp) {\n            Abc_NtkToAig( pNtkTemp ); }\n        Io_WriteVerilog( pNtkTemp, pFileName, 0 );\n    \n    } else { \n        fmt.Fprintf(os.Stderr, \"Unknown file format.\\n\"); }\n    Abc_NtkDelete( pNtkTemp );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Write the network into file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteHie(pNtk *Abc_Ntk_t, pBaseName string, pFileName string) {\n    var pNtkTemp *Abc_Ntk_t;\n    var pNtkResult *Abc_Ntk_t;\n    var pNtkBase *Abc_Ntk_t = nil;\n    var i int32;\n    // check if the current network is available\n    if pNtk == nil {\n        fmt.Fprintf(os.Stdout, \"Empty network.\\n\");\n        return;\n    }\n\n    // read the base network\n    assert(Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk), \"Abc_NtkIsStrash(pNtk) || Abc_NtkIsLogic(pNtk)\");\n    if Io_ReadFileType(pBaseName) == IO_FILE_BLIF {\n        pNtkBase = Io_ReadBlifMv( pBaseName, 0, 1 );\n    } else if Io_ReadFileType(pBaseName) == IO_FILE_BLIFMV {\n        pNtkBase = Io_ReadBlifMv( pBaseName, 1, 1 );\n    } else if Io_ReadFileType(pBaseName) == IO_FILE_VERILOG {\n        pNtkBase = Io_ReadVerilog( pBaseName, 1 );\n    } else { \n        fmt.Fprintf(os.Stderr, \"Unknown input file format.\\n\"); }\n    if pNtkBase == nil {\n        return; }\n\n    // flatten logic hierarchy if present\n    if Abc_NtkWhiteboxNum(pNtkBase) \u003e 0 \u0026\u0026 pNtk.nBarBufs == 0 {\n        pNtkBase = Abc_NtkFlattenLogicHierarchy( pNtkTemp = pNtkBase );\n        Abc_NtkDelete( pNtkTemp );\n        if pNtkBase == nil {\n            return; }\n    }\n\n    // reintroduce the boxes into the netlist\n    if pNtk.nBarBufs \u003e 0 {\n        // derive the netlist\n        pNtkResult = Abc_NtkToNetlist( pNtk );\n        pNtkResult = Abc_NtkFromBarBufs( pNtkBase, pNtkTemp = pNtkResult );\n        Abc_NtkDelete( pNtkTemp );\n        if pNtkResult != nil {\n            fmt.Printf(\"Hierarchy writer replaced %d barbufs by hierarchy boundaries.\\n\", pNtk.nBarBufs); }\n    \n    } else if Io_ReadFileType(pBaseName) == IO_FILE_BLIFMV {\n        if Abc_NtkBlackboxNum(pNtkBase) \u003e 0 {\n            fmt.Printf(\"Hierarchy writer does not support BLIF-MV with blackboxes.\\n\");\n            Abc_NtkDelete( pNtkBase );\n            return;\n        }\n        // convert the current network to BLIF-MV\n        assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n        pNtkResult = Abc_NtkToNetlist( pNtk );\n        if !Abc_NtkConvertToBlifMv( pNtkResult ) {\n            Abc_NtkDelete( pNtkBase );\n            return;\n        }\n        // reintroduce the network\n        pNtkResult = Abc_NtkInsertBlifMv( pNtkBase, pNtkTemp = pNtkResult );\n        Abc_NtkDelete( pNtkTemp );\n    \n    } else if Abc_NtkBlackboxNum(pNtkBase) \u003e 0 {\n        // derive the netlist\n        pNtkResult = Abc_NtkToNetlist( pNtk );\n        pNtkResult = Abc_NtkInsertNewLogic( pNtkBase, pNtkTemp = pNtkResult );\n        Abc_NtkDelete( pNtkTemp );\n        if pNtkResult != nil {\n            fmt.Printf(\"Hierarchy writer reintroduced %d instances of blackboxes.\\n\", Abc_NtkBlackboxNum(pNtkBase)); }\n    \n    } else {\n        fmt.Printf(\"Warning: The output network does not contain blackboxes.\\n\");\n        pNtkResult = Abc_NtkToNetlist( pNtk );\n    }\n    Abc_NtkDelete( pNtkBase );\n    if pNtkResult == nil {\n        return; }\n\n    // write the resulting network\n    if Io_ReadFileType(pFileName) == IO_FILE_BLIF {\n        if pNtkResult.pDesign {\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(pNtkResult.pDesign.vModules)) \u0026\u0026 (((pNtkTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pNtkResult.pDesign.vModules, i)), 1); i++  {\n                if !Abc_NtkHasSop(pNtkTemp) \u0026\u0026 !Abc_NtkHasMapping(pNtkTemp) {\n                    Abc_NtkToSop( pNtkTemp, -1, ABC_INFINITY ); }\n            }\n        \n        } else {\n            if !Abc_NtkHasSop(pNtkResult) \u0026\u0026 !Abc_NtkHasMapping(pNtkResult) {\n                Abc_NtkToSop( pNtkResult, -1, ABC_INFINITY ); }\n        }\n        Io_WriteBlif( pNtkResult, pFileName, 1, 0, 0 );\n    \n    } else if Io_ReadFileType(pFileName) == IO_FILE_VERILOG {\n        if pNtkResult.pDesign {\n            // inlining of macro Vec_PtrForEachEntry\n            for  i = 0; (i \u003c Vec_PtrSize(pNtkResult.pDesign.vModules)) \u0026\u0026 (((pNtkTemp) = (Abc_Ntk_t *)Vec_PtrEntry(pNtkResult.pDesign.vModules, i)), 1); i++  {\n                if !Abc_NtkHasAig(pNtkTemp) \u0026\u0026 !Abc_NtkHasMapping(pNtkTemp) {\n                    Abc_NtkToAig( pNtkTemp ); }\n            }\n        \n        } else {\n            if !Abc_NtkHasAig(pNtkResult) \u0026\u0026 !Abc_NtkHasMapping(pNtkResult) {\n                Abc_NtkToAig( pNtkResult ); }\n        }\n        Io_WriteVerilog( pNtkResult, pFileName, 0 );\n    \n    } else if Io_ReadFileType(pFileName) == IO_FILE_BLIFMV {\n        Io_WriteBlifMv( pNtkResult, pFileName );\n    \n    } else { \n        fmt.Fprintf(os.Stderr, \"Unknown output file format.\\n\"); }\n\n    Abc_NtkDelete( pNtkResult );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates PI terminal and net.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadCreatePi(pNtk *Abc_Ntk_t, pName string) *Abc_Obj_t {\n    var pNet, pTerm *Abc_Obj_t;\n    // get the PI net\n    pNet  = Abc_NtkFindNet( pNtk, pName );\n    if pNet != nil {\n        fmt.Printf(\"Warning: PI \\\"%s\\\" appears twice in the list.\\n\", pName); }\n    pNet  = Abc_NtkFindOrCreateNet( pNtk, pName );\n    // add the PI node\n    pTerm = Abc_NtkCreatePi( pNtk );\n    Abc_ObjAddFanin( pNet, pTerm );\n    return pTerm;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates PO terminal and net.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadCreatePo(pNtk *Abc_Ntk_t, pName string) *Abc_Obj_t {\n    var pNet, pTerm *Abc_Obj_t;\n    // get the PO net\n    pNet  = Abc_NtkFindNet( pNtk, pName );\n    if (pNet != nil) \u0026\u0026 Abc_ObjFaninNum(pNet) == 0 {\n        fmt.Printf(\"Warning: PO \\\"%s\\\" appears twice in the list.\\n\", pName); }\n    pNet  = Abc_NtkFindOrCreateNet( pNtk, pName );\n    // add the PO node\n    pTerm = Abc_NtkCreatePo( pNtk );\n    Abc_ObjAddFanin( pTerm, pNet );\n    return pTerm;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create a latch with the given input/output.]\n\n  Description [By default, the latch value is unknown (ABC_INIT_NONE).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadCreateLatch(pNtk *Abc_Ntk_t, pNetLI string, pNetLO string) *Abc_Obj_t {\n    var pLatch, pTerm, pNet *Abc_Obj_t;\n    // get the LI net\n    pNet = Abc_NtkFindOrCreateNet( pNtk, pNetLI );\n    // add the BO terminal\n    pTerm = Abc_NtkCreateBi( pNtk );\n    Abc_ObjAddFanin( pTerm, pNet );\n    // add the latch box\n    pLatch = Abc_NtkCreateLatch( pNtk );\n    Abc_ObjAddFanin( pLatch, pTerm  );\n    // add the BI terminal\n    pTerm = Abc_NtkCreateBo( pNtk );\n    Abc_ObjAddFanin( pTerm, pLatch );\n    // get the LO net\n    pNet = Abc_NtkFindOrCreateNet( pNtk, pNetLO );\n    Abc_ObjAddFanin( pNet, pTerm );\n    // set latch name\n    Abc_ObjAssignName( pLatch, pNetLO, \"L\" );\n    return pLatch;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create the reset latch with data=1 and init=0.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadCreateResetLatch(pNtk *Abc_Ntk_t, fBlifMv int32) *Abc_Obj_t {\n    var pLatch, pNode *Abc_Obj_t;\n    var pNetLI, pNetLO *Abc_Obj_t;\n    // create latch with 0 init value\n//    pLatch = Io_ReadCreateLatch( pNtk, \"_resetLI_\", \"_resetLO_\" );\n    pNetLI = Abc_NtkCreateNet( pNtk );\n    pNetLO = Abc_NtkCreateNet( pNtk );\n    Abc_ObjAssignName( pNetLI, Abc_ObjName(pNetLI), nil );\n    Abc_ObjAssignName( pNetLO, Abc_ObjName(pNetLO), nil );\n    pLatch = Io_ReadCreateLatch( pNtk, Abc_ObjName(pNetLI), Abc_ObjName(pNetLO) );\n    // set the initial value\n    Abc_LatchSetInit0( pLatch );\n    // feed the latch with constant1- node\n//    pNode = Abc_NtkCreateNode( pNtk );   \n//    pNode-\u003epData = Abc_SopRegister( (Extra_MmFlex_t *)pNtk-\u003epManFunc, \"2\\n1\\n\" );\n    pNode = Abc_NtkCreateNodeConst1( pNtk );\n    Abc_ObjAddFanin( Abc_ObjFanin0(Abc_ObjFanin0(pLatch)), pNode );\n    return pLatch;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create node and the net driven by it.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadCreateNode(pNtk *Abc_Ntk_t, pNameOut string, pNamesIn []string, nInputs int32) *Abc_Obj_t {\n    var pNet, pNode *Abc_Obj_t;\n    var i int32;\n    // create a new node \n    pNode = Abc_NtkCreateNode( pNtk );\n    // add the fanin nets\n    for  i = 0; i \u003c nInputs; i++  {\n        pNet = Abc_NtkFindOrCreateNet( pNtk, pNamesIn[i] );\n        Abc_ObjAddFanin( pNode, pNet );\n    }\n    // add the fanout net\n    pNet = Abc_NtkFindOrCreateNet( pNtk, pNameOut );\n    Abc_ObjAddFanin( pNet, pNode );\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create a constant 0 node driving the net with this name.]\n\n  Description [Assumes that the net already exists.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadCreateConst(pNtk *Abc_Ntk_t, pName string, fConst1 int32) *Abc_Obj_t {\n    var pNet, pTerm *Abc_Obj_t;\n    if fConst1 != 0 {\n        pTerm = Abc_NtkCreateNodeConst1(pNtk);\n    } else {\n        pTerm = Abc_NtkCreateNodeConst0(pNtk);\n    }\n    pNet  = Abc_NtkFindNet(pNtk, pName);    assert((pNet != nil), \"pNet\");\n    Abc_ObjAddFanin( pNet, pTerm );\n    return pTerm;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create an inverter or buffer for the given net.]\n\n  Description [Assumes that the nets already exist.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadCreateInv(pNtk *Abc_Ntk_t, pNameIn string, pNameOut string) *Abc_Obj_t {\n    var pNet, pNode *Abc_Obj_t;\n    pNet  = Abc_NtkFindNet(pNtk, pNameIn);     assert((pNet != nil), \"pNet\");\n    pNode = Abc_NtkCreateNodeInv(pNtk, pNet);\n    pNet  = Abc_NtkFindNet(pNtk, pNameOut);    assert((pNet != nil), \"pNet\");\n    Abc_ObjAddFanin( pNet, pNode );\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create an inverter or buffer for the given net.]\n\n  Description [Assumes that the nets already exist.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadCreateBuf(pNtk *Abc_Ntk_t, pNameIn string, pNameOut string) *Abc_Obj_t {\n    var pNet, pNode *Abc_Obj_t;\n    pNet  = Abc_NtkFindNet(pNtk, pNameIn);     assert((pNet != nil), \"pNet\");\n    pNode = Abc_NtkCreateNodeBuf(pNtk, pNet);\n    pNet  = Abc_NtkFindNet(pNtk, pNameOut);    assert((pNet != nil), \"pNet\");\n    Abc_ObjAddFanin( pNet, pNode );\n    return pNet;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Provide an fopen replacement with path lookup]\n\n  Description [Provide an fopen replacement where the path stored\n               in pathvar MVSIS variable is used to look up the path\n               for name. Returns NULL if file cannot be opened.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_FileOpen(FileName string, PathVar string, Mode string, fVerbose int32) *os.File {\n    var t, c, i string;\n\n    if PathVar == 0 {\n        return fopen( FileName, Mode );\n    \n    } else {\n        if c = Abc_FrameReadFlag( (char*)PathVar ) {\n            var ActualFileName [4096]byte;\n            var fp *os.File;\n            t = Extra_UtilStrsav( c );\n            for i = strtok( t, \":\" ); i != 0; i = strtok( 0, \":\")  {\n#ifdef WIN32\n                _snprintf ( ActualFileName, 4096, \"%s/%s\", i, FileName );\n#else\n                snprintf ( ActualFileName, 4096, \"%s/%s\", i, FileName );\n#endif\n                if fp = fopen ( ActualFileName, Mode ) {\n                    if fVerbose != 0 {\n                    fprintf ( os.Stdout, \"Using file %s\\n\", ActualFileName ); }\n                    // inlining of macro ABC_FREE\n                    ((t) ? (free((char *) (t)), (t) = 0) : 0);\n                    return fp;\n                }\n            }\n            // inlining of macro ABC_FREE\n            ((t) ? (free((char *) (t)), (t) = 0) : 0);\n            return 0;\n        \n        } else {\n            return fopen( FileName, Mode );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Tranform SF into PLA.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_TransformSF2PLA(pNameIn string, pNameOut string) {\n    var fStart int32;\n    var Size int32 = 1000000;\n    var pBuffer, pToken string;\n    var pFileIn *os.File   = os.Open(pNameIn);\n    var pFileOut *os.File  = os.OpenFile(pNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFileIn == nil {\n        if pFileOut != nil { _ = (pFileOut).Close(); }\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for reading.\\n\", pNameIn);\n        return;\n    }\n    if pFileOut == nil {\n        if pFileIn != nil {  _ = (pFileIn).Close(); }\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for reading.\\n\", pNameOut);\n        return;\n    }\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(Size)));\n    fmt.Fprintf(pFileOut, \".type fd\\n\");\n    for  fgets(pBuffer, Size, pFileIn)  {\n        if strstr(pBuffer, \"END_SDF\") {\n            break; }\n        if strstr(pBuffer, \"SDF\") {\n            var pRes string  = fgets(pBuffer, Size, pFileIn);\n            assert(pRes != nil, \"pRes != nil\");\n            if pToken = strtok( pBuffer, \" \\t\\r\\n\" ) {\n                fmt.Fprintf(pFileOut, \".i %d\\n\", strconv.Atoi(pToken)); }\n            if pToken = strtok( nil, \" \\t\\r\\n\" ) {\n                fmt.Fprintf(pFileOut, \".o %d\\n\", strconv.Atoi(pToken)); }\n            if pToken = strtok( nil, \" \\t\\r\\n\" ) {\n                fmt.Fprintf(pFileOut, \".p %d\\n\", strconv.Atoi(pToken)); }\n            fStart = 1;\n        \n        } else if fStart != 0 {\n            fmt.Fprintf(pFileOut, \"%s\", pBuffer); }\n    }\n    fmt.Fprintf(pFileOut, \".e\\n\");\n    _ = (pFileIn).Close();\n    _ = (pFileOut).Close();\n    // inlining of macro ABC_FREE\n    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

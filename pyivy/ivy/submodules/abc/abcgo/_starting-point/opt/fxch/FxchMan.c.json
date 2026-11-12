@@ -1,0 +1,614 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c",
+  "SHA256": "6154d348a5dd6810a61ddc6d9e3b2ca84b11af89d209b20c781b3cd58349efb7",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 70,
+        "Column": 9,
+        "ByteOffset": 2360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Lit0 \u003c Lit1 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 199,
+        "Column": 64,
+        "ByteOffset": 7220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pFxchMan) ? (free((char *) (pFxchMan)), (pFxchMan) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 9,
+        "ByteOffset": 7626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vCube) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 8045
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFxchMan.nVars \u003c nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 347,
+        "Column": 9,
+        "ByteOffset": 13773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 375,
+        "Column": 9,
+        "ByteOffset": 14917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue == Vec_IntSize( pFxchMan.vDiv ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 455,
+        "Column": 13,
+        "ByteOffset": 18429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( vCube );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 527,
+        "Column": 5,
+        "ByteOffset": 21364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize( pFxchMan.vLevels ) == iVarNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 558,
+        "Column": 9,
+        "ByteOffset": 22322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 574,
+        "Column": 9,
+        "ByteOffset": 23272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Fxch_ManGetLit( pFxchMan, iCube0, 0) == Fxch_ManGetLit( pFxchMan, iCube1, 0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 582,
+        "Column": 5,
+        "ByteOffset": 23572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize( pFxchMan.vPairs ) % 2 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 608,
+        "Column": 5,
+        "ByteOffset": 24764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize( pFxchMan.vCubesToUpdate ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 621,
+        "Column": 9,
+        "ByteOffset": 25328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize( pFxchMan.vSCC ) % 2 == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 708,
+        "Column": 5,
+        "ByteOffset": 28817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cubes =%8d  \", Vec_WecSizeUsed( pFxchMan.vCubes ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 709,
+        "Column": 5,
+        "ByteOffset": 28883
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Lits  =%8d  \", Vec_WecSizeUsed( pFxchMan.vLits ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 710,
+        "Column": 5,
+        "ByteOffset": 28948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Divs  =%8d  \", Hsh_VecSize( pFxchMan.pDivHash ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 711,
+        "Column": 5,
+        "ByteOffset": 29012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Divs+ =%8d  \", Vec_QueSize( pFxchMan.vDivPrio ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 712,
+        "Column": 5,
+        "ByteOffset": 29076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Extr  =%7d  \\n\", pFxchMan.nExtDivs );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fxch_ManSCAddRemove",
+      "Start": 702,
+      "End": 1592,
+      "BodyStart": 1107,
+      "Original": "static inline int Fxch_ManSCAddRemove( Fxch_Man_t* pFxchMan,\n                                       unsigned int SubCubeID,\n                                       unsigned int iCube,\n                                       unsigned int iLit0,\n                                       unsigned int iLit1,\n                                       char fAdd,\n                                       char fUpdate )\n{\n    int ret = 0;\n\n    if ( fAdd )\n    {\n        ret = Fxch_SCHashTableInsert( pFxchMan-\u003epSCHashTable, pFxchMan-\u003evCubes,\n                                      SubCubeID,\n                                      iCube, iLit0, iLit1, fUpdate );\n    }\n    else\n    {\n        ret = Fxch_SCHashTableRemove( pFxchMan-\u003epSCHashTable, pFxchMan-\u003evCubes,\n                                      SubCubeID,\n                                      iCube, iLit0, iLit1, fUpdate );\n    }\n\n    return ret;\n}",
+      "Draft": "static inline int Fxch_ManSCAddRemove( Fxch_Man_t* pFxchMan,\n                                       unsigned int SubCubeID,\n                                       unsigned int iCube,\n                                       unsigned int iLit0,\n                                       unsigned int iLit1,\n                                       char fAdd,\n                                       char fUpdate )\n{\n    var ret int32;\n\n    if fAdd != 0 {\n        ret = Fxch_SCHashTableInsert( pFxchMan.pSCHashTable, pFxchMan.vCubes,\n                                      SubCubeID,\n                                      iCube, iLit0, iLit1, fUpdate );\n    \n    } else {\n        ret = Fxch_SCHashTableRemove( pFxchMan.pSCHashTable, pFxchMan.vCubes,\n                                      SubCubeID,\n                                      iCube, iLit0, iLit1, fUpdate );\n    }\n\n    return ret;\n}"
+    },
+    {
+      "Name": "Fxch_ManDivSingleCube",
+      "Start": 1595,
+      "End": 3126,
+      "BodyStart": 1816,
+      "Original": "static inline int Fxch_ManDivSingleCube( Fxch_Man_t* pFxchMan,\n                                         int iCube,\n                                         int fAdd,\n                                         int fUpdate )\n{\n    Vec_Int_t* vCube = Vec_WecEntry( pFxchMan-\u003evCubes, iCube );\n    int i, k,\n        Lit0,\n        Lit1,\n        fSingleCube = 1,\n        fBase = 0;\n\n    if ( Vec_IntSize( vCube ) \u003c 2 )\n        return 0;\n\n    Vec_IntForEachEntryStart( vCube, Lit0, i, 1)\n    Vec_IntForEachEntryStart( vCube, Lit1, k, (i + 1) )\n    {\n        int * pOutputID, nOnes, j, z;\n        assert( Lit0 \u003c Lit1 );\n\n        Vec_IntClear( pFxchMan-\u003evCubeFree );\n        Vec_IntPush( pFxchMan-\u003evCubeFree, Abc_Var2Lit( Abc_LitNot( Lit0 ), 0 ) );\n        Vec_IntPush( pFxchMan-\u003evCubeFree, Abc_Var2Lit( Abc_LitNot( Lit1 ), 1 ) );\n\n        pOutputID = Vec_IntEntryP( pFxchMan-\u003evOutputID, iCube * pFxchMan-\u003enSizeOutputID );\n        nOnes = 0;\n\n        for ( j = 0; j \u003c pFxchMan-\u003enSizeOutputID; j++ )\n            nOnes += Fxch_CountOnes( pOutputID[j] );\n\n        if ( nOnes == 0 )\n            nOnes = 1;\n\n        if (fAdd)\n        {\n            for ( z = 0; z \u003c nOnes; z++ )\n                Fxch_DivAdd( pFxchMan, fUpdate, fSingleCube, fBase );\n            pFxchMan-\u003enPairsS++;\n        }\n        else\n        {\n            for ( z = 0; z \u003c nOnes; z++ )\n                Fxch_DivRemove( pFxchMan, fUpdate, fSingleCube, fBase );\n            pFxchMan-\u003enPairsS--;\n        }\n    }\n\n    return Vec_IntSize( vCube ) * ( Vec_IntSize( vCube ) - 1 ) / 2;\n}",
+      "Draft": "func Fxch_ManDivSingleCube(pFxchMan *Fxch_Man_t, iCube int32, fAdd int32, fUpdate int32) int32 {\n    var vCube *Vec_Int_t  = Vec_WecEntry( pFxchMan.vCubes, iCube );\n    var i int32;\n    var k int32;\n    var Lit0 int32;\n    var Lit1 int32;\n    var fSingleCube int32 = 1;\n    var fBase int32;\n\n    if Vec_IntSize( vCube ) \u003c 2 {\n        return 0; }\n\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit0) = Vec_IntEntry(vCube, i)), 1); i++  {\n    // inlining of macro Vec_IntForEachEntryStart\n    for  k = (i + 1); (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit1) = Vec_IntEntry(vCube, k)), 1); k++  {\n        var pOutputID *int32;\n        var nOnes int32;\n        var j int32;\n        var z int32;\n        assert(Lit0 \u003c Lit1, \"Lit0 \u003c Lit1\");\n\n        Vec_IntClear( pFxchMan.vCubeFree );\n        Vec_IntPush( pFxchMan.vCubeFree, Abc_Var2Lit( Abc_LitNot( Lit0 ), 0 ) );\n        Vec_IntPush( pFxchMan.vCubeFree, Abc_Var2Lit( Abc_LitNot( Lit1 ), 1 ) );\n\n        pOutputID = Vec_IntEntryP( pFxchMan.vOutputID, iCube * pFxchMan.nSizeOutputID );\n        nOnes = 0;\n\n        for  j = 0; j \u003c pFxchMan.nSizeOutputID; j++  {\n            nOnes += Fxch_CountOnes( pOutputID[j] );\n        }\n\n        if nOnes == 0 {\n            nOnes = 1; }\n\n        if fAdd != 0 {\n            for  z = 0; z \u003c nOnes; z++  {\n                Fxch_DivAdd( pFxchMan, fUpdate, fSingleCube, fBase );\n            }\n            pFxchMan.nPairsS++;\n        \n        } else {\n            for  z = 0; z \u003c nOnes; z++  {\n                Fxch_DivRemove( pFxchMan, fUpdate, fSingleCube, fBase );\n            }\n            pFxchMan.nPairsS--;\n        }\n    }\n    }\n\n    return Vec_IntSize( vCube ) * ( Vec_IntSize( vCube ) - 1 ) / 2;\n}"
+    },
+    {
+      "Name": "Fxch_ManDivDoubleCube",
+      "Start": 3128,
+      "End": 4819,
+      "BodyStart": 3353,
+      "Original": "static inline void Fxch_ManDivDoubleCube( Fxch_Man_t* pFxchMan,\n                                          int iCube,\n                                          int fAdd,\n                                          int fUpdate )\n{\n    Vec_Int_t* vLitHashKeys = pFxchMan-\u003evLitHashKeys,\n             * vCube = Vec_WecEntry( pFxchMan-\u003evCubes, iCube );\n    int SubCubeID = 0,\n        iLit0,\n        Lit0;\n\n    Vec_IntForEachEntryStart( vCube, Lit0, iLit0, 1)\n        SubCubeID += Vec_IntEntry( vLitHashKeys, Lit0 );\n\n    Fxch_ManSCAddRemove( pFxchMan, SubCubeID,\n                         iCube, 0, 0,\n                         (char)fAdd, (char)fUpdate );\n\n    Vec_IntForEachEntryStart( vCube, Lit0, iLit0, 1)\n    {\n        /* 1 Lit remove */\n        SubCubeID -= Vec_IntEntry( vLitHashKeys, Lit0 );\n\n        pFxchMan-\u003enPairsD += Fxch_ManSCAddRemove( pFxchMan, SubCubeID,\n                                                  iCube, iLit0, 0,\n                                                  (char)fAdd, (char)fUpdate );\n\n        if ( Vec_IntSize( vCube ) \u003e= 3 )\n        {\n            int Lit1,\n                iLit1;\n\n            Vec_IntForEachEntryStart( vCube, Lit1, iLit1, iLit0 + 1)\n            {\n                /* 2 Lit remove */\n                SubCubeID -= Vec_IntEntry( vLitHashKeys, Lit1 );\n\n                pFxchMan-\u003enPairsD += Fxch_ManSCAddRemove( pFxchMan, SubCubeID,\n                                                          iCube, iLit0, iLit1,\n                                                          (char)fAdd, (char)fUpdate );\n\n                SubCubeID += Vec_IntEntry( vLitHashKeys, Lit1 );\n            }\n        }\n\n        SubCubeID += Vec_IntEntry( vLitHashKeys, Lit0 );\n    }\n}",
+      "Draft": "func Fxch_ManDivDoubleCube(pFxchMan *Fxch_Man_t, iCube int32, fAdd int32, fUpdate int32) {\n    var vLitHashKeys *Vec_Int_t = pFxchMan.vLitHashKeys;\n    var vCube *Vec_Int_t = Vec_WecEntry( pFxchMan.vCubes, iCube );\n    var SubCubeID, iLit0, Lit0 int32;\n\n    // inlining of macro Vec_IntForEachEntryStart\n    for  iLit0 = 1; (iLit0 \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit0) = Vec_IntEntry(vCube, iLit0)), 1); iLit0++  {\n        SubCubeID += Vec_IntEntry( vLitHashKeys, Lit0 );\n    }\n\n    Fxch_ManSCAddRemove( pFxchMan, SubCubeID,\n                         iCube, 0, 0,\n                         byte(fAdd), byte(fUpdate) );\n\n    // inlining of macro Vec_IntForEachEntryStart\n    for  iLit0 = 1; (iLit0 \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit0) = Vec_IntEntry(vCube, iLit0)), 1); iLit0++  {\n        /* 1 Lit remove */\n        SubCubeID -= Vec_IntEntry( vLitHashKeys, Lit0 );\n\n        pFxchMan.nPairsD += Fxch_ManSCAddRemove( pFxchMan, SubCubeID,\n                                                  iCube, iLit0, 0,\n                                                  byte(fAdd), byte(fUpdate) );\n\n        if Vec_IntSize( vCube ) \u003e= 3 {\n            var Lit1, iLit1 int32;\n\n            // inlining of macro Vec_IntForEachEntryStart\n            for  iLit1 = iLit0 + 1; (iLit1 \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit1) = Vec_IntEntry(vCube, iLit1)), 1); iLit1++  {\n                /* 2 Lit remove */\n                SubCubeID -= Vec_IntEntry( vLitHashKeys, Lit1 );\n\n                pFxchMan.nPairsD += Fxch_ManSCAddRemove( pFxchMan, SubCubeID,\n                                                          iCube, iLit0, iLit1,\n                                                          byte(fAdd), byte(fUpdate) );\n\n                SubCubeID += Vec_IntEntry( vLitHashKeys, Lit1 );\n            }\n        }\n\n        SubCubeID += Vec_IntEntry( vLitHashKeys, Lit0 );\n    }\n}"
+    },
+    {
+      "Name": "Fxch_ManCompressCubes",
+      "Start": 4821,
+      "End": 5195,
+      "BodyStart": 4947,
+      "Original": "static inline void Fxch_ManCompressCubes( Vec_Wec_t* vCubes,\n                                          Vec_Int_t* vLit2Cube )\n{\n    int i,\n        k = 0,\n        CubeId;\n\n    Vec_IntForEachEntry( vLit2Cube, CubeId, i )\n        if ( Vec_IntSize(Vec_WecEntry(vCubes, CubeId)) \u003e 0 )\n            Vec_IntWriteEntry( vLit2Cube, k++, CubeId );\n\n    Vec_IntShrink( vLit2Cube, k );\n}",
+      "Draft": "func Fxch_ManCompressCubes(vCubes *Vec_Wec_t, vLit2Cube *Vec_Int_t) {\n    var i, k, CubeId int32;\n\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLit2Cube)) \u0026\u0026 (((CubeId) = Vec_IntEntry(vLit2Cube, i)), 1); i++  {\n        if Vec_IntSize(Vec_WecEntry(vCubes, CubeId)) \u003e 0 {\n            Vec_IntWriteEntry( vLit2Cube, k++, CubeId ); }\n    }\n\n    Vec_IntShrink( vLit2Cube, k );\n}"
+    },
+    {
+      "Name": "Fxch_ManAlloc",
+      "Start": 5416,
+      "End": 6098,
+      "BodyStart": 5463,
+      "Original": "Fxch_Man_t* Fxch_ManAlloc( Vec_Wec_t* vCubes )\n{\n    Fxch_Man_t* pFxchMan = ABC_CALLOC( Fxch_Man_t, 1 );\n\n    pFxchMan-\u003evCubes = vCubes;\n    pFxchMan-\u003enCubesInit = Vec_WecSize( vCubes );\n\n    pFxchMan-\u003epDivHash = Hsh_VecManStart( 1024 );\n    pFxchMan-\u003evDivWeights = Vec_FltAlloc( 1024 );\n    pFxchMan-\u003evDivCubePairs = Vec_WecAlloc( 1024 );\n\n    pFxchMan-\u003evCubeFree = Vec_IntAlloc( 4 );\n    pFxchMan-\u003evDiv = Vec_IntAlloc( 4 );\n\n    pFxchMan-\u003evCubesS = Vec_IntAlloc( 128 );\n    pFxchMan-\u003evPairs = Vec_IntAlloc( 128 );\n    pFxchMan-\u003evCubesToUpdate = Vec_IntAlloc( 64 );\n    pFxchMan-\u003evCubesToRemove = Vec_IntAlloc( 64 );\n    pFxchMan-\u003evSCC = Vec_IntAlloc( 64 );\n\n    return pFxchMan;\n}",
+      "Draft": "func Fxch_ManAlloc(vCubes *Vec_Wec_t) *Fxch_Man_t {\n    // inlining of macro ABC_CALLOC\n    var pFxchMan *Fxch_Man_t  = \u0026Fxch_Man_t{};\n\n    pFxchMan.vCubes = vCubes;\n    pFxchMan.nCubesInit = Vec_WecSize( vCubes );\n\n    pFxchMan.pDivHash = Hsh_VecManStart( 1024 );\n    pFxchMan.vDivWeights = Vec_FltAlloc( 1024 );\n    pFxchMan.vDivCubePairs = Vec_WecAlloc( 1024 );\n\n    pFxchMan.vCubeFree = Vec_IntAlloc( 4 );\n    pFxchMan.vDiv = Vec_IntAlloc( 4 );\n\n    pFxchMan.vCubesS = Vec_IntAlloc( 128 );\n    pFxchMan.vPairs = Vec_IntAlloc( 128 );\n    pFxchMan.vCubesToUpdate = Vec_IntAlloc( 64 );\n    pFxchMan.vCubesToRemove = Vec_IntAlloc( 64 );\n    pFxchMan.vSCC = Vec_IntAlloc( 64 );\n\n    return pFxchMan;\n}"
+    },
+    {
+      "Name": "Fxch_ManFree",
+      "Start": 6100,
+      "End": 6773,
+      "BodyStart": 6142,
+      "Original": "void Fxch_ManFree( Fxch_Man_t* pFxchMan )\n{\n    Vec_WecFree( pFxchMan-\u003evLits );\n    Vec_IntFree( pFxchMan-\u003evLitCount );\n    Vec_IntFree( pFxchMan-\u003evLitHashKeys );\n    Hsh_VecManStop( pFxchMan-\u003epDivHash );\n    Vec_FltFree( pFxchMan-\u003evDivWeights );\n    Vec_QueFree( pFxchMan-\u003evDivPrio );\n    Vec_WecFree( pFxchMan-\u003evDivCubePairs );\n    Vec_IntFree( pFxchMan-\u003evLevels );\n\n    Vec_IntFree( pFxchMan-\u003evCubeFree );\n    Vec_IntFree( pFxchMan-\u003evDiv );\n\n    Vec_IntFree( pFxchMan-\u003evCubesS );\n    Vec_IntFree( pFxchMan-\u003evPairs );\n    Vec_IntFree( pFxchMan-\u003evCubesToUpdate );\n    Vec_IntFree( pFxchMan-\u003evCubesToRemove );\n    Vec_IntFree( pFxchMan-\u003evSCC );\n\n    ABC_FREE( pFxchMan );\n}",
+      "Draft": "func Fxch_ManFree(pFxchMan *Fxch_Man_t) {\n    Vec_WecFree( pFxchMan.vLits );\n    Vec_IntFree( pFxchMan.vLitCount );\n    Vec_IntFree( pFxchMan.vLitHashKeys );\n    Hsh_VecManStop( pFxchMan.pDivHash );\n    Vec_FltFree( pFxchMan.vDivWeights );\n    Vec_QueFree( pFxchMan.vDivPrio );\n    Vec_WecFree( pFxchMan.vDivCubePairs );\n    Vec_IntFree( pFxchMan.vLevels );\n\n    Vec_IntFree( pFxchMan.vCubeFree );\n    Vec_IntFree( pFxchMan.vDiv );\n\n    Vec_IntFree( pFxchMan.vCubesS );\n    Vec_IntFree( pFxchMan.vPairs );\n    Vec_IntFree( pFxchMan.vCubesToUpdate );\n    Vec_IntFree( pFxchMan.vCubesToRemove );\n    Vec_IntFree( pFxchMan.vSCC );\n\n    // inlining of macro ABC_FREE\n    ((pFxchMan) ? (free((char *) (pFxchMan)), (pFxchMan) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Fxch_ManMapLiteralsIntoCubes",
+      "Start": 6775,
+      "End": 8235,
+      "BodyStart": 6879,
+      "Original": "void Fxch_ManMapLiteralsIntoCubes( Fxch_Man_t* pFxchMan,\n                                   int nVars )\n{\n\n    Vec_Int_t* vCube;\n    int i, k,\n        Lit,\n        Count;\n\n    pFxchMan-\u003enVars = 0;\n    pFxchMan-\u003enLits = 0;\n    Vec_WecForEachLevel( pFxchMan-\u003evCubes, vCube, i )\n    {\n        assert( Vec_IntSize(vCube) \u003e 0 );\n        pFxchMan-\u003enVars = Abc_MaxInt( pFxchMan-\u003enVars, Vec_IntEntry( vCube, 0 ) );\n        pFxchMan-\u003enLits += Vec_IntSize(vCube) - 1;\n        Vec_IntForEachEntryStart( vCube, Lit, k, 1 )\n            pFxchMan-\u003enVars = Abc_MaxInt( pFxchMan-\u003enVars, Abc_Lit2Var( Lit ) );\n    }\n\n    assert( pFxchMan-\u003enVars \u003c nVars );\n    pFxchMan-\u003enVars = nVars;\n\n    /* Count the number of time each literal appears on the SOP */\n    pFxchMan-\u003evLitCount = Vec_IntStart( 2 * pFxchMan-\u003enVars );\n    Vec_WecForEachLevel( pFxchMan-\u003evCubes, vCube, i )\n        Vec_IntForEachEntryStart( vCube, Lit, k, 1 )\n            Vec_IntAddToEntry( pFxchMan-\u003evLitCount, Lit, 1 );\n\n    /* Allocate space to the array of arrays wich maps Literals into cubes which uses them */\n    pFxchMan-\u003evLits = Vec_WecStart( 2 * pFxchMan-\u003enVars );\n    Vec_IntForEachEntry( pFxchMan-\u003evLitCount, Count, Lit )\n        Vec_IntGrow( Vec_WecEntry( pFxchMan-\u003evLits, Lit ), Count );\n\n    /* Maps Literals into cubes which uses them */\n    Vec_WecForEachLevel( pFxchMan-\u003evCubes, vCube, i )\n        Vec_IntForEachEntryStart( vCube, Lit, k, 1 )\n            Vec_WecPush( pFxchMan-\u003evLits, Lit, i );\n}",
+      "Draft": "func Fxch_ManMapLiteralsIntoCubes(pFxchMan *Fxch_Man_t, nVars int32) {\n\n    var vCube *Vec_Int_t;\n    var i, k, Lit, Count int32;\n\n    pFxchMan.nVars = 0;\n    pFxchMan.nLits = 0;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, i)), 1); i++  {\n        assert(Vec_IntSize(vCube) \u003e 0, \"Vec_IntSize(vCube) \u003e 0\");\n        pFxchMan.nVars = Abc_MaxInt( pFxchMan.nVars, Vec_IntEntry( vCube, 0 ) );\n        pFxchMan.nLits += Vec_IntSize(vCube) - 1;\n        // inlining of macro Vec_IntForEachEntryStart\n        for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n            pFxchMan.nVars = Abc_MaxInt( pFxchMan.nVars, Abc_Lit2Var( Lit ) );\n        }\n    }\n\n    assert(pFxchMan.nVars \u003c nVars, \"pFxchMan.nVars \u003c nVars\");\n    pFxchMan.nVars = nVars;\n\n    /* Count the number of time each literal appears on the SOP */\n    pFxchMan.vLitCount = Vec_IntStart( 2 * pFxchMan.nVars );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n            Vec_IntAddToEntry( pFxchMan.vLitCount, Lit, 1 );\n        }\n    }\n\n    /* Allocate space to the array of arrays wich maps Literals into cubes which uses them */\n    pFxchMan.vLits = Vec_WecStart( 2 * pFxchMan.nVars );\n    // inlining of macro Vec_IntForEachEntry\n    for  Lit = 0; (Lit \u003c Vec_IntSize(pFxchMan.vLitCount)) \u0026\u0026 (((Count) = Vec_IntEntry(pFxchMan.vLitCount, Lit)), 1); Lit++  {\n        Vec_IntGrow( Vec_WecEntry( pFxchMan.vLits, Lit ), Count );\n    }\n\n    /* Maps Literals into cubes which uses them */\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n            Vec_WecPush( pFxchMan.vLits, Lit, i );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Fxch_ManGenerateLitHashKeys",
+      "Start": 8237,
+      "End": 8604,
+      "BodyStart": 8294,
+      "Original": "void Fxch_ManGenerateLitHashKeys( Fxch_Man_t* pFxchMan )\n{\n    int i;\n    /* Generates the random number which will be used for hashing cubes */\n    Gia_ManRandom( 1 );\n    pFxchMan-\u003evLitHashKeys = Vec_IntAlloc( ( 2 * pFxchMan-\u003enVars ) );\n    for ( i = 0; i \u003c (2 * pFxchMan-\u003enVars); i++ )\n        Vec_IntPush( pFxchMan-\u003evLitHashKeys, Gia_ManRandom(0) \u0026 0x3FFFFFF );\n}",
+      "Draft": "func Fxch_ManGenerateLitHashKeys(pFxchMan *Fxch_Man_t) {\n    var i int32;\n    /* Generates the random number which will be used for hashing cubes */\n    Gia_ManRandom( 1 );\n    pFxchMan.vLitHashKeys = Vec_IntAlloc( ( 2 * pFxchMan.nVars ) );\n    for  i = 0; i \u003c (2 * pFxchMan.nVars); i++  {\n        Vec_IntPush( pFxchMan.vLitHashKeys, Gia_ManRandom(0) \u0026 0x3FFFFFF );\n    }\n}"
+    },
+    {
+      "Name": "Fxch_ManSCHashTablesInit",
+      "Start": 8606,
+      "End": 9073,
+      "BodyStart": 8660,
+      "Original": "void Fxch_ManSCHashTablesInit( Fxch_Man_t* pFxchMan )\n{\n    Vec_Wec_t* vCubes = pFxchMan-\u003evCubes;\n    Vec_Int_t* vCube;\n    int iCube,\n        nTotalHashed = 0;\n\n    Vec_WecForEachLevel( vCubes, vCube, iCube )\n    {\n        int nLits = Vec_IntSize( vCube ) - 1,\n            nSubCubes = nLits \u003c= 2? nLits + 1: ( nLits * nLits + nLits ) / 2;\n\n        nTotalHashed += nSubCubes + 1;\n    }\n\n    pFxchMan-\u003epSCHashTable = Fxch_SCHashTableCreate( pFxchMan, nTotalHashed );\n}",
+      "Draft": "func Fxch_ManSCHashTablesInit(pFxchMan *Fxch_Man_t) {\n    var vCubes *Vec_Wec_t  = pFxchMan.vCubes;\n    var vCube *Vec_Int_t;\n    var iCube, nTotalHashed int32;\n\n    // inlining of macro Vec_WecForEachLevel\n    for  iCube = 0; (iCube \u003c Vec_WecSize(vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(vCubes, iCube)), 1); iCube++  {\n        var nLits int32 = Vec_IntSize( vCube ) - 1;\n        var nSubCubes int32;\n        if nLits \u003c= 2 {\n            nSubCubes = nLits + 1;\n        } else {\n            nSubCubes = ( nLits * nLits + nLits ) / 2;\n        }\n\n        nTotalHashed += nSubCubes + 1;\n    }\n\n    pFxchMan.pSCHashTable = Fxch_SCHashTableCreate( pFxchMan, nTotalHashed );\n}"
+    },
+    {
+      "Name": "Fxch_ManSCHashTablesFree",
+      "Start": 9075,
+      "End": 9186,
+      "BodyStart": 9129,
+      "Original": "void Fxch_ManSCHashTablesFree( Fxch_Man_t* pFxchMan )\n{\n    Fxch_SCHashTableDelete( pFxchMan-\u003epSCHashTable );\n}",
+      "Draft": "func Fxch_ManSCHashTablesFree(pFxchMan *Fxch_Man_t) {\n    Fxch_SCHashTableDelete( pFxchMan.pSCHashTable );\n}"
+    },
+    {
+      "Name": "Fxch_ManDivCreate",
+      "Start": 9188,
+      "End": 9857,
+      "BodyStart": 9235,
+      "Original": "void Fxch_ManDivCreate( Fxch_Man_t* pFxchMan )\n{\n    Vec_Int_t* vCube;\n    float Weight;\n    int fAdd = 1,\n        fUpdate = 0,\n        iCube;\n\n    Vec_WecForEachLevel( pFxchMan-\u003evCubes, vCube, iCube )\n    {\n        Fxch_ManDivSingleCube( pFxchMan, iCube, fAdd, fUpdate );\n        Fxch_ManDivDoubleCube( pFxchMan, iCube, fAdd, fUpdate );\n    }\n\n    pFxchMan-\u003evDivPrio = Vec_QueAlloc( Vec_FltSize( pFxchMan-\u003evDivWeights ) );\n    Vec_QueSetPriority( pFxchMan-\u003evDivPrio, Vec_FltArrayP( pFxchMan-\u003evDivWeights ) );\n    Vec_FltForEachEntry( pFxchMan-\u003evDivWeights, Weight, iCube )\n    {\n        if ( Weight \u003e 0.0 )\n            Vec_QuePush( pFxchMan-\u003evDivPrio, iCube );\n    }\n}",
+      "Draft": "func Fxch_ManDivCreate(pFxchMan *Fxch_Man_t) {\n    var vCube *Vec_Int_t;\n    var Weight float32;\n    var fAdd int32 = 1;\n    var fUpdate int32;\n    var iCube int32;\n\n    // inlining of macro Vec_WecForEachLevel\n    for  iCube = 0; (iCube \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, iCube)), 1); iCube++  {\n        Fxch_ManDivSingleCube( pFxchMan, iCube, fAdd, fUpdate );\n        Fxch_ManDivDoubleCube( pFxchMan, iCube, fAdd, fUpdate );\n    }\n\n    pFxchMan.vDivPrio = Vec_QueAlloc( Vec_FltSize( pFxchMan.vDivWeights ) );\n    Vec_QueSetPriority( pFxchMan.vDivPrio, Vec_FltArrayP( pFxchMan.vDivWeights ) );\n    // inlining of macro Vec_FltForEachEntry\n    for  iCube = 0; (iCube \u003c Vec_FltSize(pFxchMan.vDivWeights)) \u0026\u0026 (((Weight) = Vec_FltEntry(pFxchMan.vDivWeights, iCube)), 1); iCube++  {\n        if Weight \u003e 0.0 {\n            Vec_QuePush( pFxchMan.vDivPrio, iCube ); }\n    }\n}"
+    },
+    {
+      "Name": "Fxch_ManComputeLevelDiv",
+      "Start": 9883,
+      "End": 10223,
+      "BodyStart": 9986,
+      "Original": "int Fxch_ManComputeLevelDiv( Fxch_Man_t* pFxchMan,\n                             Vec_Int_t* vCubeFree )\n{\n    int i,\n        Lit,\n        Level = 0;\n\n    Vec_IntForEachEntry( vCubeFree, Lit, i )\n        Level = Abc_MaxInt( Level, Vec_IntEntry( pFxchMan-\u003evLevels, Abc_Lit2Var( Abc_Lit2Var( Lit ) ) ) );\n\n    return Abc_MinInt( Level, 800 );\n}",
+      "Draft": "func Fxch_ManComputeLevelDiv(pFxchMan *Fxch_Man_t, vCubeFree *Vec_Int_t) int32 {\n    var i, Lit, Level int32;\n\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCubeFree)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCubeFree, i)), 1); i++  {\n        Level = Abc_MaxInt( Level, Vec_IntEntry( pFxchMan.vLevels, Abc_Lit2Var( Abc_Lit2Var( Lit ) ) ) );\n    }\n\n    return Abc_MinInt( Level, 800 );\n}"
+    },
+    {
+      "Name": "Fxch_ManComputeLevelCube",
+      "Start": 10225,
+      "End": 10534,
+      "BodyStart": 10327,
+      "Original": "int Fxch_ManComputeLevelCube( Fxch_Man_t* pFxchMan,\n                              Vec_Int_t * vCube )\n{\n    int k,\n        Lit,\n        Level = 0;\n\n    Vec_IntForEachEntryStart( vCube, Lit, k, 1 )\n        Level = Abc_MaxInt( Level, Vec_IntEntry( pFxchMan-\u003evLevels, Abc_Lit2Var( Lit ) ) );\n\n    return Level;\n}",
+      "Draft": "func Fxch_ManComputeLevelCube(pFxchMan *Fxch_Man_t, vCube *Vec_Int_t) int32 {\n    var k, Lit, Level int32;\n\n    // inlining of macro Vec_IntForEachEntryStart\n    for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n        Level = Abc_MaxInt( Level, Vec_IntEntry( pFxchMan.vLevels, Abc_Lit2Var( Lit ) ) );\n    }\n\n    return Level;\n}"
+    },
+    {
+      "Name": "Fxch_ManComputeLevel",
+      "Start": 10536,
+      "End": 11155,
+      "BodyStart": 10586,
+      "Original": "void Fxch_ManComputeLevel( Fxch_Man_t* pFxchMan )\n{\n    Vec_Int_t* vCube;\n    int i,\n        iVar,\n        iFirst = 0;\n\n    iVar = Vec_IntEntry( Vec_WecEntry( pFxchMan-\u003evCubes, 0 ), 0 );\n    pFxchMan-\u003evLevels = Vec_IntStart( pFxchMan-\u003enVars );\n\n    Vec_WecForEachLevel( pFxchMan-\u003evCubes, vCube, i )\n    {\n        if ( iVar != Vec_IntEntry( vCube, 0 ) )\n        {\n            Vec_IntAddToEntry( pFxchMan-\u003evLevels, iVar, i - iFirst );\n            iVar = Vec_IntEntry( vCube, 0 );\n            iFirst = i;\n        }\n        Vec_IntUpdateEntry( pFxchMan-\u003evLevels, iVar, Fxch_ManComputeLevelCube( pFxchMan, vCube ) );\n    }\n}",
+      "Draft": "func Fxch_ManComputeLevel(pFxchMan *Fxch_Man_t) {\n    var vCube *Vec_Int_t;\n    var i, iVar, iFirst int32;\n\n    iVar = Vec_IntEntry( Vec_WecEntry( pFxchMan.vCubes, 0 ), 0 );\n    pFxchMan.vLevels = Vec_IntStart( pFxchMan.nVars );\n\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, i)), 1); i++  {\n        if iVar != Vec_IntEntry( vCube, 0 ) {\n            Vec_IntAddToEntry( pFxchMan.vLevels, iVar, i - iFirst );\n            iVar = Vec_IntEntry( vCube, 0 );\n            iFirst = i;\n        }\n        Vec_IntUpdateEntry( pFxchMan.vLevels, iVar, Fxch_ManComputeLevelCube( pFxchMan, vCube ) );\n    }\n}"
+    },
+    {
+      "Name": "Fxch_ManExtractDivFromCube",
+      "Start": 11197,
+      "End": 12129,
+      "BodyStart": 11459,
+      "Original": "static inline void Fxch_ManExtractDivFromCube( Fxch_Man_t* pFxchMan,\n                                               const int Lit0,\n                                               const int Lit1,\n                                               const int iVarNew )\n{\n    int i, iCube0;\n    Vec_Int_t* vLitP = Vec_WecEntry( pFxchMan-\u003evLits, Vec_WecSize( pFxchMan-\u003evLits ) - 2 );\n\n    Vec_IntForEachEntry( pFxchMan-\u003evCubesS, iCube0, i )\n    {\n        int RetValue;\n        Vec_Int_t* vCube0;\n\n        vCube0 = Fxch_ManGetCube( pFxchMan, iCube0 );\n        RetValue  = Vec_IntRemove1( vCube0, Abc_LitNot( Lit0 ) );\n        RetValue += Vec_IntRemove1( vCube0, Abc_LitNot( Lit1 ) );\n        assert( RetValue == 2 );\n\n        Vec_IntPush( vCube0, Abc_Var2Lit( iVarNew, 0 ) );\n        Vec_IntPush( vLitP, Vec_WecLevelId( pFxchMan-\u003evCubes, vCube0 ) );\n        Vec_IntPush( pFxchMan-\u003evCubesToUpdate, iCube0 );\n\n        pFxchMan-\u003enLits--;\n    }\n}",
+      "Draft": "func Fxch_ManExtractDivFromCube(pFxchMan *Fxch_Man_t, Lit0 int32, Lit1 int32, iVarNew int32) {\n    var i, iCube0 int32;\n    var vLitP *Vec_Int_t  = Vec_WecEntry( pFxchMan.vLits, Vec_WecSize( pFxchMan.vLits ) - 2 );\n\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(pFxchMan.vCubesS)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vCubesS, i)), 1); i++  {\n        var RetValue int32;\n        var vCube0 *Vec_Int_t;\n\n        vCube0 = Fxch_ManGetCube( pFxchMan, iCube0 );\n        RetValue  = Vec_IntRemove1( vCube0, Abc_LitNot( Lit0 ) );\n        RetValue += Vec_IntRemove1( vCube0, Abc_LitNot( Lit1 ) );\n        assert(RetValue == 2, \"RetValue == 2\");\n\n        Vec_IntPush( vCube0, Abc_Var2Lit( iVarNew, 0 ) );\n        Vec_IntPush( vLitP, Vec_WecLevelId( pFxchMan.vCubes, vCube0 ) );\n        Vec_IntPush( pFxchMan.vCubesToUpdate, iCube0 );\n\n        pFxchMan.nLits--;\n    }\n}"
+    },
+    {
+      "Name": "Fxch_ManExtractDivFromCubePairs",
+      "Start": 12169,
+      "End": 16843,
+      "BodyStart": 12314,
+      "Original": "static inline void Fxch_ManExtractDivFromCubePairs( Fxch_Man_t* pFxchMan,\n                                                   const int iVarNew )\n{\n    /* For each pair (Ci, Cj) */\n    int iCube0, iCube1, i;\n\n\n    Vec_IntForEachEntryDouble( pFxchMan-\u003evPairs, iCube0, iCube1, i )\n    {\n        int j, Lit,\n            RetValue,\n            fCompl = 0;\n        int * pOutputID0, * pOutputID1;\n\n        Vec_Int_t* vCube = NULL,\n                 * vCube0 = Fxch_ManGetCube( pFxchMan, iCube0 ),\n                 * vCube1 = Fxch_ManGetCube( pFxchMan, iCube1 ),\n                 * vCube0Copy = Vec_IntDup( vCube0 ),\n                 * vCube1Copy = Vec_IntDup( vCube1 );\n\n        RetValue  = Fxch_DivRemoveLits( vCube0Copy, vCube1Copy, pFxchMan-\u003evDiv, \u0026fCompl );\n\n        assert( RetValue == Vec_IntSize( pFxchMan-\u003evDiv ) );\n\n        pFxchMan-\u003enLits -= Vec_IntSize( pFxchMan-\u003evDiv ) + Vec_IntSize( vCube1 ) - 2;\n\n        /* Identify type of Extraction */\n        pOutputID0 = Vec_IntEntryP( pFxchMan-\u003evOutputID, iCube0 * pFxchMan-\u003enSizeOutputID );\n        pOutputID1 = Vec_IntEntryP( pFxchMan-\u003evOutputID, iCube1 * pFxchMan-\u003enSizeOutputID );\n        RetValue = 1;\n        for ( j = 0; j \u003c pFxchMan-\u003enSizeOutputID \u0026\u0026 RetValue; j++ )\n            RetValue = ( pOutputID0[j] == pOutputID1[j] );\n\n        /* Exact Extractraion */\n        if ( RetValue )\n        {\n            Vec_IntClear( vCube0 );\n            Vec_IntAppend( vCube0, vCube0Copy );\n            vCube = vCube0;\n\n            Vec_IntPush( pFxchMan-\u003evCubesToUpdate, iCube0 );\n            Vec_IntClear( vCube1 );\n\n            /* Update Lit -\u003e Cube mapping */\n            Vec_IntForEachEntry( pFxchMan-\u003evDiv, Lit, j )\n            {\n                Vec_IntRemove( Vec_WecEntry( pFxchMan-\u003evLits, Abc_Lit2Var( Lit ) ),\n                               Vec_WecLevelId( pFxchMan-\u003evCubes, vCube0 ) );\n                Vec_IntRemove( Vec_WecEntry( pFxchMan-\u003evLits, Abc_LitNot( Abc_Lit2Var( Lit ) ) ),\n                               Vec_WecLevelId( pFxchMan-\u003evCubes, vCube0 ) );\n            }\n\n        }\n        /* Unexact Extraction */\n        else\n        {\n            for ( j = 0; j \u003c pFxchMan-\u003enSizeOutputID; j++ )\n                pFxchMan-\u003epTempOutputID[j] = ( pOutputID0[j] \u0026 pOutputID1[j] );\n\n            /* Create new cube */\n            vCube = Vec_WecPushLevel( pFxchMan-\u003evCubes );\n            Vec_IntAppend( vCube, vCube0Copy );\n            Vec_IntPushArray( pFxchMan-\u003evOutputID, pFxchMan-\u003epTempOutputID, pFxchMan-\u003enSizeOutputID );\n            Vec_IntPush( pFxchMan-\u003evCubesToUpdate, Vec_WecLevelId( pFxchMan-\u003evCubes, vCube ) );\n\n            /* Update Lit -\u003e Cube mapping */\n            Vec_IntForEachEntryStart( vCube, Lit, j, 1 )\n                Vec_WecPush( pFxchMan-\u003evLits, Lit, Vec_WecLevelId( pFxchMan-\u003evCubes, vCube ) );\n\n            /*********************************************************/\n            RetValue = 0;\n            for ( j = 0; j \u003c pFxchMan-\u003enSizeOutputID; j++ )\n            {\n                pFxchMan-\u003epTempOutputID[j] = pOutputID0[j];\n                RetValue |= ( pOutputID0[j] \u0026 ~( pOutputID1[j] ) );\n                pOutputID0[j] \u0026= ~( pOutputID1[j] );\n            }\n\n            if ( RetValue != 0 )\n                Vec_IntPush( pFxchMan-\u003evCubesToUpdate, iCube0 );\n            else\n                Vec_IntClear( vCube0 );\n\n            /*********************************************************/\n            RetValue = 0;\n            for ( j = 0; j \u003c pFxchMan-\u003enSizeOutputID; j++ )\n            {\n                RetValue |= ( pOutputID1[j] \u0026 ~( pFxchMan-\u003epTempOutputID[j] ) );\n                pOutputID1[j] \u0026= ~( pFxchMan-\u003epTempOutputID[j] );\n            }\n\n            if ( RetValue != 0 )\n                Vec_IntPush( pFxchMan-\u003evCubesToUpdate, iCube1 );\n            else\n                Vec_IntClear( vCube1 );\n\n        }\n        Vec_IntFree( vCube0Copy );\n        Vec_IntFree( vCube1Copy );\n\n        if ( iVarNew )\n        {\n            Vec_Int_t* vLitP = Vec_WecEntry( pFxchMan-\u003evLits, Vec_WecSize( pFxchMan-\u003evLits ) - 2 ),\n                     * vLitN = Vec_WecEntry( pFxchMan-\u003evLits, Vec_WecSize( pFxchMan-\u003evLits ) - 1 );\n\n            assert( vCube );\n            if ( Vec_IntSize( pFxchMan-\u003evDiv ) == 2 || fCompl )\n            {\n                Vec_IntPush( vCube, Abc_Var2Lit( iVarNew, 1 ) );\n                Vec_IntPush( vLitN, Vec_WecLevelId( pFxchMan-\u003evCubes, vCube ) );\n                Vec_IntSort( vLitN, 0 );\n            }\n            else\n            {\n                Vec_IntPush( vCube, Abc_Var2Lit( iVarNew, 0 ) );\n                Vec_IntPush( vLitP, Vec_WecLevelId( pFxchMan-\u003evCubes, vCube ) );\n                Vec_IntSort( vLitP, 0 );\n            }\n        }\n    }\n\n    return;\n}",
+      "Draft": "func Fxch_ManExtractDivFromCubePairs(pFxchMan *Fxch_Man_t, iVarNew int32) {\n    /* For each pair (Ci, Cj) */\n    var iCube0, iCube1, i int32;\n\n\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(pFxchMan.vPairs)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vPairs, i)), 1) \u0026\u0026 (((iCube1) = Vec_IntEntry(pFxchMan.vPairs, i+1)), 1); i += 2  {\n        var j, Lit, RetValue, fCompl int32;\n        var pOutputID0, pOutputID1 *int32;\n\n        var vCube *Vec_Int_t = nil;\n        var vCube0 *Vec_Int_t = Fxch_ManGetCube( pFxchMan, iCube0 );\n        var vCube1 *Vec_Int_t = Fxch_ManGetCube( pFxchMan, iCube1 );\n        var vCube0Copy *Vec_Int_t = Vec_IntDup( vCube0 );\n        var vCube1Copy *Vec_Int_t = Vec_IntDup( vCube1 );\n\n        RetValue  = Fxch_DivRemoveLits( vCube0Copy, vCube1Copy, pFxchMan.vDiv, \u0026fCompl );\n\n        assert(RetValue == Vec_IntSize( pFxchMan.vDiv ), \"RetValue == Vec_IntSize( pFxchMan.vDiv )\");\n\n        pFxchMan.nLits -= Vec_IntSize( pFxchMan.vDiv ) + Vec_IntSize( vCube1 ) - 2;\n\n        /* Identify type of Extraction */\n        pOutputID0 = Vec_IntEntryP( pFxchMan.vOutputID, iCube0 * pFxchMan.nSizeOutputID );\n        pOutputID1 = Vec_IntEntryP( pFxchMan.vOutputID, iCube1 * pFxchMan.nSizeOutputID );\n        RetValue = 1;\n        for  j = 0; j \u003c pFxchMan.nSizeOutputID \u0026\u0026 (RetValue != 0); j++  {\n            RetValue = ( pOutputID0[j] == pOutputID1[j] );\n        }\n\n        /* Exact Extractraion */\n        if RetValue != 0 {\n            Vec_IntClear( vCube0 );\n            Vec_IntAppend( vCube0, vCube0Copy );\n            vCube = vCube0;\n\n            Vec_IntPush( pFxchMan.vCubesToUpdate, iCube0 );\n            Vec_IntClear( vCube1 );\n\n            /* Update Lit -\u003e Cube mapping */\n            // inlining of macro Vec_IntForEachEntry\n            for  j = 0; (j \u003c Vec_IntSize(pFxchMan.vDiv)) \u0026\u0026 (((Lit) = Vec_IntEntry(pFxchMan.vDiv, j)), 1); j++  {\n                Vec_IntRemove( Vec_WecEntry( pFxchMan.vLits, Abc_Lit2Var( Lit ) ),\n                               Vec_WecLevelId( pFxchMan.vCubes, vCube0 ) );\n                Vec_IntRemove( Vec_WecEntry( pFxchMan.vLits, Abc_LitNot( Abc_Lit2Var( Lit ) ) ),\n                               Vec_WecLevelId( pFxchMan.vCubes, vCube0 ) );\n            }\n\n        \n        /* Unexact Extraction */\n        } else {\n            for  j = 0; j \u003c pFxchMan.nSizeOutputID; j++  {\n                pFxchMan.pTempOutputID[j] = ( pOutputID0[j] \u0026 pOutputID1[j] );\n            }\n\n            /* Create new cube */\n            vCube = Vec_WecPushLevel( pFxchMan.vCubes );\n            Vec_IntAppend( vCube, vCube0Copy );\n            Vec_IntPushArray( pFxchMan.vOutputID, pFxchMan.pTempOutputID, pFxchMan.nSizeOutputID );\n            Vec_IntPush( pFxchMan.vCubesToUpdate, Vec_WecLevelId( pFxchMan.vCubes, vCube ) );\n\n            /* Update Lit -\u003e Cube mapping */\n            // inlining of macro Vec_IntForEachEntryStart\n            for  j = 1; (j \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, j)), 1); j++  {\n                Vec_WecPush( pFxchMan.vLits, Lit, Vec_WecLevelId( pFxchMan.vCubes, vCube ) );\n            }\n\n            /*********************************************************/\n            RetValue = 0;\n            for  j = 0; j \u003c pFxchMan.nSizeOutputID; j++  {\n                pFxchMan.pTempOutputID[j] = pOutputID0[j];\n                RetValue |= ( pOutputID0[j] \u0026 ~( pOutputID1[j] ) );\n                pOutputID0[j] \u0026= ~( pOutputID1[j] );\n            }\n\n            if RetValue != 0 {\n                Vec_IntPush( pFxchMan.vCubesToUpdate, iCube0 );\n            } else {\n                Vec_IntClear( vCube0 ); }\n\n            /*********************************************************/\n            RetValue = 0;\n            for  j = 0; j \u003c pFxchMan.nSizeOutputID; j++  {\n                RetValue |= ( pOutputID1[j] \u0026 ~( pFxchMan.pTempOutputID[j] ) );\n                pOutputID1[j] \u0026= ~( pFxchMan.pTempOutputID[j] );\n            }\n\n            if RetValue != 0 {\n                Vec_IntPush( pFxchMan.vCubesToUpdate, iCube1 );\n            } else {\n                Vec_IntClear( vCube1 ); }\n\n        }\n        Vec_IntFree( vCube0Copy );\n        Vec_IntFree( vCube1Copy );\n\n        if iVarNew != 0 {\n            var vLitP *Vec_Int_t = Vec_WecEntry( pFxchMan.vLits, Vec_WecSize( pFxchMan.vLits ) - 2 );\n            var vLitN *Vec_Int_t = Vec_WecEntry( pFxchMan.vLits, Vec_WecSize( pFxchMan.vLits ) - 1 );\n\n            assert((vCube != nil), \"vCube\");\n            if Vec_IntSize( pFxchMan.vDiv ) == 2 || (fCompl != 0) {\n                Vec_IntPush( vCube, Abc_Var2Lit( iVarNew, 1 ) );\n                Vec_IntPush( vLitN, Vec_WecLevelId( pFxchMan.vCubes, vCube ) );\n                Vec_IntSort( vLitN, 0 );\n            \n            } else {\n                Vec_IntPush( vCube, Abc_Var2Lit( iVarNew, 0 ) );\n                Vec_IntPush( vLitP, Vec_WecLevelId( pFxchMan.vCubes, vCube ) );\n                Vec_IntSort( vLitP, 0 );\n            }\n        }\n    }\n\n    return;\n}"
+    },
+    {
+      "Name": "Fxch_ManCreateCube",
+      "Start": 16845,
+      "End": 19373,
+      "BodyStart": 17002,
+      "Original": "static inline int Fxch_ManCreateCube( Fxch_Man_t* pFxchMan,\n                                      int Lit0,\n                                      int Lit1 )\n{\n    int Level,\n        iVarNew,\n        j;\n    Vec_Int_t* vCube0,\n             * vCube1;\n\n    /* Create a new variable */\n    iVarNew = pFxchMan-\u003enVars;\n    pFxchMan-\u003enVars++;\n\n    /* Clear temporary outputID vector */\n    for ( j = 0; j \u003c pFxchMan-\u003enSizeOutputID; j++ )\n        pFxchMan-\u003epTempOutputID[j] = 0;\n\n    /* Create new Lit hash keys */\n    Vec_IntPush( pFxchMan-\u003evLitHashKeys, Gia_ManRandom(0) \u0026 0x3FFFFFF );\n    Vec_IntPush( pFxchMan-\u003evLitHashKeys, Gia_ManRandom(0) \u0026 0x3FFFFFF );\n\n    /* Create new Cube */\n    vCube0 = Vec_WecPushLevel( pFxchMan-\u003evCubes );\n    Vec_IntPush( vCube0, iVarNew );\n    Vec_IntPushArray( pFxchMan-\u003evOutputID, pFxchMan-\u003epTempOutputID, pFxchMan-\u003enSizeOutputID );\n\n    if ( Vec_IntSize( pFxchMan-\u003evDiv ) == 2 )\n    {\n        if ( Lit0 \u003e Lit1 )\n            ABC_SWAP(int, Lit0, Lit1);\n\n        Vec_IntPush( vCube0, Abc_LitNot( Lit0 ) );\n        Vec_IntPush( vCube0, Abc_LitNot( Lit1 ) );\n        Level = 1 + Fxch_ManComputeLevelCube( pFxchMan, vCube0 );\n    }\n    else\n    {\n        int i;\n        int Lit;\n\n        vCube1 = Vec_WecPushLevel( pFxchMan-\u003evCubes );\n        Vec_IntPush( vCube1, iVarNew );\n        Vec_IntPushArray( pFxchMan-\u003evOutputID, pFxchMan-\u003epTempOutputID, pFxchMan-\u003enSizeOutputID );\n\n        vCube0 = Fxch_ManGetCube( pFxchMan, Vec_WecSize( pFxchMan-\u003evCubes ) - 2 );\n        Fxch_DivSepareteCubes( pFxchMan-\u003evDiv, vCube0, vCube1 );\n        Level = 2 + Abc_MaxInt( Fxch_ManComputeLevelCube( pFxchMan, vCube0 ),\n                                Fxch_ManComputeLevelCube( pFxchMan, vCube1 ) );\n\n        Vec_IntPush( pFxchMan-\u003evCubesToUpdate, Vec_WecLevelId( pFxchMan-\u003evCubes, vCube0 ) );\n        Vec_IntPush( pFxchMan-\u003evCubesToUpdate, Vec_WecLevelId( pFxchMan-\u003evCubes, vCube1 ) );\n\n        /* Update Lit -\u003e Cube mapping */\n        Vec_IntForEachEntryStart( vCube0, Lit, i, 1 )\n            Vec_WecPush( pFxchMan-\u003evLits, Lit, Vec_WecLevelId( pFxchMan-\u003evCubes, vCube0 ) );\n\n        Vec_IntForEachEntryStart( vCube1, Lit, i, 1 )\n            Vec_WecPush( pFxchMan-\u003evLits, Lit, Vec_WecLevelId( pFxchMan-\u003evCubes, vCube1 ) );\n    }\n    assert( Vec_IntSize( pFxchMan-\u003evLevels ) == iVarNew );\n    Vec_IntPush( pFxchMan-\u003evLevels, Level );\n\n    pFxchMan-\u003enLits += Vec_IntSize( pFxchMan-\u003evDiv );\n\n    /* Create new literals */\n    Vec_WecPushLevel( pFxchMan-\u003evLits );\n    Vec_WecPushLevel( pFxchMan-\u003evLits );\n\n    return iVarNew;\n}",
+      "Draft": "func Fxch_ManCreateCube(pFxchMan *Fxch_Man_t, Lit0 int32, Lit1 int32) int32 {\n    var Level, iVarNew, j int32;\n    var vCube0, vCube1 *Vec_Int_t;\n\n    /* Create a new variable */\n    iVarNew = pFxchMan.nVars;\n    pFxchMan.nVars++;\n\n    /* Clear temporary outputID vector */\n    for  j = 0; j \u003c pFxchMan.nSizeOutputID; j++  {\n        pFxchMan.pTempOutputID[j] = 0;\n    }\n\n    /* Create new Lit hash keys */\n    Vec_IntPush( pFxchMan.vLitHashKeys, Gia_ManRandom(0) \u0026 0x3FFFFFF );\n    Vec_IntPush( pFxchMan.vLitHashKeys, Gia_ManRandom(0) \u0026 0x3FFFFFF );\n\n    /* Create new Cube */\n    vCube0 = Vec_WecPushLevel( pFxchMan.vCubes );\n    Vec_IntPush( vCube0, iVarNew );\n    Vec_IntPushArray( pFxchMan.vOutputID, pFxchMan.pTempOutputID, pFxchMan.nSizeOutputID );\n\n    if Vec_IntSize( pFxchMan.vDiv ) == 2 {\n        if Lit0 \u003e Lit1 {\n            // inlining of macro ABC_SWAP\n             var t int32  = Lit0; Lit0 = Lit1; Lit1 = t; };\n\n        Vec_IntPush( vCube0, Abc_LitNot( Lit0 ) );\n        Vec_IntPush( vCube0, Abc_LitNot( Lit1 ) );\n        Level = 1 + Fxch_ManComputeLevelCube( pFxchMan, vCube0 );\n    \n    } else {\n        var i int32;\n        var Lit int32;\n\n        vCube1 = Vec_WecPushLevel( pFxchMan.vCubes );\n        Vec_IntPush( vCube1, iVarNew );\n        Vec_IntPushArray( pFxchMan.vOutputID, pFxchMan.pTempOutputID, pFxchMan.nSizeOutputID );\n\n        vCube0 = Fxch_ManGetCube( pFxchMan, Vec_WecSize( pFxchMan.vCubes ) - 2 );\n        Fxch_DivSepareteCubes( pFxchMan.vDiv, vCube0, vCube1 );\n        Level = 2 + Abc_MaxInt( Fxch_ManComputeLevelCube( pFxchMan, vCube0 ),\n                                Fxch_ManComputeLevelCube( pFxchMan, vCube1 ) );\n\n        Vec_IntPush( pFxchMan.vCubesToUpdate, Vec_WecLevelId( pFxchMan.vCubes, vCube0 ) );\n        Vec_IntPush( pFxchMan.vCubesToUpdate, Vec_WecLevelId( pFxchMan.vCubes, vCube1 ) );\n\n        /* Update Lit -\u003e Cube mapping */\n        // inlining of macro Vec_IntForEachEntryStart\n        for  i = 1; (i \u003c Vec_IntSize(vCube0)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube0, i)), 1); i++  {\n            Vec_WecPush( pFxchMan.vLits, Lit, Vec_WecLevelId( pFxchMan.vCubes, vCube0 ) );\n        }\n\n        // inlining of macro Vec_IntForEachEntryStart\n        for  i = 1; (i \u003c Vec_IntSize(vCube1)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube1, i)), 1); i++  {\n            Vec_WecPush( pFxchMan.vLits, Lit, Vec_WecLevelId( pFxchMan.vCubes, vCube1 ) );\n        }\n    }\n    assert(Vec_IntSize( pFxchMan.vLevels ) == iVarNew, \"Vec_IntSize( pFxchMan.vLevels ) == iVarNew\");\n    Vec_IntPush( pFxchMan.vLevels, Level );\n\n    pFxchMan.nLits += Vec_IntSize( pFxchMan.vDiv );\n\n    /* Create new literals */\n    Vec_WecPushLevel( pFxchMan.vLits );\n    Vec_WecPushLevel( pFxchMan.vLits );\n\n    return iVarNew;\n}"
+    },
+    {
+      "Name": "Fxch_ManUpdate",
+      "Start": 19375,
+      "End": 25668,
+      "BodyStart": 19450,
+      "Original": "void Fxch_ManUpdate( Fxch_Man_t* pFxchMan,\n                     int iDiv )\n{\n    int i, iCube0, iCube1,\n        Lit0 = -1,\n        Lit1 = -1,\n        iVarNew;\n\n    Vec_Int_t* vCube0,\n             * vCube1,\n             * vDivCubePairs;\n\n    /* Get the selected candidate (divisor) */\n    Vec_IntClear( pFxchMan-\u003evDiv );\n    Vec_IntAppend( pFxchMan-\u003evDiv, Hsh_VecReadEntry( pFxchMan-\u003epDivHash, iDiv ) );\n\n    /* Find cubes associated with the divisor */\n    Vec_IntClear( pFxchMan-\u003evCubesS );\n    if ( Vec_IntSize( pFxchMan-\u003evDiv ) == 2 )\n    {\n        Lit0 = Abc_Lit2Var( Vec_IntEntry( pFxchMan-\u003evDiv, 0 ) );\n        Lit1 = Abc_Lit2Var( Vec_IntEntry( pFxchMan-\u003evDiv, 1 ) );\n        assert( Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0 );\n\n        Fxch_ManCompressCubes( pFxchMan-\u003evCubes, Vec_WecEntry( pFxchMan-\u003evLits, Abc_LitNot( Lit0 ) ) );\n        Fxch_ManCompressCubes( pFxchMan-\u003evCubes, Vec_WecEntry( pFxchMan-\u003evLits, Abc_LitNot( Lit1 ) ) );\n        Vec_IntTwoRemoveCommon( Vec_WecEntry( pFxchMan-\u003evLits, Abc_LitNot( Lit0 ) ),\n                                Vec_WecEntry( pFxchMan-\u003evLits, Abc_LitNot( Lit1 ) ),\n                                pFxchMan-\u003evCubesS );\n    }\n\n    /* Find pairs associated with the divisor */\n    Vec_IntClear( pFxchMan-\u003evPairs );\n    vDivCubePairs = Vec_WecEntry( pFxchMan-\u003evDivCubePairs, iDiv );\n    Vec_IntAppend( pFxchMan-\u003evPairs, vDivCubePairs );\n    Vec_IntErase( vDivCubePairs );\n\n    Vec_IntForEachEntryDouble( pFxchMan-\u003evPairs, iCube0, iCube1, i )\n    {\n        assert( Fxch_ManGetLit( pFxchMan, iCube0, 0) == Fxch_ManGetLit( pFxchMan, iCube1, 0) );\n        if (iCube0 \u003e iCube1)\n        {\n            Vec_IntSetEntry( pFxchMan-\u003evPairs, i, iCube1);\n            Vec_IntSetEntry( pFxchMan-\u003evPairs, i+1, iCube0);\n        }\n    }\n\n    Vec_IntUniqifyPairs( pFxchMan-\u003evPairs );\n    assert( Vec_IntSize( pFxchMan-\u003evPairs ) % 2 == 0 );\n\n    /* subtract cost of single-cube divisors */\n    Vec_IntForEachEntry( pFxchMan-\u003evCubesS, iCube0, i )\n    {\n        Fxch_ManDivSingleCube( pFxchMan, iCube0, 0, 1);\n\n        if ( Vec_WecEntryEntry( pFxchMan-\u003evCubes, iCube0, 0 ) == 0 )\n            Fxch_ManDivDoubleCube( pFxchMan, iCube0, 0, 1 );\n    }\n\n    Vec_IntForEachEntry( pFxchMan-\u003evPairs, iCube0, i )\n    {\n        Fxch_ManDivSingleCube( pFxchMan, iCube0, 0, 1);\n\n        if ( Vec_WecEntryEntry( pFxchMan-\u003evCubes, iCube0, 0 ) == 0 )\n            Fxch_ManDivDoubleCube( pFxchMan, iCube0, 0, 1 );\n    }\n\n    Vec_IntClear( pFxchMan-\u003evCubesToUpdate );\n    if ( Fxch_DivIsNotConstant1( pFxchMan-\u003evDiv ) )\n    {\n        iVarNew = Fxch_ManCreateCube( pFxchMan, Lit0, Lit1 );\n        Fxch_ManExtractDivFromCube( pFxchMan, Lit0, Lit1, iVarNew );\n        Fxch_ManExtractDivFromCubePairs( pFxchMan, iVarNew );\n    }\n    else\n        Fxch_ManExtractDivFromCubePairs( pFxchMan, 0 );\n\n    assert( Vec_IntSize( pFxchMan-\u003evCubesToUpdate ) );\n\n    /* Add cost */\n    Vec_IntForEachEntry( pFxchMan-\u003evCubesToUpdate, iCube0, i )\n    {\n        Fxch_ManDivSingleCube( pFxchMan, iCube0, 1, 1 );\n\n        if ( Vec_WecEntryEntry( pFxchMan-\u003evCubes, iCube0, 0 ) == 0 )\n            Fxch_ManDivDoubleCube( pFxchMan, iCube0, 1, 1 );\n    }\n\n    /* Deal with SCC */\n    if ( Vec_IntSize( pFxchMan-\u003evSCC ) )\n    {\n        Vec_IntUniqifyPairs( pFxchMan-\u003evSCC );\n        assert( Vec_IntSize( pFxchMan-\u003evSCC ) % 2 == 0 );\n\n        Vec_IntForEachEntryDouble( pFxchMan-\u003evSCC, iCube0, iCube1, i )\n        {\n            int j, RetValue = 1;\n            int* pOutputID0 = Vec_IntEntryP( pFxchMan-\u003evOutputID, iCube0 * pFxchMan-\u003enSizeOutputID );\n            int* pOutputID1 = Vec_IntEntryP( pFxchMan-\u003evOutputID, iCube1 * pFxchMan-\u003enSizeOutputID );\n            vCube0 = Vec_WecEntry( pFxchMan-\u003evCubes, iCube0 );\n            vCube1 = Vec_WecEntry( pFxchMan-\u003evCubes, iCube1 );\n\n            if ( !Vec_WecIntHasMark( vCube0 ) )\n            {\n                Fxch_ManDivSingleCube( pFxchMan, iCube0, 0, 1 );\n                Fxch_ManDivDoubleCube( pFxchMan, iCube0, 0, 1 );\n                Vec_WecIntSetMark( vCube0 );\n            }\n\n            if ( !Vec_WecIntHasMark( vCube1 ) )\n            {\n                Fxch_ManDivSingleCube( pFxchMan, iCube1, 0, 1 );\n                Fxch_ManDivDoubleCube( pFxchMan, iCube1, 0, 1 );\n                Vec_WecIntSetMark( vCube1 );\n            }\n\n            if ( Vec_IntSize( vCube0 ) == Vec_IntSize( vCube1 ) )\n            {\n                for ( j = 0; j \u003c pFxchMan-\u003enSizeOutputID; j++ )\n                {\n                    pOutputID1[j] |= pOutputID0[j];\n                    pOutputID0[j] = 0;\n                }\n                Vec_IntClear( Vec_WecEntry( pFxchMan-\u003evCubes, iCube0 ) );\n                Vec_WecIntXorMark( vCube0 );\n                continue;\n            }\n\n            for ( j = 0; j \u003c pFxchMan-\u003enSizeOutputID \u0026\u0026 RetValue; j++ )\n                RetValue = ( pOutputID0[j] == pOutputID1[j] );\n\n            if ( RetValue )\n            {\n                Vec_IntClear( Vec_WecEntry( pFxchMan-\u003evCubes, iCube0 ) );\n                Vec_WecIntXorMark( vCube0 );\n            }\n            else\n            {\n                RetValue = 0;\n                for ( j = 0; j \u003c pFxchMan-\u003enSizeOutputID; j++ )\n                {\n                    RetValue |= ( pOutputID0[j] \u0026 ~( pOutputID1[j] ) );\n                    pOutputID0[j] \u0026= ~( pOutputID1[j] );\n                }\n\n                if ( RetValue == 0 )\n                {\n                    Vec_IntClear( Vec_WecEntry( pFxchMan-\u003evCubes, iCube0 ) );\n                    Vec_WecIntXorMark( vCube0 );\n                }\n            }\n        }\n\n        Vec_IntForEachEntryDouble( pFxchMan-\u003evSCC, iCube0, iCube1, i )\n        {\n            vCube0 = Vec_WecEntry( pFxchMan-\u003evCubes, iCube0 );\n            vCube1 = Vec_WecEntry( pFxchMan-\u003evCubes, iCube1 );\n\n            if ( Vec_WecIntHasMark( vCube0 ) )\n            {\n                Fxch_ManDivSingleCube( pFxchMan, iCube0, 1, 1 );\n                Fxch_ManDivDoubleCube( pFxchMan, iCube0, 1, 1 );\n                Vec_WecIntXorMark( vCube0 );\n            }\n\n            if ( Vec_WecIntHasMark( vCube1 ) )\n            {\n                Fxch_ManDivSingleCube( pFxchMan, iCube1, 1, 1 );\n                Fxch_ManDivDoubleCube( pFxchMan, iCube1, 1, 1 );\n                Vec_WecIntXorMark( vCube1 );\n            }\n        }\n\n        Vec_IntClear( pFxchMan-\u003evSCC );\n    }\n\n    pFxchMan-\u003enExtDivs++;\n}",
+      "Draft": "func Fxch_ManUpdate(pFxchMan *Fxch_Man_t, iDiv int32) {\n    var i int32;\n    var iCube0 int32;\n    var iCube1 int32;\n    var Lit0 int32 = -1;\n    var Lit1 int32 = -1;\n    var iVarNew int32;\n\n    var vCube0, vCube1, vDivCubePairs *Vec_Int_t;\n\n    /* Get the selected candidate (divisor) */\n    Vec_IntClear( pFxchMan.vDiv );\n    Vec_IntAppend( pFxchMan.vDiv, Hsh_VecReadEntry( pFxchMan.pDivHash, iDiv ) );\n\n    /* Find cubes associated with the divisor */\n    Vec_IntClear( pFxchMan.vCubesS );\n    if Vec_IntSize( pFxchMan.vDiv ) == 2 {\n        Lit0 = Abc_Lit2Var( Vec_IntEntry( pFxchMan.vDiv, 0 ) );\n        Lit1 = Abc_Lit2Var( Vec_IntEntry( pFxchMan.vDiv, 1 ) );\n        assert(Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0, \"Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0\");\n\n        Fxch_ManCompressCubes( pFxchMan.vCubes, Vec_WecEntry( pFxchMan.vLits, Abc_LitNot( Lit0 ) ) );\n        Fxch_ManCompressCubes( pFxchMan.vCubes, Vec_WecEntry( pFxchMan.vLits, Abc_LitNot( Lit1 ) ) );\n        Vec_IntTwoRemoveCommon( Vec_WecEntry( pFxchMan.vLits, Abc_LitNot( Lit0 ) ),\n                                Vec_WecEntry( pFxchMan.vLits, Abc_LitNot( Lit1 ) ),\n                                pFxchMan.vCubesS );\n    }\n\n    /* Find pairs associated with the divisor */\n    Vec_IntClear( pFxchMan.vPairs );\n    vDivCubePairs = Vec_WecEntry( pFxchMan.vDivCubePairs, iDiv );\n    Vec_IntAppend( pFxchMan.vPairs, vDivCubePairs );\n    Vec_IntErase( vDivCubePairs );\n\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(pFxchMan.vPairs)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vPairs, i)), 1) \u0026\u0026 (((iCube1) = Vec_IntEntry(pFxchMan.vPairs, i+1)), 1); i += 2  {\n        assert(Fxch_ManGetLit( pFxchMan, iCube0, 0) == Fxch_ManGetLit( pFxchMan, iCube1, 0), \"Fxch_ManGetLit( pFxchMan, iCube0, 0) == Fxch_ManGetLit( pFxchMan, iCube1, 0)\");\n        if iCube0 \u003e iCube1 {\n            Vec_IntSetEntry( pFxchMan.vPairs, i, iCube1);\n            Vec_IntSetEntry( pFxchMan.vPairs, i+1, iCube0);\n        }\n    }\n\n    Vec_IntUniqifyPairs( pFxchMan.vPairs );\n    assert(Vec_IntSize( pFxchMan.vPairs ) % 2 == 0, \"Vec_IntSize( pFxchMan.vPairs ) % 2 == 0\");\n\n    /* subtract cost of single-cube divisors */\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(pFxchMan.vCubesS)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vCubesS, i)), 1); i++  {\n        Fxch_ManDivSingleCube( pFxchMan, iCube0, 0, 1);\n\n        if Vec_WecEntryEntry( pFxchMan.vCubes, iCube0, 0 ) == 0 {\n            Fxch_ManDivDoubleCube( pFxchMan, iCube0, 0, 1 ); }\n    }\n\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(pFxchMan.vPairs)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vPairs, i)), 1); i++  {\n        Fxch_ManDivSingleCube( pFxchMan, iCube0, 0, 1);\n\n        if Vec_WecEntryEntry( pFxchMan.vCubes, iCube0, 0 ) == 0 {\n            Fxch_ManDivDoubleCube( pFxchMan, iCube0, 0, 1 ); }\n    }\n\n    Vec_IntClear( pFxchMan.vCubesToUpdate );\n    if Fxch_DivIsNotConstant1( pFxchMan.vDiv ) {\n        iVarNew = Fxch_ManCreateCube( pFxchMan, Lit0, Lit1 );\n        Fxch_ManExtractDivFromCube( pFxchMan, Lit0, Lit1, iVarNew );\n        Fxch_ManExtractDivFromCubePairs( pFxchMan, iVarNew );\n    \n    } else {\n        Fxch_ManExtractDivFromCubePairs( pFxchMan, 0 ); }\n\n    assert(Vec_IntSize( pFxchMan.vCubesToUpdate ), \"Vec_IntSize( pFxchMan.vCubesToUpdate )\");\n\n    /* Add cost */\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(pFxchMan.vCubesToUpdate)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vCubesToUpdate, i)), 1); i++  {\n        Fxch_ManDivSingleCube( pFxchMan, iCube0, 1, 1 );\n\n        if Vec_WecEntryEntry( pFxchMan.vCubes, iCube0, 0 ) == 0 {\n            Fxch_ManDivDoubleCube( pFxchMan, iCube0, 1, 1 ); }\n    }\n\n    /* Deal with SCC */\n    if Vec_IntSize( pFxchMan.vSCC ) {\n        Vec_IntUniqifyPairs( pFxchMan.vSCC );\n        assert(Vec_IntSize( pFxchMan.vSCC ) % 2 == 0, \"Vec_IntSize( pFxchMan.vSCC ) % 2 == 0\");\n\n        // inlining of macro Vec_IntForEachEntryDouble\n        for  i = 0; (i+1 \u003c Vec_IntSize(pFxchMan.vSCC)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vSCC, i)), 1) \u0026\u0026 (((iCube1) = Vec_IntEntry(pFxchMan.vSCC, i+1)), 1); i += 2  {\n            var j int32;\n            var RetValue int32 = 1;\n            var pOutputID0 *int32  = Vec_IntEntryP( pFxchMan.vOutputID, iCube0 * pFxchMan.nSizeOutputID );\n            var pOutputID1 *int32  = Vec_IntEntryP( pFxchMan.vOutputID, iCube1 * pFxchMan.nSizeOutputID );\n            vCube0 = Vec_WecEntry( pFxchMan.vCubes, iCube0 );\n            vCube1 = Vec_WecEntry( pFxchMan.vCubes, iCube1 );\n\n            if !Vec_WecIntHasMark( vCube0 ) {\n                Fxch_ManDivSingleCube( pFxchMan, iCube0, 0, 1 );\n                Fxch_ManDivDoubleCube( pFxchMan, iCube0, 0, 1 );\n                Vec_WecIntSetMark( vCube0 );\n            }\n\n            if !Vec_WecIntHasMark( vCube1 ) {\n                Fxch_ManDivSingleCube( pFxchMan, iCube1, 0, 1 );\n                Fxch_ManDivDoubleCube( pFxchMan, iCube1, 0, 1 );\n                Vec_WecIntSetMark( vCube1 );\n            }\n\n            if Vec_IntSize( vCube0 ) == Vec_IntSize( vCube1 ) {\n                for  j = 0; j \u003c pFxchMan.nSizeOutputID; j++  {\n                    pOutputID1[j] |= pOutputID0[j];\n                    pOutputID0[j] = 0;\n                }\n                Vec_IntClear( Vec_WecEntry( pFxchMan.vCubes, iCube0 ) );\n                Vec_WecIntXorMark( vCube0 );\n                continue;\n            }\n\n            for  j = 0; j \u003c pFxchMan.nSizeOutputID \u0026\u0026 (RetValue != 0); j++  {\n                RetValue = ( pOutputID0[j] == pOutputID1[j] );\n            }\n\n            if RetValue != 0 {\n                Vec_IntClear( Vec_WecEntry( pFxchMan.vCubes, iCube0 ) );\n                Vec_WecIntXorMark( vCube0 );\n            \n            } else {\n                RetValue = 0;\n                for  j = 0; j \u003c pFxchMan.nSizeOutputID; j++  {\n                    RetValue |= ( pOutputID0[j] \u0026 ~( pOutputID1[j] ) );\n                    pOutputID0[j] \u0026= ~( pOutputID1[j] );\n                }\n\n                if RetValue == 0 {\n                    Vec_IntClear( Vec_WecEntry( pFxchMan.vCubes, iCube0 ) );\n                    Vec_WecIntXorMark( vCube0 );\n                }\n            }\n        }\n\n        // inlining of macro Vec_IntForEachEntryDouble\n        for  i = 0; (i+1 \u003c Vec_IntSize(pFxchMan.vSCC)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vSCC, i)), 1) \u0026\u0026 (((iCube1) = Vec_IntEntry(pFxchMan.vSCC, i+1)), 1); i += 2  {\n            vCube0 = Vec_WecEntry( pFxchMan.vCubes, iCube0 );\n            vCube1 = Vec_WecEntry( pFxchMan.vCubes, iCube1 );\n\n            if Vec_WecIntHasMark( vCube0 ) {\n                Fxch_ManDivSingleCube( pFxchMan, iCube0, 1, 1 );\n                Fxch_ManDivDoubleCube( pFxchMan, iCube0, 1, 1 );\n                Vec_WecIntXorMark( vCube0 );\n            }\n\n            if Vec_WecIntHasMark( vCube1 ) {\n                Fxch_ManDivSingleCube( pFxchMan, iCube1, 1, 1 );\n                Fxch_ManDivDoubleCube( pFxchMan, iCube1, 1, 1 );\n                Vec_WecIntXorMark( vCube1 );\n            }\n        }\n\n        Vec_IntClear( pFxchMan.vSCC );\n    }\n\n    pFxchMan.nExtDivs++;\n}"
+    },
+    {
+      "Name": "Fxch_ManPrintDivs",
+      "Start": 25682,
+      "End": 25862,
+      "BodyStart": 25729,
+      "Original": "void Fxch_ManPrintDivs( Fxch_Man_t* pFxchMan )\n{\n    int iDiv;\n\n    for ( iDiv = 0; iDiv \u003c Vec_FltSize( pFxchMan-\u003evDivWeights ); iDiv++ )\n        Fxch_DivPrint( pFxchMan, iDiv );\n}",
+      "Draft": "func Fxch_ManPrintDivs(pFxchMan *Fxch_Man_t) {\n    var iDiv int32;\n\n    for  iDiv = 0; iDiv \u003c Vec_FltSize( pFxchMan.vDivWeights ); iDiv++  {\n        Fxch_DivPrint( pFxchMan, iDiv );\n    }\n}"
+    },
+    {
+      "Name": "Fxch_ManPrintStats",
+      "Start": 25864,
+      "End": 26230,
+      "BodyStart": 25912,
+      "Original": "void Fxch_ManPrintStats( Fxch_Man_t* pFxchMan )\n{\n    printf( \"Cubes =%8d  \", Vec_WecSizeUsed( pFxchMan-\u003evCubes ) );\n    printf( \"Lits  =%8d  \", Vec_WecSizeUsed( pFxchMan-\u003evLits ) );\n    printf( \"Divs  =%8d  \", Hsh_VecSize( pFxchMan-\u003epDivHash ) );\n    printf( \"Divs+ =%8d  \", Vec_QueSize( pFxchMan-\u003evDivPrio ) );\n    printf( \"Extr  =%7d  \\n\", pFxchMan-\u003enExtDivs );\n}",
+      "Draft": "func Fxch_ManPrintStats(pFxchMan *Fxch_Man_t) {\n    fmt.Printf(\"Cubes =%8d  \", Vec_WecSizeUsed( pFxchMan.vCubes ));\n    fmt.Printf(\"Lits  =%8d  \", Vec_WecSizeUsed( pFxchMan.vLits ));\n    fmt.Printf(\"Divs  =%8d  \", Hsh_VecSize( pFxchMan.pDivHash ));\n    fmt.Printf(\"Divs+ =%8d  \", Vec_QueSize( pFxchMan.vDivPrio ));\n    fmt.Printf(\"Extr  =%7d  \\n\", pFxchMan.nExtDivs);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::mechanical::sizeof::6227",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5492,
+      "End": 5492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::pointer-cast::6192",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5492,
+      "End": 5492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::pointer-cast::7542",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6750,
+      "End": 6750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManSCAddRemove",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManSCAddRemove",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 702,
+      "End": 1592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManDivSingleCube",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManDivSingleCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1595,
+      "End": 3126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManDivDoubleCube",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManDivDoubleCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3128,
+      "End": 4819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManCompressCubes",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManCompressCubes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4821,
+      "End": 5195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5416,
+      "End": 6098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::ternary::Fxch_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Fxch_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6100,
+      "End": 6773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6100,
+      "End": 6773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManMapLiteralsIntoCubes",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManMapLiteralsIntoCubes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6775,
+      "End": 8235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManGenerateLitHashKeys",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManGenerateLitHashKeys",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8237,
+      "End": 8604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManSCHashTablesInit",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManSCHashTablesInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8606,
+      "End": 9073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManSCHashTablesFree",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManSCHashTablesFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9075,
+      "End": 9186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManDivCreate",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManDivCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9188,
+      "End": 9857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManComputeLevelDiv",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManComputeLevelDiv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9883,
+      "End": 10223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManComputeLevelCube",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManComputeLevelCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10225,
+      "End": 10534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManComputeLevel",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManComputeLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10536,
+      "End": 11155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManExtractDivFromCube",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManExtractDivFromCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11197,
+      "End": 12129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManExtractDivFromCubePairs",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManExtractDivFromCubePairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12169,
+      "End": 16843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManCreateCube",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManCreateCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16845,
+      "End": 19373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19375,
+      "End": 25668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManPrintDivs",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManPrintDivs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25682,
+      "End": 25862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::Fxch_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Fxch_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25864,
+      "End": 26230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxch/FxchMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 26475
+    }
+  ],
+  "Draft": "package fxch\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [ FxchMan.c ]\n\n  PackageName [ Fast eXtract with Cube Hashing (FXCH) ]\n\n  Synopsis    [ Fxch Manager implementation ]\n\n  Author      [ Bruno Schmitt - boschmitt at inf.ufrgs.br ]\n\n  Affiliation [ UFRGS ]\n\n  Date        [ Ver. 1.0. Started - March 6, 2016. ]\n\n  Revision    []\n\n***********************************************************************/\n//#include \"Fxch.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                LOCAL FUNCTIONS DEFINITIONS                       ///\n////////////////////////////////////////////////////////////////////////\nstatic inline int Fxch_ManSCAddRemove( Fxch_Man_t* pFxchMan,\n                                       unsigned int SubCubeID,\n                                       unsigned int iCube,\n                                       unsigned int iLit0,\n                                       unsigned int iLit1,\n                                       char fAdd,\n                                       char fUpdate )\n{\n    var ret int32;\n\n    if fAdd != 0 {\n        ret = Fxch_SCHashTableInsert( pFxchMan.pSCHashTable, pFxchMan.vCubes,\n                                      SubCubeID,\n                                      iCube, iLit0, iLit1, fUpdate );\n    \n    } else {\n        ret = Fxch_SCHashTableRemove( pFxchMan.pSCHashTable, pFxchMan.vCubes,\n                                      SubCubeID,\n                                      iCube, iLit0, iLit1, fUpdate );\n    }\n\n    return ret;\n}\n\n\nfunc Fxch_ManDivSingleCube(pFxchMan *Fxch_Man_t, iCube int32, fAdd int32, fUpdate int32) int32 {\n    var vCube *Vec_Int_t  = Vec_WecEntry( pFxchMan.vCubes, iCube );\n    var i int32;\n    var k int32;\n    var Lit0 int32;\n    var Lit1 int32;\n    var fSingleCube int32 = 1;\n    var fBase int32;\n\n    if Vec_IntSize( vCube ) \u003c 2 {\n        return 0; }\n\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit0) = Vec_IntEntry(vCube, i)), 1); i++  {\n    // inlining of macro Vec_IntForEachEntryStart\n    for  k = (i + 1); (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit1) = Vec_IntEntry(vCube, k)), 1); k++  {\n        var pOutputID *int32;\n        var nOnes int32;\n        var j int32;\n        var z int32;\n        assert(Lit0 \u003c Lit1, \"Lit0 \u003c Lit1\");\n\n        Vec_IntClear( pFxchMan.vCubeFree );\n        Vec_IntPush( pFxchMan.vCubeFree, Abc_Var2Lit( Abc_LitNot( Lit0 ), 0 ) );\n        Vec_IntPush( pFxchMan.vCubeFree, Abc_Var2Lit( Abc_LitNot( Lit1 ), 1 ) );\n\n        pOutputID = Vec_IntEntryP( pFxchMan.vOutputID, iCube * pFxchMan.nSizeOutputID );\n        nOnes = 0;\n\n        for  j = 0; j \u003c pFxchMan.nSizeOutputID; j++  {\n            nOnes += Fxch_CountOnes( pOutputID[j] );\n        }\n\n        if nOnes == 0 {\n            nOnes = 1; }\n\n        if fAdd != 0 {\n            for  z = 0; z \u003c nOnes; z++  {\n                Fxch_DivAdd( pFxchMan, fUpdate, fSingleCube, fBase );\n            }\n            pFxchMan.nPairsS++;\n        \n        } else {\n            for  z = 0; z \u003c nOnes; z++  {\n                Fxch_DivRemove( pFxchMan, fUpdate, fSingleCube, fBase );\n            }\n            pFxchMan.nPairsS--;\n        }\n    }\n    }\n\n    return Vec_IntSize( vCube ) * ( Vec_IntSize( vCube ) - 1 ) / 2;\n}\n\nfunc Fxch_ManDivDoubleCube(pFxchMan *Fxch_Man_t, iCube int32, fAdd int32, fUpdate int32) {\n    var vLitHashKeys *Vec_Int_t = pFxchMan.vLitHashKeys;\n    var vCube *Vec_Int_t = Vec_WecEntry( pFxchMan.vCubes, iCube );\n    var SubCubeID, iLit0, Lit0 int32;\n\n    // inlining of macro Vec_IntForEachEntryStart\n    for  iLit0 = 1; (iLit0 \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit0) = Vec_IntEntry(vCube, iLit0)), 1); iLit0++  {\n        SubCubeID += Vec_IntEntry( vLitHashKeys, Lit0 );\n    }\n\n    Fxch_ManSCAddRemove( pFxchMan, SubCubeID,\n                         iCube, 0, 0,\n                         byte(fAdd), byte(fUpdate) );\n\n    // inlining of macro Vec_IntForEachEntryStart\n    for  iLit0 = 1; (iLit0 \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit0) = Vec_IntEntry(vCube, iLit0)), 1); iLit0++  {\n        /* 1 Lit remove */\n        SubCubeID -= Vec_IntEntry( vLitHashKeys, Lit0 );\n\n        pFxchMan.nPairsD += Fxch_ManSCAddRemove( pFxchMan, SubCubeID,\n                                                  iCube, iLit0, 0,\n                                                  byte(fAdd), byte(fUpdate) );\n\n        if Vec_IntSize( vCube ) \u003e= 3 {\n            var Lit1, iLit1 int32;\n\n            // inlining of macro Vec_IntForEachEntryStart\n            for  iLit1 = iLit0 + 1; (iLit1 \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit1) = Vec_IntEntry(vCube, iLit1)), 1); iLit1++  {\n                /* 2 Lit remove */\n                SubCubeID -= Vec_IntEntry( vLitHashKeys, Lit1 );\n\n                pFxchMan.nPairsD += Fxch_ManSCAddRemove( pFxchMan, SubCubeID,\n                                                          iCube, iLit0, iLit1,\n                                                          byte(fAdd), byte(fUpdate) );\n\n                SubCubeID += Vec_IntEntry( vLitHashKeys, Lit1 );\n            }\n        }\n\n        SubCubeID += Vec_IntEntry( vLitHashKeys, Lit0 );\n    }\n}\n\nfunc Fxch_ManCompressCubes(vCubes *Vec_Wec_t, vLit2Cube *Vec_Int_t) {\n    var i, k, CubeId int32;\n\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLit2Cube)) \u0026\u0026 (((CubeId) = Vec_IntEntry(vLit2Cube, i)), 1); i++  {\n        if Vec_IntSize(Vec_WecEntry(vCubes, CubeId)) \u003e 0 {\n            Vec_IntWriteEntry( vLit2Cube, k++, CubeId ); }\n    }\n\n    Vec_IntShrink( vLit2Cube, k );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     PUBLIC INTERFACE                             ///\n////////////////////////////////////////////////////////////////////////\nfunc Fxch_ManAlloc(vCubes *Vec_Wec_t) *Fxch_Man_t {\n    // inlining of macro ABC_CALLOC\n    var pFxchMan *Fxch_Man_t  = \u0026Fxch_Man_t{};\n\n    pFxchMan.vCubes = vCubes;\n    pFxchMan.nCubesInit = Vec_WecSize( vCubes );\n\n    pFxchMan.pDivHash = Hsh_VecManStart( 1024 );\n    pFxchMan.vDivWeights = Vec_FltAlloc( 1024 );\n    pFxchMan.vDivCubePairs = Vec_WecAlloc( 1024 );\n\n    pFxchMan.vCubeFree = Vec_IntAlloc( 4 );\n    pFxchMan.vDiv = Vec_IntAlloc( 4 );\n\n    pFxchMan.vCubesS = Vec_IntAlloc( 128 );\n    pFxchMan.vPairs = Vec_IntAlloc( 128 );\n    pFxchMan.vCubesToUpdate = Vec_IntAlloc( 64 );\n    pFxchMan.vCubesToRemove = Vec_IntAlloc( 64 );\n    pFxchMan.vSCC = Vec_IntAlloc( 64 );\n\n    return pFxchMan;\n}\n\nfunc Fxch_ManFree(pFxchMan *Fxch_Man_t) {\n    Vec_WecFree( pFxchMan.vLits );\n    Vec_IntFree( pFxchMan.vLitCount );\n    Vec_IntFree( pFxchMan.vLitHashKeys );\n    Hsh_VecManStop( pFxchMan.pDivHash );\n    Vec_FltFree( pFxchMan.vDivWeights );\n    Vec_QueFree( pFxchMan.vDivPrio );\n    Vec_WecFree( pFxchMan.vDivCubePairs );\n    Vec_IntFree( pFxchMan.vLevels );\n\n    Vec_IntFree( pFxchMan.vCubeFree );\n    Vec_IntFree( pFxchMan.vDiv );\n\n    Vec_IntFree( pFxchMan.vCubesS );\n    Vec_IntFree( pFxchMan.vPairs );\n    Vec_IntFree( pFxchMan.vCubesToUpdate );\n    Vec_IntFree( pFxchMan.vCubesToRemove );\n    Vec_IntFree( pFxchMan.vSCC );\n\n    // inlining of macro ABC_FREE\n    ((pFxchMan) ? (free((char *) (pFxchMan)), (pFxchMan) = 0) : 0);\n}\n\nfunc Fxch_ManMapLiteralsIntoCubes(pFxchMan *Fxch_Man_t, nVars int32) {\n\n    var vCube *Vec_Int_t;\n    var i, k, Lit, Count int32;\n\n    pFxchMan.nVars = 0;\n    pFxchMan.nLits = 0;\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, i)), 1); i++  {\n        assert(Vec_IntSize(vCube) \u003e 0, \"Vec_IntSize(vCube) \u003e 0\");\n        pFxchMan.nVars = Abc_MaxInt( pFxchMan.nVars, Vec_IntEntry( vCube, 0 ) );\n        pFxchMan.nLits += Vec_IntSize(vCube) - 1;\n        // inlining of macro Vec_IntForEachEntryStart\n        for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n            pFxchMan.nVars = Abc_MaxInt( pFxchMan.nVars, Abc_Lit2Var( Lit ) );\n        }\n    }\n\n    assert(pFxchMan.nVars \u003c nVars, \"pFxchMan.nVars \u003c nVars\");\n    pFxchMan.nVars = nVars;\n\n    /* Count the number of time each literal appears on the SOP */\n    pFxchMan.vLitCount = Vec_IntStart( 2 * pFxchMan.nVars );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n            Vec_IntAddToEntry( pFxchMan.vLitCount, Lit, 1 );\n        }\n    }\n\n    /* Allocate space to the array of arrays wich maps Literals into cubes which uses them */\n    pFxchMan.vLits = Vec_WecStart( 2 * pFxchMan.nVars );\n    // inlining of macro Vec_IntForEachEntry\n    for  Lit = 0; (Lit \u003c Vec_IntSize(pFxchMan.vLitCount)) \u0026\u0026 (((Count) = Vec_IntEntry(pFxchMan.vLitCount, Lit)), 1); Lit++  {\n        Vec_IntGrow( Vec_WecEntry( pFxchMan.vLits, Lit ), Count );\n    }\n\n    /* Maps Literals into cubes which uses them */\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntryStart\n        for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n            Vec_WecPush( pFxchMan.vLits, Lit, i );\n        }\n    }\n}\n\nfunc Fxch_ManGenerateLitHashKeys(pFxchMan *Fxch_Man_t) {\n    var i int32;\n    /* Generates the random number which will be used for hashing cubes */\n    Gia_ManRandom( 1 );\n    pFxchMan.vLitHashKeys = Vec_IntAlloc( ( 2 * pFxchMan.nVars ) );\n    for  i = 0; i \u003c (2 * pFxchMan.nVars); i++  {\n        Vec_IntPush( pFxchMan.vLitHashKeys, Gia_ManRandom(0) \u0026 0x3FFFFFF );\n    }\n}\n\nfunc Fxch_ManSCHashTablesInit(pFxchMan *Fxch_Man_t) {\n    var vCubes *Vec_Wec_t  = pFxchMan.vCubes;\n    var vCube *Vec_Int_t;\n    var iCube, nTotalHashed int32;\n\n    // inlining of macro Vec_WecForEachLevel\n    for  iCube = 0; (iCube \u003c Vec_WecSize(vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(vCubes, iCube)), 1); iCube++  {\n        var nLits int32 = Vec_IntSize( vCube ) - 1;\n        var nSubCubes int32;\n        if nLits \u003c= 2 {\n            nSubCubes = nLits + 1;\n        } else {\n            nSubCubes = ( nLits * nLits + nLits ) / 2;\n        }\n\n        nTotalHashed += nSubCubes + 1;\n    }\n\n    pFxchMan.pSCHashTable = Fxch_SCHashTableCreate( pFxchMan, nTotalHashed );\n}\n\nfunc Fxch_ManSCHashTablesFree(pFxchMan *Fxch_Man_t) {\n    Fxch_SCHashTableDelete( pFxchMan.pSCHashTable );\n}\n\nfunc Fxch_ManDivCreate(pFxchMan *Fxch_Man_t) {\n    var vCube *Vec_Int_t;\n    var Weight float32;\n    var fAdd int32 = 1;\n    var fUpdate int32;\n    var iCube int32;\n\n    // inlining of macro Vec_WecForEachLevel\n    for  iCube = 0; (iCube \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, iCube)), 1); iCube++  {\n        Fxch_ManDivSingleCube( pFxchMan, iCube, fAdd, fUpdate );\n        Fxch_ManDivDoubleCube( pFxchMan, iCube, fAdd, fUpdate );\n    }\n\n    pFxchMan.vDivPrio = Vec_QueAlloc( Vec_FltSize( pFxchMan.vDivWeights ) );\n    Vec_QueSetPriority( pFxchMan.vDivPrio, Vec_FltArrayP( pFxchMan.vDivWeights ) );\n    // inlining of macro Vec_FltForEachEntry\n    for  iCube = 0; (iCube \u003c Vec_FltSize(pFxchMan.vDivWeights)) \u0026\u0026 (((Weight) = Vec_FltEntry(pFxchMan.vDivWeights, iCube)), 1); iCube++  {\n        if Weight \u003e 0.0 {\n            Vec_QuePush( pFxchMan.vDivPrio, iCube ); }\n    }\n}\n\n/* Level Computation */\nfunc Fxch_ManComputeLevelDiv(pFxchMan *Fxch_Man_t, vCubeFree *Vec_Int_t) int32 {\n    var i, Lit, Level int32;\n\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCubeFree)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCubeFree, i)), 1); i++  {\n        Level = Abc_MaxInt( Level, Vec_IntEntry( pFxchMan.vLevels, Abc_Lit2Var( Abc_Lit2Var( Lit ) ) ) );\n    }\n\n    return Abc_MinInt( Level, 800 );\n}\n\nfunc Fxch_ManComputeLevelCube(pFxchMan *Fxch_Man_t, vCube *Vec_Int_t) int32 {\n    var k, Lit, Level int32;\n\n    // inlining of macro Vec_IntForEachEntryStart\n    for  k = 1; (k \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, k)), 1); k++  {\n        Level = Abc_MaxInt( Level, Vec_IntEntry( pFxchMan.vLevels, Abc_Lit2Var( Lit ) ) );\n    }\n\n    return Level;\n}\n\nfunc Fxch_ManComputeLevel(pFxchMan *Fxch_Man_t) {\n    var vCube *Vec_Int_t;\n    var i, iVar, iFirst int32;\n\n    iVar = Vec_IntEntry( Vec_WecEntry( pFxchMan.vCubes, 0 ), 0 );\n    pFxchMan.vLevels = Vec_IntStart( pFxchMan.nVars );\n\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(pFxchMan.vCubes)) \u0026\u0026 (((vCube) = Vec_WecEntry(pFxchMan.vCubes, i)), 1); i++  {\n        if iVar != Vec_IntEntry( vCube, 0 ) {\n            Vec_IntAddToEntry( pFxchMan.vLevels, iVar, i - iFirst );\n            iVar = Vec_IntEntry( vCube, 0 );\n            iFirst = i;\n        }\n        Vec_IntUpdateEntry( pFxchMan.vLevels, iVar, Fxch_ManComputeLevelCube( pFxchMan, vCube ) );\n    }\n}\n\n/* Extract divisor from single-cubes */\nfunc Fxch_ManExtractDivFromCube(pFxchMan *Fxch_Man_t, Lit0 int32, Lit1 int32, iVarNew int32) {\n    var i, iCube0 int32;\n    var vLitP *Vec_Int_t  = Vec_WecEntry( pFxchMan.vLits, Vec_WecSize( pFxchMan.vLits ) - 2 );\n\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(pFxchMan.vCubesS)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vCubesS, i)), 1); i++  {\n        var RetValue int32;\n        var vCube0 *Vec_Int_t;\n\n        vCube0 = Fxch_ManGetCube( pFxchMan, iCube0 );\n        RetValue  = Vec_IntRemove1( vCube0, Abc_LitNot( Lit0 ) );\n        RetValue += Vec_IntRemove1( vCube0, Abc_LitNot( Lit1 ) );\n        assert(RetValue == 2, \"RetValue == 2\");\n\n        Vec_IntPush( vCube0, Abc_Var2Lit( iVarNew, 0 ) );\n        Vec_IntPush( vLitP, Vec_WecLevelId( pFxchMan.vCubes, vCube0 ) );\n        Vec_IntPush( pFxchMan.vCubesToUpdate, iCube0 );\n\n        pFxchMan.nLits--;\n    }\n}\n\n/* Extract divisor from cube pairs */\nfunc Fxch_ManExtractDivFromCubePairs(pFxchMan *Fxch_Man_t, iVarNew int32) {\n    /* For each pair (Ci, Cj) */\n    var iCube0, iCube1, i int32;\n\n\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(pFxchMan.vPairs)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vPairs, i)), 1) \u0026\u0026 (((iCube1) = Vec_IntEntry(pFxchMan.vPairs, i+1)), 1); i += 2  {\n        var j, Lit, RetValue, fCompl int32;\n        var pOutputID0, pOutputID1 *int32;\n\n        var vCube *Vec_Int_t = nil;\n        var vCube0 *Vec_Int_t = Fxch_ManGetCube( pFxchMan, iCube0 );\n        var vCube1 *Vec_Int_t = Fxch_ManGetCube( pFxchMan, iCube1 );\n        var vCube0Copy *Vec_Int_t = Vec_IntDup( vCube0 );\n        var vCube1Copy *Vec_Int_t = Vec_IntDup( vCube1 );\n\n        RetValue  = Fxch_DivRemoveLits( vCube0Copy, vCube1Copy, pFxchMan.vDiv, \u0026fCompl );\n\n        assert(RetValue == Vec_IntSize( pFxchMan.vDiv ), \"RetValue == Vec_IntSize( pFxchMan.vDiv )\");\n\n        pFxchMan.nLits -= Vec_IntSize( pFxchMan.vDiv ) + Vec_IntSize( vCube1 ) - 2;\n\n        /* Identify type of Extraction */\n        pOutputID0 = Vec_IntEntryP( pFxchMan.vOutputID, iCube0 * pFxchMan.nSizeOutputID );\n        pOutputID1 = Vec_IntEntryP( pFxchMan.vOutputID, iCube1 * pFxchMan.nSizeOutputID );\n        RetValue = 1;\n        for  j = 0; j \u003c pFxchMan.nSizeOutputID \u0026\u0026 (RetValue != 0); j++  {\n            RetValue = ( pOutputID0[j] == pOutputID1[j] );\n        }\n\n        /* Exact Extractraion */\n        if RetValue != 0 {\n            Vec_IntClear( vCube0 );\n            Vec_IntAppend( vCube0, vCube0Copy );\n            vCube = vCube0;\n\n            Vec_IntPush( pFxchMan.vCubesToUpdate, iCube0 );\n            Vec_IntClear( vCube1 );\n\n            /* Update Lit -\u003e Cube mapping */\n            // inlining of macro Vec_IntForEachEntry\n            for  j = 0; (j \u003c Vec_IntSize(pFxchMan.vDiv)) \u0026\u0026 (((Lit) = Vec_IntEntry(pFxchMan.vDiv, j)), 1); j++  {\n                Vec_IntRemove( Vec_WecEntry( pFxchMan.vLits, Abc_Lit2Var( Lit ) ),\n                               Vec_WecLevelId( pFxchMan.vCubes, vCube0 ) );\n                Vec_IntRemove( Vec_WecEntry( pFxchMan.vLits, Abc_LitNot( Abc_Lit2Var( Lit ) ) ),\n                               Vec_WecLevelId( pFxchMan.vCubes, vCube0 ) );\n            }\n\n        \n        /* Unexact Extraction */\n        } else {\n            for  j = 0; j \u003c pFxchMan.nSizeOutputID; j++  {\n                pFxchMan.pTempOutputID[j] = ( pOutputID0[j] \u0026 pOutputID1[j] );\n            }\n\n            /* Create new cube */\n            vCube = Vec_WecPushLevel( pFxchMan.vCubes );\n            Vec_IntAppend( vCube, vCube0Copy );\n            Vec_IntPushArray( pFxchMan.vOutputID, pFxchMan.pTempOutputID, pFxchMan.nSizeOutputID );\n            Vec_IntPush( pFxchMan.vCubesToUpdate, Vec_WecLevelId( pFxchMan.vCubes, vCube ) );\n\n            /* Update Lit -\u003e Cube mapping */\n            // inlining of macro Vec_IntForEachEntryStart\n            for  j = 1; (j \u003c Vec_IntSize(vCube)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube, j)), 1); j++  {\n                Vec_WecPush( pFxchMan.vLits, Lit, Vec_WecLevelId( pFxchMan.vCubes, vCube ) );\n            }\n\n            /*********************************************************/\n            RetValue = 0;\n            for  j = 0; j \u003c pFxchMan.nSizeOutputID; j++  {\n                pFxchMan.pTempOutputID[j] = pOutputID0[j];\n                RetValue |= ( pOutputID0[j] \u0026 ~( pOutputID1[j] ) );\n                pOutputID0[j] \u0026= ~( pOutputID1[j] );\n            }\n\n            if RetValue != 0 {\n                Vec_IntPush( pFxchMan.vCubesToUpdate, iCube0 );\n            } else {\n                Vec_IntClear( vCube0 ); }\n\n            /*********************************************************/\n            RetValue = 0;\n            for  j = 0; j \u003c pFxchMan.nSizeOutputID; j++  {\n                RetValue |= ( pOutputID1[j] \u0026 ~( pFxchMan.pTempOutputID[j] ) );\n                pOutputID1[j] \u0026= ~( pFxchMan.pTempOutputID[j] );\n            }\n\n            if RetValue != 0 {\n                Vec_IntPush( pFxchMan.vCubesToUpdate, iCube1 );\n            } else {\n                Vec_IntClear( vCube1 ); }\n\n        }\n        Vec_IntFree( vCube0Copy );\n        Vec_IntFree( vCube1Copy );\n\n        if iVarNew != 0 {\n            var vLitP *Vec_Int_t = Vec_WecEntry( pFxchMan.vLits, Vec_WecSize( pFxchMan.vLits ) - 2 );\n            var vLitN *Vec_Int_t = Vec_WecEntry( pFxchMan.vLits, Vec_WecSize( pFxchMan.vLits ) - 1 );\n\n            assert((vCube != nil), \"vCube\");\n            if Vec_IntSize( pFxchMan.vDiv ) == 2 || (fCompl != 0) {\n                Vec_IntPush( vCube, Abc_Var2Lit( iVarNew, 1 ) );\n                Vec_IntPush( vLitN, Vec_WecLevelId( pFxchMan.vCubes, vCube ) );\n                Vec_IntSort( vLitN, 0 );\n            \n            } else {\n                Vec_IntPush( vCube, Abc_Var2Lit( iVarNew, 0 ) );\n                Vec_IntPush( vLitP, Vec_WecLevelId( pFxchMan.vCubes, vCube ) );\n                Vec_IntSort( vLitP, 0 );\n            }\n        }\n    }\n\n    return;\n}\n\nfunc Fxch_ManCreateCube(pFxchMan *Fxch_Man_t, Lit0 int32, Lit1 int32) int32 {\n    var Level, iVarNew, j int32;\n    var vCube0, vCube1 *Vec_Int_t;\n\n    /* Create a new variable */\n    iVarNew = pFxchMan.nVars;\n    pFxchMan.nVars++;\n\n    /* Clear temporary outputID vector */\n    for  j = 0; j \u003c pFxchMan.nSizeOutputID; j++  {\n        pFxchMan.pTempOutputID[j] = 0;\n    }\n\n    /* Create new Lit hash keys */\n    Vec_IntPush( pFxchMan.vLitHashKeys, Gia_ManRandom(0) \u0026 0x3FFFFFF );\n    Vec_IntPush( pFxchMan.vLitHashKeys, Gia_ManRandom(0) \u0026 0x3FFFFFF );\n\n    /* Create new Cube */\n    vCube0 = Vec_WecPushLevel( pFxchMan.vCubes );\n    Vec_IntPush( vCube0, iVarNew );\n    Vec_IntPushArray( pFxchMan.vOutputID, pFxchMan.pTempOutputID, pFxchMan.nSizeOutputID );\n\n    if Vec_IntSize( pFxchMan.vDiv ) == 2 {\n        if Lit0 \u003e Lit1 {\n            // inlining of macro ABC_SWAP\n             var t int32  = Lit0; Lit0 = Lit1; Lit1 = t; };\n\n        Vec_IntPush( vCube0, Abc_LitNot( Lit0 ) );\n        Vec_IntPush( vCube0, Abc_LitNot( Lit1 ) );\n        Level = 1 + Fxch_ManComputeLevelCube( pFxchMan, vCube0 );\n    \n    } else {\n        var i int32;\n        var Lit int32;\n\n        vCube1 = Vec_WecPushLevel( pFxchMan.vCubes );\n        Vec_IntPush( vCube1, iVarNew );\n        Vec_IntPushArray( pFxchMan.vOutputID, pFxchMan.pTempOutputID, pFxchMan.nSizeOutputID );\n\n        vCube0 = Fxch_ManGetCube( pFxchMan, Vec_WecSize( pFxchMan.vCubes ) - 2 );\n        Fxch_DivSepareteCubes( pFxchMan.vDiv, vCube0, vCube1 );\n        Level = 2 + Abc_MaxInt( Fxch_ManComputeLevelCube( pFxchMan, vCube0 ),\n                                Fxch_ManComputeLevelCube( pFxchMan, vCube1 ) );\n\n        Vec_IntPush( pFxchMan.vCubesToUpdate, Vec_WecLevelId( pFxchMan.vCubes, vCube0 ) );\n        Vec_IntPush( pFxchMan.vCubesToUpdate, Vec_WecLevelId( pFxchMan.vCubes, vCube1 ) );\n\n        /* Update Lit -\u003e Cube mapping */\n        // inlining of macro Vec_IntForEachEntryStart\n        for  i = 1; (i \u003c Vec_IntSize(vCube0)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube0, i)), 1); i++  {\n            Vec_WecPush( pFxchMan.vLits, Lit, Vec_WecLevelId( pFxchMan.vCubes, vCube0 ) );\n        }\n\n        // inlining of macro Vec_IntForEachEntryStart\n        for  i = 1; (i \u003c Vec_IntSize(vCube1)) \u0026\u0026 (((Lit) = Vec_IntEntry(vCube1, i)), 1); i++  {\n            Vec_WecPush( pFxchMan.vLits, Lit, Vec_WecLevelId( pFxchMan.vCubes, vCube1 ) );\n        }\n    }\n    assert(Vec_IntSize( pFxchMan.vLevels ) == iVarNew, \"Vec_IntSize( pFxchMan.vLevels ) == iVarNew\");\n    Vec_IntPush( pFxchMan.vLevels, Level );\n\n    pFxchMan.nLits += Vec_IntSize( pFxchMan.vDiv );\n\n    /* Create new literals */\n    Vec_WecPushLevel( pFxchMan.vLits );\n    Vec_WecPushLevel( pFxchMan.vLits );\n\n    return iVarNew;\n}\n\nfunc Fxch_ManUpdate(pFxchMan *Fxch_Man_t, iDiv int32) {\n    var i int32;\n    var iCube0 int32;\n    var iCube1 int32;\n    var Lit0 int32 = -1;\n    var Lit1 int32 = -1;\n    var iVarNew int32;\n\n    var vCube0, vCube1, vDivCubePairs *Vec_Int_t;\n\n    /* Get the selected candidate (divisor) */\n    Vec_IntClear( pFxchMan.vDiv );\n    Vec_IntAppend( pFxchMan.vDiv, Hsh_VecReadEntry( pFxchMan.pDivHash, iDiv ) );\n\n    /* Find cubes associated with the divisor */\n    Vec_IntClear( pFxchMan.vCubesS );\n    if Vec_IntSize( pFxchMan.vDiv ) == 2 {\n        Lit0 = Abc_Lit2Var( Vec_IntEntry( pFxchMan.vDiv, 0 ) );\n        Lit1 = Abc_Lit2Var( Vec_IntEntry( pFxchMan.vDiv, 1 ) );\n        assert(Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0, \"Lit0 \u003e= 0 \u0026\u0026 Lit1 \u003e= 0\");\n\n        Fxch_ManCompressCubes( pFxchMan.vCubes, Vec_WecEntry( pFxchMan.vLits, Abc_LitNot( Lit0 ) ) );\n        Fxch_ManCompressCubes( pFxchMan.vCubes, Vec_WecEntry( pFxchMan.vLits, Abc_LitNot( Lit1 ) ) );\n        Vec_IntTwoRemoveCommon( Vec_WecEntry( pFxchMan.vLits, Abc_LitNot( Lit0 ) ),\n                                Vec_WecEntry( pFxchMan.vLits, Abc_LitNot( Lit1 ) ),\n                                pFxchMan.vCubesS );\n    }\n\n    /* Find pairs associated with the divisor */\n    Vec_IntClear( pFxchMan.vPairs );\n    vDivCubePairs = Vec_WecEntry( pFxchMan.vDivCubePairs, iDiv );\n    Vec_IntAppend( pFxchMan.vPairs, vDivCubePairs );\n    Vec_IntErase( vDivCubePairs );\n\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(pFxchMan.vPairs)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vPairs, i)), 1) \u0026\u0026 (((iCube1) = Vec_IntEntry(pFxchMan.vPairs, i+1)), 1); i += 2  {\n        assert(Fxch_ManGetLit( pFxchMan, iCube0, 0) == Fxch_ManGetLit( pFxchMan, iCube1, 0), \"Fxch_ManGetLit( pFxchMan, iCube0, 0) == Fxch_ManGetLit( pFxchMan, iCube1, 0)\");\n        if iCube0 \u003e iCube1 {\n            Vec_IntSetEntry( pFxchMan.vPairs, i, iCube1);\n            Vec_IntSetEntry( pFxchMan.vPairs, i+1, iCube0);\n        }\n    }\n\n    Vec_IntUniqifyPairs( pFxchMan.vPairs );\n    assert(Vec_IntSize( pFxchMan.vPairs ) % 2 == 0, \"Vec_IntSize( pFxchMan.vPairs ) % 2 == 0\");\n\n    /* subtract cost of single-cube divisors */\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(pFxchMan.vCubesS)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vCubesS, i)), 1); i++  {\n        Fxch_ManDivSingleCube( pFxchMan, iCube0, 0, 1);\n\n        if Vec_WecEntryEntry( pFxchMan.vCubes, iCube0, 0 ) == 0 {\n            Fxch_ManDivDoubleCube( pFxchMan, iCube0, 0, 1 ); }\n    }\n\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(pFxchMan.vPairs)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vPairs, i)), 1); i++  {\n        Fxch_ManDivSingleCube( pFxchMan, iCube0, 0, 1);\n\n        if Vec_WecEntryEntry( pFxchMan.vCubes, iCube0, 0 ) == 0 {\n            Fxch_ManDivDoubleCube( pFxchMan, iCube0, 0, 1 ); }\n    }\n\n    Vec_IntClear( pFxchMan.vCubesToUpdate );\n    if Fxch_DivIsNotConstant1( pFxchMan.vDiv ) {\n        iVarNew = Fxch_ManCreateCube( pFxchMan, Lit0, Lit1 );\n        Fxch_ManExtractDivFromCube( pFxchMan, Lit0, Lit1, iVarNew );\n        Fxch_ManExtractDivFromCubePairs( pFxchMan, iVarNew );\n    \n    } else {\n        Fxch_ManExtractDivFromCubePairs( pFxchMan, 0 ); }\n\n    assert(Vec_IntSize( pFxchMan.vCubesToUpdate ), \"Vec_IntSize( pFxchMan.vCubesToUpdate )\");\n\n    /* Add cost */\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(pFxchMan.vCubesToUpdate)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vCubesToUpdate, i)), 1); i++  {\n        Fxch_ManDivSingleCube( pFxchMan, iCube0, 1, 1 );\n\n        if Vec_WecEntryEntry( pFxchMan.vCubes, iCube0, 0 ) == 0 {\n            Fxch_ManDivDoubleCube( pFxchMan, iCube0, 1, 1 ); }\n    }\n\n    /* Deal with SCC */\n    if Vec_IntSize( pFxchMan.vSCC ) {\n        Vec_IntUniqifyPairs( pFxchMan.vSCC );\n        assert(Vec_IntSize( pFxchMan.vSCC ) % 2 == 0, \"Vec_IntSize( pFxchMan.vSCC ) % 2 == 0\");\n\n        // inlining of macro Vec_IntForEachEntryDouble\n        for  i = 0; (i+1 \u003c Vec_IntSize(pFxchMan.vSCC)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vSCC, i)), 1) \u0026\u0026 (((iCube1) = Vec_IntEntry(pFxchMan.vSCC, i+1)), 1); i += 2  {\n            var j int32;\n            var RetValue int32 = 1;\n            var pOutputID0 *int32  = Vec_IntEntryP( pFxchMan.vOutputID, iCube0 * pFxchMan.nSizeOutputID );\n            var pOutputID1 *int32  = Vec_IntEntryP( pFxchMan.vOutputID, iCube1 * pFxchMan.nSizeOutputID );\n            vCube0 = Vec_WecEntry( pFxchMan.vCubes, iCube0 );\n            vCube1 = Vec_WecEntry( pFxchMan.vCubes, iCube1 );\n\n            if !Vec_WecIntHasMark( vCube0 ) {\n                Fxch_ManDivSingleCube( pFxchMan, iCube0, 0, 1 );\n                Fxch_ManDivDoubleCube( pFxchMan, iCube0, 0, 1 );\n                Vec_WecIntSetMark( vCube0 );\n            }\n\n            if !Vec_WecIntHasMark( vCube1 ) {\n                Fxch_ManDivSingleCube( pFxchMan, iCube1, 0, 1 );\n                Fxch_ManDivDoubleCube( pFxchMan, iCube1, 0, 1 );\n                Vec_WecIntSetMark( vCube1 );\n            }\n\n            if Vec_IntSize( vCube0 ) == Vec_IntSize( vCube1 ) {\n                for  j = 0; j \u003c pFxchMan.nSizeOutputID; j++  {\n                    pOutputID1[j] |= pOutputID0[j];\n                    pOutputID0[j] = 0;\n                }\n                Vec_IntClear( Vec_WecEntry( pFxchMan.vCubes, iCube0 ) );\n                Vec_WecIntXorMark( vCube0 );\n                continue;\n            }\n\n            for  j = 0; j \u003c pFxchMan.nSizeOutputID \u0026\u0026 (RetValue != 0); j++  {\n                RetValue = ( pOutputID0[j] == pOutputID1[j] );\n            }\n\n            if RetValue != 0 {\n                Vec_IntClear( Vec_WecEntry( pFxchMan.vCubes, iCube0 ) );\n                Vec_WecIntXorMark( vCube0 );\n            \n            } else {\n                RetValue = 0;\n                for  j = 0; j \u003c pFxchMan.nSizeOutputID; j++  {\n                    RetValue |= ( pOutputID0[j] \u0026 ~( pOutputID1[j] ) );\n                    pOutputID0[j] \u0026= ~( pOutputID1[j] );\n                }\n\n                if RetValue == 0 {\n                    Vec_IntClear( Vec_WecEntry( pFxchMan.vCubes, iCube0 ) );\n                    Vec_WecIntXorMark( vCube0 );\n                }\n            }\n        }\n\n        // inlining of macro Vec_IntForEachEntryDouble\n        for  i = 0; (i+1 \u003c Vec_IntSize(pFxchMan.vSCC)) \u0026\u0026 (((iCube0) = Vec_IntEntry(pFxchMan.vSCC, i)), 1) \u0026\u0026 (((iCube1) = Vec_IntEntry(pFxchMan.vSCC, i+1)), 1); i += 2  {\n            vCube0 = Vec_WecEntry( pFxchMan.vCubes, iCube0 );\n            vCube1 = Vec_WecEntry( pFxchMan.vCubes, iCube1 );\n\n            if Vec_WecIntHasMark( vCube0 ) {\n                Fxch_ManDivSingleCube( pFxchMan, iCube0, 1, 1 );\n                Fxch_ManDivDoubleCube( pFxchMan, iCube0, 1, 1 );\n                Vec_WecIntXorMark( vCube0 );\n            }\n\n            if Vec_WecIntHasMark( vCube1 ) {\n                Fxch_ManDivSingleCube( pFxchMan, iCube1, 1, 1 );\n                Fxch_ManDivDoubleCube( pFxchMan, iCube1, 1, 1 );\n                Vec_WecIntXorMark( vCube1 );\n            }\n        }\n\n        Vec_IntClear( pFxchMan.vSCC );\n    }\n\n    pFxchMan.nExtDivs++;\n}\n\n/* Print */\nfunc Fxch_ManPrintDivs(pFxchMan *Fxch_Man_t) {\n    var iDiv int32;\n\n    for  iDiv = 0; iDiv \u003c Vec_FltSize( pFxchMan.vDivWeights ); iDiv++  {\n        Fxch_DivPrint( pFxchMan, iDiv );\n    }\n}\n\nfunc Fxch_ManPrintStats(pFxchMan *Fxch_Man_t) {\n    fmt.Printf(\"Cubes =%8d  \", Vec_WecSizeUsed( pFxchMan.vCubes ));\n    fmt.Printf(\"Lits  =%8d  \", Vec_WecSizeUsed( pFxchMan.vLits ));\n    fmt.Printf(\"Divs  =%8d  \", Hsh_VecSize( pFxchMan.pDivHash ));\n    fmt.Printf(\"Divs+ =%8d  \", Vec_QueSize( pFxchMan.vDivPrio ));\n    fmt.Printf(\"Extr  =%7d  \\n\", pFxchMan.nExtDivs);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

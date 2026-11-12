@@ -1,0 +1,321 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/verify.c",
+  "SHA256": "bb17b1b3d464bb119b54f92b361d119917a67563b401e347f5bbdb9acbf06855",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 34,
+        "Column": 9,
+        "ByteOffset": 659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"some minterm in F is not covered by Fold u Dold\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 36,
+        "Column": 28,
+        "ByteOffset": 776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if (verbose_debug) printf(\"%s\\n\", pc1(p)); else break;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 44,
+        "Column": 9,
+        "ByteOffset": 1153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"some minterm in Fold is not covered by F u Dold\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 46,
+        "Column": 28,
+        "ByteOffset": 1270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if (verbose_debug) printf(\"%s\\n\", pc1(p)); else break;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 72,
+        "Column": 12,
+        "ByteOffset": 1897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr, \"Warning: cannot permute columns without names\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 72,
+        "Column": 20,
+        "ByteOffset": 1905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr, \"Warning: cannot permute columns without names\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 77,
+        "Column": 12,
+        "ByteOffset": 2042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr, \"PLA_verify: PLA's are not the same size\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 77,
+        "Column": 20,
+        "ByteOffset": 2050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr, \"PLA_verify: PLA's are not the same size\\n\");"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 106,
+        "Column": 12,
+        "ByteOffset": 2845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp(labi, PLA1.label[j]) == 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 5,
+        "ByteOffset": 3780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"ON-SET and DC-SET are disjoint\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 3839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"Some minterm(s) belong to both the ON-SET and DC-SET !\\n\");"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 159,
+        "Column": 12,
+        "ByteOffset": 3991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 159,
+        "Column": 19,
+        "ByteOffset": 3998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 4132
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"ON-SET and OFF-SET are disjoint\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 4192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"Some minterm(s) belong to both the ON-SET and OFF-SET !\\n\");"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 171,
+        "Column": 12,
+        "ByteOffset": 4345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 171,
+        "Column": 19,
+        "ByteOffset": 4352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 176,
+        "Column": 5,
+        "ByteOffset": 4486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"DC-SET and OFF-SET are disjoint\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 5,
+        "ByteOffset": 4546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"Some minterm(s) belong to both the OFF-SET and DC-SET !\\n\");"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 183,
+        "Column": 12,
+        "ByteOffset": 4699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 183,
+        "Column": 19,
+        "ByteOffset": 4706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 187,
+        "Column": 5,
+        "ByteOffset": 4833
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"Union of ON-SET, OFF-SET and DC-SET is the universe\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 5,
+        "ByteOffset": 4965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"There are minterms left unspecified !\\n\");"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 196,
+        "Column": 12,
+        "ByteOffset": 5162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 196,
+        "Column": 19,
+        "ByteOffset": 5169
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/verify.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4816
+    }
+  ],
+  "Draft": "package espresso\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\n)\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n */\n\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*\n *  verify -- check that all minterms of F are contained in (Fold u Dold)\n *  and that all minterms of Fold are contained in (F u Dold).\n */\nbool verify(F, Fold, Dold)\npcover F, Fold, Dold;\n{\n    pcube p, last, *FD;\n    bool verify_error = FALSE;\n\n    /* Make sure the function didn't grow too large */\n    FD = cube2list(Fold, Dold);\n    // inlining of macro foreach_set\n    for(p=F.data,last=p+F.count*F.wsize;p\u003clast;p+=F.wsize)\n    if ! cube_is_covered(FD, p) {\n        fmt.Printf(\"some minterm in F is not covered by Fold u Dold\\n\");\n        verify_error = TRUE;\n        if (verbose_debug) fmt.Printf(\"%s\\n\", pc1(p)); else break;\n    }\n    // inlining of macro free_cubelist\n    FREE(FD[0]); FREE(FD);;\n\n    /* Make sure minimized function covers the original function */\n    FD = cube2list(F, Dold);\n    // inlining of macro foreach_set\n    for(p=Fold.data,last=p+Fold.count*Fold.wsize;p\u003clast;p+=Fold.wsize)\n    if ! cube_is_covered(FD, p) {\n        fmt.Printf(\"some minterm in Fold is not covered by F u Dold\\n\");\n        verify_error = TRUE;\n        if (verbose_debug) fmt.Printf(\"%s\\n\", pc1(p)); else break;\n    }\n    // inlining of macro free_cubelist\n    FREE(FD[0]); FREE(FD);;\n\n    return verify_error;\n}\n\n\n\n/*\n *  PLA_verify -- verify that two PLA's are identical\n *\n *  If names are given, row and column permutations are done to make\n *  the comparison meaningful.\n *\n */\nbool PLA_verify(PLA1, PLA2)\nvar PLA1, PLA2 pPLA;\n{\n    /* Check if both have names given; if so, attempt to permute to\n     * match the names\n     */\n    if PLA1.label != NULL \u0026\u0026 PLA1.label[0] != NULL \u0026\u0026\n       PLA2.label != NULL \u0026\u0026 PLA2.label[0] != NULL {\n    PLA_permute(PLA1, PLA2);\n    } else {\n    (void) fmt.Fprintf(os.Stderr, \"Warning: cannot permute columns without names\\n\");\n    return TRUE;\n    }\n\n    if PLA1.F.sf_size != PLA2.F.sf_size {\n    (void) fmt.Fprintf(os.Stderr, \"PLA_verify: PLA's are not the same size\\n\");\n    return TRUE;\n    }\n\n    return verify(PLA2.F, PLA1.F, PLA1.D);\n}\n\n\n\n/*\n *  Permute the columns of PLA1 so that they match the order of PLA2\n *  Discard any columns of PLA1 which are not in PLA2\n *  Association is strictly by the names of the columns of the cover.\n */\nvoid PLA_permute(PLA1, PLA2)\nvar PLA1, PLA2 pPLA;\n{\n    register int i, j, *permute, npermute;\n    register char *labi;\n    char **label;\n\n    /* determine which columns of PLA1 to save, and place these in the list\n     * \"permute\"; the order in this list is the final output order\n     */\n    npermute = 0;\n    permute = ALLOC(int, PLA2.F.sf_size);\n    for i = 0; i \u003c PLA2.F.sf_size; i++ {\n    labi = PLA2.label[i];\n    for j = 0; j \u003c PLA1.F.sf_size; j++ {\n        if int32(strings.Compare(labi, PLA1.label[j])) == 0 {\n        permute[npermute++] = j;\n        break;\n        }\n    }\n    }\n\n    /* permute columns */\n    if PLA1.F != NULL {\n    PLA1.F = sf_permute(PLA1.F, permute, npermute);\n    }\n    if PLA1.R != NULL {\n    PLA1.R = sf_permute(PLA1.R, permute, npermute);\n    }\n    if PLA1.D != NULL {\n    PLA1.D = sf_permute(PLA1.D, permute, npermute);\n    }\n\n    /* permute the labels */\n    label = ALLOC(char *, cube.size);\n    for i = 0; i \u003c npermute; i++ {\n    label[i] = PLA1.label[permute[i]];\n    }\n    for i = npermute; i \u003c cube.size; i++ {\n    label[i] = NULL;\n    }\n    FREE(PLA1.label);\n    PLA1.label = label;\n\n    FREE(permute);\n}\n\n\n\n/*\n *  check_consistency -- test that the ON-set, OFF-set and DC-set form\n *  a partition of the boolean space.\n */\nbool check_consistency(PLA)\nvar PLA pPLA;\n{\n    bool verify_error = FALSE;\n    pcover T;\n\n    T = cv_intersect(PLA.F, PLA.D);\n    if (T.count == 0)\n    fmt.Printf(\"ON-SET and DC-SET are disjoint\\n\");\n    else {\n    fmt.Printf(\"Some minterm(s) belong to both the ON-SET and DC-SET !\\n\");\n    if (verbose_debug)\n        cprint(T);\n    verify_error = TRUE;\n    }\n    (void) fflush(os.Stdout);\n    // inlining of macro free_cover\n    sf_free(T);\n\n    T = cv_intersect(PLA.F, PLA.R);\n    if (T.count == 0)\n    fmt.Printf(\"ON-SET and OFF-SET are disjoint\\n\");\n    else {\n    fmt.Printf(\"Some minterm(s) belong to both the ON-SET and OFF-SET !\\n\");\n    if (verbose_debug)\n        cprint(T);\n    verify_error = TRUE;\n    }\n    (void) fflush(os.Stdout);\n    // inlining of macro free_cover\n    sf_free(T);\n\n    T = cv_intersect(PLA.D, PLA.R);\n    if (T.count == 0)\n    fmt.Printf(\"DC-SET and OFF-SET are disjoint\\n\");\n    else {\n    fmt.Printf(\"Some minterm(s) belong to both the OFF-SET and DC-SET !\\n\");\n    if (verbose_debug)\n        cprint(T);\n    verify_error = TRUE;\n    }\n    (void) fflush(os.Stdout);\n    // inlining of macro free_cover\n    sf_free(T);\n\n    if (tautology(cube3list(PLA.F, PLA.D, PLA.R)))\n    fmt.Printf(\"Union of ON-SET, OFF-SET and DC-SET is the universe\\n\");\n    else {\n    T = complement(cube3list(PLA.F, PLA.D, PLA.R));\n    fmt.Printf(\"There are minterms left unspecified !\\n\");\n    if (verbose_debug)\n        cprint(T);\n    verify_error = TRUE;\n    // inlining of macro free_cover\n    sf_free(T);\n    }\n    (void) fflush(os.Stdout);\n    return verify_error;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

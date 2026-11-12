@@ -1,0 +1,1721 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyShow.c",
+  "SHA256": "a984325e0f9ad449dded2994739d777941737bdec7dd6fa4dad0a26943d2bffa",
+  "Library": [
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1667
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( FileNameDot, \"temp%02d.dot\", spStatic_Ivy_ManShow_Counter++ );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 62,
+        "Column": 17,
+        "ByteOffset": 1796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( FileNameDot, \"w\" )) == nil {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 63,
+        "Column": 9,
+        "ByteOffset": 1840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 63,
+        "Column": 18,
+        "ByteOffset": 1849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 1945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 9,
+        "ByteOffset": 2689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot visualize AIG with more than 200 nodes.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 91,
+        "Column": 18,
+        "ByteOffset": 2698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot visualize AIG with more than 200 nodes.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 94,
+        "Column": 17,
+        "ByteOffset": 2798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (pFile = fopen( pFileName, \"w\" )) == nil {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 9,
+        "ByteOffset": 2840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 95,
+        "Column": 18,
+        "ByteOffset": 2849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 3291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# %s\\n\",  \"AIG structure generated by IVY package\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 3366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 3394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"digraph AIG {\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 3435
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"size = \\\"7.5,10\\\";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 3565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"center = true;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"edge [dir = back];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 5,
+        "ByteOffset": 3800
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 3870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"{\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 5,
+        "ByteOffset": 3899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  node [shape = plaintext];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 3954
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  edge [style = invis];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 4005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  LevelTitle1 [label=\\\"\\\"];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 4060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  LevelTitle2 [label=\\\"\\\"];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 9,
+        "ByteOffset": 4241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  Level%d\", Level );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 9,
+        "ByteOffset": 4287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" [label = \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 9,
+        "ByteOffset": 4349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\\"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 9,
+        "ByteOffset": 4381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\\"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 4413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 4521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  LevelTitle1 -\u003e  LevelTitle2 -\u003e\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 9,
+        "ByteOffset": 4666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  Level%d\",  Level );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 146,
+        "Column": 13,
+        "ByteOffset": 4766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" -\u003e\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 13,
+        "ByteOffset": 4820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \";\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 5,
+        "ByteOffset": 4855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 5,
+        "ByteOffset": 4883
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"}\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 5,
+        "ByteOffset": 4910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 4938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 5000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"{\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 5029
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  rank = same;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 5071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  LevelTitle1;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 5113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  title1 [shape=plaintext,\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 5167
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"          fontsize=20,\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 5217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"          fontname = \\\"Times-Roman\\\",\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 162,
+        "Column": 5,
+        "ByteOffset": 5282
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"          label=\\\"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 5326
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s\", \"AIG structure visualized by ABC\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 5389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 5418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"Benchmark \\\\\\\"%s\\\\\\\". \", \"aig\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 5473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"Time was %s. \",  Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 5532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\\"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 5562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"         ];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 5,
+        "ByteOffset": 5601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"}\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 5,
+        "ByteOffset": 5628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 5656
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 174,
+        "Column": 5,
+        "ByteOffset": 5716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"{\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 175,
+        "Column": 5,
+        "ByteOffset": 5745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  rank = same;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 176,
+        "Column": 5,
+        "ByteOffset": 5787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  LevelTitle2;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 177,
+        "Column": 5,
+        "ByteOffset": 5829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  title2 [shape=plaintext,\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 5,
+        "ByteOffset": 5883
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"          fontsize=18,\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 179,
+        "Column": 5,
+        "ByteOffset": 5933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"          fontname = \\\"Times-Roman\\\",\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 5998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"          label=\\\"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 181,
+        "Column": 5,
+        "ByteOffset": 6042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"The set contains %d logic nodes and spans %d levels.\", Ivy_ManNodeNum(pMan), LevelMax );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 6152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 6181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\\"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 6211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"         ];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 6250
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"}\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 186,
+        "Column": 5,
+        "ByteOffset": 6277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 187,
+        "Column": 5,
+        "ByteOffset": 6305
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 5,
+        "ByteOffset": 6358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"{\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 6387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  rank = same;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 6468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  Level%d;\\n\",  LevelMax );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 197,
+        "Column": 13,
+        "ByteOffset": 6930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"  Node%d%s [label = \\\"%d%s\\\"\", pNode.Id, "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 200,
+        "Column": 13,
+        "ByteOffset": 7116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"  Node%d%s [label = \\\"%d%s(%d%s)\\\"\", pNode.Id, "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 9,
+        "ByteOffset": 7381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \", shape = %s\", (Ivy_ObjIsLatch(pNode)? \"box\":\"invtriangle\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 204,
+        "Column": 9,
+        "ByteOffset": 7469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \", color = coral, fillcolor = coral\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 205,
+        "Column": 9,
+        "ByteOffset": 7533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 7575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"}\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 7602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 7630
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 214,
+        "Column": 9,
+        "ByteOffset": 7751
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"{\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 215,
+        "Column": 9,
+        "ByteOffset": 7784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  rank = same;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 9,
+        "ByteOffset": 7873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  Level%d;\\n\",  Level );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 17,
+        "ByteOffset": 8305
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"  Node%d [label = \\\"%d\\\"\", pNode.Id, pNode.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 17,
+        "ByteOffset": 8409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"  Node%d [label = \\\"%d(%d%s)\\\"\", pNode.Id, pNode.Id, "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 13,
+        "ByteOffset": 8587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \", shape = ellipse\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 228,
+        "Column": 17,
+        "ByteOffset": 8681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \", style = filled\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 13,
+        "ByteOffset": 8733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 232,
+        "Column": 9,
+        "ByteOffset": 8787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"}\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 233,
+        "Column": 9,
+        "ByteOffset": 8818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 9,
+        "ByteOffset": 8850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 238,
+        "Column": 5,
+        "ByteOffset": 8914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"{\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 239,
+        "Column": 5,
+        "ByteOffset": 8943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  rank = same;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 241,
+        "Column": 5,
+        "ByteOffset": 9024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  Level%d;\\n\",  0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 246,
+        "Column": 9,
+        "ByteOffset": 9231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  Node%d [label = \\\"Const1\\\"\", pNode.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 9,
+        "ByteOffset": 9299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \", shape = ellipse\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 248,
+        "Column": 9,
+        "ByteOffset": 9346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \", color = coral, fillcolor = coral\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 9,
+        "ByteOffset": 9410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 13,
+        "ByteOffset": 9859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"  Node%d%s [label = \\\"%d%s\\\"\", pNode.Id, "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 257,
+        "Column": 13,
+        "ByteOffset": 10047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"  Node%d%s [label = \\\"%d%s(%d%s)\\\"\", pNode.Id, "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 260,
+        "Column": 9,
+        "ByteOffset": 10314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \", shape = %s\", (Ivy_ObjIsLatch(pNode)? \"box\":\"triangle\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 9,
+        "ByteOffset": 10399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \", color = coral, fillcolor = coral\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 262,
+        "Column": 9,
+        "ByteOffset": 10463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 10505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"}\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 10532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 5,
+        "ByteOffset": 10560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 5,
+        "ByteOffset": 10642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"title1 -\u003e title2 [style = invis];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 272,
+        "Column": 9,
+        "ByteOffset": 11041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"title2 -\u003e Node%d%s [style = invis];\\n\", pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\") ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 9,
+        "ByteOffset": 11597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"Node%d%s\",  pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 281,
+        "Column": 9,
+        "ByteOffset": 11681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" -\u003e \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 282,
+        "Column": 9,
+        "ByteOffset": 11715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"Node%d%s\",  Ivy_ObjFaninId0(pNode), (Ivy_ObjIsLatch(Ivy_ObjFanin0(pNode))? \"_out\":\"\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 9,
+        "ByteOffset": 11829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" [\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 284,
+        "Column": 9,
+        "ByteOffset": 11861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"style = %s\", Ivy_ObjFaninC0(pNode)? \"dotted\" : \"bold\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 9,
+        "ByteOffset": 12102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"]\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 288,
+        "Column": 9,
+        "ByteOffset": 12133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 292,
+        "Column": 9,
+        "ByteOffset": 12281
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"Node%d\",  pNode.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 293,
+        "Column": 9,
+        "ByteOffset": 12328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" -\u003e \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 294,
+        "Column": 9,
+        "ByteOffset": 12362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"Node%d%s\",  Ivy_ObjFaninId1(pNode), (Ivy_ObjIsLatch(Ivy_ObjFanin1(pNode))? \"_out\":\"\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 295,
+        "Column": 9,
+        "ByteOffset": 12476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" [\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 296,
+        "Column": 9,
+        "ByteOffset": 12508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"style = %s\", Ivy_ObjFaninC1(pNode)? \"dotted\" : \"bold\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 299,
+        "Column": 9,
+        "ByteOffset": 12749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"]\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 9,
+        "ByteOffset": 12780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 17,
+        "ByteOffset": 13060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"Node%d\",  pPrev.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 17,
+        "ByteOffset": 13115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" -\u003e \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 307,
+        "Column": 17,
+        "ByteOffset": 13157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"Node%d\",  pTemp.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 308,
+        "Column": 17,
+        "ByteOffset": 13212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" [style = %s]\", Ivy_IsComplement(pTemp.pEquiv)? \"dotted\" : \"bold\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 309,
+        "Column": 17,
+        "ByteOffset": 13314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 313,
+        "Column": 13,
+        "ByteOffset": 13448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"Node%d\",  pPrev.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 314,
+        "Column": 13,
+        "ByteOffset": 13499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" -\u003e \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 315,
+        "Column": 13,
+        "ByteOffset": 13537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"Node%d\",  pNode.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 316,
+        "Column": 13,
+        "ByteOffset": 13588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" [style = %s]\", Ivy_IsComplement(pPrev.pEquiv)? \"dotted\" : \"bold\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 317,
+        "Column": 13,
+        "ByteOffset": 13686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 322,
+        "Column": 5,
+        "ByteOffset": 13738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"}\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 5,
+        "ByteOffset": 13765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 324,
+        "Column": 5,
+        "ByteOffset": 13793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 325,
+        "Column": 5,
+        "ByteOffset": 13821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_ManShow",
+      "Start": 1327,
+      "End": 2033,
+      "BodyStart": 1394,
+      "Original": "void Ivy_ManShow( Ivy_Man_t * pMan, int fHaig, Vec_Ptr_t * vBold )\n{\n    extern void Abc_ShowFile( char * FileNameDot );\n    static int Counter = 0;\n    char FileNameDot[200];\n    FILE * pFile;\n    // create the file name\n//    Ivy_ShowGetFileName( pMan-\u003epName, FileNameDot );\n    sprintf( FileNameDot, \"temp%02d.dot\", Counter++ );\n    // check that the file can be opened\n    if ( (pFile = fopen( FileNameDot, \"w\" )) == NULL )\n    {\n        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );\n        return;\n    }\n    fclose( pFile );\n    // generate the file\n    Ivy_WriteDotAig( pMan, FileNameDot, fHaig, vBold );\n    // visualize the file \n    Abc_ShowFile( FileNameDot );\n}",
+      "Draft": "func Ivy_ManShow(pMan *Ivy_Man_t, fHaig int32, vBold *Vec_Ptr_t) {\n    extern void Abc_ShowFile( char * FileNameDot );\n    \n    var FileNameDot string // was [200]byte in C\n\n    var pFile *os.File;\n    // create the file name\n//    Ivy_ShowGetFileName( pMan-\u003epName, FileNameDot );\n    FileNameDot = fmt.Sprintf(\"temp%02d.dot\", spStatic_Ivy_ManShow_Counter++);\n    // check that the file can be opened\n    if (pFile = fopen( FileNameDot, \"w\" )) == nil {\n        fprintf( os.Stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );\n        return;\n    }\n    _ = (pFile).Close();\n    // generate the file\n    Ivy_WriteDotAig( pMan, FileNameDot, fHaig, vBold );\n    // visualize the file \n    Abc_ShowFile( FileNameDot );\n}"
+    },
+    {
+      "Name": "Ivy_WriteDotAig",
+      "Start": 2386,
+      "End": 12553,
+      "BodyStart": 2475,
+      "Original": "void Ivy_WriteDotAig( Ivy_Man_t * pMan, char * pFileName, int fHaig, Vec_Ptr_t * vBold )\n{\n    FILE * pFile;\n    Ivy_Obj_t * pNode, * pTemp, * pPrev;\n    int LevelMax, Level, i;\n\n    if ( Ivy_ManNodeNum(pMan) \u003e 200 )\n    {\n        fprintf( stdout, \"Cannot visualize AIG with more than 200 nodes.\\n\" );\n        return;\n    }\n    if ( (pFile = fopen( pFileName, \"w\" )) == NULL )\n    {\n        fprintf( stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n\n    // mark the nodes\n    if ( vBold )\n        Vec_PtrForEachEntry( Ivy_Obj_t *, vBold, pNode, i )\n            pNode-\u003efMarkB = 1;\n\n    // compute levels\n    LevelMax = 1 + Ivy_ManSetLevels( pMan, fHaig );\n\n    // write the DOT header\n    fprintf( pFile, \"# %s\\n\",  \"AIG structure generated by IVY package\" );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \"digraph AIG {\\n\" );\n    fprintf( pFile, \"size = \\\"7.5,10\\\";\\n\" );\n//  fprintf( pFile, \"ranksep = 0.5;\\n\" );\n//  fprintf( pFile, \"nodesep = 0.5;\\n\" );\n    fprintf( pFile, \"center = true;\\n\" );\n//  fprintf( pFile, \"orientation = landscape;\\n\" );\n//  fprintf( pFile, \"edge [fontsize = 10];\\n\" );\n//  fprintf( pFile, \"edge [dir = none];\\n\" );\n    fprintf( pFile, \"edge [dir = back];\\n\" );\n    fprintf( pFile, \"\\n\" );\n\n    // labels on the left of the picture\n    fprintf( pFile, \"{\\n\" );\n    fprintf( pFile, \"  node [shape = plaintext];\\n\" );\n    fprintf( pFile, \"  edge [style = invis];\\n\" );\n    fprintf( pFile, \"  LevelTitle1 [label=\\\"\\\"];\\n\" );\n    fprintf( pFile, \"  LevelTitle2 [label=\\\"\\\"];\\n\" );\n    // generate node names with labels\n    for ( Level = LevelMax; Level \u003e= 0; Level-- )\n    {\n        // the visible node name\n        fprintf( pFile, \"  Level%d\", Level );\n        fprintf( pFile, \" [label = \" );\n        // label name\n        fprintf( pFile, \"\\\"\" );\n        fprintf( pFile, \"\\\"\" );\n        fprintf( pFile, \"];\\n\" );\n    }\n\n    // genetate the sequence of visible/invisible nodes to mark levels\n    fprintf( pFile, \"  LevelTitle1 -\u003e  LevelTitle2 -\u003e\" );\n    for ( Level = LevelMax; Level \u003e= 0; Level-- )\n    {\n        // the visible node name\n        fprintf( pFile, \"  Level%d\",  Level );\n        // the connector\n        if ( Level != 0 )\n            fprintf( pFile, \" -\u003e\" );\n        else\n            fprintf( pFile, \";\" );\n    }\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \"}\" );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \"\\n\" );\n\n    // generate title box on top\n    fprintf( pFile, \"{\\n\" );\n    fprintf( pFile, \"  rank = same;\\n\" );\n    fprintf( pFile, \"  LevelTitle1;\\n\" );\n    fprintf( pFile, \"  title1 [shape=plaintext,\\n\" );\n    fprintf( pFile, \"          fontsize=20,\\n\" );\n    fprintf( pFile, \"          fontname = \\\"Times-Roman\\\",\\n\" );\n    fprintf( pFile, \"          label=\\\"\" );\n    fprintf( pFile, \"%s\", \"AIG structure visualized by ABC\" );\n    fprintf( pFile, \"\\\\n\" );\n    fprintf( pFile, \"Benchmark \\\\\\\"%s\\\\\\\". \", \"aig\" );\n    fprintf( pFile, \"Time was %s. \",  Extra_TimeStamp() );\n    fprintf( pFile, \"\\\"\\n\" );\n    fprintf( pFile, \"         ];\\n\" );\n    fprintf( pFile, \"}\" );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \"\\n\" );\n\n    // generate statistics box\n    fprintf( pFile, \"{\\n\" );\n    fprintf( pFile, \"  rank = same;\\n\" );\n    fprintf( pFile, \"  LevelTitle2;\\n\" );\n    fprintf( pFile, \"  title2 [shape=plaintext,\\n\" );\n    fprintf( pFile, \"          fontsize=18,\\n\" );\n    fprintf( pFile, \"          fontname = \\\"Times-Roman\\\",\\n\" );\n    fprintf( pFile, \"          label=\\\"\" );\n    fprintf( pFile, \"The set contains %d logic nodes and spans %d levels.\", Ivy_ManNodeNum(pMan), LevelMax );\n    fprintf( pFile, \"\\\\n\" );\n    fprintf( pFile, \"\\\"\\n\" );\n    fprintf( pFile, \"         ];\\n\" );\n    fprintf( pFile, \"}\" );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \"\\n\" );\n\n    // generate the COs\n    fprintf( pFile, \"{\\n\" );\n    fprintf( pFile, \"  rank = same;\\n\" );\n    // the labeling node of this level\n    fprintf( pFile, \"  Level%d;\\n\",  LevelMax );\n    // generate the CO nodes\n    Ivy_ManForEachCo( pMan, pNode, i )\n    {\n        if ( fHaig || pNode-\u003epEquiv == NULL )\n            fprintf( pFile, \"  Node%d%s [label = \\\"%d%s\\\"\", pNode-\u003eId, \n                (Ivy_ObjIsLatch(pNode)? \"_in\":\"\"), pNode-\u003eId, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\") );\n        else\n            fprintf( pFile, \"  Node%d%s [label = \\\"%d%s(%d%s)\\\"\", pNode-\u003eId, \n                (Ivy_ObjIsLatch(pNode)? \"_in\":\"\"), pNode-\u003eId, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\"), \n                    Ivy_Regular(pNode-\u003epEquiv)-\u003eId, Ivy_IsComplement(pNode-\u003epEquiv)? \"\\'\":\"\" );\n        fprintf( pFile, \", shape = %s\", (Ivy_ObjIsLatch(pNode)? \"box\":\"invtriangle\") );\n        fprintf( pFile, \", color = coral, fillcolor = coral\" );\n        fprintf( pFile, \"];\\n\" );\n    }\n    fprintf( pFile, \"}\" );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \"\\n\" );\n\n    // generate nodes of each rank\n    for ( Level = LevelMax - 1; Level \u003e 0; Level-- )\n    {\n        fprintf( pFile, \"{\\n\" );\n        fprintf( pFile, \"  rank = same;\\n\" );\n        // the labeling node of this level\n        fprintf( pFile, \"  Level%d;\\n\",  Level );\n        Ivy_ManForEachObj( pMan, pNode, i )\n        {\n            if ( (int)pNode-\u003eLevel != Level )\n                continue;\n            if ( fHaig || pNode-\u003epEquiv == NULL )\n                fprintf( pFile, \"  Node%d [label = \\\"%d\\\"\", pNode-\u003eId, pNode-\u003eId );\n            else \n                fprintf( pFile, \"  Node%d [label = \\\"%d(%d%s)\\\"\", pNode-\u003eId, pNode-\u003eId, \n                    Ivy_Regular(pNode-\u003epEquiv)-\u003eId, Ivy_IsComplement(pNode-\u003epEquiv)? \"\\'\":\"\" );\n            fprintf( pFile, \", shape = ellipse\" );\n            if ( vBold \u0026\u0026 pNode-\u003efMarkB )\n                fprintf( pFile, \", style = filled\" );\n            fprintf( pFile, \"];\\n\" );\n        }\n        fprintf( pFile, \"}\" );\n        fprintf( pFile, \"\\n\" );\n        fprintf( pFile, \"\\n\" );\n    }\n\n    // generate the CI nodes\n    fprintf( pFile, \"{\\n\" );\n    fprintf( pFile, \"  rank = same;\\n\" );\n    // the labeling node of this level\n    fprintf( pFile, \"  Level%d;\\n\",  0 );\n    // generate constant node\n    if ( Ivy_ObjRefs(Ivy_ManConst1(pMan)) \u003e 0 )\n    {\n        pNode = Ivy_ManConst1(pMan);\n        // check if the costant node is present\n        fprintf( pFile, \"  Node%d [label = \\\"Const1\\\"\", pNode-\u003eId );\n        fprintf( pFile, \", shape = ellipse\" );\n        fprintf( pFile, \", color = coral, fillcolor = coral\" );\n        fprintf( pFile, \"];\\n\" );\n    }\n    // generate the CI nodes\n    Ivy_ManForEachCi( pMan, pNode, i )\n    {\n        if ( fHaig || pNode-\u003epEquiv == NULL )\n            fprintf( pFile, \"  Node%d%s [label = \\\"%d%s\\\"\", pNode-\u003eId, \n                (Ivy_ObjIsLatch(pNode)? \"_out\":\"\"), pNode-\u003eId, (Ivy_ObjIsLatch(pNode)? \"_out\":\"\") );\n        else\n            fprintf( pFile, \"  Node%d%s [label = \\\"%d%s(%d%s)\\\"\", pNode-\u003eId, \n                (Ivy_ObjIsLatch(pNode)? \"_out\":\"\"), pNode-\u003eId, (Ivy_ObjIsLatch(pNode)? \"_out\":\"\"), \n                    Ivy_Regular(pNode-\u003epEquiv)-\u003eId, Ivy_IsComplement(pNode-\u003epEquiv)? \"\\'\":\"\" );\n        fprintf( pFile, \", shape = %s\", (Ivy_ObjIsLatch(pNode)? \"box\":\"triangle\") );\n        fprintf( pFile, \", color = coral, fillcolor = coral\" );\n        fprintf( pFile, \"];\\n\" );\n    }\n    fprintf( pFile, \"}\" );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \"\\n\" );\n\n    // generate invisible edges from the square down\n    fprintf( pFile, \"title1 -\u003e title2 [style = invis];\\n\" );\n    Ivy_ManForEachCo( pMan, pNode, i )\n        fprintf( pFile, \"title2 -\u003e Node%d%s [style = invis];\\n\", pNode-\u003eId, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\") );\n\n    // generate edges\n    Ivy_ManForEachObj( pMan, pNode, i )\n    {\n        if ( !Ivy_ObjIsNode(pNode) \u0026\u0026 !Ivy_ObjIsCo(pNode) \u0026\u0026 !Ivy_ObjIsBuf(pNode) )\n            continue;\n        // generate the edge from this node to the next\n        fprintf( pFile, \"Node%d%s\",  pNode-\u003eId, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\") );\n        fprintf( pFile, \" -\u003e \" );\n        fprintf( pFile, \"Node%d%s\",  Ivy_ObjFaninId0(pNode), (Ivy_ObjIsLatch(Ivy_ObjFanin0(pNode))? \"_out\":\"\") );\n        fprintf( pFile, \" [\" );\n        fprintf( pFile, \"style = %s\", Ivy_ObjFaninC0(pNode)? \"dotted\" : \"bold\" );\n//        if ( Ivy_NtkIsSeq(pNode-\u003epMan) \u0026\u0026 Seq_ObjFaninL0(pNode) \u003e 0 )\n//        fprintf( pFile, \", label = \\\"%s\\\"\", Seq_ObjFaninGetInitPrintable(pNode,0) );\n        fprintf( pFile, \"]\" );\n        fprintf( pFile, \";\\n\" );\n        if ( !Ivy_ObjIsNode(pNode) )\n            continue;\n        // generate the edge from this node to the next\n        fprintf( pFile, \"Node%d\",  pNode-\u003eId );\n        fprintf( pFile, \" -\u003e \" );\n        fprintf( pFile, \"Node%d%s\",  Ivy_ObjFaninId1(pNode), (Ivy_ObjIsLatch(Ivy_ObjFanin1(pNode))? \"_out\":\"\") );\n        fprintf( pFile, \" [\" );\n        fprintf( pFile, \"style = %s\", Ivy_ObjFaninC1(pNode)? \"dotted\" : \"bold\" );\n//        if ( Ivy_NtkIsSeq(pNode-\u003epMan) \u0026\u0026 Seq_ObjFaninL1(pNode) \u003e 0 )\n//        fprintf( pFile, \", label = \\\"%s\\\"\", Seq_ObjFaninGetInitPrintable(pNode,1) );\n        fprintf( pFile, \"]\" );\n        fprintf( pFile, \";\\n\" );\n        // generate the edges between the equivalent nodes\n        if ( fHaig \u0026\u0026 pNode-\u003epEquiv \u0026\u0026 Ivy_ObjRefs(pNode) \u003e 0 )\n        {\n            pPrev = pNode;\n            for ( pTemp = pNode-\u003epEquiv; pTemp != pNode; pTemp = Ivy_Regular(pTemp-\u003epEquiv) )\n            {\n                fprintf( pFile, \"Node%d\",  pPrev-\u003eId );\n                fprintf( pFile, \" -\u003e \" );\n                fprintf( pFile, \"Node%d\",  pTemp-\u003eId );\n                fprintf( pFile, \" [style = %s]\", Ivy_IsComplement(pTemp-\u003epEquiv)? \"dotted\" : \"bold\" );\n                fprintf( pFile, \";\\n\" );\n                pPrev = pTemp;\n            }\n            // connect the last node with the first\n            fprintf( pFile, \"Node%d\",  pPrev-\u003eId );\n            fprintf( pFile, \" -\u003e \" );\n            fprintf( pFile, \"Node%d\",  pNode-\u003eId );\n            fprintf( pFile, \" [style = %s]\", Ivy_IsComplement(pPrev-\u003epEquiv)? \"dotted\" : \"bold\" );\n            fprintf( pFile, \";\\n\" );\n        }\n    }\n\n    fprintf( pFile, \"}\" );\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \"\\n\" );\n    fclose( pFile );\n\n    // unmark nodes\n    if ( vBold )\n        Vec_PtrForEachEntry( Ivy_Obj_t *, vBold, pNode, i )\n            pNode-\u003efMarkB = 0;\n}",
+      "Draft": "func Ivy_WriteDotAig(pMan *Ivy_Man_t, pFileName string, fHaig int32, vBold *Vec_Ptr_t) {\n    var pFile *os.File;\n    var pNode, pTemp, pPrev *Ivy_Obj_t;\n    var LevelMax, Level, i int32;\n\n    if Ivy_ManNodeNum(pMan) \u003e 200 {\n        fmt.Fprintf(os.Stdout, \"Cannot visualize AIG with more than 200 nodes.\\n\");\n        return;\n    }\n    if (pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666)) == nil {\n        fmt.Fprintf(os.Stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n\n    // mark the nodes\n    if vBold != nil {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vBold)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(vBold, i)), 1); i++  {\n            pNode.fMarkB = 1;\n        } }\n\n    // compute levels\n    LevelMax = 1 + Ivy_ManSetLevels( pMan, fHaig );\n\n    // write the DOT header\n    fmt.Fprintf(pFile, \"# %s\\n\", \"AIG structure generated by IVY package\");\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"digraph AIG {\\n\");\n    fmt.Fprintf(pFile, \"size = \\\"7.5,10\\\";\\n\");\n//  fprintf( pFile, \"ranksep = 0.5;\\n\" );\n//  fprintf( pFile, \"nodesep = 0.5;\\n\" );\n    fmt.Fprintf(pFile, \"center = true;\\n\");\n//  fprintf( pFile, \"orientation = landscape;\\n\" );\n//  fprintf( pFile, \"edge [fontsize = 10];\\n\" );\n//  fprintf( pFile, \"edge [dir = none];\\n\" );\n    fmt.Fprintf(pFile, \"edge [dir = back];\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // labels on the left of the picture\n    fmt.Fprintf(pFile, \"{\\n\");\n    fmt.Fprintf(pFile, \"  node [shape = plaintext];\\n\");\n    fmt.Fprintf(pFile, \"  edge [style = invis];\\n\");\n    fmt.Fprintf(pFile, \"  LevelTitle1 [label=\\\"\\\"];\\n\");\n    fmt.Fprintf(pFile, \"  LevelTitle2 [label=\\\"\\\"];\\n\");\n    // generate node names with labels\n    for  Level = LevelMax; Level \u003e= 0; Level--  {\n        // the visible node name\n        fmt.Fprintf(pFile, \"  Level%d\", Level);\n        fmt.Fprintf(pFile, \" [label = \");\n        // label name\n        fmt.Fprintf(pFile, \"\\\"\");\n        fmt.Fprintf(pFile, \"\\\"\");\n        fmt.Fprintf(pFile, \"];\\n\");\n    }\n\n    // genetate the sequence of visible/invisible nodes to mark levels\n    fmt.Fprintf(pFile, \"  LevelTitle1 -\u003e  LevelTitle2 -\u003e\");\n    for  Level = LevelMax; Level \u003e= 0; Level--  {\n        // the visible node name\n        fmt.Fprintf(pFile, \"  Level%d\", Level);\n        // the connector\n        if Level != 0 {\n            fmt.Fprintf(pFile, \" -\u003e\");\n        } else {\n            fmt.Fprintf(pFile, \";\"); }\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"}\");\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // generate title box on top\n    fmt.Fprintf(pFile, \"{\\n\");\n    fmt.Fprintf(pFile, \"  rank = same;\\n\");\n    fmt.Fprintf(pFile, \"  LevelTitle1;\\n\");\n    fmt.Fprintf(pFile, \"  title1 [shape=plaintext,\\n\");\n    fmt.Fprintf(pFile, \"          fontsize=20,\\n\");\n    fmt.Fprintf(pFile, \"          fontname = \\\"Times-Roman\\\",\\n\");\n    fmt.Fprintf(pFile, \"          label=\\\"\");\n    fmt.Fprintf(pFile, \"%s\", \"AIG structure visualized by ABC\");\n    fmt.Fprintf(pFile, \"\\\\n\");\n    fmt.Fprintf(pFile, \"Benchmark \\\\\\\"%s\\\\\\\". \", \"aig\");\n    fmt.Fprintf(pFile, \"Time was %s. \", Extra_TimeStamp());\n    fmt.Fprintf(pFile, \"\\\"\\n\");\n    fmt.Fprintf(pFile, \"         ];\\n\");\n    fmt.Fprintf(pFile, \"}\");\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // generate statistics box\n    fmt.Fprintf(pFile, \"{\\n\");\n    fmt.Fprintf(pFile, \"  rank = same;\\n\");\n    fmt.Fprintf(pFile, \"  LevelTitle2;\\n\");\n    fmt.Fprintf(pFile, \"  title2 [shape=plaintext,\\n\");\n    fmt.Fprintf(pFile, \"          fontsize=18,\\n\");\n    fmt.Fprintf(pFile, \"          fontname = \\\"Times-Roman\\\",\\n\");\n    fmt.Fprintf(pFile, \"          label=\\\"\");\n    fmt.Fprintf(pFile, \"The set contains %d logic nodes and spans %d levels.\", Ivy_ManNodeNum(pMan), LevelMax);\n    fmt.Fprintf(pFile, \"\\\\n\");\n    fmt.Fprintf(pFile, \"\\\"\\n\");\n    fmt.Fprintf(pFile, \"         ];\\n\");\n    fmt.Fprintf(pFile, \"}\");\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // generate the COs\n    fmt.Fprintf(pFile, \"{\\n\");\n    fmt.Fprintf(pFile, \"  rank = same;\\n\");\n    // the labeling node of this level\n    fmt.Fprintf(pFile, \"  Level%d;\\n\", LevelMax);\n    // generate the CO nodes\n    // inlining of macro Ivy_ManForEachCo\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pNode) == nil {} else if !Ivy_ObjIsCo(pNode) {} else {\n        if (fHaig != 0) || pNode.pEquiv == nil {\n            fmt.Fprintf(pFile, \"  Node%d%s [label = \\\"%d%s\\\"\", pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\"), pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\"));\n        } else {\n            fmt.Fprintf(pFile, \"  Node%d%s [label = \\\"%d%s(%d%s)\\\"\", pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\"), pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\"), Ivy_Regular(pNode.pEquiv).Id, Ivy_IsComplement(pNode.pEquiv)? \"\\'\":\"\"); }\n        fmt.Fprintf(pFile, \", shape = %s\", (Ivy_ObjIsLatch(pNode)? \"box\":\"invtriangle\"));\n        fmt.Fprintf(pFile, \", color = coral, fillcolor = coral\");\n        fmt.Fprintf(pFile, \"];\\n\");\n    }\n    }\n    fmt.Fprintf(pFile, \"}\");\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // generate nodes of each rank\n    for  Level = LevelMax - 1; Level \u003e 0; Level--  {\n        fmt.Fprintf(pFile, \"{\\n\");\n        fmt.Fprintf(pFile, \"  rank = same;\\n\");\n        // the labeling node of this level\n        fmt.Fprintf(pFile, \"  Level%d;\\n\", Level);\n        // inlining of macro Ivy_ManForEachObj\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pNode) == nil {} else {\n            if int32(pNode.Level) != Level {\n                continue; }\n            if (fHaig != 0) || pNode.pEquiv == nil {\n                fmt.Fprintf(pFile, \"  Node%d [label = \\\"%d\\\"\", pNode.Id, pNode.Id);\n            } else { \n                fmt.Fprintf(pFile, \"  Node%d [label = \\\"%d(%d%s)\\\"\", pNode.Id, pNode.Id, Ivy_Regular(pNode.pEquiv).Id, Ivy_IsComplement(pNode.pEquiv)? \"\\'\":\"\"); }\n            fmt.Fprintf(pFile, \", shape = ellipse\");\n            if (vBold != nil) \u0026\u0026 pNode.fMarkB {\n                fmt.Fprintf(pFile, \", style = filled\"); }\n            fmt.Fprintf(pFile, \"];\\n\");\n        }\n        }\n        fmt.Fprintf(pFile, \"}\");\n        fmt.Fprintf(pFile, \"\\n\");\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n\n    // generate the CI nodes\n    fmt.Fprintf(pFile, \"{\\n\");\n    fmt.Fprintf(pFile, \"  rank = same;\\n\");\n    // the labeling node of this level\n    fmt.Fprintf(pFile, \"  Level%d;\\n\", 0);\n    // generate constant node\n    if Ivy_ObjRefs(Ivy_ManConst1(pMan)) \u003e 0 {\n        pNode = Ivy_ManConst1(pMan);\n        // check if the costant node is present\n        fmt.Fprintf(pFile, \"  Node%d [label = \\\"Const1\\\"\", pNode.Id);\n        fmt.Fprintf(pFile, \", shape = ellipse\");\n        fmt.Fprintf(pFile, \", color = coral, fillcolor = coral\");\n        fmt.Fprintf(pFile, \"];\\n\");\n    }\n    // generate the CI nodes\n    // inlining of macro Ivy_ManForEachCi\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pNode) == nil {} else if !Ivy_ObjIsCi(pNode) {} else {\n        if (fHaig != 0) || pNode.pEquiv == nil {\n            fmt.Fprintf(pFile, \"  Node%d%s [label = \\\"%d%s\\\"\", pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_out\":\"\"), pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_out\":\"\"));\n        } else {\n            fmt.Fprintf(pFile, \"  Node%d%s [label = \\\"%d%s(%d%s)\\\"\", pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_out\":\"\"), pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_out\":\"\"), Ivy_Regular(pNode.pEquiv).Id, Ivy_IsComplement(pNode.pEquiv)? \"\\'\":\"\"); }\n        fmt.Fprintf(pFile, \", shape = %s\", (Ivy_ObjIsLatch(pNode)? \"box\":\"triangle\"));\n        fmt.Fprintf(pFile, \", color = coral, fillcolor = coral\");\n        fmt.Fprintf(pFile, \"];\\n\");\n    }\n    }\n    fmt.Fprintf(pFile, \"}\");\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // generate invisible edges from the square down\n    fmt.Fprintf(pFile, \"title1 -\u003e title2 [style = invis];\\n\");\n    // inlining of macro Ivy_ManForEachCo\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pNode) == nil {} else if !Ivy_ObjIsCo(pNode) {} else {\n        fmt.Fprintf(pFile, \"title2 -\u003e Node%d%s [style = invis];\\n\", pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\")); }\n    }\n\n    // generate edges\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pNode) == nil {} else {\n        if !Ivy_ObjIsNode(pNode) \u0026\u0026 !Ivy_ObjIsCo(pNode) \u0026\u0026 !Ivy_ObjIsBuf(pNode) {\n            continue; }\n        // generate the edge from this node to the next\n        fmt.Fprintf(pFile, \"Node%d%s\", pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\"));\n        fmt.Fprintf(pFile, \" -\u003e \");\n        fmt.Fprintf(pFile, \"Node%d%s\", Ivy_ObjFaninId0(pNode), (Ivy_ObjIsLatch(Ivy_ObjFanin0(pNode))? \"_out\":\"\"));\n        fmt.Fprintf(pFile, \" [\");\n        fmt.Fprintf(pFile, \"style = %s\", Ivy_ObjFaninC0(pNode)? \"dotted\" : \"bold\");\n//        if ( Ivy_NtkIsSeq(pNode-\u003epMan) \u0026\u0026 Seq_ObjFaninL0(pNode) \u003e 0 )\n//        fprintf( pFile, \", label = \\\"%s\\\"\", Seq_ObjFaninGetInitPrintable(pNode,0) );\n        fmt.Fprintf(pFile, \"]\");\n        fmt.Fprintf(pFile, \";\\n\");\n        if !Ivy_ObjIsNode(pNode) {\n            continue; }\n        // generate the edge from this node to the next\n        fmt.Fprintf(pFile, \"Node%d\", pNode.Id);\n        fmt.Fprintf(pFile, \" -\u003e \");\n        fmt.Fprintf(pFile, \"Node%d%s\", Ivy_ObjFaninId1(pNode), (Ivy_ObjIsLatch(Ivy_ObjFanin1(pNode))? \"_out\":\"\"));\n        fmt.Fprintf(pFile, \" [\");\n        fmt.Fprintf(pFile, \"style = %s\", Ivy_ObjFaninC1(pNode)? \"dotted\" : \"bold\");\n//        if ( Ivy_NtkIsSeq(pNode-\u003epMan) \u0026\u0026 Seq_ObjFaninL1(pNode) \u003e 0 )\n//        fprintf( pFile, \", label = \\\"%s\\\"\", Seq_ObjFaninGetInitPrintable(pNode,1) );\n        fmt.Fprintf(pFile, \"]\");\n        fmt.Fprintf(pFile, \";\\n\");\n        // generate the edges between the equivalent nodes\n        if (fHaig != 0) \u0026\u0026 pNode.pEquiv \u0026\u0026 Ivy_ObjRefs(pNode) \u003e 0 {\n            pPrev = pNode;\n            for  pTemp = pNode.pEquiv; pTemp != pNode; pTemp = Ivy_Regular(pTemp.pEquiv)  {\n                fmt.Fprintf(pFile, \"Node%d\", pPrev.Id);\n                fmt.Fprintf(pFile, \" -\u003e \");\n                fmt.Fprintf(pFile, \"Node%d\", pTemp.Id);\n                fmt.Fprintf(pFile, \" [style = %s]\", Ivy_IsComplement(pTemp.pEquiv)? \"dotted\" : \"bold\");\n                fmt.Fprintf(pFile, \";\\n\");\n                pPrev = pTemp;\n            }\n            // connect the last node with the first\n            fmt.Fprintf(pFile, \"Node%d\", pPrev.Id);\n            fmt.Fprintf(pFile, \" -\u003e \");\n            fmt.Fprintf(pFile, \"Node%d\", pNode.Id);\n            fmt.Fprintf(pFile, \" [style = %s]\", Ivy_IsComplement(pPrev.pEquiv)? \"dotted\" : \"bold\");\n            fmt.Fprintf(pFile, \";\\n\");\n        }\n    }\n    }\n\n    fmt.Fprintf(pFile, \"}\");\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n\n    // unmark nodes\n    if vBold != nil {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vBold)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(vBold, i)), 1); i++  {\n            pNode.fMarkB = 0;\n        } }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyShow.c::mechanical::static::1452",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1452,
+      "End": 1458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyShow.c::pointer-cast::3032",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2924,
+      "End": 2924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyShow.c::pointer-cast::6701",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6378,
+      "End": 6378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyShow.c::pointer-cast::8046",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7471,
+      "End": 7471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyShow.c::pointer-cast::9669",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8826,
+      "End": 8826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyShow.c::pointer-cast::10911",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9764,
+      "End": 9764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyShow.c::pointer-cast::11338",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9939,
+      "End": 9939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyShow.c::pointer-cast::14025",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12469,
+      "End": 12469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyShow.c::Ivy_ManShow",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManShow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1327,
+      "End": 2033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyShow.c::ternary::Ivy_WriteDotAig",
+      "Category": "ternary-review",
+      "Symbol": "Ivy_WriteDotAig",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2386,
+      "End": 12553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyShow.c::Ivy_WriteDotAig",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_WriteDotAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2386,
+      "End": 12553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyShow.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12801
+    }
+  ],
+  "Draft": "package ivy\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ivyShow.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [Visualization of HAIG.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: ivyShow.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Ivy_WriteDotAig( Ivy_Man_t * pMan, char * pFileName, int fHaig, Vec_Ptr_t * vBold );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Ivy_ManShow_Counter int32;\nfunc Ivy_ManShow(pMan *Ivy_Man_t, fHaig int32, vBold *Vec_Ptr_t) {\n    extern void Abc_ShowFile( char * FileNameDot );\n    \n    var FileNameDot string // was [200]byte in C\n\n    var pFile *os.File;\n    // create the file name\n//    Ivy_ShowGetFileName( pMan-\u003epName, FileNameDot );\n    FileNameDot = fmt.Sprintf(\"temp%02d.dot\", spStatic_Ivy_ManShow_Counter++);\n    // check that the file can be opened\n    if (pFile = fopen( FileNameDot, \"w\" )) == nil {\n        fprintf( os.Stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", FileNameDot );\n        return;\n    }\n    _ = (pFile).Close();\n    // generate the file\n    Ivy_WriteDotAig( pMan, FileNameDot, fHaig, vBold );\n    // visualize the file \n    Abc_ShowFile( FileNameDot );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the graph structure of AIG for DOT.]\n\n  Description [Useful for graph visualization using tools such as GraphViz: \n  http://www.graphviz.org/]\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_WriteDotAig(pMan *Ivy_Man_t, pFileName string, fHaig int32, vBold *Vec_Ptr_t) {\n    var pFile *os.File;\n    var pNode, pTemp, pPrev *Ivy_Obj_t;\n    var LevelMax, Level, i int32;\n\n    if Ivy_ManNodeNum(pMan) \u003e 200 {\n        fmt.Fprintf(os.Stdout, \"Cannot visualize AIG with more than 200 nodes.\\n\");\n        return;\n    }\n    if (pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666)) == nil {\n        fmt.Fprintf(os.Stdout, \"Cannot open the intermediate file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n\n    // mark the nodes\n    if vBold != nil {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vBold)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(vBold, i)), 1); i++  {\n            pNode.fMarkB = 1;\n        } }\n\n    // compute levels\n    LevelMax = 1 + Ivy_ManSetLevels( pMan, fHaig );\n\n    // write the DOT header\n    fmt.Fprintf(pFile, \"# %s\\n\", \"AIG structure generated by IVY package\");\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"digraph AIG {\\n\");\n    fmt.Fprintf(pFile, \"size = \\\"7.5,10\\\";\\n\");\n//  fprintf( pFile, \"ranksep = 0.5;\\n\" );\n//  fprintf( pFile, \"nodesep = 0.5;\\n\" );\n    fmt.Fprintf(pFile, \"center = true;\\n\");\n//  fprintf( pFile, \"orientation = landscape;\\n\" );\n//  fprintf( pFile, \"edge [fontsize = 10];\\n\" );\n//  fprintf( pFile, \"edge [dir = none];\\n\" );\n    fmt.Fprintf(pFile, \"edge [dir = back];\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // labels on the left of the picture\n    fmt.Fprintf(pFile, \"{\\n\");\n    fmt.Fprintf(pFile, \"  node [shape = plaintext];\\n\");\n    fmt.Fprintf(pFile, \"  edge [style = invis];\\n\");\n    fmt.Fprintf(pFile, \"  LevelTitle1 [label=\\\"\\\"];\\n\");\n    fmt.Fprintf(pFile, \"  LevelTitle2 [label=\\\"\\\"];\\n\");\n    // generate node names with labels\n    for  Level = LevelMax; Level \u003e= 0; Level--  {\n        // the visible node name\n        fmt.Fprintf(pFile, \"  Level%d\", Level);\n        fmt.Fprintf(pFile, \" [label = \");\n        // label name\n        fmt.Fprintf(pFile, \"\\\"\");\n        fmt.Fprintf(pFile, \"\\\"\");\n        fmt.Fprintf(pFile, \"];\\n\");\n    }\n\n    // genetate the sequence of visible/invisible nodes to mark levels\n    fmt.Fprintf(pFile, \"  LevelTitle1 -\u003e  LevelTitle2 -\u003e\");\n    for  Level = LevelMax; Level \u003e= 0; Level--  {\n        // the visible node name\n        fmt.Fprintf(pFile, \"  Level%d\", Level);\n        // the connector\n        if Level != 0 {\n            fmt.Fprintf(pFile, \" -\u003e\");\n        } else {\n            fmt.Fprintf(pFile, \";\"); }\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"}\");\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // generate title box on top\n    fmt.Fprintf(pFile, \"{\\n\");\n    fmt.Fprintf(pFile, \"  rank = same;\\n\");\n    fmt.Fprintf(pFile, \"  LevelTitle1;\\n\");\n    fmt.Fprintf(pFile, \"  title1 [shape=plaintext,\\n\");\n    fmt.Fprintf(pFile, \"          fontsize=20,\\n\");\n    fmt.Fprintf(pFile, \"          fontname = \\\"Times-Roman\\\",\\n\");\n    fmt.Fprintf(pFile, \"          label=\\\"\");\n    fmt.Fprintf(pFile, \"%s\", \"AIG structure visualized by ABC\");\n    fmt.Fprintf(pFile, \"\\\\n\");\n    fmt.Fprintf(pFile, \"Benchmark \\\\\\\"%s\\\\\\\". \", \"aig\");\n    fmt.Fprintf(pFile, \"Time was %s. \", Extra_TimeStamp());\n    fmt.Fprintf(pFile, \"\\\"\\n\");\n    fmt.Fprintf(pFile, \"         ];\\n\");\n    fmt.Fprintf(pFile, \"}\");\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // generate statistics box\n    fmt.Fprintf(pFile, \"{\\n\");\n    fmt.Fprintf(pFile, \"  rank = same;\\n\");\n    fmt.Fprintf(pFile, \"  LevelTitle2;\\n\");\n    fmt.Fprintf(pFile, \"  title2 [shape=plaintext,\\n\");\n    fmt.Fprintf(pFile, \"          fontsize=18,\\n\");\n    fmt.Fprintf(pFile, \"          fontname = \\\"Times-Roman\\\",\\n\");\n    fmt.Fprintf(pFile, \"          label=\\\"\");\n    fmt.Fprintf(pFile, \"The set contains %d logic nodes and spans %d levels.\", Ivy_ManNodeNum(pMan), LevelMax);\n    fmt.Fprintf(pFile, \"\\\\n\");\n    fmt.Fprintf(pFile, \"\\\"\\n\");\n    fmt.Fprintf(pFile, \"         ];\\n\");\n    fmt.Fprintf(pFile, \"}\");\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // generate the COs\n    fmt.Fprintf(pFile, \"{\\n\");\n    fmt.Fprintf(pFile, \"  rank = same;\\n\");\n    // the labeling node of this level\n    fmt.Fprintf(pFile, \"  Level%d;\\n\", LevelMax);\n    // generate the CO nodes\n    // inlining of macro Ivy_ManForEachCo\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pNode) == nil {} else if !Ivy_ObjIsCo(pNode) {} else {\n        if (fHaig != 0) || pNode.pEquiv == nil {\n            fmt.Fprintf(pFile, \"  Node%d%s [label = \\\"%d%s\\\"\", pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\"), pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\"));\n        } else {\n            fmt.Fprintf(pFile, \"  Node%d%s [label = \\\"%d%s(%d%s)\\\"\", pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\"), pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\"), Ivy_Regular(pNode.pEquiv).Id, Ivy_IsComplement(pNode.pEquiv)? \"\\'\":\"\"); }\n        fmt.Fprintf(pFile, \", shape = %s\", (Ivy_ObjIsLatch(pNode)? \"box\":\"invtriangle\"));\n        fmt.Fprintf(pFile, \", color = coral, fillcolor = coral\");\n        fmt.Fprintf(pFile, \"];\\n\");\n    }\n    }\n    fmt.Fprintf(pFile, \"}\");\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // generate nodes of each rank\n    for  Level = LevelMax - 1; Level \u003e 0; Level--  {\n        fmt.Fprintf(pFile, \"{\\n\");\n        fmt.Fprintf(pFile, \"  rank = same;\\n\");\n        // the labeling node of this level\n        fmt.Fprintf(pFile, \"  Level%d;\\n\", Level);\n        // inlining of macro Ivy_ManForEachObj\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pNode) == nil {} else {\n            if int32(pNode.Level) != Level {\n                continue; }\n            if (fHaig != 0) || pNode.pEquiv == nil {\n                fmt.Fprintf(pFile, \"  Node%d [label = \\\"%d\\\"\", pNode.Id, pNode.Id);\n            } else { \n                fmt.Fprintf(pFile, \"  Node%d [label = \\\"%d(%d%s)\\\"\", pNode.Id, pNode.Id, Ivy_Regular(pNode.pEquiv).Id, Ivy_IsComplement(pNode.pEquiv)? \"\\'\":\"\"); }\n            fmt.Fprintf(pFile, \", shape = ellipse\");\n            if (vBold != nil) \u0026\u0026 pNode.fMarkB {\n                fmt.Fprintf(pFile, \", style = filled\"); }\n            fmt.Fprintf(pFile, \"];\\n\");\n        }\n        }\n        fmt.Fprintf(pFile, \"}\");\n        fmt.Fprintf(pFile, \"\\n\");\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n\n    // generate the CI nodes\n    fmt.Fprintf(pFile, \"{\\n\");\n    fmt.Fprintf(pFile, \"  rank = same;\\n\");\n    // the labeling node of this level\n    fmt.Fprintf(pFile, \"  Level%d;\\n\", 0);\n    // generate constant node\n    if Ivy_ObjRefs(Ivy_ManConst1(pMan)) \u003e 0 {\n        pNode = Ivy_ManConst1(pMan);\n        // check if the costant node is present\n        fmt.Fprintf(pFile, \"  Node%d [label = \\\"Const1\\\"\", pNode.Id);\n        fmt.Fprintf(pFile, \", shape = ellipse\");\n        fmt.Fprintf(pFile, \", color = coral, fillcolor = coral\");\n        fmt.Fprintf(pFile, \"];\\n\");\n    }\n    // generate the CI nodes\n    // inlining of macro Ivy_ManForEachCi\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pNode) == nil {} else if !Ivy_ObjIsCi(pNode) {} else {\n        if (fHaig != 0) || pNode.pEquiv == nil {\n            fmt.Fprintf(pFile, \"  Node%d%s [label = \\\"%d%s\\\"\", pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_out\":\"\"), pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_out\":\"\"));\n        } else {\n            fmt.Fprintf(pFile, \"  Node%d%s [label = \\\"%d%s(%d%s)\\\"\", pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_out\":\"\"), pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_out\":\"\"), Ivy_Regular(pNode.pEquiv).Id, Ivy_IsComplement(pNode.pEquiv)? \"\\'\":\"\"); }\n        fmt.Fprintf(pFile, \", shape = %s\", (Ivy_ObjIsLatch(pNode)? \"box\":\"triangle\"));\n        fmt.Fprintf(pFile, \", color = coral, fillcolor = coral\");\n        fmt.Fprintf(pFile, \"];\\n\");\n    }\n    }\n    fmt.Fprintf(pFile, \"}\");\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // generate invisible edges from the square down\n    fmt.Fprintf(pFile, \"title1 -\u003e title2 [style = invis];\\n\");\n    // inlining of macro Ivy_ManForEachCo\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pNode) == nil {} else if !Ivy_ObjIsCo(pNode) {} else {\n        fmt.Fprintf(pFile, \"title2 -\u003e Node%d%s [style = invis];\\n\", pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\")); }\n    }\n\n    // generate edges\n    // inlining of macro Ivy_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  { if (pNode) == nil {} else {\n        if !Ivy_ObjIsNode(pNode) \u0026\u0026 !Ivy_ObjIsCo(pNode) \u0026\u0026 !Ivy_ObjIsBuf(pNode) {\n            continue; }\n        // generate the edge from this node to the next\n        fmt.Fprintf(pFile, \"Node%d%s\", pNode.Id, (Ivy_ObjIsLatch(pNode)? \"_in\":\"\"));\n        fmt.Fprintf(pFile, \" -\u003e \");\n        fmt.Fprintf(pFile, \"Node%d%s\", Ivy_ObjFaninId0(pNode), (Ivy_ObjIsLatch(Ivy_ObjFanin0(pNode))? \"_out\":\"\"));\n        fmt.Fprintf(pFile, \" [\");\n        fmt.Fprintf(pFile, \"style = %s\", Ivy_ObjFaninC0(pNode)? \"dotted\" : \"bold\");\n//        if ( Ivy_NtkIsSeq(pNode-\u003epMan) \u0026\u0026 Seq_ObjFaninL0(pNode) \u003e 0 )\n//        fprintf( pFile, \", label = \\\"%s\\\"\", Seq_ObjFaninGetInitPrintable(pNode,0) );\n        fmt.Fprintf(pFile, \"]\");\n        fmt.Fprintf(pFile, \";\\n\");\n        if !Ivy_ObjIsNode(pNode) {\n            continue; }\n        // generate the edge from this node to the next\n        fmt.Fprintf(pFile, \"Node%d\", pNode.Id);\n        fmt.Fprintf(pFile, \" -\u003e \");\n        fmt.Fprintf(pFile, \"Node%d%s\", Ivy_ObjFaninId1(pNode), (Ivy_ObjIsLatch(Ivy_ObjFanin1(pNode))? \"_out\":\"\"));\n        fmt.Fprintf(pFile, \" [\");\n        fmt.Fprintf(pFile, \"style = %s\", Ivy_ObjFaninC1(pNode)? \"dotted\" : \"bold\");\n//        if ( Ivy_NtkIsSeq(pNode-\u003epMan) \u0026\u0026 Seq_ObjFaninL1(pNode) \u003e 0 )\n//        fprintf( pFile, \", label = \\\"%s\\\"\", Seq_ObjFaninGetInitPrintable(pNode,1) );\n        fmt.Fprintf(pFile, \"]\");\n        fmt.Fprintf(pFile, \";\\n\");\n        // generate the edges between the equivalent nodes\n        if (fHaig != 0) \u0026\u0026 pNode.pEquiv \u0026\u0026 Ivy_ObjRefs(pNode) \u003e 0 {\n            pPrev = pNode;\n            for  pTemp = pNode.pEquiv; pTemp != pNode; pTemp = Ivy_Regular(pTemp.pEquiv)  {\n                fmt.Fprintf(pFile, \"Node%d\", pPrev.Id);\n                fmt.Fprintf(pFile, \" -\u003e \");\n                fmt.Fprintf(pFile, \"Node%d\", pTemp.Id);\n                fmt.Fprintf(pFile, \" [style = %s]\", Ivy_IsComplement(pTemp.pEquiv)? \"dotted\" : \"bold\");\n                fmt.Fprintf(pFile, \";\\n\");\n                pPrev = pTemp;\n            }\n            // connect the last node with the first\n            fmt.Fprintf(pFile, \"Node%d\", pPrev.Id);\n            fmt.Fprintf(pFile, \" -\u003e \");\n            fmt.Fprintf(pFile, \"Node%d\", pNode.Id);\n            fmt.Fprintf(pFile, \" [style = %s]\", Ivy_IsComplement(pPrev.pEquiv)? \"dotted\" : \"bold\");\n            fmt.Fprintf(pFile, \";\\n\");\n        }\n    }\n    }\n\n    fmt.Fprintf(pFile, \"}\");\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n\n    // unmark nodes\n    if vBold != nil {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vBold)) \u0026\u0026 (((pNode) = (Ivy_Obj_t *)Vec_PtrEntry(vBold, i)), 1); i++  {\n            pNode.fMarkB = 0;\n        } }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

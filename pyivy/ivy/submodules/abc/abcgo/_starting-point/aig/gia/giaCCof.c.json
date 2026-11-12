@@ -1,0 +1,439 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c",
+  "SHA256": "a5e38cf453c585a300608ebdffe068201f36ad07eca1b177f8c46688b4dd7736",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 2132
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFrameMax \u003e 0 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 2403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( spStatic_Ccf_ManStart_pPars, 0, sizeof(Gia_ParFra_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 104,
+        "Column": 57,
+        "ByteOffset": 3320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 4967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 9,
+        "ByteOffset": 7701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 13,
+        "ByteOffset": 7898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%3d : AIG =%7d  Conf =%7d.  \", Count++, "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 266,
+        "Column": 57,
+        "ByteOffset": 8871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var nTimeToStop abctime  = Abc_Clock() + nTimeMax * CLOCKS_PER_SEC;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 5,
+        "ByteOffset": 8927
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(pGia) == 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 13,
+        "ByteOffset": 9292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"ITER %3d :\\n\", f ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 296,
+        "Column": 17,
+        "ByteOffset": 10017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Property failed in frame %d.\\n\", f );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 307,
+        "Column": 9,
+        "ByteOffset": 10292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Runtime limit (%d sec) is reached after %d frames.  \", nTimeMax, f );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 309,
+        "Column": 9,
+        "ByteOffset": 10410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Completed %d frames without converging.  \", f );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 311,
+        "Column": 9,
+        "ByteOffset": 10506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Backward reachability converged after %d iterations.  \", f-1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 313,
+        "Column": 9,
+        "ByteOffset": 10618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Conflict limit or timeout is reached after %d frames.  \", f-1 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 317,
+        "Column": 9,
+        "ByteOffset": 10792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Property holds.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 319,
+        "Column": 9,
+        "ByteOffset": 10856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Property is undecided.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ccf_ManStart",
+      "Start": 1888,
+      "End": 2650,
+      "BodyStart": 1990,
+      "Original": "Ccf_Man_t * Ccf_ManStart( Gia_Man_t * pGia, int nFrameMax, int nConfMax, int nTimeMax, int fVerbose )\n{\n    static Gia_ParFra_t Pars, * pPars = \u0026Pars;\n    Ccf_Man_t * p;\n    assert( nFrameMax \u003e 0 );\n    p = ABC_CALLOC( Ccf_Man_t, 1 );\n    p-\u003epGia      = pGia;\n    p-\u003enFrameMax = nFrameMax;    \n    p-\u003enConfMax  = nConfMax;\n    p-\u003enTimeMax  = nTimeMax;\n    p-\u003efVerbose  = fVerbose;\n    // create unrolling manager\n    memset( pPars, 0, sizeof(Gia_ParFra_t) );\n    pPars-\u003efVerbose     = fVerbose;\n    pPars-\u003enFrames      = nFrameMax;\n    pPars-\u003efSaveLastLit = 1;\n    p-\u003epUnr = Gia_ManUnrollStart( pGia, pPars );\n    p-\u003evCopies = Vec_IntAlloc( 1000 );\n    // internal data\n    p-\u003epSat = sat_solver_new();\n//    sat_solver_setnvars( p-\u003epSat, 10000 );\n    return p;\n}",
+      "Draft": "func Ccf_ManStart(pGia *Gia_Man_t, nFrameMax int32, nConfMax int32, nTimeMax int32, fVerbose int32) *Ccf_Man_t {\n    \n    \n    assert(nFrameMax \u003e 0, \"nFrameMax \u003e 0\");\n    // inlining of macro ABC_CALLOC\n    p := \u0026Ccf_Man_t{};\n    p.pGia      = pGia;\n    p.nFrameMax = nFrameMax;    \n    p.nConfMax  = nConfMax;\n    p.nTimeMax  = nTimeMax;\n    p.fVerbose  = fVerbose;\n    // create unrolling manager\n    memset( spStatic_Ccf_ManStart_pPars, 0, sizeof(Gia_ParFra_t) );\n    spStatic_Ccf_ManStart_pPars.fVerbose     = fVerbose;\n    spStatic_Ccf_ManStart_pPars.nFrames      = nFrameMax;\n    spStatic_Ccf_ManStart_pPars.fSaveLastLit = 1;\n    p.pUnr = Gia_ManUnrollStart( pGia, spStatic_Ccf_ManStart_pPars );\n    p.vCopies = Vec_IntAlloc( 1000 );\n    // internal data\n    p.pSat = sat_solver_new();\n//    sat_solver_setnvars( p-\u003epSat, 10000 );\n    return p;\n}"
+    },
+    {
+      "Name": "Ccf_ManStop",
+      "Start": 2901,
+      "End": 3089,
+      "BodyStart": 2935,
+      "Original": "void Ccf_ManStop( Ccf_Man_t * p )\n{\n    Vec_IntFree( p-\u003evCopies );\n    Gia_ManUnrollStop( p-\u003epUnr );\n    sat_solver_delete( p-\u003epSat );\n    Gia_ManStopP( \u0026p-\u003epFrames );\n    ABC_FREE( p );\n}",
+      "Draft": "func Ccf_ManStop(p *Ccf_Man_t) {\n    Vec_IntFree( p.vCopies );\n    Gia_ManUnrollStop( p.pUnr );\n    sat_solver_delete( p.pSat );\n    Gia_ManStopP( \u0026p.pFrames );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Gia_ManCofExtendSolver",
+      "Start": 3345,
+      "End": 3894,
+      "BodyStart": 3390,
+      "Original": "void Gia_ManCofExtendSolver( Ccf_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    // add SAT clauses\n    for ( i = sat_solver_nvars(p-\u003epSat); i \u003c Gia_ManObjNum(p-\u003epFrames); i++ )\n    {\n        pObj = Gia_ManObj( p-\u003epFrames, i );\n        if ( Gia_ObjIsAnd(pObj) )\n            sat_solver_add_and( p-\u003epSat, i, \n                Gia_ObjFaninId0(pObj, i), \n                Gia_ObjFaninId1(pObj, i), \n                Gia_ObjFaninC0(pObj), \n                Gia_ObjFaninC1(pObj), 0 ); \n    }\n    sat_solver_setnvars( p-\u003epSat, Gia_ManObjNum(p-\u003epFrames) );\n}",
+      "Draft": "func Gia_ManCofExtendSolver(p *Ccf_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // add SAT clauses\n    for  i = sat_solver_nvars(p.pSat); i \u003c Gia_ManObjNum(p.pFrames); i++  {\n        pObj = Gia_ManObj( p.pFrames, i );\n        if Gia_ObjIsAnd(pObj) {\n            sat_solver_add_and( p.pSat, i, \n                Gia_ObjFaninId0(pObj, i), \n                Gia_ObjFaninId1(pObj, i), \n                Gia_ObjFaninC0(pObj), \n                Gia_ObjFaninC1(pObj), 0 ); } \n    }\n    sat_solver_setnvars( p.pSat, Gia_ManObjNum(p.pFrames) );\n}"
+    },
+    {
+      "Name": "Gia_Obj0Copy",
+      "Start": 3896,
+      "End": 4041,
+      "BodyStart": 3975,
+      "Original": "static inline int Gia_Obj0Copy( Vec_Int_t * vCopies, int Fan0, int fCompl0 )  \n{ return Abc_LitNotCond( Vec_IntEntry(vCopies, Fan0), fCompl0 ); }",
+      "Draft": "func Gia_Obj0Copy(vCopies *Vec_Int_t, Fan0 int32, fCompl0 int32) int32 { return Abc_LitNotCond( Vec_IntEntry(vCopies, Fan0), fCompl0 ); }"
+    },
+    {
+      "Name": "Gia_Obj1Copy",
+      "Start": 4043,
+      "End": 4188,
+      "BodyStart": 4122,
+      "Original": "static inline int Gia_Obj1Copy( Vec_Int_t * vCopies, int Fan1, int fCompl1 )  \n{ return Abc_LitNotCond( Vec_IntEntry(vCopies, Fan1), fCompl1 ); }",
+      "Draft": "func Gia_Obj1Copy(vCopies *Vec_Int_t, Fan1 int32, fCompl1 int32) int32 { return Abc_LitNotCond( Vec_IntEntry(vCopies, Fan1), fCompl1 ); }"
+    },
+    {
+      "Name": "Gia_ManCofOneDerive_rec",
+      "Start": 4520,
+      "End": 5457,
+      "BodyStart": 4574,
+      "Original": "void Gia_ManCofOneDerive_rec( Ccf_Man_t * p, int Id )\n{\n    Gia_Obj_t * pObj;\n    int Res;\n    if ( Vec_IntEntry(p-\u003evCopies, Id) != -1 )\n        return;\n    pObj = Gia_ManObj(p-\u003epFrames, Id);\n    assert( Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj) );\n    if ( Gia_ObjIsAnd(pObj) )\n    {\n        int fCompl0 = Gia_ObjFaninC0(pObj);\n        int fCompl1 = Gia_ObjFaninC1(pObj);\n        int Fan0 = Gia_ObjFaninId0p(p-\u003epFrames, pObj);\n        int Fan1 = Gia_ObjFaninId1p(p-\u003epFrames, pObj);\n        Gia_ManCofOneDerive_rec( p, Fan0 );\n        Gia_ManCofOneDerive_rec( p, Fan1 );\n        Res = Gia_ManHashAnd( p-\u003epFrames, \n            Gia_Obj0Copy(p-\u003evCopies, Fan0, fCompl0), \n            Gia_Obj1Copy(p-\u003evCopies, Fan1, fCompl1) );\n    }\n    else if ( Gia_ObjCioId(pObj) \u003e= Gia_ManRegNum(p-\u003epGia) ) // PI\n        Res = sat_solver_var_value( p-\u003epSat, Id );\n    else\n        Res = Abc_Var2Lit( Id, 0 );\n    Vec_IntWriteEntry( p-\u003evCopies, Id, Res );\n}",
+      "Draft": "func Gia_ManCofOneDerive_rec(p *Ccf_Man_t, Id int32) {\n    var pObj *Gia_Obj_t;\n    var Res int32;\n    if Vec_IntEntry(p.vCopies, Id) != -1 {\n        return; }\n    pObj = Gia_ManObj(p.pFrames, Id);\n    assert(Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj)\");\n    if Gia_ObjIsAnd(pObj) {\n        var fCompl0 int32  = Gia_ObjFaninC0(pObj);\n        var fCompl1 int32  = Gia_ObjFaninC1(pObj);\n        var Fan0 int32  = Gia_ObjFaninId0p(p.pFrames, pObj);\n        var Fan1 int32  = Gia_ObjFaninId1p(p.pFrames, pObj);\n        Gia_ManCofOneDerive_rec( p, Fan0 );\n        Gia_ManCofOneDerive_rec( p, Fan1 );\n        Res = Gia_ManHashAnd( p.pFrames, \n            Gia_Obj0Copy(p.vCopies, Fan0, fCompl0), \n            Gia_Obj1Copy(p.vCopies, Fan1, fCompl1) );\n    \n    } else if Gia_ObjCioId(pObj) \u003e= Gia_ManRegNum(p.pGia) { // PI\n        Res = sat_solver_var_value( p.pSat, Id );\n    } else {\n        Res = Abc_Var2Lit( Id, 0 ); }\n    Vec_IntWriteEntry( p.vCopies, Id, Res );\n}"
+    },
+    {
+      "Name": "Gia_ManCofOneDerive",
+      "Start": 5788,
+      "End": 6366,
+      "BodyStart": 5842,
+      "Original": "int Gia_ManCofOneDerive( Ccf_Man_t * p, int LitProp )\n{\n    int LitOut;\n    // derive the cofactor of the property node\n    Vec_IntFill( p-\u003evCopies, Gia_ManObjNum(p-\u003epFrames), -1 );\n    Gia_ManCofOneDerive_rec( p, Abc_Lit2Var(LitProp) );\n    LitOut = Vec_IntEntry( p-\u003evCopies, Abc_Lit2Var(LitProp) );\n    LitOut = Abc_LitNotCond( LitOut, Abc_LitIsCompl(LitProp) );\n    // add new PO for the cofactor\n    Gia_ManAppendCo( p-\u003epFrames, LitOut );\n    // add SAT clauses\n    Gia_ManCofExtendSolver( p );\n    // return negative literal of the cofactor\n    return Abc_LitNot(LitOut);\n}",
+      "Draft": "func Gia_ManCofOneDerive(p *Ccf_Man_t, LitProp int32) int32 {\n    var LitOut int32;\n    // derive the cofactor of the property node\n    Vec_IntFill( p.vCopies, Gia_ManObjNum(p.pFrames), -1 );\n    Gia_ManCofOneDerive_rec( p, Abc_Lit2Var(LitProp) );\n    LitOut = Vec_IntEntry( p.vCopies, Abc_Lit2Var(LitProp) );\n    LitOut = Abc_LitNotCond( LitOut, Abc_LitIsCompl(LitProp) );\n    // add new PO for the cofactor\n    Gia_ManAppendCo( p.pFrames, LitOut );\n    // add SAT clauses\n    Gia_ManCofExtendSolver( p );\n    // return negative literal of the cofactor\n    return Abc_LitNot(LitOut);\n}"
+    },
+    {
+      "Name": "Gia_ManCofGetReachable",
+      "Start": 6798,
+      "End": 8031,
+      "BodyStart": 6851,
+      "Original": "int Gia_ManCofGetReachable( Ccf_Man_t * p, int Lit )\n{\n    int ObjPrev = 0, ConfPrev = 0;\n    int Count = 0, LitOut, RetValue;\n    abctime clk;\n    // try solving for the first time and quit if converged\n    RetValue = sat_solver_solve( p-\u003epSat, \u0026Lit, \u0026Lit + 1, p-\u003enConfMax, 0, 0, 0 );\n    if ( RetValue == l_False )\n        return 1;\n    // iterate circuit cofactoring\n    while ( RetValue == l_True )\n    {\n        clk = Abc_Clock();\n        // derive cofactor\n        LitOut = Gia_ManCofOneDerive( p, Lit );\n        // add the blocking clause\n        RetValue = sat_solver_addclause( p-\u003epSat, \u0026LitOut, \u0026LitOut + 1 );\n        assert( RetValue );\n        // try solving again\n        RetValue = sat_solver_solve( p-\u003epSat, \u0026Lit, \u0026Lit + 1, p-\u003enConfMax, 0, 0, 0 );\n        // derive cofactors\n        if ( p-\u003efVerbose ) \n        {\n            printf( \"%3d : AIG =%7d  Conf =%7d.  \", Count++, \n                Gia_ManObjNum(p-\u003epFrames) - ObjPrev, sat_solver_nconflicts(p-\u003epSat) - ConfPrev );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            ObjPrev = Gia_ManObjNum(p-\u003epFrames);\n            ConfPrev = sat_solver_nconflicts(p-\u003epSat);\n        }\n    }\n    if ( RetValue == l_Undef )\n        return -1;\n    return 0;\n}",
+      "Draft": "func Gia_ManCofGetReachable(p *Ccf_Man_t, Lit int32) int32 {\n    var ObjPrev, ConfPrev int32;\n    var Count, LitOut, RetValue int32;\n    var clk abctime;\n    // try solving for the first time and quit if converged\n    RetValue = sat_solver_solve( p.pSat, \u0026Lit, \u0026Lit + 1, p.nConfMax, 0, 0, 0 );\n    if RetValue == l_False {\n        return 1; }\n    // iterate circuit cofactoring\n    for  RetValue == l_True  {\n        clk = Abc_Clock();\n        // derive cofactor\n        LitOut = Gia_ManCofOneDerive( p, Lit );\n        // add the blocking clause\n        RetValue = sat_solver_addclause( p.pSat, \u0026LitOut, \u0026LitOut + 1 );\n        assert((RetValue != 0), \"RetValue\");\n        // try solving again\n        RetValue = sat_solver_solve( p.pSat, \u0026Lit, \u0026Lit + 1, p.nConfMax, 0, 0, 0 );\n        // derive cofactors\n        if p.fVerbose {\n            fmt.Printf(\"%3d : AIG =%7d  Conf =%7d.  \", Count++, Gia_ManObjNum(p.pFrames) - ObjPrev, sat_solver_nconflicts(p.pSat) - ConfPrev);\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            ObjPrev = Gia_ManObjNum(p.pFrames);\n            ConfPrev = sat_solver_nconflicts(p.pSat);\n        }\n    }\n    if RetValue == l_Undef {\n        return -1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Gia_ManCofTest",
+      "Start": 8267,
+      "End": 10840,
+      "BodyStart": 8371,
+      "Original": "Gia_Man_t * Gia_ManCofTest( Gia_Man_t * pGia, int nFrameMax, int nConfMax, int nTimeMax, int fVerbose )\n{ \n    Gia_Man_t * pNew;\n    Ccf_Man_t * p;\n    Gia_Obj_t * pObj;\n    int f, i, Lit, RetValue = -1, fFailed = 0;\n    abctime nTimeToStop = Abc_Clock() + nTimeMax * CLOCKS_PER_SEC;\n    abctime clk = Abc_Clock();\n    assert( Gia_ManPoNum(pGia) == 1 );\n\n    // create reachability manager\n    p = Ccf_ManStart( pGia, nFrameMax, nConfMax, nTimeMax, fVerbose );\n\n    // set runtime limit\n    if ( nTimeMax )\n        sat_solver_set_runtime_limit( p-\u003epSat, nTimeToStop );\n\n    // perform backward image computation\n    for ( f = 0; f \u003c nFrameMax; f++ )\n    {\n        if ( fVerbose ) \n            printf( \"ITER %3d :\\n\", f );\n        // add to the mapping of nodes\n        p-\u003epFrames = (Gia_Man_t *)Gia_ManUnrollAdd( p-\u003epUnr, f+1 );\n        // add SAT clauses\n        Gia_ManCofExtendSolver( p );\n        // return output literal\n        Lit = Gia_ManUnrollLastLit( p-\u003epUnr );\n        // derives cofactors of the property literal till all states are blocked\n        RetValue = Gia_ManCofGetReachable( p, Lit );\n        if ( RetValue )\n            break;\n\n        // check the property output\n        Gia_ManSetPhase( p-\u003epFrames );\n        Gia_ManForEachPo( p-\u003epFrames, pObj, i )\n            if ( pObj-\u003efPhase )\n            {\n                printf( \"Property failed in frame %d.\\n\", f );\n                fFailed = 1;\n                break;\n            }\n        if ( i \u003c Gia_ManPoNum(p-\u003epFrames) )\n            break;\n    }\n\n    // report the result\n    if ( nTimeToStop \u0026\u0026 Abc_Clock() \u003e nTimeToStop )\n        printf( \"Runtime limit (%d sec) is reached after %d frames.  \", nTimeMax, f );\n    else if ( f == nFrameMax )\n        printf( \"Completed %d frames without converging.  \", f );\n    else if ( RetValue == 1 )\n        printf( \"Backward reachability converged after %d iterations.  \", f-1 );\n    else if ( RetValue == -1 )\n        printf( \"Conflict limit or timeout is reached after %d frames.  \", f-1 );\n    Abc_PrintTime( 1, \"Runtime\", Abc_Clock() - clk );\n\n    if ( !fFailed \u0026\u0026 RetValue == 1 )\n        printf( \"Property holds.\\n\" );\n    else if ( !fFailed )\n        printf( \"Property is undecided.\\n\" );\n\n    // get the resulting AIG manager\n    Gia_ManHashStop( p-\u003epFrames );\n    pNew = p-\u003epFrames;  p-\u003epFrames = NULL;\n    Ccf_ManStop( p );\n\n    // cleanup\n//    if ( fVerbose )\n//        Gia_ManPrintStats( pNew, 0 );\n    pNew = Gia_ManCleanup( pGia = pNew );\n    Gia_ManStop( pGia );\n//    if ( fVerbose )\n//        Gia_ManPrintStats( pNew, 0 );\n    return pNew;   \n}",
+      "Draft": "func Gia_ManCofTest(pGia *Gia_Man_t, nFrameMax int32, nConfMax int32, nTimeMax int32, fVerbose int32) *Gia_Man_t { \n    var pNew *Gia_Man_t;\n    var p *Ccf_Man_t;\n    var pObj *Gia_Obj_t;\n    var f int32;\n    var i int32;\n    var Lit int32;\n    var RetValue int32 = -1;\n    var fFailed int32;\n    var nTimeToStop abctime  = Abc_Clock() + nTimeMax * int64(time.Second);\n    var clk abctime  = Abc_Clock();\n    assert(Gia_ManPoNum(pGia) == 1, \"Gia_ManPoNum(pGia) == 1\");\n\n    // create reachability manager\n    p = Ccf_ManStart( pGia, nFrameMax, nConfMax, nTimeMax, fVerbose );\n\n    // set runtime limit\n    if nTimeMax {\n        sat_solver_set_runtime_limit( p.pSat, nTimeToStop ); }\n\n    // perform backward image computation\n    for  f = 0; f \u003c nFrameMax; f++  {\n        if fVerbose != 0 { \n            fmt.Printf(\"ITER %3d :\\n\", f); }\n        // add to the mapping of nodes\n        p.pFrames = (Gia_Man_t *)Gia_ManUnrollAdd( p.pUnr, f+1 );\n        // add SAT clauses\n        Gia_ManCofExtendSolver( p );\n        // return output literal\n        Lit = Gia_ManUnrollLastLit( p.pUnr );\n        // derives cofactors of the property literal till all states are blocked\n        RetValue = Gia_ManCofGetReachable( p, Lit );\n        if RetValue != 0 {\n            break; }\n\n        // check the property output\n        Gia_ManSetPhase( p.pFrames );\n        // inlining of macro Gia_ManForEachPo\n        for  i = 0; (i \u003c Gia_ManPoNum(p.pFrames)) \u0026\u0026 ((pObj) = Gia_ManCo(p.pFrames, i)); i++  {\n            if pObj.fPhase {\n                fmt.Printf(\"Property failed in frame %d.\\n\", f);\n                fFailed = 1;\n                break;\n            }\n        }\n        if i \u003c Gia_ManPoNum(p.pFrames) {\n            break; }\n    }\n\n    // report the result\n    if nTimeToStop \u0026\u0026 Abc_Clock() \u003e nTimeToStop {\n        fmt.Printf(\"Runtime limit (%d sec) is reached after %d frames.  \", nTimeMax, f);\n    } else if f == nFrameMax {\n        fmt.Printf(\"Completed %d frames without converging.  \", f);\n    } else if RetValue == 1 {\n        fmt.Printf(\"Backward reachability converged after %d iterations.  \", f-1);\n    } else if RetValue == -1 {\n        fmt.Printf(\"Conflict limit or timeout is reached after %d frames.  \", f-1); }\n    Abc_PrintTime( 1, \"Runtime\", Abc_Clock() - clk );\n\n    if !(fFailed != 0) \u0026\u0026 RetValue == 1 {\n        fmt.Printf(\"Property holds.\\n\");\n    } else if !(fFailed != 0) {\n        fmt.Printf(\"Property is undecided.\\n\"); }\n\n    // get the resulting AIG manager\n    Gia_ManHashStop( p.pFrames );\n    pNew = p.pFrames;  p.pFrames = nil;\n    Ccf_ManStop( p );\n\n    // cleanup\n//    if ( fVerbose )\n//        Gia_ManPrintStats( pNew, 0 );\n    pNew = Gia_ManCleanup( pGia = pNew );\n    Gia_ManStop( pGia );\n//    if ( fVerbose )\n//        Gia_ManPrintStats( pNew, 0 );\n    return pNew;   \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::struct::Ccf_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Ccf_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 828,
+      "End": 1417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::mechanical::static::1996",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1996,
+      "End": 2002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::mechanical::sizeof::2176",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2095,
+      "End": 2095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::mechanical::sizeof::2397",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2323,
+      "End": 2329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::pointer-cast::2142",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2095,
+      "End": 2095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::pointer-cast::3204",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3073,
+      "End": 3073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::pointer-cast::9195",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9049,
+      "End": 9062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::Ccf_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Ccf_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1888,
+      "End": 2650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::ternary::Ccf_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Ccf_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2901,
+      "End": 3089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::Ccf_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Ccf_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2901,
+      "End": 3089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::Gia_ManCofExtendSolver",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCofExtendSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3345,
+      "End": 3894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::Gia_Obj0Copy",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Obj0Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3896,
+      "End": 4041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::Gia_Obj1Copy",
+      "Category": "semantic-review",
+      "Symbol": "Gia_Obj1Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4043,
+      "End": 4188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::Gia_ManCofOneDerive_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCofOneDerive_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4520,
+      "End": 5457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::Gia_ManCofOneDerive",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCofOneDerive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5788,
+      "End": 6366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::Gia_ManCofGetReachable",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCofGetReachable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6798,
+      "End": 8031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::Gia_ManCofTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCofTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8267,
+      "End": 10840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaCCof.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11087
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [giaCCof.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Backward reachability using circuit cofactoring.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaCCof.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"sat/bsat/satSolver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n    // manager\ntype Ccf_Man_t struct {\n    // user data\n    pGia   *Gia_Man_t;       // single-output AIG manager\n    nFrameMax          int32;  // maximum number of frames\n    nConfMax          int32;   // maximum number of conflicts\n    nTimeMax          int32;   // maximum runtime in seconds\n    fVerbose          int32;   // verbose flag\n    // internal data\n    pUnr        any;       // unrolling manager\n    pFrames   *Gia_Man_t;    // unrolled timeframes\n    vCopies   *Vec_Int_t;    // copy pointers of the AIG\n    pSat  *sat_solver;       // SAT solver\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Create manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Ccf_ManStart_Pars Gia_ParFra_t;\nvar spStatic_Ccf_ManStart_pPars *Gia_ParFra_t = \u0026spStatic_Ccf_ManStart_Pars;\nfunc Ccf_ManStart(pGia *Gia_Man_t, nFrameMax int32, nConfMax int32, nTimeMax int32, fVerbose int32) *Ccf_Man_t {\n    \n    \n    assert(nFrameMax \u003e 0, \"nFrameMax \u003e 0\");\n    // inlining of macro ABC_CALLOC\n    p := \u0026Ccf_Man_t{};\n    p.pGia      = pGia;\n    p.nFrameMax = nFrameMax;    \n    p.nConfMax  = nConfMax;\n    p.nTimeMax  = nTimeMax;\n    p.fVerbose  = fVerbose;\n    // create unrolling manager\n    memset( spStatic_Ccf_ManStart_pPars, 0, sizeof(Gia_ParFra_t) );\n    spStatic_Ccf_ManStart_pPars.fVerbose     = fVerbose;\n    spStatic_Ccf_ManStart_pPars.nFrames      = nFrameMax;\n    spStatic_Ccf_ManStart_pPars.fSaveLastLit = 1;\n    p.pUnr = Gia_ManUnrollStart( pGia, spStatic_Ccf_ManStart_pPars );\n    p.vCopies = Vec_IntAlloc( 1000 );\n    // internal data\n    p.pSat = sat_solver_new();\n//    sat_solver_setnvars( p-\u003epSat, 10000 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Delete manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ccf_ManStop(p *Ccf_Man_t) {\n    Vec_IntFree( p.vCopies );\n    Gia_ManUnrollStop( p.pUnr );\n    sat_solver_delete( p.pSat );\n    Gia_ManStopP( \u0026p.pFrames );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Extends the solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCofExtendSolver(p *Ccf_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // add SAT clauses\n    for  i = sat_solver_nvars(p.pSat); i \u003c Gia_ManObjNum(p.pFrames); i++  {\n        pObj = Gia_ManObj( p.pFrames, i );\n        if Gia_ObjIsAnd(pObj) {\n            sat_solver_add_and( p.pSat, i, \n                Gia_ObjFaninId0(pObj, i), \n                Gia_ObjFaninId1(pObj, i), \n                Gia_ObjFaninC0(pObj), \n                Gia_ObjFaninC1(pObj), 0 ); } \n    }\n    sat_solver_setnvars( p.pSat, Gia_ManObjNum(p.pFrames) );\n}\n\nfunc Gia_Obj0Copy(vCopies *Vec_Int_t, Fan0 int32, fCompl0 int32) int32 { return Abc_LitNotCond( Vec_IntEntry(vCopies, Fan0), fCompl0 ); }\n\nfunc Gia_Obj1Copy(vCopies *Vec_Int_t, Fan1 int32, fCompl1 int32) int32 { return Abc_LitNotCond( Vec_IntEntry(vCopies, Fan1), fCompl1 ); }\n \n/**Function*************************************************************\n\n  Synopsis    [Cofactor the circuit w.r.t. the given assignment.]\n\n  Description [Assumes that the solver has just returned SAT.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCofOneDerive_rec(p *Ccf_Man_t, Id int32) {\n    var pObj *Gia_Obj_t;\n    var Res int32;\n    if Vec_IntEntry(p.vCopies, Id) != -1 {\n        return; }\n    pObj = Gia_ManObj(p.pFrames, Id);\n    assert(Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj)\");\n    if Gia_ObjIsAnd(pObj) {\n        var fCompl0 int32  = Gia_ObjFaninC0(pObj);\n        var fCompl1 int32  = Gia_ObjFaninC1(pObj);\n        var Fan0 int32  = Gia_ObjFaninId0p(p.pFrames, pObj);\n        var Fan1 int32  = Gia_ObjFaninId1p(p.pFrames, pObj);\n        Gia_ManCofOneDerive_rec( p, Fan0 );\n        Gia_ManCofOneDerive_rec( p, Fan1 );\n        Res = Gia_ManHashAnd( p.pFrames, \n            Gia_Obj0Copy(p.vCopies, Fan0, fCompl0), \n            Gia_Obj1Copy(p.vCopies, Fan1, fCompl1) );\n    \n    } else if Gia_ObjCioId(pObj) \u003e= Gia_ManRegNum(p.pGia) { // PI\n        Res = sat_solver_var_value( p.pSat, Id );\n    } else {\n        Res = Abc_Var2Lit( Id, 0 ); }\n    Vec_IntWriteEntry( p.vCopies, Id, Res );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cofactor the circuit w.r.t. the given assignment.]\n\n  Description [Assumes that the solver has just returned SAT.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCofOneDerive(p *Ccf_Man_t, LitProp int32) int32 {\n    var LitOut int32;\n    // derive the cofactor of the property node\n    Vec_IntFill( p.vCopies, Gia_ManObjNum(p.pFrames), -1 );\n    Gia_ManCofOneDerive_rec( p, Abc_Lit2Var(LitProp) );\n    LitOut = Vec_IntEntry( p.vCopies, Abc_Lit2Var(LitProp) );\n    LitOut = Abc_LitNotCond( LitOut, Abc_LitIsCompl(LitProp) );\n    // add new PO for the cofactor\n    Gia_ManAppendCo( p.pFrames, LitOut );\n    // add SAT clauses\n    Gia_ManCofExtendSolver( p );\n    // return negative literal of the cofactor\n    return Abc_LitNot(LitOut);\n} \n\n/**Function*************************************************************\n\n  Synopsis    [Enumerates backward reachable states.]\n\n  Description [Return -1 if resource limit is reached. Returns 1 \n  if computation converged (there is no more reachable states).\n  Returns 0 if no more states to enumerate.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCofGetReachable(p *Ccf_Man_t, Lit int32) int32 {\n    var ObjPrev, ConfPrev int32;\n    var Count, LitOut, RetValue int32;\n    var clk abctime;\n    // try solving for the first time and quit if converged\n    RetValue = sat_solver_solve( p.pSat, \u0026Lit, \u0026Lit + 1, p.nConfMax, 0, 0, 0 );\n    if RetValue == l_False {\n        return 1; }\n    // iterate circuit cofactoring\n    for  RetValue == l_True  {\n        clk = Abc_Clock();\n        // derive cofactor\n        LitOut = Gia_ManCofOneDerive( p, Lit );\n        // add the blocking clause\n        RetValue = sat_solver_addclause( p.pSat, \u0026LitOut, \u0026LitOut + 1 );\n        assert((RetValue != 0), \"RetValue\");\n        // try solving again\n        RetValue = sat_solver_solve( p.pSat, \u0026Lit, \u0026Lit + 1, p.nConfMax, 0, 0, 0 );\n        // derive cofactors\n        if p.fVerbose {\n            fmt.Printf(\"%3d : AIG =%7d  Conf =%7d.  \", Count++, Gia_ManObjNum(p.pFrames) - ObjPrev, sat_solver_nconflicts(p.pSat) - ConfPrev);\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            ObjPrev = Gia_ManObjNum(p.pFrames);\n            ConfPrev = sat_solver_nconflicts(p.pSat);\n        }\n    }\n    if RetValue == l_Undef {\n        return -1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCofTest(pGia *Gia_Man_t, nFrameMax int32, nConfMax int32, nTimeMax int32, fVerbose int32) *Gia_Man_t { \n    var pNew *Gia_Man_t;\n    var p *Ccf_Man_t;\n    var pObj *Gia_Obj_t;\n    var f int32;\n    var i int32;\n    var Lit int32;\n    var RetValue int32 = -1;\n    var fFailed int32;\n    var nTimeToStop abctime  = Abc_Clock() + nTimeMax * int64(time.Second);\n    var clk abctime  = Abc_Clock();\n    assert(Gia_ManPoNum(pGia) == 1, \"Gia_ManPoNum(pGia) == 1\");\n\n    // create reachability manager\n    p = Ccf_ManStart( pGia, nFrameMax, nConfMax, nTimeMax, fVerbose );\n\n    // set runtime limit\n    if nTimeMax {\n        sat_solver_set_runtime_limit( p.pSat, nTimeToStop ); }\n\n    // perform backward image computation\n    for  f = 0; f \u003c nFrameMax; f++  {\n        if fVerbose != 0 { \n            fmt.Printf(\"ITER %3d :\\n\", f); }\n        // add to the mapping of nodes\n        p.pFrames = (Gia_Man_t *)Gia_ManUnrollAdd( p.pUnr, f+1 );\n        // add SAT clauses\n        Gia_ManCofExtendSolver( p );\n        // return output literal\n        Lit = Gia_ManUnrollLastLit( p.pUnr );\n        // derives cofactors of the property literal till all states are blocked\n        RetValue = Gia_ManCofGetReachable( p, Lit );\n        if RetValue != 0 {\n            break; }\n\n        // check the property output\n        Gia_ManSetPhase( p.pFrames );\n        // inlining of macro Gia_ManForEachPo\n        for  i = 0; (i \u003c Gia_ManPoNum(p.pFrames)) \u0026\u0026 ((pObj) = Gia_ManCo(p.pFrames, i)); i++  {\n            if pObj.fPhase {\n                fmt.Printf(\"Property failed in frame %d.\\n\", f);\n                fFailed = 1;\n                break;\n            }\n        }\n        if i \u003c Gia_ManPoNum(p.pFrames) {\n            break; }\n    }\n\n    // report the result\n    if nTimeToStop \u0026\u0026 Abc_Clock() \u003e nTimeToStop {\n        fmt.Printf(\"Runtime limit (%d sec) is reached after %d frames.  \", nTimeMax, f);\n    } else if f == nFrameMax {\n        fmt.Printf(\"Completed %d frames without converging.  \", f);\n    } else if RetValue == 1 {\n        fmt.Printf(\"Backward reachability converged after %d iterations.  \", f-1);\n    } else if RetValue == -1 {\n        fmt.Printf(\"Conflict limit or timeout is reached after %d frames.  \", f-1); }\n    Abc_PrintTime( 1, \"Runtime\", Abc_Clock() - clk );\n\n    if !(fFailed != 0) \u0026\u0026 RetValue == 1 {\n        fmt.Printf(\"Property holds.\\n\");\n    } else if !(fFailed != 0) {\n        fmt.Printf(\"Property is undecided.\\n\"); }\n\n    // get the resulting AIG manager\n    Gia_ManHashStop( p.pFrames );\n    pNew = p.pFrames;  p.pFrames = nil;\n    Ccf_ManStop( p );\n\n    // cleanup\n//    if ( fVerbose )\n//        Gia_ManPrintStats( pNew, 0 );\n    pNew = Gia_ManCleanup( pGia = pNew );\n    Gia_ManStop( pGia );\n//    if ( fVerbose )\n//        Gia_ManPrintStats( pNew, 0 );\n    return pNew;   \n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

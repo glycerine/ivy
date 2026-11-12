@@ -1,0 +1,1064 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h",
+  "SHA256": "50e54458dcd879efa8104241c8ca8373d3a81140963861441d7724079075ef7a",
+  "Library": [
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 138,
+        "Column": 78,
+        "ByteOffset": 6287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pLoads    = /*__starting_point_inline_macro:ABC_CALLOC__*/((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 139,
+        "Column": 78,
+        "ByteOffset": 6409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pLoads2   = /*__starting_point_inline_macro:ABC_CALLOC__*/((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 140,
+        "Column": 78,
+        "ByteOffset": 6531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pDepts    = /*__starting_point_inline_macro:ABC_CALLOC__*/((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 141,
+        "Column": 78,
+        "ByteOffset": 6653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTimes    = /*__starting_point_inline_macro:ABC_CALLOC__*/((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 142,
+        "Column": 78,
+        "ByteOffset": 6775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pSlews    = /*__starting_point_inline_macro:ABC_CALLOC__*/((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 143,
+        "Column": 78,
+        "ByteOffset": 6897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTimes2   = /*__starting_point_inline_macro:ABC_CALLOC__*/((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 144,
+        "Column": 78,
+        "ByteOffset": 7019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pSlews2   = /*__starting_point_inline_macro:ABC_CALLOC__*/((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 145,
+        "Column": 76,
+        "ByteOffset": 7139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pSlack    = /*__starting_point_inline_macro:ABC_FALLOC__*/((float *) memset(malloc(sizeof(float) * (size_t)(p.nObjs)), 0xff, sizeof(float) * (size_t)(p.nObjs)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 145,
+        "Column": 83,
+        "ByteOffset": 7146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pSlack    = /*__starting_point_inline_macro:ABC_FALLOC__*/((float *) memset(malloc(sizeof(float) * (size_t)(p.nObjs)), 0xff, sizeof(float) * (size_t)(p.nObjs)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 150,
+        "Column": 64,
+        "ByteOffset": 7373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pLoads) ? (free((char *) (p.pLoads)), (p.pLoads) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 151,
+        "Column": 65,
+        "ByteOffset": 7486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pLoads2) ? (free((char *) (p.pLoads2)), (p.pLoads2) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 152,
+        "Column": 64,
+        "ByteOffset": 7600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pDepts) ? (free((char *) (p.pDepts)), (p.pDepts) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 153,
+        "Column": 64,
+        "ByteOffset": 7712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pTimes) ? (free((char *) (p.pTimes)), (p.pTimes) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 154,
+        "Column": 64,
+        "ByteOffset": 7824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pSlews) ? (free((char *) (p.pSlews)), (p.pSlews) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 155,
+        "Column": 65,
+        "ByteOffset": 7937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pTimes2) ? (free((char *) (p.pTimes2)), (p.pTimes2) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 156,
+        "Column": 65,
+        "ByteOffset": 8052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pSlews2) ? (free((char *) (p.pSlews2)), (p.pSlews2) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 157,
+        "Column": 64,
+        "ByteOffset": 8166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pSlack) ? (free((char *) (p.pSlack)), (p.pSlack) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 158,
+        "Column": 57,
+        "ByteOffset": 8271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 8348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pDepts, 0, sizeof(SC_Pair) * p.nObjs );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 162,
+        "Column": 5,
+        "ByteOffset": 8402
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pTimes, 0, sizeof(SC_Pair) * p.nObjs );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 163,
+        "Column": 5,
+        "ByteOffset": 8456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pSlews, 0, sizeof(SC_Pair) * p.nObjs );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Scl_ObjCell",
+      "Start": 3012,
+      "End": 3153,
+      "BodyStart": 3090,
+      "Original": "static inline SC_Cell * Scl_ObjCell( SC_Time * p, int i )                     { return SC_LibCell( p-\u003epLib, Vec_IntEntry(p-\u003evGates, i) );   }",
+      "Draft": "func Scl_ObjCell(p *SC_Time, i int32) *SC_Cell { return SC_LibCell( p.pLib, Vec_IntEntry(p.vGates, i) );   }"
+    },
+    {
+      "Name": "Scl_ObjSetCell",
+      "Start": 3154,
+      "End": 3295,
+      "BodyStart": 3232,
+      "Original": "static inline void      Scl_ObjSetCell( SC_Time * p, int i, SC_Cell * pCell ) { Vec_IntWriteEntry( p-\u003evGates, i, pCell-\u003eId );               }",
+      "Draft": "func Scl_ObjSetCell(p *SC_Time, i int32, pCell *SC_Cell) { Vec_IntWriteEntry( p.vGates, i, pCell.Id );               }"
+    },
+    {
+      "Name": "Scl_ObjLoad",
+      "Start": 3297,
+      "End": 3401,
+      "BodyStart": 3375,
+      "Original": "static inline SC_Pair * Scl_ObjLoad( SC_Time * p, int i )                     { return p-\u003epLoads + i;  }",
+      "Draft": "func Scl_ObjLoad(p *SC_Time, i int32) *SC_Pair { return p.pLoads + i;  }"
+    },
+    {
+      "Name": "Scl_ObjLoad2",
+      "Start": 3402,
+      "End": 3506,
+      "BodyStart": 3480,
+      "Original": "static inline SC_Pair * Scl_ObjLoad2( SC_Time * p, int i )                    { return p-\u003epLoads2 + i; }",
+      "Draft": "func Scl_ObjLoad2(p *SC_Time, i int32) *SC_Pair { return p.pLoads2 + i; }"
+    },
+    {
+      "Name": "Scl_ObjDept",
+      "Start": 3507,
+      "End": 3611,
+      "BodyStart": 3585,
+      "Original": "static inline SC_Pair * Scl_ObjDept( SC_Time * p, int i )                     { return p-\u003epDepts + i;  }",
+      "Draft": "func Scl_ObjDept(p *SC_Time, i int32) *SC_Pair { return p.pDepts + i;  }"
+    },
+    {
+      "Name": "Scl_ObjTime",
+      "Start": 3612,
+      "End": 3716,
+      "BodyStart": 3690,
+      "Original": "static inline SC_Pair * Scl_ObjTime( SC_Time * p, int i )                     { return p-\u003epTimes + i;  }",
+      "Draft": "func Scl_ObjTime(p *SC_Time, i int32) *SC_Pair { return p.pTimes + i;  }"
+    },
+    {
+      "Name": "Scl_ObjSlew",
+      "Start": 3717,
+      "End": 3821,
+      "BodyStart": 3795,
+      "Original": "static inline SC_Pair * Scl_ObjSlew( SC_Time * p, int i )                     { return p-\u003epSlews + i;  }",
+      "Draft": "func Scl_ObjSlew(p *SC_Time, i int32) *SC_Pair { return p.pSlews + i;  }"
+    },
+    {
+      "Name": "Scl_ObjTime2",
+      "Start": 3822,
+      "End": 3926,
+      "BodyStart": 3900,
+      "Original": "static inline SC_Pair * Scl_ObjTime2( SC_Time * p, int i )                    { return p-\u003epTimes2 + i; }",
+      "Draft": "func Scl_ObjTime2(p *SC_Time, i int32) *SC_Pair { return p.pTimes2 + i; }"
+    },
+    {
+      "Name": "Scl_ObjSlew2",
+      "Start": 3927,
+      "End": 4031,
+      "BodyStart": 4005,
+      "Original": "static inline SC_Pair * Scl_ObjSlew2( SC_Time * p, int i )                    { return p-\u003epSlews2 + i; }",
+      "Draft": "func Scl_ObjSlew2(p *SC_Time, i int32) *SC_Pair { return p.pSlews2 + i; }"
+    },
+    {
+      "Name": "Scl_ObjTimeMax",
+      "Start": 4033,
+      "End": 4186,
+      "BodyStart": 4111,
+      "Original": "static inline float     Scl_ObjTimeMax( SC_Time * p, int i )                  { return Abc_MaxFloat(Scl_ObjTime(p, i)-\u003erise, Scl_ObjTime(p, i)-\u003efall);  }",
+      "Draft": "func Scl_ObjTimeMax(p *SC_Time, i int32) float32 { return Abc_MaxFloat(Scl_ObjTime(p, i).rise, Scl_ObjTime(p, i).fall);  }"
+    },
+    {
+      "Name": "Scl_ObjDepthMax",
+      "Start": 4187,
+      "End": 4340,
+      "BodyStart": 4265,
+      "Original": "static inline float     Scl_ObjDepthMax( SC_Time * p, int i )                 { return Abc_MaxFloat(Scl_ObjDept(p, i)-\u003erise, Scl_ObjDept(p, i)-\u003efall);  }",
+      "Draft": "func Scl_ObjDepthMax(p *SC_Time, i int32) float32 { return Abc_MaxFloat(Scl_ObjDept(p, i).rise, Scl_ObjDept(p, i).fall);  }"
+    },
+    {
+      "Name": "Scl_ObjGetSlack",
+      "Start": 4341,
+      "End": 4550,
+      "BodyStart": 4419,
+      "Original": "static inline float     Scl_ObjGetSlack( SC_Time * p, int i, float D )        { return D - Abc_MaxFloat(Scl_ObjTime(p, i)-\u003erise + Scl_ObjDept(p, i)-\u003erise, Scl_ObjTime(p, i)-\u003efall + Scl_ObjDept(p, i)-\u003efall);  }",
+      "Draft": "func Scl_ObjGetSlack(p *SC_Time, i int32, D float32) float32 { return D - Abc_MaxFloat(Scl_ObjTime(p, i).rise + Scl_ObjDept(p, i).rise, Scl_ObjTime(p, i).fall + Scl_ObjDept(p, i).fall);  }"
+    },
+    {
+      "Name": "Scl_ObjGetSlackR",
+      "Start": 4551,
+      "End": 4697,
+      "BodyStart": 4629,
+      "Original": "static inline float     Scl_ObjGetSlackR( SC_Time * p, int i, float D )       { return D - (Scl_ObjTime(p, i)-\u003erise + Scl_ObjDept(p, i)-\u003erise);  }",
+      "Draft": "func Scl_ObjGetSlackR(p *SC_Time, i int32, D float32) float32 { return D - (Scl_ObjTime(p, i).rise + Scl_ObjDept(p, i).rise);  }"
+    },
+    {
+      "Name": "Scl_ObjGetSlackF",
+      "Start": 4698,
+      "End": 4844,
+      "BodyStart": 4776,
+      "Original": "static inline float     Scl_ObjGetSlackF( SC_Time * p, int i, float D )       { return D - (Scl_ObjTime(p, i)-\u003efall + Scl_ObjDept(p, i)-\u003efall);  }",
+      "Draft": "func Scl_ObjGetSlackF(p *SC_Time, i int32, D float32) float32 { return D - (Scl_ObjTime(p, i).fall + Scl_ObjDept(p, i).fall);  }"
+    },
+    {
+      "Name": "Scl_ObjSlack",
+      "Start": 4845,
+      "End": 4949,
+      "BodyStart": 4923,
+      "Original": "static inline float     Scl_ObjSlack( SC_Time * p, int i )                    { return p-\u003epSlack[i];   }",
+      "Draft": "func Scl_ObjSlack(p *SC_Time, i int32) float32 { return p.pSlack[i];   }"
+    },
+    {
+      "Name": "Scl_ObjDupFanin",
+      "Start": 4951,
+      "End": 5097,
+      "BodyStart": 5029,
+      "Original": "static inline void      Scl_ObjDupFanin( SC_Time * p, int i, int iFanin )     { *Scl_ObjTime(p, i) = *Scl_ObjTime(p, iFanin);                    }",
+      "Draft": "func Scl_ObjDupFanin(p *SC_Time, i int32, iFanin int32) { *Scl_ObjTime(p, i) = *Scl_ObjTime(p, iFanin);                    }"
+    },
+    {
+      "Name": "Scl_ObjGain",
+      "Start": 5098,
+      "End": 5301,
+      "BodyStart": 5176,
+      "Original": "static inline float     Scl_ObjGain( SC_Time * p, int i )                     { return 0.5*((Scl_ObjTime2(p, i)-\u003erise - Scl_ObjTime(p, i)-\u003erise) + (Scl_ObjTime2(p, i)-\u003efall - Scl_ObjTime(p, i)-\u003efall)); }",
+      "Draft": "func Scl_ObjGain(p *SC_Time, i int32) float32 { return 0.5*((Scl_ObjTime2(p, i).rise - Scl_ObjTime(p, i).rise) + (Scl_ObjTime2(p, i).fall - Scl_ObjTime(p, i).fall)); }"
+    },
+    {
+      "Name": "Scl_ObjLegal",
+      "Start": 5302,
+      "End": 5554,
+      "BodyStart": 5380,
+      "Original": "static inline int       Scl_ObjLegal( SC_Time * p, int i, float D )           { return Scl_ObjTime(p, i)-\u003erise \u003c= Scl_ObjTime2(p, i)-\u003erise + Scl_ObjGetSlackR(p, i, D) \u0026\u0026 Scl_ObjTime(p, i)-\u003efall \u003c= Scl_ObjTime2(p, i)-\u003efall + Scl_ObjGetSlackF(p, i, D); }",
+      "Draft": "func Scl_ObjLegal(p *SC_Time, i int32, D float32) int32 { return Scl_ObjTime(p, i).rise \u003c= Scl_ObjTime2(p, i).rise + Scl_ObjGetSlackR(p, i, D) \u0026\u0026 Scl_ObjTime(p, i).fall \u003c= Scl_ObjTime2(p, i).fall + Scl_ObjGetSlackF(p, i, D); }"
+    },
+    {
+      "Name": "Scl_ObjLoadFf",
+      "Start": 5556,
+      "End": 5703,
+      "BodyStart": 5634,
+      "Original": "static inline double    Scl_ObjLoadFf( SC_Time * p, int i, int fRise )        { return fRise ? Scl_ObjLoad(p, i)-\u003erise : Scl_ObjLoad(p, i)-\u003efall; }",
+      "Draft": "func Scl_ObjLoadFf(p *SC_Time, i int32, fRise int32) float64 { if fRise != 0 {\n    return Scl_ObjLoad(p, i).rise;\n} else {\n    return Scl_ObjLoad(p, i).fall;\n} }"
+    },
+    {
+      "Name": "Scl_ObjTimePs",
+      "Start": 5704,
+      "End": 5851,
+      "BodyStart": 5782,
+      "Original": "static inline double    Scl_ObjTimePs( SC_Time * p, int i, int fRise )        { return fRise ? Scl_ObjTime(p, i)-\u003erise : Scl_ObjTime(p, i)-\u003efall; }",
+      "Draft": "func Scl_ObjTimePs(p *SC_Time, i int32, fRise int32) float64 { if fRise != 0 {\n    return Scl_ObjTime(p, i).rise;\n} else {\n    return Scl_ObjTime(p, i).fall;\n} }"
+    },
+    {
+      "Name": "Scl_ObjSlewPs",
+      "Start": 5852,
+      "End": 5999,
+      "BodyStart": 5930,
+      "Original": "static inline double    Scl_ObjSlewPs( SC_Time * p, int i, int fRise )        { return fRise ? Scl_ObjSlew(p, i)-\u003erise : Scl_ObjSlew(p, i)-\u003efall; }",
+      "Draft": "func Scl_ObjSlewPs(p *SC_Time, i int32, fRise int32) float64 { if fRise != 0 {\n    return Scl_ObjSlew(p, i).rise;\n} else {\n    return Scl_ObjSlew(p, i).fall;\n} }"
+    },
+    {
+      "Name": "Scl_ManAlloc",
+      "Start": 6493,
+      "End": 7177,
+      "BodyStart": 6594,
+      "Original": "static inline SC_Time * Scl_ManAlloc( SC_Lib * pLib, Vec_Int_t * vCis, Vec_Int_t * vCos, int nObjs )\n{\n    SC_Time * p;\n    p = ABC_CALLOC( SC_Time, 1 );\n    p-\u003epLib      = pLib;\n    p-\u003evCis      = vCis;\n    p-\u003evCos      = vCos;\n    p-\u003enObjs     = nObjs;\n    p-\u003epLoads    = ABC_CALLOC( SC_Pair, p-\u003enObjs );\n    p-\u003epLoads2   = ABC_CALLOC( SC_Pair, p-\u003enObjs );\n    p-\u003epDepts    = ABC_CALLOC( SC_Pair, p-\u003enObjs );\n    p-\u003epTimes    = ABC_CALLOC( SC_Pair, p-\u003enObjs );\n    p-\u003epSlews    = ABC_CALLOC( SC_Pair, p-\u003enObjs );\n    p-\u003epTimes2   = ABC_CALLOC( SC_Pair, p-\u003enObjs );\n    p-\u003epSlews2   = ABC_CALLOC( SC_Pair, p-\u003enObjs );\n    p-\u003epSlack    = ABC_FALLOC( float, p-\u003enObjs );\n    return p;\n}",
+      "Draft": "func Scl_ManAlloc(pLib *SC_Lib, vCis *Vec_Int_t, vCos *Vec_Int_t, nObjs int32) *SC_Time {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_Time{};\n    p.pLib      = pLib;\n    p.vCis      = vCis;\n    p.vCos      = vCos;\n    p.nObjs     = nObjs;\n    // inlining of macro ABC_CALLOC\n    p.pLoads    = ((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));\n    // inlining of macro ABC_CALLOC\n    p.pLoads2   = ((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));\n    // inlining of macro ABC_CALLOC\n    p.pDepts    = ((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));\n    // inlining of macro ABC_CALLOC\n    p.pTimes    = ((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));\n    // inlining of macro ABC_CALLOC\n    p.pSlews    = ((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));\n    // inlining of macro ABC_CALLOC\n    p.pTimes2   = ((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));\n    // inlining of macro ABC_CALLOC\n    p.pSlews2   = ((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));\n    // inlining of macro ABC_FALLOC\n    p.pSlack    = ((float *) memset(malloc(sizeof(float) * (size_t)(p.nObjs)), 0xff, sizeof(float) * (size_t)(p.nObjs)));\n    return p;\n}"
+    },
+    {
+      "Name": "Scl_ManFree",
+      "Start": 7178,
+      "End": 7497,
+      "BodyStart": 7224,
+      "Original": "static inline void Scl_ManFree( SC_Time * p )\n{\n    Vec_IntFreeP( \u0026p-\u003evGates );\n    ABC_FREE( p-\u003epLoads );\n    ABC_FREE( p-\u003epLoads2 );\n    ABC_FREE( p-\u003epDepts );\n    ABC_FREE( p-\u003epTimes );\n    ABC_FREE( p-\u003epSlews );\n    ABC_FREE( p-\u003epTimes2 );\n    ABC_FREE( p-\u003epSlews2 );\n    ABC_FREE( p-\u003epSlack );\n    ABC_FREE( p );\n}",
+      "Draft": "func Scl_ManFree(p *SC_Time) {\n    Vec_IntFreeP( \u0026p.vGates );\n    // inlining of macro ABC_FREE\n    ((p.pLoads) ? (free((char *) (p.pLoads)), (p.pLoads) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pLoads2) ? (free((char *) (p.pLoads2)), (p.pLoads2) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDepts) ? (free((char *) (p.pDepts)), (p.pDepts) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pTimes) ? (free((char *) (p.pTimes)), (p.pTimes) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pSlews) ? (free((char *) (p.pSlews)), (p.pSlews) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pTimes2) ? (free((char *) (p.pTimes2)), (p.pTimes2) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pSlews2) ? (free((char *) (p.pSlews2)), (p.pSlews2) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pSlack) ? (free((char *) (p.pSlack)), (p.pSlack) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Scl_ManCleanTime",
+      "Start": 7498,
+      "End": 7720,
+      "BodyStart": 7549,
+      "Original": "static inline void Scl_ManCleanTime( SC_Time * p )\n{\n    memset( p-\u003epDepts, 0, sizeof(SC_Pair) * p-\u003enObjs );\n    memset( p-\u003epTimes, 0, sizeof(SC_Pair) * p-\u003enObjs );\n    memset( p-\u003epSlews, 0, sizeof(SC_Pair) * p-\u003enObjs );\n}",
+      "Draft": "func Scl_ManCleanTime(p *SC_Time) {\n    memset( p.pDepts, 0, sizeof(SC_Pair) * p.nObjs );\n    memset( p.pTimes, 0, sizeof(SC_Pair) * p.nObjs );\n    memset( p.pSlews, 0, sizeof(SC_Pair) * p.nObjs );\n}"
+    },
+    {
+      "Name": "Scl_ConeStore",
+      "Start": 8012,
+      "End": 8265,
+      "BodyStart": 8079,
+      "Original": "static inline void Scl_ConeStore( SC_Time * p, Vec_Int_t * vCone )\n{\n    int i, iObj;\n    Vec_IntForEachEntry( vCone, iObj, i )\n    {\n        *Scl_ObjTime2(p, iObj) = *Scl_ObjTime(p, iObj);\n        *Scl_ObjSlew2(p, iObj) = *Scl_ObjSlew(p, iObj);\n    }\n}",
+      "Draft": "func Scl_ConeStore(p *SC_Time, vCone *Vec_Int_t) {\n    var i, iObj int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCone)) \u0026\u0026 (((iObj) = Vec_IntEntry(vCone, i)), 1); i++  {\n        *Scl_ObjTime2(p, iObj) = *Scl_ObjTime(p, iObj);\n        *Scl_ObjSlew2(p, iObj) = *Scl_ObjSlew(p, iObj);\n    }\n}"
+    },
+    {
+      "Name": "Scl_ConeRestore",
+      "Start": 8266,
+      "End": 8521,
+      "BodyStart": 8335,
+      "Original": "static inline void Scl_ConeRestore( SC_Time * p, Vec_Int_t * vCone )\n{\n    int i, iObj;\n    Vec_IntForEachEntry( vCone, iObj, i )\n    {\n        *Scl_ObjTime(p, iObj) = *Scl_ObjTime2(p, iObj);\n        *Scl_ObjSlew(p, iObj) = *Scl_ObjSlew2(p, iObj);\n    }\n}",
+      "Draft": "func Scl_ConeRestore(p *SC_Time, vCone *Vec_Int_t) {\n    var i, iObj int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCone)) \u0026\u0026 (((iObj) = Vec_IntEntry(vCone, i)), 1); i++  {\n        *Scl_ObjTime(p, iObj) = *Scl_ObjTime2(p, iObj);\n        *Scl_ObjSlew(p, iObj) = *Scl_ObjSlew2(p, iObj);\n    }\n}"
+    },
+    {
+      "Name": "Scl_ConeClear",
+      "Start": 8522,
+      "End": 8772,
+      "BodyStart": 8589,
+      "Original": "static inline void Scl_ConeClear( SC_Time * p, Vec_Int_t * vCone )\n{\n    SC_Pair Zero = { 0.0, 0.0 };\n    int i, iObj;\n    Vec_IntForEachEntry( vCone, iObj, i )\n    {\n        *Scl_ObjTime(p, iObj) = Zero;\n        *Scl_ObjSlew(p, iObj) = Zero;\n    }\n}",
+      "Draft": "func Scl_ConeClear(p *SC_Time, vCone *Vec_Int_t) {\n    var Zero SC_Pair  = SC_Pair{ 0.0, 0.0 };\n    var i, iObj int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCone)) \u0026\u0026 (((iObj) = Vec_IntEntry(vCone, i)), 1); i++  {\n        *Scl_ObjTime(p, iObj) = Zero;\n        *Scl_ObjSlew(p, iObj) = Zero;\n    }\n}"
+    },
+    {
+      "Name": "Scl_PinTimeArrival",
+      "Start": 9053,
+      "End": 9502,
+      "BodyStart": 9147,
+      "Original": "static inline void Scl_PinTimeArrival( SC_Time * p, SC_Timing * pTime, int iObj, int iFanin )\n{\n    SC_Pair * pArrIn   = Scl_ObjTime( p, iFanin );\n    SC_Pair * pSlewIn  = Scl_ObjSlew( p, iFanin );\n    SC_Pair * pLoad    = Scl_ObjLoad( p, iObj );\n    SC_Pair * pArrOut  = Scl_ObjTime( p, iObj );   // modified\n    SC_Pair * pSlewOut = Scl_ObjSlew( p, iObj );   // modified\n    Scl_LibPinArrival( pTime, pArrIn, pSlewIn, pLoad, pArrOut, pSlewOut );\n}",
+      "Draft": "func Scl_PinTimeArrival(p *SC_Time, pTime *SC_Timing, iObj int32, iFanin int32) {\n    var pArrIn *SC_Pair    = Scl_ObjTime( p, iFanin );\n    var pSlewIn *SC_Pair   = Scl_ObjSlew( p, iFanin );\n    var pLoad *SC_Pair     = Scl_ObjLoad( p, iObj );\n    var pArrOut *SC_Pair   = Scl_ObjTime( p, iObj );   // modified\n    var pSlewOut *SC_Pair  = Scl_ObjSlew( p, iObj );   // modified\n    Scl_LibPinArrival( pTime, pArrIn, pSlewIn, pLoad, pArrOut, pSlewOut );\n}"
+    },
+    {
+      "Name": "Scl_PinTimeDeparture",
+      "Start": 9503,
+      "End": 9883,
+      "BodyStart": 9599,
+      "Original": "static inline void Scl_PinTimeDeparture( SC_Time * p, SC_Timing * pTime, int iObj, int iFanin )\n{\n    SC_Pair * pDepIn   = Scl_ObjDept( p, iFanin );   // modified\n    SC_Pair * pSlewIn  = Scl_ObjSlew( p, iFanin );\n    SC_Pair * pLoad    = Scl_ObjLoad( p, iObj );\n    SC_Pair * pDepOut  = Scl_ObjDept( p, iObj );\n    Scl_LibPinDeparture( pTime, pDepIn, pSlewIn, pLoad, pDepOut );\n}",
+      "Draft": "func Scl_PinTimeDeparture(p *SC_Time, pTime *SC_Timing, iObj int32, iFanin int32) {\n    var pDepIn *SC_Pair    = Scl_ObjDept( p, iFanin );   // modified\n    var pSlewIn *SC_Pair   = Scl_ObjSlew( p, iFanin );\n    var pLoad *SC_Pair     = Scl_ObjLoad( p, iObj );\n    var pDepOut *SC_Pair   = Scl_ObjDept( p, iObj );\n    Scl_LibPinDeparture( pTime, pDepIn, pSlewIn, pLoad, pDepOut );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::struct::SC_Time",
+      "Category": "struct-review",
+      "Symbol": "SC_Time",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1342,
+      "End": 2570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::mechanical::sizeof::6700",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6621,
+      "End": 6621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::mechanical::sizeof::6925",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6767,
+      "End": 6767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::mechanical::sizeof::7049",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6819,
+      "End": 6819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::mechanical::sizeof::7173",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6871,
+      "End": 6871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::mechanical::sizeof::7297",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6923,
+      "End": 6923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::mechanical::sizeof::7421",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6975,
+      "End": 6975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::mechanical::sizeof::7545",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7027,
+      "End": 7027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::mechanical::sizeof::7669",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7079,
+      "End": 7079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::mechanical::sizeof::7778",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7131,
+      "End": 7131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::mechanical::sizeof::7821",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7131,
+      "End": 7131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::mechanical::sizeof::9056",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7577,
+      "End": 7583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::mechanical::sizeof::9112",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7633,
+      "End": 7639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::mechanical::sizeof::9168",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7689,
+      "End": 7695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::6668",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6621,
+      "End": 6621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::6886",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6767,
+      "End": 6767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::7010",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6819,
+      "End": 6819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::7134",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6871,
+      "End": 6871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::7258",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6923,
+      "End": 6923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::7382",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6975,
+      "End": 6975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::7506",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7027,
+      "End": 7027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::7630",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7079,
+      "End": 7079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::7754",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7131,
+      "End": 7131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::8024",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7262,
+      "End": 7262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::8140",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7289,
+      "End": 7289
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::8257",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7317,
+      "End": 7317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::8372",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7344,
+      "End": 7344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::8487",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7371,
+      "End": 7371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::8603",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7398,
+      "End": 7398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::8721",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7426,
+      "End": 7426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::8838",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7454,
+      "End": 7454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::pointer-cast::8945",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7481,
+      "End": 7481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjCell",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjCell",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3012,
+      "End": 3153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjSetCell",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjSetCell",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3154,
+      "End": 3295
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjLoad",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3297,
+      "End": 3401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjLoad2",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjLoad2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3402,
+      "End": 3506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjDept",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjDept",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3507,
+      "End": 3611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjTime",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3612,
+      "End": 3716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjSlew",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjSlew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3717,
+      "End": 3821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjTime2",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjTime2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3822,
+      "End": 3926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjSlew2",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjSlew2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3927,
+      "End": 4031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjTimeMax",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjTimeMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4033,
+      "End": 4186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjDepthMax",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjDepthMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4187,
+      "End": 4340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjGetSlack",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjGetSlack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4341,
+      "End": 4550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjGetSlackR",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjGetSlackR",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4551,
+      "End": 4697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjGetSlackF",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjGetSlackF",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4698,
+      "End": 4844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjSlack",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjSlack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4845,
+      "End": 4949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjDupFanin",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjDupFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4951,
+      "End": 5097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjGain",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjGain",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5098,
+      "End": 5301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjLegal",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjLegal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5302,
+      "End": 5554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjLoadFf",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjLoadFf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5556,
+      "End": 5703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjTimePs",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjTimePs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5704,
+      "End": 5851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ObjSlewPs",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ObjSlewPs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5852,
+      "End": 5999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6493,
+      "End": 7177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::ternary::Scl_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Scl_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7178,
+      "End": 7497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7178,
+      "End": 7497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ManCleanTime",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ManCleanTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7498,
+      "End": 7720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ConeStore",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConeStore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8012,
+      "End": 8265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ConeRestore",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConeRestore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8266,
+      "End": 8521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_ConeClear",
+      "Category": "semantic-review",
+      "Symbol": "Scl_ConeClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8522,
+      "End": 8772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_PinTimeArrival",
+      "Category": "semantic-review",
+      "Symbol": "Scl_PinTimeArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9053,
+      "End": 9502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::Scl_PinTimeDeparture",
+      "Category": "semantic-review",
+      "Symbol": "Scl_PinTimeDeparture",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9503,
+      "End": 9883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclTime.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10140
+    }
+  ],
+  "Draft": "package scl\n\n/**CFile****************************************************************\n\n  FileName    [sclTime.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Standard-cell library representation.]\n\n  Synopsis    [Timing/gate-sizing manager.]\n\n  Author      [Alan Mishchenko, Niklas Een]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 24, 2012.]\n\n  Revision    [$Id: sclTime.h,v 1.0 2012/08/24 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"misc/vec/vec.h\"\n//#include \"sclLib.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n             \ntype SC_Time struct {\n    pLib        *SC_Lib;          // library\n    vCis     *Vec_Int_t;          // comb inputs\n    vCos     *Vec_Int_t;          // comb outputs \n    nObjs            int32;         // allocated size\n    // get assignment\n    vGates     *Vec_Int_t;        // mapping of objId into gateId\n    // timing information\n    pLoads       *SC_Pair;        // loads for each gate\n    pLoads2       *SC_Pair;       // loads for each gate\n    pDepts       *SC_Pair;        // departures for each gate\n    pTimes       *SC_Pair;        // arrivals for each gate\n    pSlews       *SC_Pair;        // slews for each gate\n    pTimes2       *SC_Pair;       // arrivals for each gate\n    pSlews2       *SC_Pair;       // slews for each gate\n    pSlack         *float32;        // slacks for each gate\n    pWLoadUsed   *SC_WireLoad;    // name of the used WireLoad model\n    // optimization parameters\n    SumArea          float32;       // total area\n    MaxDelay          float32;      // max delay\n    SumArea0          float32;      // total area at the begining \n    MaxDelay0          float32;     // max delay at the begining\n    BestDelay          float32;     // best delay in the middle\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       GLOBAL VARIABLES                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Scl_ObjCell(p *SC_Time, i int32) *SC_Cell { return SC_LibCell( p.pLib, Vec_IntEntry(p.vGates, i) );   }\nfunc Scl_ObjSetCell(p *SC_Time, i int32, pCell *SC_Cell) { Vec_IntWriteEntry( p.vGates, i, pCell.Id );               }\n\nfunc Scl_ObjLoad(p *SC_Time, i int32) *SC_Pair { return p.pLoads + i;  }\nfunc Scl_ObjLoad2(p *SC_Time, i int32) *SC_Pair { return p.pLoads2 + i; }\nfunc Scl_ObjDept(p *SC_Time, i int32) *SC_Pair { return p.pDepts + i;  }\nfunc Scl_ObjTime(p *SC_Time, i int32) *SC_Pair { return p.pTimes + i;  }\nfunc Scl_ObjSlew(p *SC_Time, i int32) *SC_Pair { return p.pSlews + i;  }\nfunc Scl_ObjTime2(p *SC_Time, i int32) *SC_Pair { return p.pTimes2 + i; }\nfunc Scl_ObjSlew2(p *SC_Time, i int32) *SC_Pair { return p.pSlews2 + i; }\n\nfunc Scl_ObjTimeMax(p *SC_Time, i int32) float32 { return Abc_MaxFloat(Scl_ObjTime(p, i).rise, Scl_ObjTime(p, i).fall);  }\nfunc Scl_ObjDepthMax(p *SC_Time, i int32) float32 { return Abc_MaxFloat(Scl_ObjDept(p, i).rise, Scl_ObjDept(p, i).fall);  }\nfunc Scl_ObjGetSlack(p *SC_Time, i int32, D float32) float32 { return D - Abc_MaxFloat(Scl_ObjTime(p, i).rise + Scl_ObjDept(p, i).rise, Scl_ObjTime(p, i).fall + Scl_ObjDept(p, i).fall);  }\nfunc Scl_ObjGetSlackR(p *SC_Time, i int32, D float32) float32 { return D - (Scl_ObjTime(p, i).rise + Scl_ObjDept(p, i).rise);  }\nfunc Scl_ObjGetSlackF(p *SC_Time, i int32, D float32) float32 { return D - (Scl_ObjTime(p, i).fall + Scl_ObjDept(p, i).fall);  }\nfunc Scl_ObjSlack(p *SC_Time, i int32) float32 { return p.pSlack[i];   }\n\nfunc Scl_ObjDupFanin(p *SC_Time, i int32, iFanin int32) { *Scl_ObjTime(p, i) = *Scl_ObjTime(p, iFanin);                    }\nfunc Scl_ObjGain(p *SC_Time, i int32) float32 { return 0.5*((Scl_ObjTime2(p, i).rise - Scl_ObjTime(p, i).rise) + (Scl_ObjTime2(p, i).fall - Scl_ObjTime(p, i).fall)); }\nfunc Scl_ObjLegal(p *SC_Time, i int32, D float32) int32 { return Scl_ObjTime(p, i).rise \u003c= Scl_ObjTime2(p, i).rise + Scl_ObjGetSlackR(p, i, D) \u0026\u0026 Scl_ObjTime(p, i).fall \u003c= Scl_ObjTime2(p, i).fall + Scl_ObjGetSlackF(p, i, D); }\n\nfunc Scl_ObjLoadFf(p *SC_Time, i int32, fRise int32) float64 { if fRise != 0 {\n    return Scl_ObjLoad(p, i).rise;\n} else {\n    return Scl_ObjLoad(p, i).fall;\n} }\nfunc Scl_ObjTimePs(p *SC_Time, i int32, fRise int32) float64 { if fRise != 0 {\n    return Scl_ObjTime(p, i).rise;\n} else {\n    return Scl_ObjTime(p, i).fall;\n} }\nfunc Scl_ObjSlewPs(p *SC_Time, i int32, fRise int32) float64 { if fRise != 0 {\n    return Scl_ObjSlew(p, i).rise;\n} else {\n    return Scl_ObjSlew(p, i).fall;\n} }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Constructor/destructor of STA manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Scl_ManAlloc(pLib *SC_Lib, vCis *Vec_Int_t, vCos *Vec_Int_t, nObjs int32) *SC_Time {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026SC_Time{};\n    p.pLib      = pLib;\n    p.vCis      = vCis;\n    p.vCos      = vCos;\n    p.nObjs     = nObjs;\n    // inlining of macro ABC_CALLOC\n    p.pLoads    = ((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));\n    // inlining of macro ABC_CALLOC\n    p.pLoads2   = ((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));\n    // inlining of macro ABC_CALLOC\n    p.pDepts    = ((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));\n    // inlining of macro ABC_CALLOC\n    p.pTimes    = ((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));\n    // inlining of macro ABC_CALLOC\n    p.pSlews    = ((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));\n    // inlining of macro ABC_CALLOC\n    p.pTimes2   = ((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));\n    // inlining of macro ABC_CALLOC\n    p.pSlews2   = ((SC_Pair *) calloc((size_t)(p.nObjs), sizeof(SC_Pair)));\n    // inlining of macro ABC_FALLOC\n    p.pSlack    = ((float *) memset(malloc(sizeof(float) * (size_t)(p.nObjs)), 0xff, sizeof(float) * (size_t)(p.nObjs)));\n    return p;\n}\nfunc Scl_ManFree(p *SC_Time) {\n    Vec_IntFreeP( \u0026p.vGates );\n    // inlining of macro ABC_FREE\n    ((p.pLoads) ? (free((char *) (p.pLoads)), (p.pLoads) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pLoads2) ? (free((char *) (p.pLoads2)), (p.pLoads2) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pDepts) ? (free((char *) (p.pDepts)), (p.pDepts) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pTimes) ? (free((char *) (p.pTimes)), (p.pTimes) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pSlews) ? (free((char *) (p.pSlews)), (p.pSlews) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pTimes2) ? (free((char *) (p.pTimes2)), (p.pTimes2) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pSlews2) ? (free((char *) (p.pSlews2)), (p.pSlews2) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pSlack) ? (free((char *) (p.pSlack)), (p.pSlack) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Scl_ManCleanTime(p *SC_Time) {\n    memset( p.pDepts, 0, sizeof(SC_Pair) * p.nObjs );\n    memset( p.pTimes, 0, sizeof(SC_Pair) * p.nObjs );\n    memset( p.pSlews, 0, sizeof(SC_Pair) * p.nObjs );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Stores/retrieves timing information for the logic cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Scl_ConeStore(p *SC_Time, vCone *Vec_Int_t) {\n    var i, iObj int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCone)) \u0026\u0026 (((iObj) = Vec_IntEntry(vCone, i)), 1); i++  {\n        *Scl_ObjTime2(p, iObj) = *Scl_ObjTime(p, iObj);\n        *Scl_ObjSlew2(p, iObj) = *Scl_ObjSlew(p, iObj);\n    }\n}\nfunc Scl_ConeRestore(p *SC_Time, vCone *Vec_Int_t) {\n    var i, iObj int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCone)) \u0026\u0026 (((iObj) = Vec_IntEntry(vCone, i)), 1); i++  {\n        *Scl_ObjTime(p, iObj) = *Scl_ObjTime2(p, iObj);\n        *Scl_ObjSlew(p, iObj) = *Scl_ObjSlew2(p, iObj);\n    }\n}\nfunc Scl_ConeClear(p *SC_Time, vCone *Vec_Int_t) {\n    var Zero SC_Pair  = SC_Pair{ 0.0, 0.0 };\n    var i, iObj int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCone)) \u0026\u0026 (((iObj) = Vec_IntEntry(vCone, i)), 1); i++  {\n        *Scl_ObjTime(p, iObj) = Zero;\n        *Scl_ObjSlew(p, iObj) = Zero;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Timing computation for pin/gate/cone/network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Scl_PinTimeArrival(p *SC_Time, pTime *SC_Timing, iObj int32, iFanin int32) {\n    var pArrIn *SC_Pair    = Scl_ObjTime( p, iFanin );\n    var pSlewIn *SC_Pair   = Scl_ObjSlew( p, iFanin );\n    var pLoad *SC_Pair     = Scl_ObjLoad( p, iObj );\n    var pArrOut *SC_Pair   = Scl_ObjTime( p, iObj );   // modified\n    var pSlewOut *SC_Pair  = Scl_ObjSlew( p, iObj );   // modified\n    Scl_LibPinArrival( pTime, pArrIn, pSlewIn, pLoad, pArrOut, pSlewOut );\n}\nfunc Scl_PinTimeDeparture(p *SC_Time, pTime *SC_Timing, iObj int32, iFanin int32) {\n    var pDepIn *SC_Pair    = Scl_ObjDept( p, iFanin );   // modified\n    var pSlewIn *SC_Pair   = Scl_ObjSlew( p, iFanin );\n    var pLoad *SC_Pair     = Scl_ObjLoad( p, iObj );\n    var pDepOut *SC_Pair   = Scl_ObjDept( p, iObj );\n    Scl_LibPinDeparture( pTime, pDepIn, pSlewIn, pLoad, pDepOut );\n}\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

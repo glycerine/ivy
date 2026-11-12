@@ -1,0 +1,82 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpga.h",
+  "SHA256": "4ad62d69f5317c93a153848c7422507a4f8369d9b5c8fdf8b5cfe3029ac2ae49",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpga.h::macro::Fpga_IsComplement",
+      "Category": "macro-review",
+      "Symbol": "Fpga_IsComplement",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2032,
+      "End": 2099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpga.h::macro::Fpga_Regular",
+      "Category": "macro-review",
+      "Symbol": "Fpga_Regular",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2100,
+      "End": 2176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpga.h::macro::Fpga_Not",
+      "Category": "macro-review",
+      "Symbol": "Fpga_Not",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2177,
+      "End": 2252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpga.h::macro::Fpga_NotCond",
+      "Category": "macro-review",
+      "Symbol": "Fpga_NotCond",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2253,
+      "End": 2328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpga.h::macro::Fpga_Ref",
+      "Category": "macro-review",
+      "Symbol": "Fpga_Ref",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2330,
+      "End": 2352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpga.h::macro::Fpga_Deref",
+      "Category": "macro-review",
+      "Symbol": "Fpga_Deref",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2353,
+      "End": 2374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpga.h::macro::Fpga_RecursiveDeref",
+      "Category": "macro-review",
+      "Symbol": "Fpga_RecursiveDeref",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2375,
+      "End": 2407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpga.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9248
+    }
+  ],
+  "Draft": "package fpga\n\n/**CFile****************************************************************\n\n  FileName    [fpga.h]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Technology mapping for variable-size-LUT FPGAs.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - August 18, 2004.]\n\n  Revision    [$Id: fpga.h,v 1.7 2004/09/30 21:18:09 satrajit Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n// the maximum size of LUTs used for mapping\nconst FPGA_MAX_LUTSIZE =   32\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\ntype Fpga_Man_t =         Fpga_ManStruct_t_;\ntype Fpga_Node_t =        Fpga_NodeStruct_t_;\ntype Fpga_NodeVec_t =     Fpga_NodeVecStruct_t_;\ntype Fpga_Cut_t =         Fpga_CutStruct_t_;\ntype Fpga_LutLib_t =      Fpga_LutLibStruct_t_;\n\n////////////////////////////////////////////////////////////////////////\n///                       GLOBAL VARIABLES                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n \n// Original macro:\n// #define Fpga_IsComplement(p)    (((int)((ABC_PTRUINT_T) (p) \u0026 01)))\n\n// Original macro:\n// #define Fpga_Regular(p)         ((Fpga_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) \n\n// Original macro:\n// #define Fpga_Not(p)             ((Fpga_Node_t *)((ABC_PTRUINT_T)(p) ^ 01)) \n\n// Original macro:\n// #define Fpga_NotCond(p,c)       ((Fpga_Node_t *)((ABC_PTRUINT_T)(p) ^ (c)))\n\n\n// Original macro:\n// #define Fpga_Ref(p)   \n\n// Original macro:\n// #define Fpga_Deref(p)\n\n// Original macro:\n// #define Fpga_RecursiveDeref(p,c)\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== fpgaCreate.c =============================================================*/\n// extern Fpga_Man_t *    Fpga_ManCreate( int nInputs, int nOutputs, int fVerbose );\n\n// extern Fpga_Node_t *   Fpga_NodeCreate( Fpga_Man_t * p, Fpga_Node_t * p1, Fpga_Node_t * p2 );\n\n// extern void            Fpga_ManFree( Fpga_Man_t * pMan );\n\n// extern void            Fpga_ManPrintTimeStats( Fpga_Man_t * p );\n\n\n// extern int             Fpga_ManReadInputNum( Fpga_Man_t * p );\n\n// extern int             Fpga_ManReadOutputNum( Fpga_Man_t * p );\n\n// extern Fpga_Node_t **  Fpga_ManReadInputs ( Fpga_Man_t * p );\n\n// extern Fpga_Node_t **  Fpga_ManReadOutputs( Fpga_Man_t * p );\n\n// extern Fpga_Node_t *   Fpga_ManReadConst1 ( Fpga_Man_t * p );\n\n// extern float *         Fpga_ManReadInputArrivals( Fpga_Man_t * p );\n\n// extern int             Fpga_ManReadVerbose( Fpga_Man_t * p );\n\n// extern int             Fpga_ManReadVarMax( Fpga_Man_t * p );\n\n// extern float *         Fpga_ManReadLutAreas( Fpga_Man_t * p );\n\n// extern Fpga_NodeVec_t* Fpga_ManReadMapping( Fpga_Man_t * p );\n\n// extern void            Fpga_ManSetOutputNames( Fpga_Man_t * p, char ** ppNames );\n\n// extern void            Fpga_ManSetInputArrivals( Fpga_Man_t * p, float * pArrivals );\n\n// extern void            Fpga_ManSetAreaRecovery( Fpga_Man_t * p, int fAreaRecovery );\n\n// extern void            Fpga_ManSetDelayLimit( Fpga_Man_t * p, float DelayLimit );\n\n// extern void            Fpga_ManSetAreaLimit( Fpga_Man_t * p, float AreaLimit );\n\n// extern void            Fpga_ManSetObeyFanoutLimits( Fpga_Man_t * p, int fObeyFanoutLimits );\n              \n// extern void            Fpga_ManSetNumIterations( Fpga_Man_t * p, int nNumIterations );\n\n// extern int             Fpga_ManReadFanoutViolations( Fpga_Man_t * p );\n\n// extern void            Fpga_ManSetFanoutViolations( Fpga_Man_t * p, int nVio );\n\n// extern void            Fpga_ManSetChoiceNodeNum( Fpga_Man_t * p, int nChoiceNodes );\n\n// extern void            Fpga_ManSetChoiceNum( Fpga_Man_t * p, int nChoices );\n\n// extern void            Fpga_ManSetVerbose( Fpga_Man_t * p, int fVerbose );\n\n// extern void            Fpga_ManSetSwitching( Fpga_Man_t * p, int fSwitching );\n\n// extern void            Fpga_ManSetLatchPaths( Fpga_Man_t * p, int fLatchPaths );\n\n// extern void            Fpga_ManSetLatchNum( Fpga_Man_t * p, int nLatches );\n\n// extern void            Fpga_ManSetDelayTarget( Fpga_Man_t * p, float DelayTarget );\n\n// extern void            Fpga_ManSetName( Fpga_Man_t * p, char * pFileName );\n\n\n// extern int             Fpga_LibReadLutMax( Fpga_LutLib_t * pLib );\n\n\n// extern char *          Fpga_NodeReadData0( Fpga_Node_t * p );\n\n// extern Fpga_Node_t *   Fpga_NodeReadData1( Fpga_Node_t * p );\n\n// extern int             Fpga_NodeReadRefs( Fpga_Node_t * p );\n\n// extern int             Fpga_NodeReadNum( Fpga_Node_t * p );\n\n// extern int             Fpga_NodeReadLevel( Fpga_Node_t * p );\n\n// extern Fpga_Cut_t *    Fpga_NodeReadCuts( Fpga_Node_t * p );\n\n// extern Fpga_Cut_t *    Fpga_NodeReadCutBest( Fpga_Node_t * p );\n\n// extern Fpga_Node_t *   Fpga_NodeReadOne( Fpga_Node_t * p );\n\n// extern Fpga_Node_t *   Fpga_NodeReadTwo( Fpga_Node_t * p );\n\n// extern void            Fpga_NodeSetLevel( Fpga_Node_t * p, Fpga_Node_t * pNode );\n\n// extern void            Fpga_NodeSetData0( Fpga_Node_t * p, char * pData );\n\n// extern void            Fpga_NodeSetData1( Fpga_Node_t * p, Fpga_Node_t * pNode );\n\n// extern void            Fpga_NodeSetArrival( Fpga_Node_t * p, float Time );\n\n// extern void            Fpga_NodeSetNextE( Fpga_Node_t * p, Fpga_Node_t * pNextE );\n\n// extern void            Fpga_NodeSetRepr( Fpga_Node_t * p, Fpga_Node_t * pRepr );\n\n// extern void            Fpga_NodeSetSwitching( Fpga_Node_t * p, float Switching );\n\n\n// extern int             Fpga_NodeIsConst( Fpga_Node_t * p );\n\n// extern int             Fpga_NodeIsVar( Fpga_Node_t * p );\n\n// extern int             Fpga_NodeIsAnd( Fpga_Node_t * p );\n\n// extern int             Fpga_NodeComparePhase( Fpga_Node_t * p1, Fpga_Node_t * p2 );\n\n\n// extern int             Fpga_CutReadLeavesNum( Fpga_Cut_t * p );\n\n// extern Fpga_Node_t **  Fpga_CutReadLeaves( Fpga_Cut_t * p );\n\n\n// extern Fpga_Node_t *   Fpga_NodeAnd( Fpga_Man_t * p, Fpga_Node_t * p1, Fpga_Node_t * p2 );\n\n// extern Fpga_Node_t *   Fpga_NodeOr( Fpga_Man_t * p, Fpga_Node_t * p1, Fpga_Node_t * p2 );\n\n// extern Fpga_Node_t *   Fpga_NodeExor( Fpga_Man_t * p, Fpga_Node_t * p1, Fpga_Node_t * p2 );\n\n// extern Fpga_Node_t *   Fpga_NodeMux( Fpga_Man_t * p, Fpga_Node_t * pNode, Fpga_Node_t * pNodeT, Fpga_Node_t * pNodeE );\n\n// extern void            Fpga_NodeSetChoice( Fpga_Man_t * pMan, Fpga_Node_t * pNodeOld, Fpga_Node_t * pNodeNew );\n\n\n// extern void            Fpga_ManStats( Fpga_Man_t * p );\n\n\n/*=== fpgaCore.c =============================================================*/\n// extern int             Fpga_Mapping( Fpga_Man_t * p );\n\n/*=== fpgaCut.c ===============================================================*/\n// extern void            Fpga_MappingCreatePiCuts( Fpga_Man_t * p );\n\n// extern void            Fpga_CutsCleanSign( Fpga_Man_t * pMan );\n\n// extern void            Fpga_CutsCleanRoot( Fpga_Man_t * pMan );\n\n/*=== fpgaCutUtils.c =============================================================*/\n// extern void            Fpga_CutCreateFromNode( Fpga_Man_t * p, int iRoot, int * pLeaves, int nLeaves );\n\n// extern void            Fpga_MappingSetUsedCuts( Fpga_Man_t * p );\n\n/*=== fpgaLib.c =============================================================*/\n// extern Fpga_LutLib_t * Fpga_LutLibDup( Fpga_LutLib_t * p );\n\n// extern int             Fpga_LutLibReadVarMax( Fpga_LutLib_t * p );\n\n// extern float *         Fpga_LutLibReadLutAreas( Fpga_LutLib_t * p );\n\n// extern float *         Fpga_LutLibReadLutDelays( Fpga_LutLib_t * p );\n\n// extern float           Fpga_LutLibReadLutArea( Fpga_LutLib_t * p, int Size );\n\n// extern float           Fpga_LutLibReadLutDelay( Fpga_LutLib_t * p, int Size );\n\n/*=== fpgaTruth.c =============================================================*/\n// extern void *          Fpga_TruthsCutBdd( void * dd, Fpga_Cut_t * pCut );\n\n// extern int             Fpga_CutVolume( Fpga_Cut_t * pCut );\n\n/*=== fpgaUtil.c =============================================================*/\n// extern int             Fpga_ManCheckConsistency( Fpga_Man_t * p );\n\n// extern void            Fpga_ManCleanData0( Fpga_Man_t * pMan );\n\n// extern Fpga_NodeVec_t * Fpga_CollectNodeTfo( Fpga_Man_t * pMan, Fpga_Node_t * pNode );\n\n/*=== fpga.c =============================================================*/\n// extern void            Fpga_SetSimpleLutLib( int nLutSize );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

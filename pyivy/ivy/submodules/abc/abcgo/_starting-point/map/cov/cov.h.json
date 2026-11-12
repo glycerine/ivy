@@ -1,0 +1,184 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/cov.h",
+  "SHA256": "a89b061a98a62f6b8961cb15bf01db80cc0c4e8f638ffecefd71ee8f4a102fb5",
+  "Functions": [
+    {
+      "Name": "Abc_ObjGetStr",
+      "Start": 2573,
+      "End": 2749,
+      "BodyStart": 2656,
+      "Original": "static inline Cov_Obj_t *  Abc_ObjGetStr( Abc_Obj_t * pObj )                       { return (Cov_Obj_t *)Vec_PtrEntry(((Cov_Man_t *)pObj-\u003epNtk-\u003epManCut)-\u003evObjStrs, pObj-\u003eId); }",
+      "Draft": "func Abc_ObjGetStr(pObj *Abc_Obj_t) *Cov_Obj_t { return (Cov_Obj_t *)Vec_PtrEntry(((Cov_Man_t *)pObj.pNtk.pManCut).vObjStrs, pObj.Id); }"
+    },
+    {
+      "Name": "Abc_ObjSetSupp",
+      "Start": 2751,
+      "End": 2874,
+      "BodyStart": 2834,
+      "Original": "static inline void         Abc_ObjSetSupp( Abc_Obj_t * pObj, Vec_Int_t * vVec )    { Abc_ObjGetStr(pObj)-\u003evSupp = vVec;   }",
+      "Draft": "func Abc_ObjSetSupp(pObj *Abc_Obj_t, vVec *Vec_Int_t) { Abc_ObjGetStr(pObj).vSupp = vVec;   }"
+    },
+    {
+      "Name": "Abc_ObjGetSupp",
+      "Start": 2875,
+      "End": 2998,
+      "BodyStart": 2958,
+      "Original": "static inline Vec_Int_t *  Abc_ObjGetSupp( Abc_Obj_t * pObj )                      { return Abc_ObjGetStr(pObj)-\u003evSupp;   }",
+      "Draft": "func Abc_ObjGetSupp(pObj *Abc_Obj_t) *Vec_Int_t { return Abc_ObjGetStr(pObj).vSupp;   }"
+    },
+    {
+      "Name": "Abc_ObjSetCover2",
+      "Start": 3000,
+      "End": 3125,
+      "BodyStart": 3083,
+      "Original": "static inline void         Abc_ObjSetCover2( Abc_Obj_t * pObj, Min_Cube_t * pCov ) { Abc_ObjGetStr(pObj)-\u003epCover[2] = pCov; }",
+      "Draft": "func Abc_ObjSetCover2(pObj *Abc_Obj_t, pCov *Min_Cube_t) { Abc_ObjGetStr(pObj).pCover[2] = pCov; }"
+    },
+    {
+      "Name": "Abc_ObjGetCover2",
+      "Start": 3126,
+      "End": 3251,
+      "BodyStart": 3209,
+      "Original": "static inline Min_Cube_t * Abc_ObjGetCover2( Abc_Obj_t * pObj )                    { return Abc_ObjGetStr(pObj)-\u003epCover[2]; }",
+      "Draft": "func Abc_ObjGetCover2(pObj *Abc_Obj_t) *Min_Cube_t { return Abc_ObjGetStr(pObj).pCover[2]; }"
+    },
+    {
+      "Name": "Abc_ObjSetCover",
+      "Start": 3253,
+      "End": 3388,
+      "BodyStart": 3344,
+      "Original": "static inline void         Abc_ObjSetCover( Abc_Obj_t * pObj, Min_Cube_t * pCov, int Pol ) { Abc_ObjGetStr(pObj)-\u003epCover[Pol] = pCov; }",
+      "Draft": "func Abc_ObjSetCover(pObj *Abc_Obj_t, pCov *Min_Cube_t, Pol int32) { Abc_ObjGetStr(pObj).pCover[Pol] = pCov; }"
+    },
+    {
+      "Name": "Abc_ObjGetCover",
+      "Start": 3389,
+      "End": 3524,
+      "BodyStart": 3480,
+      "Original": "static inline Min_Cube_t * Abc_ObjGetCover( Abc_Obj_t * pObj, int Pol )                    { return Abc_ObjGetStr(pObj)-\u003epCover[Pol]; }",
+      "Draft": "func Abc_ObjGetCover(pObj *Abc_Obj_t, Pol int32) *Min_Cube_t { return Abc_ObjGetStr(pObj).pCover[Pol]; }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/cov.h::struct::Cov_Obj_t::Min_Cube_t *      pCover[3];",
+      "Category": "struct-field-review",
+      "Symbol": "Cov_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 995,
+      "End": 1028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/cov.h::struct::Cov_Obj_t",
+      "Category": "struct-review",
+      "Symbol": "Cov_Obj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 905,
+      "End": 1129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/cov.h::struct::Cov_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Cov_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1169,
+      "End": 2571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/cov.h::pointer-cast::2665",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2665,
+      "End": 2678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/cov.h::pointer-cast::2692",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2692,
+      "End": 2705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/cov.h::Abc_ObjGetStr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjGetStr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2573,
+      "End": 2749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/cov.h::Abc_ObjSetSupp",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjSetSupp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2751,
+      "End": 2874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/cov.h::Abc_ObjGetSupp",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjGetSupp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2875,
+      "End": 2998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/cov.h::Abc_ObjSetCover2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjSetCover2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3000,
+      "End": 3125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/cov.h::Abc_ObjGetCover2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjGetCover2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3126,
+      "End": 3251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/cov.h::Abc_ObjSetCover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjSetCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3253,
+      "End": 3388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/cov.h::Abc_ObjGetCover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjGetCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3389,
+      "End": 3524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/cov.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4954
+    }
+  ],
+  "Draft": "package cov\n\n/**CFile****************************************************************\n\n  FileName    [cov.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Mapping into network of SOPs/ESOPs.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n   \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cov.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n//#include \"base/abc/abc.h\"\n//#include \"covInt.h\"\n\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Cov_Man_t =  Cov_Man_t_;\n    \n\n// storage for node information\ntype Cov_Obj_t struct {\n    Min_Cube_t *      pCover[3];    // pos/neg/esop\n    vSupp        *Vec_Int_t;        // computed support (all nodes except CIs)\n}\n\n// storage for additional information\ntype Cov_Man_t_ struct {\n    // general characteristics\n    nFaninMax               int32;    // the number of vars\n    nCubesMax               int32;    // the limit on the number of cubes in the intermediate covers\n    nWords               int32;       // the number of words\n    vFanCounts        *Vec_Int_t;   // fanout counts\n    vObjStrs        *Vec_Ptr_t;     // object structures\n    pMemory             any;      // memory for the internal data strctures\n    pManMin        *Min_Man_t;      // the cube manager\n    fUseEsop               int32;     // enables ESOPs\n    fUseSop               int32;      // enables SOPs\n    // arrays to map local variables\n    vComTo0        *Vec_Int_t;      // mapping of common variables into first fanin\n    vComTo1        *Vec_Int_t;      // mapping of common variables into second fanin\n    vPairs0        *Vec_Int_t;      // the first var in each pair of common vars\n    vPairs1        *Vec_Int_t;      // the second var in each pair of common vars\n    vTriv0        *Vec_Int_t;       // trival support of the first node\n    vTriv1        *Vec_Int_t;       // trival support of the second node\n    // statistics\n    nSupps               int32;       // supports created\n    nSuppsMax               int32;    // the maximum number of supports\n    nBoundary               int32;    // the boundary size\n    nNodes               int32;       // the number of nodes processed\n}\n\nfunc Abc_ObjGetStr(pObj *Abc_Obj_t) *Cov_Obj_t { return (Cov_Obj_t *)Vec_PtrEntry(((Cov_Man_t *)pObj.pNtk.pManCut).vObjStrs, pObj.Id); }\n\nfunc Abc_ObjSetSupp(pObj *Abc_Obj_t, vVec *Vec_Int_t) { Abc_ObjGetStr(pObj).vSupp = vVec;   }\nfunc Abc_ObjGetSupp(pObj *Abc_Obj_t) *Vec_Int_t { return Abc_ObjGetStr(pObj).vSupp;   }\n\nfunc Abc_ObjSetCover2(pObj *Abc_Obj_t, pCov *Min_Cube_t) { Abc_ObjGetStr(pObj).pCover[2] = pCov; }\nfunc Abc_ObjGetCover2(pObj *Abc_Obj_t) *Min_Cube_t { return Abc_ObjGetStr(pObj).pCover[2]; }\n\nfunc Abc_ObjSetCover(pObj *Abc_Obj_t, pCov *Min_Cube_t, Pol int32) { Abc_ObjGetStr(pObj).pCover[Pol] = pCov; }\nfunc Abc_ObjGetCover(pObj *Abc_Obj_t, Pol int32) *Min_Cube_t { return Abc_ObjGetStr(pObj).pCover[Pol]; }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== covBuild.c ==========================================================*/\n// extern Abc_Ntk_t * Abc_NtkCovDerive( Cov_Man_t * p, Abc_Ntk_t * pNtk );\n\n// extern Abc_Ntk_t * Abc_NtkCovDeriveClean( Cov_Man_t * p, Abc_Ntk_t * pNtk );\n\n// extern Abc_Ntk_t * Abc_NtkCovDeriveRegular( Cov_Man_t * p, Abc_Ntk_t * pNtk );\n\n/*=== covCore.c ===========================================================*/\n// extern Abc_Ntk_t * Abc_NtkSopEsopCover( Abc_Ntk_t * pNtk, int nFaninMax, int nCubesMax, int fUseEsop, int fUseSop, int fUseInvs, int fVerbose );\n\n/*=== covMan.c ============================================================*/\n// extern Cov_Man_t * Cov_ManAlloc( Abc_Ntk_t * pNtk, int nFaninMax, int nCubesMax );\n\n// extern void        Cov_ManFree( Cov_Man_t * p );\n\n// extern void        Abc_NodeCovDropData( Cov_Man_t * p, Abc_Obj_t * pObj );\n\n/*=== covTest.c ===========================================================*/\n// extern Abc_Ntk_t * Abc_NtkCovTestSop( Abc_Ntk_t * pNtk );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n"
+}

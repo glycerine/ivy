@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/AbcApi.cpp",
+  "SHA256": "405d6caf8ca0bb58b679cdcd95921326f003e9118fef0f3cabd883c3c0b7b736",
+  "Functions": [
+    {
+      "Name": "Abc_CallMiniSat22",
+      "Start": 1325,
+      "End": 1421,
+      "BodyStart": 1364,
+      "Original": "int Abc_CallMiniSat22( Cnf_Dat_t * p )\n{\n    Solver S;\n    int Result = -1;\n    return Result;\n}",
+      "Draft": "func Abc_CallMiniSat22(p *Cnf_Dat_t) int32 {\n    Solver S;\n    var Result int32  = -1;\n    return Result;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/AbcApi.cpp::Abc_CallMiniSat22",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CallMiniSat22",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1325,
+      "End": 1421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/AbcApi.cpp::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1668
+    }
+  ],
+  "Draft": "package bsat2\n\n/**CFile****************************************************************\n\n  FileName    [AbcApi.cpp]\n\n  PackageName [A C++ version of SAT solver MiniSAT 2.2 developed \n  by Niklas Sorensson and Niklas Een. http://minisat.se.]\n\n  Synopsis    [Interface to the SAT solver.]\n\n  Author      [Niklas Sorensson and Niklas Een.]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2004.]\n\n  Revision    [$Id: AbcApi.cpp,v 1.0 2004/01/01 1:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"Solver.h\"\n//#include \"sat/cnf/cnf.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n//using namespace Minisat;\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CallMiniSat22(p *Cnf_Dat_t) int32 {\n    Solver S;\n    var Result int32  = -1;\n    return Result;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

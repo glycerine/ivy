@@ -1,0 +1,46 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/solution.c",
+  "SHA256": "bd6ac5cac54ce870944c8b2f9f662aa59835662ead524a1dff9c1225d1800333",
+  "Functions": [
+    {
+      "Name": "solution_alloc",
+      "Start": 146,
+      "End": 299,
+      "BodyStart": 176,
+      "Original": "solution_t *\nsolution_alloc()\n{\n    solution_t *sol;\n\n    sol = ALLOC(solution_t, 1);\n    sol-\u003ecost = 0;\n    sol-\u003erow = sm_row_alloc();\n    return sol;\n}",
+      "Draft": "func solution_alloc() *solution_t {\n    var sol *solution_t;\n\n    sol = ALLOC(solution_t, 1);\n    sol.cost = 0;\n    sol.row = sm_row_alloc();\n    return sol;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/solution.c::pointer-cast::1115",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1006,
+      "End": 1006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/solution.c::solution_alloc",
+      "Category": "semantic-review",
+      "Symbol": "solution_alloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 146,
+      "End": 299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/solution.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1840
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"mincov_int.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\nfunc solution_alloc() *solution_t {\n    var sol *solution_t;\n\n    sol = ALLOC(solution_t, 1);\n    sol.cost = 0;\n    sol.row = sm_row_alloc();\n    return sol;\n}\n\n\nvoid\nsolution_free(sol)\nvar sol *solution_t;\n{\n    sm_row_free(sol.row);\n    FREE(sol);\n}\n\n\nsolution_t *\nsolution_dup(sol)\nvar sol *solution_t;\n{\n    solution_t *new_sol;\n\n    new_sol = ALLOC(solution_t, 1);\n    new_sol.cost = sol.cost;\n    new_sol.row = sm_row_dup(sol.row);\n    return new_sol;\n}\n\n\nvoid \nsolution_add(sol, weight, col)\nvar sol *solution_t;\nvar weight *int32;\nvar col int32;\n{\n    (void) sm_row_insert(sol.row, col);\n    sol.cost += WEIGHT(weight, col);\n}\n\n\nvoid \nsolution_accept(sol, A, weight, col)\nvar sol *solution_t;\nvar A *sm_matrix;\nvar weight *int32;\nvar col int32;\n{\n    register sm_element *p, *pnext;\n    sm_col *pcol;\n\n    solution_add(sol, weight, col);\n\n    /* delete rows covered by this column */\n    // inlining of macro sm_get_col\n    pcol = (((col) \u003e= 0 \u0026\u0026 (col) \u003c (A).cols_size) ?     (A).cols[col] : (sm_col *) 0);\n    for p = pcol.first_row; p != 0; p = pnext {\n    pnext = p.next_row;        /* grab it before it disappears */\n    sm_delrow(A, p.row_num);\n    }\n}\n\n\n/* ARGSUSED */\nvoid \nsolution_reject(sol, A, weight, col)\nvar sol *solution_t;\nvar A *sm_matrix;\nvar weight *int32;\nvar col int32;\n{\n    sm_delcol(A, col);\n}\n\n\nsolution_t *\nsolution_choose_best(best1, best2)\nvar best1, best2 *solution_t;\n{\n    if best1 != NIL(solution_t) {\n    if best2 != NIL(solution_t) {\n        if best1.cost \u003c= best2.cost {\n        solution_free(best2);\n        return best1;\n        } else {\n        solution_free(best1);\n        return best2;\n        }\n    } else {\n        return best1;\n    }\n    } else {\n    if best2 != NIL(solution_t) {\n        return best2;\n    } else {\n        return NIL(solution_t);\n    }\n    }\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

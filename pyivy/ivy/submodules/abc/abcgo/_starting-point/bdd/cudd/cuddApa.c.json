@@ -1,0 +1,1424 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c",
+  "SHA256": "8b2c52be245ceb49a00633f224928afb51b72f6abbc6ebf56d8fe68d0745acb0",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 12,
+        "ByteOffset": 6507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return(ABC_ALLOC(DdApaDigit, digits));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 455,
+        "Column": 5,
+        "ByteOffset": 15992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(first);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 456,
+        "Column": 5,
+        "ByteOffset": 16013
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(second);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 484,
+        "Column": 18,
+        "ByteOffset": 16911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        result = fprintf(fp,DD_APA_HEXPRINT,number[i]);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 485,
+        "Column": 22,
+        "ByteOffset": 16971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if result == EOF {"
+    },
+    {
+      "Name": "log10",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 511,
+        "Column": 49,
+        "ByteOffset": 17753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var decimalDigits int32  = int32( (digits * log10(float64( DD_APA_BASE)))) + 1;"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 516,
+        "Column": 15,
+        "ByteOffset": 17884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    decimal = ABC_ALLOC(unsigned char, decimalDigits);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 518,
+        "Column": 9,
+        "ByteOffset": 17957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(work);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 526,
+        "Column": 5,
+        "ByteOffset": 18216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(work);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 532,
+        "Column": 22,
+        "ByteOffset": 18429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            result = fprintf(fp,\"%1d\",decimal[i]);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 533,
+        "Column": 26,
+        "ByteOffset": 18484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if result == EOF {"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 534,
+        "Column": 17,
+        "ByteOffset": 18506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(decimal);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 539,
+        "Column": 5,
+        "ByteOffset": 18586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(decimal);"
+    },
+    {
+      "Name": "log10",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 562,
+        "Column": 49,
+        "ByteOffset": 19365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var decimalDigits int32  = int32( (digits * log10(float64( DD_APA_BASE)))) + 1;"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 567,
+        "Column": 15,
+        "ByteOffset": 19496
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    decimal = ABC_ALLOC(unsigned char, decimalDigits);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 569,
+        "Column": 9,
+        "ByteOffset": 19569
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(work);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 579,
+        "Column": 5,
+        "ByteOffset": 19932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(work);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 588,
+        "Column": 18,
+        "ByteOffset": 20181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        result = fprintf(fp,\"%s%1d\",i == first+1 ? \".\" : \"\", decimal[i]);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 589,
+        "Column": 22,
+        "ByteOffset": 20259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if result == EOF {"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 590,
+        "Column": 13,
+        "ByteOffset": 20277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(decimal);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 594,
+        "Column": 5,
+        "ByteOffset": 20339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(decimal);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 595,
+        "Column": 14,
+        "ByteOffset": 20371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    result = fprintf(fp,\"e+%d\",decimalDigits - first - 1);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 596,
+        "Column": 18,
+        "ByteOffset": 20434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if result == EOF {"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 637,
+        "Column": 9,
+        "ByteOffset": 21819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(max);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 643,
+        "Column": 9,
+        "ByteOffset": 21986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(max);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 644,
+        "Column": 9,
+        "ByteOffset": 22009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(min);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 649,
+        "Column": 9,
+        "ByteOffset": 22216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(max);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 650,
+        "Column": 9,
+        "ByteOffset": 22239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(min);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 657,
+        "Column": 9,
+        "ByteOffset": 22435
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(max);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 658,
+        "Column": 9,
+        "ByteOffset": 22458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(min);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 661,
+        "Column": 107,
+        "ByteOffset": 22663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if /*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(node) \u0026 ~01)).ref == 1 { ABC_FREE(i); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 669,
+        "Column": 5,
+        "ByteOffset": 22914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(max);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 670,
+        "Column": 5,
+        "ByteOffset": 22933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(min);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 673,
+        "Column": 103,
+        "ByteOffset": 23126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if /*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(node) \u0026 ~01)).ref == 1 { ABC_FREE(i); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 701,
+        "Column": 5,
+        "ByteOffset": 23984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(count);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 702,
+        "Column": 8,
+        "ByteOffset": 24008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fprintf(fp,\"\\n\") == EOF {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 702,
+        "Column": 28,
+        "ByteOffset": 24028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fprintf(fp,\"\\n\") == EOF {"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 734,
+        "Column": 5,
+        "ByteOffset": 25052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(count);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 735,
+        "Column": 8,
+        "ByteOffset": 25076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fprintf(fp,\"\\n\") == EOF {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 735,
+        "Column": 28,
+        "ByteOffset": 25096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fprintf(fp,\"\\n\") == EOF {"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 769,
+        "Column": 5,
+        "ByteOffset": 26122
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(count);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 770,
+        "Column": 5,
+        "ByteOffset": 26143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(density);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 772,
+        "Column": 8,
+        "ByteOffset": 26239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fprintf(fp,\".%u\\n\", fractional) == EOF {"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 772,
+        "Column": 43,
+        "ByteOffset": 26274
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fprintf(fp,\".%u\\n\", fractional) == EOF {"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 833,
+        "Column": 26,
+        "ByteOffset": 28677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if Nt.ref == 1 { ABC_FREE(mint1); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 838,
+        "Column": 26,
+        "ByteOffset": 28807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if Nt.ref == 1 { ABC_FREE(mint1); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 839,
+        "Column": 105,
+        "ByteOffset": 28930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if /*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(Ne) \u0026 ~01)).ref == 1 { ABC_FREE(mint2); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 852,
+        "Column": 22,
+        "ByteOffset": 29483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if Nt.ref == 1 { ABC_FREE(mint1); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 853,
+        "Column": 101,
+        "ByteOffset": 29602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if /*__starting_point_inline_macro:Cudd_Regular__*/((DdNode *)((ptruint)(Ne) \u0026 ~01)).ref == 1 { ABC_FREE(mint2); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 857,
+        "Column": 13,
+        "ByteOffset": 29733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(mint);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 881,
+        "Column": 5,
+        "ByteOffset": 30383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(d);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 96,
+        "Column": 1,
+        "ByteOffset": 4019
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_ApaNumberOfDigits",
+      "Start": 5777,
+      "End": 5974,
+      "BodyStart": 5826,
+      "Original": "int\nCudd_ApaNumberOfDigits(\n  int  binaryDigits)\n{\n    int digits;\n\n    digits = binaryDigits / DD_APA_BITS;\n    if ((digits * DD_APA_BITS) != binaryDigits)\n        digits++;\n    return(digits);\n\n}",
+      "Draft": "func Cudd_ApaNumberOfDigits(binaryDigits int32) int32 {\n    var digits int32;\n\n    digits = binaryDigits / DD_APA_BITS;\n    if (digits * DD_APA_BITS) != binaryDigits {\n        digits++; }\n    return(digits);\n\n}"
+    },
+    {
+      "Name": "Cudd_NewApaNumber",
+      "Start": 6431,
+      "End": 6524,
+      "BodyStart": 6477,
+      "Original": "DdApaNumber\nCudd_NewApaNumber(\n  int  digits)\n{\n    return(ABC_ALLOC(DdApaDigit, digits));\n\n}",
+      "Draft": "func Cudd_NewApaNumber(digits int32) DdApaNumber {\n    return(ABC_ALLOC(DdApaDigit, digits));\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaCopy",
+      "Start": 6921,
+      "End": 7085,
+      "BodyStart": 6999,
+      "Original": "void\nCudd_ApaCopy(\n  int  digits,\n  DdApaNumber  source,\n  DdApaNumber  dest)\n{\n    int i;\n\n    for (i = 0; i \u003c digits; i++) {\n        dest[i] = source[i];\n    }\n\n}",
+      "Draft": "func Cudd_ApaCopy(digits int32, source DdApaNumber, dest DdApaNumber) {\n    var i int32;\n\n    for i = 0; i \u003c digits; i++ {\n        dest[i] = source[i];\n    }\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaAdd",
+      "Start": 7541,
+      "End": 7882,
+      "BodyStart": 7636,
+      "Original": "DdApaDigit\nCudd_ApaAdd(\n  int  digits,\n  DdApaNumber  a,\n  DdApaNumber  b,\n  DdApaNumber  sum)\n{\n    int i;\n    DdApaDoubleDigit partial = 0;\n\n    for (i = digits - 1; i \u003e= 0; i--) {\n        partial = a[i] + b[i] + DD_MSDIGIT(partial);\n        sum[i] = (DdApaDigit) DD_LSDIGIT(partial);\n    }\n    return((DdApaDigit) DD_MSDIGIT(partial));\n\n}",
+      "Draft": "func Cudd_ApaAdd(digits int32, a DdApaNumber, b DdApaNumber, sum DdApaNumber) DdApaDigit {\n    var i int32;\n    var partial DdApaDoubleDigit;\n\n    for i = digits - 1; i \u003e= 0; i-- {\n        // inlining of macro DD_MSDIGIT\n        partial = a[i] + b[i] + ((partial) \u003e\u003e DD_APA_BITS);\n        // inlining of macro DD_LSDIGIT\n        sum[i] = (DdApaDigit) ((partial) \u0026 DD_APA_MASK);\n    }\n    // inlining of macro DD_MSDIGIT\n    return((DdApaDigit) ((partial) \u003e\u003e DD_APA_BITS));\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaSubtract",
+      "Start": 8359,
+      "End": 8735,
+      "BodyStart": 8460,
+      "Original": "DdApaDigit\nCudd_ApaSubtract(\n  int  digits,\n  DdApaNumber  a,\n  DdApaNumber  b,\n  DdApaNumber  diff)\n{\n    int i;\n    DdApaDoubleDigit partial = DD_APA_BASE;\n\n    for (i = digits - 1; i \u003e= 0; i--) {\n        partial = DD_MSDIGIT(partial) + DD_APA_MASK + a[i] - b[i];\n        diff[i] = (DdApaDigit) DD_LSDIGIT(partial);\n    }\n    return((DdApaDigit) DD_MSDIGIT(partial) - 1);\n\n}",
+      "Draft": "func Cudd_ApaSubtract(digits int32, a DdApaNumber, b DdApaNumber, diff DdApaNumber) DdApaDigit {\n    var i int32;\n    var partial DdApaDoubleDigit  = DD_APA_BASE;\n\n    for i = digits - 1; i \u003e= 0; i-- {\n        // inlining of macro DD_MSDIGIT\n        partial = ((partial) \u003e\u003e DD_APA_BITS) + DD_APA_MASK + a[i] - b[i];\n        // inlining of macro DD_LSDIGIT\n        diff[i] = (DdApaDigit) ((partial) \u0026 DD_APA_MASK);\n    }\n    // inlining of macro DD_MSDIGIT\n    return((DdApaDigit) ((partial) \u003e\u003e DD_APA_BITS) - 1);\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaShortDivision",
+      "Start": 9161,
+      "End": 9622,
+      "BodyStart": 9283,
+      "Original": "DdApaDigit\nCudd_ApaShortDivision(\n  int  digits,\n  DdApaNumber  dividend,\n  DdApaDigit  divisor,\n  DdApaNumber  quotient)\n{\n    int i;\n    DdApaDigit remainder;\n    DdApaDoubleDigit partial;\n\n    remainder = 0;\n    for (i = 0; i \u003c digits; i++) {\n        partial = remainder * DD_APA_BASE + dividend[i];\n        quotient[i] = (DdApaDigit) (partial/(DdApaDoubleDigit)divisor);\n        remainder = (DdApaDigit) (partial % divisor);\n    }\n\n    return(remainder);\n\n}",
+      "Draft": "func Cudd_ApaShortDivision(digits int32, dividend DdApaNumber, divisor DdApaDigit, quotient DdApaNumber) DdApaDigit {\n    var i int32;\n    var remainder DdApaDigit;\n    var partial DdApaDoubleDigit;\n\n    remainder = 0;\n    for i = 0; i \u003c digits; i++ {\n        partial = remainder * DD_APA_BASE + dividend[i];\n        quotient[i] = (DdApaDigit) (partial/(DdApaDoubleDigit)divisor);\n        remainder = (DdApaDigit) (partial % divisor);\n    }\n\n    return(remainder);\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaIntDivision",
+      "Start": 10539,
+      "End": 11025,
+      "BodyStart": 10660,
+      "Original": "unsigned int\nCudd_ApaIntDivision(\n  int  digits,\n  DdApaNumber dividend,\n  unsigned int divisor,\n  DdApaNumber quotient)\n{\n    int i;\n    double partial;\n    unsigned int remainder = 0;\n    double ddiv = (double) divisor;\n\n    for (i = 0; i \u003c digits; i++) {\n        partial = (double) remainder * DD_APA_BASE + dividend[i];\n        quotient[i] = (DdApaDigit) (partial / ddiv);\n        remainder = (unsigned int) (partial - ((double)quotient[i] * ddiv));\n    }\n\n    return(remainder);\n\n}",
+      "Draft": "unsigned int\nCudd_ApaIntDivision(\n  int  digits,\n  DdApaNumber dividend,\n  unsigned int divisor,\n  DdApaNumber quotient)\n{\n    var i int32;\n    var partial float64;\n    unsigned int remainder = 0;\n    var ddiv float64  = float64( divisor);\n\n    for i = 0; i \u003c digits; i++ {\n        partial = float64( remainder) * DD_APA_BASE + dividend[i];\n        quotient[i] = (DdApaDigit) (partial / ddiv);\n        remainder = (unsigned int) (partial - (float64(quotient[i]) * ddiv));\n    }\n\n    return(remainder);\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaShiftRight",
+      "Start": 11565,
+      "End": 11838,
+      "BodyStart": 11659,
+      "Original": "void\nCudd_ApaShiftRight(\n  int  digits,\n  DdApaDigit  in,\n  DdApaNumber  a,\n  DdApaNumber  b)\n{\n    int i;\n\n    for (i = digits - 1; i \u003e 0; i--) {\n        b[i] = (a[i] \u003e\u003e 1) | ((a[i-1] \u0026 1) \u003c\u003c (DD_APA_BITS - 1));\n    }\n    b[0] = (a[0] \u003e\u003e 1) | (in \u003c\u003c (DD_APA_BITS - 1));\n\n}",
+      "Draft": "func Cudd_ApaShiftRight(digits int32, in DdApaDigit, a DdApaNumber, b DdApaNumber) {\n    var i int32;\n\n    for i = digits - 1; i \u003e 0; i-- {\n        b[i] = (a[i] \u003e\u003e 1) | ((a[i-1] \u0026 1) \u003c\u003c (DD_APA_BITS - 1));\n    }\n    b[0] = (a[0] \u003e\u003e 1) | (in \u003c\u003c (DD_APA_BITS - 1));\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaSetToLiteral",
+      "Start": 12280,
+      "End": 12478,
+      "BodyStart": 12368,
+      "Original": "void\nCudd_ApaSetToLiteral(\n  int  digits,\n  DdApaNumber  number,\n  DdApaDigit  literal)\n{\n    int i;\n\n    for (i = 0; i \u003c digits - 1; i++)\n        number[i] = 0;\n    number[digits - 1] = literal;\n\n}",
+      "Draft": "func Cudd_ApaSetToLiteral(digits int32, number DdApaNumber, literal DdApaDigit) {\n    var i int32;\n\n    for i = 0; i \u003c digits - 1; i++ {\n        number[i] = 0;\n    }\n    number[digits - 1] = literal;\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaPowerOfTwo",
+      "Start": 12992,
+      "End": 13288,
+      "BodyStart": 13069,
+      "Original": "void\nCudd_ApaPowerOfTwo(\n  int  digits,\n  DdApaNumber  number,\n  int  power)\n{\n    int i;\n    int index;\n\n    for (i = 0; i \u003c digits; i++)\n        number[i] = 0;\n    i = digits - 1 - power / DD_APA_BITS;\n    if (i \u003c 0) return;\n    index = power \u0026 (DD_APA_BITS - 1);\n    number[i] = 1 \u003c\u003c index;\n\n}",
+      "Draft": "func Cudd_ApaPowerOfTwo(digits int32, number DdApaNumber, power int32) {\n    var i int32;\n    var index int32;\n\n    for i = 0; i \u003c digits; i++ {\n        number[i] = 0;\n    }\n    i = digits - 1 - power / DD_APA_BITS;\n    if i \u003c 0 { return; }\n    index = power \u0026 (DD_APA_BITS - 1);\n    number[i] = 1 \u003c\u003c index;\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaCompare",
+      "Start": 13745,
+      "End": 14489,
+      "BodyStart": 13850,
+      "Original": "int\nCudd_ApaCompare(\n  int digitsFirst,\n  DdApaNumber  first,\n  int digitsSecond,\n  DdApaNumber  second)\n{\n    int i;\n    int firstNZ, secondNZ;\n\n    /* Find first non-zero in both numbers. */\n    for (firstNZ = 0; firstNZ \u003c digitsFirst; firstNZ++)\n        if (first[firstNZ] != 0) break;\n    for (secondNZ = 0; secondNZ \u003c digitsSecond; secondNZ++)\n        if (second[secondNZ] != 0) break;\n    if (digitsFirst - firstNZ \u003e digitsSecond - secondNZ) return(1);\n    else if (digitsFirst - firstNZ \u003c digitsSecond - secondNZ) return(-1);\n    for (i = 0; i \u003c digitsFirst - firstNZ; i++) {\n        if (first[firstNZ + i] \u003e second[secondNZ + i]) return(1);\n        else if (first[firstNZ + i] \u003c second[secondNZ + i]) return(-1);\n    }\n    return(0);\n\n}",
+      "Draft": "func Cudd_ApaCompare(digitsFirst int32, first DdApaNumber, digitsSecond int32, second DdApaNumber) int32 {\n    var i int32;\n    var firstNZ, secondNZ int32;\n\n    /* Find first non-zero in both numbers. */\n    for firstNZ = 0; firstNZ \u003c digitsFirst; firstNZ++ {\n        if first[firstNZ] != 0 { break; }\n    }\n    for secondNZ = 0; secondNZ \u003c digitsSecond; secondNZ++ {\n        if second[secondNZ] != 0 { break; }\n    }\n    if digitsFirst - firstNZ \u003e digitsSecond - secondNZ { return(1);\n    } else if digitsFirst - firstNZ \u003c digitsSecond - secondNZ { return(-1); }\n    for i = 0; i \u003c digitsFirst - firstNZ; i++ {\n        if first[firstNZ + i] \u003e second[secondNZ + i] { return(1);\n        } else if first[firstNZ + i] \u003c second[secondNZ + i] { return(-1); }\n    }\n    return(0);\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaCompareRatios",
+      "Start": 15015,
+      "End": 15863,
+      "BodyStart": 15181,
+      "Original": "int\nCudd_ApaCompareRatios(\n  int digitsFirst,\n  DdApaNumber firstNum,\n  unsigned int firstDen,\n  int digitsSecond,\n  DdApaNumber secondNum,\n  unsigned int secondDen)\n{\n    int result;\n    DdApaNumber first, second;\n    unsigned int firstRem, secondRem;\n\n    first = Cudd_NewApaNumber(digitsFirst);\n    firstRem = Cudd_ApaIntDivision(digitsFirst,firstNum,firstDen,first);\n    second = Cudd_NewApaNumber(digitsSecond);\n    secondRem = Cudd_ApaIntDivision(digitsSecond,secondNum,secondDen,second);\n    result = Cudd_ApaCompare(digitsFirst,first,digitsSecond,second);\n    ABC_FREE(first);\n    ABC_FREE(second);\n    if (result == 0) {\n        if ((double)firstRem/firstDen \u003e (double)secondRem/secondDen)\n            return(1);\n        else if ((double)firstRem/firstDen \u003c (double)secondRem/secondDen)\n            return(-1);\n    }\n    return(result);\n\n}",
+      "Draft": "int\nCudd_ApaCompareRatios(\n  int digitsFirst,\n  DdApaNumber firstNum,\n  unsigned int firstDen,\n  int digitsSecond,\n  DdApaNumber secondNum,\n  unsigned int secondDen)\n{\n    var result int32;\n    var first, second DdApaNumber;\n    unsigned int firstRem, secondRem;\n\n    first = Cudd_NewApaNumber(digitsFirst);\n    firstRem = Cudd_ApaIntDivision(digitsFirst,firstNum,firstDen,first);\n    second = Cudd_NewApaNumber(digitsSecond);\n    secondRem = Cudd_ApaIntDivision(digitsSecond,secondNum,secondDen,second);\n    result = Cudd_ApaCompare(digitsFirst,first,digitsSecond,second);\n    ABC_FREE(first);\n    ABC_FREE(second);\n    if result == 0 {\n        if float64(firstRem)/firstDen \u003e float64(secondRem)/secondDen {\n            return(1);\n        } else if float64(firstRem)/firstDen \u003c float64(secondRem)/secondDen {\n            return(-1); }\n    }\n    return(result);\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaPrintHex",
+      "Start": 16343,
+      "End": 16602,
+      "BodyStart": 16416,
+      "Original": "int\nCudd_ApaPrintHex(\n  FILE * fp,\n  int  digits,\n  DdApaNumber  number)\n{\n    int i, result;\n\n    for (i = 0; i \u003c digits; i++) {\n        result = fprintf(fp,DD_APA_HEXPRINT,number[i]);\n        if (result == EOF)\n            return(0);\n    }\n    return(1);\n\n}",
+      "Draft": "func Cudd_ApaPrintHex(fp *os.File, digits int32, number DdApaNumber) int32 {\n    var i, result int32;\n\n    for i = 0; i \u003c digits; i++ {\n        result = fmt.Fprintf(fp, DD_APA_HEXPRINT, number[i]);\n        if result == -1 {\n            return(0); }\n    }\n    return(1);\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaPrintDecimal",
+      "Start": 17065,
+      "End": 18177,
+      "BodyStart": 17142,
+      "Original": "int\nCudd_ApaPrintDecimal(\n  FILE * fp,\n  int  digits,\n  DdApaNumber  number)\n{\n    int i, result;\n    DdApaDigit remainder;\n    DdApaNumber work;\n    unsigned char *decimal;\n    int leadingzero;\n    int decimalDigits = (int) (digits * log10((double) DD_APA_BASE)) + 1;\n\n    work = Cudd_NewApaNumber(digits);\n    if (work == NULL)\n        return(0);\n    decimal = ABC_ALLOC(unsigned char, decimalDigits);\n    if (decimal == NULL) {\n        ABC_FREE(work);\n        return(0);\n    }\n    Cudd_ApaCopy(digits,number,work);\n    for (i = decimalDigits - 1; i \u003e= 0; i--) {\n        remainder = Cudd_ApaShortDivision(digits,work,(DdApaDigit) 10,work);\n        decimal[i] = (unsigned char) remainder;\n    }\n    ABC_FREE(work);\n\n    leadingzero = 1;\n    for (i = 0; i \u003c decimalDigits; i++) {\n        leadingzero = leadingzero \u0026\u0026 (decimal[i] == 0);\n        if ((!leadingzero) || (i == (decimalDigits - 1))) {\n            result = fprintf(fp,\"%1d\",decimal[i]);\n            if (result == EOF) {\n                ABC_FREE(decimal);\n                return(0);\n            }\n        }\n    }\n    ABC_FREE(decimal);\n    return(1);\n\n}",
+      "Draft": "func Cudd_ApaPrintDecimal(fp *os.File, digits int32, number DdApaNumber) int32 {\n    var i, result int32;\n    var remainder DdApaDigit;\n    var work DdApaNumber;\n    unsigned char *decimal;\n    var leadingzero int32;\n    var decimalDigits int32  = int32( (digits * math.Log10(float64(float64( DD_APA_BASE))))) + 1;\n\n    work = Cudd_NewApaNumber(digits);\n    if work == nil {\n        return(0); }\n    decimal = ABC_ALLOC(unsigned char, decimalDigits);\n    if decimal == nil {\n        ABC_FREE(work);\n        return(0);\n    }\n    Cudd_ApaCopy(digits,number,work);\n    for i = decimalDigits - 1; i \u003e= 0; i-- {\n        remainder = Cudd_ApaShortDivision(digits,work,(DdApaDigit) 10,work);\n        decimal[i] = (unsigned char) remainder;\n    }\n    ABC_FREE(work);\n\n    leadingzero = 1;\n    for i = 0; i \u003c decimalDigits; i++ {\n        leadingzero = leadingzero \u0026\u0026 (decimal[i] == 0);\n        if (!(leadingzero != 0)) || (i == (decimalDigits - 1)) {\n            result = fmt.Fprintf(fp, \"%1d\", decimal[i]);\n            if result == -1 {\n                ABC_FREE(decimal);\n                return(0);\n            }\n        }\n    }\n    ABC_FREE(decimal);\n    return(1);\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaPrintExponential",
+      "Start": 18648,
+      "End": 19891,
+      "BodyStart": 18746,
+      "Original": "int\nCudd_ApaPrintExponential(\n  FILE * fp,\n  int  digits,\n  DdApaNumber  number,\n  int precision)\n{\n    int i, first, last, result;\n    DdApaDigit remainder;\n    DdApaNumber work;\n    unsigned char *decimal;\n    int decimalDigits = (int) (digits * log10((double) DD_APA_BASE)) + 1;\n\n    work = Cudd_NewApaNumber(digits);\n    if (work == NULL)\n        return(0);\n    decimal = ABC_ALLOC(unsigned char, decimalDigits);\n    if (decimal == NULL) {\n        ABC_FREE(work);\n        return(0);\n    }\n    Cudd_ApaCopy(digits,number,work);\n    first = decimalDigits - 1;\n    for (i = decimalDigits - 1; i \u003e= 0; i--) {\n        remainder = Cudd_ApaShortDivision(digits,work,(DdApaDigit) 10,work);\n        decimal[i] = (unsigned char) remainder;\n        if (remainder != 0) first = i; /* keep track of MS non-zero */\n    }\n    ABC_FREE(work);\n    last = ddMin(first + precision, decimalDigits);\n\n    for (i = first; i \u003c last; i++) {\n        result = fprintf(fp,\"%s%1d\",i == first+1 ? \".\" : \"\", decimal[i]);\n        if (result == EOF) {\n            ABC_FREE(decimal);\n            return(0);\n        }\n    }\n    ABC_FREE(decimal);\n    result = fprintf(fp,\"e+%d\",decimalDigits - first - 1);\n    if (result == EOF) {\n        return(0);\n    }\n    return(1);\n\n}",
+      "Draft": "func Cudd_ApaPrintExponential(fp *os.File, digits int32, number DdApaNumber, precision int32) int32 {\n    var i, first, last, result int32;\n    var remainder DdApaDigit;\n    var work DdApaNumber;\n    unsigned char *decimal;\n    var decimalDigits int32  = int32( (digits * math.Log10(float64(float64( DD_APA_BASE))))) + 1;\n\n    work = Cudd_NewApaNumber(digits);\n    if work == nil {\n        return(0); }\n    decimal = ABC_ALLOC(unsigned char, decimalDigits);\n    if decimal == nil {\n        ABC_FREE(work);\n        return(0);\n    }\n    Cudd_ApaCopy(digits,number,work);\n    first = decimalDigits - 1;\n    for i = decimalDigits - 1; i \u003e= 0; i-- {\n        remainder = Cudd_ApaShortDivision(digits,work,(DdApaDigit) 10,work);\n        decimal[i] = (unsigned char) remainder;\n        if remainder != 0 { first = i; } /* keep track of MS non-zero */\n    }\n    ABC_FREE(work);\n    // inlining of macro ddMin\n    \n    if (decimalDigits) \u003c (first + precision) {\n        last = (decimalDigits);\n    } else {\n        last = (first + precision);\n    }\n\n    for i = first; i \u003c last; i++ {\n        result = fmt.Fprintf(fp, \"%s%1d\", i == first+1 ? \".\" : \"\", decimal[i]);\n        if result == -1 {\n            ABC_FREE(decimal);\n            return(0);\n        }\n    }\n    ABC_FREE(decimal);\n    result = fmt.Fprintf(fp, \"e+%d\", decimalDigits - first - 1);\n    if result == -1 {\n        return(0);\n    }\n    return(1);\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaCountMinterm",
+      "Start": 20663,
+      "End": 22272,
+      "BodyStart": 20767,
+      "Original": "DdApaNumber\nCudd_ApaCountMinterm(\n  DdManager * manager,\n  DdNode * node,\n  int  nvars,\n  int * digits)\n{\n    DdApaNumber max, min;\n    st__table    *table;\n    DdApaNumber i,count;\n\n    background = manager-\u003ebackground;\n    zero = Cudd_Not(manager-\u003eone);\n\n    *digits = Cudd_ApaNumberOfDigits(nvars+1);\n    max = Cudd_NewApaNumber(*digits);\n    if (max == NULL) {\n        return(NULL);\n    }\n    Cudd_ApaPowerOfTwo(*digits,max,nvars);\n    min = Cudd_NewApaNumber(*digits);\n    if (min == NULL) {\n        ABC_FREE(max);\n        return(NULL);\n    }\n    Cudd_ApaSetToLiteral(*digits,min,0);\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if (table == NULL) {\n        ABC_FREE(max);\n        ABC_FREE(min);\n        return(NULL);\n    }\n    i = cuddApaCountMintermAux(Cudd_Regular(node),*digits,max,min,table);\n    if (i == NULL) {\n        ABC_FREE(max);\n        ABC_FREE(min);\n        st__foreach(table, cuddApaStCountfree, NULL);\n        st__free_table(table);\n        return(NULL);\n    }\n    count = Cudd_NewApaNumber(*digits);\n    if (count == NULL) {\n        ABC_FREE(max);\n        ABC_FREE(min);\n        st__foreach(table, cuddApaStCountfree, NULL);\n        st__free_table(table);\n        if (Cudd_Regular(node)-\u003eref == 1) ABC_FREE(i);\n        return(NULL);\n    }\n    if (Cudd_IsComplement(node)) {\n        (void) Cudd_ApaSubtract(*digits,max,i,count);\n    } else {\n        Cudd_ApaCopy(*digits,i,count);\n    }\n    ABC_FREE(max);\n    ABC_FREE(min);\n    st__foreach(table, cuddApaStCountfree, NULL);\n    st__free_table(table);\n    if (Cudd_Regular(node)-\u003eref == 1) ABC_FREE(i);\n    return(count);\n\n}",
+      "Draft": "func Cudd_ApaCountMinterm(manager *DdManager, node *DdNode, nvars int32, digits *int32) DdApaNumber {\n    var max, min DdApaNumber;\n    var table *st__table;\n    var i, count DdApaNumber;\n\n    background = manager.background;\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(manager.one) ^ 01));\n\n    *digits = Cudd_ApaNumberOfDigits(nvars+1);\n    max = Cudd_NewApaNumber(*digits);\n    if max == nil {\n        return(nil);\n    }\n    Cudd_ApaPowerOfTwo(*digits,max,nvars);\n    min = Cudd_NewApaNumber(*digits);\n    if min == nil {\n        ABC_FREE(max);\n        return(nil);\n    }\n    Cudd_ApaSetToLiteral(*digits,min,0);\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if table == nil {\n        ABC_FREE(max);\n        ABC_FREE(min);\n        return(nil);\n    }\n    // inlining of macro Cudd_Regular\n    i = cuddApaCountMintermAux(((DdNode *)((ptruint)(node) \u0026 ~01)),*digits,max,min,table);\n    if i == nil {\n        ABC_FREE(max);\n        ABC_FREE(min);\n        st__foreach(table, cuddApaStCountfree, nil);\n        st__free_table(table);\n        return(nil);\n    }\n    count = Cudd_NewApaNumber(*digits);\n    if count == nil {\n        ABC_FREE(max);\n        ABC_FREE(min);\n        st__foreach(table, cuddApaStCountfree, nil);\n        st__free_table(table);\n        // inlining of macro Cudd_Regular\n        if ((DdNode *)((ptruint)(node) \u0026 ~01)).ref == 1 { ABC_FREE(i); }\n        return(nil);\n    }\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (node) \u0026 01)) != 0 {\n        (void) Cudd_ApaSubtract(*digits,max,i,count);\n    } else {\n        Cudd_ApaCopy(*digits,i,count);\n    }\n    ABC_FREE(max);\n    ABC_FREE(min);\n    st__foreach(table, cuddApaStCountfree, nil);\n    st__free_table(table);\n    // inlining of macro Cudd_Regular\n    if ((DdNode *)((ptruint)(node) \u0026 ~01)).ref == 1 { ABC_FREE(i); }\n    return(count);\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaPrintMinterm",
+      "Start": 22777,
+      "End": 23177,
+      "BodyStart": 22865,
+      "Original": "int\nCudd_ApaPrintMinterm(\n  FILE * fp,\n  DdManager * dd,\n  DdNode * node,\n  int  nvars)\n{\n    int digits;\n    int result;\n    DdApaNumber count;\n\n    count = Cudd_ApaCountMinterm(dd,node,nvars,\u0026digits);\n    if (count == NULL)\n        return(0);\n    result = Cudd_ApaPrintDecimal(fp,digits,count);\n    ABC_FREE(count);\n    if (fprintf(fp,\"\\n\") == EOF) {\n        return(0);\n    }\n    return(result);\n\n}",
+      "Draft": "func Cudd_ApaPrintMinterm(fp *os.File, dd *DdManager, node *DdNode, nvars int32) int32 {\n    var digits int32;\n    var result int32;\n    var count DdApaNumber;\n\n    count = Cudd_ApaCountMinterm(dd,node,nvars,\u0026digits);\n    if count == nil {\n        return(0); }\n    result = Cudd_ApaPrintDecimal(fp,digits,count);\n    ABC_FREE(count);\n    if fmt.Fprintf(fp, \"\\n\") == -1 {\n        return(0);\n    }\n    return(result);\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaPrintMintermExp",
+      "Start": 23797,
+      "End": 24231,
+      "BodyStart": 23905,
+      "Original": "int\nCudd_ApaPrintMintermExp(\n  FILE * fp,\n  DdManager * dd,\n  DdNode * node,\n  int  nvars,\n  int precision)\n{\n    int digits;\n    int result;\n    DdApaNumber count;\n\n    count = Cudd_ApaCountMinterm(dd,node,nvars,\u0026digits);\n    if (count == NULL)\n        return(0);\n    result = Cudd_ApaPrintExponential(fp,digits,count,precision);\n    ABC_FREE(count);\n    if (fprintf(fp,\"\\n\") == EOF) {\n        return(0);\n    }\n    return(result);\n\n}",
+      "Draft": "func Cudd_ApaPrintMintermExp(fp *os.File, dd *DdManager, node *DdNode, nvars int32, precision int32) int32 {\n    var digits int32;\n    var result int32;\n    var count DdApaNumber;\n\n    count = Cudd_ApaCountMinterm(dd,node,nvars,\u0026digits);\n    if count == nil {\n        return(0); }\n    result = Cudd_ApaPrintExponential(fp,digits,count,precision);\n    ABC_FREE(count);\n    if fmt.Fprintf(fp, \"\\n\") == -1 {\n        return(0);\n    }\n    return(result);\n\n}"
+    },
+    {
+      "Name": "Cudd_ApaPrintDensity",
+      "Start": 24694,
+      "End": 25393,
+      "BodyStart": 24782,
+      "Original": "int\nCudd_ApaPrintDensity(\n  FILE * fp,\n  DdManager * dd,\n  DdNode * node,\n  int  nvars)\n{\n    int digits;\n    int result;\n    DdApaNumber count,density;\n    unsigned int size, remainder, fractional;\n\n    count = Cudd_ApaCountMinterm(dd,node,nvars,\u0026digits);\n    if (count == NULL)\n        return(0);\n    size = Cudd_DagSize(node);\n    density = Cudd_NewApaNumber(digits);\n    remainder = Cudd_ApaIntDivision(digits,count,size,density);\n    result = Cudd_ApaPrintDecimal(fp,digits,density);\n    ABC_FREE(count);\n    ABC_FREE(density);\n    fractional = (unsigned int)((double)remainder / size * 1000000);\n    if (fprintf(fp,\".%u\\n\", fractional) == EOF) {\n        return(0);\n    }\n    return(result);\n\n}",
+      "Draft": "func Cudd_ApaPrintDensity(fp *os.File, dd *DdManager, node *DdNode, nvars int32) int32 {\n    var digits int32;\n    var result int32;\n    var count, density DdApaNumber;\n    unsigned int size, remainder, fractional;\n\n    count = Cudd_ApaCountMinterm(dd,node,nvars,\u0026digits);\n    if count == nil {\n        return(0); }\n    size = Cudd_DagSize(node);\n    density = Cudd_NewApaNumber(digits);\n    remainder = Cudd_ApaIntDivision(digits,count,size,density);\n    result = Cudd_ApaPrintDecimal(fp,digits,density);\n    ABC_FREE(count);\n    ABC_FREE(density);\n    fractional = (unsigned int)(float64(remainder) / size * 1000000);\n    if fmt.Fprintf(fp, \".%d\\n\", fractional) == -1 {\n        return(0);\n    }\n    return(result);\n\n}"
+    },
+    {
+      "Name": "cuddApaCountMintermAux",
+      "Start": 26767,
+      "End": 28495,
+      "BodyStart": 26903,
+      "Original": "static DdApaNumber\ncuddApaCountMintermAux(\n  DdNode * node,\n  int  digits,\n  DdApaNumber  max,\n  DdApaNumber  min,\n  st__table * table)\n{\n    DdNode      *Nt, *Ne;\n    DdApaNumber mint, mint1, mint2;\n    DdApaDigit  carryout;\n\n    if (cuddIsConstant(node)) {\n        if (node == background || node == zero) {\n            return(min);\n        } else {\n            return(max);\n        }\n    }\n    if (node-\u003eref \u003e 1 \u0026\u0026 st__lookup(table, (const char *)node, (char **)\u0026mint)) {\n        return(mint);\n    }\n\n    Nt = cuddT(node); Ne = cuddE(node);\n\n    mint1 = cuddApaCountMintermAux(Nt,  digits, max, min, table);\n    if (mint1 == NULL) return(NULL);\n    mint2 = cuddApaCountMintermAux(Cudd_Regular(Ne), digits, max, min, table);\n    if (mint2 == NULL) {\n        if (Nt-\u003eref == 1) ABC_FREE(mint1);\n        return(NULL);\n    }\n    mint = Cudd_NewApaNumber(digits);\n    if (mint == NULL) {\n        if (Nt-\u003eref == 1) ABC_FREE(mint1);\n        if (Cudd_Regular(Ne)-\u003eref == 1) ABC_FREE(mint2);\n        return(NULL);\n    }\n    if (Cudd_IsComplement(Ne)) {\n        (void) Cudd_ApaSubtract(digits,max,mint2,mint);\n        carryout = Cudd_ApaAdd(digits,mint1,mint,mint);\n    } else {\n        carryout = Cudd_ApaAdd(digits,mint1,mint2,mint);\n    }\n    Cudd_ApaShiftRight(digits,carryout,mint,mint);\n    /* If the refernce count of a child is 1, its minterm count\n    ** hasn't been stored in table.  Therefore, it must be explicitly\n    ** freed here. */\n    if (Nt-\u003eref == 1) ABC_FREE(mint1);\n    if (Cudd_Regular(Ne)-\u003eref == 1) ABC_FREE(mint2);\n\n    if (node-\u003eref \u003e 1) {\n        if ( st__insert(table, (char *)node, (char *)mint) == st__OUT_OF_MEM) {\n            ABC_FREE(mint);\n            return(NULL);\n        }\n    }\n    return(mint);\n\n}",
+      "Draft": "func cuddApaCountMintermAux(node *DdNode, digits int32, max DdApaNumber, min DdApaNumber, table *st__table) DdApaNumber {\n    var Nt, Ne *DdNode;\n    var mint, mint1, mint2 DdApaNumber;\n    var carryout DdApaDigit;\n\n    // inlining of macro cuddIsConstant\n    if (node).index == CUDD_CONST_INDEX {\n        if node == background || node == zero {\n            return(min);\n        } else {\n            return(max);\n        }\n    }\n    if node.ref \u003e 1 \u0026\u0026 st__lookup(table, (char *)node, (char **)\u0026mint) {\n        return(mint);\n    }\n\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    Nt = ((node).type.kids.T); Ne = ((node).type.kids.E);\n\n    mint1 = cuddApaCountMintermAux(Nt,  digits, max, min, table);\n    if mint1 == nil { return(nil); }\n    // inlining of macro Cudd_Regular\n    mint2 = cuddApaCountMintermAux(((DdNode *)((ptruint)(Ne) \u0026 ~01)), digits, max, min, table);\n    if mint2 == nil {\n        if Nt.ref == 1 { ABC_FREE(mint1); }\n        return(nil);\n    }\n    mint = Cudd_NewApaNumber(digits);\n    if mint == nil {\n        if Nt.ref == 1 { ABC_FREE(mint1); }\n        // inlining of macro Cudd_Regular\n        if ((DdNode *)((ptruint)(Ne) \u0026 ~01)).ref == 1 { ABC_FREE(mint2); }\n        return(nil);\n    }\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (Ne) \u0026 01)) != 0 {\n        (void) Cudd_ApaSubtract(digits,max,mint2,mint);\n        carryout = Cudd_ApaAdd(digits,mint1,mint,mint);\n    } else {\n        carryout = Cudd_ApaAdd(digits,mint1,mint2,mint);\n    }\n    Cudd_ApaShiftRight(digits,carryout,mint,mint);\n    /* If the refernce count of a child is 1, its minterm count\n    ** hasn't been stored in table.  Therefore, it must be explicitly\n    ** freed here. */\n    if Nt.ref == 1 { ABC_FREE(mint1); }\n    // inlining of macro Cudd_Regular\n    if ((DdNode *)((ptruint)(Ne) \u0026 ~01)).ref == 1 { ABC_FREE(mint2); }\n\n    if node.ref \u003e 1 {\n        if st__insert(table, (char *)node, (char *)mint) == st__OUT_OF_MEM {\n            ABC_FREE(mint);\n            return(nil);\n        }\n    }\n    return(mint);\n\n}"
+    },
+    {
+      "Name": "cuddApaStCountfree",
+      "Start": 28936,
+      "End": 29120,
+      "BodyStart": 29023,
+      "Original": "static enum st__retval\ncuddApaStCountfree(\n  char * key,\n  char * value,\n  char * arg)\n{\n    DdApaNumber d;\n\n    d = (DdApaNumber) value;\n    ABC_FREE(d);\n    return( st__CONTINUE);\n\n}",
+      "Draft": "func cuddApaStCountfree(key string, value string, arg string) st__retval {\n    var d DdApaNumber;\n\n    d = (DdApaNumber) value;\n    ABC_FREE(d);\n    return( st__CONTINUE);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::pointer-cast::21305",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20895,
+      "End": 20895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::pointer-cast::21913",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21436,
+      "End": 21436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::pointer-cast::22409",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21867,
+      "End": 21867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::pointer-cast::22875",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22208,
+      "End": 22208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::pointer-cast::27970",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27222,
+      "End": 27231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::pointer-cast::28348",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27449,
+      "End": 27449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::pointer-cast::28670",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27706,
+      "End": 27706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::pointer-cast::29343",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28254,
+      "End": 28254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::pointer-cast::29461",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28356,
+      "End": 28364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::pointer-cast::29475",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28370,
+      "End": 28378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaNumberOfDigits",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaNumberOfDigits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5777,
+      "End": 5974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_NewApaNumber",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_NewApaNumber",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6431,
+      "End": 6524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaCopy",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6921,
+      "End": 7085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaAdd",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7541,
+      "End": 7882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaSubtract",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaSubtract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8359,
+      "End": 8735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaShortDivision",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaShortDivision",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9161,
+      "End": 9622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaIntDivision",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaIntDivision",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 10539,
+      "End": 11025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaShiftRight",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaShiftRight",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11565,
+      "End": 11838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaSetToLiteral",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaSetToLiteral",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12280,
+      "End": 12478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaPowerOfTwo",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaPowerOfTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12992,
+      "End": 13288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaCompare",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13745,
+      "End": 14489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaCompareRatios",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaCompareRatios",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 15015,
+      "End": 15863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaPrintHex",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaPrintHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16343,
+      "End": 16602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaPrintDecimal",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaPrintDecimal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17065,
+      "End": 18177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::ternary::Cudd_ApaPrintExponential",
+      "Category": "ternary-review",
+      "Symbol": "Cudd_ApaPrintExponential",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 18648,
+      "End": 19891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaPrintExponential",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaPrintExponential",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18648,
+      "End": 19891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaCountMinterm",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaCountMinterm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20663,
+      "End": 22272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaPrintMinterm",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaPrintMinterm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22777,
+      "End": 23177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaPrintMintermExp",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaPrintMintermExp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23797,
+      "End": 24231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::Cudd_ApaPrintDensity",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_ApaPrintDensity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24694,
+      "End": 25393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::cuddApaCountMintermAux",
+      "Category": "semantic-review",
+      "Symbol": "cuddApaCountMintermAux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26767,
+      "End": 28495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::cuddApaStCountfree",
+      "Category": "semantic-review",
+      "Symbol": "cuddApaStCountfree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28936,
+      "End": 29120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 29179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4019,
+      "End": 4127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::6490",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6490,
+      "End": 6519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::15583",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15583,
+      "End": 15598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::15604",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15604,
+      "End": 15620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::17428",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17428,
+      "End": 17467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::17504",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17504,
+      "End": 17518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::17765",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17765,
+      "End": 17779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::18061",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18061,
+      "End": 18078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::18141",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18141,
+      "End": 18158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::19024",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19024,
+      "End": 19063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::19100",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19100,
+      "End": 19114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::19463",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19463,
+      "End": 19477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::19684",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19684,
+      "End": 19701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::19746",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19746,
+      "End": 19763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::21168",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21168,
+      "End": 21181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::21339",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21339,
+      "End": 21352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::21362",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21362,
+      "End": 21375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::21508",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21508,
+      "End": 21521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::21531",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21531,
+      "End": 21544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::21732",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21732,
+      "End": 21745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::21755",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21755,
+      "End": 21768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::21897",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21897,
+      "End": 21908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::22089",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22089,
+      "End": 22102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::22108",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22108,
+      "End": 22121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::22238",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22238,
+      "End": 22249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::23078",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23078,
+      "End": 23093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::24132",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24132,
+      "End": 24147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::25187",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25187,
+      "End": 25202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::25208",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 25208,
+      "End": 25225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::27544",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27544,
+      "End": 27559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::27677",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27677,
+      "End": 27692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::27734",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27734,
+      "End": 27749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::28229",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28229,
+      "End": 28244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::28282",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28282,
+      "End": 28297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::28417",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28417,
+      "End": 28431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddApa.c::macro-inline::29078",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29078,
+      "End": 29089
+    }
+  ],
+  "Draft": "package cudd\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\nimport \"os\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddApa.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Arbitrary precision arithmetic functions.]\n\n  Description [External procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_ApaNumberOfDigits()\n                \u003cli\u003e Cudd_NewApaNumber()\n                \u003cli\u003e Cudd_ApaCopy()\n                \u003cli\u003e Cudd_ApaAdd()\n                \u003cli\u003e Cudd_ApaSubtract()\n                \u003cli\u003e Cudd_ApaShortDivision()\n                \u003cli\u003e Cudd_ApaIntDivision()\n                \u003cli\u003e Cudd_ApaShiftRight()\n                \u003cli\u003e Cudd_ApaSetToLiteral()\n                \u003cli\u003e Cudd_ApaPowerOfTwo()\n                \u003cli\u003e Cudd_ApaCompare()\n                \u003cli\u003e Cudd_ApaCompareRatios()\n                \u003cli\u003e Cudd_ApaPrintHex()\n                \u003cli\u003e Cudd_ApaPrintDecimal()\n                \u003cli\u003e Cudd_ApaPrintExponential()\n                \u003cli\u003e Cudd_ApaCountMinterm()\n                \u003cli\u003e Cudd_ApaPrintMinterm()\n                \u003cli\u003e Cudd_ApaPrintMintermExp()\n                \u003cli\u003e Cudd_ApaPrintDensity()\n                \u003c/ul\u003e\n        Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddApaCountMintermAux()\n                \u003cli\u003e cuddApaStCountfree()\n                \u003c/ul\u003e]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddApa.c,v 1.19 2009/03/08 01:27:50 fabio Exp $\";\n#endif\n\nvar background, zero *DdNode;\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static DdApaNumber cuddApaCountMintermAux (DdNode * node, int digits, DdApaNumber max, DdApaNumber min, st__table * table);\n\n// static      st__retval cuddApaStCountfree (char * key, char * value, char * arg);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Finds the number of digits for an arbitrary precision\n  integer.]\n\n  Description [Finds the number of digits for an arbitrary precision\n  integer given the maximum number of binary digits.  The number of\n  binary digits should be positive. Returns the number of digits if\n  successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_ApaNumberOfDigits(binaryDigits int32) int32 {\n    var digits int32;\n\n    digits = binaryDigits / DD_APA_BITS;\n    if (digits * DD_APA_BITS) != binaryDigits {\n        digits++; }\n    return(digits);\n\n} /* end of Cudd_ApaNumberOfDigits */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Allocates memory for an arbitrary precision integer.]\n\n  Description [Allocates memory for an arbitrary precision\n  integer. Returns a pointer to the allocated memory if successful;\n  NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_NewApaNumber(digits int32) DdApaNumber {\n    return(ABC_ALLOC(DdApaDigit, digits));\n\n} /* end of Cudd_NewApaNumber */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Makes a copy of an arbitrary precision integer.]\n\n  Description [Makes a copy of an arbitrary precision integer.]\n\n  SideEffects [Changes parameter \u003ccode\u003edest\u003c/code\u003e.]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_ApaCopy(digits int32, source DdApaNumber, dest DdApaNumber) {\n    var i int32;\n\n    for i = 0; i \u003c digits; i++ {\n        dest[i] = source[i];\n    }\n\n} /* end of Cudd_ApaCopy */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Adds two arbitrary precision integers.]\n\n  Description [Adds two arbitrary precision integers.  Returns the\n  carry out of the most significant digit.]\n\n  SideEffects [The result of the sum is stored in parameter \u003ccode\u003esum\u003c/code\u003e.]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_ApaAdd(digits int32, a DdApaNumber, b DdApaNumber, sum DdApaNumber) DdApaDigit {\n    var i int32;\n    var partial DdApaDoubleDigit;\n\n    for i = digits - 1; i \u003e= 0; i-- {\n        // inlining of macro DD_MSDIGIT\n        partial = a[i] + b[i] + ((partial) \u003e\u003e DD_APA_BITS);\n        // inlining of macro DD_LSDIGIT\n        sum[i] = (DdApaDigit) ((partial) \u0026 DD_APA_MASK);\n    }\n    // inlining of macro DD_MSDIGIT\n    return((DdApaDigit) ((partial) \u003e\u003e DD_APA_BITS));\n\n} /* end of Cudd_ApaAdd */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Subtracts two arbitrary precision integers.]\n\n  Description [Subtracts two arbitrary precision integers.  Returns the\n  borrow out of the most significant digit.]\n\n  SideEffects [The result of the subtraction is stored in parameter\n  \u003ccode\u003ediff\u003c/code\u003e.]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_ApaSubtract(digits int32, a DdApaNumber, b DdApaNumber, diff DdApaNumber) DdApaDigit {\n    var i int32;\n    var partial DdApaDoubleDigit  = DD_APA_BASE;\n\n    for i = digits - 1; i \u003e= 0; i-- {\n        // inlining of macro DD_MSDIGIT\n        partial = ((partial) \u003e\u003e DD_APA_BITS) + DD_APA_MASK + a[i] - b[i];\n        // inlining of macro DD_LSDIGIT\n        diff[i] = (DdApaDigit) ((partial) \u0026 DD_APA_MASK);\n    }\n    // inlining of macro DD_MSDIGIT\n    return((DdApaDigit) ((partial) \u003e\u003e DD_APA_BITS) - 1);\n\n} /* end of Cudd_ApaSubtract */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Divides an arbitrary precision integer by a digit.]\n\n  Description [Divides an arbitrary precision integer by a digit.]\n\n  SideEffects [The quotient is returned in parameter \u003ccode\u003equotient\u003c/code\u003e.]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_ApaShortDivision(digits int32, dividend DdApaNumber, divisor DdApaDigit, quotient DdApaNumber) DdApaDigit {\n    var i int32;\n    var remainder DdApaDigit;\n    var partial DdApaDoubleDigit;\n\n    remainder = 0;\n    for i = 0; i \u003c digits; i++ {\n        partial = remainder * DD_APA_BASE + dividend[i];\n        quotient[i] = (DdApaDigit) (partial/(DdApaDoubleDigit)divisor);\n        remainder = (DdApaDigit) (partial % divisor);\n    }\n\n    return(remainder);\n\n} /* end of Cudd_ApaShortDivision */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Divides an arbitrary precision integer by an integer.]\n\n  Description [Divides an arbitrary precision integer by a 32-bit\n  unsigned integer. Returns the remainder of the division. This\n  procedure relies on the assumption that the number of bits of a\n  DdApaDigit plus the number of bits of an unsigned int is less the\n  number of bits of the mantissa of a double. This guarantees that the\n  product of a DdApaDigit and an unsigned int can be represented\n  without loss of precision by a double. On machines where this\n  assumption is not satisfied, this procedure will malfunction.]\n\n  SideEffects [The quotient is returned in parameter \u003ccode\u003equotient\u003c/code\u003e.]\n\n  SeeAlso     [Cudd_ApaShortDivision]\n\n******************************************************************************/\nunsigned int\nCudd_ApaIntDivision(\n  int  digits,\n  DdApaNumber dividend,\n  unsigned int divisor,\n  DdApaNumber quotient)\n{\n    var i int32;\n    var partial float64;\n    unsigned int remainder = 0;\n    var ddiv float64  = float64( divisor);\n\n    for i = 0; i \u003c digits; i++ {\n        partial = float64( remainder) * DD_APA_BASE + dividend[i];\n        quotient[i] = (DdApaDigit) (partial / ddiv);\n        remainder = (unsigned int) (partial - (float64(quotient[i]) * ddiv));\n    }\n\n    return(remainder);\n\n} /* end of Cudd_ApaIntDivision */\n\n\n/**Function********************************************************************\n\n  Synopsis [Shifts right an arbitrary precision integer by one binary\n  place.]\n\n  Description [Shifts right an arbitrary precision integer by one\n  binary place. The most significant binary digit of the result is\n  taken from parameter \u003ccode\u003ein\u003c/code\u003e.]\n\n  SideEffects [The result is returned in parameter \u003ccode\u003eb\u003c/code\u003e.]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_ApaShiftRight(digits int32, in DdApaDigit, a DdApaNumber, b DdApaNumber) {\n    var i int32;\n\n    for i = digits - 1; i \u003e 0; i-- {\n        b[i] = (a[i] \u003e\u003e 1) | ((a[i-1] \u0026 1) \u003c\u003c (DD_APA_BITS - 1));\n    }\n    b[0] = (a[0] \u003e\u003e 1) | (in \u003c\u003c (DD_APA_BITS - 1));\n\n} /* end of Cudd_ApaShiftRight */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Sets an arbitrary precision integer to a one-digit literal.]\n\n  Description [Sets an arbitrary precision integer to a one-digit literal.]\n\n  SideEffects [The result is returned in parameter \u003ccode\u003enumber\u003c/code\u003e.]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_ApaSetToLiteral(digits int32, number DdApaNumber, literal DdApaDigit) {\n    var i int32;\n\n    for i = 0; i \u003c digits - 1; i++ {\n        number[i] = 0;\n    }\n    number[digits - 1] = literal;\n\n} /* end of Cudd_ApaSetToLiteral */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Sets an arbitrary precision integer to a power of two.]\n\n  Description [Sets an arbitrary precision integer to a power of\n  two. If the power of two is too large to be represented, the number\n  is set to 0.]\n\n  SideEffects [The result is returned in parameter \u003ccode\u003enumber\u003c/code\u003e.]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_ApaPowerOfTwo(digits int32, number DdApaNumber, power int32) {\n    var i int32;\n    var index int32;\n\n    for i = 0; i \u003c digits; i++ {\n        number[i] = 0;\n    }\n    i = digits - 1 - power / DD_APA_BITS;\n    if i \u003c 0 { return; }\n    index = power \u0026 (DD_APA_BITS - 1);\n    number[i] = 1 \u003c\u003c index;\n\n} /* end of Cudd_ApaPowerOfTwo */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Compares two arbitrary precision integers.]\n\n  Description [Compares two arbitrary precision integers. Returns 1 if\n  the first number is larger; 0 if they are equal; -1 if the second\n  number is larger.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_ApaCompare(digitsFirst int32, first DdApaNumber, digitsSecond int32, second DdApaNumber) int32 {\n    var i int32;\n    var firstNZ, secondNZ int32;\n\n    /* Find first non-zero in both numbers. */\n    for firstNZ = 0; firstNZ \u003c digitsFirst; firstNZ++ {\n        if first[firstNZ] != 0 { break; }\n    }\n    for secondNZ = 0; secondNZ \u003c digitsSecond; secondNZ++ {\n        if second[secondNZ] != 0 { break; }\n    }\n    if digitsFirst - firstNZ \u003e digitsSecond - secondNZ { return(1);\n    } else if digitsFirst - firstNZ \u003c digitsSecond - secondNZ { return(-1); }\n    for i = 0; i \u003c digitsFirst - firstNZ; i++ {\n        if first[firstNZ + i] \u003e second[secondNZ + i] { return(1);\n        } else if first[firstNZ + i] \u003c second[secondNZ + i] { return(-1); }\n    }\n    return(0);\n\n} /* end of Cudd_ApaCompare */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Compares the ratios of two arbitrary precision integers to two\n  unsigned ints.]\n\n  Description [Compares the ratios of two arbitrary precision integers\n  to two unsigned ints. Returns 1 if the first number is larger; 0 if\n  they are equal; -1 if the second number is larger.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nint\nCudd_ApaCompareRatios(\n  int digitsFirst,\n  DdApaNumber firstNum,\n  unsigned int firstDen,\n  int digitsSecond,\n  DdApaNumber secondNum,\n  unsigned int secondDen)\n{\n    var result int32;\n    var first, second DdApaNumber;\n    unsigned int firstRem, secondRem;\n\n    first = Cudd_NewApaNumber(digitsFirst);\n    firstRem = Cudd_ApaIntDivision(digitsFirst,firstNum,firstDen,first);\n    second = Cudd_NewApaNumber(digitsSecond);\n    secondRem = Cudd_ApaIntDivision(digitsSecond,secondNum,secondDen,second);\n    result = Cudd_ApaCompare(digitsFirst,first,digitsSecond,second);\n    ABC_FREE(first);\n    ABC_FREE(second);\n    if result == 0 {\n        if float64(firstRem)/firstDen \u003e float64(secondRem)/secondDen {\n            return(1);\n        } else if float64(firstRem)/firstDen \u003c float64(secondRem)/secondDen {\n            return(-1); }\n    }\n    return(result);\n\n} /* end of Cudd_ApaCompareRatios */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints an arbitrary precision integer in hexadecimal format.]\n\n  Description [Prints an arbitrary precision integer in hexadecimal format.\n  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_ApaPrintDecimal Cudd_ApaPrintExponential]\n\n******************************************************************************/\nfunc Cudd_ApaPrintHex(fp *os.File, digits int32, number DdApaNumber) int32 {\n    var i, result int32;\n\n    for i = 0; i \u003c digits; i++ {\n        result = fmt.Fprintf(fp, DD_APA_HEXPRINT, number[i]);\n        if result == -1 {\n            return(0); }\n    }\n    return(1);\n\n} /* end of Cudd_ApaPrintHex */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints an arbitrary precision integer in decimal format.]\n\n  Description [Prints an arbitrary precision integer in decimal format.\n  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_ApaPrintHex Cudd_ApaPrintExponential]\n\n******************************************************************************/\nfunc Cudd_ApaPrintDecimal(fp *os.File, digits int32, number DdApaNumber) int32 {\n    var i, result int32;\n    var remainder DdApaDigit;\n    var work DdApaNumber;\n    unsigned char *decimal;\n    var leadingzero int32;\n    var decimalDigits int32  = int32( (digits * math.Log10(float64(float64( DD_APA_BASE))))) + 1;\n\n    work = Cudd_NewApaNumber(digits);\n    if work == nil {\n        return(0); }\n    decimal = ABC_ALLOC(unsigned char, decimalDigits);\n    if decimal == nil {\n        ABC_FREE(work);\n        return(0);\n    }\n    Cudd_ApaCopy(digits,number,work);\n    for i = decimalDigits - 1; i \u003e= 0; i-- {\n        remainder = Cudd_ApaShortDivision(digits,work,(DdApaDigit) 10,work);\n        decimal[i] = (unsigned char) remainder;\n    }\n    ABC_FREE(work);\n\n    leadingzero = 1;\n    for i = 0; i \u003c decimalDigits; i++ {\n        leadingzero = leadingzero \u0026\u0026 (decimal[i] == 0);\n        if (!(leadingzero != 0)) || (i == (decimalDigits - 1)) {\n            result = fmt.Fprintf(fp, \"%1d\", decimal[i]);\n            if result == -1 {\n                ABC_FREE(decimal);\n                return(0);\n            }\n        }\n    }\n    ABC_FREE(decimal);\n    return(1);\n\n} /* end of Cudd_ApaPrintDecimal */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints an arbitrary precision integer in exponential format.]\n\n  Description [Prints an arbitrary precision integer in exponential format.\n  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_ApaPrintHex Cudd_ApaPrintDecimal]\n\n******************************************************************************/\nfunc Cudd_ApaPrintExponential(fp *os.File, digits int32, number DdApaNumber, precision int32) int32 {\n    var i, first, last, result int32;\n    var remainder DdApaDigit;\n    var work DdApaNumber;\n    unsigned char *decimal;\n    var decimalDigits int32  = int32( (digits * math.Log10(float64(float64( DD_APA_BASE))))) + 1;\n\n    work = Cudd_NewApaNumber(digits);\n    if work == nil {\n        return(0); }\n    decimal = ABC_ALLOC(unsigned char, decimalDigits);\n    if decimal == nil {\n        ABC_FREE(work);\n        return(0);\n    }\n    Cudd_ApaCopy(digits,number,work);\n    first = decimalDigits - 1;\n    for i = decimalDigits - 1; i \u003e= 0; i-- {\n        remainder = Cudd_ApaShortDivision(digits,work,(DdApaDigit) 10,work);\n        decimal[i] = (unsigned char) remainder;\n        if remainder != 0 { first = i; } /* keep track of MS non-zero */\n    }\n    ABC_FREE(work);\n    // inlining of macro ddMin\n    \n    if (decimalDigits) \u003c (first + precision) {\n        last = (decimalDigits);\n    } else {\n        last = (first + precision);\n    }\n\n    for i = first; i \u003c last; i++ {\n        result = fmt.Fprintf(fp, \"%s%1d\", i == first+1 ? \".\" : \"\", decimal[i]);\n        if result == -1 {\n            ABC_FREE(decimal);\n            return(0);\n        }\n    }\n    ABC_FREE(decimal);\n    result = fmt.Fprintf(fp, \"e+%d\", decimalDigits - first - 1);\n    if result == -1 {\n        return(0);\n    }\n    return(1);\n\n} /* end of Cudd_ApaPrintExponential */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Counts the number of minterms of a DD.]\n\n  Description [Counts the number of minterms of a DD. The function is\n  assumed to depend on nvars variables. The minterm count is\n  represented as an arbitrary precision unsigned integer, to allow for\n  any number of variables CUDD supports.  Returns a pointer to the\n  array representing the number of minterms of the function rooted at\n  node if successful; NULL otherwise.]\n\n  SideEffects [The number of digits of the result is returned in\n  parameter \u003ccode\u003edigits\u003c/code\u003e.]\n\n  SeeAlso     [Cudd_CountMinterm]\n\n******************************************************************************/\nfunc Cudd_ApaCountMinterm(manager *DdManager, node *DdNode, nvars int32, digits *int32) DdApaNumber {\n    var max, min DdApaNumber;\n    var table *st__table;\n    var i, count DdApaNumber;\n\n    background = manager.background;\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(manager.one) ^ 01));\n\n    *digits = Cudd_ApaNumberOfDigits(nvars+1);\n    max = Cudd_NewApaNumber(*digits);\n    if max == nil {\n        return(nil);\n    }\n    Cudd_ApaPowerOfTwo(*digits,max,nvars);\n    min = Cudd_NewApaNumber(*digits);\n    if min == nil {\n        ABC_FREE(max);\n        return(nil);\n    }\n    Cudd_ApaSetToLiteral(*digits,min,0);\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if table == nil {\n        ABC_FREE(max);\n        ABC_FREE(min);\n        return(nil);\n    }\n    // inlining of macro Cudd_Regular\n    i = cuddApaCountMintermAux(((DdNode *)((ptruint)(node) \u0026 ~01)),*digits,max,min,table);\n    if i == nil {\n        ABC_FREE(max);\n        ABC_FREE(min);\n        st__foreach(table, cuddApaStCountfree, nil);\n        st__free_table(table);\n        return(nil);\n    }\n    count = Cudd_NewApaNumber(*digits);\n    if count == nil {\n        ABC_FREE(max);\n        ABC_FREE(min);\n        st__foreach(table, cuddApaStCountfree, nil);\n        st__free_table(table);\n        // inlining of macro Cudd_Regular\n        if ((DdNode *)((ptruint)(node) \u0026 ~01)).ref == 1 { ABC_FREE(i); }\n        return(nil);\n    }\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (node) \u0026 01)) != 0 {\n        (void) Cudd_ApaSubtract(*digits,max,i,count);\n    } else {\n        Cudd_ApaCopy(*digits,i,count);\n    }\n    ABC_FREE(max);\n    ABC_FREE(min);\n    st__foreach(table, cuddApaStCountfree, nil);\n    st__free_table(table);\n    // inlining of macro Cudd_Regular\n    if ((DdNode *)((ptruint)(node) \u0026 ~01)).ref == 1 { ABC_FREE(i); }\n    return(count);\n\n} /* end of Cudd_ApaCountMinterm */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints the number of minterms of a BDD or ADD using\n  arbitrary precision arithmetic.]\n\n  Description [Prints the number of minterms of a BDD or ADD using\n  arbitrary precision arithmetic. Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_ApaPrintMintermExp]\n\n******************************************************************************/\nfunc Cudd_ApaPrintMinterm(fp *os.File, dd *DdManager, node *DdNode, nvars int32) int32 {\n    var digits int32;\n    var result int32;\n    var count DdApaNumber;\n\n    count = Cudd_ApaCountMinterm(dd,node,nvars,\u0026digits);\n    if count == nil {\n        return(0); }\n    result = Cudd_ApaPrintDecimal(fp,digits,count);\n    ABC_FREE(count);\n    if fmt.Fprintf(fp, \"\\n\") == -1 {\n        return(0);\n    }\n    return(result);\n\n} /* end of Cudd_ApaPrintMinterm */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints the number of minterms of a BDD or ADD in exponential\n  format using arbitrary precision arithmetic.]\n\n  Description [Prints the number of minterms of a BDD or ADD in\n  exponential format using arbitrary precision arithmetic. Parameter\n  precision controls the number of signficant digits printed. Returns\n  1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_ApaPrintMinterm]\n\n******************************************************************************/\nfunc Cudd_ApaPrintMintermExp(fp *os.File, dd *DdManager, node *DdNode, nvars int32, precision int32) int32 {\n    var digits int32;\n    var result int32;\n    var count DdApaNumber;\n\n    count = Cudd_ApaCountMinterm(dd,node,nvars,\u0026digits);\n    if count == nil {\n        return(0); }\n    result = Cudd_ApaPrintExponential(fp,digits,count,precision);\n    ABC_FREE(count);\n    if fmt.Fprintf(fp, \"\\n\") == -1 {\n        return(0);\n    }\n    return(result);\n\n} /* end of Cudd_ApaPrintMintermExp */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Prints the density of a BDD or ADD using\n  arbitrary precision arithmetic.]\n\n  Description [Prints the density of a BDD or ADD using\n  arbitrary precision arithmetic. Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_ApaPrintDensity(fp *os.File, dd *DdManager, node *DdNode, nvars int32) int32 {\n    var digits int32;\n    var result int32;\n    var count, density DdApaNumber;\n    unsigned int size, remainder, fractional;\n\n    count = Cudd_ApaCountMinterm(dd,node,nvars,\u0026digits);\n    if count == nil {\n        return(0); }\n    size = Cudd_DagSize(node);\n    density = Cudd_NewApaNumber(digits);\n    remainder = Cudd_ApaIntDivision(digits,count,size,density);\n    result = Cudd_ApaPrintDecimal(fp,digits,density);\n    ABC_FREE(count);\n    ABC_FREE(density);\n    fractional = (unsigned int)(float64(remainder) / size * 1000000);\n    if fmt.Fprintf(fp, \".%d\\n\", fractional) == -1 {\n        return(0);\n    }\n    return(result);\n\n} /* end of Cudd_ApaPrintDensity */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_ApaCountMinterm.]\n\n  Description [Performs the recursive step of Cudd_ApaCountMinterm.\n  It is based on the following identity. Let |f| be the\n  number of minterms of f. Then:\n  \u003cxmp\u003e\n    |f| = (|f0|+|f1|)/2\n  \u003c/xmp\u003e\n  where f0 and f1 are the two cofactors of f.\n  Uses the identity \u003ccode\u003e|f'| = max - |f|\u003c/code\u003e.\n  The procedure expects the argument \"node\" to be a regular pointer, and\n  guarantees this condition is met in the recursive calls.\n  For efficiency, the result of a call is cached only if the node has\n  a reference count greater than 1.\n  Returns the number of minterms of the function rooted at node.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc cuddApaCountMintermAux(node *DdNode, digits int32, max DdApaNumber, min DdApaNumber, table *st__table) DdApaNumber {\n    var Nt, Ne *DdNode;\n    var mint, mint1, mint2 DdApaNumber;\n    var carryout DdApaDigit;\n\n    // inlining of macro cuddIsConstant\n    if (node).index == CUDD_CONST_INDEX {\n        if node == background || node == zero {\n            return(min);\n        } else {\n            return(max);\n        }\n    }\n    if node.ref \u003e 1 \u0026\u0026 st__lookup(table, (char *)node, (char **)\u0026mint) {\n        return(mint);\n    }\n\n    // inlining of macro cuddT\n    // inlining of macro cuddE\n    Nt = ((node).type.kids.T); Ne = ((node).type.kids.E);\n\n    mint1 = cuddApaCountMintermAux(Nt,  digits, max, min, table);\n    if mint1 == nil { return(nil); }\n    // inlining of macro Cudd_Regular\n    mint2 = cuddApaCountMintermAux(((DdNode *)((ptruint)(Ne) \u0026 ~01)), digits, max, min, table);\n    if mint2 == nil {\n        if Nt.ref == 1 { ABC_FREE(mint1); }\n        return(nil);\n    }\n    mint = Cudd_NewApaNumber(digits);\n    if mint == nil {\n        if Nt.ref == 1 { ABC_FREE(mint1); }\n        // inlining of macro Cudd_Regular\n        if ((DdNode *)((ptruint)(Ne) \u0026 ~01)).ref == 1 { ABC_FREE(mint2); }\n        return(nil);\n    }\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (Ne) \u0026 01)) != 0 {\n        (void) Cudd_ApaSubtract(digits,max,mint2,mint);\n        carryout = Cudd_ApaAdd(digits,mint1,mint,mint);\n    } else {\n        carryout = Cudd_ApaAdd(digits,mint1,mint2,mint);\n    }\n    Cudd_ApaShiftRight(digits,carryout,mint,mint);\n    /* If the refernce count of a child is 1, its minterm count\n    ** hasn't been stored in table.  Therefore, it must be explicitly\n    ** freed here. */\n    if Nt.ref == 1 { ABC_FREE(mint1); }\n    // inlining of macro Cudd_Regular\n    if ((DdNode *)((ptruint)(Ne) \u0026 ~01)).ref == 1 { ABC_FREE(mint2); }\n\n    if node.ref \u003e 1 {\n        if st__insert(table, (char *)node, (char *)mint) == st__OUT_OF_MEM {\n            ABC_FREE(mint);\n            return(nil);\n        }\n    }\n    return(mint);\n\n} /* end of cuddApaCountMintermAux */\n\n\n/**Function********************************************************************\n\n  Synopsis [Frees the memory used to store the minterm counts recorded\n  in the visited table.]\n\n  Description [Frees the memory used to store the minterm counts\n  recorded in the visited table. Returns st__CONTINUE.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc cuddApaStCountfree(key string, value string, arg string) st__retval {\n    var d DdApaNumber;\n\n    d = (DdApaNumber) value;\n    ABC_FREE(d);\n    return( st__CONTINUE);\n\n} /* end of cuddApaStCountfree */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

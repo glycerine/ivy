@@ -1,0 +1,1541 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c",
+  "SHA256": "dda8d271fd05b27638e6c2545480ef95cc8bd8d22853660ceeb9606b977bd361",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrEntry( pSto.vDoms, Id ) == nil );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 126,
+        "Column": 9,
+        "ByteOffset": 4090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pDom2, pDom, sizeof(Aig_Dom_t) + sizeof(int) * pSto.Limit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 5195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%4d : {\", Num );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 9,
+        "ByteOffset": 5269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %4d\", pDom.pNodes[k] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 9,
+        "ByteOffset": 5351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"     \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 5380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" }\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 9,
+        "ByteOffset": 6564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"*** PI %4d %4d :\\n\", i, pObj.Id );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 236,
+        "Column": 60,
+        "ByteOffset": 7498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pSto) ? (free((char *) (pSto)), (pSto) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 258,
+        "Column": 9,
+        "ByteOffset": 8085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pDom.pNodes[i-1] \u003c pDom.pNodes[i] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 345,
+        "Column": 5,
+        "ByteOffset": 10714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pD0.nNodes \u003e= pD1.nNodes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 423,
+        "Column": 5,
+        "ByteOffset": 12931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Limit \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 433,
+        "Column": 5,
+        "ByteOffset": 13241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pDom.nNodes \u003c= Limit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 434,
+        "Column": 5,
+        "ByteOffset": 13277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjDomCheck( pDom ) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 495,
+        "Column": 9,
+        "ByteOffset": 15519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pDom2, pDom1, sizeof(Aig_Dom_t) + sizeof(int) * pSto.Limit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 518,
+        "Column": 66,
+        "ByteOffset": 16206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Aig_ObjForEachFanout__*/for  assert(pSto.pAig.pFanData), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(pSto.pAig, iFanout) : Aig_ObjFanout0Int(pSto.pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pSto.pAig, iFanout\u003e\u003e1)), 1); i++  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 548,
+        "Column": 5,
+        "ByteOffset": 17589
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 615,
+        "Column": 5,
+        "ByteOffset": 20113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes =%4d. Flops =%4d. Doms =%9d. Ave =%8.2f.   \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 658,
+        "Column": 5,
+        "ByteOffset": 21992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes =%4d. PIs =%4d. Doms =%9d. Ave =%8.2f.   \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 699,
+        "Column": 5,
+        "ByteOffset": 23778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes =%6d. Doms =%9d. Ave =%8.2f.   \", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 746,
+        "Column": 5,
+        "ByteOffset": 25289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 798,
+        "Column": 5,
+        "ByteOffset": 26791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.nRefs \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 801,
+        "Column": 5,
+        "ByteOffset": 26869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.nRefs == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 825,
+        "Column": 5,
+        "ByteOffset": 27499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.nRefs \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 828,
+        "Column": 5,
+        "ByteOffset": 27578
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNode.nRefs == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 855,
+        "Column": 9,
+        "ByteOffset": 28445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Aig_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 862,
+        "Column": 9,
+        "ByteOffset": 28820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Aig_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 867,
+        "Column": 5,
+        "ByteOffset": 29019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Counter0 == Counter1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 952,
+        "Column": 5,
+        "ByteOffset": 31546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The cut has %d non-trivial %d-dominators.\\n\", Vec_PtrSize(vDoms), pSto.Limit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 958,
+        "Column": 9,
+        "ByteOffset": 31910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Vol =%3d.  \", Aig_ObjDomVolume(pSto, pDom) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 959,
+        "Column": 9,
+        "ByteOffset": 31973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Dom =%3d.  \", Aig_ObjDomDomed(pSto, pDom) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 987,
+        "Column": 9,
+        "ByteOffset": 32660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ITERATION %d:\\n\", Num );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 1039,
+        "Column": 66,
+        "ByteOffset": 34061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Aig_ObjForEachFanout__*/for  assert(pSto.pAig.pFanData), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(pSto.pAig, iFanout) : Aig_ObjFanout0Int(pSto.pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pSto.pAig, iFanout\u003e\u003e1)), 1); i++  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1051,
+        "Column": 17,
+        "ByteOffset": 35067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%6d : Level =%4d. Fanout =%6d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1055,
+        "Column": 13,
+        "ByteOffset": 35240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d(%d) \", Entry, Vec_IntEntry(pSto.vTimes, Entry) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1060,
+        "Column": 9,
+        "ByteOffset": 35393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ManDomStart",
+      "Start": 2280,
+      "End": 2728,
+      "BodyStart": 2339,
+      "Original": "Aig_Sto_t * Aig_ManDomStart( Aig_Man_t * pAig, int Limit )\n{\n    Aig_Sto_t * pSto;\n    pSto = ABC_CALLOC( Aig_Sto_t, 1 );\n    pSto-\u003epAig     = pAig;\n    pSto-\u003eLimit    = Limit;\n    pSto-\u003epMem     = Aig_MmFixedStart( sizeof(Aig_Dom_t) + sizeof(int) * Limit, 10000 );\n    pSto-\u003evDoms    = Vec_PtrStart( Aig_ManObjNumMax(pAig) );\n    pSto-\u003evFans    = Vec_IntAlloc( 100 );\n    pSto-\u003evTimes   = Vec_IntStart( Aig_ManObjNumMax(pAig) );\n    return pSto;\n}",
+      "Draft": "func Aig_ManDomStart(pAig *Aig_Man_t, Limit int32) *Aig_Sto_t {\n    \n    // inlining of macro ABC_CALLOC\n    pSto := \u0026Aig_Sto_t{};\n    pSto.pAig     = pAig;\n    pSto.Limit    = Limit;\n    pSto.pMem     = Aig_MmFixedStart( sizeof(Aig_Dom_t) + sizeof(int) * Limit, 10000 );\n    pSto.vDoms    = Vec_PtrStart( Aig_ManObjNumMax(pAig) );\n    pSto.vFans    = Vec_IntAlloc( 100 );\n    pSto.vTimes   = Vec_IntStart( Aig_ManObjNumMax(pAig) );\n    return pSto;\n}"
+    },
+    {
+      "Name": "Aig_ObjAddTriv",
+      "Start": 2987,
+      "End": 3372,
+      "BodyStart": 3054,
+      "Original": "void Aig_ObjAddTriv( Aig_Sto_t * pSto, int Id, Vec_Ptr_t * vDoms )\n{\n    Aig_Dom_t * pDom;\n    pDom = (Aig_Dom_t *)Aig_MmFixedEntryFetch( pSto-\u003epMem );\n    pDom-\u003euSign     = (1 \u003c\u003c (Id % 63));\n    pDom-\u003enNodes    = 1;\n    pDom-\u003epNodes[0] = Id;\n    Vec_PtrPushFirst( vDoms, pDom );\n    assert( Vec_PtrEntry( pSto-\u003evDoms, Id ) == NULL );\n    Vec_PtrWriteEntry( pSto-\u003evDoms, Id, vDoms );\n}",
+      "Draft": "func Aig_ObjAddTriv(pSto *Aig_Sto_t, Id int32, vDoms *Vec_Ptr_t) {\n    var pDom *Aig_Dom_t;\n    pDom = (Aig_Dom_t *)Aig_MmFixedEntryFetch( pSto.pMem );\n    pDom.uSign     = (1 \u003c\u003c (Id % 63));\n    pDom.nNodes    = 1;\n    pDom.pNodes[0] = Id;\n    Vec_PtrPushFirst( vDoms, pDom );\n    assert(Vec_PtrEntry( pSto.vDoms, Id ) == nil, \"Vec_PtrEntry( pSto.vDoms, Id ) == nil\");\n    Vec_PtrWriteEntry( pSto.vDoms, Id, vDoms );\n}"
+    },
+    {
+      "Name": "Aig_ObjDomVecDup",
+      "Start": 3634,
+      "End": 4096,
+      "BodyStart": 3714,
+      "Original": "Vec_Ptr_t * Aig_ObjDomVecDup( Aig_Sto_t * pSto, Vec_Ptr_t * vDoms, int fSkip1 )\n{\n    Vec_Ptr_t * vDoms2;\n    Aig_Dom_t * pDom, * pDom2;\n    int i;\n    vDoms2 = Vec_PtrAlloc( 0 );\n    Vec_PtrForEachEntryStart( Aig_Dom_t *, vDoms, pDom, i, fSkip1 )\n    {\n        pDom2 = (Aig_Dom_t *)Aig_MmFixedEntryFetch( pSto-\u003epMem );\n        memcpy( pDom2, pDom, sizeof(Aig_Dom_t) + sizeof(int) * pSto-\u003eLimit );\n        Vec_PtrPush( vDoms2, pDom2 );\n    }\n    return vDoms2;\n}",
+      "Draft": "func Aig_ObjDomVecDup(pSto *Aig_Sto_t, vDoms *Vec_Ptr_t, fSkip1 int32) *Vec_Ptr_t {\n    var vDoms2 *Vec_Ptr_t;\n    var pDom, pDom2 *Aig_Dom_t;\n    var i int32;\n    vDoms2 = Vec_PtrAlloc( 0 );\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = fSkip1; (i \u003c Vec_PtrSize(vDoms)) \u0026\u0026 (((pDom) = (Aig_Dom_t *)Vec_PtrEntry(vDoms, i)), 1); i++  {\n        pDom2 = (Aig_Dom_t *)Aig_MmFixedEntryFetch( pSto.pMem );\n        memcpy( pDom2, pDom, sizeof(Aig_Dom_t) + sizeof(int) * pSto.Limit );\n        Vec_PtrPush( vDoms2, pDom2 );\n    }\n    return vDoms2;\n}"
+    },
+    {
+      "Name": "Aig_ObjDomVecRecycle",
+      "Start": 4356,
+      "End": 4599,
+      "BodyStart": 4421,
+      "Original": "void Aig_ObjDomVecRecycle( Aig_Sto_t * pSto, Vec_Ptr_t * vDoms )\n{\n    Aig_Dom_t * pDom;\n    int i;\n    Vec_PtrForEachEntry( Aig_Dom_t *, vDoms, pDom, i )\n        Aig_MmFixedEntryRecycle( pSto-\u003epMem, (char *)pDom );\n    Vec_PtrFree( vDoms );\n}",
+      "Draft": "func Aig_ObjDomVecRecycle(pSto *Aig_Sto_t, vDoms *Vec_Ptr_t) {\n    var pDom *Aig_Dom_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDoms)) \u0026\u0026 (((pDom) = (Aig_Dom_t *)Vec_PtrEntry(vDoms, i)), 1); i++  {\n        Aig_MmFixedEntryRecycle( pSto.pMem, (char *)pDom );\n    }\n    Vec_PtrFree( vDoms );\n}"
+    },
+    {
+      "Name": "Aig_ObjDomPrint",
+      "Start": 4865,
+      "End": 5145,
+      "BodyStart": 4933,
+      "Original": "void Aig_ObjDomPrint( Aig_Sto_t * pSto, Aig_Dom_t * pDom, int Num )\n{\n    int k;\n    printf( \"%4d : {\", Num );\n    for ( k = 0; k \u003c pDom-\u003enNodes; k++ )\n        printf( \" %4d\", pDom-\u003epNodes[k] );\n    for ( ; k \u003c pSto-\u003eLimit; k++ )\n        printf( \"     \" );\n    printf( \" }\\n\" );\n}",
+      "Draft": "func Aig_ObjDomPrint(pSto *Aig_Sto_t, pDom *Aig_Dom_t, Num int32) {\n    var k int32;\n    fmt.Printf(\"%4d : {\", Num);\n    for  k = 0; k \u003c pDom.nNodes; k++  {\n        fmt.Printf(\" %4d\", pDom.pNodes[k]);\n    }\n    for  ; k \u003c pSto.Limit; k++  {\n        fmt.Printf(\"     \");\n    }\n    fmt.Printf(\" }\\n\");\n}"
+    },
+    {
+      "Name": "Aig_ObjDomVecPrint",
+      "Start": 5411,
+      "End": 5607,
+      "BodyStart": 5474,
+      "Original": "void Aig_ObjDomVecPrint( Aig_Sto_t * pSto, Vec_Ptr_t * vDoms )\n{\n    Aig_Dom_t * pDom;\n    int i;\n    Vec_PtrForEachEntry( Aig_Dom_t *, vDoms, pDom, i )\n        Aig_ObjDomPrint( pSto, pDom, i );\n}",
+      "Draft": "func Aig_ObjDomVecPrint(pSto *Aig_Sto_t, vDoms *Vec_Ptr_t) {\n    var pDom *Aig_Dom_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDoms)) \u0026\u0026 (((pDom) = (Aig_Dom_t *)Vec_PtrEntry(vDoms, i)), 1); i++  {\n        Aig_ObjDomPrint( pSto, pDom, i );\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManDomPrint",
+      "Start": 5874,
+      "End": 6147,
+      "BodyStart": 5915,
+      "Original": "void Aig_ManDomPrint( Aig_Sto_t * pSto )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Saig_ManForEachPi( pSto-\u003epAig, pObj, i )\n    {\n        printf( \"*** PI %4d %4d :\\n\", i, pObj-\u003eId );\n        Aig_ObjDomVecPrint( pSto, (Vec_Ptr_t *)Vec_PtrEntry(pSto-\u003evDoms, pObj-\u003eId) );\n    }\n}",
+      "Draft": "func Aig_ManDomPrint(pSto *Aig_Sto_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(pSto.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pSto.pAig.vCis, i)), 1); i++  {\n        fmt.Printf(\"*** PI %4d %4d :\\n\", i, pObj.Id);\n        Aig_ObjDomVecPrint( pSto, (Vec_Ptr_t *)Vec_PtrEntry(pSto.vDoms, pObj.Id) );\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManDomStop",
+      "Start": 6428,
+      "End": 6794,
+      "BodyStart": 6468,
+      "Original": "void Aig_ManDomStop( Aig_Sto_t * pSto )\n{\n    Vec_Ptr_t * vDoms;\n    int i;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, pSto-\u003evDoms, vDoms, i )\n        if ( vDoms )\n            Aig_ObjDomVecRecycle( pSto, vDoms );\n    Vec_PtrFree( pSto-\u003evDoms );\n    Vec_IntFree( pSto-\u003evFans );\n    Vec_IntFree( pSto-\u003evTimes );\n    Aig_MmFixedStop( pSto-\u003epMem, 0 );\n    ABC_FREE( pSto );\n}",
+      "Draft": "func Aig_ManDomStop(pSto *Aig_Sto_t) {\n    var vDoms *Vec_Ptr_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pSto.vDoms)) \u0026\u0026 (((vDoms) = (Vec_Ptr_t *)Vec_PtrEntry(pSto.vDoms, i)), 1); i++  {\n        if vDoms != nil {\n            Aig_ObjDomVecRecycle( pSto, vDoms ); }\n    }\n    Vec_PtrFree( pSto.vDoms );\n    Vec_IntFree( pSto.vFans );\n    Vec_IntFree( pSto.vTimes );\n    Aig_MmFixedStop( pSto.pMem, 0 );\n    // inlining of macro ABC_FREE\n    ((pSto) ? (free((char *) (pSto)), (pSto) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Aig_ObjDomCheck",
+      "Start": 7061,
+      "End": 7418,
+      "BodyStart": 7101,
+      "Original": "int Aig_ObjDomCheck( Aig_Dom_t * pDom )\n{\n    int i;\n    for ( i = 1; i \u003c pDom-\u003enNodes; i++ )\n    {\n        if ( pDom-\u003epNodes[i-1] \u003e= pDom-\u003epNodes[i] )\n        {\n            Abc_Print( -1, \"Aig_ObjDomCheck(): Cut has wrong ordering of inputs.\\n\" );\n            return 0;\n        }\n        assert( pDom-\u003epNodes[i-1] \u003c pDom-\u003epNodes[i] );\n    }\n    return 1;\n}",
+      "Draft": "func Aig_ObjDomCheck(pDom *Aig_Dom_t) int32 {\n    var i int32;\n    for  i = 1; i \u003c pDom.nNodes; i++  {\n        if pDom.pNodes[i-1] \u003e= pDom.pNodes[i] {\n            Abc_Print( -1, \"Aig_ObjDomCheck(): Cut has wrong ordering of inputs.\\n\" );\n            return 0;\n        }\n        assert(pDom.pNodes[i-1] \u003c pDom.pNodes[i], \"pDom.pNodes[i-1] \u003c pDom.pNodes[i]\");\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Aig_ObjDomCheckDominance",
+      "Start": 7693,
+      "End": 8135,
+      "BodyStart": 7774,
+      "Original": "static inline int Aig_ObjDomCheckDominance( Aig_Dom_t * pDom, Aig_Dom_t * pCut )\n{\n    int i, k;\n    for ( i = 0; i \u003c pDom-\u003enNodes; i++ )\n    {\n        for ( k = 0; k \u003c (int)pCut-\u003enNodes; k++ )\n            if ( pDom-\u003epNodes[i] == pCut-\u003epNodes[k] )\n                break;\n        if ( k == (int)pCut-\u003enNodes ) // node i in pDom is not contained in pCut\n            return 0;\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}",
+      "Draft": "func Aig_ObjDomCheckDominance(pDom *Aig_Dom_t, pCut *Aig_Dom_t) int32 {\n    var i, k int32;\n    for  i = 0; i \u003c pDom.nNodes; i++  {\n        for  k = 0; k \u003c int32(pCut.nNodes); k++  {\n            if pDom.pNodes[i] == pCut.pNodes[k] {\n                break; }\n        }\n        if k == int32(pCut.nNodes) { // node i in pDom is not contained in pCut\n            return 0; }\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}"
+    },
+    {
+      "Name": "Aig_ObjDomFilter",
+      "Start": 8405,
+      "End": 9560,
+      "BodyStart": 8483,
+      "Original": "int Aig_ObjDomFilter( Aig_Sto_t * pSto, Vec_Ptr_t * vDoms, Aig_Dom_t * pDom )\n{ \n    Aig_Dom_t * pTemp;\n    int i;\n    Vec_PtrForEachEntry( Aig_Dom_t *, vDoms, pTemp, i )\n    {\n        if ( pTemp-\u003enNodes \u003e pDom-\u003enNodes )\n        {\n            // do not fiter the first cut\n            if ( i == 0 )\n                continue;\n            // skip the non-contained cuts\n            if ( (pTemp-\u003euSign \u0026 pDom-\u003euSign) != pDom-\u003euSign )\n                continue;\n            // check containment seriously\n            if ( Aig_ObjDomCheckDominance( pDom, pTemp ) )\n            {\n                Vec_PtrRemove( vDoms, pTemp );\n                Aig_MmFixedEntryRecycle( pSto-\u003epMem, (char *)pTemp );\n                i--;\n                pSto-\u003enDomsFilter1++;\n            }\n         }\n        else\n        {\n            // skip the non-contained cuts\n            if ( (pTemp-\u003euSign \u0026 pDom-\u003euSign) != pTemp-\u003euSign )\n                continue;\n            // check containment seriously\n            if ( Aig_ObjDomCheckDominance( pTemp, pDom ) )\n            {\n                pSto-\u003enDomsFilter2++;\n                return 1;\n            }\n        }\n    }\n    return 0;\n}",
+      "Draft": "func Aig_ObjDomFilter(pSto *Aig_Sto_t, vDoms *Vec_Ptr_t, pDom *Aig_Dom_t) int32 { \n    var pTemp *Aig_Dom_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDoms)) \u0026\u0026 (((pTemp) = (Aig_Dom_t *)Vec_PtrEntry(vDoms, i)), 1); i++  {\n        if pTemp.nNodes \u003e pDom.nNodes {\n            // do not fiter the first cut\n            if i == 0 {\n                continue; }\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pDom.uSign) != pDom.uSign {\n                continue; }\n            // check containment seriously\n            if Aig_ObjDomCheckDominance( pDom, pTemp ) != 0 {\n                Vec_PtrRemove( vDoms, pTemp );\n                Aig_MmFixedEntryRecycle( pSto.pMem, (char *)pTemp );\n                i--;\n                pSto.nDomsFilter1++;\n            }\n         \n        } else {\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pDom.uSign) != pTemp.uSign {\n                continue; }\n            // check containment seriously\n            if Aig_ObjDomCheckDominance( pTemp, pDom ) != 0 {\n                pSto.nDomsFilter2++;\n                return 1;\n            }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Aig_ObjDomMergeOrdered",
+      "Start": 9812,
+      "End": 11877,
+      "BodyStart": 9916,
+      "Original": "static inline int Aig_ObjDomMergeOrdered( Aig_Dom_t * pD0, Aig_Dom_t * pD1, Aig_Dom_t * pD, int Limit )\n{ \n    int i, k, c;\n    assert( pD0-\u003enNodes \u003e= pD1-\u003enNodes );\n    // the case of the largest cut sizes\n    if ( pD0-\u003enNodes == Limit \u0026\u0026 pD1-\u003enNodes == Limit )\n    {\n        for ( i = 0; i \u003c pD0-\u003enNodes; i++ )\n            if ( pD0-\u003epNodes[i] != pD1-\u003epNodes[i] )\n                return 0;\n        for ( i = 0; i \u003c pD0-\u003enNodes; i++ )\n            pD-\u003epNodes[i] = pD0-\u003epNodes[i];\n        pD-\u003enNodes = pD0-\u003enNodes;\n        return 1;\n    }\n    // the case when one of the cuts is the largest\n    if ( pD0-\u003enNodes == Limit )\n    {\n        for ( i = 0; i \u003c pD1-\u003enNodes; i++ )\n        {\n            for ( k = pD0-\u003enNodes - 1; k \u003e= 0; k-- )\n                if ( pD0-\u003epNodes[k] == pD1-\u003epNodes[i] )\n                    break;\n            if ( k == -1 ) // did not find\n                return 0;\n        }\n        for ( i = 0; i \u003c pD0-\u003enNodes; i++ )\n            pD-\u003epNodes[i] = pD0-\u003epNodes[i];\n        pD-\u003enNodes = pD0-\u003enNodes;\n        return 1;\n    }\n\n    // compare two cuts with different numbers\n    i = k = 0;\n    for ( c = 0; c \u003c (int)Limit; c++ )\n    {\n        if ( k == pD1-\u003enNodes )\n        {\n            if ( i == pD0-\u003enNodes )\n            {\n                pD-\u003enNodes = c;\n                return 1;\n            }\n            pD-\u003epNodes[c] = pD0-\u003epNodes[i++];\n            continue;\n        }\n        if ( i == pD0-\u003enNodes )\n        {\n            if ( k == pD1-\u003enNodes )\n            {\n                pD-\u003enNodes = c;\n                return 1;\n            }\n            pD-\u003epNodes[c] = pD1-\u003epNodes[k++];\n            continue;\n        }\n        if ( pD0-\u003epNodes[i] \u003c pD1-\u003epNodes[k] )\n        {\n            pD-\u003epNodes[c] = pD0-\u003epNodes[i++];\n            continue;\n        }\n        if ( pD0-\u003epNodes[i] \u003e pD1-\u003epNodes[k] )\n        {\n            pD-\u003epNodes[c] = pD1-\u003epNodes[k++];\n            continue;\n        }\n        pD-\u003epNodes[c] = pD0-\u003epNodes[i++]; \n        k++;\n    }\n    if ( i \u003c pD0-\u003enNodes || k \u003c pD1-\u003enNodes )\n        return 0;\n    pD-\u003enNodes = c;\n    return 1;\n}",
+      "Draft": "func Aig_ObjDomMergeOrdered(pD0 *Aig_Dom_t, pD1 *Aig_Dom_t, pD *Aig_Dom_t, Limit int32) int32 { \n    var i, k, c int32;\n    assert(pD0.nNodes \u003e= pD1.nNodes, \"pD0.nNodes \u003e= pD1.nNodes\");\n    // the case of the largest cut sizes\n    if pD0.nNodes == Limit \u0026\u0026 pD1.nNodes == Limit {\n        for  i = 0; i \u003c pD0.nNodes; i++  {\n            if pD0.pNodes[i] != pD1.pNodes[i] {\n                return 0; }\n        }\n        for  i = 0; i \u003c pD0.nNodes; i++  {\n            pD.pNodes[i] = pD0.pNodes[i];\n        }\n        pD.nNodes = pD0.nNodes;\n        return 1;\n    }\n    // the case when one of the cuts is the largest\n    if pD0.nNodes == Limit {\n        for  i = 0; i \u003c pD1.nNodes; i++  {\n            for  k = pD0.nNodes - 1; k \u003e= 0; k--  {\n                if pD0.pNodes[k] == pD1.pNodes[i] {\n                    break; }\n            }\n            if k == -1 { // did not find\n                return 0; }\n        }\n        for  i = 0; i \u003c pD0.nNodes; i++  {\n            pD.pNodes[i] = pD0.pNodes[i];\n        }\n        pD.nNodes = pD0.nNodes;\n        return 1;\n    }\n\n    // compare two cuts with different numbers\n    i = k = 0;\n    for  c = 0; c \u003c int32(Limit); c++  {\n        if k == pD1.nNodes {\n            if i == pD0.nNodes {\n                pD.nNodes = c;\n                return 1;\n            }\n            pD.pNodes[c] = pD0.pNodes[i]; i++;\n            continue;\n        }\n        if i == pD0.nNodes {\n            if k == pD1.nNodes {\n                pD.nNodes = c;\n                return 1;\n            }\n            pD.pNodes[c] = pD1.pNodes[k]; k++;\n            continue;\n        }\n        if pD0.pNodes[i] \u003c pD1.pNodes[k] {\n            pD.pNodes[c] = pD0.pNodes[i]; i++;\n            continue;\n        }\n        if pD0.pNodes[i] \u003e pD1.pNodes[k] {\n            pD.pNodes[c] = pD1.pNodes[k]; k++;\n            continue;\n        }\n        pD.pNodes[c] = pD0.pNodes[i]; i++; \n        k++;\n    }\n    if i \u003c pD0.nNodes || k \u003c pD1.nNodes {\n        return 0; }\n    pD.nNodes = c;\n    return 1;\n}"
+    },
+    {
+      "Name": "Aig_ObjDomMergeTwo",
+      "Start": 12150,
+      "End": 12662,
+      "BodyStart": 12242,
+      "Original": "int Aig_ObjDomMergeTwo( Aig_Dom_t * pDom0, Aig_Dom_t * pDom1, Aig_Dom_t * pDom, int Limit )\n{ \n    assert( Limit \u003e 0 );\n    if ( pDom0-\u003enNodes \u003c pDom1-\u003enNodes )\n    {\n        if ( !Aig_ObjDomMergeOrdered( pDom1, pDom0, pDom, Limit ) )\n            return 0;\n    }\n    else\n    {\n        if ( !Aig_ObjDomMergeOrdered( pDom0, pDom1, pDom, Limit ) )\n            return 0;\n    }\n    pDom-\u003euSign = pDom0-\u003euSign | pDom1-\u003euSign;\n    assert( pDom-\u003enNodes \u003c= Limit );\n    assert( Aig_ObjDomCheck( pDom ) );\n    return 1;\n}",
+      "Draft": "func Aig_ObjDomMergeTwo(pDom0 *Aig_Dom_t, pDom1 *Aig_Dom_t, pDom *Aig_Dom_t, Limit int32) int32 { \n    assert(Limit \u003e 0, \"Limit \u003e 0\");\n    if pDom0.nNodes \u003c pDom1.nNodes {\n        if !(Aig_ObjDomMergeOrdered( pDom1, pDom0, pDom, Limit ) != 0) {\n            return 0; }\n    \n    } else {\n        if !(Aig_ObjDomMergeOrdered( pDom0, pDom1, pDom, Limit ) != 0) {\n            return 0; }\n    }\n    pDom.uSign = pDom0.uSign | pDom1.uSign;\n    assert(pDom.nNodes \u003c= Limit, \"pDom.nNodes \u003c= Limit\");\n    assert((Aig_ObjDomCheck( pDom ) != 0), \"Aig_ObjDomCheck( pDom )\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Aig_ObjDomMerge",
+      "Start": 12929,
+      "End": 13917,
+      "BodyStart": 13017,
+      "Original": "Vec_Ptr_t * Aig_ObjDomMerge( Aig_Sto_t * pSto, Vec_Ptr_t * vDoms0, Vec_Ptr_t * vDoms1 )\n{\n    Vec_Ptr_t * vDoms;\n    Aig_Dom_t * pDom0, * pDom1, * pDom;\n    int i, k;\n    vDoms = Vec_PtrAlloc( 16 );\n    Vec_PtrForEachEntry( Aig_Dom_t *, vDoms0, pDom0, i )\n    Vec_PtrForEachEntry( Aig_Dom_t *, vDoms1, pDom1, k )\n    {\n        if ( Aig_WordCountOnes( pDom0-\u003euSign | pDom1-\u003euSign ) \u003e pSto-\u003eLimit )\n            continue;\n        // check if the cut exists\n        pDom = (Aig_Dom_t *)Aig_MmFixedEntryFetch( pSto-\u003epMem );\n        if ( !Aig_ObjDomMergeTwo( pDom0, pDom1, pDom, pSto-\u003eLimit ) )\n        {\n            Aig_MmFixedEntryRecycle( pSto-\u003epMem, (char *)pDom );\n            continue;\n        }\n        // check if this cut is contained in any of the available cuts\n        if ( Aig_ObjDomFilter( pSto, vDoms, pDom ) )\n        {\n            Aig_MmFixedEntryRecycle( pSto-\u003epMem, (char *)pDom );\n            continue;\n        }\n        Vec_PtrPush( vDoms, pDom );\n    }\n    return vDoms;\n}",
+      "Draft": "func Aig_ObjDomMerge(pSto *Aig_Sto_t, vDoms0 *Vec_Ptr_t, vDoms1 *Vec_Ptr_t) *Vec_Ptr_t {\n    var vDoms *Vec_Ptr_t;\n    var pDom0, pDom1, pDom *Aig_Dom_t;\n    var i, k int32;\n    vDoms = Vec_PtrAlloc( 16 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDoms0)) \u0026\u0026 (((pDom0) = (Aig_Dom_t *)Vec_PtrEntry(vDoms0, i)), 1); i++  {\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(vDoms1)) \u0026\u0026 (((pDom1) = (Aig_Dom_t *)Vec_PtrEntry(vDoms1, k)), 1); k++  {\n        if Aig_WordCountOnes( pDom0.uSign | pDom1.uSign ) \u003e pSto.Limit {\n            continue; }\n        // check if the cut exists\n        pDom = (Aig_Dom_t *)Aig_MmFixedEntryFetch( pSto.pMem );\n        if !(Aig_ObjDomMergeTwo( pDom0, pDom1, pDom, pSto.Limit ) != 0) {\n            Aig_MmFixedEntryRecycle( pSto.pMem, (char *)pDom );\n            continue;\n        }\n        // check if this cut is contained in any of the available cuts\n        if Aig_ObjDomFilter( pSto, vDoms, pDom ) != 0 {\n            Aig_MmFixedEntryRecycle( pSto.pMem, (char *)pDom );\n            continue;\n        }\n        Vec_PtrPush( vDoms, pDom );\n    }\n    }\n    return vDoms;\n}"
+    },
+    {
+      "Name": "Aig_ObjDomUnion",
+      "Start": 14184,
+      "End": 14684,
+      "BodyStart": 14265,
+      "Original": "void Aig_ObjDomUnion( Aig_Sto_t * pSto, Vec_Ptr_t * vDoms2, Vec_Ptr_t * vDoms1 )\n{\n    Aig_Dom_t * pDom1, * pDom2;\n    int i;\n    Vec_PtrForEachEntry( Aig_Dom_t *, vDoms1, pDom1, i )\n    {\n        if ( i == 0 )\n            continue;\n        if ( Aig_ObjDomFilter( pSto, vDoms2, pDom1 ) )\n            continue;\n        pDom2 = (Aig_Dom_t *)Aig_MmFixedEntryFetch( pSto-\u003epMem );\n        memcpy( pDom2, pDom1, sizeof(Aig_Dom_t) + sizeof(int) * pSto-\u003eLimit );\n        Vec_PtrPush( vDoms2, pDom2 );\n    }\n}",
+      "Draft": "func Aig_ObjDomUnion(pSto *Aig_Sto_t, vDoms2 *Vec_Ptr_t, vDoms1 *Vec_Ptr_t) {\n    var pDom1, pDom2 *Aig_Dom_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDoms1)) \u0026\u0026 (((pDom1) = (Aig_Dom_t *)Vec_PtrEntry(vDoms1, i)), 1); i++  {\n        if i == 0 {\n            continue; }\n        if Aig_ObjDomFilter( pSto, vDoms2, pDom1 ) != 0 {\n            continue; }\n        pDom2 = (Aig_Dom_t *)Aig_MmFixedEntryFetch( pSto.pMem );\n        memcpy( pDom2, pDom1, sizeof(Aig_Dom_t) + sizeof(int) * pSto.Limit );\n        Vec_PtrPush( vDoms2, pDom2 );\n    }\n}"
+    },
+    {
+      "Name": "Aig_ObjDomCompute",
+      "Start": 14952,
+      "End": 15904,
+      "BodyStart": 15013,
+      "Original": "void Aig_ObjDomCompute( Aig_Sto_t * pSto, Aig_Obj_t * pObj )\n{\n    Vec_Ptr_t * vDoms0, * vDoms1, * vDoms2, * vDomsT;\n    Aig_Obj_t * pFanout;\n    int i, iFanout;\n    pSto-\u003enDomNodes += Aig_ObjIsNode(pObj);\n    Vec_IntClear( pSto-\u003evFans );\n    Aig_ObjForEachFanout( pSto-\u003epAig, pObj, pFanout, iFanout, i )\n        if ( Aig_ObjIsTravIdCurrent(pSto-\u003epAig, pFanout) )\n            Vec_IntPush( pSto-\u003evFans, iFanout\u003e\u003e1 );\n    if ( Vec_IntSize(pSto-\u003evFans) == 0 )\n        return;\n    vDoms0 = (Vec_Ptr_t *)Vec_PtrEntry( pSto-\u003evDoms, Vec_IntEntry(pSto-\u003evFans, 0) );\n    vDoms2 = Aig_ObjDomVecDup( pSto, vDoms0, 0 );\n    Vec_IntForEachEntryStart( pSto-\u003evFans, iFanout, i, 1 )\n    {\n        vDoms1 = (Vec_Ptr_t *)Vec_PtrEntry( pSto-\u003evDoms, iFanout );\n        vDoms2 = Aig_ObjDomMerge( pSto, vDomsT = vDoms2, vDoms1 );\n        Aig_ObjDomVecRecycle( pSto, vDomsT );\n    }\n    Aig_ObjAddTriv( pSto, pObj-\u003eId, vDoms2 );\n    pSto-\u003enDomsTotal += Vec_PtrSize(vDoms2);\n}",
+      "Draft": "func Aig_ObjDomCompute(pSto *Aig_Sto_t, pObj *Aig_Obj_t) {\n    var vDoms0, vDoms1, vDoms2, vDomsT *Vec_Ptr_t;\n    var pFanout *Aig_Obj_t;\n    var i, iFanout int32;\n    pSto.nDomNodes += Aig_ObjIsNode(pObj);\n    Vec_IntClear( pSto.vFans );\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(pSto.pAig.pFanData, \"pSto.pAig.pFanData\"), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(pSto.pAig, iFanout) : Aig_ObjFanout0Int(pSto.pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pSto.pAig, iFanout\u003e\u003e1)), 1); i++  {\n        if Aig_ObjIsTravIdCurrent(pSto.pAig, pFanout) {\n            Vec_IntPush( pSto.vFans, iFanout\u003e\u003e1 ); }\n    }\n    if Vec_IntSize(pSto.vFans) == 0 {\n        return; }\n    vDoms0 = (Vec_Ptr_t *)Vec_PtrEntry( pSto.vDoms, Vec_IntEntry(pSto.vFans, 0) );\n    vDoms2 = Aig_ObjDomVecDup( pSto, vDoms0, 0 );\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(pSto.vFans)) \u0026\u0026 (((iFanout) = Vec_IntEntry(pSto.vFans, i)), 1); i++  {\n        vDoms1 = (Vec_Ptr_t *)Vec_PtrEntry( pSto.vDoms, iFanout );\n        vDoms2 = Aig_ObjDomMerge( pSto, vDomsT = vDoms2, vDoms1 );\n        Aig_ObjDomVecRecycle( pSto, vDomsT );\n    }\n    Aig_ObjAddTriv( pSto, pObj.Id, vDoms2 );\n    pSto.nDomsTotal += Vec_PtrSize(vDoms2);\n}"
+    },
+    {
+      "Name": "Aig_ManMarkFlopTfi_rec",
+      "Start": 16189,
+      "End": 16657,
+      "BodyStart": 16251,
+      "Original": "int Aig_ManMarkFlopTfi_rec( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    int Count;\n    assert( !Aig_IsComplement(pObj) );\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return 0;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if ( Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) )\n        return 1;\n    Count = Aig_ManMarkFlopTfi_rec( p, Aig_ObjFanin0(pObj) );\n    if ( Aig_ObjIsNode(pObj) )\n        Count += Aig_ManMarkFlopTfi_rec( p, Aig_ObjFanin1(pObj) );\n    return Count;\n}",
+      "Draft": "func Aig_ManMarkFlopTfi_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    var Count int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {\n        return 1; }\n    Count = Aig_ManMarkFlopTfi_rec( p, Aig_ObjFanin0(pObj) );\n    if Aig_ObjIsNode(pObj) {\n        Count += Aig_ManMarkFlopTfi_rec( p, Aig_ObjFanin1(pObj) ); }\n    return Count;\n}"
+    },
+    {
+      "Name": "Aig_ManMarkFlopTfi",
+      "Start": 16942,
+      "End": 17131,
+      "BodyStart": 16983,
+      "Original": "void Aig_ManMarkFlopTfi( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManIncrementTravId( p );\n    Saig_ManForEachLi( p, pObj, i )\n        Aig_ManMarkFlopTfi_rec( p, pObj );\n}",
+      "Draft": "func Aig_ManMarkFlopTfi(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {\n        Aig_ManMarkFlopTfi_rec( p, pObj );\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManComputeDomsFlops",
+      "Start": 17398,
+      "End": 18511,
+      "BodyStart": 17465,
+      "Original": "Aig_Sto_t * Aig_ManComputeDomsFlops( Aig_Man_t * pAig, int Limit )\n{\n    Aig_Sto_t * pSto;\n    Vec_Ptr_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i;\n    abctime clk = Abc_Clock();\n    pSto = Aig_ManDomStart( pAig, Limit );\n    // initialize flop inputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjAddTriv( pSto, pObj-\u003eId, Vec_PtrAlloc(1) );\n    // compute internal nodes\n    vNodes = Aig_ManDfsReverse( pAig );\n    Aig_ManMarkFlopTfi( pAig );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        if ( Aig_ObjIsTravIdCurrent(pSto-\u003epAig, pObj) )\n            Aig_ObjDomCompute( pSto, pObj );\n    Vec_PtrFree( vNodes );\n    // compute combinational inputs\n    Aig_ManForEachCi( pAig, pObj, i )\n        Aig_ObjDomCompute( pSto, pObj );\n    // print statistics\n    printf( \"Nodes =%4d. Flops =%4d. Doms =%9d. Ave =%8.2f.   \", \n        pSto-\u003enDomNodes, Aig_ManRegNum(pSto-\u003epAig), pSto-\u003enDomsTotal, \n//        pSto-\u003enDomsFilter1, pSto-\u003enDomsFilter2,\n        1.0 * pSto-\u003enDomsTotal / (pSto-\u003enDomNodes + Aig_ManRegNum(pSto-\u003epAig)) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return pSto;\n}",
+      "Draft": "func Aig_ManComputeDomsFlops(pAig *Aig_Man_t, Limit int32) *Aig_Sto_t {\n    var pSto *Aig_Sto_t;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    pSto = Aig_ManDomStart( pAig, Limit );\n    // initialize flop inputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Aig_ObjAddTriv( pSto, pObj.Id, Vec_PtrAlloc(1) );\n    }\n    // compute internal nodes\n    vNodes = Aig_ManDfsReverse( pAig );\n    Aig_ManMarkFlopTfi( pAig );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Aig_ObjIsTravIdCurrent(pSto.pAig, pObj) {\n            Aig_ObjDomCompute( pSto, pObj ); }\n    }\n    Vec_PtrFree( vNodes );\n    // compute combinational inputs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        Aig_ObjDomCompute( pSto, pObj );\n    }\n    // print statistics\n    fmt.Printf(\"Nodes =%4d. Flops =%4d. Doms =%9d. Ave =%8.2f.   \", pSto.nDomNodes, Aig_ManRegNum(pSto.pAig), pSto.nDomsTotal, //        pSto-\u003enDomsFilter1, pSto-\u003enDomsFilter2,\n            1.0 * pSto.nDomsTotal / (pSto.nDomNodes + Aig_ManRegNum(pSto.pAig)));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return pSto;\n}"
+    },
+    {
+      "Name": "Aig_ManComputeDomsPis",
+      "Start": 18778,
+      "End": 19887,
+      "BodyStart": 18843,
+      "Original": "Aig_Sto_t * Aig_ManComputeDomsPis( Aig_Man_t * pAig, int Limit )\n{\n    Aig_Sto_t * pSto;\n    Vec_Ptr_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i;\n    abctime clk = Abc_Clock();\n    pSto = Aig_ManDomStart( pAig, Limit );\n    // initialize flop inputs\n    Aig_ManForEachCo( pAig, pObj, i )\n        Aig_ObjAddTriv( pSto, pObj-\u003eId, Vec_PtrAlloc(1) );\n    // compute internal nodes\n    vNodes = Aig_ManDfsReverse( pAig );\n    Aig_ManMarkFlopTfi( pAig );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        if ( Aig_ObjIsTravIdCurrent(pSto-\u003epAig, pObj) )\n            Aig_ObjDomCompute( pSto, pObj );\n    Vec_PtrFree( vNodes );\n    // compute combinational inputs\n    Saig_ManForEachPi( pAig, pObj, i )\n        Aig_ObjDomCompute( pSto, pObj );\n    // print statistics\n    printf( \"Nodes =%4d. PIs =%4d. Doms =%9d. Ave =%8.2f.   \", \n        pSto-\u003enDomNodes, Saig_ManPiNum(pSto-\u003epAig), pSto-\u003enDomsTotal, \n//        pSto-\u003enDomsFilter1, pSto-\u003enDomsFilter2,\n        1.0 * pSto-\u003enDomsTotal / (pSto-\u003enDomNodes + Saig_ManPiNum(pSto-\u003epAig)) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return pSto;\n}",
+      "Draft": "func Aig_ManComputeDomsPis(pAig *Aig_Man_t, Limit int32) *Aig_Sto_t {\n    var pSto *Aig_Sto_t;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    pSto = Aig_ManDomStart( pAig, Limit );\n    // initialize flop inputs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        Aig_ObjAddTriv( pSto, pObj.Id, Vec_PtrAlloc(1) );\n    }\n    // compute internal nodes\n    vNodes = Aig_ManDfsReverse( pAig );\n    Aig_ManMarkFlopTfi( pAig );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Aig_ObjIsTravIdCurrent(pSto.pAig, pObj) {\n            Aig_ObjDomCompute( pSto, pObj ); }\n    }\n    Vec_PtrFree( vNodes );\n    // compute combinational inputs\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        Aig_ObjDomCompute( pSto, pObj );\n    }\n    // print statistics\n    fmt.Printf(\"Nodes =%4d. PIs =%4d. Doms =%9d. Ave =%8.2f.   \", pSto.nDomNodes, Saig_ManPiNum(pSto.pAig), pSto.nDomsTotal, //        pSto-\u003enDomsFilter1, pSto-\u003enDomsFilter2,\n            1.0 * pSto.nDomsTotal / (pSto.nDomNodes + Saig_ManPiNum(pSto.pAig)));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return pSto;\n}"
+    },
+    {
+      "Name": "Aig_ManComputeDomsNodes",
+      "Start": 20154,
+      "End": 21105,
+      "BodyStart": 20221,
+      "Original": "Aig_Sto_t * Aig_ManComputeDomsNodes( Aig_Man_t * pAig, int Limit )\n{\n    Aig_Sto_t * pSto;\n    Vec_Ptr_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i;\n    abctime clk = Abc_Clock();\n    pSto = Aig_ManDomStart( pAig, Limit );\n    // initialize flop inputs\n    Aig_ManForEachCo( pAig, pObj, i )\n        Aig_ObjAddTriv( pSto, pObj-\u003eId, Vec_PtrAlloc(1) );\n    // compute internal nodes\n    vNodes = Aig_ManDfsReverse( pAig );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        Aig_ObjDomCompute( pSto, pObj );\n    Vec_PtrFree( vNodes );\n    // compute combinational inputs\n    Aig_ManForEachCi( pAig, pObj, i )\n        Aig_ObjDomCompute( pSto, pObj );\n    // print statistics\n    printf( \"Nodes =%6d. Doms =%9d. Ave =%8.2f.   \", \n        pSto-\u003enDomNodes, pSto-\u003enDomsTotal, \n//        pSto-\u003enDomsFilter1, pSto-\u003enDomsFilter2,\n        1.0 * pSto-\u003enDomsTotal / pSto-\u003enDomNodes );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return pSto;\n}",
+      "Draft": "func Aig_ManComputeDomsNodes(pAig *Aig_Man_t, Limit int32) *Aig_Sto_t {\n    var pSto *Aig_Sto_t;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    pSto = Aig_ManDomStart( pAig, Limit );\n    // initialize flop inputs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        Aig_ObjAddTriv( pSto, pObj.Id, Vec_PtrAlloc(1) );\n    }\n    // compute internal nodes\n    vNodes = Aig_ManDfsReverse( pAig );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Aig_ObjDomCompute( pSto, pObj );\n    }\n    Vec_PtrFree( vNodes );\n    // compute combinational inputs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        Aig_ObjDomCompute( pSto, pObj );\n    }\n    // print statistics\n    fmt.Printf(\"Nodes =%6d. Doms =%9d. Ave =%8.2f.   \", pSto.nDomNodes, pSto.nDomsTotal, //        pSto-\u003enDomsFilter1, pSto-\u003enDomsFilter2,\n            1.0 * pSto.nDomsTotal / pSto.nDomNodes);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return pSto;\n}"
+    },
+    {
+      "Name": "Aig_ObjDomCollect",
+      "Start": 21374,
+      "End": 21883,
+      "BodyStart": 21442,
+      "Original": "Vec_Ptr_t * Aig_ObjDomCollect( Aig_Sto_t * pSto, Vec_Int_t * vCut )\n{\n    Vec_Ptr_t * vDoms0, * vDoms1, * vDoms2;\n    int i, ObjId;\n    vDoms0 = (Vec_Ptr_t *)Vec_PtrEntry( pSto-\u003evDoms, Vec_IntEntry(vCut, 0) );\n    vDoms2 = Aig_ObjDomVecDup( pSto, vDoms0, 1 );\n    Vec_IntForEachEntryStart( vCut, ObjId, i, 1 )\n    {\n        vDoms1 = (Vec_Ptr_t *)Vec_PtrEntry( pSto-\u003evDoms, ObjId );\n        if ( vDoms1 == NULL )\n            continue;\n        Aig_ObjDomUnion( pSto, vDoms2, vDoms1 );\n    }\n    return vDoms2;\n}",
+      "Draft": "func Aig_ObjDomCollect(pSto *Aig_Sto_t, vCut *Vec_Int_t) *Vec_Ptr_t {\n    var vDoms0, vDoms1, vDoms2 *Vec_Ptr_t;\n    var i, ObjId int32;\n    vDoms0 = (Vec_Ptr_t *)Vec_PtrEntry( pSto.vDoms, Vec_IntEntry(vCut, 0) );\n    vDoms2 = Aig_ObjDomVecDup( pSto, vDoms0, 1 );\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vCut)) \u0026\u0026 (((ObjId) = Vec_IntEntry(vCut, i)), 1); i++  {\n        vDoms1 = (Vec_Ptr_t *)Vec_PtrEntry( pSto.vDoms, ObjId );\n        if vDoms1 == nil {\n            continue; }\n        Aig_ObjDomUnion( pSto, vDoms2, vDoms1 );\n    }\n    return vDoms2;\n}"
+    },
+    {
+      "Name": "Aig_ObjDomVolume_rec",
+      "Start": 22169,
+      "End": 22735,
+      "BodyStart": 22229,
+      "Original": "int Aig_ObjDomVolume_rec( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    int Count;\n    assert( !Aig_IsComplement(pObj) );\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return 0;\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if ( pObj-\u003efMarkA )\n        return 1;\n//    assert( !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsConst1(pObj) );\n    if ( Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) )\n        return 1;\n    Count = Aig_ObjDomVolume_rec( p, Aig_ObjFanin0(pObj) );\n    if ( Aig_ObjIsNode(pObj) )\n        Count += Aig_ObjDomVolume_rec( p, Aig_ObjFanin1(pObj) );\n    return Count;\n}",
+      "Draft": "func Aig_ObjDomVolume_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    var Count int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if pObj.fMarkA {\n        return 1; }\n//    assert( !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsConst1(pObj) );\n    if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {\n        return 1; }\n    Count = Aig_ObjDomVolume_rec( p, Aig_ObjFanin0(pObj) );\n    if Aig_ObjIsNode(pObj) {\n        Count += Aig_ObjDomVolume_rec( p, Aig_ObjFanin1(pObj) ); }\n    return Count;\n}"
+    },
+    {
+      "Name": "Aig_ObjDomVolume",
+      "Start": 23014,
+      "End": 23297,
+      "BodyStart": 23073,
+      "Original": "int Aig_ObjDomVolume( Aig_Sto_t * pSto, Aig_Dom_t * pDom )\n{\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n    Aig_ManIncrementTravId( pSto-\u003epAig );\n    Aig_DomForEachNode( pSto-\u003epAig, pDom, pObj, i )\n        Counter += Aig_ObjDomVolume_rec( pSto-\u003epAig, pObj );\n    return Counter;\n}",
+      "Draft": "func Aig_ObjDomVolume(pSto *Aig_Sto_t, pDom *Aig_Dom_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    Aig_ManIncrementTravId( pSto.pAig );\n    // inlining of macro Aig_DomForEachNode\n    for  i = 0; (i \u003c pDom.nNodes) \u0026\u0026 ((pObj) = Aig_ManObj(pSto.pAig, (pDom).pNodes[i])); i++  {\n        Counter += Aig_ObjDomVolume_rec( pSto.pAig, pObj );\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Aig_ObjDomDeref_rec",
+      "Start": 23565,
+      "End": 24010,
+      "BodyStart": 23610,
+      "Original": "int Aig_ObjDomDeref_rec( Aig_Obj_t * pNode )\n{\n    int Counter = 0;\n    assert( pNode-\u003enRefs \u003e 0 );\n    if ( --pNode-\u003enRefs \u003e 0 )\n        return 0;\n    assert( pNode-\u003enRefs == 0 );\n    if ( pNode-\u003efMarkA )\n        return 1;\n    if ( Aig_ObjIsCi(pNode) )\n        return 0;\n    Counter += Aig_ObjDomDeref_rec( Aig_ObjFanin0(pNode) );\n    if ( Aig_ObjIsNode(pNode) )\n    Counter += Aig_ObjDomDeref_rec( Aig_ObjFanin1(pNode) );\n    return Counter;\n}",
+      "Draft": "func Aig_ObjDomDeref_rec(pNode *Aig_Obj_t) int32 {\n    var Counter int32;\n    assert(pNode.nRefs \u003e 0, \"pNode.nRefs \u003e 0\");\n    if --pNode.nRefs \u003e 0 {\n        return 0; }\n    assert(pNode.nRefs == 0, \"pNode.nRefs == 0\");\n    if pNode.fMarkA {\n        return 1; }\n    if Aig_ObjIsCi(pNode) {\n        return 0; }\n    Counter += Aig_ObjDomDeref_rec( Aig_ObjFanin0(pNode) );\n    if Aig_ObjIsNode(pNode) {\n    Counter += Aig_ObjDomDeref_rec( Aig_ObjFanin1(pNode) ); }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Aig_ObjDomRef_rec",
+      "Start": 24273,
+      "End": 24713,
+      "BodyStart": 24316,
+      "Original": "int Aig_ObjDomRef_rec( Aig_Obj_t * pNode )\n{\n    int Counter = 0;\n    assert( pNode-\u003enRefs \u003e= 0 );\n    if ( pNode-\u003enRefs++ \u003e 0 )\n        return 0;\n    assert( pNode-\u003enRefs == 1 );\n    if ( pNode-\u003efMarkA )\n        return 1;\n    if ( Aig_ObjIsCi(pNode) )\n        return 0;\n    Counter += Aig_ObjDomRef_rec( Aig_ObjFanin0(pNode) );\n    if ( Aig_ObjIsNode(pNode) )\n    Counter += Aig_ObjDomRef_rec( Aig_ObjFanin1(pNode) );\n    return Counter;\n}",
+      "Draft": "func Aig_ObjDomRef_rec(pNode *Aig_Obj_t) int32 {\n    var Counter int32;\n    assert(pNode.nRefs \u003e= 0, \"pNode.nRefs \u003e= 0\");\n    if pNode.nRefs++ \u003e 0 {\n        return 0; }\n    assert(pNode.nRefs == 1, \"pNode.nRefs == 1\");\n    if pNode.fMarkA {\n        return 1; }\n    if Aig_ObjIsCi(pNode) {\n        return 0; }\n    Counter += Aig_ObjDomRef_rec( Aig_ObjFanin0(pNode) );\n    if Aig_ObjIsNode(pNode) {\n    Counter += Aig_ObjDomRef_rec( Aig_ObjFanin1(pNode) ); }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Aig_ObjDomDomed",
+      "Start": 24992,
+      "End": 25725,
+      "BodyStart": 25050,
+      "Original": "int Aig_ObjDomDomed( Aig_Sto_t * pSto, Aig_Dom_t * pDom )\n{\n    Aig_Obj_t * pObj;\n    int i, Counter0, Counter1;\n    Counter0 = 0;\n    Aig_DomForEachNode( pSto-\u003epAig, pDom, pObj, i )\n    {\n        assert( !Aig_ObjIsCi(pObj) );\n        Counter0 += Aig_ObjDomDeref_rec( Aig_ObjFanin0(pObj) );\n        if ( Aig_ObjIsNode(pObj) )\n        Counter0 += Aig_ObjDomDeref_rec( Aig_ObjFanin1(pObj) );\n    }\n    Counter1 = 0;\n    Aig_DomForEachNode( pSto-\u003epAig, pDom, pObj, i )\n    {\n        assert( !Aig_ObjIsCi(pObj) );\n        Counter1 += Aig_ObjDomRef_rec( Aig_ObjFanin0(pObj) );\n        if ( Aig_ObjIsNode(pObj) )\n        Counter1 += Aig_ObjDomRef_rec( Aig_ObjFanin1(pObj) );\n    }\n    assert( Counter0 == Counter1 );\n    return Counter0;\n}",
+      "Draft": "func Aig_ObjDomDomed(pSto *Aig_Sto_t, pDom *Aig_Dom_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter0, Counter1 int32;\n    Counter0 = 0;\n    // inlining of macro Aig_DomForEachNode\n    for  i = 0; (i \u003c pDom.nNodes) \u0026\u0026 ((pObj) = Aig_ManObj(pSto.pAig, (pDom).pNodes[i])); i++  {\n        assert(!Aig_ObjIsCi(pObj), \"!Aig_ObjIsCi(pObj)\");\n        Counter0 += Aig_ObjDomDeref_rec( Aig_ObjFanin0(pObj) );\n        if Aig_ObjIsNode(pObj) {\n        Counter0 += Aig_ObjDomDeref_rec( Aig_ObjFanin1(pObj) ); }\n    }\n    Counter1 = 0;\n    // inlining of macro Aig_DomForEachNode\n    for  i = 0; (i \u003c pDom.nNodes) \u0026\u0026 ((pObj) = Aig_ManObj(pSto.pAig, (pDom).pNodes[i])); i++  {\n        assert(!Aig_ObjIsCi(pObj), \"!Aig_ObjIsCi(pObj)\");\n        Counter1 += Aig_ObjDomRef_rec( Aig_ObjFanin0(pObj) );\n        if Aig_ObjIsNode(pObj) {\n        Counter1 += Aig_ObjDomRef_rec( Aig_ObjFanin1(pObj) ); }\n    }\n    assert(Counter0 == Counter1, \"Counter0 == Counter1\");\n    return Counter0;\n}"
+    },
+    {
+      "Name": "Aig_ObjDomCollectLos",
+      "Start": 25995,
+      "End": 26299,
+      "BodyStart": 26048,
+      "Original": "Vec_Int_t * Aig_ObjDomCollectLos( Aig_Sto_t * pSto )\n{\n    Vec_Int_t * vCut;\n    Aig_Obj_t * pObj;\n    int i;\n    vCut = Vec_IntAlloc( Aig_ManRegNum(pSto-\u003epAig) );\n    Saig_ManForEachLo( pSto-\u003epAig, pObj, i )\n    {\n        Vec_IntPush( vCut, pObj-\u003eId );\n        pObj-\u003efMarkA = 1;\n    }\n    return vCut;\n}",
+      "Draft": "func Aig_ObjDomCollectLos(pSto *Aig_Sto_t) *Vec_Int_t {\n    var vCut *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vCut = Vec_IntAlloc( Aig_ManRegNum(pSto.pAig) );\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pSto.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pSto.pAig.vCis, i+Saig_ManPiNum(pSto.pAig))), 1); i++  {\n        Vec_IntPush( vCut, pObj.Id );\n        pObj.fMarkA = 1;\n    }\n    return vCut;\n}"
+    },
+    {
+      "Name": "Aig_ObjPoLogicDeref",
+      "Start": 26535,
+      "End": 26713,
+      "BodyStart": 26580,
+      "Original": "void Aig_ObjPoLogicDeref( Aig_Sto_t * pSto )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Saig_ManForEachPo( pSto-\u003epAig, pObj, i )\n        Aig_ObjDomDeref_rec( Aig_ObjFanin0(pObj) );\n}",
+      "Draft": "func Aig_ObjPoLogicDeref(pSto *Aig_Sto_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pSto.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pSto.pAig.vCos, i)), 1); i++  {\n        Aig_ObjDomDeref_rec( Aig_ObjFanin0(pObj) );\n    }\n}"
+    },
+    {
+      "Name": "Aig_ObjPoLogicRef",
+      "Start": 26949,
+      "End": 27123,
+      "BodyStart": 26992,
+      "Original": "void Aig_ObjPoLogicRef( Aig_Sto_t * pSto )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Saig_ManForEachPo( pSto-\u003epAig, pObj, i )\n        Aig_ObjDomRef_rec( Aig_ObjFanin0(pObj) );\n}",
+      "Draft": "func Aig_ObjPoLogicRef(pSto *Aig_Sto_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pSto.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pSto.pAig.vCos, i)), 1); i++  {\n        Aig_ObjDomRef_rec( Aig_ObjFanin0(pObj) );\n    }\n}"
+    },
+    {
+      "Name": "Aig_ObjDomFindGood",
+      "Start": 27392,
+      "End": 28176,
+      "BodyStart": 27436,
+      "Original": "void Aig_ObjDomFindGood( Aig_Sto_t * pSto )\n{\n    Aig_Dom_t * pDom; \n    Vec_Int_t * vCut;\n    Vec_Ptr_t * vDoms;\n    int i;\n    vCut  = Aig_ObjDomCollectLos( pSto );\n    vDoms = Aig_ObjDomCollect( pSto, vCut );\n    Vec_IntFree( vCut );\n    printf( \"The cut has %d non-trivial %d-dominators.\\n\", Vec_PtrSize(vDoms), pSto-\u003eLimit );\n\n    Aig_ObjPoLogicDeref( pSto );\n    Vec_PtrForEachEntry( Aig_Dom_t *, vDoms, pDom, i )\n    {\n//        if ( Aig_ObjDomDomed(pSto, pDom) \u003c= 1 )\n//            continue;\n        printf( \"Vol =%3d.  \", Aig_ObjDomVolume(pSto, pDom) );\n        printf( \"Dom =%3d.  \", Aig_ObjDomDomed(pSto, pDom) );\n        Aig_ObjDomPrint( pSto, pDom, i );\n    }\n    Aig_ObjPoLogicRef( pSto );\n\n    Aig_ObjDomVecRecycle( pSto, vDoms );\n    Aig_ManCleanMarkA( pSto-\u003epAig );\n}",
+      "Draft": "func Aig_ObjDomFindGood(pSto *Aig_Sto_t) {\n    var pDom *Aig_Dom_t; \n    var vCut *Vec_Int_t;\n    var vDoms *Vec_Ptr_t;\n    var i int32;\n    vCut  = Aig_ObjDomCollectLos( pSto );\n    vDoms = Aig_ObjDomCollect( pSto, vCut );\n    Vec_IntFree( vCut );\n    fmt.Printf(\"The cut has %d non-trivial %d-dominators.\\n\", Vec_PtrSize(vDoms), pSto.Limit);\n\n    Aig_ObjPoLogicDeref( pSto );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDoms)) \u0026\u0026 (((pDom) = (Aig_Dom_t *)Vec_PtrEntry(vDoms, i)), 1); i++  {\n//        if ( Aig_ObjDomDomed(pSto, pDom) \u003c= 1 )\n//            continue;\n        fmt.Printf(\"Vol =%3d.  \", Aig_ObjDomVolume(pSto, pDom));\n        fmt.Printf(\"Dom =%3d.  \", Aig_ObjDomDomed(pSto, pDom));\n        Aig_ObjDomPrint( pSto, pDom, i );\n    }\n    Aig_ObjPoLogicRef( pSto );\n\n    Aig_ObjDomVecRecycle( pSto, vDoms );\n    Aig_ManCleanMarkA( pSto.pAig );\n}"
+    },
+    {
+      "Name": "Aig_ManComputeDomsTest2",
+      "Start": 28444,
+      "End": 28877,
+      "BodyStart": 28502,
+      "Original": "void Aig_ManComputeDomsTest2( Aig_Man_t * pAig, int Num )\n{\n    Aig_Sto_t * pSto;\n//    int i;\n//Aig_ManShow( pAig, 0, NULL );\n    Aig_ManFanoutStart( pAig );\n//    for ( i = 1; i \u003c 9; i++ )\n    {\n        printf( \"ITERATION %d:\\n\", Num );\n        pSto = Aig_ManComputeDomsFlops( pAig, Num );\n        Aig_ObjDomFindGood( pSto );\n//        Aig_ManDomPrint( pSto );\n        Aig_ManDomStop( pSto );\n    }\n    Aig_ManFanoutStop( pAig );\n}",
+      "Draft": "func Aig_ManComputeDomsTest2(pAig *Aig_Man_t, Num int32) {\n    var pSto *Aig_Sto_t;\n//    int i;\n//Aig_ManShow( pAig, 0, NULL );\n    Aig_ManFanoutStart( pAig );\n//    for ( i = 1; i \u003c 9; i++ )\n    {\n        fmt.Printf(\"ITERATION %d:\\n\", Num);\n        pSto = Aig_ManComputeDomsFlops( pAig, Num );\n        Aig_ObjDomFindGood( pSto );\n//        Aig_ManDomPrint( pSto );\n        Aig_ManDomStop( pSto );\n    }\n    Aig_ManFanoutStop( pAig );\n}"
+    },
+    {
+      "Name": "Aig_ManComputeDomsTest",
+      "Start": 29144,
+      "End": 29382,
+      "BodyStart": 29192,
+      "Original": "void Aig_ManComputeDomsTest( Aig_Man_t * pAig )\n{\n    Aig_Sto_t * pSto;\n    Aig_ManFanoutStart( pAig );\n    pSto = Aig_ManComputeDomsPis( pAig, 1 );\n    Aig_ManDomPrint( pSto );\n    Aig_ManDomStop( pSto );\n    Aig_ManFanoutStop( pAig );\n}",
+      "Draft": "func Aig_ManComputeDomsTest(pAig *Aig_Man_t) {\n    var pSto *Aig_Sto_t;\n    Aig_ManFanoutStart( pAig );\n    pSto = Aig_ManComputeDomsPis( pAig, 1 );\n    Aig_ManDomPrint( pSto );\n    Aig_ManDomStop( pSto );\n    Aig_ManFanoutStop( pAig );\n}"
+    },
+    {
+      "Name": "Aig_ObjDomCount",
+      "Start": 29655,
+      "End": 31008,
+      "BodyStart": 29714,
+      "Original": "void Aig_ObjDomCount( Aig_Sto_t * pSto, Aig_Obj_t * pObj )\n{\n    Aig_Dom_t * pDom;\n    Aig_Obj_t * pFanout;\n    Vec_Int_t * vSingles;\n    Vec_Ptr_t * vDoms;\n    int i, k, Entry, iFanout, fPrint = 0;\n    vSingles = Vec_IntAlloc( 100 );\n    // for each dominator of a fanout, count how many fanouts have it as a dominator\n    Aig_ObjForEachFanout( pSto-\u003epAig, pObj, pFanout, iFanout, i )\n    {\n        vDoms = (Vec_Ptr_t *)Vec_PtrEntry( pSto-\u003evDoms, Aig_ObjId(pFanout) );\n        Vec_PtrForEachEntryStart( Aig_Dom_t *, vDoms, pDom, k, 1 )\n        {\n//            printf( \"Fanout %d  Dominator %d\\n\", Aig_ObjId(pFanout), pDom-\u003epNodes[0] );\n            Vec_IntAddToEntry( pSto-\u003evTimes, pDom-\u003epNodes[0], 1 );\n            Vec_IntPushUnique( vSingles, pDom-\u003epNodes[0] );\n        }\n    }\n    // clear storage\n    Vec_IntForEachEntry( vSingles, Entry, i )\n    {\n        if ( Vec_IntEntry(pSto-\u003evTimes, Entry) \u003e 5 )\n        {\n            if ( fPrint == 0 )\n            {\n                printf( \"%6d : Level =%4d. Fanout =%6d.\\n\", \n                    Aig_ObjId(pObj), Aig_ObjLevel(pObj), Aig_ObjRefs(pObj) );\n            }\n            fPrint = 1;\n            printf( \"%d(%d) \", Entry, Vec_IntEntry(pSto-\u003evTimes, Entry) );\n        }\n        Vec_IntWriteEntry( pSto-\u003evTimes, Entry, 0);\n    }\n    if ( fPrint )\n        printf( \"\\n\" );\n    Vec_IntFree( vSingles );\n}",
+      "Draft": "func Aig_ObjDomCount(pSto *Aig_Sto_t, pObj *Aig_Obj_t) {\n    var pDom *Aig_Dom_t;\n    var pFanout *Aig_Obj_t;\n    var vSingles *Vec_Int_t;\n    var vDoms *Vec_Ptr_t;\n    var i, k, Entry, iFanout, fPrint int32;\n    vSingles = Vec_IntAlloc( 100 );\n    // for each dominator of a fanout, count how many fanouts have it as a dominator\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(pSto.pAig.pFanData, \"pSto.pAig.pFanData\"), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(pSto.pAig, iFanout) : Aig_ObjFanout0Int(pSto.pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pSto.pAig, iFanout\u003e\u003e1)), 1); i++  {\n        vDoms = (Vec_Ptr_t *)Vec_PtrEntry( pSto.vDoms, Aig_ObjId(pFanout) );\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  k = 1; (k \u003c Vec_PtrSize(vDoms)) \u0026\u0026 (((pDom) = (Aig_Dom_t *)Vec_PtrEntry(vDoms, k)), 1); k++  {\n//            printf( \"Fanout %d  Dominator %d\\n\", Aig_ObjId(pFanout), pDom-\u003epNodes[0] );\n            Vec_IntAddToEntry( pSto.vTimes, pDom.pNodes[0], 1 );\n            Vec_IntPushUnique( vSingles, pDom.pNodes[0] );\n        }\n    }\n    // clear storage\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSingles)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSingles, i)), 1); i++  {\n        if Vec_IntEntry(pSto.vTimes, Entry) \u003e 5 {\n            if fPrint == 0 {\n                fmt.Printf(\"%6d : Level =%4d. Fanout =%6d.\\n\", Aig_ObjId(pObj), Aig_ObjLevel(pObj), Aig_ObjRefs(pObj));\n            }\n            fPrint = 1;\n            fmt.Printf(\"%d(%d) \", Entry, Vec_IntEntry(pSto.vTimes, Entry));\n        }\n        Vec_IntWriteEntry( pSto.vTimes, Entry, 0);\n    }\n    if fPrint != 0 {\n        fmt.Printf(\"\\n\"); }\n    Vec_IntFree( vSingles );\n}"
+    },
+    {
+      "Name": "Aig_ManComputeDomsForCofactoring",
+      "Start": 31276,
+      "End": 31986,
+      "BodyStart": 31334,
+      "Original": "void Aig_ManComputeDomsForCofactoring( Aig_Man_t * pAig )\n{\n    Vec_Ptr_t * vDoms;\n    Aig_Sto_t * pSto;\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManFanoutStart( pAig );\n    pSto = Aig_ManComputeDomsNodes( pAig, 1 );\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n        if ( !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) )\n            continue;\n        if ( Aig_ObjRefs(pObj) \u003c 10 )\n            continue;\n        vDoms = (Vec_Ptr_t *)Vec_PtrEntry( pSto-\u003evDoms, Aig_ObjId(pObj) );\n//        printf( \"%6d : Level =%4d. Fanout =%6d.\\n\", \n//            Aig_ObjId(pObj), Aig_ObjLevel(pObj), Aig_ObjRefs(pObj) );\n\n        Aig_ObjDomCount( pSto, pObj );\n    }\n    Aig_ManDomStop( pSto );\n    Aig_ManFanoutStop( pAig );\n}",
+      "Draft": "func Aig_ManComputeDomsForCofactoring(pAig *Aig_Man_t) {\n    var vDoms *Vec_Ptr_t;\n    var pSto *Aig_Sto_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManFanoutStart( pAig );\n    pSto = Aig_ManComputeDomsNodes( pAig, 1 );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) {\n            continue; }\n        if Aig_ObjRefs(pObj) \u003c 10 {\n            continue; }\n        vDoms = (Vec_Ptr_t *)Vec_PtrEntry( pSto.vDoms, Aig_ObjId(pObj) );\n//        printf( \"%6d : Level =%4d. Fanout =%6d.\\n\", \n//            Aig_ObjId(pObj), Aig_ObjLevel(pObj), Aig_ObjRefs(pObj) );\n\n        Aig_ObjDomCount( pSto, pObj );\n    }\n    }\n    Aig_ManDomStop( pSto );\n    Aig_ManFanoutStop( pAig );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::struct::Aig_Dom_t::// the number of nodes\n    int             pNodes[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Dom_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 970,
+      "End": 1031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::struct::Aig_Dom_t",
+      "Category": "struct-review",
+      "Symbol": "Aig_Dom_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 837,
+      "End": 1051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::struct::Aig_Sto_t_",
+      "Category": "struct-review",
+      "Symbol": "Aig_Sto_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1053,
+      "End": 1626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::mechanical::sizeof::2455",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2374,
+      "End": 2374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::mechanical::sizeof::2570",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2496,
+      "End": 2502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::mechanical::sizeof::2590",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2516,
+      "End": 2522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::mechanical::sizeof::4158",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3983,
+      "End": 3989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::mechanical::sizeof::4178",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4003,
+      "End": 4009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::mechanical::sizeof::15769",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14590,
+      "End": 14596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::mechanical::sizeof::15789",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14610,
+      "End": 14616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::2421",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2374,
+      "End": 2374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::3163",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3089,
+      "End": 3102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::4009",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3818,
+      "End": 3818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::4079",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3904,
+      "End": 3917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::4742",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4460,
+      "End": 4460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::4835",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4556,
+      "End": 4564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::5899",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5513,
+      "End": 5513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::6508",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5954,
+      "End": 5954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::6660",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6088,
+      "End": 6101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::7194",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6508,
+      "End": 6508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::7517",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6775,
+      "End": 6775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::9392",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8524,
+      "End": 8524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::9942",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9078,
+      "End": 9086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::14105",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13132,
+      "End": 13132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::14267",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13189,
+      "End": 13189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::14472",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13398,
+      "End": 13411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::14651",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13577,
+      "End": 13585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::14882",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13808,
+      "End": 13816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::15497",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14314,
+      "End": 14314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::15689",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14510,
+      "End": 14523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::16883",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15438,
+      "End": 15451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::17194",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15642,
+      "End": 15655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::18711",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17055,
+      "End": 17055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::19452",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17654,
+      "End": 17654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::19798",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17854,
+      "End": 17854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::20179",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18074,
+      "End": 18074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::21320",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19032,
+      "End": 19032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::21646",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19231,
+      "End": 19231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::22028",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19451,
+      "End": 19451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::23169",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20410,
+      "End": 20410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::23463",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20577,
+      "End": 20577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::23784",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20737,
+      "End": 20737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::24585",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21519,
+      "End": 21532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::24873",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21707,
+      "End": 21720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::29745",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26163,
+      "End": 26163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::30416",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26619,
+      "End": 26619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::31017",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27031,
+      "End": 27031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::31872",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27761,
+      "End": 27761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::34437",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30063,
+      "End": 30076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::34619",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30133,
+      "End": 30133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::36245",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31497,
+      "End": 31497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::pointer-cast::36491",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31694,
+      "End": 31707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::macro::Aig_DomForEachNode",
+      "Category": "macro-review",
+      "Symbol": "Aig_DomForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1628,
+      "End": 1798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ManDomStart",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDomStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2280,
+      "End": 2728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjAddTriv",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjAddTriv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2987,
+      "End": 3372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomVecDup",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomVecDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3634,
+      "End": 4096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomVecRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomVecRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4356,
+      "End": 4599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomPrint",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4865,
+      "End": 5145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomVecPrint",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomVecPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5411,
+      "End": 5607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ManDomPrint",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDomPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5874,
+      "End": 6147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::ternary::Aig_ManDomStop",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ManDomStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6428,
+      "End": 6794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ManDomStop",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDomStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6428,
+      "End": 6794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomCheck",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7061,
+      "End": 7418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomCheckDominance",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomCheckDominance",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7693,
+      "End": 8135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomFilter",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomFilter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8405,
+      "End": 9560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomMergeOrdered",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomMergeOrdered",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9812,
+      "End": 11877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomMergeTwo",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomMergeTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12150,
+      "End": 12662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomMerge",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12929,
+      "End": 13917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomUnion",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomUnion",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14184,
+      "End": 14684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::ternary::Aig_ObjDomCompute",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ObjDomCompute",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14952,
+      "End": 15904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomCompute",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomCompute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14952,
+      "End": 15904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ManMarkFlopTfi_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManMarkFlopTfi_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16189,
+      "End": 16657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ManMarkFlopTfi",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManMarkFlopTfi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16942,
+      "End": 17131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ManComputeDomsFlops",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManComputeDomsFlops",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17398,
+      "End": 18511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ManComputeDomsPis",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManComputeDomsPis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18778,
+      "End": 19887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ManComputeDomsNodes",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManComputeDomsNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20154,
+      "End": 21105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomCollect",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomCollect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21374,
+      "End": 21883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomVolume_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomVolume_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22169,
+      "End": 22735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomVolume",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomVolume",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23014,
+      "End": 23297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomDeref_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomDeref_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23565,
+      "End": 24010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomRef_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomRef_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24273,
+      "End": 24713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomDomed",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomDomed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24992,
+      "End": 25725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomCollectLos",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomCollectLos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25995,
+      "End": 26299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjPoLogicDeref",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjPoLogicDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26535,
+      "End": 26713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjPoLogicRef",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjPoLogicRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26949,
+      "End": 27123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomFindGood",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomFindGood",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27392,
+      "End": 28176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ManComputeDomsTest2",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManComputeDomsTest2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28444,
+      "End": 28877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ManComputeDomsTest",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManComputeDomsTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29144,
+      "End": 29382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::ternary::Aig_ObjDomCount",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ObjDomCount",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 29655,
+      "End": 31008
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ObjDomCount",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjDomCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29655,
+      "End": 31008
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::Aig_ManComputeDomsForCofactoring",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManComputeDomsForCofactoring",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31276,
+      "End": 31986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigDoms.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 32237
+    }
+  ],
+  "Draft": "package aig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [aigDoms.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Computing multi-output dominators.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigDoms.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n//#include \"aig/saig/saig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Aig_Sto_t = Aig_Sto_t_;\n   \n\ntype Aig_Dom_t struct {\n    uSign             int32;         // signature\n    nNodes             int32;        // the number of nodes\n    pNodes [0]int32;     // the nodes\n}\n\ntype Aig_Sto_t_ struct {\n    Limit             int32;\n    pAig      *Aig_Man_t;          // user's AIG\n    pMem  *Aig_MmFixed_t;          // memory manager for dominators\n    vDoms      *Vec_Ptr_t;         // dominators\n    vFans      *Vec_Int_t;         // temporary fanouts\n    vTimes      *Vec_Int_t;        // the number of times each appears\n    nDomNodes             int32;     // nodes with dominators\n    nDomsTotal             int32;    // total dominators\n    nDomsFilter1             int32;  // filtered dominators\n    nDomsFilter2             int32;  // filtered dominators\n}\n\n// Original macro:\n// #define Aig_DomForEachNode( pAig, pDom, pNode, i )                         \\\n//     for ( i = 0; (i \u003c pDom-\u003enNodes) \u0026\u0026 ((pNode) = Aig_ManObj(pAig, (pDom)-\u003epNodes[i])); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates dominator manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDomStart(pAig *Aig_Man_t, Limit int32) *Aig_Sto_t {\n    \n    // inlining of macro ABC_CALLOC\n    pSto := \u0026Aig_Sto_t{};\n    pSto.pAig     = pAig;\n    pSto.Limit    = Limit;\n    pSto.pMem     = Aig_MmFixedStart( sizeof(Aig_Dom_t) + sizeof(int) * Limit, 10000 );\n    pSto.vDoms    = Vec_PtrStart( Aig_ManObjNumMax(pAig) );\n    pSto.vFans    = Vec_IntAlloc( 100 );\n    pSto.vTimes   = Vec_IntStart( Aig_ManObjNumMax(pAig) );\n    return pSto;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds trivial dominator.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjAddTriv(pSto *Aig_Sto_t, Id int32, vDoms *Vec_Ptr_t) {\n    var pDom *Aig_Dom_t;\n    pDom = (Aig_Dom_t *)Aig_MmFixedEntryFetch( pSto.pMem );\n    pDom.uSign     = (1 \u003c\u003c (Id % 63));\n    pDom.nNodes    = 1;\n    pDom.pNodes[0] = Id;\n    Vec_PtrPushFirst( vDoms, pDom );\n    assert(Vec_PtrEntry( pSto.vDoms, Id ) == nil, \"Vec_PtrEntry( pSto.vDoms, Id ) == nil\");\n    Vec_PtrWriteEntry( pSto.vDoms, Id, vDoms );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates vector of doms.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomVecDup(pSto *Aig_Sto_t, vDoms *Vec_Ptr_t, fSkip1 int32) *Vec_Ptr_t {\n    var vDoms2 *Vec_Ptr_t;\n    var pDom, pDom2 *Aig_Dom_t;\n    var i int32;\n    vDoms2 = Vec_PtrAlloc( 0 );\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = fSkip1; (i \u003c Vec_PtrSize(vDoms)) \u0026\u0026 (((pDom) = (Aig_Dom_t *)Vec_PtrEntry(vDoms, i)), 1); i++  {\n        pDom2 = (Aig_Dom_t *)Aig_MmFixedEntryFetch( pSto.pMem );\n        memcpy( pDom2, pDom, sizeof(Aig_Dom_t) + sizeof(int) * pSto.Limit );\n        Vec_PtrPush( vDoms2, pDom2 );\n    }\n    return vDoms2;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recycles vector of doms.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomVecRecycle(pSto *Aig_Sto_t, vDoms *Vec_Ptr_t) {\n    var pDom *Aig_Dom_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDoms)) \u0026\u0026 (((pDom) = (Aig_Dom_t *)Vec_PtrEntry(vDoms, i)), 1); i++  {\n        Aig_MmFixedEntryRecycle( pSto.pMem, (char *)pDom );\n    }\n    Vec_PtrFree( vDoms );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the vector of doms.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomPrint(pSto *Aig_Sto_t, pDom *Aig_Dom_t, Num int32) {\n    var k int32;\n    fmt.Printf(\"%4d : {\", Num);\n    for  k = 0; k \u003c pDom.nNodes; k++  {\n        fmt.Printf(\" %4d\", pDom.pNodes[k]);\n    }\n    for  ; k \u003c pSto.Limit; k++  {\n        fmt.Printf(\"     \");\n    }\n    fmt.Printf(\" }\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the vector of doms.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomVecPrint(pSto *Aig_Sto_t, vDoms *Vec_Ptr_t) {\n    var pDom *Aig_Dom_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDoms)) \u0026\u0026 (((pDom) = (Aig_Dom_t *)Vec_PtrEntry(vDoms, i)), 1); i++  {\n        Aig_ObjDomPrint( pSto, pDom, i );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes multi-node dominators.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDomPrint(pSto *Aig_Sto_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(pSto.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pSto.pAig.vCis, i)), 1); i++  {\n        fmt.Printf(\"*** PI %4d %4d :\\n\", i, pObj.Id);\n        Aig_ObjDomVecPrint( pSto, (Vec_Ptr_t *)Vec_PtrEntry(pSto.vDoms, pObj.Id) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Divides the circuit into well-balanced parts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDomStop(pSto *Aig_Sto_t) {\n    var vDoms *Vec_Ptr_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pSto.vDoms)) \u0026\u0026 (((vDoms) = (Vec_Ptr_t *)Vec_PtrEntry(pSto.vDoms, i)), 1); i++  {\n        if vDoms != nil {\n            Aig_ObjDomVecRecycle( pSto, vDoms ); }\n    }\n    Vec_PtrFree( pSto.vDoms );\n    Vec_IntFree( pSto.vFans );\n    Vec_IntFree( pSto.vTimes );\n    Aig_MmFixedStop( pSto.pMem, 0 );\n    // inlining of macro ABC_FREE\n    ((pSto) ? (free((char *) (pSto)), (pSto) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks correctness of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomCheck(pDom *Aig_Dom_t) int32 {\n    var i int32;\n    for  i = 1; i \u003c pDom.nNodes; i++  {\n        if pDom.pNodes[i-1] \u003e= pDom.pNodes[i] {\n            Abc_Print( -1, \"Aig_ObjDomCheck(): Cut has wrong ordering of inputs.\\n\" );\n            return 0;\n        }\n        assert(pDom.pNodes[i-1] \u003c pDom.pNodes[i], \"pDom.pNodes[i-1] \u003c pDom.pNodes[i]\");\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pDom is contained in pCut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomCheckDominance(pDom *Aig_Dom_t, pCut *Aig_Dom_t) int32 {\n    var i, k int32;\n    for  i = 0; i \u003c pDom.nNodes; i++  {\n        for  k = 0; k \u003c int32(pCut.nNodes); k++  {\n            if pDom.pNodes[i] == pCut.pNodes[k] {\n                break; }\n        }\n        if k == int32(pCut.nNodes) { // node i in pDom is not contained in pCut\n            return 0; }\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the cut is contained.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomFilter(pSto *Aig_Sto_t, vDoms *Vec_Ptr_t, pDom *Aig_Dom_t) int32 { \n    var pTemp *Aig_Dom_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDoms)) \u0026\u0026 (((pTemp) = (Aig_Dom_t *)Vec_PtrEntry(vDoms, i)), 1); i++  {\n        if pTemp.nNodes \u003e pDom.nNodes {\n            // do not fiter the first cut\n            if i == 0 {\n                continue; }\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pDom.uSign) != pDom.uSign {\n                continue; }\n            // check containment seriously\n            if Aig_ObjDomCheckDominance( pDom, pTemp ) != 0 {\n                Vec_PtrRemove( vDoms, pTemp );\n                Aig_MmFixedEntryRecycle( pSto.pMem, (char *)pTemp );\n                i--;\n                pSto.nDomsFilter1++;\n            }\n         \n        } else {\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pDom.uSign) != pTemp.uSign {\n                continue; }\n            // check containment seriously\n            if Aig_ObjDomCheckDominance( pTemp, pDom ) != 0 {\n                pSto.nDomsFilter2++;\n                return 1;\n            }\n        }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomMergeOrdered(pD0 *Aig_Dom_t, pD1 *Aig_Dom_t, pD *Aig_Dom_t, Limit int32) int32 { \n    var i, k, c int32;\n    assert(pD0.nNodes \u003e= pD1.nNodes, \"pD0.nNodes \u003e= pD1.nNodes\");\n    // the case of the largest cut sizes\n    if pD0.nNodes == Limit \u0026\u0026 pD1.nNodes == Limit {\n        for  i = 0; i \u003c pD0.nNodes; i++  {\n            if pD0.pNodes[i] != pD1.pNodes[i] {\n                return 0; }\n        }\n        for  i = 0; i \u003c pD0.nNodes; i++  {\n            pD.pNodes[i] = pD0.pNodes[i];\n        }\n        pD.nNodes = pD0.nNodes;\n        return 1;\n    }\n    // the case when one of the cuts is the largest\n    if pD0.nNodes == Limit {\n        for  i = 0; i \u003c pD1.nNodes; i++  {\n            for  k = pD0.nNodes - 1; k \u003e= 0; k--  {\n                if pD0.pNodes[k] == pD1.pNodes[i] {\n                    break; }\n            }\n            if k == -1 { // did not find\n                return 0; }\n        }\n        for  i = 0; i \u003c pD0.nNodes; i++  {\n            pD.pNodes[i] = pD0.pNodes[i];\n        }\n        pD.nNodes = pD0.nNodes;\n        return 1;\n    }\n\n    // compare two cuts with different numbers\n    i = k = 0;\n    for  c = 0; c \u003c int32(Limit); c++  {\n        if k == pD1.nNodes {\n            if i == pD0.nNodes {\n                pD.nNodes = c;\n                return 1;\n            }\n            pD.pNodes[c] = pD0.pNodes[i]; i++;\n            continue;\n        }\n        if i == pD0.nNodes {\n            if k == pD1.nNodes {\n                pD.nNodes = c;\n                return 1;\n            }\n            pD.pNodes[c] = pD1.pNodes[k]; k++;\n            continue;\n        }\n        if pD0.pNodes[i] \u003c pD1.pNodes[k] {\n            pD.pNodes[c] = pD0.pNodes[i]; i++;\n            continue;\n        }\n        if pD0.pNodes[i] \u003e pD1.pNodes[k] {\n            pD.pNodes[c] = pD1.pNodes[k]; k++;\n            continue;\n        }\n        pD.pNodes[c] = pD0.pNodes[i]; i++; \n        k++;\n    }\n    if i \u003c pD0.nNodes || k \u003c pD1.nNodes {\n        return 0; }\n    pD.nNodes = c;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the object for FPGA mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomMergeTwo(pDom0 *Aig_Dom_t, pDom1 *Aig_Dom_t, pDom *Aig_Dom_t, Limit int32) int32 { \n    assert(Limit \u003e 0, \"Limit \u003e 0\");\n    if pDom0.nNodes \u003c pDom1.nNodes {\n        if !(Aig_ObjDomMergeOrdered( pDom1, pDom0, pDom, Limit ) != 0) {\n            return 0; }\n    \n    } else {\n        if !(Aig_ObjDomMergeOrdered( pDom0, pDom1, pDom, Limit ) != 0) {\n            return 0; }\n    }\n    pDom.uSign = pDom0.uSign | pDom1.uSign;\n    assert(pDom.nNodes \u003c= Limit, \"pDom.nNodes \u003c= Limit\");\n    assert((Aig_ObjDomCheck( pDom ) != 0), \"Aig_ObjDomCheck( pDom )\");\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Merge two arrays of dominators.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomMerge(pSto *Aig_Sto_t, vDoms0 *Vec_Ptr_t, vDoms1 *Vec_Ptr_t) *Vec_Ptr_t {\n    var vDoms *Vec_Ptr_t;\n    var pDom0, pDom1, pDom *Aig_Dom_t;\n    var i, k int32;\n    vDoms = Vec_PtrAlloc( 16 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDoms0)) \u0026\u0026 (((pDom0) = (Aig_Dom_t *)Vec_PtrEntry(vDoms0, i)), 1); i++  {\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(vDoms1)) \u0026\u0026 (((pDom1) = (Aig_Dom_t *)Vec_PtrEntry(vDoms1, k)), 1); k++  {\n        if Aig_WordCountOnes( pDom0.uSign | pDom1.uSign ) \u003e pSto.Limit {\n            continue; }\n        // check if the cut exists\n        pDom = (Aig_Dom_t *)Aig_MmFixedEntryFetch( pSto.pMem );\n        if !(Aig_ObjDomMergeTwo( pDom0, pDom1, pDom, pSto.Limit ) != 0) {\n            Aig_MmFixedEntryRecycle( pSto.pMem, (char *)pDom );\n            continue;\n        }\n        // check if this cut is contained in any of the available cuts\n        if Aig_ObjDomFilter( pSto, vDoms, pDom ) != 0 {\n            Aig_MmFixedEntryRecycle( pSto.pMem, (char *)pDom );\n            continue;\n        }\n        Vec_PtrPush( vDoms, pDom );\n    }\n    }\n    return vDoms;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Union two arrays of dominators.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomUnion(pSto *Aig_Sto_t, vDoms2 *Vec_Ptr_t, vDoms1 *Vec_Ptr_t) {\n    var pDom1, pDom2 *Aig_Dom_t;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDoms1)) \u0026\u0026 (((pDom1) = (Aig_Dom_t *)Vec_PtrEntry(vDoms1, i)), 1); i++  {\n        if i == 0 {\n            continue; }\n        if Aig_ObjDomFilter( pSto, vDoms2, pDom1 ) != 0 {\n            continue; }\n        pDom2 = (Aig_Dom_t *)Aig_MmFixedEntryFetch( pSto.pMem );\n        memcpy( pDom2, pDom1, sizeof(Aig_Dom_t) + sizeof(int) * pSto.Limit );\n        Vec_PtrPush( vDoms2, pDom2 );\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes multi-node dominators.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomCompute(pSto *Aig_Sto_t, pObj *Aig_Obj_t) {\n    var vDoms0, vDoms1, vDoms2, vDomsT *Vec_Ptr_t;\n    var pFanout *Aig_Obj_t;\n    var i, iFanout int32;\n    pSto.nDomNodes += Aig_ObjIsNode(pObj);\n    Vec_IntClear( pSto.vFans );\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(pSto.pAig.pFanData, \"pSto.pAig.pFanData\"), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(pSto.pAig, iFanout) : Aig_ObjFanout0Int(pSto.pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pSto.pAig, iFanout\u003e\u003e1)), 1); i++  {\n        if Aig_ObjIsTravIdCurrent(pSto.pAig, pFanout) {\n            Vec_IntPush( pSto.vFans, iFanout\u003e\u003e1 ); }\n    }\n    if Vec_IntSize(pSto.vFans) == 0 {\n        return; }\n    vDoms0 = (Vec_Ptr_t *)Vec_PtrEntry( pSto.vDoms, Vec_IntEntry(pSto.vFans, 0) );\n    vDoms2 = Aig_ObjDomVecDup( pSto, vDoms0, 0 );\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(pSto.vFans)) \u0026\u0026 (((iFanout) = Vec_IntEntry(pSto.vFans, i)), 1); i++  {\n        vDoms1 = (Vec_Ptr_t *)Vec_PtrEntry( pSto.vDoms, iFanout );\n        vDoms2 = Aig_ObjDomMerge( pSto, vDomsT = vDoms2, vDoms1 );\n        Aig_ObjDomVecRecycle( pSto, vDomsT );\n    }\n    Aig_ObjAddTriv( pSto, pObj.Id, vDoms2 );\n    pSto.nDomsTotal += Vec_PtrSize(vDoms2);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the flop TFI with the current traversal ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManMarkFlopTfi_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    var Count int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {\n        return 1; }\n    Count = Aig_ManMarkFlopTfi_rec( p, Aig_ObjFanin0(pObj) );\n    if Aig_ObjIsNode(pObj) {\n        Count += Aig_ManMarkFlopTfi_rec( p, Aig_ObjFanin1(pObj) ); }\n    return Count;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the flop TFI with the current traversal ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManMarkFlopTfi(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {\n        Aig_ManMarkFlopTfi_rec( p, pObj );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes multi-node dominators.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManComputeDomsFlops(pAig *Aig_Man_t, Limit int32) *Aig_Sto_t {\n    var pSto *Aig_Sto_t;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    pSto = Aig_ManDomStart( pAig, Limit );\n    // initialize flop inputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Aig_ObjAddTriv( pSto, pObj.Id, Vec_PtrAlloc(1) );\n    }\n    // compute internal nodes\n    vNodes = Aig_ManDfsReverse( pAig );\n    Aig_ManMarkFlopTfi( pAig );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Aig_ObjIsTravIdCurrent(pSto.pAig, pObj) {\n            Aig_ObjDomCompute( pSto, pObj ); }\n    }\n    Vec_PtrFree( vNodes );\n    // compute combinational inputs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        Aig_ObjDomCompute( pSto, pObj );\n    }\n    // print statistics\n    fmt.Printf(\"Nodes =%4d. Flops =%4d. Doms =%9d. Ave =%8.2f.   \", pSto.nDomNodes, Aig_ManRegNum(pSto.pAig), pSto.nDomsTotal, //        pSto-\u003enDomsFilter1, pSto-\u003enDomsFilter2,\n            1.0 * pSto.nDomsTotal / (pSto.nDomNodes + Aig_ManRegNum(pSto.pAig)));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return pSto;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes multi-node dominators.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManComputeDomsPis(pAig *Aig_Man_t, Limit int32) *Aig_Sto_t {\n    var pSto *Aig_Sto_t;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    pSto = Aig_ManDomStart( pAig, Limit );\n    // initialize flop inputs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        Aig_ObjAddTriv( pSto, pObj.Id, Vec_PtrAlloc(1) );\n    }\n    // compute internal nodes\n    vNodes = Aig_ManDfsReverse( pAig );\n    Aig_ManMarkFlopTfi( pAig );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Aig_ObjIsTravIdCurrent(pSto.pAig, pObj) {\n            Aig_ObjDomCompute( pSto, pObj ); }\n    }\n    Vec_PtrFree( vNodes );\n    // compute combinational inputs\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        Aig_ObjDomCompute( pSto, pObj );\n    }\n    // print statistics\n    fmt.Printf(\"Nodes =%4d. PIs =%4d. Doms =%9d. Ave =%8.2f.   \", pSto.nDomNodes, Saig_ManPiNum(pSto.pAig), pSto.nDomsTotal, //        pSto-\u003enDomsFilter1, pSto-\u003enDomsFilter2,\n            1.0 * pSto.nDomsTotal / (pSto.nDomNodes + Saig_ManPiNum(pSto.pAig)));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return pSto;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes multi-node dominators.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManComputeDomsNodes(pAig *Aig_Man_t, Limit int32) *Aig_Sto_t {\n    var pSto *Aig_Sto_t;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    pSto = Aig_ManDomStart( pAig, Limit );\n    // initialize flop inputs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        Aig_ObjAddTriv( pSto, pObj.Id, Vec_PtrAlloc(1) );\n    }\n    // compute internal nodes\n    vNodes = Aig_ManDfsReverse( pAig );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Aig_ObjDomCompute( pSto, pObj );\n    }\n    Vec_PtrFree( vNodes );\n    // compute combinational inputs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        Aig_ObjDomCompute( pSto, pObj );\n    }\n    // print statistics\n    fmt.Printf(\"Nodes =%6d. Doms =%9d. Ave =%8.2f.   \", pSto.nDomNodes, pSto.nDomsTotal, //        pSto-\u003enDomsFilter1, pSto-\u003enDomsFilter2,\n            1.0 * pSto.nDomsTotal / pSto.nDomNodes);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return pSto;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects dominators from the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomCollect(pSto *Aig_Sto_t, vCut *Vec_Int_t) *Vec_Ptr_t {\n    var vDoms0, vDoms1, vDoms2 *Vec_Ptr_t;\n    var i, ObjId int32;\n    vDoms0 = (Vec_Ptr_t *)Vec_PtrEntry( pSto.vDoms, Vec_IntEntry(vCut, 0) );\n    vDoms2 = Aig_ObjDomVecDup( pSto, vDoms0, 1 );\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vCut)) \u0026\u0026 (((ObjId) = Vec_IntEntry(vCut, i)), 1); i++  {\n        vDoms1 = (Vec_Ptr_t *)Vec_PtrEntry( pSto.vDoms, ObjId );\n        if vDoms1 == nil {\n            continue; }\n        Aig_ObjDomUnion( pSto, vDoms2, vDoms1 );\n    }\n    return vDoms2;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the flop TFI with the current traversal ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomVolume_rec(p *Aig_Man_t, pObj *Aig_Obj_t) int32 {\n    var Count int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return 0; }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    if pObj.fMarkA {\n        return 1; }\n//    assert( !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsConst1(pObj) );\n    if Aig_ObjIsCi(pObj) || Aig_ObjIsConst1(pObj) {\n        return 1; }\n    Count = Aig_ObjDomVolume_rec( p, Aig_ObjFanin0(pObj) );\n    if Aig_ObjIsNode(pObj) {\n        Count += Aig_ObjDomVolume_rec( p, Aig_ObjFanin1(pObj) ); }\n    return Count;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Count the number of nodes in the dominator.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomVolume(pSto *Aig_Sto_t, pDom *Aig_Dom_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    Aig_ManIncrementTravId( pSto.pAig );\n    // inlining of macro Aig_DomForEachNode\n    for  i = 0; (i \u003c pDom.nNodes) \u0026\u0026 ((pObj) = Aig_ManObj(pSto.pAig, (pDom).pNodes[i])); i++  {\n        Counter += Aig_ObjDomVolume_rec( pSto.pAig, pObj );\n    }\n    return Counter;\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Dereferences the node's MFFC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomDeref_rec(pNode *Aig_Obj_t) int32 {\n    var Counter int32;\n    assert(pNode.nRefs \u003e 0, \"pNode.nRefs \u003e 0\");\n    if --pNode.nRefs \u003e 0 {\n        return 0; }\n    assert(pNode.nRefs == 0, \"pNode.nRefs == 0\");\n    if pNode.fMarkA {\n        return 1; }\n    if Aig_ObjIsCi(pNode) {\n        return 0; }\n    Counter += Aig_ObjDomDeref_rec( Aig_ObjFanin0(pNode) );\n    if Aig_ObjIsNode(pNode) {\n    Counter += Aig_ObjDomDeref_rec( Aig_ObjFanin1(pNode) ); }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [References the node's MFFC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomRef_rec(pNode *Aig_Obj_t) int32 {\n    var Counter int32;\n    assert(pNode.nRefs \u003e= 0, \"pNode.nRefs \u003e= 0\");\n    if pNode.nRefs++ \u003e 0 {\n        return 0; }\n    assert(pNode.nRefs == 1, \"pNode.nRefs == 1\");\n    if pNode.fMarkA {\n        return 1; }\n    if Aig_ObjIsCi(pNode) {\n        return 0; }\n    Counter += Aig_ObjDomRef_rec( Aig_ObjFanin0(pNode) );\n    if Aig_ObjIsNode(pNode) {\n    Counter += Aig_ObjDomRef_rec( Aig_ObjFanin1(pNode) ); }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Count the number of nodes in the dominator.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomDomed(pSto *Aig_Sto_t, pDom *Aig_Dom_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter0, Counter1 int32;\n    Counter0 = 0;\n    // inlining of macro Aig_DomForEachNode\n    for  i = 0; (i \u003c pDom.nNodes) \u0026\u0026 ((pObj) = Aig_ManObj(pSto.pAig, (pDom).pNodes[i])); i++  {\n        assert(!Aig_ObjIsCi(pObj), \"!Aig_ObjIsCi(pObj)\");\n        Counter0 += Aig_ObjDomDeref_rec( Aig_ObjFanin0(pObj) );\n        if Aig_ObjIsNode(pObj) {\n        Counter0 += Aig_ObjDomDeref_rec( Aig_ObjFanin1(pObj) ); }\n    }\n    Counter1 = 0;\n    // inlining of macro Aig_DomForEachNode\n    for  i = 0; (i \u003c pDom.nNodes) \u0026\u0026 ((pObj) = Aig_ManObj(pSto.pAig, (pDom).pNodes[i])); i++  {\n        assert(!Aig_ObjIsCi(pObj), \"!Aig_ObjIsCi(pObj)\");\n        Counter1 += Aig_ObjDomRef_rec( Aig_ObjFanin0(pObj) );\n        if Aig_ObjIsNode(pObj) {\n        Counter1 += Aig_ObjDomRef_rec( Aig_ObjFanin1(pObj) ); }\n    }\n    assert(Counter0 == Counter1, \"Counter0 == Counter1\");\n    return Counter0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collects dominators from the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomCollectLos(pSto *Aig_Sto_t) *Vec_Int_t {\n    var vCut *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vCut = Vec_IntAlloc( Aig_ManRegNum(pSto.pAig) );\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pSto.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pSto.pAig.vCis, i+Saig_ManPiNum(pSto.pAig))), 1); i++  {\n        Vec_IntPush( vCut, pObj.Id );\n        pObj.fMarkA = 1;\n    }\n    return vCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjPoLogicDeref(pSto *Aig_Sto_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pSto.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pSto.pAig.vCos, i)), 1); i++  {\n        Aig_ObjDomDeref_rec( Aig_ObjFanin0(pObj) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjPoLogicRef(pSto *Aig_Sto_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pSto.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pSto.pAig.vCos, i)), 1); i++  {\n        Aig_ObjDomRef_rec( Aig_ObjFanin0(pObj) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects dominators from the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomFindGood(pSto *Aig_Sto_t) {\n    var pDom *Aig_Dom_t; \n    var vCut *Vec_Int_t;\n    var vDoms *Vec_Ptr_t;\n    var i int32;\n    vCut  = Aig_ObjDomCollectLos( pSto );\n    vDoms = Aig_ObjDomCollect( pSto, vCut );\n    Vec_IntFree( vCut );\n    fmt.Printf(\"The cut has %d non-trivial %d-dominators.\\n\", Vec_PtrSize(vDoms), pSto.Limit);\n\n    Aig_ObjPoLogicDeref( pSto );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDoms)) \u0026\u0026 (((pDom) = (Aig_Dom_t *)Vec_PtrEntry(vDoms, i)), 1); i++  {\n//        if ( Aig_ObjDomDomed(pSto, pDom) \u003c= 1 )\n//            continue;\n        fmt.Printf(\"Vol =%3d.  \", Aig_ObjDomVolume(pSto, pDom));\n        fmt.Printf(\"Dom =%3d.  \", Aig_ObjDomDomed(pSto, pDom));\n        Aig_ObjDomPrint( pSto, pDom, i );\n    }\n    Aig_ObjPoLogicRef( pSto );\n\n    Aig_ObjDomVecRecycle( pSto, vDoms );\n    Aig_ManCleanMarkA( pSto.pAig );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes multi-node dominators.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManComputeDomsTest2(pAig *Aig_Man_t, Num int32) {\n    var pSto *Aig_Sto_t;\n//    int i;\n//Aig_ManShow( pAig, 0, NULL );\n    Aig_ManFanoutStart( pAig );\n//    for ( i = 1; i \u003c 9; i++ )\n    {\n        fmt.Printf(\"ITERATION %d:\\n\", Num);\n        pSto = Aig_ManComputeDomsFlops( pAig, Num );\n        Aig_ObjDomFindGood( pSto );\n//        Aig_ManDomPrint( pSto );\n        Aig_ManDomStop( pSto );\n    }\n    Aig_ManFanoutStop( pAig );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes multi-node dominators.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManComputeDomsTest(pAig *Aig_Man_t) {\n    var pSto *Aig_Sto_t;\n    Aig_ManFanoutStart( pAig );\n    pSto = Aig_ManComputeDomsPis( pAig, 1 );\n    Aig_ManDomPrint( pSto );\n    Aig_ManDomStop( pSto );\n    Aig_ManFanoutStop( pAig );\n}\n\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collects dominators from the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjDomCount(pSto *Aig_Sto_t, pObj *Aig_Obj_t) {\n    var pDom *Aig_Dom_t;\n    var pFanout *Aig_Obj_t;\n    var vSingles *Vec_Int_t;\n    var vDoms *Vec_Ptr_t;\n    var i, k, Entry, iFanout, fPrint int32;\n    vSingles = Vec_IntAlloc( 100 );\n    // for each dominator of a fanout, count how many fanouts have it as a dominator\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(pSto.pAig.pFanData, \"pSto.pAig.pFanData\"), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(pSto.pAig, iFanout) : Aig_ObjFanout0Int(pSto.pAig, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(pSto.pAig, iFanout\u003e\u003e1)), 1); i++  {\n        vDoms = (Vec_Ptr_t *)Vec_PtrEntry( pSto.vDoms, Aig_ObjId(pFanout) );\n        // inlining of macro Vec_PtrForEachEntryStart\n        for  k = 1; (k \u003c Vec_PtrSize(vDoms)) \u0026\u0026 (((pDom) = (Aig_Dom_t *)Vec_PtrEntry(vDoms, k)), 1); k++  {\n//            printf( \"Fanout %d  Dominator %d\\n\", Aig_ObjId(pFanout), pDom-\u003epNodes[0] );\n            Vec_IntAddToEntry( pSto.vTimes, pDom.pNodes[0], 1 );\n            Vec_IntPushUnique( vSingles, pDom.pNodes[0] );\n        }\n    }\n    // clear storage\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSingles)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSingles, i)), 1); i++  {\n        if Vec_IntEntry(pSto.vTimes, Entry) \u003e 5 {\n            if fPrint == 0 {\n                fmt.Printf(\"%6d : Level =%4d. Fanout =%6d.\\n\", Aig_ObjId(pObj), Aig_ObjLevel(pObj), Aig_ObjRefs(pObj));\n            }\n            fPrint = 1;\n            fmt.Printf(\"%d(%d) \", Entry, Vec_IntEntry(pSto.vTimes, Entry));\n        }\n        Vec_IntWriteEntry( pSto.vTimes, Entry, 0);\n    }\n    if fPrint != 0 {\n        fmt.Printf(\"\\n\"); }\n    Vec_IntFree( vSingles );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes multi-node dominators.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManComputeDomsForCofactoring(pAig *Aig_Man_t) {\n    var vDoms *Vec_Ptr_t;\n    var pSto *Aig_Sto_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManFanoutStart( pAig );\n    pSto = Aig_ManComputeDomsNodes( pAig, 1 );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) {\n            continue; }\n        if Aig_ObjRefs(pObj) \u003c 10 {\n            continue; }\n        vDoms = (Vec_Ptr_t *)Vec_PtrEntry( pSto.vDoms, Aig_ObjId(pObj) );\n//        printf( \"%6d : Level =%4d. Fanout =%6d.\\n\", \n//            Aig_ObjId(pObj), Aig_ObjLevel(pObj), Aig_ObjRefs(pObj) );\n\n        Aig_ObjDomCount( pSto, pObj );\n    }\n    }\n    Aig_ManDomStop( pSto );\n    Aig_ManFanoutStop( pAig );\n}\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sminterf.c",
+  "SHA256": "2ce89f403b4b8f4d9e59565bc1bddb2b0acb3a5436702947ff3165d0630cf54f",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sminterf.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sminterf.c::macro-inline::622",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 622,
+      "End": 641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sminterf.c::macro-inline::647",
+      "Category": "macro-inline-review",
+      "Symbol": "sm_foreach_row_element",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 647,
+      "End": 687
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\npset\ndo_sm_minimum_cover(A)\nvar A pset_family;\n{\n    sm_matrix *M;\n    sm_row *sparse_cover;\n    sm_element *pe;\n    pset cover;\n    register int i, base, rownum;\n    register unsigned val;\n    register pset last, p;\n\n    M = sm_alloc();\n    rownum = 0;\n    // inlining of macro foreach_set\n    for p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize {\n    // inlining of macro foreach_set_element\n    // inlining of macro LOOP\n    for(i = (p[0] \u0026 0x03ff); i \u003e 0; )                    for(val = p[i], base = --i \u003c\u003c LOGBPI; val != 0; base++, val \u003e\u003e= 1)          if val \u0026 1 {\n        (void) sm_insert(M, rownum, base);\n    }\n    rownum++;\n    }\n\n    sparse_cover = sm_minimum_cover(M, NIL(int), 1, 0);\n    sm_free(M);\n\n    // inlining of macro set_new\n    cover = set_clear(ALLOC(unsigned int, SET_SIZE(A.sf_size)), A.sf_size);\n    sm_foreach_row_element(sparse_cover, pe) {\n    // inlining of macro set_insert\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    (cover[(((pe.col_num) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((pe.col_num) \u0026 (BPI-1)));\n    }\n    sm_row_free(sparse_cover);\n\n    return cover;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,162 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRpmOld.c",
+  "SHA256": "0518af885aae10ec0d8afb9226ce1c0f4f8ef3018c212000d96b4c5980844ae7",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 98,
+        "Column": 5,
+        "ByteOffset": 3669
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 9,
+        "ByteOffset": 5900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Original AIG:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 9,
+        "ByteOffset": 6077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"After PI trimming:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 9,
+        "ByteOffset": 6272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"After PI-2-FF transformation:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 185,
+        "Column": 9,
+        "ByteOffset": 6680
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"After min-area retiming:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 193,
+        "Column": 9,
+        "ByteOffset": 6894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"After FF-2-PI tranformation:\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManDupIn2Ff",
+      "Start": 1317,
+      "End": 2500,
+      "BodyStart": 1362,
+      "Original": "Gia_Man_t * Gia_ManDupIn2Ff( Gia_Man_t * p )\n{\n    Vec_Int_t * vPiOuts;\n    Gia_Man_t * pNew; \n    Gia_Obj_t * pObj;\n    int i;\n    vPiOuts = Vec_IntAlloc( Gia_ManPiNum(p) );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) + 2 * Gia_ManPiNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachPi( p, pObj, i )\n        Vec_IntPush( vPiOuts, Gia_ManAppendCi(pNew) );\n    Gia_ManForEachRo( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    Gia_ManForEachPi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    Gia_ManForEachAnd( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    Gia_ManForEachPo( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManForEachRi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManForEachPi( p, pObj, i )\n        Gia_ManAppendCo( pNew, Vec_IntEntry(vPiOuts, i) );\n    Gia_ManSetRegNum( pNew, Gia_ManPiNum(p) );\n    Vec_IntFree( vPiOuts );\n    return pNew;\n}",
+      "Draft": "func Gia_ManDupIn2Ff(p *Gia_Man_t) *Gia_Man_t {\n    var vPiOuts *Vec_Int_t;\n    var pNew *Gia_Man_t; \n    var pObj *Gia_Obj_t;\n    var i int32;\n    vPiOuts = Vec_IntAlloc( Gia_ManPiNum(p) );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) + 2 * Gia_ManPiNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        Vec_IntPush( vPiOuts, Gia_ManAppendCi(pNew) );\n    }\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        Gia_ManAppendCo( pNew, Vec_IntEntry(vPiOuts, i) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManPiNum(p) );\n    Vec_IntFree( vPiOuts );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManDupFf2In_rec",
+      "Start": 2760,
+      "End": 3125,
+      "BodyStart": 2822,
+      "Original": "int Gia_ManDupFf2In_rec( Gia_Man_t * pNew, Gia_Obj_t * pObj )\n{\n    if ( pObj-\u003eValue != ~0 )\n        return pObj-\u003eValue;\n    assert( Gia_ObjIsAnd(pObj) );\n    Gia_ManDupFf2In_rec( pNew, Gia_ObjFanin0(pObj) );\n    Gia_ManDupFf2In_rec( pNew, Gia_ObjFanin1(pObj) );\n    return pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n}",
+      "Draft": "func Gia_ManDupFf2In_rec(pNew *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    if pObj.Value != ~0 {\n        return pObj.Value; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Gia_ManDupFf2In_rec( pNew, Gia_ObjFanin0(pObj) );\n    Gia_ManDupFf2In_rec( pNew, Gia_ObjFanin1(pObj) );\n    return pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n}"
+    },
+    {
+      "Name": "Gia_ManDupFf2In",
+      "Start": 3385,
+      "End": 4155,
+      "BodyStart": 3445,
+      "Original": "Gia_Man_t * Gia_ManDupFf2In( Gia_Man_t * p, int nFlopsOld )\n{\n    Gia_Man_t * pNew; \n    Gia_Obj_t * pObj;\n    int i;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachRo( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    for ( i = Gia_ManPiNum(p) - nFlopsOld; i \u003c Gia_ManPiNum(p); i++ )\n        Gia_ManPi(p, i)-\u003eValue = Gia_ManAppendCi( pNew );\n    Gia_ManForEachPo( p, pObj, i )\n        Gia_ManDupFf2In_rec( pNew, Gia_ObjFanin0(pObj) );\n    Gia_ManForEachPo( p, pObj, i )\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManSetRegNum( pNew, nFlopsOld );\n    return pNew;\n}",
+      "Draft": "func Gia_ManDupFf2In(p *Gia_Man_t, nFlopsOld int32) *Gia_Man_t {\n    var pNew *Gia_Man_t; \n    var pObj *Gia_Obj_t;\n    var i int32;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    for  i = Gia_ManPiNum(p) - nFlopsOld; i \u003c Gia_ManPiNum(p); i++  {\n        Gia_ManPi(p, i).Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Gia_ManDupFf2In_rec( pNew, Gia_ObjFanin0(pObj) );\n    }\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManSetRegNum( pNew, nFlopsOld );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Abs_RpmPerformOld",
+      "Start": 4444,
+      "End": 5924,
+      "BodyStart": 4505,
+      "Original": "Gia_Man_t * Abs_RpmPerformOld( Gia_Man_t * p, int fVerbose )\n{\n//    extern Aig_Man_t * Saig_ManRetimeMinArea( Aig_Man_t * p, int nMaxIters, int fForwardOnly, int fBackwardOnly, int fInitial, int fVerbose );\n    Aig_Man_t * pMan, * pTemp;\n    Gia_Man_t * pNew, * pTmp;\n    int nFlopsOld = Gia_ManRegNum(p);\n    if ( fVerbose )\n    {\n        printf( \"Original AIG:\\n\" );\n        Gia_ManPrintStats( p, NULL );\n    }\n\n    // perform input trimming\n    pNew = Gia_ManDupTrimmed( p, 1, 0, 0, -1 );\n    if ( fVerbose )\n    {\n        printf( \"After PI trimming:\\n\" );\n        Gia_ManPrintStats( pNew, NULL );\n    }\n    // transform GIA\n    pNew = Gia_ManDupIn2Ff( pTmp = pNew );\n    Gia_ManStop( pTmp );\n    if ( fVerbose )\n    {\n        printf( \"After PI-2-FF transformation:\\n\" );\n        Gia_ManPrintStats( pNew, NULL );\n    }\n\n    // derive AIG\n    pMan = Gia_ManToAigSimple( pNew );\n    Gia_ManStop( pNew );\n    // perform min-reg retiming\n    pMan = Saig_ManRetimeMinArea( pTemp = pMan, 10, 0, 0, 1, 0 );\n    Aig_ManStop( pTemp );\n    // derive GIA\n    pNew = Gia_ManFromAigSimple( pMan );\n    Aig_ManStop( pMan );\n    if ( fVerbose )\n    {\n        printf( \"After min-area retiming:\\n\" );\n        Gia_ManPrintStats( pNew, NULL );\n    }\n\n    // transform back\n    pNew = Gia_ManDupFf2In( pTmp = pNew, nFlopsOld );\n    Gia_ManStop( pTmp );\n    if ( fVerbose )\n    {\n        printf( \"After FF-2-PI tranformation:\\n\" );\n        Gia_ManPrintStats( pNew, NULL );\n    }\n    return pNew;\n}",
+      "Draft": "func Abs_RpmPerformOld(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {\n//    extern Aig_Man_t * Saig_ManRetimeMinArea( Aig_Man_t * p, int nMaxIters, int fForwardOnly, int fBackwardOnly, int fInitial, int fVerbose );\n    var pMan, pTemp *Aig_Man_t;\n    var pNew, pTmp *Gia_Man_t;\n    var nFlopsOld int32  = Gia_ManRegNum(p);\n    if fVerbose != 0 {\n        fmt.Printf(\"Original AIG:\\n\");\n        Gia_ManPrintStats( p, nil );\n    }\n\n    // perform input trimming\n    pNew = Gia_ManDupTrimmed( p, 1, 0, 0, -1 );\n    if fVerbose != 0 {\n        fmt.Printf(\"After PI trimming:\\n\");\n        Gia_ManPrintStats( pNew, nil );\n    }\n    // transform GIA\n    pNew = Gia_ManDupIn2Ff( pTmp = pNew );\n    Gia_ManStop( pTmp );\n    if fVerbose != 0 {\n        fmt.Printf(\"After PI-2-FF transformation:\\n\");\n        Gia_ManPrintStats( pNew, nil );\n    }\n\n    // derive AIG\n    pMan = Gia_ManToAigSimple( pNew );\n    Gia_ManStop( pNew );\n    // perform min-reg retiming\n    pMan = Saig_ManRetimeMinArea( pTemp = pMan, 10, 0, 0, 1, 0 );\n    Aig_ManStop( pTemp );\n    // derive GIA\n    pNew = Gia_ManFromAigSimple( pMan );\n    Aig_ManStop( pMan );\n    if fVerbose != 0 {\n        fmt.Printf(\"After min-area retiming:\\n\");\n        Gia_ManPrintStats( pNew, nil );\n    }\n\n    // transform back\n    pNew = Gia_ManDupFf2In( pTmp = pNew, nFlopsOld );\n    Gia_ManStop( pTmp );\n    if fVerbose != 0 {\n        fmt.Printf(\"After FF-2-PI tranformation:\\n\");\n        Gia_ManPrintStats( pNew, nil );\n    }\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRpmOld.c::Gia_ManDupIn2Ff",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDupIn2Ff",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1317,
+      "End": 2500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRpmOld.c::Gia_ManDupFf2In_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDupFf2In_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2760,
+      "End": 3125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRpmOld.c::Gia_ManDupFf2In",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDupFf2In",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3385,
+      "End": 4155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRpmOld.c::Abs_RpmPerformOld",
+      "Category": "semantic-review",
+      "Symbol": "Abs_RpmPerformOld",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4444,
+      "End": 5924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRpmOld.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6171
+    }
+  ],
+  "Draft": "package abs\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [absRpmOld.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Old min-cut-based reparametrization.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: absRpmOld.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"abs.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Specialized duplication.]\n\n  Description [Replaces registers by PIs/POs and PIs by registers.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDupIn2Ff(p *Gia_Man_t) *Gia_Man_t {\n    var vPiOuts *Vec_Int_t;\n    var pNew *Gia_Man_t; \n    var pObj *Gia_Obj_t;\n    var i int32;\n    vPiOuts = Vec_IntAlloc( Gia_ManPiNum(p) );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) + 2 * Gia_ManPiNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        Vec_IntPush( vPiOuts, Gia_ManAppendCi(pNew) );\n    }\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        Gia_ManAppendCo( pNew, Vec_IntEntry(vPiOuts, i) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManPiNum(p) );\n    Vec_IntFree( vPiOuts );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reverses the above step.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDupFf2In_rec(pNew *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    if pObj.Value != ~0 {\n        return pObj.Value; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Gia_ManDupFf2In_rec( pNew, Gia_ObjFanin0(pObj) );\n    Gia_ManDupFf2In_rec( pNew, Gia_ObjFanin1(pObj) );\n    return pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reverses the above step.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDupFf2In(p *Gia_Man_t, nFlopsOld int32) *Gia_Man_t {\n    var pNew *Gia_Man_t; \n    var pObj *Gia_Obj_t;\n    var i int32;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    for  i = Gia_ManPiNum(p) - nFlopsOld; i \u003c Gia_ManPiNum(p); i++  {\n        Gia_ManPi(p, i).Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Gia_ManDupFf2In_rec( pNew, Gia_ObjFanin0(pObj) );\n    }\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManSetRegNum( pNew, nFlopsOld );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reparameterized to get rid of useless primary inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abs_RpmPerformOld(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {\n//    extern Aig_Man_t * Saig_ManRetimeMinArea( Aig_Man_t * p, int nMaxIters, int fForwardOnly, int fBackwardOnly, int fInitial, int fVerbose );\n    var pMan, pTemp *Aig_Man_t;\n    var pNew, pTmp *Gia_Man_t;\n    var nFlopsOld int32  = Gia_ManRegNum(p);\n    if fVerbose != 0 {\n        fmt.Printf(\"Original AIG:\\n\");\n        Gia_ManPrintStats( p, nil );\n    }\n\n    // perform input trimming\n    pNew = Gia_ManDupTrimmed( p, 1, 0, 0, -1 );\n    if fVerbose != 0 {\n        fmt.Printf(\"After PI trimming:\\n\");\n        Gia_ManPrintStats( pNew, nil );\n    }\n    // transform GIA\n    pNew = Gia_ManDupIn2Ff( pTmp = pNew );\n    Gia_ManStop( pTmp );\n    if fVerbose != 0 {\n        fmt.Printf(\"After PI-2-FF transformation:\\n\");\n        Gia_ManPrintStats( pNew, nil );\n    }\n\n    // derive AIG\n    pMan = Gia_ManToAigSimple( pNew );\n    Gia_ManStop( pNew );\n    // perform min-reg retiming\n    pMan = Saig_ManRetimeMinArea( pTemp = pMan, 10, 0, 0, 1, 0 );\n    Aig_ManStop( pTemp );\n    // derive GIA\n    pNew = Gia_ManFromAigSimple( pMan );\n    Aig_ManStop( pMan );\n    if fVerbose != 0 {\n        fmt.Printf(\"After min-area retiming:\\n\");\n        Gia_ManPrintStats( pNew, nil );\n    }\n\n    // transform back\n    pNew = Gia_ManDupFf2In( pTmp = pNew, nFlopsOld );\n    Gia_ManStop( pTmp );\n    if fVerbose != 0 {\n        fmt.Printf(\"After FF-2-PI tranformation:\\n\");\n        Gia_ManPrintStats( pNew, nil );\n    }\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

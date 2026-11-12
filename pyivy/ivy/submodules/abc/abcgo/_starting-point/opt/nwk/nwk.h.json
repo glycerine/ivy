@@ -1,0 +1,978 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h",
+  "SHA256": "04eeeabe121ee244e9f0acf84214df1b1ce2f881cfae0646e8e6ebf03ddef733",
+  "Functions": [
+    {
+      "Name": "Nwk_ManCiNum",
+      "Start": 5151,
+      "End": 5264,
+      "BodyStart": 5217,
+      "Original": "static inline int         Nwk_ManCiNum( Nwk_Man_t * p )           { return p-\u003enObjs[NWK_OBJ_CI];                }",
+      "Draft": "func Nwk_ManCiNum(p *Nwk_Man_t) int32 { return p.nObjs[NWK_OBJ_CI];                }"
+    },
+    {
+      "Name": "Nwk_ManCoNum",
+      "Start": 5266,
+      "End": 5379,
+      "BodyStart": 5332,
+      "Original": "static inline int         Nwk_ManCoNum( Nwk_Man_t * p )           { return p-\u003enObjs[NWK_OBJ_CO];                }",
+      "Draft": "func Nwk_ManCoNum(p *Nwk_Man_t) int32 { return p.nObjs[NWK_OBJ_CO];                }"
+    },
+    {
+      "Name": "Nwk_ManNodeNum",
+      "Start": 5381,
+      "End": 5494,
+      "BodyStart": 5447,
+      "Original": "static inline int         Nwk_ManNodeNum( Nwk_Man_t * p )         { return p-\u003enObjs[NWK_OBJ_NODE];              }",
+      "Draft": "func Nwk_ManNodeNum(p *Nwk_Man_t) int32 { return p.nObjs[NWK_OBJ_NODE];              }"
+    },
+    {
+      "Name": "Nwk_ManLatchNum",
+      "Start": 5496,
+      "End": 5609,
+      "BodyStart": 5562,
+      "Original": "static inline int         Nwk_ManLatchNum( Nwk_Man_t * p )        { return p-\u003enObjs[NWK_OBJ_LATCH];             }",
+      "Draft": "func Nwk_ManLatchNum(p *Nwk_Man_t) int32 { return p.nObjs[NWK_OBJ_LATCH];             }"
+    },
+    {
+      "Name": "Nwk_ManObjNumMax",
+      "Start": 5611,
+      "End": 5724,
+      "BodyStart": 5677,
+      "Original": "static inline int         Nwk_ManObjNumMax( Nwk_Man_t * p )       { return Vec_PtrSize(p-\u003evObjs);               }",
+      "Draft": "func Nwk_ManObjNumMax(p *Nwk_Man_t) int32 { return Vec_PtrSize(p.vObjs);               }"
+    },
+    {
+      "Name": "Nwk_ManCi",
+      "Start": 5726,
+      "End": 5852,
+      "BodyStart": 5792,
+      "Original": "static inline Nwk_Obj_t * Nwk_ManCi( Nwk_Man_t * p, int i )       { return (Nwk_Obj_t *)Vec_PtrEntry( p-\u003evCis, i );          }",
+      "Draft": "func Nwk_ManCi(p *Nwk_Man_t, i int32) *Nwk_Obj_t { return (Nwk_Obj_t *)Vec_PtrEntry( p.vCis, i );          }"
+    },
+    {
+      "Name": "Nwk_ManCo",
+      "Start": 5854,
+      "End": 5980,
+      "BodyStart": 5920,
+      "Original": "static inline Nwk_Obj_t * Nwk_ManCo( Nwk_Man_t * p, int i )       { return (Nwk_Obj_t *)Vec_PtrEntry( p-\u003evCos, i );          }",
+      "Draft": "func Nwk_ManCo(p *Nwk_Man_t, i int32) *Nwk_Obj_t { return (Nwk_Obj_t *)Vec_PtrEntry( p.vCos, i );          }"
+    },
+    {
+      "Name": "Nwk_ManObj",
+      "Start": 5982,
+      "End": 6108,
+      "BodyStart": 6048,
+      "Original": "static inline Nwk_Obj_t * Nwk_ManObj( Nwk_Man_t * p, int i )      { return (Nwk_Obj_t *)Vec_PtrEntry( p-\u003evObjs, i );         }",
+      "Draft": "func Nwk_ManObj(p *Nwk_Man_t, i int32) *Nwk_Obj_t { return (Nwk_Obj_t *)Vec_PtrEntry( p.vObjs, i );         }"
+    },
+    {
+      "Name": "Nwk_ObjId",
+      "Start": 6111,
+      "End": 6224,
+      "BodyStart": 6177,
+      "Original": "static inline int         Nwk_ObjId( Nwk_Obj_t * p )              { return p-\u003eId;                               }",
+      "Draft": "func Nwk_ObjId(p *Nwk_Obj_t) int32 { return p.Id;                               }"
+    },
+    {
+      "Name": "Nwk_ObjPioNum",
+      "Start": 6226,
+      "End": 6339,
+      "BodyStart": 6292,
+      "Original": "static inline int         Nwk_ObjPioNum( Nwk_Obj_t * p )          { return p-\u003ePioId;                            }",
+      "Draft": "func Nwk_ObjPioNum(p *Nwk_Obj_t) int32 { return p.PioId;                            }"
+    },
+    {
+      "Name": "Nwk_ObjFaninNum",
+      "Start": 6341,
+      "End": 6454,
+      "BodyStart": 6407,
+      "Original": "static inline int         Nwk_ObjFaninNum( Nwk_Obj_t * p )        { return p-\u003enFanins;                          }",
+      "Draft": "func Nwk_ObjFaninNum(p *Nwk_Obj_t) int32 { return p.nFanins;                          }"
+    },
+    {
+      "Name": "Nwk_ObjFanoutNum",
+      "Start": 6456,
+      "End": 6569,
+      "BodyStart": 6522,
+      "Original": "static inline int         Nwk_ObjFanoutNum( Nwk_Obj_t * p )       { return p-\u003enFanouts;                         }",
+      "Draft": "func Nwk_ObjFanoutNum(p *Nwk_Obj_t) int32 { return p.nFanouts;                         }"
+    },
+    {
+      "Name": "Nwk_ObjFanin0",
+      "Start": 6572,
+      "End": 6685,
+      "BodyStart": 6638,
+      "Original": "static inline Nwk_Obj_t * Nwk_ObjFanin0( Nwk_Obj_t * p )          { return p-\u003epFanio[0];                        }",
+      "Draft": "func Nwk_ObjFanin0(p *Nwk_Obj_t) *Nwk_Obj_t { return p.pFanio[0];                        }"
+    },
+    {
+      "Name": "Nwk_ObjFanout0",
+      "Start": 6687,
+      "End": 6800,
+      "BodyStart": 6753,
+      "Original": "static inline Nwk_Obj_t * Nwk_ObjFanout0( Nwk_Obj_t * p )         { return p-\u003epFanio[p-\u003enFanins];               }",
+      "Draft": "func Nwk_ObjFanout0(p *Nwk_Obj_t) *Nwk_Obj_t { return p.pFanio[p.nFanins];               }"
+    },
+    {
+      "Name": "Nwk_ObjFanin",
+      "Start": 6802,
+      "End": 6915,
+      "BodyStart": 6868,
+      "Original": "static inline Nwk_Obj_t * Nwk_ObjFanin( Nwk_Obj_t * p, int i )    { return p-\u003epFanio[i];                        }",
+      "Draft": "func Nwk_ObjFanin(p *Nwk_Obj_t, i int32) *Nwk_Obj_t { return p.pFanio[i];                        }"
+    },
+    {
+      "Name": "Nwk_ObjFanout",
+      "Start": 6917,
+      "End": 7030,
+      "BodyStart": 6983,
+      "Original": "static inline Nwk_Obj_t * Nwk_ObjFanout( Nwk_Obj_t * p, int i )   { return p-\u003epFanio[p-\u003enFanins+1];             }",
+      "Draft": "func Nwk_ObjFanout(p *Nwk_Obj_t, i int32) *Nwk_Obj_t { return p.pFanio[p.nFanins+1];             }"
+    },
+    {
+      "Name": "Nwk_ObjIsNone",
+      "Start": 7033,
+      "End": 7146,
+      "BodyStart": 7099,
+      "Original": "static inline int         Nwk_ObjIsNone( Nwk_Obj_t * p )          { return p-\u003eType == NWK_OBJ_NONE;             }",
+      "Draft": "func Nwk_ObjIsNone(p *Nwk_Obj_t) int32 { return p.Type == NWK_OBJ_NONE;             }"
+    },
+    {
+      "Name": "Nwk_ObjIsCi",
+      "Start": 7148,
+      "End": 7261,
+      "BodyStart": 7214,
+      "Original": "static inline int         Nwk_ObjIsCi( Nwk_Obj_t * p )            { return p-\u003eType == NWK_OBJ_CI;               }",
+      "Draft": "func Nwk_ObjIsCi(p *Nwk_Obj_t) int32 { return p.Type == NWK_OBJ_CI;               }"
+    },
+    {
+      "Name": "Nwk_ObjIsCo",
+      "Start": 7263,
+      "End": 7376,
+      "BodyStart": 7329,
+      "Original": "static inline int         Nwk_ObjIsCo( Nwk_Obj_t * p )            { return p-\u003eType == NWK_OBJ_CO;               }",
+      "Draft": "func Nwk_ObjIsCo(p *Nwk_Obj_t) int32 { return p.Type == NWK_OBJ_CO;               }"
+    },
+    {
+      "Name": "Nwk_ObjIsNode",
+      "Start": 7378,
+      "End": 7491,
+      "BodyStart": 7444,
+      "Original": "static inline int         Nwk_ObjIsNode( Nwk_Obj_t * p )          { return p-\u003eType == NWK_OBJ_NODE;             }",
+      "Draft": "func Nwk_ObjIsNode(p *Nwk_Obj_t) int32 { return p.Type == NWK_OBJ_NODE;             }"
+    },
+    {
+      "Name": "Nwk_ObjIsLatch",
+      "Start": 7493,
+      "End": 7606,
+      "BodyStart": 7559,
+      "Original": "static inline int         Nwk_ObjIsLatch( Nwk_Obj_t * p )         { return p-\u003eType == NWK_OBJ_LATCH;            }",
+      "Draft": "func Nwk_ObjIsLatch(p *Nwk_Obj_t) int32 { return p.Type == NWK_OBJ_LATCH;            }"
+    },
+    {
+      "Name": "Nwk_ObjIsPi",
+      "Start": 7608,
+      "End": 7785,
+      "BodyStart": 7674,
+      "Original": "static inline int         Nwk_ObjIsPi( Nwk_Obj_t * p )            { return Nwk_ObjIsCi(p) \u0026\u0026 (p-\u003epMan-\u003epManTime == NULL || Tim_ManBoxForCi(p-\u003epMan-\u003epManTime, p-\u003ePioId) == -1); }",
+      "Draft": "func Nwk_ObjIsPi(p *Nwk_Obj_t) int32 { return Nwk_ObjIsCi(p) \u0026\u0026 (p.pMan.pManTime == nil || Tim_ManBoxForCi(p.pMan.pManTime, p.PioId) == -1); }"
+    },
+    {
+      "Name": "Nwk_ObjIsPo",
+      "Start": 7787,
+      "End": 7965,
+      "BodyStart": 7853,
+      "Original": "static inline int         Nwk_ObjIsPo( Nwk_Obj_t * p )            { return Nwk_ObjIsCo(p) \u0026\u0026 (p-\u003epMan-\u003epManTime == NULL || Tim_ManBoxForCo(p-\u003epMan-\u003epManTime, p-\u003ePioId) == -1);  }",
+      "Draft": "func Nwk_ObjIsPo(p *Nwk_Obj_t) int32 { return Nwk_ObjIsCo(p) \u0026\u0026 (p.pMan.pManTime == nil || Tim_ManBoxForCo(p.pMan.pManTime, p.PioId) == -1);  }"
+    },
+    {
+      "Name": "Nwk_ObjIsLi",
+      "Start": 7966,
+      "End": 8123,
+      "BodyStart": 8032,
+      "Original": "static inline int         Nwk_ObjIsLi( Nwk_Obj_t * p )            { return p-\u003epMan-\u003enTruePos \u0026\u0026 Nwk_ObjIsCo(p) \u0026\u0026 (int)p-\u003ePioId \u003e= p-\u003epMan-\u003enTruePos;       }",
+      "Draft": "func Nwk_ObjIsLi(p *Nwk_Obj_t) int32 { return p.pMan.nTruePos \u0026\u0026 Nwk_ObjIsCo(p) \u0026\u0026 int32(p.PioId) \u003e= p.pMan.nTruePos;       }"
+    },
+    {
+      "Name": "Nwk_ObjIsLo",
+      "Start": 8125,
+      "End": 8282,
+      "BodyStart": 8191,
+      "Original": "static inline int         Nwk_ObjIsLo( Nwk_Obj_t * p )            { return p-\u003epMan-\u003enTruePis \u0026\u0026 Nwk_ObjIsCi(p) \u0026\u0026 (int)p-\u003ePioId \u003e= p-\u003epMan-\u003enTruePis;       }",
+      "Draft": "func Nwk_ObjIsLo(p *Nwk_Obj_t) int32 { return p.pMan.nTruePis \u0026\u0026 Nwk_ObjIsCi(p) \u0026\u0026 int32(p.PioId) \u003e= p.pMan.nTruePis;       }"
+    },
+    {
+      "Name": "Nwk_ObjArrival",
+      "Start": 8285,
+      "End": 8398,
+      "BodyStart": 8362,
+      "Original": "static inline float       Nwk_ObjArrival( Nwk_Obj_t * pObj )                 { return pObj-\u003etArrival;           }",
+      "Draft": "func Nwk_ObjArrival(pObj *Nwk_Obj_t) float32 { return pObj.tArrival;           }"
+    },
+    {
+      "Name": "Nwk_ObjRequired",
+      "Start": 8399,
+      "End": 8512,
+      "BodyStart": 8476,
+      "Original": "static inline float       Nwk_ObjRequired( Nwk_Obj_t * pObj )                { return pObj-\u003etRequired;          }",
+      "Draft": "func Nwk_ObjRequired(pObj *Nwk_Obj_t) float32 { return pObj.tRequired;          }"
+    },
+    {
+      "Name": "Nwk_ObjSlack",
+      "Start": 8513,
+      "End": 8626,
+      "BodyStart": 8590,
+      "Original": "static inline float       Nwk_ObjSlack( Nwk_Obj_t * pObj )                   { return pObj-\u003etSlack;             }",
+      "Draft": "func Nwk_ObjSlack(pObj *Nwk_Obj_t) float32 { return pObj.tSlack;             }"
+    },
+    {
+      "Name": "Nwk_ObjSetArrival",
+      "Start": 8627,
+      "End": 8740,
+      "BodyStart": 8704,
+      "Original": "static inline void        Nwk_ObjSetArrival( Nwk_Obj_t * pObj, float Time )  { pObj-\u003etArrival   = Time;         }",
+      "Draft": "func Nwk_ObjSetArrival(pObj *Nwk_Obj_t, Time float32) { pObj.tArrival   = Time;         }"
+    },
+    {
+      "Name": "Nwk_ObjSetRequired",
+      "Start": 8741,
+      "End": 8854,
+      "BodyStart": 8818,
+      "Original": "static inline void        Nwk_ObjSetRequired( Nwk_Obj_t * pObj, float Time ) { pObj-\u003etRequired  = Time;         }",
+      "Draft": "func Nwk_ObjSetRequired(pObj *Nwk_Obj_t, Time float32) { pObj.tRequired  = Time;         }"
+    },
+    {
+      "Name": "Nwk_ObjSetSlack",
+      "Start": 8855,
+      "End": 8968,
+      "BodyStart": 8932,
+      "Original": "static inline void        Nwk_ObjSetSlack( Nwk_Obj_t * pObj, float Time )    { pObj-\u003etSlack     = Time;         }",
+      "Draft": "func Nwk_ObjSetSlack(pObj *Nwk_Obj_t, Time float32) { pObj.tSlack     = Time;         }"
+    },
+    {
+      "Name": "Nwk_ObjLevel",
+      "Start": 8970,
+      "End": 9083,
+      "BodyStart": 9047,
+      "Original": "static inline int         Nwk_ObjLevel( Nwk_Obj_t * pObj )                   { return pObj-\u003eLevel;              }",
+      "Draft": "func Nwk_ObjLevel(pObj *Nwk_Obj_t) int32 { return pObj.Level;              }"
+    },
+    {
+      "Name": "Nwk_ObjSetLevel",
+      "Start": 9084,
+      "End": 9197,
+      "BodyStart": 9161,
+      "Original": "static inline void        Nwk_ObjSetLevel( Nwk_Obj_t * pObj, int Level )     { pObj-\u003eLevel = Level;             }",
+      "Draft": "func Nwk_ObjSetLevel(pObj *Nwk_Obj_t, Level int32) { pObj.Level = Level;             }"
+    },
+    {
+      "Name": "Nwk_ObjSetTravId",
+      "Start": 9199,
+      "End": 9328,
+      "BodyStart": 9276,
+      "Original": "static inline void        Nwk_ObjSetTravId( Nwk_Obj_t * pObj, int TravId )   { pObj-\u003eTravId = TravId;                           }",
+      "Draft": "func Nwk_ObjSetTravId(pObj *Nwk_Obj_t, TravId int32) { pObj.TravId = TravId;                           }"
+    },
+    {
+      "Name": "Nwk_ObjSetTravIdCurrent",
+      "Start": 9329,
+      "End": 9458,
+      "BodyStart": 9406,
+      "Original": "static inline void        Nwk_ObjSetTravIdCurrent( Nwk_Obj_t * pObj )        { pObj-\u003eTravId = pObj-\u003epMan-\u003enTravIds;             }",
+      "Draft": "func Nwk_ObjSetTravIdCurrent(pObj *Nwk_Obj_t) { pObj.TravId = pObj.pMan.nTravIds;             }"
+    },
+    {
+      "Name": "Nwk_ObjSetTravIdPrevious",
+      "Start": 9459,
+      "End": 9588,
+      "BodyStart": 9536,
+      "Original": "static inline void        Nwk_ObjSetTravIdPrevious( Nwk_Obj_t * pObj )       { pObj-\u003eTravId = pObj-\u003epMan-\u003enTravIds - 1;         }",
+      "Draft": "func Nwk_ObjSetTravIdPrevious(pObj *Nwk_Obj_t) { pObj.TravId = pObj.pMan.nTravIds - 1;         }"
+    },
+    {
+      "Name": "Nwk_ObjIsTravIdCurrent",
+      "Start": 9589,
+      "End": 9718,
+      "BodyStart": 9666,
+      "Original": "static inline int         Nwk_ObjIsTravIdCurrent( Nwk_Obj_t * pObj )         { return pObj-\u003eTravId == pObj-\u003epMan-\u003enTravIds;     }",
+      "Draft": "func Nwk_ObjIsTravIdCurrent(pObj *Nwk_Obj_t) int32 { return pObj.TravId == pObj.pMan.nTravIds;     }"
+    },
+    {
+      "Name": "Nwk_ObjIsTravIdPrevious",
+      "Start": 9719,
+      "End": 9848,
+      "BodyStart": 9796,
+      "Original": "static inline int         Nwk_ObjIsTravIdPrevious( Nwk_Obj_t * pObj )        { return pObj-\u003eTravId == pObj-\u003epMan-\u003enTravIds - 1; }",
+      "Draft": "func Nwk_ObjIsTravIdPrevious(pObj *Nwk_Obj_t) int32 { return pObj.TravId == pObj.pMan.nTravIds - 1; }"
+    },
+    {
+      "Name": "Nwk_ManTimeEqual",
+      "Start": 9850,
+      "End": 9974,
+      "BodyStart": 9927,
+      "Original": "static inline int         Nwk_ManTimeEqual( float f1, float f2, float Eps )  { return (f1 \u003c f2 + Eps) \u0026\u0026 (f2 \u003c f1 + Eps);  }",
+      "Draft": "func Nwk_ManTimeEqual(f1 float32, f2 float32, Eps float32) int32 { return (f1 \u003c f2 + Eps) \u0026\u0026 (f2 \u003c f1 + Eps);  }"
+    },
+    {
+      "Name": "Nwk_ManTimeLess",
+      "Start": 9975,
+      "End": 10099,
+      "BodyStart": 10052,
+      "Original": "static inline int         Nwk_ManTimeLess( float f1, float f2, float Eps )   { return (f1 \u003c f2 + Eps);                     }",
+      "Draft": "func Nwk_ManTimeLess(f1 float32, f2 float32, Eps float32) int32 { return (f1 \u003c f2 + Eps);                     }"
+    },
+    {
+      "Name": "Nwk_ManTimeMore",
+      "Start": 10100,
+      "End": 10224,
+      "BodyStart": 10177,
+      "Original": "static inline int         Nwk_ManTimeMore( float f1, float f2, float Eps )   { return (f1 + Eps \u003e f2);                     }",
+      "Draft": "func Nwk_ManTimeMore(f1 float32, f2 float32, Eps float32) int32 { return (f1 + Eps \u003e f2);                     }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::struct::Nwk_Man_t_::// the objects in the topological order\n    int                nObjs[NWK_OBJ_VOID];",
+      "Category": "struct-field-review",
+      "Symbol": "Nwk_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2311,
+      "End": 2404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::struct::Nwk_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Nwk_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1907,
+      "End": 3310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::struct::Nwk_Obj_t_::// temporary pointer\n    union {\n        void *         pNext;          // temporary pointer\n        int            iTemp;          // temporary number\n    };",
+      "Category": "struct-field-review",
+      "Symbol": "Nwk_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3473,
+      "End": 3641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::struct::Nwk_Obj_t_::// node information\n    unsigned           Type     :  3;",
+      "Category": "struct-field-review",
+      "Symbol": "Nwk_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3641,
+      "End": 3703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::struct::Nwk_Obj_t_::// object type\n    unsigned           fInvert  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Nwk_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3703,
+      "End": 3757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::struct::Nwk_Obj_t_::// complemented attribute\n    unsigned           MarkA    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Nwk_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3757,
+      "End": 3822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::struct::Nwk_Obj_t_::// temporary mark  \n    unsigned           MarkB    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Nwk_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3822,
+      "End": 3881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::struct::Nwk_Obj_t_::// temporary mark\n    unsigned           MarkC    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Nwk_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3881,
+      "End": 3938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::struct::Nwk_Obj_t_::// temporary mark\n    unsigned           PioId    : 25;",
+      "Category": "struct-field-review",
+      "Symbol": "Nwk_Obj_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3938,
+      "End": 3995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::struct::Nwk_Obj_t_",
+      "Category": "struct-review",
+      "Symbol": "Nwk_Obj_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3312,
+      "End": 4708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::mechanical::enum::1519",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1519,
+      "End": 1523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::mechanical::union::3508",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 3508,
+      "End": 3513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::pointer-cast::5801",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5801,
+      "End": 5814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::pointer-cast::5929",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5929,
+      "End": 5942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::pointer-cast::6057",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6057,
+      "End": 6070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::macro::Nwk_ManForEachCi",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ManForEachCi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 10446,
+      "End": 10579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::macro::Nwk_ManForEachCo",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ManForEachCo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 10580,
+      "End": 10713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::macro::Nwk_ManForEachPi",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ManForEachPi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 10714,
+      "End": 10922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::macro::Nwk_ManForEachPo",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ManForEachPo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 10923,
+      "End": 11131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::macro::Nwk_ManForEachObj",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ManForEachObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11132,
+      "End": 11356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::macro::Nwk_ManForEachNode",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ManForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11357,
+      "End": 11607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::macro::Nwk_ManForEachLatch",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ManForEachLatch",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11608,
+      "End": 11859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::macro::Nwk_ObjForEachFanin",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11861,
+      "End": 12027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::macro::Nwk_ObjForEachFanout",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12028,
+      "End": 12212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::macro::Nwk_ManForEachPiSeq",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ManForEachPiSeq",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12238,
+      "End": 12399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::macro::Nwk_ManForEachPoSeq",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ManForEachPoSeq",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12400,
+      "End": 12561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::macro::Nwk_ManForEachLoSeq",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ManForEachLoSeq",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12562,
+      "End": 12762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::macro::Nwk_ManForEachLiSeq",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ManForEachLiSeq",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12763,
+      "End": 12963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::macro::Nwk_ManForEachLiLoSeq",
+      "Category": "macro-review",
+      "Symbol": "Nwk_ManForEachLiLoSeq",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12964,
+      "End": 13212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ManCiNum",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5151,
+      "End": 5264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ManCoNum",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5266,
+      "End": 5379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ManNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5381,
+      "End": 5494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ManLatchNum",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManLatchNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5496,
+      "End": 5609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ManObjNumMax",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManObjNumMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5611,
+      "End": 5724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ManCi",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5726,
+      "End": 5852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ManCo",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5854,
+      "End": 5980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ManObj",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5982,
+      "End": 6108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjId",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6111,
+      "End": 6224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjPioNum",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjPioNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6226,
+      "End": 6339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjFaninNum",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjFaninNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6341,
+      "End": 6454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjFanoutNum",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjFanoutNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6456,
+      "End": 6569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjFanin0",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjFanin0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6572,
+      "End": 6685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjFanout0",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjFanout0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6687,
+      "End": 6800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjFanin",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6802,
+      "End": 6915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjFanout",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6917,
+      "End": 7030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjIsNone",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjIsNone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7033,
+      "End": 7146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjIsCi",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjIsCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7148,
+      "End": 7261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjIsCo",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjIsCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7263,
+      "End": 7376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjIsNode",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjIsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7378,
+      "End": 7491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjIsLatch",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjIsLatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7493,
+      "End": 7606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjIsPi",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjIsPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7608,
+      "End": 7785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjIsPo",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjIsPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7787,
+      "End": 7965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjIsLi",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjIsLi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7966,
+      "End": 8123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjIsLo",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjIsLo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8125,
+      "End": 8282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjArrival",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8285,
+      "End": 8398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjRequired",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8399,
+      "End": 8512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjSlack",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjSlack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8513,
+      "End": 8626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjSetArrival",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjSetArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8627,
+      "End": 8740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjSetRequired",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjSetRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8741,
+      "End": 8854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjSetSlack",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjSetSlack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8855,
+      "End": 8968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjLevel",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8970,
+      "End": 9083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjSetLevel",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjSetLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9084,
+      "End": 9197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjSetTravId",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjSetTravId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9199,
+      "End": 9328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjSetTravIdCurrent",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjSetTravIdCurrent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9329,
+      "End": 9458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjSetTravIdPrevious",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjSetTravIdPrevious",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9459,
+      "End": 9588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjIsTravIdCurrent",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjIsTravIdCurrent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9589,
+      "End": 9718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ObjIsTravIdPrevious",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjIsTravIdPrevious",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9719,
+      "End": 9848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ManTimeEqual",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManTimeEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9850,
+      "End": 9974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ManTimeLess",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManTimeLess",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9975,
+      "End": 10099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::Nwk_ManTimeMore",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManTimeMore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10100,
+      "End": 10224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwk.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19888
+    }
+  ],
+  "Draft": "package nwk\n\n/**CFile****************************************************************\n\n  FileName    [nwk.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Logic network representation.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nwk.h,v 1.1 2008/05/14 22:13:09 wudenni Exp $]\n\n***********************************************************************/\n \n\n\n\n \n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/aig/aig.h\"\n//#include \"aig/hop/hop.h\"\n//#include \"misc/tim/tim.h\"\n//#include \"map/if/if.h\"\n//#include \"bool/bdc/bdc.h\"\n\n//#include \"proof/fra/fra.h\"\n//#include \"proof/ssw/ssw.h\"\n//#include \"ntlnwk.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Nwk_Obj_t =    Nwk_Obj_t_;\n\n// object types\n type Nwk_Type_t int32\nconst ( \n    NWK_OBJ_NONE Nwk_Type_t = iota\n                      // 0: non-existant object\n    NWK_OBJ_CI\n                        // 1: combinational input\n    NWK_OBJ_CO\n                        // 2: combinational output\n    NWK_OBJ_NODE\n                      // 3: logic node\n    NWK_OBJ_LATCH\n                     // 4: register\n    NWK_OBJ_VOID                       // 5: unused object\n\n)\n\n \n\ntype Nwk_Man_t_ struct {\n    // models of this design\n    pName              string;          // the name of this design\n    pSpec              string;          // the name of input file\n    // node representation\n    vCis         *Vec_Ptr_t;           // the primary inputs of the extracted part\n    vCos         *Vec_Ptr_t;           // the primary outputs of the extracted part \n    vObjs         *Vec_Ptr_t;          // the objects in the topological order\n    nObjs [NWK_OBJ_VOID]int32; // counter of objects of each type\n    nFanioPlus                int32;     // the number of extra fanins/fanouts alloc by default\n    // functionality, timing, memory, etc\n    pManHop         *Hop_Man_t;        // the functionality representation\n    pManTime         *Tim_Man_t;       // the timing manager\n    pLutLib          *If_LibLut_t;        // the LUT library\n    pMemObjs      *Aig_MmFlex_t;       // memory for objects\n    vTemp         *Vec_Ptr_t;          // array used for incremental updates\n    nTravIds                int32;       // the counter of traversal IDs\n    nRealloced                int32;     // the number of realloced nodes\n    // sequential information\n    nLatches                int32;       // the total number of latches \n    nTruePis                int32;       // the number of true primary inputs\n    nTruePos                int32;       // the number of true primary outputs\n}\n\ntype Nwk_Obj_t_ struct {\n    pMan         *Nwk_Man_t;           // the manager  \n    pFunc         *Hop_Obj_t;          // functionality\n    pCopy              any;          // temporary pointer\n    union {\n        void *         pNext;          // temporary pointer\n        int            iTemp;          // temporary number\n    };\n    // node information\n    Type uint32; /* C bitfield: 3 bits; review packing and truncation */  // object type\n    fInvert uint32; /* C bitfield: 1 bits; review packing and truncation */  // complemented attribute\n    MarkA uint32; /* C bitfield: 1 bits; review packing and truncation */  // temporary mark  \n    MarkB uint32; /* C bitfield: 1 bits; review packing and truncation */  // temporary mark\n    MarkC uint32; /* C bitfield: 1 bits; review packing and truncation */  // temporary mark\n    PioId uint32; /* C bitfield: 25 bits; review packing and truncation */  // number of this node in the PI/PO list\n    Id                int32;             // unique ID\n    TravId                int32;         // traversal ID\n    // timing information\n    Level                int32;          // the topological level\n    tArrival              float32;       // the arrival time\n    tRequired              float32;      // the required time\n    tSlack              float32;         // the slack\n    // fanin/fanout representation\n    nFanins                int32;        // the number of fanins\n    nFanouts                int32;       // the number of fanouts\n    nFanioAlloc                int32;    // the number of allocated fanins/fanouts\n    pFanio        **Nwk_Obj_t;         // fanins/fanouts\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                      INLINED FUNCTIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Nwk_ManCiNum(p *Nwk_Man_t) int32 { return p.nObjs[NWK_OBJ_CI];                } \nfunc Nwk_ManCoNum(p *Nwk_Man_t) int32 { return p.nObjs[NWK_OBJ_CO];                } \nfunc Nwk_ManNodeNum(p *Nwk_Man_t) int32 { return p.nObjs[NWK_OBJ_NODE];              } \nfunc Nwk_ManLatchNum(p *Nwk_Man_t) int32 { return p.nObjs[NWK_OBJ_LATCH];             } \nfunc Nwk_ManObjNumMax(p *Nwk_Man_t) int32 { return Vec_PtrSize(p.vObjs);               }\n\nfunc Nwk_ManCi(p *Nwk_Man_t, i int32) *Nwk_Obj_t { return (Nwk_Obj_t *)Vec_PtrEntry( p.vCis, i );          } \nfunc Nwk_ManCo(p *Nwk_Man_t, i int32) *Nwk_Obj_t { return (Nwk_Obj_t *)Vec_PtrEntry( p.vCos, i );          } \nfunc Nwk_ManObj(p *Nwk_Man_t, i int32) *Nwk_Obj_t { return (Nwk_Obj_t *)Vec_PtrEntry( p.vObjs, i );         } \n\nfunc Nwk_ObjId(p *Nwk_Obj_t) int32 { return p.Id;                               } \nfunc Nwk_ObjPioNum(p *Nwk_Obj_t) int32 { return p.PioId;                            } \nfunc Nwk_ObjFaninNum(p *Nwk_Obj_t) int32 { return p.nFanins;                          } \nfunc Nwk_ObjFanoutNum(p *Nwk_Obj_t) int32 { return p.nFanouts;                         } \n\nfunc Nwk_ObjFanin0(p *Nwk_Obj_t) *Nwk_Obj_t { return p.pFanio[0];                        } \nfunc Nwk_ObjFanout0(p *Nwk_Obj_t) *Nwk_Obj_t { return p.pFanio[p.nFanins];               } \nfunc Nwk_ObjFanin(p *Nwk_Obj_t, i int32) *Nwk_Obj_t { return p.pFanio[i];                        } \nfunc Nwk_ObjFanout(p *Nwk_Obj_t, i int32) *Nwk_Obj_t { return p.pFanio[p.nFanins+1];             } \n\nfunc Nwk_ObjIsNone(p *Nwk_Obj_t) int32 { return p.Type == NWK_OBJ_NONE;             } \nfunc Nwk_ObjIsCi(p *Nwk_Obj_t) int32 { return p.Type == NWK_OBJ_CI;               } \nfunc Nwk_ObjIsCo(p *Nwk_Obj_t) int32 { return p.Type == NWK_OBJ_CO;               } \nfunc Nwk_ObjIsNode(p *Nwk_Obj_t) int32 { return p.Type == NWK_OBJ_NODE;             } \nfunc Nwk_ObjIsLatch(p *Nwk_Obj_t) int32 { return p.Type == NWK_OBJ_LATCH;            } \nfunc Nwk_ObjIsPi(p *Nwk_Obj_t) int32 { return Nwk_ObjIsCi(p) \u0026\u0026 (p.pMan.pManTime == nil || Tim_ManBoxForCi(p.pMan.pManTime, p.PioId) == -1); } \nfunc Nwk_ObjIsPo(p *Nwk_Obj_t) int32 { return Nwk_ObjIsCo(p) \u0026\u0026 (p.pMan.pManTime == nil || Tim_ManBoxForCo(p.pMan.pManTime, p.PioId) == -1);  }\nfunc Nwk_ObjIsLi(p *Nwk_Obj_t) int32 { return p.pMan.nTruePos \u0026\u0026 Nwk_ObjIsCo(p) \u0026\u0026 int32(p.PioId) \u003e= p.pMan.nTruePos;       } \nfunc Nwk_ObjIsLo(p *Nwk_Obj_t) int32 { return p.pMan.nTruePis \u0026\u0026 Nwk_ObjIsCi(p) \u0026\u0026 int32(p.PioId) \u003e= p.pMan.nTruePis;       } \n\nfunc Nwk_ObjArrival(pObj *Nwk_Obj_t) float32 { return pObj.tArrival;           }\nfunc Nwk_ObjRequired(pObj *Nwk_Obj_t) float32 { return pObj.tRequired;          }\nfunc Nwk_ObjSlack(pObj *Nwk_Obj_t) float32 { return pObj.tSlack;             }\nfunc Nwk_ObjSetArrival(pObj *Nwk_Obj_t, Time float32) { pObj.tArrival   = Time;         }\nfunc Nwk_ObjSetRequired(pObj *Nwk_Obj_t, Time float32) { pObj.tRequired  = Time;         }\nfunc Nwk_ObjSetSlack(pObj *Nwk_Obj_t, Time float32) { pObj.tSlack     = Time;         }\n\nfunc Nwk_ObjLevel(pObj *Nwk_Obj_t) int32 { return pObj.Level;              }\nfunc Nwk_ObjSetLevel(pObj *Nwk_Obj_t, Level int32) { pObj.Level = Level;             }\n\nfunc Nwk_ObjSetTravId(pObj *Nwk_Obj_t, TravId int32) { pObj.TravId = TravId;                           }\nfunc Nwk_ObjSetTravIdCurrent(pObj *Nwk_Obj_t) { pObj.TravId = pObj.pMan.nTravIds;             }\nfunc Nwk_ObjSetTravIdPrevious(pObj *Nwk_Obj_t) { pObj.TravId = pObj.pMan.nTravIds - 1;         }\nfunc Nwk_ObjIsTravIdCurrent(pObj *Nwk_Obj_t) int32 { return pObj.TravId == pObj.pMan.nTravIds;     }\nfunc Nwk_ObjIsTravIdPrevious(pObj *Nwk_Obj_t) int32 { return pObj.TravId == pObj.pMan.nTravIds - 1; }\n\nfunc Nwk_ManTimeEqual(f1 float32, f2 float32, Eps float32) int32 { return (f1 \u003c f2 + Eps) \u0026\u0026 (f2 \u003c f1 + Eps);  }\nfunc Nwk_ManTimeLess(f1 float32, f2 float32, Eps float32) int32 { return (f1 \u003c f2 + Eps);                     }\nfunc Nwk_ManTimeMore(f1 float32, f2 float32, Eps float32) int32 { return (f1 + Eps \u003e f2);                     }\n\n////////////////////////////////////////////////////////////////////////\n///                         ITERATORS                                ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define Nwk_ManForEachCi( p, pObj, i )                                     \\\n//     Vec_PtrForEachEntry( Nwk_Obj_t *, p-\u003evCis, pObj, i )\n\n// Original macro:\n// #define Nwk_ManForEachCo( p, pObj, i )                                     \\\n//     Vec_PtrForEachEntry( Nwk_Obj_t *, p-\u003evCos, pObj, i )\n\n// Original macro:\n// #define Nwk_ManForEachPi( p, pObj, i )                                     \\\n//     Vec_PtrForEachEntry( Nwk_Obj_t *, p-\u003evCis, pObj, i )                                \\\n//         if ( !Nwk_ObjIsPi(pObj) ) {} else\n\n// Original macro:\n// #define Nwk_ManForEachPo( p, pObj, i )                                     \\\n//     Vec_PtrForEachEntry( Nwk_Obj_t *, p-\u003evCos, pObj, i )                                \\\n//         if ( !Nwk_ObjIsPo(pObj) ) {} else\n\n// Original macro:\n// #define Nwk_ManForEachObj( p, pObj, i )                                    \\\n//     for ( i = 0; (i \u003c Vec_PtrSize(p-\u003evObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(p-\u003evObjs, i)), 1); i++ ) \\\n//         if ( pObj == NULL ) {} else\n\n// Original macro:\n// #define Nwk_ManForEachNode( p, pObj, i )                                   \\\n//     for ( i = 0; (i \u003c Vec_PtrSize(p-\u003evObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(p-\u003evObjs, i)), 1); i++ ) \\\n//         if ( (pObj) == NULL || !Nwk_ObjIsNode(pObj) ) {} else\n\n// Original macro:\n// #define Nwk_ManForEachLatch( p, pObj, i )                                  \\\n//     for ( i = 0; (i \u003c Vec_PtrSize(p-\u003evObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(p-\u003evObjs, i)), 1); i++ ) \\\n//         if ( (pObj) == NULL || !Nwk_ObjIsLatch(pObj) ) {} else\n\n\n// Original macro:\n// #define Nwk_ObjForEachFanin( pObj, pFanin, i )                                  \\\n//     for ( i = 0; (i \u003c (int)(pObj)-\u003enFanins) \u0026\u0026 ((pFanin) = (pObj)-\u003epFanio[i]); i++ )\n\n// Original macro:\n// #define Nwk_ObjForEachFanout( pObj, pFanout, i )                                \\\n//     for ( i = 0; (i \u003c (int)(pObj)-\u003enFanouts) \u0026\u0026 ((pFanout) = (pObj)-\u003epFanio[(pObj)-\u003enFanins+i]); i++ )\n\n\n// sequential iterators\n// Original macro:\n// #define Nwk_ManForEachPiSeq( p, pObj, i )                                           \\\n//     Vec_PtrForEachEntryStop( Nwk_Obj_t *, p-\u003evCis, pObj, i, (p)-\u003enTruePis )\n\n// Original macro:\n// #define Nwk_ManForEachPoSeq( p, pObj, i )                                           \\\n//     Vec_PtrForEachEntryStop( Nwk_Obj_t *, p-\u003evCos, pObj, i, (p)-\u003enTruePos )\n\n// Original macro:\n// #define Nwk_ManForEachLoSeq( p, pObj, i )                                           \\\n//     for ( i = 0; (i \u003c (p)-\u003enLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(p-\u003evCis, i+(p)-\u003enTruePis)), 1); i++ )\n\n// Original macro:\n// #define Nwk_ManForEachLiSeq( p, pObj, i )                                           \\\n//     for ( i = 0; (i \u003c (p)-\u003enLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(p-\u003evCos, i+(p)-\u003enTruePos)), 1); i++ )\n\n// Original macro:\n// #define Nwk_ManForEachLiLoSeq( p, pObjLi, pObjLo, i )                               \\\n//     for ( i = 0; (i \u003c (p)-\u003enLatches) \u0026\u0026 (((pObjLi) = Nwk_ManCo(p, i+(p)-\u003enTruePos)), 1)        \\\n//         \u0026\u0026 (((pObjLo) = Nwk_ManCi(p, i+(p)-\u003enTruePis)), 1); i++ )\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== nwkAig.c ==========================================================*/\nextern ABC_DLL Vec_Ptr_t *     Nwk_ManDeriveRetimingCut( Aig_Man_t * p, int fForward, int fVerbose );\n/*=== nwkBidec.c ==========================================================*/\nextern ABC_DLL void            Nwk_ManBidecResyn( Nwk_Man_t * pNtk, int fVerbose );\nextern ABC_DLL Hop_Obj_t *     Nwk_NodeIfNodeResyn( Bdc_Man_t * p, Hop_Man_t * pHop, Hop_Obj_t * pRoot, int nVars, Vec_Int_t * vTruth, unsigned * puCare, float dProb );\n/*=== nwkCheck.c ==========================================================*/\nextern ABC_DLL int             Nwk_ManCheck( Nwk_Man_t * p );\n/*=== nwkDfs.c ==========================================================*/\nextern ABC_DLL int             Nwk_ManVerifyTopoOrder( Nwk_Man_t * pNtk );\nextern ABC_DLL int             Nwk_ManLevelBackup( Nwk_Man_t * pNtk );\nextern ABC_DLL int             Nwk_ManLevel( Nwk_Man_t * pNtk );\nextern ABC_DLL int             Nwk_ManLevelMax( Nwk_Man_t * pNtk );\nextern ABC_DLL Vec_Vec_t *     Nwk_ManLevelize( Nwk_Man_t * pNtk );\nextern ABC_DLL Vec_Ptr_t *     Nwk_ManDfs( Nwk_Man_t * pNtk );\nextern ABC_DLL Vec_Ptr_t *     Nwk_ManDfsNodes( Nwk_Man_t * pNtk, Nwk_Obj_t ** ppNodes, int nNodes );\nextern ABC_DLL Vec_Ptr_t *     Nwk_ManDfsReverse( Nwk_Man_t * pNtk );\nextern ABC_DLL Vec_Ptr_t *     Nwk_ManSupportNodes( Nwk_Man_t * pNtk, Nwk_Obj_t ** ppNodes, int nNodes );\nextern ABC_DLL void            Nwk_ManSupportSum( Nwk_Man_t * pNtk );\nextern ABC_DLL int             Nwk_ObjMffcLabel( Nwk_Obj_t * pNode );\n/*=== nwkFanio.c ==========================================================*/\nextern ABC_DLL void            Nwk_ObjCollectFanins( Nwk_Obj_t * pNode, Vec_Ptr_t * vNodes );\nextern ABC_DLL void            Nwk_ObjCollectFanouts( Nwk_Obj_t * pNode, Vec_Ptr_t * vNodes );\nextern ABC_DLL int             Nwk_ObjFindFanin( Nwk_Obj_t * pObj, Nwk_Obj_t * pFanin );\nextern ABC_DLL int             Nwk_ObjFindFanout( Nwk_Obj_t * pObj, Nwk_Obj_t * pFanout );\nextern ABC_DLL void            Nwk_ObjAddFanin( Nwk_Obj_t * pObj, Nwk_Obj_t * pFanin );\nextern ABC_DLL void            Nwk_ObjDeleteFanin( Nwk_Obj_t * pObj, Nwk_Obj_t * pFanin );\nextern ABC_DLL void            Nwk_ObjPatchFanin( Nwk_Obj_t * pObj, Nwk_Obj_t * pFaninOld, Nwk_Obj_t * pFaninNew );\nextern ABC_DLL void            Nwk_ObjTransferFanout( Nwk_Obj_t * pNodeFrom, Nwk_Obj_t * pNodeTo );\nextern ABC_DLL void            Nwk_ObjReplace( Nwk_Obj_t * pNodeOld, Nwk_Obj_t * pNodeNew );\n/*=== nwkFlow.c ============================================================*/\nextern ABC_DLL Vec_Ptr_t *     Nwk_ManRetimeCutForward( Nwk_Man_t * pMan, int nLatches, int fVerbose );\nextern ABC_DLL Vec_Ptr_t *     Nwk_ManRetimeCutBackward( Nwk_Man_t * pMan, int nLatches, int fVerbose );\n/*=== nwkMan.c ============================================================*/\nextern ABC_DLL Nwk_Man_t *     Nwk_ManAlloc();\nextern ABC_DLL void            Nwk_ManFree( Nwk_Man_t * p );\nextern ABC_DLL float           Nwl_ManComputeTotalSwitching( Nwk_Man_t * pNtk );\nextern ABC_DLL void            Nwk_ManPrintStats( Nwk_Man_t * p, If_LibLut_t * pLutLib, int fSaveBest, int fDumpResult, int fPower, Ntl_Man_t * pNtl );\n/*=== nwkMap.c ============================================================*/\nextern ABC_DLL Nwk_Man_t *     Nwk_MappingIf( Aig_Man_t * p, Tim_Man_t * pManTime, If_Par_t * pPars );\n/*=== nwkObj.c ============================================================*/\nextern ABC_DLL Nwk_Obj_t *     Nwk_ManCreateCi( Nwk_Man_t * pMan, int nFanouts );\nextern ABC_DLL Nwk_Obj_t *     Nwk_ManCreateCo( Nwk_Man_t * pMan );\nextern ABC_DLL Nwk_Obj_t *     Nwk_ManCreateNode( Nwk_Man_t * pMan, int nFanins, int nFanouts );\nextern ABC_DLL Nwk_Obj_t *     Nwk_ManCreateBox( Nwk_Man_t * pMan, int nFanins, int nFanouts );\nextern ABC_DLL Nwk_Obj_t *     Nwk_ManCreateLatch( Nwk_Man_t * pMan );\nextern ABC_DLL void            Nwk_ManDeleteNode( Nwk_Obj_t * pObj );\nextern ABC_DLL void            Nwk_ManDeleteNode_rec( Nwk_Obj_t * pObj );\n/*=== nwkSpeedup.c ============================================================*/\nextern ABC_DLL Aig_Man_t *     Nwk_ManSpeedup( Nwk_Man_t * pNtk, int fUseLutLib, int Percentage, int Degree, int fVerbose, int fVeryVerbose );\n/*=== nwkStrash.c ============================================================*/\nextern ABC_DLL Aig_Man_t *     Nwk_ManStrash( Nwk_Man_t * pNtk );\n/*=== nwkTiming.c ============================================================*/\nextern ABC_DLL int             Nwk_ManVerifyTiming(  Nwk_Man_t * pNtk );\nextern ABC_DLL void            Nwk_ManDelayTraceSortPins( Nwk_Obj_t * pNode, int * pPinPerm, float * pPinDelays );\nextern ABC_DLL float           Nwk_ManDelayTraceLut( Nwk_Man_t * pNtk );\nextern ABC_DLL void            Nwk_ManDelayTracePrint( Nwk_Man_t * pNtk );\nextern ABC_DLL void            Nwk_ManUpdate( Nwk_Obj_t * pObj, Nwk_Obj_t * pObjNew, Vec_Vec_t * vLevels );\nextern ABC_DLL int             Nwk_ManVerifyLevel( Nwk_Man_t * pNtk );\n/*=== nwkUtil.c ============================================================*/\nextern ABC_DLL void            Nwk_ManIncrementTravId( Nwk_Man_t * pNtk );\nextern ABC_DLL int             Nwk_ManGetFaninMax( Nwk_Man_t * pNtk );\nextern ABC_DLL int             Nwk_ManGetTotalFanins( Nwk_Man_t * pNtk );\nextern ABC_DLL int             Nwk_ManPiNum( Nwk_Man_t * pNtk );\nextern ABC_DLL int             Nwk_ManPoNum( Nwk_Man_t * pNtk );\nextern ABC_DLL int             Nwk_ManGetAigNodeNum( Nwk_Man_t * pNtk );\nextern ABC_DLL int             Nwk_NodeCompareLevelsIncrease( Nwk_Obj_t ** pp1, Nwk_Obj_t ** pp2 );\nextern ABC_DLL int             Nwk_NodeCompareLevelsDecrease( Nwk_Obj_t ** pp1, Nwk_Obj_t ** pp2 );\nextern ABC_DLL void            Nwk_ObjPrint( Nwk_Obj_t * pObj );\nextern ABC_DLL void            Nwk_ManDumpBlif( Nwk_Man_t * pNtk, char * pFileName, Vec_Ptr_t * vCiNames, Vec_Ptr_t * vCoNames );\nextern ABC_DLL void            Nwk_ManPrintFanioNew( Nwk_Man_t * pNtk );\nextern ABC_DLL void            Nwk_ManCleanMarks( Nwk_Man_t * pNtk );\nextern ABC_DLL void            Nwk_ManMinimumBase( Nwk_Man_t * pNtk, int fVerbose );\nextern ABC_DLL void            Nwk_ManRemoveDupFanins( Nwk_Man_t * pNtk, int fVerbose );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

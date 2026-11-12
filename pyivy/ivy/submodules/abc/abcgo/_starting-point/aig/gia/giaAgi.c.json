@@ -1,0 +1,957 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c",
+  "SHA256": "7d71d4d20d6fa1160d9a11f34c30f920688461e70bbab297d65f79c31dae8b7d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 4764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nObjs \u003c p.nCap );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 5407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iLit0 \u003c iLit1 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 148,
+        "Column": 74,
+        "ByteOffset": 6812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pObjs    = /*__starting_point_inline_macro:ABC_CALLOC__*/((word *) calloc((size_t)(nCap), sizeof(word)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 149,
+        "Column": 78,
+        "ByteOffset": 6928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTravIds = /*__starting_point_inline_macro:ABC_CALLOC__*/((unsigned *) calloc((size_t)(nCap), sizeof(unsigned)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 155,
+        "Column": 63,
+        "ByteOffset": 7127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 156,
+        "Column": 66,
+        "ByteOffset": 7239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pTravIds) ? (free((char *) (p.pTravIds)), (p.pTravIds) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 157,
+        "Column": 69,
+        "ByteOffset": 7360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vCis.pArray) ? (free((char *) (p.vCis.pArray)), (p.vCis.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 158,
+        "Column": 69,
+        "ByteOffset": 7487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vCos.pArray) ? (free((char *) (p.vCos.pArray)), (p.vCos.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 159,
+        "Column": 57,
+        "ByteOffset": 7602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 185,
+        "Column": 18,
+        "ByteOffset": 8507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 207,
+        "Column": 5,
+        "ByteOffset": 8978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Agi_ObjIsAnd(p, i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 220,
+        "Column": 5,
+        "ByteOffset": 9535
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes with small support %d (out of %d)\\n\", Counter, Agi_ManNodeNum(p) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Agi_ManObjNum",
+      "Start": 1939,
+      "End": 2073,
+      "BodyStart": 2014,
+      "Original": "static inline int      Agi_ManObjNum( Agi_Man_t * p )                      { return p-\u003enObjs;                                        }",
+      "Draft": "func Agi_ManObjNum(p *Agi_Man_t) int32 { return p.nObjs;                                        }"
+    },
+    {
+      "Name": "Agi_ManCiNum",
+      "Start": 2075,
+      "End": 2209,
+      "BodyStart": 2150,
+      "Original": "static inline int      Agi_ManCiNum( Agi_Man_t * p )                       { return Vec_IntSize( \u0026p-\u003evCis );                         }",
+      "Draft": "func Agi_ManCiNum(p *Agi_Man_t) int32 { return Vec_IntSize( \u0026p.vCis );                         }"
+    },
+    {
+      "Name": "Agi_ManCoNum",
+      "Start": 2211,
+      "End": 2345,
+      "BodyStart": 2286,
+      "Original": "static inline int      Agi_ManCoNum( Agi_Man_t * p )                       { return Vec_IntSize( \u0026p-\u003evCos );                         }",
+      "Draft": "func Agi_ManCoNum(p *Agi_Man_t) int32 { return Vec_IntSize( \u0026p.vCos );                         }"
+    },
+    {
+      "Name": "Agi_ManNodeNum",
+      "Start": 2347,
+      "End": 2481,
+      "BodyStart": 2422,
+      "Original": "static inline int      Agi_ManNodeNum( Agi_Man_t * p )                     { return p-\u003enNodes;                                       }",
+      "Draft": "func Agi_ManNodeNum(p *Agi_Man_t) int32 { return p.nNodes;                                       }"
+    },
+    {
+      "Name": "Agi_ObjLit0",
+      "Start": 2484,
+      "End": 2618,
+      "BodyStart": 2559,
+      "Original": "static inline unsigned Agi_ObjLit0( Agi_Man_t * p, int i )                 { return (unsigned)(p-\u003epObjs[i]);                         }",
+      "Draft": "func Agi_ObjLit0(p *Agi_Man_t, i int32) uint32 { return uint32((p.pObjs[i]));                         }"
+    },
+    {
+      "Name": "Agi_ObjLit1",
+      "Start": 2620,
+      "End": 2754,
+      "BodyStart": 2695,
+      "Original": "static inline unsigned Agi_ObjLit1( Agi_Man_t * p, int i )                 { return (unsigned)(p-\u003epObjs[i] \u003e\u003e 32);                   }",
+      "Draft": "func Agi_ObjLit1(p *Agi_Man_t, i int32) uint32 { return uint32((p.pObjs[i] \u003e\u003e 32));                   }"
+    },
+    {
+      "Name": "Agi_ObjLit2",
+      "Start": 2756,
+      "End": 2890,
+      "BodyStart": 2831,
+      "Original": "static inline unsigned Agi_ObjLit2( Agi_Man_t * p, int i )                 { return p-\u003epThird[i];                                    }",
+      "Draft": "func Agi_ObjLit2(p *Agi_Man_t, i int32) uint32 { return p.pThird[i];                                    }"
+    },
+    {
+      "Name": "Agi_ObjVar0",
+      "Start": 2892,
+      "End": 3026,
+      "BodyStart": 2967,
+      "Original": "static inline int      Agi_ObjVar0( Agi_Man_t * p, int i )                 { return Agi_ObjLit0(p, i) \u003e\u003e 1;                          }",
+      "Draft": "func Agi_ObjVar0(p *Agi_Man_t, i int32) int32 { return Agi_ObjLit0(p, i) \u003e\u003e 1;                          }"
+    },
+    {
+      "Name": "Agi_ObjVar1",
+      "Start": 3028,
+      "End": 3162,
+      "BodyStart": 3103,
+      "Original": "static inline int      Agi_ObjVar1( Agi_Man_t * p, int i )                 { return Agi_ObjLit1(p, i) \u003e\u003e 1;                          }",
+      "Draft": "func Agi_ObjVar1(p *Agi_Man_t, i int32) int32 { return Agi_ObjLit1(p, i) \u003e\u003e 1;                          }"
+    },
+    {
+      "Name": "Agi_ObjVar2",
+      "Start": 3164,
+      "End": 3298,
+      "BodyStart": 3239,
+      "Original": "static inline int      Agi_ObjVar2( Agi_Man_t * p, int i )                 { return Agi_ObjLit2(p, i) \u003e\u003e 1;                          }",
+      "Draft": "func Agi_ObjVar2(p *Agi_Man_t, i int32) int32 { return Agi_ObjLit2(p, i) \u003e\u003e 1;                          }"
+    },
+    {
+      "Name": "Agi_ObjSetLit0",
+      "Start": 3300,
+      "End": 3434,
+      "BodyStart": 3375,
+      "Original": "static inline void     Agi_ObjSetLit0( Agi_Man_t * p, int i, unsigned l )  { p-\u003epObjs[i] = (p-\u003epObjs[i] \u0026 AGI_M1) | (word)l;         }",
+      "Draft": "func Agi_ObjSetLit0(p *Agi_Man_t, i int32, l uint32) { p.pObjs[i] = (p.pObjs[i] \u0026 AGI_M1) | (word)l;         }"
+    },
+    {
+      "Name": "Agi_ObjSetLit1",
+      "Start": 3436,
+      "End": 3570,
+      "BodyStart": 3511,
+      "Original": "static inline void     Agi_ObjSetLit1( Agi_Man_t * p, int i, unsigned l )  { p-\u003epObjs[i] = (p-\u003epObjs[i] \u0026 AGI_M0) | ((word)l \u003c\u003c 32); }",
+      "Draft": "func Agi_ObjSetLit1(p *Agi_Man_t, i int32, l uint32) { p.pObjs[i] = (p.pObjs[i] \u0026 AGI_M0) | ((word)l \u003c\u003c 32); }"
+    },
+    {
+      "Name": "Agi_ObjSetLit2",
+      "Start": 3572,
+      "End": 3706,
+      "BodyStart": 3647,
+      "Original": "static inline void     Agi_ObjSetLit2( Agi_Man_t * p, int i, unsigned l )  { p-\u003epThird[i] = l;                                       }",
+      "Draft": "func Agi_ObjSetLit2(p *Agi_Man_t, i int32, l uint32) { p.pThird[i] = l;                                       }"
+    },
+    {
+      "Name": "Agi_ObjIsC0",
+      "Start": 3710,
+      "End": 3844,
+      "BodyStart": 3785,
+      "Original": "static inline int      Agi_ObjIsC0( Agi_Man_t * p, int i )                 { return (i == 0);                                        }",
+      "Draft": "func Agi_ObjIsC0(p *Agi_Man_t, i int32) int32 { return (i == 0);                                        }"
+    },
+    {
+      "Name": "Agi_ObjIsPi",
+      "Start": 3846,
+      "End": 3980,
+      "BodyStart": 3921,
+      "Original": "static inline int      Agi_ObjIsPi( Agi_Man_t * p, int i )                 { return (p-\u003epObjs[i] \u0026 AGI_PI) == AGI_PI;                }",
+      "Draft": "func Agi_ObjIsPi(p *Agi_Man_t, i int32) int32 { return (p.pObjs[i] \u0026 AGI_PI) == AGI_PI;                }"
+    },
+    {
+      "Name": "Agi_ObjIsRo",
+      "Start": 3982,
+      "End": 4116,
+      "BodyStart": 4057,
+      "Original": "static inline int      Agi_ObjIsRo( Agi_Man_t * p, int i )                 { return (p-\u003epObjs[i] \u0026 AGI_PI) == AGI_RO;                }",
+      "Draft": "func Agi_ObjIsRo(p *Agi_Man_t, i int32) int32 { return (p.pObjs[i] \u0026 AGI_PI) == AGI_RO;                }"
+    },
+    {
+      "Name": "Agi_ObjIsPo",
+      "Start": 4118,
+      "End": 4252,
+      "BodyStart": 4193,
+      "Original": "static inline int      Agi_ObjIsPo( Agi_Man_t * p, int i )                 { return (p-\u003epObjs[i] \u0026 AGI_PI) == AGI_PO;                }",
+      "Draft": "func Agi_ObjIsPo(p *Agi_Man_t, i int32) int32 { return (p.pObjs[i] \u0026 AGI_PI) == AGI_PO;                }"
+    },
+    {
+      "Name": "Agi_ObjIsRi",
+      "Start": 4254,
+      "End": 4388,
+      "BodyStart": 4329,
+      "Original": "static inline int      Agi_ObjIsRi( Agi_Man_t * p, int i )                 { return (p-\u003epObjs[i] \u0026 AGI_PI) == AGI_RI;                }",
+      "Draft": "func Agi_ObjIsRi(p *Agi_Man_t, i int32) int32 { return (p.pObjs[i] \u0026 AGI_PI) == AGI_RI;                }"
+    },
+    {
+      "Name": "Agi_ObjIsCi",
+      "Start": 4390,
+      "End": 4524,
+      "BodyStart": 4465,
+      "Original": "static inline int      Agi_ObjIsCi( Agi_Man_t * p, int i )                 { return (p-\u003epObjs[i] \u0026 AGI_RO) == AGI_RO;                }",
+      "Draft": "func Agi_ObjIsCi(p *Agi_Man_t, i int32) int32 { return (p.pObjs[i] \u0026 AGI_RO) == AGI_RO;                }"
+    },
+    {
+      "Name": "Agi_ObjIsCo",
+      "Start": 4526,
+      "End": 4660,
+      "BodyStart": 4601,
+      "Original": "static inline int      Agi_ObjIsCo( Agi_Man_t * p, int i )                 { return (p-\u003epObjs[i] \u0026 AGI_PO) == AGI_PO;                }",
+      "Draft": "func Agi_ObjIsCo(p *Agi_Man_t, i int32) int32 { return (p.pObjs[i] \u0026 AGI_PO) == AGI_PO;                }"
+    },
+    {
+      "Name": "Agi_ObjIsNode",
+      "Start": 4662,
+      "End": 4796,
+      "BodyStart": 4737,
+      "Original": "static inline int      Agi_ObjIsNode( Agi_Man_t * p, int i )               { return p-\u003epObjs[i] \u003c AGI_C0;                            }",
+      "Draft": "func Agi_ObjIsNode(p *Agi_Man_t, i int32) int32 { return p.pObjs[i] \u003c AGI_C0;                            }"
+    },
+    {
+      "Name": "Agi_ObjIsBuf",
+      "Start": 4798,
+      "End": 4932,
+      "BodyStart": 4873,
+      "Original": "static inline int      Agi_ObjIsBuf( Agi_Man_t * p, int i )                { return Agi_ObjLit0(p, i) == Agi_ObjLit1(p, i);          }",
+      "Draft": "func Agi_ObjIsBuf(p *Agi_Man_t, i int32) int32 { return Agi_ObjLit0(p, i) == Agi_ObjLit1(p, i);          }"
+    },
+    {
+      "Name": "Agi_ObjIsAnd",
+      "Start": 4934,
+      "End": 5082,
+      "BodyStart": 5009,
+      "Original": "static inline int      Agi_ObjIsAnd( Agi_Man_t * p, int i )                { return Agi_ObjIsNode(p, i) \u0026\u0026 Agi_ObjLit0(p, i) \u003c Agi_ObjLit1(p, i);  }",
+      "Draft": "func Agi_ObjIsAnd(p *Agi_Man_t, i int32) int32 { return Agi_ObjIsNode(p, i) \u0026\u0026 Agi_ObjLit0(p, i) \u003c Agi_ObjLit1(p, i);  }"
+    },
+    {
+      "Name": "Agi_ObjIsXor",
+      "Start": 5084,
+      "End": 5232,
+      "BodyStart": 5159,
+      "Original": "static inline int      Agi_ObjIsXor( Agi_Man_t * p, int i )                { return Agi_ObjIsNode(p, i) \u0026\u0026 Agi_ObjLit0(p, i) \u003e Agi_ObjLit1(p, i);  }",
+      "Draft": "func Agi_ObjIsXor(p *Agi_Man_t, i int32) int32 { return Agi_ObjIsNode(p, i) \u0026\u0026 Agi_ObjLit0(p, i) \u003e Agi_ObjLit1(p, i);  }"
+    },
+    {
+      "Name": "Agi_ObjIsMux",
+      "Start": 5234,
+      "End": 5368,
+      "BodyStart": 5309,
+      "Original": "static inline int      Agi_ObjIsMux( Agi_Man_t * p, int i )                { return Agi_ObjIsAnd(p, i) \u0026\u0026 ~Agi_ObjLit2(p, i);        }",
+      "Draft": "func Agi_ObjIsMux(p *Agi_Man_t, i int32) int32 { return Agi_ObjIsAnd(p, i) \u0026\u0026 ~Agi_ObjLit2(p, i);        }"
+    },
+    {
+      "Name": "Agi_ObjIsMaj",
+      "Start": 5369,
+      "End": 5503,
+      "BodyStart": 5444,
+      "Original": "static inline int      Agi_ObjIsMaj( Agi_Man_t * p, int i )                { return Agi_ObjIsXor(p, i) \u0026\u0026 ~Agi_ObjLit2(p, i);        }",
+      "Draft": "func Agi_ObjIsMaj(p *Agi_Man_t, i int32) int32 { return Agi_ObjIsXor(p, i) \u0026\u0026 ~Agi_ObjLit2(p, i);        }"
+    },
+    {
+      "Name": "Agi_ManAppendObj",
+      "Start": 5506,
+      "End": 5632,
+      "BodyStart": 5558,
+      "Original": "static inline int Agi_ManAppendObj( Agi_Man_t * p )\n{\n    assert( p-\u003enObjs \u003c p-\u003enCap );\n    return p-\u003enObjs++; // return var\n}",
+      "Draft": "func Agi_ManAppendObj(p *Agi_Man_t) int32 {\n    assert(p.nObjs \u003c p.nCap, \"p.nObjs \u003c p.nCap\");\n    return p.nObjs++; // return var\n}"
+    },
+    {
+      "Name": "Agi_ManAppendCi",
+      "Start": 5633,
+      "End": 5868,
+      "BodyStart": 5684,
+      "Original": "static inline int Agi_ManAppendCi( Agi_Man_t * p )\n{\n    int iObj = Agi_ManAppendObj( p );\n    p-\u003epObjs[iObj] = AGI_PI | (word)Vec_IntSize(\u0026p-\u003evCis);\n    Vec_IntPush( \u0026p-\u003evCis, iObj );\n    return Abc_Var2Lit( iObj, 0 ); // return lit\n}",
+      "Draft": "func Agi_ManAppendCi(p *Agi_Man_t) int32 {\n    var iObj int32  = Agi_ManAppendObj( p );\n    p.pObjs[iObj] = AGI_PI | (word)Vec_IntSize(\u0026p.vCis);\n    Vec_IntPush( \u0026p.vCis, iObj );\n    return Abc_Var2Lit( iObj, 0 ); // return lit\n}"
+    },
+    {
+      "Name": "Agi_ManAppendCo",
+      "Start": 5869,
+      "End": 6099,
+      "BodyStart": 5931,
+      "Original": "static inline int Agi_ManAppendCo( Agi_Man_t * p, int iLit0 )\n{\n    int iObj = Agi_ManAppendObj( p );\n    p-\u003epObjs[iObj] = AGI_PO | (word)iLit0;\n    Vec_IntPush( \u0026p-\u003evCos, iObj );\n    return Abc_Var2Lit( iObj, 0 ); // return lit\n}",
+      "Draft": "func Agi_ManAppendCo(p *Agi_Man_t, iLit0 int32) int32 {\n    var iObj int32  = Agi_ManAppendObj( p );\n    p.pObjs[iObj] = AGI_PO | (word)iLit0;\n    Vec_IntPush( \u0026p.vCos, iObj );\n    return Abc_Var2Lit( iObj, 0 ); // return lit\n}"
+    },
+    {
+      "Name": "Agi_ManAppendAnd",
+      "Start": 6100,
+      "End": 6366,
+      "BodyStart": 6174,
+      "Original": "static inline int Agi_ManAppendAnd( Agi_Man_t * p, int iLit0, int iLit1 )\n{\n    int iObj = Agi_ManAppendObj( p );\n    assert( iLit0 \u003c iLit1 );\n    p-\u003epObjs[iObj] = ((word)iLit1 \u003c\u003c 32) | (word)iLit0;\n    p-\u003enNodes++;\n    return Abc_Var2Lit( iObj, 0 ); // return lit\n}",
+      "Draft": "func Agi_ManAppendAnd(p *Agi_Man_t, iLit0 int32, iLit1 int32) int32 {\n    var iObj int32  = Agi_ManAppendObj( p );\n    assert(iLit0 \u003c iLit1, \"iLit0 \u003c iLit1\");\n    p.pObjs[iObj] = ((word)iLit1 \u003c\u003c 32) | (word)iLit0;\n    p.nNodes++;\n    return Abc_Var2Lit( iObj, 0 ); // return lit\n}"
+    },
+    {
+      "Name": "Agi_ManAlloc",
+      "Start": 7262,
+      "End": 7569,
+      "BodyStart": 7299,
+      "Original": "Agi_Man_t * Agi_ManAlloc( int nCap )\n{\n    Agi_Man_t * p;\n    nCap = Abc_MaxInt( nCap, 16 );\n    p = ABC_CALLOC( Agi_Man_t, 1 );\n    p-\u003enCap     = nCap;\n    p-\u003epObjs    = ABC_CALLOC( word, nCap );\n    p-\u003epTravIds = ABC_CALLOC( unsigned, nCap );\n    p-\u003epObjs[0] = AGI_C0;\n    p-\u003enObjs    = 1;\n    return p;\n}",
+      "Draft": "func Agi_ManAlloc(nCap int32) *Agi_Man_t {\n    \n    nCap = Abc_MaxInt( nCap, 16 );\n    // inlining of macro ABC_CALLOC\n    p := \u0026Agi_Man_t{};\n    p.nCap     = nCap;\n    // inlining of macro ABC_CALLOC\n    p.pObjs    = ((word *) calloc((size_t)(nCap), sizeof(word)));\n    // inlining of macro ABC_CALLOC\n    p.pTravIds = ((unsigned *) calloc((size_t)(nCap), sizeof(unsigned)));\n    p.pObjs[0] = AGI_C0;\n    p.nObjs    = 1;\n    return p;\n}"
+    },
+    {
+      "Name": "Agi_ManFree",
+      "Start": 7570,
+      "End": 7745,
+      "BodyStart": 7604,
+      "Original": "void Agi_ManFree( Agi_Man_t * p )\n{\n    ABC_FREE( p-\u003epObjs );\n    ABC_FREE( p-\u003epTravIds );\n    ABC_FREE( p-\u003evCis.pArray );\n    ABC_FREE( p-\u003evCos.pArray );\n    ABC_FREE( p );\n}",
+      "Draft": "func Agi_ManFree(p *Agi_Man_t) {\n    // inlining of macro ABC_FREE\n    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pTravIds) ? (free((char *) (p.pTravIds)), (p.pTravIds) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vCis.pArray) ? (free((char *) (p.vCis.pArray)), (p.vCis.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vCos.pArray) ? (free((char *) (p.vCos.pArray)), (p.vCos.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Agi_ManFromGia",
+      "Start": 7981,
+      "End": 8547,
+      "BodyStart": 8025,
+      "Original": "Agi_Man_t * Agi_ManFromGia( Gia_Man_t * p )\n{\n    Agi_Man_t * pNew;\n    Gia_Obj_t * pObj;\n    int i;\n    pNew = Agi_ManAlloc( Gia_ManObjNum(p) );\n    Gia_ManForEachObj1( p, pObj, i )\n        if ( Gia_ObjIsAnd(pObj) )\n            pObj-\u003eValue = Agi_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        else if ( Gia_ObjIsCo(pObj) )\n            pObj-\u003eValue = Agi_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        else if ( Gia_ObjIsCi(pObj) )\n            pObj-\u003eValue = Agi_ManAppendCi( pNew );\n        else assert( 0 );\n    return pNew;\n}",
+      "Draft": "func Agi_ManFromGia(p *Gia_Man_t) *Agi_Man_t {\n    var pNew *Agi_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    pNew = Agi_ManAlloc( Gia_ManObjNum(p) );\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Agi_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Agi_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Agi_ManAppendCi( pNew );\n        } else { assert(false, \"0\"); }\n    }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Agi_ManSuppSize_rec",
+      "Start": 8783,
+      "End": 9111,
+      "BodyStart": 8831,
+      "Original": "int Agi_ManSuppSize_rec( Agi_Man_t * p, int i )\n{\n    if ( p-\u003epTravIds[i] == p-\u003enTravIds )\n        return 0;\n    p-\u003epTravIds[i] = p-\u003enTravIds;\n    if ( Agi_ObjIsCi(p, i) )\n        return 1;\n    assert( Agi_ObjIsAnd(p, i) );\n    return Agi_ManSuppSize_rec( p, Agi_ObjVar0(p, i) ) +  Agi_ManSuppSize_rec( p, Agi_ObjVar1(p, i) );\n}",
+      "Draft": "func Agi_ManSuppSize_rec(p *Agi_Man_t, i int32) int32 {\n    if p.pTravIds[i] == p.nTravIds {\n        return 0; }\n    p.pTravIds[i] = p.nTravIds;\n    if Agi_ObjIsCi(p, i) != 0 {\n        return 1; }\n    assert((Agi_ObjIsAnd(p, i) != 0), \"Agi_ObjIsAnd(p, i)\");\n    return Agi_ManSuppSize_rec( p, Agi_ObjVar0(p, i) ) +  Agi_ManSuppSize_rec( p, Agi_ObjVar1(p, i) );\n}"
+    },
+    {
+      "Name": "Agi_ManSuppSizeOne",
+      "Start": 9112,
+      "End": 9221,
+      "BodyStart": 9159,
+      "Original": "int Agi_ManSuppSizeOne( Agi_Man_t * p, int i )\n{\n    p-\u003enTravIds++;\n    return Agi_ManSuppSize_rec( p, i );\n}",
+      "Draft": "func Agi_ManSuppSizeOne(p *Agi_Man_t, i int32) int32 {\n    p.nTravIds++;\n    return Agi_ManSuppSize_rec( p, i );\n}"
+    },
+    {
+      "Name": "Agi_ManSuppSizeTest",
+      "Start": 9222,
+      "End": 9564,
+      "BodyStart": 9263,
+      "Original": "int Agi_ManSuppSizeTest( Agi_Man_t * p )\n{\n    abctime clk = Abc_Clock();\n    int i, Counter = 0;\n    Agi_ManForEachNode( p, i )\n        Counter += (Agi_ManSuppSizeOne(p, i) \u003c= 16);\n    printf( \"Nodes with small support %d (out of %d)\\n\", Counter, Agi_ManNodeNum(p) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return Counter;\n\n}",
+      "Draft": "func Agi_ManSuppSizeTest(p *Agi_Man_t) int32 {\n    var clk abctime  = Abc_Clock();\n    var i, Counter int32;\n    // inlining of macro Agi_ManForEachNode\n    for  i = 1; i \u003c Agi_ManObjNum(p); i++  { if !(Agi_ObjIsNode(p, i) != 0) {} else {\n        Counter += (Agi_ManSuppSizeOne(p, i) \u003c= 16); }\n    }\n    fmt.Printf(\"Nodes with small support %d (out of %d)\\n\", Counter, Agi_ManNodeNum(p));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return Counter;\n\n}"
+    },
+    {
+      "Name": "Agi_ManTest",
+      "Start": 9565,
+      "End": 9794,
+      "BodyStart": 9602,
+      "Original": "void Agi_ManTest( Gia_Man_t * pGia )\n{\n    extern int Gia_ManSuppSizeTest( Gia_Man_t * p );\n    Agi_Man_t * p;\n    Gia_ManSuppSizeTest( pGia );\n    p = Agi_ManFromGia( pGia );\n    Agi_ManSuppSizeTest( p );\n    Agi_ManFree( p );\n}",
+      "Draft": "func Agi_ManTest(pGia *Gia_Man_t) {\n    extern int Gia_ManSuppSizeTest( Gia_Man_t * p );\n    var p *Agi_Man_t;\n    Gia_ManSuppSizeTest( pGia );\n    p = Agi_ManFromGia( pGia );\n    Agi_ManSuppSizeTest( p );\n    Agi_ManFree( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::struct::Agi_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Agi_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1069,
+      "End": 1937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::mechanical::sizeof::7444",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7363,
+      "End": 7363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::mechanical::sizeof::7586",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7433,
+      "End": 7433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::mechanical::sizeof::7703",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7477,
+      "End": 7477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::pointer-cast::7410",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7363,
+      "End": 7363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::pointer-cast::7554",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7433,
+      "End": 7433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::pointer-cast::7667",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7477,
+      "End": 7477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::pointer-cast::7890",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7610,
+      "End": 7610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::pointer-cast::8005",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7636,
+      "End": 7636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::pointer-cast::8129",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7665,
+      "End": 7665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::pointer-cast::8259",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7697,
+      "End": 7697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::pointer-cast::8376",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7729,
+      "End": 7729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::macro::Agi_ManForEachCi",
+      "Category": "macro-review",
+      "Symbol": "Agi_ManForEachCi",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6368,
+      "End": 6447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::macro::Agi_ManForEachCo",
+      "Category": "macro-review",
+      "Symbol": "Agi_ManForEachCo",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6448,
+      "End": 6527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::macro::Agi_ManForEachObj",
+      "Category": "macro-review",
+      "Symbol": "Agi_ManForEachObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6528,
+      "End": 6608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::macro::Agi_ManForEachObj1",
+      "Category": "macro-review",
+      "Symbol": "Agi_ManForEachObj1",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6609,
+      "End": 6689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::macro::Agi_ManForEachNode",
+      "Category": "macro-review",
+      "Symbol": "Agi_ManForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6690,
+      "End": 6806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManObjNum",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManObjNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1939,
+      "End": 2073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManCiNum",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManCiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2075,
+      "End": 2209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManCoNum",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManCoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2211,
+      "End": 2345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2347,
+      "End": 2481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjLit0",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjLit0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2484,
+      "End": 2618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjLit1",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjLit1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2620,
+      "End": 2754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjLit2",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjLit2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2756,
+      "End": 2890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjVar0",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjVar0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2892,
+      "End": 3026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjVar1",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjVar1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3028,
+      "End": 3162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjVar2",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjVar2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3164,
+      "End": 3298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjSetLit0",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjSetLit0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3300,
+      "End": 3434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjSetLit1",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjSetLit1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3436,
+      "End": 3570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjSetLit2",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjSetLit2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3572,
+      "End": 3706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjIsC0",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjIsC0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3710,
+      "End": 3844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjIsPi",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjIsPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3846,
+      "End": 3980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjIsRo",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjIsRo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3982,
+      "End": 4116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjIsPo",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjIsPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4118,
+      "End": 4252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjIsRi",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjIsRi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4254,
+      "End": 4388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjIsCi",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjIsCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4390,
+      "End": 4524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjIsCo",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjIsCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4526,
+      "End": 4660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjIsNode",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjIsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4662,
+      "End": 4796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjIsBuf",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjIsBuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4798,
+      "End": 4932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjIsAnd",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjIsAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4934,
+      "End": 5082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjIsXor",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjIsXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5084,
+      "End": 5232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjIsMux",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjIsMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5234,
+      "End": 5368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ObjIsMaj",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ObjIsMaj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5369,
+      "End": 5503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManAppendObj",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManAppendObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5506,
+      "End": 5632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManAppendCi",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManAppendCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5633,
+      "End": 5868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManAppendCo",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManAppendCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5869,
+      "End": 6099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManAppendAnd",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManAppendAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6100,
+      "End": 6366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7262,
+      "End": 7569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::ternary::Agi_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Agi_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7570,
+      "End": 7745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7570,
+      "End": 7745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManFromGia",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManFromGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7981,
+      "End": 8547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManSuppSize_rec",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManSuppSize_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8783,
+      "End": 9111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManSuppSizeOne",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManSuppSizeOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9112,
+      "End": 9221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManSuppSizeTest",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManSuppSizeTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9222,
+      "End": 9564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::Agi_ManTest",
+      "Category": "semantic-review",
+      "Symbol": "Agi_ManTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9565,
+      "End": 9794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAgi.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10041
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaAig.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaAig.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n#define AGI_PI ABC_CONST(0xFFFFFFFF00000000) \n#define AGI_RO ABC_CONST(0xFFFFFFFE00000000) \n#define AGI_PO ABC_CONST(0xFFFFFFFD00000000) \n#define AGI_RI ABC_CONST(0xFFFFFFFC00000000) \n#define AGI_C0 ABC_CONST(0xFFFFFFFBFFFFFFFA) \n#define AGI_M0 ABC_CONST(0x00000000FFFFFFFF) \n#define AGI_M1 ABC_CONST(0xFFFFFFFF00000000) \n\n   \ntype Agi_Man_t struct {\n    pName              string;       // name of the AIG\n    pSpec              string;       // name of the input file\n    nCap                int32;        // number of objects\n    nObjs                int32;       // number of objects\n    nNodes                int32;      // number of objects\n    nRegs                int32;       // number of registers\n    nTravIds           uint32;    // number of objects\n    vCis          Vec_Int_t;        // comb inputs\n    vCos          Vec_Int_t;        // comb outputs\n    pObjs              *word;       // objects\n    pThird          *uint32;      // third input\n    pTravIds          *uint32;    // traversal IDs\n    pNext          *uint32;       // next values\n    pTable          *uint32;      // hash table\n    pCopy          *uint32;       // hash table\n}\n\nfunc Agi_ManObjNum(p *Agi_Man_t) int32 { return p.nObjs;                                        } \nfunc Agi_ManCiNum(p *Agi_Man_t) int32 { return Vec_IntSize( \u0026p.vCis );                         } \nfunc Agi_ManCoNum(p *Agi_Man_t) int32 { return Vec_IntSize( \u0026p.vCos );                         } \nfunc Agi_ManNodeNum(p *Agi_Man_t) int32 { return p.nNodes;                                       } \n\nfunc Agi_ObjLit0(p *Agi_Man_t, i int32) uint32 { return uint32((p.pObjs[i]));                         } \nfunc Agi_ObjLit1(p *Agi_Man_t, i int32) uint32 { return uint32((p.pObjs[i] \u003e\u003e 32));                   } \nfunc Agi_ObjLit2(p *Agi_Man_t, i int32) uint32 { return p.pThird[i];                                    } \nfunc Agi_ObjVar0(p *Agi_Man_t, i int32) int32 { return Agi_ObjLit0(p, i) \u003e\u003e 1;                          } \nfunc Agi_ObjVar1(p *Agi_Man_t, i int32) int32 { return Agi_ObjLit1(p, i) \u003e\u003e 1;                          } \nfunc Agi_ObjVar2(p *Agi_Man_t, i int32) int32 { return Agi_ObjLit2(p, i) \u003e\u003e 1;                          } \nfunc Agi_ObjSetLit0(p *Agi_Man_t, i int32, l uint32) { p.pObjs[i] = (p.pObjs[i] \u0026 AGI_M1) | (word)l;         } \nfunc Agi_ObjSetLit1(p *Agi_Man_t, i int32, l uint32) { p.pObjs[i] = (p.pObjs[i] \u0026 AGI_M0) | ((word)l \u003c\u003c 32); } \nfunc Agi_ObjSetLit2(p *Agi_Man_t, i int32, l uint32) { p.pThird[i] = l;                                       }  \n\nfunc Agi_ObjIsC0(p *Agi_Man_t, i int32) int32 { return (i == 0);                                        } \nfunc Agi_ObjIsPi(p *Agi_Man_t, i int32) int32 { return (p.pObjs[i] \u0026 AGI_PI) == AGI_PI;                } \nfunc Agi_ObjIsRo(p *Agi_Man_t, i int32) int32 { return (p.pObjs[i] \u0026 AGI_PI) == AGI_RO;                } \nfunc Agi_ObjIsPo(p *Agi_Man_t, i int32) int32 { return (p.pObjs[i] \u0026 AGI_PI) == AGI_PO;                } \nfunc Agi_ObjIsRi(p *Agi_Man_t, i int32) int32 { return (p.pObjs[i] \u0026 AGI_PI) == AGI_RI;                } \nfunc Agi_ObjIsCi(p *Agi_Man_t, i int32) int32 { return (p.pObjs[i] \u0026 AGI_RO) == AGI_RO;                } \nfunc Agi_ObjIsCo(p *Agi_Man_t, i int32) int32 { return (p.pObjs[i] \u0026 AGI_PO) == AGI_PO;                } \nfunc Agi_ObjIsNode(p *Agi_Man_t, i int32) int32 { return p.pObjs[i] \u003c AGI_C0;                            } \nfunc Agi_ObjIsBuf(p *Agi_Man_t, i int32) int32 { return Agi_ObjLit0(p, i) == Agi_ObjLit1(p, i);          } \nfunc Agi_ObjIsAnd(p *Agi_Man_t, i int32) int32 { return Agi_ObjIsNode(p, i) \u0026\u0026 Agi_ObjLit0(p, i) \u003c Agi_ObjLit1(p, i);  } \nfunc Agi_ObjIsXor(p *Agi_Man_t, i int32) int32 { return Agi_ObjIsNode(p, i) \u0026\u0026 Agi_ObjLit0(p, i) \u003e Agi_ObjLit1(p, i);  } \nfunc Agi_ObjIsMux(p *Agi_Man_t, i int32) int32 { return Agi_ObjIsAnd(p, i) \u0026\u0026 ~Agi_ObjLit2(p, i);        }\nfunc Agi_ObjIsMaj(p *Agi_Man_t, i int32) int32 { return Agi_ObjIsXor(p, i) \u0026\u0026 ~Agi_ObjLit2(p, i);        } \n\nfunc Agi_ManAppendObj(p *Agi_Man_t) int32 {\n    assert(p.nObjs \u003c p.nCap, \"p.nObjs \u003c p.nCap\");\n    return p.nObjs++; // return var\n}\nfunc Agi_ManAppendCi(p *Agi_Man_t) int32 {\n    var iObj int32  = Agi_ManAppendObj( p );\n    p.pObjs[iObj] = AGI_PI | (word)Vec_IntSize(\u0026p.vCis);\n    Vec_IntPush( \u0026p.vCis, iObj );\n    return Abc_Var2Lit( iObj, 0 ); // return lit\n}\nfunc Agi_ManAppendCo(p *Agi_Man_t, iLit0 int32) int32 {\n    var iObj int32  = Agi_ManAppendObj( p );\n    p.pObjs[iObj] = AGI_PO | (word)iLit0;\n    Vec_IntPush( \u0026p.vCos, iObj );\n    return Abc_Var2Lit( iObj, 0 ); // return lit\n}\nfunc Agi_ManAppendAnd(p *Agi_Man_t, iLit0 int32, iLit1 int32) int32 {\n    var iObj int32  = Agi_ManAppendObj( p );\n    assert(iLit0 \u003c iLit1, \"iLit0 \u003c iLit1\");\n    p.pObjs[iObj] = ((word)iLit1 \u003c\u003c 32) | (word)iLit0;\n    p.nNodes++;\n    return Abc_Var2Lit( iObj, 0 ); // return lit\n}\n\n// Original macro:\n// #define Agi_ManForEachCi( p, iCi, i )   Vec_IntForEachEntry( \u0026p-\u003evCis, iCi, i )\n\n// Original macro:\n// #define Agi_ManForEachCo( p, iCo, i )   Vec_IntForEachEntry( \u0026p-\u003evCos, iCo, i )\n\n// Original macro:\n// #define Agi_ManForEachObj( p, i )       for ( i = 0; i \u003c Agi_ManObjNum(p); i++ )\n\n// Original macro:\n// #define Agi_ManForEachObj1( p, i )      for ( i = 1; i \u003c Agi_ManObjNum(p); i++ )\n\n// Original macro:\n// #define Agi_ManForEachNode( p, i )      for ( i = 1; i \u003c Agi_ManObjNum(p); i++ ) if ( !Agi_ObjIsNode(p, i) ) {} else\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Agi_ManAlloc(nCap int32) *Agi_Man_t {\n    \n    nCap = Abc_MaxInt( nCap, 16 );\n    // inlining of macro ABC_CALLOC\n    p := \u0026Agi_Man_t{};\n    p.nCap     = nCap;\n    // inlining of macro ABC_CALLOC\n    p.pObjs    = ((word *) calloc((size_t)(nCap), sizeof(word)));\n    // inlining of macro ABC_CALLOC\n    p.pTravIds = ((unsigned *) calloc((size_t)(nCap), sizeof(unsigned)));\n    p.pObjs[0] = AGI_C0;\n    p.nObjs    = 1;\n    return p;\n}\nfunc Agi_ManFree(p *Agi_Man_t) {\n    // inlining of macro ABC_FREE\n    ((p.pObjs) ? (free((char *) (p.pObjs)), (p.pObjs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pTravIds) ? (free((char *) (p.pTravIds)), (p.pTravIds) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vCis.pArray) ? (free((char *) (p.vCis.pArray)), (p.vCis.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vCos.pArray) ? (free((char *) (p.vCos.pArray)), (p.vCos.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Agi_ManFromGia(p *Gia_Man_t) *Agi_Man_t {\n    var pNew *Agi_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    pNew = Agi_ManAlloc( Gia_ManObjNum(p) );\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Agi_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else if Gia_ObjIsCo(pObj) {\n            pObj.Value = Agi_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Agi_ManAppendCi( pNew );\n        } else { assert(false, \"0\"); }\n    }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Agi_ManSuppSize_rec(p *Agi_Man_t, i int32) int32 {\n    if p.pTravIds[i] == p.nTravIds {\n        return 0; }\n    p.pTravIds[i] = p.nTravIds;\n    if Agi_ObjIsCi(p, i) != 0 {\n        return 1; }\n    assert((Agi_ObjIsAnd(p, i) != 0), \"Agi_ObjIsAnd(p, i)\");\n    return Agi_ManSuppSize_rec( p, Agi_ObjVar0(p, i) ) +  Agi_ManSuppSize_rec( p, Agi_ObjVar1(p, i) );\n}\nfunc Agi_ManSuppSizeOne(p *Agi_Man_t, i int32) int32 {\n    p.nTravIds++;\n    return Agi_ManSuppSize_rec( p, i );\n}\nfunc Agi_ManSuppSizeTest(p *Agi_Man_t) int32 {\n    var clk abctime  = Abc_Clock();\n    var i, Counter int32;\n    // inlining of macro Agi_ManForEachNode\n    for  i = 1; i \u003c Agi_ManObjNum(p); i++  { if !(Agi_ObjIsNode(p, i) != 0) {} else {\n        Counter += (Agi_ManSuppSizeOne(p, i) \u003c= 16); }\n    }\n    fmt.Printf(\"Nodes with small support %d (out of %d)\\n\", Counter, Agi_ManNodeNum(p));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return Counter;\n\n}\nfunc Agi_ManTest(pGia *Gia_Man_t) {\n    extern int Gia_ManSuppSizeTest( Gia_Man_t * p );\n    var p *Agi_Man_t;\n    Gia_ManSuppSizeTest( pGia );\n    p = Agi_ManFromGia( pGia );\n    Agi_ManSuppSizeTest( p );\n    Agi_ManFree( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

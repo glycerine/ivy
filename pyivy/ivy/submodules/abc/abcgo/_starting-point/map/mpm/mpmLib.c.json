@@ -1,0 +1,137 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmLib.c",
+  "SHA256": "acf7285046218d09f977ff55b756056e9ca78348ad7d61de3f82e4f92e36b122",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLutSize \u003c= MPM_VAR_MAX );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 64,
+        "Column": 66,
+        "ByteOffset": 1842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pLib.pName) ? (free((char *) (pLib.pName)), (pLib.pName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 65,
+        "Column": 60,
+        "ByteOffset": 1954
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pLib) ? (free((char *) (pLib)), (pLib) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mpm_LibLutSetSimple",
+      "Start": 1251,
+      "End": 1655,
+      "BodyStart": 1302,
+      "Original": "Mpm_LibLut_t * Mpm_LibLutSetSimple( int nLutSize )\n{\n    Mpm_LibLut_t * pLib;\n    int i, k;\n    assert( nLutSize \u003c= MPM_VAR_MAX );\n    pLib = ABC_CALLOC( Mpm_LibLut_t, 1 );\n    pLib-\u003eLutMax = nLutSize;\n    for ( i = 1; i \u003c= pLib-\u003eLutMax; i++ )\n    {\n        pLib-\u003epLutAreas[i] = MPM_UNIT_AREA;\n        for ( k = 0; k \u003c i; k++ )\n            pLib-\u003epLutDelays[i][k] = MPM_UNIT_TIME;\n    }\n    return pLib;\n}",
+      "Draft": "func Mpm_LibLutSetSimple(nLutSize int32) *Mpm_LibLut_t {\n    \n    var i, k int32;\n    assert(nLutSize \u003c= MPM_VAR_MAX, \"nLutSize \u003c= MPM_VAR_MAX\");\n    // inlining of macro ABC_CALLOC\n    pLib := \u0026Mpm_LibLut_t{};\n    pLib.LutMax = nLutSize;\n    for  i = 1; i \u003c= pLib.LutMax; i++  {\n        pLib.pLutAreas[i] = MPM_UNIT_AREA;\n        for  k = 0; k \u003c i; k++  {\n            pLib.pLutDelays[i][k] = MPM_UNIT_TIME;\n        }\n    }\n    return pLib;\n}"
+    },
+    {
+      "Name": "Mpm_LibLutFree",
+      "Start": 1656,
+      "End": 1793,
+      "BodyStart": 1699,
+      "Original": "void Mpm_LibLutFree( Mpm_LibLut_t * pLib )\n{\n    if ( pLib == NULL )\n        return;\n    ABC_FREE( pLib-\u003epName );\n    ABC_FREE( pLib );\n}",
+      "Draft": "func Mpm_LibLutFree(pLib *Mpm_LibLut_t) {\n    if pLib == nil {\n        return; }\n    // inlining of macro ABC_FREE\n    ((pLib.pName) ? (free((char *) (pLib.pName)), (pLib.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pLib) ? (free((char *) (pLib)), (pLib) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmLib.c::mechanical::sizeof::1477",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1393,
+      "End": 1393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmLib.c::pointer-cast::1440",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1393,
+      "End": 1393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmLib.c::pointer-cast::1889",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1745,
+      "End": 1745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmLib.c::pointer-cast::2003",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1774,
+      "End": 1774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmLib.c::Mpm_LibLutSetSimple",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_LibLutSetSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1251,
+      "End": 1655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmLib.c::ternary::Mpm_LibLutFree",
+      "Category": "ternary-review",
+      "Symbol": "Mpm_LibLutFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1656,
+      "End": 1793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmLib.c::Mpm_LibLutFree",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_LibLutFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1656,
+      "End": 1793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmLib.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2040
+    }
+  ],
+  "Draft": "package mpm\n\n/**CFile****************************************************************\n\n  FileName    [mpmLib.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Configurable technology mapper.]\n\n  Synopsis    [DSD manipulation for 6-input functions.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 1, 2013.]\n\n  Revision    [$Id: mpmLib.c,v 1.00 2013/06/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mpmInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mpm_LibLutSetSimple(nLutSize int32) *Mpm_LibLut_t {\n    \n    var i, k int32;\n    assert(nLutSize \u003c= MPM_VAR_MAX, \"nLutSize \u003c= MPM_VAR_MAX\");\n    // inlining of macro ABC_CALLOC\n    pLib := \u0026Mpm_LibLut_t{};\n    pLib.LutMax = nLutSize;\n    for  i = 1; i \u003c= pLib.LutMax; i++  {\n        pLib.pLutAreas[i] = MPM_UNIT_AREA;\n        for  k = 0; k \u003c i; k++  {\n            pLib.pLutDelays[i][k] = MPM_UNIT_TIME;\n        }\n    }\n    return pLib;\n}\nfunc Mpm_LibLutFree(pLib *Mpm_LibLut_t) {\n    if pLib == nil {\n        return; }\n    // inlining of macro ABC_FREE\n    ((pLib.pName) ? (free((char *) (pLib.pName)), (pLib.pName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pLib) ? (free((char *) (pLib)), (pLib) = 0) : 0);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

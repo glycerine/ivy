@@ -1,0 +1,1921 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h",
+  "SHA256": "7343593d9b2b5ab7b950c07c7164c5e2a62915a71aa29aea494e8a05029287f6",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 159,
+        "Column": 66,
+        "ByteOffset": 6277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Kit_DsdNtkObj(pNtk *Kit_DsdNtk_t, Id int32) *Kit_DsdObj_t { assert( Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes ); if Id \u003c pNtk.nVars {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 165,
+        "Column": 96,
+        "ByteOffset": 6648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Kit_DsdLitIsLeaf(pNtk *Kit_DsdNtk_t, Lit int32) int32 { var Id int32  = Abc_Lit2Var(Lit); assert( Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes ); return Id \u003c pNtk.nVars; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 166,
+        "Column": 98,
+        "ByteOffset": 6823
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Kit_DsdLitSupport(pNtk *Kit_DsdNtk_t, Lit int32) uint32 { var Id int32  = Abc_Lit2Var(Lit); assert( Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes ); if pNtk.pSupps {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 252,
+        "Column": 54,
+        "ByteOffset": 12077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Kit_GraphVar(pGraph *Kit_Graph_t) *Kit_Node_t { assert( Kit_GraphIsVar( pGraph ) );    return Kit_GraphNode( pGraph, pGraph.eRoot.Node );      }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 253,
+        "Column": 51,
+        "ByteOffset": 12224
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Kit_GraphVarInt(pGraph *Kit_Graph_t) int32 { assert( Kit_GraphIsVar( pGraph ) );    return Kit_GraphNodeInt( pGraph, Kit_GraphVar(pGraph) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 40,
+        "ByteOffset": 13277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Kit_BitMask(nBits int32) uint32 { assert( nBits \u003c= 32 ); return ~((~uint32(0)) \u003c\u003c nBits);               }"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 37,
+        "Column": 1,
+        "ByteOffset": 896
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 515,
+        "Column": 1,
+        "ByteOffset": 23726
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Kit_DsdObjOffset",
+      "Start": 5366,
+      "End": 5498,
+      "BodyStart": 5435,
+      "Original": "static inline unsigned        Kit_DsdObjOffset( int nFans )          { return (nFans \u003e\u003e 1) + ((nFans \u0026 1) \u003e 0);                    }",
+      "Draft": "func Kit_DsdObjOffset(nFans int32) uint32 { return (nFans \u003e\u003e 1) + ((nFans \u0026 1) \u003e 0);                    }"
+    },
+    {
+      "Name": "Kit_DsdObjTruth",
+      "Start": 5499,
+      "End": 5654,
+      "BodyStart": 5568,
+      "Original": "static inline unsigned *      Kit_DsdObjTruth( Kit_DsdObj_t * pObj ) { return pObj-\u003eType == KIT_DSD_PRIME ? (unsigned *)pObj-\u003epFans + pObj-\u003eOffset: NULL; }",
+      "Draft": "func Kit_DsdObjTruth(pObj *Kit_DsdObj_t) *uint32 { if pObj.Type == KIT_DSD_PRIME {\n    return (unsigned *)pObj.pFans + pObj.Offset;\n} else {\n    return nil;\n} }"
+    },
+    {
+      "Name": "Kit_DsdNtkObjNum",
+      "Start": 5655,
+      "End": 5762,
+      "BodyStart": 5724,
+      "Original": "static inline int             Kit_DsdNtkObjNum( Kit_DsdNtk_t * pNtk ){ return pNtk-\u003enVars + pNtk-\u003enNodes; }",
+      "Draft": "func Kit_DsdNtkObjNum(pNtk *Kit_DsdNtk_t) int32 { return pNtk.nVars + pNtk.nNodes; }"
+    },
+    {
+      "Name": "Kit_DsdNtkObj",
+      "Start": 5763,
+      "End": 5965,
+      "BodyStart": 5843,
+      "Original": "static inline Kit_DsdObj_t *  Kit_DsdNtkObj( Kit_DsdNtk_t * pNtk, int Id )      { assert( Id \u003e= 0 \u0026\u0026 Id \u003c pNtk-\u003enVars + pNtk-\u003enNodes ); return Id \u003c pNtk-\u003enVars ? NULL : pNtk-\u003epNodes[Id - pNtk-\u003enVars]; }",
+      "Draft": "func Kit_DsdNtkObj(pNtk *Kit_DsdNtk_t, Id int32) *Kit_DsdObj_t { assert(Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes, \"Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes\"); if Id \u003c pNtk.nVars {\n    return nil;\n} else {\n    return pNtk.pNodes[Id - pNtk.nVars];\n} }"
+    },
+    {
+      "Name": "Kit_DsdNtkRoot",
+      "Start": 5966,
+      "End": 6125,
+      "BodyStart": 6046,
+      "Original": "static inline Kit_DsdObj_t *  Kit_DsdNtkRoot( Kit_DsdNtk_t * pNtk )             { return Kit_DsdNtkObj( pNtk, Abc_Lit2Var(pNtk-\u003eRoot) );                      }",
+      "Draft": "func Kit_DsdNtkRoot(pNtk *Kit_DsdNtk_t) *Kit_DsdObj_t { return Kit_DsdNtkObj( pNtk, Abc_Lit2Var(pNtk.Root) );                      }"
+    },
+    {
+      "Name": "Kit_DsdLitIsLeaf",
+      "Start": 6126,
+      "End": 6316,
+      "BodyStart": 6207,
+      "Original": "static inline int             Kit_DsdLitIsLeaf( Kit_DsdNtk_t * pNtk, int Lit )   { int Id = Abc_Lit2Var(Lit); assert( Id \u003e= 0 \u0026\u0026 Id \u003c pNtk-\u003enVars + pNtk-\u003enNodes ); return Id \u003c pNtk-\u003enVars; }",
+      "Draft": "func Kit_DsdLitIsLeaf(pNtk *Kit_DsdNtk_t, Lit int32) int32 { var Id int32  = Abc_Lit2Var(Lit); assert(Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes, \"Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes\"); return Id \u003c pNtk.nVars; }"
+    },
+    {
+      "Name": "Kit_DsdLitSupport",
+      "Start": 6317,
+      "End": 6571,
+      "BodyStart": 6398,
+      "Original": "static inline unsigned        Kit_DsdLitSupport( Kit_DsdNtk_t * pNtk, int Lit )  { int Id = Abc_Lit2Var(Lit); assert( Id \u003e= 0 \u0026\u0026 Id \u003c pNtk-\u003enVars + pNtk-\u003enNodes ); return pNtk-\u003epSupps? (Id \u003c pNtk-\u003enVars? (1 \u003c\u003c Id) : pNtk-\u003epSupps[Id - pNtk-\u003enVars]) : 0; }",
+      "Draft": "func Kit_DsdLitSupport(pNtk *Kit_DsdNtk_t, Lit int32) uint32 { var Id int32  = Abc_Lit2Var(Lit); assert(Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes, \"Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes\"); if pNtk.pSupps {\n    if Id \u003c pNtk.nVars {\n        return (1 \u003c\u003c Id);\n    } else {\n        return pNtk.pSupps[Id - pNtk.nVars];\n    }\n} else {\n    return 0;\n} }"
+    },
+    {
+      "Name": "Kit_CubeHasLit",
+      "Start": 7715,
+      "End": 7848,
+      "BodyStart": 7805,
+      "Original": "static inline int          Kit_CubeHasLit( unsigned uCube, int i )                        { return(uCube \u0026  (unsigned)(1\u003c\u003ci)) \u003e 0;  }",
+      "Draft": "func Kit_CubeHasLit(uCube uint32, i int32) int32 { return(uCube \u0026  uint32((1\u003c\u003ci))) \u003e 0;  }"
+    },
+    {
+      "Name": "Kit_CubeSetLit",
+      "Start": 7849,
+      "End": 7982,
+      "BodyStart": 7939,
+      "Original": "static inline unsigned     Kit_CubeSetLit( unsigned uCube, int i )                        { return uCube |  (unsigned)(1\u003c\u003ci);       }",
+      "Draft": "func Kit_CubeSetLit(uCube uint32, i int32) uint32 { return uCube |  uint32((1\u003c\u003ci));       }"
+    },
+    {
+      "Name": "Kit_CubeXorLit",
+      "Start": 7983,
+      "End": 8116,
+      "BodyStart": 8073,
+      "Original": "static inline unsigned     Kit_CubeXorLit( unsigned uCube, int i )                        { return uCube ^  (unsigned)(1\u003c\u003ci);       }",
+      "Draft": "func Kit_CubeXorLit(uCube uint32, i int32) uint32 { return uCube ^  uint32((1\u003c\u003ci));       }"
+    },
+    {
+      "Name": "Kit_CubeRemLit",
+      "Start": 8117,
+      "End": 8250,
+      "BodyStart": 8207,
+      "Original": "static inline unsigned     Kit_CubeRemLit( unsigned uCube, int i )                        { return uCube \u0026 ~(unsigned)(1\u003c\u003ci);       }",
+      "Draft": "func Kit_CubeRemLit(uCube uint32, i int32) uint32 { return uCube \u0026 ~uint32((1\u003c\u003ci));       }"
+    },
+    {
+      "Name": "Kit_CubeContains",
+      "Start": 8252,
+      "End": 8385,
+      "BodyStart": 8342,
+      "Original": "static inline int          Kit_CubeContains( unsigned uLarge, unsigned uSmall )           { return (uLarge \u0026 uSmall) == uSmall;     }",
+      "Draft": "func Kit_CubeContains(uLarge uint32, uSmall uint32) int32 { return (uLarge \u0026 uSmall) == uSmall;     }"
+    },
+    {
+      "Name": "Kit_CubeSharp",
+      "Start": 8386,
+      "End": 8519,
+      "BodyStart": 8476,
+      "Original": "static inline unsigned     Kit_CubeSharp( unsigned uCube, unsigned uMask )                { return uCube \u0026 ~uMask;                  }",
+      "Draft": "func Kit_CubeSharp(uCube uint32, uMask uint32) uint32 { return uCube \u0026 ~uMask;                  }"
+    },
+    {
+      "Name": "Kit_CubeMask",
+      "Start": 8520,
+      "End": 8653,
+      "BodyStart": 8610,
+      "Original": "static inline unsigned     Kit_CubeMask( int nVar )                                       { return (~(unsigned)0) \u003e\u003e (32-nVar);     }",
+      "Draft": "func Kit_CubeMask(nVar int32) uint32 { return (~uint32(0)) \u003e\u003e (32-nVar);     }"
+    },
+    {
+      "Name": "Kit_CubeIsMarked",
+      "Start": 8655,
+      "End": 8788,
+      "BodyStart": 8745,
+      "Original": "static inline int          Kit_CubeIsMarked( unsigned uCube )                             { return Kit_CubeHasLit( uCube, 31 );     }",
+      "Draft": "func Kit_CubeIsMarked(uCube uint32) int32 { return Kit_CubeHasLit( uCube, 31 );     }"
+    },
+    {
+      "Name": "Kit_CubeMark",
+      "Start": 8789,
+      "End": 8922,
+      "BodyStart": 8879,
+      "Original": "static inline unsigned     Kit_CubeMark( unsigned uCube )                                 { return Kit_CubeSetLit( uCube, 31 );     }",
+      "Draft": "func Kit_CubeMark(uCube uint32) uint32 { return Kit_CubeSetLit( uCube, 31 );     }"
+    },
+    {
+      "Name": "Kit_CubeUnmark",
+      "Start": 8923,
+      "End": 9056,
+      "BodyStart": 9013,
+      "Original": "static inline unsigned     Kit_CubeUnmark( unsigned uCube )                               { return Kit_CubeRemLit( uCube, 31 );     }",
+      "Draft": "func Kit_CubeUnmark(uCube uint32) uint32 { return Kit_CubeRemLit( uCube, 31 );     }"
+    },
+    {
+      "Name": "Kit_SopCubeNum",
+      "Start": 9058,
+      "End": 9191,
+      "BodyStart": 9148,
+      "Original": "static inline int          Kit_SopCubeNum( Kit_Sop_t * cSop )                             { return cSop-\u003enCubes;                    }",
+      "Draft": "func Kit_SopCubeNum(cSop *Kit_Sop_t) int32 { return cSop.nCubes;                    }"
+    },
+    {
+      "Name": "Kit_SopCube",
+      "Start": 9192,
+      "End": 9325,
+      "BodyStart": 9282,
+      "Original": "static inline unsigned     Kit_SopCube( Kit_Sop_t * cSop, int i )                         { return cSop-\u003epCubes[i];                 }",
+      "Draft": "func Kit_SopCube(cSop *Kit_Sop_t, i int32) uint32 { return cSop.pCubes[i];                 }"
+    },
+    {
+      "Name": "Kit_SopShrink",
+      "Start": 9326,
+      "End": 9459,
+      "BodyStart": 9416,
+      "Original": "static inline void         Kit_SopShrink( Kit_Sop_t * cSop, int nCubesNew )               { cSop-\u003enCubes = nCubesNew;               }",
+      "Draft": "func Kit_SopShrink(cSop *Kit_Sop_t, nCubesNew int32) { cSop.nCubes = nCubesNew;               }"
+    },
+    {
+      "Name": "Kit_SopPushCube",
+      "Start": 9460,
+      "End": 9593,
+      "BodyStart": 9550,
+      "Original": "static inline void         Kit_SopPushCube( Kit_Sop_t * cSop, unsigned uCube )            { cSop-\u003epCubes[cSop-\u003enCubes++] = uCube;   }",
+      "Draft": "func Kit_SopPushCube(cSop *Kit_Sop_t, uCube uint32) { cSop.pCubes[cSop.nCubes++] = uCube;   }"
+    },
+    {
+      "Name": "Kit_SopWriteCube",
+      "Start": 9594,
+      "End": 9727,
+      "BodyStart": 9684,
+      "Original": "static inline void         Kit_SopWriteCube( Kit_Sop_t * cSop, unsigned uCube, int i )    { cSop-\u003epCubes[i] = uCube;                }",
+      "Draft": "func Kit_SopWriteCube(cSop *Kit_Sop_t, uCube uint32, i int32) { cSop.pCubes[i] = uCube;                }"
+    },
+    {
+      "Name": "Kit_EdgeCreate",
+      "Start": 9729,
+      "End": 9894,
+      "BodyStart": 9819,
+      "Original": "static inline Kit_Edge_t   Kit_EdgeCreate( int Node, int fCompl )                         { Kit_Edge_t eEdge = { (unsigned)fCompl, (unsigned)Node }; return eEdge;  }",
+      "Draft": "func Kit_EdgeCreate(Node int32, fCompl int32) Kit_Edge_t { var eEdge Kit_Edge_t  = Kit_Edge_t{ uint32(fCompl), uint32(Node) }; return eEdge;  }"
+    },
+    {
+      "Name": "Kit_EdgeToInt",
+      "Start": 9895,
+      "End": 10040,
+      "BodyStart": 9985,
+      "Original": "static inline unsigned     Kit_EdgeToInt( Kit_Edge_t eEdge )                              { return (eEdge.Node \u003c\u003c 1) | eEdge.fCompl;            }",
+      "Draft": "func Kit_EdgeToInt(eEdge Kit_Edge_t) uint32 { return (eEdge.Node \u003c\u003c 1) | eEdge.fCompl;            }"
+    },
+    {
+      "Name": "Kit_IntToEdge",
+      "Start": 10041,
+      "End": 10186,
+      "BodyStart": 10131,
+      "Original": "static inline Kit_Edge_t   Kit_IntToEdge( unsigned Edge )                                 { return Kit_EdgeCreate( Edge \u003e\u003e 1, Edge \u0026 1 );       }",
+      "Draft": "func Kit_IntToEdge(Edge uint32) Kit_Edge_t { return Kit_EdgeCreate( Edge \u003e\u003e 1, Edge \u0026 1 );       }"
+    },
+    {
+      "Name": "Kit_EdgeToInt_",
+      "Start": 10483,
+      "End": 10637,
+      "BodyStart": 10573,
+      "Original": "static inline unsigned     Kit_EdgeToInt_( Kit_Edge_t m )                                 { union { Kit_Edge_t x; unsigned y; } v; v.x = m; return v.y;  }",
+      "Draft": "func Kit_EdgeToInt_(m Kit_Edge_t) uint32 { union { var x Kit_Edge_t; var y uint32; }\n v; v.x = m; return v.y;  }"
+    },
+    {
+      "Name": "Kit_IntToEdge_",
+      "Start": 10638,
+      "End": 10792,
+      "BodyStart": 10728,
+      "Original": "static inline Kit_Edge_t   Kit_IntToEdge_( unsigned m )                                   { union { Kit_Edge_t x; unsigned y; } v; v.y = m; return v.x;  }",
+      "Draft": "func Kit_IntToEdge_(m uint32) Kit_Edge_t { union { var x Kit_Edge_t; var y uint32; }\n v; v.y = m; return v.x;  }"
+    },
+    {
+      "Name": "Kit_GraphIsConst",
+      "Start": 10794,
+      "End": 10939,
+      "BodyStart": 10884,
+      "Original": "static inline int          Kit_GraphIsConst( Kit_Graph_t * pGraph )                       { return pGraph-\u003efConst;                              }",
+      "Draft": "func Kit_GraphIsConst(pGraph *Kit_Graph_t) int32 { return pGraph.fConst;                              }"
+    },
+    {
+      "Name": "Kit_GraphIsConst0",
+      "Start": 10940,
+      "End": 11085,
+      "BodyStart": 11030,
+      "Original": "static inline int          Kit_GraphIsConst0( Kit_Graph_t * pGraph )                      { return pGraph-\u003efConst \u0026\u0026 pGraph-\u003eeRoot.fCompl;      }",
+      "Draft": "func Kit_GraphIsConst0(pGraph *Kit_Graph_t) int32 { return pGraph.fConst \u0026\u0026 pGraph.eRoot.fCompl;      }"
+    },
+    {
+      "Name": "Kit_GraphIsConst1",
+      "Start": 11086,
+      "End": 11231,
+      "BodyStart": 11176,
+      "Original": "static inline int          Kit_GraphIsConst1( Kit_Graph_t * pGraph )                      { return pGraph-\u003efConst \u0026\u0026 !pGraph-\u003eeRoot.fCompl;     }",
+      "Draft": "func Kit_GraphIsConst1(pGraph *Kit_Graph_t) int32 { return pGraph.fConst \u0026\u0026 !pGraph.eRoot.fCompl;     }"
+    },
+    {
+      "Name": "Kit_GraphIsComplement",
+      "Start": 11232,
+      "End": 11377,
+      "BodyStart": 11322,
+      "Original": "static inline int          Kit_GraphIsComplement( Kit_Graph_t * pGraph )                  { return pGraph-\u003eeRoot.fCompl;                        }",
+      "Draft": "func Kit_GraphIsComplement(pGraph *Kit_Graph_t) int32 { return pGraph.eRoot.fCompl;                        }"
+    },
+    {
+      "Name": "Kit_GraphIsVar",
+      "Start": 11378,
+      "End": 11526,
+      "BodyStart": 11468,
+      "Original": "static inline int          Kit_GraphIsVar( Kit_Graph_t * pGraph )                         { return pGraph-\u003eeRoot.Node \u003c (unsigned)pGraph-\u003enLeaves; }",
+      "Draft": "func Kit_GraphIsVar(pGraph *Kit_Graph_t) int32 { return pGraph.eRoot.Node \u003c uint32(pGraph.nLeaves); }"
+    },
+    {
+      "Name": "Kit_GraphComplement",
+      "Start": 11527,
+      "End": 11672,
+      "BodyStart": 11617,
+      "Original": "static inline void         Kit_GraphComplement( Kit_Graph_t * pGraph )                    { pGraph-\u003eeRoot.fCompl ^= 1;                          }",
+      "Draft": "func Kit_GraphComplement(pGraph *Kit_Graph_t) { pGraph.eRoot.fCompl ^= 1;                          }"
+    },
+    {
+      "Name": "Kit_GraphSetRoot",
+      "Start": 11673,
+      "End": 11818,
+      "BodyStart": 11763,
+      "Original": "static inline void         Kit_GraphSetRoot( Kit_Graph_t * pGraph, Kit_Edge_t eRoot )     { pGraph-\u003eeRoot = eRoot;                              }",
+      "Draft": "func Kit_GraphSetRoot(pGraph *Kit_Graph_t, eRoot Kit_Edge_t) { pGraph.eRoot = eRoot;                              }"
+    },
+    {
+      "Name": "Kit_GraphLeaveNum",
+      "Start": 11819,
+      "End": 11964,
+      "BodyStart": 11909,
+      "Original": "static inline int          Kit_GraphLeaveNum( Kit_Graph_t * pGraph )                      { return pGraph-\u003enLeaves;                             }",
+      "Draft": "func Kit_GraphLeaveNum(pGraph *Kit_Graph_t) int32 { return pGraph.nLeaves;                             }"
+    },
+    {
+      "Name": "Kit_GraphNodeNum",
+      "Start": 11965,
+      "End": 12110,
+      "BodyStart": 12055,
+      "Original": "static inline int          Kit_GraphNodeNum( Kit_Graph_t * pGraph )                       { return pGraph-\u003enSize - pGraph-\u003enLeaves;             }",
+      "Draft": "func Kit_GraphNodeNum(pGraph *Kit_Graph_t) int32 { return pGraph.nSize - pGraph.nLeaves;             }"
+    },
+    {
+      "Name": "Kit_GraphNode",
+      "Start": 12111,
+      "End": 12256,
+      "BodyStart": 12201,
+      "Original": "static inline Kit_Node_t * Kit_GraphNode( Kit_Graph_t * pGraph, int i )                   { return pGraph-\u003epNodes + i;                          }",
+      "Draft": "func Kit_GraphNode(pGraph *Kit_Graph_t, i int32) *Kit_Node_t { return pGraph.pNodes + i;                          }"
+    },
+    {
+      "Name": "Kit_GraphNodeLast",
+      "Start": 12257,
+      "End": 12402,
+      "BodyStart": 12347,
+      "Original": "static inline Kit_Node_t * Kit_GraphNodeLast( Kit_Graph_t * pGraph )                      { return pGraph-\u003epNodes + pGraph-\u003enSize - 1;          }",
+      "Draft": "func Kit_GraphNodeLast(pGraph *Kit_Graph_t) *Kit_Node_t { return pGraph.pNodes + pGraph.nSize - 1;          }"
+    },
+    {
+      "Name": "Kit_GraphNodeInt",
+      "Start": 12403,
+      "End": 12548,
+      "BodyStart": 12493,
+      "Original": "static inline int          Kit_GraphNodeInt( Kit_Graph_t * pGraph, Kit_Node_t * pNode )   { return pNode - pGraph-\u003epNodes;                      }",
+      "Draft": "func Kit_GraphNodeInt(pGraph *Kit_Graph_t, pNode *Kit_Node_t) int32 { return pNode - pGraph.pNodes;                      }"
+    },
+    {
+      "Name": "Kit_GraphNodeIsVar",
+      "Start": 12549,
+      "End": 12699,
+      "BodyStart": 12639,
+      "Original": "static inline int          Kit_GraphNodeIsVar( Kit_Graph_t * pGraph, Kit_Node_t * pNode ) { return Kit_GraphNodeInt(pGraph,pNode) \u003c pGraph-\u003enLeaves; }",
+      "Draft": "func Kit_GraphNodeIsVar(pGraph *Kit_Graph_t, pNode *Kit_Node_t) int32 { return Kit_GraphNodeInt(pGraph,pNode) \u003c pGraph.nLeaves; }"
+    },
+    {
+      "Name": "Kit_GraphVar",
+      "Start": 12700,
+      "End": 12889,
+      "BodyStart": 12790,
+      "Original": "static inline Kit_Node_t * Kit_GraphVar( Kit_Graph_t * pGraph )                           { assert( Kit_GraphIsVar( pGraph ) );    return Kit_GraphNode( pGraph, pGraph-\u003eeRoot.Node );      }",
+      "Draft": "func Kit_GraphVar(pGraph *Kit_Graph_t) *Kit_Node_t { assert((Kit_GraphIsVar( pGraph ) != 0), \"Kit_GraphIsVar( pGraph )\");    return Kit_GraphNode( pGraph, pGraph.eRoot.Node );      }"
+    },
+    {
+      "Name": "Kit_GraphVarInt",
+      "Start": 12890,
+      "End": 13079,
+      "BodyStart": 12980,
+      "Original": "static inline int          Kit_GraphVarInt( Kit_Graph_t * pGraph )                        { assert( Kit_GraphIsVar( pGraph ) );    return Kit_GraphNodeInt( pGraph, Kit_GraphVar(pGraph) ); }",
+      "Draft": "func Kit_GraphVarInt(pGraph *Kit_Graph_t) int32 { assert((Kit_GraphIsVar( pGraph ) != 0), \"Kit_GraphIsVar( pGraph )\");    return Kit_GraphNodeInt( pGraph, Kit_GraphVar(pGraph) ); }"
+    },
+    {
+      "Name": "Kit_GraphNodeFanin0",
+      "Start": 13080,
+      "End": 13269,
+      "BodyStart": 13170,
+      "Original": "static inline Kit_Node_t * Kit_GraphNodeFanin0( Kit_Graph_t * pGraph, Kit_Node_t * pNode ){ return Kit_GraphNodeIsVar(pGraph, pNode)? NULL : Kit_GraphNode(pGraph, pNode-\u003eeEdge0.Node);     }",
+      "Draft": "func Kit_GraphNodeFanin0(pGraph *Kit_Graph_t, pNode *Kit_Node_t) *Kit_Node_t { if Kit_GraphNodeIsVar(pGraph, pNode) != 0 {\n    return nil;\n} else {\n    return Kit_GraphNode(pGraph, pNode.eEdge0.Node);\n}     }"
+    },
+    {
+      "Name": "Kit_GraphNodeFanin1",
+      "Start": 13270,
+      "End": 13459,
+      "BodyStart": 13360,
+      "Original": "static inline Kit_Node_t * Kit_GraphNodeFanin1( Kit_Graph_t * pGraph, Kit_Node_t * pNode ){ return Kit_GraphNodeIsVar(pGraph, pNode)? NULL : Kit_GraphNode(pGraph, pNode-\u003eeEdge1.Node);     }",
+      "Draft": "func Kit_GraphNodeFanin1(pGraph *Kit_Graph_t, pNode *Kit_Node_t) *Kit_Node_t { if Kit_GraphNodeIsVar(pGraph, pNode) != 0 {\n    return nil;\n} else {\n    return Kit_GraphNode(pGraph, pNode.eEdge1.Node);\n}     }"
+    },
+    {
+      "Name": "Kit_GraphRootLevel",
+      "Start": 13460,
+      "End": 13649,
+      "BodyStart": 13550,
+      "Original": "static inline int          Kit_GraphRootLevel( Kit_Graph_t * pGraph )                     { return Kit_GraphNode(pGraph, pGraph-\u003eeRoot.Node)-\u003eLevel;                                        }",
+      "Draft": "func Kit_GraphRootLevel(pGraph *Kit_Graph_t) int32 { return Kit_GraphNode(pGraph, pGraph.eRoot.Node).Level;                                        }"
+    },
+    {
+      "Name": "Kit_SuppIsMinBase",
+      "Start": 13651,
+      "End": 13796,
+      "BodyStart": 13741,
+      "Original": "static inline int          Kit_SuppIsMinBase( int Supp )                                  { return (Supp \u0026 (Supp+1)) == 0;                      }",
+      "Draft": "func Kit_SuppIsMinBase(Supp int32) int32 { return (Supp \u0026 (Supp+1)) == 0;                      }"
+    },
+    {
+      "Name": "Kit_BitWordNum",
+      "Start": 13798,
+      "End": 13931,
+      "BodyStart": 13856,
+      "Original": "static inline int          Kit_BitWordNum( int nBits )    { return nBits/(8*sizeof(unsigned)) + ((nBits%(8*sizeof(unsigned))) \u003e 0); }",
+      "Draft": "func Kit_BitWordNum(nBits int32) int32 { return nBits/(8*sizeof(unsigned)) + ((nBits%(8*sizeof(unsigned))) \u003e 0); }"
+    },
+    {
+      "Name": "Kit_TruthWordNum",
+      "Start": 13932,
+      "End": 14065,
+      "BodyStart": 13990,
+      "Original": "static inline int          Kit_TruthWordNum( int nVars )  { return nVars \u003c= 5 ? 1 : (1 \u003c\u003c (nVars - 5));                             }",
+      "Draft": "func Kit_TruthWordNum(nVars int32) int32 { if nVars \u003c= 5 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 5));\n}                             }"
+    },
+    {
+      "Name": "Kit_BitMask",
+      "Start": 14066,
+      "End": 14199,
+      "BodyStart": 14124,
+      "Original": "static inline unsigned     Kit_BitMask( int nBits )       { assert( nBits \u003c= 32 ); return ~((~(unsigned)0) \u003c\u003c nBits);               }",
+      "Draft": "func Kit_BitMask(nBits int32) uint32 { assert(nBits \u003c= 32, \"nBits \u003c= 32\"); return ~((~uint32(0)) \u003c\u003c nBits);               }"
+    },
+    {
+      "Name": "Kit_TruthSetBit",
+      "Start": 14201,
+      "End": 14318,
+      "BodyStart": 14271,
+      "Original": "static inline void         Kit_TruthSetBit( unsigned * p, int Bit )   { p[Bit\u003e\u003e5] |= (1\u003c\u003c(Bit \u0026 31));               }",
+      "Draft": "func Kit_TruthSetBit(p *uint32, Bit int32) { p[Bit\u003e\u003e5] |= (1\u003c\u003c(Bit \u0026 31));               }"
+    },
+    {
+      "Name": "Kit_TruthXorBit",
+      "Start": 14319,
+      "End": 14436,
+      "BodyStart": 14389,
+      "Original": "static inline void         Kit_TruthXorBit( unsigned * p, int Bit )   { p[Bit\u003e\u003e5] ^= (1\u003c\u003c(Bit \u0026 31));               }",
+      "Draft": "func Kit_TruthXorBit(p *uint32, Bit int32) { p[Bit\u003e\u003e5] ^= (1\u003c\u003c(Bit \u0026 31));               }"
+    },
+    {
+      "Name": "Kit_TruthHasBit",
+      "Start": 14437,
+      "End": 14554,
+      "BodyStart": 14507,
+      "Original": "static inline int          Kit_TruthHasBit( unsigned * p, int Bit )   { return (p[Bit\u003e\u003e5] \u0026 (1\u003c\u003c(Bit \u0026 31))) \u003e 0;   }",
+      "Draft": "func Kit_TruthHasBit(p *uint32, Bit int32) int32 { return (p[Bit\u003e\u003e5] \u0026 (1\u003c\u003c(Bit \u0026 31))) \u003e 0;   }"
+    },
+    {
+      "Name": "Kit_WordFindFirstBit",
+      "Start": 14556,
+      "End": 14727,
+      "BodyStart": 14613,
+      "Original": "static inline int Kit_WordFindFirstBit( unsigned uWord )\n{\n    int i;\n    for ( i = 0; i \u003c 32; i++ )\n        if ( uWord \u0026 (1 \u003c\u003c i) )\n            return i;\n    return -1;\n}",
+      "Draft": "func Kit_WordFindFirstBit(uWord uint32) int32 {\n    var i int32;\n    for  i = 0; i \u003c 32; i++  {\n        if uWord \u0026 (1 \u003c\u003c i) {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Kit_WordHasOneBit",
+      "Start": 14728,
+      "End": 14824,
+      "BodyStart": 14782,
+      "Original": "static inline int Kit_WordHasOneBit( unsigned uWord )\n{\n    return (uWord \u0026 (uWord - 1)) == 0;\n}",
+      "Draft": "func Kit_WordHasOneBit(uWord uint32) int32 {\n    return (uWord \u0026 (uWord - 1)) == 0;\n}"
+    },
+    {
+      "Name": "Kit_WordCountOnes",
+      "Start": 14825,
+      "End": 15178,
+      "BodyStart": 14879,
+      "Original": "static inline int Kit_WordCountOnes( unsigned uWord )\n{\n    uWord = (uWord \u0026 0x55555555) + ((uWord\u003e\u003e1) \u0026 0x55555555);\n    uWord = (uWord \u0026 0x33333333) + ((uWord\u003e\u003e2) \u0026 0x33333333);\n    uWord = (uWord \u0026 0x0F0F0F0F) + ((uWord\u003e\u003e4) \u0026 0x0F0F0F0F);\n    uWord = (uWord \u0026 0x00FF00FF) + ((uWord\u003e\u003e8) \u0026 0x00FF00FF);\n    return  (uWord \u0026 0x0000FFFF) + (uWord\u003e\u003e16);\n}",
+      "Draft": "func Kit_WordCountOnes(uWord uint32) int32 {\n    uWord = (uWord \u0026 0x55555555) + ((uWord\u003e\u003e1) \u0026 0x55555555);\n    uWord = (uWord \u0026 0x33333333) + ((uWord\u003e\u003e2) \u0026 0x33333333);\n    uWord = (uWord \u0026 0x0F0F0F0F) + ((uWord\u003e\u003e4) \u0026 0x0F0F0F0F);\n    uWord = (uWord \u0026 0x00FF00FF) + ((uWord\u003e\u003e8) \u0026 0x00FF00FF);\n    return  (uWord \u0026 0x0000FFFF) + (uWord\u003e\u003e16);\n}"
+    },
+    {
+      "Name": "Kit_TruthCountOnes",
+      "Start": 15179,
+      "End": 15393,
+      "BodyStart": 15245,
+      "Original": "static inline int Kit_TruthCountOnes( unsigned * pIn, int nVars )\n{\n    int w, Counter = 0;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        Counter += Kit_WordCountOnes(pIn[w]);\n    return Counter;\n}",
+      "Draft": "func Kit_TruthCountOnes(pIn *uint32, nVars int32) int32 {\n    var w, Counter int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        Counter += Kit_WordCountOnes(pIn[w]);\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Kit_TruthFindFirstBit",
+      "Start": 15394,
+      "End": 15622,
+      "BodyStart": 15463,
+      "Original": "static inline int Kit_TruthFindFirstBit( unsigned * pIn, int nVars )\n{\n    int w;\n    for ( w = 0; w \u003c Kit_TruthWordNum(nVars); w++ )\n        if ( pIn[w] )\n            return 32*w + Kit_WordFindFirstBit(pIn[w]);\n    return -1;\n}",
+      "Draft": "func Kit_TruthFindFirstBit(pIn *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = 0; w \u003c Kit_TruthWordNum(nVars); w++  {\n        if pIn[w] {\n            return 32*w + Kit_WordFindFirstBit(pIn[w]); }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Kit_TruthFindFirstZero",
+      "Start": 15623,
+      "End": 15854,
+      "BodyStart": 15693,
+      "Original": "static inline int Kit_TruthFindFirstZero( unsigned * pIn, int nVars )\n{\n    int w;\n    for ( w = 0; w \u003c Kit_TruthWordNum(nVars); w++ )\n        if ( ~pIn[w] )\n            return 32*w + Kit_WordFindFirstBit(~pIn[w]);\n    return -1;\n}",
+      "Draft": "func Kit_TruthFindFirstZero(pIn *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = 0; w \u003c Kit_TruthWordNum(nVars); w++  {\n        if ~pIn[w] {\n            return 32*w + Kit_WordFindFirstBit(~pIn[w]); }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Kit_TruthIsEqual",
+      "Start": 15855,
+      "End": 16076,
+      "BodyStart": 15937,
+      "Original": "static inline int Kit_TruthIsEqual( unsigned * pIn0, unsigned * pIn1, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        if ( pIn0[w] != pIn1[w] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Kit_TruthIsEqual(pIn0 *uint32, pIn1 *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if pIn0[w] != pIn1[w] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Kit_TruthIsEqualWithCare",
+      "Start": 16077,
+      "End": 16350,
+      "BodyStart": 16185,
+      "Original": "static inline int Kit_TruthIsEqualWithCare( unsigned * pIn0, unsigned * pIn1, unsigned * pCare, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        if ( (pIn0[w] \u0026 pCare[w]) != (pIn1[w] \u0026 pCare[w]) )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Kit_TruthIsEqualWithCare(pIn0 *uint32, pIn1 *uint32, pCare *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if (pIn0[w] \u0026 pCare[w]) != (pIn1[w] \u0026 pCare[w]) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Kit_TruthIsOpposite",
+      "Start": 16351,
+      "End": 16576,
+      "BodyStart": 16436,
+      "Original": "static inline int Kit_TruthIsOpposite( unsigned * pIn0, unsigned * pIn1, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        if ( pIn0[w] != ~pIn1[w] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Kit_TruthIsOpposite(pIn0 *uint32, pIn1 *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if pIn0[w] != ~pIn1[w] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Kit_TruthIsEqualWithPhase",
+      "Start": 16577,
+      "End": 17018,
+      "BodyStart": 16668,
+      "Original": "static inline int Kit_TruthIsEqualWithPhase( unsigned * pIn0, unsigned * pIn1, int nVars )\n{\n    int w;\n    if ( (pIn0[0] \u0026 1) == (pIn1[0] \u0026 1) )\n    {\n        for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n            if ( pIn0[w] != pIn1[w] )\n                return 0;\n    }\n    else\n    {\n        for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n            if ( pIn0[w] != ~pIn1[w] )\n                return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Kit_TruthIsEqualWithPhase(pIn0 *uint32, pIn1 *uint32, nVars int32) int32 {\n    var w int32;\n    if (pIn0[0] \u0026 1) == (pIn1[0] \u0026 1) {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            if pIn0[w] != pIn1[w] {\n                return 0; }\n        }\n    \n    } else {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            if pIn0[w] != ~pIn1[w] {\n                return 0; }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Kit_TruthIsConst0",
+      "Start": 17019,
+      "End": 17211,
+      "BodyStart": 17084,
+      "Original": "static inline int Kit_TruthIsConst0( unsigned * pIn, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        if ( pIn[w] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Kit_TruthIsConst0(pIn *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if pIn[w] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Kit_TruthIsConst1",
+      "Start": 17212,
+      "End": 17420,
+      "BodyStart": 17277,
+      "Original": "static inline int Kit_TruthIsConst1( unsigned * pIn, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        if ( pIn[w] != ~(unsigned)0 )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Kit_TruthIsConst1(pIn *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if pIn[w] != ~uint32(0) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Kit_TruthIsImply",
+      "Start": 17421,
+      "End": 17642,
+      "BodyStart": 17503,
+      "Original": "static inline int Kit_TruthIsImply( unsigned * pIn1, unsigned * pIn2, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        if ( pIn1[w] \u0026 ~pIn2[w] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Kit_TruthIsImply(pIn1 *uint32, pIn2 *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if pIn1[w] \u0026 ~pIn2[w] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Kit_TruthIsDisjoint",
+      "Start": 17643,
+      "End": 17866,
+      "BodyStart": 17728,
+      "Original": "static inline int Kit_TruthIsDisjoint( unsigned * pIn1, unsigned * pIn2, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        if ( pIn1[w] \u0026 pIn2[w] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Kit_TruthIsDisjoint(pIn1 *uint32, pIn2 *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if pIn1[w] \u0026 pIn2[w] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Kit_TruthIsDisjoint3",
+      "Start": 17867,
+      "End": 18118,
+      "BodyStart": 17970,
+      "Original": "static inline int Kit_TruthIsDisjoint3( unsigned * pIn1, unsigned * pIn2, unsigned * pIn3, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        if ( pIn1[w] \u0026 pIn2[w] \u0026 pIn3[w] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Kit_TruthIsDisjoint3(pIn1 *uint32, pIn2 *uint32, pIn3 *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if pIn1[w] \u0026 pIn2[w] \u0026 pIn3[w] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Kit_TruthCopy",
+      "Start": 18119,
+      "End": 18293,
+      "BodyStart": 18198,
+      "Original": "static inline void Kit_TruthCopy( unsigned * pOut, unsigned * pIn, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = pIn[w];\n}",
+      "Draft": "func Kit_TruthCopy(pOut *uint32, pIn *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn[w];\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthClear",
+      "Start": 18294,
+      "End": 18448,
+      "BodyStart": 18358,
+      "Original": "static inline void Kit_TruthClear( unsigned * pOut, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = 0;\n}",
+      "Draft": "func Kit_TruthClear(pOut *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = 0;\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthFill",
+      "Start": 18449,
+      "End": 18613,
+      "BodyStart": 18512,
+      "Original": "static inline void Kit_TruthFill( unsigned * pOut, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = ~(unsigned)0;\n}",
+      "Draft": "func Kit_TruthFill(pOut *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = ~uint32(0);\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthNot",
+      "Start": 18614,
+      "End": 18788,
+      "BodyStart": 18692,
+      "Original": "static inline void Kit_TruthNot( unsigned * pOut, unsigned * pIn, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = ~pIn[w];\n}",
+      "Draft": "func Kit_TruthNot(pOut *uint32, pIn *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = ~pIn[w];\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthAnd",
+      "Start": 18789,
+      "End": 18991,
+      "BodyStart": 18885,
+      "Original": "static inline void Kit_TruthAnd( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = pIn0[w] \u0026 pIn1[w];\n}",
+      "Draft": "func Kit_TruthAnd(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn0[w] \u0026 pIn1[w];\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthOr",
+      "Start": 18992,
+      "End": 19193,
+      "BodyStart": 19087,
+      "Original": "static inline void Kit_TruthOr( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = pIn0[w] | pIn1[w];\n}",
+      "Draft": "func Kit_TruthOr(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn0[w] | pIn1[w];\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthXor",
+      "Start": 19194,
+      "End": 19396,
+      "BodyStart": 19290,
+      "Original": "static inline void Kit_TruthXor( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = pIn0[w] ^ pIn1[w];\n}",
+      "Draft": "func Kit_TruthXor(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn0[w] ^ pIn1[w];\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthSharp",
+      "Start": 19397,
+      "End": 19602,
+      "BodyStart": 19495,
+      "Original": "static inline void Kit_TruthSharp( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = pIn0[w] \u0026 ~pIn1[w];\n}",
+      "Draft": "func Kit_TruthSharp(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn0[w] \u0026 ~pIn1[w];\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthNand",
+      "Start": 19603,
+      "End": 19809,
+      "BodyStart": 19700,
+      "Original": "static inline void Kit_TruthNand( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = ~(pIn0[w] \u0026 pIn1[w]);\n}",
+      "Draft": "func Kit_TruthNand(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = ~(pIn0[w] \u0026 pIn1[w]);\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthAndPhase",
+      "Start": 19810,
+      "End": 20546,
+      "BodyStart": 19937,
+      "Original": "static inline void Kit_TruthAndPhase( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars, int fCompl0, int fCompl1 )\n{\n    int w;\n    if ( fCompl0 \u0026\u0026 fCompl1 )\n    {\n        for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n            pOut[w] = ~(pIn0[w] | pIn1[w]);\n    }\n    else if ( fCompl0 \u0026\u0026 !fCompl1 )\n    {\n        for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n            pOut[w] = ~pIn0[w] \u0026 pIn1[w];\n    }\n    else if ( !fCompl0 \u0026\u0026 fCompl1 )\n    {\n        for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n            pOut[w] = pIn0[w] \u0026 ~pIn1[w];\n    }\n    else // if ( !fCompl0 \u0026\u0026 !fCompl1 )\n    {\n        for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n            pOut[w] = pIn0[w] \u0026 pIn1[w];\n    }\n}",
+      "Draft": "func Kit_TruthAndPhase(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32, fCompl0 int32, fCompl1 int32) {\n    var w int32;\n    if fCompl0 \u0026\u0026 fCompl1 {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = ~(pIn0[w] | pIn1[w]);\n        }\n    \n    } else if fCompl0 \u0026\u0026 !fCompl1 {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = ~pIn0[w] \u0026 pIn1[w];\n        }\n    \n    } else if !fCompl0 \u0026\u0026 fCompl1 {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = pIn0[w] \u0026 ~pIn1[w];\n        }\n    \n    } else { // if ( !fCompl0 \u0026\u0026 !fCompl1 )\n    \n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = pIn0[w] \u0026 pIn1[w];\n        }\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthOrPhase",
+      "Start": 20547,
+      "End": 21282,
+      "BodyStart": 20673,
+      "Original": "static inline void Kit_TruthOrPhase( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, int nVars, int fCompl0, int fCompl1 )\n{\n    int w;\n    if ( fCompl0 \u0026\u0026 fCompl1 )\n    {\n        for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n            pOut[w] = ~(pIn0[w] \u0026 pIn1[w]);\n    }\n    else if ( fCompl0 \u0026\u0026 !fCompl1 )\n    {\n        for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n            pOut[w] = ~pIn0[w] | pIn1[w];\n    }\n    else if ( !fCompl0 \u0026\u0026 fCompl1 )\n    {\n        for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n            pOut[w] = pIn0[w] | ~pIn1[w];\n    }\n    else // if ( !fCompl0 \u0026\u0026 !fCompl1 )\n    {\n        for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n            pOut[w] = pIn0[w] | pIn1[w];\n    }\n}",
+      "Draft": "func Kit_TruthOrPhase(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32, fCompl0 int32, fCompl1 int32) {\n    var w int32;\n    if fCompl0 \u0026\u0026 fCompl1 {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = ~(pIn0[w] \u0026 pIn1[w]);\n        }\n    \n    } else if fCompl0 \u0026\u0026 !fCompl1 {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = ~pIn0[w] | pIn1[w];\n        }\n    \n    } else if !fCompl0 \u0026\u0026 fCompl1 {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = pIn0[w] | ~pIn1[w];\n        }\n    \n    } else { // if ( !fCompl0 \u0026\u0026 !fCompl1 )\n    \n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = pIn0[w] | pIn1[w];\n        }\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthMux",
+      "Start": 21283,
+      "End": 21530,
+      "BodyStart": 21397,
+      "Original": "static inline void Kit_TruthMux( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, unsigned * pCtrl, int nVars )\n{\n    int w;\n    for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n        pOut[w] = (pIn0[w] \u0026 ~pCtrl[w]) | (pIn1[w] \u0026 pCtrl[w]);\n}",
+      "Draft": "func Kit_TruthMux(pOut *uint32, pIn0 *uint32, pIn1 *uint32, pCtrl *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = (pIn0[w] \u0026 ~pCtrl[w]) | (pIn1[w] \u0026 pCtrl[w]);\n    }\n}"
+    },
+    {
+      "Name": "Kit_TruthMuxPhase",
+      "Start": 21531,
+      "End": 21958,
+      "BodyStart": 21662,
+      "Original": "static inline void Kit_TruthMuxPhase( unsigned * pOut, unsigned * pIn0, unsigned * pIn1, unsigned * pCtrl, int nVars, int fComp0 )\n{\n    int w;\n    if ( fComp0 )\n        for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n            pOut[w] = (~pIn0[w] \u0026 ~pCtrl[w]) | (pIn1[w] \u0026 pCtrl[w]);\n    else\n        for ( w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w-- )\n            pOut[w] = (pIn0[w] \u0026 ~pCtrl[w]) | (pIn1[w] \u0026 pCtrl[w]);\n}",
+      "Draft": "func Kit_TruthMuxPhase(pOut *uint32, pIn0 *uint32, pIn1 *uint32, pCtrl *uint32, nVars int32, fComp0 int32) {\n    var w int32;\n    if fComp0 != 0 {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = (~pIn0[w] \u0026 ~pCtrl[w]) | (pIn1[w] \u0026 pCtrl[w]);\n        }\n    } else {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = (pIn0[w] \u0026 ~pCtrl[w]) | (pIn1[w] \u0026 pCtrl[w]);\n        } }\n}"
+    },
+    {
+      "Name": "Kit_TruthIthVar",
+      "Start": 21959,
+      "End": 22483,
+      "BodyStart": 22036,
+      "Original": "static inline void Kit_TruthIthVar( unsigned * pTruth, int nVars, int iVar )\n{\n    unsigned Masks[5] = { 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    int k, nWords = (nVars \u003c= 5 ? 1 : (1 \u003c\u003c (nVars - 5)));\n    if ( iVar \u003c 5 )\n    {\n        for ( k = 0; k \u003c nWords; k++ )\n            pTruth[k] = Masks[iVar];\n    }\n    else\n    {\n        for ( k = 0; k \u003c nWords; k++ )\n            if ( k \u0026 (1 \u003c\u003c (iVar-5)) )\n                pTruth[k] = ~(unsigned)0;\n            else\n                pTruth[k] = 0;\n    }\n}",
+      "Draft": "func Kit_TruthIthVar(pTruth *uint32, nVars int32, iVar int32) {\n    var Masks [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    var k int32;\n    var nWords int32;\n    if nVars \u003c= 5 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars - 5));\n    }\n    if iVar \u003c 5 {\n        for  k = 0; k \u003c nWords; k++  {\n            pTruth[k] = Masks[iVar];\n        }\n    \n    } else {\n        for  k = 0; k \u003c nWords; k++  {\n            if k \u0026 (1 \u003c\u003c (iVar-5)) {\n                pTruth[k] = ~uint32(0);\n            } else {\n                pTruth[k] = 0; }\n        }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_Sop_t",
+      "Category": "struct-review",
+      "Symbol": "Kit_Sop_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1428,
+      "End": 1675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_Edge_t::unsigned          fCompl   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Edge_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1736,
+      "End": 1773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_Edge_t::// the complemented bit\n    unsigned          Node     : 30;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Edge_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1773,
+      "End": 1836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_Edge_t",
+      "Category": "struct-review",
+      "Symbol": "Kit_Edge_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1677,
+      "End": 1887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_Node_t::// the right child of the node\n    // other info\n    union { int       iFunc;           // the function of the node (BDD or AIG)\n    void *            pFunc; };",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2047,
+      "End": 2217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_Node_t::// the function of the node (BDD or AIG)\n    unsigned          Level    : 14;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2217,
+      "End": 2302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_Node_t::// the level of this node in the global AIG\n    // printing info \n    unsigned          fNodeOr  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2302,
+      "End": 2407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_Node_t::// marks the original OR node\n    unsigned          fCompl0  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2407,
+      "End": 2476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_Node_t::// marks the original complemented edge\n    unsigned          fCompl1  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2476,
+      "End": 2555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_Node_t::// marks the original complemented edge\n    // latch info\n    unsigned          nLat0    :  5;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2555,
+      "End": 2652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_Node_t::// the number of latches on the first edge\n    unsigned          nLat1    :  5;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2652,
+      "End": 2734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_Node_t::// the number of latches on the second edge\n    unsigned          nLat2    :  5;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2734,
+      "End": 2817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_Node_t",
+      "Category": "struct-review",
+      "Symbol": "Kit_Node_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1889,
+      "End": 2866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_Graph_t",
+      "Category": "struct-review",
+      "Symbol": "Kit_Graph_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2868,
+      "End": 3378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_DsdObj_t::unsigned       Id         : 6;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_DsdObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3792,
+      "End": 3828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_DsdObj_t::// the number of this node\n    unsigned       Type       : 3;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_DsdObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3828,
+      "End": 3891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_DsdObj_t::// none, const, var, AND, XOR, MUX, PRIME\n    unsigned       fMark      : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_DsdObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3891,
+      "End": 3969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_DsdObj_t::// finished checking output\n    unsigned       Offset     : 8;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_DsdObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3969,
+      "End": 4033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_DsdObj_t::// offset to the truth table\n    unsigned       nRefs      : 8;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_DsdObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4033,
+      "End": 4098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_DsdObj_t::// offset to the truth table\n    unsigned       nFans      : 6;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_DsdObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4098,
+      "End": 4163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_DsdObj_t::// the number of fanins of this node\n    unsigned short pFans[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_DsdObj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4163,
+      "End": 4230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_DsdObj_t",
+      "Category": "struct-review",
+      "Symbol": "Kit_DsdObj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 3727,
+      "End": 4262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_DsdNtk_t::unsigned short nVars;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_DsdNtk_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4344,
+      "End": 4370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_DsdNtk_t::// at most 16 (perhaps 18?)\n    unsigned short nNodesAlloc;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_DsdNtk_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4370,
+      "End": 4440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_DsdNtk_t::// the number of allocated nodes (at most nVars)\n    unsigned short nNodes;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_DsdNtk_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4440,
+      "End": 4520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_DsdNtk_t::// the number of nodes\n    unsigned short Root;",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_DsdNtk_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4520,
+      "End": 4577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_DsdNtk_t",
+      "Category": "struct-review",
+      "Symbol": "Kit_DsdNtk_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 4279,
+      "End": 4810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::struct::Kit_DsdMan_t",
+      "Category": "struct-review",
+      "Symbol": "Kit_DsdMan_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 4827,
+      "End": 5363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::mechanical::union::2125",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 2110,
+      "End": 2115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::mechanical::enum::3422",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 3407,
+      "End": 3411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::mechanical::union::10590",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 10575,
+      "End": 10580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::mechanical::union::10745",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 10730,
+      "End": 10735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::mechanical::sizeof::13889",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13874,
+      "End": 13880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::mechanical::sizeof::13920",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13905,
+      "End": 13911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::pointer-cast::5622",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5607,
+      "End": 5619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::macro::Kit_DsdNtkForEachObj",
+      "Category": "macro-review",
+      "Symbol": "Kit_DsdNtkForEachObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6573,
+      "End": 6734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::macro::Kit_DsdObjForEachFanin",
+      "Category": "macro-review",
+      "Symbol": "Kit_DsdObjForEachFanin",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6735,
+      "End": 6902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::macro::Kit_DsdObjForEachFaninReverse",
+      "Category": "macro-review",
+      "Symbol": "Kit_DsdObjForEachFaninReverse",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6903,
+      "End": 7075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::macro::Kit_PlaForEachCube",
+      "Category": "macro-review",
+      "Symbol": "Kit_PlaForEachCube",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7077,
+      "End": 7203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::macro::Kit_PlaCubeForEachVar",
+      "Category": "macro-review",
+      "Symbol": "Kit_PlaCubeForEachVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7204,
+      "End": 7349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::macro::KIT_MIN",
+      "Category": "macro-review",
+      "Symbol": "KIT_MIN",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7571,
+      "End": 7622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::macro::KIT_MAX",
+      "Category": "macro-review",
+      "Symbol": "KIT_MAX",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7623,
+      "End": 7674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::macro::Kit_SopForEachCube",
+      "Category": "macro-review",
+      "Symbol": "Kit_SopForEachCube",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22706,
+      "End": 22876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::macro::Kit_CubeForEachLiteral",
+      "Category": "macro-review",
+      "Symbol": "Kit_CubeForEachLiteral",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22877,
+      "End": 23036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::macro::Kit_GraphForEachLeaf",
+      "Category": "macro-review",
+      "Symbol": "Kit_GraphForEachLeaf",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23038,
+      "End": 23226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::macro::Kit_GraphForEachNode",
+      "Category": "macro-review",
+      "Symbol": "Kit_GraphForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23227,
+      "End": 23428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_DsdObjOffset",
+      "Category": "semantic-review",
+      "Symbol": "Kit_DsdObjOffset",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5366,
+      "End": 5498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_DsdObjTruth",
+      "Category": "semantic-review",
+      "Symbol": "Kit_DsdObjTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5499,
+      "End": 5654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_DsdNtkObjNum",
+      "Category": "semantic-review",
+      "Symbol": "Kit_DsdNtkObjNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5655,
+      "End": 5762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_DsdNtkObj",
+      "Category": "semantic-review",
+      "Symbol": "Kit_DsdNtkObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5763,
+      "End": 5965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_DsdNtkRoot",
+      "Category": "semantic-review",
+      "Symbol": "Kit_DsdNtkRoot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5966,
+      "End": 6125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_DsdLitIsLeaf",
+      "Category": "semantic-review",
+      "Symbol": "Kit_DsdLitIsLeaf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6126,
+      "End": 6316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_DsdLitSupport",
+      "Category": "semantic-review",
+      "Symbol": "Kit_DsdLitSupport",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6317,
+      "End": 6571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_CubeHasLit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_CubeHasLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7715,
+      "End": 7848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_CubeSetLit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_CubeSetLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7849,
+      "End": 7982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_CubeXorLit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_CubeXorLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7983,
+      "End": 8116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_CubeRemLit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_CubeRemLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8117,
+      "End": 8250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_CubeContains",
+      "Category": "semantic-review",
+      "Symbol": "Kit_CubeContains",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8252,
+      "End": 8385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_CubeSharp",
+      "Category": "semantic-review",
+      "Symbol": "Kit_CubeSharp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8386,
+      "End": 8519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_CubeMask",
+      "Category": "semantic-review",
+      "Symbol": "Kit_CubeMask",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8520,
+      "End": 8653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_CubeIsMarked",
+      "Category": "semantic-review",
+      "Symbol": "Kit_CubeIsMarked",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8655,
+      "End": 8788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_CubeMark",
+      "Category": "semantic-review",
+      "Symbol": "Kit_CubeMark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8789,
+      "End": 8922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_CubeUnmark",
+      "Category": "semantic-review",
+      "Symbol": "Kit_CubeUnmark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8923,
+      "End": 9056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_SopCubeNum",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopCubeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9058,
+      "End": 9191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_SopCube",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9192,
+      "End": 9325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_SopShrink",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopShrink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9326,
+      "End": 9459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_SopPushCube",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopPushCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9460,
+      "End": 9593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_SopWriteCube",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SopWriteCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9594,
+      "End": 9727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_EdgeCreate",
+      "Category": "semantic-review",
+      "Symbol": "Kit_EdgeCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9729,
+      "End": 9894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_EdgeToInt",
+      "Category": "semantic-review",
+      "Symbol": "Kit_EdgeToInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9895,
+      "End": 10040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_IntToEdge",
+      "Category": "semantic-review",
+      "Symbol": "Kit_IntToEdge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10041,
+      "End": 10186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_EdgeToInt_",
+      "Category": "semantic-review",
+      "Symbol": "Kit_EdgeToInt_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10483,
+      "End": 10637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_IntToEdge_",
+      "Category": "semantic-review",
+      "Symbol": "Kit_IntToEdge_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10638,
+      "End": 10792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10794,
+      "End": 10939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphIsConst0",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphIsConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10940,
+      "End": 11085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphIsConst1",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphIsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11086,
+      "End": 11231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphIsComplement",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphIsComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11232,
+      "End": 11377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphIsVar",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphIsVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11378,
+      "End": 11526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphComplement",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11527,
+      "End": 11672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphSetRoot",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphSetRoot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11673,
+      "End": 11818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphLeaveNum",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphLeaveNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11819,
+      "End": 11964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11965,
+      "End": 12110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphNode",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12111,
+      "End": 12256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphNodeLast",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphNodeLast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12257,
+      "End": 12402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphNodeInt",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphNodeInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12403,
+      "End": 12548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphNodeIsVar",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphNodeIsVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12549,
+      "End": 12699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphVar",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12700,
+      "End": 12889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphVarInt",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphVarInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12890,
+      "End": 13079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphNodeFanin0",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphNodeFanin0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13080,
+      "End": 13269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphNodeFanin1",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphNodeFanin1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13270,
+      "End": 13459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_GraphRootLevel",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphRootLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13460,
+      "End": 13649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_SuppIsMinBase",
+      "Category": "semantic-review",
+      "Symbol": "Kit_SuppIsMinBase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13651,
+      "End": 13796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_BitWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Kit_BitWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13798,
+      "End": 13931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13932,
+      "End": 14065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_BitMask",
+      "Category": "semantic-review",
+      "Symbol": "Kit_BitMask",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14066,
+      "End": 14199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthSetBit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthSetBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14201,
+      "End": 14318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthXorBit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthXorBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14319,
+      "End": 14436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthHasBit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthHasBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14437,
+      "End": 14554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_WordFindFirstBit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_WordFindFirstBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14556,
+      "End": 14727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_WordHasOneBit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_WordHasOneBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14728,
+      "End": 14824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_WordCountOnes",
+      "Category": "semantic-review",
+      "Symbol": "Kit_WordCountOnes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14825,
+      "End": 15178
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthCountOnes",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthCountOnes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15179,
+      "End": 15393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthFindFirstBit",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthFindFirstBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15394,
+      "End": 15622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthFindFirstZero",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthFindFirstZero",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15623,
+      "End": 15854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthIsEqual",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15855,
+      "End": 16076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthIsEqualWithCare",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsEqualWithCare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16077,
+      "End": 16350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthIsOpposite",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsOpposite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16351,
+      "End": 16576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthIsEqualWithPhase",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsEqualWithPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16577,
+      "End": 17018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthIsConst0",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17019,
+      "End": 17211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthIsConst1",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17212,
+      "End": 17420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthIsImply",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsImply",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17421,
+      "End": 17642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthIsDisjoint",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsDisjoint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17643,
+      "End": 17866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthIsDisjoint3",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIsDisjoint3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17867,
+      "End": 18118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthCopy",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18119,
+      "End": 18293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthClear",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18294,
+      "End": 18448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthFill",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthFill",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18449,
+      "End": 18613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthNot",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18614,
+      "End": 18788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthAnd",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18789,
+      "End": 18991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthOr",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18992,
+      "End": 19193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthXor",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19194,
+      "End": 19396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthSharp",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthSharp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19397,
+      "End": 19602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthNand",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthNand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19603,
+      "End": 19809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthAndPhase",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthAndPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19810,
+      "End": 20546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthOrPhase",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthOrPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20547,
+      "End": 21282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthMux",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21283,
+      "End": 21530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthMuxPhase",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthMuxPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21531,
+      "End": 21958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::Kit_TruthIthVar",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthIthVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21959,
+      "End": 22483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 35895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 896,
+      "End": 955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kit.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 23726,
+      "End": 24017
+    }
+  ],
+  "Draft": "package kit\n\n/**CFile****************************************************************\n\n  FileName    [kit.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Computation kit.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Dec 6, 2006.]\n\n  Revision    [$Id: kit.h,v 1.00 2006/12/06 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n//#include \"cloud.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Kit_Sop_t struct {\n    nLits               int32;          // the number of literals\n    nCubes               int32;         // the number of cubes\n    pCubes         *uint32;         // the storage for cubes\n}\n\n   \ntype Kit_Edge_t struct {\n    fCompl uint32; /* C bitfield: 1 bits; review packing and truncation */   // the complemented bit\n    Node uint32; /* C bitfield: 30 bits; review packing and truncation */   // the decomposition node pointed by the edge\n}\n\n   \ntype Kit_Node_t struct {\n    eEdge0        Kit_Edge_t;          // the left child of the node\n    eEdge1        Kit_Edge_t;          // the right child of the node\n    // other info\n    union { int       iFunc;           // the function of the node (BDD or AIG)\n    void *            pFunc; };        // the function of the node (BDD or AIG)\n    Level uint32; /* C bitfield: 14 bits; review packing and truncation */   // the level of this node in the global AIG\n    // printing info \n    fNodeOr uint32; /* C bitfield: 1 bits; review packing and truncation */   // marks the original OR node\n    fCompl0 uint32; /* C bitfield: 1 bits; review packing and truncation */   // marks the original complemented edge\n    fCompl1 uint32; /* C bitfield: 1 bits; review packing and truncation */   // marks the original complemented edge\n    // latch info\n    nLat0 uint32; /* C bitfield: 5 bits; review packing and truncation */   // the number of latches on the first edge\n    nLat1 uint32; /* C bitfield: 5 bits; review packing and truncation */   // the number of latches on the second edge\n    nLat2 uint32; /* C bitfield: 5 bits; review packing and truncation */   // the number of latches on the output edge\n}\n\n   \ntype Kit_Graph_t struct {\n    fConst               int32;          // marks the constant 1 graph\n    nLeaves               int32;         // the number of leaves\n    nSize               int32;           // the number of nodes (including the leaves) \n    nCap               int32;            // the number of allocated nodes\n    pNodes       *Kit_Node_t;          // the array of leaves and internal nodes\n    eRoot        Kit_Edge_t;           // the pointer to the topmost node\n}\n\n\n// DSD node types\n type Kit_Dsd_t int32\nconst ( \n    KIT_DSD_NONE Kit_Dsd_t  = 0\n  // 0: unknown\n    KIT_DSD_CONST1 Kit_Dsd_t = KIT_DSD_NONE + 1\n     // 1: constant 1\n    KIT_DSD_VAR Kit_Dsd_t = KIT_DSD_CONST1 + 1\n        // 2: elementary variable\n    KIT_DSD_AND Kit_Dsd_t = KIT_DSD_VAR + 1\n        // 3: multi-input AND\n    KIT_DSD_XOR Kit_Dsd_t = KIT_DSD_AND + 1\n        // 4: multi-input XOR\n    KIT_DSD_PRIME Kit_Dsd_t = KIT_DSD_XOR + 1       // 5: arbitrary function of 3+ variables\n\n)\n\n \n\n// DSD node\n   \ntype Kit_DsdObj_t struct { \n    Id uint32; /* C bitfield: 6 bits; review packing and truncation */  // the number of this node\n    Type uint32; /* C bitfield: 3 bits; review packing and truncation */  // none, const, var, AND, XOR, MUX, PRIME\n    fMark uint32; /* C bitfield: 1 bits; review packing and truncation */  // finished checking output\n    Offset uint32; /* C bitfield: 8 bits; review packing and truncation */  // offset to the truth table\n    nRefs uint32; /* C bitfield: 8 bits; review packing and truncation */  // offset to the truth table\n    nFans uint32; /* C bitfield: 6 bits; review packing and truncation */  // the number of fanins of this node\n    unsigned short pFans[0];        // the fanin literals\n}\n\n// DSD network\n   \ntype Kit_DsdNtk_t struct {\n    unsigned short nVars;           // at most 16 (perhaps 18?)\n    unsigned short nNodesAlloc;     // the number of allocated nodes (at most nVars)\n    unsigned short nNodes;          // the number of nodes\n    unsigned short Root;            // the root of the tree\n    pMem      *uint32;            // memory for the truth tables (memory manager?)\n    pSupps      *uint32;          // supports of the nodes\n    pNodes **Kit_DsdObj_t;          // the nodes\n}\n\n// DSD manager\n   \ntype Kit_DsdMan_t struct {\n    nVars            int32;           // the maximum number of variables\n    nWords            int32;          // the number of words in TTs\n    vTtElems     *Vec_Ptr_t;        // elementary truth tables\n    vTtNodes     *Vec_Ptr_t;        // the node truth tables\n    // BDD representation\n    dd  *CloudManager;              // BDD package\n    vTtBdds     *Vec_Ptr_t;         // the node truth tables\n    vNodes     *Vec_Int_t;          // temporary array for BDD nodes\n}\n \nfunc Kit_DsdObjOffset(nFans int32) uint32 { return (nFans \u003e\u003e 1) + ((nFans \u0026 1) \u003e 0);                    }\nfunc Kit_DsdObjTruth(pObj *Kit_DsdObj_t) *uint32 { if pObj.Type == KIT_DSD_PRIME {\n    return (unsigned *)pObj.pFans + pObj.Offset;\n} else {\n    return nil;\n} }\nfunc Kit_DsdNtkObjNum(pNtk *Kit_DsdNtk_t) int32 { return pNtk.nVars + pNtk.nNodes; }\nfunc Kit_DsdNtkObj(pNtk *Kit_DsdNtk_t, Id int32) *Kit_DsdObj_t { assert(Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes, \"Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes\"); if Id \u003c pNtk.nVars {\n    return nil;\n} else {\n    return pNtk.pNodes[Id - pNtk.nVars];\n} }\nfunc Kit_DsdNtkRoot(pNtk *Kit_DsdNtk_t) *Kit_DsdObj_t { return Kit_DsdNtkObj( pNtk, Abc_Lit2Var(pNtk.Root) );                      }\nfunc Kit_DsdLitIsLeaf(pNtk *Kit_DsdNtk_t, Lit int32) int32 { var Id int32  = Abc_Lit2Var(Lit); assert(Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes, \"Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes\"); return Id \u003c pNtk.nVars; }\nfunc Kit_DsdLitSupport(pNtk *Kit_DsdNtk_t, Lit int32) uint32 { var Id int32  = Abc_Lit2Var(Lit); assert(Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes, \"Id \u003e= 0 \u0026\u0026 Id \u003c pNtk.nVars + pNtk.nNodes\"); if pNtk.pSupps {\n    if Id \u003c pNtk.nVars {\n        return (1 \u003c\u003c Id);\n    } else {\n        return pNtk.pSupps[Id - pNtk.nVars];\n    }\n} else {\n    return 0;\n} }\n\n// Original macro:\n// #define Kit_DsdNtkForEachObj( pNtk, pObj, i )                                      \\\n//     for ( i = 0; (i \u003c (pNtk)-\u003enNodes) \u0026\u0026 ((pObj) = (pNtk)-\u003epNodes[i]); i++ )\n\n// Original macro:\n// #define Kit_DsdObjForEachFanin( pNtk, pObj, iLit, i )                              \\\n//     for ( i = 0; (i \u003c (int)(pObj)-\u003enFans) \u0026\u0026 ((iLit) = (pObj)-\u003epFans[i], 1); i++ )\n\n// Original macro:\n// #define Kit_DsdObjForEachFaninReverse( pNtk, pObj, iLit, i )                       \\\n//     for ( i = (int)(pObj)-\u003enFans - 1; (i \u003e= 0) \u0026\u0026 ((iLit) = (pObj)-\u003epFans[i], 1); i-- )\n\n\n// Original macro:\n// #define Kit_PlaForEachCube( pSop, nFanins, pCube )                \\\n//     for ( pCube = (pSop); *pCube; pCube += (nFanins) + 3 )\n\n// Original macro:\n// #define Kit_PlaCubeForEachVar( pCube, Value, i )                     \\\n//     for ( i = 0; (pCube[i] != ' ') \u0026\u0026 (Value = pCube[i]); i++ )           \n\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define KIT_MIN(a,b)       (((a) \u003c (b))? (a) : (b))\n\n// Original macro:\n// #define KIT_MAX(a,b)       (((a) \u003e (b))? (a) : (b))\n\n#define KIT_INFINITY       (100000000)\n\nfunc Kit_CubeHasLit(uCube uint32, i int32) int32 { return(uCube \u0026  uint32((1\u003c\u003ci))) \u003e 0;  }\nfunc Kit_CubeSetLit(uCube uint32, i int32) uint32 { return uCube |  uint32((1\u003c\u003ci));       }\nfunc Kit_CubeXorLit(uCube uint32, i int32) uint32 { return uCube ^  uint32((1\u003c\u003ci));       }\nfunc Kit_CubeRemLit(uCube uint32, i int32) uint32 { return uCube \u0026 ~uint32((1\u003c\u003ci));       }\n\nfunc Kit_CubeContains(uLarge uint32, uSmall uint32) int32 { return (uLarge \u0026 uSmall) == uSmall;     }\nfunc Kit_CubeSharp(uCube uint32, uMask uint32) uint32 { return uCube \u0026 ~uMask;                  }\nfunc Kit_CubeMask(nVar int32) uint32 { return (~uint32(0)) \u003e\u003e (32-nVar);     }\n\nfunc Kit_CubeIsMarked(uCube uint32) int32 { return Kit_CubeHasLit( uCube, 31 );     }\nfunc Kit_CubeMark(uCube uint32) uint32 { return Kit_CubeSetLit( uCube, 31 );     }\nfunc Kit_CubeUnmark(uCube uint32) uint32 { return Kit_CubeRemLit( uCube, 31 );     }\n\nfunc Kit_SopCubeNum(cSop *Kit_Sop_t) int32 { return cSop.nCubes;                    }\nfunc Kit_SopCube(cSop *Kit_Sop_t, i int32) uint32 { return cSop.pCubes[i];                 }\nfunc Kit_SopShrink(cSop *Kit_Sop_t, nCubesNew int32) { cSop.nCubes = nCubesNew;               }\nfunc Kit_SopPushCube(cSop *Kit_Sop_t, uCube uint32) { cSop.pCubes[cSop.nCubes++] = uCube;   }\nfunc Kit_SopWriteCube(cSop *Kit_Sop_t, uCube uint32, i int32) { cSop.pCubes[i] = uCube;                }\n\nfunc Kit_EdgeCreate(Node int32, fCompl int32) Kit_Edge_t { var eEdge Kit_Edge_t  = Kit_Edge_t{ uint32(fCompl), uint32(Node) }; return eEdge;  }\nfunc Kit_EdgeToInt(eEdge Kit_Edge_t) uint32 { return (eEdge.Node \u003c\u003c 1) | eEdge.fCompl;            }\nfunc Kit_IntToEdge(Edge uint32) Kit_Edge_t { return Kit_EdgeCreate( Edge \u003e\u003e 1, Edge \u0026 1 );       }\n//static inline unsigned     Kit_EdgeToInt_( Kit_Edge_t eEdge )                             { return *(unsigned *)\u0026eEdge;                         }\n//static inline Kit_Edge_t   Kit_IntToEdge_( unsigned Edge )                                { return *(Kit_Edge_t *)\u0026Edge;                        }\nfunc Kit_EdgeToInt_(m Kit_Edge_t) uint32 { union { var x Kit_Edge_t; var y uint32; }\n v; v.x = m; return v.y;  }\nfunc Kit_IntToEdge_(m uint32) Kit_Edge_t { union { var x Kit_Edge_t; var y uint32; }\n v; v.y = m; return v.x;  }\n\nfunc Kit_GraphIsConst(pGraph *Kit_Graph_t) int32 { return pGraph.fConst;                              }\nfunc Kit_GraphIsConst0(pGraph *Kit_Graph_t) int32 { return pGraph.fConst \u0026\u0026 pGraph.eRoot.fCompl;      }\nfunc Kit_GraphIsConst1(pGraph *Kit_Graph_t) int32 { return pGraph.fConst \u0026\u0026 !pGraph.eRoot.fCompl;     }\nfunc Kit_GraphIsComplement(pGraph *Kit_Graph_t) int32 { return pGraph.eRoot.fCompl;                        }\nfunc Kit_GraphIsVar(pGraph *Kit_Graph_t) int32 { return pGraph.eRoot.Node \u003c uint32(pGraph.nLeaves); }\nfunc Kit_GraphComplement(pGraph *Kit_Graph_t) { pGraph.eRoot.fCompl ^= 1;                          }\nfunc Kit_GraphSetRoot(pGraph *Kit_Graph_t, eRoot Kit_Edge_t) { pGraph.eRoot = eRoot;                              }\nfunc Kit_GraphLeaveNum(pGraph *Kit_Graph_t) int32 { return pGraph.nLeaves;                             }\nfunc Kit_GraphNodeNum(pGraph *Kit_Graph_t) int32 { return pGraph.nSize - pGraph.nLeaves;             }\nfunc Kit_GraphNode(pGraph *Kit_Graph_t, i int32) *Kit_Node_t { return pGraph.pNodes + i;                          }\nfunc Kit_GraphNodeLast(pGraph *Kit_Graph_t) *Kit_Node_t { return pGraph.pNodes + pGraph.nSize - 1;          }\nfunc Kit_GraphNodeInt(pGraph *Kit_Graph_t, pNode *Kit_Node_t) int32 { return pNode - pGraph.pNodes;                      }\nfunc Kit_GraphNodeIsVar(pGraph *Kit_Graph_t, pNode *Kit_Node_t) int32 { return Kit_GraphNodeInt(pGraph,pNode) \u003c pGraph.nLeaves; }\nfunc Kit_GraphVar(pGraph *Kit_Graph_t) *Kit_Node_t { assert((Kit_GraphIsVar( pGraph ) != 0), \"Kit_GraphIsVar( pGraph )\");    return Kit_GraphNode( pGraph, pGraph.eRoot.Node );      }\nfunc Kit_GraphVarInt(pGraph *Kit_Graph_t) int32 { assert((Kit_GraphIsVar( pGraph ) != 0), \"Kit_GraphIsVar( pGraph )\");    return Kit_GraphNodeInt( pGraph, Kit_GraphVar(pGraph) ); }\nfunc Kit_GraphNodeFanin0(pGraph *Kit_Graph_t, pNode *Kit_Node_t) *Kit_Node_t { if Kit_GraphNodeIsVar(pGraph, pNode) != 0 {\n    return nil;\n} else {\n    return Kit_GraphNode(pGraph, pNode.eEdge0.Node);\n}     }\nfunc Kit_GraphNodeFanin1(pGraph *Kit_Graph_t, pNode *Kit_Node_t) *Kit_Node_t { if Kit_GraphNodeIsVar(pGraph, pNode) != 0 {\n    return nil;\n} else {\n    return Kit_GraphNode(pGraph, pNode.eEdge1.Node);\n}     }\nfunc Kit_GraphRootLevel(pGraph *Kit_Graph_t) int32 { return Kit_GraphNode(pGraph, pGraph.eRoot.Node).Level;                                        }\n\nfunc Kit_SuppIsMinBase(Supp int32) int32 { return (Supp \u0026 (Supp+1)) == 0;                      }\n\nfunc Kit_BitWordNum(nBits int32) int32 { return nBits/(8*sizeof(unsigned)) + ((nBits%(8*sizeof(unsigned))) \u003e 0); }\nfunc Kit_TruthWordNum(nVars int32) int32 { if nVars \u003c= 5 {\n    return 1;\n} else {\n    return (1 \u003c\u003c (nVars - 5));\n}                             }\nfunc Kit_BitMask(nBits int32) uint32 { assert(nBits \u003c= 32, \"nBits \u003c= 32\"); return ~((~uint32(0)) \u003c\u003c nBits);               }\n\nfunc Kit_TruthSetBit(p *uint32, Bit int32) { p[Bit\u003e\u003e5] |= (1\u003c\u003c(Bit \u0026 31));               }\nfunc Kit_TruthXorBit(p *uint32, Bit int32) { p[Bit\u003e\u003e5] ^= (1\u003c\u003c(Bit \u0026 31));               }\nfunc Kit_TruthHasBit(p *uint32, Bit int32) int32 { return (p[Bit\u003e\u003e5] \u0026 (1\u003c\u003c(Bit \u0026 31))) \u003e 0;   }\n\nfunc Kit_WordFindFirstBit(uWord uint32) int32 {\n    var i int32;\n    for  i = 0; i \u003c 32; i++  {\n        if uWord \u0026 (1 \u003c\u003c i) {\n            return i; }\n    }\n    return -1;\n}\nfunc Kit_WordHasOneBit(uWord uint32) int32 {\n    return (uWord \u0026 (uWord - 1)) == 0;\n}\nfunc Kit_WordCountOnes(uWord uint32) int32 {\n    uWord = (uWord \u0026 0x55555555) + ((uWord\u003e\u003e1) \u0026 0x55555555);\n    uWord = (uWord \u0026 0x33333333) + ((uWord\u003e\u003e2) \u0026 0x33333333);\n    uWord = (uWord \u0026 0x0F0F0F0F) + ((uWord\u003e\u003e4) \u0026 0x0F0F0F0F);\n    uWord = (uWord \u0026 0x00FF00FF) + ((uWord\u003e\u003e8) \u0026 0x00FF00FF);\n    return  (uWord \u0026 0x0000FFFF) + (uWord\u003e\u003e16);\n}\nfunc Kit_TruthCountOnes(pIn *uint32, nVars int32) int32 {\n    var w, Counter int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        Counter += Kit_WordCountOnes(pIn[w]);\n    }\n    return Counter;\n}\nfunc Kit_TruthFindFirstBit(pIn *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = 0; w \u003c Kit_TruthWordNum(nVars); w++  {\n        if pIn[w] {\n            return 32*w + Kit_WordFindFirstBit(pIn[w]); }\n    }\n    return -1;\n}\nfunc Kit_TruthFindFirstZero(pIn *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = 0; w \u003c Kit_TruthWordNum(nVars); w++  {\n        if ~pIn[w] {\n            return 32*w + Kit_WordFindFirstBit(~pIn[w]); }\n    }\n    return -1;\n}\nfunc Kit_TruthIsEqual(pIn0 *uint32, pIn1 *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if pIn0[w] != pIn1[w] {\n            return 0; }\n    }\n    return 1;\n}\nfunc Kit_TruthIsEqualWithCare(pIn0 *uint32, pIn1 *uint32, pCare *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if (pIn0[w] \u0026 pCare[w]) != (pIn1[w] \u0026 pCare[w]) {\n            return 0; }\n    }\n    return 1;\n}\nfunc Kit_TruthIsOpposite(pIn0 *uint32, pIn1 *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if pIn0[w] != ~pIn1[w] {\n            return 0; }\n    }\n    return 1;\n}\nfunc Kit_TruthIsEqualWithPhase(pIn0 *uint32, pIn1 *uint32, nVars int32) int32 {\n    var w int32;\n    if (pIn0[0] \u0026 1) == (pIn1[0] \u0026 1) {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            if pIn0[w] != pIn1[w] {\n                return 0; }\n        }\n    \n    } else {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            if pIn0[w] != ~pIn1[w] {\n                return 0; }\n        }\n    }\n    return 1;\n}\nfunc Kit_TruthIsConst0(pIn *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if pIn[w] {\n            return 0; }\n    }\n    return 1;\n}\nfunc Kit_TruthIsConst1(pIn *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if pIn[w] != ~uint32(0) {\n            return 0; }\n    }\n    return 1;\n}\nfunc Kit_TruthIsImply(pIn1 *uint32, pIn2 *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if pIn1[w] \u0026 ~pIn2[w] {\n            return 0; }\n    }\n    return 1;\n}\nfunc Kit_TruthIsDisjoint(pIn1 *uint32, pIn2 *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if pIn1[w] \u0026 pIn2[w] {\n            return 0; }\n    }\n    return 1;\n}\nfunc Kit_TruthIsDisjoint3(pIn1 *uint32, pIn2 *uint32, pIn3 *uint32, nVars int32) int32 {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        if pIn1[w] \u0026 pIn2[w] \u0026 pIn3[w] {\n            return 0; }\n    }\n    return 1;\n}\nfunc Kit_TruthCopy(pOut *uint32, pIn *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn[w];\n    }\n}\nfunc Kit_TruthClear(pOut *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = 0;\n    }\n}\nfunc Kit_TruthFill(pOut *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = ~uint32(0);\n    }\n}\nfunc Kit_TruthNot(pOut *uint32, pIn *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = ~pIn[w];\n    }\n}\nfunc Kit_TruthAnd(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn0[w] \u0026 pIn1[w];\n    }\n}\nfunc Kit_TruthOr(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn0[w] | pIn1[w];\n    }\n}\nfunc Kit_TruthXor(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn0[w] ^ pIn1[w];\n    }\n}\nfunc Kit_TruthSharp(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = pIn0[w] \u0026 ~pIn1[w];\n    }\n}\nfunc Kit_TruthNand(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = ~(pIn0[w] \u0026 pIn1[w]);\n    }\n}\nfunc Kit_TruthAndPhase(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32, fCompl0 int32, fCompl1 int32) {\n    var w int32;\n    if fCompl0 \u0026\u0026 fCompl1 {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = ~(pIn0[w] | pIn1[w]);\n        }\n    \n    } else if fCompl0 \u0026\u0026 !fCompl1 {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = ~pIn0[w] \u0026 pIn1[w];\n        }\n    \n    } else if !fCompl0 \u0026\u0026 fCompl1 {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = pIn0[w] \u0026 ~pIn1[w];\n        }\n    \n    } else { // if ( !fCompl0 \u0026\u0026 !fCompl1 )\n    \n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = pIn0[w] \u0026 pIn1[w];\n        }\n    }\n}\nfunc Kit_TruthOrPhase(pOut *uint32, pIn0 *uint32, pIn1 *uint32, nVars int32, fCompl0 int32, fCompl1 int32) {\n    var w int32;\n    if fCompl0 \u0026\u0026 fCompl1 {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = ~(pIn0[w] \u0026 pIn1[w]);\n        }\n    \n    } else if fCompl0 \u0026\u0026 !fCompl1 {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = ~pIn0[w] | pIn1[w];\n        }\n    \n    } else if !fCompl0 \u0026\u0026 fCompl1 {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = pIn0[w] | ~pIn1[w];\n        }\n    \n    } else { // if ( !fCompl0 \u0026\u0026 !fCompl1 )\n    \n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = pIn0[w] | pIn1[w];\n        }\n    }\n}\nfunc Kit_TruthMux(pOut *uint32, pIn0 *uint32, pIn1 *uint32, pCtrl *uint32, nVars int32) {\n    var w int32;\n    for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n        pOut[w] = (pIn0[w] \u0026 ~pCtrl[w]) | (pIn1[w] \u0026 pCtrl[w]);\n    }\n}\nfunc Kit_TruthMuxPhase(pOut *uint32, pIn0 *uint32, pIn1 *uint32, pCtrl *uint32, nVars int32, fComp0 int32) {\n    var w int32;\n    if fComp0 != 0 {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = (~pIn0[w] \u0026 ~pCtrl[w]) | (pIn1[w] \u0026 pCtrl[w]);\n        }\n    } else {\n        for  w = Kit_TruthWordNum(nVars)-1; w \u003e= 0; w--  {\n            pOut[w] = (pIn0[w] \u0026 ~pCtrl[w]) | (pIn1[w] \u0026 pCtrl[w]);\n        } }\n}\nfunc Kit_TruthIthVar(pTruth *uint32, nVars int32, iVar int32) {\n    var Masks [5]uint32 = [5]uint32{ 0xAAAAAAAA, 0xCCCCCCCC, 0xF0F0F0F0, 0xFF00FF00, 0xFFFF0000 };\n    var k int32;\n    var nWords int32;\n    if nVars \u003c= 5 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars - 5));\n    }\n    if iVar \u003c 5 {\n        for  k = 0; k \u003c nWords; k++  {\n            pTruth[k] = Masks[iVar];\n        }\n    \n    } else {\n        for  k = 0; k \u003c nWords; k++  {\n            if k \u0026 (1 \u003c\u003c (iVar-5)) {\n                pTruth[k] = ~uint32(0);\n            } else {\n                pTruth[k] = 0; }\n        }\n    }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                           ITERATORS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define Kit_SopForEachCube( cSop, uCube, i )                                      \\\n//     for ( i = 0; (i \u003c Kit_SopCubeNum(cSop)) \u0026\u0026 ((uCube) = Kit_SopCube(cSop, i)); i++ )\n\n// Original macro:\n// #define Kit_CubeForEachLiteral( uCube, Lit, nLits, i )                            \\\n//     for ( i = 0; (i \u003c (nLits)) \u0026\u0026 ((Lit) = Kit_CubeHasLit(uCube, i)); i++ )\n\n\n// Original macro:\n// #define Kit_GraphForEachLeaf( pGraph, pLeaf, i )                                              \\\n//     for ( i = 0; (i \u003c (pGraph)-\u003enLeaves) \u0026\u0026 (((pLeaf) = Kit_GraphNode(pGraph, i)), 1); i++ )\n\n// Original macro:\n// #define Kit_GraphForEachNode( pGraph, pAnd, i )                                               \\\n//     for ( i = (pGraph)-\u003enLeaves; (i \u003c (pGraph)-\u003enSize) \u0026\u0026 (((pAnd) = Kit_GraphNode(pGraph, i)), 1); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== kitBdd.c ==========================================================*/\n#ifdef ABC_USE_CUDD\nextern DdNode *        Kit_SopToBdd( DdManager * dd, Kit_Sop_t * cSop, int nVars );\nextern DdNode *        Kit_GraphToBdd( DdManager * dd, Kit_Graph_t * pGraph );\nextern DdNode *        Kit_TruthToBdd( DdManager * dd, unsigned * pTruth, int nVars, int fMSBonTop );\n#endif\n/*=== kitCloud.c ==========================================================*/\n// extern CloudNode *     Kit_TruthToCloud( CloudManager * dd, unsigned * pTruth, int nVars );\n\n// extern unsigned *      Kit_CloudToTruth( Vec_Int_t * vNodes, int nVars, Vec_Ptr_t * vStore, int fInv );\n\n// extern int             Kit_CreateCloud( CloudManager * dd, CloudNode * pFunc, Vec_Int_t * vNodes );\n\n// extern int             Kit_CreateCloudFromTruth( CloudManager * dd, unsigned * pTruth, int nVars, Vec_Int_t * vNodes );\n\n// extern unsigned *      Kit_TruthCompose( CloudManager * dd, unsigned * pTruth, int nVars, unsigned ** pInputs, int nVarsAll, Vec_Ptr_t * vStore, Vec_Int_t * vNodes );\n\n// extern void            Kit_TruthCofSupports( Vec_Int_t * vBddDir, Vec_Int_t * vBddInv, int nVars, Vec_Int_t * vMemory, unsigned * puSupps );\n\n/*=== kitDsd.c ==========================================================*/\n// extern Kit_DsdMan_t *  Kit_DsdManAlloc( int nVars, int nNodes );\n\n// extern void            Kit_DsdManFree( Kit_DsdMan_t * p );\n\n// extern Kit_DsdNtk_t *  Kit_DsdDeriveNtk( unsigned * pTruth, int nVars, int nLutSize );\n\n// extern unsigned *      Kit_DsdTruthCompute( Kit_DsdMan_t * p, Kit_DsdNtk_t * pNtk );\n\n// extern void            Kit_DsdTruth( Kit_DsdNtk_t * pNtk, unsigned * pTruthRes );\n\n// extern void            Kit_DsdTruthPartial( Kit_DsdMan_t * p, Kit_DsdNtk_t * pNtk, unsigned * pTruthRes, unsigned uSupp );\n\n// extern void            Kit_DsdTruthPartialTwo( Kit_DsdMan_t * p, Kit_DsdNtk_t * pNtk, unsigned uSupp, int iVar, unsigned * pTruthCo, unsigned * pTruthDec );\n\n// extern void            Kit_DsdPrint( FILE * pFile, Kit_DsdNtk_t * pNtk );\n\n// extern void            Kit_DsdPrintExpanded( Kit_DsdNtk_t * pNtk );\n\n// extern void            Kit_DsdPrintFromTruth( unsigned * pTruth, int nVars );\n\n// extern void            Kit_DsdPrintFromTruth2( FILE * pFile, unsigned * pTruth, int nVars );\n\n// extern void            Kit_DsdWriteFromTruth( char * pBuffer, unsigned * pTruth, int nVars );\n\n// extern Kit_DsdNtk_t *  Kit_DsdDecompose( unsigned * pTruth, int nVars );\n\n// extern Kit_DsdNtk_t *  Kit_DsdDecomposeExpand( unsigned * pTruth, int nVars );\n\n// extern Kit_DsdNtk_t *  Kit_DsdDecomposeMux( unsigned * pTruth, int nVars, int nDecMux );\n\n// extern void            Kit_DsdVerify( Kit_DsdNtk_t * pNtk, unsigned * pTruth, int nVars );\n\n// extern void            Kit_DsdNtkFree( Kit_DsdNtk_t * pNtk );\n\n// extern int             Kit_DsdNonDsdSizeMax( Kit_DsdNtk_t * pNtk );\n\n// extern Kit_DsdObj_t *  Kit_DsdNonDsdPrimeMax( Kit_DsdNtk_t * pNtk );\n\n// extern unsigned        Kit_DsdNonDsdSupports( Kit_DsdNtk_t * pNtk );\n\n// extern int             Kit_DsdCountAigNodes( Kit_DsdNtk_t * pNtk );\n\n// extern unsigned        Kit_DsdGetSupports( Kit_DsdNtk_t * p );\n\n// extern Kit_DsdNtk_t *  Kit_DsdExpand( Kit_DsdNtk_t * p );\n\n// extern Kit_DsdNtk_t *  Kit_DsdShrink( Kit_DsdNtk_t * p, int pPrios[] );\n\n// extern void            Kit_DsdRotate( Kit_DsdNtk_t * p, int pFreqs[] );\n\n// extern int             Kit_DsdCofactoring( unsigned * pTruth, int nVars, int * pCofVars, int nLimit, int fVerbose );\n\n/*=== kitFactor.c ==========================================================*/\n// extern Kit_Graph_t *   Kit_SopFactor( Vec_Int_t * vCover, int fCompl, int nVars, Vec_Int_t * vMemory );\n\n/*=== kitGraph.c ==========================================================*/\n// extern Kit_Graph_t *   Kit_GraphCreate( int nLeaves );\n   \n// extern Kit_Graph_t *   Kit_GraphCreateConst0();\n   \n// extern Kit_Graph_t *   Kit_GraphCreateConst1();\n   \n// extern Kit_Graph_t *   Kit_GraphCreateLeaf( int iLeaf, int nLeaves, int fCompl );\n   \n// extern void            Kit_GraphFree( Kit_Graph_t * pGraph );\n   \n// extern Kit_Node_t *    Kit_GraphAppendNode( Kit_Graph_t * pGraph );\n   \n// extern Kit_Edge_t      Kit_GraphAddNodeAnd( Kit_Graph_t * pGraph, Kit_Edge_t eEdge0, Kit_Edge_t eEdge1 );\n\n// extern Kit_Edge_t      Kit_GraphAddNodeOr( Kit_Graph_t * pGraph, Kit_Edge_t eEdge0, Kit_Edge_t eEdge1 );\n\n// extern Kit_Edge_t      Kit_GraphAddNodeXor( Kit_Graph_t * pGraph, Kit_Edge_t eEdge0, Kit_Edge_t eEdge1, int Type );\n\n// extern Kit_Edge_t      Kit_GraphAddNodeMux( Kit_Graph_t * pGraph, Kit_Edge_t eEdgeC, Kit_Edge_t eEdgeT, Kit_Edge_t eEdgeE, int Type );\n\n// extern unsigned        Kit_GraphToTruth( Kit_Graph_t * pGraph );\n\n// extern Kit_Graph_t *   Kit_TruthToGraph( unsigned * pTruth, int nVars, Vec_Int_t * vMemory );\n\n// extern Kit_Graph_t *   Kit_TruthToGraph2( unsigned * pTruth0, unsigned * pTruth1, int nVars, Vec_Int_t * vMemory );\n\n// extern int             Kit_GraphLeafDepth_rec( Kit_Graph_t * pGraph, Kit_Node_t * pNode, Kit_Node_t * pLeaf );\n\n// extern int             Kit_TruthLitNum( unsigned * pTruth, int nVars, Vec_Int_t * vMemory );\n\n/*=== kitHop.c ==========================================================*/\n//extern int             Kit_TruthToGia( Gia_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory, Vec_Int_t * vLeaves, int fHash );\n//extern Hop_Obj_t *     Kit_GraphToHop( Hop_Man_t * pMan, Kit_Graph_t * pGraph );\n//extern Hop_Obj_t *     Kit_TruthToHop( Hop_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory );\n//extern Hop_Obj_t *     Kit_CoverToHop( Hop_Man_t * pMan, Vec_Int_t * vCover, int nVars, Vec_Int_t * vMemory );\n/*=== kitIsop.c ==========================================================*/\n// extern int             Kit_TruthIsop( unsigned * puTruth, int nVars, Vec_Int_t * vMemory, int fTryBoth );\n\n// extern int             Kit_TruthIsop2( unsigned * puTruth0, unsigned * puTruth1, int nVars, Vec_Int_t * vMemory, int fTryBoth, int fReturnTt );\n\n// extern void            Kit_TruthIsopPrint( unsigned * puTruth, int nVars, Vec_Int_t * vMemory, int fTryBoth );\n\n// extern void            Kit_TruthIsopPrintCover( Vec_Int_t * vCover, int nVars, int fCompl );\n\n/*=== kitPla.c ==========================================================*/\n// extern int             Kit_PlaIsConst0( char * pSop );\n\n// extern int             Kit_PlaIsConst1( char * pSop );\n\n// extern int             Kit_PlaIsBuf( char * pSop );\n\n// extern int             Kit_PlaIsInv( char * pSop );\n\n// extern int             Kit_PlaGetVarNum( char * pSop );\n\n// extern int             Kit_PlaGetCubeNum( char * pSop );\n\n// extern int             Kit_PlaIsComplement( char * pSop );\n\n// extern void            Kit_PlaComplement( char * pSop );\n\n// extern char *          Kit_PlaStart( void * p, int nCubes, int nVars );\n\n// extern char *          Kit_PlaCreateFromIsop( void * p, int nVars, Vec_Int_t * vCover );\n\n// extern void            Kit_PlaToIsop( char * pSop, Vec_Int_t * vCover );\n\n// extern char *          Kit_PlaStoreSop( void * p, char * pSop );\n\n// extern char *          Kit_PlaFromTruth( void * p, unsigned * pTruth, int nVars, Vec_Int_t * vCover );\n\n// extern char *          Kit_PlaFromTruthNew( unsigned * pTruth, int nVars, Vec_Int_t * vCover, Vec_Str_t * vStr );\n\n// extern ABC_UINT64_T    Kit_PlaToTruth6( char * pSop, int nVars );\n\n// extern void            Kit_PlaToTruth( char * pSop, int nVars, Vec_Ptr_t * vVars, unsigned * pTemp, unsigned * pTruth );\n\n/*=== kitSop.c ==========================================================*/\n// extern void            Kit_SopCreate( Kit_Sop_t * cResult, Vec_Int_t * vInput, int nVars, Vec_Int_t * vMemory );\n\n// extern void            Kit_SopCreateInverse( Kit_Sop_t * cResult, Vec_Int_t * vInput, int nVars, Vec_Int_t * vMemory );\n\n// extern void            Kit_SopDup( Kit_Sop_t * cResult, Kit_Sop_t * cSop, Vec_Int_t * vMemory );\n\n// extern void            Kit_SopDivideByLiteralQuo( Kit_Sop_t * cSop, int iLit );\n\n// extern void            Kit_SopDivideByCube( Kit_Sop_t * cSop, Kit_Sop_t * cDiv, Kit_Sop_t * vQuo, Kit_Sop_t * vRem, Vec_Int_t * vMemory );\n\n// extern void            Kit_SopDivideInternal( Kit_Sop_t * cSop, Kit_Sop_t * cDiv, Kit_Sop_t * vQuo, Kit_Sop_t * vRem, Vec_Int_t * vMemory );\n\n// extern void            Kit_SopMakeCubeFree( Kit_Sop_t * cSop );\n\n// extern int             Kit_SopIsCubeFree( Kit_Sop_t * cSop );\n\n// extern void            Kit_SopCommonCubeCover( Kit_Sop_t * cResult, Kit_Sop_t * cSop, Vec_Int_t * vMemory );\n\n// extern int             Kit_SopAnyLiteral( Kit_Sop_t * cSop, int nLits );\n\n// extern int             Kit_SopDivisor( Kit_Sop_t * cResult, Kit_Sop_t * cSop, int nLits, Vec_Int_t * vMemory );\n\n// extern void            Kit_SopBestLiteralCover( Kit_Sop_t * cResult, Kit_Sop_t * cSop, unsigned uCube, int nLits, Vec_Int_t * vMemory );\n\n/*=== kitTruth.c ==========================================================*/\n// extern void            Kit_TruthSwapAdjacentVars( unsigned * pOut, unsigned * pIn, int nVars, int Start );\n\n// extern void            Kit_TruthStretch( unsigned * pOut, unsigned * pIn, int nVars, int nVarsAll, unsigned Phase, int fReturnIn );\n\n// extern void            Kit_TruthPermute( unsigned * pOut, unsigned * pIn, int nVars, char * pPerm, int fReturnIn );\n\n// extern void            Kit_TruthShrink( unsigned * pOut, unsigned * pIn, int nVars, int nVarsAll, unsigned Phase, int fReturnIn );\n\n// extern int             Kit_TruthVarInSupport( unsigned * pTruth, int nVars, int iVar );\n\n// extern int             Kit_TruthSupportSize( unsigned * pTruth, int nVars );\n\n// extern unsigned        Kit_TruthSupport( unsigned * pTruth, int nVars );\n\n// extern void            Kit_TruthCofactor0( unsigned * pTruth, int nVars, int iVar );\n\n// extern void            Kit_TruthCofactor1( unsigned * pTruth, int nVars, int iVar );\n\n// extern void            Kit_TruthCofactor0New( unsigned * pOut, unsigned * pIn, int nVars, int iVar );\n\n// extern void            Kit_TruthCofactor1New( unsigned * pOut, unsigned * pIn, int nVars, int iVar );\n\n// extern int             Kit_TruthVarIsVacuous( unsigned * pOnset, unsigned * pOffset, int nVars, int iVar );\n\n// extern void            Kit_TruthExist( unsigned * pTruth, int nVars, int iVar );\n\n// extern void            Kit_TruthExistNew( unsigned * pRes, unsigned * pTruth, int nVars, int iVar );\n\n// extern void            Kit_TruthExistSet( unsigned * pRes, unsigned * pTruth, int nVars, unsigned uMask );\n\n// extern void            Kit_TruthForall( unsigned * pTruth, int nVars, int iVar );\n\n// extern void            Kit_TruthForallNew( unsigned * pRes, unsigned * pTruth, int nVars, int iVar );\n\n// extern void            Kit_TruthForallSet( unsigned * pRes, unsigned * pTruth, int nVars, unsigned uMask );\n\n// extern void            Kit_TruthUniqueNew( unsigned * pRes, unsigned * pTruth, int nVars, int iVar );\n\n// extern void            Kit_TruthMuxVar( unsigned * pOut, unsigned * pCof0, unsigned * pCof1, int nVars, int iVar );\n\n// extern void            Kit_TruthMuxVarPhase( unsigned * pOut, unsigned * pCof0, unsigned * pCof1, int nVars, int iVar, int fCompl0 );\n\n// extern void            Kit_TruthChangePhase( unsigned * pTruth, int nVars, int iVar );\n\n// extern int             Kit_TruthVarsSymm( unsigned * pTruth, int nVars, int iVar0, int iVar1, unsigned * pCof0, unsigned * pCof1 );\n\n// extern int             Kit_TruthVarsAntiSymm( unsigned * pTruth, int nVars, int iVar0, int iVar1, unsigned * pCof0, unsigned * pCof1 );\n\n// extern int             Kit_TruthMinCofSuppOverlap( unsigned * pTruth, int nVars, int * pVarMin );\n\n// extern int             Kit_TruthBestCofVar( unsigned * pTruth, int nVars, unsigned * pCof0, unsigned * pCof1 );\n\n// extern void            Kit_TruthCountOnesInCofs( unsigned * pTruth, int nVars, int * pStore );\n\n// extern void            Kit_TruthCountOnesInCofs0( unsigned * pTruth, int nVars, int * pStore );\n\n// extern void            Kit_TruthCountOnesInCofsSlow( unsigned * pTruth, int nVars, int * pStore, unsigned * pAux );\n\n// extern unsigned        Kit_TruthHash( unsigned * pIn, int nWords );\n\n// extern unsigned        Kit_TruthSemiCanonicize( unsigned * pInOut, unsigned * pAux, int nVars, char * pCanonPerm );\n\n// extern char *          Kit_TruthDumpToFile( unsigned * pTruth, int nVars, int nFile );\n\n// extern void            Kit_TruthPrintProfile( unsigned * pTruth, int nVars );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

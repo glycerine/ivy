@@ -1,0 +1,241 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSimSat.c",
+  "SHA256": "511d10a93689481668258b4135fda598f7d3f00d5c2aad1038e6610a4a4fe97c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 66,
+        "ByteOffset": 1729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:Aig_ObjForEachFanout__*/for  assert(p.pAigTotal.pFanData), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(p.pAigTotal, iFanout) : Aig_ObjFanout0Int(p.pAigTotal, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p.pAigTotal, iFanout\u003e\u003e1)), 1); i++  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 9,
+        "ByteOffset": 4158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Aig_IsComplement(pObjFraig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 211,
+        "Column": 9,
+        "ByteOffset": 7772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 213,
+        "Column": 9,
+        "ByteOffset": 7814
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue2 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 253,
+        "Column": 5,
+        "ByteOffset": 9417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dch_ManCollectTfoCands_rec",
+      "Start": 1318,
+      "End": 2211,
+      "BodyStart": 1385,
+      "Original": "void Dch_ManCollectTfoCands_rec( Dch_Man_t * p, Aig_Obj_t * pObj )\n{\n    Aig_Obj_t * pFanout, * pRepr;\n    int iFanout = -1, i;\n    assert( !Aig_IsComplement(pObj) );\n    if ( Aig_ObjIsTravIdCurrent(p-\u003epAigTotal, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p-\u003epAigTotal, pObj);\n    // traverse the fanouts\n    Aig_ObjForEachFanout( p-\u003epAigTotal, pObj, pFanout, iFanout, i )\n        Dch_ManCollectTfoCands_rec( p, pFanout );\n    // check if the given node has a representative\n    pRepr = Aig_ObjRepr( p-\u003epAigTotal, pObj );\n    if ( pRepr == NULL )\n        return;\n    // pRepr is the constant 1 node\n    if ( pRepr == Aig_ManConst1(p-\u003epAigTotal) )\n    {\n        Vec_PtrPush( p-\u003evSimRoots, pObj );\n        return;\n    }\n    // pRepr is the representative of an equivalence class\n    if ( pRepr-\u003efMarkA )\n        return;\n    pRepr-\u003efMarkA = 1;\n    Vec_PtrPush( p-\u003evSimClasses, pRepr );\n}",
+      "Draft": "func Dch_ManCollectTfoCands_rec(p *Dch_Man_t, pObj *Aig_Obj_t) {\n    var pFanout, pRepr *Aig_Obj_t;\n    var iFanout int32 = -1;\n    var i int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsTravIdCurrent(p.pAigTotal, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p.pAigTotal, pObj);\n    // traverse the fanouts\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(p.pAigTotal.pFanData, \"p.pAigTotal.pFanData\"), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(p.pAigTotal, iFanout) : Aig_ObjFanout0Int(p.pAigTotal, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p.pAigTotal, iFanout\u003e\u003e1)), 1); i++  {\n        Dch_ManCollectTfoCands_rec( p, pFanout );\n    }\n    // check if the given node has a representative\n    pRepr = Aig_ObjRepr( p.pAigTotal, pObj );\n    if pRepr == nil {\n        return; }\n    // pRepr is the constant 1 node\n    if pRepr == Aig_ManConst1(p.pAigTotal) {\n        Vec_PtrPush( p.vSimRoots, pObj );\n        return;\n    }\n    // pRepr is the representative of an equivalence class\n    if pRepr.fMarkA {\n        return; }\n    pRepr.fMarkA = 1;\n    Vec_PtrPush( p.vSimClasses, pRepr );\n}"
+    },
+    {
+      "Name": "Dch_ManCollectTfoCands",
+      "Start": 2504,
+      "End": 3143,
+      "BodyStart": 2587,
+      "Original": "void Dch_ManCollectTfoCands( Dch_Man_t * p, Aig_Obj_t * pObj1, Aig_Obj_t * pObj2 )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Vec_PtrClear( p-\u003evSimRoots );\n    Vec_PtrClear( p-\u003evSimClasses );\n    Aig_ManIncrementTravId( p-\u003epAigTotal );\n    Aig_ObjSetTravIdCurrent( p-\u003epAigTotal, Aig_ManConst1(p-\u003epAigTotal) );    \n    Dch_ManCollectTfoCands_rec( p, pObj1 );\n    Dch_ManCollectTfoCands_rec( p, pObj2 );\n    Vec_PtrSort( p-\u003evSimRoots, (int (*)(void))Aig_ObjCompareIdIncrease );\n    Vec_PtrSort( p-\u003evSimClasses, (int (*)(void))Aig_ObjCompareIdIncrease );\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evSimClasses, pObj, i )\n        pObj-\u003efMarkA = 0;\n}",
+      "Draft": "func Dch_ManCollectTfoCands(p *Dch_Man_t, pObj1 *Aig_Obj_t, pObj2 *Aig_Obj_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Vec_PtrClear( p.vSimRoots );\n    Vec_PtrClear( p.vSimClasses );\n    Aig_ManIncrementTravId( p.pAigTotal );\n    Aig_ObjSetTravIdCurrent( p.pAigTotal, Aig_ManConst1(p.pAigTotal) );    \n    Dch_ManCollectTfoCands_rec( p, pObj1 );\n    Dch_ManCollectTfoCands_rec( p, pObj2 );\n    Vec_PtrSort( p.vSimRoots, (int (*)(void))Aig_ObjCompareIdIncrease );\n    Vec_PtrSort( p.vSimClasses, (int (*)(void))Aig_ObjCompareIdIncrease );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSimClasses)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vSimClasses, i)), 1); i++  {\n        pObj.fMarkA = 0;\n    }\n}"
+    },
+    {
+      "Name": "Dch_ManResimulateSolved_rec",
+      "Start": 3434,
+      "End": 4552,
+      "BodyStart": 3502,
+      "Original": "void Dch_ManResimulateSolved_rec( Dch_Man_t * p, Aig_Obj_t * pObj )\n{\n    if ( Aig_ObjIsTravIdCurrent(p-\u003epAigTotal, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p-\u003epAigTotal, pObj);\n    if ( Aig_ObjIsCi(pObj) )\n    {\n        Aig_Obj_t * pObjFraig;\n        int nVarNum;\n        pObjFraig = Dch_ObjFraig( pObj );\n        assert( !Aig_IsComplement(pObjFraig) );\n        nVarNum = Dch_ObjSatNum( p, pObjFraig );\n        // get the value from the SAT solver\n        // (account for the fact that some vars may be minimized away)\n        pObj-\u003efMarkB = !nVarNum? 0 : sat_solver_var_value( p-\u003epSat, nVarNum );\n//        pObj-\u003efMarkB = !nVarNum? Aig_ManRandom(0) \u0026 1 : sat_solver_var_value( p-\u003epSat, nVarNum );\n        return;\n    }\n    Dch_ManResimulateSolved_rec( p, Aig_ObjFanin0(pObj) );\n    Dch_ManResimulateSolved_rec( p, Aig_ObjFanin1(pObj) );\n    pObj-\u003efMarkB = ( Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj) )\n                 \u0026 ( Aig_ObjFanin1(pObj)-\u003efMarkB ^ Aig_ObjFaninC1(pObj) );\n    // count the cone size\n    if ( Dch_ObjSatNum( p, Aig_Regular(Dch_ObjFraig(pObj)) ) \u003e 0 )\n        p-\u003enConeThis++;\n}",
+      "Draft": "func Dch_ManResimulateSolved_rec(p *Dch_Man_t, pObj *Aig_Obj_t) {\n    if Aig_ObjIsTravIdCurrent(p.pAigTotal, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p.pAigTotal, pObj);\n    if Aig_ObjIsCi(pObj) {\n        var pObjFraig *Aig_Obj_t;\n        var nVarNum int32;\n        pObjFraig = Dch_ObjFraig( pObj );\n        assert(!Aig_IsComplement(pObjFraig), \"!Aig_IsComplement(pObjFraig)\");\n        nVarNum = Dch_ObjSatNum( p, pObjFraig );\n        // get the value from the SAT solver\n        // (account for the fact that some vars may be minimized away)\n        if !(nVarNum != 0) {\n            pObj.fMarkB = 0;\n        } else {\n            pObj.fMarkB = sat_solver_var_value( p.pSat, nVarNum );\n        }\n//        pObj-\u003efMarkB = !nVarNum? Aig_ManRandom(0) \u0026 1 : sat_solver_var_value( p-\u003epSat, nVarNum );\n        return;\n    }\n    Dch_ManResimulateSolved_rec( p, Aig_ObjFanin0(pObj) );\n    Dch_ManResimulateSolved_rec( p, Aig_ObjFanin1(pObj) );\n    pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) )\n                 \u0026 ( Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj) );\n    // count the cone size\n    if Dch_ObjSatNum( p, Aig_Regular(Dch_ObjFraig(pObj)) ) \u003e 0 {\n        p.nConeThis++; }\n}"
+    },
+    {
+      "Name": "Dch_ManResimulateOther_rec",
+      "Start": 4841,
+      "End": 5425,
+      "BodyStart": 4908,
+      "Original": "void Dch_ManResimulateOther_rec( Dch_Man_t * p, Aig_Obj_t * pObj )\n{\n    if ( Aig_ObjIsTravIdCurrent(p-\u003epAigTotal, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent(p-\u003epAigTotal, pObj);\n    if ( Aig_ObjIsCi(pObj) )\n    {\n        // set random value\n        pObj-\u003efMarkB = Aig_ManRandom(0) \u0026 1;\n        return;\n    }\n    Dch_ManResimulateOther_rec( p, Aig_ObjFanin0(pObj) );\n    Dch_ManResimulateOther_rec( p, Aig_ObjFanin1(pObj) );\n    pObj-\u003efMarkB = ( Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj) )\n                 \u0026 ( Aig_ObjFanin1(pObj)-\u003efMarkB ^ Aig_ObjFaninC1(pObj) );\n}",
+      "Draft": "func Dch_ManResimulateOther_rec(p *Dch_Man_t, pObj *Aig_Obj_t) {\n    if Aig_ObjIsTravIdCurrent(p.pAigTotal, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p.pAigTotal, pObj);\n    if Aig_ObjIsCi(pObj) {\n        // set random value\n        pObj.fMarkB = Aig_ManRandom(0) \u0026 1;\n        return;\n    }\n    Dch_ManResimulateOther_rec( p, Aig_ObjFanin0(pObj) );\n    Dch_ManResimulateOther_rec( p, Aig_ObjFanin1(pObj) );\n    pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) )\n                 \u0026 ( Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj) );\n}"
+    },
+    {
+      "Name": "Dch_ManResimulateCex",
+      "Start": 5688,
+      "End": 7183,
+      "BodyStart": 5768,
+      "Original": "void Dch_ManResimulateCex( Dch_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pRepr )\n{\n    Aig_Obj_t * pRoot, ** ppClass;\n    int i, k, nSize, RetValue1, RetValue2;\n    abctime clk = Abc_Clock();\n    // get the equivalence classes\n    Dch_ManCollectTfoCands( p, pObj, pRepr );\n    // resimulate the cone of influence of the solved nodes\n    p-\u003enConeThis = 0;\n    Aig_ManIncrementTravId( p-\u003epAigTotal );\n    Aig_ObjSetTravIdCurrent( p-\u003epAigTotal, Aig_ManConst1(p-\u003epAigTotal) );\n    Dch_ManResimulateSolved_rec( p, pObj );\n    Dch_ManResimulateSolved_rec( p, pRepr );\n    p-\u003enConeMax = Abc_MaxInt( p-\u003enConeMax, p-\u003enConeThis );\n    // resimulate the cone of influence of the other nodes\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evSimRoots, pRoot, i )\n        Dch_ManResimulateOther_rec( p, pRoot );\n    // refine these nodes\n    RetValue1 = Dch_ClassesRefineConst1Group( p-\u003eppClasses, p-\u003evSimRoots, 0 );\n    // resimulate the cone of influence of the cand classes\n    RetValue2 = 0;\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evSimClasses, pRoot, i )\n    {\n        ppClass = Dch_ClassesReadClass( p-\u003eppClasses, pRoot, \u0026nSize );\n        for ( k = 0; k \u003c nSize; k++ )\n            Dch_ManResimulateOther_rec( p, ppClass[k] );\n        // refine this class\n        RetValue2 += Dch_ClassesRefineOneClass( p-\u003eppClasses, pRoot, 0 );\n    }\n    // make sure refinement happened\n    if ( Aig_ObjIsConst1(pRepr) )\n        assert( RetValue1 );\n    else\n        assert( RetValue2 );\np-\u003etimeSimSat += Abc_Clock() - clk;\n}",
+      "Draft": "func Dch_ManResimulateCex(p *Dch_Man_t, pObj *Aig_Obj_t, pRepr *Aig_Obj_t) {\n    var pRoot *Aig_Obj_t;\n    var ppClass **Aig_Obj_t;\n    var i, k, nSize, RetValue1, RetValue2 int32;\n    var clk abctime  = Abc_Clock();\n    // get the equivalence classes\n    Dch_ManCollectTfoCands( p, pObj, pRepr );\n    // resimulate the cone of influence of the solved nodes\n    p.nConeThis = 0;\n    Aig_ManIncrementTravId( p.pAigTotal );\n    Aig_ObjSetTravIdCurrent( p.pAigTotal, Aig_ManConst1(p.pAigTotal) );\n    Dch_ManResimulateSolved_rec( p, pObj );\n    Dch_ManResimulateSolved_rec( p, pRepr );\n    p.nConeMax = Abc_MaxInt( p.nConeMax, p.nConeThis );\n    // resimulate the cone of influence of the other nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSimRoots)) \u0026\u0026 (((pRoot) = (Aig_Obj_t *)Vec_PtrEntry(p.vSimRoots, i)), 1); i++  {\n        Dch_ManResimulateOther_rec( p, pRoot );\n    }\n    // refine these nodes\n    RetValue1 = Dch_ClassesRefineConst1Group( p.ppClasses, p.vSimRoots, 0 );\n    // resimulate the cone of influence of the cand classes\n    RetValue2 = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSimClasses)) \u0026\u0026 (((pRoot) = (Aig_Obj_t *)Vec_PtrEntry(p.vSimClasses, i)), 1); i++  {\n        ppClass = Dch_ClassesReadClass( p.ppClasses, pRoot, \u0026nSize );\n        for  k = 0; k \u003c nSize; k++  {\n            Dch_ManResimulateOther_rec( p, ppClass[k] );\n        }\n        // refine this class\n        RetValue2 += Dch_ClassesRefineOneClass( p.ppClasses, pRoot, 0 );\n    }\n    // make sure refinement happened\n    if Aig_ObjIsConst1(pRepr) {\n        assert(RetValue1, \"RetValue1\");\n    } else {\n        assert((RetValue2 != 0), \"RetValue2\"); }\np.timeSimSat += Abc_Clock() - clk;\n}"
+    },
+    {
+      "Name": "Dch_ManResimulateCex2",
+      "Start": 7446,
+      "End": 8668,
+      "BodyStart": 7527,
+      "Original": "void Dch_ManResimulateCex2( Dch_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pRepr )\n{\n    Aig_Obj_t * pRoot;\n    int i, RetValue;\n    abctime clk = Abc_Clock();\n    // get the equivalence class\n    if ( Dch_ObjIsConst1Cand(p-\u003epAigTotal, pObj) )\n        Dch_ClassesCollectConst1Group( p-\u003eppClasses, pObj, 500, p-\u003evSimRoots );\n    else\n        Dch_ClassesCollectOneClass( p-\u003eppClasses, pRepr, p-\u003evSimRoots );\n    // resimulate the cone of influence of the solved nodes\n    p-\u003enConeThis = 0;\n    Aig_ManIncrementTravId( p-\u003epAigTotal );\n    Aig_ObjSetTravIdCurrent( p-\u003epAigTotal, Aig_ManConst1(p-\u003epAigTotal) );\n    Dch_ManResimulateSolved_rec( p, pObj );\n    Dch_ManResimulateSolved_rec( p, pRepr );\n    p-\u003enConeMax = Abc_MaxInt( p-\u003enConeMax, p-\u003enConeThis );\n    // resimulate the cone of influence of the other nodes\n    Vec_PtrForEachEntry( Aig_Obj_t *, p-\u003evSimRoots, pRoot, i )\n        Dch_ManResimulateOther_rec( p, pRoot );\n    // refine this class\n    if ( Dch_ObjIsConst1Cand(p-\u003epAigTotal, pObj) )\n        RetValue = Dch_ClassesRefineConst1Group( p-\u003eppClasses, p-\u003evSimRoots, 0 );\n    else\n        RetValue = Dch_ClassesRefineOneClass( p-\u003eppClasses, pRepr, 0 );\n    assert( RetValue );\np-\u003etimeSimSat += Abc_Clock() - clk;\n}",
+      "Draft": "func Dch_ManResimulateCex2(p *Dch_Man_t, pObj *Aig_Obj_t, pRepr *Aig_Obj_t) {\n    var pRoot *Aig_Obj_t;\n    var i, RetValue int32;\n    var clk abctime  = Abc_Clock();\n    // get the equivalence class\n    if Dch_ObjIsConst1Cand(p.pAigTotal, pObj) {\n        Dch_ClassesCollectConst1Group( p.ppClasses, pObj, 500, p.vSimRoots );\n    } else {\n        Dch_ClassesCollectOneClass( p.ppClasses, pRepr, p.vSimRoots ); }\n    // resimulate the cone of influence of the solved nodes\n    p.nConeThis = 0;\n    Aig_ManIncrementTravId( p.pAigTotal );\n    Aig_ObjSetTravIdCurrent( p.pAigTotal, Aig_ManConst1(p.pAigTotal) );\n    Dch_ManResimulateSolved_rec( p, pObj );\n    Dch_ManResimulateSolved_rec( p, pRepr );\n    p.nConeMax = Abc_MaxInt( p.nConeMax, p.nConeThis );\n    // resimulate the cone of influence of the other nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSimRoots)) \u0026\u0026 (((pRoot) = (Aig_Obj_t *)Vec_PtrEntry(p.vSimRoots, i)), 1); i++  {\n        Dch_ManResimulateOther_rec( p, pRoot );\n    }\n    // refine this class\n    if Dch_ObjIsConst1Cand(p.pAigTotal, pObj) {\n        RetValue = Dch_ClassesRefineConst1Group( p.ppClasses, p.vSimRoots, 0 );\n    } else {\n        RetValue = Dch_ClassesRefineOneClass( p.ppClasses, pRepr, 0 ); }\n    assert((RetValue != 0), \"RetValue\");\np.timeSimSat += Abc_Clock() - clk;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSimSat.c::pointer-cast::3444",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3056,
+      "End": 3056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSimSat.c::pointer-cast::6871",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6371,
+      "End": 6371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSimSat.c::pointer-cast::7279",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6666,
+      "End": 6666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSimSat.c::pointer-cast::8985",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8261,
+      "End": 8261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSimSat.c::ternary::Dch_ManCollectTfoCands_rec",
+      "Category": "ternary-review",
+      "Symbol": "Dch_ManCollectTfoCands_rec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1318,
+      "End": 2211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSimSat.c::Dch_ManCollectTfoCands_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ManCollectTfoCands_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1318,
+      "End": 2211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSimSat.c::Dch_ManCollectTfoCands",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ManCollectTfoCands",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2504,
+      "End": 3143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSimSat.c::Dch_ManResimulateSolved_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ManResimulateSolved_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3434,
+      "End": 4552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSimSat.c::Dch_ManResimulateOther_rec",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ManResimulateOther_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4841,
+      "End": 5425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSimSat.c::Dch_ManResimulateCex",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ManResimulateCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5688,
+      "End": 7183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSimSat.c::Dch_ManResimulateCex2",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ManResimulateCex2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7446,
+      "End": 8668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSimSat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8915
+    }
+  ],
+  "Draft": "package dch\n\n/**CFile****************************************************************\n\n  FileName    [dchSimSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Choice computation for tech-mapping.]\n\n  Synopsis    [Performs resimulation using counter-examples.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 29, 2008.]\n\n  Revision    [$Id: dchSimSat.c,v 1.00 2008/07/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dchInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Collects internal nodes in the reverse DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dch_ManCollectTfoCands_rec(p *Dch_Man_t, pObj *Aig_Obj_t) {\n    var pFanout, pRepr *Aig_Obj_t;\n    var iFanout int32 = -1;\n    var i int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if Aig_ObjIsTravIdCurrent(p.pAigTotal, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p.pAigTotal, pObj);\n    // traverse the fanouts\n    // inlining of macro Aig_ObjForEachFanout\n    for  assert(p.pAigTotal.pFanData, \"p.pAigTotal.pFanData\"), i = 0; (i \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFanout) = i? Aig_ObjFanoutNext(p.pAigTotal, iFanout) : Aig_ObjFanout0Int(p.pAigTotal, pObj.Id)), 1) \u0026\u0026           (((pFanout) = Aig_ManObj(p.pAigTotal, iFanout\u003e\u003e1)), 1); i++  {\n        Dch_ManCollectTfoCands_rec( p, pFanout );\n    }\n    // check if the given node has a representative\n    pRepr = Aig_ObjRepr( p.pAigTotal, pObj );\n    if pRepr == nil {\n        return; }\n    // pRepr is the constant 1 node\n    if pRepr == Aig_ManConst1(p.pAigTotal) {\n        Vec_PtrPush( p.vSimRoots, pObj );\n        return;\n    }\n    // pRepr is the representative of an equivalence class\n    if pRepr.fMarkA {\n        return; }\n    pRepr.fMarkA = 1;\n    Vec_PtrPush( p.vSimClasses, pRepr );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect equivalence classes and const1 cands in the TFO.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n \n***********************************************************************/\nfunc Dch_ManCollectTfoCands(p *Dch_Man_t, pObj1 *Aig_Obj_t, pObj2 *Aig_Obj_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Vec_PtrClear( p.vSimRoots );\n    Vec_PtrClear( p.vSimClasses );\n    Aig_ManIncrementTravId( p.pAigTotal );\n    Aig_ObjSetTravIdCurrent( p.pAigTotal, Aig_ManConst1(p.pAigTotal) );    \n    Dch_ManCollectTfoCands_rec( p, pObj1 );\n    Dch_ManCollectTfoCands_rec( p, pObj2 );\n    Vec_PtrSort( p.vSimRoots, (int (*)(void))Aig_ObjCompareIdIncrease );\n    Vec_PtrSort( p.vSimClasses, (int (*)(void))Aig_ObjCompareIdIncrease );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSimClasses)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vSimClasses, i)), 1); i++  {\n        pObj.fMarkA = 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resimulates the cone of influence of the solved nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n \n***********************************************************************/\nfunc Dch_ManResimulateSolved_rec(p *Dch_Man_t, pObj *Aig_Obj_t) {\n    if Aig_ObjIsTravIdCurrent(p.pAigTotal, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p.pAigTotal, pObj);\n    if Aig_ObjIsCi(pObj) {\n        var pObjFraig *Aig_Obj_t;\n        var nVarNum int32;\n        pObjFraig = Dch_ObjFraig( pObj );\n        assert(!Aig_IsComplement(pObjFraig), \"!Aig_IsComplement(pObjFraig)\");\n        nVarNum = Dch_ObjSatNum( p, pObjFraig );\n        // get the value from the SAT solver\n        // (account for the fact that some vars may be minimized away)\n        if !(nVarNum != 0) {\n            pObj.fMarkB = 0;\n        } else {\n            pObj.fMarkB = sat_solver_var_value( p.pSat, nVarNum );\n        }\n//        pObj-\u003efMarkB = !nVarNum? Aig_ManRandom(0) \u0026 1 : sat_solver_var_value( p-\u003epSat, nVarNum );\n        return;\n    }\n    Dch_ManResimulateSolved_rec( p, Aig_ObjFanin0(pObj) );\n    Dch_ManResimulateSolved_rec( p, Aig_ObjFanin1(pObj) );\n    pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) )\n                 \u0026 ( Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj) );\n    // count the cone size\n    if Dch_ObjSatNum( p, Aig_Regular(Dch_ObjFraig(pObj)) ) \u003e 0 {\n        p.nConeThis++; }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resimulates the cone of influence of the other nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dch_ManResimulateOther_rec(p *Dch_Man_t, pObj *Aig_Obj_t) {\n    if Aig_ObjIsTravIdCurrent(p.pAigTotal, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent(p.pAigTotal, pObj);\n    if Aig_ObjIsCi(pObj) {\n        // set random value\n        pObj.fMarkB = Aig_ManRandom(0) \u0026 1;\n        return;\n    }\n    Dch_ManResimulateOther_rec( p, Aig_ObjFanin0(pObj) );\n    Dch_ManResimulateOther_rec( p, Aig_ObjFanin1(pObj) );\n    pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) )\n                 \u0026 ( Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Handle the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dch_ManResimulateCex(p *Dch_Man_t, pObj *Aig_Obj_t, pRepr *Aig_Obj_t) {\n    var pRoot *Aig_Obj_t;\n    var ppClass **Aig_Obj_t;\n    var i, k, nSize, RetValue1, RetValue2 int32;\n    var clk abctime  = Abc_Clock();\n    // get the equivalence classes\n    Dch_ManCollectTfoCands( p, pObj, pRepr );\n    // resimulate the cone of influence of the solved nodes\n    p.nConeThis = 0;\n    Aig_ManIncrementTravId( p.pAigTotal );\n    Aig_ObjSetTravIdCurrent( p.pAigTotal, Aig_ManConst1(p.pAigTotal) );\n    Dch_ManResimulateSolved_rec( p, pObj );\n    Dch_ManResimulateSolved_rec( p, pRepr );\n    p.nConeMax = Abc_MaxInt( p.nConeMax, p.nConeThis );\n    // resimulate the cone of influence of the other nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSimRoots)) \u0026\u0026 (((pRoot) = (Aig_Obj_t *)Vec_PtrEntry(p.vSimRoots, i)), 1); i++  {\n        Dch_ManResimulateOther_rec( p, pRoot );\n    }\n    // refine these nodes\n    RetValue1 = Dch_ClassesRefineConst1Group( p.ppClasses, p.vSimRoots, 0 );\n    // resimulate the cone of influence of the cand classes\n    RetValue2 = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSimClasses)) \u0026\u0026 (((pRoot) = (Aig_Obj_t *)Vec_PtrEntry(p.vSimClasses, i)), 1); i++  {\n        ppClass = Dch_ClassesReadClass( p.ppClasses, pRoot, \u0026nSize );\n        for  k = 0; k \u003c nSize; k++  {\n            Dch_ManResimulateOther_rec( p, ppClass[k] );\n        }\n        // refine this class\n        RetValue2 += Dch_ClassesRefineOneClass( p.ppClasses, pRoot, 0 );\n    }\n    // make sure refinement happened\n    if Aig_ObjIsConst1(pRepr) {\n        assert(RetValue1, \"RetValue1\");\n    } else {\n        assert((RetValue2 != 0), \"RetValue2\"); }\np.timeSimSat += Abc_Clock() - clk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Handle the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dch_ManResimulateCex2(p *Dch_Man_t, pObj *Aig_Obj_t, pRepr *Aig_Obj_t) {\n    var pRoot *Aig_Obj_t;\n    var i, RetValue int32;\n    var clk abctime  = Abc_Clock();\n    // get the equivalence class\n    if Dch_ObjIsConst1Cand(p.pAigTotal, pObj) {\n        Dch_ClassesCollectConst1Group( p.ppClasses, pObj, 500, p.vSimRoots );\n    } else {\n        Dch_ClassesCollectOneClass( p.ppClasses, pRepr, p.vSimRoots ); }\n    // resimulate the cone of influence of the solved nodes\n    p.nConeThis = 0;\n    Aig_ManIncrementTravId( p.pAigTotal );\n    Aig_ObjSetTravIdCurrent( p.pAigTotal, Aig_ManConst1(p.pAigTotal) );\n    Dch_ManResimulateSolved_rec( p, pObj );\n    Dch_ManResimulateSolved_rec( p, pRepr );\n    p.nConeMax = Abc_MaxInt( p.nConeMax, p.nConeThis );\n    // resimulate the cone of influence of the other nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vSimRoots)) \u0026\u0026 (((pRoot) = (Aig_Obj_t *)Vec_PtrEntry(p.vSimRoots, i)), 1); i++  {\n        Dch_ManResimulateOther_rec( p, pRoot );\n    }\n    // refine this class\n    if Dch_ObjIsConst1Cand(p.pAigTotal, pObj) {\n        RetValue = Dch_ClassesRefineConst1Group( p.ppClasses, p.vSimRoots, 0 );\n    } else {\n        RetValue = Dch_ClassesRefineOneClass( p.ppClasses, pRepr, 0 ); }\n    assert((RetValue != 0), \"RetValue\");\np.timeSimSat += Abc_Clock() - clk;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

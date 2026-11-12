@@ -1,0 +1,552 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyObj.c",
+  "SHA256": "93f529af3c31b07d3f139163afa8d6a59863798d9919028b5f16af4908c50743",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pGhost) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsGhost(pGhost) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_TableLookup(p, pGhost) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 2450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsNone(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 9,
+        "ByteOffset": 3032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 4744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 150,
+        "Column": 5,
+        "ByteOffset": 4783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || pFan1 != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 181,
+        "Column": 5,
+        "ByteOffset": 5760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 5799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || Ivy_ObjFanin1(pObj) != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 6255
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.pNextFan0 == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 195,
+        "Column": 5,
+        "ByteOffset": 6292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.pNextFan1 == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 6329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.pPrevFan0 == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 197,
+        "Column": 5,
+        "ByteOffset": 6366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.pPrevFan1 == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 6964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 247,
+        "Column": 5,
+        "ByteOffset": 7895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 248,
+        "Column": 5,
+        "ByteOffset": 7934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjRefs(pObj) == 0 || !fFreeTop );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 289,
+        "Column": 5,
+        "ByteOffset": 9152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 290,
+        "Column": 5,
+        "ByteOffset": 9191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_ObjIsNone(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 318,
+        "Column": 5,
+        "ByteOffset": 10319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObjOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 320,
+        "Column": 5,
+        "ByteOffset": 10415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsNone(pObjOld) || !Ivy_ObjIsPi(pObjOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 322,
+        "Column": 5,
+        "ByteOffset": 10532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_ObjIsBuf(Ivy_Regular(pObjNew)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 324,
+        "Column": 5,
+        "ByteOffset": 10620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObjOld != Ivy_Regular(pObjNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 339,
+        "Column": 5,
+        "ByteOffset": 11338
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObjNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 344,
+        "Column": 13,
+        "ByteOffset": 11617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Ivy_ObjIsNode(pObjOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 364,
+        "Column": 5,
+        "ByteOffset": 12423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjFanin0(pObjNew) == nil || pObjOld != Ivy_ObjFanin0(pObjNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 365,
+        "Column": 5,
+        "ByteOffset": 12505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjFanin1(pObjNew) == nil || pObjOld != Ivy_ObjFanin1(pObjNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 368,
+        "Column": 9,
+        "ByteOffset": 12669
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjOld.pFanout != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 9,
+        "ByteOffset": 12711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObjNew.pFanout == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 373,
+        "Column": 5,
+        "ByteOffset": 12829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjRefs(pObjNew) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 444,
+        "Column": 9,
+        "ByteOffset": 15226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_ObjCreatePi",
+      "Start": 1276,
+      "End": 1413,
+      "BodyStart": 1321,
+      "Original": "Ivy_Obj_t * Ivy_ObjCreatePi( Ivy_Man_t * p )\n{\n    return Ivy_ObjCreate( p, Ivy_ObjCreateGhost(p, NULL, NULL, IVY_PI, IVY_INIT_NONE) );\n}",
+      "Draft": "func Ivy_ObjCreatePi(p *Ivy_Man_t) *Ivy_Obj_t {\n    return Ivy_ObjCreate( p, Ivy_ObjCreateGhost(p, nil, nil, IVY_PI, IVY_INIT_NONE) );\n}"
+    },
+    {
+      "Name": "Ivy_ObjCreatePo",
+      "Start": 1696,
+      "End": 1857,
+      "BodyStart": 1762,
+      "Original": "Ivy_Obj_t * Ivy_ObjCreatePo( Ivy_Man_t * p, Ivy_Obj_t * pDriver )\n{\n    return Ivy_ObjCreate( p, Ivy_ObjCreateGhost(p, pDriver, NULL, IVY_PO, IVY_INIT_NONE) );\n}",
+      "Draft": "func Ivy_ObjCreatePo(p *Ivy_Man_t, pDriver *Ivy_Obj_t) *Ivy_Obj_t {\n    return Ivy_ObjCreate( p, Ivy_ObjCreateGhost(p, pDriver, nil, IVY_PO, IVY_INIT_NONE) );\n}"
+    },
+    {
+      "Name": "Ivy_ObjCreate",
+      "Start": 2140,
+      "End": 4404,
+      "BodyStart": 2203,
+      "Original": "Ivy_Obj_t * Ivy_ObjCreate( Ivy_Man_t * p, Ivy_Obj_t * pGhost )\n{\n    Ivy_Obj_t * pObj;\n    assert( !Ivy_IsComplement(pGhost) );\n    assert( Ivy_ObjIsGhost(pGhost) );\n    assert( Ivy_TableLookup(p, pGhost) == NULL );\n    // get memory for the new object\n    pObj = Ivy_ManFetchMemory( p );\n    assert( Ivy_ObjIsNone(pObj) );\n    pObj-\u003eId = Vec_PtrSize(p-\u003evObjs);\n    Vec_PtrPush( p-\u003evObjs, pObj );\n    // add basic info (fanins, compls, type, init)\n    pObj-\u003eType = pGhost-\u003eType;\n    pObj-\u003eInit = pGhost-\u003eInit;\n    // add connections\n    Ivy_ObjConnect( p, pObj, pGhost-\u003epFanin0, pGhost-\u003epFanin1 );\n    // compute level\n    if ( Ivy_ObjIsNode(pObj) )\n        pObj-\u003eLevel = Ivy_ObjLevelNew(pObj);\n    else if ( Ivy_ObjIsLatch(pObj) )\n        pObj-\u003eLevel = 0;\n    else if ( Ivy_ObjIsOneFanin(pObj) )\n        pObj-\u003eLevel = Ivy_ObjFanin0(pObj)-\u003eLevel;\n    else if ( !Ivy_ObjIsPi(pObj) )\n        assert( 0 );\n    // create phase\n    if ( Ivy_ObjIsNode(pObj) )\n        pObj-\u003efPhase = Ivy_ObjFaninPhase(Ivy_ObjChild0(pObj)) \u0026 Ivy_ObjFaninPhase(Ivy_ObjChild1(pObj));\n    else if ( Ivy_ObjIsOneFanin(pObj) )\n        pObj-\u003efPhase = Ivy_ObjFaninPhase(Ivy_ObjChild0(pObj));\n    // set the fail TFO flag\n    if ( Ivy_ObjIsNode(pObj) )\n        pObj-\u003efFailTfo = Ivy_ObjFanin0(pObj)-\u003efFailTfo | Ivy_ObjFanin1(pObj)-\u003efFailTfo;\n    // mark the fanins in a special way if the node is EXOR\n    if ( Ivy_ObjIsExor(pObj) )\n    {\n        Ivy_ObjFanin0(pObj)-\u003efExFan = 1;\n        Ivy_ObjFanin1(pObj)-\u003efExFan = 1;\n    }\n    // add PIs/POs to the arrays\n    if ( Ivy_ObjIsPi(pObj) )\n        Vec_PtrPush( p-\u003evPis, pObj );\n    else if ( Ivy_ObjIsPo(pObj) )\n        Vec_PtrPush( p-\u003evPos, pObj );\n//    else if ( Ivy_ObjIsBuf(pObj) )\n//        Vec_PtrPush( p-\u003evBufs, pObj );\n    if ( p-\u003evRequired \u0026\u0026 Vec_IntSize(p-\u003evRequired) \u003c= pObj-\u003eId )\n        Vec_IntFillExtra( p-\u003evRequired, 2 * Vec_IntSize(p-\u003evRequired), 1000000 );\n    // update node counters of the manager\n    p-\u003enObjs[Ivy_ObjType(pObj)]++;\n    p-\u003enCreated++;\n\n//    printf( \"Adding %sAIG node: \", p-\u003epHaig==NULL? \"H\":\" \" );\n//    Ivy_ObjPrintVerbose( p, pObj, p-\u003epHaig==NULL );\n//    printf( \"\\n\" );\n\n    // if HAIG is defined, create a corresponding node\n    if ( p-\u003epHaig )\n        Ivy_ManHaigCreateObj( p, pObj );\n    return pObj;\n}",
+      "Draft": "func Ivy_ObjCreate(p *Ivy_Man_t, pGhost *Ivy_Obj_t) *Ivy_Obj_t {\n    var pObj *Ivy_Obj_t;\n    assert(!Ivy_IsComplement(pGhost), \"!Ivy_IsComplement(pGhost)\");\n    assert(Ivy_ObjIsGhost(pGhost), \"Ivy_ObjIsGhost(pGhost)\");\n    assert(Ivy_TableLookup(p, pGhost) == nil, \"Ivy_TableLookup(p, pGhost) == nil\");\n    // get memory for the new object\n    pObj = Ivy_ManFetchMemory( p );\n    assert(Ivy_ObjIsNone(pObj), \"Ivy_ObjIsNone(pObj)\");\n    pObj.Id = Vec_PtrSize(p.vObjs);\n    Vec_PtrPush( p.vObjs, pObj );\n    // add basic info (fanins, compls, type, init)\n    pObj.Type = pGhost.Type;\n    pObj.Init = pGhost.Init;\n    // add connections\n    Ivy_ObjConnect( p, pObj, pGhost.pFanin0, pGhost.pFanin1 );\n    // compute level\n    if Ivy_ObjIsNode(pObj) {\n        pObj.Level = Ivy_ObjLevelNew(pObj);\n    } else if Ivy_ObjIsLatch(pObj) {\n        pObj.Level = 0;\n    } else if Ivy_ObjIsOneFanin(pObj) {\n        pObj.Level = Ivy_ObjFanin0(pObj).Level;\n    } else if !Ivy_ObjIsPi(pObj) {\n        assert(false, \"0\"); }\n    // create phase\n    if Ivy_ObjIsNode(pObj) {\n        pObj.fPhase = Ivy_ObjFaninPhase(Ivy_ObjChild0(pObj)) \u0026 Ivy_ObjFaninPhase(Ivy_ObjChild1(pObj));\n    } else if Ivy_ObjIsOneFanin(pObj) {\n        pObj.fPhase = Ivy_ObjFaninPhase(Ivy_ObjChild0(pObj)); }\n    // set the fail TFO flag\n    if Ivy_ObjIsNode(pObj) {\n        pObj.fFailTfo = Ivy_ObjFanin0(pObj).fFailTfo | Ivy_ObjFanin1(pObj).fFailTfo; }\n    // mark the fanins in a special way if the node is EXOR\n    if Ivy_ObjIsExor(pObj) {\n        Ivy_ObjFanin0(pObj).fExFan = 1;\n        Ivy_ObjFanin1(pObj).fExFan = 1;\n    }\n    // add PIs/POs to the arrays\n    if Ivy_ObjIsPi(pObj) {\n        Vec_PtrPush( p.vPis, pObj );\n    } else if Ivy_ObjIsPo(pObj) {\n        Vec_PtrPush( p.vPos, pObj ); }\n//    else if ( Ivy_ObjIsBuf(pObj) )\n//        Vec_PtrPush( p-\u003evBufs, pObj );\n    if p.vRequired \u0026\u0026 Vec_IntSize(p.vRequired) \u003c= pObj.Id {\n        Vec_IntFillExtra( p.vRequired, 2 * Vec_IntSize(p.vRequired), 1000000 ); }\n    // update node counters of the manager\n    p.nObjs[Ivy_ObjType(pObj)]++;\n    p.nCreated++;\n\n//    printf( \"Adding %sAIG node: \", p-\u003epHaig==NULL? \"H\":\" \" );\n//    Ivy_ObjPrintVerbose( p, pObj, p-\u003epHaig==NULL );\n//    printf( \"\\n\" );\n\n    // if HAIG is defined, create a corresponding node\n    if p.pHaig {\n        Ivy_ManHaigCreateObj( p, pObj ); }\n    return pObj;\n}"
+    },
+    {
+      "Name": "Ivy_ObjConnect",
+      "Start": 4672,
+      "End": 5482,
+      "BodyStart": 4765,
+      "Original": "void Ivy_ObjConnect( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Obj_t * pFan0, Ivy_Obj_t * pFan1 )\n{\n    assert( !Ivy_IsComplement(pObj) );\n    assert( Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || pFan1 != NULL );\n    // add the first fanin\n    pObj-\u003epFanin0 = pFan0;\n    pObj-\u003epFanin1 = pFan1;\n    // increment references of the fanins and add their fanouts\n    if ( Ivy_ObjFanin0(pObj) != NULL )\n    {\n        Ivy_ObjRefsInc( Ivy_ObjFanin0(pObj) );\n        if ( p-\u003efFanout )\n            Ivy_ObjAddFanout( p, Ivy_ObjFanin0(pObj), pObj );\n    }\n    if ( Ivy_ObjFanin1(pObj) != NULL )\n    {\n        Ivy_ObjRefsInc( Ivy_ObjFanin1(pObj) );\n        if ( p-\u003efFanout )\n            Ivy_ObjAddFanout( p, Ivy_ObjFanin1(pObj), pObj );\n    }\n    // add the node to the structural hash table\n    Ivy_TableInsert( p, pObj );\n}",
+      "Draft": "func Ivy_ObjConnect(p *Ivy_Man_t, pObj *Ivy_Obj_t, pFan0 *Ivy_Obj_t, pFan1 *Ivy_Obj_t) {\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || pFan1 != nil, \"Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || pFan1 != nil\");\n    // add the first fanin\n    pObj.pFanin0 = pFan0;\n    pObj.pFanin1 = pFan1;\n    // increment references of the fanins and add their fanouts\n    if Ivy_ObjFanin0(pObj) != nil {\n        Ivy_ObjRefsInc( Ivy_ObjFanin0(pObj) );\n        if p.fFanout {\n            Ivy_ObjAddFanout( p, Ivy_ObjFanin0(pObj), pObj ); }\n    }\n    if Ivy_ObjFanin1(pObj) != nil {\n        Ivy_ObjRefsInc( Ivy_ObjFanin1(pObj) );\n        if p.fFanout {\n            Ivy_ObjAddFanout( p, Ivy_ObjFanin1(pObj), pObj ); }\n    }\n    // add the node to the structural hash table\n    Ivy_TableInsert( p, pObj );\n}"
+    },
+    {
+      "Name": "Ivy_ObjDisconnect",
+      "Start": 5750,
+      "End": 6650,
+      "BodyStart": 5808,
+      "Original": "void Ivy_ObjDisconnect( Ivy_Man_t * p, Ivy_Obj_t * pObj )\n{\n    assert( !Ivy_IsComplement(pObj) );\n    assert( Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || Ivy_ObjFanin1(pObj) != NULL );\n    // remove connections\n    if ( pObj-\u003epFanin0 != NULL )\n    {\n        Ivy_ObjRefsDec(Ivy_ObjFanin0(pObj));\n        if ( p-\u003efFanout )\n            Ivy_ObjDeleteFanout( p, Ivy_ObjFanin0(pObj), pObj );\n    }\n    if ( pObj-\u003epFanin1 != NULL )\n    {\n        Ivy_ObjRefsDec(Ivy_ObjFanin1(pObj));\n        if ( p-\u003efFanout )\n            Ivy_ObjDeleteFanout( p, Ivy_ObjFanin1(pObj), pObj );\n    }\n    assert( pObj-\u003epNextFan0 == NULL );\n    assert( pObj-\u003epNextFan1 == NULL );\n    assert( pObj-\u003epPrevFan0 == NULL );\n    assert( pObj-\u003epPrevFan1 == NULL );\n    // remove the node from the structural hash table\n    Ivy_TableDelete( p, pObj );\n    // add the first fanin\n    pObj-\u003epFanin0 = NULL;\n    pObj-\u003epFanin1 = NULL;\n}",
+      "Draft": "func Ivy_ObjDisconnect(p *Ivy_Man_t, pObj *Ivy_Obj_t) {\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || Ivy_ObjFanin1(pObj) != nil, \"Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || Ivy_ObjFanin1(pObj) != nil\");\n    // remove connections\n    if pObj.pFanin0 != nil {\n        Ivy_ObjRefsDec(Ivy_ObjFanin0(pObj));\n        if p.fFanout {\n            Ivy_ObjDeleteFanout( p, Ivy_ObjFanin0(pObj), pObj ); }\n    }\n    if pObj.pFanin1 != nil {\n        Ivy_ObjRefsDec(Ivy_ObjFanin1(pObj));\n        if p.fFanout {\n            Ivy_ObjDeleteFanout( p, Ivy_ObjFanin1(pObj), pObj ); }\n    }\n    assert(pObj.pNextFan0 == nil, \"pObj.pNextFan0 == nil\");\n    assert(pObj.pNextFan1 == nil, \"pObj.pNextFan1 == nil\");\n    assert(pObj.pPrevFan0 == nil, \"pObj.pPrevFan0 == nil\");\n    assert(pObj.pPrevFan1 == nil, \"pObj.pPrevFan1 == nil\");\n    // remove the node from the structural hash table\n    Ivy_TableDelete( p, pObj );\n    // add the first fanin\n    pObj.pFanin0 = nil;\n    pObj.pFanin1 = nil;\n}"
+    },
+    {
+      "Name": "Ivy_ObjPatchFanin0",
+      "Start": 6940,
+      "End": 7664,
+      "BodyStart": 7022,
+      "Original": "void Ivy_ObjPatchFanin0( Ivy_Man_t * p, Ivy_Obj_t * pObj, Ivy_Obj_t * pFaninNew )\n{\n    Ivy_Obj_t * pFaninOld;\n    assert( !Ivy_IsComplement(pObj) );\n    pFaninOld = Ivy_ObjFanin0(pObj);\n    // decrement ref and remove fanout\n    Ivy_ObjRefsDec( pFaninOld );\n    if ( p-\u003efFanout )\n        Ivy_ObjDeleteFanout( p, pFaninOld, pObj );\n    // update the fanin\n    pObj-\u003epFanin0 = pFaninNew;\n    // increment ref and add fanout\n    Ivy_ObjRefsInc( Ivy_Regular(pFaninNew) );\n    if ( p-\u003efFanout )\n        Ivy_ObjAddFanout( p, Ivy_Regular(pFaninNew), pObj );\n    // get rid of old fanin\n    if ( !Ivy_ObjIsPi(pFaninOld) \u0026\u0026 !Ivy_ObjIsConst1(pFaninOld) \u0026\u0026 Ivy_ObjRefs(pFaninOld) == 0 )\n        Ivy_ObjDelete_rec( p, pFaninOld, 1 );\n}",
+      "Draft": "func Ivy_ObjPatchFanin0(p *Ivy_Man_t, pObj *Ivy_Obj_t, pFaninNew *Ivy_Obj_t) {\n    var pFaninOld *Ivy_Obj_t;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    pFaninOld = Ivy_ObjFanin0(pObj);\n    // decrement ref and remove fanout\n    Ivy_ObjRefsDec( pFaninOld );\n    if p.fFanout {\n        Ivy_ObjDeleteFanout( p, pFaninOld, pObj ); }\n    // update the fanin\n    pObj.pFanin0 = pFaninNew;\n    // increment ref and add fanout\n    Ivy_ObjRefsInc( Ivy_Regular(pFaninNew) );\n    if p.fFanout {\n        Ivy_ObjAddFanout( p, Ivy_Regular(pFaninNew), pObj ); }\n    // get rid of old fanin\n    if !Ivy_ObjIsPi(pFaninOld) \u0026\u0026 !Ivy_ObjIsConst1(pFaninOld) \u0026\u0026 Ivy_ObjRefs(pFaninOld) == 0 {\n        Ivy_ObjDelete_rec( p, pFaninOld, 1 ); }\n}"
+    },
+    {
+      "Name": "Ivy_ObjDelete",
+      "Start": 7917,
+      "End": 8884,
+      "BodyStart": 7985,
+      "Original": "void Ivy_ObjDelete( Ivy_Man_t * p, Ivy_Obj_t * pObj, int fFreeTop )\n{\n    assert( !Ivy_IsComplement(pObj) );\n    assert( Ivy_ObjRefs(pObj) == 0 || !fFreeTop );\n    // update node counters of the manager\n    p-\u003enObjs[pObj-\u003eType]--;\n    p-\u003enDeleted++;\n    // remove connections\n    Ivy_ObjDisconnect( p, pObj );\n    // remove PIs/POs from the arrays\n    if ( Ivy_ObjIsPi(pObj) )\n        Vec_PtrRemove( p-\u003evPis, pObj );\n    else if ( Ivy_ObjIsPo(pObj) )\n        Vec_PtrRemove( p-\u003evPos, pObj );\n    else if ( p-\u003efFanout \u0026\u0026 Ivy_ObjIsBuf(pObj) )\n        Vec_PtrRemove( p-\u003evBufs, pObj );\n    // clean and recycle the entry\n    if ( fFreeTop )\n    {\n        // free the node\n        Vec_PtrWriteEntry( p-\u003evObjs, pObj-\u003eId, NULL );\n        Ivy_ManRecycleMemory( p, pObj );\n    }\n    else\n    {\n        int nRefsOld = pObj-\u003enRefs;\n        Ivy_Obj_t * pFanout = pObj-\u003epFanout;\n        Ivy_ObjClean( pObj );\n        pObj-\u003epFanout = pFanout;\n        pObj-\u003enRefs = nRefsOld;\n    }\n}",
+      "Draft": "func Ivy_ObjDelete(p *Ivy_Man_t, pObj *Ivy_Obj_t, fFreeTop int32) {\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(Ivy_ObjRefs(pObj) == 0 || !(fFreeTop != 0), \"Ivy_ObjRefs(pObj) == 0 || !fFreeTop\");\n    // update node counters of the manager\n    p.nObjs[pObj.Type]--;\n    p.nDeleted++;\n    // remove connections\n    Ivy_ObjDisconnect( p, pObj );\n    // remove PIs/POs from the arrays\n    if Ivy_ObjIsPi(pObj) {\n        Vec_PtrRemove( p.vPis, pObj );\n    } else if Ivy_ObjIsPo(pObj) {\n        Vec_PtrRemove( p.vPos, pObj );\n    } else if p.fFanout \u0026\u0026 Ivy_ObjIsBuf(pObj) {\n        Vec_PtrRemove( p.vBufs, pObj ); }\n    // clean and recycle the entry\n    if fFreeTop != 0 {\n        // free the node\n        Vec_PtrWriteEntry( p.vObjs, pObj.Id, nil );\n        Ivy_ManRecycleMemory( p, pObj );\n    \n    } else {\n        var nRefsOld int32  = pObj.nRefs;\n        var pFanout *Ivy_Obj_t  = pObj.pFanout;\n        Ivy_ObjClean( pObj );\n        pObj.pFanout = pFanout;\n        pObj.nRefs = nRefsOld;\n    }\n}"
+    },
+    {
+      "Name": "Ivy_ObjDelete_rec",
+      "Start": 9149,
+      "End": 9753,
+      "BodyStart": 9221,
+      "Original": "void Ivy_ObjDelete_rec( Ivy_Man_t * p, Ivy_Obj_t * pObj, int fFreeTop )\n{\n    Ivy_Obj_t * pFanin0, * pFanin1;\n    assert( !Ivy_IsComplement(pObj) );\n    assert( !Ivy_ObjIsNone(pObj) );\n    if ( Ivy_ObjIsConst1(pObj) || Ivy_ObjIsPi(pObj) )\n        return;\n    pFanin0 = Ivy_ObjFanin0(pObj);\n    pFanin1 = Ivy_ObjFanin1(pObj);\n    Ivy_ObjDelete( p, pObj, fFreeTop );\n    if ( pFanin0 \u0026\u0026 !Ivy_ObjIsNone(pFanin0) \u0026\u0026 Ivy_ObjRefs(pFanin0) == 0 )\n        Ivy_ObjDelete_rec( p, pFanin0, 1 );\n    if ( pFanin1 \u0026\u0026 !Ivy_ObjIsNone(pFanin1) \u0026\u0026 Ivy_ObjRefs(pFanin1) == 0 )\n        Ivy_ObjDelete_rec( p, pFanin1, 1 );\n}",
+      "Draft": "func Ivy_ObjDelete_rec(p *Ivy_Man_t, pObj *Ivy_Obj_t, fFreeTop int32) {\n    var pFanin0, pFanin1 *Ivy_Obj_t;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(!Ivy_ObjIsNone(pObj), \"!Ivy_ObjIsNone(pObj)\");\n    if Ivy_ObjIsConst1(pObj) || Ivy_ObjIsPi(pObj) {\n        return; }\n    pFanin0 = Ivy_ObjFanin0(pObj);\n    pFanin1 = Ivy_ObjFanin1(pObj);\n    Ivy_ObjDelete( p, pObj, fFreeTop );\n    if pFanin0 \u0026\u0026 !Ivy_ObjIsNone(pFanin0) \u0026\u0026 Ivy_ObjRefs(pFanin0) == 0 {\n        Ivy_ObjDelete_rec( p, pFanin0, 1 ); }\n    if (pFanin1 != nil) \u0026\u0026 !Ivy_ObjIsNone(pFanin1) \u0026\u0026 Ivy_ObjRefs(pFanin1) == 0 {\n        Ivy_ObjDelete_rec( p, pFanin1, 1 ); }\n}"
+    },
+    {
+      "Name": "Ivy_ObjReplace",
+      "Start": 10208,
+      "End": 14060,
+      "BodyStart": 10335,
+      "Original": "void Ivy_ObjReplace( Ivy_Man_t * p, Ivy_Obj_t * pObjOld, Ivy_Obj_t * pObjNew, int fDeleteOld, int fFreeTop, int fUpdateLevel )\n{\n    int nRefsOld;//, clk;\n    // the object to be replaced cannot be complemented\n    assert( !Ivy_IsComplement(pObjOld) );\n    // the object to be replaced cannot be a terminal\n    assert( Ivy_ObjIsNone(pObjOld) || !Ivy_ObjIsPi(pObjOld) );\n    // the object to be used cannot be a PO or assert\n    assert( !Ivy_ObjIsBuf(Ivy_Regular(pObjNew)) );\n    // the object cannot be the same\n    assert( pObjOld != Ivy_Regular(pObjNew) );\n//printf( \"Replacing %d by %d.\\n\", Ivy_Regular(pObjOld)-\u003eId, Ivy_Regular(pObjNew)-\u003eId );\n\n    // if HAIG is defined, create the choice node\n    if ( p-\u003epHaig )\n    {\n//        if ( pObjOld-\u003eId == 31 )\n//        {\n//            Ivy_ManShow( p, 0 );\n//            Ivy_ManShow( p-\u003epHaig, 1 );\n//        }\n        Ivy_ManHaigCreateChoice( p, pObjOld, pObjNew );\n    }\n    // if the new object is complemented or already used, add the buffer\n    if ( Ivy_IsComplement(pObjNew) || Ivy_ObjIsLatch(pObjNew) || Ivy_ObjRefs(pObjNew) \u003e 0 || Ivy_ObjIsPi(pObjNew) || Ivy_ObjIsConst1(pObjNew) )\n        pObjNew = Ivy_ObjCreate( p, Ivy_ObjCreateGhost(p, pObjNew, NULL, IVY_BUF, IVY_INIT_NONE) );\n    assert( !Ivy_IsComplement(pObjNew) );\n    if ( fUpdateLevel )\n    {\n//clk = Abc_Clock();\n        // if the new node's arrival time is different, recursively update arrival time of the fanouts\n        if ( p-\u003efFanout \u0026\u0026 !Ivy_ObjIsBuf(pObjNew) \u0026\u0026 pObjOld-\u003eLevel != pObjNew-\u003eLevel )\n        {\n            assert( Ivy_ObjIsNode(pObjOld) );\n            pObjOld-\u003eLevel = pObjNew-\u003eLevel;\n            Ivy_ObjUpdateLevel_rec( p, pObjOld );\n        }\n//p-\u003etime1 += Abc_Clock() - clk;\n        // if the new node's required time has changed, recursively update required time of the fanins\n//clk = Abc_Clock();\n        if ( p-\u003evRequired )\n        {\n            int ReqNew = Vec_IntEntry(p-\u003evRequired, pObjOld-\u003eId);\n            if ( ReqNew \u003c Vec_IntEntry(p-\u003evRequired, pObjNew-\u003eId) )\n            {\n                Vec_IntWriteEntry( p-\u003evRequired, pObjNew-\u003eId, ReqNew );\n                Ivy_ObjUpdateLevelR_rec( p, pObjNew, ReqNew );\n            }\n        }\n//p-\u003etime2 += Abc_Clock() - clk;\n    }\n    // delete the old object\n    if ( fDeleteOld )\n        Ivy_ObjDelete_rec( p, pObjOld, fFreeTop );\n    // make sure object is not pointing to itself\n    assert( Ivy_ObjFanin0(pObjNew) == NULL || pObjOld != Ivy_ObjFanin0(pObjNew) );\n    assert( Ivy_ObjFanin1(pObjNew) == NULL || pObjOld != Ivy_ObjFanin1(pObjNew) );\n    // make sure the old node has no fanin fanout pointers\n    if ( p-\u003efFanout )\n    {\n        assert( pObjOld-\u003epFanout != NULL );\n        assert( pObjNew-\u003epFanout == NULL );\n        pObjNew-\u003epFanout = pObjOld-\u003epFanout;\n    }\n    // transfer the old object\n    assert( Ivy_ObjRefs(pObjNew) == 0 );\n    nRefsOld = pObjOld-\u003enRefs;  \n    Ivy_ObjOverwrite( pObjOld, pObjNew );\n    pObjOld-\u003enRefs = nRefsOld;\n    // patch the fanout of the fanins \n    if ( p-\u003efFanout )\n    {\n        Ivy_ObjPatchFanout( p, Ivy_ObjFanin0(pObjOld), pObjNew, pObjOld );\n        if ( Ivy_ObjFanin1(pObjOld) )\n        Ivy_ObjPatchFanout( p, Ivy_ObjFanin1(pObjOld), pObjNew, pObjOld );\n    }\n    // update the hash table\n    Ivy_TableUpdate( p, pObjNew, pObjOld-\u003eId );\n    // recycle the object that was taken over by pObjOld\n    Vec_PtrWriteEntry( p-\u003evObjs, pObjNew-\u003eId, NULL );\n    Ivy_ManRecycleMemory( p, pObjNew );\n    // if the new node is the buffer propagate it\n    if ( p-\u003efFanout \u0026\u0026 Ivy_ObjIsBuf(pObjOld) )\n        Vec_PtrPush( p-\u003evBufs, pObjOld );\n//    Ivy_ManCheckFanouts( p );\n//    printf( \"\\n\" );\n/*\n    if ( p-\u003epHaig )\n    {\n        int x;\n        Ivy_ManShow( p, 0, NULL );\n        Ivy_ManShow( p-\u003epHaig, 1, NULL );\n        x = 0;\n    }\n*/\n//    if ( Ivy_ManCheckFanoutNums(p) )\n//    {\n//        int x = 0;\n//    }\n}",
+      "Draft": "func Ivy_ObjReplace(p *Ivy_Man_t, pObjOld *Ivy_Obj_t, pObjNew *Ivy_Obj_t, fDeleteOld int32, fFreeTop int32, fUpdateLevel int32) {\n    var nRefsOld int32;//, clk;\n    // the object to be replaced cannot be complemented\n    assert(!Ivy_IsComplement(pObjOld), \"!Ivy_IsComplement(pObjOld)\");\n    // the object to be replaced cannot be a terminal\n    assert(Ivy_ObjIsNone(pObjOld) || !Ivy_ObjIsPi(pObjOld), \"Ivy_ObjIsNone(pObjOld) || !Ivy_ObjIsPi(pObjOld)\");\n    // the object to be used cannot be a PO or assert\n    assert(!Ivy_ObjIsBuf(Ivy_Regular(pObjNew)), \"!Ivy_ObjIsBuf(Ivy_Regular(pObjNew))\");\n    // the object cannot be the same\n    assert(pObjOld != Ivy_Regular(pObjNew), \"pObjOld != Ivy_Regular(pObjNew)\");\n//printf( \"Replacing %d by %d.\\n\", Ivy_Regular(pObjOld)-\u003eId, Ivy_Regular(pObjNew)-\u003eId );\n\n    // if HAIG is defined, create the choice node\n    if p.pHaig {\n//        if ( pObjOld-\u003eId == 31 )\n//        {\n//            Ivy_ManShow( p, 0 );\n//            Ivy_ManShow( p-\u003epHaig, 1 );\n//        }\n        Ivy_ManHaigCreateChoice( p, pObjOld, pObjNew );\n    }\n    // if the new object is complemented or already used, add the buffer\n    if Ivy_IsComplement(pObjNew) || Ivy_ObjIsLatch(pObjNew) || Ivy_ObjRefs(pObjNew) \u003e 0 || Ivy_ObjIsPi(pObjNew) || Ivy_ObjIsConst1(pObjNew) {\n        pObjNew = Ivy_ObjCreate( p, Ivy_ObjCreateGhost(p, pObjNew, nil, IVY_BUF, IVY_INIT_NONE) ); }\n    assert(!Ivy_IsComplement(pObjNew), \"!Ivy_IsComplement(pObjNew)\");\n    if fUpdateLevel != 0 {\n//clk = Abc_Clock();\n        // if the new node's arrival time is different, recursively update arrival time of the fanouts\n        if p.fFanout \u0026\u0026 !Ivy_ObjIsBuf(pObjNew) \u0026\u0026 pObjOld.Level != pObjNew.Level {\n            assert(Ivy_ObjIsNode(pObjOld), \"Ivy_ObjIsNode(pObjOld)\");\n            pObjOld.Level = pObjNew.Level;\n            Ivy_ObjUpdateLevel_rec( p, pObjOld );\n        }\n//p-\u003etime1 += Abc_Clock() - clk;\n        // if the new node's required time has changed, recursively update required time of the fanins\n//clk = Abc_Clock();\n        if p.vRequired {\n            var ReqNew int32  = Vec_IntEntry(p.vRequired, pObjOld.Id);\n            if ReqNew \u003c Vec_IntEntry(p.vRequired, pObjNew.Id) {\n                Vec_IntWriteEntry( p.vRequired, pObjNew.Id, ReqNew );\n                Ivy_ObjUpdateLevelR_rec( p, pObjNew, ReqNew );\n            }\n        }\n//p-\u003etime2 += Abc_Clock() - clk;\n    }\n    // delete the old object\n    if fDeleteOld != 0 {\n        Ivy_ObjDelete_rec( p, pObjOld, fFreeTop ); }\n    // make sure object is not pointing to itself\n    assert(Ivy_ObjFanin0(pObjNew) == nil || pObjOld != Ivy_ObjFanin0(pObjNew), \"Ivy_ObjFanin0(pObjNew) == nil || pObjOld != Ivy_ObjFanin0(pObjNew)\");\n    assert(Ivy_ObjFanin1(pObjNew) == nil || pObjOld != Ivy_ObjFanin1(pObjNew), \"Ivy_ObjFanin1(pObjNew) == nil || pObjOld != Ivy_ObjFanin1(pObjNew)\");\n    // make sure the old node has no fanin fanout pointers\n    if p.fFanout {\n        assert(pObjOld.pFanout != nil, \"pObjOld.pFanout != nil\");\n        assert(pObjNew.pFanout == nil, \"pObjNew.pFanout == nil\");\n        pObjNew.pFanout = pObjOld.pFanout;\n    }\n    // transfer the old object\n    assert(Ivy_ObjRefs(pObjNew) == 0, \"Ivy_ObjRefs(pObjNew) == 0\");\n    nRefsOld = pObjOld.nRefs;  \n    Ivy_ObjOverwrite( pObjOld, pObjNew );\n    pObjOld.nRefs = nRefsOld;\n    // patch the fanout of the fanins \n    if p.fFanout {\n        Ivy_ObjPatchFanout( p, Ivy_ObjFanin0(pObjOld), pObjNew, pObjOld );\n        if Ivy_ObjFanin1(pObjOld) {\n        Ivy_ObjPatchFanout( p, Ivy_ObjFanin1(pObjOld), pObjNew, pObjOld ); }\n    }\n    // update the hash table\n    Ivy_TableUpdate( p, pObjNew, pObjOld.Id );\n    // recycle the object that was taken over by pObjOld\n    Vec_PtrWriteEntry( p.vObjs, pObjNew.Id, nil );\n    Ivy_ManRecycleMemory( p, pObjNew );\n    // if the new node is the buffer propagate it\n    if p.fFanout \u0026\u0026 Ivy_ObjIsBuf(pObjOld) {\n        Vec_PtrPush( p.vBufs, pObjOld ); }\n//    Ivy_ManCheckFanouts( p );\n//    printf( \"\\n\" );\n/*\n    if ( p-\u003epHaig )\n    {\n        int x;\n        Ivy_ManShow( p, 0, NULL );\n        Ivy_ManShow( p-\u003epHaig, 1, NULL );\n        x = 0;\n    }\n*/\n//    if ( Ivy_ManCheckFanoutNums(p) )\n//    {\n//        int x = 0;\n//    }\n}"
+    },
+    {
+      "Name": "Ivy_NodeFixBufferFanins",
+      "Start": 14496,
+      "End": 15687,
+      "BodyStart": 14579,
+      "Original": "void Ivy_NodeFixBufferFanins( Ivy_Man_t * p, Ivy_Obj_t * pNode, int fUpdateLevel )\n{\n    Ivy_Obj_t * pFanReal0, * pFanReal1, * pResult = NULL;\n    if ( Ivy_ObjIsPo(pNode) )\n    {\n        if ( !Ivy_ObjIsBuf(Ivy_ObjFanin0(pNode)) )\n            return;\n        pFanReal0 = Ivy_ObjReal( Ivy_ObjChild0(pNode) );\n        Ivy_ObjPatchFanin0( p, pNode, pFanReal0 );\n//        Ivy_ManCheckFanouts( p );\n        return;\n    }\n    if ( !Ivy_ObjIsBuf(Ivy_ObjFanin0(pNode)) \u0026\u0026 !Ivy_ObjIsBuf(Ivy_ObjFanin1(pNode)) )\n        return;\n    // get the real fanins\n    pFanReal0 = Ivy_ObjReal( Ivy_ObjChild0(pNode) );\n    pFanReal1 = Ivy_ObjReal( Ivy_ObjChild1(pNode) );\n    // get the new node\n    if ( Ivy_ObjIsNode(pNode) )\n        pResult = Ivy_Oper( p, pFanReal0, pFanReal1, Ivy_ObjType(pNode) );\n    else if ( Ivy_ObjIsLatch(pNode) )\n        pResult = Ivy_Latch( p, pFanReal0, Ivy_ObjInit(pNode) );\n    else \n        assert( 0 );\n\n//printf( \"===== Replacing %d by %d.\\n\", pNode-\u003eId, pResult-\u003eId );\n//Ivy_ObjPrintVerbose( p, pNode, 0 );   printf( \"\\n\" );\n//Ivy_ObjPrintVerbose( p, pResult, 0 ); printf( \"\\n\" );\n\n    // perform the replacement\n    Ivy_ObjReplace( p, pNode, pResult, 1, 0, fUpdateLevel ); \n}",
+      "Draft": "func Ivy_NodeFixBufferFanins(p *Ivy_Man_t, pNode *Ivy_Obj_t, fUpdateLevel int32) {\n    var pFanReal0 *Ivy_Obj_t;\n    var pFanReal1 *Ivy_Obj_t;\n    var pResult *Ivy_Obj_t = nil;\n    if Ivy_ObjIsPo(pNode) {\n        if !Ivy_ObjIsBuf(Ivy_ObjFanin0(pNode)) {\n            return; }\n        pFanReal0 = Ivy_ObjReal( Ivy_ObjChild0(pNode) );\n        Ivy_ObjPatchFanin0( p, pNode, pFanReal0 );\n//        Ivy_ManCheckFanouts( p );\n        return;\n    }\n    if !Ivy_ObjIsBuf(Ivy_ObjFanin0(pNode)) \u0026\u0026 !Ivy_ObjIsBuf(Ivy_ObjFanin1(pNode)) {\n        return; }\n    // get the real fanins\n    pFanReal0 = Ivy_ObjReal( Ivy_ObjChild0(pNode) );\n    pFanReal1 = Ivy_ObjReal( Ivy_ObjChild1(pNode) );\n    // get the new node\n    if Ivy_ObjIsNode(pNode) {\n        pResult = Ivy_Oper( p, pFanReal0, pFanReal1, Ivy_ObjType(pNode) );\n    } else if Ivy_ObjIsLatch(pNode) {\n        pResult = Ivy_Latch( p, pFanReal0, Ivy_ObjInit(pNode) );\n    } else { \n        assert(false, \"0\"); }\n\n//printf( \"===== Replacing %d by %d.\\n\", pNode-\u003eId, pResult-\u003eId );\n//Ivy_ObjPrintVerbose( p, pNode, 0 );   printf( \"\\n\" );\n//Ivy_ObjPrintVerbose( p, pResult, 0 ); printf( \"\\n\" );\n\n    // perform the replacement\n    Ivy_ObjReplace( p, pNode, pResult, 1, 0, fUpdateLevel ); \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyObj.c::Ivy_ObjCreatePi",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjCreatePi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1276,
+      "End": 1413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyObj.c::Ivy_ObjCreatePo",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjCreatePo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1696,
+      "End": 1857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyObj.c::Ivy_ObjCreate",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2140,
+      "End": 4404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyObj.c::Ivy_ObjConnect",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjConnect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4672,
+      "End": 5482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyObj.c::Ivy_ObjDisconnect",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjDisconnect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5750,
+      "End": 6650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyObj.c::Ivy_ObjPatchFanin0",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjPatchFanin0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6940,
+      "End": 7664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyObj.c::Ivy_ObjDelete",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjDelete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7917,
+      "End": 8884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyObj.c::Ivy_ObjDelete_rec",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjDelete_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9149,
+      "End": 9753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyObj.c::Ivy_ObjReplace",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ObjReplace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10208,
+      "End": 14060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyObj.c::Ivy_NodeFixBufferFanins",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_NodeFixBufferFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14496,
+      "End": 15687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyObj.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15934
+    }
+  ],
+  "Draft": "package ivy\n\n/**CFile****************************************************************\n\n  FileName    [ivyObj.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [Adding/removing objects.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: ivyObj.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Create the new node assuming it does not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjCreatePi(p *Ivy_Man_t) *Ivy_Obj_t {\n    return Ivy_ObjCreate( p, Ivy_ObjCreateGhost(p, nil, nil, IVY_PI, IVY_INIT_NONE) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create the new node assuming it does not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjCreatePo(p *Ivy_Man_t, pDriver *Ivy_Obj_t) *Ivy_Obj_t {\n    return Ivy_ObjCreate( p, Ivy_ObjCreateGhost(p, pDriver, nil, IVY_PO, IVY_INIT_NONE) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create the new node assuming it does not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjCreate(p *Ivy_Man_t, pGhost *Ivy_Obj_t) *Ivy_Obj_t {\n    var pObj *Ivy_Obj_t;\n    assert(!Ivy_IsComplement(pGhost), \"!Ivy_IsComplement(pGhost)\");\n    assert(Ivy_ObjIsGhost(pGhost), \"Ivy_ObjIsGhost(pGhost)\");\n    assert(Ivy_TableLookup(p, pGhost) == nil, \"Ivy_TableLookup(p, pGhost) == nil\");\n    // get memory for the new object\n    pObj = Ivy_ManFetchMemory( p );\n    assert(Ivy_ObjIsNone(pObj), \"Ivy_ObjIsNone(pObj)\");\n    pObj.Id = Vec_PtrSize(p.vObjs);\n    Vec_PtrPush( p.vObjs, pObj );\n    // add basic info (fanins, compls, type, init)\n    pObj.Type = pGhost.Type;\n    pObj.Init = pGhost.Init;\n    // add connections\n    Ivy_ObjConnect( p, pObj, pGhost.pFanin0, pGhost.pFanin1 );\n    // compute level\n    if Ivy_ObjIsNode(pObj) {\n        pObj.Level = Ivy_ObjLevelNew(pObj);\n    } else if Ivy_ObjIsLatch(pObj) {\n        pObj.Level = 0;\n    } else if Ivy_ObjIsOneFanin(pObj) {\n        pObj.Level = Ivy_ObjFanin0(pObj).Level;\n    } else if !Ivy_ObjIsPi(pObj) {\n        assert(false, \"0\"); }\n    // create phase\n    if Ivy_ObjIsNode(pObj) {\n        pObj.fPhase = Ivy_ObjFaninPhase(Ivy_ObjChild0(pObj)) \u0026 Ivy_ObjFaninPhase(Ivy_ObjChild1(pObj));\n    } else if Ivy_ObjIsOneFanin(pObj) {\n        pObj.fPhase = Ivy_ObjFaninPhase(Ivy_ObjChild0(pObj)); }\n    // set the fail TFO flag\n    if Ivy_ObjIsNode(pObj) {\n        pObj.fFailTfo = Ivy_ObjFanin0(pObj).fFailTfo | Ivy_ObjFanin1(pObj).fFailTfo; }\n    // mark the fanins in a special way if the node is EXOR\n    if Ivy_ObjIsExor(pObj) {\n        Ivy_ObjFanin0(pObj).fExFan = 1;\n        Ivy_ObjFanin1(pObj).fExFan = 1;\n    }\n    // add PIs/POs to the arrays\n    if Ivy_ObjIsPi(pObj) {\n        Vec_PtrPush( p.vPis, pObj );\n    } else if Ivy_ObjIsPo(pObj) {\n        Vec_PtrPush( p.vPos, pObj ); }\n//    else if ( Ivy_ObjIsBuf(pObj) )\n//        Vec_PtrPush( p-\u003evBufs, pObj );\n    if p.vRequired \u0026\u0026 Vec_IntSize(p.vRequired) \u003c= pObj.Id {\n        Vec_IntFillExtra( p.vRequired, 2 * Vec_IntSize(p.vRequired), 1000000 ); }\n    // update node counters of the manager\n    p.nObjs[Ivy_ObjType(pObj)]++;\n    p.nCreated++;\n\n//    printf( \"Adding %sAIG node: \", p-\u003epHaig==NULL? \"H\":\" \" );\n//    Ivy_ObjPrintVerbose( p, pObj, p-\u003epHaig==NULL );\n//    printf( \"\\n\" );\n\n    // if HAIG is defined, create a corresponding node\n    if p.pHaig {\n        Ivy_ManHaigCreateObj( p, pObj ); }\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Connect the object to the fanin.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjConnect(p *Ivy_Man_t, pObj *Ivy_Obj_t, pFan0 *Ivy_Obj_t, pFan1 *Ivy_Obj_t) {\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || pFan1 != nil, \"Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || pFan1 != nil\");\n    // add the first fanin\n    pObj.pFanin0 = pFan0;\n    pObj.pFanin1 = pFan1;\n    // increment references of the fanins and add their fanouts\n    if Ivy_ObjFanin0(pObj) != nil {\n        Ivy_ObjRefsInc( Ivy_ObjFanin0(pObj) );\n        if p.fFanout {\n            Ivy_ObjAddFanout( p, Ivy_ObjFanin0(pObj), pObj ); }\n    }\n    if Ivy_ObjFanin1(pObj) != nil {\n        Ivy_ObjRefsInc( Ivy_ObjFanin1(pObj) );\n        if p.fFanout {\n            Ivy_ObjAddFanout( p, Ivy_ObjFanin1(pObj), pObj ); }\n    }\n    // add the node to the structural hash table\n    Ivy_TableInsert( p, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Connect the object to the fanin.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjDisconnect(p *Ivy_Man_t, pObj *Ivy_Obj_t) {\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || Ivy_ObjFanin1(pObj) != nil, \"Ivy_ObjIsPi(pObj) || Ivy_ObjIsOneFanin(pObj) || Ivy_ObjFanin1(pObj) != nil\");\n    // remove connections\n    if pObj.pFanin0 != nil {\n        Ivy_ObjRefsDec(Ivy_ObjFanin0(pObj));\n        if p.fFanout {\n            Ivy_ObjDeleteFanout( p, Ivy_ObjFanin0(pObj), pObj ); }\n    }\n    if pObj.pFanin1 != nil {\n        Ivy_ObjRefsDec(Ivy_ObjFanin1(pObj));\n        if p.fFanout {\n            Ivy_ObjDeleteFanout( p, Ivy_ObjFanin1(pObj), pObj ); }\n    }\n    assert(pObj.pNextFan0 == nil, \"pObj.pNextFan0 == nil\");\n    assert(pObj.pNextFan1 == nil, \"pObj.pNextFan1 == nil\");\n    assert(pObj.pPrevFan0 == nil, \"pObj.pPrevFan0 == nil\");\n    assert(pObj.pPrevFan1 == nil, \"pObj.pPrevFan1 == nil\");\n    // remove the node from the structural hash table\n    Ivy_TableDelete( p, pObj );\n    // add the first fanin\n    pObj.pFanin0 = nil;\n    pObj.pFanin1 = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces the first fanin of the node by the new fanin.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjPatchFanin0(p *Ivy_Man_t, pObj *Ivy_Obj_t, pFaninNew *Ivy_Obj_t) {\n    var pFaninOld *Ivy_Obj_t;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    pFaninOld = Ivy_ObjFanin0(pObj);\n    // decrement ref and remove fanout\n    Ivy_ObjRefsDec( pFaninOld );\n    if p.fFanout {\n        Ivy_ObjDeleteFanout( p, pFaninOld, pObj ); }\n    // update the fanin\n    pObj.pFanin0 = pFaninNew;\n    // increment ref and add fanout\n    Ivy_ObjRefsInc( Ivy_Regular(pFaninNew) );\n    if p.fFanout {\n        Ivy_ObjAddFanout( p, Ivy_Regular(pFaninNew), pObj ); }\n    // get rid of old fanin\n    if !Ivy_ObjIsPi(pFaninOld) \u0026\u0026 !Ivy_ObjIsConst1(pFaninOld) \u0026\u0026 Ivy_ObjRefs(pFaninOld) == 0 {\n        Ivy_ObjDelete_rec( p, pFaninOld, 1 ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjDelete(p *Ivy_Man_t, pObj *Ivy_Obj_t, fFreeTop int32) {\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(Ivy_ObjRefs(pObj) == 0 || !(fFreeTop != 0), \"Ivy_ObjRefs(pObj) == 0 || !fFreeTop\");\n    // update node counters of the manager\n    p.nObjs[pObj.Type]--;\n    p.nDeleted++;\n    // remove connections\n    Ivy_ObjDisconnect( p, pObj );\n    // remove PIs/POs from the arrays\n    if Ivy_ObjIsPi(pObj) {\n        Vec_PtrRemove( p.vPis, pObj );\n    } else if Ivy_ObjIsPo(pObj) {\n        Vec_PtrRemove( p.vPos, pObj );\n    } else if p.fFanout \u0026\u0026 Ivy_ObjIsBuf(pObj) {\n        Vec_PtrRemove( p.vBufs, pObj ); }\n    // clean and recycle the entry\n    if fFreeTop != 0 {\n        // free the node\n        Vec_PtrWriteEntry( p.vObjs, pObj.Id, nil );\n        Ivy_ManRecycleMemory( p, pObj );\n    \n    } else {\n        var nRefsOld int32  = pObj.nRefs;\n        var pFanout *Ivy_Obj_t  = pObj.pFanout;\n        Ivy_ObjClean( pObj );\n        pObj.pFanout = pFanout;\n        pObj.nRefs = nRefsOld;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the MFFC of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjDelete_rec(p *Ivy_Man_t, pObj *Ivy_Obj_t, fFreeTop int32) {\n    var pFanin0, pFanin1 *Ivy_Obj_t;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    assert(!Ivy_ObjIsNone(pObj), \"!Ivy_ObjIsNone(pObj)\");\n    if Ivy_ObjIsConst1(pObj) || Ivy_ObjIsPi(pObj) {\n        return; }\n    pFanin0 = Ivy_ObjFanin0(pObj);\n    pFanin1 = Ivy_ObjFanin1(pObj);\n    Ivy_ObjDelete( p, pObj, fFreeTop );\n    if pFanin0 \u0026\u0026 !Ivy_ObjIsNone(pFanin0) \u0026\u0026 Ivy_ObjRefs(pFanin0) == 0 {\n        Ivy_ObjDelete_rec( p, pFanin0, 1 ); }\n    if (pFanin1 != nil) \u0026\u0026 !Ivy_ObjIsNone(pFanin1) \u0026\u0026 Ivy_ObjRefs(pFanin1) == 0 {\n        Ivy_ObjDelete_rec( p, pFanin1, 1 ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces one object by another.]\n\n  Description [Both objects are currently in the manager. The new object\n  (pObjNew) should be used instead of the old object (pObjOld). If the \n  new object is complemented or used, the buffer is added.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ObjReplace(p *Ivy_Man_t, pObjOld *Ivy_Obj_t, pObjNew *Ivy_Obj_t, fDeleteOld int32, fFreeTop int32, fUpdateLevel int32) {\n    var nRefsOld int32;//, clk;\n    // the object to be replaced cannot be complemented\n    assert(!Ivy_IsComplement(pObjOld), \"!Ivy_IsComplement(pObjOld)\");\n    // the object to be replaced cannot be a terminal\n    assert(Ivy_ObjIsNone(pObjOld) || !Ivy_ObjIsPi(pObjOld), \"Ivy_ObjIsNone(pObjOld) || !Ivy_ObjIsPi(pObjOld)\");\n    // the object to be used cannot be a PO or assert\n    assert(!Ivy_ObjIsBuf(Ivy_Regular(pObjNew)), \"!Ivy_ObjIsBuf(Ivy_Regular(pObjNew))\");\n    // the object cannot be the same\n    assert(pObjOld != Ivy_Regular(pObjNew), \"pObjOld != Ivy_Regular(pObjNew)\");\n//printf( \"Replacing %d by %d.\\n\", Ivy_Regular(pObjOld)-\u003eId, Ivy_Regular(pObjNew)-\u003eId );\n\n    // if HAIG is defined, create the choice node\n    if p.pHaig {\n//        if ( pObjOld-\u003eId == 31 )\n//        {\n//            Ivy_ManShow( p, 0 );\n//            Ivy_ManShow( p-\u003epHaig, 1 );\n//        }\n        Ivy_ManHaigCreateChoice( p, pObjOld, pObjNew );\n    }\n    // if the new object is complemented or already used, add the buffer\n    if Ivy_IsComplement(pObjNew) || Ivy_ObjIsLatch(pObjNew) || Ivy_ObjRefs(pObjNew) \u003e 0 || Ivy_ObjIsPi(pObjNew) || Ivy_ObjIsConst1(pObjNew) {\n        pObjNew = Ivy_ObjCreate( p, Ivy_ObjCreateGhost(p, pObjNew, nil, IVY_BUF, IVY_INIT_NONE) ); }\n    assert(!Ivy_IsComplement(pObjNew), \"!Ivy_IsComplement(pObjNew)\");\n    if fUpdateLevel != 0 {\n//clk = Abc_Clock();\n        // if the new node's arrival time is different, recursively update arrival time of the fanouts\n        if p.fFanout \u0026\u0026 !Ivy_ObjIsBuf(pObjNew) \u0026\u0026 pObjOld.Level != pObjNew.Level {\n            assert(Ivy_ObjIsNode(pObjOld), \"Ivy_ObjIsNode(pObjOld)\");\n            pObjOld.Level = pObjNew.Level;\n            Ivy_ObjUpdateLevel_rec( p, pObjOld );\n        }\n//p-\u003etime1 += Abc_Clock() - clk;\n        // if the new node's required time has changed, recursively update required time of the fanins\n//clk = Abc_Clock();\n        if p.vRequired {\n            var ReqNew int32  = Vec_IntEntry(p.vRequired, pObjOld.Id);\n            if ReqNew \u003c Vec_IntEntry(p.vRequired, pObjNew.Id) {\n                Vec_IntWriteEntry( p.vRequired, pObjNew.Id, ReqNew );\n                Ivy_ObjUpdateLevelR_rec( p, pObjNew, ReqNew );\n            }\n        }\n//p-\u003etime2 += Abc_Clock() - clk;\n    }\n    // delete the old object\n    if fDeleteOld != 0 {\n        Ivy_ObjDelete_rec( p, pObjOld, fFreeTop ); }\n    // make sure object is not pointing to itself\n    assert(Ivy_ObjFanin0(pObjNew) == nil || pObjOld != Ivy_ObjFanin0(pObjNew), \"Ivy_ObjFanin0(pObjNew) == nil || pObjOld != Ivy_ObjFanin0(pObjNew)\");\n    assert(Ivy_ObjFanin1(pObjNew) == nil || pObjOld != Ivy_ObjFanin1(pObjNew), \"Ivy_ObjFanin1(pObjNew) == nil || pObjOld != Ivy_ObjFanin1(pObjNew)\");\n    // make sure the old node has no fanin fanout pointers\n    if p.fFanout {\n        assert(pObjOld.pFanout != nil, \"pObjOld.pFanout != nil\");\n        assert(pObjNew.pFanout == nil, \"pObjNew.pFanout == nil\");\n        pObjNew.pFanout = pObjOld.pFanout;\n    }\n    // transfer the old object\n    assert(Ivy_ObjRefs(pObjNew) == 0, \"Ivy_ObjRefs(pObjNew) == 0\");\n    nRefsOld = pObjOld.nRefs;  \n    Ivy_ObjOverwrite( pObjOld, pObjNew );\n    pObjOld.nRefs = nRefsOld;\n    // patch the fanout of the fanins \n    if p.fFanout {\n        Ivy_ObjPatchFanout( p, Ivy_ObjFanin0(pObjOld), pObjNew, pObjOld );\n        if Ivy_ObjFanin1(pObjOld) {\n        Ivy_ObjPatchFanout( p, Ivy_ObjFanin1(pObjOld), pObjNew, pObjOld ); }\n    }\n    // update the hash table\n    Ivy_TableUpdate( p, pObjNew, pObjOld.Id );\n    // recycle the object that was taken over by pObjOld\n    Vec_PtrWriteEntry( p.vObjs, pObjNew.Id, nil );\n    Ivy_ManRecycleMemory( p, pObjNew );\n    // if the new node is the buffer propagate it\n    if p.fFanout \u0026\u0026 Ivy_ObjIsBuf(pObjOld) {\n        Vec_PtrPush( p.vBufs, pObjOld ); }\n//    Ivy_ManCheckFanouts( p );\n//    printf( \"\\n\" );\n/*\n    if ( p-\u003epHaig )\n    {\n        int x;\n        Ivy_ManShow( p, 0, NULL );\n        Ivy_ManShow( p-\u003epHaig, 1, NULL );\n        x = 0;\n    }\n*/\n//    if ( Ivy_ManCheckFanoutNums(p) )\n//    {\n//        int x = 0;\n//    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Fixes buffer fanins.]\n\n  Description [This situation happens because NodeReplace is a lazy\n  procedure, which does not propagate the change to the fanouts but\n  instead records the change in the form of a buf/inv node.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_NodeFixBufferFanins(p *Ivy_Man_t, pNode *Ivy_Obj_t, fUpdateLevel int32) {\n    var pFanReal0 *Ivy_Obj_t;\n    var pFanReal1 *Ivy_Obj_t;\n    var pResult *Ivy_Obj_t = nil;\n    if Ivy_ObjIsPo(pNode) {\n        if !Ivy_ObjIsBuf(Ivy_ObjFanin0(pNode)) {\n            return; }\n        pFanReal0 = Ivy_ObjReal( Ivy_ObjChild0(pNode) );\n        Ivy_ObjPatchFanin0( p, pNode, pFanReal0 );\n//        Ivy_ManCheckFanouts( p );\n        return;\n    }\n    if !Ivy_ObjIsBuf(Ivy_ObjFanin0(pNode)) \u0026\u0026 !Ivy_ObjIsBuf(Ivy_ObjFanin1(pNode)) {\n        return; }\n    // get the real fanins\n    pFanReal0 = Ivy_ObjReal( Ivy_ObjChild0(pNode) );\n    pFanReal1 = Ivy_ObjReal( Ivy_ObjChild1(pNode) );\n    // get the new node\n    if Ivy_ObjIsNode(pNode) {\n        pResult = Ivy_Oper( p, pFanReal0, pFanReal1, Ivy_ObjType(pNode) );\n    } else if Ivy_ObjIsLatch(pNode) {\n        pResult = Ivy_Latch( p, pFanReal0, Ivy_ObjInit(pNode) );\n    } else { \n        assert(false, \"0\"); }\n\n//printf( \"===== Replacing %d by %d.\\n\", pNode-\u003eId, pResult-\u003eId );\n//Ivy_ObjPrintVerbose( p, pNode, 0 );   printf( \"\\n\" );\n//Ivy_ObjPrintVerbose( p, pResult, 0 ); printf( \"\\n\" );\n\n    // perform the replacement\n    Ivy_ObjReplace( p, pNode, pResult, 1, 0, fUpdateLevel ); \n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

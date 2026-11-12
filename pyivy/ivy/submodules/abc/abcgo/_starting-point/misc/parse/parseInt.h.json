@@ -1,0 +1,19 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseInt.h",
+  "SHA256": "93a398ba85632b71aea6a6176340fead0f718515478b318722cd2cf8da87179e",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/parse/parseInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3182
+    }
+  ],
+  "Draft": "package parse\n\n/**CFile****************************************************************\n\n  FileName    [parseInt.h]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Parsing symbolic Boolean formulas into BDDs.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 8, 2003.]\n\n  Revision    [$Id: parseInt.h,v 1.0 2003/09/08 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/hop/hop.h\"\n//#include \"misc/vec/vec.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\ntype Parse_StackFn_t =    ParseStackFnStruct;    // the function stack\ntype Parse_StackOp_t =    ParseStackOpStruct;    // the operation stack\n\n////////////////////////////////////////////////////////////////////////\n///                       GLOBAL VARIABLES                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== parseStack.c =============================================================*/\n// extern Parse_StackFn_t *  Parse_StackFnStart  ( int nDepth );\n\n// extern int                Parse_StackFnIsEmpty( Parse_StackFn_t * p );\n\n// extern void               Parse_StackFnPush   ( Parse_StackFn_t * p, void * bFunc );\n\n// extern void *             Parse_StackFnPop    ( Parse_StackFn_t * p );\n\n// extern void               Parse_StackFnFree   ( Parse_StackFn_t * p );\n\n\n// extern Parse_StackOp_t *  Parse_StackOpStart  ( int nDepth );\n\n// extern int                Parse_StackOpIsEmpty( Parse_StackOp_t * p );\n\n// extern void               Parse_StackOpPush   ( Parse_StackOp_t * p, int Oper );\n\n// extern int                Parse_StackOpPop    ( Parse_StackOp_t * p );\n\n// extern void               Parse_StackOpFree   ( Parse_StackOp_t * p );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

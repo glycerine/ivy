@@ -1,0 +1,652 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c",
+  "SHA256": "4fedde91c289291a3bd2ee64dbdf154341592fe52fb3131d0faa35cae8850077",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 3159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (pTruth[0] \u0026 1) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 3926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pTable != nil );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 131,
+        "Column": 71,
+        "ByteOffset": 4150
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTable = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(p.nTableSize), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 139,
+        "Column": 9,
+        "ByteOffset": 4504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pThis.Handle );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 142,
+        "Column": 9,
+        "ByteOffset": 4610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *pSpot == 0 ); // should not be there"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 5,
+        "ByteOffset": 4722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Counter == Vec_SetEntryNum(p.pMem) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 148,
+        "Column": 65,
+        "ByteOffset": 4832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pTableOld) ? (free((char *) (pTableOld)), (pTableOld) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 179,
+        "Column": 9,
+        "ByteOffset": 5724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (*pSpot \u0026 1) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 212,
+        "Column": 5,
+        "ByteOffset": 6627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e 0 \u0026\u0026 nVars \u003c= 16 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 222,
+        "Column": 75,
+        "ByteOffset": 7032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTable     = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(p.nTableSize), sizeof(int)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 225,
+        "Column": 70,
+        "ByteOffset": 7217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pZero = /*__starting_point_inline_macro:ABC_ALLOC__*/((word *) malloc(sizeof(word) * (size_t)(p.nWords)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 236,
+        "Column": 9,
+        "ByteOffset": 7604
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !i || p.hIthVars[i] \u003e p.hIthVars[i-1] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 8015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Lookups = %d. Entries = %d.\\n\", p.nTableLookups, Vec_SetEntryNum(p.pMem) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 256,
+        "Column": 63,
+        "ByteOffset": 8189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pZero) ? (free((char *) (p.pZero)), (p.pZero) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 257,
+        "Column": 64,
+        "ByteOffset": 8299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 258,
+        "Column": 57,
+        "ByteOffset": 8404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 273,
+        "Column": 5,
+        "ByteOffset": 8755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( v \u003e= 0 \u0026\u0026 v \u003c p.nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 289,
+        "Column": 5,
+        "ByteOffset": 9157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (h \u0026 1) == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Tru_ManReadOne",
+      "Start": 1810,
+      "End": 1935,
+      "BodyStart": 1875,
+      "Original": "static inline Tru_One_t * Tru_ManReadOne( Tru_Man_t * p, int h ) { return h ? (Tru_One_t *)Vec_SetEntry(p-\u003epMem, h) : NULL; }",
+      "Draft": "func Tru_ManReadOne(p *Tru_Man_t, h int32) *Tru_One_t { if h != 0 {\n    return (Tru_One_t *)Vec_SetEntry(p.pMem, h);\n} else {\n    return nil;\n} }"
+    },
+    {
+      "Name": "Tru_ManHash",
+      "Start": 2412,
+      "End": 2648,
+      "BodyStart": 2502,
+      "Original": "static inline unsigned Tru_ManHash( word * pTruth, int nWords, int nBins, int * pPrimes )\n{\n    int i;\n    unsigned uHash = 0;\n    for ( i = 0; i \u003c nWords; i++ )\n        uHash ^= pTruth[i] * pPrimes[i \u0026 0x7];\n    return uHash % nBins;\n}",
+      "Draft": "func Tru_ManHash(pTruth *word, nWords int32, nBins int32, pPrimes *int32) uint32 {\n    var i int32;\n    var uHash uint32;\n    for  i = 0; i \u003c nWords; i++  {\n        uHash ^= pTruth[i] * pPrimes[i \u0026 0x7];\n    }\n    return uHash % nBins;\n}"
+    },
+    {
+      "Name": "Tru_ManLookup",
+      "Start": 2909,
+      "End": 3439,
+      "BodyStart": 2961,
+      "Original": "int * Tru_ManLookup( Tru_Man_t * p, word * pTruth )\n{\n    static int s_Primes[10] = { 1291, 1699, 2357, 4177, 5147, 5647, 6343, 7103, 7873, 8147 };\n    Tru_One_t * pEntry;\n    int * pSpot;\n    assert( (pTruth[0] \u0026 1) == 0 );\n    pSpot = p-\u003epTable + Tru_ManHash( pTruth, p-\u003enWords, p-\u003enTableSize, s_Primes );\n    for ( pEntry = Tru_ManReadOne(p, *pSpot); pEntry; pSpot = \u0026pEntry-\u003eNext, pEntry = Tru_ManReadOne(p, *pSpot) )\n        if ( Tru_ManEqual(pEntry-\u003epTruth, pTruth, p-\u003enWords) )\n            return pSpot;\n    return pSpot;\n}",
+      "Draft": "func Tru_ManLookup(p *Tru_Man_t, pTruth *word) *int32 {\n    \n    var pEntry *Tru_One_t;\n    var pSpot *int32;\n    assert((pTruth[0] \u0026 1) == 0, \"(pTruth[0] \u0026 1) == 0\");\n    pSpot = p.pTable + Tru_ManHash( pTruth, p.nWords, p.nTableSize, spStatic_Tru_ManLookup_s_Primes );\n    for  pEntry = Tru_ManReadOne(p, *pSpot); (pEntry != nil); pSpot = \u0026pEntry.Next, pEntry = Tru_ManReadOne(p, *pSpot)  {\n        if Tru_ManEqual(pEntry.pTruth, pTruth, p.nWords) {\n            return pSpot; }\n    }\n    return pSpot;\n}"
+    },
+    {
+      "Name": "Tru_ManResize",
+      "Start": 3700,
+      "End": 4654,
+      "BodyStart": 3736,
+      "Original": "void Tru_ManResize( Tru_Man_t * p )\n{\n    Tru_One_t * pThis;\n    int * pTableOld, * pSpot;\n    int nTableSizeOld, iNext, Counter, i;\n    assert( p-\u003epTable != NULL );\n    // replace the table\n    pTableOld = p-\u003epTable;\n    nTableSizeOld = p-\u003enTableSize;\n    p-\u003enTableSize = 2 * p-\u003enTableSize + 1; \n    p-\u003epTable = ABC_CALLOC( int, p-\u003enTableSize );\n    // rehash the entries from the old table\n    Counter = 0;\n    for ( i = 0; i \u003c nTableSizeOld; i++ )\n    for ( pThis = Tru_ManReadOne(p, pTableOld[i]),\n          iNext = (pThis? pThis-\u003eNext : 0);  \n          pThis;  pThis = Tru_ManReadOne(p, iNext),   \n          iNext = (pThis? pThis-\u003eNext : 0)  )\n    {\n        assert( pThis-\u003eHandle );\n        pThis-\u003eNext = 0;\n        pSpot = Tru_ManLookup( p, pThis-\u003epTruth );\n        assert( *pSpot == 0 ); // should not be there\n        *pSpot = pThis-\u003eHandle;\n        Counter++;\n    }\n    assert( Counter == Vec_SetEntryNum(p-\u003epMem) );\n    ABC_FREE( pTableOld );\n}",
+      "Draft": "func Tru_ManResize(p *Tru_Man_t) {\n    var pThis *Tru_One_t;\n    var pTableOld, pSpot *int32;\n    var nTableSizeOld, iNext, Counter, i int32;\n    assert(p.pTable != nil, \"p.pTable != nil\");\n    // replace the table\n    pTableOld = p.pTable;\n    nTableSizeOld = p.nTableSize;\n    p.nTableSize = 2 * p.nTableSize + 1; \n    // inlining of macro ABC_CALLOC\n    p.pTable = ((int *) calloc((size_t)(p.nTableSize), sizeof(int)));\n    // rehash the entries from the old table\n    Counter = 0;\n    for  i = 0; i \u003c nTableSizeOld; i++  {\n    for  pThis = Tru_ManReadOne(p, pTableOld[i]),\n          iNext = (pThis? pThis.Next : 0);  \n          (pThis != nil);  pThis = Tru_ManReadOne(p, iNext),   \n          iNext = (pThis? pThis.Next : 0)   {\n        assert(pThis.Handle, \"pThis.Handle\");\n        pThis.Next = 0;\n        pSpot = Tru_ManLookup( p, pThis.pTruth );\n        assert(*pSpot == 0, \"*pSpot == 0\"); // should not be there\n        *pSpot = pThis.Handle;\n        Counter++;\n    }\n    }\n    assert(Counter == Vec_SetEntryNum(p.pMem), \"Counter == Vec_SetEntryNum(p.pMem)\");\n    // inlining of macro ABC_FREE\n    ((pTableOld) ? (free((char *) (pTableOld)), (pTableOld) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Tru_ManInsert",
+      "Start": 4919,
+      "End": 5774,
+      "BodyStart": 4969,
+      "Original": "int Tru_ManInsert( Tru_Man_t * p, word * pTruth )\n{\n    int fCompl, * pSpot;\n    if ( Tru_ManEqual0(pTruth, p-\u003enWords) )\n        return 0;\n    if ( Tru_ManEqual1(pTruth, p-\u003enWords) )\n        return 1;\n    p-\u003enTableLookups++;\n    if ( Vec_SetEntryNum(p-\u003epMem) \u003e 2 * p-\u003enTableSize )\n        Tru_ManResize( p );\n    fCompl = pTruth[0] \u0026 1;\n    if ( fCompl )  \n        Tru_ManNot( pTruth, p-\u003enWords );\n    pSpot = Tru_ManLookup( p, pTruth );\n    if ( *pSpot == 0 )\n    {\n        Tru_One_t * pEntry;\n        *pSpot = Vec_SetAppend( p-\u003epMem, NULL, p-\u003enEntrySize );\n        assert( (*pSpot \u0026 1) == 0 );\n        pEntry = Tru_ManReadOne( p, *pSpot );\n        Tru_ManCopy( pEntry-\u003epTruth, pTruth, p-\u003enWords );\n        pEntry-\u003eHandle = *pSpot;\n        pEntry-\u003eNext = 0;\n    }\n    if ( fCompl )  \n        Tru_ManNot( pTruth, p-\u003enWords );\n    return *pSpot ^ fCompl;\n}",
+      "Draft": "func Tru_ManInsert(p *Tru_Man_t, pTruth *word) int32 {\n    var fCompl int32;\n    var pSpot *int32;\n    if Tru_ManEqual0(pTruth, p.nWords) {\n        return 0; }\n    if Tru_ManEqual1(pTruth, p.nWords) {\n        return 1; }\n    p.nTableLookups++;\n    if Vec_SetEntryNum(p.pMem) \u003e 2 * p.nTableSize {\n        Tru_ManResize( p ); }\n    fCompl = pTruth[0] \u0026 1;\n    if fCompl != 0 {  \n        Tru_ManNot( pTruth, p.nWords ); }\n    pSpot = Tru_ManLookup( p, pTruth );\n    if *pSpot == 0 {\n        var pEntry *Tru_One_t;\n        *pSpot = Vec_SetAppend( p.pMem, nil, p.nEntrySize );\n        assert((*pSpot \u0026 1) == 0, \"(*pSpot \u0026 1) == 0\");\n        pEntry = Tru_ManReadOne( p, *pSpot );\n        Tru_ManCopy( pEntry.pTruth, pTruth, p.nWords );\n        pEntry.Handle = *pSpot;\n        pEntry.Next = 0;\n    }\n    if fCompl != 0 {  \n        Tru_ManNot( pTruth, p.nWords ); }\n    return *pSpot ^ fCompl;\n}"
+    },
+    {
+      "Name": "Tru_ManAlloc",
+      "Start": 6040,
+      "End": 7276,
+      "BodyStart": 6078,
+      "Original": "Tru_Man_t * Tru_ManAlloc( int nVars )\n{\n    word Masks[6] = \n    { \n        ABC_CONST(0xAAAAAAAAAAAAAAAA), \n        ABC_CONST(0xCCCCCCCCCCCCCCCC), \n        ABC_CONST(0xF0F0F0F0F0F0F0F0), \n        ABC_CONST(0xFF00FF00FF00FF00), \n        ABC_CONST(0xFFFF0000FFFF0000), \n        ABC_CONST(0xFFFFFFFF00000000) \n    };\n    Tru_Man_t * p;\n    int i, w;\n    assert( nVars \u003e 0 \u0026\u0026 nVars \u003c= 16 );\n    p = ABC_CALLOC( Tru_Man_t, 1 );\n    p-\u003enVars      = nVars;\n    p-\u003enWords     = (nVars \u003c 6) ? 1 : (1 \u003c\u003c (nVars-6));\n    p-\u003enEntrySize = (sizeof(Tru_One_t) + p-\u003enWords * sizeof(word))/sizeof(int);\n    p-\u003enTableSize = 8147;\n    p-\u003epTable     = ABC_CALLOC( int, p-\u003enTableSize );\n    p-\u003epMem       = Vec_SetAlloc( 16 );\n    // initialize truth tables\n    p-\u003epZero = ABC_ALLOC( word, p-\u003enWords );\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        for ( w = 0; w \u003c p-\u003enWords; w++ )\n            if ( i \u003c 6 )\n                p-\u003epZero[w] = Masks[i];\n            else if ( w \u0026 (1 \u003c\u003c (i-6)) )\n                p-\u003epZero[w] = ~(word)0;\n            else\n                p-\u003epZero[w] = 0;\n        p-\u003ehIthVars[i] = Tru_ManInsert( p, p-\u003epZero );\n        assert( !i || p-\u003ehIthVars[i] \u003e p-\u003ehIthVars[i-1] );\n    }\n    Tru_ManClear( p-\u003epZero, p-\u003enWords );\n    return p;\n}",
+      "Draft": "func Tru_ManAlloc(nVars int32) *Tru_Man_t {\n    var Masks [6]word = [6]word{ \n        ABC_CONST(0xAAAAAAAAAAAAAAAA), \n        ABC_CONST(0xCCCCCCCCCCCCCCCC), \n        ABC_CONST(0xF0F0F0F0F0F0F0F0), \n        ABC_CONST(0xFF00FF00FF00FF00), \n        ABC_CONST(0xFFFF0000FFFF0000), \n        ABC_CONST(0xFFFFFFFF00000000), \n    };\n    \n    var i, w int32;\n    assert(nVars \u003e 0 \u0026\u0026 nVars \u003c= 16, \"nVars \u003e 0 \u0026\u0026 nVars \u003c= 16\");\n    // inlining of macro ABC_CALLOC\n    p := \u0026Tru_Man_t{};\n    p.nVars      = nVars;\n    if nVars \u003c 6 {\n        p.nWords = 1;\n    } else {\n        p.nWords = (1 \u003c\u003c (nVars-6));\n    }\n    p.nEntrySize = (sizeof(Tru_One_t) + p.nWords * sizeof(word))/sizeof(int);\n    p.nTableSize = 8147;\n    // inlining of macro ABC_CALLOC\n    p.pTable     = ((int *) calloc((size_t)(p.nTableSize), sizeof(int)));\n    p.pMem       = Vec_SetAlloc( 16 );\n    // initialize truth tables\n    // inlining of macro ABC_ALLOC\n    p.pZero = ((word *) malloc(sizeof(word) * (size_t)(p.nWords)));\n    for  i = 0; i \u003c nVars; i++  {\n        for  w = 0; w \u003c p.nWords; w++  {\n            if i \u003c 6 {\n                p.pZero[w] = Masks[i];\n            } else if w \u0026 (1 \u003c\u003c (i-6)) {\n                p.pZero[w] = ~(word)0;\n            } else {\n                p.pZero[w] = 0; }\n        }\n        p.hIthVars[i] = Tru_ManInsert( p, p.pZero );\n        assert(!(i != 0) || p.hIthVars[i] \u003e p.hIthVars[i-1], \"!i || p.hIthVars[i] \u003e p.hIthVars[i-1]\");\n    }\n    Tru_ManClear( p.pZero, p.nWords );\n    return p;\n}"
+    },
+    {
+      "Name": "Tru_ManFree",
+      "Start": 7541,
+      "End": 7769,
+      "BodyStart": 7575,
+      "Original": "void Tru_ManFree( Tru_Man_t * p )\n{\n    printf( \"Lookups = %d. Entries = %d.\\n\", p-\u003enTableLookups, Vec_SetEntryNum(p-\u003epMem) );\n    Vec_SetFree( p-\u003epMem );\n    ABC_FREE( p-\u003epZero );\n    ABC_FREE( p-\u003epTable );\n    ABC_FREE( p );\n}",
+      "Draft": "func Tru_ManFree(p *Tru_Man_t) {\n    fmt.Printf(\"Lookups = %d. Entries = %d.\\n\", p.nTableLookups, Vec_SetEntryNum(p.pMem));\n    Vec_SetFree( p.pMem );\n    // inlining of macro ABC_FREE\n    ((p.pZero) ? (free((char *) (p.pZero)), (p.pZero) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Tru_ManVar",
+      "Start": 8033,
+      "End": 8172,
+      "BodyStart": 8075,
+      "Original": "word * Tru_ManVar( Tru_Man_t * p, int v )\n{\n    assert( v \u003e= 0 \u0026\u0026 v \u003c p-\u003enVars );\n    return Tru_ManReadOne( p, p-\u003ehIthVars[v] )-\u003epTruth;\n}",
+      "Draft": "func Tru_ManVar(p *Tru_Man_t, v int32) *word {\n    assert(v \u003e= 0 \u0026\u0026 v \u003c p.nVars, \"v \u003e= 0 \u0026\u0026 v \u003c p.nVars\");\n    return Tru_ManReadOne( p, p.hIthVars[v] ).pTruth;\n}"
+    },
+    {
+      "Name": "Tru_ManFunc",
+      "Start": 8434,
+      "End": 8594,
+      "BodyStart": 8477,
+      "Original": "word * Tru_ManFunc( Tru_Man_t * p, int h )\n{\n    assert( (h \u0026 1) == 0 );\n    if ( h == 0 )\n        return p-\u003epZero;\n    return Tru_ManReadOne( p, h )-\u003epTruth;\n}",
+      "Draft": "func Tru_ManFunc(p *Tru_Man_t, h int32) *word {\n    assert((h \u0026 1) == 0, \"(h \u0026 1) == 0\");\n    if h == 0 {\n        return p.pZero; }\n    return Tru_ManReadOne( p, h ).pTruth;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::struct::Tru_One_t::// next one in the table\n    word             pTruth[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Tru_One_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1722,
+      "End": 1787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::struct::Tru_One_t",
+      "Category": "struct-review",
+      "Symbol": "Tru_One_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1573,
+      "End": 1808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::struct::Tru_Man_t_::// temporary truth table \n    int              hIthVars[16];",
+      "Category": "struct-field-review",
+      "Symbol": "Tru_Man_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1444,
+      "End": 1512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::struct::Tru_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Tru_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1024,
+      "End": 1571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::mechanical::static::2967",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2967,
+      "End": 2973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::mechanical::sizeof::4100",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4013,
+      "End": 4013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::mechanical::sizeof::6672",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6435,
+      "End": 6435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::mechanical::sizeof::6797",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6567,
+      "End": 6573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::mechanical::sizeof::6829",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6599,
+      "End": 6605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::mechanical::sizeof::6843",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6613,
+      "End": 6619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::mechanical::sizeof::6989",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6672,
+      "End": 6672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::mechanical::sizeof::7152",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6792,
+      "End": 6792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::pointer-cast::1888",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1888,
+      "End": 1901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::pointer-cast::4060",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4013,
+      "End": 4013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::pointer-cast::4763",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4630,
+      "End": 4630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::pointer-cast::6638",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6435,
+      "End": 6435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::pointer-cast::6949",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6672,
+      "End": 6672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::pointer-cast::7136",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6792,
+      "End": 6792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::pointer-cast::8132",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7700,
+      "End": 7700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::pointer-cast::8245",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7726,
+      "End": 7726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::pointer-cast::8352",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7753,
+      "End": 7753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::Tru_ManReadOne",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManReadOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1810,
+      "End": 1935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::Tru_ManHash",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2412,
+      "End": 2648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::Tru_ManLookup",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2909,
+      "End": 3439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::ternary::Tru_ManResize",
+      "Category": "ternary-review",
+      "Symbol": "Tru_ManResize",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3700,
+      "End": 4654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::Tru_ManResize",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManResize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3700,
+      "End": 4654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::Tru_ManInsert",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4919,
+      "End": 5774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::Tru_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6040,
+      "End": 7276
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::ternary::Tru_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Tru_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7541,
+      "End": 7769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::Tru_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7541,
+      "End": 7769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::Tru_ManVar",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8033,
+      "End": 8172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::Tru_ManFunc",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManFunc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8434,
+      "End": 8594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::macro-inline::6116",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6116,
+      "End": 6145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::macro-inline::6156",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6156,
+      "End": 6185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::macro-inline::6196",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6196,
+      "End": 6225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::macro-inline::6236",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6236,
+      "End": 6265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::macro-inline::6276",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6276,
+      "End": 6305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.c::macro-inline::6316",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6316,
+      "End": 6345
+    }
+  ],
+  "Draft": "package bsat\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [satTruth.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT solver.]\n\n  Synopsis    [Truth table computation package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: satTruth.c,v 1.4 2005/09/16 22:55:03 casem Exp $]\n\n***********************************************************************/\n\n//#include \"satTruth.h\"\n//#include \"misc/vec/vecSet.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Tru_Man_t_ struct {\n    nVars              int32;        // the number of variables\n    nWords              int32;       // the number of words in the truth table\n    nEntrySize              int32;   // the size of one entry in 'int'\n    nTableSize              int32;   // hash table size\n    pTable             *int32;       // hash table\n    pMem       *Vec_Set_t;         // memory for truth tables\n    pZero            *word;        // temporary truth table \n    hIthVars [16]int32; // variable handles\n    nTableLookups              int32;\n}\n\n    // 16 bytes minimum\ntype Tru_One_t struct {\n    Handle              int32;       // support\n    Next              int32;         // next one in the table\n    word             pTruth[0];    // truth table\n}\n\nfunc Tru_ManReadOne(p *Tru_Man_t, h int32) *Tru_One_t { if h != 0 {\n    return (Tru_One_t *)Vec_SetEntry(p.pMem, h);\n} else {\n    return nil;\n} }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the hash key.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tru_ManHash(pTruth *word, nWords int32, nBins int32, pPrimes *int32) uint32 {\n    var i int32;\n    var uHash uint32;\n    for  i = 0; i \u003c nWords; i++  {\n        uHash ^= pTruth[i] * pPrimes[i \u0026 0x7];\n    }\n    return uHash % nBins;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the given record.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Tru_ManLookup_s_Primes [10]int32 = [10]int32{ 1291, 1699, 2357, 4177, 5147, 5647, 6343, 7103, 7873, 8147 };\nfunc Tru_ManLookup(p *Tru_Man_t, pTruth *word) *int32 {\n    \n    var pEntry *Tru_One_t;\n    var pSpot *int32;\n    assert((pTruth[0] \u0026 1) == 0, \"(pTruth[0] \u0026 1) == 0\");\n    pSpot = p.pTable + Tru_ManHash( pTruth, p.nWords, p.nTableSize, spStatic_Tru_ManLookup_s_Primes );\n    for  pEntry = Tru_ManReadOne(p, *pSpot); (pEntry != nil); pSpot = \u0026pEntry.Next, pEntry = Tru_ManReadOne(p, *pSpot)  {\n        if Tru_ManEqual(pEntry.pTruth, pTruth, p.nWords) {\n            return pSpot; }\n    }\n    return pSpot;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the given record.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tru_ManResize(p *Tru_Man_t) {\n    var pThis *Tru_One_t;\n    var pTableOld, pSpot *int32;\n    var nTableSizeOld, iNext, Counter, i int32;\n    assert(p.pTable != nil, \"p.pTable != nil\");\n    // replace the table\n    pTableOld = p.pTable;\n    nTableSizeOld = p.nTableSize;\n    p.nTableSize = 2 * p.nTableSize + 1; \n    // inlining of macro ABC_CALLOC\n    p.pTable = ((int *) calloc((size_t)(p.nTableSize), sizeof(int)));\n    // rehash the entries from the old table\n    Counter = 0;\n    for  i = 0; i \u003c nTableSizeOld; i++  {\n    for  pThis = Tru_ManReadOne(p, pTableOld[i]),\n          iNext = (pThis? pThis.Next : 0);  \n          (pThis != nil);  pThis = Tru_ManReadOne(p, iNext),   \n          iNext = (pThis? pThis.Next : 0)   {\n        assert(pThis.Handle, \"pThis.Handle\");\n        pThis.Next = 0;\n        pSpot = Tru_ManLookup( p, pThis.pTruth );\n        assert(*pSpot == 0, \"*pSpot == 0\"); // should not be there\n        *pSpot = pThis.Handle;\n        Counter++;\n    }\n    }\n    assert(Counter == Vec_SetEntryNum(p.pMem), \"Counter == Vec_SetEntryNum(p.pMem)\");\n    // inlining of macro ABC_FREE\n    ((pTableOld) ? (free((char *) (pTableOld)), (pTableOld) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds entry to the hash table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tru_ManInsert(p *Tru_Man_t, pTruth *word) int32 {\n    var fCompl int32;\n    var pSpot *int32;\n    if Tru_ManEqual0(pTruth, p.nWords) {\n        return 0; }\n    if Tru_ManEqual1(pTruth, p.nWords) {\n        return 1; }\n    p.nTableLookups++;\n    if Vec_SetEntryNum(p.pMem) \u003e 2 * p.nTableSize {\n        Tru_ManResize( p ); }\n    fCompl = pTruth[0] \u0026 1;\n    if fCompl != 0 {  \n        Tru_ManNot( pTruth, p.nWords ); }\n    pSpot = Tru_ManLookup( p, pTruth );\n    if *pSpot == 0 {\n        var pEntry *Tru_One_t;\n        *pSpot = Vec_SetAppend( p.pMem, nil, p.nEntrySize );\n        assert((*pSpot \u0026 1) == 0, \"(*pSpot \u0026 1) == 0\");\n        pEntry = Tru_ManReadOne( p, *pSpot );\n        Tru_ManCopy( pEntry.pTruth, pTruth, p.nWords );\n        pEntry.Handle = *pSpot;\n        pEntry.Next = 0;\n    }\n    if fCompl != 0 {  \n        Tru_ManNot( pTruth, p.nWords ); }\n    return *pSpot ^ fCompl;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Start the truth table logging.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tru_ManAlloc(nVars int32) *Tru_Man_t {\n    var Masks [6]word = [6]word{ \n        ABC_CONST(0xAAAAAAAAAAAAAAAA), \n        ABC_CONST(0xCCCCCCCCCCCCCCCC), \n        ABC_CONST(0xF0F0F0F0F0F0F0F0), \n        ABC_CONST(0xFF00FF00FF00FF00), \n        ABC_CONST(0xFFFF0000FFFF0000), \n        ABC_CONST(0xFFFFFFFF00000000), \n    };\n    \n    var i, w int32;\n    assert(nVars \u003e 0 \u0026\u0026 nVars \u003c= 16, \"nVars \u003e 0 \u0026\u0026 nVars \u003c= 16\");\n    // inlining of macro ABC_CALLOC\n    p := \u0026Tru_Man_t{};\n    p.nVars      = nVars;\n    if nVars \u003c 6 {\n        p.nWords = 1;\n    } else {\n        p.nWords = (1 \u003c\u003c (nVars-6));\n    }\n    p.nEntrySize = (sizeof(Tru_One_t) + p.nWords * sizeof(word))/sizeof(int);\n    p.nTableSize = 8147;\n    // inlining of macro ABC_CALLOC\n    p.pTable     = ((int *) calloc((size_t)(p.nTableSize), sizeof(int)));\n    p.pMem       = Vec_SetAlloc( 16 );\n    // initialize truth tables\n    // inlining of macro ABC_ALLOC\n    p.pZero = ((word *) malloc(sizeof(word) * (size_t)(p.nWords)));\n    for  i = 0; i \u003c nVars; i++  {\n        for  w = 0; w \u003c p.nWords; w++  {\n            if i \u003c 6 {\n                p.pZero[w] = Masks[i];\n            } else if w \u0026 (1 \u003c\u003c (i-6)) {\n                p.pZero[w] = ~(word)0;\n            } else {\n                p.pZero[w] = 0; }\n        }\n        p.hIthVars[i] = Tru_ManInsert( p, p.pZero );\n        assert(!(i != 0) || p.hIthVars[i] \u003e p.hIthVars[i-1], \"!i || p.hIthVars[i] \u003e p.hIthVars[i-1]\");\n    }\n    Tru_ManClear( p.pZero, p.nWords );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stop the truth table logging.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tru_ManFree(p *Tru_Man_t) {\n    fmt.Printf(\"Lookups = %d. Entries = %d.\\n\", p.nTableLookups, Vec_SetEntryNum(p.pMem));\n    Vec_SetFree( p.pMem );\n    // inlining of macro ABC_FREE\n    ((p.pZero) ? (free((char *) (p.pZero)), (p.pZero) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pTable) ? (free((char *) (p.pTable)), (p.pTable) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns elementary variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tru_ManVar(p *Tru_Man_t, v int32) *word {\n    assert(v \u003e= 0 \u0026\u0026 v \u003c p.nVars, \"v \u003e= 0 \u0026\u0026 v \u003c p.nVars\");\n    return Tru_ManReadOne( p, p.hIthVars[v] ).pTruth;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns stored truth table]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tru_ManFunc(p *Tru_Man_t, h int32) *word {\n    assert((h \u0026 1) == 0, \"(h \u0026 1) == 0\");\n    if h == 0 {\n        return p.pZero; }\n    return Tru_ManReadOne( p, h ).pTruth;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

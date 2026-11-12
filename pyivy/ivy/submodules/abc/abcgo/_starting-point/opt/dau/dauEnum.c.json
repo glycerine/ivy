@@ -1,0 +1,451 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c",
+  "SHA256": "7d9854d5d8b31545b733c156f6eb16521264f7abc1b32d3b1e86b44aee53d704",
+  "Library": [
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 85,
+        "Column": 5,
+        "ByteOffset": 2469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( spStatic_Dau_EnumCombineTwo_pBuffer, \"%s%c%s%s%s%s%c\", "
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 3175
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( spStatic_Dau_EnumCombineThree_pBuffer, \"%s%c%s%s%s%s%s%s%c\", "
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 126,
+        "Column": 13,
+        "ByteOffset": 4006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 9,
+        "ByteOffset": 4239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"VARIABLE NUMBER %d:\\n\", v );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 13,
+        "ByteOffset": 4454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s\\n\", pName );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 4507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 237,
+        "Column": 9,
+        "ByteOffset": 8991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"VARIABLE NUMBER %d:\\n\", v );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 239,
+        "Column": 13,
+        "ByteOffset": 9198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s\\n\", pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 245,
+        "Column": 9,
+        "ByteOffset": 9447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d=%d \", v, Vec_PtrSize(vOne) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 5,
+        "ByteOffset": 9558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dau_EnumLift",
+      "Start": 1235,
+      "End": 1499,
+      "BodyStart": 1282,
+      "Original": "char * Dau_EnumLift( char * pName, int Shift )\n{\n    static char pBuffer[64];\n    char * pTemp;\n    for ( pTemp = pBuffer; *pName; pTemp++, pName++ )\n        *pTemp = (*pName \u003e= 'a' \u0026\u0026 *pName \u003c= 'z') ? *pName + Shift : *pName;\n    *pTemp = 0;\n    return pBuffer;\n}",
+      "Draft": "func Dau_EnumLift(pName string, Shift int32) string {\n    \n    var pTemp string;\n    for  pTemp = spStatic_Dau_EnumLift_pBuffer; *pName; pTemp, pName = pTemp+1, pName+1  {\n        *pTemp = (*pName \u003e= 'a' \u0026\u0026 *pName \u003c= 'z') ? *pName + Shift : *pName;\n    }\n    *pTemp = 0;\n    return spStatic_Dau_EnumLift_pBuffer;\n}"
+    },
+    {
+      "Name": "Dau_EnumLift2",
+      "Start": 1500,
+      "End": 1765,
+      "BodyStart": 1548,
+      "Original": "char * Dau_EnumLift2( char * pName, int Shift )\n{\n    static char pBuffer[64];\n    char * pTemp;\n    for ( pTemp = pBuffer; *pName; pTemp++, pName++ )\n        *pTemp = (*pName \u003e= 'a' \u0026\u0026 *pName \u003c= 'z') ? *pName + Shift : *pName;\n    *pTemp = 0;\n    return pBuffer;\n}",
+      "Draft": "func Dau_EnumLift2(pName string, Shift int32) string {\n    \n    var pTemp string;\n    for  pTemp = spStatic_Dau_EnumLift2_pBuffer; *pName; pTemp, pName = pTemp+1, pName+1  {\n        *pTemp = (*pName \u003e= 'a' \u0026\u0026 *pName \u003c= 'z') ? *pName + Shift : *pName;\n    }\n    *pTemp = 0;\n    return spStatic_Dau_EnumLift2_pBuffer;\n}"
+    },
+    {
+      "Name": "Dau_EnumCombineTwo",
+      "Start": 2001,
+      "End": 2535,
+      "BodyStart": 2134,
+      "Original": "void Dau_EnumCombineTwo( Vec_Ptr_t * vOne, int fStar, int fXor, char * pName1, char * pName2, int Shift2, int fCompl1, int fCompl2 )\n{\n    static char pBuffer[256];\n    pName2 = Dau_EnumLift( pName2, Shift2 );\n    sprintf( pBuffer, \"%s%c%s%s%s%s%c\", \n        fStar?\"*\":\"\", \n        fXor?'[':'(', \n        fCompl1?\"!\":\"\", pName1[0] == '*' ? pName1 + 1 : pName1, \n        fCompl2?\"!\":\"\", pName2[0] == '*' ? pName2 + 1 : pName2, \n        fXor?']':')' );\n//    printf( \"%s \", pBuffer );\n    Vec_PtrPush( vOne, Abc_UtilStrsav(pBuffer) );\n}",
+      "Draft": "func Dau_EnumCombineTwo(vOne *Vec_Ptr_t, fStar int32, fXor int32, pName1 string, pName2 string, Shift2 int32, fCompl1 int32, fCompl2 int32) {\n    \n    pName2 = Dau_EnumLift( pName2, Shift2 );\n    spStatic_Dau_EnumCombineTwo_pBuffer = fmt.Sprintf(\"%s%c%s%s%s%s%c\", fStar?\"*\":\"\", fXor?'[':'(', fCompl1?\"!\":\"\", pName1[0] == '*' ? pName1 + 1 : pName1, fCompl2?\"!\":\"\", pName2[0] == '*' ? pName2 + 1 : pName2, fXor?']':')');\n//    printf( \"%s \", pBuffer );\n    Vec_PtrPush( vOne, Abc_UtilStrsav(spStatic_Dau_EnumCombineTwo_pBuffer) );\n}"
+    },
+    {
+      "Name": "Dau_EnumCombineThree",
+      "Start": 2536,
+      "End": 3199,
+      "BodyStart": 2701,
+      "Original": "void Dau_EnumCombineThree( Vec_Ptr_t * vOne, int fStar, char * pNameC, char * pName1, char * pName2, int Shift1, int Shift2, int fComplC, int fCompl1, int fCompl2 )\n{\n    static char pBuffer[256];\n    pName1 = Dau_EnumLift( pName1, Shift1 );\n    pName2 = Dau_EnumLift2( pName2, Shift2 );\n    sprintf( pBuffer, \"%s%c%s%s%s%s%s%s%c\", \n        fStar?\"*\":\"\", \n        '\u003c', \n        fComplC?\"!\":\"\", pNameC[0] == '*' ? pNameC + 1 : pNameC, \n        fCompl1?\"!\":\"\", pName1[0] == '*' ? pName1 + 1 : pName1, \n        fCompl2?\"!\":\"\", pName2[0] == '*' ? pName2 + 1 : pName2, \n        '\u003e' );\n//    printf( \"%s \", pBuffer );\n    Vec_PtrPush( vOne, Abc_UtilStrsav(pBuffer) );\n}",
+      "Draft": "func Dau_EnumCombineThree(vOne *Vec_Ptr_t, fStar int32, pNameC string, pName1 string, pName2 string, Shift1 int32, Shift2 int32, fComplC int32, fCompl1 int32, fCompl2 int32) {\n    \n    pName1 = Dau_EnumLift( pName1, Shift1 );\n    pName2 = Dau_EnumLift2( pName2, Shift2 );\n    spStatic_Dau_EnumCombineThree_pBuffer = fmt.Sprintf(\"%s%c%s%s%s%s%s%s%c\", fStar?\"*\":\"\", '\u003c', fComplC?\"!\":\"\", pNameC[0] == '*' ? pNameC + 1 : pNameC, fCompl1?\"!\":\"\", pName1[0] == '*' ? pName1 + 1 : pName1, fCompl2?\"!\":\"\", pName2[0] == '*' ? pName2 + 1 : pName2, '\u003e');\n//    printf( \"%s \", pBuffer );\n    Vec_PtrPush( vOne, Abc_UtilStrsav(spStatic_Dau_EnumCombineThree_pBuffer) );\n}"
+    },
+    {
+      "Name": "Dau_EnumTestDump",
+      "Start": 3435,
+      "End": 3892,
+      "BodyStart": 3496,
+      "Original": "void Dau_EnumTestDump( Vec_Ptr_t * vSets, char * pFileName )\n{ \n    FILE * pFile;\n    Vec_Ptr_t * vOne;\n    char * pName;\n    int v, k;\n    pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n        return;\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vSets, vOne, v )\n    {\n        fprintf( pFile, \"VARIABLE NUMBER %d:\\n\", v );\n        Vec_PtrForEachEntry( char *, vOne, pName, k )\n            fprintf( pFile, \"%s\\n\", pName );\n    }\n    fclose( pFile );\n}",
+      "Draft": "func Dau_EnumTestDump(vSets *Vec_Ptr_t, pFileName string) { \n    var pFile *os.File;\n    var vOne *Vec_Ptr_t;\n    var pName string;\n    var v, k int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        return; }\n    // inlining of macro Vec_PtrForEachEntry\n    for  v = 0; (v \u003c Vec_PtrSize(vSets)) \u0026\u0026 (((vOne) = (Vec_Ptr_t *)Vec_PtrEntry(vSets, v)), 1); v++  {\n        fmt.Fprintf(pFile, \"VARIABLE NUMBER %d:\\n\", v);\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vOne)) \u0026\u0026 (((pName) = (char *)Vec_PtrEntry(vOne, k)), 1); k++  {\n            fmt.Fprintf(pFile, \"%s\\n\", pName);\n        }\n    }\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Dau_EnumTest",
+      "Start": 4128,
+      "End": 8044,
+      "BodyStart": 4148,
+      "Original": "void Dau_EnumTest()\n{\n    int v, k, nVarMax = 10;\n    Vec_Ptr_t * vSets;\n    Vec_Ptr_t * vOne;\n    char * pName;\n    // 0 vars\n    vSets = Vec_PtrAlloc( 16 );\n    Vec_PtrPush( vSets, Vec_PtrAlloc(0) );\n    // 1 vars\n    vOne = Vec_PtrAlloc( 1 );\n    Vec_PtrPush( vOne, Abc_UtilStrsav(\"*a\") );\n    Vec_PtrPush( vSets, vOne );\n    // 2+ vars\n    for ( v = 2; v \u003c= nVarMax; v++ )\n    {\n        Vec_Ptr_t * vSetI, * vSetJ, * vSetK;\n        char * pNameI, * pNameJ, * pNameK;\n        int i, j, k, i1, j1, k1;\n        vOne = Vec_PtrAlloc( 100 );\n        for ( i = 1; i \u003c v; i++ )\n        for ( j = i; j \u003c v; j++ )\n        {\n            if ( i + j != v )\n                continue;\n            vSetI = (Vec_Ptr_t *)Vec_PtrEntry( vSets, i );\n            vSetJ = (Vec_Ptr_t *)Vec_PtrEntry( vSets, j );\n            Vec_PtrForEachEntry( char *, vSetI, pNameI, i1 )\n            Vec_PtrForEachEntry( char *, vSetJ, pNameJ, j1 )\n            {\n                // AND(a,b)\n                Dau_EnumCombineTwo( vOne, 0, 0, pNameI, pNameJ, i, 0, 0 );\n                // AND(!a,b)\n                if ( pNameI[0] != '*' )\n                Dau_EnumCombineTwo( vOne, 0, 0, pNameI, pNameJ, i, 1, 0 );\n                // AND(a,!b)\n                if ( pNameJ[0] != '*' \u0026\u0026 !(i == j \u0026\u0026 i1 == j1) )\n                Dau_EnumCombineTwo( vOne, 0, 0, pNameI, pNameJ, i, 0, 1 );\n                // AND(!a,!b)\n                if ( pNameI[0] != '*' \u0026\u0026 pNameJ[0] != '*' )\n                Dau_EnumCombineTwo( vOne, 0, 0, pNameI, pNameJ, i, 1, 1 );\n                // XOR(a,b)\n                Dau_EnumCombineTwo( vOne, pNameI[0] == '*' || pNameJ[0] == '*', 1, pNameI, pNameJ, i, 0, 0 );\n            }\n        }\n        for ( k = 1; k \u003c v; k++ )\n        for ( i = 1; i \u003c v; i++ )\n        for ( j = i; j \u003c v; j++ )\n        {\n            if ( k + i + j != v )\n                continue;\n            vSetK = (Vec_Ptr_t *)Vec_PtrEntry( vSets, k );\n            vSetI = (Vec_Ptr_t *)Vec_PtrEntry( vSets, i );\n            vSetJ = (Vec_Ptr_t *)Vec_PtrEntry( vSets, j );\n            Vec_PtrForEachEntry( char *, vSetK, pNameK, k1 )\n            Vec_PtrForEachEntry( char *, vSetI, pNameI, i1 )\n            Vec_PtrForEachEntry( char *, vSetJ, pNameJ, j1 )\n            {\n                int fStar = pNameI[0] == '*' \u0026\u0026 pNameJ[0] == '*';\n\n                // MUX(c,a,b)\n                Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 0, 0, 0 );\n                // MUX(c,!a,b)\n                if ( pNameI[0] != '*' )\n                Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 0, 1, 0 );\n                // MUX(c,a,!b)\n                if ( pNameJ[0] != '*' \u0026\u0026 !(i == j \u0026\u0026 i1 == j1) )\n                Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 0, 0, 1 );\n\n                if ( pNameK[0] != '*' \u0026\u0026 !(i == j \u0026\u0026 i1 == j1) )\n                {\n                    // MUX(!c,a,b)\n                    Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 1, 0, 0 );\n                    // MUX(!c,!a,b)\n                    if ( pNameI[0] != '*' )\n                    Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 1, 1, 0 );\n                    // MUX(!c,a,!b)\n                    if ( pNameJ[0] != '*' )\n                    Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 1, 0, 1 );\n                }\n            }\n        }\n        Vec_PtrPush( vSets, vOne );\n    }\n    Dau_EnumTestDump( vSets, \"_npn/npn/dsd10.txt\" );\n\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vSets, vOne, v )\n    {\n        printf( \"VARIABLE NUMBER %d:\\n\", v );\n        Vec_PtrForEachEntry( char *, vOne, pName, k )\n            printf( \"%s\\n\", pName );\n        if ( v == 4 )\n            break;\n    }\n    Vec_PtrForEachEntry( Vec_Ptr_t *, vSets, vOne, v )\n    {\n        printf( \"%d=%d \", v, Vec_PtrSize(vOne) );\n        Vec_PtrFreeFree( vOne );\n    }\n    Vec_PtrFree( vSets );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Dau_EnumTest() {\n    var v int32;\n    var k int32;\n    var nVarMax int32 = 10;\n    var vSets *Vec_Ptr_t;\n    var vOne *Vec_Ptr_t;\n    var pName string;\n    // 0 vars\n    vSets = Vec_PtrAlloc( 16 );\n    Vec_PtrPush( vSets, Vec_PtrAlloc(0) );\n    // 1 vars\n    vOne = Vec_PtrAlloc( 1 );\n    Vec_PtrPush( vOne, Abc_UtilStrsav(\"*a\") );\n    Vec_PtrPush( vSets, vOne );\n    // 2+ vars\n    for  v = 2; v \u003c= nVarMax; v++  {\n        var vSetI, vSetJ, vSetK *Vec_Ptr_t;\n        var pNameI, pNameJ, pNameK string;\n        var i, j, k, i1, j1, k1 int32;\n        vOne = Vec_PtrAlloc( 100 );\n        for  i = 1; i \u003c v; i++  {\n        for  j = i; j \u003c v; j++  {\n            if i + j != v {\n                continue; }\n            vSetI = (Vec_Ptr_t *)Vec_PtrEntry( vSets, i );\n            vSetJ = (Vec_Ptr_t *)Vec_PtrEntry( vSets, j );\n            // inlining of macro Vec_PtrForEachEntry\n            for  i1 = 0; (i1 \u003c Vec_PtrSize(vSetI)) \u0026\u0026 (((pNameI) = (char *)Vec_PtrEntry(vSetI, i1)), 1); i1++  {\n            // inlining of macro Vec_PtrForEachEntry\n            for  j1 = 0; (j1 \u003c Vec_PtrSize(vSetJ)) \u0026\u0026 (((pNameJ) = (char *)Vec_PtrEntry(vSetJ, j1)), 1); j1++  {\n                // AND(a,b)\n                Dau_EnumCombineTwo( vOne, 0, 0, pNameI, pNameJ, i, 0, 0 );\n                // AND(!a,b)\n                if pNameI[0] != '*' {\n                Dau_EnumCombineTwo( vOne, 0, 0, pNameI, pNameJ, i, 1, 0 ); }\n                // AND(a,!b)\n                if pNameJ[0] != '*' \u0026\u0026 !(i == j \u0026\u0026 i1 == j1) {\n                Dau_EnumCombineTwo( vOne, 0, 0, pNameI, pNameJ, i, 0, 1 ); }\n                // AND(!a,!b)\n                if pNameI[0] != '*' \u0026\u0026 pNameJ[0] != '*' {\n                Dau_EnumCombineTwo( vOne, 0, 0, pNameI, pNameJ, i, 1, 1 ); }\n                // XOR(a,b)\n                Dau_EnumCombineTwo( vOne, pNameI[0] == '*' || pNameJ[0] == '*', 1, pNameI, pNameJ, i, 0, 0 );\n            }\n            }\n        }\n        }\n        for  k = 1; k \u003c v; k++  {\n        for  i = 1; i \u003c v; i++  {\n        for  j = i; j \u003c v; j++  {\n            if k + i + j != v {\n                continue; }\n            vSetK = (Vec_Ptr_t *)Vec_PtrEntry( vSets, k );\n            vSetI = (Vec_Ptr_t *)Vec_PtrEntry( vSets, i );\n            vSetJ = (Vec_Ptr_t *)Vec_PtrEntry( vSets, j );\n            // inlining of macro Vec_PtrForEachEntry\n            for  k1 = 0; (k1 \u003c Vec_PtrSize(vSetK)) \u0026\u0026 (((pNameK) = (char *)Vec_PtrEntry(vSetK, k1)), 1); k1++  {\n            // inlining of macro Vec_PtrForEachEntry\n            for  i1 = 0; (i1 \u003c Vec_PtrSize(vSetI)) \u0026\u0026 (((pNameI) = (char *)Vec_PtrEntry(vSetI, i1)), 1); i1++  {\n            // inlining of macro Vec_PtrForEachEntry\n            for  j1 = 0; (j1 \u003c Vec_PtrSize(vSetJ)) \u0026\u0026 (((pNameJ) = (char *)Vec_PtrEntry(vSetJ, j1)), 1); j1++  {\n                var fStar int32  = pNameI[0] == '*' \u0026\u0026 pNameJ[0] == '*';\n\n                // MUX(c,a,b)\n                Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 0, 0, 0 );\n                // MUX(c,!a,b)\n                if pNameI[0] != '*' {\n                Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 0, 1, 0 ); }\n                // MUX(c,a,!b)\n                if pNameJ[0] != '*' \u0026\u0026 !(i == j \u0026\u0026 i1 == j1) {\n                Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 0, 0, 1 ); }\n\n                if pNameK[0] != '*' \u0026\u0026 !(i == j \u0026\u0026 i1 == j1) {\n                    // MUX(!c,a,b)\n                    Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 1, 0, 0 );\n                    // MUX(!c,!a,b)\n                    if pNameI[0] != '*' {\n                    Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 1, 1, 0 ); }\n                    // MUX(!c,a,!b)\n                    if pNameJ[0] != '*' {\n                    Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 1, 0, 1 ); }\n                }\n            }\n            }\n            }\n        }\n        }\n        }\n        Vec_PtrPush( vSets, vOne );\n    }\n    Dau_EnumTestDump( vSets, \"_npn/npn/dsd10.txt\" );\n\n    // inlining of macro Vec_PtrForEachEntry\n    for  v = 0; (v \u003c Vec_PtrSize(vSets)) \u0026\u0026 (((vOne) = (Vec_Ptr_t *)Vec_PtrEntry(vSets, v)), 1); v++  {\n        fmt.Printf(\"VARIABLE NUMBER %d:\\n\", v);\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vOne)) \u0026\u0026 (((pName) = (char *)Vec_PtrEntry(vOne, k)), 1); k++  {\n            fmt.Printf(\"%s\\n\", pName);\n        }\n        if v == 4 {\n            break; }\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  v = 0; (v \u003c Vec_PtrSize(vSets)) \u0026\u0026 (((vOne) = (Vec_Ptr_t *)Vec_PtrEntry(vSets, v)), 1); v++  {\n        fmt.Printf(\"%d=%d \", v, Vec_PtrSize(vOne));\n        Vec_PtrFreeFree( vOne );\n    }\n    Vec_PtrFree( vSets );\n    fmt.Printf(\"\\n\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::mechanical::static::1288",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1288,
+      "End": 1294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::mechanical::static::1554",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1554,
+      "End": 1560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::mechanical::static::2140",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2140,
+      "End": 2146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::mechanical::static::2707",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2707,
+      "End": 2713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::3761",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3654,
+      "End": 3654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::3984",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3773,
+      "End": 3773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::5029",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4822,
+      "End": 4835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::5088",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4881,
+      "End": 4894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::5250",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4932,
+      "End": 4932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::5418",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4993,
+      "End": 4993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::6412",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5991,
+      "End": 6004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::6471",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6050,
+      "End": 6063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::6530",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6109,
+      "End": 6122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::6692",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6160,
+      "End": 6160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::6860",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6221,
+      "End": 6221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::7028",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6282,
+      "End": 6282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::8455",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7606,
+      "End": 7606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::8670",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7717,
+      "End": 7717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::pointer-cast::8907",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7851,
+      "End": 7851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::ternary::Dau_EnumLift",
+      "Category": "ternary-review",
+      "Symbol": "Dau_EnumLift",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1235,
+      "End": 1499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::Dau_EnumLift",
+      "Category": "semantic-review",
+      "Symbol": "Dau_EnumLift",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1235,
+      "End": 1499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::ternary::Dau_EnumLift2",
+      "Category": "ternary-review",
+      "Symbol": "Dau_EnumLift2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1500,
+      "End": 1765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::Dau_EnumLift2",
+      "Category": "semantic-review",
+      "Symbol": "Dau_EnumLift2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1500,
+      "End": 1765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::ternary::Dau_EnumCombineTwo",
+      "Category": "ternary-review",
+      "Symbol": "Dau_EnumCombineTwo",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2001,
+      "End": 2535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::Dau_EnumCombineTwo",
+      "Category": "semantic-review",
+      "Symbol": "Dau_EnumCombineTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2001,
+      "End": 2535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::ternary::Dau_EnumCombineThree",
+      "Category": "ternary-review",
+      "Symbol": "Dau_EnumCombineThree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2536,
+      "End": 3199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::Dau_EnumCombineThree",
+      "Category": "semantic-review",
+      "Symbol": "Dau_EnumCombineThree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2536,
+      "End": 3199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::Dau_EnumTestDump",
+      "Category": "semantic-review",
+      "Symbol": "Dau_EnumTestDump",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3435,
+      "End": 3892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::Dau_EnumTest",
+      "Category": "semantic-review",
+      "Symbol": "Dau_EnumTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4128,
+      "End": 8044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauEnum.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8291
+    }
+  ],
+  "Draft": "package dau\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [dauEnum.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware unmapping.]\n\n  Synopsis    [Enumeration of decompositions.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: dauEnum.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dauInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Dau_EnumLift_pBuffer [64]byte;\nfunc Dau_EnumLift(pName string, Shift int32) string {\n    \n    var pTemp string;\n    for  pTemp = spStatic_Dau_EnumLift_pBuffer; *pName; pTemp, pName = pTemp+1, pName+1  {\n        *pTemp = (*pName \u003e= 'a' \u0026\u0026 *pName \u003c= 'z') ? *pName + Shift : *pName;\n    }\n    *pTemp = 0;\n    return spStatic_Dau_EnumLift_pBuffer;\n}\nvar spStatic_Dau_EnumLift2_pBuffer [64]byte;\nfunc Dau_EnumLift2(pName string, Shift int32) string {\n    \n    var pTemp string;\n    for  pTemp = spStatic_Dau_EnumLift2_pBuffer; *pName; pTemp, pName = pTemp+1, pName+1  {\n        *pTemp = (*pName \u003e= 'a' \u0026\u0026 *pName \u003c= 'z') ? *pName + Shift : *pName;\n    }\n    *pTemp = 0;\n    return spStatic_Dau_EnumLift2_pBuffer;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Dau_EnumCombineTwo_pBuffer string // was [256]byte in C\n\nfunc Dau_EnumCombineTwo(vOne *Vec_Ptr_t, fStar int32, fXor int32, pName1 string, pName2 string, Shift2 int32, fCompl1 int32, fCompl2 int32) {\n    \n    pName2 = Dau_EnumLift( pName2, Shift2 );\n    spStatic_Dau_EnumCombineTwo_pBuffer = fmt.Sprintf(\"%s%c%s%s%s%s%c\", fStar?\"*\":\"\", fXor?'[':'(', fCompl1?\"!\":\"\", pName1[0] == '*' ? pName1 + 1 : pName1, fCompl2?\"!\":\"\", pName2[0] == '*' ? pName2 + 1 : pName2, fXor?']':')');\n//    printf( \"%s \", pBuffer );\n    Vec_PtrPush( vOne, Abc_UtilStrsav(spStatic_Dau_EnumCombineTwo_pBuffer) );\n}\nvar spStatic_Dau_EnumCombineThree_pBuffer string // was [256]byte in C\n\nfunc Dau_EnumCombineThree(vOne *Vec_Ptr_t, fStar int32, pNameC string, pName1 string, pName2 string, Shift1 int32, Shift2 int32, fComplC int32, fCompl1 int32, fCompl2 int32) {\n    \n    pName1 = Dau_EnumLift( pName1, Shift1 );\n    pName2 = Dau_EnumLift2( pName2, Shift2 );\n    spStatic_Dau_EnumCombineThree_pBuffer = fmt.Sprintf(\"%s%c%s%s%s%s%s%s%c\", fStar?\"*\":\"\", '\u003c', fComplC?\"!\":\"\", pNameC[0] == '*' ? pNameC + 1 : pNameC, fCompl1?\"!\":\"\", pName1[0] == '*' ? pName1 + 1 : pName1, fCompl2?\"!\":\"\", pName2[0] == '*' ? pName2 + 1 : pName2, '\u003e');\n//    printf( \"%s \", pBuffer );\n    Vec_PtrPush( vOne, Abc_UtilStrsav(spStatic_Dau_EnumCombineThree_pBuffer) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_EnumTestDump(vSets *Vec_Ptr_t, pFileName string) { \n    var pFile *os.File;\n    var vOne *Vec_Ptr_t;\n    var pName string;\n    var v, k int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        return; }\n    // inlining of macro Vec_PtrForEachEntry\n    for  v = 0; (v \u003c Vec_PtrSize(vSets)) \u0026\u0026 (((vOne) = (Vec_Ptr_t *)Vec_PtrEntry(vSets, v)), 1); v++  {\n        fmt.Fprintf(pFile, \"VARIABLE NUMBER %d:\\n\", v);\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vOne)) \u0026\u0026 (((pName) = (char *)Vec_PtrEntry(vOne, k)), 1); k++  {\n            fmt.Fprintf(pFile, \"%s\\n\", pName);\n        }\n    }\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_EnumTest() {\n    var v int32;\n    var k int32;\n    var nVarMax int32 = 10;\n    var vSets *Vec_Ptr_t;\n    var vOne *Vec_Ptr_t;\n    var pName string;\n    // 0 vars\n    vSets = Vec_PtrAlloc( 16 );\n    Vec_PtrPush( vSets, Vec_PtrAlloc(0) );\n    // 1 vars\n    vOne = Vec_PtrAlloc( 1 );\n    Vec_PtrPush( vOne, Abc_UtilStrsav(\"*a\") );\n    Vec_PtrPush( vSets, vOne );\n    // 2+ vars\n    for  v = 2; v \u003c= nVarMax; v++  {\n        var vSetI, vSetJ, vSetK *Vec_Ptr_t;\n        var pNameI, pNameJ, pNameK string;\n        var i, j, k, i1, j1, k1 int32;\n        vOne = Vec_PtrAlloc( 100 );\n        for  i = 1; i \u003c v; i++  {\n        for  j = i; j \u003c v; j++  {\n            if i + j != v {\n                continue; }\n            vSetI = (Vec_Ptr_t *)Vec_PtrEntry( vSets, i );\n            vSetJ = (Vec_Ptr_t *)Vec_PtrEntry( vSets, j );\n            // inlining of macro Vec_PtrForEachEntry\n            for  i1 = 0; (i1 \u003c Vec_PtrSize(vSetI)) \u0026\u0026 (((pNameI) = (char *)Vec_PtrEntry(vSetI, i1)), 1); i1++  {\n            // inlining of macro Vec_PtrForEachEntry\n            for  j1 = 0; (j1 \u003c Vec_PtrSize(vSetJ)) \u0026\u0026 (((pNameJ) = (char *)Vec_PtrEntry(vSetJ, j1)), 1); j1++  {\n                // AND(a,b)\n                Dau_EnumCombineTwo( vOne, 0, 0, pNameI, pNameJ, i, 0, 0 );\n                // AND(!a,b)\n                if pNameI[0] != '*' {\n                Dau_EnumCombineTwo( vOne, 0, 0, pNameI, pNameJ, i, 1, 0 ); }\n                // AND(a,!b)\n                if pNameJ[0] != '*' \u0026\u0026 !(i == j \u0026\u0026 i1 == j1) {\n                Dau_EnumCombineTwo( vOne, 0, 0, pNameI, pNameJ, i, 0, 1 ); }\n                // AND(!a,!b)\n                if pNameI[0] != '*' \u0026\u0026 pNameJ[0] != '*' {\n                Dau_EnumCombineTwo( vOne, 0, 0, pNameI, pNameJ, i, 1, 1 ); }\n                // XOR(a,b)\n                Dau_EnumCombineTwo( vOne, pNameI[0] == '*' || pNameJ[0] == '*', 1, pNameI, pNameJ, i, 0, 0 );\n            }\n            }\n        }\n        }\n        for  k = 1; k \u003c v; k++  {\n        for  i = 1; i \u003c v; i++  {\n        for  j = i; j \u003c v; j++  {\n            if k + i + j != v {\n                continue; }\n            vSetK = (Vec_Ptr_t *)Vec_PtrEntry( vSets, k );\n            vSetI = (Vec_Ptr_t *)Vec_PtrEntry( vSets, i );\n            vSetJ = (Vec_Ptr_t *)Vec_PtrEntry( vSets, j );\n            // inlining of macro Vec_PtrForEachEntry\n            for  k1 = 0; (k1 \u003c Vec_PtrSize(vSetK)) \u0026\u0026 (((pNameK) = (char *)Vec_PtrEntry(vSetK, k1)), 1); k1++  {\n            // inlining of macro Vec_PtrForEachEntry\n            for  i1 = 0; (i1 \u003c Vec_PtrSize(vSetI)) \u0026\u0026 (((pNameI) = (char *)Vec_PtrEntry(vSetI, i1)), 1); i1++  {\n            // inlining of macro Vec_PtrForEachEntry\n            for  j1 = 0; (j1 \u003c Vec_PtrSize(vSetJ)) \u0026\u0026 (((pNameJ) = (char *)Vec_PtrEntry(vSetJ, j1)), 1); j1++  {\n                var fStar int32  = pNameI[0] == '*' \u0026\u0026 pNameJ[0] == '*';\n\n                // MUX(c,a,b)\n                Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 0, 0, 0 );\n                // MUX(c,!a,b)\n                if pNameI[0] != '*' {\n                Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 0, 1, 0 ); }\n                // MUX(c,a,!b)\n                if pNameJ[0] != '*' \u0026\u0026 !(i == j \u0026\u0026 i1 == j1) {\n                Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 0, 0, 1 ); }\n\n                if pNameK[0] != '*' \u0026\u0026 !(i == j \u0026\u0026 i1 == j1) {\n                    // MUX(!c,a,b)\n                    Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 1, 0, 0 );\n                    // MUX(!c,!a,b)\n                    if pNameI[0] != '*' {\n                    Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 1, 1, 0 ); }\n                    // MUX(!c,a,!b)\n                    if pNameJ[0] != '*' {\n                    Dau_EnumCombineThree( vOne, fStar, pNameK, pNameI, pNameJ, k, k+i, 1, 0, 1 ); }\n                }\n            }\n            }\n            }\n        }\n        }\n        }\n        Vec_PtrPush( vSets, vOne );\n    }\n    Dau_EnumTestDump( vSets, \"_npn/npn/dsd10.txt\" );\n\n    // inlining of macro Vec_PtrForEachEntry\n    for  v = 0; (v \u003c Vec_PtrSize(vSets)) \u0026\u0026 (((vOne) = (Vec_Ptr_t *)Vec_PtrEntry(vSets, v)), 1); v++  {\n        fmt.Printf(\"VARIABLE NUMBER %d:\\n\", v);\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vOne)) \u0026\u0026 (((pName) = (char *)Vec_PtrEntry(vOne, k)), 1); k++  {\n            fmt.Printf(\"%s\\n\", pName);\n        }\n        if v == 4 {\n            break; }\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  v = 0; (v \u003c Vec_PtrSize(vSets)) \u0026\u0026 (((vOne) = (Vec_Ptr_t *)Vec_PtrEntry(vSets, v)), 1); v++  {\n        fmt.Printf(\"%d=%d \", v, Vec_PtrSize(vOne));\n        Vec_PtrFreeFree( vOne );\n    }\n    Vec_PtrFree( vSets );\n    fmt.Printf(\"\\n\");\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

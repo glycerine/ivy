@@ -1,0 +1,416 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c",
+  "SHA256": "6652d4166bb8d71a5167194b65eeed991c08cf6c73c739cab9aa0a42bd219504",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCex.nBits == pCex.nRegs + pCex.nPis * (pCex.iFrame + 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCex.nBits - pCex.nRegs + Gia_ManRegNum(pAig) \u003c= Vec_PtrSize(vInfo) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 3542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCex == nil || Gia_ManRegNum(pAig) == pCex.nRegs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 3606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(pAig) \u003c= Vec_PtrSize(vInfo) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 4552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vInfo) == Gia_ManRegNum(p.pAig) + Gia_ManPiNum(p.pAig) * p.pPars.nFrames );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 5706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == Vec_PtrSize(vInfo) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 188,
+        "Column": 5,
+        "ByteOffset": 6320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (Vec_PtrSize(vSimInfo) - Gia_ManRegNum(pAig)) % Gia_ManPiNum(pAig) == 0 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 249,
+        "Column": 78,
+        "ByteOffset": 8872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 371,
+        "Column": 9,
+        "ByteOffset": 13174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ManRegNum(pSrm) == 0 \u0026\u0026 Gia_ManPiNum(pSrm) == (Gia_ManPiNum(pAig) * nFramesReal) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 385,
+        "Column": 9,
+        "ByteOffset": 14010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pState.iPo \u003e= 0 ); // hit counter"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 415,
+        "Column": 62,
+        "ByteOffset": 15183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pState) ? (free((char *) (pState)), (pState) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cec_ManSeqDeriveInfoFromCex",
+      "Start": 1308,
+      "End": 3043,
+      "BodyStart": 1398,
+      "Original": "void Cec_ManSeqDeriveInfoFromCex( Vec_Ptr_t * vInfo, Gia_Man_t * pAig, Abc_Cex_t * pCex )\n{\n    unsigned * pInfo;\n    int k, i, w, nWords;\n    assert( pCex-\u003enBits == pCex-\u003enRegs + pCex-\u003enPis * (pCex-\u003eiFrame + 1) );\n    assert( pCex-\u003enBits - pCex-\u003enRegs + Gia_ManRegNum(pAig) \u003c= Vec_PtrSize(vInfo) );\n    nWords = Vec_PtrReadWordsSimInfo( vInfo );\n/*\n    // user register values\n    assert( pCex-\u003enRegs == Gia_ManRegNum(pAig) );\n    for ( k = 0; k \u003c pCex-\u003enRegs; k++ )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for ( w = 0; w \u003c nWords; w++ )\n            pInfo[w] = Abc_InfoHasBit( pCex-\u003epData, k )? ~0 : 0;\n    }\n*/\n    // print warning about register values\n    for ( k = 0; k \u003c pCex-\u003enRegs; k++ )\n        if ( Abc_InfoHasBit( pCex-\u003epData, k ) )\n            break;\n    if ( k \u003c pCex-\u003enRegs )\n        Abc_Print( 0, \"The CEX has flop values different from 0, but they are currently not used by \\\"resim\\\".\\n\" );\n\n    // assign zero register values\n    for ( k = 0; k \u003c Gia_ManRegNum(pAig); k++ )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for ( w = 0; w \u003c nWords; w++ )\n            pInfo[w] = 0;\n    }\n    for ( i = pCex-\u003enRegs; i \u003c pCex-\u003enBits; i++ )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k++ );\n        for ( w = 0; w \u003c nWords; w++ )\n            pInfo[w] = Gia_ManRandom(0);\n        // set simulation pattern and make sure it is second (first will be erased during simulation)\n        pInfo[0] = (pInfo[0] \u003c\u003c 1) | Abc_InfoHasBit( pCex-\u003epData, i ); \n        pInfo[0] \u003c\u003c= 1;\n    }\n    for ( ; k \u003c Vec_PtrSize(vInfo); k++ )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for ( w = 0; w \u003c nWords; w++ )\n            pInfo[w] = Gia_ManRandom(0);\n    }\n}",
+      "Draft": "func Cec_ManSeqDeriveInfoFromCex(vInfo *Vec_Ptr_t, pAig *Gia_Man_t, pCex *Abc_Cex_t) {\n    var pInfo *uint32;\n    var k, i, w, nWords int32;\n    assert(pCex.nBits == pCex.nRegs + pCex.nPis * (pCex.iFrame + 1), \"pCex.nBits == pCex.nRegs + pCex.nPis * (pCex.iFrame + 1)\");\n    assert(pCex.nBits - pCex.nRegs + Gia_ManRegNum(pAig) \u003c= Vec_PtrSize(vInfo), \"pCex.nBits - pCex.nRegs + Gia_ManRegNum(pAig) \u003c= Vec_PtrSize(vInfo)\");\n    nWords = Vec_PtrReadWordsSimInfo( vInfo );\n/*\n    // user register values\n    assert( pCex-\u003enRegs == Gia_ManRegNum(pAig) );\n    for ( k = 0; k \u003c pCex-\u003enRegs; k++ )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for ( w = 0; w \u003c nWords; w++ )\n            pInfo[w] = Abc_InfoHasBit( pCex-\u003epData, k )? ~0 : 0;\n    }\n*/\n    // print warning about register values\n    for  k = 0; k \u003c pCex.nRegs; k++  {\n        if Abc_InfoHasBit( pCex.pData, k ) {\n            break; }\n    }\n    if k \u003c pCex.nRegs {\n        Abc_Print( 0, \"The CEX has flop values different from 0, but they are currently not used by \\\"resim\\\".\\n\" ); }\n\n    // assign zero register values\n    for  k = 0; k \u003c Gia_ManRegNum(pAig); k++  {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for  w = 0; w \u003c nWords; w++  {\n            pInfo[w] = 0;\n        }\n    }\n    for  i = pCex.nRegs; i \u003c pCex.nBits; i++  {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k++ );\n        for  w = 0; w \u003c nWords; w++  {\n            pInfo[w] = Gia_ManRandom(0);\n        }\n        // set simulation pattern and make sure it is second (first will be erased during simulation)\n        pInfo[0] = (pInfo[0] \u003c\u003c 1) | Abc_InfoHasBit( pCex.pData, i ); \n        pInfo[0] \u003c\u003c= 1;\n    }\n    for  ; k \u003c Vec_PtrSize(vInfo); k++  {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for  w = 0; w \u003c nWords; w++  {\n            pInfo[w] = Gia_ManRandom(0);\n        }\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManSeqDeriveInfoInitRandom",
+      "Start": 3325,
+      "End": 4052,
+      "BodyStart": 3418,
+      "Original": "void Cec_ManSeqDeriveInfoInitRandom( Vec_Ptr_t * vInfo, Gia_Man_t * pAig, Abc_Cex_t * pCex )\n{\n    unsigned * pInfo;\n    int k, w, nWords;\n    nWords = Vec_PtrReadWordsSimInfo( vInfo );\n    assert( pCex == NULL || Gia_ManRegNum(pAig) == pCex-\u003enRegs );\n    assert( Gia_ManRegNum(pAig) \u003c= Vec_PtrSize(vInfo) );\n    for ( k = 0; k \u003c Gia_ManRegNum(pAig); k++ )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for ( w = 0; w \u003c nWords; w++ )\n            pInfo[w] = (pCex \u0026\u0026 Abc_InfoHasBit(pCex-\u003epData, k))? ~0 : 0;\n    }\n\n    for ( ; k \u003c Vec_PtrSize(vInfo); k++ )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for ( w = 0; w \u003c nWords; w++ )\n            pInfo[w] = Gia_ManRandom( 0 );\n    }\n}",
+      "Draft": "func Cec_ManSeqDeriveInfoInitRandom(vInfo *Vec_Ptr_t, pAig *Gia_Man_t, pCex *Abc_Cex_t) {\n    var pInfo *uint32;\n    var k, w, nWords int32;\n    nWords = Vec_PtrReadWordsSimInfo( vInfo );\n    assert(pCex == nil || Gia_ManRegNum(pAig) == pCex.nRegs, \"pCex == nil || Gia_ManRegNum(pAig) == pCex.nRegs\");\n    assert(Gia_ManRegNum(pAig) \u003c= Vec_PtrSize(vInfo), \"Gia_ManRegNum(pAig) \u003c= Vec_PtrSize(vInfo)\");\n    for  k = 0; k \u003c Gia_ManRegNum(pAig); k++  {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for  w = 0; w \u003c nWords; w++  {\n            pInfo[w] = (pCex \u0026\u0026 Abc_InfoHasBit(pCex.pData, k))? ~0 : 0;\n        }\n    }\n\n    for  ; k \u003c Vec_PtrSize(vInfo); k++  {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for  w = 0; w \u003c nWords; w++  {\n            pInfo[w] = Gia_ManRandom( 0 );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Cec_ManSeqResimulate",
+      "Start": 4345,
+      "End": 5731,
+      "BodyStart": 4409,
+      "Original": "int Cec_ManSeqResimulate( Cec_ManSim_t * p, Vec_Ptr_t * vInfo )\n{\n    unsigned * pInfo0, * pInfo1;\n    int f, i, k, w;\n//    assert( Gia_ManRegNum(p-\u003epAig) \u003e 0 );\n    assert( Vec_PtrSize(vInfo) == Gia_ManRegNum(p-\u003epAig) + Gia_ManPiNum(p-\u003epAig) * p-\u003epPars-\u003enFrames );\n    for ( k = 0; k \u003c Gia_ManRegNum(p-\u003epAig); k++ )\n    {\n        pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, k );\n        pInfo1 = (unsigned *)Vec_PtrEntry( p-\u003evCoSimInfo, Gia_ManPoNum(p-\u003epAig) + k );\n        for ( w = 0; w \u003c p-\u003enWords; w++ )\n            pInfo1[w] = pInfo0[w];\n    }\n    for ( f = 0; f \u003c p-\u003epPars-\u003enFrames; f++ )\n    {\n        for ( i = 0; i \u003c Gia_ManPiNum(p-\u003epAig); i++ )\n        {\n            pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, k++ );\n            pInfo1 = (unsigned *)Vec_PtrEntry( p-\u003evCiSimInfo, i );\n            for ( w = 0; w \u003c p-\u003enWords; w++ )\n                pInfo1[w] = pInfo0[w];\n        }\n        for ( i = 0; i \u003c Gia_ManRegNum(p-\u003epAig); i++ )\n        {\n            pInfo0 = (unsigned *)Vec_PtrEntry( p-\u003evCoSimInfo, Gia_ManPoNum(p-\u003epAig) + i );\n            pInfo1 = (unsigned *)Vec_PtrEntry( p-\u003evCiSimInfo, Gia_ManPiNum(p-\u003epAig) + i );\n            for ( w = 0; w \u003c p-\u003enWords; w++ )\n                pInfo1[w] = pInfo0[w];\n        }\n        if ( Cec_ManSimSimulateRound( p, p-\u003evCiSimInfo, p-\u003evCoSimInfo ) )\n            return 1;\n    }\n    assert( k == Vec_PtrSize(vInfo) );\n    return 0;\n}",
+      "Draft": "func Cec_ManSeqResimulate(p *Cec_ManSim_t, vInfo *Vec_Ptr_t) int32 {\n    var pInfo0, pInfo1 *uint32;\n    var f, i, k, w int32;\n//    assert( Gia_ManRegNum(p-\u003epAig) \u003e 0 );\n    assert(Vec_PtrSize(vInfo) == Gia_ManRegNum(p.pAig) + Gia_ManPiNum(p.pAig) * p.pPars.nFrames, \"Vec_PtrSize(vInfo) == Gia_ManRegNum(p.pAig) + Gia_ManPiNum(p.pAig) * p.pPars.nFrames\");\n    for  k = 0; k \u003c Gia_ManRegNum(p.pAig); k++  {\n        pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, k );\n        pInfo1 = (unsigned *)Vec_PtrEntry( p.vCoSimInfo, Gia_ManPoNum(p.pAig) + k );\n        for  w = 0; w \u003c p.nWords; w++  {\n            pInfo1[w] = pInfo0[w];\n        }\n    }\n    for  f = 0; f \u003c p.pPars.nFrames; f++  {\n        for  i = 0; i \u003c Gia_ManPiNum(p.pAig); i++  {\n            pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, k++ );\n            pInfo1 = (unsigned *)Vec_PtrEntry( p.vCiSimInfo, i );\n            for  w = 0; w \u003c p.nWords; w++  {\n                pInfo1[w] = pInfo0[w];\n            }\n        }\n        for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n            pInfo0 = (unsigned *)Vec_PtrEntry( p.vCoSimInfo, Gia_ManPoNum(p.pAig) + i );\n            pInfo1 = (unsigned *)Vec_PtrEntry( p.vCiSimInfo, Gia_ManPiNum(p.pAig) + i );\n            for  w = 0; w \u003c p.nWords; w++  {\n                pInfo1[w] = pInfo0[w];\n            }\n        }\n        if Cec_ManSimSimulateRound( p, p.vCiSimInfo, p.vCoSimInfo ) {\n            return 1; }\n    }\n    assert(k == Vec_PtrSize(vInfo), \"k == Vec_PtrSize(vInfo)\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Cec_ManSeqResimulateInfo",
+      "Start": 6021,
+      "End": 6856,
+      "BodyStart": 6133,
+      "Original": "int Cec_ManSeqResimulateInfo( Gia_Man_t * pAig, Vec_Ptr_t * vSimInfo, Abc_Cex_t * pBestState, int fCheckMiter )\n{\n    Cec_ParSim_t ParsSim, * pParsSim = \u0026ParsSim;\n    Cec_ManSim_t * pSim;\n    int RetValue;//, clkTotal = Abc_Clock();\n    assert( (Vec_PtrSize(vSimInfo) - Gia_ManRegNum(pAig)) % Gia_ManPiNum(pAig) == 0 );\n    Cec_ManSimSetDefaultParams( pParsSim );\n    pParsSim-\u003enFrames = (Vec_PtrSize(vSimInfo) - Gia_ManRegNum(pAig)) / Gia_ManPiNum(pAig);\n    pParsSim-\u003enWords  = Vec_PtrReadWordsSimInfo( vSimInfo );\n    pParsSim-\u003efCheckMiter = fCheckMiter;\n    Gia_ManCreateValueRefs( pAig );\n    pSim = Cec_ManSimStart( pAig, pParsSim );\n    if ( pBestState )\n        pSim-\u003epBestState = pBestState;\n    RetValue = Cec_ManSeqResimulate( pSim, vSimInfo );\n    pSim-\u003epBestState = NULL;\n    Cec_ManSimStop( pSim );\n    return RetValue;\n}",
+      "Draft": "func Cec_ManSeqResimulateInfo(pAig *Gia_Man_t, vSimInfo *Vec_Ptr_t, pBestState *Abc_Cex_t, fCheckMiter int32) int32 {\n    var ParsSim Cec_ParSim_t;\n    var pParsSim *Cec_ParSim_t = \u0026ParsSim;\n    var pSim *Cec_ManSim_t;\n    var RetValue int32;//, clkTotal = Abc_Clock();\n    assert((Vec_PtrSize(vSimInfo) - Gia_ManRegNum(pAig)) % Gia_ManPiNum(pAig) == 0, \"(Vec_PtrSize(vSimInfo) - Gia_ManRegNum(pAig)) % Gia_ManPiNum(pAig) == 0\");\n    Cec_ManSimSetDefaultParams( pParsSim );\n    pParsSim.nFrames = (Vec_PtrSize(vSimInfo) - Gia_ManRegNum(pAig)) / Gia_ManPiNum(pAig);\n    pParsSim.nWords  = Vec_PtrReadWordsSimInfo( vSimInfo );\n    pParsSim.fCheckMiter = fCheckMiter;\n    Gia_ManCreateValueRefs( pAig );\n    pSim = Cec_ManSimStart( pAig, pParsSim );\n    if pBestState != nil {\n        pSim.pBestState = pBestState; }\n    RetValue = Cec_ManSeqResimulate( pSim, vSimInfo );\n    pSim.pBestState = nil;\n    Cec_ManSimStop( pSim );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Cec_ManSeqResimulateCounter",
+      "Start": 7153,
+      "End": 8903,
+      "BodyStart": 7245,
+      "Original": "int Cec_ManSeqResimulateCounter( Gia_Man_t * pAig, Cec_ParSim_t * pPars, Abc_Cex_t * pCex )\n{\n    Vec_Ptr_t * vSimInfo;\n    int RetValue;\n    abctime clkTotal = Abc_Clock();\n    if ( pCex == NULL )\n    {\n        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): Counter-example is not available.\\n\" );\n        return -1;\n    }\n    if ( pAig-\u003epReprs == NULL )\n    {\n        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): Equivalence classes are not available.\\n\" );\n        return -1;\n    }\n    if ( Gia_ManRegNum(pAig) == 0 )\n    {\n        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): Not a sequential AIG.\\n\" );\n        return -1;\n    }\n//    if ( Gia_ManRegNum(pAig) != pCex-\u003enRegs || Gia_ManPiNum(pAig) != pCex-\u003enPis )\n    if ( Gia_ManPiNum(pAig) != pCex-\u003enPis )\n    {\n        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): The number of PIs in the AIG and the counter-example differ.\\n\" );\n        return -1;\n    }\n    if ( pPars-\u003efVerbose )\n        Abc_Print( 1, \"Resimulating %d timeframes.\\n\", pPars-\u003enFrames + pCex-\u003eiFrame + 1 );\n    Gia_ManRandom( 1 );\n    vSimInfo = Vec_PtrAllocSimInfo( Gia_ManRegNum(pAig) + \n        Gia_ManPiNum(pAig) * (pPars-\u003enFrames + pCex-\u003eiFrame + 1), 1 );\n    Cec_ManSeqDeriveInfoFromCex( vSimInfo, pAig, pCex );\n    if ( pPars-\u003efVerbose )\n        Gia_ManEquivPrintClasses( pAig, 0, 0 );\n    RetValue = Cec_ManSeqResimulateInfo( pAig, vSimInfo, NULL, pPars-\u003efCheckMiter );\n    if ( pPars-\u003efVerbose )\n        Gia_ManEquivPrintClasses( pAig, 0, 0 );\n    Vec_PtrFree( vSimInfo );\n    if ( pPars-\u003efVerbose )\n        ABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n//    if ( RetValue \u0026\u0026 pPars-\u003efCheckMiter )\n//        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): An output of the miter is asserted!\\n\" );\n    return RetValue;\n}",
+      "Draft": "func Cec_ManSeqResimulateCounter(pAig *Gia_Man_t, pPars *Cec_ParSim_t, pCex *Abc_Cex_t) int32 {\n    var vSimInfo *Vec_Ptr_t;\n    var RetValue int32;\n    var clkTotal abctime  = Abc_Clock();\n    if pCex == nil {\n        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): Counter-example is not available.\\n\" );\n        return -1;\n    }\n    if pAig.pReprs == nil {\n        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): Equivalence classes are not available.\\n\" );\n        return -1;\n    }\n    if Gia_ManRegNum(pAig) == 0 {\n        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): Not a sequential AIG.\\n\" );\n        return -1;\n    }\n//    if ( Gia_ManRegNum(pAig) != pCex-\u003enRegs || Gia_ManPiNum(pAig) != pCex-\u003enPis )\n    if Gia_ManPiNum(pAig) != pCex.nPis {\n        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): The number of PIs in the AIG and the counter-example differ.\\n\" );\n        return -1;\n    }\n    if pPars.fVerbose {\n        Abc_Print( 1, \"Resimulating %d timeframes.\\n\", pPars.nFrames + pCex.iFrame + 1 ); }\n    Gia_ManRandom( 1 );\n    vSimInfo = Vec_PtrAllocSimInfo( Gia_ManRegNum(pAig) + \n        Gia_ManPiNum(pAig) * (pPars.nFrames + pCex.iFrame + 1), 1 );\n    Cec_ManSeqDeriveInfoFromCex( vSimInfo, pAig, pCex );\n    if pPars.fVerbose {\n        Gia_ManEquivPrintClasses( pAig, 0, 0 ); }\n    RetValue = Cec_ManSeqResimulateInfo( pAig, vSimInfo, nil, pPars.fCheckMiter );\n    if pPars.fVerbose {\n        Gia_ManEquivPrintClasses( pAig, 0, 0 ); }\n    Vec_PtrFree( vSimInfo );\n    if pPars.fVerbose {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));; }\n//    if ( RetValue \u0026\u0026 pPars-\u003efCheckMiter )\n//        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): An output of the miter is asserted!\\n\" );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Cec_ManCountNonConstOutputs",
+      "Start": 9192,
+      "End": 9494,
+      "BodyStart": 9244,
+      "Original": "int Cec_ManCountNonConstOutputs( Gia_Man_t * pAig )\n{\n    Gia_Obj_t * pObj;\n    int i, Counter = 0;\n    if ( pAig-\u003epReprs == NULL )\n        return -1;\n    Gia_ManForEachPo( pAig, pObj, i )\n        if ( !Gia_ObjIsConst( pAig, Gia_ObjFaninId0p(pAig, pObj) ) )\n            Counter++;\n    return Counter;\n}",
+      "Draft": "func Cec_ManCountNonConstOutputs(pAig *Gia_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var i, Counter int32;\n    if pAig.pReprs == nil {\n        return -1; }\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(pAig)) \u0026\u0026 ((pObj) = Gia_ManCo(pAig, i)); i++  {\n        if !Gia_ObjIsConst( pAig, Gia_ObjFaninId0p(pAig, pObj) ) {\n            Counter++; }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Cec_ManCheckNonTrivialCands",
+      "Start": 9782,
+      "End": 10429,
+      "BodyStart": 9834,
+      "Original": "int Cec_ManCheckNonTrivialCands( Gia_Man_t * pAig )\n{\n    Gia_Obj_t * pObj;\n    int i, RetValue = 0;\n    if ( pAig-\u003epReprs == NULL )\n        return 0;\n    // label internal nodes driving POs\n    Gia_ManForEachPo( pAig, pObj, i )\n        Gia_ObjFanin0(pObj)-\u003efMark0 = 1;\n    // check if there are non-labled equivs\n    Gia_ManForEachObj( pAig, pObj, i )\n        if ( Gia_ObjIsCand(pObj) \u0026\u0026 !pObj-\u003efMark0 \u0026\u0026 Gia_ObjRepr(pAig, i) != GIA_VOID )\n        {\n            RetValue = 1;\n            break;\n        }\n    // clean internal nodes driving POs\n    Gia_ManForEachPo( pAig, pObj, i )\n        Gia_ObjFanin0(pObj)-\u003efMark0 = 0;\n    return RetValue;\n}",
+      "Draft": "func Cec_ManCheckNonTrivialCands(pAig *Gia_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var i, RetValue int32;\n    if pAig.pReprs == nil {\n        return 0; }\n    // label internal nodes driving POs\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(pAig)) \u0026\u0026 ((pObj) = Gia_ManCo(pAig, i)); i++  {\n        Gia_ObjFanin0(pObj).fMark0 = 1;\n    }\n    // check if there are non-labled equivs\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pAig, i)); i++  {\n        if Gia_ObjIsCand(pObj) \u0026\u0026 !pObj.fMark0 \u0026\u0026 Gia_ObjRepr(pAig, i) != GIA_VOID {\n            RetValue = 1;\n            break;\n        }\n    }\n    // clean internal nodes driving POs\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(pAig)) \u0026\u0026 ((pObj) = Gia_ManCo(pAig, i)); i++  {\n        Gia_ObjFanin0(pObj).fMark0 = 0;\n    }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Cec_ManSeqSemiformal",
+      "Start": 10719,
+      "End": 14890,
+      "BodyStart": 10786,
+      "Original": "int Cec_ManSeqSemiformal( Gia_Man_t * pAig, Cec_ParSmf_t * pPars )\n{ \n    int nAddFrames = 16; // additional timeframes to simulate\n    int nCountNoRef = 0;\n    int nFramesReal;\n    Cec_ParSat_t ParsSat, * pParsSat = \u0026ParsSat;\n    Vec_Ptr_t * vSimInfo; \n    Vec_Str_t * vStatus;\n    Abc_Cex_t * pState;\n    Gia_Man_t * pSrm, * pReduce, * pAux;\n    int r, nPats, RetValue = 0;\n    if ( pAig-\u003epReprs == NULL )\n    { \n        Abc_Print( 1, \"Cec_ManSeqSemiformal(): Equivalence classes are not available.\\n\" );\n        return -1;\n    }\n    if ( Gia_ManRegNum(pAig) == 0 )\n    {\n        Abc_Print( 1, \"Cec_ManSeqSemiformal(): Not a sequential AIG.\\n\" );\n        return -1;\n    }\n    Gia_ManRandom( 1 );\n    // prepare starting pattern\n    pState = Abc_CexAlloc( Gia_ManRegNum(pAig), 0, 0 );\n    pState-\u003eiFrame = -1;\n    pState-\u003eiPo = -1;\n    // prepare SAT solving\n    Cec_ManSatSetDefaultParams( pParsSat );\n    pParsSat-\u003enBTLimit = pPars-\u003enBTLimit;\n    pParsSat-\u003efVerbose = pPars-\u003efVerbose;\n    if ( pParsSat-\u003efVerbose )\n    {\n        Abc_Print( 1, \"Starting: \" );\n        Gia_ManEquivPrintClasses( pAig, 0, 0 );\n    }\n    // perform the given number of BMC rounds\n    Gia_ManCleanMark0( pAig );\n    for ( r = 0; r \u003c pPars-\u003enRounds; r++ )\n    {\n        if ( !Cec_ManCheckNonTrivialCands(pAig) )\n        {\n            Abc_Print( 1, \"Cec_ManSeqSemiformal: There are only trivial equiv candidates left (PO drivers). Quitting.\\n\" );\n            break;\n        }\n//        Abc_CexPrint( pState );\n        // derive speculatively reduced model\n//        pSrm = Gia_ManSpecReduceInit( pAig, pState, pPars-\u003enFrames, pPars-\u003efDualOut );\n        pSrm = Gia_ManSpecReduceInitFrames( pAig, pState, pPars-\u003enFrames, \u0026nFramesReal, pPars-\u003efDualOut, pPars-\u003enMinOutputs );\n        if ( pSrm == NULL )\n        {\n            Abc_Print( 1, \"Quitting refinement because miter could not be unrolled.\\n\" );\n            break;\n        }\n        assert( Gia_ManRegNum(pSrm) == 0 \u0026\u0026 Gia_ManPiNum(pSrm) == (Gia_ManPiNum(pAig) * nFramesReal) );\n        if ( pPars-\u003efVerbose )\n            Abc_Print( 1, \"Unrolled for %d frames.\\n\", nFramesReal );\n        // allocate room for simulation info\n        vSimInfo = Vec_PtrAllocSimInfo( Gia_ManRegNum(pAig) + \n            Gia_ManPiNum(pAig) * (nFramesReal + nAddFrames), pPars-\u003enWords );\n        Cec_ManSeqDeriveInfoInitRandom( vSimInfo, pAig, pState );\n        // fill in simulation info with counter-examples\n        vStatus = Cec_ManSatSolveSeq( vSimInfo, pSrm, pParsSat, Gia_ManRegNum(pAig), \u0026nPats );\n        Vec_StrFree( vStatus );\n        Gia_ManStop( pSrm );\n        // resimulate and refine the classes\n        RetValue = Cec_ManSeqResimulateInfo( pAig, vSimInfo, pState, pPars-\u003efCheckMiter );\n        Vec_PtrFree( vSimInfo );\n        assert( pState-\u003eiPo \u003e= 0 ); // hit counter\n        pState-\u003eiPo = -1;\n        if ( pPars-\u003efVerbose )\n        {\n            Abc_Print( 1, \"BMC = %3d \", nPats );\n            Gia_ManEquivPrintClasses( pAig, 0, 0 );\n        }\n\n        // write equivalence classes\n        Gia_AigerWrite( pAig, \"gore.aig\", 0, 0, 0 );\n        // reduce the model\n        pReduce = Gia_ManSpecReduce( pAig, 0, 0, 1, 0, 0 );\n        if ( pReduce )\n        {\n            pReduce = Gia_ManSeqStructSweep( pAux = pReduce, 1, 1, 0 );\n            Gia_ManStop( pAux );\n            Gia_AigerWrite( pReduce, \"gsrm.aig\", 0, 0, 0 );\n//            Abc_Print( 1, \"Speculatively reduced model was written into file \\\"%s\\\".\\n\", \"gsrm.aig\" );\n//          Gia_ManPrintStatsShort( pReduce );\n            Gia_ManStop( pReduce );\n        }\n\n        if ( RetValue )\n        {\n            Abc_Print( 1, \"Cec_ManSeqSemiformal(): An output of the miter is asserted. Refinement stopped.\\n\" );\n            break;\n        }\n        // decide when to stop\n        if ( nPats \u003e 0 )\n            nCountNoRef = 0;\n        else if ( ++nCountNoRef == pPars-\u003enNonRefines )\n            break;\n    }\n    ABC_FREE( pState );\n    if ( pPars-\u003efCheckMiter )\n    {\n        int nNonConsts = Cec_ManCountNonConstOutputs( pAig );\n        if ( nNonConsts )\n            Abc_Print( 1, \"The number of POs that are not const-0 candidates = %d.\\n\", nNonConsts );\n    }\n    return RetValue;\n}",
+      "Draft": "func Cec_ManSeqSemiformal(pAig *Gia_Man_t, pPars *Cec_ParSmf_t) int32 { \n    var nAddFrames int32  = 16; // additional timeframes to simulate\n    var nCountNoRef int32;\n    var nFramesReal int32;\n    var ParsSat Cec_ParSat_t;\n    var pParsSat *Cec_ParSat_t = \u0026ParsSat;\n    var vSimInfo *Vec_Ptr_t; \n    var vStatus *Vec_Str_t;\n    var pState *Abc_Cex_t;\n    var pSrm, pReduce, pAux *Gia_Man_t;\n    var r, nPats, RetValue int32;\n    if pAig.pReprs == nil { \n        Abc_Print( 1, \"Cec_ManSeqSemiformal(): Equivalence classes are not available.\\n\" );\n        return -1;\n    }\n    if Gia_ManRegNum(pAig) == 0 {\n        Abc_Print( 1, \"Cec_ManSeqSemiformal(): Not a sequential AIG.\\n\" );\n        return -1;\n    }\n    Gia_ManRandom( 1 );\n    // prepare starting pattern\n    pState = Abc_CexAlloc( Gia_ManRegNum(pAig), 0, 0 );\n    pState.iFrame = -1;\n    pState.iPo = -1;\n    // prepare SAT solving\n    Cec_ManSatSetDefaultParams( pParsSat );\n    pParsSat.nBTLimit = pPars.nBTLimit;\n    pParsSat.fVerbose = pPars.fVerbose;\n    if pParsSat.fVerbose {\n        Abc_Print( 1, \"Starting: \" );\n        Gia_ManEquivPrintClasses( pAig, 0, 0 );\n    }\n    // perform the given number of BMC rounds\n    Gia_ManCleanMark0( pAig );\n    for  r = 0; r \u003c pPars.nRounds; r++  {\n        if !(Cec_ManCheckNonTrivialCands(pAig) != 0) {\n            Abc_Print( 1, \"Cec_ManSeqSemiformal: There are only trivial equiv candidates left (PO drivers). Quitting.\\n\" );\n            break;\n        }\n//        Abc_CexPrint( pState );\n        // derive speculatively reduced model\n//        pSrm = Gia_ManSpecReduceInit( pAig, pState, pPars-\u003enFrames, pPars-\u003efDualOut );\n        pSrm = Gia_ManSpecReduceInitFrames( pAig, pState, pPars.nFrames, \u0026nFramesReal, pPars.fDualOut, pPars.nMinOutputs );\n        if pSrm == nil {\n            Abc_Print( 1, \"Quitting refinement because miter could not be unrolled.\\n\" );\n            break;\n        }\n        assert(Gia_ManRegNum(pSrm) == 0 \u0026\u0026 Gia_ManPiNum(pSrm) == (Gia_ManPiNum(pAig) * nFramesReal), \"Gia_ManRegNum(pSrm) == 0 \u0026\u0026 Gia_ManPiNum(pSrm) == (Gia_ManPiNum(pAig) * nFramesReal)\");\n        if pPars.fVerbose {\n            Abc_Print( 1, \"Unrolled for %d frames.\\n\", nFramesReal ); }\n        // allocate room for simulation info\n        vSimInfo = Vec_PtrAllocSimInfo( Gia_ManRegNum(pAig) + \n            Gia_ManPiNum(pAig) * (nFramesReal + nAddFrames), pPars.nWords );\n        Cec_ManSeqDeriveInfoInitRandom( vSimInfo, pAig, pState );\n        // fill in simulation info with counter-examples\n        vStatus = Cec_ManSatSolveSeq( vSimInfo, pSrm, pParsSat, Gia_ManRegNum(pAig), \u0026nPats );\n        Vec_StrFree( vStatus );\n        Gia_ManStop( pSrm );\n        // resimulate and refine the classes\n        RetValue = Cec_ManSeqResimulateInfo( pAig, vSimInfo, pState, pPars.fCheckMiter );\n        Vec_PtrFree( vSimInfo );\n        assert(pState.iPo \u003e= 0, \"pState.iPo \u003e= 0\"); // hit counter\n        pState.iPo = -1;\n        if pPars.fVerbose {\n            Abc_Print( 1, \"BMC = %3d \", nPats );\n            Gia_ManEquivPrintClasses( pAig, 0, 0 );\n        }\n\n        // write equivalence classes\n        Gia_AigerWrite( pAig, \"gore.aig\", 0, 0, 0 );\n        // reduce the model\n        pReduce = Gia_ManSpecReduce( pAig, 0, 0, 1, 0, 0 );\n        if pReduce {\n            pReduce = Gia_ManSeqStructSweep( pAux = pReduce, 1, 1, 0 );\n            Gia_ManStop( pAux );\n            Gia_AigerWrite( pReduce, \"gsrm.aig\", 0, 0, 0 );\n//            Abc_Print( 1, \"Speculatively reduced model was written into file \\\"%s\\\".\\n\", \"gsrm.aig\" );\n//          Gia_ManPrintStatsShort( pReduce );\n            Gia_ManStop( pReduce );\n        }\n\n        if RetValue != 0 {\n            Abc_Print( 1, \"Cec_ManSeqSemiformal(): An output of the miter is asserted. Refinement stopped.\\n\" );\n            break;\n        }\n        // decide when to stop\n        if nPats \u003e 0 {\n            nCountNoRef = 0;\n        } else if nCountNoRef++; nCountNoRef == pPars.nNonRefines {\n            break; }\n    }\n    // inlining of macro ABC_FREE\n    ((pState) ? (free((char *) (pState)), (pState) = 0) : 0);\n    if pPars.fCheckMiter {\n        var nNonConsts int32  = Cec_ManCountNonConstOutputs( pAig );\n        if nNonConsts != 0 {\n            Abc_Print( 1, \"The number of POs that are not const-0 candidates = %d.\\n\", nNonConsts ); }\n    }\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::pointer-cast::2349",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2349,
+      "End": 2361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::pointer-cast::2530",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2530,
+      "End": 2542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::pointer-cast::2918",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2918,
+      "End": 2930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::pointer-cast::3704",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3704,
+      "End": 3716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::pointer-cast::3925",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3925,
+      "End": 3937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::pointer-cast::4686",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4686,
+      "End": 4698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::pointer-cast::4741",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4741,
+      "End": 4753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::pointer-cast::5031",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5031,
+      "End": 5043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::pointer-cast::5092",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5092,
+      "End": 5104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::pointer-cast::5319",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5319,
+      "End": 5331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::pointer-cast::5410",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5410,
+      "End": 5422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::pointer-cast::15185",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14617,
+      "End": 14617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::Cec_ManSeqDeriveInfoFromCex",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSeqDeriveInfoFromCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1308,
+      "End": 3043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::ternary::Cec_ManSeqDeriveInfoInitRandom",
+      "Category": "ternary-review",
+      "Symbol": "Cec_ManSeqDeriveInfoInitRandom",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3325,
+      "End": 4052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::Cec_ManSeqDeriveInfoInitRandom",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSeqDeriveInfoInitRandom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3325,
+      "End": 4052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::Cec_ManSeqResimulate",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSeqResimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4345,
+      "End": 5731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::Cec_ManSeqResimulateInfo",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSeqResimulateInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6021,
+      "End": 6856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::Cec_ManSeqResimulateCounter",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSeqResimulateCounter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7153,
+      "End": 8903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::Cec_ManCountNonConstOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManCountNonConstOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9192,
+      "End": 9494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::Cec_ManCheckNonTrivialCands",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManCheckNonTrivialCands",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9782,
+      "End": 10429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::ternary::Cec_ManSeqSemiformal",
+      "Category": "ternary-review",
+      "Symbol": "Cec_ManSeqSemiformal",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10719,
+      "End": 14890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::Cec_ManSeqSemiformal",
+      "Category": "semantic-review",
+      "Symbol": "Cec_ManSeqSemiformal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10719,
+      "End": 14890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/cec/cecSeq.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15372
+    }
+  ],
+  "Draft": "package cec\n\nimport \"time\"\n\n/**CFile****************************************************************\n\n  FileName    [cecSeq.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Combinational equivalence checking.]\n\n  Synopsis    [Refinement of sequential equivalence classes.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cecSeq.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cecInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Sets register values from the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSeqDeriveInfoFromCex(vInfo *Vec_Ptr_t, pAig *Gia_Man_t, pCex *Abc_Cex_t) {\n    var pInfo *uint32;\n    var k, i, w, nWords int32;\n    assert(pCex.nBits == pCex.nRegs + pCex.nPis * (pCex.iFrame + 1), \"pCex.nBits == pCex.nRegs + pCex.nPis * (pCex.iFrame + 1)\");\n    assert(pCex.nBits - pCex.nRegs + Gia_ManRegNum(pAig) \u003c= Vec_PtrSize(vInfo), \"pCex.nBits - pCex.nRegs + Gia_ManRegNum(pAig) \u003c= Vec_PtrSize(vInfo)\");\n    nWords = Vec_PtrReadWordsSimInfo( vInfo );\n/*\n    // user register values\n    assert( pCex-\u003enRegs == Gia_ManRegNum(pAig) );\n    for ( k = 0; k \u003c pCex-\u003enRegs; k++ )\n    {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for ( w = 0; w \u003c nWords; w++ )\n            pInfo[w] = Abc_InfoHasBit( pCex-\u003epData, k )? ~0 : 0;\n    }\n*/\n    // print warning about register values\n    for  k = 0; k \u003c pCex.nRegs; k++  {\n        if Abc_InfoHasBit( pCex.pData, k ) {\n            break; }\n    }\n    if k \u003c pCex.nRegs {\n        Abc_Print( 0, \"The CEX has flop values different from 0, but they are currently not used by \\\"resim\\\".\\n\" ); }\n\n    // assign zero register values\n    for  k = 0; k \u003c Gia_ManRegNum(pAig); k++  {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for  w = 0; w \u003c nWords; w++  {\n            pInfo[w] = 0;\n        }\n    }\n    for  i = pCex.nRegs; i \u003c pCex.nBits; i++  {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k++ );\n        for  w = 0; w \u003c nWords; w++  {\n            pInfo[w] = Gia_ManRandom(0);\n        }\n        // set simulation pattern and make sure it is second (first will be erased during simulation)\n        pInfo[0] = (pInfo[0] \u003c\u003c 1) | Abc_InfoHasBit( pCex.pData, i ); \n        pInfo[0] \u003c\u003c= 1;\n    }\n    for  ; k \u003c Vec_PtrSize(vInfo); k++  {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for  w = 0; w \u003c nWords; w++  {\n            pInfo[w] = Gia_ManRandom(0);\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets register values from the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSeqDeriveInfoInitRandom(vInfo *Vec_Ptr_t, pAig *Gia_Man_t, pCex *Abc_Cex_t) {\n    var pInfo *uint32;\n    var k, w, nWords int32;\n    nWords = Vec_PtrReadWordsSimInfo( vInfo );\n    assert(pCex == nil || Gia_ManRegNum(pAig) == pCex.nRegs, \"pCex == nil || Gia_ManRegNum(pAig) == pCex.nRegs\");\n    assert(Gia_ManRegNum(pAig) \u003c= Vec_PtrSize(vInfo), \"Gia_ManRegNum(pAig) \u003c= Vec_PtrSize(vInfo)\");\n    for  k = 0; k \u003c Gia_ManRegNum(pAig); k++  {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for  w = 0; w \u003c nWords; w++  {\n            pInfo[w] = (pCex \u0026\u0026 Abc_InfoHasBit(pCex.pData, k))? ~0 : 0;\n        }\n    }\n\n    for  ; k \u003c Vec_PtrSize(vInfo); k++  {\n        pInfo = (unsigned *)Vec_PtrEntry( vInfo, k );\n        for  w = 0; w \u003c nWords; w++  {\n            pInfo[w] = Gia_ManRandom( 0 );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resimulates the classes using sequential simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSeqResimulate(p *Cec_ManSim_t, vInfo *Vec_Ptr_t) int32 {\n    var pInfo0, pInfo1 *uint32;\n    var f, i, k, w int32;\n//    assert( Gia_ManRegNum(p-\u003epAig) \u003e 0 );\n    assert(Vec_PtrSize(vInfo) == Gia_ManRegNum(p.pAig) + Gia_ManPiNum(p.pAig) * p.pPars.nFrames, \"Vec_PtrSize(vInfo) == Gia_ManRegNum(p.pAig) + Gia_ManPiNum(p.pAig) * p.pPars.nFrames\");\n    for  k = 0; k \u003c Gia_ManRegNum(p.pAig); k++  {\n        pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, k );\n        pInfo1 = (unsigned *)Vec_PtrEntry( p.vCoSimInfo, Gia_ManPoNum(p.pAig) + k );\n        for  w = 0; w \u003c p.nWords; w++  {\n            pInfo1[w] = pInfo0[w];\n        }\n    }\n    for  f = 0; f \u003c p.pPars.nFrames; f++  {\n        for  i = 0; i \u003c Gia_ManPiNum(p.pAig); i++  {\n            pInfo0 = (unsigned *)Vec_PtrEntry( vInfo, k++ );\n            pInfo1 = (unsigned *)Vec_PtrEntry( p.vCiSimInfo, i );\n            for  w = 0; w \u003c p.nWords; w++  {\n                pInfo1[w] = pInfo0[w];\n            }\n        }\n        for  i = 0; i \u003c Gia_ManRegNum(p.pAig); i++  {\n            pInfo0 = (unsigned *)Vec_PtrEntry( p.vCoSimInfo, Gia_ManPoNum(p.pAig) + i );\n            pInfo1 = (unsigned *)Vec_PtrEntry( p.vCiSimInfo, Gia_ManPiNum(p.pAig) + i );\n            for  w = 0; w \u003c p.nWords; w++  {\n                pInfo1[w] = pInfo0[w];\n            }\n        }\n        if Cec_ManSimSimulateRound( p, p.vCiSimInfo, p.vCoSimInfo ) {\n            return 1; }\n    }\n    assert(k == Vec_PtrSize(vInfo), \"k == Vec_PtrSize(vInfo)\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resimulates information to refine equivalence classes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSeqResimulateInfo(pAig *Gia_Man_t, vSimInfo *Vec_Ptr_t, pBestState *Abc_Cex_t, fCheckMiter int32) int32 {\n    var ParsSim Cec_ParSim_t;\n    var pParsSim *Cec_ParSim_t = \u0026ParsSim;\n    var pSim *Cec_ManSim_t;\n    var RetValue int32;//, clkTotal = Abc_Clock();\n    assert((Vec_PtrSize(vSimInfo) - Gia_ManRegNum(pAig)) % Gia_ManPiNum(pAig) == 0, \"(Vec_PtrSize(vSimInfo) - Gia_ManRegNum(pAig)) % Gia_ManPiNum(pAig) == 0\");\n    Cec_ManSimSetDefaultParams( pParsSim );\n    pParsSim.nFrames = (Vec_PtrSize(vSimInfo) - Gia_ManRegNum(pAig)) / Gia_ManPiNum(pAig);\n    pParsSim.nWords  = Vec_PtrReadWordsSimInfo( vSimInfo );\n    pParsSim.fCheckMiter = fCheckMiter;\n    Gia_ManCreateValueRefs( pAig );\n    pSim = Cec_ManSimStart( pAig, pParsSim );\n    if pBestState != nil {\n        pSim.pBestState = pBestState; }\n    RetValue = Cec_ManSeqResimulate( pSim, vSimInfo );\n    pSim.pBestState = nil;\n    Cec_ManSimStop( pSim );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resimuates one counter-example to refine equivalence classes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSeqResimulateCounter(pAig *Gia_Man_t, pPars *Cec_ParSim_t, pCex *Abc_Cex_t) int32 {\n    var vSimInfo *Vec_Ptr_t;\n    var RetValue int32;\n    var clkTotal abctime  = Abc_Clock();\n    if pCex == nil {\n        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): Counter-example is not available.\\n\" );\n        return -1;\n    }\n    if pAig.pReprs == nil {\n        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): Equivalence classes are not available.\\n\" );\n        return -1;\n    }\n    if Gia_ManRegNum(pAig) == 0 {\n        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): Not a sequential AIG.\\n\" );\n        return -1;\n    }\n//    if ( Gia_ManRegNum(pAig) != pCex-\u003enRegs || Gia_ManPiNum(pAig) != pCex-\u003enPis )\n    if Gia_ManPiNum(pAig) != pCex.nPis {\n        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): The number of PIs in the AIG and the counter-example differ.\\n\" );\n        return -1;\n    }\n    if pPars.fVerbose {\n        Abc_Print( 1, \"Resimulating %d timeframes.\\n\", pPars.nFrames + pCex.iFrame + 1 ); }\n    Gia_ManRandom( 1 );\n    vSimInfo = Vec_PtrAllocSimInfo( Gia_ManRegNum(pAig) + \n        Gia_ManPiNum(pAig) * (pPars.nFrames + pCex.iFrame + 1), 1 );\n    Cec_ManSeqDeriveInfoFromCex( vSimInfo, pAig, pCex );\n    if pPars.fVerbose {\n        Gia_ManEquivPrintClasses( pAig, 0, 0 ); }\n    RetValue = Cec_ManSeqResimulateInfo( pAig, vSimInfo, nil, pPars.fCheckMiter );\n    if pPars.fVerbose {\n        Gia_ManEquivPrintClasses( pAig, 0, 0 ); }\n    Vec_PtrFree( vSimInfo );\n    if pPars.fVerbose {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));; }\n//    if ( RetValue \u0026\u0026 pPars-\u003efCheckMiter )\n//        Abc_Print( 1, \"Cec_ManSeqResimulateCounter(): An output of the miter is asserted!\\n\" );\n    return RetValue;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of POs that are not const0 cands.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManCountNonConstOutputs(pAig *Gia_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var i, Counter int32;\n    if pAig.pReprs == nil {\n        return -1; }\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(pAig)) \u0026\u0026 ((pObj) = Gia_ManCo(pAig, i)); i++  {\n        if !Gia_ObjIsConst( pAig, Gia_ObjFaninId0p(pAig, pObj) ) {\n            Counter++; }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of POs that are not const0 cands.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManCheckNonTrivialCands(pAig *Gia_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var i, RetValue int32;\n    if pAig.pReprs == nil {\n        return 0; }\n    // label internal nodes driving POs\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(pAig)) \u0026\u0026 ((pObj) = Gia_ManCo(pAig, i)); i++  {\n        Gia_ObjFanin0(pObj).fMark0 = 1;\n    }\n    // check if there are non-labled equivs\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c pAig.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pAig, i)); i++  {\n        if Gia_ObjIsCand(pObj) \u0026\u0026 !pObj.fMark0 \u0026\u0026 Gia_ObjRepr(pAig, i) != GIA_VOID {\n            RetValue = 1;\n            break;\n        }\n    }\n    // clean internal nodes driving POs\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(pAig)) \u0026\u0026 ((pObj) = Gia_ManCo(pAig, i)); i++  {\n        Gia_ObjFanin0(pObj).fMark0 = 0;\n    }\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs semiformal refinement of equivalence classes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cec_ManSeqSemiformal(pAig *Gia_Man_t, pPars *Cec_ParSmf_t) int32 { \n    var nAddFrames int32  = 16; // additional timeframes to simulate\n    var nCountNoRef int32;\n    var nFramesReal int32;\n    var ParsSat Cec_ParSat_t;\n    var pParsSat *Cec_ParSat_t = \u0026ParsSat;\n    var vSimInfo *Vec_Ptr_t; \n    var vStatus *Vec_Str_t;\n    var pState *Abc_Cex_t;\n    var pSrm, pReduce, pAux *Gia_Man_t;\n    var r, nPats, RetValue int32;\n    if pAig.pReprs == nil { \n        Abc_Print( 1, \"Cec_ManSeqSemiformal(): Equivalence classes are not available.\\n\" );\n        return -1;\n    }\n    if Gia_ManRegNum(pAig) == 0 {\n        Abc_Print( 1, \"Cec_ManSeqSemiformal(): Not a sequential AIG.\\n\" );\n        return -1;\n    }\n    Gia_ManRandom( 1 );\n    // prepare starting pattern\n    pState = Abc_CexAlloc( Gia_ManRegNum(pAig), 0, 0 );\n    pState.iFrame = -1;\n    pState.iPo = -1;\n    // prepare SAT solving\n    Cec_ManSatSetDefaultParams( pParsSat );\n    pParsSat.nBTLimit = pPars.nBTLimit;\n    pParsSat.fVerbose = pPars.fVerbose;\n    if pParsSat.fVerbose {\n        Abc_Print( 1, \"Starting: \" );\n        Gia_ManEquivPrintClasses( pAig, 0, 0 );\n    }\n    // perform the given number of BMC rounds\n    Gia_ManCleanMark0( pAig );\n    for  r = 0; r \u003c pPars.nRounds; r++  {\n        if !(Cec_ManCheckNonTrivialCands(pAig) != 0) {\n            Abc_Print( 1, \"Cec_ManSeqSemiformal: There are only trivial equiv candidates left (PO drivers). Quitting.\\n\" );\n            break;\n        }\n//        Abc_CexPrint( pState );\n        // derive speculatively reduced model\n//        pSrm = Gia_ManSpecReduceInit( pAig, pState, pPars-\u003enFrames, pPars-\u003efDualOut );\n        pSrm = Gia_ManSpecReduceInitFrames( pAig, pState, pPars.nFrames, \u0026nFramesReal, pPars.fDualOut, pPars.nMinOutputs );\n        if pSrm == nil {\n            Abc_Print( 1, \"Quitting refinement because miter could not be unrolled.\\n\" );\n            break;\n        }\n        assert(Gia_ManRegNum(pSrm) == 0 \u0026\u0026 Gia_ManPiNum(pSrm) == (Gia_ManPiNum(pAig) * nFramesReal), \"Gia_ManRegNum(pSrm) == 0 \u0026\u0026 Gia_ManPiNum(pSrm) == (Gia_ManPiNum(pAig) * nFramesReal)\");\n        if pPars.fVerbose {\n            Abc_Print( 1, \"Unrolled for %d frames.\\n\", nFramesReal ); }\n        // allocate room for simulation info\n        vSimInfo = Vec_PtrAllocSimInfo( Gia_ManRegNum(pAig) + \n            Gia_ManPiNum(pAig) * (nFramesReal + nAddFrames), pPars.nWords );\n        Cec_ManSeqDeriveInfoInitRandom( vSimInfo, pAig, pState );\n        // fill in simulation info with counter-examples\n        vStatus = Cec_ManSatSolveSeq( vSimInfo, pSrm, pParsSat, Gia_ManRegNum(pAig), \u0026nPats );\n        Vec_StrFree( vStatus );\n        Gia_ManStop( pSrm );\n        // resimulate and refine the classes\n        RetValue = Cec_ManSeqResimulateInfo( pAig, vSimInfo, pState, pPars.fCheckMiter );\n        Vec_PtrFree( vSimInfo );\n        assert(pState.iPo \u003e= 0, \"pState.iPo \u003e= 0\"); // hit counter\n        pState.iPo = -1;\n        if pPars.fVerbose {\n            Abc_Print( 1, \"BMC = %3d \", nPats );\n            Gia_ManEquivPrintClasses( pAig, 0, 0 );\n        }\n\n        // write equivalence classes\n        Gia_AigerWrite( pAig, \"gore.aig\", 0, 0, 0 );\n        // reduce the model\n        pReduce = Gia_ManSpecReduce( pAig, 0, 0, 1, 0, 0 );\n        if pReduce {\n            pReduce = Gia_ManSeqStructSweep( pAux = pReduce, 1, 1, 0 );\n            Gia_ManStop( pAux );\n            Gia_AigerWrite( pReduce, \"gsrm.aig\", 0, 0, 0 );\n//            Abc_Print( 1, \"Speculatively reduced model was written into file \\\"%s\\\".\\n\", \"gsrm.aig\" );\n//          Gia_ManPrintStatsShort( pReduce );\n            Gia_ManStop( pReduce );\n        }\n\n        if RetValue != 0 {\n            Abc_Print( 1, \"Cec_ManSeqSemiformal(): An output of the miter is asserted. Refinement stopped.\\n\" );\n            break;\n        }\n        // decide when to stop\n        if nPats \u003e 0 {\n            nCountNoRef = 0;\n        } else if nCountNoRef++; nCountNoRef == pPars.nNonRefines {\n            break; }\n    }\n    // inlining of macro ABC_FREE\n    ((pState) ? (free((char *) (pState)), (pState) = 0) : 0);\n    if pPars.fCheckMiter {\n        var nNonConsts int32  = Cec_ManCountNonConstOutputs( pAig );\n        if nNonConsts != 0 {\n            Abc_Print( 1, \"The number of POs that are not const-0 candidates = %d.\\n\", nNonConsts ); }\n    }\n    return RetValue;\n}\n\n//\u0026r s13207.aig; \u0026ps; \u0026equiv; \u0026ps; \u0026semi -R 2 -vm\n//\u0026r bug/50/temp.aig; \u0026ps; \u0026equiv -smv; \u0026semi -v\n//r mentor/1_05c.blif; st; \u0026get; \u0026ps; \u0026equiv -smv; \u0026semi -mv\n//\u0026r bug/50/hdl1.aig; \u0026ps; \u0026equiv -smv; \u0026semi -mv; \u0026srm; \u0026r gsrm.aig; \u0026ps\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

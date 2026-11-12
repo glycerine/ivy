@@ -1,0 +1,485 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c",
+  "SHA256": "36b623b5d3f12e4938adfaa78e731e4fcf81558d0ae724442381f86b25be2cb6",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Total == p.nNodesCur );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 19,
+        "ByteOffset": 4917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pWidthStart = ABC_ALLOC( int, p.nSupp + 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 19,
+        "ByteOffset": 4966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pWidthStop  = ABC_ALLOC( int, p.nSupp + 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 139,
+        "Column": 5,
+        "ByteOffset": 5001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pWidthStart, 0, sizeof(int) * (p.nSupp + 1) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 5060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pWidthStop, 0, sizeof(int) * (p.nSupp + 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 9,
+        "ByteOffset": 7179
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Level %2d: Width = %5d.\\n\", v, p.pPlanes[v].statsWidth );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 7287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pWidthStart );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 7316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pWidthStop );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 291,
+        "Column": 5,
+        "ByteOffset": 9964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"NODES: Total = %6d. Average = %6.2f.\\n\", p.nNodesCur, p.nNodesCur / float32(p.nSupp) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 5,
+        "ByteOffset": 10339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"APL: Total = %8.2f. Average =%6.2f.\\n\", p.nAplCur, p.nAplCur / float32(p.nSupp) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 328,
+        "Column": 9,
+        "ByteOffset": 10860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Level = %2d. Width = %3d.\\n\", i, p.pPlanes[i].statsWidth );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 333,
+        "Column": 5,
+        "ByteOffset": 11085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nWidthCur == TotalWidth );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 334,
+        "Column": 5,
+        "ByteOffset": 11126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"WIDTH: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 335,
+        "Column": 5,
+        "ByteOffset": 11151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Maximum = %5d.  \", WidthMax );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 336,
+        "Column": 5,
+        "ByteOffset": 11195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total = %7d.  \", p.nWidthCur );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 337,
+        "Column": 5,
+        "ByteOffset": 11240
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Average = %6.2f.\\n\", TotalWidth / float32(p.nSupp) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 354,
+        "Column": 9,
+        "ByteOffset": 11698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pUnit.TopRef     \u003c= Level );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 355,
+        "Column": 9,
+        "ByteOffset": 11743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pUnit.pE.TopRef \u003c= Level + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 356,
+        "Column": 9,
+        "ByteOffset": 11791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pUnit.pT.TopRef \u003c= Level + 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "reoProfileNodesStart",
+      "Start": 1422,
+      "End": 1722,
+      "BodyStart": 1463,
+      "Original": "void reoProfileNodesStart( reo_man * p )\n{\n    int Total, i;\n    Total = 0;\n    for ( i = 0; i \u003c= p-\u003enSupp; i++ )\n    {\n        p-\u003epPlanes[i].statsCost = p-\u003epPlanes[i].statsNodes;\n        Total += p-\u003epPlanes[i].statsNodes;\n    }\n    assert( Total == p-\u003enNodesCur );\n    p-\u003enNodesBeg = p-\u003enNodesCur;\n}",
+      "Draft": "func reoProfileNodesStart(p *reo_man) {\n    var Total, i int32;\n    Total = 0;\n    for  i = 0; i \u003c= p.nSupp; i++  {\n        p.pPlanes[i].statsCost = p.pPlanes[i].statsNodes;\n        Total += p.pPlanes[i].statsNodes;\n    }\n    assert(Total == p.nNodesCur, \"Total == p.nNodesCur\");\n    p.nNodesBeg = p.nNodesCur;\n}"
+    },
+    {
+      "Name": "reoProfileAplStart",
+      "Start": 2672,
+      "End": 4000,
+      "BodyStart": 2711,
+      "Original": "void reoProfileAplStart( reo_man * p )\n{\n    reo_unit * pER, * pTR;\n    reo_unit * pUnit;\n    double Res, Half;\n    int i;\n\n    // clean the weights of all nodes\n    for ( i = 0; i \u003c p-\u003enSupp; i++ )\n        for ( pUnit = p-\u003epPlanes[i].pHead; pUnit; pUnit = pUnit-\u003eNext )\n            pUnit-\u003eWeight = 0.0;\n    // to assign the node weights (the probability of visiting each node)\n    // we visit the node after visiting its predecessors\n\n    // set the probability of visits to the top nodes\n    for ( i = 0; i \u003c p-\u003enTops; i++ )\n        Unit_Regular(p-\u003epTops[i])-\u003eWeight += 1.0;\n\n    // to compute the path length (the sum of products of edge weight by edge length)\n    // we visit the nodes in any order (the above order will do)\n    Res = 0.0;\n    for ( i = 0; i \u003c p-\u003enSupp; i++ )\n    {\n        p-\u003epPlanes[i].statsCost = 0.0;\n        for ( pUnit = p-\u003epPlanes[i].pHead; pUnit; pUnit = pUnit-\u003eNext )\n        {\n            pER  = Unit_Regular(pUnit-\u003epE);\n            pTR  = Unit_Regular(pUnit-\u003epT);\n            Half = 0.5 * pUnit-\u003eWeight;\n            pER-\u003eWeight += Half;\n            pTR-\u003eWeight += Half;\n            // add to the path length\n            p-\u003epPlanes[i].statsCost += pUnit-\u003eWeight;\n        }\n        Res += p-\u003epPlanes[i].statsCost;\n    }\n    p-\u003epPlanes[p-\u003enSupp].statsCost = 0.0;\n    p-\u003enAplBeg = p-\u003enAplCur = Res;\n}",
+      "Draft": "func reoProfileAplStart(p *reo_man) {\n    var pER, pTR *reo_unit;\n    var pUnit *reo_unit;\n    var Res, Half float64;\n    var i int32;\n\n    // clean the weights of all nodes\n    for  i = 0; i \u003c p.nSupp; i++  {\n        for  pUnit = p.pPlanes[i].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n            pUnit.Weight = 0.0;\n        }\n    }\n    // to assign the node weights (the probability of visiting each node)\n    // we visit the node after visiting its predecessors\n\n    // set the probability of visits to the top nodes\n    for  i = 0; i \u003c p.nTops; i++  {\n        // inlining of macro Unit_Regular\n        ((reo_unit *)((ABC_PTRUINT_T)(p.pTops[i]) \u0026 ~01)).Weight += 1.0;\n    }\n\n    // to compute the path length (the sum of products of edge weight by edge length)\n    // we visit the nodes in any order (the above order will do)\n    Res = 0.0;\n    for  i = 0; i \u003c p.nSupp; i++  {\n        p.pPlanes[i].statsCost = 0.0;\n        for  pUnit = p.pPlanes[i].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n            // inlining of macro Unit_Regular\n            pER  = ((reo_unit *)((ABC_PTRUINT_T)(pUnit.pE) \u0026 ~01));\n            // inlining of macro Unit_Regular\n            pTR  = ((reo_unit *)((ABC_PTRUINT_T)(pUnit.pT) \u0026 ~01));\n            Half = 0.5 * pUnit.Weight;\n            pER.Weight += Half;\n            pTR.Weight += Half;\n            // add to the path length\n            p.pPlanes[i].statsCost += pUnit.Weight;\n        }\n        Res += p.pPlanes[i].statsCost;\n    }\n    p.pPlanes[p.nSupp].statsCost = 0.0;\n    p.nAplBeg = p.nAplCur = Res;\n}"
+    },
+    {
+      "Name": "reoProfileWidthStart",
+      "Start": 4469,
+      "End": 7124,
+      "BodyStart": 4510,
+      "Original": "void reoProfileWidthStart( reo_man * p )\n{\n    reo_unit * pUnit;\n    int * pWidthStart;\n    int * pWidthStop;\n    int v;\n\n    // allocate and clean the storage for starting and stopping levels\n    pWidthStart = ABC_ALLOC( int, p-\u003enSupp + 1 );\n    pWidthStop  = ABC_ALLOC( int, p-\u003enSupp + 1 );\n    memset( pWidthStart, 0, sizeof(int) * (p-\u003enSupp + 1) );\n    memset( pWidthStop, 0, sizeof(int) * (p-\u003enSupp + 1) );\n\n    // go through the non-constant nodes and set the topmost level of their cofactors\n    for ( v = 0; v \u003c= p-\u003enSupp; v++ )\n    for ( pUnit = p-\u003epPlanes[v].pHead; pUnit; pUnit = pUnit-\u003eNext )\n    {\n        pUnit-\u003eTopRef = REO_TOPREF_UNDEF;\n        pUnit-\u003eSign   = 0;\n    }\n\n    // add the topmost level of the width profile\n    for ( v = 0; v \u003c p-\u003enTops; v++ )\n    {\n        pUnit = Unit_Regular(p-\u003epTops[v]);\n        if ( pUnit-\u003eTopRef == REO_TOPREF_UNDEF )\n        {\n            // set the starting level\n            pUnit-\u003eTopRef = 0;\n            pWidthStart[pUnit-\u003eTopRef]++;\n            // set the stopping level\n            if ( pUnit-\u003elev != REO_CONST_LEVEL )\n                pWidthStop[pUnit-\u003elev+1]++;\n        }\n    }\n\n    for ( v = 0; v \u003c p-\u003enSupp; v++ )\n    for ( pUnit = p-\u003epPlanes[v].pHead; pUnit; pUnit = pUnit-\u003eNext )\n    {\n        if ( pUnit-\u003epE-\u003eTopRef == REO_TOPREF_UNDEF )\n        {\n            // set the starting level\n            pUnit-\u003epE-\u003eTopRef = pUnit-\u003elev + 1;\n            pWidthStart[pUnit-\u003epE-\u003eTopRef]++;\n            // set the stopping level\n            if ( pUnit-\u003epE-\u003elev != REO_CONST_LEVEL )\n                pWidthStop[pUnit-\u003epE-\u003elev+1]++;\n        }\n        if ( pUnit-\u003epT-\u003eTopRef == REO_TOPREF_UNDEF )\n        {\n            // set the starting level\n            pUnit-\u003epT-\u003eTopRef = pUnit-\u003elev + 1;\n            pWidthStart[pUnit-\u003epT-\u003eTopRef]++;\n            // set the stopping level\n            if ( pUnit-\u003epT-\u003elev != REO_CONST_LEVEL )\n                pWidthStop[pUnit-\u003epT-\u003elev+1]++;\n        }\n    }\n\n    // verify the top reference\n    for ( v = 0; v \u003c p-\u003enSupp; v++ )\n        reoProfileWidthVerifyLevel( p-\u003epPlanes + v, v );\n\n    // derive the profile\n    p-\u003enWidthCur = 0;\n    for ( v = 0; v \u003c= p-\u003enSupp; v++ )\n    {\n        if ( v == 0 )\n            p-\u003epPlanes[v].statsWidth = pWidthStart[v] - pWidthStop[v];\n        else\n            p-\u003epPlanes[v].statsWidth = p-\u003epPlanes[v-1].statsWidth + pWidthStart[v] - pWidthStop[v];\n        p-\u003epPlanes[v].statsCost = p-\u003epPlanes[v].statsWidth;\n        p-\u003enWidthCur += p-\u003epPlanes[v].statsWidth;\n        printf( \"Level %2d: Width = %5d.\\n\", v, p-\u003epPlanes[v].statsWidth );\n    }\n    p-\u003enWidthBeg = p-\u003enWidthCur;\n    ABC_FREE( pWidthStart );\n    ABC_FREE( pWidthStop );\n}",
+      "Draft": "func reoProfileWidthStart(p *reo_man) {\n    var pUnit *reo_unit;\n    var pWidthStart *int32;\n    var pWidthStop *int32;\n    var v int32;\n\n    // allocate and clean the storage for starting and stopping levels\n    pWidthStart = ABC_ALLOC( int, p.nSupp + 1 );\n    pWidthStop  = ABC_ALLOC( int, p.nSupp + 1 );\n    memset( pWidthStart, 0, sizeof(int) * (p.nSupp + 1) );\n    memset( pWidthStop, 0, sizeof(int) * (p.nSupp + 1) );\n\n    // go through the non-constant nodes and set the topmost level of their cofactors\n    for  v = 0; v \u003c= p.nSupp; v++  {\n    for  pUnit = p.pPlanes[v].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n        pUnit.TopRef = REO_TOPREF_UNDEF;\n        pUnit.Sign   = 0;\n    }\n    }\n\n    // add the topmost level of the width profile\n    for  v = 0; v \u003c p.nTops; v++  {\n        // inlining of macro Unit_Regular\n        pUnit = ((reo_unit *)((ABC_PTRUINT_T)(p.pTops[v]) \u0026 ~01));\n        if pUnit.TopRef == REO_TOPREF_UNDEF {\n            // set the starting level\n            pUnit.TopRef = 0;\n            pWidthStart[pUnit.TopRef]++;\n            // set the stopping level\n            if pUnit.lev != REO_CONST_LEVEL {\n                pWidthStop[pUnit.lev+1]++; }\n        }\n    }\n\n    for  v = 0; v \u003c p.nSupp; v++  {\n    for  pUnit = p.pPlanes[v].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n        if pUnit.pE.TopRef == REO_TOPREF_UNDEF {\n            // set the starting level\n            pUnit.pE.TopRef = pUnit.lev + 1;\n            pWidthStart[pUnit.pE.TopRef]++;\n            // set the stopping level\n            if pUnit.pE.lev != REO_CONST_LEVEL {\n                pWidthStop[pUnit.pE.lev+1]++; }\n        }\n        if pUnit.pT.TopRef == REO_TOPREF_UNDEF {\n            // set the starting level\n            pUnit.pT.TopRef = pUnit.lev + 1;\n            pWidthStart[pUnit.pT.TopRef]++;\n            // set the stopping level\n            if pUnit.pT.lev != REO_CONST_LEVEL {\n                pWidthStop[pUnit.pT.lev+1]++; }\n        }\n    }\n    }\n\n    // verify the top reference\n    for  v = 0; v \u003c p.nSupp; v++  {\n        reoProfileWidthVerifyLevel( p.pPlanes + v, v );\n    }\n\n    // derive the profile\n    p.nWidthCur = 0;\n    for  v = 0; v \u003c= p.nSupp; v++  {\n        if v == 0 {\n            p.pPlanes[v].statsWidth = pWidthStart[v] - pWidthStop[v];\n        } else {\n            p.pPlanes[v].statsWidth = p.pPlanes[v-1].statsWidth + pWidthStart[v] - pWidthStop[v]; }\n        p.pPlanes[v].statsCost = p.pPlanes[v].statsWidth;\n        p.nWidthCur += p.pPlanes[v].statsWidth;\n        fmt.Printf(\"Level %2d: Width = %5d.\\n\", v, p.pPlanes[v].statsWidth);\n    }\n    p.nWidthBeg = p.nWidthCur;\n    ABC_FREE( pWidthStart );\n    ABC_FREE( pWidthStop );\n}"
+    },
+    {
+      "Name": "reoProfileWidthStart2",
+      "Start": 7593,
+      "End": 9378,
+      "BodyStart": 7635,
+      "Original": "void reoProfileWidthStart2( reo_man * p )\n{\n    reo_unit * pUnit;\n    int i, v;\n\n    // clean the profile\n    for ( i = 0; i \u003c= p-\u003enSupp; i++ )\n        p-\u003epPlanes[i].statsWidth = 0;\n    \n    // clean the node structures\n    for ( v = 0; v \u003c= p-\u003enSupp; v++ )\n    for ( pUnit = p-\u003epPlanes[v].pHead; pUnit; pUnit = pUnit-\u003eNext )\n    {\n        pUnit-\u003eTopRef = REO_TOPREF_UNDEF;\n        pUnit-\u003eSign   = 0;\n    }\n\n    // set the topref to the topmost nodes\n    for ( i = 0; i \u003c p-\u003enTops; i++ )\n        Unit_Regular(p-\u003epTops[i])-\u003eTopRef = 0;\n\n    // go through the non-constant nodes and set the topmost level of their cofactors\n    for ( i = 0; i \u003c p-\u003enSupp; i++ )\n        for ( pUnit = p-\u003epPlanes[i].pHead; pUnit; pUnit = pUnit-\u003eNext )\n        {\n            if ( pUnit-\u003epE-\u003eTopRef \u003e i+1 )\n                 pUnit-\u003epE-\u003eTopRef = i+1;\n            if ( pUnit-\u003epT-\u003eTopRef \u003e i+1 )\n                 pUnit-\u003epT-\u003eTopRef = i+1;\n        }\n\n    // verify the top reference\n    for ( i = 0; i \u003c p-\u003enSupp; i++ )\n        reoProfileWidthVerifyLevel( p-\u003epPlanes + i, i );\n\n    // compute the profile for the internal nodes\n    for ( i = 0; i \u003c p-\u003enSupp; i++ )\n        for ( pUnit = p-\u003epPlanes[i].pHead; pUnit; pUnit = pUnit-\u003eNext )\n            for ( v = pUnit-\u003eTopRef; v \u003c= pUnit-\u003elev; v++ )\n                p-\u003epPlanes[v].statsWidth++;\n\n    // compute the profile for the constant nodes\n    for ( pUnit = p-\u003epPlanes[p-\u003enSupp].pHead; pUnit; pUnit = pUnit-\u003eNext )\n        for ( v = pUnit-\u003eTopRef; v \u003c= p-\u003enSupp; v++ )\n            p-\u003epPlanes[v].statsWidth++;\n\n    // get the width cost\n    p-\u003enWidthCur = 0;\n    for ( i = 0; i \u003c= p-\u003enSupp; i++ )\n    {\n        p-\u003epPlanes[i].statsCost = p-\u003epPlanes[i].statsWidth;\n        p-\u003enWidthCur           += p-\u003epPlanes[i].statsWidth;\n    }\n    p-\u003enWidthBeg = p-\u003enWidthCur;\n}",
+      "Draft": "func reoProfileWidthStart2(p *reo_man) {\n    var pUnit *reo_unit;\n    var i, v int32;\n\n    // clean the profile\n    for  i = 0; i \u003c= p.nSupp; i++  {\n        p.pPlanes[i].statsWidth = 0;\n    }\n    \n    // clean the node structures\n    for  v = 0; v \u003c= p.nSupp; v++  {\n    for  pUnit = p.pPlanes[v].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n        pUnit.TopRef = REO_TOPREF_UNDEF;\n        pUnit.Sign   = 0;\n    }\n    }\n\n    // set the topref to the topmost nodes\n    for  i = 0; i \u003c p.nTops; i++  {\n        // inlining of macro Unit_Regular\n        ((reo_unit *)((ABC_PTRUINT_T)(p.pTops[i]) \u0026 ~01)).TopRef = 0;\n    }\n\n    // go through the non-constant nodes and set the topmost level of their cofactors\n    for  i = 0; i \u003c p.nSupp; i++  {\n        for  pUnit = p.pPlanes[i].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n            if pUnit.pE.TopRef \u003e i+1 {\n                 pUnit.pE.TopRef = i+1; }\n            if pUnit.pT.TopRef \u003e i+1 {\n                 pUnit.pT.TopRef = i+1; }\n        }\n    }\n\n    // verify the top reference\n    for  i = 0; i \u003c p.nSupp; i++  {\n        reoProfileWidthVerifyLevel( p.pPlanes + i, i );\n    }\n\n    // compute the profile for the internal nodes\n    for  i = 0; i \u003c p.nSupp; i++  {\n        for  pUnit = p.pPlanes[i].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n            for  v = pUnit.TopRef; v \u003c= pUnit.lev; v++  {\n                p.pPlanes[v].statsWidth++;\n            }\n        }\n    }\n\n    // compute the profile for the constant nodes\n    for  pUnit = p.pPlanes[p.nSupp].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n        for  v = pUnit.TopRef; v \u003c= p.nSupp; v++  {\n            p.pPlanes[v].statsWidth++;\n        }\n    }\n\n    // get the width cost\n    p.nWidthCur = 0;\n    for  i = 0; i \u003c= p.nSupp; i++  {\n        p.pPlanes[i].statsCost = p.pPlanes[i].statsWidth;\n        p.nWidthCur           += p.pPlanes[i].statsWidth;\n    }\n    p.nWidthBeg = p.nWidthCur;\n}"
+    },
+    {
+      "Name": "reoProfileNodesPrint",
+      "Start": 9613,
+      "End": 9759,
+      "BodyStart": 9654,
+      "Original": "void reoProfileNodesPrint( reo_man * p )\n{\n    printf( \"NODES: Total = %6d. Average = %6.2f.\\n\", p-\u003enNodesCur, p-\u003enNodesCur / (float)p-\u003enSupp );\n}",
+      "Draft": "func reoProfileNodesPrint(p *reo_man) {\n    fmt.Printf(\"NODES: Total = %6d. Average = %6.2f.\\n\", p.nNodesCur, p.nNodesCur / float32(p.nSupp));\n}"
+    },
+    {
+      "Name": "reoProfileAplPrint",
+      "Start": 9994,
+      "End": 10133,
+      "BodyStart": 10033,
+      "Original": "void reoProfileAplPrint( reo_man * p )\n{\n    printf( \"APL: Total = %8.2f. Average =%6.2f.\\n\", p-\u003enAplCur, p-\u003enAplCur / (float)p-\u003enSupp );\n}",
+      "Draft": "func reoProfileAplPrint(p *reo_man) {\n    fmt.Printf(\"APL: Total = %8.2f. Average =%6.2f.\\n\", p.nAplCur, p.nAplCur / float32(p.nSupp));\n}"
+    },
+    {
+      "Name": "reoProfileWidthPrint",
+      "Start": 10368,
+      "End": 11002,
+      "BodyStart": 10409,
+      "Original": "void reoProfileWidthPrint( reo_man * p )\n{\n    int WidthMax;\n    int TotalWidth;\n    int i;\n\n    WidthMax   = 0;\n    TotalWidth = 0;\n    for ( i = 0; i \u003c= p-\u003enSupp; i++ )\n    {\n        printf( \"Level = %2d. Width = %3d.\\n\", i, p-\u003epPlanes[i].statsWidth );\n        if ( WidthMax \u003c p-\u003epPlanes[i].statsWidth )\n             WidthMax = p-\u003epPlanes[i].statsWidth;\n        TotalWidth += p-\u003epPlanes[i].statsWidth;\n    }\n    assert( p-\u003enWidthCur == TotalWidth );\n    printf( \"WIDTH: \" );\n    printf( \"Maximum = %5d.  \", WidthMax );\n    printf( \"Total = %7d.  \", p-\u003enWidthCur );\n    printf( \"Average = %6.2f.\\n\", TotalWidth / (float)p-\u003enSupp );\n}",
+      "Draft": "func reoProfileWidthPrint(p *reo_man) {\n    var WidthMax int32;\n    var TotalWidth int32;\n    var i int32;\n\n    WidthMax   = 0;\n    TotalWidth = 0;\n    for  i = 0; i \u003c= p.nSupp; i++  {\n        fmt.Printf(\"Level = %2d. Width = %3d.\\n\", i, p.pPlanes[i].statsWidth);\n        if WidthMax \u003c p.pPlanes[i].statsWidth {\n             WidthMax = p.pPlanes[i].statsWidth; }\n        TotalWidth += p.pPlanes[i].statsWidth;\n    }\n    assert(p.nWidthCur == TotalWidth, \"p.nWidthCur == TotalWidth\");\n    fmt.Printf(\"WIDTH: \");\n    fmt.Printf(\"Maximum = %5d.  \", WidthMax);\n    fmt.Printf(\"Total = %7d.  \", p.nWidthCur);\n    fmt.Printf(\"Average = %6.2f.\\n\", TotalWidth / float32(p.nSupp));\n}"
+    },
+    {
+      "Name": "reoProfileWidthVerifyLevel",
+      "Start": 11237,
+      "End": 11547,
+      "BodyStart": 11302,
+      "Original": "void reoProfileWidthVerifyLevel( reo_plane * pPlane, int Level )\n{\n    reo_unit * pUnit;\n    for ( pUnit = pPlane-\u003epHead; pUnit; pUnit = pUnit-\u003eNext )\n    {\n        assert( pUnit-\u003eTopRef     \u003c= Level );\n        assert( pUnit-\u003epE-\u003eTopRef \u003c= Level + 1 );\n        assert( pUnit-\u003epT-\u003eTopRef \u003c= Level + 1 );\n    }\n}",
+      "Draft": "func reoProfileWidthVerifyLevel(pPlane *reo_plane, Level int32) {\n    var pUnit *reo_unit;\n    for  pUnit = pPlane.pHead; (pUnit != nil); pUnit = pUnit.Next  {\n        assert(pUnit.TopRef     \u003c= Level, \"pUnit.TopRef     \u003c= Level\");\n        assert(pUnit.pE.TopRef \u003c= Level + 1, \"pUnit.pE.TopRef \u003c= Level + 1\");\n        assert(pUnit.pT.TopRef \u003c= Level + 1, \"pUnit.pT.TopRef \u003c= Level + 1\");\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::mechanical::sizeof::5009",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4790,
+      "End": 4796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::mechanical::sizeof::5068",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4849,
+      "End": 4855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::pointer-cast::3256",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3207,
+      "End": 3207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::pointer-cast::3721",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3599,
+      "End": 3599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::pointer-cast::3838",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3643,
+      "End": 3643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::pointer-cast::5533",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5265,
+      "End": 5265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::pointer-cast::8430",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8089,
+      "End": 8089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::reoProfileNodesStart",
+      "Category": "semantic-review",
+      "Symbol": "reoProfileNodesStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1422,
+      "End": 1722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::reoProfileAplStart",
+      "Category": "semantic-review",
+      "Symbol": "reoProfileAplStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2672,
+      "End": 4000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::reoProfileWidthStart",
+      "Category": "semantic-review",
+      "Symbol": "reoProfileWidthStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4469,
+      "End": 7124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::reoProfileWidthStart2",
+      "Category": "semantic-review",
+      "Symbol": "reoProfileWidthStart2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7593,
+      "End": 9378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::reoProfileNodesPrint",
+      "Category": "semantic-review",
+      "Symbol": "reoProfileNodesPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9613,
+      "End": 9759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::reoProfileAplPrint",
+      "Category": "semantic-review",
+      "Symbol": "reoProfileAplPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9994,
+      "End": 10133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::reoProfileWidthPrint",
+      "Category": "semantic-review",
+      "Symbol": "reoProfileWidthPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10368,
+      "End": 11002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::reoProfileWidthVerifyLevel",
+      "Category": "semantic-review",
+      "Symbol": "reoProfileWidthVerifyLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11237,
+      "End": 11547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::macro-inline::4680",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4680,
+      "End": 4710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::macro-inline::4730",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4730,
+      "End": 4760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::macro-inline::7070",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7070,
+      "End": 7093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoProfile.c::macro-inline::7099",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7099,
+      "End": 7121
+    }
+  ],
+  "Draft": "package reo\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [reoProfile.c]\n\n  PackageName [REO: A specialized DD reordering engine.]\n\n  Synopsis    [Procudures that compute variables profiles (nodes, width, APL).]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 15, 2002.]\n\n  Revision    [$Id: reoProfile.c,v 1.0 2002/15/10 03:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"reo.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function********************************************************************\n\n  Synopsis    [Start the profile for the BDD nodes.]\n\n  Description [TopRef is the first level, on this the given node counts towards \n  the width of the BDDs. (In other words, it is the level of the referencing node plus 1.)]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc reoProfileNodesStart(p *reo_man) {\n    var Total, i int32;\n    Total = 0;\n    for  i = 0; i \u003c= p.nSupp; i++  {\n        p.pPlanes[i].statsCost = p.pPlanes[i].statsNodes;\n        Total += p.pPlanes[i].statsNodes;\n    }\n    assert(Total == p.nNodesCur, \"Total == p.nNodesCur\");\n    p.nNodesBeg = p.nNodesCur;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Start the profile for the APL.]\n\n  Description [Computes the total path length. The path length is normalized\n  by dividing it by 2^|supp(f)|. To get the \"real\" APL, multiply by 2^|supp(f)|.\n  This procedure assumes that Weight field of all nodes has been set to 0.0 \n  before the call, except for the weight of the topmost node, which is set to 1.0 \n  (1.0 is the probability of traversing the topmost node). This procedure \n  assigns the edge weights. Because of the equal probability of selecting 0 and 1 \n  assignment at a node, the edge weights are the same for the node. \n  Instead of storing them, we store the weight of the node, which is the probability \n  of traversing the node (pUnit-\u003eWeight) during the top down evalation of the BDD. ]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc reoProfileAplStart(p *reo_man) {\n    var pER, pTR *reo_unit;\n    var pUnit *reo_unit;\n    var Res, Half float64;\n    var i int32;\n\n    // clean the weights of all nodes\n    for  i = 0; i \u003c p.nSupp; i++  {\n        for  pUnit = p.pPlanes[i].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n            pUnit.Weight = 0.0;\n        }\n    }\n    // to assign the node weights (the probability of visiting each node)\n    // we visit the node after visiting its predecessors\n\n    // set the probability of visits to the top nodes\n    for  i = 0; i \u003c p.nTops; i++  {\n        // inlining of macro Unit_Regular\n        ((reo_unit *)((ABC_PTRUINT_T)(p.pTops[i]) \u0026 ~01)).Weight += 1.0;\n    }\n\n    // to compute the path length (the sum of products of edge weight by edge length)\n    // we visit the nodes in any order (the above order will do)\n    Res = 0.0;\n    for  i = 0; i \u003c p.nSupp; i++  {\n        p.pPlanes[i].statsCost = 0.0;\n        for  pUnit = p.pPlanes[i].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n            // inlining of macro Unit_Regular\n            pER  = ((reo_unit *)((ABC_PTRUINT_T)(pUnit.pE) \u0026 ~01));\n            // inlining of macro Unit_Regular\n            pTR  = ((reo_unit *)((ABC_PTRUINT_T)(pUnit.pT) \u0026 ~01));\n            Half = 0.5 * pUnit.Weight;\n            pER.Weight += Half;\n            pTR.Weight += Half;\n            // add to the path length\n            p.pPlanes[i].statsCost += pUnit.Weight;\n        }\n        Res += p.pPlanes[i].statsCost;\n    }\n    p.pPlanes[p.nSupp].statsCost = 0.0;\n    p.nAplBeg = p.nAplCur = Res;\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Start the profile for the BDD width. Complexity of the algorithm is O(N + n).]\n\n  Description [TopRef is the first level, on which the given node counts towards \n  the width of the BDDs. (In other words, it is the level of the referencing node plus 1.)]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc reoProfileWidthStart(p *reo_man) {\n    var pUnit *reo_unit;\n    var pWidthStart *int32;\n    var pWidthStop *int32;\n    var v int32;\n\n    // allocate and clean the storage for starting and stopping levels\n    pWidthStart = ABC_ALLOC( int, p.nSupp + 1 );\n    pWidthStop  = ABC_ALLOC( int, p.nSupp + 1 );\n    memset( pWidthStart, 0, sizeof(int) * (p.nSupp + 1) );\n    memset( pWidthStop, 0, sizeof(int) * (p.nSupp + 1) );\n\n    // go through the non-constant nodes and set the topmost level of their cofactors\n    for  v = 0; v \u003c= p.nSupp; v++  {\n    for  pUnit = p.pPlanes[v].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n        pUnit.TopRef = REO_TOPREF_UNDEF;\n        pUnit.Sign   = 0;\n    }\n    }\n\n    // add the topmost level of the width profile\n    for  v = 0; v \u003c p.nTops; v++  {\n        // inlining of macro Unit_Regular\n        pUnit = ((reo_unit *)((ABC_PTRUINT_T)(p.pTops[v]) \u0026 ~01));\n        if pUnit.TopRef == REO_TOPREF_UNDEF {\n            // set the starting level\n            pUnit.TopRef = 0;\n            pWidthStart[pUnit.TopRef]++;\n            // set the stopping level\n            if pUnit.lev != REO_CONST_LEVEL {\n                pWidthStop[pUnit.lev+1]++; }\n        }\n    }\n\n    for  v = 0; v \u003c p.nSupp; v++  {\n    for  pUnit = p.pPlanes[v].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n        if pUnit.pE.TopRef == REO_TOPREF_UNDEF {\n            // set the starting level\n            pUnit.pE.TopRef = pUnit.lev + 1;\n            pWidthStart[pUnit.pE.TopRef]++;\n            // set the stopping level\n            if pUnit.pE.lev != REO_CONST_LEVEL {\n                pWidthStop[pUnit.pE.lev+1]++; }\n        }\n        if pUnit.pT.TopRef == REO_TOPREF_UNDEF {\n            // set the starting level\n            pUnit.pT.TopRef = pUnit.lev + 1;\n            pWidthStart[pUnit.pT.TopRef]++;\n            // set the stopping level\n            if pUnit.pT.lev != REO_CONST_LEVEL {\n                pWidthStop[pUnit.pT.lev+1]++; }\n        }\n    }\n    }\n\n    // verify the top reference\n    for  v = 0; v \u003c p.nSupp; v++  {\n        reoProfileWidthVerifyLevel( p.pPlanes + v, v );\n    }\n\n    // derive the profile\n    p.nWidthCur = 0;\n    for  v = 0; v \u003c= p.nSupp; v++  {\n        if v == 0 {\n            p.pPlanes[v].statsWidth = pWidthStart[v] - pWidthStop[v];\n        } else {\n            p.pPlanes[v].statsWidth = p.pPlanes[v-1].statsWidth + pWidthStart[v] - pWidthStop[v]; }\n        p.pPlanes[v].statsCost = p.pPlanes[v].statsWidth;\n        p.nWidthCur += p.pPlanes[v].statsWidth;\n        fmt.Printf(\"Level %2d: Width = %5d.\\n\", v, p.pPlanes[v].statsWidth);\n    }\n    p.nWidthBeg = p.nWidthCur;\n    ABC_FREE( pWidthStart );\n    ABC_FREE( pWidthStop );\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Start the profile for the BDD width. Complexity of the algorithm is O(N * n).]\n\n  Description [TopRef is the first level, on which the given node counts towards \n  the width of the BDDs. (In other words, it is the level of the referencing node plus 1.)]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc reoProfileWidthStart2(p *reo_man) {\n    var pUnit *reo_unit;\n    var i, v int32;\n\n    // clean the profile\n    for  i = 0; i \u003c= p.nSupp; i++  {\n        p.pPlanes[i].statsWidth = 0;\n    }\n    \n    // clean the node structures\n    for  v = 0; v \u003c= p.nSupp; v++  {\n    for  pUnit = p.pPlanes[v].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n        pUnit.TopRef = REO_TOPREF_UNDEF;\n        pUnit.Sign   = 0;\n    }\n    }\n\n    // set the topref to the topmost nodes\n    for  i = 0; i \u003c p.nTops; i++  {\n        // inlining of macro Unit_Regular\n        ((reo_unit *)((ABC_PTRUINT_T)(p.pTops[i]) \u0026 ~01)).TopRef = 0;\n    }\n\n    // go through the non-constant nodes and set the topmost level of their cofactors\n    for  i = 0; i \u003c p.nSupp; i++  {\n        for  pUnit = p.pPlanes[i].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n            if pUnit.pE.TopRef \u003e i+1 {\n                 pUnit.pE.TopRef = i+1; }\n            if pUnit.pT.TopRef \u003e i+1 {\n                 pUnit.pT.TopRef = i+1; }\n        }\n    }\n\n    // verify the top reference\n    for  i = 0; i \u003c p.nSupp; i++  {\n        reoProfileWidthVerifyLevel( p.pPlanes + i, i );\n    }\n\n    // compute the profile for the internal nodes\n    for  i = 0; i \u003c p.nSupp; i++  {\n        for  pUnit = p.pPlanes[i].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n            for  v = pUnit.TopRef; v \u003c= pUnit.lev; v++  {\n                p.pPlanes[v].statsWidth++;\n            }\n        }\n    }\n\n    // compute the profile for the constant nodes\n    for  pUnit = p.pPlanes[p.nSupp].pHead; (pUnit != nil); pUnit = pUnit.Next  {\n        for  v = pUnit.TopRef; v \u003c= p.nSupp; v++  {\n            p.pPlanes[v].statsWidth++;\n        }\n    }\n\n    // get the width cost\n    p.nWidthCur = 0;\n    for  i = 0; i \u003c= p.nSupp; i++  {\n        p.pPlanes[i].statsCost = p.pPlanes[i].statsWidth;\n        p.nWidthCur           += p.pPlanes[i].statsWidth;\n    }\n    p.nWidthBeg = p.nWidthCur;\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc reoProfileNodesPrint(p *reo_man) {\n    fmt.Printf(\"NODES: Total = %6d. Average = %6.2f.\\n\", p.nNodesCur, p.nNodesCur / float32(p.nSupp));\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc reoProfileAplPrint(p *reo_man) {\n    fmt.Printf(\"APL: Total = %8.2f. Average =%6.2f.\\n\", p.nAplCur, p.nAplCur / float32(p.nSupp));\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc reoProfileWidthPrint(p *reo_man) {\n    var WidthMax int32;\n    var TotalWidth int32;\n    var i int32;\n\n    WidthMax   = 0;\n    TotalWidth = 0;\n    for  i = 0; i \u003c= p.nSupp; i++  {\n        fmt.Printf(\"Level = %2d. Width = %3d.\\n\", i, p.pPlanes[i].statsWidth);\n        if WidthMax \u003c p.pPlanes[i].statsWidth {\n             WidthMax = p.pPlanes[i].statsWidth; }\n        TotalWidth += p.pPlanes[i].statsWidth;\n    }\n    assert(p.nWidthCur == TotalWidth, \"p.nWidthCur == TotalWidth\");\n    fmt.Printf(\"WIDTH: \");\n    fmt.Printf(\"Maximum = %5d.  \", WidthMax);\n    fmt.Printf(\"Total = %7d.  \", p.nWidthCur);\n    fmt.Printf(\"Average = %6.2f.\\n\", TotalWidth / float32(p.nSupp));\n}\n\n/**Function********************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc reoProfileWidthVerifyLevel(pPlane *reo_plane, Level int32) {\n    var pUnit *reo_unit;\n    for  pUnit = pPlane.pHead; (pUnit != nil); pUnit = pUnit.Next  {\n        assert(pUnit.TopRef     \u003c= Level, \"pUnit.TopRef     \u003c= Level\");\n        assert(pUnit.pE.TopRef \u003c= Level + 1, \"pUnit.pE.TopRef \u003c= Level + 1\");\n        assert(pUnit.pT.TopRef \u003c= Level + 1, \"pUnit.pT.TopRef \u003c= Level + 1\");\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                         END OF FILE                              ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

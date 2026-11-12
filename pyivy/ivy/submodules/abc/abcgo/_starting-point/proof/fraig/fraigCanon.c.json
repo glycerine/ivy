@@ -1,0 +1,147 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigCanon.c",
+  "SHA256": "ff6957c95f9b7e16cab9693e4ca315ae8069c95eeb12da3ac9ab59bd7aa319f3",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 6237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNodeOld.pRepr == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 195,
+        "Column": 9,
+        "ByteOffset": 7879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pMan.fDoSparse );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 205,
+        "Column": 5,
+        "ByteOffset": 8194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNodeNew.pRepr == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fraig_NodeAndCanon",
+      "Start": 1950,
+      "End": 7639,
+      "BodyStart": 2044,
+      "Original": "Fraig_Node_t * Fraig_NodeAndCanon( Fraig_Man_t * pMan, Fraig_Node_t * p1, Fraig_Node_t * p2 )\n{\n    Fraig_Node_t * pNodeNew, * pNodeOld, * pNodeRepr;\n    int fUseSatCheck;\n//    int RetValue;\n\n    // check for trivial cases\n    if ( p1 == p2 )\n        return p1;\n    if ( p1 == Fraig_Not(p2) )\n        return Fraig_Not(pMan-\u003epConst1);\n    if ( Fraig_NodeIsConst(p1) )\n    {\n        if ( p1 == pMan-\u003epConst1 )\n            return p2;\n        return Fraig_Not(pMan-\u003epConst1);\n    }\n    if ( Fraig_NodeIsConst(p2) )\n    {\n        if ( p2 == pMan-\u003epConst1 )\n            return p1;\n        return Fraig_Not(pMan-\u003epConst1);\n    }\n/*\n    // check for less trivial cases\n    if ( Fraig_IsComplement(p1) )\n    {\n        if ( RetValue = Fraig_NodeIsInSupergate( Fraig_Regular(p1), p2 ) )\n        {\n            if ( RetValue == -1 )\n                pMan-\u003enImplies0++;\n            else\n                pMan-\u003enImplies1++;\n\n            if ( RetValue == -1 )\n                return p2;\n        }\n    }\n    else\n    {\n        if ( RetValue = Fraig_NodeIsInSupergate( p1, p2 ) )\n        {\n            if ( RetValue == 1 )\n                pMan-\u003enSimplifies1++;\n            else\n                pMan-\u003enSimplifies0++;\n\n            if ( RetValue == 1 )\n                return p1;\n            return Fraig_Not(pMan-\u003epConst1);\n        }\n    }\n \n    if ( Fraig_IsComplement(p2) )\n    {\n        if ( RetValue = Fraig_NodeIsInSupergate( Fraig_Regular(p2), p1 ) )\n        {\n            if ( RetValue == -1 )\n                pMan-\u003enImplies0++;\n            else\n                pMan-\u003enImplies1++;\n\n            if ( RetValue == -1 )\n                return p1;\n        }\n    }\n    else\n    {\n        if ( RetValue = Fraig_NodeIsInSupergate( p2, p1 ) )\n        {\n            if ( RetValue == 1 )\n                pMan-\u003enSimplifies1++;\n            else\n                pMan-\u003enSimplifies0++;\n\n            if ( RetValue == 1 )\n                return p2;\n            return Fraig_Not(pMan-\u003epConst1);\n        }\n    }\n*/\n    // perform level-one structural hashing\n    if ( Fraig_HashTableLookupS( pMan, p1, p2, \u0026pNodeNew ) ) // the node with these children is found\n    {\n        // if the existent node is part of the cone of unused logic\n        // (that is logic feeding the node which is equivalent to the given node)\n        // return the canonical representative of this node\n        // determine the phase of the given node, with respect to its canonical form\n        pNodeRepr = Fraig_Regular(pNodeNew)-\u003epRepr;\n        if ( pMan-\u003efFuncRed \u0026\u0026 pNodeRepr )\n            return Fraig_NotCond( pNodeRepr, Fraig_IsComplement(pNodeNew) ^ Fraig_NodeComparePhase(Fraig_Regular(pNodeNew), pNodeRepr) );\n        // otherwise, the node is itself a canonical representative, return it\n        return pNodeNew;\n    }\n    // the same node is not found, but the new one is created\n\n    // if one level hashing is requested (without functionality hashing), return\n    if ( !pMan-\u003efFuncRed )\n        return pNodeNew;\n\n    // check if the new node is unique using the simulation info\n    if ( pNodeNew-\u003enOnes == 0 || pNodeNew-\u003enOnes == (unsigned)pMan-\u003enWordsRand * 32 )\n    {\n        pMan-\u003enSatZeros++;\n        if ( !pMan-\u003efDoSparse ) // if we do not do sparse functions, skip\n            return pNodeNew;\n        // check the sparse function simulation hash table\n        pNodeOld = Fraig_HashTableLookupF0( pMan, pNodeNew );\n        if ( pNodeOld == NULL ) // the node is unique (it is added to the table)\n            return pNodeNew;\n    }\n    else\n    {\n        // check the simulation hash table\n        pNodeOld = Fraig_HashTableLookupF( pMan, pNodeNew );\n        if ( pNodeOld == NULL ) // the node is unique\n            return pNodeNew;\n    }\n    assert( pNodeOld-\u003epRepr == 0 );\n    // there is another node which looks the same according to simulation\n\n    // use SAT to resolve the ambiguity\n    fUseSatCheck = (pMan-\u003enInspLimit == 0 || Fraig_ManReadInspects(pMan) \u003c pMan-\u003enInspLimit); \n    if ( fUseSatCheck \u0026\u0026 Fraig_NodeIsEquivalent( pMan, pNodeOld, pNodeNew, pMan-\u003enBTLimit, 1000000 ) )\n    {\n        // set the node to be equivalent with this node\n        // to prevent loops, only set if the old node is not in the TFI of the new node\n        // the loop may happen in the following case: suppose \n        // NodeC = AND(NodeA, NodeB) and at the same time NodeA =\u003e NodeB\n        // in this case, NodeA and NodeC are functionally equivalent\n        // however, NodeA is a fanin of node NodeC (this leads to the loop)\n        // add the node to the list of equivalent nodes or dereference it\n        if ( pMan-\u003efChoicing \u0026\u0026 !Fraig_CheckTfi( pMan, pNodeOld, pNodeNew ) )\n        { \n            // if the old node is not in the TFI of the new node and choicing \n            // is enabled, add the new node to the list of equivalent ones\n            pNodeNew-\u003epNextE = pNodeOld-\u003epNextE;\n            pNodeOld-\u003epNextE = pNodeNew;\n        }\n        // set the canonical representative of this node\n        pNodeNew-\u003epRepr = pNodeOld;\n        // return the equivalent node\n        return Fraig_NotCond( pNodeOld, Fraig_NodeComparePhase(pNodeOld, pNodeNew) );\n    }\n\n    // now we add another member to this simulation class\n    if ( pNodeNew-\u003enOnes == 0 || pNodeNew-\u003enOnes == (unsigned)pMan-\u003enWordsRand * 32 )\n    {\n        Fraig_Node_t * pNodeTemp;\n        assert( pMan-\u003efDoSparse );\n        pNodeTemp = Fraig_HashTableLookupF0( pMan, pNodeNew );\n//        assert( pNodeTemp == NULL );\n//        Fraig_HashTableInsertF0( pMan, pNodeNew );\n    }\n    else\n    {\n        pNodeNew-\u003epNextD = pNodeOld-\u003epNextD;\n        pNodeOld-\u003epNextD = pNodeNew;\n    }\n    // return the new node\n    assert( pNodeNew-\u003epRepr == 0 );\n    return pNodeNew;\n}",
+      "Draft": "func Fraig_NodeAndCanon(pMan *Fraig_Man_t, p1 *Fraig_Node_t, p2 *Fraig_Node_t) *Fraig_Node_t {\n    var pNodeNew, pNodeOld, pNodeRepr *Fraig_Node_t;\n    var fUseSatCheck int32;\n//    int RetValue;\n\n    // check for trivial cases\n    if p1 == p2 {\n        return p1; }\n    // inlining of macro Fraig_Not\n    if p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01)) {\n        // inlining of macro Fraig_Not\n        return ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ; }\n    if Fraig_NodeIsConst(p1) {\n        if p1 == pMan.pConst1 {\n            return p2; }\n        // inlining of macro Fraig_Not\n        return ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ;\n    }\n    if Fraig_NodeIsConst(p2) {\n        if p2 == pMan.pConst1 {\n            return p1; }\n        // inlining of macro Fraig_Not\n        return ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ;\n    }\n/*\n    // check for less trivial cases\n    if ( Fraig_IsComplement(p1) )\n    {\n        if ( RetValue = Fraig_NodeIsInSupergate( Fraig_Regular(p1), p2 ) )\n        {\n            if ( RetValue == -1 )\n                pMan-\u003enImplies0++;\n            else\n                pMan-\u003enImplies1++;\n\n            if ( RetValue == -1 )\n                return p2;\n        }\n    }\n    else\n    {\n        if ( RetValue = Fraig_NodeIsInSupergate( p1, p2 ) )\n        {\n            if ( RetValue == 1 )\n                pMan-\u003enSimplifies1++;\n            else\n                pMan-\u003enSimplifies0++;\n\n            if ( RetValue == 1 )\n                return p1;\n            return Fraig_Not(pMan-\u003epConst1);\n        }\n    }\n \n    if ( Fraig_IsComplement(p2) )\n    {\n        if ( RetValue = Fraig_NodeIsInSupergate( Fraig_Regular(p2), p1 ) )\n        {\n            if ( RetValue == -1 )\n                pMan-\u003enImplies0++;\n            else\n                pMan-\u003enImplies1++;\n\n            if ( RetValue == -1 )\n                return p1;\n        }\n    }\n    else\n    {\n        if ( RetValue = Fraig_NodeIsInSupergate( p2, p1 ) )\n        {\n            if ( RetValue == 1 )\n                pMan-\u003enSimplifies1++;\n            else\n                pMan-\u003enSimplifies0++;\n\n            if ( RetValue == 1 )\n                return p2;\n            return Fraig_Not(pMan-\u003epConst1);\n        }\n    }\n*/\n    // perform level-one structural hashing\n    if Fraig_HashTableLookupS( pMan, p1, p2, \u0026pNodeNew ) { // the node with these children is found\n    \n        // if the existent node is part of the cone of unused logic\n        // (that is logic feeding the node which is equivalent to the given node)\n        // return the canonical representative of this node\n        // determine the phase of the given node, with respect to its canonical form\n        // inlining of macro Fraig_Regular\n        pNodeRepr = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNodeNew) \u0026 ~01)) .pRepr;\n        if pMan.fFuncRed \u0026\u0026 (pNodeRepr != nil) {\n            // inlining of macro Fraig_NotCond\n            // inlining of macro Fraig_IsComplement\n            // inlining of macro Fraig_Regular\n            return ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNodeRepr) ^ (((int32(((ABC_PTRUINT_T) (pNodeNew) \u0026 01)))) ^ Fraig_NodeComparePhase(((Fraig_Node_t *)((ABC_PTRUINT_T)(pNodeNew) \u0026 ~01)) , pNodeRepr)))); }\n        // otherwise, the node is itself a canonical representative, return it\n        return pNodeNew;\n    }\n    // the same node is not found, but the new one is created\n\n    // if one level hashing is requested (without functionality hashing), return\n    if !pMan.fFuncRed {\n        return pNodeNew; }\n\n    // check if the new node is unique using the simulation info\n    if pNodeNew.nOnes == 0 || pNodeNew.nOnes == uint32(pMan.nWordsRand) * 32 {\n        pMan.nSatZeros++;\n        if !pMan.fDoSparse { // if we do not do sparse functions, skip\n            return pNodeNew; }\n        // check the sparse function simulation hash table\n        pNodeOld = Fraig_HashTableLookupF0( pMan, pNodeNew );\n        if pNodeOld == nil { // the node is unique (it is added to the table)\n            return pNodeNew; }\n    \n    } else {\n        // check the simulation hash table\n        pNodeOld = Fraig_HashTableLookupF( pMan, pNodeNew );\n        if pNodeOld == nil { // the node is unique\n            return pNodeNew; }\n    }\n    assert(pNodeOld.pRepr == 0, \"pNodeOld.pRepr == 0\");\n    // there is another node which looks the same according to simulation\n\n    // use SAT to resolve the ambiguity\n    fUseSatCheck = (pMan.nInspLimit == 0 || Fraig_ManReadInspects(pMan) \u003c pMan.nInspLimit); \n    if (fUseSatCheck != 0) \u0026\u0026 Fraig_NodeIsEquivalent( pMan, pNodeOld, pNodeNew, pMan.nBTLimit, 1000000 ) {\n        // set the node to be equivalent with this node\n        // to prevent loops, only set if the old node is not in the TFI of the new node\n        // the loop may happen in the following case: suppose \n        // NodeC = AND(NodeA, NodeB) and at the same time NodeA =\u003e NodeB\n        // in this case, NodeA and NodeC are functionally equivalent\n        // however, NodeA is a fanin of node NodeC (this leads to the loop)\n        // add the node to the list of equivalent nodes or dereference it\n        if pMan.fChoicing \u0026\u0026 !Fraig_CheckTfi( pMan, pNodeOld, pNodeNew ) { \n            // if the old node is not in the TFI of the new node and choicing \n            // is enabled, add the new node to the list of equivalent ones\n            pNodeNew.pNextE = pNodeOld.pNextE;\n            pNodeOld.pNextE = pNodeNew;\n        }\n        // set the canonical representative of this node\n        pNodeNew.pRepr = pNodeOld;\n        // return the equivalent node\n        // inlining of macro Fraig_NotCond\n        return ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNodeOld) ^ (Fraig_NodeComparePhase(pNodeOld, pNodeNew))));\n    }\n\n    // now we add another member to this simulation class\n    if pNodeNew.nOnes == 0 || pNodeNew.nOnes == uint32(pMan.nWordsRand) * 32 {\n        var pNodeTemp *Fraig_Node_t;\n        assert(pMan.fDoSparse, \"pMan.fDoSparse\");\n        pNodeTemp = Fraig_HashTableLookupF0( pMan, pNodeNew );\n//        assert( pNodeTemp == NULL );\n//        Fraig_HashTableInsertF0( pMan, pNodeNew );\n    \n    } else {\n        pNodeNew.pNextD = pNodeOld.pNextD;\n        pNodeOld.pNextD = pNodeNew;\n    }\n    // return the new node\n    assert(pNodeNew.pRepr == 0, \"pNodeNew.pRepr == 0\");\n    return pNodeNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigCanon.c::pointer-cast::2274",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2228,
+      "End": 2228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigCanon.c::pointer-cast::2382",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2259,
+      "End": 2259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigCanon.c::pointer-cast::2597",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2397,
+      "End": 2397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigCanon.c::pointer-cast::2818",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2541,
+      "End": 2541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigCanon.c::pointer-cast::4756",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4398,
+      "End": 4398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigCanon.c::pointer-cast::4928",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4492,
+      "End": 4492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigCanon.c::pointer-cast::5147",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4492,
+      "End": 4492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigCanon.c::pointer-cast::7647",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6993,
+      "End": 6993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigCanon.c::Fraig_NodeAndCanon",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeAndCanon",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1950,
+      "End": 7639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigCanon.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7887
+    }
+  ],
+  "Draft": "package fraig\n\n/**CFile****************************************************************\n\n  FileName    [fraigCanon.c]\n\n  PackageName [FRAIG: Functionally reduced AND-INV graphs.]\n\n  Synopsis    [AND-node creation and elementary AND-operation.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - October 1, 2004]\n\n  Revision    [$Id: fraigCanon.c,v 1.4 2005/07/08 01:01:31 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003climits.h\u003e\n//#include \"fraigInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [The internal AND operation for the two FRAIG nodes.]\n\n  Description [This procedure is the core of the FRAIG package, because\n  it performs the two-step canonicization of FRAIG nodes. The first step\n  involves the lookup in the structural hash table (which hashes two ANDs \n  into a node that has them as fanins, if such a node exists). If the node \n  is not found in the structural hash table, an attempt is made to find a \n  functionally equivalent node in another hash table (which hashes the \n  simulation info into the nodes, which has this simulation info). Some \n  tricks used on the way are described in the comments to the code and\n  in the paper \"FRAIGs: Functionally reduced AND-INV graphs\".]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeAndCanon(pMan *Fraig_Man_t, p1 *Fraig_Node_t, p2 *Fraig_Node_t) *Fraig_Node_t {\n    var pNodeNew, pNodeOld, pNodeRepr *Fraig_Node_t;\n    var fUseSatCheck int32;\n//    int RetValue;\n\n    // check for trivial cases\n    if p1 == p2 {\n        return p1; }\n    // inlining of macro Fraig_Not\n    if p1 == ((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) ^ 01)) {\n        // inlining of macro Fraig_Not\n        return ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ; }\n    if Fraig_NodeIsConst(p1) {\n        if p1 == pMan.pConst1 {\n            return p2; }\n        // inlining of macro Fraig_Not\n        return ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ;\n    }\n    if Fraig_NodeIsConst(p2) {\n        if p2 == pMan.pConst1 {\n            return p1; }\n        // inlining of macro Fraig_Not\n        return ((Fraig_Node_t *)((ABC_PTRUINT_T)(pMan.pConst1) ^ 01)) ;\n    }\n/*\n    // check for less trivial cases\n    if ( Fraig_IsComplement(p1) )\n    {\n        if ( RetValue = Fraig_NodeIsInSupergate( Fraig_Regular(p1), p2 ) )\n        {\n            if ( RetValue == -1 )\n                pMan-\u003enImplies0++;\n            else\n                pMan-\u003enImplies1++;\n\n            if ( RetValue == -1 )\n                return p2;\n        }\n    }\n    else\n    {\n        if ( RetValue = Fraig_NodeIsInSupergate( p1, p2 ) )\n        {\n            if ( RetValue == 1 )\n                pMan-\u003enSimplifies1++;\n            else\n                pMan-\u003enSimplifies0++;\n\n            if ( RetValue == 1 )\n                return p1;\n            return Fraig_Not(pMan-\u003epConst1);\n        }\n    }\n \n    if ( Fraig_IsComplement(p2) )\n    {\n        if ( RetValue = Fraig_NodeIsInSupergate( Fraig_Regular(p2), p1 ) )\n        {\n            if ( RetValue == -1 )\n                pMan-\u003enImplies0++;\n            else\n                pMan-\u003enImplies1++;\n\n            if ( RetValue == -1 )\n                return p1;\n        }\n    }\n    else\n    {\n        if ( RetValue = Fraig_NodeIsInSupergate( p2, p1 ) )\n        {\n            if ( RetValue == 1 )\n                pMan-\u003enSimplifies1++;\n            else\n                pMan-\u003enSimplifies0++;\n\n            if ( RetValue == 1 )\n                return p2;\n            return Fraig_Not(pMan-\u003epConst1);\n        }\n    }\n*/\n    // perform level-one structural hashing\n    if Fraig_HashTableLookupS( pMan, p1, p2, \u0026pNodeNew ) { // the node with these children is found\n    \n        // if the existent node is part of the cone of unused logic\n        // (that is logic feeding the node which is equivalent to the given node)\n        // return the canonical representative of this node\n        // determine the phase of the given node, with respect to its canonical form\n        // inlining of macro Fraig_Regular\n        pNodeRepr = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNodeNew) \u0026 ~01)) .pRepr;\n        if pMan.fFuncRed \u0026\u0026 (pNodeRepr != nil) {\n            // inlining of macro Fraig_NotCond\n            // inlining of macro Fraig_IsComplement\n            // inlining of macro Fraig_Regular\n            return ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNodeRepr) ^ (((int32(((ABC_PTRUINT_T) (pNodeNew) \u0026 01)))) ^ Fraig_NodeComparePhase(((Fraig_Node_t *)((ABC_PTRUINT_T)(pNodeNew) \u0026 ~01)) , pNodeRepr)))); }\n        // otherwise, the node is itself a canonical representative, return it\n        return pNodeNew;\n    }\n    // the same node is not found, but the new one is created\n\n    // if one level hashing is requested (without functionality hashing), return\n    if !pMan.fFuncRed {\n        return pNodeNew; }\n\n    // check if the new node is unique using the simulation info\n    if pNodeNew.nOnes == 0 || pNodeNew.nOnes == uint32(pMan.nWordsRand) * 32 {\n        pMan.nSatZeros++;\n        if !pMan.fDoSparse { // if we do not do sparse functions, skip\n            return pNodeNew; }\n        // check the sparse function simulation hash table\n        pNodeOld = Fraig_HashTableLookupF0( pMan, pNodeNew );\n        if pNodeOld == nil { // the node is unique (it is added to the table)\n            return pNodeNew; }\n    \n    } else {\n        // check the simulation hash table\n        pNodeOld = Fraig_HashTableLookupF( pMan, pNodeNew );\n        if pNodeOld == nil { // the node is unique\n            return pNodeNew; }\n    }\n    assert(pNodeOld.pRepr == 0, \"pNodeOld.pRepr == 0\");\n    // there is another node which looks the same according to simulation\n\n    // use SAT to resolve the ambiguity\n    fUseSatCheck = (pMan.nInspLimit == 0 || Fraig_ManReadInspects(pMan) \u003c pMan.nInspLimit); \n    if (fUseSatCheck != 0) \u0026\u0026 Fraig_NodeIsEquivalent( pMan, pNodeOld, pNodeNew, pMan.nBTLimit, 1000000 ) {\n        // set the node to be equivalent with this node\n        // to prevent loops, only set if the old node is not in the TFI of the new node\n        // the loop may happen in the following case: suppose \n        // NodeC = AND(NodeA, NodeB) and at the same time NodeA =\u003e NodeB\n        // in this case, NodeA and NodeC are functionally equivalent\n        // however, NodeA is a fanin of node NodeC (this leads to the loop)\n        // add the node to the list of equivalent nodes or dereference it\n        if pMan.fChoicing \u0026\u0026 !Fraig_CheckTfi( pMan, pNodeOld, pNodeNew ) { \n            // if the old node is not in the TFI of the new node and choicing \n            // is enabled, add the new node to the list of equivalent ones\n            pNodeNew.pNextE = pNodeOld.pNextE;\n            pNodeOld.pNextE = pNodeNew;\n        }\n        // set the canonical representative of this node\n        pNodeNew.pRepr = pNodeOld;\n        // return the equivalent node\n        // inlining of macro Fraig_NotCond\n        return ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNodeOld) ^ (Fraig_NodeComparePhase(pNodeOld, pNodeNew))));\n    }\n\n    // now we add another member to this simulation class\n    if pNodeNew.nOnes == 0 || pNodeNew.nOnes == uint32(pMan.nWordsRand) * 32 {\n        var pNodeTemp *Fraig_Node_t;\n        assert(pMan.fDoSparse, \"pMan.fDoSparse\");\n        pNodeTemp = Fraig_HashTableLookupF0( pMan, pNodeNew );\n//        assert( pNodeTemp == NULL );\n//        Fraig_HashTableInsertF0( pMan, pNodeNew );\n    \n    } else {\n        pNodeNew.pNextD = pNodeOld.pNextD;\n        pNodeOld.pNextD = pNodeNew;\n    }\n    // return the new node\n    assert(pNodeNew.pRepr == 0, \"pNodeNew.pRepr == 0\");\n    return pNodeNew;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

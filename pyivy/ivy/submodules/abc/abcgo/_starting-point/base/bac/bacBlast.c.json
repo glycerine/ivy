@@ -1,0 +1,1126 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c",
+  "SHA256": "25cbb3884171f3f6e6191f500132c04bd0a2cecdb7f81cf8478045ceb62e941e",
+  "Library": [
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 16,
+        "ByteOffset": 1524
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ppGraphs = ABC_CALLOC( Dec_Graph_t *, Abc_NamObjNumMax(p.pMods) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 1900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.ppGraphs == nil );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 2218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.ppGraphs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iRes \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 3115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Bac_ManNtkIsOk(p, iLNtk) \u0026\u0026 Bac_ManNtkIsOk(p, iRNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 135,
+        "Column": 13,
+        "ByteOffset": 4919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Bac_ObjIsBoxPrim(p, iBox) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 138,
+        "Column": 13,
+        "ByteOffset": 5112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nLits \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 144,
+        "Column": 17,
+        "ByteOffset": 5497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pGraph != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 30,
+        "ByteOffset": 5912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 161,
+        "Column": 30,
+        "ByteOffset": 6205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 30,
+        "ByteOffset": 7384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 190,
+        "Column": 25,
+        "ByteOffset": 7971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        assert( Bac_BoxBoNum(p, iBox) == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 195,
+        "Column": 34,
+        "ByteOffset": 8397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 197,
+        "Column": 30,
+        "ByteOffset": 8462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 199,
+        "Column": 26,
+        "ByteOffset": 8519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 203,
+        "Column": 14,
+        "ByteOffset": 8576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 248,
+        "Column": 5,
+        "ByteOffset": 9906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(\u0026p.vBuf2LeafNtk) == pNew.nBufs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 270,
+        "Column": 5,
+        "ByteOffset": 10495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(\u0026p.vBuf2LeafNtk) == Gia_ManBufNum(pGia) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 13,
+        "ByteOffset": 10880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pObj.Value == Gia_ObjFanin1(pObj).Value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 10951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count == Gia_ManBufNum(pGia) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 286,
+        "Column": 9,
+        "ByteOffset": 11043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjFanin0(pObj).Value == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 293,
+        "Column": 5,
+        "ByteOffset": 11272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Vec_IntSize(\u0026pNew.vBuf2RootNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 335,
+        "Column": 13,
+        "ByteOffset": 13023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Bac_ObjIsCo(pNtk, iTerm) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 363,
+        "Column": 5,
+        "ByteOffset": 14185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count == Gia_ManBufNum(pGia) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 424,
+        "Column": 5,
+        "ByteOffset": 16230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(\u0026p.vBuf2LeafNtk) == pNtk.nBarBufs2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 434,
+        "Column": 17,
+        "ByteOffset": 16665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pObj.iTemp == pFanin.iTemp );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 441,
+        "Column": 9,
+        "ByteOffset": 16852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFanin0(pObj).iTemp == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 444,
+        "Column": 5,
+        "ByteOffset": 16952
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count == pNtk.nBarBufs2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 459,
+        "Column": 9,
+        "ByteOffset": 17592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pFanin || Abc_NodeIsConst0(pFanin) || Abc_NodeIsConst1(pFanin) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 471,
+        "Column": 9,
+        "ByteOffset": 18195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The library does not have one of the elementary gates.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 480,
+        "Column": 5,
+        "ByteOffset": 18728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NamObjNumMax(p.pMods) \u003e 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 486,
+        "Column": 9,
+        "ByteOffset": 18947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The standard cell library is not available.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 498,
+        "Column": 5,
+        "ByteOffset": 19322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasMapping(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 509,
+        "Column": 13,
+        "ByteOffset": 19765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Bac_ObjIsCo(pCbaNtk, iTerm) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 524,
+        "Column": 5,
+        "ByteOffset": 20537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count == pNtk.nBarBufs2 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bac_ManPrepareGates",
+      "Start": 1354,
+      "End": 1943,
+      "BodyStart": 1396,
+      "Original": "void Bac_ManPrepareGates( Bac_Man_t * p )\n{\n    Dec_Graph_t ** ppGraphs; int i;\n    if ( p-\u003epMioLib == NULL )\n        return;\n    ppGraphs = ABC_CALLOC( Dec_Graph_t *, Abc_NamObjNumMax(p-\u003epMods) );\n    for ( i = 1; i \u003c Abc_NamObjNumMax(p-\u003epMods); i++ )\n    {\n        char * pGateName = Abc_NamStr( p-\u003epMods, i );\n        Mio_Gate_t * pGate = Mio_LibraryReadGateByName( (Mio_Library_t *)p-\u003epMioLib, pGateName, NULL );\n        if ( pGate != NULL )\n            ppGraphs[i] = Dec_Factor( Mio_GateReadSop(pGate) );\n    }\n    assert( p-\u003eppGraphs == NULL );\n    p-\u003eppGraphs = (void **)ppGraphs;\n}",
+      "Draft": "func Bac_ManPrepareGates(p *Bac_Man_t) {\n    var ppGraphs **Dec_Graph_t; var i int32;\n    if p.pMioLib == nil {\n        return; }\n    ppGraphs = ABC_CALLOC( Dec_Graph_t *, Abc_NamObjNumMax(p.pMods) );\n    for  i = 1; i \u003c Abc_NamObjNumMax(p.pMods); i++  {\n        var pGateName string  = Abc_NamStr( p.pMods, i );\n        var pGate *Mio_Gate_t  = Mio_LibraryReadGateByName( (Mio_Library_t *)p.pMioLib, pGateName, nil );\n        if pGate != nil {\n            ppGraphs[i] = Dec_Factor( Mio_GateReadSop(pGate) ); }\n    }\n    assert(p.ppGraphs == nil, \"p.ppGraphs == nil\");\n    p.ppGraphs = (void **)ppGraphs;\n}"
+    },
+    {
+      "Name": "Bac_ManUndoGates",
+      "Start": 1944,
+      "End": 2217,
+      "BodyStart": 1983,
+      "Original": "void Bac_ManUndoGates( Bac_Man_t * p )\n{\n    int i;\n    if ( p-\u003epMioLib == NULL )\n        return;\n    for ( i = 1; i \u003c Abc_NamObjNumMax(p-\u003epMods); i++ )\n        if ( p-\u003eppGraphs[i] )\n            Dec_GraphFree( (Dec_Graph_t *)p-\u003eppGraphs[i] );\n    ABC_FREE( p-\u003eppGraphs );\n}",
+      "Draft": "func Bac_ManUndoGates(p *Bac_Man_t) {\n    var i int32;\n    if p.pMioLib == nil {\n        return; }\n    for  i = 1; i \u003c Abc_NamObjNumMax(p.pMods); i++  {\n        if p.ppGraphs[i] {\n            Dec_GraphFree( (Dec_Graph_t *)p.ppGraphs[i] ); }\n    }\n    ABC_FREE( p.ppGraphs );\n}"
+    },
+    {
+      "Name": "Bac_ManAddBarbuf",
+      "Start": 2454,
+      "End": 3577,
+      "BodyStart": 2582,
+      "Original": "int Bac_ManAddBarbuf( Gia_Man_t * pNew, int iRes, Bac_Man_t * p, int iLNtk, int iLObj, int iRNtk, int iRObj, Vec_Int_t * vMap )\n{\n    int iBufLit, iIdLit;\n    if ( iRes == 0 || iRes == 1 )\n        return iRes;\n    assert( iRes \u003e 0 );\n    if ( vMap \u0026\u0026 Abc_Lit2Var(iRes) \u003c Vec_IntSize(vMap) \u0026\u0026 (iIdLit = Vec_IntEntry(vMap, Abc_Lit2Var(iRes))) \u003e= 0 \u0026\u0026 \n        Vec_IntEntry(\u0026p-\u003evBuf2LeafNtk, Abc_Lit2Var(iIdLit)) == iLNtk \u0026\u0026 Vec_IntEntry(\u0026p-\u003evBuf2RootNtk, Abc_Lit2Var(iIdLit)) == iRNtk )\n        return Abc_LitNotCond( Vec_IntEntry(pNew-\u003evBarBufs, Abc_Lit2Var(iIdLit)), Abc_LitIsCompl(iRes) ^ Abc_LitIsCompl(iIdLit) );\n    assert( Bac_ManNtkIsOk(p, iLNtk) \u0026\u0026 Bac_ManNtkIsOk(p, iRNtk) );\n    Vec_IntPush( \u0026p-\u003evBuf2LeafNtk, iLNtk );\n    Vec_IntPush( \u0026p-\u003evBuf2LeafObj, iLObj );\n    Vec_IntPush( \u0026p-\u003evBuf2RootNtk, iRNtk );\n    Vec_IntPush( \u0026p-\u003evBuf2RootObj, iRObj );\n    iBufLit = Gia_ManAppendBuf( pNew, iRes );\n    if ( vMap )\n    {\n        Vec_IntSetEntryFull( vMap, Abc_Lit2Var(iRes), Abc_Var2Lit(Vec_IntSize(pNew-\u003evBarBufs), Abc_LitIsCompl(iRes)) );\n        Vec_IntPush( pNew-\u003evBarBufs, iBufLit );\n    }\n    return iBufLit;\n}",
+      "Draft": "func Bac_ManAddBarbuf(pNew *Gia_Man_t, iRes int32, p *Bac_Man_t, iLNtk int32, iLObj int32, iRNtk int32, iRObj int32, vMap *Vec_Int_t) int32 {\n    var iBufLit, iIdLit int32;\n    if iRes == 0 || iRes == 1 {\n        return iRes; }\n    assert(iRes \u003e 0, \"iRes \u003e 0\");\n    if vMap \u0026\u0026 Abc_Lit2Var(iRes) \u003c Vec_IntSize(vMap) \u0026\u0026 (iIdLit = Vec_IntEntry(vMap, Abc_Lit2Var(iRes))) \u003e= 0 \u0026\u0026 \n        Vec_IntEntry(\u0026p.vBuf2LeafNtk, Abc_Lit2Var(iIdLit)) == iLNtk \u0026\u0026 Vec_IntEntry(\u0026p.vBuf2RootNtk, Abc_Lit2Var(iIdLit)) == iRNtk {\n        return Abc_LitNotCond( Vec_IntEntry(pNew.vBarBufs, Abc_Lit2Var(iIdLit)), Abc_LitIsCompl(iRes) ^ Abc_LitIsCompl(iIdLit) ); }\n    assert(Bac_ManNtkIsOk(p, iLNtk) \u0026\u0026 Bac_ManNtkIsOk(p, iRNtk), \"Bac_ManNtkIsOk(p, iLNtk) \u0026\u0026 Bac_ManNtkIsOk(p, iRNtk)\");\n    Vec_IntPush( \u0026p.vBuf2LeafNtk, iLNtk );\n    Vec_IntPush( \u0026p.vBuf2LeafObj, iLObj );\n    Vec_IntPush( \u0026p.vBuf2RootNtk, iRNtk );\n    Vec_IntPush( \u0026p.vBuf2RootObj, iRObj );\n    iBufLit = Gia_ManAppendBuf( pNew, iRes );\n    if vMap != nil {\n        Vec_IntSetEntryFull( vMap, Abc_Lit2Var(iRes), Abc_Var2Lit(Vec_IntSize(pNew.vBarBufs), Abc_LitIsCompl(iRes)) );\n        Vec_IntPush( pNew.vBarBufs, iBufLit );\n    }\n    return iBufLit;\n}"
+    },
+    {
+      "Name": "Bac_ManExtract_rec",
+      "Start": 3578,
+      "End": 8594,
+      "BodyStart": 3675,
+      "Original": "int Bac_ManExtract_rec( Gia_Man_t * pNew, Bac_Ntk_t * p, int i, int fBuffers, Vec_Int_t * vMap )\n{\n    int iRes = Bac_ObjCopy( p, i );\n    if ( iRes \u003e= 0 )\n        return iRes;\n    if ( Bac_ObjIsCo(p, i) )\n        iRes = Bac_ManExtract_rec( pNew, p, Bac_ObjFanin(p, i), fBuffers, vMap );\n    else if ( Bac_ObjIsPi(p, i) )\n    {\n        Bac_Ntk_t * pHost = Bac_NtkHostNtk( p );\n        int iObj = Bac_BoxBi( pHost, Bac_NtkHostObj(p), Bac_ObjIndex(p, i) );\n        iRes = Bac_ManExtract_rec( pNew, pHost, iObj, fBuffers, vMap );\n        if ( fBuffers )\n            iRes = Bac_ManAddBarbuf( pNew, iRes, p-\u003epDesign, Bac_NtkId(p), i, Bac_NtkId(pHost), iObj, vMap );\n    }\n    else if ( Bac_ObjIsBo(p, i) )\n    {\n        int iBox = Bac_BoxBoBox(p, i);\n        if ( Bac_ObjIsBoxUser(p, iBox) ) // user box\n        {\n            Bac_Ntk_t * pBox = Bac_BoxBoNtk( p, i );\n            int iObj = Bac_NtkPo( pBox, Bac_ObjIndex(p, i) );\n            iRes = Bac_ManExtract_rec( pNew, pBox, iObj, fBuffers, vMap );\n            if ( fBuffers )\n                iRes = Bac_ManAddBarbuf( pNew, iRes, p-\u003epDesign, Bac_NtkId(p), i, Bac_NtkId(pBox), iObj, vMap );\n        }\n        else // primitive\n        {\n            int iFanin, nLits, pLits[16];\n            assert( Bac_ObjIsBoxPrim(p, iBox) );\n            Bac_BoxForEachFanin( p, iBox, iFanin, nLits )\n                pLits[nLits] = Bac_ManExtract_rec( pNew, p, iFanin, fBuffers, vMap );\n            assert( nLits \u003c= 16 );\n            if ( p-\u003epDesign-\u003eppGraphs ) // mapped gate\n            {\n                extern int Gia_ManFactorGraph( Gia_Man_t * p, Dec_Graph_t * pFForm, Vec_Int_t * vLeaves );\n                Dec_Graph_t * pGraph = (Dec_Graph_t *)p-\u003epDesign-\u003eppGraphs[Bac_BoxNtkId(p, iBox)];\n                Vec_Int_t Leaves = { nLits, nLits, pLits };\n                assert( pGraph != NULL );\n                return Gia_ManFactorGraph( pNew, pGraph, \u0026Leaves );\n            }\n            else\n            {\n                Bac_ObjType_t Type = Bac_ObjType(p, iBox);\n                if ( nLits == 0 )\n                {\n                    if ( Type == BAC_BOX_CF )\n                        iRes = 0;\n                    else if ( Type == BAC_BOX_CT )\n                        iRes = 1;\n                    else assert( 0 );\n                }\n                else if ( nLits == 1 )\n                {\n                    if ( Type == BAC_BOX_BUF )\n                        iRes = pLits[0];\n                    else if ( Type == BAC_BOX_INV )\n                        iRes = Abc_LitNot( pLits[0] );\n                    else assert( 0 );\n                }\n                else if ( nLits == 2 )\n                {\n                    if ( Type == BAC_BOX_AND )\n                        iRes = Gia_ManHashAnd( pNew, pLits[0], pLits[1] );\n                    else if ( Type == BAC_BOX_NAND )\n                        iRes = Abc_LitNot( Gia_ManHashAnd( pNew, pLits[0], pLits[1] ) );\n                    else if ( Type == BAC_BOX_OR )\n                        iRes = Gia_ManHashOr( pNew, pLits[0], pLits[1] );\n                    else if ( Type == BAC_BOX_NOR )\n                        iRes = Abc_LitNot( Gia_ManHashOr( pNew, pLits[0], pLits[1] ) );\n                    else if ( Type == BAC_BOX_XOR )\n                        iRes = Gia_ManHashXor( pNew, pLits[0], pLits[1] );\n                    else if ( Type == BAC_BOX_XNOR )\n                        iRes = Abc_LitNot( Gia_ManHashXor( pNew, pLits[0], pLits[1] ) );\n                    else if ( Type == BAC_BOX_SHARP )\n                        iRes = Gia_ManHashAnd( pNew, pLits[0], Abc_LitNot(pLits[1]) );\n                    else if ( Type == BAC_BOX_SHARPL )\n                        iRes = Gia_ManHashAnd( pNew, Abc_LitNot(pLits[0]), pLits[1] );\n                    else assert( 0 );\n                }\n                else if ( nLits == 3 )\n                {\n                    if ( Type == BAC_BOX_MUX )\n                        iRes = Gia_ManHashMux( pNew, pLits[0], pLits[1], pLits[2] );\n                    else if ( Type == BAC_BOX_MAJ )\n                        iRes = Gia_ManHashMaj( pNew, pLits[0], pLits[1], pLits[2] );\n                    else if ( Type == BAC_BOX_ADD )\n                    {\n                        int iRes0 = Gia_ManHashAnd( pNew, pLits[1], pLits[2] );\n                        int iRes1 = Gia_ManHashOr( pNew, pLits[1], pLits[2] );\n                        assert( Bac_BoxBoNum(p, iBox) == 2 );\n                        if ( Bac_BoxBo(p, iBox, 0) == i ) // sum\n                            iRes = Gia_ManHashXor( pNew, pLits[0], Gia_ManHashAnd(pNew, Abc_LitNot(iRes0), iRes1) );\n                        else if ( Bac_BoxBo(p, iBox, 1) == i ) // cout\n                            iRes = Gia_ManHashOr( pNew, iRes0, Gia_ManHashAnd(pNew, pLits[0], iRes1) );\n                        else assert( 0 );\n                    }\n                    else assert( 0 );\n                }\n                else assert( 0 );\n            }\n        }\n    }\n    else assert( 0 );\n    Bac_ObjSetCopy( p, i, iRes );\n    return iRes;\n}",
+      "Draft": "func Bac_ManExtract_rec(pNew *Gia_Man_t, p *Bac_Ntk_t, i int32, fBuffers int32, vMap *Vec_Int_t) int32 {\n    var iRes int32  = Bac_ObjCopy( p, i );\n    if iRes \u003e= 0 {\n        return iRes; }\n    if Bac_ObjIsCo(p, i) {\n        iRes = Bac_ManExtract_rec( pNew, p, Bac_ObjFanin(p, i), fBuffers, vMap );\n    } else if Bac_ObjIsPi(p, i) {\n        var pHost *Bac_Ntk_t  = Bac_NtkHostNtk( p );\n        var iObj int32  = Bac_BoxBi( pHost, Bac_NtkHostObj(p), Bac_ObjIndex(p, i) );\n        iRes = Bac_ManExtract_rec( pNew, pHost, iObj, fBuffers, vMap );\n        if fBuffers != 0 {\n            iRes = Bac_ManAddBarbuf( pNew, iRes, p.pDesign, Bac_NtkId(p), i, Bac_NtkId(pHost), iObj, vMap ); }\n    \n    } else if Bac_ObjIsBo(p, i) {\n        var iBox int32  = Bac_BoxBoBox(p, i);\n        if Bac_ObjIsBoxUser(p, iBox) { // user box\n        \n            var pBox *Bac_Ntk_t  = Bac_BoxBoNtk( p, i );\n            var iObj int32  = Bac_NtkPo( pBox, Bac_ObjIndex(p, i) );\n            iRes = Bac_ManExtract_rec( pNew, pBox, iObj, fBuffers, vMap );\n            if fBuffers != 0 {\n                iRes = Bac_ManAddBarbuf( pNew, iRes, p.pDesign, Bac_NtkId(p), i, Bac_NtkId(pBox), iObj, vMap ); }\n        \n        } else { // primitive\n        \n            var iFanin int32;\n            var nLits int32;\n            var pLits [16]int32;\n            assert(Bac_ObjIsBoxPrim(p, iBox), \"Bac_ObjIsBoxPrim(p, iBox)\");\n            Bac_BoxForEachFanin( p, iBox, iFanin, nLits )\n                pLits[nLits] = Bac_ManExtract_rec( pNew, p, iFanin, fBuffers, vMap );\n            assert(nLits \u003c= 16, \"nLits \u003c= 16\");\n            if p.pDesign.ppGraphs { // mapped gate\n            \n                extern int Gia_ManFactorGraph( Gia_Man_t * p, Dec_Graph_t * pFForm, Vec_Int_t * vLeaves );\n                var pGraph *Dec_Graph_t  = (Dec_Graph_t *)p.pDesign.ppGraphs[Bac_BoxNtkId(p, iBox)];\n                var Leaves Vec_Int_t  = Vec_Int_t{ nLits, nLits, pLits };\n                assert(pGraph != nil, \"pGraph != nil\");\n                return Gia_ManFactorGraph( pNew, pGraph, \u0026Leaves );\n            \n            } else {\n                var Type Bac_ObjType_t  = Bac_ObjType(p, iBox);\n                if nLits == 0 {\n                    if Type == BAC_BOX_CF {\n                        iRes = 0;\n                    } else if Type == BAC_BOX_CT {\n                        iRes = 1;\n                    } else { assert(false, \"0\"); }\n                \n                } else if nLits == 1 {\n                    if Type == BAC_BOX_BUF {\n                        iRes = pLits[0];\n                    } else if Type == BAC_BOX_INV {\n                        iRes = Abc_LitNot( pLits[0] );\n                    } else { assert(false, \"0\"); }\n                \n                } else if nLits == 2 {\n                    if Type == BAC_BOX_AND {\n                        iRes = Gia_ManHashAnd( pNew, pLits[0], pLits[1] );\n                    } else if Type == BAC_BOX_NAND {\n                        iRes = Abc_LitNot( Gia_ManHashAnd( pNew, pLits[0], pLits[1] ) );\n                    } else if Type == BAC_BOX_OR {\n                        iRes = Gia_ManHashOr( pNew, pLits[0], pLits[1] );\n                    } else if Type == BAC_BOX_NOR {\n                        iRes = Abc_LitNot( Gia_ManHashOr( pNew, pLits[0], pLits[1] ) );\n                    } else if Type == BAC_BOX_XOR {\n                        iRes = Gia_ManHashXor( pNew, pLits[0], pLits[1] );\n                    } else if Type == BAC_BOX_XNOR {\n                        iRes = Abc_LitNot( Gia_ManHashXor( pNew, pLits[0], pLits[1] ) );\n                    } else if Type == BAC_BOX_SHARP {\n                        iRes = Gia_ManHashAnd( pNew, pLits[0], Abc_LitNot(pLits[1]) );\n                    } else if Type == BAC_BOX_SHARPL {\n                        iRes = Gia_ManHashAnd( pNew, Abc_LitNot(pLits[0]), pLits[1] );\n                    } else { assert(false, \"0\"); }\n                \n                } else if nLits == 3 {\n                    if Type == BAC_BOX_MUX {\n                        iRes = Gia_ManHashMux( pNew, pLits[0], pLits[1], pLits[2] );\n                    } else if Type == BAC_BOX_MAJ {\n                        iRes = Gia_ManHashMaj( pNew, pLits[0], pLits[1], pLits[2] );\n                    } else if Type == BAC_BOX_ADD {\n                        var iRes0 int32  = Gia_ManHashAnd( pNew, pLits[1], pLits[2] );\n                        var iRes1 int32  = Gia_ManHashOr( pNew, pLits[1], pLits[2] );\n                        assert(Bac_BoxBoNum(p, iBox) == 2, \"Bac_BoxBoNum(p, iBox) == 2\");\n                        if Bac_BoxBo(p, iBox, 0) == i { // sum\n                            iRes = Gia_ManHashXor( pNew, pLits[0], Gia_ManHashAnd(pNew, Abc_LitNot(iRes0), iRes1) );\n                        } else if Bac_BoxBo(p, iBox, 1) == i { // cout\n                            iRes = Gia_ManHashOr( pNew, iRes0, Gia_ManHashAnd(pNew, pLits[0], iRes1) );\n                        } else { assert(false, \"0\"); }\n                    \n                    } else { assert(false, \"0\"); }\n                \n                } else { assert(false, \"0\"); }\n            }\n        }\n    \n    } else { assert(false, \"0\"); }\n    Bac_ObjSetCopy( p, i, iRes );\n    return iRes;\n}"
+    },
+    {
+      "Name": "Bac_ManExtract",
+      "Start": 8595,
+      "End": 10029,
+      "BodyStart": 8667,
+      "Original": "Gia_Man_t * Bac_ManExtract( Bac_Man_t * p, int fBuffers, int fVerbose )\n{\n    Bac_Ntk_t * pNtk, * pRoot = Bac_ManRoot(p);\n    Gia_Man_t * pNew, * pTemp; \n    Vec_Int_t * vMap = NULL;\n    int i, iObj;\n\n    Vec_IntClear( \u0026p-\u003evBuf2LeafNtk );\n    Vec_IntClear( \u0026p-\u003evBuf2LeafObj );\n    Vec_IntClear( \u0026p-\u003evBuf2RootNtk );\n    Vec_IntClear( \u0026p-\u003evBuf2RootObj );\n\n    Bac_ManForEachNtk( p, pNtk, i )\n    {\n        Bac_NtkDeriveIndex( pNtk );\n        Bac_NtkStartCopies( pNtk );\n    }\n\n    // start the manager\n    pNew = Gia_ManStart( Bac_ManNodeNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav(p-\u003epName);\n    pNew-\u003epSpec = Abc_UtilStrsav(p-\u003epSpec);\n\n    // primary inputs\n    Bac_NtkForEachPi( pRoot, iObj, i )\n        Bac_ObjSetCopy( pRoot, iObj, Gia_ManAppendCi(pNew) );\n\n    // internal nodes\n    Gia_ManHashAlloc( pNew );\n    pNew-\u003evBarBufs = Vec_IntAlloc( 10000 );\n    vMap = Vec_IntStartFull( 10000 );\n    Bac_ManPrepareGates( p );\n    Bac_NtkForEachPo( pRoot, iObj, i )\n        Bac_ManExtract_rec( pNew, pRoot, iObj, fBuffers, vMap );\n    Bac_ManUndoGates( p );\n    Vec_IntFreeP( \u0026vMap );\n    Gia_ManHashStop( pNew );\n\n    // primary outputs\n    Bac_NtkForEachPo( pRoot, iObj, i )\n        Gia_ManAppendCo( pNew, Bac_ObjCopy(pRoot, iObj) );\n    assert( Vec_IntSize(\u0026p-\u003evBuf2LeafNtk) == pNew-\u003enBufs );\n\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    //Gia_ManPrintStats( pNew, NULL );\n    return pNew;\n}",
+      "Draft": "func Bac_ManExtract(p *Bac_Man_t, fBuffers int32, fVerbose int32) *Gia_Man_t {\n    var pNtk *Bac_Ntk_t;\n    var pRoot *Bac_Ntk_t = Bac_ManRoot(p);\n    var pNew, pTemp *Gia_Man_t; \n    var vMap *Vec_Int_t  = nil;\n    var i, iObj int32;\n\n    Vec_IntClear( \u0026p.vBuf2LeafNtk );\n    Vec_IntClear( \u0026p.vBuf2LeafObj );\n    Vec_IntClear( \u0026p.vBuf2RootNtk );\n    Vec_IntClear( \u0026p.vBuf2RootObj );\n\n    Bac_ManForEachNtk( p, pNtk, i )\n    {\n        Bac_NtkDeriveIndex( pNtk );\n        Bac_NtkStartCopies( pNtk );\n    }\n\n    // start the manager\n    pNew = Gia_ManStart( Bac_ManNodeNum(p) );\n    pNew.pName = Abc_UtilStrsav(p.pName);\n    pNew.pSpec = Abc_UtilStrsav(p.pSpec);\n\n    // primary inputs\n    Bac_NtkForEachPi( pRoot, iObj, i )\n        Bac_ObjSetCopy( pRoot, iObj, Gia_ManAppendCi(pNew) );\n\n    // internal nodes\n    Gia_ManHashAlloc( pNew );\n    pNew.vBarBufs = Vec_IntAlloc( 10000 );\n    vMap = Vec_IntStartFull( 10000 );\n    Bac_ManPrepareGates( p );\n    Bac_NtkForEachPo( pRoot, iObj, i )\n        Bac_ManExtract_rec( pNew, pRoot, iObj, fBuffers, vMap );\n    Bac_ManUndoGates( p );\n    Vec_IntFreeP( \u0026vMap );\n    Gia_ManHashStop( pNew );\n\n    // primary outputs\n    Bac_NtkForEachPo( pRoot, iObj, i )\n        Gia_ManAppendCo( pNew, Bac_ObjCopy(pRoot, iObj) );\n    assert(Vec_IntSize(\u0026p.vBuf2LeafNtk) == pNew.nBufs, \"Vec_IntSize(\u0026p.vBuf2LeafNtk) == pNew.nBufs\");\n\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    //Gia_ManPrintStats( pNew, NULL );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Bac_ManMarkNodesGia",
+      "Start": 10315,
+      "End": 11061,
+      "BodyStart": 10375,
+      "Original": "void Bac_ManMarkNodesGia( Bac_Man_t * p, Gia_Man_t * pGia )\n{\n    Gia_Obj_t * pObj; int i, Count = 0;\n    assert( Vec_IntSize(\u0026p-\u003evBuf2LeafNtk) == Gia_ManBufNum(pGia) );\n    Gia_ManConst0(pGia)-\u003eValue = 1;\n    Gia_ManForEachPi( pGia, pObj, i )\n        pObj-\u003eValue = 1;\n    Gia_ManForEachAnd( pGia, pObj, i )\n    {\n        if ( Gia_ObjIsBuf(pObj) )\n            pObj-\u003eValue = Vec_IntEntry( \u0026p-\u003evBuf2LeafNtk, Count++ );\n        else\n        {\n            pObj-\u003eValue = Gia_ObjFanin0(pObj)-\u003eValue;\n            assert( pObj-\u003eValue == Gia_ObjFanin1(pObj)-\u003eValue );\n        }\n    }\n    assert( Count == Gia_ManBufNum(pGia) );\n    Gia_ManForEachPo( pGia, pObj, i )\n    {\n        assert( Gia_ObjFanin0(pObj)-\u003eValue == 1 );\n        pObj-\u003eValue = 1;\n    }\n}",
+      "Draft": "func Bac_ManMarkNodesGia(p *Bac_Man_t, pGia *Gia_Man_t) {\n    var pObj *Gia_Obj_t; var i, Count int32;\n    assert(Vec_IntSize(\u0026p.vBuf2LeafNtk) == Gia_ManBufNum(pGia), \"Vec_IntSize(\u0026p.vBuf2LeafNtk) == Gia_ManBufNum(pGia)\");\n    Gia_ManConst0(pGia).Value = 1;\n    Gia_ManForEachPi( pGia, pObj, i )\n        pObj.Value = 1;\n    Gia_ManForEachAnd( pGia, pObj, i )\n    {\n        if Gia_ObjIsBuf(pObj) {\n            pObj.Value = Vec_IntEntry( \u0026p.vBuf2LeafNtk, Count++ );\n        } else {\n            pObj.Value = Gia_ObjFanin0(pObj).Value;\n            assert(pObj.Value == Gia_ObjFanin1(pObj).Value, \"pObj.Value == Gia_ObjFanin1(pObj).Value\");\n        }\n    }\n    assert(Count == Gia_ManBufNum(pGia), \"Count == Gia_ManBufNum(pGia)\");\n    Gia_ManForEachPo( pGia, pObj, i )\n    {\n        assert(Gia_ObjFanin0(pObj).Value == 1, \"Gia_ObjFanin0(pObj).Value == 1\");\n        pObj.Value = 1;\n    }\n}"
+    },
+    {
+      "Name": "Bac_ManRemapBarbufs",
+      "Start": 11062,
+      "End": 11922,
+      "BodyStart": 11122,
+      "Original": "void Bac_ManRemapBarbufs( Bac_Man_t * pNew, Bac_Man_t * p )\n{\n    Bac_Ntk_t * pNtk;  int Entry, i;\n    //assert( Vec_IntSize(\u0026p-\u003evBuf2RootNtk) );\n    assert( !Vec_IntSize(\u0026pNew-\u003evBuf2RootNtk) );\n    Vec_IntAppend( \u0026pNew-\u003evBuf2RootNtk, \u0026p-\u003evBuf2RootNtk );\n    Vec_IntAppend( \u0026pNew-\u003evBuf2RootObj, \u0026p-\u003evBuf2RootObj );\n    Vec_IntAppend( \u0026pNew-\u003evBuf2LeafNtk, \u0026p-\u003evBuf2LeafNtk );\n    Vec_IntAppend( \u0026pNew-\u003evBuf2LeafObj, \u0026p-\u003evBuf2LeafObj );\n    Vec_IntForEachEntry( \u0026p-\u003evBuf2LeafObj, Entry, i )\n    {\n        pNtk = Bac_ManNtk( p, Vec_IntEntry(\u0026p-\u003evBuf2LeafNtk, i) );\n        Vec_IntWriteEntry( \u0026pNew-\u003evBuf2LeafObj, i, Bac_ObjCopy(pNtk, Entry) );\n    }\n    Vec_IntForEachEntry( \u0026p-\u003evBuf2RootObj, Entry, i )\n    {\n        pNtk = Bac_ManNtk( p, Vec_IntEntry(\u0026p-\u003evBuf2RootNtk, i) );\n        Vec_IntWriteEntry( \u0026pNew-\u003evBuf2RootObj, i, Bac_ObjCopy(pNtk, Entry) );\n    }\n}",
+      "Draft": "func Bac_ManRemapBarbufs(pNew *Bac_Man_t, p *Bac_Man_t) {\n    var pNtk *Bac_Ntk_t;  var Entry, i int32;\n    //assert( Vec_IntSize(\u0026p-\u003evBuf2RootNtk) );\n    assert(!Vec_IntSize(\u0026pNew.vBuf2RootNtk), \"!Vec_IntSize(\u0026pNew.vBuf2RootNtk)\");\n    Vec_IntAppend( \u0026pNew.vBuf2RootNtk, \u0026p.vBuf2RootNtk );\n    Vec_IntAppend( \u0026pNew.vBuf2RootObj, \u0026p.vBuf2RootObj );\n    Vec_IntAppend( \u0026pNew.vBuf2LeafNtk, \u0026p.vBuf2LeafNtk );\n    Vec_IntAppend( \u0026pNew.vBuf2LeafObj, \u0026p.vBuf2LeafObj );\n    Vec_IntForEachEntry( \u0026p.vBuf2LeafObj, Entry, i )\n    {\n        pNtk = Bac_ManNtk( p, Vec_IntEntry(\u0026p.vBuf2LeafNtk, i) );\n        Vec_IntWriteEntry( \u0026pNew.vBuf2LeafObj, i, Bac_ObjCopy(pNtk, Entry) );\n    }\n    Vec_IntForEachEntry( \u0026p.vBuf2RootObj, Entry, i )\n    {\n        pNtk = Bac_ManNtk( p, Vec_IntEntry(\u0026p.vBuf2RootNtk, i) );\n        Vec_IntWriteEntry( \u0026pNew.vBuf2RootObj, i, Bac_ObjCopy(pNtk, Entry) );\n    }\n}"
+    },
+    {
+      "Name": "Bac_NtkCreateAndConnectBuffer",
+      "Start": 11923,
+      "End": 12451,
+      "BodyStart": 12022,
+      "Original": "void Bac_NtkCreateAndConnectBuffer( Gia_Man_t * pGia, Gia_Obj_t * pObj, Bac_Ntk_t * p, int iTerm )\n{\n    int iObj;\n    if ( pGia \u0026\u0026 Gia_ObjFaninId0p(pGia, pObj) \u003e 0 )\n    {\n        iObj = Bac_ObjAlloc( p, BAC_OBJ_BI, Gia_ObjFanin0(pObj)-\u003eValue );\n        Bac_ObjAlloc( p, Gia_ObjFaninC0(pObj) ? BAC_BOX_INV : BAC_BOX_BUF, -1 );\n    }\n    else\n    {\n        Bac_ObjAlloc( p, pGia \u0026\u0026 Gia_ObjFaninC0(pObj) ? BAC_BOX_CT : BAC_BOX_CF, -1 );\n    }\n    iObj = Bac_ObjAlloc( p, BAC_OBJ_BO, -1 );\n    Bac_ObjSetFanin( p, iTerm, iObj );\n}",
+      "Draft": "func Bac_NtkCreateAndConnectBuffer(pGia *Gia_Man_t, pObj *Gia_Obj_t, p *Bac_Ntk_t, iTerm int32) {\n    var iObj int32;\n    if (pGia != nil) \u0026\u0026 Gia_ObjFaninId0p(pGia, pObj) \u003e 0 {\n        iObj = Bac_ObjAlloc( p, BAC_OBJ_BI, Gia_ObjFanin0(pObj).Value );\n        Bac_ObjAlloc( p, Gia_ObjFaninC0(pObj) ? BAC_BOX_INV : BAC_BOX_BUF, -1 );\n    \n    } else {\n        Bac_ObjAlloc( p, pGia \u0026\u0026 Gia_ObjFaninC0(pObj) ? BAC_BOX_CT : BAC_BOX_CF, -1 );\n    }\n    iObj = Bac_ObjAlloc( p, BAC_OBJ_BO, -1 );\n    Bac_ObjSetFanin( p, iTerm, iObj );\n}"
+    },
+    {
+      "Name": "Bac_NtkInsertGia",
+      "Start": 12452,
+      "End": 14949,
+      "BodyStart": 12509,
+      "Original": "void Bac_NtkInsertGia( Bac_Man_t * p, Gia_Man_t * pGia )\n{\n    Bac_Ntk_t * pNtk, * pRoot = Bac_ManRoot( p );\n    int i, j, k, iBox, iTerm, Count = 0;\n    Gia_Obj_t * pObj;\n\n    Gia_ManConst0(pGia)-\u003eValue = ~0;\n    Gia_ManForEachPi( pGia, pObj, i )\n        pObj-\u003eValue = Bac_NtkPi( pRoot, i );\n    Gia_ManForEachAnd( pGia, pObj, i )\n    {\n        if ( Gia_ObjIsBuf(pObj) )\n        {\n            pNtk = Bac_ManNtk( p, Vec_IntEntry(\u0026p-\u003evBuf2RootNtk, Count) );\n            iTerm = Vec_IntEntry( \u0026p-\u003evBuf2RootObj, Count );\n            assert( Bac_ObjIsCo(pNtk, iTerm) );\n            if ( Bac_ObjFanin(pNtk, iTerm) == -1 ) // not a feedthrough\n                Bac_NtkCreateAndConnectBuffer( pGia, pObj, pNtk, iTerm );\n            // prepare leaf\n            pObj-\u003eValue = Vec_IntEntry( \u0026p-\u003evBuf2LeafObj, Count++ );\n        }\n        else\n        {\n            int iLit0 = Gia_ObjFanin0(pObj)-\u003eValue;\n            int iLit1 = Gia_ObjFanin1(pObj)-\u003eValue;\n            Bac_ObjType_t Type;\n            pNtk = Bac_ManNtk( p, pObj-\u003eValue );\n            if ( Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) )\n                Type = BAC_BOX_NOR;\n            else if ( Gia_ObjFaninC1(pObj) )\n                Type = BAC_BOX_SHARP;\n            else if ( Gia_ObjFaninC0(pObj) )\n            {\n                Type = BAC_BOX_SHARP;\n                ABC_SWAP( int, iLit0, iLit1 );\n            }\n            else \n                Type = BAC_BOX_AND;\n            // create box\n            iTerm = Bac_ObjAlloc( pNtk, BAC_OBJ_BI, iLit1 );\n            iTerm = Bac_ObjAlloc( pNtk, BAC_OBJ_BI, iLit0 );\n            Bac_ObjAlloc( pNtk, Type, -1 );\n            pObj-\u003eValue = Bac_ObjAlloc( pNtk, BAC_OBJ_BO, -1 );\n        }\n    }\n    assert( Count == Gia_ManBufNum(pGia) );\n\n    // create constant 0 drivers for COs without barbufs\n    Bac_ManForEachNtk( p, pNtk, i )\n    {\n        Bac_NtkForEachBox( pNtk, iBox )\n            Bac_BoxForEachBi( pNtk, iBox, iTerm, j )\n                if ( Bac_ObjFanin(pNtk, iTerm) == -1 )\n                    Bac_NtkCreateAndConnectBuffer( NULL, NULL, pNtk, iTerm );\n        Bac_NtkForEachPo( pNtk, iTerm, k )\n            if ( pNtk != pRoot \u0026\u0026 Bac_ObjFanin(pNtk, iTerm) == -1 )\n                Bac_NtkCreateAndConnectBuffer( NULL, NULL, pNtk, iTerm );\n    }\n    // create node and connect POs\n    Gia_ManForEachPo( pGia, pObj, i )\n        if ( Bac_ObjFanin(pRoot, Bac_NtkPo(pRoot, i)) == -1 ) // not a feedthrough\n            Bac_NtkCreateAndConnectBuffer( pGia, pObj, pRoot, Bac_NtkPo(pRoot, i) );\n}",
+      "Draft": "func Bac_NtkInsertGia(p *Bac_Man_t, pGia *Gia_Man_t) {\n    var pNtk *Bac_Ntk_t;\n    var pRoot *Bac_Ntk_t = Bac_ManRoot( p );\n    var i, j, k, iBox, iTerm, Count int32;\n    var pObj *Gia_Obj_t;\n\n    Gia_ManConst0(pGia).Value = ~0;\n    Gia_ManForEachPi( pGia, pObj, i )\n        pObj.Value = Bac_NtkPi( pRoot, i );\n    Gia_ManForEachAnd( pGia, pObj, i )\n    {\n        if Gia_ObjIsBuf(pObj) {\n            pNtk = Bac_ManNtk( p, Vec_IntEntry(\u0026p.vBuf2RootNtk, Count) );\n            iTerm = Vec_IntEntry( \u0026p.vBuf2RootObj, Count );\n            assert(Bac_ObjIsCo(pNtk, iTerm), \"Bac_ObjIsCo(pNtk, iTerm)\");\n            if Bac_ObjFanin(pNtk, iTerm) == -1 { // not a feedthrough\n                Bac_NtkCreateAndConnectBuffer( pGia, pObj, pNtk, iTerm ); }\n            // prepare leaf\n            pObj.Value = Vec_IntEntry( \u0026p.vBuf2LeafObj, Count++ );\n        \n        } else {\n            var iLit0 int32  = Gia_ObjFanin0(pObj).Value;\n            var iLit1 int32  = Gia_ObjFanin1(pObj).Value;\n            var Type Bac_ObjType_t;\n            pNtk = Bac_ManNtk( p, pObj.Value );\n            if Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) {\n                Type = BAC_BOX_NOR;\n            } else if Gia_ObjFaninC1(pObj) {\n                Type = BAC_BOX_SHARP;\n            } else if Gia_ObjFaninC0(pObj) {\n                Type = BAC_BOX_SHARP;\n                ABC_SWAP( int, iLit0, iLit1 );\n            \n            } else { \n                Type = BAC_BOX_AND; }\n            // create box\n            iTerm = Bac_ObjAlloc( pNtk, BAC_OBJ_BI, iLit1 );\n            iTerm = Bac_ObjAlloc( pNtk, BAC_OBJ_BI, iLit0 );\n            Bac_ObjAlloc( pNtk, Type, -1 );\n            pObj.Value = Bac_ObjAlloc( pNtk, BAC_OBJ_BO, -1 );\n        }\n    }\n    assert(Count == Gia_ManBufNum(pGia), \"Count == Gia_ManBufNum(pGia)\");\n\n    // create constant 0 drivers for COs without barbufs\n    Bac_ManForEachNtk( p, pNtk, i )\n    {\n        Bac_NtkForEachBox( pNtk, iBox )\n            Bac_BoxForEachBi( pNtk, iBox, iTerm, j )\n                if ( Bac_ObjFanin(pNtk, iTerm) == -1 )\n                    Bac_NtkCreateAndConnectBuffer( nil, nil, pNtk, iTerm );\n        Bac_NtkForEachPo( pNtk, iTerm, k )\n            if ( pNtk != pRoot \u0026\u0026 Bac_ObjFanin(pNtk, iTerm) == -1 )\n                Bac_NtkCreateAndConnectBuffer( nil, nil, pNtk, iTerm );\n    }\n    // create node and connect POs\n    Gia_ManForEachPo( pGia, pObj, i )\n        if ( Bac_ObjFanin(pRoot, Bac_NtkPo(pRoot, i)) == -1 ) // not a feedthrough\n            Bac_NtkCreateAndConnectBuffer( pGia, pObj, pRoot, Bac_NtkPo(pRoot, i) );\n}"
+    },
+    {
+      "Name": "Bac_ManInsertGia",
+      "Start": 14950,
+      "End": 15224,
+      "BodyStart": 15014,
+      "Original": "Bac_Man_t * Bac_ManInsertGia( Bac_Man_t * p, Gia_Man_t * pGia )\n{\n    Bac_Man_t * pNew = Bac_ManDupUserBoxes( p );\n    Bac_ManMarkNodesGia( p, pGia );\n    Bac_ManRemapBarbufs( pNew, p );\n    Bac_NtkInsertGia( pNew, pGia );\n    Bac_ManMoveNames( pNew, p );\n    return pNew;\n}",
+      "Draft": "func Bac_ManInsertGia(p *Bac_Man_t, pGia *Gia_Man_t) *Bac_Man_t {\n    var pNew *Bac_Man_t  = Bac_ManDupUserBoxes( p );\n    Bac_ManMarkNodesGia( p, pGia );\n    Bac_ManRemapBarbufs( pNew, p );\n    Bac_NtkInsertGia( pNew, pGia );\n    Bac_ManMoveNames( pNew, p );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Bac_ManBlastTest",
+      "Start": 15460,
+      "End": 15653,
+      "BodyStart": 15506,
+      "Original": "Bac_Man_t * Bac_ManBlastTest( Bac_Man_t * p )\n{\n    Gia_Man_t * pGia = Bac_ManExtract( p, 1, 0 );\n    Bac_Man_t * pNew = Bac_ManInsertGia( p, pGia );\n    Gia_ManStop( pGia );\n    return pNew;\n}",
+      "Draft": "func Bac_ManBlastTest(p *Bac_Man_t) *Bac_Man_t {\n    var pGia *Gia_Man_t  = Bac_ManExtract( p, 1, 0 );\n    var pNew *Bac_Man_t  = Bac_ManInsertGia( p, pGia );\n    Gia_ManStop( pGia );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Abc_NodeIsSeriousGate",
+      "Start": 15939,
+      "End": 16077,
+      "BodyStart": 15996,
+      "Original": "static inline int Abc_NodeIsSeriousGate( Abc_Obj_t * p )\n{\n    return Abc_ObjIsNode(p) \u0026\u0026 Abc_ObjFaninNum(p) \u003e 0 \u0026\u0026 !Abc_ObjIsBarBuf(p);\n}",
+      "Draft": "func Abc_NodeIsSeriousGate(p *Abc_Obj_t) int32 {\n    return Abc_ObjIsNode(p) \u0026\u0026 Abc_ObjFaninNum(p) \u003e 0 \u0026\u0026 !Abc_ObjIsBarBuf(p);\n}"
+    },
+    {
+      "Name": "Bac_ManMarkNodesAbc",
+      "Start": 16078,
+      "End": 16980,
+      "BodyStart": 16138,
+      "Original": "void Bac_ManMarkNodesAbc( Bac_Man_t * p, Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj, * pFanin; int i, k, Count = 0;\n    assert( Vec_IntSize(\u0026p-\u003evBuf2LeafNtk) == pNtk-\u003enBarBufs2 );\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        pObj-\u003eiTemp = 1;\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        if ( Abc_ObjIsBarBuf(pObj) )\n            pObj-\u003eiTemp = Vec_IntEntry( \u0026p-\u003evBuf2LeafNtk, Count++ );\n        else if ( Abc_NodeIsSeriousGate(pObj) )\n        {\n            pObj-\u003eiTemp = Abc_ObjFanin0(pObj)-\u003eiTemp;\n            Abc_ObjForEachFanin( pObj, pFanin, k )\n                assert( pObj-\u003eiTemp == pFanin-\u003eiTemp );\n        }\n    }\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if ( !Abc_NodeIsSeriousGate(Abc_ObjFanin0(pObj)) )\n            continue;\n        assert( Abc_ObjFanin0(pObj)-\u003eiTemp == 1 );\n        pObj-\u003eiTemp = Abc_ObjFanin0(pObj)-\u003eiTemp;\n    }\n    assert( Count == pNtk-\u003enBarBufs2 );\n}",
+      "Draft": "func Bac_ManMarkNodesAbc(p *Bac_Man_t, pNtk *Abc_Ntk_t) {\n    var pObj, pFanin *Abc_Obj_t; var i, k, Count int32;\n    assert(Vec_IntSize(\u0026p.vBuf2LeafNtk) == pNtk.nBarBufs2, \"Vec_IntSize(\u0026p.vBuf2LeafNtk) == pNtk.nBarBufs2\");\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        pObj.iTemp = 1;\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        if Abc_ObjIsBarBuf(pObj) {\n            pObj.iTemp = Vec_IntEntry( \u0026p.vBuf2LeafNtk, Count++ );\n        } else if Abc_NodeIsSeriousGate(pObj) != 0 {\n            pObj.iTemp = Abc_ObjFanin0(pObj).iTemp;\n            Abc_ObjForEachFanin( pObj, pFanin, k )\n                assert(pObj.iTemp == pFanin.iTemp, \"pObj.iTemp == pFanin.iTemp\");\n        }\n    }\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if !(Abc_NodeIsSeriousGate(Abc_ObjFanin0(pObj)) != 0) {\n            continue; }\n        assert(Abc_ObjFanin0(pObj).iTemp == 1, \"Abc_ObjFanin0(pObj).iTemp == 1\");\n        pObj.iTemp = Abc_ObjFanin0(pObj).iTemp;\n    }\n    assert(Count == pNtk.nBarBufs2, \"Count == pNtk.nBarBufs2\");\n}"
+    },
+    {
+      "Name": "Bac_NtkCreateOrConnectFanin",
+      "Start": 16981,
+      "End": 17878,
+      "BodyStart": 17062,
+      "Original": "void Bac_NtkCreateOrConnectFanin( Abc_Obj_t * pFanin, Bac_Ntk_t * p, int iTerm )\n{\n    int iObj;\n    if ( pFanin \u0026\u0026 Abc_NodeIsSeriousGate(pFanin) )//\u0026\u0026 Bac_ObjName(p, pFanin-\u003eiTemp) == -1 ) // gate without name\n    {\n        iObj = pFanin-\u003eiTemp;\n    }\n    else if ( pFanin \u0026\u0026 (Abc_ObjIsPi(pFanin) || Abc_ObjIsBarBuf(pFanin) || Abc_NodeIsSeriousGate(pFanin)) ) // PI/BO or gate with name\n    {\n        iObj = Bac_ObjAlloc( p, BAC_OBJ_BI, pFanin-\u003eiTemp );\n        Bac_ObjAlloc( p, BAC_BOX_GATE, p-\u003epDesign-\u003eElemGates[2] ); // buffer\n        iObj = Bac_ObjAlloc( p, BAC_OBJ_BO, -1 );\n    }\n    else\n    {\n        assert( !pFanin || Abc_NodeIsConst0(pFanin) || Abc_NodeIsConst1(pFanin) );\n        Bac_ObjAlloc( p, BAC_BOX_GATE, p-\u003epDesign-\u003eElemGates[(pFanin \u0026\u0026 Abc_NodeIsConst1(pFanin))] ); // const 0/1\n        iObj = Bac_ObjAlloc( p, BAC_OBJ_BO, -1 );\n    }\n    Bac_ObjSetFanin( p, iTerm, iObj );\n}",
+      "Draft": "func Bac_NtkCreateOrConnectFanin(pFanin *Abc_Obj_t, p *Bac_Ntk_t, iTerm int32) {\n    var iObj int32;\n    if (pFanin != nil) \u0026\u0026 (Abc_NodeIsSeriousGate(pFanin) != 0) {//\u0026\u0026 Bac_ObjName(p, pFanin-\u003eiTemp) == -1 ) // gate without name\n    \n        iObj = pFanin.iTemp;\n    \n    } else if (pFanin != nil) \u0026\u0026 (Abc_ObjIsPi(pFanin) || Abc_ObjIsBarBuf(pFanin) || (Abc_NodeIsSeriousGate(pFanin) != 0)) { // PI/BO or gate with name\n    \n        iObj = Bac_ObjAlloc( p, BAC_OBJ_BI, pFanin.iTemp );\n        Bac_ObjAlloc( p, BAC_BOX_GATE, p.pDesign.ElemGates[2] ); // buffer\n        iObj = Bac_ObjAlloc( p, BAC_OBJ_BO, -1 );\n    \n    } else {\n        assert(!(pFanin != nil) || Abc_NodeIsConst0(pFanin) || Abc_NodeIsConst1(pFanin), \"!pFanin || Abc_NodeIsConst0(pFanin) || Abc_NodeIsConst1(pFanin)\");\n        Bac_ObjAlloc( p, BAC_BOX_GATE, p.pDesign.ElemGates[(pFanin \u0026\u0026 Abc_NodeIsConst1(pFanin))] ); // const 0/1\n        iObj = Bac_ObjAlloc( p, BAC_OBJ_BO, -1 );\n    }\n    Bac_ObjSetFanin( p, iTerm, iObj );\n}"
+    },
+    {
+      "Name": "Bac_NtkPrepareLibrary",
+      "Start": 17879,
+      "End": 18781,
+      "BodyStart": 17945,
+      "Original": "void Bac_NtkPrepareLibrary( Bac_Man_t * p, Mio_Library_t * pLib )\n{\n    Mio_Gate_t * pGate;\n    Mio_Gate_t * pGate0 = Mio_LibraryReadConst0( pLib );\n    Mio_Gate_t * pGate1 = Mio_LibraryReadConst1( pLib );\n    Mio_Gate_t * pGate2 = Mio_LibraryReadBuf( pLib );\n    if ( !pGate0 || !pGate1 || !pGate2 )\n    {\n        printf( \"The library does not have one of the elementary gates.\\n\" );\n        return;\n    }\n    p-\u003eElemGates[0] = Abc_NamStrFindOrAdd( p-\u003epMods, Mio_GateReadName(pGate0), NULL );\n    p-\u003eElemGates[1] = Abc_NamStrFindOrAdd( p-\u003epMods, Mio_GateReadName(pGate1), NULL );\n    p-\u003eElemGates[2] = Abc_NamStrFindOrAdd( p-\u003epMods, Mio_GateReadName(pGate2), NULL );\n    Mio_LibraryForEachGate( pLib, pGate )\n        if ( pGate != pGate0 \u0026\u0026 pGate != pGate1 \u0026\u0026 pGate != pGate2 )\n            Abc_NamStrFindOrAdd( p-\u003epMods, Mio_GateReadName(pGate), NULL );\n    assert( Abc_NamObjNumMax(p-\u003epMods) \u003e 1 );\n}",
+      "Draft": "func Bac_NtkPrepareLibrary(p *Bac_Man_t, pLib *Mio_Library_t) {\n    var pGate *Mio_Gate_t;\n    var pGate0 *Mio_Gate_t  = Mio_LibraryReadConst0( pLib );\n    var pGate1 *Mio_Gate_t  = Mio_LibraryReadConst1( pLib );\n    var pGate2 *Mio_Gate_t  = Mio_LibraryReadBuf( pLib );\n    if !(pGate0 != nil) || !(pGate1 != nil) || !(pGate2 != nil) {\n        fmt.Printf(\"The library does not have one of the elementary gates.\\n\");\n        return;\n    }\n    p.ElemGates[0] = Abc_NamStrFindOrAdd( p.pMods, Mio_GateReadName(pGate0), nil );\n    p.ElemGates[1] = Abc_NamStrFindOrAdd( p.pMods, Mio_GateReadName(pGate1), nil );\n    p.ElemGates[2] = Abc_NamStrFindOrAdd( p.pMods, Mio_GateReadName(pGate2), nil );\n    Mio_LibraryForEachGate( pLib, pGate )\n        if ( pGate != pGate0 \u0026\u0026 pGate != pGate1 \u0026\u0026 pGate != pGate2 )\n            Abc_NamStrFindOrAdd( p.pMods, Mio_GateReadName(pGate), nil );\n    assert(Abc_NamObjNumMax(p.pMods) \u003e 1, \"Abc_NamObjNumMax(p.pMods) \u003e 1\");\n}"
+    },
+    {
+      "Name": "Bac_NtkBuildLibrary",
+      "Start": 18782,
+      "End": 19115,
+      "BodyStart": 18823,
+      "Original": "int Bac_NtkBuildLibrary( Bac_Man_t * p )\n{\n    int RetValue = 1;\n    Mio_Library_t * pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n    if ( pLib == NULL )\n        printf( \"The standard cell library is not available.\\n\" ), RetValue = 0;\n    else\n        Bac_NtkPrepareLibrary( p, pLib );\n    p-\u003epMioLib = pLib;\n    return RetValue;\n}",
+      "Draft": "func Bac_NtkBuildLibrary(p *Bac_Man_t) int32 {\n    var RetValue int32  = 1;\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    if pLib == nil {\n        fmt.Printf(\"The standard cell library is not available.\\n\");\nRetValue = 0;\n    } else {\n        Bac_NtkPrepareLibrary( p, pLib ); }\n    p.pMioLib = pLib;\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Bac_NtkInsertNtk",
+      "Start": 19116,
+      "End": 21345,
+      "BodyStart": 19173,
+      "Original": "void Bac_NtkInsertNtk( Bac_Man_t * p, Abc_Ntk_t * pNtk )\n{\n    Bac_Ntk_t * pCbaNtk, * pRoot = Bac_ManRoot( p );\n    int i, j, k, iBox, iTerm, Count = 0;\n    Abc_Obj_t * pObj;\n    assert( Abc_NtkHasMapping(pNtk) );\n    Bac_NtkPrepareLibrary( p, (Mio_Library_t *)pNtk-\u003epManFunc );\n    p-\u003epMioLib = pNtk-\u003epManFunc;\n\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        pObj-\u003eiTemp = Bac_NtkPi( pRoot, i );\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        if ( Abc_ObjIsBarBuf(pObj) )\n        {\n            pCbaNtk = Bac_ManNtk( p, Vec_IntEntry(\u0026p-\u003evBuf2RootNtk, Count) );\n            iTerm = Vec_IntEntry( \u0026p-\u003evBuf2RootObj, Count );\n            assert( Bac_ObjIsCo(pCbaNtk, iTerm) );\n            if ( Bac_ObjFanin(pCbaNtk, iTerm) == -1 ) // not a feedthrough\n                Bac_NtkCreateOrConnectFanin( Abc_ObjFanin0(pObj), pCbaNtk, iTerm );\n            // prepare leaf\n            pObj-\u003eiTemp = Vec_IntEntry( \u0026p-\u003evBuf2LeafObj, Count++ );\n        }\n        else if ( Abc_NodeIsSeriousGate(pObj) )\n        {\n            pCbaNtk = Bac_ManNtk( p, pObj-\u003eiTemp );\n            for ( k = Abc_ObjFaninNum(pObj)-1; k \u003e= 0; k-- )\n                iTerm = Bac_ObjAlloc( pCbaNtk, BAC_OBJ_BI, Abc_ObjFanin(pObj, k)-\u003eiTemp );\n            Bac_ObjAlloc( pCbaNtk, BAC_BOX_GATE, Abc_NamStrFind(p-\u003epMods, Mio_GateReadName((Mio_Gate_t *)pObj-\u003epData)) );\n            pObj-\u003eiTemp = Bac_ObjAlloc( pCbaNtk, BAC_OBJ_BO, -1 );\n        }\n    }\n    assert( Count == pNtk-\u003enBarBufs2 );\n\n    // create constant 0 drivers for COs without barbufs\n    Bac_ManForEachNtk( p, pCbaNtk, i )\n    {\n        Bac_NtkForEachBox( pCbaNtk, iBox )\n            Bac_BoxForEachBi( pCbaNtk, iBox, iTerm, j )\n                if ( Bac_ObjFanin(pCbaNtk, iTerm) == -1 )\n                    Bac_NtkCreateOrConnectFanin( NULL, pCbaNtk, iTerm );\n        Bac_NtkForEachPo( pCbaNtk, iTerm, k )\n            if ( pCbaNtk != pRoot \u0026\u0026 Bac_ObjFanin(pCbaNtk, iTerm) == -1 )\n                Bac_NtkCreateOrConnectFanin( NULL, pCbaNtk, iTerm );\n    }\n    // create node and connect POs\n    Abc_NtkForEachPo( pNtk, pObj, i )\n        if ( Bac_ObjFanin(pRoot, Bac_NtkPo(pRoot, i)) == -1 ) // not a feedthrough\n            Bac_NtkCreateOrConnectFanin( Abc_ObjFanin0(pObj), pRoot, Bac_NtkPo(pRoot, i) );\n}",
+      "Draft": "func Bac_NtkInsertNtk(p *Bac_Man_t, pNtk *Abc_Ntk_t) {\n    var pCbaNtk *Bac_Ntk_t;\n    var pRoot *Bac_Ntk_t = Bac_ManRoot( p );\n    var i, j, k, iBox, iTerm, Count int32;\n    var pObj *Abc_Obj_t;\n    assert(Abc_NtkHasMapping(pNtk), \"Abc_NtkHasMapping(pNtk)\");\n    Bac_NtkPrepareLibrary( p, (Mio_Library_t *)pNtk.pManFunc );\n    p.pMioLib = pNtk.pManFunc;\n\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        pObj.iTemp = Bac_NtkPi( pRoot, i );\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        if Abc_ObjIsBarBuf(pObj) {\n            pCbaNtk = Bac_ManNtk( p, Vec_IntEntry(\u0026p.vBuf2RootNtk, Count) );\n            iTerm = Vec_IntEntry( \u0026p.vBuf2RootObj, Count );\n            assert(Bac_ObjIsCo(pCbaNtk, iTerm), \"Bac_ObjIsCo(pCbaNtk, iTerm)\");\n            if Bac_ObjFanin(pCbaNtk, iTerm) == -1 { // not a feedthrough\n                Bac_NtkCreateOrConnectFanin( Abc_ObjFanin0(pObj), pCbaNtk, iTerm ); }\n            // prepare leaf\n            pObj.iTemp = Vec_IntEntry( \u0026p.vBuf2LeafObj, Count++ );\n        \n        } else if Abc_NodeIsSeriousGate(pObj) != 0 {\n            pCbaNtk = Bac_ManNtk( p, pObj.iTemp );\n            for  k = Abc_ObjFaninNum(pObj)-1; k \u003e= 0; k--  {\n                iTerm = Bac_ObjAlloc( pCbaNtk, BAC_OBJ_BI, Abc_ObjFanin(pObj, k).iTemp );\n            }\n            Bac_ObjAlloc( pCbaNtk, BAC_BOX_GATE, Abc_NamStrFind(p.pMods, Mio_GateReadName((Mio_Gate_t *)pObj.pData)) );\n            pObj.iTemp = Bac_ObjAlloc( pCbaNtk, BAC_OBJ_BO, -1 );\n        }\n    }\n    assert(Count == pNtk.nBarBufs2, \"Count == pNtk.nBarBufs2\");\n\n    // create constant 0 drivers for COs without barbufs\n    Bac_ManForEachNtk( p, pCbaNtk, i )\n    {\n        Bac_NtkForEachBox( pCbaNtk, iBox )\n            Bac_BoxForEachBi( pCbaNtk, iBox, iTerm, j )\n                if ( Bac_ObjFanin(pCbaNtk, iTerm) == -1 )\n                    Bac_NtkCreateOrConnectFanin( nil, pCbaNtk, iTerm );\n        Bac_NtkForEachPo( pCbaNtk, iTerm, k )\n            if ( pCbaNtk != pRoot \u0026\u0026 Bac_ObjFanin(pCbaNtk, iTerm) == -1 )\n                Bac_NtkCreateOrConnectFanin( nil, pCbaNtk, iTerm );\n    }\n    // create node and connect POs\n    Abc_NtkForEachPo( pNtk, pObj, i )\n        if ( Bac_ObjFanin(pRoot, Bac_NtkPo(pRoot, i)) == -1 ) // not a feedthrough\n            Bac_NtkCreateOrConnectFanin( Abc_ObjFanin0(pObj), pRoot, Bac_NtkPo(pRoot, i) );\n}"
+    },
+    {
+      "Name": "Bac_ManInsertAbc",
+      "Start": 21346,
+      "End": 21652,
+      "BodyStart": 21400,
+      "Original": "void * Bac_ManInsertAbc( Bac_Man_t * p, void * pAbc )\n{\n    Abc_Ntk_t * pNtk = (Abc_Ntk_t *)pAbc;\n    Bac_Man_t * pNew = Bac_ManDupUserBoxes( p );\n    Bac_ManMarkNodesAbc( p, pNtk );\n    Bac_ManRemapBarbufs( pNew, p );\n    Bac_NtkInsertNtk( pNew, pNtk );\n    Bac_ManMoveNames( pNew, p );\n    return pNew;\n}",
+      "Draft": "func Bac_ManInsertAbc(p *Bac_Man_t, pAbc any) any {\n    var pNtk *Abc_Ntk_t  = (Abc_Ntk_t *)pAbc;\n    var pNew *Bac_Man_t  = Bac_ManDupUserBoxes( p );\n    Bac_ManMarkNodesAbc( p, pNtk );\n    Bac_ManRemapBarbufs( pNew, p );\n    Bac_NtkInsertNtk( pNew, pNtk );\n    Bac_ManMoveNames( pNew, p );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::pointer-cast::1723",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1723,
+      "End": 1740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::pointer-cast::1923",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1923,
+      "End": 1932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::pointer-cast::2154",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2154,
+      "End": 2169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::pointer-cast::5249",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5249,
+      "End": 5264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::pointer-cast::18874",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18874,
+      "End": 18891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::pointer-cast::19360",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19360,
+      "End": 19377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::pointer-cast::20414",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20414,
+      "End": 20428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::pointer-cast::21425",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21425,
+      "End": 21438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_ManPrepareGates",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManPrepareGates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1354,
+      "End": 1943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_ManUndoGates",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManUndoGates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1944,
+      "End": 2217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_ManAddBarbuf",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManAddBarbuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2454,
+      "End": 3577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_ManExtract_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManExtract_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3578,
+      "End": 8594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_ManExtract",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManExtract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8595,
+      "End": 10029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_ManMarkNodesGia",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManMarkNodesGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10315,
+      "End": 11061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_ManRemapBarbufs",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManRemapBarbufs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11062,
+      "End": 11922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::ternary::Bac_NtkCreateAndConnectBuffer",
+      "Category": "ternary-review",
+      "Symbol": "Bac_NtkCreateAndConnectBuffer",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11923,
+      "End": 12451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_NtkCreateAndConnectBuffer",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkCreateAndConnectBuffer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11923,
+      "End": 12451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_NtkInsertGia",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkInsertGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12452,
+      "End": 14949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_ManInsertGia",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManInsertGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14950,
+      "End": 15224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_ManBlastTest",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManBlastTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15460,
+      "End": 15653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Abc_NodeIsSeriousGate",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeIsSeriousGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15939,
+      "End": 16077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_ManMarkNodesAbc",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManMarkNodesAbc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16078,
+      "End": 16980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_NtkCreateOrConnectFanin",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkCreateOrConnectFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16981,
+      "End": 17878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_NtkPrepareLibrary",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkPrepareLibrary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17879,
+      "End": 18781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_NtkBuildLibrary",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkBuildLibrary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18782,
+      "End": 19115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_NtkInsertNtk",
+      "Category": "semantic-review",
+      "Symbol": "Bac_NtkInsertNtk",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19116,
+      "End": 21345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::void-pointer::Bac_ManInsertAbc",
+      "Category": "void-pointer-review",
+      "Symbol": "Bac_ManInsertAbc",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 21346,
+      "End": 21652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::Bac_ManInsertAbc",
+      "Category": "semantic-review",
+      "Symbol": "Bac_ManInsertAbc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21346,
+      "End": 21652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::1495",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1495,
+      "End": 1550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::2191",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2191,
+      "End": 2214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::4867",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_BoxForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4867,
+      "End": 4912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::8953",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_ManForEachNtk",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8953,
+      "End": 8984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::9256",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_NtkForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9256,
+      "End": 9290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::9522",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9522,
+      "End": 9556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::9733",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9733,
+      "End": 9767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::10525",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10525,
+      "End": 10558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::10588",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachAnd",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10588,
+      "End": 10622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::10938",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10938,
+      "End": 10971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::11501",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11501,
+      "End": 11550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::11713",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11713,
+      "End": 11762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::12666",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12666,
+      "End": 12699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::12749",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachAnd",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12749,
+      "End": 12783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::13775",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_SWAP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13775,
+      "End": 13804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::14252",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_ManForEachNtk",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14252,
+      "End": 14283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::14298",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_NtkForEachBox",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14298,
+      "End": 14329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::14342",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_BoxForEachBi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14342,
+      "End": 14382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::14524",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14524,
+      "End": 14558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::14746",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14746,
+      "End": 14779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::16261",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16261,
+      "End": 16294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::16324",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16324,
+      "End": 16359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::16596",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16596,
+      "End": 16634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::16711",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16711,
+      "End": 16744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::18551",
+      "Category": "macro-inline-review",
+      "Symbol": "Mio_LibraryForEachGate",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18551,
+      "End": 18588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::19433",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19433,
+      "End": 19466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::19516",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19516,
+      "End": 19551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::20630",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_ManForEachNtk",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20630,
+      "End": 20664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::20679",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_NtkForEachBox",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20679,
+      "End": 20713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::20726",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_BoxForEachBi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20726,
+      "End": 20769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::20909",
+      "Category": "macro-inline-review",
+      "Symbol": "Bac_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20909,
+      "End": 20946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/bac/bacBlast.c::macro-inline::21135",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21135,
+      "End": 21168
+    }
+  ],
+  "Draft": "package bac\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [bacBlast.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Bit-blasting of the netlist.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 29, 2014.]\n\n  Revision    [$Id: bacBlast.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bac.h\"\n//#include \"base/abc/abc.h\"\n//#include \"map/mio/mio.h\"\n//#include \"bool/dec/dec.h\"\n//#include \"base/main/mainInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_ManPrepareGates(p *Bac_Man_t) {\n    var ppGraphs **Dec_Graph_t; var i int32;\n    if p.pMioLib == nil {\n        return; }\n    ppGraphs = ABC_CALLOC( Dec_Graph_t *, Abc_NamObjNumMax(p.pMods) );\n    for  i = 1; i \u003c Abc_NamObjNumMax(p.pMods); i++  {\n        var pGateName string  = Abc_NamStr( p.pMods, i );\n        var pGate *Mio_Gate_t  = Mio_LibraryReadGateByName( (Mio_Library_t *)p.pMioLib, pGateName, nil );\n        if pGate != nil {\n            ppGraphs[i] = Dec_Factor( Mio_GateReadSop(pGate) ); }\n    }\n    assert(p.ppGraphs == nil, \"p.ppGraphs == nil\");\n    p.ppGraphs = (void **)ppGraphs;\n}\nfunc Bac_ManUndoGates(p *Bac_Man_t) {\n    var i int32;\n    if p.pMioLib == nil {\n        return; }\n    for  i = 1; i \u003c Abc_NamObjNumMax(p.pMods); i++  {\n        if p.ppGraphs[i] {\n            Dec_GraphFree( (Dec_Graph_t *)p.ppGraphs[i] ); }\n    }\n    ABC_FREE( p.ppGraphs );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_ManAddBarbuf(pNew *Gia_Man_t, iRes int32, p *Bac_Man_t, iLNtk int32, iLObj int32, iRNtk int32, iRObj int32, vMap *Vec_Int_t) int32 {\n    var iBufLit, iIdLit int32;\n    if iRes == 0 || iRes == 1 {\n        return iRes; }\n    assert(iRes \u003e 0, \"iRes \u003e 0\");\n    if vMap \u0026\u0026 Abc_Lit2Var(iRes) \u003c Vec_IntSize(vMap) \u0026\u0026 (iIdLit = Vec_IntEntry(vMap, Abc_Lit2Var(iRes))) \u003e= 0 \u0026\u0026 \n        Vec_IntEntry(\u0026p.vBuf2LeafNtk, Abc_Lit2Var(iIdLit)) == iLNtk \u0026\u0026 Vec_IntEntry(\u0026p.vBuf2RootNtk, Abc_Lit2Var(iIdLit)) == iRNtk {\n        return Abc_LitNotCond( Vec_IntEntry(pNew.vBarBufs, Abc_Lit2Var(iIdLit)), Abc_LitIsCompl(iRes) ^ Abc_LitIsCompl(iIdLit) ); }\n    assert(Bac_ManNtkIsOk(p, iLNtk) \u0026\u0026 Bac_ManNtkIsOk(p, iRNtk), \"Bac_ManNtkIsOk(p, iLNtk) \u0026\u0026 Bac_ManNtkIsOk(p, iRNtk)\");\n    Vec_IntPush( \u0026p.vBuf2LeafNtk, iLNtk );\n    Vec_IntPush( \u0026p.vBuf2LeafObj, iLObj );\n    Vec_IntPush( \u0026p.vBuf2RootNtk, iRNtk );\n    Vec_IntPush( \u0026p.vBuf2RootObj, iRObj );\n    iBufLit = Gia_ManAppendBuf( pNew, iRes );\n    if vMap != nil {\n        Vec_IntSetEntryFull( vMap, Abc_Lit2Var(iRes), Abc_Var2Lit(Vec_IntSize(pNew.vBarBufs), Abc_LitIsCompl(iRes)) );\n        Vec_IntPush( pNew.vBarBufs, iBufLit );\n    }\n    return iBufLit;\n}\nfunc Bac_ManExtract_rec(pNew *Gia_Man_t, p *Bac_Ntk_t, i int32, fBuffers int32, vMap *Vec_Int_t) int32 {\n    var iRes int32  = Bac_ObjCopy( p, i );\n    if iRes \u003e= 0 {\n        return iRes; }\n    if Bac_ObjIsCo(p, i) {\n        iRes = Bac_ManExtract_rec( pNew, p, Bac_ObjFanin(p, i), fBuffers, vMap );\n    } else if Bac_ObjIsPi(p, i) {\n        var pHost *Bac_Ntk_t  = Bac_NtkHostNtk( p );\n        var iObj int32  = Bac_BoxBi( pHost, Bac_NtkHostObj(p), Bac_ObjIndex(p, i) );\n        iRes = Bac_ManExtract_rec( pNew, pHost, iObj, fBuffers, vMap );\n        if fBuffers != 0 {\n            iRes = Bac_ManAddBarbuf( pNew, iRes, p.pDesign, Bac_NtkId(p), i, Bac_NtkId(pHost), iObj, vMap ); }\n    \n    } else if Bac_ObjIsBo(p, i) {\n        var iBox int32  = Bac_BoxBoBox(p, i);\n        if Bac_ObjIsBoxUser(p, iBox) { // user box\n        \n            var pBox *Bac_Ntk_t  = Bac_BoxBoNtk( p, i );\n            var iObj int32  = Bac_NtkPo( pBox, Bac_ObjIndex(p, i) );\n            iRes = Bac_ManExtract_rec( pNew, pBox, iObj, fBuffers, vMap );\n            if fBuffers != 0 {\n                iRes = Bac_ManAddBarbuf( pNew, iRes, p.pDesign, Bac_NtkId(p), i, Bac_NtkId(pBox), iObj, vMap ); }\n        \n        } else { // primitive\n        \n            var iFanin int32;\n            var nLits int32;\n            var pLits [16]int32;\n            assert(Bac_ObjIsBoxPrim(p, iBox), \"Bac_ObjIsBoxPrim(p, iBox)\");\n            Bac_BoxForEachFanin( p, iBox, iFanin, nLits )\n                pLits[nLits] = Bac_ManExtract_rec( pNew, p, iFanin, fBuffers, vMap );\n            assert(nLits \u003c= 16, \"nLits \u003c= 16\");\n            if p.pDesign.ppGraphs { // mapped gate\n            \n                extern int Gia_ManFactorGraph( Gia_Man_t * p, Dec_Graph_t * pFForm, Vec_Int_t * vLeaves );\n                var pGraph *Dec_Graph_t  = (Dec_Graph_t *)p.pDesign.ppGraphs[Bac_BoxNtkId(p, iBox)];\n                var Leaves Vec_Int_t  = Vec_Int_t{ nLits, nLits, pLits };\n                assert(pGraph != nil, \"pGraph != nil\");\n                return Gia_ManFactorGraph( pNew, pGraph, \u0026Leaves );\n            \n            } else {\n                var Type Bac_ObjType_t  = Bac_ObjType(p, iBox);\n                if nLits == 0 {\n                    if Type == BAC_BOX_CF {\n                        iRes = 0;\n                    } else if Type == BAC_BOX_CT {\n                        iRes = 1;\n                    } else { assert(false, \"0\"); }\n                \n                } else if nLits == 1 {\n                    if Type == BAC_BOX_BUF {\n                        iRes = pLits[0];\n                    } else if Type == BAC_BOX_INV {\n                        iRes = Abc_LitNot( pLits[0] );\n                    } else { assert(false, \"0\"); }\n                \n                } else if nLits == 2 {\n                    if Type == BAC_BOX_AND {\n                        iRes = Gia_ManHashAnd( pNew, pLits[0], pLits[1] );\n                    } else if Type == BAC_BOX_NAND {\n                        iRes = Abc_LitNot( Gia_ManHashAnd( pNew, pLits[0], pLits[1] ) );\n                    } else if Type == BAC_BOX_OR {\n                        iRes = Gia_ManHashOr( pNew, pLits[0], pLits[1] );\n                    } else if Type == BAC_BOX_NOR {\n                        iRes = Abc_LitNot( Gia_ManHashOr( pNew, pLits[0], pLits[1] ) );\n                    } else if Type == BAC_BOX_XOR {\n                        iRes = Gia_ManHashXor( pNew, pLits[0], pLits[1] );\n                    } else if Type == BAC_BOX_XNOR {\n                        iRes = Abc_LitNot( Gia_ManHashXor( pNew, pLits[0], pLits[1] ) );\n                    } else if Type == BAC_BOX_SHARP {\n                        iRes = Gia_ManHashAnd( pNew, pLits[0], Abc_LitNot(pLits[1]) );\n                    } else if Type == BAC_BOX_SHARPL {\n                        iRes = Gia_ManHashAnd( pNew, Abc_LitNot(pLits[0]), pLits[1] );\n                    } else { assert(false, \"0\"); }\n                \n                } else if nLits == 3 {\n                    if Type == BAC_BOX_MUX {\n                        iRes = Gia_ManHashMux( pNew, pLits[0], pLits[1], pLits[2] );\n                    } else if Type == BAC_BOX_MAJ {\n                        iRes = Gia_ManHashMaj( pNew, pLits[0], pLits[1], pLits[2] );\n                    } else if Type == BAC_BOX_ADD {\n                        var iRes0 int32  = Gia_ManHashAnd( pNew, pLits[1], pLits[2] );\n                        var iRes1 int32  = Gia_ManHashOr( pNew, pLits[1], pLits[2] );\n                        assert(Bac_BoxBoNum(p, iBox) == 2, \"Bac_BoxBoNum(p, iBox) == 2\");\n                        if Bac_BoxBo(p, iBox, 0) == i { // sum\n                            iRes = Gia_ManHashXor( pNew, pLits[0], Gia_ManHashAnd(pNew, Abc_LitNot(iRes0), iRes1) );\n                        } else if Bac_BoxBo(p, iBox, 1) == i { // cout\n                            iRes = Gia_ManHashOr( pNew, iRes0, Gia_ManHashAnd(pNew, pLits[0], iRes1) );\n                        } else { assert(false, \"0\"); }\n                    \n                    } else { assert(false, \"0\"); }\n                \n                } else { assert(false, \"0\"); }\n            }\n        }\n    \n    } else { assert(false, \"0\"); }\n    Bac_ObjSetCopy( p, i, iRes );\n    return iRes;\n}\nfunc Bac_ManExtract(p *Bac_Man_t, fBuffers int32, fVerbose int32) *Gia_Man_t {\n    var pNtk *Bac_Ntk_t;\n    var pRoot *Bac_Ntk_t = Bac_ManRoot(p);\n    var pNew, pTemp *Gia_Man_t; \n    var vMap *Vec_Int_t  = nil;\n    var i, iObj int32;\n\n    Vec_IntClear( \u0026p.vBuf2LeafNtk );\n    Vec_IntClear( \u0026p.vBuf2LeafObj );\n    Vec_IntClear( \u0026p.vBuf2RootNtk );\n    Vec_IntClear( \u0026p.vBuf2RootObj );\n\n    Bac_ManForEachNtk( p, pNtk, i )\n    {\n        Bac_NtkDeriveIndex( pNtk );\n        Bac_NtkStartCopies( pNtk );\n    }\n\n    // start the manager\n    pNew = Gia_ManStart( Bac_ManNodeNum(p) );\n    pNew.pName = Abc_UtilStrsav(p.pName);\n    pNew.pSpec = Abc_UtilStrsav(p.pSpec);\n\n    // primary inputs\n    Bac_NtkForEachPi( pRoot, iObj, i )\n        Bac_ObjSetCopy( pRoot, iObj, Gia_ManAppendCi(pNew) );\n\n    // internal nodes\n    Gia_ManHashAlloc( pNew );\n    pNew.vBarBufs = Vec_IntAlloc( 10000 );\n    vMap = Vec_IntStartFull( 10000 );\n    Bac_ManPrepareGates( p );\n    Bac_NtkForEachPo( pRoot, iObj, i )\n        Bac_ManExtract_rec( pNew, pRoot, iObj, fBuffers, vMap );\n    Bac_ManUndoGates( p );\n    Vec_IntFreeP( \u0026vMap );\n    Gia_ManHashStop( pNew );\n\n    // primary outputs\n    Bac_NtkForEachPo( pRoot, iObj, i )\n        Gia_ManAppendCo( pNew, Bac_ObjCopy(pRoot, iObj) );\n    assert(Vec_IntSize(\u0026p.vBuf2LeafNtk) == pNew.nBufs, \"Vec_IntSize(\u0026p.vBuf2LeafNtk) == pNew.nBufs\");\n\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    //Gia_ManPrintStats( pNew, NULL );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Mark each GIA node with the network it belongs to.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_ManMarkNodesGia(p *Bac_Man_t, pGia *Gia_Man_t) {\n    var pObj *Gia_Obj_t; var i, Count int32;\n    assert(Vec_IntSize(\u0026p.vBuf2LeafNtk) == Gia_ManBufNum(pGia), \"Vec_IntSize(\u0026p.vBuf2LeafNtk) == Gia_ManBufNum(pGia)\");\n    Gia_ManConst0(pGia).Value = 1;\n    Gia_ManForEachPi( pGia, pObj, i )\n        pObj.Value = 1;\n    Gia_ManForEachAnd( pGia, pObj, i )\n    {\n        if Gia_ObjIsBuf(pObj) {\n            pObj.Value = Vec_IntEntry( \u0026p.vBuf2LeafNtk, Count++ );\n        } else {\n            pObj.Value = Gia_ObjFanin0(pObj).Value;\n            assert(pObj.Value == Gia_ObjFanin1(pObj).Value, \"pObj.Value == Gia_ObjFanin1(pObj).Value\");\n        }\n    }\n    assert(Count == Gia_ManBufNum(pGia), \"Count == Gia_ManBufNum(pGia)\");\n    Gia_ManForEachPo( pGia, pObj, i )\n    {\n        assert(Gia_ObjFanin0(pObj).Value == 1, \"Gia_ObjFanin0(pObj).Value == 1\");\n        pObj.Value = 1;\n    }\n}\nfunc Bac_ManRemapBarbufs(pNew *Bac_Man_t, p *Bac_Man_t) {\n    var pNtk *Bac_Ntk_t;  var Entry, i int32;\n    //assert( Vec_IntSize(\u0026p-\u003evBuf2RootNtk) );\n    assert(!Vec_IntSize(\u0026pNew.vBuf2RootNtk), \"!Vec_IntSize(\u0026pNew.vBuf2RootNtk)\");\n    Vec_IntAppend( \u0026pNew.vBuf2RootNtk, \u0026p.vBuf2RootNtk );\n    Vec_IntAppend( \u0026pNew.vBuf2RootObj, \u0026p.vBuf2RootObj );\n    Vec_IntAppend( \u0026pNew.vBuf2LeafNtk, \u0026p.vBuf2LeafNtk );\n    Vec_IntAppend( \u0026pNew.vBuf2LeafObj, \u0026p.vBuf2LeafObj );\n    Vec_IntForEachEntry( \u0026p.vBuf2LeafObj, Entry, i )\n    {\n        pNtk = Bac_ManNtk( p, Vec_IntEntry(\u0026p.vBuf2LeafNtk, i) );\n        Vec_IntWriteEntry( \u0026pNew.vBuf2LeafObj, i, Bac_ObjCopy(pNtk, Entry) );\n    }\n    Vec_IntForEachEntry( \u0026p.vBuf2RootObj, Entry, i )\n    {\n        pNtk = Bac_ManNtk( p, Vec_IntEntry(\u0026p.vBuf2RootNtk, i) );\n        Vec_IntWriteEntry( \u0026pNew.vBuf2RootObj, i, Bac_ObjCopy(pNtk, Entry) );\n    }\n}\nfunc Bac_NtkCreateAndConnectBuffer(pGia *Gia_Man_t, pObj *Gia_Obj_t, p *Bac_Ntk_t, iTerm int32) {\n    var iObj int32;\n    if (pGia != nil) \u0026\u0026 Gia_ObjFaninId0p(pGia, pObj) \u003e 0 {\n        iObj = Bac_ObjAlloc( p, BAC_OBJ_BI, Gia_ObjFanin0(pObj).Value );\n        Bac_ObjAlloc( p, Gia_ObjFaninC0(pObj) ? BAC_BOX_INV : BAC_BOX_BUF, -1 );\n    \n    } else {\n        Bac_ObjAlloc( p, pGia \u0026\u0026 Gia_ObjFaninC0(pObj) ? BAC_BOX_CT : BAC_BOX_CF, -1 );\n    }\n    iObj = Bac_ObjAlloc( p, BAC_OBJ_BO, -1 );\n    Bac_ObjSetFanin( p, iTerm, iObj );\n}\nfunc Bac_NtkInsertGia(p *Bac_Man_t, pGia *Gia_Man_t) {\n    var pNtk *Bac_Ntk_t;\n    var pRoot *Bac_Ntk_t = Bac_ManRoot( p );\n    var i, j, k, iBox, iTerm, Count int32;\n    var pObj *Gia_Obj_t;\n\n    Gia_ManConst0(pGia).Value = ~0;\n    Gia_ManForEachPi( pGia, pObj, i )\n        pObj.Value = Bac_NtkPi( pRoot, i );\n    Gia_ManForEachAnd( pGia, pObj, i )\n    {\n        if Gia_ObjIsBuf(pObj) {\n            pNtk = Bac_ManNtk( p, Vec_IntEntry(\u0026p.vBuf2RootNtk, Count) );\n            iTerm = Vec_IntEntry( \u0026p.vBuf2RootObj, Count );\n            assert(Bac_ObjIsCo(pNtk, iTerm), \"Bac_ObjIsCo(pNtk, iTerm)\");\n            if Bac_ObjFanin(pNtk, iTerm) == -1 { // not a feedthrough\n                Bac_NtkCreateAndConnectBuffer( pGia, pObj, pNtk, iTerm ); }\n            // prepare leaf\n            pObj.Value = Vec_IntEntry( \u0026p.vBuf2LeafObj, Count++ );\n        \n        } else {\n            var iLit0 int32  = Gia_ObjFanin0(pObj).Value;\n            var iLit1 int32  = Gia_ObjFanin1(pObj).Value;\n            var Type Bac_ObjType_t;\n            pNtk = Bac_ManNtk( p, pObj.Value );\n            if Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) {\n                Type = BAC_BOX_NOR;\n            } else if Gia_ObjFaninC1(pObj) {\n                Type = BAC_BOX_SHARP;\n            } else if Gia_ObjFaninC0(pObj) {\n                Type = BAC_BOX_SHARP;\n                ABC_SWAP( int, iLit0, iLit1 );\n            \n            } else { \n                Type = BAC_BOX_AND; }\n            // create box\n            iTerm = Bac_ObjAlloc( pNtk, BAC_OBJ_BI, iLit1 );\n            iTerm = Bac_ObjAlloc( pNtk, BAC_OBJ_BI, iLit0 );\n            Bac_ObjAlloc( pNtk, Type, -1 );\n            pObj.Value = Bac_ObjAlloc( pNtk, BAC_OBJ_BO, -1 );\n        }\n    }\n    assert(Count == Gia_ManBufNum(pGia), \"Count == Gia_ManBufNum(pGia)\");\n\n    // create constant 0 drivers for COs without barbufs\n    Bac_ManForEachNtk( p, pNtk, i )\n    {\n        Bac_NtkForEachBox( pNtk, iBox )\n            Bac_BoxForEachBi( pNtk, iBox, iTerm, j )\n                if ( Bac_ObjFanin(pNtk, iTerm) == -1 )\n                    Bac_NtkCreateAndConnectBuffer( nil, nil, pNtk, iTerm );\n        Bac_NtkForEachPo( pNtk, iTerm, k )\n            if ( pNtk != pRoot \u0026\u0026 Bac_ObjFanin(pNtk, iTerm) == -1 )\n                Bac_NtkCreateAndConnectBuffer( nil, nil, pNtk, iTerm );\n    }\n    // create node and connect POs\n    Gia_ManForEachPo( pGia, pObj, i )\n        if ( Bac_ObjFanin(pRoot, Bac_NtkPo(pRoot, i)) == -1 ) // not a feedthrough\n            Bac_NtkCreateAndConnectBuffer( pGia, pObj, pRoot, Bac_NtkPo(pRoot, i) );\n}\nfunc Bac_ManInsertGia(p *Bac_Man_t, pGia *Gia_Man_t) *Bac_Man_t {\n    var pNew *Bac_Man_t  = Bac_ManDupUserBoxes( p );\n    Bac_ManMarkNodesGia( p, pGia );\n    Bac_ManRemapBarbufs( pNew, p );\n    Bac_NtkInsertGia( pNew, pGia );\n    Bac_ManMoveNames( pNew, p );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bac_ManBlastTest(p *Bac_Man_t) *Bac_Man_t {\n    var pGia *Gia_Man_t  = Bac_ManExtract( p, 1, 0 );\n    var pNew *Bac_Man_t  = Bac_ManInsertGia( p, pGia );\n    Gia_ManStop( pGia );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Mark each GIA node with the network it belongs to.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeIsSeriousGate(p *Abc_Obj_t) int32 {\n    return Abc_ObjIsNode(p) \u0026\u0026 Abc_ObjFaninNum(p) \u003e 0 \u0026\u0026 !Abc_ObjIsBarBuf(p);\n}\nfunc Bac_ManMarkNodesAbc(p *Bac_Man_t, pNtk *Abc_Ntk_t) {\n    var pObj, pFanin *Abc_Obj_t; var i, k, Count int32;\n    assert(Vec_IntSize(\u0026p.vBuf2LeafNtk) == pNtk.nBarBufs2, \"Vec_IntSize(\u0026p.vBuf2LeafNtk) == pNtk.nBarBufs2\");\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        pObj.iTemp = 1;\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        if Abc_ObjIsBarBuf(pObj) {\n            pObj.iTemp = Vec_IntEntry( \u0026p.vBuf2LeafNtk, Count++ );\n        } else if Abc_NodeIsSeriousGate(pObj) != 0 {\n            pObj.iTemp = Abc_ObjFanin0(pObj).iTemp;\n            Abc_ObjForEachFanin( pObj, pFanin, k )\n                assert(pObj.iTemp == pFanin.iTemp, \"pObj.iTemp == pFanin.iTemp\");\n        }\n    }\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        if !(Abc_NodeIsSeriousGate(Abc_ObjFanin0(pObj)) != 0) {\n            continue; }\n        assert(Abc_ObjFanin0(pObj).iTemp == 1, \"Abc_ObjFanin0(pObj).iTemp == 1\");\n        pObj.iTemp = Abc_ObjFanin0(pObj).iTemp;\n    }\n    assert(Count == pNtk.nBarBufs2, \"Count == pNtk.nBarBufs2\");\n}\nfunc Bac_NtkCreateOrConnectFanin(pFanin *Abc_Obj_t, p *Bac_Ntk_t, iTerm int32) {\n    var iObj int32;\n    if (pFanin != nil) \u0026\u0026 (Abc_NodeIsSeriousGate(pFanin) != 0) {//\u0026\u0026 Bac_ObjName(p, pFanin-\u003eiTemp) == -1 ) // gate without name\n    \n        iObj = pFanin.iTemp;\n    \n    } else if (pFanin != nil) \u0026\u0026 (Abc_ObjIsPi(pFanin) || Abc_ObjIsBarBuf(pFanin) || (Abc_NodeIsSeriousGate(pFanin) != 0)) { // PI/BO or gate with name\n    \n        iObj = Bac_ObjAlloc( p, BAC_OBJ_BI, pFanin.iTemp );\n        Bac_ObjAlloc( p, BAC_BOX_GATE, p.pDesign.ElemGates[2] ); // buffer\n        iObj = Bac_ObjAlloc( p, BAC_OBJ_BO, -1 );\n    \n    } else {\n        assert(!(pFanin != nil) || Abc_NodeIsConst0(pFanin) || Abc_NodeIsConst1(pFanin), \"!pFanin || Abc_NodeIsConst0(pFanin) || Abc_NodeIsConst1(pFanin)\");\n        Bac_ObjAlloc( p, BAC_BOX_GATE, p.pDesign.ElemGates[(pFanin \u0026\u0026 Abc_NodeIsConst1(pFanin))] ); // const 0/1\n        iObj = Bac_ObjAlloc( p, BAC_OBJ_BO, -1 );\n    }\n    Bac_ObjSetFanin( p, iTerm, iObj );\n}\nfunc Bac_NtkPrepareLibrary(p *Bac_Man_t, pLib *Mio_Library_t) {\n    var pGate *Mio_Gate_t;\n    var pGate0 *Mio_Gate_t  = Mio_LibraryReadConst0( pLib );\n    var pGate1 *Mio_Gate_t  = Mio_LibraryReadConst1( pLib );\n    var pGate2 *Mio_Gate_t  = Mio_LibraryReadBuf( pLib );\n    if !(pGate0 != nil) || !(pGate1 != nil) || !(pGate2 != nil) {\n        fmt.Printf(\"The library does not have one of the elementary gates.\\n\");\n        return;\n    }\n    p.ElemGates[0] = Abc_NamStrFindOrAdd( p.pMods, Mio_GateReadName(pGate0), nil );\n    p.ElemGates[1] = Abc_NamStrFindOrAdd( p.pMods, Mio_GateReadName(pGate1), nil );\n    p.ElemGates[2] = Abc_NamStrFindOrAdd( p.pMods, Mio_GateReadName(pGate2), nil );\n    Mio_LibraryForEachGate( pLib, pGate )\n        if ( pGate != pGate0 \u0026\u0026 pGate != pGate1 \u0026\u0026 pGate != pGate2 )\n            Abc_NamStrFindOrAdd( p.pMods, Mio_GateReadName(pGate), nil );\n    assert(Abc_NamObjNumMax(p.pMods) \u003e 1, \"Abc_NamObjNumMax(p.pMods) \u003e 1\");\n}\nfunc Bac_NtkBuildLibrary(p *Bac_Man_t) int32 {\n    var RetValue int32  = 1;\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    if pLib == nil {\n        fmt.Printf(\"The standard cell library is not available.\\n\");\nRetValue = 0;\n    } else {\n        Bac_NtkPrepareLibrary( p, pLib ); }\n    p.pMioLib = pLib;\n    return RetValue;\n}\nfunc Bac_NtkInsertNtk(p *Bac_Man_t, pNtk *Abc_Ntk_t) {\n    var pCbaNtk *Bac_Ntk_t;\n    var pRoot *Bac_Ntk_t = Bac_ManRoot( p );\n    var i, j, k, iBox, iTerm, Count int32;\n    var pObj *Abc_Obj_t;\n    assert(Abc_NtkHasMapping(pNtk), \"Abc_NtkHasMapping(pNtk)\");\n    Bac_NtkPrepareLibrary( p, (Mio_Library_t *)pNtk.pManFunc );\n    p.pMioLib = pNtk.pManFunc;\n\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        pObj.iTemp = Bac_NtkPi( pRoot, i );\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        if Abc_ObjIsBarBuf(pObj) {\n            pCbaNtk = Bac_ManNtk( p, Vec_IntEntry(\u0026p.vBuf2RootNtk, Count) );\n            iTerm = Vec_IntEntry( \u0026p.vBuf2RootObj, Count );\n            assert(Bac_ObjIsCo(pCbaNtk, iTerm), \"Bac_ObjIsCo(pCbaNtk, iTerm)\");\n            if Bac_ObjFanin(pCbaNtk, iTerm) == -1 { // not a feedthrough\n                Bac_NtkCreateOrConnectFanin( Abc_ObjFanin0(pObj), pCbaNtk, iTerm ); }\n            // prepare leaf\n            pObj.iTemp = Vec_IntEntry( \u0026p.vBuf2LeafObj, Count++ );\n        \n        } else if Abc_NodeIsSeriousGate(pObj) != 0 {\n            pCbaNtk = Bac_ManNtk( p, pObj.iTemp );\n            for  k = Abc_ObjFaninNum(pObj)-1; k \u003e= 0; k--  {\n                iTerm = Bac_ObjAlloc( pCbaNtk, BAC_OBJ_BI, Abc_ObjFanin(pObj, k).iTemp );\n            }\n            Bac_ObjAlloc( pCbaNtk, BAC_BOX_GATE, Abc_NamStrFind(p.pMods, Mio_GateReadName((Mio_Gate_t *)pObj.pData)) );\n            pObj.iTemp = Bac_ObjAlloc( pCbaNtk, BAC_OBJ_BO, -1 );\n        }\n    }\n    assert(Count == pNtk.nBarBufs2, \"Count == pNtk.nBarBufs2\");\n\n    // create constant 0 drivers for COs without barbufs\n    Bac_ManForEachNtk( p, pCbaNtk, i )\n    {\n        Bac_NtkForEachBox( pCbaNtk, iBox )\n            Bac_BoxForEachBi( pCbaNtk, iBox, iTerm, j )\n                if ( Bac_ObjFanin(pCbaNtk, iTerm) == -1 )\n                    Bac_NtkCreateOrConnectFanin( nil, pCbaNtk, iTerm );\n        Bac_NtkForEachPo( pCbaNtk, iTerm, k )\n            if ( pCbaNtk != pRoot \u0026\u0026 Bac_ObjFanin(pCbaNtk, iTerm) == -1 )\n                Bac_NtkCreateOrConnectFanin( nil, pCbaNtk, iTerm );\n    }\n    // create node and connect POs\n    Abc_NtkForEachPo( pNtk, pObj, i )\n        if ( Bac_ObjFanin(pRoot, Bac_NtkPo(pRoot, i)) == -1 ) // not a feedthrough\n            Bac_NtkCreateOrConnectFanin( Abc_ObjFanin0(pObj), pRoot, Bac_NtkPo(pRoot, i) );\n}\nfunc Bac_ManInsertAbc(p *Bac_Man_t, pAbc any) any {\n    var pNtk *Abc_Ntk_t  = (Abc_Ntk_t *)pAbc;\n    var pNew *Bac_Man_t  = Bac_ManDupUserBoxes( p );\n    Bac_ManMarkNodesAbc( p, pNtk );\n    Bac_ManRemapBarbufs( pNew, p );\n    Bac_NtkInsertNtk( pNew, pNtk );\n    Bac_ManMoveNames( pNew, p );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

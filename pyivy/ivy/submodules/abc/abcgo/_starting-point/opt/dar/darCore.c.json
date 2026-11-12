@@ -1,0 +1,273 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darCore.c",
+  "SHA256": "598ebbd338cfc19aa5c3c3f74d906075a54f7e9562269918f7b831133a37fdd7",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPars, 0, sizeof(Dar_RwrPar_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 150,
+        "Column": 13,
+        "ByteOffset": 5499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCut.nLeaves \u003c 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 153,
+        "Column": 17,
+        "ByteOffset": 5614
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pCut.uTruth == 0 || pCut.uTruth == 0xFFFF );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 17,
+        "ByteOffset": 5797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pCut.uTruth == 0xAAAA || pCut.uTruth == 0x5555 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 195,
+        "Column": 9,
+        "ByteOffset": 7480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( int32(Aig_Regular(pObjNew).Level) \u003c= Required );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 200,
+        "Column": 9,
+        "ByteOffset": 7716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.GainBest \u003c= nNodeBefore - nNodeAfter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 9,
+        "ByteOffset": 9005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Aig_ManRewrite: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 321,
+        "Column": 9,
+        "ByteOffset": 11988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nodes = %6d. Total cuts = %6d. 4-input cuts = %6d.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 9,
+        "ByteOffset": 12110
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cut size = %2d. Truth size = %2d. Total mem = %5.2f MB  \","
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 326,
+        "Column": 73,
+        "ByteOffset": 12435
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dar_ManDefaultRwrParams",
+      "Start": 1649,
+      "End": 2051,
+      "BodyStart": 1702,
+      "Original": "void Dar_ManDefaultRwrParams( Dar_RwrPar_t * pPars )\n{\n    memset( pPars, 0, sizeof(Dar_RwrPar_t) );\n    pPars-\u003enCutsMax     =  8; // 8\n    pPars-\u003enSubgMax     =  5; // 5 is a \"magic number\"\n    pPars-\u003efFanout      =  1;\n    pPars-\u003efUpdateLevel =  0;\n    pPars-\u003efUseZeros    =  0;\n    pPars-\u003efPower       =  0;\n    pPars-\u003efRecycle     =  1;\n    pPars-\u003efVerbose     =  0;\n    pPars-\u003efVeryVerbose =  0;\n}",
+      "Draft": "func Dar_ManDefaultRwrParams(pPars *Dar_RwrPar_t) {\n    memset( pPars, 0, sizeof(Dar_RwrPar_t) );\n    pPars.nCutsMax     =  8; // 8\n    pPars.nSubgMax     =  5; // 5 is a \"magic number\"\n    pPars.fFanout      =  1;\n    pPars.fUpdateLevel =  0;\n    pPars.fUseZeros    =  0;\n    pPars.fPower       =  0;\n    pPars.fRecycle     =  1;\n    pPars.fVerbose     =  0;\n    pPars.fVeryVerbose =  0;\n}"
+    },
+    {
+      "Name": "Dar_ManRewrite",
+      "Start": 2307,
+      "End": 8617,
+      "BodyStart": 2368,
+      "Original": "int Dar_ManRewrite( Aig_Man_t * pAig, Dar_RwrPar_t * pPars )\n{\n    extern Vec_Int_t * Saig_ManComputeSwitchProbs( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );\n    Dar_Man_t * p;\n//    Bar_Progress_t * pProgress;\n    Dar_Cut_t * pCut;\n    Aig_Obj_t * pObj, * pObjNew;\n    int i, k, nNodesOld, nNodeBefore, nNodeAfter, Required;\n    abctime clk = 0, clkStart;\n    int Counter = 0;\n    int nMffcSize;//, nMffcGains[MAX_VAL+1][MAX_VAL+1] = {{0}};\n    // prepare the library\n    Dar_LibPrepare( pPars-\u003enSubgMax ); \n    // create rewriting manager\n    p = Dar_ManStart( pAig, pPars );\n    if ( pPars-\u003efPower )\n        pAig-\u003evProbs = Saig_ManComputeSwitchProbs( pAig, 48, 16, 1 );\n    // remove dangling nodes\n    Aig_ManCleanup( pAig );\n    // if updating levels is requested, start fanout and timing\n    if ( p-\u003epPars-\u003efFanout )\n        Aig_ManFanoutStart( pAig );\n    if ( p-\u003epPars-\u003efUpdateLevel )\n        Aig_ManStartReverseLevels( pAig, 0 );\n    // set elementary cuts for the PIs\n//    Dar_ManCutsStart( p );\n    // resynthesize each node once\n    clkStart = Abc_Clock();\n    p-\u003enNodesInit = Aig_ManNodeNum(pAig);\n    nNodesOld = Vec_PtrSize( pAig-\u003evObjs );\n\n//    pProgress = Bar_ProgressStart( stdout, nNodesOld );\n    Aig_ManForEachObj( pAig, pObj, i )\n//    pProgress = Bar_ProgressStart( stdout, 100 );\n//    Aig_ManOrderStart( pAig );\n//    Aig_ManForEachNodeInOrder( pAig, pObj )\n    {\n        if ( pAig-\u003eTime2Quit \u0026\u0026 !(i \u0026 256) \u0026\u0026 Abc_Clock() \u003e pAig-\u003eTime2Quit )\n            break;\n//        Bar_ProgressUpdate( pProgress, 100*pAig-\u003enAndPrev/pAig-\u003enAndTotal, NULL );\n//        Bar_ProgressUpdate( pProgress, i, NULL );\n        if ( !Aig_ObjIsNode(pObj) )\n            continue;\n        if ( i \u003e nNodesOld )\n//        if ( p-\u003epPars-\u003efUseZeros \u0026\u0026 i \u003e nNodesOld )\n            break;\n        if ( pPars-\u003efRecycle \u0026\u0026 ++Counter % 50000 == 0 \u0026\u0026 Aig_DagSize(pObj) \u003c Vec_PtrSize(p-\u003evCutNodes)/100 )\n        {\n//            printf( \"Counter = %7d.  Node = %7d.  Dag = %5d. Vec = %5d.\\n\", \n//                Counter, i, Aig_DagSize(pObj), Vec_PtrSize(p-\u003evCutNodes) );\n//            fflush( stdout );\n            Dar_ManCutsRestart( p, pObj );\n        }\n\n        // consider freeing the cuts\n//        if ( (i \u0026 0xFFF) == 0 \u0026\u0026 Aig_MmFixedReadMemUsage(p-\u003epMemCuts)/(1\u003c\u003c20) \u003e 100 )\n//            Dar_ManCutsStart( p );\n\n        // compute cuts for the node\n        p-\u003enNodesTried++;\nclk = Abc_Clock();\n        Dar_ObjSetCuts( pObj, NULL );\n        Dar_ObjComputeCuts_rec( p, pObj );\np-\u003etimeCuts += Abc_Clock() - clk;\n\n        // check if there is a trivial cut\n        Dar_ObjForEachCut( pObj, pCut, k )\n            if ( pCut-\u003enLeaves == 0 || (pCut-\u003enLeaves == 1 \u0026\u0026 pCut-\u003epLeaves[0] != pObj-\u003eId \u0026\u0026 Aig_ManObj(p-\u003epAig, pCut-\u003epLeaves[0])) )\n                break;\n        if ( k \u003c (int)pObj-\u003enCuts )\n        {\n            assert( pCut-\u003enLeaves \u003c 2 );\n            if ( pCut-\u003enLeaves == 0 ) // replace by constant\n            {\n                assert( pCut-\u003euTruth == 0 || pCut-\u003euTruth == 0xFFFF );\n                pObjNew = Aig_NotCond( Aig_ManConst1(p-\u003epAig), pCut-\u003euTruth==0 );\n            }\n            else\n            {\n                assert( pCut-\u003euTruth == 0xAAAA || pCut-\u003euTruth == 0x5555 );\n                pObjNew = Aig_NotCond( Aig_ManObj(p-\u003epAig, pCut-\u003epLeaves[0]), pCut-\u003euTruth==0x5555 );\n            }\n            // remove the old cuts\n            Dar_ObjSetCuts( pObj, NULL );\n            // replace the node\n            Aig_ObjReplace( pAig, pObj, pObjNew, p-\u003epPars-\u003efUpdateLevel );\n            continue;\n        }\n\n        // evaluate the cuts\n        p-\u003eGainBest = -1;\n        nMffcSize   = -1;\n        Required    = pAig-\u003evLevelR? Aig_ObjRequiredLevel(pAig, pObj) : ABC_INFINITY;\n        Dar_ObjForEachCut( pObj, pCut, k )\n        {\n            int nLeavesOld = pCut-\u003enLeaves;\n            if ( pCut-\u003enLeaves == 3 )\n                pCut-\u003epLeaves[pCut-\u003enLeaves++] = 0;\n            Dar_LibEval( p, pObj, pCut, Required, \u0026nMffcSize );\n            pCut-\u003enLeaves = nLeavesOld; \n        }\n        // check the best gain\n        if ( !(p-\u003eGainBest \u003e 0 || (p-\u003eGainBest == 0 \u0026\u0026 p-\u003epPars-\u003efUseZeros)) )\n        {\n//            Aig_ObjOrderAdvance( pAig );\n            continue;\n        }\n//        nMffcGains[p-\u003eGainBest \u003c MAX_VAL ? p-\u003eGainBest : MAX_VAL][nMffcSize \u003c MAX_VAL ? nMffcSize : MAX_VAL]++;\n        // remove the old cuts\n        Dar_ObjSetCuts( pObj, NULL );\n        // if we end up here, a rewriting step is accepted\n        nNodeBefore = Aig_ManNodeNum( pAig );\n        pObjNew = Dar_LibBuildBest( p ); // pObjNew can be complemented!\n        pObjNew = Aig_NotCond( pObjNew, Aig_ObjPhaseReal(pObjNew) ^ pObj-\u003efPhase );\n        assert( (int)Aig_Regular(pObjNew)-\u003eLevel \u003c= Required );\n        // replace the node\n        Aig_ObjReplace( pAig, pObj, pObjNew, p-\u003epPars-\u003efUpdateLevel );\n        // compare the gains\n        nNodeAfter = Aig_ManNodeNum( pAig );\n        assert( p-\u003eGainBest \u003c= nNodeBefore - nNodeAfter );\n        // count gains of this class\n        p-\u003eClassGains[p-\u003eClassBest] += nNodeBefore - nNodeAfter;\n    }\n//    Aig_ManOrderStop( pAig );\n/*\n    printf( \"Distribution of gain (row) by MFFC size (column) %s 0-costs:\\n\", p-\u003epPars-\u003efUseZeros? \"with\":\"without\" );\n    for ( k = 0; k \u003c= MAX_VAL; k++ )\n        printf( \"\u003c%4d\u003e \", k );\n    printf( \"\\n\" );\n    for ( i = 0; i \u003c= MAX_VAL; i++ )\n    {\n        for ( k = 0; k \u003c= MAX_VAL; k++ )\n            printf( \"%6d \", nMffcGains[i][k] );\n        printf( \"\\n\" );\n    }\n*/\n\np-\u003etimeTotal = Abc_Clock() - clkStart;\np-\u003etimeOther = p-\u003etimeTotal - p-\u003etimeCuts - p-\u003etimeEval;\n\n//    Bar_ProgressStop( pProgress );\n    Dar_ManCutsFree( p );\n    // put the nodes into the DFS order and reassign their IDs\n//    Aig_NtkReassignIds( p );\n    // fix the levels\n//    Aig_ManVerifyLevel( pAig );\n    if ( p-\u003epPars-\u003efFanout )\n        Aig_ManFanoutStop( pAig );\n    if ( p-\u003epPars-\u003efUpdateLevel )\n    {\n//        Aig_ManVerifyReverseLevel( pAig );\n        Aig_ManStopReverseLevels( pAig );\n    }\n    if ( pAig-\u003evProbs )\n    {\n        Vec_IntFree( pAig-\u003evProbs );\n        pAig-\u003evProbs = NULL;\n    }\n    // stop the rewriting manager\n    Dar_ManStop( p );\n    Aig_ManCheckPhase( pAig );\n    // check\n    if ( !Aig_ManCheck( pAig ) )\n    {\n        printf( \"Aig_ManRewrite: The network check has failed.\\n\" );\n        return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Dar_ManRewrite(pAig *Aig_Man_t, pPars *Dar_RwrPar_t) int32 {\n    extern Vec_Int_t * Saig_ManComputeSwitchProbs( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );\n    var p *Dar_Man_t;\n//    Bar_Progress_t * pProgress;\n    var pCut *Dar_Cut_t;\n    var pObj, pObjNew *Aig_Obj_t;\n    var i, k, nNodesOld, nNodeBefore, nNodeAfter, Required int32;\n    var clk, clkStart abctime;\n    var Counter int32;\n    var nMffcSize int32;//, nMffcGains[MAX_VAL+1][MAX_VAL+1] = {{0}};\n    // prepare the library\n    Dar_LibPrepare( pPars.nSubgMax ); \n    // create rewriting manager\n    p = Dar_ManStart( pAig, pPars );\n    if pPars.fPower {\n        pAig.vProbs = Saig_ManComputeSwitchProbs( pAig, 48, 16, 1 ); }\n    // remove dangling nodes\n    Aig_ManCleanup( pAig );\n    // if updating levels is requested, start fanout and timing\n    if p.pPars.fFanout {\n        Aig_ManFanoutStart( pAig ); }\n    if p.pPars.fUpdateLevel {\n        Aig_ManStartReverseLevels( pAig, 0 ); }\n    // set elementary cuts for the PIs\n//    Dar_ManCutsStart( p );\n    // resynthesize each node once\n    clkStart = Abc_Clock();\n    p.nNodesInit = Aig_ManNodeNum(pAig);\n    nNodesOld = Vec_PtrSize( pAig.vObjs );\n\n//    pProgress = Bar_ProgressStart( stdout, nNodesOld );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n//    pProgress = Bar_ProgressStart( stdout, 100 );\n//    Aig_ManOrderStart( pAig );\n//    Aig_ManForEachNodeInOrder( pAig, pObj )\n    \n        if pAig.Time2Quit \u0026\u0026 !(i \u0026 256) \u0026\u0026 Abc_Clock() \u003e pAig.Time2Quit {\n            break; }\n//        Bar_ProgressUpdate( pProgress, 100*pAig-\u003enAndPrev/pAig-\u003enAndTotal, NULL );\n//        Bar_ProgressUpdate( pProgress, i, NULL );\n        if !Aig_ObjIsNode(pObj) {\n            continue; }\n        if i \u003e nNodesOld {\n//        if ( p-\u003epPars-\u003efUseZeros \u0026\u0026 i \u003e nNodesOld )\n            break; }\n        if pPars.fRecycle \u0026\u0026 ++Counter % 50000 == 0 \u0026\u0026 Aig_DagSize(pObj) \u003c Vec_PtrSize(p.vCutNodes)/100 {\n//            printf( \"Counter = %7d.  Node = %7d.  Dag = %5d. Vec = %5d.\\n\", \n//                Counter, i, Aig_DagSize(pObj), Vec_PtrSize(p-\u003evCutNodes) );\n//            fflush( stdout );\n            Dar_ManCutsRestart( p, pObj );\n        }\n\n        // consider freeing the cuts\n//        if ( (i \u0026 0xFFF) == 0 \u0026\u0026 Aig_MmFixedReadMemUsage(p-\u003epMemCuts)/(1\u003c\u003c20) \u003e 100 )\n//            Dar_ManCutsStart( p );\n\n        // compute cuts for the node\n        p.nNodesTried++;\nclk = Abc_Clock();\n        Dar_ObjSetCuts( pObj, nil );\n        Dar_ObjComputeCuts_rec( p, pObj );\np.timeCuts += Abc_Clock() - clk;\n\n        // check if there is a trivial cut\n        // inlining of macro Dar_ObjForEachCut\n        for  (pCut) = Dar_ObjCuts(pObj), k = 0; k \u003c int32((pObj).nCuts); k, pCut = k+1, pCut+1  { if (pCut).fUsed==0 {} else\n            if pCut.nLeaves == 0 || (pCut.nLeaves == 1 \u0026\u0026 pCut.pLeaves[0] != pObj.Id \u0026\u0026 Aig_ManObj(p.pAig, pCut.pLeaves[0])) {\n                break; }\n        }\n        if k \u003c int32(pObj.nCuts) {\n            assert(pCut.nLeaves \u003c 2, \"pCut.nLeaves \u003c 2\");\n            if pCut.nLeaves == 0 { // replace by constant\n            \n                assert(pCut.uTruth == 0 || pCut.uTruth == 0xFFFF, \"pCut.uTruth == 0 || pCut.uTruth == 0xFFFF\");\n                pObjNew = Aig_NotCond( Aig_ManConst1(p.pAig), pCut.uTruth==0 );\n            \n            } else {\n                assert(pCut.uTruth == 0xAAAA || pCut.uTruth == 0x5555, \"pCut.uTruth == 0xAAAA || pCut.uTruth == 0x5555\");\n                pObjNew = Aig_NotCond( Aig_ManObj(p.pAig, pCut.pLeaves[0]), pCut.uTruth==0x5555 );\n            }\n            // remove the old cuts\n            Dar_ObjSetCuts( pObj, nil );\n            // replace the node\n            Aig_ObjReplace( pAig, pObj, pObjNew, p.pPars.fUpdateLevel );\n            continue;\n        }\n\n        // evaluate the cuts\n        p.GainBest = -1;\n        nMffcSize   = -1;\n        if pAig.vLevelR {\n            Required = Aig_ObjRequiredLevel(pAig, pObj);\n        } else {\n            Required = ABC_INFINITY;\n        }\n        // inlining of macro Dar_ObjForEachCut\n        for  (pCut) = Dar_ObjCuts(pObj), k = 0; k \u003c int32((pObj).nCuts); k, pCut = k+1, pCut+1  { if (pCut).fUsed==0 {} else {\n            var nLeavesOld int32  = pCut.nLeaves;\n            if pCut.nLeaves == 3 {\n                pCut.pLeaves[pCut.nLeaves++] = 0; }\n            Dar_LibEval( p, pObj, pCut, Required, \u0026nMffcSize );\n            pCut.nLeaves = nLeavesOld; \n        }\n        }\n        // check the best gain\n        if !(p.GainBest \u003e 0 || (p.GainBest == 0 \u0026\u0026 p.pPars.fUseZeros)) {\n//            Aig_ObjOrderAdvance( pAig );\n            continue;\n        }\n//        nMffcGains[p-\u003eGainBest \u003c MAX_VAL ? p-\u003eGainBest : MAX_VAL][nMffcSize \u003c MAX_VAL ? nMffcSize : MAX_VAL]++;\n        // remove the old cuts\n        Dar_ObjSetCuts( pObj, nil );\n        // if we end up here, a rewriting step is accepted\n        nNodeBefore = Aig_ManNodeNum( pAig );\n        pObjNew = Dar_LibBuildBest( p ); // pObjNew can be complemented!\n        pObjNew = Aig_NotCond( pObjNew, Aig_ObjPhaseReal(pObjNew) ^ pObj.fPhase );\n        assert(int32(Aig_Regular(pObjNew).Level) \u003c= Required, \"int32(Aig_Regular(pObjNew).Level) \u003c= Required\");\n        // replace the node\n        Aig_ObjReplace( pAig, pObj, pObjNew, p.pPars.fUpdateLevel );\n        // compare the gains\n        nNodeAfter = Aig_ManNodeNum( pAig );\n        assert(p.GainBest \u003c= nNodeBefore - nNodeAfter, \"p.GainBest \u003c= nNodeBefore - nNodeAfter\");\n        // count gains of this class\n        p.ClassGains[p.ClassBest] += nNodeBefore - nNodeAfter;\n    }\n    }\n//    Aig_ManOrderStop( pAig );\n/*\n    printf( \"Distribution of gain (row) by MFFC size (column) %s 0-costs:\\n\", p-\u003epPars-\u003efUseZeros? \"with\":\"without\" );\n    for ( k = 0; k \u003c= MAX_VAL; k++ )\n        printf( \"\u003c%4d\u003e \", k );\n    printf( \"\\n\" );\n    for ( i = 0; i \u003c= MAX_VAL; i++ )\n    {\n        for ( k = 0; k \u003c= MAX_VAL; k++ )\n            printf( \"%6d \", nMffcGains[i][k] );\n        printf( \"\\n\" );\n    }\n*/\n\np.timeTotal = Abc_Clock() - clkStart;\np.timeOther = p.timeTotal - p.timeCuts - p.timeEval;\n\n//    Bar_ProgressStop( pProgress );\n    Dar_ManCutsFree( p );\n    // put the nodes into the DFS order and reassign their IDs\n//    Aig_NtkReassignIds( p );\n    // fix the levels\n//    Aig_ManVerifyLevel( pAig );\n    if p.pPars.fFanout {\n        Aig_ManFanoutStop( pAig ); }\n    if p.pPars.fUpdateLevel {\n//        Aig_ManVerifyReverseLevel( pAig );\n        Aig_ManStopReverseLevels( pAig );\n    }\n    if pAig.vProbs {\n        Vec_IntFree( pAig.vProbs );\n        pAig.vProbs = nil;\n    }\n    // stop the rewriting manager\n    Dar_ManStop( p );\n    Aig_ManCheckPhase( pAig );\n    // check\n    if !Aig_ManCheck( pAig ) {\n        fmt.Printf(\"Aig_ManRewrite: The network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Dar_ManCutCount",
+      "Start": 8887,
+      "End": 9278,
+      "BodyStart": 8942,
+      "Original": "int Dar_ManCutCount( Aig_Man_t * pAig, int * pnCutsK )\n{\n    Dar_Cut_t * pCut;\n    Aig_Obj_t * pObj;\n    int i, k, nCuts = 0, nCutsK = 0;\n    Aig_ManForEachNode( pAig, pObj, i )\n        Dar_ObjForEachCut( pObj, pCut, k )\n        {\n            nCuts++;\n            if ( pCut-\u003enLeaves == 4 )\n                nCutsK++;\n        }\n    if ( pnCutsK )\n        *pnCutsK = nCutsK;\n    return nCuts;\n}",
+      "Draft": "func Dar_ManCutCount(pAig *Aig_Man_t, pnCutsK *int32) int32 {\n    var pCut *Dar_Cut_t;\n    var pObj *Aig_Obj_t;\n    var i, k, nCuts, nCutsK int32;\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        // inlining of macro Dar_ObjForEachCut\n        for  (pCut) = Dar_ObjCuts(pObj), k = 0; k \u003c int32((pObj).nCuts); k, pCut = k+1, pCut+1  { if (pCut).fUsed==0 {} else {\n            nCuts++;\n            if pCut.nLeaves == 4 {\n                nCutsK++; }\n        }\n        } }\n    }\n    if pnCutsK != nil {\n        *pnCutsK = nCutsK; }\n    return nCuts;\n}"
+    },
+    {
+      "Name": "Dar_ManComputeCuts",
+      "Start": 9514,
+      "End": 11297,
+      "BodyStart": 9613,
+      "Original": "Aig_MmFixed_t * Dar_ManComputeCuts( Aig_Man_t * pAig, int nCutsMax, int fSkipTtMin, int fVerbose )\n{ \n    Dar_Man_t * p;\n    Dar_RwrPar_t Pars, * pPars = \u0026Pars; \n    Aig_Obj_t * pObj;\n    Aig_MmFixed_t * pMemCuts;\n    int i, nNodes;\n    abctime clk = Abc_Clock();\n    // remove dangling nodes\n    if ( (nNodes = Aig_ManCleanup( pAig )) )\n    {\n//        printf( \"Removing %d nodes.\\n\", nNodes );\n    }\n    // create default parameters\n    Dar_ManDefaultRwrParams( pPars );\n    pPars-\u003enCutsMax = nCutsMax;\n    // create rewriting manager\n    p = Dar_ManStart( pAig, pPars );\n    // set elementary cuts for the PIs\n//    Dar_ManCutsStart( p );\n    Aig_MmFixedRestart( p-\u003epMemCuts );\n    Dar_ObjPrepareCuts( p, Aig_ManConst1(p-\u003epAig) );\n    Aig_ManForEachCi( pAig, pObj, i )\n        Dar_ObjPrepareCuts( p, pObj );\n    // compute cuts for each nodes in the topological order\n    Aig_ManForEachNode( pAig, pObj, i )\n        Dar_ObjComputeCuts( p, pObj, fSkipTtMin );\n    // print verbose stats\n    if ( fVerbose )\n    {\n//        Aig_Obj_t * pObj;\n        int nCuts, nCutsK;//, i;\n        nCuts = Dar_ManCutCount( pAig, \u0026nCutsK );\n        printf( \"Nodes = %6d. Total cuts = %6d. 4-input cuts = %6d.\\n\",\n            Aig_ManObjNum(pAig), nCuts, nCutsK );\n        printf( \"Cut size = %2d. Truth size = %2d. Total mem = %5.2f MB  \",\n            (int)sizeof(Dar_Cut_t), (int)4, 1.0*Aig_MmFixedReadMemUsage(p-\u003epMemCuts)/(1\u003c\u003c20) );\n        ABC_PRT( \"Runtime\", Abc_Clock() - clk );\n/*\n        Aig_ManForEachNode( pAig, pObj, i )\n            if ( i % 300 == 0 )\n                Dar_ObjCutPrint( pAig, pObj );\n*/\n    }\n    // free the cuts\n    pMemCuts = p-\u003epMemCuts;\n    p-\u003epMemCuts = NULL;\n//    Dar_ManCutsFree( p );\n    // stop the rewriting manager\n    Dar_ManStop( p );\n    return pMemCuts;\n}",
+      "Draft": "func Dar_ManComputeCuts(pAig *Aig_Man_t, nCutsMax int32, fSkipTtMin int32, fVerbose int32) *Aig_MmFixed_t { \n    var p *Dar_Man_t;\n    var Pars Dar_RwrPar_t;\n    var pPars *Dar_RwrPar_t = \u0026Pars; \n    var pObj *Aig_Obj_t;\n    var pMemCuts *Aig_MmFixed_t;\n    var i, nNodes int32;\n    var clk abctime  = Abc_Clock();\n    // remove dangling nodes\n    if nNodes = Aig_ManCleanup( pAig ) {\n//        printf( \"Removing %d nodes.\\n\", nNodes );\n    }\n    // create default parameters\n    Dar_ManDefaultRwrParams( pPars );\n    pPars.nCutsMax = nCutsMax;\n    // create rewriting manager\n    p = Dar_ManStart( pAig, pPars );\n    // set elementary cuts for the PIs\n//    Dar_ManCutsStart( p );\n    Aig_MmFixedRestart( p.pMemCuts );\n    Dar_ObjPrepareCuts( p, Aig_ManConst1(p.pAig) );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        Dar_ObjPrepareCuts( p, pObj );\n    }\n    // compute cuts for each nodes in the topological order\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Dar_ObjComputeCuts( p, pObj, fSkipTtMin ); }\n    }\n    // print verbose stats\n    if fVerbose != 0 {\n//        Aig_Obj_t * pObj;\n        var nCuts, nCutsK int32;//, i;\n        nCuts = Dar_ManCutCount( pAig, \u0026nCutsK );\n        fmt.Printf(\"Nodes = %6d. Total cuts = %6d. 4-input cuts = %6d.\\n\", Aig_ManObjNum(pAig), nCuts, nCutsK);\n        fmt.Printf(\"Cut size = %2d. Truth size = %2d. Total mem = %5.2f MB  \", int32(sizeof(Dar_Cut_t)), int32(4), 1.0*Aig_MmFixedReadMemUsage(p.pMemCuts)/(1\u003c\u003c20));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n/*\n        Aig_ManForEachNode( pAig, pObj, i )\n            if ( i % 300 == 0 )\n                Dar_ObjCutPrint( pAig, pObj );\n*/\n    }\n    // free the cuts\n    pMemCuts = p.pMemCuts;\n    p.pMemCuts = nil;\n//    Dar_ManCutsFree( p );\n    // stop the rewriting manager\n    Dar_ManStop( p );\n    return pMemCuts;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darCore.c::mechanical::sizeof::1726",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1726,
+      "End": 1732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darCore.c::mechanical::sizeof::12118",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10855,
+      "End": 10861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darCore.c::pointer-cast::3703",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3537,
+      "End": 3537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darCore.c::pointer-cast::9669",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9029,
+      "End": 9029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darCore.c::pointer-cast::11257",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10252,
+      "End": 10252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darCore.c::pointer-cast::11580",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10389,
+      "End": 10389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darCore.c::macro::Aig_ManForEachNodeInOrder",
+      "Category": "macro-review",
+      "Symbol": "Aig_ManForEachNodeInOrder",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 837,
+      "End": 1133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darCore.c::Dar_ManDefaultRwrParams",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManDefaultRwrParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1649,
+      "End": 2051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darCore.c::Dar_ManRewrite",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManRewrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2307,
+      "End": 8617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darCore.c::Dar_ManCutCount",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManCutCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8887,
+      "End": 9278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darCore.c::Dar_ManComputeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Dar_ManComputeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9514,
+      "End": 11297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/darCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11546
+    }
+  ],
+  "Draft": "package dar\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [darCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware AIG rewriting.]\n\n  Synopsis    [Core of the rewriting package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: darCore.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"darInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// iterator over the nodes in the topological order\n// Original macro:\n// #define Aig_ManForEachNodeInOrder( p, pObj )                                    \\\n//     for ( assert(p-\u003epOrderData), p-\u003eiPrev = 0, p-\u003eiNext = p-\u003epOrderData[1];     \\\n//           p-\u003eiNext \u0026\u0026 (((pObj) = Aig_ManObj(p, p-\u003eiNext)), 1);                  \\\n//           p-\u003eiNext = p-\u003epOrderData[2*p-\u003eiPrev+1] )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the structure with default assignment of parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManDefaultRwrParams(pPars *Dar_RwrPar_t) {\n    memset( pPars, 0, sizeof(Dar_RwrPar_t) );\n    pPars.nCutsMax     =  8; // 8\n    pPars.nSubgMax     =  5; // 5 is a \"magic number\"\n    pPars.fFanout      =  1;\n    pPars.fUpdateLevel =  0;\n    pPars.fUseZeros    =  0;\n    pPars.fPower       =  0;\n    pPars.fRecycle     =  1;\n    pPars.fVerbose     =  0;\n    pPars.fVeryVerbose =  0;\n}\n\nconst MAX_VAL = 10\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManRewrite(pAig *Aig_Man_t, pPars *Dar_RwrPar_t) int32 {\n    extern Vec_Int_t * Saig_ManComputeSwitchProbs( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );\n    var p *Dar_Man_t;\n//    Bar_Progress_t * pProgress;\n    var pCut *Dar_Cut_t;\n    var pObj, pObjNew *Aig_Obj_t;\n    var i, k, nNodesOld, nNodeBefore, nNodeAfter, Required int32;\n    var clk, clkStart abctime;\n    var Counter int32;\n    var nMffcSize int32;//, nMffcGains[MAX_VAL+1][MAX_VAL+1] = {{0}};\n    // prepare the library\n    Dar_LibPrepare( pPars.nSubgMax ); \n    // create rewriting manager\n    p = Dar_ManStart( pAig, pPars );\n    if pPars.fPower {\n        pAig.vProbs = Saig_ManComputeSwitchProbs( pAig, 48, 16, 1 ); }\n    // remove dangling nodes\n    Aig_ManCleanup( pAig );\n    // if updating levels is requested, start fanout and timing\n    if p.pPars.fFanout {\n        Aig_ManFanoutStart( pAig ); }\n    if p.pPars.fUpdateLevel {\n        Aig_ManStartReverseLevels( pAig, 0 ); }\n    // set elementary cuts for the PIs\n//    Dar_ManCutsStart( p );\n    // resynthesize each node once\n    clkStart = Abc_Clock();\n    p.nNodesInit = Aig_ManNodeNum(pAig);\n    nNodesOld = Vec_PtrSize( pAig.vObjs );\n\n//    pProgress = Bar_ProgressStart( stdout, nNodesOld );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n//    pProgress = Bar_ProgressStart( stdout, 100 );\n//    Aig_ManOrderStart( pAig );\n//    Aig_ManForEachNodeInOrder( pAig, pObj )\n    \n        if pAig.Time2Quit \u0026\u0026 !(i \u0026 256) \u0026\u0026 Abc_Clock() \u003e pAig.Time2Quit {\n            break; }\n//        Bar_ProgressUpdate( pProgress, 100*pAig-\u003enAndPrev/pAig-\u003enAndTotal, NULL );\n//        Bar_ProgressUpdate( pProgress, i, NULL );\n        if !Aig_ObjIsNode(pObj) {\n            continue; }\n        if i \u003e nNodesOld {\n//        if ( p-\u003epPars-\u003efUseZeros \u0026\u0026 i \u003e nNodesOld )\n            break; }\n        if pPars.fRecycle \u0026\u0026 ++Counter % 50000 == 0 \u0026\u0026 Aig_DagSize(pObj) \u003c Vec_PtrSize(p.vCutNodes)/100 {\n//            printf( \"Counter = %7d.  Node = %7d.  Dag = %5d. Vec = %5d.\\n\", \n//                Counter, i, Aig_DagSize(pObj), Vec_PtrSize(p-\u003evCutNodes) );\n//            fflush( stdout );\n            Dar_ManCutsRestart( p, pObj );\n        }\n\n        // consider freeing the cuts\n//        if ( (i \u0026 0xFFF) == 0 \u0026\u0026 Aig_MmFixedReadMemUsage(p-\u003epMemCuts)/(1\u003c\u003c20) \u003e 100 )\n//            Dar_ManCutsStart( p );\n\n        // compute cuts for the node\n        p.nNodesTried++;\nclk = Abc_Clock();\n        Dar_ObjSetCuts( pObj, nil );\n        Dar_ObjComputeCuts_rec( p, pObj );\np.timeCuts += Abc_Clock() - clk;\n\n        // check if there is a trivial cut\n        // inlining of macro Dar_ObjForEachCut\n        for  (pCut) = Dar_ObjCuts(pObj), k = 0; k \u003c int32((pObj).nCuts); k, pCut = k+1, pCut+1  { if (pCut).fUsed==0 {} else\n            if pCut.nLeaves == 0 || (pCut.nLeaves == 1 \u0026\u0026 pCut.pLeaves[0] != pObj.Id \u0026\u0026 Aig_ManObj(p.pAig, pCut.pLeaves[0])) {\n                break; }\n        }\n        if k \u003c int32(pObj.nCuts) {\n            assert(pCut.nLeaves \u003c 2, \"pCut.nLeaves \u003c 2\");\n            if pCut.nLeaves == 0 { // replace by constant\n            \n                assert(pCut.uTruth == 0 || pCut.uTruth == 0xFFFF, \"pCut.uTruth == 0 || pCut.uTruth == 0xFFFF\");\n                pObjNew = Aig_NotCond( Aig_ManConst1(p.pAig), pCut.uTruth==0 );\n            \n            } else {\n                assert(pCut.uTruth == 0xAAAA || pCut.uTruth == 0x5555, \"pCut.uTruth == 0xAAAA || pCut.uTruth == 0x5555\");\n                pObjNew = Aig_NotCond( Aig_ManObj(p.pAig, pCut.pLeaves[0]), pCut.uTruth==0x5555 );\n            }\n            // remove the old cuts\n            Dar_ObjSetCuts( pObj, nil );\n            // replace the node\n            Aig_ObjReplace( pAig, pObj, pObjNew, p.pPars.fUpdateLevel );\n            continue;\n        }\n\n        // evaluate the cuts\n        p.GainBest = -1;\n        nMffcSize   = -1;\n        if pAig.vLevelR {\n            Required = Aig_ObjRequiredLevel(pAig, pObj);\n        } else {\n            Required = ABC_INFINITY;\n        }\n        // inlining of macro Dar_ObjForEachCut\n        for  (pCut) = Dar_ObjCuts(pObj), k = 0; k \u003c int32((pObj).nCuts); k, pCut = k+1, pCut+1  { if (pCut).fUsed==0 {} else {\n            var nLeavesOld int32  = pCut.nLeaves;\n            if pCut.nLeaves == 3 {\n                pCut.pLeaves[pCut.nLeaves++] = 0; }\n            Dar_LibEval( p, pObj, pCut, Required, \u0026nMffcSize );\n            pCut.nLeaves = nLeavesOld; \n        }\n        }\n        // check the best gain\n        if !(p.GainBest \u003e 0 || (p.GainBest == 0 \u0026\u0026 p.pPars.fUseZeros)) {\n//            Aig_ObjOrderAdvance( pAig );\n            continue;\n        }\n//        nMffcGains[p-\u003eGainBest \u003c MAX_VAL ? p-\u003eGainBest : MAX_VAL][nMffcSize \u003c MAX_VAL ? nMffcSize : MAX_VAL]++;\n        // remove the old cuts\n        Dar_ObjSetCuts( pObj, nil );\n        // if we end up here, a rewriting step is accepted\n        nNodeBefore = Aig_ManNodeNum( pAig );\n        pObjNew = Dar_LibBuildBest( p ); // pObjNew can be complemented!\n        pObjNew = Aig_NotCond( pObjNew, Aig_ObjPhaseReal(pObjNew) ^ pObj.fPhase );\n        assert(int32(Aig_Regular(pObjNew).Level) \u003c= Required, \"int32(Aig_Regular(pObjNew).Level) \u003c= Required\");\n        // replace the node\n        Aig_ObjReplace( pAig, pObj, pObjNew, p.pPars.fUpdateLevel );\n        // compare the gains\n        nNodeAfter = Aig_ManNodeNum( pAig );\n        assert(p.GainBest \u003c= nNodeBefore - nNodeAfter, \"p.GainBest \u003c= nNodeBefore - nNodeAfter\");\n        // count gains of this class\n        p.ClassGains[p.ClassBest] += nNodeBefore - nNodeAfter;\n    }\n    }\n//    Aig_ManOrderStop( pAig );\n/*\n    printf( \"Distribution of gain (row) by MFFC size (column) %s 0-costs:\\n\", p-\u003epPars-\u003efUseZeros? \"with\":\"without\" );\n    for ( k = 0; k \u003c= MAX_VAL; k++ )\n        printf( \"\u003c%4d\u003e \", k );\n    printf( \"\\n\" );\n    for ( i = 0; i \u003c= MAX_VAL; i++ )\n    {\n        for ( k = 0; k \u003c= MAX_VAL; k++ )\n            printf( \"%6d \", nMffcGains[i][k] );\n        printf( \"\\n\" );\n    }\n*/\n\np.timeTotal = Abc_Clock() - clkStart;\np.timeOther = p.timeTotal - p.timeCuts - p.timeEval;\n\n//    Bar_ProgressStop( pProgress );\n    Dar_ManCutsFree( p );\n    // put the nodes into the DFS order and reassign their IDs\n//    Aig_NtkReassignIds( p );\n    // fix the levels\n//    Aig_ManVerifyLevel( pAig );\n    if p.pPars.fFanout {\n        Aig_ManFanoutStop( pAig ); }\n    if p.pPars.fUpdateLevel {\n//        Aig_ManVerifyReverseLevel( pAig );\n        Aig_ManStopReverseLevels( pAig );\n    }\n    if pAig.vProbs {\n        Vec_IntFree( pAig.vProbs );\n        pAig.vProbs = nil;\n    }\n    // stop the rewriting manager\n    Dar_ManStop( p );\n    Aig_ManCheckPhase( pAig );\n    // check\n    if !Aig_ManCheck( pAig ) {\n        fmt.Printf(\"Aig_ManRewrite: The network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the total number of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManCutCount(pAig *Aig_Man_t, pnCutsK *int32) int32 {\n    var pCut *Dar_Cut_t;\n    var pObj *Aig_Obj_t;\n    var i, k, nCuts, nCutsK int32;\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        // inlining of macro Dar_ObjForEachCut\n        for  (pCut) = Dar_ObjCuts(pObj), k = 0; k \u003c int32((pObj).nCuts); k, pCut = k+1, pCut+1  { if (pCut).fUsed==0 {} else {\n            nCuts++;\n            if pCut.nLeaves == 4 {\n                nCutsK++; }\n        }\n        } }\n    }\n    if pnCutsK != nil {\n        *pnCutsK = nCutsK; }\n    return nCuts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dar_ManComputeCuts(pAig *Aig_Man_t, nCutsMax int32, fSkipTtMin int32, fVerbose int32) *Aig_MmFixed_t { \n    var p *Dar_Man_t;\n    var Pars Dar_RwrPar_t;\n    var pPars *Dar_RwrPar_t = \u0026Pars; \n    var pObj *Aig_Obj_t;\n    var pMemCuts *Aig_MmFixed_t;\n    var i, nNodes int32;\n    var clk abctime  = Abc_Clock();\n    // remove dangling nodes\n    if nNodes = Aig_ManCleanup( pAig ) {\n//        printf( \"Removing %d nodes.\\n\", nNodes );\n    }\n    // create default parameters\n    Dar_ManDefaultRwrParams( pPars );\n    pPars.nCutsMax = nCutsMax;\n    // create rewriting manager\n    p = Dar_ManStart( pAig, pPars );\n    // set elementary cuts for the PIs\n//    Dar_ManCutsStart( p );\n    Aig_MmFixedRestart( p.pMemCuts );\n    Dar_ObjPrepareCuts( p, Aig_ManConst1(p.pAig) );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        Dar_ObjPrepareCuts( p, pObj );\n    }\n    // compute cuts for each nodes in the topological order\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Dar_ObjComputeCuts( p, pObj, fSkipTtMin ); }\n    }\n    // print verbose stats\n    if fVerbose != 0 {\n//        Aig_Obj_t * pObj;\n        var nCuts, nCutsK int32;//, i;\n        nCuts = Dar_ManCutCount( pAig, \u0026nCutsK );\n        fmt.Printf(\"Nodes = %6d. Total cuts = %6d. 4-input cuts = %6d.\\n\", Aig_ManObjNum(pAig), nCuts, nCutsK);\n        fmt.Printf(\"Cut size = %2d. Truth size = %2d. Total mem = %5.2f MB  \", int32(sizeof(Dar_Cut_t)), int32(4), 1.0*Aig_MmFixedReadMemUsage(p.pMemCuts)/(1\u003c\u003c20));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n/*\n        Aig_ManForEachNode( pAig, pObj, i )\n            if ( i % 300 == 0 )\n                Dar_ObjCutPrint( pAig, pObj );\n*/\n    }\n    // free the cuts\n    pMemCuts = p.pMemCuts;\n    p.pMemCuts = nil;\n//    Dar_ManCutsFree( p );\n    // stop the rewriting manager\n    Dar_ManStop( p );\n    return pMemCuts;\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

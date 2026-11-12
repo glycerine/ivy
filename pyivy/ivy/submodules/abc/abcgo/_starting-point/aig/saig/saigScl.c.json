@@ -1,0 +1,149 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigScl.c",
+  "SHA256": "9f513e40135ad1884b61e73ad0a26f1a3b28a6c07c31729f85d487c1d539ef49",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 67,
+        "Column": 9,
+        "ByteOffset": 2338
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Network has %d (out of %d) registers driving POs.\\n\", Counter1, Saig_ManRegNum(pAig) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 69,
+        "Column": 9,
+        "ByteOffset": 2463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Network has %d (out of %d) registers driven by PIs.\\n\", Counter2, Saig_ManRegNum(pAig) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 2971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 9,
+        "ByteOffset": 3254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !pObj.fMarkA ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Saig_ManReportUselessRegisters",
+      "Start": 1257,
+      "End": 2229,
+      "BodyStart": 1313,
+      "Original": "void Saig_ManReportUselessRegisters( Aig_Man_t * pAig )\n{\n    Aig_Obj_t * pObj, * pDriver;\n    int i, Counter1, Counter2;\n    // set PIO numbers\n    Aig_ManSetCioIds( pAig );\n    // check how many POs are driven by a register whose ref count is 1\n    Counter1 = 0;\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        pDriver = Aig_ObjFanin0(pObj);\n        if ( Saig_ObjIsLo(pAig, pDriver) \u0026\u0026 Aig_ObjRefs(pDriver) == 1 )\n            Counter1++;\n    }\n    // check how many PIs have ref count 1 and drive a register\n    Counter2 = 0;\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        pDriver = Aig_ObjFanin0(pObj);\n        if ( Saig_ObjIsPi(pAig, pDriver) \u0026\u0026 Aig_ObjRefs(pDriver) == 1 )\n            Counter2++;\n    }\n    if ( Counter1 )\n        printf( \"Network has %d (out of %d) registers driving POs.\\n\", Counter1, Saig_ManRegNum(pAig) );\n    if ( Counter2 )\n        printf( \"Network has %d (out of %d) registers driven by PIs.\\n\", Counter2, Saig_ManRegNum(pAig) );\n}",
+      "Draft": "func Saig_ManReportUselessRegisters(pAig *Aig_Man_t) {\n    var pObj, pDriver *Aig_Obj_t;\n    var i, Counter1, Counter2 int32;\n    // set PIO numbers\n    Aig_ManSetCioIds( pAig );\n    // check how many POs are driven by a register whose ref count is 1\n    Counter1 = 0;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        pDriver = Aig_ObjFanin0(pObj);\n        if Saig_ObjIsLo(pAig, pDriver) \u0026\u0026 Aig_ObjRefs(pDriver) == 1 {\n            Counter1++; }\n    }\n    // check how many PIs have ref count 1 and drive a register\n    Counter2 = 0;\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        pDriver = Aig_ObjFanin0(pObj);\n        if Saig_ObjIsPi(pAig, pDriver) \u0026\u0026 Aig_ObjRefs(pDriver) == 1 {\n            Counter2++; }\n    }\n    if Counter1 {\n        fmt.Printf(\"Network has %d (out of %d) registers driving POs.\\n\", Counter1, Saig_ManRegNum(pAig)); }\n    if Counter2 != 0 {\n        fmt.Printf(\"Network has %d (out of %d) registers driven by PIs.\\n\", Counter2, Saig_ManRegNum(pAig)); }\n}"
+    },
+    {
+      "Name": "Saig_ManReportComplements",
+      "Start": 2519,
+      "End": 3098,
+      "BodyStart": 2566,
+      "Original": "int Saig_ManReportComplements( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj, * pFanin;\n    int i, Counter = 0;\n    assert( Aig_ManRegNum(p) \u003e 0 );\n    Aig_ManForEachObj( p, pObj, i )\n        assert( !pObj-\u003efMarkA );\n    Aig_ManForEachLiSeq( p, pObj, i )\n    {\n        pFanin = Aig_ObjFanin0(pObj);\n        if ( pFanin-\u003efMarkA )\n            Counter++;\n        else\n            pFanin-\u003efMarkA = 1;\n    }\n    // count fanins that have both attributes\n    Aig_ManForEachLiSeq( p, pObj, i )\n    {\n        pFanin = Aig_ObjFanin0(pObj);\n        pFanin-\u003efMarkA = 0;\n    }\n    return Counter;\n}",
+      "Draft": "func Saig_ManReportComplements(p *Aig_Man_t) int32 {\n    var pObj, pFanin *Aig_Obj_t;\n    var i, Counter int32;\n    assert(Aig_ManRegNum(p) \u003e 0, \"Aig_ManRegNum(p) \u003e 0\");\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(!pObj.fMarkA, \"!pObj.fMarkA\"); }\n    }\n    // inlining of macro Aig_ManForEachLiSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pFanin = Aig_ObjFanin0(pObj);\n        if pFanin.fMarkA {\n            Counter++;\n        } else {\n            pFanin.fMarkA = 1; }\n    }\n    // count fanins that have both attributes\n    // inlining of macro Aig_ManForEachLiSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pFanin = Aig_ObjFanin0(pObj);\n        pFanin.fMarkA = 0;\n    }\n    return Counter;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigScl.c::pointer-cast::1691",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1526,
+      "End": 1526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigScl.c::pointer-cast::2084",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1794,
+      "End": 1794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigScl.c::pointer-cast::3155",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2664,
+      "End": 2664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigScl.c::pointer-cast::3473",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2733,
+      "End": 2733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigScl.c::pointer-cast::3921",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2965,
+      "End": 2965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigScl.c::Saig_ManReportUselessRegisters",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManReportUselessRegisters",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1257,
+      "End": 2229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigScl.c::Saig_ManReportComplements",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManReportComplements",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2519,
+      "End": 3098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigScl.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3345
+    }
+  ],
+  "Draft": "package saig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [saigScl.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [Sequential cleanup.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saigScl.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"saig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Report registers useless for SEC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManReportUselessRegisters(pAig *Aig_Man_t) {\n    var pObj, pDriver *Aig_Obj_t;\n    var i, Counter1, Counter2 int32;\n    // set PIO numbers\n    Aig_ManSetCioIds( pAig );\n    // check how many POs are driven by a register whose ref count is 1\n    Counter1 = 0;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        pDriver = Aig_ObjFanin0(pObj);\n        if Saig_ObjIsLo(pAig, pDriver) \u0026\u0026 Aig_ObjRefs(pDriver) == 1 {\n            Counter1++; }\n    }\n    // check how many PIs have ref count 1 and drive a register\n    Counter2 = 0;\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        pDriver = Aig_ObjFanin0(pObj);\n        if Saig_ObjIsPi(pAig, pDriver) \u0026\u0026 Aig_ObjRefs(pDriver) == 1 {\n            Counter2++; }\n    }\n    if Counter1 {\n        fmt.Printf(\"Network has %d (out of %d) registers driving POs.\\n\", Counter1, Saig_ManRegNum(pAig)); }\n    if Counter2 != 0 {\n        fmt.Printf(\"Network has %d (out of %d) registers driven by PIs.\\n\", Counter2, Saig_ManRegNum(pAig)); }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Report the number of pairs of complemented registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManReportComplements(p *Aig_Man_t) int32 {\n    var pObj, pFanin *Aig_Obj_t;\n    var i, Counter int32;\n    assert(Aig_ManRegNum(p) \u003e 0, \"Aig_ManRegNum(p) \u003e 0\");\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        assert(!pObj.fMarkA, \"!pObj.fMarkA\"); }\n    }\n    // inlining of macro Aig_ManForEachLiSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pFanin = Aig_ObjFanin0(pObj);\n        if pFanin.fMarkA {\n            Counter++;\n        } else {\n            pFanin.fMarkA = 1; }\n    }\n    // count fanins that have both attributes\n    // inlining of macro Aig_ManForEachLiSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pFanin = Aig_ObjFanin0(pObj);\n        pFanin.fMarkA = 0;\n    }\n    return Counter;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,190 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h",
+  "SHA256": "19d3d0311f23ea99bd363f3c2e3de3e1e59a6bef608a4ca101ee9f3b1572c140",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::struct::satoko_opts_t",
+      "Category": "struct-review",
+      "Symbol": "satoko_opts_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 752,
+      "End": 2095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::struct::satoko_stats_t",
+      "Category": "struct-review",
+      "Symbol": "satoko_stats_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2097,
+      "End": 2411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::mechanical::enum::465",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 465,
+      "End": 469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::mechanical::enum::515",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 515,
+      "End": 519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::mechanical::enum::608",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 608,
+      "End": 612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::pointer-cast::2559",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2559,
+      "End": 2571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::pointer-cast::2597",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2597,
+      "End": 2609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::pointer-cast::2643",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2643,
+      "End": 2660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::pointer-cast::3048",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3048,
+      "End": 3060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::pointer-cast::3086",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3086,
+      "End": 3098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::pointer-cast::3500",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3500,
+      "End": 3512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::pointer-cast::3541",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3541,
+      "End": 3553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::pointer-cast::3584",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3584,
+      "End": 3596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::pointer-cast::4678",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4678,
+      "End": 4690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::pointer-cast::4729",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4729,
+      "End": 4741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::pointer-cast::4768",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4768,
+      "End": 4780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::pointer-cast::4809",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4809,
+      "End": 4821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::pointer-cast::4850",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4850,
+      "End": 4862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::pointer-cast::4893",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4893,
+      "End": 4905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/satoko.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5295
+    }
+  ],
+  "Draft": "package satoko\n\n//===--- satoko.h -----------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n\n\n\n//#include \"types.h\"\n//#include \"misc/util/abc_global.h\"\nABC_NAMESPACE_HEADER_START\n\n/** Return valeus */\nconst (\n    SATOKO_ERR = 0\n\n    SATOKO_OK  = 1\n\n)\n\n\nconst (\n    SATOKO_UNDEC = 0\n /* Undecided */\n    SATOKO_SAT   = 1\n\n    SATOKO_UNSAT = -1\n\n)\n\n\nconst (\n    SATOKO_LIT_FALSE = 1\n\n    SATOKO_LIT_TRUE = 0\n\n    SATOKO_VAR_UNASSING = 3\n\n)\n\n\nstruct solver_t_;\ntype satoko_t = solver_t_;\n\n   \ntype satoko_opts_t struct {\n    /* Limits */\n    conf_limit long;  /* Limit on the n.of conflicts */\n    prop_limit long;  /* Limit on the n.of propagations */\n\n    /* Constants used for restart heuristic */\n    f_rst float64;          /* Used to force a restart */\n    b_rst float64;          /* Used to block a restart */\n    fst_block_rst uint32;   /* Lower bound n.of conflicts for start blocking restarts */\n    sz_lbd_bqueue uint32;   /* Size of the moving avarege queue for LBD (force restart) */\n    sz_trail_bqueue uint32; /* Size of the moving avarege queue for Trail size (block restart) */\n\n    /* Constants used for clause database reduction heuristic */\n    n_conf_fst_reduce uint32;  /* N.of conflicts before first clause databese reduction */\n    inc_reduce uint32;         /* Increment to reduce */\n    inc_special_reduce uint32; /* Special increment to reduce */\n    lbd_freeze_clause uint32;\n    learnt_ratio float32;          /* Percentage of learned clauses to remove */\n\n    /* VSIDS heuristic */\n    var_decay float64;\n    clause_decay float32;\n    var_act_rescale uint32;\n    var_act_limit act_t;\n\n\n    /* Binary resolution */\n    clause_max_sz_bin_resol uint32;\n    clause_min_lbd_bin_resol uint32;\n    garbage_max_ratio float32;\n    verbose byte;\n    no_simplify byte;\n}\n\n   \ntype satoko_stats_t struct {\n    n_starts uint32;\n    n_reduce_db uint32;\n\n    n_decisions long;\n    n_propagations long;\n    n_propagations_all long;\n    n_inspects long;\n    n_conflicts long;\n    n_conflicts_all long;\n\n    n_original_lits long;\n    n_learnt_lits long;\n}\n\n\n//===------------------------------------------------------------------------===\n// extern satoko_t *satoko_create(void);\n\n// extern void satoko_destroy(satoko_t *);\n\n// extern void satoko_reset(satoko_t *);\n\n\n// extern void satoko_default_opts(satoko_opts_t *);\n\n// extern void satoko_configure(satoko_t *, satoko_opts_t *);\n\n// extern int  satoko_parse_dimacs(char *, satoko_t **);\n\n// extern void satoko_setnvars(satoko_t *, int);\n\n// extern int  satoko_add_variable(satoko_t *, char);\n\n// extern int  satoko_add_clause(satoko_t *, int *, int);\n\n// extern void satoko_assump_push(satoko_t *s, int);\n\n// extern void satoko_assump_pop(satoko_t *s);\n\n// extern int  satoko_simplify(satoko_t *);\n\n// extern int  satoko_solve(satoko_t *);\n\n// extern int  satoko_solve_assumptions(satoko_t *s, int * plits, int nlits);\n\n// extern int  satoko_solve_assumptions_limit(satoko_t *s, int * plits, int nlits, int nconflim);\n\n// extern int  satoko_minimize_assumptions(satoko_t *s, int * plits, int nlits, int nconflim);\n\n// extern void satoko_mark_cone(satoko_t *, int *, int);\n\n// extern void satoko_unmark_cone(satoko_t *, int *, int);\n\n\n// extern void satoko_rollback(satoko_t *);\n\n// extern void satoko_bookmark(satoko_t *);\n\n// extern void satoko_unbookmark(satoko_t *);\n\n/* If problem is unsatisfiable under assumptions, this function is used to\n * obtain the final conflict clause expressed in the assumptions.\n *  - It receives as inputs the solver and a pointer to an array where clause\n * is stored. The memory for the clause is managed by the solver.\n *  - The return value is either the size of the array or -1 in case the final\n * conflict cluase was not generated.\n */\n// extern int satoko_final_conflict(satoko_t *, int **);\n\n\n/* Procedure to dump a DIMACS file.\n * - It receives as input the solver, a file name string and two integers.\n * - If the file name string is NULL the solver will dump in stdout.\n * - The first argument can be either 0 or 1 and is an option to dump learnt \n *   clauses. (value 1 will dump them).\n * - The seccond argument can be either 0 or 1 and is an option to use 0 as a \n *   variable ID or not. Keep in mind that if 0 is used as an ID the generated\n *   file will not be a DIMACS. (value 1 will use 0 as ID).\n */\n// extern void satoko_write_dimacs(satoko_t *, char *, int, int);\n\n// extern satoko_stats_t * satoko_stats(satoko_t *);\n\n// extern satoko_opts_t * satoko_options(satoko_t *);\n\n\n// extern int satoko_varnum(satoko_t *);\n\n// extern int satoko_clausenum(satoko_t *);\n\n// extern int satoko_learntnum(satoko_t *);\n\n// extern int satoko_conflictnum(satoko_t *);\n\n// extern void satoko_set_stop(satoko_t *, int *);\n\n// extern void satoko_set_stop_func(satoko_t *s, int (*fnct)(int));\n\n// extern void satoko_set_runid(satoko_t *, int);\n\n// extern int satoko_read_cex_varvalue(satoko_t *, int);\n\n// extern abctime satoko_set_runtime_limit(satoko_t *, abctime);\n\n// extern char satoko_var_polarity(satoko_t *, unsigned);\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

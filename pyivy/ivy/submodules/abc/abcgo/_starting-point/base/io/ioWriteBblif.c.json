@@ -1,0 +1,95 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBblif.c",
+  "SHA256": "5a3720e057382c512d2619b976ad7ac8989d024724b5613d488eb298b15893d4",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 2021
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsSopLogic(pNtk) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bbl_ManFromAbc",
+      "Start": 1847,
+      "End": 3197,
+      "BodyStart": 1894,
+      "Original": "Bbl_Man_t * Bbl_ManFromAbc( Abc_Ntk_t * pNtk )\n{\n    Bbl_Man_t * p;\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj, * pFanin;\n    int i, k;\n    assert( Abc_NtkIsSopLogic(pNtk) );\n    // start the data manager\n    p = Bbl_ManStart( Abc_NtkName(pNtk) );\n    // collect internal nodes to be added\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    // create combinational inputs\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        Bbl_ManCreateObject( p, BBL_OBJ_CI, Abc_ObjId(pObj), 0, NULL );\n    // create internal nodes \n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        Bbl_ManCreateObject( p, BBL_OBJ_NODE, Abc_ObjId(pObj), Abc_ObjFaninNum(pObj), (char *)pObj-\u003epData );\n    // create combinational outputs\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Bbl_ManCreateObject( p, BBL_OBJ_CO, Abc_ObjId(pObj), 1, NULL );\n    // create fanin/fanout connections for internal nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Bbl_ManAddFanin( p, Abc_ObjId(pObj), Abc_ObjId(pFanin) );\n    // create fanin/fanout connections for combinational outputs\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Bbl_ManAddFanin( p, Abc_ObjId(pObj), Abc_ObjId(pFanin) );\n    Vec_PtrFree( vNodes );\n    // sanity check\n    Bbl_ManCheck( p );\n    return p;\n}",
+      "Draft": "func Bbl_ManFromAbc(pNtk *Abc_Ntk_t) *Bbl_Man_t {\n    var p *Bbl_Man_t;\n    var vNodes *Vec_Ptr_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k int32;\n    assert(Abc_NtkIsSopLogic(pNtk), \"Abc_NtkIsSopLogic(pNtk)\");\n    // start the data manager\n    p = Bbl_ManStart( Abc_NtkName(pNtk) );\n    // collect internal nodes to be added\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    // create combinational inputs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Bbl_ManCreateObject( p, BBL_OBJ_CI, Abc_ObjId(pObj), 0, nil );\n    }\n    // create internal nodes \n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Bbl_ManCreateObject( p, BBL_OBJ_NODE, Abc_ObjId(pObj), Abc_ObjFaninNum(pObj), (char *)pObj.pData );\n    }\n    // create combinational outputs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Bbl_ManCreateObject( p, BBL_OBJ_CO, Abc_ObjId(pObj), 1, nil );\n    }\n    // create fanin/fanout connections for internal nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Bbl_ManAddFanin( p, Abc_ObjId(pObj), Abc_ObjId(pFanin) );\n        }\n    }\n    // create fanin/fanout connections for combinational outputs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Bbl_ManAddFanin( p, Abc_ObjId(pObj), Abc_ObjId(pFanin) );\n        }\n    }\n    Vec_PtrFree( vNodes );\n    // sanity check\n    Bbl_ManCheck( p );\n    return p;\n}"
+    },
+    {
+      "Name": "Io_WriteBblif",
+      "Start": 3456,
+      "End": 3699,
+      "BodyStart": 3513,
+      "Original": "void Io_WriteBblif( Abc_Ntk_t * pNtk, char * pFileName )\n{\n    Bbl_Man_t * p;\n    p = Bbl_ManFromAbc( pNtk );\n//Bbl_ManPrintStats( p );\n//Bbl_ManDumpBlif( p, \"test_bbl.blif\" );\n    Bbl_ManDumpBinaryBlif( p, pFileName );\n    Bbl_ManStop( p );\n}",
+      "Draft": "func Io_WriteBblif(pNtk *Abc_Ntk_t, pFileName string) {\n    var p *Bbl_Man_t;\n    p = Bbl_ManFromAbc( pNtk );\n//Bbl_ManPrintStats( p );\n//Bbl_ManDumpBlif( p, \"test_bbl.blif\" );\n    Bbl_ManDumpBinaryBlif( p, pFileName );\n    Bbl_ManStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBblif.c::pointer-cast::2563",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2354,
+      "End": 2354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBblif.c::pointer-cast::2698",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2492,
+      "End": 2500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBblif.c::pointer-cast::3138",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2723,
+      "End": 2723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBblif.c::Bbl_ManFromAbc",
+      "Category": "semantic-review",
+      "Symbol": "Bbl_ManFromAbc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1847,
+      "End": 3197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBblif.c::Io_WriteBblif",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteBblif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3456,
+      "End": 3699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteBblif.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3947
+    }
+  ],
+  "Draft": "package io\n\n/**CFile****************************************************************\n\n  FileName    [ioWriteBblif.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to write AIG in the binary format.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: ioWriteBblif.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioAbc.h\"\n//#include \"misc/bbl/bblif.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n// For description of Binary BLIF format, refer to \"abc/src/aig/bbl/bblif.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Fnction*************************************************************\n\n  Synopsis    [Construct manager from the ABC network.]\n\n  Description [In the ABC network each object has a unique integer ID.\n  This ID is used when we construct objects of the BBLIF manager \n  corresponding to each object of the ABC network. The objects can be\n  added to the manager in any order (although below they are added in the\n  topological order), but by the time fanin/fanout connections are created, \n  corresponding objects are already constructed. In the end the checking\n  procedure is called.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbl_ManFromAbc(pNtk *Abc_Ntk_t) *Bbl_Man_t {\n    var p *Bbl_Man_t;\n    var vNodes *Vec_Ptr_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i, k int32;\n    assert(Abc_NtkIsSopLogic(pNtk), \"Abc_NtkIsSopLogic(pNtk)\");\n    // start the data manager\n    p = Bbl_ManStart( Abc_NtkName(pNtk) );\n    // collect internal nodes to be added\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    // create combinational inputs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Bbl_ManCreateObject( p, BBL_OBJ_CI, Abc_ObjId(pObj), 0, nil );\n    }\n    // create internal nodes \n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Bbl_ManCreateObject( p, BBL_OBJ_NODE, Abc_ObjId(pObj), Abc_ObjFaninNum(pObj), (char *)pObj.pData );\n    }\n    // create combinational outputs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Bbl_ManCreateObject( p, BBL_OBJ_CO, Abc_ObjId(pObj), 1, nil );\n    }\n    // create fanin/fanout connections for internal nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Bbl_ManAddFanin( p, Abc_ObjId(pObj), Abc_ObjId(pFanin) );\n        }\n    }\n    // create fanin/fanout connections for combinational outputs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Bbl_ManAddFanin( p, Abc_ObjId(pObj), Abc_ObjId(pFanin) );\n        }\n    }\n    Vec_PtrFree( vNodes );\n    // sanity check\n    Bbl_ManCheck( p );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the AIG in the binary format.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteBblif(pNtk *Abc_Ntk_t, pFileName string) {\n    var p *Bbl_Man_t;\n    p = Bbl_ManFromAbc( pNtk );\n//Bbl_ManPrintStats( p );\n//Bbl_ManDumpBlif( p, \"test_bbl.blif\" );\n    Bbl_ManDumpBinaryBlif( p, pFileName );\n    Bbl_ManStop( p );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

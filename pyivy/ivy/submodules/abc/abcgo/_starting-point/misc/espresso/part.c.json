@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/part.c",
+  "SHA256": "e8d9a84f089bd5811ba2649574c5faf3d941584417a02c5a60beb9fd28407354",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/part.c::pointer-cast::885",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 755,
+      "End": 755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/part.c::pointer-cast::1555",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1307,
+      "End": 1307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/part.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2410
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"mincov_int.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n// static int visit_col();\n\n\nstatic void\ncopy_row(A, prow)\nregister sm_matrix *A;\nregister sm_row *prow;\n{\n    register sm_element *p;\n\n    for p = prow.first_col; p != 0; p = p.next_col {\n    (void) sm_insert(A, p.row_num, p.col_num);\n    }\n}\n\n\nstatic int\nvisit_row(A, prow, rows_visited, cols_visited)\nvar A *sm_matrix;\nvar prow *sm_row;\nvar rows_visited *int32;\nvar cols_visited *int32;\n{\n    sm_element *p;\n    sm_col *pcol;\n\n    if ! prow.flag {\n    prow.flag = 1;\n    (*rows_visited)++;\n    if *rows_visited == A.nrows {\n        return 1;\n    }\n    for p = prow.first_col; p != 0; p = p.next_col {\n        // inlining of macro sm_get_col\n        pcol = (((p.col_num) \u003e= 0 \u0026\u0026 (p.col_num) \u003c (A).cols_size) ?     (A).cols[p.col_num] : (sm_col *) 0);\n        if ! pcol.flag {\n        if visit_col(A, pcol, rows_visited, cols_visited) {\n            return 1;\n        }\n        }\n    }\n    }\n    return 0;\n}\n\n\nstatic int\nvisit_col(A, pcol, rows_visited, cols_visited)\nvar A *sm_matrix;\nvar pcol *sm_col;\nvar rows_visited *int32;\nvar cols_visited *int32;\n{\n    sm_element *p;\n    sm_row *prow;\n\n    if ! pcol.flag {\n    pcol.flag = 1;\n    (*cols_visited)++;\n    if *cols_visited == A.ncols {\n        return 1;\n    }\n    for p = pcol.first_row; p != 0; p = p.next_row {\n        // inlining of macro sm_get_row\n        prow = (((p.row_num) \u003e= 0 \u0026\u0026 (p.row_num) \u003c (A).rows_size) ?     (A).rows[p.row_num] : (sm_row *) 0);\n        if ! prow.flag {\n        if visit_row(A, prow, rows_visited, cols_visited) {\n            return 1;\n        }\n        }\n    }\n    }\n    return 0;\n}\n\f\nint\nsm_block_partition(A, L, R)\nvar A *sm_matrix;\nvar L, R **sm_matrix;\n{\n    int cols_visited, rows_visited;\n    register sm_row *prow;\n    register sm_col *pcol;\n\n    /* Avoid the trivial case */\n    if A.nrows == 0 {\n    return 0;\n    }\n\n    /* Reset the visited flags for each row and column */\n    for prow = A.first_row; prow != 0; prow = prow.next_row {\n    prow.flag = 0;\n    }\n    for pcol = A.first_col; pcol != 0; pcol = pcol.next_col {\n    pcol.flag = 0;\n    }\n\n    cols_visited = rows_visited = 0;\n    if visit_row(A, A.first_row, \u0026rows_visited, \u0026cols_visited) {\n    /* we found all of the rows */\n    return 0;\n    } else {\n    *L = sm_alloc();\n    *R = sm_alloc();\n    for prow = A.first_row; prow != 0; prow = prow.next_row {\n        if prow.flag {\n        copy_row(*L, prow);\n        } else {\n        copy_row(*R, prow);\n        }\n    }\n    return 1;\n    }\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

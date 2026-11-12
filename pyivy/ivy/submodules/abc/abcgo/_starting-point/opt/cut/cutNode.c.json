@@ -1,0 +1,688 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c",
+  "SHA256": "865ce85a328265ac8ea11187c970e9fe6a6ae8a3926a8b4a050aa21c6e0bb88f",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 9,
+        "ByteOffset": 2865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut.nLeaves \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 198,
+        "Column": 9,
+        "ByteOffset": 7394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( ppTail == pSuperList.ppTail[a] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 199,
+        "Column": 9,
+        "ByteOffset": 7444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *ppTail == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 264,
+        "Column": 5,
+        "ByteOffset": 9408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPrev.pNext == pTemp );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 286,
+        "Column": 5,
+        "ByteOffset": 10380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *ppTail == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 310,
+        "Column": 5,
+        "ByteOffset": 11070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pParams.fSeq || pCut.nLeaves \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 329,
+        "Column": 9,
+        "ByteOffset": 11743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.vNodeAttrs != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 395,
+        "Column": 5,
+        "ByteOffset": 14529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Cut_NodeReadCutsNew(p, Node) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 495,
+        "Column": 9,
+        "ByteOffset": 17788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut1.nLeaves == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 501,
+        "Column": 9,
+        "ByteOffset": 17963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut0.nLeaves == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 515,
+        "Column": 5,
+        "ByteOffset": 18401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Delay \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 588,
+        "Column": 9,
+        "ByteOffset": 20771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pList0.nLeaves == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 593,
+        "Column": 9,
+        "ByteOffset": 20898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pList1.nLeaves == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 635,
+        "Column": 9,
+        "ByteOffset": 23869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pTemp0.nLeaves == uint32(Limit) \u0026\u0026 pTemp1.nLeaves == uint32(Limit) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 693,
+        "Column": 9,
+        "ByteOffset": 25681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pList );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 766,
+        "Column": 5,
+        "ByteOffset": 30656
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Cut_NodeReadCutsNew(p, Root) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 820,
+        "Column": 5,
+        "ByteOffset": 32241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pTop != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 942,
+        "Column": 9,
+        "ByteOffset": 39010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Cut_NodeReadCutsTemp(p, CutSetNum) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 946,
+        "Column": 9,
+        "ByteOffset": 39143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Cut_NodeReadCutsNew(p, Root) == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 978,
+        "Column": 17,
+        "ByteOffset": 40362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"******************* These are contained cuts:\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cut_CutCheckDominance",
+      "Start": 1490,
+      "End": 1939,
+      "BodyStart": 1568,
+      "Original": "static inline int Cut_CutCheckDominance( Cut_Cut_t * pDom, Cut_Cut_t * pCut )\n{\n    int i, k;\n    for ( i = 0; i \u003c (int)pDom-\u003enLeaves; i++ )\n    {\n        for ( k = 0; k \u003c (int)pCut-\u003enLeaves; k++ )\n            if ( pDom-\u003epLeaves[i] == pCut-\u003epLeaves[k] )\n                break;\n        if ( k == (int)pCut-\u003enLeaves ) // node i in pDom is not contained in pCut\n            return 0;\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}",
+      "Draft": "func Cut_CutCheckDominance(pDom *Cut_Cut_t, pCut *Cut_Cut_t) int32 {\n    var i, k int32;\n    for  i = 0; i \u003c int32(pDom.nLeaves); i++  {\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            if pDom.pLeaves[i] == pCut.pLeaves[k] {\n                break; }\n        }\n        if k == int32(pCut.nLeaves) { // node i in pDom is not contained in pCut\n            return 0; }\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}"
+    },
+    {
+      "Name": "Cut_CutFilter",
+      "Start": 2204,
+      "End": 3418,
+      "BodyStart": 2273,
+      "Original": "static inline void Cut_CutFilter( Cut_Man_t * p, Cut_Cut_t * pList )\n{ \n    Cut_Cut_t * pListR, ** ppListR = \u0026pListR;\n    Cut_Cut_t * pCut, * pCut2, * pDom, * pPrev;\n    // save the first cut\n    *ppListR = pList, ppListR = \u0026pList-\u003epNext;\n    // try to filter out other cuts\n    pPrev = pList;\n    Cut_ListForEachCutSafe( pList-\u003epNext, pCut, pCut2 )\n    {\n        assert( pCut-\u003enLeaves \u003e 1 );\n        // go through all the previous cuts up to pCut\n        Cut_ListForEachCutStop( pList-\u003epNext, pDom, pCut )\n        {\n            if ( pDom-\u003enLeaves \u003e pCut-\u003enLeaves )\n                continue;\n            if ( (pDom-\u003euSign \u0026 pCut-\u003euSign) != pDom-\u003euSign )\n                continue;\n            if ( Cut_CutCheckDominance( pDom, pCut ) )\n                break;\n        }\n        if ( pDom != pCut ) // pDom is contained in pCut - recycle pCut\n        {\n            // make sure cuts are connected after removing\n            pPrev-\u003epNext = pCut-\u003epNext;\n            // recycle the cut\n            Cut_CutRecycle( p, pCut );\n        }\n        else // pDom is NOT contained in pCut - save pCut\n        {\n            *ppListR = pCut, ppListR = \u0026pCut-\u003epNext;\n            pPrev = pCut;\n        }\n    }\n    *ppListR = NULL;\n}",
+      "Draft": "func Cut_CutFilter(p *Cut_Man_t, pList *Cut_Cut_t) { \n    var pListR *Cut_Cut_t;\n    var ppListR **Cut_Cut_t = \u0026pListR;\n    var pCut, pCut2, pDom, pPrev *Cut_Cut_t;\n    // save the first cut\n    *ppListR = pList, ppListR = \u0026pList.pNext;\n    // try to filter out other cuts\n    pPrev = pList;\n    // inlining of macro Cut_ListForEachCutSafe\n    for  pCut = pList.pNext,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n        assert(pCut.nLeaves \u003e 1, \"pCut.nLeaves \u003e 1\");\n        // go through all the previous cuts up to pCut\n        // inlining of macro Cut_ListForEachCutStop\n        for  pDom = pList.pNext;                                             pDom != pCut;                                            pDom = pDom.pNext  {\n            if pDom.nLeaves \u003e pCut.nLeaves {\n                continue; }\n            if (pDom.uSign \u0026 pCut.uSign) != pDom.uSign {\n                continue; }\n            if Cut_CutCheckDominance( pDom, pCut ) != 0 {\n                break; }\n        }\n        if pDom != pCut { // pDom is contained in pCut - recycle pCut\n        \n            // make sure cuts are connected after removing\n            pPrev.pNext = pCut.pNext;\n            // recycle the cut\n            Cut_CutRecycle( p, pCut );\n        \n        } else { // pDom is NOT contained in pCut - save pCut\n        \n            *ppListR = pCut, ppListR = \u0026pCut.pNext;\n            pPrev = pCut;\n        }\n    }\n    *ppListR = nil;\n}"
+    },
+    {
+      "Name": "Cut_CutFilterOneEqual",
+      "Start": 3713,
+      "End": 4237,
+      "BodyStart": 3813,
+      "Original": "static inline int Cut_CutFilterOneEqual( Cut_Man_t * p, Cut_List_t * pSuperList, Cut_Cut_t * pCut )\n{\n    Cut_Cut_t * pTemp;\n    Cut_ListForEachCut( pSuperList-\u003epHead[pCut-\u003enLeaves], pTemp )\n    {\n        // skip the non-contained cuts\n        if ( pCut-\u003euSign != pTemp-\u003euSign )\n            continue;\n        // check containment seriously\n        if ( Cut_CutCheckDominance( pTemp, pCut ) )\n        {\n            p-\u003enCutsFilter++;\n            Cut_CutRecycle( p, pCut );\n            return 1;\n        }\n    }\n    return 0;\n}",
+      "Draft": "func Cut_CutFilterOneEqual(p *Cut_Man_t, pSuperList *Cut_List_t, pCut *Cut_Cut_t) int32 {\n    var pTemp *Cut_Cut_t;\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp = pSuperList.pHead[pCut.nLeaves];                                             (pTemp != nil);                                                     pTemp = pTemp.pNext  {\n        // skip the non-contained cuts\n        if pCut.uSign != pTemp.uSign {\n            continue; }\n        // check containment seriously\n        if Cut_CutCheckDominance( pTemp, pCut ) != 0 {\n            p.nCutsFilter++;\n            Cut_CutRecycle( p, pCut );\n            return 1;\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Cut_CutFilterOne",
+      "Start": 4569,
+      "End": 6541,
+      "BodyStart": 4664,
+      "Original": "static inline int Cut_CutFilterOne( Cut_Man_t * p, Cut_List_t * pSuperList, Cut_Cut_t * pCut )\n{\n    Cut_Cut_t * pTemp, * pTemp2, ** ppTail;\n    int a;\n\n    // check if this cut is filtered out by smaller cuts\n    for ( a = 2; a \u003c= (int)pCut-\u003enLeaves; a++ )\n    {\n        Cut_ListForEachCut( pSuperList-\u003epHead[a], pTemp )\n        {\n            // skip the non-contained cuts\n            if ( (pTemp-\u003euSign \u0026 pCut-\u003euSign) != pTemp-\u003euSign )\n                continue;\n            // check containment seriously\n            if ( Cut_CutCheckDominance( pTemp, pCut ) )\n            {\n                p-\u003enCutsFilter++;\n                Cut_CutRecycle( p, pCut );\n                return 1;\n            }\n        }\n    }\n\n    // filter out other cuts using this one\n    for ( a = pCut-\u003enLeaves + 1; a \u003c= (int)pCut-\u003enVarsMax; a++ )\n    {\n        ppTail = pSuperList-\u003epHead + a;\n        Cut_ListForEachCutSafe( pSuperList-\u003epHead[a], pTemp, pTemp2 )\n        {\n            // skip the non-contained cuts\n            if ( (pTemp-\u003euSign \u0026 pCut-\u003euSign) != pCut-\u003euSign )\n            {\n                ppTail = \u0026pTemp-\u003epNext;\n                continue;\n            }\n            // check containment seriously\n            if ( Cut_CutCheckDominance( pCut, pTemp ) )\n            {\n                p-\u003enCutsFilter++;\n                p-\u003enNodeCuts--;\n                // move the head\n                if ( pSuperList-\u003epHead[a] == pTemp )\n                    pSuperList-\u003epHead[a] = pTemp-\u003epNext;\n                // move the tail\n                if ( pSuperList-\u003eppTail[a] == \u0026pTemp-\u003epNext )\n                    pSuperList-\u003eppTail[a] = ppTail;\n                // skip the given cut in the list\n                *ppTail = pTemp-\u003epNext;\n                // recycle pTemp\n                Cut_CutRecycle( p, pTemp );\n            }\n            else\n                ppTail = \u0026pTemp-\u003epNext;\n        }\n        assert( ppTail == pSuperList-\u003eppTail[a] );\n        assert( *ppTail == NULL );\n    }\n\n    return 0;\n}",
+      "Draft": "func Cut_CutFilterOne(p *Cut_Man_t, pSuperList *Cut_List_t, pCut *Cut_Cut_t) int32 {\n    var pTemp *Cut_Cut_t;\n    var pTemp2 *Cut_Cut_t;\n    var ppTail **Cut_Cut_t;\n    var a int32;\n\n    // check if this cut is filtered out by smaller cuts\n    for  a = 2; a \u003c= int32(pCut.nLeaves); a++  {\n        // inlining of macro Cut_ListForEachCut\n        for  pTemp = pSuperList.pHead[a];                                             (pTemp != nil);                                                     pTemp = pTemp.pNext  {\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pCut.uSign) != pTemp.uSign {\n                continue; }\n            // check containment seriously\n            if Cut_CutCheckDominance( pTemp, pCut ) != 0 {\n                p.nCutsFilter++;\n                Cut_CutRecycle( p, pCut );\n                return 1;\n            }\n        }\n    }\n\n    // filter out other cuts using this one\n    for  a = pCut.nLeaves + 1; a \u003c= int32(pCut.nVarsMax); a++  {\n        ppTail = pSuperList.pHead + a;\n        // inlining of macro Cut_ListForEachCutSafe\n        for  pTemp = pSuperList.pHead[a],                                             pTemp2 = pTemp? pTemp.pNext: nil;                          (pTemp != nil);                                                     pTemp = pTemp2,                                             pTemp2 = pTemp? pTemp.pNext: nil  {\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pCut.uSign) != pCut.uSign {\n                ppTail = \u0026pTemp.pNext;\n                continue;\n            }\n            // check containment seriously\n            if Cut_CutCheckDominance( pCut, pTemp ) != 0 {\n                p.nCutsFilter++;\n                p.nNodeCuts--;\n                // move the head\n                if pSuperList.pHead[a] == pTemp {\n                    pSuperList.pHead[a] = pTemp.pNext; }\n                // move the tail\n                if pSuperList.ppTail[a] == \u0026pTemp.pNext {\n                    pSuperList.ppTail[a] = ppTail; }\n                // skip the given cut in the list\n                *ppTail = pTemp.pNext;\n                // recycle pTemp\n                Cut_CutRecycle( p, pTemp );\n            \n            } else {\n                ppTail = \u0026pTemp.pNext; }\n        }\n        assert(ppTail == pSuperList.ppTail[a], \"ppTail == pSuperList.ppTail[a]\");\n        assert(*ppTail == nil, \"*ppTail == nil\");\n    }\n\n    return 0;\n}"
+    },
+    {
+      "Name": "Cut_CutFilterGlobal",
+      "Start": 6855,
+      "End": 7258,
+      "BodyStart": 6928,
+      "Original": "static inline int Cut_CutFilterGlobal( Cut_Man_t * p, Cut_Cut_t * pCut )\n{\n    int a;\n    if ( pCut-\u003enLeaves == 1 )\n        return 0;\n    for ( a = 0; a \u003c (int)pCut-\u003enLeaves; a++ )\n        if ( Vec_IntEntry( p-\u003evNodeAttrs, pCut-\u003epLeaves[a] ) ) // global\n            return 0;\n    // there is no global nodes, the cut should be removed\n    p-\u003enCutsFilter++;\n    Cut_CutRecycle( p, pCut );\n    return 1;\n}",
+      "Draft": "func Cut_CutFilterGlobal(p *Cut_Man_t, pCut *Cut_Cut_t) int32 {\n    var a int32;\n    if pCut.nLeaves == 1 {\n        return 0; }\n    for  a = 0; a \u003c int32(pCut.nLeaves); a++  {\n        if Vec_IntEntry( p.vNodeAttrs, pCut.pLeaves[a] ) { // global\n            return 0; }\n    }\n    // there is no global nodes, the cut should be removed\n    p.nCutsFilter++;\n    Cut_CutRecycle( p, pCut );\n    return 1;\n}"
+    },
+    {
+      "Name": "Cut_CutFilterOld",
+      "Start": 7591,
+      "End": 9037,
+      "BodyStart": 7680,
+      "Original": "static inline int Cut_CutFilterOld( Cut_Man_t * p, Cut_Cut_t * pList, Cut_Cut_t * pCut )\n{\n    Cut_Cut_t * pPrev, * pTemp, * pTemp2, ** ppTail;\n\n    // check if this cut is filtered out by smaller cuts\n    pPrev = NULL;\n    Cut_ListForEachCut( pList, pTemp )\n    {\n        if ( pTemp-\u003enLeaves \u003e pCut-\u003enLeaves )\n            break;\n        pPrev = pTemp;\n        // skip the non-contained cuts\n        if ( (pTemp-\u003euSign \u0026 pCut-\u003euSign) != pTemp-\u003euSign )\n            continue;\n        // check containment seriously\n        if ( Cut_CutCheckDominance( pTemp, pCut ) )\n        {\n            p-\u003enCutsFilter++;\n            Cut_CutRecycle( p, pCut );\n            return 1;\n        }\n    }\n    assert( pPrev-\u003epNext == pTemp );\n\n    // filter out other cuts using this one\n    ppTail = \u0026pPrev-\u003epNext;\n    Cut_ListForEachCutSafe( pTemp, pTemp, pTemp2 )\n    {\n        // skip the non-contained cuts\n        if ( (pTemp-\u003euSign \u0026 pCut-\u003euSign) != pCut-\u003euSign )\n        {\n            ppTail = \u0026pTemp-\u003epNext;\n            continue;\n        }\n        // check containment seriously\n        if ( Cut_CutCheckDominance( pCut, pTemp ) )\n        {\n            p-\u003enCutsFilter++;\n            p-\u003enNodeCuts--;\n            // skip the given cut in the list\n            *ppTail = pTemp-\u003epNext;\n            // recycle pTemp\n            Cut_CutRecycle( p, pTemp );\n        }\n        else\n            ppTail = \u0026pTemp-\u003epNext;\n    }\n    assert( *ppTail == NULL );\n    return 0;\n}",
+      "Draft": "func Cut_CutFilterOld(p *Cut_Man_t, pList *Cut_Cut_t, pCut *Cut_Cut_t) int32 {\n    var pPrev *Cut_Cut_t;\n    var pTemp *Cut_Cut_t;\n    var pTemp2 *Cut_Cut_t;\n    var ppTail **Cut_Cut_t;\n\n    // check if this cut is filtered out by smaller cuts\n    pPrev = nil;\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp = pList;                                             (pTemp != nil);                                                     pTemp = pTemp.pNext  {\n        if pTemp.nLeaves \u003e pCut.nLeaves {\n            break; }\n        pPrev = pTemp;\n        // skip the non-contained cuts\n        if (pTemp.uSign \u0026 pCut.uSign) != pTemp.uSign {\n            continue; }\n        // check containment seriously\n        if Cut_CutCheckDominance( pTemp, pCut ) != 0 {\n            p.nCutsFilter++;\n            Cut_CutRecycle( p, pCut );\n            return 1;\n        }\n    }\n    assert(pPrev.pNext == pTemp, \"pPrev.pNext == pTemp\");\n\n    // filter out other cuts using this one\n    ppTail = \u0026pPrev.pNext;\n    // inlining of macro Cut_ListForEachCutSafe\n    for  pTemp = pTemp,                                             pTemp2 = pTemp? pTemp.pNext: nil;                          (pTemp != nil);                                                     pTemp = pTemp2,                                             pTemp2 = pTemp? pTemp.pNext: nil  {\n        // skip the non-contained cuts\n        if (pTemp.uSign \u0026 pCut.uSign) != pCut.uSign {\n            ppTail = \u0026pTemp.pNext;\n            continue;\n        }\n        // check containment seriously\n        if Cut_CutCheckDominance( pCut, pTemp ) != 0 {\n            p.nCutsFilter++;\n            p.nNodeCuts--;\n            // skip the given cut in the list\n            *ppTail = pTemp.pNext;\n            // recycle pTemp\n            Cut_CutRecycle( p, pTemp );\n        \n        } else {\n            ppTail = \u0026pTemp.pNext; }\n    }\n    assert(*ppTail == nil, \"*ppTail == nil\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Cut_CutProcessTwo",
+      "Start": 9332,
+      "End": 10832,
+      "BodyStart": 9448,
+      "Original": "static inline int Cut_CutProcessTwo( Cut_Man_t * p, Cut_Cut_t * pCut0, Cut_Cut_t * pCut1, Cut_List_t * pSuperList )\n{\n    Cut_Cut_t * pCut;\n    // merge the cuts\n    if ( pCut0-\u003enLeaves \u003e= pCut1-\u003enLeaves )\n        pCut = Cut_CutMergeTwo( p, pCut0, pCut1 );\n    else\n        pCut = Cut_CutMergeTwo( p, pCut1, pCut0 );\n    if ( pCut == NULL )\n        return 0;\n    assert( p-\u003epParams-\u003efSeq || pCut-\u003enLeaves \u003e 1 );\n    // set the signature\n    pCut-\u003euSign = pCut0-\u003euSign | pCut1-\u003euSign;\n    if ( p-\u003epParams-\u003efRecord )\n        pCut-\u003eNum0 = pCut0-\u003eNum0, pCut-\u003eNum1 = pCut1-\u003eNum0;\n    // check containment\n    if ( p-\u003epParams-\u003efFilter )\n    {\n        if ( Cut_CutFilterOne(p, pSuperList, pCut) )\n//        if ( Cut_CutFilterOneEqual(p, pSuperList, pCut) )\n            return 0;\n        if ( p-\u003epParams-\u003efSeq )\n        {\n            if ( p-\u003epCompareOld \u0026\u0026 Cut_CutFilterOld(p, p-\u003epCompareOld, pCut) )\n                return 0;\n            if ( p-\u003epCompareNew \u0026\u0026 Cut_CutFilterOld(p, p-\u003epCompareNew, pCut) )\n                return 0;\n        }\n    }\n\n    if ( p-\u003epParams-\u003efGlobal )\n    {\n        assert( p-\u003evNodeAttrs != NULL );\n        if ( Cut_CutFilterGlobal( p, pCut ) )\n            return 0;\n    }\n\n    // compute the truth table\n    if ( p-\u003epParams-\u003efTruth )\n        Cut_TruthCompute( p, pCut, pCut0, pCut1, p-\u003efCompl0, p-\u003efCompl1 );\n    // add to the list\n    Cut_ListAdd( pSuperList, pCut );\n    // return status (0 if okay; 1 if exceeded the limit)\n    return ++p-\u003enNodeCuts == p-\u003epParams-\u003enKeepMax;\n}",
+      "Draft": "func Cut_CutProcessTwo(p *Cut_Man_t, pCut0 *Cut_Cut_t, pCut1 *Cut_Cut_t, pSuperList *Cut_List_t) int32 {\n    var pCut *Cut_Cut_t;\n    // merge the cuts\n    if pCut0.nLeaves \u003e= pCut1.nLeaves {\n        pCut = Cut_CutMergeTwo( p, pCut0, pCut1 );\n    } else {\n        pCut = Cut_CutMergeTwo( p, pCut1, pCut0 ); }\n    if pCut == nil {\n        return 0; }\n    assert(p.pParams.fSeq || pCut.nLeaves \u003e 1, \"p.pParams.fSeq || pCut.nLeaves \u003e 1\");\n    // set the signature\n    pCut.uSign = pCut0.uSign | pCut1.uSign;\n    if p.pParams.fRecord {\n        pCut.Num0 = pCut0.Num0, pCut.Num1 = pCut1.Num0; }\n    // check containment\n    if p.pParams.fFilter {\n        if Cut_CutFilterOne(p, pSuperList, pCut) != 0 {\n//        if ( Cut_CutFilterOneEqual(p, pSuperList, pCut) )\n            return 0; }\n        if p.pParams.fSeq {\n            if p.pCompareOld \u0026\u0026 (Cut_CutFilterOld(p, p.pCompareOld, pCut) != 0) {\n                return 0; }\n            if p.pCompareNew \u0026\u0026 (Cut_CutFilterOld(p, p.pCompareNew, pCut) != 0) {\n                return 0; }\n        }\n    }\n\n    if p.pParams.fGlobal {\n        assert(p.vNodeAttrs != nil, \"p.vNodeAttrs != nil\");\n        if Cut_CutFilterGlobal( p, pCut ) != 0 {\n            return 0; }\n    }\n\n    // compute the truth table\n    if p.pParams.fTruth {\n        Cut_TruthCompute( p, pCut, pCut0, pCut1, p.fCompl0, p.fCompl1 ); }\n    // add to the list\n    Cut_ListAdd( pSuperList, pCut );\n    // return status (0 if okay; 1 if exceeded the limit)\n    return ++p.nNodeCuts == p.pParams.nKeepMax;\n}"
+    },
+    {
+      "Name": "Cut_NodeComputeCuts",
+      "Start": 11116,
+      "End": 13619,
+      "BodyStart": 11248,
+      "Original": "Cut_Cut_t * Cut_NodeComputeCuts( Cut_Man_t * p, int Node, int Node0, int Node1, int fCompl0, int fCompl1, int fTriv, int TreeCode )\n{\n    Cut_List_t Super, * pSuper = \u0026Super;\n    Cut_Cut_t * pList, * pCut;\n    abctime clk;\n    // start the number of cuts at the node\n    p-\u003enNodes++;\n    p-\u003enNodeCuts = 0;\n    // prepare information for recording\n    if ( p-\u003epParams-\u003efRecord )\n    {\n        Cut_CutNumberList( Cut_NodeReadCutsNew(p, Node0) );\n        Cut_CutNumberList( Cut_NodeReadCutsNew(p, Node1) );\n    }\n    // compute the cuts\nclk = Abc_Clock();\n    Cut_ListStart( pSuper );\n    Cut_NodeDoComputeCuts( p, pSuper, Node, fCompl0, fCompl1, Cut_NodeReadCutsNew(p, Node0), Cut_NodeReadCutsNew(p, Node1), fTriv, TreeCode );\n    pList = Cut_ListFinish( pSuper );\np-\u003etimeMerge += Abc_Clock() - clk;\n    // verify the result of cut computation\n//    Cut_CutListVerify( pList );\n    // performing the recording\n    if ( p-\u003epParams-\u003efRecord )\n    {\n        Vec_IntWriteEntry( p-\u003evNodeStarts, Node, Vec_IntSize(p-\u003evCutPairs) );\n        Cut_ListForEachCut( pList, pCut )\n            Vec_IntPush( p-\u003evCutPairs, ((pCut-\u003eNum1 \u003c\u003c 16) | pCut-\u003eNum0) );\n        Vec_IntWriteEntry( p-\u003evNodeCuts, Node, Vec_IntSize(p-\u003evCutPairs) - Vec_IntEntry(p-\u003evNodeStarts, Node) );\n    }\n    if ( p-\u003epParams-\u003efRecordAig )\n    {\n        extern void Aig_RManRecord( unsigned * pTruth, int nVarsInit );\n        Cut_ListForEachCut( pList, pCut )\n            if ( Cut_CutReadLeaveNum(pCut) \u003e 4 )\n                Aig_RManRecord( Cut_CutReadTruth(pCut), Cut_CutReadLeaveNum(pCut) );\n    }\n    // check if the node is over the list\n    if ( p-\u003enNodeCuts == p-\u003epParams-\u003enKeepMax )\n        p-\u003enCutsLimit++;\n    // set the list at the node\n    Vec_PtrFillExtra( p-\u003evCutsNew, Node + 1, NULL );\n    assert( Cut_NodeReadCutsNew(p, Node) == NULL );\n    /////\n//    pList-\u003epNext = NULL;\n    /////\n    Cut_NodeWriteCutsNew( p, Node, pList );\n    // filter the cuts\n//clk = Abc_Clock();\n//    if ( p-\u003epParams-\u003efFilter )\n//        Cut_CutFilter( p, pList0 );\n//p-\u003etimeFilter += Abc_Clock() - clk;\n    // perform mapping of this node with these cuts\nclk = Abc_Clock();\n    if ( p-\u003epParams-\u003efMap \u0026\u0026 !p-\u003epParams-\u003efSeq )\n    {\n//        int Delay1, Delay2;\n//        Delay1 = Cut_NodeMapping( p, pList, Node, Node0, Node1 );    \n//        Delay2 = Cut_NodeMapping2( p, pList, Node, Node0, Node1 );   \n//        assert( Delay1 \u003e= Delay2 );\n        Cut_NodeMapping( p, pList, Node, Node0, Node1 );\n    }\np-\u003etimeMap += Abc_Clock() - clk;\n    return pList;\n}",
+      "Draft": "func Cut_NodeComputeCuts(p *Cut_Man_t, Node int32, Node0 int32, Node1 int32, fCompl0 int32, fCompl1 int32, fTriv int32, TreeCode int32) *Cut_Cut_t {\n    var Super Cut_List_t;\n    var pSuper *Cut_List_t = \u0026Super;\n    var pList, pCut *Cut_Cut_t;\n    var clk abctime;\n    // start the number of cuts at the node\n    p.nNodes++;\n    p.nNodeCuts = 0;\n    // prepare information for recording\n    if p.pParams.fRecord {\n        Cut_CutNumberList( Cut_NodeReadCutsNew(p, Node0) );\n        Cut_CutNumberList( Cut_NodeReadCutsNew(p, Node1) );\n    }\n    // compute the cuts\nclk = Abc_Clock();\n    Cut_ListStart( pSuper );\n    Cut_NodeDoComputeCuts( p, pSuper, Node, fCompl0, fCompl1, Cut_NodeReadCutsNew(p, Node0), Cut_NodeReadCutsNew(p, Node1), fTriv, TreeCode );\n    pList = Cut_ListFinish( pSuper );\np.timeMerge += Abc_Clock() - clk;\n    // verify the result of cut computation\n//    Cut_CutListVerify( pList );\n    // performing the recording\n    if p.pParams.fRecord {\n        Vec_IntWriteEntry( p.vNodeStarts, Node, Vec_IntSize(p.vCutPairs) );\n        // inlining of macro Cut_ListForEachCut\n        for  pCut = pList;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n            Vec_IntPush( p.vCutPairs, ((pCut.Num1 \u003c\u003c 16) | pCut.Num0) );\n        }\n        Vec_IntWriteEntry( p.vNodeCuts, Node, Vec_IntSize(p.vCutPairs) - Vec_IntEntry(p.vNodeStarts, Node) );\n    }\n    if p.pParams.fRecordAig {\n        extern void Aig_RManRecord( unsigned * pTruth, int nVarsInit );\n        // inlining of macro Cut_ListForEachCut\n        for  pCut = pList;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n            if Cut_CutReadLeaveNum(pCut) \u003e 4 {\n                Aig_RManRecord( Cut_CutReadTruth(pCut), Cut_CutReadLeaveNum(pCut) ); }\n        }\n    }\n    // check if the node is over the list\n    if p.nNodeCuts == p.pParams.nKeepMax {\n        p.nCutsLimit++; }\n    // set the list at the node\n    Vec_PtrFillExtra( p.vCutsNew, Node + 1, nil );\n    assert(Cut_NodeReadCutsNew(p, Node) == nil, \"Cut_NodeReadCutsNew(p, Node) == nil\");\n    /////\n//    pList-\u003epNext = NULL;\n    /////\n    Cut_NodeWriteCutsNew( p, Node, pList );\n    // filter the cuts\n//clk = Abc_Clock();\n//    if ( p-\u003epParams-\u003efFilter )\n//        Cut_CutFilter( p, pList0 );\n//p-\u003etimeFilter += Abc_Clock() - clk;\n    // perform mapping of this node with these cuts\nclk = Abc_Clock();\n    if p.pParams.fMap \u0026\u0026 !p.pParams.fSeq {\n//        int Delay1, Delay2;\n//        Delay1 = Cut_NodeMapping( p, pList, Node, Node0, Node1 );    \n//        Delay2 = Cut_NodeMapping2( p, pList, Node, Node0, Node1 );   \n//        assert( Delay1 \u003e= Delay2 );\n        Cut_NodeMapping( p, pList, Node, Node0, Node1 );\n    }\np.timeMap += Abc_Clock() - clk;\n    return pList;\n}"
+    },
+    {
+      "Name": "Cut_NodeMapping2",
+      "Start": 13885,
+      "End": 14795,
+      "BodyStart": 13974,
+      "Original": "int Cut_NodeMapping2( Cut_Man_t * p, Cut_Cut_t * pCuts, int Node, int Node0, int Node1 )\n{\n    Cut_Cut_t * pCut;\n    int DelayMin, DelayCur, i;\n    if ( pCuts == NULL )\n        p-\u003enDelayMin = -1;\n    if ( p-\u003enDelayMin == -1 )\n        return -1;\n    DelayMin = 1000000;\n    Cut_ListForEachCut( pCuts, pCut )\n    {\n        if ( pCut-\u003enLeaves == 1 )\n            continue;\n        DelayCur = 0;\n        for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n            if ( DelayCur \u003c Vec_IntEntry(p-\u003evDelays, pCut-\u003epLeaves[i]) )\n                DelayCur = Vec_IntEntry(p-\u003evDelays, pCut-\u003epLeaves[i]);\n        if ( DelayMin \u003e DelayCur )\n            DelayMin = DelayCur;\n    }\n    if ( DelayMin == 1000000 )\n    {\n         p-\u003enDelayMin = -1;\n         return -1;\n    }\n    DelayMin++;\n    Vec_IntWriteEntry( p-\u003evDelays, Node, DelayMin );\n    if ( p-\u003enDelayMin \u003c DelayMin )\n        p-\u003enDelayMin = DelayMin;\n    return DelayMin;\n}",
+      "Draft": "func Cut_NodeMapping2(p *Cut_Man_t, pCuts *Cut_Cut_t, Node int32, Node0 int32, Node1 int32) int32 {\n    var pCut *Cut_Cut_t;\n    var DelayMin, DelayCur, i int32;\n    if pCuts == nil {\n        p.nDelayMin = -1; }\n    if p.nDelayMin == -1 {\n        return -1; }\n    DelayMin = 1000000;\n    // inlining of macro Cut_ListForEachCut\n    for  pCut = pCuts;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n        if pCut.nLeaves == 1 {\n            continue; }\n        DelayCur = 0;\n        for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n            if DelayCur \u003c Vec_IntEntry(p.vDelays, pCut.pLeaves[i]) {\n                DelayCur = Vec_IntEntry(p.vDelays, pCut.pLeaves[i]); }\n        }\n        if DelayMin \u003e DelayCur {\n            DelayMin = DelayCur; }\n    }\n    if DelayMin == 1000000 {\n         p.nDelayMin = -1;\n         return -1;\n    }\n    DelayMin++;\n    Vec_IntWriteEntry( p.vDelays, Node, DelayMin );\n    if p.nDelayMin \u003c DelayMin {\n        p.nDelayMin = DelayMin; }\n    return DelayMin;\n}"
+    },
+    {
+      "Name": "Cut_NodeMapping",
+      "Start": 15083,
+      "End": 16664,
+      "BodyStart": 15171,
+      "Original": "int Cut_NodeMapping( Cut_Man_t * p, Cut_Cut_t * pCuts, int Node, int Node0, int Node1 )\n{\n    Cut_Cut_t * pCut0, * pCut1, * pCut;\n    int Delay0, Delay1, Delay;\n    // get the fanin cuts\n    Delay0 = Vec_IntEntry( p-\u003evDelays2, Node0 );\n    Delay1 = Vec_IntEntry( p-\u003evDelays2, Node1 );\n    pCut0 = (Delay0 == 0) ? (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCutsNew, Node0 ) : (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCutsMax, Node0 );\n    pCut1 = (Delay1 == 0) ? (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCutsNew, Node1 ) : (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCutsMax, Node1 );\n    if ( Delay0 == Delay1 )\n        Delay = (Delay0 == 0) ? Delay0 + 1: Delay0;\n    else if ( Delay0 \u003e Delay1 )\n    {\n        Delay = Delay0;\n        pCut1 = (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCutsNew, Node1 );\n        assert( pCut1-\u003enLeaves == 1 );\n    }\n    else // if ( Delay0 \u003c Delay1 )\n    {\n        Delay = Delay1;\n        pCut0 = (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCutsNew, Node0 );\n        assert( pCut0-\u003enLeaves == 1 );\n    }\n    // merge the cuts\n    if ( pCut0-\u003enLeaves \u003c pCut1-\u003enLeaves )\n        pCut  = Cut_CutMergeTwo( p, pCut1, pCut0 );\n    else\n        pCut  = Cut_CutMergeTwo( p, pCut0, pCut1 );\n    if ( pCut == NULL )\n    {\n        Delay++;\n        pCut = Cut_CutAlloc( p );\n        pCut-\u003enLeaves = 2;\n        pCut-\u003epLeaves[0] = Node0 \u003c Node1 ? Node0 : Node1;\n        pCut-\u003epLeaves[1] = Node0 \u003c Node1 ? Node1 : Node0;\n    }\n    assert( Delay \u003e 0 );\n    Vec_IntWriteEntry( p-\u003evDelays2, Node, Delay );\n    Vec_PtrWriteEntry( p-\u003evCutsMax, Node, pCut );\n    if ( p-\u003enDelayMin \u003c Delay )\n        p-\u003enDelayMin = Delay;\n    return Delay;\n}",
+      "Draft": "func Cut_NodeMapping(p *Cut_Man_t, pCuts *Cut_Cut_t, Node int32, Node0 int32, Node1 int32) int32 {\n    var pCut0, pCut1, pCut *Cut_Cut_t;\n    var Delay0, Delay1, Delay int32;\n    // get the fanin cuts\n    Delay0 = Vec_IntEntry( p.vDelays2, Node0 );\n    Delay1 = Vec_IntEntry( p.vDelays2, Node1 );\n    if Delay0 == 0 {\n        pCut0 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node0 );\n    } else {\n        pCut0 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsMax, Node0 );\n    }\n    if Delay1 == 0 {\n        pCut1 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node1 );\n    } else {\n        pCut1 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsMax, Node1 );\n    }\n    if Delay0 == Delay1 {\n        if Delay0 == 0 {\n            Delay = Delay0 + 1;\n        } else {\n            Delay = Delay0;\n        }\n    } else if Delay0 \u003e Delay1 {\n        Delay = Delay0;\n        pCut1 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node1 );\n        assert(pCut1.nLeaves == 1, \"pCut1.nLeaves == 1\");\n    \n    } else { // if ( Delay0 \u003c Delay1 )\n    \n        Delay = Delay1;\n        pCut0 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node0 );\n        assert(pCut0.nLeaves == 1, \"pCut0.nLeaves == 1\");\n    }\n    // merge the cuts\n    if pCut0.nLeaves \u003c pCut1.nLeaves {\n        pCut  = Cut_CutMergeTwo( p, pCut1, pCut0 );\n    } else {\n        pCut  = Cut_CutMergeTwo( p, pCut0, pCut1 ); }\n    if pCut == nil {\n        Delay++;\n        pCut = Cut_CutAlloc( p );\n        pCut.nLeaves = 2;\n        pCut.pLeaves[0] = Node0 \u003c Node1 ? Node0 : Node1;\n        pCut.pLeaves[1] = Node0 \u003c Node1 ? Node1 : Node0;\n    }\n    assert(Delay \u003e 0, \"Delay \u003e 0\");\n    Vec_IntWriteEntry( p.vDelays2, Node, Delay );\n    Vec_PtrWriteEntry( p.vCutsMax, Node, pCut );\n    if p.nDelayMin \u003c Delay {\n        p.nDelayMin = Delay; }\n    return Delay;\n}"
+    },
+    {
+      "Name": "Cut_ManMappingArea_rec",
+      "Start": 16928,
+      "End": 17403,
+      "BodyStart": 16982,
+      "Original": "int Cut_ManMappingArea_rec( Cut_Man_t * p, int Node )\n{\n    Cut_Cut_t * pCut;\n    int i, Counter;\n    if ( p-\u003evCutsMax == NULL )\n        return 0;\n    pCut = (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCutsMax, Node );\n    if ( pCut == NULL || pCut-\u003enLeaves == 1 )\n        return 0;\n    Counter = 0;\n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        Counter += Cut_ManMappingArea_rec( p, pCut-\u003epLeaves[i] );\n    Vec_PtrWriteEntry( p-\u003evCutsMax, Node, NULL );\n    return 1 + Counter;\n}",
+      "Draft": "func Cut_ManMappingArea_rec(p *Cut_Man_t, Node int32) int32 {\n    var pCut *Cut_Cut_t;\n    var i, Counter int32;\n    if p.vCutsMax == nil {\n        return 0; }\n    pCut = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsMax, Node );\n    if pCut == nil || pCut.nLeaves == 1 {\n        return 0; }\n    Counter = 0;\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Counter += Cut_ManMappingArea_rec( p, pCut.pLeaves[i] );\n    }\n    Vec_PtrWriteEntry( p.vCutsMax, Node, nil );\n    return 1 + Counter;\n}"
+    },
+    {
+      "Name": "Cut_NodeDoComputeCuts",
+      "Start": 17687,
+      "End": 20886,
+      "BodyStart": 17853,
+      "Original": "void Cut_NodeDoComputeCuts( Cut_Man_t * p, Cut_List_t * pSuper, int Node, int fCompl0, int fCompl1, Cut_Cut_t * pList0, Cut_Cut_t * pList1, int fTriv, int TreeCode )\n{\n    Cut_Cut_t * pStop0, * pStop1, * pTemp0, * pTemp1;\n    Cut_Cut_t * pStore0 = NULL, * pStore1 = NULL; // Suppress \"might be used uninitialized\"\n    int i, nCutsOld, Limit;\n    // start with the elementary cut\n    if ( fTriv ) \n    {\n//        printf( \"Creating trivial cut %d.\\n\", Node );\n        pTemp0 = Cut_CutCreateTriv( p, Node );\n        Cut_ListAdd( pSuper, pTemp0 );\n        p-\u003enNodeCuts++;\n    }\n    // get the cut lists of children\n    if ( pList0 == NULL || pList1 == NULL || (p-\u003epParams-\u003efLocal \u0026\u0026 TreeCode)  )\n        return;\n\n    // remember the old number of cuts\n    nCutsOld = p-\u003enCutsCur;\n    Limit = p-\u003epParams-\u003enVarsMax;\n    // get the simultation bit of the node\n    p-\u003efSimul = (fCompl0 ^ pList0-\u003efSimul) \u0026 (fCompl1 ^ pList1-\u003efSimul);\n    // set temporary variables\n    p-\u003efCompl0 = fCompl0;\n    p-\u003efCompl1 = fCompl1;\n    // if tree cuts are computed, make sure only the unit cuts propagate over the DAG nodes\n    if ( TreeCode \u0026 1 )\n    {\n        assert( pList0-\u003enLeaves == 1 );\n        pStore0 = pList0-\u003epNext;\n        pList0-\u003epNext = NULL;\n    }\n    if ( TreeCode \u0026 2 )\n    {\n        assert( pList1-\u003enLeaves == 1 );\n        pStore1 = pList1-\u003epNext;\n        pList1-\u003epNext = NULL;\n    }\n    // find the point in the list where the max-var cuts begin\n    Cut_ListForEachCut( pList0, pStop0 )\n        if ( pStop0-\u003enLeaves == (unsigned)Limit )\n            break;\n    Cut_ListForEachCut( pList1, pStop1 )\n        if ( pStop1-\u003enLeaves == (unsigned)Limit )\n            break;\n\n    // small by small\n    Cut_ListForEachCutStop( pList0, pTemp0, pStop0 )\n    Cut_ListForEachCutStop( pList1, pTemp1, pStop1 )\n    {\n        if ( Cut_CutProcessTwo( p, pTemp0, pTemp1, pSuper ) )\n            goto Quits;\n    }\n    // small by large\n    Cut_ListForEachCutStop( pList0, pTemp0, pStop0 )\n    Cut_ListForEachCut( pStop1, pTemp1 )\n    {\n        if ( (pTemp0-\u003euSign \u0026 pTemp1-\u003euSign) != pTemp0-\u003euSign )\n            continue;\n        if ( Cut_CutProcessTwo( p, pTemp0, pTemp1, pSuper ) )\n            goto Quits;\n    }\n    // small by large\n    Cut_ListForEachCutStop( pList1, pTemp1, pStop1 )\n    Cut_ListForEachCut( pStop0, pTemp0 )\n    {\n        if ( (pTemp0-\u003euSign \u0026 pTemp1-\u003euSign) != pTemp1-\u003euSign )\n            continue;\n        if ( Cut_CutProcessTwo( p, pTemp0, pTemp1, pSuper ) )\n            goto Quits;\n    }\n    // large by large\n    Cut_ListForEachCut( pStop0, pTemp0 )\n    Cut_ListForEachCut( pStop1, pTemp1 )\n    {\n        assert( pTemp0-\u003enLeaves == (unsigned)Limit \u0026\u0026 pTemp1-\u003enLeaves == (unsigned)Limit );\n        if ( pTemp0-\u003euSign != pTemp1-\u003euSign )\n            continue;\n        for ( i = 0; i \u003c Limit; i++ )\n            if ( pTemp0-\u003epLeaves[i] != pTemp1-\u003epLeaves[i] )\n                break;\n        if ( i \u003c Limit )\n            continue;\n        if ( Cut_CutProcessTwo( p, pTemp0, pTemp1, pSuper ) )\n            goto Quits;\n    } \n    if ( p-\u003enNodeCuts == 0 )\n        p-\u003enNodesNoCuts++;\nQuits:\n    if ( TreeCode \u0026 1 )\n        pList0-\u003epNext = pStore0;\n    if ( TreeCode \u0026 2 )\n        pList1-\u003epNext = pStore1;\n}",
+      "Draft": "func Cut_NodeDoComputeCuts(p *Cut_Man_t, pSuper *Cut_List_t, Node int32, fCompl0 int32, fCompl1 int32, pList0 *Cut_Cut_t, pList1 *Cut_Cut_t, fTriv int32, TreeCode int32) {\n    var pStop0, pStop1, pTemp0, pTemp1 *Cut_Cut_t;\n    var pStore0 *Cut_Cut_t = nil;\n    var pStore1 *Cut_Cut_t = nil; // Suppress \"might be used uninitialized\"\n    var i, nCutsOld, Limit int32;\n    // start with the elementary cut\n    if fTriv != 0 {\n//        printf( \"Creating trivial cut %d.\\n\", Node );\n        pTemp0 = Cut_CutCreateTriv( p, Node );\n        Cut_ListAdd( pSuper, pTemp0 );\n        p.nNodeCuts++;\n    }\n    // get the cut lists of children\n    if pList0 == nil || pList1 == nil || (p.pParams.fLocal \u0026\u0026 (TreeCode != 0)) {\n        return; }\n\n    // remember the old number of cuts\n    nCutsOld = p.nCutsCur;\n    Limit = p.pParams.nVarsMax;\n    // get the simultation bit of the node\n    p.fSimul = (fCompl0 ^ pList0.fSimul) \u0026 (fCompl1 ^ pList1.fSimul);\n    // set temporary variables\n    p.fCompl0 = fCompl0;\n    p.fCompl1 = fCompl1;\n    // if tree cuts are computed, make sure only the unit cuts propagate over the DAG nodes\n    if TreeCode \u0026 1 {\n        assert(pList0.nLeaves == 1, \"pList0.nLeaves == 1\");\n        pStore0 = pList0.pNext;\n        pList0.pNext = nil;\n    }\n    if TreeCode \u0026 2 {\n        assert(pList1.nLeaves == 1, \"pList1.nLeaves == 1\");\n        pStore1 = pList1.pNext;\n        pList1.pNext = nil;\n    }\n    // find the point in the list where the max-var cuts begin\n    // inlining of macro Cut_ListForEachCut\n    for  pStop0 = pList0;                                             pStop0;                                                     pStop0 = pStop0.pNext  {\n        if pStop0.nLeaves == uint32(Limit) {\n            break; }\n    }\n    // inlining of macro Cut_ListForEachCut\n    for  pStop1 = pList1;                                             pStop1;                                                     pStop1 = pStop1.pNext  {\n        if pStop1.nLeaves == uint32(Limit) {\n            break; }\n    }\n\n    // small by small\n    // inlining of macro Cut_ListForEachCutStop\n    for  pTemp0 = pList0;                                             pTemp0 != pStop0;                                            pTemp0 = pTemp0.pNext  {\n    // inlining of macro Cut_ListForEachCutStop\n    for  pTemp1 = pList1;                                             pTemp1 != pStop1;                                            pTemp1 = pTemp1.pNext  {\n        if Cut_CutProcessTwo( p, pTemp0, pTemp1, pSuper ) != 0 {\n            goto Quits; }\n    }\n    }\n    // small by large\n    // inlining of macro Cut_ListForEachCutStop\n    for  pTemp0 = pList0;                                             pTemp0 != pStop0;                                            pTemp0 = pTemp0.pNext  {\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp1 = pStop1;                                             (pTemp1 != nil);                                                     pTemp1 = pTemp1.pNext  {\n        if (pTemp0.uSign \u0026 pTemp1.uSign) != pTemp0.uSign {\n            continue; }\n        if Cut_CutProcessTwo( p, pTemp0, pTemp1, pSuper ) != 0 {\n            goto Quits; }\n    }\n    }\n    // small by large\n    // inlining of macro Cut_ListForEachCutStop\n    for  pTemp1 = pList1;                                             pTemp1 != pStop1;                                            pTemp1 = pTemp1.pNext  {\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp0 = pStop0;                                             pTemp0;                                                     pTemp0 = pTemp0.pNext  {\n        if (pTemp0.uSign \u0026 pTemp1.uSign) != pTemp1.uSign {\n            continue; }\n        if Cut_CutProcessTwo( p, pTemp0, pTemp1, pSuper ) != 0 {\n            goto Quits; }\n    }\n    }\n    // large by large\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp0 = pStop0;                                             pTemp0;                                                     pTemp0 = pTemp0.pNext  {\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp1 = pStop1;                                             (pTemp1 != nil);                                                     pTemp1 = pTemp1.pNext  {\n        assert(pTemp0.nLeaves == uint32(Limit) \u0026\u0026 pTemp1.nLeaves == uint32(Limit), \"pTemp0.nLeaves == uint32(Limit) \u0026\u0026 pTemp1.nLeaves == uint32(Limit)\");\n        if pTemp0.uSign != pTemp1.uSign {\n            continue; }\n        for  i = 0; i \u003c Limit; i++  {\n            if pTemp0.pLeaves[i] != pTemp1.pLeaves[i] {\n                break; }\n        }\n        if i \u003c Limit {\n            continue; }\n        if Cut_CutProcessTwo( p, pTemp0, pTemp1, pSuper ) != 0 {\n            goto Quits; }\n    }\n    } \n    if p.nNodeCuts == 0 {\n        p.nNodesNoCuts++; }\nQuits:\n    if TreeCode \u0026 1 {\n        pList0.pNext = pStore0; }\n    if TreeCode \u0026 2 {\n        pList1.pNext = pStore1; }\n}"
+    },
+    {
+      "Name": "Cut_NodeUnionCuts",
+      "Start": 21174,
+      "End": 25134,
+      "BodyStart": 21241,
+      "Original": "Cut_Cut_t * Cut_NodeUnionCuts( Cut_Man_t * p, Vec_Int_t * vNodes )\n{\n    Cut_List_t Super, * pSuper = \u0026Super;\n    Cut_Cut_t * pList, * pListStart, * pCut, * pCut2;\n    Cut_Cut_t * pTop = NULL; // Suppress \"might be used uninitialized\"\n    int i, k, Node, Root, Limit = p-\u003epParams-\u003enVarsMax;\n    abctime clk = Abc_Clock();\n\n    // start the new list\n    Cut_ListStart( pSuper );\n\n    // remember the root node to save the resulting cuts\n    Root = Vec_IntEntry( vNodes, 0 );\n    p-\u003enNodeCuts = 1;\n\n    // collect small cuts first\n    Vec_PtrClear( p-\u003evTemp );\n    Vec_IntForEachEntry( vNodes, Node, i )\n    {\n        // get the cuts of this node\n        pList = Cut_NodeReadCutsNew( p, Node );\n        Cut_NodeWriteCutsNew( p, Node, NULL );\n        assert( pList );\n        // remember the starting point\n        pListStart = pList-\u003epNext;\n        pList-\u003epNext = NULL;\n        // save or recycle the elementary cut\n        if ( i == 0 )\n            Cut_ListAdd( pSuper, pList ), pTop = pList;\n        else\n            Cut_CutRecycle( p, pList );\n        // save all the cuts that are smaller than the limit\n        Cut_ListForEachCutSafe( pListStart, pCut, pCut2 )\n        {\n            if ( pCut-\u003enLeaves == (unsigned)Limit )\n            {\n                Vec_PtrPush( p-\u003evTemp, pCut );\n                break;\n            }\n            // check containment\n            if ( p-\u003epParams-\u003efFilter \u0026\u0026 Cut_CutFilterOne( p, pSuper, pCut ) )\n                continue;\n            // set the complemented bit by comparing the first cut with the current cut\n            pCut-\u003efCompl = pTop-\u003efSimul ^ pCut-\u003efSimul;\n            pListStart = pCut-\u003epNext;\n            pCut-\u003epNext = NULL;\n            // add to the list\n            Cut_ListAdd( pSuper, pCut );\n            if ( ++p-\u003enNodeCuts == p-\u003epParams-\u003enKeepMax )\n            {\n                // recycle the rest of the cuts of this node\n                Cut_ListForEachCutSafe( pListStart, pCut, pCut2 )\n                    Cut_CutRecycle( p, pCut );\n                // recycle all cuts of other nodes\n                Vec_IntForEachEntryStart( vNodes, Node, k, i+1 )\n                    Cut_NodeFreeCuts( p, Node );\n                // recycle the saved cuts of other nodes\n                Vec_PtrForEachEntry( Cut_Cut_t *, p-\u003evTemp, pList, k )\n                    Cut_ListForEachCutSafe( pList, pCut, pCut2 )\n                        Cut_CutRecycle( p, pCut );\n                goto finish;\n            }\n        }\n    } \n    // collect larger cuts next\n    Vec_PtrForEachEntry( Cut_Cut_t *, p-\u003evTemp, pList, i )\n    {\n        Cut_ListForEachCutSafe( pList, pCut, pCut2 )\n        {\n            // check containment\n            if ( p-\u003epParams-\u003efFilter \u0026\u0026 Cut_CutFilterOne( p, pSuper, pCut ) )\n                continue;\n            // set the complemented bit\n            pCut-\u003efCompl = pTop-\u003efSimul ^ pCut-\u003efSimul;\n            pListStart = pCut-\u003epNext;\n            pCut-\u003epNext = NULL;\n            // add to the list\n            Cut_ListAdd( pSuper, pCut );\n            if ( ++p-\u003enNodeCuts == p-\u003epParams-\u003enKeepMax )\n            {\n                // recycle the rest of the cuts\n                Cut_ListForEachCutSafe( pListStart, pCut, pCut2 )\n                    Cut_CutRecycle( p, pCut );\n                // recycle the saved cuts of other nodes\n                Vec_PtrForEachEntryStart( Cut_Cut_t *, p-\u003evTemp, pList, k, i+1 )\n                    Cut_ListForEachCutSafe( pList, pCut, pCut2 )\n                        Cut_CutRecycle( p, pCut );\n                goto finish;\n            }\n        }\n    }\nfinish :\n    // set the cuts at the node\n    assert( Cut_NodeReadCutsNew(p, Root) == NULL );\n    pList = Cut_ListFinish( pSuper );\n    Cut_NodeWriteCutsNew( p, Root, pList );\np-\u003etimeUnion += Abc_Clock() - clk;\n    // filter the cuts\n//clk = Abc_Clock();\n//    if ( p-\u003epParams-\u003efFilter )\n//        Cut_CutFilter( p, pList );\n//p-\u003etimeFilter += Abc_Clock() - clk;\n    p-\u003enNodes -= vNodes-\u003enSize - 1;\n    return pList;\n}",
+      "Draft": "func Cut_NodeUnionCuts(p *Cut_Man_t, vNodes *Vec_Int_t) *Cut_Cut_t {\n    var Super Cut_List_t;\n    var pSuper *Cut_List_t = \u0026Super;\n    var pList, pListStart, pCut, pCut2 *Cut_Cut_t;\n    var pTop *Cut_Cut_t  = nil; // Suppress \"might be used uninitialized\"\n    var i int32;\n    var k int32;\n    var Node int32;\n    var Root int32;\n    var Limit int32 = p.pParams.nVarsMax;\n    var clk abctime  = Abc_Clock();\n\n    // start the new list\n    Cut_ListStart( pSuper );\n\n    // remember the root node to save the resulting cuts\n    Root = Vec_IntEntry( vNodes, 0 );\n    p.nNodeCuts = 1;\n\n    // collect small cuts first\n    Vec_PtrClear( p.vTemp );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((Node) = Vec_IntEntry(vNodes, i)), 1); i++  {\n        // get the cuts of this node\n        pList = Cut_NodeReadCutsNew( p, Node );\n        Cut_NodeWriteCutsNew( p, Node, nil );\n        assert((pList != nil), \"pList\");\n        // remember the starting point\n        pListStart = pList.pNext;\n        pList.pNext = nil;\n        // save or recycle the elementary cut\n        if i == 0 {\n            Cut_ListAdd( pSuper, pList );\npTop = pList;\n        } else {\n            Cut_CutRecycle( p, pList ); }\n        // save all the cuts that are smaller than the limit\n        // inlining of macro Cut_ListForEachCutSafe\n        for  pCut = pListStart,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n            if pCut.nLeaves == uint32(Limit) {\n                Vec_PtrPush( p.vTemp, pCut );\n                break;\n            }\n            // check containment\n            if p.pParams.fFilter \u0026\u0026 (Cut_CutFilterOne( p, pSuper, pCut ) != 0) {\n                continue; }\n            // set the complemented bit by comparing the first cut with the current cut\n            pCut.fCompl = pTop.fSimul ^ pCut.fSimul;\n            pListStart = pCut.pNext;\n            pCut.pNext = nil;\n            // add to the list\n            Cut_ListAdd( pSuper, pCut );\n            if ++p.nNodeCuts == p.pParams.nKeepMax {\n                // recycle the rest of the cuts of this node\n                // inlining of macro Cut_ListForEachCutSafe\n                for  pCut = pListStart,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                    Cut_CutRecycle( p, pCut );\n                }\n                // recycle all cuts of other nodes\n                // inlining of macro Vec_IntForEachEntryStart\n                for  k = i+1; (k \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((Node) = Vec_IntEntry(vNodes, k)), 1); k++  {\n                    Cut_NodeFreeCuts( p, Node );\n                }\n                // recycle the saved cuts of other nodes\n                // inlining of macro Vec_PtrForEachEntry\n                for  k = 0; (k \u003c Vec_PtrSize(p.vTemp)) \u0026\u0026 (((pList) = (Cut_Cut_t *)Vec_PtrEntry(p.vTemp, k)), 1); k++  {\n                    // inlining of macro Cut_ListForEachCutSafe\n                    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                        Cut_CutRecycle( p, pCut );\n                    }\n                }\n                goto finish;\n            }\n        }\n    } \n    // collect larger cuts next\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTemp)) \u0026\u0026 (((pList) = (Cut_Cut_t *)Vec_PtrEntry(p.vTemp, i)), 1); i++  {\n        // inlining of macro Cut_ListForEachCutSafe\n        for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n            // check containment\n            if p.pParams.fFilter \u0026\u0026 (Cut_CutFilterOne( p, pSuper, pCut ) != 0) {\n                continue; }\n            // set the complemented bit\n            pCut.fCompl = pTop.fSimul ^ pCut.fSimul;\n            pListStart = pCut.pNext;\n            pCut.pNext = nil;\n            // add to the list\n            Cut_ListAdd( pSuper, pCut );\n            if ++p.nNodeCuts == p.pParams.nKeepMax {\n                // recycle the rest of the cuts\n                // inlining of macro Cut_ListForEachCutSafe\n                for  pCut = pListStart,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                    Cut_CutRecycle( p, pCut );\n                }\n                // recycle the saved cuts of other nodes\n                // inlining of macro Vec_PtrForEachEntryStart\n                for  k = i+1; (k \u003c Vec_PtrSize(p.vTemp)) \u0026\u0026 (((pList) = (Cut_Cut_t *)Vec_PtrEntry(p.vTemp, k)), 1); k++  {\n                    // inlining of macro Cut_ListForEachCutSafe\n                    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                        Cut_CutRecycle( p, pCut );\n                    }\n                }\n                goto finish;\n            }\n        }\n    }\nfinish :\n    // set the cuts at the node\n    assert(Cut_NodeReadCutsNew(p, Root) == nil, \"Cut_NodeReadCutsNew(p, Root) == nil\");\n    pList = Cut_ListFinish( pSuper );\n    Cut_NodeWriteCutsNew( p, Root, pList );\np.timeUnion += Abc_Clock() - clk;\n    // filter the cuts\n//clk = Abc_Clock();\n//    if ( p-\u003epParams-\u003efFilter )\n//        Cut_CutFilter( p, pList );\n//p-\u003etimeFilter += Abc_Clock() - clk;\n    p.nNodes -= vNodes.nSize - 1;\n    return pList;\n}"
+    },
+    {
+      "Name": "Cut_NodeUnionCutsSeq",
+      "Start": 25422,
+      "End": 31385,
+      "BodyStart": 25519,
+      "Original": "Cut_Cut_t * Cut_NodeUnionCutsSeq( Cut_Man_t * p, Vec_Int_t * vNodes, int CutSetNum, int fFirst )\n{\n    Cut_List_t Super, * pSuper = \u0026Super;\n    Cut_Cut_t * pList, * pListStart, * pCut, * pCut2, * pTop;\n    int i, k, Node, Root, Limit = p-\u003epParams-\u003enVarsMax;\n    abctime clk = Abc_Clock();\n\n    // start the new list\n    Cut_ListStart( pSuper );\n\n    // remember the root node to save the resulting cuts\n    Root = Vec_IntEntry( vNodes, 0 );\n    p-\u003enNodeCuts = 1;\n\n    // store the original lists for comparison\n    p-\u003epCompareOld = Cut_NodeReadCutsOld( p, Root );\n    p-\u003epCompareNew = (CutSetNum \u003e= 0)? Cut_NodeReadCutsNew( p, Root ) : NULL;\n\n    // get the topmost cut\n    pTop = NULL;\n    if ( (pTop = Cut_NodeReadCutsOld( p, Root )) == NULL )\n        pTop = Cut_NodeReadCutsNew( p, Root );\n    assert( pTop != NULL );\n\n    // collect small cuts first\n    Vec_PtrClear( p-\u003evTemp );\n    Vec_IntForEachEntry( vNodes, Node, i )\n    {\n        // get the cuts of this node\n        if ( i == 0 \u0026\u0026 CutSetNum \u003e= 0 )\n        {\n            pList = Cut_NodeReadCutsTemp( p, CutSetNum );\n            Cut_NodeWriteCutsTemp( p, CutSetNum, NULL );\n        }\n        else\n        {\n            pList = Cut_NodeReadCutsNew( p, Node );\n            Cut_NodeWriteCutsNew( p, Node, NULL );\n        }\n        if ( pList == NULL )\n            continue;\n\n        // process the cuts\n        if ( fFirst )\n        {\n            // remember the starting point\n            pListStart = pList-\u003epNext;\n            pList-\u003epNext = NULL;\n            // save or recycle the elementary cut\n            if ( i == 0 )\n                Cut_ListAdd( pSuper, pList );\n            else\n                Cut_CutRecycle( p, pList );\n        }\n        else\n            pListStart = pList;\n\n        // save all the cuts that are smaller than the limit\n        Cut_ListForEachCutSafe( pListStart, pCut, pCut2 )\n        {\n            if ( pCut-\u003enLeaves == (unsigned)Limit )\n            {\n                Vec_PtrPush( p-\u003evTemp, pCut );\n                break;\n            }\n            // check containment\n//            if ( p-\u003epParams-\u003efFilter \u0026\u0026 Cut_CutFilterOne( p, pSuper, pCut ) )\n//                continue;\n            if ( p-\u003epParams-\u003efFilter )\n            {\n                if ( Cut_CutFilterOne(p, pSuper, pCut) )\n                    continue;\n                if ( p-\u003epParams-\u003efSeq )\n                {\n                    if ( p-\u003epCompareOld \u0026\u0026 Cut_CutFilterOld(p, p-\u003epCompareOld, pCut) )\n                        continue;\n                    if ( p-\u003epCompareNew \u0026\u0026 Cut_CutFilterOld(p, p-\u003epCompareNew, pCut) )\n                        continue;\n                }\n            }\n\n            // set the complemented bit by comparing the first cut with the current cut\n            pCut-\u003efCompl = pTop-\u003efSimul ^ pCut-\u003efSimul;\n            pListStart = pCut-\u003epNext;\n            pCut-\u003epNext = NULL;\n            // add to the list\n            Cut_ListAdd( pSuper, pCut );\n            if ( ++p-\u003enNodeCuts == p-\u003epParams-\u003enKeepMax )\n            {\n                // recycle the rest of the cuts of this node\n                Cut_ListForEachCutSafe( pListStart, pCut, pCut2 )\n                    Cut_CutRecycle( p, pCut );\n                // recycle all cuts of other nodes\n                Vec_IntForEachEntryStart( vNodes, Node, k, i+1 )\n                    Cut_NodeFreeCuts( p, Node );\n                // recycle the saved cuts of other nodes\n                Vec_PtrForEachEntry( Cut_Cut_t *, p-\u003evTemp, pList, k )\n                    Cut_ListForEachCutSafe( pList, pCut, pCut2 )\n                        Cut_CutRecycle( p, pCut );\n                goto finish;\n            }\n        }\n    } \n    // collect larger cuts next\n    Vec_PtrForEachEntry( Cut_Cut_t *, p-\u003evTemp, pList, i )\n    {\n        Cut_ListForEachCutSafe( pList, pCut, pCut2 )\n        {\n            // check containment\n//            if ( p-\u003epParams-\u003efFilter \u0026\u0026 Cut_CutFilterOne( p, pSuper, pCut ) )\n//                continue;\n            if ( p-\u003epParams-\u003efFilter )\n            {\n                if ( Cut_CutFilterOne(p, pSuper, pCut) )\n                    continue;\n                if ( p-\u003epParams-\u003efSeq )\n                {\n                    if ( p-\u003epCompareOld \u0026\u0026 Cut_CutFilterOld(p, p-\u003epCompareOld, pCut) )\n                        continue;\n                    if ( p-\u003epCompareNew \u0026\u0026 Cut_CutFilterOld(p, p-\u003epCompareNew, pCut) )\n                        continue;\n                }\n            }\n\n            // set the complemented bit\n            pCut-\u003efCompl = pTop-\u003efSimul ^ pCut-\u003efSimul;\n            pListStart   = pCut-\u003epNext;\n            pCut-\u003epNext  = NULL;\n            // add to the list\n            Cut_ListAdd( pSuper, pCut );\n            if ( ++p-\u003enNodeCuts == p-\u003epParams-\u003enKeepMax )\n            {\n                // recycle the rest of the cuts\n                Cut_ListForEachCutSafe( pListStart, pCut, pCut2 )\n                    Cut_CutRecycle( p, pCut );\n                // recycle the saved cuts of other nodes\n                Vec_PtrForEachEntryStart( Cut_Cut_t *, p-\u003evTemp, pList, k, i+1 )\n                    Cut_ListForEachCutSafe( pList, pCut, pCut2 )\n                        Cut_CutRecycle( p, pCut );\n                goto finish;\n            }\n        }\n    }\nfinish :\n    // set the cuts at the node\n    pList = Cut_ListFinish( pSuper );\n\n    // set the lists at the node\n//    assert( Cut_NodeReadCutsNew(p, Root) == NULL );\n//    Cut_NodeWriteCutsNew( p, Root, pList );\n    if ( CutSetNum \u003e= 0 )\n    {\n        assert( Cut_NodeReadCutsTemp(p, CutSetNum) == NULL );\n        Cut_NodeWriteCutsTemp( p, CutSetNum, pList );\n    }\n    else\n    {\n        assert( Cut_NodeReadCutsNew(p, Root) == NULL );\n        Cut_NodeWriteCutsNew( p, Root, pList );\n    }\n\np-\u003etimeUnion += Abc_Clock() - clk;\n    // filter the cuts\n//clk = Abc_Clock();\n//    if ( p-\u003epParams-\u003efFilter )\n//        Cut_CutFilter( p, pList );\n//p-\u003etimeFilter += Abc_Clock() - clk;\n//    if ( fFirst )\n//        p-\u003enNodes -= vNodes-\u003enSize - 1;\n    return pList;\n}",
+      "Draft": "func Cut_NodeUnionCutsSeq(p *Cut_Man_t, vNodes *Vec_Int_t, CutSetNum int32, fFirst int32) *Cut_Cut_t {\n    var Super Cut_List_t;\n    var pSuper *Cut_List_t = \u0026Super;\n    var pList, pListStart, pCut, pCut2, pTop *Cut_Cut_t;\n    var i int32;\n    var k int32;\n    var Node int32;\n    var Root int32;\n    var Limit int32 = p.pParams.nVarsMax;\n    var clk abctime  = Abc_Clock();\n\n    // start the new list\n    Cut_ListStart( pSuper );\n\n    // remember the root node to save the resulting cuts\n    Root = Vec_IntEntry( vNodes, 0 );\n    p.nNodeCuts = 1;\n\n    // store the original lists for comparison\n    p.pCompareOld = Cut_NodeReadCutsOld( p, Root );\n    if CutSetNum \u003e= 0 {\n        p.pCompareNew = Cut_NodeReadCutsNew( p, Root );\n    } else {\n        p.pCompareNew = nil;\n    }\n\n    // get the topmost cut\n    pTop = nil;\n    if (pTop = Cut_NodeReadCutsOld( p, Root )) == nil {\n        pTop = Cut_NodeReadCutsNew( p, Root ); }\n    assert(pTop != nil, \"pTop != nil\");\n\n    // collect small cuts first\n    Vec_PtrClear( p.vTemp );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((Node) = Vec_IntEntry(vNodes, i)), 1); i++  {\n        // get the cuts of this node\n        if i == 0 \u0026\u0026 CutSetNum \u003e= 0 {\n            pList = Cut_NodeReadCutsTemp( p, CutSetNum );\n            Cut_NodeWriteCutsTemp( p, CutSetNum, nil );\n        \n        } else {\n            pList = Cut_NodeReadCutsNew( p, Node );\n            Cut_NodeWriteCutsNew( p, Node, nil );\n        }\n        if pList == nil {\n            continue; }\n\n        // process the cuts\n        if fFirst != 0 {\n            // remember the starting point\n            pListStart = pList.pNext;\n            pList.pNext = nil;\n            // save or recycle the elementary cut\n            if i == 0 {\n                Cut_ListAdd( pSuper, pList );\n            } else {\n                Cut_CutRecycle( p, pList ); }\n        \n        } else {\n            pListStart = pList; }\n\n        // save all the cuts that are smaller than the limit\n        // inlining of macro Cut_ListForEachCutSafe\n        for  pCut = pListStart,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n            if pCut.nLeaves == uint32(Limit) {\n                Vec_PtrPush( p.vTemp, pCut );\n                break;\n            }\n            // check containment\n//            if ( p-\u003epParams-\u003efFilter \u0026\u0026 Cut_CutFilterOne( p, pSuper, pCut ) )\n//                continue;\n            if p.pParams.fFilter {\n                if Cut_CutFilterOne(p, pSuper, pCut) != 0 {\n                    continue; }\n                if p.pParams.fSeq {\n                    if p.pCompareOld \u0026\u0026 (Cut_CutFilterOld(p, p.pCompareOld, pCut) != 0) {\n                        continue; }\n                    if p.pCompareNew \u0026\u0026 (Cut_CutFilterOld(p, p.pCompareNew, pCut) != 0) {\n                        continue; }\n                }\n            }\n\n            // set the complemented bit by comparing the first cut with the current cut\n            pCut.fCompl = pTop.fSimul ^ pCut.fSimul;\n            pListStart = pCut.pNext;\n            pCut.pNext = nil;\n            // add to the list\n            Cut_ListAdd( pSuper, pCut );\n            if ++p.nNodeCuts == p.pParams.nKeepMax {\n                // recycle the rest of the cuts of this node\n                // inlining of macro Cut_ListForEachCutSafe\n                for  pCut = pListStart,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                    Cut_CutRecycle( p, pCut );\n                }\n                // recycle all cuts of other nodes\n                // inlining of macro Vec_IntForEachEntryStart\n                for  k = i+1; (k \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((Node) = Vec_IntEntry(vNodes, k)), 1); k++  {\n                    Cut_NodeFreeCuts( p, Node );\n                }\n                // recycle the saved cuts of other nodes\n                // inlining of macro Vec_PtrForEachEntry\n                for  k = 0; (k \u003c Vec_PtrSize(p.vTemp)) \u0026\u0026 (((pList) = (Cut_Cut_t *)Vec_PtrEntry(p.vTemp, k)), 1); k++  {\n                    // inlining of macro Cut_ListForEachCutSafe\n                    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                        Cut_CutRecycle( p, pCut );\n                    }\n                }\n                goto finish;\n            }\n        }\n    } \n    // collect larger cuts next\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTemp)) \u0026\u0026 (((pList) = (Cut_Cut_t *)Vec_PtrEntry(p.vTemp, i)), 1); i++  {\n        // inlining of macro Cut_ListForEachCutSafe\n        for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n            // check containment\n//            if ( p-\u003epParams-\u003efFilter \u0026\u0026 Cut_CutFilterOne( p, pSuper, pCut ) )\n//                continue;\n            if p.pParams.fFilter {\n                if Cut_CutFilterOne(p, pSuper, pCut) != 0 {\n                    continue; }\n                if p.pParams.fSeq {\n                    if p.pCompareOld \u0026\u0026 (Cut_CutFilterOld(p, p.pCompareOld, pCut) != 0) {\n                        continue; }\n                    if p.pCompareNew \u0026\u0026 (Cut_CutFilterOld(p, p.pCompareNew, pCut) != 0) {\n                        continue; }\n                }\n            }\n\n            // set the complemented bit\n            pCut.fCompl = pTop.fSimul ^ pCut.fSimul;\n            pListStart   = pCut.pNext;\n            pCut.pNext  = nil;\n            // add to the list\n            Cut_ListAdd( pSuper, pCut );\n            if ++p.nNodeCuts == p.pParams.nKeepMax {\n                // recycle the rest of the cuts\n                // inlining of macro Cut_ListForEachCutSafe\n                for  pCut = pListStart,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                    Cut_CutRecycle( p, pCut );\n                }\n                // recycle the saved cuts of other nodes\n                // inlining of macro Vec_PtrForEachEntryStart\n                for  k = i+1; (k \u003c Vec_PtrSize(p.vTemp)) \u0026\u0026 (((pList) = (Cut_Cut_t *)Vec_PtrEntry(p.vTemp, k)), 1); k++  {\n                    // inlining of macro Cut_ListForEachCutSafe\n                    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                        Cut_CutRecycle( p, pCut );\n                    }\n                }\n                goto finish;\n            }\n        }\n    }\nfinish :\n    // set the cuts at the node\n    pList = Cut_ListFinish( pSuper );\n\n    // set the lists at the node\n//    assert( Cut_NodeReadCutsNew(p, Root) == NULL );\n//    Cut_NodeWriteCutsNew( p, Root, pList );\n    if CutSetNum \u003e= 0 {\n        assert(Cut_NodeReadCutsTemp(p, CutSetNum) == nil, \"Cut_NodeReadCutsTemp(p, CutSetNum) == nil\");\n        Cut_NodeWriteCutsTemp( p, CutSetNum, pList );\n    \n    } else {\n        assert(Cut_NodeReadCutsNew(p, Root) == nil, \"Cut_NodeReadCutsNew(p, Root) == nil\");\n        Cut_NodeWriteCutsNew( p, Root, pList );\n    }\n\np.timeUnion += Abc_Clock() - clk;\n    // filter the cuts\n//clk = Abc_Clock();\n//    if ( p-\u003epParams-\u003efFilter )\n//        Cut_CutFilter( p, pList );\n//p-\u003etimeFilter += Abc_Clock() - clk;\n//    if ( fFirst )\n//        p-\u003enNodes -= vNodes-\u003enSize - 1;\n    return pList;\n}"
+    },
+    {
+      "Name": "Cut_CutListVerify",
+      "Start": 31678,
+      "End": 32159,
+      "BodyStart": 31721,
+      "Original": "int Cut_CutListVerify( Cut_Cut_t * pList )\n{ \n    Cut_Cut_t * pCut, * pDom;\n    Cut_ListForEachCut( pList, pCut )\n    {\n        Cut_ListForEachCutStop( pList, pDom, pCut )\n        {\n            if ( Cut_CutCheckDominance( pDom, pCut ) )\n            {\n                printf( \"******************* These are contained cuts:\\n\" );\n                Cut_CutPrint( pDom, 1 );\n                Cut_CutPrint( pDom, 1 );\n                return 0;\n            }\n        }\n    }\n    return 1;\n}",
+      "Draft": "func Cut_CutListVerify(pList *Cut_Cut_t) int32 { \n    var pCut, pDom *Cut_Cut_t;\n    // inlining of macro Cut_ListForEachCut\n    for  pCut = pList;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n        // inlining of macro Cut_ListForEachCutStop\n        for  pDom = pList;                                             pDom != pCut;                                            pDom = pDom.pNext  {\n            if Cut_CutCheckDominance( pDom, pCut ) != 0 {\n                fmt.Printf(\"******************* These are contained cuts:\\n\");\n                Cut_CutPrint( pDom, 1 );\n                Cut_CutPrint( pDom, 1 );\n                return 0;\n            }\n        }\n    }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::pointer-cast::17410",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15396,
+      "End": 15409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::pointer-cast::17460",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15446,
+      "End": 15459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::pointer-cast::17537",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15523,
+      "End": 15536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::pointer-cast::17587",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15573,
+      "End": 15586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::pointer-cast::17794",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15780,
+      "End": 15793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::pointer-cast::17969",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15955,
+      "End": 15968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::pointer-cast::19100",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17086,
+      "End": 17099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::pointer-cast::27969",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23405,
+      "End": 23405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::pointer-cast::28628",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23672,
+      "End": 23672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::pointer-cast::30117",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24477,
+      "End": 24477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::pointer-cast::35631",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28832,
+      "End": 28832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::pointer-cast::36290",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29099,
+      "End": 29099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::pointer-cast::38259",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30384,
+      "End": 30384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_CutCheckDominance",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutCheckDominance",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1490,
+      "End": 1939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::ternary::Cut_CutFilter",
+      "Category": "ternary-review",
+      "Symbol": "Cut_CutFilter",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2204,
+      "End": 3418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_CutFilter",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutFilter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2204,
+      "End": 3418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_CutFilterOneEqual",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutFilterOneEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3713,
+      "End": 4237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::ternary::Cut_CutFilterOne",
+      "Category": "ternary-review",
+      "Symbol": "Cut_CutFilterOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4569,
+      "End": 6541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_CutFilterOne",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutFilterOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4569,
+      "End": 6541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_CutFilterGlobal",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutFilterGlobal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6855,
+      "End": 7258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::ternary::Cut_CutFilterOld",
+      "Category": "ternary-review",
+      "Symbol": "Cut_CutFilterOld",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7591,
+      "End": 9037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_CutFilterOld",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutFilterOld",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7591,
+      "End": 9037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_CutProcessTwo",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutProcessTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9332,
+      "End": 10832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_NodeComputeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeComputeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11116,
+      "End": 13619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_NodeMapping2",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeMapping2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13885,
+      "End": 14795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::ternary::Cut_NodeMapping",
+      "Category": "ternary-review",
+      "Symbol": "Cut_NodeMapping",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15083,
+      "End": 16664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_NodeMapping",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15083,
+      "End": 16664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_ManMappingArea_rec",
+      "Category": "semantic-review",
+      "Symbol": "Cut_ManMappingArea_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16928,
+      "End": 17403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_NodeDoComputeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeDoComputeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17687,
+      "End": 20886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::ternary::Cut_NodeUnionCuts",
+      "Category": "ternary-review",
+      "Symbol": "Cut_NodeUnionCuts",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 21174,
+      "End": 25134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_NodeUnionCuts",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeUnionCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21174,
+      "End": 25134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::ternary::Cut_NodeUnionCutsSeq",
+      "Category": "ternary-review",
+      "Symbol": "Cut_NodeUnionCutsSeq",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 25422,
+      "End": 31385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_NodeUnionCutsSeq",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeUnionCutsSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25422,
+      "End": 31385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::Cut_CutListVerify",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutListVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31678,
+      "End": 32159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutNode.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 32406
+    }
+  ],
+  "Draft": "package cut\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [cutNode.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [K-feasible cut computation package.]\n\n  Synopsis    [Procedures to compute cuts for a node.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cutNode.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cutInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Cut_NodeMapping( Cut_Man_t * p, Cut_Cut_t * pCuts, int Node, int Node0, int Node1 );\n\n// static int Cut_NodeMapping2( Cut_Man_t * p, Cut_Cut_t * pCuts, int Node, int Node0, int Node1 );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pDom is contained in pCut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutCheckDominance(pDom *Cut_Cut_t, pCut *Cut_Cut_t) int32 {\n    var i, k int32;\n    for  i = 0; i \u003c int32(pDom.nLeaves); i++  {\n        for  k = 0; k \u003c int32(pCut.nLeaves); k++  {\n            if pDom.pLeaves[i] == pCut.pLeaves[k] {\n                break; }\n        }\n        if k == int32(pCut.nLeaves) { // node i in pDom is not contained in pCut\n            return 0; }\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Filters cuts using dominance.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutFilter(p *Cut_Man_t, pList *Cut_Cut_t) { \n    var pListR *Cut_Cut_t;\n    var ppListR **Cut_Cut_t = \u0026pListR;\n    var pCut, pCut2, pDom, pPrev *Cut_Cut_t;\n    // save the first cut\n    *ppListR = pList, ppListR = \u0026pList.pNext;\n    // try to filter out other cuts\n    pPrev = pList;\n    // inlining of macro Cut_ListForEachCutSafe\n    for  pCut = pList.pNext,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n        assert(pCut.nLeaves \u003e 1, \"pCut.nLeaves \u003e 1\");\n        // go through all the previous cuts up to pCut\n        // inlining of macro Cut_ListForEachCutStop\n        for  pDom = pList.pNext;                                             pDom != pCut;                                            pDom = pDom.pNext  {\n            if pDom.nLeaves \u003e pCut.nLeaves {\n                continue; }\n            if (pDom.uSign \u0026 pCut.uSign) != pDom.uSign {\n                continue; }\n            if Cut_CutCheckDominance( pDom, pCut ) != 0 {\n                break; }\n        }\n        if pDom != pCut { // pDom is contained in pCut - recycle pCut\n        \n            // make sure cuts are connected after removing\n            pPrev.pNext = pCut.pNext;\n            // recycle the cut\n            Cut_CutRecycle( p, pCut );\n        \n        } else { // pDom is NOT contained in pCut - save pCut\n        \n            *ppListR = pCut, ppListR = \u0026pCut.pNext;\n            pPrev = pCut;\n        }\n    }\n    *ppListR = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks equality of one cut.]\n\n  Description [Returns 1 if the cut is removed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutFilterOneEqual(p *Cut_Man_t, pSuperList *Cut_List_t, pCut *Cut_Cut_t) int32 {\n    var pTemp *Cut_Cut_t;\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp = pSuperList.pHead[pCut.nLeaves];                                             (pTemp != nil);                                                     pTemp = pTemp.pNext  {\n        // skip the non-contained cuts\n        if pCut.uSign != pTemp.uSign {\n            continue; }\n        // check containment seriously\n        if Cut_CutCheckDominance( pTemp, pCut ) != 0 {\n            p.nCutsFilter++;\n            Cut_CutRecycle( p, pCut );\n            return 1;\n        }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks containment for one cut.]\n\n  Description [Returns 1 if the cut is removed.]\n               \n  SideEffects [May remove other cuts in the set.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutFilterOne(p *Cut_Man_t, pSuperList *Cut_List_t, pCut *Cut_Cut_t) int32 {\n    var pTemp *Cut_Cut_t;\n    var pTemp2 *Cut_Cut_t;\n    var ppTail **Cut_Cut_t;\n    var a int32;\n\n    // check if this cut is filtered out by smaller cuts\n    for  a = 2; a \u003c= int32(pCut.nLeaves); a++  {\n        // inlining of macro Cut_ListForEachCut\n        for  pTemp = pSuperList.pHead[a];                                             (pTemp != nil);                                                     pTemp = pTemp.pNext  {\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pCut.uSign) != pTemp.uSign {\n                continue; }\n            // check containment seriously\n            if Cut_CutCheckDominance( pTemp, pCut ) != 0 {\n                p.nCutsFilter++;\n                Cut_CutRecycle( p, pCut );\n                return 1;\n            }\n        }\n    }\n\n    // filter out other cuts using this one\n    for  a = pCut.nLeaves + 1; a \u003c= int32(pCut.nVarsMax); a++  {\n        ppTail = pSuperList.pHead + a;\n        // inlining of macro Cut_ListForEachCutSafe\n        for  pTemp = pSuperList.pHead[a],                                             pTemp2 = pTemp? pTemp.pNext: nil;                          (pTemp != nil);                                                     pTemp = pTemp2,                                             pTemp2 = pTemp? pTemp.pNext: nil  {\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pCut.uSign) != pCut.uSign {\n                ppTail = \u0026pTemp.pNext;\n                continue;\n            }\n            // check containment seriously\n            if Cut_CutCheckDominance( pCut, pTemp ) != 0 {\n                p.nCutsFilter++;\n                p.nNodeCuts--;\n                // move the head\n                if pSuperList.pHead[a] == pTemp {\n                    pSuperList.pHead[a] = pTemp.pNext; }\n                // move the tail\n                if pSuperList.ppTail[a] == \u0026pTemp.pNext {\n                    pSuperList.ppTail[a] = ppTail; }\n                // skip the given cut in the list\n                *ppTail = pTemp.pNext;\n                // recycle pTemp\n                Cut_CutRecycle( p, pTemp );\n            \n            } else {\n                ppTail = \u0026pTemp.pNext; }\n        }\n        assert(ppTail == pSuperList.ppTail[a], \"ppTail == pSuperList.ppTail[a]\");\n        assert(*ppTail == nil, \"*ppTail == nil\");\n    }\n\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the cut is local and can be removed.]\n\n  Description [Returns 1 if the cut is removed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutFilterGlobal(p *Cut_Man_t, pCut *Cut_Cut_t) int32 {\n    var a int32;\n    if pCut.nLeaves == 1 {\n        return 0; }\n    for  a = 0; a \u003c int32(pCut.nLeaves); a++  {\n        if Vec_IntEntry( p.vNodeAttrs, pCut.pLeaves[a] ) { // global\n            return 0; }\n    }\n    // there is no global nodes, the cut should be removed\n    p.nCutsFilter++;\n    Cut_CutRecycle( p, pCut );\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks containment for one cut.]\n\n  Description [Returns 1 if the cut is removed.]\n               \n  SideEffects [May remove other cuts in the set.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutFilterOld(p *Cut_Man_t, pList *Cut_Cut_t, pCut *Cut_Cut_t) int32 {\n    var pPrev *Cut_Cut_t;\n    var pTemp *Cut_Cut_t;\n    var pTemp2 *Cut_Cut_t;\n    var ppTail **Cut_Cut_t;\n\n    // check if this cut is filtered out by smaller cuts\n    pPrev = nil;\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp = pList;                                             (pTemp != nil);                                                     pTemp = pTemp.pNext  {\n        if pTemp.nLeaves \u003e pCut.nLeaves {\n            break; }\n        pPrev = pTemp;\n        // skip the non-contained cuts\n        if (pTemp.uSign \u0026 pCut.uSign) != pTemp.uSign {\n            continue; }\n        // check containment seriously\n        if Cut_CutCheckDominance( pTemp, pCut ) != 0 {\n            p.nCutsFilter++;\n            Cut_CutRecycle( p, pCut );\n            return 1;\n        }\n    }\n    assert(pPrev.pNext == pTemp, \"pPrev.pNext == pTemp\");\n\n    // filter out other cuts using this one\n    ppTail = \u0026pPrev.pNext;\n    // inlining of macro Cut_ListForEachCutSafe\n    for  pTemp = pTemp,                                             pTemp2 = pTemp? pTemp.pNext: nil;                          (pTemp != nil);                                                     pTemp = pTemp2,                                             pTemp2 = pTemp? pTemp.pNext: nil  {\n        // skip the non-contained cuts\n        if (pTemp.uSign \u0026 pCut.uSign) != pCut.uSign {\n            ppTail = \u0026pTemp.pNext;\n            continue;\n        }\n        // check containment seriously\n        if Cut_CutCheckDominance( pCut, pTemp ) != 0 {\n            p.nCutsFilter++;\n            p.nNodeCuts--;\n            // skip the given cut in the list\n            *ppTail = pTemp.pNext;\n            // recycle pTemp\n            Cut_CutRecycle( p, pTemp );\n        \n        } else {\n            ppTail = \u0026pTemp.pNext; }\n    }\n    assert(*ppTail == nil, \"*ppTail == nil\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Processes two cuts.]\n\n  Description [Returns 1 if the limit has been reached.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutProcessTwo(p *Cut_Man_t, pCut0 *Cut_Cut_t, pCut1 *Cut_Cut_t, pSuperList *Cut_List_t) int32 {\n    var pCut *Cut_Cut_t;\n    // merge the cuts\n    if pCut0.nLeaves \u003e= pCut1.nLeaves {\n        pCut = Cut_CutMergeTwo( p, pCut0, pCut1 );\n    } else {\n        pCut = Cut_CutMergeTwo( p, pCut1, pCut0 ); }\n    if pCut == nil {\n        return 0; }\n    assert(p.pParams.fSeq || pCut.nLeaves \u003e 1, \"p.pParams.fSeq || pCut.nLeaves \u003e 1\");\n    // set the signature\n    pCut.uSign = pCut0.uSign | pCut1.uSign;\n    if p.pParams.fRecord {\n        pCut.Num0 = pCut0.Num0, pCut.Num1 = pCut1.Num0; }\n    // check containment\n    if p.pParams.fFilter {\n        if Cut_CutFilterOne(p, pSuperList, pCut) != 0 {\n//        if ( Cut_CutFilterOneEqual(p, pSuperList, pCut) )\n            return 0; }\n        if p.pParams.fSeq {\n            if p.pCompareOld \u0026\u0026 (Cut_CutFilterOld(p, p.pCompareOld, pCut) != 0) {\n                return 0; }\n            if p.pCompareNew \u0026\u0026 (Cut_CutFilterOld(p, p.pCompareNew, pCut) != 0) {\n                return 0; }\n        }\n    }\n\n    if p.pParams.fGlobal {\n        assert(p.vNodeAttrs != nil, \"p.vNodeAttrs != nil\");\n        if Cut_CutFilterGlobal( p, pCut ) != 0 {\n            return 0; }\n    }\n\n    // compute the truth table\n    if p.pParams.fTruth {\n        Cut_TruthCompute( p, pCut, pCut0, pCut1, p.fCompl0, p.fCompl1 ); }\n    // add to the list\n    Cut_ListAdd( pSuperList, pCut );\n    // return status (0 if okay; 1 if exceeded the limit)\n    return ++p.nNodeCuts == p.pParams.nKeepMax;\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts by merging cuts at two nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeComputeCuts(p *Cut_Man_t, Node int32, Node0 int32, Node1 int32, fCompl0 int32, fCompl1 int32, fTriv int32, TreeCode int32) *Cut_Cut_t {\n    var Super Cut_List_t;\n    var pSuper *Cut_List_t = \u0026Super;\n    var pList, pCut *Cut_Cut_t;\n    var clk abctime;\n    // start the number of cuts at the node\n    p.nNodes++;\n    p.nNodeCuts = 0;\n    // prepare information for recording\n    if p.pParams.fRecord {\n        Cut_CutNumberList( Cut_NodeReadCutsNew(p, Node0) );\n        Cut_CutNumberList( Cut_NodeReadCutsNew(p, Node1) );\n    }\n    // compute the cuts\nclk = Abc_Clock();\n    Cut_ListStart( pSuper );\n    Cut_NodeDoComputeCuts( p, pSuper, Node, fCompl0, fCompl1, Cut_NodeReadCutsNew(p, Node0), Cut_NodeReadCutsNew(p, Node1), fTriv, TreeCode );\n    pList = Cut_ListFinish( pSuper );\np.timeMerge += Abc_Clock() - clk;\n    // verify the result of cut computation\n//    Cut_CutListVerify( pList );\n    // performing the recording\n    if p.pParams.fRecord {\n        Vec_IntWriteEntry( p.vNodeStarts, Node, Vec_IntSize(p.vCutPairs) );\n        // inlining of macro Cut_ListForEachCut\n        for  pCut = pList;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n            Vec_IntPush( p.vCutPairs, ((pCut.Num1 \u003c\u003c 16) | pCut.Num0) );\n        }\n        Vec_IntWriteEntry( p.vNodeCuts, Node, Vec_IntSize(p.vCutPairs) - Vec_IntEntry(p.vNodeStarts, Node) );\n    }\n    if p.pParams.fRecordAig {\n        extern void Aig_RManRecord( unsigned * pTruth, int nVarsInit );\n        // inlining of macro Cut_ListForEachCut\n        for  pCut = pList;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n            if Cut_CutReadLeaveNum(pCut) \u003e 4 {\n                Aig_RManRecord( Cut_CutReadTruth(pCut), Cut_CutReadLeaveNum(pCut) ); }\n        }\n    }\n    // check if the node is over the list\n    if p.nNodeCuts == p.pParams.nKeepMax {\n        p.nCutsLimit++; }\n    // set the list at the node\n    Vec_PtrFillExtra( p.vCutsNew, Node + 1, nil );\n    assert(Cut_NodeReadCutsNew(p, Node) == nil, \"Cut_NodeReadCutsNew(p, Node) == nil\");\n    /////\n//    pList-\u003epNext = NULL;\n    /////\n    Cut_NodeWriteCutsNew( p, Node, pList );\n    // filter the cuts\n//clk = Abc_Clock();\n//    if ( p-\u003epParams-\u003efFilter )\n//        Cut_CutFilter( p, pList0 );\n//p-\u003etimeFilter += Abc_Clock() - clk;\n    // perform mapping of this node with these cuts\nclk = Abc_Clock();\n    if p.pParams.fMap \u0026\u0026 !p.pParams.fSeq {\n//        int Delay1, Delay2;\n//        Delay1 = Cut_NodeMapping( p, pList, Node, Node0, Node1 );    \n//        Delay2 = Cut_NodeMapping2( p, pList, Node, Node0, Node1 );   \n//        assert( Delay1 \u003e= Delay2 );\n        Cut_NodeMapping( p, pList, Node, Node0, Node1 );\n    }\np.timeMap += Abc_Clock() - clk;\n    return pList;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns optimum delay mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeMapping2(p *Cut_Man_t, pCuts *Cut_Cut_t, Node int32, Node0 int32, Node1 int32) int32 {\n    var pCut *Cut_Cut_t;\n    var DelayMin, DelayCur, i int32;\n    if pCuts == nil {\n        p.nDelayMin = -1; }\n    if p.nDelayMin == -1 {\n        return -1; }\n    DelayMin = 1000000;\n    // inlining of macro Cut_ListForEachCut\n    for  pCut = pCuts;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n        if pCut.nLeaves == 1 {\n            continue; }\n        DelayCur = 0;\n        for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n            if DelayCur \u003c Vec_IntEntry(p.vDelays, pCut.pLeaves[i]) {\n                DelayCur = Vec_IntEntry(p.vDelays, pCut.pLeaves[i]); }\n        }\n        if DelayMin \u003e DelayCur {\n            DelayMin = DelayCur; }\n    }\n    if DelayMin == 1000000 {\n         p.nDelayMin = -1;\n         return -1;\n    }\n    DelayMin++;\n    Vec_IntWriteEntry( p.vDelays, Node, DelayMin );\n    if p.nDelayMin \u003c DelayMin {\n        p.nDelayMin = DelayMin; }\n    return DelayMin;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns optimum delay mapping using the largest cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeMapping(p *Cut_Man_t, pCuts *Cut_Cut_t, Node int32, Node0 int32, Node1 int32) int32 {\n    var pCut0, pCut1, pCut *Cut_Cut_t;\n    var Delay0, Delay1, Delay int32;\n    // get the fanin cuts\n    Delay0 = Vec_IntEntry( p.vDelays2, Node0 );\n    Delay1 = Vec_IntEntry( p.vDelays2, Node1 );\n    if Delay0 == 0 {\n        pCut0 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node0 );\n    } else {\n        pCut0 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsMax, Node0 );\n    }\n    if Delay1 == 0 {\n        pCut1 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node1 );\n    } else {\n        pCut1 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsMax, Node1 );\n    }\n    if Delay0 == Delay1 {\n        if Delay0 == 0 {\n            Delay = Delay0 + 1;\n        } else {\n            Delay = Delay0;\n        }\n    } else if Delay0 \u003e Delay1 {\n        Delay = Delay0;\n        pCut1 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node1 );\n        assert(pCut1.nLeaves == 1, \"pCut1.nLeaves == 1\");\n    \n    } else { // if ( Delay0 \u003c Delay1 )\n    \n        Delay = Delay1;\n        pCut0 = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node0 );\n        assert(pCut0.nLeaves == 1, \"pCut0.nLeaves == 1\");\n    }\n    // merge the cuts\n    if pCut0.nLeaves \u003c pCut1.nLeaves {\n        pCut  = Cut_CutMergeTwo( p, pCut1, pCut0 );\n    } else {\n        pCut  = Cut_CutMergeTwo( p, pCut0, pCut1 ); }\n    if pCut == nil {\n        Delay++;\n        pCut = Cut_CutAlloc( p );\n        pCut.nLeaves = 2;\n        pCut.pLeaves[0] = Node0 \u003c Node1 ? Node0 : Node1;\n        pCut.pLeaves[1] = Node0 \u003c Node1 ? Node1 : Node0;\n    }\n    assert(Delay \u003e 0, \"Delay \u003e 0\");\n    Vec_IntWriteEntry( p.vDelays2, Node, Delay );\n    Vec_PtrWriteEntry( p.vCutsMax, Node, pCut );\n    if p.nDelayMin \u003c Delay {\n        p.nDelayMin = Delay; }\n    return Delay;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes area after mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_ManMappingArea_rec(p *Cut_Man_t, Node int32) int32 {\n    var pCut *Cut_Cut_t;\n    var i, Counter int32;\n    if p.vCutsMax == nil {\n        return 0; }\n    pCut = (Cut_Cut_t *)Vec_PtrEntry( p.vCutsMax, Node );\n    if pCut == nil || pCut.nLeaves == 1 {\n        return 0; }\n    Counter = 0;\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Counter += Cut_ManMappingArea_rec( p, pCut.pLeaves[i] );\n    }\n    Vec_PtrWriteEntry( p.vCutsMax, Node, nil );\n    return 1 + Counter;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts by merging cuts at two nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeDoComputeCuts(p *Cut_Man_t, pSuper *Cut_List_t, Node int32, fCompl0 int32, fCompl1 int32, pList0 *Cut_Cut_t, pList1 *Cut_Cut_t, fTriv int32, TreeCode int32) {\n    var pStop0, pStop1, pTemp0, pTemp1 *Cut_Cut_t;\n    var pStore0 *Cut_Cut_t = nil;\n    var pStore1 *Cut_Cut_t = nil; // Suppress \"might be used uninitialized\"\n    var i, nCutsOld, Limit int32;\n    // start with the elementary cut\n    if fTriv != 0 {\n//        printf( \"Creating trivial cut %d.\\n\", Node );\n        pTemp0 = Cut_CutCreateTriv( p, Node );\n        Cut_ListAdd( pSuper, pTemp0 );\n        p.nNodeCuts++;\n    }\n    // get the cut lists of children\n    if pList0 == nil || pList1 == nil || (p.pParams.fLocal \u0026\u0026 (TreeCode != 0)) {\n        return; }\n\n    // remember the old number of cuts\n    nCutsOld = p.nCutsCur;\n    Limit = p.pParams.nVarsMax;\n    // get the simultation bit of the node\n    p.fSimul = (fCompl0 ^ pList0.fSimul) \u0026 (fCompl1 ^ pList1.fSimul);\n    // set temporary variables\n    p.fCompl0 = fCompl0;\n    p.fCompl1 = fCompl1;\n    // if tree cuts are computed, make sure only the unit cuts propagate over the DAG nodes\n    if TreeCode \u0026 1 {\n        assert(pList0.nLeaves == 1, \"pList0.nLeaves == 1\");\n        pStore0 = pList0.pNext;\n        pList0.pNext = nil;\n    }\n    if TreeCode \u0026 2 {\n        assert(pList1.nLeaves == 1, \"pList1.nLeaves == 1\");\n        pStore1 = pList1.pNext;\n        pList1.pNext = nil;\n    }\n    // find the point in the list where the max-var cuts begin\n    // inlining of macro Cut_ListForEachCut\n    for  pStop0 = pList0;                                             pStop0;                                                     pStop0 = pStop0.pNext  {\n        if pStop0.nLeaves == uint32(Limit) {\n            break; }\n    }\n    // inlining of macro Cut_ListForEachCut\n    for  pStop1 = pList1;                                             pStop1;                                                     pStop1 = pStop1.pNext  {\n        if pStop1.nLeaves == uint32(Limit) {\n            break; }\n    }\n\n    // small by small\n    // inlining of macro Cut_ListForEachCutStop\n    for  pTemp0 = pList0;                                             pTemp0 != pStop0;                                            pTemp0 = pTemp0.pNext  {\n    // inlining of macro Cut_ListForEachCutStop\n    for  pTemp1 = pList1;                                             pTemp1 != pStop1;                                            pTemp1 = pTemp1.pNext  {\n        if Cut_CutProcessTwo( p, pTemp0, pTemp1, pSuper ) != 0 {\n            goto Quits; }\n    }\n    }\n    // small by large\n    // inlining of macro Cut_ListForEachCutStop\n    for  pTemp0 = pList0;                                             pTemp0 != pStop0;                                            pTemp0 = pTemp0.pNext  {\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp1 = pStop1;                                             (pTemp1 != nil);                                                     pTemp1 = pTemp1.pNext  {\n        if (pTemp0.uSign \u0026 pTemp1.uSign) != pTemp0.uSign {\n            continue; }\n        if Cut_CutProcessTwo( p, pTemp0, pTemp1, pSuper ) != 0 {\n            goto Quits; }\n    }\n    }\n    // small by large\n    // inlining of macro Cut_ListForEachCutStop\n    for  pTemp1 = pList1;                                             pTemp1 != pStop1;                                            pTemp1 = pTemp1.pNext  {\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp0 = pStop0;                                             pTemp0;                                                     pTemp0 = pTemp0.pNext  {\n        if (pTemp0.uSign \u0026 pTemp1.uSign) != pTemp1.uSign {\n            continue; }\n        if Cut_CutProcessTwo( p, pTemp0, pTemp1, pSuper ) != 0 {\n            goto Quits; }\n    }\n    }\n    // large by large\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp0 = pStop0;                                             pTemp0;                                                     pTemp0 = pTemp0.pNext  {\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp1 = pStop1;                                             (pTemp1 != nil);                                                     pTemp1 = pTemp1.pNext  {\n        assert(pTemp0.nLeaves == uint32(Limit) \u0026\u0026 pTemp1.nLeaves == uint32(Limit), \"pTemp0.nLeaves == uint32(Limit) \u0026\u0026 pTemp1.nLeaves == uint32(Limit)\");\n        if pTemp0.uSign != pTemp1.uSign {\n            continue; }\n        for  i = 0; i \u003c Limit; i++  {\n            if pTemp0.pLeaves[i] != pTemp1.pLeaves[i] {\n                break; }\n        }\n        if i \u003c Limit {\n            continue; }\n        if Cut_CutProcessTwo( p, pTemp0, pTemp1, pSuper ) != 0 {\n            goto Quits; }\n    }\n    } \n    if p.nNodeCuts == 0 {\n        p.nNodesNoCuts++; }\nQuits:\n    if TreeCode \u0026 1 {\n        pList0.pNext = pStore0; }\n    if TreeCode \u0026 2 {\n        pList1.pNext = pStore1; }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts by unioning cuts at a choice node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeUnionCuts(p *Cut_Man_t, vNodes *Vec_Int_t) *Cut_Cut_t {\n    var Super Cut_List_t;\n    var pSuper *Cut_List_t = \u0026Super;\n    var pList, pListStart, pCut, pCut2 *Cut_Cut_t;\n    var pTop *Cut_Cut_t  = nil; // Suppress \"might be used uninitialized\"\n    var i int32;\n    var k int32;\n    var Node int32;\n    var Root int32;\n    var Limit int32 = p.pParams.nVarsMax;\n    var clk abctime  = Abc_Clock();\n\n    // start the new list\n    Cut_ListStart( pSuper );\n\n    // remember the root node to save the resulting cuts\n    Root = Vec_IntEntry( vNodes, 0 );\n    p.nNodeCuts = 1;\n\n    // collect small cuts first\n    Vec_PtrClear( p.vTemp );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((Node) = Vec_IntEntry(vNodes, i)), 1); i++  {\n        // get the cuts of this node\n        pList = Cut_NodeReadCutsNew( p, Node );\n        Cut_NodeWriteCutsNew( p, Node, nil );\n        assert((pList != nil), \"pList\");\n        // remember the starting point\n        pListStart = pList.pNext;\n        pList.pNext = nil;\n        // save or recycle the elementary cut\n        if i == 0 {\n            Cut_ListAdd( pSuper, pList );\npTop = pList;\n        } else {\n            Cut_CutRecycle( p, pList ); }\n        // save all the cuts that are smaller than the limit\n        // inlining of macro Cut_ListForEachCutSafe\n        for  pCut = pListStart,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n            if pCut.nLeaves == uint32(Limit) {\n                Vec_PtrPush( p.vTemp, pCut );\n                break;\n            }\n            // check containment\n            if p.pParams.fFilter \u0026\u0026 (Cut_CutFilterOne( p, pSuper, pCut ) != 0) {\n                continue; }\n            // set the complemented bit by comparing the first cut with the current cut\n            pCut.fCompl = pTop.fSimul ^ pCut.fSimul;\n            pListStart = pCut.pNext;\n            pCut.pNext = nil;\n            // add to the list\n            Cut_ListAdd( pSuper, pCut );\n            if ++p.nNodeCuts == p.pParams.nKeepMax {\n                // recycle the rest of the cuts of this node\n                // inlining of macro Cut_ListForEachCutSafe\n                for  pCut = pListStart,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                    Cut_CutRecycle( p, pCut );\n                }\n                // recycle all cuts of other nodes\n                // inlining of macro Vec_IntForEachEntryStart\n                for  k = i+1; (k \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((Node) = Vec_IntEntry(vNodes, k)), 1); k++  {\n                    Cut_NodeFreeCuts( p, Node );\n                }\n                // recycle the saved cuts of other nodes\n                // inlining of macro Vec_PtrForEachEntry\n                for  k = 0; (k \u003c Vec_PtrSize(p.vTemp)) \u0026\u0026 (((pList) = (Cut_Cut_t *)Vec_PtrEntry(p.vTemp, k)), 1); k++  {\n                    // inlining of macro Cut_ListForEachCutSafe\n                    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                        Cut_CutRecycle( p, pCut );\n                    }\n                }\n                goto finish;\n            }\n        }\n    } \n    // collect larger cuts next\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTemp)) \u0026\u0026 (((pList) = (Cut_Cut_t *)Vec_PtrEntry(p.vTemp, i)), 1); i++  {\n        // inlining of macro Cut_ListForEachCutSafe\n        for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n            // check containment\n            if p.pParams.fFilter \u0026\u0026 (Cut_CutFilterOne( p, pSuper, pCut ) != 0) {\n                continue; }\n            // set the complemented bit\n            pCut.fCompl = pTop.fSimul ^ pCut.fSimul;\n            pListStart = pCut.pNext;\n            pCut.pNext = nil;\n            // add to the list\n            Cut_ListAdd( pSuper, pCut );\n            if ++p.nNodeCuts == p.pParams.nKeepMax {\n                // recycle the rest of the cuts\n                // inlining of macro Cut_ListForEachCutSafe\n                for  pCut = pListStart,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                    Cut_CutRecycle( p, pCut );\n                }\n                // recycle the saved cuts of other nodes\n                // inlining of macro Vec_PtrForEachEntryStart\n                for  k = i+1; (k \u003c Vec_PtrSize(p.vTemp)) \u0026\u0026 (((pList) = (Cut_Cut_t *)Vec_PtrEntry(p.vTemp, k)), 1); k++  {\n                    // inlining of macro Cut_ListForEachCutSafe\n                    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                        Cut_CutRecycle( p, pCut );\n                    }\n                }\n                goto finish;\n            }\n        }\n    }\nfinish :\n    // set the cuts at the node\n    assert(Cut_NodeReadCutsNew(p, Root) == nil, \"Cut_NodeReadCutsNew(p, Root) == nil\");\n    pList = Cut_ListFinish( pSuper );\n    Cut_NodeWriteCutsNew( p, Root, pList );\np.timeUnion += Abc_Clock() - clk;\n    // filter the cuts\n//clk = Abc_Clock();\n//    if ( p-\u003epParams-\u003efFilter )\n//        Cut_CutFilter( p, pList );\n//p-\u003etimeFilter += Abc_Clock() - clk;\n    p.nNodes -= vNodes.nSize - 1;\n    return pList;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the cuts by unioning cuts at a choice node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeUnionCutsSeq(p *Cut_Man_t, vNodes *Vec_Int_t, CutSetNum int32, fFirst int32) *Cut_Cut_t {\n    var Super Cut_List_t;\n    var pSuper *Cut_List_t = \u0026Super;\n    var pList, pListStart, pCut, pCut2, pTop *Cut_Cut_t;\n    var i int32;\n    var k int32;\n    var Node int32;\n    var Root int32;\n    var Limit int32 = p.pParams.nVarsMax;\n    var clk abctime  = Abc_Clock();\n\n    // start the new list\n    Cut_ListStart( pSuper );\n\n    // remember the root node to save the resulting cuts\n    Root = Vec_IntEntry( vNodes, 0 );\n    p.nNodeCuts = 1;\n\n    // store the original lists for comparison\n    p.pCompareOld = Cut_NodeReadCutsOld( p, Root );\n    if CutSetNum \u003e= 0 {\n        p.pCompareNew = Cut_NodeReadCutsNew( p, Root );\n    } else {\n        p.pCompareNew = nil;\n    }\n\n    // get the topmost cut\n    pTop = nil;\n    if (pTop = Cut_NodeReadCutsOld( p, Root )) == nil {\n        pTop = Cut_NodeReadCutsNew( p, Root ); }\n    assert(pTop != nil, \"pTop != nil\");\n\n    // collect small cuts first\n    Vec_PtrClear( p.vTemp );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((Node) = Vec_IntEntry(vNodes, i)), 1); i++  {\n        // get the cuts of this node\n        if i == 0 \u0026\u0026 CutSetNum \u003e= 0 {\n            pList = Cut_NodeReadCutsTemp( p, CutSetNum );\n            Cut_NodeWriteCutsTemp( p, CutSetNum, nil );\n        \n        } else {\n            pList = Cut_NodeReadCutsNew( p, Node );\n            Cut_NodeWriteCutsNew( p, Node, nil );\n        }\n        if pList == nil {\n            continue; }\n\n        // process the cuts\n        if fFirst != 0 {\n            // remember the starting point\n            pListStart = pList.pNext;\n            pList.pNext = nil;\n            // save or recycle the elementary cut\n            if i == 0 {\n                Cut_ListAdd( pSuper, pList );\n            } else {\n                Cut_CutRecycle( p, pList ); }\n        \n        } else {\n            pListStart = pList; }\n\n        // save all the cuts that are smaller than the limit\n        // inlining of macro Cut_ListForEachCutSafe\n        for  pCut = pListStart,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n            if pCut.nLeaves == uint32(Limit) {\n                Vec_PtrPush( p.vTemp, pCut );\n                break;\n            }\n            // check containment\n//            if ( p-\u003epParams-\u003efFilter \u0026\u0026 Cut_CutFilterOne( p, pSuper, pCut ) )\n//                continue;\n            if p.pParams.fFilter {\n                if Cut_CutFilterOne(p, pSuper, pCut) != 0 {\n                    continue; }\n                if p.pParams.fSeq {\n                    if p.pCompareOld \u0026\u0026 (Cut_CutFilterOld(p, p.pCompareOld, pCut) != 0) {\n                        continue; }\n                    if p.pCompareNew \u0026\u0026 (Cut_CutFilterOld(p, p.pCompareNew, pCut) != 0) {\n                        continue; }\n                }\n            }\n\n            // set the complemented bit by comparing the first cut with the current cut\n            pCut.fCompl = pTop.fSimul ^ pCut.fSimul;\n            pListStart = pCut.pNext;\n            pCut.pNext = nil;\n            // add to the list\n            Cut_ListAdd( pSuper, pCut );\n            if ++p.nNodeCuts == p.pParams.nKeepMax {\n                // recycle the rest of the cuts of this node\n                // inlining of macro Cut_ListForEachCutSafe\n                for  pCut = pListStart,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                    Cut_CutRecycle( p, pCut );\n                }\n                // recycle all cuts of other nodes\n                // inlining of macro Vec_IntForEachEntryStart\n                for  k = i+1; (k \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((Node) = Vec_IntEntry(vNodes, k)), 1); k++  {\n                    Cut_NodeFreeCuts( p, Node );\n                }\n                // recycle the saved cuts of other nodes\n                // inlining of macro Vec_PtrForEachEntry\n                for  k = 0; (k \u003c Vec_PtrSize(p.vTemp)) \u0026\u0026 (((pList) = (Cut_Cut_t *)Vec_PtrEntry(p.vTemp, k)), 1); k++  {\n                    // inlining of macro Cut_ListForEachCutSafe\n                    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                        Cut_CutRecycle( p, pCut );\n                    }\n                }\n                goto finish;\n            }\n        }\n    } \n    // collect larger cuts next\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTemp)) \u0026\u0026 (((pList) = (Cut_Cut_t *)Vec_PtrEntry(p.vTemp, i)), 1); i++  {\n        // inlining of macro Cut_ListForEachCutSafe\n        for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n            // check containment\n//            if ( p-\u003epParams-\u003efFilter \u0026\u0026 Cut_CutFilterOne( p, pSuper, pCut ) )\n//                continue;\n            if p.pParams.fFilter {\n                if Cut_CutFilterOne(p, pSuper, pCut) != 0 {\n                    continue; }\n                if p.pParams.fSeq {\n                    if p.pCompareOld \u0026\u0026 (Cut_CutFilterOld(p, p.pCompareOld, pCut) != 0) {\n                        continue; }\n                    if p.pCompareNew \u0026\u0026 (Cut_CutFilterOld(p, p.pCompareNew, pCut) != 0) {\n                        continue; }\n                }\n            }\n\n            // set the complemented bit\n            pCut.fCompl = pTop.fSimul ^ pCut.fSimul;\n            pListStart   = pCut.pNext;\n            pCut.pNext  = nil;\n            // add to the list\n            Cut_ListAdd( pSuper, pCut );\n            if ++p.nNodeCuts == p.pParams.nKeepMax {\n                // recycle the rest of the cuts\n                // inlining of macro Cut_ListForEachCutSafe\n                for  pCut = pListStart,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                    Cut_CutRecycle( p, pCut );\n                }\n                // recycle the saved cuts of other nodes\n                // inlining of macro Vec_PtrForEachEntryStart\n                for  k = i+1; (k \u003c Vec_PtrSize(p.vTemp)) \u0026\u0026 (((pList) = (Cut_Cut_t *)Vec_PtrEntry(p.vTemp, k)), 1); k++  {\n                    // inlining of macro Cut_ListForEachCutSafe\n                    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n                        Cut_CutRecycle( p, pCut );\n                    }\n                }\n                goto finish;\n            }\n        }\n    }\nfinish :\n    // set the cuts at the node\n    pList = Cut_ListFinish( pSuper );\n\n    // set the lists at the node\n//    assert( Cut_NodeReadCutsNew(p, Root) == NULL );\n//    Cut_NodeWriteCutsNew( p, Root, pList );\n    if CutSetNum \u003e= 0 {\n        assert(Cut_NodeReadCutsTemp(p, CutSetNum) == nil, \"Cut_NodeReadCutsTemp(p, CutSetNum) == nil\");\n        Cut_NodeWriteCutsTemp( p, CutSetNum, pList );\n    \n    } else {\n        assert(Cut_NodeReadCutsNew(p, Root) == nil, \"Cut_NodeReadCutsNew(p, Root) == nil\");\n        Cut_NodeWriteCutsNew( p, Root, pList );\n    }\n\np.timeUnion += Abc_Clock() - clk;\n    // filter the cuts\n//clk = Abc_Clock();\n//    if ( p-\u003epParams-\u003efFilter )\n//        Cut_CutFilter( p, pList );\n//p-\u003etimeFilter += Abc_Clock() - clk;\n//    if ( fFirst )\n//        p-\u003enNodes -= vNodes-\u003enSize - 1;\n    return pList;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies that the list contains only non-dominated cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutListVerify(pList *Cut_Cut_t) int32 { \n    var pCut, pDom *Cut_Cut_t;\n    // inlining of macro Cut_ListForEachCut\n    for  pCut = pList;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n        // inlining of macro Cut_ListForEachCutStop\n        for  pDom = pList;                                             pDom != pCut;                                            pDom = pDom.pNext  {\n            if Cut_CutCheckDominance( pDom, pCut ) != 0 {\n                fmt.Printf(\"******************* These are contained cuts:\\n\");\n                Cut_CutPrint( pDom, 1 );\n                Cut_CutPrint( pDom, 1 );\n                return 0;\n            }\n        }\n    }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

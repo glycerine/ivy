@@ -1,0 +1,96 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Map.c",
+  "SHA256": "cfd186aff9bbdf9618c41b39887c60b59113f484a7082d4ab46d42a28a6152a1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 1934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_AigMap",
+      "Start": 1337,
+      "End": 3261,
+      "BodyStart": 1407,
+      "Original": "Vec_Int_t * Llb_AigMap( Aig_Man_t * pAig, int nLutSize, int nLutMin )\n{\n    extern Abc_Ntk_t * Abc_NtkFromAigPhase( Aig_Man_t * pMan );\n    extern If_Man_t *  Abc_NtkToIf( Abc_Ntk_t * pNtk, If_Par_t * pPars );\n    extern void        Gia_ManSetIfParsDefault( void * pPars );\n    If_Par_t Pars, * pPars = \u0026Pars;\n    If_Man_t * pIfMan;\n    If_Obj_t * pAnd;\n    Abc_Ntk_t * pNtk;\n    Abc_Obj_t * pNode;\n    Vec_Int_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i;\n\n    // create ABC network\n    pNtk = Abc_NtkFromAigPhase( pAig );\n    assert( Abc_NtkIsStrash(pNtk) );\n\n    // derive mapping parameters\n    Gia_ManSetIfParsDefault( pPars );\n    pPars-\u003enLutSize = nLutSize;\n\n    // get timing information\n    pPars-\u003epTimesArr = Abc_NtkGetCiArrivalFloats(pNtk);\n    pPars-\u003epTimesReq = Abc_NtkGetCoRequiredFloats(pNtk);\n\n    // perform LUT mapping\n    pIfMan = Abc_NtkToIf( pNtk, pPars );    \n    if ( pIfMan == NULL )\n    {\n        Abc_NtkDelete( pNtk );\n        return NULL;\n    }\n    if ( !If_ManPerformMapping( pIfMan ) )\n    {\n        Abc_NtkDelete( pNtk );\n        If_ManStop( pIfMan );\n        return NULL;\n    }\n\n    // mark nodes in the AIG used in the mapping\n    Aig_ManCleanMarkA( pAig );\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pNode = (Abc_Obj_t *)pObj-\u003epData;\n        if ( pNode == NULL )\n            continue;\n        pAnd = (If_Obj_t *)pNode-\u003epCopy;\n        if ( pAnd == NULL )\n            continue;\n        if ( pAnd-\u003enRefs \u003e 0 \u0026\u0026 (int)If_ObjCutBest(pAnd)-\u003enLeaves \u003e= nLutMin )\n            pObj-\u003efMarkA = 1;\n    }\n    Abc_NtkDelete( pNtk );\n    If_ManStop( pIfMan );\n\n    // unmark flop drivers\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjFanin0(pObj)-\u003efMarkA = 0;\n\n    // collect mapping\n    vNodes = Vec_IntAlloc( 100 );\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( pObj-\u003efMarkA )\n            Vec_IntPush( vNodes, Aig_ObjId(pObj) );\n    Aig_ManCleanMarkA( pAig );\n    return vNodes;\n}",
+      "Draft": "func Llb_AigMap(pAig *Aig_Man_t, nLutSize int32, nLutMin int32) *Vec_Int_t {\n    extern Abc_Ntk_t * Abc_NtkFromAigPhase( Aig_Man_t * pMan );\n    extern If_Man_t *  Abc_NtkToIf( Abc_Ntk_t * pNtk, If_Par_t * pPars );\n    extern void        Gia_ManSetIfParsDefault( void * pPars );\n    var Pars If_Par_t;\n    var pPars *If_Par_t = \u0026Pars;\n    var pIfMan *If_Man_t;\n    var pAnd *If_Obj_t;\n    var pNtk *Abc_Ntk_t;\n    var pNode *Abc_Obj_t;\n    var vNodes *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n\n    // create ABC network\n    pNtk = Abc_NtkFromAigPhase( pAig );\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // derive mapping parameters\n    Gia_ManSetIfParsDefault( pPars );\n    pPars.nLutSize = nLutSize;\n\n    // get timing information\n    pPars.pTimesArr = Abc_NtkGetCiArrivalFloats(pNtk);\n    pPars.pTimesReq = Abc_NtkGetCoRequiredFloats(pNtk);\n\n    // perform LUT mapping\n    pIfMan = Abc_NtkToIf( pNtk, pPars );    \n    if pIfMan == nil {\n        Abc_NtkDelete( pNtk );\n        return nil;\n    }\n    if !If_ManPerformMapping( pIfMan ) {\n        Abc_NtkDelete( pNtk );\n        If_ManStop( pIfMan );\n        return nil;\n    }\n\n    // mark nodes in the AIG used in the mapping\n    Aig_ManCleanMarkA( pAig );\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pNode = (Abc_Obj_t *)pObj.pData;\n        if pNode == nil {\n            continue; }\n        pAnd = (If_Obj_t *)pNode.pCopy;\n        if pAnd == nil {\n            continue; }\n        if pAnd.nRefs \u003e 0 \u0026\u0026 int32(If_ObjCutBest(pAnd).nLeaves) \u003e= nLutMin {\n            pObj.fMarkA = 1; }\n    }\n    Abc_NtkDelete( pNtk );\n    If_ManStop( pIfMan );\n\n    // unmark flop drivers\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjFanin0(pObj).fMarkA = 0;\n\n    // collect mapping\n    vNodes = Vec_IntAlloc( 100 );\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( pObj.fMarkA )\n            Vec_IntPush( vNodes, Aig_ObjId(pObj) );\n    Aig_ManCleanMarkA( pAig );\n    return vNodes;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Map.c::pointer-cast::2588",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2588,
+      "End": 2601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Map.c::pointer-cast::2680",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2680,
+      "End": 2692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Map.c::Llb_AigMap",
+      "Category": "semantic-review",
+      "Symbol": "Llb_AigMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1337,
+      "End": 3261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Map.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Map.c::macro-inline::2530",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2530,
+      "End": 2565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Map.c::macro-inline::2956",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2956,
+      "End": 2990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Map.c::macro-inline::3094",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3094,
+      "End": 3129
+    }
+  ],
+  "Draft": "package llb\n\n/**CFile****************************************************************\n\n  FileName    [llb2Map.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Non-linear quantification scheduling.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb2Map.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n//#include \"base/abc/abc.h\"\n//#include \"map/if/if.h\"\n\n//ABC_NAMESPACE_IMPL_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns internal nodes used in the mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_AigMap(pAig *Aig_Man_t, nLutSize int32, nLutMin int32) *Vec_Int_t {\n    extern Abc_Ntk_t * Abc_NtkFromAigPhase( Aig_Man_t * pMan );\n    extern If_Man_t *  Abc_NtkToIf( Abc_Ntk_t * pNtk, If_Par_t * pPars );\n    extern void        Gia_ManSetIfParsDefault( void * pPars );\n    var Pars If_Par_t;\n    var pPars *If_Par_t = \u0026Pars;\n    var pIfMan *If_Man_t;\n    var pAnd *If_Obj_t;\n    var pNtk *Abc_Ntk_t;\n    var pNode *Abc_Obj_t;\n    var vNodes *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n\n    // create ABC network\n    pNtk = Abc_NtkFromAigPhase( pAig );\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // derive mapping parameters\n    Gia_ManSetIfParsDefault( pPars );\n    pPars.nLutSize = nLutSize;\n\n    // get timing information\n    pPars.pTimesArr = Abc_NtkGetCiArrivalFloats(pNtk);\n    pPars.pTimesReq = Abc_NtkGetCoRequiredFloats(pNtk);\n\n    // perform LUT mapping\n    pIfMan = Abc_NtkToIf( pNtk, pPars );    \n    if pIfMan == nil {\n        Abc_NtkDelete( pNtk );\n        return nil;\n    }\n    if !If_ManPerformMapping( pIfMan ) {\n        Abc_NtkDelete( pNtk );\n        If_ManStop( pIfMan );\n        return nil;\n    }\n\n    // mark nodes in the AIG used in the mapping\n    Aig_ManCleanMarkA( pAig );\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pNode = (Abc_Obj_t *)pObj.pData;\n        if pNode == nil {\n            continue; }\n        pAnd = (If_Obj_t *)pNode.pCopy;\n        if pAnd == nil {\n            continue; }\n        if pAnd.nRefs \u003e 0 \u0026\u0026 int32(If_ObjCutBest(pAnd).nLeaves) \u003e= nLutMin {\n            pObj.fMarkA = 1; }\n    }\n    Abc_NtkDelete( pNtk );\n    If_ManStop( pIfMan );\n\n    // unmark flop drivers\n    Saig_ManForEachLi( pAig, pObj, i )\n        Aig_ObjFanin0(pObj).fMarkA = 0;\n\n    // collect mapping\n    vNodes = Vec_IntAlloc( 100 );\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( pObj.fMarkA )\n            Vec_IntPush( vNodes, Aig_ObjId(pObj) );\n    Aig_ManCleanMarkA( pAig );\n    return vNodes;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

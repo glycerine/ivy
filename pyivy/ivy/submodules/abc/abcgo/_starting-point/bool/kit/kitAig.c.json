@@ -1,0 +1,107 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitAig.c",
+  "SHA256": "24effa3ab93f3aa7c1af16332fba6894cc840a748fba04a9c1de82d2b765594e",
+  "Functions": [
+    {
+      "Name": "Kit_GraphToAigInternal",
+      "Start": 1292,
+      "End": 2305,
+      "BodyStart": 1369,
+      "Original": "Aig_Obj_t * Kit_GraphToAigInternal( Aig_Man_t * pMan, Kit_Graph_t * pGraph )\n{\n    Kit_Node_t * pNode = NULL;\n    Aig_Obj_t * pAnd0, * pAnd1;\n    int i;\n    // check for constant function\n    if ( Kit_GraphIsConst(pGraph) )\n        return Aig_NotCond( Aig_ManConst1(pMan), Kit_GraphIsComplement(pGraph) );\n    // check for a literal\n    if ( Kit_GraphIsVar(pGraph) )\n        return Aig_NotCond( (Aig_Obj_t *)Kit_GraphVar(pGraph)-\u003epFunc, Kit_GraphIsComplement(pGraph) );\n    // build the AIG nodes corresponding to the AND gates of the graph\n    Kit_GraphForEachNode( pGraph, pNode, i )\n    {\n        pAnd0 = Aig_NotCond( (Aig_Obj_t *)Kit_GraphNode(pGraph, pNode-\u003eeEdge0.Node)-\u003epFunc, pNode-\u003eeEdge0.fCompl ); \n        pAnd1 = Aig_NotCond( (Aig_Obj_t *)Kit_GraphNode(pGraph, pNode-\u003eeEdge1.Node)-\u003epFunc, pNode-\u003eeEdge1.fCompl ); \n        pNode-\u003epFunc = Aig_And( pMan, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Aig_NotCond( (Aig_Obj_t *)pNode-\u003epFunc, Kit_GraphIsComplement(pGraph) );\n}",
+      "Draft": "func Kit_GraphToAigInternal(pMan *Aig_Man_t, pGraph *Kit_Graph_t) *Aig_Obj_t {\n    var pNode *Kit_Node_t  = nil;\n    var pAnd0, pAnd1 *Aig_Obj_t;\n    var i int32;\n    // check for constant function\n    if Kit_GraphIsConst(pGraph) {\n        return Aig_NotCond( Aig_ManConst1(pMan), Kit_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Kit_GraphIsVar(pGraph) {\n        return Aig_NotCond( (Aig_Obj_t *)Kit_GraphVar(pGraph).pFunc, Kit_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Kit_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Aig_NotCond( (Aig_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Aig_NotCond( (Aig_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n        pNode.pFunc = Aig_And( pMan, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Aig_NotCond( (Aig_Obj_t *)pNode.pFunc, Kit_GraphIsComplement(pGraph) );\n}"
+    },
+    {
+      "Name": "Kit_GraphToAig",
+      "Start": 2579,
+      "End": 2897,
+      "BodyStart": 2670,
+      "Original": "Aig_Obj_t * Kit_GraphToAig( Aig_Man_t * pMan, Aig_Obj_t ** pFanins, Kit_Graph_t * pGraph )\n{\n    Kit_Node_t * pNode = NULL;\n    int i;\n    // collect the fanins\n    Kit_GraphForEachLeaf( pGraph, pNode, i )\n        pNode-\u003epFunc = pFanins[i];\n    // perform strashing\n    return Kit_GraphToAigInternal( pMan, pGraph );\n}",
+      "Draft": "func Kit_GraphToAig(pMan *Aig_Man_t, pFanins **Aig_Obj_t, pGraph *Kit_Graph_t) *Aig_Obj_t {\n    var pNode *Kit_Node_t  = nil;\n    var i int32;\n    // collect the fanins\n    // inlining of macro Kit_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pNode.pFunc = pFanins[i];\n    }\n    // perform strashing\n    return Kit_GraphToAigInternal( pMan, pGraph );\n}"
+    },
+    {
+      "Name": "Kit_TruthToAig",
+      "Start": 3181,
+      "End": 3795,
+      "BodyStart": 3301,
+      "Original": "Aig_Obj_t * Kit_TruthToAig( Aig_Man_t * pMan, Aig_Obj_t ** pFanins, unsigned * pTruth, int nVars, Vec_Int_t * vMemory )\n{\n    Aig_Obj_t * pObj;\n    Kit_Graph_t * pGraph;\n    // transform truth table into the decomposition tree\n    if ( vMemory == NULL )\n    {\n        vMemory = Vec_IntAlloc( 0 );\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );\n        Vec_IntFree( vMemory );\n    }\n    else\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );\n    // derive the AIG for the decomposition tree\n    pObj = Kit_GraphToAig( pMan, pFanins, pGraph );\n    Kit_GraphFree( pGraph );\n    return pObj;\n}",
+      "Draft": "func Kit_TruthToAig(pMan *Aig_Man_t, pFanins **Aig_Obj_t, pTruth *uint32, nVars int32, vMemory *Vec_Int_t) *Aig_Obj_t {\n    var pObj *Aig_Obj_t;\n    var pGraph *Kit_Graph_t;\n    // transform truth table into the decomposition tree\n    if vMemory == nil {\n        vMemory = Vec_IntAlloc( 0 );\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );\n        Vec_IntFree( vMemory );\n    \n    } else {\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory ); }\n    // derive the AIG for the decomposition tree\n    pObj = Kit_GraphToAig( pMan, pFanins, pGraph );\n    Kit_GraphFree( pGraph );\n    return pObj;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitAig.c::pointer-cast::1687",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1687,
+      "End": 1700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitAig.c::pointer-cast::2031",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1913,
+      "End": 1926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitAig.c::pointer-cast::2148",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2030,
+      "End": 2043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitAig.c::pointer-cast::2362",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2244,
+      "End": 2257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitAig.c::Kit_GraphToAigInternal",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphToAigInternal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1292,
+      "End": 2305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitAig.c::Kit_GraphToAig",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphToAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2579,
+      "End": 2897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitAig.c::Kit_TruthToAig",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthToAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3181,
+      "End": 3795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitAig.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4042
+    }
+  ],
+  "Draft": "package kit\n\n/**CFile****************************************************************\n\n  FileName    [kitAig.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Computation kit.]\n\n  Synopsis    [Procedures involving AIGs.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Dec 6, 2006.]\n\n  Revision    [$Id: kitAig.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"kit.h\"\n//#include \"aig/aig/aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the decomposition graph into the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphToAigInternal(pMan *Aig_Man_t, pGraph *Kit_Graph_t) *Aig_Obj_t {\n    var pNode *Kit_Node_t  = nil;\n    var pAnd0, pAnd1 *Aig_Obj_t;\n    var i int32;\n    // check for constant function\n    if Kit_GraphIsConst(pGraph) {\n        return Aig_NotCond( Aig_ManConst1(pMan), Kit_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Kit_GraphIsVar(pGraph) {\n        return Aig_NotCond( (Aig_Obj_t *)Kit_GraphVar(pGraph).pFunc, Kit_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Kit_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Aig_NotCond( (Aig_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Aig_NotCond( (Aig_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n        pNode.pFunc = Aig_And( pMan, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Aig_NotCond( (Aig_Obj_t *)pNode.pFunc, Kit_GraphIsComplement(pGraph) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Strashes one logic node using its SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphToAig(pMan *Aig_Man_t, pFanins **Aig_Obj_t, pGraph *Kit_Graph_t) *Aig_Obj_t {\n    var pNode *Kit_Node_t  = nil;\n    var i int32;\n    // collect the fanins\n    // inlining of macro Kit_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pNode.pFunc = pFanins[i];\n    }\n    // perform strashing\n    return Kit_GraphToAigInternal( pMan, pGraph );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Strashed onen logic nodes using its truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_TruthToAig(pMan *Aig_Man_t, pFanins **Aig_Obj_t, pTruth *uint32, nVars int32, vMemory *Vec_Int_t) *Aig_Obj_t {\n    var pObj *Aig_Obj_t;\n    var pGraph *Kit_Graph_t;\n    // transform truth table into the decomposition tree\n    if vMemory == nil {\n        vMemory = Vec_IntAlloc( 0 );\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );\n        Vec_IntFree( vMemory );\n    \n    } else {\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory ); }\n    // derive the AIG for the decomposition tree\n    pObj = Kit_GraphToAig( pMan, pFanins, pGraph );\n    Kit_GraphFree( pGraph );\n    return pObj;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

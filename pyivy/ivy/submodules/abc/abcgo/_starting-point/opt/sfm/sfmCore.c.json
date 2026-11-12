@@ -1,0 +1,750 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c",
+  "SHA256": "048c2a9cf29749c8a0724281a213b372e212eaa593b9d3837687e9f7ad3b1fba",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPars, 0, sizeof(Sfm_Par_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 77,
+        "Column": 5,
+        "ByteOffset": 2525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes = %d. Try = %d. Resub = %d. Div = %d (ave = %d). SAT calls = %d. Timeouts = %d. MaxDivs = %d.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2806
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Attempts :   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2837
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Remove %6d out of %6d (%6.2f %%)   \", p.nRemoves, p.nTryRemoves, 100.0*p.nRemoves/Abc_MaxInt(1, p.nTryRemoves) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 5,
+        "ByteOffset": 2964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Resub  %6d out of %6d (%6.2f %%)   \", p.nResubs,  p.nTryResubs,  100.0*p.nResubs /Abc_MaxInt(1, p.nTryResubs)  );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 3116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Improves %6d out of %6d (%6.2f %%)   \", p.nImproves,p.nTryImproves,100.0*p.nImproves/Abc_MaxInt(1, p.nTryImproves)); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 85,
+        "Column": 5,
+        "ByteOffset": 3248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 3269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Reduction:   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 3300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes  %6d out of %6d (%6.2f %%)   \", p.nTotalNodesBeg-p.nTotalNodesEnd, p.nTotalNodesBeg, 100.0*(p.nTotalNodesBeg-p.nTotalNodesEnd)/Abc_MaxInt(1, p.nTotalNodesBeg) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 3481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Edges  %6d out of %6d (%6.2f %%)   \", p.nTotalEdgesBeg-p.nTotalEdgesEnd, p.nTotalEdgesBeg, 100.0*(p.nTotalEdgesBeg-p.nTotalEdgesEnd)/Abc_MaxInt(1, p.nTotalEdgesBeg) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 5,
+        "ByteOffset": 3662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 122,
+        "Column": 5,
+        "ByteOffset": 4713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Sfm_ObjIsNode(p, iNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 4752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( f \u003e= 0 \u0026\u0026 f \u003c Sfm_ObjFaninNum(p, iNode) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 9,
+        "ByteOffset": 4887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%5d : Lev =%3d. Leaf =%3d.  Node =%3d.  Div=%3d.  Fanin =%4d (%d/%d). MFFC = %d\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 5549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFaninRem != -1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 13,
+        "ByteOffset": 6162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 13,
+        "ByteOffset": 6252
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", i % 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 9,
+        "ByteOffset": 6294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 13,
+        "ByteOffset": 6364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%3d: %3d \", p.nCexes, iVar );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 171,
+        "Column": 17,
+        "ByteOffset": 6476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%d\", Abc_InfoHasBit((unsigned *)\u0026uSign, p.nCexes-1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 13,
+        "ByteOffset": 6552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 181,
+        "Column": 9,
+        "ByteOffset": 6897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(p.vDivs, iVar) != iFaninSkip );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 13,
+        "ByteOffset": 7559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Node %d: Fanin %d (%d) can be removed.  \", iNode, f, Sfm_ObjFanin(p, iNode, f) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 204,
+        "Column": 13,
+        "ByteOffset": 7679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Node %d: Fanin %d (%d) can be replaced by divisor %d (%d).   \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 79,
+        "ByteOffset": 7919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Kit_DsdPrintFromTruth( (unsigned *)\u0026uTruth, Vec_IntSize(p.vDivIds) ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 235,
+        "Column": 5,
+        "ByteOffset": 8622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Sfm_ObjIsNode(p, iNode) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 239,
+        "Column": 9,
+        "ByteOffset": 8742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%5d : Lev =%3d. Leaf =%3d.  Node =%3d.  Div=%3d.  Fanins = %d.  MFFC = %d\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 9354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( uTruth != SFM_SAT_SAT );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 330,
+        "Column": 9,
+        "ByteOffset": 12101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Obj %3d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 331,
+        "Column": 9,
+        "ByteOffset": 12136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fixed %d  \", Vec_StrEntry(p.vFixed, i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 332,
+        "Column": 9,
+        "ByteOffset": 12195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Empty %d  \", Vec_StrEntry(p.vEmpty, i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 9,
+        "ByteOffset": 12254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Truth  \" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 334,
+        "Column": 25,
+        "ByteOffset": 12299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintHex( stdout, (unsigned *)Vec_WrdEntryP(p.vTruths, i), Vec_IntSize(vArray) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 335,
+        "Column": 9,
+        "ByteOffset": 12379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 368,
+        "Column": 9,
+        "ByteOffset": 13131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Performing MFS with %d PIs, %d POs, %d nodes (%d flexible, %d fixed, %d empty).\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sfm_ParSetDefault",
+      "Start": 1287,
+      "End": 2160,
+      "BodyStart": 1331,
+      "Original": "void Sfm_ParSetDefault( Sfm_Par_t * pPars )\n{\n    memset( pPars, 0, sizeof(Sfm_Par_t) );\n    pPars-\u003enTfoLevMax   =    2;  // the maximum fanout levels\n    pPars-\u003enFanoutMax   =   30;  // the maximum number of fanouts\n    pPars-\u003enDepthMax    =   20;  // the maximum depth to try  \n    pPars-\u003enWinSizeMax  =  300;  // the maximum window size\n    pPars-\u003enGrowthLevel =    0;  // the maximum allowed growth in level\n    pPars-\u003enBTLimit     = 5000;  // the maximum number of conflicts in one SAT run\n    pPars-\u003efRrOnly      =    0;  // perform redundancy removal\n    pPars-\u003efArea        =    0;  // performs optimization for area\n    pPars-\u003efMoreEffort  =    0;  // performs high-affort minimization\n    pPars-\u003efAllBoxes    =    0;  // enable preserving all boxes\n    pPars-\u003efVerbose     =    0;  // enable basic stats\n    pPars-\u003efVeryVerbose =    0;  // enable detailed stats\n}",
+      "Draft": "func Sfm_ParSetDefault(pPars *Sfm_Par_t) {\n    memset( pPars, 0, sizeof(Sfm_Par_t) );\n    pPars.nTfoLevMax   =    2;  // the maximum fanout levels\n    pPars.nFanoutMax   =   30;  // the maximum number of fanouts\n    pPars.nDepthMax    =   20;  // the maximum depth to try  \n    pPars.nWinSizeMax  =  300;  // the maximum window size\n    pPars.nGrowthLevel =    0;  // the maximum allowed growth in level\n    pPars.nBTLimit     = 5000;  // the maximum number of conflicts in one SAT run\n    pPars.fRrOnly      =    0;  // perform redundancy removal\n    pPars.fArea        =    0;  // performs optimization for area\n    pPars.fMoreEffort  =    0;  // performs high-affort minimization\n    pPars.fAllBoxes    =    0;  // enable preserving all boxes\n    pPars.fVerbose     =    0;  // enable basic stats\n    pPars.fVeryVerbose =    0;  // enable detailed stats\n}"
+    },
+    {
+      "Name": "Sfm_NtkPrintStats",
+      "Start": 2399,
+      "End": 4086,
+      "BodyStart": 2439,
+      "Original": "void Sfm_NtkPrintStats( Sfm_Ntk_t * p )\n{\n    p-\u003etimeOther = p-\u003etimeTotal - p-\u003etimeWin - p-\u003etimeDiv - p-\u003etimeCnf - p-\u003etimeSat;\n    printf( \"Nodes = %d. Try = %d. Resub = %d. Div = %d (ave = %d). SAT calls = %d. Timeouts = %d. MaxDivs = %d.\\n\",\n        Sfm_NtkNodeNum(p), p-\u003enNodesTried, p-\u003enRemoves + p-\u003enResubs, p-\u003enTotalDivs, p-\u003enTotalDivs/Abc_MaxInt(1, p-\u003enNodesTried), p-\u003enSatCalls, p-\u003enTimeOuts, p-\u003enMaxDivs );\n\n    printf( \"Attempts :   \" );\n    printf( \"Remove %6d out of %6d (%6.2f %%)   \", p-\u003enRemoves, p-\u003enTryRemoves, 100.0*p-\u003enRemoves/Abc_MaxInt(1, p-\u003enTryRemoves) );\n    printf( \"Resub  %6d out of %6d (%6.2f %%)   \", p-\u003enResubs,  p-\u003enTryResubs,  100.0*p-\u003enResubs /Abc_MaxInt(1, p-\u003enTryResubs)  );\n    if ( p-\u003epPars-\u003efUseDcs )\n    printf( \"Improves %6d out of %6d (%6.2f %%)   \", p-\u003enImproves,p-\u003enTryImproves,100.0*p-\u003enImproves/Abc_MaxInt(1, p-\u003enTryImproves));\n    printf( \"\\n\" );\n\n    printf( \"Reduction:   \" );\n    printf( \"Nodes  %6d out of %6d (%6.2f %%)   \", p-\u003enTotalNodesBeg-p-\u003enTotalNodesEnd, p-\u003enTotalNodesBeg, 100.0*(p-\u003enTotalNodesBeg-p-\u003enTotalNodesEnd)/Abc_MaxInt(1, p-\u003enTotalNodesBeg) );\n    printf( \"Edges  %6d out of %6d (%6.2f %%)   \", p-\u003enTotalEdgesBeg-p-\u003enTotalEdgesEnd, p-\u003enTotalEdgesBeg, 100.0*(p-\u003enTotalEdgesBeg-p-\u003enTotalEdgesEnd)/Abc_MaxInt(1, p-\u003enTotalEdgesBeg) );\n    printf( \"\\n\" );\n\n    ABC_PRTP( \"Win\", p-\u003etimeWin  ,  p-\u003etimeTotal );\n    ABC_PRTP( \"Div\", p-\u003etimeDiv  ,  p-\u003etimeTotal );\n    ABC_PRTP( \"Cnf\", p-\u003etimeCnf  ,  p-\u003etimeTotal );\n    ABC_PRTP( \"Sat\", p-\u003etimeSat  ,  p-\u003etimeTotal );\n    ABC_PRTP( \"Oth\", p-\u003etimeOther,  p-\u003etimeTotal );\n    ABC_PRTP( \"ALL\", p-\u003etimeTotal,  p-\u003etimeTotal );\n//    ABC_PRTP( \"   \", p-\u003etime1    ,  p-\u003etimeTotal );\n}",
+      "Draft": "func Sfm_NtkPrintStats(p *Sfm_Ntk_t) {\n    p.timeOther = p.timeTotal - p.timeWin - p.timeDiv - p.timeCnf - p.timeSat;\n    fmt.Printf(\"Nodes = %d. Try = %d. Resub = %d. Div = %d (ave = %d). SAT calls = %d. Timeouts = %d. MaxDivs = %d.\\n\", Sfm_NtkNodeNum(p), p.nNodesTried, p.nRemoves + p.nResubs, p.nTotalDivs, p.nTotalDivs/Abc_MaxInt(1, p.nNodesTried), p.nSatCalls, p.nTimeOuts, p.nMaxDivs);\n\n    fmt.Printf(\"Attempts :   \");\n    fmt.Printf(\"Remove %6d out of %6d (%6.2f %%)   \", p.nRemoves, p.nTryRemoves, 100.0*p.nRemoves/Abc_MaxInt(1, p.nTryRemoves));\n    fmt.Printf(\"Resub  %6d out of %6d (%6.2f %%)   \", p.nResubs, p.nTryResubs, 100.0*p.nResubs /Abc_MaxInt(1, p.nTryResubs));\n    if p.pPars.fUseDcs {\n    fmt.Printf(\"Improves %6d out of %6d (%6.2f %%)   \", p.nImproves, p.nTryImproves, 100.0*p.nImproves/Abc_MaxInt(1, p.nTryImproves)); }\n    fmt.Printf(\"\\n\");\n\n    fmt.Printf(\"Reduction:   \");\n    fmt.Printf(\"Nodes  %6d out of %6d (%6.2f %%)   \", p.nTotalNodesBeg-p.nTotalNodesEnd, p.nTotalNodesBeg, 100.0*(p.nTotalNodesBeg-p.nTotalNodesEnd)/Abc_MaxInt(1, p.nTotalNodesBeg));\n    fmt.Printf(\"Edges  %6d out of %6d (%6.2f %%)   \", p.nTotalEdgesBeg-p.nTotalEdgesEnd, p.nTotalEdgesBeg, 100.0*(p.nTotalEdgesBeg-p.nTotalEdgesEnd)/Abc_MaxInt(1, p.nTotalEdgesBeg));\n    fmt.Printf(\"\\n\");\n\n    ABC_PRTP( \"Win\", p.timeWin  ,  p.timeTotal );\n    ABC_PRTP( \"Div\", p.timeDiv  ,  p.timeTotal );\n    ABC_PRTP( \"Cnf\", p.timeCnf  ,  p.timeTotal );\n    ABC_PRTP( \"Sat\", p.timeSat  ,  p.timeTotal );\n    ABC_PRTP( \"Oth\", p.timeOther,  p.timeTotal );\n    ABC_PRTP( \"ALL\", p.timeTotal,  p.timeTotal );\n//    ABC_PRTP( \"   \", p-\u003etime1    ,  p-\u003etimeTotal );\n}"
+    },
+    {
+      "Name": "Sfm_NodeResubSolve",
+      "Start": 4359,
+      "End": 8242,
+      "BodyStart": 4434,
+      "Original": "int Sfm_NodeResubSolve( Sfm_Ntk_t * p, int iNode, int f, int fRemoveOnly )\n{\n    int fSkipUpdate  = 0;\n    int fVeryVerbose = 0;//p-\u003epPars-\u003efVeryVerbose \u0026\u0026 Vec_IntSize(p-\u003evDivs) \u003c 200;// || pNode-\u003eId == 556;\n    int i, iFanin, iVar = -1;\n    int iFaninRem = -1, iFaninSkip = -1;\n    word uTruth, uSign, uMask;\n    abctime clk;\n    assert( Sfm_ObjIsNode(p, iNode) );\n    assert( f \u003e= 0 \u0026\u0026 f \u003c Sfm_ObjFaninNum(p, iNode) );\n    p-\u003enTryRemoves++;\n    // report init stats\n    if ( p-\u003epPars-\u003efVeryVerbose )\n        printf( \"%5d : Lev =%3d. Leaf =%3d.  Node =%3d.  Div=%3d.  Fanin =%4d (%d/%d). MFFC = %d\\n\", \n            iNode, Sfm_ObjLevel(p, iNode), 0, Vec_IntSize(p-\u003evNodes), Vec_IntSize(p-\u003evDivs), \n            Sfm_ObjFanin(p, iNode, f), f, Sfm_ObjFaninNum(p, iNode), Sfm_ObjMffcSize(p, Sfm_ObjFanin(p, iNode, f)) );\n    // clean simulation info\n    p-\u003enCexes = 0;\n    Vec_WrdFill( p-\u003evDivCexes, Vec_IntSize(p-\u003evDivs), 0 );\n    // try removing the critical fanin\n    Vec_IntClear( p-\u003evDivIds );\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n        if ( i != f )\n            Vec_IntPush( p-\u003evDivIds, Sfm_ObjSatVar(p, iFanin) );\n        else\n            iFaninRem = iFanin;\n    assert( iFaninRem != -1 );\n    // find fanin to skip \n    if ( Sfm_ObjIsFixed(p, iFaninRem) \u0026\u0026 Sfm_ObjFaninNum(p, iFaninRem) == 1 )\n        iFaninSkip = Sfm_ObjFanin(p, iFaninRem, 0);\nclk = Abc_Clock();\n    uTruth = Sfm_ComputeInterpolant( p );\np-\u003etimeSat += Abc_Clock() - clk;\n    // analyze outcomes\n    if ( uTruth == SFM_SAT_UNDEC )\n    {\n        p-\u003enTimeOuts++;\n        return 0;\n    }\n    if ( uTruth != SFM_SAT_SAT )\n        goto finish;\n    if ( fRemoveOnly || p-\u003epPars-\u003efRrOnly || Vec_IntSize(p-\u003evDivs) == 0 )\n        return 0;\n\n    p-\u003enTryResubs++;\n    if ( fVeryVerbose )\n    {\n        for ( i = 0; i \u003c 9; i++ )\n            printf( \" \" );\n        for ( i = 0; i \u003c Vec_IntSize(p-\u003evDivs); i++ )\n            printf( \"%d\", i % 10 );\n        printf( \"\\n\" );\n    }\n    while ( 1 ) \n    {\n        if ( fVeryVerbose )\n        {\n            printf( \"%3d: %3d \", p-\u003enCexes, iVar );\n            Vec_WrdForEachEntry( p-\u003evDivCexes, uSign, i )\n                printf( \"%d\", Abc_InfoHasBit((unsigned *)\u0026uSign, p-\u003enCexes-1) );\n            printf( \"\\n\" );\n        }\n        // find the next divisor to try\n        uMask = (~(word)0) \u003e\u003e (64 - p-\u003enCexes);\n        Vec_WrdForEachEntry( p-\u003evDivCexes, uSign, iVar )\n            if ( uSign == uMask \u0026\u0026 Vec_IntEntry(p-\u003evDivs, iVar) != iFaninSkip )\n                break;\n        if ( iVar == Vec_IntSize(p-\u003evDivs) )\n            return 0;\n        assert( Vec_IntEntry(p-\u003evDivs, iVar) != iFaninSkip );\n        // try replacing the critical fanin\n        Vec_IntPush( p-\u003evDivIds, Sfm_ObjSatVar(p, Vec_IntEntry(p-\u003evDivs, iVar)) );\nclk = Abc_Clock();\n        uTruth = Sfm_ComputeInterpolant( p );\np-\u003etimeSat += Abc_Clock() - clk;\n        // analyze outcomes\n        if ( uTruth == SFM_SAT_UNDEC )\n        {\n            p-\u003enTimeOuts++;\n            return 0;\n        }\n        if ( uTruth != SFM_SAT_SAT )\n            goto finish;\n        if ( p-\u003enCexes == 64 )\n            return 0;\n        // remove the last variable\n        Vec_IntPop( p-\u003evDivIds );\n    }\nfinish:\n    if ( p-\u003epPars-\u003efVeryVerbose )\n    {\n        if ( iVar == -1 )\n            printf( \"Node %d: Fanin %d (%d) can be removed.  \", iNode, f, Sfm_ObjFanin(p, iNode, f) );\n        else\n            printf( \"Node %d: Fanin %d (%d) can be replaced by divisor %d (%d).   \", \n            iNode, f, Sfm_ObjFanin(p, iNode, f), iVar, Vec_IntEntry(p-\u003evDivs, iVar) );\n        Kit_DsdPrintFromTruth( (unsigned *)\u0026uTruth, Vec_IntSize(p-\u003evDivIds) ); printf( \"\\n\" );\n    }\n    if ( iVar == -1 )\n        p-\u003enRemoves++;\n    else\n        p-\u003enResubs++;\n    if ( fSkipUpdate )\n        return 0;\n    // update the network\n    Sfm_NtkUpdate( p, iNode, f, (iVar == -1 ? iVar : Vec_IntEntry(p-\u003evDivs, iVar)), uTruth );\n    return 1;\n}",
+      "Draft": "func Sfm_NodeResubSolve(p *Sfm_Ntk_t, iNode int32, f int32, fRemoveOnly int32) int32 {\n    var fSkipUpdate int32;\n    var fVeryVerbose int32;//p-\u003epPars-\u003efVeryVerbose \u0026\u0026 Vec_IntSize(p-\u003evDivs) \u003c 200;// || pNode-\u003eId == 556;\n    var i int32;\n    var iFanin int32;\n    var iVar int32 = -1;\n    var iFaninRem int32 = -1;\n    var iFaninSkip int32 = -1;\n    var uTruth, uSign, uMask word;\n    var clk abctime;\n    assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n    assert(f \u003e= 0 \u0026\u0026 f \u003c Sfm_ObjFaninNum(p, iNode), \"f \u003e= 0 \u0026\u0026 f \u003c Sfm_ObjFaninNum(p, iNode)\");\n    p.nTryRemoves++;\n    // report init stats\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"%5d : Lev =%3d. Leaf =%3d.  Node =%3d.  Div=%3d.  Fanin =%4d (%d/%d). MFFC = %d\\n\", iNode, Sfm_ObjLevel(p, iNode), 0, Vec_IntSize(p.vNodes), Vec_IntSize(p.vDivs), Sfm_ObjFanin(p, iNode, f), f, Sfm_ObjFaninNum(p, iNode), Sfm_ObjMffcSize(p, Sfm_ObjFanin(p, iNode, f))); }\n    // clean simulation info\n    p.nCexes = 0;\n    Vec_WrdFill( p.vDivCexes, Vec_IntSize(p.vDivs), 0 );\n    // try removing the critical fanin\n    Vec_IntClear( p.vDivIds );\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n        if ( i != f )\n            Vec_IntPush( p.vDivIds, Sfm_ObjSatVar(p, iFanin) );\n        else\n            iFaninRem = iFanin;\n    assert(iFaninRem != -1, \"iFaninRem != -1\");\n    // find fanin to skip \n    if Sfm_ObjIsFixed(p, iFaninRem) \u0026\u0026 Sfm_ObjFaninNum(p, iFaninRem) == 1 {\n        iFaninSkip = Sfm_ObjFanin(p, iFaninRem, 0); }\nclk = Abc_Clock();\n    uTruth = Sfm_ComputeInterpolant( p );\np.timeSat += Abc_Clock() - clk;\n    // analyze outcomes\n    if uTruth == SFM_SAT_UNDEC {\n        p.nTimeOuts++;\n        return 0;\n    }\n    if uTruth != SFM_SAT_SAT {\n        goto finish; }\n    if (fRemoveOnly != 0) || p.pPars.fRrOnly || Vec_IntSize(p.vDivs) == 0 {\n        return 0; }\n\n    p.nTryResubs++;\n    if fVeryVerbose != 0 {\n        for  i = 0; i \u003c 9; i++  {\n            fmt.Printf(\" \");\n        }\n        for  i = 0; i \u003c Vec_IntSize(p.vDivs); i++  {\n            fmt.Printf(\"%d\", i % 10);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    for {\n        if fVeryVerbose != 0 {\n            fmt.Printf(\"%3d: %3d \", p.nCexes, iVar);\n            Vec_WrdForEachEntry( p.vDivCexes, uSign, i )\n                fmt.Printf(\"%d\", Abc_InfoHasBit((unsigned *)\u0026uSign, p.nCexes-1));\n            fmt.Printf(\"\\n\");\n        }\n        // find the next divisor to try\n        uMask = (~(word)0) \u003e\u003e (64 - p.nCexes);\n        Vec_WrdForEachEntry( p.vDivCexes, uSign, iVar )\n            if ( uSign == uMask \u0026\u0026 Vec_IntEntry(p.vDivs, iVar) != iFaninSkip )\n                break;\n        if iVar == Vec_IntSize(p.vDivs) {\n            return 0; }\n        assert(Vec_IntEntry(p.vDivs, iVar) != iFaninSkip, \"Vec_IntEntry(p.vDivs, iVar) != iFaninSkip\");\n        // try replacing the critical fanin\n        Vec_IntPush( p.vDivIds, Sfm_ObjSatVar(p, Vec_IntEntry(p.vDivs, iVar)) );\nclk = Abc_Clock();\n        uTruth = Sfm_ComputeInterpolant( p );\np.timeSat += Abc_Clock() - clk;\n        // analyze outcomes\n        if uTruth == SFM_SAT_UNDEC {\n            p.nTimeOuts++;\n            return 0;\n        }\n        if uTruth != SFM_SAT_SAT {\n            goto finish; }\n        if p.nCexes == 64 {\n            return 0; }\n        // remove the last variable\n        Vec_IntPop( p.vDivIds );\n    }\nfinish:\n    if p.pPars.fVeryVerbose {\n        if iVar == -1 {\n            fmt.Printf(\"Node %d: Fanin %d (%d) can be removed.  \", iNode, f, Sfm_ObjFanin(p, iNode, f));\n        } else {\n            fmt.Printf(\"Node %d: Fanin %d (%d) can be replaced by divisor %d (%d).   \", iNode, f, Sfm_ObjFanin(p, iNode, f), iVar, Vec_IntEntry(p.vDivs, iVar)); }\n        Kit_DsdPrintFromTruth( (unsigned *)\u0026uTruth, Vec_IntSize(p.vDivIds) ); fmt.Printf(\"\\n\");\n    }\n    if iVar == -1 {\n        p.nRemoves++;\n    } else {\n        p.nResubs++; }\n    if fSkipUpdate != 0 {\n        return 0; }\n    // update the network\n    Sfm_NtkUpdate( p, iNode, f, (iVar == -1 ? iVar : Vec_IntEntry(p.vDivs, iVar)), uTruth );\n    return 1;\n}"
+    },
+    {
+      "Name": "Sfm_NodeResubOne",
+      "Start": 8515,
+      "End": 10422,
+      "BodyStart": 8564,
+      "Original": "int Sfm_NodeResubOne( Sfm_Ntk_t * p, int iNode )\n{\n    int fSkipUpdate  = 0;\n    int i, iFanin;\n    word uTruth;\n    abctime clk;\n    assert( Sfm_ObjIsNode(p, iNode) );\n    p-\u003enTryImproves++;\n    // report init stats\n    if ( p-\u003epPars-\u003efVeryVerbose )\n        printf( \"%5d : Lev =%3d. Leaf =%3d.  Node =%3d.  Div=%3d.  Fanins = %d.  MFFC = %d\\n\", \n            iNode, Sfm_ObjLevel(p, iNode), 0, Vec_IntSize(p-\u003evNodes), Vec_IntSize(p-\u003evDivs), \n            Sfm_ObjFaninNum(p, iNode), Sfm_ObjMffcSize(p, iNode) );\n    // collect fanins\n    Vec_IntClear( p-\u003evDivIds );\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n        Vec_IntPush( p-\u003evDivIds, Sfm_ObjSatVar(p, iFanin) );\nclk = Abc_Clock();\n    uTruth = Sfm_ComputeInterpolant2( p );\np-\u003etimeSat += Abc_Clock() - clk;\n    // analyze outcomes\n    if ( uTruth == SFM_SAT_UNDEC )\n    {\n        p-\u003enTimeOuts++;\n        return 0;\n    }\n    assert( uTruth != SFM_SAT_SAT );\n    if ( uTruth == Vec_WrdEntry(p-\u003evTruths, iNode) )\n        return 0;\n    else\n    {\n        word uTruth0  =  Vec_WrdEntry(p-\u003evTruths, iNode);\n        //word uTruth0N = ~uTruth0;\n        //word uTruthN  = ~uTruth;\n        int Old  = Kit_TruthLitNum((unsigned*)\u0026uTruth0,  Sfm_ObjFaninNum(p, iNode), p-\u003evCover);\n        //int OldN = Kit_TruthLitNum((unsigned*)\u0026uTruth0N, Sfm_ObjFaninNum(p, iNode), p-\u003evCover);\n        int New  = Kit_TruthLitNum((unsigned*)\u0026uTruth,   Sfm_ObjFaninNum(p, iNode), p-\u003evCover);\n        //int NewN = Kit_TruthLitNum((unsigned*)\u0026uTruthN,  Sfm_ObjFaninNum(p, iNode), p-\u003evCover);\n        //if ( Abc_MinInt(New, NewN) \u003e Abc_MinInt(Old, OldN) )\n        if ( New \u003e Old )\n            return 0;\n    }\n    p-\u003enImproves++;\n    if ( fSkipUpdate )\n        return 0;\n    // update truth table\n    Vec_WrdWriteEntry( p-\u003evTruths, iNode, uTruth );\n    Sfm_TruthToCnf( uTruth, NULL, Sfm_ObjFaninNum(p, iNode), p-\u003evCover, (Vec_Str_t *)Vec_WecEntry(p-\u003evCnfs, iNode) );\n    return 1;\n}",
+      "Draft": "func Sfm_NodeResubOne(p *Sfm_Ntk_t, iNode int32) int32 {\n    var fSkipUpdate int32;\n    var i, iFanin int32;\n    var uTruth word;\n    var clk abctime;\n    assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n    p.nTryImproves++;\n    // report init stats\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"%5d : Lev =%3d. Leaf =%3d.  Node =%3d.  Div=%3d.  Fanins = %d.  MFFC = %d\\n\", iNode, Sfm_ObjLevel(p, iNode), 0, Vec_IntSize(p.vNodes), Vec_IntSize(p.vDivs), Sfm_ObjFaninNum(p, iNode), Sfm_ObjMffcSize(p, iNode)); }\n    // collect fanins\n    Vec_IntClear( p.vDivIds );\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n        Vec_IntPush( p.vDivIds, Sfm_ObjSatVar(p, iFanin) );\nclk = Abc_Clock();\n    uTruth = Sfm_ComputeInterpolant2( p );\np.timeSat += Abc_Clock() - clk;\n    // analyze outcomes\n    if uTruth == SFM_SAT_UNDEC {\n        p.nTimeOuts++;\n        return 0;\n    }\n    assert(uTruth != SFM_SAT_SAT, \"uTruth != SFM_SAT_SAT\");\n    if uTruth == Vec_WrdEntry(p.vTruths, iNode) {\n        return 0;\n    } else {\n        var uTruth0 word   =  Vec_WrdEntry(p.vTruths, iNode);\n        //word uTruth0N = ~uTruth0;\n        //word uTruthN  = ~uTruth;\n        var Old int32   = Kit_TruthLitNum((unsigned*)\u0026uTruth0,  Sfm_ObjFaninNum(p, iNode), p.vCover);\n        //int OldN = Kit_TruthLitNum((unsigned*)\u0026uTruth0N, Sfm_ObjFaninNum(p, iNode), p-\u003evCover);\n        var New int32   = Kit_TruthLitNum((unsigned*)\u0026uTruth,   Sfm_ObjFaninNum(p, iNode), p.vCover);\n        //int NewN = Kit_TruthLitNum((unsigned*)\u0026uTruthN,  Sfm_ObjFaninNum(p, iNode), p-\u003evCover);\n        //if ( Abc_MinInt(New, NewN) \u003e Abc_MinInt(Old, OldN) )\n        if New \u003e Old {\n            return 0; }\n    }\n    p.nImproves++;\n    if fSkipUpdate != 0 {\n        return 0; }\n    // update truth table\n    Vec_WrdWriteEntry( p.vTruths, iNode, uTruth );\n    Sfm_TruthToCnf( uTruth, nil, Sfm_ObjFaninNum(p, iNode), p.vCover, (Vec_Str_t *)Vec_WecEntry(p.vCnfs, iNode) );\n    return 1;\n}"
+    },
+    {
+      "Name": "Sfm_NodeResub",
+      "Start": 10423,
+      "End": 11763,
+      "BodyStart": 10469,
+      "Original": "int Sfm_NodeResub( Sfm_Ntk_t * p, int iNode )\n{\n    int i, iFanin;\n    p-\u003enNodesTried++;\n    // prepare SAT solver\n    if ( !Sfm_NtkCreateWindow( p, iNode, p-\u003epPars-\u003efVeryVerbose ) )\n        return 0;\n    if ( !Sfm_NtkWindowToSolver( p ) )\n        return 0;\n    // try replacing area critical fanins\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n        if ( Sfm_ObjIsNode(p, iFanin) \u0026\u0026 Sfm_ObjFanoutNum(p, iFanin) == 1 )\n        {\n            if ( Sfm_NodeResubSolve( p, iNode, i, 0 ) )\n                return 1;\n        }\n    // try removing redundant edges\n    if ( !p-\u003epPars-\u003efArea )\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n        if ( !(Sfm_ObjIsNode(p, iFanin) \u0026\u0026 Sfm_ObjFanoutNum(p, iFanin) == 1) )\n        {\n            if ( Sfm_NodeResubSolve( p, iNode, i, 1 ) )\n                return 1;\n        }\n    // try simplifying local functions\n    if ( p-\u003epPars-\u003efUseDcs )\n        if ( Sfm_NodeResubOne( p, iNode ) )\n            return 1;\n/*\n    // try replacing area critical fanins while adding two new fanins\n    if ( Sfm_ObjFaninNum(p, iNode) \u003c p-\u003enFaninMax )\n        Abc_ObjForEachFanin( pNode, pFanin, i )\n            if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 )\n            {\n                if ( Abc_NtkMfsSolveSatResub2( p, pNode, i, -1 ) )\n                    return 1;\n            }\n*/\n    return 0;\n}",
+      "Draft": "func Sfm_NodeResub(p *Sfm_Ntk_t, iNode int32) int32 {\n    var i, iFanin int32;\n    p.nNodesTried++;\n    // prepare SAT solver\n    if !Sfm_NtkCreateWindow( p, iNode, p.pPars.fVeryVerbose ) {\n        return 0; }\n    if !Sfm_NtkWindowToSolver( p ) {\n        return 0; }\n    // try replacing area critical fanins\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n        if Sfm_ObjIsNode(p, iFanin) \u0026\u0026 Sfm_ObjFanoutNum(p, iFanin) == 1 {\n            if Sfm_NodeResubSolve( p, iNode, i, 0 ) != 0 {\n                return 1; }\n        }\n    // try removing redundant edges\n    if ( !p.pPars.fArea )\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n        if !(Sfm_ObjIsNode(p, iFanin) \u0026\u0026 Sfm_ObjFanoutNum(p, iFanin) == 1) {\n            if Sfm_NodeResubSolve( p, iNode, i, 1 ) != 0 {\n                return 1; }\n        }\n    // try simplifying local functions\n    if p.pPars.fUseDcs {\n        if Sfm_NodeResubOne( p, iNode ) != 0 {\n            return 1; } }\n/*\n    // try replacing area critical fanins while adding two new fanins\n    if ( Sfm_ObjFaninNum(p, iNode) \u003c p-\u003enFaninMax )\n        Abc_ObjForEachFanin( pNode, pFanin, i )\n            if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 )\n            {\n                if ( Abc_NtkMfsSolveSatResub2( p, pNode, i, -1 ) )\n                    return 1;\n            }\n*/\n    return 0;\n}"
+    },
+    {
+      "Name": "Sfm_NtkPrint",
+      "Start": 11999,
+      "End": 12495,
+      "BodyStart": 12034,
+      "Original": "void Sfm_NtkPrint( Sfm_Ntk_t * p )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enObjs; i++ )\n    {\n        Vec_Int_t * vArray = Vec_WecEntry( \u0026p-\u003evFanins, i );\n        printf( \"Obj %3d : \", i );\n        printf( \"Fixed %d  \", Vec_StrEntry(p-\u003evFixed, i) );\n        printf( \"Empty %d  \", Vec_StrEntry(p-\u003evEmpty, i) );\n        printf( \"Truth  \" );\n        Extra_PrintHex( stdout, (unsigned *)Vec_WrdEntryP(p-\u003evTruths, i), Vec_IntSize(vArray) );\n        printf( \"  \" );\n        Vec_IntPrint( vArray );\n    }\n}",
+      "Draft": "func Sfm_NtkPrint(p *Sfm_Ntk_t) {\n    var i int32;\n    for  i = 0; i \u003c p.nObjs; i++  {\n        var vArray *Vec_Int_t  = Vec_WecEntry( \u0026p.vFanins, i );\n        fmt.Printf(\"Obj %3d : \", i);\n        fmt.Printf(\"Fixed %d  \", Vec_StrEntry(p.vFixed, i));\n        fmt.Printf(\"Empty %d  \", Vec_StrEntry(p.vEmpty, i));\n        fmt.Printf(\"Truth  \");\n        Extra_PrintHex( os.Stdout, (unsigned *)Vec_WrdEntryP(p.vTruths, i), Vec_IntSize(vArray) );\n        fmt.Printf(\"  \");\n        Vec_IntPrint( vArray );\n    }\n}"
+    },
+    {
+      "Name": "Sfm_NtkPerform",
+      "Start": 12731,
+      "End": 14375,
+      "BodyStart": 12786,
+      "Original": "int Sfm_NtkPerform( Sfm_Ntk_t * p, Sfm_Par_t * pPars )\n{\n    int i, k, Counter = 0;\n    //Sfm_NtkPrint( p );\n    p-\u003etimeTotal = Abc_Clock();\n    if ( pPars-\u003efVerbose )\n    {\n        int nFixed = p-\u003evFixed ? Vec_StrSum(p-\u003evFixed) : 0;\n        int nEmpty = p-\u003evEmpty ? Vec_StrSum(p-\u003evEmpty) : 0;\n        printf( \"Performing MFS with %d PIs, %d POs, %d nodes (%d flexible, %d fixed, %d empty).\\n\", \n            p-\u003enPis, p-\u003enPos, p-\u003enNodes, p-\u003enNodes-nFixed, nFixed, nEmpty );\n    }\n    p-\u003epPars = pPars;\n    Sfm_NtkPrepare( p );\n//    Sfm_ComputeInterpolantCheck( p );\n//    return 0;\n    p-\u003enTotalNodesBeg = Vec_WecSizeUsedLimits( \u0026p-\u003evFanins, Sfm_NtkPiNum(p), Vec_WecSize(\u0026p-\u003evFanins) - Sfm_NtkPoNum(p) );\n    p-\u003enTotalEdgesBeg = Vec_WecSizeSize(\u0026p-\u003evFanins) - Sfm_NtkPoNum(p);\n    Sfm_NtkForEachNode( p, i )\n    {\n        if ( Sfm_ObjIsFixed( p, i ) )\n            continue;\n        if ( p-\u003epPars-\u003enDepthMax \u0026\u0026 Sfm_ObjLevel(p, i) \u003e p-\u003epPars-\u003enDepthMax )\n            continue;\n        if ( Sfm_ObjFaninNum(p, i) \u003c 2 || Sfm_ObjFaninNum(p, i) \u003e 6 )\n            continue;\n        for ( k = 0; Sfm_NodeResub(p, i); k++ )\n        {\n//            Counter++;\n//            break;\n        }\n        Counter += (k \u003e 0);\n        if ( pPars-\u003enNodesMax \u0026\u0026 Counter \u003e= pPars-\u003enNodesMax )\n            break;\n    }\n    p-\u003enTotalNodesEnd = Vec_WecSizeUsedLimits( \u0026p-\u003evFanins, Sfm_NtkPiNum(p), Vec_WecSize(\u0026p-\u003evFanins) - Sfm_NtkPoNum(p) );\n    p-\u003enTotalEdgesEnd = Vec_WecSizeSize(\u0026p-\u003evFanins) - Sfm_NtkPoNum(p);\n    p-\u003etimeTotal = Abc_Clock() - p-\u003etimeTotal;\n    if ( pPars-\u003efVerbose )\n        Sfm_NtkPrintStats( p );\n    //Sfm_NtkPrint( p );\n    return Counter;\n}",
+      "Draft": "func Sfm_NtkPerform(p *Sfm_Ntk_t, pPars *Sfm_Par_t) int32 {\n    var i, k, Counter int32;\n    //Sfm_NtkPrint( p );\n    p.timeTotal = Abc_Clock();\n    if pPars.fVerbose {\n        var nFixed int32;\n        if p.vFixed {\n            nFixed = Vec_StrSum(p.vFixed);\n        } else {\n            nFixed = 0;\n        }\n        var nEmpty int32;\n        if p.vEmpty {\n            nEmpty = Vec_StrSum(p.vEmpty);\n        } else {\n            nEmpty = 0;\n        }\n        fmt.Printf(\"Performing MFS with %d PIs, %d POs, %d nodes (%d flexible, %d fixed, %d empty).\\n\", p.nPis, p.nPos, p.nNodes, p.nNodes-nFixed, nFixed, nEmpty);\n    }\n    p.pPars = pPars;\n    Sfm_NtkPrepare( p );\n//    Sfm_ComputeInterpolantCheck( p );\n//    return 0;\n    p.nTotalNodesBeg = Vec_WecSizeUsedLimits( \u0026p.vFanins, Sfm_NtkPiNum(p), Vec_WecSize(\u0026p.vFanins) - Sfm_NtkPoNum(p) );\n    p.nTotalEdgesBeg = Vec_WecSizeSize(\u0026p.vFanins) - Sfm_NtkPoNum(p);\n    Sfm_NtkForEachNode( p, i )\n    {\n        if Sfm_ObjIsFixed( p, i ) {\n            continue; }\n        if p.pPars.nDepthMax \u0026\u0026 Sfm_ObjLevel(p, i) \u003e p.pPars.nDepthMax {\n            continue; }\n        if Sfm_ObjFaninNum(p, i) \u003c 2 || Sfm_ObjFaninNum(p, i) \u003e 6 {\n            continue; }\n        for  k = 0; (Sfm_NodeResub(p, i) != 0); k++  {\n//            Counter++;\n//            break;\n        }\n        Counter += (k \u003e 0);\n        if pPars.nNodesMax \u0026\u0026 Counter \u003e= pPars.nNodesMax {\n            break; }\n    }\n    p.nTotalNodesEnd = Vec_WecSizeUsedLimits( \u0026p.vFanins, Sfm_NtkPiNum(p), Vec_WecSize(\u0026p.vFanins) - Sfm_NtkPoNum(p) );\n    p.nTotalEdgesEnd = Vec_WecSizeSize(\u0026p.vFanins) - Sfm_NtkPoNum(p);\n    p.timeTotal = Abc_Clock() - p.timeTotal;\n    if pPars.fVerbose {\n        Sfm_NtkPrintStats( p ); }\n    //Sfm_NtkPrint( p );\n    return Counter;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::mechanical::sizeof::1355",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1355,
+      "End": 1361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::pointer-cast::6522",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6522,
+      "End": 6534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::pointer-cast::7920",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7920,
+      "End": 7932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::pointer-cast::9681",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9681,
+      "End": 9692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::pointer-cast::9875",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9875,
+      "End": 9886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::pointer-cast::10361",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10361,
+      "End": 10374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::pointer-cast::12367",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12367,
+      "End": 12379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::Sfm_ParSetDefault",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ParSetDefault",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1287,
+      "End": 2160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::Sfm_NtkPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2399,
+      "End": 4086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::ternary::Sfm_NodeResubSolve",
+      "Category": "ternary-review",
+      "Symbol": "Sfm_NodeResubSolve",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4359,
+      "End": 8242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::Sfm_NodeResubSolve",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NodeResubSolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4359,
+      "End": 8242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::Sfm_NodeResubOne",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NodeResubOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8515,
+      "End": 10422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::Sfm_NodeResub",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NodeResub",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10423,
+      "End": 11763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::Sfm_NtkPrint",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11999,
+      "End": 12495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::Sfm_NtkPerform",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12731,
+      "End": 14375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::macro-inline::3723",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3723,
+      "End": 3769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::macro-inline::3775",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3775,
+      "End": 3821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::macro-inline::3827",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3827,
+      "End": 3873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::macro-inline::3879",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3879,
+      "End": 3925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::macro-inline::3931",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3931,
+      "End": 3977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::macro-inline::3983",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRTP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3983,
+      "End": 4029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::macro-inline::5357",
+      "Category": "macro-inline-review",
+      "Symbol": "Sfm_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5357,
+      "End": 5399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::macro-inline::6431",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WrdForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6431,
+      "End": 6476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::macro-inline::6692",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_WrdForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6692,
+      "End": 6740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::macro-inline::9082",
+      "Category": "macro-inline-review",
+      "Symbol": "Sfm_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9082,
+      "End": 9124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::macro-inline::10727",
+      "Category": "macro-inline-review",
+      "Symbol": "Sfm_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10727,
+      "End": 10769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::macro-inline::11016",
+      "Category": "macro-inline-review",
+      "Symbol": "Sfm_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11016,
+      "End": 11058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmCore.c::macro-inline::13512",
+      "Category": "macro-inline-review",
+      "Symbol": "Sfm_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13512,
+      "End": 13538
+    }
+  ],
+  "Draft": "package sfm\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [sfmCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [Core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sfmCore.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sfmInt.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Setup parameter structure.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_ParSetDefault(pPars *Sfm_Par_t) {\n    memset( pPars, 0, sizeof(Sfm_Par_t) );\n    pPars.nTfoLevMax   =    2;  // the maximum fanout levels\n    pPars.nFanoutMax   =   30;  // the maximum number of fanouts\n    pPars.nDepthMax    =   20;  // the maximum depth to try  \n    pPars.nWinSizeMax  =  300;  // the maximum window size\n    pPars.nGrowthLevel =    0;  // the maximum allowed growth in level\n    pPars.nBTLimit     = 5000;  // the maximum number of conflicts in one SAT run\n    pPars.fRrOnly      =    0;  // perform redundancy removal\n    pPars.fArea        =    0;  // performs optimization for area\n    pPars.fMoreEffort  =    0;  // performs high-affort minimization\n    pPars.fAllBoxes    =    0;  // enable preserving all boxes\n    pPars.fVerbose     =    0;  // enable basic stats\n    pPars.fVeryVerbose =    0;  // enable detailed stats\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints statistics.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NtkPrintStats(p *Sfm_Ntk_t) {\n    p.timeOther = p.timeTotal - p.timeWin - p.timeDiv - p.timeCnf - p.timeSat;\n    fmt.Printf(\"Nodes = %d. Try = %d. Resub = %d. Div = %d (ave = %d). SAT calls = %d. Timeouts = %d. MaxDivs = %d.\\n\", Sfm_NtkNodeNum(p), p.nNodesTried, p.nRemoves + p.nResubs, p.nTotalDivs, p.nTotalDivs/Abc_MaxInt(1, p.nNodesTried), p.nSatCalls, p.nTimeOuts, p.nMaxDivs);\n\n    fmt.Printf(\"Attempts :   \");\n    fmt.Printf(\"Remove %6d out of %6d (%6.2f %%)   \", p.nRemoves, p.nTryRemoves, 100.0*p.nRemoves/Abc_MaxInt(1, p.nTryRemoves));\n    fmt.Printf(\"Resub  %6d out of %6d (%6.2f %%)   \", p.nResubs, p.nTryResubs, 100.0*p.nResubs /Abc_MaxInt(1, p.nTryResubs));\n    if p.pPars.fUseDcs {\n    fmt.Printf(\"Improves %6d out of %6d (%6.2f %%)   \", p.nImproves, p.nTryImproves, 100.0*p.nImproves/Abc_MaxInt(1, p.nTryImproves)); }\n    fmt.Printf(\"\\n\");\n\n    fmt.Printf(\"Reduction:   \");\n    fmt.Printf(\"Nodes  %6d out of %6d (%6.2f %%)   \", p.nTotalNodesBeg-p.nTotalNodesEnd, p.nTotalNodesBeg, 100.0*(p.nTotalNodesBeg-p.nTotalNodesEnd)/Abc_MaxInt(1, p.nTotalNodesBeg));\n    fmt.Printf(\"Edges  %6d out of %6d (%6.2f %%)   \", p.nTotalEdgesBeg-p.nTotalEdgesEnd, p.nTotalEdgesBeg, 100.0*(p.nTotalEdgesBeg-p.nTotalEdgesEnd)/Abc_MaxInt(1, p.nTotalEdgesBeg));\n    fmt.Printf(\"\\n\");\n\n    ABC_PRTP( \"Win\", p.timeWin  ,  p.timeTotal );\n    ABC_PRTP( \"Div\", p.timeDiv  ,  p.timeTotal );\n    ABC_PRTP( \"Cnf\", p.timeCnf  ,  p.timeTotal );\n    ABC_PRTP( \"Sat\", p.timeSat  ,  p.timeTotal );\n    ABC_PRTP( \"Oth\", p.timeOther,  p.timeTotal );\n    ABC_PRTP( \"ALL\", p.timeTotal,  p.timeTotal );\n//    ABC_PRTP( \"   \", p-\u003etime1    ,  p-\u003etimeTotal );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs resubstitution for the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NodeResubSolve(p *Sfm_Ntk_t, iNode int32, f int32, fRemoveOnly int32) int32 {\n    var fSkipUpdate int32;\n    var fVeryVerbose int32;//p-\u003epPars-\u003efVeryVerbose \u0026\u0026 Vec_IntSize(p-\u003evDivs) \u003c 200;// || pNode-\u003eId == 556;\n    var i int32;\n    var iFanin int32;\n    var iVar int32 = -1;\n    var iFaninRem int32 = -1;\n    var iFaninSkip int32 = -1;\n    var uTruth, uSign, uMask word;\n    var clk abctime;\n    assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n    assert(f \u003e= 0 \u0026\u0026 f \u003c Sfm_ObjFaninNum(p, iNode), \"f \u003e= 0 \u0026\u0026 f \u003c Sfm_ObjFaninNum(p, iNode)\");\n    p.nTryRemoves++;\n    // report init stats\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"%5d : Lev =%3d. Leaf =%3d.  Node =%3d.  Div=%3d.  Fanin =%4d (%d/%d). MFFC = %d\\n\", iNode, Sfm_ObjLevel(p, iNode), 0, Vec_IntSize(p.vNodes), Vec_IntSize(p.vDivs), Sfm_ObjFanin(p, iNode, f), f, Sfm_ObjFaninNum(p, iNode), Sfm_ObjMffcSize(p, Sfm_ObjFanin(p, iNode, f))); }\n    // clean simulation info\n    p.nCexes = 0;\n    Vec_WrdFill( p.vDivCexes, Vec_IntSize(p.vDivs), 0 );\n    // try removing the critical fanin\n    Vec_IntClear( p.vDivIds );\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n        if ( i != f )\n            Vec_IntPush( p.vDivIds, Sfm_ObjSatVar(p, iFanin) );\n        else\n            iFaninRem = iFanin;\n    assert(iFaninRem != -1, \"iFaninRem != -1\");\n    // find fanin to skip \n    if Sfm_ObjIsFixed(p, iFaninRem) \u0026\u0026 Sfm_ObjFaninNum(p, iFaninRem) == 1 {\n        iFaninSkip = Sfm_ObjFanin(p, iFaninRem, 0); }\nclk = Abc_Clock();\n    uTruth = Sfm_ComputeInterpolant( p );\np.timeSat += Abc_Clock() - clk;\n    // analyze outcomes\n    if uTruth == SFM_SAT_UNDEC {\n        p.nTimeOuts++;\n        return 0;\n    }\n    if uTruth != SFM_SAT_SAT {\n        goto finish; }\n    if (fRemoveOnly != 0) || p.pPars.fRrOnly || Vec_IntSize(p.vDivs) == 0 {\n        return 0; }\n\n    p.nTryResubs++;\n    if fVeryVerbose != 0 {\n        for  i = 0; i \u003c 9; i++  {\n            fmt.Printf(\" \");\n        }\n        for  i = 0; i \u003c Vec_IntSize(p.vDivs); i++  {\n            fmt.Printf(\"%d\", i % 10);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    for {\n        if fVeryVerbose != 0 {\n            fmt.Printf(\"%3d: %3d \", p.nCexes, iVar);\n            Vec_WrdForEachEntry( p.vDivCexes, uSign, i )\n                fmt.Printf(\"%d\", Abc_InfoHasBit((unsigned *)\u0026uSign, p.nCexes-1));\n            fmt.Printf(\"\\n\");\n        }\n        // find the next divisor to try\n        uMask = (~(word)0) \u003e\u003e (64 - p.nCexes);\n        Vec_WrdForEachEntry( p.vDivCexes, uSign, iVar )\n            if ( uSign == uMask \u0026\u0026 Vec_IntEntry(p.vDivs, iVar) != iFaninSkip )\n                break;\n        if iVar == Vec_IntSize(p.vDivs) {\n            return 0; }\n        assert(Vec_IntEntry(p.vDivs, iVar) != iFaninSkip, \"Vec_IntEntry(p.vDivs, iVar) != iFaninSkip\");\n        // try replacing the critical fanin\n        Vec_IntPush( p.vDivIds, Sfm_ObjSatVar(p, Vec_IntEntry(p.vDivs, iVar)) );\nclk = Abc_Clock();\n        uTruth = Sfm_ComputeInterpolant( p );\np.timeSat += Abc_Clock() - clk;\n        // analyze outcomes\n        if uTruth == SFM_SAT_UNDEC {\n            p.nTimeOuts++;\n            return 0;\n        }\n        if uTruth != SFM_SAT_SAT {\n            goto finish; }\n        if p.nCexes == 64 {\n            return 0; }\n        // remove the last variable\n        Vec_IntPop( p.vDivIds );\n    }\nfinish:\n    if p.pPars.fVeryVerbose {\n        if iVar == -1 {\n            fmt.Printf(\"Node %d: Fanin %d (%d) can be removed.  \", iNode, f, Sfm_ObjFanin(p, iNode, f));\n        } else {\n            fmt.Printf(\"Node %d: Fanin %d (%d) can be replaced by divisor %d (%d).   \", iNode, f, Sfm_ObjFanin(p, iNode, f), iVar, Vec_IntEntry(p.vDivs, iVar)); }\n        Kit_DsdPrintFromTruth( (unsigned *)\u0026uTruth, Vec_IntSize(p.vDivIds) ); fmt.Printf(\"\\n\");\n    }\n    if iVar == -1 {\n        p.nRemoves++;\n    } else {\n        p.nResubs++; }\n    if fSkipUpdate != 0 {\n        return 0; }\n    // update the network\n    Sfm_NtkUpdate( p, iNode, f, (iVar == -1 ? iVar : Vec_IntEntry(p.vDivs, iVar)), uTruth );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs resubstitution for the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NodeResubOne(p *Sfm_Ntk_t, iNode int32) int32 {\n    var fSkipUpdate int32;\n    var i, iFanin int32;\n    var uTruth word;\n    var clk abctime;\n    assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n    p.nTryImproves++;\n    // report init stats\n    if p.pPars.fVeryVerbose {\n        fmt.Printf(\"%5d : Lev =%3d. Leaf =%3d.  Node =%3d.  Div=%3d.  Fanins = %d.  MFFC = %d\\n\", iNode, Sfm_ObjLevel(p, iNode), 0, Vec_IntSize(p.vNodes), Vec_IntSize(p.vDivs), Sfm_ObjFaninNum(p, iNode), Sfm_ObjMffcSize(p, iNode)); }\n    // collect fanins\n    Vec_IntClear( p.vDivIds );\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n        Vec_IntPush( p.vDivIds, Sfm_ObjSatVar(p, iFanin) );\nclk = Abc_Clock();\n    uTruth = Sfm_ComputeInterpolant2( p );\np.timeSat += Abc_Clock() - clk;\n    // analyze outcomes\n    if uTruth == SFM_SAT_UNDEC {\n        p.nTimeOuts++;\n        return 0;\n    }\n    assert(uTruth != SFM_SAT_SAT, \"uTruth != SFM_SAT_SAT\");\n    if uTruth == Vec_WrdEntry(p.vTruths, iNode) {\n        return 0;\n    } else {\n        var uTruth0 word   =  Vec_WrdEntry(p.vTruths, iNode);\n        //word uTruth0N = ~uTruth0;\n        //word uTruthN  = ~uTruth;\n        var Old int32   = Kit_TruthLitNum((unsigned*)\u0026uTruth0,  Sfm_ObjFaninNum(p, iNode), p.vCover);\n        //int OldN = Kit_TruthLitNum((unsigned*)\u0026uTruth0N, Sfm_ObjFaninNum(p, iNode), p-\u003evCover);\n        var New int32   = Kit_TruthLitNum((unsigned*)\u0026uTruth,   Sfm_ObjFaninNum(p, iNode), p.vCover);\n        //int NewN = Kit_TruthLitNum((unsigned*)\u0026uTruthN,  Sfm_ObjFaninNum(p, iNode), p-\u003evCover);\n        //if ( Abc_MinInt(New, NewN) \u003e Abc_MinInt(Old, OldN) )\n        if New \u003e Old {\n            return 0; }\n    }\n    p.nImproves++;\n    if fSkipUpdate != 0 {\n        return 0; }\n    // update truth table\n    Vec_WrdWriteEntry( p.vTruths, iNode, uTruth );\n    Sfm_TruthToCnf( uTruth, nil, Sfm_ObjFaninNum(p, iNode), p.vCover, (Vec_Str_t *)Vec_WecEntry(p.vCnfs, iNode) );\n    return 1;\n}\nfunc Sfm_NodeResub(p *Sfm_Ntk_t, iNode int32) int32 {\n    var i, iFanin int32;\n    p.nNodesTried++;\n    // prepare SAT solver\n    if !Sfm_NtkCreateWindow( p, iNode, p.pPars.fVeryVerbose ) {\n        return 0; }\n    if !Sfm_NtkWindowToSolver( p ) {\n        return 0; }\n    // try replacing area critical fanins\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n        if Sfm_ObjIsNode(p, iFanin) \u0026\u0026 Sfm_ObjFanoutNum(p, iFanin) == 1 {\n            if Sfm_NodeResubSolve( p, iNode, i, 0 ) != 0 {\n                return 1; }\n        }\n    // try removing redundant edges\n    if ( !p.pPars.fArea )\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n        if !(Sfm_ObjIsNode(p, iFanin) \u0026\u0026 Sfm_ObjFanoutNum(p, iFanin) == 1) {\n            if Sfm_NodeResubSolve( p, iNode, i, 1 ) != 0 {\n                return 1; }\n        }\n    // try simplifying local functions\n    if p.pPars.fUseDcs {\n        if Sfm_NodeResubOne( p, iNode ) != 0 {\n            return 1; } }\n/*\n    // try replacing area critical fanins while adding two new fanins\n    if ( Sfm_ObjFaninNum(p, iNode) \u003c p-\u003enFaninMax )\n        Abc_ObjForEachFanin( pNode, pFanin, i )\n            if ( !Abc_ObjIsCi(pFanin) \u0026\u0026 Abc_ObjFanoutNum(pFanin) == 1 )\n            {\n                if ( Abc_NtkMfsSolveSatResub2( p, pNode, i, -1 ) )\n                    return 1;\n            }\n*/\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NtkPrint(p *Sfm_Ntk_t) {\n    var i int32;\n    for  i = 0; i \u003c p.nObjs; i++  {\n        var vArray *Vec_Int_t  = Vec_WecEntry( \u0026p.vFanins, i );\n        fmt.Printf(\"Obj %3d : \", i);\n        fmt.Printf(\"Fixed %d  \", Vec_StrEntry(p.vFixed, i));\n        fmt.Printf(\"Empty %d  \", Vec_StrEntry(p.vEmpty, i));\n        fmt.Printf(\"Truth  \");\n        Extra_PrintHex( os.Stdout, (unsigned *)Vec_WrdEntryP(p.vTruths, i), Vec_IntSize(vArray) );\n        fmt.Printf(\"  \");\n        Vec_IntPrint( vArray );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NtkPerform(p *Sfm_Ntk_t, pPars *Sfm_Par_t) int32 {\n    var i, k, Counter int32;\n    //Sfm_NtkPrint( p );\n    p.timeTotal = Abc_Clock();\n    if pPars.fVerbose {\n        var nFixed int32;\n        if p.vFixed {\n            nFixed = Vec_StrSum(p.vFixed);\n        } else {\n            nFixed = 0;\n        }\n        var nEmpty int32;\n        if p.vEmpty {\n            nEmpty = Vec_StrSum(p.vEmpty);\n        } else {\n            nEmpty = 0;\n        }\n        fmt.Printf(\"Performing MFS with %d PIs, %d POs, %d nodes (%d flexible, %d fixed, %d empty).\\n\", p.nPis, p.nPos, p.nNodes, p.nNodes-nFixed, nFixed, nEmpty);\n    }\n    p.pPars = pPars;\n    Sfm_NtkPrepare( p );\n//    Sfm_ComputeInterpolantCheck( p );\n//    return 0;\n    p.nTotalNodesBeg = Vec_WecSizeUsedLimits( \u0026p.vFanins, Sfm_NtkPiNum(p), Vec_WecSize(\u0026p.vFanins) - Sfm_NtkPoNum(p) );\n    p.nTotalEdgesBeg = Vec_WecSizeSize(\u0026p.vFanins) - Sfm_NtkPoNum(p);\n    Sfm_NtkForEachNode( p, i )\n    {\n        if Sfm_ObjIsFixed( p, i ) {\n            continue; }\n        if p.pPars.nDepthMax \u0026\u0026 Sfm_ObjLevel(p, i) \u003e p.pPars.nDepthMax {\n            continue; }\n        if Sfm_ObjFaninNum(p, i) \u003c 2 || Sfm_ObjFaninNum(p, i) \u003e 6 {\n            continue; }\n        for  k = 0; (Sfm_NodeResub(p, i) != 0); k++  {\n//            Counter++;\n//            break;\n        }\n        Counter += (k \u003e 0);\n        if pPars.nNodesMax \u0026\u0026 Counter \u003e= pPars.nNodesMax {\n            break; }\n    }\n    p.nTotalNodesEnd = Vec_WecSizeUsedLimits( \u0026p.vFanins, Sfm_NtkPiNum(p), Vec_WecSize(\u0026p.vFanins) - Sfm_NtkPoNum(p) );\n    p.nTotalEdgesEnd = Vec_WecSizeSize(\u0026p.vFanins) - Sfm_NtkPoNum(p);\n    p.timeTotal = Abc_Clock() - p.timeTotal;\n    if pPars.fVerbose {\n        Sfm_NtkPrintStats( p ); }\n    //Sfm_NtkPrint( p );\n    return Counter;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

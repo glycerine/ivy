@@ -1,0 +1,1257 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrout.c",
+  "SHA256": "5fd184d22ba189108454068a29ca8c410df0687c26f94413ebbad37644282593",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 61,
+        "Column": 12,
+        "ByteOffset": 1194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \".p %d\\n\", num);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 68,
+        "Column": 16,
+        "ByteOffset": 1489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \".e\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 85,
+        "Column": 16,
+        "ByteOffset": 2192
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \".end\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 12,
+        "ByteOffset": 2457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \".type \");"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 101,
+        "Column": 31,
+        "ByteOffset": 2510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (output_type \u0026 F_type) putc('f', fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 102,
+        "Column": 31,
+        "ByteOffset": 2555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (output_type \u0026 D_type) putc('d', fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 103,
+        "Column": 31,
+        "ByteOffset": 2600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (output_type \u0026 R_type) putc('r', fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 2619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc('\\n', fp);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 12,
+        "ByteOffset": 2737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \".i %d\\n\", cube.num_binary_vars);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 16,
+        "ByteOffset": 2825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \".o %d\\n\", cube.part_size[cube.output]);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 12,
+        "ByteOffset": 2902
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \".mv %d %d\", cube.num_vars, cube.num_binary_vars);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 16,
+        "ByteOffset": 3044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \" %d\", cube.part_size[var]);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 12,
+        "ByteOffset": 3096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 12,
+        "ByteOffset": 3263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \".ilb\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 126,
+        "Column": 16,
+        "ByteOffset": 3499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \" (null)\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 16,
+        "ByteOffset": 3558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \" %s\", /*__starting_point_inline_macro:INLABEL__*/PLA.label[cube.first_part[var] + 1]);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 3670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc('\\n', fp);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 12,
+        "ByteOffset": 3892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \".ob\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 16,
+        "ByteOffset": 4161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \" (null)\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 16,
+        "ByteOffset": 4220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \" %s\", /*__starting_point_inline_macro:OUTLABEL__*/PLA.label[cube.first_part[cube.output] + i]);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 147,
+        "Column": 5,
+        "ByteOffset": 4341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc('\\n', fp);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 16,
+        "ByteOffset": 4600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \".label var=%d\", var);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 157,
+        "Column": 16,
+        "ByteOffset": 4690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \" %s\", PLA.label[i]);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 159,
+        "Column": 9,
+        "ByteOffset": 4742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        putc('\\n', fp);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 166,
+        "Column": 12,
+        "ByteOffset": 4899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"#.phase \");"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 168,
+        "Column": 9,
+        "ByteOffset": 4967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        putc(/*__starting_point_inline_macro:is_in_set__*/(PLA.phase[/*__starting_point_inline_macro:WHICH_WORD__*/(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c /*__starting_point_inline_macro:WHICH_BIT__*/((i) \u0026 (BPI-1)))) ? '1' : '0', fp);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 12,
+        "ByteOffset": 5197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 12,
+        "ByteOffset": 5302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\".option unmerged\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 180,
+        "Column": 20,
+        "ByteOffset": 5375
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pls_label(PLA, stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 181,
+        "Column": 20,
+        "ByteOffset": 5403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pls_group(PLA, stdout);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 182,
+        "Column": 12,
+        "ByteOffset": 5423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\".p %d\\n\", PLA.F.count);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 184,
+        "Column": 25,
+        "ByteOffset": 5602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    print_expanded_cube(stdout, p, PLA.phase);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 186,
+        "Column": 12,
+        "ByteOffset": 5642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\".end\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 196,
+        "Column": 12,
+        "ByteOffset": 5759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"\\n.group\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 12,
+        "ByteOffset": 5856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \" (\"), col += 2;"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 201,
+        "Column": 15,
+        "ByteOffset": 5965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        len = strlen(PLA.label[i]);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 16,
+        "ByteOffset": 6030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \" \\\\\\n\"), col = 0;"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 205,
+        "Column": 9,
+        "ByteOffset": 6094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        putc(' ', fp), col += 1;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 16,
+        "ByteOffset": 6134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \"%s\", PLA.label[i]), col += len;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 12,
+        "ByteOffset": 6196
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \")\"), col += 1;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 12,
+        "ByteOffset": 6241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 220,
+        "Column": 12,
+        "ByteOffset": 6359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \".label\");"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 224,
+        "Column": 15,
+        "ByteOffset": 6520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        len = strlen(PLA.label[i]);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 16,
+        "ByteOffset": 6585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \" \\\\\\n\"), col = 0;"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 228,
+        "Column": 9,
+        "ByteOffset": 6637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        putc(' ', fp), col += 1;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 16,
+        "ByteOffset": 6677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \"%s\", PLA.label[i]), col += len;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 12,
+        "ByteOffset": 7271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\"%s = \", /*__starting_point_inline_macro:OUTLABEL__*/PLA.label[cube.first_part[cube.output] + i]);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 255,
+        "Column": 11,
+        "ByteOffset": 7387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    col = strlen(/*__starting_point_inline_macro:OUTLABEL__*/PLA.label[cube.first_part[cube.output] + i]) + 3;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 262,
+        "Column": 20,
+        "ByteOffset": 7993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) printf(\"(\"), col += 1;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 264,
+        "Column": 20,
+        "ByteOffset": 8048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) printf(\" | (\");"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 272,
+        "Column": 19,
+        "ByteOffset": 8462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            len = strlen(/*__starting_point_inline_macro:INLABEL__*/PLA.label[cube.first_part[var] + 1]);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 274,
+        "Column": 24,
+        "ByteOffset": 8603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) printf(\"\\n    \"), col = 4;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 276,
+        "Column": 24,
+        "ByteOffset": 8681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) printf(\"\u0026\"), col += 1;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 279,
+        "Column": 24,
+        "ByteOffset": 8784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) printf(\"!\"), col += 1;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 20,
+        "ByteOffset": 8826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) printf(\"%s\", /*__starting_point_inline_macro:INLABEL__*/PLA.label[cube.first_part[var] + 1]), col += len;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 282,
+        "Column": 16,
+        "ByteOffset": 8961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf(\")\"), col += 1;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 284,
+        "Column": 12,
+        "ByteOffset": 9005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\";\\n\\n\");"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 326,
+        "Column": 5,
+        "ByteOffset": 10645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc(ch, fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 329,
+        "Column": 5,
+        "ByteOffset": 10738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc(' ', fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 332,
+        "Column": 9,
+        "ByteOffset": 11041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        putc(ch, fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 337,
+        "Column": 5,
+        "ByteOffset": 11138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc(' ', fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 340,
+        "Column": 9,
+        "ByteOffset": 11437
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        putc(ch, fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 343,
+        "Column": 5,
+        "ByteOffset": 11467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc('\\n', fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 358,
+        "Column": 9,
+        "ByteOffset": 11968
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        putc(ch, fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 364,
+        "Column": 9,
+        "ByteOffset": 12351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        putc(ch, fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 369,
+        "Column": 5,
+        "ByteOffset": 12437
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc(' ', fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 377,
+        "Column": 9,
+        "ByteOffset": 13047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        putc(ch, fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 380,
+        "Column": 5,
+        "ByteOffset": 13077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc('\\n', fp);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 401,
+        "Column": 12,
+        "ByteOffset": 13678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\"\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 402,
+        "Column": 12,
+        "ByteOffset": 13703
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\"%s[%d]: ord(T)=%d\\n\", name, level, cnt);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 404,
+        "Column": 12,
+        "ByteOffset": 13786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\"cofactor=%s\\n\", pc1(T[0]));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 406,
+        "Column": 16,
+        "ByteOffset": 13900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf(\"%4d. %s\\n\", cnt, pc1(set_or(temp, p, T[0])));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 421,
+        "Column": 12,
+        "ByteOffset": 14246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\"\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 422,
+        "Column": 12,
+        "ByteOffset": 14271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\"%s[%d]: ord(T)=%d\\n\", name, num, T.count);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 425,
+        "Column": 16,
+        "ByteOffset": 14466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) printf(\"%4d. %s\\n\", cnt++, pc1(p));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 435,
+        "Column": 12,
+        "ByteOffset": 14679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\"%s\\n\", pc1(p));"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 454,
+        "Column": 20,
+        "ByteOffset": 15135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) sprintf(PLA.label[ind], \"v%d.bar\", var);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 456,
+        "Column": 20,
+        "ByteOffset": 15212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) sprintf(PLA.label[ind], \"v%d\", var);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 458,
+        "Column": 20,
+        "ByteOffset": 15281
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) sprintf(PLA.label[ind], \"v%d.%d\", var, i);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 490,
+        "Column": 5,
+        "ByteOffset": 16194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc(x, fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 494,
+        "Column": 5,
+        "ByteOffset": 16287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc(' ', fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 496,
+        "Column": 9,
+        "ByteOffset": 16355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        putc('-', fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 508,
+        "Column": 9,
+        "ByteOffset": 16853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        putc('~', fp);    /* no parts, hope its an output ... */"
+    },
+    {
+      "Name": "fputs",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 510,
+        "Column": 16,
+        "ByteOffset": 16942
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fputs(PLA.label[part], fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 516,
+        "Column": 5,
+        "ByteOffset": 17032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc(' ', fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 519,
+        "Column": 9,
+        "ByteOffset": 17340
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        putc(x, fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 523,
+        "Column": 5,
+        "ByteOffset": 17370
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc('\\n', fp);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 584,
+        "Column": 16,
+        "ByteOffset": 19350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 586,
+        "Column": 16,
+        "ByteOffset": 19450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \"# unconstrained weight = %d\\n\", noweight);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 587,
+        "Column": 16,
+        "ByteOffset": 19521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \"num_codes=%d\\n\", cube.part_size[var]);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 590,
+        "Column": 20,
+        "ByteOffset": 19657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(fp, \"weight=%d: \", weight[i]);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 593,
+        "Column": 24,
+        "ByteOffset": 20037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(fp, \" %d\", j);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 596,
+        "Column": 20,
+        "ByteOffset": 20107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(fp, \"\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 600,
+        "Column": 16,
+        "ByteOffset": 20174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 604,
+        "Column": 20,
+        "ByteOffset": 20344
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(fp, \"#   w=%d: (\", weight[i]);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 607,
+        "Column": 24,
+        "ByteOffset": 20724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(fp, \" %s\","
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 611,
+        "Column": 20,
+        "ByteOffset": 20842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(fp, \" )\\n\");"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrout.c::mechanical::static::13192",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 9748,
+      "End": 9754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrout.c::mechanical::static::13266",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 9822,
+      "End": 9828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrout.c::pointer-cast::3194",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2806,
+      "End": 2814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrout.c::pointer-cast::3802",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3280,
+      "End": 3288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrout.c::pointer-cast::13503",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10009,
+      "End": 10009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrout.c::pointer-cast::14848",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10958,
+      "End": 10967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrout.c::pointer-cast::15049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11159,
+      "End": 11167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrout.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrout.c::macro-inline::10037",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10037,
+      "End": 10047
+    }
+  ],
+  "Draft": "package espresso\n\nimport \"fmt\"\n\nimport \"os\"\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n    module: cvrout.c\n    purpose: cube and cover output routines\n*/\n\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\nvoid fprint_pla(fp, PLA, output_type)\nINOUT FILE *fp;\nIN pPLA PLA;\nIN int output_type;\n{\n    int num;\n    register pcube last, p;\n\n    if (output_type \u0026 CONSTRAINTS_type) != 0 {\n    output_symbolic_constraints(fp, PLA, 0);\n    output_type \u0026= ~ CONSTRAINTS_type;\n    if output_type == 0 {\n        return;\n    }\n    }\n\n    if (output_type \u0026 SYMBOLIC_CONSTRAINTS_type) != 0 {\n    output_symbolic_constraints(fp, PLA, 1);\n    output_type \u0026= ~ SYMBOLIC_CONSTRAINTS_type;\n    if output_type == 0 {\n        return;\n    }\n    }\n\n    if output_type == PLEASURE_type {\n    pls_output(PLA);\n    } else if output_type == EQNTOTT_type {\n    eqn_output(PLA);\n    } else if output_type == KISS_type {\n    kiss_output(fp, PLA);\n    } else {\n    fpr_header(fp, PLA, output_type);\n\n    num = 0;\n    if (output_type \u0026 F_type) num += (PLA.F).count;\n    if (output_type \u0026 D_type) num += (PLA.D).count;\n    if (output_type \u0026 R_type) num += (PLA.R).count;\n    (void) fmt.Fprintf(fp, \".p %d\\n\", num);\n\n    /* quick patch 01/17/85 to support TPLA ! */\n    if output_type == F_type {\n        // inlining of macro foreach_set\n        for p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p\u003clast;p+=PLA.F.wsize {\n        print_cube(fp, p, \"01\");\n        }\n        (void) fmt.Fprintf(fp, \".e\\n\");\n    } else {\n        if output_type \u0026 F_type {\n        // inlining of macro foreach_set\n        for p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p\u003clast;p+=PLA.F.wsize {\n            print_cube(fp, p, \"~1\");\n        }\n        }\n        if output_type \u0026 D_type {\n        // inlining of macro foreach_set\n        for p=PLA.D.data,last=p+PLA.D.count*PLA.D.wsize;p\u003clast;p+=PLA.D.wsize {\n            print_cube(fp, p, \"~2\");\n        }\n        }\n        if output_type \u0026 R_type {\n        // inlining of macro foreach_set\n        for p=PLA.R.data,last=p+PLA.R.count*PLA.R.wsize;p\u003clast;p+=PLA.R.wsize {\n            print_cube(fp, p, \"~0\");\n        }\n        }\n        (void) fmt.Fprintf(fp, \".end\\n\");\n    }\n    }\n}\n\f\nvoid fpr_header(fp, PLA, output_type)\nvar fp *os.File;\nvar PLA pPLA;\nvar output_type int32;\n{\n    register int i, var;\n    int first, last;\n\n    /* .type keyword gives logical type */\n    if output_type != F_type {\n    (void) fmt.Fprintf(fp, \".type \");\n    if (output_type \u0026 F_type) putc('f', fp);\n    if (output_type \u0026 D_type) putc('d', fp);\n    if (output_type \u0026 R_type) putc('r', fp);\n    putc('\\n', fp);\n    }\n\n    /* Check for binary or multiple-valued labels */\n    if cube.num_mv_vars \u003c= 1 {\n    (void) fmt.Fprintf(fp, \".i %d\\n\", cube.num_binary_vars);\n    if (cube.output != -1)\n        (void) fmt.Fprintf(fp, \".o %d\\n\", cube.part_size[cube.output]);\n    } else {\n    (void) fmt.Fprintf(fp, \".mv %d %d\", cube.num_vars, cube.num_binary_vars);\n    for(var = cube.num_binary_vars; var \u003c cube.num_vars; var++)\n        (void) fmt.Fprintf(fp, \" %d\", cube.part_size[var]);\n    (void) fmt.Fprintf(fp, \"\\n\");\n    }\n\n    /* binary valued labels */\n    if PLA.label != NIL(char *) \u0026\u0026 PLA.label[1] != NILbyte(\n        \u0026\u0026 cube.num_binary_vars) \u003e 0 {\n    (void) fmt.Fprintf(fp, \".ilb\");\n    for(var = 0; var \u003c cube.num_binary_vars; var++)\n      /* see (NIL) OUTLABELS comment below */\n      // inlining of macro INLABEL\n      if PLA.label[cube.first_part[var] + 1] == NIL(char){\n        (void) fmt.Fprintf(fp, \" (null)\");\n      }\n      else{\n        // inlining of macro INLABEL\n        (void) fmt.Fprintf(fp, \" %s\", PLA.label[cube.first_part[var] + 1]);\n      }\n    putc('\\n', fp);\n    }\n\n    /* output-part (last multiple-valued variable) labels */\n    if PLA.label != NIL(char *) \u0026\u0026\n        PLA.label[cube.first_part[cube.output]] != NILbyte(\n        \u0026\u0026 cube.output) != -1 {\n    (void) fmt.Fprintf(fp, \".ob\");\n    for(i = 0; i \u003c cube.part_size[cube.output]; i++)\n      /* (NIL) OUTLABELS caused espresso to segfault under solaris */\n      // inlining of macro OUTLABEL\n      if PLA.label[cube.first_part[cube.output] + i] == NIL(char){\n        (void) fmt.Fprintf(fp, \" (null)\");\n      }\n      else{\n        // inlining of macro OUTLABEL\n        (void) fmt.Fprintf(fp, \" %s\", PLA.label[cube.first_part[cube.output] + i]);\n      }\n    putc('\\n', fp);\n    }\n\n    /* multiple-valued labels */\n    for var = cube.num_binary_vars; var \u003c cube.num_vars-1; var++ {\n    first = cube.first_part[var];\n    last = cube.last_part[var];\n    if PLA.label != NULL \u0026\u0026 PLA.label[first] != NULL {\n        (void) fmt.Fprintf(fp, \".label var=%d\", var);\n        for i = first; i \u003c= last; i++ {\n        (void) fmt.Fprintf(fp, \" %s\", PLA.label[i]);\n        }\n        putc('\\n', fp);\n    }\n    }\n\n    if PLA.phase != (pcube) NULL {\n    first = cube.first_part[cube.output];\n    last = cube.last_part[cube.output];\n    (void) fmt.Fprintf(fp, \"#.phase \");\n    for(i = first; i \u003c= last; i++)\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        putc((PLA.phase[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))) ? '1' : '0', fp);\n    (void) fmt.Fprintf(fp, \"\\n\");\n    }\n}\n\f\nvoid pls_output(PLA)\nIN pPLA PLA;\n{\n    register pcube last, p;\n\n    (void) fmt.Printf(\".option unmerged\\n\");\n    makeup_labels(PLA);\n    pls_label(PLA, os.Stdout);\n    pls_group(PLA, os.Stdout);\n    (void) fmt.Printf(\".p %d\\n\", PLA.F.count);\n    // inlining of macro foreach_set\n    for p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p\u003clast;p+=PLA.F.wsize {\n    print_expanded_cube(os.Stdout, p, PLA.phase);\n    }\n    (void) fmt.Printf(\".end\\n\");\n}\n\n\nvoid pls_group(PLA, fp)\nvar PLA pPLA;\nvar fp *os.File;\n{\n    int var, i, col, len;\n\n    (void) fmt.Fprintf(fp, \"\\n.group\");\n    col = 6;\n    for var = 0; var \u003c cube.num_vars-1; var++ {\n    (void) fmt.Fprintf(fp, \" (\"), col += 2;\n    for i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++ {\n        len = len(PLA.label[i]);\n        if (col + len \u003e 75)\n        (void) fmt.Fprintf(fp, \" \\\\\\n\"), col = 0;\n        else if (i != 0)\n        putc(' ', fp), col += 1;\n        (void) fmt.Fprintf(fp, \"%s\", PLA.label[i]), col += len;\n    }\n    (void) fmt.Fprintf(fp, \")\"), col += 1;\n    }\n    (void) fmt.Fprintf(fp, \"\\n\");\n}\n\n\nvoid pls_label(PLA, fp)\nvar PLA pPLA;\nvar fp *os.File;\n{\n    int var, i, col, len;\n\n    (void) fmt.Fprintf(fp, \".label\");\n    col = 6;\n    for(var = 0; var \u003c cube.num_vars; var++)\n    for i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++ {\n        len = len(PLA.label[i]);\n        if (col + len \u003e 75)\n        (void) fmt.Fprintf(fp, \" \\\\\\n\"), col = 0;\n        else\n        putc(' ', fp), col += 1;\n        (void) fmt.Fprintf(fp, \"%s\", PLA.label[i]), col += len;\n    }\n}\n\n\n\n/*\n    eqntott output mode -- output algebraic equations\n*/\nvoid eqn_output(PLA)\nvar PLA pPLA;\n{\n    register pcube p, last;\n    register int i, var, col, len;\n    int x;\n    bool firstand, firstor;\n\n    if (cube.output == -1)\n    fatal(\"Cannot have no-output function for EQNTOTT output mode\");\n    if (cube.num_mv_vars != 1)\n    fatal(\"Must have binary-valued function for EQNTOTT output mode\");\n    makeup_labels(PLA);\n\n    /* Write a single equation for each output */\n    for i = 0; i \u003c cube.part_size[cube.output]; i++ {\n    // inlining of macro OUTLABEL\n    (void) fmt.Printf(\"%s = \", PLA.label[cube.first_part[cube.output] + i]);\n    // inlining of macro OUTLABEL\n    col = len(PLA.label[cube.first_part[cube.output] + i]) + 3;\n    firstor = TRUE;\n\n    /* Write product terms for each cube in this output */\n    // inlining of macro foreach_set\n    for(p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p\u003clast;p+=PLA.F.wsize)\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if p[(((i + cube.first_part[cube.output]) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i + cube.first_part[cube.output]) \u0026 (BPI-1))) {\n        if (firstor)\n            (void) fmt.Printf(\"(\"), col += 1;\n        else\n            (void) fmt.Printf(\" | (\");\ncol += 4;\n        firstor = FALSE;\n        firstand = TRUE;\n\n        /* print out a product term */\n        for(var = 0; var \u003c cube.num_binary_vars; var++)\n            // inlining of macro GETINPUT\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            if (x=((p[(((2*var) \u003e\u003e LOGBPI) + 1)] \u003e\u003e ((2*var) \u0026 (BPI-1))) \u0026 3)) != DASH {\n            // inlining of macro INLABEL\n            len = len(PLA.label[cube.first_part[var] + 1]);\n            if (col+len \u003e 72)\n                (void) fmt.Printf(\"\\n    \"), col = 4;\n            if (! firstand)\n                (void) fmt.Printf(\"\u0026\"), col += 1;\n            firstand = FALSE;\n            if (x == ZERO)\n                (void) fmt.Printf(\"!\"), col += 1;\n            // inlining of macro INLABEL\n            (void) fmt.Printf(\"%s\", PLA.label[cube.first_part[var] + 1]), col += len;\n            }\n        (void) fmt.Printf(\")\"), col += 1;\n        }\n    (void) fmt.Printf(\";\\n\\n\");\n    }\n}\n\n\nchar *fmt_cube(c, out_map, s)\nregister pcube c;\nregister char *out_map, *s;\n{\n    register int i, var, last, len = 0;\n\n    for var = 0; var \u003c cube.num_binary_vars; var++ {\n    // inlining of macro GETINPUT\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    s[len++] = \"?01-\" [((c[(((2*var) \u003e\u003e LOGBPI) + 1)] \u003e\u003e ((2*var) \u0026 (BPI-1))) \u0026 3)];\n    }\n    for var = cube.num_binary_vars; var \u003c cube.num_vars - 1; var++ {\n    s[len++] = ' ';\n    for i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        s[len++] = \"01\" [(c[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))) != 0];\n    }\n    }\n    if cube.output != -1 {\n    last = cube.last_part[cube.output];\n    s[len++] = ' ';\n    for i = cube.first_part[cube.output]; i \u003c= last; i++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        s[len++] = out_map [(c[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))) != 0];\n    }\n    }\n    s[len] = '\\0';\n    return s;\n}\n\n\nvoid print_cube(fp, c, out_map)\nregister FILE *fp;\nregister pcube c;\nregister char *out_map;\n{\n    register int i, var, ch;\n    int last;\n\n    for var = 0; var \u003c cube.num_binary_vars; var++ {\n    // inlining of macro GETINPUT\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    ch = \"?01-\" [((c[(((2*var) \u003e\u003e LOGBPI) + 1)] \u003e\u003e ((2*var) \u0026 (BPI-1))) \u0026 3)];\n    putc(ch, fp);\n    }\n    for var = cube.num_binary_vars; var \u003c cube.num_vars - 1; var++ {\n    putc(' ', fp);\n    for i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        ch = \"01\" [(c[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))) != 0];\n        putc(ch, fp);\n    }\n    }\n    if cube.output != -1 {\n    last = cube.last_part[cube.output];\n    putc(' ', fp);\n    for i = cube.first_part[cube.output]; i \u003c= last; i++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        ch = out_map [(c[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))) != 0];\n        putc(ch, fp);\n    }\n    }\n    putc('\\n', fp);\n}\n\n\nvoid print_expanded_cube(fp, c, phase)\nregister FILE *fp;\nregister pcube c;\npcube phase;\n{\n    register int i, var, ch;\n    char *out_map;\n\n    for var = 0; var \u003c cube.num_binary_vars; var++ {\n    for i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        ch = \"~1\" [(c[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))) != 0];\n        putc(ch, fp);\n    }\n    }\n    for var = cube.num_binary_vars; var \u003c cube.num_vars - 1; var++ {\n    for i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        ch = \"1~\" [(c[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))) != 0];\n        putc(ch, fp);\n    }\n    }\n    if cube.output != -1 {\n    var = cube.num_vars - 1;\n    putc(' ', fp);\n    for i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if phase == (pcube) NULL || (phase[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))) {\n        out_map = \"~1\";\n        } else {\n        out_map = \"~0\";\n        }\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        ch = out_map[(c[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))) != 0];\n        putc(ch, fp);\n    }\n    }\n    putc('\\n', fp);\n}\n\n\nchar *pc1(c) pcube c;\n{static char s1[256];return fmt_cube(c, \"01\", s1);}\nchar *pc2(c) pcube c;\n{static char s2[256];return fmt_cube(c, \"01\", s2);}\n\n\nvoid debug_print(T, name, level)\npcube *T;\nvar name string;\nvar level int32;\n{\n    register pcube *T1, p, temp;\n    register int cnt;\n\n    // inlining of macro CUBELISTSIZE\n    cnt = (((pcube *) T[1] - T) - 3);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    temp = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    if (verbose_debug \u0026\u0026 level == 0)\n    (void) fmt.Printf(\"\\n\");\n    (void) fmt.Printf(\"%s[%d]: ord(T)=%d\\n\", name, level, cnt);\n    if verbose_debug {\n    (void) fmt.Printf(\"cofactor=%s\\n\", pc1(T[0]));\n    for(T1 = T+2, cnt = 1; (p = *T1++) != (pcube) NULL; cnt++)\n        (void) fmt.Printf(\"%4d. %s\\n\", cnt, pc1(set_or(temp, p, T[0])));\n    }\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(temp);\n}\n\n\nvoid debug1_print(T, name, num)\npcover T;\nvar name string;\nvar num int32;\n{\n    register int cnt = 1;\n    register pcube p, last;\n\n    if (verbose_debug \u0026\u0026 num == 0)\n    (void) fmt.Printf(\"\\n\");\n    (void) fmt.Printf(\"%s[%d]: ord(T)=%d\\n\", name, num, T.count);\n    if (verbose_debug)\n    // inlining of macro foreach_set\n    for(p=T.data,last=p+T.count*T.wsize;p\u003clast;p+=T.wsize)\n        (void) fmt.Printf(\"%4d. %s\\n\", cnt++, pc1(p));\n}\n\n\nvoid cprint(T)\npcover T;\n{\n    register pcube p, last;\n\n    // inlining of macro foreach_set\n    for(p=T.data,last=p+T.count*T.wsize;p\u003clast;p+=T.wsize)\n    (void) fmt.Printf(\"%s\\n\", pc1(p));\n}\n\n\nvoid makeup_labels(PLA)\nvar PLA pPLA;\n{\n    int var, i, ind;\n\n    if (PLA.label == (char **) NULL)\n    PLA_labels(PLA);\n\n    for(var = 0; var \u003c cube.num_vars; var++)\n    for i = 0; i \u003c cube.part_size[var]; i++ {\n        ind = cube.first_part[var] + i;\n        if PLA.label[ind] == (char *) NULL {\n        PLA.label[ind] = ALLOC(char, 15);\n        if (var \u003c cube.num_binary_vars)\n            if ((i % 2) == 0)\n            (void) sprintf(PLA.label[ind], \"v%d.bar\", var);\n            else\n            (void) sprintf(PLA.label[ind], \"v%d\", var);\n        else\n            (void) sprintf(PLA.label[ind], \"v%d.%d\", var, i);\n        }\n    }\n}\n\n\nvoid kiss_output(fp, PLA)\nvar fp *os.File;\nvar PLA pPLA;\n{\n    register pset last, p;\n\n    // inlining of macro foreach_set\n    for p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p\u003clast;p+=PLA.F.wsize {\n    kiss_print_cube(fp, PLA, p, \"~1\");\n    }\n    // inlining of macro foreach_set\n    for p=PLA.D.data,last=p+PLA.D.count*PLA.D.wsize;p\u003clast;p+=PLA.D.wsize {\n    kiss_print_cube(fp, PLA, p, \"~2\");\n    }\n}\n\n\nvoid kiss_print_cube(fp, PLA, p, out_string)\nvar fp *os.File;\nvar PLA pPLA;\npcube p;\nvar out_string string;\n{\n    register int i, var;\n    int part, x;\n\n    for var = 0; var \u003c cube.num_binary_vars; var++ {\n    // inlining of macro GETINPUT\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    x = \"?01-\" [((p[(((2*var) \u003e\u003e LOGBPI) + 1)] \u003e\u003e ((2*var) \u0026 (BPI-1))) \u0026 3)];\n    putc(x, fp);\n    }\n\n    for var = cube.num_binary_vars; var \u003c cube.num_vars - 1; var++ {\n    putc(' ', fp);\n    if setp_implies(cube.var_mask[var], p) {\n        putc('-', fp);\n    } else {\n        part = -1;\n        for i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if p[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1))) {\n            if part != -1 {\n            fatal(\"more than 1 part in a symbolic variable\\n\");\n            }\n            part = i;\n        }\n        }\n        if part == -1 {\n        putc('~', fp);    /* no parts, hope its an output ... */\n        } else {\n        (void) fputs(PLA.label[part], fp);\n        }\n    }\n    }\n\n    if (var = cube.output) != -1 {\n    putc(' ', fp);\n    for i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        x = out_string [(p[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))) != 0];\n        putc(x, fp);\n    }\n    }\n\n    putc('\\n', fp);\n}\n\f\nvoid output_symbolic_constraints(fp, PLA, output_symbolic)\nvar fp *os.File;\nvar PLA pPLA;\nvar output_symbolic int32;\n{\n    pset_family A;\n    register int i, j;\n    int size, var, npermute, *permute, *weight, noweight;\n\n    if (cube.num_vars - cube.num_binary_vars) \u003c= 1 {\n    return;\n    }\n    makeup_labels(PLA);\n\n    for var=cube.num_binary_vars; var \u003c cube.num_vars-1; var++ {\n\n    /* pull out the columns for variable \"var\" */\n    npermute = cube.part_size[var];\n    permute = ALLOC(int, npermute);\n    for i=0; i \u003c npermute; i++ {\n        permute[i] = cube.first_part[var] + i;\n    }\n    A = sf_permute(sf_save(PLA.F), permute, npermute);\n    FREE(permute);\n\n\n    /* Delete the singletons and the full sets */\n    noweight = 0;\n    for i = 0; i \u003c A.count; i++ {\n        // inlining of macro GETSET\n        size = set_ord(((A).data + (A).wsize * (i)));\n        if size == 1 || size == A.sf_size {\n        sf_delset(A, i--);\n        noweight++;\n        }\n    }\n\n\n    /* Count how many times each is duplicated */\n    weight = ALLOC(int, A.count);\n    for i = 0; i \u003c A.count; i++ {\n        // inlining of macro RESET\n        // inlining of macro GETSET\n        (((A).data + (A).wsize * (i))[0] \u0026= ~ (COVERED));\n    }\n    for i = 0; i \u003c A.count; i++ {\n        weight[i] = 0;\n        // inlining of macro TESTP\n        // inlining of macro GETSET\n        if ! (((A).data + (A).wsize * (i))[0] \u0026 (COVERED)) {\n        weight[i] = 1;\n        for j = i+1; j \u003c A.count; j++ {\n            // inlining of macro GETSET\n            if setp_equal(((A).data + (A).wsize * (i)), ((A).data + (A).wsize * (j))) {\n            weight[i]++;\n            // inlining of macro SET\n            // inlining of macro GETSET\n            (((A).data + (A).wsize * (j))[0] |= (COVERED));\n            }\n        }\n        }\n    }\n\n\n    /* Print out the constraints */\n    if ! (output_symbolic != 0) {\n        (void) fmt.Fprintf(fp, \"# Symbolic constraints for variable %d (Numeric form)\\n\", var);\n        (void) fmt.Fprintf(fp, \"# unconstrained weight = %d\\n\", noweight);\n        (void) fmt.Fprintf(fp, \"num_codes=%d\\n\", cube.part_size[var]);\n        for i = 0; i \u003c A.count; i++ {\n        if weight[i] \u003e 0 {\n            (void) fmt.Fprintf(fp, \"weight=%d: \", weight[i]);\n            for j = 0; j \u003c A.sf_size; j++ {\n            // inlining of macro is_in_set\n            // inlining of macro GETSET\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            if ((A).data + (A).wsize * (i))[(((j) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((j) \u0026 (BPI-1))) {\n                (void) fmt.Fprintf(fp, \" %d\", j);\n            }\n            }\n            (void) fmt.Fprintf(fp, \"\\n\");\n        }\n        }\n    } else {\n        (void) fmt.Fprintf(fp, \"# Symbolic constraints for variable %d (Symbolic form)\\n\", var);\n        for i = 0; i \u003c A.count; i++ {\n        if weight[i] \u003e 0 {\n            (void) fmt.Fprintf(fp, \"#   w=%d: (\", weight[i]);\n            for j = 0; j \u003c A.sf_size; j++ {\n            // inlining of macro is_in_set\n            // inlining of macro GETSET\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            if ((A).data + (A).wsize * (i))[(((j) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((j) \u0026 (BPI-1))) {\n                (void) fmt.Fprintf(fp, \" %s\", PLA.label[cube.first_part[var]+j]);\n            }\n            }\n            (void) fmt.Fprintf(fp, \" )\\n\");\n        }\n        }\n        FREE(weight);\n    }\n    }\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

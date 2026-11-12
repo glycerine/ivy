@@ -1,0 +1,477 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c",
+  "SHA256": "c73e4e780faac9cb6d8b2fa2d557551b56d07af78c38b4b950ded01ace233a71",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 2300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nCubes == Min_CoverCountCubes(pCover) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 3591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nCubes == Min_CoverCountCubes(pCover) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 200,
+        "Column": 5,
+        "ByteOffset": 6942
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 13,
+        "ByteOffset": 7232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%-20s :  Trivial.\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 9,
+        "ByteOffset": 7433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%20s :  Cone = %5d.  Supp = %5d.  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 219,
+        "Column": 13,
+        "ByteOffset": 7711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cubes = %5d.  \", nCubes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 9,
+        "ByteOffset": 7795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 9836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nCubes == Min_CoverCountCubes(pCover) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 376,
+        "Column": 5,
+        "ByteOffset": 12621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 381,
+        "Column": 13,
+        "ByteOffset": 12883
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%-20s :  Trivial.\\n\", Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 388,
+        "Column": 9,
+        "ByteOffset": 13084
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%20s :  Cone = %5d.  Supp = %5d.  \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 394,
+        "Column": 13,
+        "ByteOffset": 13363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cubes = %5d.  \", nCubes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 397,
+        "Column": 9,
+        "ByteOffset": 13447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NodeDeriveCoverPro",
+      "Start": 1236,
+      "End": 2005,
+      "BodyStart": 1333,
+      "Original": "Min_Cube_t * Abc_NodeDeriveCoverPro( Min_Man_t * p, Min_Cube_t * pCover0, Min_Cube_t * pCover1 )\n{\n    Min_Cube_t * pCover;\n    Min_Cube_t * pCube0, * pCube1, * pCube;\n    if ( pCover0 == NULL || pCover1 == NULL )\n        return NULL;\n    // clean storage\n    Min_ManClean( p, p-\u003enVars );\n    // go through the cube pairs\n    Min_CoverForEachCube( pCover0, pCube0 )\n    Min_CoverForEachCube( pCover1, pCube1 )\n    {\n        if ( Min_CubesDisjoint( pCube0, pCube1 ) )\n            continue;\n        pCube = Min_CubesProduct( p, pCube0, pCube1 );\n        // add the cube to storage\n        Min_SopAddCube( p, pCube );\n    }\n    Min_SopMinimize( p );\n    pCover = Min_CoverCollect( p, p-\u003enVars );\n    assert( p-\u003enCubes == Min_CoverCountCubes(pCover) );\n    return pCover;\n}",
+      "Draft": "func Abc_NodeDeriveCoverPro(p *Min_Man_t, pCover0 *Min_Cube_t, pCover1 *Min_Cube_t) *Min_Cube_t {\n    var pCover *Min_Cube_t;\n    var pCube0, pCube1, pCube *Min_Cube_t;\n    if pCover0 == nil || pCover1 == nil {\n        return nil; }\n    // clean storage\n    Min_ManClean( p, p.nVars );\n    // go through the cube pairs\n    // inlining of macro Min_CoverForEachCube\n    for  pCube0 = pCover0;                                                 pCube0;                                                          pCube0 = pCube0.pNext  {\n    // inlining of macro Min_CoverForEachCube\n    for  pCube1 = pCover1;                                                 pCube1;                                                          pCube1 = pCube1.pNext  {\n        if Min_CubesDisjoint( pCube0, pCube1 ) {\n            continue; }\n        pCube = Min_CubesProduct( p, pCube0, pCube1 );\n        // add the cube to storage\n        Min_SopAddCube( p, pCube );\n    }\n    }\n    Min_SopMinimize( p );\n    pCover = Min_CoverCollect( p, p.nVars );\n    assert(p.nCubes == Min_CoverCountCubes(pCover), \"p.nCubes == Min_CoverCountCubes(pCover)\");\n    return pCover;\n}"
+    },
+    {
+      "Name": "Abc_NodeDeriveCoverSum",
+      "Start": 2241,
+      "End": 2963,
+      "BodyStart": 2338,
+      "Original": "Min_Cube_t * Abc_NodeDeriveCoverSum( Min_Man_t * p, Min_Cube_t * pCover0, Min_Cube_t * pCover1 )\n{\n    Min_Cube_t * pCover;\n    Min_Cube_t * pThis, * pCube;\n    if ( pCover0 == NULL || pCover1 == NULL )\n        return NULL;\n    // clean storage\n    Min_ManClean( p, p-\u003enVars );\n    // add the cubes to storage\n    Min_CoverForEachCube( pCover0, pThis )\n    {\n        pCube = Min_CubeDup( p, pThis );\n        Min_SopAddCube( p, pCube );\n    }\n    Min_CoverForEachCube( pCover1, pThis )\n    {\n        pCube = Min_CubeDup( p, pThis );\n        Min_SopAddCube( p, pCube );\n    }\n    Min_SopMinimize( p );\n    pCover = Min_CoverCollect( p, p-\u003enVars );\n    assert( p-\u003enCubes == Min_CoverCountCubes(pCover) );\n    return pCover;\n}",
+      "Draft": "func Abc_NodeDeriveCoverSum(p *Min_Man_t, pCover0 *Min_Cube_t, pCover1 *Min_Cube_t) *Min_Cube_t {\n    var pCover *Min_Cube_t;\n    var pThis, pCube *Min_Cube_t;\n    if pCover0 == nil || pCover1 == nil {\n        return nil; }\n    // clean storage\n    Min_ManClean( p, p.nVars );\n    // add the cubes to storage\n    // inlining of macro Min_CoverForEachCube\n    for  pThis = pCover0;                                                 pThis;                                                          pThis = pThis.pNext  {\n        pCube = Min_CubeDup( p, pThis );\n        Min_SopAddCube( p, pCube );\n    }\n    // inlining of macro Min_CoverForEachCube\n    for  pThis = pCover1;                                                 pThis;                                                          pThis = pThis.pNext  {\n        pCube = Min_CubeDup( p, pThis );\n        Min_SopAddCube( p, pCube );\n    }\n    Min_SopMinimize( p );\n    pCover = Min_CoverCollect( p, p.nVars );\n    assert(p.nCubes == Min_CoverCountCubes(pCover), \"p.nCubes == Min_CoverCountCubes(pCover)\");\n    return pCover;\n}"
+    },
+    {
+      "Name": "Abc_NodeDeriveSops",
+      "Start": 3199,
+      "End": 5445,
+      "BodyStart": 3297,
+      "Original": "int Abc_NodeDeriveSops( Min_Man_t * p, Abc_Obj_t * pRoot, Vec_Ptr_t * vSupp, Vec_Ptr_t * vNodes )\n{\n    Min_Cube_t * pCov0[2], * pCov1[2];\n    Min_Cube_t * pCoverP, * pCoverN;\n    Abc_Obj_t * pObj;\n    int i, nCubes, fCompl0, fCompl1;\n\n    // set elementary vars\n    Vec_PtrForEachEntry( Abc_Obj_t *, vSupp, pObj, i )\n    {\n        pObj-\u003epCopy = (Abc_Obj_t *)Min_CubeAllocVar( p, i, 0 );\n        pObj-\u003epNext = (Abc_Obj_t *)Min_CubeAllocVar( p, i, 1 );\n    }\n\n    // get the cover for each node in the array\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        // get the complements\n        fCompl0 = Abc_ObjFaninC0(pObj);\n        fCompl1 = Abc_ObjFaninC1(pObj);\n        // get the covers\n        pCov0[0] = (Min_Cube_t *)Abc_ObjFanin0(pObj)-\u003epCopy;\n        pCov0[1] = (Min_Cube_t *)Abc_ObjFanin0(pObj)-\u003epNext;\n        pCov1[0] = (Min_Cube_t *)Abc_ObjFanin1(pObj)-\u003epCopy;\n        pCov1[1] = (Min_Cube_t *)Abc_ObjFanin1(pObj)-\u003epNext;\n        // compute the covers\n        pCoverP = Abc_NodeDeriveCoverPro( p, pCov0[ fCompl0], pCov1[ fCompl1] );\n        pCoverN = Abc_NodeDeriveCoverSum( p, pCov0[!fCompl0], pCov1[!fCompl1] );\n        // set the covers\n        pObj-\u003epCopy = (Abc_Obj_t *)pCoverP;\n        pObj-\u003epNext = (Abc_Obj_t *)pCoverN;\n    }\n\n     nCubes = ABC_MIN( Min_CoverCountCubes(pCoverN), Min_CoverCountCubes(pCoverP) );\n\n/*\nprintf( \"\\n\\n\" );\nMin_CoverWrite( stdout, pCoverP );\nprintf( \"\\n\\n\" );\nMin_CoverWrite( stdout, pCoverN );\n*/\n\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverP );\n\n//    Min_CoverExpand( p, pCoverP );\n//    Min_SopMinimize( p );\n//    pCoverP = Min_CoverCollect( p, p-\u003enVars );\n\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverP );\n\n//    nCubes = Min_CoverCountCubes(pCoverP);\n\n    // clean the copy fields\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        pObj-\u003epCopy = pObj-\u003epNext = NULL;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vSupp, pObj, i )\n        pObj-\u003epCopy = pObj-\u003epNext = NULL;\n\n//    Min_CoverWriteFile( pCoverP, Abc_ObjName(pRoot), 0 );\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverP );\n\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverP );\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverN );\n    return nCubes;\n}",
+      "Draft": "func Abc_NodeDeriveSops(p *Min_Man_t, pRoot *Abc_Obj_t, vSupp *Vec_Ptr_t, vNodes *Vec_Ptr_t) int32 {\n    var pCov0, pCov1 [2]*Min_Cube_t;\n    var pCoverP, pCoverN *Min_Cube_t;\n    var pObj *Abc_Obj_t;\n    var i, nCubes, fCompl0, fCompl1 int32;\n\n    // set elementary vars\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSupp)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)Min_CubeAllocVar( p, i, 0 );\n        pObj.pNext = (Abc_Obj_t *)Min_CubeAllocVar( p, i, 1 );\n    }\n\n    // get the cover for each node in the array\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // get the complements\n        fCompl0 = Abc_ObjFaninC0(pObj);\n        fCompl1 = Abc_ObjFaninC1(pObj);\n        // get the covers\n        pCov0[0] = (Min_Cube_t *)Abc_ObjFanin0(pObj).pCopy;\n        pCov0[1] = (Min_Cube_t *)Abc_ObjFanin0(pObj).pNext;\n        pCov1[0] = (Min_Cube_t *)Abc_ObjFanin1(pObj).pCopy;\n        pCov1[1] = (Min_Cube_t *)Abc_ObjFanin1(pObj).pNext;\n        // compute the covers\n        pCoverP = Abc_NodeDeriveCoverPro( p, pCov0[ fCompl0], pCov1[ fCompl1] );\n        pCoverN = Abc_NodeDeriveCoverSum( p, pCov0[!fCompl0], pCov1[!fCompl1] );\n        // set the covers\n        pObj.pCopy = (Abc_Obj_t *)pCoverP;\n        pObj.pNext = (Abc_Obj_t *)pCoverN;\n    }\n\n     nCubes = ABC_MIN( Min_CoverCountCubes(pCoverN), Min_CoverCountCubes(pCoverP) );\n\n/*\nprintf( \"\\n\\n\" );\nMin_CoverWrite( stdout, pCoverP );\nprintf( \"\\n\\n\" );\nMin_CoverWrite( stdout, pCoverN );\n*/\n\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverP );\n\n//    Min_CoverExpand( p, pCoverP );\n//    Min_SopMinimize( p );\n//    pCoverP = Min_CoverCollect( p, p-\u003enVars );\n\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverP );\n\n//    nCubes = Min_CoverCountCubes(pCoverP);\n\n    // clean the copy fields\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pCopy = pObj.pNext = nil;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSupp)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, i)), 1); i++  {\n        pObj.pCopy = pObj.pNext = nil;\n    }\n\n//    Min_CoverWriteFile( pCoverP, Abc_ObjName(pRoot), 0 );\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverP );\n\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverP );\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverN );\n    return nCubes;\n}"
+    },
+    {
+      "Name": "Abc_NtkTestSop",
+      "Start": 5681,
+      "End": 6679,
+      "BodyStart": 5721,
+      "Original": "void Abc_NtkTestSop( Abc_Ntk_t * pNtk )\n{\n    Min_Man_t * p;\n    Vec_Ptr_t * vSupp, * vNodes;\n    Abc_Obj_t * pObj;\n    int i, nCubes;\n    assert( Abc_NtkIsStrash(pNtk) );\n\n    Abc_NtkCleanCopy(pNtk);\n    Abc_NtkCleanNext(pNtk);\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        if ( !Abc_ObjIsNode(Abc_ObjFanin0(pObj)) )\n        {\n            printf( \"%-20s :  Trivial.\\n\", Abc_ObjName(pObj) );\n            continue;\n        }\n\n        vSupp  = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        vNodes = Abc_NtkDfsNodes( pNtk, \u0026pObj, 1 );\n\n        printf( \"%20s :  Cone = %5d.  Supp = %5d.  \", \n            Abc_ObjName(pObj), vNodes-\u003enSize, vSupp-\u003enSize );\n//        if ( vSupp-\u003enSize \u003c= 128 )\n        {\n            p = Min_ManAlloc( vSupp-\u003enSize );\n            nCubes = Abc_NodeDeriveSops( p, pObj, vSupp, vNodes );\n            printf( \"Cubes = %5d.  \", nCubes );\n            Min_ManFree( p );\n        }\n        printf( \"\\n\" );\n\n\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n    }\n}",
+      "Draft": "func Abc_NtkTestSop(pNtk *Abc_Ntk_t) {\n    var p *Min_Man_t;\n    var vSupp, vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, nCubes int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    Abc_NtkCleanCopy(pNtk);\n    Abc_NtkCleanNext(pNtk);\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if !Abc_ObjIsNode(Abc_ObjFanin0(pObj)) {\n            fmt.Printf(\"%-20s :  Trivial.\\n\", Abc_ObjName(pObj));\n            continue;\n        }\n\n        vSupp  = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        vNodes = Abc_NtkDfsNodes( pNtk, \u0026pObj, 1 );\n\n        fmt.Printf(\"%20s :  Cone = %5d.  Supp = %5d.  \", Abc_ObjName(pObj), vNodes.nSize, vSupp.nSize);\n//        if ( vSupp-\u003enSize \u003c= 128 )\n        {\n            p = Min_ManAlloc( vSupp.nSize );\n            nCubes = Abc_NodeDeriveSops( p, pObj, vSupp, vNodes );\n            fmt.Printf(\"Cubes = %5d.  \", nCubes);\n            Min_ManFree( p );\n        }\n        fmt.Printf(\"\\n\");\n\n\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NodeDeriveCover",
+      "Start": 6917,
+      "End": 8436,
+      "BodyStart": 7031,
+      "Original": "Min_Cube_t * Abc_NodeDeriveCover( Min_Man_t * p, Min_Cube_t * pCov0, Min_Cube_t * pCov1, int fComp0, int fComp1 )\n{\n    Min_Cube_t * pCover0, * pCover1, * pCover;\n    Min_Cube_t * pCube0, * pCube1, * pCube;\n\n    // complement the first if needed\n    if ( !fComp0 )\n        pCover0 = pCov0;\n    else if ( pCov0 \u0026\u0026 pCov0-\u003enLits == 0 ) // topmost one is the tautology cube\n        pCover0 = pCov0-\u003epNext;\n    else\n        pCover0 = p-\u003epOne0, p-\u003epOne0-\u003epNext = pCov0;\n\n    // complement the second if needed\n    if ( !fComp1 )\n        pCover1 = pCov1;\n    else if ( pCov1 \u0026\u0026 pCov1-\u003enLits == 0 ) // topmost one is the tautology cube\n        pCover1 = pCov1-\u003epNext;\n    else\n        pCover1 = p-\u003epOne1, p-\u003epOne1-\u003epNext = pCov1;\n\n    if ( pCover0 == NULL || pCover1 == NULL )\n        return NULL;\n\n    // clean storage\n    Min_ManClean( p, p-\u003enVars );\n    // go through the cube pairs\n    Min_CoverForEachCube( pCover0, pCube0 )\n    Min_CoverForEachCube( pCover1, pCube1 )\n    {\n        if ( Min_CubesDisjoint( pCube0, pCube1 ) )\n            continue;\n        pCube = Min_CubesProduct( p, pCube0, pCube1 );\n        // add the cube to storage\n        Min_EsopAddCube( p, pCube );\n    }\n \n    if ( p-\u003enCubes \u003e 10 )\n    {\n//        printf( \"(%d,\", p-\u003enCubes );\n        Min_EsopMinimize( p );\n//        printf( \"%d) \", p-\u003enCubes );\n    }\n\n    pCover = Min_CoverCollect( p, p-\u003enVars );\n    assert( p-\u003enCubes == Min_CoverCountCubes(pCover) );\n\n//    if ( p-\u003enCubes \u003e 1000 )\n//        printf( \"%d \", p-\u003enCubes );\n    return pCover;\n}",
+      "Draft": "func Abc_NodeDeriveCover(p *Min_Man_t, pCov0 *Min_Cube_t, pCov1 *Min_Cube_t, fComp0 int32, fComp1 int32) *Min_Cube_t {\n    var pCover0, pCover1, pCover *Min_Cube_t;\n    var pCube0, pCube1, pCube *Min_Cube_t;\n\n    // complement the first if needed\n    if !(fComp0 != 0) {\n        pCover0 = pCov0;\n    } else if (pCov0 != nil) \u0026\u0026 pCov0.nLits == 0 { // topmost one is the tautology cube\n        pCover0 = pCov0.pNext;\n    } else {\n        pCover0 = p.pOne0;\np.pOne0.pNext = pCov0; }\n\n    // complement the second if needed\n    if !(fComp1 != 0) {\n        pCover1 = pCov1;\n    } else if (pCov1 != nil) \u0026\u0026 pCov1.nLits == 0 { // topmost one is the tautology cube\n        pCover1 = pCov1.pNext;\n    } else {\n        pCover1 = p.pOne1;\np.pOne1.pNext = pCov1; }\n\n    if pCover0 == nil || pCover1 == nil {\n        return nil; }\n\n    // clean storage\n    Min_ManClean( p, p.nVars );\n    // go through the cube pairs\n    // inlining of macro Min_CoverForEachCube\n    for  pCube0 = pCover0;                                                 pCube0;                                                          pCube0 = pCube0.pNext  {\n    // inlining of macro Min_CoverForEachCube\n    for  pCube1 = pCover1;                                                 pCube1;                                                          pCube1 = pCube1.pNext  {\n        if Min_CubesDisjoint( pCube0, pCube1 ) {\n            continue; }\n        pCube = Min_CubesProduct( p, pCube0, pCube1 );\n        // add the cube to storage\n        Min_EsopAddCube( p, pCube );\n    }\n    }\n \n    if p.nCubes \u003e 10 {\n//        printf( \"(%d,\", p-\u003enCubes );\n        Min_EsopMinimize( p );\n//        printf( \"%d) \", p-\u003enCubes );\n    }\n\n    pCover = Min_CoverCollect( p, p.nVars );\n    assert(p.nCubes == Min_CoverCountCubes(pCover), \"p.nCubes == Min_CoverCountCubes(pCover)\");\n\n//    if ( p-\u003enCubes \u003e 1000 )\n//        printf( \"%d \", p-\u003enCubes );\n    return pCover;\n}"
+    },
+    {
+      "Name": "Abc_NodeDeriveEsops",
+      "Start": 8672,
+      "End": 10287,
+      "BodyStart": 8771,
+      "Original": "int Abc_NodeDeriveEsops( Min_Man_t * p, Abc_Obj_t * pRoot, Vec_Ptr_t * vSupp, Vec_Ptr_t * vNodes )\n{\n    Min_Cube_t * pCover, * pCube;\n    Abc_Obj_t * pObj;\n    int i;\n\n    // set elementary vars\n    Vec_PtrForEachEntry( Abc_Obj_t *, vSupp, pObj, i )\n        pObj-\u003epCopy = (Abc_Obj_t *)Min_CubeAllocVar( p, i, 0 );\n\n    // get the cover for each node in the array\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        pCover = Abc_NodeDeriveCover( p,  \n            (Min_Cube_t *)Abc_ObjFanin0(pObj)-\u003epCopy,  \n            (Min_Cube_t *)Abc_ObjFanin1(pObj)-\u003epCopy,\n            Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n        pObj-\u003epCopy = (Abc_Obj_t *)pCover;\n        if ( p-\u003enCubes \u003e 3000 )\n            return -1;\n    }\n\n    // add complement if needed\n    if ( Abc_ObjFaninC0(pRoot) )\n    {\n        if ( pCover \u0026\u0026 pCover-\u003enLits == 0 ) // topmost one is the tautology cube\n        {\n            pCube = pCover;\n            pCover = pCover-\u003epNext;\n            Min_CubeRecycle( p, pCube );\n            p-\u003enCubes--;\n        }\n        else\n        {\n            pCube = Min_CubeAlloc( p );\n            pCube-\u003epNext = pCover;\n            p-\u003enCubes++;\n        }\n    }\n/*\n    Min_CoverExpand( p, pCover );\n    Min_EsopMinimize( p );\n    pCover = Min_CoverCollect( p, p-\u003enVars );\n*/\n    // clean the copy fields\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        pObj-\u003epCopy = NULL;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vSupp, pObj, i )\n        pObj-\u003epCopy = NULL;\n\n//    Min_CoverWriteFile( pCover, Abc_ObjName(pRoot), 1 );\n//    Min_CoverWrite( stdout, pCover );\n    return p-\u003enCubes;\n}",
+      "Draft": "func Abc_NodeDeriveEsops(p *Min_Man_t, pRoot *Abc_Obj_t, vSupp *Vec_Ptr_t, vNodes *Vec_Ptr_t) int32 {\n    var pCover, pCube *Min_Cube_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n\n    // set elementary vars\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSupp)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)Min_CubeAllocVar( p, i, 0 );\n    }\n\n    // get the cover for each node in the array\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pCover = Abc_NodeDeriveCover( p,  \n            (Min_Cube_t *)Abc_ObjFanin0(pObj).pCopy,  \n            (Min_Cube_t *)Abc_ObjFanin1(pObj).pCopy,\n            Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n        pObj.pCopy = (Abc_Obj_t *)pCover;\n        if p.nCubes \u003e 3000 {\n            return -1; }\n    }\n\n    // add complement if needed\n    if Abc_ObjFaninC0(pRoot) {\n        if (pCover != nil) \u0026\u0026 pCover.nLits == 0 { // topmost one is the tautology cube\n        \n            pCube = pCover;\n            pCover = pCover.pNext;\n            Min_CubeRecycle( p, pCube );\n            p.nCubes--;\n        \n        } else {\n            pCube = Min_CubeAlloc( p );\n            pCube.pNext = pCover;\n            p.nCubes++;\n        }\n    }\n/*\n    Min_CoverExpand( p, pCover );\n    Min_EsopMinimize( p );\n    pCover = Min_CoverCollect( p, p-\u003enVars );\n*/\n    // clean the copy fields\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pCopy = nil;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSupp)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, i)), 1); i++  {\n        pObj.pCopy = nil;\n    }\n\n//    Min_CoverWriteFile( pCover, Abc_ObjName(pRoot), 1 );\n//    Min_CoverWrite( stdout, pCover );\n    return p.nCubes;\n}"
+    },
+    {
+      "Name": "Abc_NtkTestEsop",
+      "Start": 10523,
+      "End": 11495,
+      "BodyStart": 10564,
+      "Original": "void Abc_NtkTestEsop( Abc_Ntk_t * pNtk )\n{\n    Min_Man_t * p;\n    Vec_Ptr_t * vSupp, * vNodes;\n    Abc_Obj_t * pObj;\n    int i, nCubes;\n    assert( Abc_NtkIsStrash(pNtk) );\n\n    Abc_NtkCleanCopy(pNtk);\n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        if ( !Abc_ObjIsNode(Abc_ObjFanin0(pObj)) )\n        {\n            printf( \"%-20s :  Trivial.\\n\", Abc_ObjName(pObj) );\n            continue;\n        }\n\n        vSupp  = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        vNodes = Abc_NtkDfsNodes( pNtk, \u0026pObj, 1 );\n\n        printf( \"%20s :  Cone = %5d.  Supp = %5d.  \", \n            Abc_ObjName(pObj), vNodes-\u003enSize, vSupp-\u003enSize );\n//        if ( vSupp-\u003enSize \u003c= 128 )\n        {\n            p = Min_ManAlloc( vSupp-\u003enSize );\n            nCubes = Abc_NodeDeriveEsops( p, pObj, vSupp, vNodes );\n            printf( \"Cubes = %5d.  \", nCubes );\n            Min_ManFree( p );\n        }\n        printf( \"\\n\" );\n\n\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n    }\n}",
+      "Draft": "func Abc_NtkTestEsop(pNtk *Abc_Ntk_t) {\n    var p *Min_Man_t;\n    var vSupp, vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, nCubes int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    Abc_NtkCleanCopy(pNtk);\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if !Abc_ObjIsNode(Abc_ObjFanin0(pObj)) {\n            fmt.Printf(\"%-20s :  Trivial.\\n\", Abc_ObjName(pObj));\n            continue;\n        }\n\n        vSupp  = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        vNodes = Abc_NtkDfsNodes( pNtk, \u0026pObj, 1 );\n\n        fmt.Printf(\"%20s :  Cone = %5d.  Supp = %5d.  \", Abc_ObjName(pObj), vNodes.nSize, vSupp.nSize);\n//        if ( vSupp-\u003enSize \u003c= 128 )\n        {\n            p = Min_ManAlloc( vSupp.nSize );\n            nCubes = Abc_NodeDeriveEsops( p, pObj, vSupp, vNodes );\n            fmt.Printf(\"Cubes = %5d.  \", nCubes);\n            Min_ManFree( p );\n        }\n        fmt.Printf(\"\\n\");\n\n\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::4279",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3466,
+      "End": 3466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::4355",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3545,
+      "End": 3558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::4419",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3609,
+      "End": 3622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::4628",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3710,
+      "End": 3710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::4839",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3924,
+      "End": 3938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::4900",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3985,
+      "End": 3999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::4961",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4046,
+      "End": 4060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::5022",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4107,
+      "End": 4121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::5304",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4389,
+      "End": 4402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::5348",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4433,
+      "End": 4446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::6006",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4983,
+      "End": 4983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::6208",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5081,
+      "End": 5081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::10560",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8872,
+      "End": 8872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::10630",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8945,
+      "End": 8958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::10833",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9040,
+      "End": 9040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::10943",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9153,
+      "End": 9167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::10999",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9209,
+      "End": 9223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::11121",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9331,
+      "End": 9344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::11899",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10001,
+      "End": 10001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::pointer-cast::12087",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10085,
+      "End": 10085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::Abc_NodeDeriveCoverPro",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeDeriveCoverPro",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1236,
+      "End": 2005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::Abc_NodeDeriveCoverSum",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeDeriveCoverSum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2241,
+      "End": 2963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::Abc_NodeDeriveSops",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeDeriveSops",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3199,
+      "End": 5445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::Abc_NtkTestSop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestSop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5681,
+      "End": 6679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::Abc_NodeDeriveCover",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeDeriveCover",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6917,
+      "End": 8436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::Abc_NodeDeriveEsops",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeDeriveEsops",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8672,
+      "End": 10287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::Abc_NtkTestEsop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestEsop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10523,
+      "End": 11495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covTest.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11743
+    }
+  ],
+  "Draft": "package cov\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [covTest.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n \n  PackageName [Mapping into network of SOPs/ESOPs.]\n\n  Synopsis    [Testing procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: covTest.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cov.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeDeriveCoverPro(p *Min_Man_t, pCover0 *Min_Cube_t, pCover1 *Min_Cube_t) *Min_Cube_t {\n    var pCover *Min_Cube_t;\n    var pCube0, pCube1, pCube *Min_Cube_t;\n    if pCover0 == nil || pCover1 == nil {\n        return nil; }\n    // clean storage\n    Min_ManClean( p, p.nVars );\n    // go through the cube pairs\n    // inlining of macro Min_CoverForEachCube\n    for  pCube0 = pCover0;                                                 pCube0;                                                          pCube0 = pCube0.pNext  {\n    // inlining of macro Min_CoverForEachCube\n    for  pCube1 = pCover1;                                                 pCube1;                                                          pCube1 = pCube1.pNext  {\n        if Min_CubesDisjoint( pCube0, pCube1 ) {\n            continue; }\n        pCube = Min_CubesProduct( p, pCube0, pCube1 );\n        // add the cube to storage\n        Min_SopAddCube( p, pCube );\n    }\n    }\n    Min_SopMinimize( p );\n    pCover = Min_CoverCollect( p, p.nVars );\n    assert(p.nCubes == Min_CoverCountCubes(pCover), \"p.nCubes == Min_CoverCountCubes(pCover)\");\n    return pCover;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeDeriveCoverSum(p *Min_Man_t, pCover0 *Min_Cube_t, pCover1 *Min_Cube_t) *Min_Cube_t {\n    var pCover *Min_Cube_t;\n    var pThis, pCube *Min_Cube_t;\n    if pCover0 == nil || pCover1 == nil {\n        return nil; }\n    // clean storage\n    Min_ManClean( p, p.nVars );\n    // add the cubes to storage\n    // inlining of macro Min_CoverForEachCube\n    for  pThis = pCover0;                                                 pThis;                                                          pThis = pThis.pNext  {\n        pCube = Min_CubeDup( p, pThis );\n        Min_SopAddCube( p, pCube );\n    }\n    // inlining of macro Min_CoverForEachCube\n    for  pThis = pCover1;                                                 pThis;                                                          pThis = pThis.pNext  {\n        pCube = Min_CubeDup( p, pThis );\n        Min_SopAddCube( p, pCube );\n    }\n    Min_SopMinimize( p );\n    pCover = Min_CoverCollect( p, p.nVars );\n    assert(p.nCubes == Min_CoverCountCubes(pCover), \"p.nCubes == Min_CoverCountCubes(pCover)\");\n    return pCover;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeDeriveSops(p *Min_Man_t, pRoot *Abc_Obj_t, vSupp *Vec_Ptr_t, vNodes *Vec_Ptr_t) int32 {\n    var pCov0, pCov1 [2]*Min_Cube_t;\n    var pCoverP, pCoverN *Min_Cube_t;\n    var pObj *Abc_Obj_t;\n    var i, nCubes, fCompl0, fCompl1 int32;\n\n    // set elementary vars\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSupp)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)Min_CubeAllocVar( p, i, 0 );\n        pObj.pNext = (Abc_Obj_t *)Min_CubeAllocVar( p, i, 1 );\n    }\n\n    // get the cover for each node in the array\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // get the complements\n        fCompl0 = Abc_ObjFaninC0(pObj);\n        fCompl1 = Abc_ObjFaninC1(pObj);\n        // get the covers\n        pCov0[0] = (Min_Cube_t *)Abc_ObjFanin0(pObj).pCopy;\n        pCov0[1] = (Min_Cube_t *)Abc_ObjFanin0(pObj).pNext;\n        pCov1[0] = (Min_Cube_t *)Abc_ObjFanin1(pObj).pCopy;\n        pCov1[1] = (Min_Cube_t *)Abc_ObjFanin1(pObj).pNext;\n        // compute the covers\n        pCoverP = Abc_NodeDeriveCoverPro( p, pCov0[ fCompl0], pCov1[ fCompl1] );\n        pCoverN = Abc_NodeDeriveCoverSum( p, pCov0[!fCompl0], pCov1[!fCompl1] );\n        // set the covers\n        pObj.pCopy = (Abc_Obj_t *)pCoverP;\n        pObj.pNext = (Abc_Obj_t *)pCoverN;\n    }\n\n     nCubes = ABC_MIN( Min_CoverCountCubes(pCoverN), Min_CoverCountCubes(pCoverP) );\n\n/*\nprintf( \"\\n\\n\" );\nMin_CoverWrite( stdout, pCoverP );\nprintf( \"\\n\\n\" );\nMin_CoverWrite( stdout, pCoverN );\n*/\n\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverP );\n\n//    Min_CoverExpand( p, pCoverP );\n//    Min_SopMinimize( p );\n//    pCoverP = Min_CoverCollect( p, p-\u003enVars );\n\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverP );\n\n//    nCubes = Min_CoverCountCubes(pCoverP);\n\n    // clean the copy fields\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pCopy = pObj.pNext = nil;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSupp)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, i)), 1); i++  {\n        pObj.pCopy = pObj.pNext = nil;\n    }\n\n//    Min_CoverWriteFile( pCoverP, Abc_ObjName(pRoot), 0 );\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverP );\n\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverP );\n//    printf( \"\\n\" );\n//    Min_CoverWrite( stdout, pCoverN );\n    return nCubes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestSop(pNtk *Abc_Ntk_t) {\n    var p *Min_Man_t;\n    var vSupp, vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, nCubes int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    Abc_NtkCleanCopy(pNtk);\n    Abc_NtkCleanNext(pNtk);\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if !Abc_ObjIsNode(Abc_ObjFanin0(pObj)) {\n            fmt.Printf(\"%-20s :  Trivial.\\n\", Abc_ObjName(pObj));\n            continue;\n        }\n\n        vSupp  = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        vNodes = Abc_NtkDfsNodes( pNtk, \u0026pObj, 1 );\n\n        fmt.Printf(\"%20s :  Cone = %5d.  Supp = %5d.  \", Abc_ObjName(pObj), vNodes.nSize, vSupp.nSize);\n//        if ( vSupp-\u003enSize \u003c= 128 )\n        {\n            p = Min_ManAlloc( vSupp.nSize );\n            nCubes = Abc_NodeDeriveSops( p, pObj, vSupp, vNodes );\n            fmt.Printf(\"Cubes = %5d.  \", nCubes);\n            Min_ManFree( p );\n        }\n        fmt.Printf(\"\\n\");\n\n\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n    }\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeDeriveCover(p *Min_Man_t, pCov0 *Min_Cube_t, pCov1 *Min_Cube_t, fComp0 int32, fComp1 int32) *Min_Cube_t {\n    var pCover0, pCover1, pCover *Min_Cube_t;\n    var pCube0, pCube1, pCube *Min_Cube_t;\n\n    // complement the first if needed\n    if !(fComp0 != 0) {\n        pCover0 = pCov0;\n    } else if (pCov0 != nil) \u0026\u0026 pCov0.nLits == 0 { // topmost one is the tautology cube\n        pCover0 = pCov0.pNext;\n    } else {\n        pCover0 = p.pOne0;\np.pOne0.pNext = pCov0; }\n\n    // complement the second if needed\n    if !(fComp1 != 0) {\n        pCover1 = pCov1;\n    } else if (pCov1 != nil) \u0026\u0026 pCov1.nLits == 0 { // topmost one is the tautology cube\n        pCover1 = pCov1.pNext;\n    } else {\n        pCover1 = p.pOne1;\np.pOne1.pNext = pCov1; }\n\n    if pCover0 == nil || pCover1 == nil {\n        return nil; }\n\n    // clean storage\n    Min_ManClean( p, p.nVars );\n    // go through the cube pairs\n    // inlining of macro Min_CoverForEachCube\n    for  pCube0 = pCover0;                                                 pCube0;                                                          pCube0 = pCube0.pNext  {\n    // inlining of macro Min_CoverForEachCube\n    for  pCube1 = pCover1;                                                 pCube1;                                                          pCube1 = pCube1.pNext  {\n        if Min_CubesDisjoint( pCube0, pCube1 ) {\n            continue; }\n        pCube = Min_CubesProduct( p, pCube0, pCube1 );\n        // add the cube to storage\n        Min_EsopAddCube( p, pCube );\n    }\n    }\n \n    if p.nCubes \u003e 10 {\n//        printf( \"(%d,\", p-\u003enCubes );\n        Min_EsopMinimize( p );\n//        printf( \"%d) \", p-\u003enCubes );\n    }\n\n    pCover = Min_CoverCollect( p, p.nVars );\n    assert(p.nCubes == Min_CoverCountCubes(pCover), \"p.nCubes == Min_CoverCountCubes(pCover)\");\n\n//    if ( p-\u003enCubes \u003e 1000 )\n//        printf( \"%d \", p-\u003enCubes );\n    return pCover;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeDeriveEsops(p *Min_Man_t, pRoot *Abc_Obj_t, vSupp *Vec_Ptr_t, vNodes *Vec_Ptr_t) int32 {\n    var pCover, pCube *Min_Cube_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n\n    // set elementary vars\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSupp)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, i)), 1); i++  {\n        pObj.pCopy = (Abc_Obj_t *)Min_CubeAllocVar( p, i, 0 );\n    }\n\n    // get the cover for each node in the array\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pCover = Abc_NodeDeriveCover( p,  \n            (Min_Cube_t *)Abc_ObjFanin0(pObj).pCopy,  \n            (Min_Cube_t *)Abc_ObjFanin1(pObj).pCopy,\n            Abc_ObjFaninC0(pObj), Abc_ObjFaninC1(pObj) );\n        pObj.pCopy = (Abc_Obj_t *)pCover;\n        if p.nCubes \u003e 3000 {\n            return -1; }\n    }\n\n    // add complement if needed\n    if Abc_ObjFaninC0(pRoot) {\n        if (pCover != nil) \u0026\u0026 pCover.nLits == 0 { // topmost one is the tautology cube\n        \n            pCube = pCover;\n            pCover = pCover.pNext;\n            Min_CubeRecycle( p, pCube );\n            p.nCubes--;\n        \n        } else {\n            pCube = Min_CubeAlloc( p );\n            pCube.pNext = pCover;\n            p.nCubes++;\n        }\n    }\n/*\n    Min_CoverExpand( p, pCover );\n    Min_EsopMinimize( p );\n    pCover = Min_CoverCollect( p, p-\u003enVars );\n*/\n    // clean the copy fields\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pCopy = nil;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSupp)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, i)), 1); i++  {\n        pObj.pCopy = nil;\n    }\n\n//    Min_CoverWriteFile( pCover, Abc_ObjName(pRoot), 1 );\n//    Min_CoverWrite( stdout, pCover );\n    return p.nCubes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestEsop(pNtk *Abc_Ntk_t) {\n    var p *Min_Man_t;\n    var vSupp, vNodes *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, nCubes int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    Abc_NtkCleanCopy(pNtk);\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if !Abc_ObjIsNode(Abc_ObjFanin0(pObj)) {\n            fmt.Printf(\"%-20s :  Trivial.\\n\", Abc_ObjName(pObj));\n            continue;\n        }\n\n        vSupp  = Abc_NtkNodeSupport( pNtk, \u0026pObj, 1 );\n        vNodes = Abc_NtkDfsNodes( pNtk, \u0026pObj, 1 );\n\n        fmt.Printf(\"%20s :  Cone = %5d.  Supp = %5d.  \", Abc_ObjName(pObj), vNodes.nSize, vSupp.nSize);\n//        if ( vSupp-\u003enSize \u003c= 128 )\n        {\n            p = Min_ManAlloc( vSupp.nSize );\n            nCubes = Abc_NodeDeriveEsops( p, pObj, vSupp, vNodes );\n            fmt.Printf(\"Cubes = %5d.  \", nCubes);\n            Min_ManFree( p );\n        }\n        fmt.Printf(\"\\n\");\n\n\n        Vec_PtrFree( vNodes );\n        Vec_PtrFree( vSupp );\n    }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

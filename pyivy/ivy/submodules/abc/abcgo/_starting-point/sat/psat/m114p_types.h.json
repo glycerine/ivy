@@ -1,0 +1,19 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/psat/m114p_types.h",
+  "SHA256": "afa5c46896e9ee5122bbb49dd346841190c70c4edd9b90178cb165ace12a8d3e",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/psat/m114p_types.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 210
+    }
+  ],
+  "Draft": "package psat\n\n// C-language header for MiniSat 1.14p\n\n\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\ntypedef int   M114p_Solver_t;\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

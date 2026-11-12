@@ -1,0 +1,19 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/CGlucose.h",
+  "SHA256": "6f9ba28b8c759f9803658e8eeddcfbe4ae90d0e668e2ffd01e0e2ea3f3f5e9c2",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/CGlucose.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 85
+    }
+  ],
+  "Draft": "package glucose2\n\n\n\n\nconst CGLUCOSE_EXP = 1\n\n"
+}

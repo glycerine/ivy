@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.h",
+  "SHA256": "f09148ff61c8c306c81f7a51577e0906f11234d32ca5a15e52a86d296da06f9f",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.h::macro::Abc_NamManForEachObj",
+      "Category": "macro-review",
+      "Symbol": "Abc_NamManForEachObj",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1540,
+      "End": 1666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3524
+    }
+  ],
+  "Draft": "package util\n\n/**CFile****************************************************************\n\n  FileName    [utilNam.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Memory recycling utilities.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: utilNam.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Abc_Nam_t =           Abc_Nam_t_;\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define Abc_NamManForEachObj( p, pStr, i )  \\\n//     for ( i = 1; (i \u003c Abc_NamObjNumMax(p)) \u0026\u0026 ((pStr) = Abc_NamStr(p, i)); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== utilNam.c ===============================================================*/\n// extern Abc_Nam_t *     Abc_NamStart( int nObjs, int nAveSize );\n\n// extern void            Abc_NamStop( Abc_Nam_t * p );\n\n// extern void            Abc_NamPrint( Abc_Nam_t * p, char * pFileName );\n\n// extern Abc_Nam_t *     Abc_NamRef( Abc_Nam_t * p );\n\n// extern void            Abc_NamDeref( Abc_Nam_t * p );\n\n// extern int             Abc_NamObjNumMax( Abc_Nam_t * p );\n\n// extern int             Abc_NamMemUsed( Abc_Nam_t * p );\n\n// extern int             Abc_NamMemAlloc( Abc_Nam_t * p );\n\n// extern int             Abc_NamStrFind( Abc_Nam_t * p, char * pStr );\n\n// extern int             Abc_NamStrFindLim( Abc_Nam_t * p, char * pStr, char * pLim );\n\n// extern int             Abc_NamStrFindOrAdd( Abc_Nam_t * p, char * pStr, int * pfFound );\n\n// extern int             Abc_NamStrFindOrAddLim( Abc_Nam_t * p, char * pStr, char * pLim, int * pfFound );\n\n// extern int             Abc_NamStrFindOrAddF( Abc_Nam_t * p, const char * format, ...  );\n\n// extern char *          Abc_NamStr( Abc_Nam_t * p, int id );\n\n// extern Vec_Str_t *     Abc_NamBuffer( Abc_Nam_t * p );\n\n// extern Vec_Int_t *     Abc_NamComputeIdMap( Abc_Nam_t * p1, Abc_Nam_t * p2 );\n\n// extern int             Abc_NamReportCommon( Vec_Int_t * vNameIds1, Abc_Nam_t * p1, Abc_Nam_t * p2 );\n\n// extern char *          Abc_NamReportUnique( Vec_Int_t * vNameIds1, Abc_Nam_t * p1, Abc_Nam_t * p2 );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

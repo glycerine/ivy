@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.h",
+  "SHA256": "ab4dd721aa391fedfc13f265de5a99c91dfe7289ea7306c590d1cc50963725cc",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.h::mechanical::enum::93",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 93,
+      "End": 97
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/main.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4010
+    }
+  ],
+  "Draft": "package espresso\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\ntype keys int32\nconst  (\n    KEY_ESPRESSO keys = iota\n KEY_PLA_verify\n KEY_check\n KEY_contain\n KEY_d1merge\n\n    KEY_disjoint\n KEY_dsharp\n KEY_echo\n KEY_essen\n KEY_exact\n KEY_expand\n\n    KEY_gasp\n KEY_intersect\n KEY_irred\n KEY_lexsort\n KEY_make_sparse\n\n    KEY_map\n KEY_mapdc\n KEY_minterms\n KEY_opo\n KEY_opoall\n\n    KEY_pair\n KEY_pairall\n KEY_primes\n KEY_qm\n KEY_reduce\n KEY_sharp\n\n    KEY_simplify\n KEY_so\n KEY_so_both\n KEY_stats\n KEY_super_gasp\n KEY_taut\n\n    KEY_test\n KEY_equiv\n KEY_union\n KEY_verify\n KEY_MANY_ESPRESSO\n\n    KEY_separate\n KEY_xor\n KEY_d1merge_in\n KEY_fsm\n\n    KEY_unknown\n\n)\n\n\n/* Lookup table for program options */\nstruct {\n    char *name;\n         keys key;\n    int num_plas;\n    bool needs_offset;\n    bool needs_dcset;\n}\n option_table [] = {\n    /* ways to minimize functions */\n    \"ESPRESSO\", KEY_ESPRESSO, 1, TRUE, TRUE,    /* must be first */\n    \"many\", KEY_MANY_ESPRESSO, 1, TRUE, TRUE,\n    \"exact\", KEY_exact, 1, TRUE, TRUE,\n    \"qm\", KEY_qm, 1, TRUE, TRUE,\n    \"single_output\", KEY_so, 1, TRUE, TRUE,\n    \"so\", KEY_so, 1, TRUE, TRUE,\n    \"so_both\", KEY_so_both, 1, TRUE, TRUE,\n    \"simplify\", KEY_simplify, 1, FALSE, FALSE,\n    \"echo\", KEY_echo, 1, FALSE, FALSE,\n\n    /* output phase assignment and assignment of inputs to two-bit decoders */\n    \"opo\", KEY_opo, 1, TRUE, TRUE,\n    \"opoall\", KEY_opoall, 1, TRUE, TRUE,\n    \"pair\", KEY_pair, 1, TRUE, TRUE,\n    \"pairall\", KEY_pairall, 1, TRUE, TRUE,\n\n    /* Ways to check covers */\n    \"check\", KEY_check, 1, TRUE, TRUE,\n    \"stats\", KEY_stats, 1, FALSE, FALSE,\n    \"verify\", KEY_verify, 2, FALSE, TRUE,\n    \"PLAverify\", KEY_PLA_verify, 2, FALSE, TRUE,\n\n    /* hacks */\n    \"equiv\", KEY_equiv, 1, TRUE, TRUE,\n    \"map\", KEY_map, 1, FALSE, FALSE,\n    \"mapdc\", KEY_mapdc, 1, FALSE, FALSE,\n    \"fsm\", KEY_fsm, 1, FALSE, TRUE,\n\n    /* the basic boolean operations on covers */\n    \"contain\", KEY_contain, 1, FALSE, FALSE,\n    \"d1merge\", KEY_d1merge, 1, FALSE, FALSE,\n    \"d1merge_in\", KEY_d1merge_in, 1, FALSE, FALSE,\n    \"disjoint\", KEY_disjoint, 1, TRUE, FALSE,\n    \"dsharp\", KEY_dsharp, 2, FALSE, FALSE,\n    \"intersect\", KEY_intersect, 2, FALSE, FALSE,\n    \"minterms\", KEY_minterms, 1, FALSE, FALSE,\n    \"primes\", KEY_primes, 1, FALSE, TRUE,\n    \"separate\", KEY_separate, 1, TRUE, TRUE,\n    \"sharp\", KEY_sharp, 2, FALSE, FALSE,\n    \"union\", KEY_union, 2, FALSE, FALSE,\n    \"xor\", KEY_xor, 2, TRUE, TRUE,\n\n    /* debugging only -- call each step of the espresso algorithm */\n    \"essen\", KEY_essen, 1, FALSE, TRUE,\n    \"expand\", KEY_expand, 1, TRUE, FALSE,\n    \"gasp\", KEY_gasp, 1, TRUE, TRUE,\n    \"irred\", KEY_irred, 1, FALSE, TRUE,\n    \"make_sparse\", KEY_make_sparse, 1, TRUE, TRUE,\n    \"reduce\", KEY_reduce, 1, FALSE, TRUE,\n    \"taut\", KEY_taut, 1, FALSE, FALSE,\n    \"super_gasp\", KEY_super_gasp, 1, TRUE, TRUE,\n    \"lexsort\", KEY_lexsort, 1, FALSE, FALSE,\n    \"test\", KEY_test, 1, TRUE, TRUE,\n    0, KEY_unknown, 0, FALSE, FALSE             /* must be last */\n};\n\n\nstruct {\n    char *name;\n    int value;\n}\n debug_table[] = {\n    \"\", EXPAND + ESSEN + IRRED + REDUCE + SPARSE + GASP + SHARP + MINCOV,\n    \"compl\",   COMPL,  \"essen\",       ESSEN,\n    \"expand\",  EXPAND, \"expand1\",     EXPAND1|EXPAND,\n    \"irred\",   IRRED,  \"irred1\",      IRRED1|IRRED,\n    \"reduce\",  REDUCE, \"reduce1\",     REDUCE1|REDUCE,\n    \"mincov\",  MINCOV, \"mincov1\",     MINCOV1|MINCOV,\n    \"sparse\",  SPARSE, \"sharp\",       SHARP,\n    \"taut\",    TAUT,   \"gasp\",        GASP,\n    \"exact\",   EXACT,\n    0,\n};\n\n\nstruct {\n    char *name;\n    int *variable;\n    int value;\n}\n esp_opt_table[] = {\n    \"eat\", \u0026echo_comments, FALSE,\n    \"eatdots\", \u0026echo_unknown_commands, FALSE,\n    \"fast\", \u0026single_expand, TRUE,\n    \"kiss\", \u0026kiss, TRUE,\n    \"ness\", \u0026remove_essential, FALSE,\n    \"nirr\", \u0026force_irredundant, FALSE,\n    \"nunwrap\", \u0026unwrap_onset, FALSE,\n    \"onset\", \u0026recompute_onset, TRUE,\n    \"pos\", \u0026pos, TRUE,\n    \"random\", \u0026use_random_order, TRUE,\n    \"strong\", \u0026use_super_gasp, TRUE,\n    0,\n};\n"
+}

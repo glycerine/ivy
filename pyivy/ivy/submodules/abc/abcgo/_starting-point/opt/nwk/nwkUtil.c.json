@@ -1,0 +1,1210 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c",
+  "SHA256": "584c4f8f81ae4f10c5764cf6fd14c70c0effbe6bc5f4160348a7320a8de70a57",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 13,
+        "ByteOffset": 4039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Nwk_ManGetAigNodeNum(): Local AIG of node %d is not assigned.\\n\", pNode.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 223,
+        "Column": 5,
+        "ByteOffset": 5683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"ObjId = %5d.  \", pObj.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 9,
+        "ByteOffset": 5755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"PI\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 9,
+        "ByteOffset": 5808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"PO\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 9,
+        "ByteOffset": 5863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 230,
+        "Column": 5,
+        "ByteOffset": 5887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"   Fanins = \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 232,
+        "Column": 9,
+        "ByteOffset": 5963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d \", pNext.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 233,
+        "Column": 5,
+        "ByteOffset": 5994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"   Fanouts = \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 9,
+        "ByteOffset": 6072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d \", pNext.Id );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 236,
+        "Column": 5,
+        "ByteOffset": 6103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 9,
+        "ByteOffset": 6780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Nwk_ManDumpBlif(): Network does not have POs.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 267,
+        "Column": 13,
+        "ByteOffset": 6991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 5,
+        "ByteOffset": 7020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# BLIF file written by procedure Nwk_ManDumpBlif()\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 5,
+        "ByteOffset": 7171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".model %s\\n\", pNtk.pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 272,
+        "Column": 5,
+        "ByteOffset": 7237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".inputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 275,
+        "Column": 13,
+        "ByteOffset": 7340
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s\", (char*)Vec_PtrEntry(vPiNames, i) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 13,
+        "ByteOffset": 7424
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" n%0*d\", nDigits, pObj.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 278,
+        "Column": 5,
+        "ByteOffset": 7474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 7519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".outputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 13,
+        "ByteOffset": 7623
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s\", (char*)Vec_PtrEntry(vPoNames, i) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 13,
+        "ByteOffset": 7707
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" n%0*d\", nDigits, pObj.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 5,
+        "ByteOffset": 7757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 302,
+        "Column": 9,
+        "ByteOffset": 8436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".names\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 21,
+        "ByteOffset": 8706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \" %s\", (char*)Vec_PtrEntry(vPiNames, Nwk_ObjPioNum(pFanin)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 308,
+        "Column": 21,
+        "ByteOffset": 8826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \" n%0*d\", nDigits, pFanin.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 310,
+        "Column": 9,
+        "ByteOffset": 8892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" n%0*d\\n\", nDigits, pObj.Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 312,
+        "Column": 9,
+        "ByteOffset": 8978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", pSop );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 321,
+        "Column": 9,
+        "ByteOffset": 9195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".names\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 13,
+        "ByteOffset": 9293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s\", (char*)Vec_PtrEntry(vPiNames, Nwk_ObjPioNum(Nwk_ObjFanin0(pObj))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 13,
+        "ByteOffset": 9414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" n%0*d\", nDigits, Nwk_ObjFanin0(pObj).Id ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 327,
+        "Column": 13,
+        "ByteOffset": 9511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s\\n\", (char*)Vec_PtrEntry(vPoNames, Nwk_ObjPioNum(pObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 329,
+        "Column": 13,
+        "ByteOffset": 9619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" n%0*d\\n\", nDigits, pObj.Id ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 330,
+        "Column": 9,
+        "ByteOffset": 9677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%d 1\\n\", !pObj.fInvert );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 332,
+        "Column": 5,
+        "ByteOffset": 9730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".end\\n\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 333,
+        "Column": 5,
+        "ByteOffset": 9764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 410,
+        "Column": 5,
+        "ByteOffset": 12636
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The distribution of fanins and fanouts in the network:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 411,
+        "Column": 5,
+        "ByteOffset": 12710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"         Number   Nodes with fanin  Nodes with fanout\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 416,
+        "Column": 13,
+        "ByteOffset": 12935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%15d : \", k );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 418,
+        "Column": 13,
+        "ByteOffset": 12988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( Buffer, \"%d - %d\", int32(pow(float64(10), k/10)) * (k%10), int32(pow(float64(10), k/10)) * (k%10+1) - 1 ); "
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 418,
+        "Column": 47,
+        "ByteOffset": 13022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( Buffer, \"%d - %d\", int32(pow(float64(10), k/10)) * (k%10), int32(pow(float64(10), k/10)) * (k%10+1) - 1 ); "
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 418,
+        "Column": 87,
+        "ByteOffset": 13062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( Buffer, \"%d - %d\", int32(pow(float64(10), k/10)) * (k%10), int32(pow(float64(10), k/10)) * (k%10+1) - 1 ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 419,
+        "Column": 13,
+        "ByteOffset": 13117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%15s : \", Buffer );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 422,
+        "Column": 13,
+        "ByteOffset": 13204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"              \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 424,
+        "Column": 13,
+        "ByteOffset": 13261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%12d  \", vFanins.pArray[k] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 425,
+        "Column": 9,
+        "ByteOffset": 13310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 427,
+        "Column": 13,
+        "ByteOffset": 13377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"              \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 429,
+        "Column": 13,
+        "ByteOffset": 13434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%12d  \", vFanouts.pArray[k] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 430,
+        "Column": 9,
+        "ByteOffset": 13484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 435,
+        "Column": 5,
+        "ByteOffset": 13568
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Fanins: Max = %d. Ave = %.2f.  Fanouts: Max = %d. Ave =  %.2f.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 487,
+        "Column": 9,
+        "ByteOffset": 15390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Reducing node %d fanins from %d to %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 512,
+        "Column": 9,
+        "ByteOffset": 16170
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Support minimization reduced support of %d nodes.\\n\", Counter ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 554,
+        "Column": 9,
+        "ByteOffset": 17383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Support minimization reduced support of %d nodes.\\n\", Counter ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 573,
+        "Column": 5,
+        "ByteOffset": 18005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.pFanio[iFan0] == pObj.pFanio[iFan1] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 602,
+        "Column": 25,
+        "ByteOffset": 18972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"Removing duplicated fanins of node %d (fanins %d and %d).\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Nwk_ManIncrementTravId",
+      "Start": 1323,
+      "End": 1581,
+      "BodyStart": 1371,
+      "Original": "void Nwk_ManIncrementTravId( Nwk_Man_t * pNtk )\n{\n    Nwk_Obj_t * pObj;\n    int i;\n    if ( pNtk-\u003enTravIds \u003e= (1\u003c\u003c26)-1 )\n    {\n        pNtk-\u003enTravIds = 0;\n        Nwk_ManForEachObj( pNtk, pObj, i )\n            pObj-\u003eTravId = 0;\n    }\n    pNtk-\u003enTravIds++;\n}",
+      "Draft": "func Nwk_ManIncrementTravId(pNtk *Nwk_Man_t) {\n    var pObj *Nwk_Obj_t;\n    var i int32;\n    if pNtk.nTravIds \u003e= (1\u003c\u003c26)-1 {\n        pNtk.nTravIds = 0;\n        Nwk_ManForEachObj( pNtk, pObj, i )\n            pObj.TravId = 0;\n    }\n    pNtk.nTravIds++;\n}"
+    },
+    {
+      "Name": "Nwk_ManGetFaninMax",
+      "Start": 1862,
+      "End": 2134,
+      "BodyStart": 1905,
+      "Original": "int Nwk_ManGetFaninMax( Nwk_Man_t * pNtk )\n{\n    Nwk_Obj_t * pNode;\n    int i, nFaninsMax = 0;\n    Nwk_ManForEachNode( pNtk, pNode, i )\n    {\n        if ( nFaninsMax \u003c Nwk_ObjFaninNum(pNode) )\n            nFaninsMax = Nwk_ObjFaninNum(pNode);\n    }\n    return nFaninsMax;\n}",
+      "Draft": "func Nwk_ManGetFaninMax(pNtk *Nwk_Man_t) int32 {\n    var pNode *Nwk_Obj_t;\n    var i, nFaninsMax int32;\n    Nwk_ManForEachNode( pNtk, pNode, i )\n    {\n        if nFaninsMax \u003c Nwk_ObjFaninNum(pNode) {\n            nFaninsMax = Nwk_ObjFaninNum(pNode); }\n    }\n    return nFaninsMax;\n}"
+    },
+    {
+      "Name": "Nwk_ManGetTotalFanins",
+      "Start": 2407,
+      "End": 2607,
+      "BodyStart": 2453,
+      "Original": "int Nwk_ManGetTotalFanins( Nwk_Man_t * pNtk )\n{\n    Nwk_Obj_t * pNode;\n    int i, nFanins = 0;\n    Nwk_ManForEachNode( pNtk, pNode, i )\n        nFanins += Nwk_ObjFaninNum(pNode);\n    return nFanins;\n}",
+      "Draft": "func Nwk_ManGetTotalFanins(pNtk *Nwk_Man_t) int32 {\n    var pNode *Nwk_Obj_t;\n    var i, nFanins int32;\n    Nwk_ManForEachNode( pNtk, pNode, i )\n        nFanins += Nwk_ObjFaninNum(pNode);\n    return nFanins;\n}"
+    },
+    {
+      "Name": "Nwk_ManPiNum",
+      "Start": 2875,
+      "End": 3062,
+      "BodyStart": 2912,
+      "Original": "int Nwk_ManPiNum( Nwk_Man_t * pNtk )\n{\n    Nwk_Obj_t * pNode;\n    int i, Counter = 0;\n    Nwk_ManForEachCi( pNtk, pNode, i )\n        Counter += Nwk_ObjIsPi( pNode );\n    return Counter;\n}",
+      "Draft": "func Nwk_ManPiNum(pNtk *Nwk_Man_t) int32 {\n    var pNode *Nwk_Obj_t;\n    var i, Counter int32;\n    Nwk_ManForEachCi( pNtk, pNode, i )\n        Counter += Nwk_ObjIsPi( pNode );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Nwk_ManPoNum",
+      "Start": 3329,
+      "End": 3516,
+      "BodyStart": 3366,
+      "Original": "int Nwk_ManPoNum( Nwk_Man_t * pNtk )\n{\n    Nwk_Obj_t * pNode;\n    int i, Counter = 0;\n    Nwk_ManForEachCo( pNtk, pNode, i )\n        Counter += Nwk_ObjIsPo( pNode );\n    return Counter;\n}",
+      "Draft": "func Nwk_ManPoNum(pNtk *Nwk_Man_t) int32 {\n    var pNode *Nwk_Obj_t;\n    var i, Counter int32;\n    Nwk_ManForEachCo( pNtk, pNode, i )\n        Counter += Nwk_ObjIsPo( pNode );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Nwk_ManGetAigNodeNum",
+      "Start": 3782,
+      "End": 4237,
+      "BodyStart": 3827,
+      "Original": "int Nwk_ManGetAigNodeNum( Nwk_Man_t * pNtk )\n{\n    Nwk_Obj_t * pNode;\n    int i, nNodes = 0;\n    Nwk_ManForEachNode( pNtk, pNode, i )\n    {\n        if ( pNode-\u003epFunc == NULL )\n        {\n            printf( \"Nwk_ManGetAigNodeNum(): Local AIG of node %d is not assigned.\\n\", pNode-\u003eId );\n            continue;\n        }\n        if ( Nwk_ObjFaninNum(pNode) \u003c 2 )\n            continue;\n        nNodes += Hop_DagSize( pNode-\u003epFunc );\n    }\n    return nNodes;\n}",
+      "Draft": "func Nwk_ManGetAigNodeNum(pNtk *Nwk_Man_t) int32 {\n    var pNode *Nwk_Obj_t;\n    var i, nNodes int32;\n    Nwk_ManForEachNode( pNtk, pNode, i )\n    {\n        if pNode.pFunc == nil {\n            fmt.Printf(\"Nwk_ManGetAigNodeNum(): Local AIG of node %d is not assigned.\\n\", pNode.Id);\n            continue;\n        }\n        if Nwk_ObjFaninNum(pNode) \u003c 2 {\n            continue; }\n        nNodes += Hop_DagSize( pNode.pFunc );\n    }\n    return nNodes;\n}"
+    },
+    {
+      "Name": "Nwk_NodeCompareLevelsIncrease",
+      "Start": 4540,
+      "End": 4754,
+      "BodyStart": 4612,
+      "Original": "int Nwk_NodeCompareLevelsIncrease( Nwk_Obj_t ** pp1, Nwk_Obj_t ** pp2 )\n{\n    int Diff = (*pp1)-\u003eLevel - (*pp2)-\u003eLevel;\n    if ( Diff \u003c 0 )\n        return -1;\n    if ( Diff \u003e 0 ) \n        return 1;\n    return 0; \n}",
+      "Draft": "func Nwk_NodeCompareLevelsIncrease(pp1 **Nwk_Obj_t, pp2 **Nwk_Obj_t) int32 {\n    var Diff int32  = (*pp1).Level - (*pp2).Level;\n    if Diff \u003c 0 {\n        return -1; }\n    if Diff \u003e 0 { \n        return 1; }\n    return 0; \n}"
+    },
+    {
+      "Name": "Nwk_NodeCompareLevelsDecrease",
+      "Start": 5057,
+      "End": 5271,
+      "BodyStart": 5129,
+      "Original": "int Nwk_NodeCompareLevelsDecrease( Nwk_Obj_t ** pp1, Nwk_Obj_t ** pp2 )\n{\n    int Diff = (*pp1)-\u003eLevel - (*pp2)-\u003eLevel;\n    if ( Diff \u003e 0 )\n        return -1;\n    if ( Diff \u003c 0 ) \n        return 1;\n    return 0; \n}",
+      "Draft": "func Nwk_NodeCompareLevelsDecrease(pp1 **Nwk_Obj_t, pp2 **Nwk_Obj_t) int32 {\n    var Diff int32  = (*pp1).Level - (*pp2).Level;\n    if Diff \u003e 0 {\n        return -1; }\n    if Diff \u003c 0 { \n        return 1; }\n    return 0; \n}"
+    },
+    {
+      "Name": "Nwk_ObjPrint",
+      "Start": 5526,
+      "End": 6044,
+      "BodyStart": 5564,
+      "Original": "void Nwk_ObjPrint( Nwk_Obj_t * pObj )\n{\n    Nwk_Obj_t * pNext;\n    int i;\n    printf( \"ObjId = %5d.  \", pObj-\u003eId );\n    if ( Nwk_ObjIsPi(pObj) )\n        printf( \"PI\" );\n    if ( Nwk_ObjIsPo(pObj) )\n        printf( \"PO\" );\n    if ( Nwk_ObjIsNode(pObj) )\n        printf( \"Node\" );\n    printf( \"   Fanins = \" );\n    Nwk_ObjForEachFanin( pObj, pNext, i )\n        printf( \"%d \", pNext-\u003eId );\n    printf( \"   Fanouts = \" );\n    Nwk_ObjForEachFanout( pObj, pNext, i )\n        printf( \"%d \", pNext-\u003eId );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Nwk_ObjPrint(pObj *Nwk_Obj_t) {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    fmt.Printf(\"ObjId = %5d.  \", pObj.Id);\n    if Nwk_ObjIsPi(pObj) {\n        fmt.Printf(\"PI\"); }\n    if Nwk_ObjIsPo(pObj) {\n        fmt.Printf(\"PO\"); }\n    if Nwk_ObjIsNode(pObj) {\n        fmt.Printf(\"Node\"); }\n    fmt.Printf(\"   Fanins = \");\n    Nwk_ObjForEachFanin( pObj, pNext, i )\n        fmt.Printf(\"%d \", pNext.Id);\n    fmt.Printf(\"   Fanouts = \");\n    Nwk_ObjForEachFanout( pObj, pNext, i )\n        fmt.Printf(\"%d \", pNext.Id);\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Nwk_ManDumpBlif",
+      "Start": 6316,
+      "End": 9704,
+      "BodyStart": 6419,
+      "Original": "void Nwk_ManDumpBlif( Nwk_Man_t * pNtk, char * pFileName, Vec_Ptr_t * vPiNames, Vec_Ptr_t * vPoNames )\n{\n    FILE * pFile;\n    Vec_Ptr_t * vNodes;\n    Vec_Int_t * vTruth;\n    Vec_Int_t * vCover;\n    Nwk_Obj_t * pObj, * pFanin;\n    Aig_MmFlex_t * pMem;\n    char * pSop = NULL;\n    unsigned * pTruth;\n    int i, k, nDigits;\n    if ( Nwk_ManPoNum(pNtk) == 0 )\n    {\n        printf( \"Nwk_ManDumpBlif(): Network does not have POs.\\n\" );\n        return;\n    }\n    // collect nodes in the DFS order\n    nDigits = Abc_Base10Log( Nwk_ManObjNumMax(pNtk) );\n    // write the file \n    pFile = fopen( pFileName, \"w\" );\n    fprintf( pFile, \"# BLIF file written by procedure Nwk_ManDumpBlif()\\n\" );\n//    fprintf( pFile, \"# http://www.eecs.berkeley.edu/~alanmi/abc/\\n\" );\n    fprintf( pFile, \".model %s\\n\", pNtk-\u003epName );\n    // write PIs\n    fprintf( pFile, \".inputs\" );\n    Nwk_ManForEachCi( pNtk, pObj, i )\n        if ( vPiNames )\n            fprintf( pFile, \" %s\", (char*)Vec_PtrEntry(vPiNames, i) );\n        else\n            fprintf( pFile, \" n%0*d\", nDigits, pObj-\u003eId );\n    fprintf( pFile, \"\\n\" );\n    // write POs\n    fprintf( pFile, \".outputs\" );\n    Nwk_ManForEachCo( pNtk, pObj, i )\n        if ( vPoNames )\n            fprintf( pFile, \" %s\", (char*)Vec_PtrEntry(vPoNames, i) );\n        else\n            fprintf( pFile, \" n%0*d\", nDigits, pObj-\u003eId );\n    fprintf( pFile, \"\\n\" );\n    // write nodes\n    pMem = Aig_MmFlexStart();\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vNodes = Nwk_ManDfs( pNtk );\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vNodes, pObj, i )\n    {\n        if ( !Nwk_ObjIsNode(pObj) )\n            continue;\n        // derive SOP for the AIG\n        pTruth = Hop_ManConvertAigToTruth( pNtk-\u003epManHop, Hop_Regular(pObj-\u003epFunc), Nwk_ObjFaninNum(pObj), vTruth, 0 );\n        if ( Hop_IsComplement(pObj-\u003epFunc) )\n            Kit_TruthNot( pTruth, pTruth, Nwk_ObjFaninNum(pObj) );\n        pSop = Kit_PlaFromTruth( pMem, pTruth, Nwk_ObjFaninNum(pObj), vCover );\n        // write the node\n        fprintf( pFile, \".names\" );\n        if ( !Kit_TruthIsConst0(pTruth, Nwk_ObjFaninNum(pObj)) \u0026\u0026 !Kit_TruthIsConst1(pTruth, Nwk_ObjFaninNum(pObj)) )\n        {\n            Nwk_ObjForEachFanin( pObj, pFanin, k )\n                if ( vPiNames \u0026\u0026 Nwk_ObjIsPi(pFanin) )\n                    fprintf( pFile, \" %s\", (char*)Vec_PtrEntry(vPiNames, Nwk_ObjPioNum(pFanin)) );\n                else\n                    fprintf( pFile, \" n%0*d\", nDigits, pFanin-\u003eId );\n        }\n        fprintf( pFile, \" n%0*d\\n\", nDigits, pObj-\u003eId );\n        // write the function\n        fprintf( pFile, \"%s\", pSop );\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vTruth );\n    Vec_PtrFree( vNodes );\n    Aig_MmFlexStop( pMem, 0 );\n    // write POs\n    Nwk_ManForEachCo( pNtk, pObj, i )\n    {\n        fprintf( pFile, \".names\" );\n        if ( vPiNames \u0026\u0026 Nwk_ObjIsPi(Nwk_ObjFanin0(pObj)) )\n            fprintf( pFile, \" %s\", (char*)Vec_PtrEntry(vPiNames, Nwk_ObjPioNum(Nwk_ObjFanin0(pObj))) );\n        else\n            fprintf( pFile, \" n%0*d\", nDigits, Nwk_ObjFanin0(pObj)-\u003eId );\n        if ( vPoNames )\n            fprintf( pFile, \" %s\\n\", (char*)Vec_PtrEntry(vPoNames, Nwk_ObjPioNum(pObj)) );\n        else\n            fprintf( pFile, \" n%0*d\\n\", nDigits, pObj-\u003eId );\n        fprintf( pFile, \"%d 1\\n\", !pObj-\u003efInvert );\n    }\n    fprintf( pFile, \".end\\n\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func Nwk_ManDumpBlif(pNtk *Nwk_Man_t, pFileName string, vPiNames *Vec_Ptr_t, vPoNames *Vec_Ptr_t) {\n    var pFile *os.File;\n    var vNodes *Vec_Ptr_t;\n    var vTruth *Vec_Int_t;\n    var vCover *Vec_Int_t;\n    var pObj, pFanin *Nwk_Obj_t;\n    var pMem *Aig_MmFlex_t;\n    var pSop string  = nil;\n    var pTruth *uint32;\n    var i, k, nDigits int32;\n    if Nwk_ManPoNum(pNtk) == 0 {\n        fmt.Printf(\"Nwk_ManDumpBlif(): Network does not have POs.\\n\");\n        return;\n    }\n    // collect nodes in the DFS order\n    nDigits = Abc_Base10Log( Nwk_ManObjNumMax(pNtk) );\n    // write the file \n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fmt.Fprintf(pFile, \"# BLIF file written by procedure Nwk_ManDumpBlif()\\n\");\n//    fprintf( pFile, \"# http://www.eecs.berkeley.edu/~alanmi/abc/\\n\" );\n    fmt.Fprintf(pFile, \".model %s\\n\", pNtk.pName);\n    // write PIs\n    fmt.Fprintf(pFile, \".inputs\");\n    Nwk_ManForEachCi( pNtk, pObj, i )\n        if ( vPiNames )\n            fmt.Fprintf(pFile, \" %s\", (char*)Vec_PtrEntry(vPiNames, i));\n        else\n            fmt.Fprintf(pFile, \" n%0*d\", nDigits, pObj.Id);\n    fmt.Fprintf(pFile, \"\\n\");\n    // write POs\n    fmt.Fprintf(pFile, \".outputs\");\n    Nwk_ManForEachCo( pNtk, pObj, i )\n        if ( vPoNames )\n            fmt.Fprintf(pFile, \" %s\", (char*)Vec_PtrEntry(vPoNames, i));\n        else\n            fmt.Fprintf(pFile, \" n%0*d\", nDigits, pObj.Id);\n    fmt.Fprintf(pFile, \"\\n\");\n    // write nodes\n    pMem = Aig_MmFlexStart();\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vNodes = Nwk_ManDfs( pNtk );\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vNodes, pObj, i )\n    {\n        if !Nwk_ObjIsNode(pObj) {\n            continue; }\n        // derive SOP for the AIG\n        pTruth = Hop_ManConvertAigToTruth( pNtk.pManHop, Hop_Regular(pObj.pFunc), Nwk_ObjFaninNum(pObj), vTruth, 0 );\n        if Hop_IsComplement(pObj.pFunc) {\n            Kit_TruthNot( pTruth, pTruth, Nwk_ObjFaninNum(pObj) ); }\n        pSop = Kit_PlaFromTruth( pMem, pTruth, Nwk_ObjFaninNum(pObj), vCover );\n        // write the node\n        fmt.Fprintf(pFile, \".names\");\n        if !Kit_TruthIsConst0(pTruth, Nwk_ObjFaninNum(pObj)) \u0026\u0026 !Kit_TruthIsConst1(pTruth, Nwk_ObjFaninNum(pObj)) {\n            Nwk_ObjForEachFanin( pObj, pFanin, k )\n                if ( vPiNames \u0026\u0026 Nwk_ObjIsPi(pFanin) )\n                    fmt.Fprintf(pFile, \" %s\", (char*)Vec_PtrEntry(vPiNames, Nwk_ObjPioNum(pFanin)));\n                else\n                    fmt.Fprintf(pFile, \" n%0*d\", nDigits, pFanin.Id);\n        }\n        fmt.Fprintf(pFile, \" n%0*d\\n\", nDigits, pObj.Id);\n        // write the function\n        fmt.Fprintf(pFile, \"%s\", pSop);\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vTruth );\n    Vec_PtrFree( vNodes );\n    Aig_MmFlexStop( pMem, 0 );\n    // write POs\n    Nwk_ManForEachCo( pNtk, pObj, i )\n    {\n        fmt.Fprintf(pFile, \".names\");\n        if (vPiNames != nil) \u0026\u0026 Nwk_ObjIsPi(Nwk_ObjFanin0(pObj)) {\n            fmt.Fprintf(pFile, \" %s\", (char*)Vec_PtrEntry(vPiNames, Nwk_ObjPioNum(Nwk_ObjFanin0(pObj))));\n        } else {\n            fmt.Fprintf(pFile, \" n%0*d\", nDigits, Nwk_ObjFanin0(pObj).Id); }\n        if vPoNames != nil {\n            fmt.Fprintf(pFile, \" %s\\n\", (char*)Vec_PtrEntry(vPoNames, Nwk_ObjPioNum(pObj)));\n        } else {\n            fmt.Fprintf(pFile, \" n%0*d\\n\", nDigits, pObj.Id); }\n        fmt.Fprintf(pFile, \"%d 1\\n\", !pObj.fInvert);\n    }\n    fmt.Fprintf(pFile, \".end\\n\\n\");\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Nwk_ManPrintFanioNew",
+      "Start": 9997,
+      "End": 13678,
+      "BodyStart": 10043,
+      "Original": "void Nwk_ManPrintFanioNew( Nwk_Man_t * pNtk )\n{\n    char Buffer[100];\n    Nwk_Obj_t * pNode;\n    Vec_Int_t * vFanins, * vFanouts;\n    int nFanins, nFanouts, nFaninsMax, nFanoutsMax, nFaninsAll, nFanoutsAll;\n    int i, k, nSizeMax;\n\n    // determine the largest fanin and fanout\n    nFaninsMax = nFanoutsMax = 0;\n    nFaninsAll = nFanoutsAll = 0;\n    Nwk_ManForEachNode( pNtk, pNode, i )\n    {\n        nFanins  = Nwk_ObjFaninNum(pNode);\n        nFanouts = Nwk_ObjFanoutNum(pNode);\n        nFaninsAll  += nFanins;\n        nFanoutsAll += nFanouts;\n        nFaninsMax   = Abc_MaxInt( nFaninsMax, nFanins );\n        nFanoutsMax  = Abc_MaxInt( nFanoutsMax, nFanouts );\n    }\n\n    // allocate storage for fanin/fanout numbers\n    nSizeMax = Abc_MaxInt( 10 * (Abc_Base10Log(nFaninsMax) + 1), 10 * (Abc_Base10Log(nFanoutsMax) + 1) );\n    vFanins  = Vec_IntStart( nSizeMax );\n    vFanouts = Vec_IntStart( nSizeMax );\n\n    // count the number of fanins and fanouts\n    Nwk_ManForEachNode( pNtk, pNode, i )\n    {\n        nFanins  = Nwk_ObjFaninNum(pNode);\n        nFanouts = Nwk_ObjFanoutNum(pNode);\n//        nFanouts = Nwk_NodeMffcSize(pNode);\n\n        if ( nFanins \u003c 10 )\n            Vec_IntAddToEntry( vFanins, nFanins, 1 );\n        else if ( nFanins \u003c 100 )\n            Vec_IntAddToEntry( vFanins, 10 + nFanins/10, 1 );\n        else if ( nFanins \u003c 1000 )\n            Vec_IntAddToEntry( vFanins, 20 + nFanins/100, 1 );\n        else if ( nFanins \u003c 10000 )\n            Vec_IntAddToEntry( vFanins, 30 + nFanins/1000, 1 );\n        else if ( nFanins \u003c 100000 )\n            Vec_IntAddToEntry( vFanins, 40 + nFanins/10000, 1 );\n        else if ( nFanins \u003c 1000000 )\n            Vec_IntAddToEntry( vFanins, 50 + nFanins/100000, 1 );\n        else if ( nFanins \u003c 10000000 )\n            Vec_IntAddToEntry( vFanins, 60 + nFanins/1000000, 1 );\n\n        if ( nFanouts \u003c 10 )\n            Vec_IntAddToEntry( vFanouts, nFanouts, 1 );\n        else if ( nFanouts \u003c 100 )\n            Vec_IntAddToEntry( vFanouts, 10 + nFanouts/10, 1 );\n        else if ( nFanouts \u003c 1000 )\n            Vec_IntAddToEntry( vFanouts, 20 + nFanouts/100, 1 );\n        else if ( nFanouts \u003c 10000 )\n            Vec_IntAddToEntry( vFanouts, 30 + nFanouts/1000, 1 );\n        else if ( nFanouts \u003c 100000 )\n            Vec_IntAddToEntry( vFanouts, 40 + nFanouts/10000, 1 );\n        else if ( nFanouts \u003c 1000000 )\n            Vec_IntAddToEntry( vFanouts, 50 + nFanouts/100000, 1 );\n        else if ( nFanouts \u003c 10000000 )\n            Vec_IntAddToEntry( vFanouts, 60 + nFanouts/1000000, 1 );\n    }\n\n    printf( \"The distribution of fanins and fanouts in the network:\\n\" );\n    printf( \"         Number   Nodes with fanin  Nodes with fanout\\n\" );\n    for ( k = 0; k \u003c nSizeMax; k++ )\n    {\n        if ( vFanins-\u003epArray[k] == 0 \u0026\u0026 vFanouts-\u003epArray[k] == 0 )\n            continue;\n        if ( k \u003c 10 )\n            printf( \"%15d : \", k );\n        else\n        {\n            sprintf( Buffer, \"%d - %d\", (int)pow((double)10, k/10) * (k%10), (int)pow((double)10, k/10) * (k%10+1) - 1 ); \n            printf( \"%15s : \", Buffer );\n        }\n        if ( vFanins-\u003epArray[k] == 0 )\n            printf( \"              \" );\n        else\n            printf( \"%12d  \", vFanins-\u003epArray[k] );\n        printf( \"    \" );\n        if ( vFanouts-\u003epArray[k] == 0 )\n            printf( \"              \" );\n        else\n            printf( \"%12d  \", vFanouts-\u003epArray[k] );\n        printf( \"\\n\" );\n    }\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vFanouts );\n\n    printf( \"Fanins: Max = %d. Ave = %.2f.  Fanouts: Max = %d. Ave =  %.2f.\\n\", \n        nFaninsMax,  1.0*nFaninsAll/Nwk_ManNodeNum(pNtk), \n        nFanoutsMax, 1.0*nFanoutsAll/Nwk_ManNodeNum(pNtk)  );\n}",
+      "Draft": "func Nwk_ManPrintFanioNew(pNtk *Nwk_Man_t) {\n    var Buffer string // was [100]byte in C\n\n    var pNode *Nwk_Obj_t;\n    var vFanins, vFanouts *Vec_Int_t;\n    var nFanins, nFanouts, nFaninsMax, nFanoutsMax, nFaninsAll, nFanoutsAll int32;\n    var i, k, nSizeMax int32;\n\n    // determine the largest fanin and fanout\n    nFaninsMax = nFanoutsMax = 0;\n    nFaninsAll = nFanoutsAll = 0;\n    Nwk_ManForEachNode( pNtk, pNode, i )\n    {\n        nFanins  = Nwk_ObjFaninNum(pNode);\n        nFanouts = Nwk_ObjFanoutNum(pNode);\n        nFaninsAll  += nFanins;\n        nFanoutsAll += nFanouts;\n        nFaninsMax   = Abc_MaxInt( nFaninsMax, nFanins );\n        nFanoutsMax  = Abc_MaxInt( nFanoutsMax, nFanouts );\n    }\n\n    // allocate storage for fanin/fanout numbers\n    nSizeMax = Abc_MaxInt( 10 * (Abc_Base10Log(nFaninsMax) + 1), 10 * (Abc_Base10Log(nFanoutsMax) + 1) );\n    vFanins  = Vec_IntStart( nSizeMax );\n    vFanouts = Vec_IntStart( nSizeMax );\n\n    // count the number of fanins and fanouts\n    Nwk_ManForEachNode( pNtk, pNode, i )\n    {\n        nFanins  = Nwk_ObjFaninNum(pNode);\n        nFanouts = Nwk_ObjFanoutNum(pNode);\n//        nFanouts = Nwk_NodeMffcSize(pNode);\n\n        if nFanins \u003c 10 {\n            Vec_IntAddToEntry( vFanins, nFanins, 1 );\n        } else if nFanins \u003c 100 {\n            Vec_IntAddToEntry( vFanins, 10 + nFanins/10, 1 );\n        } else if nFanins \u003c 1000 {\n            Vec_IntAddToEntry( vFanins, 20 + nFanins/100, 1 );\n        } else if nFanins \u003c 10000 {\n            Vec_IntAddToEntry( vFanins, 30 + nFanins/1000, 1 );\n        } else if nFanins \u003c 100000 {\n            Vec_IntAddToEntry( vFanins, 40 + nFanins/10000, 1 );\n        } else if nFanins \u003c 1000000 {\n            Vec_IntAddToEntry( vFanins, 50 + nFanins/100000, 1 );\n        } else if nFanins \u003c 10000000 {\n            Vec_IntAddToEntry( vFanins, 60 + nFanins/1000000, 1 ); }\n\n        if nFanouts \u003c 10 {\n            Vec_IntAddToEntry( vFanouts, nFanouts, 1 );\n        } else if nFanouts \u003c 100 {\n            Vec_IntAddToEntry( vFanouts, 10 + nFanouts/10, 1 );\n        } else if nFanouts \u003c 1000 {\n            Vec_IntAddToEntry( vFanouts, 20 + nFanouts/100, 1 );\n        } else if nFanouts \u003c 10000 {\n            Vec_IntAddToEntry( vFanouts, 30 + nFanouts/1000, 1 );\n        } else if nFanouts \u003c 100000 {\n            Vec_IntAddToEntry( vFanouts, 40 + nFanouts/10000, 1 );\n        } else if nFanouts \u003c 1000000 {\n            Vec_IntAddToEntry( vFanouts, 50 + nFanouts/100000, 1 );\n        } else if nFanouts \u003c 10000000 {\n            Vec_IntAddToEntry( vFanouts, 60 + nFanouts/1000000, 1 ); }\n    }\n\n    fmt.Printf(\"The distribution of fanins and fanouts in the network:\\n\");\n    fmt.Printf(\"         Number   Nodes with fanin  Nodes with fanout\\n\");\n    for  k = 0; k \u003c nSizeMax; k++  {\n        if vFanins.pArray[k] == 0 \u0026\u0026 vFanouts.pArray[k] == 0 {\n            continue; }\n        if k \u003c 10 {\n            fmt.Printf(\"%15d : \", k);\n        } else {\n            Buffer = fmt.Sprintf(\"%d - %d\", int32(math.Pow(float64(float64(10)), float64(k/10))) * (k%10), int32(math.Pow(float64(float64(10)), float64(k/10))) * (k%10+1) - 1); \n            printf( \"%15s : \", Buffer );\n        }\n        if vFanins.pArray[k] == 0 {\n            fmt.Printf(\"              \");\n        } else {\n            fmt.Printf(\"%12d  \", vFanins.pArray[k]); }\n        fmt.Printf(\"    \");\n        if vFanouts.pArray[k] == 0 {\n            fmt.Printf(\"              \");\n        } else {\n            fmt.Printf(\"%12d  \", vFanouts.pArray[k]); }\n        fmt.Printf(\"\\n\");\n    }\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vFanouts );\n\n    fmt.Printf(\"Fanins: Max = %d. Ave = %.2f.  Fanouts: Max = %d. Ave =  %.2f.\\n\", nFaninsMax, 1.0*nFaninsAll/Nwk_ManNodeNum(pNtk), nFanoutsMax, 1.0*nFanoutsAll/Nwk_ManNodeNum(pNtk));\n}"
+    },
+    {
+      "Name": "Nwk_ManCleanMarks",
+      "Start": 13954,
+      "End": 14111,
+      "BodyStart": 13997,
+      "Original": "void Nwk_ManCleanMarks( Nwk_Man_t * pMan )\n{\n    Nwk_Obj_t * pObj;\n    int i;\n    Nwk_ManForEachObj( pMan, pObj, i )\n        pObj-\u003eMarkA = pObj-\u003eMarkB = 0;\n}",
+      "Draft": "func Nwk_ManCleanMarks(pMan *Nwk_Man_t) {\n    var pObj *Nwk_Obj_t;\n    var i int32;\n    Nwk_ManForEachObj( pMan, pObj, i )\n        pObj.MarkA = pObj.MarkB = 0;\n}"
+    },
+    {
+      "Name": "Nwk_ManMinimumBaseNode",
+      "Start": 14382,
+      "End": 15470,
+      "BodyStart": 14463,
+      "Original": "int Nwk_ManMinimumBaseNode( Nwk_Obj_t * pObj, Vec_Int_t * vTruth, int fVerbose )\n{\n    unsigned * pTruth;\n    Nwk_Obj_t * pFanin, * pObjNew;\n    Nwk_Man_t * pNtk = pObj-\u003epMan;\n    int uSupp, nSuppSize, k, Counter = 0;\n    pTruth = Hop_ManConvertAigToTruth( pNtk-\u003epManHop, Hop_Regular(pObj-\u003epFunc), Nwk_ObjFaninNum(pObj), vTruth, 0 );\n    nSuppSize = Kit_TruthSupportSize(pTruth, Nwk_ObjFaninNum(pObj));\n    if ( nSuppSize == Nwk_ObjFaninNum(pObj) )\n        return 0;\n    Counter++;\n    uSupp = Kit_TruthSupport( pTruth, Nwk_ObjFaninNum(pObj) );\n    // create new node with the given support\n    pObjNew = Nwk_ManCreateNode( pNtk, nSuppSize, Nwk_ObjFanoutNum(pObj) );\n    Nwk_ObjForEachFanin( pObj, pFanin, k )\n        if ( uSupp \u0026 (1 \u003c\u003c k) )\n            Nwk_ObjAddFanin( pObjNew, pFanin );\n    pObjNew-\u003epFunc = Hop_Remap( pNtk-\u003epManHop, pObj-\u003epFunc, uSupp, Nwk_ObjFaninNum(pObj) );\n    if ( fVerbose )\n        printf( \"Reducing node %d fanins from %d to %d.\\n\", \n            pObj-\u003eId, Nwk_ObjFaninNum(pObj), Nwk_ObjFaninNum(pObjNew) );\n    Nwk_ObjReplace( pObj, pObjNew );\n    return 1;\n}",
+      "Draft": "func Nwk_ManMinimumBaseNode(pObj *Nwk_Obj_t, vTruth *Vec_Int_t, fVerbose int32) int32 {\n    var pTruth *uint32;\n    var pFanin, pObjNew *Nwk_Obj_t;\n    var pNtk *Nwk_Man_t  = pObj.pMan;\n    var uSupp, nSuppSize, k, Counter int32;\n    pTruth = Hop_ManConvertAigToTruth( pNtk.pManHop, Hop_Regular(pObj.pFunc), Nwk_ObjFaninNum(pObj), vTruth, 0 );\n    nSuppSize = Kit_TruthSupportSize(pTruth, Nwk_ObjFaninNum(pObj));\n    if nSuppSize == Nwk_ObjFaninNum(pObj) {\n        return 0; }\n    Counter++;\n    uSupp = Kit_TruthSupport( pTruth, Nwk_ObjFaninNum(pObj) );\n    // create new node with the given support\n    pObjNew = Nwk_ManCreateNode( pNtk, nSuppSize, Nwk_ObjFanoutNum(pObj) );\n    Nwk_ObjForEachFanin( pObj, pFanin, k )\n        if ( uSupp \u0026 (1 \u003c\u003c k) )\n            Nwk_ObjAddFanin( pObjNew, pFanin );\n    pObjNew.pFunc = Hop_Remap( pNtk.pManHop, pObj.pFunc, uSupp, Nwk_ObjFaninNum(pObj) );\n    if fVerbose != 0 {\n        fmt.Printf(\"Reducing node %d fanins from %d to %d.\\n\", pObj.Id, Nwk_ObjFaninNum(pObj), Nwk_ObjFaninNum(pObjNew)); }\n    Nwk_ObjReplace( pObj, pObjNew );\n    return 1;\n}"
+    },
+    {
+      "Name": "Nwk_ManMinimumBaseInt",
+      "Start": 15741,
+      "End": 16181,
+      "BodyStart": 15801,
+      "Original": "int Nwk_ManMinimumBaseInt( Nwk_Man_t * pNtk, int fVerbose )\n{\n    Vec_Int_t * vTruth;\n    Nwk_Obj_t * pObj;\n    int i, Counter = 0;\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Nwk_ManForEachNode( pNtk, pObj, i )\n        Counter += Nwk_ManMinimumBaseNode( pObj, vTruth, fVerbose );\n    if ( fVerbose \u0026\u0026 Counter )\n        printf( \"Support minimization reduced support of %d nodes.\\n\", Counter );\n    Vec_IntFree( vTruth );\n    return Counter;\n}",
+      "Draft": "func Nwk_ManMinimumBaseInt(pNtk *Nwk_Man_t, fVerbose int32) int32 {\n    var vTruth *Vec_Int_t;\n    var pObj *Nwk_Obj_t;\n    var i, Counter int32;\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Nwk_ManForEachNode( pNtk, pObj, i )\n        Counter += Nwk_ManMinimumBaseNode( pObj, vTruth, fVerbose );\n    if (fVerbose != 0) \u0026\u0026 (Counter != 0) {\n        fmt.Printf(\"Support minimization reduced support of %d nodes.\\n\", Counter); }\n    Vec_IntFree( vTruth );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Nwk_ManMinimumBaseRec",
+      "Start": 16452,
+      "End": 16668,
+      "BodyStart": 16513,
+      "Original": "void Nwk_ManMinimumBaseRec( Nwk_Man_t * pNtk, int fVerbose )\n{\n    int i;\n    abctime clk = Abc_Clock();\n    for ( i = 0; Nwk_ManMinimumBaseInt( pNtk, fVerbose ); i++ );\n    ABC_PRT( \"Minbase\", Abc_Clock() - clk );\n}",
+      "Draft": "func Nwk_ManMinimumBaseRec(pNtk *Nwk_Man_t, fVerbose int32) {\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    for  i = 0; (Nwk_ManMinimumBaseInt( pNtk, fVerbose ) != 0); i++  {}\n    ABC_PRT( \"Minbase\", Abc_Clock() - clk );\n}"
+    },
+    {
+      "Name": "Nwk_ManMinimumBase",
+      "Start": 16939,
+      "End": 17357,
+      "BodyStart": 16997,
+      "Original": "void Nwk_ManMinimumBase( Nwk_Man_t * pNtk, int fVerbose )\n{\n    Vec_Int_t * vTruth;\n    Nwk_Obj_t * pObj;\n    int i, Counter = 0;\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Nwk_ManForEachNode( pNtk, pObj, i )\n        Counter += Nwk_ManMinimumBaseNode( pObj, vTruth, fVerbose );\n    if ( fVerbose \u0026\u0026 Counter )\n        printf( \"Support minimization reduced support of %d nodes.\\n\", Counter );\n    Vec_IntFree( vTruth );\n}",
+      "Draft": "func Nwk_ManMinimumBase(pNtk *Nwk_Man_t, fVerbose int32) {\n    var vTruth *Vec_Int_t;\n    var pObj *Nwk_Obj_t;\n    var i, Counter int32;\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Nwk_ManForEachNode( pNtk, pObj, i )\n        Counter += Nwk_ManMinimumBaseNode( pObj, vTruth, fVerbose );\n    if (fVerbose != 0) \u0026\u0026 (Counter != 0) {\n        fmt.Printf(\"Support minimization reduced support of %d nodes.\\n\", Counter); }\n    Vec_IntFree( vTruth );\n}"
+    },
+    {
+      "Name": "Nwk_ManRemoveDupFaninsNode",
+      "Start": 17628,
+      "End": 18064,
+      "BodyStart": 17722,
+      "Original": "void Nwk_ManRemoveDupFaninsNode( Nwk_Obj_t * pObj, int iFan0, int iFan1, Vec_Int_t * vTruth )\n{\n    Hop_Man_t * pManHop = pObj-\u003epMan-\u003epManHop;\n//    Nwk_Obj_t * pFanin0 = pObj-\u003epFanio[iFan0];\n//    Nwk_Obj_t * pFanin1 = pObj-\u003epFanio[iFan1];\n    assert( pObj-\u003epFanio[iFan0] == pObj-\u003epFanio[iFan1] );\n    pObj-\u003epFunc = Hop_Compose( pManHop, pObj-\u003epFunc, Hop_IthVar(pManHop,iFan0), iFan1 );\n    Nwk_ManMinimumBaseNode( pObj, vTruth, 0 );\n}",
+      "Draft": "func Nwk_ManRemoveDupFaninsNode(pObj *Nwk_Obj_t, iFan0 int32, iFan1 int32, vTruth *Vec_Int_t) {\n    var pManHop *Hop_Man_t  = pObj.pMan.pManHop;\n//    Nwk_Obj_t * pFanin0 = pObj-\u003epFanio[iFan0];\n//    Nwk_Obj_t * pFanin1 = pObj-\u003epFanio[iFan1];\n    assert(pObj.pFanio[iFan0] == pObj.pFanio[iFan1], \"pObj.pFanio[iFan0] == pObj.pFanio[iFan1]\");\n    pObj.pFunc = Hop_Compose( pManHop, pObj.pFunc, Hop_IthVar(pManHop,iFan0), iFan1 );\n    Nwk_ManMinimumBaseNode( pObj, vTruth, 0 );\n}"
+    },
+    {
+      "Name": "Nwk_ManRemoveDupFanins",
+      "Start": 18335,
+      "End": 19307,
+      "BodyStart": 18397,
+      "Original": "void Nwk_ManRemoveDupFanins( Nwk_Man_t * pNtk, int fVerbose )\n{\n    Vec_Int_t * vTruth;\n    Nwk_Obj_t * pObj;\n    int i, k, m, fFound;\n    // check if the nodes have duplicated fanins\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Nwk_ManForEachNode( pNtk, pObj, i )\n    {\n        fFound = 0;\n        for ( k = 0; k \u003c pObj-\u003enFanins; k++ )\n        {\n            for ( m = k + 1; m \u003c pObj-\u003enFanins; m++ )\n                if ( pObj-\u003epFanio[k] == pObj-\u003epFanio[m] )\n                {\n                    if ( fVerbose )\n                        printf( \"Removing duplicated fanins of node %d (fanins %d and %d).\\n\", \n                            pObj-\u003eId, pObj-\u003epFanio[k]-\u003eId, pObj-\u003epFanio[m]-\u003eId );\n                    Nwk_ManRemoveDupFaninsNode( pObj, k, m, vTruth );\n                    fFound = 1;\n                    break;\n                }\n            if ( fFound )\n                break;\n        }\n    }\n    Vec_IntFree( vTruth );\n//    Nwk_ManMinimumBase( pNtk, fVerbose );\n}",
+      "Draft": "func Nwk_ManRemoveDupFanins(pNtk *Nwk_Man_t, fVerbose int32) {\n    var vTruth *Vec_Int_t;\n    var pObj *Nwk_Obj_t;\n    var i, k, m, fFound int32;\n    // check if the nodes have duplicated fanins\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Nwk_ManForEachNode( pNtk, pObj, i )\n    {\n        fFound = 0;\n        for  k = 0; k \u003c pObj.nFanins; k++  {\n            for  m = k + 1; m \u003c pObj.nFanins; m++  {\n                if pObj.pFanio[k] == pObj.pFanio[m] {\n                    if fVerbose != 0 {\n                        fmt.Printf(\"Removing duplicated fanins of node %d (fanins %d and %d).\\n\", pObj.Id, pObj.pFanio[k].Id, pObj.pFanio[m].Id); }\n                    Nwk_ManRemoveDupFaninsNode( pObj, k, m, vTruth );\n                    fFound = 1;\n                    break;\n                }\n            }\n            if fFound != 0 {\n                break; }\n        }\n    }\n    Vec_IntFree( vTruth );\n//    Nwk_ManMinimumBase( pNtk, fVerbose );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::pointer-cast::7271",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7271,
+      "End": 7278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::pointer-cast::7555",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7555,
+      "End": 7562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::pointer-cast::8654",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8654,
+      "End": 8661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::pointer-cast::9245",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9245,
+      "End": 9252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::pointer-cast::9462",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9462,
+      "End": 9469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManIncrementTravId",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManIncrementTravId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1323,
+      "End": 1581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManGetFaninMax",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGetFaninMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1862,
+      "End": 2134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManGetTotalFanins",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGetTotalFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2407,
+      "End": 2607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManPiNum",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManPiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2875,
+      "End": 3062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManPoNum",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManPoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3329,
+      "End": 3516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManGetAigNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManGetAigNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3782,
+      "End": 4237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_NodeCompareLevelsIncrease",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_NodeCompareLevelsIncrease",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4540,
+      "End": 4754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_NodeCompareLevelsDecrease",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_NodeCompareLevelsDecrease",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5057,
+      "End": 5271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ObjPrint",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5526,
+      "End": 6044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManDumpBlif",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManDumpBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6316,
+      "End": 9704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManPrintFanioNew",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManPrintFanioNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9997,
+      "End": 13678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManCleanMarks",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCleanMarks",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13954,
+      "End": 14111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManMinimumBaseNode",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManMinimumBaseNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14382,
+      "End": 15470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManMinimumBaseInt",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManMinimumBaseInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15741,
+      "End": 16181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManMinimumBaseRec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManMinimumBaseRec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16452,
+      "End": 16668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManMinimumBase",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManMinimumBase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16939,
+      "End": 17357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManRemoveDupFaninsNode",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManRemoveDupFaninsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17628,
+      "End": 18064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::Nwk_ManRemoveDupFanins",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManRemoveDupFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18335,
+      "End": 19307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::1487",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1487,
+      "End": 1521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::1961",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1961,
+      "End": 1997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::2506",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2506,
+      "End": 2542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::2965",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2965,
+      "End": 2999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::3419",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3419,
+      "End": 3453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::3879",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3879,
+      "End": 3915
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::5839",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5839,
+      "End": 5876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::5948",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5948,
+      "End": 5986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::7178",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7178,
+      "End": 7211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::7462",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7462,
+      "End": 7495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::7853",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7853,
+      "End": 7904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::8517",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8517,
+      "End": 8555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::9074",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9074,
+      "End": 9107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::10347",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10347,
+      "End": 10383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::10955",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10955,
+      "End": 10991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::14036",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14036,
+      "End": 14070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::15053",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15053,
+      "End": 15091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::15915",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15915,
+      "End": 15950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::16626",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16626,
+      "End": 16665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::17111",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17111,
+      "End": 17146
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkUtil.c::macro-inline::18561",
+      "Category": "macro-inline-review",
+      "Symbol": "Nwk_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18561,
+      "End": 18596
+    }
+  ],
+  "Draft": "package nwk\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [nwkUtil.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Logic network representation.]\n\n  Synopsis    [Various utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nwkUtil.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cmath.h\u003e\n//#include \"nwk.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Increments the current traversal ID of the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManIncrementTravId(pNtk *Nwk_Man_t) {\n    var pObj *Nwk_Obj_t;\n    var i int32;\n    if pNtk.nTravIds \u003e= (1\u003c\u003c26)-1 {\n        pNtk.nTravIds = 0;\n        Nwk_ManForEachObj( pNtk, pObj, i )\n            pObj.TravId = 0;\n    }\n    pNtk.nTravIds++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the maximum number of fanins of a node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGetFaninMax(pNtk *Nwk_Man_t) int32 {\n    var pNode *Nwk_Obj_t;\n    var i, nFaninsMax int32;\n    Nwk_ManForEachNode( pNtk, pNode, i )\n    {\n        if nFaninsMax \u003c Nwk_ObjFaninNum(pNode) {\n            nFaninsMax = Nwk_ObjFaninNum(pNode); }\n    }\n    return nFaninsMax;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the total number of all fanins.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGetTotalFanins(pNtk *Nwk_Man_t) int32 {\n    var pNode *Nwk_Obj_t;\n    var i, nFanins int32;\n    Nwk_ManForEachNode( pNtk, pNode, i )\n        nFanins += Nwk_ObjFaninNum(pNode);\n    return nFanins;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of true PIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManPiNum(pNtk *Nwk_Man_t) int32 {\n    var pNode *Nwk_Obj_t;\n    var i, Counter int32;\n    Nwk_ManForEachCi( pNtk, pNode, i )\n        Counter += Nwk_ObjIsPi( pNode );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of true POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManPoNum(pNtk *Nwk_Man_t) int32 {\n    var pNode *Nwk_Obj_t;\n    var i, Counter int32;\n    Nwk_ManForEachCo( pNtk, pNode, i )\n        Counter += Nwk_ObjIsPo( pNode );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the number of AIG nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManGetAigNodeNum(pNtk *Nwk_Man_t) int32 {\n    var pNode *Nwk_Obj_t;\n    var i, nNodes int32;\n    Nwk_ManForEachNode( pNtk, pNode, i )\n    {\n        if pNode.pFunc == nil {\n            fmt.Printf(\"Nwk_ManGetAigNodeNum(): Local AIG of node %d is not assigned.\\n\", pNode.Id);\n            continue;\n        }\n        if Nwk_ObjFaninNum(pNode) \u003c 2 {\n            continue; }\n        nNodes += Hop_DagSize( pNode.pFunc );\n    }\n    return nNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Procedure used for sorting the nodes in increasing order of levels.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_NodeCompareLevelsIncrease(pp1 **Nwk_Obj_t, pp2 **Nwk_Obj_t) int32 {\n    var Diff int32  = (*pp1).Level - (*pp2).Level;\n    if Diff \u003c 0 {\n        return -1; }\n    if Diff \u003e 0 { \n        return 1; }\n    return 0; \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Procedure used for sorting the nodes in decreasing order of levels.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_NodeCompareLevelsDecrease(pp1 **Nwk_Obj_t, pp2 **Nwk_Obj_t) int32 {\n    var Diff int32  = (*pp1).Level - (*pp2).Level;\n    if Diff \u003e 0 {\n        return -1; }\n    if Diff \u003c 0 { \n        return 1; }\n    return 0; \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the objects.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ObjPrint(pObj *Nwk_Obj_t) {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    fmt.Printf(\"ObjId = %5d.  \", pObj.Id);\n    if Nwk_ObjIsPi(pObj) {\n        fmt.Printf(\"PI\"); }\n    if Nwk_ObjIsPo(pObj) {\n        fmt.Printf(\"PO\"); }\n    if Nwk_ObjIsNode(pObj) {\n        fmt.Printf(\"Node\"); }\n    fmt.Printf(\"   Fanins = \");\n    Nwk_ObjForEachFanin( pObj, pNext, i )\n        fmt.Printf(\"%d \", pNext.Id);\n    fmt.Printf(\"   Fanouts = \");\n    Nwk_ObjForEachFanout( pObj, pNext, i )\n        fmt.Printf(\"%d \", pNext.Id);\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dumps the BLIF file for the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManDumpBlif(pNtk *Nwk_Man_t, pFileName string, vPiNames *Vec_Ptr_t, vPoNames *Vec_Ptr_t) {\n    var pFile *os.File;\n    var vNodes *Vec_Ptr_t;\n    var vTruth *Vec_Int_t;\n    var vCover *Vec_Int_t;\n    var pObj, pFanin *Nwk_Obj_t;\n    var pMem *Aig_MmFlex_t;\n    var pSop string  = nil;\n    var pTruth *uint32;\n    var i, k, nDigits int32;\n    if Nwk_ManPoNum(pNtk) == 0 {\n        fmt.Printf(\"Nwk_ManDumpBlif(): Network does not have POs.\\n\");\n        return;\n    }\n    // collect nodes in the DFS order\n    nDigits = Abc_Base10Log( Nwk_ManObjNumMax(pNtk) );\n    // write the file \n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fmt.Fprintf(pFile, \"# BLIF file written by procedure Nwk_ManDumpBlif()\\n\");\n//    fprintf( pFile, \"# http://www.eecs.berkeley.edu/~alanmi/abc/\\n\" );\n    fmt.Fprintf(pFile, \".model %s\\n\", pNtk.pName);\n    // write PIs\n    fmt.Fprintf(pFile, \".inputs\");\n    Nwk_ManForEachCi( pNtk, pObj, i )\n        if ( vPiNames )\n            fmt.Fprintf(pFile, \" %s\", (char*)Vec_PtrEntry(vPiNames, i));\n        else\n            fmt.Fprintf(pFile, \" n%0*d\", nDigits, pObj.Id);\n    fmt.Fprintf(pFile, \"\\n\");\n    // write POs\n    fmt.Fprintf(pFile, \".outputs\");\n    Nwk_ManForEachCo( pNtk, pObj, i )\n        if ( vPoNames )\n            fmt.Fprintf(pFile, \" %s\", (char*)Vec_PtrEntry(vPoNames, i));\n        else\n            fmt.Fprintf(pFile, \" n%0*d\", nDigits, pObj.Id);\n    fmt.Fprintf(pFile, \"\\n\");\n    // write nodes\n    pMem = Aig_MmFlexStart();\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vCover = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vNodes = Nwk_ManDfs( pNtk );\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vNodes, pObj, i )\n    {\n        if !Nwk_ObjIsNode(pObj) {\n            continue; }\n        // derive SOP for the AIG\n        pTruth = Hop_ManConvertAigToTruth( pNtk.pManHop, Hop_Regular(pObj.pFunc), Nwk_ObjFaninNum(pObj), vTruth, 0 );\n        if Hop_IsComplement(pObj.pFunc) {\n            Kit_TruthNot( pTruth, pTruth, Nwk_ObjFaninNum(pObj) ); }\n        pSop = Kit_PlaFromTruth( pMem, pTruth, Nwk_ObjFaninNum(pObj), vCover );\n        // write the node\n        fmt.Fprintf(pFile, \".names\");\n        if !Kit_TruthIsConst0(pTruth, Nwk_ObjFaninNum(pObj)) \u0026\u0026 !Kit_TruthIsConst1(pTruth, Nwk_ObjFaninNum(pObj)) {\n            Nwk_ObjForEachFanin( pObj, pFanin, k )\n                if ( vPiNames \u0026\u0026 Nwk_ObjIsPi(pFanin) )\n                    fmt.Fprintf(pFile, \" %s\", (char*)Vec_PtrEntry(vPiNames, Nwk_ObjPioNum(pFanin)));\n                else\n                    fmt.Fprintf(pFile, \" n%0*d\", nDigits, pFanin.Id);\n        }\n        fmt.Fprintf(pFile, \" n%0*d\\n\", nDigits, pObj.Id);\n        // write the function\n        fmt.Fprintf(pFile, \"%s\", pSop);\n    }\n    Vec_IntFree( vCover );\n    Vec_IntFree( vTruth );\n    Vec_PtrFree( vNodes );\n    Aig_MmFlexStop( pMem, 0 );\n    // write POs\n    Nwk_ManForEachCo( pNtk, pObj, i )\n    {\n        fmt.Fprintf(pFile, \".names\");\n        if (vPiNames != nil) \u0026\u0026 Nwk_ObjIsPi(Nwk_ObjFanin0(pObj)) {\n            fmt.Fprintf(pFile, \" %s\", (char*)Vec_PtrEntry(vPiNames, Nwk_ObjPioNum(Nwk_ObjFanin0(pObj))));\n        } else {\n            fmt.Fprintf(pFile, \" n%0*d\", nDigits, Nwk_ObjFanin0(pObj).Id); }\n        if vPoNames != nil {\n            fmt.Fprintf(pFile, \" %s\\n\", (char*)Vec_PtrEntry(vPoNames, Nwk_ObjPioNum(pObj)));\n        } else {\n            fmt.Fprintf(pFile, \" n%0*d\\n\", nDigits, pObj.Id); }\n        fmt.Fprintf(pFile, \"%d 1\\n\", !pObj.fInvert);\n    }\n    fmt.Fprintf(pFile, \".end\\n\\n\");\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the distribution of fanins/fanouts in the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManPrintFanioNew(pNtk *Nwk_Man_t) {\n    var Buffer string // was [100]byte in C\n\n    var pNode *Nwk_Obj_t;\n    var vFanins, vFanouts *Vec_Int_t;\n    var nFanins, nFanouts, nFaninsMax, nFanoutsMax, nFaninsAll, nFanoutsAll int32;\n    var i, k, nSizeMax int32;\n\n    // determine the largest fanin and fanout\n    nFaninsMax = nFanoutsMax = 0;\n    nFaninsAll = nFanoutsAll = 0;\n    Nwk_ManForEachNode( pNtk, pNode, i )\n    {\n        nFanins  = Nwk_ObjFaninNum(pNode);\n        nFanouts = Nwk_ObjFanoutNum(pNode);\n        nFaninsAll  += nFanins;\n        nFanoutsAll += nFanouts;\n        nFaninsMax   = Abc_MaxInt( nFaninsMax, nFanins );\n        nFanoutsMax  = Abc_MaxInt( nFanoutsMax, nFanouts );\n    }\n\n    // allocate storage for fanin/fanout numbers\n    nSizeMax = Abc_MaxInt( 10 * (Abc_Base10Log(nFaninsMax) + 1), 10 * (Abc_Base10Log(nFanoutsMax) + 1) );\n    vFanins  = Vec_IntStart( nSizeMax );\n    vFanouts = Vec_IntStart( nSizeMax );\n\n    // count the number of fanins and fanouts\n    Nwk_ManForEachNode( pNtk, pNode, i )\n    {\n        nFanins  = Nwk_ObjFaninNum(pNode);\n        nFanouts = Nwk_ObjFanoutNum(pNode);\n//        nFanouts = Nwk_NodeMffcSize(pNode);\n\n        if nFanins \u003c 10 {\n            Vec_IntAddToEntry( vFanins, nFanins, 1 );\n        } else if nFanins \u003c 100 {\n            Vec_IntAddToEntry( vFanins, 10 + nFanins/10, 1 );\n        } else if nFanins \u003c 1000 {\n            Vec_IntAddToEntry( vFanins, 20 + nFanins/100, 1 );\n        } else if nFanins \u003c 10000 {\n            Vec_IntAddToEntry( vFanins, 30 + nFanins/1000, 1 );\n        } else if nFanins \u003c 100000 {\n            Vec_IntAddToEntry( vFanins, 40 + nFanins/10000, 1 );\n        } else if nFanins \u003c 1000000 {\n            Vec_IntAddToEntry( vFanins, 50 + nFanins/100000, 1 );\n        } else if nFanins \u003c 10000000 {\n            Vec_IntAddToEntry( vFanins, 60 + nFanins/1000000, 1 ); }\n\n        if nFanouts \u003c 10 {\n            Vec_IntAddToEntry( vFanouts, nFanouts, 1 );\n        } else if nFanouts \u003c 100 {\n            Vec_IntAddToEntry( vFanouts, 10 + nFanouts/10, 1 );\n        } else if nFanouts \u003c 1000 {\n            Vec_IntAddToEntry( vFanouts, 20 + nFanouts/100, 1 );\n        } else if nFanouts \u003c 10000 {\n            Vec_IntAddToEntry( vFanouts, 30 + nFanouts/1000, 1 );\n        } else if nFanouts \u003c 100000 {\n            Vec_IntAddToEntry( vFanouts, 40 + nFanouts/10000, 1 );\n        } else if nFanouts \u003c 1000000 {\n            Vec_IntAddToEntry( vFanouts, 50 + nFanouts/100000, 1 );\n        } else if nFanouts \u003c 10000000 {\n            Vec_IntAddToEntry( vFanouts, 60 + nFanouts/1000000, 1 ); }\n    }\n\n    fmt.Printf(\"The distribution of fanins and fanouts in the network:\\n\");\n    fmt.Printf(\"         Number   Nodes with fanin  Nodes with fanout\\n\");\n    for  k = 0; k \u003c nSizeMax; k++  {\n        if vFanins.pArray[k] == 0 \u0026\u0026 vFanouts.pArray[k] == 0 {\n            continue; }\n        if k \u003c 10 {\n            fmt.Printf(\"%15d : \", k);\n        } else {\n            Buffer = fmt.Sprintf(\"%d - %d\", int32(math.Pow(float64(float64(10)), float64(k/10))) * (k%10), int32(math.Pow(float64(float64(10)), float64(k/10))) * (k%10+1) - 1); \n            printf( \"%15s : \", Buffer );\n        }\n        if vFanins.pArray[k] == 0 {\n            fmt.Printf(\"              \");\n        } else {\n            fmt.Printf(\"%12d  \", vFanins.pArray[k]); }\n        fmt.Printf(\"    \");\n        if vFanouts.pArray[k] == 0 {\n            fmt.Printf(\"              \");\n        } else {\n            fmt.Printf(\"%12d  \", vFanouts.pArray[k]); }\n        fmt.Printf(\"\\n\");\n    }\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vFanouts );\n\n    fmt.Printf(\"Fanins: Max = %d. Ave = %.2f.  Fanouts: Max = %d. Ave =  %.2f.\\n\", nFaninsMax, 1.0*nFaninsAll/Nwk_ManNodeNum(pNtk), nFanoutsMax, 1.0*nFanoutsAll/Nwk_ManNodeNum(pNtk));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans the temporary marks of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManCleanMarks(pMan *Nwk_Man_t) {\n    var pObj *Nwk_Obj_t;\n    var i int32;\n    Nwk_ManForEachObj( pMan, pObj, i )\n        pObj.MarkA = pObj.MarkB = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Minimizes the support of all nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManMinimumBaseNode(pObj *Nwk_Obj_t, vTruth *Vec_Int_t, fVerbose int32) int32 {\n    var pTruth *uint32;\n    var pFanin, pObjNew *Nwk_Obj_t;\n    var pNtk *Nwk_Man_t  = pObj.pMan;\n    var uSupp, nSuppSize, k, Counter int32;\n    pTruth = Hop_ManConvertAigToTruth( pNtk.pManHop, Hop_Regular(pObj.pFunc), Nwk_ObjFaninNum(pObj), vTruth, 0 );\n    nSuppSize = Kit_TruthSupportSize(pTruth, Nwk_ObjFaninNum(pObj));\n    if nSuppSize == Nwk_ObjFaninNum(pObj) {\n        return 0; }\n    Counter++;\n    uSupp = Kit_TruthSupport( pTruth, Nwk_ObjFaninNum(pObj) );\n    // create new node with the given support\n    pObjNew = Nwk_ManCreateNode( pNtk, nSuppSize, Nwk_ObjFanoutNum(pObj) );\n    Nwk_ObjForEachFanin( pObj, pFanin, k )\n        if ( uSupp \u0026 (1 \u003c\u003c k) )\n            Nwk_ObjAddFanin( pObjNew, pFanin );\n    pObjNew.pFunc = Hop_Remap( pNtk.pManHop, pObj.pFunc, uSupp, Nwk_ObjFaninNum(pObj) );\n    if fVerbose != 0 {\n        fmt.Printf(\"Reducing node %d fanins from %d to %d.\\n\", pObj.Id, Nwk_ObjFaninNum(pObj), Nwk_ObjFaninNum(pObjNew)); }\n    Nwk_ObjReplace( pObj, pObjNew );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Minimizes the support of all nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManMinimumBaseInt(pNtk *Nwk_Man_t, fVerbose int32) int32 {\n    var vTruth *Vec_Int_t;\n    var pObj *Nwk_Obj_t;\n    var i, Counter int32;\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Nwk_ManForEachNode( pNtk, pObj, i )\n        Counter += Nwk_ManMinimumBaseNode( pObj, vTruth, fVerbose );\n    if (fVerbose != 0) \u0026\u0026 (Counter != 0) {\n        fmt.Printf(\"Support minimization reduced support of %d nodes.\\n\", Counter); }\n    Vec_IntFree( vTruth );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Minimizes the support of all nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManMinimumBaseRec(pNtk *Nwk_Man_t, fVerbose int32) {\n    var i int32;\n    var clk abctime  = Abc_Clock();\n    for  i = 0; (Nwk_ManMinimumBaseInt( pNtk, fVerbose ) != 0); i++  {}\n    ABC_PRT( \"Minbase\", Abc_Clock() - clk );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Minimizes the support of all nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManMinimumBase(pNtk *Nwk_Man_t, fVerbose int32) {\n    var vTruth *Vec_Int_t;\n    var pObj *Nwk_Obj_t;\n    var i, Counter int32;\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Nwk_ManForEachNode( pNtk, pObj, i )\n        Counter += Nwk_ManMinimumBaseNode( pObj, vTruth, fVerbose );\n    if (fVerbose != 0) \u0026\u0026 (Counter != 0) {\n        fmt.Printf(\"Support minimization reduced support of %d nodes.\\n\", Counter); }\n    Vec_IntFree( vTruth );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Minimizes the support of all nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManRemoveDupFaninsNode(pObj *Nwk_Obj_t, iFan0 int32, iFan1 int32, vTruth *Vec_Int_t) {\n    var pManHop *Hop_Man_t  = pObj.pMan.pManHop;\n//    Nwk_Obj_t * pFanin0 = pObj-\u003epFanio[iFan0];\n//    Nwk_Obj_t * pFanin1 = pObj-\u003epFanio[iFan1];\n    assert(pObj.pFanio[iFan0] == pObj.pFanio[iFan1], \"pObj.pFanio[iFan0] == pObj.pFanio[iFan1]\");\n    pObj.pFunc = Hop_Compose( pManHop, pObj.pFunc, Hop_IthVar(pManHop,iFan0), iFan1 );\n    Nwk_ManMinimumBaseNode( pObj, vTruth, 0 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Minimizes the support of all nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManRemoveDupFanins(pNtk *Nwk_Man_t, fVerbose int32) {\n    var vTruth *Vec_Int_t;\n    var pObj *Nwk_Obj_t;\n    var i, k, m, fFound int32;\n    // check if the nodes have duplicated fanins\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    Nwk_ManForEachNode( pNtk, pObj, i )\n    {\n        fFound = 0;\n        for  k = 0; k \u003c pObj.nFanins; k++  {\n            for  m = k + 1; m \u003c pObj.nFanins; m++  {\n                if pObj.pFanio[k] == pObj.pFanio[m] {\n                    if fVerbose != 0 {\n                        fmt.Printf(\"Removing duplicated fanins of node %d (fanins %d and %d).\\n\", pObj.Id, pObj.pFanio[k].Id, pObj.pFanio[m].Id); }\n                    Nwk_ManRemoveDupFaninsNode( pObj, k, m, vTruth );\n                    fFound = 1;\n                    break;\n                }\n            }\n            if fFound != 0 {\n                break; }\n        }\n    }\n    Vec_IntFree( vTruth );\n//    Nwk_ManMinimumBase( pNtk, fVerbose );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

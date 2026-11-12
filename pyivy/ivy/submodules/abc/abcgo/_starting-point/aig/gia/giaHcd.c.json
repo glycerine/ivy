@@ -1,0 +1,668 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c",
+  "SHA256": "eae277091feb57a579eeaf9eb4014f42c899a54fbb06e7c6320513632b465b39",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 2460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Hcd_Pars_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 323,
+        "Column": 5,
+        "ByteOffset": 9728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vGias) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 326,
+        "Column": 9,
+        "ByteOffset": 9980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ManCiNum(pGia)  == Gia_ManCiNum(pGia0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 327,
+        "Column": 9,
+        "ByteOffset": 10042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ManCoNum(pGia)  == Gia_ManCoNum(pGia0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 328,
+        "Column": 9,
+        "ByteOffset": 10104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ManRegNum(pGia) == Gia_ManRegNum(pGia0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 353,
+        "Column": 5,
+        "ByteOffset": 11285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNodes == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 407,
+        "Column": 5,
+        "ByteOffset": 12869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pOld) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 408,
+        "Column": 5,
+        "ByteOffset": 12908
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 458,
+        "Column": 9,
+        "ByteOffset": 14595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 463,
+        "Column": 13,
+        "ByteOffset": 14937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( int32(pObj.Value) == Abc_LitNotCond( pRepr.Value, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 468,
+        "Column": 9,
+        "ByteOffset": 15195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pRepr.Value \u003c pObj.Value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 472,
+        "Column": 13,
+        "ByteOffset": 15434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjReprObj( pNew, Gia_ObjId(pNew, pObjNew) ) == pReprNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 477,
+        "Column": 13,
+        "ByteOffset": 15711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjNext(pNew, Gia_ObjId(pNew, pObjNew)) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 484,
+        "Column": 5,
+        "ByteOffset": 16063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 548,
+        "Column": 5,
+        "ByteOffset": 18208
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (Gia_ManCoNum(p) % nSnapshots) == 0 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 553,
+        "Column": 80,
+        "ByteOffset": 18493
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNew.pReprs = /*__starting_point_inline_macro:ABC_CALLOC__*/((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(Gia_Rpr_t)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 554,
+        "Column": 74,
+        "ByteOffset": 18622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNew.pNexts = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 565,
+        "Column": 13,
+        "ByteOffset": 19225
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjIsConst0(pRepr) || Gia_ObjIsRo(p, pRepr) );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 603,
+        "Column": 22,
+        "ByteOffset": 20628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var clk int64  = clock();"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 609,
+        "Column": 43,
+        "ByteOffset": 20915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 609,
+        "Column": 69,
+        "ByteOffset": 20941
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 611,
+        "Column": 15,
+        "ByteOffset": 21003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        clk = clock();"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 632,
+        "Column": 43,
+        "ByteOffset": 21863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 632,
+        "Column": 69,
+        "ByteOffset": 21889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 641,
+        "Column": 9,
+        "ByteOffset": 22201
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Choices   : Reprs = %5d. Equivs = %5d. Choices = %5d.\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Hcd_ManSetDefaultParams",
+      "Start": 2393,
+      "End": 3096,
+      "BodyStart": 2440,
+      "Original": "void Hcd_ManSetDefaultParams( Hcd_Pars_t * p )\n{\n    memset( p, 0, sizeof(Hcd_Pars_t) );\n    p-\u003enWords         =     8;  // the number of simulation words\n    p-\u003enBTLimit       =  1000;  // conflict limit at a node\n    p-\u003enSatVarMax     =  5000;  // the max number of SAT variables\n    p-\u003efSynthesis     =     1;  // derives three snapshots\n    p-\u003efPolarFlip     =     1;  // uses polarity adjustment\n    p-\u003efSimulateTfo   =     1;  // simulate TFO\n    p-\u003efPower         =     0;  // power-aware rewriting\n    p-\u003efVerbose       =     0;  // verbose stats\n    p-\u003enNodesAhead    =  1000;  // the lookahead in terms of nodes\n    p-\u003enCallsRecycle  =   100;  // calls to perform before recycling SAT solver\n}",
+      "Draft": "func Hcd_ManSetDefaultParams(p *Hcd_Pars_t) {\n    memset( p, 0, sizeof(Hcd_Pars_t) );\n    p.nWords         =     8;  // the number of simulation words\n    p.nBTLimit       =  1000;  // conflict limit at a node\n    p.nSatVarMax     =  5000;  // the max number of SAT variables\n    p.fSynthesis     =     1;  // derives three snapshots\n    p.fPolarFlip     =     1;  // uses polarity adjustment\n    p.fSimulateTfo   =     1;  // simulate TFO\n    p.fPower         =     0;  // power-aware rewriting\n    p.fVerbose       =     0;  // verbose stats\n    p.nNodesAhead    =  1000;  // the lookahead in terms of nodes\n    p.nCallsRecycle  =   100;  // calls to perform before recycling SAT solver\n}"
+    },
+    {
+      "Name": "Hcd_Compress",
+      "Start": 3362,
+      "End": 4793,
+      "BodyStart": 3527,
+      "Original": "Aig_Man_t * Hcd_Compress( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rwz -l; b -l; rwz -l; b -l\"\n{\n    Aig_Man_t * pTemp;\n\n    Dar_RwrPar_t ParsRwr, * pParsRwr = \u0026ParsRwr;\n    Dar_RefPar_t ParsRef, * pParsRef = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr-\u003efUpdateLevel = fUpdateLevel;\n    pParsRef-\u003efUpdateLevel = fUpdateLevel;\n\n    pParsRwr-\u003efPower = fPower;\n\n    pParsRwr-\u003efVerbose = 0;//fVerbose;\n    pParsRef-\u003efVerbose = 0;//fVerbose;\n\n//    pAig = Aig_ManDupDfs( pAig ); \n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n\n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n\n    // balance\n    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n    }\n\n    pParsRwr-\u003efUseZeros = 1;\n    pParsRef-\u003efUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n\n    return pAig;\n}",
+      "Draft": "Aig_Man_t * Hcd_Compress( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rwz -l; b -l; rwz -l; b -l\"\n{\n    var pTemp *Aig_Man_t;\n\n    var ParsRwr Dar_RwrPar_t;\n    var pParsRwr *Dar_RwrPar_t = \u0026ParsRwr;\n    var ParsRef Dar_RefPar_t;\n    var pParsRef *Dar_RefPar_t = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr.fUpdateLevel = fUpdateLevel;\n    pParsRef.fUpdateLevel = fUpdateLevel;\n\n    pParsRwr.fPower = fPower;\n\n    pParsRwr.fVerbose = 0;//fVerbose;\n    pParsRef.fVerbose = 0;//fVerbose;\n\n//    pAig = Aig_ManDupDfs( pAig ); \n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    // balance\n    if fBalance {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n    }\n\n    pParsRwr.fUseZeros = 1;\n    pParsRef.fUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    return pAig;\n}"
+    },
+    {
+      "Name": "Hcd_Compress2",
+      "Start": 5059,
+      "End": 7445,
+      "BodyStart": 5266,
+      "Original": "Aig_Man_t * Hcd_Compress2( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fFanout, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rf -l; b -l; rw -l; rwz -l; b -l; rfz -l; rwz -l; b -l\"\n{\n    Aig_Man_t * pTemp;\n\n    Dar_RwrPar_t ParsRwr, * pParsRwr = \u0026ParsRwr;\n    Dar_RefPar_t ParsRef, * pParsRef = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr-\u003efUpdateLevel = fUpdateLevel;\n    pParsRef-\u003efUpdateLevel = fUpdateLevel;\n    pParsRwr-\u003efFanout = fFanout;\n    pParsRwr-\u003efPower = fPower;\n\n    pParsRwr-\u003efVerbose = 0;//fVerbose;\n    pParsRef-\u003efVerbose = 0;//fVerbose;\n\n//    pAig = Aig_ManDupDfs( pAig ); \n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n\n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n\n    // balance\n//    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n    }\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n\n    pParsRwr-\u003efUseZeros = 1;\n    pParsRef-\u003efUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n\n    // balance\n    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n    }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n\n    // balance\n    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if ( fVerbose ) Aig_ManPrintStats( pAig );\n    }\n    return pAig;\n}",
+      "Draft": "Aig_Man_t * Hcd_Compress2( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fFanout, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rf -l; b -l; rw -l; rwz -l; b -l; rfz -l; rwz -l; b -l\"\n{\n    var pTemp *Aig_Man_t;\n\n    var ParsRwr Dar_RwrPar_t;\n    var pParsRwr *Dar_RwrPar_t = \u0026ParsRwr;\n    var ParsRef Dar_RefPar_t;\n    var pParsRef *Dar_RefPar_t = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr.fUpdateLevel = fUpdateLevel;\n    pParsRef.fUpdateLevel = fUpdateLevel;\n    pParsRwr.fFanout = fFanout;\n    pParsRwr.fPower = fPower;\n\n    pParsRwr.fVerbose = 0;//fVerbose;\n    pParsRef.fVerbose = 0;//fVerbose;\n\n//    pAig = Aig_ManDupDfs( pAig ); \n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    // balance\n//    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n    }\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    pParsRwr.fUseZeros = 1;\n    pParsRef.fUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    // balance\n    if fBalance {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n    }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    // balance\n    if fBalance {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n    }\n    return pAig;\n}"
+    },
+    {
+      "Name": "Hcd_ChoiceSynthesis",
+      "Start": 7711,
+      "End": 8452,
+      "BodyStart": 7919,
+      "Original": "Vec_Ptr_t * Hcd_ChoiceSynthesis( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias resyn    \"b; rw; rwz; b; rwz; b\"\n//alias resyn2   \"b; rw; rf; b; rw; rwz; b; rfz; rwz; b\"\n{\n    Vec_Ptr_t * vGias;\n    Gia_Man_t * pGia;\n\n    vGias = Vec_PtrAlloc( 3 );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n\n    pAig = Hcd_Compress( pAig, fBalance, fUpdateLevel, fPower, fVerbose );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n//Aig_ManPrintStats( pAig );\n\n    pAig = Hcd_Compress2( pAig, fBalance, fUpdateLevel, 1, fPower, fVerbose );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n//Aig_ManPrintStats( pAig );\n\n    Aig_ManStop( pAig );\n    return vGias;\n}",
+      "Draft": "Vec_Ptr_t * Hcd_ChoiceSynthesis( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias resyn    \"b; rw; rwz; b; rwz; b\"\n//alias resyn2   \"b; rw; rf; b; rw; rwz; b; rfz; rwz; b\"\n{\n    var vGias *Vec_Ptr_t;\n    var pGia *Gia_Man_t;\n\n    vGias = Vec_PtrAlloc( 3 );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n\n    pAig = Hcd_Compress( pAig, fBalance, fUpdateLevel, fPower, fVerbose );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n//Aig_ManPrintStats( pAig );\n\n    pAig = Hcd_Compress2( pAig, fBalance, fUpdateLevel, 1, fPower, fVerbose );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n//Aig_ManPrintStats( pAig );\n\n    Aig_ManStop( pAig );\n    return vGias;\n}"
+    },
+    {
+      "Name": "Hcd_ManChoiceMiter_rec",
+      "Start": 8725,
+      "End": 9187,
+      "BodyStart": 8805,
+      "Original": "int Hcd_ManChoiceMiter_rec( Gia_Man_t * pNew, Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    if ( ~pObj-\u003eValue )\n        return pObj-\u003eValue;\n    Hcd_ManChoiceMiter_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    if ( Gia_ObjIsCo(pObj) )\n        return pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Hcd_ManChoiceMiter_rec( pNew, p, Gia_ObjFanin1(pObj) );\n    return pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n}",
+      "Draft": "func Hcd_ManChoiceMiter_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    if ~pObj.Value {\n        return pObj.Value; }\n    Hcd_ManChoiceMiter_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    if Gia_ObjIsCo(pObj) {\n        return pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }\n    Hcd_ManChoiceMiter_rec( pNew, p, Gia_ObjFanin1(pObj) );\n    return pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n}"
+    },
+    {
+      "Name": "Hcd_ManChoiceMiter",
+      "Start": 9481,
+      "End": 10941,
+      "BodyStart": 9533,
+      "Original": "Gia_Man_t * Hcd_ManChoiceMiter( Vec_Ptr_t * vGias )\n{\n    Gia_Man_t * pNew, * pGia, * pGia0;\n    int i, k, iNode, nNodes;\n    // make sure they have equal parameters\n    assert( Vec_PtrSize(vGias) \u003e 0 );\n    pGia0 = (Gia_Man_t *)Vec_PtrEntry( vGias, 0 );\n    Vec_PtrForEachEntry( Gia_Man_t *, vGias, pGia, i )\n    {\n        assert( Gia_ManCiNum(pGia)  == Gia_ManCiNum(pGia0) );\n        assert( Gia_ManCoNum(pGia)  == Gia_ManCoNum(pGia0) );\n        assert( Gia_ManRegNum(pGia) == Gia_ManRegNum(pGia0) );\n        Gia_ManFillValue( pGia );\n        Gia_ManConst0(pGia)-\u003eValue = 0;\n    }\n    // start the new manager\n    pNew = Gia_ManStart( Vec_PtrSize(vGias) * Gia_ManObjNum(pGia0) );\n    pNew-\u003epName = Abc_UtilStrsav( pGia0-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( pGia0-\u003epSpec );\n    // create new CIs and assign them to the old manager CIs\n    for ( k = 0; k \u003c Gia_ManCiNum(pGia0); k++ )\n    {\n        iNode = Gia_ManAppendCi(pNew);\n        Vec_PtrForEachEntry( Gia_Man_t *, vGias, pGia, i )\n            Gia_ManCi( pGia, k )-\u003eValue = iNode; \n    }\n    // create internal nodes\n    Gia_ManHashAlloc( pNew );\n    for ( k = 0; k \u003c Gia_ManCoNum(pGia0); k++ )\n    {\n        Vec_PtrForEachEntry( Gia_Man_t *, vGias, pGia, i )\n            Hcd_ManChoiceMiter_rec( pNew, pGia, Gia_ManCo( pGia, k ) );\n    }\n    Gia_ManHashStop( pNew );\n    // check the presence of dangling nodes\n    nNodes = Gia_ManHasDangling( pNew );\n    assert( nNodes == 0 );\n    return pNew;\n}",
+      "Draft": "func Hcd_ManChoiceMiter(vGias *Vec_Ptr_t) *Gia_Man_t {\n    var pNew, pGia, pGia0 *Gia_Man_t;\n    var i, k, iNode, nNodes int32;\n    // make sure they have equal parameters\n    assert(Vec_PtrSize(vGias) \u003e 0, \"Vec_PtrSize(vGias) \u003e 0\");\n    pGia0 = (Gia_Man_t *)Vec_PtrEntry( vGias, 0 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vGias)) \u0026\u0026 (((pGia) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {\n        assert(Gia_ManCiNum(pGia)  == Gia_ManCiNum(pGia0), \"Gia_ManCiNum(pGia)  == Gia_ManCiNum(pGia0)\");\n        assert(Gia_ManCoNum(pGia)  == Gia_ManCoNum(pGia0), \"Gia_ManCoNum(pGia)  == Gia_ManCoNum(pGia0)\");\n        assert(Gia_ManRegNum(pGia) == Gia_ManRegNum(pGia0), \"Gia_ManRegNum(pGia) == Gia_ManRegNum(pGia0)\");\n        Gia_ManFillValue( pGia );\n        Gia_ManConst0(pGia).Value = 0;\n    }\n    // start the new manager\n    pNew = Gia_ManStart( Vec_PtrSize(vGias) * Gia_ManObjNum(pGia0) );\n    pNew.pName = Abc_UtilStrsav( pGia0.pName );\n    pNew.pSpec = Abc_UtilStrsav( pGia0.pSpec );\n    // create new CIs and assign them to the old manager CIs\n    for  k = 0; k \u003c Gia_ManCiNum(pGia0); k++  {\n        iNode = Gia_ManAppendCi(pNew);\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vGias)) \u0026\u0026 (((pGia) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {\n            Gia_ManCi( pGia, k ).Value = iNode;\n        } \n    }\n    // create internal nodes\n    Gia_ManHashAlloc( pNew );\n    for  k = 0; k \u003c Gia_ManCoNum(pGia0); k++  {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vGias)) \u0026\u0026 (((pGia) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {\n            Hcd_ManChoiceMiter_rec( pNew, pGia, Gia_ManCo( pGia, k ) );\n        }\n    }\n    Gia_ManHashStop( pNew );\n    // check the presence of dangling nodes\n    nNodes = Gia_ManHasDangling( pNew );\n    assert(nNodes == 0, \"nNodes == 0\");\n    return pNew;\n}"
+    },
+    {
+      "Name": "Hcd_ObjCheckTfi_rec",
+      "Start": 11218,
+      "End": 12046,
+      "BodyStart": 11318,
+      "Original": "int Hcd_ObjCheckTfi_rec( Gia_Man_t * p, Gia_Obj_t * pOld, Gia_Obj_t * pNode, Vec_Ptr_t * vVisited )\n{\n    // check the trivial cases\n    if ( pNode == NULL )\n        return 0;\n    if ( Gia_ObjIsCi(pNode) )\n        return 0;\n//    if ( pNode-\u003eId \u003c pOld-\u003eId ) // cannot use because of choices of pNode\n//        return 0;\n    if ( pNode == pOld )\n        return 1;\n    // skip the visited node\n    if ( pNode-\u003efMark0 )\n        return 0;\n    pNode-\u003efMark0 = 1;\n    Vec_PtrPush( vVisited, pNode );\n    // check the children\n    if ( Hcd_ObjCheckTfi_rec( p, pOld, Gia_ObjFanin0(pNode), vVisited ) )\n        return 1;\n    if ( Hcd_ObjCheckTfi_rec( p, pOld, Gia_ObjFanin1(pNode), vVisited ) )\n        return 1;\n    // check equivalent nodes\n    return Hcd_ObjCheckTfi_rec( p, pOld, Gia_ObjNextObj(p, Gia_ObjId(p, pNode)), vVisited );\n}",
+      "Draft": "func Hcd_ObjCheckTfi_rec(p *Gia_Man_t, pOld *Gia_Obj_t, pNode *Gia_Obj_t, vVisited *Vec_Ptr_t) int32 {\n    // check the trivial cases\n    if pNode == nil {\n        return 0; }\n    if Gia_ObjIsCi(pNode) {\n        return 0; }\n//    if ( pNode-\u003eId \u003c pOld-\u003eId ) // cannot use because of choices of pNode\n//        return 0;\n    if pNode == pOld {\n        return 1; }\n    // skip the visited node\n    if pNode.fMark0 {\n        return 0; }\n    pNode.fMark0 = 1;\n    Vec_PtrPush( vVisited, pNode );\n    // check the children\n    if Hcd_ObjCheckTfi_rec( p, pOld, Gia_ObjFanin0(pNode), vVisited ) != 0 {\n        return 1; }\n    if Hcd_ObjCheckTfi_rec( p, pOld, Gia_ObjFanin1(pNode), vVisited ) != 0 {\n        return 1; }\n    // check equivalent nodes\n    return Hcd_ObjCheckTfi_rec( p, pOld, Gia_ObjNextObj(p, Gia_ObjId(p, pNode)), vVisited );\n}"
+    },
+    {
+      "Name": "Hcd_ObjCheckTfi",
+      "Start": 12323,
+      "End": 12782,
+      "BodyStart": 12397,
+      "Original": "int Hcd_ObjCheckTfi( Gia_Man_t * p, Gia_Obj_t * pOld, Gia_Obj_t * pNode )\n{\n    Vec_Ptr_t * vVisited;\n    Gia_Obj_t * pObj;\n    int RetValue, i;\n    assert( !Gia_IsComplement(pOld) );\n    assert( !Gia_IsComplement(pNode) );\n    vVisited = Vec_PtrAlloc( 100 );\n    RetValue = Hcd_ObjCheckTfi_rec( p, pOld, pNode, vVisited );\n    Vec_PtrForEachEntry( Gia_Obj_t *, vVisited, pObj, i )\n        pObj-\u003efMark0 = 0;\n    Vec_PtrFree( vVisited );\n    return RetValue;\n}",
+      "Draft": "func Hcd_ObjCheckTfi(p *Gia_Man_t, pOld *Gia_Obj_t, pNode *Gia_Obj_t) int32 {\n    var vVisited *Vec_Ptr_t;\n    var pObj *Gia_Obj_t;\n    var RetValue, i int32;\n    assert(!Gia_IsComplement(pOld), \"!Gia_IsComplement(pOld)\");\n    assert(!Gia_IsComplement(pNode), \"!Gia_IsComplement(pNode)\");\n    vVisited = Vec_PtrAlloc( 100 );\n    RetValue = Hcd_ObjCheckTfi_rec( p, pOld, pNode, vVisited );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vVisited)) \u0026\u0026 (((pObj) = (Gia_Obj_t *)Vec_PtrEntry(vVisited, i)), 1); i++  {\n        pObj.fMark0 = 0;\n    }\n    Vec_PtrFree( vVisited );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Hcd_ManAddNextEntry_rec",
+      "Start": 13059,
+      "End": 13374,
+      "BodyStart": 13142,
+      "Original": "void Hcd_ManAddNextEntry_rec( Gia_Man_t * p, Gia_Obj_t * pOld, Gia_Obj_t * pNode )\n{\n    if ( Gia_ObjNext(p, Gia_ObjId(p, pOld)) == 0 )\n    {\n        Gia_ObjSetNext( p, Gia_ObjId(p, pOld), Gia_ObjId(p, pNode) );\n        return;\n    }\n    Hcd_ManAddNextEntry_rec( p, Gia_ObjNextObj(p, Gia_ObjId(p, pOld)), pNode );\n}",
+      "Draft": "func Hcd_ManAddNextEntry_rec(p *Gia_Man_t, pOld *Gia_Obj_t, pNode *Gia_Obj_t) {\n    if Gia_ObjNext(p, Gia_ObjId(p, pOld)) == 0 {\n        Gia_ObjSetNext( p, Gia_ObjId(p, pOld), Gia_ObjId(p, pNode) );\n        return;\n    }\n    Hcd_ManAddNextEntry_rec( p, Gia_ObjNextObj(p, Gia_ObjId(p, pOld)), pNode );\n}"
+    },
+    {
+      "Name": "Hcd_ManEquivToChoices_rec",
+      "Start": 13646,
+      "End": 15896,
+      "BodyStart": 13730,
+      "Original": "void Hcd_ManEquivToChoices_rec( Gia_Man_t * pNew, Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    Gia_Obj_t * pRepr, * pReprNew, * pObjNew;\n    if ( ~pObj-\u003eValue )\n        return;\n    if ( (pRepr = Gia_ObjReprObj(p, Gia_ObjId(p, pObj))) )\n    {\n        if ( Gia_ObjIsConst0(pRepr) )\n        {\n            pObj-\u003eValue = Abc_LitNotCond( pRepr-\u003eValue, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) );\n            return;\n        }\n        Hcd_ManEquivToChoices_rec( pNew, p, pRepr );\n        assert( Gia_ObjIsAnd(pObj) );\n        Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin0(pObj) );\n        Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin1(pObj) );\n        pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        if ( Abc_LitRegular(pObj-\u003eValue) == Abc_LitRegular(pRepr-\u003eValue) )\n        {\n            assert( (int)pObj-\u003eValue == Abc_LitNotCond( pRepr-\u003eValue, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) ) );\n            return;\n        }\n        if ( pRepr-\u003eValue \u003e pObj-\u003eValue ) // should never happen with high resource limit\n            return;\n        assert( pRepr-\u003eValue \u003c pObj-\u003eValue );\n        pReprNew = Gia_ManObj( pNew, Abc_Lit2Var(pRepr-\u003eValue) );\n        pObjNew  = Gia_ManObj( pNew, Abc_Lit2Var(pObj-\u003eValue) );\n        if ( Gia_ObjReprObj( pNew, Gia_ObjId(pNew, pObjNew) ) )\n        {\n            assert( Gia_ObjReprObj( pNew, Gia_ObjId(pNew, pObjNew) ) == pReprNew );\n            pObj-\u003eValue = Abc_LitNotCond( pRepr-\u003eValue, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) );\n            return;\n        }\n        if ( !Hcd_ObjCheckTfi( pNew, pReprNew, pObjNew ) )\n        {\n            assert( Gia_ObjNext(pNew, Gia_ObjId(pNew, pObjNew)) == 0 );\n            Gia_ObjSetRepr( pNew, Gia_ObjId(pNew, pObjNew), Gia_ObjId(pNew, pReprNew) );\n            Hcd_ManAddNextEntry_rec( pNew, pReprNew, pObjNew ); \n        }\n        pObj-\u003eValue = Abc_LitNotCond( pRepr-\u003eValue, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) );\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin1(pObj) );\n    pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n}",
+      "Draft": "func Hcd_ManEquivToChoices_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t) {\n    var pRepr, pReprNew, pObjNew *Gia_Obj_t;\n    if ~pObj.Value {\n        return; }\n    if pRepr = Gia_ObjReprObj(p, Gia_ObjId(p, pObj)) {\n        if Gia_ObjIsConst0(pRepr) {\n            pObj.Value = Abc_LitNotCond( pRepr.Value, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) );\n            return;\n        }\n        Hcd_ManEquivToChoices_rec( pNew, p, pRepr );\n        assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n        Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin0(pObj) );\n        Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin1(pObj) );\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        if Abc_LitRegular(pObj.Value) == Abc_LitRegular(pRepr.Value) {\n            assert(int32(pObj.Value) == Abc_LitNotCond( pRepr.Value, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) ), \"int32(pObj.Value) == Abc_LitNotCond( pRepr.Value, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) )\");\n            return;\n        }\n        if pRepr.Value \u003e pObj.Value { // should never happen with high resource limit\n            return; }\n        assert(pRepr.Value \u003c pObj.Value, \"pRepr.Value \u003c pObj.Value\");\n        pReprNew = Gia_ManObj( pNew, Abc_Lit2Var(pRepr.Value) );\n        pObjNew  = Gia_ManObj( pNew, Abc_Lit2Var(pObj.Value) );\n        if Gia_ObjReprObj( pNew, Gia_ObjId(pNew, pObjNew) ) {\n            assert(Gia_ObjReprObj( pNew, Gia_ObjId(pNew, pObjNew) ) == pReprNew, \"Gia_ObjReprObj( pNew, Gia_ObjId(pNew, pObjNew) ) == pReprNew\");\n            pObj.Value = Abc_LitNotCond( pRepr.Value, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) );\n            return;\n        }\n        if !(Hcd_ObjCheckTfi( pNew, pReprNew, pObjNew ) != 0) {\n            assert(Gia_ObjNext(pNew, Gia_ObjId(pNew, pObjNew)) == 0, \"Gia_ObjNext(pNew, Gia_ObjId(pNew, pObjNew)) == 0\");\n            Gia_ObjSetRepr( pNew, Gia_ObjId(pNew, pObjNew), Gia_ObjId(pNew, pReprNew) );\n            Hcd_ManAddNextEntry_rec( pNew, pReprNew, pObjNew ); \n        }\n        pObj.Value = Abc_LitNotCond( pRepr.Value, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin1(pObj) );\n    pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n}"
+    },
+    {
+      "Name": "Hcd_ManRemoveBadChoices",
+      "Start": 16171,
+      "End": 17220,
+      "BodyStart": 16217,
+      "Original": "void Hcd_ManRemoveBadChoices( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i, iObj, iPrev, Counter = 0;\n    // mark nodes with fanout\n    Gia_ManForEachObj( p, pObj, i )\n    {\n        pObj-\u003efMark0 = 0;\n        if ( Gia_ObjIsAnd(pObj) )\n        {\n            Gia_ObjFanin0(pObj)-\u003efMark0 = 1;\n            Gia_ObjFanin1(pObj)-\u003efMark0 = 1;\n        }\n        else if ( Gia_ObjIsCo(pObj) )\n            Gia_ObjFanin0(pObj)-\u003efMark0 = 1;\n    }\n    // go through the classes and remove \n    Gia_ManForEachClass( p, i )\n    {\n        for ( iPrev = i, iObj = Gia_ObjNext(p, i); iObj; iObj = Gia_ObjNext(p, iPrev) )\n        {\n            if ( !Gia_ManObj(p, iObj)-\u003efMark0 )\n            {\n                iPrev = iObj; \n                continue;\n            }\n            Gia_ObjSetRepr( p, iObj, GIA_VOID );\n            Gia_ObjSetNext( p, iPrev, Gia_ObjNext(p, iObj) );\n            Gia_ObjSetNext( p, iObj, 0 );\n            Counter++;\n        } \n    }\n    // remove the marks\n    Gia_ManCleanMark0( p );\n//    printf( \"Removed %d bad choices.\\n\", Counter );\n}",
+      "Draft": "func Hcd_ManRemoveBadChoices(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i, iObj, iPrev, Counter int32;\n    // mark nodes with fanout\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        pObj.fMark0 = 0;\n        if Gia_ObjIsAnd(pObj) {\n            Gia_ObjFanin0(pObj).fMark0 = 1;\n            Gia_ObjFanin1(pObj).fMark0 = 1;\n        \n        } else if Gia_ObjIsCo(pObj) {\n            Gia_ObjFanin0(pObj).fMark0 = 1; }\n    }\n    // go through the classes and remove \n    // inlining of macro Gia_ManForEachClass\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsHead(p, i) {} else {\n        for  iPrev = i, iObj = Gia_ObjNext(p, i); iObj; iObj = Gia_ObjNext(p, iPrev)  {\n            if !Gia_ManObj(p, iObj).fMark0 {\n                iPrev = iObj; \n                continue;\n            }\n            Gia_ObjSetRepr( p, iObj, GIA_VOID );\n            Gia_ObjSetNext( p, iPrev, Gia_ObjNext(p, iObj) );\n            Gia_ObjSetNext( p, iObj, 0 );\n            Counter++;\n        } \n    }\n    }\n    // remove the marks\n    Gia_ManCleanMark0( p );\n//    printf( \"Removed %d bad choices.\\n\", Counter );\n}"
+    },
+    {
+      "Name": "Hcd_ManEquivToChoices",
+      "Start": 17494,
+      "End": 18984,
+      "BodyStart": 17561,
+      "Original": "Gia_Man_t * Hcd_ManEquivToChoices( Gia_Man_t * p, int nSnapshots )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj, * pRepr;\n    int i;\n    assert( (Gia_ManCoNum(p) % nSnapshots) == 0 );\n    Gia_ManSetPhase( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    pNew-\u003epReprs = ABC_CALLOC( Gia_Rpr_t, Gia_ManObjNum(p) );\n    pNew-\u003epNexts = ABC_CALLOC( int, Gia_ManObjNum(p) );\n    for ( i = 0; i \u003c Gia_ManObjNum(p); i++ )\n        Gia_ObjSetRepr( pNew, i, GIA_VOID );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi(pNew);\n    Gia_ManForEachRo( p, pObj, i )\n        if ( (pRepr = Gia_ObjReprObj(p, Gia_ObjId(p, pObj))) )\n        {\n            assert( Gia_ObjIsConst0(pRepr) || Gia_ObjIsRo(p, pRepr) );\n            pObj-\u003eValue = pRepr-\u003eValue;\n        }\n    Gia_ManHashAlloc( pNew );\n    Gia_ManForEachCo( p, pObj, i )\n        Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    Gia_ManForEachCo( p, pObj, i )\n        if ( i % nSnapshots == 0 )\n            Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Hcd_ManRemoveBadChoices( pNew );\n//    Gia_ManEquivPrintClasses( pNew, 0, 0 );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    Gia_ManEquivPrintClasses( pNew, 0, 0 );\n    return pNew;\n}",
+      "Draft": "func Hcd_ManEquivToChoices(p *Gia_Man_t, nSnapshots int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj, pRepr *Gia_Obj_t;\n    var i int32;\n    assert((Gia_ManCoNum(p) % nSnapshots) == 0, \"(Gia_ManCoNum(p) % nSnapshots) == 0\");\n    Gia_ManSetPhase( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // inlining of macro ABC_CALLOC\n    pNew.pReprs = ((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(Gia_Rpr_t)));\n    // inlining of macro ABC_CALLOC\n    pNew.pNexts = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    for  i = 0; i \u003c Gia_ManObjNum(p); i++  {\n        Gia_ObjSetRepr( pNew, i, GIA_VOID );\n    }\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi(pNew);\n    }\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        if pRepr = Gia_ObjReprObj(p, Gia_ObjId(p, pObj)) {\n            assert(Gia_ObjIsConst0(pRepr) || Gia_ObjIsRo(p, pRepr), \"Gia_ObjIsConst0(pRepr) || Gia_ObjIsRo(p, pRepr)\");\n            pObj.Value = pRepr.Value;\n        }\n    }\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        if i % nSnapshots == 0 {\n            Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Hcd_ManRemoveBadChoices( pNew );\n//    Gia_ManEquivPrintClasses( pNew, 0, 0 );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    Gia_ManEquivPrintClasses( pNew, 0, 0 );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Hcd_ComputeChoices",
+      "Start": 19263,
+      "End": 20951,
+      "BodyStart": 19375,
+      "Original": "Aig_Man_t * Hcd_ComputeChoices( Aig_Man_t * pAig, int nBTLimit, int fSynthesis, int fUseMiniSat, int fVerbose )\n{\n    Vec_Ptr_t * vGias;\n    Gia_Man_t * pGia, * pMiter;\n    Aig_Man_t * pAigNew;\n    int i;\n    clock_t clk = clock();\n    // perform synthesis\n    if ( fSynthesis )\n    {\n        vGias = Hcd_ChoiceSynthesis( Aig_ManDupDfs(pAig), 1, 1, 0, 0 );\n        if ( fVerbose )\n            ABC_PRT( \"Synthesis time\", clock() - clk );\n        // create choices\n        clk = clock();\n        pMiter = Hcd_ManChoiceMiter( vGias );\n        Vec_PtrForEachEntry( Gia_Man_t *, vGias, pGia, i )\n            Gia_ManStop( pGia );\n\n        Gia_AigerWrite( pMiter, \"m3.aig\", 0, 0, 0 );\n    }\n    else \n    {\n        vGias = Vec_PtrStart( 3 );\n        pMiter = Gia_ManFromAig(pAig);\n    }\n    // perform choicing\n    Gia_ComputeEquivalences( pMiter, nBTLimit, fUseMiniSat, fVerbose );\n    // derive AIG with choices\n    pGia = Hcd_ManEquivToChoices( pMiter, Vec_PtrSize(vGias) );\n    Gia_ManSetRegNum( pGia, Aig_ManRegNum(pAig) );\n    Gia_ManStop( pMiter );\n    Vec_PtrFree( vGias );\n    if ( fVerbose )\n        ABC_PRT( \"Choicing time\", clock() - clk );\n//    Gia_ManHasChoices_very_old( pGia );\n    // transform back\n    pAigNew = Gia_ManToAig( pGia, 1 );\n    Gia_ManStop( pGia );\n\n    if ( fVerbose )\n    {\n        extern int Dch_DeriveChoiceCountReprs( Aig_Man_t * pAig );\n        extern int Dch_DeriveChoiceCountEquivs( Aig_Man_t * pAig );\n        printf( \"Choices   : Reprs = %5d. Equivs = %5d. Choices = %5d.\\n\", \n            Dch_DeriveChoiceCountReprs( pAigNew ), \n            Dch_DeriveChoiceCountEquivs( pAigNew ), \n            Aig_ManChoiceNum( pAigNew ) );\n    }\n\n    return pAigNew;\n}",
+      "Draft": "func Hcd_ComputeChoices(pAig *Aig_Man_t, nBTLimit int32, fSynthesis int32, fUseMiniSat int32, fVerbose int32) *Aig_Man_t {\n    var vGias *Vec_Ptr_t;\n    var pGia, pMiter *Gia_Man_t;\n    var pAigNew *Aig_Man_t;\n    var i int32;\n    var clk int64  = time.Now().UnixNano();\n    // perform synthesis\n    if fSynthesis != 0 {\n        vGias = Hcd_ChoiceSynthesis( Aig_ManDupDfs(pAig), 1, 1, 0, 0 );\n        if fVerbose != 0 {\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Synthesis time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));; }\n        // create choices\n        clk = time.Now().UnixNano();\n        pMiter = Hcd_ManChoiceMiter( vGias );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vGias)) \u0026\u0026 (((pGia) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {\n            Gia_ManStop( pGia );\n        }\n\n        Gia_AigerWrite( pMiter, \"m3.aig\", 0, 0, 0 );\n    \n    } else {\n        vGias = Vec_PtrStart( 3 );\n        pMiter = Gia_ManFromAig(pAig);\n    }\n    // perform choicing\n    Gia_ComputeEquivalences( pMiter, nBTLimit, fUseMiniSat, fVerbose );\n    // derive AIG with choices\n    pGia = Hcd_ManEquivToChoices( pMiter, Vec_PtrSize(vGias) );\n    Gia_ManSetRegNum( pGia, Aig_ManRegNum(pAig) );\n    Gia_ManStop( pMiter );\n    Vec_PtrFree( vGias );\n    if fVerbose != 0 {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Choicing time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));; }\n//    Gia_ManHasChoices_very_old( pGia );\n    // transform back\n    pAigNew = Gia_ManToAig( pGia, 1 );\n    Gia_ManStop( pGia );\n\n    if fVerbose != 0 {\n        extern int Dch_DeriveChoiceCountReprs( Aig_Man_t * pAig );\n        extern int Dch_DeriveChoiceCountEquivs( Aig_Man_t * pAig );\n        fmt.Printf(\"Choices   : Reprs = %5d. Equivs = %5d. Choices = %5d.\\n\", Dch_DeriveChoiceCountReprs( pAigNew ), Dch_DeriveChoiceCountEquivs( pAigNew ), Aig_ManChoiceNum( pAigNew ));\n    }\n\n    return pAigNew;\n}"
+    },
+    {
+      "Name": "Hcd_ComputeChoicesTest",
+      "Start": 21229,
+      "End": 21550,
+      "BodyStart": 21338,
+      "Original": "void Hcd_ComputeChoicesTest( Gia_Man_t * pGia, int nBTLimit, int fSynthesis, int fUseMiniSat, int fVerbose )\n{\n    Aig_Man_t * pAig, * pAigNew;\n    pAig = Gia_ManToAig( pGia, 0 );\n    pAigNew = Hcd_ComputeChoices( pAig, nBTLimit, fSynthesis, fUseMiniSat, fVerbose );\n    Aig_ManStop( pAigNew );\n    Aig_ManStop( pAig );\n}",
+      "Draft": "func Hcd_ComputeChoicesTest(pGia *Gia_Man_t, nBTLimit int32, fSynthesis int32, fUseMiniSat int32, fVerbose int32) {\n    var pAig, pAigNew *Aig_Man_t;\n    pAig = Gia_ManToAig( pGia, 0 );\n    pAigNew = Hcd_ComputeChoices( pAig, nBTLimit, fSynthesis, fUseMiniSat, fVerbose );\n    Aig_ManStop( pAigNew );\n    Aig_ManStop( pAig );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::struct::Hcd_Pars_t",
+      "Category": "struct-review",
+      "Symbol": "Hcd_Pars_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 870,
+      "End": 1793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::mechanical::sizeof::2460",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2460,
+      "End": 2466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::mechanical::sizeof::18575",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17869,
+      "End": 17869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::mechanical::sizeof::18705",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17931,
+      "End": 17931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::pointer-cast::9697",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9697,
+      "End": 9710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::pointer-cast::9847",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9740,
+      "End": 9740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::pointer-cast::10636",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10425,
+      "End": 10425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::pointer-cast::10968",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10653,
+      "End": 10653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::pointer-cast::13073",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12651,
+      "End": 12651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::pointer-cast::18526",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17869,
+      "End": 17869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::pointer-cast::18662",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17931,
+      "End": 17931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::pointer-cast::21194",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19803,
+      "End": 19803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::Hcd_ManSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Hcd_ManSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2393,
+      "End": 3096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::Hcd_Compress",
+      "Category": "semantic-review",
+      "Symbol": "Hcd_Compress",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 3362,
+      "End": 4793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::Hcd_Compress2",
+      "Category": "semantic-review",
+      "Symbol": "Hcd_Compress2",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5059,
+      "End": 7445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::Hcd_ChoiceSynthesis",
+      "Category": "semantic-review",
+      "Symbol": "Hcd_ChoiceSynthesis",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 7711,
+      "End": 8452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::Hcd_ManChoiceMiter_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hcd_ManChoiceMiter_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8725,
+      "End": 9187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::Hcd_ManChoiceMiter",
+      "Category": "semantic-review",
+      "Symbol": "Hcd_ManChoiceMiter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9481,
+      "End": 10941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::Hcd_ObjCheckTfi_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hcd_ObjCheckTfi_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11218,
+      "End": 12046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::Hcd_ObjCheckTfi",
+      "Category": "semantic-review",
+      "Symbol": "Hcd_ObjCheckTfi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12323,
+      "End": 12782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::Hcd_ManAddNextEntry_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hcd_ManAddNextEntry_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13059,
+      "End": 13374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::Hcd_ManEquivToChoices_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hcd_ManEquivToChoices_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13646,
+      "End": 15896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::Hcd_ManRemoveBadChoices",
+      "Category": "semantic-review",
+      "Symbol": "Hcd_ManRemoveBadChoices",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16171,
+      "End": 17220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::Hcd_ManEquivToChoices",
+      "Category": "semantic-review",
+      "Symbol": "Hcd_ManEquivToChoices",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17494,
+      "End": 18984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::Hcd_ComputeChoices",
+      "Category": "semantic-review",
+      "Symbol": "Hcd_ComputeChoices",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19263,
+      "End": 20951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::Hcd_ComputeChoicesTest",
+      "Category": "semantic-review",
+      "Symbol": "Hcd_ComputeChoicesTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21229,
+      "End": 21550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaHcd.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21797
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [giaHcd.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [New choice computation package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaHcd.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"giaAig.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"opt/dar/dar.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// choicing parameters\n   \ntype Hcd_Pars_t struct {\n    nWords              int32;        // the number of simulation words\n    nBTLimit              int32;      // conflict limit at a node\n    nSatVarMax              int32;    // the max number of SAT variables\n    fSynthesis              int32;    // set to 1 to perform synthesis\n    fPolarFlip              int32;    // uses polarity adjustment\n    fSimulateTfo              int32;  // uses simulation of TFO classes\n    fPower              int32;        // uses power-aware rewriting\n    fUseGia              int32;       // uses GIA package \n    fUseCSat              int32;      // uses circuit-based solver\n    fVerbose              int32;      // verbose stats\n    timeSynth          int64;     // synthesis runtime\n    nNodesAhead              int32;   // the lookahead in terms of nodes\n    nCallsRecycle              int32; // calls to perform before recycling SAT solver\n}\n\n// extern void Gia_ComputeEquivalences( Gia_Man_t * pMiter, int nBTLimit, int fUseMiniSat, int fVerbose );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hcd_ManSetDefaultParams(p *Hcd_Pars_t) {\n    memset( p, 0, sizeof(Hcd_Pars_t) );\n    p.nWords         =     8;  // the number of simulation words\n    p.nBTLimit       =  1000;  // conflict limit at a node\n    p.nSatVarMax     =  5000;  // the max number of SAT variables\n    p.fSynthesis     =     1;  // derives three snapshots\n    p.fPolarFlip     =     1;  // uses polarity adjustment\n    p.fSimulateTfo   =     1;  // simulate TFO\n    p.fPower         =     0;  // power-aware rewriting\n    p.fVerbose       =     0;  // verbose stats\n    p.nNodesAhead    =  1000;  // the lookahead in terms of nodes\n    p.nCallsRecycle  =   100;  // calls to perform before recycling SAT solver\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reproduces script \"compress\".]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nAig_Man_t * Hcd_Compress( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rwz -l; b -l; rwz -l; b -l\"\n{\n    var pTemp *Aig_Man_t;\n\n    var ParsRwr Dar_RwrPar_t;\n    var pParsRwr *Dar_RwrPar_t = \u0026ParsRwr;\n    var ParsRef Dar_RefPar_t;\n    var pParsRef *Dar_RefPar_t = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr.fUpdateLevel = fUpdateLevel;\n    pParsRef.fUpdateLevel = fUpdateLevel;\n\n    pParsRwr.fPower = fPower;\n\n    pParsRwr.fVerbose = 0;//fVerbose;\n    pParsRef.fVerbose = 0;//fVerbose;\n\n//    pAig = Aig_ManDupDfs( pAig ); \n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    // balance\n    if fBalance {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n    }\n\n    pParsRwr.fUseZeros = 1;\n    pParsRef.fUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    return pAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reproduces script \"compress2\".]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nAig_Man_t * Hcd_Compress2( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fFanout, int fPower, int fVerbose )\n//alias compress2   \"b -l; rw -l; rf -l; b -l; rw -l; rwz -l; b -l; rfz -l; rwz -l; b -l\"\n{\n    var pTemp *Aig_Man_t;\n\n    var ParsRwr Dar_RwrPar_t;\n    var pParsRwr *Dar_RwrPar_t = \u0026ParsRwr;\n    var ParsRef Dar_RefPar_t;\n    var pParsRef *Dar_RefPar_t = \u0026ParsRef;\n\n    Dar_ManDefaultRwrParams( pParsRwr );\n    Dar_ManDefaultRefParams( pParsRef );\n\n    pParsRwr.fUpdateLevel = fUpdateLevel;\n    pParsRef.fUpdateLevel = fUpdateLevel;\n    pParsRwr.fFanout = fFanout;\n    pParsRwr.fPower = fPower;\n\n    pParsRwr.fVerbose = 0;//fVerbose;\n    pParsRef.fVerbose = 0;//fVerbose;\n\n//    pAig = Aig_ManDupDfs( pAig ); \n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    // balance\n//    if ( fBalance )\n    {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n    }\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    pParsRwr.fUseZeros = 1;\n    pParsRef.fUseZeros = 1;\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    // balance\n    if fBalance {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n    }\n    \n    // refactor\n    Dar_ManRefactor( pAig, pParsRef );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n    \n    // rewrite\n    Dar_ManRewrite( pAig, pParsRwr );\n    pAig = Aig_ManDupDfs( pTemp = pAig ); \n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n\n    // balance\n    if fBalance {\n    pAig = Dar_ManBalance( pTemp = pAig, fUpdateLevel );\n    Aig_ManStop( pTemp );\n    if fVerbose != 0 { Aig_ManPrintStats( pAig ); }\n    }\n    return pAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reproduces script \"compress2\".]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nVec_Ptr_t * Hcd_ChoiceSynthesis( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose )\n//alias resyn    \"b; rw; rwz; b; rwz; b\"\n//alias resyn2   \"b; rw; rf; b; rw; rwz; b; rfz; rwz; b\"\n{\n    var vGias *Vec_Ptr_t;\n    var pGia *Gia_Man_t;\n\n    vGias = Vec_PtrAlloc( 3 );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n\n    pAig = Hcd_Compress( pAig, fBalance, fUpdateLevel, fPower, fVerbose );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n//Aig_ManPrintStats( pAig );\n\n    pAig = Hcd_Compress2( pAig, fBalance, fUpdateLevel, 1, fPower, fVerbose );\n    pGia = Gia_ManFromAig(pAig);\n    Vec_PtrPush( vGias, pGia );\n//Aig_ManPrintStats( pAig );\n\n    Aig_ManStop( pAig );\n    return vGias;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the AIG in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hcd_ManChoiceMiter_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    if ~pObj.Value {\n        return pObj.Value; }\n    Hcd_ManChoiceMiter_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    if Gia_ObjIsCo(pObj) {\n        return pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }\n    Hcd_ManChoiceMiter_rec( pNew, p, Gia_ObjFanin1(pObj) );\n    return pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n} \n\n/**Function*************************************************************\n\n  Synopsis    [Derives the miter of several AIGs for choice computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hcd_ManChoiceMiter(vGias *Vec_Ptr_t) *Gia_Man_t {\n    var pNew, pGia, pGia0 *Gia_Man_t;\n    var i, k, iNode, nNodes int32;\n    // make sure they have equal parameters\n    assert(Vec_PtrSize(vGias) \u003e 0, \"Vec_PtrSize(vGias) \u003e 0\");\n    pGia0 = (Gia_Man_t *)Vec_PtrEntry( vGias, 0 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vGias)) \u0026\u0026 (((pGia) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {\n        assert(Gia_ManCiNum(pGia)  == Gia_ManCiNum(pGia0), \"Gia_ManCiNum(pGia)  == Gia_ManCiNum(pGia0)\");\n        assert(Gia_ManCoNum(pGia)  == Gia_ManCoNum(pGia0), \"Gia_ManCoNum(pGia)  == Gia_ManCoNum(pGia0)\");\n        assert(Gia_ManRegNum(pGia) == Gia_ManRegNum(pGia0), \"Gia_ManRegNum(pGia) == Gia_ManRegNum(pGia0)\");\n        Gia_ManFillValue( pGia );\n        Gia_ManConst0(pGia).Value = 0;\n    }\n    // start the new manager\n    pNew = Gia_ManStart( Vec_PtrSize(vGias) * Gia_ManObjNum(pGia0) );\n    pNew.pName = Abc_UtilStrsav( pGia0.pName );\n    pNew.pSpec = Abc_UtilStrsav( pGia0.pSpec );\n    // create new CIs and assign them to the old manager CIs\n    for  k = 0; k \u003c Gia_ManCiNum(pGia0); k++  {\n        iNode = Gia_ManAppendCi(pNew);\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vGias)) \u0026\u0026 (((pGia) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {\n            Gia_ManCi( pGia, k ).Value = iNode;\n        } \n    }\n    // create internal nodes\n    Gia_ManHashAlloc( pNew );\n    for  k = 0; k \u003c Gia_ManCoNum(pGia0); k++  {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vGias)) \u0026\u0026 (((pGia) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {\n            Hcd_ManChoiceMiter_rec( pNew, pGia, Gia_ManCo( pGia, k ) );\n        }\n    }\n    Gia_ManHashStop( pNew );\n    // check the presence of dangling nodes\n    nNodes = Gia_ManHasDangling( pNew );\n    assert(nNodes == 0, \"nNodes == 0\");\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pOld is in the TFI of pNode.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hcd_ObjCheckTfi_rec(p *Gia_Man_t, pOld *Gia_Obj_t, pNode *Gia_Obj_t, vVisited *Vec_Ptr_t) int32 {\n    // check the trivial cases\n    if pNode == nil {\n        return 0; }\n    if Gia_ObjIsCi(pNode) {\n        return 0; }\n//    if ( pNode-\u003eId \u003c pOld-\u003eId ) // cannot use because of choices of pNode\n//        return 0;\n    if pNode == pOld {\n        return 1; }\n    // skip the visited node\n    if pNode.fMark0 {\n        return 0; }\n    pNode.fMark0 = 1;\n    Vec_PtrPush( vVisited, pNode );\n    // check the children\n    if Hcd_ObjCheckTfi_rec( p, pOld, Gia_ObjFanin0(pNode), vVisited ) != 0 {\n        return 1; }\n    if Hcd_ObjCheckTfi_rec( p, pOld, Gia_ObjFanin1(pNode), vVisited ) != 0 {\n        return 1; }\n    // check equivalent nodes\n    return Hcd_ObjCheckTfi_rec( p, pOld, Gia_ObjNextObj(p, Gia_ObjId(p, pNode)), vVisited );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pOld is in the TFI of pNode.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hcd_ObjCheckTfi(p *Gia_Man_t, pOld *Gia_Obj_t, pNode *Gia_Obj_t) int32 {\n    var vVisited *Vec_Ptr_t;\n    var pObj *Gia_Obj_t;\n    var RetValue, i int32;\n    assert(!Gia_IsComplement(pOld), \"!Gia_IsComplement(pOld)\");\n    assert(!Gia_IsComplement(pNode), \"!Gia_IsComplement(pNode)\");\n    vVisited = Vec_PtrAlloc( 100 );\n    RetValue = Hcd_ObjCheckTfi_rec( p, pOld, pNode, vVisited );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vVisited)) \u0026\u0026 (((pObj) = (Gia_Obj_t *)Vec_PtrEntry(vVisited, i)), 1); i++  {\n        pObj.fMark0 = 0;\n    }\n    Vec_PtrFree( vVisited );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the next entry while making choices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hcd_ManAddNextEntry_rec(p *Gia_Man_t, pOld *Gia_Obj_t, pNode *Gia_Obj_t) {\n    if Gia_ObjNext(p, Gia_ObjId(p, pOld)) == 0 {\n        Gia_ObjSetNext( p, Gia_ObjId(p, pOld), Gia_ObjId(p, pNode) );\n        return;\n    }\n    Hcd_ManAddNextEntry_rec( p, Gia_ObjNextObj(p, Gia_ObjId(p, pOld)), pNode );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the AIG in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hcd_ManEquivToChoices_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t) {\n    var pRepr, pReprNew, pObjNew *Gia_Obj_t;\n    if ~pObj.Value {\n        return; }\n    if pRepr = Gia_ObjReprObj(p, Gia_ObjId(p, pObj)) {\n        if Gia_ObjIsConst0(pRepr) {\n            pObj.Value = Abc_LitNotCond( pRepr.Value, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) );\n            return;\n        }\n        Hcd_ManEquivToChoices_rec( pNew, p, pRepr );\n        assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n        Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin0(pObj) );\n        Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin1(pObj) );\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        if Abc_LitRegular(pObj.Value) == Abc_LitRegular(pRepr.Value) {\n            assert(int32(pObj.Value) == Abc_LitNotCond( pRepr.Value, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) ), \"int32(pObj.Value) == Abc_LitNotCond( pRepr.Value, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) )\");\n            return;\n        }\n        if pRepr.Value \u003e pObj.Value { // should never happen with high resource limit\n            return; }\n        assert(pRepr.Value \u003c pObj.Value, \"pRepr.Value \u003c pObj.Value\");\n        pReprNew = Gia_ManObj( pNew, Abc_Lit2Var(pRepr.Value) );\n        pObjNew  = Gia_ManObj( pNew, Abc_Lit2Var(pObj.Value) );\n        if Gia_ObjReprObj( pNew, Gia_ObjId(pNew, pObjNew) ) {\n            assert(Gia_ObjReprObj( pNew, Gia_ObjId(pNew, pObjNew) ) == pReprNew, \"Gia_ObjReprObj( pNew, Gia_ObjId(pNew, pObjNew) ) == pReprNew\");\n            pObj.Value = Abc_LitNotCond( pRepr.Value, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) );\n            return;\n        }\n        if !(Hcd_ObjCheckTfi( pNew, pReprNew, pObjNew ) != 0) {\n            assert(Gia_ObjNext(pNew, Gia_ObjId(pNew, pObjNew)) == 0, \"Gia_ObjNext(pNew, Gia_ObjId(pNew, pObjNew)) == 0\");\n            Gia_ObjSetRepr( pNew, Gia_ObjId(pNew, pObjNew), Gia_ObjId(pNew, pReprNew) );\n            Hcd_ManAddNextEntry_rec( pNew, pReprNew, pObjNew ); \n        }\n        pObj.Value = Abc_LitNotCond( pRepr.Value, Gia_ObjPhaseReal(pRepr) ^ Gia_ObjPhaseReal(pObj) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin1(pObj) );\n    pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes choices, which contain fanouts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hcd_ManRemoveBadChoices(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i, iObj, iPrev, Counter int32;\n    // mark nodes with fanout\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        pObj.fMark0 = 0;\n        if Gia_ObjIsAnd(pObj) {\n            Gia_ObjFanin0(pObj).fMark0 = 1;\n            Gia_ObjFanin1(pObj).fMark0 = 1;\n        \n        } else if Gia_ObjIsCo(pObj) {\n            Gia_ObjFanin0(pObj).fMark0 = 1; }\n    }\n    // go through the classes and remove \n    // inlining of macro Gia_ManForEachClass\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsHead(p, i) {} else {\n        for  iPrev = i, iObj = Gia_ObjNext(p, i); iObj; iObj = Gia_ObjNext(p, iPrev)  {\n            if !Gia_ManObj(p, iObj).fMark0 {\n                iPrev = iObj; \n                continue;\n            }\n            Gia_ObjSetRepr( p, iObj, GIA_VOID );\n            Gia_ObjSetNext( p, iPrev, Gia_ObjNext(p, iObj) );\n            Gia_ObjSetNext( p, iObj, 0 );\n            Counter++;\n        } \n    }\n    }\n    // remove the marks\n    Gia_ManCleanMark0( p );\n//    printf( \"Removed %d bad choices.\\n\", Counter );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reduces AIG using equivalence classes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hcd_ManEquivToChoices(p *Gia_Man_t, nSnapshots int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj, pRepr *Gia_Obj_t;\n    var i int32;\n    assert((Gia_ManCoNum(p) % nSnapshots) == 0, \"(Gia_ManCoNum(p) % nSnapshots) == 0\");\n    Gia_ManSetPhase( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    // inlining of macro ABC_CALLOC\n    pNew.pReprs = ((Gia_Rpr_t *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(Gia_Rpr_t)));\n    // inlining of macro ABC_CALLOC\n    pNew.pNexts = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    for  i = 0; i \u003c Gia_ManObjNum(p); i++  {\n        Gia_ObjSetRepr( pNew, i, GIA_VOID );\n    }\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi(pNew);\n    }\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        if pRepr = Gia_ObjReprObj(p, Gia_ObjId(p, pObj)) {\n            assert(Gia_ObjIsConst0(pRepr) || Gia_ObjIsRo(p, pRepr), \"Gia_ObjIsConst0(pRepr) || Gia_ObjIsRo(p, pRepr)\");\n            pObj.Value = pRepr.Value;\n        }\n    }\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Hcd_ManEquivToChoices_rec( pNew, p, Gia_ObjFanin0(pObj) );\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        if i % nSnapshots == 0 {\n            Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Hcd_ManRemoveBadChoices( pNew );\n//    Gia_ManEquivPrintClasses( pNew, 0, 0 );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n//    Gia_ManEquivPrintClasses( pNew, 0, 0 );\n    return pNew;\n} \n\n/**Function*************************************************************\n\n  Synopsis    [Performs computation of AIGs with choices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hcd_ComputeChoices(pAig *Aig_Man_t, nBTLimit int32, fSynthesis int32, fUseMiniSat int32, fVerbose int32) *Aig_Man_t {\n    var vGias *Vec_Ptr_t;\n    var pGia, pMiter *Gia_Man_t;\n    var pAigNew *Aig_Man_t;\n    var i int32;\n    var clk int64  = time.Now().UnixNano();\n    // perform synthesis\n    if fSynthesis != 0 {\n        vGias = Hcd_ChoiceSynthesis( Aig_ManDupDfs(pAig), 1, 1, 0, 0 );\n        if fVerbose != 0 {\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Synthesis time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));; }\n        // create choices\n        clk = time.Now().UnixNano();\n        pMiter = Hcd_ManChoiceMiter( vGias );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vGias)) \u0026\u0026 (((pGia) = (Gia_Man_t *)Vec_PtrEntry(vGias, i)), 1); i++  {\n            Gia_ManStop( pGia );\n        }\n\n        Gia_AigerWrite( pMiter, \"m3.aig\", 0, 0, 0 );\n    \n    } else {\n        vGias = Vec_PtrStart( 3 );\n        pMiter = Gia_ManFromAig(pAig);\n    }\n    // perform choicing\n    Gia_ComputeEquivalences( pMiter, nBTLimit, fUseMiniSat, fVerbose );\n    // derive AIG with choices\n    pGia = Hcd_ManEquivToChoices( pMiter, Vec_PtrSize(vGias) );\n    Gia_ManSetRegNum( pGia, Aig_ManRegNum(pAig) );\n    Gia_ManStop( pMiter );\n    Vec_PtrFree( vGias );\n    if fVerbose != 0 {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Choicing time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));; }\n//    Gia_ManHasChoices_very_old( pGia );\n    // transform back\n    pAigNew = Gia_ManToAig( pGia, 1 );\n    Gia_ManStop( pGia );\n\n    if fVerbose != 0 {\n        extern int Dch_DeriveChoiceCountReprs( Aig_Man_t * pAig );\n        extern int Dch_DeriveChoiceCountEquivs( Aig_Man_t * pAig );\n        fmt.Printf(\"Choices   : Reprs = %5d. Equivs = %5d. Choices = %5d.\\n\", Dch_DeriveChoiceCountReprs( pAigNew ), Dch_DeriveChoiceCountEquivs( pAigNew ), Aig_ManChoiceNum( pAigNew ));\n    }\n\n    return pAigNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs computation of AIGs with choices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hcd_ComputeChoicesTest(pGia *Gia_Man_t, nBTLimit int32, fSynthesis int32, fUseMiniSat int32, fVerbose int32) {\n    var pAig, pAigNew *Aig_Man_t;\n    pAig = Gia_ManToAig( pGia, 0 );\n    pAigNew = Hcd_ComputeChoices( pAig, nBTLimit, fSynthesis, fUseMiniSat, fVerbose );\n    Aig_ManStop( pAigNew );\n    Aig_ManStop( pAig );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

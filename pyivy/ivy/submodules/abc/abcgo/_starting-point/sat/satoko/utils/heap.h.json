@@ -1,0 +1,407 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h",
+  "SHA256": "43eaee5c02f0a81f62b8c88b8907b6f483d066dcb2fc4755a501ef43e8ae3051",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 81,
+        "Column": 82,
+        "ByteOffset": 2623
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var p *heap_t  = /*__starting_point_inline_macro:satoko_alloc__*/((heap_t *) malloc((1) * sizeof(heap_t)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 91,
+        "Column": 58,
+        "ByteOffset": 2903
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:satoko_free__*/for { free(p); p = nil; "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 3218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(heap_in_heap(p, entry));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 3370
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(heap_in_heap(p, entry));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 3931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(!heap_in_heap(p, entry));"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "left",
+      "Start": 859,
+      "End": 920,
+      "BodyStart": 899,
+      "Original": "static inline unsigned left(unsigned i) { return 2 * i + 1; }",
+      "Draft": "func left(i uint32) uint32 { return 2 * i + 1; }"
+    },
+    {
+      "Name": "right",
+      "Start": 921,
+      "End": 985,
+      "BodyStart": 962,
+      "Original": "static inline unsigned right(unsigned i) { return (i + 1) * 2; }",
+      "Draft": "func right(i uint32) uint32 { return (i + 1) * 2; }"
+    },
+    {
+      "Name": "parent",
+      "Start": 986,
+      "End": 1052,
+      "BodyStart": 1028,
+      "Original": "static inline unsigned parent(unsigned i) { return (i - 1) \u003e\u003e 1; }",
+      "Draft": "func parent(i uint32) uint32 { return (i - 1) \u003e\u003e 1; }"
+    },
+    {
+      "Name": "compare",
+      "Start": 1054,
+      "End": 1184,
+      "BodyStart": 1115,
+      "Original": "static inline int compare(heap_t *p, unsigned x, unsigned y)\n{\n    return vec_act_at(p-\u003eweights, x) \u003e vec_act_at(p-\u003eweights, y);\n}",
+      "Draft": "func compare(p *heap_t, x uint32, y uint32) int32 {\n    // inlining of macro vec_act_at\n    return vec_sdbl_at(p.weights, x) \u003e vec_sdbl_at(p.weights, y);\n}"
+    },
+    {
+      "Name": "heap_percolate_up",
+      "Start": 1186,
+      "End": 1639,
+      "BodyStart": 1246,
+      "Original": "static inline void heap_percolate_up(heap_t *h, unsigned i)\n{\n    unsigned x = vec_uint_at(h-\u003edata, i);\n    unsigned p = parent(i);\n\n    while (i != 0 \u0026\u0026 compare(h, x, vec_uint_at(h-\u003edata, p))) {\n        vec_uint_assign(h-\u003edata, i, vec_uint_at(h-\u003edata, p));\n        vec_int_assign(h-\u003eindices, vec_uint_at(h-\u003edata, p), (int) i);\n        i = p;\n        p = parent(p);\n    }\n    vec_uint_assign(h-\u003edata, i, x);\n    vec_int_assign(h-\u003eindices, x, (int) i);\n}",
+      "Draft": "func heap_percolate_up(h *heap_t, i uint32) {\n    var x uint32  = vec_uint_at(h.data, i);\n    var p uint32  = parent(i);\n\n    for i != 0 \u0026\u0026 (compare(h, x, vec_uint_at(h.data, p)) != 0) {\n        vec_uint_assign(h.data, i, vec_uint_at(h.data, p));\n        vec_int_assign(h.indices, vec_uint_at(h.data, p), int32( i));\n        i = p;\n        p = parent(p);\n    }\n    vec_uint_assign(h.data, i, x);\n    vec_int_assign(h.indices, x, int32( i));\n}"
+    },
+    {
+      "Name": "heap_percolate_down",
+      "Start": 1641,
+      "End": 2332,
+      "BodyStart": 1703,
+      "Original": "static inline void heap_percolate_down(heap_t *h, unsigned i)\n{\n    unsigned x = vec_uint_at(h-\u003edata, i);\n\n    while (left(i) \u003c vec_uint_size(h-\u003edata)) {\n        unsigned child = right(i) \u003c vec_uint_size(h-\u003edata) \u0026\u0026\n                     compare(h, vec_uint_at(h-\u003edata, right(i)), vec_uint_at(h-\u003edata, left(i)))\n                   ? right(i)\n                   : left(i);\n\n        if (!compare(h, vec_uint_at(h-\u003edata, child), x))\n            break;\n\n        vec_uint_assign(h-\u003edata, i, vec_uint_at(h-\u003edata, child));\n        vec_int_assign(h-\u003eindices, vec_uint_at(h-\u003edata, i), (int) i);\n        i = child;\n    }\n    vec_uint_assign(h-\u003edata, i, x);\n    vec_int_assign(h-\u003eindices, x, (int) i);\n}",
+      "Draft": "func heap_percolate_down(h *heap_t, i uint32) {\n    var x uint32  = vec_uint_at(h.data, i);\n\n    for left(i) \u003c vec_uint_size(h.data) {\n        var child uint32;\n        if right(i) \u003c vec_uint_size(h.data) \u0026\u0026\n                     (compare(h, vec_uint_at(h.data, right(i)), vec_uint_at(h.data, left(i))) != 0) {\n            child = right(i);\n        } else {\n            child = left(i);\n        }\n\n        if !(compare(h, vec_uint_at(h.data, child), x) != 0) {\n            break; }\n\n        vec_uint_assign(h.data, i, vec_uint_at(h.data, child));\n        vec_int_assign(h.indices, vec_uint_at(h.data, i), int32( i));\n        i = child;\n    }\n    vec_uint_assign(h.data, i, x);\n    vec_int_assign(h.indices, x, int32( i));\n}"
+    },
+    {
+      "Name": "heap_alloc",
+      "Start": 2508,
+      "End": 2713,
+      "BodyStart": 2561,
+      "Original": "static inline heap_t *heap_alloc(vec_act_t *weights)\n{\n    heap_t *p = satoko_alloc(heap_t, 1);\n    p-\u003eweights = weights;\n    p-\u003eindices = vec_int_alloc(0);\n    p-\u003edata = vec_uint_alloc(0);\n    return p;\n}",
+      "Draft": "func heap_alloc(weights *vec_act_t) *heap_t {\n    // inlining of macro satoko_alloc\n    var p *heap_t  = ((heap_t *) malloc((1) * sizeof(heap_t)));\n    p.weights = weights;\n    p.indices = vec_int_alloc(0);\n    p.data = vec_uint_alloc(0);\n    return p;\n}"
+    },
+    {
+      "Name": "heap_free",
+      "Start": 2715,
+      "End": 2836,
+      "BodyStart": 2755,
+      "Original": "static inline void heap_free(heap_t *p)\n{\n    vec_int_free(p-\u003eindices);\n    vec_uint_free(p-\u003edata);\n    satoko_free(p);\n}",
+      "Draft": "func heap_free(p *heap_t) {\n    vec_int_free(p.indices);\n    vec_uint_free(p.data);\n    // inlining of macro satoko_free\n    for { free(p); p = nil; \nif !(false) { break }\n} \n}"
+    },
+    {
+      "Name": "heap_size",
+      "Start": 2838,
+      "End": 2920,
+      "BodyStart": 2882,
+      "Original": "static inline unsigned heap_size(heap_t *p)\n{\n    return vec_uint_size(p-\u003edata);\n}",
+      "Draft": "func heap_size(p *heap_t) uint32 {\n    return vec_uint_size(p.data);\n}"
+    },
+    {
+      "Name": "heap_in_heap",
+      "Start": 2922,
+      "End": 3081,
+      "BodyStart": 2980,
+      "Original": "static inline int heap_in_heap(heap_t *p, unsigned entry)\n{\n    return (entry \u003c vec_int_size(p-\u003eindices)) \u0026\u0026\n           (vec_int_at(p-\u003eindices, entry) \u003e= 0);\n}",
+      "Draft": "func heap_in_heap(p *heap_t, entry uint32) int32 {\n    return (entry \u003c vec_int_size(p.indices)) \u0026\u0026\n           (vec_int_at(p.indices, entry) \u003e= 0);\n}"
+    },
+    {
+      "Name": "heap_increase",
+      "Start": 3083,
+      "End": 3252,
+      "BodyStart": 3143,
+      "Original": "static inline void heap_increase(heap_t *p, unsigned entry)\n{\n    assert(heap_in_heap(p, entry));\n    heap_percolate_down(p, (unsigned) vec_int_at(p-\u003eindices, entry));\n}",
+      "Draft": "func heap_increase(p *heap_t, entry uint32) {\n    assert((heap_in_heap(p, entry) != 0), \"heap_in_heap(p, entry)\");\n    heap_percolate_down(p, uint32( vec_int_at(p.indices, entry)));\n}"
+    },
+    {
+      "Name": "heap_decrease",
+      "Start": 3254,
+      "End": 3421,
+      "BodyStart": 3314,
+      "Original": "static inline void heap_decrease(heap_t *p, unsigned entry)\n{\n    assert(heap_in_heap(p, entry));\n    heap_percolate_up(p, (unsigned) vec_int_at(p-\u003eindices, entry));\n}",
+      "Draft": "func heap_decrease(p *heap_t, entry uint32) {\n    assert((heap_in_heap(p, entry) != 0), \"heap_in_heap(p, entry)\");\n    heap_percolate_up(p, uint32( vec_int_at(p.indices, entry)));\n}"
+    },
+    {
+      "Name": "heap_insert",
+      "Start": 3423,
+      "End": 3993,
+      "BodyStart": 3481,
+      "Original": "static inline void heap_insert(heap_t *p, unsigned entry)\n{\n    if (vec_int_size(p-\u003eindices) \u003c entry + 1) {\n        unsigned old_size = vec_int_size(p-\u003eindices);\n        unsigned i;\n        int e;\n        vec_int_resize(p-\u003eindices, entry + 1);\n        vec_int_foreach_start(p-\u003eindices, e, i, old_size)\n            vec_int_assign(p-\u003eindices, i, -1);\n    }\n    assert(!heap_in_heap(p, entry));\n    vec_int_assign(p-\u003eindices, entry, (int) vec_uint_size(p-\u003edata));\n    vec_uint_push_back(p-\u003edata, entry);\n    heap_percolate_up(p, (unsigned) vec_int_at(p-\u003eindices, entry));\n}",
+      "Draft": "func heap_insert(p *heap_t, entry uint32) {\n    if vec_int_size(p.indices) \u003c entry + 1 {\n        var old_size uint32  = vec_int_size(p.indices);\n        var i uint32;\n        var e int32;\n        vec_int_resize(p.indices, entry + 1);\n        // inlining of macro vec_int_foreach_start\n        for i = old_size; (i \u003c vec_int_size(p.indices)) \u0026\u0026 (((e) = vec_int_at(p.indices, i)), 1); i++ {\n            vec_int_assign(p.indices, i, -1);\n        }\n    }\n    assert(!(heap_in_heap(p, entry) != 0), \"!heap_in_heap(p, entry)\");\n    vec_int_assign(p.indices, entry, int32( vec_uint_size(p.data)));\n    vec_uint_push_back(p.data, entry);\n    heap_percolate_up(p, uint32( vec_int_at(p.indices, entry)));\n}"
+    },
+    {
+      "Name": "heap_update",
+      "Start": 3995,
+      "End": 4263,
+      "BodyStart": 4049,
+      "Original": "static inline void heap_update(heap_t *p, unsigned i)\n{\n    if (!heap_in_heap(p, i))\n        heap_insert(p, i);\n    else {\n        heap_percolate_up(p, (unsigned) vec_int_at(p-\u003eindices, i));\n        heap_percolate_down(p, (unsigned) vec_int_at(p-\u003eindices, i));\n    }\n}",
+      "Draft": "func heap_update(p *heap_t, i uint32) {\n    if !(heap_in_heap(p, i) != 0) {\n        heap_insert(p, i);\n    } else {\n        heap_percolate_up(p, uint32( vec_int_at(p.indices, i)));\n        heap_percolate_down(p, uint32( vec_int_at(p.indices, i)));\n    }\n}"
+    },
+    {
+      "Name": "heap_build",
+      "Start": 4265,
+      "End": 4731,
+      "BodyStart": 4327,
+      "Original": "static inline void heap_build(heap_t *p, vec_uint_t *entries)\n{\n    int i;\n    unsigned j, entry;\n\n    vec_uint_foreach(p-\u003edata, entry, j)\n        vec_int_assign(p-\u003eindices, entry, -1);\n    vec_uint_clear(p-\u003edata);\n    vec_uint_foreach(entries, entry, j) {\n        vec_int_assign(p-\u003eindices, entry, (int) j);\n        vec_uint_push_back(p-\u003edata, entry);\n    }\n    for ((i = vec_uint_size(p-\u003edata) / 2 - 1); i \u003e= 0; i--)\n        heap_percolate_down(p, (unsigned) i);\n}",
+      "Draft": "func heap_build(p *heap_t, entries *vec_uint_t) {\n    var i int32;\n    var j, entry uint32;\n\n    // inlining of macro vec_uint_foreach\n    for j = 0; (j \u003c vec_uint_size(p.data)) \u0026\u0026 (((entry) = vec_uint_at(p.data, j)), 1); j++ {\n        vec_int_assign(p.indices, entry, -1);\n    }\n    vec_uint_clear(p.data);\n    // inlining of macro vec_uint_foreach\n    for j = 0; (j \u003c vec_uint_size(entries)) \u0026\u0026 (((entry) = vec_uint_at(entries, j)), 1); j++ {\n        vec_int_assign(p.indices, entry, int32( j));\n        vec_uint_push_back(p.data, entry);\n    }\n    for (i = vec_uint_size(p.data) / 2 - 1); i \u003e= 0; i-- {\n        heap_percolate_down(p, uint32( i));\n    }\n}"
+    },
+    {
+      "Name": "heap_clear",
+      "Start": 4733,
+      "End": 4837,
+      "BodyStart": 4774,
+      "Original": "static inline void heap_clear(heap_t *p)\n{\n    vec_int_clear(p-\u003eindices);\n    vec_uint_clear(p-\u003edata);\n}",
+      "Draft": "func heap_clear(p *heap_t) {\n    vec_int_clear(p.indices);\n    vec_uint_clear(p.data);\n}"
+    },
+    {
+      "Name": "heap_remove_min",
+      "Start": 4839,
+      "End": 5233,
+      "BodyStart": 4889,
+      "Original": "static inline unsigned heap_remove_min(heap_t *p)\n{\n    unsigned x = vec_uint_at(p-\u003edata, 0);\n    vec_uint_assign(p-\u003edata, 0, vec_uint_at(p-\u003edata, vec_uint_size(p-\u003edata) - 1));\n    vec_int_assign(p-\u003eindices, vec_uint_at(p-\u003edata, 0), 0);\n    vec_int_assign(p-\u003eindices, x, -1);\n    vec_uint_pop_back(p-\u003edata);\n    if (vec_uint_size(p-\u003edata) \u003e 1)\n        heap_percolate_down(p, 0);\n    return x;\n}",
+      "Draft": "func heap_remove_min(p *heap_t) uint32 {\n    var x uint32  = vec_uint_at(p.data, 0);\n    vec_uint_assign(p.data, 0, vec_uint_at(p.data, vec_uint_size(p.data) - 1));\n    vec_int_assign(p.indices, vec_uint_at(p.data, 0), 0);\n    vec_int_assign(p.indices, x, -1);\n    vec_uint_pop_back(p.data);\n    if vec_uint_size(p.data) \u003e 1 {\n        heap_percolate_down(p, 0); }\n    return x;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::struct::heap_t",
+      "Category": "struct-review",
+      "Symbol": "heap_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 549,
+      "End": 669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::mechanical::sizeof::2746",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2579,
+      "End": 2579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::mechanical::do::3026",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 2819,
+      "End": 2819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::pointer-cast::2722",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2579,
+      "End": 2579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::left",
+      "Category": "semantic-review",
+      "Symbol": "left",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 859,
+      "End": 920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::right",
+      "Category": "semantic-review",
+      "Symbol": "right",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 921,
+      "End": 985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::parent",
+      "Category": "semantic-review",
+      "Symbol": "parent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 986,
+      "End": 1052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::compare",
+      "Category": "semantic-review",
+      "Symbol": "compare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1054,
+      "End": 1184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::heap_percolate_up",
+      "Category": "semantic-review",
+      "Symbol": "heap_percolate_up",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1186,
+      "End": 1639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::heap_percolate_down",
+      "Category": "semantic-review",
+      "Symbol": "heap_percolate_down",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1641,
+      "End": 2332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::heap_alloc",
+      "Category": "semantic-review",
+      "Symbol": "heap_alloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2508,
+      "End": 2713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::heap_free",
+      "Category": "semantic-review",
+      "Symbol": "heap_free",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2715,
+      "End": 2836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::heap_size",
+      "Category": "semantic-review",
+      "Symbol": "heap_size",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2838,
+      "End": 2920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::heap_in_heap",
+      "Category": "semantic-review",
+      "Symbol": "heap_in_heap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2922,
+      "End": 3081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::heap_increase",
+      "Category": "semantic-review",
+      "Symbol": "heap_increase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3083,
+      "End": 3252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::heap_decrease",
+      "Category": "semantic-review",
+      "Symbol": "heap_decrease",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3254,
+      "End": 3421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::heap_insert",
+      "Category": "semantic-review",
+      "Symbol": "heap_insert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3423,
+      "End": 3993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::heap_update",
+      "Category": "semantic-review",
+      "Symbol": "heap_update",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3995,
+      "End": 4263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::heap_build",
+      "Category": "semantic-review",
+      "Symbol": "heap_build",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4265,
+      "End": 4731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::heap_clear",
+      "Category": "semantic-review",
+      "Symbol": "heap_clear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4733,
+      "End": 4837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::heap_remove_min",
+      "Category": "semantic-review",
+      "Symbol": "heap_remove_min",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4839,
+      "End": 5233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/heap.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5295
+    }
+  ],
+  "Draft": "package utils\n\n//===--- heap.h ----------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n\n\n\n//#include \"mem.h\"\n//#include \"../types.h\"\n//#include \"vec/vec_sdbl.h\"\n//#include \"vec/vec_int.h\"\n//#include \"vec/vec_uint.h\"\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_HEADER_START\n\n   \ntype heap_t struct {\n    indices *vec_int_t;\n    data *vec_uint_t;\n    weights *vec_act_t;\n}\n//===------------------------------------------------------------------------===\n// Heap internal functions\n//===------------------------------------------------------------------------===\nfunc left(i uint32) uint32 { return 2 * i + 1; }\nfunc right(i uint32) uint32 { return (i + 1) * 2; }\nfunc parent(i uint32) uint32 { return (i - 1) \u003e\u003e 1; }\n\nfunc compare(p *heap_t, x uint32, y uint32) int32 {\n    // inlining of macro vec_act_at\n    return vec_sdbl_at(p.weights, x) \u003e vec_sdbl_at(p.weights, y);\n}\n\nfunc heap_percolate_up(h *heap_t, i uint32) {\n    var x uint32  = vec_uint_at(h.data, i);\n    var p uint32  = parent(i);\n\n    for i != 0 \u0026\u0026 (compare(h, x, vec_uint_at(h.data, p)) != 0) {\n        vec_uint_assign(h.data, i, vec_uint_at(h.data, p));\n        vec_int_assign(h.indices, vec_uint_at(h.data, p), int32( i));\n        i = p;\n        p = parent(p);\n    }\n    vec_uint_assign(h.data, i, x);\n    vec_int_assign(h.indices, x, int32( i));\n}\n\nfunc heap_percolate_down(h *heap_t, i uint32) {\n    var x uint32  = vec_uint_at(h.data, i);\n\n    for left(i) \u003c vec_uint_size(h.data) {\n        var child uint32;\n        if right(i) \u003c vec_uint_size(h.data) \u0026\u0026\n                     (compare(h, vec_uint_at(h.data, right(i)), vec_uint_at(h.data, left(i))) != 0) {\n            child = right(i);\n        } else {\n            child = left(i);\n        }\n\n        if !(compare(h, vec_uint_at(h.data, child), x) != 0) {\n            break; }\n\n        vec_uint_assign(h.data, i, vec_uint_at(h.data, child));\n        vec_int_assign(h.indices, vec_uint_at(h.data, i), int32( i));\n        i = child;\n    }\n    vec_uint_assign(h.data, i, x);\n    vec_int_assign(h.indices, x, int32( i));\n}\n\n//===------------------------------------------------------------------------===\n// Heap API\n//===------------------------------------------------------------------------===\nfunc heap_alloc(weights *vec_act_t) *heap_t {\n    // inlining of macro satoko_alloc\n    var p *heap_t  = ((heap_t *) malloc((1) * sizeof(heap_t)));\n    p.weights = weights;\n    p.indices = vec_int_alloc(0);\n    p.data = vec_uint_alloc(0);\n    return p;\n}\n\nfunc heap_free(p *heap_t) {\n    vec_int_free(p.indices);\n    vec_uint_free(p.data);\n    // inlining of macro satoko_free\n    for { free(p); p = nil; \nif !(false) { break }\n} \n}\n\nfunc heap_size(p *heap_t) uint32 {\n    return vec_uint_size(p.data);\n}\n\nfunc heap_in_heap(p *heap_t, entry uint32) int32 {\n    return (entry \u003c vec_int_size(p.indices)) \u0026\u0026\n           (vec_int_at(p.indices, entry) \u003e= 0);\n}\n\nfunc heap_increase(p *heap_t, entry uint32) {\n    assert((heap_in_heap(p, entry) != 0), \"heap_in_heap(p, entry)\");\n    heap_percolate_down(p, uint32( vec_int_at(p.indices, entry)));\n}\n\nfunc heap_decrease(p *heap_t, entry uint32) {\n    assert((heap_in_heap(p, entry) != 0), \"heap_in_heap(p, entry)\");\n    heap_percolate_up(p, uint32( vec_int_at(p.indices, entry)));\n}\n\nfunc heap_insert(p *heap_t, entry uint32) {\n    if vec_int_size(p.indices) \u003c entry + 1 {\n        var old_size uint32  = vec_int_size(p.indices);\n        var i uint32;\n        var e int32;\n        vec_int_resize(p.indices, entry + 1);\n        // inlining of macro vec_int_foreach_start\n        for i = old_size; (i \u003c vec_int_size(p.indices)) \u0026\u0026 (((e) = vec_int_at(p.indices, i)), 1); i++ {\n            vec_int_assign(p.indices, i, -1);\n        }\n    }\n    assert(!(heap_in_heap(p, entry) != 0), \"!heap_in_heap(p, entry)\");\n    vec_int_assign(p.indices, entry, int32( vec_uint_size(p.data)));\n    vec_uint_push_back(p.data, entry);\n    heap_percolate_up(p, uint32( vec_int_at(p.indices, entry)));\n}\n\nfunc heap_update(p *heap_t, i uint32) {\n    if !(heap_in_heap(p, i) != 0) {\n        heap_insert(p, i);\n    } else {\n        heap_percolate_up(p, uint32( vec_int_at(p.indices, i)));\n        heap_percolate_down(p, uint32( vec_int_at(p.indices, i)));\n    }\n}\n\nfunc heap_build(p *heap_t, entries *vec_uint_t) {\n    var i int32;\n    var j, entry uint32;\n\n    // inlining of macro vec_uint_foreach\n    for j = 0; (j \u003c vec_uint_size(p.data)) \u0026\u0026 (((entry) = vec_uint_at(p.data, j)), 1); j++ {\n        vec_int_assign(p.indices, entry, -1);\n    }\n    vec_uint_clear(p.data);\n    // inlining of macro vec_uint_foreach\n    for j = 0; (j \u003c vec_uint_size(entries)) \u0026\u0026 (((entry) = vec_uint_at(entries, j)), 1); j++ {\n        vec_int_assign(p.indices, entry, int32( j));\n        vec_uint_push_back(p.data, entry);\n    }\n    for (i = vec_uint_size(p.data) / 2 - 1); i \u003e= 0; i-- {\n        heap_percolate_down(p, uint32( i));\n    }\n}\n\nfunc heap_clear(p *heap_t) {\n    vec_int_clear(p.indices);\n    vec_uint_clear(p.data);\n}\n\nfunc heap_remove_min(p *heap_t) uint32 {\n    var x uint32  = vec_uint_at(p.data, 0);\n    vec_uint_assign(p.data, 0, vec_uint_at(p.data, vec_uint_size(p.data) - 1));\n    vec_int_assign(p.indices, vec_uint_at(p.data, 0), 0);\n    vec_int_assign(p.indices, x, -1);\n    vec_uint_pop_back(p.data);\n    if vec_uint_size(p.data) \u003e 1 {\n        heap_percolate_down(p, 0); }\n    return x;\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

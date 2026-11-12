@@ -1,0 +1,262 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c",
+  "SHA256": "962f4e33395b4f6cc0d33aacc98c699e7fb0c50465e011437c3466cdcf177416",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 50,
+        "Column": 72,
+        "ByteOffset": 1454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMan = /*__starting_point_inline_macro:ABC_ALLOC__*/((Min_Man_t *) malloc(sizeof(Min_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pMan, 0, sizeof(Min_Man_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 56,
+        "Column": 83,
+        "ByteOffset": 1842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMan.ppStore = /*__starting_point_inline_macro:ABC_ALLOC__*/((Min_Cube_t * *) malloc(sizeof(Min_Cube_t *) * (size_t)(pMan.nVars + 1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2928
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.ppStore, 0, sizeof(Min_Cube_t *) * (nSupp + 1) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 106,
+        "Column": 65,
+        "ByteOffset": 3407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.ppStore) ? (free((char *) (p.ppStore)), (p.ppStore) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 107,
+        "Column": 57,
+        "ByteOffset": 3514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Min_ManAlloc",
+      "Start": 1272,
+      "End": 2321,
+      "BodyStart": 1310,
+      "Original": "Min_Man_t * Min_ManAlloc( int nVars )\n{\n    Min_Man_t * pMan;\n    // start the manager\n    pMan = ABC_ALLOC( Min_Man_t, 1 );\n    memset( pMan, 0, sizeof(Min_Man_t) );\n    pMan-\u003enVars   = nVars;\n    pMan-\u003enWords  = Abc_BitWordNum( nVars * 2 );\n    pMan-\u003epMemMan = Extra_MmFixedStart( sizeof(Min_Cube_t) + sizeof(unsigned) * (pMan-\u003enWords - 1) );\n    // allocate storage for the temporary cover\n    pMan-\u003eppStore = ABC_ALLOC( Min_Cube_t *, pMan-\u003enVars + 1 );\n    // create tautology cubes\n    Min_ManClean( pMan, nVars );\n    pMan-\u003epOne0  = Min_CubeAlloc( pMan );\n    pMan-\u003epOne1  = Min_CubeAlloc( pMan );\n    pMan-\u003epTemp  = Min_CubeAlloc( pMan );\n    pMan-\u003epBubble = Min_CubeAlloc( pMan );  pMan-\u003epBubble-\u003euData[0] = 0;\n    // create trivial cubes\n    Min_ManClean( pMan, 1 );\n    pMan-\u003epTriv0[0] = Min_CubeAllocVar( pMan, 0, 0 );\n    pMan-\u003epTriv0[1] = Min_CubeAllocVar( pMan, 0, 1 );   \n    pMan-\u003epTriv1[0] = Min_CubeAllocVar( pMan, 0, 0 );\n    pMan-\u003epTriv1[1] = Min_CubeAllocVar( pMan, 0, 1 );   \n    Min_ManClean( pMan, nVars );\n    return pMan;\n}",
+      "Draft": "func Min_ManAlloc(nVars int32) *Min_Man_t {\n    var pMan *Min_Man_t;\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    pMan = ((Min_Man_t *) malloc(sizeof(Min_Man_t) * (size_t)(1)));\n    memset( pMan, 0, sizeof(Min_Man_t) );\n    pMan.nVars   = nVars;\n    pMan.nWords  = Abc_BitWordNum( nVars * 2 );\n    pMan.pMemMan = Extra_MmFixedStart( sizeof(Min_Cube_t) + sizeof(unsigned) * (pMan.nWords - 1) );\n    // allocate storage for the temporary cover\n    // inlining of macro ABC_ALLOC\n    pMan.ppStore = ((Min_Cube_t * *) malloc(sizeof(Min_Cube_t *) * (size_t)(pMan.nVars + 1)));\n    // create tautology cubes\n    Min_ManClean( pMan, nVars );\n    pMan.pOne0  = Min_CubeAlloc( pMan );\n    pMan.pOne1  = Min_CubeAlloc( pMan );\n    pMan.pTemp  = Min_CubeAlloc( pMan );\n    pMan.pBubble = Min_CubeAlloc( pMan );  pMan.pBubble.uData[0] = 0;\n    // create trivial cubes\n    Min_ManClean( pMan, 1 );\n    pMan.pTriv0[0] = Min_CubeAllocVar( pMan, 0, 0 );\n    pMan.pTriv0[1] = Min_CubeAllocVar( pMan, 0, 1 );   \n    pMan.pTriv1[0] = Min_CubeAllocVar( pMan, 0, 0 );\n    pMan.pTriv1[1] = Min_CubeAllocVar( pMan, 0, 1 );   \n    Min_ManClean( pMan, nVars );\n    return pMan;\n}"
+    },
+    {
+      "Name": "Min_ManClean",
+      "Start": 2589,
+      "End": 2851,
+      "BodyStart": 2635,
+      "Original": "void Min_ManClean( Min_Man_t * p, int nSupp )\n{\n    // set the size of the cube manager\n    p-\u003enVars  = nSupp;\n    p-\u003enWords = Abc_BitWordNum(2*nSupp);\n    // clean the storage\n    memset( p-\u003eppStore, 0, sizeof(Min_Cube_t *) * (nSupp + 1) );\n    p-\u003enCubes = 0;\n}",
+      "Draft": "func Min_ManClean(p *Min_Man_t, nSupp int32) {\n    // set the size of the cube manager\n    p.nVars  = nSupp;\n    p.nWords = Abc_BitWordNum(2*nSupp);\n    // clean the storage\n    memset( p.ppStore, 0, sizeof(Min_Cube_t *) * (nSupp + 1) );\n    p.nCubes = 0;\n}"
+    },
+    {
+      "Name": "Min_ManFree",
+      "Start": 3118,
+      "End": 3239,
+      "BodyStart": 3152,
+      "Original": "void Min_ManFree( Min_Man_t * p )\n{\n    Extra_MmFixedStop( p-\u003epMemMan );\n    ABC_FREE( p-\u003eppStore );\n    ABC_FREE( p );\n}",
+      "Draft": "func Min_ManFree(p *Min_Man_t) {\n    Extra_MmFixedStop( p.pMemMan );\n    // inlining of macro ABC_FREE\n    ((p.ppStore) ? (free((char *) (p.ppStore)), (p.ppStore) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::mechanical::sizeof::1437",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1370,
+      "End": 1370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::mechanical::sizeof::1493",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1418,
+      "End": 1424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::mechanical::sizeof::1630",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1555,
+      "End": 1561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::mechanical::sizeof::1651",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1576,
+      "End": 1582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::mechanical::sizeof::1830",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1685,
+      "End": 1685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::mechanical::sizeof::2946",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2793,
+      "End": 2799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::pointer-cast::1416",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1370,
+      "End": 1370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::pointer-cast::1806",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1685,
+      "End": 1685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::pointer-cast::1836",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1685,
+      "End": 1685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::pointer-cast::2952",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2799,
+      "End": 2813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::pointer-cast::3414",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3195,
+      "End": 3195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::pointer-cast::3523",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3223,
+      "End": 3223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::Min_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Min_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1272,
+      "End": 2321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::Min_ManClean",
+      "Category": "semantic-review",
+      "Symbol": "Min_ManClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2589,
+      "End": 2851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::ternary::Min_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Min_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3118,
+      "End": 3239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::Min_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Min_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3118,
+      "End": 3239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/cov/covMinMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3487
+    }
+  ],
+  "Draft": "package cov\n\n/**CFile****************************************************************\n\n  FileName    [covMinMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Mapping into network of SOPs/ESOPs.]\n\n  Synopsis    [SOP manipulation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: covMinMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"covInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the minimization manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_ManAlloc(nVars int32) *Min_Man_t {\n    var pMan *Min_Man_t;\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    pMan = ((Min_Man_t *) malloc(sizeof(Min_Man_t) * (size_t)(1)));\n    memset( pMan, 0, sizeof(Min_Man_t) );\n    pMan.nVars   = nVars;\n    pMan.nWords  = Abc_BitWordNum( nVars * 2 );\n    pMan.pMemMan = Extra_MmFixedStart( sizeof(Min_Cube_t) + sizeof(unsigned) * (pMan.nWords - 1) );\n    // allocate storage for the temporary cover\n    // inlining of macro ABC_ALLOC\n    pMan.ppStore = ((Min_Cube_t * *) malloc(sizeof(Min_Cube_t *) * (size_t)(pMan.nVars + 1)));\n    // create tautology cubes\n    Min_ManClean( pMan, nVars );\n    pMan.pOne0  = Min_CubeAlloc( pMan );\n    pMan.pOne1  = Min_CubeAlloc( pMan );\n    pMan.pTemp  = Min_CubeAlloc( pMan );\n    pMan.pBubble = Min_CubeAlloc( pMan );  pMan.pBubble.uData[0] = 0;\n    // create trivial cubes\n    Min_ManClean( pMan, 1 );\n    pMan.pTriv0[0] = Min_CubeAllocVar( pMan, 0, 0 );\n    pMan.pTriv0[1] = Min_CubeAllocVar( pMan, 0, 1 );   \n    pMan.pTriv1[0] = Min_CubeAllocVar( pMan, 0, 0 );\n    pMan.pTriv1[1] = Min_CubeAllocVar( pMan, 0, 1 );   \n    Min_ManClean( pMan, nVars );\n    return pMan;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans the minimization manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_ManClean(p *Min_Man_t, nSupp int32) {\n    // set the size of the cube manager\n    p.nVars  = nSupp;\n    p.nWords = Abc_BitWordNum(2*nSupp);\n    // clean the storage\n    memset( p.ppStore, 0, sizeof(Min_Cube_t *) * (nSupp + 1) );\n    p.nCubes = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the minimization manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Min_ManFree(p *Min_Man_t) {\n    Extra_MmFixedStop( p.pMemMan );\n    // inlining of macro ABC_FREE\n    ((p.ppStore) ? (free((char *) (p.ppStore)), (p.ppStore) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

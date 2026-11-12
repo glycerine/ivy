@@ -1,0 +1,819 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c",
+  "SHA256": "fbffec3685c9ea1f3fa524e015a44ae3928eb426e33fa6484aa50a3ed05692d1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1578
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 71,
+        "Column": 5,
+        "ByteOffset": 2097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%s (total = %d  driven = %d)\\n\", pStr, Counter, nTotal );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 13,
+        "ByteOffset": 3182
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%3d :   Obj = %6d   Refs = %6d   Freq = %6d\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 3969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(p) \u003e 0 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 138,
+        "Column": 71,
+        "ByteOffset": 4071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pSets    = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 139,
+        "Column": 71,
+        "ByteOffset": 4191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pResets  = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 140,
+        "Column": 71,
+        "ByteOffset": 4311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pEnables = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 194,
+        "Column": 63,
+        "ByteOffset": 6660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 197,
+        "Column": 9,
+        "ByteOffset": 6761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Flops with set/reset = %6d. Flops with enable = %6d.\\n\", nHaveSetReset, nHaveEnable );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 204,
+        "Column": 63,
+        "ByteOffset": 7144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 205,
+        "Column": 61,
+        "ByteOffset": 7251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pSets) ? (free((char *) (pSets)), (pSets) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 206,
+        "Column": 63,
+        "ByteOffset": 7356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pResets) ? (free((char *) (pResets)), (pResets) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 207,
+        "Column": 64,
+        "ByteOffset": 7466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pEnables) ? (free((char *) (pEnables)), (pEnables) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 8135
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(p) \u003e 0 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 233,
+        "Column": 71,
+        "ByteOffset": 8237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pSets    = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 234,
+        "Column": 71,
+        "ByteOffset": 8357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pResets  = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 235,
+        "Column": 71,
+        "ByteOffset": 8477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pEnables = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 293,
+        "Column": 17,
+        "ByteOffset": 10919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Adding set signal %d related to %d flops.\\n\", i, pSets[i] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 17,
+        "ByteOffset": 11173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Adding reset signal %d related to %d flops.\\n\", i, pResets[i] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 307,
+        "Column": 17,
+        "ByteOffset": 11432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Adding enable signal %d related to %d flops.\\n\", i, pEnables[i] ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 311,
+        "Column": 61,
+        "ByteOffset": 11631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pSets) ? (free((char *) (pSets)), (pSets) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 312,
+        "Column": 63,
+        "ByteOffset": 11736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pResets) ? (free((char *) (pResets)), (pResets) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 313,
+        "Column": 64,
+        "ByteOffset": 11846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pEnables) ? (free((char *) (pEnables)), (pEnables) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 335,
+        "Column": 9,
+        "ByteOffset": 12624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsCand(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 458,
+        "Column": 13,
+        "ByteOffset": 17837
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot recognize enable of flop %d.\\n\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 464,
+        "Column": 13,
+        "ByteOffset": 18123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot recognize self-loop of enable flop %d.\\n\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 530,
+        "Column": 13,
+        "ByteOffset": 20613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The flop driver %d is not a node.\\n\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 537,
+        "Column": 13,
+        "ByteOffset": 20882
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The flop driver %d is not an OR gate.\\n\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 546,
+        "Column": 13,
+        "ByteOffset": 21227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The flop driver fanin %d is not a node.\\n\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 556,
+        "Column": 13,
+        "ByteOffset": 21705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The flop %d does not have a self-loop.\\n\", i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 591,
+        "Column": 18,
+        "ByteOffset": 23092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 599,
+        "Column": 5,
+        "ByteOffset": 23386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize( vDatas ) == Gia_ManRegNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 600,
+        "Column": 5,
+        "ByteOffset": 23443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize( vFlopClasses ) == Gia_ManRegNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 601,
+        "Column": 5,
+        "ByteOffset": 23506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Detected %d classes.\\n\", Vec_PtrSize(vCtrls) - (Counter == 0) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_CollectSuper_rec",
+      "Start": 1266,
+      "End": 1756,
+      "BodyStart": 1347,
+      "Original": "void Gia_CollectSuper_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vSuper )\n{\n    // if the new node is complemented or a PI, another gate begins\n    if ( Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) )\n    {\n        Vec_IntPushUnique( vSuper, Gia_ObjId(p, Gia_Regular(pObj)) );\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    // go through the branches\n    Gia_CollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper );\n    Gia_CollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper );\n}",
+      "Draft": "func Gia_CollectSuper_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t) {\n    // if the new node is complemented or a PI, another gate begins\n    if Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) {\n        Vec_IntPushUnique( vSuper, Gia_ObjId(p, Gia_Regular(pObj)) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    // go through the branches\n    Gia_CollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper );\n    Gia_CollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper );\n}"
+    },
+    {
+      "Name": "Gia_CollectSuper",
+      "Start": 2015,
+      "End": 2475,
+      "BodyStart": 2092,
+      "Original": "void Gia_CollectSuper( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vSuper )\n{\n    assert( !Gia_IsComplement(pObj) );\n    Vec_IntClear( vSuper );\n//    Gia_CollectSuper_rec( p, pObj, vSuper );\n    if ( Gia_ObjIsAnd(pObj) )\n    {\n        Vec_IntPushUnique( vSuper, Gia_ObjId(p, Gia_ObjFanin0(pObj)) );\n        Vec_IntPushUnique( vSuper, Gia_ObjId(p, Gia_ObjFanin1(pObj)) );\n    }\n    else\n        Vec_IntPushUnique( vSuper, Gia_ObjId(p, Gia_Regular(pObj)) );\n\n}",
+      "Draft": "func Gia_CollectSuper(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t) {\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    Vec_IntClear( vSuper );\n//    Gia_CollectSuper_rec( p, pObj, vSuper );\n    if Gia_ObjIsAnd(pObj) {\n        Vec_IntPushUnique( vSuper, Gia_ObjId(p, Gia_ObjFanin0(pObj)) );\n        Vec_IntPushUnique( vSuper, Gia_ObjId(p, Gia_ObjFanin1(pObj)) );\n    \n    } else {\n        Vec_IntPushUnique( vSuper, Gia_ObjId(p, Gia_Regular(pObj)) ); }\n\n}"
+    },
+    {
+      "Name": "Gia_ManPrintSignals",
+      "Start": 2711,
+      "End": 3414,
+      "BodyStart": 2779,
+      "Original": "void Gia_ManPrintSignals( Gia_Man_t * p, int * pFreq, char * pStr )\n{\n    Vec_Int_t * vObjs;\n    int i, Counter = 0, nTotal = 0;\n    vObjs = Vec_IntAlloc( 100 );\n    for ( i = 0; i \u003c Gia_ManObjNum(p); i++ )\n        if ( pFreq[i] \u003e 1 )\n        {\n            nTotal += pFreq[i];\n            Counter++;\n        }\n    printf( \"%s (total = %d  driven = %d)\\n\", pStr, Counter, nTotal );\n    Counter = 0;\n    for ( i = 0; i \u003c Gia_ManObjNum(p); i++ )\n        if ( pFreq[i] \u003e 10 )\n        {\n            printf( \"%3d :   Obj = %6d   Refs = %6d   Freq = %6d\\n\", \n                ++Counter, i, Gia_ObjRefNum(p, Gia_ManObj(p,i)), pFreq[i] );\n            Vec_IntPush( vObjs, i );\n        }\n    Vec_IntFree( vObjs );\n}",
+      "Draft": "func Gia_ManPrintSignals(p *Gia_Man_t, pFreq *int32, pStr string) {\n    var vObjs *Vec_Int_t;\n    var i, Counter, nTotal int32;\n    vObjs = Vec_IntAlloc( 100 );\n    for  i = 0; i \u003c Gia_ManObjNum(p); i++  {\n        if pFreq[i] \u003e 1 {\n            nTotal += pFreq[i];\n            Counter++;\n        }\n    }\n    fmt.Printf(\"%s (total = %d  driven = %d)\\n\", pStr, Counter, nTotal);\n    Counter = 0;\n    for  i = 0; i \u003c Gia_ManObjNum(p); i++  {\n        if pFreq[i] \u003e 10 {\n            fmt.Printf(\"%3d :   Obj = %6d   Refs = %6d   Freq = %6d\\n\", ++Counter, i, Gia_ObjRefNum(p, Gia_ManObj(p,i)), pFreq[i]);\n            Vec_IntPush( vObjs, i );\n        }\n    }\n    Vec_IntFree( vObjs );\n}"
+    },
+    {
+      "Name": "Gia_ManDetectSeqSignals",
+      "Start": 3650,
+      "End": 6340,
+      "BodyStart": 3725,
+      "Original": "void Gia_ManDetectSeqSignals( Gia_Man_t * p, int fSetReset, int fVerbose )\n{\n    Vec_Int_t * vSuper;\n    Gia_Obj_t * pFlop, * pObjC, * pObj0, * pObj1, * pNode, * pTemp;\n    int i, k, Ent, * pSets, * pResets, * pEnables;\n    int nHaveSetReset = 0, nHaveEnable = 0;\n    assert( Gia_ManRegNum(p) \u003e 0 );\n    pSets    = ABC_CALLOC( int, Gia_ManObjNum(p) );\n    pResets  = ABC_CALLOC( int, Gia_ManObjNum(p) );\n    pEnables = ABC_CALLOC( int, Gia_ManObjNum(p) );\n    vSuper   = Vec_IntAlloc( 100 );\n    Gia_ManForEachRi( p, pFlop, i )\n    {\n        pNode = Gia_ObjFanin0(pFlop);\n        if ( !Gia_ObjIsAnd(pNode) )\n            continue;\n        // detect sets/resets\n        Gia_CollectSuper( p, pNode, vSuper );\n        if ( Gia_ObjFaninC0(pFlop) )\n            Vec_IntForEachEntry( vSuper, Ent, k )\n                pSets[Ent]++;\n        else\n            Vec_IntForEachEntry( vSuper, Ent, k )\n                pResets[Ent]++;\n        // detect enables\n        if ( !Gia_ObjIsMuxType(pNode) )\n            continue;\n        pObjC = Gia_ObjRecognizeMux( pNode, \u0026pObj0, \u0026pObj1 );\n        pTemp = Gia_ObjRiToRo( p, pFlop );\n        if ( Gia_Regular(pObj0) != pTemp \u0026\u0026 Gia_Regular(pObj1) != pTemp )\n            continue;\n        if ( !Gia_ObjFaninC0(pFlop) )\n        {\n            pObj0 = Gia_Not(pObj0);\n            pObj1 = Gia_Not(pObj1);\n        }\n        if ( Gia_IsComplement(pObjC) )\n        {\n            pObjC = Gia_Not(pObjC);\n            pTemp = pObj0;\n            pObj0 = pObj1;\n            pObj1 = pTemp;\n        }\n        // detect controls\n//        Gia_CollectSuper( p, pObjC, vSuper );\n//        Vec_IntForEachEntry( vSuper, Ent, k )\n//            pEnables[Ent]++;\n        pEnables[Gia_ObjId(p, pObjC)]++;\n        nHaveEnable++;\n    }\n    Gia_ManForEachRi( p, pFlop, i )\n    {\n        pNode = Gia_ObjFanin0(pFlop);\n        if ( !Gia_ObjIsAnd(pNode) )\n            continue;\n        // detect sets/resets\n        Gia_CollectSuper( p, pNode, vSuper );\n        Vec_IntForEachEntry( vSuper, Ent, k )\n            if ( pSets[Ent] \u003e 1 || pResets[Ent] \u003e 1 )\n            {\n                nHaveSetReset++;\n                break;\n            }\n    }\n    Vec_IntFree( vSuper );\n    ABC_FREE( p-\u003epRefs );\n    Gia_ManCreateRefs( p );\n    if ( fVerbose )\n    {\n        printf( \"Flops with set/reset = %6d. Flops with enable = %6d.\\n\", nHaveSetReset, nHaveEnable );\n        if ( fSetReset )\n        {\n            Gia_ManPrintSignals( p, pSets, \"Set signals\" );\n            Gia_ManPrintSignals( p, pResets, \"Reset signals\" );\n        }\n        Gia_ManPrintSignals( p, pEnables, \"Enable signals\" );\n    }\n    ABC_FREE( p-\u003epRefs );\n    ABC_FREE( pSets );\n    ABC_FREE( pResets );\n    ABC_FREE( pEnables );\n}",
+      "Draft": "func Gia_ManDetectSeqSignals(p *Gia_Man_t, fSetReset int32, fVerbose int32) {\n    var vSuper *Vec_Int_t;\n    var pFlop, pObjC, pObj0, pObj1, pNode, pTemp *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var Ent int32;\n    var pSets *int32;\n    var pResets *int32;\n    var pEnables *int32;\n    var nHaveSetReset, nHaveEnable int32;\n    assert(Gia_ManRegNum(p) \u003e 0, \"Gia_ManRegNum(p) \u003e 0\");\n    // inlining of macro ABC_CALLOC\n    pSets    = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    pResets  = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    pEnables = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    vSuper   = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pFlop) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pNode = Gia_ObjFanin0(pFlop);\n        if !Gia_ObjIsAnd(pNode) {\n            continue; }\n        // detect sets/resets\n        Gia_CollectSuper( p, pNode, vSuper );\n        if Gia_ObjFaninC0(pFlop) {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((Ent) = Vec_IntEntry(vSuper, k)), 1); k++  {\n                pSets[Ent]++;\n            }\n        } else {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((Ent) = Vec_IntEntry(vSuper, k)), 1); k++  {\n                pResets[Ent]++;\n            } }\n        // detect enables\n        if !Gia_ObjIsMuxType(pNode) {\n            continue; }\n        pObjC = Gia_ObjRecognizeMux( pNode, \u0026pObj0, \u0026pObj1 );\n        pTemp = Gia_ObjRiToRo( p, pFlop );\n        if Gia_Regular(pObj0) != pTemp \u0026\u0026 Gia_Regular(pObj1) != pTemp {\n            continue; }\n        if !Gia_ObjFaninC0(pFlop) {\n            pObj0 = Gia_Not(pObj0);\n            pObj1 = Gia_Not(pObj1);\n        }\n        if Gia_IsComplement(pObjC) {\n            pObjC = Gia_Not(pObjC);\n            pTemp = pObj0;\n            pObj0 = pObj1;\n            pObj1 = pTemp;\n        }\n        // detect controls\n//        Gia_CollectSuper( p, pObjC, vSuper );\n//        Vec_IntForEachEntry( vSuper, Ent, k )\n//            pEnables[Ent]++;\n        pEnables[Gia_ObjId(p, pObjC)]++;\n        nHaveEnable++;\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pFlop) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pNode = Gia_ObjFanin0(pFlop);\n        if !Gia_ObjIsAnd(pNode) {\n            continue; }\n        // detect sets/resets\n        Gia_CollectSuper( p, pNode, vSuper );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((Ent) = Vec_IntEntry(vSuper, k)), 1); k++  {\n            if pSets[Ent] \u003e 1 || pResets[Ent] \u003e 1 {\n                nHaveSetReset++;\n                break;\n            }\n        }\n    }\n    Vec_IntFree( vSuper );\n    // inlining of macro ABC_FREE\n    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);\n    Gia_ManCreateRefs( p );\n    if fVerbose != 0 {\n        fmt.Printf(\"Flops with set/reset = %6d. Flops with enable = %6d.\\n\", nHaveSetReset, nHaveEnable);\n        if fSetReset != 0 {\n            Gia_ManPrintSignals( p, pSets, \"Set signals\" );\n            Gia_ManPrintSignals( p, pResets, \"Reset signals\" );\n        }\n        Gia_ManPrintSignals( p, pEnables, \"Enable signals\" );\n    }\n    // inlining of macro ABC_FREE\n    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pSets) ? (free((char *) (pSets)), (pSets) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pResets) ? (free((char *) (pResets)), (pResets) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pEnables) ? (free((char *) (pEnables)), (pEnables) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Gia_ManDetectSeqSignalsWithFanout",
+      "Start": 6576,
+      "End": 9704,
+      "BodyStart": 6666,
+      "Original": "Vec_Int_t * Gia_ManDetectSeqSignalsWithFanout( Gia_Man_t * p, int nFanMax, int fVerbose )\n{\n    Vec_Int_t * vResult;\n    Vec_Int_t * vSuper;\n    Gia_Obj_t * pFlop, * pObjC, * pObj0, * pObj1, * pNode, * pTemp;\n    int i, k, Ent, * pSets, * pResets, * pEnables;\n    int nHaveSetReset = 0, nHaveEnable = 0;\n    assert( Gia_ManRegNum(p) \u003e 0 );\n    pSets    = ABC_CALLOC( int, Gia_ManObjNum(p) );\n    pResets  = ABC_CALLOC( int, Gia_ManObjNum(p) );\n    pEnables = ABC_CALLOC( int, Gia_ManObjNum(p) );\n    vSuper   = Vec_IntAlloc( 100 );\n    Gia_ManForEachRi( p, pFlop, i )\n    {\n        pNode = Gia_ObjFanin0(pFlop);\n        if ( !Gia_ObjIsAnd(pNode) )\n            continue;\n        // detect sets/resets\n        Gia_CollectSuper( p, pNode, vSuper );\n        if ( Gia_ObjFaninC0(pFlop) )\n            Vec_IntForEachEntry( vSuper, Ent, k )\n                pSets[Ent]++;\n        else\n            Vec_IntForEachEntry( vSuper, Ent, k )\n                pResets[Ent]++;\n        // detect enables\n        if ( !Gia_ObjIsMuxType(pNode) )\n            continue;\n        pObjC = Gia_ObjRecognizeMux( pNode, \u0026pObj0, \u0026pObj1 );\n        pTemp = Gia_ObjRiToRo( p, pFlop );\n        if ( Gia_Regular(pObj0) != pTemp \u0026\u0026 Gia_Regular(pObj1) != pTemp )\n            continue;\n        if ( !Gia_ObjFaninC0(pFlop) )\n        {\n            pObj0 = Gia_Not(pObj0);\n            pObj1 = Gia_Not(pObj1);\n        }\n        if ( Gia_IsComplement(pObjC) )\n        {\n            pObjC = Gia_Not(pObjC);\n            pTemp = pObj0;\n            pObj0 = pObj1;\n            pObj1 = pTemp;\n        }\n        // detect controls\n//        Gia_CollectSuper( p, pObjC, vSuper );\n//        Vec_IntForEachEntry( vSuper, Ent, k )\n//            pEnables[Ent]++;\n        pEnables[Gia_ObjId(p, pObjC)]++;\n        nHaveEnable++;\n    }\n    Gia_ManForEachRi( p, pFlop, i )\n    {\n        pNode = Gia_ObjFanin0(pFlop);\n        if ( !Gia_ObjIsAnd(pNode) )\n            continue;\n        // detect sets/resets\n        Gia_CollectSuper( p, pNode, vSuper );\n        Vec_IntForEachEntry( vSuper, Ent, k )\n            if ( pSets[Ent] \u003e 1 || pResets[Ent] \u003e 1 )\n            {\n                nHaveSetReset++;\n                break;\n            }\n    }\n    Vec_IntFree( vSuper );\n    vResult  = Vec_IntAlloc( 100 );\n    for ( i = 1; i \u003c Gia_ManObjNum(p); i++ )\n        if ( pSets[i] \u003e nFanMax )\n        {\n            if ( fVerbose )\n                printf( \"Adding set signal %d related to %d flops.\\n\", i, pSets[i] );\n            Vec_IntPushUnique( vResult, i );\n        }\n    for ( i = 1; i \u003c Gia_ManObjNum(p); i++ )\n        if ( pResets[i] \u003e nFanMax )\n        {\n            if ( fVerbose )\n                printf( \"Adding reset signal %d related to %d flops.\\n\", i, pResets[i] );\n            Vec_IntPushUnique( vResult, i );\n        }\n    for ( i = 1; i \u003c Gia_ManObjNum(p); i++ )\n        if ( pEnables[i] \u003e nFanMax )\n        {\n            if ( fVerbose )\n                printf( \"Adding enable signal %d related to %d flops.\\n\", i, pEnables[i] );\n            Vec_IntPushUnique( vResult, i );\n        }\n    ABC_FREE( pSets );\n    ABC_FREE( pResets );\n    ABC_FREE( pEnables );\n    return vResult;\n}",
+      "Draft": "func Gia_ManDetectSeqSignalsWithFanout(p *Gia_Man_t, nFanMax int32, fVerbose int32) *Vec_Int_t {\n    var vResult *Vec_Int_t;\n    var vSuper *Vec_Int_t;\n    var pFlop, pObjC, pObj0, pObj1, pNode, pTemp *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var Ent int32;\n    var pSets *int32;\n    var pResets *int32;\n    var pEnables *int32;\n    var nHaveSetReset, nHaveEnable int32;\n    assert(Gia_ManRegNum(p) \u003e 0, \"Gia_ManRegNum(p) \u003e 0\");\n    // inlining of macro ABC_CALLOC\n    pSets    = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    pResets  = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    pEnables = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    vSuper   = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pFlop) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pNode = Gia_ObjFanin0(pFlop);\n        if !Gia_ObjIsAnd(pNode) {\n            continue; }\n        // detect sets/resets\n        Gia_CollectSuper( p, pNode, vSuper );\n        if Gia_ObjFaninC0(pFlop) {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((Ent) = Vec_IntEntry(vSuper, k)), 1); k++  {\n                pSets[Ent]++;\n            }\n        } else {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((Ent) = Vec_IntEntry(vSuper, k)), 1); k++  {\n                pResets[Ent]++;\n            } }\n        // detect enables\n        if !Gia_ObjIsMuxType(pNode) {\n            continue; }\n        pObjC = Gia_ObjRecognizeMux( pNode, \u0026pObj0, \u0026pObj1 );\n        pTemp = Gia_ObjRiToRo( p, pFlop );\n        if Gia_Regular(pObj0) != pTemp \u0026\u0026 Gia_Regular(pObj1) != pTemp {\n            continue; }\n        if !Gia_ObjFaninC0(pFlop) {\n            pObj0 = Gia_Not(pObj0);\n            pObj1 = Gia_Not(pObj1);\n        }\n        if Gia_IsComplement(pObjC) {\n            pObjC = Gia_Not(pObjC);\n            pTemp = pObj0;\n            pObj0 = pObj1;\n            pObj1 = pTemp;\n        }\n        // detect controls\n//        Gia_CollectSuper( p, pObjC, vSuper );\n//        Vec_IntForEachEntry( vSuper, Ent, k )\n//            pEnables[Ent]++;\n        pEnables[Gia_ObjId(p, pObjC)]++;\n        nHaveEnable++;\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pFlop) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pNode = Gia_ObjFanin0(pFlop);\n        if !Gia_ObjIsAnd(pNode) {\n            continue; }\n        // detect sets/resets\n        Gia_CollectSuper( p, pNode, vSuper );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((Ent) = Vec_IntEntry(vSuper, k)), 1); k++  {\n            if pSets[Ent] \u003e 1 || pResets[Ent] \u003e 1 {\n                nHaveSetReset++;\n                break;\n            }\n        }\n    }\n    Vec_IntFree( vSuper );\n    vResult  = Vec_IntAlloc( 100 );\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  {\n        if pSets[i] \u003e nFanMax {\n            if fVerbose != 0 {\n                fmt.Printf(\"Adding set signal %d related to %d flops.\\n\", i, pSets[i]); }\n            Vec_IntPushUnique( vResult, i );\n        }\n    }\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  {\n        if pResets[i] \u003e nFanMax {\n            if fVerbose != 0 {\n                fmt.Printf(\"Adding reset signal %d related to %d flops.\\n\", i, pResets[i]); }\n            Vec_IntPushUnique( vResult, i );\n        }\n    }\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  {\n        if pEnables[i] \u003e nFanMax {\n            if fVerbose != 0 {\n                fmt.Printf(\"Adding enable signal %d related to %d flops.\\n\", i, pEnables[i]); }\n            Vec_IntPushUnique( vResult, i );\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pSets) ? (free((char *) (pSets)), (pSets) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pResets) ? (free((char *) (pResets)), (pResets) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pEnables) ? (free((char *) (pEnables)), (pEnables) = 0) : 0);\n    return vResult;\n}"
+    },
+    {
+      "Name": "Gia_ManTransferFrames",
+      "Start": 10001,
+      "End": 10631,
+      "BodyStart": 10126,
+      "Original": "Vec_Int_t * Gia_ManTransferFrames( Gia_Man_t * pAig, Gia_Man_t * pFrames, int nFrames, Gia_Man_t * pNew, Vec_Int_t * vSigs )\n{\n    Vec_Int_t * vSigsNew;\n    Gia_Obj_t * pObj, * pObjF;\n    int k, f;\n    vSigsNew = Vec_IntAlloc( 100 );\n    Gia_ManForEachObjVec( vSigs, pAig, pObj, k )\n    {\n        assert( Gia_ObjIsCand(pObj) );\n        for ( f = 0; f \u003c nFrames; f++ )\n        {\n            pObjF = Gia_ManObj( pFrames, Abc_Lit2Var(Gia_ObjCopyF( pAig, f, pObj )) );\n            if ( pObjF-\u003eValue \u0026\u0026 ~pObjF-\u003eValue )\n                Vec_IntPushUnique( vSigsNew, Abc_Lit2Var(pObjF-\u003eValue) );\n        }\n    }\n    return vSigsNew;    \n}",
+      "Draft": "func Gia_ManTransferFrames(pAig *Gia_Man_t, pFrames *Gia_Man_t, nFrames int32, pNew *Gia_Man_t, vSigs *Vec_Int_t) *Vec_Int_t {\n    var vSigsNew *Vec_Int_t;\n    var pObj, pObjF *Gia_Obj_t;\n    var k, f int32;\n    vSigsNew = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachObjVec\n    for  k = 0; (k \u003c Vec_IntSize(vSigs)) \u0026\u0026 ((pObj) = Gia_ManObj(pAig, Vec_IntEntry(vSigs,k))); k++  {\n        assert(Gia_ObjIsCand(pObj), \"Gia_ObjIsCand(pObj)\");\n        for  f = 0; f \u003c nFrames; f++  {\n            pObjF = Gia_ManObj( pFrames, Abc_Lit2Var(Gia_ObjCopyF( pAig, f, pObj )) );\n            if pObjF.Value \u0026\u0026 ~pObjF.Value {\n                Vec_IntPushUnique( vSigsNew, Abc_Lit2Var(pObjF.Value) ); }\n        }\n    }\n    return vSigsNew;    \n}"
+    },
+    {
+      "Name": "Gia_ManUnrollInit",
+      "Start": 10867,
+      "End": 12141,
+      "BodyStart": 10927,
+      "Original": "Gia_Man_t * Gia_ManUnrollInit( Gia_Man_t * p, int nFrames )\n{\n    Gia_Man_t * pNew;\n    Gia_Obj_t * pObj, * pObjRi, * pObjRo;\n    int f, i;\n    Vec_IntFill( \u0026p-\u003evCopies, nFrames * Gia_ManObjNum(p), -1 );\n    pNew = Gia_ManStart( nFrames * Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManForEachRo( p, pObj, i )\n        Gia_ObjSetCopyF( p, 0, pObj, 0 );\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        Gia_ObjSetCopyF( p, f, Gia_ManConst0(p), 0 );\n        Gia_ManForEachPi( p, pObj, i )\n            Gia_ObjSetCopyF( p, f, pObj, Gia_ManAppendCi(pNew) );\n        Gia_ManForEachAnd( p, pObj, i )\n            Gia_ObjSetCopyF( p, f, pObj, Gia_ManHashAnd(pNew, Gia_ObjFanin0CopyF(p, f, pObj), Gia_ObjFanin1CopyF(p, f, pObj)) );\n        Gia_ManForEachCo( p, pObj, i )\n            Gia_ObjSetCopyF( p, f, pObj, Gia_ObjFanin0CopyF(p, f, pObj) );\n        Gia_ManForEachPo( p, pObj, i )\n            Gia_ManAppendCo( pNew, Gia_ObjCopyF(p, f, pObj) );\n        if ( f == nFrames - 1 )\n            break;\n        Gia_ManForEachRiRo( p, pObjRi, pObjRo, i )\n            Gia_ObjSetCopyF( p, f+1, pObjRo, Gia_ObjCopyF(p, f, pObjRi) );\n    }\n    Gia_ManHashStop( pNew );\n    return pNew;\n}",
+      "Draft": "func Gia_ManUnrollInit(p *Gia_Man_t, nFrames int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObj, pObjRi, pObjRo *Gia_Obj_t;\n    var f, i int32;\n    Vec_IntFill( \u0026p.vCopies, nFrames * Gia_ManObjNum(p), -1 );\n    pNew = Gia_ManStart( nFrames * Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        Gia_ObjSetCopyF( p, 0, pObj, 0 );\n    }\n    for  f = 0; f \u003c nFrames; f++  {\n        Gia_ObjSetCopyF( p, f, Gia_ManConst0(p), 0 );\n        // inlining of macro Gia_ManForEachPi\n        for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n            Gia_ObjSetCopyF( p, f, pObj, Gia_ManAppendCi(pNew) );\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            Gia_ObjSetCopyF( p, f, pObj, Gia_ManHashAnd(pNew, Gia_ObjFanin0CopyF(p, f, pObj), Gia_ObjFanin1CopyF(p, f, pObj)) ); }\n        }\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            Gia_ObjSetCopyF( p, f, pObj, Gia_ObjFanin0CopyF(p, f, pObj) );\n        }\n        // inlining of macro Gia_ManForEachPo\n        for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            Gia_ManAppendCo( pNew, Gia_ObjCopyF(p, f, pObj) );\n        }\n        if f == nFrames - 1 {\n            break; }\n        // inlining of macro Gia_ManForEachRiRo\n        for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n            Gia_ObjSetCopyF( p, f+1, pObjRo, Gia_ObjCopyF(p, f, pObjRi) );\n        }\n    }\n    Gia_ManHashStop( pNew );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManUnrollAndCofactor",
+      "Start": 12436,
+      "End": 13200,
+      "BodyStart": 12530,
+      "Original": "Gia_Man_t * Gia_ManUnrollAndCofactor( Gia_Man_t * p, int nFrames, int nFanMax, int fVerbose )\n{\n    Vec_Int_t * vCofSigs, * vTemp;\n    Gia_Man_t * pAig, * pFrames, * pNew;\n    // compute initialized timeframes\n    pFrames  = Gia_ManUnrollInit( p, nFrames );\n    pAig     = Gia_ManCleanup( pFrames );\n    // compute and remap set/reset/enable signals\n    vCofSigs = Gia_ManDetectSeqSignalsWithFanout( p, nFanMax, fVerbose );\n    vCofSigs = Gia_ManTransferFrames( p, pFrames, nFrames, pAig, vTemp = vCofSigs );\n    Vec_IntFree( vTemp );\n    Gia_ManStop( pFrames );\n    Vec_IntErase( \u0026p-\u003evCopies );\n    // cofactor all these variables\n    pNew = Gia_ManDupCofAllInt( pAig, vCofSigs, fVerbose );\n    Vec_IntFree( vCofSigs );\n    Gia_ManStop( pAig );\n    return pNew;\n}",
+      "Draft": "func Gia_ManUnrollAndCofactor(p *Gia_Man_t, nFrames int32, nFanMax int32, fVerbose int32) *Gia_Man_t {\n    var vCofSigs, vTemp *Vec_Int_t;\n    var pAig, pFrames, pNew *Gia_Man_t;\n    // compute initialized timeframes\n    pFrames  = Gia_ManUnrollInit( p, nFrames );\n    pAig     = Gia_ManCleanup( pFrames );\n    // compute and remap set/reset/enable signals\n    vCofSigs = Gia_ManDetectSeqSignalsWithFanout( p, nFanMax, fVerbose );\n    vCofSigs = Gia_ManTransferFrames( p, pFrames, nFrames, pAig, vTemp = vCofSigs );\n    Vec_IntFree( vTemp );\n    Gia_ManStop( pFrames );\n    Vec_IntErase( \u0026p.vCopies );\n    // cofactor all these variables\n    pNew = Gia_ManDupCofAllInt( pAig, vCofSigs, fVerbose );\n    Vec_IntFree( vCofSigs );\n    Gia_ManStop( pAig );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManRemoveEnables2",
+      "Start": 13494,
+      "End": 15956,
+      "BodyStart": 13545,
+      "Original": "Gia_Man_t * Gia_ManRemoveEnables2( Gia_Man_t * p )\n{\n    Gia_Man_t * pNew, * pAux; \n    Gia_Obj_t * pTemp, * pObjC, * pObj0, * pObj1, * pFlopIn, * pFlopOut;\n    Gia_Obj_t * pThis, * pNode;\n    int i;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachCi( p, pThis, i )\n        pThis-\u003eValue = Gia_ManAppendCi( pNew );\n    Gia_ManForEachAnd( p, pThis, i )\n        pThis-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pThis), Gia_ObjFanin1Copy(pThis) );\n    Gia_ManForEachPo( p, pThis, i )\n        pThis-\u003eValue = Gia_ObjFanin0Copy(pThis);\n    Gia_ManForEachRi( p, pFlopIn, i )\n    {\n        pNode = Gia_ObjFanin0(pFlopIn);\n        if ( !Gia_ObjIsMuxType(pNode) )\n        {\n            printf( \"Cannot recognize enable of flop %d.\\n\", i );\n            continue;\n        }\n        pObjC = Gia_ObjRecognizeMux( pNode, \u0026pObj1, \u0026pObj0 );\n        pFlopOut = Gia_ObjRiToRo( p, pFlopIn );\n        if ( Gia_Regular(pObj0) != pFlopOut \u0026\u0026 Gia_Regular(pObj1) != pFlopOut )\n        {\n            printf( \"Cannot recognize self-loop of enable flop %d.\\n\", i );\n            continue;\n        }\n        if ( !Gia_ObjFaninC0(pFlopIn) )\n        {\n            pObj0 = Gia_Not(pObj0);\n            pObj1 = Gia_Not(pObj1);\n        }\n        if ( Gia_IsComplement(pObjC) )\n        {\n            pObjC = Gia_Not(pObjC);\n            pTemp = pObj0;\n            pObj0 = pObj1;\n            pObj1 = pTemp;\n        }\n        if ( Gia_Regular(pObj0) == pFlopOut )\n        {\n//            printf( \"FlopIn compl = %d. FlopOut is d0. Complement = %d.\\n\", \n//                Gia_ObjFaninC0(pFlopIn), Gia_IsComplement(pObj0) );\n            pFlopIn-\u003eValue = Abc_LitNotCond(Gia_Regular(pObj1)-\u003eValue, !Gia_IsComplement(pObj1));\n        }\n        else if ( Gia_Regular(pObj1) == pFlopOut )\n        {\n//            printf( \"FlopIn compl = %d. FlopOut is d1. Complement = %d.\\n\", \n//                Gia_ObjFaninC0(pFlopIn), Gia_IsComplement(pObj1) );\n            pFlopIn-\u003eValue = Abc_LitNotCond(Gia_Regular(pObj0)-\u003eValue, !Gia_IsComplement(pObj0));\n        }\n    }\n    Gia_ManForEachCo( p, pThis, i )\n        Gia_ManAppendCo( pNew, pThis-\u003eValue );\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew = Gia_ManCleanup( pAux = pNew );\n    Gia_ManStop( pAux );\n    return pNew;\n}",
+      "Draft": "func Gia_ManRemoveEnables2(p *Gia_Man_t) *Gia_Man_t {\n    var pNew, pAux *Gia_Man_t; \n    var pTemp, pObjC, pObj0, pObj1, pFlopIn, pFlopOut *Gia_Obj_t;\n    var pThis, pNode *Gia_Obj_t;\n    var i int32;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pThis) = Gia_ManCi(p, i)); i++  {\n        pThis.Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pThis) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pThis) {} else {\n        pThis.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pThis), Gia_ObjFanin1Copy(pThis) ); }\n    }\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pThis) = Gia_ManCo(p, i)); i++  {\n        pThis.Value = Gia_ObjFanin0Copy(pThis);\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pFlopIn) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pNode = Gia_ObjFanin0(pFlopIn);\n        if !Gia_ObjIsMuxType(pNode) {\n            fmt.Printf(\"Cannot recognize enable of flop %d.\\n\", i);\n            continue;\n        }\n        pObjC = Gia_ObjRecognizeMux( pNode, \u0026pObj1, \u0026pObj0 );\n        pFlopOut = Gia_ObjRiToRo( p, pFlopIn );\n        if Gia_Regular(pObj0) != pFlopOut \u0026\u0026 Gia_Regular(pObj1) != pFlopOut {\n            fmt.Printf(\"Cannot recognize self-loop of enable flop %d.\\n\", i);\n            continue;\n        }\n        if !Gia_ObjFaninC0(pFlopIn) {\n            pObj0 = Gia_Not(pObj0);\n            pObj1 = Gia_Not(pObj1);\n        }\n        if Gia_IsComplement(pObjC) {\n            pObjC = Gia_Not(pObjC);\n            pTemp = pObj0;\n            pObj0 = pObj1;\n            pObj1 = pTemp;\n        }\n        if Gia_Regular(pObj0) == pFlopOut {\n//            printf( \"FlopIn compl = %d. FlopOut is d0. Complement = %d.\\n\", \n//                Gia_ObjFaninC0(pFlopIn), Gia_IsComplement(pObj0) );\n            pFlopIn.Value = Abc_LitNotCond(Gia_Regular(pObj1).Value, !Gia_IsComplement(pObj1));\n        \n        } else if Gia_Regular(pObj1) == pFlopOut {\n//            printf( \"FlopIn compl = %d. FlopOut is d1. Complement = %d.\\n\", \n//                Gia_ObjFaninC0(pFlopIn), Gia_IsComplement(pObj1) );\n            pFlopIn.Value = Abc_LitNotCond(Gia_Regular(pObj0).Value, !Gia_IsComplement(pObj0));\n        }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pThis) = Gia_ManCo(p, i)); i++  {\n        Gia_ManAppendCo( pNew, pThis.Value );\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew = Gia_ManCleanup( pAux = pNew );\n    Gia_ManStop( pAux );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManRemoveEnables",
+      "Start": 16248,
+      "End": 21054,
+      "BodyStart": 16298,
+      "Original": "Gia_Man_t * Gia_ManRemoveEnables( Gia_Man_t * p )\n{\n    Vec_Ptr_t * vCtrls, * vDatas;\n    Vec_Int_t * vFlopClasses;\n    Gia_Man_t * pNew, * pAux; \n    Gia_Obj_t * pFlopIn, * pFlopOut, * pDriver, * pFan0, * pFan1, * pCtrl = NULL, * pData, * pObj;\n    int i, iClass, fCompl, Counter = 0;\n    vCtrls = Vec_PtrAlloc( 100 );\n    Vec_PtrPush( vCtrls, NULL );\n    vDatas = Vec_PtrAlloc( Gia_ManRegNum(p) );\n    vFlopClasses = Vec_IntAlloc( Gia_ManRegNum(p) );\n    Gia_ManForEachRi( p, pFlopIn, i )\n    {\n        fCompl = Gia_ObjFaninC0(pFlopIn);\n        pDriver = Gia_ObjFanin0(pFlopIn);\n        if ( !Gia_ObjIsAnd(pDriver) )\n        {\n            printf( \"The flop driver %d is not a node.\\n\", i );\n            Vec_PtrPush( vDatas, NULL );\n            Vec_IntPush( vFlopClasses, 0 );\n            Counter++;\n            continue;\n        }\n        if ( !Gia_ObjFaninC0(pDriver) || !Gia_ObjFaninC1(pDriver) )\n        {\n            printf( \"The flop driver %d is not an OR gate.\\n\", i );\n            Vec_PtrPush( vDatas, NULL );\n            Vec_IntPush( vFlopClasses, 0 );\n            Counter++;\n            continue;\n        }\n        pFan0 = Gia_ObjFanin0(pDriver);\n        pFan1 = Gia_ObjFanin1(pDriver);\n        if ( !Gia_ObjIsAnd(pFan0) || !Gia_ObjIsAnd(pFan1) )\n        {\n            printf( \"The flop driver fanin %d is not a node.\\n\", i );\n            Vec_PtrPush( vDatas, NULL );\n            Vec_IntPush( vFlopClasses, 0 );\n            Counter++;\n            continue;\n        }\n        pFlopOut = Gia_ObjRiToRo( p, pFlopIn );\n        pFlopOut = Gia_NotCond( pFlopOut, !fCompl );\n        if ( Gia_ObjChild0(pFan0) != pFlopOut \u0026\u0026 Gia_ObjChild1(pFan0) != pFlopOut \u0026\u0026 \n             Gia_ObjChild0(pFan1) != pFlopOut \u0026\u0026 Gia_ObjChild1(pFan1) != pFlopOut )\n        {\n            printf( \"The flop %d does not have a self-loop.\\n\", i );\n            Vec_PtrPush( vDatas, NULL );\n            Vec_IntPush( vFlopClasses, 0 );\n            Counter++;\n            continue;\n        }\n        pData = NULL;\n        if ( Gia_ObjChild0(pFan0) == pFlopOut )\n        {\n            pCtrl = Gia_Not( Gia_ObjChild1(pFan0) );\n            if ( Gia_ObjFanin0(pFan1) == Gia_Regular(pCtrl) )\n                pData = Gia_ObjChild1(pFan1);\n            else\n                pData = Gia_ObjChild0(pFan1);\n        }\n        else if ( Gia_ObjChild1(pFan0) == pFlopOut )\n        {\n            pCtrl = Gia_Not( Gia_ObjChild0(pFan0) );\n            if ( Gia_ObjFanin0(pFan1) == Gia_Regular(pCtrl) )\n                pData = Gia_ObjChild1(pFan1);\n            else\n                pData = Gia_ObjChild0(pFan1);\n        }\n        else if ( Gia_ObjChild0(pFan1) == pFlopOut )\n        {\n            pCtrl = Gia_Not( Gia_ObjChild1(pFan1) );\n            if ( Gia_ObjFanin0(pFan0) == Gia_Regular(pCtrl) )\n                pData = Gia_ObjChild1(pFan0);\n            else\n                pData = Gia_ObjChild0(pFan0);\n        }\n        else if ( Gia_ObjChild1(pFan1) == pFlopOut )\n        {\n            pCtrl = Gia_Not( Gia_ObjChild0(pFan1) );\n            if ( Gia_ObjFanin0(pFan0) == Gia_Regular(pCtrl) )\n                pData = Gia_ObjChild1(pFan0);\n            else\n                pData = Gia_ObjChild0(pFan0);\n        }\n        else assert( 0 );\n        if ( Vec_PtrFind( vCtrls, pCtrl ) == -1 )\n            Vec_PtrPush( vCtrls, pCtrl );\n        iClass = Vec_PtrFind( vCtrls, pCtrl );\n        pData = Gia_NotCond( pData, !fCompl );\n        Vec_PtrPush( vDatas, pData );\n        Vec_IntPush( vFlopClasses, iClass );\n    }\n    assert( Vec_PtrSize( vDatas ) == Gia_ManRegNum(p) );\n    assert( Vec_IntSize( vFlopClasses ) == Gia_ManRegNum(p) );\n    printf( \"Detected %d classes.\\n\", Vec_PtrSize(vCtrls) - (Counter == 0) );\n    Vec_PtrFree( vCtrls );\n    \n\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachObj1( p, pObj, i )\n    {\n        if ( Gia_ObjIsAnd(pObj) )\n            pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        else if ( Gia_ObjIsCi(pObj) )\n            pObj-\u003eValue = Gia_ManAppendCi( pNew );\n        else if ( Gia_ObjIsPo(p, pObj) )\n            pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManForEachRi( p, pObj, i )\n    {\n        pData = (Gia_Obj_t *)Vec_PtrEntry(vDatas, i);\n        if ( pData == NULL )\n            pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        else\n            pObj-\u003eValue = Gia_ManAppendCo( pNew, Abc_LitNotCond(Gia_Regular(pData)-\u003eValue, Gia_IsComplement(pData)) );\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Vec_PtrFree( vDatas );\n\n\n    pNew = Gia_ManCleanup( pAux = pNew );\n    Gia_ManStop( pAux );\n    pNew-\u003evFlopClasses = vFlopClasses;\n    return pNew;\n}",
+      "Draft": "func Gia_ManRemoveEnables(p *Gia_Man_t) *Gia_Man_t {\n    var vCtrls, vDatas *Vec_Ptr_t;\n    var vFlopClasses *Vec_Int_t;\n    var pNew, pAux *Gia_Man_t; \n    var pFlopIn *Gia_Obj_t;\n    var pFlopOut *Gia_Obj_t;\n    var pDriver *Gia_Obj_t;\n    var pFan0 *Gia_Obj_t;\n    var pFan1 *Gia_Obj_t;\n    var pCtrl *Gia_Obj_t = nil;\n    var pData *Gia_Obj_t;\n    var pObj *Gia_Obj_t;\n    var i, iClass, fCompl, Counter int32;\n    vCtrls = Vec_PtrAlloc( 100 );\n    Vec_PtrPush( vCtrls, nil );\n    vDatas = Vec_PtrAlloc( Gia_ManRegNum(p) );\n    vFlopClasses = Vec_IntAlloc( Gia_ManRegNum(p) );\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pFlopIn) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        fCompl = Gia_ObjFaninC0(pFlopIn);\n        pDriver = Gia_ObjFanin0(pFlopIn);\n        if !Gia_ObjIsAnd(pDriver) {\n            fmt.Printf(\"The flop driver %d is not a node.\\n\", i);\n            Vec_PtrPush( vDatas, nil );\n            Vec_IntPush( vFlopClasses, 0 );\n            Counter++;\n            continue;\n        }\n        if !Gia_ObjFaninC0(pDriver) || !Gia_ObjFaninC1(pDriver) {\n            fmt.Printf(\"The flop driver %d is not an OR gate.\\n\", i);\n            Vec_PtrPush( vDatas, nil );\n            Vec_IntPush( vFlopClasses, 0 );\n            Counter++;\n            continue;\n        }\n        pFan0 = Gia_ObjFanin0(pDriver);\n        pFan1 = Gia_ObjFanin1(pDriver);\n        if !Gia_ObjIsAnd(pFan0) || !Gia_ObjIsAnd(pFan1) {\n            fmt.Printf(\"The flop driver fanin %d is not a node.\\n\", i);\n            Vec_PtrPush( vDatas, nil );\n            Vec_IntPush( vFlopClasses, 0 );\n            Counter++;\n            continue;\n        }\n        pFlopOut = Gia_ObjRiToRo( p, pFlopIn );\n        pFlopOut = Gia_NotCond( pFlopOut, !fCompl );\n        if Gia_ObjChild0(pFan0) != pFlopOut \u0026\u0026 Gia_ObjChild1(pFan0) != pFlopOut \u0026\u0026 \n             Gia_ObjChild0(pFan1) != pFlopOut \u0026\u0026 Gia_ObjChild1(pFan1) != pFlopOut {\n            fmt.Printf(\"The flop %d does not have a self-loop.\\n\", i);\n            Vec_PtrPush( vDatas, nil );\n            Vec_IntPush( vFlopClasses, 0 );\n            Counter++;\n            continue;\n        }\n        pData = nil;\n        if Gia_ObjChild0(pFan0) == pFlopOut {\n            pCtrl = Gia_Not( Gia_ObjChild1(pFan0) );\n            if Gia_ObjFanin0(pFan1) == Gia_Regular(pCtrl) {\n                pData = Gia_ObjChild1(pFan1);\n            } else {\n                pData = Gia_ObjChild0(pFan1); }\n        \n        } else if Gia_ObjChild1(pFan0) == pFlopOut {\n            pCtrl = Gia_Not( Gia_ObjChild0(pFan0) );\n            if Gia_ObjFanin0(pFan1) == Gia_Regular(pCtrl) {\n                pData = Gia_ObjChild1(pFan1);\n            } else {\n                pData = Gia_ObjChild0(pFan1); }\n        \n        } else if Gia_ObjChild0(pFan1) == pFlopOut {\n            pCtrl = Gia_Not( Gia_ObjChild1(pFan1) );\n            if Gia_ObjFanin0(pFan0) == Gia_Regular(pCtrl) {\n                pData = Gia_ObjChild1(pFan0);\n            } else {\n                pData = Gia_ObjChild0(pFan0); }\n        \n        } else if Gia_ObjChild1(pFan1) == pFlopOut {\n            pCtrl = Gia_Not( Gia_ObjChild0(pFan1) );\n            if Gia_ObjFanin0(pFan0) == Gia_Regular(pCtrl) {\n                pData = Gia_ObjChild1(pFan0);\n            } else {\n                pData = Gia_ObjChild0(pFan0); }\n        \n        } else { assert(false, \"0\"); }\n        if Vec_PtrFind( vCtrls, pCtrl ) == -1 {\n            Vec_PtrPush( vCtrls, pCtrl ); }\n        iClass = Vec_PtrFind( vCtrls, pCtrl );\n        pData = Gia_NotCond( pData, !fCompl );\n        Vec_PtrPush( vDatas, pData );\n        Vec_IntPush( vFlopClasses, iClass );\n    }\n    assert(Vec_PtrSize( vDatas ) == Gia_ManRegNum(p), \"Vec_PtrSize( vDatas ) == Gia_ManRegNum(p)\");\n    assert(Vec_IntSize( vFlopClasses ) == Gia_ManRegNum(p), \"Vec_IntSize( vFlopClasses ) == Gia_ManRegNum(p)\");\n    fmt.Printf(\"Detected %d classes.\\n\", Vec_PtrSize(vCtrls) - (Counter == 0));\n    Vec_PtrFree( vCtrls );\n    \n\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        } else if Gia_ObjIsPo(p, pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pData = (Gia_Obj_t *)Vec_PtrEntry(vDatas, i);\n        if pData == nil {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else {\n            pObj.Value = Gia_ManAppendCo( pNew, Abc_LitNotCond(Gia_Regular(pData).Value, Gia_IsComplement(pData)) ); }\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Vec_PtrFree( vDatas );\n\n\n    pNew = Gia_ManCleanup( pAux = pNew );\n    Gia_ManStop( pAux );\n    pNew.vFlopClasses = vFlopClasses;\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::mechanical::sizeof::4055",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3965,
+      "End": 3965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::mechanical::sizeof::4175",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4017,
+      "End": 4017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::mechanical::sizeof::4295",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4069,
+      "End": 4069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::mechanical::sizeof::8182",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6931,
+      "End": 6931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::mechanical::sizeof::8302",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6983,
+      "End": 6983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::mechanical::sizeof::8422",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7035,
+      "End": 7035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::4012",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3965,
+      "End": 3965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::4132",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4017,
+      "End": 4017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::4252",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4069,
+      "End": 4069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::6625",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5822,
+      "End": 5822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::7132",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6243,
+      "End": 6243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::7241",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6269,
+      "End": 6269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::7346",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6292,
+      "End": 6292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::7456",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6317,
+      "End": 6317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::8139",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6931,
+      "End": 6931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::8259",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6983,
+      "End": 6983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::8379",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7035,
+      "End": 7035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::11574",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9613,
+      "End": 9613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::11679",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9636,
+      "End": 9636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::11789",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9661,
+      "End": 9661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::pointer-cast::24337",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20572,
+      "End": 20585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::Gia_CollectSuper_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CollectSuper_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1266,
+      "End": 1756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::Gia_CollectSuper",
+      "Category": "semantic-review",
+      "Symbol": "Gia_CollectSuper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2015,
+      "End": 2475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::Gia_ManPrintSignals",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManPrintSignals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2711,
+      "End": 3414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::ternary::Gia_ManDetectSeqSignals",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManDetectSeqSignals",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3650,
+      "End": 6340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::Gia_ManDetectSeqSignals",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDetectSeqSignals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3650,
+      "End": 6340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::ternary::Gia_ManDetectSeqSignalsWithFanout",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManDetectSeqSignalsWithFanout",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6576,
+      "End": 9704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::Gia_ManDetectSeqSignalsWithFanout",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDetectSeqSignalsWithFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6576,
+      "End": 9704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::Gia_ManTransferFrames",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManTransferFrames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10001,
+      "End": 10631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::Gia_ManUnrollInit",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManUnrollInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10867,
+      "End": 12141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::Gia_ManUnrollAndCofactor",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManUnrollAndCofactor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12436,
+      "End": 13200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::Gia_ManRemoveEnables2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManRemoveEnables2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13494,
+      "End": 15956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::Gia_ManRemoveEnables",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManRemoveEnables",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16248,
+      "End": 21054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaEnable.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21301
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [gia.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Structural detection of enables, sets and resets.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: gia.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the supergate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_CollectSuper_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t) {\n    // if the new node is complemented or a PI, another gate begins\n    if Gia_IsComplement(pObj) || Gia_ObjIsCi(pObj) {\n        Vec_IntPushUnique( vSuper, Gia_ObjId(p, Gia_Regular(pObj)) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    // go through the branches\n    Gia_CollectSuper_rec( p, Gia_ObjChild0(pObj), vSuper );\n    Gia_CollectSuper_rec( p, Gia_ObjChild1(pObj), vSuper );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the supergate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_CollectSuper(p *Gia_Man_t, pObj *Gia_Obj_t, vSuper *Vec_Int_t) {\n    assert(!Gia_IsComplement(pObj), \"!Gia_IsComplement(pObj)\");\n    Vec_IntClear( vSuper );\n//    Gia_CollectSuper_rec( p, pObj, vSuper );\n    if Gia_ObjIsAnd(pObj) {\n        Vec_IntPushUnique( vSuper, Gia_ObjId(p, Gia_ObjFanin0(pObj)) );\n        Vec_IntPushUnique( vSuper, Gia_ObjId(p, Gia_ObjFanin1(pObj)) );\n    \n    } else {\n        Vec_IntPushUnique( vSuper, Gia_ObjId(p, Gia_Regular(pObj)) ); }\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManPrintSignals(p *Gia_Man_t, pFreq *int32, pStr string) {\n    var vObjs *Vec_Int_t;\n    var i, Counter, nTotal int32;\n    vObjs = Vec_IntAlloc( 100 );\n    for  i = 0; i \u003c Gia_ManObjNum(p); i++  {\n        if pFreq[i] \u003e 1 {\n            nTotal += pFreq[i];\n            Counter++;\n        }\n    }\n    fmt.Printf(\"%s (total = %d  driven = %d)\\n\", pStr, Counter, nTotal);\n    Counter = 0;\n    for  i = 0; i \u003c Gia_ManObjNum(p); i++  {\n        if pFreq[i] \u003e 10 {\n            fmt.Printf(\"%3d :   Obj = %6d   Refs = %6d   Freq = %6d\\n\", ++Counter, i, Gia_ObjRefNum(p, Gia_ManObj(p,i)), pFreq[i]);\n            Vec_IntPush( vObjs, i );\n        }\n    }\n    Vec_IntFree( vObjs );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDetectSeqSignals(p *Gia_Man_t, fSetReset int32, fVerbose int32) {\n    var vSuper *Vec_Int_t;\n    var pFlop, pObjC, pObj0, pObj1, pNode, pTemp *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var Ent int32;\n    var pSets *int32;\n    var pResets *int32;\n    var pEnables *int32;\n    var nHaveSetReset, nHaveEnable int32;\n    assert(Gia_ManRegNum(p) \u003e 0, \"Gia_ManRegNum(p) \u003e 0\");\n    // inlining of macro ABC_CALLOC\n    pSets    = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    pResets  = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    pEnables = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    vSuper   = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pFlop) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pNode = Gia_ObjFanin0(pFlop);\n        if !Gia_ObjIsAnd(pNode) {\n            continue; }\n        // detect sets/resets\n        Gia_CollectSuper( p, pNode, vSuper );\n        if Gia_ObjFaninC0(pFlop) {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((Ent) = Vec_IntEntry(vSuper, k)), 1); k++  {\n                pSets[Ent]++;\n            }\n        } else {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((Ent) = Vec_IntEntry(vSuper, k)), 1); k++  {\n                pResets[Ent]++;\n            } }\n        // detect enables\n        if !Gia_ObjIsMuxType(pNode) {\n            continue; }\n        pObjC = Gia_ObjRecognizeMux( pNode, \u0026pObj0, \u0026pObj1 );\n        pTemp = Gia_ObjRiToRo( p, pFlop );\n        if Gia_Regular(pObj0) != pTemp \u0026\u0026 Gia_Regular(pObj1) != pTemp {\n            continue; }\n        if !Gia_ObjFaninC0(pFlop) {\n            pObj0 = Gia_Not(pObj0);\n            pObj1 = Gia_Not(pObj1);\n        }\n        if Gia_IsComplement(pObjC) {\n            pObjC = Gia_Not(pObjC);\n            pTemp = pObj0;\n            pObj0 = pObj1;\n            pObj1 = pTemp;\n        }\n        // detect controls\n//        Gia_CollectSuper( p, pObjC, vSuper );\n//        Vec_IntForEachEntry( vSuper, Ent, k )\n//            pEnables[Ent]++;\n        pEnables[Gia_ObjId(p, pObjC)]++;\n        nHaveEnable++;\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pFlop) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pNode = Gia_ObjFanin0(pFlop);\n        if !Gia_ObjIsAnd(pNode) {\n            continue; }\n        // detect sets/resets\n        Gia_CollectSuper( p, pNode, vSuper );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((Ent) = Vec_IntEntry(vSuper, k)), 1); k++  {\n            if pSets[Ent] \u003e 1 || pResets[Ent] \u003e 1 {\n                nHaveSetReset++;\n                break;\n            }\n        }\n    }\n    Vec_IntFree( vSuper );\n    // inlining of macro ABC_FREE\n    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);\n    Gia_ManCreateRefs( p );\n    if fVerbose != 0 {\n        fmt.Printf(\"Flops with set/reset = %6d. Flops with enable = %6d.\\n\", nHaveSetReset, nHaveEnable);\n        if fSetReset != 0 {\n            Gia_ManPrintSignals( p, pSets, \"Set signals\" );\n            Gia_ManPrintSignals( p, pResets, \"Reset signals\" );\n        }\n        Gia_ManPrintSignals( p, pEnables, \"Enable signals\" );\n    }\n    // inlining of macro ABC_FREE\n    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pSets) ? (free((char *) (pSets)), (pSets) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pResets) ? (free((char *) (pResets)), (pResets) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pEnables) ? (free((char *) (pEnables)), (pEnables) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDetectSeqSignalsWithFanout(p *Gia_Man_t, nFanMax int32, fVerbose int32) *Vec_Int_t {\n    var vResult *Vec_Int_t;\n    var vSuper *Vec_Int_t;\n    var pFlop, pObjC, pObj0, pObj1, pNode, pTemp *Gia_Obj_t;\n    var i int32;\n    var k int32;\n    var Ent int32;\n    var pSets *int32;\n    var pResets *int32;\n    var pEnables *int32;\n    var nHaveSetReset, nHaveEnable int32;\n    assert(Gia_ManRegNum(p) \u003e 0, \"Gia_ManRegNum(p) \u003e 0\");\n    // inlining of macro ABC_CALLOC\n    pSets    = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    pResets  = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    pEnables = ((int *) calloc((size_t)(Gia_ManObjNum(p)), sizeof(int)));\n    vSuper   = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pFlop) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pNode = Gia_ObjFanin0(pFlop);\n        if !Gia_ObjIsAnd(pNode) {\n            continue; }\n        // detect sets/resets\n        Gia_CollectSuper( p, pNode, vSuper );\n        if Gia_ObjFaninC0(pFlop) {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((Ent) = Vec_IntEntry(vSuper, k)), 1); k++  {\n                pSets[Ent]++;\n            }\n        } else {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((Ent) = Vec_IntEntry(vSuper, k)), 1); k++  {\n                pResets[Ent]++;\n            } }\n        // detect enables\n        if !Gia_ObjIsMuxType(pNode) {\n            continue; }\n        pObjC = Gia_ObjRecognizeMux( pNode, \u0026pObj0, \u0026pObj1 );\n        pTemp = Gia_ObjRiToRo( p, pFlop );\n        if Gia_Regular(pObj0) != pTemp \u0026\u0026 Gia_Regular(pObj1) != pTemp {\n            continue; }\n        if !Gia_ObjFaninC0(pFlop) {\n            pObj0 = Gia_Not(pObj0);\n            pObj1 = Gia_Not(pObj1);\n        }\n        if Gia_IsComplement(pObjC) {\n            pObjC = Gia_Not(pObjC);\n            pTemp = pObj0;\n            pObj0 = pObj1;\n            pObj1 = pTemp;\n        }\n        // detect controls\n//        Gia_CollectSuper( p, pObjC, vSuper );\n//        Vec_IntForEachEntry( vSuper, Ent, k )\n//            pEnables[Ent]++;\n        pEnables[Gia_ObjId(p, pObjC)]++;\n        nHaveEnable++;\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pFlop) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pNode = Gia_ObjFanin0(pFlop);\n        if !Gia_ObjIsAnd(pNode) {\n            continue; }\n        // detect sets/resets\n        Gia_CollectSuper( p, pNode, vSuper );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSuper)) \u0026\u0026 (((Ent) = Vec_IntEntry(vSuper, k)), 1); k++  {\n            if pSets[Ent] \u003e 1 || pResets[Ent] \u003e 1 {\n                nHaveSetReset++;\n                break;\n            }\n        }\n    }\n    Vec_IntFree( vSuper );\n    vResult  = Vec_IntAlloc( 100 );\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  {\n        if pSets[i] \u003e nFanMax {\n            if fVerbose != 0 {\n                fmt.Printf(\"Adding set signal %d related to %d flops.\\n\", i, pSets[i]); }\n            Vec_IntPushUnique( vResult, i );\n        }\n    }\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  {\n        if pResets[i] \u003e nFanMax {\n            if fVerbose != 0 {\n                fmt.Printf(\"Adding reset signal %d related to %d flops.\\n\", i, pResets[i]); }\n            Vec_IntPushUnique( vResult, i );\n        }\n    }\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  {\n        if pEnables[i] \u003e nFanMax {\n            if fVerbose != 0 {\n                fmt.Printf(\"Adding enable signal %d related to %d flops.\\n\", i, pEnables[i]); }\n            Vec_IntPushUnique( vResult, i );\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pSets) ? (free((char *) (pSets)), (pSets) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pResets) ? (free((char *) (pResets)), (pResets) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pEnables) ? (free((char *) (pEnables)), (pEnables) = 0) : 0);\n    return vResult;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers attributes from the original one to the final one.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManTransferFrames(pAig *Gia_Man_t, pFrames *Gia_Man_t, nFrames int32, pNew *Gia_Man_t, vSigs *Vec_Int_t) *Vec_Int_t {\n    var vSigsNew *Vec_Int_t;\n    var pObj, pObjF *Gia_Obj_t;\n    var k, f int32;\n    vSigsNew = Vec_IntAlloc( 100 );\n    // inlining of macro Gia_ManForEachObjVec\n    for  k = 0; (k \u003c Vec_IntSize(vSigs)) \u0026\u0026 ((pObj) = Gia_ManObj(pAig, Vec_IntEntry(vSigs,k))); k++  {\n        assert(Gia_ObjIsCand(pObj), \"Gia_ObjIsCand(pObj)\");\n        for  f = 0; f \u003c nFrames; f++  {\n            pObjF = Gia_ManObj( pFrames, Abc_Lit2Var(Gia_ObjCopyF( pAig, f, pObj )) );\n            if pObjF.Value \u0026\u0026 ~pObjF.Value {\n                Vec_IntPushUnique( vSigsNew, Abc_Lit2Var(pObjF.Value) ); }\n        }\n    }\n    return vSigsNew;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManUnrollInit(p *Gia_Man_t, nFrames int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObj, pObjRi, pObjRo *Gia_Obj_t;\n    var f, i int32;\n    Vec_IntFill( \u0026p.vCopies, nFrames * Gia_ManObjNum(p), -1 );\n    pNew = Gia_ManStart( nFrames * Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        Gia_ObjSetCopyF( p, 0, pObj, 0 );\n    }\n    for  f = 0; f \u003c nFrames; f++  {\n        Gia_ObjSetCopyF( p, f, Gia_ManConst0(p), 0 );\n        // inlining of macro Gia_ManForEachPi\n        for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n            Gia_ObjSetCopyF( p, f, pObj, Gia_ManAppendCi(pNew) );\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            Gia_ObjSetCopyF( p, f, pObj, Gia_ManHashAnd(pNew, Gia_ObjFanin0CopyF(p, f, pObj), Gia_ObjFanin1CopyF(p, f, pObj)) ); }\n        }\n        // inlining of macro Gia_ManForEachCo\n        for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            Gia_ObjSetCopyF( p, f, pObj, Gia_ObjFanin0CopyF(p, f, pObj) );\n        }\n        // inlining of macro Gia_ManForEachPo\n        for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n            Gia_ManAppendCo( pNew, Gia_ObjCopyF(p, f, pObj) );\n        }\n        if f == nFrames - 1 {\n            break; }\n        // inlining of macro Gia_ManForEachRiRo\n        for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObjRi) = Gia_ManCo(p, Gia_ManPoNum(p)+i)) \u0026\u0026 ((pObjRo) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n            Gia_ObjSetCopyF( p, f+1, pObjRo, Gia_ObjCopyF(p, f, pObjRi) );\n        }\n    }\n    Gia_ManHashStop( pNew );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Unrolls initialized timeframes while cofactoring some vars.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManUnrollAndCofactor(p *Gia_Man_t, nFrames int32, nFanMax int32, fVerbose int32) *Gia_Man_t {\n    var vCofSigs, vTemp *Vec_Int_t;\n    var pAig, pFrames, pNew *Gia_Man_t;\n    // compute initialized timeframes\n    pFrames  = Gia_ManUnrollInit( p, nFrames );\n    pAig     = Gia_ManCleanup( pFrames );\n    // compute and remap set/reset/enable signals\n    vCofSigs = Gia_ManDetectSeqSignalsWithFanout( p, nFanMax, fVerbose );\n    vCofSigs = Gia_ManTransferFrames( p, pFrames, nFrames, pAig, vTemp = vCofSigs );\n    Vec_IntFree( vTemp );\n    Gia_ManStop( pFrames );\n    Vec_IntErase( \u0026p.vCopies );\n    // cofactor all these variables\n    pNew = Gia_ManDupCofAllInt( pAig, vCofSigs, fVerbose );\n    Vec_IntFree( vCofSigs );\n    Gia_ManStop( pAig );\n    return pNew;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transform seq circuits with enables by removing enables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManRemoveEnables2(p *Gia_Man_t) *Gia_Man_t {\n    var pNew, pAux *Gia_Man_t; \n    var pTemp, pObjC, pObj0, pObj1, pFlopIn, pFlopOut *Gia_Obj_t;\n    var pThis, pNode *Gia_Obj_t;\n    var i int32;\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pThis) = Gia_ManCi(p, i)); i++  {\n        pThis.Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pThis) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pThis) {} else {\n        pThis.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pThis), Gia_ObjFanin1Copy(pThis) ); }\n    }\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pThis) = Gia_ManCo(p, i)); i++  {\n        pThis.Value = Gia_ObjFanin0Copy(pThis);\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pFlopIn) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pNode = Gia_ObjFanin0(pFlopIn);\n        if !Gia_ObjIsMuxType(pNode) {\n            fmt.Printf(\"Cannot recognize enable of flop %d.\\n\", i);\n            continue;\n        }\n        pObjC = Gia_ObjRecognizeMux( pNode, \u0026pObj1, \u0026pObj0 );\n        pFlopOut = Gia_ObjRiToRo( p, pFlopIn );\n        if Gia_Regular(pObj0) != pFlopOut \u0026\u0026 Gia_Regular(pObj1) != pFlopOut {\n            fmt.Printf(\"Cannot recognize self-loop of enable flop %d.\\n\", i);\n            continue;\n        }\n        if !Gia_ObjFaninC0(pFlopIn) {\n            pObj0 = Gia_Not(pObj0);\n            pObj1 = Gia_Not(pObj1);\n        }\n        if Gia_IsComplement(pObjC) {\n            pObjC = Gia_Not(pObjC);\n            pTemp = pObj0;\n            pObj0 = pObj1;\n            pObj1 = pTemp;\n        }\n        if Gia_Regular(pObj0) == pFlopOut {\n//            printf( \"FlopIn compl = %d. FlopOut is d0. Complement = %d.\\n\", \n//                Gia_ObjFaninC0(pFlopIn), Gia_IsComplement(pObj0) );\n            pFlopIn.Value = Abc_LitNotCond(Gia_Regular(pObj1).Value, !Gia_IsComplement(pObj1));\n        \n        } else if Gia_Regular(pObj1) == pFlopOut {\n//            printf( \"FlopIn compl = %d. FlopOut is d1. Complement = %d.\\n\", \n//                Gia_ObjFaninC0(pFlopIn), Gia_IsComplement(pObj1) );\n            pFlopIn.Value = Abc_LitNotCond(Gia_Regular(pObj0).Value, !Gia_IsComplement(pObj0));\n        }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pThis) = Gia_ManCo(p, i)); i++  {\n        Gia_ManAppendCo( pNew, pThis.Value );\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    pNew = Gia_ManCleanup( pAux = pNew );\n    Gia_ManStop( pAux );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transform seq circuits with enables by removing enables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManRemoveEnables(p *Gia_Man_t) *Gia_Man_t {\n    var vCtrls, vDatas *Vec_Ptr_t;\n    var vFlopClasses *Vec_Int_t;\n    var pNew, pAux *Gia_Man_t; \n    var pFlopIn *Gia_Obj_t;\n    var pFlopOut *Gia_Obj_t;\n    var pDriver *Gia_Obj_t;\n    var pFan0 *Gia_Obj_t;\n    var pFan1 *Gia_Obj_t;\n    var pCtrl *Gia_Obj_t = nil;\n    var pData *Gia_Obj_t;\n    var pObj *Gia_Obj_t;\n    var i, iClass, fCompl, Counter int32;\n    vCtrls = Vec_PtrAlloc( 100 );\n    Vec_PtrPush( vCtrls, nil );\n    vDatas = Vec_PtrAlloc( Gia_ManRegNum(p) );\n    vFlopClasses = Vec_IntAlloc( Gia_ManRegNum(p) );\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pFlopIn) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        fCompl = Gia_ObjFaninC0(pFlopIn);\n        pDriver = Gia_ObjFanin0(pFlopIn);\n        if !Gia_ObjIsAnd(pDriver) {\n            fmt.Printf(\"The flop driver %d is not a node.\\n\", i);\n            Vec_PtrPush( vDatas, nil );\n            Vec_IntPush( vFlopClasses, 0 );\n            Counter++;\n            continue;\n        }\n        if !Gia_ObjFaninC0(pDriver) || !Gia_ObjFaninC1(pDriver) {\n            fmt.Printf(\"The flop driver %d is not an OR gate.\\n\", i);\n            Vec_PtrPush( vDatas, nil );\n            Vec_IntPush( vFlopClasses, 0 );\n            Counter++;\n            continue;\n        }\n        pFan0 = Gia_ObjFanin0(pDriver);\n        pFan1 = Gia_ObjFanin1(pDriver);\n        if !Gia_ObjIsAnd(pFan0) || !Gia_ObjIsAnd(pFan1) {\n            fmt.Printf(\"The flop driver fanin %d is not a node.\\n\", i);\n            Vec_PtrPush( vDatas, nil );\n            Vec_IntPush( vFlopClasses, 0 );\n            Counter++;\n            continue;\n        }\n        pFlopOut = Gia_ObjRiToRo( p, pFlopIn );\n        pFlopOut = Gia_NotCond( pFlopOut, !fCompl );\n        if Gia_ObjChild0(pFan0) != pFlopOut \u0026\u0026 Gia_ObjChild1(pFan0) != pFlopOut \u0026\u0026 \n             Gia_ObjChild0(pFan1) != pFlopOut \u0026\u0026 Gia_ObjChild1(pFan1) != pFlopOut {\n            fmt.Printf(\"The flop %d does not have a self-loop.\\n\", i);\n            Vec_PtrPush( vDatas, nil );\n            Vec_IntPush( vFlopClasses, 0 );\n            Counter++;\n            continue;\n        }\n        pData = nil;\n        if Gia_ObjChild0(pFan0) == pFlopOut {\n            pCtrl = Gia_Not( Gia_ObjChild1(pFan0) );\n            if Gia_ObjFanin0(pFan1) == Gia_Regular(pCtrl) {\n                pData = Gia_ObjChild1(pFan1);\n            } else {\n                pData = Gia_ObjChild0(pFan1); }\n        \n        } else if Gia_ObjChild1(pFan0) == pFlopOut {\n            pCtrl = Gia_Not( Gia_ObjChild0(pFan0) );\n            if Gia_ObjFanin0(pFan1) == Gia_Regular(pCtrl) {\n                pData = Gia_ObjChild1(pFan1);\n            } else {\n                pData = Gia_ObjChild0(pFan1); }\n        \n        } else if Gia_ObjChild0(pFan1) == pFlopOut {\n            pCtrl = Gia_Not( Gia_ObjChild1(pFan1) );\n            if Gia_ObjFanin0(pFan0) == Gia_Regular(pCtrl) {\n                pData = Gia_ObjChild1(pFan0);\n            } else {\n                pData = Gia_ObjChild0(pFan0); }\n        \n        } else if Gia_ObjChild1(pFan1) == pFlopOut {\n            pCtrl = Gia_Not( Gia_ObjChild0(pFan1) );\n            if Gia_ObjFanin0(pFan0) == Gia_Regular(pCtrl) {\n                pData = Gia_ObjChild1(pFan0);\n            } else {\n                pData = Gia_ObjChild0(pFan0); }\n        \n        } else { assert(false, \"0\"); }\n        if Vec_PtrFind( vCtrls, pCtrl ) == -1 {\n            Vec_PtrPush( vCtrls, pCtrl ); }\n        iClass = Vec_PtrFind( vCtrls, pCtrl );\n        pData = Gia_NotCond( pData, !fCompl );\n        Vec_PtrPush( vDatas, pData );\n        Vec_IntPush( vFlopClasses, iClass );\n    }\n    assert(Vec_PtrSize( vDatas ) == Gia_ManRegNum(p), \"Vec_PtrSize( vDatas ) == Gia_ManRegNum(p)\");\n    assert(Vec_IntSize( vFlopClasses ) == Gia_ManRegNum(p), \"Vec_IntSize( vFlopClasses ) == Gia_ManRegNum(p)\");\n    fmt.Printf(\"Detected %d classes.\\n\", Vec_PtrSize(vCtrls) - (Counter == 0));\n    Vec_PtrFree( vCtrls );\n    \n\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachObj1\n    for  i = 1; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) {\n            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else if Gia_ObjIsCi(pObj) {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        } else if Gia_ObjIsPo(p, pObj) {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pData = (Gia_Obj_t *)Vec_PtrEntry(vDatas, i);\n        if pData == nil {\n            pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n        } else {\n            pObj.Value = Gia_ManAppendCo( pNew, Abc_LitNotCond(Gia_Regular(pData).Value, Gia_IsComplement(pData)) ); }\n    }\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    Vec_PtrFree( vDatas );\n\n\n    pNew = Gia_ManCleanup( pAux = pNew );\n    Gia_ManStop( pAux );\n    pNew.vFlopClasses = vFlopClasses;\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

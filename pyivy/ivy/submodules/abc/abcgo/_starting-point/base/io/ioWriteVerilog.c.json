@@ -1,0 +1,1979 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c",
+  "SHA256": "c80f95a6d652c75e86cfe05a32ed0f10ae0218ebc810feb0f76456cfc3f72388",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 9,
+        "ByteOffset": 2349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_WriteVerilog(): Can produce Verilog for mapped or AIG netlists only.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 80,
+        "Column": 13,
+        "ByteOffset": 2501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 9,
+        "ByteOffset": 2556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteVerilog(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 82,
+        "Column": 18,
+        "ByteOffset": 2565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteVerilog(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 2716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"// Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 2815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 96,
+        "Column": 13,
+        "ByteOffset": 3213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_NtkIsNetlist(pNetlist) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 13,
+        "ByteOffset": 3325
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 5,
+        "ByteOffset": 3504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 3532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 3982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"module %s ( \", Io_WriteVerilogGetName(Abc_NtkName(pNtk)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 9,
+        "ByteOffset": 4215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"clock, \" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 4284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 9,
+        "ByteOffset": 4397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \",\\n   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 4515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  );\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 9,
+        "ByteOffset": 4699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  input  clock;\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 144,
+        "Column": 9,
+        "ByteOffset": 4876
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  input \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 146,
+        "Column": 9,
+        "ByteOffset": 4961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 149,
+        "Column": 9,
+        "ByteOffset": 5032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  output\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 5116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 13,
+        "ByteOffset": 5290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"  reg\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 13,
+        "ByteOffset": 5380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 13,
+        "ByteOffset": 5476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"  wire\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 163,
+        "Column": 13,
+        "ByteOffset": 5568
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 5846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"endmodule\\n\\n\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 198,
+        "Column": 23,
+        "ByteOffset": 6651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        AddedLength = strlen(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 200,
+        "Column": 13,
+        "ByteOffset": 6825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\n   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 205,
+        "Column": 9,
+        "ByteOffset": 6965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (i==Abc_NtkPiNum(pNtk)-1)? \"\" : \",\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 249,
+        "Column": 23,
+        "ByteOffset": 8347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        AddedLength = strlen(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 13,
+        "ByteOffset": 8521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\n   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 9,
+        "ByteOffset": 8661
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (i==Abc_NtkPoNum(pNtk)-1)? \"\" : \",\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 262,
+        "Column": 9,
+        "ByteOffset": 8861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert (pSkip);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 9,
+        "ByteOffset": 8885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_WriteVerilogPos(): Omitted %d feedthrough nets from output list of module (e.g. %s).\\n\", nskip, Abc_ObjName(pSkip) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 302,
+        "Column": 23,
+        "ByteOffset": 10188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        AddedLength = strlen(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 304,
+        "Column": 13,
+        "ByteOffset": 10362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\n   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 309,
+        "Column": 9,
+        "ByteOffset": 10502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 318,
+        "Column": 23,
+        "ByteOffset": 11017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        AddedLength = strlen(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 13,
+        "ByteOffset": 11191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\n   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 9,
+        "ByteOffset": 11331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 337,
+        "Column": 27,
+        "ByteOffset": 12012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            AddedLength = strlen(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 339,
+        "Column": 17,
+        "ByteOffset": 12194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"\\n   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 344,
+        "Column": 13,
+        "ByteOffset": 12354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 354,
+        "Column": 27,
+        "ByteOffset": 12947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            AddedLength = strlen(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 356,
+        "Column": 17,
+        "ByteOffset": 13129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"\\n   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 361,
+        "Column": 13,
+        "ByteOffset": 13289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 366,
+        "Column": 5,
+        "ByteOffset": 13474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Counter == nNodes );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 398,
+        "Column": 23,
+        "ByteOffset": 14489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        AddedLength = strlen(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 400,
+        "Column": 13,
+        "ByteOffset": 14663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\n   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 405,
+        "Column": 9,
+        "ByteOffset": 14803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 431,
+        "Column": 5,
+        "ByteOffset": 15579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  always @ (posedge clock) begin\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 433,
+        "Column": 9,
+        "ByteOffset": 15843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"    %s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch)))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 434,
+        "Column": 9,
+        "ByteOffset": 15956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" \u003c= %s;\\n\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pLatch)))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 437,
+        "Column": 5,
+        "ByteOffset": 16078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  end\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 446,
+        "Column": 5,
+        "ByteOffset": 16556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  initial begin\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 449,
+        "Column": 13,
+        "ByteOffset": 16859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"    %s \u003c= 1\\'b0;\\n\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch)))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 451,
+        "Column": 13,
+        "ByteOffset": 17046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"    %s \u003c= 1\\'b1;\\n\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch)))) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 454,
+        "Column": 5,
+        "ByteOffset": 17181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  end\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 483,
+        "Column": 9,
+        "ByteOffset": 18126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  %s box%0*d\", pNtkBox.pName, nDigits, Counter++ );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 484,
+        "Column": 9,
+        "ByteOffset": 18203
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 486,
+        "Column": 13,
+        "ByteOffset": 18388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".%s\",   Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pTerm))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 487,
+        "Column": 13,
+        "ByteOffset": 18487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"(%s), \", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin(pObj,k)))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 490,
+        "Column": 13,
+        "ByteOffset": 18761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".%s\",   Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(pTerm))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 491,
+        "Column": 13,
+        "ByteOffset": 18859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"(%s)%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout(pObj,k)))), k==Abc_NtkPoNum(pNtkBox)-1? \"\":\", \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 493,
+        "Column": 9,
+        "ByteOffset": 19018
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \");\\n\" );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 503,
+        "Column": 48,
+        "ByteOffset": 19619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if Abc_ObjFaninNum(pObj) == 0 \u0026\u0026 (!strcmp(Mio_GateReadName(pGate), \"_const0_\") || !strcmp(Mio_GateReadName(pGate), \"_const1_\")) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 503,
+        "Column": 96,
+        "ByteOffset": 19667
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if Abc_ObjFaninNum(pObj) == 0 \u0026\u0026 (!strcmp(Mio_GateReadName(pGate), \"_const0_\") || !strcmp(Mio_GateReadName(pGate), \"_const1_\")) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 504,
+        "Column": 17,
+        "ByteOffset": 19730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"  %-*s %s = 1\\'b%d;\\n\", Length, \"assign\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanout0(pObj) )), !strcmp(Mio_GateReadName(pGate), \"_const1_\") );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 504,
+        "Column": 138,
+        "ByteOffset": 19851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"  %-*s %s = 1\\'b%d;\\n\", Length, \"assign\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanout0(pObj) )), !strcmp(Mio_GateReadName(pGate), \"_const1_\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 509,
+        "Column": 17,
+        "ByteOffset": 20021
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%-*s \", Length, Mio_GateReadName(pGate) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 510,
+        "Column": 17,
+        "ByteOffset": 20097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"( %s\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanout0(pObj) )) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 512,
+        "Column": 21,
+        "ByteOffset": 20323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \", %s\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanin(pObj,i) )) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 514,
+        "Column": 17,
+        "ByteOffset": 20444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert ( i == Abc_ObjFaninNum(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 515,
+        "Column": 17,
+        "ByteOffset": 20499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" );\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 518,
+        "Column": 17,
+        "ByteOffset": 20576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"  %-*s g%0*d\", Length, Mio_GateReadName(pGate), nDigits, Counter++ );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 519,
+        "Column": 17,
+        "ByteOffset": 20679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 521,
+        "Column": 21,
+        "ByteOffset": 20841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \".%s\", Io_WriteVerilogGetName(Mio_PinReadName(pGatePin)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 522,
+        "Column": 21,
+        "ByteOffset": 20937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"(%s), \", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanin(pObj,i) )) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 524,
+        "Column": 17,
+        "ByteOffset": 21060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert ( i == Abc_ObjFaninNum(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 525,
+        "Column": 17,
+        "ByteOffset": 21115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \".%s\", Io_WriteVerilogGetName(Mio_GateReadOutName(pGate)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 526,
+        "Column": 17,
+        "ByteOffset": 21208
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"(%s)\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanout0(pObj) )) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 527,
+        "Column": 17,
+        "ByteOffset": 21311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \");\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 536,
+        "Column": 13,
+        "ByteOffset": 21698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"  assign %s = \", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pObj))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 543,
+        "Column": 13,
+        "ByteOffset": 22246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 546,
+        "Column": 115,
+        "ByteOffset": 22580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                /*__starting_point_inline_macro:ABC_FREE__*/((Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData) ? (free((char *) (Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData)), (Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData) = 0) : 0);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 607,
+        "Column": 14,
+        "ByteOffset": 24665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Length = strlen(pName);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 642,
+        "Column": 5,
+        "ByteOffset": 25828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"module lut%d #( parameter TT = %d\\'h0 ) ( input [%d:0] in, output out );\\n\", nLutSize, 1\u003c\u003cnLutSize, nLutSize-1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 643,
+        "Column": 5,
+        "ByteOffset": 25963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"    assign out = TT[in];\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 644,
+        "Column": 5,
+        "ByteOffset": 26015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"endmodule\\n\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 658,
+        "Column": 9,
+        "ByteOffset": 26609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  %s box%0*d\", pNtkBox.pName, nDigits, Counter++ );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 659,
+        "Column": 9,
+        "ByteOffset": 26686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"(\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 661,
+        "Column": 13,
+        "ByteOffset": 26871
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".%s\",   Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pTerm))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 662,
+        "Column": 13,
+        "ByteOffset": 26970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"(%s), \", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin(pObj,k)))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 665,
+        "Column": 13,
+        "ByteOffset": 27244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \".%s\",   Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(pTerm))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 666,
+        "Column": 13,
+        "ByteOffset": 27342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"(%s)%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout(pObj,k)))), k==Abc_NtkPoNum(pNtkBox)-1? \"\":\", \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 668,
+        "Column": 9,
+        "ByteOffset": 27501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \");\\n\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 673,
+        "Column": 38,
+        "ByteOffset": 27817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Length = Abc_MaxInt( Length, strlen(Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pObj)))) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 675,
+        "Column": 42,
+        "ByteOffset": 28080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Length = Abc_MaxInt( Length, strlen(Io_WriteVerilogGetName(Abc_ObjName(pTerm))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 685,
+        "Column": 9,
+        "ByteOffset": 28559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  lut%d #(%d\\'h\", nLutSize, 1\u003c\u003cnLutSize );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 687,
+        "Column": 13,
+        "ByteOffset": 28658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%08x%08x\", uint32((Truth \u003e\u003e 32)), uint32(Truth) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 689,
+        "Column": 13,
+        "ByteOffset": 28755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%0*x\", 1\u003c\u003c(nLutSize-2), Abc_InfoMask(1 \u003c\u003c nLutSize) \u0026 uint32(Truth) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 690,
+        "Column": 9,
+        "ByteOffset": 28853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \") lut_%0*d ( {\", nDigits, Counter++ );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 692,
+        "Column": 13,
+        "ByteOffset": 28987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%*s, \", Length, \"1\\'b0\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 695,
+        "Column": 13,
+        "ByteOffset": 29112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%*s%s\", Length, Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin(pObj, k))), k==0 ? \"\":\", \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 697,
+        "Column": 9,
+        "ByteOffset": 29241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"}, %*s );\\n\", Length, Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pObj))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 704,
+        "Column": 5,
+        "ByteOffset": 29538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"module %s ( \", Io_WriteVerilogGetName(Abc_NtkName(pNtk)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 707,
+        "Column": 9,
+        "ByteOffset": 29771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"clock, \" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 709,
+        "Column": 5,
+        "ByteOffset": 29840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 712,
+        "Column": 9,
+        "ByteOffset": 29953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \",\\n   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 716,
+        "Column": 5,
+        "ByteOffset": 30071
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  );\\n\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 719,
+        "Column": 9,
+        "ByteOffset": 30257
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  input  clock;\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 723,
+        "Column": 9,
+        "ByteOffset": 30434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  input \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 725,
+        "Column": 9,
+        "ByteOffset": 30519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \";\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 728,
+        "Column": 9,
+        "ByteOffset": 30590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  output\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 730,
+        "Column": 9,
+        "ByteOffset": 30674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \";\\n\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 735,
+        "Column": 13,
+        "ByteOffset": 30850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"  reg\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 737,
+        "Column": 13,
+        "ByteOffset": 30940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \";\\n\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 740,
+        "Column": 13,
+        "ByteOffset": 31038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"  wire\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 742,
+        "Column": 13,
+        "ByteOffset": 31130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \";\\n\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 748,
+        "Column": 13,
+        "ByteOffset": 31336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 753,
+        "Column": 5,
+        "ByteOffset": 31456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\nendmodule\\n\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 763,
+        "Column": 17,
+        "ByteOffset": 31977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Node \\\"%s\\\" has the fanin count (%d) larger than the LUT size (%d).\\n\", Abc_ObjName(pObj), Abc_ObjFaninNum(pObj), nLutSize ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 768,
+        "Column": 9,
+        "ByteOffset": 32178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"In total, %d internal logic nodes exceed the fanin count limit. Verilog is not written.\\n\", Counter );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 773,
+        "Column": 13,
+        "ByteOffset": 32356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 775,
+        "Column": 9,
+        "ByteOffset": 32411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteVerilog(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 775,
+        "Column": 18,
+        "ByteOffset": 32420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteVerilog(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 780,
+        "Column": 5,
+        "ByteOffset": 32571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"// Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 781,
+        "Column": 5,
+        "ByteOffset": 32670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 789,
+        "Column": 5,
+        "ByteOffset": 32918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 790,
+        "Column": 5,
+        "ByteOffset": 32946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Io_WriteVerilog",
+      "Start": 2001,
+      "End": 3389,
+      "BodyStart": 2075,
+      "Original": "void Io_WriteVerilog( Abc_Ntk_t * pNtk, char * pFileName, int fOnlyAnds )\n{\n    Abc_Ntk_t * pNetlist;\n    FILE * pFile;\n    int i;\n    // can only write nodes represented using local AIGs\n    if ( !Abc_NtkIsAigNetlist(pNtk) \u0026\u0026 !Abc_NtkIsMappedNetlist(pNtk) )\n    {\n        printf( \"Io_WriteVerilog(): Can produce Verilog for mapped or AIG netlists only.\\n\" );\n        return;\n    }\n    // start the output stream\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        fprintf( stdout, \"Io_WriteVerilog(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n\n    // write the equations for the network\n    fprintf( pFile, \"// Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk-\u003epName, Extra_TimeStamp() );\n    fprintf( pFile, \"\\n\" );\n\n    // write modules\n    if ( pNtk-\u003epDesign )\n    {\n        // write the network first\n        Io_WriteVerilogInt( pFile, pNtk, fOnlyAnds );\n        // write other things\n        Vec_PtrForEachEntry( Abc_Ntk_t *, pNtk-\u003epDesign-\u003evModules, pNetlist, i )\n        {\n            assert( Abc_NtkIsNetlist(pNetlist) );\n            if ( pNetlist == pNtk )\n                continue;\n            fprintf( pFile, \"\\n\" );\n            Io_WriteVerilogInt( pFile, pNetlist, fOnlyAnds );\n        }\n    }\n    else\n    {\n        Io_WriteVerilogInt( pFile, pNtk, fOnlyAnds );\n    }\n\n    fprintf( pFile, \"\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func Io_WriteVerilog(pNtk *Abc_Ntk_t, pFileName string, fOnlyAnds int32) {\n    var pNetlist *Abc_Ntk_t;\n    var pFile *os.File;\n    var i int32;\n    // can only write nodes represented using local AIGs\n    if !Abc_NtkIsAigNetlist(pNtk) \u0026\u0026 !Abc_NtkIsMappedNetlist(pNtk) {\n        fmt.Printf(\"Io_WriteVerilog(): Can produce Verilog for mapped or AIG netlists only.\\n\");\n        return;\n    }\n    // start the output stream\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Io_WriteVerilog(): Cannot open the output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n\n    // write the equations for the network\n    fmt.Fprintf(pFile, \"// Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp());\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // write modules\n    if pNtk.pDesign {\n        // write the network first\n        Io_WriteVerilogInt( pFile, pNtk, fOnlyAnds );\n        // write other things\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.pDesign.vModules)) \u0026\u0026 (((pNetlist) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {\n            assert(Abc_NtkIsNetlist(pNetlist), \"Abc_NtkIsNetlist(pNetlist)\");\n            if pNetlist == pNtk {\n                continue; }\n            fmt.Fprintf(pFile, \"\\n\");\n            Io_WriteVerilogInt( pFile, pNetlist, fOnlyAnds );\n        }\n    \n    } else {\n        Io_WriteVerilogInt( pFile, pNtk, fOnlyAnds );\n    }\n\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Io_WriteVerilogInt",
+      "Start": 3640,
+      "End": 5782,
+      "BodyStart": 3713,
+      "Original": "void Io_WriteVerilogInt( FILE * pFile, Abc_Ntk_t * pNtk, int fOnlyAnds )\n{\n    // write inputs and outputs\n//    fprintf( pFile, \"module %s ( gclk,\\n   \", Abc_NtkName(pNtk) );\n    fprintf( pFile, \"module %s ( \", Io_WriteVerilogGetName(Abc_NtkName(pNtk)) );\n    // add the clock signal if it does not exist\n    if ( Abc_NtkLatchNum(pNtk) \u003e 0 \u0026\u0026 Nm_ManFindIdByName(pNtk-\u003epManName, \"clock\", ABC_OBJ_PI) == -1 )\n        fprintf( pFile, \"clock, \" );\n    // write other primary inputs\n    fprintf( pFile, \"\\n   \" );\n    if ( Abc_NtkPiNum(pNtk) \u003e 0  )\n    {\n        Io_WriteVerilogPis( pFile, pNtk, 3 );\n        fprintf( pFile, \",\\n   \" );\n    }\n    if ( Abc_NtkPoNum(pNtk) \u003e 0  )\n        Io_WriteVerilogPos( pFile, pNtk, 3 );\n    fprintf( pFile, \"  );\\n\" );\n    // add the clock signal if it does not exist\n    if ( Abc_NtkLatchNum(pNtk) \u003e 0 \u0026\u0026 Nm_ManFindIdByName(pNtk-\u003epManName, \"clock\", ABC_OBJ_PI) == -1 )\n        fprintf( pFile, \"  input  clock;\\n\" );\n    // write inputs, outputs, registers, and wires\n    if ( Abc_NtkPiNum(pNtk) \u003e 0  )\n    {\n//        fprintf( pFile, \"  input gclk,\" );\n        fprintf( pFile, \"  input \" );\n        Io_WriteVerilogPis( pFile, pNtk, 10 );\n        fprintf( pFile, \";\\n\" );\n    }\n    if ( Abc_NtkPoNum(pNtk) \u003e 0  )\n    {\n        fprintf( pFile, \"  output\" );\n        Io_WriteVerilogPos( pFile, pNtk, 5 );\n        fprintf( pFile, \";\\n\" );\n    }\n    // if this is not a blackbox, write internal signals\n    if ( !Abc_NtkHasBlackbox(pNtk) )\n    {\n        if ( Abc_NtkLatchNum(pNtk) \u003e 0 )\n        {\n            fprintf( pFile, \"  reg\" );\n            Io_WriteVerilogRegs( pFile, pNtk, 4 );\n            fprintf( pFile, \";\\n\" );\n        }\n        if ( Io_WriteVerilogWiresCount(pNtk) \u003e 0 )\n        {\n            fprintf( pFile, \"  wire\" );\n            Io_WriteVerilogWires( pFile, pNtk, 4 );\n            fprintf( pFile, \";\\n\" );\n        }\n        // write nodes\n        Io_WriteVerilogObjects( pFile, pNtk, fOnlyAnds );        \n        // write registers\n        if ( Abc_NtkLatchNum(pNtk) \u003e 0 )\n            Io_WriteVerilogLatches( pFile, pNtk );\n    }\n    // finalize the file\n    fprintf( pFile, \"endmodule\\n\\n\" );\n}",
+      "Draft": "func Io_WriteVerilogInt(pFile *os.File, pNtk *Abc_Ntk_t, fOnlyAnds int32) {\n    // write inputs and outputs\n//    fprintf( pFile, \"module %s ( gclk,\\n   \", Abc_NtkName(pNtk) );\n    fmt.Fprintf(pFile, \"module %s ( \", Io_WriteVerilogGetName(Abc_NtkName(pNtk)));\n    // add the clock signal if it does not exist\n    if Abc_NtkLatchNum(pNtk) \u003e 0 \u0026\u0026 Nm_ManFindIdByName(pNtk.pManName, \"clock\", ABC_OBJ_PI) == -1 {\n        fmt.Fprintf(pFile, \"clock, \"); }\n    // write other primary inputs\n    fmt.Fprintf(pFile, \"\\n   \");\n    if Abc_NtkPiNum(pNtk) \u003e 0 {\n        Io_WriteVerilogPis( pFile, pNtk, 3 );\n        fmt.Fprintf(pFile, \",\\n   \");\n    }\n    if Abc_NtkPoNum(pNtk) \u003e 0 {\n        Io_WriteVerilogPos( pFile, pNtk, 3 ); }\n    fmt.Fprintf(pFile, \"  );\\n\");\n    // add the clock signal if it does not exist\n    if Abc_NtkLatchNum(pNtk) \u003e 0 \u0026\u0026 Nm_ManFindIdByName(pNtk.pManName, \"clock\", ABC_OBJ_PI) == -1 {\n        fmt.Fprintf(pFile, \"  input  clock;\\n\"); }\n    // write inputs, outputs, registers, and wires\n    if Abc_NtkPiNum(pNtk) \u003e 0 {\n//        fprintf( pFile, \"  input gclk,\" );\n        fmt.Fprintf(pFile, \"  input \");\n        Io_WriteVerilogPis( pFile, pNtk, 10 );\n        fmt.Fprintf(pFile, \";\\n\");\n    }\n    if Abc_NtkPoNum(pNtk) \u003e 0 {\n        fmt.Fprintf(pFile, \"  output\");\n        Io_WriteVerilogPos( pFile, pNtk, 5 );\n        fmt.Fprintf(pFile, \";\\n\");\n    }\n    // if this is not a blackbox, write internal signals\n    if !Abc_NtkHasBlackbox(pNtk) {\n        if Abc_NtkLatchNum(pNtk) \u003e 0 {\n            fmt.Fprintf(pFile, \"  reg\");\n            Io_WriteVerilogRegs( pFile, pNtk, 4 );\n            fmt.Fprintf(pFile, \";\\n\");\n        }\n        if Io_WriteVerilogWiresCount(pNtk) \u003e 0 {\n            fmt.Fprintf(pFile, \"  wire\");\n            Io_WriteVerilogWires( pFile, pNtk, 4 );\n            fmt.Fprintf(pFile, \";\\n\");\n        }\n        // write nodes\n        Io_WriteVerilogObjects( pFile, pNtk, fOnlyAnds );        \n        // write registers\n        if Abc_NtkLatchNum(pNtk) \u003e 0 {\n            Io_WriteVerilogLatches( pFile, pNtk ); }\n    }\n    // finalize the file\n    fmt.Fprintf(pFile, \"endmodule\\n\\n\");\n}"
+    },
+    {
+      "Name": "Io_WriteVerilogPis",
+      "Start": 6045,
+      "End": 6928,
+      "BodyStart": 6114,
+      "Original": "void Io_WriteVerilogPis( FILE * pFile, Abc_Ntk_t * pNtk, int Start )\n{\n    Abc_Obj_t * pTerm, * pNet;\n    int LineLength;\n    int AddedLength;\n    int NameCounter;\n    int i;\n\n    LineLength  = Start;\n    NameCounter = 0;\n    Abc_NtkForEachPi( pNtk, pTerm, i )\n    {\n        pNet = Abc_ObjFanout0(pTerm);\n        // get the line length after this name is written\n        AddedLength = strlen(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if ( NameCounter \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH )\n        { // write the line extender\n            fprintf( pFile, \"\\n   \" );\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fprintf( pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (i==Abc_NtkPiNum(pNtk)-1)? \"\" : \",\" );\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n}",
+      "Draft": "func Io_WriteVerilogPis(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {\n    var pTerm, pNet *Abc_Obj_t;\n    var LineLength int32;\n    var AddedLength int32;\n    var NameCounter int32;\n    var i int32;\n\n    LineLength  = Start;\n    NameCounter = 0;\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        pNet = Abc_ObjFanout0(pTerm);\n        // get the line length after this name is written\n        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n            fmt.Fprintf(pFile, \"\\n   \");\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (i==Abc_NtkPiNum(pNtk)-1)? \"\" : \",\");\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n}"
+    },
+    {
+      "Name": "Io_WriteVerilogPos",
+      "Start": 7192,
+      "End": 8735,
+      "BodyStart": 7261,
+      "Original": "void Io_WriteVerilogPos( FILE * pFile, Abc_Ntk_t * pNtk, int Start )\n{\n    Abc_Obj_t * pTerm, * pNet, * pSkip;\n    int LineLength;\n    int AddedLength;\n    int NameCounter;\n    int i;\n    int nskip;\n\n    pSkip = 0;\n    nskip = 0;\n\n    LineLength  = Start;\n    NameCounter = 0;\n    Abc_NtkForEachPo( pNtk, pTerm, i )\n    {\n        pNet = Abc_ObjFanin0(pTerm);\n        \n        if ( Abc_ObjIsPi(Abc_ObjFanin0(pNet)) )\n        {\n            // Skip this output since it is a feedthrough -- the same\n            // name will appear as an input and an output which other\n            // tools reading verilog do not like.\n            \n            nskip++;\n            pSkip = pNet;   // save an example of skipped net\n            continue;\n        }\n        \n        // get the line length after this name is written\n        AddedLength = strlen(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if ( NameCounter \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH )\n        { // write the line extender\n            fprintf( pFile, \"\\n   \" );\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fprintf( pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (i==Abc_NtkPoNum(pNtk)-1)? \"\" : \",\" );\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n\n    if (nskip != 0)\n    {\n        assert (pSkip);\n        printf( \"Io_WriteVerilogPos(): Omitted %d feedthrough nets from output list of module (e.g. %s).\\n\", nskip, Abc_ObjName(pSkip) );\n        return;\n    }\n\n}",
+      "Draft": "func Io_WriteVerilogPos(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {\n    var pTerm, pNet, pSkip *Abc_Obj_t;\n    var LineLength int32;\n    var AddedLength int32;\n    var NameCounter int32;\n    var i int32;\n    var nskip int32;\n\n    pSkip = 0;\n    nskip = 0;\n\n    LineLength  = Start;\n    NameCounter = 0;\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pNet = Abc_ObjFanin0(pTerm);\n        \n        if Abc_ObjIsPi(Abc_ObjFanin0(pNet)) {\n            // Skip this output since it is a feedthrough -- the same\n            // name will appear as an input and an output which other\n            // tools reading verilog do not like.\n            \n            nskip++;\n            pSkip = pNet;   // save an example of skipped net\n            continue;\n        }\n        \n        // get the line length after this name is written\n        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n            fmt.Fprintf(pFile, \"\\n   \");\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (i==Abc_NtkPoNum(pNtk)-1)? \"\" : \",\");\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n\n    if nskip != 0 {\n        assert((pSkip != nil), \"pSkip\");\n        fmt.Printf(\"Io_WriteVerilogPos(): Omitted %d feedthrough nets from output list of module (e.g. %s).\\n\", nskip, Abc_ObjName(pSkip));\n        return;\n    }\n\n}"
+    },
+    {
+      "Name": "Io_WriteVerilogWires",
+      "Start": 8988,
+      "End": 12609,
+      "BodyStart": 9059,
+      "Original": "void Io_WriteVerilogWires( FILE * pFile, Abc_Ntk_t * pNtk, int Start )\n{\n    Abc_Obj_t * pObj, * pNet, * pBox, * pTerm;\n    int LineLength;\n    int AddedLength;\n    int NameCounter;\n    int i, k, Counter, nNodes;\n\n    // count the number of wires\n    nNodes = Io_WriteVerilogWiresCount( pNtk );\n\n    // write the wires\n    Counter = 0;\n    LineLength  = Start;\n    NameCounter = 0;\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        if ( i == 0 ) \n            continue;\n        pNet = Abc_ObjFanout0(pObj);\n        if ( Abc_ObjFanoutNum(pNet) \u003e 0 \u0026\u0026 Abc_ObjIsCo(Abc_ObjFanout0(pNet)) )\n            continue;\n        Counter++;\n        // get the line length after this name is written\n        AddedLength = strlen(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if ( NameCounter \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH )\n        { // write the line extender\n            fprintf( pFile, \"\\n   \" );\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fprintf( pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\" );\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n    {\n        pNet = Abc_ObjFanin0(Abc_ObjFanin0(pObj));\n        Counter++;\n        // get the line length after this name is written\n        AddedLength = strlen(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if ( NameCounter \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH )\n        { // write the line extender\n            fprintf( pFile, \"\\n   \" );\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fprintf( pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\" );\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n    Abc_NtkForEachBox( pNtk, pBox, i )\n    {\n        if ( Abc_ObjIsLatch(pBox) )\n            continue;\n        Abc_ObjForEachFanin( pBox, pTerm, k )\n        {\n            pNet = Abc_ObjFanin0(pTerm);\n            Counter++;\n            // get the line length after this name is written\n            AddedLength = strlen(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n            if ( NameCounter \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH )\n            { // write the line extender\n                fprintf( pFile, \"\\n   \" );\n                // reset the line length\n                LineLength  = 3;\n                NameCounter = 0;\n            }\n            fprintf( pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\" );\n            LineLength += AddedLength;\n            NameCounter++;\n        }\n        Abc_ObjForEachFanout( pBox, pTerm, k )\n        {\n            pNet = Abc_ObjFanout0(pTerm);\n            if ( Abc_ObjFanoutNum(pNet) \u003e 0 \u0026\u0026 Abc_ObjIsCo(Abc_ObjFanout0(pNet)) )\n                continue;\n            Counter++;\n            // get the line length after this name is written\n            AddedLength = strlen(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n            if ( NameCounter \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH )\n            { // write the line extender\n                fprintf( pFile, \"\\n   \" );\n                // reset the line length\n                LineLength  = 3;\n                NameCounter = 0;\n            }\n            fprintf( pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\" );\n            LineLength += AddedLength;\n            NameCounter++;\n        }\n    }\n    assert( Counter == nNodes );\n}",
+      "Draft": "func Io_WriteVerilogWires(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {\n    var pObj, pNet, pBox, pTerm *Abc_Obj_t;\n    var LineLength int32;\n    var AddedLength int32;\n    var NameCounter int32;\n    var i, k, Counter, nNodes int32;\n\n    // count the number of wires\n    nNodes = Io_WriteVerilogWiresCount( pNtk );\n\n    // write the wires\n    Counter = 0;\n    LineLength  = Start;\n    NameCounter = 0;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if i == 0 { \n            continue; }\n        pNet = Abc_ObjFanout0(pObj);\n        if Abc_ObjFanoutNum(pNet) \u003e 0 \u0026\u0026 Abc_ObjIsCo(Abc_ObjFanout0(pNet)) {\n            continue; }\n        Counter++;\n        // get the line length after this name is written\n        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n            fmt.Fprintf(pFile, \"\\n   \");\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\");\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n    }\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n        pNet = Abc_ObjFanin0(Abc_ObjFanin0(pObj));\n        Counter++;\n        // get the line length after this name is written\n        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n            fmt.Fprintf(pFile, \"\\n   \");\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\");\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n    }\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pBox) {\n            continue; }\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pBox)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pBox, k)), 1); k++  {\n            pNet = Abc_ObjFanin0(pTerm);\n            Counter++;\n            // get the line length after this name is written\n            AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n            if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n                fmt.Fprintf(pFile, \"\\n   \");\n                // reset the line length\n                LineLength  = 3;\n                NameCounter = 0;\n            }\n            fmt.Fprintf(pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\");\n            LineLength += AddedLength;\n            NameCounter++;\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pBox)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pBox, k)), 1); k++  {\n            pNet = Abc_ObjFanout0(pTerm);\n            if Abc_ObjFanoutNum(pNet) \u003e 0 \u0026\u0026 Abc_ObjIsCo(Abc_ObjFanout0(pNet)) {\n                continue; }\n            Counter++;\n            // get the line length after this name is written\n            AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n            if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n                fmt.Fprintf(pFile, \"\\n   \");\n                // reset the line length\n                LineLength  = 3;\n                NameCounter = 0;\n            }\n            fmt.Fprintf(pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\");\n            LineLength += AddedLength;\n            NameCounter++;\n        }\n    }\n    assert(Counter == nNodes, \"Counter == nNodes\");\n}"
+    },
+    {
+      "Name": "Io_WriteVerilogRegs",
+      "Start": 12861,
+      "End": 13907,
+      "BodyStart": 12931,
+      "Original": "void Io_WriteVerilogRegs( FILE * pFile, Abc_Ntk_t * pNtk, int Start )\n{\n    Abc_Obj_t * pLatch, * pNet;\n    int LineLength;\n    int AddedLength;\n    int NameCounter;\n    int i, Counter, nNodes;\n\n    // count the number of latches\n    nNodes = Abc_NtkLatchNum(pNtk);\n\n    // write the wires\n    Counter = 0;\n    LineLength  = Start;\n    NameCounter = 0;\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        pNet = Abc_ObjFanout0(Abc_ObjFanout0(pLatch));\n        Counter++;\n        // get the line length after this name is written\n        AddedLength = strlen(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if ( NameCounter \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH )\n        { // write the line extender\n            fprintf( pFile, \"\\n   \" );\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fprintf( pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\" );\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n}",
+      "Draft": "func Io_WriteVerilogRegs(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {\n    var pLatch, pNet *Abc_Obj_t;\n    var LineLength int32;\n    var AddedLength int32;\n    var NameCounter int32;\n    var i, Counter, nNodes int32;\n\n    // count the number of latches\n    nNodes = Abc_NtkLatchNum(pNtk);\n\n    // write the wires\n    Counter = 0;\n    LineLength  = Start;\n    NameCounter = 0;\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n        pNet = Abc_ObjFanout0(Abc_ObjFanout0(pLatch));\n        Counter++;\n        // get the line length after this name is written\n        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n            fmt.Fprintf(pFile, \"\\n   \");\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\");\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n    }\n}"
+    },
+    {
+      "Name": "Io_WriteVerilogLatches",
+      "Start": 14162,
+      "End": 15662,
+      "BodyStart": 14224,
+      "Original": "void Io_WriteVerilogLatches( FILE * pFile, Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pLatch;\n    int i;\n    if ( Abc_NtkLatchNum(pNtk) == 0 )\n        return;\n    // write the latches\n//    fprintf( pFile, \"  always @(posedge %s) begin\\n\", Io_WriteVerilogGetName(Abc_ObjFanout0(Abc_NtkPi(pNtk,0))) );\n//    fprintf( pFile, \"  always begin\\n\" );\n    fprintf( pFile, \"  always @ (posedge clock) begin\\n\" );\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        fprintf( pFile, \"    %s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch)))) );\n        fprintf( pFile, \" \u003c= %s;\\n\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pLatch)))) );\n    }\n    fprintf( pFile, \"  end\\n\" );\n    // check if there are initial values\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n        if ( Abc_LatchInit(pLatch) == ABC_INIT_ZERO || Abc_LatchInit(pLatch) == ABC_INIT_ONE )\n            break;\n    if ( i == Abc_NtkLatchNum(pNtk) )\n        return;\n    // write the initial values\n    fprintf( pFile, \"  initial begin\\n\" );\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        if ( Abc_LatchInit(pLatch) == ABC_INIT_ZERO )\n            fprintf( pFile, \"    %s \u003c= 1\\'b0;\\n\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch)))) );\n        else if ( Abc_LatchInit(pLatch) == ABC_INIT_ONE )\n            fprintf( pFile, \"    %s \u003c= 1\\'b1;\\n\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch)))) );\n    }\n    fprintf( pFile, \"  end\\n\" );\n}",
+      "Draft": "func Io_WriteVerilogLatches(pFile *os.File, pNtk *Abc_Ntk_t) {\n    var pLatch *Abc_Obj_t;\n    var i int32;\n    if Abc_NtkLatchNum(pNtk) == 0 {\n        return; }\n    // write the latches\n//    fprintf( pFile, \"  always @(posedge %s) begin\\n\", Io_WriteVerilogGetName(Abc_ObjFanout0(Abc_NtkPi(pNtk,0))) );\n//    fprintf( pFile, \"  always begin\\n\" );\n    fmt.Fprintf(pFile, \"  always @ (posedge clock) begin\\n\");\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n        fmt.Fprintf(pFile, \"    %s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch)))));\n        fmt.Fprintf(pFile, \" \u003c= %s;\\n\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pLatch)))));\n    }\n    }\n    fmt.Fprintf(pFile, \"  end\\n\");\n    // check if there are initial values\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else\n        if Abc_LatchInit(pLatch) == ABC_INIT_ZERO || Abc_LatchInit(pLatch) == ABC_INIT_ONE {\n            break; }\n    }\n    if i == Abc_NtkLatchNum(pNtk) {\n        return; }\n    // write the initial values\n    fmt.Fprintf(pFile, \"  initial begin\\n\");\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n        if Abc_LatchInit(pLatch) == ABC_INIT_ZERO {\n            fmt.Fprintf(pFile, \"    %s \u003c= 1\\'b0;\\n\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch)))));\n        } else if Abc_LatchInit(pLatch) == ABC_INIT_ONE {\n            fmt.Fprintf(pFile, \"    %s \u003c= 1\\'b1;\\n\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch))))); }\n    }\n    }\n    fmt.Fprintf(pFile, \"  end\\n\");\n}"
+    },
+    {
+      "Name": "Io_WriteVerilogObjects",
+      "Start": 15925,
+      "End": 20232,
+      "BodyStart": 16002,
+      "Original": "void Io_WriteVerilogObjects( FILE * pFile, Abc_Ntk_t * pNtk, int fOnlyAnds )\n{\n    int fUseSimpleGateNames = 0;\n    Vec_Vec_t * vLevels;\n    Abc_Ntk_t * pNtkBox;\n    Abc_Obj_t * pObj, * pTerm, * pFanin;\n    Hop_Obj_t * pFunc;\n    int i, k, Counter, nDigits, Length;\n\n    // write boxes\n    nDigits = Abc_Base10Log( Abc_NtkBoxNum(pNtk)-Abc_NtkLatchNum(pNtk) );\n    Counter = 0;\n    Abc_NtkForEachBox( pNtk, pObj, i )\n    {\n        if ( Abc_ObjIsLatch(pObj) )\n            continue;\n        pNtkBox = (Abc_Ntk_t *)pObj-\u003epData;\n        fprintf( pFile, \"  %s box%0*d\", pNtkBox-\u003epName, nDigits, Counter++ );\n        fprintf( pFile, \"(\" );\n        Abc_NtkForEachPi( pNtkBox, pTerm, k )\n        {\n            fprintf( pFile, \".%s\",   Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pTerm))) );\n            fprintf( pFile, \"(%s), \", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin(pObj,k)))) );\n        }\n        Abc_NtkForEachPo( pNtkBox, pTerm, k )\n        {\n            fprintf( pFile, \".%s\",   Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(pTerm))) );\n            fprintf( pFile, \"(%s)%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout(pObj,k)))), k==Abc_NtkPoNum(pNtkBox)-1? \"\":\", \" );\n        }\n        fprintf( pFile, \");\\n\" );\n    }\n    // write nodes\n    if ( Abc_NtkHasMapping(pNtk) )\n    {\n        Length  = Mio_LibraryReadGateNameMax((Mio_Library_t *)pNtk-\u003epManFunc);\n        nDigits = Abc_Base10Log( Abc_NtkNodeNum(pNtk) );\n        Counter = 0;\n        Abc_NtkForEachNode( pNtk, pObj, k )\n        {\n            Mio_Gate_t * pGate = (Mio_Gate_t *)pObj-\u003epData;\n            Mio_Pin_t * pGatePin;\n            if ( Abc_ObjFaninNum(pObj) == 0 \u0026\u0026 (!strcmp(Mio_GateReadName(pGate), \"_const0_\") || !strcmp(Mio_GateReadName(pGate), \"_const1_\")) )\n            {\n                fprintf( pFile, \"  %-*s %s = 1\\'b%d;\\n\", Length, \"assign\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanout0(pObj) )), !strcmp(Mio_GateReadName(pGate), \"_const1_\") );\n                continue;\n            }\n            // write the node\n            if ( fUseSimpleGateNames )\n            {\n                fprintf( pFile, \"%-*s \", Length, Mio_GateReadName(pGate) );\n                fprintf( pFile, \"( %s\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanout0(pObj) )) );\n                for ( pGatePin = Mio_GateReadPins(pGate), i = 0; pGatePin; pGatePin = Mio_PinReadNext(pGatePin), i++ )\n                    fprintf( pFile, \", %s\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanin(pObj,i) )) );\n                assert ( i == Abc_ObjFaninNum(pObj) );\n                fprintf( pFile, \" );\\n\" );\n            }\n            else\n            {\n                fprintf( pFile, \"  %-*s g%0*d\", Length, Mio_GateReadName(pGate), nDigits, Counter++ );\n                fprintf( pFile, \"(\" );\n                for ( pGatePin = Mio_GateReadPins(pGate), i = 0; pGatePin; pGatePin = Mio_PinReadNext(pGatePin), i++ )\n                {\n                    fprintf( pFile, \".%s\", Io_WriteVerilogGetName(Mio_PinReadName(pGatePin)) );\n                    fprintf( pFile, \"(%s), \", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanin(pObj,i) )) );\n                }\n                assert ( i == Abc_ObjFaninNum(pObj) );\n                fprintf( pFile, \".%s\", Io_WriteVerilogGetName(Mio_GateReadOutName(pGate)) );\n                fprintf( pFile, \"(%s)\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanout0(pObj) )) );\n                fprintf( pFile, \");\\n\" );\n            }\n        }\n    }\n    else\n    {\n        vLevels = Vec_VecAlloc( 10 );\n        Abc_NtkForEachNode( pNtk, pObj, i )\n        {\n            pFunc = (Hop_Obj_t *)pObj-\u003epData;\n            fprintf( pFile, \"  assign %s = \", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pObj))) );\n            // set the input names\n            Abc_ObjForEachFanin( pObj, pFanin, k )\n                Hop_IthVar((Hop_Man_t *)pNtk-\u003epManFunc, k)-\u003epData = Extra_UtilStrsav(Io_WriteVerilogGetName(Abc_ObjName(pFanin)));\n            // write the formula\n            Hop_ObjPrintVerilog( pFile, pFunc, vLevels, 0, fOnlyAnds );\n            fprintf( pFile, \";\\n\" );\n            // clear the input names\n            Abc_ObjForEachFanin( pObj, pFanin, k )\n                ABC_FREE( Hop_IthVar((Hop_Man_t *)pNtk-\u003epManFunc, k)-\u003epData );\n        }\n        Vec_VecFree( vLevels );\n    }\n}",
+      "Draft": "func Io_WriteVerilogObjects(pFile *os.File, pNtk *Abc_Ntk_t, fOnlyAnds int32) {\n    var fUseSimpleGateNames int32;\n    var vLevels *Vec_Vec_t;\n    var pNtkBox *Abc_Ntk_t;\n    var pObj, pTerm, pFanin *Abc_Obj_t;\n    var pFunc *Hop_Obj_t;\n    var i, k, Counter, nDigits, Length int32;\n\n    // write boxes\n    nDigits = Abc_Base10Log( Abc_NtkBoxNum(pNtk)-Abc_NtkLatchNum(pNtk) );\n    Counter = 0;\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pObj) {\n            continue; }\n        pNtkBox = (Abc_Ntk_t *)pObj.pData;\n        fmt.Fprintf(pFile, \"  %s box%0*d\", pNtkBox.pName, nDigits, Counter++);\n        fmt.Fprintf(pFile, \"(\");\n        // inlining of macro Abc_NtkForEachPi\n        for  k = 0; (k \u003c Abc_NtkPiNum(pNtkBox)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtkBox, k)), 1); k++  {\n            fmt.Fprintf(pFile, \".%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pTerm))));\n            fmt.Fprintf(pFile, \"(%s), \", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin(pObj,k)))));\n        }\n        // inlining of macro Abc_NtkForEachPo\n        for  k = 0; (k \u003c Abc_NtkPoNum(pNtkBox)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtkBox, k)), 1); k++  {\n            fmt.Fprintf(pFile, \".%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(pTerm))));\n            fmt.Fprintf(pFile, \"(%s)%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout(pObj,k)))), k==Abc_NtkPoNum(pNtkBox)-1? \"\":\", \");\n        }\n        fmt.Fprintf(pFile, \");\\n\");\n    }\n    // write nodes\n    if Abc_NtkHasMapping(pNtk) {\n        Length  = Mio_LibraryReadGateNameMax((Mio_Library_t *)pNtk.pManFunc);\n        nDigits = Abc_Base10Log( Abc_NtkNodeNum(pNtk) );\n        Counter = 0;\n        // inlining of macro Abc_NtkForEachNode\n        for  k = 0; (k \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, k)), 1); k++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n            var pGate *Mio_Gate_t  = (Mio_Gate_t *)pObj.pData;\n            var pGatePin *Mio_Pin_t;\n            if Abc_ObjFaninNum(pObj) == 0 \u0026\u0026 (!(int32(strings.Compare(Mio_GateReadName(pGate), \"_const0_\")) != 0) || !(int32(strings.Compare(Mio_GateReadName(pGate), \"_const1_\")) != 0)) {\n                fmt.Fprintf(pFile, \"  %-*s %s = 1\\'b%d;\\n\", Length, \"assign\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanout0(pObj) )), !int32(strings.Compare(Mio_GateReadName(pGate), \"_const1_\")));\n                continue;\n            }\n            // write the node\n            if fUseSimpleGateNames != 0 {\n                fmt.Fprintf(pFile, \"%-*s \", Length, Mio_GateReadName(pGate));\n                fmt.Fprintf(pFile, \"( %s\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanout0(pObj) )));\n                for  pGatePin = Mio_GateReadPins(pGate), i = 0; (pGatePin != nil); pGatePin = Mio_PinReadNext(pGatePin), i++  {\n                    fmt.Fprintf(pFile, \", %s\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanin(pObj,i) )));\n                }\n                assert(i == Abc_ObjFaninNum(pObj), \"i == Abc_ObjFaninNum(pObj)\");\n                fmt.Fprintf(pFile, \" );\\n\");\n            \n            } else {\n                fmt.Fprintf(pFile, \"  %-*s g%0*d\", Length, Mio_GateReadName(pGate), nDigits, Counter++);\n                fmt.Fprintf(pFile, \"(\");\n                for  pGatePin = Mio_GateReadPins(pGate), i = 0; (pGatePin != nil); pGatePin = Mio_PinReadNext(pGatePin), i++  {\n                    fmt.Fprintf(pFile, \".%s\", Io_WriteVerilogGetName(Mio_PinReadName(pGatePin)));\n                    fmt.Fprintf(pFile, \"(%s), \", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanin(pObj,i) )));\n                }\n                assert(i == Abc_ObjFaninNum(pObj), \"i == Abc_ObjFaninNum(pObj)\");\n                fmt.Fprintf(pFile, \".%s\", Io_WriteVerilogGetName(Mio_GateReadOutName(pGate)));\n                fmt.Fprintf(pFile, \"(%s)\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanout0(pObj) )));\n                fmt.Fprintf(pFile, \");\\n\");\n            }\n        }\n        }\n    \n    } else {\n        vLevels = Vec_VecAlloc( 10 );\n        // inlining of macro Abc_NtkForEachNode\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n            pFunc = (Hop_Obj_t *)pObj.pData;\n            fmt.Fprintf(pFile, \"  assign %s = \", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pObj))));\n            // set the input names\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData = Extra_UtilStrsav(Io_WriteVerilogGetName(Abc_ObjName(pFanin)));\n            }\n            // write the formula\n            Hop_ObjPrintVerilog( pFile, pFunc, vLevels, 0, fOnlyAnds );\n            fmt.Fprintf(pFile, \";\\n\");\n            // clear the input names\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                // inlining of macro ABC_FREE\n                ((Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData) ? (free((char *) (Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData)), (Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData) = 0) : 0);\n            }\n        }\n        }\n        Vec_VecFree( vLevels );\n    }\n}"
+    },
+    {
+      "Name": "Io_WriteVerilogWiresCount",
+      "Start": 20495,
+      "End": 21304,
+      "BodyStart": 20545,
+      "Original": "int Io_WriteVerilogWiresCount( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj, * pNet, * pBox;\n    int i, k, nWires;\n    nWires = Abc_NtkLatchNum(pNtk);\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        if ( i == 0 ) \n            continue;\n        pNet = Abc_ObjFanout0(pObj);\n        if ( Abc_ObjFanoutNum(pNet) \u003e 0 \u0026\u0026 Abc_ObjIsCo(Abc_ObjFanout0(pNet)) )\n            continue;\n        nWires++;\n    }\n    Abc_NtkForEachBox( pNtk, pBox, i )\n    {\n        if ( Abc_ObjIsLatch(pBox) )\n            continue;\n        nWires += Abc_ObjFaninNum(pBox);\n        Abc_ObjForEachFanout( pBox, pObj, k )\n        {\n            pNet = Abc_ObjFanout0(pObj);\n            if ( Abc_ObjFanoutNum(pNet) \u003e 0 \u0026\u0026 Abc_ObjIsCo(Abc_ObjFanout0(pNet)) )\n                continue;\n            nWires++;\n        }\n    }\n    return nWires;\n}",
+      "Draft": "func Io_WriteVerilogWiresCount(pNtk *Abc_Ntk_t) int32 {\n    var pObj, pNet, pBox *Abc_Obj_t;\n    var i, k, nWires int32;\n    nWires = Abc_NtkLatchNum(pNtk);\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if i == 0 { \n            continue; }\n        pNet = Abc_ObjFanout0(pObj);\n        if Abc_ObjFanoutNum(pNet) \u003e 0 \u0026\u0026 Abc_ObjIsCo(Abc_ObjFanout0(pNet)) {\n            continue; }\n        nWires++;\n    }\n    }\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pBox) {\n            continue; }\n        nWires += Abc_ObjFaninNum(pBox);\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pBox)) \u0026\u0026 (((pObj) = Abc_ObjFanout(pBox, k)), 1); k++  {\n            pNet = Abc_ObjFanout0(pObj);\n            if Abc_ObjFanoutNum(pNet) \u003e 0 \u0026\u0026 Abc_ObjIsCo(Abc_ObjFanout0(pNet)) {\n                continue; }\n            nWires++;\n        }\n    }\n    return nWires;\n}"
+    },
+    {
+      "Name": "Io_WriteVerilogGetName",
+      "Start": 21587,
+      "End": 22355,
+      "BodyStart": 21633,
+      "Original": "char * Io_WriteVerilogGetName( char * pName )\n{\n    static char Buffer[500];\n    int Length, i;\n    Length = strlen(pName);\n    // consider the case of a signal having name \"0\" or \"1\"\n    if ( !(Length == 1 \u0026\u0026 (pName[0] == '0' || pName[0] == '1')) )\n    {\n        for ( i = 0; i \u003c Length; i++ )\n            if ( !((pName[i] \u003e= 'a' \u0026\u0026 pName[i] \u003c= 'z') || \n                 (pName[i] \u003e= 'A' \u0026\u0026 pName[i] \u003c= 'Z') || \n                 (pName[i] \u003e= '0' \u0026\u0026 pName[i] \u003c= '9') || pName[i] == '_') )\n                 break;\n        if ( i == Length )\n            return pName;\n    }\n    // create Verilog style name\n    Buffer[0] = '\\\\';\n    for ( i = 0; i \u003c Length; i++ )\n        Buffer[i+1] = pName[i];\n    Buffer[Length+1] = ' ';\n    Buffer[Length+2] = 0;\n    return Buffer;\n}",
+      "Draft": "func Io_WriteVerilogGetName(pName string) string {\n    \n    var Length, i int32;\n    Length = len(pName);\n    // consider the case of a signal having name \"0\" or \"1\"\n    if !(Length == 1 \u0026\u0026 (pName[0] == '0' || pName[0] == '1')) {\n        for  i = 0; i \u003c Length; i++  {\n            if !((pName[i] \u003e= 'a' \u0026\u0026 pName[i] \u003c= 'z') || \n                 (pName[i] \u003e= 'A' \u0026\u0026 pName[i] \u003c= 'Z') || \n                 (pName[i] \u003e= '0' \u0026\u0026 pName[i] \u003c= '9') || pName[i] == '_') {\n                 break; }\n        }\n        if i == Length {\n            return pName; }\n    }\n    // create Verilog style name\n    spStatic_Io_WriteVerilogGetName_Buffer[0] = '\\\\';\n    for  i = 0; i \u003c Length; i++  {\n        spStatic_Io_WriteVerilogGetName_Buffer[i+1] = pName[i];\n    }\n    spStatic_Io_WriteVerilogGetName_Buffer[Length+1] = ' ';\n    spStatic_Io_WriteVerilogGetName_Buffer[Length+2] = 0;\n    return spStatic_Io_WriteVerilogGetName_Buffer;\n}"
+    },
+    {
+      "Name": "Io_WriteLutModule",
+      "Start": 22626,
+      "End": 22912,
+      "BodyStart": 22679,
+      "Original": "void Io_WriteLutModule( FILE * pFile, int nLutSize )\n{    \n    fprintf( pFile, \"module lut%d #( parameter TT = %d\\'h0 ) ( input [%d:0] in, output out );\\n\", nLutSize, 1\u003c\u003cnLutSize, nLutSize-1 );\n    fprintf( pFile, \"    assign out = TT[in];\\n\" );\n    fprintf( pFile, \"endmodule\\n\\n\" );\n}",
+      "Draft": "func Io_WriteLutModule(pFile *os.File, nLutSize int32) {    \n    fmt.Fprintf(pFile, \"module lut%d #( parameter TT = %d\\'h0 ) ( input [%d:0] in, output out );\\n\", nLutSize, 1\u003c\u003cnLutSize, nLutSize-1);\n    fmt.Fprintf(pFile, \"    assign out = TT[in];\\n\");\n    fmt.Fprintf(pFile, \"endmodule\\n\\n\");\n}"
+    },
+    {
+      "Name": "Io_WriteVerilogObjectsLut",
+      "Start": 22913,
+      "End": 25439,
+      "BodyStart": 22992,
+      "Original": "void Io_WriteVerilogObjectsLut( FILE * pFile, Abc_Ntk_t * pNtk, int nLutSize )\n{\n    Abc_Ntk_t * pNtkBox;\n    Abc_Obj_t * pObj, * pTerm;\n    int i, k, Counter, nDigits, Length = 0;\n\n    // write boxes\n    nDigits = Abc_Base10Log( Abc_NtkBoxNum(pNtk)-Abc_NtkLatchNum(pNtk) );\n    Counter = 0;\n    Abc_NtkForEachBox( pNtk, pObj, i )\n    {\n        if ( Abc_ObjIsLatch(pObj) )\n            continue;\n        pNtkBox = (Abc_Ntk_t *)pObj-\u003epData;\n        fprintf( pFile, \"  %s box%0*d\", pNtkBox-\u003epName, nDigits, Counter++ );\n        fprintf( pFile, \"(\" );\n        Abc_NtkForEachPi( pNtkBox, pTerm, k )\n        {\n            fprintf( pFile, \".%s\",   Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pTerm))) );\n            fprintf( pFile, \"(%s), \", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin(pObj,k)))) );\n        }\n        Abc_NtkForEachPo( pNtkBox, pTerm, k )\n        {\n            fprintf( pFile, \".%s\",   Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(pTerm))) );\n            fprintf( pFile, \"(%s)%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout(pObj,k)))), k==Abc_NtkPoNum(pNtkBox)-1? \"\":\", \" );\n        }\n        fprintf( pFile, \");\\n\" );\n    }\n\n    // find the longest signal name\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        Length = Abc_MaxInt( Length, strlen(Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pObj)))) );\n        Abc_ObjForEachFanin( pObj, pTerm, k )\n            Length = Abc_MaxInt( Length, strlen(Io_WriteVerilogGetName(Abc_ObjName(pTerm))) );\n    }\n\n    // write LUT instances\n    nDigits = Abc_Base10Log( Abc_NtkNodeNum(pNtk) );\n    Counter = 0;\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        word Truth = Abc_SopToTruth( (char *)pObj-\u003epData, Abc_ObjFaninNum(pObj) );\n        fprintf( pFile, \"  lut%d #(%d\\'h\", nLutSize, 1\u003c\u003cnLutSize );\n        if ( nLutSize == 6 )\n            fprintf( pFile, \"%08x%08x\", (unsigned)(Truth \u003e\u003e 32), (unsigned)Truth );\n        else\n            fprintf( pFile, \"%0*x\", 1\u003c\u003c(nLutSize-2), Abc_InfoMask(1 \u003c\u003c nLutSize) \u0026 (unsigned)Truth );\n        fprintf( pFile, \") lut_%0*d ( {\", nDigits, Counter++ );\n        for ( k = nLutSize - 1; k \u003e= Abc_ObjFaninNum(pObj); k-- )\n            fprintf( pFile, \"%*s, \", Length, \"1\\'b0\" );\n        for ( k = Abc_ObjFaninNum(pObj) - 1; k \u003e= 0; k-- )\n            fprintf( pFile, \"%*s%s\", Length, Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin(pObj, k))), k==0 ? \"\":\", \" );\n        fprintf( pFile, \"}, %*s );\\n\", Length, Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pObj))) );\n    }\n}",
+      "Draft": "func Io_WriteVerilogObjectsLut(pFile *os.File, pNtk *Abc_Ntk_t, nLutSize int32) {\n    var pNtkBox *Abc_Ntk_t;\n    var pObj, pTerm *Abc_Obj_t;\n    var i, k, Counter, nDigits, Length int32;\n\n    // write boxes\n    nDigits = Abc_Base10Log( Abc_NtkBoxNum(pNtk)-Abc_NtkLatchNum(pNtk) );\n    Counter = 0;\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pObj) {\n            continue; }\n        pNtkBox = (Abc_Ntk_t *)pObj.pData;\n        fmt.Fprintf(pFile, \"  %s box%0*d\", pNtkBox.pName, nDigits, Counter++);\n        fmt.Fprintf(pFile, \"(\");\n        // inlining of macro Abc_NtkForEachPi\n        for  k = 0; (k \u003c Abc_NtkPiNum(pNtkBox)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtkBox, k)), 1); k++  {\n            fmt.Fprintf(pFile, \".%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pTerm))));\n            fmt.Fprintf(pFile, \"(%s), \", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin(pObj,k)))));\n        }\n        // inlining of macro Abc_NtkForEachPo\n        for  k = 0; (k \u003c Abc_NtkPoNum(pNtkBox)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtkBox, k)), 1); k++  {\n            fmt.Fprintf(pFile, \".%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(pTerm))));\n            fmt.Fprintf(pFile, \"(%s)%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout(pObj,k)))), k==Abc_NtkPoNum(pNtkBox)-1? \"\":\", \");\n        }\n        fmt.Fprintf(pFile, \");\\n\");\n    }\n\n    // find the longest signal name\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Length = Abc_MaxInt( Length, len(Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pObj)))) );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Length = Abc_MaxInt( Length, len(Io_WriteVerilogGetName(Abc_ObjName(pTerm))) );\n        }\n    }\n    }\n\n    // write LUT instances\n    nDigits = Abc_Base10Log( Abc_NtkNodeNum(pNtk) );\n    Counter = 0;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        var Truth word  = Abc_SopToTruth( (char *)pObj.pData, Abc_ObjFaninNum(pObj) );\n        fmt.Fprintf(pFile, \"  lut%d #(%d\\'h\", nLutSize, 1\u003c\u003cnLutSize);\n        if nLutSize == 6 {\n            fmt.Fprintf(pFile, \"%08x%08x\", uint32((Truth \u003e\u003e 32)), uint32(Truth));\n        } else {\n            fmt.Fprintf(pFile, \"%0*x\", 1\u003c\u003c(nLutSize-2), Abc_InfoMask(1 \u003c\u003c nLutSize) \u0026 uint32(Truth)); }\n        fmt.Fprintf(pFile, \") lut_%0*d ( {\", nDigits, Counter++);\n        for  k = nLutSize - 1; k \u003e= Abc_ObjFaninNum(pObj); k--  {\n            fmt.Fprintf(pFile, \"%*s, \", Length, \"1\\'b0\");\n        }\n        for  k = Abc_ObjFaninNum(pObj) - 1; k \u003e= 0; k--  {\n            fmt.Fprintf(pFile, \"%*s%s\", Length, Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin(pObj, k))), k==0 ? \"\":\", \");\n        }\n        fmt.Fprintf(pFile, \"}, %*s );\\n\", Length, Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pObj))));\n    }\n    }\n}"
+    },
+    {
+      "Name": "Io_WriteVerilogLutInt",
+      "Start": 25440,
+      "End": 27652,
+      "BodyStart": 25515,
+      "Original": "void Io_WriteVerilogLutInt( FILE * pFile, Abc_Ntk_t * pNtk, int nLutSize )\n{\n    // write inputs and outputs\n//    fprintf( pFile, \"module %s ( gclk,\\n   \", Abc_NtkName(pNtk) );\n    fprintf( pFile, \"module %s ( \", Io_WriteVerilogGetName(Abc_NtkName(pNtk)) );\n    // add the clock signal if it does not exist\n    if ( Abc_NtkLatchNum(pNtk) \u003e 0 \u0026\u0026 Nm_ManFindIdByName(pNtk-\u003epManName, \"clock\", ABC_OBJ_PI) == -1 )\n        fprintf( pFile, \"clock, \" );\n    // write other primary inputs\n    fprintf( pFile, \"\\n   \" );\n    if ( Abc_NtkPiNum(pNtk) \u003e 0  )\n    {\n        Io_WriteVerilogPis( pFile, pNtk, 3 );\n        fprintf( pFile, \",\\n   \" );\n    }\n    if ( Abc_NtkPoNum(pNtk) \u003e 0  )\n        Io_WriteVerilogPos( pFile, pNtk, 3 );\n    fprintf( pFile, \"  );\\n\\n\" );\n    // add the clock signal if it does not exist\n    if ( Abc_NtkLatchNum(pNtk) \u003e 0 \u0026\u0026 Nm_ManFindIdByName(pNtk-\u003epManName, \"clock\", ABC_OBJ_PI) == -1 )\n        fprintf( pFile, \"  input  clock;\\n\" );\n    // write inputs, outputs, registers, and wires\n    if ( Abc_NtkPiNum(pNtk) \u003e 0  )\n    {\n//        fprintf( pFile, \"  input gclk,\" );\n        fprintf( pFile, \"  input \" );\n        Io_WriteVerilogPis( pFile, pNtk, 10 );\n        fprintf( pFile, \";\\n\" );\n    }\n    if ( Abc_NtkPoNum(pNtk) \u003e 0  )\n    {\n        fprintf( pFile, \"  output\" );\n        Io_WriteVerilogPos( pFile, pNtk, 5 );\n        fprintf( pFile, \";\\n\\n\" );\n    }\n    // if this is not a blackbox, write internal signals\n    if ( !Abc_NtkHasBlackbox(pNtk) )\n    {\n        if ( Abc_NtkLatchNum(pNtk) \u003e 0 )\n        {\n            fprintf( pFile, \"  reg\" );\n            Io_WriteVerilogRegs( pFile, pNtk, 4 );\n            fprintf( pFile, \";\\n\\n\" );\n        }\n        if ( Io_WriteVerilogWiresCount(pNtk) \u003e 0 )\n        {\n            fprintf( pFile, \"  wire\" );\n            Io_WriteVerilogWires( pFile, pNtk, 4 );\n            fprintf( pFile, \";\\n\\n\" );\n        }\n        // write nodes\n        Io_WriteVerilogObjectsLut( pFile, pNtk, nLutSize );        \n        // write registers\n        if ( Abc_NtkLatchNum(pNtk) \u003e 0 )\n        {\n            fprintf( pFile, \"\\n\" );\n            Io_WriteVerilogLatches( pFile, pNtk );\n        }\n    }\n    // finalize the file\n    fprintf( pFile, \"\\nendmodule\\n\\n\" );\n}",
+      "Draft": "func Io_WriteVerilogLutInt(pFile *os.File, pNtk *Abc_Ntk_t, nLutSize int32) {\n    // write inputs and outputs\n//    fprintf( pFile, \"module %s ( gclk,\\n   \", Abc_NtkName(pNtk) );\n    fmt.Fprintf(pFile, \"module %s ( \", Io_WriteVerilogGetName(Abc_NtkName(pNtk)));\n    // add the clock signal if it does not exist\n    if Abc_NtkLatchNum(pNtk) \u003e 0 \u0026\u0026 Nm_ManFindIdByName(pNtk.pManName, \"clock\", ABC_OBJ_PI) == -1 {\n        fmt.Fprintf(pFile, \"clock, \"); }\n    // write other primary inputs\n    fmt.Fprintf(pFile, \"\\n   \");\n    if Abc_NtkPiNum(pNtk) \u003e 0 {\n        Io_WriteVerilogPis( pFile, pNtk, 3 );\n        fmt.Fprintf(pFile, \",\\n   \");\n    }\n    if Abc_NtkPoNum(pNtk) \u003e 0 {\n        Io_WriteVerilogPos( pFile, pNtk, 3 ); }\n    fmt.Fprintf(pFile, \"  );\\n\\n\");\n    // add the clock signal if it does not exist\n    if Abc_NtkLatchNum(pNtk) \u003e 0 \u0026\u0026 Nm_ManFindIdByName(pNtk.pManName, \"clock\", ABC_OBJ_PI) == -1 {\n        fmt.Fprintf(pFile, \"  input  clock;\\n\"); }\n    // write inputs, outputs, registers, and wires\n    if Abc_NtkPiNum(pNtk) \u003e 0 {\n//        fprintf( pFile, \"  input gclk,\" );\n        fmt.Fprintf(pFile, \"  input \");\n        Io_WriteVerilogPis( pFile, pNtk, 10 );\n        fmt.Fprintf(pFile, \";\\n\");\n    }\n    if Abc_NtkPoNum(pNtk) \u003e 0 {\n        fmt.Fprintf(pFile, \"  output\");\n        Io_WriteVerilogPos( pFile, pNtk, 5 );\n        fmt.Fprintf(pFile, \";\\n\\n\");\n    }\n    // if this is not a blackbox, write internal signals\n    if !Abc_NtkHasBlackbox(pNtk) {\n        if Abc_NtkLatchNum(pNtk) \u003e 0 {\n            fmt.Fprintf(pFile, \"  reg\");\n            Io_WriteVerilogRegs( pFile, pNtk, 4 );\n            fmt.Fprintf(pFile, \";\\n\\n\");\n        }\n        if Io_WriteVerilogWiresCount(pNtk) \u003e 0 {\n            fmt.Fprintf(pFile, \"  wire\");\n            Io_WriteVerilogWires( pFile, pNtk, 4 );\n            fmt.Fprintf(pFile, \";\\n\\n\");\n        }\n        // write nodes\n        Io_WriteVerilogObjectsLut( pFile, pNtk, nLutSize );        \n        // write registers\n        if Abc_NtkLatchNum(pNtk) \u003e 0 {\n            fmt.Fprintf(pFile, \"\\n\");\n            Io_WriteVerilogLatches( pFile, pNtk );\n        }\n    }\n    // finalize the file\n    fmt.Fprintf(pFile, \"\\nendmodule\\n\\n\");\n}"
+    },
+    {
+      "Name": "Io_WriteVerilogLut",
+      "Start": 27654,
+      "End": 28965,
+      "BodyStart": 27730,
+      "Original": "void Io_WriteVerilogLut( Abc_Ntk_t * pNtk, char * pFileName, int nLutSize )\n{\n    FILE * pFile;\n    Abc_Ntk_t * pNtkTemp;\n    Abc_Obj_t * pObj; \n    int i, Counter = 0;\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        if ( Abc_ObjFaninNum(pObj) \u003e nLutSize )\n        {\n            if ( Counter \u003c 3 )\n                printf( \"Node \\\"%s\\\" has the fanin count (%d) larger than the LUT size (%d).\\n\", Abc_ObjName(pObj), Abc_ObjFaninNum(pObj), nLutSize );\n            Counter++;\n        }\n    if ( Counter )\n    {\n        printf( \"In total, %d internal logic nodes exceed the fanin count limit. Verilog is not written.\\n\", Counter );\n        return;\n    }\n\n    // start the output stream\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        fprintf( stdout, \"Io_WriteVerilog(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n\n    // write the equations for the network\n    fprintf( pFile, \"// Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk-\u003epName, Extra_TimeStamp() );\n    fprintf( pFile, \"\\n\" );\n    Io_WriteLutModule( pFile, nLutSize );\n\n    pNtkTemp = Abc_NtkToNetlist( pNtk );\n    Abc_NtkToSop( pNtkTemp, -1, ABC_INFINITY );\n    Io_WriteVerilogLutInt( pFile, pNtkTemp, nLutSize );\n    Abc_NtkDelete( pNtkTemp );\n\n    fprintf( pFile, \"\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func Io_WriteVerilogLut(pNtk *Abc_Ntk_t, pFileName string, nLutSize int32) {\n    var pFile *os.File;\n    var pNtkTemp *Abc_Ntk_t;\n    var pObj *Abc_Obj_t; \n    var i, Counter int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else\n        if Abc_ObjFaninNum(pObj) \u003e nLutSize {\n            if Counter \u003c 3 {\n                fmt.Printf(\"Node \\\"%s\\\" has the fanin count (%d) larger than the LUT size (%d).\\n\", Abc_ObjName(pObj), Abc_ObjFaninNum(pObj), nLutSize); }\n            Counter++;\n        }\n    }\n    if Counter != 0 {\n        fmt.Printf(\"In total, %d internal logic nodes exceed the fanin count limit. Verilog is not written.\\n\", Counter);\n        return;\n    }\n\n    // start the output stream\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Io_WriteVerilog(): Cannot open the output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n\n    // write the equations for the network\n    fmt.Fprintf(pFile, \"// Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp());\n    fmt.Fprintf(pFile, \"\\n\");\n    Io_WriteLutModule( pFile, nLutSize );\n\n    pNtkTemp = Abc_NtkToNetlist( pNtk );\n    Abc_NtkToSop( pNtkTemp, -1, ABC_INFINITY );\n    Io_WriteVerilogLutInt( pFile, pNtkTemp, nLutSize );\n    Abc_NtkDelete( pNtkTemp );\n\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::mechanical::static::24705",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 21639,
+      "End": 21645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::pointer-cast::3083",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2954,
+      "End": 2954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::pointer-cast::18157",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16423,
+      "End": 16436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::pointer-cast::19241",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17299,
+      "End": 17316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::pointer-cast::19614",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17498,
+      "End": 17512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::pointer-cast::21814",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19524,
+      "End": 19537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::pointer-cast::22167",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19770,
+      "End": 19783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::pointer-cast::22681",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20120,
+      "End": 20120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::pointer-cast::22729",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20120,
+      "End": 20120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::pointer-cast::22750",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20120,
+      "End": 20120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::pointer-cast::22804",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20120,
+      "End": 20120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::pointer-cast::26503",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23326,
+      "End": 23339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::pointer-cast::28454",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24614,
+      "End": 24622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::Io_WriteVerilog",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteVerilog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2001,
+      "End": 3389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::Io_WriteVerilogInt",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteVerilogInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3640,
+      "End": 5782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::ternary::Io_WriteVerilogPis",
+      "Category": "ternary-review",
+      "Symbol": "Io_WriteVerilogPis",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6045,
+      "End": 6928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::Io_WriteVerilogPis",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteVerilogPis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6045,
+      "End": 6928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::ternary::Io_WriteVerilogPos",
+      "Category": "ternary-review",
+      "Symbol": "Io_WriteVerilogPos",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7192,
+      "End": 8735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::Io_WriteVerilogPos",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteVerilogPos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7192,
+      "End": 8735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::ternary::Io_WriteVerilogWires",
+      "Category": "ternary-review",
+      "Symbol": "Io_WriteVerilogWires",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8988,
+      "End": 12609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::Io_WriteVerilogWires",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteVerilogWires",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8988,
+      "End": 12609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::ternary::Io_WriteVerilogRegs",
+      "Category": "ternary-review",
+      "Symbol": "Io_WriteVerilogRegs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12861,
+      "End": 13907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::Io_WriteVerilogRegs",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteVerilogRegs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12861,
+      "End": 13907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::Io_WriteVerilogLatches",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteVerilogLatches",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14162,
+      "End": 15662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::ternary::Io_WriteVerilogObjects",
+      "Category": "ternary-review",
+      "Symbol": "Io_WriteVerilogObjects",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15925,
+      "End": 20232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::Io_WriteVerilogObjects",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteVerilogObjects",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15925,
+      "End": 20232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::Io_WriteVerilogWiresCount",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteVerilogWiresCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20495,
+      "End": 21304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::Io_WriteVerilogGetName",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteVerilogGetName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21587,
+      "End": 22355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::Io_WriteLutModule",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteLutModule",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22626,
+      "End": 22912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::ternary::Io_WriteVerilogObjectsLut",
+      "Category": "ternary-review",
+      "Symbol": "Io_WriteVerilogObjectsLut",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 22913,
+      "End": 25439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::Io_WriteVerilogObjectsLut",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteVerilogObjectsLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22913,
+      "End": 25439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::Io_WriteVerilogLutInt",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteVerilogLutInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25440,
+      "End": 27652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::Io_WriteVerilogLut",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteVerilogLut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27654,
+      "End": 28965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteVerilog.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 29212
+    }
+  ],
+  "Draft": "package io\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ioWriteVerilog.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to output a special subset of Verilog.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: ioWriteVerilog.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioAbc.h\"\n//#include \"base/main/main.h\"\n//#include \"map/mio/mio.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Io_WriteVerilogInt( FILE * pFile, Abc_Ntk_t * pNtk, int fOnlyAnds );\n\n// static void Io_WriteVerilogPis( FILE * pFile, Abc_Ntk_t * pNtk, int Start );\n\n// static void Io_WriteVerilogPos( FILE * pFile, Abc_Ntk_t * pNtk, int Start );\n\n// static void Io_WriteVerilogWires( FILE * pFile, Abc_Ntk_t * pNtk, int Start );\n\n// static void Io_WriteVerilogRegs( FILE * pFile, Abc_Ntk_t * pNtk, int Start );\n\n// static void Io_WriteVerilogLatches( FILE * pFile, Abc_Ntk_t * pNtk );\n\n// static void Io_WriteVerilogObjects( FILE * pFile, Abc_Ntk_t * pNtk, int fOnlyAnds );\n\n// static int  Io_WriteVerilogWiresCount( Abc_Ntk_t * pNtk );\n\n// static char * Io_WriteVerilogGetName( char * pName );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Write verilog.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteVerilog(pNtk *Abc_Ntk_t, pFileName string, fOnlyAnds int32) {\n    var pNetlist *Abc_Ntk_t;\n    var pFile *os.File;\n    var i int32;\n    // can only write nodes represented using local AIGs\n    if !Abc_NtkIsAigNetlist(pNtk) \u0026\u0026 !Abc_NtkIsMappedNetlist(pNtk) {\n        fmt.Printf(\"Io_WriteVerilog(): Can produce Verilog for mapped or AIG netlists only.\\n\");\n        return;\n    }\n    // start the output stream\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Io_WriteVerilog(): Cannot open the output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n\n    // write the equations for the network\n    fmt.Fprintf(pFile, \"// Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp());\n    fmt.Fprintf(pFile, \"\\n\");\n\n    // write modules\n    if pNtk.pDesign {\n        // write the network first\n        Io_WriteVerilogInt( pFile, pNtk, fOnlyAnds );\n        // write other things\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pNtk.pDesign.vModules)) \u0026\u0026 (((pNetlist) = (Abc_Ntk_t *)Vec_PtrEntry(pNtk.pDesign.vModules, i)), 1); i++  {\n            assert(Abc_NtkIsNetlist(pNetlist), \"Abc_NtkIsNetlist(pNetlist)\");\n            if pNetlist == pNtk {\n                continue; }\n            fmt.Fprintf(pFile, \"\\n\");\n            Io_WriteVerilogInt( pFile, pNetlist, fOnlyAnds );\n        }\n    \n    } else {\n        Io_WriteVerilogInt( pFile, pNtk, fOnlyAnds );\n    }\n\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes verilog.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteVerilogInt(pFile *os.File, pNtk *Abc_Ntk_t, fOnlyAnds int32) {\n    // write inputs and outputs\n//    fprintf( pFile, \"module %s ( gclk,\\n   \", Abc_NtkName(pNtk) );\n    fmt.Fprintf(pFile, \"module %s ( \", Io_WriteVerilogGetName(Abc_NtkName(pNtk)));\n    // add the clock signal if it does not exist\n    if Abc_NtkLatchNum(pNtk) \u003e 0 \u0026\u0026 Nm_ManFindIdByName(pNtk.pManName, \"clock\", ABC_OBJ_PI) == -1 {\n        fmt.Fprintf(pFile, \"clock, \"); }\n    // write other primary inputs\n    fmt.Fprintf(pFile, \"\\n   \");\n    if Abc_NtkPiNum(pNtk) \u003e 0 {\n        Io_WriteVerilogPis( pFile, pNtk, 3 );\n        fmt.Fprintf(pFile, \",\\n   \");\n    }\n    if Abc_NtkPoNum(pNtk) \u003e 0 {\n        Io_WriteVerilogPos( pFile, pNtk, 3 ); }\n    fmt.Fprintf(pFile, \"  );\\n\");\n    // add the clock signal if it does not exist\n    if Abc_NtkLatchNum(pNtk) \u003e 0 \u0026\u0026 Nm_ManFindIdByName(pNtk.pManName, \"clock\", ABC_OBJ_PI) == -1 {\n        fmt.Fprintf(pFile, \"  input  clock;\\n\"); }\n    // write inputs, outputs, registers, and wires\n    if Abc_NtkPiNum(pNtk) \u003e 0 {\n//        fprintf( pFile, \"  input gclk,\" );\n        fmt.Fprintf(pFile, \"  input \");\n        Io_WriteVerilogPis( pFile, pNtk, 10 );\n        fmt.Fprintf(pFile, \";\\n\");\n    }\n    if Abc_NtkPoNum(pNtk) \u003e 0 {\n        fmt.Fprintf(pFile, \"  output\");\n        Io_WriteVerilogPos( pFile, pNtk, 5 );\n        fmt.Fprintf(pFile, \";\\n\");\n    }\n    // if this is not a blackbox, write internal signals\n    if !Abc_NtkHasBlackbox(pNtk) {\n        if Abc_NtkLatchNum(pNtk) \u003e 0 {\n            fmt.Fprintf(pFile, \"  reg\");\n            Io_WriteVerilogRegs( pFile, pNtk, 4 );\n            fmt.Fprintf(pFile, \";\\n\");\n        }\n        if Io_WriteVerilogWiresCount(pNtk) \u003e 0 {\n            fmt.Fprintf(pFile, \"  wire\");\n            Io_WriteVerilogWires( pFile, pNtk, 4 );\n            fmt.Fprintf(pFile, \";\\n\");\n        }\n        // write nodes\n        Io_WriteVerilogObjects( pFile, pNtk, fOnlyAnds );        \n        // write registers\n        if Abc_NtkLatchNum(pNtk) \u003e 0 {\n            Io_WriteVerilogLatches( pFile, pNtk ); }\n    }\n    // finalize the file\n    fmt.Fprintf(pFile, \"endmodule\\n\\n\");\n} \n\n/**Function*************************************************************\n\n  Synopsis    [Writes the primary inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteVerilogPis(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {\n    var pTerm, pNet *Abc_Obj_t;\n    var LineLength int32;\n    var AddedLength int32;\n    var NameCounter int32;\n    var i int32;\n\n    LineLength  = Start;\n    NameCounter = 0;\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        pNet = Abc_ObjFanout0(pTerm);\n        // get the line length after this name is written\n        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n            fmt.Fprintf(pFile, \"\\n   \");\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (i==Abc_NtkPiNum(pNtk)-1)? \"\" : \",\");\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n} \n\n/**Function*************************************************************\n\n  Synopsis    [Writes the primary outputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteVerilogPos(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {\n    var pTerm, pNet, pSkip *Abc_Obj_t;\n    var LineLength int32;\n    var AddedLength int32;\n    var NameCounter int32;\n    var i int32;\n    var nskip int32;\n\n    pSkip = 0;\n    nskip = 0;\n\n    LineLength  = Start;\n    NameCounter = 0;\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pNet = Abc_ObjFanin0(pTerm);\n        \n        if Abc_ObjIsPi(Abc_ObjFanin0(pNet)) {\n            // Skip this output since it is a feedthrough -- the same\n            // name will appear as an input and an output which other\n            // tools reading verilog do not like.\n            \n            nskip++;\n            pSkip = pNet;   // save an example of skipped net\n            continue;\n        }\n        \n        // get the line length after this name is written\n        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n            fmt.Fprintf(pFile, \"\\n   \");\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (i==Abc_NtkPoNum(pNtk)-1)? \"\" : \",\");\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n\n    if nskip != 0 {\n        assert((pSkip != nil), \"pSkip\");\n        fmt.Printf(\"Io_WriteVerilogPos(): Omitted %d feedthrough nets from output list of module (e.g. %s).\\n\", nskip, Abc_ObjName(pSkip));\n        return;\n    }\n\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the wires.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteVerilogWires(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {\n    var pObj, pNet, pBox, pTerm *Abc_Obj_t;\n    var LineLength int32;\n    var AddedLength int32;\n    var NameCounter int32;\n    var i, k, Counter, nNodes int32;\n\n    // count the number of wires\n    nNodes = Io_WriteVerilogWiresCount( pNtk );\n\n    // write the wires\n    Counter = 0;\n    LineLength  = Start;\n    NameCounter = 0;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if i == 0 { \n            continue; }\n        pNet = Abc_ObjFanout0(pObj);\n        if Abc_ObjFanoutNum(pNet) \u003e 0 \u0026\u0026 Abc_ObjIsCo(Abc_ObjFanout0(pNet)) {\n            continue; }\n        Counter++;\n        // get the line length after this name is written\n        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n            fmt.Fprintf(pFile, \"\\n   \");\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\");\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n    }\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n        pNet = Abc_ObjFanin0(Abc_ObjFanin0(pObj));\n        Counter++;\n        // get the line length after this name is written\n        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n            fmt.Fprintf(pFile, \"\\n   \");\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\");\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n    }\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pBox) {\n            continue; }\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pBox)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pBox, k)), 1); k++  {\n            pNet = Abc_ObjFanin0(pTerm);\n            Counter++;\n            // get the line length after this name is written\n            AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n            if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n                fmt.Fprintf(pFile, \"\\n   \");\n                // reset the line length\n                LineLength  = 3;\n                NameCounter = 0;\n            }\n            fmt.Fprintf(pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\");\n            LineLength += AddedLength;\n            NameCounter++;\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pBox)) \u0026\u0026 (((pTerm) = Abc_ObjFanout(pBox, k)), 1); k++  {\n            pNet = Abc_ObjFanout0(pTerm);\n            if Abc_ObjFanoutNum(pNet) \u003e 0 \u0026\u0026 Abc_ObjIsCo(Abc_ObjFanout0(pNet)) {\n                continue; }\n            Counter++;\n            // get the line length after this name is written\n            AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n            if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n                fmt.Fprintf(pFile, \"\\n   \");\n                // reset the line length\n                LineLength  = 3;\n                NameCounter = 0;\n            }\n            fmt.Fprintf(pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\");\n            LineLength += AddedLength;\n            NameCounter++;\n        }\n    }\n    assert(Counter == nNodes, \"Counter == nNodes\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the regs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteVerilogRegs(pFile *os.File, pNtk *Abc_Ntk_t, Start int32) {\n    var pLatch, pNet *Abc_Obj_t;\n    var LineLength int32;\n    var AddedLength int32;\n    var NameCounter int32;\n    var i, Counter, nNodes int32;\n\n    // count the number of latches\n    nNodes = Abc_NtkLatchNum(pNtk);\n\n    // write the wires\n    Counter = 0;\n    LineLength  = Start;\n    NameCounter = 0;\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n        pNet = Abc_ObjFanout0(Abc_ObjFanout0(pLatch));\n        Counter++;\n        // get the line length after this name is written\n        AddedLength = len(Io_WriteVerilogGetName(Abc_ObjName(pNet))) + 2;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e IO_WRITE_LINE_LENGTH { // write the line extender\n            fmt.Fprintf(pFile, \"\\n   \");\n            // reset the line length\n            LineLength  = 3;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s%s\", Io_WriteVerilogGetName(Abc_ObjName(pNet)), (Counter==nNodes)? \"\" : \",\");\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the latches.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteVerilogLatches(pFile *os.File, pNtk *Abc_Ntk_t) {\n    var pLatch *Abc_Obj_t;\n    var i int32;\n    if Abc_NtkLatchNum(pNtk) == 0 {\n        return; }\n    // write the latches\n//    fprintf( pFile, \"  always @(posedge %s) begin\\n\", Io_WriteVerilogGetName(Abc_ObjFanout0(Abc_NtkPi(pNtk,0))) );\n//    fprintf( pFile, \"  always begin\\n\" );\n    fmt.Fprintf(pFile, \"  always @ (posedge clock) begin\\n\");\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n        fmt.Fprintf(pFile, \"    %s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch)))));\n        fmt.Fprintf(pFile, \" \u003c= %s;\\n\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin0(pLatch)))));\n    }\n    }\n    fmt.Fprintf(pFile, \"  end\\n\");\n    // check if there are initial values\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else\n        if Abc_LatchInit(pLatch) == ABC_INIT_ZERO || Abc_LatchInit(pLatch) == ABC_INIT_ONE {\n            break; }\n    }\n    if i == Abc_NtkLatchNum(pNtk) {\n        return; }\n    // write the initial values\n    fmt.Fprintf(pFile, \"  initial begin\\n\");\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n        if Abc_LatchInit(pLatch) == ABC_INIT_ZERO {\n            fmt.Fprintf(pFile, \"    %s \u003c= 1\\'b0;\\n\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch)))));\n        } else if Abc_LatchInit(pLatch) == ABC_INIT_ONE {\n            fmt.Fprintf(pFile, \"    %s \u003c= 1\\'b1;\\n\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout0(pLatch))))); }\n    }\n    }\n    fmt.Fprintf(pFile, \"  end\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the nodes and boxes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteVerilogObjects(pFile *os.File, pNtk *Abc_Ntk_t, fOnlyAnds int32) {\n    var fUseSimpleGateNames int32;\n    var vLevels *Vec_Vec_t;\n    var pNtkBox *Abc_Ntk_t;\n    var pObj, pTerm, pFanin *Abc_Obj_t;\n    var pFunc *Hop_Obj_t;\n    var i, k, Counter, nDigits, Length int32;\n\n    // write boxes\n    nDigits = Abc_Base10Log( Abc_NtkBoxNum(pNtk)-Abc_NtkLatchNum(pNtk) );\n    Counter = 0;\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pObj) {\n            continue; }\n        pNtkBox = (Abc_Ntk_t *)pObj.pData;\n        fmt.Fprintf(pFile, \"  %s box%0*d\", pNtkBox.pName, nDigits, Counter++);\n        fmt.Fprintf(pFile, \"(\");\n        // inlining of macro Abc_NtkForEachPi\n        for  k = 0; (k \u003c Abc_NtkPiNum(pNtkBox)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtkBox, k)), 1); k++  {\n            fmt.Fprintf(pFile, \".%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pTerm))));\n            fmt.Fprintf(pFile, \"(%s), \", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin(pObj,k)))));\n        }\n        // inlining of macro Abc_NtkForEachPo\n        for  k = 0; (k \u003c Abc_NtkPoNum(pNtkBox)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtkBox, k)), 1); k++  {\n            fmt.Fprintf(pFile, \".%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(pTerm))));\n            fmt.Fprintf(pFile, \"(%s)%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout(pObj,k)))), k==Abc_NtkPoNum(pNtkBox)-1? \"\":\", \");\n        }\n        fmt.Fprintf(pFile, \");\\n\");\n    }\n    // write nodes\n    if Abc_NtkHasMapping(pNtk) {\n        Length  = Mio_LibraryReadGateNameMax((Mio_Library_t *)pNtk.pManFunc);\n        nDigits = Abc_Base10Log( Abc_NtkNodeNum(pNtk) );\n        Counter = 0;\n        // inlining of macro Abc_NtkForEachNode\n        for  k = 0; (k \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, k)), 1); k++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n            var pGate *Mio_Gate_t  = (Mio_Gate_t *)pObj.pData;\n            var pGatePin *Mio_Pin_t;\n            if Abc_ObjFaninNum(pObj) == 0 \u0026\u0026 (!(int32(strings.Compare(Mio_GateReadName(pGate), \"_const0_\")) != 0) || !(int32(strings.Compare(Mio_GateReadName(pGate), \"_const1_\")) != 0)) {\n                fmt.Fprintf(pFile, \"  %-*s %s = 1\\'b%d;\\n\", Length, \"assign\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanout0(pObj) )), !int32(strings.Compare(Mio_GateReadName(pGate), \"_const1_\")));\n                continue;\n            }\n            // write the node\n            if fUseSimpleGateNames != 0 {\n                fmt.Fprintf(pFile, \"%-*s \", Length, Mio_GateReadName(pGate));\n                fmt.Fprintf(pFile, \"( %s\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanout0(pObj) )));\n                for  pGatePin = Mio_GateReadPins(pGate), i = 0; (pGatePin != nil); pGatePin = Mio_PinReadNext(pGatePin), i++  {\n                    fmt.Fprintf(pFile, \", %s\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanin(pObj,i) )));\n                }\n                assert(i == Abc_ObjFaninNum(pObj), \"i == Abc_ObjFaninNum(pObj)\");\n                fmt.Fprintf(pFile, \" );\\n\");\n            \n            } else {\n                fmt.Fprintf(pFile, \"  %-*s g%0*d\", Length, Mio_GateReadName(pGate), nDigits, Counter++);\n                fmt.Fprintf(pFile, \"(\");\n                for  pGatePin = Mio_GateReadPins(pGate), i = 0; (pGatePin != nil); pGatePin = Mio_PinReadNext(pGatePin), i++  {\n                    fmt.Fprintf(pFile, \".%s\", Io_WriteVerilogGetName(Mio_PinReadName(pGatePin)));\n                    fmt.Fprintf(pFile, \"(%s), \", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanin(pObj,i) )));\n                }\n                assert(i == Abc_ObjFaninNum(pObj), \"i == Abc_ObjFaninNum(pObj)\");\n                fmt.Fprintf(pFile, \".%s\", Io_WriteVerilogGetName(Mio_GateReadOutName(pGate)));\n                fmt.Fprintf(pFile, \"(%s)\", Io_WriteVerilogGetName(Abc_ObjName( Abc_ObjFanout0(pObj) )));\n                fmt.Fprintf(pFile, \");\\n\");\n            }\n        }\n        }\n    \n    } else {\n        vLevels = Vec_VecAlloc( 10 );\n        // inlining of macro Abc_NtkForEachNode\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n            pFunc = (Hop_Obj_t *)pObj.pData;\n            fmt.Fprintf(pFile, \"  assign %s = \", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pObj))));\n            // set the input names\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData = Extra_UtilStrsav(Io_WriteVerilogGetName(Abc_ObjName(pFanin)));\n            }\n            // write the formula\n            Hop_ObjPrintVerilog( pFile, pFunc, vLevels, 0, fOnlyAnds );\n            fmt.Fprintf(pFile, \";\\n\");\n            // clear the input names\n            // inlining of macro Abc_ObjForEachFanin\n            for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n                // inlining of macro ABC_FREE\n                ((Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData) ? (free((char *) (Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData)), (Hop_IthVar((Hop_Man_t *)pNtk.pManFunc, k).pData) = 0) : 0);\n            }\n        }\n        }\n        Vec_VecFree( vLevels );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of wires.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteVerilogWiresCount(pNtk *Abc_Ntk_t) int32 {\n    var pObj, pNet, pBox *Abc_Obj_t;\n    var i, k, nWires int32;\n    nWires = Abc_NtkLatchNum(pNtk);\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if i == 0 { \n            continue; }\n        pNet = Abc_ObjFanout0(pObj);\n        if Abc_ObjFanoutNum(pNet) \u003e 0 \u0026\u0026 Abc_ObjIsCo(Abc_ObjFanout0(pNet)) {\n            continue; }\n        nWires++;\n    }\n    }\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pBox) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pBox) {\n            continue; }\n        nWires += Abc_ObjFaninNum(pBox);\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pBox)) \u0026\u0026 (((pObj) = Abc_ObjFanout(pBox, k)), 1); k++  {\n            pNet = Abc_ObjFanout0(pObj);\n            if Abc_ObjFanoutNum(pNet) \u003e 0 \u0026\u0026 Abc_ObjIsCo(Abc_ObjFanout0(pNet)) {\n                continue; }\n            nWires++;\n        }\n    }\n    return nWires;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the name for writing the Verilog file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Io_WriteVerilogGetName_Buffer [500]byte;\nfunc Io_WriteVerilogGetName(pName string) string {\n    \n    var Length, i int32;\n    Length = len(pName);\n    // consider the case of a signal having name \"0\" or \"1\"\n    if !(Length == 1 \u0026\u0026 (pName[0] == '0' || pName[0] == '1')) {\n        for  i = 0; i \u003c Length; i++  {\n            if !((pName[i] \u003e= 'a' \u0026\u0026 pName[i] \u003c= 'z') || \n                 (pName[i] \u003e= 'A' \u0026\u0026 pName[i] \u003c= 'Z') || \n                 (pName[i] \u003e= '0' \u0026\u0026 pName[i] \u003c= '9') || pName[i] == '_') {\n                 break; }\n        }\n        if i == Length {\n            return pName; }\n    }\n    // create Verilog style name\n    spStatic_Io_WriteVerilogGetName_Buffer[0] = '\\\\';\n    for  i = 0; i \u003c Length; i++  {\n        spStatic_Io_WriteVerilogGetName_Buffer[i+1] = pName[i];\n    }\n    spStatic_Io_WriteVerilogGetName_Buffer[Length+1] = ' ';\n    spStatic_Io_WriteVerilogGetName_Buffer[Length+2] = 0;\n    return spStatic_Io_WriteVerilogGetName_Buffer;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Write the network of K-input LUTs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteLutModule(pFile *os.File, nLutSize int32) {    \n    fmt.Fprintf(pFile, \"module lut%d #( parameter TT = %d\\'h0 ) ( input [%d:0] in, output out );\\n\", nLutSize, 1\u003c\u003cnLutSize, nLutSize-1);\n    fmt.Fprintf(pFile, \"    assign out = TT[in];\\n\");\n    fmt.Fprintf(pFile, \"endmodule\\n\\n\");\n}\nfunc Io_WriteVerilogObjectsLut(pFile *os.File, pNtk *Abc_Ntk_t, nLutSize int32) {\n    var pNtkBox *Abc_Ntk_t;\n    var pObj, pTerm *Abc_Obj_t;\n    var i, k, Counter, nDigits, Length int32;\n\n    // write boxes\n    nDigits = Abc_Base10Log( Abc_NtkBoxNum(pNtk)-Abc_NtkLatchNum(pNtk) );\n    Counter = 0;\n    // inlining of macro Abc_NtkForEachBox\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {\n        if Abc_ObjIsLatch(pObj) {\n            continue; }\n        pNtkBox = (Abc_Ntk_t *)pObj.pData;\n        fmt.Fprintf(pFile, \"  %s box%0*d\", pNtkBox.pName, nDigits, Counter++);\n        fmt.Fprintf(pFile, \"(\");\n        // inlining of macro Abc_NtkForEachPi\n        for  k = 0; (k \u003c Abc_NtkPiNum(pNtkBox)) \u0026\u0026 (((pTerm) = Abc_NtkPi(pNtkBox, k)), 1); k++  {\n            fmt.Fprintf(pFile, \".%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pTerm))));\n            fmt.Fprintf(pFile, \"(%s), \", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(Abc_ObjFanin(pObj,k)))));\n        }\n        // inlining of macro Abc_NtkForEachPo\n        for  k = 0; (k \u003c Abc_NtkPoNum(pNtkBox)) \u0026\u0026 (((pTerm) = Abc_NtkPo(pNtkBox, k)), 1); k++  {\n            fmt.Fprintf(pFile, \".%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin0(pTerm))));\n            fmt.Fprintf(pFile, \"(%s)%s\", Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(Abc_ObjFanout(pObj,k)))), k==Abc_NtkPoNum(pNtkBox)-1? \"\":\", \");\n        }\n        fmt.Fprintf(pFile, \");\\n\");\n    }\n\n    // find the longest signal name\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        Length = Abc_MaxInt( Length, len(Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pObj)))) );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pTerm) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Length = Abc_MaxInt( Length, len(Io_WriteVerilogGetName(Abc_ObjName(pTerm))) );\n        }\n    }\n    }\n\n    // write LUT instances\n    nDigits = Abc_Base10Log( Abc_NtkNodeNum(pNtk) );\n    Counter = 0;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        var Truth word  = Abc_SopToTruth( (char *)pObj.pData, Abc_ObjFaninNum(pObj) );\n        fmt.Fprintf(pFile, \"  lut%d #(%d\\'h\", nLutSize, 1\u003c\u003cnLutSize);\n        if nLutSize == 6 {\n            fmt.Fprintf(pFile, \"%08x%08x\", uint32((Truth \u003e\u003e 32)), uint32(Truth));\n        } else {\n            fmt.Fprintf(pFile, \"%0*x\", 1\u003c\u003c(nLutSize-2), Abc_InfoMask(1 \u003c\u003c nLutSize) \u0026 uint32(Truth)); }\n        fmt.Fprintf(pFile, \") lut_%0*d ( {\", nDigits, Counter++);\n        for  k = nLutSize - 1; k \u003e= Abc_ObjFaninNum(pObj); k--  {\n            fmt.Fprintf(pFile, \"%*s, \", Length, \"1\\'b0\");\n        }\n        for  k = Abc_ObjFaninNum(pObj) - 1; k \u003e= 0; k--  {\n            fmt.Fprintf(pFile, \"%*s%s\", Length, Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanin(pObj, k))), k==0 ? \"\":\", \");\n        }\n        fmt.Fprintf(pFile, \"}, %*s );\\n\", Length, Io_WriteVerilogGetName(Abc_ObjName(Abc_ObjFanout0(pObj))));\n    }\n    }\n}\nfunc Io_WriteVerilogLutInt(pFile *os.File, pNtk *Abc_Ntk_t, nLutSize int32) {\n    // write inputs and outputs\n//    fprintf( pFile, \"module %s ( gclk,\\n   \", Abc_NtkName(pNtk) );\n    fmt.Fprintf(pFile, \"module %s ( \", Io_WriteVerilogGetName(Abc_NtkName(pNtk)));\n    // add the clock signal if it does not exist\n    if Abc_NtkLatchNum(pNtk) \u003e 0 \u0026\u0026 Nm_ManFindIdByName(pNtk.pManName, \"clock\", ABC_OBJ_PI) == -1 {\n        fmt.Fprintf(pFile, \"clock, \"); }\n    // write other primary inputs\n    fmt.Fprintf(pFile, \"\\n   \");\n    if Abc_NtkPiNum(pNtk) \u003e 0 {\n        Io_WriteVerilogPis( pFile, pNtk, 3 );\n        fmt.Fprintf(pFile, \",\\n   \");\n    }\n    if Abc_NtkPoNum(pNtk) \u003e 0 {\n        Io_WriteVerilogPos( pFile, pNtk, 3 ); }\n    fmt.Fprintf(pFile, \"  );\\n\\n\");\n    // add the clock signal if it does not exist\n    if Abc_NtkLatchNum(pNtk) \u003e 0 \u0026\u0026 Nm_ManFindIdByName(pNtk.pManName, \"clock\", ABC_OBJ_PI) == -1 {\n        fmt.Fprintf(pFile, \"  input  clock;\\n\"); }\n    // write inputs, outputs, registers, and wires\n    if Abc_NtkPiNum(pNtk) \u003e 0 {\n//        fprintf( pFile, \"  input gclk,\" );\n        fmt.Fprintf(pFile, \"  input \");\n        Io_WriteVerilogPis( pFile, pNtk, 10 );\n        fmt.Fprintf(pFile, \";\\n\");\n    }\n    if Abc_NtkPoNum(pNtk) \u003e 0 {\n        fmt.Fprintf(pFile, \"  output\");\n        Io_WriteVerilogPos( pFile, pNtk, 5 );\n        fmt.Fprintf(pFile, \";\\n\\n\");\n    }\n    // if this is not a blackbox, write internal signals\n    if !Abc_NtkHasBlackbox(pNtk) {\n        if Abc_NtkLatchNum(pNtk) \u003e 0 {\n            fmt.Fprintf(pFile, \"  reg\");\n            Io_WriteVerilogRegs( pFile, pNtk, 4 );\n            fmt.Fprintf(pFile, \";\\n\\n\");\n        }\n        if Io_WriteVerilogWiresCount(pNtk) \u003e 0 {\n            fmt.Fprintf(pFile, \"  wire\");\n            Io_WriteVerilogWires( pFile, pNtk, 4 );\n            fmt.Fprintf(pFile, \";\\n\\n\");\n        }\n        // write nodes\n        Io_WriteVerilogObjectsLut( pFile, pNtk, nLutSize );        \n        // write registers\n        if Abc_NtkLatchNum(pNtk) \u003e 0 {\n            fmt.Fprintf(pFile, \"\\n\");\n            Io_WriteVerilogLatches( pFile, pNtk );\n        }\n    }\n    // finalize the file\n    fmt.Fprintf(pFile, \"\\nendmodule\\n\\n\");\n} \nfunc Io_WriteVerilogLut(pNtk *Abc_Ntk_t, pFileName string, nLutSize int32) {\n    var pFile *os.File;\n    var pNtkTemp *Abc_Ntk_t;\n    var pObj *Abc_Obj_t; \n    var i, Counter int32;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else\n        if Abc_ObjFaninNum(pObj) \u003e nLutSize {\n            if Counter \u003c 3 {\n                fmt.Printf(\"Node \\\"%s\\\" has the fanin count (%d) larger than the LUT size (%d).\\n\", Abc_ObjName(pObj), Abc_ObjFaninNum(pObj), nLutSize); }\n            Counter++;\n        }\n    }\n    if Counter != 0 {\n        fmt.Printf(\"In total, %d internal logic nodes exceed the fanin count limit. Verilog is not written.\\n\", Counter);\n        return;\n    }\n\n    // start the output stream\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Io_WriteVerilog(): Cannot open the output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n\n    // write the equations for the network\n    fmt.Fprintf(pFile, \"// Benchmark \\\"%s\\\" written by ABC on %s\\n\", pNtk.pName, Extra_TimeStamp());\n    fmt.Fprintf(pFile, \"\\n\");\n    Io_WriteLutModule( pFile, nLutSize );\n\n    pNtkTemp = Abc_NtkToNetlist( pNtk );\n    Abc_NtkToSop( pNtkTemp, -1, ABC_INFINITY );\n    Io_WriteVerilogLutInt( pFile, pNtkTemp, nLutSize );\n    Abc_NtkDelete( pNtkTemp );\n\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

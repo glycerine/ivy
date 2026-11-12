@@ -1,0 +1,786 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c",
+  "SHA256": "6f07ca43c267642abee7b0edd9c45ac0873b0d97fc5730f9c3ece6a9803ee20d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 2826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(Gia_ManObj(p, iObj)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 13,
+        "ByteOffset": 3157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Mismatch at node %d related to CI %d (%d).\\n\", iObj, CiId, Abc_TtGetBit(pInfo, i) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 98,
+        "Column": 5,
+        "ByteOffset": 3314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManObjNum(p) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 3351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vSuppWords == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 3386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(\u0026p.vSuppVars) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 3704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_WrdSize(p.vSuppWords) == p.nSuppWords * Gia_ManObjNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsCi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 3875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vSuppWords != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 9,
+        "ByteOffset": 4559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_WrdSize(p.vSuppWords) == p.nSuppWords * Gia_ManObjNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 4703
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iSuppPi == Vec_IntSize(\u0026p.vSuppVars) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 5080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 152,
+        "Column": 5,
+        "ByteOffset": 5592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_TtIsConst0( Gia_ManQuantInfoId(p, iObj), p.nSuppWords ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 6046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_TtIsConst0(pInfo, p.nSuppWords) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 7958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 5,
+        "ByteOffset": 8954
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pRoot) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 298,
+        "Column": 5,
+        "ByteOffset": 12156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 305,
+        "Column": 5,
+        "ByteOffset": 12388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew.iSuppPi \u003e 0 \u0026\u0026 pNew.iSuppPi \u003c= 64 * pNew.nSuppWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 308,
+        "Column": 5,
+        "ByteOffset": 12527
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( OutLit \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 318,
+        "Column": 9,
+        "ByteOffset": 13057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vOuts) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 342,
+        "Column": 5,
+        "ByteOffset": 14127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vOuts) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 454,
+        "Column": 9,
+        "ByteOffset": 19355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsCi( Gia_ManObj(p0, Abc_Lit2Var(iLit)) ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 469,
+        "Column": 5,
+        "ByteOffset": 19969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew.iSuppPi == Gia_ManCiNum(pNew) - Vec_IntSize(vSide) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 486,
+        "Column": 5,
+        "ByteOffset": 20787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew.iSuppPi == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManQuantInfoId",
+      "Start": 1307,
+      "End": 1444,
+      "BodyStart": 1380,
+      "Original": "static inline word * Gia_ManQuantInfoId( Gia_Man_t * p, int iObj )       { return Vec_WrdEntryP( p-\u003evSuppWords, p-\u003enSuppWords * iObj ); }",
+      "Draft": "func Gia_ManQuantInfoId(p *Gia_Man_t, iObj int32) *word { return Vec_WrdEntryP( p.vSuppWords, p.nSuppWords * iObj ); }"
+    },
+    {
+      "Name": "Gia_ManQuantInfo",
+      "Start": 1445,
+      "End": 1578,
+      "BodyStart": 1518,
+      "Original": "static inline word * Gia_ManQuantInfo( Gia_Man_t * p, Gia_Obj_t * pObj ) { return Gia_ManQuantInfoId( p, Gia_ObjId(p, pObj) );      }",
+      "Draft": "func Gia_ManQuantInfo(p *Gia_Man_t, pObj *Gia_Obj_t) *word { return Gia_ManQuantInfoId( p, Gia_ObjId(p, pObj) );      }"
+    },
+    {
+      "Name": "Gia_ObjCopyGetTwoArray",
+      "Start": 1580,
+      "End": 1790,
+      "BodyStart": 1673,
+      "Original": "static inline void   Gia_ObjCopyGetTwoArray( Gia_Man_t * p, int iObj, int LitsOut[2] )      \n{ \n    int * pLits = Vec_IntEntryP( \u0026p-\u003evCopiesTwo, 2*iObj );\n    LitsOut[0] = pLits[0];\n    LitsOut[1] = pLits[1];\n}",
+      "Draft": "func Gia_ObjCopyGetTwoArray(p *Gia_Man_t, iObj int32, LitsOut []int32) { \n    var pLits *int32  = Vec_IntEntryP( \u0026p.vCopiesTwo, 2*iObj );\n    LitsOut[0] = pLits[0];\n    LitsOut[1] = pLits[1];\n}"
+    },
+    {
+      "Name": "Gia_ObjCopySetTwoArray",
+      "Start": 1791,
+      "End": 1998,
+      "BodyStart": 1883,
+      "Original": "static inline void   Gia_ObjCopySetTwoArray( Gia_Man_t * p, int iObj, int LitsIn[2] )      \n{ \n    int * pLits = Vec_IntEntryP( \u0026p-\u003evCopiesTwo, 2*iObj );\n    pLits[0] = LitsIn[0];\n    pLits[1] = LitsIn[1];\n}",
+      "Draft": "func Gia_ObjCopySetTwoArray(p *Gia_Man_t, iObj int32, LitsIn []int32) { \n    var pLits *int32  = Vec_IntEntryP( \u0026p.vCopiesTwo, 2*iObj );\n    pLits[0] = LitsIn[0];\n    pLits[1] = LitsIn[1];\n}"
+    },
+    {
+      "Name": "Gia_ManQuantVerify_rec",
+      "Start": 2278,
+      "End": 2732,
+      "BodyStart": 2342,
+      "Original": "int Gia_ManQuantVerify_rec( Gia_Man_t * p, int iObj, int CiId )\n{\n    Gia_Obj_t * pObj;\n    if ( Gia_ObjIsTravIdCurrentId( p, iObj ) )\n        return 0;\n    Gia_ObjSetTravIdCurrentId( p, iObj );\n    pObj = Gia_ManObj( p, iObj );\n    if ( Gia_ObjIsCi(pObj) )\n        return Gia_ObjCioId(pObj) == CiId;\n    return Gia_ManQuantVerify_rec( p, Gia_ObjFaninId0(pObj, iObj), CiId ) ||\n           Gia_ManQuantVerify_rec( p, Gia_ObjFaninId1(pObj, iObj), CiId );\n}",
+      "Draft": "func Gia_ManQuantVerify_rec(p *Gia_Man_t, iObj int32, CiId int32) int32 {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId( p, iObj ) {\n        return 0; }\n    Gia_ObjSetTravIdCurrentId( p, iObj );\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) {\n        return Gia_ObjCioId(pObj) == CiId; }\n    return Gia_ManQuantVerify_rec( p, Gia_ObjFaninId0(pObj, iObj), CiId ) ||\n           Gia_ManQuantVerify_rec( p, Gia_ObjFaninId1(pObj, iObj), CiId );\n}"
+    },
+    {
+      "Name": "Gia_ManQuantVerify",
+      "Start": 2733,
+      "End": 3184,
+      "BodyStart": 2784,
+      "Original": "void Gia_ManQuantVerify( Gia_Man_t * p, int iObj )\n{\n    word * pInfo = Gia_ManQuantInfoId( p, iObj );  int i, CiId;\n    assert( Gia_ObjIsAnd(Gia_ManObj(p, iObj)) );\n    Vec_IntForEachEntry( \u0026p-\u003evSuppVars, CiId, i )\n    {\n        Gia_ManIncrementTravId( p );\n        if ( Abc_TtGetBit(pInfo, i) != Gia_ManQuantVerify_rec(p, iObj, CiId) )\n            printf( \"Mismatch at node %d related to CI %d (%d).\\n\", iObj, CiId, Abc_TtGetBit(pInfo, i) );\n    }\n}",
+      "Draft": "func Gia_ManQuantVerify(p *Gia_Man_t, iObj int32) {\n    var pInfo *word  = Gia_ManQuantInfoId( p, iObj );  var i, CiId int32;\n    assert(Gia_ObjIsAnd(Gia_ManObj(p, iObj)), \"Gia_ObjIsAnd(Gia_ManObj(p, iObj))\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vSuppVars)) \u0026\u0026 (((CiId) = Vec_IntEntry(\u0026p.vSuppVars, i)), 1); i++  {\n        Gia_ManIncrementTravId( p );\n        if Abc_TtGetBit(pInfo, i) != Gia_ManQuantVerify_rec(p, iObj, CiId) {\n            fmt.Printf(\"Mismatch at node %d related to CI %d (%d).\\n\", iObj, CiId, Abc_TtGetBit(pInfo, i)); }\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManQuantSetSuppStart",
+      "Start": 3188,
+      "End": 3484,
+      "BodyStart": 3235,
+      "Original": "void Gia_ManQuantSetSuppStart( Gia_Man_t * p )\n{\n    assert( Gia_ManObjNum(p) == 1 );\n    assert( p-\u003evSuppWords == NULL );\n    assert( Vec_IntSize(\u0026p-\u003evSuppVars) == 0 );\n    p-\u003eiSuppPi    = 0;\n    p-\u003enSuppWords = 1;\n    p-\u003evSuppWords = Vec_WrdAlloc( 1000 );\n    Vec_WrdPush( p-\u003evSuppWords, 0 );\n}",
+      "Draft": "func Gia_ManQuantSetSuppStart(p *Gia_Man_t) {\n    assert(Gia_ManObjNum(p) == 1, \"Gia_ManObjNum(p) == 1\");\n    assert(p.vSuppWords == nil, \"p.vSuppWords == nil\");\n    assert(Vec_IntSize(\u0026p.vSuppVars) == 0, \"Vec_IntSize(\u0026p.vSuppVars) == 0\");\n    p.iSuppPi    = 0;\n    p.nSuppWords = 1;\n    p.vSuppWords = Vec_WrdAlloc( 1000 );\n    Vec_WrdPush( p.vSuppWords, 0 );\n}"
+    },
+    {
+      "Name": "Gia_ManQuantSetSuppZero",
+      "Start": 3485,
+      "End": 3706,
+      "BodyStart": 3531,
+      "Original": "void Gia_ManQuantSetSuppZero( Gia_Man_t * p )\n{\n    int w;\n    for ( w = 0; w \u003c p-\u003enSuppWords; w++ )\n        Vec_WrdPush( p-\u003evSuppWords, 0 );\n    assert( Vec_WrdSize(p-\u003evSuppWords) == p-\u003enSuppWords * Gia_ManObjNum(p) );\n}",
+      "Draft": "func Gia_ManQuantSetSuppZero(p *Gia_Man_t) {\n    var w int32;\n    for  w = 0; w \u003c p.nSuppWords; w++  {\n        Vec_WrdPush( p.vSuppWords, 0 );\n    }\n    assert(Vec_WrdSize(p.vSuppWords) == p.nSuppWords * Gia_ManObjNum(p), \"Vec_WrdSize(p.vSuppWords) == p.nSuppWords * Gia_ManObjNum(p)\");\n}"
+    },
+    {
+      "Name": "Gia_ManQuantSetSuppCi",
+      "Start": 3707,
+      "End": 4702,
+      "BodyStart": 3769,
+      "Original": "void Gia_ManQuantSetSuppCi( Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    assert( Gia_ObjIsCi(pObj) );\n    assert( p-\u003evSuppWords != NULL );\n    if ( p-\u003eiSuppPi == 64 * p-\u003enSuppWords )\n    {\n        word Data; int w, Count = 0, Size = Vec_WrdSize(p-\u003evSuppWords);\n        Vec_Wrd_t * vTemp = Vec_WrdAlloc( Size ? 2 * Size : 1000 ); \n        Vec_WrdForEachEntry( p-\u003evSuppWords, Data, w )\n        {\n            Vec_WrdPush( vTemp, Data );\n            if ( ++Count == p-\u003enSuppWords )\n            {\n                Vec_WrdPush( vTemp, 0 );\n                Count = 0;\n            }\n        }\n        Vec_WrdFree( p-\u003evSuppWords );\n        p-\u003evSuppWords = vTemp;\n        p-\u003enSuppWords++;\n        assert( Vec_WrdSize(p-\u003evSuppWords) == p-\u003enSuppWords * Gia_ManObjNum(p) );\n        //printf( \"Resizing to %d words.\\n\", p-\u003enSuppWords );\n    }\n    assert( p-\u003eiSuppPi == Vec_IntSize(\u0026p-\u003evSuppVars) );\n    Vec_IntPush( \u0026p-\u003evSuppVars, Gia_ObjCioId(pObj) );\n    Abc_TtSetBit( Gia_ManQuantInfo(p, pObj), p-\u003eiSuppPi++ );\n}",
+      "Draft": "func Gia_ManQuantSetSuppCi(p *Gia_Man_t, pObj *Gia_Obj_t) {\n    assert(Gia_ObjIsCi(pObj), \"Gia_ObjIsCi(pObj)\");\n    assert(p.vSuppWords != nil, \"p.vSuppWords != nil\");\n    if p.iSuppPi == 64 * p.nSuppWords {\n        var Data word; var w int32;\nvar Count int32;\nvar Size int32 = Vec_WrdSize(p.vSuppWords);\n        var vTemp *Vec_Wrd_t  = Vec_WrdAlloc( Size ? 2 * Size : 1000 ); \n        // inlining of macro Vec_WrdForEachEntry\n        for  w = 0; (w \u003c Vec_WrdSize(p.vSuppWords)) \u0026\u0026 (((Data) = Vec_WrdEntry(p.vSuppWords, w)), 1); w++  {\n            Vec_WrdPush( vTemp, Data );\n            if Count++; Count == p.nSuppWords {\n                Vec_WrdPush( vTemp, 0 );\n                Count = 0;\n            }\n        }\n        Vec_WrdFree( p.vSuppWords );\n        p.vSuppWords = vTemp;\n        p.nSuppWords++;\n        assert(Vec_WrdSize(p.vSuppWords) == p.nSuppWords * Gia_ManObjNum(p), \"Vec_WrdSize(p.vSuppWords) == p.nSuppWords * Gia_ManObjNum(p)\");\n        //printf( \"Resizing to %d words.\\n\", p-\u003enSuppWords );\n    }\n    assert(p.iSuppPi == Vec_IntSize(\u0026p.vSuppVars), \"p.iSuppPi == Vec_IntSize(\u0026p.vSuppVars)\");\n    Vec_IntPush( \u0026p.vSuppVars, Gia_ObjCioId(pObj) );\n    Abc_TtSetBit( Gia_ManQuantInfo(p, pObj), p.iSuppPi++ );\n}"
+    },
+    {
+      "Name": "Gia_ManQuantSetSuppAnd",
+      "Start": 4703,
+      "End": 5081,
+      "BodyStart": 4766,
+      "Original": "void Gia_ManQuantSetSuppAnd( Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    int iObj  = Gia_ObjId(p, pObj);\n    int iFan0 = Gia_ObjFaninId0(pObj, iObj);\n    int iFan1 = Gia_ObjFaninId1(pObj, iObj);\n    assert( Gia_ObjIsAnd(pObj) );\n    Gia_ManQuantSetSuppZero( p );\n    Abc_TtOr( Gia_ManQuantInfo(p, pObj), Gia_ManQuantInfoId(p, iFan0), Gia_ManQuantInfoId(p, iFan1), p-\u003enSuppWords );\n}",
+      "Draft": "func Gia_ManQuantSetSuppAnd(p *Gia_Man_t, pObj *Gia_Obj_t) {\n    var iObj int32   = Gia_ObjId(p, pObj);\n    var iFan0 int32  = Gia_ObjFaninId0(pObj, iObj);\n    var iFan1 int32  = Gia_ObjFaninId1(pObj, iObj);\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Gia_ManQuantSetSuppZero( p );\n    Abc_TtOr( Gia_ManQuantInfo(p, pObj), Gia_ManQuantInfoId(p, iFan0), Gia_ManQuantInfoId(p, iFan1), p.nSuppWords );\n}"
+    },
+    {
+      "Name": "Gia_ManQuantCheckSupp",
+      "Start": 5082,
+      "End": 5212,
+      "BodyStart": 5146,
+      "Original": "int Gia_ManQuantCheckSupp( Gia_Man_t * p, int iObj, int iSupp )\n{\n    return Abc_TtGetBit( Gia_ManQuantInfoId(p, iObj), iSupp );\n}",
+      "Draft": "func Gia_ManQuantCheckSupp(p *Gia_Man_t, iObj int32, iSupp int32) int32 {\n    return Abc_TtGetBit( Gia_ManQuantInfoId(p, iObj), iSupp );\n}"
+    },
+    {
+      "Name": "Gia_ManQuantUpdateCiSupp",
+      "Start": 5213,
+      "End": 5479,
+      "BodyStart": 5270,
+      "Original": "void Gia_ManQuantUpdateCiSupp( Gia_Man_t * p, int iObj )\n{\n    if ( Abc_TtIsConst0( Gia_ManQuantInfoId(p, iObj), p-\u003enSuppWords ) )\n        Gia_ManQuantSetSuppCi( p, Gia_ManObj(p, iObj) );\n    assert( !Abc_TtIsConst0( Gia_ManQuantInfoId(p, iObj), p-\u003enSuppWords ) );\n}",
+      "Draft": "func Gia_ManQuantUpdateCiSupp(p *Gia_Man_t, iObj int32) {\n    if Abc_TtIsConst0( Gia_ManQuantInfoId(p, iObj), p.nSuppWords ) {\n        Gia_ManQuantSetSuppCi( p, Gia_ManObj(p, iObj) ); }\n    assert(!Abc_TtIsConst0( Gia_ManQuantInfoId(p, iObj), p.nSuppWords ), \"!Abc_TtIsConst0( Gia_ManQuantInfoId(p, iObj), p.nSuppWords )\");\n}"
+    },
+    {
+      "Name": "Gia_ManQuantCheckOverlap",
+      "Start": 5480,
+      "End": 5642,
+      "BodyStart": 5536,
+      "Original": "int Gia_ManQuantCheckOverlap( Gia_Man_t * p, int iObj )\n{\n    return Abc_TtIntersect( Gia_ManQuantInfoId(p, iObj), Gia_ManQuantInfoId(p, 0), p-\u003enSuppWords, 0 );\n}",
+      "Draft": "func Gia_ManQuantCheckOverlap(p *Gia_Man_t, iObj int32) int32 {\n    return Abc_TtIntersect( Gia_ManQuantInfoId(p, iObj), Gia_ManQuantInfoId(p, 0), p.nSuppWords, 0 );\n}"
+    },
+    {
+      "Name": "Gia_ManQuantMarkUsedCis",
+      "Start": 5643,
+      "End": 6043,
+      "BodyStart": 5737,
+      "Original": "void Gia_ManQuantMarkUsedCis( Gia_Man_t * p, int(*pFuncCiToKeep)(void *, int), void * pData )\n{\n    int i, CiId;\n    word * pInfo = Gia_ManQuantInfoId( p, 0 );\n    Abc_TtClear( pInfo, p-\u003enSuppWords );\n    assert( Abc_TtIsConst0(pInfo, p-\u003enSuppWords) );\n    Vec_IntForEachEntry( \u0026p-\u003evSuppVars, CiId, i )\n        if ( !pFuncCiToKeep( pData, CiId ) ) // quant var\n            Abc_TtSetBit( pInfo, i );\n}",
+      "Draft": "func Gia_ManQuantMarkUsedCis(p *Gia_Man_t, pFuncCiToKeep func(any, int32) int32, pData any) {\n    var i, CiId int32;\n    var pInfo *word  = Gia_ManQuantInfoId( p, 0 );\n    Abc_TtClear( pInfo, p.nSuppWords );\n    assert(Abc_TtIsConst0(pInfo, p.nSuppWords), \"Abc_TtIsConst0(pInfo, p.nSuppWords)\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vSuppVars)) \u0026\u0026 (((CiId) = Vec_IntEntry(\u0026p.vSuppVars, i)), 1); i++  {\n        if !pFuncCiToKeep( pData, CiId ) { // quant var\n            Abc_TtSetBit( pInfo, i ); }\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManQuantCountUsed_rec",
+      "Start": 6045,
+      "End": 6658,
+      "BodyStart": 6102,
+      "Original": "int Gia_ManQuantCountUsed_rec( Gia_Man_t * p, int iObj )\n{\n    Gia_Obj_t * pObj; int Count = 1;\n    if ( Gia_ObjIsTravIdCurrentId( p, iObj ) )\n        return 0;\n    Gia_ObjSetTravIdCurrentId( p, iObj );\n    pObj = Gia_ManObj( p, iObj );\n    if ( Gia_ObjIsCi(pObj) )\n        return 0;\n    if ( Gia_ManQuantCheckSupp(p, Gia_ObjFaninId0(pObj, iObj), p-\u003eiSuppPi) )\n        Count += Gia_ManQuantCountUsed_rec( p, Gia_ObjFaninId0(pObj, iObj) );\n    if ( Gia_ManQuantCheckSupp(p, Gia_ObjFaninId1(pObj, iObj), p-\u003eiSuppPi) )\n        Count += Gia_ManQuantCountUsed_rec( p, Gia_ObjFaninId1(pObj, iObj) );\n    return Count;\n}",
+      "Draft": "func Gia_ManQuantCountUsed_rec(p *Gia_Man_t, iObj int32) int32 {\n    var pObj *Gia_Obj_t; var Count int32  = 1;\n    if Gia_ObjIsTravIdCurrentId( p, iObj ) {\n        return 0; }\n    Gia_ObjSetTravIdCurrentId( p, iObj );\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) {\n        return 0; }\n    if Gia_ManQuantCheckSupp(p, Gia_ObjFaninId0(pObj, iObj), p.iSuppPi) != 0 {\n        Count += Gia_ManQuantCountUsed_rec( p, Gia_ObjFaninId0(pObj, iObj) ); }\n    if Gia_ManQuantCheckSupp(p, Gia_ObjFaninId1(pObj, iObj), p.iSuppPi) != 0 {\n        Count += Gia_ManQuantCountUsed_rec( p, Gia_ObjFaninId1(pObj, iObj) ); }\n    return Count;\n}"
+    },
+    {
+      "Name": "Gia_ManQuantCountUsed",
+      "Start": 6659,
+      "End": 6797,
+      "BodyStart": 6712,
+      "Original": "int Gia_ManQuantCountUsed( Gia_Man_t * p, int iObj )\n{\n    Gia_ManIncrementTravId( p );\n    return Gia_ManQuantCountUsed_rec( p, iObj );\n}",
+      "Draft": "func Gia_ManQuantCountUsed(p *Gia_Man_t, iObj int32) int32 {\n    Gia_ManIncrementTravId( p );\n    return Gia_ManQuantCountUsed_rec( p, iObj );\n}"
+    },
+    {
+      "Name": "Gia_ManQuantDupConeSupp_rec",
+      "Start": 6799,
+      "End": 8200,
+      "BodyStart": 6970,
+      "Original": "void Gia_ManQuantDupConeSupp_rec( Gia_Man_t * pNew, Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vCis, Vec_Int_t * vObjs, int(*pFuncCiToKeep)(void *, int), void * pData )\n{\n    int iLit0, iLit1, iObj = Gia_ObjId( p, pObj );\n    int iLit = Gia_ObjCopyArray( p, iObj );\n    if ( iLit \u003e= 0 )\n        return;\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        int iLit = Gia_ManAppendCi( pNew );\n        Gia_Obj_t * pObjNew = Gia_ManObj( pNew, Abc_Lit2Var(iLit) );\n        Gia_ManQuantSetSuppZero( pNew );\n        if ( !pFuncCiToKeep( pData, Gia_ObjCioId(pObj) ) )\n        {\n            //printf( \"Collecting CI %d\\n\", Gia_ObjCioId(pObj)+1 );\n            Gia_ManQuantSetSuppCi( pNew, pObjNew );\n        }\n        Gia_ObjSetCopyArray( p, iObj, iLit );\n        Vec_IntPush( vCis, iObj );\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Gia_ManQuantDupConeSupp_rec( pNew, p, Gia_ObjFanin0(pObj), vCis, vObjs, pFuncCiToKeep, pData );\n    Gia_ManQuantDupConeSupp_rec( pNew, p, Gia_ObjFanin1(pObj), vCis, vObjs, pFuncCiToKeep, pData );\n    iLit0 = Gia_ObjCopyArray( p, Gia_ObjFaninId0(pObj, iObj) );\n    iLit1 = Gia_ObjCopyArray( p, Gia_ObjFaninId1(pObj, iObj) );\n    iLit0 = Abc_LitNotCond( iLit0, Gia_ObjFaninC0(pObj) );\n    iLit1 = Abc_LitNotCond( iLit1, Gia_ObjFaninC1(pObj) );\n    iLit  = Gia_ManHashAnd( pNew, iLit0, iLit1 );\n    Gia_ObjSetCopyArray( p, iObj, iLit );\n    Vec_IntPush( vObjs, iObj );\n}",
+      "Draft": "func Gia_ManQuantDupConeSupp_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t, vCis *Vec_Int_t, vObjs *Vec_Int_t, pFuncCiToKeep func(any, int32) int32, pData any) {\n    var iLit0 int32;\n    var iLit1 int32;\n    var iObj int32 = Gia_ObjId( p, pObj );\n    var iLit int32  = Gia_ObjCopyArray( p, iObj );\n    if iLit \u003e= 0 {\n        return; }\n    if Gia_ObjIsCi(pObj) {\n        var iLit int32  = Gia_ManAppendCi( pNew );\n        var pObjNew *Gia_Obj_t  = Gia_ManObj( pNew, Abc_Lit2Var(iLit) );\n        Gia_ManQuantSetSuppZero( pNew );\n        if !pFuncCiToKeep( pData, Gia_ObjCioId(pObj) ) {\n            //printf( \"Collecting CI %d\\n\", Gia_ObjCioId(pObj)+1 );\n            Gia_ManQuantSetSuppCi( pNew, pObjNew );\n        }\n        Gia_ObjSetCopyArray( p, iObj, iLit );\n        Vec_IntPush( vCis, iObj );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Gia_ManQuantDupConeSupp_rec( pNew, p, Gia_ObjFanin0(pObj), vCis, vObjs, pFuncCiToKeep, pData );\n    Gia_ManQuantDupConeSupp_rec( pNew, p, Gia_ObjFanin1(pObj), vCis, vObjs, pFuncCiToKeep, pData );\n    iLit0 = Gia_ObjCopyArray( p, Gia_ObjFaninId0(pObj, iObj) );\n    iLit1 = Gia_ObjCopyArray( p, Gia_ObjFaninId1(pObj, iObj) );\n    iLit0 = Abc_LitNotCond( iLit0, Gia_ObjFaninC0(pObj) );\n    iLit1 = Abc_LitNotCond( iLit1, Gia_ObjFaninC1(pObj) );\n    iLit  = Gia_ManHashAnd( pNew, iLit0, iLit1 );\n    Gia_ObjSetCopyArray( p, iObj, iLit );\n    Vec_IntPush( vObjs, iObj );\n}"
+    },
+    {
+      "Name": "Gia_ManQuantDupConeSupp",
+      "Start": 8201,
+      "End": 9513,
+      "BodyStart": 8347,
+      "Original": "Gia_Man_t * Gia_ManQuantDupConeSupp( Gia_Man_t * p, int iLit, int(*pFuncCiToKeep)(void *, int), void * pData, Vec_Int_t ** pvCis, int * pOutLit )\n{\n    Gia_Man_t * pNew; int i, iLit0, iObj;\n    Gia_Obj_t * pObj, * pRoot = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n    Vec_Int_t * vCis = Vec_IntAlloc( 1000 );\n    Vec_Int_t * vObjs = Vec_IntAlloc( 1000 );\n    assert( Gia_ObjIsAnd(pRoot) );\n    if ( Vec_IntSize(\u0026p-\u003evCopies) \u003c Gia_ManObjNum(p) )\n        Vec_IntFillExtra( \u0026p-\u003evCopies, Gia_ManObjNum(p), -1 );\n    pNew = Gia_ManStart( 1000 );\n    Gia_ManHashStart( pNew ); \n    Gia_ManQuantSetSuppStart( pNew );\n    Gia_ManQuantDupConeSupp_rec( pNew, p, pRoot, vCis, vObjs, pFuncCiToKeep, pData );\n    iLit0 = Gia_ObjCopyArray( p, Abc_Lit2Var(iLit) );\n    iLit0 = Abc_LitNotCond( iLit0, Abc_LitIsCompl(iLit) );\n    if ( pOutLit ) *pOutLit = iLit0;\n    Gia_ManForEachObjVec( vCis, p, pObj, i )\n        Gia_ObjSetCopyArray( p, Gia_ObjId(p, pObj), -1 );\n    Gia_ManForEachObjVec( vObjs, p, pObj, i )\n        Gia_ObjSetCopyArray( p, Gia_ObjId(p, pObj), -1 );\n    //assert( Vec_IntCountLarger(\u0026p-\u003evCopies, -1) == 0 );\n    Vec_IntFree( vObjs );\n    // remap into CI Ids\n    Vec_IntForEachEntry( vCis, iObj, i )\n        Vec_IntWriteEntry( vCis, i, Gia_ManIdToCioId(p, iObj) );\n    if ( pvCis ) *pvCis = vCis;\n    return pNew;\n}",
+      "Draft": "func Gia_ManQuantDupConeSupp(p *Gia_Man_t, iLit int32, pFuncCiToKeep func(any, int32) int32, pData any, pvCis **Vec_Int_t, pOutLit *int32) *Gia_Man_t {\n    var pNew *Gia_Man_t; var i, iLit0, iObj int32;\n    var pObj *Gia_Obj_t;\n    var pRoot *Gia_Obj_t = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n    var vCis *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vObjs *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    assert(Gia_ObjIsAnd(pRoot), \"Gia_ObjIsAnd(pRoot)\");\n    if Vec_IntSize(\u0026p.vCopies) \u003c Gia_ManObjNum(p) {\n        Vec_IntFillExtra( \u0026p.vCopies, Gia_ManObjNum(p), -1 ); }\n    pNew = Gia_ManStart( 1000 );\n    Gia_ManHashStart( pNew ); \n    Gia_ManQuantSetSuppStart( pNew );\n    Gia_ManQuantDupConeSupp_rec( pNew, p, pRoot, vCis, vObjs, pFuncCiToKeep, pData );\n    iLit0 = Gia_ObjCopyArray( p, Abc_Lit2Var(iLit) );\n    iLit0 = Abc_LitNotCond( iLit0, Abc_LitIsCompl(iLit) );\n    if pOutLit != nil { *pOutLit = iLit0; }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vCis)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vCis,i))); i++  {\n        Gia_ObjSetCopyArray( p, Gia_ObjId(p, pObj), -1 );\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {\n        Gia_ObjSetCopyArray( p, Gia_ObjId(p, pObj), -1 );\n    }\n    //assert( Vec_IntCountLarger(\u0026p-\u003evCopies, -1) == 0 );\n    Vec_IntFree( vObjs );\n    // remap into CI Ids\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCis)) \u0026\u0026 (((iObj) = Vec_IntEntry(vCis, i)), 1); i++  {\n        Vec_IntWriteEntry( vCis, i, Gia_ManIdToCioId(p, iObj) );\n    }\n    if pvCis { *pvCis = vCis; }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManQuantExist_rec",
+      "Start": 9514,
+      "End": 10788,
+      "BodyStart": 9581,
+      "Original": "void Gia_ManQuantExist_rec( Gia_Man_t * p, int iObj, int pRes[2] )\n{\n    Gia_Obj_t * pObj;\n    int Lits0[2], Lits1[2], pFans[2], fCompl[2];\n    if ( Gia_ObjIsTravIdCurrentId( p, iObj ) )\n    {\n        Gia_ObjCopyGetTwoArray( p, iObj, pRes );\n        return;\n    }\n    Gia_ObjSetTravIdCurrentId( p, iObj );\n    pObj = Gia_ManObj( p, iObj );\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        pRes[0] = 0; pRes[1] = 1;\n        Gia_ObjCopySetTwoArray( p, iObj, pRes );\n        return;\n    }\n    pFans[0]  = Gia_ObjFaninId0( pObj, iObj );\n    pFans[1]  = Gia_ObjFaninId1( pObj, iObj );\n    fCompl[0] = Gia_ObjFaninC0( pObj );\n    fCompl[1] = Gia_ObjFaninC1( pObj );\n    if ( Gia_ManQuantCheckSupp(p, pFans[0], p-\u003eiSuppPi) )\n        Gia_ManQuantExist_rec( p, pFans[0], Lits0 );\n    else\n        Lits0[0] = Lits0[1] = Abc_Var2Lit( pFans[0], 0 );\n    if ( Gia_ManQuantCheckSupp(p, pFans[1], p-\u003eiSuppPi) )\n        Gia_ManQuantExist_rec( p, pFans[1], Lits1 );\n    else\n        Lits1[0] = Lits1[1] = Abc_Var2Lit( pFans[1], 0 );\n    pRes[0] = Gia_ManHashAnd( p, Abc_LitNotCond(Lits0[0], fCompl[0]), Abc_LitNotCond(Lits1[0], fCompl[1]) );\n    pRes[1] = Gia_ManHashAnd( p, Abc_LitNotCond(Lits0[1], fCompl[0]), Abc_LitNotCond(Lits1[1], fCompl[1]) );\n    Gia_ObjCopySetTwoArray( p, iObj, pRes );\n}",
+      "Draft": "func Gia_ManQuantExist_rec(p *Gia_Man_t, iObj int32, pRes []int32) {\n    var pObj *Gia_Obj_t;\n    var Lits0, Lits1, pFans, fCompl [2]int32;\n    if Gia_ObjIsTravIdCurrentId( p, iObj ) {\n        Gia_ObjCopyGetTwoArray( p, iObj, pRes );\n        return;\n    }\n    Gia_ObjSetTravIdCurrentId( p, iObj );\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) {\n        pRes[0] = 0; pRes[1] = 1;\n        Gia_ObjCopySetTwoArray( p, iObj, pRes );\n        return;\n    }\n    pFans[0]  = Gia_ObjFaninId0( pObj, iObj );\n    pFans[1]  = Gia_ObjFaninId1( pObj, iObj );\n    fCompl[0] = Gia_ObjFaninC0( pObj );\n    fCompl[1] = Gia_ObjFaninC1( pObj );\n    if Gia_ManQuantCheckSupp(p, pFans[0], p.iSuppPi) != 0 {\n        Gia_ManQuantExist_rec( p, pFans[0], Lits0 );\n    } else {\n        Lits0[0] = Lits0[1] = Abc_Var2Lit( pFans[0], 0 ); }\n    if Gia_ManQuantCheckSupp(p, pFans[1], p.iSuppPi) != 0 {\n        Gia_ManQuantExist_rec( p, pFans[1], Lits1 );\n    } else {\n        Lits1[0] = Lits1[1] = Abc_Var2Lit( pFans[1], 0 ); }\n    pRes[0] = Gia_ManHashAnd( p, Abc_LitNotCond(Lits0[0], fCompl[0]), Abc_LitNotCond(Lits1[0], fCompl[1]) );\n    pRes[1] = Gia_ManHashAnd( p, Abc_LitNotCond(Lits0[1], fCompl[0]), Abc_LitNotCond(Lits1[1], fCompl[1]) );\n    Gia_ObjCopySetTwoArray( p, iObj, pRes );\n}"
+    },
+    {
+      "Name": "Gia_ManQuantExist2",
+      "Start": 10789,
+      "End": 13919,
+      "BodyStart": 10888,
+      "Original": "int Gia_ManQuantExist2( Gia_Man_t * p0, int iLit, int(*pFuncCiToKeep)(void *, int), void * pData )\n{\n//    abctime clk = Abc_Clock();\n    Gia_Man_t * pNew;\n    Vec_Int_t * vOuts, * vOuts2, * vCis; \n    Gia_Obj_t * pObj = Gia_ManObj( p0, Abc_Lit2Var(iLit) );\n    int i, n, Entry, Lit, OutLit = -1, pLits[2], nVarsQua, nAndsOld, nAndsNew; \n    if ( iLit \u003c 2 ) return iLit;\n    if ( Gia_ObjIsCi(pObj) ) return pFuncCiToKeep(pData, Gia_ObjCioId(pObj)) ? iLit : 1;\n    assert( Gia_ObjIsAnd(pObj) );\n    pNew = Gia_ManQuantDupConeSupp( p0, iLit, pFuncCiToKeep, pData, \u0026vCis, \u0026OutLit );\n    if ( pNew-\u003eiSuppPi == 0 )\n    {\n        Gia_ManStop( pNew );\n        Vec_IntFree( vCis );\n        return iLit;\n    }\n    assert( pNew-\u003eiSuppPi \u003e 0 \u0026\u0026 pNew-\u003eiSuppPi \u003c= 64 * pNew-\u003enSuppWords );\n    vOuts = Vec_IntAlloc( 100 );\n    vOuts2 = Vec_IntAlloc( 100 );\n    assert( OutLit \u003e 1 );\n    Vec_IntPush( vOuts, OutLit );\n    nVarsQua = pNew-\u003eiSuppPi;\n    nAndsOld = Gia_ManAndNum(pNew);\n    while ( --pNew-\u003eiSuppPi \u003e= 0 )\n    {\n        Entry = Abc_Lit2Var( Vec_IntEntry(vOuts, 0) );\n//        printf( \"Quantifying input %d with %d affected nodes (out of %d):\\n\", \n//            pNew-\u003eiSuppPi, Gia_ManQuantCountUsed(pNew,Entry), Gia_ManAndNum(pNew) );\n        if ( Vec_IntSize(\u0026pNew-\u003evCopiesTwo) \u003c 2*Gia_ManObjNum(pNew) )\n            Vec_IntFillExtra( \u0026pNew-\u003evCopiesTwo, 2*Gia_ManObjNum(pNew), -1 );\n        assert( Vec_IntSize(vOuts) \u003e 0 );\n        Vec_IntClear( vOuts2 );\n        Gia_ManIncrementTravId( pNew );\n        Vec_IntForEachEntry( vOuts, Entry, i )\n        {\n            Gia_ManQuantExist_rec( pNew, Abc_Lit2Var(Entry), pLits );\n            for ( n = 0; n \u003c 2; n++ )\n            {\n                Lit = Abc_LitNotCond( pLits[n], Abc_LitIsCompl(Entry) );\n                if ( Lit == 0 )\n                    continue;\n                if ( Lit == 1 )\n                {\n                    Vec_IntFree( vOuts );\n                    Vec_IntFree( vOuts2 );\n                    Gia_ManStop( pNew );\n                    Vec_IntFree( vCis );\n                    return 1;\n                }\n                Vec_IntPushUnique( vOuts2, Lit );\n            }\n        }\n        Vec_IntClear( vOuts );\n        ABC_SWAP( Vec_Int_t *, vOuts, vOuts2 );\n    }\n//    printf( \"\\n\" );\n    //printf( \"The number of diff cofactors = %d.\\n\", Vec_IntSize(vOuts) );\n    assert( Vec_IntSize(vOuts) \u003e 0 );\n    Vec_IntForEachEntry( vOuts, Entry, i )\n        Vec_IntWriteEntry( vOuts, i, Abc_LitNot(Entry) );\n    OutLit = Gia_ManHashAndMulti( pNew, vOuts );\n    OutLit = Abc_LitNot( OutLit );\n    Vec_IntFree( vOuts );\n    Vec_IntFree( vOuts2 );\n    // transfer back\n    Gia_ManAppendCo( pNew, OutLit );\n    nAndsNew = Gia_ManAndNum(p0);\n    Lit = Gia_ManDupConeBack( p0, pNew, vCis );\n    nAndsNew = Gia_ManAndNum(p0) - nAndsNew;\n    Gia_ManStop( pNew );\n    // report the result\n//    printf( \"Performed quantification with %6d nodes, %3d keep-vars, %3d quant-vars, resulting in %5d new nodes. \\n\", \n//        nAndsOld, Vec_IntSize(vCis) - nVarsQua, nVarsQua, nAndsNew );\n//    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Vec_IntFree( vCis );\n    return Lit;\n}",
+      "Draft": "func Gia_ManQuantExist2(p0 *Gia_Man_t, iLit int32, pFuncCiToKeep func(any, int32) int32, pData any) int32 {\n//    abctime clk = Abc_Clock();\n    var pNew *Gia_Man_t;\n    var vOuts, vOuts2, vCis *Vec_Int_t; \n    var pObj *Gia_Obj_t  = Gia_ManObj( p0, Abc_Lit2Var(iLit) );\n    var i int32;\n    var n int32;\n    var Entry int32;\n    var Lit int32;\n    var OutLit int32 = -1;\n    var pLits [2]int32;\n    var nVarsQua int32;\n    var nAndsOld int32;\n    var nAndsNew int32; \n    if iLit \u003c 2 { return iLit; }\n    if Gia_ObjIsCi(pObj) { if pFuncCiToKeep(pData, Gia_ObjCioId(pObj)) {\n        return iLit;\n    } else {\n        return 1;\n    } }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    pNew = Gia_ManQuantDupConeSupp( p0, iLit, pFuncCiToKeep, pData, \u0026vCis, \u0026OutLit );\n    if pNew.iSuppPi == 0 {\n        Gia_ManStop( pNew );\n        Vec_IntFree( vCis );\n        return iLit;\n    }\n    assert(pNew.iSuppPi \u003e 0 \u0026\u0026 pNew.iSuppPi \u003c= 64 * pNew.nSuppWords, \"pNew.iSuppPi \u003e 0 \u0026\u0026 pNew.iSuppPi \u003c= 64 * pNew.nSuppWords\");\n    vOuts = Vec_IntAlloc( 100 );\n    vOuts2 = Vec_IntAlloc( 100 );\n    assert(OutLit \u003e 1, \"OutLit \u003e 1\");\n    Vec_IntPush( vOuts, OutLit );\n    nVarsQua = pNew.iSuppPi;\n    nAndsOld = Gia_ManAndNum(pNew);\n    for  --pNew.iSuppPi \u003e= 0  {\n        Entry = Abc_Lit2Var( Vec_IntEntry(vOuts, 0) );\n//        printf( \"Quantifying input %d with %d affected nodes (out of %d):\\n\", \n//            pNew-\u003eiSuppPi, Gia_ManQuantCountUsed(pNew,Entry), Gia_ManAndNum(pNew) );\n        if Vec_IntSize(\u0026pNew.vCopiesTwo) \u003c 2*Gia_ManObjNum(pNew) {\n            Vec_IntFillExtra( \u0026pNew.vCopiesTwo, 2*Gia_ManObjNum(pNew), -1 ); }\n        assert(Vec_IntSize(vOuts) \u003e 0, \"Vec_IntSize(vOuts) \u003e 0\");\n        Vec_IntClear( vOuts2 );\n        Gia_ManIncrementTravId( pNew );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vOuts)) \u0026\u0026 (((Entry) = Vec_IntEntry(vOuts, i)), 1); i++  {\n            Gia_ManQuantExist_rec( pNew, Abc_Lit2Var(Entry), pLits );\n            for  n = 0; n \u003c 2; n++  {\n                Lit = Abc_LitNotCond( pLits[n], Abc_LitIsCompl(Entry) );\n                if Lit == 0 {\n                    continue; }\n                if Lit == 1 {\n                    Vec_IntFree( vOuts );\n                    Vec_IntFree( vOuts2 );\n                    Gia_ManStop( pNew );\n                    Vec_IntFree( vCis );\n                    return 1;\n                }\n                Vec_IntPushUnique( vOuts2, Lit );\n            }\n        }\n        Vec_IntClear( vOuts );\n        // inlining of macro ABC_SWAP\n        { var t *Vec_Int_t  = vOuts; vOuts = vOuts2; vOuts2 = t; };\n    }\n//    printf( \"\\n\" );\n    //printf( \"The number of diff cofactors = %d.\\n\", Vec_IntSize(vOuts) );\n    assert(Vec_IntSize(vOuts) \u003e 0, \"Vec_IntSize(vOuts) \u003e 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOuts)) \u0026\u0026 (((Entry) = Vec_IntEntry(vOuts, i)), 1); i++  {\n        Vec_IntWriteEntry( vOuts, i, Abc_LitNot(Entry) );\n    }\n    OutLit = Gia_ManHashAndMulti( pNew, vOuts );\n    OutLit = Abc_LitNot( OutLit );\n    Vec_IntFree( vOuts );\n    Vec_IntFree( vOuts2 );\n    // transfer back\n    Gia_ManAppendCo( pNew, OutLit );\n    nAndsNew = Gia_ManAndNum(p0);\n    Lit = Gia_ManDupConeBack( p0, pNew, vCis );\n    nAndsNew = Gia_ManAndNum(p0) - nAndsNew;\n    Gia_ManStop( pNew );\n    // report the result\n//    printf( \"Performed quantification with %6d nodes, %3d keep-vars, %3d quant-vars, resulting in %5d new nodes. \\n\", \n//        nAndsOld, Vec_IntSize(vCis) - nVarsQua, nVarsQua, nAndsNew );\n//    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Vec_IntFree( vCis );\n    return Lit;\n}"
+    },
+    {
+      "Name": "Gia_ManQuantCollect_rec",
+      "Start": 14199,
+      "End": 14936,
+      "BodyStart": 14326,
+      "Original": "void Gia_ManQuantCollect_rec( Gia_Man_t * p, int iObj, Vec_Int_t * vQuantCis, Vec_Int_t * vQuantSide, Vec_Int_t * vQuantAnds )\n{\n    Gia_Obj_t * pObj; \n    if ( Gia_ObjIsTravIdCurrentId( p, iObj ) )\n        return;\n    Gia_ObjSetTravIdCurrentId( p, iObj );\n    if ( !Gia_ManQuantCheckOverlap(p, iObj) )\n    {\n        Vec_IntPush( vQuantSide, iObj );\n        return;\n    }\n    pObj = Gia_ManObj( p, iObj );\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        Vec_IntPush( vQuantCis, iObj );\n        return;\n    }\n    Gia_ManQuantCollect_rec( p, Gia_ObjFaninId0(pObj, iObj), vQuantCis, vQuantSide, vQuantAnds );\n    Gia_ManQuantCollect_rec( p, Gia_ObjFaninId1(pObj, iObj), vQuantCis, vQuantSide, vQuantAnds );\n    Vec_IntPush( vQuantAnds, iObj );\n}",
+      "Draft": "func Gia_ManQuantCollect_rec(p *Gia_Man_t, iObj int32, vQuantCis *Vec_Int_t, vQuantSide *Vec_Int_t, vQuantAnds *Vec_Int_t) {\n    var pObj *Gia_Obj_t; \n    if Gia_ObjIsTravIdCurrentId( p, iObj ) {\n        return; }\n    Gia_ObjSetTravIdCurrentId( p, iObj );\n    if !(Gia_ManQuantCheckOverlap(p, iObj) != 0) {\n        Vec_IntPush( vQuantSide, iObj );\n        return;\n    }\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vQuantCis, iObj );\n        return;\n    }\n    Gia_ManQuantCollect_rec( p, Gia_ObjFaninId0(pObj, iObj), vQuantCis, vQuantSide, vQuantAnds );\n    Gia_ManQuantCollect_rec( p, Gia_ObjFaninId1(pObj, iObj), vQuantCis, vQuantSide, vQuantAnds );\n    Vec_IntPush( vQuantAnds, iObj );\n}"
+    },
+    {
+      "Name": "Gia_ManQuantCollect",
+      "Start": 14937,
+      "End": 15464,
+      "BodyStart": 15108,
+      "Original": "void Gia_ManQuantCollect( Gia_Man_t * p, int iObj, int(*pFuncCiToKeep)(void *, int), void * pData, Vec_Int_t * vQuantCis, Vec_Int_t * vQuantSide, Vec_Int_t * vQuantAnds )\n{\n    Gia_ManQuantMarkUsedCis( p, pFuncCiToKeep, pData );\n    Gia_ManIncrementTravId( p );\n    Gia_ManQuantCollect_rec( p, iObj, vQuantCis, vQuantSide, vQuantAnds );\n//    printf( \"\\nCreated cone with %d quant-vars, %d side-inputs, and %d internal nodes.\\n\", \n//        Vec_IntSize(p-\u003evQuantCis), Vec_IntSize(p-\u003evQuantSide), Vec_IntSize(p-\u003evQuantAnds) );\n}",
+      "Draft": "func Gia_ManQuantCollect(p *Gia_Man_t, iObj int32, pFuncCiToKeep func(any, int32) int32, pData any, vQuantCis *Vec_Int_t, vQuantSide *Vec_Int_t, vQuantAnds *Vec_Int_t) {\n    Gia_ManQuantMarkUsedCis( p, pFuncCiToKeep, pData );\n    Gia_ManIncrementTravId( p );\n    Gia_ManQuantCollect_rec( p, iObj, vQuantCis, vQuantSide, vQuantAnds );\n//    printf( \"\\nCreated cone with %d quant-vars, %d side-inputs, and %d internal nodes.\\n\", \n//        Vec_IntSize(p-\u003evQuantCis), Vec_IntSize(p-\u003evQuantSide), Vec_IntSize(p-\u003evQuantAnds) );\n}"
+    },
+    {
+      "Name": "Gia_ManQuantExist2Dup",
+      "Start": 15466,
+      "End": 17224,
+      "BodyStart": 15598,
+      "Original": "Gia_Man_t * Gia_ManQuantExist2Dup( Gia_Man_t * p, int iLit, Vec_Int_t * vCis, Vec_Int_t * vSide, Vec_Int_t * vAnds, int * pOutLit )\n{\n    int i, iObj, iLit0, iLit1, iLitR;\n    Gia_Man_t * pNew = Gia_ManStart( Vec_IntSize(vSide) + Vec_IntSize(vCis) + 10*Vec_IntSize(vAnds) );\n    Gia_ManQuantSetSuppStart( pNew );\n    Gia_ManHashStart( pNew ); \n    if ( Vec_IntSize(\u0026p-\u003evCopies) \u003c Gia_ManObjNum(p) )\n        Vec_IntFillExtra( \u0026p-\u003evCopies, Gia_ManObjNum(p), -1 );\n    Vec_IntForEachEntry( vSide, iObj, i )\n    {\n        Gia_ObjSetCopyArray( p, iObj, Gia_ManAppendCi(pNew) );\n        Gia_ManQuantSetSuppZero( pNew );\n    }\n    Vec_IntForEachEntry( vCis,  iObj, i )\n    {\n        Gia_ObjSetCopyArray( p, iObj, (iLit0 = Gia_ManAppendCi(pNew)) );\n        Gia_ManQuantSetSuppZero( pNew );\n        Gia_ManQuantSetSuppCi( pNew, Gia_ManObj(pNew, Abc_Lit2Var(iLit0)) );\n    }\n    Vec_IntForEachEntry( vAnds, iObj, i )\n    {\n        Gia_Obj_t * pObj = Gia_ManObj( p, iObj );\n        iLit0 = Gia_ObjCopyArray( p, Gia_ObjFaninId0(pObj, iObj) );\n        iLit1 = Gia_ObjCopyArray( p, Gia_ObjFaninId1(pObj, iObj) );\n        iLit0 = Abc_LitNotCond( iLit0, Gia_ObjFaninC0(pObj) );\n        iLit1 = Abc_LitNotCond( iLit1, Gia_ObjFaninC1(pObj) );\n        iLitR = Gia_ManHashAnd( pNew, iLit0, iLit1 );\n        Gia_ObjSetCopyArray( p, iObj, iLitR );\n    }\n    iLit0 = Gia_ObjCopyArray( p, Abc_Lit2Var(iLit) );\n    iLit0 = Abc_LitNotCond( iLit0, Abc_LitIsCompl(iLit) );\n    if ( pOutLit ) *pOutLit = iLit0;\n    Vec_IntForEachEntry( vSide, iObj, i )\n        Gia_ObjSetCopyArray( p, iObj, -1 );\n    Vec_IntForEachEntry( vCis,  iObj, i )\n        Gia_ObjSetCopyArray( p, iObj, -1 );\n    Vec_IntForEachEntry( vAnds, iObj, i )\n        Gia_ObjSetCopyArray( p, iObj, -1 );\n    return pNew;\n}",
+      "Draft": "func Gia_ManQuantExist2Dup(p *Gia_Man_t, iLit int32, vCis *Vec_Int_t, vSide *Vec_Int_t, vAnds *Vec_Int_t, pOutLit *int32) *Gia_Man_t {\n    var i, iObj, iLit0, iLit1, iLitR int32;\n    var pNew *Gia_Man_t  = Gia_ManStart( Vec_IntSize(vSide) + Vec_IntSize(vCis) + 10*Vec_IntSize(vAnds) );\n    Gia_ManQuantSetSuppStart( pNew );\n    Gia_ManHashStart( pNew ); \n    if Vec_IntSize(\u0026p.vCopies) \u003c Gia_ManObjNum(p) {\n        Vec_IntFillExtra( \u0026p.vCopies, Gia_ManObjNum(p), -1 ); }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSide)) \u0026\u0026 (((iObj) = Vec_IntEntry(vSide, i)), 1); i++  {\n        Gia_ObjSetCopyArray( p, iObj, Gia_ManAppendCi(pNew) );\n        Gia_ManQuantSetSuppZero( pNew );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCis)) \u0026\u0026 (((iObj) = Vec_IntEntry(vCis, i)), 1); i++  {\n        Gia_ObjSetCopyArray( p, iObj, (iLit0 = Gia_ManAppendCi(pNew)) );\n        Gia_ManQuantSetSuppZero( pNew );\n        Gia_ManQuantSetSuppCi( pNew, Gia_ManObj(pNew, Abc_Lit2Var(iLit0)) );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vAnds)) \u0026\u0026 (((iObj) = Vec_IntEntry(vAnds, i)), 1); i++  {\n        var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n        iLit0 = Gia_ObjCopyArray( p, Gia_ObjFaninId0(pObj, iObj) );\n        iLit1 = Gia_ObjCopyArray( p, Gia_ObjFaninId1(pObj, iObj) );\n        iLit0 = Abc_LitNotCond( iLit0, Gia_ObjFaninC0(pObj) );\n        iLit1 = Abc_LitNotCond( iLit1, Gia_ObjFaninC1(pObj) );\n        iLitR = Gia_ManHashAnd( pNew, iLit0, iLit1 );\n        Gia_ObjSetCopyArray( p, iObj, iLitR );\n    }\n    iLit0 = Gia_ObjCopyArray( p, Abc_Lit2Var(iLit) );\n    iLit0 = Abc_LitNotCond( iLit0, Abc_LitIsCompl(iLit) );\n    if pOutLit != nil { *pOutLit = iLit0; }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSide)) \u0026\u0026 (((iObj) = Vec_IntEntry(vSide, i)), 1); i++  {\n        Gia_ObjSetCopyArray( p, iObj, -1 );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCis)) \u0026\u0026 (((iObj) = Vec_IntEntry(vCis, i)), 1); i++  {\n        Gia_ObjSetCopyArray( p, iObj, -1 );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vAnds)) \u0026\u0026 (((iObj) = Vec_IntEntry(vAnds, i)), 1); i++  {\n        Gia_ObjSetCopyArray( p, iObj, -1 );\n    }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManQuantExistInt",
+      "Start": 17225,
+      "End": 19545,
+      "BodyStart": 17334,
+      "Original": "int Gia_ManQuantExistInt( Gia_Man_t * p0, int iLit, Vec_Int_t * vCis, Vec_Int_t * vSide, Vec_Int_t * vAnds )\n{\n    int i, Lit, iOutLit, nAndsNew, pLits[2], pRes[2] = {0};\n    Gia_Man_t * pNew;\n    if ( iLit \u003c 2 )\n        return 0;\n    if ( Vec_IntSize(vCis) == 0 )\n        return iLit;\n    if ( Vec_IntSize(vAnds) == 0 )\n    {\n        assert( Gia_ObjIsCi( Gia_ManObj(p0, Abc_Lit2Var(iLit)) ) );\n        return Vec_IntFind(vCis, Abc_Lit2Var(iLit)) == -1 ? iLit : 1;\n    }\n    pNew = Gia_ManQuantExist2Dup( p0, iLit, vCis, vSide, vAnds, \u0026iOutLit );\n    if ( Vec_IntSize(\u0026pNew-\u003evCopiesTwo) \u003c 2*Gia_ManObjNum(pNew) )\n        Vec_IntFillExtra( \u0026pNew-\u003evCopiesTwo, 2*Gia_ManObjNum(pNew), -1 );\n    Gia_ObjCopySetTwoArray( pNew, 0, pRes );\n    for ( i = 0; i \u003c Gia_ManCiNum(pNew); i++ )\n    {\n        pRes[0] = pRes[1] = Abc_Var2Lit( i+1, 0 );\n        Gia_ObjCopySetTwoArray( pNew, i+1, pRes );\n    }\n    assert( pNew-\u003eiSuppPi == Gia_ManCiNum(pNew) - Vec_IntSize(vSide) );\n    for ( i = Gia_ManCiNum(pNew) - 1; i \u003e= Vec_IntSize(vSide); i-- )\n    {\n        pRes[0] = 0; pRes[1] = 1;\n        Gia_ObjCopySetTwoArray( pNew, i+1, pRes );\n\n        pNew-\u003eiSuppPi--;\n        if ( Vec_IntSize(\u0026pNew-\u003evCopiesTwo) \u003c 2*Gia_ManObjNum(pNew) )\n            Vec_IntFillExtra( \u0026pNew-\u003evCopiesTwo, 2*Gia_ManObjNum(pNew), -1 );\n        Gia_ManIncrementTravId( pNew );\n        Gia_ManQuantExist_rec( pNew, Abc_Lit2Var(iOutLit), pLits );\n        pLits[0] = Abc_LitNotCond( pLits[0], Abc_LitIsCompl(iOutLit) );\n        pLits[1] = Abc_LitNotCond( pLits[1], Abc_LitIsCompl(iOutLit) );\n        iOutLit = Gia_ManHashOr( pNew, pLits[0], pLits[1] );\n\n        pRes[0] = pRes[1] = Abc_Var2Lit( i+1, 0 );\n        Gia_ObjCopySetTwoArray( pNew, i+1, pRes );\n    }\n    assert( pNew-\u003eiSuppPi == 0 );\n    Vec_IntAppend( vSide, vCis );\n    // transfer back\n    Gia_ManAppendCo( pNew, iOutLit );\n    nAndsNew = Gia_ManAndNum(p0);\n    Lit = Gia_ManDupConeBackObjs( p0, pNew, vSide );\n    nAndsNew = Gia_ManAndNum(p0) - nAndsNew;\n    Vec_IntShrink( vSide, Vec_IntSize(vSide) - Vec_IntSize(vCis) );\n//    printf( \"Performed quantification with %6d -\u003e %6d nodes, %3d side-vars, %3d quant-vars, resulting in %5d new nodes. \\n\", \n//        Vec_IntSize(vAnds), Gia_ManAndNum(pNew), Vec_IntSize(vSide), Vec_IntSize(vCis), nAndsNew );\n    Gia_ManStop( pNew );\n    return Lit;\n}",
+      "Draft": "func Gia_ManQuantExistInt(p0 *Gia_Man_t, iLit int32, vCis *Vec_Int_t, vSide *Vec_Int_t, vAnds *Vec_Int_t) int32 {\n    var i int32;\n    var Lit int32;\n    var iOutLit int32;\n    var nAndsNew int32;\n    var pLits [2]int32;\n    var pRes [2]int32 ;\n    var pNew *Gia_Man_t;\n    if iLit \u003c 2 {\n        return 0; }\n    if Vec_IntSize(vCis) == 0 {\n        return iLit; }\n    if Vec_IntSize(vAnds) == 0 {\n        assert(Gia_ObjIsCi( Gia_ManObj(p0, Abc_Lit2Var(iLit)) ), \"Gia_ObjIsCi( Gia_ManObj(p0, Abc_Lit2Var(iLit)) )\");\n        if Vec_IntFind(vCis, Abc_Lit2Var(iLit)) == -1 {\n            return iLit;\n        } else {\n            return 1;\n        }\n    }\n    pNew = Gia_ManQuantExist2Dup( p0, iLit, vCis, vSide, vAnds, \u0026iOutLit );\n    if Vec_IntSize(\u0026pNew.vCopiesTwo) \u003c 2*Gia_ManObjNum(pNew) {\n        Vec_IntFillExtra( \u0026pNew.vCopiesTwo, 2*Gia_ManObjNum(pNew), -1 ); }\n    Gia_ObjCopySetTwoArray( pNew, 0, pRes );\n    for  i = 0; i \u003c Gia_ManCiNum(pNew); i++  {\n        pRes[0] = pRes[1] = Abc_Var2Lit( i+1, 0 );\n        Gia_ObjCopySetTwoArray( pNew, i+1, pRes );\n    }\n    assert(pNew.iSuppPi == Gia_ManCiNum(pNew) - Vec_IntSize(vSide), \"pNew.iSuppPi == Gia_ManCiNum(pNew) - Vec_IntSize(vSide)\");\n    for  i = Gia_ManCiNum(pNew) - 1; i \u003e= Vec_IntSize(vSide); i--  {\n        pRes[0] = 0; pRes[1] = 1;\n        Gia_ObjCopySetTwoArray( pNew, i+1, pRes );\n\n        pNew.iSuppPi--;\n        if Vec_IntSize(\u0026pNew.vCopiesTwo) \u003c 2*Gia_ManObjNum(pNew) {\n            Vec_IntFillExtra( \u0026pNew.vCopiesTwo, 2*Gia_ManObjNum(pNew), -1 ); }\n        Gia_ManIncrementTravId( pNew );\n        Gia_ManQuantExist_rec( pNew, Abc_Lit2Var(iOutLit), pLits );\n        pLits[0] = Abc_LitNotCond( pLits[0], Abc_LitIsCompl(iOutLit) );\n        pLits[1] = Abc_LitNotCond( pLits[1], Abc_LitIsCompl(iOutLit) );\n        iOutLit = Gia_ManHashOr( pNew, pLits[0], pLits[1] );\n\n        pRes[0] = pRes[1] = Abc_Var2Lit( i+1, 0 );\n        Gia_ObjCopySetTwoArray( pNew, i+1, pRes );\n    }\n    assert(pNew.iSuppPi == 0, \"pNew.iSuppPi == 0\");\n    Vec_IntAppend( vSide, vCis );\n    // transfer back\n    Gia_ManAppendCo( pNew, iOutLit );\n    nAndsNew = Gia_ManAndNum(p0);\n    Lit = Gia_ManDupConeBackObjs( p0, pNew, vSide );\n    nAndsNew = Gia_ManAndNum(p0) - nAndsNew;\n    Vec_IntShrink( vSide, Vec_IntSize(vSide) - Vec_IntSize(vCis) );\n//    printf( \"Performed quantification with %6d -\u003e %6d nodes, %3d side-vars, %3d quant-vars, resulting in %5d new nodes. \\n\", \n//        Vec_IntSize(vAnds), Gia_ManAndNum(pNew), Vec_IntSize(vSide), Vec_IntSize(vCis), nAndsNew );\n    Gia_ManStop( pNew );\n    return Lit;\n}"
+    },
+    {
+      "Name": "Gia_ManQuantExist",
+      "Start": 19546,
+      "End": 20104,
+      "BodyStart": 19644,
+      "Original": "int Gia_ManQuantExist( Gia_Man_t * p0, int iLit, int(*pFuncCiToKeep)(void *, int), void * pData )\n{\n    int Res;\n    Vec_Int_t * vQuantCis  = Vec_IntAlloc( 100 );\n    Vec_Int_t * vQuantSide = Vec_IntAlloc( 100 );\n    Vec_Int_t * vQuantAnds = Vec_IntAlloc( 100 );\n    Gia_ManQuantCollect( p0, Abc_Lit2Var(iLit), pFuncCiToKeep, pData, vQuantCis, vQuantSide, vQuantAnds );\n    Res = Gia_ManQuantExistInt( p0, iLit, vQuantCis, vQuantSide, vQuantAnds );\n    Vec_IntFree( vQuantCis );\n    Vec_IntFree( vQuantSide );\n    Vec_IntFree( vQuantAnds );\n    return Res;\n}",
+      "Draft": "func Gia_ManQuantExist(p0 *Gia_Man_t, iLit int32, pFuncCiToKeep func(any, int32) int32, pData any) int32 {\n    var Res int32;\n    var vQuantCis *Vec_Int_t   = Vec_IntAlloc( 100 );\n    var vQuantSide *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vQuantAnds *Vec_Int_t  = Vec_IntAlloc( 100 );\n    Gia_ManQuantCollect( p0, Abc_Lit2Var(iLit), pFuncCiToKeep, pData, vQuantCis, vQuantSide, vQuantAnds );\n    Res = Gia_ManQuantExistInt( p0, iLit, vQuantCis, vQuantSide, vQuantAnds );\n    Vec_IntFree( vQuantCis );\n    Vec_IntFree( vQuantSide );\n    Vec_IntFree( vQuantAnds );\n    return Res;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantInfoId",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantInfoId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1307,
+      "End": 1444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantInfo",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1445,
+      "End": 1578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ObjCopyGetTwoArray",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjCopyGetTwoArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1580,
+      "End": 1790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ObjCopySetTwoArray",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjCopySetTwoArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1791,
+      "End": 1998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantVerify_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantVerify_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2278,
+      "End": 2732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantVerify",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2733,
+      "End": 3184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantSetSuppStart",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantSetSuppStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3188,
+      "End": 3484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantSetSuppZero",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantSetSuppZero",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3485,
+      "End": 3706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::ternary::Gia_ManQuantSetSuppCi",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManQuantSetSuppCi",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3707,
+      "End": 4702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantSetSuppCi",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantSetSuppCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3707,
+      "End": 4702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantSetSuppAnd",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantSetSuppAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4703,
+      "End": 5081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantCheckSupp",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantCheckSupp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5082,
+      "End": 5212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantUpdateCiSupp",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantUpdateCiSupp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5213,
+      "End": 5479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantCheckOverlap",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantCheckOverlap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5480,
+      "End": 5642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::void-pointer::Gia_ManQuantMarkUsedCis",
+      "Category": "void-pointer-review",
+      "Symbol": "Gia_ManQuantMarkUsedCis",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5643,
+      "End": 6043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantMarkUsedCis",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantMarkUsedCis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5643,
+      "End": 6043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantCountUsed_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantCountUsed_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6045,
+      "End": 6658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantCountUsed",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantCountUsed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6659,
+      "End": 6797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::void-pointer::Gia_ManQuantDupConeSupp_rec",
+      "Category": "void-pointer-review",
+      "Symbol": "Gia_ManQuantDupConeSupp_rec",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 6799,
+      "End": 8200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantDupConeSupp_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantDupConeSupp_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6799,
+      "End": 8200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::void-pointer::Gia_ManQuantDupConeSupp",
+      "Category": "void-pointer-review",
+      "Symbol": "Gia_ManQuantDupConeSupp",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 8201,
+      "End": 9513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantDupConeSupp",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantDupConeSupp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8201,
+      "End": 9513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantExist_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantExist_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9514,
+      "End": 10788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::void-pointer::Gia_ManQuantExist2",
+      "Category": "void-pointer-review",
+      "Symbol": "Gia_ManQuantExist2",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 10789,
+      "End": 13919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantExist2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantExist2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10789,
+      "End": 13919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantCollect_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantCollect_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14199,
+      "End": 14936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::void-pointer::Gia_ManQuantCollect",
+      "Category": "void-pointer-review",
+      "Symbol": "Gia_ManQuantCollect",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 14937,
+      "End": 15464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantCollect",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantCollect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14937,
+      "End": 15464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantExist2Dup",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantExist2Dup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15466,
+      "End": 17224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantExistInt",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantExistInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17225,
+      "End": 19545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::void-pointer::Gia_ManQuantExist",
+      "Category": "void-pointer-review",
+      "Symbol": "Gia_ManQuantExist",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 19546,
+      "End": 20104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::Gia_ManQuantExist",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManQuantExist",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19546,
+      "End": 20104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaExist.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20352
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaExist.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Existential quantification.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaExist.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Existentially quantified several variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n\nfunc Gia_ManQuantInfoId(p *Gia_Man_t, iObj int32) *word { return Vec_WrdEntryP( p.vSuppWords, p.nSuppWords * iObj ); }\nfunc Gia_ManQuantInfo(p *Gia_Man_t, pObj *Gia_Obj_t) *word { return Gia_ManQuantInfoId( p, Gia_ObjId(p, pObj) );      }\n\nfunc Gia_ObjCopyGetTwoArray(p *Gia_Man_t, iObj int32, LitsOut []int32) { \n    var pLits *int32  = Vec_IntEntryP( \u0026p.vCopiesTwo, 2*iObj );\n    LitsOut[0] = pLits[0];\n    LitsOut[1] = pLits[1];\n}\nfunc Gia_ObjCopySetTwoArray(p *Gia_Man_t, iObj int32, LitsIn []int32) { \n    var pLits *int32  = Vec_IntEntryP( \u0026p.vCopiesTwo, 2*iObj );\n    pLits[0] = LitsIn[0];\n    pLits[1] = LitsIn[1];\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Existentially quantified several variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManQuantVerify_rec(p *Gia_Man_t, iObj int32, CiId int32) int32 {\n    var pObj *Gia_Obj_t;\n    if Gia_ObjIsTravIdCurrentId( p, iObj ) {\n        return 0; }\n    Gia_ObjSetTravIdCurrentId( p, iObj );\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) {\n        return Gia_ObjCioId(pObj) == CiId; }\n    return Gia_ManQuantVerify_rec( p, Gia_ObjFaninId0(pObj, iObj), CiId ) ||\n           Gia_ManQuantVerify_rec( p, Gia_ObjFaninId1(pObj, iObj), CiId );\n}\nfunc Gia_ManQuantVerify(p *Gia_Man_t, iObj int32) {\n    var pInfo *word  = Gia_ManQuantInfoId( p, iObj );  var i, CiId int32;\n    assert(Gia_ObjIsAnd(Gia_ManObj(p, iObj)), \"Gia_ObjIsAnd(Gia_ManObj(p, iObj))\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vSuppVars)) \u0026\u0026 (((CiId) = Vec_IntEntry(\u0026p.vSuppVars, i)), 1); i++  {\n        Gia_ManIncrementTravId( p );\n        if Abc_TtGetBit(pInfo, i) != Gia_ManQuantVerify_rec(p, iObj, CiId) {\n            fmt.Printf(\"Mismatch at node %d related to CI %d (%d).\\n\", iObj, CiId, Abc_TtGetBit(pInfo, i)); }\n    }\n}\n\n\n\nfunc Gia_ManQuantSetSuppStart(p *Gia_Man_t) {\n    assert(Gia_ManObjNum(p) == 1, \"Gia_ManObjNum(p) == 1\");\n    assert(p.vSuppWords == nil, \"p.vSuppWords == nil\");\n    assert(Vec_IntSize(\u0026p.vSuppVars) == 0, \"Vec_IntSize(\u0026p.vSuppVars) == 0\");\n    p.iSuppPi    = 0;\n    p.nSuppWords = 1;\n    p.vSuppWords = Vec_WrdAlloc( 1000 );\n    Vec_WrdPush( p.vSuppWords, 0 );\n}\nfunc Gia_ManQuantSetSuppZero(p *Gia_Man_t) {\n    var w int32;\n    for  w = 0; w \u003c p.nSuppWords; w++  {\n        Vec_WrdPush( p.vSuppWords, 0 );\n    }\n    assert(Vec_WrdSize(p.vSuppWords) == p.nSuppWords * Gia_ManObjNum(p), \"Vec_WrdSize(p.vSuppWords) == p.nSuppWords * Gia_ManObjNum(p)\");\n}\nfunc Gia_ManQuantSetSuppCi(p *Gia_Man_t, pObj *Gia_Obj_t) {\n    assert(Gia_ObjIsCi(pObj), \"Gia_ObjIsCi(pObj)\");\n    assert(p.vSuppWords != nil, \"p.vSuppWords != nil\");\n    if p.iSuppPi == 64 * p.nSuppWords {\n        var Data word; var w int32;\nvar Count int32;\nvar Size int32 = Vec_WrdSize(p.vSuppWords);\n        var vTemp *Vec_Wrd_t  = Vec_WrdAlloc( Size ? 2 * Size : 1000 ); \n        // inlining of macro Vec_WrdForEachEntry\n        for  w = 0; (w \u003c Vec_WrdSize(p.vSuppWords)) \u0026\u0026 (((Data) = Vec_WrdEntry(p.vSuppWords, w)), 1); w++  {\n            Vec_WrdPush( vTemp, Data );\n            if Count++; Count == p.nSuppWords {\n                Vec_WrdPush( vTemp, 0 );\n                Count = 0;\n            }\n        }\n        Vec_WrdFree( p.vSuppWords );\n        p.vSuppWords = vTemp;\n        p.nSuppWords++;\n        assert(Vec_WrdSize(p.vSuppWords) == p.nSuppWords * Gia_ManObjNum(p), \"Vec_WrdSize(p.vSuppWords) == p.nSuppWords * Gia_ManObjNum(p)\");\n        //printf( \"Resizing to %d words.\\n\", p-\u003enSuppWords );\n    }\n    assert(p.iSuppPi == Vec_IntSize(\u0026p.vSuppVars), \"p.iSuppPi == Vec_IntSize(\u0026p.vSuppVars)\");\n    Vec_IntPush( \u0026p.vSuppVars, Gia_ObjCioId(pObj) );\n    Abc_TtSetBit( Gia_ManQuantInfo(p, pObj), p.iSuppPi++ );\n}\nfunc Gia_ManQuantSetSuppAnd(p *Gia_Man_t, pObj *Gia_Obj_t) {\n    var iObj int32   = Gia_ObjId(p, pObj);\n    var iFan0 int32  = Gia_ObjFaninId0(pObj, iObj);\n    var iFan1 int32  = Gia_ObjFaninId1(pObj, iObj);\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Gia_ManQuantSetSuppZero( p );\n    Abc_TtOr( Gia_ManQuantInfo(p, pObj), Gia_ManQuantInfoId(p, iFan0), Gia_ManQuantInfoId(p, iFan1), p.nSuppWords );\n}\nfunc Gia_ManQuantCheckSupp(p *Gia_Man_t, iObj int32, iSupp int32) int32 {\n    return Abc_TtGetBit( Gia_ManQuantInfoId(p, iObj), iSupp );\n}\nfunc Gia_ManQuantUpdateCiSupp(p *Gia_Man_t, iObj int32) {\n    if Abc_TtIsConst0( Gia_ManQuantInfoId(p, iObj), p.nSuppWords ) {\n        Gia_ManQuantSetSuppCi( p, Gia_ManObj(p, iObj) ); }\n    assert(!Abc_TtIsConst0( Gia_ManQuantInfoId(p, iObj), p.nSuppWords ), \"!Abc_TtIsConst0( Gia_ManQuantInfoId(p, iObj), p.nSuppWords )\");\n}\nfunc Gia_ManQuantCheckOverlap(p *Gia_Man_t, iObj int32) int32 {\n    return Abc_TtIntersect( Gia_ManQuantInfoId(p, iObj), Gia_ManQuantInfoId(p, 0), p.nSuppWords, 0 );\n}\nfunc Gia_ManQuantMarkUsedCis(p *Gia_Man_t, pFuncCiToKeep func(any, int32) int32, pData any) {\n    var i, CiId int32;\n    var pInfo *word  = Gia_ManQuantInfoId( p, 0 );\n    Abc_TtClear( pInfo, p.nSuppWords );\n    assert(Abc_TtIsConst0(pInfo, p.nSuppWords), \"Abc_TtIsConst0(pInfo, p.nSuppWords)\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(\u0026p.vSuppVars)) \u0026\u0026 (((CiId) = Vec_IntEntry(\u0026p.vSuppVars, i)), 1); i++  {\n        if !pFuncCiToKeep( pData, CiId ) { // quant var\n            Abc_TtSetBit( pInfo, i ); }\n    }\n}\n\nfunc Gia_ManQuantCountUsed_rec(p *Gia_Man_t, iObj int32) int32 {\n    var pObj *Gia_Obj_t; var Count int32  = 1;\n    if Gia_ObjIsTravIdCurrentId( p, iObj ) {\n        return 0; }\n    Gia_ObjSetTravIdCurrentId( p, iObj );\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) {\n        return 0; }\n    if Gia_ManQuantCheckSupp(p, Gia_ObjFaninId0(pObj, iObj), p.iSuppPi) != 0 {\n        Count += Gia_ManQuantCountUsed_rec( p, Gia_ObjFaninId0(pObj, iObj) ); }\n    if Gia_ManQuantCheckSupp(p, Gia_ObjFaninId1(pObj, iObj), p.iSuppPi) != 0 {\n        Count += Gia_ManQuantCountUsed_rec( p, Gia_ObjFaninId1(pObj, iObj) ); }\n    return Count;\n}\nfunc Gia_ManQuantCountUsed(p *Gia_Man_t, iObj int32) int32 {\n    Gia_ManIncrementTravId( p );\n    return Gia_ManQuantCountUsed_rec( p, iObj );\n}\n\nfunc Gia_ManQuantDupConeSupp_rec(pNew *Gia_Man_t, p *Gia_Man_t, pObj *Gia_Obj_t, vCis *Vec_Int_t, vObjs *Vec_Int_t, pFuncCiToKeep func(any, int32) int32, pData any) {\n    var iLit0 int32;\n    var iLit1 int32;\n    var iObj int32 = Gia_ObjId( p, pObj );\n    var iLit int32  = Gia_ObjCopyArray( p, iObj );\n    if iLit \u003e= 0 {\n        return; }\n    if Gia_ObjIsCi(pObj) {\n        var iLit int32  = Gia_ManAppendCi( pNew );\n        var pObjNew *Gia_Obj_t  = Gia_ManObj( pNew, Abc_Lit2Var(iLit) );\n        Gia_ManQuantSetSuppZero( pNew );\n        if !pFuncCiToKeep( pData, Gia_ObjCioId(pObj) ) {\n            //printf( \"Collecting CI %d\\n\", Gia_ObjCioId(pObj)+1 );\n            Gia_ManQuantSetSuppCi( pNew, pObjNew );\n        }\n        Gia_ObjSetCopyArray( p, iObj, iLit );\n        Vec_IntPush( vCis, iObj );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Gia_ManQuantDupConeSupp_rec( pNew, p, Gia_ObjFanin0(pObj), vCis, vObjs, pFuncCiToKeep, pData );\n    Gia_ManQuantDupConeSupp_rec( pNew, p, Gia_ObjFanin1(pObj), vCis, vObjs, pFuncCiToKeep, pData );\n    iLit0 = Gia_ObjCopyArray( p, Gia_ObjFaninId0(pObj, iObj) );\n    iLit1 = Gia_ObjCopyArray( p, Gia_ObjFaninId1(pObj, iObj) );\n    iLit0 = Abc_LitNotCond( iLit0, Gia_ObjFaninC0(pObj) );\n    iLit1 = Abc_LitNotCond( iLit1, Gia_ObjFaninC1(pObj) );\n    iLit  = Gia_ManHashAnd( pNew, iLit0, iLit1 );\n    Gia_ObjSetCopyArray( p, iObj, iLit );\n    Vec_IntPush( vObjs, iObj );\n}\nfunc Gia_ManQuantDupConeSupp(p *Gia_Man_t, iLit int32, pFuncCiToKeep func(any, int32) int32, pData any, pvCis **Vec_Int_t, pOutLit *int32) *Gia_Man_t {\n    var pNew *Gia_Man_t; var i, iLit0, iObj int32;\n    var pObj *Gia_Obj_t;\n    var pRoot *Gia_Obj_t = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n    var vCis *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var vObjs *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    assert(Gia_ObjIsAnd(pRoot), \"Gia_ObjIsAnd(pRoot)\");\n    if Vec_IntSize(\u0026p.vCopies) \u003c Gia_ManObjNum(p) {\n        Vec_IntFillExtra( \u0026p.vCopies, Gia_ManObjNum(p), -1 ); }\n    pNew = Gia_ManStart( 1000 );\n    Gia_ManHashStart( pNew ); \n    Gia_ManQuantSetSuppStart( pNew );\n    Gia_ManQuantDupConeSupp_rec( pNew, p, pRoot, vCis, vObjs, pFuncCiToKeep, pData );\n    iLit0 = Gia_ObjCopyArray( p, Abc_Lit2Var(iLit) );\n    iLit0 = Abc_LitNotCond( iLit0, Abc_LitIsCompl(iLit) );\n    if pOutLit != nil { *pOutLit = iLit0; }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vCis)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vCis,i))); i++  {\n        Gia_ObjSetCopyArray( p, Gia_ObjId(p, pObj), -1 );\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {\n        Gia_ObjSetCopyArray( p, Gia_ObjId(p, pObj), -1 );\n    }\n    //assert( Vec_IntCountLarger(\u0026p-\u003evCopies, -1) == 0 );\n    Vec_IntFree( vObjs );\n    // remap into CI Ids\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCis)) \u0026\u0026 (((iObj) = Vec_IntEntry(vCis, i)), 1); i++  {\n        Vec_IntWriteEntry( vCis, i, Gia_ManIdToCioId(p, iObj) );\n    }\n    if pvCis { *pvCis = vCis; }\n    return pNew;\n}\nfunc Gia_ManQuantExist_rec(p *Gia_Man_t, iObj int32, pRes []int32) {\n    var pObj *Gia_Obj_t;\n    var Lits0, Lits1, pFans, fCompl [2]int32;\n    if Gia_ObjIsTravIdCurrentId( p, iObj ) {\n        Gia_ObjCopyGetTwoArray( p, iObj, pRes );\n        return;\n    }\n    Gia_ObjSetTravIdCurrentId( p, iObj );\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) {\n        pRes[0] = 0; pRes[1] = 1;\n        Gia_ObjCopySetTwoArray( p, iObj, pRes );\n        return;\n    }\n    pFans[0]  = Gia_ObjFaninId0( pObj, iObj );\n    pFans[1]  = Gia_ObjFaninId1( pObj, iObj );\n    fCompl[0] = Gia_ObjFaninC0( pObj );\n    fCompl[1] = Gia_ObjFaninC1( pObj );\n    if Gia_ManQuantCheckSupp(p, pFans[0], p.iSuppPi) != 0 {\n        Gia_ManQuantExist_rec( p, pFans[0], Lits0 );\n    } else {\n        Lits0[0] = Lits0[1] = Abc_Var2Lit( pFans[0], 0 ); }\n    if Gia_ManQuantCheckSupp(p, pFans[1], p.iSuppPi) != 0 {\n        Gia_ManQuantExist_rec( p, pFans[1], Lits1 );\n    } else {\n        Lits1[0] = Lits1[1] = Abc_Var2Lit( pFans[1], 0 ); }\n    pRes[0] = Gia_ManHashAnd( p, Abc_LitNotCond(Lits0[0], fCompl[0]), Abc_LitNotCond(Lits1[0], fCompl[1]) );\n    pRes[1] = Gia_ManHashAnd( p, Abc_LitNotCond(Lits0[1], fCompl[0]), Abc_LitNotCond(Lits1[1], fCompl[1]) );\n    Gia_ObjCopySetTwoArray( p, iObj, pRes );\n}\nfunc Gia_ManQuantExist2(p0 *Gia_Man_t, iLit int32, pFuncCiToKeep func(any, int32) int32, pData any) int32 {\n//    abctime clk = Abc_Clock();\n    var pNew *Gia_Man_t;\n    var vOuts, vOuts2, vCis *Vec_Int_t; \n    var pObj *Gia_Obj_t  = Gia_ManObj( p0, Abc_Lit2Var(iLit) );\n    var i int32;\n    var n int32;\n    var Entry int32;\n    var Lit int32;\n    var OutLit int32 = -1;\n    var pLits [2]int32;\n    var nVarsQua int32;\n    var nAndsOld int32;\n    var nAndsNew int32; \n    if iLit \u003c 2 { return iLit; }\n    if Gia_ObjIsCi(pObj) { if pFuncCiToKeep(pData, Gia_ObjCioId(pObj)) {\n        return iLit;\n    } else {\n        return 1;\n    } }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    pNew = Gia_ManQuantDupConeSupp( p0, iLit, pFuncCiToKeep, pData, \u0026vCis, \u0026OutLit );\n    if pNew.iSuppPi == 0 {\n        Gia_ManStop( pNew );\n        Vec_IntFree( vCis );\n        return iLit;\n    }\n    assert(pNew.iSuppPi \u003e 0 \u0026\u0026 pNew.iSuppPi \u003c= 64 * pNew.nSuppWords, \"pNew.iSuppPi \u003e 0 \u0026\u0026 pNew.iSuppPi \u003c= 64 * pNew.nSuppWords\");\n    vOuts = Vec_IntAlloc( 100 );\n    vOuts2 = Vec_IntAlloc( 100 );\n    assert(OutLit \u003e 1, \"OutLit \u003e 1\");\n    Vec_IntPush( vOuts, OutLit );\n    nVarsQua = pNew.iSuppPi;\n    nAndsOld = Gia_ManAndNum(pNew);\n    for  --pNew.iSuppPi \u003e= 0  {\n        Entry = Abc_Lit2Var( Vec_IntEntry(vOuts, 0) );\n//        printf( \"Quantifying input %d with %d affected nodes (out of %d):\\n\", \n//            pNew-\u003eiSuppPi, Gia_ManQuantCountUsed(pNew,Entry), Gia_ManAndNum(pNew) );\n        if Vec_IntSize(\u0026pNew.vCopiesTwo) \u003c 2*Gia_ManObjNum(pNew) {\n            Vec_IntFillExtra( \u0026pNew.vCopiesTwo, 2*Gia_ManObjNum(pNew), -1 ); }\n        assert(Vec_IntSize(vOuts) \u003e 0, \"Vec_IntSize(vOuts) \u003e 0\");\n        Vec_IntClear( vOuts2 );\n        Gia_ManIncrementTravId( pNew );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vOuts)) \u0026\u0026 (((Entry) = Vec_IntEntry(vOuts, i)), 1); i++  {\n            Gia_ManQuantExist_rec( pNew, Abc_Lit2Var(Entry), pLits );\n            for  n = 0; n \u003c 2; n++  {\n                Lit = Abc_LitNotCond( pLits[n], Abc_LitIsCompl(Entry) );\n                if Lit == 0 {\n                    continue; }\n                if Lit == 1 {\n                    Vec_IntFree( vOuts );\n                    Vec_IntFree( vOuts2 );\n                    Gia_ManStop( pNew );\n                    Vec_IntFree( vCis );\n                    return 1;\n                }\n                Vec_IntPushUnique( vOuts2, Lit );\n            }\n        }\n        Vec_IntClear( vOuts );\n        // inlining of macro ABC_SWAP\n        { var t *Vec_Int_t  = vOuts; vOuts = vOuts2; vOuts2 = t; };\n    }\n//    printf( \"\\n\" );\n    //printf( \"The number of diff cofactors = %d.\\n\", Vec_IntSize(vOuts) );\n    assert(Vec_IntSize(vOuts) \u003e 0, \"Vec_IntSize(vOuts) \u003e 0\");\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOuts)) \u0026\u0026 (((Entry) = Vec_IntEntry(vOuts, i)), 1); i++  {\n        Vec_IntWriteEntry( vOuts, i, Abc_LitNot(Entry) );\n    }\n    OutLit = Gia_ManHashAndMulti( pNew, vOuts );\n    OutLit = Abc_LitNot( OutLit );\n    Vec_IntFree( vOuts );\n    Vec_IntFree( vOuts2 );\n    // transfer back\n    Gia_ManAppendCo( pNew, OutLit );\n    nAndsNew = Gia_ManAndNum(p0);\n    Lit = Gia_ManDupConeBack( p0, pNew, vCis );\n    nAndsNew = Gia_ManAndNum(p0) - nAndsNew;\n    Gia_ManStop( pNew );\n    // report the result\n//    printf( \"Performed quantification with %6d nodes, %3d keep-vars, %3d quant-vars, resulting in %5d new nodes. \\n\", \n//        nAndsOld, Vec_IntSize(vCis) - nVarsQua, nVarsQua, nAndsNew );\n//    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Vec_IntFree( vCis );\n    return Lit;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Existentially quantified several variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManQuantCollect_rec(p *Gia_Man_t, iObj int32, vQuantCis *Vec_Int_t, vQuantSide *Vec_Int_t, vQuantAnds *Vec_Int_t) {\n    var pObj *Gia_Obj_t; \n    if Gia_ObjIsTravIdCurrentId( p, iObj ) {\n        return; }\n    Gia_ObjSetTravIdCurrentId( p, iObj );\n    if !(Gia_ManQuantCheckOverlap(p, iObj) != 0) {\n        Vec_IntPush( vQuantSide, iObj );\n        return;\n    }\n    pObj = Gia_ManObj( p, iObj );\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vQuantCis, iObj );\n        return;\n    }\n    Gia_ManQuantCollect_rec( p, Gia_ObjFaninId0(pObj, iObj), vQuantCis, vQuantSide, vQuantAnds );\n    Gia_ManQuantCollect_rec( p, Gia_ObjFaninId1(pObj, iObj), vQuantCis, vQuantSide, vQuantAnds );\n    Vec_IntPush( vQuantAnds, iObj );\n}\nfunc Gia_ManQuantCollect(p *Gia_Man_t, iObj int32, pFuncCiToKeep func(any, int32) int32, pData any, vQuantCis *Vec_Int_t, vQuantSide *Vec_Int_t, vQuantAnds *Vec_Int_t) {\n    Gia_ManQuantMarkUsedCis( p, pFuncCiToKeep, pData );\n    Gia_ManIncrementTravId( p );\n    Gia_ManQuantCollect_rec( p, iObj, vQuantCis, vQuantSide, vQuantAnds );\n//    printf( \"\\nCreated cone with %d quant-vars, %d side-inputs, and %d internal nodes.\\n\", \n//        Vec_IntSize(p-\u003evQuantCis), Vec_IntSize(p-\u003evQuantSide), Vec_IntSize(p-\u003evQuantAnds) );\n}\n\nfunc Gia_ManQuantExist2Dup(p *Gia_Man_t, iLit int32, vCis *Vec_Int_t, vSide *Vec_Int_t, vAnds *Vec_Int_t, pOutLit *int32) *Gia_Man_t {\n    var i, iObj, iLit0, iLit1, iLitR int32;\n    var pNew *Gia_Man_t  = Gia_ManStart( Vec_IntSize(vSide) + Vec_IntSize(vCis) + 10*Vec_IntSize(vAnds) );\n    Gia_ManQuantSetSuppStart( pNew );\n    Gia_ManHashStart( pNew ); \n    if Vec_IntSize(\u0026p.vCopies) \u003c Gia_ManObjNum(p) {\n        Vec_IntFillExtra( \u0026p.vCopies, Gia_ManObjNum(p), -1 ); }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSide)) \u0026\u0026 (((iObj) = Vec_IntEntry(vSide, i)), 1); i++  {\n        Gia_ObjSetCopyArray( p, iObj, Gia_ManAppendCi(pNew) );\n        Gia_ManQuantSetSuppZero( pNew );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCis)) \u0026\u0026 (((iObj) = Vec_IntEntry(vCis, i)), 1); i++  {\n        Gia_ObjSetCopyArray( p, iObj, (iLit0 = Gia_ManAppendCi(pNew)) );\n        Gia_ManQuantSetSuppZero( pNew );\n        Gia_ManQuantSetSuppCi( pNew, Gia_ManObj(pNew, Abc_Lit2Var(iLit0)) );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vAnds)) \u0026\u0026 (((iObj) = Vec_IntEntry(vAnds, i)), 1); i++  {\n        var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n        iLit0 = Gia_ObjCopyArray( p, Gia_ObjFaninId0(pObj, iObj) );\n        iLit1 = Gia_ObjCopyArray( p, Gia_ObjFaninId1(pObj, iObj) );\n        iLit0 = Abc_LitNotCond( iLit0, Gia_ObjFaninC0(pObj) );\n        iLit1 = Abc_LitNotCond( iLit1, Gia_ObjFaninC1(pObj) );\n        iLitR = Gia_ManHashAnd( pNew, iLit0, iLit1 );\n        Gia_ObjSetCopyArray( p, iObj, iLitR );\n    }\n    iLit0 = Gia_ObjCopyArray( p, Abc_Lit2Var(iLit) );\n    iLit0 = Abc_LitNotCond( iLit0, Abc_LitIsCompl(iLit) );\n    if pOutLit != nil { *pOutLit = iLit0; }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSide)) \u0026\u0026 (((iObj) = Vec_IntEntry(vSide, i)), 1); i++  {\n        Gia_ObjSetCopyArray( p, iObj, -1 );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCis)) \u0026\u0026 (((iObj) = Vec_IntEntry(vCis, i)), 1); i++  {\n        Gia_ObjSetCopyArray( p, iObj, -1 );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vAnds)) \u0026\u0026 (((iObj) = Vec_IntEntry(vAnds, i)), 1); i++  {\n        Gia_ObjSetCopyArray( p, iObj, -1 );\n    }\n    return pNew;\n}\nfunc Gia_ManQuantExistInt(p0 *Gia_Man_t, iLit int32, vCis *Vec_Int_t, vSide *Vec_Int_t, vAnds *Vec_Int_t) int32 {\n    var i int32;\n    var Lit int32;\n    var iOutLit int32;\n    var nAndsNew int32;\n    var pLits [2]int32;\n    var pRes [2]int32 ;\n    var pNew *Gia_Man_t;\n    if iLit \u003c 2 {\n        return 0; }\n    if Vec_IntSize(vCis) == 0 {\n        return iLit; }\n    if Vec_IntSize(vAnds) == 0 {\n        assert(Gia_ObjIsCi( Gia_ManObj(p0, Abc_Lit2Var(iLit)) ), \"Gia_ObjIsCi( Gia_ManObj(p0, Abc_Lit2Var(iLit)) )\");\n        if Vec_IntFind(vCis, Abc_Lit2Var(iLit)) == -1 {\n            return iLit;\n        } else {\n            return 1;\n        }\n    }\n    pNew = Gia_ManQuantExist2Dup( p0, iLit, vCis, vSide, vAnds, \u0026iOutLit );\n    if Vec_IntSize(\u0026pNew.vCopiesTwo) \u003c 2*Gia_ManObjNum(pNew) {\n        Vec_IntFillExtra( \u0026pNew.vCopiesTwo, 2*Gia_ManObjNum(pNew), -1 ); }\n    Gia_ObjCopySetTwoArray( pNew, 0, pRes );\n    for  i = 0; i \u003c Gia_ManCiNum(pNew); i++  {\n        pRes[0] = pRes[1] = Abc_Var2Lit( i+1, 0 );\n        Gia_ObjCopySetTwoArray( pNew, i+1, pRes );\n    }\n    assert(pNew.iSuppPi == Gia_ManCiNum(pNew) - Vec_IntSize(vSide), \"pNew.iSuppPi == Gia_ManCiNum(pNew) - Vec_IntSize(vSide)\");\n    for  i = Gia_ManCiNum(pNew) - 1; i \u003e= Vec_IntSize(vSide); i--  {\n        pRes[0] = 0; pRes[1] = 1;\n        Gia_ObjCopySetTwoArray( pNew, i+1, pRes );\n\n        pNew.iSuppPi--;\n        if Vec_IntSize(\u0026pNew.vCopiesTwo) \u003c 2*Gia_ManObjNum(pNew) {\n            Vec_IntFillExtra( \u0026pNew.vCopiesTwo, 2*Gia_ManObjNum(pNew), -1 ); }\n        Gia_ManIncrementTravId( pNew );\n        Gia_ManQuantExist_rec( pNew, Abc_Lit2Var(iOutLit), pLits );\n        pLits[0] = Abc_LitNotCond( pLits[0], Abc_LitIsCompl(iOutLit) );\n        pLits[1] = Abc_LitNotCond( pLits[1], Abc_LitIsCompl(iOutLit) );\n        iOutLit = Gia_ManHashOr( pNew, pLits[0], pLits[1] );\n\n        pRes[0] = pRes[1] = Abc_Var2Lit( i+1, 0 );\n        Gia_ObjCopySetTwoArray( pNew, i+1, pRes );\n    }\n    assert(pNew.iSuppPi == 0, \"pNew.iSuppPi == 0\");\n    Vec_IntAppend( vSide, vCis );\n    // transfer back\n    Gia_ManAppendCo( pNew, iOutLit );\n    nAndsNew = Gia_ManAndNum(p0);\n    Lit = Gia_ManDupConeBackObjs( p0, pNew, vSide );\n    nAndsNew = Gia_ManAndNum(p0) - nAndsNew;\n    Vec_IntShrink( vSide, Vec_IntSize(vSide) - Vec_IntSize(vCis) );\n//    printf( \"Performed quantification with %6d -\u003e %6d nodes, %3d side-vars, %3d quant-vars, resulting in %5d new nodes. \\n\", \n//        Vec_IntSize(vAnds), Gia_ManAndNum(pNew), Vec_IntSize(vSide), Vec_IntSize(vCis), nAndsNew );\n    Gia_ManStop( pNew );\n    return Lit;\n}\nfunc Gia_ManQuantExist(p0 *Gia_Man_t, iLit int32, pFuncCiToKeep func(any, int32) int32, pData any) int32 {\n    var Res int32;\n    var vQuantCis *Vec_Int_t   = Vec_IntAlloc( 100 );\n    var vQuantSide *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vQuantAnds *Vec_Int_t  = Vec_IntAlloc( 100 );\n    Gia_ManQuantCollect( p0, Abc_Lit2Var(iLit), pFuncCiToKeep, pData, vQuantCis, vQuantSide, vQuantAnds );\n    Res = Gia_ManQuantExistInt( p0, iLit, vQuantCis, vQuantSide, vQuantAnds );\n    Vec_IntFree( vQuantCis );\n    Vec_IntFree( vQuantSide );\n    Vec_IntFree( vQuantAnds );\n    return Res;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

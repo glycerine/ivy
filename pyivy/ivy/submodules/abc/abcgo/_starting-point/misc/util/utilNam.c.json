@@ -1,0 +1,1326 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c",
+  "SHA256": "352612b675400ed189fa52d54fd52ba56da48f9eb4b10a0abbd5bc9012fbf0db",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 89,
+        "Column": 76,
+        "ByteOffset": 3147
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pStore      = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(p.nStore)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 91,
+        "Column": 76,
+        "ByteOffset": 3310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pBins       = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(p.nBins), sizeof(int)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 96,
+        "Column": 5,
+        "ByteOffset": 3562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pStore, 0, 4 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 119,
+        "Column": 64,
+        "ByteOffset": 4228
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pStore) ? (free((char *) (p.pStore)), (p.pStore) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 120,
+        "Column": 63,
+        "ByteOffset": 4339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 121,
+        "Column": 57,
+        "ByteOffset": 4442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 136,
+        "Column": 39,
+        "ByteOffset": 4819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = pFileName ? fopen( pFileName, \"wb\" ) : stdout;"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 136,
+        "Column": 66,
+        "ByteOffset": 4846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = pFileName ? fopen( pFileName, \"wb\" ) : stdout;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 23,
+        "ByteOffset": 4896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFile == nil { printf( \"Count node open file %s\\n\", pFileName ); return; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 9,
+        "ByteOffset": 5130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%8d = %s\\n\", i, Abc_NamHandleToStr(p, h) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 142,
+        "Column": 17,
+        "ByteOffset": 5213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFile != stdout {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 143,
+        "Column": 9,
+        "ByteOffset": 5230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose(pFile); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 328,
+        "Column": 5,
+        "ByteOffset": 10556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pStr );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 355,
+        "Column": 5,
+        "ByteOffset": 11361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pBins != nil );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 360,
+        "Column": 70,
+        "ByteOffset": 11668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pBins = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(p.nBins), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 371,
+        "Column": 9,
+        "ByteOffset": 12332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *piPlace == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 373,
+        "Column": 9,
+        "ByteOffset": 12415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize( \u0026p.vInt2Handle ) == i );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 378,
+        "Column": 64,
+        "ByteOffset": 12660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pBinsOld) ? (free((char *) (pBinsOld)), (pBinsOld) = 0) : 0);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 414,
+        "Column": 34,
+        "ByteOffset": 13708
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !(pStr[0] != '\\\\' || pStr[strlen(pStr)-1] == ' ') {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 415,
+        "Column": 18,
+        "ByteOffset": 13751
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        for  i = strlen(pStr) - 1; i \u003e= 0; i--  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 419,
+        "Column": 9,
+        "ByteOffset": 13857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i \u003c int32(strlen(pStr)) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 419,
+        "Column": 27,
+        "ByteOffset": 13875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i \u003c int32(strlen(pStr)) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 429,
+        "Column": 30,
+        "ByteOffset": 14116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    iHandleNew = p.iHandle + strlen(pStr) + 1;"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 435,
+        "Column": 34,
+        "ByteOffset": 14325
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pStore = ((char *) realloc((char *)(p.pStore), sizeof(char) * (size_t)(p.nStore)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 437,
+        "Column": 34,
+        "ByteOffset": 14440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pStore = ((char *) malloc(sizeof(char) * (size_t)(p.nStore)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 440,
+        "Column": 5,
+        "ByteOffset": 14504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nStore \u003e= iHandleNew );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 443,
+        "Column": 5,
+        "ByteOffset": 14613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( Abc_NamHandleToStr( p, p.iHandle ), pStr );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 456,
+        "Column": 5,
+        "ByteOffset": 15107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pStr \u003c pLim );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 471,
+        "Column": 34,
+        "ByteOffset": 15559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pStore = ((char *) realloc((char *)(p.pStore), sizeof(char) * (size_t)(p.nStore)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 473,
+        "Column": 34,
+        "ByteOffset": 15674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pStore = ((char *) malloc(sizeof(char) * (size_t)(p.nStore)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 476,
+        "Column": 5,
+        "ByteOffset": 15738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nStore \u003e= iHandleNew );"
+    },
+    {
+      "Name": "strncpy",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 480,
+        "Column": 5,
+        "ByteOffset": 15896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strncpy( pStore, pStr, pLim - pStr );"
+    },
+    {
+      "Name": "va_start",
+      "Status": "review",
+      "Message": "C va_list ABI has no direct Go representation.",
+      "Location": {
+        "Line": 494,
+        "Column": 20,
+        "ByteOffset": 16371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    va_list args;  va_start( args, format );"
+    },
+    {
+      "Name": "vsnprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 496,
+        "Column": 14,
+        "ByteOffset": 16474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nAdded = vsnprintf( Vec_StrLimit(\u0026p.vBuffer), nSize, format, args );"
+    },
+    {
+      "Name": "vsnprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 499,
+        "Column": 17,
+        "ByteOffset": 16651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nSize = vsnprintf( Vec_StrLimit(\u0026p.vBuffer), nAdded, format, args );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 500,
+        "Column": 9,
+        "ByteOffset": 16720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nSize == nAdded );"
+    },
+    {
+      "Name": "va_end",
+      "Status": "review",
+      "Message": "C va_list ABI has no direct Go representation.",
+      "Location": {
+        "Line": 502,
+        "Column": 5,
+        "ByteOffset": 16757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    va_end( args );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 586,
+        "Column": 9,
+        "ByteOffset": 19413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Entry \u003e 0 \u0026\u0026 Entry \u003c Abc_NamObjNumMax(p1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 608,
+        "Column": 9,
+        "ByteOffset": 20267
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Entry \u003e 0 \u0026\u0026 Entry \u003c Abc_NamObjNumMax(p1) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NamHandleToStr",
+      "Start": 1732,
+      "End": 1862,
+      "BodyStart": 1803,
+      "Original": "static inline char * Abc_NamHandleToStr( Abc_Nam_t * p, int h )        { return (char *)(p-\u003epStore + h);                         }",
+      "Draft": "func Abc_NamHandleToStr(p *Abc_Nam_t, h int32) string { return (char *)(p.pStore + h);                         }"
+    },
+    {
+      "Name": "Abc_NamIntToHandle",
+      "Start": 1863,
+      "End": 1993,
+      "BodyStart": 1934,
+      "Original": "static inline int    Abc_NamIntToHandle( Abc_Nam_t * p, int i )        { return Vec_IntEntry(\u0026p-\u003evInt2Handle, i);                }",
+      "Draft": "func Abc_NamIntToHandle(p *Abc_Nam_t, i int32) int32 { return Vec_IntEntry(\u0026p.vInt2Handle, i);                }"
+    },
+    {
+      "Name": "Abc_NamIntToStr",
+      "Start": 1994,
+      "End": 2124,
+      "BodyStart": 2065,
+      "Original": "static inline char * Abc_NamIntToStr( Abc_Nam_t * p, int i )           { return Abc_NamHandleToStr(p, Abc_NamIntToHandle(p,i));  }",
+      "Draft": "func Abc_NamIntToStr(p *Abc_Nam_t, i int32) string { return Abc_NamHandleToStr(p, Abc_NamIntToHandle(p,i));  }"
+    },
+    {
+      "Name": "Abc_NamIntToNext",
+      "Start": 2125,
+      "End": 2255,
+      "BodyStart": 2196,
+      "Original": "static inline int    Abc_NamIntToNext( Abc_Nam_t * p, int i )          { return Vec_IntEntry(\u0026p-\u003evInt2Next, i);                  }",
+      "Draft": "func Abc_NamIntToNext(p *Abc_Nam_t, i int32) int32 { return Vec_IntEntry(\u0026p.vInt2Next, i);                  }"
+    },
+    {
+      "Name": "Abc_NamIntToNextP",
+      "Start": 2256,
+      "End": 2386,
+      "BodyStart": 2327,
+      "Original": "static inline int *  Abc_NamIntToNextP( Abc_Nam_t * p, int i )         { return Vec_IntEntryP(\u0026p-\u003evInt2Next, i);                 }",
+      "Draft": "func Abc_NamIntToNextP(p *Abc_Nam_t, i int32) *int32 { return Vec_IntEntryP(\u0026p.vInt2Next, i);                 }"
+    },
+    {
+      "Name": "Abc_NamStart",
+      "Start": 2858,
+      "End": 3591,
+      "BodyStart": 2910,
+      "Original": "Abc_Nam_t * Abc_NamStart( int nObjs, int nAveSize )\n{\n    Abc_Nam_t * p;\n    if ( nObjs == 0 )\n        nObjs = 16;\n    p = ABC_CALLOC( Abc_Nam_t, 1 );\n    p-\u003enStore      = ((nObjs * (nAveSize + 1) + 16) / 4) * 4;\n    p-\u003epStore      = ABC_ALLOC( char, p-\u003enStore );\n    p-\u003enBins       = Abc_PrimeCudd( nObjs );\n    p-\u003epBins       = ABC_CALLOC( int, p-\u003enBins );\n    // 0th object is unused\n    Vec_IntGrow( \u0026p-\u003evInt2Handle, nObjs );  Vec_IntPush( \u0026p-\u003evInt2Handle, -1 );\n    Vec_IntGrow( \u0026p-\u003evInt2Next,   nObjs );  Vec_IntPush( \u0026p-\u003evInt2Next,   -1 );\n    p-\u003eiHandle     = 4;\n    memset( p-\u003epStore, 0, 4 );\n//Abc_Print( 1, \"Starting nam with %d bins.\\n\", p-\u003enBins );\n    // start reference counting\n    p-\u003enRefs       = 1;\n    return p;\n}",
+      "Draft": "func Abc_NamStart(nObjs int32, nAveSize int32) *Abc_Nam_t {\n    var p *Abc_Nam_t;\n    if nObjs == 0 {\n        nObjs = 16; }\n    // inlining of macro ABC_CALLOC\n    p = \u0026Abc_Nam_t{};\n    p.nStore      = ((nObjs * (nAveSize + 1) + 16) / 4) * 4;\n    // inlining of macro ABC_ALLOC\n    p.pStore      = ((char *) malloc(sizeof(char) * (size_t)(p.nStore)));\n    p.nBins       = Abc_PrimeCudd( nObjs );\n    // inlining of macro ABC_CALLOC\n    p.pBins       = ((int *) calloc((size_t)(p.nBins), sizeof(int)));\n    // 0th object is unused\n    Vec_IntGrow( \u0026p.vInt2Handle, nObjs );  Vec_IntPush( \u0026p.vInt2Handle, -1 );\n    Vec_IntGrow( \u0026p.vInt2Next,   nObjs );  Vec_IntPush( \u0026p.vInt2Next,   -1 );\n    p.iHandle     = 4;\n    memset( p.pStore, 0, 4 );\n//Abc_Print( 1, \"Starting nam with %d bins.\\n\", p-\u003enBins );\n    // start reference counting\n    p.nRefs       = 1;\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_NamStop",
+      "Start": 3843,
+      "End": 4117,
+      "BodyStart": 3877,
+      "Original": "void Abc_NamStop( Abc_Nam_t * p )\n{\n//Abc_Print( 1, \"Starting nam with %d bins.\\n\", p-\u003enBins );\n    Vec_StrErase( \u0026p-\u003evBuffer );\n    Vec_IntErase( \u0026p-\u003evInt2Handle );\n    Vec_IntErase( \u0026p-\u003evInt2Next );\n    ABC_FREE( p-\u003epStore );\n    ABC_FREE( p-\u003epBins );\n    ABC_FREE( p );\n}",
+      "Draft": "func Abc_NamStop(p *Abc_Nam_t) {\n//Abc_Print( 1, \"Starting nam with %d bins.\\n\", p-\u003enBins );\n    Vec_StrErase( \u0026p.vBuffer );\n    Vec_IntErase( \u0026p.vInt2Handle );\n    Vec_IntErase( \u0026p.vInt2Next );\n    // inlining of macro ABC_FREE\n    ((p.pStore) ? (free((char *) (p.pStore)), (p.pStore) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Abc_NamPrint",
+      "Start": 4368,
+      "End": 4767,
+      "BodyStart": 4421,
+      "Original": "void Abc_NamPrint( Abc_Nam_t * p, char * pFileName )\n{\n    FILE * pFile = pFileName ? fopen( pFileName, \"wb\" ) : stdout;\n    int h, i;\n    if ( pFile == NULL ) { printf( \"Count node open file %s\\n\", pFileName ); return; }\n    Vec_IntForEachEntryStart( \u0026p-\u003evInt2Handle, h, i, 1 )\n        fprintf( pFile, \"%8d = %s\\n\", i, Abc_NamHandleToStr(p, h) );\n    if ( pFile != stdout )\n        fclose(pFile);\n}",
+      "Draft": "func Abc_NamPrint(p *Abc_Nam_t, pFileName string) {\n    var pFile *os.File  = pFileName ? os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666) : os.Stdout;\n    var h, i int32;\n    if pFile == nil { fmt.Printf(\"Count node open file %s\\n\", pFileName); return; }\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(\u0026p.vInt2Handle)) \u0026\u0026 (((h) = Vec_IntEntry(\u0026p.vInt2Handle, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"%8d = %s\\n\", i, Abc_NamHandleToStr(p, h));\n    }\n    if pFile != os.Stdout {\n        _ = (pFile).Close(); }\n}"
+    },
+    {
+      "Name": "Abc_NamRef",
+      "Start": 5026,
+      "End": 5099,
+      "BodyStart": 5066,
+      "Original": "Abc_Nam_t * Abc_NamRef( Abc_Nam_t * p )\n{\n    p-\u003enRefs++;\n    return p;\n}",
+      "Draft": "func Abc_NamRef(p *Abc_Nam_t) *Abc_Nam_t {\n    p.nRefs++;\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_NamDeref",
+      "Start": 5360,
+      "End": 5488,
+      "BodyStart": 5395,
+      "Original": "void Abc_NamDeref( Abc_Nam_t * p )\n{\n    if ( p == NULL )\n        return;\n    if ( --p-\u003enRefs == 0 )\n        Abc_NamStop( p );\n}",
+      "Draft": "func Abc_NamDeref(p *Abc_Nam_t) {\n    if p == nil {\n        return; }\n    if --p.nRefs == 0 {\n        Abc_NamStop( p ); }\n}"
+    },
+    {
+      "Name": "Abc_NamObjNumMax",
+      "Start": 5759,
+      "End": 5841,
+      "BodyStart": 5797,
+      "Original": "int Abc_NamObjNumMax( Abc_Nam_t * p )\n{\n    return Vec_IntSize(\u0026p-\u003evInt2Handle);\n}",
+      "Draft": "func Abc_NamObjNumMax(p *Abc_Nam_t) int32 {\n    return Vec_IntSize(\u0026p.vInt2Handle);\n}"
+    },
+    {
+      "Name": "Abc_NamMemUsed",
+      "Start": 6113,
+      "End": 6328,
+      "BodyStart": 6149,
+      "Original": "int Abc_NamMemUsed( Abc_Nam_t * p )\n{\n    if ( p == NULL )\n        return 0;\n    return sizeof(Abc_Nam_t) + p-\u003eiHandle + sizeof(int) * p-\u003enBins + \n        sizeof(int) * (p-\u003evInt2Handle.nSize + p-\u003evInt2Next.nSize);\n}",
+      "Draft": "func Abc_NamMemUsed(p *Abc_Nam_t) int32 {\n    if p == nil {\n        return 0; }\n    return sizeof(Abc_Nam_t) + p.iHandle + sizeof(int) * p.nBins + \n        sizeof(int) * (p.vInt2Handle.nSize + p.vInt2Next.nSize);\n}"
+    },
+    {
+      "Name": "Abc_NamMemAlloc",
+      "Start": 6600,
+      "End": 6813,
+      "BodyStart": 6637,
+      "Original": "int Abc_NamMemAlloc( Abc_Nam_t * p )\n{\n    if ( p == NULL )\n        return 0;\n    return sizeof(Abc_Nam_t) + p-\u003enStore + sizeof(int) * p-\u003enBins + \n        sizeof(int) * (p-\u003evInt2Handle.nCap + p-\u003evInt2Next.nCap);\n}",
+      "Draft": "func Abc_NamMemAlloc(p *Abc_Nam_t) int32 {\n    if p == nil {\n        return 0; }\n    return sizeof(Abc_Nam_t) + p.nStore + sizeof(int) * p.nBins + \n        sizeof(int) * (p.vInt2Handle.nCap + p.vInt2Next.nCap);\n}"
+    },
+    {
+      "Name": "Abc_NamStrHash",
+      "Start": 7085,
+      "End": 8601,
+      "BodyStart": 7160,
+      "Original": "int Abc_NamStrHash( const char * pStr, const char * pLim, int nTableSize )\n{\n    static int s_FPrimes[128] = { \n        1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459, \n        1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997, \n        2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543, \n        2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089, \n        3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671, \n        3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243, \n        4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871, \n        4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471, \n        5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073, \n        6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689, \n        6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309, \n        7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933, \n        8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147\n    };\n    unsigned i, uHash;\n    if ( pLim )\n    {\n        for ( uHash = 0, i = 0; pStr+i \u003c pLim; i++ )\n            if ( i \u0026 1 ) \n                uHash *= pStr[i] * s_FPrimes[i \u0026 0x7F];\n            else\n                uHash ^= pStr[i] * s_FPrimes[i \u0026 0x7F];\n    }\n    else\n    {\n        for ( uHash = 0, i = 0; pStr[i]; i++ )\n            if ( i \u0026 1 ) \n                uHash *= pStr[i] * s_FPrimes[i \u0026 0x7F];\n            else\n                uHash ^= pStr[i] * s_FPrimes[i \u0026 0x7F];\n    }\n    return uHash % nTableSize;\n}",
+      "Draft": "func Abc_NamStrHash(pStr string, pLim string, nTableSize int32) int32 {\n    \n    var i, uHash uint32;\n    if pLim {\n        for  uHash, i = 0, 0; pStr+i \u003c pLim; i++  {\n            if i \u0026 1 { \n                uHash *= pStr[i] * spStatic_Abc_NamStrHash_s_FPrimes[i \u0026 0x7F];\n            } else {\n                uHash ^= pStr[i] * spStatic_Abc_NamStrHash_s_FPrimes[i \u0026 0x7F]; }\n        }\n    \n    } else {\n        for  uHash, i = 0, 0; pStr[i]; i++  {\n            if i \u0026 1 { \n                uHash *= pStr[i] * spStatic_Abc_NamStrHash_s_FPrimes[i \u0026 0x7F];\n            } else {\n                uHash ^= pStr[i] * spStatic_Abc_NamStrHash_s_FPrimes[i \u0026 0x7F]; }\n        }\n    }\n    return uHash % nTableSize;\n}"
+    },
+    {
+      "Name": "Abc_NamStrHash2",
+      "Start": 8657,
+      "End": 9051,
+      "BodyStart": 8734,
+      "Original": "int Abc_NamStrHash2( const char * pStr, const char * pLim, int nTableSize ) \n{\n    int nSize = pLim ? pLim - pStr : -1;\n    int i = 0; unsigned hash = 0;\n    while ( i != nSize \u0026\u0026 pStr[i] ) \n    {\n        hash += pStr[i++];\n        hash += hash \u003c\u003c 10;\n        hash ^= hash \u003e\u003e 6;\n    }\n    hash += hash \u003c\u003c 3;\n    hash ^= hash \u003e\u003e 11;\n    hash += hash \u003c\u003c 15;\n    return (int)(hash % nTableSize);\n}",
+      "Draft": "func Abc_NamStrHash2(pStr string, pLim string, nTableSize int32) int32 {\n    var nSize int32;\n    if pLim {\n        nSize = pLim - pStr;\n    } else {\n        nSize = -1;\n    }\n    var i int32; var hash uint32;\n    for  i != nSize \u0026\u0026 pStr[i]  {\n        hash += pStr[i++];\n        hash += hash \u003c\u003c 10;\n        hash ^= hash \u003e\u003e 6;\n    }\n    hash += hash \u003c\u003c 3;\n    hash ^= hash \u003e\u003e 11;\n    hash += hash \u003c\u003c 15;\n    return int32((hash % nTableSize));\n}"
+    },
+    {
+      "Name": "Abc_NamStrcmp",
+      "Start": 9336,
+      "End": 9708,
+      "BodyStart": 9410,
+      "Original": "static inline int Abc_NamStrcmp( char * pStr, char * pLim, char * pThis )\n{\n    if ( pLim )\n    {\n        while ( pStr \u003c pLim )\n            if ( *pStr++ != *pThis++ )\n                return 1;\n        return *pThis != '\\0';\n    }\n    else\n    {\n        while ( *pStr )\n            if ( *pStr++ != *pThis++ )\n                return 1;\n        return *pThis != '\\0';\n    }\n}",
+      "Draft": "func Abc_NamStrcmp(pStr string, pLim string, pThis string) int32 {\n    if pLim {\n        for  pStr \u003c pLim  {\n            if *pStr++ != *pThis++ {\n                return 1; }\n        }\n        return *pThis != '\\0';\n    \n    } else {\n        for  *pStr  {\n            if *pStr++ != *pThis++ {\n                return 1; }\n        }\n        return *pThis != '\\0';\n    }\n}"
+    },
+    {
+      "Name": "Abc_NamStrHashFind",
+      "Start": 9709,
+      "End": 10234,
+      "BodyStart": 9803,
+      "Original": "static inline int * Abc_NamStrHashFind( Abc_Nam_t * p, const char * pStr, const char * pLim )\n{\n    char * pThis;\n    int * pPlace = (int *)(p-\u003epBins + Abc_NamStrHash( pStr, pLim, p-\u003enBins ));\n    assert( *pStr );\n    for ( pThis = (*pPlace)? Abc_NamIntToStr(p, *pPlace) : NULL; \n          pThis;    pPlace = Abc_NamIntToNextP(p, *pPlace), \n          pThis = (*pPlace)? Abc_NamIntToStr(p, *pPlace) : NULL )\n              if ( !Abc_NamStrcmp( (char *)pStr, (char *)pLim, pThis ) )\n                  break;\n    return pPlace;\n}",
+      "Draft": "func Abc_NamStrHashFind(p *Abc_Nam_t, pStr string, pLim string) *int32 {\n    var pThis string;\n    var pPlace *int32  = (int *)(p.pBins + Abc_NamStrHash( pStr, pLim, p.nBins ));\n    assert(*pStr, \"*pStr\");\n    for  pThis = (*pPlace)? Abc_NamIntToStr(p, *pPlace) : nil; \n          pThis;    pPlace = Abc_NamIntToNextP(p, *pPlace), \n          pThis = (*pPlace)? Abc_NamIntToStr(p, *pPlace) : nil  {\n              if !Abc_NamStrcmp( (char *)pStr, (char *)pLim, pThis ) {\n                  break; }\n    }\n    return pPlace;\n}"
+    },
+    {
+      "Name": "Abc_NamStrHashResize",
+      "Start": 10493,
+      "End": 11817,
+      "BodyStart": 10536,
+      "Original": "void Abc_NamStrHashResize( Abc_Nam_t * p )\n{\n    Vec_Int_t vInt2HandleOld;  char * pThis; \n    int * piPlace, * pBinsOld, iHandleOld, i;//, clk = Abc_Clock();\n    assert( p-\u003epBins != NULL );\n//    Abc_Print( 1, \"Resizing names manager hash table from %6d to %6d. \", p-\u003enBins, Abc_PrimeCudd( 3 * p-\u003enBins ) );\n    // replace the table\n    pBinsOld = p-\u003epBins;\n    p-\u003enBins = Abc_PrimeCudd( 3 * p-\u003enBins ); \n    p-\u003epBins = ABC_CALLOC( int, p-\u003enBins );\n    // replace the handles array\n    vInt2HandleOld = p-\u003evInt2Handle;\n    Vec_IntZero( \u0026p-\u003evInt2Handle );\n    Vec_IntGrow( \u0026p-\u003evInt2Handle, 2 * Vec_IntSize(\u0026vInt2HandleOld) ); \n    Vec_IntPush( \u0026p-\u003evInt2Handle, -1 );\n    Vec_IntClear( \u0026p-\u003evInt2Next );    Vec_IntPush( \u0026p-\u003evInt2Next, -1 );\n    // rehash the entries from the old table\n    Vec_IntForEachEntryStart( \u0026vInt2HandleOld, iHandleOld, i, 1 )\n    {\n        pThis   = Abc_NamHandleToStr( p, iHandleOld );\n        piPlace = Abc_NamStrHashFind( p, pThis, NULL );\n        assert( *piPlace == 0 );\n        *piPlace = Vec_IntSize( \u0026p-\u003evInt2Handle );\n        assert( Vec_IntSize( \u0026p-\u003evInt2Handle ) == i );\n        Vec_IntPush( \u0026p-\u003evInt2Handle, iHandleOld );\n        Vec_IntPush( \u0026p-\u003evInt2Next,   0 );\n    }\n    Vec_IntErase( \u0026vInt2HandleOld );\n    ABC_FREE( pBinsOld );\n//    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Abc_NamStrHashResize(p *Abc_Nam_t) {\n    var vInt2HandleOld Vec_Int_t;  var pThis string; \n    var piPlace *int32;\n    var pBinsOld *int32;\n    var iHandleOld int32;\n    var i int32;//, clk = Abc_Clock();\n    assert(p.pBins != nil, \"p.pBins != nil\");\n//    Abc_Print( 1, \"Resizing names manager hash table from %6d to %6d. \", p-\u003enBins, Abc_PrimeCudd( 3 * p-\u003enBins ) );\n    // replace the table\n    pBinsOld = p.pBins;\n    p.nBins = Abc_PrimeCudd( 3 * p.nBins ); \n    // inlining of macro ABC_CALLOC\n    p.pBins = ((int *) calloc((size_t)(p.nBins), sizeof(int)));\n    // replace the handles array\n    vInt2HandleOld = p.vInt2Handle;\n    Vec_IntZero( \u0026p.vInt2Handle );\n    Vec_IntGrow( \u0026p.vInt2Handle, 2 * Vec_IntSize(\u0026vInt2HandleOld) ); \n    Vec_IntPush( \u0026p.vInt2Handle, -1 );\n    Vec_IntClear( \u0026p.vInt2Next );    Vec_IntPush( \u0026p.vInt2Next, -1 );\n    // rehash the entries from the old table\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(\u0026vInt2HandleOld)) \u0026\u0026 (((iHandleOld) = Vec_IntEntry(\u0026vInt2HandleOld, i)), 1); i++  {\n        pThis   = Abc_NamHandleToStr( p, iHandleOld );\n        piPlace = Abc_NamStrHashFind( p, pThis, nil );\n        assert(*piPlace == 0, \"*piPlace == 0\");\n        *piPlace = Vec_IntSize( \u0026p.vInt2Handle );\n        assert(Vec_IntSize( \u0026p.vInt2Handle ) == i, \"Vec_IntSize( \u0026p.vInt2Handle ) == i\");\n        Vec_IntPush( \u0026p.vInt2Handle, iHandleOld );\n        Vec_IntPush( \u0026p.vInt2Next,   0 );\n    }\n    Vec_IntErase( \u0026vInt2HandleOld );\n    // inlining of macro ABC_FREE\n    ((pBinsOld) ? (free((char *) (pBinsOld)), (pBinsOld) = 0) : 0);\n//    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}"
+    },
+    {
+      "Name": "Abc_NamStrFind",
+      "Start": 12098,
+      "End": 12199,
+      "BodyStart": 12147,
+      "Original": "int Abc_NamStrFind( Abc_Nam_t * p, char * pStr )\n{\n    return *Abc_NamStrHashFind( p, pStr, NULL );\n}",
+      "Draft": "func Abc_NamStrFind(p *Abc_Nam_t, pStr string) int32 {\n    return *Abc_NamStrHashFind( p, pStr, nil );\n}"
+    },
+    {
+      "Name": "Abc_NamStrFindLim",
+      "Start": 12200,
+      "End": 12317,
+      "BodyStart": 12265,
+      "Original": "int Abc_NamStrFindLim( Abc_Nam_t * p, char * pStr, char * pLim )\n{\n    return *Abc_NamStrHashFind( p, pStr, pLim );\n}",
+      "Draft": "func Abc_NamStrFindLim(p *Abc_Nam_t, pStr string, pLim string) int32 {\n    return *Abc_NamStrHashFind( p, pStr, pLim );\n}"
+    },
+    {
+      "Name": "Abc_NamStrFindOrAdd",
+      "Start": 12593,
+      "End": 13778,
+      "BodyStart": 12662,
+      "Original": "int Abc_NamStrFindOrAdd( Abc_Nam_t * p, char * pStr, int * pfFound )\n{\n    int i, iHandleNew;\n    int *piPlace;\n    if ( !(pStr[0] != '\\\\' || pStr[strlen(pStr)-1] == ' ') )\n    {\n        for ( i = strlen(pStr) - 1; i \u003e= 0; i-- )\n            if ( *pStr == ' ' )\n                break;\n        assert( i \u003c (int)strlen(pStr) );\n    }\n    piPlace = Abc_NamStrHashFind( p, pStr, NULL );\n    if ( *piPlace )\n    {\n        if ( pfFound )\n            *pfFound = 1;\n        return *piPlace;\n    }\n    if ( pfFound )\n        *pfFound = 0;\n    iHandleNew = p-\u003eiHandle + strlen(pStr) + 1;\n    while ( p-\u003enStore \u003c iHandleNew )\n    {\n        p-\u003enStore *= 3;\n        p-\u003enStore /= 2;\n        p-\u003epStore  = ABC_REALLOC( char, p-\u003epStore, p-\u003enStore );\n    }\n    assert( p-\u003enStore \u003e= iHandleNew );\n    // create new handle\n    *piPlace = Vec_IntSize( \u0026p-\u003evInt2Handle );\n    strcpy( Abc_NamHandleToStr( p, p-\u003eiHandle ), pStr );\n    Vec_IntPush( \u0026p-\u003evInt2Handle, p-\u003eiHandle );\n    Vec_IntPush( \u0026p-\u003evInt2Next, 0 );\n    p-\u003eiHandle = iHandleNew;\n    // extend the hash table\n    if ( Vec_IntSize(\u0026p-\u003evInt2Handle) \u003e 2 * p-\u003enBins )\n        Abc_NamStrHashResize( p );\n    return Vec_IntSize(\u0026p-\u003evInt2Handle) - 1;\n}",
+      "Draft": "func Abc_NamStrFindOrAdd(p *Abc_Nam_t, pStr string, pfFound *int32) int32 {\n    var i, iHandleNew int32;\n    var piPlace *int32;\n    if !(pStr[0] != '\\\\' || pStr[len(pStr)-1] == ' ') {\n        for  i = len(pStr) - 1; i \u003e= 0; i--  {\n            if *pStr == ' ' {\n                break; }\n        }\n        assert(i \u003c int32(len(pStr)), \"i \u003c int32(strlen(pStr))\");\n    }\n    piPlace = Abc_NamStrHashFind( p, pStr, nil );\n    if *piPlace {\n        if pfFound != nil {\n            *pfFound = 1; }\n        return *piPlace;\n    }\n    if pfFound != nil {\n        *pfFound = 0; }\n    iHandleNew = p.iHandle + len(pStr) + 1;\n    for  p.nStore \u003c iHandleNew  {\n        p.nStore *= 3;\n        p.nStore /= 2;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pStore {\n            p.pStore = ((char *) realloc((char *)(p.pStore), sizeof(char) * (size_t)(p.nStore)));\n        } else {\n            p.pStore = ((char *) malloc(sizeof(char) * (size_t)(p.nStore)));\n        }\n    }\n    assert(p.nStore \u003e= iHandleNew, \"p.nStore \u003e= iHandleNew\");\n    // create new handle\n    *piPlace = Vec_IntSize( \u0026p.vInt2Handle );\n    strcpy( Abc_NamHandleToStr( p, p.iHandle ), pStr );\n    Vec_IntPush( \u0026p.vInt2Handle, p.iHandle );\n    Vec_IntPush( \u0026p.vInt2Next, 0 );\n    p.iHandle = iHandleNew;\n    // extend the hash table\n    if Vec_IntSize(\u0026p.vInt2Handle) \u003e 2 * p.nBins {\n        Abc_NamStrHashResize( p ); }\n    return Vec_IntSize(\u0026p.vInt2Handle) - 1;\n}"
+    },
+    {
+      "Name": "Abc_NamStrFindOrAddLim",
+      "Start": 13779,
+      "End": 14869,
+      "BodyStart": 13864,
+      "Original": "int Abc_NamStrFindOrAddLim( Abc_Nam_t * p, char * pStr, char * pLim, int * pfFound )\n{\n    int iHandleNew;\n    int *piPlace;\n    char * pStore;\n    assert( pStr \u003c pLim );\n    piPlace = Abc_NamStrHashFind( p, pStr, pLim );\n    if ( *piPlace )\n    {\n        if ( pfFound )\n            *pfFound = 1;\n        return *piPlace;\n    }\n    if ( pfFound )\n        *pfFound = 0;\n    iHandleNew = p-\u003eiHandle + (pLim - pStr) + 1;\n    while ( p-\u003enStore \u003c iHandleNew )\n    {\n        p-\u003enStore *= 3;\n        p-\u003enStore /= 2;\n        p-\u003epStore  = ABC_REALLOC( char, p-\u003epStore, p-\u003enStore );\n    }\n    assert( p-\u003enStore \u003e= iHandleNew );\n    // create new handle\n    *piPlace = Vec_IntSize( \u0026p-\u003evInt2Handle );\n    pStore = Abc_NamHandleToStr( p, p-\u003eiHandle );\n    strncpy( pStore, pStr, pLim - pStr );\n    pStore[pLim - pStr] = 0;\n    Vec_IntPush( \u0026p-\u003evInt2Handle, p-\u003eiHandle );\n    Vec_IntPush( \u0026p-\u003evInt2Next, 0 );\n    p-\u003eiHandle = iHandleNew;\n    // extend the hash table\n    if ( Vec_IntSize(\u0026p-\u003evInt2Handle) \u003e 2 * p-\u003enBins )\n        Abc_NamStrHashResize( p );\n    return Vec_IntSize(\u0026p-\u003evInt2Handle) - 1;\n}",
+      "Draft": "func Abc_NamStrFindOrAddLim(p *Abc_Nam_t, pStr string, pLim string, pfFound *int32) int32 {\n    var iHandleNew int32;\n    var piPlace *int32;\n    var pStore string;\n    assert(pStr \u003c pLim, \"pStr \u003c pLim\");\n    piPlace = Abc_NamStrHashFind( p, pStr, pLim );\n    if *piPlace {\n        if pfFound != nil {\n            *pfFound = 1; }\n        return *piPlace;\n    }\n    if pfFound != nil {\n        *pfFound = 0; }\n    iHandleNew = p.iHandle + (pLim - pStr) + 1;\n    for  p.nStore \u003c iHandleNew  {\n        p.nStore *= 3;\n        p.nStore /= 2;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pStore {\n            p.pStore = ((char *) realloc((char *)(p.pStore), sizeof(char) * (size_t)(p.nStore)));\n        } else {\n            p.pStore = ((char *) malloc(sizeof(char) * (size_t)(p.nStore)));\n        }\n    }\n    assert(p.nStore \u003e= iHandleNew, \"p.nStore \u003e= iHandleNew\");\n    // create new handle\n    *piPlace = Vec_IntSize( \u0026p.vInt2Handle );\n    pStore = Abc_NamHandleToStr( p, p.iHandle );\n    strncpy( pStore, pStr, pLim - pStr );\n    pStore[pLim - pStr] = 0;\n    Vec_IntPush( \u0026p.vInt2Handle, p.iHandle );\n    Vec_IntPush( \u0026p.vInt2Next, 0 );\n    p.iHandle = iHandleNew;\n    // extend the hash table\n    if Vec_IntSize(\u0026p.vInt2Handle) \u003e 2 * p.nBins {\n        Abc_NamStrHashResize( p ); }\n    return Vec_IntSize(\u0026p.vInt2Handle) - 1;\n}"
+    },
+    {
+      "Name": "Abc_NamStrFindOrAddF",
+      "Start": 14870,
+      "End": 15517,
+      "BodyStart": 14939,
+      "Original": "int Abc_NamStrFindOrAddF( Abc_Nam_t * p, const char * format, ...  )\n{\n    int nAdded, nSize = 1000; \n    va_list args;  va_start( args, format );\n    Vec_StrGrow( \u0026p-\u003evBuffer, Vec_StrSize(\u0026p-\u003evBuffer) + nSize );\n    nAdded = vsnprintf( Vec_StrLimit(\u0026p-\u003evBuffer), nSize, format, args );\n    if ( nAdded \u003e nSize )\n    {\n        Vec_StrGrow( \u0026p-\u003evBuffer, Vec_StrSize(\u0026p-\u003evBuffer) + nAdded + nSize );\n        nSize = vsnprintf( Vec_StrLimit(\u0026p-\u003evBuffer), nAdded, format, args );\n        assert( nSize == nAdded );\n    }\n    va_end( args );\n    return Abc_NamStrFindOrAddLim( p, Vec_StrLimit(\u0026p-\u003evBuffer), Vec_StrLimit(\u0026p-\u003evBuffer) + nAdded, NULL );\n}",
+      "Draft": "int Abc_NamStrFindOrAddF( Abc_Nam_t * p, char * format, ...  )\n{\n    var nAdded int32;\n    var nSize int32 = 1000; \n    va_list args;  va_start( args, format );\n    Vec_StrGrow( \u0026p.vBuffer, Vec_StrSize(\u0026p.vBuffer) + nSize );\n    nAdded = vsnprintf( Vec_StrLimit(\u0026p.vBuffer), nSize, format, args );\n    if nAdded \u003e nSize {\n        Vec_StrGrow( \u0026p.vBuffer, Vec_StrSize(\u0026p.vBuffer) + nAdded + nSize );\n        nSize = vsnprintf( Vec_StrLimit(\u0026p.vBuffer), nAdded, format, args );\n        assert(nSize == nAdded, \"nSize == nAdded\");\n    }\n    va_end( args );\n    return Abc_NamStrFindOrAddLim( p, Vec_StrLimit(\u0026p.vBuffer), Vec_StrLimit(\u0026p.vBuffer) + nAdded, nil );\n}"
+    },
+    {
+      "Name": "Abc_NamStr",
+      "Start": 15779,
+      "End": 15888,
+      "BodyStart": 15826,
+      "Original": "char * Abc_NamStr( Abc_Nam_t * p, int NameId )\n{\n    return NameId \u003e 0 ? Abc_NamIntToStr(p, NameId) : NULL;\n}",
+      "Draft": "func Abc_NamStr(p *Abc_Nam_t, NameId int32) string {\n    if NameId \u003e 0 {\n        return Abc_NamIntToStr(p, NameId);\n    } else {\n        return nil;\n    }\n}"
+    },
+    {
+      "Name": "Abc_NamBuffer",
+      "Start": 16148,
+      "End": 16249,
+      "BodyStart": 16191,
+      "Original": "Vec_Str_t * Abc_NamBuffer( Abc_Nam_t * p )\n{\n    Vec_StrClear(\u0026p-\u003evBuffer);\n    return \u0026p-\u003evBuffer;\n}",
+      "Draft": "func Abc_NamBuffer(p *Abc_Nam_t) *Vec_Str_t {\n    Vec_StrClear(\u0026p.vBuffer);\n    return \u0026p.vBuffer;\n}"
+    },
+    {
+      "Name": "Abc_NamComputeIdMap",
+      "Start": 16546,
+      "End": 17118,
+      "BodyStart": 16612,
+      "Original": "Vec_Int_t * Abc_NamComputeIdMap( Abc_Nam_t * p1, Abc_Nam_t * p2 )\n{\n    Vec_Int_t * vMap;\n    char * pThis;\n    int * piPlace, iHandle1, i;\n    if ( p1 == p2 )\n        return Vec_IntStartNatural( Abc_NamObjNumMax(p1) );\n    vMap = Vec_IntStart( Abc_NamObjNumMax(p1) );\n    Vec_IntForEachEntryStart( \u0026p1-\u003evInt2Handle, iHandle1, i, 1 )\n    {\n        pThis = Abc_NamHandleToStr( p1, iHandle1 );\n        piPlace = Abc_NamStrHashFind( p2, pThis, NULL );\n        Vec_IntWriteEntry( vMap, i, *piPlace );\n//        Abc_Print( 1, \"%d-\u003e%d  \", i, *piPlace );\n    }\n    return vMap;\n}",
+      "Draft": "func Abc_NamComputeIdMap(p1 *Abc_Nam_t, p2 *Abc_Nam_t) *Vec_Int_t {\n    var vMap *Vec_Int_t;\n    var pThis string;\n    var piPlace *int32;\n    var iHandle1 int32;\n    var i int32;\n    if p1 == p2 {\n        return Vec_IntStartNatural( Abc_NamObjNumMax(p1) ); }\n    vMap = Vec_IntStart( Abc_NamObjNumMax(p1) );\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(\u0026p1.vInt2Handle)) \u0026\u0026 (((iHandle1) = Vec_IntEntry(\u0026p1.vInt2Handle, i)), 1); i++  {\n        pThis = Abc_NamHandleToStr( p1, iHandle1 );\n        piPlace = Abc_NamStrHashFind( p2, pThis, nil );\n        Vec_IntWriteEntry( vMap, i, *piPlace );\n//        Abc_Print( 1, \"%d-\u003e%d  \", i, *piPlace );\n    }\n    return vMap;\n}"
+    },
+    {
+      "Name": "Abc_NamReportCommon",
+      "Start": 17580,
+      "End": 18042,
+      "BodyStart": 17661,
+      "Original": "int Abc_NamReportCommon( Vec_Int_t * vNameIds1, Abc_Nam_t * p1, Abc_Nam_t * p2 )\n{\n    int i, Entry, Counter = 0;\n    Vec_IntForEachEntry( vNameIds1, Entry, i )\n    {\n        assert( Entry \u003e 0 \u0026\u0026 Entry \u003c Abc_NamObjNumMax(p1) );\n        Counter += (Abc_NamStrFind(p2, Abc_NamStr(p1, Entry)) \u003e 0);\n//        if ( Abc_NamStrFind(p2, Abc_NamStr(p1, Entry)) == 0 )\n//            Abc_Print( 1, \"unique name \u003c%s\u003e\\n\", Abc_NamStr(p1, Entry) );\n    }\n    return Counter;\n}",
+      "Draft": "func Abc_NamReportCommon(vNameIds1 *Vec_Int_t, p1 *Abc_Nam_t, p2 *Abc_Nam_t) int32 {\n    var i, Entry, Counter int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNameIds1)) \u0026\u0026 (((Entry) = Vec_IntEntry(vNameIds1, i)), 1); i++  {\n        assert(Entry \u003e 0 \u0026\u0026 Entry \u003c Abc_NamObjNumMax(p1), \"Entry \u003e 0 \u0026\u0026 Entry \u003c Abc_NamObjNumMax(p1)\");\n        Counter += (Abc_NamStrFind(p2, Abc_NamStr(p1, Entry)) \u003e 0);\n//        if ( Abc_NamStrFind(p2, Abc_NamStr(p1, Entry)) == 0 )\n//            Abc_Print( 1, \"unique name \u003c%s\u003e\\n\", Abc_NamStr(p1, Entry) );\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Abc_NamReportUnique",
+      "Start": 18336,
+      "End": 18682,
+      "BodyStart": 18420,
+      "Original": "char * Abc_NamReportUnique( Vec_Int_t * vNameIds1, Abc_Nam_t * p1, Abc_Nam_t * p2 )\n{\n    int i, Entry;\n    Vec_IntForEachEntry( vNameIds1, Entry, i )\n    {\n        assert( Entry \u003e 0 \u0026\u0026 Entry \u003c Abc_NamObjNumMax(p1) );\n        if ( Abc_NamStrFind(p2, Abc_NamStr(p1, Entry)) == 0 )\n            return Abc_NamStr(p1, Entry);\n    }\n    return NULL;\n}",
+      "Draft": "func Abc_NamReportUnique(vNameIds1 *Vec_Int_t, p1 *Abc_Nam_t, p2 *Abc_Nam_t) string {\n    var i, Entry int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNameIds1)) \u0026\u0026 (((Entry) = Vec_IntEntry(vNameIds1, i)), 1); i++  {\n        assert(Entry \u003e 0 \u0026\u0026 Entry \u003c Abc_NamObjNumMax(p1), \"Entry \u003e 0 \u0026\u0026 Entry \u003c Abc_NamObjNumMax(p1)\");\n        if Abc_NamStrFind(p2, Abc_NamStr(p1, Entry)) == 0 {\n            return Abc_NamStr(p1, Entry); }\n    }\n    return nil;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::struct::Abc_Nam_t_",
+      "Category": "struct-review",
+      "Symbol": "Abc_Nam_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1018,
+      "End": 1730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::sizeof::3062",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2981,
+      "End": 2981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::sizeof::3228",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3092,
+      "End": 3092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::sizeof::3414",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3188,
+      "End": 3188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::sizeof::6770",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6201,
+      "End": 6207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::sizeof::6803",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6234,
+      "End": 6240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::sizeof::6837",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6268,
+      "End": 6274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::sizeof::7258",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6689,
+      "End": 6695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::sizeof::7290",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6721,
+      "End": 6727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::sizeof::7324",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6755,
+      "End": 6761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::static::7735",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 7166,
+      "End": 7172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::sizeof::11565",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10914,
+      "End": 10914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::sizeof::14217",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13282,
+      "End": 13282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::sizeof::14282",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13282,
+      "End": 13282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::sizeof::15406",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14309,
+      "End": 14309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::mechanical::sizeof::15471",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14309,
+      "End": 14309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::1812",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1812,
+      "End": 1820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::3028",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2981,
+      "End": 2981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::3212",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3092,
+      "End": 3092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::3379",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3188,
+      "End": 3188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::4325",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4048,
+      "End": 4048
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::4439",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4075,
+      "End": 4075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::4544",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4101,
+      "End": 4101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::10411",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9842,
+      "End": 9849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::10720",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10151,
+      "End": 10159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::10734",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10165,
+      "End": 10173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::11530",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10914,
+      "End": 10914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::12553",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11741,
+      "End": 11741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::14179",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13282,
+      "End": 13282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::14196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13282,
+      "End": 13282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::14266",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13282,
+      "End": 13282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::15368",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14309,
+      "End": 14309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::15385",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14309,
+      "End": 14309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::pointer-cast::15455",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14309,
+      "End": 14309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamHandleToStr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamHandleToStr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1732,
+      "End": 1862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamIntToHandle",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamIntToHandle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1863,
+      "End": 1993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamIntToStr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamIntToStr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1994,
+      "End": 2124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamIntToNext",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamIntToNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2125,
+      "End": 2255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamIntToNextP",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamIntToNextP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2256,
+      "End": 2386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamStart",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2858,
+      "End": 3591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::ternary::Abc_NamStop",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NamStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3843,
+      "End": 4117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamStop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3843,
+      "End": 4117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::ternary::Abc_NamPrint",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NamPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4368,
+      "End": 4767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamPrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4368,
+      "End": 4767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamRef",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5026,
+      "End": 5099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamDeref",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5360,
+      "End": 5488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamObjNumMax",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamObjNumMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5759,
+      "End": 5841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamMemUsed",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamMemUsed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6113,
+      "End": 6328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamMemAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamMemAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6600,
+      "End": 6813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamStrHash",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamStrHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7085,
+      "End": 8601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamStrHash2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamStrHash2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8657,
+      "End": 9051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamStrcmp",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamStrcmp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9336,
+      "End": 9708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::ternary::Abc_NamStrHashFind",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NamStrHashFind",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9709,
+      "End": 10234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamStrHashFind",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamStrHashFind",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9709,
+      "End": 10234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::ternary::Abc_NamStrHashResize",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NamStrHashResize",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10493,
+      "End": 11817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamStrHashResize",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamStrHashResize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10493,
+      "End": 11817
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamStrFind",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamStrFind",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12098,
+      "End": 12199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamStrFindLim",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamStrFindLim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12200,
+      "End": 12317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamStrFindOrAdd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamStrFindOrAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12593,
+      "End": 13778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamStrFindOrAddLim",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamStrFindOrAddLim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13779,
+      "End": 14869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamStrFindOrAddF",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamStrFindOrAddF",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 14870,
+      "End": 15517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamStr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamStr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15779,
+      "End": 15888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamBuffer",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamBuffer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16148,
+      "End": 16249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamComputeIdMap",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamComputeIdMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16546,
+      "End": 17118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamReportCommon",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamReportCommon",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17580,
+      "End": 18042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::Abc_NamReportUnique",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NamReportUnique",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18336,
+      "End": 18682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::macro-inline::15096",
+      "Category": "macro-inline-review",
+      "Symbol": "vsnprintf",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15096,
+      "End": 15155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilNam.c::macro-inline::15284",
+      "Category": "macro-inline-review",
+      "Symbol": "vsnprintf",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15284,
+      "End": 15344
+    }
+  ],
+  "Draft": "package util\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [utilNam.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Manager for character strings.]\n\n  Synopsis    [Manager for character strings.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: utilNam.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"abc_global.h\"\n//#include \"misc/vec/vec.h\"\n//#include \"utilNam.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// this package maps non-empty character strings into natural numbers and back\n\n// name manager\ntype Abc_Nam_t_ struct {\n    // info storage for names\n    nStore              int32;       // the size of allocated storage\n    iHandle              int32;      // the current free handle\n    pStore            string;       // storage for name objects\n    // internal number mappings\n    vInt2Handle        Vec_Int_t;  // mapping integers into handles\n    vInt2Next        Vec_Int_t;    // mapping integers into nexts\n    // hash table for names\n    pBins             *int32;        // the hash table bins \n    nBins              int32;        // the number of bins \n    // manager recycling\n    nRefs              int32;        // reference counter for the manager\n    // internal buffer\n    vBuffer        Vec_Str_t;      \n}\n\nfunc Abc_NamHandleToStr(p *Abc_Nam_t, h int32) string { return (char *)(p.pStore + h);                         }\nfunc Abc_NamIntToHandle(p *Abc_Nam_t, i int32) int32 { return Vec_IntEntry(\u0026p.vInt2Handle, i);                }\nfunc Abc_NamIntToStr(p *Abc_Nam_t, i int32) string { return Abc_NamHandleToStr(p, Abc_NamIntToHandle(p,i));  }\nfunc Abc_NamIntToNext(p *Abc_Nam_t, i int32) int32 { return Vec_IntEntry(\u0026p.vInt2Next, i);                  }\nfunc Abc_NamIntToNextP(p *Abc_Nam_t, i int32) *int32 { return Vec_IntEntryP(\u0026p.vInt2Next, i);                 }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamStart(nObjs int32, nAveSize int32) *Abc_Nam_t {\n    var p *Abc_Nam_t;\n    if nObjs == 0 {\n        nObjs = 16; }\n    // inlining of macro ABC_CALLOC\n    p = \u0026Abc_Nam_t{};\n    p.nStore      = ((nObjs * (nAveSize + 1) + 16) / 4) * 4;\n    // inlining of macro ABC_ALLOC\n    p.pStore      = ((char *) malloc(sizeof(char) * (size_t)(p.nStore)));\n    p.nBins       = Abc_PrimeCudd( nObjs );\n    // inlining of macro ABC_CALLOC\n    p.pBins       = ((int *) calloc((size_t)(p.nBins), sizeof(int)));\n    // 0th object is unused\n    Vec_IntGrow( \u0026p.vInt2Handle, nObjs );  Vec_IntPush( \u0026p.vInt2Handle, -1 );\n    Vec_IntGrow( \u0026p.vInt2Next,   nObjs );  Vec_IntPush( \u0026p.vInt2Next,   -1 );\n    p.iHandle     = 4;\n    memset( p.pStore, 0, 4 );\n//Abc_Print( 1, \"Starting nam with %d bins.\\n\", p-\u003enBins );\n    // start reference counting\n    p.nRefs       = 1;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamStop(p *Abc_Nam_t) {\n//Abc_Print( 1, \"Starting nam with %d bins.\\n\", p-\u003enBins );\n    Vec_StrErase( \u0026p.vBuffer );\n    Vec_IntErase( \u0026p.vInt2Handle );\n    Vec_IntErase( \u0026p.vInt2Next );\n    // inlining of macro ABC_FREE\n    ((p.pStore) ? (free((char *) (p.pStore)), (p.pStore) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pBins) ? (free((char *) (p.pBins)), (p.pBins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamPrint(p *Abc_Nam_t, pFileName string) {\n    var pFile *os.File  = pFileName ? os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666) : os.Stdout;\n    var h, i int32;\n    if pFile == nil { fmt.Printf(\"Count node open file %s\\n\", pFileName); return; }\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(\u0026p.vInt2Handle)) \u0026\u0026 (((h) = Vec_IntEntry(\u0026p.vInt2Handle, i)), 1); i++  {\n        fmt.Fprintf(pFile, \"%8d = %s\\n\", i, Abc_NamHandleToStr(p, h));\n    }\n    if pFile != os.Stdout {\n        _ = (pFile).Close(); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [References the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamRef(p *Abc_Nam_t) *Abc_Nam_t {\n    p.nRefs++;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dereferences the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamDeref(p *Abc_Nam_t) {\n    if p == nil {\n        return; }\n    if --p.nRefs == 0 {\n        Abc_NamStop( p ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of used entries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamObjNumMax(p *Abc_Nam_t) int32 {\n    return Vec_IntSize(\u0026p.vInt2Handle);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reports memory usage of the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamMemUsed(p *Abc_Nam_t) int32 {\n    if p == nil {\n        return 0; }\n    return sizeof(Abc_Nam_t) + p.iHandle + sizeof(int) * p.nBins + \n        sizeof(int) * (p.vInt2Handle.nSize + p.vInt2Next.nSize);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reports memory usage of the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamMemAlloc(p *Abc_Nam_t) int32 {\n    if p == nil {\n        return 0; }\n    return sizeof(Abc_Nam_t) + p.nStore + sizeof(int) * p.nBins + \n        sizeof(int) * (p.vInt2Handle.nCap + p.vInt2Next.nCap);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes hash value of the C-string.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Abc_NamStrHash_s_FPrimes [128]int32 = [128]int32{ \n        1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459, \n        1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997, \n        2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543, \n        2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089, \n        3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671, \n        3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243, \n        4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871, \n        4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471, \n        5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073, \n        6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689, \n        6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309, \n        7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933, \n        8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147,\n    };\nfunc Abc_NamStrHash(pStr string, pLim string, nTableSize int32) int32 {\n    \n    var i, uHash uint32;\n    if pLim {\n        for  uHash, i = 0, 0; pStr+i \u003c pLim; i++  {\n            if i \u0026 1 { \n                uHash *= pStr[i] * spStatic_Abc_NamStrHash_s_FPrimes[i \u0026 0x7F];\n            } else {\n                uHash ^= pStr[i] * spStatic_Abc_NamStrHash_s_FPrimes[i \u0026 0x7F]; }\n        }\n    \n    } else {\n        for  uHash, i = 0, 0; pStr[i]; i++  {\n            if i \u0026 1 { \n                uHash *= pStr[i] * spStatic_Abc_NamStrHash_s_FPrimes[i \u0026 0x7F];\n            } else {\n                uHash ^= pStr[i] * spStatic_Abc_NamStrHash_s_FPrimes[i \u0026 0x7F]; }\n        }\n    }\n    return uHash % nTableSize;\n}\n// https://en.wikipedia.org/wiki/Jenkins_hash_function\nfunc Abc_NamStrHash2(pStr string, pLim string, nTableSize int32) int32 {\n    var nSize int32;\n    if pLim {\n        nSize = pLim - pStr;\n    } else {\n        nSize = -1;\n    }\n    var i int32; var hash uint32;\n    for  i != nSize \u0026\u0026 pStr[i]  {\n        hash += pStr[i++];\n        hash += hash \u003c\u003c 10;\n        hash ^= hash \u003e\u003e 6;\n    }\n    hash += hash \u003c\u003c 3;\n    hash ^= hash \u003e\u003e 11;\n    hash += hash \u003c\u003c 15;\n    return int32((hash % nTableSize));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns place where this string is, or should be.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamStrcmp(pStr string, pLim string, pThis string) int32 {\n    if pLim {\n        for  pStr \u003c pLim  {\n            if *pStr++ != *pThis++ {\n                return 1; }\n        }\n        return *pThis != '\\0';\n    \n    } else {\n        for  *pStr  {\n            if *pStr++ != *pThis++ {\n                return 1; }\n        }\n        return *pThis != '\\0';\n    }\n}\nfunc Abc_NamStrHashFind(p *Abc_Nam_t, pStr string, pLim string) *int32 {\n    var pThis string;\n    var pPlace *int32  = (int *)(p.pBins + Abc_NamStrHash( pStr, pLim, p.nBins ));\n    assert(*pStr, \"*pStr\");\n    for  pThis = (*pPlace)? Abc_NamIntToStr(p, *pPlace) : nil; \n          pThis;    pPlace = Abc_NamIntToNextP(p, *pPlace), \n          pThis = (*pPlace)? Abc_NamIntToStr(p, *pPlace) : nil  {\n              if !Abc_NamStrcmp( (char *)pStr, (char *)pLim, pThis ) {\n                  break; }\n    }\n    return pPlace;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resizes the hash table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamStrHashResize(p *Abc_Nam_t) {\n    var vInt2HandleOld Vec_Int_t;  var pThis string; \n    var piPlace *int32;\n    var pBinsOld *int32;\n    var iHandleOld int32;\n    var i int32;//, clk = Abc_Clock();\n    assert(p.pBins != nil, \"p.pBins != nil\");\n//    Abc_Print( 1, \"Resizing names manager hash table from %6d to %6d. \", p-\u003enBins, Abc_PrimeCudd( 3 * p-\u003enBins ) );\n    // replace the table\n    pBinsOld = p.pBins;\n    p.nBins = Abc_PrimeCudd( 3 * p.nBins ); \n    // inlining of macro ABC_CALLOC\n    p.pBins = ((int *) calloc((size_t)(p.nBins), sizeof(int)));\n    // replace the handles array\n    vInt2HandleOld = p.vInt2Handle;\n    Vec_IntZero( \u0026p.vInt2Handle );\n    Vec_IntGrow( \u0026p.vInt2Handle, 2 * Vec_IntSize(\u0026vInt2HandleOld) ); \n    Vec_IntPush( \u0026p.vInt2Handle, -1 );\n    Vec_IntClear( \u0026p.vInt2Next );    Vec_IntPush( \u0026p.vInt2Next, -1 );\n    // rehash the entries from the old table\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(\u0026vInt2HandleOld)) \u0026\u0026 (((iHandleOld) = Vec_IntEntry(\u0026vInt2HandleOld, i)), 1); i++  {\n        pThis   = Abc_NamHandleToStr( p, iHandleOld );\n        piPlace = Abc_NamStrHashFind( p, pThis, nil );\n        assert(*piPlace == 0, \"*piPlace == 0\");\n        *piPlace = Vec_IntSize( \u0026p.vInt2Handle );\n        assert(Vec_IntSize( \u0026p.vInt2Handle ) == i, \"Vec_IntSize( \u0026p.vInt2Handle ) == i\");\n        Vec_IntPush( \u0026p.vInt2Handle, iHandleOld );\n        Vec_IntPush( \u0026p.vInt2Next,   0 );\n    }\n    Vec_IntErase( \u0026vInt2HandleOld );\n    // inlining of macro ABC_FREE\n    ((pBinsOld) ? (free((char *) (pBinsOld)), (pBinsOld) = 0) : 0);\n//    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the index of the string in the table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamStrFind(p *Abc_Nam_t, pStr string) int32 {\n    return *Abc_NamStrHashFind( p, pStr, nil );\n}\nfunc Abc_NamStrFindLim(p *Abc_Nam_t, pStr string, pLim string) int32 {\n    return *Abc_NamStrHashFind( p, pStr, pLim );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds or adds the given name to storage.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamStrFindOrAdd(p *Abc_Nam_t, pStr string, pfFound *int32) int32 {\n    var i, iHandleNew int32;\n    var piPlace *int32;\n    if !(pStr[0] != '\\\\' || pStr[len(pStr)-1] == ' ') {\n        for  i = len(pStr) - 1; i \u003e= 0; i--  {\n            if *pStr == ' ' {\n                break; }\n        }\n        assert(i \u003c int32(len(pStr)), \"i \u003c int32(strlen(pStr))\");\n    }\n    piPlace = Abc_NamStrHashFind( p, pStr, nil );\n    if *piPlace {\n        if pfFound != nil {\n            *pfFound = 1; }\n        return *piPlace;\n    }\n    if pfFound != nil {\n        *pfFound = 0; }\n    iHandleNew = p.iHandle + len(pStr) + 1;\n    for  p.nStore \u003c iHandleNew  {\n        p.nStore *= 3;\n        p.nStore /= 2;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pStore {\n            p.pStore = ((char *) realloc((char *)(p.pStore), sizeof(char) * (size_t)(p.nStore)));\n        } else {\n            p.pStore = ((char *) malloc(sizeof(char) * (size_t)(p.nStore)));\n        }\n    }\n    assert(p.nStore \u003e= iHandleNew, \"p.nStore \u003e= iHandleNew\");\n    // create new handle\n    *piPlace = Vec_IntSize( \u0026p.vInt2Handle );\n    strcpy( Abc_NamHandleToStr( p, p.iHandle ), pStr );\n    Vec_IntPush( \u0026p.vInt2Handle, p.iHandle );\n    Vec_IntPush( \u0026p.vInt2Next, 0 );\n    p.iHandle = iHandleNew;\n    // extend the hash table\n    if Vec_IntSize(\u0026p.vInt2Handle) \u003e 2 * p.nBins {\n        Abc_NamStrHashResize( p ); }\n    return Vec_IntSize(\u0026p.vInt2Handle) - 1;\n}\nfunc Abc_NamStrFindOrAddLim(p *Abc_Nam_t, pStr string, pLim string, pfFound *int32) int32 {\n    var iHandleNew int32;\n    var piPlace *int32;\n    var pStore string;\n    assert(pStr \u003c pLim, \"pStr \u003c pLim\");\n    piPlace = Abc_NamStrHashFind( p, pStr, pLim );\n    if *piPlace {\n        if pfFound != nil {\n            *pfFound = 1; }\n        return *piPlace;\n    }\n    if pfFound != nil {\n        *pfFound = 0; }\n    iHandleNew = p.iHandle + (pLim - pStr) + 1;\n    for  p.nStore \u003c iHandleNew  {\n        p.nStore *= 3;\n        p.nStore /= 2;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pStore {\n            p.pStore = ((char *) realloc((char *)(p.pStore), sizeof(char) * (size_t)(p.nStore)));\n        } else {\n            p.pStore = ((char *) malloc(sizeof(char) * (size_t)(p.nStore)));\n        }\n    }\n    assert(p.nStore \u003e= iHandleNew, \"p.nStore \u003e= iHandleNew\");\n    // create new handle\n    *piPlace = Vec_IntSize( \u0026p.vInt2Handle );\n    pStore = Abc_NamHandleToStr( p, p.iHandle );\n    strncpy( pStore, pStr, pLim - pStr );\n    pStore[pLim - pStr] = 0;\n    Vec_IntPush( \u0026p.vInt2Handle, p.iHandle );\n    Vec_IntPush( \u0026p.vInt2Next, 0 );\n    p.iHandle = iHandleNew;\n    // extend the hash table\n    if Vec_IntSize(\u0026p.vInt2Handle) \u003e 2 * p.nBins {\n        Abc_NamStrHashResize( p ); }\n    return Vec_IntSize(\u0026p.vInt2Handle) - 1;\n}\nint Abc_NamStrFindOrAddF( Abc_Nam_t * p, char * format, ...  )\n{\n    var nAdded int32;\n    var nSize int32 = 1000; \n    va_list args;  va_start( args, format );\n    Vec_StrGrow( \u0026p.vBuffer, Vec_StrSize(\u0026p.vBuffer) + nSize );\n    nAdded = vsnprintf( Vec_StrLimit(\u0026p.vBuffer), nSize, format, args );\n    if nAdded \u003e nSize {\n        Vec_StrGrow( \u0026p.vBuffer, Vec_StrSize(\u0026p.vBuffer) + nAdded + nSize );\n        nSize = vsnprintf( Vec_StrLimit(\u0026p.vBuffer), nAdded, format, args );\n        assert(nSize == nAdded, \"nSize == nAdded\");\n    }\n    va_end( args );\n    return Abc_NamStrFindOrAddLim( p, Vec_StrLimit(\u0026p.vBuffer), Vec_StrLimit(\u0026p.vBuffer) + nAdded, nil );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns name from name ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamStr(p *Abc_Nam_t, NameId int32) string {\n    if NameId \u003e 0 {\n        return Abc_NamIntToStr(p, NameId);\n    } else {\n        return nil;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns internal buffer.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamBuffer(p *Abc_Nam_t) *Vec_Str_t {\n    Vec_StrClear(\u0026p.vBuffer);\n    return \u0026p.vBuffer;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [For each ID of the first manager, gives ID of the second one.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamComputeIdMap(p1 *Abc_Nam_t, p2 *Abc_Nam_t) *Vec_Int_t {\n    var vMap *Vec_Int_t;\n    var pThis string;\n    var piPlace *int32;\n    var iHandle1 int32;\n    var i int32;\n    if p1 == p2 {\n        return Vec_IntStartNatural( Abc_NamObjNumMax(p1) ); }\n    vMap = Vec_IntStart( Abc_NamObjNumMax(p1) );\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(\u0026p1.vInt2Handle)) \u0026\u0026 (((iHandle1) = Vec_IntEntry(\u0026p1.vInt2Handle, i)), 1); i++  {\n        pThis = Abc_NamHandleToStr( p1, iHandle1 );\n        piPlace = Abc_NamStrHashFind( p2, pThis, nil );\n        Vec_IntWriteEntry( vMap, i, *piPlace );\n//        Abc_Print( 1, \"%d-\u003e%d  \", i, *piPlace );\n    }\n    return vMap;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of common names in the array.]\n\n  Description [The array contains name IDs in the first manager.\n  The procedure returns the number of entries that correspond to names\n  in the first manager that appear in the second manager.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamReportCommon(vNameIds1 *Vec_Int_t, p1 *Abc_Nam_t, p2 *Abc_Nam_t) int32 {\n    var i, Entry, Counter int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNameIds1)) \u0026\u0026 (((Entry) = Vec_IntEntry(vNameIds1, i)), 1); i++  {\n        assert(Entry \u003e 0 \u0026\u0026 Entry \u003c Abc_NamObjNumMax(p1), \"Entry \u003e 0 \u0026\u0026 Entry \u003c Abc_NamObjNumMax(p1)\");\n        Counter += (Abc_NamStrFind(p2, Abc_NamStr(p1, Entry)) \u003e 0);\n//        if ( Abc_NamStrFind(p2, Abc_NamStr(p1, Entry)) == 0 )\n//            Abc_Print( 1, \"unique name \u003c%s\u003e\\n\", Abc_NamStr(p1, Entry) );\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the name that appears in p1 does not appear in p2.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NamReportUnique(vNameIds1 *Vec_Int_t, p1 *Abc_Nam_t, p2 *Abc_Nam_t) string {\n    var i, Entry int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNameIds1)) \u0026\u0026 (((Entry) = Vec_IntEntry(vNameIds1, i)), 1); i++  {\n        assert(Entry \u003e 0 \u0026\u0026 Entry \u003c Abc_NamObjNumMax(p1), \"Entry \u003e 0 \u0026\u0026 Entry \u003c Abc_NamObjNumMax(p1)\");\n        if Abc_NamStrFind(p2, Abc_NamStr(p1, Entry)) == 0 {\n            return Abc_NamStr(p1, Entry); }\n    }\n    return nil;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

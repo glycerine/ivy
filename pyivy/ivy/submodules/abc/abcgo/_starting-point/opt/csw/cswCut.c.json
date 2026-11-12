@@ -1,0 +1,501 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c",
+  "SHA256": "dca5f91ceb17a478e8fca69442d7639841f7781163bf01d32204f2157759b81a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nFanins \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 75,
+        "Column": 5,
+        "ByteOffset": 2123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nFanins \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 3086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutMax != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 9,
+        "ByteOffset": 3742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut.pFanins[i] == pCut1.pFanins[k] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 187,
+        "Column": 5,
+        "ByteOffset": 5851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFansNew \u003c pCut.nFanins );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 6122
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == nFansNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 284,
+        "Column": 5,
+        "ByteOffset": 8878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pC0.nFanins \u003e= pC1.nFanins );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 362,
+        "Column": 5,
+        "ByteOffset": 11148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nLeafMax \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 390,
+        "Column": 5,
+        "ByteOffset": 11926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nFanins \u003e 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 393,
+        "Column": 5,
+        "ByteOffset": 12041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars == 2 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 449,
+        "Column": 9,
+        "ByteOffset": 13986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( Csw_CutTruth(pCut), 0xAA, sizeof(unsigned) * p.nTruthWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 475,
+        "Column": 5,
+        "ByteOffset": 14741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 481,
+        "Column": 5,
+        "ByteOffset": 14923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Csw_ObjCuts(p, pObj) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 482,
+        "Column": 5,
+        "ByteOffset": 14966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 500,
+        "Column": 13,
+        "ByteOffset": 15841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCut.nFanins == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 505,
+        "Column": 13,
+        "ByteOffset": 15987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCut.nFanins == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 524,
+        "Column": 13,
+        "ByteOffset": 16773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iVar \u003c pCut.nFanins );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 549,
+        "Column": 9,
+        "ByteOffset": 17529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut.nFanins \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 550,
+        "Column": 9,
+        "ByteOffset": 17565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut.Cost \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 560,
+        "Column": 13,
+        "ByteOffset": 17886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pCut.Cost \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Csw_CutFindCost",
+      "Start": 1223,
+      "End": 1608,
+      "BodyStart": 1292,
+      "Original": "static inline int Csw_CutFindCost( Csw_Man_t * p, Csw_Cut_t * pCut )\n{\n    Aig_Obj_t * pLeaf;\n    int i, Cost = 0;\n    assert( pCut-\u003enFanins \u003e 0 );\n    Csw_CutForEachLeaf( p-\u003epManRes, pCut, pLeaf, i )\n    {\n//        Cost += pLeaf-\u003enRefs;\n        Cost += Csw_ObjRefs( p, pLeaf );\n//        printf( \"%d \", pLeaf-\u003enRefs );\n    }\n//printf( \"\\n\" );\n    return Cost * 100 / pCut-\u003enFanins;\n}",
+      "Draft": "func Csw_CutFindCost(p *Csw_Man_t, pCut *Csw_Cut_t) int32 {\n    var pLeaf *Aig_Obj_t;\n    var i, Cost int32;\n    assert(pCut.nFanins \u003e 0, \"pCut.nFanins \u003e 0\");\n    // inlining of macro Csw_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nFanins)) \u0026\u0026 ((pLeaf) = Aig_ManObj(p.pManRes, (pCut).pFanins[i])); i++  {\n//        Cost += pLeaf-\u003enRefs;\n        Cost += Csw_ObjRefs( p, pLeaf );\n//        printf( \"%d \", pLeaf-\u003enRefs );\n    }\n//printf( \"\\n\" );\n    return Cost * 100 / pCut.nFanins;\n}"
+    },
+    {
+      "Name": "Csw_CutFindCost2",
+      "Start": 1872,
+      "End": 2149,
+      "BodyStart": 1944,
+      "Original": "static inline float Csw_CutFindCost2( Csw_Man_t * p, Csw_Cut_t * pCut )\n{\n    Aig_Obj_t * pLeaf;\n    float Cost = 0.0;\n    int i;\n    assert( pCut-\u003enFanins \u003e 0 );\n    Csw_CutForEachLeaf( p-\u003epManRes, pCut, pLeaf, i )\n        Cost += (float)1.0/pLeaf-\u003enRefs;\n    return 1/Cost;\n}",
+      "Draft": "func Csw_CutFindCost2(p *Csw_Man_t, pCut *Csw_Cut_t) float32 {\n    var pLeaf *Aig_Obj_t;\n    var Cost float32  = 0.0;\n    var i int32;\n    assert(pCut.nFanins \u003e 0, \"pCut.nFanins \u003e 0\");\n    // inlining of macro Csw_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nFanins)) \u0026\u0026 ((pLeaf) = Aig_ManObj(p.pManRes, (pCut).pFanins[i])); i++  {\n        Cost += float32(1.0)/pLeaf.nRefs;\n    }\n    return 1/Cost;\n}"
+    },
+    {
+      "Name": "Csw_CutFindFree",
+      "Start": 2418,
+      "End": 2841,
+      "BodyStart": 2495,
+      "Original": "static inline Csw_Cut_t * Csw_CutFindFree( Csw_Man_t * p, Aig_Obj_t * pObj )\n{\n    Csw_Cut_t * pCut, * pCutMax;\n    int i;\n    pCutMax = NULL;\n    Csw_ObjForEachCut( p, pObj, pCut, i )\n    {\n        if ( pCut-\u003enFanins == 0 )\n            return pCut;\n        if ( pCutMax == NULL || pCutMax-\u003eCost \u003c pCut-\u003eCost )\n            pCutMax = pCut;\n    }\n    assert( pCutMax != NULL );\n    pCutMax-\u003enFanins = 0;\n    return pCutMax;\n}",
+      "Draft": "func Csw_CutFindFree(p *Csw_Man_t, pObj *Aig_Obj_t) *Csw_Cut_t {\n    var pCut, pCutMax *Csw_Cut_t;\n    var i int32;\n    pCutMax = nil;\n    // inlining of macro Csw_ObjForEachCut\n    for  i = 0, pCut = Csw_ObjCuts(p, pObj); i \u003c p.nCutsMax; i++, pCut = Csw_CutNext(pCut)  {\n        if pCut.nFanins == 0 {\n            return pCut; }\n        if pCutMax == nil || pCutMax.Cost \u003c pCut.Cost {\n            pCutMax = pCut; }\n    }\n    assert(pCutMax != nil, \"pCutMax != nil\");\n    pCutMax.nFanins = 0;\n    return pCutMax;\n}"
+    },
+    {
+      "Name": "Cut_TruthPhase",
+      "Start": 3140,
+      "End": 3562,
+      "BodyStart": 3217,
+      "Original": "static inline unsigned Cut_TruthPhase( Csw_Cut_t * pCut, Csw_Cut_t * pCut1 )\n{\n    unsigned uPhase = 0;\n    int i, k;\n    for ( i = k = 0; i \u003c pCut-\u003enFanins; i++ )\n    {\n        if ( k == pCut1-\u003enFanins )\n            break;\n        if ( pCut-\u003epFanins[i] \u003c pCut1-\u003epFanins[k] )\n            continue;\n        assert( pCut-\u003epFanins[i] == pCut1-\u003epFanins[k] );\n        uPhase |= (1 \u003c\u003c i);\n        k++;\n    }\n    return uPhase;\n}",
+      "Draft": "func Cut_TruthPhase(pCut *Csw_Cut_t, pCut1 *Csw_Cut_t) uint32 {\n    var uPhase uint32;\n    var i, k int32;\n    for  i = k = 0; i \u003c pCut.nFanins; i++  {\n        if k == pCut1.nFanins {\n            break; }\n        if pCut.pFanins[i] \u003c pCut1.pFanins[k] {\n            continue; }\n        assert(pCut.pFanins[i] == pCut1.pFanins[k], \"pCut.pFanins[i] == pCut1.pFanins[k]\");\n        uPhase |= (1 \u003c\u003c i);\n        k++;\n    }\n    return uPhase;\n}"
+    },
+    {
+      "Name": "Csw_CutComputeTruth",
+      "Start": 3831,
+      "End": 4838,
+      "BodyStart": 3961,
+      "Original": "unsigned * Csw_CutComputeTruth( Csw_Man_t * p, Csw_Cut_t * pCut, Csw_Cut_t * pCut0, Csw_Cut_t * pCut1, int fCompl0, int fCompl1 )\n{\n    // permute the first table\n    if ( fCompl0 ) \n        Kit_TruthNot( p-\u003epuTemp[0], Csw_CutTruth(pCut0), p-\u003enLeafMax );\n    else\n        Kit_TruthCopy( p-\u003epuTemp[0], Csw_CutTruth(pCut0), p-\u003enLeafMax );\n    Kit_TruthStretch( p-\u003epuTemp[2], p-\u003epuTemp[0], pCut0-\u003enFanins, p-\u003enLeafMax, Cut_TruthPhase(pCut, pCut0), 0 );\n    // permute the second table\n    if ( fCompl1 ) \n        Kit_TruthNot( p-\u003epuTemp[1], Csw_CutTruth(pCut1), p-\u003enLeafMax );\n    else\n        Kit_TruthCopy( p-\u003epuTemp[1], Csw_CutTruth(pCut1), p-\u003enLeafMax );\n    Kit_TruthStretch( p-\u003epuTemp[3], p-\u003epuTemp[1], pCut1-\u003enFanins, p-\u003enLeafMax, Cut_TruthPhase(pCut, pCut1), 0 );\n    // produce the resulting table\n    Kit_TruthAnd( Csw_CutTruth(pCut), p-\u003epuTemp[2], p-\u003epuTemp[3], p-\u003enLeafMax );\n//    assert( pCut-\u003enFanins \u003e= Kit_TruthSupportSize( Csw_CutTruth(pCut), p-\u003enLeafMax ) );\n    return Csw_CutTruth(pCut);\n}",
+      "Draft": "func Csw_CutComputeTruth(p *Csw_Man_t, pCut *Csw_Cut_t, pCut0 *Csw_Cut_t, pCut1 *Csw_Cut_t, fCompl0 int32, fCompl1 int32) *uint32 {\n    // permute the first table\n    if fCompl0 != 0 { \n        Kit_TruthNot( p.puTemp[0], Csw_CutTruth(pCut0), p.nLeafMax );\n    } else {\n        Kit_TruthCopy( p.puTemp[0], Csw_CutTruth(pCut0), p.nLeafMax ); }\n    Kit_TruthStretch( p.puTemp[2], p.puTemp[0], pCut0.nFanins, p.nLeafMax, Cut_TruthPhase(pCut, pCut0), 0 );\n    // permute the second table\n    if fCompl1 != 0 { \n        Kit_TruthNot( p.puTemp[1], Csw_CutTruth(pCut1), p.nLeafMax );\n    } else {\n        Kit_TruthCopy( p.puTemp[1], Csw_CutTruth(pCut1), p.nLeafMax ); }\n    Kit_TruthStretch( p.puTemp[3], p.puTemp[1], pCut1.nFanins, p.nLeafMax, Cut_TruthPhase(pCut, pCut1), 0 );\n    // produce the resulting table\n    Kit_TruthAnd( Csw_CutTruth(pCut), p.puTemp[2], p.puTemp[3], p.nLeafMax );\n//    assert( pCut-\u003enFanins \u003e= Kit_TruthSupportSize( Csw_CutTruth(pCut), p-\u003enLeafMax ) );\n    return Csw_CutTruth(pCut);\n}"
+    },
+    {
+      "Name": "Csw_CutSupportMinimize",
+      "Start": 5124,
+      "End": 6054,
+      "BodyStart": 5186,
+      "Original": "int Csw_CutSupportMinimize( Csw_Man_t * p, Csw_Cut_t * pCut )\n{\n    unsigned * pTruth;\n    int uSupp, nFansNew, i, k;\n    // get truth table\n    pTruth = Csw_CutTruth( pCut );\n    // get support \n    uSupp = Kit_TruthSupport( pTruth, p-\u003enLeafMax );\n    // get the new support size\n    nFansNew = Kit_WordCountOnes( uSupp );\n    // check if there are redundant variables\n    if ( nFansNew == pCut-\u003enFanins )\n        return nFansNew;\n    assert( nFansNew \u003c pCut-\u003enFanins );\n    // minimize support\n    Kit_TruthShrink( p-\u003epuTemp[0], pTruth, nFansNew, p-\u003enLeafMax, uSupp, 1 );\n    for ( i = k = 0; i \u003c pCut-\u003enFanins; i++ )\n        if ( uSupp \u0026 (1 \u003c\u003c i) )\n            pCut-\u003epFanins[k++] = pCut-\u003epFanins[i];\n    assert( k == nFansNew );\n    pCut-\u003enFanins = nFansNew;\n//    assert( nFansNew == Kit_TruthSupportSize( pTruth, p-\u003enLeafMax ) );\n//Extra_PrintBinary( stdout, pTruth, (1\u003c\u003cp-\u003enLeafMax) ); printf( \"\\n\" );\n    return nFansNew;\n}",
+      "Draft": "func Csw_CutSupportMinimize(p *Csw_Man_t, pCut *Csw_Cut_t) int32 {\n    var pTruth *uint32;\n    var uSupp, nFansNew, i, k int32;\n    // get truth table\n    pTruth = Csw_CutTruth( pCut );\n    // get support \n    uSupp = Kit_TruthSupport( pTruth, p.nLeafMax );\n    // get the new support size\n    nFansNew = Kit_WordCountOnes( uSupp );\n    // check if there are redundant variables\n    if nFansNew == pCut.nFanins {\n        return nFansNew; }\n    assert(nFansNew \u003c pCut.nFanins, \"nFansNew \u003c pCut.nFanins\");\n    // minimize support\n    Kit_TruthShrink( p.puTemp[0], pTruth, nFansNew, p.nLeafMax, uSupp, 1 );\n    for  i = k = 0; i \u003c pCut.nFanins; i++  {\n        if uSupp \u0026 (1 \u003c\u003c i) {\n            pCut.pFanins[k++] = pCut.pFanins[i]; }\n    }\n    assert(k == nFansNew, \"k == nFansNew\");\n    pCut.nFanins = nFansNew;\n//    assert( nFansNew == Kit_TruthSupportSize( pTruth, p-\u003enLeafMax ) );\n//Extra_PrintBinary( stdout, pTruth, (1\u003c\u003cp-\u003enLeafMax) ); printf( \"\\n\" );\n    return nFansNew;\n}"
+    },
+    {
+      "Name": "Csw_CutCheckDominance",
+      "Start": 6329,
+      "End": 6778,
+      "BodyStart": 6407,
+      "Original": "static inline int Csw_CutCheckDominance( Csw_Cut_t * pDom, Csw_Cut_t * pCut )\n{\n    int i, k;\n    for ( i = 0; i \u003c (int)pDom-\u003enFanins; i++ )\n    {\n        for ( k = 0; k \u003c (int)pCut-\u003enFanins; k++ )\n            if ( pDom-\u003epFanins[i] == pCut-\u003epFanins[k] )\n                break;\n        if ( k == (int)pCut-\u003enFanins ) // node i in pDom is not contained in pCut\n            return 0;\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}",
+      "Draft": "func Csw_CutCheckDominance(pDom *Csw_Cut_t, pCut *Csw_Cut_t) int32 {\n    var i, k int32;\n    for  i = 0; i \u003c int32(pDom.nFanins); i++  {\n        for  k = 0; k \u003c int32(pCut.nFanins); k++  {\n            if pDom.pFanins[i] == pCut.pFanins[k] {\n                break; }\n        }\n        if k == int32(pCut.nFanins) { // node i in pDom is not contained in pCut\n            return 0; }\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}"
+    },
+    {
+      "Name": "Csw_CutFilter",
+      "Start": 7048,
+      "End": 8164,
+      "BodyStart": 7119,
+      "Original": "int Csw_CutFilter( Csw_Man_t * p, Aig_Obj_t * pObj, Csw_Cut_t * pCut )\n{ \n    Csw_Cut_t * pTemp;\n    int i;\n    // go through the cuts of the node\n    Csw_ObjForEachCut( p, pObj, pTemp, i )\n    {\n        if ( pTemp-\u003enFanins \u003c 2 )\n            continue;\n        if ( pTemp == pCut )\n            continue;\n        if ( pTemp-\u003enFanins \u003e pCut-\u003enFanins )\n        {\n            // skip the non-contained cuts\n            if ( (pTemp-\u003euSign \u0026 pCut-\u003euSign) != pCut-\u003euSign )\n                continue;\n            // check containment seriously\n            if ( Csw_CutCheckDominance( pCut, pTemp ) )\n            {\n                // remove contained cut\n                pTemp-\u003enFanins = 0;\n            }\n         }\n        else\n        {\n            // skip the non-contained cuts\n            if ( (pTemp-\u003euSign \u0026 pCut-\u003euSign) != pTemp-\u003euSign )\n                continue;\n            // check containment seriously\n            if ( Csw_CutCheckDominance( pTemp, pCut ) )\n            {\n                // remove the given\n                pCut-\u003enFanins = 0;\n                return 1;\n            }\n        }\n    }\n    return 0;\n}",
+      "Draft": "func Csw_CutFilter(p *Csw_Man_t, pObj *Aig_Obj_t, pCut *Csw_Cut_t) int32 { \n    var pTemp *Csw_Cut_t;\n    var i int32;\n    // go through the cuts of the node\n    // inlining of macro Csw_ObjForEachCut\n    for  i = 0, pTemp = Csw_ObjCuts(p, pObj); i \u003c p.nCutsMax; i++, pTemp = Csw_CutNext(pTemp)  {\n        if pTemp.nFanins \u003c 2 {\n            continue; }\n        if pTemp == pCut {\n            continue; }\n        if pTemp.nFanins \u003e pCut.nFanins {\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pCut.uSign) != pCut.uSign {\n                continue; }\n            // check containment seriously\n            if Csw_CutCheckDominance( pCut, pTemp ) != 0 {\n                // remove contained cut\n                pTemp.nFanins = 0;\n            }\n         \n        } else {\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pCut.uSign) != pTemp.uSign {\n                continue; }\n            // check containment seriously\n            if Csw_CutCheckDominance( pTemp, pCut ) != 0 {\n                // remove the given\n                pCut.nFanins = 0;\n                return 1;\n            }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Csw_CutMergeOrdered",
+      "Start": 8416,
+      "End": 10546,
+      "BodyStart": 8521,
+      "Original": "static inline int Csw_CutMergeOrdered( Csw_Man_t * p, Csw_Cut_t * pC0, Csw_Cut_t * pC1, Csw_Cut_t * pC )\n{ \n    int i, k, c;\n    assert( pC0-\u003enFanins \u003e= pC1-\u003enFanins );\n    // the case of the largest cut sizes\n    if ( pC0-\u003enFanins == p-\u003enLeafMax \u0026\u0026 pC1-\u003enFanins == p-\u003enLeafMax )\n    {\n        for ( i = 0; i \u003c pC0-\u003enFanins; i++ )\n            if ( pC0-\u003epFanins[i] != pC1-\u003epFanins[i] )\n                return 0;\n        for ( i = 0; i \u003c pC0-\u003enFanins; i++ )\n            pC-\u003epFanins[i] = pC0-\u003epFanins[i];\n        pC-\u003enFanins = pC0-\u003enFanins;\n        return 1;\n    }\n    // the case when one of the cuts is the largest\n    if ( pC0-\u003enFanins == p-\u003enLeafMax )\n    {\n        for ( i = 0; i \u003c pC1-\u003enFanins; i++ )\n        {\n            for ( k = pC0-\u003enFanins - 1; k \u003e= 0; k-- )\n                if ( pC0-\u003epFanins[k] == pC1-\u003epFanins[i] )\n                    break;\n            if ( k == -1 ) // did not find\n                return 0;\n        }\n        for ( i = 0; i \u003c pC0-\u003enFanins; i++ )\n            pC-\u003epFanins[i] = pC0-\u003epFanins[i];\n        pC-\u003enFanins = pC0-\u003enFanins;\n        return 1;\n    }\n\n    // compare two cuts with different numbers\n    i = k = 0;\n    for ( c = 0; c \u003c p-\u003enLeafMax; c++ )\n    {\n        if ( k == pC1-\u003enFanins )\n        {\n            if ( i == pC0-\u003enFanins )\n            {\n                pC-\u003enFanins = c;\n                return 1;\n            }\n            pC-\u003epFanins[c] = pC0-\u003epFanins[i++];\n            continue;\n        }\n        if ( i == pC0-\u003enFanins )\n        {\n            if ( k == pC1-\u003enFanins )\n            {\n                pC-\u003enFanins = c;\n                return 1;\n            }\n            pC-\u003epFanins[c] = pC1-\u003epFanins[k++];\n            continue;\n        }\n        if ( pC0-\u003epFanins[i] \u003c pC1-\u003epFanins[k] )\n        {\n            pC-\u003epFanins[c] = pC0-\u003epFanins[i++];\n            continue;\n        }\n        if ( pC0-\u003epFanins[i] \u003e pC1-\u003epFanins[k] )\n        {\n            pC-\u003epFanins[c] = pC1-\u003epFanins[k++];\n            continue;\n        }\n        pC-\u003epFanins[c] = pC0-\u003epFanins[i++]; \n        k++;\n    }\n    if ( i \u003c pC0-\u003enFanins || k \u003c pC1-\u003enFanins )\n        return 0;\n    pC-\u003enFanins = c;\n    return 1;\n}",
+      "Draft": "func Csw_CutMergeOrdered(p *Csw_Man_t, pC0 *Csw_Cut_t, pC1 *Csw_Cut_t, pC *Csw_Cut_t) int32 { \n    var i, k, c int32;\n    assert(pC0.nFanins \u003e= pC1.nFanins, \"pC0.nFanins \u003e= pC1.nFanins\");\n    // the case of the largest cut sizes\n    if pC0.nFanins == p.nLeafMax \u0026\u0026 pC1.nFanins == p.nLeafMax {\n        for  i = 0; i \u003c pC0.nFanins; i++  {\n            if pC0.pFanins[i] != pC1.pFanins[i] {\n                return 0; }\n        }\n        for  i = 0; i \u003c pC0.nFanins; i++  {\n            pC.pFanins[i] = pC0.pFanins[i];\n        }\n        pC.nFanins = pC0.nFanins;\n        return 1;\n    }\n    // the case when one of the cuts is the largest\n    if pC0.nFanins == p.nLeafMax {\n        for  i = 0; i \u003c pC1.nFanins; i++  {\n            for  k = pC0.nFanins - 1; k \u003e= 0; k--  {\n                if pC0.pFanins[k] == pC1.pFanins[i] {\n                    break; }\n            }\n            if k == -1 { // did not find\n                return 0; }\n        }\n        for  i = 0; i \u003c pC0.nFanins; i++  {\n            pC.pFanins[i] = pC0.pFanins[i];\n        }\n        pC.nFanins = pC0.nFanins;\n        return 1;\n    }\n\n    // compare two cuts with different numbers\n    i = k = 0;\n    for  c = 0; c \u003c p.nLeafMax; c++  {\n        if k == pC1.nFanins {\n            if i == pC0.nFanins {\n                pC.nFanins = c;\n                return 1;\n            }\n            pC.pFanins[c] = pC0.pFanins[i]; i++;\n            continue;\n        }\n        if i == pC0.nFanins {\n            if k == pC1.nFanins {\n                pC.nFanins = c;\n                return 1;\n            }\n            pC.pFanins[c] = pC1.pFanins[k]; k++;\n            continue;\n        }\n        if pC0.pFanins[i] \u003c pC1.pFanins[k] {\n            pC.pFanins[c] = pC0.pFanins[i]; i++;\n            continue;\n        }\n        if pC0.pFanins[i] \u003e pC1.pFanins[k] {\n            pC.pFanins[c] = pC1.pFanins[k]; k++;\n            continue;\n        }\n        pC.pFanins[c] = pC0.pFanins[i]; i++; \n        k++;\n    }\n    if i \u003c pC0.nFanins || k \u003c pC1.nFanins {\n        return 0; }\n    pC.nFanins = c;\n    return 1;\n}"
+    },
+    {
+      "Name": "Csw_CutMerge",
+      "Start": 10819,
+      "End": 11270,
+      "BodyStart": 10909,
+      "Original": "int Csw_CutMerge( Csw_Man_t * p, Csw_Cut_t * pCut0, Csw_Cut_t * pCut1, Csw_Cut_t * pCut )\n{ \n    assert( p-\u003enLeafMax \u003e 0 );\n    // merge the nodes\n    if ( pCut0-\u003enFanins \u003c pCut1-\u003enFanins )\n    {\n        if ( !Csw_CutMergeOrdered( p, pCut1, pCut0, pCut ) )\n            return 0;\n    }\n    else\n    {\n        if ( !Csw_CutMergeOrdered( p, pCut0, pCut1, pCut ) )\n            return 0;\n    }\n    pCut-\u003euSign = pCut0-\u003euSign | pCut1-\u003euSign;\n    return 1;\n}",
+      "Draft": "func Csw_CutMerge(p *Csw_Man_t, pCut0 *Csw_Cut_t, pCut1 *Csw_Cut_t, pCut *Csw_Cut_t) int32 { \n    assert(p.nLeafMax \u003e 0, \"p.nLeafMax \u003e 0\");\n    // merge the nodes\n    if pCut0.nFanins \u003c pCut1.nFanins {\n        if !(Csw_CutMergeOrdered( p, pCut1, pCut0, pCut ) != 0) {\n            return 0; }\n    \n    } else {\n        if !(Csw_CutMergeOrdered( p, pCut0, pCut1, pCut ) != 0) {\n            return 0; }\n    }\n    pCut.uSign = pCut0.uSign | pCut1.uSign;\n    return 1;\n}"
+    },
+    {
+      "Name": "Csw_ObjTwoVarCut",
+      "Start": 11567,
+      "End": 12763,
+      "BodyStart": 11631,
+      "Original": "Aig_Obj_t * Csw_ObjTwoVarCut( Csw_Man_t * p, Csw_Cut_t * pCut )\n{\n    Aig_Obj_t * pRes, * pIn0, * pIn1;\n    int nVars, uTruth, fCompl = 0;\n    assert( pCut-\u003enFanins \u003e 2 );\n    // minimize support of this cut\n    nVars = Csw_CutSupportMinimize( p, pCut );\n    assert( nVars == 2 );\n    // get the fanins\n    pIn0 = Aig_ManObj( p-\u003epManRes, pCut-\u003epFanins[0] );\n    pIn1 = Aig_ManObj( p-\u003epManRes, pCut-\u003epFanins[1] );\n    // derive the truth table\n    uTruth = 0xF \u0026 *Csw_CutTruth(pCut);\n    if ( uTruth == 14 || uTruth == 13 || uTruth == 11 || uTruth == 7 )\n    {\n        uTruth = 0xF \u0026 ~uTruth;\n        fCompl = 1;\n    }\n    // compute the result\n    pRes = NULL;\n    if ( uTruth == 1  )  // 0001  // 1110  14\n        pRes = Aig_And( p-\u003epManRes, Aig_Not(pIn0), Aig_Not(pIn1) );\n    if ( uTruth == 2  )  // 0010  // 1101  13 \n        pRes = Aig_And( p-\u003epManRes,         pIn0 , Aig_Not(pIn1) );\n    if ( uTruth == 4  )  // 0100  // 1011  11\n        pRes = Aig_And( p-\u003epManRes, Aig_Not(pIn0),         pIn1  );\n    if ( uTruth == 8  )  // 1000  // 0111   7\n        pRes = Aig_And( p-\u003epManRes,         pIn0 ,         pIn1  );\n    if ( pRes )\n        pRes = Aig_NotCond( pRes, fCompl );\n    return pRes;\n}",
+      "Draft": "func Csw_ObjTwoVarCut(p *Csw_Man_t, pCut *Csw_Cut_t) *Aig_Obj_t {\n    var pRes, pIn0, pIn1 *Aig_Obj_t;\n    var nVars, uTruth, fCompl int32;\n    assert(pCut.nFanins \u003e 2, \"pCut.nFanins \u003e 2\");\n    // minimize support of this cut\n    nVars = Csw_CutSupportMinimize( p, pCut );\n    assert(nVars == 2, \"nVars == 2\");\n    // get the fanins\n    pIn0 = Aig_ManObj( p.pManRes, pCut.pFanins[0] );\n    pIn1 = Aig_ManObj( p.pManRes, pCut.pFanins[1] );\n    // derive the truth table\n    uTruth = 0xF \u0026 *Csw_CutTruth(pCut);\n    if uTruth == 14 || uTruth == 13 || uTruth == 11 || uTruth == 7 {\n        uTruth = 0xF \u0026 ~uTruth;\n        fCompl = 1;\n    }\n    // compute the result\n    pRes = nil;\n    if uTruth == 1 {  // 0001  // 1110  14\n        pRes = Aig_And( p.pManRes, Aig_Not(pIn0), Aig_Not(pIn1) ); }\n    if uTruth == 2 {  // 0010  // 1101  13 \n        pRes = Aig_And( p.pManRes,         pIn0 , Aig_Not(pIn1) ); }\n    if uTruth == 4 {  // 0100  // 1011  11\n        pRes = Aig_And( p.pManRes, Aig_Not(pIn0),         pIn1  ); }\n    if uTruth == 8 {  // 1000  // 0111   7\n        pRes = Aig_And( p.pManRes,         pIn0 ,         pIn1  ); }\n    if pRes {\n        pRes = Aig_NotCond( pRes, fCompl ); }\n    return pRes;\n}"
+    },
+    {
+      "Name": "Csw_ObjPrepareCuts",
+      "Start": 12999,
+      "End": 13806,
+      "BodyStart": 13076,
+      "Original": "Csw_Cut_t * Csw_ObjPrepareCuts( Csw_Man_t * p, Aig_Obj_t * pObj, int fTriv )\n{\n    Csw_Cut_t * pCutSet, * pCut;\n    int i;\n    // create the cutset of the node\n    pCutSet = (Csw_Cut_t *)Aig_MmFixedEntryFetch( p-\u003epMemCuts );\n    Csw_ObjSetCuts( p, pObj, pCutSet );\n    Csw_ObjForEachCut( p, pObj, pCut, i )\n    {\n        pCut-\u003enFanins = 0;\n        pCut-\u003eiNode = pObj-\u003eId;\n        pCut-\u003enCutSize = p-\u003enCutSize;\n        pCut-\u003enLeafMax = p-\u003enLeafMax;\n    }\n    // add unit cut if needed\n    if ( fTriv )\n    {\n        pCut = pCutSet;\n        pCut-\u003eCost = 0;\n        pCut-\u003eiNode = pObj-\u003eId;\n        pCut-\u003enFanins = 1;\n        pCut-\u003epFanins[0] = pObj-\u003eId;\n        pCut-\u003euSign = Aig_ObjCutSign( pObj-\u003eId );\n        memset( Csw_CutTruth(pCut), 0xAA, sizeof(unsigned) * p-\u003enTruthWords );\n    }\n    return pCutSet;\n}",
+      "Draft": "func Csw_ObjPrepareCuts(p *Csw_Man_t, pObj *Aig_Obj_t, fTriv int32) *Csw_Cut_t {\n    var pCutSet, pCut *Csw_Cut_t;\n    var i int32;\n    // create the cutset of the node\n    pCutSet = (Csw_Cut_t *)Aig_MmFixedEntryFetch( p.pMemCuts );\n    Csw_ObjSetCuts( p, pObj, pCutSet );\n    // inlining of macro Csw_ObjForEachCut\n    for  i = 0, pCut = Csw_ObjCuts(p, pObj); i \u003c p.nCutsMax; i++, pCut = Csw_CutNext(pCut)  {\n        pCut.nFanins = 0;\n        pCut.iNode = pObj.Id;\n        pCut.nCutSize = p.nCutSize;\n        pCut.nLeafMax = p.nLeafMax;\n    }\n    // add unit cut if needed\n    if fTriv != 0 {\n        pCut = pCutSet;\n        pCut.Cost = 0;\n        pCut.iNode = pObj.Id;\n        pCut.nFanins = 1;\n        pCut.pFanins[0] = pObj.Id;\n        pCut.uSign = Aig_ObjCutSign( pObj.Id );\n        memset( Csw_CutTruth(pCut), 0xAA, sizeof(unsigned) * p.nTruthWords );\n    }\n    return pCutSet;\n}"
+    },
+    {
+      "Name": "Csw_ObjSweep",
+      "Start": 14089,
+      "End": 17514,
+      "BodyStart": 14160,
+      "Original": "Aig_Obj_t * Csw_ObjSweep( Csw_Man_t * p, Aig_Obj_t * pObj, int fTriv )\n{\n    int fUseResub = 1;\n    Csw_Cut_t * pCut0, * pCut1, * pCut, * pCutSet;\n    Aig_Obj_t * pFanin0 = Aig_ObjFanin0(pObj);\n    Aig_Obj_t * pFanin1 = Aig_ObjFanin1(pObj);\n    Aig_Obj_t * pObjNew;\n    unsigned * pTruth;\n    int i, k, nVars, nFanins, iVar;\n    abctime clk;\n\n    assert( !Aig_IsComplement(pObj) );\n    if ( !Aig_ObjIsNode(pObj) )\n        return pObj;\n    if ( Csw_ObjCuts(p, pObj) )\n        return pObj;\n    // the node is not processed yet\n    assert( Csw_ObjCuts(p, pObj) == NULL );\n    assert( Aig_ObjIsNode(pObj) );\n\n    // set up the first cut\n    pCutSet = Csw_ObjPrepareCuts( p, pObj, fTriv );\n\n    // compute pair-wise cut combinations while checking table\n    Csw_ObjForEachCut( p, pFanin0, pCut0, i )\n    if ( pCut0-\u003enFanins \u003e 0 )\n    Csw_ObjForEachCut( p, pFanin1, pCut1, k )\n    if ( pCut1-\u003enFanins \u003e 0 )\n    {\n        // make sure K-feasible cut exists\n        if ( Kit_WordCountOnes(pCut0-\u003euSign | pCut1-\u003euSign) \u003e p-\u003enLeafMax )\n            continue;\n        // get the next cut of this node\n        pCut = Csw_CutFindFree( p, pObj );\nclk = Abc_Clock();\n        // assemble the new cut\n        if ( !Csw_CutMerge( p, pCut0, pCut1, pCut ) )\n        {\n            assert( pCut-\u003enFanins == 0 );\n            continue;\n        }\n        // check containment\n        if ( Csw_CutFilter( p, pObj, pCut ) )\n        {\n            assert( pCut-\u003enFanins == 0 );\n            continue;\n        }\n        // create its truth table\n        pTruth = Csw_CutComputeTruth( p, pCut, pCut0, pCut1, Aig_ObjFaninC0(pObj), Aig_ObjFaninC1(pObj) );\n        // support minimize the truth table\n        nFanins = pCut-\u003enFanins;\n//        nVars = Csw_CutSupportMinimize( p, pCut ); // leads to quality degradation\n        nVars = Kit_TruthSupportSize( pTruth, p-\u003enLeafMax );\np-\u003etimeCuts += Abc_Clock() - clk;\n\n        // check for trivial truth tables\n        if ( nVars == 0 )\n        {\n            p-\u003enNodesTriv0++;\n            return Aig_NotCond( Aig_ManConst1(p-\u003epManRes), !(pTruth[0] \u0026 1) );\n        }\n        if ( nVars == 1 )\n        {\n            p-\u003enNodesTriv1++;\n            iVar = Kit_WordFindFirstBit( Kit_TruthSupport(pTruth, p-\u003enLeafMax) );\n            assert( iVar \u003c pCut-\u003enFanins );\n            return Aig_NotCond( Aig_ManObj(p-\u003epManRes, pCut-\u003epFanins[iVar]), (pTruth[0] \u0026 1) );\n        }\n        if ( nVars == 2 \u0026\u0026 nFanins \u003e 2 \u0026\u0026 fUseResub )\n        {\n            if ( (pObjNew = Csw_ObjTwoVarCut( p, pCut )) )\n            {\n                p-\u003enNodesTriv2++;\n                return pObjNew;\n            }\n        }\n\n        // check if an equivalent node with the same cut exists\nclk = Abc_Clock();\n        pObjNew = pCut-\u003enFanins \u003e 2 ? Csw_TableCutLookup( p, pCut ) : NULL;\np-\u003etimeHash += Abc_Clock() - clk;\n        if ( pObjNew )\n        {\n            p-\u003enNodesCuts++;\n            return pObjNew;\n        }\n\n        // assign the cost\n        pCut-\u003eCost = Csw_CutFindCost( p, pCut );\n        assert( pCut-\u003enFanins \u003e 0 );\n        assert( pCut-\u003eCost \u003e 0 );\n    }\n    p-\u003enNodesTried++;\n\n    // load the resulting cuts into the table\nclk = Abc_Clock();\n    Csw_ObjForEachCut( p, pObj, pCut, i )\n    {\n        if ( pCut-\u003enFanins \u003e 2 )\n        {\n            assert( pCut-\u003eCost \u003e 0 );\n            Csw_TableCutInsert( p, pCut );\n        }\n    }\np-\u003etimeHash += Abc_Clock() - clk;\n\n    // return the node if could not replace it\n    return pObj;\n}",
+      "Draft": "func Csw_ObjSweep(p *Csw_Man_t, pObj *Aig_Obj_t, fTriv int32) *Aig_Obj_t {\n    var fUseResub int32  = 1;\n    var pCut0, pCut1, pCut, pCutSet *Csw_Cut_t;\n    var pFanin0 *Aig_Obj_t  = Aig_ObjFanin0(pObj);\n    var pFanin1 *Aig_Obj_t  = Aig_ObjFanin1(pObj);\n    var pObjNew *Aig_Obj_t;\n    var pTruth *uint32;\n    var i, k, nVars, nFanins, iVar int32;\n    var clk abctime;\n\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if !Aig_ObjIsNode(pObj) {\n        return pObj; }\n    if Csw_ObjCuts(p, pObj) {\n        return pObj; }\n    // the node is not processed yet\n    assert(Csw_ObjCuts(p, pObj) == nil, \"Csw_ObjCuts(p, pObj) == nil\");\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n\n    // set up the first cut\n    pCutSet = Csw_ObjPrepareCuts( p, pObj, fTriv );\n\n    // compute pair-wise cut combinations while checking table\n    // inlining of macro Csw_ObjForEachCut\n    for  i = 0, pCut0 = Csw_ObjCuts(p, pFanin0); i \u003c p.nCutsMax; i++, pCut0 = Csw_CutNext(pCut0)  { \n    if pCut0.nFanins \u003e 0 {\n    // inlining of macro Csw_ObjForEachCut\n    for  k = 0, pCut1 = Csw_ObjCuts(p, pFanin1); k \u003c p.nCutsMax; k++, pCut1 = Csw_CutNext(pCut1)  { \n    if pCut1.nFanins \u003e 0 {\n        // make sure K-feasible cut exists\n        if Kit_WordCountOnes(pCut0.uSign | pCut1.uSign) \u003e p.nLeafMax {\n            continue; }\n        // get the next cut of this node\n        pCut = Csw_CutFindFree( p, pObj );\nclk = Abc_Clock();\n        // assemble the new cut\n        if !(Csw_CutMerge( p, pCut0, pCut1, pCut ) != 0) {\n            assert(pCut.nFanins == 0, \"pCut.nFanins == 0\");\n            continue;\n        }\n        // check containment\n        if Csw_CutFilter( p, pObj, pCut ) != 0 {\n            assert(pCut.nFanins == 0, \"pCut.nFanins == 0\");\n            continue;\n        }\n        // create its truth table\n        pTruth = Csw_CutComputeTruth( p, pCut, pCut0, pCut1, Aig_ObjFaninC0(pObj), Aig_ObjFaninC1(pObj) );\n        // support minimize the truth table\n        nFanins = pCut.nFanins;\n//        nVars = Csw_CutSupportMinimize( p, pCut ); // leads to quality degradation\n        nVars = Kit_TruthSupportSize( pTruth, p.nLeafMax );\np.timeCuts += Abc_Clock() - clk;\n\n        // check for trivial truth tables\n        if nVars == 0 {\n            p.nNodesTriv0++;\n            return Aig_NotCond( Aig_ManConst1(p.pManRes), !(pTruth[0] \u0026 1) );\n        }\n        if nVars == 1 {\n            p.nNodesTriv1++;\n            iVar = Kit_WordFindFirstBit( Kit_TruthSupport(pTruth, p.nLeafMax) );\n            assert(iVar \u003c pCut.nFanins, \"iVar \u003c pCut.nFanins\");\n            return Aig_NotCond( Aig_ManObj(p.pManRes, pCut.pFanins[iVar]), (pTruth[0] \u0026 1) );\n        }\n        if nVars == 2 \u0026\u0026 nFanins \u003e 2 \u0026\u0026 (fUseResub != 0) {\n            if pObjNew = Csw_ObjTwoVarCut( p, pCut ) {\n                p.nNodesTriv2++;\n                return pObjNew;\n            }\n        }\n\n        // check if an equivalent node with the same cut exists\nclk = Abc_Clock();\n        if pCut.nFanins \u003e 2 {\n            pObjNew = Csw_TableCutLookup( p, pCut );\n        } else {\n            pObjNew = nil;\n        }\np.timeHash += Abc_Clock() - clk;\n        if pObjNew != nil {\n            p.nNodesCuts++;\n            return pObjNew;\n        }\n\n        // assign the cost\n        pCut.Cost = Csw_CutFindCost( p, pCut );\n        assert(pCut.nFanins \u003e 0, \"pCut.nFanins \u003e 0\");\n        assert(pCut.Cost \u003e 0, \"pCut.Cost \u003e 0\");\n    }\n    } }\n    }\n    p.nNodesTried++;\n\n    // load the resulting cuts into the table\nclk = Abc_Clock();\n    // inlining of macro Csw_ObjForEachCut\n    for  i = 0, pCut = Csw_ObjCuts(p, pObj); i \u003c p.nCutsMax; i++, pCut = Csw_CutNext(pCut)  {\n        if pCut.nFanins \u003e 2 {\n            assert(pCut.Cost \u003e 0, \"pCut.Cost \u003e 0\");\n            Csw_TableCutInsert( p, pCut );\n        }\n    }\np.timeHash += Abc_Clock() - clk;\n\n    // return the node if could not replace it\n    return pObj;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::mechanical::sizeof::14285",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13742,
+      "End": 13748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::pointer-cast::13609",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13173,
+      "End": 13186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::Csw_CutFindCost",
+      "Category": "semantic-review",
+      "Symbol": "Csw_CutFindCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1223,
+      "End": 1608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::Csw_CutFindCost2",
+      "Category": "semantic-review",
+      "Symbol": "Csw_CutFindCost2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1872,
+      "End": 2149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::Csw_CutFindFree",
+      "Category": "semantic-review",
+      "Symbol": "Csw_CutFindFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2418,
+      "End": 2841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::Cut_TruthPhase",
+      "Category": "semantic-review",
+      "Symbol": "Cut_TruthPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3140,
+      "End": 3562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::Csw_CutComputeTruth",
+      "Category": "semantic-review",
+      "Symbol": "Csw_CutComputeTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3831,
+      "End": 4838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::Csw_CutSupportMinimize",
+      "Category": "semantic-review",
+      "Symbol": "Csw_CutSupportMinimize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5124,
+      "End": 6054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::Csw_CutCheckDominance",
+      "Category": "semantic-review",
+      "Symbol": "Csw_CutCheckDominance",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6329,
+      "End": 6778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::Csw_CutFilter",
+      "Category": "semantic-review",
+      "Symbol": "Csw_CutFilter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7048,
+      "End": 8164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::Csw_CutMergeOrdered",
+      "Category": "semantic-review",
+      "Symbol": "Csw_CutMergeOrdered",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8416,
+      "End": 10546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::Csw_CutMerge",
+      "Category": "semantic-review",
+      "Symbol": "Csw_CutMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10819,
+      "End": 11270
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::Csw_ObjTwoVarCut",
+      "Category": "semantic-review",
+      "Symbol": "Csw_ObjTwoVarCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11567,
+      "End": 12763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::Csw_ObjPrepareCuts",
+      "Category": "semantic-review",
+      "Symbol": "Csw_ObjPrepareCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12999,
+      "End": 13806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::Csw_ObjSweep",
+      "Category": "semantic-review",
+      "Symbol": "Csw_ObjSweep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14089,
+      "End": 17514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCut.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17761
+    }
+  ],
+  "Draft": "package csw\n\n/**CFile****************************************************************\n\n  FileName    [cswCut.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Cut sweeping.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - July 11, 2007.]\n\n  Revision    [$Id: cswCut.c,v 1.00 2007/07/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cswInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Compute the cost of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_CutFindCost(p *Csw_Man_t, pCut *Csw_Cut_t) int32 {\n    var pLeaf *Aig_Obj_t;\n    var i, Cost int32;\n    assert(pCut.nFanins \u003e 0, \"pCut.nFanins \u003e 0\");\n    // inlining of macro Csw_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nFanins)) \u0026\u0026 ((pLeaf) = Aig_ManObj(p.pManRes, (pCut).pFanins[i])); i++  {\n//        Cost += pLeaf-\u003enRefs;\n        Cost += Csw_ObjRefs( p, pLeaf );\n//        printf( \"%d \", pLeaf-\u003enRefs );\n    }\n//printf( \"\\n\" );\n    return Cost * 100 / pCut.nFanins;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute the cost of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_CutFindCost2(p *Csw_Man_t, pCut *Csw_Cut_t) float32 {\n    var pLeaf *Aig_Obj_t;\n    var Cost float32  = 0.0;\n    var i int32;\n    assert(pCut.nFanins \u003e 0, \"pCut.nFanins \u003e 0\");\n    // inlining of macro Csw_CutForEachLeaf\n    for  i = 0; (i \u003c int32((pCut).nFanins)) \u0026\u0026 ((pLeaf) = Aig_ManObj(p.pManRes, (pCut).pFanins[i])); i++  {\n        Cost += float32(1.0)/pLeaf.nRefs;\n    }\n    return 1/Cost;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the next free cut to use.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_CutFindFree(p *Csw_Man_t, pObj *Aig_Obj_t) *Csw_Cut_t {\n    var pCut, pCutMax *Csw_Cut_t;\n    var i int32;\n    pCutMax = nil;\n    // inlining of macro Csw_ObjForEachCut\n    for  i = 0, pCut = Csw_ObjCuts(p, pObj); i \u003c p.nCutsMax; i++, pCut = Csw_CutNext(pCut)  {\n        if pCut.nFanins == 0 {\n            return pCut; }\n        if pCutMax == nil || pCutMax.Cost \u003c pCut.Cost {\n            pCutMax = pCut; }\n    }\n    assert(pCutMax != nil, \"pCutMax != nil\");\n    pCutMax.nFanins = 0;\n    return pCutMax;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the stretching phase of the cut w.r.t. the merged cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_TruthPhase(pCut *Csw_Cut_t, pCut1 *Csw_Cut_t) uint32 {\n    var uPhase uint32;\n    var i, k int32;\n    for  i = k = 0; i \u003c pCut.nFanins; i++  {\n        if k == pCut1.nFanins {\n            break; }\n        if pCut.pFanins[i] \u003c pCut1.pFanins[k] {\n            continue; }\n        assert(pCut.pFanins[i] == pCut1.pFanins[k], \"pCut.pFanins[i] == pCut1.pFanins[k]\");\n        uPhase |= (1 \u003c\u003c i);\n        k++;\n    }\n    return uPhase;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs truth table computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_CutComputeTruth(p *Csw_Man_t, pCut *Csw_Cut_t, pCut0 *Csw_Cut_t, pCut1 *Csw_Cut_t, fCompl0 int32, fCompl1 int32) *uint32 {\n    // permute the first table\n    if fCompl0 != 0 { \n        Kit_TruthNot( p.puTemp[0], Csw_CutTruth(pCut0), p.nLeafMax );\n    } else {\n        Kit_TruthCopy( p.puTemp[0], Csw_CutTruth(pCut0), p.nLeafMax ); }\n    Kit_TruthStretch( p.puTemp[2], p.puTemp[0], pCut0.nFanins, p.nLeafMax, Cut_TruthPhase(pCut, pCut0), 0 );\n    // permute the second table\n    if fCompl1 != 0 { \n        Kit_TruthNot( p.puTemp[1], Csw_CutTruth(pCut1), p.nLeafMax );\n    } else {\n        Kit_TruthCopy( p.puTemp[1], Csw_CutTruth(pCut1), p.nLeafMax ); }\n    Kit_TruthStretch( p.puTemp[3], p.puTemp[1], pCut1.nFanins, p.nLeafMax, Cut_TruthPhase(pCut, pCut1), 0 );\n    // produce the resulting table\n    Kit_TruthAnd( Csw_CutTruth(pCut), p.puTemp[2], p.puTemp[3], p.nLeafMax );\n//    assert( pCut-\u003enFanins \u003e= Kit_TruthSupportSize( Csw_CutTruth(pCut), p-\u003enLeafMax ) );\n    return Csw_CutTruth(pCut);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs support minimization for the truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_CutSupportMinimize(p *Csw_Man_t, pCut *Csw_Cut_t) int32 {\n    var pTruth *uint32;\n    var uSupp, nFansNew, i, k int32;\n    // get truth table\n    pTruth = Csw_CutTruth( pCut );\n    // get support \n    uSupp = Kit_TruthSupport( pTruth, p.nLeafMax );\n    // get the new support size\n    nFansNew = Kit_WordCountOnes( uSupp );\n    // check if there are redundant variables\n    if nFansNew == pCut.nFanins {\n        return nFansNew; }\n    assert(nFansNew \u003c pCut.nFanins, \"nFansNew \u003c pCut.nFanins\");\n    // minimize support\n    Kit_TruthShrink( p.puTemp[0], pTruth, nFansNew, p.nLeafMax, uSupp, 1 );\n    for  i = k = 0; i \u003c pCut.nFanins; i++  {\n        if uSupp \u0026 (1 \u003c\u003c i) {\n            pCut.pFanins[k++] = pCut.pFanins[i]; }\n    }\n    assert(k == nFansNew, \"k == nFansNew\");\n    pCut.nFanins = nFansNew;\n//    assert( nFansNew == Kit_TruthSupportSize( pTruth, p-\u003enLeafMax ) );\n//Extra_PrintBinary( stdout, pTruth, (1\u003c\u003cp-\u003enLeafMax) ); printf( \"\\n\" );\n    return nFansNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if pDom is contained in pCut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_CutCheckDominance(pDom *Csw_Cut_t, pCut *Csw_Cut_t) int32 {\n    var i, k int32;\n    for  i = 0; i \u003c int32(pDom.nFanins); i++  {\n        for  k = 0; k \u003c int32(pCut.nFanins); k++  {\n            if pDom.pFanins[i] == pCut.pFanins[k] {\n                break; }\n        }\n        if k == int32(pCut.nFanins) { // node i in pDom is not contained in pCut\n            return 0; }\n    }\n    // every node in pDom is contained in pCut\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the cut is contained.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_CutFilter(p *Csw_Man_t, pObj *Aig_Obj_t, pCut *Csw_Cut_t) int32 { \n    var pTemp *Csw_Cut_t;\n    var i int32;\n    // go through the cuts of the node\n    // inlining of macro Csw_ObjForEachCut\n    for  i = 0, pTemp = Csw_ObjCuts(p, pObj); i \u003c p.nCutsMax; i++, pTemp = Csw_CutNext(pTemp)  {\n        if pTemp.nFanins \u003c 2 {\n            continue; }\n        if pTemp == pCut {\n            continue; }\n        if pTemp.nFanins \u003e pCut.nFanins {\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pCut.uSign) != pCut.uSign {\n                continue; }\n            // check containment seriously\n            if Csw_CutCheckDominance( pCut, pTemp ) != 0 {\n                // remove contained cut\n                pTemp.nFanins = 0;\n            }\n         \n        } else {\n            // skip the non-contained cuts\n            if (pTemp.uSign \u0026 pCut.uSign) != pTemp.uSign {\n                continue; }\n            // check containment seriously\n            if Csw_CutCheckDominance( pTemp, pCut ) != 0 {\n                // remove the given\n                pCut.nFanins = 0;\n                return 1;\n            }\n        }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_CutMergeOrdered(p *Csw_Man_t, pC0 *Csw_Cut_t, pC1 *Csw_Cut_t, pC *Csw_Cut_t) int32 { \n    var i, k, c int32;\n    assert(pC0.nFanins \u003e= pC1.nFanins, \"pC0.nFanins \u003e= pC1.nFanins\");\n    // the case of the largest cut sizes\n    if pC0.nFanins == p.nLeafMax \u0026\u0026 pC1.nFanins == p.nLeafMax {\n        for  i = 0; i \u003c pC0.nFanins; i++  {\n            if pC0.pFanins[i] != pC1.pFanins[i] {\n                return 0; }\n        }\n        for  i = 0; i \u003c pC0.nFanins; i++  {\n            pC.pFanins[i] = pC0.pFanins[i];\n        }\n        pC.nFanins = pC0.nFanins;\n        return 1;\n    }\n    // the case when one of the cuts is the largest\n    if pC0.nFanins == p.nLeafMax {\n        for  i = 0; i \u003c pC1.nFanins; i++  {\n            for  k = pC0.nFanins - 1; k \u003e= 0; k--  {\n                if pC0.pFanins[k] == pC1.pFanins[i] {\n                    break; }\n            }\n            if k == -1 { // did not find\n                return 0; }\n        }\n        for  i = 0; i \u003c pC0.nFanins; i++  {\n            pC.pFanins[i] = pC0.pFanins[i];\n        }\n        pC.nFanins = pC0.nFanins;\n        return 1;\n    }\n\n    // compare two cuts with different numbers\n    i = k = 0;\n    for  c = 0; c \u003c p.nLeafMax; c++  {\n        if k == pC1.nFanins {\n            if i == pC0.nFanins {\n                pC.nFanins = c;\n                return 1;\n            }\n            pC.pFanins[c] = pC0.pFanins[i]; i++;\n            continue;\n        }\n        if i == pC0.nFanins {\n            if k == pC1.nFanins {\n                pC.nFanins = c;\n                return 1;\n            }\n            pC.pFanins[c] = pC1.pFanins[k]; k++;\n            continue;\n        }\n        if pC0.pFanins[i] \u003c pC1.pFanins[k] {\n            pC.pFanins[c] = pC0.pFanins[i]; i++;\n            continue;\n        }\n        if pC0.pFanins[i] \u003e pC1.pFanins[k] {\n            pC.pFanins[c] = pC1.pFanins[k]; k++;\n            continue;\n        }\n        pC.pFanins[c] = pC0.pFanins[i]; i++; \n        k++;\n    }\n    if i \u003c pC0.nFanins || k \u003c pC1.nFanins {\n        return 0; }\n    pC.nFanins = c;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the object for FPGA mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_CutMerge(p *Csw_Man_t, pCut0 *Csw_Cut_t, pCut1 *Csw_Cut_t, pCut *Csw_Cut_t) int32 { \n    assert(p.nLeafMax \u003e 0, \"p.nLeafMax \u003e 0\");\n    // merge the nodes\n    if pCut0.nFanins \u003c pCut1.nFanins {\n        if !(Csw_CutMergeOrdered( p, pCut1, pCut0, pCut ) != 0) {\n            return 0; }\n    \n    } else {\n        if !(Csw_CutMergeOrdered( p, pCut0, pCut1, pCut ) != 0) {\n            return 0; }\n    }\n    pCut.uSign = pCut0.uSign | pCut1.uSign;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Consider cut with more than 2 fanins having 2 true variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_ObjTwoVarCut(p *Csw_Man_t, pCut *Csw_Cut_t) *Aig_Obj_t {\n    var pRes, pIn0, pIn1 *Aig_Obj_t;\n    var nVars, uTruth, fCompl int32;\n    assert(pCut.nFanins \u003e 2, \"pCut.nFanins \u003e 2\");\n    // minimize support of this cut\n    nVars = Csw_CutSupportMinimize( p, pCut );\n    assert(nVars == 2, \"nVars == 2\");\n    // get the fanins\n    pIn0 = Aig_ManObj( p.pManRes, pCut.pFanins[0] );\n    pIn1 = Aig_ManObj( p.pManRes, pCut.pFanins[1] );\n    // derive the truth table\n    uTruth = 0xF \u0026 *Csw_CutTruth(pCut);\n    if uTruth == 14 || uTruth == 13 || uTruth == 11 || uTruth == 7 {\n        uTruth = 0xF \u0026 ~uTruth;\n        fCompl = 1;\n    }\n    // compute the result\n    pRes = nil;\n    if uTruth == 1 {  // 0001  // 1110  14\n        pRes = Aig_And( p.pManRes, Aig_Not(pIn0), Aig_Not(pIn1) ); }\n    if uTruth == 2 {  // 0010  // 1101  13 \n        pRes = Aig_And( p.pManRes,         pIn0 , Aig_Not(pIn1) ); }\n    if uTruth == 4 {  // 0100  // 1011  11\n        pRes = Aig_And( p.pManRes, Aig_Not(pIn0),         pIn1  ); }\n    if uTruth == 8 {  // 1000  // 0111   7\n        pRes = Aig_And( p.pManRes,         pIn0 ,         pIn1  ); }\n    if pRes {\n        pRes = Aig_NotCond( pRes, fCompl ); }\n    return pRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_ObjPrepareCuts(p *Csw_Man_t, pObj *Aig_Obj_t, fTriv int32) *Csw_Cut_t {\n    var pCutSet, pCut *Csw_Cut_t;\n    var i int32;\n    // create the cutset of the node\n    pCutSet = (Csw_Cut_t *)Aig_MmFixedEntryFetch( p.pMemCuts );\n    Csw_ObjSetCuts( p, pObj, pCutSet );\n    // inlining of macro Csw_ObjForEachCut\n    for  i = 0, pCut = Csw_ObjCuts(p, pObj); i \u003c p.nCutsMax; i++, pCut = Csw_CutNext(pCut)  {\n        pCut.nFanins = 0;\n        pCut.iNode = pObj.Id;\n        pCut.nCutSize = p.nCutSize;\n        pCut.nLeafMax = p.nLeafMax;\n    }\n    // add unit cut if needed\n    if fTriv != 0 {\n        pCut = pCutSet;\n        pCut.Cost = 0;\n        pCut.iNode = pObj.Id;\n        pCut.nFanins = 1;\n        pCut.pFanins[0] = pObj.Id;\n        pCut.uSign = Aig_ObjCutSign( pObj.Id );\n        memset( Csw_CutTruth(pCut), 0xAA, sizeof(unsigned) * p.nTruthWords );\n    }\n    return pCutSet;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives cuts for one node and sweeps this node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_ObjSweep(p *Csw_Man_t, pObj *Aig_Obj_t, fTriv int32) *Aig_Obj_t {\n    var fUseResub int32  = 1;\n    var pCut0, pCut1, pCut, pCutSet *Csw_Cut_t;\n    var pFanin0 *Aig_Obj_t  = Aig_ObjFanin0(pObj);\n    var pFanin1 *Aig_Obj_t  = Aig_ObjFanin1(pObj);\n    var pObjNew *Aig_Obj_t;\n    var pTruth *uint32;\n    var i, k, nVars, nFanins, iVar int32;\n    var clk abctime;\n\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if !Aig_ObjIsNode(pObj) {\n        return pObj; }\n    if Csw_ObjCuts(p, pObj) {\n        return pObj; }\n    // the node is not processed yet\n    assert(Csw_ObjCuts(p, pObj) == nil, \"Csw_ObjCuts(p, pObj) == nil\");\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n\n    // set up the first cut\n    pCutSet = Csw_ObjPrepareCuts( p, pObj, fTriv );\n\n    // compute pair-wise cut combinations while checking table\n    // inlining of macro Csw_ObjForEachCut\n    for  i = 0, pCut0 = Csw_ObjCuts(p, pFanin0); i \u003c p.nCutsMax; i++, pCut0 = Csw_CutNext(pCut0)  { \n    if pCut0.nFanins \u003e 0 {\n    // inlining of macro Csw_ObjForEachCut\n    for  k = 0, pCut1 = Csw_ObjCuts(p, pFanin1); k \u003c p.nCutsMax; k++, pCut1 = Csw_CutNext(pCut1)  { \n    if pCut1.nFanins \u003e 0 {\n        // make sure K-feasible cut exists\n        if Kit_WordCountOnes(pCut0.uSign | pCut1.uSign) \u003e p.nLeafMax {\n            continue; }\n        // get the next cut of this node\n        pCut = Csw_CutFindFree( p, pObj );\nclk = Abc_Clock();\n        // assemble the new cut\n        if !(Csw_CutMerge( p, pCut0, pCut1, pCut ) != 0) {\n            assert(pCut.nFanins == 0, \"pCut.nFanins == 0\");\n            continue;\n        }\n        // check containment\n        if Csw_CutFilter( p, pObj, pCut ) != 0 {\n            assert(pCut.nFanins == 0, \"pCut.nFanins == 0\");\n            continue;\n        }\n        // create its truth table\n        pTruth = Csw_CutComputeTruth( p, pCut, pCut0, pCut1, Aig_ObjFaninC0(pObj), Aig_ObjFaninC1(pObj) );\n        // support minimize the truth table\n        nFanins = pCut.nFanins;\n//        nVars = Csw_CutSupportMinimize( p, pCut ); // leads to quality degradation\n        nVars = Kit_TruthSupportSize( pTruth, p.nLeafMax );\np.timeCuts += Abc_Clock() - clk;\n\n        // check for trivial truth tables\n        if nVars == 0 {\n            p.nNodesTriv0++;\n            return Aig_NotCond( Aig_ManConst1(p.pManRes), !(pTruth[0] \u0026 1) );\n        }\n        if nVars == 1 {\n            p.nNodesTriv1++;\n            iVar = Kit_WordFindFirstBit( Kit_TruthSupport(pTruth, p.nLeafMax) );\n            assert(iVar \u003c pCut.nFanins, \"iVar \u003c pCut.nFanins\");\n            return Aig_NotCond( Aig_ManObj(p.pManRes, pCut.pFanins[iVar]), (pTruth[0] \u0026 1) );\n        }\n        if nVars == 2 \u0026\u0026 nFanins \u003e 2 \u0026\u0026 (fUseResub != 0) {\n            if pObjNew = Csw_ObjTwoVarCut( p, pCut ) {\n                p.nNodesTriv2++;\n                return pObjNew;\n            }\n        }\n\n        // check if an equivalent node with the same cut exists\nclk = Abc_Clock();\n        if pCut.nFanins \u003e 2 {\n            pObjNew = Csw_TableCutLookup( p, pCut );\n        } else {\n            pObjNew = nil;\n        }\np.timeHash += Abc_Clock() - clk;\n        if pObjNew != nil {\n            p.nNodesCuts++;\n            return pObjNew;\n        }\n\n        // assign the cost\n        pCut.Cost = Csw_CutFindCost( p, pCut );\n        assert(pCut.nFanins \u003e 0, \"pCut.nFanins \u003e 0\");\n        assert(pCut.Cost \u003e 0, \"pCut.Cost \u003e 0\");\n    }\n    } }\n    }\n    p.nNodesTried++;\n\n    // load the resulting cuts into the table\nclk = Abc_Clock();\n    // inlining of macro Csw_ObjForEachCut\n    for  i = 0, pCut = Csw_ObjCuts(p, pObj); i \u003c p.nCutsMax; i++, pCut = Csw_CutNext(pCut)  {\n        if pCut.nFanins \u003e 2 {\n            assert(pCut.Cost \u003e 0, \"pCut.Cost \u003e 0\");\n            Csw_TableCutInsert( p, pCut );\n        }\n    }\np.timeHash += Abc_Clock() - clk;\n\n    // return the node if could not replace it\n    return pObj;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

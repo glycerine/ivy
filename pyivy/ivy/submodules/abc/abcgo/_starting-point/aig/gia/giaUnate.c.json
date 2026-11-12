@@ -1,0 +1,424 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c",
+  "SHA256": "eb8aa0053315f2d29d2c710a4299f2f4e564bdedaf66f00937183898444ac50f",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 173,
+        "Column": 5,
+        "ByteOffset": 5699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (Res0 \u0026 Res1) \u003c= 3 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 213,
+        "Column": 83,
+        "ByteOffset": 7148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pBuffer string  = /*__starting_point_inline_macro:ABC_CALLOC__*/((char *) calloc((size_t)(nVars+1), sizeof(char)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 215,
+        "Column": 9,
+        "ByteOffset": 7216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Inputs  : \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 13,
+        "ByteOffset": 7290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", i % 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 219,
+        "Column": 9,
+        "ByteOffset": 7332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 223,
+        "Column": 9,
+        "ByteOffset": 7467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( pBuffer, ' ', (size_t)nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 231,
+        "Column": 13,
+        "ByteOffset": 8039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Out%4d : %s\\n\", o, pBuffer ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 233,
+        "Column": 63,
+        "ByteOffset": 8148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 5,
+        "ByteOffset": 8218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Ins/Outs = %4d/%4d.  Total supp = %5d.  Total unate = %5d.\\n\","
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 238,
+        "Column": 73,
+        "ByteOffset": 8517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 263,
+        "Column": 87,
+        "ByteOffset": 9276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pBuffer string  = /*__starting_point_inline_macro:ABC_CALLOC__*/((char *) calloc((size_t)(nVars+1), sizeof(char)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 265,
+        "Column": 13,
+        "ByteOffset": 9352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Inputs  : \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 17,
+        "ByteOffset": 9434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%d\", i % 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 269,
+        "Column": 13,
+        "ByteOffset": 9484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 278,
+        "Column": 26,
+        "ByteOffset": 9943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 281,
+        "Column": 17,
+        "ByteOffset": 10014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Out%4d : %s\\n\", o, pBuffer ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 283,
+        "Column": 67,
+        "ByteOffset": 10131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 9,
+        "ByteOffset": 10209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Ins/Outs = %4d/%4d.  Total supp = %5d.  Total unate = %5d.\\n\","
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 288,
+        "Column": 73,
+        "ByteOffset": 10516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Vec_IntFlopBit",
+      "Start": 1289,
+      "End": 1631,
+      "BodyStart": 1347,
+      "Original": "static inline Vec_Int_t * Vec_IntFlopBit( Vec_Int_t * p )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enSize; i++ )\n    {\n        if ( i+1 \u003c p-\u003enSize \u0026\u0026 Abc_Lit2Var(p-\u003epArray[i]) == Abc_Lit2Var(p-\u003epArray[i+1]) ) \n            i++; // skip variable appearing as both pos and neg literal\n        else\n            p-\u003epArray[i] ^= 1;\n    }\n    return p;\n}",
+      "Draft": "func Vec_IntFlopBit(p *Vec_Int_t) *Vec_Int_t {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if i+1 \u003c p.nSize \u0026\u0026 Abc_Lit2Var(p.pArray[i]) == Abc_Lit2Var(p.pArray[i+1]) { \n            i++; // skip variable appearing as both pos and neg literal\n        } else {\n            p.pArray[i] ^= 1; }\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_ManCheckUnateVec",
+      "Start": 1920,
+      "End": 3623,
+      "BodyStart": 2010,
+      "Original": "Vec_Wec_t * Gia_ManCheckUnateVec( Gia_Man_t * p, Vec_Int_t * vCiIds, Vec_Int_t * vCoIds )\n{\n    Vec_Int_t * vCiVec = vCiIds ? Vec_IntDup(vCiIds) : Vec_IntStartNatural(Gia_ManCiNum(p));\n    Vec_Int_t * vCoVec = vCoIds ? Vec_IntDup(vCoIds) : Vec_IntStartNatural(Gia_ManCoNum(p));\n    Vec_Wec_t * vUnatesCo = Vec_WecStart( Vec_IntSize(vCoVec) );\n    Vec_Wec_t * vUnates   = Vec_WecStart( Gia_ManObjNum(p) );\n    Vec_Int_t * vUnate0, * vUnate1;\n    Gia_Obj_t * pObj; int i, CioId;\n    Vec_IntForEachEntry( vCiVec, CioId, i )\n    {\n        pObj = Gia_ManCi( p, CioId );\n        Vec_IntPush( Vec_WecEntry(vUnates, Gia_ObjId(p, pObj)), Abc_Var2Lit(CioId, 0) );\n    }\n    Gia_ManForEachAnd( p, pObj, i )\n    {\n        vUnate0 = Vec_WecEntry(vUnates, Gia_ObjFaninId0(pObj, i));\n        vUnate1 = Vec_WecEntry(vUnates, Gia_ObjFaninId1(pObj, i));\n        vUnate0 = Gia_ObjFaninC0(pObj) ? Vec_IntFlopBit(vUnate0) : vUnate0;\n        vUnate1 = Gia_ObjFaninC1(pObj) ? Vec_IntFlopBit(vUnate1) : vUnate1;\n        Vec_IntTwoMerge2( vUnate0, vUnate1, Vec_WecEntry(vUnates, i) ); \n        vUnate0 = Gia_ObjFaninC0(pObj) ? Vec_IntFlopBit(vUnate0) : vUnate0;\n        vUnate1 = Gia_ObjFaninC1(pObj) ? Vec_IntFlopBit(vUnate1) : vUnate1;\n    }\n    Vec_IntForEachEntry( vCoVec, CioId, i )\n    {\n        pObj    = Gia_ManCo( p, CioId );\n        vUnate0 = Vec_WecEntry(vUnates, Gia_ObjFaninId0p(p, pObj));\n        vUnate0 = Gia_ObjFaninC0(pObj) ? Vec_IntFlopBit(vUnate0) : vUnate0;\n        Vec_IntAppend( Vec_WecEntry(vUnatesCo, i), vUnate0 );\n        vUnate0 = Gia_ObjFaninC0(pObj) ? Vec_IntFlopBit(vUnate0) : vUnate0;\n    }\n    Vec_WecFree( vUnates );\n    Vec_IntFree( vCiVec );\n    Vec_IntFree( vCoVec );\n    return vUnatesCo;\n}",
+      "Draft": "func Gia_ManCheckUnateVec(p *Gia_Man_t, vCiIds *Vec_Int_t, vCoIds *Vec_Int_t) *Vec_Wec_t {\n    var vCiVec *Vec_Int_t;\n    if vCiIds != nil {\n        vCiVec = Vec_IntDup(vCiIds);\n    } else {\n        vCiVec = Vec_IntStartNatural(Gia_ManCiNum(p));\n    }\n    var vCoVec *Vec_Int_t;\n    if vCoIds != nil {\n        vCoVec = Vec_IntDup(vCoIds);\n    } else {\n        vCoVec = Vec_IntStartNatural(Gia_ManCoNum(p));\n    }\n    var vUnatesCo *Vec_Wec_t  = Vec_WecStart( Vec_IntSize(vCoVec) );\n    var vUnates *Vec_Wec_t    = Vec_WecStart( Gia_ManObjNum(p) );\n    var vUnate0, vUnate1 *Vec_Int_t;\n    var pObj *Gia_Obj_t; var i, CioId int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCiVec)) \u0026\u0026 (((CioId) = Vec_IntEntry(vCiVec, i)), 1); i++  {\n        pObj = Gia_ManCi( p, CioId );\n        Vec_IntPush( Vec_WecEntry(vUnates, Gia_ObjId(p, pObj)), Abc_Var2Lit(CioId, 0) );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        vUnate0 = Vec_WecEntry(vUnates, Gia_ObjFaninId0(pObj, i));\n        vUnate1 = Vec_WecEntry(vUnates, Gia_ObjFaninId1(pObj, i));\n        if Gia_ObjFaninC0(pObj) {\n            vUnate0 = Vec_IntFlopBit(vUnate0);\n        } else {\n            vUnate0 = vUnate0;\n        }\n        if Gia_ObjFaninC1(pObj) {\n            vUnate1 = Vec_IntFlopBit(vUnate1);\n        } else {\n            vUnate1 = vUnate1;\n        }\n        Vec_IntTwoMerge2( vUnate0, vUnate1, Vec_WecEntry(vUnates, i) ); \n        if Gia_ObjFaninC0(pObj) {\n            vUnate0 = Vec_IntFlopBit(vUnate0);\n        } else {\n            vUnate0 = vUnate0;\n        }\n        if Gia_ObjFaninC1(pObj) {\n            vUnate1 = Vec_IntFlopBit(vUnate1);\n        } else {\n            vUnate1 = vUnate1;\n        }\n    }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCoVec)) \u0026\u0026 (((CioId) = Vec_IntEntry(vCoVec, i)), 1); i++  {\n        pObj    = Gia_ManCo( p, CioId );\n        vUnate0 = Vec_WecEntry(vUnates, Gia_ObjFaninId0p(p, pObj));\n        if Gia_ObjFaninC0(pObj) {\n            vUnate0 = Vec_IntFlopBit(vUnate0);\n        } else {\n            vUnate0 = vUnate0;\n        }\n        Vec_IntAppend( Vec_WecEntry(vUnatesCo, i), vUnate0 );\n        if Gia_ObjFaninC0(pObj) {\n            vUnate0 = Vec_IntFlopBit(vUnate0);\n        } else {\n            vUnate0 = vUnate0;\n        }\n    }\n    Vec_WecFree( vUnates );\n    Vec_IntFree( vCiVec );\n    Vec_IntFree( vCoVec );\n    return vUnatesCo;\n}"
+    },
+    {
+      "Name": "Gia_ManCheckUnate_rec",
+      "Start": 4096,
+      "End": 4841,
+      "BodyStart": 4149,
+      "Original": "int Gia_ManCheckUnate_rec( Gia_Man_t * p, int iObj )\n{\n    Gia_Obj_t * pObj;\n    int Res0, Res1;\n    if ( p-\u003enTravIds - p-\u003epTravIds[iObj] \u003c= 3 )\n        return p-\u003enTravIds - p-\u003epTravIds[iObj];\n    pObj = Gia_ManObj( p, iObj );\n    p-\u003epTravIds[iObj] = p-\u003enTravIds - 3;\n    if ( Gia_ObjIsCi(pObj) )\n        return 3;\n    Res0 = Gia_ManCheckUnate_rec( p, Gia_ObjFaninId0(pObj, iObj) );\n    Res1 = Gia_ManCheckUnate_rec( p, Gia_ObjFaninId1(pObj, iObj) );\n    Res0 = ((Res0 == 1 || Res0 == 2) \u0026\u0026 Gia_ObjFaninC0(pObj)) ? Res0 ^ 3 : Res0;\n    Res1 = ((Res1 == 1 || Res1 == 2) \u0026\u0026 Gia_ObjFaninC1(pObj)) ? Res1 ^ 3 : Res1;\n    p-\u003epTravIds[iObj] = p-\u003enTravIds - (Res0 \u0026 Res1);\n    assert( (Res0 \u0026 Res1) \u003c= 3 );\n    return p-\u003enTravIds - p-\u003epTravIds[iObj];\n}",
+      "Draft": "func Gia_ManCheckUnate_rec(p *Gia_Man_t, iObj int32) int32 {\n    var pObj *Gia_Obj_t;\n    var Res0, Res1 int32;\n    if p.nTravIds - p.pTravIds[iObj] \u003c= 3 {\n        return p.nTravIds - p.pTravIds[iObj]; }\n    pObj = Gia_ManObj( p, iObj );\n    p.pTravIds[iObj] = p.nTravIds - 3;\n    if Gia_ObjIsCi(pObj) {\n        return 3; }\n    Res0 = Gia_ManCheckUnate_rec( p, Gia_ObjFaninId0(pObj, iObj) );\n    Res1 = Gia_ManCheckUnate_rec( p, Gia_ObjFaninId1(pObj, iObj) );\n    if (Res0 == 1 || Res0 == 2) \u0026\u0026 Gia_ObjFaninC0(pObj) {\n        Res0 = Res0 ^ 3;\n    } else {\n        Res0 = Res0;\n    }\n    if (Res1 == 1 || Res1 == 2) \u0026\u0026 Gia_ObjFaninC1(pObj) {\n        Res1 = Res1 ^ 3;\n    } else {\n        Res1 = Res1;\n    }\n    p.pTravIds[iObj] = p.nTravIds - (Res0 \u0026 Res1);\n    assert((Res0 \u0026 Res1) \u003c= 3, \"(Res0 \u0026 Res1) \u003c= 3\");\n    return p.nTravIds - p.pTravIds[iObj];\n}"
+    },
+    {
+      "Name": "Gia_ManCheckUnate",
+      "Start": 4842,
+      "End": 5503,
+      "BodyStart": 4903,
+      "Original": "int Gia_ManCheckUnate( Gia_Man_t * p, int iCiId, int iCoId )\n{\n    int Res;\n    int CiObjId = Gia_ObjId(p, Gia_ManCi(p, iCiId));\n    int CoObjId = Gia_ObjId(p, Gia_ManCo(p, iCoId));\n    Gia_Obj_t * pCoObj = Gia_ManCo(p, iCoId);\n    Gia_ManIncrementTravId( p ); // Co does not depend on Ci.\n    Gia_ManIncrementTravId( p ); // Co is pos-unate in Ci\n    Gia_ObjSetTravIdCurrentId( p, CiObjId );\n    Gia_ManIncrementTravId( p ); // Co is neg-unate in Ci\n    Gia_ManIncrementTravId( p ); // Co is not unate in Ci\n    Res = Gia_ManCheckUnate_rec( p, Gia_ObjFaninId0(pCoObj, CoObjId) );\n    return ((Res == 1 || Res == 2) \u0026\u0026 Gia_ObjFaninC0(pCoObj)) ? Res ^ 3 : Res;\n}",
+      "Draft": "func Gia_ManCheckUnate(p *Gia_Man_t, iCiId int32, iCoId int32) int32 {\n    var Res int32;\n    var CiObjId int32  = Gia_ObjId(p, Gia_ManCi(p, iCiId));\n    var CoObjId int32  = Gia_ObjId(p, Gia_ManCo(p, iCoId));\n    var pCoObj *Gia_Obj_t  = Gia_ManCo(p, iCoId);\n    Gia_ManIncrementTravId( p ); // Co does not depend on Ci.\n    Gia_ManIncrementTravId( p ); // Co is pos-unate in Ci\n    Gia_ObjSetTravIdCurrentId( p, CiObjId );\n    Gia_ManIncrementTravId( p ); // Co is neg-unate in Ci\n    Gia_ManIncrementTravId( p ); // Co is not unate in Ci\n    Res = Gia_ManCheckUnate_rec( p, Gia_ObjFaninId0(pCoObj, CoObjId) );\n    if (Res == 1 || Res == 2) \u0026\u0026 Gia_ObjFaninC0(pCoObj) {\n        return Res ^ 3;\n    } else {\n        return Res;\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManCheckUnateVecTest",
+      "Start": 5771,
+      "End": 7137,
+      "BodyStart": 5832,
+      "Original": "void Gia_ManCheckUnateVecTest( Gia_Man_t * p, int fVerbose )\n{\n    abctime clk = Abc_Clock();\n    Vec_Wec_t * vUnates = Gia_ManCheckUnateVec( p, NULL, NULL );\n    int i, o, Var, nVars = Gia_ManCiNum(p);\n    int nUnate = 0, nNonUnate = 0;\n    char * pBuffer = ABC_CALLOC( char, nVars+1 );\n    if ( fVerbose )\n    {\n        printf( \"Inputs  : \" );\n        for ( i = 0; i \u003c nVars; i++ )\n            printf( \"%d\", i % 10 );\n        printf( \"\\n\" );\n    }\n    for ( o = 0; o \u003c Gia_ManCoNum(p); o++ )\n    {\n        Vec_Int_t * vUnate = Vec_WecEntry( vUnates, o );\n        memset( pBuffer, ' ', (size_t)nVars );\n        Vec_IntForEachEntry( vUnate, Var, i )\n            if ( i+1 \u003c Vec_IntSize(vUnate) \u0026\u0026 Abc_Lit2Var(Var) == Abc_Lit2Var(Vec_IntEntry(vUnate, i+1)) ) // both lits are present\n                pBuffer[Abc_Lit2Var(Var)] = '.', i++, nNonUnate++; // does not depend on this var\n            else\n                pBuffer[Abc_Lit2Var(Var)] = Abc_LitIsCompl(Var) ? 'n' : 'p', nUnate++;\n        if ( fVerbose )\n            printf( \"Out%4d : %s\\n\", o, pBuffer );\n    }\n    ABC_FREE( pBuffer );\n    // print stats\n    printf( \"Ins/Outs = %4d/%4d.  Total supp = %5d.  Total unate = %5d.\\n\",\n        Gia_ManCiNum(p), Gia_ManCoNum(p), nUnate+nNonUnate, nUnate );\n    ABC_PRT( \"Total time\", Abc_Clock() - clk );\n    //Vec_WecPrint( vUnates, 0 );\n    Vec_WecFree( vUnates );\n}",
+      "Draft": "func Gia_ManCheckUnateVecTest(p *Gia_Man_t, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n    var vUnates *Vec_Wec_t  = Gia_ManCheckUnateVec( p, nil, nil );\n    var i int32;\n    var o int32;\n    var Var int32;\n    var nVars int32 = Gia_ManCiNum(p);\n    var nUnate, nNonUnate int32;\n    // inlining of macro ABC_CALLOC\n    var pBuffer string  = ((char *) calloc((size_t)(nVars+1), sizeof(char)));\n    if fVerbose != 0 {\n        fmt.Printf(\"Inputs  : \");\n        for  i = 0; i \u003c nVars; i++  {\n            fmt.Printf(\"%d\", i % 10);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    for  o = 0; o \u003c Gia_ManCoNum(p); o++  {\n        var vUnate *Vec_Int_t  = Vec_WecEntry( vUnates, o );\n        memset( pBuffer, ' ', (size_t)nVars );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vUnate)) \u0026\u0026 (((Var) = Vec_IntEntry(vUnate, i)), 1); i++  {\n            if i+1 \u003c Vec_IntSize(vUnate) \u0026\u0026 Abc_Lit2Var(Var) == Abc_Lit2Var(Vec_IntEntry(vUnate, i+1)) { // both lits are present\n                pBuffer[Abc_Lit2Var(Var)] = '.', i++, nNonUnate++; // does not depend on this var\n            } else {\n                pBuffer[Abc_Lit2Var(Var)] = Abc_LitIsCompl(Var) ? 'n' : 'p', nUnate++; }\n        }\n        if fVerbose != 0 {\n            fmt.Printf(\"Out%4d : %s\\n\", o, pBuffer); }\n    }\n    // inlining of macro ABC_FREE\n    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);\n    // print stats\n    fmt.Printf(\"Ins/Outs = %4d/%4d.  Total supp = %5d.  Total unate = %5d.\\n\", Gia_ManCiNum(p), Gia_ManCoNum(p), nUnate+nNonUnate, nUnate);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Total time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    //Vec_WecPrint( vUnates, 0 );\n    Vec_WecFree( vUnates );\n}"
+    },
+    {
+      "Name": "Gia_ManCheckUnateTest",
+      "Start": 7404,
+      "End": 8762,
+      "BodyStart": 7479,
+      "Original": "void Gia_ManCheckUnateTest( Gia_Man_t * p, int fComputeAll, int fVerbose )\n{\n    if ( fComputeAll )\n        Gia_ManCheckUnateVecTest( p, fVerbose );\n    else\n    {\n        abctime clk = Abc_Clock();\n        int i, o, nVars = Gia_ManCiNum(p);\n        int nUnate = 0, nNonUnate = 0;\n        char * pBuffer = ABC_CALLOC( char, nVars+1 );\n        if ( fVerbose )\n        {\n            printf( \"Inputs  : \" );\n            for ( i = 0; i \u003c nVars; i++ )\n                printf( \"%d\", i % 10 );\n            printf( \"\\n\" );\n        }\n        for ( o = 0; o \u003c Gia_ManCoNum(p); o++ )\n        {\n            for ( i = 0; i \u003c nVars; i++ )\n            {\n                int Res = Gia_ManCheckUnate( p, i, o );\n                if ( Res == 3 )       pBuffer[i] = ' ';\n                else if ( Res == 2 )  pBuffer[i] = 'p', nUnate++;\n                else if ( Res == 1 )  pBuffer[i] = 'n', nUnate++;\n                else if ( Res == 0 )  pBuffer[i] = '.', nNonUnate++;\n                else assert( 0 );\n            }\n            if ( fVerbose )\n                printf( \"Out%4d : %s\\n\", o, pBuffer );\n        }\n        ABC_FREE( pBuffer );\n        // print stats\n        printf( \"Ins/Outs = %4d/%4d.  Total supp = %5d.  Total unate = %5d.\\n\",\n            Gia_ManCiNum(p), Gia_ManCoNum(p), nUnate+nNonUnate, nUnate );\n        ABC_PRT( \"Total time\", Abc_Clock() - clk );\n    }\n}",
+      "Draft": "func Gia_ManCheckUnateTest(p *Gia_Man_t, fComputeAll int32, fVerbose int32) {\n    if fComputeAll != 0 {\n        Gia_ManCheckUnateVecTest( p, fVerbose );\n    } else {\n        var clk abctime  = Abc_Clock();\n        var i int32;\n        var o int32;\n        var nVars int32 = Gia_ManCiNum(p);\n        var nUnate, nNonUnate int32;\n        // inlining of macro ABC_CALLOC\n        var pBuffer string  = ((char *) calloc((size_t)(nVars+1), sizeof(char)));\n        if fVerbose != 0 {\n            fmt.Printf(\"Inputs  : \");\n            for  i = 0; i \u003c nVars; i++  {\n                fmt.Printf(\"%d\", i % 10);\n            }\n            fmt.Printf(\"\\n\");\n        }\n        for  o = 0; o \u003c Gia_ManCoNum(p); o++  {\n            for  i = 0; i \u003c nVars; i++  {\n                var Res int32  = Gia_ManCheckUnate( p, i, o );\n                if Res == 3 {       pBuffer[i] = ' ';\n                } else if Res == 2 {  pBuffer[i] = 'p', nUnate++;\n                } else if Res == 1 {  pBuffer[i] = 'n', nUnate++;\n                } else if Res == 0 {  pBuffer[i] = '.', nNonUnate++;\n                } else { assert(false, \"0\"); }\n            }\n            if fVerbose != 0 {\n                fmt.Printf(\"Out%4d : %s\\n\", o, pBuffer); }\n        }\n        // inlining of macro ABC_FREE\n        ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);\n        // print stats\n        fmt.Printf(\"Ins/Outs = %4d/%4d.  Total supp = %5d.  Total unate = %5d.\\n\", Gia_ManCiNum(p), Gia_ManCoNum(p), nUnate+nNonUnate, nUnate);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Total time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::mechanical::sizeof::6449",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6030,
+      "End": 6030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::mechanical::sizeof::8515",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7710,
+      "End": 7710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::pointer-cast::6414",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6030,
+      "End": 6030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::pointer-cast::7414",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6840,
+      "End": 6840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::pointer-cast::8480",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7710,
+      "End": 7710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::pointer-cast::9360",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8505,
+      "End": 8505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::Vec_IntFlopBit",
+      "Category": "semantic-review",
+      "Symbol": "Vec_IntFlopBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1289,
+      "End": 1631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::Gia_ManCheckUnateVec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCheckUnateVec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1920,
+      "End": 3623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::Gia_ManCheckUnate_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCheckUnate_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4096,
+      "End": 4841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::Gia_ManCheckUnate",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCheckUnate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4842,
+      "End": 5503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::ternary::Gia_ManCheckUnateVecTest",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManCheckUnateVecTest",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5771,
+      "End": 7137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::Gia_ManCheckUnateVecTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCheckUnateVecTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5771,
+      "End": 7137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::ternary::Gia_ManCheckUnateTest",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManCheckUnateTest",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7404,
+      "End": 8762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::Gia_ManCheckUnateTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCheckUnateTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7404,
+      "End": 8762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaUnate.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9009
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [giaUnate.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Computation of structural unateness.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaUnate.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Flips the first bit in all entries of the vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_IntFlopBit(p *Vec_Int_t) *Vec_Int_t {\n    var i int32;\n    for  i = 0; i \u003c p.nSize; i++  {\n        if i+1 \u003c p.nSize \u0026\u0026 Abc_Lit2Var(p.pArray[i]) == Abc_Lit2Var(p.pArray[i+1]) { \n            i++; // skip variable appearing as both pos and neg literal\n        } else {\n            p.pArray[i] ^= 1; }\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compute unateness for all outputs in terms of inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCheckUnateVec(p *Gia_Man_t, vCiIds *Vec_Int_t, vCoIds *Vec_Int_t) *Vec_Wec_t {\n    var vCiVec *Vec_Int_t;\n    if vCiIds != nil {\n        vCiVec = Vec_IntDup(vCiIds);\n    } else {\n        vCiVec = Vec_IntStartNatural(Gia_ManCiNum(p));\n    }\n    var vCoVec *Vec_Int_t;\n    if vCoIds != nil {\n        vCoVec = Vec_IntDup(vCoIds);\n    } else {\n        vCoVec = Vec_IntStartNatural(Gia_ManCoNum(p));\n    }\n    var vUnatesCo *Vec_Wec_t  = Vec_WecStart( Vec_IntSize(vCoVec) );\n    var vUnates *Vec_Wec_t    = Vec_WecStart( Gia_ManObjNum(p) );\n    var vUnate0, vUnate1 *Vec_Int_t;\n    var pObj *Gia_Obj_t; var i, CioId int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCiVec)) \u0026\u0026 (((CioId) = Vec_IntEntry(vCiVec, i)), 1); i++  {\n        pObj = Gia_ManCi( p, CioId );\n        Vec_IntPush( Vec_WecEntry(vUnates, Gia_ObjId(p, pObj)), Abc_Var2Lit(CioId, 0) );\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        vUnate0 = Vec_WecEntry(vUnates, Gia_ObjFaninId0(pObj, i));\n        vUnate1 = Vec_WecEntry(vUnates, Gia_ObjFaninId1(pObj, i));\n        if Gia_ObjFaninC0(pObj) {\n            vUnate0 = Vec_IntFlopBit(vUnate0);\n        } else {\n            vUnate0 = vUnate0;\n        }\n        if Gia_ObjFaninC1(pObj) {\n            vUnate1 = Vec_IntFlopBit(vUnate1);\n        } else {\n            vUnate1 = vUnate1;\n        }\n        Vec_IntTwoMerge2( vUnate0, vUnate1, Vec_WecEntry(vUnates, i) ); \n        if Gia_ObjFaninC0(pObj) {\n            vUnate0 = Vec_IntFlopBit(vUnate0);\n        } else {\n            vUnate0 = vUnate0;\n        }\n        if Gia_ObjFaninC1(pObj) {\n            vUnate1 = Vec_IntFlopBit(vUnate1);\n        } else {\n            vUnate1 = vUnate1;\n        }\n    }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCoVec)) \u0026\u0026 (((CioId) = Vec_IntEntry(vCoVec, i)), 1); i++  {\n        pObj    = Gia_ManCo( p, CioId );\n        vUnate0 = Vec_WecEntry(vUnates, Gia_ObjFaninId0p(p, pObj));\n        if Gia_ObjFaninC0(pObj) {\n            vUnate0 = Vec_IntFlopBit(vUnate0);\n        } else {\n            vUnate0 = vUnate0;\n        }\n        Vec_IntAppend( Vec_WecEntry(vUnatesCo, i), vUnate0 );\n        if Gia_ObjFaninC0(pObj) {\n            vUnate0 = Vec_IntFlopBit(vUnate0);\n        } else {\n            vUnate0 = vUnate0;\n        }\n    }\n    Vec_WecFree( vUnates );\n    Vec_IntFree( vCiVec );\n    Vec_IntFree( vCoVec );\n    return vUnatesCo;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks unateness one function in one variable.]\n\n  Description [Returns 0 if Co is not unate in Ci.\n               Returns 1 if Co is neg-unate in Ci.\n               Returns 2 if Co is pos-unate in Ci.\n               Returns 3 if Co does not depend on Ci.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCheckUnate_rec(p *Gia_Man_t, iObj int32) int32 {\n    var pObj *Gia_Obj_t;\n    var Res0, Res1 int32;\n    if p.nTravIds - p.pTravIds[iObj] \u003c= 3 {\n        return p.nTravIds - p.pTravIds[iObj]; }\n    pObj = Gia_ManObj( p, iObj );\n    p.pTravIds[iObj] = p.nTravIds - 3;\n    if Gia_ObjIsCi(pObj) {\n        return 3; }\n    Res0 = Gia_ManCheckUnate_rec( p, Gia_ObjFaninId0(pObj, iObj) );\n    Res1 = Gia_ManCheckUnate_rec( p, Gia_ObjFaninId1(pObj, iObj) );\n    if (Res0 == 1 || Res0 == 2) \u0026\u0026 Gia_ObjFaninC0(pObj) {\n        Res0 = Res0 ^ 3;\n    } else {\n        Res0 = Res0;\n    }\n    if (Res1 == 1 || Res1 == 2) \u0026\u0026 Gia_ObjFaninC1(pObj) {\n        Res1 = Res1 ^ 3;\n    } else {\n        Res1 = Res1;\n    }\n    p.pTravIds[iObj] = p.nTravIds - (Res0 \u0026 Res1);\n    assert((Res0 \u0026 Res1) \u003c= 3, \"(Res0 \u0026 Res1) \u003c= 3\");\n    return p.nTravIds - p.pTravIds[iObj];\n}\nfunc Gia_ManCheckUnate(p *Gia_Man_t, iCiId int32, iCoId int32) int32 {\n    var Res int32;\n    var CiObjId int32  = Gia_ObjId(p, Gia_ManCi(p, iCiId));\n    var CoObjId int32  = Gia_ObjId(p, Gia_ManCo(p, iCoId));\n    var pCoObj *Gia_Obj_t  = Gia_ManCo(p, iCoId);\n    Gia_ManIncrementTravId( p ); // Co does not depend on Ci.\n    Gia_ManIncrementTravId( p ); // Co is pos-unate in Ci\n    Gia_ObjSetTravIdCurrentId( p, CiObjId );\n    Gia_ManIncrementTravId( p ); // Co is neg-unate in Ci\n    Gia_ManIncrementTravId( p ); // Co is not unate in Ci\n    Res = Gia_ManCheckUnate_rec( p, Gia_ObjFaninId0(pCoObj, CoObjId) );\n    if (Res == 1 || Res == 2) \u0026\u0026 Gia_ObjFaninC0(pCoObj) {\n        return Res ^ 3;\n    } else {\n        return Res;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Testing procedure for all pairs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCheckUnateVecTest(p *Gia_Man_t, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n    var vUnates *Vec_Wec_t  = Gia_ManCheckUnateVec( p, nil, nil );\n    var i int32;\n    var o int32;\n    var Var int32;\n    var nVars int32 = Gia_ManCiNum(p);\n    var nUnate, nNonUnate int32;\n    // inlining of macro ABC_CALLOC\n    var pBuffer string  = ((char *) calloc((size_t)(nVars+1), sizeof(char)));\n    if fVerbose != 0 {\n        fmt.Printf(\"Inputs  : \");\n        for  i = 0; i \u003c nVars; i++  {\n            fmt.Printf(\"%d\", i % 10);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    for  o = 0; o \u003c Gia_ManCoNum(p); o++  {\n        var vUnate *Vec_Int_t  = Vec_WecEntry( vUnates, o );\n        memset( pBuffer, ' ', (size_t)nVars );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vUnate)) \u0026\u0026 (((Var) = Vec_IntEntry(vUnate, i)), 1); i++  {\n            if i+1 \u003c Vec_IntSize(vUnate) \u0026\u0026 Abc_Lit2Var(Var) == Abc_Lit2Var(Vec_IntEntry(vUnate, i+1)) { // both lits are present\n                pBuffer[Abc_Lit2Var(Var)] = '.', i++, nNonUnate++; // does not depend on this var\n            } else {\n                pBuffer[Abc_Lit2Var(Var)] = Abc_LitIsCompl(Var) ? 'n' : 'p', nUnate++; }\n        }\n        if fVerbose != 0 {\n            fmt.Printf(\"Out%4d : %s\\n\", o, pBuffer); }\n    }\n    // inlining of macro ABC_FREE\n    ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);\n    // print stats\n    fmt.Printf(\"Ins/Outs = %4d/%4d.  Total supp = %5d.  Total unate = %5d.\\n\", Gia_ManCiNum(p), Gia_ManCoNum(p), nUnate+nNonUnate, nUnate);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Total time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    //Vec_WecPrint( vUnates, 0 );\n    Vec_WecFree( vUnates );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Testing procedure for one pair.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCheckUnateTest(p *Gia_Man_t, fComputeAll int32, fVerbose int32) {\n    if fComputeAll != 0 {\n        Gia_ManCheckUnateVecTest( p, fVerbose );\n    } else {\n        var clk abctime  = Abc_Clock();\n        var i int32;\n        var o int32;\n        var nVars int32 = Gia_ManCiNum(p);\n        var nUnate, nNonUnate int32;\n        // inlining of macro ABC_CALLOC\n        var pBuffer string  = ((char *) calloc((size_t)(nVars+1), sizeof(char)));\n        if fVerbose != 0 {\n            fmt.Printf(\"Inputs  : \");\n            for  i = 0; i \u003c nVars; i++  {\n                fmt.Printf(\"%d\", i % 10);\n            }\n            fmt.Printf(\"\\n\");\n        }\n        for  o = 0; o \u003c Gia_ManCoNum(p); o++  {\n            for  i = 0; i \u003c nVars; i++  {\n                var Res int32  = Gia_ManCheckUnate( p, i, o );\n                if Res == 3 {       pBuffer[i] = ' ';\n                } else if Res == 2 {  pBuffer[i] = 'p', nUnate++;\n                } else if Res == 1 {  pBuffer[i] = 'n', nUnate++;\n                } else if Res == 0 {  pBuffer[i] = '.', nNonUnate++;\n                } else { assert(false, \"0\"); }\n            }\n            if fVerbose != 0 {\n                fmt.Printf(\"Out%4d : %s\\n\", o, pBuffer); }\n        }\n        // inlining of macro ABC_FREE\n        ((pBuffer) ? (free((char *) (pBuffer)), (pBuffer) = 0) : 0);\n        // print stats\n        fmt.Printf(\"Ins/Outs = %4d/%4d.  Total supp = %5d.  Total unate = %5d.\\n\", Gia_ManCiNum(p), Gia_ManCoNum(p), nUnate+nNonUnate, nUnate);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Total time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

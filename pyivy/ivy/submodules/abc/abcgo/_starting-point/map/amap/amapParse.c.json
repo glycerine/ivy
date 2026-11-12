@@ -1,0 +1,612 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c",
+  "SHA256": "4ea47033db7d0984feb41a5ada034cdf7f2d6633fa49b6351509b92c61755af7",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 128,
+        "Column": 9,
+        "ByteOffset": 4445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pOutput, \"Amap_ParseFormula(): Different number of opening and closing parentheses ().\\n\" );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 16,
+        "ByteOffset": 4613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFormula = ABC_ALLOC( char, strlen(pFormInit) + 3 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 133,
+        "Column": 33,
+        "ByteOffset": 4630
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFormula = ABC_ALLOC( char, strlen(pFormInit) + 3 );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 4659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( pFormula, \"(%s)\", pFormInit );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 17,
+        "ByteOffset": 5208
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pOutput, \"Amap_ParseFormula(): No operation symbol before constant 0.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 17,
+        "ByteOffset": 5605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pOutput, \"Amap_ParseFormula(): No operation symbol before constant 1.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 176,
+        "Column": 17,
+        "ByteOffset": 6292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pOutput, \"Amap_ParseFormula(): No variable is specified before the negation suffix.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 189,
+        "Column": 17,
+        "ByteOffset": 6832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pOutput, \"Amap_ParseFormula(): There is no variable before AND, EXOR, or OR.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 25,
+        "ByteOffset": 8175
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        fprintf( pOutput, \"Amap_ParseFormula(): There is no opening parenthesis\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 25,
+        "ByteOffset": 8649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        fprintf( pOutput, \"Amap_ParseFormula(): Unknown operation\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 25,
+        "ByteOffset": 8737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        ABC_FREE( pFormula );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 17,
+        "ByteOffset": 8987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pOutput, \"Amap_ParseFormula(): There is no opening parenthesis\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 25,
+        "ByteOffset": 9865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        fprintf( pOutput, \"Amap_ParseFormula(): The negation sign or an opening parenthesis inside the variable name.\\n\" );"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 260,
+        "Column": 20,
+        "ByteOffset": 10247
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strncmp(pTemp, pName, i) == 0 \u0026\u0026 strlen(pName) == uint32(i) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 260,
+        "Column": 53,
+        "ByteOffset": 10280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strncmp(pTemp, pName, i) == 0 \u0026\u0026 strlen(pName) == uint32(i) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 266,
+        "Column": 17,
+        "ByteOffset": 10462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pOutput, \"Amap_ParseFormula(): The parser cannot find var \\\"%s\\\" in the input var list of gate \\\"%s\\\".\\n\", pTemp, pGateName ); "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 314,
+        "Column": 25,
+        "ByteOffset": 12659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        fprintf( pOutput, \"Amap_ParseFormula(): Unknown operation\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 315,
+        "Column": 25,
+        "ByteOffset": 12747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        ABC_FREE( pFormula );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 336,
+        "Column": 21,
+        "ByteOffset": 13583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    ABC_FREE( pFormula );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 342,
+        "Column": 21,
+        "ByteOffset": 13795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pOutput, \"Amap_ParseFormula(): Something is left in the operation stack\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 344,
+        "Column": 17,
+        "ByteOffset": 13921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pOutput, \"Amap_ParseFormula(): Something is left in the function stack\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 347,
+        "Column": 13,
+        "ByteOffset": 14047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pOutput, \"Amap_ParseFormula(): The input string is empty\\n\" ); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 349,
+        "Column": 5,
+        "ByteOffset": 14131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pFormula );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 378,
+        "Column": 9,
+        "ByteOffset": 14920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gates with more than %d inputs will be ignored.\\n\", AMAP_MAXINS ); }"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 387,
+        "Column": 16,
+        "ByteOffset": 15323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strcmp( pGate.pForm, AMAP_STRING_CONST0 ) == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 389,
+        "Column": 23,
+        "ByteOffset": 15430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else if strcmp( pGate.pForm, AMAP_STRING_CONST1 ) == 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 392,
+        "Column": 17,
+        "ByteOffset": 15553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Cannot parse formula \\\"%s\\\" of gate \\\"%s\\\" with no pins.\\n\", pGate.pForm, pGate.pName );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 402,
+        "Column": 35,
+        "ByteOffset": 15939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pObj = Amap_ParseFormula( stdout, pGate.pForm, vNames, pMan, pGate.pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 408,
+        "Column": 17,
+        "ByteOffset": 16234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Skipping gate \\\"%s\\\" because its output \\\"%s\\\" does not depend on all input variables.\\n\", pGate.pName, pGate.pForm ); }"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 412,
+        "Column": 9,
+        "ByteOffset": 16523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pGate.pFunc, pTruth, sizeof(unsigned)*Abc_TruthWordNum(pGate.nPins) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Amap_ParseFormulaOper",
+      "Start": 2661,
+      "End": 3375,
+      "BodyStart": 2747,
+      "Original": "Hop_Obj_t * Amap_ParseFormulaOper( Hop_Man_t * pMan, Vec_Ptr_t * pStackFn, int Oper )\n{\n    Hop_Obj_t * gArg1, * gArg2, * gFunc;\n    // perform the given operation\n    gArg2 = (Hop_Obj_t *)Vec_PtrPop( pStackFn );\n    gArg1 = (Hop_Obj_t *)Vec_PtrPop( pStackFn );\n    if ( Oper == AMAP_EQN_OPER_AND )\n        gFunc = Hop_And( pMan, gArg1, gArg2 );\n    else if ( Oper == AMAP_EQN_OPER_OR )\n        gFunc = Hop_Or( pMan, gArg1, gArg2 );\n    else if ( Oper == AMAP_EQN_OPER_XOR )\n        gFunc = Hop_Exor( pMan, gArg1, gArg2 );\n    else\n        return NULL;\n//    Cudd_Ref( gFunc );\n//    Cudd_RecursiveDeref( dd, gArg1 );\n//    Cudd_RecursiveDeref( dd, gArg2 );\n    Vec_PtrPush( pStackFn,  gFunc );\n    return gFunc;\n}",
+      "Draft": "func Amap_ParseFormulaOper(pMan *Hop_Man_t, pStackFn *Vec_Ptr_t, Oper int32) *Hop_Obj_t {\n    var gArg1, gArg2, gFunc *Hop_Obj_t;\n    // perform the given operation\n    gArg2 = (Hop_Obj_t *)Vec_PtrPop( pStackFn );\n    gArg1 = (Hop_Obj_t *)Vec_PtrPop( pStackFn );\n    if Oper == AMAP_EQN_OPER_AND {\n        gFunc = Hop_And( pMan, gArg1, gArg2 );\n    } else if Oper == AMAP_EQN_OPER_OR {\n        gFunc = Hop_Or( pMan, gArg1, gArg2 );\n    } else if Oper == AMAP_EQN_OPER_XOR {\n        gFunc = Hop_Exor( pMan, gArg1, gArg2 );\n    } else {\n        return nil; }\n//    Cudd_Ref( gFunc );\n//    Cudd_RecursiveDeref( dd, gArg1 );\n//    Cudd_RecursiveDeref( dd, gArg2 );\n    Vec_PtrPush( pStackFn,  gFunc );\n    return gFunc;\n}"
+    },
+    {
+      "Name": "Amap_ParseFormula",
+      "Start": 3758,
+      "End": 14653,
+      "BodyStart": 3883,
+      "Original": "Hop_Obj_t * Amap_ParseFormula( FILE * pOutput, char * pFormInit, Vec_Ptr_t * vVarNames, Hop_Man_t * pMan, char * pGateName )\n{\n    char * pFormula;\n    Vec_Ptr_t * pStackFn;\n    Vec_Int_t * pStackOp;\n    Hop_Obj_t * gFunc;\n    char * pTemp, * pName;\n    int nParans, fFound, Flag;\n    int Oper, Oper1, Oper2;\n    int i, v;\n\n    // make sure that the number of opening and closing parentheses is the same\n    nParans = 0;\n    for ( pTemp = pFormInit; *pTemp; pTemp++ )\n        if ( *pTemp == '(' )\n            nParans++;\n        else if ( *pTemp == ')' )\n            nParans--;\n    if ( nParans != 0 )\n    {\n        fprintf( pOutput, \"Amap_ParseFormula(): Different number of opening and closing parentheses ().\\n\" );\n        return NULL;\n    }\n\n    // copy the formula\n    pFormula = ABC_ALLOC( char, strlen(pFormInit) + 3 );\n    sprintf( pFormula, \"(%s)\", pFormInit );\n\n    // start the stacks\n    pStackFn = Vec_PtrAlloc( 100 );\n    pStackOp = Vec_IntAlloc( 100 );\n\n    Flag = AMAP_EQN_FLAG_START;\n    for ( pTemp = pFormula; *pTemp; pTemp++ )\n    {\n        switch ( *pTemp )\n        {\n        // skip all spaces, tabs, and end-of-lines\n        case ' ':\n        case '\\t':\n        case '\\r':\n        case '\\n':\n            continue;\n        case AMAP_EQN_SYM_CONST0:\n            Vec_PtrPush( pStackFn, Hop_ManConst0(pMan) );  // Cudd_Ref( b0 );\n            if ( Flag == AMAP_EQN_FLAG_VAR )\n            {\n                fprintf( pOutput, \"Amap_ParseFormula(): No operation symbol before constant 0.\\n\" );\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            }\n            Flag = AMAP_EQN_FLAG_VAR; \n            break;\n        case AMAP_EQN_SYM_CONST1:\n            Vec_PtrPush( pStackFn, Hop_ManConst1(pMan) );  //  Cudd_Ref( b1 );\n            if ( Flag == AMAP_EQN_FLAG_VAR )\n            {\n                fprintf( pOutput, \"Amap_ParseFormula(): No operation symbol before constant 1.\\n\" );\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            }\n            Flag = AMAP_EQN_FLAG_VAR; \n            break;\n        case AMAP_EQN_SYM_NEG:\n            if ( Flag == AMAP_EQN_FLAG_VAR )\n            {// if NEGBEF follows a variable, AND is assumed\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_AND );\n                Flag = AMAP_EQN_FLAG_OPER;\n            }\n            Vec_IntPush( pStackOp, AMAP_EQN_OPER_NEG );\n            break;\n        case AMAP_EQN_SYM_NEGAFT:\n            if ( Flag != AMAP_EQN_FLAG_VAR )\n            {// if there is no variable before NEGAFT, it is an error\n                fprintf( pOutput, \"Amap_ParseFormula(): No variable is specified before the negation suffix.\\n\" );\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            }\n            else // if ( Flag == PARSE_FLAG_VAR )\n                Vec_PtrPush( pStackFn, Hop_Not( (Hop_Obj_t *)Vec_PtrPop(pStackFn) ) );\n            break;\n        case AMAP_EQN_SYM_AND:\n        case AMAP_EQN_SYM_AND2:\n        case AMAP_EQN_SYM_OR:\n        case AMAP_EQN_SYM_OR2:\n        case AMAP_EQN_SYM_XOR:\n            if ( Flag != AMAP_EQN_FLAG_VAR )\n            {\n                fprintf( pOutput, \"Amap_ParseFormula(): There is no variable before AND, EXOR, or OR.\\n\" );\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            }\n            if ( *pTemp == AMAP_EQN_SYM_AND || *pTemp == AMAP_EQN_SYM_AND2 )\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_AND );\n            else if ( *pTemp == AMAP_EQN_SYM_OR || *pTemp == AMAP_EQN_SYM_OR2 )\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_OR );\n            else //if ( *pTemp == AMAP_EQN_SYM_XOR )\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_XOR );\n            Flag = AMAP_EQN_FLAG_OPER; \n            break;\n        case AMAP_EQN_SYM_OPEN:\n            if ( Flag == AMAP_EQN_FLAG_VAR )\n            {\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_AND );\n//                fprintf( pOutput, \"Amap_ParseFormula(): An opening parenthesis follows a var without operation sign.\\n\" ); \n//                Flag = AMAP_EQN_FLAG_ERROR; \n//              break; \n            }\n            Vec_IntPush( pStackOp, AMAP_EQN_OPER_MARK );\n            // after an opening bracket, it feels like starting over again\n            Flag = AMAP_EQN_FLAG_START; \n            break;\n        case AMAP_EQN_SYM_CLOSE:\n            if ( Vec_IntSize( pStackOp ) != 0 )\n            {\n                while ( 1 )\n                {\n                    if ( Vec_IntSize( pStackOp ) == 0 )\n                    {\n                        fprintf( pOutput, \"Amap_ParseFormula(): There is no opening parenthesis\\n\" );\n                        Flag = AMAP_EQN_FLAG_ERROR; \n                        break;\n                    }\n                    Oper = Vec_IntPop( pStackOp );\n                    if ( Oper == AMAP_EQN_OPER_MARK )\n                        break;\n\n                    // perform the given operation\n                    if ( Amap_ParseFormulaOper( pMan, pStackFn, Oper ) == NULL )\n                    {\n                        fprintf( pOutput, \"Amap_ParseFormula(): Unknown operation\\n\" );\n                        ABC_FREE( pFormula );\n                        Vec_PtrFreeP( \u0026pStackFn );\n                        Vec_IntFreeP( \u0026pStackOp );\n                        return NULL;\n                    }\n                }\n            }\n            else\n            {\n                fprintf( pOutput, \"Amap_ParseFormula(): There is no opening parenthesis\\n\" );\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            }\n            if ( Flag != AMAP_EQN_FLAG_ERROR )\n                Flag = AMAP_EQN_FLAG_VAR; \n            break;\n\n\n        default:\n            // scan the next name\n            for ( i = 0; pTemp[i] \u0026\u0026 \n                         pTemp[i] != ' ' \u0026\u0026 pTemp[i] != '\\t' \u0026\u0026 pTemp[i] != '\\r' \u0026\u0026 pTemp[i] != '\\n' \u0026\u0026\n                         pTemp[i] != AMAP_EQN_SYM_AND \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_AND2 \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_OR \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_OR2 \u0026\u0026 \n                         pTemp[i] != AMAP_EQN_SYM_XOR \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_NEGAFT \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_CLOSE; \n                  i++ )\n              {\n                    if ( pTemp[i] == AMAP_EQN_SYM_NEG || pTemp[i] == AMAP_EQN_SYM_OPEN )\n                    {\n                        fprintf( pOutput, \"Amap_ParseFormula(): The negation sign or an opening parenthesis inside the variable name.\\n\" );\n                        Flag = AMAP_EQN_FLAG_ERROR; \n                        break;\n                    }\n              }\n            // variable name is found\n            fFound = 0;\n            Vec_PtrForEachEntry( char *, vVarNames, pName, v )\n                if ( strncmp(pTemp, pName, i) == 0 \u0026\u0026 strlen(pName) == (unsigned)i )\n                {\n                    pTemp += i-1;\n                    fFound = 1;\n                    break;\n                }\n            if ( !fFound )\n            { \n                fprintf( pOutput, \"Amap_ParseFormula(): The parser cannot find var \\\"%s\\\" in the input var list of gate \\\"%s\\\".\\n\", pTemp, pGateName ); \n                Flag = AMAP_EQN_FLAG_ERROR; \n                break; \n            }\n/*\n            if ( Flag == AMAP_EQN_FLAG_VAR )\n            {\n                fprintf( pOutput, \"Amap_ParseFormula(): The variable name \\\"%s\\\" follows another var without operation sign.\\n\", pTemp ); \n                Flag = AMAP_EQN_FLAG_ERROR; \n                break; \n            }\n*/\n            if ( Flag == AMAP_EQN_FLAG_VAR )\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_AND );\n\n            Vec_PtrPush( pStackFn, Hop_IthVar( pMan, v ) ); // Cudd_Ref( pbVars[v] );\n            Flag = AMAP_EQN_FLAG_VAR; \n            break;\n        }\n\n        if ( Flag == AMAP_EQN_FLAG_ERROR )\n            break;      // error exit\n        else if ( Flag == AMAP_EQN_FLAG_START )\n            continue;  //  go on parsing\n        else if ( Flag == AMAP_EQN_FLAG_VAR )\n            while ( 1 )\n            {  // check if there are negations in the OpStack     \n                if ( Vec_IntSize( pStackOp ) == 0 )\n                    break;\n                Oper = Vec_IntPop( pStackOp );\n                if ( Oper != AMAP_EQN_OPER_NEG )\n                {\n                    Vec_IntPush( pStackOp, Oper );\n                    break;\n                }\n                else\n                {\n                      Vec_PtrPush( pStackFn, Hop_Not((Hop_Obj_t *)Vec_PtrPop(pStackFn)) );\n                }\n            }\n        else // if ( Flag == AMAP_EQN_FLAG_OPER )\n            while ( 1 )\n            {  // execute all the operations in the OpStack\n               // with precedence higher or equal than the last one\n                Oper1 = Vec_IntPop( pStackOp ); // the last operation\n                if ( Vec_IntSize( pStackOp ) == 0 ) \n                {  // if it is the only operation, push it back\n                    Vec_IntPush( pStackOp, Oper1 );\n                    break;\n                }\n                Oper2 = Vec_IntPop( pStackOp ); // the operation before the last one\n                if ( Oper2 \u003e= Oper1 )  \n                {  // if Oper2 precedence is higher or equal, execute it\n                    if ( Amap_ParseFormulaOper( pMan, pStackFn, Oper2 ) == NULL )\n                    {\n                        fprintf( pOutput, \"Amap_ParseFormula(): Unknown operation\\n\" );\n                        ABC_FREE( pFormula );\n                        Vec_PtrFreeP( \u0026pStackFn );\n                        Vec_IntFreeP( \u0026pStackOp );\n                        return NULL;\n                    }\n                    Vec_IntPush( pStackOp,  Oper1 );     // push the last operation back\n                }\n                else\n                {  // if Oper2 precedence is lower, push them back and done\n                    Vec_IntPush( pStackOp, Oper2 );\n                    Vec_IntPush( pStackOp, Oper1 );\n                    break;\n                }\n            }\n    }\n\n    if ( Flag != AMAP_EQN_FLAG_ERROR )\n    {\n        if ( Vec_PtrSize(pStackFn) != 0 )\n        {    \n            gFunc = (Hop_Obj_t *)Vec_PtrPop(pStackFn);\n            if ( Vec_PtrSize(pStackFn) == 0 )\n                if ( Vec_IntSize( pStackOp ) == 0 )\n                {\n//                    Cudd_Deref( gFunc );\n                    ABC_FREE( pFormula );\n                    Vec_PtrFreeP( \u0026pStackFn );\n                    Vec_IntFreeP( \u0026pStackOp );\n                    return gFunc;\n                }\n                else\n                    fprintf( pOutput, \"Amap_ParseFormula(): Something is left in the operation stack\\n\" );\n            else\n                fprintf( pOutput, \"Amap_ParseFormula(): Something is left in the function stack\\n\" );\n        }\n        else\n            fprintf( pOutput, \"Amap_ParseFormula(): The input string is empty\\n\" );\n    }\n    ABC_FREE( pFormula );\n    Vec_PtrFreeP( \u0026pStackFn );\n    Vec_IntFreeP( \u0026pStackOp );\n    return NULL;\n}",
+      "Draft": "func Amap_ParseFormula(pOutput *os.File, pFormInit string, vVarNames *Vec_Ptr_t, pMan *Hop_Man_t, pGateName string) *Hop_Obj_t {\n    var pFormula string;\n    var pStackFn *Vec_Ptr_t;\n    var pStackOp *Vec_Int_t;\n    var gFunc *Hop_Obj_t;\n    var pTemp, pName string;\n    var nParans, fFound, Flag int32;\n    var Oper, Oper1, Oper2 int32;\n    var i, v int32;\n\n    // make sure that the number of opening and closing parentheses is the same\n    nParans = 0;\n    for  pTemp = pFormInit; *pTemp; pTemp++  {\n        if *pTemp == '(' {\n            nParans++;\n        } else if *pTemp == ')' {\n            nParans--; }\n    }\n    if nParans != 0 {\n        fmt.Fprintf(pOutput, \"Amap_ParseFormula(): Different number of opening and closing parentheses ().\\n\");\n        return nil;\n    }\n\n    // copy the formula\n    pFormula = ABC_ALLOC( char, len(pFormInit) + 3 );\n    pFormula = fmt.Sprintf(\"(%s)\", pFormInit);\n\n    // start the stacks\n    pStackFn = Vec_PtrAlloc( 100 );\n    pStackOp = Vec_IntAlloc( 100 );\n\n    Flag = AMAP_EQN_FLAG_START;\n    for  pTemp = pFormula; *pTemp; pTemp++  {\n        switch  *pTemp  {\n        // skip all spaces, tabs, and end-of-lines\n        case ' ',\n         '\\t',\n         '\\r',\n         '\\n':\n            continue;\n        case AMAP_EQN_SYM_CONST0:\n            Vec_PtrPush( pStackFn, Hop_ManConst0(pMan) );  // Cudd_Ref( b0 );\n            if Flag == AMAP_EQN_FLAG_VAR {\n                fmt.Fprintf(pOutput, \"Amap_ParseFormula(): No operation symbol before constant 0.\\n\");\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            }\n            Flag = AMAP_EQN_FLAG_VAR; \n            break;\n        case AMAP_EQN_SYM_CONST1:\n            Vec_PtrPush( pStackFn, Hop_ManConst1(pMan) );  //  Cudd_Ref( b1 );\n            if Flag == AMAP_EQN_FLAG_VAR {\n                fmt.Fprintf(pOutput, \"Amap_ParseFormula(): No operation symbol before constant 1.\\n\");\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            }\n            Flag = AMAP_EQN_FLAG_VAR; \n            break;\n        case AMAP_EQN_SYM_NEG:\n            if Flag == AMAP_EQN_FLAG_VAR {// if NEGBEF follows a variable, AND is assumed\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_AND );\n                Flag = AMAP_EQN_FLAG_OPER;\n            }\n            Vec_IntPush( pStackOp, AMAP_EQN_OPER_NEG );\n            break;\n        case AMAP_EQN_SYM_NEGAFT:\n            if Flag != AMAP_EQN_FLAG_VAR {// if there is no variable before NEGAFT, it is an error\n                fmt.Fprintf(pOutput, \"Amap_ParseFormula(): No variable is specified before the negation suffix.\\n\");\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            \n            } else { // if ( Flag == PARSE_FLAG_VAR )\n                Vec_PtrPush( pStackFn, Hop_Not( (Hop_Obj_t *)Vec_PtrPop(pStackFn) ) ); }\n            break;\n        case AMAP_EQN_SYM_AND,\n         AMAP_EQN_SYM_AND2,\n         AMAP_EQN_SYM_OR,\n         AMAP_EQN_SYM_OR2,\n         AMAP_EQN_SYM_XOR:\n            if Flag != AMAP_EQN_FLAG_VAR {\n                fmt.Fprintf(pOutput, \"Amap_ParseFormula(): There is no variable before AND, EXOR, or OR.\\n\");\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            }\n            if *pTemp == AMAP_EQN_SYM_AND || *pTemp == AMAP_EQN_SYM_AND2 {\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_AND );\n            } else if *pTemp == AMAP_EQN_SYM_OR || *pTemp == AMAP_EQN_SYM_OR2 {\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_OR );\n            } else { //if ( *pTemp == AMAP_EQN_SYM_XOR )\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_XOR ); }\n            Flag = AMAP_EQN_FLAG_OPER; \n            break;\n        case AMAP_EQN_SYM_OPEN:\n            if Flag == AMAP_EQN_FLAG_VAR {\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_AND );\n//                fprintf( pOutput, \"Amap_ParseFormula(): An opening parenthesis follows a var without operation sign.\\n\" ); \n//                Flag = AMAP_EQN_FLAG_ERROR; \n//              break; \n            }\n            Vec_IntPush( pStackOp, AMAP_EQN_OPER_MARK );\n            // after an opening bracket, it feels like starting over again\n            Flag = AMAP_EQN_FLAG_START; \n            break;\n        case AMAP_EQN_SYM_CLOSE:\n            if Vec_IntSize( pStackOp ) != 0 {\n                for {\n                    if Vec_IntSize( pStackOp ) == 0 {\n                        fmt.Fprintf(pOutput, \"Amap_ParseFormula(): There is no opening parenthesis\\n\");\n                        Flag = AMAP_EQN_FLAG_ERROR; \n                        break;\n                    }\n                    Oper = Vec_IntPop( pStackOp );\n                    if Oper == AMAP_EQN_OPER_MARK {\n                        break; }\n\n                    // perform the given operation\n                    if Amap_ParseFormulaOper( pMan, pStackFn, Oper ) == nil {\n                        fmt.Fprintf(pOutput, \"Amap_ParseFormula(): Unknown operation\\n\");\n                        ABC_FREE( pFormula );\n                        Vec_PtrFreeP( \u0026pStackFn );\n                        Vec_IntFreeP( \u0026pStackOp );\n                        return nil;\n                    }\n                }\n            \n            } else {\n                fmt.Fprintf(pOutput, \"Amap_ParseFormula(): There is no opening parenthesis\\n\");\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            }\n            if Flag != AMAP_EQN_FLAG_ERROR {\n                Flag = AMAP_EQN_FLAG_VAR; } \n            break;\n\n\n        default:\n            // scan the next name\n            for  i = 0; pTemp[i] \u0026\u0026 \n                         pTemp[i] != ' ' \u0026\u0026 pTemp[i] != '\\t' \u0026\u0026 pTemp[i] != '\\r' \u0026\u0026 pTemp[i] != '\\n' \u0026\u0026\n                         pTemp[i] != AMAP_EQN_SYM_AND \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_AND2 \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_OR \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_OR2 \u0026\u0026 \n                         pTemp[i] != AMAP_EQN_SYM_XOR \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_NEGAFT \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_CLOSE; \n                  i++  {\n                    if pTemp[i] == AMAP_EQN_SYM_NEG || pTemp[i] == AMAP_EQN_SYM_OPEN {\n                        fmt.Fprintf(pOutput, \"Amap_ParseFormula(): The negation sign or an opening parenthesis inside the variable name.\\n\");\n                        Flag = AMAP_EQN_FLAG_ERROR; \n                        break;\n                    }\n              }\n            // variable name is found\n            fFound = 0;\n            Vec_PtrForEachEntry( char *, vVarNames, pName, v )\n                if strncmp(pTemp, pName, i) == 0 \u0026\u0026 len(pName) == uint32(i) {\n                    pTemp += i-1;\n                    fFound = 1;\n                    break;\n                }\n            if !fFound { \n                fmt.Fprintf(pOutput, \"Amap_ParseFormula(): The parser cannot find var \\\"%s\\\" in the input var list of gate \\\"%s\\\".\\n\", pTemp, pGateName); \n                Flag = AMAP_EQN_FLAG_ERROR; \n                break; \n            }\n/*\n            if ( Flag == AMAP_EQN_FLAG_VAR )\n            {\n                fprintf( pOutput, \"Amap_ParseFormula(): The variable name \\\"%s\\\" follows another var without operation sign.\\n\", pTemp ); \n                Flag = AMAP_EQN_FLAG_ERROR; \n                break; \n            }\n*/\n            if Flag == AMAP_EQN_FLAG_VAR {\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_AND ); }\n\n            Vec_PtrPush( pStackFn, Hop_IthVar( pMan, v ) ); // Cudd_Ref( pbVars[v] );\n            Flag = AMAP_EQN_FLAG_VAR; \n            break;\n        }\n\n        if Flag == AMAP_EQN_FLAG_ERROR {\n            break;      // error exit\n        } else if Flag == AMAP_EQN_FLAG_START {\n            continue;  //  go on parsing\n        } else if Flag == AMAP_EQN_FLAG_VAR {\n            for {  // check if there are negations in the OpStack     \n                if Vec_IntSize( pStackOp ) == 0 {\n                    break; }\n                Oper = Vec_IntPop( pStackOp );\n                if Oper != AMAP_EQN_OPER_NEG {\n                    Vec_IntPush( pStackOp, Oper );\n                    break;\n                \n                } else {\n                      Vec_PtrPush( pStackFn, Hop_Not((Hop_Obj_t *)Vec_PtrPop(pStackFn)) );\n                }\n            }\n        } else { // if ( Flag == AMAP_EQN_FLAG_OPER )\n            for {  // execute all the operations in the OpStack\n               // with precedence higher or equal than the last one\n                Oper1 = Vec_IntPop( pStackOp ); // the last operation\n                if Vec_IntSize( pStackOp ) == 0 {  // if it is the only operation, push it back\n                    Vec_IntPush( pStackOp, Oper1 );\n                    break;\n                }\n                Oper2 = Vec_IntPop( pStackOp ); // the operation before the last one\n                if Oper2 \u003e= Oper1 {  // if Oper2 precedence is higher or equal, execute it\n                    if Amap_ParseFormulaOper( pMan, pStackFn, Oper2 ) == nil {\n                        fmt.Fprintf(pOutput, \"Amap_ParseFormula(): Unknown operation\\n\");\n                        ABC_FREE( pFormula );\n                        Vec_PtrFreeP( \u0026pStackFn );\n                        Vec_IntFreeP( \u0026pStackOp );\n                        return nil;\n                    }\n                    Vec_IntPush( pStackOp,  Oper1 );     // push the last operation back\n                \n                } else {  // if Oper2 precedence is lower, push them back and done\n                    Vec_IntPush( pStackOp, Oper2 );\n                    Vec_IntPush( pStackOp, Oper1 );\n                    break;\n                }\n            } }\n    }\n\n    if Flag != AMAP_EQN_FLAG_ERROR {\n        if Vec_PtrSize(pStackFn) != 0 {    \n            gFunc = (Hop_Obj_t *)Vec_PtrPop(pStackFn);\n            if Vec_PtrSize(pStackFn) == 0 {\n                if Vec_IntSize( pStackOp ) == 0 {\n//                    Cudd_Deref( gFunc );\n                    ABC_FREE( pFormula );\n                    Vec_PtrFreeP( \u0026pStackFn );\n                    Vec_IntFreeP( \u0026pStackOp );\n                    return gFunc;\n                \n                } else {\n                    fmt.Fprintf(pOutput, \"Amap_ParseFormula(): Something is left in the operation stack\\n\"); }\n            } else {\n                fmt.Fprintf(pOutput, \"Amap_ParseFormula(): Something is left in the function stack\\n\"); }\n        \n        } else {\n            fmt.Fprintf(pOutput, \"Amap_ParseFormula(): The input string is empty\\n\"); }\n    }\n    ABC_FREE( pFormula );\n    Vec_PtrFreeP( \u0026pStackFn );\n    Vec_IntFreeP( \u0026pStackOp );\n    return nil;\n}"
+    },
+    {
+      "Name": "Amap_LibParseEquations",
+      "Start": 14920,
+      "End": 17177,
+      "BodyStart": 14979,
+      "Original": "int Amap_LibParseEquations( Amap_Lib_t * p, int fVerbose )\n{\n//    extern int Kit_TruthSupportSize( unsigned * pTruth, int nVars );\n    Hop_Man_t * pMan;\n    Hop_Obj_t * pObj;\n    Vec_Ptr_t * vNames;\n    Vec_Int_t * vTruth;\n    Amap_Gat_t * pGate;\n    Amap_Pin_t * pPin;\n    unsigned * pTruth;\n    int i, nPinMax;\n    nPinMax = Amap_LibNumPinsMax(p);\n    if ( nPinMax \u003e AMAP_MAXINS )\n        printf( \"Gates with more than %d inputs will be ignored.\\n\", AMAP_MAXINS );\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vNames = Vec_PtrAlloc( 100 );\n    pMan = Hop_ManStart();\n    Hop_IthVar( pMan, nPinMax - 1 );\n    Vec_PtrForEachEntry( Amap_Gat_t *, p-\u003evGates, pGate, i )\n    {\n        if ( pGate-\u003enPins == 0 )\n        {\n            pGate-\u003epFunc = (unsigned *)Aig_MmFlexEntryFetch( p-\u003epMemGates, 4 );\n            if ( strcmp( pGate-\u003epForm, AMAP_STRING_CONST0 ) == 0 )\n                pGate-\u003epFunc[0] = 0;\n            else if ( strcmp( pGate-\u003epForm, AMAP_STRING_CONST1 ) == 0 )\n                pGate-\u003epFunc[0] = ~0;\n            else\n            {\n                printf( \"Cannot parse formula \\\"%s\\\" of gate \\\"%s\\\" with no pins.\\n\", pGate-\u003epForm, pGate-\u003epName );\n                break;\n            }\n            continue;\n        }\n        if ( pGate-\u003enPins \u003e AMAP_MAXINS )\n            continue;\n        Vec_PtrClear( vNames );\n        Amap_GateForEachPin( pGate, pPin )\n            Vec_PtrPush( vNames, pPin-\u003epName );\n        pObj = Amap_ParseFormula( stdout, pGate-\u003epForm, vNames, pMan, pGate-\u003epName );\n        if ( pObj == NULL )\n            break;\n        pTruth = Hop_ManConvertAigToTruth( pMan, pObj, pGate-\u003enPins, vTruth, 0 );\n        if ( Kit_TruthSupportSize(pTruth, pGate-\u003enPins) \u003c (int)pGate-\u003enPins )\n        {\n            if ( fVerbose )\n                printf( \"Skipping gate \\\"%s\\\" because its output \\\"%s\\\" does not depend on all input variables.\\n\", pGate-\u003epName, pGate-\u003epForm );\n            continue;\n        }\n        pGate-\u003epFunc = (unsigned *)Aig_MmFlexEntryFetch( p-\u003epMemGates, sizeof(unsigned)*Abc_TruthWordNum(pGate-\u003enPins) );\n        memcpy( pGate-\u003epFunc, pTruth, sizeof(unsigned)*Abc_TruthWordNum(pGate-\u003enPins) );\n    }\n    Vec_PtrFree( vNames );\n    Vec_IntFree( vTruth );\n    Hop_ManStop( pMan );\n    return i == Vec_PtrSize(p-\u003evGates);\n}",
+      "Draft": "func Amap_LibParseEquations(p *Amap_Lib_t, fVerbose int32) int32 {\n//    extern int Kit_TruthSupportSize( unsigned * pTruth, int nVars );\n    var pMan *Hop_Man_t;\n    var pObj *Hop_Obj_t;\n    var vNames *Vec_Ptr_t;\n    var vTruth *Vec_Int_t;\n    var pGate *Amap_Gat_t;\n    var pPin *Amap_Pin_t;\n    var pTruth *uint32;\n    var i, nPinMax int32;\n    nPinMax = Amap_LibNumPinsMax(p);\n    if nPinMax \u003e AMAP_MAXINS {\n        fmt.Printf(\"Gates with more than %d inputs will be ignored.\\n\", AMAP_MAXINS); }\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vNames = Vec_PtrAlloc( 100 );\n    pMan = Hop_ManStart();\n    Hop_IthVar( pMan, nPinMax - 1 );\n    Vec_PtrForEachEntry( Amap_Gat_t *, p.vGates, pGate, i )\n    {\n        if pGate.nPins == 0 {\n            pGate.pFunc = (unsigned *)Aig_MmFlexEntryFetch( p.pMemGates, 4 );\n            if int32(strings.Compare(pGate.pForm, AMAP_STRING_CONST0)) == 0 {\n                pGate.pFunc[0] = 0;\n            } else if int32(strings.Compare(pGate.pForm, AMAP_STRING_CONST1)) == 0 {\n                pGate.pFunc[0] = ~0;\n            } else {\n                fmt.Printf(\"Cannot parse formula \\\"%s\\\" of gate \\\"%s\\\" with no pins.\\n\", pGate.pForm, pGate.pName);\n                break;\n            }\n            continue;\n        }\n        if pGate.nPins \u003e AMAP_MAXINS {\n            continue; }\n        Vec_PtrClear( vNames );\n        Amap_GateForEachPin( pGate, pPin )\n            Vec_PtrPush( vNames, pPin.pName );\n        pObj = Amap_ParseFormula( os.Stdout, pGate.pForm, vNames, pMan, pGate.pName );\n        if pObj == nil {\n            break; }\n        pTruth = Hop_ManConvertAigToTruth( pMan, pObj, pGate.nPins, vTruth, 0 );\n        if Kit_TruthSupportSize(pTruth, pGate.nPins) \u003c int32(pGate.nPins) {\n            if fVerbose != 0 {\n                fmt.Printf(\"Skipping gate \\\"%s\\\" because its output \\\"%s\\\" does not depend on all input variables.\\n\", pGate.pName, pGate.pForm); }\n            continue;\n        }\n        pGate.pFunc = (unsigned *)Aig_MmFlexEntryFetch( p.pMemGates, sizeof(unsigned)*Abc_TruthWordNum(pGate.nPins) );\n        memcpy( pGate.pFunc, pTruth, sizeof(unsigned)*Abc_TruthWordNum(pGate.nPins) );\n    }\n    Vec_PtrFree( vNames );\n    Vec_IntFree( vTruth );\n    Hop_ManStop( pMan );\n    return i == Vec_PtrSize(p.vGates);\n}"
+    },
+    {
+      "Name": "Amap_LibParseTest",
+      "Start": 17444,
+      "End": 17763,
+      "BodyStart": 17487,
+      "Original": "void Amap_LibParseTest( char * pFileName )\n{\n    int fVerbose = 0;\n    Amap_Lib_t * p;\n    abctime clk = Abc_Clock();\n    p = Amap_LibReadFile( pFileName, fVerbose );\n    if ( p == NULL )\n        return;\n    Amap_LibParseEquations( p, fVerbose );\n    Amap_LibFree( p );\n    ABC_PRT( \"Total time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Amap_LibParseTest(pFileName string) {\n    var fVerbose int32;\n    var p *Amap_Lib_t;\n    var clk abctime  = Abc_Clock();\n    p = Amap_LibReadFile( pFileName, fVerbose );\n    if p == nil {\n        return; }\n    Amap_LibParseEquations( p, fVerbose );\n    Amap_LibFree( p );\n    ABC_PRT( \"Total time\", Abc_Clock() - clk );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::mechanical::sizeof::16911",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16911,
+      "End": 16917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::mechanical::sizeof::17000",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17000,
+      "End": 17006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::pointer-cast::2837",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2837,
+      "End": 2850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::pointer-cast::2886",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2886,
+      "End": 2899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::pointer-cast::6592",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6592,
+      "End": 6605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::pointer-cast::12157",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12157,
+      "End": 12170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::pointer-cast::13805",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13805,
+      "End": 13818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::pointer-cast::15661",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15661,
+      "End": 15673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::pointer-cast::16863",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16863,
+      "End": 16875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::Amap_ParseFormulaOper",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ParseFormulaOper",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2661,
+      "End": 3375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::Amap_ParseFormula",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ParseFormula",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3758,
+      "End": 14653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::Amap_LibParseEquations",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibParseEquations",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14920,
+      "End": 17177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::Amap_LibParseTest",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibParseTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17444,
+      "End": 17763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::macro-inline::4542",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4542,
+      "End": 4582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::macro-inline::8886",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8886,
+      "End": 8906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::macro-inline::10378",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10378,
+      "End": 10428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::macro-inline::13127",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13127,
+      "End": 13147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::macro-inline::14019",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14019,
+      "End": 14039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::macro-inline::14551",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14551,
+      "End": 14571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::macro-inline::15528",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15528,
+      "End": 15584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::macro-inline::16248",
+      "Category": "macro-inline-review",
+      "Symbol": "Amap_GateForEachPin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16248,
+      "End": 16282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapParse.c::macro-inline::17718",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17718,
+      "End": 17760
+    }
+  ],
+  "Draft": "package amap\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [amapParse.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Technology mapper for standard cells.]\n\n  Synopsis    [Parses representations of gates.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: amapParse.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"amapInt.h\"\n//#include \"aig/hop/hop.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// the list of operation symbols to be used in expressions\n#define AMAP_EQN_SYM_OPEN    '('   // opening parenthesis\n#define AMAP_EQN_SYM_CLOSE   ')'   // closing parenthesis\n#define AMAP_EQN_SYM_CONST0  '0'   // constant 0\n#define AMAP_EQN_SYM_CONST1  '1'   // constant 1\n#define AMAP_EQN_SYM_NEG     '!'   // negation before the variable\n#define AMAP_EQN_SYM_NEGAFT  '\\''  // negation after the variable\n#define AMAP_EQN_SYM_AND     '*'   // logic AND\n#define AMAP_EQN_SYM_AND2    '\u0026'   // logic AND\n#define AMAP_EQN_SYM_XOR     '^'   // logic XOR\n#define AMAP_EQN_SYM_OR      '+'   // logic OR\n#define AMAP_EQN_SYM_OR2     '|'   // logic OR\n\n// the list of opcodes (also specifying operation precedence)\nconst AMAP_EQN_OPER_NEG =    10    // negation\nconst AMAP_EQN_OPER_AND =     9    // logic AND\nconst AMAP_EQN_OPER_XOR =     8    // logic XOR\nconst AMAP_EQN_OPER_OR =      7    // logic OR\nconst AMAP_EQN_OPER_MARK =    1    // OpStack token standing for an opening parenthesis\n\n// these are values of the internal Flag\nconst AMAP_EQN_FLAG_START =   1    // after the opening parenthesis \nconst AMAP_EQN_FLAG_VAR =     2    // after operation is received\nconst AMAP_EQN_FLAG_OPER =    3    // after operation symbol is received\nconst AMAP_EQN_FLAG_ERROR =   4    // when error is detected\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Performs the operation on the top entries in the stack.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ParseFormulaOper(pMan *Hop_Man_t, pStackFn *Vec_Ptr_t, Oper int32) *Hop_Obj_t {\n    var gArg1, gArg2, gFunc *Hop_Obj_t;\n    // perform the given operation\n    gArg2 = (Hop_Obj_t *)Vec_PtrPop( pStackFn );\n    gArg1 = (Hop_Obj_t *)Vec_PtrPop( pStackFn );\n    if Oper == AMAP_EQN_OPER_AND {\n        gFunc = Hop_And( pMan, gArg1, gArg2 );\n    } else if Oper == AMAP_EQN_OPER_OR {\n        gFunc = Hop_Or( pMan, gArg1, gArg2 );\n    } else if Oper == AMAP_EQN_OPER_XOR {\n        gFunc = Hop_Exor( pMan, gArg1, gArg2 );\n    } else {\n        return nil; }\n//    Cudd_Ref( gFunc );\n//    Cudd_RecursiveDeref( dd, gArg1 );\n//    Cudd_RecursiveDeref( dd, gArg2 );\n    Vec_PtrPush( pStackFn,  gFunc );\n    return gFunc;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the AIG corresponding to the equation.]\n\n  Description [Takes the stream to output messages, the formula, the vector\n  of variable names and the AIG manager.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ParseFormula(pOutput *os.File, pFormInit string, vVarNames *Vec_Ptr_t, pMan *Hop_Man_t, pGateName string) *Hop_Obj_t {\n    var pFormula string;\n    var pStackFn *Vec_Ptr_t;\n    var pStackOp *Vec_Int_t;\n    var gFunc *Hop_Obj_t;\n    var pTemp, pName string;\n    var nParans, fFound, Flag int32;\n    var Oper, Oper1, Oper2 int32;\n    var i, v int32;\n\n    // make sure that the number of opening and closing parentheses is the same\n    nParans = 0;\n    for  pTemp = pFormInit; *pTemp; pTemp++  {\n        if *pTemp == '(' {\n            nParans++;\n        } else if *pTemp == ')' {\n            nParans--; }\n    }\n    if nParans != 0 {\n        fmt.Fprintf(pOutput, \"Amap_ParseFormula(): Different number of opening and closing parentheses ().\\n\");\n        return nil;\n    }\n\n    // copy the formula\n    pFormula = ABC_ALLOC( char, len(pFormInit) + 3 );\n    pFormula = fmt.Sprintf(\"(%s)\", pFormInit);\n\n    // start the stacks\n    pStackFn = Vec_PtrAlloc( 100 );\n    pStackOp = Vec_IntAlloc( 100 );\n\n    Flag = AMAP_EQN_FLAG_START;\n    for  pTemp = pFormula; *pTemp; pTemp++  {\n        switch  *pTemp  {\n        // skip all spaces, tabs, and end-of-lines\n        case ' ',\n         '\\t',\n         '\\r',\n         '\\n':\n            continue;\n        case AMAP_EQN_SYM_CONST0:\n            Vec_PtrPush( pStackFn, Hop_ManConst0(pMan) );  // Cudd_Ref( b0 );\n            if Flag == AMAP_EQN_FLAG_VAR {\n                fmt.Fprintf(pOutput, \"Amap_ParseFormula(): No operation symbol before constant 0.\\n\");\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            }\n            Flag = AMAP_EQN_FLAG_VAR; \n            break;\n        case AMAP_EQN_SYM_CONST1:\n            Vec_PtrPush( pStackFn, Hop_ManConst1(pMan) );  //  Cudd_Ref( b1 );\n            if Flag == AMAP_EQN_FLAG_VAR {\n                fmt.Fprintf(pOutput, \"Amap_ParseFormula(): No operation symbol before constant 1.\\n\");\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            }\n            Flag = AMAP_EQN_FLAG_VAR; \n            break;\n        case AMAP_EQN_SYM_NEG:\n            if Flag == AMAP_EQN_FLAG_VAR {// if NEGBEF follows a variable, AND is assumed\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_AND );\n                Flag = AMAP_EQN_FLAG_OPER;\n            }\n            Vec_IntPush( pStackOp, AMAP_EQN_OPER_NEG );\n            break;\n        case AMAP_EQN_SYM_NEGAFT:\n            if Flag != AMAP_EQN_FLAG_VAR {// if there is no variable before NEGAFT, it is an error\n                fmt.Fprintf(pOutput, \"Amap_ParseFormula(): No variable is specified before the negation suffix.\\n\");\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            \n            } else { // if ( Flag == PARSE_FLAG_VAR )\n                Vec_PtrPush( pStackFn, Hop_Not( (Hop_Obj_t *)Vec_PtrPop(pStackFn) ) ); }\n            break;\n        case AMAP_EQN_SYM_AND,\n         AMAP_EQN_SYM_AND2,\n         AMAP_EQN_SYM_OR,\n         AMAP_EQN_SYM_OR2,\n         AMAP_EQN_SYM_XOR:\n            if Flag != AMAP_EQN_FLAG_VAR {\n                fmt.Fprintf(pOutput, \"Amap_ParseFormula(): There is no variable before AND, EXOR, or OR.\\n\");\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            }\n            if *pTemp == AMAP_EQN_SYM_AND || *pTemp == AMAP_EQN_SYM_AND2 {\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_AND );\n            } else if *pTemp == AMAP_EQN_SYM_OR || *pTemp == AMAP_EQN_SYM_OR2 {\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_OR );\n            } else { //if ( *pTemp == AMAP_EQN_SYM_XOR )\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_XOR ); }\n            Flag = AMAP_EQN_FLAG_OPER; \n            break;\n        case AMAP_EQN_SYM_OPEN:\n            if Flag == AMAP_EQN_FLAG_VAR {\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_AND );\n//                fprintf( pOutput, \"Amap_ParseFormula(): An opening parenthesis follows a var without operation sign.\\n\" ); \n//                Flag = AMAP_EQN_FLAG_ERROR; \n//              break; \n            }\n            Vec_IntPush( pStackOp, AMAP_EQN_OPER_MARK );\n            // after an opening bracket, it feels like starting over again\n            Flag = AMAP_EQN_FLAG_START; \n            break;\n        case AMAP_EQN_SYM_CLOSE:\n            if Vec_IntSize( pStackOp ) != 0 {\n                for {\n                    if Vec_IntSize( pStackOp ) == 0 {\n                        fmt.Fprintf(pOutput, \"Amap_ParseFormula(): There is no opening parenthesis\\n\");\n                        Flag = AMAP_EQN_FLAG_ERROR; \n                        break;\n                    }\n                    Oper = Vec_IntPop( pStackOp );\n                    if Oper == AMAP_EQN_OPER_MARK {\n                        break; }\n\n                    // perform the given operation\n                    if Amap_ParseFormulaOper( pMan, pStackFn, Oper ) == nil {\n                        fmt.Fprintf(pOutput, \"Amap_ParseFormula(): Unknown operation\\n\");\n                        ABC_FREE( pFormula );\n                        Vec_PtrFreeP( \u0026pStackFn );\n                        Vec_IntFreeP( \u0026pStackOp );\n                        return nil;\n                    }\n                }\n            \n            } else {\n                fmt.Fprintf(pOutput, \"Amap_ParseFormula(): There is no opening parenthesis\\n\");\n                Flag = AMAP_EQN_FLAG_ERROR; \n                break;\n            }\n            if Flag != AMAP_EQN_FLAG_ERROR {\n                Flag = AMAP_EQN_FLAG_VAR; } \n            break;\n\n\n        default:\n            // scan the next name\n            for  i = 0; pTemp[i] \u0026\u0026 \n                         pTemp[i] != ' ' \u0026\u0026 pTemp[i] != '\\t' \u0026\u0026 pTemp[i] != '\\r' \u0026\u0026 pTemp[i] != '\\n' \u0026\u0026\n                         pTemp[i] != AMAP_EQN_SYM_AND \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_AND2 \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_OR \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_OR2 \u0026\u0026 \n                         pTemp[i] != AMAP_EQN_SYM_XOR \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_NEGAFT \u0026\u0026 pTemp[i] != AMAP_EQN_SYM_CLOSE; \n                  i++  {\n                    if pTemp[i] == AMAP_EQN_SYM_NEG || pTemp[i] == AMAP_EQN_SYM_OPEN {\n                        fmt.Fprintf(pOutput, \"Amap_ParseFormula(): The negation sign or an opening parenthesis inside the variable name.\\n\");\n                        Flag = AMAP_EQN_FLAG_ERROR; \n                        break;\n                    }\n              }\n            // variable name is found\n            fFound = 0;\n            Vec_PtrForEachEntry( char *, vVarNames, pName, v )\n                if strncmp(pTemp, pName, i) == 0 \u0026\u0026 len(pName) == uint32(i) {\n                    pTemp += i-1;\n                    fFound = 1;\n                    break;\n                }\n            if !fFound { \n                fmt.Fprintf(pOutput, \"Amap_ParseFormula(): The parser cannot find var \\\"%s\\\" in the input var list of gate \\\"%s\\\".\\n\", pTemp, pGateName); \n                Flag = AMAP_EQN_FLAG_ERROR; \n                break; \n            }\n/*\n            if ( Flag == AMAP_EQN_FLAG_VAR )\n            {\n                fprintf( pOutput, \"Amap_ParseFormula(): The variable name \\\"%s\\\" follows another var without operation sign.\\n\", pTemp ); \n                Flag = AMAP_EQN_FLAG_ERROR; \n                break; \n            }\n*/\n            if Flag == AMAP_EQN_FLAG_VAR {\n                Vec_IntPush( pStackOp, AMAP_EQN_OPER_AND ); }\n\n            Vec_PtrPush( pStackFn, Hop_IthVar( pMan, v ) ); // Cudd_Ref( pbVars[v] );\n            Flag = AMAP_EQN_FLAG_VAR; \n            break;\n        }\n\n        if Flag == AMAP_EQN_FLAG_ERROR {\n            break;      // error exit\n        } else if Flag == AMAP_EQN_FLAG_START {\n            continue;  //  go on parsing\n        } else if Flag == AMAP_EQN_FLAG_VAR {\n            for {  // check if there are negations in the OpStack     \n                if Vec_IntSize( pStackOp ) == 0 {\n                    break; }\n                Oper = Vec_IntPop( pStackOp );\n                if Oper != AMAP_EQN_OPER_NEG {\n                    Vec_IntPush( pStackOp, Oper );\n                    break;\n                \n                } else {\n                      Vec_PtrPush( pStackFn, Hop_Not((Hop_Obj_t *)Vec_PtrPop(pStackFn)) );\n                }\n            }\n        } else { // if ( Flag == AMAP_EQN_FLAG_OPER )\n            for {  // execute all the operations in the OpStack\n               // with precedence higher or equal than the last one\n                Oper1 = Vec_IntPop( pStackOp ); // the last operation\n                if Vec_IntSize( pStackOp ) == 0 {  // if it is the only operation, push it back\n                    Vec_IntPush( pStackOp, Oper1 );\n                    break;\n                }\n                Oper2 = Vec_IntPop( pStackOp ); // the operation before the last one\n                if Oper2 \u003e= Oper1 {  // if Oper2 precedence is higher or equal, execute it\n                    if Amap_ParseFormulaOper( pMan, pStackFn, Oper2 ) == nil {\n                        fmt.Fprintf(pOutput, \"Amap_ParseFormula(): Unknown operation\\n\");\n                        ABC_FREE( pFormula );\n                        Vec_PtrFreeP( \u0026pStackFn );\n                        Vec_IntFreeP( \u0026pStackOp );\n                        return nil;\n                    }\n                    Vec_IntPush( pStackOp,  Oper1 );     // push the last operation back\n                \n                } else {  // if Oper2 precedence is lower, push them back and done\n                    Vec_IntPush( pStackOp, Oper2 );\n                    Vec_IntPush( pStackOp, Oper1 );\n                    break;\n                }\n            } }\n    }\n\n    if Flag != AMAP_EQN_FLAG_ERROR {\n        if Vec_PtrSize(pStackFn) != 0 {    \n            gFunc = (Hop_Obj_t *)Vec_PtrPop(pStackFn);\n            if Vec_PtrSize(pStackFn) == 0 {\n                if Vec_IntSize( pStackOp ) == 0 {\n//                    Cudd_Deref( gFunc );\n                    ABC_FREE( pFormula );\n                    Vec_PtrFreeP( \u0026pStackFn );\n                    Vec_IntFreeP( \u0026pStackOp );\n                    return gFunc;\n                \n                } else {\n                    fmt.Fprintf(pOutput, \"Amap_ParseFormula(): Something is left in the operation stack\\n\"); }\n            } else {\n                fmt.Fprintf(pOutput, \"Amap_ParseFormula(): Something is left in the function stack\\n\"); }\n        \n        } else {\n            fmt.Fprintf(pOutput, \"Amap_ParseFormula(): The input string is empty\\n\"); }\n    }\n    ABC_FREE( pFormula );\n    Vec_PtrFreeP( \u0026pStackFn );\n    Vec_IntFreeP( \u0026pStackOp );\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Parses equations for the gates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibParseEquations(p *Amap_Lib_t, fVerbose int32) int32 {\n//    extern int Kit_TruthSupportSize( unsigned * pTruth, int nVars );\n    var pMan *Hop_Man_t;\n    var pObj *Hop_Obj_t;\n    var vNames *Vec_Ptr_t;\n    var vTruth *Vec_Int_t;\n    var pGate *Amap_Gat_t;\n    var pPin *Amap_Pin_t;\n    var pTruth *uint32;\n    var i, nPinMax int32;\n    nPinMax = Amap_LibNumPinsMax(p);\n    if nPinMax \u003e AMAP_MAXINS {\n        fmt.Printf(\"Gates with more than %d inputs will be ignored.\\n\", AMAP_MAXINS); }\n    vTruth = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    vNames = Vec_PtrAlloc( 100 );\n    pMan = Hop_ManStart();\n    Hop_IthVar( pMan, nPinMax - 1 );\n    Vec_PtrForEachEntry( Amap_Gat_t *, p.vGates, pGate, i )\n    {\n        if pGate.nPins == 0 {\n            pGate.pFunc = (unsigned *)Aig_MmFlexEntryFetch( p.pMemGates, 4 );\n            if int32(strings.Compare(pGate.pForm, AMAP_STRING_CONST0)) == 0 {\n                pGate.pFunc[0] = 0;\n            } else if int32(strings.Compare(pGate.pForm, AMAP_STRING_CONST1)) == 0 {\n                pGate.pFunc[0] = ~0;\n            } else {\n                fmt.Printf(\"Cannot parse formula \\\"%s\\\" of gate \\\"%s\\\" with no pins.\\n\", pGate.pForm, pGate.pName);\n                break;\n            }\n            continue;\n        }\n        if pGate.nPins \u003e AMAP_MAXINS {\n            continue; }\n        Vec_PtrClear( vNames );\n        Amap_GateForEachPin( pGate, pPin )\n            Vec_PtrPush( vNames, pPin.pName );\n        pObj = Amap_ParseFormula( os.Stdout, pGate.pForm, vNames, pMan, pGate.pName );\n        if pObj == nil {\n            break; }\n        pTruth = Hop_ManConvertAigToTruth( pMan, pObj, pGate.nPins, vTruth, 0 );\n        if Kit_TruthSupportSize(pTruth, pGate.nPins) \u003c int32(pGate.nPins) {\n            if fVerbose != 0 {\n                fmt.Printf(\"Skipping gate \\\"%s\\\" because its output \\\"%s\\\" does not depend on all input variables.\\n\", pGate.pName, pGate.pForm); }\n            continue;\n        }\n        pGate.pFunc = (unsigned *)Aig_MmFlexEntryFetch( p.pMemGates, sizeof(unsigned)*Abc_TruthWordNum(pGate.nPins) );\n        memcpy( pGate.pFunc, pTruth, sizeof(unsigned)*Abc_TruthWordNum(pGate.nPins) );\n    }\n    Vec_PtrFree( vNames );\n    Vec_IntFree( vTruth );\n    Hop_ManStop( pMan );\n    return i == Vec_PtrSize(p.vGates);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Parses equations for the gates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibParseTest(pFileName string) {\n    var fVerbose int32;\n    var p *Amap_Lib_t;\n    var clk abctime  = Abc_Clock();\n    p = Amap_LibReadFile( pFileName, fVerbose );\n    if p == nil {\n        return; }\n    Amap_LibParseEquations( p, fVerbose );\n    Amap_LibFree( p );\n    ABC_PRT( \"Total time\", Abc_Clock() - clk );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

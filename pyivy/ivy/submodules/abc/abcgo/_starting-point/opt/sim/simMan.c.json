@@ -1,0 +1,848 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c",
+  "SHA256": "fc8755c84fa9e63aa63a131c780537022510dfe74f0da4ef5064a83505badaaa",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 52,
+        "Column": 69,
+        "ByteOffset": 1498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Sym_Man_t *) malloc(sizeof(Sym_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Sym_Man_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 72,
+        "Column": 77,
+        "ByteOffset": 2530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.uPatRand = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nSimWords)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 73,
+        "Column": 77,
+        "ByteOffset": 2657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.uPatCol  = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nSimWords)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 74,
+        "Column": 77,
+        "ByteOffset": 2784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.uPatRow  = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nSimWords)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 118,
+        "Column": 66,
+        "ByteOffset": 4447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.uPatRand) ? (free((char *) (p.uPatRand)), (p.uPatRand) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 119,
+        "Column": 65,
+        "ByteOffset": 4564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.uPatCol) ? (free((char *) (p.uPatCol)), (p.uPatCol) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 120,
+        "Column": 65,
+        "ByteOffset": 4679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.uPatRow) ? (free((char *) (p.uPatRow)), (p.uPatRow) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 121,
+        "Column": 57,
+        "ByteOffset": 4786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 5,
+        "ByteOffset": 5270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total symm         = %8d.\\n\", p.nPairsSymm );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 139,
+        "Column": 5,
+        "ByteOffset": 5329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Structural symm    = %8d.\\n\", p.nPairsSymmStr );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 140,
+        "Column": 5,
+        "ByteOffset": 5391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total non-sym      = %8d.\\n\", p.nPairsNonSymm );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 141,
+        "Column": 5,
+        "ByteOffset": 5453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total var pairs    = %8d.\\n\", p.nPairsTotal );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 5513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Sat runs SAT       = %8d.\\n\", p.nSatRunsSat );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 5,
+        "ByteOffset": 5573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Sat runs UNSAT     = %8d.\\n\", p.nSatRunsUnsat );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 145,
+        "Column": 68,
+        "ByteOffset": 5785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeStruct)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 147,
+        "Column": 65,
+        "ByteOffset": 5956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSim)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 149,
+        "Column": 66,
+        "ByteOffset": 6128
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMatr)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 151,
+        "Column": 67,
+        "ByteOffset": 6301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCount)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 153,
+        "Column": 67,
+        "ByteOffset": 6474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeFraig)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 155,
+        "Column": 65,
+        "ByteOffset": 6645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSat)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 157,
+        "Column": 67,
+        "ByteOffset": 6818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 175,
+        "Column": 69,
+        "ByteOffset": 7289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Sim_Man_t *) malloc(sizeof(Sim_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 176,
+        "Column": 5,
+        "ByteOffset": 7335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Sim_Man_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 223,
+        "Column": 57,
+        "ByteOffset": 9412
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 5,
+        "ByteOffset": 9896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total func supps   = %8d.\\n\", Sim_UtilCountSuppSizes(p, 0) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 241,
+        "Column": 5,
+        "ByteOffset": 9971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total struct supps = %8d.\\n\", Sim_UtilCountSuppSizes(p, 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 5,
+        "ByteOffset": 10046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Sat runs SAT       = %8d.\\n\", p.nSatRunsSat );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 5,
+        "ByteOffset": 10106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Sat runs UNSAT     = %8d.\\n\", p.nSatRunsUnsat );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 245,
+        "Column": 65,
+        "ByteOffset": 10315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSim)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 247,
+        "Column": 66,
+        "ByteOffset": 10487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTrav)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 249,
+        "Column": 67,
+        "ByteOffset": 10660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeFraig)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 251,
+        "Column": 65,
+        "ByteOffset": 10831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSat)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 253,
+        "Column": 67,
+        "ByteOffset": 11004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 11520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPat.pData, 0, p.nSuppWords * sizeof(unsigned) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sym_ManStart",
+      "Start": 1279,
+      "End": 2895,
+      "BodyStart": 1338,
+      "Original": "Sym_Man_t * Sym_ManStart( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    Sym_Man_t * p;\n    int i, v; \n    // start the manager\n    p = ABC_ALLOC( Sym_Man_t, 1 );\n    memset( p, 0, sizeof(Sym_Man_t) );\n    p-\u003epNtk = pNtk;\n    p-\u003evNodes     = Abc_NtkDfs( pNtk, 0 );\n    p-\u003enInputs    = Abc_NtkCiNum(p-\u003epNtk);\n    p-\u003enOutputs   = Abc_NtkCoNum(p-\u003epNtk);\n    // internal simulation information\n    p-\u003enSimWords  = SIM_NUM_WORDS(p-\u003enInputs);\n    p-\u003evSim       = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), p-\u003enSimWords, 0 );\n    // symmetry info for each output\n    p-\u003evMatrSymms    = Vec_PtrStart( p-\u003enOutputs );\n    p-\u003evMatrNonSymms = Vec_PtrStart( p-\u003enOutputs );\n    p-\u003evPairsTotal   = Vec_IntStart( p-\u003enOutputs );\n    p-\u003evPairsSym     = Vec_IntStart( p-\u003enOutputs );\n    p-\u003evPairsNonSym  = Vec_IntStart( p-\u003enOutputs );\n    for ( i = 0; i \u003c p-\u003enOutputs; i++ )\n    {\n        p-\u003evMatrSymms-\u003epArray[i]    = Extra_BitMatrixStart( p-\u003enInputs );\n        p-\u003evMatrNonSymms-\u003epArray[i] = Extra_BitMatrixStart( p-\u003enInputs );\n    }\n    // temporary patterns\n    p-\u003euPatRand = ABC_ALLOC( unsigned, p-\u003enSimWords );\n    p-\u003euPatCol  = ABC_ALLOC( unsigned, p-\u003enSimWords );\n    p-\u003euPatRow  = ABC_ALLOC( unsigned, p-\u003enSimWords );\n    p-\u003evVarsU   = Vec_IntStart( 100 );\n    p-\u003evVarsV   = Vec_IntStart( 100 );\n    // compute supports\n    p-\u003evSuppFun  = Sim_ComputeFunSupp( pNtk, fVerbose );\n    p-\u003evSupports = Vec_VecStart( p-\u003enOutputs );\n    for ( i = 0; i \u003c p-\u003enOutputs; i++ )\n        for ( v = 0; v \u003c p-\u003enInputs; v++ )\n            if ( Sim_SuppFunHasVar( p-\u003evSuppFun, i, v ) )\n                Vec_VecPushInt( p-\u003evSupports, i, v );\n    return p;\n}",
+      "Draft": "func Sym_ManStart(pNtk *Abc_Ntk_t, fVerbose int32) *Sym_Man_t {\n    var p *Sym_Man_t;\n    var i, v int32; \n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Sym_Man_t *) malloc(sizeof(Sym_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Sym_Man_t) );\n    p.pNtk = pNtk;\n    p.vNodes     = Abc_NtkDfs( pNtk, 0 );\n    p.nInputs    = Abc_NtkCiNum(p.pNtk);\n    p.nOutputs   = Abc_NtkCoNum(p.pNtk);\n    // internal simulation information\n    // inlining of macro SIM_NUM_WORDS\n    p.nSimWords  = (((p.nInputs)\u003e\u003e5) + (((p.nInputs)\u002631) \u003e 0));\n    p.vSim       = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), p.nSimWords, 0 );\n    // symmetry info for each output\n    p.vMatrSymms    = Vec_PtrStart( p.nOutputs );\n    p.vMatrNonSymms = Vec_PtrStart( p.nOutputs );\n    p.vPairsTotal   = Vec_IntStart( p.nOutputs );\n    p.vPairsSym     = Vec_IntStart( p.nOutputs );\n    p.vPairsNonSym  = Vec_IntStart( p.nOutputs );\n    for  i = 0; i \u003c p.nOutputs; i++  {\n        p.vMatrSymms.pArray[i]    = Extra_BitMatrixStart( p.nInputs );\n        p.vMatrNonSymms.pArray[i] = Extra_BitMatrixStart( p.nInputs );\n    }\n    // temporary patterns\n    // inlining of macro ABC_ALLOC\n    p.uPatRand = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nSimWords)));\n    // inlining of macro ABC_ALLOC\n    p.uPatCol  = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nSimWords)));\n    // inlining of macro ABC_ALLOC\n    p.uPatRow  = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nSimWords)));\n    p.vVarsU   = Vec_IntStart( 100 );\n    p.vVarsV   = Vec_IntStart( 100 );\n    // compute supports\n    p.vSuppFun  = Sim_ComputeFunSupp( pNtk, fVerbose );\n    p.vSupports = Vec_VecStart( p.nOutputs );\n    for  i = 0; i \u003c p.nOutputs; i++  {\n        for  v = 0; v \u003c p.nInputs; v++  {\n            // inlining of macro Sim_SuppFunHasVar\n            // inlining of macro Sim_HasBit\n            if  (((unsigned*)(p.vSuppFun).pArray[i])[((v))\u003e\u003e5]  \u0026 (1\u003c\u003c(((v)) \u0026 31))) \u003e 0 {\n                Vec_VecPushInt( p.vSupports, i, v ); }\n        }\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Sym_ManStop",
+      "Start": 3160,
+      "End": 4011,
+      "BodyStart": 3194,
+      "Original": "void Sym_ManStop( Sym_Man_t * p )\n{\n    int i;\n    Sym_ManPrintStats( p );\n    if ( p-\u003evSuppFun )     Sim_UtilInfoFree( p-\u003evSuppFun );   \n    if ( p-\u003evSim )         Sim_UtilInfoFree( p-\u003evSim );   \n    if ( p-\u003evNodes )       Vec_PtrFree( p-\u003evNodes );\n    if ( p-\u003evSupports )    Vec_VecFree( p-\u003evSupports );\n    for ( i = 0; i \u003c p-\u003enOutputs; i++ )\n    {\n        Extra_BitMatrixStop( (Extra_BitMat_t *)p-\u003evMatrSymms-\u003epArray[i] );\n        Extra_BitMatrixStop( (Extra_BitMat_t *)p-\u003evMatrNonSymms-\u003epArray[i] );\n    }\n    Vec_IntFree( p-\u003evVarsU );\n    Vec_IntFree( p-\u003evVarsV );\n    Vec_PtrFree( p-\u003evMatrSymms );\n    Vec_PtrFree( p-\u003evMatrNonSymms );\n    Vec_IntFree( p-\u003evPairsTotal );\n    Vec_IntFree( p-\u003evPairsSym );\n    Vec_IntFree( p-\u003evPairsNonSym );\n    ABC_FREE( p-\u003euPatRand );\n    ABC_FREE( p-\u003euPatCol );\n    ABC_FREE( p-\u003euPatRow );\n    ABC_FREE( p );\n}",
+      "Draft": "func Sym_ManStop(p *Sym_Man_t) {\n    var i int32;\n    Sym_ManPrintStats( p );\n    if p.vSuppFun {     Sim_UtilInfoFree( p.vSuppFun ); }   \n    if p.vSim {         Sim_UtilInfoFree( p.vSim ); }   \n    if p.vNodes {       Vec_PtrFree( p.vNodes ); }\n    if p.vSupports {    Vec_VecFree( p.vSupports ); }\n    for  i = 0; i \u003c p.nOutputs; i++  {\n        Extra_BitMatrixStop( (Extra_BitMat_t *)p.vMatrSymms.pArray[i] );\n        Extra_BitMatrixStop( (Extra_BitMat_t *)p.vMatrNonSymms.pArray[i] );\n    }\n    Vec_IntFree( p.vVarsU );\n    Vec_IntFree( p.vVarsV );\n    Vec_PtrFree( p.vMatrSymms );\n    Vec_PtrFree( p.vMatrNonSymms );\n    Vec_IntFree( p.vPairsTotal );\n    Vec_IntFree( p.vPairsSym );\n    Vec_IntFree( p.vPairsNonSym );\n    // inlining of macro ABC_FREE\n    ((p.uPatRand) ? (free((char *) (p.uPatRand)), (p.uPatRand) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.uPatCol) ? (free((char *) (p.uPatCol)), (p.uPatCol) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.uPatRow) ? (free((char *) (p.uPatRow)), (p.uPatRow) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Sym_ManPrintStats",
+      "Start": 4278,
+      "End": 5141,
+      "BodyStart": 4318,
+      "Original": "void Sym_ManPrintStats( Sym_Man_t * p )\n{\n//    printf( \"Inputs = %5d. Outputs = %5d. Sim words = %5d.\\n\", \n//        Abc_NtkCiNum(p-\u003epNtk), Abc_NtkCoNum(p-\u003epNtk), p-\u003enSimWords );\n    printf( \"Total symm         = %8d.\\n\", p-\u003enPairsSymm );\n    printf( \"Structural symm    = %8d.\\n\", p-\u003enPairsSymmStr );\n    printf( \"Total non-sym      = %8d.\\n\", p-\u003enPairsNonSymm );\n    printf( \"Total var pairs    = %8d.\\n\", p-\u003enPairsTotal );\n    printf( \"Sat runs SAT       = %8d.\\n\", p-\u003enSatRunsSat );\n    printf( \"Sat runs UNSAT     = %8d.\\n\", p-\u003enSatRunsUnsat );\n    ABC_PRT( \"Structural  \", p-\u003etimeStruct );\n    ABC_PRT( \"Simulation  \", p-\u003etimeSim );\n    ABC_PRT( \"Matrix      \", p-\u003etimeMatr );\n    ABC_PRT( \"Counting    \", p-\u003etimeCount );\n    ABC_PRT( \"Fraiging    \", p-\u003etimeFraig );\n    ABC_PRT( \"SAT         \", p-\u003etimeSat );\n    ABC_PRT( \"TOTAL       \", p-\u003etimeTotal );\n}",
+      "Draft": "func Sym_ManPrintStats(p *Sym_Man_t) {\n//    printf( \"Inputs = %5d. Outputs = %5d. Sim words = %5d.\\n\", \n//        Abc_NtkCiNum(p-\u003epNtk), Abc_NtkCoNum(p-\u003epNtk), p-\u003enSimWords );\n    fmt.Printf(\"Total symm         = %8d.\\n\", p.nPairsSymm);\n    fmt.Printf(\"Structural symm    = %8d.\\n\", p.nPairsSymmStr);\n    fmt.Printf(\"Total non-sym      = %8d.\\n\", p.nPairsNonSymm);\n    fmt.Printf(\"Total var pairs    = %8d.\\n\", p.nPairsTotal);\n    fmt.Printf(\"Sat runs SAT       = %8d.\\n\", p.nSatRunsSat);\n    fmt.Printf(\"Sat runs UNSAT     = %8d.\\n\", p.nSatRunsUnsat);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Structural  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeStruct)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Simulation  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSim)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Matrix      \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMatr)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Counting    \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCount)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Fraiging    \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeFraig)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"SAT         \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSat)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"TOTAL       \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n}"
+    },
+    {
+      "Name": "Sim_ManStart",
+      "Start": 5408,
+      "End": 6676,
+      "BodyStart": 5471,
+      "Original": "Sim_Man_t * Sim_ManStart( Abc_Ntk_t * pNtk, int fLightweight )\n{\n    Sim_Man_t * p;\n    // start the manager\n    p = ABC_ALLOC( Sim_Man_t, 1 );\n    memset( p, 0, sizeof(Sim_Man_t) );\n    p-\u003epNtk = pNtk;\n    p-\u003enInputs    = Abc_NtkCiNum(p-\u003epNtk);\n    p-\u003enOutputs   = Abc_NtkCoNum(p-\u003epNtk);\n    // internal simulation information\n    p-\u003enSimBits   = 2048;\n    p-\u003enSimWords  = SIM_NUM_WORDS(p-\u003enSimBits);\n    p-\u003evSim0      = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), p-\u003enSimWords, 0 );\n    p-\u003efLightweight = fLightweight;\n    if (!p-\u003efLightweight) {\n        p-\u003evSim1      = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), p-\u003enSimWords, 0 );\n        // support information\n        p-\u003enSuppBits  = Abc_NtkCiNum(pNtk);\n        p-\u003enSuppWords = SIM_NUM_WORDS(p-\u003enSuppBits);\n        p-\u003evSuppStr   = Sim_ComputeStrSupp( pNtk );\n        p-\u003evSuppFun   = Sim_UtilInfoAlloc( Abc_NtkCoNum(p-\u003epNtk),  p-\u003enSuppWords, 1 );\n        // other data\n        p-\u003epMmPat     = Extra_MmFixedStart( sizeof(Sim_Pat_t) + p-\u003enSuppWords * sizeof(unsigned) ); \n        p-\u003evFifo      = Vec_PtrAlloc( 100 );\n        p-\u003evDiffs     = Vec_IntAlloc( 100 );\n        // allocate support targets (array of unresolved outputs for each input)\n        p-\u003evSuppTargs = Vec_VecStart( p-\u003enInputs );\n    }\n    return p;\n}",
+      "Draft": "func Sim_ManStart(pNtk *Abc_Ntk_t, fLightweight int32) *Sim_Man_t {\n    var p *Sim_Man_t;\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Sim_Man_t *) malloc(sizeof(Sim_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Sim_Man_t) );\n    p.pNtk = pNtk;\n    p.nInputs    = Abc_NtkCiNum(p.pNtk);\n    p.nOutputs   = Abc_NtkCoNum(p.pNtk);\n    // internal simulation information\n    p.nSimBits   = 2048;\n    // inlining of macro SIM_NUM_WORDS\n    p.nSimWords  = (((p.nSimBits)\u003e\u003e5) + (((p.nSimBits)\u002631) \u003e 0));\n    p.vSim0      = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), p.nSimWords, 0 );\n    p.fLightweight = fLightweight;\n    if !p.fLightweight {\n        p.vSim1      = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), p.nSimWords, 0 );\n        // support information\n        p.nSuppBits  = Abc_NtkCiNum(pNtk);\n        // inlining of macro SIM_NUM_WORDS\n        p.nSuppWords = (((p.nSuppBits)\u003e\u003e5) + (((p.nSuppBits)\u002631) \u003e 0));\n        p.vSuppStr   = Sim_ComputeStrSupp( pNtk );\n        p.vSuppFun   = Sim_UtilInfoAlloc( Abc_NtkCoNum(p.pNtk),  p.nSuppWords, 1 );\n        // other data\n        p.pMmPat     = Extra_MmFixedStart( sizeof(Sim_Pat_t) + p.nSuppWords * sizeof(unsigned) ); \n        p.vFifo      = Vec_PtrAlloc( 100 );\n        p.vDiffs     = Vec_IntAlloc( 100 );\n        // allocate support targets (array of unresolved outputs for each input)\n        p.vSuppTargs = Vec_VecStart( p.nInputs );\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Sim_ManStop",
+      "Start": 6941,
+      "End": 7504,
+      "BodyStart": 6975,
+      "Original": "void Sim_ManStop( Sim_Man_t * p )\n{\n    Sim_ManPrintStats( p );\n    if ( p-\u003evSim0 )        Sim_UtilInfoFree( p-\u003evSim0 );       \n    if ( p-\u003evSim1 )        Sim_UtilInfoFree( p-\u003evSim1 );       \n    if ( p-\u003evSuppStr )     Sim_UtilInfoFree( p-\u003evSuppStr );    \n//    if ( p-\u003evSuppFun )     Sim_UtilInfoFree( p-\u003evSuppFun );    \n    if ( p-\u003evSuppTargs )   Vec_VecFree( p-\u003evSuppTargs );\n    if ( p-\u003epMmPat )       Extra_MmFixedStop( p-\u003epMmPat );\n    if ( p-\u003evFifo )        Vec_PtrFree( p-\u003evFifo );\n    if ( p-\u003evDiffs )       Vec_IntFree( p-\u003evDiffs );\n    ABC_FREE( p );\n}",
+      "Draft": "func Sim_ManStop(p *Sim_Man_t) {\n    Sim_ManPrintStats( p );\n    if p.vSim0 {        Sim_UtilInfoFree( p.vSim0 ); }       \n    if p.vSim1 {        Sim_UtilInfoFree( p.vSim1 ); }       \n    if p.vSuppStr {     Sim_UtilInfoFree( p.vSuppStr ); }    \n//    if ( p-\u003evSuppFun )     Sim_UtilInfoFree( p-\u003evSuppFun );    \n    if p.vSuppTargs {   Vec_VecFree( p.vSuppTargs ); }\n    if p.pMmPat {       Extra_MmFixedStop( p.pMmPat ); }\n    if p.vFifo {        Vec_PtrFree( p.vFifo ); }\n    if p.vDiffs {       Vec_IntFree( p.vDiffs ); }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Sim_ManPrintStats",
+      "Start": 7771,
+      "End": 8446,
+      "BodyStart": 7811,
+      "Original": "void Sim_ManPrintStats( Sim_Man_t * p )\n{\n//    printf( \"Inputs = %5d. Outputs = %5d. Sim words = %5d.\\n\", \n//        Abc_NtkCiNum(p-\u003epNtk), Abc_NtkCoNum(p-\u003epNtk), p-\u003enSimWords );\n    printf( \"Total func supps   = %8d.\\n\", Sim_UtilCountSuppSizes(p, 0) );\n    printf( \"Total struct supps = %8d.\\n\", Sim_UtilCountSuppSizes(p, 1) );\n    printf( \"Sat runs SAT       = %8d.\\n\", p-\u003enSatRunsSat );\n    printf( \"Sat runs UNSAT     = %8d.\\n\", p-\u003enSatRunsUnsat );\n    ABC_PRT( \"Simulation  \", p-\u003etimeSim );\n    ABC_PRT( \"Traversal   \", p-\u003etimeTrav );\n    ABC_PRT( \"Fraiging    \", p-\u003etimeFraig );\n    ABC_PRT( \"SAT         \", p-\u003etimeSat );\n    ABC_PRT( \"TOTAL       \", p-\u003etimeTotal );\n}",
+      "Draft": "func Sim_ManPrintStats(p *Sim_Man_t) {\n//    printf( \"Inputs = %5d. Outputs = %5d. Sim words = %5d.\\n\", \n//        Abc_NtkCiNum(p-\u003epNtk), Abc_NtkCoNum(p-\u003epNtk), p-\u003enSimWords );\n    fmt.Printf(\"Total func supps   = %8d.\\n\", Sim_UtilCountSuppSizes(p, 0));\n    fmt.Printf(\"Total struct supps = %8d.\\n\", Sim_UtilCountSuppSizes(p, 1));\n    fmt.Printf(\"Sat runs SAT       = %8d.\\n\", p.nSatRunsSat);\n    fmt.Printf(\"Sat runs UNSAT     = %8d.\\n\", p.nSatRunsUnsat);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Simulation  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSim)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Traversal   \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTrav)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Fraiging    \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeFraig)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"SAT         \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSat)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"TOTAL       \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n}"
+    },
+    {
+      "Name": "Sim_ManPatAlloc",
+      "Start": 8715,
+      "End": 9018,
+      "BodyStart": 8760,
+      "Original": "Sim_Pat_t * Sim_ManPatAlloc( Sim_Man_t * p )\n{\n    Sim_Pat_t * pPat;\n    pPat = (Sim_Pat_t *)Extra_MmFixedEntryFetch( p-\u003epMmPat );\n    pPat-\u003eOutput = -1;\n    pPat-\u003epData  = (unsigned *)((char *)pPat + sizeof(Sim_Pat_t));\n    memset( pPat-\u003epData, 0, p-\u003enSuppWords * sizeof(unsigned) );\n    return pPat;\n}",
+      "Draft": "func Sim_ManPatAlloc(p *Sim_Man_t) *Sim_Pat_t {\n    var pPat *Sim_Pat_t;\n    pPat = (Sim_Pat_t *)Extra_MmFixedEntryFetch( p.pMmPat );\n    pPat.Output = -1;\n    pPat.pData  = (unsigned *)((char *)pPat + sizeof(Sim_Pat_t));\n    memset( pPat.pData, 0, p.nSuppWords * sizeof(unsigned) );\n    return pPat;\n}"
+    },
+    {
+      "Name": "Sim_ManPatFree",
+      "Start": 9285,
+      "End": 9401,
+      "BodyStart": 9340,
+      "Original": "void Sim_ManPatFree( Sim_Man_t * p, Sim_Pat_t * pPat )\n{\n    Extra_MmFixedEntryRecycle( p-\u003epMmPat, (char *)pPat );\n}",
+      "Draft": "func Sim_ManPatFree(p *Sim_Man_t, pPat *Sim_Pat_t) {\n    Extra_MmFixedEntryRecycle( p.pMmPat, (char *)pPat );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::mechanical::sizeof::1474",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1407,
+      "End": 1407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::mechanical::sizeof::1527",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1452,
+      "End": 1458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::mechanical::sizeof::2541",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2331,
+      "End": 2331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::mechanical::sizeof::2670",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2386,
+      "End": 2386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::mechanical::sizeof::2799",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2441,
+      "End": 2441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::mechanical::sizeof::7335",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5525,
+      "End": 5525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::mechanical::sizeof::7388",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5570,
+      "End": 5576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::mechanical::sizeof::8334",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6375,
+      "End": 6381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::mechanical::sizeof::8370",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6411,
+      "End": 6417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::mechanical::sizeof::11587",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8916,
+      "End": 8922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::mechanical::sizeof::11651",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8980,
+      "End": 8986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::1453",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1407,
+      "End": 1407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::2521",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2331,
+      "End": 2331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::2650",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2386,
+      "End": 2386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::2779",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2441,
+      "End": 2441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::3253",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2785,
+      "End": 2785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::4044",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3541,
+      "End": 3559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::4119",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3616,
+      "End": 3634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::4480",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3910,
+      "End": 3910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::4600",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3939,
+      "End": 3939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::4718",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3967,
+      "End": 3967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::4827",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3995,
+      "End": 3995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::7314",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5525,
+      "End": 5525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::9504",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7488,
+      "End": 7488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::11466",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8795,
+      "End": 8808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::11559",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8888,
+      "End": 8900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::11572",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8901,
+      "End": 8909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::pointer-cast::12055",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9384,
+      "End": 9392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::Sym_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Sym_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1279,
+      "End": 2895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::ternary::Sym_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Sym_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3160,
+      "End": 4011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::Sym_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Sym_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3160,
+      "End": 4011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::Sym_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Sym_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4278,
+      "End": 5141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::Sim_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Sim_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5408,
+      "End": 6676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::ternary::Sim_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Sim_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6941,
+      "End": 7504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::Sim_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Sim_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6941,
+      "End": 7504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::Sim_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Sim_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7771,
+      "End": 8446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::Sim_ManPatAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Sim_ManPatAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8715,
+      "End": 9018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::Sim_ManPatFree",
+      "Category": "semantic-review",
+      "Symbol": "Sim_ManPatFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9285,
+      "End": 9401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9648
+    }
+  ],
+  "Draft": "package sim\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [simMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Simulation manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: simMan.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"sim.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the simulation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sym_ManStart(pNtk *Abc_Ntk_t, fVerbose int32) *Sym_Man_t {\n    var p *Sym_Man_t;\n    var i, v int32; \n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Sym_Man_t *) malloc(sizeof(Sym_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Sym_Man_t) );\n    p.pNtk = pNtk;\n    p.vNodes     = Abc_NtkDfs( pNtk, 0 );\n    p.nInputs    = Abc_NtkCiNum(p.pNtk);\n    p.nOutputs   = Abc_NtkCoNum(p.pNtk);\n    // internal simulation information\n    // inlining of macro SIM_NUM_WORDS\n    p.nSimWords  = (((p.nInputs)\u003e\u003e5) + (((p.nInputs)\u002631) \u003e 0));\n    p.vSim       = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), p.nSimWords, 0 );\n    // symmetry info for each output\n    p.vMatrSymms    = Vec_PtrStart( p.nOutputs );\n    p.vMatrNonSymms = Vec_PtrStart( p.nOutputs );\n    p.vPairsTotal   = Vec_IntStart( p.nOutputs );\n    p.vPairsSym     = Vec_IntStart( p.nOutputs );\n    p.vPairsNonSym  = Vec_IntStart( p.nOutputs );\n    for  i = 0; i \u003c p.nOutputs; i++  {\n        p.vMatrSymms.pArray[i]    = Extra_BitMatrixStart( p.nInputs );\n        p.vMatrNonSymms.pArray[i] = Extra_BitMatrixStart( p.nInputs );\n    }\n    // temporary patterns\n    // inlining of macro ABC_ALLOC\n    p.uPatRand = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nSimWords)));\n    // inlining of macro ABC_ALLOC\n    p.uPatCol  = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nSimWords)));\n    // inlining of macro ABC_ALLOC\n    p.uPatRow  = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nSimWords)));\n    p.vVarsU   = Vec_IntStart( 100 );\n    p.vVarsV   = Vec_IntStart( 100 );\n    // compute supports\n    p.vSuppFun  = Sim_ComputeFunSupp( pNtk, fVerbose );\n    p.vSupports = Vec_VecStart( p.nOutputs );\n    for  i = 0; i \u003c p.nOutputs; i++  {\n        for  v = 0; v \u003c p.nInputs; v++  {\n            // inlining of macro Sim_SuppFunHasVar\n            // inlining of macro Sim_HasBit\n            if  (((unsigned*)(p.vSuppFun).pArray[i])[((v))\u003e\u003e5]  \u0026 (1\u003c\u003c(((v)) \u0026 31))) \u003e 0 {\n                Vec_VecPushInt( p.vSupports, i, v ); }\n        }\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the simulation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sym_ManStop(p *Sym_Man_t) {\n    var i int32;\n    Sym_ManPrintStats( p );\n    if p.vSuppFun {     Sim_UtilInfoFree( p.vSuppFun ); }   \n    if p.vSim {         Sim_UtilInfoFree( p.vSim ); }   \n    if p.vNodes {       Vec_PtrFree( p.vNodes ); }\n    if p.vSupports {    Vec_VecFree( p.vSupports ); }\n    for  i = 0; i \u003c p.nOutputs; i++  {\n        Extra_BitMatrixStop( (Extra_BitMat_t *)p.vMatrSymms.pArray[i] );\n        Extra_BitMatrixStop( (Extra_BitMat_t *)p.vMatrNonSymms.pArray[i] );\n    }\n    Vec_IntFree( p.vVarsU );\n    Vec_IntFree( p.vVarsV );\n    Vec_PtrFree( p.vMatrSymms );\n    Vec_PtrFree( p.vMatrNonSymms );\n    Vec_IntFree( p.vPairsTotal );\n    Vec_IntFree( p.vPairsSym );\n    Vec_IntFree( p.vPairsNonSym );\n    // inlining of macro ABC_FREE\n    ((p.uPatRand) ? (free((char *) (p.uPatRand)), (p.uPatRand) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.uPatCol) ? (free((char *) (p.uPatCol)), (p.uPatCol) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.uPatRow) ? (free((char *) (p.uPatRow)), (p.uPatRow) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the manager statisticis.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sym_ManPrintStats(p *Sym_Man_t) {\n//    printf( \"Inputs = %5d. Outputs = %5d. Sim words = %5d.\\n\", \n//        Abc_NtkCiNum(p-\u003epNtk), Abc_NtkCoNum(p-\u003epNtk), p-\u003enSimWords );\n    fmt.Printf(\"Total symm         = %8d.\\n\", p.nPairsSymm);\n    fmt.Printf(\"Structural symm    = %8d.\\n\", p.nPairsSymmStr);\n    fmt.Printf(\"Total non-sym      = %8d.\\n\", p.nPairsNonSymm);\n    fmt.Printf(\"Total var pairs    = %8d.\\n\", p.nPairsTotal);\n    fmt.Printf(\"Sat runs SAT       = %8d.\\n\", p.nSatRunsSat);\n    fmt.Printf(\"Sat runs UNSAT     = %8d.\\n\", p.nSatRunsUnsat);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Structural  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeStruct)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Simulation  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSim)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Matrix      \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeMatr)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Counting    \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeCount)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Fraiging    \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeFraig)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"SAT         \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSat)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"TOTAL       \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the simulation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_ManStart(pNtk *Abc_Ntk_t, fLightweight int32) *Sim_Man_t {\n    var p *Sim_Man_t;\n    // start the manager\n    // inlining of macro ABC_ALLOC\n    p = ((Sim_Man_t *) malloc(sizeof(Sim_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Sim_Man_t) );\n    p.pNtk = pNtk;\n    p.nInputs    = Abc_NtkCiNum(p.pNtk);\n    p.nOutputs   = Abc_NtkCoNum(p.pNtk);\n    // internal simulation information\n    p.nSimBits   = 2048;\n    // inlining of macro SIM_NUM_WORDS\n    p.nSimWords  = (((p.nSimBits)\u003e\u003e5) + (((p.nSimBits)\u002631) \u003e 0));\n    p.vSim0      = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), p.nSimWords, 0 );\n    p.fLightweight = fLightweight;\n    if !p.fLightweight {\n        p.vSim1      = Sim_UtilInfoAlloc( Abc_NtkObjNumMax(pNtk), p.nSimWords, 0 );\n        // support information\n        p.nSuppBits  = Abc_NtkCiNum(pNtk);\n        // inlining of macro SIM_NUM_WORDS\n        p.nSuppWords = (((p.nSuppBits)\u003e\u003e5) + (((p.nSuppBits)\u002631) \u003e 0));\n        p.vSuppStr   = Sim_ComputeStrSupp( pNtk );\n        p.vSuppFun   = Sim_UtilInfoAlloc( Abc_NtkCoNum(p.pNtk),  p.nSuppWords, 1 );\n        // other data\n        p.pMmPat     = Extra_MmFixedStart( sizeof(Sim_Pat_t) + p.nSuppWords * sizeof(unsigned) ); \n        p.vFifo      = Vec_PtrAlloc( 100 );\n        p.vDiffs     = Vec_IntAlloc( 100 );\n        // allocate support targets (array of unresolved outputs for each input)\n        p.vSuppTargs = Vec_VecStart( p.nInputs );\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the simulation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_ManStop(p *Sim_Man_t) {\n    Sim_ManPrintStats( p );\n    if p.vSim0 {        Sim_UtilInfoFree( p.vSim0 ); }       \n    if p.vSim1 {        Sim_UtilInfoFree( p.vSim1 ); }       \n    if p.vSuppStr {     Sim_UtilInfoFree( p.vSuppStr ); }    \n//    if ( p-\u003evSuppFun )     Sim_UtilInfoFree( p-\u003evSuppFun );    \n    if p.vSuppTargs {   Vec_VecFree( p.vSuppTargs ); }\n    if p.pMmPat {       Extra_MmFixedStop( p.pMmPat ); }\n    if p.vFifo {        Vec_PtrFree( p.vFifo ); }\n    if p.vDiffs {       Vec_IntFree( p.vDiffs ); }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the manager statisticis.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_ManPrintStats(p *Sim_Man_t) {\n//    printf( \"Inputs = %5d. Outputs = %5d. Sim words = %5d.\\n\", \n//        Abc_NtkCiNum(p-\u003epNtk), Abc_NtkCoNum(p-\u003epNtk), p-\u003enSimWords );\n    fmt.Printf(\"Total func supps   = %8d.\\n\", Sim_UtilCountSuppSizes(p, 0));\n    fmt.Printf(\"Total struct supps = %8d.\\n\", Sim_UtilCountSuppSizes(p, 1));\n    fmt.Printf(\"Sat runs SAT       = %8d.\\n\", p.nSatRunsSat);\n    fmt.Printf(\"Sat runs UNSAT     = %8d.\\n\", p.nSatRunsUnsat);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Simulation  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSim)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Traversal   \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTrav)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Fraiging    \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeFraig)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"SAT         \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSat)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"TOTAL       \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns one simulation pattern.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_ManPatAlloc(p *Sim_Man_t) *Sim_Pat_t {\n    var pPat *Sim_Pat_t;\n    pPat = (Sim_Pat_t *)Extra_MmFixedEntryFetch( p.pMmPat );\n    pPat.Output = -1;\n    pPat.pData  = (unsigned *)((char *)pPat + sizeof(Sim_Pat_t));\n    memset( pPat.pData, 0, p.nSuppWords * sizeof(unsigned) );\n    return pPat;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns one simulation pattern.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_ManPatFree(p *Sim_Man_t, pPat *Sim_Pat_t) {\n    Extra_MmFixedEntryRecycle( p.pMmPat, (char *)pPat );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

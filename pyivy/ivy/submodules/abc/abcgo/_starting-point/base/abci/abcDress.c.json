@@ -1,0 +1,301 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress.c",
+  "SHA256": "ccede2268daea3b1b6fc3783b2ef90c98991703e62599f4ae93c648551a89ff8",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 1865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtkLogic) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 2057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtkOrig) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 1,
+        "ByteOffset": 2784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"After mitering:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 1,
+        "ByteOffset": 2815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Logic:  Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkLogic), Abc_NtkCountCopy(pNtkLogic) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 1,
+        "ByteOffset": 2920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Orig:   Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkOrig),  Abc_NtkCountCopy(pNtkOrig) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 1,
+        "ByteOffset": 3320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"After fraiging:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 1,
+        "ByteOffset": 3351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Logic:  Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkLogic), Abc_NtkCountCopy(pNtkLogic) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 1,
+        "ByteOffset": 3456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Orig:   Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkOrig),  Abc_NtkCountCopy(pNtkOrig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 4412
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 5805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 9,
+        "ByteOffset": 6721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pName != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 9,
+        "ByteOffset": 7144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total number of names collected = %5d.\\n\", CounterInit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 9,
+        "ByteOffset": 7219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total number of names assigned  = %5d. (Dir = %5d. Compl = %5d.)\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkDress",
+      "Start": 1638,
+      "End": 3922,
+      "BodyStart": 1713,
+      "Original": "void Abc_NtkDress( Abc_Ntk_t * pNtkLogic, char * pFileName, int fVerbose )\n{\n    Abc_Ntk_t * pNtkOrig, * pNtkLogicOrig;\n    Abc_Ntk_t * pMiter, * pMiterFraig;\n    stmm_table * tMapping;\n\n    assert( Abc_NtkIsLogic(pNtkLogic) );\n\n    // get the original netlist\n    pNtkOrig = Io_ReadNetlist( pFileName, Io_ReadFileType(pFileName), 1 );\n    if ( pNtkOrig == NULL )\n        return;\n    assert( Abc_NtkIsNetlist(pNtkOrig) );\n\n    Abc_NtkCleanCopy(pNtkLogic);\n    Abc_NtkCleanCopy(pNtkOrig);\n\n    // convert it into the logic network\n    pNtkLogicOrig = Abc_NtkToLogic( pNtkOrig );\n    // check that the networks have the same PIs/POs/latches\n    if ( !Abc_NtkCompareSignals( pNtkLogic, pNtkLogicOrig, 1, 1 ) )\n    {\n        Abc_NtkDelete( pNtkOrig );\n        Abc_NtkDelete( pNtkLogicOrig );\n        return;\n    }\n\n    // convert the current logic network into an AIG\n    pMiter = Abc_NtkStrash( pNtkLogic, 1, 0, 0 );\n\n    // convert it into the AIG and make the netlist point to the AIG\n    Abc_NtkAppend( pMiter, pNtkLogicOrig, 1 );\n    Abc_NtkTransferCopy( pNtkOrig );\n    Abc_NtkDelete( pNtkLogicOrig );\n\nif ( fVerbose ) \n{\nprintf( \"After mitering:\\n\" );\nprintf( \"Logic:  Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkLogic), Abc_NtkCountCopy(pNtkLogic) );\nprintf( \"Orig:   Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkOrig),  Abc_NtkCountCopy(pNtkOrig) );\n}\n\n    // fraig the miter (miter nodes point to the fraiged miter)\n    pMiterFraig = Abc_NtkIvyFraig( pMiter, 100, 1, 0, 1, 0 );\n    // make netlists point to the fraiged miter\n    Abc_NtkTransferCopy( pNtkLogic );\n    Abc_NtkTransferCopy( pNtkOrig );\n    Abc_NtkDelete( pMiter );\n\nif ( fVerbose ) \n{\nprintf( \"After fraiging:\\n\" );\nprintf( \"Logic:  Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkLogic), Abc_NtkCountCopy(pNtkLogic) );\nprintf( \"Orig:   Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkOrig),  Abc_NtkCountCopy(pNtkOrig) );\n}\n\n    // derive mapping from the fraiged nodes into their prototype nodes in the original netlist\n    tMapping = Abc_NtkDressDeriveMapping( pNtkOrig );\n\n    // transfer the names to the new netlist\n    Abc_NtkDressTransferNames( pNtkLogic, tMapping, fVerbose );\n\n    // clean up\n    stmm_free_table( tMapping );\n    Abc_NtkDelete( pMiterFraig );\n    Abc_NtkDelete( pNtkOrig );\n}",
+      "Draft": "func Abc_NtkDress(pNtkLogic *Abc_Ntk_t, pFileName string, fVerbose int32) {\n    var pNtkOrig, pNtkLogicOrig *Abc_Ntk_t;\n    var pMiter, pMiterFraig *Abc_Ntk_t;\n    var tMapping *stmm_table;\n\n    assert(Abc_NtkIsLogic(pNtkLogic), \"Abc_NtkIsLogic(pNtkLogic)\");\n\n    // get the original netlist\n    pNtkOrig = Io_ReadNetlist( pFileName, Io_ReadFileType(pFileName), 1 );\n    if pNtkOrig == nil {\n        return; }\n    assert(Abc_NtkIsNetlist(pNtkOrig), \"Abc_NtkIsNetlist(pNtkOrig)\");\n\n    Abc_NtkCleanCopy(pNtkLogic);\n    Abc_NtkCleanCopy(pNtkOrig);\n\n    // convert it into the logic network\n    pNtkLogicOrig = Abc_NtkToLogic( pNtkOrig );\n    // check that the networks have the same PIs/POs/latches\n    if !Abc_NtkCompareSignals( pNtkLogic, pNtkLogicOrig, 1, 1 ) {\n        Abc_NtkDelete( pNtkOrig );\n        Abc_NtkDelete( pNtkLogicOrig );\n        return;\n    }\n\n    // convert the current logic network into an AIG\n    pMiter = Abc_NtkStrash( pNtkLogic, 1, 0, 0 );\n\n    // convert it into the AIG and make the netlist point to the AIG\n    Abc_NtkAppend( pMiter, pNtkLogicOrig, 1 );\n    Abc_NtkTransferCopy( pNtkOrig );\n    Abc_NtkDelete( pNtkLogicOrig );\n\nif fVerbose != 0 {\nfmt.Printf(\"After mitering:\\n\");\nfmt.Printf(\"Logic:  Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkLogic), Abc_NtkCountCopy(pNtkLogic));\nfmt.Printf(\"Orig:   Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkOrig), Abc_NtkCountCopy(pNtkOrig));\n}\n\n    // fraig the miter (miter nodes point to the fraiged miter)\n    pMiterFraig = Abc_NtkIvyFraig( pMiter, 100, 1, 0, 1, 0 );\n    // make netlists point to the fraiged miter\n    Abc_NtkTransferCopy( pNtkLogic );\n    Abc_NtkTransferCopy( pNtkOrig );\n    Abc_NtkDelete( pMiter );\n\nif fVerbose != 0 {\nfmt.Printf(\"After fraiging:\\n\");\nfmt.Printf(\"Logic:  Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkLogic), Abc_NtkCountCopy(pNtkLogic));\nfmt.Printf(\"Orig:   Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkOrig), Abc_NtkCountCopy(pNtkOrig));\n}\n\n    // derive mapping from the fraiged nodes into their prototype nodes in the original netlist\n    tMapping = Abc_NtkDressDeriveMapping( pNtkOrig );\n\n    // transfer the names to the new netlist\n    Abc_NtkDressTransferNames( pNtkLogic, tMapping, fVerbose );\n\n    // clean up\n    stmm_free_table( tMapping );\n    Abc_NtkDelete( pMiterFraig );\n    Abc_NtkDelete( pNtkOrig );\n}"
+    },
+    {
+      "Name": "Abc_NtkDressDeriveMapping",
+      "Start": 4235,
+      "End": 4981,
+      "BodyStart": 4294,
+      "Original": "stmm_table * Abc_NtkDressDeriveMapping( Abc_Ntk_t * pNtk )\n{\n    stmm_table * tResult;\n    Abc_Obj_t * pNode, * pNodeMap, * pNodeFraig;\n    int i;\n    assert( Abc_NtkIsNetlist(pNtk) );\n    tResult = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        // get the fraiged node\n        pNodeFraig = Abc_ObjRegular(pNode-\u003epCopy);\n        // if this node is already mapped, skip\n        if ( stmm_is_member( tResult, (char *)pNodeFraig ) )\n            continue;\n        // get the mapping of this node\n        pNodeMap = Abc_ObjNotCond( pNode, Abc_ObjIsComplement(pNode-\u003epCopy) );\n        // add the mapping\n        stmm_insert( tResult, (char *)pNodeFraig, (char *)pNodeMap );\n    }\n    return tResult;\n}",
+      "Draft": "func Abc_NtkDressDeriveMapping(pNtk *Abc_Ntk_t) *stmm_table {\n    var tResult *stmm_table;\n    var pNode, pNodeMap, pNodeFraig *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    tResult = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        // get the fraiged node\n        pNodeFraig = Abc_ObjRegular(pNode.pCopy);\n        // if this node is already mapped, skip\n        // inlining of macro stmm_is_member\n        if  stmm_lookup(tResult,(char *)pNodeFraig,(char **) 0) {\n            continue; }\n        // get the mapping of this node\n        pNodeMap = Abc_ObjNotCond( pNode, Abc_ObjIsComplement(pNode.pCopy) );\n        // add the mapping\n        stmm_insert( tResult, (char *)pNodeFraig, (char *)pNodeMap );\n    }\n    }\n    return tResult;\n}"
+    },
+    {
+      "Name": "Abc_NtkDressTransferNames",
+      "Start": 5258,
+      "End": 6925,
+      "BodyStart": 5346,
+      "Original": "void Abc_NtkDressTransferNames( Abc_Ntk_t * pNtk, stmm_table * tMapping, int fVerbose )\n{\n    Abc_Obj_t * pNet, * pNode, * pNodeMap, * pNodeFraig;\n    char * pName;\n    int i, Counter = 0, CounterInv = 0, CounterInit = stmm_count(tMapping);\n    assert( Abc_NtkIsLogic(pNtk) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        // if the node already has a name, quit\n        pName = Nm_ManFindNameById( pNtk-\u003epManName, pNode-\u003eId );\n        if ( pName != NULL )\n            continue;\n        // get the fraiged node\n        pNodeFraig = Abc_ObjRegular(pNode-\u003epCopy);\n        // find the matching node of the original netlist\n        if ( !stmm_lookup( tMapping, (char *)pNodeFraig, (char **)\u0026pNodeMap ) )\n            continue;\n        // find the true match\n        pNodeMap = Abc_ObjNotCond( pNodeMap, Abc_ObjIsComplement(pNode-\u003epCopy) );\n        // get the name\n        pNet = Abc_ObjFanout0(Abc_ObjRegular(pNodeMap));\n        pName = Nm_ManFindNameById( pNet-\u003epNtk-\u003epManName, pNet-\u003eId );\n        assert( pName != NULL );\n        // set the name\n        if ( Abc_ObjIsComplement(pNodeMap) )\n        {\n            Abc_ObjAssignName( pNode, pName, \"_inv\" );\n            CounterInv++;\n        }\n        else\n        {\n            Abc_ObjAssignName( pNode, pName, NULL );\n            Counter++;\n        }\n        // remove the name\n        stmm_delete( tMapping, (char **)\u0026pNodeFraig, (char **)\u0026pNodeMap );\n    }\n    if ( fVerbose )\n    {\n        printf( \"Total number of names collected = %5d.\\n\", CounterInit );\n        printf( \"Total number of names assigned  = %5d. (Dir = %5d. Compl = %5d.)\\n\", \n            Counter + CounterInv, Counter, CounterInv );\n    }\n}",
+      "Draft": "func Abc_NtkDressTransferNames(pNtk *Abc_Ntk_t, tMapping *stmm_table, fVerbose int32) {\n    var pNet, pNode, pNodeMap, pNodeFraig *Abc_Obj_t;\n    var pName string;\n    // inlining of macro stmm_count\n    int i, Counter = 0, CounterInv = 0, CounterInit = ((tMapping).num_entries);\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        // if the node already has a name, quit\n        pName = Nm_ManFindNameById( pNtk.pManName, pNode.Id );\n        if pName != nil {\n            continue; }\n        // get the fraiged node\n        pNodeFraig = Abc_ObjRegular(pNode.pCopy);\n        // find the matching node of the original netlist\n        if !stmm_lookup( tMapping, (char *)pNodeFraig, (char **)\u0026pNodeMap ) {\n            continue; }\n        // find the true match\n        pNodeMap = Abc_ObjNotCond( pNodeMap, Abc_ObjIsComplement(pNode.pCopy) );\n        // get the name\n        pNet = Abc_ObjFanout0(Abc_ObjRegular(pNodeMap));\n        pName = Nm_ManFindNameById( pNet.pNtk.pManName, pNet.Id );\n        assert(pName != nil, \"pName != nil\");\n        // set the name\n        if Abc_ObjIsComplement(pNodeMap) {\n            Abc_ObjAssignName( pNode, pName, \"_inv\" );\n            CounterInv++;\n        \n        } else {\n            Abc_ObjAssignName( pNode, pName, nil );\n            Counter++;\n        }\n        // remove the name\n        stmm_delete( tMapping, (char **)\u0026pNodeFraig, (char **)\u0026pNodeMap );\n    }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Total number of names collected = %5d.\\n\", CounterInit);\n        fmt.Printf(\"Total number of names assigned  = %5d. (Dir = %5d. Compl = %5d.)\\n\", Counter + CounterInv, Counter, CounterInv);\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress.c::pointer-cast::4914",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4668,
+      "End": 4668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress.c::pointer-cast::4933",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4668,
+      "End": 4668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress.c::pointer-cast::5146",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4914,
+      "End": 4922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress.c::pointer-cast::5166",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4934,
+      "End": 4942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress.c::pointer-cast::6383",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5924,
+      "End": 5932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress.c::pointer-cast::6403",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5944,
+      "End": 5953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress.c::pointer-cast::7082",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6623,
+      "End": 6632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress.c::pointer-cast::7104",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6645,
+      "End": 6654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress.c::Abc_NtkDress",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDress",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1638,
+      "End": 3922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress.c::Abc_NtkDressDeriveMapping",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDressDeriveMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4235,
+      "End": 4981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress.c::Abc_NtkDressTransferNames",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDressTransferNames",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5258,
+      "End": 6925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcDress.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7172
+    }
+  ],
+  "Draft": "package abci\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [abcDress.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Transfers names from one netlist to the other.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcDress.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/io/ioAbc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static stmm_table * Abc_NtkDressDeriveMapping( Abc_Ntk_t * pNtk );\n\n// static void         Abc_NtkDressTransferNames( Abc_Ntk_t * pNtk, stmm_table * tMapping, int fVerbose );\n\n\n// extern Abc_Ntk_t *  Abc_NtkIvyFraig( Abc_Ntk_t * pNtk, int nConfLimit, int fDoSparse, int fProve, int fTransfer, int fVerbose );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers names from one netlist to the other.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDress(pNtkLogic *Abc_Ntk_t, pFileName string, fVerbose int32) {\n    var pNtkOrig, pNtkLogicOrig *Abc_Ntk_t;\n    var pMiter, pMiterFraig *Abc_Ntk_t;\n    var tMapping *stmm_table;\n\n    assert(Abc_NtkIsLogic(pNtkLogic), \"Abc_NtkIsLogic(pNtkLogic)\");\n\n    // get the original netlist\n    pNtkOrig = Io_ReadNetlist( pFileName, Io_ReadFileType(pFileName), 1 );\n    if pNtkOrig == nil {\n        return; }\n    assert(Abc_NtkIsNetlist(pNtkOrig), \"Abc_NtkIsNetlist(pNtkOrig)\");\n\n    Abc_NtkCleanCopy(pNtkLogic);\n    Abc_NtkCleanCopy(pNtkOrig);\n\n    // convert it into the logic network\n    pNtkLogicOrig = Abc_NtkToLogic( pNtkOrig );\n    // check that the networks have the same PIs/POs/latches\n    if !Abc_NtkCompareSignals( pNtkLogic, pNtkLogicOrig, 1, 1 ) {\n        Abc_NtkDelete( pNtkOrig );\n        Abc_NtkDelete( pNtkLogicOrig );\n        return;\n    }\n\n    // convert the current logic network into an AIG\n    pMiter = Abc_NtkStrash( pNtkLogic, 1, 0, 0 );\n\n    // convert it into the AIG and make the netlist point to the AIG\n    Abc_NtkAppend( pMiter, pNtkLogicOrig, 1 );\n    Abc_NtkTransferCopy( pNtkOrig );\n    Abc_NtkDelete( pNtkLogicOrig );\n\nif fVerbose != 0 {\nfmt.Printf(\"After mitering:\\n\");\nfmt.Printf(\"Logic:  Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkLogic), Abc_NtkCountCopy(pNtkLogic));\nfmt.Printf(\"Orig:   Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkOrig), Abc_NtkCountCopy(pNtkOrig));\n}\n\n    // fraig the miter (miter nodes point to the fraiged miter)\n    pMiterFraig = Abc_NtkIvyFraig( pMiter, 100, 1, 0, 1, 0 );\n    // make netlists point to the fraiged miter\n    Abc_NtkTransferCopy( pNtkLogic );\n    Abc_NtkTransferCopy( pNtkOrig );\n    Abc_NtkDelete( pMiter );\n\nif fVerbose != 0 {\nfmt.Printf(\"After fraiging:\\n\");\nfmt.Printf(\"Logic:  Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkLogic), Abc_NtkCountCopy(pNtkLogic));\nfmt.Printf(\"Orig:   Nodes = %5d. Copy = %5d. \\n\", Abc_NtkNodeNum(pNtkOrig), Abc_NtkCountCopy(pNtkOrig));\n}\n\n    // derive mapping from the fraiged nodes into their prototype nodes in the original netlist\n    tMapping = Abc_NtkDressDeriveMapping( pNtkOrig );\n\n    // transfer the names to the new netlist\n    Abc_NtkDressTransferNames( pNtkLogic, tMapping, fVerbose );\n\n    // clean up\n    stmm_free_table( tMapping );\n    Abc_NtkDelete( pMiterFraig );\n    Abc_NtkDelete( pNtkOrig );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the mapping from the fraig nodes point into the nodes of the netlist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDressDeriveMapping(pNtk *Abc_Ntk_t) *stmm_table {\n    var tResult *stmm_table;\n    var pNode, pNodeMap, pNodeFraig *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    tResult = stmm_init_table(stmm_ptrcmp,stmm_ptrhash);\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        // get the fraiged node\n        pNodeFraig = Abc_ObjRegular(pNode.pCopy);\n        // if this node is already mapped, skip\n        // inlining of macro stmm_is_member\n        if  stmm_lookup(tResult,(char *)pNodeFraig,(char **) 0) {\n            continue; }\n        // get the mapping of this node\n        pNodeMap = Abc_ObjNotCond( pNode, Abc_ObjIsComplement(pNode.pCopy) );\n        // add the mapping\n        stmm_insert( tResult, (char *)pNodeFraig, (char *)pNodeMap );\n    }\n    }\n    return tResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Attaches the names of to the new netlist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDressTransferNames(pNtk *Abc_Ntk_t, tMapping *stmm_table, fVerbose int32) {\n    var pNet, pNode, pNodeMap, pNodeFraig *Abc_Obj_t;\n    var pName string;\n    // inlining of macro stmm_count\n    int i, Counter = 0, CounterInv = 0, CounterInit = ((tMapping).num_entries);\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        // if the node already has a name, quit\n        pName = Nm_ManFindNameById( pNtk.pManName, pNode.Id );\n        if pName != nil {\n            continue; }\n        // get the fraiged node\n        pNodeFraig = Abc_ObjRegular(pNode.pCopy);\n        // find the matching node of the original netlist\n        if !stmm_lookup( tMapping, (char *)pNodeFraig, (char **)\u0026pNodeMap ) {\n            continue; }\n        // find the true match\n        pNodeMap = Abc_ObjNotCond( pNodeMap, Abc_ObjIsComplement(pNode.pCopy) );\n        // get the name\n        pNet = Abc_ObjFanout0(Abc_ObjRegular(pNodeMap));\n        pName = Nm_ManFindNameById( pNet.pNtk.pManName, pNet.Id );\n        assert(pName != nil, \"pName != nil\");\n        // set the name\n        if Abc_ObjIsComplement(pNodeMap) {\n            Abc_ObjAssignName( pNode, pName, \"_inv\" );\n            CounterInv++;\n        \n        } else {\n            Abc_ObjAssignName( pNode, pName, nil );\n            Counter++;\n        }\n        // remove the name\n        stmm_delete( tMapping, (char **)\u0026pNodeFraig, (char **)\u0026pNodeMap );\n    }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Total number of names collected = %5d.\\n\", CounterInit);\n        fmt.Printf(\"Total number of names assigned  = %5d. (Dir = %5d. Compl = %5d.)\\n\", Counter + CounterInv, Counter, CounterInv);\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

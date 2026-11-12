@@ -1,0 +1,884 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c",
+  "SHA256": "283b63a5490dbd14ec62c379c4aec2929f6c3dd6606efe52d36bdf22daab9917",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Fra_Sec_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 4547
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPars, 0, sizeof(Fra_Ssw_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 9,
+        "ByteOffset": 4699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Original miter:       Latches = %5d. Nodes = %6d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 9,
+        "ByteOffset": 5110
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Sequential cleanup:   Latches = %5d. Nodes = %6d. \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 13,
+        "ByteOffset": 5802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Phase abstraction:    Latches = %5d. Nodes = %6d. \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 9,
+        "ByteOffset": 6250
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Forward retiming:     Latches = %5d. Nodes = %6d. \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 204,
+        "Column": 13,
+        "ByteOffset": 7517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fra_FraigSec(): Counter-example verification has FAILED.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 13,
+        "ByteOffset": 7657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The counter-example is invalid because of phase abstraction.\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 9,
+        "ByteOffset": 7758
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pSeqModel );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 9,
+        "ByteOffset": 7862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pTemp.pSeqModel );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 17,
+        "ByteOffset": 8029
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Networks are NOT EQUIVALENT after simulation.   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 13,
+        "ByteOffset": 8224
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"SOLUTION: FAIL       \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 9,
+        "ByteOffset": 8543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Latch-corr (I=%3d):   Latches = %5d. Nodes = %6d. \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 9,
+        "ByteOffset": 9343
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Fraiging:             Latches = %5d. Nodes = %6d. \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 10746
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Min-reg retiming:     Latches = %5d. Nodes = %6d. \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 339,
+        "Column": 17,
+        "ByteOffset": 12126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Global conflict limit (%d) exceeded.\\n\", pPars2.nBTLimitGlobal ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 364,
+        "Column": 13,
+        "ByteOffset": 12915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"K-step (K=%2d,I=%3d):  Latches = %5d. Nodes = %6d. \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 384,
+        "Column": 13,
+        "ByteOffset": 13854
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Min-reg retiming:     Latches = %5d. Nodes = %6d. \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 401,
+        "Column": 13,
+        "ByteOffset": 14451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Rewriting:            Latches = %5d. Nodes = %6d. \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 411,
+        "Column": 13,
+        "ByteOffset": 14855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Seq simulation  :     Latches = %5d. Nodes = %6d. \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 419,
+        "Column": 17,
+        "ByteOffset": 15242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"The counter-example is invalid because of phase abstraction.\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 421,
+        "Column": 13,
+        "ByteOffset": 15351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p.pSeqModel );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 423,
+        "Column": 13,
+        "ByteOffset": 15462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( pNew.pSeqModel );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 430,
+        "Column": 17,
+        "ByteOffset": 15647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Networks are NOT EQUIVALENT after simulation.   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 434,
+        "Column": 13,
+        "ByteOffset": 15842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"SOLUTION: FAIL       \" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 453,
+        "Column": 9,
+        "ByteOffset": 16381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pNew.pSeqModel );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 471,
+        "Column": 21,
+        "ByteOffset": 17137
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Solving output %2d (out of %2d):\\n\", i, Saig_ManPoNum(pNew) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 497,
+        "Column": 17,
+        "ByteOffset": 18411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Solving output %3d (out of %3d) using interpolation.\\r\", i, Saig_ManPoNum(pNew) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 501,
+        "Column": 17,
+        "ByteOffset": 18598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Interpolation left %d (out of %d) outputs unsolved              \\n\", spStatic_Fra_FraigSec_Counter, Saig_ManPoNum(pNew) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 523,
+        "Column": 13,
+        "ByteOffset": 19579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Property proved using interpolation.  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 525,
+        "Column": 13,
+        "ByteOffset": 19677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Property DISPROVED in frame %d using interpolation.  \", Depth );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 527,
+        "Column": 13,
+        "ByteOffset": 19798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Property UNDECIDED after interpolation.  \" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 529,
+        "Column": 13,
+        "ByteOffset": 19882
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); } "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 560,
+        "Column": 13,
+        "ByteOffset": 21056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Running property directed reachability...\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 570,
+        "Column": 13,
+        "ByteOffset": 21379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Networks are equivalent.  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 574,
+        "Column": 9,
+        "ByteOffset": 21540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"SOLUTION: PASS       \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 591,
+        "Column": 13,
+        "ByteOffset": 22305
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Networks are NOT EQUIVALENT.  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 595,
+        "Column": 9,
+        "ByteOffset": 22470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"SOLUTION: FAIL       \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 606,
+        "Column": 13,
+        "ByteOffset": 22849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Networks are UNDECIDED.   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 610,
+        "Column": 9,
+        "ByteOffset": 23010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"SOLUTION: UNDECIDED  \" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 617,
+        "Column": 13,
+        "ByteOffset": 23266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( pFileName, \"sm%02d.aig\", spStatic_Fra_FraigSec_Counter++ );"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 619,
+        "Column": 13,
+        "ByteOffset": 23400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The unsolved reduced miter is written into file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 624,
+        "Column": 13,
+        "ByteOffset": 23587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The counter-example is invalid because of phase abstraction.\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 626,
+        "Column": 9,
+        "ByteOffset": 23688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pSeqModel );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 628,
+        "Column": 9,
+        "ByteOffset": 23791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pNew.pSeqModel );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fra_SecSetDefaultParams",
+      "Start": 1390,
+      "End": 3603,
+      "BodyStart": 1436,
+      "Original": "void Fra_SecSetDefaultParams( Fra_Sec_t * p )\n{\n    memset( p, 0, sizeof(Fra_Sec_t) );\n    p-\u003efTryComb          =       1;  // try CEC call as a preprocessing step\n    p-\u003efTryBmc           =       1;  // try BMC call as a preprocessing step \n    p-\u003enFramesMax        =       4;  // the max number of frames used for induction\n    p-\u003enBTLimit          =    1000;  // conflict limit at a node during induction \n    p-\u003enBTLimitGlobal    = 5000000;  // global conflict limit during induction\n    p-\u003enBTLimitInter     =   10000;  // conflict limit during interpolation\n    p-\u003enBddVarsMax       =     150;  // the limit on the number of registers in BDD reachability\n    p-\u003enBddMax           =   50000;  // the limit on the number of BDD nodes \n    p-\u003enBddIterMax       = 1000000;  // the limit on the number of BDD iterations\n    p-\u003efPhaseAbstract    =       0;  // enables phase abstraction\n    p-\u003efRetimeFirst      =       1;  // enables most-forward retiming at the beginning\n    p-\u003efRetimeRegs       =       1;  // enables min-register retiming at the beginning\n    p-\u003efFraiging         =       1;  // enables fraiging at the beginning\n    p-\u003efInduction        =       1;  // enables the use of induction (signal correspondence)\n    p-\u003efInterpolation    =       1;  // enables interpolation\n    p-\u003efInterSeparate    =       0;  // enables interpolation for each outputs separately\n    p-\u003efReachability     =       1;  // enables BDD based reachability\n    p-\u003efReorderImage     =       1;  // enables variable reordering during image computation\n    p-\u003efStopOnFirstFail  =       1;  // enables stopping after first output of a miter has failed to prove\n    p-\u003efUseNewProver     =       0;  // enables new prover\n    p-\u003efUsePdr           =       1;  // enables PDR\n    p-\u003enPdrTimeout       =      60;  // enabled PDR timeout\n    p-\u003efSilent           =       0;  // disables all output\n    p-\u003efVerbose          =       0;  // enables verbose reporting of statistics\n    p-\u003efVeryVerbose      =       0;  // enables very verbose reporting  \n    p-\u003eTimeLimit         =       0;  // enables the timeout\n    // internal parameters\n    p-\u003efReportSolution   =       0;  // enables specialized format for reporting solution\n}",
+      "Draft": "func Fra_SecSetDefaultParams(p *Fra_Sec_t) {\n    memset( p, 0, sizeof(Fra_Sec_t) );\n    p.fTryComb          =       1;  // try CEC call as a preprocessing step\n    p.fTryBmc           =       1;  // try BMC call as a preprocessing step \n    p.nFramesMax        =       4;  // the max number of frames used for induction\n    p.nBTLimit          =    1000;  // conflict limit at a node during induction \n    p.nBTLimitGlobal    = 5000000;  // global conflict limit during induction\n    p.nBTLimitInter     =   10000;  // conflict limit during interpolation\n    p.nBddVarsMax       =     150;  // the limit on the number of registers in BDD reachability\n    p.nBddMax           =   50000;  // the limit on the number of BDD nodes \n    p.nBddIterMax       = 1000000;  // the limit on the number of BDD iterations\n    p.fPhaseAbstract    =       0;  // enables phase abstraction\n    p.fRetimeFirst      =       1;  // enables most-forward retiming at the beginning\n    p.fRetimeRegs       =       1;  // enables min-register retiming at the beginning\n    p.fFraiging         =       1;  // enables fraiging at the beginning\n    p.fInduction        =       1;  // enables the use of induction (signal correspondence)\n    p.fInterpolation    =       1;  // enables interpolation\n    p.fInterSeparate    =       0;  // enables interpolation for each outputs separately\n    p.fReachability     =       1;  // enables BDD based reachability\n    p.fReorderImage     =       1;  // enables variable reordering during image computation\n    p.fStopOnFirstFail  =       1;  // enables stopping after first output of a miter has failed to prove\n    p.fUseNewProver     =       0;  // enables new prover\n    p.fUsePdr           =       1;  // enables PDR\n    p.nPdrTimeout       =      60;  // enabled PDR timeout\n    p.fSilent           =       0;  // disables all output\n    p.fVerbose          =       0;  // enables verbose reporting of statistics\n    p.fVeryVerbose      =       0;  // enables very verbose reporting  \n    p.TimeLimit         =       0;  // enables the timeout\n    // internal parameters\n    p.fReportSolution   =       0;  // enables specialized format for reporting solution\n}"
+    },
+    {
+      "Name": "Fra_FraigSec",
+      "Start": 3839,
+      "End": 24353,
+      "BodyStart": 3917,
+      "Original": "int Fra_FraigSec( Aig_Man_t * p, Fra_Sec_t * pParSec, Aig_Man_t ** ppResult )\n{\n    Ssw_Pars_t Pars2, * pPars2 = \u0026Pars2;\n    Fra_Ssw_t Pars, * pPars = \u0026Pars;\n    Fra_Sml_t * pSml;\n    Aig_Man_t * pNew, * pTemp;\n    int nFrames, RetValue, nIter;\n    abctime clk, clkTotal = Abc_Clock();\n    int TimeOut = 0;\n    int fLatchCorr = 0;\n    float TimeLeft = 0.0;\n    pParSec-\u003enSMnumber = -1;\n\n    // try the miter before solving\n    pNew = Aig_ManDupSimple( p );\n    RetValue = Fra_FraigMiterStatus( pNew );\n    if ( RetValue \u003e= 0 )\n        goto finish;\n\n    // prepare parameters\n    memset( pPars, 0, sizeof(Fra_Ssw_t) );\n    pPars-\u003efLatchCorr  = fLatchCorr;\n    pPars-\u003efVerbose = pParSec-\u003efVeryVerbose;\n    if ( pParSec-\u003efVerbose )\n    {\n        printf( \"Original miter:       Latches = %5d. Nodes = %6d.\\n\", \n            Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew) );\n    }\n//Aig_ManDumpBlif( pNew, \"after.blif\", NULL, NULL );\n\n    // perform sequential cleanup\nclk = Abc_Clock();\n    if ( pNew-\u003enRegs )\n    pNew = Aig_ManReduceLaches( pNew, 0 );\n    if ( pNew-\u003enRegs )\n    pNew = Aig_ManConstReduce( pNew, 0, -1, -1, 0, 0 );\n    if ( pParSec-\u003efVerbose )\n    {\n        printf( \"Sequential cleanup:   Latches = %5d. Nodes = %6d. \", \n            Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    RetValue = Fra_FraigMiterStatus( pNew );\n    if ( RetValue \u003e= 0 )\n        goto finish;\n\n    // perform phase abstraction\nclk = Abc_Clock();\n    if ( pParSec-\u003efPhaseAbstract )\n    {\n        extern Aig_Man_t * Saig_ManPhaseAbstractAuto( Aig_Man_t * p, int fVerbose );\n        pNew-\u003enTruePis = Aig_ManCiNum(pNew) - Aig_ManRegNum(pNew); \n        pNew-\u003enTruePos = Aig_ManCoNum(pNew) - Aig_ManRegNum(pNew); \n        pNew = Saig_ManPhaseAbstractAuto( pTemp = pNew, 0 );\n        Aig_ManStop( pTemp );\n        if ( pParSec-\u003efVerbose )\n        {\n            printf( \"Phase abstraction:    Latches = %5d. Nodes = %6d. \", \n                Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n    }\n\n    // perform forward retiming\n    if ( pParSec-\u003efRetimeFirst \u0026\u0026 pNew-\u003enRegs )\n    {\nclk = Abc_Clock();\n//    pNew = Rtm_ManRetime( pTemp = pNew, 1, 1000, 0 );\n    pNew = Saig_ManRetimeForward( pTemp = pNew, 100, 0 );\n    Aig_ManStop( pTemp );\n    if ( pParSec-\u003efVerbose )\n    {\n        printf( \"Forward retiming:     Latches = %5d. Nodes = %6d. \", \n            Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    }\n     \n    // run latch correspondence\nclk = Abc_Clock();\n    if ( pNew-\u003enRegs )\n    {\n    pNew = Aig_ManDupOrdered( pTemp = pNew );\n//    pNew = Aig_ManDupDfs( pTemp = pNew );\n    Aig_ManStop( pTemp );\n/*\n    if ( RetValue == -1 \u0026\u0026 pParSec-\u003eTimeLimit )\n    {\n        TimeLeft = (float)pParSec-\u003eTimeLimit - ((float)(Abc_Clock()-clkTotal)/(float)(CLOCKS_PER_SEC));\n        TimeLeft = Abc_MaxInt( TimeLeft, 0.0 );\n        if ( TimeLeft == 0.0 )\n        {\n            if ( !pParSec-\u003efSilent )\n                printf( \"Runtime limit exceeded.\\n\" );\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n    }\n*/\n\n//    pNew = Fra_FraigLatchCorrespondence( pTemp = pNew, 0, 1000, 1, pParSec-\u003efVeryVerbose, \u0026nIter, TimeLeft );\n//Aig_ManDumpBlif( pNew, \"ex.blif\", NULL, NULL );\n    Ssw_ManSetDefaultParamsLcorr( pPars2 );\n    pNew = Ssw_LatchCorrespondence( pTemp = pNew, pPars2 );\n    nIter = pPars2-\u003enIters;\n\n    // prepare parameters for scorr\n    Ssw_ManSetDefaultParams( pPars2 );\n\n    if ( pTemp-\u003epSeqModel )\n    {\n        if ( !Saig_ManVerifyCex( pTemp, pTemp-\u003epSeqModel ) )\n            printf( \"Fra_FraigSec(): Counter-example verification has FAILED.\\n\" );\n        if ( Saig_ManPiNum(p) != Saig_ManPiNum(pTemp) )\n            printf( \"The counter-example is invalid because of phase abstraction.\\n\" );\n        else\n        {\n        ABC_FREE( p-\u003epSeqModel );\n        p-\u003epSeqModel = Abc_CexDup( pTemp-\u003epSeqModel, Aig_ManRegNum(p) );\n        ABC_FREE( pTemp-\u003epSeqModel );\n        }\n    }\n    if ( pNew == NULL )\n    {\n        if ( p-\u003epSeqModel )\n        {\n            RetValue = 0;\n            if ( !pParSec-\u003efSilent )\n            {\n                printf( \"Networks are NOT EQUIVALENT after simulation.   \" );\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n            }\n            if ( pParSec-\u003efReportSolution \u0026\u0026 !pParSec-\u003efRecursive )\n            {\n            printf( \"SOLUTION: FAIL       \" );\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n            }\n            Aig_ManStop( pTemp );\n            return RetValue;\n        }\n        pNew = pTemp;\n        RetValue = -1;\n        TimeOut = 1;\n        goto finish;\n    }\n    Aig_ManStop( pTemp );\n\n    if ( pParSec-\u003efVerbose )\n    {\n        printf( \"Latch-corr (I=%3d):   Latches = %5d. Nodes = %6d. \", \n            nIter, Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    }\n/*\n    if ( RetValue == -1 \u0026\u0026 pParSec-\u003eTimeLimit )\n    {\n        TimeLeft = (float)pParSec-\u003eTimeLimit - ((float)(Abc_Clock()-clkTotal)/(float)(CLOCKS_PER_SEC));\n        TimeLeft = Abc_MaxInt( TimeLeft, 0.0 );\n        if ( TimeLeft == 0.0 )\n        {\n            if ( !pParSec-\u003efSilent )\n                printf( \"Runtime limit exceeded.\\n\" );\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n    }\n*/\n    // perform fraiging\n    if ( pParSec-\u003efFraiging )\n    {\nclk = Abc_Clock();\n    pNew = Fra_FraigEquivence( pTemp = pNew, 100, 0 );\n    Aig_ManStop( pTemp );\n    if ( pParSec-\u003efVerbose )\n    {\n        printf( \"Fraiging:             Latches = %5d. Nodes = %6d. \", \n            Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    }\n\n    if ( pNew-\u003enRegs == 0 )\n        RetValue = Fra_FraigCec( \u0026pNew, 100000, 0 );\n\n    RetValue = Fra_FraigMiterStatus( pNew );\n    if ( RetValue \u003e= 0 )\n        goto finish;\n/*\n    if ( RetValue == -1 \u0026\u0026 pParSec-\u003eTimeLimit )\n    {\n        TimeLeft = (float)pParSec-\u003eTimeLimit - ((float)(Abc_Clock()-clkTotal)/(float)(CLOCKS_PER_SEC));\n        TimeLeft = Abc_MaxInt( TimeLeft, 0.0 );\n        if ( TimeLeft == 0.0 )\n        {\n            if ( !pParSec-\u003efSilent )\n                printf( \"Runtime limit exceeded.\\n\" );\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n    }\n*/\n    // perform min-area retiming\n    if ( pParSec-\u003efRetimeRegs \u0026\u0026 pNew-\u003enRegs )\n    {\n//    extern Aig_Man_t * Saig_ManRetimeMinArea( Aig_Man_t * p, int nMaxIters, int fForwardOnly, int fBackwardOnly, int fInitial, int fVerbose );\nclk = Abc_Clock();\n    pNew-\u003enTruePis = Aig_ManCiNum(pNew) - Aig_ManRegNum(pNew); \n    pNew-\u003enTruePos = Aig_ManCoNum(pNew) - Aig_ManRegNum(pNew); \n//        pNew = Rtm_ManRetime( pTemp = pNew, 1, 1000, 0 );\n    pNew = Saig_ManRetimeMinArea( pTemp = pNew, 1000, 0, 0, 1, 0 );\n    Aig_ManStop( pTemp );\n    pNew = Aig_ManDupOrdered( pTemp = pNew );\n    Aig_ManStop( pTemp );\n    if ( pParSec-\u003efVerbose )\n    {\n    printf( \"Min-reg retiming:     Latches = %5d. Nodes = %6d. \", \n        Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    }\n\n    // perform seq sweeping while increasing the number of frames\n    RetValue = Fra_FraigMiterStatus( pNew );\n    if ( RetValue == -1 \u0026\u0026 pParSec-\u003efInduction )\n    for ( nFrames = 1; nFrames \u003c= pParSec-\u003enFramesMax; nFrames *= 2 )\n    {\n/*\n        if ( RetValue == -1 \u0026\u0026 pParSec-\u003eTimeLimit )\n        {\n            TimeLeft = (float)pParSec-\u003eTimeLimit - ((float)(Abc_Clock()-clkTotal)/(float)(CLOCKS_PER_SEC));\n            TimeLeft = Abc_MaxInt( TimeLeft, 0.0 );\n            if ( TimeLeft == 0.0 )\n            {\n                if ( !pParSec-\u003efSilent )\n                    printf( \"Runtime limit exceeded.\\n\" );\n                RetValue = -1;\n                TimeOut = 1;\n                goto finish;\n            }\n        }\n*/ \n\nclk = Abc_Clock();\n        pPars-\u003enFramesK = nFrames;\n        pPars-\u003eTimeLimit = TimeLeft;\n        pPars-\u003efSilent = pParSec-\u003efSilent;\n//        pNew = Fra_FraigInduction( pTemp = pNew, pPars );\n\n        pPars2-\u003enFramesK = nFrames;\n        pPars2-\u003enBTLimit = pParSec-\u003enBTLimit;\n        pPars2-\u003enBTLimitGlobal = pParSec-\u003enBTLimitGlobal;\n//        pPars2-\u003enBTLimit = 1000 * nFrames;\n\n        if ( RetValue == -1 \u0026\u0026 pPars2-\u003enConflicts \u003e pPars2-\u003enBTLimitGlobal )\n        {\n            if ( !pParSec-\u003efSilent )\n                printf( \"Global conflict limit (%d) exceeded.\\n\", pPars2-\u003enBTLimitGlobal );\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n\n        Aig_ManSetRegNum( pNew, pNew-\u003enRegs );\n//        pNew = Ssw_SignalCorrespondence( pTemp = pNew, pPars2 );\n        if ( Aig_ManRegNum(pNew) \u003e 0 )\n            pNew = Ssw_SignalCorrespondence( pTemp = pNew, pPars2 );\n        else\n            pNew = Aig_ManDupSimpleDfs( pTemp = pNew );\n\n        if ( pNew == NULL )\n        {\n            pNew = pTemp;\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n\n//        printf( \"Total conflicts = %d.\\n\", pPars2-\u003enConflicts );\n\n        Aig_ManStop( pTemp );\n        RetValue = Fra_FraigMiterStatus( pNew );\n        if ( pParSec-\u003efVerbose )\n        { \n            printf( \"K-step (K=%2d,I=%3d):  Latches = %5d. Nodes = %6d. \", \n                nFrames, pPars2-\u003enIters, Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n        if ( RetValue != -1 )\n            break;\n\n        // perform retiming\n//        if ( pParSec-\u003efRetimeFirst \u0026\u0026 pNew-\u003enRegs )\n        if ( pNew-\u003enRegs )\n        {\n//        extern Aig_Man_t * Saig_ManRetimeMinArea( Aig_Man_t * p, int nMaxIters, int fForwardOnly, int fBackwardOnly, int fInitial, int fVerbose );\nclk = Abc_Clock();\n        pNew-\u003enTruePis = Aig_ManCiNum(pNew) - Aig_ManRegNum(pNew); \n        pNew-\u003enTruePos = Aig_ManCoNum(pNew) - Aig_ManRegNum(pNew); \n//        pNew = Rtm_ManRetime( pTemp = pNew, 1, 1000, 0 );\n        pNew = Saig_ManRetimeMinArea( pTemp = pNew, 1000, 0, 0, 1, 0 );\n        Aig_ManStop( pTemp );\n        pNew = Aig_ManDupOrdered( pTemp = pNew );\n        Aig_ManStop( pTemp );\n        if ( pParSec-\u003efVerbose )\n        {\n            printf( \"Min-reg retiming:     Latches = %5d. Nodes = %6d. \", \n                Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n        }  \n\n        if ( pNew-\u003enRegs )\n            pNew = Aig_ManConstReduce( pNew, 0, -1, -1, 0, 0 );\n\n        // perform rewriting\nclk = Abc_Clock();\n        pNew = Aig_ManDupOrdered( pTemp = pNew );\n        Aig_ManStop( pTemp );\n//        pNew = Dar_ManRewriteDefault( pTemp = pNew );\n        pNew = Dar_ManCompress2( pTemp = pNew, 1, 0, 1, 0, 0 ); \n        Aig_ManStop( pTemp );\n        if ( pParSec-\u003efVerbose )\n        {\n            printf( \"Rewriting:            Latches = %5d. Nodes = %6d. \", \n                Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        } \n\n        // perform sequential simulation\n        if ( pNew-\u003enRegs )\n        {\nclk = Abc_Clock();\n        pSml = Fra_SmlSimulateSeq( pNew, 0, 128 * nFrames, 1 + 16/(1+Aig_ManNodeNum(pNew)/1000), 1  ); \n        if ( pParSec-\u003efVerbose )\n        {\n            printf( \"Seq simulation  :     Latches = %5d. Nodes = %6d. \", \n                Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew) );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n        if ( pSml-\u003efNonConstOut )\n        {\n            pNew-\u003epSeqModel = Fra_SmlGetCounterExample( pSml );\n            // transfer to the original manager\n            if ( Saig_ManPiNum(p) != Saig_ManPiNum(pNew) )\n                printf( \"The counter-example is invalid because of phase abstraction.\\n\" );\n            else\n            {\n            ABC_FREE( p-\u003epSeqModel );\n            p-\u003epSeqModel = Abc_CexDup( pNew-\u003epSeqModel, Aig_ManRegNum(p) );\n            ABC_FREE( pNew-\u003epSeqModel );\n            }\n\n            Fra_SmlStop( pSml );\n            Aig_ManStop( pNew );\n            RetValue = 0;\n            if ( !pParSec-\u003efSilent )\n            {\n                printf( \"Networks are NOT EQUIVALENT after simulation.   \" );\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n            }\n            if ( pParSec-\u003efReportSolution \u0026\u0026 !pParSec-\u003efRecursive )\n            {\n            printf( \"SOLUTION: FAIL       \" );\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n            }\n            return RetValue;\n        }\n        Fra_SmlStop( pSml );\n        }\n    }\n\n    // get the miter status\n    RetValue = Fra_FraigMiterStatus( pNew );\n\n    // try interplation\nclk = Abc_Clock();\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(pNew) );\n    if ( pParSec-\u003efInterpolation \u0026\u0026 RetValue == -1 \u0026\u0026 Aig_ManRegNum(pNew) \u003e 0 )\n    {\n        Inter_ManParams_t Pars, * pPars = \u0026Pars;\n        int Depth;\n        ABC_FREE( pNew-\u003epSeqModel );\n        Inter_ManSetDefaultParams( pPars );\n//        pPars-\u003enBTLimit = 100;\n        pPars-\u003enBTLimit = pParSec-\u003enBTLimitInter;\n        pPars-\u003efVerbose = pParSec-\u003efVeryVerbose;\n        if ( Saig_ManPoNum(pNew) == 1 )\n        {\n            RetValue = Inter_ManPerformInterpolation( pNew, pPars, \u0026Depth );\n        }\n        else if ( pParSec-\u003efInterSeparate )\n        {\n            Abc_Cex_t * pCex = NULL;\n            Aig_Man_t * pTemp, * pAux;\n            Aig_Obj_t * pObjPo;\n            int i, Counter = 0;\n            Saig_ManForEachPo( pNew, pObjPo, i )\n            { \n                if ( Aig_ObjFanin0(pObjPo) == Aig_ManConst1(pNew) )\n                    continue;\n                if ( pPars-\u003efVerbose )\n                    printf( \"Solving output %2d (out of %2d):\\n\", i, Saig_ManPoNum(pNew) );\n                pTemp = Aig_ManDupOneOutput( pNew, i, 1 );\n                pTemp = Aig_ManScl( pAux = pTemp, 1, 1, 0, -1, -1, 0, 0 );\n                Aig_ManStop( pAux );\n                if ( Saig_ManRegNum(pTemp) \u003e 0 )\n                {\n                    RetValue = Inter_ManPerformInterpolation( pTemp, pPars, \u0026Depth );\n                    if ( pTemp-\u003epSeqModel )\n                    {\n                        pCex = p-\u003epSeqModel = Abc_CexDup( pTemp-\u003epSeqModel, Aig_ManRegNum(p) );\n                        pCex-\u003eiPo = i;\n                        Aig_ManStop( pTemp );\n                        break;\n                    }\n                    // if solved, remove the output\n                    if ( RetValue == 1 )\n                    {\n                        Aig_ObjPatchFanin0( pNew, pObjPo, Aig_ManConst0(pNew) );\n    //                    printf( \"Output %3d : Solved \", i );\n                    }\n                    else\n                    {\n                        Counter++;\n    //                    printf( \"Output %3d : Undec  \", i );\n                    }\n                }\n                else\n                    Counter++;\n//                Aig_ManPrintStats( pTemp );\n                Aig_ManStop( pTemp );\n                printf( \"Solving output %3d (out of %3d) using interpolation.\\r\", i, Saig_ManPoNum(pNew) );\n            }\n            Aig_ManCleanup( pNew );\n            if ( pCex == NULL )\n            {\n                printf( \"Interpolation left %d (out of %d) outputs unsolved              \\n\", Counter, Saig_ManPoNum(pNew) );\n                if ( Counter )\n                    RetValue = -1;\n            }\n            pNew = Aig_ManDupUnsolvedOutputs( pTemp = pNew, 1 );\n            Aig_ManStop( pTemp );\n            pNew = Aig_ManScl( pTemp = pNew, 1, 1, 0, -1, -1, 0, 0 );\n            Aig_ManStop( pTemp );\n        }\n        else\n        {\n            Aig_Man_t * pNewOrpos = Saig_ManDupOrpos( pNew );\n            RetValue = Inter_ManPerformInterpolation( pNewOrpos, pPars, \u0026Depth );\n            if ( pNewOrpos-\u003epSeqModel )\n            {\n                Abc_Cex_t * pCex;\n                pCex = pNew-\u003epSeqModel = pNewOrpos-\u003epSeqModel; pNewOrpos-\u003epSeqModel = NULL;\n                pCex-\u003eiPo = Saig_ManFindFailedPoCex( pNew, pNew-\u003epSeqModel );\n            }\n            Aig_ManStop( pNewOrpos );\n        }\n\n        if ( pParSec-\u003efVerbose )\n        {\n        if ( RetValue == 1 )\n            printf( \"Property proved using interpolation.  \" );\n        else if ( RetValue == 0 )\n            printf( \"Property DISPROVED in frame %d using interpolation.  \", Depth );\n        else if ( RetValue == -1 )\n            printf( \"Property UNDECIDED after interpolation.  \" );\n        else\n            assert( 0 ); \nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n    }\n\n    // try reachability analysis\n    if ( pParSec-\u003efReachability \u0026\u0026 RetValue == -1 \u0026\u0026 Aig_ManRegNum(pNew) \u003e 0 \u0026\u0026 Aig_ManRegNum(pNew) \u003c pParSec-\u003enBddVarsMax )\n    {\n        Saig_ParBbr_t Pars, * pPars = \u0026Pars;\n        Bbr_ManSetDefaultParams( pPars );\n        pPars-\u003eTimeLimit     = 0;\n        pPars-\u003enBddMax       = pParSec-\u003enBddMax;\n        pPars-\u003enIterMax      = pParSec-\u003enBddIterMax;\n        pPars-\u003efPartition    = 1;\n        pPars-\u003efReorder      = 1;\n        pPars-\u003efReorderImage = 1;\n        pPars-\u003efVerbose      = 0;\n        pPars-\u003efSilent       = pParSec-\u003efSilent;\n        pNew-\u003enTruePis = Aig_ManCiNum(pNew) - Aig_ManRegNum(pNew); \n        pNew-\u003enTruePos = Aig_ManCoNum(pNew) - Aig_ManRegNum(pNew); \n        RetValue = Aig_ManVerifyUsingBdds( pNew, pPars );\n    }\n\n    // try PDR\n    if ( pParSec-\u003efUsePdr \u0026\u0026 RetValue == -1 \u0026\u0026 Aig_ManRegNum(pNew) \u003e 0 )\n    {\n        Pdr_Par_t Pars, * pPars = \u0026Pars;\n        Pdr_ManSetDefaultParams( pPars );\n        pPars-\u003enTimeOut = pParSec-\u003enPdrTimeout;\n        pPars-\u003efVerbose = pParSec-\u003efVerbose;\n        if ( pParSec-\u003efVerbose )\n            printf( \"Running property directed reachability...\\n\" );\n        RetValue = Pdr_ManSolve( pNew, pPars );\n        if ( pNew-\u003epSeqModel )\n            pNew-\u003epSeqModel-\u003eiPo = Saig_ManFindFailedPoCex( pNew, pNew-\u003epSeqModel );\n    }\n\nfinish:\n    // report the miter\n    if ( RetValue == 1 )\n    {\n        if ( !pParSec-\u003efSilent )\n        {\n            printf( \"Networks are equivalent.  \" );\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n        if ( pParSec-\u003efReportSolution \u0026\u0026 !pParSec-\u003efRecursive )\n        {\n        printf( \"SOLUTION: PASS       \" );\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n    }\n    else if ( RetValue == 0 )\n    {\n        if ( pNew-\u003epSeqModel == NULL )\n        {\n            int i;\n            // if the CEX is not derives, it is because tricial CEX should be assumed\n            pNew-\u003epSeqModel = Abc_CexAlloc( Aig_ManRegNum(pNew), pNew-\u003enTruePis, 1 );\n            // if the CEX does not work, we need to change PIs to 1 because \n            // the only way it can happen is when a PO is equal to a PI...\n            if ( Saig_ManFindFailedPoCex( pNew, pNew-\u003epSeqModel ) == -1 )\n                for ( i = 0; i \u003c pNew-\u003enTruePis; i++ )\n                    Abc_InfoSetBit( pNew-\u003epSeqModel-\u003epData, i );\n        }\n        if ( !pParSec-\u003efSilent )\n        {\n            printf( \"Networks are NOT EQUIVALENT.  \" );\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n        if ( pParSec-\u003efReportSolution \u0026\u0026 !pParSec-\u003efRecursive )\n        {\n        printf( \"SOLUTION: FAIL       \" );\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n    }\n    else \n    {\n        ///////////////////////////////////\n        // save intermediate result\n        extern void Abc_FrameSetSave1( void * pAig );\n        Abc_FrameSetSave1( Aig_ManDupSimple(pNew) );\n        ///////////////////////////////////\n        if ( !pParSec-\u003efSilent )\n        {\n            printf( \"Networks are UNDECIDED.   \" );\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n        if ( pParSec-\u003efReportSolution \u0026\u0026 !pParSec-\u003efRecursive )\n        {\n        printf( \"SOLUTION: UNDECIDED  \" );\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n        if ( !TimeOut \u0026\u0026 !pParSec-\u003efSilent )\n        {\n            static int Counter = 1;\n            char pFileName[1000];\n            pParSec-\u003enSMnumber = Counter;\n            sprintf( pFileName, \"sm%02d.aig\", Counter++ );\n            Ioa_WriteAiger( pNew, pFileName, 0, 0 );\n            printf( \"The unsolved reduced miter is written into file \\\"%s\\\".\\n\", pFileName );\n        }\n    }\n    if ( pNew-\u003epSeqModel )\n    {\n        if ( Saig_ManPiNum(p) != Saig_ManPiNum(pNew) )\n            printf( \"The counter-example is invalid because of phase abstraction.\\n\" );\n        else\n        {\n        ABC_FREE( p-\u003epSeqModel );\n        p-\u003epSeqModel = Abc_CexDup( pNew-\u003epSeqModel, Aig_ManRegNum(p) );\n        ABC_FREE( pNew-\u003epSeqModel );\n        }\n    }\n    if ( ppResult != NULL )\n        *ppResult = Aig_ManDupSimpleDfs( pNew );\n    if ( pNew )\n        Aig_ManStop( pNew );\n    return RetValue;\n}",
+      "Draft": "func Fra_FraigSec(p *Aig_Man_t, pParSec *Fra_Sec_t, ppResult **Aig_Man_t) int32 {\n    var Pars2 Ssw_Pars_t;\n    var pPars2 *Ssw_Pars_t = \u0026Pars2;\n    var Pars Fra_Ssw_t;\n    var pPars *Fra_Ssw_t = \u0026Pars;\n    var pSml *Fra_Sml_t;\n    var pNew, pTemp *Aig_Man_t;\n    var nFrames, RetValue, nIter int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    var TimeOut int32;\n    var fLatchCorr int32;\n    var TimeLeft float32  = 0.0;\n    pParSec.nSMnumber = -1;\n\n    // try the miter before solving\n    pNew = Aig_ManDupSimple( p );\n    RetValue = Fra_FraigMiterStatus( pNew );\n    if RetValue \u003e= 0 {\n        goto finish; }\n\n    // prepare parameters\n    memset( pPars, 0, sizeof(Fra_Ssw_t) );\n    pPars.fLatchCorr  = fLatchCorr;\n    pPars.fVerbose = pParSec.fVeryVerbose;\n    if pParSec.fVerbose {\n        fmt.Printf(\"Original miter:       Latches = %5d. Nodes = %6d.\\n\", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\n    }\n//Aig_ManDumpBlif( pNew, \"after.blif\", NULL, NULL );\n\n    // perform sequential cleanup\nclk = Abc_Clock();\n    if pNew.nRegs {\n    pNew = Aig_ManReduceLaches( pNew, 0 ); }\n    if pNew.nRegs {\n    pNew = Aig_ManConstReduce( pNew, 0, -1, -1, 0, 0 ); }\n    if pParSec.fVerbose {\n        fmt.Printf(\"Sequential cleanup:   Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    RetValue = Fra_FraigMiterStatus( pNew );\n    if RetValue \u003e= 0 {\n        goto finish; }\n\n    // perform phase abstraction\nclk = Abc_Clock();\n    if pParSec.fPhaseAbstract {\n        extern Aig_Man_t * Saig_ManPhaseAbstractAuto( Aig_Man_t * p, int fVerbose );\n        pNew.nTruePis = Aig_ManCiNum(pNew) - Aig_ManRegNum(pNew); \n        pNew.nTruePos = Aig_ManCoNum(pNew) - Aig_ManRegNum(pNew); \n        pNew = Saig_ManPhaseAbstractAuto( pTemp = pNew, 0 );\n        Aig_ManStop( pTemp );\n        if pParSec.fVerbose {\n            fmt.Printf(\"Phase abstraction:    Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n    }\n\n    // perform forward retiming\n    if pParSec.fRetimeFirst \u0026\u0026 pNew.nRegs {\nclk = Abc_Clock();\n//    pNew = Rtm_ManRetime( pTemp = pNew, 1, 1000, 0 );\n    pNew = Saig_ManRetimeForward( pTemp = pNew, 100, 0 );\n    Aig_ManStop( pTemp );\n    if pParSec.fVerbose {\n        fmt.Printf(\"Forward retiming:     Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    }\n     \n    // run latch correspondence\nclk = Abc_Clock();\n    if pNew.nRegs {\n    pNew = Aig_ManDupOrdered( pTemp = pNew );\n//    pNew = Aig_ManDupDfs( pTemp = pNew );\n    Aig_ManStop( pTemp );\n/*\n    if ( RetValue == -1 \u0026\u0026 pParSec-\u003eTimeLimit )\n    {\n        TimeLeft = (float)pParSec-\u003eTimeLimit - ((float)(Abc_Clock()-clkTotal)/(float)(CLOCKS_PER_SEC));\n        TimeLeft = Abc_MaxInt( TimeLeft, 0.0 );\n        if ( TimeLeft == 0.0 )\n        {\n            if ( !pParSec-\u003efSilent )\n                printf( \"Runtime limit exceeded.\\n\" );\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n    }\n*/\n\n//    pNew = Fra_FraigLatchCorrespondence( pTemp = pNew, 0, 1000, 1, pParSec-\u003efVeryVerbose, \u0026nIter, TimeLeft );\n//Aig_ManDumpBlif( pNew, \"ex.blif\", NULL, NULL );\n    Ssw_ManSetDefaultParamsLcorr( pPars2 );\n    pNew = Ssw_LatchCorrespondence( pTemp = pNew, pPars2 );\n    nIter = pPars2.nIters;\n\n    // prepare parameters for scorr\n    Ssw_ManSetDefaultParams( pPars2 );\n\n    if pTemp.pSeqModel {\n        if !Saig_ManVerifyCex( pTemp, pTemp.pSeqModel ) {\n            fmt.Printf(\"Fra_FraigSec(): Counter-example verification has FAILED.\\n\"); }\n        if Saig_ManPiNum(p) != Saig_ManPiNum(pTemp) {\n            fmt.Printf(\"The counter-example is invalid because of phase abstraction.\\n\");\n        } else {\n        ABC_FREE( p.pSeqModel );\n        p.pSeqModel = Abc_CexDup( pTemp.pSeqModel, Aig_ManRegNum(p) );\n        ABC_FREE( pTemp.pSeqModel );\n        }\n    }\n    if pNew == nil {\n        if p.pSeqModel {\n            RetValue = 0;\n            if !pParSec.fSilent {\n                fmt.Printf(\"Networks are NOT EQUIVALENT after simulation.   \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n            }\n            if pParSec.fReportSolution \u0026\u0026 !pParSec.fRecursive {\n            fmt.Printf(\"SOLUTION: FAIL       \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n            }\n            Aig_ManStop( pTemp );\n            return RetValue;\n        }\n        pNew = pTemp;\n        RetValue = -1;\n        TimeOut = 1;\n        goto finish;\n    }\n    Aig_ManStop( pTemp );\n\n    if pParSec.fVerbose {\n        fmt.Printf(\"Latch-corr (I=%3d):   Latches = %5d. Nodes = %6d. \", nIter, Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    }\n/*\n    if ( RetValue == -1 \u0026\u0026 pParSec-\u003eTimeLimit )\n    {\n        TimeLeft = (float)pParSec-\u003eTimeLimit - ((float)(Abc_Clock()-clkTotal)/(float)(CLOCKS_PER_SEC));\n        TimeLeft = Abc_MaxInt( TimeLeft, 0.0 );\n        if ( TimeLeft == 0.0 )\n        {\n            if ( !pParSec-\u003efSilent )\n                printf( \"Runtime limit exceeded.\\n\" );\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n    }\n*/\n    // perform fraiging\n    if pParSec.fFraiging {\nclk = Abc_Clock();\n    pNew = Fra_FraigEquivence( pTemp = pNew, 100, 0 );\n    Aig_ManStop( pTemp );\n    if pParSec.fVerbose {\n        fmt.Printf(\"Fraiging:             Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    }\n\n    if pNew.nRegs == 0 {\n        RetValue = Fra_FraigCec( \u0026pNew, 100000, 0 ); }\n\n    RetValue = Fra_FraigMiterStatus( pNew );\n    if RetValue \u003e= 0 {\n        goto finish; }\n/*\n    if ( RetValue == -1 \u0026\u0026 pParSec-\u003eTimeLimit )\n    {\n        TimeLeft = (float)pParSec-\u003eTimeLimit - ((float)(Abc_Clock()-clkTotal)/(float)(CLOCKS_PER_SEC));\n        TimeLeft = Abc_MaxInt( TimeLeft, 0.0 );\n        if ( TimeLeft == 0.0 )\n        {\n            if ( !pParSec-\u003efSilent )\n                printf( \"Runtime limit exceeded.\\n\" );\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n    }\n*/\n    // perform min-area retiming\n    if pParSec.fRetimeRegs \u0026\u0026 pNew.nRegs {\n//    extern Aig_Man_t * Saig_ManRetimeMinArea( Aig_Man_t * p, int nMaxIters, int fForwardOnly, int fBackwardOnly, int fInitial, int fVerbose );\nclk = Abc_Clock();\n    pNew.nTruePis = Aig_ManCiNum(pNew) - Aig_ManRegNum(pNew); \n    pNew.nTruePos = Aig_ManCoNum(pNew) - Aig_ManRegNum(pNew); \n//        pNew = Rtm_ManRetime( pTemp = pNew, 1, 1000, 0 );\n    pNew = Saig_ManRetimeMinArea( pTemp = pNew, 1000, 0, 0, 1, 0 );\n    Aig_ManStop( pTemp );\n    pNew = Aig_ManDupOrdered( pTemp = pNew );\n    Aig_ManStop( pTemp );\n    if pParSec.fVerbose {\n    fmt.Printf(\"Min-reg retiming:     Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    }\n\n    // perform seq sweeping while increasing the number of frames\n    RetValue = Fra_FraigMiterStatus( pNew );\n    if RetValue == -1 \u0026\u0026 pParSec.fInduction {\n    for  nFrames = 1; nFrames \u003c= pParSec.nFramesMax; nFrames *= 2  {\n/*\n        if ( RetValue == -1 \u0026\u0026 pParSec-\u003eTimeLimit )\n        {\n            TimeLeft = (float)pParSec-\u003eTimeLimit - ((float)(Abc_Clock()-clkTotal)/(float)(CLOCKS_PER_SEC));\n            TimeLeft = Abc_MaxInt( TimeLeft, 0.0 );\n            if ( TimeLeft == 0.0 )\n            {\n                if ( !pParSec-\u003efSilent )\n                    printf( \"Runtime limit exceeded.\\n\" );\n                RetValue = -1;\n                TimeOut = 1;\n                goto finish;\n            }\n        }\n*/ \n\nclk = Abc_Clock();\n        pPars.nFramesK = nFrames;\n        pPars.TimeLimit = TimeLeft;\n        pPars.fSilent = pParSec.fSilent;\n//        pNew = Fra_FraigInduction( pTemp = pNew, pPars );\n\n        pPars2.nFramesK = nFrames;\n        pPars2.nBTLimit = pParSec.nBTLimit;\n        pPars2.nBTLimitGlobal = pParSec.nBTLimitGlobal;\n//        pPars2-\u003enBTLimit = 1000 * nFrames;\n\n        if RetValue == -1 \u0026\u0026 pPars2.nConflicts \u003e pPars2.nBTLimitGlobal {\n            if !pParSec.fSilent {\n                fmt.Printf(\"Global conflict limit (%d) exceeded.\\n\", pPars2.nBTLimitGlobal); }\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n\n        Aig_ManSetRegNum( pNew, pNew.nRegs );\n//        pNew = Ssw_SignalCorrespondence( pTemp = pNew, pPars2 );\n        if Aig_ManRegNum(pNew) \u003e 0 {\n            pNew = Ssw_SignalCorrespondence( pTemp = pNew, pPars2 );\n        } else {\n            pNew = Aig_ManDupSimpleDfs( pTemp = pNew ); }\n\n        if pNew == nil {\n            pNew = pTemp;\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n\n//        printf( \"Total conflicts = %d.\\n\", pPars2-\u003enConflicts );\n\n        Aig_ManStop( pTemp );\n        RetValue = Fra_FraigMiterStatus( pNew );\n        if pParSec.fVerbose { \n            fmt.Printf(\"K-step (K=%2d,I=%3d):  Latches = %5d. Nodes = %6d. \", nFrames, pPars2.nIters, Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n        if RetValue != -1 {\n            break; }\n\n        // perform retiming\n//        if ( pParSec-\u003efRetimeFirst \u0026\u0026 pNew-\u003enRegs )\n        if pNew.nRegs {\n//        extern Aig_Man_t * Saig_ManRetimeMinArea( Aig_Man_t * p, int nMaxIters, int fForwardOnly, int fBackwardOnly, int fInitial, int fVerbose );\nclk = Abc_Clock();\n        pNew.nTruePis = Aig_ManCiNum(pNew) - Aig_ManRegNum(pNew); \n        pNew.nTruePos = Aig_ManCoNum(pNew) - Aig_ManRegNum(pNew); \n//        pNew = Rtm_ManRetime( pTemp = pNew, 1, 1000, 0 );\n        pNew = Saig_ManRetimeMinArea( pTemp = pNew, 1000, 0, 0, 1, 0 );\n        Aig_ManStop( pTemp );\n        pNew = Aig_ManDupOrdered( pTemp = pNew );\n        Aig_ManStop( pTemp );\n        if pParSec.fVerbose {\n            fmt.Printf(\"Min-reg retiming:     Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n        }  \n\n        if pNew.nRegs {\n            pNew = Aig_ManConstReduce( pNew, 0, -1, -1, 0, 0 ); }\n\n        // perform rewriting\nclk = Abc_Clock();\n        pNew = Aig_ManDupOrdered( pTemp = pNew );\n        Aig_ManStop( pTemp );\n//        pNew = Dar_ManRewriteDefault( pTemp = pNew );\n        pNew = Dar_ManCompress2( pTemp = pNew, 1, 0, 1, 0, 0 ); \n        Aig_ManStop( pTemp );\n        if pParSec.fVerbose {\n            fmt.Printf(\"Rewriting:            Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        } \n\n        // perform sequential simulation\n        if pNew.nRegs {\nclk = Abc_Clock();\n        pSml = Fra_SmlSimulateSeq( pNew, 0, 128 * nFrames, 1 + 16/(1+Aig_ManNodeNum(pNew)/1000), 1  ); \n        if pParSec.fVerbose {\n            fmt.Printf(\"Seq simulation  :     Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n        if pSml.fNonConstOut {\n            pNew.pSeqModel = Fra_SmlGetCounterExample( pSml );\n            // transfer to the original manager\n            if Saig_ManPiNum(p) != Saig_ManPiNum(pNew) {\n                fmt.Printf(\"The counter-example is invalid because of phase abstraction.\\n\");\n            } else {\n            ABC_FREE( p.pSeqModel );\n            p.pSeqModel = Abc_CexDup( pNew.pSeqModel, Aig_ManRegNum(p) );\n            ABC_FREE( pNew.pSeqModel );\n            }\n\n            Fra_SmlStop( pSml );\n            Aig_ManStop( pNew );\n            RetValue = 0;\n            if !pParSec.fSilent {\n                fmt.Printf(\"Networks are NOT EQUIVALENT after simulation.   \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n            }\n            if pParSec.fReportSolution \u0026\u0026 !pParSec.fRecursive {\n            fmt.Printf(\"SOLUTION: FAIL       \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n            }\n            return RetValue;\n        }\n        Fra_SmlStop( pSml );\n        }\n    } }\n\n    // get the miter status\n    RetValue = Fra_FraigMiterStatus( pNew );\n\n    // try interplation\nclk = Abc_Clock();\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(pNew) );\n    if pParSec.fInterpolation \u0026\u0026 RetValue == -1 \u0026\u0026 Aig_ManRegNum(pNew) \u003e 0 {\n        var Pars Inter_ManParams_t;\n        var pPars *Inter_ManParams_t = \u0026Pars;\n        var Depth int32;\n        ABC_FREE( pNew.pSeqModel );\n        Inter_ManSetDefaultParams( pPars );\n//        pPars-\u003enBTLimit = 100;\n        pPars.nBTLimit = pParSec.nBTLimitInter;\n        pPars.fVerbose = pParSec.fVeryVerbose;\n        if Saig_ManPoNum(pNew) == 1 {\n            RetValue = Inter_ManPerformInterpolation( pNew, pPars, \u0026Depth );\n        \n        } else if pParSec.fInterSeparate {\n            var pCex *Abc_Cex_t  = nil;\n            var pTemp, pAux *Aig_Man_t;\n            var pObjPo *Aig_Obj_t;\n            var i, spStatic_Fra_FraigSec_Counter int32;\n            Saig_ManForEachPo( pNew, pObjPo, i )\n            { \n                if Aig_ObjFanin0(pObjPo) == Aig_ManConst1(pNew) {\n                    continue; }\n                if pPars.fVerbose {\n                    fmt.Printf(\"Solving output %2d (out of %2d):\\n\", i, Saig_ManPoNum(pNew)); }\n                pTemp = Aig_ManDupOneOutput( pNew, i, 1 );\n                pTemp = Aig_ManScl( pAux = pTemp, 1, 1, 0, -1, -1, 0, 0 );\n                Aig_ManStop( pAux );\n                if Saig_ManRegNum(pTemp) \u003e 0 {\n                    RetValue = Inter_ManPerformInterpolation( pTemp, pPars, \u0026Depth );\n                    if pTemp.pSeqModel {\n                        pCex = p.pSeqModel = Abc_CexDup( pTemp.pSeqModel, Aig_ManRegNum(p) );\n                        pCex.iPo = i;\n                        Aig_ManStop( pTemp );\n                        break;\n                    }\n                    // if solved, remove the output\n                    if RetValue == 1 {\n                        Aig_ObjPatchFanin0( pNew, pObjPo, Aig_ManConst0(pNew) );\n    //                    printf( \"Output %3d : Solved \", i );\n                    \n                    } else {\n                        spStatic_Fra_FraigSec_Counter++;\n    //                    printf( \"Output %3d : Undec  \", i );\n                    }\n                \n                } else {\n                    spStatic_Fra_FraigSec_Counter++; }\n//                Aig_ManPrintStats( pTemp );\n                Aig_ManStop( pTemp );\n                fmt.Printf(\"Solving output %3d (out of %3d) using interpolation.\\r\", i, Saig_ManPoNum(pNew));\n            }\n            Aig_ManCleanup( pNew );\n            if pCex == nil {\n                fmt.Printf(\"Interpolation left %d (out of %d) outputs unsolved              \\n\", spStatic_Fra_FraigSec_Counter, Saig_ManPoNum(pNew));\n                if spStatic_Fra_FraigSec_Counter != 0 {\n                    RetValue = -1; }\n            }\n            pNew = Aig_ManDupUnsolvedOutputs( pTemp = pNew, 1 );\n            Aig_ManStop( pTemp );\n            pNew = Aig_ManScl( pTemp = pNew, 1, 1, 0, -1, -1, 0, 0 );\n            Aig_ManStop( pTemp );\n        \n        } else {\n            var pNewOrpos *Aig_Man_t  = Saig_ManDupOrpos( pNew );\n            RetValue = Inter_ManPerformInterpolation( pNewOrpos, pPars, \u0026Depth );\n            if pNewOrpos.pSeqModel {\n                var pCex *Abc_Cex_t;\n                pCex = pNew.pSeqModel = pNewOrpos.pSeqModel; pNewOrpos.pSeqModel = nil;\n                pCex.iPo = Saig_ManFindFailedPoCex( pNew, pNew.pSeqModel );\n            }\n            Aig_ManStop( pNewOrpos );\n        }\n\n        if pParSec.fVerbose {\n        if RetValue == 1 {\n            fmt.Printf(\"Property proved using interpolation.  \");\n        } else if RetValue == 0 {\n            fmt.Printf(\"Property DISPROVED in frame %d using interpolation.  \", Depth);\n        } else if RetValue == -1 {\n            fmt.Printf(\"Property UNDECIDED after interpolation.  \");\n        } else {\n            assert(false, \"0\"); } \nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n    }\n\n    // try reachability analysis\n    if pParSec.fReachability \u0026\u0026 RetValue == -1 \u0026\u0026 Aig_ManRegNum(pNew) \u003e 0 \u0026\u0026 Aig_ManRegNum(pNew) \u003c pParSec.nBddVarsMax {\n        var Pars Saig_ParBbr_t;\n        var pPars *Saig_ParBbr_t = \u0026Pars;\n        Bbr_ManSetDefaultParams( pPars );\n        pPars.TimeLimit     = 0;\n        pPars.nBddMax       = pParSec.nBddMax;\n        pPars.nIterMax      = pParSec.nBddIterMax;\n        pPars.fPartition    = 1;\n        pPars.fReorder      = 1;\n        pPars.fReorderImage = 1;\n        pPars.fVerbose      = 0;\n        pPars.fSilent       = pParSec.fSilent;\n        pNew.nTruePis = Aig_ManCiNum(pNew) - Aig_ManRegNum(pNew); \n        pNew.nTruePos = Aig_ManCoNum(pNew) - Aig_ManRegNum(pNew); \n        RetValue = Aig_ManVerifyUsingBdds( pNew, pPars );\n    }\n\n    // try PDR\n    if pParSec.fUsePdr \u0026\u0026 RetValue == -1 \u0026\u0026 Aig_ManRegNum(pNew) \u003e 0 {\n        var Pars Pdr_Par_t;\n        var pPars *Pdr_Par_t = \u0026Pars;\n        Pdr_ManSetDefaultParams( pPars );\n        pPars.nTimeOut = pParSec.nPdrTimeout;\n        pPars.fVerbose = pParSec.fVerbose;\n        if pParSec.fVerbose {\n            fmt.Printf(\"Running property directed reachability...\\n\"); }\n        RetValue = Pdr_ManSolve( pNew, pPars );\n        if pNew.pSeqModel {\n            pNew.pSeqModel.iPo = Saig_ManFindFailedPoCex( pNew, pNew.pSeqModel ); }\n    }\n\nfinish:\n    // report the miter\n    if RetValue == 1 {\n        if !pParSec.fSilent {\n            fmt.Printf(\"Networks are equivalent.  \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n        if pParSec.fReportSolution \u0026\u0026 !pParSec.fRecursive {\n        fmt.Printf(\"SOLUTION: PASS       \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n    \n    } else if RetValue == 0 {\n        if pNew.pSeqModel == nil {\n            var i int32;\n            // if the CEX is not derives, it is because tricial CEX should be assumed\n            pNew.pSeqModel = Abc_CexAlloc( Aig_ManRegNum(pNew), pNew.nTruePis, 1 );\n            // if the CEX does not work, we need to change PIs to 1 because \n            // the only way it can happen is when a PO is equal to a PI...\n            if Saig_ManFindFailedPoCex( pNew, pNew.pSeqModel ) == -1 {\n                for  i = 0; i \u003c pNew.nTruePis; i++  {\n                    Abc_InfoSetBit( pNew.pSeqModel.pData, i );\n                } }\n        }\n        if !pParSec.fSilent {\n            fmt.Printf(\"Networks are NOT EQUIVALENT.  \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n        if pParSec.fReportSolution \u0026\u0026 !pParSec.fRecursive {\n        fmt.Printf(\"SOLUTION: FAIL       \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n    \n    } else {\n        ///////////////////////////////////\n        // save intermediate result\n        extern void Abc_FrameSetSave1( void * pAig );\n        Abc_FrameSetSave1( Aig_ManDupSimple(pNew) );\n        ///////////////////////////////////\n        if !pParSec.fSilent {\n            fmt.Printf(\"Networks are UNDECIDED.   \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n        if pParSec.fReportSolution \u0026\u0026 !pParSec.fRecursive {\n        fmt.Printf(\"SOLUTION: UNDECIDED  \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n        if !(TimeOut != 0) \u0026\u0026 !pParSec.fSilent {\n            \n            var pFileName string // was [1000]byte in C\n\n            pParSec.nSMnumber = spStatic_Fra_FraigSec_Counter;\n            pFileName = fmt.Sprintf(\"sm%02d.aig\", spStatic_Fra_FraigSec_Counter++);\n            Ioa_WriteAiger( pNew, pFileName, 0, 0 );\n            printf( \"The unsolved reduced miter is written into file \\\"%s\\\".\\n\", pFileName );\n        }\n    }\n    if pNew.pSeqModel {\n        if Saig_ManPiNum(p) != Saig_ManPiNum(pNew) {\n            fmt.Printf(\"The counter-example is invalid because of phase abstraction.\\n\");\n        } else {\n        ABC_FREE( p.pSeqModel );\n        p.pSeqModel = Abc_CexDup( pNew.pSeqModel, Aig_ManRegNum(p) );\n        ABC_FREE( pNew.pSeqModel );\n        }\n    }\n    if ppResult != nil {\n        *ppResult = Aig_ManDupSimpleDfs( pNew ); }\n    if pNew {\n        Aig_ManStop( pNew ); }\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::mechanical::sizeof::1456",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1456,
+      "End": 1462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::mechanical::sizeof::4436",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4436,
+      "End": 4442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::mechanical::static::23529",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 23529,
+      "End": 23535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::Fra_SecSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Fra_SecSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1390,
+      "End": 3603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::Fra_FraigSec",
+      "Category": "semantic-review",
+      "Symbol": "Fra_FraigSec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3839,
+      "End": 24353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 24600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::5124",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5124,
+      "End": 5160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::5844",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5844,
+      "End": 5880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::6307",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6307,
+      "End": 6343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::7723",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7723,
+      "End": 7747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::7830",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7830,
+      "End": 7858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::8099",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8099,
+      "End": 8140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::8285",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8285,
+      "End": 8326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::8705",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8705,
+      "End": 8741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::9516",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9516,
+      "End": 9552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::10937",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10937,
+      "End": 10973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::13198",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13198,
+      "End": 13234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::14140",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14140,
+      "End": 14176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::14751",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14751,
+      "End": 14787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::15181",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15181,
+      "End": 15217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::15579",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15579,
+      "End": 15603
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::15693",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15693,
+      "End": 15720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::15958",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15958,
+      "End": 15999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::16144",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16144,
+      "End": 16185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::16616",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16616,
+      "End": 16643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::17164",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17164,
+      "End": 17200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::20179",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20179,
+      "End": 20215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::21708",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21708,
+      "End": 21749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::21878",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21878,
+      "End": 21919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::22668",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22668,
+      "End": 22709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::22838",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22838,
+      "End": 22879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::23239",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23239,
+      "End": 23280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::23409",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23409,
+      "End": 23450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::24058",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24058,
+      "End": 24082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraSec.c::macro-inline::24164",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24164,
+      "End": 24191
+    }
+  ],
+  "Draft": "package fra\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [fraSec.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [New FRAIG package.]\n\n  Synopsis    [Performs SEC based on seq sweeping.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 30, 2007.]\n\n  Revision    [$Id: fraSec.c,v 1.00 2007/06/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fra.h\"\n//#include \"aig/ioa/ioa.h\"\n//#include \"proof/int/int.h\"\n//#include \"proof/ssw/ssw.h\"\n//#include \"aig/saig/saig.h\"\n//#include \"bdd/bbr/bbr.h\"\n//#include \"proof/pdr/pdr.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_SecSetDefaultParams(p *Fra_Sec_t) {\n    memset( p, 0, sizeof(Fra_Sec_t) );\n    p.fTryComb          =       1;  // try CEC call as a preprocessing step\n    p.fTryBmc           =       1;  // try BMC call as a preprocessing step \n    p.nFramesMax        =       4;  // the max number of frames used for induction\n    p.nBTLimit          =    1000;  // conflict limit at a node during induction \n    p.nBTLimitGlobal    = 5000000;  // global conflict limit during induction\n    p.nBTLimitInter     =   10000;  // conflict limit during interpolation\n    p.nBddVarsMax       =     150;  // the limit on the number of registers in BDD reachability\n    p.nBddMax           =   50000;  // the limit on the number of BDD nodes \n    p.nBddIterMax       = 1000000;  // the limit on the number of BDD iterations\n    p.fPhaseAbstract    =       0;  // enables phase abstraction\n    p.fRetimeFirst      =       1;  // enables most-forward retiming at the beginning\n    p.fRetimeRegs       =       1;  // enables min-register retiming at the beginning\n    p.fFraiging         =       1;  // enables fraiging at the beginning\n    p.fInduction        =       1;  // enables the use of induction (signal correspondence)\n    p.fInterpolation    =       1;  // enables interpolation\n    p.fInterSeparate    =       0;  // enables interpolation for each outputs separately\n    p.fReachability     =       1;  // enables BDD based reachability\n    p.fReorderImage     =       1;  // enables variable reordering during image computation\n    p.fStopOnFirstFail  =       1;  // enables stopping after first output of a miter has failed to prove\n    p.fUseNewProver     =       0;  // enables new prover\n    p.fUsePdr           =       1;  // enables PDR\n    p.nPdrTimeout       =      60;  // enabled PDR timeout\n    p.fSilent           =       0;  // disables all output\n    p.fVerbose          =       0;  // enables verbose reporting of statistics\n    p.fVeryVerbose      =       0;  // enables very verbose reporting  \n    p.TimeLimit         =       0;  // enables the timeout\n    // internal parameters\n    p.fReportSolution   =       0;  // enables specialized format for reporting solution\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Fra_FraigSec_Counter int32 = 1;\nfunc Fra_FraigSec(p *Aig_Man_t, pParSec *Fra_Sec_t, ppResult **Aig_Man_t) int32 {\n    var Pars2 Ssw_Pars_t;\n    var pPars2 *Ssw_Pars_t = \u0026Pars2;\n    var Pars Fra_Ssw_t;\n    var pPars *Fra_Ssw_t = \u0026Pars;\n    var pSml *Fra_Sml_t;\n    var pNew, pTemp *Aig_Man_t;\n    var nFrames, RetValue, nIter int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    var TimeOut int32;\n    var fLatchCorr int32;\n    var TimeLeft float32  = 0.0;\n    pParSec.nSMnumber = -1;\n\n    // try the miter before solving\n    pNew = Aig_ManDupSimple( p );\n    RetValue = Fra_FraigMiterStatus( pNew );\n    if RetValue \u003e= 0 {\n        goto finish; }\n\n    // prepare parameters\n    memset( pPars, 0, sizeof(Fra_Ssw_t) );\n    pPars.fLatchCorr  = fLatchCorr;\n    pPars.fVerbose = pParSec.fVeryVerbose;\n    if pParSec.fVerbose {\n        fmt.Printf(\"Original miter:       Latches = %5d. Nodes = %6d.\\n\", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\n    }\n//Aig_ManDumpBlif( pNew, \"after.blif\", NULL, NULL );\n\n    // perform sequential cleanup\nclk = Abc_Clock();\n    if pNew.nRegs {\n    pNew = Aig_ManReduceLaches( pNew, 0 ); }\n    if pNew.nRegs {\n    pNew = Aig_ManConstReduce( pNew, 0, -1, -1, 0, 0 ); }\n    if pParSec.fVerbose {\n        fmt.Printf(\"Sequential cleanup:   Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    RetValue = Fra_FraigMiterStatus( pNew );\n    if RetValue \u003e= 0 {\n        goto finish; }\n\n    // perform phase abstraction\nclk = Abc_Clock();\n    if pParSec.fPhaseAbstract {\n        extern Aig_Man_t * Saig_ManPhaseAbstractAuto( Aig_Man_t * p, int fVerbose );\n        pNew.nTruePis = Aig_ManCiNum(pNew) - Aig_ManRegNum(pNew); \n        pNew.nTruePos = Aig_ManCoNum(pNew) - Aig_ManRegNum(pNew); \n        pNew = Saig_ManPhaseAbstractAuto( pTemp = pNew, 0 );\n        Aig_ManStop( pTemp );\n        if pParSec.fVerbose {\n            fmt.Printf(\"Phase abstraction:    Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n    }\n\n    // perform forward retiming\n    if pParSec.fRetimeFirst \u0026\u0026 pNew.nRegs {\nclk = Abc_Clock();\n//    pNew = Rtm_ManRetime( pTemp = pNew, 1, 1000, 0 );\n    pNew = Saig_ManRetimeForward( pTemp = pNew, 100, 0 );\n    Aig_ManStop( pTemp );\n    if pParSec.fVerbose {\n        fmt.Printf(\"Forward retiming:     Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    }\n     \n    // run latch correspondence\nclk = Abc_Clock();\n    if pNew.nRegs {\n    pNew = Aig_ManDupOrdered( pTemp = pNew );\n//    pNew = Aig_ManDupDfs( pTemp = pNew );\n    Aig_ManStop( pTemp );\n/*\n    if ( RetValue == -1 \u0026\u0026 pParSec-\u003eTimeLimit )\n    {\n        TimeLeft = (float)pParSec-\u003eTimeLimit - ((float)(Abc_Clock()-clkTotal)/(float)(CLOCKS_PER_SEC));\n        TimeLeft = Abc_MaxInt( TimeLeft, 0.0 );\n        if ( TimeLeft == 0.0 )\n        {\n            if ( !pParSec-\u003efSilent )\n                printf( \"Runtime limit exceeded.\\n\" );\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n    }\n*/\n\n//    pNew = Fra_FraigLatchCorrespondence( pTemp = pNew, 0, 1000, 1, pParSec-\u003efVeryVerbose, \u0026nIter, TimeLeft );\n//Aig_ManDumpBlif( pNew, \"ex.blif\", NULL, NULL );\n    Ssw_ManSetDefaultParamsLcorr( pPars2 );\n    pNew = Ssw_LatchCorrespondence( pTemp = pNew, pPars2 );\n    nIter = pPars2.nIters;\n\n    // prepare parameters for scorr\n    Ssw_ManSetDefaultParams( pPars2 );\n\n    if pTemp.pSeqModel {\n        if !Saig_ManVerifyCex( pTemp, pTemp.pSeqModel ) {\n            fmt.Printf(\"Fra_FraigSec(): Counter-example verification has FAILED.\\n\"); }\n        if Saig_ManPiNum(p) != Saig_ManPiNum(pTemp) {\n            fmt.Printf(\"The counter-example is invalid because of phase abstraction.\\n\");\n        } else {\n        ABC_FREE( p.pSeqModel );\n        p.pSeqModel = Abc_CexDup( pTemp.pSeqModel, Aig_ManRegNum(p) );\n        ABC_FREE( pTemp.pSeqModel );\n        }\n    }\n    if pNew == nil {\n        if p.pSeqModel {\n            RetValue = 0;\n            if !pParSec.fSilent {\n                fmt.Printf(\"Networks are NOT EQUIVALENT after simulation.   \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n            }\n            if pParSec.fReportSolution \u0026\u0026 !pParSec.fRecursive {\n            fmt.Printf(\"SOLUTION: FAIL       \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n            }\n            Aig_ManStop( pTemp );\n            return RetValue;\n        }\n        pNew = pTemp;\n        RetValue = -1;\n        TimeOut = 1;\n        goto finish;\n    }\n    Aig_ManStop( pTemp );\n\n    if pParSec.fVerbose {\n        fmt.Printf(\"Latch-corr (I=%3d):   Latches = %5d. Nodes = %6d. \", nIter, Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    }\n/*\n    if ( RetValue == -1 \u0026\u0026 pParSec-\u003eTimeLimit )\n    {\n        TimeLeft = (float)pParSec-\u003eTimeLimit - ((float)(Abc_Clock()-clkTotal)/(float)(CLOCKS_PER_SEC));\n        TimeLeft = Abc_MaxInt( TimeLeft, 0.0 );\n        if ( TimeLeft == 0.0 )\n        {\n            if ( !pParSec-\u003efSilent )\n                printf( \"Runtime limit exceeded.\\n\" );\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n    }\n*/\n    // perform fraiging\n    if pParSec.fFraiging {\nclk = Abc_Clock();\n    pNew = Fra_FraigEquivence( pTemp = pNew, 100, 0 );\n    Aig_ManStop( pTemp );\n    if pParSec.fVerbose {\n        fmt.Printf(\"Fraiging:             Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    }\n\n    if pNew.nRegs == 0 {\n        RetValue = Fra_FraigCec( \u0026pNew, 100000, 0 ); }\n\n    RetValue = Fra_FraigMiterStatus( pNew );\n    if RetValue \u003e= 0 {\n        goto finish; }\n/*\n    if ( RetValue == -1 \u0026\u0026 pParSec-\u003eTimeLimit )\n    {\n        TimeLeft = (float)pParSec-\u003eTimeLimit - ((float)(Abc_Clock()-clkTotal)/(float)(CLOCKS_PER_SEC));\n        TimeLeft = Abc_MaxInt( TimeLeft, 0.0 );\n        if ( TimeLeft == 0.0 )\n        {\n            if ( !pParSec-\u003efSilent )\n                printf( \"Runtime limit exceeded.\\n\" );\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n    }\n*/\n    // perform min-area retiming\n    if pParSec.fRetimeRegs \u0026\u0026 pNew.nRegs {\n//    extern Aig_Man_t * Saig_ManRetimeMinArea( Aig_Man_t * p, int nMaxIters, int fForwardOnly, int fBackwardOnly, int fInitial, int fVerbose );\nclk = Abc_Clock();\n    pNew.nTruePis = Aig_ManCiNum(pNew) - Aig_ManRegNum(pNew); \n    pNew.nTruePos = Aig_ManCoNum(pNew) - Aig_ManRegNum(pNew); \n//        pNew = Rtm_ManRetime( pTemp = pNew, 1, 1000, 0 );\n    pNew = Saig_ManRetimeMinArea( pTemp = pNew, 1000, 0, 0, 1, 0 );\n    Aig_ManStop( pTemp );\n    pNew = Aig_ManDupOrdered( pTemp = pNew );\n    Aig_ManStop( pTemp );\n    if pParSec.fVerbose {\n    fmt.Printf(\"Min-reg retiming:     Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    }\n\n    // perform seq sweeping while increasing the number of frames\n    RetValue = Fra_FraigMiterStatus( pNew );\n    if RetValue == -1 \u0026\u0026 pParSec.fInduction {\n    for  nFrames = 1; nFrames \u003c= pParSec.nFramesMax; nFrames *= 2  {\n/*\n        if ( RetValue == -1 \u0026\u0026 pParSec-\u003eTimeLimit )\n        {\n            TimeLeft = (float)pParSec-\u003eTimeLimit - ((float)(Abc_Clock()-clkTotal)/(float)(CLOCKS_PER_SEC));\n            TimeLeft = Abc_MaxInt( TimeLeft, 0.0 );\n            if ( TimeLeft == 0.0 )\n            {\n                if ( !pParSec-\u003efSilent )\n                    printf( \"Runtime limit exceeded.\\n\" );\n                RetValue = -1;\n                TimeOut = 1;\n                goto finish;\n            }\n        }\n*/ \n\nclk = Abc_Clock();\n        pPars.nFramesK = nFrames;\n        pPars.TimeLimit = TimeLeft;\n        pPars.fSilent = pParSec.fSilent;\n//        pNew = Fra_FraigInduction( pTemp = pNew, pPars );\n\n        pPars2.nFramesK = nFrames;\n        pPars2.nBTLimit = pParSec.nBTLimit;\n        pPars2.nBTLimitGlobal = pParSec.nBTLimitGlobal;\n//        pPars2-\u003enBTLimit = 1000 * nFrames;\n\n        if RetValue == -1 \u0026\u0026 pPars2.nConflicts \u003e pPars2.nBTLimitGlobal {\n            if !pParSec.fSilent {\n                fmt.Printf(\"Global conflict limit (%d) exceeded.\\n\", pPars2.nBTLimitGlobal); }\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n\n        Aig_ManSetRegNum( pNew, pNew.nRegs );\n//        pNew = Ssw_SignalCorrespondence( pTemp = pNew, pPars2 );\n        if Aig_ManRegNum(pNew) \u003e 0 {\n            pNew = Ssw_SignalCorrespondence( pTemp = pNew, pPars2 );\n        } else {\n            pNew = Aig_ManDupSimpleDfs( pTemp = pNew ); }\n\n        if pNew == nil {\n            pNew = pTemp;\n            RetValue = -1;\n            TimeOut = 1;\n            goto finish;\n        }\n\n//        printf( \"Total conflicts = %d.\\n\", pPars2-\u003enConflicts );\n\n        Aig_ManStop( pTemp );\n        RetValue = Fra_FraigMiterStatus( pNew );\n        if pParSec.fVerbose { \n            fmt.Printf(\"K-step (K=%2d,I=%3d):  Latches = %5d. Nodes = %6d. \", nFrames, pPars2.nIters, Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n        if RetValue != -1 {\n            break; }\n\n        // perform retiming\n//        if ( pParSec-\u003efRetimeFirst \u0026\u0026 pNew-\u003enRegs )\n        if pNew.nRegs {\n//        extern Aig_Man_t * Saig_ManRetimeMinArea( Aig_Man_t * p, int nMaxIters, int fForwardOnly, int fBackwardOnly, int fInitial, int fVerbose );\nclk = Abc_Clock();\n        pNew.nTruePis = Aig_ManCiNum(pNew) - Aig_ManRegNum(pNew); \n        pNew.nTruePos = Aig_ManCoNum(pNew) - Aig_ManRegNum(pNew); \n//        pNew = Rtm_ManRetime( pTemp = pNew, 1, 1000, 0 );\n        pNew = Saig_ManRetimeMinArea( pTemp = pNew, 1000, 0, 0, 1, 0 );\n        Aig_ManStop( pTemp );\n        pNew = Aig_ManDupOrdered( pTemp = pNew );\n        Aig_ManStop( pTemp );\n        if pParSec.fVerbose {\n            fmt.Printf(\"Min-reg retiming:     Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n        }  \n\n        if pNew.nRegs {\n            pNew = Aig_ManConstReduce( pNew, 0, -1, -1, 0, 0 ); }\n\n        // perform rewriting\nclk = Abc_Clock();\n        pNew = Aig_ManDupOrdered( pTemp = pNew );\n        Aig_ManStop( pTemp );\n//        pNew = Dar_ManRewriteDefault( pTemp = pNew );\n        pNew = Dar_ManCompress2( pTemp = pNew, 1, 0, 1, 0, 0 ); \n        Aig_ManStop( pTemp );\n        if pParSec.fVerbose {\n            fmt.Printf(\"Rewriting:            Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        } \n\n        // perform sequential simulation\n        if pNew.nRegs {\nclk = Abc_Clock();\n        pSml = Fra_SmlSimulateSeq( pNew, 0, 128 * nFrames, 1 + 16/(1+Aig_ManNodeNum(pNew)/1000), 1  ); \n        if pParSec.fVerbose {\n            fmt.Printf(\"Seq simulation  :     Latches = %5d. Nodes = %6d. \", Aig_ManRegNum(pNew), Aig_ManNodeNum(pNew));\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n        if pSml.fNonConstOut {\n            pNew.pSeqModel = Fra_SmlGetCounterExample( pSml );\n            // transfer to the original manager\n            if Saig_ManPiNum(p) != Saig_ManPiNum(pNew) {\n                fmt.Printf(\"The counter-example is invalid because of phase abstraction.\\n\");\n            } else {\n            ABC_FREE( p.pSeqModel );\n            p.pSeqModel = Abc_CexDup( pNew.pSeqModel, Aig_ManRegNum(p) );\n            ABC_FREE( pNew.pSeqModel );\n            }\n\n            Fra_SmlStop( pSml );\n            Aig_ManStop( pNew );\n            RetValue = 0;\n            if !pParSec.fSilent {\n                fmt.Printf(\"Networks are NOT EQUIVALENT after simulation.   \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n            }\n            if pParSec.fReportSolution \u0026\u0026 !pParSec.fRecursive {\n            fmt.Printf(\"SOLUTION: FAIL       \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n            }\n            return RetValue;\n        }\n        Fra_SmlStop( pSml );\n        }\n    } }\n\n    // get the miter status\n    RetValue = Fra_FraigMiterStatus( pNew );\n\n    // try interplation\nclk = Abc_Clock();\n    Aig_ManSetRegNum( pNew, Aig_ManRegNum(pNew) );\n    if pParSec.fInterpolation \u0026\u0026 RetValue == -1 \u0026\u0026 Aig_ManRegNum(pNew) \u003e 0 {\n        var Pars Inter_ManParams_t;\n        var pPars *Inter_ManParams_t = \u0026Pars;\n        var Depth int32;\n        ABC_FREE( pNew.pSeqModel );\n        Inter_ManSetDefaultParams( pPars );\n//        pPars-\u003enBTLimit = 100;\n        pPars.nBTLimit = pParSec.nBTLimitInter;\n        pPars.fVerbose = pParSec.fVeryVerbose;\n        if Saig_ManPoNum(pNew) == 1 {\n            RetValue = Inter_ManPerformInterpolation( pNew, pPars, \u0026Depth );\n        \n        } else if pParSec.fInterSeparate {\n            var pCex *Abc_Cex_t  = nil;\n            var pTemp, pAux *Aig_Man_t;\n            var pObjPo *Aig_Obj_t;\n            var i, spStatic_Fra_FraigSec_Counter int32;\n            Saig_ManForEachPo( pNew, pObjPo, i )\n            { \n                if Aig_ObjFanin0(pObjPo) == Aig_ManConst1(pNew) {\n                    continue; }\n                if pPars.fVerbose {\n                    fmt.Printf(\"Solving output %2d (out of %2d):\\n\", i, Saig_ManPoNum(pNew)); }\n                pTemp = Aig_ManDupOneOutput( pNew, i, 1 );\n                pTemp = Aig_ManScl( pAux = pTemp, 1, 1, 0, -1, -1, 0, 0 );\n                Aig_ManStop( pAux );\n                if Saig_ManRegNum(pTemp) \u003e 0 {\n                    RetValue = Inter_ManPerformInterpolation( pTemp, pPars, \u0026Depth );\n                    if pTemp.pSeqModel {\n                        pCex = p.pSeqModel = Abc_CexDup( pTemp.pSeqModel, Aig_ManRegNum(p) );\n                        pCex.iPo = i;\n                        Aig_ManStop( pTemp );\n                        break;\n                    }\n                    // if solved, remove the output\n                    if RetValue == 1 {\n                        Aig_ObjPatchFanin0( pNew, pObjPo, Aig_ManConst0(pNew) );\n    //                    printf( \"Output %3d : Solved \", i );\n                    \n                    } else {\n                        spStatic_Fra_FraigSec_Counter++;\n    //                    printf( \"Output %3d : Undec  \", i );\n                    }\n                \n                } else {\n                    spStatic_Fra_FraigSec_Counter++; }\n//                Aig_ManPrintStats( pTemp );\n                Aig_ManStop( pTemp );\n                fmt.Printf(\"Solving output %3d (out of %3d) using interpolation.\\r\", i, Saig_ManPoNum(pNew));\n            }\n            Aig_ManCleanup( pNew );\n            if pCex == nil {\n                fmt.Printf(\"Interpolation left %d (out of %d) outputs unsolved              \\n\", spStatic_Fra_FraigSec_Counter, Saig_ManPoNum(pNew));\n                if spStatic_Fra_FraigSec_Counter != 0 {\n                    RetValue = -1; }\n            }\n            pNew = Aig_ManDupUnsolvedOutputs( pTemp = pNew, 1 );\n            Aig_ManStop( pTemp );\n            pNew = Aig_ManScl( pTemp = pNew, 1, 1, 0, -1, -1, 0, 0 );\n            Aig_ManStop( pTemp );\n        \n        } else {\n            var pNewOrpos *Aig_Man_t  = Saig_ManDupOrpos( pNew );\n            RetValue = Inter_ManPerformInterpolation( pNewOrpos, pPars, \u0026Depth );\n            if pNewOrpos.pSeqModel {\n                var pCex *Abc_Cex_t;\n                pCex = pNew.pSeqModel = pNewOrpos.pSeqModel; pNewOrpos.pSeqModel = nil;\n                pCex.iPo = Saig_ManFindFailedPoCex( pNew, pNew.pSeqModel );\n            }\n            Aig_ManStop( pNewOrpos );\n        }\n\n        if pParSec.fVerbose {\n        if RetValue == 1 {\n            fmt.Printf(\"Property proved using interpolation.  \");\n        } else if RetValue == 0 {\n            fmt.Printf(\"Property DISPROVED in frame %d using interpolation.  \", Depth);\n        } else if RetValue == -1 {\n            fmt.Printf(\"Property UNDECIDED after interpolation.  \");\n        } else {\n            assert(false, \"0\"); } \nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n    }\n\n    // try reachability analysis\n    if pParSec.fReachability \u0026\u0026 RetValue == -1 \u0026\u0026 Aig_ManRegNum(pNew) \u003e 0 \u0026\u0026 Aig_ManRegNum(pNew) \u003c pParSec.nBddVarsMax {\n        var Pars Saig_ParBbr_t;\n        var pPars *Saig_ParBbr_t = \u0026Pars;\n        Bbr_ManSetDefaultParams( pPars );\n        pPars.TimeLimit     = 0;\n        pPars.nBddMax       = pParSec.nBddMax;\n        pPars.nIterMax      = pParSec.nBddIterMax;\n        pPars.fPartition    = 1;\n        pPars.fReorder      = 1;\n        pPars.fReorderImage = 1;\n        pPars.fVerbose      = 0;\n        pPars.fSilent       = pParSec.fSilent;\n        pNew.nTruePis = Aig_ManCiNum(pNew) - Aig_ManRegNum(pNew); \n        pNew.nTruePos = Aig_ManCoNum(pNew) - Aig_ManRegNum(pNew); \n        RetValue = Aig_ManVerifyUsingBdds( pNew, pPars );\n    }\n\n    // try PDR\n    if pParSec.fUsePdr \u0026\u0026 RetValue == -1 \u0026\u0026 Aig_ManRegNum(pNew) \u003e 0 {\n        var Pars Pdr_Par_t;\n        var pPars *Pdr_Par_t = \u0026Pars;\n        Pdr_ManSetDefaultParams( pPars );\n        pPars.nTimeOut = pParSec.nPdrTimeout;\n        pPars.fVerbose = pParSec.fVerbose;\n        if pParSec.fVerbose {\n            fmt.Printf(\"Running property directed reachability...\\n\"); }\n        RetValue = Pdr_ManSolve( pNew, pPars );\n        if pNew.pSeqModel {\n            pNew.pSeqModel.iPo = Saig_ManFindFailedPoCex( pNew, pNew.pSeqModel ); }\n    }\n\nfinish:\n    // report the miter\n    if RetValue == 1 {\n        if !pParSec.fSilent {\n            fmt.Printf(\"Networks are equivalent.  \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n        if pParSec.fReportSolution \u0026\u0026 !pParSec.fRecursive {\n        fmt.Printf(\"SOLUTION: PASS       \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n    \n    } else if RetValue == 0 {\n        if pNew.pSeqModel == nil {\n            var i int32;\n            // if the CEX is not derives, it is because tricial CEX should be assumed\n            pNew.pSeqModel = Abc_CexAlloc( Aig_ManRegNum(pNew), pNew.nTruePis, 1 );\n            // if the CEX does not work, we need to change PIs to 1 because \n            // the only way it can happen is when a PO is equal to a PI...\n            if Saig_ManFindFailedPoCex( pNew, pNew.pSeqModel ) == -1 {\n                for  i = 0; i \u003c pNew.nTruePis; i++  {\n                    Abc_InfoSetBit( pNew.pSeqModel.pData, i );\n                } }\n        }\n        if !pParSec.fSilent {\n            fmt.Printf(\"Networks are NOT EQUIVALENT.  \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n        if pParSec.fReportSolution \u0026\u0026 !pParSec.fRecursive {\n        fmt.Printf(\"SOLUTION: FAIL       \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n    \n    } else {\n        ///////////////////////////////////\n        // save intermediate result\n        extern void Abc_FrameSetSave1( void * pAig );\n        Abc_FrameSetSave1( Aig_ManDupSimple(pNew) );\n        ///////////////////////////////////\n        if !pParSec.fSilent {\n            fmt.Printf(\"Networks are UNDECIDED.   \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n        if pParSec.fReportSolution \u0026\u0026 !pParSec.fRecursive {\n        fmt.Printf(\"SOLUTION: UNDECIDED  \");\nABC_PRT( \"Time\", Abc_Clock() - clkTotal );\n        }\n        if !(TimeOut != 0) \u0026\u0026 !pParSec.fSilent {\n            \n            var pFileName string // was [1000]byte in C\n\n            pParSec.nSMnumber = spStatic_Fra_FraigSec_Counter;\n            pFileName = fmt.Sprintf(\"sm%02d.aig\", spStatic_Fra_FraigSec_Counter++);\n            Ioa_WriteAiger( pNew, pFileName, 0, 0 );\n            printf( \"The unsolved reduced miter is written into file \\\"%s\\\".\\n\", pFileName );\n        }\n    }\n    if pNew.pSeqModel {\n        if Saig_ManPiNum(p) != Saig_ManPiNum(pNew) {\n            fmt.Printf(\"The counter-example is invalid because of phase abstraction.\\n\");\n        } else {\n        ABC_FREE( p.pSeqModel );\n        p.pSeqModel = Abc_CexDup( pNew.pSeqModel, Aig_ManRegNum(p) );\n        ABC_FREE( pNew.pSeqModel );\n        }\n    }\n    if ppResult != nil {\n        *ppResult = Aig_ManDupSimpleDfs( pNew ); }\n    if pNew {\n        Aig_ManStop( pNew ); }\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

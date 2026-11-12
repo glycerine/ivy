@@ -1,0 +1,1908 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c",
+  "SHA256": "bb174c72acb5ad405c0968ca03f7377e26f5b8edc950507abf6c0c1a39ec5c7c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 4014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Num \u003c p.nClauses );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 5912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(sizeof(Msat_Lit_t) == sizeof(unsigned));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 5964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(sizeof(float)     == sizeof(unsigned));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 160,
+        "Column": 73,
+        "ByteOffset": 6084
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Msat_Solver_t *) malloc(sizeof(Msat_Solver_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 6134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Msat_Solver_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 175,
+        "Column": 77,
+        "ByteOffset": 6530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pdActivity = /*__starting_point_inline_macro:ABC_ALLOC__*/((double *) malloc(sizeof(double) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 176,
+        "Column": 76,
+        "ByteOffset": 6655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pFactors   = /*__starting_point_inline_macro:ABC_ALLOC__*/((float *) malloc(sizeof(float) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 182,
+        "Column": 73,
+        "ByteOffset": 6886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pAssigns  = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc))); "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 183,
+        "Column": 73,
+        "ByteOffset": 7006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pModel    = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc))); "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 190,
+        "Column": 88,
+        "ByteOffset": 7357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pvWatched = /*__starting_point_inline_macro:ABC_ALLOC__*/((Msat_ClauseVec_t * *) malloc(sizeof(Msat_ClauseVec_t *) * (size_t)(2 * p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 198,
+        "Column": 85,
+        "ByteOffset": 7766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pReasons  = /*__starting_point_inline_macro:ABC_ALLOC__*/((Msat_Clause_t * *) malloc(sizeof(Msat_Clause_t *) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 199,
+        "Column": 5,
+        "ByteOffset": 7829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pReasons, 0, sizeof(Msat_Clause_t *) * p.nVarsAlloc );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 200,
+        "Column": 70,
+        "ByteOffset": 7963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pLevel = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 219,
+        "Column": 73,
+        "ByteOffset": 8676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pSeen     = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 220,
+        "Column": 5,
+        "ByteOffset": 8727
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pSeen, 0, sizeof(int) * p.nVarsAlloc );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 248,
+        "Column": 36,
+        "ByteOffset": 9586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pdActivity = ((double *) realloc((char *)(p.pdActivity), sizeof(double) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 250,
+        "Column": 36,
+        "ByteOffset": 9709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pdActivity = ((double *) malloc(sizeof(double) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 254,
+        "Column": 33,
+        "ByteOffset": 9869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pFactors = ((float *) realloc((char *)(p.pFactors), sizeof(float) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 256,
+        "Column": 33,
+        "ByteOffset": 9986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pFactors = ((float *) malloc(sizeof(float) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 265,
+        "Column": 31,
+        "ByteOffset": 10265
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pAssigns = ((int *) realloc((char *)(p.pAssigns), sizeof(int) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 267,
+        "Column": 31,
+        "ByteOffset": 10378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pAssigns = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 271,
+        "Column": 29,
+        "ByteOffset": 10529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pModel = ((int *) realloc((char *)(p.pModel), sizeof(int) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 273,
+        "Column": 29,
+        "ByteOffset": 10638
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pModel = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 284,
+        "Column": 47,
+        "ByteOffset": 11048
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pvWatched = ((Msat_ClauseVec_t * *) realloc((char *)(p.pvWatched), sizeof(Msat_ClauseVec_t *) * (size_t)(2 * p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 286,
+        "Column": 47,
+        "ByteOffset": 11197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pvWatched = ((Msat_ClauseVec_t * *) malloc(sizeof(Msat_ClauseVec_t *) * (size_t)(2 * p.nVarsAlloc)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 297,
+        "Column": 43,
+        "ByteOffset": 11587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pReasons = ((Msat_Clause_t * *) realloc((char *)(p.pReasons), sizeof(Msat_Clause_t *) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 299,
+        "Column": 43,
+        "ByteOffset": 11724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pReasons = ((Msat_Clause_t * *) malloc(sizeof(Msat_Clause_t *) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 303,
+        "Column": 29,
+        "ByteOffset": 11887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pLevel = ((int *) realloc((char *)(p.pLevel), sizeof(int) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 305,
+        "Column": 29,
+        "ByteOffset": 11996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pLevel = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 314,
+        "Column": 28,
+        "ByteOffset": 12260
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pSeen = ((int *) realloc((char *)(p.pSeen), sizeof(int) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 316,
+        "Column": 28,
+        "ByteOffset": 12367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pSeen = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 352,
+        "Column": 5,
+        "ByteOffset": 13541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nVarsAlloc \u003e= nVars );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 398,
+        "Column": 5,
+        "ByteOffset": 14954
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pReasons, 0, sizeof(Msat_Clause_t *) * p.nVars );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 409,
+        "Column": 5,
+        "ByteOffset": 15268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pSeen, 0, sizeof(int) * p.nVars );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 453,
+        "Column": 68,
+        "ByteOffset": 16694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pdActivity) ? (free((char *) (p.pdActivity)), (p.pdActivity) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 454,
+        "Column": 66,
+        "ByteOffset": 16816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pFactors) ? (free((char *) (p.pFactors)), (p.pFactors) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 460,
+        "Column": 67,
+        "ByteOffset": 17065
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pvWatched) ? (free((char *) (p.pvWatched)), (p.pvWatched) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 463,
+        "Column": 66,
+        "ByteOffset": 17218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pAssigns) ? (free((char *) (p.pAssigns)), (p.pAssigns) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 464,
+        "Column": 64,
+        "ByteOffset": 17334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pModel) ? (free((char *) (p.pModel)), (p.pModel) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 467,
+        "Column": 66,
+        "ByteOffset": 17517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pReasons) ? (free((char *) (p.pReasons)), (p.pReasons) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 468,
+        "Column": 64,
+        "ByteOffset": 17633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pLevel) ? (free((char *) (p.pLevel)), (p.pLevel) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 481,
+        "Column": 63,
+        "ByteOffset": 18104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pSeen) ? (free((char *) (p.pSeen)), (p.pSeen) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 484,
+        "Column": 57,
+        "ByteOffset": 18273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Msat_SolverReadVarNum",
+      "Start": 1460,
+      "End": 1564,
+      "BodyStart": 1539,
+      "Original": "int                Msat_SolverReadVarNum( Msat_Solver_t * p )                  { return p-\u003enVars;      }",
+      "Draft": "func Msat_SolverReadVarNum(p *Msat_Solver_t) int32 { return p.nVars;      }"
+    },
+    {
+      "Name": "Msat_SolverReadClauseNum",
+      "Start": 1565,
+      "End": 1669,
+      "BodyStart": 1644,
+      "Original": "int                Msat_SolverReadClauseNum( Msat_Solver_t * p )               { return p-\u003enClauses;   }",
+      "Draft": "func Msat_SolverReadClauseNum(p *Msat_Solver_t) int32 { return p.nClauses;   }"
+    },
+    {
+      "Name": "Msat_SolverReadVarAllocNum",
+      "Start": 1670,
+      "End": 1774,
+      "BodyStart": 1749,
+      "Original": "int                Msat_SolverReadVarAllocNum( Msat_Solver_t * p )             { return p-\u003enVarsAlloc; }",
+      "Draft": "func Msat_SolverReadVarAllocNum(p *Msat_Solver_t) int32 { return p.nVarsAlloc; }"
+    },
+    {
+      "Name": "Msat_SolverReadDecisionLevel",
+      "Start": 1775,
+      "End": 1899,
+      "BodyStart": 1854,
+      "Original": "int                Msat_SolverReadDecisionLevel( Msat_Solver_t * p )           { return Msat_IntVecReadSize(p-\u003evTrailLim); }",
+      "Draft": "func Msat_SolverReadDecisionLevel(p *Msat_Solver_t) int32 { return Msat_IntVecReadSize(p.vTrailLim); }"
+    },
+    {
+      "Name": "Msat_SolverReadDecisionLevelArray",
+      "Start": 1900,
+      "End": 2004,
+      "BodyStart": 1979,
+      "Original": "int *              Msat_SolverReadDecisionLevelArray( Msat_Solver_t * p )      { return p-\u003epLevel;     }",
+      "Draft": "func Msat_SolverReadDecisionLevelArray(p *Msat_Solver_t) *int32 { return p.pLevel;     }"
+    },
+    {
+      "Name": "Msat_SolverReadReasonArray",
+      "Start": 2005,
+      "End": 2109,
+      "BodyStart": 2084,
+      "Original": "Msat_Clause_t **    Msat_SolverReadReasonArray( Msat_Solver_t * p )            { return p-\u003epReasons;   }",
+      "Draft": "func Msat_SolverReadReasonArray(p *Msat_Solver_t) **Msat_Clause_t { return p.pReasons;   }"
+    },
+    {
+      "Name": "Msat_SolverReadVarValue",
+      "Start": 2110,
+      "End": 2232,
+      "BodyStart": 2191,
+      "Original": "Msat_Type_t         Msat_SolverReadVarValue( Msat_Solver_t * p, Msat_Var_t Var ) { return (Msat_Type_t)p-\u003epAssigns[Var]; }",
+      "Draft": "func Msat_SolverReadVarValue(p *Msat_Solver_t, Var Msat_Var_t) Msat_Type_t { return (Msat_Type_t)p.pAssigns[Var]; }"
+    },
+    {
+      "Name": "Msat_SolverReadLearned",
+      "Start": 2233,
+      "End": 2337,
+      "BodyStart": 2312,
+      "Original": "Msat_ClauseVec_t *  Msat_SolverReadLearned( Msat_Solver_t * p )                { return p-\u003evLearned;   }",
+      "Draft": "func Msat_SolverReadLearned(p *Msat_Solver_t) *Msat_ClauseVec_t { return p.vLearned;   }"
+    },
+    {
+      "Name": "Msat_SolverReadWatchedArray",
+      "Start": 2338,
+      "End": 2442,
+      "BodyStart": 2417,
+      "Original": "Msat_ClauseVec_t ** Msat_SolverReadWatchedArray( Msat_Solver_t * p )           { return p-\u003epvWatched;  }",
+      "Draft": "func Msat_SolverReadWatchedArray(p *Msat_Solver_t) **Msat_ClauseVec_t { return p.pvWatched;  }"
+    },
+    {
+      "Name": "Msat_SolverReadAssignsArray",
+      "Start": 2443,
+      "End": 2547,
+      "BodyStart": 2522,
+      "Original": "int *              Msat_SolverReadAssignsArray( Msat_Solver_t * p )            { return p-\u003epAssigns;   }",
+      "Draft": "func Msat_SolverReadAssignsArray(p *Msat_Solver_t) *int32 { return p.pAssigns;   }"
+    },
+    {
+      "Name": "Msat_SolverReadModelArray",
+      "Start": 2548,
+      "End": 2652,
+      "BodyStart": 2627,
+      "Original": "int *              Msat_SolverReadModelArray( Msat_Solver_t * p )              { return p-\u003epModel;     }",
+      "Draft": "func Msat_SolverReadModelArray(p *Msat_Solver_t) *int32 { return p.pModel;     }"
+    },
+    {
+      "Name": "Msat_SolverReadBackTracks",
+      "Start": 2653,
+      "End": 2768,
+      "BodyStart": 2732,
+      "Original": "int                Msat_SolverReadBackTracks( Msat_Solver_t * p )              { return (int)p-\u003eStats.nConflicts; }",
+      "Draft": "func Msat_SolverReadBackTracks(p *Msat_Solver_t) int32 { return int32(p.Stats.nConflicts); }"
+    },
+    {
+      "Name": "Msat_SolverReadInspects",
+      "Start": 2769,
+      "End": 2884,
+      "BodyStart": 2848,
+      "Original": "int                Msat_SolverReadInspects( Msat_Solver_t * p )                { return (int)p-\u003eStats.nInspects;  }",
+      "Draft": "func Msat_SolverReadInspects(p *Msat_Solver_t) int32 { return int32(p.Stats.nInspects);  }"
+    },
+    {
+      "Name": "Msat_SolverReadMem",
+      "Start": 2885,
+      "End": 2989,
+      "BodyStart": 2964,
+      "Original": "Msat_MmStep_t *     Msat_SolverReadMem( Msat_Solver_t * p )                    { return p-\u003epMem;       }",
+      "Draft": "func Msat_SolverReadMem(p *Msat_Solver_t) *Msat_MmStep_t { return p.pMem;       }"
+    },
+    {
+      "Name": "Msat_SolverReadSeenArray",
+      "Start": 2990,
+      "End": 3094,
+      "BodyStart": 3069,
+      "Original": "int *              Msat_SolverReadSeenArray( Msat_Solver_t * p )               { return p-\u003epSeen;      }",
+      "Draft": "func Msat_SolverReadSeenArray(p *Msat_Solver_t) *int32 { return p.pSeen;      }"
+    },
+    {
+      "Name": "Msat_SolverIncrementSeenId",
+      "Start": 3095,
+      "End": 3199,
+      "BodyStart": 3174,
+      "Original": "int                Msat_SolverIncrementSeenId( Msat_Solver_t * p )             { return ++p-\u003enSeenId;  }",
+      "Draft": "func Msat_SolverIncrementSeenId(p *Msat_Solver_t) int32 { return ++p.nSeenId;  }"
+    },
+    {
+      "Name": "Msat_SolverSetVerbosity",
+      "Start": 3200,
+      "End": 3306,
+      "BodyStart": 3279,
+      "Original": "void               Msat_SolverSetVerbosity( Msat_Solver_t * p, int fVerbose )  { p-\u003efVerbose = fVerbose; }",
+      "Draft": "func Msat_SolverSetVerbosity(p *Msat_Solver_t, fVerbose int32) { p.fVerbose = fVerbose; }"
+    },
+    {
+      "Name": "Msat_SolverClausesIncrement",
+      "Start": 3307,
+      "End": 3411,
+      "BodyStart": 3386,
+      "Original": "void               Msat_SolverClausesIncrement( Msat_Solver_t * p )            { p-\u003enClausesAlloc++;   }",
+      "Draft": "func Msat_SolverClausesIncrement(p *Msat_Solver_t) { p.nClausesAlloc++;   }"
+    },
+    {
+      "Name": "Msat_SolverClausesDecrement",
+      "Start": 3412,
+      "End": 3516,
+      "BodyStart": 3491,
+      "Original": "void               Msat_SolverClausesDecrement( Msat_Solver_t * p )            { p-\u003enClausesAlloc--;   }",
+      "Draft": "func Msat_SolverClausesDecrement(p *Msat_Solver_t) { p.nClausesAlloc--;   }"
+    },
+    {
+      "Name": "Msat_SolverClausesIncrementL",
+      "Start": 3517,
+      "End": 3621,
+      "BodyStart": 3596,
+      "Original": "void               Msat_SolverClausesIncrementL( Msat_Solver_t * p )           { p-\u003enClausesAllocL++;  }",
+      "Draft": "func Msat_SolverClausesIncrementL(p *Msat_Solver_t) { p.nClausesAllocL++;  }"
+    },
+    {
+      "Name": "Msat_SolverClausesDecrementL",
+      "Start": 3622,
+      "End": 3726,
+      "BodyStart": 3701,
+      "Original": "void               Msat_SolverClausesDecrementL( Msat_Solver_t * p )           { p-\u003enClausesAllocL--;  }",
+      "Draft": "func Msat_SolverClausesDecrementL(p *Msat_Solver_t) { p.nClausesAllocL--;  }"
+    },
+    {
+      "Name": "Msat_SolverMarkLastClauseTypeA",
+      "Start": 3727,
+      "End": 3914,
+      "BodyStart": 3806,
+      "Original": "void               Msat_SolverMarkLastClauseTypeA( Msat_Solver_t * p )         { Msat_ClauseSetTypeA( Msat_ClauseVecReadEntry( p-\u003evClauses, Msat_ClauseVecReadSize(p-\u003evClauses)-1 ), 1 ); }",
+      "Draft": "func Msat_SolverMarkLastClauseTypeA(p *Msat_Solver_t) { Msat_ClauseSetTypeA( Msat_ClauseVecReadEntry( p.vClauses, Msat_ClauseVecReadSize(p.vClauses)-1 ), 1 ); }"
+    },
+    {
+      "Name": "Msat_SolverMarkClausesStart",
+      "Start": 3915,
+      "End": 4053,
+      "BodyStart": 3994,
+      "Original": "void               Msat_SolverMarkClausesStart( Msat_Solver_t * p )            { p-\u003enClausesStart = Msat_ClauseVecReadSize(p-\u003evClauses); }",
+      "Draft": "func Msat_SolverMarkClausesStart(p *Msat_Solver_t) { p.nClausesStart = Msat_ClauseVecReadSize(p.vClauses); }"
+    },
+    {
+      "Name": "Msat_SolverReadFactors",
+      "Start": 4054,
+      "End": 4158,
+      "BodyStart": 4133,
+      "Original": "float *            Msat_SolverReadFactors( Msat_Solver_t * p )                 { return p-\u003epFactors;   }",
+      "Draft": "func Msat_SolverReadFactors(p *Msat_Solver_t) *float32 { return p.pFactors;   }"
+    },
+    {
+      "Name": "Msat_SolverReadClause",
+      "Start": 4433,
+      "End": 4766,
+      "BodyStart": 4501,
+      "Original": "Msat_Clause_t * Msat_SolverReadClause( Msat_Solver_t * p, int Num )\n{\n    int nClausesP;\n    assert( Num \u003c p-\u003enClauses );\n    nClausesP = Msat_ClauseVecReadSize( p-\u003evClauses );\n    if ( Num \u003c nClausesP )\n        return Msat_ClauseVecReadEntry( p-\u003evClauses, Num );\n    return Msat_ClauseVecReadEntry( p-\u003evLearned, Num - nClausesP );\n}",
+      "Draft": "func Msat_SolverReadClause(p *Msat_Solver_t, Num int32) *Msat_Clause_t {\n    var nClausesP int32;\n    assert(Num \u003c p.nClauses, \"Num \u003c p.nClauses\");\n    nClausesP = Msat_ClauseVecReadSize( p.vClauses );\n    if Num \u003c nClausesP {\n        return Msat_ClauseVecReadEntry( p.vClauses, Num ); }\n    return Msat_ClauseVecReadEntry( p.vLearned, Num - nClausesP );\n}"
+    },
+    {
+      "Name": "Msat_SolverReadAdjacents",
+      "Start": 5041,
+      "End": 5136,
+      "BodyStart": 5107,
+      "Original": "Msat_ClauseVec_t *  Msat_SolverReadAdjacents( Msat_Solver_t * p )\n{\n    return p-\u003evAdjacents;\n}",
+      "Draft": "func Msat_SolverReadAdjacents(p *Msat_Solver_t) *Msat_ClauseVec_t {\n    return p.vAdjacents;\n}"
+    },
+    {
+      "Name": "Msat_SolverReadConeVars",
+      "Start": 5411,
+      "End": 5501,
+      "BodyStart": 5473,
+      "Original": "Msat_IntVec_t *  Msat_SolverReadConeVars( Msat_Solver_t * p )\n{\n    return p-\u003evConeVars;\n}",
+      "Draft": "func Msat_SolverReadConeVars(p *Msat_Solver_t) *Msat_IntVec_t {\n    return p.vConeVars;\n}"
+    },
+    {
+      "Name": "Msat_SolverReadVarsUsed",
+      "Start": 5776,
+      "End": 5866,
+      "BodyStart": 5838,
+      "Original": "Msat_IntVec_t *  Msat_SolverReadVarsUsed( Msat_Solver_t * p )\n{\n    return p-\u003evVarsUsed;\n}",
+      "Draft": "func Msat_SolverReadVarsUsed(p *Msat_Solver_t) *Msat_IntVec_t {\n    return p.vVarsUsed;\n}"
+    },
+    {
+      "Name": "Msat_SolverAlloc",
+      "Start": 6238,
+      "End": 8815,
+      "BodyStart": 6386,
+      "Original": "Msat_Solver_t * Msat_SolverAlloc( int nVarsAlloc,\n    double dClaInc, double dClaDecay, \n    double dVarInc, double dVarDecay, \n    int  fVerbose )\n{\n    Msat_Solver_t * p;\n    int i;\n\n    assert(sizeof(Msat_Lit_t) == sizeof(unsigned));\n    assert(sizeof(float)     == sizeof(unsigned));\n\n    p = ABC_ALLOC( Msat_Solver_t, 1 );\n    memset( p, 0, sizeof(Msat_Solver_t) );\n\n    p-\u003enVarsAlloc = nVarsAlloc;\n    p-\u003enVars     = 0;\n\n    p-\u003enClauses  = 0;\n    p-\u003evClauses  = Msat_ClauseVecAlloc( 512 );\n    p-\u003evLearned  = Msat_ClauseVecAlloc( 512 );\n\n    p-\u003edClaInc   = dClaInc;\n    p-\u003edClaDecay = dClaDecay;\n    p-\u003edVarInc   = dVarInc;\n    p-\u003edVarDecay = dVarDecay;\n\n    p-\u003epdActivity = ABC_ALLOC( double, p-\u003enVarsAlloc );\n    p-\u003epFactors   = ABC_ALLOC( float, p-\u003enVarsAlloc );\n    for ( i = 0; i \u003c p-\u003enVarsAlloc; i++ )\n    {\n        p-\u003epdActivity[i] = 0.0;\n        p-\u003epFactors[i]   = 1.0;\n    }\n\n    p-\u003epAssigns  = ABC_ALLOC( int, p-\u003enVarsAlloc ); \n    p-\u003epModel    = ABC_ALLOC( int, p-\u003enVarsAlloc ); \n    for ( i = 0; i \u003c p-\u003enVarsAlloc; i++ )\n        p-\u003epAssigns[i] = MSAT_VAR_UNASSIGNED;\n//    p-\u003epOrder    = Msat_OrderAlloc( p-\u003epAssigns, p-\u003epdActivity, p-\u003enVarsAlloc );\n    p-\u003epOrder    = Msat_OrderAlloc( p );\n\n    p-\u003epvWatched = ABC_ALLOC( Msat_ClauseVec_t *, 2 * p-\u003enVarsAlloc );\n    for ( i = 0; i \u003c 2 * p-\u003enVarsAlloc; i++ )\n        p-\u003epvWatched[i] = Msat_ClauseVecAlloc( 16 );\n    p-\u003epQueue    = Msat_QueueAlloc( p-\u003enVarsAlloc );\n\n    p-\u003evTrail    = Msat_IntVecAlloc( p-\u003enVarsAlloc );\n    p-\u003evTrailLim = Msat_IntVecAlloc( p-\u003enVarsAlloc );\n    p-\u003epReasons  = ABC_ALLOC( Msat_Clause_t *, p-\u003enVarsAlloc );\n    memset( p-\u003epReasons, 0, sizeof(Msat_Clause_t *) * p-\u003enVarsAlloc );\n    p-\u003epLevel = ABC_ALLOC( int, p-\u003enVarsAlloc );\n    for ( i = 0; i \u003c p-\u003enVarsAlloc; i++ )\n        p-\u003epLevel[i] = -1;\n    p-\u003edRandSeed = 91648253;\n    p-\u003efVerbose  = fVerbose;\n    p-\u003edProgress = 0.0;\n//    p-\u003epModel = Msat_IntVecAlloc( p-\u003enVarsAlloc );\n    p-\u003epMem = Msat_MmStepStart( 10 );\n\n    p-\u003evConeVars   = Msat_IntVecAlloc( p-\u003enVarsAlloc ); \n    p-\u003evAdjacents  = Msat_ClauseVecAlloc( p-\u003enVarsAlloc );\n    for ( i = 0; i \u003c p-\u003enVarsAlloc; i++ )\n        Msat_ClauseVecPush( p-\u003evAdjacents, (Msat_Clause_t *)Msat_IntVecAlloc(5) );\n    p-\u003evVarsUsed   = Msat_IntVecAlloc( p-\u003enVarsAlloc ); \n    Msat_IntVecFill( p-\u003evVarsUsed, p-\u003enVarsAlloc, 1 );\n\n\n    p-\u003epSeen     = ABC_ALLOC( int, p-\u003enVarsAlloc );\n    memset( p-\u003epSeen, 0, sizeof(int) * p-\u003enVarsAlloc );\n    p-\u003enSeenId   = 1;\n    p-\u003evReason   = Msat_IntVecAlloc( p-\u003enVarsAlloc );\n    p-\u003evTemp     = Msat_IntVecAlloc( p-\u003enVarsAlloc );\n    return p;\n}",
+      "Draft": "func Msat_SolverAlloc(nVarsAlloc int32, dClaInc float64, dClaDecay float64, dVarInc float64, dVarDecay float64, fVerbose int32) *Msat_Solver_t {\n    var p *Msat_Solver_t;\n    var i int32;\n\n    assert(sizeof(Msat_Lit_t) == sizeof(unsigned), \"sizeof(Msat_Lit_t) == sizeof(unsigned)\");\n    assert(sizeof(float)     == sizeof(unsigned), \"sizeof(float)     == sizeof(unsigned)\");\n\n    // inlining of macro ABC_ALLOC\n    p = ((Msat_Solver_t *) malloc(sizeof(Msat_Solver_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Msat_Solver_t) );\n\n    p.nVarsAlloc = nVarsAlloc;\n    p.nVars     = 0;\n\n    p.nClauses  = 0;\n    p.vClauses  = Msat_ClauseVecAlloc( 512 );\n    p.vLearned  = Msat_ClauseVecAlloc( 512 );\n\n    p.dClaInc   = dClaInc;\n    p.dClaDecay = dClaDecay;\n    p.dVarInc   = dVarInc;\n    p.dVarDecay = dVarDecay;\n\n    // inlining of macro ABC_ALLOC\n    p.pdActivity = ((double *) malloc(sizeof(double) * (size_t)(p.nVarsAlloc)));\n    // inlining of macro ABC_ALLOC\n    p.pFactors   = ((float *) malloc(sizeof(float) * (size_t)(p.nVarsAlloc)));\n    for  i = 0; i \u003c p.nVarsAlloc; i++  {\n        p.pdActivity[i] = 0.0;\n        p.pFactors[i]   = 1.0;\n    }\n\n    // inlining of macro ABC_ALLOC\n    p.pAssigns  = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc))); \n    // inlining of macro ABC_ALLOC\n    p.pModel    = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc))); \n    for  i = 0; i \u003c p.nVarsAlloc; i++  {\n        p.pAssigns[i] = MSAT_VAR_UNASSIGNED;\n    }\n//    p-\u003epOrder    = Msat_OrderAlloc( p-\u003epAssigns, p-\u003epdActivity, p-\u003enVarsAlloc );\n    p.pOrder    = Msat_OrderAlloc( p );\n\n    // inlining of macro ABC_ALLOC\n    p.pvWatched = ((Msat_ClauseVec_t * *) malloc(sizeof(Msat_ClauseVec_t *) * (size_t)(2 * p.nVarsAlloc)));\n    for  i = 0; i \u003c 2 * p.nVarsAlloc; i++  {\n        p.pvWatched[i] = Msat_ClauseVecAlloc( 16 );\n    }\n    p.pQueue    = Msat_QueueAlloc( p.nVarsAlloc );\n\n    p.vTrail    = Msat_IntVecAlloc( p.nVarsAlloc );\n    p.vTrailLim = Msat_IntVecAlloc( p.nVarsAlloc );\n    // inlining of macro ABC_ALLOC\n    p.pReasons  = ((Msat_Clause_t * *) malloc(sizeof(Msat_Clause_t *) * (size_t)(p.nVarsAlloc)));\n    memset( p.pReasons, 0, sizeof(Msat_Clause_t *) * p.nVarsAlloc );\n    // inlining of macro ABC_ALLOC\n    p.pLevel = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));\n    for  i = 0; i \u003c p.nVarsAlloc; i++  {\n        p.pLevel[i] = -1;\n    }\n    p.dRandSeed = 91648253;\n    p.fVerbose  = fVerbose;\n    p.dProgress = 0.0;\n//    p-\u003epModel = Msat_IntVecAlloc( p-\u003enVarsAlloc );\n    p.pMem = Msat_MmStepStart( 10 );\n\n    p.vConeVars   = Msat_IntVecAlloc( p.nVarsAlloc ); \n    p.vAdjacents  = Msat_ClauseVecAlloc( p.nVarsAlloc );\n    for  i = 0; i \u003c p.nVarsAlloc; i++  {\n        Msat_ClauseVecPush( p.vAdjacents, (Msat_Clause_t *)Msat_IntVecAlloc(5) );\n    }\n    p.vVarsUsed   = Msat_IntVecAlloc( p.nVarsAlloc ); \n    Msat_IntVecFill( p.vVarsUsed, p.nVarsAlloc, 1 );\n\n\n    // inlining of macro ABC_ALLOC\n    p.pSeen     = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));\n    memset( p.pSeen, 0, sizeof(int) * p.nVarsAlloc );\n    p.nSeenId   = 1;\n    p.vReason   = Msat_IntVecAlloc( p.nVarsAlloc );\n    p.vTemp     = Msat_IntVecAlloc( p.nVarsAlloc );\n    return p;\n}"
+    },
+    {
+      "Name": "Msat_SolverResize",
+      "Start": 9215,
+      "End": 11115,
+      "BodyStart": 9275,
+      "Original": "void Msat_SolverResize( Msat_Solver_t * p, int nVarsAlloc )\n{\n    int nVarsAllocOld, i;\n\n    nVarsAllocOld = p-\u003enVarsAlloc;\n    p-\u003enVarsAlloc = nVarsAlloc;\n\n    p-\u003epdActivity = ABC_REALLOC( double, p-\u003epdActivity, p-\u003enVarsAlloc );\n    p-\u003epFactors   = ABC_REALLOC( float, p-\u003epFactors, p-\u003enVarsAlloc );\n    for ( i = nVarsAllocOld; i \u003c p-\u003enVarsAlloc; i++ )\n    {\n        p-\u003epdActivity[i] = 0.0;\n        p-\u003epFactors[i]   = 1.0;\n    }\n\n    p-\u003epAssigns  = ABC_REALLOC( int, p-\u003epAssigns, p-\u003enVarsAlloc );\n    p-\u003epModel    = ABC_REALLOC( int, p-\u003epModel, p-\u003enVarsAlloc );\n    for ( i = nVarsAllocOld; i \u003c p-\u003enVarsAlloc; i++ )\n        p-\u003epAssigns[i] = MSAT_VAR_UNASSIGNED;\n\n//    Msat_OrderRealloc( p-\u003epOrder, p-\u003epAssigns, p-\u003epdActivity, p-\u003enVarsAlloc );\n    Msat_OrderSetBounds( p-\u003epOrder, p-\u003enVarsAlloc );\n\n    p-\u003epvWatched = ABC_REALLOC( Msat_ClauseVec_t *, p-\u003epvWatched, 2 * p-\u003enVarsAlloc );\n    for ( i = 2 * nVarsAllocOld; i \u003c 2 * p-\u003enVarsAlloc; i++ )\n        p-\u003epvWatched[i] = Msat_ClauseVecAlloc( 16 );\n\n    Msat_QueueFree( p-\u003epQueue );\n    p-\u003epQueue    = Msat_QueueAlloc( p-\u003enVarsAlloc );\n\n    p-\u003epReasons  = ABC_REALLOC( Msat_Clause_t *, p-\u003epReasons, p-\u003enVarsAlloc );\n    p-\u003epLevel    = ABC_REALLOC( int, p-\u003epLevel, p-\u003enVarsAlloc );\n    for ( i = nVarsAllocOld; i \u003c p-\u003enVarsAlloc; i++ )\n    {\n        p-\u003epReasons[i] = NULL;\n        p-\u003epLevel[i] = -1;\n    }\n\n    p-\u003epSeen     = ABC_REALLOC( int, p-\u003epSeen, p-\u003enVarsAlloc );\n    for ( i = nVarsAllocOld; i \u003c p-\u003enVarsAlloc; i++ )\n        p-\u003epSeen[i] = 0;\n\n    Msat_IntVecGrow( p-\u003evTrail, p-\u003enVarsAlloc );\n    Msat_IntVecGrow( p-\u003evTrailLim, p-\u003enVarsAlloc );\n\n    // make sure the array of adjucents has room to store the variable numbers\n    for ( i = Msat_ClauseVecReadSize(p-\u003evAdjacents); i \u003c p-\u003enVarsAlloc; i++ )\n        Msat_ClauseVecPush( p-\u003evAdjacents, (Msat_Clause_t *)Msat_IntVecAlloc(5) );\n    Msat_IntVecFill( p-\u003evVarsUsed, p-\u003enVarsAlloc, 1 );\n}",
+      "Draft": "func Msat_SolverResize(p *Msat_Solver_t, nVarsAlloc int32) {\n    var nVarsAllocOld, i int32;\n\n    nVarsAllocOld = p.nVarsAlloc;\n    p.nVarsAlloc = nVarsAlloc;\n\n    // inlining of macro ABC_REALLOC\n    \n    if p.pdActivity {\n        p.pdActivity = ((double *) realloc((char *)(p.pdActivity), sizeof(double) * (size_t)(p.nVarsAlloc)));\n    } else {\n        p.pdActivity = ((double *) malloc(sizeof(double) * (size_t)(p.nVarsAlloc)));\n    }\n    // inlining of macro ABC_REALLOC\n    \n    if p.pFactors {\n        p.pFactors = ((float *) realloc((char *)(p.pFactors), sizeof(float) * (size_t)(p.nVarsAlloc)));\n    } else {\n        p.pFactors = ((float *) malloc(sizeof(float) * (size_t)(p.nVarsAlloc)));\n    }\n    for  i = nVarsAllocOld; i \u003c p.nVarsAlloc; i++  {\n        p.pdActivity[i] = 0.0;\n        p.pFactors[i]   = 1.0;\n    }\n\n    // inlining of macro ABC_REALLOC\n    \n    if p.pAssigns {\n        p.pAssigns = ((int *) realloc((char *)(p.pAssigns), sizeof(int) * (size_t)(p.nVarsAlloc)));\n    } else {\n        p.pAssigns = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));\n    }\n    // inlining of macro ABC_REALLOC\n    \n    if p.pModel {\n        p.pModel = ((int *) realloc((char *)(p.pModel), sizeof(int) * (size_t)(p.nVarsAlloc)));\n    } else {\n        p.pModel = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));\n    }\n    for  i = nVarsAllocOld; i \u003c p.nVarsAlloc; i++  {\n        p.pAssigns[i] = MSAT_VAR_UNASSIGNED;\n    }\n\n//    Msat_OrderRealloc( p-\u003epOrder, p-\u003epAssigns, p-\u003epdActivity, p-\u003enVarsAlloc );\n    Msat_OrderSetBounds( p.pOrder, p.nVarsAlloc );\n\n    // inlining of macro ABC_REALLOC\n    \n    if p.pvWatched {\n        p.pvWatched = ((Msat_ClauseVec_t * *) realloc((char *)(p.pvWatched), sizeof(Msat_ClauseVec_t *) * (size_t)(2 * p.nVarsAlloc)));\n    } else {\n        p.pvWatched = ((Msat_ClauseVec_t * *) malloc(sizeof(Msat_ClauseVec_t *) * (size_t)(2 * p.nVarsAlloc)));\n    }\n    for  i = 2 * nVarsAllocOld; i \u003c 2 * p.nVarsAlloc; i++  {\n        p.pvWatched[i] = Msat_ClauseVecAlloc( 16 );\n    }\n\n    Msat_QueueFree( p.pQueue );\n    p.pQueue    = Msat_QueueAlloc( p.nVarsAlloc );\n\n    // inlining of macro ABC_REALLOC\n    \n    if p.pReasons {\n        p.pReasons = ((Msat_Clause_t * *) realloc((char *)(p.pReasons), sizeof(Msat_Clause_t *) * (size_t)(p.nVarsAlloc)));\n    } else {\n        p.pReasons = ((Msat_Clause_t * *) malloc(sizeof(Msat_Clause_t *) * (size_t)(p.nVarsAlloc)));\n    }\n    // inlining of macro ABC_REALLOC\n    \n    if p.pLevel {\n        p.pLevel = ((int *) realloc((char *)(p.pLevel), sizeof(int) * (size_t)(p.nVarsAlloc)));\n    } else {\n        p.pLevel = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));\n    }\n    for  i = nVarsAllocOld; i \u003c p.nVarsAlloc; i++  {\n        p.pReasons[i] = nil;\n        p.pLevel[i] = -1;\n    }\n\n    // inlining of macro ABC_REALLOC\n    \n    if p.pSeen {\n        p.pSeen = ((int *) realloc((char *)(p.pSeen), sizeof(int) * (size_t)(p.nVarsAlloc)));\n    } else {\n        p.pSeen = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));\n    }\n    for  i = nVarsAllocOld; i \u003c p.nVarsAlloc; i++  {\n        p.pSeen[i] = 0;\n    }\n\n    Msat_IntVecGrow( p.vTrail, p.nVarsAlloc );\n    Msat_IntVecGrow( p.vTrailLim, p.nVarsAlloc );\n\n    // make sure the array of adjucents has room to store the variable numbers\n    for  i = Msat_ClauseVecReadSize(p.vAdjacents); i \u003c p.nVarsAlloc; i++  {\n        Msat_ClauseVecPush( p.vAdjacents, (Msat_Clause_t *)Msat_IntVecAlloc(5) );\n    }\n    Msat_IntVecFill( p.vVarsUsed, p.nVarsAlloc, 1 );\n}"
+    },
+    {
+      "Name": "Msat_SolverClean",
+      "Start": 11598,
+      "End": 13792,
+      "BodyStart": 11652,
+      "Original": "void Msat_SolverClean( Msat_Solver_t * p, int nVars )\n{\n    int i;\n    // free the clauses\n    int nClauses;\n    Msat_Clause_t ** pClauses;\n\n    assert( p-\u003enVarsAlloc \u003e= nVars );\n    p-\u003enVars    = nVars;\n    p-\u003enClauses = 0;\n\n    nClauses = Msat_ClauseVecReadSize( p-\u003evClauses );\n    pClauses = Msat_ClauseVecReadArray( p-\u003evClauses );\n    for ( i = 0; i \u003c nClauses; i++ )\n        Msat_ClauseFree( p, pClauses[i], 0 );\n//    Msat_ClauseVecFree( p-\u003evClauses );\n    Msat_ClauseVecClear( p-\u003evClauses );\n\n    nClauses = Msat_ClauseVecReadSize( p-\u003evLearned );\n    pClauses = Msat_ClauseVecReadArray( p-\u003evLearned );\n    for ( i = 0; i \u003c nClauses; i++ )\n        Msat_ClauseFree( p, pClauses[i], 0 );\n//    Msat_ClauseVecFree( p-\u003evLearned );\n    Msat_ClauseVecClear( p-\u003evLearned );\n\n//    ABC_FREE( p-\u003epdActivity );\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n        p-\u003epdActivity[i] = 0;\n\n//    Msat_OrderFree( p-\u003epOrder );\n//    Msat_OrderClean( p-\u003epOrder, p-\u003enVars, NULL );\n    Msat_OrderSetBounds( p-\u003epOrder, p-\u003enVars );\n\n    for ( i = 0; i \u003c 2 * p-\u003enVars; i++ )\n//        Msat_ClauseVecFree( p-\u003epvWatched[i] );\n        Msat_ClauseVecClear( p-\u003epvWatched[i] );\n//    ABC_FREE( p-\u003epvWatched );\n//    Msat_QueueFree( p-\u003epQueue );\n    Msat_QueueClear( p-\u003epQueue );\n\n//    ABC_FREE( p-\u003epAssigns );\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n        p-\u003epAssigns[i] = MSAT_VAR_UNASSIGNED;\n//    Msat_IntVecFree( p-\u003evTrail );\n    Msat_IntVecClear( p-\u003evTrail );\n//    Msat_IntVecFree( p-\u003evTrailLim );\n    Msat_IntVecClear( p-\u003evTrailLim );\n//    ABC_FREE( p-\u003epReasons );\n    memset( p-\u003epReasons, 0, sizeof(Msat_Clause_t *) * p-\u003enVars );\n//    ABC_FREE( p-\u003epLevel );\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n        p-\u003epLevel[i] = -1;\n//    Msat_IntVecFree( p-\u003epModel );\n//    Msat_MmStepStop( p-\u003epMem, 0 );\n    p-\u003edRandSeed = 91648253;\n    p-\u003edProgress = 0.0;\n\n//    ABC_FREE( p-\u003epSeen );\n    memset( p-\u003epSeen, 0, sizeof(int) * p-\u003enVars );\n    p-\u003enSeenId = 1;\n//    Msat_IntVecFree( p-\u003evReason );\n    Msat_IntVecClear( p-\u003evReason );\n//    Msat_IntVecFree( p-\u003evTemp );\n    Msat_IntVecClear( p-\u003evTemp );\n//    printf(\" The number of clauses remaining = %d (%d).\\n\", p-\u003enClausesAlloc, p-\u003enClausesAllocL );\n//    ABC_FREE( p );\n}",
+      "Draft": "func Msat_SolverClean(p *Msat_Solver_t, nVars int32) {\n    var i int32;\n    // free the clauses\n    var nClauses int32;\n    var pClauses **Msat_Clause_t;\n\n    assert(p.nVarsAlloc \u003e= nVars, \"p.nVarsAlloc \u003e= nVars\");\n    p.nVars    = nVars;\n    p.nClauses = 0;\n\n    nClauses = Msat_ClauseVecReadSize( p.vClauses );\n    pClauses = Msat_ClauseVecReadArray( p.vClauses );\n    for  i = 0; i \u003c nClauses; i++  {\n        Msat_ClauseFree( p, pClauses[i], 0 );\n    }\n//    Msat_ClauseVecFree( p-\u003evClauses );\n    Msat_ClauseVecClear( p.vClauses );\n\n    nClauses = Msat_ClauseVecReadSize( p.vLearned );\n    pClauses = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = 0; i \u003c nClauses; i++  {\n        Msat_ClauseFree( p, pClauses[i], 0 );\n    }\n//    Msat_ClauseVecFree( p-\u003evLearned );\n    Msat_ClauseVecClear( p.vLearned );\n\n//    ABC_FREE( p-\u003epdActivity );\n    for  i = 0; i \u003c p.nVars; i++  {\n        p.pdActivity[i] = 0;\n    }\n\n//    Msat_OrderFree( p-\u003epOrder );\n//    Msat_OrderClean( p-\u003epOrder, p-\u003enVars, NULL );\n    Msat_OrderSetBounds( p.pOrder, p.nVars );\n\n    for  i = 0; i \u003c 2 * p.nVars; i++  {\n//        Msat_ClauseVecFree( p-\u003epvWatched[i] );\n        Msat_ClauseVecClear( p.pvWatched[i] );\n    }\n//    ABC_FREE( p-\u003epvWatched );\n//    Msat_QueueFree( p-\u003epQueue );\n    Msat_QueueClear( p.pQueue );\n\n//    ABC_FREE( p-\u003epAssigns );\n    for  i = 0; i \u003c p.nVars; i++  {\n        p.pAssigns[i] = MSAT_VAR_UNASSIGNED;\n    }\n//    Msat_IntVecFree( p-\u003evTrail );\n    Msat_IntVecClear( p.vTrail );\n//    Msat_IntVecFree( p-\u003evTrailLim );\n    Msat_IntVecClear( p.vTrailLim );\n//    ABC_FREE( p-\u003epReasons );\n    memset( p.pReasons, 0, sizeof(Msat_Clause_t *) * p.nVars );\n//    ABC_FREE( p-\u003epLevel );\n    for  i = 0; i \u003c p.nVars; i++  {\n        p.pLevel[i] = -1;\n    }\n//    Msat_IntVecFree( p-\u003epModel );\n//    Msat_MmStepStop( p-\u003epMem, 0 );\n    p.dRandSeed = 91648253;\n    p.dProgress = 0.0;\n\n//    ABC_FREE( p-\u003epSeen );\n    memset( p.pSeen, 0, sizeof(int) * p.nVars );\n    p.nSeenId = 1;\n//    Msat_IntVecFree( p-\u003evReason );\n    Msat_IntVecClear( p.vReason );\n//    Msat_IntVecFree( p-\u003evTemp );\n    Msat_IntVecClear( p.vTemp );\n//    printf(\" The number of clauses remaining = %d (%d).\\n\", p-\u003enClausesAlloc, p-\u003enClausesAllocL );\n//    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Msat_SolverFree",
+      "Start": 14045,
+      "End": 15714,
+      "BodyStart": 14087,
+      "Original": "void Msat_SolverFree( Msat_Solver_t * p )\n{\n    int i;\n\n    // free the clauses\n    int nClauses;\n    Msat_Clause_t ** pClauses;\n//printf( \"clauses = %d. learned = %d.\\n\", Msat_ClauseVecReadSize( p-\u003evClauses ), \n//                                         Msat_ClauseVecReadSize( p-\u003evLearned ) );\n\n    nClauses = Msat_ClauseVecReadSize( p-\u003evClauses );\n    pClauses = Msat_ClauseVecReadArray( p-\u003evClauses );\n    for ( i = 0; i \u003c nClauses; i++ )\n        Msat_ClauseFree( p, pClauses[i], 0 );\n    Msat_ClauseVecFree( p-\u003evClauses );\n\n    nClauses = Msat_ClauseVecReadSize( p-\u003evLearned );\n    pClauses = Msat_ClauseVecReadArray( p-\u003evLearned );\n    for ( i = 0; i \u003c nClauses; i++ )\n        Msat_ClauseFree( p, pClauses[i], 0 );\n    Msat_ClauseVecFree( p-\u003evLearned );\n\n    ABC_FREE( p-\u003epdActivity );\n    ABC_FREE( p-\u003epFactors );\n    Msat_OrderFree( p-\u003epOrder );\n\n    for ( i = 0; i \u003c 2 * p-\u003enVarsAlloc; i++ )\n        Msat_ClauseVecFree( p-\u003epvWatched[i] );\n    ABC_FREE( p-\u003epvWatched );\n    Msat_QueueFree( p-\u003epQueue );\n\n    ABC_FREE( p-\u003epAssigns );\n    ABC_FREE( p-\u003epModel );\n    Msat_IntVecFree( p-\u003evTrail );\n    Msat_IntVecFree( p-\u003evTrailLim );\n    ABC_FREE( p-\u003epReasons );\n    ABC_FREE( p-\u003epLevel );\n\n    Msat_MmStepStop( p-\u003epMem, 0 );\n\n    nClauses = Msat_ClauseVecReadSize( p-\u003evAdjacents );\n    pClauses = Msat_ClauseVecReadArray( p-\u003evAdjacents );\n    for ( i = 0; i \u003c nClauses; i++ )\n        Msat_IntVecFree( (Msat_IntVec_t *)pClauses[i] );\n    Msat_ClauseVecFree( p-\u003evAdjacents );\n    Msat_IntVecFree( p-\u003evConeVars );\n    Msat_IntVecFree( p-\u003evVarsUsed );\n\n    ABC_FREE( p-\u003epSeen );\n    Msat_IntVecFree( p-\u003evReason );\n    Msat_IntVecFree( p-\u003evTemp );\n    ABC_FREE( p );\n}",
+      "Draft": "func Msat_SolverFree(p *Msat_Solver_t) {\n    var i int32;\n\n    // free the clauses\n    var nClauses int32;\n    var pClauses **Msat_Clause_t;\n//printf( \"clauses = %d. learned = %d.\\n\", Msat_ClauseVecReadSize( p-\u003evClauses ), \n//                                         Msat_ClauseVecReadSize( p-\u003evLearned ) );\n\n    nClauses = Msat_ClauseVecReadSize( p.vClauses );\n    pClauses = Msat_ClauseVecReadArray( p.vClauses );\n    for  i = 0; i \u003c nClauses; i++  {\n        Msat_ClauseFree( p, pClauses[i], 0 );\n    }\n    Msat_ClauseVecFree( p.vClauses );\n\n    nClauses = Msat_ClauseVecReadSize( p.vLearned );\n    pClauses = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = 0; i \u003c nClauses; i++  {\n        Msat_ClauseFree( p, pClauses[i], 0 );\n    }\n    Msat_ClauseVecFree( p.vLearned );\n\n    // inlining of macro ABC_FREE\n    ((p.pdActivity) ? (free((char *) (p.pdActivity)), (p.pdActivity) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pFactors) ? (free((char *) (p.pFactors)), (p.pFactors) = 0) : 0);\n    Msat_OrderFree( p.pOrder );\n\n    for  i = 0; i \u003c 2 * p.nVarsAlloc; i++  {\n        Msat_ClauseVecFree( p.pvWatched[i] );\n    }\n    // inlining of macro ABC_FREE\n    ((p.pvWatched) ? (free((char *) (p.pvWatched)), (p.pvWatched) = 0) : 0);\n    Msat_QueueFree( p.pQueue );\n\n    // inlining of macro ABC_FREE\n    ((p.pAssigns) ? (free((char *) (p.pAssigns)), (p.pAssigns) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pModel) ? (free((char *) (p.pModel)), (p.pModel) = 0) : 0);\n    Msat_IntVecFree( p.vTrail );\n    Msat_IntVecFree( p.vTrailLim );\n    // inlining of macro ABC_FREE\n    ((p.pReasons) ? (free((char *) (p.pReasons)), (p.pReasons) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pLevel) ? (free((char *) (p.pLevel)), (p.pLevel) = 0) : 0);\n\n    Msat_MmStepStop( p.pMem, 0 );\n\n    nClauses = Msat_ClauseVecReadSize( p.vAdjacents );\n    pClauses = Msat_ClauseVecReadArray( p.vAdjacents );\n    for  i = 0; i \u003c nClauses; i++  {\n        Msat_IntVecFree( (Msat_IntVec_t *)pClauses[i] );\n    }\n    Msat_ClauseVecFree( p.vAdjacents );\n    Msat_IntVecFree( p.vConeVars );\n    Msat_IntVecFree( p.vVarsUsed );\n\n    // inlining of macro ABC_FREE\n    ((p.pSeen) ? (free((char *) (p.pSeen)), (p.pSeen) = 0) : 0);\n    Msat_IntVecFree( p.vReason );\n    Msat_IntVecFree( p.vTemp );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Msat_SolverPrepare",
+      "Start": 16002,
+      "End": 16521,
+      "BodyStart": 16070,
+      "Original": "void Msat_SolverPrepare( Msat_Solver_t * p, Msat_IntVec_t * vVars )\n{\n\n    int i;\n    // undo the previous data\n    for ( i = 0; i \u003c p-\u003enVarsAlloc; i++ )\n    {\n        p-\u003epAssigns[i]   = MSAT_VAR_UNASSIGNED;\n        p-\u003epReasons[i]   = NULL;\n        p-\u003epLevel[i]     = -1;\n        p-\u003epdActivity[i] = 0.0;\n    }\n\n    // set the new variable order\n    Msat_OrderClean( p-\u003epOrder, vVars );\n\n    Msat_QueueClear( p-\u003epQueue );\n    Msat_IntVecClear( p-\u003evTrail );\n    Msat_IntVecClear( p-\u003evTrailLim );\n    p-\u003edProgress = 0.0;\n}",
+      "Draft": "func Msat_SolverPrepare(p *Msat_Solver_t, vVars *Msat_IntVec_t) {\n\n    var i int32;\n    // undo the previous data\n    for  i = 0; i \u003c p.nVarsAlloc; i++  {\n        p.pAssigns[i]   = MSAT_VAR_UNASSIGNED;\n        p.pReasons[i]   = nil;\n        p.pLevel[i]     = -1;\n        p.pdActivity[i] = 0.0;\n    }\n\n    // set the new variable order\n    Msat_OrderClean( p.pOrder, vVars );\n\n    Msat_QueueClear( p.pQueue );\n    Msat_IntVecClear( p.vTrail );\n    Msat_IntVecClear( p.vTrailLim );\n    p.dProgress = 0.0;\n}"
+    },
+    {
+      "Name": "Msat_SolverSetupTruthTables",
+      "Start": 16782,
+      "End": 17208,
+      "BodyStart": 16840,
+      "Original": "void Msat_SolverSetupTruthTables( unsigned uTruths[][2] )\n{\n    int m, v;\n    // set up the truth tables\n    for ( m = 0; m \u003c 32; m++ )\n        for ( v = 0; v \u003c 5; v++ )\n            if ( m \u0026 (1 \u003c\u003c v) )\n                uTruths[v][0] |= (1 \u003c\u003c m);\n    // make adjustments for the case of 6 variables\n    for ( v = 0; v \u003c 5; v++ )\n        uTruths[v][1] = uTruths[v][0];\n    uTruths[5][0] = 0;\n    uTruths[5][1] = ~((unsigned)0);\n}",
+      "Draft": "func Msat_SolverSetupTruthTables(uTruths [][2]uint32) {\n    var m, v int32;\n    // set up the truth tables\n    for  m = 0; m \u003c 32; m++  {\n        for  v = 0; v \u003c 5; v++  {\n            if m \u0026 (1 \u003c\u003c v) {\n                uTruths[v][0] |= (1 \u003c\u003c m); }\n        }\n    }\n    // make adjustments for the case of 6 variables\n    for  v = 0; v \u003c 5; v++  {\n        uTruths[v][1] = uTruths[v][0];\n    }\n    uTruths[5][0] = 0;\n    uTruths[5][1] = ~(uint32(0));\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::6434",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6434,
+      "End": 6440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::6456",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6456,
+      "End": 6462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::6486",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6486,
+      "End": 6492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::6507",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6507,
+      "End": 6513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::6606",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6535,
+      "End": 6535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::6663",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6584,
+      "End": 6590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::7062",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6919,
+      "End": 6919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::7189",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6975,
+      "End": 6975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::7431",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7148,
+      "End": 7148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::7553",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7201,
+      "End": 7201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::7903",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7467,
+      "End": 7467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::8316",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7799,
+      "End": 7799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::8397",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7872,
+      "End": 7878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::8517",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7931,
+      "End": 7931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::9236",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8581,
+      "End": 8581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::9302",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8639,
+      "End": 8645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::10166",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9392,
+      "End": 9392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::10239",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9392,
+      "End": 9392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::10410",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9465,
+      "End": 9465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::10481",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9465,
+      "End": 9465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::10779",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9665,
+      "End": 9665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::10846",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9665,
+      "End": 9665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::11007",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9732,
+      "End": 9732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::11074",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9732,
+      "End": 9732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::11492",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10033,
+      "End": 10033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::11593",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10033,
+      "End": 10033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::11992",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10323,
+      "End": 10323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::12083",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10323,
+      "End": 10323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::12256",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10402,
+      "End": 10402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::12323",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10402,
+      "End": 10402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::12607",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10592,
+      "End": 10592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::12674",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10592,
+      "End": 10592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::15249",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13170,
+      "End": 13176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::mechanical::sizeof::15560",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13481,
+      "End": 13487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::6581",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6535,
+      "End": 6535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::7044",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6919,
+      "End": 6919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::7172",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6975,
+      "End": 6975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::7416",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7148,
+      "End": 7148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::7538",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7201,
+      "End": 7201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::7873",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7467,
+      "End": 7467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::7909",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7467,
+      "End": 7467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::8289",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7799,
+      "End": 7799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::8322",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7799,
+      "End": 7799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::8403",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7878,
+      "End": 7895
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::8502",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7931,
+      "End": 7931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::9002",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8408,
+      "End": 8425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::9221",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8581,
+      "End": 8581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::10122",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9392,
+      "End": 9392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::10141",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9392,
+      "End": 9392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::10221",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9392,
+      "End": 9392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::10369",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9465,
+      "End": 9465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::10387",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9465,
+      "End": 9465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::10464",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9465,
+      "End": 9465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::10740",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9665,
+      "End": 9665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::10756",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9665,
+      "End": 9665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::10831",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9665,
+      "End": 9665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::10970",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9732,
+      "End": 9732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::10986",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9732,
+      "End": 9732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::11059",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9732,
+      "End": 9732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::11437",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10033,
+      "End": 10033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::11468",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10033,
+      "End": 10033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::11498",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10033,
+      "End": 10033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::11563",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10033,
+      "End": 10033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::11599",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10033,
+      "End": 10033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::11941",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10323,
+      "End": 10323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::11969",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10323,
+      "End": 10323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::11998",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10323,
+      "End": 10323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::12056",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10323,
+      "End": 10323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::12089",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10323,
+      "End": 10323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::12219",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10402,
+      "End": 10402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::12235",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10402,
+      "End": 10402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::12308",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10402,
+      "End": 10402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::12571",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10592,
+      "End": 10592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::12587",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10592,
+      "End": 10592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::12659",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10592,
+      "End": 10592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::13098",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11019,
+      "End": 11036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::15255",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13176,
+      "End": 13193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::16958",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14810,
+      "End": 14810
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::17083",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14841,
+      "End": 14841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::17332",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14997,
+      "End": 14997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::17489",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15061,
+      "End": 15061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::17608",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15090,
+      "End": 15090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::17796",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15188,
+      "End": 15188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::17915",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15217,
+      "End": 15217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::18173",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15452,
+      "End": 15469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::18389",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15604,
+      "End": 15604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::pointer-cast::18562",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15698,
+      "End": 15698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadVarNum",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadVarNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1460,
+      "End": 1564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadClauseNum",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadClauseNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1565,
+      "End": 1669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadVarAllocNum",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadVarAllocNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1670,
+      "End": 1774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadDecisionLevel",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadDecisionLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1775,
+      "End": 1899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadDecisionLevelArray",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadDecisionLevelArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1900,
+      "End": 2004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadReasonArray",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadReasonArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2005,
+      "End": 2109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadVarValue",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadVarValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2110,
+      "End": 2232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadLearned",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadLearned",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2233,
+      "End": 2337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadWatchedArray",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadWatchedArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2338,
+      "End": 2442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadAssignsArray",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadAssignsArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2443,
+      "End": 2547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadModelArray",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadModelArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2548,
+      "End": 2652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadBackTracks",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadBackTracks",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2653,
+      "End": 2768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadInspects",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadInspects",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2769,
+      "End": 2884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadMem",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadMem",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2885,
+      "End": 2989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadSeenArray",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadSeenArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2990,
+      "End": 3094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverIncrementSeenId",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverIncrementSeenId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3095,
+      "End": 3199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverSetVerbosity",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverSetVerbosity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3200,
+      "End": 3306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverClausesIncrement",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverClausesIncrement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3307,
+      "End": 3411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverClausesDecrement",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverClausesDecrement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3412,
+      "End": 3516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverClausesIncrementL",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverClausesIncrementL",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3517,
+      "End": 3621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverClausesDecrementL",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverClausesDecrementL",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3622,
+      "End": 3726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverMarkLastClauseTypeA",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverMarkLastClauseTypeA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3727,
+      "End": 3914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverMarkClausesStart",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverMarkClausesStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3915,
+      "End": 4053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadFactors",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadFactors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4054,
+      "End": 4158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadClause",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4433,
+      "End": 4766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadAdjacents",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadAdjacents",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5041,
+      "End": 5136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadConeVars",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadConeVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5411,
+      "End": 5501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverReadVarsUsed",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReadVarsUsed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5776,
+      "End": 5866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6238,
+      "End": 8815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverResize",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverResize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9215,
+      "End": 11115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverClean",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11598,
+      "End": 13792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::ternary::Msat_SolverFree",
+      "Category": "ternary-review",
+      "Symbol": "Msat_SolverFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14045,
+      "End": 15714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverFree",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14045,
+      "End": 15714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverPrepare",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverPrepare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16002,
+      "End": 16521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::Msat_SolverSetupTruthTables",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverSetupTruthTables",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16782,
+      "End": 17208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverApi.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17455
+    }
+  ],
+  "Draft": "package msat\n\n/**CFile****************************************************************\n\n  FileName    [msatSolverApi.c]\n\n  PackageName [A C version of SAT solver MINISAT, originally developed \n  in C++ by Niklas Een and Niklas Sorensson, Chalmers University of \n  Technology, Sweden: http://www.cs.chalmers.se/~een/Satzoo.]\n\n  Synopsis    [APIs of the SAT solver.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2004.]\n\n  Revision    [$Id: msatSolverApi.c,v 1.0 2004/01/01 1:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"msatInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Msat_SolverSetupTruthTables( unsigned uTruths[][2] );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Simple SAT solver APIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverReadVarNum(p *Msat_Solver_t) int32 { return p.nVars;      }\nfunc Msat_SolverReadClauseNum(p *Msat_Solver_t) int32 { return p.nClauses;   }\nfunc Msat_SolverReadVarAllocNum(p *Msat_Solver_t) int32 { return p.nVarsAlloc; }\nfunc Msat_SolverReadDecisionLevel(p *Msat_Solver_t) int32 { return Msat_IntVecReadSize(p.vTrailLim); }\nfunc Msat_SolverReadDecisionLevelArray(p *Msat_Solver_t) *int32 { return p.pLevel;     }\nfunc Msat_SolverReadReasonArray(p *Msat_Solver_t) **Msat_Clause_t { return p.pReasons;   }\nfunc Msat_SolverReadVarValue(p *Msat_Solver_t, Var Msat_Var_t) Msat_Type_t { return (Msat_Type_t)p.pAssigns[Var]; }\nfunc Msat_SolverReadLearned(p *Msat_Solver_t) *Msat_ClauseVec_t { return p.vLearned;   }\nfunc Msat_SolverReadWatchedArray(p *Msat_Solver_t) **Msat_ClauseVec_t { return p.pvWatched;  }\nfunc Msat_SolverReadAssignsArray(p *Msat_Solver_t) *int32 { return p.pAssigns;   }\nfunc Msat_SolverReadModelArray(p *Msat_Solver_t) *int32 { return p.pModel;     }\nfunc Msat_SolverReadBackTracks(p *Msat_Solver_t) int32 { return int32(p.Stats.nConflicts); }\nfunc Msat_SolverReadInspects(p *Msat_Solver_t) int32 { return int32(p.Stats.nInspects);  }\nfunc Msat_SolverReadMem(p *Msat_Solver_t) *Msat_MmStep_t { return p.pMem;       }\nfunc Msat_SolverReadSeenArray(p *Msat_Solver_t) *int32 { return p.pSeen;      }\nfunc Msat_SolverIncrementSeenId(p *Msat_Solver_t) int32 { return ++p.nSeenId;  }\nfunc Msat_SolverSetVerbosity(p *Msat_Solver_t, fVerbose int32) { p.fVerbose = fVerbose; }\nfunc Msat_SolverClausesIncrement(p *Msat_Solver_t) { p.nClausesAlloc++;   }\nfunc Msat_SolverClausesDecrement(p *Msat_Solver_t) { p.nClausesAlloc--;   }\nfunc Msat_SolverClausesIncrementL(p *Msat_Solver_t) { p.nClausesAllocL++;  }\nfunc Msat_SolverClausesDecrementL(p *Msat_Solver_t) { p.nClausesAllocL--;  }\nfunc Msat_SolverMarkLastClauseTypeA(p *Msat_Solver_t) { Msat_ClauseSetTypeA( Msat_ClauseVecReadEntry( p.vClauses, Msat_ClauseVecReadSize(p.vClauses)-1 ), 1 ); }\nfunc Msat_SolverMarkClausesStart(p *Msat_Solver_t) { p.nClausesStart = Msat_ClauseVecReadSize(p.vClauses); }\nfunc Msat_SolverReadFactors(p *Msat_Solver_t) *float32 { return p.pFactors;   }\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the clause with the given number.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverReadClause(p *Msat_Solver_t, Num int32) *Msat_Clause_t {\n    var nClausesP int32;\n    assert(Num \u003c p.nClauses, \"Num \u003c p.nClauses\");\n    nClausesP = Msat_ClauseVecReadSize( p.vClauses );\n    if Num \u003c nClausesP {\n        return Msat_ClauseVecReadEntry( p.vClauses, Num ); }\n    return Msat_ClauseVecReadEntry( p.vLearned, Num - nClausesP );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the clause with the given number.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverReadAdjacents(p *Msat_Solver_t) *Msat_ClauseVec_t {\n    return p.vAdjacents;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the clause with the given number.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverReadConeVars(p *Msat_Solver_t) *Msat_IntVec_t {\n    return p.vConeVars;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the clause with the given number.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverReadVarsUsed(p *Msat_Solver_t) *Msat_IntVec_t {\n    return p.vVarsUsed;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the solver.]\n\n  Description [After the solver is allocated, the procedure\n  Msat_SolverClean() should be called to set the number of variables.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverAlloc(nVarsAlloc int32, dClaInc float64, dClaDecay float64, dVarInc float64, dVarDecay float64, fVerbose int32) *Msat_Solver_t {\n    var p *Msat_Solver_t;\n    var i int32;\n\n    assert(sizeof(Msat_Lit_t) == sizeof(unsigned), \"sizeof(Msat_Lit_t) == sizeof(unsigned)\");\n    assert(sizeof(float)     == sizeof(unsigned), \"sizeof(float)     == sizeof(unsigned)\");\n\n    // inlining of macro ABC_ALLOC\n    p = ((Msat_Solver_t *) malloc(sizeof(Msat_Solver_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Msat_Solver_t) );\n\n    p.nVarsAlloc = nVarsAlloc;\n    p.nVars     = 0;\n\n    p.nClauses  = 0;\n    p.vClauses  = Msat_ClauseVecAlloc( 512 );\n    p.vLearned  = Msat_ClauseVecAlloc( 512 );\n\n    p.dClaInc   = dClaInc;\n    p.dClaDecay = dClaDecay;\n    p.dVarInc   = dVarInc;\n    p.dVarDecay = dVarDecay;\n\n    // inlining of macro ABC_ALLOC\n    p.pdActivity = ((double *) malloc(sizeof(double) * (size_t)(p.nVarsAlloc)));\n    // inlining of macro ABC_ALLOC\n    p.pFactors   = ((float *) malloc(sizeof(float) * (size_t)(p.nVarsAlloc)));\n    for  i = 0; i \u003c p.nVarsAlloc; i++  {\n        p.pdActivity[i] = 0.0;\n        p.pFactors[i]   = 1.0;\n    }\n\n    // inlining of macro ABC_ALLOC\n    p.pAssigns  = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc))); \n    // inlining of macro ABC_ALLOC\n    p.pModel    = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc))); \n    for  i = 0; i \u003c p.nVarsAlloc; i++  {\n        p.pAssigns[i] = MSAT_VAR_UNASSIGNED;\n    }\n//    p-\u003epOrder    = Msat_OrderAlloc( p-\u003epAssigns, p-\u003epdActivity, p-\u003enVarsAlloc );\n    p.pOrder    = Msat_OrderAlloc( p );\n\n    // inlining of macro ABC_ALLOC\n    p.pvWatched = ((Msat_ClauseVec_t * *) malloc(sizeof(Msat_ClauseVec_t *) * (size_t)(2 * p.nVarsAlloc)));\n    for  i = 0; i \u003c 2 * p.nVarsAlloc; i++  {\n        p.pvWatched[i] = Msat_ClauseVecAlloc( 16 );\n    }\n    p.pQueue    = Msat_QueueAlloc( p.nVarsAlloc );\n\n    p.vTrail    = Msat_IntVecAlloc( p.nVarsAlloc );\n    p.vTrailLim = Msat_IntVecAlloc( p.nVarsAlloc );\n    // inlining of macro ABC_ALLOC\n    p.pReasons  = ((Msat_Clause_t * *) malloc(sizeof(Msat_Clause_t *) * (size_t)(p.nVarsAlloc)));\n    memset( p.pReasons, 0, sizeof(Msat_Clause_t *) * p.nVarsAlloc );\n    // inlining of macro ABC_ALLOC\n    p.pLevel = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));\n    for  i = 0; i \u003c p.nVarsAlloc; i++  {\n        p.pLevel[i] = -1;\n    }\n    p.dRandSeed = 91648253;\n    p.fVerbose  = fVerbose;\n    p.dProgress = 0.0;\n//    p-\u003epModel = Msat_IntVecAlloc( p-\u003enVarsAlloc );\n    p.pMem = Msat_MmStepStart( 10 );\n\n    p.vConeVars   = Msat_IntVecAlloc( p.nVarsAlloc ); \n    p.vAdjacents  = Msat_ClauseVecAlloc( p.nVarsAlloc );\n    for  i = 0; i \u003c p.nVarsAlloc; i++  {\n        Msat_ClauseVecPush( p.vAdjacents, (Msat_Clause_t *)Msat_IntVecAlloc(5) );\n    }\n    p.vVarsUsed   = Msat_IntVecAlloc( p.nVarsAlloc ); \n    Msat_IntVecFill( p.vVarsUsed, p.nVarsAlloc, 1 );\n\n\n    // inlining of macro ABC_ALLOC\n    p.pSeen     = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));\n    memset( p.pSeen, 0, sizeof(int) * p.nVarsAlloc );\n    p.nSeenId   = 1;\n    p.vReason   = Msat_IntVecAlloc( p.nVarsAlloc );\n    p.vTemp     = Msat_IntVecAlloc( p.nVarsAlloc );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resizes the solver.]\n\n  Description [Assumes that the solver contains some clauses, and that \n  it is currently between the calls. Resizes the solver to accomodate \n  more variables.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverResize(p *Msat_Solver_t, nVarsAlloc int32) {\n    var nVarsAllocOld, i int32;\n\n    nVarsAllocOld = p.nVarsAlloc;\n    p.nVarsAlloc = nVarsAlloc;\n\n    // inlining of macro ABC_REALLOC\n    \n    if p.pdActivity {\n        p.pdActivity = ((double *) realloc((char *)(p.pdActivity), sizeof(double) * (size_t)(p.nVarsAlloc)));\n    } else {\n        p.pdActivity = ((double *) malloc(sizeof(double) * (size_t)(p.nVarsAlloc)));\n    }\n    // inlining of macro ABC_REALLOC\n    \n    if p.pFactors {\n        p.pFactors = ((float *) realloc((char *)(p.pFactors), sizeof(float) * (size_t)(p.nVarsAlloc)));\n    } else {\n        p.pFactors = ((float *) malloc(sizeof(float) * (size_t)(p.nVarsAlloc)));\n    }\n    for  i = nVarsAllocOld; i \u003c p.nVarsAlloc; i++  {\n        p.pdActivity[i] = 0.0;\n        p.pFactors[i]   = 1.0;\n    }\n\n    // inlining of macro ABC_REALLOC\n    \n    if p.pAssigns {\n        p.pAssigns = ((int *) realloc((char *)(p.pAssigns), sizeof(int) * (size_t)(p.nVarsAlloc)));\n    } else {\n        p.pAssigns = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));\n    }\n    // inlining of macro ABC_REALLOC\n    \n    if p.pModel {\n        p.pModel = ((int *) realloc((char *)(p.pModel), sizeof(int) * (size_t)(p.nVarsAlloc)));\n    } else {\n        p.pModel = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));\n    }\n    for  i = nVarsAllocOld; i \u003c p.nVarsAlloc; i++  {\n        p.pAssigns[i] = MSAT_VAR_UNASSIGNED;\n    }\n\n//    Msat_OrderRealloc( p-\u003epOrder, p-\u003epAssigns, p-\u003epdActivity, p-\u003enVarsAlloc );\n    Msat_OrderSetBounds( p.pOrder, p.nVarsAlloc );\n\n    // inlining of macro ABC_REALLOC\n    \n    if p.pvWatched {\n        p.pvWatched = ((Msat_ClauseVec_t * *) realloc((char *)(p.pvWatched), sizeof(Msat_ClauseVec_t *) * (size_t)(2 * p.nVarsAlloc)));\n    } else {\n        p.pvWatched = ((Msat_ClauseVec_t * *) malloc(sizeof(Msat_ClauseVec_t *) * (size_t)(2 * p.nVarsAlloc)));\n    }\n    for  i = 2 * nVarsAllocOld; i \u003c 2 * p.nVarsAlloc; i++  {\n        p.pvWatched[i] = Msat_ClauseVecAlloc( 16 );\n    }\n\n    Msat_QueueFree( p.pQueue );\n    p.pQueue    = Msat_QueueAlloc( p.nVarsAlloc );\n\n    // inlining of macro ABC_REALLOC\n    \n    if p.pReasons {\n        p.pReasons = ((Msat_Clause_t * *) realloc((char *)(p.pReasons), sizeof(Msat_Clause_t *) * (size_t)(p.nVarsAlloc)));\n    } else {\n        p.pReasons = ((Msat_Clause_t * *) malloc(sizeof(Msat_Clause_t *) * (size_t)(p.nVarsAlloc)));\n    }\n    // inlining of macro ABC_REALLOC\n    \n    if p.pLevel {\n        p.pLevel = ((int *) realloc((char *)(p.pLevel), sizeof(int) * (size_t)(p.nVarsAlloc)));\n    } else {\n        p.pLevel = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));\n    }\n    for  i = nVarsAllocOld; i \u003c p.nVarsAlloc; i++  {\n        p.pReasons[i] = nil;\n        p.pLevel[i] = -1;\n    }\n\n    // inlining of macro ABC_REALLOC\n    \n    if p.pSeen {\n        p.pSeen = ((int *) realloc((char *)(p.pSeen), sizeof(int) * (size_t)(p.nVarsAlloc)));\n    } else {\n        p.pSeen = ((int *) malloc(sizeof(int) * (size_t)(p.nVarsAlloc)));\n    }\n    for  i = nVarsAllocOld; i \u003c p.nVarsAlloc; i++  {\n        p.pSeen[i] = 0;\n    }\n\n    Msat_IntVecGrow( p.vTrail, p.nVarsAlloc );\n    Msat_IntVecGrow( p.vTrailLim, p.nVarsAlloc );\n\n    // make sure the array of adjucents has room to store the variable numbers\n    for  i = Msat_ClauseVecReadSize(p.vAdjacents); i \u003c p.nVarsAlloc; i++  {\n        Msat_ClauseVecPush( p.vAdjacents, (Msat_Clause_t *)Msat_IntVecAlloc(5) );\n    }\n    Msat_IntVecFill( p.vVarsUsed, p.nVarsAlloc, 1 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the solver.]\n\n  Description [Cleans the solver assuming that the problem will involve \n  the given number of variables (nVars). This procedure is useful \n  for many small (incremental) SAT problems, to prevent the solver\n  from being reallocated each time.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverClean(p *Msat_Solver_t, nVars int32) {\n    var i int32;\n    // free the clauses\n    var nClauses int32;\n    var pClauses **Msat_Clause_t;\n\n    assert(p.nVarsAlloc \u003e= nVars, \"p.nVarsAlloc \u003e= nVars\");\n    p.nVars    = nVars;\n    p.nClauses = 0;\n\n    nClauses = Msat_ClauseVecReadSize( p.vClauses );\n    pClauses = Msat_ClauseVecReadArray( p.vClauses );\n    for  i = 0; i \u003c nClauses; i++  {\n        Msat_ClauseFree( p, pClauses[i], 0 );\n    }\n//    Msat_ClauseVecFree( p-\u003evClauses );\n    Msat_ClauseVecClear( p.vClauses );\n\n    nClauses = Msat_ClauseVecReadSize( p.vLearned );\n    pClauses = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = 0; i \u003c nClauses; i++  {\n        Msat_ClauseFree( p, pClauses[i], 0 );\n    }\n//    Msat_ClauseVecFree( p-\u003evLearned );\n    Msat_ClauseVecClear( p.vLearned );\n\n//    ABC_FREE( p-\u003epdActivity );\n    for  i = 0; i \u003c p.nVars; i++  {\n        p.pdActivity[i] = 0;\n    }\n\n//    Msat_OrderFree( p-\u003epOrder );\n//    Msat_OrderClean( p-\u003epOrder, p-\u003enVars, NULL );\n    Msat_OrderSetBounds( p.pOrder, p.nVars );\n\n    for  i = 0; i \u003c 2 * p.nVars; i++  {\n//        Msat_ClauseVecFree( p-\u003epvWatched[i] );\n        Msat_ClauseVecClear( p.pvWatched[i] );\n    }\n//    ABC_FREE( p-\u003epvWatched );\n//    Msat_QueueFree( p-\u003epQueue );\n    Msat_QueueClear( p.pQueue );\n\n//    ABC_FREE( p-\u003epAssigns );\n    for  i = 0; i \u003c p.nVars; i++  {\n        p.pAssigns[i] = MSAT_VAR_UNASSIGNED;\n    }\n//    Msat_IntVecFree( p-\u003evTrail );\n    Msat_IntVecClear( p.vTrail );\n//    Msat_IntVecFree( p-\u003evTrailLim );\n    Msat_IntVecClear( p.vTrailLim );\n//    ABC_FREE( p-\u003epReasons );\n    memset( p.pReasons, 0, sizeof(Msat_Clause_t *) * p.nVars );\n//    ABC_FREE( p-\u003epLevel );\n    for  i = 0; i \u003c p.nVars; i++  {\n        p.pLevel[i] = -1;\n    }\n//    Msat_IntVecFree( p-\u003epModel );\n//    Msat_MmStepStop( p-\u003epMem, 0 );\n    p.dRandSeed = 91648253;\n    p.dProgress = 0.0;\n\n//    ABC_FREE( p-\u003epSeen );\n    memset( p.pSeen, 0, sizeof(int) * p.nVars );\n    p.nSeenId = 1;\n//    Msat_IntVecFree( p-\u003evReason );\n    Msat_IntVecClear( p.vReason );\n//    Msat_IntVecFree( p-\u003evTemp );\n    Msat_IntVecClear( p.vTemp );\n//    printf(\" The number of clauses remaining = %d (%d).\\n\", p-\u003enClausesAlloc, p-\u003enClausesAllocL );\n//    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the solver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverFree(p *Msat_Solver_t) {\n    var i int32;\n\n    // free the clauses\n    var nClauses int32;\n    var pClauses **Msat_Clause_t;\n//printf( \"clauses = %d. learned = %d.\\n\", Msat_ClauseVecReadSize( p-\u003evClauses ), \n//                                         Msat_ClauseVecReadSize( p-\u003evLearned ) );\n\n    nClauses = Msat_ClauseVecReadSize( p.vClauses );\n    pClauses = Msat_ClauseVecReadArray( p.vClauses );\n    for  i = 0; i \u003c nClauses; i++  {\n        Msat_ClauseFree( p, pClauses[i], 0 );\n    }\n    Msat_ClauseVecFree( p.vClauses );\n\n    nClauses = Msat_ClauseVecReadSize( p.vLearned );\n    pClauses = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = 0; i \u003c nClauses; i++  {\n        Msat_ClauseFree( p, pClauses[i], 0 );\n    }\n    Msat_ClauseVecFree( p.vLearned );\n\n    // inlining of macro ABC_FREE\n    ((p.pdActivity) ? (free((char *) (p.pdActivity)), (p.pdActivity) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pFactors) ? (free((char *) (p.pFactors)), (p.pFactors) = 0) : 0);\n    Msat_OrderFree( p.pOrder );\n\n    for  i = 0; i \u003c 2 * p.nVarsAlloc; i++  {\n        Msat_ClauseVecFree( p.pvWatched[i] );\n    }\n    // inlining of macro ABC_FREE\n    ((p.pvWatched) ? (free((char *) (p.pvWatched)), (p.pvWatched) = 0) : 0);\n    Msat_QueueFree( p.pQueue );\n\n    // inlining of macro ABC_FREE\n    ((p.pAssigns) ? (free((char *) (p.pAssigns)), (p.pAssigns) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pModel) ? (free((char *) (p.pModel)), (p.pModel) = 0) : 0);\n    Msat_IntVecFree( p.vTrail );\n    Msat_IntVecFree( p.vTrailLim );\n    // inlining of macro ABC_FREE\n    ((p.pReasons) ? (free((char *) (p.pReasons)), (p.pReasons) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pLevel) ? (free((char *) (p.pLevel)), (p.pLevel) = 0) : 0);\n\n    Msat_MmStepStop( p.pMem, 0 );\n\n    nClauses = Msat_ClauseVecReadSize( p.vAdjacents );\n    pClauses = Msat_ClauseVecReadArray( p.vAdjacents );\n    for  i = 0; i \u003c nClauses; i++  {\n        Msat_IntVecFree( (Msat_IntVec_t *)pClauses[i] );\n    }\n    Msat_ClauseVecFree( p.vAdjacents );\n    Msat_IntVecFree( p.vConeVars );\n    Msat_IntVecFree( p.vVarsUsed );\n\n    // inlining of macro ABC_FREE\n    ((p.pSeen) ? (free((char *) (p.pSeen)), (p.pSeen) = 0) : 0);\n    Msat_IntVecFree( p.vReason );\n    Msat_IntVecFree( p.vTemp );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the solver to run on a subset of variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverPrepare(p *Msat_Solver_t, vVars *Msat_IntVec_t) {\n\n    var i int32;\n    // undo the previous data\n    for  i = 0; i \u003c p.nVarsAlloc; i++  {\n        p.pAssigns[i]   = MSAT_VAR_UNASSIGNED;\n        p.pReasons[i]   = nil;\n        p.pLevel[i]     = -1;\n        p.pdActivity[i] = 0.0;\n    }\n\n    // set the new variable order\n    Msat_OrderClean( p.pOrder, vVars );\n\n    Msat_QueueClear( p.pQueue );\n    Msat_IntVecClear( p.vTrail );\n    Msat_IntVecClear( p.vTrailLim );\n    p.dProgress = 0.0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets up the truth tables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverSetupTruthTables(uTruths [][2]uint32) {\n    var m, v int32;\n    // set up the truth tables\n    for  m = 0; m \u003c 32; m++  {\n        for  v = 0; v \u003c 5; v++  {\n            if m \u0026 (1 \u003c\u003c v) {\n                uTruths[v][0] |= (1 \u003c\u003c m); }\n        }\n    }\n    // make adjustments for the case of 6 variables\n    for  v = 0; v \u003c 5; v++  {\n        uTruths[v][1] = uTruths[v][0];\n    }\n    uTruths[5][0] = 0;\n    uTruths[5][1] = ~(uint32(0));\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

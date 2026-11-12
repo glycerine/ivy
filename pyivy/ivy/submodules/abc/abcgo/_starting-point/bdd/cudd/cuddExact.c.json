@@ -1,0 +1,1026 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c",
+  "SHA256": "285200b2762d30d5981eee74286097f00d2d7f0899f09dca29dcdfcf1e578089",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 15,
+        "ByteOffset": 8723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    newCost = ABC_ALLOC(int, maxBinomial);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 230,
+        "Column": 15,
+        "ByteOffset": 8914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    oldCost = ABC_ALLOC(int, maxBinomial);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 233,
+        "Column": 17,
+        "ByteOffset": 9010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    bestOrder = ABC_ALLOC(DdHalfWord, size);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 236,
+        "Column": 12,
+        "ByteOffset": 9103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    mask = ABC_ALLOC(char, nvars);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 313,
+        "Column": 5,
+        "ByteOffset": 12560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(bestOrder);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 314,
+        "Column": 5,
+        "ByteOffset": 12585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(oldCost);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 315,
+        "Column": 5,
+        "ByteOffset": 12608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(newCost);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 316,
+        "Column": 5,
+        "ByteOffset": 12631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(symmInfo);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 317,
+        "Column": 5,
+        "ByteOffset": 12655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(mask);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 324,
+        "Column": 27,
+        "ByteOffset": 12831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if bestOrder != nil { ABC_FREE(bestOrder); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 25,
+        "ByteOffset": 12878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if oldCost != nil { ABC_FREE(oldCost); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 326,
+        "Column": 25,
+        "ByteOffset": 12923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if newCost != nil { ABC_FREE(newCost); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 327,
+        "Column": 26,
+        "ByteOffset": 12969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if symmInfo != nil { ABC_FREE(symmInfo); }"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 328,
+        "Column": 22,
+        "ByteOffset": 13012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if mask != nil { ABC_FREE(mask); }"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 447,
+        "Column": 14,
+        "ByteOffset": 16027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    matrix = ABC_ALLOC(DdHalfWord *, rows);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 449,
+        "Column": 17,
+        "ByteOffset": 16112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    matrix[0] = ABC_ALLOC(DdHalfWord, cols*rows);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 451,
+        "Column": 9,
+        "ByteOffset": 16180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(matrix);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 474,
+        "Column": 5,
+        "ByteOffset": 16693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(matrix[0]);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 475,
+        "Column": 5,
+        "ByteOffset": 16718
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(matrix);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 886,
+        "Column": 17,
+        "ByteOffset": 31127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    symmInfo =  ABC_ALLOC(DdHalfWord, table.size);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 94,
+        "Column": 1,
+        "ByteOffset": 3736
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 98,
+        "Column": 1,
+        "ByteOffset": 3848
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 175,
+        "Column": 1,
+        "ByteOffset": 7100
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 196,
+        "Column": 1,
+        "ByteOffset": 7809
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 259,
+        "Column": 1,
+        "ByteOffset": 9964
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 303,
+        "Column": 1,
+        "ByteOffset": 12104
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 310,
+        "Column": 1,
+        "ByteOffset": 12305
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 311,
+        "Column": 1,
+        "ByteOffset": 12321
+      },
+      "Directive": "#ifdef DD_VERBOSE"
+    },
+    {
+      "Location": {
+        "Line": 554,
+        "Column": 1,
+        "ByteOffset": 18410
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 557,
+        "Column": 1,
+        "ByteOffset": 18482
+      },
+      "Directive": "#ifdef DD_VERBOSE"
+    },
+    {
+      "Location": {
+        "Line": 563,
+        "Column": 1,
+        "ByteOffset": 18572
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 581,
+        "Column": 1,
+        "ByteOffset": 19061
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 588,
+        "Column": 1,
+        "ByteOffset": 19232
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 590,
+        "Column": 1,
+        "ByteOffset": 19271
+      },
+      "Directive": "#ifdef DD_VERBOSE"
+    },
+    {
+      "Location": {
+        "Line": 669,
+        "Column": 1,
+        "ByteOffset": 21085
+      },
+      "Directive": "#ifdef DD_STATS"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "cuddExact",
+      "Start": 6510,
+      "End": 13171,
+      "BodyStart": 6574,
+      "Original": "int\ncuddExact(\n  DdManager * table,\n  int  lower,\n  int  upper)\n{\n    int k, i, j;\n    int maxBinomial, oldSubsets, newSubsets;\n    int subsetCost;\n    int size;                   /* number of variables to be reordered */\n    int unused, nvars, level, result;\n    int upperBound, lowerBound, cost;\n    int roots;\n    char *mask = NULL;\n    DdHalfWord  *symmInfo = NULL;\n    DdHalfWord **newOrder = NULL;\n    DdHalfWord **oldOrder = NULL;\n    int *newCost = NULL;\n    int *oldCost = NULL;\n    DdHalfWord **tmpOrder;\n    int *tmpCost;\n    DdHalfWord *bestOrder = NULL;\n    DdHalfWord *order;\n#ifdef DD_STATS\n    int  ddTotalSubsets;\n#endif\n\n    /* Restrict the range to be reordered by excluding unused variables\n    ** at the two ends. */\n    while (table-\u003esubtables[lower].keys == 1 \u0026\u0026\n           table-\u003evars[table-\u003einvperm[lower]]-\u003eref == 1 \u0026\u0026\n           lower \u003c upper)\n        lower++;\n    while (table-\u003esubtables[upper].keys == 1 \u0026\u0026\n           table-\u003evars[table-\u003einvperm[upper]]-\u003eref == 1 \u0026\u0026\n           lower \u003c upper)\n        upper--;\n    if (lower == upper) return(1); /* trivial problem */\n\n    /* Apply symmetric sifting to get a good upper bound and to extract\n    ** symmetry information. */\n    result = cuddSymmSiftingConv(table,lower,upper);\n    if (result == 0) goto cuddExactOutOfMem;\n\n#ifdef DD_STATS\n    (void) fprintf(table-\u003eout,\"\\n\");\n    ddTotalShuffles = 0;\n    ddTotalSubsets = 0;\n#endif\n\n    /* Initialization. */\n    nvars = table-\u003esize;\n    size = upper - lower + 1;\n    /* Count unused variable among those to be reordered.  This is only\n    ** used to compute maxBinomial. */\n    unused = 0;\n    for (i = lower + 1; i \u003c upper; i++) {\n        if (table-\u003esubtables[i].keys == 1 \u0026\u0026\n            table-\u003evars[table-\u003einvperm[i]]-\u003eref == 1)\n            unused++;\n    }\n\n    /* Find the maximum number of subsets we may have to store. */\n    maxBinomial = getMaxBinomial(size - unused);\n    if (maxBinomial == -1) goto cuddExactOutOfMem;\n\n    newOrder = getMatrix(maxBinomial, size);\n    if (newOrder == NULL) goto cuddExactOutOfMem;\n\n    newCost = ABC_ALLOC(int, maxBinomial);\n    if (newCost == NULL) goto cuddExactOutOfMem;\n\n    oldOrder = getMatrix(maxBinomial, size);\n    if (oldOrder == NULL) goto cuddExactOutOfMem;\n\n    oldCost = ABC_ALLOC(int, maxBinomial);\n    if (oldCost == NULL) goto cuddExactOutOfMem;\n\n    bestOrder = ABC_ALLOC(DdHalfWord, size);\n    if (bestOrder == NULL) goto cuddExactOutOfMem;\n\n    mask = ABC_ALLOC(char, nvars);\n    if (mask == NULL) goto cuddExactOutOfMem;\n\n    symmInfo = initSymmInfo(table, lower, upper);\n    if (symmInfo == NULL) goto cuddExactOutOfMem;\n\n    roots = ddCountRoots(table, lower, upper);\n\n    /* Initialize the old order matrix for the empty subset and the best\n    ** order to the current order. The cost for the empty subset includes\n    ** the cost of the levels between upper and the constants. These levels\n    ** are not going to change. Hence, we count them only once.\n    */\n    oldSubsets = 1;\n    for (i = 0; i \u003c size; i++) {\n        oldOrder[0][i] = bestOrder[i] = (DdHalfWord) table-\u003einvperm[i+lower];\n    }\n    subsetCost = table-\u003econstants.keys;\n    for (i = upper + 1; i \u003c nvars; i++)\n        subsetCost += getLevelKeys(table,i);\n    oldCost[0] = subsetCost;\n    /* The upper bound is initialized to the current size of the BDDs. */\n    upperBound = table-\u003ekeys - table-\u003eisolated;\n\n    /* Now consider subsets of increasing size. */\n    for (k = 1; k \u003c= size; k++) {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"Processing subsets of size %d\\n\", k);\n        fflush(table-\u003eout);\n#endif\n        newSubsets = 0;\n        level = size - k;               /* offset of first bottom variable */\n\n        for (i = 0; i \u003c oldSubsets; i++) { /* for each subset of size k-1 */\n            order = oldOrder[i];\n            cost = oldCost[i];\n            lowerBound = computeLB(table, order, roots, cost, lower, upper,\n                                   level);\n            if (lowerBound \u003e= upperBound)\n                continue;\n            /* Impose new order. */\n            result = ddShuffle(table, order, lower, upper);\n            if (result == 0) goto cuddExactOutOfMem;\n            upperBound = updateUB(table,upperBound,bestOrder,lower,upper);\n            /* For each top bottom variable. */\n            for (j = level; j \u003e= 0; j--) {\n                /* Skip unused variables. */\n                if (table-\u003esubtables[j+lower-1].keys == 1 \u0026\u0026\n                    table-\u003evars[table-\u003einvperm[j+lower-1]]-\u003eref == 1) continue;\n                /* Find cost under this order. */\n                subsetCost = cost + getLevelKeys(table, lower + level);\n                newSubsets = updateEntry(table, order, level, subsetCost,\n                                         newOrder, newCost, newSubsets, mask,\n                                         lower, upper);\n                if (j == 0)\n                    break;\n                if (checkSymmInfo(table, symmInfo, order[j-1], level) == 0)\n                    continue;\n                pushDown(order,j-1,level);\n                /* Impose new order. */\n                result = ddShuffle(table, order, lower, upper);\n                if (result == 0) goto cuddExactOutOfMem;\n                upperBound = updateUB(table,upperBound,bestOrder,lower,upper);\n            } /* for each bottom variable */\n        } /* for each subset of size k */\n\n        /* New orders become old orders in preparation for next iteration. */\n        tmpOrder = oldOrder; tmpCost = oldCost;\n        oldOrder = newOrder; oldCost = newCost;\n        newOrder = tmpOrder; newCost = tmpCost;\n#ifdef DD_STATS\n        ddTotalSubsets += newSubsets;\n#endif\n        oldSubsets = newSubsets;\n    }\n    result = ddShuffle(table, bestOrder, lower, upper);\n    if (result == 0) goto cuddExactOutOfMem;\n#ifdef DD_STATS\n#ifdef DD_VERBOSE\n    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n    (void) fprintf(table-\u003eout,\"#:S_EXACT   %8d: total subsets\\n\",\n                   ddTotalSubsets);\n    (void) fprintf(table-\u003eout,\"#:H_EXACT   %8d: total shuffles\",\n                   ddTotalShuffles);\n#endif\n\n    freeMatrix(newOrder);\n    freeMatrix(oldOrder);\n    ABC_FREE(bestOrder);\n    ABC_FREE(oldCost);\n    ABC_FREE(newCost);\n    ABC_FREE(symmInfo);\n    ABC_FREE(mask);\n    return(1);\n\ncuddExactOutOfMem:\n\n    if (newOrder != NULL) freeMatrix(newOrder);\n    if (oldOrder != NULL) freeMatrix(oldOrder);\n    if (bestOrder != NULL) ABC_FREE(bestOrder);\n    if (oldCost != NULL) ABC_FREE(oldCost);\n    if (newCost != NULL) ABC_FREE(newCost);\n    if (symmInfo != NULL) ABC_FREE(symmInfo);\n    if (mask != NULL) ABC_FREE(mask);\n    table-\u003eerrorCode = CUDD_MEMORY_OUT;\n    return(0);\n\n}",
+      "Draft": "func cuddExact(table *DdManager, lower int32, upper int32) int32 {\n    var k, i, j int32;\n    var maxBinomial, oldSubsets, newSubsets int32;\n    var subsetCost int32;\n    var size int32;                   /* number of variables to be reordered */\n    var unused, nvars, level, result int32;\n    var upperBound, lowerBound, cost int32;\n    var roots int32;\n    var mask string  = nil;\n    var symmInfo *DdHalfWord  = nil;\n    var newOrder **DdHalfWord  = nil;\n    var oldOrder **DdHalfWord  = nil;\n    var newCost *int32  = nil;\n    var oldCost *int32  = nil;\n    var tmpOrder **DdHalfWord;\n    var tmpCost *int32;\n    var bestOrder *DdHalfWord  = nil;\n    var order *DdHalfWord;\n#ifdef DD_STATS\n    int  ddTotalSubsets;\n#endif\n\n    /* Restrict the range to be reordered by excluding unused variables\n    ** at the two ends. */\n    for table.subtables[lower].keys == 1 \u0026\u0026\n           table.vars[table.invperm[lower]].ref == 1 \u0026\u0026\n           lower \u003c upper {\n        lower++;\n    }\n    for table.subtables[upper].keys == 1 \u0026\u0026\n           table.vars[table.invperm[upper]].ref == 1 \u0026\u0026\n           lower \u003c upper {\n        upper--;\n    }\n    if lower == upper { return(1); } /* trivial problem */\n\n    /* Apply symmetric sifting to get a good upper bound and to extract\n    ** symmetry information. */\n    result = cuddSymmSiftingConv(table,lower,upper);\n    if result == 0 { goto cuddExactOutOfMem; }\n\n#ifdef DD_STATS\n    (void) fprintf(table-\u003eout,\"\\n\");\n    ddTotalShuffles = 0;\n    ddTotalSubsets = 0;\n#endif\n\n    /* Initialization. */\n    nvars = table.size;\n    size = upper - lower + 1;\n    /* Count unused variable among those to be reordered.  This is only\n    ** used to compute maxBinomial. */\n    unused = 0;\n    for i = lower + 1; i \u003c upper; i++ {\n        if table.subtables[i].keys == 1 \u0026\u0026\n            table.vars[table.invperm[i]].ref == 1 {\n            unused++; }\n    }\n\n    /* Find the maximum number of subsets we may have to store. */\n    maxBinomial = getMaxBinomial(size - unused);\n    if maxBinomial == -1 { goto cuddExactOutOfMem; }\n\n    newOrder = getMatrix(maxBinomial, size);\n    if newOrder == nil { goto cuddExactOutOfMem; }\n\n    newCost = ABC_ALLOC(int, maxBinomial);\n    if newCost == nil { goto cuddExactOutOfMem; }\n\n    oldOrder = getMatrix(maxBinomial, size);\n    if oldOrder == nil { goto cuddExactOutOfMem; }\n\n    oldCost = ABC_ALLOC(int, maxBinomial);\n    if oldCost == nil { goto cuddExactOutOfMem; }\n\n    bestOrder = ABC_ALLOC(DdHalfWord, size);\n    if bestOrder == nil { goto cuddExactOutOfMem; }\n\n    mask = ABC_ALLOC(char, nvars);\n    if mask == nil { goto cuddExactOutOfMem; }\n\n    symmInfo = initSymmInfo(table, lower, upper);\n    if symmInfo == nil { goto cuddExactOutOfMem; }\n\n    roots = ddCountRoots(table, lower, upper);\n\n    /* Initialize the old order matrix for the empty subset and the best\n    ** order to the current order. The cost for the empty subset includes\n    ** the cost of the levels between upper and the constants. These levels\n    ** are not going to change. Hence, we count them only once.\n    */\n    oldSubsets = 1;\n    for i = 0; i \u003c size; i++ {\n        oldOrder[0][i] = bestOrder[i] = (DdHalfWord) table.invperm[i+lower];\n    }\n    subsetCost = table.constants.keys;\n    for i = upper + 1; i \u003c nvars; i++ {\n        subsetCost += getLevelKeys(table,i);\n    }\n    oldCost[0] = subsetCost;\n    /* The upper bound is initialized to the current size of the BDDs. */\n    upperBound = table.keys - table.isolated;\n\n    /* Now consider subsets of increasing size. */\n    for k = 1; k \u003c= size; k++ {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"Processing subsets of size %d\\n\", k);\n        fflush(table-\u003eout);\n#endif\n        newSubsets = 0;\n        level = size - k;               /* offset of first bottom variable */\n\n        for i = 0; i \u003c oldSubsets; i++ { /* for each subset of size k-1 */\n            order = oldOrder[i];\n            cost = oldCost[i];\n            lowerBound = computeLB(table, order, roots, cost, lower, upper,\n                                   level);\n            if lowerBound \u003e= upperBound {\n                continue; }\n            /* Impose new order. */\n            result = ddShuffle(table, order, lower, upper);\n            if result == 0 { goto cuddExactOutOfMem; }\n            upperBound = updateUB(table,upperBound,bestOrder,lower,upper);\n            /* For each top bottom variable. */\n            for j = level; j \u003e= 0; j-- {\n                /* Skip unused variables. */\n                if table.subtables[j+lower-1].keys == 1 \u0026\u0026\n                    table.vars[table.invperm[j+lower-1]].ref == 1 { continue; }\n                /* Find cost under this order. */\n                subsetCost = cost + getLevelKeys(table, lower + level);\n                newSubsets = updateEntry(table, order, level, subsetCost,\n                                         newOrder, newCost, newSubsets, mask,\n                                         lower, upper);\n                if j == 0 {\n                    break; }\n                if checkSymmInfo(table, symmInfo, order[j-1], level) == 0 {\n                    continue; }\n                pushDown(order,j-1,level);\n                /* Impose new order. */\n                result = ddShuffle(table, order, lower, upper);\n                if result == 0 { goto cuddExactOutOfMem; }\n                upperBound = updateUB(table,upperBound,bestOrder,lower,upper);\n            } /* for each bottom variable */\n        } /* for each subset of size k */\n\n        /* New orders become old orders in preparation for next iteration. */\n        tmpOrder = oldOrder; tmpCost = oldCost;\n        oldOrder = newOrder; oldCost = newCost;\n        newOrder = tmpOrder; newCost = tmpCost;\n#ifdef DD_STATS\n        ddTotalSubsets += newSubsets;\n#endif\n        oldSubsets = newSubsets;\n    }\n    result = ddShuffle(table, bestOrder, lower, upper);\n    if result == 0 { goto cuddExactOutOfMem; }\n#ifdef DD_STATS\n#ifdef DD_VERBOSE\n    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n    (void) fprintf(table-\u003eout,\"#:S_EXACT   %8d: total subsets\\n\",\n                   ddTotalSubsets);\n    (void) fprintf(table-\u003eout,\"#:H_EXACT   %8d: total shuffles\",\n                   ddTotalShuffles);\n#endif\n\n    freeMatrix(newOrder);\n    freeMatrix(oldOrder);\n    ABC_FREE(bestOrder);\n    ABC_FREE(oldCost);\n    ABC_FREE(newCost);\n    ABC_FREE(symmInfo);\n    ABC_FREE(mask);\n    return(1);\n\ncuddExactOutOfMem:\n\n    if newOrder != nil { freeMatrix(newOrder); }\n    if oldOrder != nil { freeMatrix(oldOrder); }\n    if bestOrder != nil { ABC_FREE(bestOrder); }\n    if oldCost != nil { ABC_FREE(oldCost); }\n    if newCost != nil { ABC_FREE(newCost); }\n    if symmInfo != nil { ABC_FREE(symmInfo); }\n    if mask != nil { ABC_FREE(mask); }\n    table.errorCode = CUDD_MEMORY_OUT;\n    return(0);\n\n}"
+    },
+    {
+      "Name": "getMaxBinomial",
+      "Start": 13869,
+      "End": 14161,
+      "BodyStart": 13905,
+      "Original": "static int\ngetMaxBinomial(\n  int n)\n{\n    double i, j, result;\n\n    if (n \u003c 0 || n \u003e 33) return(-1); /* error */\n    if (n \u003c 2) return(1);\n\n    for (result = (double)((n+3)/2), i = result+1, j=2; i \u003c= n; i++, j++) {\n        result *= i;\n        result /= j;\n    }\n\n    return((int)result);\n\n}",
+      "Draft": "func getMaxBinomial(n int32) int32 {\n    var i, j, result float64;\n\n    if n \u003c 0 || n \u003e 33 { return(-1); } /* error */\n    if n \u003c 2 { return(1); }\n\n    for result = float64(((n+3)/2)), i = result+1, j=2; i \u003c= n; i, j = i+1, j+1 {\n        result *= i;\n        result /= j;\n    }\n\n    return(int32(result));\n\n}"
+    },
+    {
+      "Name": "getMatrix",
+      "Start": 15892,
+      "End": 16388,
+      "BodyStart": 15995,
+      "Original": "static DdHalfWord **\ngetMatrix(\n  int  rows /* number of rows */,\n  int  cols /* number of columns */)\n{\n    DdHalfWord **matrix;\n    int i;\n\n    if (cols*rows == 0) return(NULL);\n    matrix = ABC_ALLOC(DdHalfWord *, rows);\n    if (matrix == NULL) return(NULL);\n    matrix[0] = ABC_ALLOC(DdHalfWord, cols*rows);\n    if (matrix[0] == NULL) {\n        ABC_FREE(matrix);\n        return(NULL);\n    }\n    for (i = 1; i \u003c rows; i++) {\n        matrix[i] = matrix[i-1] + cols;\n    }\n    return(matrix);\n\n}",
+      "Draft": "static DdHalfWord **\ngetMatrix(\n  int  rows /* number of rows */,\n  int  cols /* number of columns */)\n{\n    var matrix **DdHalfWord;\n    var i int32;\n\n    if cols*rows == 0 { return(nil); }\n    matrix = ABC_ALLOC(DdHalfWord *, rows);\n    if matrix == nil { return(nil); }\n    matrix[0] = ABC_ALLOC(DdHalfWord, cols*rows);\n    if matrix[0] == nil {\n        ABC_FREE(matrix);\n        return(nil);\n    }\n    for i = 1; i \u003c rows; i++ {\n        matrix[i] = matrix[i-1] + cols;\n    }\n    return(matrix);\n\n}"
+    },
+    {
+      "Name": "freeMatrix",
+      "Start": 16714,
+      "End": 16825,
+      "BodyStart": 16762,
+      "Original": "static void\nfreeMatrix(\n  DdHalfWord ** matrix)\n{\n    ABC_FREE(matrix[0]);\n    ABC_FREE(matrix);\n    return;\n\n}",
+      "Draft": "func freeMatrix(matrix **DdHalfWord) {\n    ABC_FREE(matrix[0]);\n    ABC_FREE(matrix);\n    return;\n\n}"
+    },
+    {
+      "Name": "getLevelKeys",
+      "Start": 17259,
+      "End": 17494,
+      "BodyStart": 17315,
+      "Original": "static int\ngetLevelKeys(\n  DdManager * table,\n  int  l)\n{\n    int isolated;\n    int x;        /* x is an index */\n\n    x = table-\u003einvperm[l];\n    isolated = table-\u003evars[x]-\u003eref == 1;\n\n    return(table-\u003esubtables[l].keys - isolated);\n\n}",
+      "Draft": "func getLevelKeys(table *DdManager, l int32) int32 {\n    var isolated int32;\n    var x int32;        /* x is an index */\n\n    x = table.invperm[l];\n    isolated = table.vars[x].ref == 1;\n\n    return(table.subtables[l].keys - isolated);\n\n}"
+    },
+    {
+      "Name": "ddShuffle",
+      "Start": 18175,
+      "End": 19678,
+      "BodyStart": 18274,
+      "Original": "static int\nddShuffle(\n  DdManager * table,\n  DdHalfWord * permutation,\n  int  lower,\n  int  upper)\n{\n    DdHalfWord  index;\n    int         level;\n    int         position;\n#if 0\n    int         numvars;\n#endif\n    int         result;\n#ifdef DD_STATS\n    long        localTime;\n    int         initialSize;\n#ifdef DD_VERBOSE\n    int         finalSize;\n#endif\n    int         previousSize;\n#endif\n\n#ifdef DD_STATS\n    localTime = util_cpu_time();\n    initialSize = table-\u003ekeys - table-\u003eisolated;\n#endif\n\n#if 0\n    numvars = table-\u003esize;\n\n    (void) fprintf(table-\u003eout,\"%d:\", ddTotalShuffles);\n    for (level = 0; level \u003c numvars; level++) {\n        (void) fprintf(table-\u003eout,\" %d\", table-\u003einvperm[level]);\n    }\n    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n\n    for (level = 0; level \u003c= upper - lower; level++) {\n        index = permutation[level];\n        position = table-\u003eperm[index];\n#ifdef DD_STATS\n        previousSize = table-\u003ekeys - table-\u003eisolated;\n#endif\n        result = ddSiftUp(table,position,level+lower);\n        if (!result) return(0);\n    }\n\n#ifdef DD_STATS\n    ddTotalShuffles++;\n#ifdef DD_VERBOSE\n    finalSize = table-\u003ekeys - table-\u003eisolated;\n    if (finalSize \u003c initialSize) {\n        (void) fprintf(table-\u003eout,\"-\");\n    } else if (finalSize \u003e initialSize) {\n        (void) fprintf(table-\u003eout,\"+\");\n    } else {\n        (void) fprintf(table-\u003eout,\"=\");\n    }\n    if ((ddTotalShuffles \u0026 63) == 0) (void) fprintf(table-\u003eout,\"\\n\");\n    fflush(table-\u003eout);\n#endif\n#endif\n\n    return(1);\n\n}",
+      "Draft": "func ddShuffle(table *DdManager, permutation *DdHalfWord, lower int32, upper int32) int32 {\n    var index DdHalfWord;\n    var level int32;\n    var position int32;\n     \n                        \n      \n    var result int32;\n#ifdef DD_STATS\n    long        localTime;\n    int         initialSize;\n#ifdef DD_VERBOSE\n    int         finalSize;\n#endif\n    int         previousSize;\n#endif\n\n#ifdef DD_STATS\n    localTime = util_cpu_time();\n    initialSize = table-\u003ekeys - table-\u003eisolated;\n#endif\n\n     \n                          \n\n                                                      \n                                               \n                                                                \n     \n                                    \n      \n\n    for level = 0; level \u003c= upper - lower; level++ {\n        index = permutation[level];\n        position = table.perm[index];\n#ifdef DD_STATS\n        previousSize = table-\u003ekeys - table-\u003eisolated;\n#endif\n        result = ddSiftUp(table,position,level+lower);\n        if !(result != 0) { return(0); }\n    }\n\n#ifdef DD_STATS\n    ddTotalShuffles++;\n#ifdef DD_VERBOSE\n    finalSize = table-\u003ekeys - table-\u003eisolated;\n    if (finalSize \u003c initialSize) {\n        (void) fprintf(table-\u003eout,\"-\");\n    } else if (finalSize \u003e initialSize) {\n        (void) fprintf(table-\u003eout,\"+\");\n    } else {\n        (void) fprintf(table-\u003eout,\"=\");\n    }\n    if ((ddTotalShuffles \u0026 63) == 0) (void) fprintf(table-\u003eout,\"\\n\");\n    fflush(table-\u003eout);\n#endif\n#endif\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "ddSiftUp",
+      "Start": 20111,
+      "End": 20445,
+      "BodyStart": 20176,
+      "Original": "static int\nddSiftUp(\n  DdManager * table,\n  int  x,\n  int  xLow)\n{\n    int        y;\n    int        size;\n\n    y = cuddNextLow(table,x);\n    while (y \u003e= xLow) {\n        size = cuddSwapInPlace(table,y,x);\n        if (size == 0) {\n            return(0);\n        }\n        x = y;\n        y = cuddNextLow(table,x);\n    }\n    return(1);\n\n}",
+      "Draft": "func ddSiftUp(table *DdManager, x int32, xLow int32) int32 {\n    var y int32;\n    var size int32;\n\n    y = cuddNextLow(table,x);\n    for y \u003e= xLow {\n        size = cuddSwapInPlace(table,y,x);\n        if size == 0 {\n            return(0);\n        }\n        x = y;\n        y = cuddNextLow(table,x);\n    }\n    return(1);\n\n}"
+    },
+    {
+      "Name": "updateUB",
+      "Start": 20877,
+      "End": 21386,
+      "BodyStart": 20990,
+      "Original": "static int\nupdateUB(\n  DdManager * table,\n  int  oldBound,\n  DdHalfWord * bestOrder,\n  int  lower,\n  int  upper)\n{\n    int i;\n    int newBound = table-\u003ekeys - table-\u003eisolated;\n\n    if (newBound \u003c oldBound) {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"New upper bound = %d\\n\", newBound);\n        fflush(table-\u003eout);\n#endif\n        for (i = lower; i \u003c= upper; i++)\n            bestOrder[i-lower] = (DdHalfWord) table-\u003einvperm[i];\n        return(newBound);\n    } else {\n        return(oldBound);\n    }\n\n}",
+      "Draft": "func updateUB(table *DdManager, oldBound int32, bestOrder *DdHalfWord, lower int32, upper int32) int32 {\n    var i int32;\n    var newBound int32  = table.keys - table.isolated;\n\n    if newBound \u003c oldBound {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"New upper bound = %d\\n\", newBound);\n        fflush(table-\u003eout);\n#endif\n        for i = lower; i \u003c= upper; i++ {\n            bestOrder[i-lower] = (DdHalfWord) table.invperm[i];\n        }\n        return(newBound);\n    } else {\n        return(oldBound);\n    }\n\n}"
+    },
+    {
+      "Name": "ddCountRoots",
+      "Start": 22081,
+      "End": 23801,
+      "BodyStart": 22155,
+      "Original": "static int\nddCountRoots(\n  DdManager * table,\n  int  lower,\n  int  upper)\n{\n    int i,j;\n    DdNode *f;\n    DdNodePtr *nodelist;\n    DdNode *sentinel = \u0026(table-\u003esentinel);\n    int slots;\n    int roots = 0;\n    int maxlevel = lower;\n\n    for (i = lower; i \u003c= upper; i++) {\n        nodelist = table-\u003esubtables[i].nodelist;\n        slots = table-\u003esubtables[i].slots;\n        for (j = 0; j \u003c slots; j++) {\n            f = nodelist[j];\n            while (f != sentinel) {\n                /* A node is a root of the DAG if it cannot be\n                ** reached by nodes above it. If a node was never\n                ** reached during the previous depth-first searches,\n                ** then it is a root, and we start a new depth-first\n                ** search from it.\n                */\n                if (!Cudd_IsComplement(f-\u003enext)) {\n                    if (f != table-\u003evars[f-\u003eindex]) {\n                        roots++;\n                    }\n                }\n                if (!Cudd_IsConstant(cuddT(f))) {\n                    cuddT(f)-\u003enext = Cudd_Complement(cuddT(f)-\u003enext);\n                    if (table-\u003eperm[cuddT(f)-\u003eindex] \u003e maxlevel)\n                        maxlevel = table-\u003eperm[cuddT(f)-\u003eindex];\n                }\n                if (!Cudd_IsConstant(cuddE(f))) {\n                    Cudd_Regular(cuddE(f))-\u003enext =\n                        Cudd_Complement(Cudd_Regular(cuddE(f))-\u003enext);\n                    if (table-\u003eperm[Cudd_Regular(cuddE(f))-\u003eindex] \u003e maxlevel)\n                        maxlevel = table-\u003eperm[Cudd_Regular(cuddE(f))-\u003eindex];\n                }\n                f = Cudd_Regular(f-\u003enext);\n            }\n        }\n    }\n    ddClearGlobal(table, lower, maxlevel);\n\n    return(roots);\n\n}",
+      "Draft": "func ddCountRoots(table *DdManager, lower int32, upper int32) int32 {\n    var i, j int32;\n    var f *DdNode;\n    var nodelist *DdNodePtr;\n    var sentinel *DdNode  = \u0026(table.sentinel);\n    var slots int32;\n    var roots int32;\n    var maxlevel int32  = lower;\n\n    for i = lower; i \u003c= upper; i++ {\n        nodelist = table.subtables[i].nodelist;\n        slots = table.subtables[i].slots;\n        for j = 0; j \u003c slots; j++ {\n            f = nodelist[j];\n            for f != sentinel {\n                /* A node is a root of the DAG if it cannot be\n                ** reached by nodes above it. If a node was never\n                ** reached during the previous depth-first searches,\n                ** then it is a root, and we start a new depth-first\n                ** search from it.\n                */\n                // inlining of macro Cudd_IsComplement\n                if !((int32( ((ptrint) (f.next) \u0026 01)) != 0)) {\n                    if f != table.vars[f.index] {\n                        roots++;\n                    }\n                }\n                // inlining of macro Cudd_IsConstant\n                // inlining of macro Cudd_Regular\n                // inlining of macro cuddT\n                if !((((DdNode *)((ptruint)(((f).type.kids.T)) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n                    // inlining of macro cuddT\n                    // inlining of macro Cudd_Complement\n                    ((f).type.kids.T).next = ((DdNode *)((ptruint)(((f).type.kids.T).next) | 01));\n                    // inlining of macro cuddT\n                    if table.perm[((f).type.kids.T).index] \u003e maxlevel {\n                        // inlining of macro cuddT\n                        maxlevel = table.perm[((f).type.kids.T).index]; }\n                }\n                // inlining of macro Cudd_IsConstant\n                // inlining of macro Cudd_Regular\n                // inlining of macro cuddE\n                if !((((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n                    // inlining of macro Cudd_Regular\n                    // inlining of macro cuddE\n                    ((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).next =\n                        // inlining of macro Cudd_Complement\n                        // inlining of macro Cudd_Regular\n                        // inlining of macro cuddE\n                        ((DdNode *)((ptruint)(((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).next) | 01));\n                    // inlining of macro Cudd_Regular\n                    // inlining of macro cuddE\n                    if table.perm[((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).index] \u003e maxlevel {\n                        // inlining of macro Cudd_Regular\n                        // inlining of macro cuddE\n                        maxlevel = table.perm[((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).index]; }\n                }\n                // inlining of macro Cudd_Regular\n                f = ((DdNode *)((ptruint)(f.next) \u0026 ~01));\n            }\n        }\n    }\n    ddClearGlobal(table, lower, maxlevel);\n\n    return(roots);\n\n}"
+    },
+    {
+      "Name": "ddClearGlobal",
+      "Start": 24327,
+      "End": 24867,
+      "BodyStart": 24406,
+      "Original": "static void\nddClearGlobal(\n  DdManager * table,\n  int  lower,\n  int  maxlevel)\n{\n    int i,j;\n    DdNode *f;\n    DdNodePtr *nodelist;\n    DdNode *sentinel = \u0026(table-\u003esentinel);\n    int slots;\n\n    for (i = lower; i \u003c= maxlevel; i++) {\n        nodelist = table-\u003esubtables[i].nodelist;\n        slots = table-\u003esubtables[i].slots;\n        for (j = 0; j \u003c slots; j++) {\n            f = nodelist[j];\n            while (f != sentinel) {\n                f-\u003enext = Cudd_Regular(f-\u003enext);\n                f = f-\u003enext;\n            }\n        }\n    }\n\n}",
+      "Draft": "func ddClearGlobal(table *DdManager, lower int32, maxlevel int32) {\n    var i, j int32;\n    var f *DdNode;\n    var nodelist *DdNodePtr;\n    var sentinel *DdNode  = \u0026(table.sentinel);\n    var slots int32;\n\n    for i = lower; i \u003c= maxlevel; i++ {\n        nodelist = table.subtables[i].nodelist;\n        slots = table.subtables[i].slots;\n        for j = 0; j \u003c slots; j++ {\n            f = nodelist[j];\n            for f != sentinel {\n                // inlining of macro Cudd_Regular\n                f.next = ((DdNode *)((ptruint)(f.next) \u0026 ~01));\n                f = f.next;\n            }\n        }\n    }\n\n}"
+    },
+    {
+      "Name": "computeLB",
+      "Start": 25550,
+      "End": 27127,
+      "BodyStart": 26037,
+      "Original": "static int\ncomputeLB(\n  DdManager * table             /* manager */,\n  DdHalfWord * order            /* optimal order for the subset */,\n  int  roots                    /* roots between lower and upper */,\n  int  cost                     /* minimum cost for the subset */,\n  int  lower                    /* lower level to be reordered */,\n  int  upper                    /* upper level to be reordered */,\n  int  level                    /* offset for the current top bottom var */\n  )\n{\n    int i;\n    int lb = cost;\n    int lb1 = 0;\n    int lb2;\n    int support;\n    DdHalfWord ref;\n\n    /* The levels not involved in reordering are not going to change.\n    ** Add their sizes to the lower bound.\n    */\n    for (i = 0; i \u003c lower; i++) {\n        lb += getLevelKeys(table,i);\n    }\n    /* If a variable is in the support, then there is going\n    ** to be at least one node labeled by that variable.\n    */\n    for (i = lower; i \u003c= lower+level; i++) {\n        support = table-\u003esubtables[i].keys \u003e 1 ||\n            table-\u003evars[order[i-lower]]-\u003eref \u003e 1;\n        lb1 += support;\n    }\n\n    /* Estimate the number of nodes required to connect the roots to\n    ** the nodes in the bottom part. */\n    if (lower+level+1 \u003c table-\u003esize) {\n        if (lower+level \u003c upper)\n            ref = table-\u003evars[order[level+1]]-\u003eref;\n        else\n            ref = table-\u003evars[table-\u003einvperm[upper+1]]-\u003eref;\n        lb2 = table-\u003esubtables[lower+level+1].keys -\n            (ref \u003e (DdHalfWord) 1) - roots;\n    } else {\n        lb2 = 0;\n    }\n\n    lb += lb1 \u003e lb2 ? lb1 : lb2;\n\n    return(lb);\n\n}",
+      "Draft": "static int\ncomputeLB(\n  DdManager * table             /* manager */,\n  DdHalfWord * order            /* optimal order for the subset */,\n  int  roots                    /* roots between lower and upper */,\n  int  cost                     /* minimum cost for the subset */,\n  int  lower                    /* lower level to be reordered */,\n  int  upper                    /* upper level to be reordered */,\n  int  level                    /* offset for the current top bottom var */\n  )\n{\n    var i int32;\n    var lb int32  = cost;\n    var lb1 int32;\n    var lb2 int32;\n    var support int32;\n    var ref DdHalfWord;\n\n    /* The levels not involved in reordering are not going to change.\n    ** Add their sizes to the lower bound.\n    */\n    for i = 0; i \u003c lower; i++ {\n        lb += getLevelKeys(table,i);\n    }\n    /* If a variable is in the support, then there is going\n    ** to be at least one node labeled by that variable.\n    */\n    for i = lower; i \u003c= lower+level; i++ {\n        support = table.subtables[i].keys \u003e 1 ||\n            table.vars[order[i-lower]].ref \u003e 1;\n        lb1 += support;\n    }\n\n    /* Estimate the number of nodes required to connect the roots to\n    ** the nodes in the bottom part. */\n    if lower+level+1 \u003c table.size {\n        if lower+level \u003c upper {\n            ref = table.vars[order[level+1]].ref;\n        } else {\n            ref = table.vars[table.invperm[upper+1]].ref; }\n        lb2 = table.subtables[lower+level+1].keys -\n            (ref \u003e (DdHalfWord) 1) - roots;\n    } else {\n        lb2 = 0;\n    }\n\n    lb += lb1 \u003e lb2 ? lb1 : lb2;\n\n    return(lb);\n\n}"
+    },
+    {
+      "Name": "updateEntry",
+      "Start": 27650,
+      "End": 28691,
+      "BodyStart": 27842,
+      "Original": "static int\nupdateEntry(\n  DdManager * table,\n  DdHalfWord * order,\n  int  level,\n  int  cost,\n  DdHalfWord ** orders,\n  int * costs,\n  int  subsets,\n  char * mask,\n  int  lower,\n  int  upper)\n{\n    int i, j;\n    int size = upper - lower + 1;\n\n    /* Build a mask that says what variables are in this subset. */\n    for (i = lower; i \u003c= upper; i++)\n        mask[table-\u003einvperm[i]] = 0;\n    for (i = level; i \u003c size; i++)\n        mask[order[i]] = 1;\n\n    /* Check each subset until a match is found or all subsets are examined. */\n    for (i = 0; i \u003c subsets; i++) {\n        DdHalfWord *subset = orders[i];\n        for (j = level; j \u003c size; j++) {\n            if (mask[subset[j]] == 0)\n                break;\n        }\n        if (j == size)          /* no mismatches: success */\n            break;\n    }\n    if (i == subsets || cost \u003c costs[i]) {              /* add or replace */\n        for (j = 0; j \u003c size; j++)\n            orders[i][j] = order[j];\n        costs[i] = cost;\n        subsets += (i == subsets);\n    }\n    return(subsets);\n\n}",
+      "Draft": "func updateEntry(table *DdManager, order *DdHalfWord, level int32, cost int32, orders **DdHalfWord, costs *int32, subsets int32, mask string, lower int32, upper int32) int32 {\n    var i, j int32;\n    var size int32  = upper - lower + 1;\n\n    /* Build a mask that says what variables are in this subset. */\n    for i = lower; i \u003c= upper; i++ {\n        mask[table.invperm[i]] = 0;\n    }\n    for i = level; i \u003c size; i++ {\n        mask[order[i]] = 1;\n    }\n\n    /* Check each subset until a match is found or all subsets are examined. */\n    for i = 0; i \u003c subsets; i++ {\n        var subset *DdHalfWord  = orders[i];\n        for j = level; j \u003c size; j++ {\n            if mask[subset[j]] == 0 {\n                break; }\n        }\n        if j == size {          /* no mismatches: success */\n            break; }\n    }\n    if i == subsets || cost \u003c costs[i] {              /* add or replace */\n        for j = 0; j \u003c size; j++ {\n            orders[i][j] = order[j];\n        }\n        costs[i] = cost;\n        subsets += (i == subsets);\n    }\n    return(subsets);\n\n}"
+    },
+    {
+      "Name": "pushDown",
+      "Start": 29012,
+      "End": 29243,
+      "BodyStart": 29080,
+      "Original": "static void\npushDown(\n  DdHalfWord * order,\n  int  j,\n  int  level)\n{\n    int i;\n    DdHalfWord tmp;\n\n    tmp = order[j];\n    for (i = j; i \u003c level; i++) {\n        order[i] = order[i+1];\n    }\n    order[level] = tmp;\n    return;\n\n}",
+      "Draft": "func pushDown(order *DdHalfWord, j int32, level int32) {\n    var i int32;\n    var tmp DdHalfWord;\n\n    tmp = order[j];\n    for i = j; i \u003c level; i++ {\n        order[i] = order[i+1];\n    }\n    order[level] = tmp;\n    return;\n\n}"
+    },
+    {
+      "Name": "initSymmInfo",
+      "Start": 30166,
+      "End": 30655,
+      "BodyStart": 30249,
+      "Original": "static DdHalfWord *\ninitSymmInfo(\n  DdManager * table,\n  int  lower,\n  int  upper)\n{\n    int level, index, next, nextindex;\n    DdHalfWord *symmInfo;\n\n    symmInfo =  ABC_ALLOC(DdHalfWord, table-\u003esize);\n    if (symmInfo == NULL) return(NULL);\n\n    for (level = lower; level \u003c= upper; level++) {\n        index = table-\u003einvperm[level];\n        next =  table-\u003esubtables[level].next;\n        nextindex = table-\u003einvperm[next];\n        symmInfo[index] = nextindex;\n    }\n    return(symmInfo);\n\n}",
+      "Draft": "func initSymmInfo(table *DdManager, lower int32, upper int32) *DdHalfWord {\n    var level, index, next, nextindex int32;\n    var symmInfo *DdHalfWord;\n\n    symmInfo =  ABC_ALLOC(DdHalfWord, table.size);\n    if symmInfo == nil { return(nil); }\n\n    for level = lower; level \u003c= upper; level++ {\n        index = table.invperm[level];\n        next =  table.subtables[level].next;\n        nextindex = table.invperm[next];\n        symmInfo[index] = nextindex;\n    }\n    return(symmInfo);\n\n}"
+    },
+    {
+      "Name": "checkSymmInfo",
+      "Start": 31131,
+      "End": 31416,
+      "BodyStart": 31231,
+      "Original": "static int\ncheckSymmInfo(\n  DdManager * table,\n  DdHalfWord * symmInfo,\n  int  index,\n  int  level)\n{\n    int i;\n\n    i = symmInfo[index];\n    while (i != index) {\n        if (index \u003c i \u0026\u0026 table-\u003eperm[i] \u003c= level)\n            return(0);\n        i = symmInfo[i];\n    }\n    return(1);\n\n}",
+      "Draft": "func checkSymmInfo(table *DdManager, symmInfo *DdHalfWord, index int32, level int32) int32 {\n    var i int32;\n\n    i = symmInfo[index];\n    for i != index {\n        if index \u003c i \u0026\u0026 table.perm[i] \u003c= level {\n            return(0); }\n        i = symmInfo[i];\n    }\n    return(1);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::pointer-cast::22448",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23068,
+      "End": 23068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::pointer-cast::22710",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23134,
+      "End": 23134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::pointer-cast::23179",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23336,
+      "End": 23336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::pointer-cast::23370",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23385,
+      "End": 23385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::pointer-cast::23544",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23440,
+      "End": 23440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::pointer-cast::23614",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23440,
+      "End": 23440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::pointer-cast::23804",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23523,
+      "End": 23523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::pointer-cast::24010",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23613,
+      "End": 23613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::pointer-cast::24196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23683,
+      "End": 23683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::pointer-cast::25361",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24783,
+      "End": 24783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::cuddExact",
+      "Category": "semantic-review",
+      "Symbol": "cuddExact",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6510,
+      "End": 13171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::getMaxBinomial",
+      "Category": "semantic-review",
+      "Symbol": "getMaxBinomial",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13869,
+      "End": 14161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::getMatrix",
+      "Category": "semantic-review",
+      "Symbol": "getMatrix",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 15892,
+      "End": 16388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::freeMatrix",
+      "Category": "semantic-review",
+      "Symbol": "freeMatrix",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16714,
+      "End": 16825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::getLevelKeys",
+      "Category": "semantic-review",
+      "Symbol": "getLevelKeys",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17259,
+      "End": 17494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::ddShuffle",
+      "Category": "semantic-review",
+      "Symbol": "ddShuffle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18175,
+      "End": 19678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::ddSiftUp",
+      "Category": "semantic-review",
+      "Symbol": "ddSiftUp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20111,
+      "End": 20445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::updateUB",
+      "Category": "semantic-review",
+      "Symbol": "updateUB",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20877,
+      "End": 21386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::ddCountRoots",
+      "Category": "semantic-review",
+      "Symbol": "ddCountRoots",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22081,
+      "End": 23801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::ddClearGlobal",
+      "Category": "semantic-review",
+      "Symbol": "ddClearGlobal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24327,
+      "End": 24867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::ternary::computeLB",
+      "Category": "ternary-review",
+      "Symbol": "computeLB",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 25550,
+      "End": 27127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::computeLB",
+      "Category": "semantic-review",
+      "Symbol": "computeLB",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 25550,
+      "End": 27127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::updateEntry",
+      "Category": "semantic-review",
+      "Symbol": "updateEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27650,
+      "End": 28691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::pushDown",
+      "Category": "semantic-review",
+      "Symbol": "pushDown",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29012,
+      "End": 29243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::initSymmInfo",
+      "Category": "semantic-review",
+      "Symbol": "initSymmInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30166,
+      "End": 30655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::checkSymmInfo",
+      "Category": "semantic-review",
+      "Symbol": "checkSymmInfo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31131,
+      "End": 31416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 31470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3736,
+      "End": 3846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3848,
+      "End": 3898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7100,
+      "End": 7147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7809,
+      "End": 7917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9964,
+      "End": 10087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 12104,
+      "End": 12164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 12305,
+      "End": 12593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 18410,
+      "End": 18570
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 18572,
+      "End": 18676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 19061,
+      "End": 19137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 19232,
+      "End": 19659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 21085,
+      "End": 21206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::8575",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8575,
+      "End": 8602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::8764",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8764,
+      "End": 8791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::8859",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8859,
+      "End": 8886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::8951",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8951,
+      "End": 8973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::12651",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12651,
+      "End": 12670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::12676",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12676,
+      "End": 12693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::12699",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12699,
+      "End": 12716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::12722",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12722,
+      "End": 12740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::12746",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12746,
+      "End": 12760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::12921",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12921,
+      "End": 12940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::12967",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12967,
+      "End": 12984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::13011",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13011,
+      "End": 13028
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::13056",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13056,
+      "End": 13074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::13098",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13098,
+      "End": 13112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::16085",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16085,
+      "End": 16114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::16170",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16170,
+      "End": 16202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::16241",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16241,
+      "End": 16257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::16768",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16768,
+      "End": 16787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::16793",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16793,
+      "End": 16809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddExact.c::macro-inline::30333",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30333,
+      "End": 30367
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddExact.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions for exact variable reordering.]\n\n  Description [External procedures included in this file:\n                \u003cul\u003e\n                \u003c/ul\u003e\n        Internal procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddExact()\n                \u003c/ul\u003e\n        Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e getMaxBinomial()\n                \u003cli\u003e gcd()\n                \u003cli\u003e getMatrix()\n                \u003cli\u003e freeMatrix()\n                \u003cli\u003e getLevelKeys()\n                \u003cli\u003e ddShuffle()\n                \u003cli\u003e ddSiftUp()\n                \u003cli\u003e updateUB()\n                \u003cli\u003e ddCountRoots()\n                \u003cli\u003e ddClearGlobal()\n                \u003cli\u003e computeLB()\n                \u003cli\u003e updateEntry()\n                \u003cli\u003e pushDown()\n                \u003cli\u003e initSymmInfo()\n                \u003c/ul\u003e]\n\n  Author      [Cheng Hua, Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddExact.c,v 1.28 2009/02/19 16:19:19 fabio Exp $\";\n#endif\n\n#ifdef DD_STATS\nstatic int ddTotalShuffles;\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static int getMaxBinomial (int n);\n\n// static DdHalfWord ** getMatrix (int rows, int cols);\n\n// static void freeMatrix (DdHalfWord **matrix);\n\n// static int getLevelKeys (DdManager *table, int l);\n\n// static int ddShuffle (DdManager *table, DdHalfWord *permutation, int lower, int upper);\n\n// static int ddSiftUp (DdManager *table, int x, int xLow);\n\n// static int updateUB (DdManager *table, int oldBound, DdHalfWord *bestOrder, int lower, int upper);\n\n// static int ddCountRoots (DdManager *table, int lower, int upper);\n\n// static void ddClearGlobal (DdManager *table, int lower, int maxlevel);\n\n// static int computeLB (DdManager *table, DdHalfWord *order, int roots, int cost, int lower, int upper, int level);\n\n// static int updateEntry (DdManager *table, DdHalfWord *order, int level, int cost, DdHalfWord **orders, int *costs, int subsets, char *mask, int lower, int upper);\n\n// static void pushDown (DdHalfWord *order, int j, int level);\n\n// static DdHalfWord * initSymmInfo (DdManager *table, int lower, int upper);\n\n// static int checkSymmInfo (DdManager *table, DdHalfWord *symmInfo, int index, int level);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Exact variable ordering algorithm.]\n\n  Description [Exact variable ordering algorithm. Finds an optimum\n  order for the variables between lower and upper.  Returns 1 if\n  successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddExact(table *DdManager, lower int32, upper int32) int32 {\n    var k, i, j int32;\n    var maxBinomial, oldSubsets, newSubsets int32;\n    var subsetCost int32;\n    var size int32;                   /* number of variables to be reordered */\n    var unused, nvars, level, result int32;\n    var upperBound, lowerBound, cost int32;\n    var roots int32;\n    var mask string  = nil;\n    var symmInfo *DdHalfWord  = nil;\n    var newOrder **DdHalfWord  = nil;\n    var oldOrder **DdHalfWord  = nil;\n    var newCost *int32  = nil;\n    var oldCost *int32  = nil;\n    var tmpOrder **DdHalfWord;\n    var tmpCost *int32;\n    var bestOrder *DdHalfWord  = nil;\n    var order *DdHalfWord;\n#ifdef DD_STATS\n    int  ddTotalSubsets;\n#endif\n\n    /* Restrict the range to be reordered by excluding unused variables\n    ** at the two ends. */\n    for table.subtables[lower].keys == 1 \u0026\u0026\n           table.vars[table.invperm[lower]].ref == 1 \u0026\u0026\n           lower \u003c upper {\n        lower++;\n    }\n    for table.subtables[upper].keys == 1 \u0026\u0026\n           table.vars[table.invperm[upper]].ref == 1 \u0026\u0026\n           lower \u003c upper {\n        upper--;\n    }\n    if lower == upper { return(1); } /* trivial problem */\n\n    /* Apply symmetric sifting to get a good upper bound and to extract\n    ** symmetry information. */\n    result = cuddSymmSiftingConv(table,lower,upper);\n    if result == 0 { goto cuddExactOutOfMem; }\n\n#ifdef DD_STATS\n    (void) fprintf(table-\u003eout,\"\\n\");\n    ddTotalShuffles = 0;\n    ddTotalSubsets = 0;\n#endif\n\n    /* Initialization. */\n    nvars = table.size;\n    size = upper - lower + 1;\n    /* Count unused variable among those to be reordered.  This is only\n    ** used to compute maxBinomial. */\n    unused = 0;\n    for i = lower + 1; i \u003c upper; i++ {\n        if table.subtables[i].keys == 1 \u0026\u0026\n            table.vars[table.invperm[i]].ref == 1 {\n            unused++; }\n    }\n\n    /* Find the maximum number of subsets we may have to store. */\n    maxBinomial = getMaxBinomial(size - unused);\n    if maxBinomial == -1 { goto cuddExactOutOfMem; }\n\n    newOrder = getMatrix(maxBinomial, size);\n    if newOrder == nil { goto cuddExactOutOfMem; }\n\n    newCost = ABC_ALLOC(int, maxBinomial);\n    if newCost == nil { goto cuddExactOutOfMem; }\n\n    oldOrder = getMatrix(maxBinomial, size);\n    if oldOrder == nil { goto cuddExactOutOfMem; }\n\n    oldCost = ABC_ALLOC(int, maxBinomial);\n    if oldCost == nil { goto cuddExactOutOfMem; }\n\n    bestOrder = ABC_ALLOC(DdHalfWord, size);\n    if bestOrder == nil { goto cuddExactOutOfMem; }\n\n    mask = ABC_ALLOC(char, nvars);\n    if mask == nil { goto cuddExactOutOfMem; }\n\n    symmInfo = initSymmInfo(table, lower, upper);\n    if symmInfo == nil { goto cuddExactOutOfMem; }\n\n    roots = ddCountRoots(table, lower, upper);\n\n    /* Initialize the old order matrix for the empty subset and the best\n    ** order to the current order. The cost for the empty subset includes\n    ** the cost of the levels between upper and the constants. These levels\n    ** are not going to change. Hence, we count them only once.\n    */\n    oldSubsets = 1;\n    for i = 0; i \u003c size; i++ {\n        oldOrder[0][i] = bestOrder[i] = (DdHalfWord) table.invperm[i+lower];\n    }\n    subsetCost = table.constants.keys;\n    for i = upper + 1; i \u003c nvars; i++ {\n        subsetCost += getLevelKeys(table,i);\n    }\n    oldCost[0] = subsetCost;\n    /* The upper bound is initialized to the current size of the BDDs. */\n    upperBound = table.keys - table.isolated;\n\n    /* Now consider subsets of increasing size. */\n    for k = 1; k \u003c= size; k++ {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"Processing subsets of size %d\\n\", k);\n        fflush(table-\u003eout);\n#endif\n        newSubsets = 0;\n        level = size - k;               /* offset of first bottom variable */\n\n        for i = 0; i \u003c oldSubsets; i++ { /* for each subset of size k-1 */\n            order = oldOrder[i];\n            cost = oldCost[i];\n            lowerBound = computeLB(table, order, roots, cost, lower, upper,\n                                   level);\n            if lowerBound \u003e= upperBound {\n                continue; }\n            /* Impose new order. */\n            result = ddShuffle(table, order, lower, upper);\n            if result == 0 { goto cuddExactOutOfMem; }\n            upperBound = updateUB(table,upperBound,bestOrder,lower,upper);\n            /* For each top bottom variable. */\n            for j = level; j \u003e= 0; j-- {\n                /* Skip unused variables. */\n                if table.subtables[j+lower-1].keys == 1 \u0026\u0026\n                    table.vars[table.invperm[j+lower-1]].ref == 1 { continue; }\n                /* Find cost under this order. */\n                subsetCost = cost + getLevelKeys(table, lower + level);\n                newSubsets = updateEntry(table, order, level, subsetCost,\n                                         newOrder, newCost, newSubsets, mask,\n                                         lower, upper);\n                if j == 0 {\n                    break; }\n                if checkSymmInfo(table, symmInfo, order[j-1], level) == 0 {\n                    continue; }\n                pushDown(order,j-1,level);\n                /* Impose new order. */\n                result = ddShuffle(table, order, lower, upper);\n                if result == 0 { goto cuddExactOutOfMem; }\n                upperBound = updateUB(table,upperBound,bestOrder,lower,upper);\n            } /* for each bottom variable */\n        } /* for each subset of size k */\n\n        /* New orders become old orders in preparation for next iteration. */\n        tmpOrder = oldOrder; tmpCost = oldCost;\n        oldOrder = newOrder; oldCost = newCost;\n        newOrder = tmpOrder; newCost = tmpCost;\n#ifdef DD_STATS\n        ddTotalSubsets += newSubsets;\n#endif\n        oldSubsets = newSubsets;\n    }\n    result = ddShuffle(table, bestOrder, lower, upper);\n    if result == 0 { goto cuddExactOutOfMem; }\n#ifdef DD_STATS\n#ifdef DD_VERBOSE\n    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n    (void) fprintf(table-\u003eout,\"#:S_EXACT   %8d: total subsets\\n\",\n                   ddTotalSubsets);\n    (void) fprintf(table-\u003eout,\"#:H_EXACT   %8d: total shuffles\",\n                   ddTotalShuffles);\n#endif\n\n    freeMatrix(newOrder);\n    freeMatrix(oldOrder);\n    ABC_FREE(bestOrder);\n    ABC_FREE(oldCost);\n    ABC_FREE(newCost);\n    ABC_FREE(symmInfo);\n    ABC_FREE(mask);\n    return(1);\n\ncuddExactOutOfMem:\n\n    if newOrder != nil { freeMatrix(newOrder); }\n    if oldOrder != nil { freeMatrix(oldOrder); }\n    if bestOrder != nil { ABC_FREE(bestOrder); }\n    if oldCost != nil { ABC_FREE(oldCost); }\n    if newCost != nil { ABC_FREE(newCost); }\n    if symmInfo != nil { ABC_FREE(symmInfo); }\n    if mask != nil { ABC_FREE(mask); }\n    table.errorCode = CUDD_MEMORY_OUT;\n    return(0);\n\n} /* end of cuddExact */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns the maximum value of (n choose k) for a given n.]\n\n  Description [Computes the maximum value of (n choose k) for a given\n  n.  The maximum value occurs for k = n/2 when n is even, or k =\n  (n-1)/2 when n is odd.  The algorithm used in this procedure avoids\n  intermediate overflow problems.  It is based on the identity\n  \u003cpre\u003e\n    binomial(n,k) = n/k * binomial(n-1,k-1).\n  \u003c/pre\u003e\n  Returns the computed value if successful; -1 if out of range.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc getMaxBinomial(n int32) int32 {\n    var i, j, result float64;\n\n    if n \u003c 0 || n \u003e 33 { return(-1); } /* error */\n    if n \u003c 2 { return(1); }\n\n    for result = float64(((n+3)/2)), i = result+1, j=2; i \u003c= n; i, j = i+1, j+1 {\n        result *= i;\n        result /= j;\n    }\n\n    return(int32(result));\n\n} /* end of getMaxBinomial */\n\n\n     \n                                                                               \n\n                                                \n\n                                                                   \n                                                        \n\n                    \n\n                \n\n                                                                               \n          \n    \n         \n         \n \n          \n          \n                \n\n                       \n                          \n                          \n\n                              \n\n                                                                          \n                                                               \n      \n                    \n                          \n                                              \n                            \n                                     \n                        \n                                     \n                 \n                                                   \n                        \n             \n                \n                                                   \n                        \n                                               \n                              \n             \n         \n     \n\n              \n\n                  \n      \n\n\n/**Function********************************************************************\n\n  Synopsis    [Allocates a two-dimensional matrix of ints.]\n\n  Description [Allocates a two-dimensional matrix of ints.\n  Returns the pointer to the matrix if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [freeMatrix]\n\n******************************************************************************/\nstatic DdHalfWord **\ngetMatrix(\n  int  rows /* number of rows */,\n  int  cols /* number of columns */)\n{\n    var matrix **DdHalfWord;\n    var i int32;\n\n    if cols*rows == 0 { return(nil); }\n    matrix = ABC_ALLOC(DdHalfWord *, rows);\n    if matrix == nil { return(nil); }\n    matrix[0] = ABC_ALLOC(DdHalfWord, cols*rows);\n    if matrix[0] == nil {\n        ABC_FREE(matrix);\n        return(nil);\n    }\n    for i = 1; i \u003c rows; i++ {\n        matrix[i] = matrix[i-1] + cols;\n    }\n    return(matrix);\n\n} /* end of getMatrix */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Frees a two-dimensional matrix allocated by getMatrix.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     [getMatrix]\n\n******************************************************************************/\nfunc freeMatrix(matrix **DdHalfWord) {\n    ABC_FREE(matrix[0]);\n    ABC_FREE(matrix);\n    return;\n\n} /* end of freeMatrix */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns the number of nodes at one level of a unique table.]\n\n  Description [Returns the number of nodes at one level of a unique table.\n  The projection function, if isolated, is not counted.]\n\n  SideEffects [None]\n\n  SeeAlso []\n\n******************************************************************************/\nfunc getLevelKeys(table *DdManager, l int32) int32 {\n    var isolated int32;\n    var x int32;        /* x is an index */\n\n    x = table.invperm[l];\n    isolated = table.vars[x].ref == 1;\n\n    return(table.subtables[l].keys - isolated);\n\n} /* end of getLevelKeys */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Reorders variables according to a given permutation.]\n\n  Description [Reorders variables according to a given permutation.\n  The i-th permutation array contains the index of the variable that\n  should be brought to the i-th level. ddShuffle assumes that no\n  dead nodes are present and that the interaction matrix is properly\n  initialized.  The reordering is achieved by a series of upward sifts.\n  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso []\n\n******************************************************************************/\nfunc ddShuffle(table *DdManager, permutation *DdHalfWord, lower int32, upper int32) int32 {\n    var index DdHalfWord;\n    var level int32;\n    var position int32;\n     \n                        \n      \n    var result int32;\n#ifdef DD_STATS\n    long        localTime;\n    int         initialSize;\n#ifdef DD_VERBOSE\n    int         finalSize;\n#endif\n    int         previousSize;\n#endif\n\n#ifdef DD_STATS\n    localTime = util_cpu_time();\n    initialSize = table-\u003ekeys - table-\u003eisolated;\n#endif\n\n     \n                          \n\n                                                      \n                                               \n                                                                \n     \n                                    \n      \n\n    for level = 0; level \u003c= upper - lower; level++ {\n        index = permutation[level];\n        position = table.perm[index];\n#ifdef DD_STATS\n        previousSize = table-\u003ekeys - table-\u003eisolated;\n#endif\n        result = ddSiftUp(table,position,level+lower);\n        if !(result != 0) { return(0); }\n    }\n\n#ifdef DD_STATS\n    ddTotalShuffles++;\n#ifdef DD_VERBOSE\n    finalSize = table-\u003ekeys - table-\u003eisolated;\n    if (finalSize \u003c initialSize) {\n        (void) fprintf(table-\u003eout,\"-\");\n    } else if (finalSize \u003e initialSize) {\n        (void) fprintf(table-\u003eout,\"+\");\n    } else {\n        (void) fprintf(table-\u003eout,\"=\");\n    }\n    if ((ddTotalShuffles \u0026 63) == 0) (void) fprintf(table-\u003eout,\"\\n\");\n    fflush(table-\u003eout);\n#endif\n#endif\n\n    return(1);\n\n} /* end of ddShuffle */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Moves one variable up.]\n\n  Description [Takes a variable from position x and sifts it up to\n  position xLow;  xLow should be less than or equal to x.\n  Returns 1 if successful; 0 otherwise]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc ddSiftUp(table *DdManager, x int32, xLow int32) int32 {\n    var y int32;\n    var size int32;\n\n    y = cuddNextLow(table,x);\n    for y \u003e= xLow {\n        size = cuddSwapInPlace(table,y,x);\n        if size == 0 {\n            return(0);\n        }\n        x = y;\n        y = cuddNextLow(table,x);\n    }\n    return(1);\n\n} /* end of ddSiftUp */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Updates the upper bound and saves the best order seen so far.]\n\n  Description [Updates the upper bound and saves the best order seen so far.\n  Returns the current value of the upper bound.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc updateUB(table *DdManager, oldBound int32, bestOrder *DdHalfWord, lower int32, upper int32) int32 {\n    var i int32;\n    var newBound int32  = table.keys - table.isolated;\n\n    if newBound \u003c oldBound {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\"New upper bound = %d\\n\", newBound);\n        fflush(table-\u003eout);\n#endif\n        for i = lower; i \u003c= upper; i++ {\n            bestOrder[i-lower] = (DdHalfWord) table.invperm[i];\n        }\n        return(newBound);\n    } else {\n        return(oldBound);\n    }\n\n} /* end of updateUB */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Counts the number of roots.]\n\n  Description [Counts the number of roots at the levels between lower and\n  upper.  The computation is based on breadth-first search.\n  A node is a root if it is not reachable from any previously visited node.\n  (All the nodes at level lower are therefore considered roots.)\n  The visited flag uses the LSB of the next pointer.  Returns the root\n  count. The roots that are constant nodes are always ignored.]\n\n  SideEffects [None]\n\n  SeeAlso     [ddClearGlobal]\n\n******************************************************************************/\nfunc ddCountRoots(table *DdManager, lower int32, upper int32) int32 {\n    var i, j int32;\n    var f *DdNode;\n    var nodelist *DdNodePtr;\n    var sentinel *DdNode  = \u0026(table.sentinel);\n    var slots int32;\n    var roots int32;\n    var maxlevel int32  = lower;\n\n    for i = lower; i \u003c= upper; i++ {\n        nodelist = table.subtables[i].nodelist;\n        slots = table.subtables[i].slots;\n        for j = 0; j \u003c slots; j++ {\n            f = nodelist[j];\n            for f != sentinel {\n                /* A node is a root of the DAG if it cannot be\n                ** reached by nodes above it. If a node was never\n                ** reached during the previous depth-first searches,\n                ** then it is a root, and we start a new depth-first\n                ** search from it.\n                */\n                // inlining of macro Cudd_IsComplement\n                if !((int32( ((ptrint) (f.next) \u0026 01)) != 0)) {\n                    if f != table.vars[f.index] {\n                        roots++;\n                    }\n                }\n                // inlining of macro Cudd_IsConstant\n                // inlining of macro Cudd_Regular\n                // inlining of macro cuddT\n                if !((((DdNode *)((ptruint)(((f).type.kids.T)) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n                    // inlining of macro cuddT\n                    // inlining of macro Cudd_Complement\n                    ((f).type.kids.T).next = ((DdNode *)((ptruint)(((f).type.kids.T).next) | 01));\n                    // inlining of macro cuddT\n                    if table.perm[((f).type.kids.T).index] \u003e maxlevel {\n                        // inlining of macro cuddT\n                        maxlevel = table.perm[((f).type.kids.T).index]; }\n                }\n                // inlining of macro Cudd_IsConstant\n                // inlining of macro Cudd_Regular\n                // inlining of macro cuddE\n                if !((((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n                    // inlining of macro Cudd_Regular\n                    // inlining of macro cuddE\n                    ((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).next =\n                        // inlining of macro Cudd_Complement\n                        // inlining of macro Cudd_Regular\n                        // inlining of macro cuddE\n                        ((DdNode *)((ptruint)(((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).next) | 01));\n                    // inlining of macro Cudd_Regular\n                    // inlining of macro cuddE\n                    if table.perm[((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).index] \u003e maxlevel {\n                        // inlining of macro Cudd_Regular\n                        // inlining of macro cuddE\n                        maxlevel = table.perm[((DdNode *)((ptruint)(((f).type.kids.E)) \u0026 ~01)).index]; }\n                }\n                // inlining of macro Cudd_Regular\n                f = ((DdNode *)((ptruint)(f.next) \u0026 ~01));\n            }\n        }\n    }\n    ddClearGlobal(table, lower, maxlevel);\n\n    return(roots);\n\n} /* end of ddCountRoots */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Scans the DD and clears the LSB of the next pointers.]\n\n  Description [Scans the DD and clears the LSB of the next pointers.\n  The LSB of the next pointers are used as markers to tell whether a\n  node was reached. Once the roots are counted, these flags are\n  reset.]\n\n  SideEffects [None]\n\n  SeeAlso     [ddCountRoots]\n\n******************************************************************************/\nfunc ddClearGlobal(table *DdManager, lower int32, maxlevel int32) {\n    var i, j int32;\n    var f *DdNode;\n    var nodelist *DdNodePtr;\n    var sentinel *DdNode  = \u0026(table.sentinel);\n    var slots int32;\n\n    for i = lower; i \u003c= maxlevel; i++ {\n        nodelist = table.subtables[i].nodelist;\n        slots = table.subtables[i].slots;\n        for j = 0; j \u003c slots; j++ {\n            f = nodelist[j];\n            for f != sentinel {\n                // inlining of macro Cudd_Regular\n                f.next = ((DdNode *)((ptruint)(f.next) \u0026 ~01));\n                f = f.next;\n            }\n        }\n    }\n\n} /* end of ddClearGlobal */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes a lower bound on the size of a BDD.]\n\n  Description [Computes a lower bound on the size of a BDD from the\n  following factors:\n  \u003cul\u003e\n  \u003cli\u003e size of the lower part of it;\n  \u003cli\u003e size of the part of the upper part not subjected to reordering;\n  \u003cli\u003e number of roots in the part of the BDD subjected to reordering;\n  \u003cli\u003e variable in the support of the roots in the upper part of the\n       BDD subjected to reordering.\n  \u003cul/\u003e]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nstatic int\ncomputeLB(\n  DdManager * table             /* manager */,\n  DdHalfWord * order            /* optimal order for the subset */,\n  int  roots                    /* roots between lower and upper */,\n  int  cost                     /* minimum cost for the subset */,\n  int  lower                    /* lower level to be reordered */,\n  int  upper                    /* upper level to be reordered */,\n  int  level                    /* offset for the current top bottom var */\n  )\n{\n    var i int32;\n    var lb int32  = cost;\n    var lb1 int32;\n    var lb2 int32;\n    var support int32;\n    var ref DdHalfWord;\n\n    /* The levels not involved in reordering are not going to change.\n    ** Add their sizes to the lower bound.\n    */\n    for i = 0; i \u003c lower; i++ {\n        lb += getLevelKeys(table,i);\n    }\n    /* If a variable is in the support, then there is going\n    ** to be at least one node labeled by that variable.\n    */\n    for i = lower; i \u003c= lower+level; i++ {\n        support = table.subtables[i].keys \u003e 1 ||\n            table.vars[order[i-lower]].ref \u003e 1;\n        lb1 += support;\n    }\n\n    /* Estimate the number of nodes required to connect the roots to\n    ** the nodes in the bottom part. */\n    if lower+level+1 \u003c table.size {\n        if lower+level \u003c upper {\n            ref = table.vars[order[level+1]].ref;\n        } else {\n            ref = table.vars[table.invperm[upper+1]].ref; }\n        lb2 = table.subtables[lower+level+1].keys -\n            (ref \u003e (DdHalfWord) 1) - roots;\n    } else {\n        lb2 = 0;\n    }\n\n    lb += lb1 \u003e lb2 ? lb1 : lb2;\n\n    return(lb);\n\n} /* end of computeLB */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Updates entry for a subset.]\n\n  Description [Updates entry for a subset. Finds the subset, if it exists.\n  If the new order for the subset has lower cost, or if the subset did not\n  exist, it stores the new order and cost. Returns the number of subsets\n  currently in the table.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc updateEntry(table *DdManager, order *DdHalfWord, level int32, cost int32, orders **DdHalfWord, costs *int32, subsets int32, mask string, lower int32, upper int32) int32 {\n    var i, j int32;\n    var size int32  = upper - lower + 1;\n\n    /* Build a mask that says what variables are in this subset. */\n    for i = lower; i \u003c= upper; i++ {\n        mask[table.invperm[i]] = 0;\n    }\n    for i = level; i \u003c size; i++ {\n        mask[order[i]] = 1;\n    }\n\n    /* Check each subset until a match is found or all subsets are examined. */\n    for i = 0; i \u003c subsets; i++ {\n        var subset *DdHalfWord  = orders[i];\n        for j = level; j \u003c size; j++ {\n            if mask[subset[j]] == 0 {\n                break; }\n        }\n        if j == size {          /* no mismatches: success */\n            break; }\n    }\n    if i == subsets || cost \u003c costs[i] {              /* add or replace */\n        for j = 0; j \u003c size; j++ {\n            orders[i][j] = order[j];\n        }\n        costs[i] = cost;\n        subsets += (i == subsets);\n    }\n    return(subsets);\n\n} /* end of updateEntry */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Pushes a variable in the order down to position \"level.\"]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc pushDown(order *DdHalfWord, j int32, level int32) {\n    var i int32;\n    var tmp DdHalfWord;\n\n    tmp = order[j];\n    for i = j; i \u003c level; i++ {\n        order[i] = order[i+1];\n    }\n    order[level] = tmp;\n    return;\n\n} /* end of pushDown */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Gathers symmetry information.]\n\n  Description [Translates the symmetry information stored in the next\n  field of each subtable from level to indices. This procedure is called\n  immediately after symmetric sifting, so that the next fields are correct.\n  By translating this informaton in terms of indices, we make it independent\n  of subsequent reorderings. The format used is that of the next fields:\n  a circular list where each variable points to the next variable in the\n  same symmetry group. Only the entries between lower and upper are\n  considered.  The procedure returns a pointer to an array\n  holding the symmetry information if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [checkSymmInfo]\n\n******************************************************************************/\nfunc initSymmInfo(table *DdManager, lower int32, upper int32) *DdHalfWord {\n    var level, index, next, nextindex int32;\n    var symmInfo *DdHalfWord;\n\n    symmInfo =  ABC_ALLOC(DdHalfWord, table.size);\n    if symmInfo == nil { return(nil); }\n\n    for level = lower; level \u003c= upper; level++ {\n        index = table.invperm[level];\n        next =  table.subtables[level].next;\n        nextindex = table.invperm[next];\n        symmInfo[index] = nextindex;\n    }\n    return(symmInfo);\n\n} /* end of initSymmInfo */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Check symmetry condition.]\n\n  Description [Returns 1 if a variable is the one with the highest index\n  among those belonging to a symmetry group that are in the top part of\n  the BDD.  The top part is given by level.]\n\n  SideEffects [None]\n\n  SeeAlso     [initSymmInfo]\n\n******************************************************************************/\nfunc checkSymmInfo(table *DdManager, symmInfo *DdHalfWord, index int32, level int32) int32 {\n    var i int32;\n\n    i = symmInfo[index];\n    for i != index {\n        if index \u003c i \u0026\u0026 table.perm[i] \u003c= level {\n            return(0); }\n        i = symmInfo[i];\n    }\n    return(1);\n\n} /* end of checkSymmInfo */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

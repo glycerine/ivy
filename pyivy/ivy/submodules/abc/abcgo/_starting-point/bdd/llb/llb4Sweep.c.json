@@ -1,0 +1,791 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c",
+  "SHA256": "8cdbac827948fcabe759cb9a0ebdfb6e55dedfd769da848e1d7934fa3cb9dcb2",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Llb_ObjBddVar(vOrder, pObj) \u003c 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 187,
+        "Column": 5,
+        "ByteOffset": 7155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Added %d cut points.  Used %d high fanout points.\\n\", Counter, Counter1 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 350,
+        "Column": 5,
+        "ByteOffset": 12743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"(%d) \", Vec_PtrSize(vFuncs) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 9,
+        "ByteOffset": 12845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d \", Cudd_DagSize(bFunc) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 353,
+        "Column": 5,
+        "ByteOffset": 12887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 421,
+        "Column": 1,
+        "ByteOffset": 15213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Groups: \" );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 447,
+        "Column": 13,
+        "ByteOffset": 15888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pSupp = ABC_CALLOC( int, Cudd_ReadSize(dd) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 472,
+        "Column": 5,
+        "ByteOffset": 16720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pSupp );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 475,
+        "Column": 5,
+        "ByteOffset": 16762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Groups =%3d  \", Vec_PtrSize(vGroups) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 476,
+        "Column": 5,
+        "ByteOffset": 16815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Variables: all =%4d \",  nSuppAll );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 477,
+        "Column": 5,
+        "ByteOffset": 16864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"pi =%4d \",  nSuppPi );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 478,
+        "Column": 5,
+        "ByteOffset": 16900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"po =%4d \",  nSuppPo );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 479,
+        "Column": 5,
+        "ByteOffset": 16936
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"lo =%4d \",  nSuppLo );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 480,
+        "Column": 5,
+        "ByteOffset": 16972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"li =%4d \",  nSuppLi );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 481,
+        "Column": 5,
+        "ByteOffset": 17008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"and =%4d\",  nSuppAnd );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 482,
+        "Column": 5,
+        "ByteOffset": 17045
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 507,
+        "Column": 5,
+        "ByteOffset": 17818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Counter == Aig_ManNodeNum(pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 513,
+        "Column": 5,
+        "ByteOffset": 18080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Counter == nCutPoints );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_Nonlin4SweepOrder_rec",
+      "Start": 1284,
+      "End": 2445,
+      "BodyStart": 1403,
+      "Original": "void Llb_Nonlin4SweepOrder_rec( Aig_Man_t * pAig, Aig_Obj_t * pObj, Vec_Int_t * vOrder, int * pCounter, int fSaveAll )\n{\n    Aig_Obj_t * pFanin0, * pFanin1;\n    if ( Aig_ObjIsTravIdCurrent(pAig, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent( pAig, pObj );\n    assert( Llb_ObjBddVar(vOrder, pObj) \u003c 0 );\n    if ( Aig_ObjIsCi(pObj) )\n    {\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), (*pCounter)++ );\n        return;\n    }\n    // try fanins with higher level first\n    pFanin0 = Aig_ObjFanin0(pObj);\n    pFanin1 = Aig_ObjFanin1(pObj);\n//    if ( pFanin0-\u003eLevel \u003e pFanin1-\u003eLevel || (pFanin0-\u003eLevel == pFanin1-\u003eLevel \u0026\u0026 pFanin0-\u003eId \u003c pFanin1-\u003eId) )\n    if ( pFanin0-\u003eLevel \u003e pFanin1-\u003eLevel )\n    {\n        Llb_Nonlin4SweepOrder_rec( pAig, pFanin0, vOrder, pCounter, fSaveAll );\n        Llb_Nonlin4SweepOrder_rec( pAig, pFanin1, vOrder, pCounter, fSaveAll );\n    }\n    else\n    {\n        Llb_Nonlin4SweepOrder_rec( pAig, pFanin1, vOrder, pCounter, fSaveAll );\n        Llb_Nonlin4SweepOrder_rec( pAig, pFanin0, vOrder, pCounter, fSaveAll );\n    }\n    if ( fSaveAll || pObj-\u003efMarkA )\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), (*pCounter)++ );\n}",
+      "Draft": "func Llb_Nonlin4SweepOrder_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, vOrder *Vec_Int_t, pCounter *int32, fSaveAll int32) {\n    var pFanin0, pFanin1 *Aig_Obj_t;\n    if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent( pAig, pObj );\n    assert(Llb_ObjBddVar(vOrder, pObj) \u003c 0, \"Llb_ObjBddVar(vOrder, pObj) \u003c 0\");\n    if Aig_ObjIsCi(pObj) {\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), (*pCounter)++ );\n        return;\n    }\n    // try fanins with higher level first\n    pFanin0 = Aig_ObjFanin0(pObj);\n    pFanin1 = Aig_ObjFanin1(pObj);\n//    if ( pFanin0-\u003eLevel \u003e pFanin1-\u003eLevel || (pFanin0-\u003eLevel == pFanin1-\u003eLevel \u0026\u0026 pFanin0-\u003eId \u003c pFanin1-\u003eId) )\n    if pFanin0.Level \u003e pFanin1.Level {\n        Llb_Nonlin4SweepOrder_rec( pAig, pFanin0, vOrder, pCounter, fSaveAll );\n        Llb_Nonlin4SweepOrder_rec( pAig, pFanin1, vOrder, pCounter, fSaveAll );\n    \n    } else {\n        Llb_Nonlin4SweepOrder_rec( pAig, pFanin1, vOrder, pCounter, fSaveAll );\n        Llb_Nonlin4SweepOrder_rec( pAig, pFanin0, vOrder, pCounter, fSaveAll );\n    }\n    if (fSaveAll != 0) || pObj.fMarkA {\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), (*pCounter)++ ); }\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4SweepOrder",
+      "Start": 2716,
+      "End": 3602,
+      "BodyStart": 2800,
+      "Original": "Vec_Int_t * Llb_Nonlin4SweepOrder( Aig_Man_t * pAig, int * pCounter, int fSaveAll )\n{\n    Vec_Int_t * vOrder;\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n    // collect nodes in the order\n    vOrder = Vec_IntStartFull( Aig_ManObjNumMax(pAig) );\n    Aig_ManIncrementTravId( pAig );\n    Aig_ObjSetTravIdCurrent( pAig, Aig_ManConst1(pAig) );\n    Aig_ManForEachCo( pAig, pObj, i )\n    {\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n        Llb_Nonlin4SweepOrder_rec( pAig, Aig_ObjFanin0(pObj), vOrder, \u0026Counter, fSaveAll );\n    }\n    Aig_ManForEachCi( pAig, pObj, i )\n        if ( Llb_ObjBddVar(vOrder, pObj) \u003c 0 )\n            Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n//    assert( Counter == Aig_ManObjNum(pAig) - 1 ); // no dangling nodes\n    if ( pCounter )\n        *pCounter = Counter - Aig_ManCiNum(pAig) - Aig_ManCoNum(pAig);\n    return vOrder;\n}",
+      "Draft": "func Llb_Nonlin4SweepOrder(pAig *Aig_Man_t, pCounter *int32, fSaveAll int32) *Vec_Int_t {\n    var vOrder *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    // collect nodes in the order\n    vOrder = Vec_IntStartFull( Aig_ManObjNumMax(pAig) );\n    Aig_ManIncrementTravId( pAig );\n    Aig_ObjSetTravIdCurrent( pAig, Aig_ManConst1(pAig) );\n    Aig_ManForEachCo( pAig, pObj, i )\n    {\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n        Llb_Nonlin4SweepOrder_rec( pAig, Aig_ObjFanin0(pObj), vOrder, \u0026Counter, fSaveAll );\n    }\n    Aig_ManForEachCi( pAig, pObj, i )\n        if ( Llb_ObjBddVar(vOrder, pObj) \u003c 0 )\n            Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n//    assert( Counter == Aig_ManObjNum(pAig) - 1 ); // no dangling nodes\n    if pCounter != nil {\n        *pCounter = Counter - Aig_ManCiNum(pAig) - Aig_ManCoNum(pAig); }\n    return vOrder;\n}"
+    },
+    {
+      "Name": "Llb4_Nonlin4SweepCutpoints",
+      "Start": 3930,
+      "End": 7073,
+      "BodyStart": 4030,
+      "Original": "int Llb4_Nonlin4SweepCutpoints( Aig_Man_t * pAig, Vec_Int_t * vOrder, int nBddLimit, int fVerbose )\n{\n    DdManager * dd;\n    DdNode * bFunc0, * bFunc1, * bFunc;\n    Aig_Obj_t * pObj;\n    int i, Counter = 0, Counter1 = 0;\n    dd = Cudd_Init( Aig_ManObjNumMax(pAig), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    // assign elementary variables\n    Aig_ManCleanData( pAig );\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj-\u003epData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n    // sweep internal nodes\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n/*\n        if ( pObj-\u003enRefs \u003e= 4 )\n        {\n            bFunc = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );  Cudd_Ref( bFunc );\n            pObj-\u003epData = bFunc;\n            Counter1++;\n            continue;\n        }\n*/\n        bFunc0 = Cudd_NotCond( (DdNode *)Aig_ObjFanin0(pObj)-\u003epData, Aig_ObjFaninC0(pObj) );\n        bFunc1 = Cudd_NotCond( (DdNode *)Aig_ObjFanin1(pObj)-\u003epData, Aig_ObjFaninC1(pObj) );\n        bFunc  = Cudd_bddAnd( dd, bFunc0, bFunc1 );  Cudd_Ref( bFunc );\n        if ( Cudd_DagSize(bFunc) \u003e nBddLimit )\n        {\n//            if ( fVerbose )\n//                printf( \"Node %5d : Beg =%5d. \", i, Cudd_DagSize(bFunc) );\n\n            // add cutpoint at a larger one\n            Cudd_RecursiveDeref( dd, bFunc );\n            if ( Cudd_DagSize(bFunc0) \u003e= Cudd_DagSize(bFunc1) )\n            {\n                Cudd_RecursiveDeref( dd, (DdNode *)Aig_ObjFanin0(pObj)-\u003epData );\n                bFunc = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, Aig_ObjFanin0(pObj)) );\n                Aig_ObjFanin0(pObj)-\u003epData = bFunc;  Cudd_Ref( bFunc );\n                Aig_ObjFanin0(pObj)-\u003efMarkA = 1;\n\n//                if ( fVerbose )\n//                    printf( \"Ref =%3d  \", Aig_ObjFanin0(pObj)-\u003enRefs );\n            }\n            else\n            {\n                Cudd_RecursiveDeref( dd, (DdNode *)Aig_ObjFanin1(pObj)-\u003epData );\n                bFunc = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, Aig_ObjFanin1(pObj)) );\n                Aig_ObjFanin1(pObj)-\u003epData = bFunc;  Cudd_Ref( bFunc );\n                Aig_ObjFanin1(pObj)-\u003efMarkA = 1;\n\n//                if ( fVerbose )\n//                    printf( \"Ref =%3d  \", Aig_ObjFanin1(pObj)-\u003enRefs );\n            }\n            // perform new operation\n            bFunc0 = Cudd_NotCond( (DdNode *)Aig_ObjFanin0(pObj)-\u003epData, Aig_ObjFaninC0(pObj) );\n            bFunc1 = Cudd_NotCond( (DdNode *)Aig_ObjFanin1(pObj)-\u003epData, Aig_ObjFaninC1(pObj) );\n            bFunc  = Cudd_bddAnd( dd, bFunc0, bFunc1 );  Cudd_Ref( bFunc );\n//            assert( Cudd_DagSize(bFunc) \u003c= nBddLimit );\n\n//            if ( fVerbose )\n//                printf( \"End =%5d.\\n\", Cudd_DagSize(bFunc) );\n            Counter++;\n        }\n        pObj-\u003epData = bFunc;\n//printf( \"%d \", Cudd_DagSize(bFunc) );\n    }\n//printf( \"\\n\" );\n    // clean up\n    Aig_ManForEachNode( pAig, pObj, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj-\u003epData );\n    Extra_StopManager( dd );\n//    Aig_ManCleanMarkA( pAig );\n    if ( fVerbose )\n    printf( \"Added %d cut points.  Used %d high fanout points.\\n\", Counter, Counter1 );\n    return Counter + Counter1;\n}",
+      "Draft": "func Llb4_Nonlin4SweepCutpoints(pAig *Aig_Man_t, vOrder *Vec_Int_t, nBddLimit int32, fVerbose int32) int32 {\n    var dd *DdManager;\n    var bFunc0, bFunc1, bFunc *DdNode;\n    var pObj *Aig_Obj_t;\n    var i, Counter, Counter1 int32;\n    dd = Cudd_Init( Aig_ManObjNumMax(pAig), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    // assign elementary variables\n    Aig_ManCleanData( pAig );\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj.pData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n    // sweep internal nodes\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n/*\n        if ( pObj-\u003enRefs \u003e= 4 )\n        {\n            bFunc = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );  Cudd_Ref( bFunc );\n            pObj-\u003epData = bFunc;\n            Counter1++;\n            continue;\n        }\n*/\n        // inlining of macro Cudd_NotCond\n        bFunc0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        // inlining of macro Cudd_NotCond\n        bFunc1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));\n        bFunc  = Cudd_bddAnd( dd, bFunc0, bFunc1 );  Cudd_Ref( bFunc );\n        if Cudd_DagSize(bFunc) \u003e nBddLimit {\n//            if ( fVerbose )\n//                printf( \"Node %5d : Beg =%5d. \", i, Cudd_DagSize(bFunc) );\n\n            // add cutpoint at a larger one\n            Cudd_RecursiveDeref( dd, bFunc );\n            if Cudd_DagSize(bFunc0) \u003e= Cudd_DagSize(bFunc1) {\n                Cudd_RecursiveDeref( dd, (DdNode *)Aig_ObjFanin0(pObj).pData );\n                bFunc = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, Aig_ObjFanin0(pObj)) );\n                Aig_ObjFanin0(pObj).pData = bFunc;  Cudd_Ref( bFunc );\n                Aig_ObjFanin0(pObj).fMarkA = 1;\n\n//                if ( fVerbose )\n//                    printf( \"Ref =%3d  \", Aig_ObjFanin0(pObj)-\u003enRefs );\n            \n            } else {\n                Cudd_RecursiveDeref( dd, (DdNode *)Aig_ObjFanin1(pObj).pData );\n                bFunc = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, Aig_ObjFanin1(pObj)) );\n                Aig_ObjFanin1(pObj).pData = bFunc;  Cudd_Ref( bFunc );\n                Aig_ObjFanin1(pObj).fMarkA = 1;\n\n//                if ( fVerbose )\n//                    printf( \"Ref =%3d  \", Aig_ObjFanin1(pObj)-\u003enRefs );\n            }\n            // perform new operation\n            // inlining of macro Cudd_NotCond\n            bFunc0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n            // inlining of macro Cudd_NotCond\n            bFunc1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));\n            bFunc  = Cudd_bddAnd( dd, bFunc0, bFunc1 );  Cudd_Ref( bFunc );\n//            assert( Cudd_DagSize(bFunc) \u003c= nBddLimit );\n\n//            if ( fVerbose )\n//                printf( \"End =%5d.\\n\", Cudd_DagSize(bFunc) );\n            Counter++;\n        }\n        pObj.pData = bFunc;\n//printf( \"%d \", Cudd_DagSize(bFunc) );\n    }\n//printf( \"\\n\" );\n    // clean up\n    Aig_ManForEachNode( pAig, pObj, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n    Extra_StopManager( dd );\n//    Aig_ManCleanMarkA( pAig );\n    if fVerbose != 0 {\n    fmt.Printf(\"Added %d cut points.  Used %d high fanout points.\\n\", Counter, Counter1); }\n    return Counter + Counter1;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4SweepPartitions_rec",
+      "Start": 7341,
+      "End": 8740,
+      "BodyStart": 7457,
+      "Original": "DdNode * Llb_Nonlin4SweepPartitions_rec( DdManager * dd, Aig_Obj_t * pObj, Vec_Int_t * vOrder, Vec_Ptr_t * vRoots )\n{\n    DdNode * bBdd, * bBdd0, * bBdd1, * bPart, * vVar;\n    if ( Aig_ObjIsConst1(pObj) )\n        return Cudd_ReadOne(dd); \n    if ( Aig_ObjIsCi(pObj) )\n        return Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n    if ( pObj-\u003epData )\n        return (DdNode *)pObj-\u003epData;\n    if ( Aig_ObjIsCo(pObj) )\n    {\n        bBdd0 = Cudd_NotCond( Llb_Nonlin4SweepPartitions_rec(dd, Aig_ObjFanin0(pObj), vOrder, vRoots), Aig_ObjFaninC0(pObj) );\n        bPart = Cudd_bddXnor( dd, Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) ), bBdd0 );  Cudd_Ref( bPart );\n        Vec_PtrPush( vRoots, bPart );\n        return NULL;\n    }\n    bBdd0 = Cudd_NotCond( Llb_Nonlin4SweepPartitions_rec(dd, Aig_ObjFanin0(pObj), vOrder, vRoots), Aig_ObjFaninC0(pObj) );\n    bBdd1 = Cudd_NotCond( Llb_Nonlin4SweepPartitions_rec(dd, Aig_ObjFanin1(pObj), vOrder, vRoots), Aig_ObjFaninC1(pObj) );\n    bBdd  = Cudd_bddAnd( dd, bBdd0, bBdd1 );   Cudd_Ref( bBdd );\n    if ( Llb_ObjBddVar(vOrder, pObj) \u003e= 0 )\n    {\n        vVar  = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n        bPart = Cudd_bddXnor( dd, vVar, bBdd );  Cudd_Ref( bPart );\n        Vec_PtrPush( vRoots, bPart );\n        Cudd_RecursiveDeref( dd, bBdd );\n        bBdd = vVar;  Cudd_Ref( vVar );\n    }\n    pObj-\u003epData = bBdd;\n    return bBdd;\n}",
+      "Draft": "func Llb_Nonlin4SweepPartitions_rec(dd *DdManager, pObj *Aig_Obj_t, vOrder *Vec_Int_t, vRoots *Vec_Ptr_t) *DdNode {\n    var bBdd, bBdd0, bBdd1, bPart, vVar *DdNode;\n    if Aig_ObjIsConst1(pObj) {\n        return Cudd_ReadOne(dd); } \n    if Aig_ObjIsCi(pObj) {\n        return Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) ); }\n    if pObj.pData {\n        return (DdNode *)pObj.pData; }\n    if Aig_ObjIsCo(pObj) {\n        // inlining of macro Cudd_NotCond\n        bBdd0 = ((DdNode *)((ptrint)(Llb_Nonlin4SweepPartitions_rec(dd, Aig_ObjFanin0(pObj), vOrder, vRoots)) ^ (Aig_ObjFaninC0(pObj))));\n        bPart = Cudd_bddXnor( dd, Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) ), bBdd0 );  Cudd_Ref( bPart );\n        Vec_PtrPush( vRoots, bPart );\n        return nil;\n    }\n    // inlining of macro Cudd_NotCond\n    bBdd0 = ((DdNode *)((ptrint)(Llb_Nonlin4SweepPartitions_rec(dd, Aig_ObjFanin0(pObj), vOrder, vRoots)) ^ (Aig_ObjFaninC0(pObj))));\n    // inlining of macro Cudd_NotCond\n    bBdd1 = ((DdNode *)((ptrint)(Llb_Nonlin4SweepPartitions_rec(dd, Aig_ObjFanin1(pObj), vOrder, vRoots)) ^ (Aig_ObjFaninC1(pObj))));\n    bBdd  = Cudd_bddAnd( dd, bBdd0, bBdd1 );   Cudd_Ref( bBdd );\n    if Llb_ObjBddVar(vOrder, pObj) \u003e= 0 {\n        vVar  = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n        bPart = Cudd_bddXnor( dd, vVar, bBdd );  Cudd_Ref( bPart );\n        Vec_PtrPush( vRoots, bPart );\n        Cudd_RecursiveDeref( dd, bBdd );\n        bBdd = vVar;  Cudd_Ref( vVar );\n    }\n    pObj.pData = bBdd;\n    return bBdd;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4SweepPartitions",
+      "Start": 9008,
+      "End": 9678,
+      "BodyStart": 9120,
+      "Original": "Vec_Ptr_t * Llb_Nonlin4SweepPartitions( DdManager * dd, Aig_Man_t * pAig, Vec_Int_t * vOrder, int fTransition )\n{\n    Vec_Ptr_t * vRoots;\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManCleanData( pAig );\n    vRoots = Vec_PtrAlloc( 100 );\n    if ( fTransition )\n    {\n        Saig_ManForEachLi( pAig, pObj, i )\n            Llb_Nonlin4SweepPartitions_rec( dd, pObj, vOrder, vRoots );\n    }\n    else\n    {\n        Saig_ManForEachPo( pAig, pObj, i )\n            Llb_Nonlin4SweepPartitions_rec( dd, pObj, vOrder, vRoots );\n    }\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( pObj-\u003epData )\n            Cudd_RecursiveDeref( dd, (DdNode *)pObj-\u003epData );\n    return vRoots;\n}",
+      "Draft": "func Llb_Nonlin4SweepPartitions(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t, fTransition int32) *Vec_Ptr_t {\n    var vRoots *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManCleanData( pAig );\n    vRoots = Vec_PtrAlloc( 100 );\n    if fTransition != 0 {\n        Saig_ManForEachLi( pAig, pObj, i )\n            Llb_Nonlin4SweepPartitions_rec( dd, pObj, vOrder, vRoots );\n    \n    } else {\n        Saig_ManForEachPo( pAig, pObj, i )\n            Llb_Nonlin4SweepPartitions_rec( dd, pObj, vOrder, vRoots );\n    }\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( pObj.pData )\n            Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n    return vRoots;\n}"
+    },
+    {
+      "Name": "Llb4_Nonlin4SweepBadMonitor",
+      "Start": 9936,
+      "End": 10544,
+      "BodyStart": 10029,
+      "Original": "DdNode * Llb4_Nonlin4SweepBadMonitor( Aig_Man_t * pAig, Vec_Int_t * vOrder, DdManager * dd )\n{\n    Aig_Obj_t * pObj;\n    DdNode * bRes, * bVar, * bTemp;\n    int i;\n    abctime TimeStop;\n    TimeStop = dd-\u003eTimeStop;  dd-\u003eTimeStop = 0;\n    bRes = Cudd_ReadOne( dd );   Cudd_Ref( bRes );\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        bVar = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n        bRes = Cudd_bddAnd( dd, bTemp = bRes, Cudd_Not(bVar) );  Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bRes );\n    dd-\u003eTimeStop = TimeStop;\n    return Cudd_Not(bRes);\n}",
+      "Draft": "func Llb4_Nonlin4SweepBadMonitor(pAig *Aig_Man_t, vOrder *Vec_Int_t, dd *DdManager) *DdNode {\n    var pObj *Aig_Obj_t;\n    var bRes, bVar, bTemp *DdNode;\n    var i int32;\n    var TimeStop abctime;\n    TimeStop = dd.TimeStop;  dd.TimeStop = 0;\n    bRes = Cudd_ReadOne( dd );   Cudd_Ref( bRes );\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        bVar = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n        // inlining of macro Cudd_Not\n        bRes = Cudd_bddAnd( dd, bTemp = bRes, ((DdNode *)((ptrint)(bVar) ^ 01)) );  Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bRes );\n    dd.TimeStop = TimeStop;\n    // inlining of macro Cudd_Not\n    return ((DdNode *)((ptrint)(bRes) ^ 01));\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4SweepVars2Q",
+      "Start": 10839,
+      "End": 11380,
+      "BodyStart": 10927,
+      "Original": "Vec_Int_t * Llb_Nonlin4SweepVars2Q( Aig_Man_t * pAig, Vec_Int_t * vOrder, int fAddLis )\n{\n    Vec_Int_t * vVars2Q;\n    Aig_Obj_t * pObj;\n    int i;\n    vVars2Q = Vec_IntAlloc( 0 );\n    Vec_IntFill( vVars2Q, Aig_ManObjNumMax(pAig), 1 );\n    // add flop outputs\n    Saig_ManForEachLo( pAig, pObj, i )\n        Vec_IntWriteEntry( vVars2Q, Llb_ObjBddVar(vOrder, pObj), 0 );\n    // add flop inputs\n    if ( fAddLis )\n    Saig_ManForEachLi( pAig, pObj, i )\n        Vec_IntWriteEntry( vVars2Q, Llb_ObjBddVar(vOrder, pObj), 0 );\n    return vVars2Q;\n}",
+      "Draft": "func Llb_Nonlin4SweepVars2Q(pAig *Aig_Man_t, vOrder *Vec_Int_t, fAddLis int32) *Vec_Int_t {\n    var vVars2Q *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vVars2Q = Vec_IntAlloc( 0 );\n    Vec_IntFill( vVars2Q, Aig_ManObjNumMax(pAig), 1 );\n    // add flop outputs\n    Saig_ManForEachLo( pAig, pObj, i )\n        Vec_IntWriteEntry( vVars2Q, Llb_ObjBddVar(vOrder, pObj), 0 );\n    // add flop inputs\n    if fAddLis != 0 {\n    Saig_ManForEachLi( pAig, pObj, i )\n        Vec_IntWriteEntry( vVars2Q, Llb_ObjBddVar(vOrder, pObj), 0 ); }\n    return vVars2Q;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4SweepDeref",
+      "Start": 11653,
+      "End": 11875,
+      "BodyStart": 11718,
+      "Original": "void Llb_Nonlin4SweepDeref( DdManager * dd, Vec_Ptr_t * vParts )\n{\n    DdNode * bFunc;\n    int i;\n    Vec_PtrForEachEntry( DdNode *, vParts, bFunc, i )\n        Cudd_RecursiveDeref( dd, bFunc );\n    Vec_PtrFree( vParts );\n}",
+      "Draft": "func Llb_Nonlin4SweepDeref(dd *DdManager, vParts *Vec_Ptr_t) {\n    var bFunc *DdNode;\n    var i int32;\n    Vec_PtrForEachEntry( DdNode *, vParts, bFunc, i )\n        Cudd_RecursiveDeref( dd, bFunc );\n    Vec_PtrFree( vParts );\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4SweepPrint",
+      "Start": 12148,
+      "End": 12395,
+      "BodyStart": 12197,
+      "Original": "void Llb_Nonlin4SweepPrint( Vec_Ptr_t * vFuncs )\n{\n    DdNode * bFunc;\n    int i;\n    printf( \"(%d) \", Vec_PtrSize(vFuncs) );\n    Vec_PtrForEachEntry( DdNode *, vFuncs, bFunc, i )\n        printf( \"%d \", Cudd_DagSize(bFunc) );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Llb_Nonlin4SweepPrint(vFuncs *Vec_Ptr_t) {\n    var bFunc *DdNode;\n    var i int32;\n    fmt.Printf(\"(%d) \", Vec_PtrSize(vFuncs));\n    Vec_PtrForEachEntry( DdNode *, vFuncs, bFunc, i )\n        fmt.Printf(\"%d \", Cudd_DagSize(bFunc));\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Llb4_Nonlin4SweepBadStates",
+      "Start": 12651,
+      "End": 13625,
+      "BodyStart": 12741,
+      "Original": "DdManager * Llb4_Nonlin4SweepBadStates( Aig_Man_t * pAig, Vec_Int_t * vOrder, int nVars )\n{\n    DdManager * dd;\n    Vec_Ptr_t * vParts;\n    Vec_Int_t * vVars2Q;\n    DdNode * bMonitor, * bImage;\n    // get quantifiable variables\n    vVars2Q = Llb_Nonlin4SweepVars2Q( pAig, vOrder, 0 );\n    // start BDD manager and create partitions \n    dd = Cudd_Init( nVars, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    vParts = Llb_Nonlin4SweepPartitions( dd, pAig, vOrder, 0 );\n//printf( \"Outputs: \" );\n//Llb_Nonlin4SweepPrint( vParts );\n    // compute image of the partitions\n    bMonitor = Llb4_Nonlin4SweepBadMonitor( pAig, vOrder, dd );  Cudd_Ref( bMonitor );\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    bImage = Llb_Nonlin4Image( dd, vParts, bMonitor, vVars2Q );  Cudd_Ref( bImage );\n    Cudd_RecursiveDeref( dd, bMonitor );\n    Llb_Nonlin4SweepDeref( dd, vParts );\n    Vec_IntFree( vVars2Q );\n    // save image and return\n    dd-\u003ebFunc = bImage;\n    return dd;\n}",
+      "Draft": "func Llb4_Nonlin4SweepBadStates(pAig *Aig_Man_t, vOrder *Vec_Int_t, nVars int32) *DdManager {\n    var dd *DdManager;\n    var vParts *Vec_Ptr_t;\n    var vVars2Q *Vec_Int_t;\n    var bMonitor, bImage *DdNode;\n    // get quantifiable variables\n    vVars2Q = Llb_Nonlin4SweepVars2Q( pAig, vOrder, 0 );\n    // start BDD manager and create partitions \n    dd = Cudd_Init( nVars, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    vParts = Llb_Nonlin4SweepPartitions( dd, pAig, vOrder, 0 );\n//printf( \"Outputs: \" );\n//Llb_Nonlin4SweepPrint( vParts );\n    // compute image of the partitions\n    bMonitor = Llb4_Nonlin4SweepBadMonitor( pAig, vOrder, dd );  Cudd_Ref( bMonitor );\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    bImage = Llb_Nonlin4Image( dd, vParts, bMonitor, vVars2Q );  Cudd_Ref( bImage );\n    Cudd_RecursiveDeref( dd, bMonitor );\n    Llb_Nonlin4SweepDeref( dd, vParts );\n    Vec_IntFree( vVars2Q );\n    // save image and return\n    dd.bFunc = bImage;\n    return dd;\n}"
+    },
+    {
+      "Name": "Llb4_Nonlin4SweepGroups",
+      "Start": 13879,
+      "End": 14788,
+      "BodyStart": 14021,
+      "Original": "DdManager * Llb4_Nonlin4SweepGroups( Aig_Man_t * pAig, Vec_Int_t * vOrder, int nVars, Vec_Ptr_t ** pvGroups, int nBddLimitClp, int fVerbose )\n{\n    DdManager * dd;\n    Vec_Ptr_t * vParts;\n    Vec_Int_t * vVars2Q;\n    // get quantifiable variables\n    vVars2Q = Llb_Nonlin4SweepVars2Q( pAig, vOrder, 1 );\n    // start BDD manager and create partitions \n    dd = Cudd_Init( nVars, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    vParts = Llb_Nonlin4SweepPartitions( dd, pAig, vOrder, 1 );\n//printf( \"Transitions: \" );\n//Llb_Nonlin4SweepPrint( vParts );\n    // compute image of the partitions\n\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    *pvGroups = Llb_Nonlin4Group( dd, vParts, vVars2Q, nBddLimitClp );\n    Llb_Nonlin4SweepDeref( dd, vParts );\n//    *pvGroups = vParts;\n\nif ( fVerbose )\n{\nprintf( \"Groups: \" );\nLlb_Nonlin4SweepPrint( *pvGroups );\n}\n\n    Vec_IntFree( vVars2Q );\n    return dd;\n}",
+      "Draft": "func Llb4_Nonlin4SweepGroups(pAig *Aig_Man_t, vOrder *Vec_Int_t, nVars int32, pvGroups **Vec_Ptr_t, nBddLimitClp int32, fVerbose int32) *DdManager {\n    var dd *DdManager;\n    var vParts *Vec_Ptr_t;\n    var vVars2Q *Vec_Int_t;\n    // get quantifiable variables\n    vVars2Q = Llb_Nonlin4SweepVars2Q( pAig, vOrder, 1 );\n    // start BDD manager and create partitions \n    dd = Cudd_Init( nVars, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    vParts = Llb_Nonlin4SweepPartitions( dd, pAig, vOrder, 1 );\n//printf( \"Transitions: \" );\n//Llb_Nonlin4SweepPrint( vParts );\n    // compute image of the partitions\n\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    *pvGroups = Llb_Nonlin4Group( dd, vParts, vVars2Q, nBddLimitClp );\n    Llb_Nonlin4SweepDeref( dd, vParts );\n//    *pvGroups = vParts;\n\nif fVerbose != 0 {\nfmt.Printf(\"Groups: \");\nLlb_Nonlin4SweepPrint( *pvGroups );\n}\n\n    Vec_IntFree( vVars2Q );\n    return dd;\n}"
+    },
+    {
+      "Name": "Llb_Nonlin4SweepPrintSuppProfile",
+      "Start": 15084,
+      "End": 16554,
+      "BodyStart": 15213,
+      "Original": "void Llb_Nonlin4SweepPrintSuppProfile( DdManager * dd, Aig_Man_t * pAig, Vec_Int_t * vOrder, Vec_Ptr_t * vGroups, int fVerbose )\n{\n    Aig_Obj_t * pObj;\n    int i, * pSupp;\n    int nSuppAll = 0, nSuppPi = 0, nSuppPo = 0, nSuppLi = 0, nSuppLo = 0, nSuppAnd = 0;\n\n    pSupp = ABC_CALLOC( int, Cudd_ReadSize(dd) );\n    Extra_VectorSupportArray( dd, (DdNode **)Vec_PtrArray(vGroups), Vec_PtrSize(vGroups), pSupp );\n\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n        if ( Llb_ObjBddVar(vOrder, pObj) \u003c 0 )\n            continue;\n        // remove variables that do not participate\n        if ( pSupp[Llb_ObjBddVar(vOrder, pObj)] == 0 )\n        {\n            if ( Aig_ObjIsNode(pObj) )\n                Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), -1 );\n            continue;\n        }\n        nSuppAll++;\n        if ( Saig_ObjIsPi(pAig, pObj) )\n            nSuppPi++;\n        else if ( Saig_ObjIsLo(pAig, pObj) )\n            nSuppLo++;\n        else if ( Saig_ObjIsPo(pAig, pObj) )\n            nSuppPo++;\n        else if ( Saig_ObjIsLi(pAig, pObj) )\n            nSuppLi++;\n        else\n            nSuppAnd++;\n    }\n    ABC_FREE( pSupp );\n\n    if ( fVerbose )\n    {\n    printf( \"Groups =%3d  \", Vec_PtrSize(vGroups) );\n    printf( \"Variables: all =%4d \",  nSuppAll );\n    printf( \"pi =%4d \",  nSuppPi );\n    printf( \"po =%4d \",  nSuppPo );\n    printf( \"lo =%4d \",  nSuppLo );\n    printf( \"li =%4d \",  nSuppLi );\n    printf( \"and =%4d\",  nSuppAnd );\n    printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Llb_Nonlin4SweepPrintSuppProfile(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t, vGroups *Vec_Ptr_t, fVerbose int32) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var pSupp *int32;\n    var nSuppAll, nSuppPi, nSuppPo, nSuppLi, nSuppLo, nSuppAnd int32;\n\n    pSupp = ABC_CALLOC( int, Cudd_ReadSize(dd) );\n    Extra_VectorSupportArray( dd, (DdNode **)Vec_PtrArray(vGroups), Vec_PtrSize(vGroups), pSupp );\n\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n        if Llb_ObjBddVar(vOrder, pObj) \u003c 0 {\n            continue; }\n        // remove variables that do not participate\n        if pSupp[Llb_ObjBddVar(vOrder, pObj)] == 0 {\n            if Aig_ObjIsNode(pObj) {\n                Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), -1 ); }\n            continue;\n        }\n        nSuppAll++;\n        if Saig_ObjIsPi(pAig, pObj) {\n            nSuppPi++;\n        } else if Saig_ObjIsLo(pAig, pObj) {\n            nSuppLo++;\n        } else if Saig_ObjIsPo(pAig, pObj) {\n            nSuppPo++;\n        } else if Saig_ObjIsLi(pAig, pObj) {\n            nSuppLi++;\n        } else {\n            nSuppAnd++; }\n    }\n    ABC_FREE( pSupp );\n\n    if fVerbose != 0 {\n    fmt.Printf(\"Groups =%3d  \", Vec_PtrSize(vGroups));\n    fmt.Printf(\"Variables: all =%4d \", nSuppAll);\n    fmt.Printf(\"pi =%4d \", nSuppPi);\n    fmt.Printf(\"po =%4d \", nSuppPo);\n    fmt.Printf(\"lo =%4d \", nSuppLo);\n    fmt.Printf(\"li =%4d \", nSuppLi);\n    fmt.Printf(\"and =%4d\", nSuppAnd);\n    fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Llb4_Nonlin4Sweep",
+      "Start": 16900,
+      "End": 18529,
+      "BodyStart": 17052,
+      "Original": "void Llb4_Nonlin4Sweep( Aig_Man_t * pAig, int nSweepMax, int nClusterMax, DdManager ** pdd, Vec_Int_t ** pvOrder, Vec_Ptr_t ** pvGroups, int fVerbose )\n{\n    DdManager * ddBad, * ddWork;\n    Vec_Ptr_t * vGroups;\n    Vec_Int_t * vOrder;\n    int Counter, nCutPoints;\n\n    // get the original ordering\n    Aig_ManCleanMarkA( pAig );\n    vOrder = Llb_Nonlin4SweepOrder( pAig, \u0026Counter, 1 );\n    assert( Counter == Aig_ManNodeNum(pAig) );\n    // mark the nodes\n    nCutPoints = Llb4_Nonlin4SweepCutpoints( pAig, vOrder, nSweepMax, fVerbose );\n    Vec_IntFree( vOrder );\n    // get better ordering\n    vOrder = Llb_Nonlin4SweepOrder( pAig, \u0026Counter, 0 );\n    assert( Counter == nCutPoints );\n    Aig_ManCleanMarkA( pAig );\n    // compute the BAD states\n    ddBad = Llb4_Nonlin4SweepBadStates( pAig, vOrder, nCutPoints + Aig_ManCiNum(pAig) + Aig_ManCoNum(pAig) );\n    // compute the clusters\n    ddWork = Llb4_Nonlin4SweepGroups( pAig, vOrder, nCutPoints + Aig_ManCiNum(pAig) + Aig_ManCoNum(pAig), \u0026vGroups, nClusterMax, fVerbose );\n    // transfer the result from the Bad manager\n//printf( \"Bad before = %d.\\n\", Cudd_DagSize(ddBad-\u003ebFunc) );\n    ddWork-\u003ebFunc = Cudd_bddTransfer( ddBad, ddWork, ddBad-\u003ebFunc );   Cudd_Ref( ddWork-\u003ebFunc );\n    Cudd_RecursiveDeref( ddBad, ddBad-\u003ebFunc );  ddBad-\u003ebFunc = NULL;\n    Extra_StopManager( ddBad );\n    // update ordering to exclude quantified variables\n//printf( \"Bad after = %d.\\n\", Cudd_DagSize(ddWork-\u003ebFunc) );\n\n    Llb_Nonlin4SweepPrintSuppProfile( ddWork, pAig, vOrder, vGroups, fVerbose );\n\n    // return the result\n    *pdd = ddWork;\n    *pvOrder = vOrder;\n    *pvGroups = vGroups;\n}",
+      "Draft": "func Llb4_Nonlin4Sweep(pAig *Aig_Man_t, nSweepMax int32, nClusterMax int32, pdd **DdManager, pvOrder **Vec_Int_t, pvGroups **Vec_Ptr_t, fVerbose int32) {\n    var ddBad, ddWork *DdManager;\n    var vGroups *Vec_Ptr_t;\n    var vOrder *Vec_Int_t;\n    var Counter, nCutPoints int32;\n\n    // get the original ordering\n    Aig_ManCleanMarkA( pAig );\n    vOrder = Llb_Nonlin4SweepOrder( pAig, \u0026Counter, 1 );\n    assert(Counter == Aig_ManNodeNum(pAig), \"Counter == Aig_ManNodeNum(pAig)\");\n    // mark the nodes\n    nCutPoints = Llb4_Nonlin4SweepCutpoints( pAig, vOrder, nSweepMax, fVerbose );\n    Vec_IntFree( vOrder );\n    // get better ordering\n    vOrder = Llb_Nonlin4SweepOrder( pAig, \u0026Counter, 0 );\n    assert(Counter == nCutPoints, \"Counter == nCutPoints\");\n    Aig_ManCleanMarkA( pAig );\n    // compute the BAD states\n    ddBad = Llb4_Nonlin4SweepBadStates( pAig, vOrder, nCutPoints + Aig_ManCiNum(pAig) + Aig_ManCoNum(pAig) );\n    // compute the clusters\n    ddWork = Llb4_Nonlin4SweepGroups( pAig, vOrder, nCutPoints + Aig_ManCiNum(pAig) + Aig_ManCoNum(pAig), \u0026vGroups, nClusterMax, fVerbose );\n    // transfer the result from the Bad manager\n//printf( \"Bad before = %d.\\n\", Cudd_DagSize(ddBad-\u003ebFunc) );\n    ddWork.bFunc = Cudd_bddTransfer( ddBad, ddWork, ddBad.bFunc );   Cudd_Ref( ddWork.bFunc );\n    Cudd_RecursiveDeref( ddBad, ddBad.bFunc );  ddBad.bFunc = nil;\n    Extra_StopManager( ddBad );\n    // update ordering to exclude quantified variables\n//printf( \"Bad after = %d.\\n\", Cudd_DagSize(ddWork-\u003ebFunc) );\n\n    Llb_Nonlin4SweepPrintSuppProfile( ddWork, pAig, vOrder, vGroups, fVerbose );\n\n    // return the result\n    *pdd = ddWork;\n    *pvOrder = vOrder;\n    *pvGroups = vGroups;\n}"
+    },
+    {
+      "Name": "Llb4_Nonlin4SweepExperiment",
+      "Start": 18799,
+      "End": 19134,
+      "BodyStart": 18852,
+      "Original": "void Llb4_Nonlin4SweepExperiment( Aig_Man_t * pAig )\n{\n    DdManager * dd;\n    Vec_Int_t * vOrder;\n    Vec_Ptr_t * vGroups;\n    Llb4_Nonlin4Sweep( pAig, 100, 500, \u0026dd, \u0026vOrder, \u0026vGroups, 1 );\n\n    Llb_Nonlin4SweepDeref( dd, vGroups );\n\n    Cudd_RecursiveDeref( dd, dd-\u003ebFunc );\n    Extra_StopManager( dd );\n    Vec_IntFree( vOrder );\n}",
+      "Draft": "func Llb4_Nonlin4SweepExperiment(pAig *Aig_Man_t) {\n    var dd *DdManager;\n    var vOrder *Vec_Int_t;\n    var vGroups *Vec_Ptr_t;\n    Llb4_Nonlin4Sweep( pAig, 100, 500, \u0026dd, \u0026vOrder, \u0026vGroups, 1 );\n\n    Llb_Nonlin4SweepDeref( dd, vGroups );\n\n    Cudd_RecursiveDeref( dd, dd.bFunc );\n    Extra_StopManager( dd );\n    Vec_IntFree( vOrder );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::4785",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4736,
+      "End": 4736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::4805",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4736,
+      "End": 4736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::4937",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4829,
+      "End": 4829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::4957",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4829,
+      "End": 4829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::5469",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5351,
+      "End": 5361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::5915",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5797,
+      "End": 5807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::6396",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6229,
+      "End": 6229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::6416",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6229,
+      "End": 6229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::6552",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6326,
+      "End": 6326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::6572",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6326,
+      "End": 6326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::7082",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6846,
+      "End": 6856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::7949",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7713,
+      "End": 7723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::8072",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7787,
+      "End": 7787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::8433",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8089,
+      "End": 8089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::8615",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8212,
+      "End": 8212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::10046",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9633,
+      "End": 9643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::10836",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10378,
+      "End": 10378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::11048",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10527,
+      "End": 10527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::pointer-cast::15969",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15430,
+      "End": 15441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::Llb_Nonlin4SweepOrder_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4SweepOrder_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1284,
+      "End": 2445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::Llb_Nonlin4SweepOrder",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4SweepOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2716,
+      "End": 3602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::Llb4_Nonlin4SweepCutpoints",
+      "Category": "semantic-review",
+      "Symbol": "Llb4_Nonlin4SweepCutpoints",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3930,
+      "End": 7073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::Llb_Nonlin4SweepPartitions_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4SweepPartitions_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7341,
+      "End": 8740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::Llb_Nonlin4SweepPartitions",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4SweepPartitions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9008,
+      "End": 9678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::Llb4_Nonlin4SweepBadMonitor",
+      "Category": "semantic-review",
+      "Symbol": "Llb4_Nonlin4SweepBadMonitor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9936,
+      "End": 10544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::Llb_Nonlin4SweepVars2Q",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4SweepVars2Q",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10839,
+      "End": 11380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::Llb_Nonlin4SweepDeref",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4SweepDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11653,
+      "End": 11875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::Llb_Nonlin4SweepPrint",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4SweepPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12148,
+      "End": 12395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::Llb4_Nonlin4SweepBadStates",
+      "Category": "semantic-review",
+      "Symbol": "Llb4_Nonlin4SweepBadStates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12651,
+      "End": 13625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::Llb4_Nonlin4SweepGroups",
+      "Category": "semantic-review",
+      "Symbol": "Llb4_Nonlin4SweepGroups",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13879,
+      "End": 14788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::Llb_Nonlin4SweepPrintSuppProfile",
+      "Category": "semantic-review",
+      "Symbol": "Llb_Nonlin4SweepPrintSuppProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15084,
+      "End": 16554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::Llb4_Nonlin4Sweep",
+      "Category": "semantic-review",
+      "Symbol": "Llb4_Nonlin4Sweep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16900,
+      "End": 18529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::Llb4_Nonlin4SweepExperiment",
+      "Category": "semantic-review",
+      "Symbol": "Llb4_Nonlin4SweepExperiment",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18799,
+      "End": 19134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::3061",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3061,
+      "End": 3094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::3268",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3268,
+      "End": 3301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::4310",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4310,
+      "End": 4343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::4449",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4449,
+      "End": 4484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::6777",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6777,
+      "End": 6812
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::9280",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9280,
+      "End": 9314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::9416",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9416,
+      "End": 9450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::9533",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9533,
+      "End": 9568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::10225",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10225,
+      "End": 10259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::11103",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11103,
+      "End": 11137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::11254",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11254,
+      "End": 11288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::11755",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11755,
+      "End": 11804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::12278",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12278,
+      "End": 12327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::15358",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15358,
+      "End": 15394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::15500",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachObj",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15500,
+      "End": 15534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb4Sweep.c::macro-inline::16198",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16198,
+      "End": 16215
+    }
+  ],
+  "Draft": "package llb\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [llb2Sweep.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Non-linear quantification scheduling.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb2Sweep.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Find good static variable ordering.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4SweepOrder_rec(pAig *Aig_Man_t, pObj *Aig_Obj_t, vOrder *Vec_Int_t, pCounter *int32, fSaveAll int32) {\n    var pFanin0, pFanin1 *Aig_Obj_t;\n    if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent( pAig, pObj );\n    assert(Llb_ObjBddVar(vOrder, pObj) \u003c 0, \"Llb_ObjBddVar(vOrder, pObj) \u003c 0\");\n    if Aig_ObjIsCi(pObj) {\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), (*pCounter)++ );\n        return;\n    }\n    // try fanins with higher level first\n    pFanin0 = Aig_ObjFanin0(pObj);\n    pFanin1 = Aig_ObjFanin1(pObj);\n//    if ( pFanin0-\u003eLevel \u003e pFanin1-\u003eLevel || (pFanin0-\u003eLevel == pFanin1-\u003eLevel \u0026\u0026 pFanin0-\u003eId \u003c pFanin1-\u003eId) )\n    if pFanin0.Level \u003e pFanin1.Level {\n        Llb_Nonlin4SweepOrder_rec( pAig, pFanin0, vOrder, pCounter, fSaveAll );\n        Llb_Nonlin4SweepOrder_rec( pAig, pFanin1, vOrder, pCounter, fSaveAll );\n    \n    } else {\n        Llb_Nonlin4SweepOrder_rec( pAig, pFanin1, vOrder, pCounter, fSaveAll );\n        Llb_Nonlin4SweepOrder_rec( pAig, pFanin0, vOrder, pCounter, fSaveAll );\n    }\n    if (fSaveAll != 0) || pObj.fMarkA {\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), (*pCounter)++ ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find good static variable ordering.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4SweepOrder(pAig *Aig_Man_t, pCounter *int32, fSaveAll int32) *Vec_Int_t {\n    var vOrder *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    // collect nodes in the order\n    vOrder = Vec_IntStartFull( Aig_ManObjNumMax(pAig) );\n    Aig_ManIncrementTravId( pAig );\n    Aig_ObjSetTravIdCurrent( pAig, Aig_ManConst1(pAig) );\n    Aig_ManForEachCo( pAig, pObj, i )\n    {\n        Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n        Llb_Nonlin4SweepOrder_rec( pAig, Aig_ObjFanin0(pObj), vOrder, \u0026Counter, fSaveAll );\n    }\n    Aig_ManForEachCi( pAig, pObj, i )\n        if ( Llb_ObjBddVar(vOrder, pObj) \u003c 0 )\n            Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), Counter++ );\n//    assert( Counter == Aig_ManObjNum(pAig) - 1 ); // no dangling nodes\n    if pCounter != nil {\n        *pCounter = Counter - Aig_ManCiNum(pAig) - Aig_ManCoNum(pAig); }\n    return vOrder;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BDD sweep on the netlist.]\n\n  Description [Returns AIG with internal cut points labeled with fMarkA.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb4_Nonlin4SweepCutpoints(pAig *Aig_Man_t, vOrder *Vec_Int_t, nBddLimit int32, fVerbose int32) int32 {\n    var dd *DdManager;\n    var bFunc0, bFunc1, bFunc *DdNode;\n    var pObj *Aig_Obj_t;\n    var i, Counter, Counter1 int32;\n    dd = Cudd_Init( Aig_ManObjNumMax(pAig), 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    // assign elementary variables\n    Aig_ManCleanData( pAig );\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj.pData = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n    // sweep internal nodes\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n/*\n        if ( pObj-\u003enRefs \u003e= 4 )\n        {\n            bFunc = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );  Cudd_Ref( bFunc );\n            pObj-\u003epData = bFunc;\n            Counter1++;\n            continue;\n        }\n*/\n        // inlining of macro Cudd_NotCond\n        bFunc0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        // inlining of macro Cudd_NotCond\n        bFunc1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));\n        bFunc  = Cudd_bddAnd( dd, bFunc0, bFunc1 );  Cudd_Ref( bFunc );\n        if Cudd_DagSize(bFunc) \u003e nBddLimit {\n//            if ( fVerbose )\n//                printf( \"Node %5d : Beg =%5d. \", i, Cudd_DagSize(bFunc) );\n\n            // add cutpoint at a larger one\n            Cudd_RecursiveDeref( dd, bFunc );\n            if Cudd_DagSize(bFunc0) \u003e= Cudd_DagSize(bFunc1) {\n                Cudd_RecursiveDeref( dd, (DdNode *)Aig_ObjFanin0(pObj).pData );\n                bFunc = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, Aig_ObjFanin0(pObj)) );\n                Aig_ObjFanin0(pObj).pData = bFunc;  Cudd_Ref( bFunc );\n                Aig_ObjFanin0(pObj).fMarkA = 1;\n\n//                if ( fVerbose )\n//                    printf( \"Ref =%3d  \", Aig_ObjFanin0(pObj)-\u003enRefs );\n            \n            } else {\n                Cudd_RecursiveDeref( dd, (DdNode *)Aig_ObjFanin1(pObj).pData );\n                bFunc = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, Aig_ObjFanin1(pObj)) );\n                Aig_ObjFanin1(pObj).pData = bFunc;  Cudd_Ref( bFunc );\n                Aig_ObjFanin1(pObj).fMarkA = 1;\n\n//                if ( fVerbose )\n//                    printf( \"Ref =%3d  \", Aig_ObjFanin1(pObj)-\u003enRefs );\n            }\n            // perform new operation\n            // inlining of macro Cudd_NotCond\n            bFunc0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n            // inlining of macro Cudd_NotCond\n            bFunc1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));\n            bFunc  = Cudd_bddAnd( dd, bFunc0, bFunc1 );  Cudd_Ref( bFunc );\n//            assert( Cudd_DagSize(bFunc) \u003c= nBddLimit );\n\n//            if ( fVerbose )\n//                printf( \"End =%5d.\\n\", Cudd_DagSize(bFunc) );\n            Counter++;\n        }\n        pObj.pData = bFunc;\n//printf( \"%d \", Cudd_DagSize(bFunc) );\n    }\n//printf( \"\\n\" );\n    // clean up\n    Aig_ManForEachNode( pAig, pObj, i )\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n    Extra_StopManager( dd );\n//    Aig_ManCleanMarkA( pAig );\n    if fVerbose != 0 {\n    fmt.Printf(\"Added %d cut points.  Used %d high fanout points.\\n\", Counter, Counter1); }\n    return Counter + Counter1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives BDDs for the partitions.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4SweepPartitions_rec(dd *DdManager, pObj *Aig_Obj_t, vOrder *Vec_Int_t, vRoots *Vec_Ptr_t) *DdNode {\n    var bBdd, bBdd0, bBdd1, bPart, vVar *DdNode;\n    if Aig_ObjIsConst1(pObj) {\n        return Cudd_ReadOne(dd); } \n    if Aig_ObjIsCi(pObj) {\n        return Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) ); }\n    if pObj.pData {\n        return (DdNode *)pObj.pData; }\n    if Aig_ObjIsCo(pObj) {\n        // inlining of macro Cudd_NotCond\n        bBdd0 = ((DdNode *)((ptrint)(Llb_Nonlin4SweepPartitions_rec(dd, Aig_ObjFanin0(pObj), vOrder, vRoots)) ^ (Aig_ObjFaninC0(pObj))));\n        bPart = Cudd_bddXnor( dd, Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) ), bBdd0 );  Cudd_Ref( bPart );\n        Vec_PtrPush( vRoots, bPart );\n        return nil;\n    }\n    // inlining of macro Cudd_NotCond\n    bBdd0 = ((DdNode *)((ptrint)(Llb_Nonlin4SweepPartitions_rec(dd, Aig_ObjFanin0(pObj), vOrder, vRoots)) ^ (Aig_ObjFaninC0(pObj))));\n    // inlining of macro Cudd_NotCond\n    bBdd1 = ((DdNode *)((ptrint)(Llb_Nonlin4SweepPartitions_rec(dd, Aig_ObjFanin1(pObj), vOrder, vRoots)) ^ (Aig_ObjFaninC1(pObj))));\n    bBdd  = Cudd_bddAnd( dd, bBdd0, bBdd1 );   Cudd_Ref( bBdd );\n    if Llb_ObjBddVar(vOrder, pObj) \u003e= 0 {\n        vVar  = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n        bPart = Cudd_bddXnor( dd, vVar, bBdd );  Cudd_Ref( bPart );\n        Vec_PtrPush( vRoots, bPart );\n        Cudd_RecursiveDeref( dd, bBdd );\n        bBdd = vVar;  Cudd_Ref( vVar );\n    }\n    pObj.pData = bBdd;\n    return bBdd;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives BDDs for the partitions.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4SweepPartitions(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t, fTransition int32) *Vec_Ptr_t {\n    var vRoots *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    Aig_ManCleanData( pAig );\n    vRoots = Vec_PtrAlloc( 100 );\n    if fTransition != 0 {\n        Saig_ManForEachLi( pAig, pObj, i )\n            Llb_Nonlin4SweepPartitions_rec( dd, pObj, vOrder, vRoots );\n    \n    } else {\n        Saig_ManForEachPo( pAig, pObj, i )\n            Llb_Nonlin4SweepPartitions_rec( dd, pObj, vOrder, vRoots );\n    }\n    Aig_ManForEachNode( pAig, pObj, i )\n        if ( pObj.pData )\n            Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n    return vRoots;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Get bad state monitor.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb4_Nonlin4SweepBadMonitor(pAig *Aig_Man_t, vOrder *Vec_Int_t, dd *DdManager) *DdNode {\n    var pObj *Aig_Obj_t;\n    var bRes, bVar, bTemp *DdNode;\n    var i int32;\n    var TimeStop abctime;\n    TimeStop = dd.TimeStop;  dd.TimeStop = 0;\n    bRes = Cudd_ReadOne( dd );   Cudd_Ref( bRes );\n    Saig_ManForEachPo( pAig, pObj, i )\n    {\n        bVar = Cudd_bddIthVar( dd, Llb_ObjBddVar(vOrder, pObj) );\n        // inlining of macro Cudd_Not\n        bRes = Cudd_bddAnd( dd, bTemp = bRes, ((DdNode *)((ptrint)(bVar) ^ 01)) );  Cudd_Ref( bRes );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    Cudd_Deref( bRes );\n    dd.TimeStop = TimeStop;\n    // inlining of macro Cudd_Not\n    return ((DdNode *)((ptrint)(bRes) ^ 01));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates quantifiable variables for both types of traversal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4SweepVars2Q(pAig *Aig_Man_t, vOrder *Vec_Int_t, fAddLis int32) *Vec_Int_t {\n    var vVars2Q *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    vVars2Q = Vec_IntAlloc( 0 );\n    Vec_IntFill( vVars2Q, Aig_ManObjNumMax(pAig), 1 );\n    // add flop outputs\n    Saig_ManForEachLo( pAig, pObj, i )\n        Vec_IntWriteEntry( vVars2Q, Llb_ObjBddVar(vOrder, pObj), 0 );\n    // add flop inputs\n    if fAddLis != 0 {\n    Saig_ManForEachLi( pAig, pObj, i )\n        Vec_IntWriteEntry( vVars2Q, Llb_ObjBddVar(vOrder, pObj), 0 ); }\n    return vVars2Q;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Multiply every partition by the cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4SweepDeref(dd *DdManager, vParts *Vec_Ptr_t) {\n    var bFunc *DdNode;\n    var i int32;\n    Vec_PtrForEachEntry( DdNode *, vParts, bFunc, i )\n        Cudd_RecursiveDeref( dd, bFunc );\n    Vec_PtrFree( vParts );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Multiply every partition by the cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4SweepPrint(vFuncs *Vec_Ptr_t) {\n    var bFunc *DdNode;\n    var i int32;\n    fmt.Printf(\"(%d) \", Vec_PtrSize(vFuncs));\n    Vec_PtrForEachEntry( DdNode *, vFuncs, bFunc, i )\n        fmt.Printf(\"%d \", Cudd_DagSize(bFunc));\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes bad states.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb4_Nonlin4SweepBadStates(pAig *Aig_Man_t, vOrder *Vec_Int_t, nVars int32) *DdManager {\n    var dd *DdManager;\n    var vParts *Vec_Ptr_t;\n    var vVars2Q *Vec_Int_t;\n    var bMonitor, bImage *DdNode;\n    // get quantifiable variables\n    vVars2Q = Llb_Nonlin4SweepVars2Q( pAig, vOrder, 0 );\n    // start BDD manager and create partitions \n    dd = Cudd_Init( nVars, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    vParts = Llb_Nonlin4SweepPartitions( dd, pAig, vOrder, 0 );\n//printf( \"Outputs: \" );\n//Llb_Nonlin4SweepPrint( vParts );\n    // compute image of the partitions\n    bMonitor = Llb4_Nonlin4SweepBadMonitor( pAig, vOrder, dd );  Cudd_Ref( bMonitor );\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    bImage = Llb_Nonlin4Image( dd, vParts, bMonitor, vVars2Q );  Cudd_Ref( bImage );\n    Cudd_RecursiveDeref( dd, bMonitor );\n    Llb_Nonlin4SweepDeref( dd, vParts );\n    Vec_IntFree( vVars2Q );\n    // save image and return\n    dd.bFunc = bImage;\n    return dd;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes clusters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb4_Nonlin4SweepGroups(pAig *Aig_Man_t, vOrder *Vec_Int_t, nVars int32, pvGroups **Vec_Ptr_t, nBddLimitClp int32, fVerbose int32) *DdManager {\n    var dd *DdManager;\n    var vParts *Vec_Ptr_t;\n    var vVars2Q *Vec_Int_t;\n    // get quantifiable variables\n    vVars2Q = Llb_Nonlin4SweepVars2Q( pAig, vOrder, 1 );\n    // start BDD manager and create partitions \n    dd = Cudd_Init( nVars, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    vParts = Llb_Nonlin4SweepPartitions( dd, pAig, vOrder, 1 );\n//printf( \"Transitions: \" );\n//Llb_Nonlin4SweepPrint( vParts );\n    // compute image of the partitions\n\n    Cudd_AutodynEnable( dd,  CUDD_REORDER_SYMM_SIFT );\n    *pvGroups = Llb_Nonlin4Group( dd, vParts, vVars2Q, nBddLimitClp );\n    Llb_Nonlin4SweepDeref( dd, vParts );\n//    *pvGroups = vParts;\n\nif fVerbose != 0 {\nfmt.Printf(\"Groups: \");\nLlb_Nonlin4SweepPrint( *pvGroups );\n}\n\n    Vec_IntFree( vVars2Q );\n    return dd;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates quantifiable variables for both types of traversal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_Nonlin4SweepPrintSuppProfile(dd *DdManager, pAig *Aig_Man_t, vOrder *Vec_Int_t, vGroups *Vec_Ptr_t, fVerbose int32) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var pSupp *int32;\n    var nSuppAll, nSuppPi, nSuppPo, nSuppLi, nSuppLo, nSuppAnd int32;\n\n    pSupp = ABC_CALLOC( int, Cudd_ReadSize(dd) );\n    Extra_VectorSupportArray( dd, (DdNode **)Vec_PtrArray(vGroups), Vec_PtrSize(vGroups), pSupp );\n\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n        if Llb_ObjBddVar(vOrder, pObj) \u003c 0 {\n            continue; }\n        // remove variables that do not participate\n        if pSupp[Llb_ObjBddVar(vOrder, pObj)] == 0 {\n            if Aig_ObjIsNode(pObj) {\n                Vec_IntWriteEntry( vOrder, Aig_ObjId(pObj), -1 ); }\n            continue;\n        }\n        nSuppAll++;\n        if Saig_ObjIsPi(pAig, pObj) {\n            nSuppPi++;\n        } else if Saig_ObjIsLo(pAig, pObj) {\n            nSuppLo++;\n        } else if Saig_ObjIsPo(pAig, pObj) {\n            nSuppPo++;\n        } else if Saig_ObjIsLi(pAig, pObj) {\n            nSuppLi++;\n        } else {\n            nSuppAnd++; }\n    }\n    ABC_FREE( pSupp );\n\n    if fVerbose != 0 {\n    fmt.Printf(\"Groups =%3d  \", Vec_PtrSize(vGroups));\n    fmt.Printf(\"Variables: all =%4d \", nSuppAll);\n    fmt.Printf(\"pi =%4d \", nSuppPi);\n    fmt.Printf(\"po =%4d \", nSuppPo);\n    fmt.Printf(\"lo =%4d \", nSuppLo);\n    fmt.Printf(\"li =%4d \", nSuppLi);\n    fmt.Printf(\"and =%4d\", nSuppAnd);\n    fmt.Printf(\"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BDD sweep on the netlist.]\n\n  Description [Returns BDD manager, ordering, clusters, and bad states \n  inside dd-\u003ebFunc.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb4_Nonlin4Sweep(pAig *Aig_Man_t, nSweepMax int32, nClusterMax int32, pdd **DdManager, pvOrder **Vec_Int_t, pvGroups **Vec_Ptr_t, fVerbose int32) {\n    var ddBad, ddWork *DdManager;\n    var vGroups *Vec_Ptr_t;\n    var vOrder *Vec_Int_t;\n    var Counter, nCutPoints int32;\n\n    // get the original ordering\n    Aig_ManCleanMarkA( pAig );\n    vOrder = Llb_Nonlin4SweepOrder( pAig, \u0026Counter, 1 );\n    assert(Counter == Aig_ManNodeNum(pAig), \"Counter == Aig_ManNodeNum(pAig)\");\n    // mark the nodes\n    nCutPoints = Llb4_Nonlin4SweepCutpoints( pAig, vOrder, nSweepMax, fVerbose );\n    Vec_IntFree( vOrder );\n    // get better ordering\n    vOrder = Llb_Nonlin4SweepOrder( pAig, \u0026Counter, 0 );\n    assert(Counter == nCutPoints, \"Counter == nCutPoints\");\n    Aig_ManCleanMarkA( pAig );\n    // compute the BAD states\n    ddBad = Llb4_Nonlin4SweepBadStates( pAig, vOrder, nCutPoints + Aig_ManCiNum(pAig) + Aig_ManCoNum(pAig) );\n    // compute the clusters\n    ddWork = Llb4_Nonlin4SweepGroups( pAig, vOrder, nCutPoints + Aig_ManCiNum(pAig) + Aig_ManCoNum(pAig), \u0026vGroups, nClusterMax, fVerbose );\n    // transfer the result from the Bad manager\n//printf( \"Bad before = %d.\\n\", Cudd_DagSize(ddBad-\u003ebFunc) );\n    ddWork.bFunc = Cudd_bddTransfer( ddBad, ddWork, ddBad.bFunc );   Cudd_Ref( ddWork.bFunc );\n    Cudd_RecursiveDeref( ddBad, ddBad.bFunc );  ddBad.bFunc = nil;\n    Extra_StopManager( ddBad );\n    // update ordering to exclude quantified variables\n//printf( \"Bad after = %d.\\n\", Cudd_DagSize(ddWork-\u003ebFunc) );\n\n    Llb_Nonlin4SweepPrintSuppProfile( ddWork, pAig, vOrder, vGroups, fVerbose );\n\n    // return the result\n    *pdd = ddWork;\n    *pvOrder = vOrder;\n    *pvGroups = vGroups;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs BDD sweep on the netlist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb4_Nonlin4SweepExperiment(pAig *Aig_Man_t) {\n    var dd *DdManager;\n    var vOrder *Vec_Int_t;\n    var vGroups *Vec_Ptr_t;\n    Llb4_Nonlin4Sweep( pAig, 100, 500, \u0026dd, \u0026vOrder, \u0026vGroups, 1 );\n\n    Llb_Nonlin4SweepDeref( dd, vGroups );\n\n    Cudd_RecursiveDeref( dd, dd.bFunc );\n    Extra_StopManager( dd );\n    Vec_IntFree( vOrder );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

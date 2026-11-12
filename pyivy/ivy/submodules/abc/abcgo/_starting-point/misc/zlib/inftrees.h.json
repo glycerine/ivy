@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inftrees.h",
+  "SHA256": "e9ea113df42e8f46a98a727b7a1435eeae3a1b4157d856a76e914557a1d03590",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inftrees.h::mechanical::enum::2683",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 2683,
+      "End": 2687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/inftrees.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2982
+    }
+  ],
+  "Draft": "package zlib\n\n/* inftrees.h -- header to use inftrees.c\n * Copyright (C) 1995-2005, 2010 Mark Adler\n * For conditions of distribution and use, see copyright notice in zlib.h\n */\n\n/* WARNING: this file should *not* be used by applications. It is\n   part of the implementation of the compression library and is\n   subject to change. Applications should only use zlib.h.\n */\n\n//ABC_NAMESPACE_HEADER_START\n\n/* Structure for decoding tables.  Each entry provides either the\n   information needed to do the operation requested by the code that\n   indexed that table entry, or it provides a pointer to another\n   table that indexes more bits of the code.  op indicates whether\n   the entry is a pointer to another table, a literal, a length or\n   distance, an end-of-block, or an invalid code.  For a table\n   pointer, the low four bits of op is the number of index bits of\n   that table.  For a length or distance, the low four bits of op\n   is the number of extra bits to get after the code.  bits is\n   the number of bits in this code or part of the code to drop off\n   of the bit buffer.  val is the actual byte to output in the case\n   of a literal, the base length or distance, or the offset from\n   the current table to the next table.  Each entry is four bytes. */\ntypedef struct {\n    unsigned char op;           /* operation, extra bits, table bits */\n    unsigned char bits;         /* bits in this part of the code */\n    unsigned short val;         /* offset in table or code value */\n}\n code;\n\n/* op values as set by inflate_table():\n    00000000 - literal\n    0000tttt - table link, tttt != 0 is the number of table index bits\n    0001eeee - length or distance, eeee is the number of extra bits\n    01100000 - end of block\n    01000000 - invalid code\n */\n\n/* Maximum size of the dynamic table.  The maximum number of code structures is\n   1444, which is the sum of 852 for literal/length codes and 592 for distance\n   codes.  These values were found by exhaustive searches using the program\n   examples/enough.c found in the zlib distribtution.  The arguments to that\n   program are the number of symbols, the initial root table size, and the\n   maximum bit length of a code.  \"enough 286 9 15\" for literal/length codes\n   returns returns 852, and \"enough 30 6 15\" for distance codes returns 592.\n   The initial root table size (9 or 6) is found in the fifth argument of the\n   inflate_table() calls in inflate.c and infback.c.  If the root table size is\n   changed, then these maximum sizes would be need to be recalculated and\n   updated. */\nconst ENOUGH_LENS = 852\nconst ENOUGH_DISTS = 592\n#define ENOUGH (ENOUGH_LENS+ENOUGH_DISTS)\n\n/* Type of code to build for inflate_table() */\n type codetype int32\nconst (\n    CODES codetype = iota\n\n    LENS\n\n    DISTS\n\n)\n\n \n\n// int ZLIB_INTERNAL inflate_table OF((codetype type, unsigned short FAR *lens,\n//                              unsigned codes, code FAR * FAR *table,\n//                              unsigned FAR *bits, unsigned short FAR *work));\n\n\n//ABC_NAMESPACE_HEADER_END\n"
+}

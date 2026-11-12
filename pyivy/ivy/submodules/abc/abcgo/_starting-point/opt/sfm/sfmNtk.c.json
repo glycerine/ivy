@@ -1,0 +1,819 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c",
+  "SHA256": "690bd1e39ba621f64b33602c5307746594c05a80d9eaa68d329faa8e7d4914d7",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 13,
+        "ByteOffset": 1645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(vArray) == 0 \u0026\u0026 Vec_StrEntry(vFixed, i) == byte(0) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 58,
+        "Column": 13,
+        "ByteOffset": 2019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Fanin + nPos \u003c Vec_WecSize(vFanins) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 13,
+        "ByteOffset": 2165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_IntSize(vArray) == 1 \u0026\u0026 Vec_StrEntry(vFixed, i) == byte(0) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 9,
+        "ByteOffset": 3889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vArray) == Vec_IntCap(vArray) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 4685
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vLevels) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 5792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vLevelsR) == 0 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 186,
+        "Column": 63,
+        "ByteOffset": 7079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((vFanins) ? (free((char *) (vFanins)), (vFanins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 227,
+        "Column": 72,
+        "ByteOffset": 8676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vLevels.pArray) ? (free((char *) (p.vLevels.pArray)), (p.vLevels.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 228,
+        "Column": 73,
+        "ByteOffset": 8813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vLevelsR.pArray) ? (free((char *) (p.vLevelsR.pArray)), (p.vLevelsR.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 229,
+        "Column": 72,
+        "ByteOffset": 8951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vCounts.pArray) ? (free((char *) (p.vCounts.pArray)), (p.vCounts.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 230,
+        "Column": 73,
+        "ByteOffset": 9088
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vTravIds.pArray) ? (free((char *) (p.vTravIds.pArray)), (p.vTravIds.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 231,
+        "Column": 74,
+        "ByteOffset": 9228
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vTravIds2.pArray) ? (free((char *) (p.vTravIds2.pArray)), (p.vTravIds2.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 232,
+        "Column": 72,
+        "ByteOffset": 9368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vId2Var.pArray) ? (free((char *) (p.vId2Var.pArray)), (p.vId2Var.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 233,
+        "Column": 72,
+        "ByteOffset": 9504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.vVar2Id.pArray) ? (free((char *) (p.vVar2Id.pArray)), (p.vVar2Id.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 250,
+        "Column": 57,
+        "ByteOffset": 10131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 10535
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Sfm_ObjIsNode(p, iNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 267,
+        "Column": 5,
+        "ByteOffset": 10574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Sfm_ObjIsPo(p, iFanin) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 5,
+        "ByteOffset": 10679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 5,
+        "ByteOffset": 10769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 5,
+        "ByteOffset": 10897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Sfm_ObjIsNode(p, iNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 277,
+        "Column": 5,
+        "ByteOffset": 10936
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Sfm_ObjIsPo(p, iFanin) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 278,
+        "Column": 5,
+        "ByteOffset": 10975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntFind( Sfm_ObjFiArray(p, iNode), iFanin ) == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 5,
+        "ByteOffset": 11044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntFind( Sfm_ObjFoArray(p, iFanin), iNode ) == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 287,
+        "Column": 5,
+        "ByteOffset": 11412
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Sfm_ObjIsNode(p, iNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 289,
+        "Column": 83,
+        "ByteOffset": 11685
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var RetValue int32  = Vec_IntRemove( Sfm_ObjFoArray(p, iFanin), iNode );  assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 317,
+        "Column": 5,
+        "ByteOffset": 13022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Sfm_ObjIsNode(p, iNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 318,
+        "Column": 5,
+        "ByteOffset": 13061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFanin != iFaninNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 319,
+        "Column": 5,
+        "ByteOffset": 13096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Sfm_ObjFaninNum(p, iNode) \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 322,
+        "Column": 87,
+        "ByteOffset": 13421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            var RetValue int32  = Vec_IntRemove( Sfm_ObjFoArray(p, iFanin), iNode );  assert( RetValue );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sfm_CheckConsistency",
+      "Start": 1246,
+      "End": 2007,
+      "BodyStart": 1335,
+      "Original": "void Sfm_CheckConsistency( Vec_Wec_t * vFanins, int nPis, int nPos, Vec_Str_t * vFixed )\n{\n    Vec_Int_t * vArray;\n    int i, k, Fanin;\n    // check entries\n    Vec_WecForEachLevel( vFanins, vArray, i )\n    {\n        // PIs have no fanins\n        if ( i \u003c nPis )\n            assert( Vec_IntSize(vArray) == 0 \u0026\u0026 Vec_StrEntry(vFixed, i) == (char)0 );\n        // nodes are in a topo order; POs cannot be fanins\n        Vec_IntForEachEntry( vArray, Fanin, k )\n//            assert( Fanin \u003c i \u0026\u0026 Fanin + nPos \u003c Vec_WecSize(vFanins) );\n            assert( Fanin + nPos \u003c Vec_WecSize(vFanins) );\n        // POs have one fanout\n        if ( i + nPos \u003e= Vec_WecSize(vFanins) )\n            assert( Vec_IntSize(vArray) == 1 \u0026\u0026 Vec_StrEntry(vFixed, i) == (char)0 );\n    }\n}",
+      "Draft": "func Sfm_CheckConsistency(vFanins *Vec_Wec_t, nPis int32, nPos int32, vFixed *Vec_Str_t) {\n    var vArray *Vec_Int_t;\n    var i, k, Fanin int32;\n    // check entries\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vFanins)) \u0026\u0026 (((vArray) = Vec_WecEntry(vFanins, i)), 1); i++  {\n        // PIs have no fanins\n        if i \u003c nPis {\n            assert(Vec_IntSize(vArray) == 0 \u0026\u0026 Vec_StrEntry(vFixed, i) == byte(0), \"Vec_IntSize(vArray) == 0 \u0026\u0026 Vec_StrEntry(vFixed, i) == byte(0)\"); }\n        // nodes are in a topo order; POs cannot be fanins\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Fanin) = Vec_IntEntry(vArray, k)), 1); k++  {\n//            assert( Fanin \u003c i \u0026\u0026 Fanin + nPos \u003c Vec_WecSize(vFanins) );\n            assert(Fanin + nPos \u003c Vec_WecSize(vFanins), \"Fanin + nPos \u003c Vec_WecSize(vFanins)\");\n        }\n        // POs have one fanout\n        if i + nPos \u003e= Vec_WecSize(vFanins) {\n            assert(Vec_IntSize(vArray) == 1 \u0026\u0026 Vec_StrEntry(vFixed, i) == byte(0), \"Vec_IntSize(vArray) == 1 \u0026\u0026 Vec_StrEntry(vFixed, i) == byte(0)\"); }\n    }\n}"
+    },
+    {
+      "Name": "Sfm_CreateFanout",
+      "Start": 2243,
+      "End": 3038,
+      "BodyStart": 2310,
+      "Original": "void Sfm_CreateFanout( Vec_Wec_t * vFanins, Vec_Wec_t * vFanouts )\n{\n    Vec_Int_t * vArray;\n    int i, k, Fanin;\n    // count fanouts\n    Vec_WecInit( vFanouts, Vec_WecSize(vFanins) );\n    Vec_WecForEachLevel( vFanins, vArray, i )\n        Vec_IntForEachEntry( vArray, Fanin, k )\n            Vec_WecEntry( vFanouts, Fanin )-\u003enSize++;\n    // allocate fanins\n    Vec_WecForEachLevel( vFanouts, vArray, i )\n    {\n        k = vArray-\u003enSize; vArray-\u003enSize = 0;\n        Vec_IntGrow( vArray, k );\n    }\n    // add fanouts\n    Vec_WecForEachLevel( vFanins, vArray, i )\n        Vec_IntForEachEntry( vArray, Fanin, k )\n            Vec_IntPush( Vec_WecEntry( vFanouts, Fanin ), i );\n    // verify\n    Vec_WecForEachLevel( vFanouts, vArray, i )\n        assert( Vec_IntSize(vArray) == Vec_IntCap(vArray) );\n}",
+      "Draft": "func Sfm_CreateFanout(vFanins *Vec_Wec_t, vFanouts *Vec_Wec_t) {\n    var vArray *Vec_Int_t;\n    var i, k, Fanin int32;\n    // count fanouts\n    Vec_WecInit( vFanouts, Vec_WecSize(vFanins) );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vFanins)) \u0026\u0026 (((vArray) = Vec_WecEntry(vFanins, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Fanin) = Vec_IntEntry(vArray, k)), 1); k++  {\n            Vec_WecEntry( vFanouts, Fanin ).nSize++;\n        }\n    }\n    // allocate fanins\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vFanouts)) \u0026\u0026 (((vArray) = Vec_WecEntry(vFanouts, i)), 1); i++  {\n        k = vArray.nSize; vArray.nSize = 0;\n        Vec_IntGrow( vArray, k );\n    }\n    // add fanouts\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vFanins)) \u0026\u0026 (((vArray) = Vec_WecEntry(vFanins, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Fanin) = Vec_IntEntry(vArray, k)), 1); k++  {\n            Vec_IntPush( Vec_WecEntry( vFanouts, Fanin ), i );\n        }\n    }\n    // verify\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vFanouts)) \u0026\u0026 (((vArray) = Vec_WecEntry(vFanouts, i)), 1); i++  {\n        assert(Vec_IntSize(vArray) == Vec_IntCap(vArray), \"Vec_IntSize(vArray) == Vec_IntCap(vArray)\");\n    }\n}"
+    },
+    {
+      "Name": "Sfm_ObjLevelNew",
+      "Start": 3274,
+      "End": 3539,
+      "BodyStart": 3366,
+      "Original": "static inline int Sfm_ObjLevelNew( Vec_Int_t * vArray, Vec_Int_t * vLevels, int fAddLevel )\n{\n    int k, Fanin, Level = 0;\n    Vec_IntForEachEntry( vArray, Fanin, k )\n        Level = Abc_MaxInt( Level, Vec_IntEntry(vLevels, Fanin) );\n    return Level + fAddLevel;\n}",
+      "Draft": "func Sfm_ObjLevelNew(vArray *Vec_Int_t, vLevels *Vec_Int_t, fAddLevel int32) int32 {\n    var k, Fanin, Level int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Fanin) = Vec_IntEntry(vArray, k)), 1); k++  {\n        Level = Abc_MaxInt( Level, Vec_IntEntry(vLevels, Fanin) );\n    }\n    return Level + fAddLevel;\n}"
+    },
+    {
+      "Name": "Sfm_CreateLevel",
+      "Start": 3540,
+      "End": 3912,
+      "BodyStart": 3625,
+      "Original": "void Sfm_CreateLevel( Vec_Wec_t * vFanins, Vec_Int_t * vLevels, Vec_Str_t * vEmpty )\n{\n    Vec_Int_t * vArray;\n    int i;\n    assert( Vec_IntSize(vLevels) == 0 );\n    Vec_IntFill( vLevels, Vec_WecSize(vFanins), 0 );\n    Vec_WecForEachLevel( vFanins, vArray, i )\n        Vec_IntWriteEntry( vLevels, i, Sfm_ObjLevelNew(vArray, vLevels, Sfm_ObjAddsLevelArray(vEmpty, i)) );\n}",
+      "Draft": "func Sfm_CreateLevel(vFanins *Vec_Wec_t, vLevels *Vec_Int_t, vEmpty *Vec_Str_t) {\n    var vArray *Vec_Int_t;\n    var i int32;\n    assert(Vec_IntSize(vLevels) == 0, \"Vec_IntSize(vLevels) == 0\");\n    Vec_IntFill( vLevels, Vec_WecSize(vFanins), 0 );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vFanins)) \u0026\u0026 (((vArray) = Vec_WecEntry(vFanins, i)), 1); i++  {\n        Vec_IntWriteEntry( vLevels, i, Sfm_ObjLevelNew(vArray, vLevels, Sfm_ObjAddsLevelArray(vEmpty, i)) );\n    }\n}"
+    },
+    {
+      "Name": "Sfm_ObjLevelNewR",
+      "Start": 4148,
+      "End": 4423,
+      "BodyStart": 4242,
+      "Original": "static inline int Sfm_ObjLevelNewR( Vec_Int_t * vArray, Vec_Int_t * vLevelsR, int fAddLevel )\n{\n    int k, Fanout, LevelR = 0;\n    Vec_IntForEachEntry( vArray, Fanout, k )\n        LevelR = Abc_MaxInt( LevelR, Vec_IntEntry(vLevelsR, Fanout) );\n    return LevelR + fAddLevel;\n}",
+      "Draft": "func Sfm_ObjLevelNewR(vArray *Vec_Int_t, vLevelsR *Vec_Int_t, fAddLevel int32) int32 {\n    var k, Fanout, LevelR int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Fanout) = Vec_IntEntry(vArray, k)), 1); k++  {\n        LevelR = Abc_MaxInt( LevelR, Vec_IntEntry(vLevelsR, Fanout) );\n    }\n    return LevelR + fAddLevel;\n}"
+    },
+    {
+      "Name": "Sfm_CreateLevelR",
+      "Start": 4424,
+      "End": 4813,
+      "BodyStart": 4512,
+      "Original": "void Sfm_CreateLevelR( Vec_Wec_t * vFanouts, Vec_Int_t * vLevelsR, Vec_Str_t * vEmpty )\n{\n    Vec_Int_t * vArray;\n    int i;\n    assert( Vec_IntSize(vLevelsR) == 0 );\n    Vec_IntFill( vLevelsR, Vec_WecSize(vFanouts), 0 );\n    Vec_WecForEachLevelReverse( vFanouts, vArray, i )\n        Vec_IntWriteEntry( vLevelsR, i, Sfm_ObjLevelNewR(vArray, vLevelsR, Sfm_ObjAddsLevelArray(vEmpty, i)) );\n}",
+      "Draft": "func Sfm_CreateLevelR(vFanouts *Vec_Wec_t, vLevelsR *Vec_Int_t, vEmpty *Vec_Str_t) {\n    var vArray *Vec_Int_t;\n    var i int32;\n    assert(Vec_IntSize(vLevelsR) == 0, \"Vec_IntSize(vLevelsR) == 0\");\n    Vec_IntFill( vLevelsR, Vec_WecSize(vFanouts), 0 );\n    // inlining of macro Vec_WecForEachLevelReverse\n    for  i = Vec_WecSize(vFanouts)-1; (i \u003e= 0) \u0026\u0026 (((vArray) = Vec_WecEntry(vFanouts, i)), 1); i--  {\n        Vec_IntWriteEntry( vLevelsR, i, Sfm_ObjLevelNewR(vArray, vLevelsR, Sfm_ObjAddsLevelArray(vEmpty, i)) );\n    }\n}"
+    },
+    {
+      "Name": "Sfm_NtkConstruct",
+      "Start": 5049,
+      "End": 6207,
+      "BodyStart": 5225,
+      "Original": "Sfm_Ntk_t * Sfm_NtkConstruct( Vec_Wec_t * vFanins, int nPis, int nPos, Vec_Str_t * vFixed, Vec_Str_t * vEmpty, Vec_Wrd_t * vTruths, Vec_Int_t * vStarts, Vec_Wrd_t * vTruths2 )\n{\n    Sfm_Ntk_t * p;\n    Sfm_CheckConsistency( vFanins, nPis, nPos, vFixed );\n    p = ABC_CALLOC( Sfm_Ntk_t, 1 );\n    p-\u003enObjs    = Vec_WecSize( vFanins );\n    p-\u003enPis     = nPis;\n    p-\u003enPos     = nPos;\n    p-\u003enNodes   = p-\u003enObjs - p-\u003enPis - p-\u003enPos;\n    // user data\n    p-\u003evFixed   = vFixed;\n    p-\u003evEmpty   = vEmpty;\n    p-\u003evTruths  = vTruths;\n    p-\u003evFanins  = *vFanins;\n    p-\u003evStarts  = vStarts;\n    p-\u003evTruths2 = vTruths2;\n    ABC_FREE( vFanins );\n    // attributes\n    Sfm_CreateFanout( \u0026p-\u003evFanins, \u0026p-\u003evFanouts );\n    Sfm_CreateLevel( \u0026p-\u003evFanins, \u0026p-\u003evLevels, vEmpty );\n    Sfm_CreateLevelR( \u0026p-\u003evFanouts, \u0026p-\u003evLevelsR, vEmpty );\n    Vec_IntFill( \u0026p-\u003evCounts,   p-\u003enObjs,  0 );\n    Vec_IntFill( \u0026p-\u003evTravIds,  p-\u003enObjs,  0 );\n    Vec_IntFill( \u0026p-\u003evTravIds2, p-\u003enObjs,  0 );\n    Vec_IntFill( \u0026p-\u003evId2Var,   2*p-\u003enObjs, -1 );\n    Vec_IntFill( \u0026p-\u003evVar2Id,   2*p-\u003enObjs, -1 );\n    p-\u003evCover   = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    p-\u003evCnfs    = Sfm_CreateCnf( p );\n    return p;\n}",
+      "Draft": "func Sfm_NtkConstruct(vFanins *Vec_Wec_t, nPis int32, nPos int32, vFixed *Vec_Str_t, vEmpty *Vec_Str_t, vTruths *Vec_Wrd_t, vStarts *Vec_Int_t, vTruths2 *Vec_Wrd_t) *Sfm_Ntk_t {\n    \n    Sfm_CheckConsistency( vFanins, nPis, nPos, vFixed );\n    // inlining of macro ABC_CALLOC\n    p := \u0026Sfm_Ntk_t{};\n    p.nObjs    = Vec_WecSize( vFanins );\n    p.nPis     = nPis;\n    p.nPos     = nPos;\n    p.nNodes   = p.nObjs - p.nPis - p.nPos;\n    // user data\n    p.vFixed   = vFixed;\n    p.vEmpty   = vEmpty;\n    p.vTruths  = vTruths;\n    p.vFanins  = *vFanins;\n    p.vStarts  = vStarts;\n    p.vTruths2 = vTruths2;\n    // inlining of macro ABC_FREE\n    ((vFanins) ? (free((char *) (vFanins)), (vFanins) = 0) : 0);\n    // attributes\n    Sfm_CreateFanout( \u0026p.vFanins, \u0026p.vFanouts );\n    Sfm_CreateLevel( \u0026p.vFanins, \u0026p.vLevels, vEmpty );\n    Sfm_CreateLevelR( \u0026p.vFanouts, \u0026p.vLevelsR, vEmpty );\n    Vec_IntFill( \u0026p.vCounts,   p.nObjs,  0 );\n    Vec_IntFill( \u0026p.vTravIds,  p.nObjs,  0 );\n    Vec_IntFill( \u0026p.vTravIds2, p.nObjs,  0 );\n    Vec_IntFill( \u0026p.vId2Var,   2*p.nObjs, -1 );\n    Vec_IntFill( \u0026p.vVar2Id,   2*p.nObjs, -1 );\n    p.vCover   = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    p.vCnfs    = Sfm_CreateCnf( p );\n    return p;\n}"
+    },
+    {
+      "Name": "Sfm_NtkPrepare",
+      "Start": 6208,
+      "End": 6918,
+      "BodyStart": 6245,
+      "Original": "void Sfm_NtkPrepare( Sfm_Ntk_t * p )\n{\n    p-\u003enLevelMax = Vec_IntFindMax(\u0026p-\u003evLevels) + p-\u003epPars-\u003enGrowthLevel;\n    p-\u003evNodes    = Vec_IntAlloc( 1000 );\n    p-\u003evDivs     = Vec_IntAlloc( 100 );\n    p-\u003evRoots    = Vec_IntAlloc( 1000 );\n    p-\u003evTfo      = Vec_IntAlloc( 1000 );\n    p-\u003evDivCexes = Vec_WrdStart( p-\u003epPars-\u003enWinSizeMax );\n    p-\u003evOrder    = Vec_IntAlloc( 100 );\n    p-\u003evDivVars  = Vec_IntAlloc( 100 );\n    p-\u003evDivIds   = Vec_IntAlloc( 1000 );\n    p-\u003evLits     = Vec_IntAlloc( 100 );\n    p-\u003evValues   = Vec_IntAlloc( 100 );\n    p-\u003evClauses  = Vec_WecAlloc( 100 );\n    p-\u003evFaninMap = Vec_IntAlloc( 10 );\n    p-\u003epSat      = sat_solver_new();\n    sat_solver_setnvars( p-\u003epSat, p-\u003epPars-\u003enWinSizeMax );\n}",
+      "Draft": "func Sfm_NtkPrepare(p *Sfm_Ntk_t) {\n    p.nLevelMax = Vec_IntFindMax(\u0026p.vLevels) + p.pPars.nGrowthLevel;\n    p.vNodes    = Vec_IntAlloc( 1000 );\n    p.vDivs     = Vec_IntAlloc( 100 );\n    p.vRoots    = Vec_IntAlloc( 1000 );\n    p.vTfo      = Vec_IntAlloc( 1000 );\n    p.vDivCexes = Vec_WrdStart( p.pPars.nWinSizeMax );\n    p.vOrder    = Vec_IntAlloc( 100 );\n    p.vDivVars  = Vec_IntAlloc( 100 );\n    p.vDivIds   = Vec_IntAlloc( 1000 );\n    p.vLits     = Vec_IntAlloc( 100 );\n    p.vValues   = Vec_IntAlloc( 100 );\n    p.vClauses  = Vec_WecAlloc( 100 );\n    p.vFaninMap = Vec_IntAlloc( 10 );\n    p.pSat      = sat_solver_new();\n    sat_solver_setnvars( p.pSat, p.pPars.nWinSizeMax );\n}"
+    },
+    {
+      "Name": "Sfm_NtkFree",
+      "Start": 6919,
+      "End": 8005,
+      "BodyStart": 6953,
+      "Original": "void Sfm_NtkFree( Sfm_Ntk_t * p )\n{\n    // user data\n    Vec_StrFree( p-\u003evFixed );\n    Vec_StrFreeP( \u0026p-\u003evEmpty );\n    Vec_WrdFree( p-\u003evTruths );\n    Vec_WecErase( \u0026p-\u003evFanins );\n    Vec_IntFree( p-\u003evStarts );\n    Vec_WrdFree( p-\u003evTruths2 );\n    // attributes\n    Vec_WecErase( \u0026p-\u003evFanouts );\n    ABC_FREE( p-\u003evLevels.pArray );\n    ABC_FREE( p-\u003evLevelsR.pArray );\n    ABC_FREE( p-\u003evCounts.pArray );\n    ABC_FREE( p-\u003evTravIds.pArray );\n    ABC_FREE( p-\u003evTravIds2.pArray );\n    ABC_FREE( p-\u003evId2Var.pArray );\n    ABC_FREE( p-\u003evVar2Id.pArray );\n    Vec_WecFree( p-\u003evCnfs );\n    Vec_IntFree( p-\u003evCover );\n    // other data\n    Vec_IntFreeP( \u0026p-\u003evNodes );\n    Vec_IntFreeP( \u0026p-\u003evDivs  );\n    Vec_IntFreeP( \u0026p-\u003evRoots );\n    Vec_IntFreeP( \u0026p-\u003evTfo   );\n    Vec_WrdFreeP( \u0026p-\u003evDivCexes );\n    Vec_IntFreeP( \u0026p-\u003evOrder );\n    Vec_IntFreeP( \u0026p-\u003evDivVars );\n    Vec_IntFreeP( \u0026p-\u003evDivIds );\n    Vec_IntFreeP( \u0026p-\u003evLits  );\n    Vec_IntFreeP( \u0026p-\u003evValues );\n    Vec_WecFreeP( \u0026p-\u003evClauses );\n    Vec_IntFreeP( \u0026p-\u003evFaninMap );\n    if ( p-\u003epSat  ) sat_solver_delete( p-\u003epSat );\n    ABC_FREE( p );\n}",
+      "Draft": "func Sfm_NtkFree(p *Sfm_Ntk_t) {\n    // user data\n    Vec_StrFree( p.vFixed );\n    Vec_StrFreeP( \u0026p.vEmpty );\n    Vec_WrdFree( p.vTruths );\n    Vec_WecErase( \u0026p.vFanins );\n    Vec_IntFree( p.vStarts );\n    Vec_WrdFree( p.vTruths2 );\n    // attributes\n    Vec_WecErase( \u0026p.vFanouts );\n    // inlining of macro ABC_FREE\n    ((p.vLevels.pArray) ? (free((char *) (p.vLevels.pArray)), (p.vLevels.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vLevelsR.pArray) ? (free((char *) (p.vLevelsR.pArray)), (p.vLevelsR.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vCounts.pArray) ? (free((char *) (p.vCounts.pArray)), (p.vCounts.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vTravIds.pArray) ? (free((char *) (p.vTravIds.pArray)), (p.vTravIds.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vTravIds2.pArray) ? (free((char *) (p.vTravIds2.pArray)), (p.vTravIds2.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vId2Var.pArray) ? (free((char *) (p.vId2Var.pArray)), (p.vId2Var.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vVar2Id.pArray) ? (free((char *) (p.vVar2Id.pArray)), (p.vVar2Id.pArray) = 0) : 0);\n    Vec_WecFree( p.vCnfs );\n    Vec_IntFree( p.vCover );\n    // other data\n    Vec_IntFreeP( \u0026p.vNodes );\n    Vec_IntFreeP( \u0026p.vDivs  );\n    Vec_IntFreeP( \u0026p.vRoots );\n    Vec_IntFreeP( \u0026p.vTfo   );\n    Vec_WrdFreeP( \u0026p.vDivCexes );\n    Vec_IntFreeP( \u0026p.vOrder );\n    Vec_IntFreeP( \u0026p.vDivVars );\n    Vec_IntFreeP( \u0026p.vDivIds );\n    Vec_IntFreeP( \u0026p.vLits  );\n    Vec_IntFreeP( \u0026p.vValues );\n    Vec_WecFreeP( \u0026p.vClauses );\n    Vec_IntFreeP( \u0026p.vFaninMap );\n    if p.pSat { sat_solver_delete( p.pSat ); }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Sfm_NtkRemoveFanin",
+      "Start": 8278,
+      "End": 8621,
+      "BodyStart": 8342,
+      "Original": "void Sfm_NtkRemoveFanin( Sfm_Ntk_t * p, int iNode, int iFanin )\n{\n    int RetValue;\n    assert( Sfm_ObjIsNode(p, iNode) );\n    assert( !Sfm_ObjIsPo(p, iFanin) );\n    RetValue = Vec_IntRemove( Sfm_ObjFiArray(p, iNode), iFanin );\n    assert( RetValue );\n    RetValue = Vec_IntRemove( Sfm_ObjFoArray(p, iFanin), iNode );\n    assert( RetValue );\n}",
+      "Draft": "func Sfm_NtkRemoveFanin(p *Sfm_Ntk_t, iNode int32, iFanin int32) {\n    var RetValue int32;\n    assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n    assert(!Sfm_ObjIsPo(p, iFanin), \"!Sfm_ObjIsPo(p, iFanin)\");\n    RetValue = Vec_IntRemove( Sfm_ObjFiArray(p, iNode), iFanin );\n    assert((RetValue != 0), \"RetValue\");\n    RetValue = Vec_IntRemove( Sfm_ObjFoArray(p, iFanin), iNode );\n    assert((RetValue != 0), \"RetValue\");\n}"
+    },
+    {
+      "Name": "Sfm_NtkAddFanin",
+      "Start": 8622,
+      "End": 9046,
+      "BodyStart": 8683,
+      "Original": "void Sfm_NtkAddFanin( Sfm_Ntk_t * p, int iNode, int iFanin )\n{\n    if ( iFanin \u003c 0 )\n        return;\n    assert( Sfm_ObjIsNode(p, iNode) );\n    assert( !Sfm_ObjIsPo(p, iFanin) );\n    assert( Vec_IntFind( Sfm_ObjFiArray(p, iNode), iFanin ) == -1 );\n    assert( Vec_IntFind( Sfm_ObjFoArray(p, iFanin), iNode ) == -1 );\n    Vec_IntPush( Sfm_ObjFiArray(p, iNode), iFanin );\n    Vec_IntPush( Sfm_ObjFoArray(p, iFanin), iNode );\n}",
+      "Draft": "func Sfm_NtkAddFanin(p *Sfm_Ntk_t, iNode int32, iFanin int32) {\n    if iFanin \u003c 0 {\n        return; }\n    assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n    assert(!Sfm_ObjIsPo(p, iFanin), \"!Sfm_ObjIsPo(p, iFanin)\");\n    assert(Vec_IntFind( Sfm_ObjFiArray(p, iNode), iFanin ) == -1, \"Vec_IntFind( Sfm_ObjFiArray(p, iNode), iFanin ) == -1\");\n    assert(Vec_IntFind( Sfm_ObjFoArray(p, iFanin), iNode ) == -1, \"Vec_IntFind( Sfm_ObjFoArray(p, iFanin), iNode ) == -1\");\n    Vec_IntPush( Sfm_ObjFiArray(p, iNode), iFanin );\n    Vec_IntPush( Sfm_ObjFoArray(p, iFanin), iNode );\n}"
+    },
+    {
+      "Name": "Sfm_NtkDeleteObj_rec",
+      "Start": 9047,
+      "End": 9569,
+      "BodyStart": 9101,
+      "Original": "void Sfm_NtkDeleteObj_rec( Sfm_Ntk_t * p, int iNode )\n{\n    int i, iFanin;\n    if ( Sfm_ObjFanoutNum(p, iNode) \u003e 0 || Sfm_ObjIsPi(p, iNode) || Sfm_ObjIsFixed(p, iNode) )\n        return;\n    assert( Sfm_ObjIsNode(p, iNode) );\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n    {\n        int RetValue = Vec_IntRemove( Sfm_ObjFoArray(p, iFanin), iNode );  assert( RetValue );\n        Sfm_NtkDeleteObj_rec( p, iFanin );\n    }\n    Vec_IntClear( Sfm_ObjFiArray(p, iNode) );\n    Vec_WrdWriteEntry( p-\u003evTruths, iNode, (word)0 );\n}",
+      "Draft": "func Sfm_NtkDeleteObj_rec(p *Sfm_Ntk_t, iNode int32) {\n    var i, iFanin int32;\n    if Sfm_ObjFanoutNum(p, iNode) \u003e 0 || Sfm_ObjIsPi(p, iNode) || Sfm_ObjIsFixed(p, iNode) {\n        return; }\n    assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, i)), 1);  i++  {\n        var RetValue int32  = Vec_IntRemove( Sfm_ObjFoArray(p, iFanin), iNode );  assert((RetValue != 0), \"RetValue\");\n        Sfm_NtkDeleteObj_rec( p, iFanin );\n    }\n    Vec_IntClear( Sfm_ObjFiArray(p, iNode) );\n    Vec_WrdWriteEntry( p.vTruths, iNode, (word)0 );\n}"
+    },
+    {
+      "Name": "Sfm_NtkUpdateLevel_rec",
+      "Start": 9570,
+      "End": 9954,
+      "BodyStart": 9626,
+      "Original": "void Sfm_NtkUpdateLevel_rec( Sfm_Ntk_t * p, int iNode )\n{\n    int i, iFanout;\n    int LevelNew = Sfm_ObjLevelNew( Sfm_ObjFiArray(p, iNode), \u0026p-\u003evLevels, Sfm_ObjAddsLevel(p, iNode) );\n    if ( LevelNew == Sfm_ObjLevel(p, iNode) )\n        return;\n    Sfm_ObjSetLevel( p, iNode, LevelNew );\n    Sfm_ObjForEachFanout( p, iNode, iFanout, i )\n        Sfm_NtkUpdateLevel_rec( p, iFanout );\n}",
+      "Draft": "func Sfm_NtkUpdateLevel_rec(p *Sfm_Ntk_t, iNode int32) {\n    var i, iFanout int32;\n    var LevelNew int32  = Sfm_ObjLevelNew( Sfm_ObjFiArray(p, iNode), \u0026p.vLevels, Sfm_ObjAddsLevel(p, iNode) );\n    if LevelNew == Sfm_ObjLevel(p, iNode) {\n        return; }\n    Sfm_ObjSetLevel( p, iNode, LevelNew );\n    // inlining of macro Sfm_ObjForEachFanout\n    for  i = 0; i \u003c Sfm_ObjFanoutNum(p, iNode) \u0026\u0026 ((iFanout = Sfm_ObjFanout(p, iNode, i)), 1); i++  {\n        Sfm_NtkUpdateLevel_rec( p, iFanout );\n    }\n}"
+    },
+    {
+      "Name": "Sfm_NtkUpdateLevelR_rec",
+      "Start": 9955,
+      "End": 10341,
+      "BodyStart": 10012,
+      "Original": "void Sfm_NtkUpdateLevelR_rec( Sfm_Ntk_t * p, int iNode )\n{\n    int i, iFanin;\n    int LevelNew = Sfm_ObjLevelNewR( Sfm_ObjFoArray(p, iNode), \u0026p-\u003evLevelsR, Sfm_ObjAddsLevel(p, iNode) );\n    if ( LevelNew == Sfm_ObjLevelR(p, iNode) )\n        return;\n    Sfm_ObjSetLevelR( p, iNode, LevelNew );\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n        Sfm_NtkUpdateLevelR_rec( p, iFanin );\n}",
+      "Draft": "func Sfm_NtkUpdateLevelR_rec(p *Sfm_Ntk_t, iNode int32) {\n    var i, iFanin int32;\n    var LevelNew int32  = Sfm_ObjLevelNewR( Sfm_ObjFoArray(p, iNode), \u0026p.vLevelsR, Sfm_ObjAddsLevel(p, iNode) );\n    if LevelNew == Sfm_ObjLevelR(p, iNode) {\n        return; }\n    Sfm_ObjSetLevelR( p, iNode, LevelNew );\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, i)), 1);  i++  {\n        Sfm_NtkUpdateLevelR_rec( p, iFanin );\n    }\n}"
+    },
+    {
+      "Name": "Sfm_NtkUpdate",
+      "Start": 10342,
+      "End": 11575,
+      "BodyStart": 10424,
+      "Original": "void Sfm_NtkUpdate( Sfm_Ntk_t * p, int iNode, int f, int iFaninNew, word uTruth )\n{\n    int iFanin = Sfm_ObjFanin( p, iNode, f );\n    assert( Sfm_ObjIsNode(p, iNode) );\n    assert( iFanin != iFaninNew );\n    assert( Sfm_ObjFaninNum(p, iNode) \u003c= 6 );\n    if ( uTruth == 0 || ~uTruth == 0 )\n    {\n        Sfm_ObjForEachFanin( p, iNode, iFanin, f )\n        {\n            int RetValue = Vec_IntRemove( Sfm_ObjFoArray(p, iFanin), iNode );  assert( RetValue );\n            Sfm_NtkDeleteObj_rec( p, iFanin );\n        }\n        Vec_IntClear( Sfm_ObjFiArray(p, iNode) );\n    }\n    else\n    {\n        // replace old fanin by new fanin\n        Sfm_NtkRemoveFanin( p, iNode, iFanin );\n        Sfm_NtkAddFanin( p, iNode, iFaninNew );\n        // recursively remove MFFC\n        Sfm_NtkDeleteObj_rec( p, iFanin );\n    }\n    // update logic level\n    Sfm_NtkUpdateLevel_rec( p, iNode );\n    if ( iFaninNew != -1 )\n        Sfm_NtkUpdateLevelR_rec( p, iFaninNew );\n    if ( Sfm_ObjFanoutNum(p, iFanin) \u003e 0 )\n        Sfm_NtkUpdateLevelR_rec( p, iFanin );\n    // update truth table\n    Vec_WrdWriteEntry( p-\u003evTruths, iNode, uTruth );\n    Sfm_TruthToCnf( uTruth, NULL, Sfm_ObjFaninNum(p, iNode), p-\u003evCover, (Vec_Str_t *)Vec_WecEntry(p-\u003evCnfs, iNode) );\n}",
+      "Draft": "func Sfm_NtkUpdate(p *Sfm_Ntk_t, iNode int32, f int32, iFaninNew int32, uTruth word) {\n    var iFanin int32  = Sfm_ObjFanin( p, iNode, f );\n    assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n    assert(iFanin != iFaninNew, \"iFanin != iFaninNew\");\n    assert(Sfm_ObjFaninNum(p, iNode) \u003c= 6, \"Sfm_ObjFaninNum(p, iNode) \u003c= 6\");\n    if uTruth == 0 || ~uTruth == 0 {\n        // inlining of macro Sfm_ObjForEachFanin\n        for  f = 0; f \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, f)), 1);  f++  {\n            var RetValue int32  = Vec_IntRemove( Sfm_ObjFoArray(p, iFanin), iNode );  assert((RetValue != 0), \"RetValue\");\n            Sfm_NtkDeleteObj_rec( p, iFanin );\n        }\n        Vec_IntClear( Sfm_ObjFiArray(p, iNode) );\n    \n    } else {\n        // replace old fanin by new fanin\n        Sfm_NtkRemoveFanin( p, iNode, iFanin );\n        Sfm_NtkAddFanin( p, iNode, iFaninNew );\n        // recursively remove MFFC\n        Sfm_NtkDeleteObj_rec( p, iFanin );\n    }\n    // update logic level\n    Sfm_NtkUpdateLevel_rec( p, iNode );\n    if iFaninNew != -1 {\n        Sfm_NtkUpdateLevelR_rec( p, iFaninNew ); }\n    if Sfm_ObjFanoutNum(p, iFanin) \u003e 0 {\n        Sfm_NtkUpdateLevelR_rec( p, iFanin ); }\n    // update truth table\n    Vec_WrdWriteEntry( p.vTruths, iNode, uTruth );\n    Sfm_TruthToCnf( uTruth, nil, Sfm_ObjFaninNum(p, iNode), p.vCover, (Vec_Str_t *)Vec_WecEntry(p.vCnfs, iNode) );\n}"
+    },
+    {
+      "Name": "Sfm_NodeReadFanins",
+      "Start": 11839,
+      "End": 11941,
+      "BodyStart": 11895,
+      "Original": "Vec_Int_t *  Sfm_NodeReadFanins( Sfm_Ntk_t * p, int i )\n{\n    return Vec_WecEntry( \u0026p-\u003evFanins, i );\n}",
+      "Draft": "func Sfm_NodeReadFanins(p *Sfm_Ntk_t, i int32) *Vec_Int_t {\n    return Vec_WecEntry( \u0026p.vFanins, i );\n}"
+    },
+    {
+      "Name": "Sfm_NodeReadTruth",
+      "Start": 11942,
+      "End": 12126,
+      "BodyStart": 11991,
+      "Original": "word * Sfm_NodeReadTruth( Sfm_Ntk_t * p, int i )\n{\n    return Sfm_ObjFaninNum(p, i) \u003c= 6 ? Vec_WrdEntryP( p-\u003evTruths, i ) : Vec_WrdEntryP( p-\u003evTruths2, Vec_IntEntry(p-\u003evStarts, i) );\n}",
+      "Draft": "func Sfm_NodeReadTruth(p *Sfm_Ntk_t, i int32) *word {\n    if Sfm_ObjFaninNum(p, i) \u003c= 6 {\n        return Vec_WrdEntryP( p.vTruths, i );\n    } else {\n        return Vec_WrdEntryP( p.vTruths2, Vec_IntEntry(p.vStarts, i) );\n    }\n}"
+    },
+    {
+      "Name": "Sfm_NodeReadFixed",
+      "Start": 12127,
+      "End": 12222,
+      "BodyStart": 12173,
+      "Original": "int Sfm_NodeReadFixed( Sfm_Ntk_t * p, int i )\n{\n    return (int)Vec_StrEntry( p-\u003evFixed, i );\n}",
+      "Draft": "func Sfm_NodeReadFixed(p *Sfm_Ntk_t, i int32) int32 {\n    return int32(Vec_StrEntry( p.vFixed, i ));\n}"
+    },
+    {
+      "Name": "Sfm_NodeReadUsed",
+      "Start": 12223,
+      "End": 12343,
+      "BodyStart": 12268,
+      "Original": "int Sfm_NodeReadUsed( Sfm_Ntk_t * p, int i )\n{\n    return (Sfm_ObjFaninNum(p, i) \u003e 0) || (Sfm_ObjFanoutNum(p, i) \u003e 0);\n}",
+      "Draft": "func Sfm_NodeReadUsed(p *Sfm_Ntk_t, i int32) int32 {\n    return (Sfm_ObjFaninNum(p, i) \u003e 0) || (Sfm_ObjFanoutNum(p, i) \u003e 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::mechanical::sizeof::6665",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5311,
+      "End": 5311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::pointer-cast::6631",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5311,
+      "End": 5311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::pointer-cast::7070",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5660,
+      "End": 5660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::pointer-cast::8721",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7217,
+      "End": 7217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::pointer-cast::8861",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7252,
+      "End": 7252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::pointer-cast::9002",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7288,
+      "End": 7288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::pointer-cast::9142",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7323,
+      "End": 7323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::pointer-cast::9285",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7359,
+      "End": 7359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::pointer-cast::9428",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7396,
+      "End": 7396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::pointer-cast::9567",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7431,
+      "End": 7431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::pointer-cast::10213",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7989,
+      "End": 7989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::pointer-cast::14203",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11528,
+      "End": 11541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_CheckConsistency",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_CheckConsistency",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1246,
+      "End": 2007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_CreateFanout",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_CreateFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2243,
+      "End": 3038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_ObjLevelNew",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjLevelNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3274,
+      "End": 3539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_CreateLevel",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_CreateLevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3540,
+      "End": 3912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_ObjLevelNewR",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjLevelNewR",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4148,
+      "End": 4423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_CreateLevelR",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_CreateLevelR",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4424,
+      "End": 4813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::ternary::Sfm_NtkConstruct",
+      "Category": "ternary-review",
+      "Symbol": "Sfm_NtkConstruct",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5049,
+      "End": 6207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_NtkConstruct",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkConstruct",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5049,
+      "End": 6207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_NtkPrepare",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkPrepare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6208,
+      "End": 6918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::ternary::Sfm_NtkFree",
+      "Category": "ternary-review",
+      "Symbol": "Sfm_NtkFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6919,
+      "End": 8005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_NtkFree",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6919,
+      "End": 8005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_NtkRemoveFanin",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkRemoveFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8278,
+      "End": 8621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_NtkAddFanin",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkAddFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8622,
+      "End": 9046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_NtkDeleteObj_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkDeleteObj_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9047,
+      "End": 9569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_NtkUpdateLevel_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkUpdateLevel_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9570,
+      "End": 9954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_NtkUpdateLevelR_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkUpdateLevelR_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9955,
+      "End": 10341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_NtkUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10342,
+      "End": 11575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_NodeReadFanins",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NodeReadFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11839,
+      "End": 11941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_NodeReadTruth",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NodeReadTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11942,
+      "End": 12126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_NodeReadFixed",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NodeReadFixed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12127,
+      "End": 12222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::Sfm_NodeReadUsed",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NodeReadUsed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12223,
+      "End": 12343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmNtk.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12590
+    }
+  ],
+  "Draft": "package sfm\n\n/**CFile****************************************************************\n\n  FileName    [sfmNtk.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [Logic network.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sfmNtk.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sfmInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_CheckConsistency(vFanins *Vec_Wec_t, nPis int32, nPos int32, vFixed *Vec_Str_t) {\n    var vArray *Vec_Int_t;\n    var i, k, Fanin int32;\n    // check entries\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vFanins)) \u0026\u0026 (((vArray) = Vec_WecEntry(vFanins, i)), 1); i++  {\n        // PIs have no fanins\n        if i \u003c nPis {\n            assert(Vec_IntSize(vArray) == 0 \u0026\u0026 Vec_StrEntry(vFixed, i) == byte(0), \"Vec_IntSize(vArray) == 0 \u0026\u0026 Vec_StrEntry(vFixed, i) == byte(0)\"); }\n        // nodes are in a topo order; POs cannot be fanins\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Fanin) = Vec_IntEntry(vArray, k)), 1); k++  {\n//            assert( Fanin \u003c i \u0026\u0026 Fanin + nPos \u003c Vec_WecSize(vFanins) );\n            assert(Fanin + nPos \u003c Vec_WecSize(vFanins), \"Fanin + nPos \u003c Vec_WecSize(vFanins)\");\n        }\n        // POs have one fanout\n        if i + nPos \u003e= Vec_WecSize(vFanins) {\n            assert(Vec_IntSize(vArray) == 1 \u0026\u0026 Vec_StrEntry(vFixed, i) == byte(0), \"Vec_IntSize(vArray) == 1 \u0026\u0026 Vec_StrEntry(vFixed, i) == byte(0)\"); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_CreateFanout(vFanins *Vec_Wec_t, vFanouts *Vec_Wec_t) {\n    var vArray *Vec_Int_t;\n    var i, k, Fanin int32;\n    // count fanouts\n    Vec_WecInit( vFanouts, Vec_WecSize(vFanins) );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vFanins)) \u0026\u0026 (((vArray) = Vec_WecEntry(vFanins, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Fanin) = Vec_IntEntry(vArray, k)), 1); k++  {\n            Vec_WecEntry( vFanouts, Fanin ).nSize++;\n        }\n    }\n    // allocate fanins\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vFanouts)) \u0026\u0026 (((vArray) = Vec_WecEntry(vFanouts, i)), 1); i++  {\n        k = vArray.nSize; vArray.nSize = 0;\n        Vec_IntGrow( vArray, k );\n    }\n    // add fanouts\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vFanins)) \u0026\u0026 (((vArray) = Vec_WecEntry(vFanins, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Fanin) = Vec_IntEntry(vArray, k)), 1); k++  {\n            Vec_IntPush( Vec_WecEntry( vFanouts, Fanin ), i );\n        }\n    }\n    // verify\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vFanouts)) \u0026\u0026 (((vArray) = Vec_WecEntry(vFanouts, i)), 1); i++  {\n        assert(Vec_IntSize(vArray) == Vec_IntCap(vArray), \"Vec_IntSize(vArray) == Vec_IntCap(vArray)\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_ObjLevelNew(vArray *Vec_Int_t, vLevels *Vec_Int_t, fAddLevel int32) int32 {\n    var k, Fanin, Level int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Fanin) = Vec_IntEntry(vArray, k)), 1); k++  {\n        Level = Abc_MaxInt( Level, Vec_IntEntry(vLevels, Fanin) );\n    }\n    return Level + fAddLevel;\n}\nfunc Sfm_CreateLevel(vFanins *Vec_Wec_t, vLevels *Vec_Int_t, vEmpty *Vec_Str_t) {\n    var vArray *Vec_Int_t;\n    var i int32;\n    assert(Vec_IntSize(vLevels) == 0, \"Vec_IntSize(vLevels) == 0\");\n    Vec_IntFill( vLevels, Vec_WecSize(vFanins), 0 );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vFanins)) \u0026\u0026 (((vArray) = Vec_WecEntry(vFanins, i)), 1); i++  {\n        Vec_IntWriteEntry( vLevels, i, Sfm_ObjLevelNew(vArray, vLevels, Sfm_ObjAddsLevelArray(vEmpty, i)) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_ObjLevelNewR(vArray *Vec_Int_t, vLevelsR *Vec_Int_t, fAddLevel int32) int32 {\n    var k, Fanout, LevelR int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vArray)) \u0026\u0026 (((Fanout) = Vec_IntEntry(vArray, k)), 1); k++  {\n        LevelR = Abc_MaxInt( LevelR, Vec_IntEntry(vLevelsR, Fanout) );\n    }\n    return LevelR + fAddLevel;\n}\nfunc Sfm_CreateLevelR(vFanouts *Vec_Wec_t, vLevelsR *Vec_Int_t, vEmpty *Vec_Str_t) {\n    var vArray *Vec_Int_t;\n    var i int32;\n    assert(Vec_IntSize(vLevelsR) == 0, \"Vec_IntSize(vLevelsR) == 0\");\n    Vec_IntFill( vLevelsR, Vec_WecSize(vFanouts), 0 );\n    // inlining of macro Vec_WecForEachLevelReverse\n    for  i = Vec_WecSize(vFanouts)-1; (i \u003e= 0) \u0026\u0026 (((vArray) = Vec_WecEntry(vFanouts, i)), 1); i--  {\n        Vec_IntWriteEntry( vLevelsR, i, Sfm_ObjLevelNewR(vArray, vLevelsR, Sfm_ObjAddsLevelArray(vEmpty, i)) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NtkConstruct(vFanins *Vec_Wec_t, nPis int32, nPos int32, vFixed *Vec_Str_t, vEmpty *Vec_Str_t, vTruths *Vec_Wrd_t, vStarts *Vec_Int_t, vTruths2 *Vec_Wrd_t) *Sfm_Ntk_t {\n    \n    Sfm_CheckConsistency( vFanins, nPis, nPos, vFixed );\n    // inlining of macro ABC_CALLOC\n    p := \u0026Sfm_Ntk_t{};\n    p.nObjs    = Vec_WecSize( vFanins );\n    p.nPis     = nPis;\n    p.nPos     = nPos;\n    p.nNodes   = p.nObjs - p.nPis - p.nPos;\n    // user data\n    p.vFixed   = vFixed;\n    p.vEmpty   = vEmpty;\n    p.vTruths  = vTruths;\n    p.vFanins  = *vFanins;\n    p.vStarts  = vStarts;\n    p.vTruths2 = vTruths2;\n    // inlining of macro ABC_FREE\n    ((vFanins) ? (free((char *) (vFanins)), (vFanins) = 0) : 0);\n    // attributes\n    Sfm_CreateFanout( \u0026p.vFanins, \u0026p.vFanouts );\n    Sfm_CreateLevel( \u0026p.vFanins, \u0026p.vLevels, vEmpty );\n    Sfm_CreateLevelR( \u0026p.vFanouts, \u0026p.vLevelsR, vEmpty );\n    Vec_IntFill( \u0026p.vCounts,   p.nObjs,  0 );\n    Vec_IntFill( \u0026p.vTravIds,  p.nObjs,  0 );\n    Vec_IntFill( \u0026p.vTravIds2, p.nObjs,  0 );\n    Vec_IntFill( \u0026p.vId2Var,   2*p.nObjs, -1 );\n    Vec_IntFill( \u0026p.vVar2Id,   2*p.nObjs, -1 );\n    p.vCover   = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    p.vCnfs    = Sfm_CreateCnf( p );\n    return p;\n}\nfunc Sfm_NtkPrepare(p *Sfm_Ntk_t) {\n    p.nLevelMax = Vec_IntFindMax(\u0026p.vLevels) + p.pPars.nGrowthLevel;\n    p.vNodes    = Vec_IntAlloc( 1000 );\n    p.vDivs     = Vec_IntAlloc( 100 );\n    p.vRoots    = Vec_IntAlloc( 1000 );\n    p.vTfo      = Vec_IntAlloc( 1000 );\n    p.vDivCexes = Vec_WrdStart( p.pPars.nWinSizeMax );\n    p.vOrder    = Vec_IntAlloc( 100 );\n    p.vDivVars  = Vec_IntAlloc( 100 );\n    p.vDivIds   = Vec_IntAlloc( 1000 );\n    p.vLits     = Vec_IntAlloc( 100 );\n    p.vValues   = Vec_IntAlloc( 100 );\n    p.vClauses  = Vec_WecAlloc( 100 );\n    p.vFaninMap = Vec_IntAlloc( 10 );\n    p.pSat      = sat_solver_new();\n    sat_solver_setnvars( p.pSat, p.pPars.nWinSizeMax );\n}\nfunc Sfm_NtkFree(p *Sfm_Ntk_t) {\n    // user data\n    Vec_StrFree( p.vFixed );\n    Vec_StrFreeP( \u0026p.vEmpty );\n    Vec_WrdFree( p.vTruths );\n    Vec_WecErase( \u0026p.vFanins );\n    Vec_IntFree( p.vStarts );\n    Vec_WrdFree( p.vTruths2 );\n    // attributes\n    Vec_WecErase( \u0026p.vFanouts );\n    // inlining of macro ABC_FREE\n    ((p.vLevels.pArray) ? (free((char *) (p.vLevels.pArray)), (p.vLevels.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vLevelsR.pArray) ? (free((char *) (p.vLevelsR.pArray)), (p.vLevelsR.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vCounts.pArray) ? (free((char *) (p.vCounts.pArray)), (p.vCounts.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vTravIds.pArray) ? (free((char *) (p.vTravIds.pArray)), (p.vTravIds.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vTravIds2.pArray) ? (free((char *) (p.vTravIds2.pArray)), (p.vTravIds2.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vId2Var.pArray) ? (free((char *) (p.vId2Var.pArray)), (p.vId2Var.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.vVar2Id.pArray) ? (free((char *) (p.vVar2Id.pArray)), (p.vVar2Id.pArray) = 0) : 0);\n    Vec_WecFree( p.vCnfs );\n    Vec_IntFree( p.vCover );\n    // other data\n    Vec_IntFreeP( \u0026p.vNodes );\n    Vec_IntFreeP( \u0026p.vDivs  );\n    Vec_IntFreeP( \u0026p.vRoots );\n    Vec_IntFreeP( \u0026p.vTfo   );\n    Vec_WrdFreeP( \u0026p.vDivCexes );\n    Vec_IntFreeP( \u0026p.vOrder );\n    Vec_IntFreeP( \u0026p.vDivVars );\n    Vec_IntFreeP( \u0026p.vDivIds );\n    Vec_IntFreeP( \u0026p.vLits  );\n    Vec_IntFreeP( \u0026p.vValues );\n    Vec_WecFreeP( \u0026p.vClauses );\n    Vec_IntFreeP( \u0026p.vFaninMap );\n    if p.pSat { sat_solver_delete( p.pSat ); }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs resubstitution for the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NtkRemoveFanin(p *Sfm_Ntk_t, iNode int32, iFanin int32) {\n    var RetValue int32;\n    assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n    assert(!Sfm_ObjIsPo(p, iFanin), \"!Sfm_ObjIsPo(p, iFanin)\");\n    RetValue = Vec_IntRemove( Sfm_ObjFiArray(p, iNode), iFanin );\n    assert((RetValue != 0), \"RetValue\");\n    RetValue = Vec_IntRemove( Sfm_ObjFoArray(p, iFanin), iNode );\n    assert((RetValue != 0), \"RetValue\");\n}\nfunc Sfm_NtkAddFanin(p *Sfm_Ntk_t, iNode int32, iFanin int32) {\n    if iFanin \u003c 0 {\n        return; }\n    assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n    assert(!Sfm_ObjIsPo(p, iFanin), \"!Sfm_ObjIsPo(p, iFanin)\");\n    assert(Vec_IntFind( Sfm_ObjFiArray(p, iNode), iFanin ) == -1, \"Vec_IntFind( Sfm_ObjFiArray(p, iNode), iFanin ) == -1\");\n    assert(Vec_IntFind( Sfm_ObjFoArray(p, iFanin), iNode ) == -1, \"Vec_IntFind( Sfm_ObjFoArray(p, iFanin), iNode ) == -1\");\n    Vec_IntPush( Sfm_ObjFiArray(p, iNode), iFanin );\n    Vec_IntPush( Sfm_ObjFoArray(p, iFanin), iNode );\n}\nfunc Sfm_NtkDeleteObj_rec(p *Sfm_Ntk_t, iNode int32) {\n    var i, iFanin int32;\n    if Sfm_ObjFanoutNum(p, iNode) \u003e 0 || Sfm_ObjIsPi(p, iNode) || Sfm_ObjIsFixed(p, iNode) {\n        return; }\n    assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, i)), 1);  i++  {\n        var RetValue int32  = Vec_IntRemove( Sfm_ObjFoArray(p, iFanin), iNode );  assert((RetValue != 0), \"RetValue\");\n        Sfm_NtkDeleteObj_rec( p, iFanin );\n    }\n    Vec_IntClear( Sfm_ObjFiArray(p, iNode) );\n    Vec_WrdWriteEntry( p.vTruths, iNode, (word)0 );\n}\nfunc Sfm_NtkUpdateLevel_rec(p *Sfm_Ntk_t, iNode int32) {\n    var i, iFanout int32;\n    var LevelNew int32  = Sfm_ObjLevelNew( Sfm_ObjFiArray(p, iNode), \u0026p.vLevels, Sfm_ObjAddsLevel(p, iNode) );\n    if LevelNew == Sfm_ObjLevel(p, iNode) {\n        return; }\n    Sfm_ObjSetLevel( p, iNode, LevelNew );\n    // inlining of macro Sfm_ObjForEachFanout\n    for  i = 0; i \u003c Sfm_ObjFanoutNum(p, iNode) \u0026\u0026 ((iFanout = Sfm_ObjFanout(p, iNode, i)), 1); i++  {\n        Sfm_NtkUpdateLevel_rec( p, iFanout );\n    }\n}\nfunc Sfm_NtkUpdateLevelR_rec(p *Sfm_Ntk_t, iNode int32) {\n    var i, iFanin int32;\n    var LevelNew int32  = Sfm_ObjLevelNewR( Sfm_ObjFoArray(p, iNode), \u0026p.vLevelsR, Sfm_ObjAddsLevel(p, iNode) );\n    if LevelNew == Sfm_ObjLevelR(p, iNode) {\n        return; }\n    Sfm_ObjSetLevelR( p, iNode, LevelNew );\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, i)), 1);  i++  {\n        Sfm_NtkUpdateLevelR_rec( p, iFanin );\n    }\n}\nfunc Sfm_NtkUpdate(p *Sfm_Ntk_t, iNode int32, f int32, iFaninNew int32, uTruth word) {\n    var iFanin int32  = Sfm_ObjFanin( p, iNode, f );\n    assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n    assert(iFanin != iFaninNew, \"iFanin != iFaninNew\");\n    assert(Sfm_ObjFaninNum(p, iNode) \u003c= 6, \"Sfm_ObjFaninNum(p, iNode) \u003c= 6\");\n    if uTruth == 0 || ~uTruth == 0 {\n        // inlining of macro Sfm_ObjForEachFanin\n        for  f = 0; f \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, f)), 1);  f++  {\n            var RetValue int32  = Vec_IntRemove( Sfm_ObjFoArray(p, iFanin), iNode );  assert((RetValue != 0), \"RetValue\");\n            Sfm_NtkDeleteObj_rec( p, iFanin );\n        }\n        Vec_IntClear( Sfm_ObjFiArray(p, iNode) );\n    \n    } else {\n        // replace old fanin by new fanin\n        Sfm_NtkRemoveFanin( p, iNode, iFanin );\n        Sfm_NtkAddFanin( p, iNode, iFaninNew );\n        // recursively remove MFFC\n        Sfm_NtkDeleteObj_rec( p, iFanin );\n    }\n    // update logic level\n    Sfm_NtkUpdateLevel_rec( p, iNode );\n    if iFaninNew != -1 {\n        Sfm_NtkUpdateLevelR_rec( p, iFaninNew ); }\n    if Sfm_ObjFanoutNum(p, iFanin) \u003e 0 {\n        Sfm_NtkUpdateLevelR_rec( p, iFanin ); }\n    // update truth table\n    Vec_WrdWriteEntry( p.vTruths, iNode, uTruth );\n    Sfm_TruthToCnf( uTruth, nil, Sfm_ObjFaninNum(p, iNode), p.vCover, (Vec_Str_t *)Vec_WecEntry(p.vCnfs, iNode) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Public APIs of this network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NodeReadFanins(p *Sfm_Ntk_t, i int32) *Vec_Int_t {\n    return Vec_WecEntry( \u0026p.vFanins, i );\n}\nfunc Sfm_NodeReadTruth(p *Sfm_Ntk_t, i int32) *word {\n    if Sfm_ObjFaninNum(p, i) \u003c= 6 {\n        return Vec_WrdEntryP( p.vTruths, i );\n    } else {\n        return Vec_WrdEntryP( p.vTruths2, Vec_IntEntry(p.vStarts, i) );\n    }\n}\nfunc Sfm_NodeReadFixed(p *Sfm_Ntk_t, i int32) int32 {\n    return int32(Vec_StrEntry( p.vFixed, i ));\n}\nfunc Sfm_NodeReadUsed(p *Sfm_Ntk_t, i int32) int32 {\n    return (Sfm_ObjFaninNum(p, i) \u003e 0) || (Sfm_ObjFanoutNum(p, i) \u003e 0);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

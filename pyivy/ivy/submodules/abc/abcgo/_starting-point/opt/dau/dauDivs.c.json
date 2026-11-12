@@ -1,0 +1,176 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDivs.c",
+  "SHA256": "b5e77ef94e3717e0ba2ec79f7897024738715e4efed111e6cbf7244c77fb8c4f",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"     \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" !a *!b\"  );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" !a * b\"  );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 1646
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  a *!b\"  );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  a * b\"  );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 5,
+        "ByteOffset": 1698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  a + b\"  );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 1724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 2516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c %c  \", 'a'+i, 'a'+j );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 13,
+        "ByteOffset": 2597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%7d\", Counter[k] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 9,
+        "ByteOffset": 2644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dau_DsdDivisors",
+      "Start": 1258,
+      "End": 2578,
+      "BodyStart": 1314,
+      "Original": "Vec_Int_t * Dau_DsdDivisors( word * pTruth, int nVars )\n{\n    word Copy[DAU_MAX_WORD];\n    int nWords = Abc_TtWordNum(nVars);\n    int nDigits = Abc_TtHexDigitNum(nVars);\n    int i, j, k, Digit, Counter[5];\n\n    printf( \"     \" );\n    printf( \" !a *!b\"  );\n    printf( \" !a * b\"  );\n    printf( \"  a *!b\"  );\n    printf( \"  a * b\"  );\n    printf( \"  a + b\"  );\n    printf( \"\\n\" );\n\n    for ( i = 0; i \u003c nVars; i++ )\n    for ( j = i+1; j \u003c nVars; j++ )\n    {\n        Abc_TtCopy( Copy, pTruth, nWords, 0 );\n        Abc_TtSwapVars( Copy, nVars, 0, i );\n        Abc_TtSwapVars( Copy, nVars, 1, j );\n        for ( k = 0; k \u003c 5; k++ )\n            Counter[k] = 0;\n        for ( k = 0; k \u003c nDigits; k++ )\n        {\n            Digit = Abc_TtGetHex( Copy, k );\n            if ( Digit == 1 || Digit == 14 )\n                Counter[0]++;\n            else if ( Digit == 2 || Digit == 13 )\n                Counter[1]++;\n            else if ( Digit == 4 || Digit == 11 )\n                Counter[2]++;\n            else if ( Digit == 8 || Digit == 7 )\n                Counter[3]++;\n            else if ( Digit == 6 || Digit == 9 )\n                Counter[4]++;\n        }\n        printf( \"%c %c  \", 'a'+i, 'a'+j );\n        for ( k = 0; k \u003c 5; k++ )\n            printf( \"%7d\", Counter[k] );\n        printf( \"\\n\" );\n    }\n    return NULL;\n}",
+      "Draft": "func Dau_DsdDivisors(pTruth *word, nVars int32) *Vec_Int_t {\n    var Copy [DAU_MAX_WORD]word;\n    var nWords int32  = Abc_TtWordNum(nVars);\n    var nDigits int32  = Abc_TtHexDigitNum(nVars);\n    var i int32;\n    var j int32;\n    var k int32;\n    var Digit int32;\n    var Counter [5]int32;\n\n    fmt.Printf(\"     \");\n    fmt.Printf(\" !a *!b\");\n    fmt.Printf(\" !a * b\");\n    fmt.Printf(\"  a *!b\");\n    fmt.Printf(\"  a * b\");\n    fmt.Printf(\"  a + b\");\n    fmt.Printf(\"\\n\");\n\n    for  i = 0; i \u003c nVars; i++  {\n    for  j = i+1; j \u003c nVars; j++  {\n        Abc_TtCopy( Copy, pTruth, nWords, 0 );\n        Abc_TtSwapVars( Copy, nVars, 0, i );\n        Abc_TtSwapVars( Copy, nVars, 1, j );\n        for  k = 0; k \u003c 5; k++  {\n            Counter[k] = 0;\n        }\n        for  k = 0; k \u003c nDigits; k++  {\n            Digit = Abc_TtGetHex( Copy, k );\n            if Digit == 1 || Digit == 14 {\n                Counter[0]++;\n            } else if Digit == 2 || Digit == 13 {\n                Counter[1]++;\n            } else if Digit == 4 || Digit == 11 {\n                Counter[2]++;\n            } else if Digit == 8 || Digit == 7 {\n                Counter[3]++;\n            } else if Digit == 6 || Digit == 9 {\n                Counter[4]++; }\n        }\n        fmt.Printf(\"%c %c  \", 'a'+i, 'a'+j);\n        for  k = 0; k \u003c 5; k++  {\n            fmt.Printf(\"%7d\", Counter[k]);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Dau_DsdTest000",
+      "Start": 2579,
+      "End": 2946,
+      "BodyStart": 2601,
+      "Original": "void Dau_DsdTest000()\n{\n//    char * pDsd = \"!(!(abc)!(def))\";\n//    char * pDsd = \"[(abc)(def)]\";\n    char * pDsd = \"\u003c\u003cabc\u003ed(ef)\u003e\";\n    word t = Dau_Dsd6ToTruth( pDsd );\n//    word t = 0xCA88CA88CA88CA88;\n//    word t = 0x9ef7a8d9c7193a0f;\n    int nVars = Abc_TtSupportSize( \u0026t, 6 );\n    return;\n//    word t = 0xCACACACACACACACA;\n    Dau_DsdDivisors( \u0026t, nVars );\n}",
+      "Draft": "func Dau_DsdTest000() {\n//    char * pDsd = \"!(!(abc)!(def))\";\n//    char * pDsd = \"[(abc)(def)]\";\n    var pDsd string  = \"\u003c\u003cabc\u003ed(ef)\u003e\";\n    var t word  = Dau_Dsd6ToTruth( pDsd );\n//    word t = 0xCA88CA88CA88CA88;\n//    word t = 0x9ef7a8d9c7193a0f;\n    var nVars int32  = Abc_TtSupportSize( \u0026t, 6 );\n    return;\n//    word t = 0xCACACACACACACACA;\n    Dau_DsdDivisors( \u0026t, nVars );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDivs.c::Dau_DsdDivisors",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdDivisors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1258,
+      "End": 2578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDivs.c::Dau_DsdTest000",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DsdTest000",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2579,
+      "End": 2946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauDivs.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3194
+    }
+  ],
+  "Draft": "package dau\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [dauDivs.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware unmapping.]\n\n  Synopsis    [Divisor computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: dauDivs.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dauInt.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DsdDivisors(pTruth *word, nVars int32) *Vec_Int_t {\n    var Copy [DAU_MAX_WORD]word;\n    var nWords int32  = Abc_TtWordNum(nVars);\n    var nDigits int32  = Abc_TtHexDigitNum(nVars);\n    var i int32;\n    var j int32;\n    var k int32;\n    var Digit int32;\n    var Counter [5]int32;\n\n    fmt.Printf(\"     \");\n    fmt.Printf(\" !a *!b\");\n    fmt.Printf(\" !a * b\");\n    fmt.Printf(\"  a *!b\");\n    fmt.Printf(\"  a * b\");\n    fmt.Printf(\"  a + b\");\n    fmt.Printf(\"\\n\");\n\n    for  i = 0; i \u003c nVars; i++  {\n    for  j = i+1; j \u003c nVars; j++  {\n        Abc_TtCopy( Copy, pTruth, nWords, 0 );\n        Abc_TtSwapVars( Copy, nVars, 0, i );\n        Abc_TtSwapVars( Copy, nVars, 1, j );\n        for  k = 0; k \u003c 5; k++  {\n            Counter[k] = 0;\n        }\n        for  k = 0; k \u003c nDigits; k++  {\n            Digit = Abc_TtGetHex( Copy, k );\n            if Digit == 1 || Digit == 14 {\n                Counter[0]++;\n            } else if Digit == 2 || Digit == 13 {\n                Counter[1]++;\n            } else if Digit == 4 || Digit == 11 {\n                Counter[2]++;\n            } else if Digit == 8 || Digit == 7 {\n                Counter[3]++;\n            } else if Digit == 6 || Digit == 9 {\n                Counter[4]++; }\n        }\n        fmt.Printf(\"%c %c  \", 'a'+i, 'a'+j);\n        for  k = 0; k \u003c 5; k++  {\n            fmt.Printf(\"%7d\", Counter[k]);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    }\n    return nil;\n}\nfunc Dau_DsdTest000() {\n//    char * pDsd = \"!(!(abc)!(def))\";\n//    char * pDsd = \"[(abc)(def)]\";\n    var pDsd string  = \"\u003c\u003cabc\u003ed(ef)\u003e\";\n    var t word  = Dau_Dsd6ToTruth( pDsd );\n//    word t = 0xCA88CA88CA88CA88;\n//    word t = 0x9ef7a8d9c7193a0f;\n    var nVars int32  = Abc_TtSupportSize( \u0026t, 6 );\n    return;\n//    word t = 0xCACACACACACACACA;\n    Dau_DsdDivisors( \u0026t, nVars );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

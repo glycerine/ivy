@@ -1,0 +1,564 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c",
+  "SHA256": "5aa7f81627833408705b66979f008345f3c13080a404030fe7f642168a1f0434",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Msat_QueueReadSize(p.pQueue) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 61,
+        "Column": 9,
+        "ByteOffset": 2039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(L_IND\"assume(\"L_LIT\")\\n\", L_ind, /*__starting_point_inline_macro:L_lit__*//*__starting_point_inline_macro:MSAT_LITSIGN__*/((Lit)\u00261)     ?\"-\":\"\", /*__starting_point_inline_macro:MSAT_LIT2VAR__*/((Lit)\u003e\u003e1)+1); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 9,
+        "ByteOffset": 3213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(L_IND\"unbind(\"L_LIT\")\\n\", L_ind, /*__starting_point_inline_macro:L_lit__*//*__starting_point_inline_macro:MSAT_LITSIGN__*/((Lit)\u00261)     ?\"-\":\"\", /*__starting_point_inline_macro:MSAT_LIT2VAR__*/((Lit)\u003e\u003e1)+1); } "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 107,
+        "Column": 5,
+        "ByteOffset": 3785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Msat_QueueReadSize(p.pQueue) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 13,
+        "ByteOffset": 4070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(L_IND\"cancel(\"L_LIT\")\\n\", L_ind, /*__starting_point_inline_macro:L_lit__*//*__starting_point_inline_macro:MSAT_LITSIGN__*/((Lit)\u00261)     ?\"-\":\"\", /*__starting_point_inline_macro:MSAT_LIT2VAR__*/((Lit)\u003e\u003e1)+1);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 152,
+        "Column": 5,
+        "ByteOffset": 5307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Msat_IntVecReadSize(vLits) != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 5405
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 5498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 191,
+        "Column": 9,
+        "ByteOffset": 6744
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(L_IND\"bind(\"L_LIT\")  \", L_ind, /*__starting_point_inline_macro:L_lit__*//*__starting_point_inline_macro:MSAT_LITSIGN__*/((Lit)\u00261)     ?\"-\":\"\", /*__starting_point_inline_macro:MSAT_LIT2VAR__*/((Lit)\u003e\u003e1)+1);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 285,
+        "Column": 5,
+        "ByteOffset": 10493
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Msat_SolverReadDecisionLevel(p) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 378,
+        "Column": 9,
+        "ByteOffset": 13591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Msat_ClauseIsLocked( p, pLearned[i]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 468,
+        "Column": 9,
+        "ByteOffset": 16397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pC != nil );  // (otherwise should be UIP)"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 513,
+        "Column": 9,
+        "ByteOffset": 18257
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( L_IND\"Learnt {\", L_ind );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 517,
+        "Column": 13,
+        "ByteOffset": 18463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\" \"L_LIT, /*__starting_point_inline_macro:L_lit__*//*__starting_point_inline_macro:MSAT_LITSIGN__*/((pReasonArray[j])\u00261)     ?\"-\":\"\", /*__starting_point_inline_macro:MSAT_LIT2VAR__*/((pReasonArray[j])\u003e\u003e1)+1);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 519,
+        "Column": 9,
+        "ByteOffset": 18697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\" } at level %d\\n\", *pLevel_out); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 543,
+        "Column": 5,
+        "ByteOffset": 19582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Msat_SolverReadDecisionLevel(p) == p.nLevelRoot );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 561,
+        "Column": 17,
+        "ByteOffset": 20114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf(L_IND\"**CONFLICT**  \", L_ind);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 599,
+        "Column": 17,
+        "ByteOffset": 21637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                memcpy( p.pModel, p.pAssigns, sizeof(int) * p.nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 620,
+        "Column": 17,
+        "ByteOffset": 22610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Var != MSAT_ORDER_UNKNOWN \u0026\u0026 Var \u003e= 0 \u0026\u0026 Var \u003c p.nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 622,
+        "Column": 17,
+        "ByteOffset": 22803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Value );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Msat_SolverAssume",
+      "Start": 1859,
+      "End": 2325,
+      "BodyStart": 1919,
+      "Original": "int  Msat_SolverAssume( Msat_Solver_t * p, Msat_Lit_t Lit )\n{\n    assert( Msat_QueueReadSize(p-\u003epQueue) == 0 );\n    if ( p-\u003efVerbose )\n        printf(L_IND\"assume(\"L_LIT\")\\n\", L_ind, L_lit(Lit));\n    Msat_IntVecPush( p-\u003evTrailLim, Msat_IntVecReadSize(p-\u003evTrail) );\n//    assert( Msat_IntVecReadSize(p-\u003evTrailLim) \u003c= Msat_IntVecReadSize(p-\u003evTrail) + 1 );\n//    assert( Msat_IntVecReadSize( p-\u003evTrailLim ) \u003c p-\u003enVars );\n    return Msat_SolverEnqueue( p, Lit, NULL );\n}",
+      "Draft": "func Msat_SolverAssume(p *Msat_Solver_t, Lit Msat_Lit_t) int32 {\n    assert(Msat_QueueReadSize(p.pQueue) == 0, \"Msat_QueueReadSize(p.pQueue) == 0\");\n    if p.fVerbose {\n        // inlining of macro L_lit\n        // inlining of macro MSAT_LITSIGN\n        // inlining of macro MSAT_LIT2VAR\n        fmt.Printf(L_IND\"assume(\"L_LIT\")\\n\", L_ind, ((Lit)\u00261)     ?\"-\":\"\", ((Lit)\u003e\u003e1)+1); }\n    Msat_IntVecPush( p.vTrailLim, Msat_IntVecReadSize(p.vTrail) );\n//    assert( Msat_IntVecReadSize(p-\u003evTrailLim) \u003c= Msat_IntVecReadSize(p-\u003evTrail) + 1 );\n//    assert( Msat_IntVecReadSize( p-\u003evTrailLim ) \u003c p-\u003enVars );\n    return Msat_SolverEnqueue( p, Lit, nil );\n}"
+    },
+    {
+      "Name": "Msat_SolverUndoOne",
+      "Start": 2603,
+      "End": 3033,
+      "BodyStart": 2648,
+      "Original": "void Msat_SolverUndoOne( Msat_Solver_t * p )\n{\n    Msat_Lit_t Lit;\n    Msat_Var_t Var;\n    Lit = Msat_IntVecPop( p-\u003evTrail ); \n    Var = MSAT_LIT2VAR(Lit);\n    p-\u003epAssigns[Var] = MSAT_VAR_UNASSIGNED;\n    p-\u003epReasons[Var] = NULL;\n    p-\u003epLevel[Var]   = -1;\n//    Msat_OrderUndo( p-\u003epOrder, Var );\n    Msat_OrderVarUnassigned( p-\u003epOrder, Var );\n\n    if ( p-\u003efVerbose )\n        printf(L_IND\"unbind(\"L_LIT\")\\n\", L_ind, L_lit(Lit)); \n}",
+      "Draft": "func Msat_SolverUndoOne(p *Msat_Solver_t) {\n    var Lit Msat_Lit_t;\n    var Var Msat_Var_t;\n    Lit = Msat_IntVecPop( p.vTrail ); \n    // inlining of macro MSAT_LIT2VAR\n    Var = ((Lit)\u003e\u003e1);\n    p.pAssigns[Var] = MSAT_VAR_UNASSIGNED;\n    p.pReasons[Var] = nil;\n    p.pLevel[Var]   = -1;\n//    Msat_OrderUndo( p-\u003epOrder, Var );\n    Msat_OrderVarUnassigned( p.pOrder, Var );\n\n    if p.fVerbose {\n        // inlining of macro L_lit\n        // inlining of macro MSAT_LITSIGN\n        // inlining of macro MSAT_LIT2VAR\n        fmt.Printf(L_IND\"unbind(\"L_LIT\")\\n\", L_ind, ((Lit)\u00261)     ?\"-\":\"\", ((Lit)\u003e\u003e1)+1); } \n}"
+    },
+    {
+      "Name": "Msat_SolverCancel",
+      "Start": 3322,
+      "End": 3886,
+      "BodyStart": 3366,
+      "Original": "void Msat_SolverCancel( Msat_Solver_t * p )\n{\n    int c;\n    assert( Msat_QueueReadSize(p-\u003epQueue) == 0 );\n    if ( p-\u003efVerbose )\n    {\n        if ( Msat_IntVecReadSize(p-\u003evTrail) != Msat_IntVecReadEntryLast(p-\u003evTrailLim) )\n        {\n            Msat_Lit_t Lit;\n            Lit = Msat_IntVecReadEntry( p-\u003evTrail, Msat_IntVecReadEntryLast(p-\u003evTrailLim) ); \n            printf(L_IND\"cancel(\"L_LIT\")\\n\", L_ind, L_lit(Lit));\n        }\n    }\n    for ( c = Msat_IntVecReadSize(p-\u003evTrail) - Msat_IntVecPop( p-\u003evTrailLim ); c != 0; c-- )\n        Msat_SolverUndoOne( p );\n}",
+      "Draft": "func Msat_SolverCancel(p *Msat_Solver_t) {\n    var c int32;\n    assert(Msat_QueueReadSize(p.pQueue) == 0, \"Msat_QueueReadSize(p.pQueue) == 0\");\n    if p.fVerbose {\n        if Msat_IntVecReadSize(p.vTrail) != Msat_IntVecReadEntryLast(p.vTrailLim) {\n            var Lit Msat_Lit_t;\n            Lit = Msat_IntVecReadEntry( p.vTrail, Msat_IntVecReadEntryLast(p.vTrailLim) ); \n            // inlining of macro L_lit\n            // inlining of macro MSAT_LITSIGN\n            // inlining of macro MSAT_LIT2VAR\n            fmt.Printf(L_IND\"cancel(\"L_LIT\")\\n\", L_ind, ((Lit)\u00261)     ?\"-\":\"\", ((Lit)\u003e\u003e1)+1);\n        }\n    }\n    for  c = Msat_IntVecReadSize(p.vTrail) - Msat_IntVecPop( p.vTrailLim ); c != 0; c--  {\n        Msat_SolverUndoOne( p );\n    }\n}"
+    },
+    {
+      "Name": "Msat_SolverCancelUntil",
+      "Start": 4158,
+      "End": 4307,
+      "BodyStart": 4218,
+      "Original": "void Msat_SolverCancelUntil( Msat_Solver_t * p, int Level )\n{\n    while ( Msat_IntVecReadSize(p-\u003evTrailLim) \u003e Level )\n        Msat_SolverCancel(p);\n}",
+      "Draft": "func Msat_SolverCancelUntil(p *Msat_Solver_t, Level int32) {\n    for  Msat_IntVecReadSize(p.vTrailLim) \u003e Level  {\n        Msat_SolverCancel(p);\n    }\n}"
+    },
+    {
+      "Name": "Msat_SolverRecord",
+      "Start": 4627,
+      "End": 5035,
+      "BodyStart": 4705,
+      "Original": "Msat_Clause_t * Msat_SolverRecord( Msat_Solver_t * p, Msat_IntVec_t * vLits )\n{\n    Msat_Clause_t * pC;\n    int Value;\n    assert( Msat_IntVecReadSize(vLits) != 0 );\n    Value = Msat_ClauseCreate( p, vLits, 1, \u0026pC );\n    assert( Value );\n    Value = Msat_SolverEnqueue( p, Msat_IntVecReadEntry(vLits,0), pC );\n    assert( Value );\n    if ( pC )\n        Msat_ClauseVecPush( p-\u003evLearned, pC );\n    return pC;\n}",
+      "Draft": "func Msat_SolverRecord(p *Msat_Solver_t, vLits *Msat_IntVec_t) *Msat_Clause_t {\n    var pC *Msat_Clause_t;\n    var Value int32;\n    assert(Msat_IntVecReadSize(vLits) != 0, \"Msat_IntVecReadSize(vLits) != 0\");\n    Value = Msat_ClauseCreate( p, vLits, 1, \u0026pC );\n    assert((Value != 0), \"Value\");\n    Value = Msat_SolverEnqueue( p, Msat_IntVecReadEntry(vLits,0), pC );\n    assert((Value != 0), \"Value\");\n    if pC != nil {\n        Msat_ClauseVecPush( p.vLearned, pC ); }\n    return pC;\n}"
+    },
+    {
+      "Name": "Msat_SolverEnqueue",
+      "Start": 5461,
+      "End": 6552,
+      "BodyStart": 5542,
+      "Original": "int  Msat_SolverEnqueue( Msat_Solver_t * p, Msat_Lit_t Lit, Msat_Clause_t * pC )\n{\n    Msat_Var_t Var = MSAT_LIT2VAR(Lit);\n\n    // skip literals that are not in the current cone\n    if ( !Msat_IntVecReadEntry( p-\u003evVarsUsed, Var ) )\n        return 1;\n\n//    assert( Msat_QueueReadSize(p-\u003epQueue) == Msat_IntVecReadSize(p-\u003evTrail) );\n    // if the literal is assigned\n    // return 1 if the assignment is consistent\n    // return 0 if the assignment is inconsistent (conflict)\n    if ( p-\u003epAssigns[Var] != MSAT_VAR_UNASSIGNED )\n        return p-\u003epAssigns[Var] == Lit;\n    // new fact - store it\n    if ( p-\u003efVerbose )\n    {\n//        printf(L_IND\"bind(\"L_LIT\")\\n\", L_ind, L_lit(Lit));\n        printf(L_IND\"bind(\"L_LIT\")  \", L_ind, L_lit(Lit));\n        Msat_ClausePrintSymbols( pC );\n    }\n    p-\u003epAssigns[Var] = Lit;\n    p-\u003epLevel[Var]   = Msat_IntVecReadSize(p-\u003evTrailLim);\n//    p-\u003epReasons[Var] = p-\u003epLevel[Var]? pC: NULL;\n    p-\u003epReasons[Var] = pC;\n    Msat_IntVecPush( p-\u003evTrail, Lit );\n    Msat_QueueInsert( p-\u003epQueue, Lit );\n\n    Msat_OrderVarAssigned( p-\u003epOrder, Var );\n    return 1;\n}",
+      "Draft": "func Msat_SolverEnqueue(p *Msat_Solver_t, Lit Msat_Lit_t, pC *Msat_Clause_t) int32 {\n    // inlining of macro MSAT_LIT2VAR\n    var Var Msat_Var_t  = ((Lit)\u003e\u003e1);\n\n    // skip literals that are not in the current cone\n    if !Msat_IntVecReadEntry( p.vVarsUsed, Var ) {\n        return 1; }\n\n//    assert( Msat_QueueReadSize(p-\u003epQueue) == Msat_IntVecReadSize(p-\u003evTrail) );\n    // if the literal is assigned\n    // return 1 if the assignment is consistent\n    // return 0 if the assignment is inconsistent (conflict)\n    if p.pAssigns[Var] != MSAT_VAR_UNASSIGNED {\n        return p.pAssigns[Var] == Lit; }\n    // new fact - store it\n    if p.fVerbose {\n//        printf(L_IND\"bind(\"L_LIT\")\\n\", L_ind, L_lit(Lit));\n        // inlining of macro L_lit\n        // inlining of macro MSAT_LITSIGN\n        // inlining of macro MSAT_LIT2VAR\n        fmt.Printf(L_IND\"bind(\"L_LIT\")  \", L_ind, ((Lit)\u00261)     ?\"-\":\"\", ((Lit)\u003e\u003e1)+1);\n        Msat_ClausePrintSymbols( pC );\n    }\n    p.pAssigns[Var] = Lit;\n    p.pLevel[Var]   = Msat_IntVecReadSize(p.vTrailLim);\n//    p-\u003epReasons[Var] = p-\u003epLevel[Var]? pC: NULL;\n    p.pReasons[Var] = pC;\n    Msat_IntVecPush( p.vTrail, Lit );\n    Msat_QueueInsert( p.pQueue, Lit );\n\n    Msat_OrderVarAssigned( p.pOrder, Var );\n    return 1;\n}"
+    },
+    {
+      "Name": "Msat_SolverPropagate",
+      "Start": 6996,
+      "End": 9169,
+      "BodyStart": 7054,
+      "Original": "Msat_Clause_t * Msat_SolverPropagate( Msat_Solver_t * p )\n{\n    Msat_ClauseVec_t ** pvWatched = p-\u003epvWatched;\n    Msat_Clause_t ** pClauses;\n    Msat_Clause_t * pConflict;\n    Msat_Lit_t Lit, Lit_out;\n    int i, j, nClauses;\n\n    // propagate all the literals in the queue\n    while ( (Lit = Msat_QueueExtract( p-\u003epQueue )) \u003e= 0 )\n    {\n        p-\u003eStats.nPropagations++;\n        // get the clauses watched by this literal\n        nClauses = Msat_ClauseVecReadSize( pvWatched[Lit] );\n        pClauses = Msat_ClauseVecReadArray( pvWatched[Lit] );\n        // go through the watched clauses and decide what to do with them\n        for ( i = j = 0; i \u003c nClauses; i++ )\n        {\n            p-\u003eStats.nInspects++;\n            // clear the returned literal\n            Lit_out = -1;\n            // propagate the clause\n            if ( !Msat_ClausePropagate( pClauses[i], Lit, p-\u003epAssigns, \u0026Lit_out ) )\n            {   // the clause is unit\n                // \"Lit_out\" contains the new assignment to be enqueued\n                if ( Msat_SolverEnqueue( p, Lit_out, pClauses[i] ) ) \n                { // consistent assignment \n                    // no changes to the implication queue; the watch is the same too\n                    pClauses[j++] = pClauses[i];\n                    continue;\n                }\n                // remember the reason of conflict (will be returned)\n                pConflict = pClauses[i];\n                // leave the remaning clauses in the same watched list\n                for ( ; i \u003c nClauses; i++ )\n                    pClauses[j++] = pClauses[i];\n                Msat_ClauseVecShrink( pvWatched[Lit], j );\n                // clear the propagation queue\n                Msat_QueueClear( p-\u003epQueue );\n                return pConflict;\n            }\n            // the clause is not unit\n            // in this case \"Lit_out\" contains the new watch if it has changed\n            if ( Lit_out \u003e= 0 )\n                Msat_ClauseVecPush( pvWatched[Lit_out], pClauses[i] );\n            else // the watch did not change\n                pClauses[j++] = pClauses[i];\n        }\n        Msat_ClauseVecShrink( pvWatched[Lit], j );\n    }\n    return NULL;\n}",
+      "Draft": "func Msat_SolverPropagate(p *Msat_Solver_t) *Msat_Clause_t {\n    var pvWatched **Msat_ClauseVec_t  = p.pvWatched;\n    var pClauses **Msat_Clause_t;\n    var pConflict *Msat_Clause_t;\n    var Lit, Lit_out Msat_Lit_t;\n    var i, j, nClauses int32;\n\n    // propagate all the literals in the queue\n    for  (Lit = Msat_QueueExtract( p.pQueue )) \u003e= 0  {\n        p.Stats.nPropagations++;\n        // get the clauses watched by this literal\n        nClauses = Msat_ClauseVecReadSize( pvWatched[Lit] );\n        pClauses = Msat_ClauseVecReadArray( pvWatched[Lit] );\n        // go through the watched clauses and decide what to do with them\n        for  i = j = 0; i \u003c nClauses; i++  {\n            p.Stats.nInspects++;\n            // clear the returned literal\n            Lit_out = -1;\n            // propagate the clause\n            if !Msat_ClausePropagate( pClauses[i], Lit, p.pAssigns, \u0026Lit_out ) {   // the clause is unit\n                // \"Lit_out\" contains the new assignment to be enqueued\n                if Msat_SolverEnqueue( p, Lit_out, pClauses[i] ) != 0 { // consistent assignment \n                    // no changes to the implication queue; the watch is the same too\n                    pClauses[j++] = pClauses[i];\n                    continue;\n                }\n                // remember the reason of conflict (will be returned)\n                pConflict = pClauses[i];\n                // leave the remaning clauses in the same watched list\n                for  ; i \u003c nClauses; i++  {\n                    pClauses[j++] = pClauses[i];\n                }\n                Msat_ClauseVecShrink( pvWatched[Lit], j );\n                // clear the propagation queue\n                Msat_QueueClear( p.pQueue );\n                return pConflict;\n            }\n            // the clause is not unit\n            // in this case \"Lit_out\" contains the new watch if it has changed\n            if Lit_out \u003e= 0 {\n                Msat_ClauseVecPush( pvWatched[Lit_out], pClauses[i] );\n            } else { // the watch did not change\n                pClauses[j++] = pClauses[i]; }\n        }\n        Msat_ClauseVecShrink( pvWatched[Lit], j );\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Msat_SolverSimplifyDB",
+      "Start": 9553,
+      "End": 10673,
+      "BodyStart": 9601,
+      "Original": "int  Msat_SolverSimplifyDB( Msat_Solver_t * p )\n{\n    Msat_ClauseVec_t * vClauses;\n    Msat_Clause_t ** pClauses;\n    int nClauses, Type, i, j;\n    int * pAssigns;\n    int Counter;\n\n    assert( Msat_SolverReadDecisionLevel(p) == 0 );\n    if ( Msat_SolverPropagate(p) != NULL )\n        return 0;\n//Msat_SolverPrintClauses( p );\n//Msat_SolverPrintAssignment( p );\n//printf( \"Simplification\\n\" );\n\n    // simplify and reassign clause numbers\n    Counter = 0;\n    pAssigns = Msat_SolverReadAssignsArray( p );\n    for ( Type = 0; Type \u003c 2; Type++ )\n    {\n        vClauses = Type? p-\u003evLearned : p-\u003evClauses;\n        nClauses = Msat_ClauseVecReadSize( vClauses );\n        pClauses = Msat_ClauseVecReadArray( vClauses );\n        for ( i = j = 0; i \u003c nClauses; i++ )\n            if ( Msat_ClauseSimplify( pClauses[i], pAssigns ) )\n                Msat_ClauseFree( p, pClauses[i], 1 );\n            else\n            {\n                pClauses[j++] = pClauses[i];\n                Msat_ClauseSetNum( pClauses[i], Counter++ );\n            }\n        Msat_ClauseVecShrink( vClauses, j );\n    }\n    p-\u003enClauses = Counter;\n    return 1;\n}",
+      "Draft": "func Msat_SolverSimplifyDB(p *Msat_Solver_t) int32 {\n    var vClauses *Msat_ClauseVec_t;\n    var pClauses **Msat_Clause_t;\n    var nClauses, Type, i, j int32;\n    var pAssigns *int32;\n    var Counter int32;\n\n    assert(Msat_SolverReadDecisionLevel(p) == 0, \"Msat_SolverReadDecisionLevel(p) == 0\");\n    if Msat_SolverPropagate(p) != nil {\n        return 0; }\n//Msat_SolverPrintClauses( p );\n//Msat_SolverPrintAssignment( p );\n//printf( \"Simplification\\n\" );\n\n    // simplify and reassign clause numbers\n    Counter = 0;\n    pAssigns = Msat_SolverReadAssignsArray( p );\n    for  Type = 0; Type \u003c 2; Type++  {\n        if Type {\n            vClauses = p.vLearned;\n        } else {\n            vClauses = p.vClauses;\n        }\n        nClauses = Msat_ClauseVecReadSize( vClauses );\n        pClauses = Msat_ClauseVecReadArray( vClauses );\n        for  i = j = 0; i \u003c nClauses; i++  {\n            if Msat_ClauseSimplify( pClauses[i], pAssigns ) {\n                Msat_ClauseFree( p, pClauses[i], 1 );\n            } else {\n                pClauses[j++] = pClauses[i];\n                Msat_ClauseSetNum( pClauses[i], Counter++ );\n            }\n        }\n        Msat_ClauseVecShrink( vClauses, j );\n    }\n    p.nClauses = Counter;\n    return 1;\n}"
+    },
+    {
+      "Name": "Msat_SolverReduceDB",
+      "Start": 11127,
+      "End": 12194,
+      "BodyStart": 11173,
+      "Original": "void Msat_SolverReduceDB( Msat_Solver_t * p )\n{\n    Msat_Clause_t ** pLearned;\n    int nLearned, i, j;\n    double dExtraLim = p-\u003edClaInc / Msat_ClauseVecReadSize(p-\u003evLearned); \n    // Remove any clause below this activity\n\n    // sort the learned clauses in the increasing order of activity\n    Msat_SolverSortDB( p );\n\n    // discard the first half the clauses (the less active ones)\n    nLearned = Msat_ClauseVecReadSize( p-\u003evLearned );\n    pLearned = Msat_ClauseVecReadArray( p-\u003evLearned );\n    for ( i = j = 0; i \u003c nLearned / 2; i++ )\n        if ( !Msat_ClauseIsLocked( p, pLearned[i]) )\n            Msat_ClauseFree( p, pLearned[i], 1 );\n        else\n            pLearned[j++] = pLearned[i];\n    // filter the more active clauses and leave those above the limit\n    for (  ; i \u003c nLearned; i++ )\n        if ( !Msat_ClauseIsLocked( p, pLearned[i] ) \u0026\u0026 \n            Msat_ClauseReadActivity(pLearned[i]) \u003c dExtraLim )\n            Msat_ClauseFree( p, pLearned[i], 1 );\n        else\n            pLearned[j++] = pLearned[i];\n    Msat_ClauseVecShrink( p-\u003evLearned, j );\n}",
+      "Draft": "func Msat_SolverReduceDB(p *Msat_Solver_t) {\n    var pLearned **Msat_Clause_t;\n    var nLearned, i, j int32;\n    var dExtraLim float64  = p.dClaInc / Msat_ClauseVecReadSize(p.vLearned); \n    // Remove any clause below this activity\n\n    // sort the learned clauses in the increasing order of activity\n    Msat_SolverSortDB( p );\n\n    // discard the first half the clauses (the less active ones)\n    nLearned = Msat_ClauseVecReadSize( p.vLearned );\n    pLearned = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = j = 0; i \u003c nLearned / 2; i++  {\n        if !Msat_ClauseIsLocked( p, pLearned[i]) {\n            Msat_ClauseFree( p, pLearned[i], 1 );\n        } else {\n            pLearned[j++] = pLearned[i]; }\n    }\n    // filter the more active clauses and leave those above the limit\n    for   ; i \u003c nLearned; i++  {\n        if !Msat_ClauseIsLocked( p, pLearned[i] ) \u0026\u0026 \n            Msat_ClauseReadActivity(pLearned[i]) \u003c dExtraLim {\n            Msat_ClauseFree( p, pLearned[i], 1 );\n        } else {\n            pLearned[j++] = pLearned[i]; }\n    }\n    Msat_ClauseVecShrink( p.vLearned, j );\n}"
+    },
+    {
+      "Name": "Msat_SolverRemoveLearned",
+      "Start": 12458,
+      "End": 13043,
+      "BodyStart": 12509,
+      "Original": "void Msat_SolverRemoveLearned( Msat_Solver_t * p )\n{\n    Msat_Clause_t ** pLearned;\n    int nLearned, i;\n\n    // discard the learned clauses\n    nLearned = Msat_ClauseVecReadSize( p-\u003evLearned );\n    pLearned = Msat_ClauseVecReadArray( p-\u003evLearned );\n    for ( i = 0; i \u003c nLearned; i++ )\n    {\n        assert( !Msat_ClauseIsLocked( p, pLearned[i]) );\n        \n        Msat_ClauseFree( p, pLearned[i], 1 );\n    }\n    Msat_ClauseVecShrink( p-\u003evLearned, 0 );\n    p-\u003enClauses = Msat_ClauseVecReadSize(p-\u003evClauses);\n\n    for ( i = 0; i \u003c p-\u003enVarsAlloc; i++ )\n        p-\u003epReasons[i] = NULL;\n}",
+      "Draft": "func Msat_SolverRemoveLearned(p *Msat_Solver_t) {\n    var pLearned **Msat_Clause_t;\n    var nLearned, i int32;\n\n    // discard the learned clauses\n    nLearned = Msat_ClauseVecReadSize( p.vLearned );\n    pLearned = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = 0; i \u003c nLearned; i++  {\n        assert(!Msat_ClauseIsLocked( p, pLearned[i]), \"!Msat_ClauseIsLocked( p, pLearned[i])\");\n        \n        Msat_ClauseFree( p, pLearned[i], 1 );\n    }\n    Msat_ClauseVecShrink( p.vLearned, 0 );\n    p.nClauses = Msat_ClauseVecReadSize(p.vClauses);\n\n    for  i = 0; i \u003c p.nVarsAlloc; i++  {\n        p.pReasons[i] = nil;\n    }\n}"
+    },
+    {
+      "Name": "Msat_SolverRemoveMarked",
+      "Start": 13314,
+      "End": 14531,
+      "BodyStart": 13364,
+      "Original": "void Msat_SolverRemoveMarked( Msat_Solver_t * p )\n{\n    Msat_Clause_t ** pLearned, ** pClauses;\n    int nLearned, nClauses, i;\n\n    // discard the learned clauses\n    nClauses = Msat_ClauseVecReadSize( p-\u003evClauses );\n    pClauses = Msat_ClauseVecReadArray( p-\u003evClauses );\n    for ( i = p-\u003enClausesStart; i \u003c nClauses; i++ )\n    {\n//        assert( !Msat_ClauseIsLocked( p, pClauses[i]) );\n        Msat_ClauseFree( p, pClauses[i], 1 );\n    }\n    Msat_ClauseVecShrink( p-\u003evClauses, p-\u003enClausesStart );\n\n    // discard the learned clauses\n    nLearned = Msat_ClauseVecReadSize( p-\u003evLearned );\n    pLearned = Msat_ClauseVecReadArray( p-\u003evLearned );\n    for ( i = 0; i \u003c nLearned; i++ )\n    {\n//        assert( !Msat_ClauseIsLocked( p, pLearned[i]) );\n        Msat_ClauseFree( p, pLearned[i], 1 );\n    }\n    Msat_ClauseVecShrink( p-\u003evLearned, 0 );\n    p-\u003enClauses = Msat_ClauseVecReadSize(p-\u003evClauses);\n/*\n    // undo the previous data\n    for ( i = 0; i \u003c p-\u003enVarsAlloc; i++ )\n    {\n        p-\u003epAssigns[i]   = MSAT_VAR_UNASSIGNED;\n        p-\u003epReasons[i]   = NULL;\n        p-\u003epLevel[i]     = -1;\n        p-\u003epdActivity[i] = 0.0;\n    }\n    Msat_OrderClean( p-\u003epOrder, p-\u003enVars, NULL );\n    Msat_QueueClear( p-\u003epQueue );\n*/\n}",
+      "Draft": "func Msat_SolverRemoveMarked(p *Msat_Solver_t) {\n    var pLearned, pClauses **Msat_Clause_t;\n    var nLearned, nClauses, i int32;\n\n    // discard the learned clauses\n    nClauses = Msat_ClauseVecReadSize( p.vClauses );\n    pClauses = Msat_ClauseVecReadArray( p.vClauses );\n    for  i = p.nClausesStart; i \u003c nClauses; i++  {\n//        assert( !Msat_ClauseIsLocked( p, pClauses[i]) );\n        Msat_ClauseFree( p, pClauses[i], 1 );\n    }\n    Msat_ClauseVecShrink( p.vClauses, p.nClausesStart );\n\n    // discard the learned clauses\n    nLearned = Msat_ClauseVecReadSize( p.vLearned );\n    pLearned = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = 0; i \u003c nLearned; i++  {\n//        assert( !Msat_ClauseIsLocked( p, pLearned[i]) );\n        Msat_ClauseFree( p, pLearned[i], 1 );\n    }\n    Msat_ClauseVecShrink( p.vLearned, 0 );\n    p.nClauses = Msat_ClauseVecReadSize(p.vClauses);\n/*\n    // undo the previous data\n    for ( i = 0; i \u003c p-\u003enVarsAlloc; i++ )\n    {\n        p-\u003epAssigns[i]   = MSAT_VAR_UNASSIGNED;\n        p-\u003epReasons[i]   = NULL;\n        p-\u003epLevel[i]     = -1;\n        p-\u003epdActivity[i] = 0.0;\n    }\n    Msat_OrderClean( p-\u003epOrder, p-\u003enVars, NULL );\n    Msat_QueueClear( p-\u003epQueue );\n*/\n}"
+    },
+    {
+      "Name": "Msat_SolverAnalyze",
+      "Start": 14927,
+      "End": 17526,
+      "BodyStart": 15037,
+      "Original": "void Msat_SolverAnalyze( Msat_Solver_t * p, Msat_Clause_t * pC, Msat_IntVec_t * vLits_out, int * pLevel_out )\n{\n    Msat_Lit_t LitQ, Lit = MSAT_LIT_UNASSIGNED;\n    Msat_Var_t VarQ, Var;\n    int * pReasonArray, nReasonSize;\n    int j, pathC = 0, nLevelCur = Msat_IntVecReadSize(p-\u003evTrailLim);\n    int iStep = Msat_IntVecReadSize(p-\u003evTrail) - 1;\n\n    // increment the seen counter\n    p-\u003enSeenId++;\n    // empty the vector array\n    Msat_IntVecClear( vLits_out );\n    Msat_IntVecPush( vLits_out, -1 ); // (leave room for the asserting literal)\n    *pLevel_out = 0;\n    do {\n        assert( pC != NULL );  // (otherwise should be UIP)\n        // get the reason of conflict\n        Msat_ClauseCalcReason( p, pC, Lit, p-\u003evReason );\n        nReasonSize  = Msat_IntVecReadSize( p-\u003evReason );\n        pReasonArray = Msat_IntVecReadArray( p-\u003evReason );\n        for ( j = 0; j \u003c nReasonSize; j++ ) {\n            LitQ = pReasonArray[j];\n            VarQ = MSAT_LIT2VAR(LitQ);\n            if ( p-\u003epSeen[VarQ] != p-\u003enSeenId ) {\n                p-\u003epSeen[VarQ] = p-\u003enSeenId;\n\n                // added to better fine-tune the search\n                Msat_SolverVarBumpActivity( p, LitQ );\n\n                // skip all the literals on this decision level\n                if ( p-\u003epLevel[VarQ] == nLevelCur )\n                    pathC++;\n                else if ( p-\u003epLevel[VarQ] \u003e 0 ) { \n                    // add the literals on other decision levels but\n                    // exclude variables from decision level 0\n                    Msat_IntVecPush( vLits_out, MSAT_LITNOT(LitQ) );\n                    if ( *pLevel_out \u003c p-\u003epLevel[VarQ] )\n                        *pLevel_out = p-\u003epLevel[VarQ];\n                }\n            }\n        }\n        // Select next clause to look at:\n        do {\n//            Lit = Msat_IntVecReadEntryLast(p-\u003evTrail);\n            Lit = Msat_IntVecReadEntry( p-\u003evTrail, iStep-- );\n            Var = MSAT_LIT2VAR(Lit);\n            pC = p-\u003epReasons[Var];\n//            Msat_SolverUndoOne( p );\n        } while ( p-\u003epSeen[Var] != p-\u003enSeenId );\n        pathC--;\n    } while ( pathC \u003e 0 );\n    // we do not unbind the variables above\n    // this will be done after conflict analysis\n\n    Msat_IntVecWriteEntry( vLits_out, 0, MSAT_LITNOT(Lit) );\n    if ( p-\u003efVerbose )\n    {\n        printf( L_IND\"Learnt {\", L_ind );\n        nReasonSize  = Msat_IntVecReadSize( vLits_out );\n        pReasonArray = Msat_IntVecReadArray( vLits_out );\n        for ( j = 0; j \u003c nReasonSize; j++ ) \n            printf(\" \"L_LIT, L_lit(pReasonArray[j]));\n        printf(\" } at level %d\\n\", *pLevel_out); \n    }\n}",
+      "Draft": "func Msat_SolverAnalyze(p *Msat_Solver_t, pC *Msat_Clause_t, vLits_out *Msat_IntVec_t, pLevel_out *int32) {\n    var LitQ Msat_Lit_t;\n    var Lit Msat_Lit_t = MSAT_LIT_UNASSIGNED;\n    var VarQ, Var Msat_Var_t;\n    var pReasonArray *int32;\n    var nReasonSize int32;\n    var j int32;\n    var pathC int32;\n    var nLevelCur int32 = Msat_IntVecReadSize(p.vTrailLim);\n    var iStep int32  = Msat_IntVecReadSize(p.vTrail) - 1;\n\n    // increment the seen counter\n    p.nSeenId++;\n    // empty the vector array\n    Msat_IntVecClear( vLits_out );\n    Msat_IntVecPush( vLits_out, -1 ); // (leave room for the asserting literal)\n    *pLevel_out = 0;\n    for {\n        assert(pC != nil, \"pC != nil\");  // (otherwise should be UIP)\n        // get the reason of conflict\n        Msat_ClauseCalcReason( p, pC, Lit, p.vReason );\n        nReasonSize  = Msat_IntVecReadSize( p.vReason );\n        pReasonArray = Msat_IntVecReadArray( p.vReason );\n        for  j = 0; j \u003c nReasonSize; j++  {\n            LitQ = pReasonArray[j];\n            // inlining of macro MSAT_LIT2VAR\n            VarQ = ((LitQ)\u003e\u003e1);\n            if p.pSeen[VarQ] != p.nSeenId {\n                p.pSeen[VarQ] = p.nSeenId;\n\n                // added to better fine-tune the search\n                Msat_SolverVarBumpActivity( p, LitQ );\n\n                // skip all the literals on this decision level\n                if p.pLevel[VarQ] == nLevelCur {\n                    pathC++;\n                } else if p.pLevel[VarQ] \u003e 0 { \n                    // add the literals on other decision levels but\n                    // exclude variables from decision level 0\n                    // inlining of macro MSAT_LITNOT\n                    Msat_IntVecPush( vLits_out, ((LitQ)^1) );\n                    if *pLevel_out \u003c p.pLevel[VarQ] {\n                        *pLevel_out = p.pLevel[VarQ]; }\n                }\n            }\n        }\n        // Select next clause to look at:\n        for {\n//            Lit = Msat_IntVecReadEntryLast(p-\u003evTrail);\n            Lit = Msat_IntVecReadEntry( p.vTrail, iStep-- );\n            // inlining of macro MSAT_LIT2VAR\n            Var = ((Lit)\u003e\u003e1);\n            pC = p.pReasons[Var];\n//            Msat_SolverUndoOne( p );\n        \nif !( p.pSeen[Var] != p.nSeenId ) { break }\n} \n        pathC--;\n    \nif !( pathC \u003e 0 ) { break }\n} \n    // we do not unbind the variables above\n    // this will be done after conflict analysis\n\n    // inlining of macro MSAT_LITNOT\n    Msat_IntVecWriteEntry( vLits_out, 0, ((Lit)^1) );\n    if p.fVerbose {\n        fmt.Printf(L_IND\"Learnt {\", L_ind);\n        nReasonSize  = Msat_IntVecReadSize( vLits_out );\n        pReasonArray = Msat_IntVecReadArray( vLits_out );\n        for  j = 0; j \u003c nReasonSize; j++  { \n            // inlining of macro L_lit\n            // inlining of macro MSAT_LITSIGN\n            // inlining of macro MSAT_LIT2VAR\n            fmt.Printf(\" \"L_LIT, ((pReasonArray[j])\u00261)     ?\"-\":\"\", ((pReasonArray[j])\u003e\u003e1)+1);\n        }\n        fmt.Printf(\" } at level %d\\n\", *pLevel_out); \n    }\n}"
+    },
+    {
+      "Name": "Msat_SolverSearch",
+      "Start": 18090,
+      "End": 21637,
+      "BodyStart": 18226,
+      "Original": "Msat_Type_t Msat_SolverSearch( Msat_Solver_t * p, int nConfLimit, int nLearnedLimit, int nBackTrackLimit, Msat_SearchParams_t * pPars )\n{\n    Msat_Clause_t * pConf;\n    Msat_Var_t Var;\n    int nLevelBack, nConfs, nAssigns, Value;\n    int i;\n\n    assert( Msat_SolverReadDecisionLevel(p) == p-\u003enLevelRoot );\n    p-\u003eStats.nStarts++;\n    p-\u003edVarDecay = 1 / pPars-\u003edVarDecay;\n    p-\u003edClaDecay = 1 / pPars-\u003edClaDecay;\n\n    // reset the activities\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n       p-\u003epdActivity[i] = (double)p-\u003epFactors[i];\n//       p-\u003epdActivity[i] = 0.0;\n\n    nConfs = 0;\n    while ( 1 )\n    {\n        pConf = Msat_SolverPropagate( p );\n        if ( pConf != NULL ){\n            // CONFLICT\n            if ( p-\u003efVerbose )\n            {\n//                printf(L_IND\"**CONFLICT**\\n\", L_ind);\n                printf(L_IND\"**CONFLICT**  \", L_ind);\n                Msat_ClausePrintSymbols( pConf );\n            }\n            // count conflicts\n            p-\u003eStats.nConflicts++;\n            nConfs++;\n\n            // if top level, return UNSAT\n            if ( Msat_SolverReadDecisionLevel(p) == p-\u003enLevelRoot )\n                return MSAT_FALSE;\n\n            // perform conflict analysis\n            Msat_SolverAnalyze( p, pConf, p-\u003evTemp, \u0026nLevelBack );\n            Msat_SolverCancelUntil( p, (p-\u003enLevelRoot \u003e nLevelBack)? p-\u003enLevelRoot : nLevelBack );\n            Msat_SolverRecord( p, p-\u003evTemp );\n\n            // it is important that recording is done after cancelling\n            // because canceling cleans the queue while recording adds to it\n            Msat_SolverVarDecayActivity( p );\n            Msat_SolverClaDecayActivity( p );\n\n        }\n        else{\n            // NO CONFLICT\n            if ( Msat_IntVecReadSize(p-\u003evTrailLim) == 0 ) {\n                // Simplify the set of problem clauses:\n//                Value = Msat_SolverSimplifyDB(p);\n//                assert( Value );\n            }\n            nAssigns = Msat_IntVecReadSize( p-\u003evTrail );\n            if ( nLearnedLimit \u003e= 0 \u0026\u0026 Msat_ClauseVecReadSize(p-\u003evLearned) \u003e= nLearnedLimit + nAssigns ) {\n                // Reduce the set of learnt clauses:\n                Msat_SolverReduceDB(p);\n            }\n\n            Var = Msat_OrderVarSelect( p-\u003epOrder );\n            if ( Var == MSAT_ORDER_UNKNOWN ) {\n                // Model found and stored in p-\u003epAssigns\n                memcpy( p-\u003epModel, p-\u003epAssigns, sizeof(int) * p-\u003enVars );\n                Msat_QueueClear( p-\u003epQueue );\n                Msat_SolverCancelUntil( p, p-\u003enLevelRoot );\n                return MSAT_TRUE;\n            }\n            if ( nConfLimit \u003e 0 \u0026\u0026 nConfs \u003e nConfLimit ) {\n                // Reached bound on number of conflicts:\n                p-\u003edProgress = Msat_SolverProgressEstimate( p );\n                Msat_QueueClear( p-\u003epQueue );\n                Msat_SolverCancelUntil( p, p-\u003enLevelRoot );\n                return MSAT_UNKNOWN; \n            }\n            else if ( nBackTrackLimit \u003e 0 \u0026\u0026 (int)p-\u003eStats.nConflicts - p-\u003enBackTracks \u003e nBackTrackLimit ) {\n                // Reached bound on number of conflicts:\n                Msat_QueueClear( p-\u003epQueue );\n                Msat_SolverCancelUntil( p, p-\u003enLevelRoot );\n                return MSAT_UNKNOWN; \n            }\n            else{\n                // New variable decision:\n                p-\u003eStats.nDecisions++;\n                assert( Var != MSAT_ORDER_UNKNOWN \u0026\u0026 Var \u003e= 0 \u0026\u0026 Var \u003c p-\u003enVars );\n                Value = Msat_SolverAssume(p, MSAT_VAR2LIT(Var,0) );\n                assert( Value );\n            }\n        }\n    }\n}",
+      "Draft": "func Msat_SolverSearch(p *Msat_Solver_t, nConfLimit int32, nLearnedLimit int32, nBackTrackLimit int32, pPars *Msat_SearchParams_t) Msat_Type_t {\n    var pConf *Msat_Clause_t;\n    var Var Msat_Var_t;\n    var nLevelBack, nConfs, nAssigns, Value int32;\n    var i int32;\n\n    assert(Msat_SolverReadDecisionLevel(p) == p.nLevelRoot, \"Msat_SolverReadDecisionLevel(p) == p.nLevelRoot\");\n    p.Stats.nStarts++;\n    p.dVarDecay = 1 / pPars.dVarDecay;\n    p.dClaDecay = 1 / pPars.dClaDecay;\n\n    // reset the activities\n    for  i = 0; i \u003c p.nVars; i++  {\n       p.pdActivity[i] = float64(p.pFactors[i]);\n    }\n//       p-\u003epdActivity[i] = 0.0;\n\n    nConfs = 0;\n    for {\n        pConf = Msat_SolverPropagate( p );\n        if pConf != nil{\n            // CONFLICT\n            if p.fVerbose {\n//                printf(L_IND\"**CONFLICT**\\n\", L_ind);\n                fmt.Printf(L_IND\"**CONFLICT**  \", L_ind);\n                Msat_ClausePrintSymbols( pConf );\n            }\n            // count conflicts\n            p.Stats.nConflicts++;\n            nConfs++;\n\n            // if top level, return UNSAT\n            if Msat_SolverReadDecisionLevel(p) == p.nLevelRoot {\n                return MSAT_FALSE; }\n\n            // perform conflict analysis\n            Msat_SolverAnalyze( p, pConf, p.vTemp, \u0026nLevelBack );\n            Msat_SolverCancelUntil( p, (p.nLevelRoot \u003e nLevelBack)? p.nLevelRoot : nLevelBack );\n            Msat_SolverRecord( p, p.vTemp );\n\n            // it is important that recording is done after cancelling\n            // because canceling cleans the queue while recording adds to it\n            Msat_SolverVarDecayActivity( p );\n            Msat_SolverClaDecayActivity( p );\n\n        \n        } else{\n            // NO CONFLICT\n            if Msat_IntVecReadSize(p.vTrailLim) == 0 {\n                // Simplify the set of problem clauses:\n//                Value = Msat_SolverSimplifyDB(p);\n//                assert( Value );\n            }\n            nAssigns = Msat_IntVecReadSize( p.vTrail );\n            if nLearnedLimit \u003e= 0 \u0026\u0026 Msat_ClauseVecReadSize(p.vLearned) \u003e= nLearnedLimit + nAssigns {\n                // Reduce the set of learnt clauses:\n                Msat_SolverReduceDB(p);\n            }\n\n            Var = Msat_OrderVarSelect( p.pOrder );\n            if Var == MSAT_ORDER_UNKNOWN {\n                // Model found and stored in p-\u003epAssigns\n                memcpy( p.pModel, p.pAssigns, sizeof(int) * p.nVars );\n                Msat_QueueClear( p.pQueue );\n                Msat_SolverCancelUntil( p, p.nLevelRoot );\n                return MSAT_TRUE;\n            }\n            if nConfLimit \u003e 0 \u0026\u0026 nConfs \u003e nConfLimit {\n                // Reached bound on number of conflicts:\n                p.dProgress = Msat_SolverProgressEstimate( p );\n                Msat_QueueClear( p.pQueue );\n                Msat_SolverCancelUntil( p, p.nLevelRoot );\n                return MSAT_UNKNOWN; \n            \n            } else if nBackTrackLimit \u003e 0 \u0026\u0026 int32(p.Stats.nConflicts) - p.nBackTracks \u003e nBackTrackLimit {\n                // Reached bound on number of conflicts:\n                Msat_QueueClear( p.pQueue );\n                Msat_SolverCancelUntil( p, p.nLevelRoot );\n                return MSAT_UNKNOWN; \n            \n            } else{\n                // New variable decision:\n                p.Stats.nDecisions++;\n                assert(Var != MSAT_ORDER_UNKNOWN \u0026\u0026 Var \u003e= 0 \u0026\u0026 Var \u003c p.nVars, \"Var != MSAT_ORDER_UNKNOWN \u0026\u0026 Var \u003e= 0 \u0026\u0026 Var \u003c p.nVars\");\n                // inlining of macro MSAT_VAR2LIT\n                Value = Msat_SolverAssume(p, (2*(Var)+(0))  );\n                assert((Value != 0), \"Value\");\n            }\n        }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::mechanical::do::16224",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 15494,
+      "End": 15496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::mechanical::do::17512",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 16701,
+      "End": 16703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::mechanical::sizeof::21546",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 20480,
+      "End": 20486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::ternary::Msat_SolverAssume",
+      "Category": "ternary-review",
+      "Symbol": "Msat_SolverAssume",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1859,
+      "End": 2325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::Msat_SolverAssume",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverAssume",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1859,
+      "End": 2325
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::ternary::Msat_SolverUndoOne",
+      "Category": "ternary-review",
+      "Symbol": "Msat_SolverUndoOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2603,
+      "End": 3033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::Msat_SolverUndoOne",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverUndoOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2603,
+      "End": 3033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::ternary::Msat_SolverCancel",
+      "Category": "ternary-review",
+      "Symbol": "Msat_SolverCancel",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3322,
+      "End": 3886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::Msat_SolverCancel",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverCancel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3322,
+      "End": 3886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::Msat_SolverCancelUntil",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverCancelUntil",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4158,
+      "End": 4307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::Msat_SolverRecord",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverRecord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4627,
+      "End": 5035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::ternary::Msat_SolverEnqueue",
+      "Category": "ternary-review",
+      "Symbol": "Msat_SolverEnqueue",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5461,
+      "End": 6552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::Msat_SolverEnqueue",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverEnqueue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5461,
+      "End": 6552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::Msat_SolverPropagate",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverPropagate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6996,
+      "End": 9169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::Msat_SolverSimplifyDB",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverSimplifyDB",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9553,
+      "End": 10673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::Msat_SolverReduceDB",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverReduceDB",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11127,
+      "End": 12194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::Msat_SolverRemoveLearned",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverRemoveLearned",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12458,
+      "End": 13043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::Msat_SolverRemoveMarked",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverRemoveMarked",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13314,
+      "End": 14531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::ternary::Msat_SolverAnalyze",
+      "Category": "ternary-review",
+      "Symbol": "Msat_SolverAnalyze",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14927,
+      "End": 17526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::Msat_SolverAnalyze",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverAnalyze",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14927,
+      "End": 17526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::ternary::Msat_SolverSearch",
+      "Category": "ternary-review",
+      "Symbol": "Msat_SolverSearch",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 18090,
+      "End": 21637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::Msat_SolverSearch",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverSearch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18090,
+      "End": 21637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatSolverSearch.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21884
+    }
+  ],
+  "Draft": "package msat\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [msatSolverSearch.c]\n\n  PackageName [A C version of SAT solver MINISAT, originally developed \n  in C++ by Niklas Een and Niklas Sorensson, Chalmers University of \n  Technology, Sweden: http://www.cs.chalmers.se/~een/Satzoo.]\n\n  Synopsis    [The search part of the solver.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2004.]\n\n  Revision    [$Id: msatSolverSearch.c,v 1.0 2004/01/01 1:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"msatInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void            Msat_SolverUndoOne( Msat_Solver_t * p );\n\n// static void            Msat_SolverCancel( Msat_Solver_t * p );\n\n// static Msat_Clause_t * Msat_SolverRecord( Msat_Solver_t * p, Msat_IntVec_t * vLits );\n\n// static void            Msat_SolverAnalyze( Msat_Solver_t * p, Msat_Clause_t * pC, Msat_IntVec_t * vLits_out, int * pLevel_out );\n\n// static void            Msat_SolverReduceDB( Msat_Solver_t * p );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Makes the next assumption (Lit).]\n\n  Description [Returns FALSE if immediate conflict.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverAssume(p *Msat_Solver_t, Lit Msat_Lit_t) int32 {\n    assert(Msat_QueueReadSize(p.pQueue) == 0, \"Msat_QueueReadSize(p.pQueue) == 0\");\n    if p.fVerbose {\n        // inlining of macro L_lit\n        // inlining of macro MSAT_LITSIGN\n        // inlining of macro MSAT_LIT2VAR\n        fmt.Printf(L_IND\"assume(\"L_LIT\")\\n\", L_ind, ((Lit)\u00261)     ?\"-\":\"\", ((Lit)\u003e\u003e1)+1); }\n    Msat_IntVecPush( p.vTrailLim, Msat_IntVecReadSize(p.vTrail) );\n//    assert( Msat_IntVecReadSize(p-\u003evTrailLim) \u003c= Msat_IntVecReadSize(p-\u003evTrail) + 1 );\n//    assert( Msat_IntVecReadSize( p-\u003evTrailLim ) \u003c p-\u003enVars );\n    return Msat_SolverEnqueue( p, Lit, nil );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reverts one variable binding on the trail.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverUndoOne(p *Msat_Solver_t) {\n    var Lit Msat_Lit_t;\n    var Var Msat_Var_t;\n    Lit = Msat_IntVecPop( p.vTrail ); \n    // inlining of macro MSAT_LIT2VAR\n    Var = ((Lit)\u003e\u003e1);\n    p.pAssigns[Var] = MSAT_VAR_UNASSIGNED;\n    p.pReasons[Var] = nil;\n    p.pLevel[Var]   = -1;\n//    Msat_OrderUndo( p-\u003epOrder, Var );\n    Msat_OrderVarUnassigned( p.pOrder, Var );\n\n    if p.fVerbose {\n        // inlining of macro L_lit\n        // inlining of macro MSAT_LITSIGN\n        // inlining of macro MSAT_LIT2VAR\n        fmt.Printf(L_IND\"unbind(\"L_LIT\")\\n\", L_ind, ((Lit)\u00261)     ?\"-\":\"\", ((Lit)\u003e\u003e1)+1); } \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reverts to the state before last Msat_SolverAssume().]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverCancel(p *Msat_Solver_t) {\n    var c int32;\n    assert(Msat_QueueReadSize(p.pQueue) == 0, \"Msat_QueueReadSize(p.pQueue) == 0\");\n    if p.fVerbose {\n        if Msat_IntVecReadSize(p.vTrail) != Msat_IntVecReadEntryLast(p.vTrailLim) {\n            var Lit Msat_Lit_t;\n            Lit = Msat_IntVecReadEntry( p.vTrail, Msat_IntVecReadEntryLast(p.vTrailLim) ); \n            // inlining of macro L_lit\n            // inlining of macro MSAT_LITSIGN\n            // inlining of macro MSAT_LIT2VAR\n            fmt.Printf(L_IND\"cancel(\"L_LIT\")\\n\", L_ind, ((Lit)\u00261)     ?\"-\":\"\", ((Lit)\u003e\u003e1)+1);\n        }\n    }\n    for  c = Msat_IntVecReadSize(p.vTrail) - Msat_IntVecPop( p.vTrailLim ); c != 0; c--  {\n        Msat_SolverUndoOne( p );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reverts to the state at given level.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverCancelUntil(p *Msat_Solver_t, Level int32) {\n    for  Msat_IntVecReadSize(p.vTrailLim) \u003e Level  {\n        Msat_SolverCancel(p);\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Record a clause and drive backtracking.]\n\n  Description [vLits[0] must contain the asserting literal.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverRecord(p *Msat_Solver_t, vLits *Msat_IntVec_t) *Msat_Clause_t {\n    var pC *Msat_Clause_t;\n    var Value int32;\n    assert(Msat_IntVecReadSize(vLits) != 0, \"Msat_IntVecReadSize(vLits) != 0\");\n    Value = Msat_ClauseCreate( p, vLits, 1, \u0026pC );\n    assert((Value != 0), \"Value\");\n    Value = Msat_SolverEnqueue( p, Msat_IntVecReadEntry(vLits,0), pC );\n    assert((Value != 0), \"Value\");\n    if pC != nil {\n        Msat_ClauseVecPush( p.vLearned, pC ); }\n    return pC;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Enqueues one variable assignment.]\n\n  Description [Puts a new fact on the propagation queue and immediately \n  updates the variable value. Should a conflict arise, FALSE is returned.\n  Otherwise returns TRUE.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverEnqueue(p *Msat_Solver_t, Lit Msat_Lit_t, pC *Msat_Clause_t) int32 {\n    // inlining of macro MSAT_LIT2VAR\n    var Var Msat_Var_t  = ((Lit)\u003e\u003e1);\n\n    // skip literals that are not in the current cone\n    if !Msat_IntVecReadEntry( p.vVarsUsed, Var ) {\n        return 1; }\n\n//    assert( Msat_QueueReadSize(p-\u003epQueue) == Msat_IntVecReadSize(p-\u003evTrail) );\n    // if the literal is assigned\n    // return 1 if the assignment is consistent\n    // return 0 if the assignment is inconsistent (conflict)\n    if p.pAssigns[Var] != MSAT_VAR_UNASSIGNED {\n        return p.pAssigns[Var] == Lit; }\n    // new fact - store it\n    if p.fVerbose {\n//        printf(L_IND\"bind(\"L_LIT\")\\n\", L_ind, L_lit(Lit));\n        // inlining of macro L_lit\n        // inlining of macro MSAT_LITSIGN\n        // inlining of macro MSAT_LIT2VAR\n        fmt.Printf(L_IND\"bind(\"L_LIT\")  \", L_ind, ((Lit)\u00261)     ?\"-\":\"\", ((Lit)\u003e\u003e1)+1);\n        Msat_ClausePrintSymbols( pC );\n    }\n    p.pAssigns[Var] = Lit;\n    p.pLevel[Var]   = Msat_IntVecReadSize(p.vTrailLim);\n//    p-\u003epReasons[Var] = p-\u003epLevel[Var]? pC: NULL;\n    p.pReasons[Var] = pC;\n    Msat_IntVecPush( p.vTrail, Lit );\n    Msat_QueueInsert( p.pQueue, Lit );\n\n    Msat_OrderVarAssigned( p.pOrder, Var );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Propagates the assignments in the queue.]\n\n  Description [Propagates all enqueued facts. If a conflict arises, \n  the conflicting clause is returned, otherwise NULL.]\n               \n  SideEffects [The propagation queue is empty, even if there was a conflict.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverPropagate(p *Msat_Solver_t) *Msat_Clause_t {\n    var pvWatched **Msat_ClauseVec_t  = p.pvWatched;\n    var pClauses **Msat_Clause_t;\n    var pConflict *Msat_Clause_t;\n    var Lit, Lit_out Msat_Lit_t;\n    var i, j, nClauses int32;\n\n    // propagate all the literals in the queue\n    for  (Lit = Msat_QueueExtract( p.pQueue )) \u003e= 0  {\n        p.Stats.nPropagations++;\n        // get the clauses watched by this literal\n        nClauses = Msat_ClauseVecReadSize( pvWatched[Lit] );\n        pClauses = Msat_ClauseVecReadArray( pvWatched[Lit] );\n        // go through the watched clauses and decide what to do with them\n        for  i = j = 0; i \u003c nClauses; i++  {\n            p.Stats.nInspects++;\n            // clear the returned literal\n            Lit_out = -1;\n            // propagate the clause\n            if !Msat_ClausePropagate( pClauses[i], Lit, p.pAssigns, \u0026Lit_out ) {   // the clause is unit\n                // \"Lit_out\" contains the new assignment to be enqueued\n                if Msat_SolverEnqueue( p, Lit_out, pClauses[i] ) != 0 { // consistent assignment \n                    // no changes to the implication queue; the watch is the same too\n                    pClauses[j++] = pClauses[i];\n                    continue;\n                }\n                // remember the reason of conflict (will be returned)\n                pConflict = pClauses[i];\n                // leave the remaning clauses in the same watched list\n                for  ; i \u003c nClauses; i++  {\n                    pClauses[j++] = pClauses[i];\n                }\n                Msat_ClauseVecShrink( pvWatched[Lit], j );\n                // clear the propagation queue\n                Msat_QueueClear( p.pQueue );\n                return pConflict;\n            }\n            // the clause is not unit\n            // in this case \"Lit_out\" contains the new watch if it has changed\n            if Lit_out \u003e= 0 {\n                Msat_ClauseVecPush( pvWatched[Lit_out], pClauses[i] );\n            } else { // the watch did not change\n                pClauses[j++] = pClauses[i]; }\n        }\n        Msat_ClauseVecShrink( pvWatched[Lit], j );\n    }\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simplifies the data base.]\n\n  Description [Simplify all constraints according to the current top-level \n  assigment (redundant constraints may be removed altogether).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverSimplifyDB(p *Msat_Solver_t) int32 {\n    var vClauses *Msat_ClauseVec_t;\n    var pClauses **Msat_Clause_t;\n    var nClauses, Type, i, j int32;\n    var pAssigns *int32;\n    var Counter int32;\n\n    assert(Msat_SolverReadDecisionLevel(p) == 0, \"Msat_SolverReadDecisionLevel(p) == 0\");\n    if Msat_SolverPropagate(p) != nil {\n        return 0; }\n//Msat_SolverPrintClauses( p );\n//Msat_SolverPrintAssignment( p );\n//printf( \"Simplification\\n\" );\n\n    // simplify and reassign clause numbers\n    Counter = 0;\n    pAssigns = Msat_SolverReadAssignsArray( p );\n    for  Type = 0; Type \u003c 2; Type++  {\n        if Type {\n            vClauses = p.vLearned;\n        } else {\n            vClauses = p.vClauses;\n        }\n        nClauses = Msat_ClauseVecReadSize( vClauses );\n        pClauses = Msat_ClauseVecReadArray( vClauses );\n        for  i = j = 0; i \u003c nClauses; i++  {\n            if Msat_ClauseSimplify( pClauses[i], pAssigns ) {\n                Msat_ClauseFree( p, pClauses[i], 1 );\n            } else {\n                pClauses[j++] = pClauses[i];\n                Msat_ClauseSetNum( pClauses[i], Counter++ );\n            }\n        }\n        Msat_ClauseVecShrink( vClauses, j );\n    }\n    p.nClauses = Counter;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans the clause databased from the useless learnt clauses.]\n\n  Description [Removes half of the learnt clauses, minus the clauses locked \n  by the current assignment. Locked clauses are clauses that are reason \n  to a some assignment.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverReduceDB(p *Msat_Solver_t) {\n    var pLearned **Msat_Clause_t;\n    var nLearned, i, j int32;\n    var dExtraLim float64  = p.dClaInc / Msat_ClauseVecReadSize(p.vLearned); \n    // Remove any clause below this activity\n\n    // sort the learned clauses in the increasing order of activity\n    Msat_SolverSortDB( p );\n\n    // discard the first half the clauses (the less active ones)\n    nLearned = Msat_ClauseVecReadSize( p.vLearned );\n    pLearned = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = j = 0; i \u003c nLearned / 2; i++  {\n        if !Msat_ClauseIsLocked( p, pLearned[i]) {\n            Msat_ClauseFree( p, pLearned[i], 1 );\n        } else {\n            pLearned[j++] = pLearned[i]; }\n    }\n    // filter the more active clauses and leave those above the limit\n    for   ; i \u003c nLearned; i++  {\n        if !Msat_ClauseIsLocked( p, pLearned[i] ) \u0026\u0026 \n            Msat_ClauseReadActivity(pLearned[i]) \u003c dExtraLim {\n            Msat_ClauseFree( p, pLearned[i], 1 );\n        } else {\n            pLearned[j++] = pLearned[i]; }\n    }\n    Msat_ClauseVecShrink( p.vLearned, j );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes the learned clauses.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverRemoveLearned(p *Msat_Solver_t) {\n    var pLearned **Msat_Clause_t;\n    var nLearned, i int32;\n\n    // discard the learned clauses\n    nLearned = Msat_ClauseVecReadSize( p.vLearned );\n    pLearned = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = 0; i \u003c nLearned; i++  {\n        assert(!Msat_ClauseIsLocked( p, pLearned[i]), \"!Msat_ClauseIsLocked( p, pLearned[i])\");\n        \n        Msat_ClauseFree( p, pLearned[i], 1 );\n    }\n    Msat_ClauseVecShrink( p.vLearned, 0 );\n    p.nClauses = Msat_ClauseVecReadSize(p.vClauses);\n\n    for  i = 0; i \u003c p.nVarsAlloc; i++  {\n        p.pReasons[i] = nil;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes the recently added clauses.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverRemoveMarked(p *Msat_Solver_t) {\n    var pLearned, pClauses **Msat_Clause_t;\n    var nLearned, nClauses, i int32;\n\n    // discard the learned clauses\n    nClauses = Msat_ClauseVecReadSize( p.vClauses );\n    pClauses = Msat_ClauseVecReadArray( p.vClauses );\n    for  i = p.nClausesStart; i \u003c nClauses; i++  {\n//        assert( !Msat_ClauseIsLocked( p, pClauses[i]) );\n        Msat_ClauseFree( p, pClauses[i], 1 );\n    }\n    Msat_ClauseVecShrink( p.vClauses, p.nClausesStart );\n\n    // discard the learned clauses\n    nLearned = Msat_ClauseVecReadSize( p.vLearned );\n    pLearned = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = 0; i \u003c nLearned; i++  {\n//        assert( !Msat_ClauseIsLocked( p, pLearned[i]) );\n        Msat_ClauseFree( p, pLearned[i], 1 );\n    }\n    Msat_ClauseVecShrink( p.vLearned, 0 );\n    p.nClauses = Msat_ClauseVecReadSize(p.vClauses);\n/*\n    // undo the previous data\n    for ( i = 0; i \u003c p-\u003enVarsAlloc; i++ )\n    {\n        p-\u003epAssigns[i]   = MSAT_VAR_UNASSIGNED;\n        p-\u003epReasons[i]   = NULL;\n        p-\u003epLevel[i]     = -1;\n        p-\u003epdActivity[i] = 0.0;\n    }\n    Msat_OrderClean( p-\u003epOrder, p-\u003enVars, NULL );\n    Msat_QueueClear( p-\u003epQueue );\n*/\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Analyze conflict and produce a reason clause.]\n\n  Description [Current decision level must be greater than root level.]\n               \n  SideEffects [vLits_out[0] is the asserting literal at level pLevel_out.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverAnalyze(p *Msat_Solver_t, pC *Msat_Clause_t, vLits_out *Msat_IntVec_t, pLevel_out *int32) {\n    var LitQ Msat_Lit_t;\n    var Lit Msat_Lit_t = MSAT_LIT_UNASSIGNED;\n    var VarQ, Var Msat_Var_t;\n    var pReasonArray *int32;\n    var nReasonSize int32;\n    var j int32;\n    var pathC int32;\n    var nLevelCur int32 = Msat_IntVecReadSize(p.vTrailLim);\n    var iStep int32  = Msat_IntVecReadSize(p.vTrail) - 1;\n\n    // increment the seen counter\n    p.nSeenId++;\n    // empty the vector array\n    Msat_IntVecClear( vLits_out );\n    Msat_IntVecPush( vLits_out, -1 ); // (leave room for the asserting literal)\n    *pLevel_out = 0;\n    for {\n        assert(pC != nil, \"pC != nil\");  // (otherwise should be UIP)\n        // get the reason of conflict\n        Msat_ClauseCalcReason( p, pC, Lit, p.vReason );\n        nReasonSize  = Msat_IntVecReadSize( p.vReason );\n        pReasonArray = Msat_IntVecReadArray( p.vReason );\n        for  j = 0; j \u003c nReasonSize; j++  {\n            LitQ = pReasonArray[j];\n            // inlining of macro MSAT_LIT2VAR\n            VarQ = ((LitQ)\u003e\u003e1);\n            if p.pSeen[VarQ] != p.nSeenId {\n                p.pSeen[VarQ] = p.nSeenId;\n\n                // added to better fine-tune the search\n                Msat_SolverVarBumpActivity( p, LitQ );\n\n                // skip all the literals on this decision level\n                if p.pLevel[VarQ] == nLevelCur {\n                    pathC++;\n                } else if p.pLevel[VarQ] \u003e 0 { \n                    // add the literals on other decision levels but\n                    // exclude variables from decision level 0\n                    // inlining of macro MSAT_LITNOT\n                    Msat_IntVecPush( vLits_out, ((LitQ)^1) );\n                    if *pLevel_out \u003c p.pLevel[VarQ] {\n                        *pLevel_out = p.pLevel[VarQ]; }\n                }\n            }\n        }\n        // Select next clause to look at:\n        for {\n//            Lit = Msat_IntVecReadEntryLast(p-\u003evTrail);\n            Lit = Msat_IntVecReadEntry( p.vTrail, iStep-- );\n            // inlining of macro MSAT_LIT2VAR\n            Var = ((Lit)\u003e\u003e1);\n            pC = p.pReasons[Var];\n//            Msat_SolverUndoOne( p );\n        \nif !( p.pSeen[Var] != p.nSeenId ) { break }\n} \n        pathC--;\n    \nif !( pathC \u003e 0 ) { break }\n} \n    // we do not unbind the variables above\n    // this will be done after conflict analysis\n\n    // inlining of macro MSAT_LITNOT\n    Msat_IntVecWriteEntry( vLits_out, 0, ((Lit)^1) );\n    if p.fVerbose {\n        fmt.Printf(L_IND\"Learnt {\", L_ind);\n        nReasonSize  = Msat_IntVecReadSize( vLits_out );\n        pReasonArray = Msat_IntVecReadArray( vLits_out );\n        for  j = 0; j \u003c nReasonSize; j++  { \n            // inlining of macro L_lit\n            // inlining of macro MSAT_LITSIGN\n            // inlining of macro MSAT_LIT2VAR\n            fmt.Printf(\" \"L_LIT, ((pReasonArray[j])\u00261)     ?\"-\":\"\", ((pReasonArray[j])\u003e\u003e1)+1);\n        }\n        fmt.Printf(\" } at level %d\\n\", *pLevel_out); \n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [The search procedure called between the restarts.]\n\n  Description [Search for a satisfying solution as long as the number of \n  conflicts does not exceed the limit (nConfLimit) while keeping the number \n  of learnt clauses below the provided limit (nLearnedLimit). NOTE! Use \n  negative value for nConfLimit or nLearnedLimit to indicate infinity.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverSearch(p *Msat_Solver_t, nConfLimit int32, nLearnedLimit int32, nBackTrackLimit int32, pPars *Msat_SearchParams_t) Msat_Type_t {\n    var pConf *Msat_Clause_t;\n    var Var Msat_Var_t;\n    var nLevelBack, nConfs, nAssigns, Value int32;\n    var i int32;\n\n    assert(Msat_SolverReadDecisionLevel(p) == p.nLevelRoot, \"Msat_SolverReadDecisionLevel(p) == p.nLevelRoot\");\n    p.Stats.nStarts++;\n    p.dVarDecay = 1 / pPars.dVarDecay;\n    p.dClaDecay = 1 / pPars.dClaDecay;\n\n    // reset the activities\n    for  i = 0; i \u003c p.nVars; i++  {\n       p.pdActivity[i] = float64(p.pFactors[i]);\n    }\n//       p-\u003epdActivity[i] = 0.0;\n\n    nConfs = 0;\n    for {\n        pConf = Msat_SolverPropagate( p );\n        if pConf != nil{\n            // CONFLICT\n            if p.fVerbose {\n//                printf(L_IND\"**CONFLICT**\\n\", L_ind);\n                fmt.Printf(L_IND\"**CONFLICT**  \", L_ind);\n                Msat_ClausePrintSymbols( pConf );\n            }\n            // count conflicts\n            p.Stats.nConflicts++;\n            nConfs++;\n\n            // if top level, return UNSAT\n            if Msat_SolverReadDecisionLevel(p) == p.nLevelRoot {\n                return MSAT_FALSE; }\n\n            // perform conflict analysis\n            Msat_SolverAnalyze( p, pConf, p.vTemp, \u0026nLevelBack );\n            Msat_SolverCancelUntil( p, (p.nLevelRoot \u003e nLevelBack)? p.nLevelRoot : nLevelBack );\n            Msat_SolverRecord( p, p.vTemp );\n\n            // it is important that recording is done after cancelling\n            // because canceling cleans the queue while recording adds to it\n            Msat_SolverVarDecayActivity( p );\n            Msat_SolverClaDecayActivity( p );\n\n        \n        } else{\n            // NO CONFLICT\n            if Msat_IntVecReadSize(p.vTrailLim) == 0 {\n                // Simplify the set of problem clauses:\n//                Value = Msat_SolverSimplifyDB(p);\n//                assert( Value );\n            }\n            nAssigns = Msat_IntVecReadSize( p.vTrail );\n            if nLearnedLimit \u003e= 0 \u0026\u0026 Msat_ClauseVecReadSize(p.vLearned) \u003e= nLearnedLimit + nAssigns {\n                // Reduce the set of learnt clauses:\n                Msat_SolverReduceDB(p);\n            }\n\n            Var = Msat_OrderVarSelect( p.pOrder );\n            if Var == MSAT_ORDER_UNKNOWN {\n                // Model found and stored in p-\u003epAssigns\n                memcpy( p.pModel, p.pAssigns, sizeof(int) * p.nVars );\n                Msat_QueueClear( p.pQueue );\n                Msat_SolverCancelUntil( p, p.nLevelRoot );\n                return MSAT_TRUE;\n            }\n            if nConfLimit \u003e 0 \u0026\u0026 nConfs \u003e nConfLimit {\n                // Reached bound on number of conflicts:\n                p.dProgress = Msat_SolverProgressEstimate( p );\n                Msat_QueueClear( p.pQueue );\n                Msat_SolverCancelUntil( p, p.nLevelRoot );\n                return MSAT_UNKNOWN; \n            \n            } else if nBackTrackLimit \u003e 0 \u0026\u0026 int32(p.Stats.nConflicts) - p.nBackTracks \u003e nBackTrackLimit {\n                // Reached bound on number of conflicts:\n                Msat_QueueClear( p.pQueue );\n                Msat_SolverCancelUntil( p, p.nLevelRoot );\n                return MSAT_UNKNOWN; \n            \n            } else{\n                // New variable decision:\n                p.Stats.nDecisions++;\n                assert(Var != MSAT_ORDER_UNKNOWN \u0026\u0026 Var \u003e= 0 \u0026\u0026 Var \u003c p.nVars, \"Var != MSAT_ORDER_UNKNOWN \u0026\u0026 Var \u003e= 0 \u0026\u0026 Var \u003c p.nVars\");\n                // inlining of macro MSAT_VAR2LIT\n                Value = Msat_SolverAssume(p, (2*(Var)+(0))  );\n                assert((Value != 0), \"Value\");\n            }\n        }\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

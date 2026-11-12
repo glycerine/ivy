@@ -1,0 +1,334 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c",
+  "SHA256": "3aeb4a473e1da9e83a2e6e42b848a74bf3fef9f272bd3b70c5d632d8afe90c78",
+  "Library": [
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 9,
+        "ByteOffset": 4463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pInfo );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 32,
+        "ByteOffset": 5364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Vec_PtrPush( vOne, ABC_CALLOC(word, nWords * nFrames) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 188,
+        "Column": 13,
+        "ByteOffset": 7108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Replaced %d dangling internal bits with constant 0.\\n\", Counter ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 220,
+        "Column": 21,
+        "ByteOffset": 8503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%d\", Abc_InfoHasBit((unsigned *)pInfo, iPat) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 17,
+        "ByteOffset": 8594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \" \" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Wlc_ObjSim",
+      "Start": 1271,
+      "End": 1392,
+      "BodyStart": 1330,
+      "Original": "static inline word * Wlc_ObjSim( Gia_Man_t * p, int iObj )\n{\n    return Vec_WrdEntryP( p-\u003evSims, p-\u003enSimWords * iObj );\n}",
+      "Draft": "func Wlc_ObjSim(p *Gia_Man_t, iObj int32) *word {\n    return Vec_WrdEntryP( p.vSims, p.nSimWords * iObj );\n}"
+    },
+    {
+      "Name": "Wlc_ObjSimPi",
+      "Start": 1393,
+      "End": 1587,
+      "BodyStart": 1452,
+      "Original": "static inline void Wlc_ObjSimPi( Gia_Man_t * p, int iObj )\n{\n    int w;\n    word * pSim = Wlc_ObjSim( p, iObj );\n    for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n        pSim[w] = Gia_ManRandomW( 0 );\n}",
+      "Draft": "func Wlc_ObjSimPi(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pSim *word  = Wlc_ObjSim( p, iObj );\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        pSim[w] = Gia_ManRandomW( 0 );\n    }\n}"
+    },
+    {
+      "Name": "Wlc_ObjSimRo",
+      "Start": 1588,
+      "End": 1839,
+      "BodyStart": 1647,
+      "Original": "static inline void Wlc_ObjSimRo( Gia_Man_t * p, int iObj )\n{\n    int w;\n    word * pSimRo = Wlc_ObjSim( p, iObj );\n    word * pSimRi = Wlc_ObjSim( p, Gia_ObjRoToRiId(p, iObj) );\n    for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n        pSimRo[w] = pSimRi[w];\n}",
+      "Draft": "func Wlc_ObjSimRo(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pSimRo *word  = Wlc_ObjSim( p, iObj );\n    var pSimRi *word  = Wlc_ObjSim( p, Gia_ObjRoToRiId(p, iObj) );\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        pSimRo[w] = pSimRi[w];\n    }\n}"
+    },
+    {
+      "Name": "Wlc_ObjSimCo",
+      "Start": 1840,
+      "End": 2275,
+      "BodyStart": 1899,
+      "Original": "static inline void Wlc_ObjSimCo( Gia_Man_t * p, int iObj )\n{\n    int w;\n    Gia_Obj_t * pObj = Gia_ManObj( p, iObj );\n    word * pSimCo  = Wlc_ObjSim( p, iObj );\n    word * pSimDri = Wlc_ObjSim( p, Gia_ObjFaninId0(pObj, iObj) );\n    if ( Gia_ObjFaninC0(pObj) )\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            pSimCo[w] = ~pSimDri[w];\n    else\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            pSimCo[w] =  pSimDri[w];\n}",
+      "Draft": "func Wlc_ObjSimCo(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    var pSimCo *word   = Wlc_ObjSim( p, iObj );\n    var pSimDri *word  = Wlc_ObjSim( p, Gia_ObjFaninId0(pObj, iObj) );\n    if Gia_ObjFaninC0(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSimCo[w] = ~pSimDri[w];\n        }\n    } else {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSimCo[w] =  pSimDri[w];\n        } }\n}"
+    },
+    {
+      "Name": "Wlc_ObjSimAnd",
+      "Start": 2276,
+      "End": 3113,
+      "BodyStart": 2336,
+      "Original": "static inline void Wlc_ObjSimAnd( Gia_Man_t * p, int iObj )\n{\n    int w;\n    Gia_Obj_t * pObj = Gia_ManObj( p, iObj );\n    word * pSim  = Wlc_ObjSim( p, iObj );\n    word * pSim0 = Wlc_ObjSim( p, Gia_ObjFaninId0(pObj, iObj) );\n    word * pSim1 = Wlc_ObjSim( p, Gia_ObjFaninId1(pObj, iObj) );\n    if ( Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) )\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            pSim[w] = ~pSim0[w] \u0026 ~pSim1[w];\n    else if ( Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) )\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            pSim[w] = ~pSim0[w] \u0026 pSim1[w];\n    else if ( !Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) )\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            pSim[w] = pSim0[w] \u0026 ~pSim1[w];\n    else\n        for ( w = 0; w \u003c p-\u003enSimWords; w++ )\n            pSim[w] = pSim0[w] \u0026 pSim1[w];\n}",
+      "Draft": "func Wlc_ObjSimAnd(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    var pSim *word   = Wlc_ObjSim( p, iObj );\n    var pSim0 *word  = Wlc_ObjSim( p, Gia_ObjFaninId0(pObj, iObj) );\n    var pSim1 *word  = Wlc_ObjSim( p, Gia_ObjFaninId1(pObj, iObj) );\n    if Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = ~pSim0[w] \u0026 ~pSim1[w];\n        }\n    } else if Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = ~pSim0[w] \u0026 pSim1[w];\n        }\n    } else if !Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = pSim0[w] \u0026 ~pSim1[w];\n        }\n    } else {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = pSim0[w] \u0026 pSim1[w];\n        } }\n}"
+    },
+    {
+      "Name": "Wlc_NtkDeleteSim",
+      "Start": 4204,
+      "End": 4418,
+      "BodyStart": 4243,
+      "Original": "void Wlc_NtkDeleteSim( Vec_Ptr_t * p )\n{\n    word * pInfo; int i, k;\n    Vec_Vec_t * vVec = (Vec_Vec_t *)p;\n    Vec_VecForEachEntry( word *, vVec, pInfo, i, k )\n        ABC_FREE( pInfo );\n    Vec_VecFree( vVec );\n}",
+      "Draft": "func Wlc_NtkDeleteSim(p *Vec_Ptr_t) {\n    var pInfo *word; var i, k int32;\n    var vVec *Vec_Vec_t  = (Vec_Vec_t *)p;\n    Vec_VecForEachEntry( word *, vVec, pInfo, i, k )\n        ABC_FREE( pInfo );\n    Vec_VecFree( vVec );\n}"
+    },
+    {
+      "Name": "Wlc_NtkSimulate",
+      "Start": 4419,
+      "End": 6947,
+      "BodyStart": 4509,
+      "Original": "Vec_Ptr_t * Wlc_NtkSimulate( Wlc_Ntk_t * p, Vec_Int_t * vNodes, int nWords, int nFrames )\n{\n    Gia_Obj_t * pObj; \n    Vec_Ptr_t * vOne, * vRes;\n    Gia_Man_t * pGia = Wlc_NtkBitBlast( p, NULL );\n    Wlc_Obj_t * pWlcObj;\n    int f, i, k, w, nBits, Counter = 0;\n    // allocate simulation info for one timeframe\n    Vec_WrdFreeP( \u0026pGia-\u003evSims );\n    pGia-\u003evSims = Vec_WrdStart( Gia_ManObjNum(pGia) * nWords );\n    pGia-\u003enSimWords = nWords;\n    // allocate resulting simulation info\n    vRes = Vec_PtrAlloc( Vec_IntSize(vNodes) );\n    Wlc_NtkForEachObjVec( vNodes, p, pWlcObj, i )\n    {\n        nBits = Wlc_ObjRange(pWlcObj);\n        vOne = Vec_PtrAlloc( nBits );\n        for ( k = 0; k \u003c nBits; k++ )\n            Vec_PtrPush( vOne, ABC_CALLOC(word, nWords * nFrames) );\n        Vec_PtrPush( vRes, vOne ); \n    }\n    // perform simulation (const0 and flop outputs are already initialized)\n    Gia_ManRandomW( 1 );\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        Gia_ManForEachObj1( pGia, pObj, i )\n        {\n            if ( Gia_ObjIsAnd(pObj) )\n                Wlc_ObjSimAnd( pGia, i );\n            else if ( Gia_ObjIsCo(pObj) )\n                Wlc_ObjSimCo( pGia, i );\n            else if ( Gia_ObjIsPi(pGia, pObj) )\n                Wlc_ObjSimPi( pGia, i );\n            else if ( Gia_ObjIsRo(pGia, pObj) )\n                Wlc_ObjSimRo( pGia, i );\n        }\n        // collect simulation data\n        Wlc_NtkForEachObjVec( vNodes, p, pWlcObj, i )\n        {\n            int nBits = Wlc_ObjRange(pWlcObj);\n            int iFirst = Vec_IntEntry( \u0026p-\u003evCopies, Wlc_ObjId(p, pWlcObj) );\n            for ( k = 0; k \u003c nBits; k++ )\n            {\n                int iLit = Vec_IntEntry( \u0026p-\u003evBits, iFirst + k );\n                word * pInfo = (word*)Vec_VecEntryEntry( (Vec_Vec_t *)vRes, i, k );\n                if ( iLit == -1 )\n                {\n                    Counter++;\n                    for ( w = 0; w \u003c nWords; w++ )\n                        pInfo[f * nWords + w] = 0;\n                }\n                else\n                {\n                    word * pInfoObj = Wlc_ObjSim( pGia, Abc_Lit2Var(iLit) );\n                    for ( w = 0; w \u003c nWords; w++ )\n                        pInfo[f * nWords + w] = Abc_LitIsCompl(iLit) ? ~pInfoObj[w] : pInfoObj[w];\n                }\n            }\n        }\n        if ( f == 0 \u0026\u0026 Counter )\n            printf( \"Replaced %d dangling internal bits with constant 0.\\n\", Counter );\n    }\n    Vec_WrdFreeP( \u0026pGia-\u003evSims );\n    pGia-\u003enSimWords = 0;\n    Gia_ManStop( pGia );\n    return vRes;\n}",
+      "Draft": "func Wlc_NtkSimulate(p *Wlc_Ntk_t, vNodes *Vec_Int_t, nWords int32, nFrames int32) *Vec_Ptr_t {\n    var pObj *Gia_Obj_t; \n    var vOne, vRes *Vec_Ptr_t;\n    var pGia *Gia_Man_t  = Wlc_NtkBitBlast( p, nil );\n    var pWlcObj *Wlc_Obj_t;\n    var f, i, k, w, nBits, Counter int32;\n    // allocate simulation info for one timeframe\n    Vec_WrdFreeP( \u0026pGia.vSims );\n    pGia.vSims = Vec_WrdStart( Gia_ManObjNum(pGia) * nWords );\n    pGia.nSimWords = nWords;\n    // allocate resulting simulation info\n    vRes = Vec_PtrAlloc( Vec_IntSize(vNodes) );\n    // inlining of macro Wlc_NtkForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((pWlcObj) = Wlc_NtkObj(p, Vec_IntEntry(vNodes, i))), 1); i++  {\n        nBits = Wlc_ObjRange(pWlcObj);\n        vOne = Vec_PtrAlloc( nBits );\n        for  k = 0; k \u003c nBits; k++  {\n            Vec_PtrPush( vOne, ABC_CALLOC(word, nWords * nFrames) );\n        }\n        Vec_PtrPush( vRes, vOne ); \n    }\n    // perform simulation (const0 and flop outputs are already initialized)\n    Gia_ManRandomW( 1 );\n    for  f = 0; f \u003c nFrames; f++  {\n        Gia_ManForEachObj1( pGia, pObj, i )\n        {\n            if Gia_ObjIsAnd(pObj) {\n                Wlc_ObjSimAnd( pGia, i );\n            } else if Gia_ObjIsCo(pObj) {\n                Wlc_ObjSimCo( pGia, i );\n            } else if Gia_ObjIsPi(pGia, pObj) {\n                Wlc_ObjSimPi( pGia, i );\n            } else if Gia_ObjIsRo(pGia, pObj) {\n                Wlc_ObjSimRo( pGia, i ); }\n        }\n        // collect simulation data\n        // inlining of macro Wlc_NtkForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((pWlcObj) = Wlc_NtkObj(p, Vec_IntEntry(vNodes, i))), 1); i++  {\n            var nBits int32  = Wlc_ObjRange(pWlcObj);\n            var iFirst int32  = Vec_IntEntry( \u0026p.vCopies, Wlc_ObjId(p, pWlcObj) );\n            for  k = 0; k \u003c nBits; k++  {\n                var iLit int32  = Vec_IntEntry( \u0026p.vBits, iFirst + k );\n                var pInfo *word  = (word*)Vec_VecEntryEntry( (Vec_Vec_t *)vRes, i, k );\n                if iLit == -1 {\n                    Counter++;\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[f * nWords + w] = 0;\n                    }\n                \n                } else {\n                    var pInfoObj *word  = Wlc_ObjSim( pGia, Abc_Lit2Var(iLit) );\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[f * nWords + w] = Abc_LitIsCompl(iLit) ? ~pInfoObj[w] : pInfoObj[w];\n                    }\n                }\n            }\n        }\n        if f == 0 \u0026\u0026 (Counter != 0) {\n            fmt.Printf(\"Replaced %d dangling internal bits with constant 0.\\n\", Counter); }\n    }\n    Vec_WrdFreeP( \u0026pGia.vSims );\n    pGia.nSimWords = 0;\n    Gia_ManStop( pGia );\n    return vRes;\n}"
+    },
+    {
+      "Name": "Wlc_NtkSimulatePrint",
+      "Start": 7449,
+      "End": 8199,
+      "BodyStart": 7555,
+      "Original": "void Wlc_NtkSimulatePrint( Wlc_Ntk_t * p, Vec_Int_t * vNodes, Vec_Ptr_t * vRes, int nWords, int nFrames )\n{\n    Wlc_Obj_t * pWlcObj; \n    int f, w, b, i, k, iPat = 0;\n    for ( f = 0; f \u003c nFrames; f++, printf(\"\\n\") )\n      for ( w = 0; w \u003c nWords; w++ )\n        for ( b = 0; b \u003c 64; b++, iPat++, printf(\"\\n\") )\n        {\n            Wlc_NtkForEachObjVec( vNodes, p, pWlcObj, i )\n            {\n                int nBits = Wlc_ObjRange(pWlcObj);\n                for ( k = nBits-1; k \u003e= 0; k-- )\n                {\n                    word * pInfo = (word*)Vec_VecEntryEntry( (Vec_Vec_t *)vRes, i, k );\n                    printf( \"%d\", Abc_InfoHasBit((unsigned *)pInfo, iPat) );\n                }\n                printf( \" \" );\n            }\n        }\n}",
+      "Draft": "func Wlc_NtkSimulatePrint(p *Wlc_Ntk_t, vNodes *Vec_Int_t, vRes *Vec_Ptr_t, nWords int32, nFrames int32) {\n    var pWlcObj *Wlc_Obj_t; \n    var f, w, b, i, k, iPat int32;\n    for  f = 0; f \u003c nFrames; f++, printf(\"\\n\")  {\n      for  w = 0; w \u003c nWords; w++  {\n        for  b = 0; b \u003c 64; b++, iPat++, printf(\"\\n\")  {\n            // inlining of macro Wlc_NtkForEachObjVec\n            for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((pWlcObj) = Wlc_NtkObj(p, Vec_IntEntry(vNodes, i))), 1); i++  {\n                var nBits int32  = Wlc_ObjRange(pWlcObj);\n                for  k = nBits-1; k \u003e= 0; k--  {\n                    var pInfo *word  = (word*)Vec_VecEntryEntry( (Vec_Vec_t *)vRes, i, k );\n                    fmt.Printf(\"%d\", Abc_InfoHasBit((unsigned *)pInfo, iPat));\n                }\n                fmt.Printf(\" \");\n            }\n        }\n      }\n    }\n}"
+    },
+    {
+      "Name": "Wlc_NtkSimulateTest",
+      "Start": 8200,
+      "End": 8619,
+      "BodyStart": 8242,
+      "Original": "void Wlc_NtkSimulateTest( Wlc_Ntk_t * p )\n{\n    int nWords = 2;\n    int nFrames = 2;\n    Vec_Ptr_t * vRes;\n    Vec_Int_t * vNodes = Vec_IntAlloc( 3 );\n    Vec_IntPush( vNodes, 1 );\n    Vec_IntPush( vNodes, 2 );\n    Vec_IntPush( vNodes, 3 );\n    vRes = Wlc_NtkSimulate( p, vNodes, nWords, nFrames );\n    Wlc_NtkSimulatePrint( p, vNodes, vRes, nWords, nFrames );\n    Wlc_NtkDeleteSim( vRes );\n    Vec_IntFree( vNodes );\n}",
+      "Draft": "func Wlc_NtkSimulateTest(p *Wlc_Ntk_t) {\n    var nWords int32  = 2;\n    var nFrames int32  = 2;\n    var vRes *Vec_Ptr_t;\n    var vNodes *Vec_Int_t  = Vec_IntAlloc( 3 );\n    Vec_IntPush( vNodes, 1 );\n    Vec_IntPush( vNodes, 2 );\n    Vec_IntPush( vNodes, 3 );\n    vRes = Wlc_NtkSimulate( p, vNodes, nWords, nFrames );\n    Wlc_NtkSimulatePrint( p, vNodes, vRes, nWords, nFrames );\n    Wlc_NtkDeleteSim( vRes );\n    Vec_IntFree( vNodes );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::pointer-cast::4296",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4296,
+      "End": 4309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::pointer-cast::6388",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6154,
+      "End": 6161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::pointer-cast::6414",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6180,
+      "End": 6193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::pointer-cast::8346",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7995,
+      "End": 8002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::pointer-cast::8372",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8021,
+      "End": 8034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::pointer-cast::8448",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8097,
+      "End": 8109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::Wlc_ObjSim",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1271,
+      "End": 1392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::Wlc_ObjSimPi",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjSimPi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1393,
+      "End": 1587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::Wlc_ObjSimRo",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjSimRo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1588,
+      "End": 1839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::Wlc_ObjSimCo",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjSimCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1840,
+      "End": 2275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::Wlc_ObjSimAnd",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_ObjSimAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2276,
+      "End": 3113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::Wlc_NtkDeleteSim",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkDeleteSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4204,
+      "End": 4418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::ternary::Wlc_NtkSimulate",
+      "Category": "ternary-review",
+      "Symbol": "Wlc_NtkSimulate",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4419,
+      "End": 6947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::Wlc_NtkSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4419,
+      "End": 6947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::Wlc_NtkSimulatePrint",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkSimulatePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7449,
+      "End": 8199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::Wlc_NtkSimulateTest",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkSimulateTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8200,
+      "End": 8619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::macro-inline::4316",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_VecForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4316,
+      "End": 4364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::macro-inline::4373",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4373,
+      "End": 4390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::macro-inline::5150",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5150,
+      "End": 5184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcSim.c::macro-inline::5381",
+      "Category": "macro-inline-review",
+      "Symbol": "Gia_ManForEachObj1",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5381,
+      "End": 5416
+    }
+  ],
+  "Draft": "package wlc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [wlcSim.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Verilog parser.]\n\n  Synopsis    [Performs sequential simulation of word-level network.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 04, 2015.]\n\n  Revision    [$Id: wlcSim.c,v 1.00 2015/06/04 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"wlc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Internal simulation APIs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_ObjSim(p *Gia_Man_t, iObj int32) *word {\n    return Vec_WrdEntryP( p.vSims, p.nSimWords * iObj );\n}\nfunc Wlc_ObjSimPi(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pSim *word  = Wlc_ObjSim( p, iObj );\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        pSim[w] = Gia_ManRandomW( 0 );\n    }\n}\nfunc Wlc_ObjSimRo(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pSimRo *word  = Wlc_ObjSim( p, iObj );\n    var pSimRi *word  = Wlc_ObjSim( p, Gia_ObjRoToRiId(p, iObj) );\n    for  w = 0; w \u003c p.nSimWords; w++  {\n        pSimRo[w] = pSimRi[w];\n    }\n}\nfunc Wlc_ObjSimCo(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    var pSimCo *word   = Wlc_ObjSim( p, iObj );\n    var pSimDri *word  = Wlc_ObjSim( p, Gia_ObjFaninId0(pObj, iObj) );\n    if Gia_ObjFaninC0(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSimCo[w] = ~pSimDri[w];\n        }\n    } else {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSimCo[w] =  pSimDri[w];\n        } }\n}\nfunc Wlc_ObjSimAnd(p *Gia_Man_t, iObj int32) {\n    var w int32;\n    var pObj *Gia_Obj_t  = Gia_ManObj( p, iObj );\n    var pSim *word   = Wlc_ObjSim( p, iObj );\n    var pSim0 *word  = Wlc_ObjSim( p, Gia_ObjFaninId0(pObj, iObj) );\n    var pSim1 *word  = Wlc_ObjSim( p, Gia_ObjFaninId1(pObj, iObj) );\n    if Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = ~pSim0[w] \u0026 ~pSim1[w];\n        }\n    } else if Gia_ObjFaninC0(pObj) \u0026\u0026 !Gia_ObjFaninC1(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = ~pSim0[w] \u0026 pSim1[w];\n        }\n    } else if !Gia_ObjFaninC0(pObj) \u0026\u0026 Gia_ObjFaninC1(pObj) {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = pSim0[w] \u0026 ~pSim1[w];\n        }\n    } else {\n        for  w = 0; w \u003c p.nSimWords; w++  {\n            pSim[w] = pSim0[w] \u0026 pSim1[w];\n        } }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs simulation of a word-level network.]\n\n  Description [Returns vRes, a 2D array of simulation information for \n  the output of each bit of each object listed in vNodes. In particular, \n  Vec_Ptr_t * vSimObj = (Vec_Ptr_t *)Vec_PtrEntry(vRes, iObj) and\n  Vec_Ptr_t * vSimObjBit = (Vec_Ptr_t *)Vec_PtrEntry(vSimObj, iBit)\n  are arrays containing the simulation info for each object (vSimObj) \n  and for each output bit of this object (vSimObjBit). Alternatively,\n  Vec_Ptr_t * vSimObjBit = Vec_VecEntryEntry( (Vec_Vec_t *)vRes, iObj, iBit ).\n  The output bitwidth of an object is Wlc_ObjRange( Wlc_NtkObj(pNtk, iObj) ).\n  Simulation information is binary data constaining the given number (nWords)\n  of 64-bit machine words for the given number (nFrames) of consecutive \n  timeframes.  The total number of timeframes is nWords * nFrames for \n  each bit of each object.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkDeleteSim(p *Vec_Ptr_t) {\n    var pInfo *word; var i, k int32;\n    var vVec *Vec_Vec_t  = (Vec_Vec_t *)p;\n    Vec_VecForEachEntry( word *, vVec, pInfo, i, k )\n        ABC_FREE( pInfo );\n    Vec_VecFree( vVec );\n}\nfunc Wlc_NtkSimulate(p *Wlc_Ntk_t, vNodes *Vec_Int_t, nWords int32, nFrames int32) *Vec_Ptr_t {\n    var pObj *Gia_Obj_t; \n    var vOne, vRes *Vec_Ptr_t;\n    var pGia *Gia_Man_t  = Wlc_NtkBitBlast( p, nil );\n    var pWlcObj *Wlc_Obj_t;\n    var f, i, k, w, nBits, Counter int32;\n    // allocate simulation info for one timeframe\n    Vec_WrdFreeP( \u0026pGia.vSims );\n    pGia.vSims = Vec_WrdStart( Gia_ManObjNum(pGia) * nWords );\n    pGia.nSimWords = nWords;\n    // allocate resulting simulation info\n    vRes = Vec_PtrAlloc( Vec_IntSize(vNodes) );\n    // inlining of macro Wlc_NtkForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((pWlcObj) = Wlc_NtkObj(p, Vec_IntEntry(vNodes, i))), 1); i++  {\n        nBits = Wlc_ObjRange(pWlcObj);\n        vOne = Vec_PtrAlloc( nBits );\n        for  k = 0; k \u003c nBits; k++  {\n            Vec_PtrPush( vOne, ABC_CALLOC(word, nWords * nFrames) );\n        }\n        Vec_PtrPush( vRes, vOne ); \n    }\n    // perform simulation (const0 and flop outputs are already initialized)\n    Gia_ManRandomW( 1 );\n    for  f = 0; f \u003c nFrames; f++  {\n        Gia_ManForEachObj1( pGia, pObj, i )\n        {\n            if Gia_ObjIsAnd(pObj) {\n                Wlc_ObjSimAnd( pGia, i );\n            } else if Gia_ObjIsCo(pObj) {\n                Wlc_ObjSimCo( pGia, i );\n            } else if Gia_ObjIsPi(pGia, pObj) {\n                Wlc_ObjSimPi( pGia, i );\n            } else if Gia_ObjIsRo(pGia, pObj) {\n                Wlc_ObjSimRo( pGia, i ); }\n        }\n        // collect simulation data\n        // inlining of macro Wlc_NtkForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((pWlcObj) = Wlc_NtkObj(p, Vec_IntEntry(vNodes, i))), 1); i++  {\n            var nBits int32  = Wlc_ObjRange(pWlcObj);\n            var iFirst int32  = Vec_IntEntry( \u0026p.vCopies, Wlc_ObjId(p, pWlcObj) );\n            for  k = 0; k \u003c nBits; k++  {\n                var iLit int32  = Vec_IntEntry( \u0026p.vBits, iFirst + k );\n                var pInfo *word  = (word*)Vec_VecEntryEntry( (Vec_Vec_t *)vRes, i, k );\n                if iLit == -1 {\n                    Counter++;\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[f * nWords + w] = 0;\n                    }\n                \n                } else {\n                    var pInfoObj *word  = Wlc_ObjSim( pGia, Abc_Lit2Var(iLit) );\n                    for  w = 0; w \u003c nWords; w++  {\n                        pInfo[f * nWords + w] = Abc_LitIsCompl(iLit) ? ~pInfoObj[w] : pInfoObj[w];\n                    }\n                }\n            }\n        }\n        if f == 0 \u0026\u0026 (Counter != 0) {\n            fmt.Printf(\"Replaced %d dangling internal bits with constant 0.\\n\", Counter); }\n    }\n    Vec_WrdFreeP( \u0026pGia.vSims );\n    pGia.nSimWords = 0;\n    Gia_ManStop( pGia );\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Testing procedure.]\n\n  Description [This testing procedure assumes that the WLC network has \n  one node, which is a multiplier. It simulates the node and checks the \n  word-level interpretation of the bit-level simulation info to make sure \n  that it indeed represents multiplication.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkSimulatePrint(p *Wlc_Ntk_t, vNodes *Vec_Int_t, vRes *Vec_Ptr_t, nWords int32, nFrames int32) {\n    var pWlcObj *Wlc_Obj_t; \n    var f, w, b, i, k, iPat int32;\n    for  f = 0; f \u003c nFrames; f++, printf(\"\\n\")  {\n      for  w = 0; w \u003c nWords; w++  {\n        for  b = 0; b \u003c 64; b++, iPat++, printf(\"\\n\")  {\n            // inlining of macro Wlc_NtkForEachObjVec\n            for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((pWlcObj) = Wlc_NtkObj(p, Vec_IntEntry(vNodes, i))), 1); i++  {\n                var nBits int32  = Wlc_ObjRange(pWlcObj);\n                for  k = nBits-1; k \u003e= 0; k--  {\n                    var pInfo *word  = (word*)Vec_VecEntryEntry( (Vec_Vec_t *)vRes, i, k );\n                    fmt.Printf(\"%d\", Abc_InfoHasBit((unsigned *)pInfo, iPat));\n                }\n                fmt.Printf(\" \");\n            }\n        }\n      }\n    }\n}\nfunc Wlc_NtkSimulateTest(p *Wlc_Ntk_t) {\n    var nWords int32  = 2;\n    var nFrames int32  = 2;\n    var vRes *Vec_Ptr_t;\n    var vNodes *Vec_Int_t  = Vec_IntAlloc( 3 );\n    Vec_IntPush( vNodes, 1 );\n    Vec_IntPush( vNodes, 2 );\n    Vec_IntPush( vNodes, 3 );\n    vRes = Wlc_NtkSimulate( p, vNodes, nWords, nFrames );\n    Wlc_NtkSimulatePrint( p, vNodes, vRes, nWords, nFrames );\n    Wlc_NtkDeleteSim( vRes );\n    Vec_IntFree( vNodes );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

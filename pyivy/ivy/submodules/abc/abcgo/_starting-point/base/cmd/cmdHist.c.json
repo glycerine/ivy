@@ -1,0 +1,332 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdHist.c",
+  "SHA256": "3b712ab7c9783ab5d5cc58d8ccce98f86181b6ce63a893d18f895f3271fc04f1",
+  "Library": [
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 59,
+        "Column": 11,
+        "ByteOffset": 1743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Len = strlen(command);"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( Buffer, command );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 63,
+        "Column": 8,
+        "ByteOffset": 1869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strlen(Buffer) \u003e 3 \u0026\u0026"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 64,
+        "Column": 10,
+        "ByteOffset": 1900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "         strncmp(Buffer,\"set\",3) \u0026\u0026 "
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 65,
+        "Column": 10,
+        "ByteOffset": 1937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "         strncmp(Buffer,\"unset\",5) \u0026\u0026 "
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 66,
+        "Column": 10,
+        "ByteOffset": 1976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "         strncmp(Buffer,\"time\",4) \u0026\u0026 "
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 67,
+        "Column": 10,
+        "ByteOffset": 2014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "         strncmp(Buffer,\"quit\",4) \u0026\u0026 "
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 68,
+        "Column": 10,
+        "ByteOffset": 2052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "         strncmp(Buffer,\"alias\",5) \u0026\u0026 "
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 69,
+        "Column": 10,
+        "ByteOffset": 2091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "         strncmp(Buffer,\"source abc.rc\",13) \u0026\u0026 "
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 70,
+        "Column": 10,
+        "ByteOffset": 2139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "         strncmp(Buffer,\"source ..\\\\abc.rc\",16) \u0026\u0026 "
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 71,
+        "Column": 10,
+        "ByteOffset": 2191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "         strncmp(Buffer,\"history\",7) \u0026\u0026 strncmp(Buffer,\"hi \", 3) \u0026\u0026 strcmp(Buffer,\"hi\") \u0026\u0026"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 71,
+        "Column": 41,
+        "ByteOffset": 2222
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "         strncmp(Buffer,\"history\",7) \u0026\u0026 strncmp(Buffer,\"hi \", 3) \u0026\u0026 strcmp(Buffer,\"hi\") \u0026\u0026"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 71,
+        "Column": 69,
+        "ByteOffset": 2250
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "         strncmp(Buffer,\"history\",7) \u0026\u0026 strncmp(Buffer,\"hi \", 3) \u0026\u0026 strcmp(Buffer,\"hi\") \u0026\u0026"
+    },
+    {
+      "Name": "strlen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 72,
+        "Column": 17,
+        "ByteOffset": 2289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "         Buffer[strlen(Buffer)-1] != '?' {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 78,
+        "Column": 19,
+        "ByteOffset": 2619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if ( !strcmp(pStr, Buffer) )"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 105,
+        "Column": 1,
+        "ByteOffset": 3238
+      },
+      "Directive": "#if defined(WIN32) \u0026\u0026 defined(ABC_USE_HISTORY)"
+    },
+    {
+      "Location": {
+        "Line": 136,
+        "Column": 1,
+        "ByteOffset": 4014
+      },
+      "Directive": "#if defined(WIN32) \u0026\u0026 defined(ABC_USE_HISTORY)"
+    },
+    {
+      "Location": {
+        "Line": 166,
+        "Column": 1,
+        "ByteOffset": 4766
+      },
+      "Directive": "#if defined(WIN32) \u0026\u0026 defined(ABC_USE_HISTORY)"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cmd_HistoryAddCommand",
+      "Start": 1344,
+      "End": 2960,
+      "BodyStart": 1415,
+      "Original": "void Cmd_HistoryAddCommand(    Abc_Frame_t * p, const char * command )\n{\n    int nLastLooked =   10;  // do not add history if the same entry appears among the last entries\n    int nLastSaved  = 1000;  // when saving a file, save no more than this number of last entries\n    char Buffer[ABC_MAX_STR];\n    int Len;\n    if ( p-\u003efBatchMode )\n        return;\n    Len = strlen(command);\n    strcpy( Buffer, command );\n    if ( Len \u003e 0 \u0026\u0026 Buffer[Len-1] == '\\n' )\n        Buffer[Len-1] = 0;\n    if ( strlen(Buffer) \u003e 3 \u0026\u0026\n         strncmp(Buffer,\"set\",3) \u0026\u0026 \n         strncmp(Buffer,\"unset\",5) \u0026\u0026 \n         strncmp(Buffer,\"time\",4) \u0026\u0026 \n         strncmp(Buffer,\"quit\",4) \u0026\u0026 \n         strncmp(Buffer,\"alias\",5) \u0026\u0026 \n         strncmp(Buffer,\"source abc.rc\",13) \u0026\u0026 \n         strncmp(Buffer,\"source ..\\\\abc.rc\",16) \u0026\u0026 \n         strncmp(Buffer,\"history\",7) \u0026\u0026 strncmp(Buffer,\"hi \", 3) \u0026\u0026 strcmp(Buffer,\"hi\") \u0026\u0026\n         Buffer[strlen(Buffer)-1] != '?' )\n    {\n        char * pStr = NULL;\n        int i, Start = Abc_MaxInt( 0, Vec_PtrSize(p-\u003eaHistory) - nLastLooked );\n        // do not enter if the same command appears among nLastLooked commands\n        Vec_PtrForEachEntryStart( char *, p-\u003eaHistory, pStr, i, Start )\n            if ( !strcmp(pStr, Buffer) )\n                break;\n        if ( i == Vec_PtrSize(p-\u003eaHistory) )\n        { // add new entry\n            Vec_PtrPush( p-\u003eaHistory, Extra_UtilStrsav(Buffer) );\n            Cmd_HistoryWrite( p, nLastSaved );\n        }\n        else\n        { // put at the end\n            Vec_PtrRemove( p-\u003eaHistory, pStr );\n            Vec_PtrPush( p-\u003eaHistory, pStr );\n        }\n    }\n}",
+      "Draft": "func Cmd_HistoryAddCommand(p *Abc_Frame_t, command string) {\n    var nLastLooked int32  =   10;  // do not add history if the same entry appears among the last entries\n    var nLastSaved int32   = 1000;  // when saving a file, save no more than this number of last entries\n    var Buffer [ABC_MAX_STR]byte;\n    var Len int32;\n    if p.fBatchMode {\n        return; }\n    Len = len(command);\n    strcpy( Buffer, command );\n    if Len \u003e 0 \u0026\u0026 Buffer[Len-1] == '\\n' {\n        Buffer[Len-1] = 0; }\n    if strlen(Buffer) \u003e 3 \u0026\u0026\n         strncmp(Buffer,\"set\",3) \u0026\u0026 \n         strncmp(Buffer,\"unset\",5) \u0026\u0026 \n         strncmp(Buffer,\"time\",4) \u0026\u0026 \n         strncmp(Buffer,\"quit\",4) \u0026\u0026 \n         strncmp(Buffer,\"alias\",5) \u0026\u0026 \n         strncmp(Buffer,\"source abc.rc\",13) \u0026\u0026 \n         strncmp(Buffer,\"source ..\\\\abc.rc\",16) \u0026\u0026 \n         strncmp(Buffer,\"history\",7) \u0026\u0026 strncmp(Buffer,\"hi \", 3) \u0026\u0026 strcmp(Buffer,\"hi\") \u0026\u0026\n         Buffer[strlen(Buffer)-1] != '?' {\n        var pStr string  = nil;\n        var i int32;\n        var Start int32 = Abc_MaxInt( 0, Vec_PtrSize(p.aHistory) - nLastLooked );\n        // do not enter if the same command appears among nLastLooked commands\n        Vec_PtrForEachEntryStart( char *, p.aHistory, pStr, i, Start )\n            if ( !strcmp(pStr, Buffer) )\n                break;\n        if i == Vec_PtrSize(p.aHistory) { // add new entry\n            Vec_PtrPush( p.aHistory, Extra_UtilStrsav(Buffer) );\n            Cmd_HistoryWrite( p, nLastSaved );\n        \n        } else { // put at the end\n            Vec_PtrRemove( p.aHistory, pStr );\n            Vec_PtrPush( p.aHistory, pStr );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Cmd_HistoryRead",
+      "Start": 3196,
+      "End": 3724,
+      "BodyStart": 3236,
+      "Original": "void Cmd_HistoryRead( Abc_Frame_t * p )\n{\n#if defined(WIN32) \u0026\u0026 defined(ABC_USE_HISTORY)\n    char Buffer[ABC_MAX_STR];\n    FILE * pFile;\n    assert( Vec_PtrSize(p-\u003eaHistory) == 0 );\n    pFile = fopen( \"abc.history\", \"rb\" );\n    if ( pFile == NULL )\n        return;\n    while ( fgets( Buffer, ABC_MAX_STR, pFile ) != NULL )\n    {\n        int Len = strlen(Buffer);\n        if ( Buffer[Len-1] == '\\n' )\n            Buffer[Len-1] = 0;\n        Vec_PtrPush( p-\u003eaHistory, Extra_UtilStrsav(Buffer) );\n    }\n    fclose( pFile );\n#endif\n}",
+      "Draft": "func Cmd_HistoryRead(p *Abc_Frame_t) {\n#if defined(WIN32) \u0026\u0026 defined(ABC_USE_HISTORY)\n    char Buffer[ABC_MAX_STR];\n    FILE * pFile;\n    assert( Vec_PtrSize(p-\u003eaHistory) == 0 );\n    pFile = fopen( \"abc.history\", \"rb\" );\n    if ( pFile == NULL )\n        return;\n    while ( fgets( Buffer, ABC_MAX_STR, pFile ) != NULL )\n    {\n        int Len = strlen(Buffer);\n        if ( Buffer[Len-1] == '\\n' )\n            Buffer[Len-1] = 0;\n        Vec_PtrPush( p-\u003eaHistory, Extra_UtilStrsav(Buffer) );\n    }\n    fclose( pFile );\n#endif\n}"
+    },
+    {
+      "Name": "Cmd_HistoryWrite",
+      "Start": 3960,
+      "End": 4476,
+      "BodyStart": 4012,
+      "Original": "void Cmd_HistoryWrite( Abc_Frame_t * p, int Limit )\n{\n#if defined(WIN32) \u0026\u0026 defined(ABC_USE_HISTORY)\n    FILE * pFile;\n    char * pStr; \n    int i;\n    pFile = fopen( \"abc.history\", \"wb\" );\n    if ( pFile == NULL )\n    {\n        Abc_Print( 0, \"Cannot open file \\\"abc.history\\\" for writing.\\n\" );\n        return;\n    }\n    Limit = Abc_MaxInt( 0, Vec_PtrSize(p-\u003eaHistory)-Limit );\n    Vec_PtrForEachEntryStart( char *, p-\u003eaHistory, pStr, i, Limit )\n        fprintf( pFile, \"%s\\n\", pStr );\n    fclose( pFile );\n#endif\n}",
+      "Draft": "func Cmd_HistoryWrite(p *Abc_Frame_t, Limit int32) {\n#if defined(WIN32) \u0026\u0026 defined(ABC_USE_HISTORY)\n    FILE * pFile;\n    char * pStr; \n    int i;\n    pFile = fopen( \"abc.history\", \"wb\" );\n    if ( pFile == NULL )\n    {\n        Abc_Print( 0, \"Cannot open file \\\"abc.history\\\" for writing.\\n\" );\n        return;\n    }\n    Limit = Abc_MaxInt( 0, Vec_PtrSize(p-\u003eaHistory)-Limit );\n    Vec_PtrForEachEntryStart( char *, p-\u003eaHistory, pStr, i, Limit )\n        fprintf( pFile, \"%s\\n\", pStr );\n    fclose( pFile );\n#endif\n}"
+    },
+    {
+      "Name": "Cmd_HistoryPrint",
+      "Start": 4712,
+      "End": 5158,
+      "BodyStart": 4764,
+      "Original": "void Cmd_HistoryPrint( Abc_Frame_t * p, int Limit )\n{\n#if defined(WIN32) \u0026\u0026 defined(ABC_USE_HISTORY) \n    char * pStr; \n    int i;\n    Limit = Abc_MaxInt( 0, Vec_PtrSize(p-\u003eaHistory)-Limit );\n    printf( \"================== Command history ==================\\n\" );\n    Vec_PtrForEachEntryStart( char *, p-\u003eaHistory, pStr, i, Limit )\n        printf( \"%s\\n\", pStr );\n    printf( \"=====================================================\\n\" );\n#endif\n}",
+      "Draft": "func Cmd_HistoryPrint(p *Abc_Frame_t, Limit int32) {\n#if defined(WIN32) \u0026\u0026 defined(ABC_USE_HISTORY) \n    char * pStr; \n    int i;\n    Limit = Abc_MaxInt( 0, Vec_PtrSize(p-\u003eaHistory)-Limit );\n    printf( \"================== Command history ==================\\n\" );\n    Vec_PtrForEachEntryStart( char *, p-\u003eaHistory, pStr, i, Limit )\n        printf( \"%s\\n\", pStr );\n    printf( \"=====================================================\\n\" );\n#endif\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdHist.c::Cmd_HistoryAddCommand",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_HistoryAddCommand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1344,
+      "End": 2960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdHist.c::Cmd_HistoryRead",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_HistoryRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3196,
+      "End": 3724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdHist.c::Cmd_HistoryWrite",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_HistoryWrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3960,
+      "End": 4476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdHist.c::Cmd_HistoryPrint",
+      "Category": "semantic-review",
+      "Symbol": "Cmd_HistoryPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4712,
+      "End": 5158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdHist.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5403
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdHist.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3238,
+      "End": 3722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdHist.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4014,
+      "End": 4474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdHist.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4766,
+      "End": 5156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdHist.c::macro-inline::2485",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2485,
+      "End": 2548
+    }
+  ],
+  "Draft": "package cmd\n\n/**CFile****************************************************************\n\n  FileName    [cmdHist.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures working with history.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cmdHist.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/mainInt.h\"\n//#include \"cmd.h\"\n//#include \"cmdInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst ABC_USE_HISTORY = 1\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmd_HistoryAddCommand(p *Abc_Frame_t, command string) {\n    var nLastLooked int32  =   10;  // do not add history if the same entry appears among the last entries\n    var nLastSaved int32   = 1000;  // when saving a file, save no more than this number of last entries\n    var Buffer [ABC_MAX_STR]byte;\n    var Len int32;\n    if p.fBatchMode {\n        return; }\n    Len = len(command);\n    strcpy( Buffer, command );\n    if Len \u003e 0 \u0026\u0026 Buffer[Len-1] == '\\n' {\n        Buffer[Len-1] = 0; }\n    if strlen(Buffer) \u003e 3 \u0026\u0026\n         strncmp(Buffer,\"set\",3) \u0026\u0026 \n         strncmp(Buffer,\"unset\",5) \u0026\u0026 \n         strncmp(Buffer,\"time\",4) \u0026\u0026 \n         strncmp(Buffer,\"quit\",4) \u0026\u0026 \n         strncmp(Buffer,\"alias\",5) \u0026\u0026 \n         strncmp(Buffer,\"source abc.rc\",13) \u0026\u0026 \n         strncmp(Buffer,\"source ..\\\\abc.rc\",16) \u0026\u0026 \n         strncmp(Buffer,\"history\",7) \u0026\u0026 strncmp(Buffer,\"hi \", 3) \u0026\u0026 strcmp(Buffer,\"hi\") \u0026\u0026\n         Buffer[strlen(Buffer)-1] != '?' {\n        var pStr string  = nil;\n        var i int32;\n        var Start int32 = Abc_MaxInt( 0, Vec_PtrSize(p.aHistory) - nLastLooked );\n        // do not enter if the same command appears among nLastLooked commands\n        Vec_PtrForEachEntryStart( char *, p.aHistory, pStr, i, Start )\n            if ( !strcmp(pStr, Buffer) )\n                break;\n        if i == Vec_PtrSize(p.aHistory) { // add new entry\n            Vec_PtrPush( p.aHistory, Extra_UtilStrsav(Buffer) );\n            Cmd_HistoryWrite( p, nLastSaved );\n        \n        } else { // put at the end\n            Vec_PtrRemove( p.aHistory, pStr );\n            Vec_PtrPush( p.aHistory, pStr );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmd_HistoryRead(p *Abc_Frame_t) {\n#if defined(WIN32) \u0026\u0026 defined(ABC_USE_HISTORY)\n    char Buffer[ABC_MAX_STR];\n    FILE * pFile;\n    assert( Vec_PtrSize(p-\u003eaHistory) == 0 );\n    pFile = fopen( \"abc.history\", \"rb\" );\n    if ( pFile == NULL )\n        return;\n    while ( fgets( Buffer, ABC_MAX_STR, pFile ) != NULL )\n    {\n        int Len = strlen(Buffer);\n        if ( Buffer[Len-1] == '\\n' )\n            Buffer[Len-1] = 0;\n        Vec_PtrPush( p-\u003eaHistory, Extra_UtilStrsav(Buffer) );\n    }\n    fclose( pFile );\n#endif\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmd_HistoryWrite(p *Abc_Frame_t, Limit int32) {\n#if defined(WIN32) \u0026\u0026 defined(ABC_USE_HISTORY)\n    FILE * pFile;\n    char * pStr; \n    int i;\n    pFile = fopen( \"abc.history\", \"wb\" );\n    if ( pFile == NULL )\n    {\n        Abc_Print( 0, \"Cannot open file \\\"abc.history\\\" for writing.\\n\" );\n        return;\n    }\n    Limit = Abc_MaxInt( 0, Vec_PtrSize(p-\u003eaHistory)-Limit );\n    Vec_PtrForEachEntryStart( char *, p-\u003eaHistory, pStr, i, Limit )\n        fprintf( pFile, \"%s\\n\", pStr );\n    fclose( pFile );\n#endif\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cmd_HistoryPrint(p *Abc_Frame_t, Limit int32) {\n#if defined(WIN32) \u0026\u0026 defined(ABC_USE_HISTORY) \n    char * pStr; \n    int i;\n    Limit = Abc_MaxInt( 0, Vec_PtrSize(p-\u003eaHistory)-Limit );\n    printf( \"================== Command history ==================\\n\" );\n    Vec_PtrForEachEntryStart( char *, p-\u003eaHistory, pStr, i, Limit )\n        printf( \"%s\\n\", pStr );\n    printf( \"=====================================================\\n\" );\n#endif\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

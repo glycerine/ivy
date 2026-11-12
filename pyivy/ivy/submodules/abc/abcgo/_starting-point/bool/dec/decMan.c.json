@@ -1,0 +1,209 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decMan.c",
+  "SHA256": "9225bce854c67e22a738c1fee3299ea91231f8f7c805da087e117b3c938b01b6",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 50,
+        "Column": 69,
+        "ByteOffset": 1464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Dec_Man_t *) malloc(sizeof(Dec_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 75,
+        "Column": 66,
+        "ByteOffset": 2296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.puCanons) ? (free((char *) (p.puCanons)), (p.puCanons) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 76,
+        "Column": 65,
+        "ByteOffset": 2413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pPhases) ? (free((char *) (p.pPhases)), (p.pPhases) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 77,
+        "Column": 64,
+        "ByteOffset": 2527
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pPerms) ? (free((char *) (p.pPerms)), (p.pPerms) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 78,
+        "Column": 62,
+        "ByteOffset": 2637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMap) ? (free((char *) (p.pMap)), (p.pMap) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 79,
+        "Column": 57,
+        "ByteOffset": 2738
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dec_ManStart",
+      "Start": 1287,
+      "End": 1705,
+      "BodyStart": 1314,
+      "Original": "Dec_Man_t * Dec_ManStart()\n{\n    Dec_Man_t * p;\n//    abctime clk = Abc_Clock();\n    p = ABC_ALLOC( Dec_Man_t, 1 );\n    p-\u003epMvcMem = Mvc_ManagerStart();\n    p-\u003evCubes = Vec_IntAlloc( 8 );\n    p-\u003evLits = Vec_IntAlloc( 8 );\n    // canonical forms, phases, perms\n    Extra_Truth4VarNPN( \u0026p-\u003epuCanons, \u0026p-\u003epPhases, \u0026p-\u003epPerms, \u0026p-\u003epMap );\n//ABC_PRT( \"NPN classes precomputation time\", Abc_Clock() - clk ); \n    return p;\n}",
+      "Draft": "func Dec_ManStart() *Dec_Man_t {\n    var p *Dec_Man_t;\n//    abctime clk = Abc_Clock();\n    // inlining of macro ABC_ALLOC\n    p = ((Dec_Man_t *) malloc(sizeof(Dec_Man_t) * (size_t)(1)));\n    p.pMvcMem = Mvc_ManagerStart();\n    p.vCubes = Vec_IntAlloc( 8 );\n    p.vLits = Vec_IntAlloc( 8 );\n    // canonical forms, phases, perms\n    Extra_Truth4VarNPN( \u0026p.puCanons, \u0026p.pPhases, \u0026p.pPerms, \u0026p.pMap );\n//ABC_PRT( \"NPN classes precomputation time\", Abc_Clock() - clk ); \n    return p;\n}"
+    },
+    {
+      "Name": "Dec_ManStop",
+      "Start": 1994,
+      "End": 2270,
+      "BodyStart": 2028,
+      "Original": "void Dec_ManStop( Dec_Man_t * p )\n{\n    Mvc_ManagerFree( (Mvc_Manager_t *)p-\u003epMvcMem );\n    Vec_IntFree( p-\u003evCubes );\n    Vec_IntFree( p-\u003evLits );\n    ABC_FREE( p-\u003epuCanons );\n    ABC_FREE( p-\u003epPhases );\n    ABC_FREE( p-\u003epPerms );\n    ABC_FREE( p-\u003epMap );\n    ABC_FREE( p );\n}",
+      "Draft": "func Dec_ManStop(p *Dec_Man_t) {\n    Mvc_ManagerFree( (Mvc_Manager_t *)p.pMvcMem );\n    Vec_IntFree( p.vCubes );\n    Vec_IntFree( p.vLits );\n    // inlining of macro ABC_FREE\n    ((p.puCanons) ? (free((char *) (p.puCanons)), (p.puCanons) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPhases) ? (free((char *) (p.pPhases)), (p.pPhases) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPerms) ? (free((char *) (p.pPerms)), (p.pPerms) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMap) ? (free((char *) (p.pMap)), (p.pMap) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decMan.c::mechanical::sizeof::1443",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1376,
+      "End": 1376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decMan.c::pointer-cast::1422",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1376,
+      "End": 1376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decMan.c::pointer-cast::2126",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2051,
+      "End": 2068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decMan.c::pointer-cast::2287",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2145,
+      "End": 2145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decMan.c::pointer-cast::2407",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2174,
+      "End": 2174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decMan.c::pointer-cast::2524",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2202,
+      "End": 2202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decMan.c::pointer-cast::2637",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2229,
+      "End": 2229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decMan.c::pointer-cast::2740",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2254,
+      "End": 2254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decMan.c::Dec_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Dec_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1287,
+      "End": 1705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decMan.c::ternary::Dec_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Dec_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1994,
+      "End": 2270
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decMan.c::Dec_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Dec_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1994,
+      "End": 2270
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/decMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2517
+    }
+  ],
+  "Draft": "package dec\n\n/**CFile****************************************************************\n\n  FileName    [decMan.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Decomposition manager.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: decMan.c,v 1.1 2003/05/22 19:20:05 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"misc/mvc/mvc.h\"\n//#include \"dec.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Start the MVC manager used in the factoring package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_ManStart() *Dec_Man_t {\n    var p *Dec_Man_t;\n//    abctime clk = Abc_Clock();\n    // inlining of macro ABC_ALLOC\n    p = ((Dec_Man_t *) malloc(sizeof(Dec_Man_t) * (size_t)(1)));\n    p.pMvcMem = Mvc_ManagerStart();\n    p.vCubes = Vec_IntAlloc( 8 );\n    p.vLits = Vec_IntAlloc( 8 );\n    // canonical forms, phases, perms\n    Extra_Truth4VarNPN( \u0026p.puCanons, \u0026p.pPhases, \u0026p.pPerms, \u0026p.pMap );\n//ABC_PRT( \"NPN classes precomputation time\", Abc_Clock() - clk ); \n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the MVC maanager used in the factoring package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_ManStop(p *Dec_Man_t) {\n    Mvc_ManagerFree( (Mvc_Manager_t *)p.pMvcMem );\n    Vec_IntFree( p.vCubes );\n    Vec_IntFree( p.vLits );\n    // inlining of macro ABC_FREE\n    ((p.puCanons) ? (free((char *) (p.puCanons)), (p.puCanons) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPhases) ? (free((char *) (p.pPhases)), (p.pPhases) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPerms) ? (free((char *) (p.pPerms)), (p.pPerms) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMap) ? (free((char *) (p.pMap)), (p.pMap) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

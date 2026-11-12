@@ -1,0 +1,752 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c",
+  "SHA256": "de2fa87e07958e4e93299ae53d7e7b6a4f798ef4140d5974f6f58ac66049fe1c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 159,
+        "Column": 13,
+        "ByteOffset": 5183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_PtrSize(vVecNods0) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 160,
+        "Column": 13,
+        "ByteOffset": 5233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_PtrSize(vVecNods1) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 161,
+        "Column": 13,
+        "ByteOffset": 5283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_PtrSize(vVecNods0) \u003c Vec_PtrSize(vVecNods) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 162,
+        "Column": 13,
+        "ByteOffset": 5353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_PtrSize(vVecNods1) \u003c Vec_PtrSize(vVecNods) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 6285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_LitIsCompl(iLit) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 213,
+        "Column": 9,
+        "ByteOffset": 7243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.nFans == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 214,
+        "Column": 9,
+        "ByteOffset": 7278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Kit_DsdObjTruth(pObj)[0] == 0xCACACACA );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 218,
+        "Column": 14,
+        "ByteOffset": 7524
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 227,
+        "Column": 5,
+        "ByteOffset": 7816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nVars \u003e= 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 252,
+        "Column": 5,
+        "ByteOffset": 8563
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_LitIsCompl(iLit0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 253,
+        "Column": 5,
+        "ByteOffset": 8601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_LitIsCompl(iLit1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 9026
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj0.Type == KIT_DSD_AND || pObj0.Type == KIT_DSD_XOR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 278,
+        "Column": 5,
+        "ByteOffset": 9538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_LitIsCompl(iLit) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 287,
+        "Column": 5,
+        "ByteOffset": 9938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.Type == KIT_DSD_AND || pObj.Type == KIT_DSD_XOR );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 340,
+        "Column": 1,
+        "ByteOffset": 11793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\nProcessing library gate %4d: %10s \", pGate.Id, pGate.pName );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 341,
+        "Column": 15,
+        "ByteOffset": 11880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Kit_DsdPrint( stdout, pNtk );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 347,
+        "Column": 13,
+        "ByteOffset": 12032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iNod \u003e 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 351,
+        "Column": 13,
+        "ByteOffset": 12301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memset( pSet, 0, sizeof(Amap_Set_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 357,
+        "Column": 17,
+        "ByteOffset": 12577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Cound not prepare gate \\\"%s\\\": \", pGate.pName );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 358,
+        "Column": 31,
+        "ByteOffset": 12665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Kit_DsdPrint( stdout, pNtk );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 376,
+        "Column": 17,
+        "ByteOffset": 13310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                memset( pSet2, 0, sizeof(Amap_Set_t) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 380,
+        "Column": 17,
+        "ByteOffset": 13501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                memcpy( pSet2.Ins, pSet.Ins, (size_t)pGate.nPins );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 421,
+        "Column": 13,
+        "ByteOffset": 14852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Amap_LibCreateRules(): Skipping gate %s (%s).\\n\", pGate.pName, pGate.pForm );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 427,
+        "Column": 5,
+        "ByteOffset": 15047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(pLib.vRules)  == 2*pLib.nNodes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 428,
+        "Column": 5,
+        "ByteOffset": 15105
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(pLib.vRulesX) == 2*pLib.nNodes );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Amap_CreateRulesPrime",
+      "Start": 1437,
+      "End": 2081,
+      "BodyStart": 1549,
+      "Original": "Vec_Int_t * Amap_CreateRulesPrime( Amap_Lib_t * p, Vec_Int_t * vNods0, Vec_Int_t * vNods1, Vec_Int_t * vNods2 )\n{\n    Vec_Int_t * vRes;\n    int i, k, j, iNod, iNod0, iNod1, iNod2;\n    if ( p-\u003evRules3 == NULL )\n        p-\u003evRules3 = Vec_IntAlloc( 100 );\n    vRes = Vec_IntAlloc( 10 );\n    Vec_IntForEachEntry( vNods0, iNod0, i )\n    Vec_IntForEachEntry( vNods1, iNod1, k )\n    Vec_IntForEachEntry( vNods2, iNod2, j )\n    {\n        iNod = Amap_LibFindMux( p, iNod0, iNod1, iNod2 );\n        if ( iNod == -1 )\n            iNod = Amap_LibCreateMux( p, iNod0, iNod1, iNod2 );\n        Vec_IntPush( vRes, Abc_Var2Lit(iNod, 0) );\n    }\n    return vRes;\n}",
+      "Draft": "func Amap_CreateRulesPrime(p *Amap_Lib_t, vNods0 *Vec_Int_t, vNods1 *Vec_Int_t, vNods2 *Vec_Int_t) *Vec_Int_t {\n    var vRes *Vec_Int_t;\n    var i, k, j, iNod, iNod0, iNod1, iNod2 int32;\n    if p.vRules3 == nil {\n        p.vRules3 = Vec_IntAlloc( 100 ); }\n    vRes = Vec_IntAlloc( 10 );\n    Vec_IntForEachEntry( vNods0, iNod0, i )\n    Vec_IntForEachEntry( vNods1, iNod1, k )\n    Vec_IntForEachEntry( vNods2, iNod2, j )\n    {\n        iNod = Amap_LibFindMux( p, iNod0, iNod1, iNod2 );\n        if iNod == -1 {\n            iNod = Amap_LibCreateMux( p, iNod0, iNod1, iNod2 ); }\n        Vec_IntPush( vRes, Abc_Var2Lit(iNod, 0) );\n    }\n    return vRes;\n}"
+    },
+    {
+      "Name": "Amap_CreateRulesTwo",
+      "Start": 2317,
+      "End": 2772,
+      "BodyStart": 2429,
+      "Original": "void Amap_CreateRulesTwo( Amap_Lib_t * p, Vec_Int_t * vNods, Vec_Int_t * vNods0, Vec_Int_t * vNods1, int fXor )\n{\n    int i, k, iNod, iNod0, iNod1;\n    Vec_IntForEachEntry( vNods0, iNod0, i )\n    Vec_IntForEachEntry( vNods1, iNod1, k )\n    {\n        iNod = Amap_LibFindNode( p, iNod0, iNod1, fXor );\n        if ( iNod == -1 )\n            iNod = Amap_LibCreateNode( p, iNod0, iNod1, fXor );\n        Vec_IntPushUnique( vNods, Abc_Var2Lit(iNod, 0) );\n    }\n}",
+      "Draft": "func Amap_CreateRulesTwo(p *Amap_Lib_t, vNods *Vec_Int_t, vNods0 *Vec_Int_t, vNods1 *Vec_Int_t, fXor int32) {\n    var i, k, iNod, iNod0, iNod1 int32;\n    Vec_IntForEachEntry( vNods0, iNod0, i )\n    Vec_IntForEachEntry( vNods1, iNod1, k )\n    {\n        iNod = Amap_LibFindNode( p, iNod0, iNod1, fXor );\n        if iNod == -1 {\n            iNod = Amap_LibCreateNode( p, iNod0, iNod1, fXor ); }\n        Vec_IntPushUnique( vNods, Abc_Var2Lit(iNod, 0) );\n    }\n}"
+    },
+    {
+      "Name": "Amap_CreateCheckAllZero",
+      "Start": 3008,
+      "End": 3268,
+      "BodyStart": 3060,
+      "Original": "int Amap_CreateCheckAllZero( Vec_Ptr_t * vVecNods )\n{\n    Vec_Int_t * vNods;\n    int i;\n    Vec_PtrForEachEntryReverse( Vec_Int_t *, vVecNods, vNods, i )\n        if ( Vec_IntSize(vNods) != 1 || Vec_IntEntry(vNods,0) != 0 )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Amap_CreateCheckAllZero(vVecNods *Vec_Ptr_t) int32 {\n    var vNods *Vec_Int_t;\n    var i int32;\n    Vec_PtrForEachEntryReverse( Vec_Int_t *, vVecNods, vNods, i )\n        if ( Vec_IntSize(vNods) != 1 || Vec_IntEntry(vNods,0) != 0 )\n            return 0;\n    return 1;\n}"
+    },
+    {
+      "Name": "Amap_CreateRulesVector_rec",
+      "Start": 3504,
+      "End": 5754,
+      "BodyStart": 3593,
+      "Original": "Vec_Int_t * Amap_CreateRulesVector_rec( Amap_Lib_t * p, Vec_Ptr_t * vVecNods, int fXor )\n{\n    Vec_Ptr_t * vVecNods0, * vVecNods1;\n    Vec_Int_t * vRes, * vNods, * vNods0, * vNods1;\n    int i, k;\n    if ( Vec_PtrSize(vVecNods) == 1 )\n        return Vec_IntDup( (Vec_Int_t *)Vec_PtrEntry(vVecNods, 0) );\n    vRes = Vec_IntAlloc( 10 );\n    vVecNods0 = Vec_PtrAlloc( Vec_PtrSize(vVecNods) );\n    vVecNods1 = Vec_PtrAlloc( Vec_PtrSize(vVecNods) );\n    if ( Amap_CreateCheckAllZero(vVecNods) )\n    {\n        for ( i = Vec_PtrSize(vVecNods)-1; i \u003e 0; i-- )\n        {\n            Vec_PtrClear( vVecNods0 );\n            Vec_PtrClear( vVecNods1 );\n            Vec_PtrForEachEntryStop( Vec_Int_t *, vVecNods, vNods, k, i )\n                Vec_PtrPush( vVecNods0, vNods );\n            Vec_PtrForEachEntryStart( Vec_Int_t *, vVecNods, vNods, k, i )\n                Vec_PtrPush( vVecNods1, vNods );\n            vNods0 = Amap_CreateRulesVector_rec( p, vVecNods0, fXor );\n            vNods1 = Amap_CreateRulesVector_rec( p, vVecNods1, fXor );\n            Amap_CreateRulesTwo( p, vRes, vNods0, vNods1, fXor );\n            Vec_IntFree( vNods0 );\n            Vec_IntFree( vNods1 );\n        }\n    }\n    else\n    {\n        int Limit = (1 \u003c\u003c Vec_PtrSize(vVecNods))-2;\n        for ( i = 1; i \u003c Limit; i++ )\n        {\n            Vec_PtrClear( vVecNods0 );\n            Vec_PtrClear( vVecNods1 );\n            Vec_PtrForEachEntryReverse( Vec_Int_t *, vVecNods, vNods, k )\n            {\n                if ( i \u0026 (1 \u003c\u003c k) )\n                    Vec_PtrPush( vVecNods1, vNods );\n                else\n                    Vec_PtrPush( vVecNods0, vNods );\n            }\n            assert( Vec_PtrSize(vVecNods0) \u003e 0 );\n            assert( Vec_PtrSize(vVecNods1) \u003e 0 );\n            assert( Vec_PtrSize(vVecNods0) \u003c Vec_PtrSize(vVecNods) );\n            assert( Vec_PtrSize(vVecNods1) \u003c Vec_PtrSize(vVecNods) );\n            vNods0 = Amap_CreateRulesVector_rec( p, vVecNods0, fXor );\n            vNods1 = Amap_CreateRulesVector_rec( p, vVecNods1, fXor );\n            Amap_CreateRulesTwo( p, vRes, vNods0, vNods1, fXor );\n            Vec_IntFree( vNods0 );\n            Vec_IntFree( vNods1 );\n        }\n    }\n    Vec_PtrFree( vVecNods0 );\n    Vec_PtrFree( vVecNods1 );\n    return vRes;\n}",
+      "Draft": "func Amap_CreateRulesVector_rec(p *Amap_Lib_t, vVecNods *Vec_Ptr_t, fXor int32) *Vec_Int_t {\n    var vVecNods0, vVecNods1 *Vec_Ptr_t;\n    var vRes, vNods, vNods0, vNods1 *Vec_Int_t;\n    var i, k int32;\n    if Vec_PtrSize(vVecNods) == 1 {\n        return Vec_IntDup( (Vec_Int_t *)Vec_PtrEntry(vVecNods, 0) ); }\n    vRes = Vec_IntAlloc( 10 );\n    vVecNods0 = Vec_PtrAlloc( Vec_PtrSize(vVecNods) );\n    vVecNods1 = Vec_PtrAlloc( Vec_PtrSize(vVecNods) );\n    if Amap_CreateCheckAllZero(vVecNods) != 0 {\n        for  i = Vec_PtrSize(vVecNods)-1; i \u003e 0; i--  {\n            Vec_PtrClear( vVecNods0 );\n            Vec_PtrClear( vVecNods1 );\n            Vec_PtrForEachEntryStop( Vec_Int_t *, vVecNods, vNods, k, i )\n                Vec_PtrPush( vVecNods0, vNods );\n            Vec_PtrForEachEntryStart( Vec_Int_t *, vVecNods, vNods, k, i )\n                Vec_PtrPush( vVecNods1, vNods );\n            vNods0 = Amap_CreateRulesVector_rec( p, vVecNods0, fXor );\n            vNods1 = Amap_CreateRulesVector_rec( p, vVecNods1, fXor );\n            Amap_CreateRulesTwo( p, vRes, vNods0, vNods1, fXor );\n            Vec_IntFree( vNods0 );\n            Vec_IntFree( vNods1 );\n        }\n    \n    } else {\n        var Limit int32  = (1 \u003c\u003c Vec_PtrSize(vVecNods))-2;\n        for  i = 1; i \u003c Limit; i++  {\n            Vec_PtrClear( vVecNods0 );\n            Vec_PtrClear( vVecNods1 );\n            Vec_PtrForEachEntryReverse( Vec_Int_t *, vVecNods, vNods, k )\n            {\n                if i \u0026 (1 \u003c\u003c k) {\n                    Vec_PtrPush( vVecNods1, vNods );\n                } else {\n                    Vec_PtrPush( vVecNods0, vNods ); }\n            }\n            assert(Vec_PtrSize(vVecNods0) \u003e 0, \"Vec_PtrSize(vVecNods0) \u003e 0\");\n            assert(Vec_PtrSize(vVecNods1) \u003e 0, \"Vec_PtrSize(vVecNods1) \u003e 0\");\n            assert(Vec_PtrSize(vVecNods0) \u003c Vec_PtrSize(vVecNods), \"Vec_PtrSize(vVecNods0) \u003c Vec_PtrSize(vVecNods)\");\n            assert(Vec_PtrSize(vVecNods1) \u003c Vec_PtrSize(vVecNods), \"Vec_PtrSize(vVecNods1) \u003c Vec_PtrSize(vVecNods)\");\n            vNods0 = Amap_CreateRulesVector_rec( p, vVecNods0, fXor );\n            vNods1 = Amap_CreateRulesVector_rec( p, vVecNods1, fXor );\n            Amap_CreateRulesTwo( p, vRes, vNods0, vNods1, fXor );\n            Vec_IntFree( vNods0 );\n            Vec_IntFree( vNods1 );\n        }\n    }\n    Vec_PtrFree( vVecNods0 );\n    Vec_PtrFree( vVecNods1 );\n    return vRes;\n}"
+    },
+    {
+      "Name": "Amap_CreateRulesFromDsd_rec",
+      "Start": 5990,
+      "End": 7567,
+      "BodyStart": 6079,
+      "Original": "Vec_Int_t * Amap_CreateRulesFromDsd_rec( Amap_Lib_t * pLib, Kit_DsdNtk_t * p, int iLit )\n{\n    Vec_Int_t * vRes = NULL;\n    Vec_Ptr_t * vVecNods;\n    Vec_Int_t * vNodsFanin;\n    Kit_DsdObj_t * pObj;\n    unsigned i;\n    int iFanin, iNod, k;\n    assert( !Abc_LitIsCompl(iLit) );\n    pObj = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit) );\n    if ( pObj == NULL )\n        return Vec_IntStartNatural( 1 );\n    // solve for the inputs\n    vVecNods = Vec_PtrAlloc( pObj-\u003enFans );\n    Kit_DsdObjForEachFanin( p, pObj, iFanin, i )\n    {\n        vNodsFanin = Amap_CreateRulesFromDsd_rec( pLib, p, Abc_LitRegular(iFanin) );\n        if ( Abc_LitIsCompl(iFanin) )\n        {\n            Vec_IntForEachEntry( vNodsFanin, iNod, k )\n                if ( iNod \u003e 0 )\n                    Vec_IntWriteEntry( vNodsFanin, k, Abc_LitNot(iNod) );\n        }\n        Vec_PtrPush( vVecNods, vNodsFanin );\n    }\n    if ( pObj-\u003eType == KIT_DSD_AND )\n        vRes = Amap_CreateRulesVector_rec( pLib, vVecNods, 0 );\n    else if ( pObj-\u003eType == KIT_DSD_XOR )\n        vRes = Amap_CreateRulesVector_rec( pLib, vVecNods, 1 );\n    else if ( pObj-\u003eType == KIT_DSD_PRIME )\n    {\n        assert( pObj-\u003enFans == 3 );\n        assert( Kit_DsdObjTruth(pObj)[0] == 0xCACACACA );\n        vRes = Amap_CreateRulesPrime( pLib, (Vec_Int_t *)Vec_PtrEntry(vVecNods, 0),\n            (Vec_Int_t *)Vec_PtrEntry(vVecNods, 1), (Vec_Int_t *)Vec_PtrEntry(vVecNods, 2) );\n    }\n    else assert( 0 );\n    Vec_PtrForEachEntry( Vec_Int_t *, vVecNods, vNodsFanin, k )\n        Vec_IntFree( vNodsFanin );\n    Vec_PtrFree( vVecNods );\n    return vRes;\n}",
+      "Draft": "func Amap_CreateRulesFromDsd_rec(pLib *Amap_Lib_t, p *Kit_DsdNtk_t, iLit int32) *Vec_Int_t {\n    var vRes *Vec_Int_t  = nil;\n    var vVecNods *Vec_Ptr_t;\n    var vNodsFanin *Vec_Int_t;\n    var pObj *Kit_DsdObj_t;\n    var i uint32;\n    var iFanin, iNod, k int32;\n    assert(!Abc_LitIsCompl(iLit), \"!Abc_LitIsCompl(iLit)\");\n    pObj = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit) );\n    if pObj == nil {\n        return Vec_IntStartNatural( 1 ); }\n    // solve for the inputs\n    vVecNods = Vec_PtrAlloc( pObj.nFans );\n    // inlining of macro Kit_DsdObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFans)) \u0026\u0026 ((iFanin) = (pObj).pFans[i], 1); i++  {\n        vNodsFanin = Amap_CreateRulesFromDsd_rec( pLib, p, Abc_LitRegular(iFanin) );\n        if Abc_LitIsCompl(iFanin) {\n            Vec_IntForEachEntry( vNodsFanin, iNod, k )\n                if ( iNod \u003e 0 )\n                    Vec_IntWriteEntry( vNodsFanin, k, Abc_LitNot(iNod) );\n        }\n        Vec_PtrPush( vVecNods, vNodsFanin );\n    }\n    if pObj.Type == KIT_DSD_AND {\n        vRes = Amap_CreateRulesVector_rec( pLib, vVecNods, 0 );\n    } else if pObj.Type == KIT_DSD_XOR {\n        vRes = Amap_CreateRulesVector_rec( pLib, vVecNods, 1 );\n    } else if pObj.Type == KIT_DSD_PRIME {\n        assert(pObj.nFans == 3, \"pObj.nFans == 3\");\n        assert(Kit_DsdObjTruth(pObj)[0] == 0xCACACACA, \"Kit_DsdObjTruth(pObj)[0] == 0xCACACACA\");\n        vRes = Amap_CreateRulesPrime( pLib, (Vec_Int_t *)Vec_PtrEntry(vVecNods, 0),\n            (Vec_Int_t *)Vec_PtrEntry(vVecNods, 1), (Vec_Int_t *)Vec_PtrEntry(vVecNods, 2) );\n    \n    } else { assert(false, \"0\"); }\n    Vec_PtrForEachEntry( Vec_Int_t *, vVecNods, vNodsFanin, k )\n        Vec_IntFree( vNodsFanin );\n    Vec_PtrFree( vVecNods );\n    return vRes;\n}"
+    },
+    {
+      "Name": "Amap_CreateRulesFromDsd",
+      "Start": 7568,
+      "End": 8010,
+      "BodyStart": 7643,
+      "Original": "Vec_Int_t * Amap_CreateRulesFromDsd( Amap_Lib_t * pLib, Kit_DsdNtk_t * p )\n{\n    Vec_Int_t * vNods;\n    int iNod, i;\n    assert( p-\u003enVars \u003e= 2 );\n    vNods = Amap_CreateRulesFromDsd_rec( pLib, p, Abc_LitRegular(p-\u003eRoot) );\n    if ( vNods == NULL )\n        return NULL;\n    if ( Abc_LitIsCompl(p-\u003eRoot) )\n    {\n        Vec_IntForEachEntry( vNods, iNod, i )\n            Vec_IntWriteEntry( vNods, i, Abc_LitNot(iNod) );\n    }\n    return vNods;\n}",
+      "Draft": "func Amap_CreateRulesFromDsd(pLib *Amap_Lib_t, p *Kit_DsdNtk_t) *Vec_Int_t {\n    var vNods *Vec_Int_t;\n    var iNod, i int32;\n    assert(p.nVars \u003e= 2, \"p.nVars \u003e= 2\");\n    vNods = Amap_CreateRulesFromDsd_rec( pLib, p, Abc_LitRegular(p.Root) );\n    if vNods == nil {\n        return nil; }\n    if Abc_LitIsCompl(p.Root) {\n        Vec_IntForEachEntry( vNods, iNod, i )\n            Vec_IntWriteEntry( vNods, i, Abc_LitNot(iNod) );\n    }\n    return vNods;\n}"
+    },
+    {
+      "Name": "Amap_CreateCheckEqual_rec",
+      "Start": 8309,
+      "End": 9286,
+      "BodyStart": 8381,
+      "Original": "int Amap_CreateCheckEqual_rec( Kit_DsdNtk_t * p, int iLit0, int iLit1 )\n{\n    Kit_DsdObj_t * pObj0, * pObj1; \n    int i;\n    assert( !Abc_LitIsCompl(iLit0) );\n    assert( !Abc_LitIsCompl(iLit1) );\n    pObj0 = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit0) );\n    pObj1 = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit1) );\n    if ( pObj0 == NULL \u0026\u0026 pObj1 == NULL )\n        return 1;\n    if ( pObj0 == NULL || pObj1 == NULL )\n        return 0;\n    if ( pObj0-\u003eType != pObj1-\u003eType )\n        return 0;\n    if ( pObj0-\u003enFans != pObj1-\u003enFans )\n        return 0;\n    if ( pObj0-\u003eType == KIT_DSD_PRIME )\n        return 0;\n    assert( pObj0-\u003eType == KIT_DSD_AND || pObj0-\u003eType == KIT_DSD_XOR );\n    for ( i = 0; i \u003c (int)pObj0-\u003enFans; i++ )\n    {\n        if ( Abc_LitIsCompl(pObj0-\u003epFans[i]) != Abc_LitIsCompl(pObj1-\u003epFans[i]) )\n            return 0;\n        if ( !Amap_CreateCheckEqual_rec( p, Abc_LitRegular(pObj0-\u003epFans[i]), Abc_LitRegular(pObj1-\u003epFans[i]) ) )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Amap_CreateCheckEqual_rec(p *Kit_DsdNtk_t, iLit0 int32, iLit1 int32) int32 {\n    var pObj0, pObj1 *Kit_DsdObj_t; \n    var i int32;\n    assert(!Abc_LitIsCompl(iLit0), \"!Abc_LitIsCompl(iLit0)\");\n    assert(!Abc_LitIsCompl(iLit1), \"!Abc_LitIsCompl(iLit1)\");\n    pObj0 = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit0) );\n    pObj1 = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit1) );\n    if pObj0 == nil \u0026\u0026 pObj1 == nil {\n        return 1; }\n    if pObj0 == nil || pObj1 == nil {\n        return 0; }\n    if pObj0.Type != pObj1.Type {\n        return 0; }\n    if pObj0.nFans != pObj1.nFans {\n        return 0; }\n    if pObj0.Type == KIT_DSD_PRIME {\n        return 0; }\n    assert(pObj0.Type == KIT_DSD_AND || pObj0.Type == KIT_DSD_XOR, \"pObj0.Type == KIT_DSD_AND || pObj0.Type == KIT_DSD_XOR\");\n    for  i = 0; i \u003c int32(pObj0.nFans); i++  {\n        if Abc_LitIsCompl(pObj0.pFans[i]) != Abc_LitIsCompl(pObj1.pFans[i]) {\n            return 0; }\n        if !(Amap_CreateCheckEqual_rec( p, Abc_LitRegular(pObj0.pFans[i]), Abc_LitRegular(pObj1.pFans[i]) ) != 0) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Amap_CreateCheckAsym_rec",
+      "Start": 9287,
+      "End": 10320,
+      "BodyStart": 9368,
+      "Original": "void Amap_CreateCheckAsym_rec( Kit_DsdNtk_t * p, int iLit, Vec_Int_t ** pvSyms )\n{\n    Kit_DsdObj_t * pObj; \n    int i, k, iFanin;\n    assert( !Abc_LitIsCompl(iLit) );\n    pObj = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit) );\n    if ( pObj == NULL )\n        return;\n    Kit_DsdObjForEachFanin( p, pObj, iFanin, i )\n        Amap_CreateCheckAsym_rec( p, Abc_LitRegular(iFanin), pvSyms );\n    if ( pObj-\u003eType == KIT_DSD_PRIME )\n        return;\n    assert( pObj-\u003eType == KIT_DSD_AND || pObj-\u003eType == KIT_DSD_XOR );\n    for ( i = 0; i \u003c (int)pObj-\u003enFans; i++ )\n    for ( k = i+1; k \u003c (int)pObj-\u003enFans; k++ )\n    {\n        if ( Abc_LitIsCompl(pObj-\u003epFans[i]) != Abc_LitIsCompl(pObj-\u003epFans[k]) \u0026\u0026 \n             Kit_DsdNtkObj(p, Abc_Lit2Var(pObj-\u003epFans[i])) == NULL \u0026\u0026 \n             Kit_DsdNtkObj(p, Abc_Lit2Var(pObj-\u003epFans[k])) == NULL )\n        {\n            if ( *pvSyms == NULL )\n                *pvSyms = Vec_IntAlloc( 16 );\n            Vec_IntPush( *pvSyms, (Abc_Lit2Var(pObj-\u003epFans[i]) \u003c\u003c 8) | Abc_Lit2Var(pObj-\u003epFans[k]) );\n        }\n    }\n}",
+      "Draft": "func Amap_CreateCheckAsym_rec(p *Kit_DsdNtk_t, iLit int32, pvSyms **Vec_Int_t) {\n    var pObj *Kit_DsdObj_t; \n    var i, k, iFanin int32;\n    assert(!Abc_LitIsCompl(iLit), \"!Abc_LitIsCompl(iLit)\");\n    pObj = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit) );\n    if pObj == nil {\n        return; }\n    // inlining of macro Kit_DsdObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFans)) \u0026\u0026 ((iFanin) = (pObj).pFans[i], 1); i++  {\n        Amap_CreateCheckAsym_rec( p, Abc_LitRegular(iFanin), pvSyms );\n    }\n    if pObj.Type == KIT_DSD_PRIME {\n        return; }\n    assert(pObj.Type == KIT_DSD_AND || pObj.Type == KIT_DSD_XOR, \"pObj.Type == KIT_DSD_AND || pObj.Type == KIT_DSD_XOR\");\n    for  i = 0; i \u003c int32(pObj.nFans); i++  {\n    for  k = i+1; k \u003c int32(pObj.nFans); k++  {\n        if Abc_LitIsCompl(pObj.pFans[i]) != Abc_LitIsCompl(pObj.pFans[k]) \u0026\u0026 \n             Kit_DsdNtkObj(p, Abc_Lit2Var(pObj.pFans[i])) == nil \u0026\u0026 \n             Kit_DsdNtkObj(p, Abc_Lit2Var(pObj.pFans[k])) == nil {\n            if *pvSyms == nil {\n                *pvSyms = Vec_IntAlloc( 16 ); }\n            Vec_IntPush( *pvSyms, (Abc_Lit2Var(pObj.pFans[i]) \u003c\u003c 8) | Abc_Lit2Var(pObj.pFans[k]) );\n        }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Amap_CreateCheckAsym",
+      "Start": 10321,
+      "End": 10459,
+      "BodyStart": 10388,
+      "Original": "void Amap_CreateCheckAsym( Kit_DsdNtk_t * p, Vec_Int_t ** pvSyms )\n{\n    Amap_CreateCheckAsym_rec( p, Abc_LitRegular(p-\u003eRoot), pvSyms );\n}",
+      "Draft": "func Amap_CreateCheckAsym(p *Kit_DsdNtk_t, pvSyms **Vec_Int_t) {\n    Amap_CreateCheckAsym_rec( p, Abc_LitRegular(p.Root), pvSyms );\n}"
+    },
+    {
+      "Name": "Amap_CreateRulesForGate",
+      "Start": 10727,
+      "End": 13941,
+      "BodyStart": 10797,
+      "Original": "void Amap_CreateRulesForGate( Amap_Lib_t * pLib, Amap_Gat_t * pGate )\n{ \n    Kit_DsdNtk_t * pNtk, * pTemp;\n    Vec_Int_t * vSyms = NULL;\n    Vec_Int_t * vNods;\n    Amap_Nod_t * pNod;\n    Amap_Set_t * pSet, * pSet2;\n    int iNod, i, k, Entry;\n//    if ( pGate-\u003enPins \u003e 4 )\n//        return;\n    pNtk = Kit_DsdDecomposeMux( pGate-\u003epFunc, pGate-\u003enPins, 2 );\n    if ( pGate-\u003enPins == 2 \u0026\u0026 (pGate-\u003epFunc[0] == 0x66666666 || pGate-\u003epFunc[0] == ~0x66666666) )\n         pLib-\u003efHasXor = 1;\n    if ( Kit_DsdNonDsdSizeMax(pNtk) == 3 )\n        pLib-\u003efHasMux = pGate-\u003efMux = 1;\n    pNtk = Kit_DsdExpand( pTemp = pNtk );\n    Kit_DsdNtkFree( pTemp );\n    Kit_DsdVerify( pNtk, pGate-\u003epFunc, pGate-\u003enPins ); \n    // check symmetries\n    Amap_CreateCheckAsym( pNtk, \u0026vSyms );\n//    if ( vSyms )\n//        Kit_DsdPrint( stdout, pNtk ), printf( \"\\n\" );\n\nif ( pLib-\u003efVerbose )\n//if ( pGate-\u003efMux )\n{\nprintf( \"\\nProcessing library gate %4d: %10s \", pGate-\u003eId, pGate-\u003epName );\nKit_DsdPrint( stdout, pNtk );\n}\n    vNods = Amap_CreateRulesFromDsd( pLib, pNtk );\n    if ( vNods )\n    {\n        Vec_IntForEachEntry( vNods, iNod, i )\n        {\n            assert( iNod \u003e 1 );\n            pNod = Amap_LibNod( pLib, Abc_Lit2Var(iNod) );\n//            assert( pNod-\u003eType == AMAP_OBJ_MUX || pNod-\u003enSuppSize == pGate-\u003enPins );\n            pSet = (Amap_Set_t *)Aig_MmFlexEntryFetch( pLib-\u003epMemSet, sizeof(Amap_Set_t) );\n            memset( pSet, 0, sizeof(Amap_Set_t) );\n            pSet-\u003eiGate = pGate-\u003eId;\n            pSet-\u003efInv  = Abc_LitIsCompl(iNod);\n            pSet-\u003enIns  = pGate-\u003enPins;\n            if ( Amap_LibDeriveGatePerm( pLib, pGate, pNtk, pNod, pSet-\u003eIns ) == 0 )\n            {\nif ( pLib-\u003efVerbose )\n{\n                printf( \"Cound not prepare gate \\\"%s\\\": \", pGate-\u003epName );\n                Kit_DsdPrint( stdout, pNtk );\n}\n                continue;\n            }\n            pSet-\u003epNext = pNod-\u003epSets;\n            pNod-\u003epSets = pSet;\n            pLib-\u003enSets++;\n            if ( vSyms == NULL )\n                continue;\n//            continue;\n            // add sets equivalent due to symmetry\n            Vec_IntForEachEntry( vSyms, Entry, k )\n            {\n                int iThis = Entry \u0026 0xff;\n                int iThat = Entry \u003e\u003e 8;\n//                printf( \"%d %d\\n\", iThis, iThat );\n                // create new set\n                pSet2 = (Amap_Set_t *)Aig_MmFlexEntryFetch( pLib-\u003epMemSet, sizeof(Amap_Set_t) );\n                memset( pSet2, 0, sizeof(Amap_Set_t) );\n                pSet2-\u003eiGate = pGate-\u003eId;\n                pSet2-\u003efInv  = Abc_LitIsCompl(iNod);\n                pSet2-\u003enIns  = pGate-\u003enPins;\n                memcpy( pSet2-\u003eIns, pSet-\u003eIns, (size_t)pGate-\u003enPins );\n                // update inputs\n                pSet2-\u003eIns[iThis] = Abc_Var2Lit( Abc_Lit2Var(pSet-\u003eIns[iThat]), Abc_LitIsCompl(pSet-\u003eIns[iThis]) );\n                pSet2-\u003eIns[iThat] = Abc_Var2Lit( Abc_Lit2Var(pSet-\u003eIns[iThis]), Abc_LitIsCompl(pSet-\u003eIns[iThat]) );\n                // add set to collection\n                pSet2-\u003epNext = pNod-\u003epSets;\n                pNod-\u003epSets  = pSet2;\n                pLib-\u003enSets++;\n            }\n        }\n        Vec_IntFree( vNods );\n    }\n    Kit_DsdNtkFree( pNtk );\n    Vec_IntFreeP( \u0026vSyms );\n}",
+      "Draft": "func Amap_CreateRulesForGate(pLib *Amap_Lib_t, pGate *Amap_Gat_t) { \n    var pNtk, pTemp *Kit_DsdNtk_t;\n    var vSyms *Vec_Int_t  = nil;\n    var vNods *Vec_Int_t;\n    var pNod *Amap_Nod_t;\n    var pSet, pSet2 *Amap_Set_t;\n    var iNod, i, k, Entry int32;\n//    if ( pGate-\u003enPins \u003e 4 )\n//        return;\n    pNtk = Kit_DsdDecomposeMux( pGate.pFunc, pGate.nPins, 2 );\n    if pGate.nPins == 2 \u0026\u0026 (pGate.pFunc[0] == 0x66666666 || pGate.pFunc[0] == ~0x66666666) {\n         pLib.fHasXor = 1; }\n    if Kit_DsdNonDsdSizeMax(pNtk) == 3 {\n        pLib.fHasMux = pGate.fMux = 1; }\n    pNtk = Kit_DsdExpand( pTemp = pNtk );\n    Kit_DsdNtkFree( pTemp );\n    Kit_DsdVerify( pNtk, pGate.pFunc, pGate.nPins ); \n    // check symmetries\n    Amap_CreateCheckAsym( pNtk, \u0026vSyms );\n//    if ( vSyms )\n//        Kit_DsdPrint( stdout, pNtk ), printf( \"\\n\" );\n\nif pLib.fVerbose {\n//if ( pGate-\u003efMux )\n\nfmt.Printf(\"\\nProcessing library gate %4d: %10s \", pGate.Id, pGate.pName);\nKit_DsdPrint( os.Stdout, pNtk );\n}\n    vNods = Amap_CreateRulesFromDsd( pLib, pNtk );\n    if vNods != nil {\n        Vec_IntForEachEntry( vNods, iNod, i )\n        {\n            assert(iNod \u003e 1, \"iNod \u003e 1\");\n            pNod = Amap_LibNod( pLib, Abc_Lit2Var(iNod) );\n//            assert( pNod-\u003eType == AMAP_OBJ_MUX || pNod-\u003enSuppSize == pGate-\u003enPins );\n            pSet = (Amap_Set_t *)Aig_MmFlexEntryFetch( pLib.pMemSet, sizeof(Amap_Set_t) );\n            memset( pSet, 0, sizeof(Amap_Set_t) );\n            pSet.iGate = pGate.Id;\n            pSet.fInv  = Abc_LitIsCompl(iNod);\n            pSet.nIns  = pGate.nPins;\n            if Amap_LibDeriveGatePerm( pLib, pGate, pNtk, pNod, pSet.Ins ) == 0 {\nif pLib.fVerbose {\n                fmt.Printf(\"Cound not prepare gate \\\"%s\\\": \", pGate.pName);\n                Kit_DsdPrint( os.Stdout, pNtk );\n}\n                continue;\n            }\n            pSet.pNext = pNod.pSets;\n            pNod.pSets = pSet;\n            pLib.nSets++;\n            if vSyms == nil {\n                continue; }\n//            continue;\n            // add sets equivalent due to symmetry\n            Vec_IntForEachEntry( vSyms, Entry, k )\n            {\n                var iThis int32  = Entry \u0026 0xff;\n                var iThat int32  = Entry \u003e\u003e 8;\n//                printf( \"%d %d\\n\", iThis, iThat );\n                // create new set\n                pSet2 = (Amap_Set_t *)Aig_MmFlexEntryFetch( pLib.pMemSet, sizeof(Amap_Set_t) );\n                memset( pSet2, 0, sizeof(Amap_Set_t) );\n                pSet2.iGate = pGate.Id;\n                pSet2.fInv  = Abc_LitIsCompl(iNod);\n                pSet2.nIns  = pGate.nPins;\n                memcpy( pSet2.Ins, pSet.Ins, (size_t)pGate.nPins );\n                // update inputs\n                pSet2.Ins[iThis] = Abc_Var2Lit( Abc_Lit2Var(pSet.Ins[iThat]), Abc_LitIsCompl(pSet.Ins[iThis]) );\n                pSet2.Ins[iThat] = Abc_Var2Lit( Abc_Lit2Var(pSet.Ins[iThis]), Abc_LitIsCompl(pSet.Ins[iThat]) );\n                // add set to collection\n                pSet2.pNext = pNod.pSets;\n                pNod.pSets  = pSet2;\n                pLib.nSets++;\n            }\n        }\n        Vec_IntFree( vNods );\n    }\n    Kit_DsdNtkFree( pNtk );\n    Vec_IntFreeP( \u0026vSyms );\n}"
+    },
+    {
+      "Name": "Amap_LibCreateRules",
+      "Start": 14209,
+      "End": 15313,
+      "BodyStart": 14273,
+      "Original": "void Amap_LibCreateRules( Amap_Lib_t * pLib, int fVeryVerbose )\n{\n    Amap_Gat_t * pGate;\n    int i, nGates = 0;\n//    abctime clk = Abc_Clock();\n    pLib-\u003efVerbose = fVeryVerbose;\n    pLib-\u003evRules   = Vec_PtrAlloc( 100 );\n    pLib-\u003evRulesX  = Vec_PtrAlloc( 100 );\n    pLib-\u003evRules3  = Vec_IntAlloc( 100 );\n    Amap_LibCreateVar( pLib );\n    Vec_PtrForEachEntry( Amap_Gat_t *, pLib-\u003evSelect, pGate, i )\n    {\n        if ( pGate-\u003enPins \u003c 2 )\n            continue;\n        if ( pGate-\u003epFunc == NULL )\n        {\n            printf( \"Amap_LibCreateRules(): Skipping gate %s (%s).\\n\", pGate-\u003epName, pGate-\u003epForm );\n            continue;\n        }\n        Amap_CreateRulesForGate( pLib, pGate );\n        nGates++;\n    }\n    assert( Vec_PtrSize(pLib-\u003evRules)  == 2*pLib-\u003enNodes );\n    assert( Vec_PtrSize(pLib-\u003evRulesX) == 2*pLib-\u003enNodes );\n    pLib-\u003epRules  = Amap_LibLookupTableAlloc( pLib-\u003evRules, 0 );\n    pLib-\u003epRulesX = Amap_LibLookupTableAlloc( pLib-\u003evRulesX, 0 );\n    Vec_VecFree( (Vec_Vec_t *)pLib-\u003evRules );  pLib-\u003evRules  = NULL;\n    Vec_VecFree( (Vec_Vec_t *)pLib-\u003evRulesX ); pLib-\u003evRulesX = NULL;\n}",
+      "Draft": "func Amap_LibCreateRules(pLib *Amap_Lib_t, fVeryVerbose int32) {\n    var pGate *Amap_Gat_t;\n    var i, nGates int32;\n//    abctime clk = Abc_Clock();\n    pLib.fVerbose = fVeryVerbose;\n    pLib.vRules   = Vec_PtrAlloc( 100 );\n    pLib.vRulesX  = Vec_PtrAlloc( 100 );\n    pLib.vRules3  = Vec_IntAlloc( 100 );\n    Amap_LibCreateVar( pLib );\n    Vec_PtrForEachEntry( Amap_Gat_t *, pLib.vSelect, pGate, i )\n    {\n        if pGate.nPins \u003c 2 {\n            continue; }\n        if pGate.pFunc == nil {\n            fmt.Printf(\"Amap_LibCreateRules(): Skipping gate %s (%s).\\n\", pGate.pName, pGate.pForm);\n            continue;\n        }\n        Amap_CreateRulesForGate( pLib, pGate );\n        nGates++;\n    }\n    assert(Vec_PtrSize(pLib.vRules)  == 2*pLib.nNodes, \"Vec_PtrSize(pLib.vRules)  == 2*pLib.nNodes\");\n    assert(Vec_PtrSize(pLib.vRulesX) == 2*pLib.nNodes, \"Vec_PtrSize(pLib.vRulesX) == 2*pLib.nNodes\");\n    pLib.pRules  = Amap_LibLookupTableAlloc( pLib.vRules, 0 );\n    pLib.pRulesX = Amap_LibLookupTableAlloc( pLib.vRulesX, 0 );\n    Vec_VecFree( (Vec_Vec_t *)pLib.vRules );  pLib.vRules  = nil;\n    Vec_VecFree( (Vec_Vec_t *)pLib.vRulesX ); pLib.vRulesX = nil;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::mechanical::sizeof::12279",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12091,
+      "End": 12097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::mechanical::sizeof::12330",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12142,
+      "End": 12148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::mechanical::sizeof::13304",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13116,
+      "End": 13122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::mechanical::sizeof::13360",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13172,
+      "End": 13178
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::pointer-cast::3765",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3765,
+      "End": 3778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::pointer-cast::7353",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7259,
+      "End": 7272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::pointer-cast::7405",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7311,
+      "End": 7324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::pointer-cast::7445",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7351,
+      "End": 7364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::pointer-cast::12228",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12040,
+      "End": 12054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::pointer-cast::13253",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13065,
+      "End": 13079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::pointer-cast::15379",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15191,
+      "End": 15204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::pointer-cast::15448",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15260,
+      "End": 15273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::Amap_CreateRulesPrime",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CreateRulesPrime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1437,
+      "End": 2081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::Amap_CreateRulesTwo",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CreateRulesTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2317,
+      "End": 2772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::Amap_CreateCheckAllZero",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CreateCheckAllZero",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3008,
+      "End": 3268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::Amap_CreateRulesVector_rec",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CreateRulesVector_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3504,
+      "End": 5754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::Amap_CreateRulesFromDsd_rec",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CreateRulesFromDsd_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5990,
+      "End": 7567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::Amap_CreateRulesFromDsd",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CreateRulesFromDsd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7568,
+      "End": 8010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::Amap_CreateCheckEqual_rec",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CreateCheckEqual_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8309,
+      "End": 9286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::Amap_CreateCheckAsym_rec",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CreateCheckAsym_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9287,
+      "End": 10320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::Amap_CreateCheckAsym",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CreateCheckAsym",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10321,
+      "End": 10459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::Amap_CreateRulesForGate",
+      "Category": "semantic-review",
+      "Symbol": "Amap_CreateRulesForGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10727,
+      "End": 13941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::Amap_LibCreateRules",
+      "Category": "semantic-review",
+      "Symbol": "Amap_LibCreateRules",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14209,
+      "End": 15313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::1724",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1724,
+      "End": 1763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::1768",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1768,
+      "End": 1807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::1812",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1812,
+      "End": 1851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::2469",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2469,
+      "End": 2508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::2513",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2513,
+      "End": 2552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::3100",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryReverse",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3100,
+      "End": 3161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::4155",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStop",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4155,
+      "End": 4216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::4278",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4278,
+      "End": 4340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::4889",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryReverse",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4889,
+      "End": 4950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::6654",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6654,
+      "End": 6696
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::7425",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7425,
+      "End": 7484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::7886",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7886,
+      "End": 7923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::11795",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11795,
+      "End": 11832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::12819",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12819,
+      "End": 12857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapRule.c::macro-inline::14551",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14551,
+      "End": 14611
+    }
+  ],
+  "Draft": "package amap\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [amapRule.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Technology mapper for standard cells.]\n\n  Synopsis    [Matching rules.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: amapRule.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"amapInt.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern int Amap_LibDeriveGatePerm( Amap_Lib_t * pLib, Amap_Gat_t * pGate, Kit_DsdNtk_t * pNtk, Amap_Nod_t * pNod, char * pArray );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the three-argument rule exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_CreateRulesPrime(p *Amap_Lib_t, vNods0 *Vec_Int_t, vNods1 *Vec_Int_t, vNods2 *Vec_Int_t) *Vec_Int_t {\n    var vRes *Vec_Int_t;\n    var i, k, j, iNod, iNod0, iNod1, iNod2 int32;\n    if p.vRules3 == nil {\n        p.vRules3 = Vec_IntAlloc( 100 ); }\n    vRes = Vec_IntAlloc( 10 );\n    Vec_IntForEachEntry( vNods0, iNod0, i )\n    Vec_IntForEachEntry( vNods1, iNod1, k )\n    Vec_IntForEachEntry( vNods2, iNod2, j )\n    {\n        iNod = Amap_LibFindMux( p, iNod0, iNod1, iNod2 );\n        if iNod == -1 {\n            iNod = Amap_LibCreateMux( p, iNod0, iNod1, iNod2 ); }\n        Vec_IntPush( vRes, Abc_Var2Lit(iNod, 0) );\n    }\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_CreateRulesTwo(p *Amap_Lib_t, vNods *Vec_Int_t, vNods0 *Vec_Int_t, vNods1 *Vec_Int_t, fXor int32) {\n    var i, k, iNod, iNod0, iNod1 int32;\n    Vec_IntForEachEntry( vNods0, iNod0, i )\n    Vec_IntForEachEntry( vNods1, iNod1, k )\n    {\n        iNod = Amap_LibFindNode( p, iNod0, iNod1, fXor );\n        if iNod == -1 {\n            iNod = Amap_LibCreateNode( p, iNod0, iNod1, fXor ); }\n        Vec_IntPushUnique( vNods, Abc_Var2Lit(iNod, 0) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_CreateCheckAllZero(vVecNods *Vec_Ptr_t) int32 {\n    var vNods *Vec_Int_t;\n    var i int32;\n    Vec_PtrForEachEntryReverse( Vec_Int_t *, vVecNods, vNods, i )\n        if ( Vec_IntSize(vNods) != 1 || Vec_IntEntry(vNods,0) != 0 )\n            return 0;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_CreateRulesVector_rec(p *Amap_Lib_t, vVecNods *Vec_Ptr_t, fXor int32) *Vec_Int_t {\n    var vVecNods0, vVecNods1 *Vec_Ptr_t;\n    var vRes, vNods, vNods0, vNods1 *Vec_Int_t;\n    var i, k int32;\n    if Vec_PtrSize(vVecNods) == 1 {\n        return Vec_IntDup( (Vec_Int_t *)Vec_PtrEntry(vVecNods, 0) ); }\n    vRes = Vec_IntAlloc( 10 );\n    vVecNods0 = Vec_PtrAlloc( Vec_PtrSize(vVecNods) );\n    vVecNods1 = Vec_PtrAlloc( Vec_PtrSize(vVecNods) );\n    if Amap_CreateCheckAllZero(vVecNods) != 0 {\n        for  i = Vec_PtrSize(vVecNods)-1; i \u003e 0; i--  {\n            Vec_PtrClear( vVecNods0 );\n            Vec_PtrClear( vVecNods1 );\n            Vec_PtrForEachEntryStop( Vec_Int_t *, vVecNods, vNods, k, i )\n                Vec_PtrPush( vVecNods0, vNods );\n            Vec_PtrForEachEntryStart( Vec_Int_t *, vVecNods, vNods, k, i )\n                Vec_PtrPush( vVecNods1, vNods );\n            vNods0 = Amap_CreateRulesVector_rec( p, vVecNods0, fXor );\n            vNods1 = Amap_CreateRulesVector_rec( p, vVecNods1, fXor );\n            Amap_CreateRulesTwo( p, vRes, vNods0, vNods1, fXor );\n            Vec_IntFree( vNods0 );\n            Vec_IntFree( vNods1 );\n        }\n    \n    } else {\n        var Limit int32  = (1 \u003c\u003c Vec_PtrSize(vVecNods))-2;\n        for  i = 1; i \u003c Limit; i++  {\n            Vec_PtrClear( vVecNods0 );\n            Vec_PtrClear( vVecNods1 );\n            Vec_PtrForEachEntryReverse( Vec_Int_t *, vVecNods, vNods, k )\n            {\n                if i \u0026 (1 \u003c\u003c k) {\n                    Vec_PtrPush( vVecNods1, vNods );\n                } else {\n                    Vec_PtrPush( vVecNods0, vNods ); }\n            }\n            assert(Vec_PtrSize(vVecNods0) \u003e 0, \"Vec_PtrSize(vVecNods0) \u003e 0\");\n            assert(Vec_PtrSize(vVecNods1) \u003e 0, \"Vec_PtrSize(vVecNods1) \u003e 0\");\n            assert(Vec_PtrSize(vVecNods0) \u003c Vec_PtrSize(vVecNods), \"Vec_PtrSize(vVecNods0) \u003c Vec_PtrSize(vVecNods)\");\n            assert(Vec_PtrSize(vVecNods1) \u003c Vec_PtrSize(vVecNods), \"Vec_PtrSize(vVecNods1) \u003c Vec_PtrSize(vVecNods)\");\n            vNods0 = Amap_CreateRulesVector_rec( p, vVecNods0, fXor );\n            vNods1 = Amap_CreateRulesVector_rec( p, vVecNods1, fXor );\n            Amap_CreateRulesTwo( p, vRes, vNods0, vNods1, fXor );\n            Vec_IntFree( vNods0 );\n            Vec_IntFree( vNods1 );\n        }\n    }\n    Vec_PtrFree( vVecNods0 );\n    Vec_PtrFree( vVecNods1 );\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_CreateRulesFromDsd_rec(pLib *Amap_Lib_t, p *Kit_DsdNtk_t, iLit int32) *Vec_Int_t {\n    var vRes *Vec_Int_t  = nil;\n    var vVecNods *Vec_Ptr_t;\n    var vNodsFanin *Vec_Int_t;\n    var pObj *Kit_DsdObj_t;\n    var i uint32;\n    var iFanin, iNod, k int32;\n    assert(!Abc_LitIsCompl(iLit), \"!Abc_LitIsCompl(iLit)\");\n    pObj = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit) );\n    if pObj == nil {\n        return Vec_IntStartNatural( 1 ); }\n    // solve for the inputs\n    vVecNods = Vec_PtrAlloc( pObj.nFans );\n    // inlining of macro Kit_DsdObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFans)) \u0026\u0026 ((iFanin) = (pObj).pFans[i], 1); i++  {\n        vNodsFanin = Amap_CreateRulesFromDsd_rec( pLib, p, Abc_LitRegular(iFanin) );\n        if Abc_LitIsCompl(iFanin) {\n            Vec_IntForEachEntry( vNodsFanin, iNod, k )\n                if ( iNod \u003e 0 )\n                    Vec_IntWriteEntry( vNodsFanin, k, Abc_LitNot(iNod) );\n        }\n        Vec_PtrPush( vVecNods, vNodsFanin );\n    }\n    if pObj.Type == KIT_DSD_AND {\n        vRes = Amap_CreateRulesVector_rec( pLib, vVecNods, 0 );\n    } else if pObj.Type == KIT_DSD_XOR {\n        vRes = Amap_CreateRulesVector_rec( pLib, vVecNods, 1 );\n    } else if pObj.Type == KIT_DSD_PRIME {\n        assert(pObj.nFans == 3, \"pObj.nFans == 3\");\n        assert(Kit_DsdObjTruth(pObj)[0] == 0xCACACACA, \"Kit_DsdObjTruth(pObj)[0] == 0xCACACACA\");\n        vRes = Amap_CreateRulesPrime( pLib, (Vec_Int_t *)Vec_PtrEntry(vVecNods, 0),\n            (Vec_Int_t *)Vec_PtrEntry(vVecNods, 1), (Vec_Int_t *)Vec_PtrEntry(vVecNods, 2) );\n    \n    } else { assert(false, \"0\"); }\n    Vec_PtrForEachEntry( Vec_Int_t *, vVecNods, vNodsFanin, k )\n        Vec_IntFree( vNodsFanin );\n    Vec_PtrFree( vVecNods );\n    return vRes;\n}\nfunc Amap_CreateRulesFromDsd(pLib *Amap_Lib_t, p *Kit_DsdNtk_t) *Vec_Int_t {\n    var vNods *Vec_Int_t;\n    var iNod, i int32;\n    assert(p.nVars \u003e= 2, \"p.nVars \u003e= 2\");\n    vNods = Amap_CreateRulesFromDsd_rec( pLib, p, Abc_LitRegular(p.Root) );\n    if vNods == nil {\n        return nil; }\n    if Abc_LitIsCompl(p.Root) {\n        Vec_IntForEachEntry( vNods, iNod, i )\n            Vec_IntWriteEntry( vNods, i, Abc_LitNot(iNod) );\n    }\n    return vNods;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if DSD network contains asymentry due to complements.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_CreateCheckEqual_rec(p *Kit_DsdNtk_t, iLit0 int32, iLit1 int32) int32 {\n    var pObj0, pObj1 *Kit_DsdObj_t; \n    var i int32;\n    assert(!Abc_LitIsCompl(iLit0), \"!Abc_LitIsCompl(iLit0)\");\n    assert(!Abc_LitIsCompl(iLit1), \"!Abc_LitIsCompl(iLit1)\");\n    pObj0 = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit0) );\n    pObj1 = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit1) );\n    if pObj0 == nil \u0026\u0026 pObj1 == nil {\n        return 1; }\n    if pObj0 == nil || pObj1 == nil {\n        return 0; }\n    if pObj0.Type != pObj1.Type {\n        return 0; }\n    if pObj0.nFans != pObj1.nFans {\n        return 0; }\n    if pObj0.Type == KIT_DSD_PRIME {\n        return 0; }\n    assert(pObj0.Type == KIT_DSD_AND || pObj0.Type == KIT_DSD_XOR, \"pObj0.Type == KIT_DSD_AND || pObj0.Type == KIT_DSD_XOR\");\n    for  i = 0; i \u003c int32(pObj0.nFans); i++  {\n        if Abc_LitIsCompl(pObj0.pFans[i]) != Abc_LitIsCompl(pObj1.pFans[i]) {\n            return 0; }\n        if !(Amap_CreateCheckEqual_rec( p, Abc_LitRegular(pObj0.pFans[i]), Abc_LitRegular(pObj1.pFans[i]) ) != 0) {\n            return 0; }\n    }\n    return 1;\n}\nfunc Amap_CreateCheckAsym_rec(p *Kit_DsdNtk_t, iLit int32, pvSyms **Vec_Int_t) {\n    var pObj *Kit_DsdObj_t; \n    var i, k, iFanin int32;\n    assert(!Abc_LitIsCompl(iLit), \"!Abc_LitIsCompl(iLit)\");\n    pObj = Kit_DsdNtkObj( p, Abc_Lit2Var(iLit) );\n    if pObj == nil {\n        return; }\n    // inlining of macro Kit_DsdObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFans)) \u0026\u0026 ((iFanin) = (pObj).pFans[i], 1); i++  {\n        Amap_CreateCheckAsym_rec( p, Abc_LitRegular(iFanin), pvSyms );\n    }\n    if pObj.Type == KIT_DSD_PRIME {\n        return; }\n    assert(pObj.Type == KIT_DSD_AND || pObj.Type == KIT_DSD_XOR, \"pObj.Type == KIT_DSD_AND || pObj.Type == KIT_DSD_XOR\");\n    for  i = 0; i \u003c int32(pObj.nFans); i++  {\n    for  k = i+1; k \u003c int32(pObj.nFans); k++  {\n        if Abc_LitIsCompl(pObj.pFans[i]) != Abc_LitIsCompl(pObj.pFans[k]) \u0026\u0026 \n             Kit_DsdNtkObj(p, Abc_Lit2Var(pObj.pFans[i])) == nil \u0026\u0026 \n             Kit_DsdNtkObj(p, Abc_Lit2Var(pObj.pFans[k])) == nil {\n            if *pvSyms == nil {\n                *pvSyms = Vec_IntAlloc( 16 ); }\n            Vec_IntPush( *pvSyms, (Abc_Lit2Var(pObj.pFans[i]) \u003c\u003c 8) | Abc_Lit2Var(pObj.pFans[k]) );\n        }\n    }\n    }\n}\nfunc Amap_CreateCheckAsym(p *Kit_DsdNtk_t, pvSyms **Vec_Int_t) {\n    Amap_CreateCheckAsym_rec( p, Abc_LitRegular(p.Root), pvSyms );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates rules for the given gate]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_CreateRulesForGate(pLib *Amap_Lib_t, pGate *Amap_Gat_t) { \n    var pNtk, pTemp *Kit_DsdNtk_t;\n    var vSyms *Vec_Int_t  = nil;\n    var vNods *Vec_Int_t;\n    var pNod *Amap_Nod_t;\n    var pSet, pSet2 *Amap_Set_t;\n    var iNod, i, k, Entry int32;\n//    if ( pGate-\u003enPins \u003e 4 )\n//        return;\n    pNtk = Kit_DsdDecomposeMux( pGate.pFunc, pGate.nPins, 2 );\n    if pGate.nPins == 2 \u0026\u0026 (pGate.pFunc[0] == 0x66666666 || pGate.pFunc[0] == ~0x66666666) {\n         pLib.fHasXor = 1; }\n    if Kit_DsdNonDsdSizeMax(pNtk) == 3 {\n        pLib.fHasMux = pGate.fMux = 1; }\n    pNtk = Kit_DsdExpand( pTemp = pNtk );\n    Kit_DsdNtkFree( pTemp );\n    Kit_DsdVerify( pNtk, pGate.pFunc, pGate.nPins ); \n    // check symmetries\n    Amap_CreateCheckAsym( pNtk, \u0026vSyms );\n//    if ( vSyms )\n//        Kit_DsdPrint( stdout, pNtk ), printf( \"\\n\" );\n\nif pLib.fVerbose {\n//if ( pGate-\u003efMux )\n\nfmt.Printf(\"\\nProcessing library gate %4d: %10s \", pGate.Id, pGate.pName);\nKit_DsdPrint( os.Stdout, pNtk );\n}\n    vNods = Amap_CreateRulesFromDsd( pLib, pNtk );\n    if vNods != nil {\n        Vec_IntForEachEntry( vNods, iNod, i )\n        {\n            assert(iNod \u003e 1, \"iNod \u003e 1\");\n            pNod = Amap_LibNod( pLib, Abc_Lit2Var(iNod) );\n//            assert( pNod-\u003eType == AMAP_OBJ_MUX || pNod-\u003enSuppSize == pGate-\u003enPins );\n            pSet = (Amap_Set_t *)Aig_MmFlexEntryFetch( pLib.pMemSet, sizeof(Amap_Set_t) );\n            memset( pSet, 0, sizeof(Amap_Set_t) );\n            pSet.iGate = pGate.Id;\n            pSet.fInv  = Abc_LitIsCompl(iNod);\n            pSet.nIns  = pGate.nPins;\n            if Amap_LibDeriveGatePerm( pLib, pGate, pNtk, pNod, pSet.Ins ) == 0 {\nif pLib.fVerbose {\n                fmt.Printf(\"Cound not prepare gate \\\"%s\\\": \", pGate.pName);\n                Kit_DsdPrint( os.Stdout, pNtk );\n}\n                continue;\n            }\n            pSet.pNext = pNod.pSets;\n            pNod.pSets = pSet;\n            pLib.nSets++;\n            if vSyms == nil {\n                continue; }\n//            continue;\n            // add sets equivalent due to symmetry\n            Vec_IntForEachEntry( vSyms, Entry, k )\n            {\n                var iThis int32  = Entry \u0026 0xff;\n                var iThat int32  = Entry \u003e\u003e 8;\n//                printf( \"%d %d\\n\", iThis, iThat );\n                // create new set\n                pSet2 = (Amap_Set_t *)Aig_MmFlexEntryFetch( pLib.pMemSet, sizeof(Amap_Set_t) );\n                memset( pSet2, 0, sizeof(Amap_Set_t) );\n                pSet2.iGate = pGate.Id;\n                pSet2.fInv  = Abc_LitIsCompl(iNod);\n                pSet2.nIns  = pGate.nPins;\n                memcpy( pSet2.Ins, pSet.Ins, (size_t)pGate.nPins );\n                // update inputs\n                pSet2.Ins[iThis] = Abc_Var2Lit( Abc_Lit2Var(pSet.Ins[iThat]), Abc_LitIsCompl(pSet.Ins[iThis]) );\n                pSet2.Ins[iThat] = Abc_Var2Lit( Abc_Lit2Var(pSet.Ins[iThis]), Abc_LitIsCompl(pSet.Ins[iThat]) );\n                // add set to collection\n                pSet2.pNext = pNod.pSets;\n                pNod.pSets  = pSet2;\n                pLib.nSets++;\n            }\n        }\n        Vec_IntFree( vNods );\n    }\n    Kit_DsdNtkFree( pNtk );\n    Vec_IntFreeP( \u0026vSyms );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates rules for the given gate]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_LibCreateRules(pLib *Amap_Lib_t, fVeryVerbose int32) {\n    var pGate *Amap_Gat_t;\n    var i, nGates int32;\n//    abctime clk = Abc_Clock();\n    pLib.fVerbose = fVeryVerbose;\n    pLib.vRules   = Vec_PtrAlloc( 100 );\n    pLib.vRulesX  = Vec_PtrAlloc( 100 );\n    pLib.vRules3  = Vec_IntAlloc( 100 );\n    Amap_LibCreateVar( pLib );\n    Vec_PtrForEachEntry( Amap_Gat_t *, pLib.vSelect, pGate, i )\n    {\n        if pGate.nPins \u003c 2 {\n            continue; }\n        if pGate.pFunc == nil {\n            fmt.Printf(\"Amap_LibCreateRules(): Skipping gate %s (%s).\\n\", pGate.pName, pGate.pForm);\n            continue;\n        }\n        Amap_CreateRulesForGate( pLib, pGate );\n        nGates++;\n    }\n    assert(Vec_PtrSize(pLib.vRules)  == 2*pLib.nNodes, \"Vec_PtrSize(pLib.vRules)  == 2*pLib.nNodes\");\n    assert(Vec_PtrSize(pLib.vRulesX) == 2*pLib.nNodes, \"Vec_PtrSize(pLib.vRulesX) == 2*pLib.nNodes\");\n    pLib.pRules  = Amap_LibLookupTableAlloc( pLib.vRules, 0 );\n    pLib.pRulesX = Amap_LibLookupTableAlloc( pLib.vRulesX, 0 );\n    Vec_VecFree( (Vec_Vec_t *)pLib.vRules );  pLib.vRules  = nil;\n    Vec_VecFree( (Vec_Vec_t *)pLib.vRulesX ); pLib.vRulesX = nil;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

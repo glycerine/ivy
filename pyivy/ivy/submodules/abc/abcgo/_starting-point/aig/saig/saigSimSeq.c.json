@@ -1,0 +1,1162 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c",
+  "SHA256": "6de465b277b8a468b16003acabe3f3bad48607c18b662fcc9acb775c1572aad3",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 107,
+        "Column": 5,
+        "ByteOffset": 4016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 4104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_ObjIsConst1(pObj) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 148,
+        "Column": 84,
+        "ByteOffset": 5320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Raig_Man_t *)/*__starting_point_inline_macro:ABC_ALLOC__*/((Raig_Man_t *) malloc(sizeof(Raig_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 5367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Raig_Man_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 157,
+        "Column": 70,
+        "ByteOffset": 5706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pFans0 = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nObjs)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 158,
+        "Column": 70,
+        "ByteOffset": 5815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pFans1 = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nObjs)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 159,
+        "Column": 69,
+        "ByteOffset": 5923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pRefs = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nObjs)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 160,
+        "Column": 75,
+        "ByteOffset": 6037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pSims = /*__starting_point_inline_macro:ABC_CALLOC__*/((unsigned *) calloc((size_t)(nObjs), sizeof(unsigned)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 173,
+        "Column": 5,
+        "ByteOffset": 6819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vCis2Ids) == Aig_ManCiNum(pAig) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 174,
+        "Column": 5,
+        "ByteOffset": 6880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nObjs == nObjs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 184,
+        "Column": 9,
+        "ByteOffset": 7529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pRefs[ pObj.iData ] == 0 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 205,
+        "Column": 64,
+        "ByteOffset": 8074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pFans0) ? (free((char *) (p.pFans0)), (p.pFans0) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 206,
+        "Column": 64,
+        "ByteOffset": 8186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pFans1) ? (free((char *) (p.pFans1)), (p.pFans1) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 207,
+        "Column": 63,
+        "ByteOffset": 8297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 208,
+        "Column": 63,
+        "ByteOffset": 8406
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pSims) ? (free((char *) (p.pSims)), (p.pSims) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 209,
+        "Column": 63,
+        "ByteOffset": 8515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMems) ? (free((char *) (p.pMems)), (p.pMems) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 210,
+        "Column": 57,
+        "ByteOffset": 8618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 5,
+        "ByteOffset": 8997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 227,
+        "Column": 5,
+        "ByteOffset": 9018
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pSims[i] == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 13,
+        "ByteOffset": 9165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.pMems == nil );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 239,
+        "Column": 37,
+        "ByteOffset": 9414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pMems = ((unsigned *) realloc((char *)(p.pMems), sizeof(unsigned) * (size_t)(p.nWordsAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 241,
+        "Column": 37,
+        "ByteOffset": 9540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pMems = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nWordsAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 243,
+        "Column": 9,
+        "ByteOffset": 9611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( p.pMems, 0xff, sizeof(unsigned) * (p.nWords + 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 5,
+        "ByteOffset": 10505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 5,
+        "ByteOffset": 10575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pSims[i] \u003e 0 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 310,
+        "Column": 13,
+        "ByteOffset": 11646
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memset( pRes + 1, 0, sizeof(unsigned) * p.nWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 341,
+        "Column": 17,
+        "ByteOffset": 12700
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Vec_IntEntry(p.vLos, iPioNum-p.nPis) == i ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 364,
+        "Column": 17,
+        "ByteOffset": 13552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pRes[0] == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 378,
+        "Column": 9,
+        "ByteOffset": 14008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pRes[0] \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 400,
+        "Column": 5,
+        "ByteOffset": 14939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCis == p.nCis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 401,
+        "Column": 5,
+        "ByteOffset": 14969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCos == p.nCos );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 402,
+        "Column": 5,
+        "ByteOffset": 14999
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nMems == 1 + Vec_IntSize(p.vLis) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 427,
+        "Column": 72,
+        "ByteOffset": 15807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pData = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(nWords)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 440,
+        "Column": 61,
+        "ByteOffset": 16321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pData) ? (free((char *) (pData)), (pData) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 461,
+        "Column": 5,
+        "ByteOffset": 16936
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 464,
+        "Column": 9,
+        "ByteOffset": 17042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Miter is trivially satisfiable (output %d).\\n\", Status.iOut );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 468,
+        "Column": 9,
+        "ByteOffset": 17174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Miter is trivially unsatisfiable.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 479,
+        "Column": 13,
+        "ByteOffset": 17521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Frame %4d out of %4d and timeout %3d sec. \", i+1, nIters, TimeLimit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 480,
+        "Column": 13,
+        "ByteOffset": 17613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"Time = %7.2f sec\\r\", (1.0*Abc_Clock()-clkTotal)/CLOCKS_PER_SEC);"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 480,
+        "Column": 69,
+        "ByteOffset": 17669
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"Time = %7.2f sec\\r\", (1.0*Abc_Clock()-clkTotal)/CLOCKS_PER_SEC);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 484,
+        "Column": 13,
+        "ByteOffset": 17798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pAig.pSeqModel == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 487,
+        "Column": 13,
+        "ByteOffset": 17966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Miter is satisfiable after simulation (output %d).\\n\", iOut ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 490,
+        "Column": 32,
+        "ByteOffset": 18100
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if (Abc_Clock() - clk)/CLOCKS_PER_SEC \u003e= TimeLimit {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 491,
+        "Column": 13,
+        "ByteOffset": 18142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"No bug detected after %d frames with time limit %d seconds.\\n\", i+1, TimeLimit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 496,
+        "Column": 9,
+        "ByteOffset": 18294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Maxcut = %8d.  AigMem = %7.2f MB.  SimMem = %7.2f MB.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 501,
+        "Column": 78,
+        "ByteOffset": 18651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Raig_Var2Lit",
+      "Start": 2313,
+      "End": 2399,
+      "BodyStart": 2369,
+      "Original": "static inline int  Raig_Var2Lit( int Var, int fCompl )  { return Var + Var + fCompl; }",
+      "Draft": "func Raig_Var2Lit(Var int32, fCompl int32) int32 { return Var + Var + fCompl; }"
+    },
+    {
+      "Name": "Raig_Lit2Var",
+      "Start": 2400,
+      "End": 2486,
+      "BodyStart": 2456,
+      "Original": "static inline int  Raig_Lit2Var( int Lit )              { return Lit \u003e\u003e 1;           }",
+      "Draft": "func Raig_Lit2Var(Lit int32) int32 { return Lit \u003e\u003e 1;           }"
+    },
+    {
+      "Name": "Raig_LitIsCompl",
+      "Start": 2487,
+      "End": 2573,
+      "BodyStart": 2543,
+      "Original": "static inline int  Raig_LitIsCompl( int Lit )           { return Lit \u0026 1;            }",
+      "Draft": "func Raig_LitIsCompl(Lit int32) int32 { return Lit \u0026 1;            }"
+    },
+    {
+      "Name": "Raig_LitNot",
+      "Start": 2574,
+      "End": 2660,
+      "BodyStart": 2630,
+      "Original": "static inline int  Raig_LitNot( int Lit )               { return Lit ^ 1;            }",
+      "Draft": "func Raig_LitNot(Lit int32) int32 { return Lit ^ 1;            }"
+    },
+    {
+      "Name": "Raig_LitNotCond",
+      "Start": 2661,
+      "End": 2747,
+      "BodyStart": 2717,
+      "Original": "static inline int  Raig_LitNotCond( int Lit, int c )    { return Lit ^ (int)(c \u003e 0); }",
+      "Draft": "func Raig_LitNotCond(Lit int32, c int32) int32 { return Lit ^ int32((c \u003e 0)); }"
+    },
+    {
+      "Name": "Raig_LitRegular",
+      "Start": 2748,
+      "End": 2834,
+      "BodyStart": 2804,
+      "Original": "static inline int  Raig_LitRegular( int Lit )           { return Lit \u0026 ~01;          }",
+      "Draft": "func Raig_LitRegular(Lit int32) int32 { return Lit \u0026 ~01;          }"
+    },
+    {
+      "Name": "Raig_ManFindPo",
+      "Start": 3333,
+      "End": 3531,
+      "BodyStart": 3383,
+      "Original": "int Raig_ManFindPo( Aig_Man_t * pAig, int iNode )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Saig_ManForEachPo( pAig, pObj, i )\n        if ( pObj-\u003eiData == iNode )\n            return i;\n    return -1;\n}",
+      "Draft": "func Raig_ManFindPo(pAig *Aig_Man_t, iNode int32) int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        if pObj.iData == iNode {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Raig_ManCreate_rec",
+      "Start": 3799,
+      "End": 4715,
+      "BodyStart": 3858,
+      "Original": "int Raig_ManCreate_rec( Raig_Man_t * p, Aig_Obj_t * pObj )\n{\n    int iFan0, iFan1;\n    assert( !Aig_IsComplement(pObj) );\n    if ( pObj-\u003eiData )\n        return pObj-\u003eiData;\n    assert( !Aig_ObjIsConst1(pObj) );\n    if ( Aig_ObjIsNode(pObj) )\n    {\n        iFan0 = Raig_ManCreate_rec( p, Aig_ObjFanin0(pObj) );\n        iFan0 = (iFan0 \u003c\u003c 1) | Aig_ObjFaninC0(pObj);\n        iFan1 = Raig_ManCreate_rec( p, Aig_ObjFanin1(pObj) );\n        iFan1 = (iFan1 \u003c\u003c 1) | Aig_ObjFaninC1(pObj);\n    }\n    else if ( Aig_ObjIsCo(pObj) )\n    {\n        iFan0 = Raig_ManCreate_rec( p, Aig_ObjFanin0(pObj) );\n        iFan0 = (iFan0 \u003c\u003c 1) | Aig_ObjFaninC0(pObj);\n        iFan1 = 0;\n    }\n    else\n    {\n        iFan0 = iFan1 = 0;\n        Vec_IntPush( p-\u003evCis2Ids, Aig_ObjCioId(pObj) );\n    }\n    p-\u003epFans0[p-\u003enObjs] = iFan0;\n    p-\u003epFans1[p-\u003enObjs] = iFan1;\n    p-\u003epRefs[p-\u003enObjs] = Aig_ObjRefs(pObj);\n    return pObj-\u003eiData = p-\u003enObjs++;\n}",
+      "Draft": "func Raig_ManCreate_rec(p *Raig_Man_t, pObj *Aig_Obj_t) int32 {\n    var iFan0, iFan1 int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if pObj.iData {\n        return pObj.iData; }\n    assert(!Aig_ObjIsConst1(pObj), \"!Aig_ObjIsConst1(pObj)\");\n    if Aig_ObjIsNode(pObj) {\n        iFan0 = Raig_ManCreate_rec( p, Aig_ObjFanin0(pObj) );\n        iFan0 = (iFan0 \u003c\u003c 1) | Aig_ObjFaninC0(pObj);\n        iFan1 = Raig_ManCreate_rec( p, Aig_ObjFanin1(pObj) );\n        iFan1 = (iFan1 \u003c\u003c 1) | Aig_ObjFaninC1(pObj);\n    \n    } else if Aig_ObjIsCo(pObj) {\n        iFan0 = Raig_ManCreate_rec( p, Aig_ObjFanin0(pObj) );\n        iFan0 = (iFan0 \u003c\u003c 1) | Aig_ObjFaninC0(pObj);\n        iFan1 = 0;\n    \n    } else {\n        iFan0 = iFan1 = 0;\n        Vec_IntPush( p.vCis2Ids, Aig_ObjCioId(pObj) );\n    }\n    p.pFans0[p.nObjs] = iFan0;\n    p.pFans1[p.nObjs] = iFan1;\n    p.pRefs[p.nObjs] = Aig_ObjRefs(pObj);\n    return pObj.iData = p.nObjs++;\n}"
+    },
+    {
+      "Name": "Raig_ManCreate",
+      "Start": 4983,
+      "End": 6517,
+      "BodyStart": 5031,
+      "Original": "Raig_Man_t * Raig_ManCreate( Aig_Man_t * pAig )\n{\n    Raig_Man_t * p;\n    Aig_Obj_t * pObj;\n    int i, nObjs;\n    Aig_ManCleanData( pAig );\n    p = (Raig_Man_t *)ABC_ALLOC( Raig_Man_t, 1 );\n    memset( p, 0, sizeof(Raig_Man_t) );\n    p-\u003epAig = pAig;\n    p-\u003enPis = Saig_ManPiNum(pAig);\n    p-\u003enPos = Saig_ManPoNum(pAig);\n    p-\u003enCis = Aig_ManCiNum(pAig);\n    p-\u003enCos = Aig_ManCoNum(pAig);\n    p-\u003enNodes = Aig_ManNodeNum(pAig);\n    nObjs = p-\u003enCis + p-\u003enCos + p-\u003enNodes + 2;\n    p-\u003epFans0 = ABC_ALLOC( int, nObjs );\n    p-\u003epFans1 = ABC_ALLOC( int, nObjs );\n    p-\u003epRefs = ABC_ALLOC( int, nObjs );\n    p-\u003epSims = ABC_CALLOC( unsigned, nObjs );\n    p-\u003evCis2Ids = Vec_IntAlloc( Aig_ManCiNum(pAig) );\n    // add objects (0=unused; 1=const1)\n    p-\u003enObjs = 2;\n    pObj = Aig_ManConst1( pAig );\n    pObj-\u003eiData = 1;\n    Aig_ManForEachCi( pAig, pObj, i )\n        if ( Aig_ObjRefs(pObj) == 0 )\n            Raig_ManCreate_rec( p, pObj );\n    Aig_ManForEachCo( pAig, pObj, i )\n        Raig_ManCreate_rec( p, pObj );\n    assert( Vec_IntSize(p-\u003evCis2Ids) == Aig_ManCiNum(pAig) );\n    assert( p-\u003enObjs == nObjs );\n    // collect flop outputs\n    p-\u003evLos = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    Saig_ManForEachLo( pAig, pObj, i )\n        Vec_IntPush( p-\u003evLos, pObj-\u003eiData );\n    // collect flop inputs\n    p-\u003evLis = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        Vec_IntPush( p-\u003evLis, pObj-\u003eiData );\n        assert( p-\u003epRefs[ pObj-\u003eiData ] == 0 );\n        p-\u003epRefs[ pObj-\u003eiData ]++;\n    }\n    return p;\n}",
+      "Draft": "func Raig_ManCreate(pAig *Aig_Man_t) *Raig_Man_t {\n    var p *Raig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i, nObjs int32;\n    Aig_ManCleanData( pAig );\n    // inlining of macro ABC_ALLOC\n    p = (Raig_Man_t *)((Raig_Man_t *) malloc(sizeof(Raig_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Raig_Man_t) );\n    p.pAig = pAig;\n    p.nPis = Saig_ManPiNum(pAig);\n    p.nPos = Saig_ManPoNum(pAig);\n    p.nCis = Aig_ManCiNum(pAig);\n    p.nCos = Aig_ManCoNum(pAig);\n    p.nNodes = Aig_ManNodeNum(pAig);\n    nObjs = p.nCis + p.nCos + p.nNodes + 2;\n    // inlining of macro ABC_ALLOC\n    p.pFans0 = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));\n    // inlining of macro ABC_ALLOC\n    p.pFans1 = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));\n    // inlining of macro ABC_ALLOC\n    p.pRefs = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));\n    // inlining of macro ABC_CALLOC\n    p.pSims = ((unsigned *) calloc((size_t)(nObjs), sizeof(unsigned)));\n    p.vCis2Ids = Vec_IntAlloc( Aig_ManCiNum(pAig) );\n    // add objects (0=unused; 1=const1)\n    p.nObjs = 2;\n    pObj = Aig_ManConst1( pAig );\n    pObj.iData = 1;\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        if Aig_ObjRefs(pObj) == 0 {\n            Raig_ManCreate_rec( p, pObj ); }\n    }\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        Raig_ManCreate_rec( p, pObj );\n    }\n    assert(Vec_IntSize(p.vCis2Ids) == Aig_ManCiNum(pAig), \"Vec_IntSize(p.vCis2Ids) == Aig_ManCiNum(pAig)\");\n    assert(p.nObjs == nObjs, \"p.nObjs == nObjs\");\n    // collect flop outputs\n    p.vLos = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        Vec_IntPush( p.vLos, pObj.iData );\n    }\n    // collect flop inputs\n    p.vLis = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Vec_IntPush( p.vLis, pObj.iData );\n        assert(p.pRefs[ pObj.iData ] == 0, \"p.pRefs[ pObj.iData ] == 0\");\n        p.pRefs[ pObj.iData ]++;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Raig_ManDelete",
+      "Start": 6785,
+      "End": 7065,
+      "BodyStart": 6823,
+      "Original": "void Raig_ManDelete( Raig_Man_t * p )\n{\n    Vec_IntFree( p-\u003evCis2Ids );\n    Vec_IntFree( p-\u003evLos );\n    Vec_IntFree( p-\u003evLis );\n    ABC_FREE( p-\u003epFans0 );\n    ABC_FREE( p-\u003epFans1 );\n    ABC_FREE( p-\u003epRefs );\n    ABC_FREE( p-\u003epSims );\n    ABC_FREE( p-\u003epMems );\n    ABC_FREE( p );\n}",
+      "Draft": "func Raig_ManDelete(p *Raig_Man_t) {\n    Vec_IntFree( p.vCis2Ids );\n    Vec_IntFree( p.vLos );\n    Vec_IntFree( p.vLis );\n    // inlining of macro ABC_FREE\n    ((p.pFans0) ? (free((char *) (p.pFans0)), (p.pFans0) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pFans1) ? (free((char *) (p.pFans1)), (p.pFans1) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pSims) ? (free((char *) (p.pSims)), (p.pSims) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMems) ? (free((char *) (p.pMems)), (p.pMems) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Raig_ManSimRef",
+      "Start": 7328,
+      "End": 8377,
+      "BodyStart": 7379,
+      "Original": "unsigned * Raig_ManSimRef( Raig_Man_t * p, int i )\n{\n    unsigned * pSim;\n    assert( i \u003e 1 );\n    assert( p-\u003epSims[i] == 0 );\n    if ( p-\u003eMemFree == 0 )\n    {\n        unsigned * pPlace, Ent;\n        if ( p-\u003enWordsAlloc == 0 )\n        {\n            assert( p-\u003epMems == NULL );\n            p-\u003enWordsAlloc = (1\u003c\u003c17); // -\u003e 1Mb\n            p-\u003enMems = 1;\n        }\n        p-\u003enWordsAlloc *= 2;\n        p-\u003epMems = ABC_REALLOC( unsigned, p-\u003epMems, p-\u003enWordsAlloc );\n        memset( p-\u003epMems, 0xff, sizeof(unsigned) * (p-\u003enWords + 1) );\n        pPlace = (unsigned *)\u0026p-\u003eMemFree;\n        for ( Ent = p-\u003enMems * (p-\u003enWords + 1); \n              Ent + p-\u003enWords + 1 \u003c (unsigned)p-\u003enWordsAlloc; \n              Ent += p-\u003enWords + 1 )\n        {\n            *pPlace = Ent;\n            pPlace = p-\u003epMems + Ent;\n        }\n        *pPlace = 0;\n    }\n    p-\u003epSims[i] = p-\u003eMemFree;\n    pSim = p-\u003epMems + p-\u003eMemFree;\n    p-\u003eMemFree = pSim[0];\n    pSim[0] = p-\u003epRefs[i];\n    p-\u003enMems++;\n    if ( p-\u003enMemsMax \u003c p-\u003enMems )\n        p-\u003enMemsMax = p-\u003enMems;\n    return pSim;\n}",
+      "Draft": "func Raig_ManSimRef(p *Raig_Man_t, i int32) *uint32 {\n    var pSim *uint32;\n    assert(i \u003e 1, \"i \u003e 1\");\n    assert(p.pSims[i] == 0, \"p.pSims[i] == 0\");\n    if p.MemFree == 0 {\n        var pPlace *uint32;\n        var Ent uint32;\n        if p.nWordsAlloc == 0 {\n            assert(p.pMems == nil, \"p.pMems == nil\");\n            p.nWordsAlloc = (1\u003c\u003c17); // -\u003e 1Mb\n            p.nMems = 1;\n        }\n        p.nWordsAlloc *= 2;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pMems {\n            p.pMems = ((unsigned *) realloc((char *)(p.pMems), sizeof(unsigned) * (size_t)(p.nWordsAlloc)));\n        } else {\n            p.pMems = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nWordsAlloc)));\n        }\n        memset( p.pMems, 0xff, sizeof(unsigned) * (p.nWords + 1) );\n        pPlace = (unsigned *)\u0026p.MemFree;\n        for  Ent = p.nMems * (p.nWords + 1); \n              Ent + p.nWords + 1 \u003c uint32(p.nWordsAlloc); \n              Ent += p.nWords + 1  {\n            *pPlace = Ent;\n            pPlace = p.pMems + Ent;\n        }\n        *pPlace = 0;\n    }\n    p.pSims[i] = p.MemFree;\n    pSim = p.pMems + p.MemFree;\n    p.MemFree = pSim[0];\n    pSim[0] = p.pRefs[i];\n    p.nMems++;\n    if p.nMemsMax \u003c p.nMems {\n        p.nMemsMax = p.nMems; }\n    return pSim;\n}"
+    },
+    {
+      "Name": "Raig_ManSimDeref",
+      "Start": 8640,
+      "End": 9018,
+      "BodyStart": 8693,
+      "Original": "unsigned * Raig_ManSimDeref( Raig_Man_t * p, int i )\n{\n    unsigned * pSim;\n    assert( i );\n    if ( i == 1 ) // const 1\n        return p-\u003epMems;\n    assert( p-\u003epSims[i] \u003e 0 );\n    pSim = p-\u003epMems + p-\u003epSims[i];\n    if ( --pSim[0] == 0 )\n    {\n        pSim[0] = p-\u003eMemFree;\n        p-\u003eMemFree = p-\u003epSims[i];\n        p-\u003epSims[i] = 0;\n        p-\u003enMems--;\n    }\n    return pSim;\n}",
+      "Draft": "func Raig_ManSimDeref(p *Raig_Man_t, i int32) *uint32 {\n    var pSim *uint32;\n    assert((i != 0), \"i\");\n    if i == 1 { // const 1\n        return p.pMems; }\n    assert(p.pSims[i] \u003e 0, \"p.pSims[i] \u003e 0\");\n    pSim = p.pMems + p.pSims[i];\n    if --pSim[0] == 0 {\n        pSim[0] = p.MemFree;\n        p.MemFree = p.pSims[i];\n        p.pSims[i] = 0;\n        p.nMems--;\n    }\n    return pSim;\n}"
+    },
+    {
+      "Name": "Raig_ManSimulateRound",
+      "Start": 9328,
+      "End": 13057,
+      "BodyStart": 9409,
+      "Original": "int Raig_ManSimulateRound( Raig_Man_t * p, int fMiter, int fFirst, int * piPat )\n{ \n    unsigned * pRes0, * pRes1, * pRes;\n    int i, w, nCis, nCos, iFan0, iFan1, iPioNum;\n    // nove the values to the register outputs\n    Vec_IntForEachEntry( p-\u003evCis2Ids, iPioNum, i )\n    {\n        if ( iPioNum \u003c p-\u003enPis )\n            continue;\n        pRes = Raig_ManSimRef( p, Vec_IntEntry(p-\u003evLos, iPioNum-p-\u003enPis) );\n        if ( fFirst )\n            memset( pRes + 1, 0, sizeof(unsigned) * p-\u003enWords );\n        else\n        {\n            pRes0 = Raig_ManSimDeref( p, Vec_IntEntry(p-\u003evLis, iPioNum-p-\u003enPis) );\n            for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                pRes[w] = pRes0[w];\n        }\n        // handle unused PIs\n        if ( pRes[0] == 0 ) \n        {\n            pRes[0] = 1;\n            Raig_ManSimDeref( p, Vec_IntEntry(p-\u003evLos, iPioNum-p-\u003enPis) );\n        }\n    }\n    // simulate the logic\n    nCis = nCos = 0;\n    for ( i = 2; i \u003c p-\u003enObjs; i++ )\n    {\n        if ( p-\u003epFans0[i] == 0 ) // ci always has zero first fanin\n        {\n            iPioNum = Vec_IntEntry( p-\u003evCis2Ids, nCis );\n            if ( iPioNum \u003c p-\u003enPis )\n            {\n                pRes = Raig_ManSimRef( p, i );\n                for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                    pRes[w] = Aig_ManRandom( 0 );\n                // handle unused PIs\n                if ( pRes[0] == 0 ) \n                {\n                    pRes[0] = 1;\n                    Raig_ManSimDeref( p, i );\n                }\n            }\n            else\n                assert( Vec_IntEntry(p-\u003evLos, iPioNum-p-\u003enPis) == i );\n            nCis++;\n            continue;\n        }\n        if ( p-\u003epFans1[i] == 0 ) // co always has non-zero 1st fanin and zero 2nd fanin\n        {\n            pRes0 = Raig_ManSimDeref( p, Raig_Lit2Var(p-\u003epFans0[i]) );\n            if ( nCos \u003c p-\u003enPos \u0026\u0026 fMiter )\n            {\n                unsigned Const = Raig_LitIsCompl(p-\u003epFans0[i])? ~0 : 0;\n                for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                    if ( pRes0[w] != Const )\n                    {\n                        *piPat = 32*(w-1) + Aig_WordFindFirstBit( pRes0[w] ^ Const );\n                        return i;\n                    }\n            }\n            else\n            {\n                pRes = Raig_ManSimRef( p, i );\n                assert( pRes[0] == 1 );\n                if ( Raig_LitIsCompl(p-\u003epFans0[i]) )\n                    for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                        pRes[w] = ~pRes0[w];\n                else\n                    for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                        pRes[w] = pRes0[w];\n            }\n            nCos++;\n            continue;\n        }\n        pRes  = Raig_ManSimRef( p, i );\n        assert( pRes[0] \u003e 0 );\n        iFan0 = p-\u003epFans0[i];\n        iFan1 = p-\u003epFans1[i];\n        pRes0 = Raig_ManSimDeref( p, Raig_Lit2Var(p-\u003epFans0[i]) );\n        pRes1 = Raig_ManSimDeref( p, Raig_Lit2Var(p-\u003epFans1[i]) );\n        if ( Raig_LitIsCompl(iFan0) \u0026\u0026 Raig_LitIsCompl(iFan1) )\n            for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                pRes[w] = ~(pRes0[w] | pRes1[w]);\n        else if ( Raig_LitIsCompl(iFan0) \u0026\u0026 !Raig_LitIsCompl(iFan1) )\n            for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                pRes[w] = ~pRes0[w] \u0026 pRes1[w];\n        else if ( !Raig_LitIsCompl(iFan0) \u0026\u0026 Raig_LitIsCompl(iFan1) )\n            for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                pRes[w] = pRes0[w] \u0026 ~pRes1[w];\n        else if ( !Raig_LitIsCompl(iFan0) \u0026\u0026 !Raig_LitIsCompl(iFan1) )\n            for ( w = 1; w \u003c= p-\u003enWords; w++ )\n                pRes[w] = pRes0[w] \u0026 pRes1[w];\n    }\n    assert( nCis == p-\u003enCis );\n    assert( nCos == p-\u003enCos );\n    assert( p-\u003enMems == 1 + Vec_IntSize(p-\u003evLis) );\n    return 0;\n}",
+      "Draft": "func Raig_ManSimulateRound(p *Raig_Man_t, fMiter int32, fFirst int32, piPat *int32) int32 { \n    var pRes0, pRes1, pRes *uint32;\n    var i, w, nCis, nCos, iFan0, iFan1, iPioNum int32;\n    // nove the values to the register outputs\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis2Ids)) \u0026\u0026 (((iPioNum) = Vec_IntEntry(p.vCis2Ids, i)), 1); i++  {\n        if iPioNum \u003c p.nPis {\n            continue; }\n        pRes = Raig_ManSimRef( p, Vec_IntEntry(p.vLos, iPioNum-p.nPis) );\n        if fFirst != 0 {\n            memset( pRes + 1, 0, sizeof(unsigned) * p.nWords );\n        } else {\n            pRes0 = Raig_ManSimDeref( p, Vec_IntEntry(p.vLis, iPioNum-p.nPis) );\n            for  w = 1; w \u003c= p.nWords; w++  {\n                pRes[w] = pRes0[w];\n            }\n        }\n        // handle unused PIs\n        if pRes[0] == 0 {\n            pRes[0] = 1;\n            Raig_ManSimDeref( p, Vec_IntEntry(p.vLos, iPioNum-p.nPis) );\n        }\n    }\n    // simulate the logic\n    nCis = nCos = 0;\n    for  i = 2; i \u003c p.nObjs; i++  {\n        if p.pFans0[i] == 0 { // ci always has zero first fanin\n        \n            iPioNum = Vec_IntEntry( p.vCis2Ids, nCis );\n            if iPioNum \u003c p.nPis {\n                pRes = Raig_ManSimRef( p, i );\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    pRes[w] = Aig_ManRandom( 0 );\n                }\n                // handle unused PIs\n                if pRes[0] == 0 {\n                    pRes[0] = 1;\n                    Raig_ManSimDeref( p, i );\n                }\n            \n            } else {\n                assert(Vec_IntEntry(p.vLos, iPioNum-p.nPis) == i, \"Vec_IntEntry(p.vLos, iPioNum-p.nPis) == i\"); }\n            nCis++;\n            continue;\n        }\n        if p.pFans1[i] == 0 { // co always has non-zero 1st fanin and zero 2nd fanin\n        \n            pRes0 = Raig_ManSimDeref( p, Raig_Lit2Var(p.pFans0[i]) );\n            if nCos \u003c p.nPos \u0026\u0026 (fMiter != 0) {\n                var Const uint32;\n                if Raig_LitIsCompl(p.pFans0[i]) != 0 {\n                    Const = ~0;\n                } else {\n                    Const = 0;\n                }\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    if pRes0[w] != Const {\n                        *piPat = 32*(w-1) + Aig_WordFindFirstBit( pRes0[w] ^ Const );\n                        return i;\n                    }\n                }\n            \n            } else {\n                pRes = Raig_ManSimRef( p, i );\n                assert(pRes[0] == 1, \"pRes[0] == 1\");\n                if Raig_LitIsCompl(p.pFans0[i]) != 0 {\n                    for  w = 1; w \u003c= p.nWords; w++  {\n                        pRes[w] = ~pRes0[w];\n                    }\n                } else {\n                    for  w = 1; w \u003c= p.nWords; w++  {\n                        pRes[w] = pRes0[w];\n                    } }\n            }\n            nCos++;\n            continue;\n        }\n        pRes  = Raig_ManSimRef( p, i );\n        assert(pRes[0] \u003e 0, \"pRes[0] \u003e 0\");\n        iFan0 = p.pFans0[i];\n        iFan1 = p.pFans1[i];\n        pRes0 = Raig_ManSimDeref( p, Raig_Lit2Var(p.pFans0[i]) );\n        pRes1 = Raig_ManSimDeref( p, Raig_Lit2Var(p.pFans1[i]) );\n        if (Raig_LitIsCompl(iFan0) != 0) \u0026\u0026 (Raig_LitIsCompl(iFan1) != 0) {\n            for  w = 1; w \u003c= p.nWords; w++  {\n                pRes[w] = ~(pRes0[w] | pRes1[w]);\n            }\n        } else if (Raig_LitIsCompl(iFan0) != 0) \u0026\u0026 !(Raig_LitIsCompl(iFan1) != 0) {\n            for  w = 1; w \u003c= p.nWords; w++  {\n                pRes[w] = ~pRes0[w] \u0026 pRes1[w];\n            }\n        } else if !(Raig_LitIsCompl(iFan0) != 0) \u0026\u0026 (Raig_LitIsCompl(iFan1) != 0) {\n            for  w = 1; w \u003c= p.nWords; w++  {\n                pRes[w] = pRes0[w] \u0026 ~pRes1[w];\n            }\n        } else if !(Raig_LitIsCompl(iFan0) != 0) \u0026\u0026 !(Raig_LitIsCompl(iFan1) != 0) {\n            for  w = 1; w \u003c= p.nWords; w++  {\n                pRes[w] = pRes0[w] \u0026 pRes1[w];\n            } }\n    }\n    assert(nCis == p.nCis, \"nCis == p.nCis\");\n    assert(nCos == p.nCos, \"nCos == p.nCos\");\n    assert(p.nMems == 1 + Vec_IntSize(p.vLis), \"p.nMems == 1 + Vec_IntSize(p.vLis)\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Raig_ManGenerateCounter",
+      "Start": 13321,
+      "End": 14200,
+      "BodyStart": 13443,
+      "Original": "Abc_Cex_t * Raig_ManGenerateCounter( Aig_Man_t * pAig, int iFrame, int iOut, int nWords, int iPat, Vec_Int_t * vCis2Ids )\n{\n    Abc_Cex_t * p;\n    unsigned * pData;\n    int f, i, w, iPioId, Counter;\n    p = Abc_CexAlloc( Aig_ManRegNum(pAig), Saig_ManPiNum(pAig), iFrame+1 );\n    p-\u003eiFrame = iFrame;\n    p-\u003eiPo = iOut;\n    // fill in the binary data\n    Aig_ManRandom( 1 );\n    Counter = p-\u003enRegs;\n    pData = ABC_ALLOC( unsigned, nWords );\n    for ( f = 0; f \u003c= iFrame; f++, Counter += p-\u003enPis )\n    for ( i = 0; i \u003c Aig_ManCiNum(pAig); i++ )\n    {\n        iPioId = Vec_IntEntry( vCis2Ids, i );\n        if ( iPioId \u003e= p-\u003enPis )\n            continue;\n        for ( w = 0; w \u003c nWords; w++ )\n            pData[w] = Aig_ManRandom( 0 );\n        if ( Abc_InfoHasBit( pData, iPat ) )\n            Abc_InfoSetBit( p-\u003epData, Counter + iPioId );\n    }\n    ABC_FREE( pData );\n    return p;\n}",
+      "Draft": "func Raig_ManGenerateCounter(pAig *Aig_Man_t, iFrame int32, iOut int32, nWords int32, iPat int32, vCis2Ids *Vec_Int_t) *Abc_Cex_t {\n    var p *Abc_Cex_t;\n    var pData *uint32;\n    var f, i, w, iPioId, Counter int32;\n    p = Abc_CexAlloc( Aig_ManRegNum(pAig), Saig_ManPiNum(pAig), iFrame+1 );\n    p.iFrame = iFrame;\n    p.iPo = iOut;\n    // fill in the binary data\n    Aig_ManRandom( 1 );\n    Counter = p.nRegs;\n    // inlining of macro ABC_ALLOC\n    pData = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(nWords)));\n    for  f = 0; f \u003c= iFrame; f++, Counter += p.nPis  {\n    for  i = 0; i \u003c Aig_ManCiNum(pAig); i++  {\n        iPioId = Vec_IntEntry( vCis2Ids, i );\n        if iPioId \u003e= p.nPis {\n            continue; }\n        for  w = 0; w \u003c nWords; w++  {\n            pData[w] = Aig_ManRandom( 0 );\n        }\n        if Abc_InfoHasBit( pData, iPat ) {\n            Abc_InfoSetBit( p.pData, Counter + iPioId ); }\n    }\n    }\n    // inlining of macro ABC_FREE\n    ((pData) ? (free((char *) (pData)), (pData) = 0) : 0);\n    return p;\n}"
+    },
+    {
+      "Name": "Raig_ManSimulate",
+      "Start": 14482,
+      "End": 16445,
+      "BodyStart": 14588,
+      "Original": "int Raig_ManSimulate( Aig_Man_t * pAig, int nWords, int nIters, int TimeLimit, int fMiter, int fVerbose )\n{\n    Raig_Man_t * p;\n    Sec_MtrStatus_t Status;\n    int i, iPat, RetValue = 0;\n    abctime clk, clkTotal = Abc_Clock();\n    assert( Aig_ManRegNum(pAig) \u003e 0 );\n    Status = Sec_MiterStatus( pAig );\n    if ( Status.nSat \u003e 0 )\n    {\n        printf( \"Miter is trivially satisfiable (output %d).\\n\", Status.iOut );\n        return 1;\n    }\n    if ( Status.nUndec == 0 )\n    {\n        printf( \"Miter is trivially unsatisfiable.\\n\" );\n        return 0;\n    }\n    Aig_ManRandom( 1 );\n    p = Raig_ManCreate( pAig );\n    p-\u003enWords = nWords;\n    // iterate through objects\n    for ( i = 0; i \u003c nIters; i++ )\n    {\n        clk = Abc_Clock();\n        RetValue = Raig_ManSimulateRound( p, fMiter, i==0, \u0026iPat );\n        if ( fVerbose )\n        {\n            printf( \"Frame %4d out of %4d and timeout %3d sec. \", i+1, nIters, TimeLimit );\n            printf(\"Time = %7.2f sec\\r\", (1.0*Abc_Clock()-clkTotal)/CLOCKS_PER_SEC);\n        }\n        if ( RetValue \u003e 0 )\n        {\n            int iOut = Raig_ManFindPo(p-\u003epAig, RetValue);\n            assert( pAig-\u003epSeqModel == NULL );\n            pAig-\u003epSeqModel = Raig_ManGenerateCounter( pAig, i, iOut, nWords, iPat, p-\u003evCis2Ids );\n            if ( fVerbose )\n            printf( \"Miter is satisfiable after simulation (output %d).\\n\", iOut );\n            break;\n        }\n        if ( (Abc_Clock() - clk)/CLOCKS_PER_SEC \u003e= TimeLimit )\n        {\n            printf( \"No bug detected after %d frames with time limit %d seconds.\\n\", i+1, TimeLimit );\n            break;\n        }\n    }\n    if ( fVerbose )\n    {\n        printf( \"Maxcut = %8d.  AigMem = %7.2f MB.  SimMem = %7.2f MB.  \", \n            p-\u003enMemsMax, \n            1.0*(p-\u003enObjs * 16)/(1\u003c\u003c20), \n            1.0*(p-\u003enMemsMax * 4 * (nWords+1))/(1\u003c\u003c20) );\n        ABC_PRT( \"Total time\", Abc_Clock() - clkTotal );\n    }\n    Raig_ManDelete( p );\n    return RetValue \u003e 0;\n}",
+      "Draft": "func Raig_ManSimulate(pAig *Aig_Man_t, nWords int32, nIters int32, TimeLimit int32, fMiter int32, fVerbose int32) int32 {\n    var p *Raig_Man_t;\n    var Status Sec_MtrStatus_t;\n    var i, iPat, RetValue int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    assert(Aig_ManRegNum(pAig) \u003e 0, \"Aig_ManRegNum(pAig) \u003e 0\");\n    Status = Sec_MiterStatus( pAig );\n    if Status.nSat \u003e 0 {\n        fmt.Printf(\"Miter is trivially satisfiable (output %d).\\n\", Status.iOut);\n        return 1;\n    }\n    if Status.nUndec == 0 {\n        fmt.Printf(\"Miter is trivially unsatisfiable.\\n\");\n        return 0;\n    }\n    Aig_ManRandom( 1 );\n    p = Raig_ManCreate( pAig );\n    p.nWords = nWords;\n    // iterate through objects\n    for  i = 0; i \u003c nIters; i++  {\n        clk = Abc_Clock();\n        RetValue = Raig_ManSimulateRound( p, fMiter, i==0, \u0026iPat );\n        if fVerbose != 0 {\n            fmt.Printf(\"Frame %4d out of %4d and timeout %3d sec. \", i+1, nIters, TimeLimit);\n            fmt.Printf(\"Time = %7.2f sec\\r\", (1.0*Abc_Clock()-clkTotal)/int64(time.Second));\n        }\n        if RetValue \u003e 0 {\n            var iOut int32  = Raig_ManFindPo(p.pAig, RetValue);\n            assert(pAig.pSeqModel == nil, \"pAig.pSeqModel == nil\");\n            pAig.pSeqModel = Raig_ManGenerateCounter( pAig, i, iOut, nWords, iPat, p.vCis2Ids );\n            if fVerbose != 0 {\n            fmt.Printf(\"Miter is satisfiable after simulation (output %d).\\n\", iOut); }\n            break;\n        }\n        if (Abc_Clock() - clk)/int64(time.Second) \u003e= TimeLimit {\n            fmt.Printf(\"No bug detected after %d frames with time limit %d seconds.\\n\", i+1, TimeLimit);\n            break;\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Maxcut = %8d.  AigMem = %7.2f MB.  SimMem = %7.2f MB.  \", p.nMemsMax, 1.0*(p.nObjs * 16)/(1\u003c\u003c20), 1.0*(p.nMemsMax * 4 * (nWords+1))/(1\u003c\u003c20));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Total time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    }\n    Raig_ManDelete( p );\n    return RetValue \u003e 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::struct::Raig_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Raig_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 850,
+      "End": 2311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::mechanical::sizeof::5396",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5145,
+      "End": 5145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::mechanical::sizeof::5450",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5191,
+      "End": 5197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::mechanical::sizeof::5792",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5472,
+      "End": 5472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::mechanical::sizeof::5902",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5513,
+      "End": 5513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::mechanical::sizeof::6011",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5553,
+      "End": 5553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::mechanical::sizeof::6143",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5593,
+      "End": 5593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::mechanical::sizeof::9541",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7737,
+      "End": 7737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::mechanical::sizeof::9619",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7737,
+      "End": 7737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::mechanical::sizeof::9699",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7820,
+      "End": 7826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::mechanical::sizeof::11779",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9790,
+      "End": 9796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::mechanical::sizeof::15785",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13730,
+      "End": 13730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::3587",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3422,
+      "End": 3422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::5314",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5131,
+      "End": 5145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::5374",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5145,
+      "End": 5145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::5777",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5472,
+      "End": 5472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::5887",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5513,
+      "End": 5513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::5996",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5553,
+      "End": 5553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::6106",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5593,
+      "End": 5593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::6498",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5795,
+      "End": 5795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::6800",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5914,
+      "End": 5914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::7177",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6165,
+      "End": 6165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::7484",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6327,
+      "End": 6327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::8177",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6917,
+      "End": 6917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::8292",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6944,
+      "End": 6944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::8406",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6971,
+      "End": 6971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::8518",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6997,
+      "End": 6997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::8630",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7023,
+      "End": 7023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::8735",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7049,
+      "End": 7049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::9500",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7737,
+      "End": 7737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::9521",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7737,
+      "End": 7737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::9599",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7737,
+      "End": 7737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::9754",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7875,
+      "End": 7887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::15765",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13730,
+      "End": 13730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::pointer-cast::16290",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14166,
+      "End": 14166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_Var2Lit",
+      "Category": "semantic-review",
+      "Symbol": "Raig_Var2Lit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2313,
+      "End": 2399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_Lit2Var",
+      "Category": "semantic-review",
+      "Symbol": "Raig_Lit2Var",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2400,
+      "End": 2486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_LitIsCompl",
+      "Category": "semantic-review",
+      "Symbol": "Raig_LitIsCompl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2487,
+      "End": 2573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_LitNot",
+      "Category": "semantic-review",
+      "Symbol": "Raig_LitNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2574,
+      "End": 2660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_LitNotCond",
+      "Category": "semantic-review",
+      "Symbol": "Raig_LitNotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2661,
+      "End": 2747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_LitRegular",
+      "Category": "semantic-review",
+      "Symbol": "Raig_LitRegular",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2748,
+      "End": 2834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_ManFindPo",
+      "Category": "semantic-review",
+      "Symbol": "Raig_ManFindPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3333,
+      "End": 3531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_ManCreate_rec",
+      "Category": "semantic-review",
+      "Symbol": "Raig_ManCreate_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3799,
+      "End": 4715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_ManCreate",
+      "Category": "semantic-review",
+      "Symbol": "Raig_ManCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4983,
+      "End": 6517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::ternary::Raig_ManDelete",
+      "Category": "ternary-review",
+      "Symbol": "Raig_ManDelete",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6785,
+      "End": 7065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_ManDelete",
+      "Category": "semantic-review",
+      "Symbol": "Raig_ManDelete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6785,
+      "End": 7065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_ManSimRef",
+      "Category": "semantic-review",
+      "Symbol": "Raig_ManSimRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7328,
+      "End": 8377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_ManSimDeref",
+      "Category": "semantic-review",
+      "Symbol": "Raig_ManSimDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8640,
+      "End": 9018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_ManSimulateRound",
+      "Category": "semantic-review",
+      "Symbol": "Raig_ManSimulateRound",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9328,
+      "End": 13057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::ternary::Raig_ManGenerateCounter",
+      "Category": "ternary-review",
+      "Symbol": "Raig_ManGenerateCounter",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13321,
+      "End": 14200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_ManGenerateCounter",
+      "Category": "semantic-review",
+      "Symbol": "Raig_ManGenerateCounter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13321,
+      "End": 14200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::Raig_ManSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Raig_ManSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14482,
+      "End": 16445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSimSeq.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16692
+    }
+  ],
+  "Draft": "package saig\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [saigSimSeq.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [Fast sequential AIG simulator.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saigSimSeq.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"saig.h\"\n//#include \"proof/ssw/ssw.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// combinational simulation manager\n   \ntype Raig_Man_t struct {\n    // parameters\n    pAig      *Aig_Man_t;         // the AIG to be used for simulation\n    nWords             int32;       // the number of words to simulate\n    // AIG representation\n    nPis             int32;         // the number of primary inputs\n    nPos             int32;         // the number of primary outputs\n    nCis             int32;         // the number of combinational inputs\n    nCos             int32;         // the number of combinational outputs\n    nNodes             int32;       // the number of internal nodes\n    nObjs             int32;        // nCis + nNodes + nCos + 2\n    pFans0            *int32;       // fanin0 for all objects\n    pFans1            *int32;       // fanin1 for all objects\n    vCis2Ids      *Vec_Int_t;     // mapping of CIs into their PI ids\n    vLos      *Vec_Int_t;         // register outputs\n    vLis      *Vec_Int_t;         // register inputs\n    // simulation info\n    pRefs            *int32;        // reference counter for each node\n    pSims       *uint32;        // simlulation information for each node\n    // recycable memory\n    pMems       *uint32;        // allocated simulaton memory\n    nWordsAlloc             int32;  // the number of allocated entries\n    nMems             int32;        // the number of used entries  \n    nMemsMax             int32;     // the max number of used entries \n    MemFree             int32;      // next free entry\n}\n\nfunc Raig_Var2Lit(Var int32, fCompl int32) int32 { return Var + Var + fCompl; }\nfunc Raig_Lit2Var(Lit int32) int32 { return Lit \u003e\u003e 1;           }\nfunc Raig_LitIsCompl(Lit int32) int32 { return Lit \u0026 1;            }\nfunc Raig_LitNot(Lit int32) int32 { return Lit ^ 1;            }\nfunc Raig_LitNotCond(Lit int32, c int32) int32 { return Lit ^ int32((c \u003e 0)); }\nfunc Raig_LitRegular(Lit int32) int32 { return Lit \u0026 ~01;          }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Find the PO corresponding to the PO driver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Raig_ManFindPo(pAig *Aig_Man_t, iNode int32) int32 {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        if pObj.iData == iNode {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates fast simulation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Raig_ManCreate_rec(p *Raig_Man_t, pObj *Aig_Obj_t) int32 {\n    var iFan0, iFan1 int32;\n    assert(!Aig_IsComplement(pObj), \"!Aig_IsComplement(pObj)\");\n    if pObj.iData {\n        return pObj.iData; }\n    assert(!Aig_ObjIsConst1(pObj), \"!Aig_ObjIsConst1(pObj)\");\n    if Aig_ObjIsNode(pObj) {\n        iFan0 = Raig_ManCreate_rec( p, Aig_ObjFanin0(pObj) );\n        iFan0 = (iFan0 \u003c\u003c 1) | Aig_ObjFaninC0(pObj);\n        iFan1 = Raig_ManCreate_rec( p, Aig_ObjFanin1(pObj) );\n        iFan1 = (iFan1 \u003c\u003c 1) | Aig_ObjFaninC1(pObj);\n    \n    } else if Aig_ObjIsCo(pObj) {\n        iFan0 = Raig_ManCreate_rec( p, Aig_ObjFanin0(pObj) );\n        iFan0 = (iFan0 \u003c\u003c 1) | Aig_ObjFaninC0(pObj);\n        iFan1 = 0;\n    \n    } else {\n        iFan0 = iFan1 = 0;\n        Vec_IntPush( p.vCis2Ids, Aig_ObjCioId(pObj) );\n    }\n    p.pFans0[p.nObjs] = iFan0;\n    p.pFans1[p.nObjs] = iFan1;\n    p.pRefs[p.nObjs] = Aig_ObjRefs(pObj);\n    return pObj.iData = p.nObjs++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates fast simulation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Raig_ManCreate(pAig *Aig_Man_t) *Raig_Man_t {\n    var p *Raig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i, nObjs int32;\n    Aig_ManCleanData( pAig );\n    // inlining of macro ABC_ALLOC\n    p = (Raig_Man_t *)((Raig_Man_t *) malloc(sizeof(Raig_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Raig_Man_t) );\n    p.pAig = pAig;\n    p.nPis = Saig_ManPiNum(pAig);\n    p.nPos = Saig_ManPoNum(pAig);\n    p.nCis = Aig_ManCiNum(pAig);\n    p.nCos = Aig_ManCoNum(pAig);\n    p.nNodes = Aig_ManNodeNum(pAig);\n    nObjs = p.nCis + p.nCos + p.nNodes + 2;\n    // inlining of macro ABC_ALLOC\n    p.pFans0 = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));\n    // inlining of macro ABC_ALLOC\n    p.pFans1 = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));\n    // inlining of macro ABC_ALLOC\n    p.pRefs = ((int *) malloc(sizeof(int) * (size_t)(nObjs)));\n    // inlining of macro ABC_CALLOC\n    p.pSims = ((unsigned *) calloc((size_t)(nObjs), sizeof(unsigned)));\n    p.vCis2Ids = Vec_IntAlloc( Aig_ManCiNum(pAig) );\n    // add objects (0=unused; 1=const1)\n    p.nObjs = 2;\n    pObj = Aig_ManConst1( pAig );\n    pObj.iData = 1;\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        if Aig_ObjRefs(pObj) == 0 {\n            Raig_ManCreate_rec( p, pObj ); }\n    }\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        Raig_ManCreate_rec( p, pObj );\n    }\n    assert(Vec_IntSize(p.vCis2Ids) == Aig_ManCiNum(pAig), \"Vec_IntSize(p.vCis2Ids) == Aig_ManCiNum(pAig)\");\n    assert(p.nObjs == nObjs, \"p.nObjs == nObjs\");\n    // collect flop outputs\n    p.vLos = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        Vec_IntPush( p.vLos, pObj.iData );\n    }\n    // collect flop inputs\n    p.vLis = Vec_IntAlloc( Aig_ManRegNum(pAig) );\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        Vec_IntPush( p.vLis, pObj.iData );\n        assert(p.pRefs[ pObj.iData ] == 0, \"p.pRefs[ pObj.iData ] == 0\");\n        p.pRefs[ pObj.iData ]++;\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates fast simulation manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Raig_ManDelete(p *Raig_Man_t) {\n    Vec_IntFree( p.vCis2Ids );\n    Vec_IntFree( p.vLos );\n    Vec_IntFree( p.vLis );\n    // inlining of macro ABC_FREE\n    ((p.pFans0) ? (free((char *) (p.pFans0)), (p.pFans0) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pFans1) ? (free((char *) (p.pFans1)), (p.pFans1) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pRefs) ? (free((char *) (p.pRefs)), (p.pRefs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pSims) ? (free((char *) (p.pSims)), (p.pSims) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMems) ? (free((char *) (p.pMems)), (p.pMems) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [References simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Raig_ManSimRef(p *Raig_Man_t, i int32) *uint32 {\n    var pSim *uint32;\n    assert(i \u003e 1, \"i \u003e 1\");\n    assert(p.pSims[i] == 0, \"p.pSims[i] == 0\");\n    if p.MemFree == 0 {\n        var pPlace *uint32;\n        var Ent uint32;\n        if p.nWordsAlloc == 0 {\n            assert(p.pMems == nil, \"p.pMems == nil\");\n            p.nWordsAlloc = (1\u003c\u003c17); // -\u003e 1Mb\n            p.nMems = 1;\n        }\n        p.nWordsAlloc *= 2;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pMems {\n            p.pMems = ((unsigned *) realloc((char *)(p.pMems), sizeof(unsigned) * (size_t)(p.nWordsAlloc)));\n        } else {\n            p.pMems = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nWordsAlloc)));\n        }\n        memset( p.pMems, 0xff, sizeof(unsigned) * (p.nWords + 1) );\n        pPlace = (unsigned *)\u0026p.MemFree;\n        for  Ent = p.nMems * (p.nWords + 1); \n              Ent + p.nWords + 1 \u003c uint32(p.nWordsAlloc); \n              Ent += p.nWords + 1  {\n            *pPlace = Ent;\n            pPlace = p.pMems + Ent;\n        }\n        *pPlace = 0;\n    }\n    p.pSims[i] = p.MemFree;\n    pSim = p.pMems + p.MemFree;\n    p.MemFree = pSim[0];\n    pSim[0] = p.pRefs[i];\n    p.nMems++;\n    if p.nMemsMax \u003c p.nMems {\n        p.nMemsMax = p.nMems; }\n    return pSim;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dereference simulaton info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Raig_ManSimDeref(p *Raig_Man_t, i int32) *uint32 {\n    var pSim *uint32;\n    assert((i != 0), \"i\");\n    if i == 1 { // const 1\n        return p.pMems; }\n    assert(p.pSims[i] \u003e 0, \"p.pSims[i] \u003e 0\");\n    pSim = p.pMems + p.pSims[i];\n    if --pSim[0] == 0 {\n        pSim[0] = p.MemFree;\n        p.MemFree = p.pSims[i];\n        p.pSims[i] = 0;\n        p.nMems--;\n    }\n    return pSim;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one round.]\n\n  Description [Returns the number of PO entry if failed; 0 otherwise.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Raig_ManSimulateRound(p *Raig_Man_t, fMiter int32, fFirst int32, piPat *int32) int32 { \n    var pRes0, pRes1, pRes *uint32;\n    var i, w, nCis, nCos, iFan0, iFan1, iPioNum int32;\n    // nove the values to the register outputs\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis2Ids)) \u0026\u0026 (((iPioNum) = Vec_IntEntry(p.vCis2Ids, i)), 1); i++  {\n        if iPioNum \u003c p.nPis {\n            continue; }\n        pRes = Raig_ManSimRef( p, Vec_IntEntry(p.vLos, iPioNum-p.nPis) );\n        if fFirst != 0 {\n            memset( pRes + 1, 0, sizeof(unsigned) * p.nWords );\n        } else {\n            pRes0 = Raig_ManSimDeref( p, Vec_IntEntry(p.vLis, iPioNum-p.nPis) );\n            for  w = 1; w \u003c= p.nWords; w++  {\n                pRes[w] = pRes0[w];\n            }\n        }\n        // handle unused PIs\n        if pRes[0] == 0 {\n            pRes[0] = 1;\n            Raig_ManSimDeref( p, Vec_IntEntry(p.vLos, iPioNum-p.nPis) );\n        }\n    }\n    // simulate the logic\n    nCis = nCos = 0;\n    for  i = 2; i \u003c p.nObjs; i++  {\n        if p.pFans0[i] == 0 { // ci always has zero first fanin\n        \n            iPioNum = Vec_IntEntry( p.vCis2Ids, nCis );\n            if iPioNum \u003c p.nPis {\n                pRes = Raig_ManSimRef( p, i );\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    pRes[w] = Aig_ManRandom( 0 );\n                }\n                // handle unused PIs\n                if pRes[0] == 0 {\n                    pRes[0] = 1;\n                    Raig_ManSimDeref( p, i );\n                }\n            \n            } else {\n                assert(Vec_IntEntry(p.vLos, iPioNum-p.nPis) == i, \"Vec_IntEntry(p.vLos, iPioNum-p.nPis) == i\"); }\n            nCis++;\n            continue;\n        }\n        if p.pFans1[i] == 0 { // co always has non-zero 1st fanin and zero 2nd fanin\n        \n            pRes0 = Raig_ManSimDeref( p, Raig_Lit2Var(p.pFans0[i]) );\n            if nCos \u003c p.nPos \u0026\u0026 (fMiter != 0) {\n                var Const uint32;\n                if Raig_LitIsCompl(p.pFans0[i]) != 0 {\n                    Const = ~0;\n                } else {\n                    Const = 0;\n                }\n                for  w = 1; w \u003c= p.nWords; w++  {\n                    if pRes0[w] != Const {\n                        *piPat = 32*(w-1) + Aig_WordFindFirstBit( pRes0[w] ^ Const );\n                        return i;\n                    }\n                }\n            \n            } else {\n                pRes = Raig_ManSimRef( p, i );\n                assert(pRes[0] == 1, \"pRes[0] == 1\");\n                if Raig_LitIsCompl(p.pFans0[i]) != 0 {\n                    for  w = 1; w \u003c= p.nWords; w++  {\n                        pRes[w] = ~pRes0[w];\n                    }\n                } else {\n                    for  w = 1; w \u003c= p.nWords; w++  {\n                        pRes[w] = pRes0[w];\n                    } }\n            }\n            nCos++;\n            continue;\n        }\n        pRes  = Raig_ManSimRef( p, i );\n        assert(pRes[0] \u003e 0, \"pRes[0] \u003e 0\");\n        iFan0 = p.pFans0[i];\n        iFan1 = p.pFans1[i];\n        pRes0 = Raig_ManSimDeref( p, Raig_Lit2Var(p.pFans0[i]) );\n        pRes1 = Raig_ManSimDeref( p, Raig_Lit2Var(p.pFans1[i]) );\n        if (Raig_LitIsCompl(iFan0) != 0) \u0026\u0026 (Raig_LitIsCompl(iFan1) != 0) {\n            for  w = 1; w \u003c= p.nWords; w++  {\n                pRes[w] = ~(pRes0[w] | pRes1[w]);\n            }\n        } else if (Raig_LitIsCompl(iFan0) != 0) \u0026\u0026 !(Raig_LitIsCompl(iFan1) != 0) {\n            for  w = 1; w \u003c= p.nWords; w++  {\n                pRes[w] = ~pRes0[w] \u0026 pRes1[w];\n            }\n        } else if !(Raig_LitIsCompl(iFan0) != 0) \u0026\u0026 (Raig_LitIsCompl(iFan1) != 0) {\n            for  w = 1; w \u003c= p.nWords; w++  {\n                pRes[w] = pRes0[w] \u0026 ~pRes1[w];\n            }\n        } else if !(Raig_LitIsCompl(iFan0) != 0) \u0026\u0026 !(Raig_LitIsCompl(iFan1) != 0) {\n            for  w = 1; w \u003c= p.nWords; w++  {\n                pRes[w] = pRes0[w] \u0026 pRes1[w];\n            } }\n    }\n    assert(nCis == p.nCis, \"nCis == p.nCis\");\n    assert(nCos == p.nCos, \"nCos == p.nCos\");\n    assert(p.nMems == 1 + Vec_IntSize(p.vLis), \"p.nMems == 1 + Vec_IntSize(p.vLis)\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Raig_ManGenerateCounter(pAig *Aig_Man_t, iFrame int32, iOut int32, nWords int32, iPat int32, vCis2Ids *Vec_Int_t) *Abc_Cex_t {\n    var p *Abc_Cex_t;\n    var pData *uint32;\n    var f, i, w, iPioId, Counter int32;\n    p = Abc_CexAlloc( Aig_ManRegNum(pAig), Saig_ManPiNum(pAig), iFrame+1 );\n    p.iFrame = iFrame;\n    p.iPo = iOut;\n    // fill in the binary data\n    Aig_ManRandom( 1 );\n    Counter = p.nRegs;\n    // inlining of macro ABC_ALLOC\n    pData = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(nWords)));\n    for  f = 0; f \u003c= iFrame; f++, Counter += p.nPis  {\n    for  i = 0; i \u003c Aig_ManCiNum(pAig); i++  {\n        iPioId = Vec_IntEntry( vCis2Ids, i );\n        if iPioId \u003e= p.nPis {\n            continue; }\n        for  w = 0; w \u003c nWords; w++  {\n            pData[w] = Aig_ManRandom( 0 );\n        }\n        if Abc_InfoHasBit( pData, iPat ) {\n            Abc_InfoSetBit( p.pData, Counter + iPioId ); }\n    }\n    }\n    // inlining of macro ABC_FREE\n    ((pData) ? (free((char *) (pData)), (pData) = 0) : 0);\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the bug is detected, 0 otherwise.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Raig_ManSimulate(pAig *Aig_Man_t, nWords int32, nIters int32, TimeLimit int32, fMiter int32, fVerbose int32) int32 {\n    var p *Raig_Man_t;\n    var Status Sec_MtrStatus_t;\n    var i, iPat, RetValue int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    assert(Aig_ManRegNum(pAig) \u003e 0, \"Aig_ManRegNum(pAig) \u003e 0\");\n    Status = Sec_MiterStatus( pAig );\n    if Status.nSat \u003e 0 {\n        fmt.Printf(\"Miter is trivially satisfiable (output %d).\\n\", Status.iOut);\n        return 1;\n    }\n    if Status.nUndec == 0 {\n        fmt.Printf(\"Miter is trivially unsatisfiable.\\n\");\n        return 0;\n    }\n    Aig_ManRandom( 1 );\n    p = Raig_ManCreate( pAig );\n    p.nWords = nWords;\n    // iterate through objects\n    for  i = 0; i \u003c nIters; i++  {\n        clk = Abc_Clock();\n        RetValue = Raig_ManSimulateRound( p, fMiter, i==0, \u0026iPat );\n        if fVerbose != 0 {\n            fmt.Printf(\"Frame %4d out of %4d and timeout %3d sec. \", i+1, nIters, TimeLimit);\n            fmt.Printf(\"Time = %7.2f sec\\r\", (1.0*Abc_Clock()-clkTotal)/int64(time.Second));\n        }\n        if RetValue \u003e 0 {\n            var iOut int32  = Raig_ManFindPo(p.pAig, RetValue);\n            assert(pAig.pSeqModel == nil, \"pAig.pSeqModel == nil\");\n            pAig.pSeqModel = Raig_ManGenerateCounter( pAig, i, iOut, nWords, iPat, p.vCis2Ids );\n            if fVerbose != 0 {\n            fmt.Printf(\"Miter is satisfiable after simulation (output %d).\\n\", iOut); }\n            break;\n        }\n        if (Abc_Clock() - clk)/int64(time.Second) \u003e= TimeLimit {\n            fmt.Printf(\"No bug detected after %d frames with time limit %d seconds.\\n\", i+1, TimeLimit);\n            break;\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Maxcut = %8d.  AigMem = %7.2f MB.  SimMem = %7.2f MB.  \", p.nMemsMax, 1.0*(p.nObjs * 16)/(1\u003c\u003c20), 1.0*(p.nMemsMax * 4 * (nWords+1))/(1\u003c\u003c20));\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Total time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n    }\n    Raig_ManDelete( p );\n    return RetValue \u003e 0;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

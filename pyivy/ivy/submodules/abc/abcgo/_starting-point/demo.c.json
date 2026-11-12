@@ -1,0 +1,46 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/demo.c",
+  "SHA256": "95576ac6be7d0f9b5852f8e0ff3efb334a9f154707a9c3908d9811a3cf90a10a",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 28,
+        "Column": 1,
+        "ByteOffset": 801
+      },
+      "Directive": "#if defined(ABC_NAMESPACE)"
+    },
+    {
+      "Location": {
+        "Line": 47,
+        "Column": 1,
+        "ByteOffset": 1283
+      },
+      "Directive": "#if defined(ABC_NAMESPACE)"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/demo.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/demo.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 0,
+      "End": 6081
+    }
+  ],
+  "Draft": "package abcgo\n\n/**CFile****************************************************************\n\n  FileName    [demo.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [ABC as a static library.]\n\n  Synopsis    [A demo program illustrating the use of ABC as a static library.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: demo.c,v 1.00 2005/11/14 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n#include \u003cstdio.h\u003e\n#include \u003ctime.h\u003e\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n#if defined(ABC_NAMESPACE)\nnamespace ABC_NAMESPACE\n{\n#elif defined(__cplusplus)\nextern \"C\"\n{\n#endif\n\n// procedures to start and stop the ABC framework\n// (should be called before and after the ABC procedures are called)\nvoid   Abc_Start();\nvoid   Abc_Stop();\n\n// procedures to get the ABC framework and execute commands in it\ntypedef struct Abc_Frame_t_ Abc_Frame_t;\n\nAbc_Frame_t * Abc_FrameGetGlobalFrame();\nint    Cmd_CommandExecute( Abc_Frame_t * pAbc, const char * sCommand );\n\n#if defined(ABC_NAMESPACE)\n}\n//using namespace ABC_NAMESPACE;\n\n#elif defined(__cplusplus)\n}\n#endif\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [The main() procedure.]\n\n  Description [This procedure compiles into a stand-alone program for \n  DAG-aware rewriting of the AIGs. A BLIF or PLA file to be considered\n  for rewriting should be given as a command-line argument. Implementation \n  of the rewriting is inspired by the paper: Per Bjesse, Arne Boralv, \n  \"DAG-aware circuit compression for formal verification\", Proc. ICCAD 2004.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint main( int argc, char * argv[] )\n{\n    // parameters\n    int fUseResyn2  = 0;\n    int fPrintStats = 1;\n    int fVerify     = 1;\n    // variables\n    Abc_Frame_t * pAbc;\n    char * pFileName;\n    char Command[1000];\n    clock_t clkRead, clkResyn, clkVer, clk;\n\n    //////////////////////////////////////////////////////////////////////////\n    // get the input file name\n    if ( argc != 2 )\n    {\n        printf( \"Wrong number of command-line arguments.\\n\" );\n        return 1;\n    }\n    pFileName = argv[1];\n\n    //////////////////////////////////////////////////////////////////////////\n    // start the ABC framework\n    Abc_Start();\n    pAbc = Abc_FrameGetGlobalFrame();\n\nclk = clock();\n    //////////////////////////////////////////////////////////////////////////\n    // read the file\n    sprintf( Command, \"read %s\", pFileName );\n    if ( Cmd_CommandExecute( pAbc, Command ) )\n    {\n        fprintf( stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );\n        return 1;\n    }\n\n    //////////////////////////////////////////////////////////////////////////\n    // balance\n    sprintf( Command, \"balance\" );\n    if ( Cmd_CommandExecute( pAbc, Command ) )\n    {\n        fprintf( stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );\n        return 1;\n    }\nclkRead = clock() - clk;\n\n    //////////////////////////////////////////////////////////////////////////\n    // print stats\n    if ( fPrintStats )\n    {\n        sprintf( Command, \"print_stats\" );\n        if ( Cmd_CommandExecute( pAbc, Command ) )\n        {\n            fprintf( stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );\n            return 1;\n        }\n    }\n\nclk = clock();\n    //////////////////////////////////////////////////////////////////////////\n    // synthesize\n    if ( fUseResyn2 )\n    {\n        sprintf( Command, \"balance; rewrite -l; refactor -l; balance; rewrite -l; rewrite -lz; balance; refactor -lz; rewrite -lz; balance\" );\n        if ( Cmd_CommandExecute( pAbc, Command ) )\n        {\n            fprintf( stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );\n            return 1;\n        }\n    }\n    else\n    {\n        sprintf( Command, \"balance; rewrite -l; rewrite -lz; balance; rewrite -lz; balance\" );\n        if ( Cmd_CommandExecute( pAbc, Command ) )\n        {\n            fprintf( stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );\n            return 1;\n        }\n    }\nclkResyn = clock() - clk;\n\n    //////////////////////////////////////////////////////////////////////////\n    // print stats\n    if ( fPrintStats )\n    {\n        sprintf( Command, \"print_stats\" );\n        if ( Cmd_CommandExecute( pAbc, Command ) )\n        {\n            fprintf( stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );\n            return 1;\n        }\n    }\n\n    //////////////////////////////////////////////////////////////////////////\n    // write the result in blif\n    sprintf( Command, \"write_blif result.blif\" );\n    if ( Cmd_CommandExecute( pAbc, Command ) )\n    {\n        fprintf( stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );\n        return 1;\n    }\n\n    //////////////////////////////////////////////////////////////////////////\n    // perform verification\nclk = clock();\n    if ( fVerify )\n    {\n        sprintf( Command, \"cec %s result.blif\", pFileName );\n        if ( Cmd_CommandExecute( pAbc, Command ) )\n        {\n            fprintf( stdout, \"Cannot execute command \\\"%s\\\".\\n\", Command );\n            return 1;\n        }\n    }\nclkVer = clock() - clk;\n\n    printf( \"Reading = %6.2f sec   \",     (float)(clkRead)/(float)(CLOCKS_PER_SEC) );\n    printf( \"Rewriting = %6.2f sec   \",   (float)(clkResyn)/(float)(CLOCKS_PER_SEC) );\n    printf( \"Verification = %6.2f sec\\n\", (float)(clkVer)/(float)(CLOCKS_PER_SEC) );\n\n    //////////////////////////////////////////////////////////////////////////\n    // stop the ABC framework\n    Abc_Stop();\n    return 0;\n}\n\n"
+}

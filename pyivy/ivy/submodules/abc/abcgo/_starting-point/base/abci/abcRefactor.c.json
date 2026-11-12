@@ -1,0 +1,629 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c",
+  "SHA256": "8b703151874fcb3853c45f26f1d6d0716906156e42530b0d9c932f85bea894e8",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 97,
+        "Column": 30,
+        "ByteOffset": 3365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Vec_PtrPush( vFuncs, ABC_ALLOC(word, nWordsMax) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 9,
+        "ByteOffset": 3523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Abc_ObjIsPi(pNode) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 9,
+        "ByteOffset": 7907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %6s : \",  Abc_ObjName(pNode) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 236,
+        "Column": 9,
+        "ByteOffset": 7961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cone = %2d. \", vFanins.nSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 237,
+        "Column": 9,
+        "ByteOffset": 8010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"FF = %2d. \",   1 + Dec_GraphNodeNum(pFForm) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 238,
+        "Column": 9,
+        "ByteOffset": 8074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"MFFC = %2d. \", nNodesSaved );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 239,
+        "Column": 9,
+        "ByteOffset": 8121
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Add = %2d. \",  nNodesAdded );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 9,
+        "ByteOffset": 8168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"GAIN = %2d. \", p.nLastGain );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 241,
+        "Column": 9,
+        "ByteOffset": 8215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 260,
+        "Column": 9,
+        "ByteOffset": 8669
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Abc_ManRef_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 261,
+        "Column": 5,
+        "ByteOffset": 8703
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Abc_ManRef_t) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 290,
+        "Column": 5,
+        "ByteOffset": 9568
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 5,
+        "ByteOffset": 9902
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Refactoring statistics:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 5,
+        "ByteOffset": 9945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes considered  = %8d.\\n\", p.nNodesConsidered );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 307,
+        "Column": 5,
+        "ByteOffset": 10009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes refactored  = %8d.\\n\", p.nNodesRefactored );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 308,
+        "Column": 5,
+        "ByteOffset": 10073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Gain              = %8d. (%6.2f %%).\\n\", p.nNodesBeg-p.nNodesEnd, 100.0*(p.nNodesBeg-p.nNodesEnd)/p.nNodesBeg );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 348,
+        "Column": 5,
+        "ByteOffset": 11770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 362,
+        "Column": 41,
+        "ByteOffset": 12410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, nNodes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 414,
+        "Column": 9,
+        "ByteOffset": 14232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkRefactor: The network check has failed.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NodeConeTruth",
+      "Start": 2624,
+      "End": 4346,
+      "BodyStart": 2767,
+      "Original": "word * Abc_NodeConeTruth( Vec_Ptr_t * vVars, Vec_Ptr_t * vFuncs, int nWordsMax, Abc_Obj_t * pRoot, Vec_Ptr_t * vLeaves, Vec_Ptr_t * vVisited )\n{\n    Abc_Obj_t * pNode;\n    word * pTruth0, * pTruth1, * pTruth = NULL;\n    int i, k, nWords = Abc_Truth6WordNum( Vec_PtrSize(vLeaves) );\n    // get nodes in the cut without fanins in the DFS order\n    Abc_NodeConeCollect( \u0026pRoot, 1, vLeaves, vVisited, 0 );\n    // set elementary functions\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n        pNode-\u003epCopy = (Abc_Obj_t *)Vec_PtrEntry( vVars, i );\n    // prepare functions\n    for ( i = Vec_PtrSize(vFuncs); i \u003c Vec_PtrSize(vVisited); i++ )\n        Vec_PtrPush( vFuncs, ABC_ALLOC(word, nWordsMax) );\n    // compute functions for the collected nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n    {\n        assert( !Abc_ObjIsPi(pNode) );\n        pTruth0 = (word *)Abc_ObjFanin0(pNode)-\u003epCopy;\n        pTruth1 = (word *)Abc_ObjFanin1(pNode)-\u003epCopy;\n        pTruth  = (word *)Vec_PtrEntry( vFuncs, i );\n        if ( Abc_ObjFaninC0(pNode) )\n        {\n            if ( Abc_ObjFaninC1(pNode) )\n                for ( k = 0; k \u003c nWords; k++ )\n                    pTruth[k] = ~pTruth0[k] \u0026 ~pTruth1[k];\n            else\n                for ( k = 0; k \u003c nWords; k++ )\n                    pTruth[k] = ~pTruth0[k] \u0026  pTruth1[k];\n        }\n        else\n        {\n            if ( Abc_ObjFaninC1(pNode) )\n                for ( k = 0; k \u003c nWords; k++ )\n                    pTruth[k] =  pTruth0[k] \u0026 ~pTruth1[k];\n            else\n                for ( k = 0; k \u003c nWords; k++ )\n                    pTruth[k] =  pTruth0[k] \u0026  pTruth1[k];\n        }\n        pNode-\u003epCopy = (Abc_Obj_t *)pTruth;\n    }\n    return pTruth;\n}",
+      "Draft": "func Abc_NodeConeTruth(vVars *Vec_Ptr_t, vFuncs *Vec_Ptr_t, nWordsMax int32, pRoot *Abc_Obj_t, vLeaves *Vec_Ptr_t, vVisited *Vec_Ptr_t) *word {\n    var pNode *Abc_Obj_t;\n    var pTruth0 *word;\n    var pTruth1 *word;\n    var pTruth *word = nil;\n    var i int32;\n    var k int32;\n    var nWords int32 = Abc_Truth6WordNum( Vec_PtrSize(vLeaves) );\n    // get nodes in the cut without fanins in the DFS order\n    Abc_NodeConeCollect( \u0026pRoot, 1, vLeaves, vVisited, 0 );\n    // set elementary functions\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n        pNode.pCopy = (Abc_Obj_t *)Vec_PtrEntry( vVars, i );\n    // prepare functions\n    for  i = Vec_PtrSize(vFuncs); i \u003c Vec_PtrSize(vVisited); i++  {\n        Vec_PtrPush( vFuncs, ABC_ALLOC(word, nWordsMax) );\n    }\n    // compute functions for the collected nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n    {\n        assert(!Abc_ObjIsPi(pNode), \"!Abc_ObjIsPi(pNode)\");\n        pTruth0 = (word *)Abc_ObjFanin0(pNode).pCopy;\n        pTruth1 = (word *)Abc_ObjFanin1(pNode).pCopy;\n        pTruth  = (word *)Vec_PtrEntry( vFuncs, i );\n        if Abc_ObjFaninC0(pNode) {\n            if Abc_ObjFaninC1(pNode) {\n                for  k = 0; k \u003c nWords; k++  {\n                    pTruth[k] = ~pTruth0[k] \u0026 ~pTruth1[k];\n                }\n            } else {\n                for  k = 0; k \u003c nWords; k++  {\n                    pTruth[k] = ~pTruth0[k] \u0026  pTruth1[k];\n                } }\n        \n        } else {\n            if Abc_ObjFaninC1(pNode) {\n                for  k = 0; k \u003c nWords; k++  {\n                    pTruth[k] =  pTruth0[k] \u0026 ~pTruth1[k];\n                }\n            } else {\n                for  k = 0; k \u003c nWords; k++  {\n                    pTruth[k] =  pTruth0[k] \u0026  pTruth1[k];\n                } }\n        }\n        pNode.pCopy = (Abc_Obj_t *)pTruth;\n    }\n    return pTruth;\n}"
+    },
+    {
+      "Name": "Abc_NodeConeIsConst0",
+      "Start": 4347,
+      "End": 4547,
+      "BodyStart": 4400,
+      "Original": "int Abc_NodeConeIsConst0( word * pTruth, int nVars )\n{\n    int k, nWords = Abc_Truth6WordNum( nVars );\n    for ( k = 0; k \u003c nWords; k++ )\n        if ( pTruth[k] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Abc_NodeConeIsConst0(pTruth *word, nVars int32) int32 {\n    var k int32;\n    var nWords int32 = Abc_Truth6WordNum( nVars );\n    for  k = 0; k \u003c nWords; k++  {\n        if pTruth[k] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NodeConeIsConst1",
+      "Start": 4548,
+      "End": 4749,
+      "BodyStart": 4601,
+      "Original": "int Abc_NodeConeIsConst1( word * pTruth, int nVars )\n{\n    int k, nWords = Abc_Truth6WordNum( nVars );\n    for ( k = 0; k \u003c nWords; k++ )\n        if ( ~pTruth[k] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Abc_NodeConeIsConst1(pTruth *word, nVars int32) int32 {\n    var k int32;\n    var nWords int32 = Abc_Truth6WordNum( nVars );\n    for  k = 0; k \u003c nWords; k++  {\n        if ~pTruth[k] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NodeRefactor",
+      "Start": 5027,
+      "End": 7963,
+      "BodyStart": 5178,
+      "Original": "Dec_Graph_t * Abc_NodeRefactor( Abc_ManRef_t * p, Abc_Obj_t * pNode, Vec_Ptr_t * vFanins, int fUpdateLevel, int fUseZeros, int fUseDcs, int fVerbose )\n{\n    extern int    Dec_GraphToNetworkCount( Abc_Obj_t * pRoot, Dec_Graph_t * pGraph, int NodeMax, int LevelMax );\n    int fVeryVerbose = 0;\n    int nVars = Vec_PtrSize(vFanins);\n    int nWordsMax = Abc_Truth6WordNum(p-\u003enNodeSizeMax);\n    Dec_Graph_t * pFForm;\n    Abc_Obj_t * pFanin;\n    word * pTruth;\n    abctime clk;\n    int i, nNodesSaved, nNodesAdded, Required;\n\n    p-\u003enNodesConsidered++;\n\n    Required = fUpdateLevel? Abc_ObjRequiredLevel(pNode) : ABC_INFINITY;\n\n    // get the function of the cut\nclk = Abc_Clock();\n    pTruth = Abc_NodeConeTruth( p-\u003evVars, p-\u003evFuncs, nWordsMax, pNode, vFanins, p-\u003evVisited );\np-\u003etimeTru += Abc_Clock() - clk;\n    if ( pTruth == NULL )\n        return NULL;\n\n    // always accept the case of constant node\n    if ( Abc_NodeConeIsConst0(pTruth, nVars) || Abc_NodeConeIsConst1(pTruth, nVars) )\n    {\n        p-\u003enLastGain = Abc_NodeMffcSize( pNode );\n        p-\u003enNodesGained += p-\u003enLastGain;\n        p-\u003enNodesRefactored++;\n        return Abc_NodeConeIsConst0(pTruth, nVars) ? Dec_GraphCreateConst0() : Dec_GraphCreateConst1();\n    }\n\n    // get the factored form\nclk = Abc_Clock();\n    pFForm = (Dec_Graph_t *)Kit_TruthToGraph( (unsigned *)pTruth, nVars, p-\u003evMemory );\np-\u003etimeFact += Abc_Clock() - clk;\n\n    // mark the fanin boundary \n    // (can mark only essential fanins, belonging to bNodeFunc!)\n    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pFanin, i )\n        pFanin-\u003evFanouts.nSize++;\n    // label MFFC with current traversal ID\n    Abc_NtkIncrementTravId( pNode-\u003epNtk );\n    nNodesSaved = Abc_NodeMffcLabelAig( pNode );\n    // unmark the fanin boundary and set the fanins as leaves in the form\n    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pFanin, i )\n    {\n        pFanin-\u003evFanouts.nSize--;\n        Dec_GraphNode(pFForm, i)-\u003epFunc = pFanin;\n    }\n\n    // detect how many new nodes will be added (while taking into account reused nodes)\nclk = Abc_Clock();\n    nNodesAdded = Dec_GraphToNetworkCount( pNode, pFForm, nNodesSaved, Required );\np-\u003etimeEval += Abc_Clock() - clk;\n    // quit if there is no improvement\n    if ( nNodesAdded == -1 || (nNodesAdded == nNodesSaved \u0026\u0026 !fUseZeros) )\n    {\n        Dec_GraphFree( pFForm );\n        return NULL;\n    }\n\n    // compute the total gain in the number of nodes\n    p-\u003enLastGain = nNodesSaved - nNodesAdded;\n    p-\u003enNodesGained += p-\u003enLastGain;\n    p-\u003enNodesRefactored++;\n\n    // report the progress\n    if ( fVeryVerbose )\n    {\n        printf( \"Node %6s : \",  Abc_ObjName(pNode) );\n        printf( \"Cone = %2d. \", vFanins-\u003enSize );\n        printf( \"FF = %2d. \",   1 + Dec_GraphNodeNum(pFForm) );\n        printf( \"MFFC = %2d. \", nNodesSaved );\n        printf( \"Add = %2d. \",  nNodesAdded );\n        printf( \"GAIN = %2d. \", p-\u003enLastGain );\n        printf( \"\\n\" );\n    }\n    return pFForm;\n}",
+      "Draft": "func Abc_NodeRefactor(p *Abc_ManRef_t, pNode *Abc_Obj_t, vFanins *Vec_Ptr_t, fUpdateLevel int32, fUseZeros int32, fUseDcs int32, fVerbose int32) *Dec_Graph_t {\n    extern int    Dec_GraphToNetworkCount( Abc_Obj_t * pRoot, Dec_Graph_t * pGraph, int NodeMax, int LevelMax );\n    var fVeryVerbose int32;\n    var nVars int32  = Vec_PtrSize(vFanins);\n    var nWordsMax int32  = Abc_Truth6WordNum(p.nNodeSizeMax);\n    var pFForm *Dec_Graph_t;\n    var pFanin *Abc_Obj_t;\n    var pTruth *word;\n    var clk abctime;\n    var i, nNodesSaved, nNodesAdded, Required int32;\n\n    p.nNodesConsidered++;\n\n    if fUpdateLevel != 0 {\n        Required = Abc_ObjRequiredLevel(pNode);\n    } else {\n        Required = ABC_INFINITY;\n    }\n\n    // get the function of the cut\nclk = Abc_Clock();\n    pTruth = Abc_NodeConeTruth( p.vVars, p.vFuncs, nWordsMax, pNode, vFanins, p.vVisited );\np.timeTru += Abc_Clock() - clk;\n    if pTruth == nil {\n        return nil; }\n\n    // always accept the case of constant node\n    if (Abc_NodeConeIsConst0(pTruth, nVars) != 0) || (Abc_NodeConeIsConst1(pTruth, nVars) != 0) {\n        p.nLastGain = Abc_NodeMffcSize( pNode );\n        p.nNodesGained += p.nLastGain;\n        p.nNodesRefactored++;\n        if Abc_NodeConeIsConst0(pTruth, nVars) != 0 {\n            return Dec_GraphCreateConst0();\n        } else {\n            return Dec_GraphCreateConst1();\n        }\n    }\n\n    // get the factored form\nclk = Abc_Clock();\n    pFForm = (Dec_Graph_t *)Kit_TruthToGraph( (unsigned *)pTruth, nVars, p.vMemory );\np.timeFact += Abc_Clock() - clk;\n\n    // mark the fanin boundary \n    // (can mark only essential fanins, belonging to bNodeFunc!)\n    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pFanin, i )\n        pFanin.vFanouts.nSize++;\n    // label MFFC with current traversal ID\n    Abc_NtkIncrementTravId( pNode.pNtk );\n    nNodesSaved = Abc_NodeMffcLabelAig( pNode );\n    // unmark the fanin boundary and set the fanins as leaves in the form\n    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pFanin, i )\n    {\n        pFanin.vFanouts.nSize--;\n        Dec_GraphNode(pFForm, i).pFunc = pFanin;\n    }\n\n    // detect how many new nodes will be added (while taking into account reused nodes)\nclk = Abc_Clock();\n    nNodesAdded = Dec_GraphToNetworkCount( pNode, pFForm, nNodesSaved, Required );\np.timeEval += Abc_Clock() - clk;\n    // quit if there is no improvement\n    if nNodesAdded == -1 || (nNodesAdded == nNodesSaved \u0026\u0026 !(fUseZeros != 0)) {\n        Dec_GraphFree( pFForm );\n        return nil;\n    }\n\n    // compute the total gain in the number of nodes\n    p.nLastGain = nNodesSaved - nNodesAdded;\n    p.nNodesGained += p.nLastGain;\n    p.nNodesRefactored++;\n\n    // report the progress\n    if fVeryVerbose != 0 {\n        fmt.Printf(\"Node %6s : \", Abc_ObjName(pNode));\n        fmt.Printf(\"Cone = %2d. \", vFanins.nSize);\n        fmt.Printf(\"FF = %2d. \", 1 + Dec_GraphNodeNum(pFForm));\n        fmt.Printf(\"MFFC = %2d. \", nNodesSaved);\n        fmt.Printf(\"Add = %2d. \", nNodesAdded);\n        fmt.Printf(\"GAIN = %2d. \", p.nLastGain);\n        fmt.Printf(\"\\n\");\n    }\n    return pFForm;\n}"
+    },
+    {
+      "Name": "Abc_NtkManRefStart",
+      "Start": 8231,
+      "End": 8807,
+      "BodyStart": 8330,
+      "Original": "Abc_ManRef_t * Abc_NtkManRefStart( int nNodeSizeMax, int nConeSizeMax, int fUseDcs, int fVerbose )\n{\n    Abc_ManRef_t * p;\n    p = ABC_ALLOC( Abc_ManRef_t, 1 );\n    memset( p, 0, sizeof(Abc_ManRef_t) );\n    p-\u003evCube        = Vec_StrAlloc( 100 );\n    p-\u003evVisited     = Vec_PtrAlloc( 100 );\n    p-\u003enNodeSizeMax = nNodeSizeMax;\n    p-\u003enConeSizeMax = nConeSizeMax;\n    p-\u003efVerbose     = fVerbose;\n    p-\u003evVars        = Vec_PtrAllocTruthTables( Abc_MaxInt(nNodeSizeMax, 6) );\n    p-\u003evFuncs       = Vec_PtrAlloc( 100 );\n    p-\u003evMemory      = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    return p;\n}",
+      "Draft": "func Abc_NtkManRefStart(nNodeSizeMax int32, nConeSizeMax int32, fUseDcs int32, fVerbose int32) *Abc_ManRef_t {\n    var p *Abc_ManRef_t;\n    p = new(Abc_ManRef_t);\n    *p = Abc_ManRef_t{};\n    p.vCube        = Vec_StrAlloc( 100 );\n    p.vVisited     = Vec_PtrAlloc( 100 );\n    p.nNodeSizeMax = nNodeSizeMax;\n    p.nConeSizeMax = nConeSizeMax;\n    p.fVerbose     = fVerbose;\n    p.vVars        = Vec_PtrAllocTruthTables( Abc_MaxInt(nNodeSizeMax, 6) );\n    p.vFuncs       = Vec_PtrAlloc( 100 );\n    p.vMemory      = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_NtkManRefStop",
+      "Start": 9073,
+      "End": 9293,
+      "BodyStart": 9116,
+      "Original": "void Abc_NtkManRefStop( Abc_ManRef_t * p )\n{\n    Vec_PtrFreeFree( p-\u003evFuncs );\n    Vec_PtrFree( p-\u003evVars );\n    Vec_IntFree( p-\u003evMemory );\n    Vec_PtrFree( p-\u003evVisited );\n    Vec_StrFree( p-\u003evCube );\n    ABC_FREE( p );\n}",
+      "Draft": "func Abc_NtkManRefStop(p *Abc_ManRef_t) {\n    Vec_PtrFreeFree( p.vFuncs );\n    Vec_PtrFree( p.vVars );\n    Vec_IntFree( p.vMemory );\n    Vec_PtrFree( p.vVisited );\n    Vec_StrFree( p.vCube );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Abc_NtkManRefPrintStats",
+      "Start": 9559,
+      "End": 10297,
+      "BodyStart": 9608,
+      "Original": "void Abc_NtkManRefPrintStats( Abc_ManRef_t * p )\n{\n    printf( \"Refactoring statistics:\\n\" );\n    printf( \"Nodes considered  = %8d.\\n\", p-\u003enNodesConsidered );\n    printf( \"Nodes refactored  = %8d.\\n\", p-\u003enNodesRefactored );\n    printf( \"Gain              = %8d. (%6.2f %%).\\n\", p-\u003enNodesBeg-p-\u003enNodesEnd, 100.0*(p-\u003enNodesBeg-p-\u003enNodesEnd)/p-\u003enNodesBeg );\n    ABC_PRT( \"Cuts       \", p-\u003etimeCut );\n    ABC_PRT( \"Resynthesis\", p-\u003etimeRes );\n    ABC_PRT( \"    BDD    \", p-\u003etimeTru );\n    ABC_PRT( \"    DCs    \", p-\u003etimeDcs );\n    ABC_PRT( \"    SOP    \", p-\u003etimeSop );\n    ABC_PRT( \"    FF     \", p-\u003etimeFact );\n    ABC_PRT( \"    Eval   \", p-\u003etimeEval );\n    ABC_PRT( \"AIG update \", p-\u003etimeNtk );\n    ABC_PRT( \"TOTAL      \", p-\u003etimeTotal );\n}",
+      "Draft": "func Abc_NtkManRefPrintStats(p *Abc_ManRef_t) {\n    fmt.Printf(\"Refactoring statistics:\\n\");\n    fmt.Printf(\"Nodes considered  = %8d.\\n\", p.nNodesConsidered);\n    fmt.Printf(\"Nodes refactored  = %8d.\\n\", p.nNodesRefactored);\n    fmt.Printf(\"Gain              = %8d. (%6.2f %%).\\n\", p.nNodesBeg-p.nNodesEnd, 100.0*(p.nNodesBeg-p.nNodesEnd)/p.nNodesBeg);\n    ABC_PRT( \"Cuts       \", p.timeCut );\n    ABC_PRT( \"Resynthesis\", p.timeRes );\n    ABC_PRT( \"    BDD    \", p.timeTru );\n    ABC_PRT( \"    DCs    \", p.timeDcs );\n    ABC_PRT( \"    SOP    \", p.timeSop );\n    ABC_PRT( \"    FF     \", p.timeFact );\n    ABC_PRT( \"    Eval   \", p.timeEval );\n    ABC_PRT( \"AIG update \", p.timeNtk );\n    ABC_PRT( \"TOTAL      \", p.timeTotal );\n}"
+    },
+    {
+      "Name": "Abc_NtkRefactor",
+      "Start": 10954,
+      "End": 14016,
+      "BodyStart": 11090,
+      "Original": "int Abc_NtkRefactor( Abc_Ntk_t * pNtk, int nNodeSizeMax, int nConeSizeMax, int fUpdateLevel, int fUseZeros, int fUseDcs, int fVerbose )\n{\n    extern void           Dec_GraphUpdateNetwork( Abc_Obj_t * pRoot, Dec_Graph_t * pGraph, int fUpdateLevel, int nGain );\n    ProgressBar * pProgress;\n    Abc_ManRef_t * pManRef;\n    Abc_ManCut_t * pManCut;\n    Dec_Graph_t * pFForm;\n    Vec_Ptr_t * vFanins;\n    Abc_Obj_t * pNode;\n    abctime clk, clkStart = Abc_Clock();\n    int i, nNodes;\n\n    assert( Abc_NtkIsStrash(pNtk) );\n    // cleanup the AIG\n    Abc_AigCleanup((Abc_Aig_t *)pNtk-\u003epManFunc);\n    // start the managers\n    pManCut = Abc_NtkManCutStart( nNodeSizeMax, nConeSizeMax, 2, 1000 );\n    pManRef = Abc_NtkManRefStart( nNodeSizeMax, nConeSizeMax, fUseDcs, fVerbose );\n    pManRef-\u003evLeaves   = Abc_NtkManCutReadCutLarge( pManCut );\n    // compute the reverse levels if level update is requested\n    if ( fUpdateLevel )\n        Abc_NtkStartReverseLevels( pNtk, 0 );\n\n    // resynthesize each node once\n    pManRef-\u003enNodesBeg = Abc_NtkNodeNum(pNtk);\n    nNodes = Abc_NtkObjNumMax(pNtk);\n    pProgress = Extra_ProgressBarStart( stdout, nNodes );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        // skip the constant node\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        // skip persistant nodes\n        if ( Abc_NodeIsPersistant(pNode) )\n            continue;\n        // skip the nodes with many fanouts\n        if ( Abc_ObjFanoutNum(pNode) \u003e 1000 )\n            continue;\n        // stop if all nodes have been tried once\n        if ( i \u003e= nNodes )\n            break;\n        // compute a reconvergence-driven cut\nclk = Abc_Clock();\n        vFanins = Abc_NodeFindCut( pManCut, pNode, fUseDcs );\npManRef-\u003etimeCut += Abc_Clock() - clk;\n        // evaluate this cut\nclk = Abc_Clock();\n        pFForm = Abc_NodeRefactor( pManRef, pNode, vFanins, fUpdateLevel, fUseZeros, fUseDcs, fVerbose );\npManRef-\u003etimeRes += Abc_Clock() - clk;\n        if ( pFForm == NULL )\n            continue;\n        // acceptable replacement found, update the graph\nclk = Abc_Clock();\n        Dec_GraphUpdateNetwork( pNode, pFForm, fUpdateLevel, pManRef-\u003enLastGain );\npManRef-\u003etimeNtk += Abc_Clock() - clk;\n        Dec_GraphFree( pFForm );\n    }\n    Extra_ProgressBarStop( pProgress );\npManRef-\u003etimeTotal = Abc_Clock() - clkStart;\n    pManRef-\u003enNodesEnd = Abc_NtkNodeNum(pNtk);\n\n    // print statistics of the manager\n    if ( fVerbose )\n        Abc_NtkManRefPrintStats( pManRef );\n    // delete the managers\n    Abc_NtkManCutStop( pManCut );\n    Abc_NtkManRefStop( pManRef );\n    // put the nodes into the DFS order and reassign their IDs\n    Abc_NtkReassignIds( pNtk );\n//    Abc_AigCheckFaninOrder( pNtk-\u003epManFunc );\n    // fix the levels\n    if ( fUpdateLevel )\n        Abc_NtkStopReverseLevels( pNtk );\n    else\n        Abc_NtkLevel( pNtk );\n    // check\n    if ( !Abc_NtkCheck( pNtk ) )\n    {\n        printf( \"Abc_NtkRefactor: The network check has failed.\\n\" );\n        return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkRefactor(pNtk *Abc_Ntk_t, nNodeSizeMax int32, nConeSizeMax int32, fUpdateLevel int32, fUseZeros int32, fUseDcs int32, fVerbose int32) int32 {\n    extern void           Dec_GraphUpdateNetwork( Abc_Obj_t * pRoot, Dec_Graph_t * pGraph, int fUpdateLevel, int nGain );\n    var pProgress *ProgressBar;\n    var pManRef *Abc_ManRef_t;\n    var pManCut *Abc_ManCut_t;\n    var pFForm *Dec_Graph_t;\n    var vFanins *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var clk abctime;\n    var clkStart abctime = Abc_Clock();\n    var i, nNodes int32;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // cleanup the AIG\n    Abc_AigCleanup((Abc_Aig_t *)pNtk.pManFunc);\n    // start the managers\n    pManCut = Abc_NtkManCutStart( nNodeSizeMax, nConeSizeMax, 2, 1000 );\n    pManRef = Abc_NtkManRefStart( nNodeSizeMax, nConeSizeMax, fUseDcs, fVerbose );\n    pManRef.vLeaves   = Abc_NtkManCutReadCutLarge( pManCut );\n    // compute the reverse levels if level update is requested\n    if fUpdateLevel != 0 {\n        Abc_NtkStartReverseLevels( pNtk, 0 ); }\n\n    // resynthesize each node once\n    pManRef.nNodesBeg = Abc_NtkNodeNum(pNtk);\n    nNodes = Abc_NtkObjNumMax(pNtk);\n    pProgress = Extra_ProgressBarStart( os.Stdout, nNodes );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        // skip the constant node\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        // skip persistant nodes\n        if Abc_NodeIsPersistant(pNode) {\n            continue; }\n        // skip the nodes with many fanouts\n        if Abc_ObjFanoutNum(pNode) \u003e 1000 {\n            continue; }\n        // stop if all nodes have been tried once\n        if i \u003e= nNodes {\n            break; }\n        // compute a reconvergence-driven cut\nclk = Abc_Clock();\n        vFanins = Abc_NodeFindCut( pManCut, pNode, fUseDcs );\npManRef.timeCut += Abc_Clock() - clk;\n        // evaluate this cut\nclk = Abc_Clock();\n        pFForm = Abc_NodeRefactor( pManRef, pNode, vFanins, fUpdateLevel, fUseZeros, fUseDcs, fVerbose );\npManRef.timeRes += Abc_Clock() - clk;\n        if pFForm == nil {\n            continue; }\n        // acceptable replacement found, update the graph\nclk = Abc_Clock();\n        Dec_GraphUpdateNetwork( pNode, pFForm, fUpdateLevel, pManRef.nLastGain );\npManRef.timeNtk += Abc_Clock() - clk;\n        Dec_GraphFree( pFForm );\n    }\n    Extra_ProgressBarStop( pProgress );\npManRef.timeTotal = Abc_Clock() - clkStart;\n    pManRef.nNodesEnd = Abc_NtkNodeNum(pNtk);\n\n    // print statistics of the manager\n    if fVerbose != 0 {\n        Abc_NtkManRefPrintStats( pManRef ); }\n    // delete the managers\n    Abc_NtkManCutStop( pManCut );\n    Abc_NtkManRefStop( pManRef );\n    // put the nodes into the DFS order and reassign their IDs\n    Abc_NtkReassignIds( pNtk );\n//    Abc_AigCheckFaninOrder( pNtk-\u003epManFunc );\n    // fix the levels\n    if fUpdateLevel != 0 {\n        Abc_NtkStopReverseLevels( pNtk );\n    } else {\n        Abc_NtkLevel( pNtk ); }\n    // check\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Printf(\"Abc_NtkRefactor: The network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::struct::Abc_ManRef_t",
+      "Category": "struct-review",
+      "Symbol": "Abc_ManRef_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 869,
+      "End": 2139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::mechanical::sizeof::8410",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8410,
+      "End": 8416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::pointer-cast::3139",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3139,
+      "End": 3152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::pointer-cast::3501",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3501,
+      "End": 3509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::pointer-cast::3556",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3556,
+      "End": 3564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::pointer-cast::3611",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3611,
+      "End": 3619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::pointer-cast::4299",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4299,
+      "End": 4312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::pointer-cast::6312",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6312,
+      "End": 6327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::pointer-cast::6345",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6345,
+      "End": 6357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::pointer-cast::11513",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11513,
+      "End": 11526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::Abc_NodeConeTruth",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeConeTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2624,
+      "End": 4346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::Abc_NodeConeIsConst0",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeConeIsConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4347,
+      "End": 4547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::Abc_NodeConeIsConst1",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeConeIsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4548,
+      "End": 4749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::Abc_NodeRefactor",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeRefactor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5027,
+      "End": 7963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::Abc_NtkManRefStart",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkManRefStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8231,
+      "End": 8807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::Abc_NtkManRefStop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkManRefStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9073,
+      "End": 9293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::Abc_NtkManRefPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkManRefPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9559,
+      "End": 10297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::Abc_NtkRefactor",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRefactor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10954,
+      "End": 14016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::3062",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3062,
+      "End": 3115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::3300",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3300,
+      "End": 3326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::3383",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3383,
+      "End": 3437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::6522",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6522,
+      "End": 6576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::6825",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6825,
+      "End": 6879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::8362",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8362,
+      "End": 8390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::9277",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9277,
+      "End": 9290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::9918",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9918,
+      "End": 9954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::9960",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9960,
+      "End": 9996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::10002",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10002,
+      "End": 10038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::10044",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10044,
+      "End": 10080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::10086",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10086,
+      "End": 10122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::10128",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10128,
+      "End": 10165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::10171",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10171,
+      "End": 10208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::10214",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10214,
+      "End": 10250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::10256",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10256,
+      "End": 10294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRefactor.c::macro-inline::12103",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12103,
+      "End": 12139
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcRefactor.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Resynthesis based on collapsing and refactoring.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcRefactor.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"bool/dec/dec.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n     \ntype Abc_ManRef_t struct {\n    // user specified parameters\n    nNodeSizeMax              int32;      // the limit on the size of the supernode\n    nConeSizeMax              int32;      // the limit on the size of the containing cone\n    fVerbose              int32;          // the verbosity flag\n    // internal data structures\n    vVars       *Vec_Ptr_t;             // truth tables\n    vFuncs       *Vec_Ptr_t;            // functions\n    vMemory       *Vec_Int_t;           // memory\n    vCube       *Vec_Str_t;             // temporary\n    vForm       *Vec_Int_t;             // temporary\n    vVisited       *Vec_Ptr_t;          // temporary\n    vLeaves       *Vec_Ptr_t;           // temporary\n    // node statistics\n    nLastGain              int32;\n    nNodesConsidered              int32;\n    nNodesRefactored              int32;\n    nNodesGained              int32;\n    nNodesBeg              int32;\n    nNodesEnd              int32;\n    // runtime statistics\n    timeCut          abctime;\n    timeTru          abctime;\n    timeDcs          abctime;\n    timeSop          abctime;\n    timeFact          abctime;\n    timeEval          abctime;\n    timeRes          abctime;\n    timeNtk          abctime;\n    timeTotal          abctime;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns function of the cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeConeTruth(vVars *Vec_Ptr_t, vFuncs *Vec_Ptr_t, nWordsMax int32, pRoot *Abc_Obj_t, vLeaves *Vec_Ptr_t, vVisited *Vec_Ptr_t) *word {\n    var pNode *Abc_Obj_t;\n    var pTruth0 *word;\n    var pTruth1 *word;\n    var pTruth *word = nil;\n    var i int32;\n    var k int32;\n    var nWords int32 = Abc_Truth6WordNum( Vec_PtrSize(vLeaves) );\n    // get nodes in the cut without fanins in the DFS order\n    Abc_NodeConeCollect( \u0026pRoot, 1, vLeaves, vVisited, 0 );\n    // set elementary functions\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pNode, i )\n        pNode.pCopy = (Abc_Obj_t *)Vec_PtrEntry( vVars, i );\n    // prepare functions\n    for  i = Vec_PtrSize(vFuncs); i \u003c Vec_PtrSize(vVisited); i++  {\n        Vec_PtrPush( vFuncs, ABC_ALLOC(word, nWordsMax) );\n    }\n    // compute functions for the collected nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vVisited, pNode, i )\n    {\n        assert(!Abc_ObjIsPi(pNode), \"!Abc_ObjIsPi(pNode)\");\n        pTruth0 = (word *)Abc_ObjFanin0(pNode).pCopy;\n        pTruth1 = (word *)Abc_ObjFanin1(pNode).pCopy;\n        pTruth  = (word *)Vec_PtrEntry( vFuncs, i );\n        if Abc_ObjFaninC0(pNode) {\n            if Abc_ObjFaninC1(pNode) {\n                for  k = 0; k \u003c nWords; k++  {\n                    pTruth[k] = ~pTruth0[k] \u0026 ~pTruth1[k];\n                }\n            } else {\n                for  k = 0; k \u003c nWords; k++  {\n                    pTruth[k] = ~pTruth0[k] \u0026  pTruth1[k];\n                } }\n        \n        } else {\n            if Abc_ObjFaninC1(pNode) {\n                for  k = 0; k \u003c nWords; k++  {\n                    pTruth[k] =  pTruth0[k] \u0026 ~pTruth1[k];\n                }\n            } else {\n                for  k = 0; k \u003c nWords; k++  {\n                    pTruth[k] =  pTruth0[k] \u0026  pTruth1[k];\n                } }\n        }\n        pNode.pCopy = (Abc_Obj_t *)pTruth;\n    }\n    return pTruth;\n}\nfunc Abc_NodeConeIsConst0(pTruth *word, nVars int32) int32 {\n    var k int32;\n    var nWords int32 = Abc_Truth6WordNum( nVars );\n    for  k = 0; k \u003c nWords; k++  {\n        if pTruth[k] {\n            return 0; }\n    }\n    return 1;\n}\nfunc Abc_NodeConeIsConst1(pTruth *word, nVars int32) int32 {\n    var k int32;\n    var nWords int32 = Abc_Truth6WordNum( nVars );\n    for  k = 0; k \u003c nWords; k++  {\n        if ~pTruth[k] {\n            return 0; }\n    }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Resynthesizes the node using refactoring.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeRefactor(p *Abc_ManRef_t, pNode *Abc_Obj_t, vFanins *Vec_Ptr_t, fUpdateLevel int32, fUseZeros int32, fUseDcs int32, fVerbose int32) *Dec_Graph_t {\n    extern int    Dec_GraphToNetworkCount( Abc_Obj_t * pRoot, Dec_Graph_t * pGraph, int NodeMax, int LevelMax );\n    var fVeryVerbose int32;\n    var nVars int32  = Vec_PtrSize(vFanins);\n    var nWordsMax int32  = Abc_Truth6WordNum(p.nNodeSizeMax);\n    var pFForm *Dec_Graph_t;\n    var pFanin *Abc_Obj_t;\n    var pTruth *word;\n    var clk abctime;\n    var i, nNodesSaved, nNodesAdded, Required int32;\n\n    p.nNodesConsidered++;\n\n    if fUpdateLevel != 0 {\n        Required = Abc_ObjRequiredLevel(pNode);\n    } else {\n        Required = ABC_INFINITY;\n    }\n\n    // get the function of the cut\nclk = Abc_Clock();\n    pTruth = Abc_NodeConeTruth( p.vVars, p.vFuncs, nWordsMax, pNode, vFanins, p.vVisited );\np.timeTru += Abc_Clock() - clk;\n    if pTruth == nil {\n        return nil; }\n\n    // always accept the case of constant node\n    if (Abc_NodeConeIsConst0(pTruth, nVars) != 0) || (Abc_NodeConeIsConst1(pTruth, nVars) != 0) {\n        p.nLastGain = Abc_NodeMffcSize( pNode );\n        p.nNodesGained += p.nLastGain;\n        p.nNodesRefactored++;\n        if Abc_NodeConeIsConst0(pTruth, nVars) != 0 {\n            return Dec_GraphCreateConst0();\n        } else {\n            return Dec_GraphCreateConst1();\n        }\n    }\n\n    // get the factored form\nclk = Abc_Clock();\n    pFForm = (Dec_Graph_t *)Kit_TruthToGraph( (unsigned *)pTruth, nVars, p.vMemory );\np.timeFact += Abc_Clock() - clk;\n\n    // mark the fanin boundary \n    // (can mark only essential fanins, belonging to bNodeFunc!)\n    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pFanin, i )\n        pFanin.vFanouts.nSize++;\n    // label MFFC with current traversal ID\n    Abc_NtkIncrementTravId( pNode.pNtk );\n    nNodesSaved = Abc_NodeMffcLabelAig( pNode );\n    // unmark the fanin boundary and set the fanins as leaves in the form\n    Vec_PtrForEachEntry( Abc_Obj_t *, vFanins, pFanin, i )\n    {\n        pFanin.vFanouts.nSize--;\n        Dec_GraphNode(pFForm, i).pFunc = pFanin;\n    }\n\n    // detect how many new nodes will be added (while taking into account reused nodes)\nclk = Abc_Clock();\n    nNodesAdded = Dec_GraphToNetworkCount( pNode, pFForm, nNodesSaved, Required );\np.timeEval += Abc_Clock() - clk;\n    // quit if there is no improvement\n    if nNodesAdded == -1 || (nNodesAdded == nNodesSaved \u0026\u0026 !(fUseZeros != 0)) {\n        Dec_GraphFree( pFForm );\n        return nil;\n    }\n\n    // compute the total gain in the number of nodes\n    p.nLastGain = nNodesSaved - nNodesAdded;\n    p.nNodesGained += p.nLastGain;\n    p.nNodesRefactored++;\n\n    // report the progress\n    if fVeryVerbose != 0 {\n        fmt.Printf(\"Node %6s : \", Abc_ObjName(pNode));\n        fmt.Printf(\"Cone = %2d. \", vFanins.nSize);\n        fmt.Printf(\"FF = %2d. \", 1 + Dec_GraphNodeNum(pFForm));\n        fmt.Printf(\"MFFC = %2d. \", nNodesSaved);\n        fmt.Printf(\"Add = %2d. \", nNodesAdded);\n        fmt.Printf(\"GAIN = %2d. \", p.nLastGain);\n        fmt.Printf(\"\\n\");\n    }\n    return pFForm;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkManRefStart(nNodeSizeMax int32, nConeSizeMax int32, fUseDcs int32, fVerbose int32) *Abc_ManRef_t {\n    var p *Abc_ManRef_t;\n    p = new(Abc_ManRef_t);\n    *p = Abc_ManRef_t{};\n    p.vCube        = Vec_StrAlloc( 100 );\n    p.vVisited     = Vec_PtrAlloc( 100 );\n    p.nNodeSizeMax = nNodeSizeMax;\n    p.nConeSizeMax = nConeSizeMax;\n    p.fVerbose     = fVerbose;\n    p.vVars        = Vec_PtrAllocTruthTables( Abc_MaxInt(nNodeSizeMax, 6) );\n    p.vFuncs       = Vec_PtrAlloc( 100 );\n    p.vMemory      = Vec_IntAlloc( 1 \u003c\u003c 16 );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkManRefStop(p *Abc_ManRef_t) {\n    Vec_PtrFreeFree( p.vFuncs );\n    Vec_PtrFree( p.vVars );\n    Vec_IntFree( p.vMemory );\n    Vec_PtrFree( p.vVisited );\n    Vec_StrFree( p.vCube );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the resynthesis manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkManRefPrintStats(p *Abc_ManRef_t) {\n    fmt.Printf(\"Refactoring statistics:\\n\");\n    fmt.Printf(\"Nodes considered  = %8d.\\n\", p.nNodesConsidered);\n    fmt.Printf(\"Nodes refactored  = %8d.\\n\", p.nNodesRefactored);\n    fmt.Printf(\"Gain              = %8d. (%6.2f %%).\\n\", p.nNodesBeg-p.nNodesEnd, 100.0*(p.nNodesBeg-p.nNodesEnd)/p.nNodesBeg);\n    ABC_PRT( \"Cuts       \", p.timeCut );\n    ABC_PRT( \"Resynthesis\", p.timeRes );\n    ABC_PRT( \"    BDD    \", p.timeTru );\n    ABC_PRT( \"    DCs    \", p.timeDcs );\n    ABC_PRT( \"    SOP    \", p.timeSop );\n    ABC_PRT( \"    FF     \", p.timeFact );\n    ABC_PRT( \"    Eval   \", p.timeEval );\n    ABC_PRT( \"AIG update \", p.timeNtk );\n    ABC_PRT( \"TOTAL      \", p.timeTotal );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs incremental resynthesis of the AIG.]\n\n  Description [Starting from each node, computes a reconvergence-driven cut, \n  derives BDD of the cut function, constructs ISOP, factors the ISOP, \n  and replaces the current implementation of the MFFC of the node by the \n  new factored form, if the number of AIG nodes is reduced and the total\n  number of levels of the AIG network is not increated. Returns the\n  number of AIG nodes saved.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRefactor(pNtk *Abc_Ntk_t, nNodeSizeMax int32, nConeSizeMax int32, fUpdateLevel int32, fUseZeros int32, fUseDcs int32, fVerbose int32) int32 {\n    extern void           Dec_GraphUpdateNetwork( Abc_Obj_t * pRoot, Dec_Graph_t * pGraph, int fUpdateLevel, int nGain );\n    var pProgress *ProgressBar;\n    var pManRef *Abc_ManRef_t;\n    var pManCut *Abc_ManCut_t;\n    var pFForm *Dec_Graph_t;\n    var vFanins *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var clk abctime;\n    var clkStart abctime = Abc_Clock();\n    var i, nNodes int32;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // cleanup the AIG\n    Abc_AigCleanup((Abc_Aig_t *)pNtk.pManFunc);\n    // start the managers\n    pManCut = Abc_NtkManCutStart( nNodeSizeMax, nConeSizeMax, 2, 1000 );\n    pManRef = Abc_NtkManRefStart( nNodeSizeMax, nConeSizeMax, fUseDcs, fVerbose );\n    pManRef.vLeaves   = Abc_NtkManCutReadCutLarge( pManCut );\n    // compute the reverse levels if level update is requested\n    if fUpdateLevel != 0 {\n        Abc_NtkStartReverseLevels( pNtk, 0 ); }\n\n    // resynthesize each node once\n    pManRef.nNodesBeg = Abc_NtkNodeNum(pNtk);\n    nNodes = Abc_NtkObjNumMax(pNtk);\n    pProgress = Extra_ProgressBarStart( os.Stdout, nNodes );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        // skip the constant node\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        // skip persistant nodes\n        if Abc_NodeIsPersistant(pNode) {\n            continue; }\n        // skip the nodes with many fanouts\n        if Abc_ObjFanoutNum(pNode) \u003e 1000 {\n            continue; }\n        // stop if all nodes have been tried once\n        if i \u003e= nNodes {\n            break; }\n        // compute a reconvergence-driven cut\nclk = Abc_Clock();\n        vFanins = Abc_NodeFindCut( pManCut, pNode, fUseDcs );\npManRef.timeCut += Abc_Clock() - clk;\n        // evaluate this cut\nclk = Abc_Clock();\n        pFForm = Abc_NodeRefactor( pManRef, pNode, vFanins, fUpdateLevel, fUseZeros, fUseDcs, fVerbose );\npManRef.timeRes += Abc_Clock() - clk;\n        if pFForm == nil {\n            continue; }\n        // acceptable replacement found, update the graph\nclk = Abc_Clock();\n        Dec_GraphUpdateNetwork( pNode, pFForm, fUpdateLevel, pManRef.nLastGain );\npManRef.timeNtk += Abc_Clock() - clk;\n        Dec_GraphFree( pFForm );\n    }\n    Extra_ProgressBarStop( pProgress );\npManRef.timeTotal = Abc_Clock() - clkStart;\n    pManRef.nNodesEnd = Abc_NtkNodeNum(pNtk);\n\n    // print statistics of the manager\n    if fVerbose != 0 {\n        Abc_NtkManRefPrintStats( pManRef ); }\n    // delete the managers\n    Abc_NtkManCutStop( pManCut );\n    Abc_NtkManRefStop( pManRef );\n    // put the nodes into the DFS order and reassign their IDs\n    Abc_NtkReassignIds( pNtk );\n//    Abc_AigCheckFaninOrder( pNtk-\u003epManFunc );\n    // fix the levels\n    if fUpdateLevel != 0 {\n        Abc_NtkStopReverseLevels( pNtk );\n    } else {\n        Abc_NtkLevel( pNtk ); }\n    // check\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Printf(\"Abc_NtkRefactor: The network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_legalize.c",
+  "SHA256": "ff2c3eecd2a69b7f4d9841fe442faa8e50df956a296f41b94c64a9d0a7be340c",
+  "Functions": [
+    {
+      "Name": "legalize",
+      "Start": 507,
+      "End": 545,
+      "BodyStart": 523,
+      "Original": "void legalize() {\n  // UNIMPLEMENTED\n}",
+      "Draft": "func legalize() {\n  // UNIMPLEMENTED\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_legalize.c::legalize",
+      "Category": "semantic-review",
+      "Symbol": "legalize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 507,
+      "End": 545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_legalize.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 571
+    }
+  ],
+  "Draft": "package place\n\n/*===================================================================*/\n//  \n//     place_legalize.c\n//\n//        Aaron P. Hurst, 2007\n//              ahurst@eecs.berkeley.edu\n//\n/*===================================================================*/\n\n//#include \u003climits.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"place_base.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n// --------------------------------------------------------------------\n// legalize()\n//\n// --------------------------------------------------------------------\nfunc legalize() {\n  // UNIMPLEMENTED\n}\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

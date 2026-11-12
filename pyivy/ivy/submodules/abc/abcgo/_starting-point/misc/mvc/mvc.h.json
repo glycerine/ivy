@@ -1,0 +1,1072 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h",
+  "SHA256": "0f27cf1bff9dc3e2f6b1626a395e00ad6517c47b002c54a44230e3392ff39bec",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::struct::MvcCubeStruct::// the next cube in the linked list\n    unsigned        iLast   : 24;",
+      "Category": "struct-field-review",
+      "Symbol": "MvcCubeStruct",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2415,
+      "End": 2492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::struct::MvcCubeStruct::// the index of the last word\n    unsigned        nUnused :  6;",
+      "Category": "struct-field-review",
+      "Symbol": "MvcCubeStruct",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2492,
+      "End": 2556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::struct::MvcCubeStruct::// the number of unused bits in the last word\n    unsigned        fPrime  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "MvcCubeStruct",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2556,
+      "End": 2636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::struct::MvcCubeStruct::// marks the prime cube\n    unsigned        fEssen  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "MvcCubeStruct",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2636,
+      "End": 2694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::struct::MvcCubeStruct::// the number of 1's in the bit data\n    Mvc_CubeWord_t  pData[1];",
+      "Category": "struct-field-review",
+      "Symbol": "MvcCubeStruct",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2749,
+      "End": 2823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::struct::MvcCubeStruct",
+      "Category": "struct-review",
+      "Symbol": "MvcCubeStruct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2366,
+      "End": 2879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::struct::MvcListStruct",
+      "Category": "struct-review",
+      "Symbol": "MvcListStruct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2929,
+      "End": 3150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::struct::MvcCoverStruct",
+      "Category": "struct-review",
+      "Symbol": "MvcCoverStruct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3180,
+      "End": 3827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::struct::MvcDataStruct::// the mask to select each MV variable\n    Mvc_Cube_t *    ppTemp[3];",
+      "Category": "struct-field-review",
+      "Symbol": "MvcDataStruct",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4199,
+      "End": 4274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::struct::MvcDataStruct",
+      "Category": "struct-review",
+      "Symbol": "MvcDataStruct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3887,
+      "End": 4303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::struct::MvcManagerStruct",
+      "Category": "struct-review",
+      "Symbol": "MvcManagerStruct",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 4376,
+      "End": 4670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeReadNext",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeReadNext",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4936,
+      "End": 4988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeReadNextP",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeReadNextP",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4989,
+      "End": 5042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeReadLast",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeReadLast",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5043,
+      "End": 5095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeReadSize",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeReadSize",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5096,
+      "End": 5148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeSetNext",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeSetNext",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5191,
+      "End": 5252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeSetLast",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeSetLast",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5253,
+      "End": 5314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeSetSize",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeSetSize",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5315,
+      "End": 5376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1Words",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1Words",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5410,
+      "End": 5468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2Words",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2Words",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5469,
+      "End": 5527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNWords",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNWords",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5528,
+      "End": 5586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeWhichWord",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeWhichWord",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5611,
+      "End": 5676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeWhichBit",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeWhichBit",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5677,
+      "End": 5744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitValue",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitValue",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5774,
+      "End": 5906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitInsert",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitInsert",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5907,
+      "End": 6034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitRemove",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitRemove",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6035,
+      "End": 6162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeVarValue",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeVarValue",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6207,
+      "End": 6341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitClean",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitClean",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6400,
+      "End": 6467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitClean",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitClean",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6468,
+      "End": 6571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitClean",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitClean",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6572,
+      "End": 6710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitCleanUnused",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitCleanUnused",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6756,
+      "End": 6864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitFill",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitFill",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6905,
+      "End": 7000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitFill",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitFill",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7001,
+      "End": 7142
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitFill",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitFill",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7143,
+      "End": 7358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitNot",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitNot",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7391,
+      "End": 7486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitNot",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitNot",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7487,
+      "End": 7628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitNot",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitNot",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7629,
+      "End": 7845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitCopy",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitCopy",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7847,
+      "End": 7941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitCopy",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitCopy",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 7942,
+      "End": 8092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitCopy",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitCopy",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8093,
+      "End": 8258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitOr",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitOr",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8260,
+      "End": 8379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitOr",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitOr",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8380,
+      "End": 8575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitOr",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitOr",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8576,
+      "End": 8770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitExor",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitExor",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8772,
+      "End": 8893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitExor",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitExor",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 8894,
+      "End": 9091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitExor",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitExor",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9092,
+      "End": 9288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitAnd",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitAnd",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9290,
+      "End": 9410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitAnd",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitAnd",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9411,
+      "End": 9607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitAnd",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitAnd",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9608,
+      "End": 9804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitSharp",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitSharp",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9806,
+      "End": 9931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitSharp",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitSharp",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 9932,
+      "End": 10136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitSharp",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitSharp",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 10137,
+      "End": 10337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitEmpty",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitEmpty",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 10339,
+      "End": 10412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitEmpty",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitEmpty",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 10413,
+      "End": 10511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitEmpty",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitEmpty",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 10512,
+      "End": 10694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitEqual",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitEqual",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 10696,
+      "End": 10798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitEqual",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitEqual",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 10799,
+      "End": 10960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitEqual",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitEqual",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 10961,
+      "End": 11182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitLess",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitLess",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11184,
+      "End": 11285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitLess",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitLess",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11286,
+      "End": 11495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitLess",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitLess",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11496,
+      "End": 11723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitMore",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitMore",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11725,
+      "End": 11826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitMore",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitMore",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11827,
+      "End": 12036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitMore",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitMore",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12037,
+      "End": 12264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitNotImpl",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitNotImpl",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12266,
+      "End": 12371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitNotImpl",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitNotImpl",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12372,
+      "End": 12535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitNotImpl",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitNotImpl",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12536,
+      "End": 12765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitDisjoint",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitDisjoint",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12767,
+      "End": 12880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitDisjoint",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitDisjoint",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12881,
+      "End": 13061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitDisjoint",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitDisjoint",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 13062,
+      "End": 13296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitEqualUnderMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitEqualUnderMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 13298,
+      "End": 13461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitEqualUnderMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitEqualUnderMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 13462,
+      "End": 13731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitEqualUnderMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitEqualUnderMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 13732,
+      "End": 14030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitEqualOutsideMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitEqualOutsideMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14032,
+      "End": 14197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitEqualOutsideMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitEqualOutsideMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14198,
+      "End": 14469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitEqualOutsideMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitEqualOutsideMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14470,
+      "End": 14769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitIntersectUnderMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitIntersectUnderMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14771,
+      "End": 14917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitIntersectUnderMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitIntersectUnderMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14918,
+      "End": 15149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitIntersectUnderMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitIntersectUnderMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15150,
+      "End": 15414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube1BitNotImplUnderMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube1BitNotImplUnderMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15416,
+      "End": 15557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_Cube2BitNotImplUnderMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_Cube2BitNotImplUnderMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15558,
+      "End": 15778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeNBitNotImplUnderMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeNBitNotImplUnderMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 15779,
+      "End": 16046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitClean",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitClean",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16120,
+      "End": 16359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitFill",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitFill",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16360,
+      "End": 16595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitNot",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitNot",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16596,
+      "End": 16827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitCopy",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitCopy",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16828,
+      "End": 17095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitOr",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitOr",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 17096,
+      "End": 17383
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitExor",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitExor",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 17384,
+      "End": 17679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitAnd",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitAnd",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 17680,
+      "End": 17971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitSharp",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitSharp",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 17972,
+      "End": 18271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitEmpty",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitEmpty",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 18272,
+      "End": 18531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitEqual",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitEqual",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 18532,
+      "End": 18823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitLess",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitLess",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 18824,
+      "End": 19111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitMore",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitMore",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 19112,
+      "End": 19399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitNotImpl",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitNotImpl",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 19400,
+      "End": 19699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitDisjoint",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitDisjoint",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 19700,
+      "End": 20003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitEqualUnderMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitEqualUnderMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 20004,
+      "End": 20355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitEqualOutsideMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitEqualOutsideMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 20356,
+      "End": 20715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitIntersectUnderMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitIntersectUnderMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 20716,
+      "End": 21083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeBitNotImplUnderMask",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeBitNotImplUnderMask",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 21084,
+      "End": 21443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_ListAddCubeHead",
+      "Category": "macro-review",
+      "Symbol": "Mvc_ListAddCubeHead",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 21471,
+      "End": 21852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_ListAddCubeTail",
+      "Category": "macro-review",
+      "Symbol": "Mvc_ListAddCubeTail",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 21853,
+      "End": 22150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_ListDeleteCube",
+      "Category": "macro-review",
+      "Symbol": "Mvc_ListDeleteCube",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22151,
+      "End": 22460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CoverAddCubeHead",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CoverAddCubeHead",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22504,
+      "End": 22640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CoverAddCubeTail",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CoverAddCubeTail",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22641,
+      "End": 22777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CoverDeleteCube",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CoverDeleteCube",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22778,
+      "End": 22926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_ListForEachCube",
+      "Category": "macro-review",
+      "Symbol": "Mvc_ListForEachCube",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 22980,
+      "End": 23101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_ListForEachCubeSafe",
+      "Category": "macro-review",
+      "Symbol": "Mvc_ListForEachCubeSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23102,
+      "End": 23298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CoverForEachCube",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CoverForEachCube",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23339,
+      "End": 23472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CoverForEachCubeWithIndex",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CoverForEachCubeWithIndex",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23473,
+      "End": 23642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CoverForEachCubeSafe",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CoverForEachCubeSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23643,
+      "End": 23851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CoverForEachCubeStart",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CoverForEachCubeStart",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 23898,
+      "End": 24020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CoverForEachCubeStartSafe",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CoverForEachCubeStartSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 24021,
+      "End": 24218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeForEachBit",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeForEachBit",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 24262,
+      "End": 24435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::Mvc_CubeForEachVarValue",
+      "Category": "macro-review",
+      "Symbol": "Mvc_CubeForEachVarValue",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 24483,
+      "End": 24658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::MEM_ALLOC",
+      "Category": "macro-review",
+      "Symbol": "MEM_ALLOC",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 24863,
+      "End": 24963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::macro::MEM_FREE",
+      "Category": "macro-review",
+      "Symbol": "MEM_FREE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 24964,
+      "End": 25067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvc.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 37816
+    }
+  ],
+  "Draft": "package mvc\n\n/**CFile****************************************************************\n\n  FileName    [mvc.h]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Data structure for MV cube/cover manipulation.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: mvc.h,v 1.10 2003/05/02 23:23:59 wjiang Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \"misc/extra/extra.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n// this is the only part of Mvc package, which should be modified\n// when compiling the package for other platforms\n\n// these parameters can be computed but setting them manually makes it faster\nconst BITS_PER_WORD =         32                      // sizeof(Mvc_CubeWord_t) * 8 \nconst BITS_PER_WORD_MINUS =   31                      // the same minus 1\nconst BITS_PER_WORD_LOG =     5                       // log2(sizeof(Mvc_CubeWord_t) * 8)\n#define BITS_DISJOINT         ((Mvc_CubeWord_t)0x55555555)  // the mask of the type \"01010101\"\n#define BITS_FULL             ((Mvc_CubeWord_t)0xffffffff)  // the mask of the type \"11111111\"\n\n// uncomment this macro to switch to standard memory management\n//#define USE_SYSTEM_MEMORY_MANAGEMENT \n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n// cube/list/cover/data\ntypedef unsigned int               Mvc_CubeWord_t;\ntype Mvc_Cube_t =       MvcCubeStruct;\ntype Mvc_List_t =       MvcListStruct;\ntype Mvc_Cover_t =      MvcCoverStruct;\ntype Mvc_Data_t =       MvcDataStruct;\ntype Mvc_Manager_t =    MvcManagerStruct;\n\n// the cube data structure\ntype MvcCubeStruct struct {\n    pNext     *Mvc_Cube_t;        // the next cube in the linked list\n    iLast uint32; /* C bitfield: 24 bits; review packing and truncation */ // the index of the last word\n    nUnused uint32; /* C bitfield: 6 bits; review packing and truncation */ // the number of unused bits in the last word\n    fPrime uint32; /* C bitfield: 1 bits; review packing and truncation */ // marks the prime cube\n    fEssen uint32; /* C bitfield: 1 bits; review packing and truncation */ // marks the essential cube\n    nOnes        uint32;        // the number of 1's in the bit data\n    Mvc_CubeWord_t  pData[1];     // the first Mvc_CubeWord_t filled with bit data\n}\n\n// the single-linked list of cubes in the cover\ntype MvcListStruct struct {\n    pHead     *Mvc_Cube_t;        // the first cube in the list\n    pTail     *Mvc_Cube_t;        // the last cube in the list\n    nItems             int32;       // the number of cubes in the list\n}\n\n// the cover data structure\ntype MvcCoverStruct struct {\n    nWords             int32;       // the number of machine words\n    nUnused             int32;      // the number of unused bits in the last word\n    nBits             int32;        // the number of used data bits in the cube\n    lCubes      Mvc_List_t;       // the single-linked list of cubes\n    pCubes    **Mvc_Cube_t;       // the array of cubes (for sorting)\n    nCubesAlloc             int32;  // the size of allocated storage\n    pLits            *int32;        // the counter of lit occurrances in cubes\n    pMask     *Mvc_Cube_t;        // the multipurpose mask\n    pMem  *Mvc_Manager_t;         // the memory manager\n}\n\n// data structure to store information about MV variables\ntype MvcDataStruct struct {\n    pMan  *Mvc_Manager_t;         // the memory manager\n//    Vm_VarMap_t *   pVm;          // the MV variable data\n    nBinVars             int32;     // the number of binary variables\n    pMaskBin     *Mvc_Cube_t;     // the mask to select the binary bits only\n    ppMasks    **Mvc_Cube_t;      // the mask to select each MV variable\n    ppTemp [3]*Mvc_Cube_t;    // the temporary cubes\n}\n\n// the manager of covers and cubes (as of today, only managing memory)\ntype MvcManagerStruct struct {\n    pManC  *Extra_MmFixed_t;        // the manager for covers\n    pMan1  *Extra_MmFixed_t;        // the manager for 1-word cubes\n    pMan2  *Extra_MmFixed_t;        // the manager for 2-word cubes\n    pMan4  *Extra_MmFixed_t;        // the manager for 3-word cubes\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n// reading data from the header of the cube\n// Original macro:\n// #define Mvc_CubeReadNext(Cube)       ((Cube)-\u003epNext)\n\n// Original macro:\n// #define Mvc_CubeReadNextP(Cube)      (\u0026(Cube)-\u003epNext)\n\n// Original macro:\n// #define Mvc_CubeReadLast(Cube)       ((Cube)-\u003eiLast)\n\n// Original macro:\n// #define Mvc_CubeReadSize(Cube)       ((Cube)-\u003enOnes)\n\n// setting data to the header of the cube\n// Original macro:\n// #define Mvc_CubeSetNext(Cube,Next)   ((Cube)-\u003epNext = (Next))\n\n// Original macro:\n// #define Mvc_CubeSetLast(Cube,Last)   ((Cube)-\u003eiLast = (Last))\n\n// Original macro:\n// #define Mvc_CubeSetSize(Cube,Size)   ((Cube)-\u003enOnes = (Size))\n\n// checking the number of words\n\n// Original macro:\n// #define Mvc_Cube1Words(Cube)         ((Cube)-\u003eiLast == 0) \n\n// Original macro:\n// #define Mvc_Cube2Words(Cube)         ((Cube)-\u003eiLast == 1) \n\n// Original macro:\n// #define Mvc_CubeNWords(Cube)         ((Cube)-\u003eiLast \u003e  1) \n\n// getting one data bit\n// Original macro:\n// #define Mvc_CubeWhichWord(Bit)       ((Bit) \u003e\u003e BITS_PER_WORD_LOG)\n\n// Original macro:\n// #define Mvc_CubeWhichBit(Bit)        ((Bit) \u0026  BITS_PER_WORD_MINUS)\n\n// accessing individual bits\n// Original macro:\n// #define Mvc_CubeBitValue(Cube, Bit) (((Cube)-\u003epData[Mvc_CubeWhichWord(Bit)] \u0026   (((Mvc_CubeWord_t)1)\u003c\u003c(Mvc_CubeWhichBit(Bit)))) \u003e 0)\n\n// Original macro:\n// #define Mvc_CubeBitInsert(Cube, Bit) ((Cube)-\u003epData[Mvc_CubeWhichWord(Bit)] |=  (((Mvc_CubeWord_t)1)\u003c\u003c(Mvc_CubeWhichBit(Bit))))\n\n// Original macro:\n// #define Mvc_CubeBitRemove(Cube, Bit) ((Cube)-\u003epData[Mvc_CubeWhichWord(Bit)] \u0026= ~(((Mvc_CubeWord_t)1)\u003c\u003c(Mvc_CubeWhichBit(Bit))))\n\n// accessing values of the binary variables\n// Original macro:\n// #define Mvc_CubeVarValue(Cube, Var) (((Cube)-\u003epData[Mvc_CubeWhichWord(2*(Var))] \u003e\u003e (Mvc_CubeWhichBit(2*(Var)))) \u0026 ((Mvc_CubeWord_t)3))\n\n\n// various macros\n\n// cleaning the data bits of the cube\n// Original macro:\n// #define Mvc_Cube1BitClean( Cube )\\\n//           ((Cube)-\u003epData[0] = 0)\n\n// Original macro:\n// #define Mvc_Cube2BitClean( Cube )\\\n//          (((Cube)-\u003epData[0] = 0),\\\n//           ((Cube)-\u003epData[1] = 0))\n\n// Original macro:\n// #define Mvc_CubeNBitClean( Cube  )\\\n// {\\\n//     int _i_;\\\n//     for( _i_ = (Cube)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//            (Cube)-\u003epData[_i_] = 0;\\\n// }\n\n\n// cleaning the unused part of the lat word\n// Original macro:\n// #define Mvc_CubeBitCleanUnused( Cube )\\\n//     ((Cube)-\u003epData[(Cube)-\u003eiLast] \u0026= (BITS_FULL \u003e\u003e (Cube)-\u003enUnused))\n\n\n// filling the used data bits with 1's\n// Original macro:\n// #define Mvc_Cube1BitFill( Cube )\\\n//            (Cube)-\u003epData[0] = (BITS_FULL \u003e\u003e (Cube)-\u003enUnused);\n\n// Original macro:\n// #define Mvc_Cube2BitFill( Cube )\\\n//          (((Cube)-\u003epData[0] =  BITS_FULL),\\\n//           ((Cube)-\u003epData[1] = (BITS_FULL \u003e\u003e (Cube)-\u003enUnused))) \n\n// Original macro:\n// #define Mvc_CubeNBitFill( Cube )\\\n// {\\\n//     int _i_;\\\n//     (Cube)-\u003epData[(Cube)-\u003eiLast] = (BITS_FULL \u003e\u003e (Cube)-\u003enUnused);\\\n//     for( _i_ = (Cube)-\u003eiLast - 1; _i_ \u003e= 0; _i_-- )\\\n//         (Cube)-\u003epData[_i_] =  BITS_FULL;\\\n// }\n\n\n// complementing the data bits\n// Original macro:\n// #define Mvc_Cube1BitNot( Cube )\\\n//           ((Cube)-\u003epData[0] ^= (BITS_FULL \u003e\u003e (Cube)-\u003enUnused))\n\n// Original macro:\n// #define Mvc_Cube2BitNot( Cube )\\\n//          (((Cube)-\u003epData[0] ^=  BITS_FULL),\\\n//           ((Cube)-\u003epData[1] ^= (BITS_FULL \u003e\u003e (Cube)-\u003enUnused)))\n\n// Original macro:\n// #define Mvc_CubeNBitNot( Cube )\\\n// {\\\n//     int _i_;\\\n//     (Cube)-\u003epData[(Cube)-\u003eiLast] ^= (BITS_FULL \u003e\u003e (Cube)-\u003enUnused);\\\n//     for( _i_ = (Cube)-\u003eiLast - 1; _i_ \u003e= 0; _i_-- )\\\n//         (Cube)-\u003epData[_i_] ^=  BITS_FULL;\\\n// }\n\n\n// Original macro:\n// #define Mvc_Cube1BitCopy( Cube1, Cube2 )\\\n//          (((Cube1)-\u003epData[0]) = ((Cube2)-\u003epData[0]))\n\n// Original macro:\n// #define Mvc_Cube2BitCopy( Cube1, Cube2 )\\\n//         ((((Cube1)-\u003epData[0]) = ((Cube2)-\u003epData[0])),\\\n//          (((Cube1)-\u003epData[1])=  ((Cube2)-\u003epData[1])))\n\n// Original macro:\n// #define Mvc_CubeNBitCopy( Cube1, Cube2 )\\\n// {\\\n//     int _i_;\\\n//     for (_i_ = (Cube1)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//         ((Cube1)-\u003epData[_i_]) = ((Cube2)-\u003epData[_i_]);\\\n// }\n\n\n// Original macro:\n// #define Mvc_Cube1BitOr( CubeR, Cube1, Cube2 )\\\n//          (((CubeR)-\u003epData[0]) = ((Cube1)-\u003epData[0] | (Cube2)-\u003epData[0]))\n\n// Original macro:\n// #define Mvc_Cube2BitOr( CubeR, Cube1, Cube2 )\\\n//         ((((CubeR)-\u003epData[0]) = ((Cube1)-\u003epData[0] | (Cube2)-\u003epData[0])),\\\n//          (((CubeR)-\u003epData[1]) = ((Cube1)-\u003epData[1] | (Cube2)-\u003epData[1])))\n\n// Original macro:\n// #define Mvc_CubeNBitOr( CubeR, Cube1, Cube2 )\\\n// {\\\n//     int _i_;\\\n//     for (_i_ = (Cube1)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//         (((CubeR)-\u003epData[_i_]) = ((Cube1)-\u003epData[_i_] | (Cube2)-\u003epData[_i_]));\\\n// }\n\n\n// Original macro:\n// #define Mvc_Cube1BitExor( CubeR, Cube1, Cube2 )\\\n//          (((CubeR)-\u003epData[0]) = ((Cube1)-\u003epData[0] ^ (Cube2)-\u003epData[0]))\n\n// Original macro:\n// #define Mvc_Cube2BitExor( CubeR, Cube1, Cube2 )\\\n//         ((((CubeR)-\u003epData[0]) = ((Cube1)-\u003epData[0] ^ (Cube2)-\u003epData[0])),\\\n//          (((CubeR)-\u003epData[1]) = ((Cube1)-\u003epData[1] ^ (Cube2)-\u003epData[1])))\n\n// Original macro:\n// #define Mvc_CubeNBitExor( CubeR, Cube1, Cube2 )\\\n// {\\\n//     int _i_;\\\n//     for (_i_ = (Cube1)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//         (((CubeR)-\u003epData[_i_]) = ((Cube1)-\u003epData[_i_] ^ (Cube2)-\u003epData[_i_]));\\\n// }\n\n\n// Original macro:\n// #define Mvc_Cube1BitAnd( CubeR, Cube1, Cube2 )\\\n//          (((CubeR)-\u003epData[0]) = ((Cube1)-\u003epData[0] \u0026 (Cube2)-\u003epData[0]))\n\n// Original macro:\n// #define Mvc_Cube2BitAnd( CubeR, Cube1, Cube2 )\\\n//         ((((CubeR)-\u003epData[0]) = ((Cube1)-\u003epData[0] \u0026 (Cube2)-\u003epData[0])),\\\n//          (((CubeR)-\u003epData[1]) = ((Cube1)-\u003epData[1] \u0026 (Cube2)-\u003epData[1])))\n\n// Original macro:\n// #define Mvc_CubeNBitAnd( CubeR, Cube1, Cube2 )\\\n// {\\\n//     int _i_;\\\n//     for (_i_ = (Cube1)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//         (((CubeR)-\u003epData[_i_]) = ((Cube1)-\u003epData[_i_] \u0026 (Cube2)-\u003epData[_i_]));\\\n// } \n\n\n// Original macro:\n// #define Mvc_Cube1BitSharp( CubeR, Cube1, Cube2 )\\\n//          (((CubeR)-\u003epData[0]) = ((Cube1)-\u003epData[0] \u0026 ~((Cube2)-\u003epData[0])))\n\n// Original macro:\n// #define Mvc_Cube2BitSharp( CubeR, Cube1, Cube2 )\\\n//         ((((CubeR)-\u003epData[0]) = ((Cube1)-\u003epData[0] \u0026 ~((Cube2)-\u003epData[0]))),\\\n//          (((CubeR)-\u003epData[1]) = ((Cube1)-\u003epData[1] \u0026 ~((Cube2)-\u003epData[1]))))\n\n// Original macro:\n// #define Mvc_CubeNBitSharp( CubeR, Cube1, Cube2 )\\\n// {\\\n//     int _i_;\\\n//     for (_i_ = (Cube1)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//         (((CubeR)-\u003epData[_i_]) = ((Cube1)-\u003epData[_i_] \u0026 ~(Cube2)-\u003epData[_i_]));\\\n// }  \n\n\n// Original macro:\n// #define Mvc_Cube1BitEmpty( Res, Cube )\\\n//   (Res = ((Cube)-\u003epData[0] == 0))\n\n// Original macro:\n// #define Mvc_Cube2BitEmpty( Res, Cube )\\\n//   (Res = ((Cube)-\u003epData[0] == 0 \u0026\u0026 (Cube)-\u003epData[1] == 0))\n\n// Original macro:\n// #define Mvc_CubeNBitEmpty( Res, Cube )\\\n// {\\\n//     int _i_; Res = 1;\\\n//     for (_i_ = (Cube)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//         if ( (Cube)-\u003epData[_i_] )\\\n//            { Res = 0; break; }\\\n// }\n\n\n// Original macro:\n// #define Mvc_Cube1BitEqual( Res, Cube1, Cube2 )\\\n//   (Res = (((Cube1)-\u003epData[0]) == ((Cube2)-\u003epData[0])))\n\n// Original macro:\n// #define Mvc_Cube2BitEqual( Res, Cube1, Cube2 )\\\n//  (Res = ((((Cube1)-\u003epData[0]) == ((Cube2)-\u003epData[0])) \u0026\u0026\\\n//          (((Cube1)-\u003epData[1]) == ((Cube2)-\u003epData[1]))))\n\n// Original macro:\n// #define Mvc_CubeNBitEqual( Res, Cube1, Cube2 )\\\n// {\\\n//     int _i_; Res = 1;\\\n//     for (_i_ = (Cube1)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//          if (((Cube1)-\u003epData[_i_]) != ((Cube2)-\u003epData[_i_]))\\\n//               { Res = 0; break; }\\\n// }\n\n\n// Original macro:\n// #define Mvc_Cube1BitLess( Res, Cube1, Cube2 )\\\n//   (Res = (((Cube1)-\u003epData[0]) \u003c  ((Cube2)-\u003epData[0])))\n\n// Original macro:\n// #define Mvc_Cube2BitLess( Res, Cube1, Cube2 )\\\n//  (Res = ((((Cube1)-\u003epData[0]) \u003c  ((Cube2)-\u003epData[0])) ||\\\n//         ((((Cube1)-\u003epData[0]) == ((Cube2)-\u003epData[0])) \u0026\u0026 (((Cube1)-\u003epData[1]) \u003c  ((Cube2)-\u003epData[1])))))\n\n// Original macro:\n// #define Mvc_CubeNBitLess( Res, Cube1, Cube2 )\\\n// {\\\n//     int _i_; Res = 1;\\\n//     for (_i_ = (Cube1)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//          if (((Cube1)-\u003epData[_i_]) \u003e= ((Cube2)-\u003epData[_i_]))\\\n//              { Res = 0; break; }\\\n// }        \n\n\n// Original macro:\n// #define Mvc_Cube1BitMore( Res, Cube1, Cube2 )\\\n//   (Res = (((Cube1)-\u003epData[0]) \u003e  ((Cube2)-\u003epData[0])))\n\n// Original macro:\n// #define Mvc_Cube2BitMore( Res, Cube1, Cube2 )\\\n//  (Res = ((((Cube1)-\u003epData[0]) \u003e  ((Cube2)-\u003epData[0])) ||\\\n//         ((((Cube1)-\u003epData[0]) == ((Cube2)-\u003epData[0])) \u0026\u0026 (((Cube1)-\u003epData[1]) \u003e  ((Cube2)-\u003epData[1])))))\n\n// Original macro:\n// #define Mvc_CubeNBitMore( Res, Cube1, Cube2 )\\\n// {\\\n//     int _i_; Res = 1;\\\n//     for (_i_ = (Cube1)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//         if (((Cube1)-\u003epData[_i_]) \u003c= ((Cube2)-\u003epData[_i_]))\\\n//              { Res = 0; break; }\\\n// }         \n\n\n// Original macro:\n// #define Mvc_Cube1BitNotImpl( Res, Cube1, Cube2 )\\\n//   (Res = (((Cube1)-\u003epData[0])  \u0026 ~((Cube2)-\u003epData[0])))\n\n// Original macro:\n// #define Mvc_Cube2BitNotImpl( Res, Cube1, Cube2 )\\\n//  (Res = ((((Cube1)-\u003epData[0]) \u0026 ~((Cube2)-\u003epData[0])) ||\\\n//          (((Cube1)-\u003epData[1]) \u0026 ~((Cube2)-\u003epData[1]))))\n\n// Original macro:\n// #define Mvc_CubeNBitNotImpl( Res, Cube1, Cube2 )\\\n// {\\\n//     int _i_; Res = 0;\\\n//     for (_i_ = (Cube1)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//         if (((Cube1)-\u003epData[_i_]) \u0026 ~((Cube2)-\u003epData[_i_]))\\\n//             { Res = 1; break; }\\\n// }         \n\n\n// Original macro:\n// #define Mvc_Cube1BitDisjoint( Res, Cube1, Cube2 )\\\n//   (Res = ((((Cube1)-\u003epData[0]) \u0026  ((Cube2)-\u003epData[0])) == 0 ))\n\n// Original macro:\n// #define Mvc_Cube2BitDisjoint( Res, Cube1, Cube2 )\\\n//  (Res = (((((Cube1)-\u003epData[0]) \u0026  ((Cube2)-\u003epData[0])) == 0 ) \u0026\u0026\\\n//          ((((Cube1)-\u003epData[1]) \u0026  ((Cube2)-\u003epData[1])) == 0 )))\n\n// Original macro:\n// #define Mvc_CubeNBitDisjoint( Res, Cube1, Cube2 )\\\n// {\\\n//     int _i_; Res = 1;\\\n//     for (_i_ = (Cube1)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//         if (((Cube1)-\u003epData[_i_]) \u0026 ((Cube2)-\u003epData[_i_]))\\\n//              { Res = 0; break; }\\\n// }             \n\n\n// Original macro:\n// #define Mvc_Cube1BitEqualUnderMask( Res, Cube1, Cube2, Mask )\\\n//   (Res = ((((Cube1)-\u003epData[0]) \u0026 ((Mask)-\u003epData[0])) == (((Cube2)-\u003epData[0]) \u0026 ((Mask)-\u003epData[0]))))\n\n// Original macro:\n// #define Mvc_Cube2BitEqualUnderMask( Res, Cube1, Cube2, Mask )\\\n//  (Res = (((((Cube1)-\u003epData[0]) \u0026 ((Mask)-\u003epData[0])) == (((Cube2)-\u003epData[0]) \u0026 ((Mask)-\u003epData[0])))  \u0026\u0026\\\n//          ((((Cube1)-\u003epData[1]) \u0026 ((Mask)-\u003epData[1])) == (((Cube2)-\u003epData[1]) \u0026 ((Mask)-\u003epData[1])))))\n\n// Original macro:\n// #define Mvc_CubeNBitEqualUnderMask( Res, Cube1, Cube2, Mask )\\\n// {\\\n//     int _i_; Res = 1;\\\n//     for (_i_ = (Cube1)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//         if ((((Cube1)-\u003epData[_i_]) \u0026 ((Mask)-\u003epData[_i_])) != (((Cube2)-\u003epData[_i_]) \u0026 ((Mask)-\u003epData[_i_])))\\\n//             { Res = 0; break; }\\\n// }               \n\n\n// Original macro:\n// #define Mvc_Cube1BitEqualOutsideMask( Res, Cube1, Cube2, Mask )\\\n//   (Res = ((((Cube1)-\u003epData[0]) | ((Mask)-\u003epData[0])) == (((Cube2)-\u003epData[0]) | ((Mask)-\u003epData[0]))))\n\n// Original macro:\n// #define Mvc_Cube2BitEqualOutsideMask( Res, Cube1, Cube2, Mask )\\\n//  (Res = (((((Cube1)-\u003epData[0]) | ((Mask)-\u003epData[0])) == (((Cube2)-\u003epData[0]) | ((Mask)-\u003epData[0])))  \u0026\u0026\\\n//          ((((Cube1)-\u003epData[1]) | ((Mask)-\u003epData[1])) == (((Cube2)-\u003epData[1]) | ((Mask)-\u003epData[1])))))\n\n// Original macro:\n// #define Mvc_CubeNBitEqualOutsideMask( Res, Cube1, Cube2, Mask )\\\n// {\\\n//     int _i_; Res = 1;\\\n//     for (_i_ = (Cube1)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//         if ((((Cube1)-\u003epData[_i_]) | ((Mask)-\u003epData[_i_])) != (((Cube2)-\u003epData[_i_]) | ((Mask)-\u003epData[_i_])))\\\n//             { Res = 0; break; }\\\n// }              \n\n\n// Original macro:\n// #define Mvc_Cube1BitIntersectUnderMask( Res, Cube1, Cube2, Mask)\\\n//   (Res = ((((Cube1)-\u003epData[0]) \u0026 ((Cube2)-\u003epData[0]) \u0026 ((Mask)-\u003epData[0])) \u003e 0))\n\n// Original macro:\n// #define Mvc_Cube2BitIntersectUnderMask( Res, Cube1, Cube2, Mask)\\\n//  (Res = (((((Cube1)-\u003epData[0]) \u0026 ((Cube2)-\u003epData[0]) \u0026 ((Mask)-\u003epData[0])) \u003e 0) ||\\\n//          ((((Cube1)-\u003epData[1]) \u0026 ((Cube2)-\u003epData[1]) \u0026 ((Mask)-\u003epData[1])) \u003e 0)))\n\n// Original macro:\n// #define Mvc_CubeNBitIntersectUnderMask( Res, Cube1, Cube2, Mask)\\\n// {\\\n//     int _i_; Res = 0;\\\n//     for (_i_ = (Cube1)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//         if (((Cube1)-\u003epData[_i_]) \u0026 ((Cube2)-\u003epData[_i_]) \u0026 ((Mask)-\u003epData[_i_]))\\\n//            { Res = 1; break; }\\\n// }       \n\n\n// Original macro:\n// #define Mvc_Cube1BitNotImplUnderMask( Res, Cube1, Cube2, Mask )\\\n//   (Res = (((Mask)-\u003epData[0]) \u0026 ((Cube1)-\u003epData[0])  \u0026 ~((Cube2)-\u003epData[0])))\n\n// Original macro:\n// #define Mvc_Cube2BitNotImplUnderMask( Res, Cube1, Cube2, Mask )\\\n//  (Res = ((((Mask)-\u003epData[0]) \u0026 ((Cube1)-\u003epData[0]) \u0026 ~((Cube2)-\u003epData[0])) ||\\\n//          (((Mask)-\u003epData[1]) \u0026 ((Cube1)-\u003epData[1]) \u0026 ~((Cube2)-\u003epData[1]))))\n\n// Original macro:\n// #define Mvc_CubeNBitNotImplUnderMask( Res, Cube1, Cube2, Mask )\\\n// {\\\n//     int _i_; Res = 0;\\\n//     for (_i_ = (Cube1)-\u003eiLast; _i_ \u003e= 0; _i_--)\\\n//         if (((Mask)-\u003epData[_i_]) \u0026 ((Cube1)-\u003epData[_i_]) \u0026 ~((Cube2)-\u003epData[_i_]))\\\n//             { Res = 1; break; }\\\n// }         \n\n\n// the following macros make no assumption about the cube's bitset size\n// Original macro:\n// #define Mvc_CubeBitClean( Cube )\\\n//     if ( Mvc_Cube1Words(Cube) )      { Mvc_Cube1BitClean( Cube ); }\\\n//     else if ( Mvc_Cube2Words(Cube) ) { Mvc_Cube2BitClean( Cube ); }\\\n//     else                             { Mvc_CubeNBitClean( Cube ); }\n\n// Original macro:\n// #define Mvc_CubeBitFill( Cube )\\\n//     if ( Mvc_Cube1Words(Cube) )      { Mvc_Cube1BitFill( Cube ); }\\\n//     else if ( Mvc_Cube2Words(Cube) ) { Mvc_Cube2BitFill( Cube ); }\\\n//     else                             { Mvc_CubeNBitFill( Cube ); }\n\n// Original macro:\n// #define Mvc_CubeBitNot( Cube )\\\n//     if ( Mvc_Cube1Words(Cube) )      { Mvc_Cube1BitNot( Cube ); }\\\n//     else if ( Mvc_Cube2Words(Cube) ) { Mvc_Cube2BitNot( Cube ); }\\\n//     else                             { Mvc_CubeNBitNot( Cube ); }\n\n// Original macro:\n// #define Mvc_CubeBitCopy( Cube1, Cube2 )\\\n//     if ( Mvc_Cube1Words(Cube1) )     { Mvc_Cube1BitCopy( Cube1, Cube2 ); }\\\n//     else if ( Mvc_Cube2Words(Cube1) ){ Mvc_Cube2BitCopy( Cube1, Cube2 ); }\\\n//     else                             { Mvc_CubeNBitCopy( Cube1, Cube2 ); }\n\n// Original macro:\n// #define Mvc_CubeBitOr( CubeR, Cube1, Cube2 )\\\n//     if ( Mvc_Cube1Words(Cube1) )     { Mvc_Cube1BitOr( CubeR, Cube1, Cube2 ); }\\\n//     else if ( Mvc_Cube2Words(Cube1) ){ Mvc_Cube2BitOr( CubeR, Cube1, Cube2 ); }\\\n//     else                             { Mvc_CubeNBitOr( CubeR, Cube1, Cube2 ); }\n\n// Original macro:\n// #define Mvc_CubeBitExor( CubeR, Cube1, Cube2 )\\\n//     if ( Mvc_Cube1Words(Cube1) )     { Mvc_Cube1BitExor( CubeR, Cube1, Cube2 ); }\\\n//     else if ( Mvc_Cube2Words(Cube1) ){ Mvc_Cube2BitExor( CubeR, Cube1, Cube2 ); }\\\n//     else                             { Mvc_CubeNBitExor( CubeR, Cube1, Cube2 ); }\n\n// Original macro:\n// #define Mvc_CubeBitAnd( CubeR, Cube1, Cube2 )\\\n//     if ( Mvc_Cube1Words(Cube1) )     { Mvc_Cube1BitAnd( CubeR, Cube1, Cube2 ); }\\\n//     else if ( Mvc_Cube2Words(Cube1) ){ Mvc_Cube2BitAnd( CubeR, Cube1, Cube2 ); }\\\n//     else                             { Mvc_CubeNBitAnd( CubeR, Cube1, Cube2 ); }\n\n// Original macro:\n// #define Mvc_CubeBitSharp( CubeR, Cube1, Cube2 )\\\n//     if ( Mvc_Cube1Words(Cube1) )     { Mvc_Cube1BitSharp( CubeR, Cube1, Cube2 ); }\\\n//     else if ( Mvc_Cube2Words(Cube1) ){ Mvc_Cube2BitSharp( CubeR, Cube1, Cube2 ); }\\\n//     else                             { Mvc_CubeNBitSharp( CubeR, Cube1, Cube2 ); }\n\n// Original macro:\n// #define Mvc_CubeBitEmpty( Res, Cube )\\\n//     if ( Mvc_Cube1Words(Cube) )      { Mvc_Cube1BitEmpty( Res, Cube ); }\\\n//     else if ( Mvc_Cube2Words(Cube) ) { Mvc_Cube2BitEmpty( Res, Cube ); }\\\n//     else                             { Mvc_CubeNBitEmpty( Res, Cube ); }\n\n// Original macro:\n// #define Mvc_CubeBitEqual( Res, Cube1, Cube2 )\\\n//     if ( Mvc_Cube1Words(Cube1) )     { Mvc_Cube1BitEqual( Res, Cube1, Cube2 ); }\\\n//     else if ( Mvc_Cube2Words(Cube1) ){ Mvc_Cube2BitEqual( Res, Cube1, Cube2 ); }\\\n//     else                             { Mvc_CubeNBitEqual( Res, Cube1, Cube2 ); }\n\n// Original macro:\n// #define Mvc_CubeBitLess( Res, Cube1, Cube2 )\\\n//     if ( Mvc_Cube1Words(Cube1) )     { Mvc_Cube1BitLess( Res, Cube1, Cube2 ); }\\\n//     else if ( Mvc_Cube2Words(Cube1) ){ Mvc_Cube2BitLess( Res, Cube1, Cube2 ); }\\\n//     else                             { Mvc_CubeNBitLess( Res, Cube1, Cube2 ); }\n\n// Original macro:\n// #define Mvc_CubeBitMore( Res, Cube1, Cube2 )\\\n//     if ( Mvc_Cube1Words(Cube1) )     { Mvc_Cube1BitMore( Res, Cube1, Cube2 ); }\\\n//     else if ( Mvc_Cube2Words(Cube1) ){ Mvc_Cube2BitMore( Res, Cube1, Cube2 ); }\\\n//     else                             { Mvc_CubeNBitMore( Res, Cube1, Cube2 ); }\n\n// Original macro:\n// #define Mvc_CubeBitNotImpl( Res, Cube1, Cube2 )\\\n//     if ( Mvc_Cube1Words(Cube1) )     { Mvc_Cube1BitNotImpl( Res, Cube1, Cube2 ); }\\\n//     else if ( Mvc_Cube2Words(Cube1) ){ Mvc_Cube2BitNotImpl( Res, Cube1, Cube2 ); }\\\n//     else                             { Mvc_CubeNBitNotImpl( Res, Cube1, Cube2 ); }\n\n// Original macro:\n// #define Mvc_CubeBitDisjoint( Res, Cube1, Cube2 )\\\n//     if ( Mvc_Cube1Words(Cube1) )     { Mvc_Cube1BitDisjoint( Res, Cube1, Cube2 ); }\\\n//     else if ( Mvc_Cube2Words(Cube1) ){ Mvc_Cube2BitDisjoint( Res, Cube1, Cube2 ); }\\\n//     else                             { Mvc_CubeNBitDisjoint( Res, Cube1, Cube2 ); }\n\n// Original macro:\n// #define Mvc_CubeBitEqualUnderMask( Res, Cube1, Cube2, Mask )\\\n//     if ( Mvc_Cube1Words(Cube1) )     { Mvc_Cube1BitEqualUnderMask( Res, Cube1, Cube2, Mask ); }\\\n//     else if ( Mvc_Cube2Words(Cube1) ){ Mvc_Cube2BitEqualUnderMask( Res, Cube1, Cube2, Mask ); }\\\n//     else                             { Mvc_CubeNBitEqualUnderMask( Res, Cube1, Cube2, Mask ); }\n\n// Original macro:\n// #define Mvc_CubeBitEqualOutsideMask( Res, Cube1, Cube2, Mask )\\\n//     if ( Mvc_Cube1Words(Cube1) )     { Mvc_Cube1BitEqualOutsideMask( Res, Cube1, Cube2, Mask ); }\\\n//     else if ( Mvc_Cube2Words(Cube1) ){ Mvc_Cube2BitEqualOutsideMask( Res, Cube1, Cube2, Mask ); }\\\n//     else                             { Mvc_CubeNBitEqualOutsideMask( Res, Cube1, Cube2, Mask ); }\n\n// Original macro:\n// #define Mvc_CubeBitIntersectUnderMask( Res, Cube1, Cube2, Mask )\\\n//     if ( Mvc_Cube1Words(Cube1) )     { Mvc_Cube1BitIntersectUnderMask( Res, Cube1, Cube2, Mask ); }\\\n//     else if ( Mvc_Cube2Words(Cube1) ){ Mvc_Cube2BitIntersectUnderMask( Res, Cube1, Cube2, Mask ); }\\\n//     else                             { Mvc_CubeNBitIntersectUnderMask( Res, Cube1, Cube2, Mask ); }\n\n// Original macro:\n// #define Mvc_CubeBitNotImplUnderMask( Res, Cube1, Cube2, Mask )\\\n//     if ( Mvc_Cube1Words(Cube1) )     { Mvc_Cube1BitNotImplUnderMask( Res, Cube1, Cube2, Mask ); }\\\n//     else if ( Mvc_Cube2Words(Cube1) ){ Mvc_Cube2BitNotImplUnderMask( Res, Cube1, Cube2, Mask ); }\\\n//     else                             { Mvc_CubeNBitNotImplUnderMask( Res, Cube1, Cube2, Mask ); }\n\n\n\n// managing linked lists\n// Original macro:\n// #define Mvc_ListAddCubeHead( pList, pCube )\\\n//     {\\\n//         if ( pList-\u003epHead == NULL )\\\n//         {\\\n//             Mvc_CubeSetNext( pCube, NULL );\\\n//             pList-\u003epHead = pCube;\\\n//             pList-\u003epTail = pCube;\\\n//         }\\\n//         else\\\n//         {\\\n//             Mvc_CubeSetNext( pCube, pList-\u003epHead );\\\n//             pList-\u003epHead = pCube;\\\n//         }\\\n//         pList-\u003enItems++;\\\n//     }\n\n// Original macro:\n// #define Mvc_ListAddCubeTail( pList, pCube )\\\n//     {\\\n//         if ( pList-\u003epHead == NULL )\\\n//             pList-\u003epHead = pCube;\\\n//         else\\\n//             Mvc_CubeSetNext( pList-\u003epTail, pCube );\\\n//         pList-\u003epTail    = pCube;\\\n//         Mvc_CubeSetNext( pCube, NULL );\\\n//         pList-\u003enItems++;\\\n//     }\n\n// Original macro:\n// #define Mvc_ListDeleteCube( pList, pPrev, pCube )\\\n// {\\\n//     if ( pPrev == NULL )\\\n//         pList-\u003epHead = pCube-\u003epNext;\\\n//     else\\\n//         pPrev-\u003epNext = pCube-\u003epNext;\\\n//     if ( pList-\u003epTail == pCube )\\\n//     {\\\n//         assert( pCube-\u003epNext == NULL );\\\n//         pList-\u003epTail = pPrev;\\\n//     }\\\n//     pList-\u003enItems--;\\\n// }\n\n\n// managing linked lists inside the cover\n// Original macro:\n// #define Mvc_CoverAddCubeHead( pCover, pCube )\\\n// {\\\n//     Mvc_List_t * pList = \u0026pCover-\u003elCubes;\\\n//     Mvc_ListAddCubeHead( pList, pCube );\\\n// }\n\n// Original macro:\n// #define Mvc_CoverAddCubeTail( pCover, pCube )\\\n// {\\\n//     Mvc_List_t * pList = \u0026pCover-\u003elCubes;\\\n//     Mvc_ListAddCubeTail( pList, pCube );\\\n// }\n\n// Original macro:\n// #define Mvc_CoverDeleteCube( pCover, pPrev, pCube )\\\n// {\\\n//     Mvc_List_t * pList = \u0026pCover-\u003elCubes;\\\n//     Mvc_ListDeleteCube( pList, pPrev, pCube );\\\n// }\n\n\n\n\n\n\n\n// iterator through the cubes in the cube list\n// Original macro:\n// #define Mvc_ListForEachCube( List, Cube )\\\n//     for ( Cube = List-\u003epHead;\\\n//           Cube;\\\n//           Cube = Cube-\u003epNext )\n\n// Original macro:\n// #define Mvc_ListForEachCubeSafe( List, Cube, Cube2 )\\\n//     for ( Cube = List-\u003epHead, Cube2 = (Cube? Cube-\u003epNext: NULL);\\\n//           Cube;\\\n//           Cube = Cube2, Cube2 = (Cube? Cube-\u003epNext: NULL) )\n\n\n// iterator through cubes in the cover\n// Original macro:\n// #define Mvc_CoverForEachCube( Cover, Cube )\\\n//     for ( Cube = (Cover)-\u003elCubes.pHead;\\\n//           Cube;\\\n//           Cube = Cube-\u003epNext )\n\n// Original macro:\n// #define Mvc_CoverForEachCubeWithIndex( Cover, Cube, Index )\\\n//     for ( Index = 0, Cube = (Cover)-\u003elCubes.pHead;\\\n//           Cube;\\\n//           Index++, Cube = Cube-\u003epNext )\n\n// Original macro:\n// #define Mvc_CoverForEachCubeSafe( Cover, Cube, Cube2 )\\\n//     for ( Cube = (Cover)-\u003elCubes.pHead, Cube2 = (Cube? Cube-\u003epNext: NULL);\\\n//           Cube;\\\n//           Cube = Cube2, Cube2 = (Cube? Cube-\u003epNext: NULL) )\n\n\n// iterator which starts from the given cube\n// Original macro:\n// #define Mvc_CoverForEachCubeStart( Start, Cube )\\\n//     for ( Cube = Start;\\\n//           Cube;\\\n//           Cube = Cube-\u003epNext )\n\n// Original macro:\n// #define Mvc_CoverForEachCubeStartSafe( Start, Cube, Cube2 )\\\n//     for ( Cube = Start, Cube2 = (Cube? Cube-\u003epNext: NULL);\\\n//           Cube;\\\n//           Cube = Cube2, Cube2 = (Cube? Cube-\u003epNext: NULL) )\n\n\n\n// iterator through literals of the cube\n// Original macro:\n// #define Mvc_CubeForEachBit( Cover, Cube, iBit, Value )\\\n//     for ( iBit = 0;\\\n//           iBit \u003c Cover-\u003enBits \u0026\u0026 ((Value = Mvc_CubeBitValue(Cube,iBit)), 1);\\\n//           iBit++ )\n\n// iterator through values of binary variables\n// Original macro:\n// #define Mvc_CubeForEachVarValue( Cover, Cube, iVar, Value )\\\n//     for ( iVar = 0;\\\n//           iVar \u003c Cover-\u003enBits/2 \u0026\u0026 (Value = Mvc_CubeVarValue(Cube,iVar));\\\n//           iVar++ )\n\n\n\n// macros which work with memory\n// MEM_ALLOC: allocate the given number (Size) of items of type (Type)\n// MEM_FREE:  deallocate the pointer (Pointer) to the given number (Size) of items of type (Type)\n// Original macro:\n// #define MEM_ALLOC( Manager, Type, Size )          ((Type *)ABC_ALLOC( char, (Size) * sizeof(Type) ))\n\n// Original macro:\n// #define MEM_FREE( Manager, Type, Size, Pointer )  if ( Pointer ) { ABC_FREE(Pointer); Pointer = NULL; }\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== mvcApi.c ====================================================*/\n// extern int              Mvc_CoverReadWordNum( Mvc_Cover_t * pCover );\n\n// extern int              Mvc_CoverReadBitNum( Mvc_Cover_t * pCover );\n\n// extern int              Mvc_CoverReadCubeNum( Mvc_Cover_t * pCover );\n\n// extern Mvc_Cube_t *     Mvc_CoverReadCubeHead( Mvc_Cover_t * pCover );\n\n// extern Mvc_Cube_t *     Mvc_CoverReadCubeTail( Mvc_Cover_t * pCover );\n\n// extern Mvc_List_t *     Mvc_CoverReadCubeList( Mvc_Cover_t * pCover );\n\n// extern int              Mvc_ListReadCubeNum( Mvc_List_t * pList );\n\n// extern Mvc_Cube_t *     Mvc_ListReadCubeHead( Mvc_List_t * pList );\n\n// extern Mvc_Cube_t *     Mvc_ListReadCubeTail( Mvc_List_t * pList );\n\n// extern void             Mvc_CoverSetCubeNum( Mvc_Cover_t * pCover,int nItems );\n\n// extern void             Mvc_CoverSetCubeHead( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube );\n\n// extern void             Mvc_CoverSetCubeTail( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube );\n\n// extern void             Mvc_CoverSetCubeList( Mvc_Cover_t * pCover, Mvc_List_t * pList );\n\n// extern int              Mvc_CoverIsEmpty( Mvc_Cover_t * pCover );\n\n// extern int              Mvc_CoverIsTautology( Mvc_Cover_t * pCover );\n\n// extern int              Mvc_CoverIsBinaryBuffer( Mvc_Cover_t * pCover );\n\n// extern void             Mvc_CoverMakeEmpty( Mvc_Cover_t * pCover );\n\n// extern void             Mvc_CoverMakeTautology( Mvc_Cover_t * pCover );\n\n// extern Mvc_Cover_t *    Mvc_CoverCreateEmpty( Mvc_Cover_t * pCover );\n\n// extern Mvc_Cover_t *    Mvc_CoverCreateTautology( Mvc_Cover_t * pCover );\n\n/*=== mvcCover.c ====================================================*/\n// extern Mvc_Cover_t *    Mvc_CoverAlloc( Mvc_Manager_t * pMem, int nBits );\n\n// extern Mvc_Cover_t *    Mvc_CoverCreateConst( Mvc_Manager_t * pMem, int nBits, int  Phase );\n\n// extern Mvc_Cover_t *    Mvc_CoverClone( Mvc_Cover_t * pCover );\n\n// extern Mvc_Cover_t *    Mvc_CoverDup( Mvc_Cover_t * pCover );\n\n// extern void             Mvc_CoverFree( Mvc_Cover_t * pCover );\n\n// extern void             Mvc_CoverAllocateMask( Mvc_Cover_t * pCover );\n\n// extern void             Mvc_CoverAllocateArrayLits( Mvc_Cover_t * pCover );\n\n// extern void             Mvc_CoverAllocateArrayCubes( Mvc_Cover_t * pCover );\n\n// extern void             Mvc_CoverDeallocateMask( Mvc_Cover_t * pCover );\n\n// extern void             Mvc_CoverDeallocateArrayLits( Mvc_Cover_t * pCover );\n\n/*=== mvcCube.c ====================================================*/\n// extern Mvc_Cube_t *     Mvc_CubeAlloc( Mvc_Cover_t * pCover );\n\n// extern Mvc_Cube_t *     Mvc_CubeDup( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube );\n\n// extern void             Mvc_CubeFree( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube );\n\n// extern void             Mvc_CubeBitRemoveDcs( Mvc_Cube_t * pCube );\n\n/*=== mvcCompare.c ====================================================*/\n// extern int              Mvc_CubeCompareInt( Mvc_Cube_t * pC1, Mvc_Cube_t * pC2, Mvc_Cube_t * pMask );\n\n// extern int              Mvc_CubeCompareSizeAndInt( Mvc_Cube_t * pC1, Mvc_Cube_t * pC2, Mvc_Cube_t * pMask );\n\n// extern int              Mvc_CubeCompareIntUnderMask( Mvc_Cube_t * pC1, Mvc_Cube_t * pC2, Mvc_Cube_t * pMask );\n\n// extern int              Mvc_CubeCompareIntOutsideMask( Mvc_Cube_t * pC1, Mvc_Cube_t * pC2, Mvc_Cube_t * pMask );\n\n// extern int              Mvc_CubeCompareIntOutsideAndUnderMask( Mvc_Cube_t * pC1, Mvc_Cube_t * pC2, Mvc_Cube_t * pMask );\n\n/*=== mvcDd.c ====================================================*/\n/*\nextern DdNode *         Mvc_CoverConvertToBdd( DdManager * dd, Mvc_Cover_t * pCover );\nextern DdNode *         Mvc_CoverConvertToZdd( DdManager * dd, Mvc_Cover_t * pCover );\nextern DdNode *         Mvc_CoverConvertToZdd2( DdManager * dd, Mvc_Cover_t * pCover );\nextern DdNode *         Mvc_CubeConvertToBdd( DdManager * dd, Mvc_Cube_t * pCube );\nextern DdNode *         Mvc_CubeConvertToZdd( DdManager * dd, Mvc_Cube_t * pCube );\nextern DdNode *         Mvc_CubeConvertToZdd2( DdManager * dd, Mvc_Cube_t * pCube );\n*/\n/*=== mvcDivisor.c ====================================================*/\n// extern Mvc_Cover_t *    Mvc_CoverDivisor( Mvc_Cover_t * pCover );\n\n/*=== mvcDivide.c ====================================================*/\n// extern void             Mvc_CoverDivide( Mvc_Cover_t * pCover, Mvc_Cover_t * pDiv, Mvc_Cover_t ** ppQuo, Mvc_Cover_t ** ppRem );\n\n// extern void             Mvc_CoverDivideInternal( Mvc_Cover_t * pCover, Mvc_Cover_t * pDiv, Mvc_Cover_t ** ppQuo, Mvc_Cover_t ** ppRem );\n\n// extern void             Mvc_CoverDivideByLiteral( Mvc_Cover_t * pCover, Mvc_Cover_t * pDiv, Mvc_Cover_t ** ppQuo, Mvc_Cover_t ** ppRem );\n\n// extern void             Mvc_CoverDivideByCube( Mvc_Cover_t * pCover, Mvc_Cover_t * pDiv, Mvc_Cover_t ** ppQuo, Mvc_Cover_t ** ppRem );\n\n// extern void             Mvc_CoverDivideByLiteralQuo( Mvc_Cover_t * pCover, int iLit );\n\n/*=== mvcList.c ====================================================*/\n// these functions are available as macros\n// extern void             Mvc_ListAddCubeHead_( Mvc_List_t * pList, Mvc_Cube_t * pCube );\n\n// extern void             Mvc_ListAddCubeTail_( Mvc_List_t * pList, Mvc_Cube_t * pCube );\n\n// extern void             Mvc_ListDeleteCube_( Mvc_List_t * pList, Mvc_Cube_t * pPrev, Mvc_Cube_t * pCube );\n\n// extern void             Mvc_CoverAddCubeHead_( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube );\n\n// extern void             Mvc_CoverAddCubeTail_( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube );\n\n// extern void             Mvc_CoverDeleteCube_( Mvc_Cover_t * pCover, Mvc_Cube_t * pPrev, Mvc_Cube_t * pCube );\n\n// extern void             Mvc_CoverAddDupCubeHead( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube );\n\n// extern void             Mvc_CoverAddDupCubeTail( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube );\n\n// other functions\n// extern void             Mvc_CoverAddLiteralsOfCube( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube );\n\n// extern void             Mvc_CoverDeleteLiteralsOfCube( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube );\n\n// extern void             Mvc_CoverList2Array( Mvc_Cover_t * pCover );\n\n// extern void             Mvc_CoverArray2List( Mvc_Cover_t * pCover );\n\n// extern Mvc_Cube_t *     Mvc_ListGetTailFromHead( Mvc_Cube_t * pHead );\n\n/*=== mvcPrint.c ====================================================*/\n// extern void             Mvc_CoverPrint( Mvc_Cover_t * pCover );\n\n// extern void             Mvc_CubePrint( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube );\n\n// extern void             Mvc_CoverPrintMv( Mvc_Data_t * pData, Mvc_Cover_t * pCover );\n\n// extern void             Mvc_CubePrintMv( Mvc_Data_t * pData, Mvc_Cover_t * pCover, Mvc_Cube_t * pCube );\n\n/*=== mvcSort.c ====================================================*/\n// extern void             Mvc_CoverSort( Mvc_Cover_t * pCover, Mvc_Cube_t * pMask, int (* pCompareFunc)(Mvc_Cube_t *, Mvc_Cube_t *, Mvc_Cube_t *) );\n\n/*=== mvcUtils.c ====================================================*/\n// extern void             Mvc_CoverSupport( Mvc_Cover_t * pCover, Mvc_Cube_t * pSupp );\n\n// extern int              Mvc_CoverSupportSizeBinary( Mvc_Cover_t * pCover );\n\n// extern int              Mvc_CoverSupportVarBelongs( Mvc_Cover_t * pCover, int iVar );\n\n// extern void             Mvc_CoverCommonCube( Mvc_Cover_t * pCover, Mvc_Cube_t * pComCube );\n\n// extern int              Mvc_CoverIsCubeFree( Mvc_Cover_t * pCover );\n\n// extern void             Mvc_CoverMakeCubeFree( Mvc_Cover_t * pCover );\n\n// extern Mvc_Cover_t *    Mvc_CoverCommonCubeCover( Mvc_Cover_t * pCover );\n\n// extern int              Mvc_CoverCheckSuppContainment( Mvc_Cover_t * pCover1, Mvc_Cover_t * pCover2 );\n\n// extern int              Mvc_CoverSetCubeSizes( Mvc_Cover_t * pCover );\n\n// extern int              Mvc_CoverGetCubeSize( Mvc_Cube_t * pCube );\n\n// extern int              Mvc_CoverCountCubePairDiffs( Mvc_Cover_t * pCover, unsigned char pDiffs[] );\n\n// extern Mvc_Cover_t *    Mvc_CoverRemap( Mvc_Cover_t * pCover, int * pVarsRem, int nVarsRem );\n\n// extern void             Mvc_CoverInverse( Mvc_Cover_t * pCover );\n\n// extern Mvc_Cover_t *    Mvc_CoverRemoveDontCareLits( Mvc_Cover_t * pCover );\n\n// extern Mvc_Cover_t *    Mvc_CoverCofactor( Mvc_Cover_t * pCover, int iValue, int iValueOther );\n\n// extern Mvc_Cover_t *    Mvc_CoverFlipVar( Mvc_Cover_t * pCover, int iValue0, int iValue1 );\n\n// extern Mvc_Cover_t *    Mvc_CoverUnivQuantify( Mvc_Cover_t * p, int iValueA0, int iValueA1, int iValueB0, int iValueB1 );\n\n// extern Mvc_Cover_t **   Mvc_CoverCofactors( Mvc_Data_t * pData, Mvc_Cover_t * pCover, int iVar );\n\n// extern int              Mvr_CoverCountLitsWithValue( Mvc_Data_t * pData, Mvc_Cover_t * pCover, int iVar, int iValue );\n\n//extern Mvc_Cover_t *    Mvc_CoverCreateExpanded( Mvc_Cover_t * pCover, Vm_VarMap_t * pVmNew );\n// extern Mvc_Cover_t *    Mvc_CoverTranspose( Mvc_Cover_t * pCover );\n\n// extern int              Mvc_UtilsCheckUnusedZeros( Mvc_Cover_t * pCover );\n\n/*=== mvcLits.c ====================================================*/\n// extern int              Mvc_CoverAnyLiteral( Mvc_Cover_t * pCover, Mvc_Cube_t * pMask );\n\n// extern int              Mvc_CoverBestLiteral( Mvc_Cover_t * pCover, Mvc_Cube_t * pMask );\n\n// extern int              Mvc_CoverWorstLiteral( Mvc_Cover_t * pCover, Mvc_Cube_t * pMask );\n\n// extern Mvc_Cover_t *    Mvc_CoverBestLiteralCover( Mvc_Cover_t * pCover, Mvc_Cover_t * pSimple );\n\n// extern int              Mvc_CoverFirstCubeFirstLit( Mvc_Cover_t * pCover );\n\n// extern int              Mvc_CoverCountLiterals( Mvc_Cover_t * pCover );\n\n// extern int              Mvc_CoverIsOneLiteral( Mvc_Cover_t * pCover );\n\n/*=== mvcOpAlg.c ====================================================*/\n// extern Mvc_Cover_t *    Mvc_CoverAlgebraicMultiply( Mvc_Cover_t * pCover1, Mvc_Cover_t * pCover2 );\n\n// extern Mvc_Cover_t *    Mvc_CoverAlgebraicSubtract( Mvc_Cover_t * pCover1, Mvc_Cover_t * pCover2 );\n\n// extern int              Mvc_CoverAlgebraicEqual( Mvc_Cover_t * pCover1, Mvc_Cover_t * pCover2 );\n\n/*=== mvcOpBool.c ====================================================*/\n// extern Mvc_Cover_t *    Mvc_CoverBooleanOr( Mvc_Cover_t * pCover1, Mvc_Cover_t * pCover2 );\n\n// extern Mvc_Cover_t *    Mvc_CoverBooleanAnd( Mvc_Data_t * p, Mvc_Cover_t * pCover1, Mvc_Cover_t * pCover2 );\n\n// extern int              Mvc_CoverBooleanEqual( Mvc_Data_t * p, Mvc_Cover_t * pCover1, Mvc_Cover_t * pCover2 );\n\n\n/*=== mvcContain.c ====================================================*/\n// extern int              Mvc_CoverContain( Mvc_Cover_t * pCover );\n\n/*=== mvcTau.c ====================================================*/\n// extern int              Mvc_CoverTautology( Mvc_Data_t * p, Mvc_Cover_t * pCover );\n\n/*=== mvcCompl.c ====================================================*/\n// extern Mvc_Cover_t *    Mvc_CoverComplement( Mvc_Data_t * p, Mvc_Cover_t * pCover );\n\n/*=== mvcSharp.c ====================================================*/\n// extern Mvc_Cover_t *    Mvc_CoverSharp( Mvc_Data_t * p, Mvc_Cover_t * pA, Mvc_Cover_t * pB );\n\n// extern int              Mvc_CoverDist0Cubes( Mvc_Data_t * pData, Mvc_Cube_t * pA, Mvc_Cube_t * pB );\n\n// extern void             Mvc_CoverIntersectCubes( Mvc_Data_t * pData, Mvc_Cover_t * pC1, Mvc_Cover_t * pC2 );\n\n// extern int              Mvc_CoverIsIntersecting( Mvc_Data_t * pData, Mvc_Cover_t * pC1, Mvc_Cover_t * pC2 );\n\n// extern void             Mvc_CoverAppendCubes( Mvc_Cover_t * pC1, Mvc_Cover_t * pC2 );\n\n// extern void             Mvc_CoverCopyAndAppendCubes( Mvc_Cover_t * pC1, Mvc_Cover_t * pC2 );\n\n// extern void             Mvc_CoverRemoveCubes( Mvc_Cover_t * pC );\n\n\n/*=== mvcReshape.c ====================================================*/\n// extern void             Mvc_CoverMinimizeByReshape( Mvc_Data_t * pData, Mvc_Cover_t * pCover );\n\n\n/*=== mvcMerge.c ====================================================*/\n// extern void             Mvc_CoverDist1Merge( Mvc_Data_t * p, Mvc_Cover_t * pCover );\n\n\n/*=== mvcData.c ====================================================*/\n//extern Mvc_Data_t *     Mvc_CoverDataAlloc( Vm_VarMap_t * pVm, Mvc_Cover_t * pCover );\n//extern void             Mvc_CoverDataFree( Mvc_Data_t * p, Mvc_Cover_t * pCover );\n\n/*=== mvcMan.c ====================================================*/\n// extern void             Mvc_ManagerFree( Mvc_Manager_t * p );\n\n// extern Mvc_Manager_t *  Mvc_ManagerStart();\n\n// extern Mvc_Manager_t *  Mvc_ManagerAllocCover();\n\n// extern Mvc_Manager_t *  Mvc_ManagerAllocCube( int nWords );\n\n// extern Mvc_Manager_t *  Mvc_ManagerFreeCover( Mvc_Cover_t * pCover );\n\n// extern Mvc_Manager_t *  Mvc_ManagerFreeCube( Mvc_Cover_t * pCube, int nWords );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

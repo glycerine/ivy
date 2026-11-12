@@ -1,0 +1,547 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c",
+  "SHA256": "4d949812551f252345f61f3bf8369440aeccf801f7f20910813c527eb9f9b24e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 75,
+        "Column": 5,
+        "ByteOffset": 2576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsMax \u003c= 20 );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 76,
+        "Column": 9,
+        "ByteOffset": 2610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Kit_ManDec_t, 1 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 85,
+        "Column": 20,
+        "ByteOffset": 3014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTruthIn   = ABC_ALLOC( unsigned, p.nWordsMax );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 86,
+        "Column": 20,
+        "ByteOffset": 3069
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTruthOut  = ABC_ALLOC( unsigned, p.nWordsMax );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 3422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pTruthIn );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 3450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pTruthOut );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 3680
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 128,
+        "Column": 5,
+        "ByteOffset": 4199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLuts \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 129,
+        "Column": 5,
+        "ByteOffset": 4224
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vSupps) % LutSize == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 13,
+        "ByteOffset": 4511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iVar \u003c nVars + v );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 192,
+        "Column": 5,
+        "ByteOffset": 6237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLuts \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 6262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vSupps) % LutSize == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 6312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLuts * nTruthLutWords == Vec_IntSize(vLuts) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 198,
+        "Column": 13,
+        "ByteOffset": 6514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( iVar \u003c nVars + v );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 225,
+        "Column": 5,
+        "ByteOffset": 7437
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( LutSize \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 5,
+        "ByteOffset": 7465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( LutSize \u003c nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 302,
+        "Column": 9,
+        "ByteOffset": 9681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iPat0 == nMints / 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 303,
+        "Column": 9,
+        "ByteOffset": 9720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iPat1 == nMints / 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 338,
+        "Column": 5,
+        "ByteOffset": 10796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( LutSize \u003c= 6 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Kit_DecOuputArrival",
+      "Start": 1934,
+      "End": 2071,
+      "BodyStart": 2021,
+      "Original": "static inline int   Kit_DecOuputArrival( int nVars, Vec_Int_t * vLuts, char ATimes[] ) { return ATimes[nVars + Vec_IntSize(vLuts) - 1]; }",
+      "Draft": "func Kit_DecOuputArrival(nVars int32, vLuts *Vec_Int_t, ATimes []byte) int32 { return ATimes[nVars + Vec_IntSize(vLuts) - 1]; }"
+    },
+    {
+      "Name": "Kit_ManDecStart",
+      "Start": 2551,
+      "End": 3185,
+      "BodyStart": 2598,
+      "Original": "Kit_ManDec_t * Kit_ManDecStart( int nVarsMax )\n{\n    Kit_ManDec_t * p;\n    assert( nVarsMax \u003c= 20 );\n    p = ABC_CALLOC( Kit_ManDec_t, 1 );\n    p-\u003enVarsMax   = nVarsMax;\n    p-\u003enWordsMax  = Kit_TruthWordNum( p-\u003enVarsMax );\n    p-\u003evTruthVars = Vec_PtrAllocTruthTables( p-\u003enVarsMax );\n    p-\u003evTruthNodes = Vec_PtrAllocSimInfo( 64, p-\u003enWordsMax );\n    p-\u003evLutsIn    = Vec_IntAlloc( 50 );\n    p-\u003evSuppIn    = Vec_IntAlloc( 50 );\n    p-\u003evLutsOut   = Vec_IntAlloc( 50 );\n    p-\u003evSuppOut   = Vec_IntAlloc( 50 );\n    p-\u003epTruthIn   = ABC_ALLOC( unsigned, p-\u003enWordsMax );\n    p-\u003epTruthOut  = ABC_ALLOC( unsigned, p-\u003enWordsMax );\n    return p;\n}",
+      "Draft": "func Kit_ManDecStart(nVarsMax int32) *Kit_ManDec_t {\n    var p *Kit_ManDec_t;\n    assert(nVarsMax \u003c= 20, \"nVarsMax \u003c= 20\");\n    p = new(Kit_ManDec_t);\n    p.nVarsMax   = nVarsMax;\n    p.nWordsMax  = Kit_TruthWordNum( p.nVarsMax );\n    p.vTruthVars = Vec_PtrAllocTruthTables( p.nVarsMax );\n    p.vTruthNodes = Vec_PtrAllocSimInfo( 64, p.nWordsMax );\n    p.vLutsIn    = Vec_IntAlloc( 50 );\n    p.vSuppIn    = Vec_IntAlloc( 50 );\n    p.vLutsOut   = Vec_IntAlloc( 50 );\n    p.vSuppOut   = Vec_IntAlloc( 50 );\n    p.pTruthIn   = ABC_ALLOC( unsigned, p.nWordsMax );\n    p.pTruthOut  = ABC_ALLOC( unsigned, p.nWordsMax );\n    return p;\n}"
+    },
+    {
+      "Name": "Kit_ManDecStop",
+      "Start": 3444,
+      "End": 3772,
+      "BodyStart": 3484,
+      "Original": "void Kit_ManDecStop( Kit_ManDec_t * p )\n{\n    ABC_FREE( p-\u003epTruthIn );\n    ABC_FREE( p-\u003epTruthOut );\n    Vec_IntFreeP( \u0026p-\u003evLutsIn );\n    Vec_IntFreeP( \u0026p-\u003evSuppIn );\n    Vec_IntFreeP( \u0026p-\u003evLutsOut );\n    Vec_IntFreeP( \u0026p-\u003evSuppOut );\n    Vec_PtrFreeP( \u0026p-\u003evTruthVars );\n    Vec_PtrFreeP( \u0026p-\u003evTruthNodes );\n    ABC_FREE( p );\n}",
+      "Draft": "func Kit_ManDecStop(p *Kit_ManDec_t) {\n    ABC_FREE( p.pTruthIn );\n    ABC_FREE( p.pTruthOut );\n    Vec_IntFreeP( \u0026p.vLutsIn );\n    Vec_IntFreeP( \u0026p.vSuppIn );\n    Vec_IntFreeP( \u0026p.vLutsOut );\n    Vec_IntFreeP( \u0026p.vSuppOut );\n    Vec_PtrFreeP( \u0026p.vTruthVars );\n    Vec_PtrFreeP( \u0026p.vTruthNodes );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Kit_DecComputeOuputArrival",
+      "Start": 4066,
+      "End": 4769,
+      "BodyStart": 4178,
+      "Original": "int Kit_DecComputeOuputArrival( int nVars, Vec_Int_t * vSupps, int LutSize, char ATimesIn[], char ATimesOut[] )\n{\n    int i, v, iVar, nLuts, Delay;\n    nLuts = Vec_IntSize(vSupps) / LutSize;\n    assert( nLuts \u003e 0 );\n    assert( Vec_IntSize(vSupps) % LutSize == 0 );\n    for ( v = 0; v \u003c nVars; v++ )\n        ATimesOut[v] = ATimesIn[v];\n    for ( v = 0; v \u003c nLuts; v++ )\n    {\n        Delay = 0;\n        for ( i = 0; i \u003c LutSize; i++ )\n        {\n            iVar = Vec_IntEntry( vSupps, v * LutSize + i );\n            assert( iVar \u003c nVars + v );\n            Delay = Abc_MaxInt( Delay, ATimesOut[iVar] );\n        }\n        ATimesOut[nVars + v] = Delay + 1;\n    }\n    return ATimesOut[nVars + nLuts - 1];\n}",
+      "Draft": "func Kit_DecComputeOuputArrival(nVars int32, vSupps *Vec_Int_t, LutSize int32, ATimesIn []byte, ATimesOut []byte) int32 {\n    var i, v, iVar, nLuts, Delay int32;\n    nLuts = Vec_IntSize(vSupps) / LutSize;\n    assert(nLuts \u003e 0, \"nLuts \u003e 0\");\n    assert(Vec_IntSize(vSupps) % LutSize == 0, \"Vec_IntSize(vSupps) % LutSize == 0\");\n    for  v = 0; v \u003c nVars; v++  {\n        ATimesOut[v] = ATimesIn[v];\n    }\n    for  v = 0; v \u003c nLuts; v++  {\n        Delay = 0;\n        for  i = 0; i \u003c LutSize; i++  {\n            iVar = Vec_IntEntry( vSupps, v * LutSize + i );\n            assert(iVar \u003c nVars + v, \"iVar \u003c nVars + v\");\n            Delay = Abc_MaxInt( Delay, ATimesOut[iVar] );\n        }\n        ATimesOut[nVars + v] = Delay + 1;\n    }\n    return ATimesOut[nVars + nLuts - 1];\n}"
+    },
+    {
+      "Name": "Kit_DecComputeTruthOne",
+      "Start": 5028,
+      "End": 5643,
+      "BodyStart": 5161,
+      "Original": "void Kit_DecComputeTruthOne( int LutSize, unsigned * pTruthLut, int nVars, unsigned * pTruths[], unsigned * pTemp, unsigned * pRes )\n{\n    int i, v;\n    Kit_TruthClear( pRes, nVars );\n    for ( i = 0; i \u003c (1\u003c\u003cLutSize); i++ )\n    {\n        if ( !Kit_TruthHasBit( pTruthLut, i ) )\n            continue;\n        Kit_TruthFill( pTemp, nVars );\n        for ( v = 0; v \u003c LutSize; v++ )\n            if ( i \u0026 (1\u003c\u003cv) )\n                Kit_TruthAnd( pTemp, pTemp, pTruths[v], nVars );\n            else\n                Kit_TruthSharp( pTemp, pTemp, pTruths[v], nVars );\n        Kit_TruthOr( pRes, pRes, pTemp, nVars );\n    }\n}",
+      "Draft": "func Kit_DecComputeTruthOne(LutSize int32, pTruthLut *uint32, nVars int32, pTruths []*uint32, pTemp *uint32, pRes *uint32) {\n    var i, v int32;\n    Kit_TruthClear( pRes, nVars );\n    for  i = 0; i \u003c (1\u003c\u003cLutSize); i++  {\n        if !Kit_TruthHasBit( pTruthLut, i ) {\n            continue; }\n        Kit_TruthFill( pTemp, nVars );\n        for  v = 0; v \u003c LutSize; v++  {\n            if i \u0026 (1\u003c\u003cv) {\n                Kit_TruthAnd( pTemp, pTemp, pTruths[v], nVars );\n            } else {\n                Kit_TruthSharp( pTemp, pTemp, pTruths[v], nVars ); }\n        }\n        Kit_TruthOr( pRes, pRes, pTemp, nVars );\n    }\n}"
+    },
+    {
+      "Name": "Kit_DecComputeTruth",
+      "Start": 5902,
+      "End": 7009,
+      "BodyStart": 6027,
+      "Original": "void Kit_DecComputeTruth( Kit_ManDec_t * p, int nVars, Vec_Int_t * vSupps, int LutSize, Vec_Int_t * vLuts, unsigned * pRes )\n{\n    unsigned * pResult, * pTruthLuts, * pTruths[17];\n    int nTruthLutWords, i, v, iVar, nLuts;\n    nLuts = Vec_IntSize(vSupps) / LutSize;\n    pTruthLuts = (unsigned *)Vec_IntArray( vLuts );\n    nTruthLutWords = Kit_TruthWordNum( LutSize );\n    assert( nLuts \u003e 0 );\n    assert( Vec_IntSize(vSupps) % LutSize == 0 );\n    assert( nLuts * nTruthLutWords == Vec_IntSize(vLuts) );\n    for ( v = 0; v \u003c nLuts; v++ )\n    {\n        for ( i = 0; i \u003c LutSize; i++ )\n        {\n            iVar = Vec_IntEntry( vSupps, v * LutSize + i );\n            assert( iVar \u003c nVars + v );\n            pTruths[i] = (iVar \u003c nVars)? (unsigned *)Vec_PtrEntry(p-\u003evTruthVars, iVar) : (unsigned *)Vec_PtrEntry(p-\u003evTruthNodes, iVar-nVars);\n        }\n        pResult = (v == nLuts - 1) ? pRes : (unsigned *)Vec_PtrEntry(p-\u003evTruthNodes, v);\n        Kit_DecComputeTruthOne( LutSize, pTruthLuts, nVars, pTruths, (unsigned *)Vec_PtrEntry(p-\u003evTruthNodes, v+1), pResult );\n        pTruthLuts += nTruthLutWords;\n    }\n}",
+      "Draft": "func Kit_DecComputeTruth(p *Kit_ManDec_t, nVars int32, vSupps *Vec_Int_t, LutSize int32, vLuts *Vec_Int_t, pRes *uint32) {\n    var pResult *uint32;\n    var pTruthLuts *uint32;\n    var pTruths [17]*uint32;\n    var nTruthLutWords, i, v, iVar, nLuts int32;\n    nLuts = Vec_IntSize(vSupps) / LutSize;\n    pTruthLuts = (unsigned *)Vec_IntArray( vLuts );\n    nTruthLutWords = Kit_TruthWordNum( LutSize );\n    assert(nLuts \u003e 0, \"nLuts \u003e 0\");\n    assert(Vec_IntSize(vSupps) % LutSize == 0, \"Vec_IntSize(vSupps) % LutSize == 0\");\n    assert(nLuts * nTruthLutWords == Vec_IntSize(vLuts), \"nLuts * nTruthLutWords == Vec_IntSize(vLuts)\");\n    for  v = 0; v \u003c nLuts; v++  {\n        for  i = 0; i \u003c LutSize; i++  {\n            iVar = Vec_IntEntry( vSupps, v * LutSize + i );\n            assert(iVar \u003c nVars + v, \"iVar \u003c nVars + v\");\n            pTruths[i] = (iVar \u003c nVars)? (unsigned *)Vec_PtrEntry(p.vTruthVars, iVar) : (unsigned *)Vec_PtrEntry(p.vTruthNodes, iVar-nVars);\n        }\n        if v == nLuts - 1 {\n            pResult = pRes;\n        } else {\n            pResult = (unsigned *)Vec_PtrEntry(p.vTruthNodes, v);\n        }\n        Kit_DecComputeTruthOne( LutSize, pTruthLuts, nVars, pTruths, (unsigned *)Vec_PtrEntry(p.vTruthNodes, v+1), pResult );\n        pTruthLuts += nTruthLutWords;\n    }\n}"
+    },
+    {
+      "Name": "Kit_DecComputePattern",
+      "Start": 7268,
+      "End": 8560,
+      "BodyStart": 7354,
+      "Original": "int Kit_DecComputePattern( int nVars, unsigned * pTruth, int LutSize, int Pattern[] )\n{\n    int nCofs = (1 \u003c\u003c LutSize);\n    int i, k, nMyu = 0;\n    assert( LutSize \u003c= 6 );\n    assert( LutSize \u003c nVars );\n    if ( nVars - LutSize \u003c= 5 )\n    {\n        unsigned uCofs[64];\n        int nBits = (1 \u003c\u003c (nVars - LutSize));\n        for ( i = 0; i \u003c nCofs; i++ )\n            uCofs[i] = (pTruth[(i*nBits)/32] \u003e\u003e ((i*nBits)%32)) \u0026 ((1\u003c\u003cnBits)-1);\n        for ( i = 0; i \u003c nCofs; i++ )\n        {\n            for ( k = 0; k \u003c nMyu; k++ )\n                if ( uCofs[i] == uCofs[k] )\n                {\n                    Pattern[i] = k;\n                    break;\n                }\n            if ( k == i )\n                Pattern[nMyu++] = i;\n        }\n    }\n    else\n    {\n        unsigned * puCofs[64];\n        int nWords = (1 \u003c\u003c (nVars - LutSize - 5));\n        for ( i = 0; i \u003c nCofs; i++ )\n            puCofs[i] = pTruth + nWords;\n        for ( i = 0; i \u003c nCofs; i++ )\n        {\n            for ( k = 0; k \u003c nMyu; k++ )\n                if ( Kit_TruthIsEqual( puCofs[i], puCofs[k], nVars - LutSize - 5 ) )\n                {\n                    Pattern[i] = k;\n                    break;\n                }\n            if ( k == i )\n                Pattern[nMyu++] = i;\n        }\n    }\n    return nMyu;\n}",
+      "Draft": "func Kit_DecComputePattern(nVars int32, pTruth *uint32, LutSize int32, Pattern []int32) int32 {\n    var nCofs int32  = (1 \u003c\u003c LutSize);\n    var i, k, nMyu int32;\n    assert(LutSize \u003c= 6, \"LutSize \u003c= 6\");\n    assert(LutSize \u003c nVars, \"LutSize \u003c nVars\");\n    if nVars - LutSize \u003c= 5 {\n        var uCofs [64]uint32;\n        var nBits int32  = (1 \u003c\u003c (nVars - LutSize));\n        for  i = 0; i \u003c nCofs; i++  {\n            uCofs[i] = (pTruth[(i*nBits)/32] \u003e\u003e ((i*nBits)%32)) \u0026 ((1\u003c\u003cnBits)-1);\n        }\n        for  i = 0; i \u003c nCofs; i++  {\n            for  k = 0; k \u003c nMyu; k++  {\n                if uCofs[i] == uCofs[k] {\n                    Pattern[i] = k;\n                    break;\n                }\n            }\n            if k == i {\n                Pattern[nMyu++] = i; }\n        }\n    \n    } else {\n        var puCofs [64]*uint32;\n        var nWords int32  = (1 \u003c\u003c (nVars - LutSize - 5));\n        for  i = 0; i \u003c nCofs; i++  {\n            puCofs[i] = pTruth + nWords;\n        }\n        for  i = 0; i \u003c nCofs; i++  {\n            for  k = 0; k \u003c nMyu; k++  {\n                if Kit_TruthIsEqual( puCofs[i], puCofs[k], nVars - LutSize - 5 ) {\n                    Pattern[i] = k;\n                    break;\n                }\n            }\n            if k == i {\n                Pattern[nMyu++] = i; }\n        }\n    }\n    return nMyu;\n}"
+    },
+    {
+      "Name": "Kit_DecComputeShared_rec",
+      "Start": 8835,
+      "End": 10189,
+      "BodyStart": 8931,
+      "Original": "int Kit_DecComputeShared_rec( int Pattern[], int Vars[], int nVars, int Shared[], int iVarTry )\n{\n    int Pat0[32], Pat1[32], Shared0[5], Shared1[5], VarsNext[5];\n    int v, u, iVarsNext, iPat0, iPat1, m, nMints = (1 \u003c\u003c nVars);\n    int nShared0, nShared1, nShared = 0;\n    for ( v = iVarTry; v \u003c nVars; v++ )\n    {\n        iVarsNext = 0;\n        for ( u = 0; u \u003c nVars; u++ )\n            if ( u == v )\n                VarsNext[iVarsNext++] = Vars[u];\n        iPat0 = iPat1 = 0;\n        for ( m = 0; m \u003c nMints; m++ )\n            if ( m \u0026 (1 \u003c\u003c v) )\n                Pat1[iPat1++] = m;\n            else\n                Pat0[iPat0++] = m;\n        assert( iPat0 == nMints / 2 );\n        assert( iPat1 == nMints / 2 );\n        nShared0 = Kit_DecComputeShared_rec( Pat0, VarsNext, nVars-1, Shared0, v + 1 );\n        if ( nShared0 == 0 )\n            continue;\n        nShared1 = Kit_DecComputeShared_rec( Pat1, VarsNext, nVars-1, Shared1, v + 1 );\n        if ( nShared1 == 0 )\n            continue;\n        Shared[nShared++] = v;\n        for ( u = 0; u \u003c nShared0; u++ )\n        for ( m = 0; m \u003c nShared1; m++ )\n            if ( Shared0[u] \u003e= 0 \u0026\u0026 Shared1[m] \u003e= 0 \u0026\u0026 Shared0[u] == Shared1[m] )\n            {\n                Shared[nShared++] = Shared0[u];\n                Shared0[u] = Shared1[m] = -1;\n            }\n        return nShared;\n    }\n    return 0;\n}",
+      "Draft": "func Kit_DecComputeShared_rec(Pattern []int32, Vars []int32, nVars int32, Shared []int32, iVarTry int32) int32 {\n    var Pat0 [32]int32;\n    var Pat1 [32]int32;\n    var Shared0 [5]int32;\n    var Shared1 [5]int32;\n    var VarsNext [5]int32;\n    var v int32;\n    var u int32;\n    var iVarsNext int32;\n    var iPat0 int32;\n    var iPat1 int32;\n    var m int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    var nShared0, nShared1, nShared int32;\n    for  v = iVarTry; v \u003c nVars; v++  {\n        iVarsNext = 0;\n        for  u = 0; u \u003c nVars; u++  {\n            if u == v {\n                VarsNext[iVarsNext++] = Vars[u]; }\n        }\n        iPat0 = iPat1 = 0;\n        for  m = 0; m \u003c nMints; m++  {\n            if m \u0026 (1 \u003c\u003c v) {\n                Pat1[iPat1++] = m;\n            } else {\n                Pat0[iPat0++] = m; }\n        }\n        assert(iPat0 == nMints / 2, \"iPat0 == nMints / 2\");\n        assert(iPat1 == nMints / 2, \"iPat1 == nMints / 2\");\n        nShared0 = Kit_DecComputeShared_rec( Pat0, VarsNext, nVars-1, Shared0, v + 1 );\n        if nShared0 == 0 {\n            continue; }\n        nShared1 = Kit_DecComputeShared_rec( Pat1, VarsNext, nVars-1, Shared1, v + 1 );\n        if nShared1 == 0 {\n            continue; }\n        Shared[nShared++] = v;\n        for  u = 0; u \u003c nShared0; u++  {\n        for  m = 0; m \u003c nShared1; m++  {\n            if Shared0[u] \u003e= 0 \u0026\u0026 Shared1[m] \u003e= 0 \u0026\u0026 Shared0[u] == Shared1[m] {\n                Shared[nShared++] = Shared0[u];\n                Shared0[u] = Shared1[m] = -1;\n            }\n        }\n        }\n        return nShared;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Kit_DecComputeShared",
+      "Start": 10464,
+      "End": 10715,
+      "BodyStart": 10533,
+      "Original": "int Kit_DecComputeShared( int Pattern[], int LutSize, int Shared[] )\n{\n    int i, Vars[6];\n    assert( LutSize \u003c= 6 );\n    for ( i = 0; i \u003c LutSize; i++ )\n        Vars[i] = i;\n    return Kit_DecComputeShared_rec( Pattern, Vars, LutSize, Shared, 0 );\n}",
+      "Draft": "func Kit_DecComputeShared(Pattern []int32, LutSize int32, Shared []int32) int32 {\n    var i int32;\n    var Vars [6]int32;\n    assert(LutSize \u003c= 6, \"LutSize \u003c= 6\");\n    for  i = 0; i \u003c LutSize; i++  {\n        Vars[i] = i;\n    }\n    return Kit_DecComputeShared_rec( Pattern, Vars, LutSize, Shared, 0 );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::struct::Kit_ManDec_t::// LUT supports\n    char            ATimeIn[64];",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_ManDec_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1279,
+      "End": 1333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::struct::Kit_ManDec_t::// the current number of words\n    char            Order[32];",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_ManDec_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1605,
+      "End": 1670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::struct::Kit_ManDec_t::// problem decomposition\n    char            ATimeOut[64];",
+      "Category": "struct-field-review",
+      "Symbol": "Kit_ManDec_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1840,
+      "End": 1903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::struct::Kit_ManDec_t",
+      "Category": "struct-review",
+      "Symbol": "Kit_ManDec_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 792,
+      "End": 1932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::pointer-cast::6185",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6185,
+      "End": 6197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::pointer-cast::6636",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6636,
+      "End": 6648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::pointer-cast::6684",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6684,
+      "End": 6696
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::pointer-cast::6792",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6792,
+      "End": 6804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::pointer-cast::6906",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6906,
+      "End": 6918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::Kit_DecOuputArrival",
+      "Category": "semantic-review",
+      "Symbol": "Kit_DecOuputArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1934,
+      "End": 2071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::Kit_ManDecStart",
+      "Category": "semantic-review",
+      "Symbol": "Kit_ManDecStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2551,
+      "End": 3185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::Kit_ManDecStop",
+      "Category": "semantic-review",
+      "Symbol": "Kit_ManDecStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3444,
+      "End": 3772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::Kit_DecComputeOuputArrival",
+      "Category": "semantic-review",
+      "Symbol": "Kit_DecComputeOuputArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4066,
+      "End": 4769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::Kit_DecComputeTruthOne",
+      "Category": "semantic-review",
+      "Symbol": "Kit_DecComputeTruthOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5028,
+      "End": 5643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::ternary::Kit_DecComputeTruth",
+      "Category": "ternary-review",
+      "Symbol": "Kit_DecComputeTruth",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5902,
+      "End": 7009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::Kit_DecComputeTruth",
+      "Category": "semantic-review",
+      "Symbol": "Kit_DecComputeTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5902,
+      "End": 7009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::Kit_DecComputePattern",
+      "Category": "semantic-review",
+      "Symbol": "Kit_DecComputePattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7268,
+      "End": 8560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::Kit_DecComputeShared_rec",
+      "Category": "semantic-review",
+      "Symbol": "Kit_DecComputeShared_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8835,
+      "End": 10189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::Kit_DecComputeShared",
+      "Category": "semantic-review",
+      "Symbol": "Kit_DecComputeShared",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10464,
+      "End": 10715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::macro-inline::2660",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2660,
+      "End": 2689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::macro-inline::3076",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3076,
+      "End": 3111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::macro-inline::3133",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3133,
+      "End": 3168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::macro-inline::3490",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3490,
+      "End": 3513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::macro-inline::3519",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3519,
+      "End": 3543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitDec.c::macro-inline::3756",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3756,
+      "End": 3769
+    }
+  ],
+  "Draft": "package kit\n\n/**CFile****************************************************************\n\n  FileName    [kitDec.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Computation kit.]\n\n  Synopsis    [Decomposition manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 18, 2009.]\n\n  Revision    [$Id: kitDec.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// decomposition manager\n   \ntype Kit_ManDec_t struct {\n    nVarsMax             int32;     // the max number of variables\n    nWordsMax             int32;    // the max number of words\n    vTruthVars      *Vec_Ptr_t;   // elementary truth tables\n    vTruthNodes      *Vec_Ptr_t;  // internal truth tables\n    // current problem\n    nVarsIn             int32;      // the current number of variables\n    vLutsIn      *Vec_Int_t;      // LUT truth tables\n    vSuppIn      *Vec_Int_t;      // LUT supports\n    ATimeIn [64]byte;  // variable arrival times\n    // extracted information\n    pTruthIn       *uint32;     // computed truth table\n    pTruthOut       *uint32;    // computed truth table\n    nVarsOut             int32;     // the current number of variables\n    nWordsOut             int32;    // the current number of words\n    Order [32]byte;    // new vars into old vars after supp minimization\n    // computed information\n    vLutsOut      *Vec_Int_t;     // problem decomposition\n    vSuppOut      *Vec_Int_t;     // problem decomposition\n    ATimeOut [64]byte; // variable arrival times\n}\n\nfunc Kit_DecOuputArrival(nVars int32, vLuts *Vec_Int_t, ATimes []byte) int32 { return ATimes[nVars + Vec_IntSize(vLuts) - 1]; }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts Decmetry manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_ManDecStart(nVarsMax int32) *Kit_ManDec_t {\n    var p *Kit_ManDec_t;\n    assert(nVarsMax \u003c= 20, \"nVarsMax \u003c= 20\");\n    p = new(Kit_ManDec_t);\n    p.nVarsMax   = nVarsMax;\n    p.nWordsMax  = Kit_TruthWordNum( p.nVarsMax );\n    p.vTruthVars = Vec_PtrAllocTruthTables( p.nVarsMax );\n    p.vTruthNodes = Vec_PtrAllocSimInfo( 64, p.nWordsMax );\n    p.vLutsIn    = Vec_IntAlloc( 50 );\n    p.vSuppIn    = Vec_IntAlloc( 50 );\n    p.vLutsOut   = Vec_IntAlloc( 50 );\n    p.vSuppOut   = Vec_IntAlloc( 50 );\n    p.pTruthIn   = ABC_ALLOC( unsigned, p.nWordsMax );\n    p.pTruthOut  = ABC_ALLOC( unsigned, p.nWordsMax );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops Decmetry manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_ManDecStop(p *Kit_ManDec_t) {\n    ABC_FREE( p.pTruthIn );\n    ABC_FREE( p.pTruthOut );\n    Vec_IntFreeP( \u0026p.vLutsIn );\n    Vec_IntFreeP( \u0026p.vSuppIn );\n    Vec_IntFreeP( \u0026p.vLutsOut );\n    Vec_IntFreeP( \u0026p.vSuppOut );\n    Vec_PtrFreeP( \u0026p.vTruthVars );\n    Vec_PtrFreeP( \u0026p.vTruthNodes );\n    ABC_FREE( p );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Deriving timing information for the decomposed structure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_DecComputeOuputArrival(nVars int32, vSupps *Vec_Int_t, LutSize int32, ATimesIn []byte, ATimesOut []byte) int32 {\n    var i, v, iVar, nLuts, Delay int32;\n    nLuts = Vec_IntSize(vSupps) / LutSize;\n    assert(nLuts \u003e 0, \"nLuts \u003e 0\");\n    assert(Vec_IntSize(vSupps) % LutSize == 0, \"Vec_IntSize(vSupps) % LutSize == 0\");\n    for  v = 0; v \u003c nVars; v++  {\n        ATimesOut[v] = ATimesIn[v];\n    }\n    for  v = 0; v \u003c nLuts; v++  {\n        Delay = 0;\n        for  i = 0; i \u003c LutSize; i++  {\n            iVar = Vec_IntEntry( vSupps, v * LutSize + i );\n            assert(iVar \u003c nVars + v, \"iVar \u003c nVars + v\");\n            Delay = Abc_MaxInt( Delay, ATimesOut[iVar] );\n        }\n        ATimesOut[nVars + v] = Delay + 1;\n    }\n    return ATimesOut[nVars + nLuts - 1];\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the truth table]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_DecComputeTruthOne(LutSize int32, pTruthLut *uint32, nVars int32, pTruths []*uint32, pTemp *uint32, pRes *uint32) {\n    var i, v int32;\n    Kit_TruthClear( pRes, nVars );\n    for  i = 0; i \u003c (1\u003c\u003cLutSize); i++  {\n        if !Kit_TruthHasBit( pTruthLut, i ) {\n            continue; }\n        Kit_TruthFill( pTemp, nVars );\n        for  v = 0; v \u003c LutSize; v++  {\n            if i \u0026 (1\u003c\u003cv) {\n                Kit_TruthAnd( pTemp, pTemp, pTruths[v], nVars );\n            } else {\n                Kit_TruthSharp( pTemp, pTemp, pTruths[v], nVars ); }\n        }\n        Kit_TruthOr( pRes, pRes, pTemp, nVars );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the truth table]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_DecComputeTruth(p *Kit_ManDec_t, nVars int32, vSupps *Vec_Int_t, LutSize int32, vLuts *Vec_Int_t, pRes *uint32) {\n    var pResult *uint32;\n    var pTruthLuts *uint32;\n    var pTruths [17]*uint32;\n    var nTruthLutWords, i, v, iVar, nLuts int32;\n    nLuts = Vec_IntSize(vSupps) / LutSize;\n    pTruthLuts = (unsigned *)Vec_IntArray( vLuts );\n    nTruthLutWords = Kit_TruthWordNum( LutSize );\n    assert(nLuts \u003e 0, \"nLuts \u003e 0\");\n    assert(Vec_IntSize(vSupps) % LutSize == 0, \"Vec_IntSize(vSupps) % LutSize == 0\");\n    assert(nLuts * nTruthLutWords == Vec_IntSize(vLuts), \"nLuts * nTruthLutWords == Vec_IntSize(vLuts)\");\n    for  v = 0; v \u003c nLuts; v++  {\n        for  i = 0; i \u003c LutSize; i++  {\n            iVar = Vec_IntEntry( vSupps, v * LutSize + i );\n            assert(iVar \u003c nVars + v, \"iVar \u003c nVars + v\");\n            pTruths[i] = (iVar \u003c nVars)? (unsigned *)Vec_PtrEntry(p.vTruthVars, iVar) : (unsigned *)Vec_PtrEntry(p.vTruthNodes, iVar-nVars);\n        }\n        if v == nLuts - 1 {\n            pResult = pRes;\n        } else {\n            pResult = (unsigned *)Vec_PtrEntry(p.vTruthNodes, v);\n        }\n        Kit_DecComputeTruthOne( LutSize, pTruthLuts, nVars, pTruths, (unsigned *)Vec_PtrEntry(p.vTruthNodes, v+1), pResult );\n        pTruthLuts += nTruthLutWords;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the truth table]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_DecComputePattern(nVars int32, pTruth *uint32, LutSize int32, Pattern []int32) int32 {\n    var nCofs int32  = (1 \u003c\u003c LutSize);\n    var i, k, nMyu int32;\n    assert(LutSize \u003c= 6, \"LutSize \u003c= 6\");\n    assert(LutSize \u003c nVars, \"LutSize \u003c nVars\");\n    if nVars - LutSize \u003c= 5 {\n        var uCofs [64]uint32;\n        var nBits int32  = (1 \u003c\u003c (nVars - LutSize));\n        for  i = 0; i \u003c nCofs; i++  {\n            uCofs[i] = (pTruth[(i*nBits)/32] \u003e\u003e ((i*nBits)%32)) \u0026 ((1\u003c\u003cnBits)-1);\n        }\n        for  i = 0; i \u003c nCofs; i++  {\n            for  k = 0; k \u003c nMyu; k++  {\n                if uCofs[i] == uCofs[k] {\n                    Pattern[i] = k;\n                    break;\n                }\n            }\n            if k == i {\n                Pattern[nMyu++] = i; }\n        }\n    \n    } else {\n        var puCofs [64]*uint32;\n        var nWords int32  = (1 \u003c\u003c (nVars - LutSize - 5));\n        for  i = 0; i \u003c nCofs; i++  {\n            puCofs[i] = pTruth + nWords;\n        }\n        for  i = 0; i \u003c nCofs; i++  {\n            for  k = 0; k \u003c nMyu; k++  {\n                if Kit_TruthIsEqual( puCofs[i], puCofs[k], nVars - LutSize - 5 ) {\n                    Pattern[i] = k;\n                    break;\n                }\n            }\n            if k == i {\n                Pattern[nMyu++] = i; }\n        }\n    }\n    return nMyu;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of shared variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_DecComputeShared_rec(Pattern []int32, Vars []int32, nVars int32, Shared []int32, iVarTry int32) int32 {\n    var Pat0 [32]int32;\n    var Pat1 [32]int32;\n    var Shared0 [5]int32;\n    var Shared1 [5]int32;\n    var VarsNext [5]int32;\n    var v int32;\n    var u int32;\n    var iVarsNext int32;\n    var iPat0 int32;\n    var iPat1 int32;\n    var m int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    var nShared0, nShared1, nShared int32;\n    for  v = iVarTry; v \u003c nVars; v++  {\n        iVarsNext = 0;\n        for  u = 0; u \u003c nVars; u++  {\n            if u == v {\n                VarsNext[iVarsNext++] = Vars[u]; }\n        }\n        iPat0 = iPat1 = 0;\n        for  m = 0; m \u003c nMints; m++  {\n            if m \u0026 (1 \u003c\u003c v) {\n                Pat1[iPat1++] = m;\n            } else {\n                Pat0[iPat0++] = m; }\n        }\n        assert(iPat0 == nMints / 2, \"iPat0 == nMints / 2\");\n        assert(iPat1 == nMints / 2, \"iPat1 == nMints / 2\");\n        nShared0 = Kit_DecComputeShared_rec( Pat0, VarsNext, nVars-1, Shared0, v + 1 );\n        if nShared0 == 0 {\n            continue; }\n        nShared1 = Kit_DecComputeShared_rec( Pat1, VarsNext, nVars-1, Shared1, v + 1 );\n        if nShared1 == 0 {\n            continue; }\n        Shared[nShared++] = v;\n        for  u = 0; u \u003c nShared0; u++  {\n        for  m = 0; m \u003c nShared1; m++  {\n            if Shared0[u] \u003e= 0 \u0026\u0026 Shared1[m] \u003e= 0 \u0026\u0026 Shared0[u] == Shared1[m] {\n                Shared[nShared++] = Shared0[u];\n                Shared0[u] = Shared1[m] = -1;\n            }\n        }\n        }\n        return nShared;\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of shared variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_DecComputeShared(Pattern []int32, LutSize int32, Shared []int32) int32 {\n    var i int32;\n    var Vars [6]int32;\n    assert(LutSize \u003c= 6, \"LutSize \u003c= 6\");\n    for  i = 0; i \u003c LutSize; i++  {\n        Vars[i] = i;\n    }\n    return Kit_DecComputeShared_rec( Pattern, Vars, LutSize, Shared, 0 );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

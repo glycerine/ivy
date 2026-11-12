@@ -1,0 +1,63 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdStarter.c",
+  "SHA256": "4affbbd24870a5ea4d2b136b63526ac6cf67c3a577d949701883a98524e01e09",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 28,
+        "Column": 1,
+        "ByteOffset": 690
+      },
+      "Directive": "#ifdef ABC_USE_PTHREADS"
+    },
+    {
+      "Location": {
+        "Line": 30,
+        "Column": 1,
+        "ByteOffset": 715
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 45,
+        "Column": 1,
+        "ByteOffset": 1067
+      },
+      "Directive": "#ifndef ABC_USE_PTHREADS"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdStarter.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdStarter.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 690,
+      "End": 818
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdStarter.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1067,
+      "End": 7745
+    }
+  ],
+  "Draft": "package cmd\n\n/**CFile****************************************************************\n\n  FileName    [cmdStarter.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Command to start many instances of ABC in parallel.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cmdStarter.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \"misc/util/abc_global.h\"\n//#include \"misc/extra/extra.h\"\n\n#ifdef ABC_USE_PTHREADS\n\n#ifdef _WIN32\n#include \"../lib/pthread.h\"\n#else\n//#include \u003cpthread.h\u003e\n#include \u003cunistd.h\u003e\n#endif\n\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n \n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n#ifndef ABC_USE_PTHREADS\n\nvoid Cmd_RunStarter( char * pFileName, char * pBinary, char * pCommand, int nCores ) {}\n\n#else // pthreads are used\n\n// the number of concurrently running threads\nstatic volatile int nThreadsRunning = 0;\n\n// mutex to control access to the number of threads\npthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [This procedures executes one call to system().]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid * Abc_RunThread( void * pCommand )\n{\n    int status;\n    // perform the call\n    if ( system( (char *)pCommand ) )\n    {\n        fprintf( stderr, \"The following command has returned non-zero exit status:\\n\" );\n        fprintf( stderr, \"\\\"%s\\\"\\n\\n\", (char *)pCommand );\n        fflush( stdout );\n    }\n    free( pCommand );\n\n    // decrement the number of threads runining \n    status = pthread_mutex_lock(\u0026mutex);   assert(status == 0);\n    nThreadsRunning--;\n    status = pthread_mutex_unlock(\u0026mutex); assert(status == 0);\n\n    // quit this thread\n    //printf(\"...Finishing %s\\n\", (char *)Command);\n    pthread_exit( NULL );\n    assert(0);\n    return NULL;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Takes file with commands to be executed and the number of CPUs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Cmd_RunStarter( char * pFileName, char * pBinary, char * pCommand, int nCores )\n{\n    FILE * pFile, * pFileTemp;\n    pthread_t * pThreadIds;\n    char * BufferCopy, * Buffer;\n    int nLines, LineMax, Line, Len;\n    int i, c, status, Counter;\n    abctime clk = Abc_Clock();\n\n    // check the number of cores\n    if ( nCores \u003c 2 )\n    {\n        fprintf( stdout, \"The number of cores (%d) should be more than 1.\\n\", nCores ); \n        return; \n    }\n\n    // open the file and make sure it is available\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    { \n        fprintf( stdout, \"Input file \\\"%s\\\" cannot be opened.\\n\", pFileName ); \n        return; \n    }\n\n    // count the number of lines and the longest line\n    nLines = LineMax = Line = 0;\n    while ( (c = fgetc(pFile)) != EOF )\n    {\n        Line++;\n        if ( c != '\\n' )\n            continue;\n        nLines++;\n        LineMax = Abc_MaxInt( LineMax, Line );\n        Line = 0;       \n    }\n    nLines += 10;\n    LineMax += LineMax + 100;\n    LineMax += pBinary  ? strlen(pBinary) : 0;\n    LineMax += pCommand ? strlen(pCommand) : 0;\n\n    // allocate storage\n    Buffer = ABC_ALLOC( char, LineMax );\n    pThreadIds = ABC_ALLOC( pthread_t, nLines );\n\n    // check if all files can be opened\n    if ( pCommand != NULL )\n    {\n        // read file names\n        rewind( pFile );\n        for ( i = 0; fgets( Buffer, LineMax, pFile ) != NULL; i++ )\n        {\n            // remove trailing spaces\n            for ( Len = strlen(Buffer) - 1; Len \u003e= 0; Len-- )\n                if ( Buffer[Len] == '\\n' || Buffer[Len] == '\\r' || Buffer[Len] == '\\t' || Buffer[Len] == ' ' )\n                    Buffer[Len] = 0;\n                else\n                    break;\n\n            // get command from file\n            if ( Buffer[0] == 0 || Buffer[0] == '\\n' || Buffer[0] == '\\r' || Buffer[0] == '\\t' || Buffer[0] == ' ' || Buffer[0] == '#' )\n                continue;\n\n            // try to open the file\n            pFileTemp = fopen( Buffer, \"rb\" );\n            if ( pFileTemp == NULL )\n            {\n                fprintf( stdout, \"Starter cannot open file \\\"%s\\\".\\n\", Buffer );\n                fflush( stdout );\n                ABC_FREE( pThreadIds );\n                ABC_FREE( Buffer );\n                fclose( pFile );\n                return;\n            }\n            fclose( pFileTemp );\n        }\n    } \n \n    // read commands and execute at most \u003cnum\u003e of them at a time\n    rewind( pFile );\n    for ( i = 0; fgets( Buffer, LineMax, pFile ) != NULL; i++ )\n    {\n        // remove trailing spaces\n        for ( Len = strlen(Buffer) - 1; Len \u003e= 0; Len-- )\n            if ( Buffer[Len] == '\\n' || Buffer[Len] == '\\r' || Buffer[Len] == '\\t' || Buffer[Len] == ' ' )\n                Buffer[Len] = 0;\n            else\n                break;\n\n        // get command from file\n        if ( Buffer[0] == 0 || Buffer[0] == '\\n' || Buffer[0] == '\\r' || Buffer[0] == '\\t' || Buffer[0] == ' ' || Buffer[0] == '#' )\n            continue;\n\n        // create command\n        if ( pCommand != NULL )\n        {\n            BufferCopy = ABC_ALLOC( char, LineMax );\n            sprintf( BufferCopy, \"%s -c \\\"%s; %s\\\" \u003e %s\", pBinary, Buffer, pCommand, Extra_FileNameGenericAppend(Buffer, \".txt\") );\n        }\n        else\n            BufferCopy = Abc_UtilStrsav( Buffer );\n        fprintf( stdout, \"Calling:  %s\\n\", (char *)BufferCopy );  \n        fflush( stdout );\n\n        // wait till there is an empty thread\n        while ( 1 )\n        {\n            status = pthread_mutex_lock(\u0026mutex);   assert(status == 0);\n            Counter = nThreadsRunning;\n            status = pthread_mutex_unlock(\u0026mutex); assert(status == 0);\n            if ( Counter \u003c nCores - 1 )\n                break;\n//            Sleep( 100 );\n        }\n\n        // increament the number of threads running\n        status = pthread_mutex_lock(\u0026mutex);   assert(status == 0);\n        nThreadsRunning++;\n        status = pthread_mutex_unlock(\u0026mutex); assert(status == 0);\n\n        // create thread to execute this command\n        status = pthread_create( \u0026pThreadIds[i], NULL, Abc_RunThread, (void *)BufferCopy );  assert(status == 0);\n        assert( i \u003c nLines );\n    }\n    ABC_FREE( pThreadIds );\n    ABC_FREE( Buffer );\n    fclose( pFile );\n\n    // wait for all the threads to finish\n    while ( 1 )\n    {\n        status = pthread_mutex_lock(\u0026mutex);   assert(status == 0);\n        Counter = nThreadsRunning;\n        status = pthread_mutex_unlock(\u0026mutex); assert(status == 0);\n        if ( Counter == 0 )\n            break;\n    }\n\n    // cleanup\n//    status = pthread_mutex_destroy(\u0026mutex);   assert(status == 0);\n//    mutex = PTHREAD_MUTEX_INITIALIZER;\n    fprintf( stdout, \"Finished processing commands in file \\\"%s\\\".  \", pFileName );\n    Abc_PrintTime( 1, \"Total wall time\", Abc_Clock() - clk );\n    fflush( stdout );\n}\n\n#endif // pthreads are used\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

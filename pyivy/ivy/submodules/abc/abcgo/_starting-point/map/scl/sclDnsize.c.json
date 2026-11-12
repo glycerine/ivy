@@ -1,0 +1,603 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclDnsize.c",
+  "SHA256": "9ee55fe8a7e4e583e615a235a117eec95a2db03137f53a9ae9717ef1df2410ff",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pPivot) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 9,
+        "ByteOffset": 2887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fMarkB == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 17,
+        "ByteOffset": 3432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pObj.fMarkB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 3570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vEvals) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 7115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_QueSize(p.vNodeByGain) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 214,
+        "Column": 9,
+        "ByteOffset": 8395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total : \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 9,
+        "ByteOffset": 8438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%5d : \",    Iter ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 5,
+        "ByteOffset": 8473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Try =%6d  \",    nAttempts );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 8515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Over =%6d  \",   nOverlaps );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 219,
+        "Column": 5,
+        "ByteOffset": 8557
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Fail =%6d  \",   nAttempts-nOverlaps-nChanges );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 220,
+        "Column": 5,
+        "ByteOffset": 8618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Win =%6d  \",    nChanges );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 5,
+        "ByteOffset": 8659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"A: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 5,
+        "ByteOffset": 8680
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%.2f \",         p.SumArea );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 223,
+        "Column": 5,
+        "ByteOffset": 8722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"(%+5.1f %%)  \", 100.0 * (p.SumArea - p.SumArea0)/ p.SumArea0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 8799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"D: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 5,
+        "ByteOffset": 8820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%.2f ps \",      p.MaxDelay );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 5,
+        "ByteOffset": 8863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"(%+5.1f %%)  \", 100.0 * (p.MaxDelay - p.MaxDelay0)/ p.MaxDelay0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 5,
+        "ByteOffset": 8943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%8.2f sec    \", 1.0*(Abc_Clock() - p.timeTotal)/(CLOCKS_PER_SEC) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 227,
+        "Column": 63,
+        "ByteOffset": 9001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%8.2f sec    \", 1.0*(Abc_Clock() - p.timeTotal)/(CLOCKS_PER_SEC) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 9024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%c\", fVerbose ? '\\n' : '\\r' );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 249,
+        "Column": 41,
+        "ByteOffset": 9589
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nRuntimeLimit = pPars.TimeOut * CLOCKS_PER_SEC + Abc_Clock();"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 9,
+        "ByteOffset": 9718
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Parameters: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 257,
+        "Column": 9,
+        "ByteOffset": 9752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Iters =%5d.  \",          pPars.nIters    );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 258,
+        "Column": 9,
+        "ByteOffset": 9813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"UseDept =%2d. \",         pPars.fUseDept  );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 9,
+        "ByteOffset": 9874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"UseWL =%2d. \",           pPars.fUseWireLoads );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 260,
+        "Column": 9,
+        "ByteOffset": 9939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Target =%5d ps. \",       pPars.DelayUser );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 9,
+        "ByteOffset": 10000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"DelayGap =%3d ps. \",     pPars.DelayGap );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 262,
+        "Column": 9,
+        "ByteOffset": 10060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Timeout =%4d sec\",       pPars.TimeOut   );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 9,
+        "ByteOffset": 10121
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 5,
+        "ByteOffset": 10339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vGatesBest == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 327,
+        "Column": 9,
+        "ByteOffset": 13031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"                                                                                                                                                  \\r\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 334,
+        "Column": 77,
+        "ByteOffset": 13539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeCone)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeCone)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 336,
+        "Column": 77,
+        "ByteOffset": 13825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSize)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeSize)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 338,
+        "Column": 77,
+        "ByteOffset": 14111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTime)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeTime)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 340,
+        "Column": 78,
+        "ByteOffset": 14398
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 342,
+        "Column": 78,
+        "ByteOffset": 14686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 347,
+        "Column": 9,
+        "ByteOffset": 14949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gate sizing timed out at %d seconds.\\n\", pPars.TimeOut ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_SclFindWindow",
+      "Start": 1310,
+      "End": 2920,
+      "BodyStart": 1399,
+      "Original": "void Abc_SclFindWindow( Abc_Obj_t * pPivot, Vec_Int_t ** pvNodes, Vec_Int_t ** pvEvals )\n{\n    Abc_Ntk_t * p = Abc_ObjNtk(pPivot);\n    Abc_Obj_t * pObj, * pNext, * pNext2;\n    Vec_Int_t * vNodes = *pvNodes;\n    Vec_Int_t * vEvals = *pvEvals;\n    int i, k;\n    assert( Abc_ObjIsNode(pPivot) );\n    // collect fanins, node, and fanouts\n    Vec_IntClear( vNodes );\n    Abc_ObjForEachFanin( pPivot, pNext, i )\n//        if ( Abc_ObjIsNode(pNext) \u0026\u0026 Abc_ObjFaninNum(pNext) \u003e 0 )\n        if ( Abc_ObjIsCi(pNext) || Abc_ObjFaninNum(pNext) \u003e 0 )\n            Vec_IntPush( vNodes, Abc_ObjId(pNext) );\n    Vec_IntPush( vNodes, Abc_ObjId(pPivot) );\n    Abc_ObjForEachFanout( pPivot, pNext, i )\n        if ( Abc_ObjIsNode(pNext) )\n        {\n            Vec_IntPush( vNodes, Abc_ObjId(pNext) );\n            Abc_ObjForEachFanout( pNext, pNext2, k )\n                if ( Abc_ObjIsNode(pNext2) )\n                    Vec_IntPush( vNodes, Abc_ObjId(pNext2) );\n        }\n    Vec_IntUniqify( vNodes );\n    // label nodes\n    Abc_NtkForEachObjVec( vNodes, p, pObj, i )\n    {\n        assert( pObj-\u003efMarkB == 0 );\n        pObj-\u003efMarkB = 1;\n    }\n    // collect nodes visible from the critical paths\n    Vec_IntClear( vEvals );\n    Abc_NtkForEachObjVec( vNodes, p, pObj, i )\n        Abc_ObjForEachFanout( pObj, pNext, k )\n            if ( !pNext-\u003efMarkB )\n            {\n                assert( pObj-\u003efMarkB );\n                Vec_IntPush( vEvals, Abc_ObjId(pObj) );\n                break;\n            }\n    assert( Vec_IntSize(vEvals) \u003e 0 );\n    // label nodes\n    Abc_NtkForEachObjVec( vNodes, p, pObj, i )\n        pObj-\u003efMarkB = 0;\n}",
+      "Draft": "func Abc_SclFindWindow(pPivot *Abc_Obj_t, pvNodes **Vec_Int_t, pvEvals **Vec_Int_t) {\n    var p *Abc_Ntk_t  = Abc_ObjNtk(pPivot);\n    var pObj, pNext, pNext2 *Abc_Obj_t;\n    var vNodes *Vec_Int_t  = *pvNodes;\n    var vEvals *Vec_Int_t  = *pvEvals;\n    var i, k int32;\n    assert(Abc_ObjIsNode(pPivot), \"Abc_ObjIsNode(pPivot)\");\n    // collect fanins, node, and fanouts\n    Vec_IntClear( vNodes );\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pPivot)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pPivot, i)), 1); i++  {\n//        if ( Abc_ObjIsNode(pNext) \u0026\u0026 Abc_ObjFaninNum(pNext) \u003e 0 )\n        if Abc_ObjIsCi(pNext) || Abc_ObjFaninNum(pNext) \u003e 0 {\n            Vec_IntPush( vNodes, Abc_ObjId(pNext) ); }\n    }\n    Vec_IntPush( vNodes, Abc_ObjId(pPivot) );\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pPivot)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pPivot, i)), 1); i++  {\n        if Abc_ObjIsNode(pNext) {\n            Vec_IntPush( vNodes, Abc_ObjId(pNext) );\n            // inlining of macro Abc_ObjForEachFanout\n            for  k = 0; (k \u003c Abc_ObjFanoutNum(pNext)) \u0026\u0026 (((pNext2) = Abc_ObjFanout(pNext, k)), 1); k++  {\n                if Abc_ObjIsNode(pNext2) {\n                    Vec_IntPush( vNodes, Abc_ObjId(pNext2) ); }\n            }\n        }\n    }\n    Vec_IntUniqify( vNodes );\n    // label nodes\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vNodes) \u0026\u0026 (((pObj) = Abc_NtkObj(p, Vec_IntEntry(vNodes,i))), 1); i++  {         if (pObj) == nil {} else {\n        assert(pObj.fMarkB == 0, \"pObj.fMarkB == 0\");\n        pObj.fMarkB = 1;\n    }\n    }\n    // collect nodes visible from the critical paths\n    Vec_IntClear( vEvals );\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vNodes) \u0026\u0026 (((pObj) = Abc_NtkObj(p, Vec_IntEntry(vNodes,i))), 1); i++  {         if (pObj) == nil {} else {\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            if !pNext.fMarkB {\n                assert(pObj.fMarkB, \"pObj.fMarkB\");\n                Vec_IntPush( vEvals, Abc_ObjId(pObj) );\n                break;\n            }\n        } }\n    }\n    assert(Vec_IntSize(vEvals) \u003e 0, \"Vec_IntSize(vEvals) \u003e 0\");\n    // label nodes\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vNodes) \u0026\u0026 (((pObj) = Abc_NtkObj(p, Vec_IntEntry(vNodes,i))), 1); i++  {         if (pObj) == nil {} else {\n        pObj.fMarkB = 0; }\n    }\n}"
+    },
+    {
+      "Name": "Abc_SclCheckImprovement",
+      "Start": 3230,
+      "End": 5554,
+      "BodyStart": 3357,
+      "Original": "int Abc_SclCheckImprovement( SC_Man * p, Abc_Obj_t * pObj, Vec_Int_t * vNodes, Vec_Int_t * vEvals, int Notches, int DelayGap )\n{\n    Abc_Obj_t * pTemp;\n    SC_Cell * pCellOld, * pCellNew;\n    float dGain, dGainBest;\n    int i, k, gateBest;\n    abctime clk;\nclk = Abc_Clock();\n//    printf( \"%d -\u003e %d\\n\", Vec_IntSize(vNodes), Vec_IntSize(vEvals) );\n    // save old gate, timing, fanin load\n    pCellOld = Abc_SclObjCell( pObj );\n    Abc_SclConeStore( p, vNodes );\n    Abc_SclEvalStore( p, vEvals );\n    Abc_SclLoadStore( p, pObj );\n    // try different gate sizes for this node\n    gateBest = -1;\n    dGainBest = -DelayGap;\n    SC_RingForEachCellRev( pCellOld, pCellNew, i )\n    {\n        if ( pCellNew-\u003earea \u003e= pCellOld-\u003earea )\n            continue;\n        if ( i \u003e Notches )\n            break;\n        // set new cell\n        Abc_SclObjSetCell( pObj, pCellNew );\n        Abc_SclUpdateLoad( p, pObj, pCellOld, pCellNew );\n        // recompute timing\n        Abc_SclTimeCone( p, vNodes );\n        // set old cell\n        Abc_SclObjSetCell( pObj, pCellOld );\n        Abc_SclLoadRestore( p, pObj );\n        // evaluate gain\n        dGain = Abc_SclEvalPerformLegal( p, vEvals, p-\u003eMaxDelay0 );\n        if ( dGain == -1 )\n            continue;\n        // save best gain\n        if ( dGainBest \u003c dGain )\n        {\n            dGainBest = dGain;\n            gateBest = pCellNew-\u003eId;\n        }\n    } \n    // put back old cell and timing\n    Abc_SclObjSetCell( pObj, pCellOld );\n    Abc_SclConeRestore( p, vNodes );\np-\u003etimeSize += Abc_Clock() - clk;\n    if ( gateBest \u003e= 0 )\n    {\n        pCellNew = SC_LibCell( p-\u003epLib, gateBest );\n        Abc_SclObjSetCell( pObj, pCellNew );\n        p-\u003eSumArea += pCellNew-\u003earea - pCellOld-\u003earea;\n//        printf( \"%f   %f -\u003e %f\\n\", pCellNew-\u003earea - pCellOld-\u003earea, p-\u003eSumArea - (pCellNew-\u003earea - pCellOld-\u003earea), p-\u003eSumArea );\n//        printf( \"%6d  %20s -\u003e %20s  %f -\u003e %f\\n\", Abc_ObjId(pObj), pCellOld-\u003epName, pCellNew-\u003epName, pCellOld-\u003earea, pCellNew-\u003earea );\n        // mark used nodes with the current trav ID\n        Abc_NtkForEachObjVec( vNodes, p-\u003epNtk, pTemp, k )\n            Abc_NodeSetTravIdCurrent( pTemp );\n        // update load and timing...\n        Abc_SclUpdateLoad( p, pObj, pCellOld, pCellNew );\n        Abc_SclTimeIncInsert( p, pObj );\n        return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Abc_SclCheckImprovement(p *SC_Man, pObj *Abc_Obj_t, vNodes *Vec_Int_t, vEvals *Vec_Int_t, Notches int32, DelayGap int32) int32 {\n    var pTemp *Abc_Obj_t;\n    var pCellOld, pCellNew *SC_Cell;\n    var dGain, dGainBest float32;\n    var i, k, gateBest int32;\n    var clk abctime;\nclk = Abc_Clock();\n//    printf( \"%d -\u003e %d\\n\", Vec_IntSize(vNodes), Vec_IntSize(vEvals) );\n    // save old gate, timing, fanin load\n    pCellOld = Abc_SclObjCell( pObj );\n    Abc_SclConeStore( p, vNodes );\n    Abc_SclEvalStore( p, vEvals );\n    Abc_SclLoadStore( p, pObj );\n    // try different gate sizes for this node\n    gateBest = -1;\n    dGainBest = -DelayGap;\n    // inlining of macro SC_RingForEachCellRev\n    for  i, pCellNew = 0, pCellOld; i == 0 || pCellNew != pCellOld; pCellNew, i = pCellNew.pPrev, i+1  {\n        if pCellNew.area \u003e= pCellOld.area {\n            continue; }\n        if i \u003e Notches {\n            break; }\n        // set new cell\n        Abc_SclObjSetCell( pObj, pCellNew );\n        Abc_SclUpdateLoad( p, pObj, pCellOld, pCellNew );\n        // recompute timing\n        Abc_SclTimeCone( p, vNodes );\n        // set old cell\n        Abc_SclObjSetCell( pObj, pCellOld );\n        Abc_SclLoadRestore( p, pObj );\n        // evaluate gain\n        dGain = Abc_SclEvalPerformLegal( p, vEvals, p.MaxDelay0 );\n        if dGain == -1 {\n            continue; }\n        // save best gain\n        if dGainBest \u003c dGain {\n            dGainBest = dGain;\n            gateBest = pCellNew.Id;\n        }\n    } \n    // put back old cell and timing\n    Abc_SclObjSetCell( pObj, pCellOld );\n    Abc_SclConeRestore( p, vNodes );\np.timeSize += Abc_Clock() - clk;\n    if gateBest \u003e= 0 {\n        pCellNew = SC_LibCell( p.pLib, gateBest );\n        Abc_SclObjSetCell( pObj, pCellNew );\n        p.SumArea += pCellNew.area - pCellOld.area;\n//        printf( \"%f   %f -\u003e %f\\n\", pCellNew-\u003earea - pCellOld-\u003earea, p-\u003eSumArea - (pCellNew-\u003earea - pCellOld-\u003earea), p-\u003eSumArea );\n//        printf( \"%6d  %20s -\u003e %20s  %f -\u003e %f\\n\", Abc_ObjId(pObj), pCellOld-\u003epName, pCellNew-\u003epName, pCellOld-\u003earea, pCellNew-\u003earea );\n        // mark used nodes with the current trav ID\n        // inlining of macro Abc_NtkForEachObjVec\n        for  k = 0; k \u003c Vec_IntSize(vNodes) \u0026\u0026 (((pTemp) = Abc_NtkObj(p.pNtk, Vec_IntEntry(vNodes,k))), 1); k++  {         if (pTemp) == nil {} else {\n            Abc_NodeSetTravIdCurrent( pTemp ); }\n        }\n        // update load and timing...\n        Abc_SclUpdateLoad( p, pObj, pCellOld, pCellNew );\n        Abc_SclTimeIncInsert( p, pObj );\n        return 1;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkCollectNodesByArea",
+      "Start": 5812,
+      "End": 6229,
+      "BodyStart": 5875,
+      "Original": "void Abc_NtkCollectNodesByArea( SC_Man * p, Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pObj;\n    int i;\n    assert( Vec_QueSize(p-\u003evNodeByGain) == 0 );\n    Vec_QueClear( p-\u003evNodeByGain );\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    if ( Abc_ObjFaninNum(pObj) \u003e 0 )\n    {\n        Vec_FltWriteEntry( p-\u003evNode2Gain, Abc_ObjId(pObj), Abc_SclObjCell(pObj)-\u003earea );\n        Vec_QuePush( p-\u003evNodeByGain, Abc_ObjId(pObj) );\n    }\n}",
+      "Draft": "func Abc_NtkCollectNodesByArea(p *SC_Man, pNtk *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    assert(Vec_QueSize(p.vNodeByGain) == 0, \"Vec_QueSize(p.vNodeByGain) == 0\");\n    Vec_QueClear( p.vNodeByGain );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else\n    if Abc_ObjFaninNum(pObj) \u003e 0 {\n        Vec_FltWriteEntry( p.vNode2Gain, Abc_ObjId(pObj), Abc_SclObjCell(pObj).area );\n        Vec_QuePush( p.vNodeByGain, Abc_ObjId(pObj) );\n    }\n    }\n}"
+    },
+    {
+      "Name": "Abc_SclCheckOverlap",
+      "Start": 6230,
+      "End": 6461,
+      "BodyStart": 6294,
+      "Original": "int Abc_SclCheckOverlap( Abc_Ntk_t * pNtk, Vec_Int_t * vNodes )\n{\n    Abc_Obj_t * pObj;\n    int i;\n    Abc_NtkForEachObjVec( vNodes, pNtk, pObj, i )\n        if ( Abc_NodeIsTravIdCurrent(pObj) )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Abc_SclCheckOverlap(pNtk *Abc_Ntk_t, vNodes *Vec_Int_t) int32 {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vNodes) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, Vec_IntEntry(vNodes,i))), 1); i++  {         if (pObj) == nil {} else\n        if Abc_NodeIsTravIdCurrent(pObj) {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_SclDnsizePrint",
+      "Start": 6725,
+      "End": 7536,
+      "BodyStart": 6831,
+      "Original": "void Abc_SclDnsizePrint( SC_Man * p, int Iter, int nAttempts, int nOverlaps, int nChanges, int fVerbose )\n{\n    if ( Iter == -1 )\n        printf( \"Total : \" );\n    else\n        printf( \"%5d : \",    Iter );\n    printf( \"Try =%6d  \",    nAttempts );\n    printf( \"Over =%6d  \",   nOverlaps );\n    printf( \"Fail =%6d  \",   nAttempts-nOverlaps-nChanges );\n    printf( \"Win =%6d  \",    nChanges );\n    printf( \"A: \" );\n    printf( \"%.2f \",         p-\u003eSumArea );\n    printf( \"(%+5.1f %%)  \", 100.0 * (p-\u003eSumArea - p-\u003eSumArea0)/ p-\u003eSumArea0 );\n    printf( \"D: \" );\n    printf( \"%.2f ps \",      p-\u003eMaxDelay );\n    printf( \"(%+5.1f %%)  \", 100.0 * (p-\u003eMaxDelay - p-\u003eMaxDelay0)/ p-\u003eMaxDelay0 );\n    printf( \"%8.2f sec    \", 1.0*(Abc_Clock() - p-\u003etimeTotal)/(CLOCKS_PER_SEC) );\n    printf( \"%c\", fVerbose ? '\\n' : '\\r' );\n}",
+      "Draft": "func Abc_SclDnsizePrint(p *SC_Man, Iter int32, nAttempts int32, nOverlaps int32, nChanges int32, fVerbose int32) {\n    if Iter == -1 {\n        fmt.Printf(\"Total : \");\n    } else {\n        fmt.Printf(\"%5d : \", Iter); }\n    fmt.Printf(\"Try =%6d  \", nAttempts);\n    fmt.Printf(\"Over =%6d  \", nOverlaps);\n    fmt.Printf(\"Fail =%6d  \", nAttempts-nOverlaps-nChanges);\n    fmt.Printf(\"Win =%6d  \", nChanges);\n    fmt.Printf(\"A: \");\n    fmt.Printf(\"%.2f \", p.SumArea);\n    fmt.Printf(\"(%+5.1f %%)  \", 100.0 * (p.SumArea - p.SumArea0)/ p.SumArea0);\n    fmt.Printf(\"D: \");\n    fmt.Printf(\"%.2f ps \", p.MaxDelay);\n    fmt.Printf(\"(%+5.1f %%)  \", 100.0 * (p.MaxDelay - p.MaxDelay0)/ p.MaxDelay0);\n    fmt.Printf(\"%8.2f sec    \", 1.0*(Abc_Clock() - p.timeTotal)/(int64(time.Second)));\n    fmt.Printf(\"%c\", fVerbose ? '\\n' : '\\r');\n}"
+    },
+    {
+      "Name": "Abc_SclDnsizePerformInt",
+      "Start": 7772,
+      "End": 12429,
+      "BodyStart": 7857,
+      "Original": "void Abc_SclDnsizePerformInt( SC_Lib * pLib, Abc_Ntk_t * pNtk, SC_SizePars * pPars )\n{\n    SC_Man * p;\n    Abc_Obj_t * pObj;\n    Vec_Int_t * vNodes, * vEvals, * vTryLater; \n    abctime clk, nRuntimeLimit = pPars-\u003eTimeOut ? pPars-\u003eTimeOut * CLOCKS_PER_SEC + Abc_Clock() : 0;\n    int i, k;\n\n    if ( pPars-\u003efVerbose )\n    {\n        printf( \"Parameters: \" );\n        printf( \"Iters =%5d.  \",          pPars-\u003enIters    );\n        printf( \"UseDept =%2d. \",         pPars-\u003efUseDept  );\n        printf( \"UseWL =%2d. \",           pPars-\u003efUseWireLoads );\n        printf( \"Target =%5d ps. \",       pPars-\u003eDelayUser );\n        printf( \"DelayGap =%3d ps. \",     pPars-\u003eDelayGap );\n        printf( \"Timeout =%4d sec\",       pPars-\u003eTimeOut   );\n        printf( \"\\n\" );\n    }\n\n    // prepare the manager; collect init stats\n    p = Abc_SclManStart( pLib, pNtk, pPars-\u003efUseWireLoads, pPars-\u003efUseDept, pPars-\u003eDelayUser, pPars-\u003eBuffTreeEst );\n    p-\u003etimeTotal  = Abc_Clock();\n    assert( p-\u003evGatesBest == NULL );\n    p-\u003evGatesBest = Vec_IntDup( p-\u003epNtk-\u003evGates );\n\n    // perform upsizing\n    vNodes = Vec_IntAlloc( 1000 );\n    vEvals = Vec_IntAlloc( 1000 );\n    vTryLater = Vec_IntAlloc( 1000 );\n    for ( i = 0; i \u003c pPars-\u003enIters; i++ )\n    {\n        int nRounds = 0;\n        int nAttemptAll = 0, nOverlapAll = 0, nChangesAll = 0;\n        Abc_NtkCollectNodesByArea( p, pNtk );\n        while ( Vec_QueSize(p-\u003evNodeByGain) \u003e 0 )\n        {\n            int nAttempt = 0, nOverlap = 0, nChanges = 0;\n            Vec_IntClear( vTryLater );\n            Abc_NtkIncrementTravId( pNtk );\n            while ( Vec_QueSize(p-\u003evNodeByGain) \u003e 0 )\n            {\n                clk = Abc_Clock();\n                pObj = Abc_NtkObj( p-\u003epNtk, Vec_QuePop(p-\u003evNodeByGain) );\n                Abc_SclFindWindow( pObj, \u0026vNodes, \u0026vEvals );\n                p-\u003etimeCone += Abc_Clock() - clk;\n                if ( Abc_SclCheckOverlap( p-\u003epNtk, vNodes ) )\n                    nOverlap++, Vec_IntPush( vTryLater, Abc_ObjId(pObj) );\n                else \n                    nChanges += Abc_SclCheckImprovement( p, pObj, vNodes, vEvals, pPars-\u003eNotches, pPars-\u003eDelayGap );\n                nAttempt++;\n            }\n            Abc_NtkForEachObjVec( vTryLater, pNtk, pObj, k )\n                Vec_QuePush( p-\u003evNodeByGain, Abc_ObjId(pObj) );\n\n            clk = Abc_Clock();\n            if ( Vec_IntSize(p-\u003evChanged) )\n                Abc_SclTimeIncUpdate( p );\n            else\n                Abc_SclTimeNtkRecompute( p, \u0026p-\u003eSumArea, \u0026p-\u003eMaxDelay, pPars-\u003efUseDept, pPars-\u003eDelayUser );\n            p-\u003etimeTime += Abc_Clock() - clk;\n\n            p-\u003eMaxDelay = Abc_SclReadMaxDelay( p );\n            if ( pPars-\u003efUseDept \u0026\u0026 pPars-\u003eDelayUser \u003e 0 \u0026\u0026 p-\u003eMaxDelay \u003c pPars-\u003eDelayUser )\n                p-\u003eMaxDelay = pPars-\u003eDelayUser;\n            Abc_SclDnsizePrint( p, nRounds++, nAttempt, nOverlap, nChanges, pPars-\u003efVeryVerbose ); \n            nAttemptAll += nAttempt; nOverlapAll += nOverlap; nChangesAll += nChanges;\n            if ( nRuntimeLimit \u0026\u0026 Abc_Clock() \u003e nRuntimeLimit )\n                break;\n        }\n        // recompute\n//        Abc_SclTimeNtkRecompute( p, \u0026p-\u003eSumArea, \u0026p-\u003eMaxDelay, pPars-\u003efUseDept, pPars-\u003eDelayUser );\n        if ( pPars-\u003efVerbose )\n            Abc_SclDnsizePrint( p, -1, nAttemptAll, nOverlapAll, nChangesAll, 1 ); \n        if ( nRuntimeLimit \u0026\u0026 Abc_Clock() \u003e nRuntimeLimit )\n            break;\n        if ( nAttemptAll == 0 )\n            break;\n    }\n    Vec_IntFree( vNodes );\n    Vec_IntFree( vEvals );\n    Vec_IntFree( vTryLater );\n    if ( !pPars-\u003efVerbose )\n        printf( \"                                                                                                                                                  \\r\" );\n\n    // report runtime\n    p-\u003etimeTotal = Abc_Clock() - p-\u003etimeTotal;\n    if ( pPars-\u003efVerbose )\n    {\n        p-\u003etimeOther = p-\u003etimeTotal - p-\u003etimeCone - p-\u003etimeSize - p-\u003etimeTime;\n        ABC_PRTP( \"Runtime: Critical path\", p-\u003etimeCone,  p-\u003etimeTotal );\n        ABC_PRTP( \"Runtime: Sizing eval  \", p-\u003etimeSize,  p-\u003etimeTotal );\n        ABC_PRTP( \"Runtime: Timing update\", p-\u003etimeTime,  p-\u003etimeTotal );\n        ABC_PRTP( \"Runtime: Other        \", p-\u003etimeOther, p-\u003etimeTotal );\n        ABC_PRTP( \"Runtime: TOTAL        \", p-\u003etimeTotal, p-\u003etimeTotal );\n    }\n    if ( pPars-\u003efDumpStats )\n        Abc_SclDumpStats( p, \"stats2.txt\", p-\u003etimeTotal );\n    if ( nRuntimeLimit \u0026\u0026 Abc_Clock() \u003e nRuntimeLimit )\n        printf( \"Gate sizing timed out at %d seconds.\\n\", pPars-\u003eTimeOut );\n\n    // save the result and quit\n    Abc_SclSclGates2MioGates( pLib, pNtk ); // updates gate pointers\n    Abc_SclManFree( p );\n//    Abc_NtkCleanMarkAB( pNtk );\n}",
+      "Draft": "func Abc_SclDnsizePerformInt(pLib *SC_Lib, pNtk *Abc_Ntk_t, pPars *SC_SizePars) {\n    var p *SC_Man;\n    var pObj *Abc_Obj_t;\n    var vNodes, vEvals, vTryLater *Vec_Int_t; \n    var clk abctime;\n    var nRuntimeLimit abctime;\n    if pPars.TimeOut {\n        nRuntimeLimit = pPars.TimeOut * int64(time.Second) + Abc_Clock();\n    } else {\n        nRuntimeLimit = 0;\n    }\n    var i, k int32;\n\n    if pPars.fVerbose {\n        fmt.Printf(\"Parameters: \");\n        fmt.Printf(\"Iters =%5d.  \", pPars.nIters);\n        fmt.Printf(\"UseDept =%2d. \", pPars.fUseDept);\n        fmt.Printf(\"UseWL =%2d. \", pPars.fUseWireLoads);\n        fmt.Printf(\"Target =%5d ps. \", pPars.DelayUser);\n        fmt.Printf(\"DelayGap =%3d ps. \", pPars.DelayGap);\n        fmt.Printf(\"Timeout =%4d sec\", pPars.TimeOut);\n        fmt.Printf(\"\\n\");\n    }\n\n    // prepare the manager; collect init stats\n    p = Abc_SclManStart( pLib, pNtk, pPars.fUseWireLoads, pPars.fUseDept, pPars.DelayUser, pPars.BuffTreeEst );\n    p.timeTotal  = Abc_Clock();\n    assert(p.vGatesBest == nil, \"p.vGatesBest == nil\");\n    p.vGatesBest = Vec_IntDup( p.pNtk.vGates );\n\n    // perform upsizing\n    vNodes = Vec_IntAlloc( 1000 );\n    vEvals = Vec_IntAlloc( 1000 );\n    vTryLater = Vec_IntAlloc( 1000 );\n    for  i = 0; i \u003c pPars.nIters; i++  {\n        var nRounds int32;\n        var nAttemptAll, nOverlapAll, nChangesAll int32;\n        Abc_NtkCollectNodesByArea( p, pNtk );\n        for  Vec_QueSize(p.vNodeByGain) \u003e 0  {\n            var nAttempt, nOverlap, nChanges int32;\n            Vec_IntClear( vTryLater );\n            Abc_NtkIncrementTravId( pNtk );\n            for  Vec_QueSize(p.vNodeByGain) \u003e 0  {\n                clk = Abc_Clock();\n                pObj = Abc_NtkObj( p.pNtk, Vec_QuePop(p.vNodeByGain) );\n                Abc_SclFindWindow( pObj, \u0026vNodes, \u0026vEvals );\n                p.timeCone += Abc_Clock() - clk;\n                if Abc_SclCheckOverlap( p.pNtk, vNodes ) != 0 {\n                    nOverlap++, Vec_IntPush( vTryLater, Abc_ObjId(pObj) );\n                } else { \n                    nChanges += Abc_SclCheckImprovement( p, pObj, vNodes, vEvals, pPars.Notches, pPars.DelayGap ); }\n                nAttempt++;\n            }\n            // inlining of macro Abc_NtkForEachObjVec\n            for  k = 0; k \u003c Vec_IntSize(vTryLater) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, Vec_IntEntry(vTryLater,k))), 1); k++  {         if (pObj) == nil {} else {\n                Vec_QuePush( p.vNodeByGain, Abc_ObjId(pObj) ); }\n            }\n\n            clk = Abc_Clock();\n            if Vec_IntSize(p.vChanged) {\n                Abc_SclTimeIncUpdate( p );\n            } else {\n                Abc_SclTimeNtkRecompute( p, \u0026p.SumArea, \u0026p.MaxDelay, pPars.fUseDept, pPars.DelayUser ); }\n            p.timeTime += Abc_Clock() - clk;\n\n            p.MaxDelay = Abc_SclReadMaxDelay( p );\n            if pPars.fUseDept \u0026\u0026 pPars.DelayUser \u003e 0 \u0026\u0026 p.MaxDelay \u003c pPars.DelayUser {\n                p.MaxDelay = pPars.DelayUser; }\n            Abc_SclDnsizePrint( p, nRounds++, nAttempt, nOverlap, nChanges, pPars.fVeryVerbose ); \n            nAttemptAll += nAttempt; nOverlapAll += nOverlap; nChangesAll += nChanges;\n            if nRuntimeLimit \u0026\u0026 Abc_Clock() \u003e nRuntimeLimit {\n                break; }\n        }\n        // recompute\n//        Abc_SclTimeNtkRecompute( p, \u0026p-\u003eSumArea, \u0026p-\u003eMaxDelay, pPars-\u003efUseDept, pPars-\u003eDelayUser );\n        if pPars.fVerbose {\n            Abc_SclDnsizePrint( p, -1, nAttemptAll, nOverlapAll, nChangesAll, 1 ); } \n        if nRuntimeLimit \u0026\u0026 Abc_Clock() \u003e nRuntimeLimit {\n            break; }\n        if nAttemptAll == 0 {\n            break; }\n    }\n    Vec_IntFree( vNodes );\n    Vec_IntFree( vEvals );\n    Vec_IntFree( vTryLater );\n    if !pPars.fVerbose {\n        fmt.Printf(\"                                                                                                                                                  \\r\"); }\n\n    // report runtime\n    p.timeTotal = Abc_Clock() - p.timeTotal;\n    if pPars.fVerbose {\n        p.timeOther = p.timeTotal - p.timeCone - p.timeSize - p.timeTime;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Runtime: Critical path\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeCone)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeCone)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Runtime: Sizing eval  \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSize)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSize)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Runtime: Timing update\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTime)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTime)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Runtime: Other        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Runtime: TOTAL        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n    }\n    if pPars.fDumpStats {\n        Abc_SclDumpStats( p, \"stats2.txt\", p.timeTotal ); }\n    if nRuntimeLimit \u0026\u0026 Abc_Clock() \u003e nRuntimeLimit {\n        fmt.Printf(\"Gate sizing timed out at %d seconds.\\n\", pPars.TimeOut); }\n\n    // save the result and quit\n    Abc_SclSclGates2MioGates( pLib, pNtk ); // updates gate pointers\n    Abc_SclManFree( p );\n//    Abc_NtkCleanMarkAB( pNtk );\n}"
+    },
+    {
+      "Name": "Abc_SclDnsizePerform",
+      "Start": 12665,
+      "End": 13059,
+      "BodyStart": 12747,
+      "Original": "void Abc_SclDnsizePerform( SC_Lib * pLib, Abc_Ntk_t * pNtk, SC_SizePars * pPars )\n{\n    Abc_Ntk_t * pNtkNew = pNtk;\n    if ( pNtk-\u003enBarBufs2 \u003e 0 )\n        pNtkNew = Abc_NtkDupDfsNoBarBufs( pNtk );\n    Abc_SclDnsizePerformInt( pLib, pNtkNew, pPars );\n    if ( pNtk-\u003enBarBufs2 \u003e 0 )\n        Abc_SclTransferGates( pNtk, pNtkNew );\n    if ( pNtk-\u003enBarBufs2 \u003e 0 )\n        Abc_NtkDelete( pNtkNew );\n}",
+      "Draft": "func Abc_SclDnsizePerform(pLib *SC_Lib, pNtk *Abc_Ntk_t, pPars *SC_SizePars) {\n    var pNtkNew *Abc_Ntk_t  = pNtk;\n    if pNtk.nBarBufs2 \u003e 0 {\n        pNtkNew = Abc_NtkDupDfsNoBarBufs( pNtk ); }\n    Abc_SclDnsizePerformInt( pLib, pNtkNew, pPars );\n    if pNtk.nBarBufs2 \u003e 0 {\n        Abc_SclTransferGates( pNtk, pNtkNew ); }\n    if pNtk.nBarBufs2 \u003e 0 {\n        Abc_NtkDelete( pNtkNew ); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclDnsize.c::Abc_SclFindWindow",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclFindWindow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1310,
+      "End": 2920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclDnsize.c::Abc_SclCheckImprovement",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclCheckImprovement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3230,
+      "End": 5554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclDnsize.c::Abc_NtkCollectNodesByArea",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCollectNodesByArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5812,
+      "End": 6229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclDnsize.c::Abc_SclCheckOverlap",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclCheckOverlap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6230,
+      "End": 6461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclDnsize.c::ternary::Abc_SclDnsizePrint",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclDnsizePrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6725,
+      "End": 7536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclDnsize.c::Abc_SclDnsizePrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclDnsizePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6725,
+      "End": 7536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclDnsize.c::ternary::Abc_SclDnsizePerformInt",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SclDnsizePerformInt",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7772,
+      "End": 12429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclDnsize.c::Abc_SclDnsizePerformInt",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclDnsizePerformInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7772,
+      "End": 12429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclDnsize.c::Abc_SclDnsizePerform",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SclDnsizePerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12665,
+      "End": 13059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/scl/sclDnsize.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13306
+    }
+  ],
+  "Draft": "package scl\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [sclDnsize.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Standard-cell library representation.]\n\n  Synopsis    [Selective decrease of gate sizes.]\n\n  Author      [Alan Mishchenko, Niklas Een]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 24, 2012.]\n\n  Revision    [$Id: sclDnsize.c,v 1.0 2012/08/24 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sclSize.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Find the array of nodes to be updated.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclFindWindow(pPivot *Abc_Obj_t, pvNodes **Vec_Int_t, pvEvals **Vec_Int_t) {\n    var p *Abc_Ntk_t  = Abc_ObjNtk(pPivot);\n    var pObj, pNext, pNext2 *Abc_Obj_t;\n    var vNodes *Vec_Int_t  = *pvNodes;\n    var vEvals *Vec_Int_t  = *pvEvals;\n    var i, k int32;\n    assert(Abc_ObjIsNode(pPivot), \"Abc_ObjIsNode(pPivot)\");\n    // collect fanins, node, and fanouts\n    Vec_IntClear( vNodes );\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pPivot)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pPivot, i)), 1); i++  {\n//        if ( Abc_ObjIsNode(pNext) \u0026\u0026 Abc_ObjFaninNum(pNext) \u003e 0 )\n        if Abc_ObjIsCi(pNext) || Abc_ObjFaninNum(pNext) \u003e 0 {\n            Vec_IntPush( vNodes, Abc_ObjId(pNext) ); }\n    }\n    Vec_IntPush( vNodes, Abc_ObjId(pPivot) );\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pPivot)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pPivot, i)), 1); i++  {\n        if Abc_ObjIsNode(pNext) {\n            Vec_IntPush( vNodes, Abc_ObjId(pNext) );\n            // inlining of macro Abc_ObjForEachFanout\n            for  k = 0; (k \u003c Abc_ObjFanoutNum(pNext)) \u0026\u0026 (((pNext2) = Abc_ObjFanout(pNext, k)), 1); k++  {\n                if Abc_ObjIsNode(pNext2) {\n                    Vec_IntPush( vNodes, Abc_ObjId(pNext2) ); }\n            }\n        }\n    }\n    Vec_IntUniqify( vNodes );\n    // label nodes\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vNodes) \u0026\u0026 (((pObj) = Abc_NtkObj(p, Vec_IntEntry(vNodes,i))), 1); i++  {         if (pObj) == nil {} else {\n        assert(pObj.fMarkB == 0, \"pObj.fMarkB == 0\");\n        pObj.fMarkB = 1;\n    }\n    }\n    // collect nodes visible from the critical paths\n    Vec_IntClear( vEvals );\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vNodes) \u0026\u0026 (((pObj) = Abc_NtkObj(p, Vec_IntEntry(vNodes,i))), 1); i++  {         if (pObj) == nil {} else {\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            if !pNext.fMarkB {\n                assert(pObj.fMarkB, \"pObj.fMarkB\");\n                Vec_IntPush( vEvals, Abc_ObjId(pObj) );\n                break;\n            }\n        } }\n    }\n    assert(Vec_IntSize(vEvals) \u003e 0, \"Vec_IntSize(vEvals) \u003e 0\");\n    // label nodes\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vNodes) \u0026\u0026 (((pObj) = Abc_NtkObj(p, Vec_IntEntry(vNodes,i))), 1); i++  {         if (pObj) == nil {} else {\n        pObj.fMarkB = 0; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node can be improved.]\n\n  Description [Updated the node to have a new gate.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclCheckImprovement(p *SC_Man, pObj *Abc_Obj_t, vNodes *Vec_Int_t, vEvals *Vec_Int_t, Notches int32, DelayGap int32) int32 {\n    var pTemp *Abc_Obj_t;\n    var pCellOld, pCellNew *SC_Cell;\n    var dGain, dGainBest float32;\n    var i, k, gateBest int32;\n    var clk abctime;\nclk = Abc_Clock();\n//    printf( \"%d -\u003e %d\\n\", Vec_IntSize(vNodes), Vec_IntSize(vEvals) );\n    // save old gate, timing, fanin load\n    pCellOld = Abc_SclObjCell( pObj );\n    Abc_SclConeStore( p, vNodes );\n    Abc_SclEvalStore( p, vEvals );\n    Abc_SclLoadStore( p, pObj );\n    // try different gate sizes for this node\n    gateBest = -1;\n    dGainBest = -DelayGap;\n    // inlining of macro SC_RingForEachCellRev\n    for  i, pCellNew = 0, pCellOld; i == 0 || pCellNew != pCellOld; pCellNew, i = pCellNew.pPrev, i+1  {\n        if pCellNew.area \u003e= pCellOld.area {\n            continue; }\n        if i \u003e Notches {\n            break; }\n        // set new cell\n        Abc_SclObjSetCell( pObj, pCellNew );\n        Abc_SclUpdateLoad( p, pObj, pCellOld, pCellNew );\n        // recompute timing\n        Abc_SclTimeCone( p, vNodes );\n        // set old cell\n        Abc_SclObjSetCell( pObj, pCellOld );\n        Abc_SclLoadRestore( p, pObj );\n        // evaluate gain\n        dGain = Abc_SclEvalPerformLegal( p, vEvals, p.MaxDelay0 );\n        if dGain == -1 {\n            continue; }\n        // save best gain\n        if dGainBest \u003c dGain {\n            dGainBest = dGain;\n            gateBest = pCellNew.Id;\n        }\n    } \n    // put back old cell and timing\n    Abc_SclObjSetCell( pObj, pCellOld );\n    Abc_SclConeRestore( p, vNodes );\np.timeSize += Abc_Clock() - clk;\n    if gateBest \u003e= 0 {\n        pCellNew = SC_LibCell( p.pLib, gateBest );\n        Abc_SclObjSetCell( pObj, pCellNew );\n        p.SumArea += pCellNew.area - pCellOld.area;\n//        printf( \"%f   %f -\u003e %f\\n\", pCellNew-\u003earea - pCellOld-\u003earea, p-\u003eSumArea - (pCellNew-\u003earea - pCellOld-\u003earea), p-\u003eSumArea );\n//        printf( \"%6d  %20s -\u003e %20s  %f -\u003e %f\\n\", Abc_ObjId(pObj), pCellOld-\u003epName, pCellNew-\u003epName, pCellOld-\u003earea, pCellNew-\u003earea );\n        // mark used nodes with the current trav ID\n        // inlining of macro Abc_NtkForEachObjVec\n        for  k = 0; k \u003c Vec_IntSize(vNodes) \u0026\u0026 (((pTemp) = Abc_NtkObj(p.pNtk, Vec_IntEntry(vNodes,k))), 1); k++  {         if (pTemp) == nil {} else {\n            Abc_NodeSetTravIdCurrent( pTemp ); }\n        }\n        // update load and timing...\n        Abc_SclUpdateLoad( p, pObj, pCellOld, pCellNew );\n        Abc_SclTimeIncInsert( p, pObj );\n        return 1;\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collect nodes by area.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCollectNodesByArea(p *SC_Man, pNtk *Abc_Ntk_t) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    assert(Vec_QueSize(p.vNodeByGain) == 0, \"Vec_QueSize(p.vNodeByGain) == 0\");\n    Vec_QueClear( p.vNodeByGain );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else\n    if Abc_ObjFaninNum(pObj) \u003e 0 {\n        Vec_FltWriteEntry( p.vNode2Gain, Abc_ObjId(pObj), Abc_SclObjCell(pObj).area );\n        Vec_QuePush( p.vNodeByGain, Abc_ObjId(pObj) );\n    }\n    }\n}\nfunc Abc_SclCheckOverlap(pNtk *Abc_Ntk_t, vNodes *Vec_Int_t) int32 {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_NtkForEachObjVec\n    for  i = 0; i \u003c Vec_IntSize(vNodes) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, Vec_IntEntry(vNodes,i))), 1); i++  {         if (pObj) == nil {} else\n        if Abc_NodeIsTravIdCurrent(pObj) {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Print cumulative statistics.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclDnsizePrint(p *SC_Man, Iter int32, nAttempts int32, nOverlaps int32, nChanges int32, fVerbose int32) {\n    if Iter == -1 {\n        fmt.Printf(\"Total : \");\n    } else {\n        fmt.Printf(\"%5d : \", Iter); }\n    fmt.Printf(\"Try =%6d  \", nAttempts);\n    fmt.Printf(\"Over =%6d  \", nOverlaps);\n    fmt.Printf(\"Fail =%6d  \", nAttempts-nOverlaps-nChanges);\n    fmt.Printf(\"Win =%6d  \", nChanges);\n    fmt.Printf(\"A: \");\n    fmt.Printf(\"%.2f \", p.SumArea);\n    fmt.Printf(\"(%+5.1f %%)  \", 100.0 * (p.SumArea - p.SumArea0)/ p.SumArea0);\n    fmt.Printf(\"D: \");\n    fmt.Printf(\"%.2f ps \", p.MaxDelay);\n    fmt.Printf(\"(%+5.1f %%)  \", 100.0 * (p.MaxDelay - p.MaxDelay0)/ p.MaxDelay0);\n    fmt.Printf(\"%8.2f sec    \", 1.0*(Abc_Clock() - p.timeTotal)/(int64(time.Second)));\n    fmt.Printf(\"%c\", fVerbose ? '\\n' : '\\r');\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclDnsizePerformInt(pLib *SC_Lib, pNtk *Abc_Ntk_t, pPars *SC_SizePars) {\n    var p *SC_Man;\n    var pObj *Abc_Obj_t;\n    var vNodes, vEvals, vTryLater *Vec_Int_t; \n    var clk abctime;\n    var nRuntimeLimit abctime;\n    if pPars.TimeOut {\n        nRuntimeLimit = pPars.TimeOut * int64(time.Second) + Abc_Clock();\n    } else {\n        nRuntimeLimit = 0;\n    }\n    var i, k int32;\n\n    if pPars.fVerbose {\n        fmt.Printf(\"Parameters: \");\n        fmt.Printf(\"Iters =%5d.  \", pPars.nIters);\n        fmt.Printf(\"UseDept =%2d. \", pPars.fUseDept);\n        fmt.Printf(\"UseWL =%2d. \", pPars.fUseWireLoads);\n        fmt.Printf(\"Target =%5d ps. \", pPars.DelayUser);\n        fmt.Printf(\"DelayGap =%3d ps. \", pPars.DelayGap);\n        fmt.Printf(\"Timeout =%4d sec\", pPars.TimeOut);\n        fmt.Printf(\"\\n\");\n    }\n\n    // prepare the manager; collect init stats\n    p = Abc_SclManStart( pLib, pNtk, pPars.fUseWireLoads, pPars.fUseDept, pPars.DelayUser, pPars.BuffTreeEst );\n    p.timeTotal  = Abc_Clock();\n    assert(p.vGatesBest == nil, \"p.vGatesBest == nil\");\n    p.vGatesBest = Vec_IntDup( p.pNtk.vGates );\n\n    // perform upsizing\n    vNodes = Vec_IntAlloc( 1000 );\n    vEvals = Vec_IntAlloc( 1000 );\n    vTryLater = Vec_IntAlloc( 1000 );\n    for  i = 0; i \u003c pPars.nIters; i++  {\n        var nRounds int32;\n        var nAttemptAll, nOverlapAll, nChangesAll int32;\n        Abc_NtkCollectNodesByArea( p, pNtk );\n        for  Vec_QueSize(p.vNodeByGain) \u003e 0  {\n            var nAttempt, nOverlap, nChanges int32;\n            Vec_IntClear( vTryLater );\n            Abc_NtkIncrementTravId( pNtk );\n            for  Vec_QueSize(p.vNodeByGain) \u003e 0  {\n                clk = Abc_Clock();\n                pObj = Abc_NtkObj( p.pNtk, Vec_QuePop(p.vNodeByGain) );\n                Abc_SclFindWindow( pObj, \u0026vNodes, \u0026vEvals );\n                p.timeCone += Abc_Clock() - clk;\n                if Abc_SclCheckOverlap( p.pNtk, vNodes ) != 0 {\n                    nOverlap++, Vec_IntPush( vTryLater, Abc_ObjId(pObj) );\n                } else { \n                    nChanges += Abc_SclCheckImprovement( p, pObj, vNodes, vEvals, pPars.Notches, pPars.DelayGap ); }\n                nAttempt++;\n            }\n            // inlining of macro Abc_NtkForEachObjVec\n            for  k = 0; k \u003c Vec_IntSize(vTryLater) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, Vec_IntEntry(vTryLater,k))), 1); k++  {         if (pObj) == nil {} else {\n                Vec_QuePush( p.vNodeByGain, Abc_ObjId(pObj) ); }\n            }\n\n            clk = Abc_Clock();\n            if Vec_IntSize(p.vChanged) {\n                Abc_SclTimeIncUpdate( p );\n            } else {\n                Abc_SclTimeNtkRecompute( p, \u0026p.SumArea, \u0026p.MaxDelay, pPars.fUseDept, pPars.DelayUser ); }\n            p.timeTime += Abc_Clock() - clk;\n\n            p.MaxDelay = Abc_SclReadMaxDelay( p );\n            if pPars.fUseDept \u0026\u0026 pPars.DelayUser \u003e 0 \u0026\u0026 p.MaxDelay \u003c pPars.DelayUser {\n                p.MaxDelay = pPars.DelayUser; }\n            Abc_SclDnsizePrint( p, nRounds++, nAttempt, nOverlap, nChanges, pPars.fVeryVerbose ); \n            nAttemptAll += nAttempt; nOverlapAll += nOverlap; nChangesAll += nChanges;\n            if nRuntimeLimit \u0026\u0026 Abc_Clock() \u003e nRuntimeLimit {\n                break; }\n        }\n        // recompute\n//        Abc_SclTimeNtkRecompute( p, \u0026p-\u003eSumArea, \u0026p-\u003eMaxDelay, pPars-\u003efUseDept, pPars-\u003eDelayUser );\n        if pPars.fVerbose {\n            Abc_SclDnsizePrint( p, -1, nAttemptAll, nOverlapAll, nChangesAll, 1 ); } \n        if nRuntimeLimit \u0026\u0026 Abc_Clock() \u003e nRuntimeLimit {\n            break; }\n        if nAttemptAll == 0 {\n            break; }\n    }\n    Vec_IntFree( vNodes );\n    Vec_IntFree( vEvals );\n    Vec_IntFree( vTryLater );\n    if !pPars.fVerbose {\n        fmt.Printf(\"                                                                                                                                                  \\r\"); }\n\n    // report runtime\n    p.timeTotal = Abc_Clock() - p.timeTotal;\n    if pPars.fVerbose {\n        p.timeOther = p.timeTotal - p.timeCone - p.timeSize - p.timeTime;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Runtime: Critical path\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeCone)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeCone)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Runtime: Sizing eval  \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeSize)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeSize)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Runtime: Timing update\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTime)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTime)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Runtime: Other        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeOther)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Runtime: TOTAL        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n    }\n    if pPars.fDumpStats {\n        Abc_SclDumpStats( p, \"stats2.txt\", p.timeTotal ); }\n    if nRuntimeLimit \u0026\u0026 Abc_Clock() \u003e nRuntimeLimit {\n        fmt.Printf(\"Gate sizing timed out at %d seconds.\\n\", pPars.TimeOut); }\n\n    // save the result and quit\n    Abc_SclSclGates2MioGates( pLib, pNtk ); // updates gate pointers\n    Abc_SclManFree( p );\n//    Abc_NtkCleanMarkAB( pNtk );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SclDnsizePerform(pLib *SC_Lib, pNtk *Abc_Ntk_t, pPars *SC_SizePars) {\n    var pNtkNew *Abc_Ntk_t  = pNtk;\n    if pNtk.nBarBufs2 \u003e 0 {\n        pNtkNew = Abc_NtkDupDfsNoBarBufs( pNtk ); }\n    Abc_SclDnsizePerformInt( pLib, pNtkNew, pPars );\n    if pNtk.nBarBufs2 \u003e 0 {\n        Abc_SclTransferGates( pNtk, pNtkNew ); }\n    if pNtk.nBarBufs2 \u003e 0 {\n        Abc_NtkDelete( pNtkNew ); }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

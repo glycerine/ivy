@@ -1,0 +1,848 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c",
+  "SHA256": "db4beabf73f49a9ef44a7c49d3b05bf0439b5921c99dbfa1c6ab6e2ae28bf219",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasSop(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 9,
+        "ByteOffset": 1956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nVars == Abc_ObjFaninNum(pNode) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 73,
+        "Column": 9,
+        "ByteOffset": 2328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 145,
+        "Column": 16,
+        "ByteOffset": 4778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if strcmp(pArray[j], pArray[best_i]) \u003c 0 {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 5491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasSop(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 174,
+        "Column": 9,
+        "ByteOffset": 5991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nVars == Abc_ObjFaninNum(pNode) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 182,
+        "Column": 9,
+        "ByteOffset": 6385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 241,
+        "Column": 93,
+        "ByteOffset": 8406
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (Vec_IntEntry(vCounts, pPerm[j]) == Vec_IntEntry(vCounts, pPerm[best_i]) \u0026\u0026 strcmp(pArray[j], pArray[best_i]) \u003c 0) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 261,
+        "Column": 5,
+        "ByteOffset": 9114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasSop(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 270,
+        "Column": 9,
+        "ByteOffset": 9614
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nVars == Abc_ObjFaninNum(pNode) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 295,
+        "Column": 9,
+        "ByteOffset": 10600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 343,
+        "Column": 5,
+        "ByteOffset": 12307
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasSop(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 352,
+        "Column": 9,
+        "ByteOffset": 12809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nVars == Abc_ObjFaninNum(pNode) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 382,
+        "Column": 9,
+        "ByteOffset": 14039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 446,
+        "Column": 5,
+        "ByteOffset": 16464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCubes \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 455,
+        "Column": 5,
+        "ByteOffset": 16806
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasSop(pNtk) );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 478,
+        "Column": 12,
+        "ByteOffset": 17644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcmp( *pp1, *pp2 );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 492,
+        "Column": 12,
+        "ByteOffset": 18029
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcmp( *pp1, *pp2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 501,
+        "Column": 9,
+        "ByteOffset": 18433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCube[nVars] == ' ' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 512,
+        "Column": 9,
+        "ByteOffset": 18960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCube[nVars] == 0 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 514,
+        "Column": 9,
+        "ByteOffset": 19025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pPivot, pCube, (size_t)(nVars + 3) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 517,
+        "Column": 5,
+        "ByteOffset": 19110
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pSop, Vec_StrArray(vStore), (size_t)(Vec_PtrSize(vCubes) * (nVars + 3)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 524,
+        "Column": 5,
+        "ByteOffset": 19352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasSop(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 581,
+        "Column": 5,
+        "ByteOffset": 21108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( fCont21 || fCont12 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 607,
+        "Column": 9,
+        "ByteOffset": 22306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pSopNew, pCube, (size_t)(nVars + 3) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 645,
+        "Column": 9,
+        "ByteOffset": 23833
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Counter \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 662,
+        "Column": 5,
+        "ByteOffset": 24254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasSop(pNtk) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkOrderFaninsById",
+      "Start": 1272,
+      "End": 2846,
+      "BodyStart": 1320,
+      "Original": "void Abc_NtkOrderFaninsById( Abc_Ntk_t * pNtk )\n{\n    Vec_Int_t * vOrder;\n    Vec_Str_t * vStore;\n    Abc_Obj_t * pNode;\n    char * pSop, * pSopNew;\n    char * pCube, * pCubeNew;\n    int nVars, i, v, * pOrder;\n    assert( Abc_NtkHasSop(pNtk) );\n    vOrder = Vec_IntAlloc( 100 );\n    vStore = Vec_StrAlloc( 100 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        pSop = (char *)pNode-\u003epData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert( nVars == Abc_ObjFaninNum(pNode) );\n        Vec_IntClear( vOrder );\n        for ( v = 0; v \u003c nVars; v++ )\n            Vec_IntPush( vOrder, v );\n        pOrder = Vec_IntArray(vOrder);\n        Vec_IntSelectSortCost( pOrder, nVars, \u0026pNode-\u003evFanins );\n        // copy the cover\n        Vec_StrGrow( vStore, Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1 );\n        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );\n        pSopNew = pCubeNew = pSop;\n        pSop = Vec_StrArray(vStore);\n        // generate permuted one\n        Abc_SopForEachCube( pSop, nVars, pCube )\n        {\n            for ( v = 0; v \u003c nVars; v++ )\n                pCubeNew[v] = '-';\n            for ( v = 0; v \u003c nVars; v++ )\n                if ( pCube[pOrder[v]] == '0' )\n                    pCubeNew[v] = '0';\n                else if ( pCube[pOrder[v]] == '1' )\n                    pCubeNew[v] = '1';\n            pCubeNew += nVars + 3;\n        }\n        pNode-\u003epData = pSopNew;\n        Vec_IntSort( \u0026pNode-\u003evFanins, 0 );\n//        Vec_IntPrint( vOrder );\n    }\n    Vec_IntFree( vOrder );\n    Vec_StrFree( vStore );\n}",
+      "Draft": "func Abc_NtkOrderFaninsById(pNtk *Abc_Ntk_t) {\n    var vOrder *Vec_Int_t;\n    var vStore *Vec_Str_t;\n    var pNode *Abc_Obj_t;\n    var pSop, pSopNew string;\n    var pCube, pCubeNew string;\n    var nVars int32;\n    var i int32;\n    var v int32;\n    var pOrder *int32;\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\");\n    vOrder = Vec_IntAlloc( 100 );\n    vStore = Vec_StrAlloc( 100 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pSop = (char *)pNode.pData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert(nVars == Abc_ObjFaninNum(pNode), \"nVars == Abc_ObjFaninNum(pNode)\");\n        Vec_IntClear( vOrder );\n        for  v = 0; v \u003c nVars; v++  {\n            Vec_IntPush( vOrder, v );\n        }\n        pOrder = Vec_IntArray(vOrder);\n        Vec_IntSelectSortCost( pOrder, nVars, \u0026pNode.vFanins );\n        // copy the cover\n        Vec_StrGrow( vStore, Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1 );\n        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );\n        pSopNew = pCubeNew = pSop;\n        pSop = Vec_StrArray(vStore);\n        // generate permuted one\n        // inlining of macro Abc_SopForEachCube\n        for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n            for  v = 0; v \u003c nVars; v++  {\n                pCubeNew[v] = '-';\n            }\n            for  v = 0; v \u003c nVars; v++  {\n                if pCube[pOrder[v]] == '0' {\n                    pCubeNew[v] = '0';\n                } else if pCube[pOrder[v]] == '1' {\n                    pCubeNew[v] = '1'; }\n            }\n            pCubeNew += nVars + 3;\n        }\n        pNode.pData = pSopNew;\n        Vec_IntSort( \u0026pNode.vFanins, 0 );\n//        Vec_IntPrint( vOrder );\n    }\n    }\n    Vec_IntFree( vOrder );\n    Vec_StrFree( vStore );\n}"
+    },
+    {
+      "Name": "Abc_NtkSopTranspose",
+      "Start": 3146,
+      "End": 3846,
+      "BodyStart": 3237,
+      "Original": "void Abc_NtkSopTranspose( char * pSop, int nVars, Vec_Ptr_t * vCubes, Vec_Str_t * vStore )\n{\n    char * pCube; \n    int nCubes, v, c;\n    // collect original cubes\n    Vec_PtrClear( vCubes );\n    Abc_SopForEachCube( pSop, nVars, pCube )\n        Vec_PtrPush( vCubes, pCube );\n    // rebuild the cubes\n    Vec_StrClear( vStore );\n    for ( v = 0; v \u003c nVars; v++ )\n    {\n        Vec_PtrForEachEntry( char *, vCubes, pCube, c )\n            Vec_StrPush( vStore, pCube[v] );\n        Vec_StrPush( vStore, '\\0' );\n    }\n    // get the cubes\n    nCubes = Vec_PtrSize( vCubes );\n    Vec_PtrClear( vCubes );\n    for ( v = 0; v \u003c nVars; v++ )\n        Vec_PtrPush( vCubes, Vec_StrEntryP(vStore, v*(nCubes+1)) );\n}",
+      "Draft": "func Abc_NtkSopTranspose(pSop string, nVars int32, vCubes *Vec_Ptr_t, vStore *Vec_Str_t) {\n    var pCube string; \n    var nCubes, v, c int32;\n    // collect original cubes\n    Vec_PtrClear( vCubes );\n    // inlining of macro Abc_SopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n        Vec_PtrPush( vCubes, pCube );\n    }\n    // rebuild the cubes\n    Vec_StrClear( vStore );\n    for  v = 0; v \u003c nVars; v++  {\n        // inlining of macro Vec_PtrForEachEntry\n        for  c = 0; (c \u003c Vec_PtrSize(vCubes)) \u0026\u0026 (((pCube) = (char *)Vec_PtrEntry(vCubes, c)), 1); c++  {\n            Vec_StrPush( vStore, pCube[v] );\n        }\n        Vec_StrPush( vStore, '\\0' );\n    }\n    // get the cubes\n    nCubes = Vec_PtrSize( vCubes );\n    Vec_PtrClear( vCubes );\n    for  v = 0; v \u003c nVars; v++  {\n        Vec_PtrPush( vCubes, Vec_StrEntryP(vStore, v*(nCubes+1)) );\n    }\n}"
+    },
+    {
+      "Name": "Vec_StrSelectSortCost",
+      "Start": 3847,
+      "End": 4401,
+      "BodyStart": 3936,
+      "Original": "static inline void Vec_StrSelectSortCost( char ** pArray, int nSize, Vec_Int_t * vPerm )\n{\n    int i, j, best_i, * pPerm;\n    Vec_IntClear( vPerm );\n    for ( i = 0; i \u003c nSize; i++ )\n        Vec_IntPush( vPerm, i );\n    pPerm = Vec_IntArray( vPerm );\n    for ( i = 0; i \u003c nSize-1; i++ )\n    {\n        best_i = i;\n        for ( j = i+1; j \u003c nSize; j++ )\n            if ( strcmp(pArray[j], pArray[best_i]) \u003c 0 )\n                best_i = j;\n        ABC_SWAP( char *, pArray[i], pArray[best_i] );\n        ABC_SWAP( int,    pPerm[i],  pPerm[best_i] );\n    }\n}",
+      "Draft": "func Vec_StrSelectSortCost(pArray *string, nSize int32, vPerm *Vec_Int_t) {\n    var i int32;\n    var j int32;\n    var best_i int32;\n    var pPerm *int32;\n    Vec_IntClear( vPerm );\n    for  i = 0; i \u003c nSize; i++  {\n        Vec_IntPush( vPerm, i );\n    }\n    pPerm = Vec_IntArray( vPerm );\n    for  i = 0; i \u003c nSize-1; i++  {\n        best_i = i;\n        for  j = i+1; j \u003c nSize; j++  {\n            if int32(strings.Compare(pArray[j], pArray[best_i])) \u003c 0 {\n                best_i = j; }\n        }\n        // inlining of macro ABC_SWAP\n        { var t string  = pArray[i]; pArray[i] = pArray[best_i]; pArray[best_i] = t; };\n        // inlining of macro ABC_SWAP\n        { var t int32  = pPerm[i]; pPerm[i] = pPerm[best_i]; pPerm[best_i] = t; };\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkOrderFaninsBySortingColumns",
+      "Start": 4402,
+      "End": 6474,
+      "BodyStart": 4462,
+      "Original": "void Abc_NtkOrderFaninsBySortingColumns( Abc_Ntk_t * pNtk )\n{\n    Vec_Int_t * vOrder;\n    Vec_Int_t * vCounts;\n    Vec_Int_t * vFanins;\n    Vec_Str_t * vStore;\n    Vec_Ptr_t * vCubes;\n    Abc_Obj_t * pNode;\n    char * pSop, * pSopNew;\n    char * pCube, * pCubeNew;\n    int nVars, i, v, * pOrder;\n    assert( Abc_NtkHasSop(pNtk) );\n    vOrder = Vec_IntAlloc( 100 );\n    vStore = Vec_StrAlloc( 100 );\n    vCubes = Vec_PtrAlloc( 100 );\n    vCounts = Vec_IntAlloc( 100 );\n    vFanins = Vec_IntAlloc( 100 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        pSop = (char *)pNode-\u003epData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert( nVars == Abc_ObjFaninNum(pNode) );\n        // create a transposed SOP\n        Abc_NtkSopTranspose( pSop, nVars, vCubes, vStore );\n        // create permutation\n        Vec_StrSelectSortCost( (char **)Vec_PtrArray(vCubes), nVars, vOrder );\n        pOrder = Vec_IntArray(vOrder);\n        // copy the cover\n        Vec_StrGrow( vStore, Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1 );\n        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );\n        pSopNew = pCubeNew = pSop;\n        pSop = Vec_StrArray(vStore);\n        // generate permuted one\n        Abc_SopForEachCube( pSop, nVars, pCube )\n        {\n            for ( v = 0; v \u003c nVars; v++ )\n                pCubeNew[v] = '-';\n            for ( v = 0; v \u003c nVars; v++ )\n                if ( pCube[pOrder[v]] == '0' )\n                    pCubeNew[v] = '0';\n                else if ( pCube[pOrder[v]] == '1' )\n                    pCubeNew[v] = '1';\n            pCubeNew += nVars + 3;\n        }\n        pNode-\u003epData = pSopNew;\n        // generate the fanin order\n        Vec_IntClear( vFanins );\n        for ( v = 0; v \u003c nVars; v++ )\n            Vec_IntPush( vFanins, Abc_ObjFaninId( pNode, pOrder[v] ) );\n        Vec_IntClear( \u0026pNode-\u003evFanins );\n        Vec_IntAppend( \u0026pNode-\u003evFanins, vFanins );\n    }\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vCounts );\n    Vec_IntFree( vOrder );\n    Vec_StrFree( vStore );\n    Vec_PtrFree( vCubes );\n}",
+      "Draft": "func Abc_NtkOrderFaninsBySortingColumns(pNtk *Abc_Ntk_t) {\n    var vOrder *Vec_Int_t;\n    var vCounts *Vec_Int_t;\n    var vFanins *Vec_Int_t;\n    var vStore *Vec_Str_t;\n    var vCubes *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var pSop, pSopNew string;\n    var pCube, pCubeNew string;\n    var nVars int32;\n    var i int32;\n    var v int32;\n    var pOrder *int32;\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\");\n    vOrder = Vec_IntAlloc( 100 );\n    vStore = Vec_StrAlloc( 100 );\n    vCubes = Vec_PtrAlloc( 100 );\n    vCounts = Vec_IntAlloc( 100 );\n    vFanins = Vec_IntAlloc( 100 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pSop = (char *)pNode.pData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert(nVars == Abc_ObjFaninNum(pNode), \"nVars == Abc_ObjFaninNum(pNode)\");\n        // create a transposed SOP\n        Abc_NtkSopTranspose( pSop, nVars, vCubes, vStore );\n        // create permutation\n        Vec_StrSelectSortCost( (char **)Vec_PtrArray(vCubes), nVars, vOrder );\n        pOrder = Vec_IntArray(vOrder);\n        // copy the cover\n        Vec_StrGrow( vStore, Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1 );\n        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );\n        pSopNew = pCubeNew = pSop;\n        pSop = Vec_StrArray(vStore);\n        // generate permuted one\n        // inlining of macro Abc_SopForEachCube\n        for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n            for  v = 0; v \u003c nVars; v++  {\n                pCubeNew[v] = '-';\n            }\n            for  v = 0; v \u003c nVars; v++  {\n                if pCube[pOrder[v]] == '0' {\n                    pCubeNew[v] = '0';\n                } else if pCube[pOrder[v]] == '1' {\n                    pCubeNew[v] = '1'; }\n            }\n            pCubeNew += nVars + 3;\n        }\n        pNode.pData = pSopNew;\n        // generate the fanin order\n        Vec_IntClear( vFanins );\n        for  v = 0; v \u003c nVars; v++  {\n            Vec_IntPush( vFanins, Abc_ObjFaninId( pNode, pOrder[v] ) );\n        }\n        Vec_IntClear( \u0026pNode.vFanins );\n        Vec_IntAppend( \u0026pNode.vFanins, vFanins );\n    }\n    }\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vCounts );\n    Vec_IntFree( vOrder );\n    Vec_StrFree( vStore );\n    Vec_PtrFree( vCubes );\n}"
+    },
+    {
+      "Name": "Vec_StrSelectSortCost2",
+      "Start": 6766,
+      "End": 7511,
+      "BodyStart": 6877,
+      "Original": "static inline void Vec_StrSelectSortCost2( char ** pArray, int nSize, Vec_Int_t * vCounts, Vec_Int_t * vPerm )\n{\n    int i, j, best_i, * pPerm;\n    Vec_IntClear( vPerm );\n    for ( i = 0; i \u003c nSize; i++ )\n        Vec_IntPush( vPerm, i );\n    pPerm = Vec_IntArray( vPerm );\n    for ( i = 0; i \u003c nSize-1; i++ )\n    {\n        best_i = i;\n        for ( j = i+1; j \u003c nSize; j++ )\n            if ( Vec_IntEntry(vCounts, pPerm[j]) \u003c  Vec_IntEntry(vCounts, pPerm[best_i]) || \n                (Vec_IntEntry(vCounts, pPerm[j]) == Vec_IntEntry(vCounts, pPerm[best_i]) \u0026\u0026 strcmp(pArray[j], pArray[best_i]) \u003c 0) )\n                best_i = j;\n        ABC_SWAP( char *, pArray[i], pArray[best_i] );\n        ABC_SWAP( int,    pPerm[i],  pPerm[best_i] );\n    }\n}",
+      "Draft": "func Vec_StrSelectSortCost2(pArray *string, nSize int32, vCounts *Vec_Int_t, vPerm *Vec_Int_t) {\n    var i int32;\n    var j int32;\n    var best_i int32;\n    var pPerm *int32;\n    Vec_IntClear( vPerm );\n    for  i = 0; i \u003c nSize; i++  {\n        Vec_IntPush( vPerm, i );\n    }\n    pPerm = Vec_IntArray( vPerm );\n    for  i = 0; i \u003c nSize-1; i++  {\n        best_i = i;\n        for  j = i+1; j \u003c nSize; j++  {\n            if Vec_IntEntry(vCounts, pPerm[j]) \u003c  Vec_IntEntry(vCounts, pPerm[best_i]) || \n                (Vec_IntEntry(vCounts, pPerm[j]) == Vec_IntEntry(vCounts, pPerm[best_i]) \u0026\u0026 int32(strings.Compare(pArray[j], pArray[best_i])) \u003c 0) {\n                best_i = j; }\n        }\n        // inlining of macro ABC_SWAP\n        { var t string  = pArray[i]; pArray[i] = pArray[best_i]; pArray[best_i] = t; };\n        // inlining of macro ABC_SWAP\n        { var t int32  = pPerm[i]; pPerm[i] = pPerm[best_i]; pPerm[best_i] = t; };\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkOrderFaninsByLitCount",
+      "Start": 7512,
+      "End": 10080,
+      "BodyStart": 7566,
+      "Original": "void Abc_NtkOrderFaninsByLitCount( Abc_Ntk_t * pNtk )\n{\n    Vec_Int_t * vOrder;\n    Vec_Int_t * vCounts;\n    Vec_Int_t * vFanins;\n    Vec_Str_t * vStore;\n    Vec_Ptr_t * vCubes;\n    Abc_Obj_t * pNode;\n    char * pSop, * pSopNew;\n    char * pCube, * pCubeNew;\n    int nVars, i, v, * pOrder;\n    assert( Abc_NtkHasSop(pNtk) );\n    vOrder = Vec_IntAlloc( 100 );\n    vStore = Vec_StrAlloc( 100 );\n    vCubes = Vec_PtrAlloc( 100 );\n    vCounts = Vec_IntAlloc( 100 );\n    vFanins = Vec_IntAlloc( 100 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        pSop = (char *)pNode-\u003epData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert( nVars == Abc_ObjFaninNum(pNode) );\n        // count literals\n        Vec_IntFill( vCounts, nVars, 0 );\n        Abc_SopForEachCube( pSop, nVars, pCube )\n            for ( v = 0; v \u003c nVars; v++ )\n                if ( pCube[v] != '-' )\n                    Vec_IntAddToEntry( vCounts, v, 1 );\n\n        // create a transposed SOP\n        Abc_NtkSopTranspose( pSop, nVars, vCubes, vStore );\n        // create permutation\n        Vec_StrSelectSortCost2( (char **)Vec_PtrArray(vCubes), nVars, vCounts, vOrder );\n        pOrder = Vec_IntArray(vOrder);\n/*\n        // find good order\n        Vec_IntClear( vOrder );\n        for ( v = 0; v \u003c nVars; v++ )\n            Vec_IntPush( vOrder, v );\n        pOrder = Vec_IntArray(vOrder);\n        Vec_IntSelectSortCost( pOrder, nVars, vCounts );\n*/\n        // copy the cover\n        Vec_StrGrow( vStore, Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1 );\n        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );\n        pSopNew = pCubeNew = pSop;\n        pSop = Vec_StrArray(vStore);\n        // generate permuted one\n        Abc_SopForEachCube( pSop, nVars, pCube )\n        {\n            for ( v = 0; v \u003c nVars; v++ )\n                pCubeNew[v] = '-';\n            for ( v = 0; v \u003c nVars; v++ )\n                if ( pCube[pOrder[v]] == '0' )\n                    pCubeNew[v] = '0';\n                else if ( pCube[pOrder[v]] == '1' )\n                    pCubeNew[v] = '1';\n            pCubeNew += nVars + 3;\n        }\n        pNode-\u003epData = pSopNew;\n        // generate the fanin order\n        Vec_IntClear( vFanins );\n        for ( v = 0; v \u003c nVars; v++ )\n            Vec_IntPush( vFanins, Abc_ObjFaninId( pNode, pOrder[v] ) );\n        Vec_IntClear( \u0026pNode-\u003evFanins );\n        Vec_IntAppend( \u0026pNode-\u003evFanins, vFanins );\n    }\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vCounts );\n    Vec_IntFree( vOrder );\n    Vec_StrFree( vStore );\n    Vec_PtrFree( vCubes );\n}",
+      "Draft": "func Abc_NtkOrderFaninsByLitCount(pNtk *Abc_Ntk_t) {\n    var vOrder *Vec_Int_t;\n    var vCounts *Vec_Int_t;\n    var vFanins *Vec_Int_t;\n    var vStore *Vec_Str_t;\n    var vCubes *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var pSop, pSopNew string;\n    var pCube, pCubeNew string;\n    var nVars int32;\n    var i int32;\n    var v int32;\n    var pOrder *int32;\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\");\n    vOrder = Vec_IntAlloc( 100 );\n    vStore = Vec_StrAlloc( 100 );\n    vCubes = Vec_PtrAlloc( 100 );\n    vCounts = Vec_IntAlloc( 100 );\n    vFanins = Vec_IntAlloc( 100 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pSop = (char *)pNode.pData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert(nVars == Abc_ObjFaninNum(pNode), \"nVars == Abc_ObjFaninNum(pNode)\");\n        // count literals\n        Vec_IntFill( vCounts, nVars, 0 );\n        // inlining of macro Abc_SopForEachCube\n        for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n            for  v = 0; v \u003c nVars; v++  {\n                if pCube[v] != '-' {\n                    Vec_IntAddToEntry( vCounts, v, 1 ); }\n            }\n        }\n\n        // create a transposed SOP\n        Abc_NtkSopTranspose( pSop, nVars, vCubes, vStore );\n        // create permutation\n        Vec_StrSelectSortCost2( (char **)Vec_PtrArray(vCubes), nVars, vCounts, vOrder );\n        pOrder = Vec_IntArray(vOrder);\n/*\n        // find good order\n        Vec_IntClear( vOrder );\n        for ( v = 0; v \u003c nVars; v++ )\n            Vec_IntPush( vOrder, v );\n        pOrder = Vec_IntArray(vOrder);\n        Vec_IntSelectSortCost( pOrder, nVars, vCounts );\n*/\n        // copy the cover\n        Vec_StrGrow( vStore, Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1 );\n        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );\n        pSopNew = pCubeNew = pSop;\n        pSop = Vec_StrArray(vStore);\n        // generate permuted one\n        // inlining of macro Abc_SopForEachCube\n        for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n            for  v = 0; v \u003c nVars; v++  {\n                pCubeNew[v] = '-';\n            }\n            for  v = 0; v \u003c nVars; v++  {\n                if pCube[pOrder[v]] == '0' {\n                    pCubeNew[v] = '0';\n                } else if pCube[pOrder[v]] == '1' {\n                    pCubeNew[v] = '1'; }\n            }\n            pCubeNew += nVars + 3;\n        }\n        pNode.pData = pSopNew;\n        // generate the fanin order\n        Vec_IntClear( vFanins );\n        for  v = 0; v \u003c nVars; v++  {\n            Vec_IntPush( vFanins, Abc_ObjFaninId( pNode, pOrder[v] ) );\n        }\n        Vec_IntClear( \u0026pNode.vFanins );\n        Vec_IntAppend( \u0026pNode.vFanins, vFanins );\n    }\n    }\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vCounts );\n    Vec_IntFree( vOrder );\n    Vec_StrFree( vStore );\n    Vec_PtrFree( vCubes );\n}"
+    },
+    {
+      "Name": "Abc_NtkOrderFaninsByLitCountAndCubeCount",
+      "Start": 10081,
+      "End": 13105,
+      "BodyStart": 10147,
+      "Original": "void Abc_NtkOrderFaninsByLitCountAndCubeCount( Abc_Ntk_t * pNtk )\n{\n    // assuming that the fanins are sorted by the number of literals in each cube\n    // this procedure sorts the literals appearing only once by the number of their cube\n    Vec_Int_t * vOrder;\n    Vec_Int_t * vCounts;\n    Vec_Int_t * vFanins;\n    Vec_Int_t * vCubeNum;\n    Vec_Str_t * vStore;\n    Abc_Obj_t * pNode;\n    char * pSop, * pSopNew;\n    char * pCube, * pCubeNew;\n    int nVars, i, v, iCube, * pOrder;\n    assert( Abc_NtkHasSop(pNtk) );\n    vStore = Vec_StrAlloc( 100 );\n    vOrder = Vec_IntAlloc( 100 );\n    vCounts = Vec_IntAlloc( 100 );\n    vFanins = Vec_IntAlloc( 100 );\n    vCubeNum = Vec_IntAlloc( 100 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        pSop = (char *)pNode-\u003epData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert( nVars == Abc_ObjFaninNum(pNode) );\n        // count literals and remember the cube where each literal appears\n        Vec_IntFill( vCounts, nVars, 0 );\n        Vec_IntFill( vCubeNum, nVars, 0 );\n        iCube = 0;\n        Abc_SopForEachCube( pSop, nVars, pCube )\n        {\n            for ( v = 0; v \u003c nVars; v++ )\n                if ( pCube[v] != '-' )\n                {\n                    Vec_IntAddToEntry( vCounts, v, 1 );\n                    Vec_IntWriteEntry( vCubeNum, v, iCube );\n                }\n            iCube++;\n        }\n        // create new order\n        for ( v = 0; v \u003c nVars; v++ )\n            if ( Vec_IntEntry(vCounts, v) == 1 )\n                Vec_IntWriteEntry( vCounts, v, Vec_IntEntry(vCubeNum, v) );\n            else\n                Vec_IntWriteEntry( vCounts, v, ABC_INFINITY );\n        // find good order\n        Vec_IntClear( vOrder );\n        for ( v = 0; v \u003c nVars; v++ )\n            Vec_IntPush( vOrder, v );\n        pOrder = Vec_IntArray(vOrder);\n        Vec_IntSelectSortCost( pOrder, nVars, vCounts );\n        // copy the cover\n        Vec_StrGrow( vStore, Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1 );\n        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );\n        pSopNew = pCubeNew = pSop;\n        pSop = Vec_StrArray(vStore);\n        // generate permuted one\n        Abc_SopForEachCube( pSop, nVars, pCube )\n        {\n            for ( v = 0; v \u003c nVars; v++ )\n                pCubeNew[v] = '-';\n            for ( v = 0; v \u003c nVars; v++ )\n                if ( pCube[pOrder[v]] == '0' )\n                    pCubeNew[v] = '0';\n                else if ( pCube[pOrder[v]] == '1' )\n                    pCubeNew[v] = '1';\n            pCubeNew += nVars + 3;\n        }\n        pNode-\u003epData = pSopNew;\n        // generate the fanin order\n        Vec_IntClear( vFanins );\n        for ( v = 0; v \u003c nVars; v++ )\n            Vec_IntPush( vFanins, Abc_ObjFaninId( pNode, pOrder[v] ) );\n        Vec_IntClear( \u0026pNode-\u003evFanins );\n        Vec_IntAppend( \u0026pNode-\u003evFanins, vFanins );\n    }\n    Vec_IntFree( vCubeNum );\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vCounts );\n    Vec_IntFree( vOrder );\n    Vec_StrFree( vStore );\n}",
+      "Draft": "func Abc_NtkOrderFaninsByLitCountAndCubeCount(pNtk *Abc_Ntk_t) {\n    // assuming that the fanins are sorted by the number of literals in each cube\n    // this procedure sorts the literals appearing only once by the number of their cube\n    var vOrder *Vec_Int_t;\n    var vCounts *Vec_Int_t;\n    var vFanins *Vec_Int_t;\n    var vCubeNum *Vec_Int_t;\n    var vStore *Vec_Str_t;\n    var pNode *Abc_Obj_t;\n    var pSop, pSopNew string;\n    var pCube, pCubeNew string;\n    var nVars int32;\n    var i int32;\n    var v int32;\n    var iCube int32;\n    var pOrder *int32;\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\");\n    vStore = Vec_StrAlloc( 100 );\n    vOrder = Vec_IntAlloc( 100 );\n    vCounts = Vec_IntAlloc( 100 );\n    vFanins = Vec_IntAlloc( 100 );\n    vCubeNum = Vec_IntAlloc( 100 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pSop = (char *)pNode.pData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert(nVars == Abc_ObjFaninNum(pNode), \"nVars == Abc_ObjFaninNum(pNode)\");\n        // count literals and remember the cube where each literal appears\n        Vec_IntFill( vCounts, nVars, 0 );\n        Vec_IntFill( vCubeNum, nVars, 0 );\n        iCube = 0;\n        // inlining of macro Abc_SopForEachCube\n        for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n            for  v = 0; v \u003c nVars; v++  {\n                if pCube[v] != '-' {\n                    Vec_IntAddToEntry( vCounts, v, 1 );\n                    Vec_IntWriteEntry( vCubeNum, v, iCube );\n                }\n            }\n            iCube++;\n        }\n        // create new order\n        for  v = 0; v \u003c nVars; v++  {\n            if Vec_IntEntry(vCounts, v) == 1 {\n                Vec_IntWriteEntry( vCounts, v, Vec_IntEntry(vCubeNum, v) );\n            } else {\n                Vec_IntWriteEntry( vCounts, v, ABC_INFINITY ); }\n        }\n        // find good order\n        Vec_IntClear( vOrder );\n        for  v = 0; v \u003c nVars; v++  {\n            Vec_IntPush( vOrder, v );\n        }\n        pOrder = Vec_IntArray(vOrder);\n        Vec_IntSelectSortCost( pOrder, nVars, vCounts );\n        // copy the cover\n        Vec_StrGrow( vStore, Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1 );\n        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );\n        pSopNew = pCubeNew = pSop;\n        pSop = Vec_StrArray(vStore);\n        // generate permuted one\n        // inlining of macro Abc_SopForEachCube\n        for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n            for  v = 0; v \u003c nVars; v++  {\n                pCubeNew[v] = '-';\n            }\n            for  v = 0; v \u003c nVars; v++  {\n                if pCube[pOrder[v]] == '0' {\n                    pCubeNew[v] = '0';\n                } else if pCube[pOrder[v]] == '1' {\n                    pCubeNew[v] = '1'; }\n            }\n            pCubeNew += nVars + 3;\n        }\n        pNode.pData = pSopNew;\n        // generate the fanin order\n        Vec_IntClear( vFanins );\n        for  v = 0; v \u003c nVars; v++  {\n            Vec_IntPush( vFanins, Abc_ObjFaninId( pNode, pOrder[v] ) );\n        }\n        Vec_IntClear( \u0026pNode.vFanins );\n        Vec_IntAppend( \u0026pNode.vFanins, vFanins );\n    }\n    }\n    Vec_IntFree( vCubeNum );\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vCounts );\n    Vec_IntFree( vOrder );\n    Vec_StrFree( vStore );\n}"
+    },
+    {
+      "Name": "Abc_NodeSplitLarge",
+      "Start": 13390,
+      "End": 14294,
+      "BodyStart": 13435,
+      "Original": "void Abc_NodeSplitLarge( Abc_Obj_t * pNode )\n{\n    Abc_Obj_t * pNode1, * pNode2, * pFanin;\n    int CutPoint, nVars = Abc_ObjFaninNum(pNode);\n    int i, nCubes = Abc_SopGetCubeNum((char *)pNode-\u003epData);\n    pNode1 = Abc_NtkDupObj( pNode-\u003epNtk, pNode, 0 );\n    pNode2 = Abc_NtkDupObj( pNode-\u003epNtk, pNode, 0 );\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        Abc_ObjAddFanin( pNode1, pFanin );\n    Abc_ObjForEachFanin( pNode, pFanin, i )\n        Abc_ObjAddFanin( pNode2, pFanin );    \n    // update the node\n    Abc_ObjRemoveFanins( pNode );\n    Abc_ObjAddFanin( pNode, pNode1 );\n    Abc_ObjAddFanin( pNode, pNode2 );\n    pNode-\u003epData = Abc_SopCreateOr( (Mem_Flex_t *)pNode-\u003epNtk-\u003epManFunc, 2, NULL );\n    // update covers of the nodes\n    assert( nCubes \u003e 1 );\n    CutPoint = (nCubes / 2) * (nVars + 3);\n    ((char *)pNode1-\u003epData)[CutPoint] = 0;\n    pNode2-\u003epData = (char *)pNode2-\u003epData + CutPoint;\n}",
+      "Draft": "func Abc_NodeSplitLarge(pNode *Abc_Obj_t) {\n    var pNode1, pNode2, pFanin *Abc_Obj_t;\n    var CutPoint int32;\n    var nVars int32 = Abc_ObjFaninNum(pNode);\n    var i int32;\n    var nCubes int32 = Abc_SopGetCubeNum((char *)pNode.pData);\n    pNode1 = Abc_NtkDupObj( pNode.pNtk, pNode, 0 );\n    pNode2 = Abc_NtkDupObj( pNode.pNtk, pNode, 0 );\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Abc_ObjAddFanin( pNode1, pFanin );\n    }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Abc_ObjAddFanin( pNode2, pFanin );\n    }    \n    // update the node\n    Abc_ObjRemoveFanins( pNode );\n    Abc_ObjAddFanin( pNode, pNode1 );\n    Abc_ObjAddFanin( pNode, pNode2 );\n    pNode.pData = Abc_SopCreateOr( (Mem_Flex_t *)pNode.pNtk.pManFunc, 2, nil );\n    // update covers of the nodes\n    assert(nCubes \u003e 1, \"nCubes \u003e 1\");\n    CutPoint = (nCubes / 2) * (nVars + 3);\n    ((char *)pNode1.pData)[CutPoint] = 0;\n    pNode2.pData = (char *)pNode2.pData + CutPoint;\n}"
+    },
+    {
+      "Name": "Abc_NtkSplitLarge",
+      "Start": 14295,
+      "End": 14779,
+      "BodyStart": 14369,
+      "Original": "void Abc_NtkSplitLarge( Abc_Ntk_t * pNtk, int nFaninsMax, int nCubesMax )\n{\n    Abc_Obj_t * pNode;\n    int nObjOld = Abc_NtkObjNumMax(pNtk);\n    int i, nCubes;\n    assert( Abc_NtkHasSop(pNtk) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if ( i == nObjOld )\n            break;\n        nCubes = Abc_SopGetCubeNum((char *)pNode-\u003epData);\n        if ( (Abc_ObjFaninNum(pNode) \u003e nFaninsMax \u0026\u0026 nCubes \u003e 1) || nCubes \u003e nCubesMax )\n            Abc_NodeSplitLarge( pNode );\n    }\n}",
+      "Draft": "func Abc_NtkSplitLarge(pNtk *Abc_Ntk_t, nFaninsMax int32, nCubesMax int32) {\n    var pNode *Abc_Obj_t;\n    var nObjOld int32  = Abc_NtkObjNumMax(pNtk);\n    var i, nCubes int32;\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\");\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if i == nObjOld {\n            break; }\n        nCubes = Abc_SopGetCubeNum((char *)pNode.pData);\n        if (Abc_ObjFaninNum(pNode) \u003e nFaninsMax \u0026\u0026 nCubes \u003e 1) || nCubes \u003e nCubesMax {\n            Abc_NodeSplitLarge( pNode ); }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NodeCompareCubes1",
+      "Start": 15054,
+      "End": 15144,
+      "BodyStart": 15108,
+      "Original": "int Abc_NodeCompareCubes1( char ** pp1, char ** pp2 )\n{\n    return strcmp( *pp1, *pp2 );\n}",
+      "Draft": "func Abc_NodeCompareCubes1(pp1 *string, pp2 *string) int32 {\n    return int32(strings.Compare(*pp1, *pp2));\n}"
+    },
+    {
+      "Name": "Abc_NodeCompareCubes2",
+      "Start": 15145,
+      "End": 15522,
+      "BodyStart": 15199,
+      "Original": "int Abc_NodeCompareCubes2( char ** pp1, char ** pp2 )\n{\n    char * pStr1 = *pp1;\n    char * pStr2 = *pp2;\n    int i, nNum1 = 0, nNum2 = 0;\n    for ( i = 0; pStr1[i]; i++ )\n    {\n        nNum1 += (pStr1[i] != '-');\n        nNum2 += (pStr2[i] != '-');\n    }\n    if ( nNum1 \u003e nNum2 )\n        return -1;\n    if ( nNum1 \u003c nNum2 )\n        return 1;\n    return strcmp( *pp1, *pp2 );\n}",
+      "Draft": "func Abc_NodeCompareCubes2(pp1 *string, pp2 *string) int32 {\n    var pStr1 string  = *pp1;\n    var pStr2 string  = *pp2;\n    var i, nNum1, nNum2 int32;\n    for  i = 0; pStr1[i]; i++  {\n        nNum1 += (pStr1[i] != '-');\n        nNum2 += (pStr2[i] != '-');\n    }\n    if nNum1 \u003e nNum2 {\n        return -1; }\n    if nNum1 \u003c nNum2 {\n        return 1; }\n    return int32(strings.Compare(*pp1, *pp2));\n}"
+    },
+    {
+      "Name": "Abc_NodeSortCubes",
+      "Start": 15523,
+      "End": 16478,
+      "BodyStart": 15620,
+      "Original": "void Abc_NodeSortCubes( Abc_Obj_t * pNode, Vec_Ptr_t * vCubes, Vec_Str_t * vStore, int fWeight )\n{\n    char * pCube, * pPivot;\n    char * pSop = (char *)pNode-\u003epData;\n    int i, nVars = Abc_ObjFaninNum(pNode);\n    Vec_PtrClear( vCubes );\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        assert( pCube[nVars] == ' ' );\n        pCube[nVars] = 0;\n        Vec_PtrPush( vCubes, pCube );\n    }\n    if ( fWeight )\n        Vec_PtrSort( vCubes, (int (*)())Abc_NodeCompareCubes2 );\n    else\n        Vec_PtrSort( vCubes, (int (*)())Abc_NodeCompareCubes1 );\n    Vec_StrGrow( vStore, Vec_PtrSize(vCubes) * (nVars + 3) );\n    pPivot = Vec_StrArray( vStore );\n    Vec_PtrForEachEntry( char *, vCubes, pCube, i )\n    {\n        assert( pCube[nVars] == 0 );\n        pCube[nVars] = ' ';\n        memcpy( pPivot, pCube, (size_t)(nVars + 3) );\n        pPivot += nVars + 3;\n    }\n    memcpy( pSop, Vec_StrArray(vStore), (size_t)(Vec_PtrSize(vCubes) * (nVars + 3)) );\n}",
+      "Draft": "func Abc_NodeSortCubes(pNode *Abc_Obj_t, vCubes *Vec_Ptr_t, vStore *Vec_Str_t, fWeight int32) {\n    var pCube, pPivot string;\n    var pSop string  = (char *)pNode.pData;\n    var i int32;\n    var nVars int32 = Abc_ObjFaninNum(pNode);\n    Vec_PtrClear( vCubes );\n    // inlining of macro Abc_SopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n        assert(pCube[nVars] == ' ', \"pCube[nVars] == ' '\");\n        pCube[nVars] = 0;\n        Vec_PtrPush( vCubes, pCube );\n    }\n    if fWeight != 0 {\n        Vec_PtrSort( vCubes, (int (*)())Abc_NodeCompareCubes2 );\n    } else {\n        Vec_PtrSort( vCubes, (int (*)())Abc_NodeCompareCubes1 ); }\n    Vec_StrGrow( vStore, Vec_PtrSize(vCubes) * (nVars + 3) );\n    pPivot = Vec_StrArray( vStore );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCubes)) \u0026\u0026 (((pCube) = (char *)Vec_PtrEntry(vCubes, i)), 1); i++  {\n        assert(pCube[nVars] == 0, \"pCube[nVars] == 0\");\n        pCube[nVars] = ' ';\n        memcpy( pPivot, pCube, (size_t)(nVars + 3) );\n        pPivot += nVars + 3;\n    }\n    memcpy( pSop, Vec_StrArray(vStore), (size_t)(Vec_PtrSize(vCubes) * (nVars + 3)) );\n}"
+    },
+    {
+      "Name": "Abc_NtkSortCubes",
+      "Start": 16479,
+      "End": 16880,
+      "BodyStart": 16534,
+      "Original": "void Abc_NtkSortCubes( Abc_Ntk_t * pNtk, int fWeight )\n{\n    Vec_Ptr_t * vCubes;\n    Vec_Str_t * vStore;\n    Abc_Obj_t * pNode;\n    int i;\n    assert( Abc_NtkHasSop(pNtk) );\n    vCubes = Vec_PtrAlloc( 1000 );\n    vStore = Vec_StrAlloc( 1000 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        Abc_NodeSortCubes( pNode, vCubes, vStore, fWeight );\n    Vec_StrFree( vStore );\n    Vec_PtrFree( vCubes );\n}",
+      "Draft": "func Abc_NtkSortCubes(pNtk *Abc_Ntk_t, fWeight int32) {\n    var vCubes *Vec_Ptr_t;\n    var vStore *Vec_Str_t;\n    var pNode *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\");\n    vCubes = Vec_PtrAlloc( 1000 );\n    vStore = Vec_StrAlloc( 1000 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Abc_NodeSortCubes( pNode, vCubes, vStore, fWeight ); }\n    }\n    Vec_StrFree( vStore );\n    Vec_PtrFree( vCubes );\n}"
+    },
+    {
+      "Name": "Abc_NtkSortSops",
+      "Start": 17170,
+      "End": 17409,
+      "BodyStart": 17211,
+      "Original": "void Abc_NtkSortSops( Abc_Ntk_t * pNtk )\n{\n    Abc_NtkSortCubes( pNtk, 1 );\n    Abc_NtkOrderFaninsByLitCount( pNtk );\n    Abc_NtkSortCubes( pNtk, 0 );\n    Abc_NtkOrderFaninsByLitCountAndCubeCount( pNtk );\n    Abc_NtkSortCubes( pNtk, 0 );\n}",
+      "Draft": "func Abc_NtkSortSops(pNtk *Abc_Ntk_t) {\n    Abc_NtkSortCubes( pNtk, 1 );\n    Abc_NtkOrderFaninsByLitCount( pNtk );\n    Abc_NtkSortCubes( pNtk, 0 );\n    Abc_NtkOrderFaninsByLitCountAndCubeCount( pNtk );\n    Abc_NtkSortCubes( pNtk, 0 );\n}"
+    },
+    {
+      "Name": "Abc_CubeContain",
+      "Start": 17738,
+      "End": 18244,
+      "BodyStart": 17815,
+      "Original": "static inline int Abc_CubeContain( char * pCube1, char * pCube2, int nVars )\n{\n    int v, fCont12 = 1, fCont21 = 1;\n    for ( v = 0; v \u003c nVars; v++ )\n    {\n        if ( pCube1[v] == pCube2[v] )\n            continue;\n        if ( pCube1[v] == '-' )\n            fCont21 = 0;\n        else if ( pCube2[v] == '-' )\n            fCont12 = 0;\n        else\n            return 0;\n        if ( !fCont12 \u0026\u0026 !fCont21 )\n            return 0;\n    }\n    assert( fCont21 || fCont12 );\n    return (fCont21 \u003c\u003c 1) | fCont12;\n}",
+      "Draft": "func Abc_CubeContain(pCube1 string, pCube2 string, nVars int32) int32 {\n    var v int32;\n    var fCont12 int32 = 1;\n    var fCont21 int32 = 1;\n    for  v = 0; v \u003c nVars; v++  {\n        if pCube1[v] == pCube2[v] {\n            continue; }\n        if pCube1[v] == '-' {\n            fCont21 = 0;\n        } else if pCube2[v] == '-' {\n            fCont12 = 0;\n        } else {\n            return 0; }\n        if !(fCont12 != 0) \u0026\u0026 !(fCont21 != 0) {\n            return 0; }\n    }\n    assert((fCont21 != 0) || (fCont12 != 0), \"fCont21 || fCont12\");\n    return (fCont21 \u003c\u003c 1) | fCont12;\n}"
+    },
+    {
+      "Name": "Abc_NodeMakeSCCFree",
+      "Start": 18245,
+      "End": 19119,
+      "BodyStart": 18290,
+      "Original": "int Abc_NodeMakeSCCFree( Abc_Obj_t * pNode )\n{\n    char * pSop = (char *)pNode-\u003epData;\n    char * pCube, * pCube2, * pSopNew;\n    int nVars = Abc_ObjFaninNum(pNode);\n    int Status, nCount = 0;\n    Abc_SopForEachCubePair( pSop, nVars, pCube, pCube2 )\n    {\n        if ( pCube[0] == 'z' || pCube2[0] == 'z' )\n            continue;\n        Status = Abc_CubeContain( pCube, pCube2, nVars );\n        nCount += (int)(Status \u003e 0);\n        if ( Status \u0026 1 )\n            pCube2[0] = 'z';\n        else if ( Status \u0026 2 )\n            pCube[0] = 'z';\n    }\n    if ( nCount == 0 )\n        return 0;\n    // create new cover\n    pSopNew = (char *)pNode-\u003epData;\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    {\n        if ( pCube[0] == 'z' )\n            continue;\n        memcpy( pSopNew, pCube, (size_t)(nVars + 3) );\n        pSopNew += nVars + 3;\n    }\n    *pSopNew = 0;\n    return 1;\n}",
+      "Draft": "func Abc_NodeMakeSCCFree(pNode *Abc_Obj_t) int32 {\n    var pSop string  = (char *)pNode.pData;\n    var pCube, pCube2, pSopNew string;\n    var nVars int32  = Abc_ObjFaninNum(pNode);\n    var Status, nCount int32;\n    // inlining of macro Abc_SopForEachCubePair\n    // inlining of macro Abc_SopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {                                                         for  pCube2 = (pCube + (nVars) + 3); *pCube2; pCube2 += (nVars) + 3  {\n        if pCube[0] == 'z' || pCube2[0] == 'z' {\n            continue; }\n        Status = Abc_CubeContain( pCube, pCube2, nVars );\n        nCount += int32((Status \u003e 0));\n        if Status \u0026 1 {\n            pCube2[0] = 'z';\n        } else if Status \u0026 2 {\n            pCube[0] = 'z'; }\n    }\n    }\n    if nCount == 0 {\n        return 0; }\n    // create new cover\n    pSopNew = (char *)pNode.pData;\n    // inlining of macro Abc_SopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n        if pCube[0] == 'z' {\n            continue; }\n        memcpy( pSopNew, pCube, (size_t)(nVars + 3) );\n        pSopNew += nVars + 3;\n    }\n    *pSopNew = 0;\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NodeMakeDist1Free",
+      "Start": 19120,
+      "End": 19728,
+      "BodyStart": 19168,
+      "Original": "void Abc_NodeMakeDist1Free( Abc_Obj_t * pNode )\n{\n    char * pSop = (char *)pNode-\u003epData;\n    char * pCube, * pCube2;\n    int i, nVars = Abc_ObjFaninNum(pNode);\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    Abc_SopForEachCube( pCube + nVars + 3, nVars, pCube2 )\n    {\n        int Counter = 0, iDiff = -1;\n        for ( i = 0; i \u003c nVars; i++ )\n            if ( pCube[i] != pCube2[i] )\n                Counter++, iDiff = i;\n        if ( Counter == 1 \u0026\u0026 ((pCube[iDiff] == '0' \u0026\u0026 pCube2[iDiff] == '1') || (pCube[iDiff] == '1' \u0026\u0026 pCube2[iDiff] == '0')) )\n            pCube[iDiff] = pCube2[iDiff] = '-';\n    }\n}",
+      "Draft": "func Abc_NodeMakeDist1Free(pNode *Abc_Obj_t) {\n    var pSop string  = (char *)pNode.pData;\n    var pCube, pCube2 string;\n    var i int32;\n    var nVars int32 = Abc_ObjFaninNum(pNode);\n    // inlining of macro Abc_SopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n    // inlining of macro Abc_SopForEachCube\n    for  pCube2 = (pCube + nVars + 3); *pCube2; pCube2 += (nVars) + 3  {\n        var Counter int32;\n        var iDiff int32 = -1;\n        for  i = 0; i \u003c nVars; i++  {\n            if pCube[i] != pCube2[i] {\n                Counter++, iDiff = i; }\n        }\n        if Counter == 1 \u0026\u0026 ((pCube[iDiff] == '0' \u0026\u0026 pCube2[iDiff] == '1') || (pCube[iDiff] == '1' \u0026\u0026 pCube2[iDiff] == '0')) {\n            pCube[iDiff] = pCube2[iDiff] = '-'; }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NodeCheckDist1Free",
+      "Start": 19729,
+      "End": 20210,
+      "BodyStart": 19778,
+      "Original": "void Abc_NodeCheckDist1Free( Abc_Obj_t * pNode )\n{\n    char * pSop = (char *)pNode-\u003epData;\n    char * pCube, * pCube2;\n    int i, nVars = Abc_ObjFaninNum(pNode);\n    Abc_SopForEachCube( pSop, nVars, pCube )\n    Abc_SopForEachCube( pSop, nVars, pCube2 )\n    {\n        int Counter = 0;\n        if ( pCube == pCube2 )\n            continue;\n        for ( i = 0; i \u003c nVars; i++ )\n            if ( pCube[i] != pCube2[i] )\n                Counter++;\n        assert( Counter \u003e 1 );\n    }\n}",
+      "Draft": "func Abc_NodeCheckDist1Free(pNode *Abc_Obj_t) {\n    var pSop string  = (char *)pNode.pData;\n    var pCube, pCube2 string;\n    var i int32;\n    var nVars int32 = Abc_ObjFaninNum(pNode);\n    // inlining of macro Abc_SopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n    // inlining of macro Abc_SopForEachCube\n    for  pCube2 = (pSop); *pCube2; pCube2 += (nVars) + 3  {\n        var Counter int32;\n        if pCube == pCube2 {\n            continue; }\n        for  i = 0; i \u003c nVars; i++  {\n            if pCube[i] != pCube2[i] {\n                Counter++; }\n        }\n        assert(Counter \u003e 1, \"Counter \u003e 1\");\n    }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NodeMakeLegit",
+      "Start": 20211,
+      "End": 20473,
+      "BodyStart": 20254,
+      "Original": "int Abc_NodeMakeLegit( Abc_Obj_t * pNode )\n{\n    int i, fChanges = 1;\n    for ( i = 0; fChanges; i++ )\n    {\n        Abc_NodeMakeDist1Free( pNode );\n        fChanges = Abc_NodeMakeSCCFree( pNode );\n    }\n//    Abc_NodeCheckDist1Free( pNode );\n    return i \u003e 1;\n}",
+      "Draft": "func Abc_NodeMakeLegit(pNode *Abc_Obj_t) int32 {\n    var i int32;\n    var fChanges int32 = 1;\n    for  i = 0; (fChanges != 0); i++  {\n        Abc_NodeMakeDist1Free( pNode );\n        fChanges = Abc_NodeMakeSCCFree( pNode );\n    }\n//    Abc_NodeCheckDist1Free( pNode );\n    return i \u003e 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkMakeLegit",
+      "Start": 20474,
+      "End": 20831,
+      "BodyStart": 20515,
+      "Original": "int Abc_NtkMakeLegit( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode;\n    int i, Counter = 0;\n    assert( Abc_NtkHasSop(pNtk) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        Counter += Abc_NodeMakeLegit( pNode );\n    if ( Counter )\n        Abc_Print( 0, \"%d nodes were made dist1-cube-free and/or single-cube-containment-free.\\n\", Counter );\n    return 1;\n}",
+      "Draft": "func Abc_NtkMakeLegit(pNtk *Abc_Ntk_t) int32 {\n    var pNode *Abc_Obj_t;\n    var i, Counter int32;\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\");\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Counter += Abc_NodeMakeLegit( pNode ); }\n    }\n    if Counter != 0 {\n        Abc_Print( 0, \"%d nodes were made dist1-cube-free and/or single-cube-containment-free.\\n\", Counter ); }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::1823",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1647,
+      "End": 1655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::3939",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3522,
+      "End": 3522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::5694",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4967,
+      "End": 4975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::5963",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5236,
+      "End": 5245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::9178",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8071,
+      "End": 8079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::9769",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8596,
+      "End": 8605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::12249",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10834,
+      "End": 10842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::15116",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13569,
+      "End": 13577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::15808",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14045,
+      "End": 14059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::15964",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14201,
+      "End": 14209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::16022",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14259,
+      "End": 14267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::16558",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14619,
+      "End": 14627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::17607",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15668,
+      "End": 15676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::18296",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16182,
+      "End": 16182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::20596",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18310,
+      "End": 18318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::21448",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18869,
+      "End": 18877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::21833",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19188,
+      "End": 19196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::pointer-cast::22577",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19798,
+      "End": 19806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NtkOrderFaninsById",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkOrderFaninsById",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1272,
+      "End": 2846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NtkSopTranspose",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSopTranspose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3146,
+      "End": 3846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Vec_StrSelectSortCost",
+      "Category": "semantic-review",
+      "Symbol": "Vec_StrSelectSortCost",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3847,
+      "End": 4401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NtkOrderFaninsBySortingColumns",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkOrderFaninsBySortingColumns",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4402,
+      "End": 6474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Vec_StrSelectSortCost2",
+      "Category": "semantic-review",
+      "Symbol": "Vec_StrSelectSortCost2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6766,
+      "End": 7511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NtkOrderFaninsByLitCount",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkOrderFaninsByLitCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7512,
+      "End": 10080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NtkOrderFaninsByLitCountAndCubeCount",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkOrderFaninsByLitCountAndCubeCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10081,
+      "End": 13105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NodeSplitLarge",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeSplitLarge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13390,
+      "End": 14294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NtkSplitLarge",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSplitLarge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14295,
+      "End": 14779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NodeCompareCubes1",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeCompareCubes1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15054,
+      "End": 15144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NodeCompareCubes2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeCompareCubes2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15145,
+      "End": 15522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NodeSortCubes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeSortCubes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15523,
+      "End": 16478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NtkSortCubes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSortCubes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16479,
+      "End": 16880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NtkSortSops",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSortSops",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17170,
+      "End": 17409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_CubeContain",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CubeContain",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17738,
+      "End": 18244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NodeMakeSCCFree",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeMakeSCCFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18245,
+      "End": 19119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NodeMakeDist1Free",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeMakeDist1Free",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19120,
+      "End": 19728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NodeCheckDist1Free",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeCheckDist1Free",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19729,
+      "End": 20210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NodeMakeLegit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeMakeLegit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20211,
+      "End": 20473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::Abc_NtkMakeLegit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMakeLegit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20474,
+      "End": 20831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFanOrder.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21078
+    }
+  ],
+  "Draft": "package abc\n\nimport \"strings\"\n\n/**CFile****************************************************************\n\n  FileName    [abcFanOrder.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Fanin ordering procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcFanOrder.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"abc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reorder fanins of the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkOrderFaninsById(pNtk *Abc_Ntk_t) {\n    var vOrder *Vec_Int_t;\n    var vStore *Vec_Str_t;\n    var pNode *Abc_Obj_t;\n    var pSop, pSopNew string;\n    var pCube, pCubeNew string;\n    var nVars int32;\n    var i int32;\n    var v int32;\n    var pOrder *int32;\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\");\n    vOrder = Vec_IntAlloc( 100 );\n    vStore = Vec_StrAlloc( 100 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pSop = (char *)pNode.pData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert(nVars == Abc_ObjFaninNum(pNode), \"nVars == Abc_ObjFaninNum(pNode)\");\n        Vec_IntClear( vOrder );\n        for  v = 0; v \u003c nVars; v++  {\n            Vec_IntPush( vOrder, v );\n        }\n        pOrder = Vec_IntArray(vOrder);\n        Vec_IntSelectSortCost( pOrder, nVars, \u0026pNode.vFanins );\n        // copy the cover\n        Vec_StrGrow( vStore, Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1 );\n        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );\n        pSopNew = pCubeNew = pSop;\n        pSop = Vec_StrArray(vStore);\n        // generate permuted one\n        // inlining of macro Abc_SopForEachCube\n        for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n            for  v = 0; v \u003c nVars; v++  {\n                pCubeNew[v] = '-';\n            }\n            for  v = 0; v \u003c nVars; v++  {\n                if pCube[pOrder[v]] == '0' {\n                    pCubeNew[v] = '0';\n                } else if pCube[pOrder[v]] == '1' {\n                    pCubeNew[v] = '1'; }\n            }\n            pCubeNew += nVars + 3;\n        }\n        pNode.pData = pSopNew;\n        Vec_IntSort( \u0026pNode.vFanins, 0 );\n//        Vec_IntPrint( vOrder );\n    }\n    }\n    Vec_IntFree( vOrder );\n    Vec_StrFree( vStore );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns fanin permutation to reorders columns lexicographically.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSopTranspose(pSop string, nVars int32, vCubes *Vec_Ptr_t, vStore *Vec_Str_t) {\n    var pCube string; \n    var nCubes, v, c int32;\n    // collect original cubes\n    Vec_PtrClear( vCubes );\n    // inlining of macro Abc_SopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n        Vec_PtrPush( vCubes, pCube );\n    }\n    // rebuild the cubes\n    Vec_StrClear( vStore );\n    for  v = 0; v \u003c nVars; v++  {\n        // inlining of macro Vec_PtrForEachEntry\n        for  c = 0; (c \u003c Vec_PtrSize(vCubes)) \u0026\u0026 (((pCube) = (char *)Vec_PtrEntry(vCubes, c)), 1); c++  {\n            Vec_StrPush( vStore, pCube[v] );\n        }\n        Vec_StrPush( vStore, '\\0' );\n    }\n    // get the cubes\n    nCubes = Vec_PtrSize( vCubes );\n    Vec_PtrClear( vCubes );\n    for  v = 0; v \u003c nVars; v++  {\n        Vec_PtrPush( vCubes, Vec_StrEntryP(vStore, v*(nCubes+1)) );\n    }\n}\nfunc Vec_StrSelectSortCost(pArray *string, nSize int32, vPerm *Vec_Int_t) {\n    var i int32;\n    var j int32;\n    var best_i int32;\n    var pPerm *int32;\n    Vec_IntClear( vPerm );\n    for  i = 0; i \u003c nSize; i++  {\n        Vec_IntPush( vPerm, i );\n    }\n    pPerm = Vec_IntArray( vPerm );\n    for  i = 0; i \u003c nSize-1; i++  {\n        best_i = i;\n        for  j = i+1; j \u003c nSize; j++  {\n            if int32(strings.Compare(pArray[j], pArray[best_i])) \u003c 0 {\n                best_i = j; }\n        }\n        // inlining of macro ABC_SWAP\n        { var t string  = pArray[i]; pArray[i] = pArray[best_i]; pArray[best_i] = t; };\n        // inlining of macro ABC_SWAP\n        { var t int32  = pPerm[i]; pPerm[i] = pPerm[best_i]; pPerm[best_i] = t; };\n    }\n}\nfunc Abc_NtkOrderFaninsBySortingColumns(pNtk *Abc_Ntk_t) {\n    var vOrder *Vec_Int_t;\n    var vCounts *Vec_Int_t;\n    var vFanins *Vec_Int_t;\n    var vStore *Vec_Str_t;\n    var vCubes *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var pSop, pSopNew string;\n    var pCube, pCubeNew string;\n    var nVars int32;\n    var i int32;\n    var v int32;\n    var pOrder *int32;\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\");\n    vOrder = Vec_IntAlloc( 100 );\n    vStore = Vec_StrAlloc( 100 );\n    vCubes = Vec_PtrAlloc( 100 );\n    vCounts = Vec_IntAlloc( 100 );\n    vFanins = Vec_IntAlloc( 100 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pSop = (char *)pNode.pData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert(nVars == Abc_ObjFaninNum(pNode), \"nVars == Abc_ObjFaninNum(pNode)\");\n        // create a transposed SOP\n        Abc_NtkSopTranspose( pSop, nVars, vCubes, vStore );\n        // create permutation\n        Vec_StrSelectSortCost( (char **)Vec_PtrArray(vCubes), nVars, vOrder );\n        pOrder = Vec_IntArray(vOrder);\n        // copy the cover\n        Vec_StrGrow( vStore, Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1 );\n        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );\n        pSopNew = pCubeNew = pSop;\n        pSop = Vec_StrArray(vStore);\n        // generate permuted one\n        // inlining of macro Abc_SopForEachCube\n        for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n            for  v = 0; v \u003c nVars; v++  {\n                pCubeNew[v] = '-';\n            }\n            for  v = 0; v \u003c nVars; v++  {\n                if pCube[pOrder[v]] == '0' {\n                    pCubeNew[v] = '0';\n                } else if pCube[pOrder[v]] == '1' {\n                    pCubeNew[v] = '1'; }\n            }\n            pCubeNew += nVars + 3;\n        }\n        pNode.pData = pSopNew;\n        // generate the fanin order\n        Vec_IntClear( vFanins );\n        for  v = 0; v \u003c nVars; v++  {\n            Vec_IntPush( vFanins, Abc_ObjFaninId( pNode, pOrder[v] ) );\n        }\n        Vec_IntClear( \u0026pNode.vFanins );\n        Vec_IntAppend( \u0026pNode.vFanins, vFanins );\n    }\n    }\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vCounts );\n    Vec_IntFree( vOrder );\n    Vec_StrFree( vStore );\n    Vec_PtrFree( vCubes );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reorders columns by literal and then lexicographically.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_StrSelectSortCost2(pArray *string, nSize int32, vCounts *Vec_Int_t, vPerm *Vec_Int_t) {\n    var i int32;\n    var j int32;\n    var best_i int32;\n    var pPerm *int32;\n    Vec_IntClear( vPerm );\n    for  i = 0; i \u003c nSize; i++  {\n        Vec_IntPush( vPerm, i );\n    }\n    pPerm = Vec_IntArray( vPerm );\n    for  i = 0; i \u003c nSize-1; i++  {\n        best_i = i;\n        for  j = i+1; j \u003c nSize; j++  {\n            if Vec_IntEntry(vCounts, pPerm[j]) \u003c  Vec_IntEntry(vCounts, pPerm[best_i]) || \n                (Vec_IntEntry(vCounts, pPerm[j]) == Vec_IntEntry(vCounts, pPerm[best_i]) \u0026\u0026 int32(strings.Compare(pArray[j], pArray[best_i])) \u003c 0) {\n                best_i = j; }\n        }\n        // inlining of macro ABC_SWAP\n        { var t string  = pArray[i]; pArray[i] = pArray[best_i]; pArray[best_i] = t; };\n        // inlining of macro ABC_SWAP\n        { var t int32  = pPerm[i]; pPerm[i] = pPerm[best_i]; pPerm[best_i] = t; };\n    }\n}\nfunc Abc_NtkOrderFaninsByLitCount(pNtk *Abc_Ntk_t) {\n    var vOrder *Vec_Int_t;\n    var vCounts *Vec_Int_t;\n    var vFanins *Vec_Int_t;\n    var vStore *Vec_Str_t;\n    var vCubes *Vec_Ptr_t;\n    var pNode *Abc_Obj_t;\n    var pSop, pSopNew string;\n    var pCube, pCubeNew string;\n    var nVars int32;\n    var i int32;\n    var v int32;\n    var pOrder *int32;\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\");\n    vOrder = Vec_IntAlloc( 100 );\n    vStore = Vec_StrAlloc( 100 );\n    vCubes = Vec_PtrAlloc( 100 );\n    vCounts = Vec_IntAlloc( 100 );\n    vFanins = Vec_IntAlloc( 100 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pSop = (char *)pNode.pData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert(nVars == Abc_ObjFaninNum(pNode), \"nVars == Abc_ObjFaninNum(pNode)\");\n        // count literals\n        Vec_IntFill( vCounts, nVars, 0 );\n        // inlining of macro Abc_SopForEachCube\n        for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n            for  v = 0; v \u003c nVars; v++  {\n                if pCube[v] != '-' {\n                    Vec_IntAddToEntry( vCounts, v, 1 ); }\n            }\n        }\n\n        // create a transposed SOP\n        Abc_NtkSopTranspose( pSop, nVars, vCubes, vStore );\n        // create permutation\n        Vec_StrSelectSortCost2( (char **)Vec_PtrArray(vCubes), nVars, vCounts, vOrder );\n        pOrder = Vec_IntArray(vOrder);\n/*\n        // find good order\n        Vec_IntClear( vOrder );\n        for ( v = 0; v \u003c nVars; v++ )\n            Vec_IntPush( vOrder, v );\n        pOrder = Vec_IntArray(vOrder);\n        Vec_IntSelectSortCost( pOrder, nVars, vCounts );\n*/\n        // copy the cover\n        Vec_StrGrow( vStore, Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1 );\n        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );\n        pSopNew = pCubeNew = pSop;\n        pSop = Vec_StrArray(vStore);\n        // generate permuted one\n        // inlining of macro Abc_SopForEachCube\n        for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n            for  v = 0; v \u003c nVars; v++  {\n                pCubeNew[v] = '-';\n            }\n            for  v = 0; v \u003c nVars; v++  {\n                if pCube[pOrder[v]] == '0' {\n                    pCubeNew[v] = '0';\n                } else if pCube[pOrder[v]] == '1' {\n                    pCubeNew[v] = '1'; }\n            }\n            pCubeNew += nVars + 3;\n        }\n        pNode.pData = pSopNew;\n        // generate the fanin order\n        Vec_IntClear( vFanins );\n        for  v = 0; v \u003c nVars; v++  {\n            Vec_IntPush( vFanins, Abc_ObjFaninId( pNode, pOrder[v] ) );\n        }\n        Vec_IntClear( \u0026pNode.vFanins );\n        Vec_IntAppend( \u0026pNode.vFanins, vFanins );\n    }\n    }\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vCounts );\n    Vec_IntFree( vOrder );\n    Vec_StrFree( vStore );\n    Vec_PtrFree( vCubes );\n}\nfunc Abc_NtkOrderFaninsByLitCountAndCubeCount(pNtk *Abc_Ntk_t) {\n    // assuming that the fanins are sorted by the number of literals in each cube\n    // this procedure sorts the literals appearing only once by the number of their cube\n    var vOrder *Vec_Int_t;\n    var vCounts *Vec_Int_t;\n    var vFanins *Vec_Int_t;\n    var vCubeNum *Vec_Int_t;\n    var vStore *Vec_Str_t;\n    var pNode *Abc_Obj_t;\n    var pSop, pSopNew string;\n    var pCube, pCubeNew string;\n    var nVars int32;\n    var i int32;\n    var v int32;\n    var iCube int32;\n    var pOrder *int32;\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\");\n    vStore = Vec_StrAlloc( 100 );\n    vOrder = Vec_IntAlloc( 100 );\n    vCounts = Vec_IntAlloc( 100 );\n    vFanins = Vec_IntAlloc( 100 );\n    vCubeNum = Vec_IntAlloc( 100 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pSop = (char *)pNode.pData;\n        nVars = Abc_SopGetVarNum(pSop);\n        assert(nVars == Abc_ObjFaninNum(pNode), \"nVars == Abc_ObjFaninNum(pNode)\");\n        // count literals and remember the cube where each literal appears\n        Vec_IntFill( vCounts, nVars, 0 );\n        Vec_IntFill( vCubeNum, nVars, 0 );\n        iCube = 0;\n        // inlining of macro Abc_SopForEachCube\n        for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n            for  v = 0; v \u003c nVars; v++  {\n                if pCube[v] != '-' {\n                    Vec_IntAddToEntry( vCounts, v, 1 );\n                    Vec_IntWriteEntry( vCubeNum, v, iCube );\n                }\n            }\n            iCube++;\n        }\n        // create new order\n        for  v = 0; v \u003c nVars; v++  {\n            if Vec_IntEntry(vCounts, v) == 1 {\n                Vec_IntWriteEntry( vCounts, v, Vec_IntEntry(vCubeNum, v) );\n            } else {\n                Vec_IntWriteEntry( vCounts, v, ABC_INFINITY ); }\n        }\n        // find good order\n        Vec_IntClear( vOrder );\n        for  v = 0; v \u003c nVars; v++  {\n            Vec_IntPush( vOrder, v );\n        }\n        pOrder = Vec_IntArray(vOrder);\n        Vec_IntSelectSortCost( pOrder, nVars, vCounts );\n        // copy the cover\n        Vec_StrGrow( vStore, Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1 );\n        memcpy( Vec_StrArray(vStore), pSop, (size_t)(Abc_SopGetCubeNum(pSop) * (nVars + 3) + 1) );\n        pSopNew = pCubeNew = pSop;\n        pSop = Vec_StrArray(vStore);\n        // generate permuted one\n        // inlining of macro Abc_SopForEachCube\n        for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n            for  v = 0; v \u003c nVars; v++  {\n                pCubeNew[v] = '-';\n            }\n            for  v = 0; v \u003c nVars; v++  {\n                if pCube[pOrder[v]] == '0' {\n                    pCubeNew[v] = '0';\n                } else if pCube[pOrder[v]] == '1' {\n                    pCubeNew[v] = '1'; }\n            }\n            pCubeNew += nVars + 3;\n        }\n        pNode.pData = pSopNew;\n        // generate the fanin order\n        Vec_IntClear( vFanins );\n        for  v = 0; v \u003c nVars; v++  {\n            Vec_IntPush( vFanins, Abc_ObjFaninId( pNode, pOrder[v] ) );\n        }\n        Vec_IntClear( \u0026pNode.vFanins );\n        Vec_IntAppend( \u0026pNode.vFanins, vFanins );\n    }\n    }\n    Vec_IntFree( vCubeNum );\n    Vec_IntFree( vFanins );\n    Vec_IntFree( vCounts );\n    Vec_IntFree( vOrder );\n    Vec_StrFree( vStore );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Split large nodes by dividing their SOPs in half.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeSplitLarge(pNode *Abc_Obj_t) {\n    var pNode1, pNode2, pFanin *Abc_Obj_t;\n    var CutPoint int32;\n    var nVars int32 = Abc_ObjFaninNum(pNode);\n    var i int32;\n    var nCubes int32 = Abc_SopGetCubeNum((char *)pNode.pData);\n    pNode1 = Abc_NtkDupObj( pNode.pNtk, pNode, 0 );\n    pNode2 = Abc_NtkDupObj( pNode.pNtk, pNode, 0 );\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Abc_ObjAddFanin( pNode1, pFanin );\n    }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pNode)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pNode, i)), 1); i++  {\n        Abc_ObjAddFanin( pNode2, pFanin );\n    }    \n    // update the node\n    Abc_ObjRemoveFanins( pNode );\n    Abc_ObjAddFanin( pNode, pNode1 );\n    Abc_ObjAddFanin( pNode, pNode2 );\n    pNode.pData = Abc_SopCreateOr( (Mem_Flex_t *)pNode.pNtk.pManFunc, 2, nil );\n    // update covers of the nodes\n    assert(nCubes \u003e 1, \"nCubes \u003e 1\");\n    CutPoint = (nCubes / 2) * (nVars + 3);\n    ((char *)pNode1.pData)[CutPoint] = 0;\n    pNode2.pData = (char *)pNode2.pData + CutPoint;\n}\nfunc Abc_NtkSplitLarge(pNtk *Abc_Ntk_t, nFaninsMax int32, nCubesMax int32) {\n    var pNode *Abc_Obj_t;\n    var nObjOld int32  = Abc_NtkObjNumMax(pNtk);\n    var i, nCubes int32;\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\");\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        if i == nObjOld {\n            break; }\n        nCubes = Abc_SopGetCubeNum((char *)pNode.pData);\n        if (Abc_ObjFaninNum(pNode) \u003e nFaninsMax \u0026\u0026 nCubes \u003e 1) || nCubes \u003e nCubesMax {\n            Abc_NodeSplitLarge( pNode ); }\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorts the cubes in a topological order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeCompareCubes1(pp1 *string, pp2 *string) int32 {\n    return int32(strings.Compare(*pp1, *pp2));\n}\nfunc Abc_NodeCompareCubes2(pp1 *string, pp2 *string) int32 {\n    var pStr1 string  = *pp1;\n    var pStr2 string  = *pp2;\n    var i, nNum1, nNum2 int32;\n    for  i = 0; pStr1[i]; i++  {\n        nNum1 += (pStr1[i] != '-');\n        nNum2 += (pStr2[i] != '-');\n    }\n    if nNum1 \u003e nNum2 {\n        return -1; }\n    if nNum1 \u003c nNum2 {\n        return 1; }\n    return int32(strings.Compare(*pp1, *pp2));\n}\nfunc Abc_NodeSortCubes(pNode *Abc_Obj_t, vCubes *Vec_Ptr_t, vStore *Vec_Str_t, fWeight int32) {\n    var pCube, pPivot string;\n    var pSop string  = (char *)pNode.pData;\n    var i int32;\n    var nVars int32 = Abc_ObjFaninNum(pNode);\n    Vec_PtrClear( vCubes );\n    // inlining of macro Abc_SopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n        assert(pCube[nVars] == ' ', \"pCube[nVars] == ' '\");\n        pCube[nVars] = 0;\n        Vec_PtrPush( vCubes, pCube );\n    }\n    if fWeight != 0 {\n        Vec_PtrSort( vCubes, (int (*)())Abc_NodeCompareCubes2 );\n    } else {\n        Vec_PtrSort( vCubes, (int (*)())Abc_NodeCompareCubes1 ); }\n    Vec_StrGrow( vStore, Vec_PtrSize(vCubes) * (nVars + 3) );\n    pPivot = Vec_StrArray( vStore );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCubes)) \u0026\u0026 (((pCube) = (char *)Vec_PtrEntry(vCubes, i)), 1); i++  {\n        assert(pCube[nVars] == 0, \"pCube[nVars] == 0\");\n        pCube[nVars] = ' ';\n        memcpy( pPivot, pCube, (size_t)(nVars + 3) );\n        pPivot += nVars + 3;\n    }\n    memcpy( pSop, Vec_StrArray(vStore), (size_t)(Vec_PtrSize(vCubes) * (nVars + 3)) );\n}\nfunc Abc_NtkSortCubes(pNtk *Abc_Ntk_t, fWeight int32) {\n    var vCubes *Vec_Ptr_t;\n    var vStore *Vec_Str_t;\n    var pNode *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\");\n    vCubes = Vec_PtrAlloc( 1000 );\n    vStore = Vec_StrAlloc( 1000 );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Abc_NodeSortCubes( pNode, vCubes, vStore, fWeight ); }\n    }\n    Vec_StrFree( vStore );\n    Vec_PtrFree( vCubes );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Sorts fanins of each node to make SOPs more readable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSortSops(pNtk *Abc_Ntk_t) {\n    Abc_NtkSortCubes( pNtk, 1 );\n    Abc_NtkOrderFaninsByLitCount( pNtk );\n    Abc_NtkSortCubes( pNtk, 0 );\n    Abc_NtkOrderFaninsByLitCountAndCubeCount( pNtk );\n    Abc_NtkSortCubes( pNtk, 0 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Makes cover legitimate for \"fast_extract\".]\n\n  Description [Iteratively removes distance-1 and contained cubes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CubeContain(pCube1 string, pCube2 string, nVars int32) int32 {\n    var v int32;\n    var fCont12 int32 = 1;\n    var fCont21 int32 = 1;\n    for  v = 0; v \u003c nVars; v++  {\n        if pCube1[v] == pCube2[v] {\n            continue; }\n        if pCube1[v] == '-' {\n            fCont21 = 0;\n        } else if pCube2[v] == '-' {\n            fCont12 = 0;\n        } else {\n            return 0; }\n        if !(fCont12 != 0) \u0026\u0026 !(fCont21 != 0) {\n            return 0; }\n    }\n    assert((fCont21 != 0) || (fCont12 != 0), \"fCont21 || fCont12\");\n    return (fCont21 \u003c\u003c 1) | fCont12;\n}\nfunc Abc_NodeMakeSCCFree(pNode *Abc_Obj_t) int32 {\n    var pSop string  = (char *)pNode.pData;\n    var pCube, pCube2, pSopNew string;\n    var nVars int32  = Abc_ObjFaninNum(pNode);\n    var Status, nCount int32;\n    // inlining of macro Abc_SopForEachCubePair\n    // inlining of macro Abc_SopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {                                                         for  pCube2 = (pCube + (nVars) + 3); *pCube2; pCube2 += (nVars) + 3  {\n        if pCube[0] == 'z' || pCube2[0] == 'z' {\n            continue; }\n        Status = Abc_CubeContain( pCube, pCube2, nVars );\n        nCount += int32((Status \u003e 0));\n        if Status \u0026 1 {\n            pCube2[0] = 'z';\n        } else if Status \u0026 2 {\n            pCube[0] = 'z'; }\n    }\n    }\n    if nCount == 0 {\n        return 0; }\n    // create new cover\n    pSopNew = (char *)pNode.pData;\n    // inlining of macro Abc_SopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n        if pCube[0] == 'z' {\n            continue; }\n        memcpy( pSopNew, pCube, (size_t)(nVars + 3) );\n        pSopNew += nVars + 3;\n    }\n    *pSopNew = 0;\n    return 1;\n}\nfunc Abc_NodeMakeDist1Free(pNode *Abc_Obj_t) {\n    var pSop string  = (char *)pNode.pData;\n    var pCube, pCube2 string;\n    var i int32;\n    var nVars int32 = Abc_ObjFaninNum(pNode);\n    // inlining of macro Abc_SopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n    // inlining of macro Abc_SopForEachCube\n    for  pCube2 = (pCube + nVars + 3); *pCube2; pCube2 += (nVars) + 3  {\n        var Counter int32;\n        var iDiff int32 = -1;\n        for  i = 0; i \u003c nVars; i++  {\n            if pCube[i] != pCube2[i] {\n                Counter++, iDiff = i; }\n        }\n        if Counter == 1 \u0026\u0026 ((pCube[iDiff] == '0' \u0026\u0026 pCube2[iDiff] == '1') || (pCube[iDiff] == '1' \u0026\u0026 pCube2[iDiff] == '0')) {\n            pCube[iDiff] = pCube2[iDiff] = '-'; }\n    }\n    }\n}\nfunc Abc_NodeCheckDist1Free(pNode *Abc_Obj_t) {\n    var pSop string  = (char *)pNode.pData;\n    var pCube, pCube2 string;\n    var i int32;\n    var nVars int32 = Abc_ObjFaninNum(pNode);\n    // inlining of macro Abc_SopForEachCube\n    for  pCube = (pSop); *pCube; pCube += (nVars) + 3  {\n    // inlining of macro Abc_SopForEachCube\n    for  pCube2 = (pSop); *pCube2; pCube2 += (nVars) + 3  {\n        var Counter int32;\n        if pCube == pCube2 {\n            continue; }\n        for  i = 0; i \u003c nVars; i++  {\n            if pCube[i] != pCube2[i] {\n                Counter++; }\n        }\n        assert(Counter \u003e 1, \"Counter \u003e 1\");\n    }\n    }\n}\nfunc Abc_NodeMakeLegit(pNode *Abc_Obj_t) int32 {\n    var i int32;\n    var fChanges int32 = 1;\n    for  i = 0; (fChanges != 0); i++  {\n        Abc_NodeMakeDist1Free( pNode );\n        fChanges = Abc_NodeMakeSCCFree( pNode );\n    }\n//    Abc_NodeCheckDist1Free( pNode );\n    return i \u003e 1;\n}\nfunc Abc_NtkMakeLegit(pNtk *Abc_Ntk_t) int32 {\n    var pNode *Abc_Obj_t;\n    var i, Counter int32;\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\");\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Counter += Abc_NodeMakeLegit( pNode ); }\n    }\n    if Counter != 0 {\n        Abc_Print( 0, \"%d nodes were made dist1-cube-free and/or single-cube-containment-free.\\n\", Counter ); }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

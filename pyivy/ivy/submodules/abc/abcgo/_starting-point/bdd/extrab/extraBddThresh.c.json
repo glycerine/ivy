@@ -1,0 +1,1182 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c",
+  "SHA256": "4c47806a3d2e3f8839d3da0f0ca0af34ba73a30e63739784f8fb0c4d3f15ea22",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 59,
+        "Column": 9,
+        "ByteOffset": 1726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"%d \", pChow[i]);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 1761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"  %d\\n\", Chow0);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 1957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(pChow, 0, sizeof(int) * nVars);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 5304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(nVars == 3);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 203,
+        "Column": 17,
+        "ByteOffset": 6215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert(Lmax \u003c Lmin);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 6482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(nVars == 4);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 234,
+        "Column": 21,
+        "ByteOffset": 7363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert(Lmax \u003c Lmin);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 248,
+        "Column": 5,
+        "ByteOffset": 7685
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(nVars == 5);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 25,
+        "ByteOffset": 8691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        assert(Lmax \u003c Lmin);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 9039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(nVars == 6);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 306,
+        "Column": 29,
+        "ByteOffset": 10278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            assert(Lmax \u003c Lmin);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 322,
+        "Column": 5,
+        "ByteOffset": 10656
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(nVars == 7);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 346,
+        "Column": 33,
+        "ByteOffset": 12036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                                assert(Lmax \u003c Lmin);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 363,
+        "Column": 5,
+        "ByteOffset": 12494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(nVars == 8);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 388,
+        "Column": 37,
+        "ByteOffset": 14019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                                    assert(Lmax \u003c Lmin);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 433,
+        "Column": 9,
+        "ByteOffset": 15418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\n Inequality [%d] = \", k);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 435,
+        "Column": 13,
+        "ByteOffset": 15503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"%ld \", pGreaters[k][i]);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 437,
+        "Column": 9,
+        "ByteOffset": 15554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\" \u003e \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 440,
+        "Column": 13,
+        "ByteOffset": 15619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"%ld \", pSmallers[k][i]);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 449,
+        "Column": 29,
+        "ByteOffset": 15938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var nCubesIsop int32  = strlen(pIsop) / (nVars + 3);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 450,
+        "Column": 33,
+        "ByteOffset": 15999
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var nCubesIsopFneg int32  = strlen(pIsopFneg) / (nVars + 3);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 459,
+        "Column": 26,
+        "ByteOffset": 16242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for i = 0; i \u003c int32(strlen(pIsop)); i += (nVars + 3) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 471,
+        "Column": 30,
+        "ByteOffset": 16605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        for j = 0; j \u003c int32(strlen(pIsopFneg)); j += (nVars + 3) {"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 516,
+        "Column": 28,
+        "ByteOffset": 18246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pWofChow *int32  = ABC_ALLOC( int, nChows );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 517,
+        "Column": 29,
+        "ByteOffset": 18300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var nCubesIsop int32  = strlen(pIsop) / (nVars + 3);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 518,
+        "Column": 33,
+        "ByteOffset": 18361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var nCubesIsopFneg int32  = strlen(pIsopFneg) / (nVars + 3);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 523,
+        "Column": 35,
+        "ByteOffset": 18551
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGreaters = (unsigned long **)malloc(nCubesIsop * nCubesIsopFneg * sizeof *pGreaters);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 525,
+        "Column": 41,
+        "ByteOffset": 18702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pGreaters[i] = (unsigned long *)malloc(nChows * sizeof *pGreaters[i]);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 527,
+        "Column": 35,
+        "ByteOffset": 18781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pSmallers = (unsigned long **)malloc(nCubesIsop * nCubesIsopFneg * sizeof *pSmallers);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 529,
+        "Column": 41,
+        "ByteOffset": 18932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pSmallers[i] = (unsigned long *)malloc(nChows * sizeof *pSmallers[i]);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 589,
+        "Column": 9,
+        "ByteOffset": 20838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        free(pGreaters[i]);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 591,
+        "Column": 5,
+        "ByteOffset": 20868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(pGreaters);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 593,
+        "Column": 9,
+        "ByteOffset": 20947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        free(pSmallers[i]);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 595,
+        "Column": 5,
+        "ByteOffset": 20977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(pSmallers);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 603,
+        "Column": 26,
+        "ByteOffset": 21156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for j = 0; j \u003c int32(strlen(pIsop)); j += (nVars + 3) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 607,
+        "Column": 26,
+        "ByteOffset": 21335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for j = 0; j \u003c int32(strlen(pIsopFneg)); j += (nVars + 3) {"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 617,
+        "Column": 5,
+        "ByteOffset": 21601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pWofChow );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 627,
+        "Column": 9,
+        "ByteOffset": 21807
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\nHeuristic method: is not TLF\\n\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 627,
+        "Column": 18,
+        "ByteOffset": 21816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\nHeuristic method: is not TLF\\n\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 629,
+        "Column": 9,
+        "ByteOffset": 21884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\nHeuristic method: Weights and threshold value:\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 629,
+        "Column": 18,
+        "ByteOffset": 21893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"\\nHeuristic method: Weights and threshold value:\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 631,
+        "Column": 13,
+        "ByteOffset": 22004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"%d \", pW[i]);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 633,
+        "Column": 9,
+        "ByteOffset": 22044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"  %d\\n\", T);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 721,
+        "Column": 5,
+        "ByteOffset": 24614
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(pIsop);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 722,
+        "Column": 5,
+        "ByteOffset": 24631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(pIsopFneg);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 755,
+        "Column": 5,
+        "ByteOffset": 26234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(nVars \u003c= 8);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 757,
+        "Column": 9,
+        "ByteOffset": 26294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"%d %d %d\\n\", i, Abc_TtPosVar(\u0026t, nVars, i),"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 765,
+        "Column": 9,
+        "ByteOffset": 26632
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"No threshold\\n\"); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_ThreshPrintChow",
+      "Start": 1562,
+      "End": 1732,
+      "BodyStart": 1624,
+      "Original": "void Extra_ThreshPrintChow(int Chow0, int * pChow, int nVars) {\n    int i;\n    for (i = 0; i \u003c nVars; i++)\n        printf(\"%d \", pChow[i]);\n    printf(\"  %d\\n\", Chow0);\n}",
+      "Draft": "func Extra_ThreshPrintChow(Chow0 int32, pChow *int32, nVars int32) {\n    var i int32;\n    for i = 0; i \u003c nVars; i++ {\n        fmt.Printf(\"%d \", pChow[i]);\n    }\n    fmt.Printf(\"  %d\\n\", Chow0);\n}"
+    },
+    {
+      "Name": "Extra_ThreshComputeChow",
+      "Start": 1733,
+      "End": 2242,
+      "BodyStart": 1795,
+      "Original": "int Extra_ThreshComputeChow(word * t, int nVars, int * pChow) {\n    int i, k, Chow0 = 0, nMints = (1 \u003c\u003c nVars);\n    memset(pChow, 0, sizeof(int) * nVars);\n    // compute Chow coefs\n    for (i = 0; i \u003c nMints; i++)\n        if (Abc_TtGetBit(t, i))\n            for (Chow0++, k = 0; k \u003c nVars; k++)\n                if ((i \u003e\u003e k) \u0026 1)\n                    pChow[k]++;\n    // compute modified Chow coefs\n    for (k = 0; k \u003c nVars; k++)\n        pChow[k] = 2 * pChow[k] - Chow0;\n    return Chow0 - (1 \u003c\u003c (nVars - 1));\n}",
+      "Draft": "func Extra_ThreshComputeChow(t *word, nVars int32, pChow *int32) int32 {\n    var i int32;\n    var k int32;\n    var Chow0 int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    memset(pChow, 0, sizeof(int) * nVars);\n    // compute Chow coefs\n    for i = 0; i \u003c nMints; i++ {\n        if Abc_TtGetBit(t, i) {\n            for Chow0, k = Chow0+1, 0; k \u003c nVars; k++ {\n                if (i \u003e\u003e k) \u0026 1 {\n                    pChow[k]++; }\n            } }\n    }\n    // compute modified Chow coefs\n    for k = 0; k \u003c nVars; k++ {\n        pChow[k] = 2 * pChow[k] - Chow0;\n    }\n    return Chow0 - (1 \u003c\u003c (nVars - 1));\n}"
+    },
+    {
+      "Name": "Extra_ThreshSortByChow",
+      "Start": 2243,
+      "End": 2733,
+      "BodyStart": 2305,
+      "Original": "void Extra_ThreshSortByChow(word * t, int nVars, int * pChow) {\n    int i, nWords = Abc_TtWordNum(nVars);\n    //sort the variables by Chow in ascending order\n    while (1) {\n        int fChange = 0;\n        for (i = 0; i \u003c nVars - 1; i++) {\n            if (pChow[i] \u003e= pChow[i + 1])\n                continue;\n            ABC_SWAP(int, pChow[i], pChow[i + 1]);\n            Abc_TtSwapAdjacent(t, nWords, i);\n            fChange = 1;\n        }\n        if (!fChange)\n            return;\n    }\n}",
+      "Draft": "func Extra_ThreshSortByChow(t *word, nVars int32, pChow *int32) {\n    var i int32;\n    var nWords int32 = Abc_TtWordNum(nVars);\n    //sort the variables by Chow in ascending order\n    for {\n        var fChange int32;\n        for i = 0; i \u003c nVars - 1; i++ {\n            if pChow[i] \u003e= pChow[i + 1] {\n                continue; }\n            ABC_SWAP(int, pChow[i], pChow[i + 1]);\n            Abc_TtSwapAdjacent(t, nWords, i);\n            fChange = 1;\n        }\n        if !(fChange != 0) {\n            return; }\n    }\n}"
+    },
+    {
+      "Name": "Extra_ThreshSortByChowInverted",
+      "Start": 2734,
+      "End": 3233,
+      "BodyStart": 2804,
+      "Original": "void Extra_ThreshSortByChowInverted(word * t, int nVars, int * pChow) {\n    int i, nWords = Abc_TtWordNum(nVars);\n    //sort the variables by Chow in descending order\n    while (1) {\n        int fChange = 0;\n        for (i = 0; i \u003c nVars - 1; i++) {\n            if (pChow[i] \u003c= pChow[i + 1])\n                continue;\n            ABC_SWAP(int, pChow[i], pChow[i + 1]);\n            Abc_TtSwapAdjacent(t, nWords, i);\n            fChange = 1;\n        }\n        if (!fChange)\n            return;\n    }\n}",
+      "Draft": "func Extra_ThreshSortByChowInverted(t *word, nVars int32, pChow *int32) {\n    var i int32;\n    var nWords int32 = Abc_TtWordNum(nVars);\n    //sort the variables by Chow in descending order\n    for {\n        var fChange int32;\n        for i = 0; i \u003c nVars - 1; i++ {\n            if pChow[i] \u003c= pChow[i + 1] {\n                continue; }\n            ABC_SWAP(int, pChow[i], pChow[i + 1]);\n            Abc_TtSwapAdjacent(t, nWords, i);\n            fChange = 1;\n        }\n        if !(fChange != 0) {\n            return; }\n    }\n}"
+    },
+    {
+      "Name": "Extra_ThreshInitializeChow",
+      "Start": 3234,
+      "End": 3667,
+      "BodyStart": 3289,
+      "Original": "int Extra_ThreshInitializeChow(int nVars, int * pChow) {\n    int i = 0, Aux[16], nChows = 0;\n    //group the variables which have the same Chow\n    for (i = 0; i \u003c nVars; i++) {\n        if (i == 0 || (pChow[i] == pChow[i - 1]))\n            Aux[i] = nChows;\n        else {\n            nChows++;\n            Aux[i] = nChows;\n        }\n    }\n    for (i = 0; i \u003c nVars; i++)\n        pChow[i] = Aux[i];\n    nChows++;\n    return nChows;\n\n}",
+      "Draft": "func Extra_ThreshInitializeChow(nVars int32, pChow *int32) int32 {\n    var i int32;\n    var Aux [16]int32;\n    var nChows int32;\n    //group the variables which have the same Chow\n    for i = 0; i \u003c nVars; i++ {\n        if i == 0 || (pChow[i] == pChow[i - 1]) {\n            Aux[i] = nChows;\n        } else {\n            nChows++;\n            Aux[i] = nChows;\n        }\n    }\n    for i = 0; i \u003c nVars; i++ {\n        pChow[i] = Aux[i];\n    }\n    nChows++;\n    return nChows;\n\n}"
+    },
+    {
+      "Name": "Extra_ThreshWeightedSum",
+      "Start": 3668,
+      "End": 3864,
+      "BodyStart": 3738,
+      "Original": "static inline int Extra_ThreshWeightedSum(int * pW, int nVars, int m) {\n    int i, Cost = 0;\n    for (i = 0; i \u003c nVars; i++)\n        if ((m \u003e\u003e i) \u0026 1)\n            Cost += pW[i];\n    return Cost;\n}",
+      "Draft": "func Extra_ThreshWeightedSum(pW *int32, nVars int32, m int32) int32 {\n    var i, Cost int32;\n    for i = 0; i \u003c nVars; i++ {\n        if (m \u003e\u003e i) \u0026 1 {\n            Cost += pW[i]; }\n    }\n    return Cost;\n}"
+    },
+    {
+      "Name": "Extra_ThreshCubeWeightedSum1",
+      "Start": 3865,
+      "End": 4131,
+      "BodyStart": 3981,
+      "Original": "static inline int Extra_ThreshCubeWeightedSum1(int * pWofChow, int * pChow,\n        char * pIsop, int nVars, int j) {\n    int k, Cost = 0;\n    for (k = j; k \u003c j + nVars; k++)\n        if (pIsop[k] == '1')\n            Cost += pWofChow[pChow[k - j]];\n    return Cost;\n}",
+      "Draft": "func Extra_ThreshCubeWeightedSum1(pWofChow *int32, pChow *int32, pIsop string, nVars int32, j int32) int32 {\n    var k, Cost int32;\n    for k = j; k \u003c j + nVars; k++ {\n        if pIsop[k] == '1' {\n            Cost += pWofChow[pChow[k - j]]; }\n    }\n    return Cost;\n}"
+    },
+    {
+      "Name": "Extra_ThreshCubeWeightedSum2",
+      "Start": 4132,
+      "End": 4398,
+      "BodyStart": 4248,
+      "Original": "static inline int Extra_ThreshCubeWeightedSum2(int * pWofChow, int * pChow,\n        char * pIsop, int nVars, int j) {\n    int k, Cost = 0;\n    for (k = j; k \u003c j + nVars; k++)\n        if (pIsop[k] == '-')\n            Cost += pWofChow[pChow[k - j]];\n    return Cost;\n}",
+      "Draft": "func Extra_ThreshCubeWeightedSum2(pWofChow *int32, pChow *int32, pIsop string, nVars int32, j int32) int32 {\n    var k, Cost int32;\n    for k = j; k \u003c j + nVars; k++ {\n        if pIsop[k] == '-' {\n            Cost += pWofChow[pChow[k - j]]; }\n    }\n    return Cost;\n}"
+    },
+    {
+      "Name": "Extra_ThreshCubeWeightedSum3",
+      "Start": 4400,
+      "End": 4639,
+      "BodyStart": 4518,
+      "Original": "static inline int Extra_ThreshCubeWeightedSum3(int * pWofChow, int nChows,\n        unsigned long ** pGreaters, int j) {\n    int i, Cost = 0;\n    for (i = 0; i \u003c nChows; i++)\n        Cost += pWofChow[i] * pGreaters[j][i];\n    return Cost;\n}",
+      "Draft": "static inline int Extra_ThreshCubeWeightedSum3(int * pWofChow, int nChows,\n        unsigned long ** pGreaters, int j) {\n    var i, Cost int32;\n    for i = 0; i \u003c nChows; i++ {\n        Cost += pWofChow[i] * pGreaters[j][i];\n    }\n    return Cost;\n}"
+    },
+    {
+      "Name": "Extra_ThreshCubeWeightedSum4",
+      "Start": 4640,
+      "End": 4879,
+      "BodyStart": 4758,
+      "Original": "static inline int Extra_ThreshCubeWeightedSum4(int * pWofChow, int nChows,\n        unsigned long ** pSmallers, int j) {\n    int i, Cost = 0;\n    for (i = 0; i \u003c nChows; i++)\n        Cost += pWofChow[i] * pSmallers[j][i];\n    return Cost;\n}",
+      "Draft": "static inline int Extra_ThreshCubeWeightedSum4(int * pWofChow, int nChows,\n        unsigned long ** pSmallers, int j) {\n    var i, Cost int32;\n    for i = 0; i \u003c nChows; i++ {\n        Cost += pWofChow[i] * pSmallers[j][i];\n    }\n    return Cost;\n}"
+    },
+    {
+      "Name": "Extra_ThreshSelectWeights3",
+      "Start": 4880,
+      "End": 5978,
+      "BodyStart": 4942,
+      "Original": "int Extra_ThreshSelectWeights3(word * t, int nVars, int * pW) {\n    int m, Lmin, Lmax, nMints = (1 \u003c\u003c nVars);\n    assert(nVars == 3);\n    for (pW[2] = 1; pW[2] \u003c= nVars; pW[2]++)\n        for (pW[1] = pW[2]; pW[1] \u003c= nVars; pW[1]++)\n            for (pW[0] = pW[1]; pW[0] \u003c= nVars; pW[0]++) {\n                Lmin = 10000;\n                Lmax = 0;\n                for (m = 0; m \u003c nMints; m++) {\n                    if (Abc_TtGetBit(t, m))\n                        Lmin = Abc_MinInt(Lmin,\n                                Extra_ThreshWeightedSum(pW, nVars, m));\n                    else\n                        Lmax = Abc_MaxInt(Lmax,\n                                Extra_ThreshWeightedSum(pW, nVars, m));\n                    if (Lmax \u003e= Lmin)\n                        break;\n//            printf( \"%c%d \", Abc_TtGetBit(t, m) ? '+' : '-', Extra_ThreshWeightedSum(pW, nVars, m) );\n                }\n//        printf( \"  -%d +%d\\n\", Lmax, Lmin );\n                if (m \u003c nMints)\n                    continue;\n                assert(Lmax \u003c Lmin);\n                return Lmin;\n            }\n    return 0;\n}",
+      "Draft": "func Extra_ThreshSelectWeights3(t *word, nVars int32, pW *int32) int32 {\n    var m int32;\n    var Lmin int32;\n    var Lmax int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    assert(nVars == 3, \"nVars == 3\");\n    for pW[2] = 1; pW[2] \u003c= nVars; pW[2]++ {\n        for pW[1] = pW[2]; pW[1] \u003c= nVars; pW[1]++ {\n            for pW[0] = pW[1]; pW[0] \u003c= nVars; pW[0]++ {\n                Lmin = 10000;\n                Lmax = 0;\n                for m = 0; m \u003c nMints; m++ {\n                    if Abc_TtGetBit(t, m) {\n                        Lmin = Abc_MinInt(Lmin,\n                                Extra_ThreshWeightedSum(pW, nVars, m));\n                    } else {\n                        Lmax = Abc_MaxInt(Lmax,\n                                Extra_ThreshWeightedSum(pW, nVars, m)); }\n                    if Lmax \u003e= Lmin {\n                        break; }\n//            printf( \"%c%d \", Abc_TtGetBit(t, m) ? '+' : '-', Extra_ThreshWeightedSum(pW, nVars, m) );\n                }\n//        printf( \"  -%d +%d\\n\", Lmax, Lmin );\n                if m \u003c nMints {\n                    continue; }\n                assert(Lmax \u003c Lmin, \"Lmax \u003c Lmin\");\n                return Lmin;\n            }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Extra_ThreshSelectWeights4",
+      "Start": 5979,
+      "End": 7055,
+      "BodyStart": 6041,
+      "Original": "int Extra_ThreshSelectWeights4(word * t, int nVars, int * pW) {\n    int m, Lmin, Lmax, nMints = (1 \u003c\u003c nVars);\n    assert(nVars == 4);\n    for (pW[3] = 1; pW[3] \u003c= nVars; pW[3]++)\n        for (pW[2] = pW[3]; pW[2] \u003c= nVars; pW[2]++)\n            for (pW[1] = pW[2]; pW[1] \u003c= nVars; pW[1]++)\n                for (pW[0] = pW[1]; pW[0] \u003c= nVars; pW[0]++) {\n                    Lmin = 10000;\n                    Lmax = 0;\n                    for (m = 0; m \u003c nMints; m++) {\n                        if (Abc_TtGetBit(t, m))\n                            Lmin = Abc_MinInt(Lmin,\n                                    Extra_ThreshWeightedSum(pW, nVars, m));\n                        else\n                            Lmax = Abc_MaxInt(Lmax,\n                                    Extra_ThreshWeightedSum(pW, nVars, m));\n                        if (Lmax \u003e= Lmin)\n                            break;\n                    }\n                    if (m \u003c nMints)\n                        continue;\n                    assert(Lmax \u003c Lmin);\n                    return Lmin;\n                }\n    return 0;\n}",
+      "Draft": "func Extra_ThreshSelectWeights4(t *word, nVars int32, pW *int32) int32 {\n    var m int32;\n    var Lmin int32;\n    var Lmax int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    assert(nVars == 4, \"nVars == 4\");\n    for pW[3] = 1; pW[3] \u003c= nVars; pW[3]++ {\n        for pW[2] = pW[3]; pW[2] \u003c= nVars; pW[2]++ {\n            for pW[1] = pW[2]; pW[1] \u003c= nVars; pW[1]++ {\n                for pW[0] = pW[1]; pW[0] \u003c= nVars; pW[0]++ {\n                    Lmin = 10000;\n                    Lmax = 0;\n                    for m = 0; m \u003c nMints; m++ {\n                        if Abc_TtGetBit(t, m) {\n                            Lmin = Abc_MinInt(Lmin,\n                                    Extra_ThreshWeightedSum(pW, nVars, m));\n                        } else {\n                            Lmax = Abc_MaxInt(Lmax,\n                                    Extra_ThreshWeightedSum(pW, nVars, m)); }\n                        if Lmax \u003e= Lmin {\n                            break; }\n                    }\n                    if m \u003c nMints {\n                        continue; }\n                    assert(Lmax \u003c Lmin, \"Lmax \u003c Lmin\");\n                    return Lmin;\n                }\n            }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Extra_ThreshSelectWeights5",
+      "Start": 7056,
+      "End": 8284,
+      "BodyStart": 7118,
+      "Original": "int Extra_ThreshSelectWeights5(word * t, int nVars, int * pW) {\n    int m, Lmin, Lmax, nMints = (1 \u003c\u003c nVars), Limit = nVars + 0;\n    assert(nVars == 5);\n    for (pW[4] = 1; pW[4] \u003c= Limit; pW[4]++)\n        for (pW[3] = pW[4]; pW[3] \u003c= Limit; pW[3]++)\n            for (pW[2] = pW[3]; pW[2] \u003c= Limit; pW[2]++)\n                for (pW[1] = pW[2]; pW[1] \u003c= Limit; pW[1]++)\n                    for (pW[0] = pW[1]; pW[0] \u003c= Limit; pW[0]++) {\n                        Lmin = 10000;\n                        Lmax = 0;\n                        for (m = 0; m \u003c nMints; m++) {\n                            if (Abc_TtGetBit(t, m))\n                                Lmin = Abc_MinInt(Lmin,\n                                        Extra_ThreshWeightedSum(pW, nVars, m));\n                            else\n                                Lmax = Abc_MaxInt(Lmax,\n                                        Extra_ThreshWeightedSum(pW, nVars, m));\n                            if (Lmax \u003e= Lmin)\n                                break;\n                        }\n                        if (m \u003c nMints)\n                            continue;\n                        assert(Lmax \u003c Lmin);\n                        return Lmin;\n                    }\n    return 0;\n}",
+      "Draft": "func Extra_ThreshSelectWeights5(t *word, nVars int32, pW *int32) int32 {\n    var m int32;\n    var Lmin int32;\n    var Lmax int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    var Limit int32 = nVars + 0;\n    assert(nVars == 5, \"nVars == 5\");\n    for pW[4] = 1; pW[4] \u003c= Limit; pW[4]++ {\n        for pW[3] = pW[4]; pW[3] \u003c= Limit; pW[3]++ {\n            for pW[2] = pW[3]; pW[2] \u003c= Limit; pW[2]++ {\n                for pW[1] = pW[2]; pW[1] \u003c= Limit; pW[1]++ {\n                    for pW[0] = pW[1]; pW[0] \u003c= Limit; pW[0]++ {\n                        Lmin = 10000;\n                        Lmax = 0;\n                        for m = 0; m \u003c nMints; m++ {\n                            if Abc_TtGetBit(t, m) {\n                                Lmin = Abc_MinInt(Lmin,\n                                        Extra_ThreshWeightedSum(pW, nVars, m));\n                            } else {\n                                Lmax = Abc_MaxInt(Lmax,\n                                        Extra_ThreshWeightedSum(pW, nVars, m)); }\n                            if Lmax \u003e= Lmin {\n                                break; }\n                        }\n                        if m \u003c nMints {\n                            continue; }\n                        assert(Lmax \u003c Lmin, \"Lmax \u003c Lmin\");\n                        return Lmin;\n                    }\n                }\n            }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Extra_ThreshSelectWeights6",
+      "Start": 8285,
+      "End": 9754,
+      "BodyStart": 8347,
+      "Original": "int Extra_ThreshSelectWeights6(word * t, int nVars, int * pW) {\n    int m, Lmin, Lmax, nMints = (1 \u003c\u003c nVars), Limit = nVars + 3;\n    assert(nVars == 6);\n    for (pW[5] = 1; pW[5] \u003c= Limit; pW[5]++)\n        for (pW[4] = pW[5]; pW[4] \u003c= Limit; pW[4]++)\n            for (pW[3] = pW[4]; pW[3] \u003c= Limit; pW[3]++)\n                for (pW[2] = pW[3]; pW[2] \u003c= Limit; pW[2]++)\n                    for (pW[1] = pW[2]; pW[1] \u003c= Limit; pW[1]++)\n                        for (pW[0] = pW[1]; pW[0] \u003c= Limit; pW[0]++) {\n                            Lmin = 10000;\n                            Lmax = 0;\n                            for (m = 0; m \u003c nMints; m++) {\n                                if (Abc_TtGetBit(t, m))\n                                    Lmin = Abc_MinInt(Lmin,\n                                            Extra_ThreshWeightedSum(pW, nVars,\n                                                    m));\n                                else\n                                    Lmax = Abc_MaxInt(Lmax,\n                                            Extra_ThreshWeightedSum(pW, nVars,\n                                                    m));\n                                if (Lmax \u003e= Lmin)\n                                    break;\n                            }\n                            if (m \u003c nMints)\n                                continue;\n                            assert(Lmax \u003c Lmin);\n                            return Lmin;\n                        }\n    return 0;\n}",
+      "Draft": "func Extra_ThreshSelectWeights6(t *word, nVars int32, pW *int32) int32 {\n    var m int32;\n    var Lmin int32;\n    var Lmax int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    var Limit int32 = nVars + 3;\n    assert(nVars == 6, \"nVars == 6\");\n    for pW[5] = 1; pW[5] \u003c= Limit; pW[5]++ {\n        for pW[4] = pW[5]; pW[4] \u003c= Limit; pW[4]++ {\n            for pW[3] = pW[4]; pW[3] \u003c= Limit; pW[3]++ {\n                for pW[2] = pW[3]; pW[2] \u003c= Limit; pW[2]++ {\n                    for pW[1] = pW[2]; pW[1] \u003c= Limit; pW[1]++ {\n                        for pW[0] = pW[1]; pW[0] \u003c= Limit; pW[0]++ {\n                            Lmin = 10000;\n                            Lmax = 0;\n                            for m = 0; m \u003c nMints; m++ {\n                                if Abc_TtGetBit(t, m) {\n                                    Lmin = Abc_MinInt(Lmin,\n                                            Extra_ThreshWeightedSum(pW, nVars,\n                                                    m));\n                                } else {\n                                    Lmax = Abc_MaxInt(Lmax,\n                                            Extra_ThreshWeightedSum(pW, nVars,\n                                                    m)); }\n                                if Lmax \u003e= Lmin {\n                                    break; }\n                            }\n                            if m \u003c nMints {\n                                continue; }\n                            assert(Lmax \u003c Lmin, \"Lmax \u003c Lmin\");\n                            return Lmin;\n                        }\n                    }\n                }\n            }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Extra_ThreshSelectWeights7",
+      "Start": 9755,
+      "End": 11373,
+      "BodyStart": 9817,
+      "Original": "int Extra_ThreshSelectWeights7(word * t, int nVars, int * pW) {\n    int m, Lmin, Lmax, nMints = (1 \u003c\u003c nVars), Limit = nVars + 6;\n    assert(nVars == 7);\n    for (pW[6] = 1; pW[6] \u003c= Limit; pW[6]++)\n        for (pW[5] = pW[6]; pW[5] \u003c= Limit; pW[5]++)\n            for (pW[4] = pW[5]; pW[4] \u003c= Limit; pW[4]++)\n                for (pW[3] = pW[4]; pW[3] \u003c= Limit; pW[3]++)\n                    for (pW[2] = pW[3]; pW[2] \u003c= Limit; pW[2]++)\n                        for (pW[1] = pW[2]; pW[1] \u003c= Limit; pW[1]++)\n                            for (pW[0] = pW[1]; pW[0] \u003c= Limit; pW[0]++) {\n                                Lmin = 10000;\n                                Lmax = 0;\n                                for (m = 0; m \u003c nMints; m++) {\n                                    if (Abc_TtGetBit(t, m))\n                                        Lmin = Abc_MinInt(Lmin,\n                                                Extra_ThreshWeightedSum(pW,\n                                                        nVars, m));\n                                    else\n                                        Lmax = Abc_MaxInt(Lmax,\n                                                Extra_ThreshWeightedSum(pW,\n                                                        nVars, m));\n                                    if (Lmax \u003e= Lmin)\n                                        break;\n                                }\n                                if (m \u003c nMints)\n                                    continue;\n                                assert(Lmax \u003c Lmin);\n                                return Lmin;\n                            }\n    return 0;\n}",
+      "Draft": "func Extra_ThreshSelectWeights7(t *word, nVars int32, pW *int32) int32 {\n    var m int32;\n    var Lmin int32;\n    var Lmax int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    var Limit int32 = nVars + 6;\n    assert(nVars == 7, \"nVars == 7\");\n    for pW[6] = 1; pW[6] \u003c= Limit; pW[6]++ {\n        for pW[5] = pW[6]; pW[5] \u003c= Limit; pW[5]++ {\n            for pW[4] = pW[5]; pW[4] \u003c= Limit; pW[4]++ {\n                for pW[3] = pW[4]; pW[3] \u003c= Limit; pW[3]++ {\n                    for pW[2] = pW[3]; pW[2] \u003c= Limit; pW[2]++ {\n                        for pW[1] = pW[2]; pW[1] \u003c= Limit; pW[1]++ {\n                            for pW[0] = pW[1]; pW[0] \u003c= Limit; pW[0]++ {\n                                Lmin = 10000;\n                                Lmax = 0;\n                                for m = 0; m \u003c nMints; m++ {\n                                    if Abc_TtGetBit(t, m) {\n                                        Lmin = Abc_MinInt(Lmin,\n                                                Extra_ThreshWeightedSum(pW,\n                                                        nVars, m));\n                                    } else {\n                                        Lmax = Abc_MaxInt(Lmax,\n                                                Extra_ThreshWeightedSum(pW,\n                                                        nVars, m)); }\n                                    if Lmax \u003e= Lmin {\n                                        break; }\n                                }\n                                if m \u003c nMints {\n                                    continue; }\n                                assert(Lmax \u003c Lmin, \"Lmax \u003c Lmin\");\n                                return Lmin;\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Extra_ThreshSelectWeights8",
+      "Start": 11374,
+      "End": 13191,
+      "BodyStart": 11436,
+      "Original": "int Extra_ThreshSelectWeights8(word * t, int nVars, int * pW) {\n    int m, Lmin, Lmax, nMints = (1 \u003c\u003c nVars), Limit = nVars + 1; // \u003c\u003c-- incomplete detection to save runtime!\n    assert(nVars == 8);\n    for (pW[7] = 1; pW[7] \u003c= Limit; pW[7]++)\n        for (pW[6] = pW[7]; pW[6] \u003c= Limit; pW[6]++)\n            for (pW[5] = pW[6]; pW[5] \u003c= Limit; pW[5]++)\n                for (pW[4] = pW[5]; pW[4] \u003c= Limit; pW[4]++)\n                    for (pW[3] = pW[4]; pW[3] \u003c= Limit; pW[3]++)\n                        for (pW[2] = pW[3]; pW[2] \u003c= Limit; pW[2]++)\n                            for (pW[1] = pW[2]; pW[1] \u003c= Limit; pW[1]++)\n                                for (pW[0] = pW[1]; pW[0] \u003c= Limit; pW[0]++) {\n                                    Lmin = 10000;\n                                    Lmax = 0;\n                                    for (m = 0; m \u003c nMints; m++) {\n                                        if (Abc_TtGetBit(t, m))\n                                            Lmin = Abc_MinInt(Lmin,\n                                                    Extra_ThreshWeightedSum(pW,\n                                                            nVars, m));\n                                        else\n                                            Lmax = Abc_MaxInt(Lmax,\n                                                    Extra_ThreshWeightedSum(pW,\n                                                            nVars, m));\n                                        if (Lmax \u003e= Lmin)\n                                            break;\n                                    }\n                                    if (m \u003c nMints)\n                                        continue;\n                                    assert(Lmax \u003c Lmin);\n                                    return Lmin;\n                                }\n    return 0;\n}",
+      "Draft": "func Extra_ThreshSelectWeights8(t *word, nVars int32, pW *int32) int32 {\n    var m int32;\n    var Lmin int32;\n    var Lmax int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    var Limit int32 = nVars + 1; // \u003c\u003c-- incomplete detection to save runtime!\n    assert(nVars == 8, \"nVars == 8\");\n    for pW[7] = 1; pW[7] \u003c= Limit; pW[7]++ {\n        for pW[6] = pW[7]; pW[6] \u003c= Limit; pW[6]++ {\n            for pW[5] = pW[6]; pW[5] \u003c= Limit; pW[5]++ {\n                for pW[4] = pW[5]; pW[4] \u003c= Limit; pW[4]++ {\n                    for pW[3] = pW[4]; pW[3] \u003c= Limit; pW[3]++ {\n                        for pW[2] = pW[3]; pW[2] \u003c= Limit; pW[2]++ {\n                            for pW[1] = pW[2]; pW[1] \u003c= Limit; pW[1]++ {\n                                for pW[0] = pW[1]; pW[0] \u003c= Limit; pW[0]++ {\n                                    Lmin = 10000;\n                                    Lmax = 0;\n                                    for m = 0; m \u003c nMints; m++ {\n                                        if Abc_TtGetBit(t, m) {\n                                            Lmin = Abc_MinInt(Lmin,\n                                                    Extra_ThreshWeightedSum(pW,\n                                                            nVars, m));\n                                        } else {\n                                            Lmax = Abc_MaxInt(Lmax,\n                                                    Extra_ThreshWeightedSum(pW,\n                                                            nVars, m)); }\n                                        if Lmax \u003e= Lmin {\n                                            break; }\n                                    }\n                                    if m \u003c nMints {\n                                        continue; }\n                                    assert(Lmax \u003c Lmin, \"Lmax \u003c Lmin\");\n                                    return Lmin;\n                                }\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Extra_ThreshSelectWeights",
+      "Start": 13192,
+      "End": 13807,
+      "BodyStart": 13253,
+      "Original": "int Extra_ThreshSelectWeights(word * t, int nVars, int * pW) {\n    if (nVars \u003c= 2)\n        return (t[0] \u0026 0xF) != 6 \u0026\u0026 (t[0] \u0026 0xF) != 9;\n    if (nVars == 3)\n        return Extra_ThreshSelectWeights3(t, nVars, pW);\n    if (nVars == 4)\n        return Extra_ThreshSelectWeights4(t, nVars, pW);\n    if (nVars == 5)\n        return Extra_ThreshSelectWeights5(t, nVars, pW);\n    if (nVars == 6)\n        return Extra_ThreshSelectWeights6(t, nVars, pW);\n    if (nVars == 7)\n        return Extra_ThreshSelectWeights7(t, nVars, pW);\n    if (nVars == 8)\n        return Extra_ThreshSelectWeights8(t, nVars, pW);\n    return 0;\n}",
+      "Draft": "func Extra_ThreshSelectWeights(t *word, nVars int32, pW *int32) int32 {\n    if nVars \u003c= 2 {\n        return (t[0] \u0026 0xF) != 6 \u0026\u0026 (t[0] \u0026 0xF) != 9; }\n    if nVars == 3 {\n        return Extra_ThreshSelectWeights3(t, nVars, pW); }\n    if nVars == 4 {\n        return Extra_ThreshSelectWeights4(t, nVars, pW); }\n    if nVars == 5 {\n        return Extra_ThreshSelectWeights5(t, nVars, pW); }\n    if nVars == 6 {\n        return Extra_ThreshSelectWeights6(t, nVars, pW); }\n    if nVars == 7 {\n        return Extra_ThreshSelectWeights7(t, nVars, pW); }\n    if nVars == 8 {\n        return Extra_ThreshSelectWeights8(t, nVars, pW); }\n    return 0;\n}"
+    },
+    {
+      "Name": "Extra_ThreshIncrementWeights",
+      "Start": 13808,
+      "End": 13955,
+      "BodyStart": 13877,
+      "Original": "void Extra_ThreshIncrementWeights(int nChows, int * pWofChow, int i) {\n    int k;\n    for (k = i; k \u003c nChows; k++) {\n        pWofChow[k]++;\n    }\n}",
+      "Draft": "func Extra_ThreshIncrementWeights(nChows int32, pWofChow *int32, i int32) {\n    var k int32;\n    for k = i; k \u003c nChows; k++ {\n        pWofChow[k]++;\n    }\n}"
+    },
+    {
+      "Name": "Extra_ThreshDecrementWeights",
+      "Start": 13956,
+      "End": 14103,
+      "BodyStart": 14025,
+      "Original": "void Extra_ThreshDecrementWeights(int nChows, int * pWofChow, int i) {\n    int k;\n    for (k = i; k \u003c nChows; k++) {\n        pWofChow[k]--;\n    }\n}",
+      "Draft": "func Extra_ThreshDecrementWeights(nChows int32, pWofChow *int32, i int32) {\n    var k int32;\n    for k = i; k \u003c nChows; k++ {\n        pWofChow[k]--;\n    }\n}"
+    },
+    {
+      "Name": "Extra_ThreshPrintInequalities",
+      "Start": 14104,
+      "End": 14563,
+      "BodyStart": 14234,
+      "Original": "void Extra_ThreshPrintInequalities(unsigned long ** pGreaters,\n        unsigned long ** pSmallers, int nChows, int nInequalities) {\n    int i = 0, k = 0;\n    for (k = 0; k \u003c nInequalities; k++) {\n        printf(\"\\n Inequality [%d] = \", k);\n        for (i = 0; i \u003c nChows; i++) {\n            printf(\"%ld \", pGreaters[k][i]);\n        }\n        printf(\" \u003e \");\n\n        for (i = 0; i \u003c nChows; i++) {\n            printf(\"%ld \", pSmallers[k][i]);\n        }\n    }\n}",
+      "Draft": "void Extra_ThreshPrintInequalities(unsigned long ** pGreaters,\n        unsigned long ** pSmallers, int nChows, int nInequalities) {\n    var i, k int32;\n    for k = 0; k \u003c nInequalities; k++ {\n        fmt.Printf(\"\\n Inequality [%d] = \", k);\n        for i = 0; i \u003c nChows; i++ {\n            fmt.Printf(\"%d \", pGreaters[k][i]);\n        }\n        fmt.Printf(\" \u003e \");\n\n        for i = 0; i \u003c nChows; i++ {\n            fmt.Printf(\"%d \", pSmallers[k][i]);\n        }\n    }\n}"
+    },
+    {
+      "Name": "Extra_ThreshCreateInequalities",
+      "Start": 14564,
+      "End": 15833,
+      "BodyStart": 14775,
+      "Original": "void Extra_ThreshCreateInequalities(char * pIsop, char * pIsopFneg, int nVars,\n        int * pWofChow, int * pChow, int nChows, int nInequalities,\n        unsigned long ** pGreaters, unsigned long ** pSmallers) {\n    int i = 0, j = 0, k = 0, m = 0;\n\n    int nCubesIsop = strlen(pIsop) / (nVars + 3);\n    int nCubesIsopFneg = strlen(pIsopFneg) / (nVars + 3);\n\n    for (k = 0; k \u003c nCubesIsop * nCubesIsopFneg; k++)\n        for (i = 0; i \u003c nChows; i++) {\n            pGreaters[k][i] = 0;\n            pSmallers[k][i] = 0;\n        }\n    m = 0;\n    for (i = 0; i \u003c (int)strlen(pIsop); i += (nVars + 3))\n        for (j = 0; j \u003c nCubesIsopFneg; j++) {\n            for (k = 0; k \u003c nVars; k++)\n                if (pIsop[i + k] == '1')\n                    pGreaters[m][pChow[k]] = pGreaters[m][(pChow[k])] + 1;\n\n            m++;\n        }\n    m = 0;\n    for (i = 0; i \u003c nCubesIsop; i++)\n        for (j = 0; j \u003c (int)strlen(pIsopFneg); j += (nVars + 3)) {\n            for (k = 0; k \u003c nVars; k++)\n                if (pIsopFneg[j + k] == '-')\n                    pSmallers[m][pChow[k]] = pSmallers[m][pChow[k]] + 1;\n            m++;\n        }\n//        Extra_ThreshPrintInequalities( pGreaters, pSmallers, nChows, nInequalities);\n//        printf( \"\\nInequalities was Created \\n\");\n}",
+      "Draft": "void Extra_ThreshCreateInequalities(char * pIsop, char * pIsopFneg, int nVars,\n        int * pWofChow, int * pChow, int nChows, int nInequalities,\n        unsigned long ** pGreaters, unsigned long ** pSmallers) {\n    var i, j, k, m int32;\n\n    var nCubesIsop int32  = len(pIsop) / (nVars + 3);\n    var nCubesIsopFneg int32  = len(pIsopFneg) / (nVars + 3);\n\n    for k = 0; k \u003c nCubesIsop * nCubesIsopFneg; k++ {\n        for i = 0; i \u003c nChows; i++ {\n            pGreaters[k][i] = 0;\n            pSmallers[k][i] = 0;\n        }\n    }\n    m = 0;\n    for i = 0; i \u003c int32(len(pIsop)); i += (nVars + 3) {\n        for j = 0; j \u003c nCubesIsopFneg; j++ {\n            for k = 0; k \u003c nVars; k++ {\n                if pIsop[i + k] == '1' {\n                    pGreaters[m][pChow[k]] = pGreaters[m][(pChow[k])] + 1; }\n            }\n\n            m++;\n        }\n    }\n    m = 0;\n    for i = 0; i \u003c nCubesIsop; i++ {\n        for j = 0; j \u003c int32(len(pIsopFneg)); j += (nVars + 3) {\n            for k = 0; k \u003c nVars; k++ {\n                if pIsopFneg[j + k] == '-' {\n                    pSmallers[m][pChow[k]] = pSmallers[m][pChow[k]] + 1; }\n            }\n            m++;\n        }\n    }\n//        Extra_ThreshPrintInequalities( pGreaters, pSmallers, nChows, nInequalities);\n//        printf( \"\\nInequalities was Created \\n\");\n}"
+    },
+    {
+      "Name": "Extra_ThreshSimplifyInequalities",
+      "Start": 15835,
+      "End": 16693,
+      "BodyStart": 15968,
+      "Original": "void Extra_ThreshSimplifyInequalities(int nInequalities, int nChows,\n        unsigned long ** pGreaters, unsigned long ** pSmallers) {\n    int i = 0, k = 0;\n\n    for (k = 0; k \u003c nInequalities; k++) {\n        for (i = 0; i \u003c nChows; i++) {\n            if ((pGreaters[k][i]) == (pSmallers[k][i])) {\n                pGreaters[k][i] = 0;\n                pSmallers[k][i] = 0;\n            } else if ((pGreaters[k][i]) \u003e (pSmallers[k][i])) {\n                pGreaters[k][i] = pGreaters[k][i] - pSmallers[k][i];\n                pSmallers[k][i] = 0;\n            } else {\n                pSmallers[k][i] = pSmallers[k][i] - pGreaters[k][i];\n                ;\n                pGreaters[k][i] = 0;\n            }\n        }\n    }\n//        Extra_ThreshPrintInequalities( pGreaters, pSmallers, nChows, nInequalities);\n//        printf( \"\\nInequalities was Siplified \\n\");\n}",
+      "Draft": "void Extra_ThreshSimplifyInequalities(int nInequalities, int nChows,\n        unsigned long ** pGreaters, unsigned long ** pSmallers) {\n    var i, k int32;\n\n    for k = 0; k \u003c nInequalities; k++ {\n        for i = 0; i \u003c nChows; i++ {\n            if (pGreaters[k][i]) == (pSmallers[k][i]) {\n                pGreaters[k][i] = 0;\n                pSmallers[k][i] = 0;\n            } else if (pGreaters[k][i]) \u003e (pSmallers[k][i]) {\n                pGreaters[k][i] = pGreaters[k][i] - pSmallers[k][i];\n                pSmallers[k][i] = 0;\n            } else {\n                pSmallers[k][i] = pSmallers[k][i] - pGreaters[k][i];\n                ;\n                pGreaters[k][i] = 0;\n            }\n        }\n    }\n//        Extra_ThreshPrintInequalities( pGreaters, pSmallers, nChows, nInequalities);\n//        printf( \"\\nInequalities was Siplified \\n\");\n}"
+    },
+    {
+      "Name": "Extra_ThreshAssignWeights",
+      "Start": 16694,
+      "End": 20442,
+      "BodyStart": 16830,
+      "Original": "int Extra_ThreshAssignWeights(word * t, char * pIsop, char * pIsopFneg,\n        int nVars, int * pW, int * pChow, int nChows, int Wmin) {\n\n    int i = 0, j = 0, Lmin = 1000, Lmax = 0, Limit = nVars * 2, delta = 0,\n            deltaOld = -1000, fIncremented = 0;\n    //******************************\n    int * pWofChow = ABC_ALLOC( int, nChows );\n    int nCubesIsop = strlen(pIsop) / (nVars + 3);\n    int nCubesIsopFneg = strlen(pIsopFneg) / (nVars + 3);\n    int nInequalities = nCubesIsop * nCubesIsopFneg;\n    unsigned long **pGreaters;\n    unsigned long **pSmallers;\n\n    pGreaters = (unsigned long **)malloc(nCubesIsop * nCubesIsopFneg * sizeof *pGreaters);\n    for (i = 0; i \u003c nCubesIsop * nCubesIsopFneg; i++) {\n        pGreaters[i] = (unsigned long *)malloc(nChows * sizeof *pGreaters[i]);\n    }\n    pSmallers = (unsigned long **)malloc(nCubesIsop * nCubesIsopFneg * sizeof *pSmallers);\n    for (i = 0; i \u003c nCubesIsop * nCubesIsopFneg; i++) {\n        pSmallers[i] = (unsigned long *)malloc(nChows * sizeof *pSmallers[i]);\n    }\n\n    //******************************\n    Extra_ThreshCreateInequalities(pIsop, pIsopFneg, nVars, pWofChow, pChow,\n            nChows, nInequalities, pGreaters, pSmallers);\n    Extra_ThreshSimplifyInequalities(nInequalities, nChows, pGreaters,\n            pSmallers);\n\n    //initializes the weights\n    pWofChow[0] = Wmin;\n    for (i = 1; i \u003c nChows; i++) {\n        pWofChow[i] = pWofChow[i - 1] + 1;\n    }\n    i = 0;\n\n    //assign the weights respecting the inequalities\n    while (i \u003c nChows \u0026\u0026 pWofChow[nChows - 1] \u003c= Limit) {\n        Lmin = 1000;\n        Lmax = 0;\n\n        while (j \u003c nInequalities) {\n            if (pGreaters[j][i] != 0) {\n                Lmin = Extra_ThreshCubeWeightedSum3(pWofChow, nChows, pGreaters,\n                        j);\n                Lmax = Extra_ThreshCubeWeightedSum4(pWofChow, nChows, pSmallers,\n                        j);\n                delta = Lmin - Lmax;\n\n                if (delta \u003e 0) {\n                    if (fIncremented == 1) {\n                        j = 0;\n                        fIncremented = 0;\n                        deltaOld = -1000;\n                    } else\n                        j++;\n                    continue;\n                }\n                if (delta \u003e deltaOld) {\n                    Extra_ThreshIncrementWeights(nChows, pWofChow, i);\n                    deltaOld = delta;\n                    fIncremented = 1;\n                } else if (fIncremented == 1) {\n                    Extra_ThreshDecrementWeights(nChows, pWofChow, i);\n                    j++;\n                    deltaOld = -1000;\n                    fIncremented = 0;\n                    continue;\n                } else\n                    j++;\n            } else\n                j++;\n\n        }\n        i++;\n        j = 0;\n    }\n\n    //******************************\n    for (i = 0; i \u003c nCubesIsop * nCubesIsopFneg; i++) {\n        free(pGreaters[i]);\n    }\n    free(pGreaters);\n    for (i = 0; i \u003c nCubesIsop * nCubesIsopFneg; i++) {\n        free(pSmallers[i]);\n    }\n    free(pSmallers);\n    //******************************\n\n    i = 0;\n    Lmin = 1000;\n    Lmax = 0;\n\n    //check the assigned weights in the original system\n    for (j = 0; j \u003c (int)strlen(pIsop); j += (nVars + 3))\n        Lmin = Abc_MinInt(Lmin,\n                Extra_ThreshCubeWeightedSum1(pWofChow, pChow, pIsop, nVars, j));\n    for (j = 0; j \u003c (int)strlen(pIsopFneg); j += (nVars + 3))\n        Lmax = Abc_MaxInt(Lmax,\n                Extra_ThreshCubeWeightedSum2(pWofChow, pChow, pIsopFneg, nVars,\n                        j));\n\n    for (i = 0; i \u003c nVars; i++) {\n        pW[i] = pWofChow[pChow[i]];\n    }\n\n    ABC_FREE( pWofChow );\n    if (Lmin \u003e Lmax)\n        return Lmin;\n    else\n        return 0;\n}",
+      "Draft": "func Extra_ThreshAssignWeights(t *word, pIsop string, pIsopFneg string, nVars int32, pW *int32, pChow *int32, nChows int32, Wmin int32) int32 {\n\n    var i int32;\n    var j int32;\n    var Lmin int32 = 1000;\n    var Lmax int32;\n    var Limit int32 = nVars * 2;\n    var delta int32;\n    var deltaOld int32 = -1000;\n    var fIncremented int32;\n    //******************************\n    var pWofChow *int32  = ABC_ALLOC( int, nChows );\n    var nCubesIsop int32  = len(pIsop) / (nVars + 3);\n    var nCubesIsopFneg int32  = len(pIsopFneg) / (nVars + 3);\n    var nInequalities int32  = nCubesIsop * nCubesIsopFneg;\n    unsigned long **pGreaters;\n    unsigned long **pSmallers;\n\n    pGreaters = (unsigned long **)malloc(nCubesIsop * nCubesIsopFneg * sizeof *pGreaters);\n    for i = 0; i \u003c nCubesIsop * nCubesIsopFneg; i++ {\n        pGreaters[i] = (unsigned long *)malloc(nChows * sizeof *pGreaters[i]);\n    }\n    pSmallers = (unsigned long **)malloc(nCubesIsop * nCubesIsopFneg * sizeof *pSmallers);\n    for i = 0; i \u003c nCubesIsop * nCubesIsopFneg; i++ {\n        pSmallers[i] = (unsigned long *)malloc(nChows * sizeof *pSmallers[i]);\n    }\n\n    //******************************\n    Extra_ThreshCreateInequalities(pIsop, pIsopFneg, nVars, pWofChow, pChow,\n            nChows, nInequalities, pGreaters, pSmallers);\n    Extra_ThreshSimplifyInequalities(nInequalities, nChows, pGreaters,\n            pSmallers);\n\n    //initializes the weights\n    pWofChow[0] = Wmin;\n    for i = 1; i \u003c nChows; i++ {\n        pWofChow[i] = pWofChow[i - 1] + 1;\n    }\n    i = 0;\n\n    //assign the weights respecting the inequalities\n    for i \u003c nChows \u0026\u0026 pWofChow[nChows - 1] \u003c= Limit {\n        Lmin = 1000;\n        Lmax = 0;\n\n        for j \u003c nInequalities {\n            if pGreaters[j][i] != 0 {\n                Lmin = Extra_ThreshCubeWeightedSum3(pWofChow, nChows, pGreaters,\n                        j);\n                Lmax = Extra_ThreshCubeWeightedSum4(pWofChow, nChows, pSmallers,\n                        j);\n                delta = Lmin - Lmax;\n\n                if delta \u003e 0 {\n                    if fIncremented == 1 {\n                        j = 0;\n                        fIncremented = 0;\n                        deltaOld = -1000;\n                    } else {\n                        j++; }\n                    continue;\n                }\n                if delta \u003e deltaOld {\n                    Extra_ThreshIncrementWeights(nChows, pWofChow, i);\n                    deltaOld = delta;\n                    fIncremented = 1;\n                } else if fIncremented == 1 {\n                    Extra_ThreshDecrementWeights(nChows, pWofChow, i);\n                    j++;\n                    deltaOld = -1000;\n                    fIncremented = 0;\n                    continue;\n                } else {\n                    j++; }\n            } else {\n                j++; }\n\n        }\n        i++;\n        j = 0;\n    }\n\n    //******************************\n    for i = 0; i \u003c nCubesIsop * nCubesIsopFneg; i++ {\n        free(pGreaters[i]);\n    }\n    free(pGreaters);\n    for i = 0; i \u003c nCubesIsop * nCubesIsopFneg; i++ {\n        free(pSmallers[i]);\n    }\n    free(pSmallers);\n    //******************************\n\n    i = 0;\n    Lmin = 1000;\n    Lmax = 0;\n\n    //check the assigned weights in the original system\n    for j = 0; j \u003c int32(len(pIsop)); j += (nVars + 3) {\n        Lmin = Abc_MinInt(Lmin,\n                Extra_ThreshCubeWeightedSum1(pWofChow, pChow, pIsop, nVars, j));\n    }\n    for j = 0; j \u003c int32(len(pIsopFneg)); j += (nVars + 3) {\n        Lmax = Abc_MaxInt(Lmax,\n                Extra_ThreshCubeWeightedSum2(pWofChow, pChow, pIsopFneg, nVars,\n                        j));\n    }\n\n    for i = 0; i \u003c nVars; i++ {\n        pW[i] = pWofChow[pChow[i]];\n    }\n\n    ABC_FREE( pWofChow );\n    if Lmin \u003e Lmax {\n        return Lmin;\n    } else {\n        return 0; }\n}"
+    },
+    {
+      "Name": "Extra_ThreshPrintWeights",
+      "Start": 20443,
+      "End": 20792,
+      "BodyStart": 20501,
+      "Original": "void Extra_ThreshPrintWeights(int T, int * pW, int nVars) {\n    int i;\n\n    if (T == 0)\n        fprintf( stdout, \"\\nHeuristic method: is not TLF\\n\\n\");\n    else {\n        fprintf( stdout, \"\\nHeuristic method: Weights and threshold value:\\n\");\n        for (i = 0; i \u003c nVars; i++)\n            printf(\"%d \", pW[i]);\n        printf(\"  %d\\n\", T);\n    }\n}",
+      "Draft": "func Extra_ThreshPrintWeights(T int32, pW *int32, nVars int32) {\n    var i int32;\n\n    if T == 0 {\n        fmt.Fprintf(os.Stdout, \"\\nHeuristic method: is not TLF\\n\\n\");\n    } else {\n        fmt.Fprintf(os.Stdout, \"\\nHeuristic method: Weights and threshold value:\\n\");\n        for i = 0; i \u003c nVars; i++ {\n            fmt.Printf(\"%d \", pW[i]);\n        }\n        fmt.Printf(\"  %d\\n\", T);\n    }\n}"
+    },
+    {
+      "Name": "Extra_ThreshCheck",
+      "Start": 21048,
+      "End": 21364,
+      "BodyStart": 21101,
+      "Original": "int Extra_ThreshCheck(word * t, int nVars, int * pW) {\n    int Chow0, Chow[16];\n    if (!Abc_TtIsUnate(t, nVars))\n        return 0;\n    Abc_TtMakePosUnate(t, nVars);\n    Chow0 = Extra_ThreshComputeChow(t, nVars, Chow);\n    Extra_ThreshSortByChow(t, nVars, Chow);\n    return Extra_ThreshSelectWeights(t, nVars, pW);\n}",
+      "Draft": "func Extra_ThreshCheck(t *word, nVars int32, pW *int32) int32 {\n    var Chow0 int32;\n    var Chow [16]int32;\n    if !Abc_TtIsUnate(t, nVars) {\n        return 0; }\n    Abc_TtMakePosUnate(t, nVars);\n    Chow0 = Extra_ThreshComputeChow(t, nVars, Chow);\n    Extra_ThreshSortByChow(t, nVars, Chow);\n    return Extra_ThreshSelectWeights(t, nVars, pW);\n}"
+    },
+    {
+      "Name": "Extra_ThreshHeuristic",
+      "Start": 21648,
+      "End": 23287,
+      "BodyStart": 21705,
+      "Original": "int Extra_ThreshHeuristic(word * t, int nVars, int * pW) {\n\n    extern char * Abc_ConvertBddToSop( Mem_Flex_t * pMan, DdManager * dd, DdNode * bFuncOn, DdNode * bFuncOnDc, int nFanins, int fAllPrimes, Vec_Str_t * vCube, int fMode );\n    int Chow0, Chow[16], nChows, i, T = 0;\n    DdManager * dd;\n    Vec_Str_t * vCube;\n    DdNode * ddNode, * ddNodeFneg;\n    char * pIsop, * pIsopFneg;\n    if (nVars \u003c= 1)\n        return 1;\n    if (!Abc_TtIsUnate(t, nVars))\n        return 0;\n    Abc_TtMakePosUnate(t, nVars);\n    Chow0 = Extra_ThreshComputeChow(t, nVars, Chow);\n    Extra_ThreshSortByChowInverted(t, nVars, Chow);\n    nChows = Extra_ThreshInitializeChow(nVars, Chow);\n\n    dd = (DdManager *) Abc_FrameReadManDd();\n    vCube = Vec_StrAlloc(nVars);\n    for (i = 0; i \u003c nVars; i++)\n        Cudd_bddIthVar(dd, i);\n    ddNode = Kit_TruthToBdd(dd, (unsigned *) t, nVars, 0);\n    Cudd_Ref(ddNode);\n    pIsop = Abc_ConvertBddToSop( NULL, dd, ddNode, ddNode, nVars, 1,\n            vCube, 1);\n\n    Abc_TtNot(t, Abc_TruthWordNum(nVars));\n    ddNodeFneg = Kit_TruthToBdd(dd, (unsigned *) t, nVars, 0);\n    Cudd_Ref(ddNodeFneg);\n\n    pIsopFneg = Abc_ConvertBddToSop( NULL, dd, ddNodeFneg, ddNodeFneg,\n            nVars, 1, vCube, 1);\n\n    Cudd_RecursiveDeref(dd, ddNode);\n    Cudd_RecursiveDeref(dd, ddNodeFneg);\n\n    T = Extra_ThreshAssignWeights(t, pIsop, pIsopFneg, nVars, pW, Chow, nChows,\n            1);\n\n    for (i = 2; (i \u003c 4) \u0026\u0026 (T == 0) \u0026\u0026 (nVars \u003e= 6); i++)\n        T = Extra_ThreshAssignWeights(t, pIsop, pIsopFneg, nVars, pW, Chow,\n                nChows, i);\n\n    free(pIsop);\n    free(pIsopFneg);\n    Vec_StrFree(vCube);\n\n    return T;\n}",
+      "Draft": "func Extra_ThreshHeuristic(t *word, nVars int32, pW *int32) int32 {\n\n    extern char * Abc_ConvertBddToSop( Mem_Flex_t * pMan, DdManager * dd, DdNode * bFuncOn, DdNode * bFuncOnDc, int nFanins, int fAllPrimes, Vec_Str_t * vCube, int fMode );\n    var Chow0 int32;\n    var Chow [16]int32;\n    var nChows int32;\n    var i int32;\n    var T int32;\n    var dd *DdManager;\n    var vCube *Vec_Str_t;\n    var ddNode, ddNodeFneg *DdNode;\n    var pIsop, pIsopFneg string;\n    if nVars \u003c= 1 {\n        return 1; }\n    if !Abc_TtIsUnate(t, nVars) {\n        return 0; }\n    Abc_TtMakePosUnate(t, nVars);\n    Chow0 = Extra_ThreshComputeChow(t, nVars, Chow);\n    Extra_ThreshSortByChowInverted(t, nVars, Chow);\n    nChows = Extra_ThreshInitializeChow(nVars, Chow);\n\n    dd = (DdManager *) Abc_FrameReadManDd();\n    vCube = Vec_StrAlloc(nVars);\n    for i = 0; i \u003c nVars; i++ {\n        Cudd_bddIthVar(dd, i);\n    }\n    ddNode = Kit_TruthToBdd(dd, (unsigned *) t, nVars, 0);\n    Cudd_Ref(ddNode);\n    pIsop = Abc_ConvertBddToSop( nil, dd, ddNode, ddNode, nVars, 1,\n            vCube, 1);\n\n    Abc_TtNot(t, Abc_TruthWordNum(nVars));\n    ddNodeFneg = Kit_TruthToBdd(dd, (unsigned *) t, nVars, 0);\n    Cudd_Ref(ddNodeFneg);\n\n    pIsopFneg = Abc_ConvertBddToSop( nil, dd, ddNodeFneg, ddNodeFneg,\n            nVars, 1, vCube, 1);\n\n    Cudd_RecursiveDeref(dd, ddNode);\n    Cudd_RecursiveDeref(dd, ddNodeFneg);\n\n    T = Extra_ThreshAssignWeights(t, pIsop, pIsopFneg, nVars, pW, Chow, nChows,\n            1);\n\n    for i = 2; (i \u003c 4) \u0026\u0026 (T == 0) \u0026\u0026 (nVars \u003e= 6); i++ {\n        T = Extra_ThreshAssignWeights(t, pIsop, pIsopFneg, nVars, pW, Chow,\n                nChows, i);\n    }\n\n    free(pIsop);\n    free(pIsopFneg);\n    Vec_StrFree(vCube);\n\n    return T;\n}"
+    },
+    {
+      "Name": "Extra_ThreshCheckTest",
+      "Start": 23536,
+      "End": 25184,
+      "BodyStart": 23565,
+      "Original": "void Extra_ThreshCheckTest() {\n    int nVars = 6;\n    int T, Chow0, Chow[16], Weights[16];\n//    word t =  s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[3] \u0026 s_Truths6[4];\n//    word t =  (s_Truths6[0] \u0026 s_Truths6[1]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[3]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[4]);\n//    word t = (s_Truths6[2] \u0026 s_Truths6[1])\n//            | (s_Truths6[2] \u0026 s_Truths6[0] \u0026 s_Truths6[3])\n//            | (s_Truths6[2] \u0026 s_Truths6[0] \u0026 ~s_Truths6[4]);\n    word t = (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[2])| (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[3]) | (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[4] \u0026 s_Truths6[5]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[3] \u0026 s_Truths6[4] \u0026 s_Truths6[5]);\n//    word t =  (s_Truths6[0] \u0026 s_Truths6[1]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[3]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[3]);\n//    word t =  (s_Truths6[0] \u0026 s_Truths6[1]) | (s_Truths6[0] \u0026 s_Truths6[2]) | (s_Truths6[0] \u0026 s_Truths6[3] \u0026 s_Truths6[4] \u0026 s_Truths6[5]) | \n//        (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[3]) | (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[5]);\n    int i;\n    assert(nVars \u003c= 8);\n    for (i = 0; i \u003c nVars; i++)\n        printf(\"%d %d %d\\n\", i, Abc_TtPosVar(\u0026t, nVars, i),\n                Abc_TtNegVar(\u0026t, nVars, i));\n//    word t = s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[2];\n    Chow0 = Extra_ThreshComputeChow(\u0026t, nVars, Chow);\n    if ((T = Extra_ThreshCheck(\u0026t, nVars, Weights)))\n        Extra_ThreshPrintChow(T, Weights, nVars);\n    else\n        printf(\"No threshold\\n\");\n}",
+      "Draft": "func Extra_ThreshCheckTest() {\n    var nVars int32  = 6;\n    var T int32;\n    var Chow0 int32;\n    var Chow [16]int32;\n    var Weights [16]int32;\n//    word t =  s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[3] \u0026 s_Truths6[4];\n//    word t =  (s_Truths6[0] \u0026 s_Truths6[1]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[3]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[4]);\n//    word t = (s_Truths6[2] \u0026 s_Truths6[1])\n//            | (s_Truths6[2] \u0026 s_Truths6[0] \u0026 s_Truths6[3])\n//            | (s_Truths6[2] \u0026 s_Truths6[0] \u0026 ~s_Truths6[4]);\n    var t word  = (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[2])| (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[3]) | (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[4] \u0026 s_Truths6[5]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[3] \u0026 s_Truths6[4] \u0026 s_Truths6[5]);\n//    word t =  (s_Truths6[0] \u0026 s_Truths6[1]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[3]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[3]);\n//    word t =  (s_Truths6[0] \u0026 s_Truths6[1]) | (s_Truths6[0] \u0026 s_Truths6[2]) | (s_Truths6[0] \u0026 s_Truths6[3] \u0026 s_Truths6[4] \u0026 s_Truths6[5]) | \n//        (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[3]) | (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[5]);\n    var i int32;\n    assert(nVars \u003c= 8, \"nVars \u003c= 8\");\n    for i = 0; i \u003c nVars; i++ {\n        fmt.Printf(\"%d %d %d\\n\", i, Abc_TtPosVar(\u0026t, nVars, i), Abc_TtNegVar(\u0026t, nVars, i));\n    }\n//    word t = s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[2];\n    Chow0 = Extra_ThreshComputeChow(\u0026t, nVars, Chow);\n    if T = Extra_ThreshCheck(\u0026t, nVars, Weights) {\n        Extra_ThreshPrintChow(T, Weights, nVars);\n    } else {\n        fmt.Printf(\"No threshold\\n\"); }\n}"
+    },
+    {
+      "Name": "Extra_ThreshHeuristicTest",
+      "Start": 25185,
+      "End": 25671,
+      "BodyStart": 25218,
+      "Original": "void Extra_ThreshHeuristicTest() {\n    int nVars = 6;\n    int T, Weights[16];\n\n    //    word t = 19983902376700760000;\n    word t = (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[2])| (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[3]) | (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[4] \u0026 s_Truths6[5]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[3] \u0026 s_Truths6[4] \u0026 s_Truths6[5]);\n    word * pT = \u0026t;\n    T = Extra_ThreshHeuristic(pT, nVars, Weights);\n    Extra_ThreshPrintWeights(T, Weights, nVars);\n\n}",
+      "Draft": "func Extra_ThreshHeuristicTest() {\n    var nVars int32  = 6;\n    var T int32;\n    var Weights [16]int32;\n\n    //    word t = 19983902376700760000;\n    var t word  = (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[2])| (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[3]) | (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[4] \u0026 s_Truths6[5]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[3] \u0026 s_Truths6[4] \u0026 s_Truths6[5]);\n    var pT *word  = \u0026t;\n    T = Extra_ThreshHeuristic(pT, nVars, Weights);\n    Extra_ThreshPrintWeights(T, Weights, nVars);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::mechanical::sizeof::1866",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1866,
+      "End": 1872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::mechanical::sizeof::17335",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17335,
+      "End": 17341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::mechanical::sizeof::17467",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17467,
+      "End": 17473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::mechanical::sizeof::17567",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17567,
+      "End": 17573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::mechanical::sizeof::17699",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17699,
+      "End": 17705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::pointer-cast::22326",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22326,
+      "End": 22339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::pointer-cast::22490",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22490,
+      "End": 22502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::pointer-cast::22711",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22711,
+      "End": 22723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshPrintChow",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshPrintChow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1562,
+      "End": 1732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshComputeChow",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshComputeChow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1733,
+      "End": 2242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshSortByChow",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshSortByChow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2243,
+      "End": 2733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshSortByChowInverted",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshSortByChowInverted",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2734,
+      "End": 3233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshInitializeChow",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshInitializeChow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3234,
+      "End": 3667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshWeightedSum",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshWeightedSum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3668,
+      "End": 3864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshCubeWeightedSum1",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshCubeWeightedSum1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3865,
+      "End": 4131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshCubeWeightedSum2",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshCubeWeightedSum2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4132,
+      "End": 4398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshCubeWeightedSum3",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshCubeWeightedSum3",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 4400,
+      "End": 4639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshCubeWeightedSum4",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshCubeWeightedSum4",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 4640,
+      "End": 4879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshSelectWeights3",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshSelectWeights3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4880,
+      "End": 5978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshSelectWeights4",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshSelectWeights4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5979,
+      "End": 7055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshSelectWeights5",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshSelectWeights5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7056,
+      "End": 8284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshSelectWeights6",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshSelectWeights6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8285,
+      "End": 9754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshSelectWeights7",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshSelectWeights7",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9755,
+      "End": 11373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshSelectWeights8",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshSelectWeights8",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11374,
+      "End": 13191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshSelectWeights",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshSelectWeights",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13192,
+      "End": 13807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshIncrementWeights",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshIncrementWeights",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13808,
+      "End": 13955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshDecrementWeights",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshDecrementWeights",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13956,
+      "End": 14103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshPrintInequalities",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshPrintInequalities",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 14104,
+      "End": 14563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshCreateInequalities",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshCreateInequalities",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 14564,
+      "End": 15833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshSimplifyInequalities",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshSimplifyInequalities",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 15835,
+      "End": 16693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshAssignWeights",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshAssignWeights",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16694,
+      "End": 20442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshPrintWeights",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshPrintWeights",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20443,
+      "End": 20792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshCheck",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21048,
+      "End": 21364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshHeuristic",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshHeuristic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21648,
+      "End": 23287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshCheckTest",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshCheckTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23536,
+      "End": 25184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::Extra_ThreshHeuristicTest",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ThreshHeuristicTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25185,
+      "End": 25671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 25916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::macro-inline::2564",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_SWAP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2564,
+      "End": 2601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::macro-inline::3064",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_SWAP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3064,
+      "End": 3101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::macro-inline::17014",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17014,
+      "End": 17038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/extrab/extraBddThresh.c::macro-inline::20350",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20350,
+      "End": 20370
+    }
+  ],
+  "Draft": "package extrab\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n FileName    [extraBddThresh.c]\n\n SystemName  [ABC: Logic synthesis and verification system.]\n\n PackageName [extra]\n\n Synopsis    [Dealing with threshold functions.]\n\n Author      [Augusto Neutzling, Jody Matos, and Alan Mishchenko (UC Berkeley).]\n\n Affiliation [Federal University of Rio Grande do Sul, Brazil]\n\n Date        [Ver. 1.0. Started - October 7, 2014.]\n\n Revision    [$Id: extraBddThresh.c,v 1.0 2014/10/07 00:00:00 alanmi Exp $]\n\n ***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \"base/main/main.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"bdd/cudd/cudd.h\"\n//#include \"bool/kit/kit.h\"\n\n//#include \"misc/vec/vec.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n Synopsis    [Checks thresholdness of the function.]\n\n Description []\n\n SideEffects []\n\n SeeAlso     []\n\n ***********************************************************************/\nfunc Extra_ThreshPrintChow(Chow0 int32, pChow *int32, nVars int32) {\n    var i int32;\n    for i = 0; i \u003c nVars; i++ {\n        fmt.Printf(\"%d \", pChow[i]);\n    }\n    fmt.Printf(\"  %d\\n\", Chow0);\n}\nfunc Extra_ThreshComputeChow(t *word, nVars int32, pChow *int32) int32 {\n    var i int32;\n    var k int32;\n    var Chow0 int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    memset(pChow, 0, sizeof(int) * nVars);\n    // compute Chow coefs\n    for i = 0; i \u003c nMints; i++ {\n        if Abc_TtGetBit(t, i) {\n            for Chow0, k = Chow0+1, 0; k \u003c nVars; k++ {\n                if (i \u003e\u003e k) \u0026 1 {\n                    pChow[k]++; }\n            } }\n    }\n    // compute modified Chow coefs\n    for k = 0; k \u003c nVars; k++ {\n        pChow[k] = 2 * pChow[k] - Chow0;\n    }\n    return Chow0 - (1 \u003c\u003c (nVars - 1));\n}\nfunc Extra_ThreshSortByChow(t *word, nVars int32, pChow *int32) {\n    var i int32;\n    var nWords int32 = Abc_TtWordNum(nVars);\n    //sort the variables by Chow in ascending order\n    for {\n        var fChange int32;\n        for i = 0; i \u003c nVars - 1; i++ {\n            if pChow[i] \u003e= pChow[i + 1] {\n                continue; }\n            ABC_SWAP(int, pChow[i], pChow[i + 1]);\n            Abc_TtSwapAdjacent(t, nWords, i);\n            fChange = 1;\n        }\n        if !(fChange != 0) {\n            return; }\n    }\n}\nfunc Extra_ThreshSortByChowInverted(t *word, nVars int32, pChow *int32) {\n    var i int32;\n    var nWords int32 = Abc_TtWordNum(nVars);\n    //sort the variables by Chow in descending order\n    for {\n        var fChange int32;\n        for i = 0; i \u003c nVars - 1; i++ {\n            if pChow[i] \u003c= pChow[i + 1] {\n                continue; }\n            ABC_SWAP(int, pChow[i], pChow[i + 1]);\n            Abc_TtSwapAdjacent(t, nWords, i);\n            fChange = 1;\n        }\n        if !(fChange != 0) {\n            return; }\n    }\n}\nfunc Extra_ThreshInitializeChow(nVars int32, pChow *int32) int32 {\n    var i int32;\n    var Aux [16]int32;\n    var nChows int32;\n    //group the variables which have the same Chow\n    for i = 0; i \u003c nVars; i++ {\n        if i == 0 || (pChow[i] == pChow[i - 1]) {\n            Aux[i] = nChows;\n        } else {\n            nChows++;\n            Aux[i] = nChows;\n        }\n    }\n    for i = 0; i \u003c nVars; i++ {\n        pChow[i] = Aux[i];\n    }\n    nChows++;\n    return nChows;\n\n}\nfunc Extra_ThreshWeightedSum(pW *int32, nVars int32, m int32) int32 {\n    var i, Cost int32;\n    for i = 0; i \u003c nVars; i++ {\n        if (m \u003e\u003e i) \u0026 1 {\n            Cost += pW[i]; }\n    }\n    return Cost;\n}\nfunc Extra_ThreshCubeWeightedSum1(pWofChow *int32, pChow *int32, pIsop string, nVars int32, j int32) int32 {\n    var k, Cost int32;\n    for k = j; k \u003c j + nVars; k++ {\n        if pIsop[k] == '1' {\n            Cost += pWofChow[pChow[k - j]]; }\n    }\n    return Cost;\n}\nfunc Extra_ThreshCubeWeightedSum2(pWofChow *int32, pChow *int32, pIsop string, nVars int32, j int32) int32 {\n    var k, Cost int32;\n    for k = j; k \u003c j + nVars; k++ {\n        if pIsop[k] == '-' {\n            Cost += pWofChow[pChow[k - j]]; }\n    }\n    return Cost;\n}\n\nstatic inline int Extra_ThreshCubeWeightedSum3(int * pWofChow, int nChows,\n        unsigned long ** pGreaters, int j) {\n    var i, Cost int32;\n    for i = 0; i \u003c nChows; i++ {\n        Cost += pWofChow[i] * pGreaters[j][i];\n    }\n    return Cost;\n}\nstatic inline int Extra_ThreshCubeWeightedSum4(int * pWofChow, int nChows,\n        unsigned long ** pSmallers, int j) {\n    var i, Cost int32;\n    for i = 0; i \u003c nChows; i++ {\n        Cost += pWofChow[i] * pSmallers[j][i];\n    }\n    return Cost;\n}\nfunc Extra_ThreshSelectWeights3(t *word, nVars int32, pW *int32) int32 {\n    var m int32;\n    var Lmin int32;\n    var Lmax int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    assert(nVars == 3, \"nVars == 3\");\n    for pW[2] = 1; pW[2] \u003c= nVars; pW[2]++ {\n        for pW[1] = pW[2]; pW[1] \u003c= nVars; pW[1]++ {\n            for pW[0] = pW[1]; pW[0] \u003c= nVars; pW[0]++ {\n                Lmin = 10000;\n                Lmax = 0;\n                for m = 0; m \u003c nMints; m++ {\n                    if Abc_TtGetBit(t, m) {\n                        Lmin = Abc_MinInt(Lmin,\n                                Extra_ThreshWeightedSum(pW, nVars, m));\n                    } else {\n                        Lmax = Abc_MaxInt(Lmax,\n                                Extra_ThreshWeightedSum(pW, nVars, m)); }\n                    if Lmax \u003e= Lmin {\n                        break; }\n//            printf( \"%c%d \", Abc_TtGetBit(t, m) ? '+' : '-', Extra_ThreshWeightedSum(pW, nVars, m) );\n                }\n//        printf( \"  -%d +%d\\n\", Lmax, Lmin );\n                if m \u003c nMints {\n                    continue; }\n                assert(Lmax \u003c Lmin, \"Lmax \u003c Lmin\");\n                return Lmin;\n            }\n        }\n    }\n    return 0;\n}\nfunc Extra_ThreshSelectWeights4(t *word, nVars int32, pW *int32) int32 {\n    var m int32;\n    var Lmin int32;\n    var Lmax int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    assert(nVars == 4, \"nVars == 4\");\n    for pW[3] = 1; pW[3] \u003c= nVars; pW[3]++ {\n        for pW[2] = pW[3]; pW[2] \u003c= nVars; pW[2]++ {\n            for pW[1] = pW[2]; pW[1] \u003c= nVars; pW[1]++ {\n                for pW[0] = pW[1]; pW[0] \u003c= nVars; pW[0]++ {\n                    Lmin = 10000;\n                    Lmax = 0;\n                    for m = 0; m \u003c nMints; m++ {\n                        if Abc_TtGetBit(t, m) {\n                            Lmin = Abc_MinInt(Lmin,\n                                    Extra_ThreshWeightedSum(pW, nVars, m));\n                        } else {\n                            Lmax = Abc_MaxInt(Lmax,\n                                    Extra_ThreshWeightedSum(pW, nVars, m)); }\n                        if Lmax \u003e= Lmin {\n                            break; }\n                    }\n                    if m \u003c nMints {\n                        continue; }\n                    assert(Lmax \u003c Lmin, \"Lmax \u003c Lmin\");\n                    return Lmin;\n                }\n            }\n        }\n    }\n    return 0;\n}\nfunc Extra_ThreshSelectWeights5(t *word, nVars int32, pW *int32) int32 {\n    var m int32;\n    var Lmin int32;\n    var Lmax int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    var Limit int32 = nVars + 0;\n    assert(nVars == 5, \"nVars == 5\");\n    for pW[4] = 1; pW[4] \u003c= Limit; pW[4]++ {\n        for pW[3] = pW[4]; pW[3] \u003c= Limit; pW[3]++ {\n            for pW[2] = pW[3]; pW[2] \u003c= Limit; pW[2]++ {\n                for pW[1] = pW[2]; pW[1] \u003c= Limit; pW[1]++ {\n                    for pW[0] = pW[1]; pW[0] \u003c= Limit; pW[0]++ {\n                        Lmin = 10000;\n                        Lmax = 0;\n                        for m = 0; m \u003c nMints; m++ {\n                            if Abc_TtGetBit(t, m) {\n                                Lmin = Abc_MinInt(Lmin,\n                                        Extra_ThreshWeightedSum(pW, nVars, m));\n                            } else {\n                                Lmax = Abc_MaxInt(Lmax,\n                                        Extra_ThreshWeightedSum(pW, nVars, m)); }\n                            if Lmax \u003e= Lmin {\n                                break; }\n                        }\n                        if m \u003c nMints {\n                            continue; }\n                        assert(Lmax \u003c Lmin, \"Lmax \u003c Lmin\");\n                        return Lmin;\n                    }\n                }\n            }\n        }\n    }\n    return 0;\n}\nfunc Extra_ThreshSelectWeights6(t *word, nVars int32, pW *int32) int32 {\n    var m int32;\n    var Lmin int32;\n    var Lmax int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    var Limit int32 = nVars + 3;\n    assert(nVars == 6, \"nVars == 6\");\n    for pW[5] = 1; pW[5] \u003c= Limit; pW[5]++ {\n        for pW[4] = pW[5]; pW[4] \u003c= Limit; pW[4]++ {\n            for pW[3] = pW[4]; pW[3] \u003c= Limit; pW[3]++ {\n                for pW[2] = pW[3]; pW[2] \u003c= Limit; pW[2]++ {\n                    for pW[1] = pW[2]; pW[1] \u003c= Limit; pW[1]++ {\n                        for pW[0] = pW[1]; pW[0] \u003c= Limit; pW[0]++ {\n                            Lmin = 10000;\n                            Lmax = 0;\n                            for m = 0; m \u003c nMints; m++ {\n                                if Abc_TtGetBit(t, m) {\n                                    Lmin = Abc_MinInt(Lmin,\n                                            Extra_ThreshWeightedSum(pW, nVars,\n                                                    m));\n                                } else {\n                                    Lmax = Abc_MaxInt(Lmax,\n                                            Extra_ThreshWeightedSum(pW, nVars,\n                                                    m)); }\n                                if Lmax \u003e= Lmin {\n                                    break; }\n                            }\n                            if m \u003c nMints {\n                                continue; }\n                            assert(Lmax \u003c Lmin, \"Lmax \u003c Lmin\");\n                            return Lmin;\n                        }\n                    }\n                }\n            }\n        }\n    }\n    return 0;\n}\nfunc Extra_ThreshSelectWeights7(t *word, nVars int32, pW *int32) int32 {\n    var m int32;\n    var Lmin int32;\n    var Lmax int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    var Limit int32 = nVars + 6;\n    assert(nVars == 7, \"nVars == 7\");\n    for pW[6] = 1; pW[6] \u003c= Limit; pW[6]++ {\n        for pW[5] = pW[6]; pW[5] \u003c= Limit; pW[5]++ {\n            for pW[4] = pW[5]; pW[4] \u003c= Limit; pW[4]++ {\n                for pW[3] = pW[4]; pW[3] \u003c= Limit; pW[3]++ {\n                    for pW[2] = pW[3]; pW[2] \u003c= Limit; pW[2]++ {\n                        for pW[1] = pW[2]; pW[1] \u003c= Limit; pW[1]++ {\n                            for pW[0] = pW[1]; pW[0] \u003c= Limit; pW[0]++ {\n                                Lmin = 10000;\n                                Lmax = 0;\n                                for m = 0; m \u003c nMints; m++ {\n                                    if Abc_TtGetBit(t, m) {\n                                        Lmin = Abc_MinInt(Lmin,\n                                                Extra_ThreshWeightedSum(pW,\n                                                        nVars, m));\n                                    } else {\n                                        Lmax = Abc_MaxInt(Lmax,\n                                                Extra_ThreshWeightedSum(pW,\n                                                        nVars, m)); }\n                                    if Lmax \u003e= Lmin {\n                                        break; }\n                                }\n                                if m \u003c nMints {\n                                    continue; }\n                                assert(Lmax \u003c Lmin, \"Lmax \u003c Lmin\");\n                                return Lmin;\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n    return 0;\n}\nfunc Extra_ThreshSelectWeights8(t *word, nVars int32, pW *int32) int32 {\n    var m int32;\n    var Lmin int32;\n    var Lmax int32;\n    var nMints int32 = (1 \u003c\u003c nVars);\n    var Limit int32 = nVars + 1; // \u003c\u003c-- incomplete detection to save runtime!\n    assert(nVars == 8, \"nVars == 8\");\n    for pW[7] = 1; pW[7] \u003c= Limit; pW[7]++ {\n        for pW[6] = pW[7]; pW[6] \u003c= Limit; pW[6]++ {\n            for pW[5] = pW[6]; pW[5] \u003c= Limit; pW[5]++ {\n                for pW[4] = pW[5]; pW[4] \u003c= Limit; pW[4]++ {\n                    for pW[3] = pW[4]; pW[3] \u003c= Limit; pW[3]++ {\n                        for pW[2] = pW[3]; pW[2] \u003c= Limit; pW[2]++ {\n                            for pW[1] = pW[2]; pW[1] \u003c= Limit; pW[1]++ {\n                                for pW[0] = pW[1]; pW[0] \u003c= Limit; pW[0]++ {\n                                    Lmin = 10000;\n                                    Lmax = 0;\n                                    for m = 0; m \u003c nMints; m++ {\n                                        if Abc_TtGetBit(t, m) {\n                                            Lmin = Abc_MinInt(Lmin,\n                                                    Extra_ThreshWeightedSum(pW,\n                                                            nVars, m));\n                                        } else {\n                                            Lmax = Abc_MaxInt(Lmax,\n                                                    Extra_ThreshWeightedSum(pW,\n                                                            nVars, m)); }\n                                        if Lmax \u003e= Lmin {\n                                            break; }\n                                    }\n                                    if m \u003c nMints {\n                                        continue; }\n                                    assert(Lmax \u003c Lmin, \"Lmax \u003c Lmin\");\n                                    return Lmin;\n                                }\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n    return 0;\n}\nfunc Extra_ThreshSelectWeights(t *word, nVars int32, pW *int32) int32 {\n    if nVars \u003c= 2 {\n        return (t[0] \u0026 0xF) != 6 \u0026\u0026 (t[0] \u0026 0xF) != 9; }\n    if nVars == 3 {\n        return Extra_ThreshSelectWeights3(t, nVars, pW); }\n    if nVars == 4 {\n        return Extra_ThreshSelectWeights4(t, nVars, pW); }\n    if nVars == 5 {\n        return Extra_ThreshSelectWeights5(t, nVars, pW); }\n    if nVars == 6 {\n        return Extra_ThreshSelectWeights6(t, nVars, pW); }\n    if nVars == 7 {\n        return Extra_ThreshSelectWeights7(t, nVars, pW); }\n    if nVars == 8 {\n        return Extra_ThreshSelectWeights8(t, nVars, pW); }\n    return 0;\n}\nfunc Extra_ThreshIncrementWeights(nChows int32, pWofChow *int32, i int32) {\n    var k int32;\n    for k = i; k \u003c nChows; k++ {\n        pWofChow[k]++;\n    }\n}\nfunc Extra_ThreshDecrementWeights(nChows int32, pWofChow *int32, i int32) {\n    var k int32;\n    for k = i; k \u003c nChows; k++ {\n        pWofChow[k]--;\n    }\n}\nvoid Extra_ThreshPrintInequalities(unsigned long ** pGreaters,\n        unsigned long ** pSmallers, int nChows, int nInequalities) {\n    var i, k int32;\n    for k = 0; k \u003c nInequalities; k++ {\n        fmt.Printf(\"\\n Inequality [%d] = \", k);\n        for i = 0; i \u003c nChows; i++ {\n            fmt.Printf(\"%d \", pGreaters[k][i]);\n        }\n        fmt.Printf(\" \u003e \");\n\n        for i = 0; i \u003c nChows; i++ {\n            fmt.Printf(\"%d \", pSmallers[k][i]);\n        }\n    }\n}\nvoid Extra_ThreshCreateInequalities(char * pIsop, char * pIsopFneg, int nVars,\n        int * pWofChow, int * pChow, int nChows, int nInequalities,\n        unsigned long ** pGreaters, unsigned long ** pSmallers) {\n    var i, j, k, m int32;\n\n    var nCubesIsop int32  = len(pIsop) / (nVars + 3);\n    var nCubesIsopFneg int32  = len(pIsopFneg) / (nVars + 3);\n\n    for k = 0; k \u003c nCubesIsop * nCubesIsopFneg; k++ {\n        for i = 0; i \u003c nChows; i++ {\n            pGreaters[k][i] = 0;\n            pSmallers[k][i] = 0;\n        }\n    }\n    m = 0;\n    for i = 0; i \u003c int32(len(pIsop)); i += (nVars + 3) {\n        for j = 0; j \u003c nCubesIsopFneg; j++ {\n            for k = 0; k \u003c nVars; k++ {\n                if pIsop[i + k] == '1' {\n                    pGreaters[m][pChow[k]] = pGreaters[m][(pChow[k])] + 1; }\n            }\n\n            m++;\n        }\n    }\n    m = 0;\n    for i = 0; i \u003c nCubesIsop; i++ {\n        for j = 0; j \u003c int32(len(pIsopFneg)); j += (nVars + 3) {\n            for k = 0; k \u003c nVars; k++ {\n                if pIsopFneg[j + k] == '-' {\n                    pSmallers[m][pChow[k]] = pSmallers[m][pChow[k]] + 1; }\n            }\n            m++;\n        }\n    }\n//        Extra_ThreshPrintInequalities( pGreaters, pSmallers, nChows, nInequalities);\n//        printf( \"\\nInequalities was Created \\n\");\n}\n\nvoid Extra_ThreshSimplifyInequalities(int nInequalities, int nChows,\n        unsigned long ** pGreaters, unsigned long ** pSmallers) {\n    var i, k int32;\n\n    for k = 0; k \u003c nInequalities; k++ {\n        for i = 0; i \u003c nChows; i++ {\n            if (pGreaters[k][i]) == (pSmallers[k][i]) {\n                pGreaters[k][i] = 0;\n                pSmallers[k][i] = 0;\n            } else if (pGreaters[k][i]) \u003e (pSmallers[k][i]) {\n                pGreaters[k][i] = pGreaters[k][i] - pSmallers[k][i];\n                pSmallers[k][i] = 0;\n            } else {\n                pSmallers[k][i] = pSmallers[k][i] - pGreaters[k][i];\n                ;\n                pGreaters[k][i] = 0;\n            }\n        }\n    }\n//        Extra_ThreshPrintInequalities( pGreaters, pSmallers, nChows, nInequalities);\n//        printf( \"\\nInequalities was Siplified \\n\");\n}\nfunc Extra_ThreshAssignWeights(t *word, pIsop string, pIsopFneg string, nVars int32, pW *int32, pChow *int32, nChows int32, Wmin int32) int32 {\n\n    var i int32;\n    var j int32;\n    var Lmin int32 = 1000;\n    var Lmax int32;\n    var Limit int32 = nVars * 2;\n    var delta int32;\n    var deltaOld int32 = -1000;\n    var fIncremented int32;\n    //******************************\n    var pWofChow *int32  = ABC_ALLOC( int, nChows );\n    var nCubesIsop int32  = len(pIsop) / (nVars + 3);\n    var nCubesIsopFneg int32  = len(pIsopFneg) / (nVars + 3);\n    var nInequalities int32  = nCubesIsop * nCubesIsopFneg;\n    unsigned long **pGreaters;\n    unsigned long **pSmallers;\n\n    pGreaters = (unsigned long **)malloc(nCubesIsop * nCubesIsopFneg * sizeof *pGreaters);\n    for i = 0; i \u003c nCubesIsop * nCubesIsopFneg; i++ {\n        pGreaters[i] = (unsigned long *)malloc(nChows * sizeof *pGreaters[i]);\n    }\n    pSmallers = (unsigned long **)malloc(nCubesIsop * nCubesIsopFneg * sizeof *pSmallers);\n    for i = 0; i \u003c nCubesIsop * nCubesIsopFneg; i++ {\n        pSmallers[i] = (unsigned long *)malloc(nChows * sizeof *pSmallers[i]);\n    }\n\n    //******************************\n    Extra_ThreshCreateInequalities(pIsop, pIsopFneg, nVars, pWofChow, pChow,\n            nChows, nInequalities, pGreaters, pSmallers);\n    Extra_ThreshSimplifyInequalities(nInequalities, nChows, pGreaters,\n            pSmallers);\n\n    //initializes the weights\n    pWofChow[0] = Wmin;\n    for i = 1; i \u003c nChows; i++ {\n        pWofChow[i] = pWofChow[i - 1] + 1;\n    }\n    i = 0;\n\n    //assign the weights respecting the inequalities\n    for i \u003c nChows \u0026\u0026 pWofChow[nChows - 1] \u003c= Limit {\n        Lmin = 1000;\n        Lmax = 0;\n\n        for j \u003c nInequalities {\n            if pGreaters[j][i] != 0 {\n                Lmin = Extra_ThreshCubeWeightedSum3(pWofChow, nChows, pGreaters,\n                        j);\n                Lmax = Extra_ThreshCubeWeightedSum4(pWofChow, nChows, pSmallers,\n                        j);\n                delta = Lmin - Lmax;\n\n                if delta \u003e 0 {\n                    if fIncremented == 1 {\n                        j = 0;\n                        fIncremented = 0;\n                        deltaOld = -1000;\n                    } else {\n                        j++; }\n                    continue;\n                }\n                if delta \u003e deltaOld {\n                    Extra_ThreshIncrementWeights(nChows, pWofChow, i);\n                    deltaOld = delta;\n                    fIncremented = 1;\n                } else if fIncremented == 1 {\n                    Extra_ThreshDecrementWeights(nChows, pWofChow, i);\n                    j++;\n                    deltaOld = -1000;\n                    fIncremented = 0;\n                    continue;\n                } else {\n                    j++; }\n            } else {\n                j++; }\n\n        }\n        i++;\n        j = 0;\n    }\n\n    //******************************\n    for i = 0; i \u003c nCubesIsop * nCubesIsopFneg; i++ {\n        free(pGreaters[i]);\n    }\n    free(pGreaters);\n    for i = 0; i \u003c nCubesIsop * nCubesIsopFneg; i++ {\n        free(pSmallers[i]);\n    }\n    free(pSmallers);\n    //******************************\n\n    i = 0;\n    Lmin = 1000;\n    Lmax = 0;\n\n    //check the assigned weights in the original system\n    for j = 0; j \u003c int32(len(pIsop)); j += (nVars + 3) {\n        Lmin = Abc_MinInt(Lmin,\n                Extra_ThreshCubeWeightedSum1(pWofChow, pChow, pIsop, nVars, j));\n    }\n    for j = 0; j \u003c int32(len(pIsopFneg)); j += (nVars + 3) {\n        Lmax = Abc_MaxInt(Lmax,\n                Extra_ThreshCubeWeightedSum2(pWofChow, pChow, pIsopFneg, nVars,\n                        j));\n    }\n\n    for i = 0; i \u003c nVars; i++ {\n        pW[i] = pWofChow[pChow[i]];\n    }\n\n    ABC_FREE( pWofChow );\n    if Lmin \u003e Lmax {\n        return Lmin;\n    } else {\n        return 0; }\n}\nfunc Extra_ThreshPrintWeights(T int32, pW *int32, nVars int32) {\n    var i int32;\n\n    if T == 0 {\n        fmt.Fprintf(os.Stdout, \"\\nHeuristic method: is not TLF\\n\\n\");\n    } else {\n        fmt.Fprintf(os.Stdout, \"\\nHeuristic method: Weights and threshold value:\\n\");\n        for i = 0; i \u003c nVars; i++ {\n            fmt.Printf(\"%d \", pW[i]);\n        }\n        fmt.Printf(\"  %d\\n\", T);\n    }\n}\n/**Function*************************************************************\n\n\n Synopsis    [Checks thresholdness of the function.]\n\n Description []\n\n SideEffects []\n\n\n SeeAlso     []\n\n ***********************************************************************/\nfunc Extra_ThreshCheck(t *word, nVars int32, pW *int32) int32 {\n    var Chow0 int32;\n    var Chow [16]int32;\n    if !Abc_TtIsUnate(t, nVars) {\n        return 0; }\n    Abc_TtMakePosUnate(t, nVars);\n    Chow0 = Extra_ThreshComputeChow(t, nVars, Chow);\n    Extra_ThreshSortByChow(t, nVars, Chow);\n    return Extra_ThreshSelectWeights(t, nVars, pW);\n}\n/**Function*************************************************************\n\n\n Synopsis    [Checks thresholdness of the function by using a heuristic method.]\n\n Description []\n\n SideEffects []\n\n\n SeeAlso     []\n\n ***********************************************************************/\nfunc Extra_ThreshHeuristic(t *word, nVars int32, pW *int32) int32 {\n\n    extern char * Abc_ConvertBddToSop( Mem_Flex_t * pMan, DdManager * dd, DdNode * bFuncOn, DdNode * bFuncOnDc, int nFanins, int fAllPrimes, Vec_Str_t * vCube, int fMode );\n    var Chow0 int32;\n    var Chow [16]int32;\n    var nChows int32;\n    var i int32;\n    var T int32;\n    var dd *DdManager;\n    var vCube *Vec_Str_t;\n    var ddNode, ddNodeFneg *DdNode;\n    var pIsop, pIsopFneg string;\n    if nVars \u003c= 1 {\n        return 1; }\n    if !Abc_TtIsUnate(t, nVars) {\n        return 0; }\n    Abc_TtMakePosUnate(t, nVars);\n    Chow0 = Extra_ThreshComputeChow(t, nVars, Chow);\n    Extra_ThreshSortByChowInverted(t, nVars, Chow);\n    nChows = Extra_ThreshInitializeChow(nVars, Chow);\n\n    dd = (DdManager *) Abc_FrameReadManDd();\n    vCube = Vec_StrAlloc(nVars);\n    for i = 0; i \u003c nVars; i++ {\n        Cudd_bddIthVar(dd, i);\n    }\n    ddNode = Kit_TruthToBdd(dd, (unsigned *) t, nVars, 0);\n    Cudd_Ref(ddNode);\n    pIsop = Abc_ConvertBddToSop( nil, dd, ddNode, ddNode, nVars, 1,\n            vCube, 1);\n\n    Abc_TtNot(t, Abc_TruthWordNum(nVars));\n    ddNodeFneg = Kit_TruthToBdd(dd, (unsigned *) t, nVars, 0);\n    Cudd_Ref(ddNodeFneg);\n\n    pIsopFneg = Abc_ConvertBddToSop( nil, dd, ddNodeFneg, ddNodeFneg,\n            nVars, 1, vCube, 1);\n\n    Cudd_RecursiveDeref(dd, ddNode);\n    Cudd_RecursiveDeref(dd, ddNodeFneg);\n\n    T = Extra_ThreshAssignWeights(t, pIsop, pIsopFneg, nVars, pW, Chow, nChows,\n            1);\n\n    for i = 2; (i \u003c 4) \u0026\u0026 (T == 0) \u0026\u0026 (nVars \u003e= 6); i++ {\n        T = Extra_ThreshAssignWeights(t, pIsop, pIsopFneg, nVars, pW, Chow,\n                nChows, i);\n    }\n\n    free(pIsop);\n    free(pIsopFneg);\n    Vec_StrFree(vCube);\n\n    return T;\n}\n\n/**Function*************************************************************\n\n Synopsis    [Checks unateness of a function.]\n\n Description []\n\n SideEffects []\n\n SeeAlso     []\n\n ***********************************************************************/\nfunc Extra_ThreshCheckTest() {\n    var nVars int32  = 6;\n    var T int32;\n    var Chow0 int32;\n    var Chow [16]int32;\n    var Weights [16]int32;\n//    word t =  s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[3] \u0026 s_Truths6[4];\n//    word t =  (s_Truths6[0] \u0026 s_Truths6[1]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[3]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[4]);\n//    word t = (s_Truths6[2] \u0026 s_Truths6[1])\n//            | (s_Truths6[2] \u0026 s_Truths6[0] \u0026 s_Truths6[3])\n//            | (s_Truths6[2] \u0026 s_Truths6[0] \u0026 ~s_Truths6[4]);\n    var t word  = (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[2])| (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[3]) | (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[4] \u0026 s_Truths6[5]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[3] \u0026 s_Truths6[4] \u0026 s_Truths6[5]);\n//    word t =  (s_Truths6[0] \u0026 s_Truths6[1]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[3]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[3]);\n//    word t =  (s_Truths6[0] \u0026 s_Truths6[1]) | (s_Truths6[0] \u0026 s_Truths6[2]) | (s_Truths6[0] \u0026 s_Truths6[3] \u0026 s_Truths6[4] \u0026 s_Truths6[5]) | \n//        (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[3]) | (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[2] \u0026 s_Truths6[5]);\n    var i int32;\n    assert(nVars \u003c= 8, \"nVars \u003c= 8\");\n    for i = 0; i \u003c nVars; i++ {\n        fmt.Printf(\"%d %d %d\\n\", i, Abc_TtPosVar(\u0026t, nVars, i), Abc_TtNegVar(\u0026t, nVars, i));\n    }\n//    word t = s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[2];\n    Chow0 = Extra_ThreshComputeChow(\u0026t, nVars, Chow);\n    if T = Extra_ThreshCheck(\u0026t, nVars, Weights) {\n        Extra_ThreshPrintChow(T, Weights, nVars);\n    } else {\n        fmt.Printf(\"No threshold\\n\"); }\n}\nfunc Extra_ThreshHeuristicTest() {\n    var nVars int32  = 6;\n    var T int32;\n    var Weights [16]int32;\n\n    //    word t = 19983902376700760000;\n    var t word  = (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[2])| (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[3]) | (s_Truths6[0] \u0026 s_Truths6[1] \u0026 s_Truths6[4] \u0026 s_Truths6[5]) | (s_Truths6[0] \u0026 s_Truths6[2] \u0026 s_Truths6[3] \u0026 s_Truths6[4] \u0026 s_Truths6[5]);\n    var pT *word  = \u0026t;\n    T = Extra_ThreshHeuristic(pT, nVars, Weights);\n    Extra_ThreshPrintWeights(T, Weights, nVars);\n\n}\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

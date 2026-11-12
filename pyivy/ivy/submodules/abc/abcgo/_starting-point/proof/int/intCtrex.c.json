@@ -1,0 +1,215 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCtrex.c",
+  "SHA256": "8d5a78e0a5b475c534ca835ddc8449804b031a46de7b51e05e5b94ee7147a53a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManPoNum(pAig) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 4322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManPoNum(pAig) == 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 9,
+        "ByteOffset": 4739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Counter-example generation in command \\\"int\\\" has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 9,
+        "ByteOffset": 4820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Use command \\\"bmc2\\\" to produce a valid counter-example.\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 146,
+        "Column": 66,
+        "ByteOffset": 5836
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 9,
+        "ByteOffset": 6079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Inter_ManGetCounterExample(): Counter-example verification has FAILED.\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 158,
+        "Column": 73,
+        "ByteOffset": 6389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Inter_ManFramesBmc",
+      "Start": 1341,
+      "End": 2777,
+      "BodyStart": 1405,
+      "Original": "Aig_Man_t * Inter_ManFramesBmc( Aig_Man_t * pAig, int nFrames )\n{\n    Aig_Man_t * pFrames;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    int i, f;\n    assert( Saig_ManRegNum(pAig) \u003e 0 );\n    assert( Saig_ManPoNum(pAig) == 1 );\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    Saig_ManForEachLo( pAig, pObj, i )\n        pObj-\u003epData = Aig_ManConst0( pFrames );\n    // add timeframes\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        // create PI nodes for this frame\n        Saig_ManForEachPi( pAig, pObj, i )\n            pObj-\u003epData = Aig_ObjCreateCi( pFrames );\n        // add internal nodes of this frame\n        Aig_ManForEachNode( pAig, pObj, i )\n            pObj-\u003epData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n        if ( f == nFrames - 1 )\n            break;\n        // transfer to register outputs\n        Saig_ManForEachLiLo(  pAig, pObjLi, pObjLo, i )\n            pObjLi-\u003epData = Aig_ObjChild0Copy(pObjLi);\n        // transfer to register outputs\n        Saig_ManForEachLiLo(  pAig, pObjLi, pObjLo, i )\n            pObjLo-\u003epData = pObjLi-\u003epData;\n    }\n    // create POs for the output of the last frame\n    pObj = Aig_ManCo( pAig, 0 );\n    Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}",
+      "Draft": "func Inter_ManFramesBmc(pAig *Aig_Man_t, nFrames int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i, f int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    assert(Saig_ManPoNum(pAig) == 1, \"Saig_ManPoNum(pAig) == 1\");\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_ManConst0( pFrames );\n    }\n    // add timeframes\n    for  f = 0; f \u003c nFrames; f++  {\n        // create PI nodes for this frame\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi( pFrames );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n        if f == nFrames - 1 {\n            break; }\n        // transfer to register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLi.pData = Aig_ObjChild0Copy(pObjLi);\n        }\n        // transfer to register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLo.pData = pObjLi.pData;\n        }\n    }\n    // create POs for the output of the last frame\n    pObj = Aig_ManCo( pAig, 0 );\n    Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}"
+    },
+    {
+      "Name": "Inter_ManGetCounterExample",
+      "Start": 3057,
+      "End": 5283,
+      "BodyStart": 3138,
+      "Original": "void * Inter_ManGetCounterExample( Aig_Man_t * pAig, int nFrames, int fVerbose )\n{\n    int nConfLimit = 1000000;\n    Abc_Cex_t * pCtrex = NULL;\n    Aig_Man_t * pFrames;\n    sat_solver * pSat;\n    Cnf_Dat_t * pCnf;\n    int status;\n    abctime clk = Abc_Clock();\n    Vec_Int_t * vCiIds;\n    // create timeframes\n    assert( Saig_ManPoNum(pAig) == 1 );\n    pFrames = Inter_ManFramesBmc( pAig, nFrames );\n    // derive CNF\n    pCnf = Cnf_Derive( pFrames, 0 );\n    Cnf_DataTranformPolarity( pCnf, 0 );\n    vCiIds = Cnf_DataCollectPiSatNums( pCnf, pFrames );\n    Aig_ManStop( pFrames );\n    // convert into SAT solver\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    Cnf_DataFree( pCnf );\n    if ( pSat == NULL )\n    {\n        printf( \"Counter-example generation in command \\\"int\\\" has failed.\\n\" );\n        printf( \"Use command \\\"bmc2\\\" to produce a valid counter-example.\\n\" );\n        Vec_IntFree( vCiIds );\n        return NULL;\n    }\n    // simplify the problem\n    status = sat_solver_simplify(pSat);\n    if ( status == 0 )\n    {\n        Vec_IntFree( vCiIds );\n        sat_solver_delete( pSat );\n        return NULL;\n    }\n    // solve the miter\n    status = sat_solver_solve( pSat, NULL, NULL, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    // if the problem is SAT, get the counterexample\n    if ( status == l_True )\n    {\n        int i, * pModel = Sat_SolverGetModel( pSat, vCiIds-\u003epArray, vCiIds-\u003enSize );\n        pCtrex = Abc_CexAlloc( Saig_ManRegNum(pAig), Saig_ManPiNum(pAig), nFrames );\n        pCtrex-\u003eiFrame = nFrames - 1;\n        pCtrex-\u003eiPo = 0;\n        for ( i = 0; i \u003c Vec_IntSize(vCiIds); i++ )\n            if ( pModel[i] )\n                Abc_InfoSetBit( pCtrex-\u003epData, Saig_ManRegNum(pAig) + i );\n        ABC_FREE( pModel );\n    }\n    // free the sat_solver\n    sat_solver_delete( pSat );\n    Vec_IntFree( vCiIds );\n    // verify counter-example\n    status = Saig_ManVerifyCex( pAig, pCtrex );\n    if ( status == 0 )\n        printf( \"Inter_ManGetCounterExample(): Counter-example verification has FAILED.\\n\" );\n    // report the results\n    if ( fVerbose )\n    {\n        ABC_PRT( \"Total ctrex generation time\", Abc_Clock() - clk );\n    }\n    return pCtrex;\n\n}",
+      "Draft": "func Inter_ManGetCounterExample(pAig *Aig_Man_t, nFrames int32, fVerbose int32) any {\n    var nConfLimit int32  = 1000000;\n    var pCtrex *Abc_Cex_t  = nil;\n    var pFrames *Aig_Man_t;\n    var pSat *sat_solver;\n    var pCnf *Cnf_Dat_t;\n    var status int32;\n    var clk abctime  = Abc_Clock();\n    var vCiIds *Vec_Int_t;\n    // create timeframes\n    assert(Saig_ManPoNum(pAig) == 1, \"Saig_ManPoNum(pAig) == 1\");\n    pFrames = Inter_ManFramesBmc( pAig, nFrames );\n    // derive CNF\n    pCnf = Cnf_Derive( pFrames, 0 );\n    Cnf_DataTranformPolarity( pCnf, 0 );\n    vCiIds = Cnf_DataCollectPiSatNums( pCnf, pFrames );\n    Aig_ManStop( pFrames );\n    // convert into SAT solver\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    Cnf_DataFree( pCnf );\n    if pSat == nil {\n        fmt.Printf(\"Counter-example generation in command \\\"int\\\" has failed.\\n\");\n        fmt.Printf(\"Use command \\\"bmc2\\\" to produce a valid counter-example.\\n\");\n        Vec_IntFree( vCiIds );\n        return nil;\n    }\n    // simplify the problem\n    status = sat_solver_simplify(pSat);\n    if status == 0 {\n        Vec_IntFree( vCiIds );\n        sat_solver_delete( pSat );\n        return nil;\n    }\n    // solve the miter\n    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    // if the problem is SAT, get the counterexample\n    if status == l_True {\n        var i int32;\n        var pModel *int32 = Sat_SolverGetModel( pSat, vCiIds.pArray, vCiIds.nSize );\n        pCtrex = Abc_CexAlloc( Saig_ManRegNum(pAig), Saig_ManPiNum(pAig), nFrames );\n        pCtrex.iFrame = nFrames - 1;\n        pCtrex.iPo = 0;\n        for  i = 0; i \u003c Vec_IntSize(vCiIds); i++  {\n            if pModel[i] {\n                Abc_InfoSetBit( pCtrex.pData, Saig_ManRegNum(pAig) + i ); }\n        }\n        // inlining of macro ABC_FREE\n        ((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);\n    }\n    // free the sat_solver\n    sat_solver_delete( pSat );\n    Vec_IntFree( vCiIds );\n    // verify counter-example\n    status = Saig_ManVerifyCex( pAig, pCtrex );\n    if status == 0 {\n        fmt.Printf(\"Inter_ManGetCounterExample(): Counter-example verification has FAILED.\\n\"); }\n    // report the results\n    if fVerbose != 0 {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Total ctrex generation time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    return pCtrex;\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCtrex.c::pointer-cast::1874",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1767,
+      "End": 1767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCtrex.c::pointer-cast::2274",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1964,
+      "End": 1964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCtrex.c::pointer-cast::2600",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2105,
+      "End": 2105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCtrex.c::pointer-cast::4537",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3680,
+      "End": 3694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCtrex.c::pointer-cast::5748",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4829,
+      "End": 4829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCtrex.c::Inter_ManFramesBmc",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManFramesBmc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1341,
+      "End": 2777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCtrex.c::void-pointer::Inter_ManGetCounterExample",
+      "Category": "void-pointer-review",
+      "Symbol": "Inter_ManGetCounterExample",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 3057,
+      "End": 5283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCtrex.c::ternary::Inter_ManGetCounterExample",
+      "Category": "ternary-review",
+      "Symbol": "Inter_ManGetCounterExample",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3057,
+      "End": 5283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCtrex.c::Inter_ManGetCounterExample",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManGetCounterExample",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3057,
+      "End": 5283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCtrex.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5531
+    }
+  ],
+  "Draft": "package int\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [intCtrex.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [Counter-example generation after disproving the property.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 24, 2008.]\n\n  Revision    [$Id: intCtrex.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"intInt.h\"\n//#include \"proof/ssw/ssw.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Unroll the circuit the given number of timeframes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManFramesBmc(pAig *Aig_Man_t, nFrames int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var i, f int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    assert(Saig_ManPoNum(pAig) == 1, \"Saig_ManPoNum(pAig) == 1\");\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pObj.pData = Aig_ManConst0( pFrames );\n    }\n    // add timeframes\n    for  f = 0; f \u003c nFrames; f++  {\n        // create PI nodes for this frame\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi( pFrames );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n        if f == nFrames - 1 {\n            break; }\n        // transfer to register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLi.pData = Aig_ObjChild0Copy(pObjLi);\n        }\n        // transfer to register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLo.pData = pObjLi.pData;\n        }\n    }\n    // create POs for the output of the last frame\n    pObj = Aig_ManCo( pAig, 0 );\n    Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Run the SAT solver on the unrolled instance.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManGetCounterExample(pAig *Aig_Man_t, nFrames int32, fVerbose int32) any {\n    var nConfLimit int32  = 1000000;\n    var pCtrex *Abc_Cex_t  = nil;\n    var pFrames *Aig_Man_t;\n    var pSat *sat_solver;\n    var pCnf *Cnf_Dat_t;\n    var status int32;\n    var clk abctime  = Abc_Clock();\n    var vCiIds *Vec_Int_t;\n    // create timeframes\n    assert(Saig_ManPoNum(pAig) == 1, \"Saig_ManPoNum(pAig) == 1\");\n    pFrames = Inter_ManFramesBmc( pAig, nFrames );\n    // derive CNF\n    pCnf = Cnf_Derive( pFrames, 0 );\n    Cnf_DataTranformPolarity( pCnf, 0 );\n    vCiIds = Cnf_DataCollectPiSatNums( pCnf, pFrames );\n    Aig_ManStop( pFrames );\n    // convert into SAT solver\n    pSat = (sat_solver *)Cnf_DataWriteIntoSolver( pCnf, 1, 0 );\n    Cnf_DataFree( pCnf );\n    if pSat == nil {\n        fmt.Printf(\"Counter-example generation in command \\\"int\\\" has failed.\\n\");\n        fmt.Printf(\"Use command \\\"bmc2\\\" to produce a valid counter-example.\\n\");\n        Vec_IntFree( vCiIds );\n        return nil;\n    }\n    // simplify the problem\n    status = sat_solver_simplify(pSat);\n    if status == 0 {\n        Vec_IntFree( vCiIds );\n        sat_solver_delete( pSat );\n        return nil;\n    }\n    // solve the miter\n    status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfLimit, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n    // if the problem is SAT, get the counterexample\n    if status == l_True {\n        var i int32;\n        var pModel *int32 = Sat_SolverGetModel( pSat, vCiIds.pArray, vCiIds.nSize );\n        pCtrex = Abc_CexAlloc( Saig_ManRegNum(pAig), Saig_ManPiNum(pAig), nFrames );\n        pCtrex.iFrame = nFrames - 1;\n        pCtrex.iPo = 0;\n        for  i = 0; i \u003c Vec_IntSize(vCiIds); i++  {\n            if pModel[i] {\n                Abc_InfoSetBit( pCtrex.pData, Saig_ManRegNum(pAig) + i ); }\n        }\n        // inlining of macro ABC_FREE\n        ((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);\n    }\n    // free the sat_solver\n    sat_solver_delete( pSat );\n    Vec_IntFree( vCiIds );\n    // verify counter-example\n    status = Saig_ManVerifyCex( pAig, pCtrex );\n    if status == 0 {\n        fmt.Printf(\"Inter_ManGetCounterExample(): Counter-example verification has FAILED.\\n\"); }\n    // report the results\n    if fVerbose != 0 {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Total ctrex generation time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    return pCtrex;\n\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

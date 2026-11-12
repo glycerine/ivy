@@ -1,0 +1,1467 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrin.c",
+  "SHA256": "37ccd24f430c5c208bf9ae2c8bc87a54ff570706ba4c90e750aa413a0e53348d",
+  "Library": [
+    {
+      "Name": "getc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 33,
+        "Column": 16,
+        "ByteOffset": 437
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    while ((ch=getc(fpin)) != EOF \u0026\u0026 ch != '\\n')"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 33,
+        "Column": 31,
+        "ByteOffset": 452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    while ((ch=getc(fpin)) != EOF \u0026\u0026 ch != '\\n')"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 35,
+        "Column": 9,
+        "ByteOffset": 493
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        putc(ch, fpout);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 37,
+        "Column": 5,
+        "ByteOffset": 528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc('\\n', fpout);"
+    },
+    {
+      "Name": "getc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 46,
+        "Column": 18,
+        "ByteOffset": 676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    while ((ch = getc(fp)) != EOF \u0026\u0026 isspace(ch))"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 46,
+        "Column": 31,
+        "ByteOffset": 689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    while ((ch = getc(fp)) != EOF \u0026\u0026 isspace(ch))"
+    },
+    {
+      "Name": "isspace",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 46,
+        "Column": 38,
+        "ByteOffset": 696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    while ((ch = getc(fp)) != EOF \u0026\u0026 isspace(ch))"
+    },
+    {
+      "Name": "getc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 49,
+        "Column": 18,
+        "ByteOffset": 752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    while ((ch = getc(fp)) != EOF \u0026\u0026 ! isspace(ch))"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 49,
+        "Column": 31,
+        "ByteOffset": 765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    while ((ch = getc(fp)) != EOF \u0026\u0026 ! isspace(ch))"
+    },
+    {
+      "Name": "isspace",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 49,
+        "Column": 40,
+        "ByteOffset": 774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    while ((ch = getc(fp)) != EOF \u0026\u0026 ! isspace(ch))"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 73,
+        "Column": 14,
+        "ByteOffset": 1382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        case EOF:"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 77,
+        "Column": 20,
+        "ByteOffset": 1481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"product term(s) %s\\n\","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 77,
+        "Column": 28,
+        "ByteOffset": 1489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"product term(s) %s\\n\","
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 16,
+        "ByteOffset": 2766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fscanf(fp, \"%s\", token);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 108,
+        "Column": 54,
+        "ByteOffset": 2844
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if /*__starting_point_inline_macro:equal__*/(strcmp(token,\"-\") == 0) || /*__starting_point_inline_macro:equal__*/(strcmp(token,\"ANY\") == 0) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 108,
+        "Column": 123,
+        "ByteOffset": 2913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if /*__starting_point_inline_macro:equal__*/(strcmp(token,\"-\") == 0) || /*__starting_point_inline_macro:equal__*/(strcmp(token,\"ANY\") == 0) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 115,
+        "Column": 61,
+        "ByteOffset": 3186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if /*__starting_point_inline_macro:equal__*/(strcmp(token,\"~\") == 0) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 131,
+        "Column": 65,
+        "ByteOffset": 4024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else if /*__starting_point_inline_macro:equal__*/(strcmp(PLA.label[i],token) == 0) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 20,
+        "ByteOffset": 4371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr,"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 136,
+        "Column": 28,
+        "ByteOffset": 4379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr,"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 138,
+        "Column": 13,
+        "ByteOffset": 4479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            exit(-1);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 144,
+        "Column": 14,
+        "ByteOffset": 4625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        case EOF:"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 20,
+        "ByteOffset": 4732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"product term(s) %s\\n\","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 148,
+        "Column": 28,
+        "ByteOffset": 4740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"product term(s) %s\\n\","
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 175,
+        "Column": 14,
+        "ByteOffset": 5624
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        case EOF:"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 179,
+        "Column": 20,
+        "ByteOffset": 5723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"product term(s) %s\\n\","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 179,
+        "Column": 28,
+        "ByteOffset": 5731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"product term(s) %s\\n\","
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 211,
+        "Column": 12,
+        "ByteOffset": 7072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr, \"(warning): input line #%d ignored\\n\", lineno);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 211,
+        "Column": 20,
+        "ByteOffset": 7080
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr, \"(warning): input line #%d ignored\\n\", lineno);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 212,
+        "Column": 19,
+        "ByteOffset": 7154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    skip_line(fp, stdout, TRUE);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 227,
+        "Column": 10,
+        "ByteOffset": 7380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    case EOF:"
+    },
+    {
+      "Name": "ungetc",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 238,
+        "Column": 16,
+        "ByteOffset": 7528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) ungetc(ch, fp);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 239,
+        "Column": 23,
+        "ByteOffset": 7566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        skip_line(fp, stdout, echo_comments);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 244,
+        "Column": 54,
+        "ByteOffset": 7740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if /*__starting_point_inline_macro:equal__*/(strcmp(get_word(fp, word),\"i\") == 0) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 246,
+        "Column": 20,
+        "ByteOffset": 7832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"extra .i ignored\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 246,
+        "Column": 28,
+        "ByteOffset": 7840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"extra .i ignored\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 247,
+        "Column": 27,
+        "ByteOffset": 7897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            skip_line(fp, stdout, /* echo */ FALSE);"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 17,
+        "ByteOffset": 7957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if (fscanf(fp, \"%d\", \u0026cube.num_binary_vars) != 1)"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 256,
+        "Column": 61,
+        "ByteOffset": 8291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if /*__starting_point_inline_macro:equal__*/(strcmp(word,\"o\") == 0) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 258,
+        "Column": 20,
+        "ByteOffset": 8369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"extra .o ignored\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 258,
+        "Column": 28,
+        "ByteOffset": 8377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"extra .o ignored\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 259,
+        "Column": 27,
+        "ByteOffset": 8434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            skip_line(fp, stdout, /* echo */ FALSE);"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 17,
+        "ByteOffset": 8583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if (fscanf(fp, \"%d\", \u0026(cube.part_size[cube.num_vars-1]))!=1)"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 270,
+        "Column": 61,
+        "ByteOffset": 8874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if /*__starting_point_inline_macro:equal__*/(strcmp(word,\"mv\") == 0) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 272,
+        "Column": 20,
+        "ByteOffset": 8953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"extra .mv ignored\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 272,
+        "Column": 28,
+        "ByteOffset": 8961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"extra .mv ignored\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 273,
+        "Column": 27,
+        "ByteOffset": 9019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            skip_line(fp, stdout, /* echo */ FALSE);"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 17,
+        "ByteOffset": 9163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if (fscanf(fp,\"%d %d\","
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 17,
+        "ByteOffset": 9682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if (fscanf(fp, \"%d\", \u0026(cube.part_size[var])) != 1)"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 294,
+        "Column": 62,
+        "ByteOffset": 9967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if (/*__starting_point_inline_macro:equal__*/(strcmp(word,\"p\") == 0))"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 295,
+        "Column": 16,
+        "ByteOffset": 10006
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fscanf(fp, \"%d\", \u0026np);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 297,
+        "Column": 59,
+        "ByteOffset": 10141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        else if /*__starting_point_inline_macro:equal__*/(strcmp(word,\"e\") == 0) || /*__starting_point_inline_macro:equal__*/(strcmp(word,\"end\") == 0) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 297,
+        "Column": 127,
+        "ByteOffset": 10209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        else if /*__starting_point_inline_macro:equal__*/(strcmp(word,\"e\") == 0) || /*__starting_point_inline_macro:equal__*/(strcmp(word,\"end\") == 0) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 308,
+        "Column": 60,
+        "ByteOffset": 10816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        else if (/*__starting_point_inline_macro:equal__*/(strcmp(word,\"kiss\") == 0))"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 312,
+        "Column": 59,
+        "ByteOffset": 10980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        else if /*__starting_point_inline_macro:equal__*/(strcmp(word,\"type\") == 0) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 315,
+        "Column": 58,
+        "ByteOffset": 11147
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if /*__starting_point_inline_macro:equal__*/(strcmp(pla_types[i].key + 1,word) == 0) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 323,
+        "Column": 61,
+        "ByteOffset": 11448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if /*__starting_point_inline_macro:equal__*/(strcmp(word,\"ilb\") == 0) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 332,
+        "Column": 40,
+        "ByteOffset": 11857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            PLA.label[i] = ALLOC(char, strlen(word) + 6);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 20,
+        "ByteOffset": 11895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) sprintf(PLA.label[i], \"%s.bar\", word);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 335,
+        "Column": 61,
+        "ByteOffset": 12004
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if /*__starting_point_inline_macro:equal__*/(strcmp(word,\"ob\") == 0) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 346,
+        "Column": 61,
+        "ByteOffset": 12514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if /*__starting_point_inline_macro:equal__*/(strcmp(word,\"label\") == 0) {"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 351,
+        "Column": 13,
+        "ByteOffset": 12711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if (fscanf(fp, \"var=%d\", \u0026var) != 1)"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 358,
+        "Column": 61,
+        "ByteOffset": 13013
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if /*__starting_point_inline_macro:equal__*/(strcmp(word,\"symbolic\") == 0) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 373,
+        "Column": 61,
+        "ByteOffset": 13516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if /*__starting_point_inline_macro:equal__*/(strcmp(word,\"symbolic-output\") == 0) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 389,
+        "Column": 61,
+        "ByteOffset": 14116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if /*__starting_point_inline_macro:equal__*/(strcmp(word,\"phase\") == 0) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 393,
+        "Column": 20,
+        "ByteOffset": 14291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"extra .phase ignored\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 393,
+        "Column": 28,
+        "ByteOffset": 14299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"extra .phase ignored\\n\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 394,
+        "Column": 27,
+        "ByteOffset": 14360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            skip_line(fp, stdout, /* echo */ FALSE);"
+    },
+    {
+      "Name": "getc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 396,
+        "Column": 21,
+        "ByteOffset": 14424
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            do ch = getc(fp); while (ch == ' ' || ch == '\\t');"
+    },
+    {
+      "Name": "ungetc",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 397,
+        "Column": 20,
+        "ByteOffset": 14486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) ungetc(ch, fp);"
+    },
+    {
+      "Name": "getc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 401,
+        "Column": 23,
+        "ByteOffset": 14792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if ((ch = getc(fp)) == '0')"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 408,
+        "Column": 61,
+        "ByteOffset": 15256
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if /*__starting_point_inline_macro:equal__*/(strcmp(word,\"pair\") == 0) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 411,
+        "Column": 20,
+        "ByteOffset": 15348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"extra .pair ignored\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 411,
+        "Column": 28,
+        "ByteOffset": 15356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(stderr, \"extra .pair ignored\\n\");"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 415,
+        "Column": 17,
+        "ByteOffset": 15495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if (fscanf(fp, \"%d\", \u0026(pair.cnt)) != 1)"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 421,
+        "Column": 40,
+        "ByteOffset": 15788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if (word[0] == '(') (void) strcpy(word, word+1);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 429,
+        "Column": 21,
+        "ByteOffset": 16041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if word[strlen(word)-1] == ')' {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 430,
+        "Column": 22,
+        "ByteOffset": 16087
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                word[strlen(word)-1]='\\0';"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 442,
+        "Column": 13,
+        "ByteOffset": 16391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"%c%s \", ch, word);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 443,
+        "Column": 23,
+        "ByteOffset": 16440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        skip_line(fp, stdout, echo_unknown_commands);"
+    },
+    {
+      "Name": "ungetc",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 447,
+        "Column": 16,
+        "ByteOffset": 16525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) ungetc(ch, fp);"
+    },
+    {
+      "Name": "putchar",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 451,
+        "Column": 13,
+        "ByteOffset": 16672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            putchar('#');"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 452,
+        "Column": 23,
+        "ByteOffset": 16708
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        skip_line(fp, stdout, echo_comments);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 522,
+        "Column": 12,
+        "ByteOffset": 19030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return EOF;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 533,
+        "Column": 16,
+        "ByteOffset": 19350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(stderr,\" with .kiss option, third to last and second\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 533,
+        "Column": 24,
+        "ByteOffset": 19358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(stderr,\" with .kiss option, third to last and second\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 534,
+        "Column": 16,
+        "ByteOffset": 19431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(stderr, \"to last variables must be the same size.\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 534,
+        "Column": 24,
+        "ByteOffset": 19439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(stderr, \"to last variables must be the same size.\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 535,
+        "Column": 16,
+        "ByteOffset": 19509
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        return EOF;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 612,
+        "Column": 5,
+        "ByteOffset": 22115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"# PLA is %s\", PLA.filename);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 614,
+        "Column": 5,
+        "ByteOffset": 22207
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\" with %d inputs and %d outputs\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 617,
+        "Column": 5,
+        "ByteOffset": 22331
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\" with %d variables (%d binary, mv sizes\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 620,
+        "Column": 9,
+        "ByteOffset": 22499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\" %d\", cube.part_size[var]);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 621,
+        "Column": 5,
+        "ByteOffset": 22539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\")\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 623,
+        "Column": 5,
+        "ByteOffset": 22564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"# ON-set cost is  %s\\n\", print_cost(PLA.F));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 624,
+        "Column": 5,
+        "ByteOffset": 22621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"# OFF-set cost is %s\\n\", print_cost(PLA.R));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 625,
+        "Column": 5,
+        "ByteOffset": 22678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"# DC-set cost is  %s\\n\", print_cost(PLA.D));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 627,
+        "Column": 5,
+        "ByteOffset": 22762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"# phase is %s\\n\", pc1(PLA.phase));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 629,
+        "Column": 5,
+        "ByteOffset": 22835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"# two-bit decoders:\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 631,
+        "Column": 9,
+        "ByteOffset": 22912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\" (%d %d)\", PLA.pair.var1[i], PLA.pair.var2[i]);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 632,
+        "Column": 5,
+        "ByteOffset": 22972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 636,
+        "Column": 9,
+        "ByteOffset": 23106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"# symbolic: \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 638,
+        "Column": 9,
+        "ByteOffset": 23210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\" %d\", p2.variable);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 640,
+        "Column": 9,
+        "ByteOffset": 23256
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 645,
+        "Column": 9,
+        "ByteOffset": 23410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"# output symbolic: \");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 647,
+        "Column": 9,
+        "ByteOffset": 23521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\" %d\", p2.pos);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 649,
+        "Column": 9,
+        "ByteOffset": 23562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\n\");"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 652,
+        "Column": 12,
+        "ByteOffset": 23599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 652,
+        "Column": 19,
+        "ByteOffset": 23606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 756,
+        "Column": 51,
+        "ByteOffset": 26272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (/*__starting_point_inline_macro:equal__*/(strcmp(word,\";\") == 0))"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 777,
+        "Column": 51,
+        "ByteOffset": 26846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (/*__starting_point_inline_macro:equal__*/(strcmp(word,\";\") == 0))"
+    },
+    {
+      "Name": "sscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 805,
+        "Column": 8,
+        "ByteOffset": 27449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if sscanf(word, \"%d\", varp) == 1 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 812,
+        "Column": 54,
+        "ByteOffset": 27691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if /*__starting_point_inline_macro:equal__*/(strcmp(PLA.label[cube.first_part[var]+i],word) == 0) {"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "new_PLA",
+      "Start": 20132,
+      "End": 20487,
+      "BodyStart": 20147,
+      "Original": "pPLA new_PLA()\n{\n    pPLA PLA;\n\n    PLA = ALLOC(PLA_t, 1);\n    PLA-\u003eF = PLA-\u003eD = PLA-\u003eR = (pcover) NULL;\n    PLA-\u003ephase = (pcube) NULL;\n    PLA-\u003epair = (ppair) NULL;\n    PLA-\u003elabel = (char **) NULL;\n    PLA-\u003efilename = (char *) NULL;\n    PLA-\u003epla_type = 0;\n    PLA-\u003esymbolic = NIL(symbolic_t);\n    PLA-\u003esymbolic_output = NIL(symbolic_t);\n    return PLA;\n}",
+      "Draft": "func new_PLA() pPLA {\n    var PLA pPLA;\n\n    PLA = ALLOC(PLA_t, 1);\n    PLA.F = PLA.D = PLA.R = (pcover) nil;\n    PLA.phase = (pcube) nil;\n    PLA.pair = (ppair) nil;\n    PLA.label = (char **) nil;\n    PLA.filename = (char *) nil;\n    PLA.pla_type = 0;\n    PLA.symbolic = NIL(symbolic_t);\n    PLA.symbolic_output = NIL(symbolic_t);\n    return PLA;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrin.c::mechanical::do::14492",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11851,
+      "End": 11853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrin.c::pointer-cast::3613",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2940,
+      "End": 2948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrin.c::pointer-cast::24014",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20315,
+      "End": 20324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrin.c::pointer-cast::24050",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20351,
+      "End": 20359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrin.c::pointer-cast::24332",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20633,
+      "End": 20641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrin.c::pointer-cast::27645",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23637,
+      "End": 23645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrin.c::new_PLA",
+      "Category": "semantic-review",
+      "Symbol": "new_PLA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20132,
+      "End": 20487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrin.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 24089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrin.c::macro-inline::11962",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11962,
+      "End": 11984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrin.c::macro-inline::17850",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17850,
+      "End": 17860
+    }
+  ],
+  "Draft": "package espresso\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n    module: cvrin.c\n    purpose: cube and cover input routines\n*/\n\n//#include \u003cctype.h\u003e\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\nvar line_length_error bool;\nvar lineno int32;\n\nvoid skip_line(fpin, fpout, echo)\nregister FILE *fpin, *fpout;\nregister bool echo;\n{\n    register int ch;\n    while ((ch=getc(fpin)) != -1 \u0026\u0026 ch != '\\n')\n    if (echo)\n        putc(ch, fpout);\n    if (echo)\n    putc('\\n', fpout);\n    lineno++;\n}\n\nchar *get_word(fp, word)\nregister FILE *fp;\nregister char *word;\n{\n    register int ch, i = 0;\n    while ((ch = getc(fp)) != -1 \u0026\u0026 isspace(ch))\n    ;\n    word[i++] = ch;\n    while ((ch = getc(fp)) != -1 \u0026\u0026 ! isspace(ch))\n    word[i++] = ch;\n    word[i++] = '\\0';\n    return word;\n}\n\f\n/*\n *  Yes, I know this routine is a mess\n */\nvoid read_cube(fp, PLA)\nregister FILE *fp;\nvar PLA pPLA;\n{\n    register int var, i;\n    pcube cf = cube.temp[0], cr = cube.temp[1], cd = cube.temp[2];\n    bool savef = FALSE, saved = FALSE, saver = FALSE;\n    char token[256];             /* for kiss read hack */\n    int varx, first, last, offset;    /* for kiss read hack */\n\n    set_clear(cf, cube.size);\n\n    /* Loop and read binary variables */\n    for(var = 0; var \u003c cube.num_binary_vars; var++)\n    switch getc(fp) {\n        case -1:\n        goto bad_char;\n        case '\\n':\n        if (! line_length_error)\n            (void) fmt.Fprintf(os.Stderr, \"product term(s) %s\\n\", \"span more than one line (warning only)\");\n        line_length_error = TRUE;\n        lineno++;\n        var--;\n        break;\n        case ' ',  '|',  '\\t':\n        var--;\n        break;\n        case '2',  '-':\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (cf[(((var*2+1) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((var*2+1) \u0026 (BPI-1)));\n        fallthrough\ncase '0':\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (cf[(((var*2) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((var*2) \u0026 (BPI-1)));\n        break;\n        case '1':\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (cf[(((var*2+1) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((var*2+1) \u0026 (BPI-1)));\n        break;\n        case '?':\n        break;\n        default:\n        goto bad_char;\n    }\n\n\n    /* Loop for the all but one of the multiple-valued variables */    \n    for(var = cube.num_binary_vars; var \u003c cube.num_vars-1; var++)\n\n    /* Read a symbolic multiple-valued variable */\n    if cube.part_size[var] \u003c 0 {\n        (void) fscanf(fp, \"%s\", token);\n        // inlining of macro equal\n        if (int32(strings.Compare(token, \"-\")) == 0) || (int32(strings.Compare(token, \"ANY\")) == 0) {\n        if kiss \u0026\u0026 var == cube.num_vars - 2 {\n            /* leave it empty */\n        } else {\n            /* make it full */\n            set_or(cf, cf, cube.var_mask[var]);\n        }\n        // inlining of macro equal\n        } else if int32(strings.Compare(token, \"~\")) == 0 {\n        ;\n        /* leave it empty ... (?) */\n        } else {\n        if (kiss \u0026\u0026 var == cube.num_vars - 2)\n            varx = var - 1, offset = ABS(cube.part_size[var-1]);\n        else\n            varx = var, offset = 0;\n        /* Find the symbolic label in the label table */\n        first = cube.first_part[varx];\n        last = cube.last_part[varx];\n        for(i = first; i \u003c= last; i++)\n            if PLA.label[i] == (char *) NULL {\n            PLA.label[i] = util_strsav(token);    /* add new label */\n            // inlining of macro set_insert\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            (cf[(((i+offset) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i+offset) \u0026 (BPI-1)));\n            break;\n            // inlining of macro equal\n            } else if int32(strings.Compare(PLA.label[i], token)) == 0 {\n            // inlining of macro set_insert\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            (cf[(((i+offset) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i+offset) \u0026 (BPI-1)));    /* use column i */\n            break;\n            }\n        if i \u003e last {\n            (void) fmt.Fprintf(os.Stderr, \"declared size of variable %d (counting from variable 0) is too small\\n\", var);\n            os.Exit(int(-1));\n        }\n        }\n    \n    } else for(i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++)\n        switch getc(fp) {\n        case -1:\n            goto bad_char;\n        case '\\n':\n            if (! line_length_error)\n            (void) fmt.Fprintf(os.Stderr, \"product term(s) %s\\n\", \"span more than one line (warning only)\");\n            line_length_error = TRUE;\n            lineno++;\n            i--;\n            break;\n        case ' ',  '|',  '\\t':\n            i--;\n            break;\n        case '1':\n            // inlining of macro set_insert\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            (cf[(((i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i) \u0026 (BPI-1)));\n        fallthrough\ncase '0':\n            break;\n        default:\n            goto bad_char;\n        }\n\n    /* Loop for last multiple-valued variable */\n    if kiss {\n    saver = savef = TRUE;\n    (void) set_xor(cr, cf, cube.var_mask[cube.num_vars - 2]);\n    } else\n    set_copy(cr, cf);\n    set_copy(cd, cf);\n    for(i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++)\n    switch getc(fp) {\n        case -1:\n        goto bad_char;\n        case '\\n':\n        if (! line_length_error)\n            (void) fmt.Fprintf(os.Stderr, \"product term(s) %s\\n\", \"span more than one line (warning only)\");\n        line_length_error = TRUE;\n        lineno++;\n        i--;\n        break;\n        case ' ',  '|',  '\\t':\n        i--;\n        break;\n        case '4',  '1':\n        if (PLA.pla_type \u0026 F_type)\n            // inlining of macro set_insert\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            (cf[(((i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i) \u0026 (BPI-1))), savef = TRUE;\n        break;\n        case '3',  '0':\n        if (PLA.pla_type \u0026 R_type)\n            // inlining of macro set_insert\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            (cr[(((i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i) \u0026 (BPI-1))), saver = TRUE;\n        break;\n        case '2',  '-':\n        if (PLA.pla_type \u0026 D_type)\n            // inlining of macro set_insert\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            (cd[(((i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i) \u0026 (BPI-1))), saved = TRUE;\n        fallthrough\ncase '~':\n        break;\n        default:\n        goto bad_char;\n    }\n    if (savef) PLA.F = sf_addset(PLA.F, cf);\n    if (saved) PLA.D = sf_addset(PLA.D, cd);\n    if (saver) PLA.R = sf_addset(PLA.R, cr);\n    return;\n\nbad_char:\n    (void) fmt.Fprintf(os.Stderr, \"(warning): input line #%d ignored\\n\", lineno);\n    skip_line(fp, os.Stdout, TRUE);\n    return;\n}\f\nvoid parse_pla(fp, PLA)\nIN FILE *fp;\nINOUT pPLA PLA;\n{\n    int i, var, ch, np, last;\n    char word[256];\n\n    lineno = 1;\n    line_length_error = FALSE;\n\nloop:\n    switch ch = getc(fp) {\n    case -1:\n        return;\n\n    case '\\n':\n        lineno++;\n\n    fallthrough\ncase ' ',  '\\t',  '\\f',  '\\r':\n        break;\n\n    case '#':\n        (void) ungetc(ch, fp);\n        skip_line(fp, os.Stdout, echo_comments);\n        break;\n\n    case '.':\n        /* .i gives the cube input size (binary-functions only) */\n        // inlining of macro equal\n        if int32(strings.Compare(get_word(fp, word), \"i\")) == 0 {\n        if cube.fullset != NULL {\n            (void) fmt.Fprintf(os.Stderr, \"extra .i ignored\\n\");\n            skip_line(fp, os.Stdout, /* echo */ FALSE);\n        } else {\n            if (fscanf(fp, \"%d\", \u0026cube.num_binary_vars) != 1)\n            fatal(\"error reading .i\");\n            cube.num_vars = cube.num_binary_vars + 1;\n            cube.part_size = ALLOC(int, cube.num_vars);\n        }\n\n        /* .o gives the cube output size (binary-functions only) */\n        // inlining of macro equal\n        } else if int32(strings.Compare(word, \"o\")) == 0 {\n        if cube.fullset != NULL {\n            (void) fmt.Fprintf(os.Stderr, \"extra .o ignored\\n\");\n            skip_line(fp, os.Stdout, /* echo */ FALSE);\n        } else {\n            if (cube.part_size == NULL)\n            fatal(\".o cannot appear before .i\");\n            if (fscanf(fp, \"%d\", \u0026(cube.part_size[cube.num_vars-1]))!=1)\n            fatal(\"error reading .o\");\n            cube_setup();\n            PLA_labels(PLA);\n        }\n\n        /* .mv gives the cube size for a multiple-valued function */\n        // inlining of macro equal\n        } else if int32(strings.Compare(word, \"mv\")) == 0 {\n        if cube.fullset != NULL {\n            (void) fmt.Fprintf(os.Stderr, \"extra .mv ignored\\n\");\n            skip_line(fp, os.Stdout, /* echo */ FALSE);\n        } else {\n            if (cube.part_size != NULL)\n            fatal(\"cannot mix .i and .mv\");\n            if (fscanf(fp,\"%d %d\",\n                        \u0026cube.num_vars,\u0026cube.num_binary_vars) != 2)\n             fatal(\"error reading .mv\");\n            if (cube.num_binary_vars \u003c 0)\nfatal(\"num_binary_vars (second field of .mv) cannot be negative\");\n            if (cube.num_vars \u003c cube.num_binary_vars)\n            fatal(\n\"num_vars (1st field of .mv) must exceed num_binary_vars (2nd field of .mv)\");\n            cube.part_size = ALLOC(int, cube.num_vars);\n            for(var=cube.num_binary_vars; var \u003c cube.num_vars; var++)\n            if (fscanf(fp, \"%d\", \u0026(cube.part_size[var])) != 1)\n                fatal(\"error reading .mv\");\n            cube_setup();\n            PLA_labels(PLA);\n        }\n\n        /* .p gives the number of product terms -- we ignore it */\n        // inlining of macro equal\n        } else if ((int32(strings.Compare(word, \"p\")) == 0))\n        (void) fscanf(fp, \"%d\", \u0026np);\n        /* .e and .end specify the end of the file */\n        // inlining of macro equal\n        else if (int32(strings.Compare(word, \"e\")) == 0) || (int32(strings.Compare(word, \"end\")) == 0) {\n        if cube.fullset == NULL {\n            /* fatal(\"unknown PLA size, need .i/.o or .mv\");*/\n                } else if PLA.F == NULL {\n                    // inlining of macro new_cover\n                    PLA.F = sf_new(10, cube.size);\n                    // inlining of macro new_cover\n                    PLA.D = sf_new(10, cube.size);\n                    // inlining of macro new_cover\n                    PLA.R = sf_new(10, cube.size);\n                }\n        return;\n        }\n        /* .kiss turns on the kiss-hack option */\n        // inlining of macro equal\n        else if ((int32(strings.Compare(word, \"kiss\")) == 0))\n        kiss = TRUE;\n\n        /* .type specifies a logical type for the PLA */\n        // inlining of macro equal\n        else if int32(strings.Compare(word, \"type\")) == 0 {\n        (void) get_word(fp, word);\n        for(i = 0; pla_types[i].key != 0; i++)\n            // inlining of macro equal\n            if int32(strings.Compare(pla_types[i].key + 1, word)) == 0 {\n            PLA.pla_type = pla_types[i].value;\n            break;\n            }\n        if (pla_types[i].key == 0)\n            fatal(\"unknown type in .type command\");\n\n        /* parse the labels */\n        // inlining of macro equal\n        } else if int32(strings.Compare(word, \"ilb\")) == 0 {\n        if (cube.fullset == NULL)\n            fatal(\"PLA size must be declared before .ilb or .ob\");\n        if (PLA.label == NULL)\n            PLA_labels(PLA);\n        for var = 0; var \u003c cube.num_binary_vars; var++ {\n            (void) get_word(fp, word);\n            i = cube.first_part[var];\n            PLA.label[i+1] = util_strsav(word);\n            PLA.label[i] = ALLOC(char, len(word) + 6);\n            (void) sprintf(PLA.label[i], \"%s.bar\", word);\n        }\n        // inlining of macro equal\n        } else if int32(strings.Compare(word, \"ob\")) == 0 {\n        if (cube.fullset == NULL)\n            fatal(\"PLA size must be declared before .ilb or .ob\");\n        if (PLA.label == NULL)\n            PLA_labels(PLA);\n        var = cube.num_vars - 1;\n        for i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++ {\n            (void) get_word(fp, word);\n            PLA.label[i] = util_strsav(word);\n        }\n        /* .label assigns labels to multiple-valued variables */\n        // inlining of macro equal\n        } else if int32(strings.Compare(word, \"label\")) == 0 {\n        if (cube.fullset == NULL)\n            fatal(\"PLA size must be declared before .label\");\n        if (PLA.label == NULL)\n            PLA_labels(PLA);\n        if (fscanf(fp, \"var=%d\", \u0026var) != 1)\n            fatal(\"Error reading labels\");\n        for i = cube.first_part[var]; i \u003c= cube.last_part[var]; i++ {\n            (void) get_word(fp, word);\n            PLA.label[i] = util_strsav(word);\n        }\n\n        // inlining of macro equal\n        } else if int32(strings.Compare(word, \"symbolic\")) == 0 {\n        symbolic_t *newlist, *p1;\n        if read_symbolic(fp, PLA, word, \u0026newlist) {\n            if PLA.symbolic == NIL(symbolic_t) {\n            PLA.symbolic = newlist;\n            } else {\n            for p1=PLA.symbolic;p1.next!=NIL(symbolic_t);\n                p1=p1.next{\n            }\n            p1.next = newlist;\n            }\n        } else {\n            fatal(\"error reading .symbolic\");\n        }\n\n        // inlining of macro equal\n        } else if int32(strings.Compare(word, \"symbolic-output\")) == 0 {\n        symbolic_t *newlist, *p1;\n        if read_symbolic(fp, PLA, word, \u0026newlist) {\n            if PLA.symbolic_output == NIL(symbolic_t) {\n            PLA.symbolic_output = newlist;\n            } else {\n            for p1=PLA.symbolic_output;p1.next!=NIL(symbolic_t);\n                p1=p1.next{\n            }\n            p1.next = newlist;\n            }\n        } else {\n            fatal(\"error reading .symbolic-output\");\n        }\n        \n        /* .phase allows a choice of output phases */\n        // inlining of macro equal\n        } else if int32(strings.Compare(word, \"phase\")) == 0 {\n        if (cube.fullset == NULL)\n            fatal(\"PLA size must be declared before .phase\");\n        if PLA.phase != NULL {\n            (void) fmt.Fprintf(os.Stderr, \"extra .phase ignored\\n\");\n            skip_line(fp, os.Stdout, /* echo */ FALSE);\n        } else {\n            do ch = getc(fp); while (ch == ' ' || ch == '\\t');\n            (void) ungetc(ch, fp);\n            // inlining of macro set_save\n            PLA.phase = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(cube.fullset))), cube.fullset);\n            last = cube.last_part[cube.num_vars - 1];\n            for(i=cube.first_part[cube.num_vars - 1]; i \u003c= last; i++)\n            if ((ch = getc(fp)) == '0')\n                // inlining of macro set_remove\n                // inlining of macro WHICH_WORD\n                // inlining of macro WHICH_BIT\n                (PLA.phase[(((i) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((i) \u0026 (BPI-1))));\n            else if (ch != '1')\n                fatal(\"only 0 or 1 allowed in phase description\");\n        }\n\n        /* .pair allows for bit-pairing input variables */\n        // inlining of macro equal\n        } else if int32(strings.Compare(word, \"pair\")) == 0 {\n        int j;\n        if PLA.pair != NULL {\n            (void) fmt.Fprintf(os.Stderr, \"extra .pair ignored\\n\");\n        } else {\n            ppair pair;\n            PLA.pair = pair = ALLOC(pair_t, 1);\n            if (fscanf(fp, \"%d\", \u0026(pair.cnt)) != 1)\n            fatal(\"syntax error in .pair\");\n            pair.var1 = ALLOC(int, pair.cnt);\n            pair.var2 = ALLOC(int, pair.cnt);\n            for i = 0; i \u003c pair.cnt; i++ {\n            (void) get_word(fp, word);\n            if (word[0] == '(') (void) strcpy(word, word+1);\n            if label_index(PLA, word, \u0026var, \u0026j) {\n                pair.var1[i] = var+1;\n            } else {\n                fatal(\"syntax error in .pair\");\n            }\n\n            (void) get_word(fp, word);\n            if word[len(word)-1] == ')' {\n                word[len(word)-1]='\\0';\n            }\n            if label_index(PLA, word, \u0026var, \u0026j) {\n                pair.var2[i] = var+1;\n            } else {\n                fatal(\"syntax error in .pair\");\n            }\n            }\n        }\n        \n        } else {\n        if (echo_unknown_commands)\n            fmt.Printf(\"%c%s \", ch, word);\n        skip_line(fp, os.Stdout, echo_unknown_commands);\n        }\n        break;\n    default:\n        (void) ungetc(ch, fp);\n        if cube.fullset == NULL {\n/*        fatal(\"unknown PLA size, need .i/.o or .mv\");*/\n        if (echo_comments)\n            putchar('#');\n        skip_line(fp, os.Stdout, echo_comments);\n        break;\n        }\n        if PLA.F == NULL {\n        // inlining of macro new_cover\n        PLA.F = sf_new(10, cube.size);\n        // inlining of macro new_cover\n        PLA.D = sf_new(10, cube.size);\n        // inlining of macro new_cover\n        PLA.R = sf_new(10, cube.size);\n        }\n        read_cube(fp, PLA);\n    }\n    goto loop;\n}\f\n/*\n    read_pla -- read a PLA from a file\n\n    Input stops when \".e\" is encountered in the input file, or upon reaching\n    end of file.\n\n    Returns the PLA in the variable PLA after massaging the \"symbolic\"\n    representation into a positional cube notation of the ON-set, OFF-set,\n    and the DC-set.\n\n    needs_dcset and needs_offset control the computation of the OFF-set\n    and DC-set (i.e., if either needs to be computed, then it will be\n    computed via complement only if the corresponding option is TRUE.)\n    pla_type specifies the interpretation to be used when reading the\n    PLA.\n\n    The phase of the output functions is adjusted according to the\n    global option \"pos\" or according to an imbedded .phase option in\n    the input file.  Note that either phase option implies that the\n    OFF-set be computed regardless of whether the caller needs it\n    explicitly or not.\n\n    Bit pairing of the binary variables is performed according to an\n    imbedded .pair option in the input file.\n\n    The global cube structure also reflects the sizes of the PLA which\n    was just read.  If these fields have already been set, then any\n    subsequent PLA must conform to these sizes.\n\n    The global flags trace and summary control the output produced\n    during the read.\n\n    Returns a status code as a result:\n    EOF (-1) : End of file reached before any data was read\n    \u003e 0     : Operation successful\n*/\n\nint read_pla(fp, needs_dcset, needs_offset, pla_type, PLA_return)\nIN FILE *fp;\nIN bool needs_dcset, needs_offset;\nIN int pla_type;\nOUT pPLA *PLA_return;\n{\n    pPLA PLA;\n    int i, second, third;\n    long time;\n    cost_t cost;\n\n    /* Allocate and initialize the PLA structure */\n    PLA = *PLA_return = new_PLA();\n    PLA.pla_type = pla_type;\n\n    /* Read the pla */\n    time = ptime();\n    parse_pla(fp, PLA);\n\n    /* Check for nothing on the file -- implies reached EOF */\n    if PLA.F == NULL {\n    return -1;\n    }\n\n    /* This hack merges the next-state field with the outputs */\n    for i = 0; i \u003c cube.num_vars; i++ {\n    cube.part_size[i] = ABS(cube.part_size[i]);\n    }\n    if kiss {\n    third = cube.num_vars - 3;\n    second = cube.num_vars - 2;\n    if cube.part_size[third] != cube.part_size[second] {\n        (void) fmt.Fprintf(os.Stderr, \" with .kiss option, third to last and second\\n\");\n        (void) fmt.Fprintf(os.Stderr, \"to last variables must be the same size.\\n\");\n        return -1;\n    }\n    for i = 0; i \u003c cube.part_size[second]; i++ {\n        PLA.label[i + cube.first_part[second]] =\n        util_strsav(PLA.label[i + cube.first_part[third]]);\n    }\n    cube.part_size[second] += cube.part_size[cube.num_vars-1];\n    cube.num_vars--;\n    setdown_cube();\n    cube_setup();\n    }\n\n    if trace {\n    totals(time, READ_TIME, PLA.F, \u0026cost);\n    }\n\n    /* Decide how to break PLA into ON-set, OFF-set and DC-set */\n    time = ptime();\n    if pos || PLA.phase != NULL || PLA.symbolic_output != NIL(symbolic_t) {\n    needs_offset = TRUE;\n    }\n    if needs_offset \u0026\u0026 (PLA.pla_type==F_type || PLA.pla_type==FD_type) {\n    // inlining of macro free_cover\n    sf_free(PLA.R);\n    PLA.R = complement(cube2list(PLA.F, PLA.D));\n    } else if needs_dcset \u0026\u0026 PLA.pla_type == FR_type {\n    pcover X;\n    // inlining of macro free_cover\n    sf_free(PLA.D);\n    /* hack, why not? */\n    X = d1merge(sf_join(PLA.F, PLA.R), cube.num_vars - 1);\n    PLA.D = complement(cube1list(X));\n    // inlining of macro free_cover\n    sf_free(X);\n    } else if PLA.pla_type == R_type || PLA.pla_type == DR_type {\n    // inlining of macro free_cover\n    sf_free(PLA.F);\n    PLA.F = complement(cube2list(PLA.D, PLA.R));\n    }\n\n    if trace {\n    totals(time, COMPL_TIME, PLA.R, \u0026cost);\n    }\n\n    /* Check for phase rearrangement of the functions */\n    if pos {\n    pcover onset = PLA.F;\n    PLA.F = PLA.R;\n    PLA.R = onset;\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    PLA.phase = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    set_diff(PLA.phase, cube.fullset, cube.var_mask[cube.num_vars-1]);\n    } else if PLA.phase != NULL {\n    (void) set_phase(PLA);\n    }\n\n    /* Setup minimization for two-bit decoders */\n    if PLA.pair != (ppair) NULL {\n    set_pair(PLA);\n    }\n\n    if PLA.symbolic != NIL(symbolic_t) {\n    // inlining of macro EXEC\n    {long t=ptime();map_symbolic(PLA);if(trace)print_trace(PLA.F,\"MAP-INPUT  \",ptime()-t);};\n    }\n    if PLA.symbolic_output != NIL(symbolic_t) {\n    // inlining of macro EXEC\n    {long t=ptime();map_output_symbolic(PLA);if(trace)print_trace(PLA.F,\"MAP-OUTPUT \",ptime()-t);};\n    if needs_offset {\n        // inlining of macro free_cover\n        sf_free(PLA.R);\n// inlining of macro EXECUTE\n{long t=ptime();PLA.R=complement(cube2list(PLA.F,PLA.D));totals(t,COMPL_TIME,PLA.R,\u0026(cost));};\n    }\n    }\n\n    return 1;\n}\n\f\nvoid PLA_summary(PLA)\nvar PLA pPLA;\n{\n    int var, i;\n    symbolic_list_t *p2;\n    symbolic_t *p1;\n\n    fmt.Printf(\"# PLA is %s\", PLA.filename);\n    if (cube.num_binary_vars == cube.num_vars - 1)\n    fmt.Printf(\" with %d inputs and %d outputs\\n\", cube.num_binary_vars, cube.part_size[cube.num_vars - 1]);\n    else {\n    fmt.Printf(\" with %d variables (%d binary, mv sizes\", cube.num_vars, cube.num_binary_vars);\n    for(var = cube.num_binary_vars; var \u003c cube.num_vars; var++)\n        fmt.Printf(\" %d\", cube.part_size[var]);\n    fmt.Printf(\")\\n\");\n    }\n    fmt.Printf(\"# ON-set cost is  %s\\n\", print_cost(PLA.F));\n    fmt.Printf(\"# OFF-set cost is %s\\n\", print_cost(PLA.R));\n    fmt.Printf(\"# DC-set cost is  %s\\n\", print_cost(PLA.D));\n    if (PLA.phase != NULL)\n    fmt.Printf(\"# phase is %s\\n\", pc1(PLA.phase));\n    if PLA.pair != NULL {\n    fmt.Printf(\"# two-bit decoders:\");\n    for(i = 0; i \u003c PLA.pair.cnt; i++)\n        fmt.Printf(\" (%d %d)\", PLA.pair.var1[i], PLA.pair.var2[i]);\n    fmt.Printf(\"\\n\");\n    }\n    if PLA.symbolic != NIL(symbolic_t) {\n    for p1 = PLA.symbolic; p1 != NIL(symbolic_t); p1 = p1.next {\n        fmt.Printf(\"# symbolic: \");\n        for p2=p1.symbolic_list; p2!=NIL(symbolic_list_t); p2=p2.next {\n        fmt.Printf(\" %d\", p2.variable);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    }\n    if PLA.symbolic_output != NIL(symbolic_t) {\n    for p1 = PLA.symbolic_output; p1 != NIL(symbolic_t); p1 = p1.next {\n        fmt.Printf(\"# output symbolic: \");\n        for p2=p1.symbolic_list; p2!=NIL(symbolic_list_t); p2=p2.next {\n        fmt.Printf(\" %d\", p2.pos);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    }\n    (void) fflush(os.Stdout);\n}\n\n\nfunc new_PLA() pPLA {\n    var PLA pPLA;\n\n    PLA = ALLOC(PLA_t, 1);\n    PLA.F = PLA.D = PLA.R = (pcover) nil;\n    PLA.phase = (pcube) nil;\n    PLA.pair = (ppair) nil;\n    PLA.label = (char **) nil;\n    PLA.filename = (char *) nil;\n    PLA.pla_type = 0;\n    PLA.symbolic = NIL(symbolic_t);\n    PLA.symbolic_output = NIL(symbolic_t);\n    return PLA;\n}\n\n\nvoid PLA_labels(PLA)\nvar PLA pPLA;\n{\n    int i;\n\n    PLA.label = ALLOC(char *, cube.size);\n    for(i = 0; i \u003c cube.size; i++)\n    PLA.label[i] = (char *) NULL;\n}\n\n\nvoid free_PLA(PLA)\nvar PLA pPLA;\n{\n    symbolic_list_t *p2, *p2next;\n    symbolic_t *p1, *p1next;\n    int i;\n\n    if (PLA.F != (pcover) NULL)\n    // inlining of macro free_cover\n    sf_free(PLA.F);\n    if (PLA.R != (pcover) NULL)\n    // inlining of macro free_cover\n    sf_free(PLA.R);\n    if (PLA.D != (pcover) NULL)\n    // inlining of macro free_cover\n    sf_free(PLA.D);\n    if (PLA.phase != (pcube) NULL)\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(PLA.phase);\n    if PLA.pair != (ppair) NULL {\n    FREE(PLA.pair.var1);\n    FREE(PLA.pair.var2);\n    FREE(PLA.pair);\n    }\n    if PLA.label != NULL {\n    for(i = 0; i \u003c cube.size; i++)\n        if (PLA.label[i] != NULL)\n        FREE(PLA.label[i]);\n    FREE(PLA.label);\n    }\n    if PLA.filename != NULL {\n    FREE(PLA.filename);\n    }\n    for p1 = PLA.symbolic; p1 != NIL(symbolic_t); p1 = p1next {\n    for p2 = p1.symbolic_list; p2 != NIL(symbolic_list_t); p2 = p2next {\n        p2next = p2.next;\n        FREE(p2);\n    }\n    p1next = p1.next;\n    FREE(p1);\n    }\n    PLA.symbolic = NIL(symbolic_t);\n    for p1 = PLA.symbolic_output; p1 != NIL(symbolic_t); p1 = p1next {\n    for p2 = p1.symbolic_list; p2 != NIL(symbolic_list_t); p2 = p2next {\n        p2next = p2.next;\n        FREE(p2);\n    }\n    p1next = p1.next;\n    FREE(p1);\n    }\n    PLA.symbolic_output = NIL(symbolic_t);\n    FREE(PLA);\n}\n\n\nint read_symbolic(fp, PLA, word, retval)\nvar fp *os.File;\nvar PLA pPLA;\nvar word string;        /* scratch string for words */\nvar retval **symbolic_t;\n{\n    symbolic_list_t *listp, *prev_listp;\n    symbolic_label_t *labelp, *prev_labelp;\n    symbolic_t *newlist;\n    int i, var;\n\n    newlist = ALLOC(symbolic_t, 1);\n    newlist.next = NIL(symbolic_t);\n    newlist.symbolic_list = NIL(symbolic_list_t);\n    newlist.symbolic_list_length = 0;\n    newlist.symbolic_label = NIL(symbolic_label_t);\n    newlist.symbolic_label_length = 0;\n    prev_listp = NIL(symbolic_list_t);\n    prev_labelp = NIL(symbolic_label_t);\n\n    for {\n    (void) get_word(fp, word);\n    // inlining of macro equal\n    if ((int32(strings.Compare(word, \";\")) == 0))\n        break;\n    if label_index(PLA, word, \u0026var, \u0026i) {\n        listp = ALLOC(symbolic_list_t, 1);\n        listp.variable = var;\n        listp.pos = i;\n        listp.next = NIL(symbolic_list_t);\n        if prev_listp == NIL(symbolic_list_t) {\n        newlist.symbolic_list = listp;\n        } else {\n        prev_listp.next = listp;\n        }\n        prev_listp = listp;\n        newlist.symbolic_list_length++;\n    } else {\n        return FALSE;\n    }\n    }\n\n    for {\n    (void) get_word(fp, word);\n    // inlining of macro equal\n    if ((int32(strings.Compare(word, \";\")) == 0))\n        break;\n    labelp = ALLOC(symbolic_label_t, 1);\n    labelp.label = util_strsav(word);\n    labelp.next = NIL(symbolic_label_t);\n    if prev_labelp == NIL(symbolic_label_t) {\n        newlist.symbolic_label = labelp;\n    } else {\n        prev_labelp.next = labelp;\n    }\n    prev_labelp = labelp;\n    newlist.symbolic_label_length++;\n    }\n\n    *retval = newlist;\n    return TRUE;\n}\n\n\nint label_index(PLA, word, varp, ip)\nvar PLA pPLA;\nvar word string;\nvar varp *int32;\nvar ip *int32;\n{\n    int var, i;\n\n    if PLA.label == NIL(char *) || PLA.label[0] == NIL(char) {\n    if sscanf(word, \"%d\", varp) == 1 {\n        *ip = *varp;\n        return TRUE;\n    }\n    } else {\n    for var = 0; var \u003c cube.num_vars; var++ {\n        for i = 0; i \u003c cube.part_size[var]; i++ {\n        // inlining of macro equal\n        if int32(strings.Compare(PLA.label[cube.first_part[var]+i], word)) == 0 {\n            *varp = var;\n            *ip = i;\n            return TRUE;\n        }\n        }\n    }\n    }\n    return FALSE;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

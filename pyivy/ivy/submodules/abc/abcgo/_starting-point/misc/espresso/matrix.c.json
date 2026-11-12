@@ -1,0 +1,514 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c",
+  "SHA256": "0034db724f32986ae4a521509bc586b0bcb6fce42d68dd7af4e78f341fd519f1",
+  "Library": [
+    {
+      "Name": "feof",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 398,
+        "Column": 14,
+        "ByteOffset": 10288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    while (! feof(fp)) {"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 399,
+        "Column": 11,
+        "ByteOffset": 10310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    err = fscanf(fp, \"%d %d\", \u0026i, \u0026j);"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 400,
+        "Column": 15,
+        "ByteOffset": 10353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if err == EOF {"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 420,
+        "Column": 8,
+        "ByteOffset": 10632
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fscanf(fp, \"%d %d\", \u0026nrows, \u0026ncols) != 2 {"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 426,
+        "Column": 8,
+        "ByteOffset": 10768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if fscanf(fp, \"%lx\", \u0026x) != 1 {"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 430,
+        "Column": 12,
+        "ByteOffset": 10868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if fscanf(fp, \"%lx\", \u0026x) != 1 {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 454,
+        "Column": 16,
+        "ByteOffset": 11321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \"%d %d\\n\", p.row_num, p.col_num);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 469,
+        "Column": 12,
+        "ByteOffset": 11554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"    \");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 471,
+        "Column": 16,
+        "ByteOffset": 11652
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \"%d\", (pcol.col_num / 100)%10);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 473,
+        "Column": 5,
+        "ByteOffset": 11706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc('\\n', fp);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 477,
+        "Column": 12,
+        "ByteOffset": 11774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"    \");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 479,
+        "Column": 16,
+        "ByteOffset": 11872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(fp, \"%d\", (pcol.col_num / 10)%10);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 481,
+        "Column": 5,
+        "ByteOffset": 11925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc('\\n', fp);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 484,
+        "Column": 12,
+        "ByteOffset": 11959
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"    \");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 486,
+        "Column": 12,
+        "ByteOffset": 12053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"%d\", pcol.col_num % 10);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 488,
+        "Column": 5,
+        "ByteOffset": 12101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc('\\n', fp);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 490,
+        "Column": 12,
+        "ByteOffset": 12129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"    \");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 492,
+        "Column": 12,
+        "ByteOffset": 12223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"-\");"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 494,
+        "Column": 5,
+        "ByteOffset": 12251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc('\\n', fp);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 497,
+        "Column": 12,
+        "ByteOffset": 12341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"%3d:\", prow.row_num);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 501,
+        "Column": 9,
+        "ByteOffset": 12504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        putc(c, fp);"
+    },
+    {
+      "Name": "putc",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 503,
+        "Column": 5,
+        "ByteOffset": 12527
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    putc('\\n', fp);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 514,
+        "Column": 16,
+        "ByteOffset": 12642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    FILE *fp = stdout;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 516,
+        "Column": 12,
+        "ByteOffset": 12662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \"%s %d rows by %d cols\\n\", s, A.nrows, A.ncols);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 23,
+        "Column": 1,
+        "ByteOffset": 432
+      },
+      "Directive": "#ifdef FAST_AND_LOOSE"
+    },
+    {
+      "Location": {
+        "Line": 63,
+        "Column": 1,
+        "ByteOffset": 1100
+      },
+      "Directive": "#ifdef FAST_AND_LOOSE"
+    },
+    {
+      "Location": {
+        "Line": 554,
+        "Column": 1,
+        "ByteOffset": 11954
+      },
+      "Directive": "#ifdef FAST_AND_LOOSE"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "sm_alloc",
+      "Start": 546,
+      "End": 919,
+      "BodyStart": 569,
+      "Original": "sm_matrix *\nsm_alloc()\n{\n    register sm_matrix *A;\n\n    A = ALLOC(sm_matrix, 1);\n    A-\u003erows = NIL(sm_row *);\n    A-\u003ecols = NIL(sm_col *);\n    A-\u003enrows = A-\u003encols = 0;\n    A-\u003erows_size = A-\u003ecols_size = 0;\n    A-\u003efirst_row = A-\u003elast_row = NIL(sm_row);\n    A-\u003efirst_col = A-\u003elast_col = NIL(sm_col);\n    A-\u003euser_word = NIL(char);        /* for our user ... */\n    return A;\n}",
+      "Draft": "func sm_alloc() *sm_matrix {\n    register sm_matrix *A;\n\n    A = ALLOC(sm_matrix, 1);\n    A.rows = NIL(sm_row *);\n    A.cols = NIL(sm_col *);\n    A.nrows = A.ncols = 0;\n    A.rows_size = A.cols_size = 0;\n    A.first_row = A.last_row = NIL(sm_row);\n    A.first_col = A.last_col = NIL(sm_col);\n    A.user_word = NIL(char);        /* for our user ... */\n    return A;\n}"
+    },
+    {
+      "Name": "sm_cleanup",
+      "Start": 11934,
+      "End": 12506,
+      "BodyStart": 11952,
+      "Original": "void\nsm_cleanup()\n{\n#ifdef FAST_AND_LOOSE\n    register sm_element *p, *pnext;\n    register sm_row *prow, *pnextrow;\n    register sm_col *pcol, *pnextcol;\n\n    for(p = sm_element_freelist; p != 0; p = pnext) {\n    pnext = p-\u003enext_col;\n    FREE(p);\n    }\n    sm_element_freelist = 0;\n\n    for(prow = sm_row_freelist; prow != 0; prow = pnextrow) {\n    pnextrow = prow-\u003enext_row;\n    FREE(prow);\n    }\n    sm_row_freelist = 0;\n\n    for(pcol = sm_col_freelist; pcol != 0; pcol = pnextcol) {\n    pnextcol = pcol-\u003enext_col;\n    FREE(pcol);\n    }\n    sm_col_freelist = 0;\n#endif\n}",
+      "Draft": "func sm_cleanup() {\n#ifdef FAST_AND_LOOSE\n    register sm_element *p, *pnext;\n    register sm_row *prow, *pnextrow;\n    register sm_col *pcol, *pnextcol;\n\n    for(p = sm_element_freelist; p != 0; p = pnext) {\n    pnext = p-\u003enext_col;\n    FREE(p);\n    }\n    sm_element_freelist = 0;\n\n    for(prow = sm_row_freelist; prow != 0; prow = pnextrow) {\n    pnextrow = prow-\u003enext_row;\n    FREE(prow);\n    }\n    sm_row_freelist = 0;\n\n    for(pcol = sm_col_freelist; pcol != 0; pcol = pnextcol) {\n    pnextcol = pcol-\u003enext_col;\n    FREE(pcol);\n    }\n    sm_col_freelist = 0;\n#endif\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::pointer-cast::608",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 645,
+      "End": 655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::pointer-cast::637",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 674,
+      "End": 684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::pointer-cast::4041",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4876,
+      "End": 4876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::pointer-cast::4257",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4982,
+      "End": 4982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::pointer-cast::4964",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5567,
+      "End": 5567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::pointer-cast::5634",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5898,
+      "End": 5898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::pointer-cast::6384",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6336,
+      "End": 6336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::pointer-cast::6747",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6572,
+      "End": 6572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::pointer-cast::7709",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7205,
+      "End": 7205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::pointer-cast::8073",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7442,
+      "End": 7442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::sm_alloc",
+      "Category": "semantic-review",
+      "Symbol": "sm_alloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 546,
+      "End": 919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::sm_cleanup",
+      "Category": "semantic-review",
+      "Symbol": "sm_cleanup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11934,
+      "End": 12506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 432,
+      "End": 543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1100,
+      "End": 2090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11954,
+      "End": 12504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::macro-inline::4147",
+      "Category": "macro-inline-review",
+      "Symbol": "sm_element_alloc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4147,
+      "End": 4172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::macro-inline::4691",
+      "Category": "macro-inline-review",
+      "Symbol": "sm_element_free",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4691,
+      "End": 4720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/matrix.c::macro-inline::6183",
+      "Category": "macro-inline-review",
+      "Symbol": "sm_element_free",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6183,
+      "End": 6201
+    }
+  ],
+  "Draft": "package espresso\n\nimport \"fmt\"\n\nimport \"os\"\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"port.h\"\n//#include \"sparse_int.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*\n *  free-lists are only used if 'FAST_AND_LOOSE' is set; this is because\n *  we lose the debugging capability of libmm_t which trashes objects when\n *  they are free'd.  However, FAST_AND_LOOSE is much faster if matrices\n *  are created and freed frequently.\n */\n\n#ifdef FAST_AND_LOOSE\nsm_element *sm_element_freelist;\nsm_row *sm_row_freelist;\nsm_col *sm_col_freelist;\n#endif\n\n\nfunc sm_alloc() *sm_matrix {\n    register sm_matrix *A;\n\n    A = ALLOC(sm_matrix, 1);\n    A.rows = NIL(sm_row *);\n    A.cols = NIL(sm_col *);\n    A.nrows = A.ncols = 0;\n    A.rows_size = A.cols_size = 0;\n    A.first_row = A.last_row = NIL(sm_row);\n    A.first_col = A.last_col = NIL(sm_col);\n    A.user_word = NIL(char);        /* for our user ... */\n    return A;\n}\n\n\nsm_matrix *\nsm_alloc_size(row, col)\nvar row, col int32;\n{\n    register sm_matrix *A;\n\n    A = sm_alloc();\n    sm_resize(A, row, col);\n    return A;\n}\n\n\nvoid\nsm_free(A)\nvar A *sm_matrix;\n{\n#ifdef FAST_AND_LOOSE\n    register sm_row *prow;\n\n    if (A-\u003efirst_row != 0) {\n    for(prow = A-\u003efirst_row; prow != 0; prow = prow-\u003enext_row) {\n        /* add the elements to the free list of elements */\n        prow-\u003elast_col-\u003enext_col = sm_element_freelist;\n        sm_element_freelist = prow-\u003efirst_col;\n    }\n\n    /* Add the linked list of rows to the row-free-list */\n    A-\u003elast_row-\u003enext_row = sm_row_freelist;\n    sm_row_freelist = A-\u003efirst_row;\n\n    /* Add the linked list of cols to the col-free-list */\n    A-\u003elast_col-\u003enext_col = sm_col_freelist;\n    sm_col_freelist = A-\u003efirst_col;\n    }\n#else\n    register sm_row *prow, *pnext_row;\n    register sm_col *pcol, *pnext_col;\n\n    for(prow = A-\u003efirst_row; prow != 0; prow = pnext_row) {\n    pnext_row = prow-\u003enext_row;\n    sm_row_free(prow);\n    }\n    for(pcol = A-\u003efirst_col; pcol != 0; pcol = pnext_col) {\n    pnext_col = pcol-\u003enext_col;\n    pcol-\u003efirst_row = pcol-\u003elast_row = NIL(sm_element);\n    sm_col_free(pcol);\n    }\n#endif\n\n    /* Free the arrays to map row/col numbers into pointers */\n    FREE(A.rows);\n    FREE(A.cols);\n    FREE(A);\n}\n\n\nsm_matrix *\nsm_dup(A)\nvar A *sm_matrix; \n{\n    register sm_row *prow;\n    register sm_element *p;\n    register sm_matrix *B;\n\n    B = sm_alloc();\n    if A.last_row != 0 {\n    sm_resize(B, A.last_row.row_num, A.last_col.col_num);\n    for prow = A.first_row; prow != 0; prow = prow.next_row {\n        for p = prow.first_col; p != 0; p = p.next_col {\n        (void) sm_insert(B, p.row_num, p.col_num);\n        }\n    }\n    }\n    return B;\n}\n\n\nvoid \nsm_resize(A, row, col)\nregister sm_matrix *A;\nvar row, col int32;\n{\n    register int i, new_size;\n\n    if row \u003e= A.rows_size {\n    new_size = MAX(A.rows_size*2, row+1);\n    A.rows = REALLOC(sm_row *, A.rows, new_size);\n    for i = A.rows_size; i \u003c new_size; i++ {\n        A.rows[i] = NIL(sm_row);\n    }\n    A.rows_size = new_size;\n    }\n\n    if col \u003e= A.cols_size {\n    new_size = MAX(A.cols_size*2, col+1);\n    A.cols = REALLOC(sm_col *, A.cols, new_size);\n    for i = A.cols_size; i \u003c new_size; i++ {\n        A.cols[i] = NIL(sm_col);\n    }\n    A.cols_size = new_size;\n    }\n}\n\n\n/*  \n *  insert -- insert a value into the matrix\n */\nsm_element *\nsm_insert(A, row, col)\nregister sm_matrix *A;\nregister int row, col;\n{\n    register sm_row *prow;\n    register sm_col *pcol;\n    register sm_element *element;\n    sm_element *save_element;\n\n    if row \u003e= A.rows_size || col \u003e= A.cols_size {\n    sm_resize(A, row, col);\n    }\n\n    prow = A.rows[row];\n    if prow == NIL(sm_row) {\n    prow = A.rows[row] = sm_row_alloc();\n    prow.row_num = row;\n    sorted_insert(sm_row, A.first_row, A.last_row, A.nrows, \n            next_row, prev_row, row_num, row, prow);\n    }\n\n    pcol = A.cols[col];\n    if pcol == NIL(sm_col) {\n    pcol = A.cols[col] = sm_col_alloc();\n    pcol.col_num = col;\n    sorted_insert(sm_col, A.first_col, A.last_col, A.ncols, \n            next_col, prev_col, col_num, col, pcol);\n    }\n\n    /* get a new item, save its address */\n    sm_element_alloc(element);\n    save_element = element;\n\n    /* insert it into the row list */\n    sorted_insert(sm_element, prow.first_col, prow.last_col, \n        prow.length, next_col, prev_col, col_num, col, element);\n\n    /* if it was used, also insert it into the column list */\n    if element == save_element {\n    sorted_insert(sm_element, pcol.first_row, pcol.last_row, \n        pcol.length, next_row, prev_row, row_num, row, element);\n    } else {\n    /* otherwise, it was already in matrix -- free element we allocated */\n    sm_element_free(save_element);\n    }\n    return element;\n}\n\n\nsm_element *\nsm_find(A, rownum, colnum)\nvar A *sm_matrix;\nvar rownum, colnum int32;\n{\n    sm_row *prow;\n    sm_col *pcol;\n\n    // inlining of macro sm_get_row\n    prow = (((rownum) \u003e= 0 \u0026\u0026 (rownum) \u003c (A).rows_size) ?     (A).rows[rownum] : (sm_row *) 0);\n    if prow == NIL(sm_row) {\n    return NIL(sm_element);\n    } else {\n    // inlining of macro sm_get_col\n    pcol = (((colnum) \u003e= 0 \u0026\u0026 (colnum) \u003c (A).cols_size) ?     (A).cols[colnum] : (sm_col *) 0);\n    if pcol == NIL(sm_col) {\n        return NIL(sm_element);\n    }\n    if prow.length \u003c pcol.length {\n        return sm_row_find(prow, colnum);\n    } else {\n        return sm_col_find(pcol, rownum);\n    }\n    }\n}\n\n\nvoid\nsm_remove(A, rownum, colnum)\nvar A *sm_matrix;\nvar rownum, colnum int32;\n{\n    sm_remove_element(A, sm_find(A, rownum, colnum));\n}\n\n\n\nvoid\nsm_remove_element(A, p)\nregister sm_matrix *A; \nregister sm_element *p;\n{\n    register sm_row *prow;\n    register sm_col *pcol;\n\n    if (p == 0) return;\n\n    /* Unlink the element from its row */\n    // inlining of macro sm_get_row\n    prow = (((p.row_num) \u003e= 0 \u0026\u0026 (p.row_num) \u003c (A).rows_size) ?     (A).rows[p.row_num] : (sm_row *) 0);\n    // inlining of macro dll_unlink\n    {     if p.prev_col == 0 {     prow.first_col = p.next_col;     } else {     p.prev_col.next_col = p.next_col;     }\n     if p.next_col == 0 {     prow.last_col = p.prev_col;     } else {     p.next_col.prev_col = p.prev_col;     }\n     prow.length--; };\n\n    /* if no more elements in the row, discard the row header */\n    if prow.first_col == NIL(sm_element) {\n    sm_delrow(A, p.row_num);\n    }\n\n    /* Unlink the element from its column */\n    // inlining of macro sm_get_col\n    pcol = (((p.col_num) \u003e= 0 \u0026\u0026 (p.col_num) \u003c (A).cols_size) ?     (A).cols[p.col_num] : (sm_col *) 0);\n    // inlining of macro dll_unlink\n    {     if p.prev_row == 0 {     pcol.first_row = p.next_row;     } else {     p.prev_row.next_row = p.next_row;     }\n     if p.next_row == 0 {     pcol.last_row = p.prev_row;     } else {     p.next_row.prev_row = p.prev_row;     }\n     pcol.length--; };\n\n    /* if no more elements in the column, discard the column header */\n    if pcol.first_row == NIL(sm_element) {\n    sm_delcol(A, p.col_num);\n    }\n\n    sm_element_free(p);\n}\n\f\nvoid \nsm_delrow(A, i)\nvar A *sm_matrix;\nvar i int32;\n{\n    register sm_element *p, *pnext;\n    sm_col *pcol;\n    sm_row *prow;\n\n    // inlining of macro sm_get_row\n    prow = (((i) \u003e= 0 \u0026\u0026 (i) \u003c (A).rows_size) ?     (A).rows[i] : (sm_row *) 0);\n    if prow != NIL(sm_row) {\n    /* walk across the row */\n    for p = prow.first_col; p != 0; p = pnext {\n        pnext = p.next_col;\n\n        /* unlink the item from the column (and delete it) */\n        // inlining of macro sm_get_col\n        pcol = (((p.col_num) \u003e= 0 \u0026\u0026 (p.col_num) \u003c (A).cols_size) ?     (A).cols[p.col_num] : (sm_col *) 0);\n        sm_col_remove_element(pcol, p);\n\n        /* discard the column if it is now empty */\n        if pcol.first_row == NIL(sm_element) {\n        sm_delcol(A, pcol.col_num);\n        }\n    }\n\n    /* discard the row -- we already threw away the elements */ \n    A.rows[i] = NIL(sm_row);\n    // inlining of macro dll_unlink\n    {     if prow.prev_row == 0 {     A.first_row = prow.next_row;     } else {     prow.prev_row.next_row = prow.next_row;     }\n     if prow.next_row == 0 {     A.last_row = prow.prev_row;     } else {     prow.next_row.prev_row = prow.prev_row;     }\n     A.nrows--; };\n    prow.first_col = prow.last_col = NIL(sm_element);\n    sm_row_free(prow);\n    }\n}\n\f\nvoid \nsm_delcol(A, i)\nvar A *sm_matrix;\nvar i int32;\n{\n    register sm_element *p, *pnext;\n    sm_row *prow;\n    sm_col *pcol;\n\n    // inlining of macro sm_get_col\n    pcol = (((i) \u003e= 0 \u0026\u0026 (i) \u003c (A).cols_size) ?     (A).cols[i] : (sm_col *) 0);\n    if pcol != NIL(sm_col) {\n    /* walk down the column */\n    for p = pcol.first_row; p != 0; p = pnext {\n        pnext = p.next_row;\n\n        /* unlink the element from the row (and delete it) */\n        // inlining of macro sm_get_row\n        prow = (((p.row_num) \u003e= 0 \u0026\u0026 (p.row_num) \u003c (A).rows_size) ?     (A).rows[p.row_num] : (sm_row *) 0);\n        sm_row_remove_element(prow, p);\n\n        /* discard the row if it is now empty */\n        if prow.first_col == NIL(sm_element) {\n        sm_delrow(A, prow.row_num);\n        }\n    }\n\n    /* discard the column -- we already threw away the elements */ \n    A.cols[i] = NIL(sm_col);\n    // inlining of macro dll_unlink\n    {     if pcol.prev_col == 0 {     A.first_col = pcol.next_col;     } else {     pcol.prev_col.next_col = pcol.next_col;     }\n     if pcol.next_col == 0 {     A.last_col = pcol.prev_col;     } else {     pcol.next_col.prev_col = pcol.prev_col;     }\n     A.ncols--; };\n    pcol.first_row = pcol.last_row = NIL(sm_element);\n    sm_col_free(pcol);\n    }\n}\n\f\nvoid\nsm_copy_row(dest, dest_row, prow)\nregister sm_matrix *dest;\nvar dest_row int32;\nvar prow *sm_row;\n{\n    register sm_element *p;\n\n    for p = prow.first_col; p != 0; p = p.next_col {\n    (void) sm_insert(dest, dest_row, p.col_num);\n    }\n}\n\n\nvoid\nsm_copy_col(dest, dest_col, pcol)\nregister sm_matrix *dest;\nvar dest_col int32;\nvar pcol *sm_col;\n{\n    register sm_element *p;\n\n    for p = pcol.first_row; p != 0; p = p.next_row {\n    (void) sm_insert(dest, dest_col, p.row_num);\n    }\n}\n\n\nsm_row *\nsm_longest_row(A)\nvar A *sm_matrix;\n{\n    register sm_row *large_row, *prow;\n    register int max_length;\n\n    max_length = 0;\n    large_row = NIL(sm_row);\n    for prow = A.first_row; prow != 0; prow = prow.next_row {\n    if prow.length \u003e max_length {\n        max_length = prow.length;\n        large_row = prow;\n    }\n    }\n    return large_row;\n}\n\n\nsm_col *\nsm_longest_col(A)\nvar A *sm_matrix;\n{\n    register sm_col *large_col, *pcol;\n    register int max_length;\n\n    max_length = 0;\n    large_col = NIL(sm_col);\n    for pcol = A.first_col; pcol != 0; pcol = pcol.next_col {\n    if pcol.length \u003e max_length {\n        max_length = pcol.length;\n        large_col = pcol;\n    }\n    }\n    return large_col;\n}\n\f\nint\nsm_num_elements(A)\nvar A *sm_matrix;\n{\n    register sm_row *prow;\n    register int num;\n\n    num = 0;\n    // inlining of macro sm_foreach_row\n    for prow = A.first_row; prow != 0; prow = prow.next_row {\n    num += prow.length;\n    }\n    return num;\n}\n\f\nint \nsm_read(fp, A)\nvar fp *os.File;\nvar A **sm_matrix;\n{\n    int i, j, err;\n\n    *A = sm_alloc();\n    while (! feof(fp)) {\n    err = fscanf(fp, \"%d %d\", \u0026i, \u0026j);\n    if err == -1 {\n        return 1;\n    } else if err != 2 {\n        return 0;\n    }\n    (void) sm_insert(*A, i, j);\n    }\n    return 1;\n}\n\n\nint \nsm_read_compressed(fp, A)\nvar fp *os.File;\nvar A **sm_matrix;\n{\n    int i, j, k, nrows, ncols;\n    unsigned long x;\n\n    *A = sm_alloc();\n    if fscanf(fp, \"%d %d\", \u0026nrows, \u0026ncols) != 2 {\n    return 0;\n    }\n    sm_resize(*A, nrows, ncols);\n\n    for i = 0; i \u003c nrows; i++ {\n    if fscanf(fp, \"%lx\", \u0026x) != 1 {\n        return 0;\n    }\n    for j = 0; j \u003c ncols; j += 32 {\n        if fscanf(fp, \"%lx\", \u0026x) != 1 {\n        return 0;\n        }\n        for k = j; x != 0; x \u003e\u003e= 1, k++ {\n        if x \u0026 1 {\n            (void) sm_insert(*A, i, k);\n        }\n        }\n    }\n    }\n    return 1;\n}\n\n\nvoid \nsm_write(fp, A)\nvar fp *os.File;\nvar A *sm_matrix;\n{\n    register sm_row *prow;\n    register sm_element *p;\n\n    for prow = A.first_row; prow != 0; prow = prow.next_row {\n    for p = prow.first_col; p != 0; p = p.next_col {\n        (void) fmt.Fprintf(fp, \"%d %d\\n\", p.row_num, p.col_num);\n    }\n    }\n}\n\f\nvoid \nsm_print(fp, A)\nvar fp *os.File;\nvar A *sm_matrix;\n{\n    register sm_row *prow;\n    register sm_col *pcol;\n    int c;\n\n    if A.last_col.col_num \u003e= 100 {\n    (void) fmt.Fprintf(fp, \"    \");\n    for pcol = A.first_col; pcol != 0; pcol = pcol.next_col {\n        (void) fmt.Fprintf(fp, \"%d\", (pcol.col_num / 100)%10);\n    }\n    putc('\\n', fp);\n    }\n\n    if A.last_col.col_num \u003e= 10 {\n    (void) fmt.Fprintf(fp, \"    \");\n    for pcol = A.first_col; pcol != 0; pcol = pcol.next_col {\n        (void) fmt.Fprintf(fp, \"%d\", (pcol.col_num / 10)%10);\n    }\n    putc('\\n', fp);\n    }\n\n    (void) fmt.Fprintf(fp, \"    \");\n    for pcol = A.first_col; pcol != 0; pcol = pcol.next_col {\n    (void) fmt.Fprintf(fp, \"%d\", pcol.col_num % 10);\n    }\n    putc('\\n', fp);\n\n    (void) fmt.Fprintf(fp, \"    \");\n    for pcol = A.first_col; pcol != 0; pcol = pcol.next_col {\n    (void) fmt.Fprintf(fp, \"-\");\n    }\n    putc('\\n', fp);\n\n    for prow = A.first_row; prow != 0; prow = prow.next_row {\n    (void) fmt.Fprintf(fp, \"%3d:\", prow.row_num);\n\n    for pcol = A.first_col; pcol != 0; pcol = pcol.next_col {\n        c = sm_row_find(prow, pcol.col_num) ? '1' : '.';\n        putc(c, fp);\n    }\n    putc('\\n', fp);\n    }\n}\n\n\nvoid \nsm_dump(A, s, max)\nvar A *sm_matrix;\nvar s string;\nvar max int32;\n{\n    FILE *fp = os.Stdout;\n\n    (void) fmt.Fprintf(fp, \"%s %d rows by %d cols\\n\", s, A.nrows, A.ncols);\n    if A.nrows \u003c max {\n    sm_print(fp, A);\n    }\n}\n\f\nfunc sm_cleanup() {\n#ifdef FAST_AND_LOOSE\n    register sm_element *p, *pnext;\n    register sm_row *prow, *pnextrow;\n    register sm_col *pcol, *pnextcol;\n\n    for(p = sm_element_freelist; p != 0; p = pnext) {\n    pnext = p-\u003enext_col;\n    FREE(p);\n    }\n    sm_element_freelist = 0;\n\n    for(prow = sm_row_freelist; prow != 0; prow = pnextrow) {\n    pnextrow = prow-\u003enext_row;\n    FREE(prow);\n    }\n    sm_row_freelist = 0;\n\n    for(pcol = sm_col_freelist; pcol != 0; pcol = pnextcol) {\n    pnextcol = pcol-\u003enext_col;\n    FREE(pcol);\n    }\n    sm_col_freelist = 0;\n#endif\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

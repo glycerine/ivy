@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdInt.h",
+  "SHA256": "d4e33d442bac28bc8b2920cb8425f174e5874cb84ce5a7856b77804f264b1e81",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdInt.h::struct::MvCommand",
+      "Category": "struct-review",
+      "Symbol": "MvCommand",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1338,
+      "End": 1692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdInt.h::struct::MvAlias",
+      "Category": "struct-review",
+      "Symbol": "MvAlias",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1694,
+      "End": 1872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cmd/cmdInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4306
+    }
+  ],
+  "Draft": "package cmd\n\n/**CFile****************************************************************\n\n  FileName    [cmdInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Internal declarations of the command package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cmdInt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"base/main/mainInt.h\"\n//#include \"cmd.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\ntype MvCommand struct {\n    sName         string;       // the command name  \n    sGroup         string;      // the group name  \n    Id          Cmd_CommandId_t;          // the stable command ID\n    pFunc        Cmd_CommandFuncType;       // the function to execute the command\n    fChange           int32;     // set to 1 to mark that the network is changed\n}\n\ntype MvAlias struct {\n    sName         string;       // the alias name\n    argc           int32;        // the number of alias parts\n    argv        *string;        // the alias parts\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                        ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== cmdAlias.c =============-========================================*/\n// extern void       CmdCommandAliasAdd( Abc_Frame_t * pAbc, char * sName, int argc, char ** argv );\n\n// extern void       CmdCommandAliasPrint( Abc_Frame_t * pAbc, Abc_Alias * pAlias );\n\n// extern char *     CmdCommandAliasLookup( Abc_Frame_t * pAbc, char * sCommand );\n\n// extern void       CmdCommandAliasFree( Abc_Alias * p );\n\n/*=== cmdUtils.c =======================================================*/\n// extern Cmd_CommandId_t Cmd_CommandNameToId( const char * sName );\n\n// extern int        CmdCommandDispatch( Abc_Frame_t * pAbc, int * argc, char *** argv );\n\n// extern int        CmdCommandDispatchBasicById( Cmd_CommandId_t Id, Abc_Frame_t * pAbc, int argc, char ** argv, int * pResult );\n\n// extern int        IoCommandDispatchById( Cmd_CommandId_t Id, Abc_Frame_t * pAbc, int argc, char ** argv, int * pResult );\n\n// extern int        AbcCommandDispatchById( Cmd_CommandId_t Id, Abc_Frame_t * pAbc, int argc, char ** argv, int * pResult );\n\n// extern const char *     CmdSplitLine( Abc_Frame_t * pAbc, const char * sCommand, int * argc, char *** argv );\n\n// extern int        CmdApplyAlias( Abc_Frame_t * pAbc, int * argc, char *** argv, int * loop );\n\n// extern char *     CmdHistorySubstitution( Abc_Frame_t * pAbc, char * line, int * changed );\n\n// extern FILE *     CmdFileOpen( Abc_Frame_t * pAbc, char * sFileName, char * sMode, char ** pFileNameReal, int silent );\n\n// extern void       CmdFreeArgv( int argc, char ** argv );\n\n// extern char **    CmdAddToArgv( int argc, char ** argv );\n\n// extern void       CmdCommandFree( Abc_Command * pCommand );\n\n// extern void       CmdCommandPrint( Abc_Frame_t * pAbc, int fPrintAll, int fDetails );\n\n// extern void       CmdPrintTable( st__table * tTable, int fAliases );\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

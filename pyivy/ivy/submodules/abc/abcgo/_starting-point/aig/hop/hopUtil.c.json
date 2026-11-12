@@ -1,0 +1,1146 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c",
+  "SHA256": "1b2767def9f48ac1768eff4a4237663b1072fc88c8e1a1ab766c808ecb88ee37",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 2962
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 3001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsPo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 4222
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pRoot) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 4756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 188,
+        "Column": 5,
+        "ByteOffset": 6189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 6409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Hop_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 230,
+        "Column": 5,
+        "ByteOffset": 7682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 231,
+        "Column": 5,
+        "ByteOffset": 7722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Hop_ObjIsMuxType(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 289,
+        "Column": 5,
+        "ByteOffset": 10683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 ); // this is not MUX"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 315,
+        "Column": 9,
+        "ByteOffset": 11450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%d\", !fCompl );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 9,
+        "ByteOffset": 11555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s%s\", fCompl? \"!\" : \"\", (char*)pObj.pData );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 327,
+        "Column": 5,
+        "ByteOffset": 11781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s\", (Level==0? \"\" : \"(\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 331,
+        "Column": 13,
+        "ByteOffset": 12124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s \", fCompl? \"+\" : \"*\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 5,
+        "ByteOffset": 12181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s\", (Level==0? \"\" : \")\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 358,
+        "Column": 9,
+        "ByteOffset": 13009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"1\\'b%d\", !fCompl );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 363,
+        "Column": 9,
+        "ByteOffset": 13118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s%s\", fCompl? \"~\" : \"\", (char*)pObj.pData );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 371,
+        "Column": 9,
+        "ByteOffset": 13406
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", (Level==0? \"\" : \"(\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 375,
+        "Column": 17,
+        "ByteOffset": 13790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" ^ \" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 377,
+        "Column": 9,
+        "ByteOffset": 13835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s\", (Level==0? \"\" : \")\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 383,
+        "Column": 13,
+        "ByteOffset": 14039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s\", (Level==0? \"\" : \"(\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 385,
+        "Column": 13,
+        "ByteOffset": 14198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" ^ \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 387,
+        "Column": 13,
+        "ByteOffset": 14315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s\", (Level==0? \"\" : \")\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 391,
+        "Column": 13,
+        "ByteOffset": 14470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s\", (Level==0? \"\" : \"(\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 393,
+        "Column": 13,
+        "ByteOffset": 14608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" ? \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 395,
+        "Column": 13,
+        "ByteOffset": 14746
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" : \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 397,
+        "Column": 13,
+        "ByteOffset": 14884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s\", (Level==0? \"\" : \")\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 405,
+        "Column": 5,
+        "ByteOffset": 15103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s\", (Level==0? \"\" : \"(\") );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 409,
+        "Column": 13,
+        "ByteOffset": 15461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %s \", fCompl? \"|\" : \"\u0026\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 411,
+        "Column": 5,
+        "ByteOffset": 15518
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"%s\", (Level==0? \"\" : \")\") );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 428,
+        "Column": 5,
+        "ByteOffset": 15895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 429,
+        "Column": 5,
+        "ByteOffset": 15934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Node %p : \", pObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 431,
+        "Column": 9,
+        "ByteOffset": 16003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"constant 1\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 433,
+        "Column": 9,
+        "ByteOffset": 16069
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"PI\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 435,
+        "Column": 9,
+        "ByteOffset": 16106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"AND( %p%s, %p%s )\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 438,
+        "Column": 5,
+        "ByteOffset": 16283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" (refs = %3d)\", Hop_ObjRefs(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 456,
+        "Column": 5,
+        "ByteOffset": 16713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PIs: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 458,
+        "Column": 9,
+        "ByteOffset": 16953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %p\", pObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 460,
+        "Column": 5,
+        "ByteOffset": 16986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 464,
+        "Column": 1,
+        "ByteOffset": 17237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 466,
+        "Column": 5,
+        "ByteOffset": 17263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 488,
+        "Column": 9,
+        "ByteOffset": 17815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Hop_ManDumpBlif(): AIG manager does not have POs.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 506,
+        "Column": 13,
+        "ByteOffset": 18906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 507,
+        "Column": 5,
+        "ByteOffset": 18935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# BLIF file written by procedure Hop_ManDumpBlif() in ABC\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 508,
+        "Column": 5,
+        "ByteOffset": 19020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"# http://www.eecs.berkeley.edu/~alanmi/abc/\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 509,
+        "Column": 5,
+        "ByteOffset": 19091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".model test\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 511,
+        "Column": 5,
+        "ByteOffset": 19147
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".inputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 513,
+        "Column": 9,
+        "ByteOffset": 19397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" n%0*d\", nDigits, int32((ABC_PTRUINT_T))pObj.pData );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 515,
+        "Column": 5,
+        "ByteOffset": 19478
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 517,
+        "Column": 5,
+        "ByteOffset": 19523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".outputs\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 519,
+        "Column": 9,
+        "ByteOffset": 19774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" n%0*d\", nDigits, int32((ABC_PTRUINT_T))pObj.pData );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 521,
+        "Column": 5,
+        "ByteOffset": 19855
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 524,
+        "Column": 9,
+        "ByteOffset": 20067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".names n%0*d n%0*d n%0*d\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 528,
+        "Column": 9,
+        "ByteOffset": 20321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%d%d 1\\n\", !Hop_ObjFaninC0(pObj), !Hop_ObjFaninC1(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 532,
+        "Column": 9,
+        "ByteOffset": 20641
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".names n%0*d n%0*d\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 535,
+        "Column": 9,
+        "ByteOffset": 20818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%d 1\\n\", !Hop_ObjFaninC0(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 540,
+        "Column": 9,
+        "ByteOffset": 20992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".names n%0*d\\n 1\\n\", nDigits, int32((ABC_PTRUINT_T))pConst1.pData ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 541,
+        "Column": 5,
+        "ByteOffset": 21084
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \".end\\n\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 542,
+        "Column": 5,
+        "ByteOffset": 21118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Hop_ManIncrementTravId",
+      "Start": 1277,
+      "End": 1411,
+      "BodyStart": 1322,
+      "Original": "void Hop_ManIncrementTravId( Hop_Man_t * p )\n{\n    if ( p-\u003enTravIds \u003e= (1\u003c\u003c30)-1 )\n        Hop_ManCleanData( p );\n    p-\u003enTravIds++;\n}",
+      "Draft": "func Hop_ManIncrementTravId(p *Hop_Man_t) {\n    if p.nTravIds \u003e= (1\u003c\u003c30)-1 {\n        Hop_ManCleanData( p ); }\n    p.nTravIds++;\n}"
+    },
+    {
+      "Name": "Hop_ManCleanData",
+      "Start": 1686,
+      "End": 2009,
+      "BodyStart": 1725,
+      "Original": "void Hop_ManCleanData( Hop_Man_t * p )\n{\n    Hop_Obj_t * pObj;\n    int i;\n    p-\u003enTravIds = 1;\n    Hop_ManConst1(p)-\u003epData = NULL;\n    Hop_ManForEachPi( p, pObj, i )\n        pObj-\u003epData = NULL;\n    Hop_ManForEachPo( p, pObj, i )\n        pObj-\u003epData = NULL;\n    Hop_ManForEachNode( p, pObj, i )\n        pObj-\u003epData = NULL;\n}",
+      "Draft": "func Hop_ManCleanData(p *Hop_Man_t) {\n    var pObj *Hop_Obj_t;\n    var i int32;\n    p.nTravIds = 1;\n    Hop_ManConst1(p).pData = nil;\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        pObj.pData = nil;\n    }\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        pObj.pData = nil;\n    }\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pObj) = p.pTable[i]) == nil {} else {\n        pObj.pData = nil; }\n    }\n}"
+    },
+    {
+      "Name": "Hop_ObjCleanData_rec",
+      "Start": 2368,
+      "End": 2662,
+      "BodyStart": 2414,
+      "Original": "void Hop_ObjCleanData_rec( Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    assert( !Hop_ObjIsPo(pObj) );\n    if ( Hop_ObjIsAnd(pObj) )\n    {\n        Hop_ObjCleanData_rec( Hop_ObjFanin0(pObj) );\n        Hop_ObjCleanData_rec( Hop_ObjFanin1(pObj) );\n    }\n    pObj-\u003epData = NULL;\n}",
+      "Draft": "func Hop_ObjCleanData_rec(pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    assert(!Hop_ObjIsPo(pObj), \"!Hop_ObjIsPo(pObj)\");\n    if Hop_ObjIsAnd(pObj) {\n        Hop_ObjCleanData_rec( Hop_ObjFanin0(pObj) );\n        Hop_ObjCleanData_rec( Hop_ObjFanin1(pObj) );\n    }\n    pObj.pData = nil;\n}"
+    },
+    {
+      "Name": "Hop_ObjCollectMulti_rec",
+      "Start": 2943,
+      "End": 3354,
+      "BodyStart": 3031,
+      "Original": "void Hop_ObjCollectMulti_rec( Hop_Obj_t * pRoot, Hop_Obj_t * pObj, Vec_Ptr_t * vSuper )\n{\n    if ( pRoot != pObj \u0026\u0026 (Hop_IsComplement(pObj) || Hop_ObjIsPi(pObj) || Hop_ObjType(pRoot) != Hop_ObjType(pObj)) )\n    {\n        Vec_PtrPushUnique(vSuper, pObj);\n        return;\n    }\n    Hop_ObjCollectMulti_rec( pRoot, Hop_ObjChild0(pObj), vSuper );\n    Hop_ObjCollectMulti_rec( pRoot, Hop_ObjChild1(pObj), vSuper );\n}",
+      "Draft": "func Hop_ObjCollectMulti_rec(pRoot *Hop_Obj_t, pObj *Hop_Obj_t, vSuper *Vec_Ptr_t) {\n    if pRoot != pObj \u0026\u0026 (Hop_IsComplement(pObj) || Hop_ObjIsPi(pObj) || Hop_ObjType(pRoot) != Hop_ObjType(pObj)) {\n        Vec_PtrPushUnique(vSuper, pObj);\n        return;\n    }\n    Hop_ObjCollectMulti_rec( pRoot, Hop_ObjChild0(pObj), vSuper );\n    Hop_ObjCollectMulti_rec( pRoot, Hop_ObjChild1(pObj), vSuper );\n}"
+    },
+    {
+      "Name": "Hop_ObjCollectMulti",
+      "Start": 3635,
+      "End": 3825,
+      "BodyStart": 3701,
+      "Original": "void Hop_ObjCollectMulti( Hop_Obj_t * pRoot, Vec_Ptr_t * vSuper )\n{\n    assert( !Hop_IsComplement(pRoot) );\n    Vec_PtrClear( vSuper );\n    Hop_ObjCollectMulti_rec( pRoot, pRoot, vSuper );\n}",
+      "Draft": "func Hop_ObjCollectMulti(pRoot *Hop_Obj_t, vSuper *Vec_Ptr_t) {\n    assert(!Hop_IsComplement(pRoot), \"!Hop_IsComplement(pRoot)\");\n    Vec_PtrClear( vSuper );\n    Hop_ObjCollectMulti_rec( pRoot, pRoot, vSuper );\n}"
+    },
+    {
+      "Name": "Hop_ObjIsMuxType",
+      "Start": 4116,
+      "End": 5265,
+      "BodyStart": 4158,
+      "Original": "int Hop_ObjIsMuxType( Hop_Obj_t * pNode )\n{\n    Hop_Obj_t * pNode0, * pNode1;\n    // check that the node is regular\n    assert( !Hop_IsComplement(pNode) );\n    // if the node is not AND, this is not MUX\n    if ( !Hop_ObjIsAnd(pNode) )\n        return 0;\n    // if the children are not complemented, this is not MUX\n    if ( !Hop_ObjFaninC0(pNode) || !Hop_ObjFaninC1(pNode) )\n        return 0;\n    // get children\n    pNode0 = Hop_ObjFanin0(pNode);\n    pNode1 = Hop_ObjFanin1(pNode);\n    // if the children are not ANDs, this is not MUX\n    if ( !Hop_ObjIsAnd(pNode0) || !Hop_ObjIsAnd(pNode1) )\n        return 0;\n    // otherwise the node is MUX iff it has a pair of equal grandchildren\n    return (Hop_ObjFanin0(pNode0) == Hop_ObjFanin0(pNode1) \u0026\u0026 (Hop_ObjFaninC0(pNode0) ^ Hop_ObjFaninC0(pNode1))) || \n           (Hop_ObjFanin0(pNode0) == Hop_ObjFanin1(pNode1) \u0026\u0026 (Hop_ObjFaninC0(pNode0) ^ Hop_ObjFaninC1(pNode1))) ||\n           (Hop_ObjFanin1(pNode0) == Hop_ObjFanin0(pNode1) \u0026\u0026 (Hop_ObjFaninC1(pNode0) ^ Hop_ObjFaninC0(pNode1))) ||\n           (Hop_ObjFanin1(pNode0) == Hop_ObjFanin1(pNode1) \u0026\u0026 (Hop_ObjFaninC1(pNode0) ^ Hop_ObjFaninC1(pNode1)));\n}",
+      "Draft": "func Hop_ObjIsMuxType(pNode *Hop_Obj_t) int32 {\n    var pNode0, pNode1 *Hop_Obj_t;\n    // check that the node is regular\n    assert(!Hop_IsComplement(pNode), \"!Hop_IsComplement(pNode)\");\n    // if the node is not AND, this is not MUX\n    if !Hop_ObjIsAnd(pNode) {\n        return 0; }\n    // if the children are not complemented, this is not MUX\n    if !Hop_ObjFaninC0(pNode) || !Hop_ObjFaninC1(pNode) {\n        return 0; }\n    // get children\n    pNode0 = Hop_ObjFanin0(pNode);\n    pNode1 = Hop_ObjFanin1(pNode);\n    // if the children are not ANDs, this is not MUX\n    if !Hop_ObjIsAnd(pNode0) || !Hop_ObjIsAnd(pNode1) {\n        return 0; }\n    // otherwise the node is MUX iff it has a pair of equal grandchildren\n    return (Hop_ObjFanin0(pNode0) == Hop_ObjFanin0(pNode1) \u0026\u0026 (Hop_ObjFaninC0(pNode0) ^ Hop_ObjFaninC0(pNode1))) || \n           (Hop_ObjFanin0(pNode0) == Hop_ObjFanin1(pNode1) \u0026\u0026 (Hop_ObjFaninC0(pNode0) ^ Hop_ObjFaninC1(pNode1))) ||\n           (Hop_ObjFanin1(pNode0) == Hop_ObjFanin0(pNode1) \u0026\u0026 (Hop_ObjFaninC1(pNode0) ^ Hop_ObjFaninC0(pNode1))) ||\n           (Hop_ObjFanin1(pNode0) == Hop_ObjFanin1(pNode1) \u0026\u0026 (Hop_ObjFaninC1(pNode0) ^ Hop_ObjFaninC1(pNode1)));\n}"
+    },
+    {
+      "Name": "Hop_ObjRecognizeExor",
+      "Start": 5547,
+      "End": 6485,
+      "BodyStart": 5634,
+      "Original": "int Hop_ObjRecognizeExor( Hop_Obj_t * pObj, Hop_Obj_t ** ppFan0, Hop_Obj_t ** ppFan1 )\n{\n    Hop_Obj_t * p0, * p1;\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) )\n        return 0;\n    if ( Hop_ObjIsExor(pObj) )\n    {\n        *ppFan0 = Hop_ObjChild0(pObj);\n        *ppFan1 = Hop_ObjChild1(pObj);\n        return 1;\n    }\n    assert( Hop_ObjIsAnd(pObj) );\n    p0 = Hop_ObjChild0(pObj);\n    p1 = Hop_ObjChild1(pObj);\n    if ( !Hop_IsComplement(p0) || !Hop_IsComplement(p1) )\n        return 0;\n    p0 = Hop_Regular(p0);\n    p1 = Hop_Regular(p1);\n    if ( !Hop_ObjIsAnd(p0) || !Hop_ObjIsAnd(p1) )\n        return 0;\n    if ( Hop_ObjFanin0(p0) != Hop_ObjFanin0(p1) || Hop_ObjFanin1(p0) != Hop_ObjFanin1(p1) )\n        return 0;\n    if ( Hop_ObjFaninC0(p0) == Hop_ObjFaninC0(p1) || Hop_ObjFaninC1(p0) == Hop_ObjFaninC1(p1) )\n        return 0;\n    *ppFan0 = Hop_ObjChild0(p0);\n    *ppFan1 = Hop_ObjChild1(p0);\n    return 1;\n}",
+      "Draft": "func Hop_ObjRecognizeExor(pObj *Hop_Obj_t, ppFan0 **Hop_Obj_t, ppFan1 **Hop_Obj_t) int32 {\n    var p0, p1 *Hop_Obj_t;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) {\n        return 0; }\n    if Hop_ObjIsExor(pObj) {\n        *ppFan0 = Hop_ObjChild0(pObj);\n        *ppFan1 = Hop_ObjChild1(pObj);\n        return 1;\n    }\n    assert(Hop_ObjIsAnd(pObj), \"Hop_ObjIsAnd(pObj)\");\n    p0 = Hop_ObjChild0(pObj);\n    p1 = Hop_ObjChild1(pObj);\n    if !Hop_IsComplement(p0) || !Hop_IsComplement(p1) {\n        return 0; }\n    p0 = Hop_Regular(p0);\n    p1 = Hop_Regular(p1);\n    if !Hop_ObjIsAnd(p0) || !Hop_ObjIsAnd(p1) {\n        return 0; }\n    if Hop_ObjFanin0(p0) != Hop_ObjFanin0(p1) || Hop_ObjFanin1(p0) != Hop_ObjFanin1(p1) {\n        return 0; }\n    if Hop_ObjFaninC0(p0) == Hop_ObjFaninC0(p1) || Hop_ObjFaninC1(p0) == Hop_ObjFaninC1(p1) {\n        return 0; }\n    *ppFan0 = Hop_ObjChild0(p0);\n    *ppFan1 = Hop_ObjChild1(p0);\n    return 1;\n}"
+    },
+    {
+      "Name": "Hop_ObjRecognizeMux",
+      "Start": 7030,
+      "End": 10323,
+      "BodyStart": 7127,
+      "Original": "Hop_Obj_t * Hop_ObjRecognizeMux( Hop_Obj_t * pNode, Hop_Obj_t ** ppNodeT, Hop_Obj_t ** ppNodeE )\n{\n    Hop_Obj_t * pNode0, * pNode1;\n    assert( !Hop_IsComplement(pNode) );\n    assert( Hop_ObjIsMuxType(pNode) );\n    // get children\n    pNode0 = Hop_ObjFanin0(pNode);\n    pNode1 = Hop_ObjFanin1(pNode);\n\n    // find the control variable\n    if ( Hop_ObjFanin1(pNode0) == Hop_ObjFanin1(pNode1) \u0026\u0026 (Hop_ObjFaninC1(pNode0) ^ Hop_ObjFaninC1(pNode1)) )\n    {\n//        if ( Fraig_IsComplement(pNode1-\u003ep2) )\n        if ( Hop_ObjFaninC1(pNode0) )\n        { // pNode2-\u003ep2 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild0(pNode1));//pNode2-\u003ep1);\n            *ppNodeE = Hop_Not(Hop_ObjChild0(pNode0));//pNode1-\u003ep1);\n            return Hop_ObjChild1(pNode1);//pNode2-\u003ep2;\n        }\n        else\n        { // pNode1-\u003ep2 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild0(pNode0));//pNode1-\u003ep1);\n            *ppNodeE = Hop_Not(Hop_ObjChild0(pNode1));//pNode2-\u003ep1);\n            return Hop_ObjChild1(pNode0);//pNode1-\u003ep2;\n        }\n    }\n    else if ( Hop_ObjFanin0(pNode0) == Hop_ObjFanin0(pNode1) \u0026\u0026 (Hop_ObjFaninC0(pNode0) ^ Hop_ObjFaninC0(pNode1)) )\n    {\n//        if ( Fraig_IsComplement(pNode1-\u003ep1) )\n        if ( Hop_ObjFaninC0(pNode0) )\n        { // pNode2-\u003ep1 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild1(pNode1));//pNode2-\u003ep2);\n            *ppNodeE = Hop_Not(Hop_ObjChild1(pNode0));//pNode1-\u003ep2);\n            return Hop_ObjChild0(pNode1);//pNode2-\u003ep1;\n        }\n        else\n        { // pNode1-\u003ep1 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild1(pNode0));//pNode1-\u003ep2);\n            *ppNodeE = Hop_Not(Hop_ObjChild1(pNode1));//pNode2-\u003ep2);\n            return Hop_ObjChild0(pNode0);//pNode1-\u003ep1;\n        }\n    }\n    else if ( Hop_ObjFanin0(pNode0) == Hop_ObjFanin1(pNode1) \u0026\u0026 (Hop_ObjFaninC0(pNode0) ^ Hop_ObjFaninC1(pNode1)) )\n    {\n//        if ( Fraig_IsComplement(pNode1-\u003ep1) )\n        if ( Hop_ObjFaninC0(pNode0) )\n        { // pNode2-\u003ep2 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild0(pNode1));//pNode2-\u003ep1);\n            *ppNodeE = Hop_Not(Hop_ObjChild1(pNode0));//pNode1-\u003ep2);\n            return Hop_ObjChild1(pNode1);//pNode2-\u003ep2;\n        }\n        else\n        { // pNode1-\u003ep1 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild1(pNode0));//pNode1-\u003ep2);\n            *ppNodeE = Hop_Not(Hop_ObjChild0(pNode1));//pNode2-\u003ep1);\n            return Hop_ObjChild0(pNode0);//pNode1-\u003ep1;\n        }\n    }\n    else if ( Hop_ObjFanin1(pNode0) == Hop_ObjFanin0(pNode1) \u0026\u0026 (Hop_ObjFaninC1(pNode0) ^ Hop_ObjFaninC0(pNode1)) )\n    {\n//        if ( Fraig_IsComplement(pNode1-\u003ep2) )\n        if ( Hop_ObjFaninC1(pNode0) )\n        { // pNode2-\u003ep1 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild1(pNode1));//pNode2-\u003ep2);\n            *ppNodeE = Hop_Not(Hop_ObjChild0(pNode0));//pNode1-\u003ep1);\n            return Hop_ObjChild0(pNode1);//pNode2-\u003ep1;\n        }\n        else\n        { // pNode1-\u003ep2 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild0(pNode0));//pNode1-\u003ep1);\n            *ppNodeE = Hop_Not(Hop_ObjChild1(pNode1));//pNode2-\u003ep2);\n            return Hop_ObjChild1(pNode0);//pNode1-\u003ep2;\n        }\n    }\n    assert( 0 ); // this is not MUX\n    return NULL;\n}",
+      "Draft": "func Hop_ObjRecognizeMux(pNode *Hop_Obj_t, ppNodeT **Hop_Obj_t, ppNodeE **Hop_Obj_t) *Hop_Obj_t {\n    var pNode0, pNode1 *Hop_Obj_t;\n    assert(!Hop_IsComplement(pNode), \"!Hop_IsComplement(pNode)\");\n    assert((Hop_ObjIsMuxType(pNode) != 0), \"Hop_ObjIsMuxType(pNode)\");\n    // get children\n    pNode0 = Hop_ObjFanin0(pNode);\n    pNode1 = Hop_ObjFanin1(pNode);\n\n    // find the control variable\n    if Hop_ObjFanin1(pNode0) == Hop_ObjFanin1(pNode1) \u0026\u0026 (Hop_ObjFaninC1(pNode0) ^ Hop_ObjFaninC1(pNode1)) {\n//        if ( Fraig_IsComplement(pNode1-\u003ep2) )\n        if Hop_ObjFaninC1(pNode0) { // pNode2-\u003ep2 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild0(pNode1));//pNode2-\u003ep1);\n            *ppNodeE = Hop_Not(Hop_ObjChild0(pNode0));//pNode1-\u003ep1);\n            return Hop_ObjChild1(pNode1);//pNode2-\u003ep2;\n        \n        } else { // pNode1-\u003ep2 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild0(pNode0));//pNode1-\u003ep1);\n            *ppNodeE = Hop_Not(Hop_ObjChild0(pNode1));//pNode2-\u003ep1);\n            return Hop_ObjChild1(pNode0);//pNode1-\u003ep2;\n        }\n    \n    } else if Hop_ObjFanin0(pNode0) == Hop_ObjFanin0(pNode1) \u0026\u0026 (Hop_ObjFaninC0(pNode0) ^ Hop_ObjFaninC0(pNode1)) {\n//        if ( Fraig_IsComplement(pNode1-\u003ep1) )\n        if Hop_ObjFaninC0(pNode0) { // pNode2-\u003ep1 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild1(pNode1));//pNode2-\u003ep2);\n            *ppNodeE = Hop_Not(Hop_ObjChild1(pNode0));//pNode1-\u003ep2);\n            return Hop_ObjChild0(pNode1);//pNode2-\u003ep1;\n        \n        } else { // pNode1-\u003ep1 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild1(pNode0));//pNode1-\u003ep2);\n            *ppNodeE = Hop_Not(Hop_ObjChild1(pNode1));//pNode2-\u003ep2);\n            return Hop_ObjChild0(pNode0);//pNode1-\u003ep1;\n        }\n    \n    } else if Hop_ObjFanin0(pNode0) == Hop_ObjFanin1(pNode1) \u0026\u0026 (Hop_ObjFaninC0(pNode0) ^ Hop_ObjFaninC1(pNode1)) {\n//        if ( Fraig_IsComplement(pNode1-\u003ep1) )\n        if Hop_ObjFaninC0(pNode0) { // pNode2-\u003ep2 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild0(pNode1));//pNode2-\u003ep1);\n            *ppNodeE = Hop_Not(Hop_ObjChild1(pNode0));//pNode1-\u003ep2);\n            return Hop_ObjChild1(pNode1);//pNode2-\u003ep2;\n        \n        } else { // pNode1-\u003ep1 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild1(pNode0));//pNode1-\u003ep2);\n            *ppNodeE = Hop_Not(Hop_ObjChild0(pNode1));//pNode2-\u003ep1);\n            return Hop_ObjChild0(pNode0);//pNode1-\u003ep1;\n        }\n    \n    } else if Hop_ObjFanin1(pNode0) == Hop_ObjFanin0(pNode1) \u0026\u0026 (Hop_ObjFaninC1(pNode0) ^ Hop_ObjFaninC0(pNode1)) {\n//        if ( Fraig_IsComplement(pNode1-\u003ep2) )\n        if Hop_ObjFaninC1(pNode0) { // pNode2-\u003ep1 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild1(pNode1));//pNode2-\u003ep2);\n            *ppNodeE = Hop_Not(Hop_ObjChild0(pNode0));//pNode1-\u003ep1);\n            return Hop_ObjChild0(pNode1);//pNode2-\u003ep1;\n        \n        } else { // pNode1-\u003ep2 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild0(pNode0));//pNode1-\u003ep1);\n            *ppNodeE = Hop_Not(Hop_ObjChild1(pNode1));//pNode2-\u003ep2);\n            return Hop_ObjChild1(pNode0);//pNode1-\u003ep2;\n        }\n    }\n    assert(false, \"0\"); // this is not MUX\n    return nil;\n}"
+    },
+    {
+      "Name": "Hop_ObjPrintEqn",
+      "Start": 10706,
+      "End": 11737,
+      "BodyStart": 10793,
+      "Original": "void Hop_ObjPrintEqn( FILE * pFile, Hop_Obj_t * pObj, Vec_Vec_t * vLevels, int Level )\n{\n    Vec_Ptr_t * vSuper;\n    Hop_Obj_t * pFanin;\n    int fCompl, i;\n    // store the complemented attribute\n    fCompl = Hop_IsComplement(pObj);\n    pObj = Hop_Regular(pObj);\n    // constant case\n    if ( Hop_ObjIsConst1(pObj) )\n    {\n        fprintf( pFile, \"%d\", !fCompl );\n        return;\n    }\n    // PI case\n    if ( Hop_ObjIsPi(pObj) )\n    {\n        fprintf( pFile, \"%s%s\", fCompl? \"!\" : \"\", (char*)pObj-\u003epData );\n        return;\n    }\n    // AND case\n    Vec_VecExpand( vLevels, Level );\n    vSuper = Vec_VecEntry(vLevels, Level);\n    Hop_ObjCollectMulti( pObj, vSuper );\n    fprintf( pFile, \"%s\", (Level==0? \"\" : \"(\") );\n    Vec_PtrForEachEntry( Hop_Obj_t *, vSuper, pFanin, i )\n    {\n        Hop_ObjPrintEqn( pFile, Hop_NotCond(pFanin, fCompl), vLevels, Level+1 );\n        if ( i \u003c Vec_PtrSize(vSuper) - 1 )\n            fprintf( pFile, \" %s \", fCompl? \"+\" : \"*\" );\n    }\n    fprintf( pFile, \"%s\", (Level==0? \"\" : \")\") );\n    return;\n}",
+      "Draft": "func Hop_ObjPrintEqn(pFile *os.File, pObj *Hop_Obj_t, vLevels *Vec_Vec_t, Level int32) {\n    var vSuper *Vec_Ptr_t;\n    var pFanin *Hop_Obj_t;\n    var fCompl, i int32;\n    // store the complemented attribute\n    fCompl = Hop_IsComplement(pObj);\n    pObj = Hop_Regular(pObj);\n    // constant case\n    if Hop_ObjIsConst1(pObj) {\n        fmt.Fprintf(pFile, \"%d\", !fCompl);\n        return;\n    }\n    // PI case\n    if Hop_ObjIsPi(pObj) {\n        fmt.Fprintf(pFile, \"%s%s\", fCompl? \"!\" : \"\", (char*)pObj.pData);\n        return;\n    }\n    // AND case\n    Vec_VecExpand( vLevels, Level );\n    vSuper = Vec_VecEntry(vLevels, Level);\n    Hop_ObjCollectMulti( pObj, vSuper );\n    fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \"(\"));\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Hop_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        Hop_ObjPrintEqn( pFile, Hop_NotCond(pFanin, fCompl), vLevels, Level+1 );\n        if i \u003c Vec_PtrSize(vSuper) - 1 {\n            fmt.Fprintf(pFile, \" %s \", fCompl? \"+\" : \"*\"); }\n    }\n    fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \")\"));\n    return;\n}"
+    },
+    {
+      "Name": "Hop_ObjPrintVerilog",
+      "Start": 12123,
+      "End": 14925,
+      "BodyStart": 12229,
+      "Original": "void Hop_ObjPrintVerilog( FILE * pFile, Hop_Obj_t * pObj, Vec_Vec_t * vLevels, int Level, int fOnlyAnds )\n{\n    Vec_Ptr_t * vSuper;\n    Hop_Obj_t * pFanin, * pFanin0, * pFanin1, * pFaninC;\n    int fCompl, i;\n    // store the complemented attribute\n    fCompl = Hop_IsComplement(pObj);\n    pObj = Hop_Regular(pObj);\n    // constant case\n    if ( Hop_ObjIsConst1(pObj) )\n    {\n        fprintf( pFile, \"1\\'b%d\", !fCompl );\n        return;\n    }\n    // PI case\n    if ( Hop_ObjIsPi(pObj) )\n    {\n        fprintf( pFile, \"%s%s\", fCompl? \"~\" : \"\", (char*)pObj-\u003epData );\n        return;\n    }\n    // EXOR case\n    if ( !fOnlyAnds \u0026\u0026 Hop_ObjIsExor(pObj) )\n    {\n        Vec_VecExpand( vLevels, Level );\n        vSuper = Vec_VecEntry( vLevels, Level );\n        Hop_ObjCollectMulti( pObj, vSuper );\n        fprintf( pFile, \"%s\", (Level==0? \"\" : \"(\") );\n        Vec_PtrForEachEntry( Hop_Obj_t *, vSuper, pFanin, i )\n        {\n            Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin, (fCompl \u0026\u0026 i==0)), vLevels, Level+1, fOnlyAnds );\n            if ( i \u003c Vec_PtrSize(vSuper) - 1 )\n                fprintf( pFile, \" ^ \" );\n        }\n        fprintf( pFile, \"%s\", (Level==0? \"\" : \")\") );\n        return;\n    }\n    // MUX case\n    if ( !fOnlyAnds \u0026\u0026 Hop_ObjIsMuxType(pObj) )\n    {\n        if ( Hop_ObjRecognizeExor( pObj, \u0026pFanin0, \u0026pFanin1 ) )\n        {\n            fprintf( pFile, \"%s\", (Level==0? \"\" : \"(\") );\n            Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin0, fCompl), vLevels, Level+1, fOnlyAnds );\n            fprintf( pFile, \" ^ \" );\n            Hop_ObjPrintVerilog( pFile, pFanin1, vLevels, Level+1, fOnlyAnds );\n            fprintf( pFile, \"%s\", (Level==0? \"\" : \")\") );\n        }\n        else \n        {\n            pFaninC = Hop_ObjRecognizeMux( pObj, \u0026pFanin1, \u0026pFanin0 );\n            fprintf( pFile, \"%s\", (Level==0? \"\" : \"(\") );\n            Hop_ObjPrintVerilog( pFile, pFaninC, vLevels, Level+1, fOnlyAnds );\n            fprintf( pFile, \" ? \" );\n            Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin1, fCompl), vLevels, Level+1, fOnlyAnds );\n            fprintf( pFile, \" : \" );\n            Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin0, fCompl), vLevels, Level+1, fOnlyAnds );\n            fprintf( pFile, \"%s\", (Level==0? \"\" : \")\") );\n        }\n        return;\n    }\n    // AND case\n    Vec_VecExpand( vLevels, Level );\n    vSuper = Vec_VecEntry(vLevels, Level);\n    Hop_ObjCollectMulti( pObj, vSuper );\n    fprintf( pFile, \"%s\", (Level==0? \"\" : \"(\") );\n    Vec_PtrForEachEntry( Hop_Obj_t *, vSuper, pFanin, i )\n    {\n        Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin, fCompl), vLevels, Level+1, fOnlyAnds );\n        if ( i \u003c Vec_PtrSize(vSuper) - 1 )\n            fprintf( pFile, \" %s \", fCompl? \"|\" : \"\u0026\" );\n    }\n    fprintf( pFile, \"%s\", (Level==0? \"\" : \")\") );\n    return;\n}",
+      "Draft": "func Hop_ObjPrintVerilog(pFile *os.File, pObj *Hop_Obj_t, vLevels *Vec_Vec_t, Level int32, fOnlyAnds int32) {\n    var vSuper *Vec_Ptr_t;\n    var pFanin, pFanin0, pFanin1, pFaninC *Hop_Obj_t;\n    var fCompl, i int32;\n    // store the complemented attribute\n    fCompl = Hop_IsComplement(pObj);\n    pObj = Hop_Regular(pObj);\n    // constant case\n    if Hop_ObjIsConst1(pObj) {\n        fmt.Fprintf(pFile, \"1\\'b%d\", !fCompl);\n        return;\n    }\n    // PI case\n    if Hop_ObjIsPi(pObj) {\n        fmt.Fprintf(pFile, \"%s%s\", fCompl? \"~\" : \"\", (char*)pObj.pData);\n        return;\n    }\n    // EXOR case\n    if !(fOnlyAnds != 0) \u0026\u0026 Hop_ObjIsExor(pObj) {\n        Vec_VecExpand( vLevels, Level );\n        vSuper = Vec_VecEntry( vLevels, Level );\n        Hop_ObjCollectMulti( pObj, vSuper );\n        fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \"(\"));\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Hop_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n            Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin, (fCompl \u0026\u0026 i==0)), vLevels, Level+1, fOnlyAnds );\n            if i \u003c Vec_PtrSize(vSuper) - 1 {\n                fmt.Fprintf(pFile, \" ^ \"); }\n        }\n        fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \")\"));\n        return;\n    }\n    // MUX case\n    if !(fOnlyAnds != 0) \u0026\u0026 (Hop_ObjIsMuxType(pObj) != 0) {\n        if Hop_ObjRecognizeExor( pObj, \u0026pFanin0, \u0026pFanin1 ) != 0 {\n            fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \"(\"));\n            Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin0, fCompl), vLevels, Level+1, fOnlyAnds );\n            fmt.Fprintf(pFile, \" ^ \");\n            Hop_ObjPrintVerilog( pFile, pFanin1, vLevels, Level+1, fOnlyAnds );\n            fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \")\"));\n        \n        } else {\n            pFaninC = Hop_ObjRecognizeMux( pObj, \u0026pFanin1, \u0026pFanin0 );\n            fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \"(\"));\n            Hop_ObjPrintVerilog( pFile, pFaninC, vLevels, Level+1, fOnlyAnds );\n            fmt.Fprintf(pFile, \" ? \");\n            Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin1, fCompl), vLevels, Level+1, fOnlyAnds );\n            fmt.Fprintf(pFile, \" : \");\n            Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin0, fCompl), vLevels, Level+1, fOnlyAnds );\n            fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \")\"));\n        }\n        return;\n    }\n    // AND case\n    Vec_VecExpand( vLevels, Level );\n    vSuper = Vec_VecEntry(vLevels, Level);\n    Hop_ObjCollectMulti( pObj, vSuper );\n    fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \"(\"));\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Hop_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin, fCompl), vLevels, Level+1, fOnlyAnds );\n        if i \u003c Vec_PtrSize(vSuper) - 1 {\n            fmt.Fprintf(pFile, \" %s \", fCompl? \"|\" : \"\u0026\"); }\n    }\n    fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \")\"));\n    return;\n}"
+    },
+    {
+      "Name": "Hop_ObjPrintVerbose",
+      "Start": 15182,
+      "End": 15675,
+      "BodyStart": 15238,
+      "Original": "void Hop_ObjPrintVerbose( Hop_Obj_t * pObj, int fHaig )\n{\n    assert( !Hop_IsComplement(pObj) );\n    printf( \"Node %p : \", pObj );\n    if ( Hop_ObjIsConst1(pObj) )\n        printf( \"constant 1\" );\n    else if ( Hop_ObjIsPi(pObj) )\n        printf( \"PI\" );\n    else\n        printf( \"AND( %p%s, %p%s )\", \n            Hop_ObjFanin0(pObj), (Hop_ObjFaninC0(pObj)? \"\\'\" : \" \"), \n            Hop_ObjFanin1(pObj), (Hop_ObjFaninC1(pObj)? \"\\'\" : \" \") );\n    printf( \" (refs = %3d)\", Hop_ObjRefs(pObj) );\n}",
+      "Draft": "func Hop_ObjPrintVerbose(pObj *Hop_Obj_t, fHaig int32) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    fmt.Printf(\"Node %p : \", pObj);\n    if Hop_ObjIsConst1(pObj) {\n        fmt.Printf(\"constant 1\");\n    } else if Hop_ObjIsPi(pObj) {\n        fmt.Printf(\"PI\");\n    } else {\n        fmt.Printf(\"AND( %p%s, %p%s )\", Hop_ObjFanin0(pObj), (Hop_ObjFaninC0(pObj)? \"\\'\" : \" \"), Hop_ObjFanin1(pObj), (Hop_ObjFaninC1(pObj)? \"\\'\" : \" \")); }\n    fmt.Printf(\" (refs = %3d)\", Hop_ObjRefs(pObj));\n}"
+    },
+    {
+      "Name": "Hop_ManPrintVerbose",
+      "Start": 15931,
+      "End": 16346,
+      "BodyStart": 15984,
+      "Original": "void Hop_ManPrintVerbose( Hop_Man_t * p, int fHaig )\n{\n    Vec_Ptr_t * vNodes;\n    Hop_Obj_t * pObj;\n    int i;\n    printf( \"PIs: \" );\n    Hop_ManForEachPi( p, pObj, i )\n        printf( \" %p\", pObj );\n    printf( \"\\n\" );\n    vNodes = Hop_ManDfs( p );\n    Vec_PtrForEachEntry( Hop_Obj_t *, vNodes, pObj, i )\n        Hop_ObjPrintVerbose( pObj, fHaig ), printf( \"\\n\" );\n    printf( \"\\n\" );\n    Vec_PtrFree( vNodes );\n}",
+      "Draft": "func Hop_ManPrintVerbose(p *Hop_Man_t, fHaig int32) {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Hop_Obj_t;\n    var i int32;\n    fmt.Printf(\"PIs: \");\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        fmt.Printf(\" %p\", pObj);\n    }\n    fmt.Printf(\"\\n\");\n    vNodes = Hop_ManDfs( p );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Hop_ObjPrintVerbose( pObj, fHaig );\nfmt.Printf(\"\\n\");\n    }\n    fmt.Printf(\"\\n\");\n    Vec_PtrFree( vNodes );\n}"
+    },
+    {
+      "Name": "Hop_ManDumpBlif",
+      "Start": 16616,
+      "End": 19061,
+      "BodyStart": 16672,
+      "Original": "void Hop_ManDumpBlif( Hop_Man_t * p, char * pFileName )\n{\n    FILE * pFile;\n    Vec_Ptr_t * vNodes;\n    Hop_Obj_t * pObj, * pConst1 = NULL;\n    int i, nDigits, Counter = 0;\n    if ( Hop_ManPoNum(p) == 0 )\n    {\n        printf( \"Hop_ManDumpBlif(): AIG manager does not have POs.\\n\" );\n        return;\n    }\n    // collect nodes in the DFS order\n    vNodes = Hop_ManDfs( p );\n    // assign IDs to objects\n    Hop_ManConst1(p)-\u003epData = (void *)(ABC_PTRUINT_T)Counter++;\n    Hop_ManForEachPi( p, pObj, i )\n        pObj-\u003epData = (void *)(ABC_PTRUINT_T)Counter++;\n    Hop_ManForEachPo( p, pObj, i )\n        pObj-\u003epData = (void *)(ABC_PTRUINT_T)Counter++;\n    Vec_PtrForEachEntry( Hop_Obj_t *, vNodes, pObj, i )\n        pObj-\u003epData = (void *)(ABC_PTRUINT_T)Counter++;\n    nDigits = Hop_Base10Log( Counter );\n    // write the file\n    pFile = fopen( pFileName, \"w\" );\n    fprintf( pFile, \"# BLIF file written by procedure Hop_ManDumpBlif() in ABC\\n\" );\n    fprintf( pFile, \"# http://www.eecs.berkeley.edu/~alanmi/abc/\\n\" );\n    fprintf( pFile, \".model test\\n\" );\n    // write PIs\n    fprintf( pFile, \".inputs\" );\n    Hop_ManForEachPi( p, pObj, i )\n        fprintf( pFile, \" n%0*d\", nDigits, (int)(ABC_PTRUINT_T)pObj-\u003epData );\n    fprintf( pFile, \"\\n\" );\n    // write POs\n    fprintf( pFile, \".outputs\" );\n    Hop_ManForEachPo( p, pObj, i )\n        fprintf( pFile, \" n%0*d\", nDigits, (int)(ABC_PTRUINT_T)pObj-\u003epData );\n    fprintf( pFile, \"\\n\" );\n    // write nodes\n    Vec_PtrForEachEntry( Hop_Obj_t *, vNodes, pObj, i )\n    {\n        fprintf( pFile, \".names n%0*d n%0*d n%0*d\\n\", \n            nDigits, (int)(ABC_PTRUINT_T)Hop_ObjFanin0(pObj)-\u003epData, \n            nDigits, (int)(ABC_PTRUINT_T)Hop_ObjFanin1(pObj)-\u003epData, \n            nDigits, (int)(ABC_PTRUINT_T)pObj-\u003epData );\n        fprintf( pFile, \"%d%d 1\\n\", !Hop_ObjFaninC0(pObj), !Hop_ObjFaninC1(pObj) );\n    }\n    // write POs\n    Hop_ManForEachPo( p, pObj, i )\n    {\n        fprintf( pFile, \".names n%0*d n%0*d\\n\", \n            nDigits, (int)(ABC_PTRUINT_T)Hop_ObjFanin0(pObj)-\u003epData, \n            nDigits, (int)(ABC_PTRUINT_T)pObj-\u003epData );\n        fprintf( pFile, \"%d 1\\n\", !Hop_ObjFaninC0(pObj) );\n        if ( Hop_ObjIsConst1(Hop_ObjFanin0(pObj)) )\n            pConst1 = Hop_ManConst1(p);\n    }\n    if ( pConst1 )\n        fprintf( pFile, \".names n%0*d\\n 1\\n\", nDigits, (int)(ABC_PTRUINT_T)pConst1-\u003epData );\n    fprintf( pFile, \".end\\n\\n\" );\n    fclose( pFile );\n    Vec_PtrFree( vNodes );\n}",
+      "Draft": "func Hop_ManDumpBlif(p *Hop_Man_t, pFileName string) {\n    var pFile *os.File;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Hop_Obj_t;\n    var pConst1 *Hop_Obj_t = nil;\n    var i, nDigits, Counter int32;\n    if Hop_ManPoNum(p) == 0 {\n        fmt.Printf(\"Hop_ManDumpBlif(): AIG manager does not have POs.\\n\");\n        return;\n    }\n    // collect nodes in the DFS order\n    vNodes = Hop_ManDfs( p );\n    // assign IDs to objects\n    Hop_ManConst1(p).pData = (void *)(ABC_PTRUINT_T)Counter++;\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        pObj.pData = (void *)(ABC_PTRUINT_T)Counter++;\n    }\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        pObj.pData = (void *)(ABC_PTRUINT_T)Counter++;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pData = (void *)(ABC_PTRUINT_T)Counter++;\n    }\n    nDigits = Hop_Base10Log( Counter );\n    // write the file\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fmt.Fprintf(pFile, \"# BLIF file written by procedure Hop_ManDumpBlif() in ABC\\n\");\n    fmt.Fprintf(pFile, \"# http://www.eecs.berkeley.edu/~alanmi/abc/\\n\");\n    fmt.Fprintf(pFile, \".model test\\n\");\n    // write PIs\n    fmt.Fprintf(pFile, \".inputs\");\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" n%0*d\", nDigits, int32((ABC_PTRUINT_T))pObj.pData);\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    // write POs\n    fmt.Fprintf(pFile, \".outputs\");\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" n%0*d\", nDigits, int32((ABC_PTRUINT_T))pObj.pData);\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    // write nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        fmt.Fprintf(pFile, \".names n%0*d n%0*d n%0*d\\n\", nDigits, int32((ABC_PTRUINT_T))Hop_ObjFanin0(pObj).pData, nDigits, int32((ABC_PTRUINT_T))Hop_ObjFanin1(pObj).pData, nDigits, int32((ABC_PTRUINT_T))pObj.pData);\n        fmt.Fprintf(pFile, \"%d%d 1\\n\", !Hop_ObjFaninC0(pObj), !Hop_ObjFaninC1(pObj));\n    }\n    // write POs\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        fmt.Fprintf(pFile, \".names n%0*d n%0*d\\n\", nDigits, int32((ABC_PTRUINT_T))Hop_ObjFanin0(pObj).pData, nDigits, int32((ABC_PTRUINT_T))pObj.pData);\n        fmt.Fprintf(pFile, \"%d 1\\n\", !Hop_ObjFaninC0(pObj));\n        if Hop_ObjIsConst1(Hop_ObjFanin0(pObj)) {\n            pConst1 = Hop_ManConst1(p); }\n    }\n    if pConst1 != nil {\n        fmt.Fprintf(pFile, \".names n%0*d\\n 1\\n\", nDigits, int32((ABC_PTRUINT_T))pConst1.pData); }\n    fmt.Fprintf(pFile, \".end\\n\\n\");\n    _ = (pFile).Close();\n    Vec_PtrFree( vNodes );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::1982",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1821,
+      "End": 1821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::2225",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1884,
+      "End": 1884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::11704",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11192,
+      "End": 11199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::12049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11427,
+      "End": 11427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::13282",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12665,
+      "End": 12672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::13701",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12974,
+      "End": 12974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::15432",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14600,
+      "End": 14600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::17058",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16070,
+      "End": 16070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::17301",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16186,
+      "End": 16186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::18161",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17049,
+      "End": 17057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::18360",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17087,
+      "End": 17087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::18432",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17140,
+      "End": 17148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::18631",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17178,
+      "End": 17178
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::18703",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17231,
+      "End": 17239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::18849",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17269,
+      "End": 17269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::18920",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17343,
+      "End": 17351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::19463",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17725,
+      "End": 17725
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::19835",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17917,
+      "End": 17917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::20122",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18077,
+      "End": 18077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::pointer-cast::20700",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18497,
+      "End": 18497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::Hop_ManIncrementTravId",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManIncrementTravId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1277,
+      "End": 1411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::Hop_ManCleanData",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManCleanData",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1686,
+      "End": 2009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::Hop_ObjCleanData_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjCleanData_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2368,
+      "End": 2662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::Hop_ObjCollectMulti_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjCollectMulti_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2943,
+      "End": 3354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::Hop_ObjCollectMulti",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjCollectMulti",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3635,
+      "End": 3825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::Hop_ObjIsMuxType",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjIsMuxType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4116,
+      "End": 5265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::Hop_ObjRecognizeExor",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjRecognizeExor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5547,
+      "End": 6485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::Hop_ObjRecognizeMux",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjRecognizeMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7030,
+      "End": 10323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::ternary::Hop_ObjPrintEqn",
+      "Category": "ternary-review",
+      "Symbol": "Hop_ObjPrintEqn",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10706,
+      "End": 11737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::Hop_ObjPrintEqn",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjPrintEqn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10706,
+      "End": 11737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::ternary::Hop_ObjPrintVerilog",
+      "Category": "ternary-review",
+      "Symbol": "Hop_ObjPrintVerilog",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12123,
+      "End": 14925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::Hop_ObjPrintVerilog",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjPrintVerilog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12123,
+      "End": 14925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::ternary::Hop_ObjPrintVerbose",
+      "Category": "ternary-review",
+      "Symbol": "Hop_ObjPrintVerbose",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15182,
+      "End": 15675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::Hop_ObjPrintVerbose",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjPrintVerbose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15182,
+      "End": 15675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::Hop_ManPrintVerbose",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManPrintVerbose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15931,
+      "End": 16346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::Hop_ManDumpBlif",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManDumpBlif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16616,
+      "End": 19061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopUtil.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19308
+    }
+  ],
+  "Draft": "package hop\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [hopUtil.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [Various procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: hopUtil.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"hop.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Increments the current traversal ID of the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManIncrementTravId(p *Hop_Man_t) {\n    if p.nTravIds \u003e= (1\u003c\u003c30)-1 {\n        Hop_ManCleanData( p ); }\n    p.nTravIds++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans the data pointers for the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManCleanData(p *Hop_Man_t) {\n    var pObj *Hop_Obj_t;\n    var i int32;\n    p.nTravIds = 1;\n    Hop_ManConst1(p).pData = nil;\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        pObj.pData = nil;\n    }\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        pObj.pData = nil;\n    }\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pObj) = p.pTable[i]) == nil {} else {\n        pObj.pData = nil; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively cleans the data pointers in the cone of the node.]\n\n  Description [Applicable to small AIGs only because no caching is performed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjCleanData_rec(pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    assert(!Hop_ObjIsPo(pObj), \"!Hop_ObjIsPo(pObj)\");\n    if Hop_ObjIsAnd(pObj) {\n        Hop_ObjCleanData_rec( Hop_ObjFanin0(pObj) );\n        Hop_ObjCleanData_rec( Hop_ObjFanin1(pObj) );\n    }\n    pObj.pData = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Detects multi-input gate rooted at this node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjCollectMulti_rec(pRoot *Hop_Obj_t, pObj *Hop_Obj_t, vSuper *Vec_Ptr_t) {\n    if pRoot != pObj \u0026\u0026 (Hop_IsComplement(pObj) || Hop_ObjIsPi(pObj) || Hop_ObjType(pRoot) != Hop_ObjType(pObj)) {\n        Vec_PtrPushUnique(vSuper, pObj);\n        return;\n    }\n    Hop_ObjCollectMulti_rec( pRoot, Hop_ObjChild0(pObj), vSuper );\n    Hop_ObjCollectMulti_rec( pRoot, Hop_ObjChild1(pObj), vSuper );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Detects multi-input gate rooted at this node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjCollectMulti(pRoot *Hop_Obj_t, vSuper *Vec_Ptr_t) {\n    assert(!Hop_IsComplement(pRoot), \"!Hop_IsComplement(pRoot)\");\n    Vec_PtrClear( vSuper );\n    Hop_ObjCollectMulti_rec( pRoot, pRoot, vSuper );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node is the root of MUX or EXOR/NEXOR.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjIsMuxType(pNode *Hop_Obj_t) int32 {\n    var pNode0, pNode1 *Hop_Obj_t;\n    // check that the node is regular\n    assert(!Hop_IsComplement(pNode), \"!Hop_IsComplement(pNode)\");\n    // if the node is not AND, this is not MUX\n    if !Hop_ObjIsAnd(pNode) {\n        return 0; }\n    // if the children are not complemented, this is not MUX\n    if !Hop_ObjFaninC0(pNode) || !Hop_ObjFaninC1(pNode) {\n        return 0; }\n    // get children\n    pNode0 = Hop_ObjFanin0(pNode);\n    pNode1 = Hop_ObjFanin1(pNode);\n    // if the children are not ANDs, this is not MUX\n    if !Hop_ObjIsAnd(pNode0) || !Hop_ObjIsAnd(pNode1) {\n        return 0; }\n    // otherwise the node is MUX iff it has a pair of equal grandchildren\n    return (Hop_ObjFanin0(pNode0) == Hop_ObjFanin0(pNode1) \u0026\u0026 (Hop_ObjFaninC0(pNode0) ^ Hop_ObjFaninC0(pNode1))) || \n           (Hop_ObjFanin0(pNode0) == Hop_ObjFanin1(pNode1) \u0026\u0026 (Hop_ObjFaninC0(pNode0) ^ Hop_ObjFaninC1(pNode1))) ||\n           (Hop_ObjFanin1(pNode0) == Hop_ObjFanin0(pNode1) \u0026\u0026 (Hop_ObjFaninC1(pNode0) ^ Hop_ObjFaninC0(pNode1))) ||\n           (Hop_ObjFanin1(pNode0) == Hop_ObjFanin1(pNode1) \u0026\u0026 (Hop_ObjFaninC1(pNode0) ^ Hop_ObjFaninC1(pNode1)));\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Recognizes what nodes are inputs of the EXOR.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjRecognizeExor(pObj *Hop_Obj_t, ppFan0 **Hop_Obj_t, ppFan1 **Hop_Obj_t) int32 {\n    var p0, p1 *Hop_Obj_t;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) {\n        return 0; }\n    if Hop_ObjIsExor(pObj) {\n        *ppFan0 = Hop_ObjChild0(pObj);\n        *ppFan1 = Hop_ObjChild1(pObj);\n        return 1;\n    }\n    assert(Hop_ObjIsAnd(pObj), \"Hop_ObjIsAnd(pObj)\");\n    p0 = Hop_ObjChild0(pObj);\n    p1 = Hop_ObjChild1(pObj);\n    if !Hop_IsComplement(p0) || !Hop_IsComplement(p1) {\n        return 0; }\n    p0 = Hop_Regular(p0);\n    p1 = Hop_Regular(p1);\n    if !Hop_ObjIsAnd(p0) || !Hop_ObjIsAnd(p1) {\n        return 0; }\n    if Hop_ObjFanin0(p0) != Hop_ObjFanin0(p1) || Hop_ObjFanin1(p0) != Hop_ObjFanin1(p1) {\n        return 0; }\n    if Hop_ObjFaninC0(p0) == Hop_ObjFaninC0(p1) || Hop_ObjFaninC1(p0) == Hop_ObjFaninC1(p1) {\n        return 0; }\n    *ppFan0 = Hop_ObjChild0(p0);\n    *ppFan1 = Hop_ObjChild1(p0);\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recognizes what nodes are control and data inputs of a MUX.]\n\n  Description [If the node is a MUX, returns the control variable C.\n  Assigns nodes T and E to be the then and else variables of the MUX. \n  Node C is never complemented. Nodes T and E can be complemented.\n  This function also recognizes EXOR/NEXOR gates as MUXes.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjRecognizeMux(pNode *Hop_Obj_t, ppNodeT **Hop_Obj_t, ppNodeE **Hop_Obj_t) *Hop_Obj_t {\n    var pNode0, pNode1 *Hop_Obj_t;\n    assert(!Hop_IsComplement(pNode), \"!Hop_IsComplement(pNode)\");\n    assert((Hop_ObjIsMuxType(pNode) != 0), \"Hop_ObjIsMuxType(pNode)\");\n    // get children\n    pNode0 = Hop_ObjFanin0(pNode);\n    pNode1 = Hop_ObjFanin1(pNode);\n\n    // find the control variable\n    if Hop_ObjFanin1(pNode0) == Hop_ObjFanin1(pNode1) \u0026\u0026 (Hop_ObjFaninC1(pNode0) ^ Hop_ObjFaninC1(pNode1)) {\n//        if ( Fraig_IsComplement(pNode1-\u003ep2) )\n        if Hop_ObjFaninC1(pNode0) { // pNode2-\u003ep2 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild0(pNode1));//pNode2-\u003ep1);\n            *ppNodeE = Hop_Not(Hop_ObjChild0(pNode0));//pNode1-\u003ep1);\n            return Hop_ObjChild1(pNode1);//pNode2-\u003ep2;\n        \n        } else { // pNode1-\u003ep2 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild0(pNode0));//pNode1-\u003ep1);\n            *ppNodeE = Hop_Not(Hop_ObjChild0(pNode1));//pNode2-\u003ep1);\n            return Hop_ObjChild1(pNode0);//pNode1-\u003ep2;\n        }\n    \n    } else if Hop_ObjFanin0(pNode0) == Hop_ObjFanin0(pNode1) \u0026\u0026 (Hop_ObjFaninC0(pNode0) ^ Hop_ObjFaninC0(pNode1)) {\n//        if ( Fraig_IsComplement(pNode1-\u003ep1) )\n        if Hop_ObjFaninC0(pNode0) { // pNode2-\u003ep1 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild1(pNode1));//pNode2-\u003ep2);\n            *ppNodeE = Hop_Not(Hop_ObjChild1(pNode0));//pNode1-\u003ep2);\n            return Hop_ObjChild0(pNode1);//pNode2-\u003ep1;\n        \n        } else { // pNode1-\u003ep1 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild1(pNode0));//pNode1-\u003ep2);\n            *ppNodeE = Hop_Not(Hop_ObjChild1(pNode1));//pNode2-\u003ep2);\n            return Hop_ObjChild0(pNode0);//pNode1-\u003ep1;\n        }\n    \n    } else if Hop_ObjFanin0(pNode0) == Hop_ObjFanin1(pNode1) \u0026\u0026 (Hop_ObjFaninC0(pNode0) ^ Hop_ObjFaninC1(pNode1)) {\n//        if ( Fraig_IsComplement(pNode1-\u003ep1) )\n        if Hop_ObjFaninC0(pNode0) { // pNode2-\u003ep2 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild0(pNode1));//pNode2-\u003ep1);\n            *ppNodeE = Hop_Not(Hop_ObjChild1(pNode0));//pNode1-\u003ep2);\n            return Hop_ObjChild1(pNode1);//pNode2-\u003ep2;\n        \n        } else { // pNode1-\u003ep1 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild1(pNode0));//pNode1-\u003ep2);\n            *ppNodeE = Hop_Not(Hop_ObjChild0(pNode1));//pNode2-\u003ep1);\n            return Hop_ObjChild0(pNode0);//pNode1-\u003ep1;\n        }\n    \n    } else if Hop_ObjFanin1(pNode0) == Hop_ObjFanin0(pNode1) \u0026\u0026 (Hop_ObjFaninC1(pNode0) ^ Hop_ObjFaninC0(pNode1)) {\n//        if ( Fraig_IsComplement(pNode1-\u003ep2) )\n        if Hop_ObjFaninC1(pNode0) { // pNode2-\u003ep1 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild1(pNode1));//pNode2-\u003ep2);\n            *ppNodeE = Hop_Not(Hop_ObjChild0(pNode0));//pNode1-\u003ep1);\n            return Hop_ObjChild0(pNode1);//pNode2-\u003ep1;\n        \n        } else { // pNode1-\u003ep2 is positive phase of C\n            *ppNodeT = Hop_Not(Hop_ObjChild0(pNode0));//pNode1-\u003ep1);\n            *ppNodeE = Hop_Not(Hop_ObjChild1(pNode1));//pNode2-\u003ep2);\n            return Hop_ObjChild1(pNode0);//pNode1-\u003ep2;\n        }\n    }\n    assert(false, \"0\"); // this is not MUX\n    return nil;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints Eqn formula for the AIG rooted at this node.]\n\n  Description [The formula is in terms of PIs, which should have\n  their names assigned in pObj-\u003epData fields.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjPrintEqn(pFile *os.File, pObj *Hop_Obj_t, vLevels *Vec_Vec_t, Level int32) {\n    var vSuper *Vec_Ptr_t;\n    var pFanin *Hop_Obj_t;\n    var fCompl, i int32;\n    // store the complemented attribute\n    fCompl = Hop_IsComplement(pObj);\n    pObj = Hop_Regular(pObj);\n    // constant case\n    if Hop_ObjIsConst1(pObj) {\n        fmt.Fprintf(pFile, \"%d\", !fCompl);\n        return;\n    }\n    // PI case\n    if Hop_ObjIsPi(pObj) {\n        fmt.Fprintf(pFile, \"%s%s\", fCompl? \"!\" : \"\", (char*)pObj.pData);\n        return;\n    }\n    // AND case\n    Vec_VecExpand( vLevels, Level );\n    vSuper = Vec_VecEntry(vLevels, Level);\n    Hop_ObjCollectMulti( pObj, vSuper );\n    fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \"(\"));\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Hop_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        Hop_ObjPrintEqn( pFile, Hop_NotCond(pFanin, fCompl), vLevels, Level+1 );\n        if i \u003c Vec_PtrSize(vSuper) - 1 {\n            fmt.Fprintf(pFile, \" %s \", fCompl? \"+\" : \"*\"); }\n    }\n    fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \")\"));\n    return;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints Verilog formula for the AIG rooted at this node.]\n\n  Description [The formula is in terms of PIs, which should have\n  their names assigned in pObj-\u003epData fields.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjPrintVerilog(pFile *os.File, pObj *Hop_Obj_t, vLevels *Vec_Vec_t, Level int32, fOnlyAnds int32) {\n    var vSuper *Vec_Ptr_t;\n    var pFanin, pFanin0, pFanin1, pFaninC *Hop_Obj_t;\n    var fCompl, i int32;\n    // store the complemented attribute\n    fCompl = Hop_IsComplement(pObj);\n    pObj = Hop_Regular(pObj);\n    // constant case\n    if Hop_ObjIsConst1(pObj) {\n        fmt.Fprintf(pFile, \"1\\'b%d\", !fCompl);\n        return;\n    }\n    // PI case\n    if Hop_ObjIsPi(pObj) {\n        fmt.Fprintf(pFile, \"%s%s\", fCompl? \"~\" : \"\", (char*)pObj.pData);\n        return;\n    }\n    // EXOR case\n    if !(fOnlyAnds != 0) \u0026\u0026 Hop_ObjIsExor(pObj) {\n        Vec_VecExpand( vLevels, Level );\n        vSuper = Vec_VecEntry( vLevels, Level );\n        Hop_ObjCollectMulti( pObj, vSuper );\n        fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \"(\"));\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Hop_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n            Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin, (fCompl \u0026\u0026 i==0)), vLevels, Level+1, fOnlyAnds );\n            if i \u003c Vec_PtrSize(vSuper) - 1 {\n                fmt.Fprintf(pFile, \" ^ \"); }\n        }\n        fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \")\"));\n        return;\n    }\n    // MUX case\n    if !(fOnlyAnds != 0) \u0026\u0026 (Hop_ObjIsMuxType(pObj) != 0) {\n        if Hop_ObjRecognizeExor( pObj, \u0026pFanin0, \u0026pFanin1 ) != 0 {\n            fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \"(\"));\n            Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin0, fCompl), vLevels, Level+1, fOnlyAnds );\n            fmt.Fprintf(pFile, \" ^ \");\n            Hop_ObjPrintVerilog( pFile, pFanin1, vLevels, Level+1, fOnlyAnds );\n            fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \")\"));\n        \n        } else {\n            pFaninC = Hop_ObjRecognizeMux( pObj, \u0026pFanin1, \u0026pFanin0 );\n            fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \"(\"));\n            Hop_ObjPrintVerilog( pFile, pFaninC, vLevels, Level+1, fOnlyAnds );\n            fmt.Fprintf(pFile, \" ? \");\n            Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin1, fCompl), vLevels, Level+1, fOnlyAnds );\n            fmt.Fprintf(pFile, \" : \");\n            Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin0, fCompl), vLevels, Level+1, fOnlyAnds );\n            fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \")\"));\n        }\n        return;\n    }\n    // AND case\n    Vec_VecExpand( vLevels, Level );\n    vSuper = Vec_VecEntry(vLevels, Level);\n    Hop_ObjCollectMulti( pObj, vSuper );\n    fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \"(\"));\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuper)) \u0026\u0026 (((pFanin) = (Hop_Obj_t *)Vec_PtrEntry(vSuper, i)), 1); i++  {\n        Hop_ObjPrintVerilog( pFile, Hop_NotCond(pFanin, fCompl), vLevels, Level+1, fOnlyAnds );\n        if i \u003c Vec_PtrSize(vSuper) - 1 {\n            fmt.Fprintf(pFile, \" %s \", fCompl? \"|\" : \"\u0026\"); }\n    }\n    fmt.Fprintf(pFile, \"%s\", (Level==0? \"\" : \")\"));\n    return;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints node in HAIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjPrintVerbose(pObj *Hop_Obj_t, fHaig int32) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    fmt.Printf(\"Node %p : \", pObj);\n    if Hop_ObjIsConst1(pObj) {\n        fmt.Printf(\"constant 1\");\n    } else if Hop_ObjIsPi(pObj) {\n        fmt.Printf(\"PI\");\n    } else {\n        fmt.Printf(\"AND( %p%s, %p%s )\", Hop_ObjFanin0(pObj), (Hop_ObjFaninC0(pObj)? \"\\'\" : \" \"), Hop_ObjFanin1(pObj), (Hop_ObjFaninC1(pObj)? \"\\'\" : \" \")); }\n    fmt.Printf(\" (refs = %3d)\", Hop_ObjRefs(pObj));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints node in HAIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManPrintVerbose(p *Hop_Man_t, fHaig int32) {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Hop_Obj_t;\n    var i int32;\n    fmt.Printf(\"PIs: \");\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        fmt.Printf(\" %p\", pObj);\n    }\n    fmt.Printf(\"\\n\");\n    vNodes = Hop_ManDfs( p );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Hop_ObjPrintVerbose( pObj, fHaig );\nfmt.Printf(\"\\n\");\n    }\n    fmt.Printf(\"\\n\");\n    Vec_PtrFree( vNodes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the AIG into the BLIF file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManDumpBlif(p *Hop_Man_t, pFileName string) {\n    var pFile *os.File;\n    var vNodes *Vec_Ptr_t;\n    var pObj *Hop_Obj_t;\n    var pConst1 *Hop_Obj_t = nil;\n    var i, nDigits, Counter int32;\n    if Hop_ManPoNum(p) == 0 {\n        fmt.Printf(\"Hop_ManDumpBlif(): AIG manager does not have POs.\\n\");\n        return;\n    }\n    // collect nodes in the DFS order\n    vNodes = Hop_ManDfs( p );\n    // assign IDs to objects\n    Hop_ManConst1(p).pData = (void *)(ABC_PTRUINT_T)Counter++;\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        pObj.pData = (void *)(ABC_PTRUINT_T)Counter++;\n    }\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        pObj.pData = (void *)(ABC_PTRUINT_T)Counter++;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.pData = (void *)(ABC_PTRUINT_T)Counter++;\n    }\n    nDigits = Hop_Base10Log( Counter );\n    // write the file\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fmt.Fprintf(pFile, \"# BLIF file written by procedure Hop_ManDumpBlif() in ABC\\n\");\n    fmt.Fprintf(pFile, \"# http://www.eecs.berkeley.edu/~alanmi/abc/\\n\");\n    fmt.Fprintf(pFile, \".model test\\n\");\n    // write PIs\n    fmt.Fprintf(pFile, \".inputs\");\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" n%0*d\", nDigits, int32((ABC_PTRUINT_T))pObj.pData);\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    // write POs\n    fmt.Fprintf(pFile, \".outputs\");\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        fmt.Fprintf(pFile, \" n%0*d\", nDigits, int32((ABC_PTRUINT_T))pObj.pData);\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    // write nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        fmt.Fprintf(pFile, \".names n%0*d n%0*d n%0*d\\n\", nDigits, int32((ABC_PTRUINT_T))Hop_ObjFanin0(pObj).pData, nDigits, int32((ABC_PTRUINT_T))Hop_ObjFanin1(pObj).pData, nDigits, int32((ABC_PTRUINT_T))pObj.pData);\n        fmt.Fprintf(pFile, \"%d%d 1\\n\", !Hop_ObjFaninC0(pObj), !Hop_ObjFaninC1(pObj));\n    }\n    // write POs\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        fmt.Fprintf(pFile, \".names n%0*d n%0*d\\n\", nDigits, int32((ABC_PTRUINT_T))Hop_ObjFanin0(pObj).pData, nDigits, int32((ABC_PTRUINT_T))pObj.pData);\n        fmt.Fprintf(pFile, \"%d 1\\n\", !Hop_ObjFaninC0(pObj));\n        if Hop_ObjIsConst1(Hop_ObjFanin0(pObj)) {\n            pConst1 = Hop_ManConst1(p); }\n    }\n    if pConst1 != nil {\n        fmt.Fprintf(pFile, \".names n%0*d\\n 1\\n\", nDigits, int32((ABC_PTRUINT_T))pConst1.pData); }\n    fmt.Fprintf(pFile, \".end\\n\\n\");\n    _ = (pFile).Close();\n    Vec_PtrFree( vNodes );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

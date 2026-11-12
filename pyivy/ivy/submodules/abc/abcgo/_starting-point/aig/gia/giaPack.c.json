@@ -1,0 +1,235 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaPack.c",
+  "SHA256": "d74b9255222f815e8c8464677c0c6fbba73ac60afbc07d4b4130f5ac5914ed9a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 9,
+        "ByteOffset": 1761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsLut(p, Id) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 67,
+        "Column": 13,
+        "ByteOffset": 2332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjIsLut(p, iFan) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 5,
+        "ByteOffset": 2553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntCap(vOrder) == 16 || Vec_IntSize(vOrder) == Vec_IntCap(vOrder) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 115,
+        "Column": 61,
+        "ByteOffset": 4486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 141,
+        "Column": 9,
+        "ByteOffset": 5524
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nSize \u003c= 32 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 9,
+        "ByteOffset": 5857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nSize \u003c 2 || Delays[0] \u003e= Delays[nSize-1] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 148,
+        "Column": 9,
+        "ByteOffset": 5918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Delays[0] \u003e= 0 \u0026\u0026 Delays[nSize-1] \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 169,
+        "Column": 5,
+        "ByteOffset": 6809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSum(vBSize) == Vec_IntSize(vOrder) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 7440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntCap(vPacking) == 16 || Vec_IntSize(vPacking) == Vec_IntCap(vPacking) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 185,
+        "Column": 9,
+        "ByteOffset": 7842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vPacking, Start) == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 7997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntCountEntry(vPacking, -1) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 8260
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Global delay = %d.\\n\", DelayMax );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManLutCollect2",
+      "Start": 1278,
+      "End": 2360,
+      "BodyStart": 1326,
+      "Original": "Vec_Int_t * Gia_ManLutCollect2( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    Vec_Int_t * vOrder;\n    int i, k, Id, iFan;\n    vOrder = Vec_IntAlloc( Gia_ManLutNum(p) );\n    Gia_ManIncrementTravId( p );\n    Gia_ManForEachCoDriver( p, pObj, i )\n    {\n        if ( !Gia_ObjIsAnd(pObj) )\n            continue;\n        Id = Gia_ObjId( p, pObj );\n        assert( Gia_ObjIsLut(p, Id) );\n        if ( Gia_ObjIsTravIdCurrentId(p, Id) )\n            continue;\n        Gia_ObjSetTravIdCurrentId(p, Id);\n        Vec_IntPush( vOrder, Id );\n    }\n    Vec_IntForEachEntry( vOrder, Id, i )\n    {\n        Gia_LutForEachFanin( p, Id, iFan, k )\n        {\n            if ( !Gia_ObjIsAnd(Gia_ManObj(p, iFan)) )\n                continue;\n            assert( Gia_ObjIsLut(p, iFan) );\n            if ( Gia_ObjIsTravIdCurrentId(p, iFan) )\n                continue;\n            Gia_ObjSetTravIdCurrentId(p, iFan);\n            Vec_IntPush( vOrder, iFan );\n        }\n    }\n    assert( Vec_IntCap(vOrder) == 16 || Vec_IntSize(vOrder) == Vec_IntCap(vOrder) );\n    Vec_IntReverseOrder( vOrder );\n    return vOrder;\n}",
+      "Draft": "func Gia_ManLutCollect2(p *Gia_Man_t) *Vec_Int_t {\n    var pObj *Gia_Obj_t;\n    var vOrder *Vec_Int_t;\n    var i, k, Id, iFan int32;\n    vOrder = Vec_IntAlloc( Gia_ManLutNum(p) );\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Gia_ManForEachCoDriver\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ObjFanin0(Gia_ManCo(p, i))); i++  {\n        if !Gia_ObjIsAnd(pObj) {\n            continue; }\n        Id = Gia_ObjId( p, pObj );\n        assert(Gia_ObjIsLut(p, Id), \"Gia_ObjIsLut(p, Id)\");\n        if Gia_ObjIsTravIdCurrentId(p, Id) {\n            continue; }\n        Gia_ObjSetTravIdCurrentId(p, Id);\n        Vec_IntPush( vOrder, Id );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOrder)) \u0026\u0026 (((Id) = Vec_IntEntry(vOrder, i)), 1); i++  {\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,Id) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,Id)[k]),1); k++  {\n            if !Gia_ObjIsAnd(Gia_ManObj(p, iFan)) {\n                continue; }\n            assert(Gia_ObjIsLut(p, iFan), \"Gia_ObjIsLut(p, iFan)\");\n            if Gia_ObjIsTravIdCurrentId(p, iFan) {\n                continue; }\n            Gia_ObjSetTravIdCurrentId(p, iFan);\n            Vec_IntPush( vOrder, iFan );\n        }\n    }\n    assert(Vec_IntCap(vOrder) == 16 || Vec_IntSize(vOrder) == Vec_IntCap(vOrder), \"Vec_IntCap(vOrder) == 16 || Vec_IntSize(vOrder) == Vec_IntCap(vOrder)\");\n    Vec_IntReverseOrder( vOrder );\n    return vOrder;\n}"
+    },
+    {
+      "Name": "Gia_ManLutCollect",
+      "Start": 2361,
+      "End": 3498,
+      "BodyStart": 2408,
+      "Original": "Vec_Int_t * Gia_ManLutCollect( Gia_Man_t * p )\n{\n    Vec_Int_t * vLuts, * vDist, * vOrder;\n    int i, k, Id, iFan, * pPerm;\n    // collect LUTs\n    vLuts = Vec_IntAlloc( Gia_ManAndNum(p) );\n    Gia_ManForEachLut( p, Id )\n        Vec_IntPush( vLuts, Id );\n    // propagate distance\n    vDist = Vec_IntStart( Gia_ManObjNum(p) );\n    Gia_ManForEachCoDriverId( p, Id, i )\n        Vec_IntWriteEntry( vDist, Id, 1 );\n    Vec_IntForEachEntryReverse( vLuts, Id, i )\n    {\n        int Dist = 1 + Vec_IntEntry(vDist, Id);\n        Gia_LutForEachFanin( p, Id, iFan, k )\n            Vec_IntUpdateEntry( vDist, iFan, Dist );\n    }\n    // sort LUTs by distance\n    k = 0;\n    Vec_IntForEachEntry( vLuts, Id, i )\n        Vec_IntWriteEntry( vDist, k++, -Vec_IntEntry(vDist, Id) );\n    Vec_IntShrink( vDist, k );\n    pPerm = Abc_MergeSortCost( Vec_IntArray(vDist), Vec_IntSize(vDist) );\n    // collect\n    vOrder = Vec_IntAlloc( Vec_IntSize(vLuts) );\n    for ( i = 0; i \u003c Vec_IntSize(vLuts); i++ )\n        Vec_IntPush( vOrder, Vec_IntEntry(vLuts, pPerm[i]) );\n    Vec_IntFree( vDist );\n    Vec_IntFree( vLuts );\n    ABC_FREE( pPerm );\n    return vOrder;\n}",
+      "Draft": "func Gia_ManLutCollect(p *Gia_Man_t) *Vec_Int_t {\n    var vLuts, vDist, vOrder *Vec_Int_t;\n    var i int32;\n    var k int32;\n    var Id int32;\n    var iFan int32;\n    var pPerm *int32;\n    // collect LUTs\n    vLuts = Vec_IntAlloc( Gia_ManAndNum(p) );\n    // inlining of macro Gia_ManForEachLut\n    for  Id = 1; Id \u003c Gia_ManObjNum(p); Id++  { if !Gia_ObjIsLut(p, Id) {} else {\n        Vec_IntPush( vLuts, Id ); }\n    }\n    // propagate distance\n    vDist = Vec_IntStart( Gia_ManObjNum(p) );\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (((Id) = Gia_ObjFaninId0p(p, Gia_ManCo(p, i))), 1); i++  {\n        Vec_IntWriteEntry( vDist, Id, 1 );\n    }\n    // inlining of macro Vec_IntForEachEntryReverse\n    for  i = Vec_IntSize(vLuts) - 1; (i \u003e= 0) \u0026\u0026 (((Id) = Vec_IntEntry(vLuts, i)), 1); i--  {\n        var Dist int32  = 1 + Vec_IntEntry(vDist, Id);\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,Id) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,Id)[k]),1); k++  {\n            Vec_IntUpdateEntry( vDist, iFan, Dist );\n        }\n    }\n    // sort LUTs by distance\n    k = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLuts)) \u0026\u0026 (((Id) = Vec_IntEntry(vLuts, i)), 1); i++  {\n        Vec_IntWriteEntry( vDist, k++, -Vec_IntEntry(vDist, Id) );\n    }\n    Vec_IntShrink( vDist, k );\n    pPerm = Abc_MergeSortCost( Vec_IntArray(vDist), Vec_IntSize(vDist) );\n    // collect\n    vOrder = Vec_IntAlloc( Vec_IntSize(vLuts) );\n    for  i = 0; i \u003c Vec_IntSize(vLuts); i++  {\n        Vec_IntPush( vOrder, Vec_IntEntry(vLuts, pPerm[i]) );\n    }\n    Vec_IntFree( vDist );\n    Vec_IntFree( vLuts );\n    // inlining of macro ABC_FREE\n    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);\n    return vOrder;\n}"
+    },
+    {
+      "Name": "Gia_ManLutPacking",
+      "Start": 3756,
+      "End": 6820,
+      "BodyStart": 3856,
+      "Original": "void Gia_ManLutPacking( Gia_Man_t * p, int nBlockSize, int DelayRoute, int DelayDir, int fVerbose )\n{\n    int Delays[32], Perm[32];\n    Vec_Int_t * vPacking, * vStarts;\n    Vec_Int_t * vOrder = Gia_ManLutCollect( p );\n    Vec_Int_t * vDelay = Vec_IntStart( Gia_ManObjNum(p) );\n    Vec_Int_t * vBlock = Vec_IntStart( Gia_ManObjNum(p) );\n    Vec_Int_t * vBSize = Vec_IntAlloc( 2 * Vec_IntSize(vOrder) / nBlockSize );\n    int i, k, Id, iFan, nSize, iBlock, Delay, DelayMax = 0;\n    // create blocks\n    Vec_IntForEachEntry( vOrder, Id, i )\n    {\n        nSize = Gia_ObjLutSize( p, Id );\n        assert( nSize \u003c= 32 );\n        Gia_LutForEachFanin( p, Id, iFan, k )\n        {\n            Delays[k] = Vec_IntEntry(vDelay, iFan);\n            Perm[k] = iFan;\n        }\n        Vec_IntSelectSortCost2Reverse( Perm, nSize, Delays );\n        assert( nSize \u003c 2 || Delays[0] \u003e= Delays[nSize-1] );\n        assert( Delays[0] \u003e= 0 \u0026\u0026 Delays[nSize-1] \u003e= 0 );\n        // check if we can reduce delay by adding it to the same bin as the latest one\n        iBlock = Vec_IntEntry( vBlock, Perm[0] );\n        if ( Delays[0] \u003e 0 \u0026\u0026 Delays[0] \u003e Delays[1] \u0026\u0026 Vec_IntEntry(vBSize, iBlock) \u003c nBlockSize )\n        {\n            Delay = Delays[0] + DelayDir;\n            Vec_IntWriteEntry( vBlock, Id, iBlock );\n            Vec_IntAddToEntry( vBSize, iBlock, 1 );\n        }\n        else // clean new block\n        {\n            Delay = Delays[0] + DelayRoute;\n            Vec_IntWriteEntry( vBlock, Id, Vec_IntSize(vBSize) );\n            Vec_IntPush( vBSize, 1 );\n        }\n        // calculate delay\n        for ( k = 1; k \u003c nSize; k++ )\n            Delay = Abc_MaxInt( Delay, Delays[k] + DelayRoute );\n        Vec_IntWriteEntry( vDelay, Id, Delay );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    assert( Vec_IntSum(vBSize) == Vec_IntSize(vOrder) );\n    // create packing info\n    vPacking = Vec_IntAlloc( Vec_IntSize(vBSize) + Vec_IntSize(vOrder) + 1 );\n    Vec_IntPush( vPacking, Vec_IntSize(vBSize) );\n    // create starting places for each block\n    vStarts = Vec_IntAlloc( Vec_IntSize(vBSize) );\n    Vec_IntForEachEntry( vBSize, nSize, i )\n    {\n        Vec_IntPush( vPacking, nSize );\n        Vec_IntPush( vStarts, Vec_IntSize(vPacking) );\n        Vec_IntFillExtra( vPacking, Vec_IntSize(vPacking) + nSize, -1 );\n    }\n    assert( Vec_IntCap(vPacking) == 16 || Vec_IntSize(vPacking) == Vec_IntCap(vPacking) );\n    // collect LUTs from the block\n    Vec_IntForEachEntryReverse( vOrder, Id, i )\n    {\n        int Block = Vec_IntEntry( vBlock, Id );\n        int Start = Vec_IntEntry( vStarts, Block );\n        assert( Vec_IntEntry(vPacking, Start) == -1 );\n        Vec_IntWriteEntry( vPacking, Start, Id );\n        Vec_IntAddToEntry( vStarts, Block, 1 );\n    }\n    assert( Vec_IntCountEntry(vPacking, -1) == 0 );\n    // cleanup\n    Vec_IntFree( vOrder );\n    Vec_IntFree( vDelay );\n    Vec_IntFree( vBlock );\n    Vec_IntFree( vBSize );\n    Vec_IntFree( vStarts );\n    Vec_IntFreeP( \u0026p-\u003evPacking );\n    p-\u003evPacking = vPacking;\n    printf( \"Global delay = %d.\\n\", DelayMax );\n}",
+      "Draft": "func Gia_ManLutPacking(p *Gia_Man_t, nBlockSize int32, DelayRoute int32, DelayDir int32, fVerbose int32) {\n    var Delays, Perm [32]int32;\n    var vPacking, vStarts *Vec_Int_t;\n    var vOrder *Vec_Int_t  = Gia_ManLutCollect( p );\n    var vDelay *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vBlock *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vBSize *Vec_Int_t  = Vec_IntAlloc( 2 * Vec_IntSize(vOrder) / nBlockSize );\n    var i, k, Id, iFan, nSize, iBlock, Delay, DelayMax int32;\n    // create blocks\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOrder)) \u0026\u0026 (((Id) = Vec_IntEntry(vOrder, i)), 1); i++  {\n        nSize = Gia_ObjLutSize( p, Id );\n        assert(nSize \u003c= 32, \"nSize \u003c= 32\");\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,Id) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,Id)[k]),1); k++  {\n            Delays[k] = Vec_IntEntry(vDelay, iFan);\n            Perm[k] = iFan;\n        }\n        Vec_IntSelectSortCost2Reverse( Perm, nSize, Delays );\n        assert(nSize \u003c 2 || Delays[0] \u003e= Delays[nSize-1], \"nSize \u003c 2 || Delays[0] \u003e= Delays[nSize-1]\");\n        assert(Delays[0] \u003e= 0 \u0026\u0026 Delays[nSize-1] \u003e= 0, \"Delays[0] \u003e= 0 \u0026\u0026 Delays[nSize-1] \u003e= 0\");\n        // check if we can reduce delay by adding it to the same bin as the latest one\n        iBlock = Vec_IntEntry( vBlock, Perm[0] );\n        if Delays[0] \u003e 0 \u0026\u0026 Delays[0] \u003e Delays[1] \u0026\u0026 Vec_IntEntry(vBSize, iBlock) \u003c nBlockSize {\n            Delay = Delays[0] + DelayDir;\n            Vec_IntWriteEntry( vBlock, Id, iBlock );\n            Vec_IntAddToEntry( vBSize, iBlock, 1 );\n        \n        } else { // clean new block\n        \n            Delay = Delays[0] + DelayRoute;\n            Vec_IntWriteEntry( vBlock, Id, Vec_IntSize(vBSize) );\n            Vec_IntPush( vBSize, 1 );\n        }\n        // calculate delay\n        for  k = 1; k \u003c nSize; k++  {\n            Delay = Abc_MaxInt( Delay, Delays[k] + DelayRoute );\n        }\n        Vec_IntWriteEntry( vDelay, Id, Delay );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    assert(Vec_IntSum(vBSize) == Vec_IntSize(vOrder), \"Vec_IntSum(vBSize) == Vec_IntSize(vOrder)\");\n    // create packing info\n    vPacking = Vec_IntAlloc( Vec_IntSize(vBSize) + Vec_IntSize(vOrder) + 1 );\n    Vec_IntPush( vPacking, Vec_IntSize(vBSize) );\n    // create starting places for each block\n    vStarts = Vec_IntAlloc( Vec_IntSize(vBSize) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vBSize)) \u0026\u0026 (((nSize) = Vec_IntEntry(vBSize, i)), 1); i++  {\n        Vec_IntPush( vPacking, nSize );\n        Vec_IntPush( vStarts, Vec_IntSize(vPacking) );\n        Vec_IntFillExtra( vPacking, Vec_IntSize(vPacking) + nSize, -1 );\n    }\n    assert(Vec_IntCap(vPacking) == 16 || Vec_IntSize(vPacking) == Vec_IntCap(vPacking), \"Vec_IntCap(vPacking) == 16 || Vec_IntSize(vPacking) == Vec_IntCap(vPacking)\");\n    // collect LUTs from the block\n    // inlining of macro Vec_IntForEachEntryReverse\n    for  i = Vec_IntSize(vOrder) - 1; (i \u003e= 0) \u0026\u0026 (((Id) = Vec_IntEntry(vOrder, i)), 1); i--  {\n        var Block int32  = Vec_IntEntry( vBlock, Id );\n        var Start int32  = Vec_IntEntry( vStarts, Block );\n        assert(Vec_IntEntry(vPacking, Start) == -1, \"Vec_IntEntry(vPacking, Start) == -1\");\n        Vec_IntWriteEntry( vPacking, Start, Id );\n        Vec_IntAddToEntry( vStarts, Block, 1 );\n    }\n    assert(Vec_IntCountEntry(vPacking, -1) == 0, \"Vec_IntCountEntry(vPacking, -1) == 0\");\n    // cleanup\n    Vec_IntFree( vOrder );\n    Vec_IntFree( vDelay );\n    Vec_IntFree( vBlock );\n    Vec_IntFree( vBSize );\n    Vec_IntFree( vStarts );\n    Vec_IntFreeP( \u0026p.vPacking );\n    p.vPacking = vPacking;\n    fmt.Printf(\"Global delay = %d.\\n\", DelayMax);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaPack.c::pointer-cast::4389",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3459,
+      "End": 3459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaPack.c::Gia_ManLutCollect2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManLutCollect2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1278,
+      "End": 2360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaPack.c::ternary::Gia_ManLutCollect",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManLutCollect",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2361,
+      "End": 3498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaPack.c::Gia_ManLutCollect",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManLutCollect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2361,
+      "End": 3498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaPack.c::Gia_ManLutPacking",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManLutPacking",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3756,
+      "End": 6820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaPack.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7067
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaPack.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [LUT packing.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaPack.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Collects LUT nodes in the increasing order of distance from COs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManLutCollect2(p *Gia_Man_t) *Vec_Int_t {\n    var pObj *Gia_Obj_t;\n    var vOrder *Vec_Int_t;\n    var i, k, Id, iFan int32;\n    vOrder = Vec_IntAlloc( Gia_ManLutNum(p) );\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Gia_ManForEachCoDriver\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ObjFanin0(Gia_ManCo(p, i))); i++  {\n        if !Gia_ObjIsAnd(pObj) {\n            continue; }\n        Id = Gia_ObjId( p, pObj );\n        assert(Gia_ObjIsLut(p, Id), \"Gia_ObjIsLut(p, Id)\");\n        if Gia_ObjIsTravIdCurrentId(p, Id) {\n            continue; }\n        Gia_ObjSetTravIdCurrentId(p, Id);\n        Vec_IntPush( vOrder, Id );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOrder)) \u0026\u0026 (((Id) = Vec_IntEntry(vOrder, i)), 1); i++  {\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,Id) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,Id)[k]),1); k++  {\n            if !Gia_ObjIsAnd(Gia_ManObj(p, iFan)) {\n                continue; }\n            assert(Gia_ObjIsLut(p, iFan), \"Gia_ObjIsLut(p, iFan)\");\n            if Gia_ObjIsTravIdCurrentId(p, iFan) {\n                continue; }\n            Gia_ObjSetTravIdCurrentId(p, iFan);\n            Vec_IntPush( vOrder, iFan );\n        }\n    }\n    assert(Vec_IntCap(vOrder) == 16 || Vec_IntSize(vOrder) == Vec_IntCap(vOrder), \"Vec_IntCap(vOrder) == 16 || Vec_IntSize(vOrder) == Vec_IntCap(vOrder)\");\n    Vec_IntReverseOrder( vOrder );\n    return vOrder;\n}\nfunc Gia_ManLutCollect(p *Gia_Man_t) *Vec_Int_t {\n    var vLuts, vDist, vOrder *Vec_Int_t;\n    var i int32;\n    var k int32;\n    var Id int32;\n    var iFan int32;\n    var pPerm *int32;\n    // collect LUTs\n    vLuts = Vec_IntAlloc( Gia_ManAndNum(p) );\n    // inlining of macro Gia_ManForEachLut\n    for  Id = 1; Id \u003c Gia_ManObjNum(p); Id++  { if !Gia_ObjIsLut(p, Id) {} else {\n        Vec_IntPush( vLuts, Id ); }\n    }\n    // propagate distance\n    vDist = Vec_IntStart( Gia_ManObjNum(p) );\n    // inlining of macro Gia_ManForEachCoDriverId\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 (((Id) = Gia_ObjFaninId0p(p, Gia_ManCo(p, i))), 1); i++  {\n        Vec_IntWriteEntry( vDist, Id, 1 );\n    }\n    // inlining of macro Vec_IntForEachEntryReverse\n    for  i = Vec_IntSize(vLuts) - 1; (i \u003e= 0) \u0026\u0026 (((Id) = Vec_IntEntry(vLuts, i)), 1); i--  {\n        var Dist int32  = 1 + Vec_IntEntry(vDist, Id);\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,Id) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,Id)[k]),1); k++  {\n            Vec_IntUpdateEntry( vDist, iFan, Dist );\n        }\n    }\n    // sort LUTs by distance\n    k = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLuts)) \u0026\u0026 (((Id) = Vec_IntEntry(vLuts, i)), 1); i++  {\n        Vec_IntWriteEntry( vDist, k++, -Vec_IntEntry(vDist, Id) );\n    }\n    Vec_IntShrink( vDist, k );\n    pPerm = Abc_MergeSortCost( Vec_IntArray(vDist), Vec_IntSize(vDist) );\n    // collect\n    vOrder = Vec_IntAlloc( Vec_IntSize(vLuts) );\n    for  i = 0; i \u003c Vec_IntSize(vLuts); i++  {\n        Vec_IntPush( vOrder, Vec_IntEntry(vLuts, pPerm[i]) );\n    }\n    Vec_IntFree( vDist );\n    Vec_IntFree( vLuts );\n    // inlining of macro ABC_FREE\n    ((pPerm) ? (free((char *) (pPerm)), (pPerm) = 0) : 0);\n    return vOrder;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [LUT packing algorithm.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManLutPacking(p *Gia_Man_t, nBlockSize int32, DelayRoute int32, DelayDir int32, fVerbose int32) {\n    var Delays, Perm [32]int32;\n    var vPacking, vStarts *Vec_Int_t;\n    var vOrder *Vec_Int_t  = Gia_ManLutCollect( p );\n    var vDelay *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vBlock *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    var vBSize *Vec_Int_t  = Vec_IntAlloc( 2 * Vec_IntSize(vOrder) / nBlockSize );\n    var i, k, Id, iFan, nSize, iBlock, Delay, DelayMax int32;\n    // create blocks\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOrder)) \u0026\u0026 (((Id) = Vec_IntEntry(vOrder, i)), 1); i++  {\n        nSize = Gia_ObjLutSize( p, Id );\n        assert(nSize \u003c= 32, \"nSize \u003c= 32\");\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,Id) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,Id)[k]),1); k++  {\n            Delays[k] = Vec_IntEntry(vDelay, iFan);\n            Perm[k] = iFan;\n        }\n        Vec_IntSelectSortCost2Reverse( Perm, nSize, Delays );\n        assert(nSize \u003c 2 || Delays[0] \u003e= Delays[nSize-1], \"nSize \u003c 2 || Delays[0] \u003e= Delays[nSize-1]\");\n        assert(Delays[0] \u003e= 0 \u0026\u0026 Delays[nSize-1] \u003e= 0, \"Delays[0] \u003e= 0 \u0026\u0026 Delays[nSize-1] \u003e= 0\");\n        // check if we can reduce delay by adding it to the same bin as the latest one\n        iBlock = Vec_IntEntry( vBlock, Perm[0] );\n        if Delays[0] \u003e 0 \u0026\u0026 Delays[0] \u003e Delays[1] \u0026\u0026 Vec_IntEntry(vBSize, iBlock) \u003c nBlockSize {\n            Delay = Delays[0] + DelayDir;\n            Vec_IntWriteEntry( vBlock, Id, iBlock );\n            Vec_IntAddToEntry( vBSize, iBlock, 1 );\n        \n        } else { // clean new block\n        \n            Delay = Delays[0] + DelayRoute;\n            Vec_IntWriteEntry( vBlock, Id, Vec_IntSize(vBSize) );\n            Vec_IntPush( vBSize, 1 );\n        }\n        // calculate delay\n        for  k = 1; k \u003c nSize; k++  {\n            Delay = Abc_MaxInt( Delay, Delays[k] + DelayRoute );\n        }\n        Vec_IntWriteEntry( vDelay, Id, Delay );\n        DelayMax = Abc_MaxInt( DelayMax, Delay );\n    }\n    assert(Vec_IntSum(vBSize) == Vec_IntSize(vOrder), \"Vec_IntSum(vBSize) == Vec_IntSize(vOrder)\");\n    // create packing info\n    vPacking = Vec_IntAlloc( Vec_IntSize(vBSize) + Vec_IntSize(vOrder) + 1 );\n    Vec_IntPush( vPacking, Vec_IntSize(vBSize) );\n    // create starting places for each block\n    vStarts = Vec_IntAlloc( Vec_IntSize(vBSize) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vBSize)) \u0026\u0026 (((nSize) = Vec_IntEntry(vBSize, i)), 1); i++  {\n        Vec_IntPush( vPacking, nSize );\n        Vec_IntPush( vStarts, Vec_IntSize(vPacking) );\n        Vec_IntFillExtra( vPacking, Vec_IntSize(vPacking) + nSize, -1 );\n    }\n    assert(Vec_IntCap(vPacking) == 16 || Vec_IntSize(vPacking) == Vec_IntCap(vPacking), \"Vec_IntCap(vPacking) == 16 || Vec_IntSize(vPacking) == Vec_IntCap(vPacking)\");\n    // collect LUTs from the block\n    // inlining of macro Vec_IntForEachEntryReverse\n    for  i = Vec_IntSize(vOrder) - 1; (i \u003e= 0) \u0026\u0026 (((Id) = Vec_IntEntry(vOrder, i)), 1); i--  {\n        var Block int32  = Vec_IntEntry( vBlock, Id );\n        var Start int32  = Vec_IntEntry( vStarts, Block );\n        assert(Vec_IntEntry(vPacking, Start) == -1, \"Vec_IntEntry(vPacking, Start) == -1\");\n        Vec_IntWriteEntry( vPacking, Start, Id );\n        Vec_IntAddToEntry( vStarts, Block, 1 );\n    }\n    assert(Vec_IntCountEntry(vPacking, -1) == 0, \"Vec_IntCountEntry(vPacking, -1) == 0\");\n    // cleanup\n    Vec_IntFree( vOrder );\n    Vec_IntFree( vDelay );\n    Vec_IntFree( vBlock );\n    Vec_IntFree( vBSize );\n    Vec_IntFree( vStarts );\n    Vec_IntFreeP( \u0026p.vPacking );\n    p.vPacking = vPacking;\n    fmt.Printf(\"Global delay = %d.\\n\", DelayMax);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

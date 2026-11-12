@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdInt.h",
+  "SHA256": "fcd22c64c754eb5b4cc0d0b28362e7a28a459301bf65eb011743a3e72cdc79be",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdInt.h::struct::Sbd_Str_t::// input count\n    int               VarIns[SBD_DIV_MAX];",
+      "Category": "struct-field-review",
+      "Symbol": "Sbd_Str_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2063,
+      "End": 2134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdInt.h::struct::Sbd_Str_t",
+      "Category": "struct-review",
+      "Symbol": "Sbd_Str_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1918,
+      "End": 2217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5741
+    }
+  ],
+  "Draft": "package sbd\n\n/**CFile****************************************************************\n\n  FileName    [rsbInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: rsbInt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n//#include \"sat/bsat/satSolver.h\"\n//#include \"misc/util/utilNam.h\"\n//#include \"misc/util/utilTruth.h\"\n//#include \"map/scl/sclLib.h\"\n//#include \"map/scl/sclCon.h\"\n//#include \"bool/kit/kit.h\"\n//#include \"misc/st/st.h\"\n//#include \"map/mio/mio.h\"\n//#include \"base/abc/abc.h\"\n//#include \"sbd.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\nconst SBD_SAT_UNDEC = 0x1234567812345678\nconst SBD_SAT_SAT =   0x8765432187654321\n\nconst SBD_LUTS_MAX =    2\nconst SBD_SIZE_MAX =    4\nconst SBD_DIV_MAX =    10\nconst SBD_FVAR_MAX =  100\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Sbd_Sto_t = Sbd_Sto_t_;\ntype Sbd_Srv_t = Sbd_Srv_t_; \n\n   \ntype Sbd_Str_t struct {\n    fLut               int32;                 // LUT or SEL\n    nVarIns               int32;              // input count\n    VarIns [SBD_DIV_MAX]int32;  // input vars\n    Res              word;                  // result of solving\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== sbdCut.c ==========================================================*/\n// extern Sbd_Sto_t *  Sbd_StoAlloc( Gia_Man_t * pGia, Vec_Int_t * vMirrors, int nLutSize, int nCutSize, int nCutNum, int fCutMin, int fVerbose );\n\n// extern void         Sbd_StoFree( Sbd_Sto_t * p );\n\n// extern int          Sbd_StoObjRefs( Sbd_Sto_t * p, int iObj );\n\n// extern void         Sbd_StoRefObj( Sbd_Sto_t * p, int iObj, int iMirror );\n\n// extern void         Sbd_StoDerefObj( Sbd_Sto_t * p, int iObj );\n\n// extern void         Sbd_StoComputeCutsConst0( Sbd_Sto_t * p, int iObj );\n\n// extern void         Sbd_StoComputeCutsObj( Sbd_Sto_t * p, int iObj, int Delay, int Level );\n\n// extern void         Sbd_StoComputeCutsCi( Sbd_Sto_t * p, int iObj, int Delay, int Level );\n\n// extern int          Sbd_StoComputeCutsNode( Sbd_Sto_t * p, int iObj );\n\n// extern void         Sbd_StoSaveBestDelayCut( Sbd_Sto_t * p, int iObj, int * pCut );\n\n// extern int          Sbd_StoObjBestCut( Sbd_Sto_t * p, int iObj, int nSize, int * pLeaves );\n\n/*=== sbdCut2.c ==========================================================*/\n// extern Sbd_Srv_t *  Sbd_ManCutServerStart( Gia_Man_t * pGia, Vec_Int_t * vMirrors, \n//                                    Vec_Int_t * vLutLevs, Vec_Int_t * vLevs, Vec_Int_t * vRefs, \n//                                    int nLutSize, int nCutSize, int nCutNum, int fVerbose );\n\n// extern void         Sbd_ManCutServerStop( Sbd_Srv_t * p );\n\n// extern int          Sbd_ManCutServerFirst( Sbd_Srv_t * p, int iObj, int * pLeaves );\n\n/*=== sbdWin.c ==========================================================*/\n// extern word         Sbd_ManSolve( sat_solver * pSat, int PivotVar, int FreeVar, Vec_Int_t * vDivSet, Vec_Int_t * vDivVars, Vec_Int_t * vDivValues, Vec_Int_t * vTemp );\n\n// extern sat_solver * Sbd_ManSatSolver( sat_solver * pSat, Gia_Man_t * p, Vec_Int_t * vMirrors, int Pivot, Vec_Int_t * vWinObjs, Vec_Int_t * vObj2Var, Vec_Int_t * vTfo, Vec_Int_t * vRoots, int fQbf );\n\n// extern int          Sbd_ManCollectConstants( sat_solver * pSat, int nCareMints[2], int PivotVar, word * pVarSims[], Vec_Int_t * vInds );\n\n// extern int          Sbd_ManCollectConstantsNew( sat_solver * pSat, Vec_Int_t * vDivVars, int nConsts, int PivotVar, word * pOnset, word * pOffset );\n\n/*=== sbdPath.c ==========================================================*/\n// extern Vec_Bit_t *  Sbc_ManCriticalPath( Gia_Man_t * p );\n\n/*=== sbdQbf.c ==========================================================*/\n// extern int          Sbd_ProblemSolve( \n//                                        Gia_Man_t * p, Vec_Int_t * vMirrors, \n//                                        int Pivot, Vec_Int_t * vWinObjs, Vec_Int_t * vObj2Var, \n//                                        Vec_Int_t * vTfo, Vec_Int_t * vRoots, \n//                                        Vec_Int_t * vDivSet, int nStrs, Sbd_Str_t * pStr0 \n//                                     );\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

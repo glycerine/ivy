@@ -1,0 +1,504 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c",
+  "SHA256": "b19e0520a2e937769226cee916aa3479d21542cfd2710568bceef155e62512a3",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pObj, 0, sizeof(Amap_Obj_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nLevelMax \u003c 4094 ); // 2^12-2"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 141,
+        "Column": 5,
+        "ByteOffset": 4031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_Lit2Var(pObj.Fan[0]) != Abc_Lit2Var(pObj.Fan[1]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 146,
+        "Column": 5,
+        "ByteOffset": 4344
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nLevelMax \u003c 4094 ); // 2^12-2"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 5285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nLevelMax \u003c 4094 ); // 2^12-2"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 201,
+        "Column": 5,
+        "ByteOffset": 6466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nLevelMax \u003c 4094 ); // 2^12-2"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 230,
+        "Column": 5,
+        "ByteOffset": 7455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nLevelMax \u003c 4094 ); // 2^12-2"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 9,
+        "ByteOffset": 10576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: Mapper allocates %.3f GB for subject graph with %d objects.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 372,
+        "Column": 9,
+        "ByteOffset": 13312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Performing mapping with %d given and %d created choices.\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Amap_ManSetupObj",
+      "Start": 1262,
+      "End": 1601,
+      "BodyStart": 1310,
+      "Original": "Amap_Obj_t * Amap_ManSetupObj( Amap_Man_t * p )\n{\n    Amap_Obj_t * pObj;\n    pObj = (Amap_Obj_t *)Aig_MmFixedEntryFetch( p-\u003epMemObj );\n    memset( pObj, 0, sizeof(Amap_Obj_t) );\n    pObj-\u003enFouts[0] = 1; // needed for flow to work in the first pass\n    pObj-\u003eId = Vec_PtrSize(p-\u003evObjs);\n    Vec_PtrPush( p-\u003evObjs, pObj );\n    return pObj;\n}",
+      "Draft": "func Amap_ManSetupObj(p *Amap_Man_t) *Amap_Obj_t {\n    var pObj *Amap_Obj_t;\n    pObj = (Amap_Obj_t *)Aig_MmFixedEntryFetch( p.pMemObj );\n    memset( pObj, 0, sizeof(Amap_Obj_t) );\n    pObj.nFouts[0] = 1; // needed for flow to work in the first pass\n    pObj.Id = Vec_PtrSize(p.vObjs);\n    Vec_PtrPush( p.vObjs, pObj );\n    return pObj;\n}"
+    },
+    {
+      "Name": "Amap_ManCreateConst1",
+      "Start": 1861,
+      "End": 2081,
+      "BodyStart": 1913,
+      "Original": "Amap_Obj_t * Amap_ManCreateConst1( Amap_Man_t * p )\n{\n    Amap_Obj_t * pObj;\n    pObj = Amap_ManSetupObj( p );\n    pObj-\u003eType   = AMAP_OBJ_CONST1;\n    pObj-\u003efPhase = 1;\n    p-\u003enObjs[AMAP_OBJ_CONST1]++;\n    return pObj;\n}",
+      "Draft": "func Amap_ManCreateConst1(p *Amap_Man_t) *Amap_Obj_t {\n    var pObj *Amap_Obj_t;\n    pObj = Amap_ManSetupObj( p );\n    pObj.Type   = AMAP_OBJ_CONST1;\n    pObj.fPhase = 1;\n    p.nObjs[AMAP_OBJ_CONST1]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Amap_ManCreatePi",
+      "Start": 2339,
+      "End": 2600,
+      "BodyStart": 2387,
+      "Original": "Amap_Obj_t * Amap_ManCreatePi( Amap_Man_t * p )\n{\n    Amap_Obj_t * pObj;\n    pObj = Amap_ManSetupObj( p );\n    pObj-\u003eType  = AMAP_OBJ_PI;\n    pObj-\u003eIdPio = Vec_PtrSize( p-\u003evPis );\n    Vec_PtrPush( p-\u003evPis, pObj );\n    p-\u003enObjs[AMAP_OBJ_PI]++;\n    return pObj;\n}",
+      "Draft": "func Amap_ManCreatePi(p *Amap_Man_t) *Amap_Obj_t {\n    var pObj *Amap_Obj_t;\n    pObj = Amap_ManSetupObj( p );\n    pObj.Type  = AMAP_OBJ_PI;\n    pObj.IdPio = Vec_PtrSize( p.vPis );\n    Vec_PtrPush( p.vPis, pObj );\n    p.nObjs[AMAP_OBJ_PI]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Amap_ManCreatePo",
+      "Start": 2881,
+      "End": 3412,
+      "BodyStart": 2949,
+      "Original": "Amap_Obj_t * Amap_ManCreatePo( Amap_Man_t * p, Amap_Obj_t * pFan0 )\n{\n    Amap_Obj_t * pObj;\n    pObj = Amap_ManSetupObj( p );\n    pObj-\u003eIdPio  = Vec_PtrSize( p-\u003evPos );\n    Vec_PtrPush( p-\u003evPos, pObj );\n    pObj-\u003eType   = AMAP_OBJ_PO;\n    pObj-\u003eFan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0)-\u003enRefs++;\n    pObj-\u003eLevel  = Amap_Regular(pFan0)-\u003eLevel;\n    if ( p-\u003enLevelMax \u003c (int)pObj-\u003eLevel )\n        p-\u003enLevelMax = (int)pObj-\u003eLevel;\n    assert( p-\u003enLevelMax \u003c 4094 ); // 2^12-2\n    p-\u003enObjs[AMAP_OBJ_PO]++;\n    return pObj;\n}",
+      "Draft": "func Amap_ManCreatePo(p *Amap_Man_t, pFan0 *Amap_Obj_t) *Amap_Obj_t {\n    var pObj *Amap_Obj_t;\n    pObj = Amap_ManSetupObj( p );\n    pObj.IdPio  = Vec_PtrSize( p.vPos );\n    Vec_PtrPush( p.vPos, pObj );\n    pObj.Type   = AMAP_OBJ_PO;\n    pObj.Fan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0).nRefs++;\n    pObj.Level  = Amap_Regular(pFan0).Level;\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    assert(p.nLevelMax \u003c 4094, \"p.nLevelMax \u003c 4094\"); // 2^12-2\n    p.nObjs[AMAP_OBJ_PO]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Amap_ManCreateAnd",
+      "Start": 3695,
+      "End": 4432,
+      "BodyStart": 3784,
+      "Original": "Amap_Obj_t * Amap_ManCreateAnd( Amap_Man_t * p, Amap_Obj_t * pFan0, Amap_Obj_t * pFan1 )\n{\n    Amap_Obj_t * pObj;\n    pObj = Amap_ManSetupObj( p );\n    pObj-\u003eType   = AMAP_OBJ_AND;\n    pObj-\u003eFan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0)-\u003enRefs++;\n    pObj-\u003eFan[1] = Amap_ObjToLit(pFan1);  Amap_Regular(pFan1)-\u003enRefs++;\n    assert( Abc_Lit2Var(pObj-\u003eFan[0]) != Abc_Lit2Var(pObj-\u003eFan[1]) );\n    pObj-\u003efPhase = Amap_ObjPhaseReal(pFan0) \u0026 Amap_ObjPhaseReal(pFan1);\n    pObj-\u003eLevel  = 1 + Abc_MaxInt( Amap_Regular(pFan0)-\u003eLevel, Amap_Regular(pFan1)-\u003eLevel );\n    if ( p-\u003enLevelMax \u003c (int)pObj-\u003eLevel )\n        p-\u003enLevelMax = (int)pObj-\u003eLevel;\n    assert( p-\u003enLevelMax \u003c 4094 ); // 2^12-2\n    p-\u003enObjs[AMAP_OBJ_AND]++;\n    return pObj;\n}",
+      "Draft": "func Amap_ManCreateAnd(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t) *Amap_Obj_t {\n    var pObj *Amap_Obj_t;\n    pObj = Amap_ManSetupObj( p );\n    pObj.Type   = AMAP_OBJ_AND;\n    pObj.Fan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0).nRefs++;\n    pObj.Fan[1] = Amap_ObjToLit(pFan1);  Amap_Regular(pFan1).nRefs++;\n    assert(Abc_Lit2Var(pObj.Fan[0]) != Abc_Lit2Var(pObj.Fan[1]), \"Abc_Lit2Var(pObj.Fan[0]) != Abc_Lit2Var(pObj.Fan[1])\");\n    pObj.fPhase = Amap_ObjPhaseReal(pFan0) \u0026 Amap_ObjPhaseReal(pFan1);\n    pObj.Level  = 1 + Abc_MaxInt( Amap_Regular(pFan0).Level, Amap_Regular(pFan1).Level );\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    assert(p.nLevelMax \u003c 4094, \"p.nLevelMax \u003c 4094\"); // 2^12-2\n    p.nObjs[AMAP_OBJ_AND]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Amap_ManCreateXor",
+      "Start": 4715,
+      "End": 5382,
+      "BodyStart": 4804,
+      "Original": "Amap_Obj_t * Amap_ManCreateXor( Amap_Man_t * p, Amap_Obj_t * pFan0, Amap_Obj_t * pFan1 )\n{\n    Amap_Obj_t * pObj;\n    pObj = Amap_ManSetupObj( p );\n    pObj-\u003eType   = AMAP_OBJ_XOR;\n    pObj-\u003eFan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0)-\u003enRefs++;\n    pObj-\u003eFan[1] = Amap_ObjToLit(pFan1);  Amap_Regular(pFan1)-\u003enRefs++;\n    pObj-\u003efPhase = Amap_ObjPhaseReal(pFan0) ^ Amap_ObjPhaseReal(pFan1);\n    pObj-\u003eLevel  = 2 + Abc_MaxInt( Amap_Regular(pFan0)-\u003eLevel, Amap_Regular(pFan1)-\u003eLevel );\n    if ( p-\u003enLevelMax \u003c (int)pObj-\u003eLevel )\n        p-\u003enLevelMax = (int)pObj-\u003eLevel;\n    assert( p-\u003enLevelMax \u003c 4094 ); // 2^12-2\n    p-\u003enObjs[AMAP_OBJ_XOR]++;\n    return pObj;\n}",
+      "Draft": "func Amap_ManCreateXor(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t) *Amap_Obj_t {\n    var pObj *Amap_Obj_t;\n    pObj = Amap_ManSetupObj( p );\n    pObj.Type   = AMAP_OBJ_XOR;\n    pObj.Fan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0).nRefs++;\n    pObj.Fan[1] = Amap_ObjToLit(pFan1);  Amap_Regular(pFan1).nRefs++;\n    pObj.fPhase = Amap_ObjPhaseReal(pFan0) ^ Amap_ObjPhaseReal(pFan1);\n    pObj.Level  = 2 + Abc_MaxInt( Amap_Regular(pFan0).Level, Amap_Regular(pFan1).Level );\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    assert(p.nLevelMax \u003c 4094, \"p.nLevelMax \u003c 4094\"); // 2^12-2\n    p.nObjs[AMAP_OBJ_XOR]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Amap_ManCreateMux",
+      "Start": 5665,
+      "End": 6578,
+      "BodyStart": 5774,
+      "Original": "Amap_Obj_t * Amap_ManCreateMux( Amap_Man_t * p, Amap_Obj_t * pFan0, Amap_Obj_t * pFan1, Amap_Obj_t * pFanC )\n{\n    Amap_Obj_t * pObj;\n    pObj = Amap_ManSetupObj( p );\n    pObj-\u003eType   = AMAP_OBJ_MUX;\n    pObj-\u003eFan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0)-\u003enRefs++;\n    pObj-\u003eFan[1] = Amap_ObjToLit(pFan1);  Amap_Regular(pFan1)-\u003enRefs++;\n    pObj-\u003eFan[2] = Amap_ObjToLit(pFanC);  Amap_Regular(pFanC)-\u003enRefs++;\n    pObj-\u003efPhase = (Amap_ObjPhaseReal(pFan1) \u0026  Amap_ObjPhaseReal(pFanC)) | \n                   (Amap_ObjPhaseReal(pFan0) \u0026 ~Amap_ObjPhaseReal(pFanC));\n    pObj-\u003eLevel  = Abc_MaxInt( Amap_Regular(pFan0)-\u003eLevel, Amap_Regular(pFan1)-\u003eLevel );\n    pObj-\u003eLevel  = 2 + Abc_MaxInt( pObj-\u003eLevel, Amap_Regular(pFanC)-\u003eLevel );\n    if ( p-\u003enLevelMax \u003c (int)pObj-\u003eLevel )\n        p-\u003enLevelMax = (int)pObj-\u003eLevel;\n    assert( p-\u003enLevelMax \u003c 4094 ); // 2^12-2\n    p-\u003enObjs[AMAP_OBJ_MUX]++;\n    return pObj;\n}",
+      "Draft": "func Amap_ManCreateMux(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t, pFanC *Amap_Obj_t) *Amap_Obj_t {\n    var pObj *Amap_Obj_t;\n    pObj = Amap_ManSetupObj( p );\n    pObj.Type   = AMAP_OBJ_MUX;\n    pObj.Fan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0).nRefs++;\n    pObj.Fan[1] = Amap_ObjToLit(pFan1);  Amap_Regular(pFan1).nRefs++;\n    pObj.Fan[2] = Amap_ObjToLit(pFanC);  Amap_Regular(pFanC).nRefs++;\n    pObj.fPhase = (Amap_ObjPhaseReal(pFan1) \u0026  Amap_ObjPhaseReal(pFanC)) | \n                   (Amap_ObjPhaseReal(pFan0) \u0026 ~Amap_ObjPhaseReal(pFanC));\n    pObj.Level  = Abc_MaxInt( Amap_Regular(pFan0).Level, Amap_Regular(pFan1).Level );\n    pObj.Level  = 2 + Abc_MaxInt( pObj.Level, Amap_Regular(pFanC).Level );\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    assert(p.nLevelMax \u003c 4094, \"p.nLevelMax \u003c 4094\"); // 2^12-2\n    p.nObjs[AMAP_OBJ_MUX]++;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Amap_ManCreateChoice",
+      "Start": 6900,
+      "End": 7533,
+      "BodyStart": 6963,
+      "Original": "void Amap_ManCreateChoice( Amap_Man_t * p, Amap_Obj_t * pObj )\n{\n    Amap_Obj_t * pTemp;\n    // mark the node as a representative if its class\n//    assert( pObj-\u003efRepr == 0 );\n    pObj-\u003efRepr = 1;\n    // update the level of this node (needed for correct required time computation)\n    for ( pTemp = pObj; pTemp; pTemp = Amap_ObjChoice(p, pTemp) )\n    {\n        pObj-\u003eLevel = Abc_MaxInt( pObj-\u003eLevel, pTemp-\u003eLevel );\n//        pTemp-\u003enVisits++; pTemp-\u003enVisitsCopy++;\n    }\n    // mark the largest level\n    if ( p-\u003enLevelMax \u003c (int)pObj-\u003eLevel )\n        p-\u003enLevelMax = (int)pObj-\u003eLevel;\n    assert( p-\u003enLevelMax \u003c 4094 ); // 2^12-2\n}",
+      "Draft": "func Amap_ManCreateChoice(p *Amap_Man_t, pObj *Amap_Obj_t) {\n    var pTemp *Amap_Obj_t;\n    // mark the node as a representative if its class\n//    assert( pObj-\u003efRepr == 0 );\n    pObj.fRepr = 1;\n    // update the level of this node (needed for correct required time computation)\n    for  pTemp = pObj; (pTemp != nil); pTemp = Amap_ObjChoice(p, pTemp)  {\n        pObj.Level = Abc_MaxInt( pObj.Level, pTemp.Level );\n//        pTemp-\u003enVisits++; pTemp-\u003enVisitsCopy++;\n    }\n    // mark the largest level\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    assert(p.nLevelMax \u003c 4094, \"p.nLevelMax \u003c 4094\"); // 2^12-2\n}"
+    },
+    {
+      "Name": "Amap_ManCreateXorChoices",
+      "Start": 7806,
+      "End": 8206,
+      "BodyStart": 7919,
+      "Original": "void Amap_ManCreateXorChoices( Amap_Man_t * p, Amap_Obj_t * pFan0, Amap_Obj_t * pFan1, Amap_Obj_t * pChoices[] )\n{\n    pChoices[0] = Amap_ManCreateXor( p, pFan0,           pFan1 );\n    pChoices[1] = Amap_ManCreateXor( p, Amap_Not(pFan0), pFan1 );\n    pChoices[2] = Amap_ManCreateXor( p, pFan0,           Amap_Not(pFan1) );\n    pChoices[3] = Amap_ManCreateXor( p, Amap_Not(pFan0), Amap_Not(pFan1) );\n}",
+      "Draft": "func Amap_ManCreateXorChoices(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t, pChoices []*Amap_Obj_t) {\n    pChoices[0] = Amap_ManCreateXor( p, pFan0,           pFan1 );\n    pChoices[1] = Amap_ManCreateXor( p, Amap_Not(pFan0), pFan1 );\n    pChoices[2] = Amap_ManCreateXor( p, pFan0,           Amap_Not(pFan1) );\n    pChoices[3] = Amap_ManCreateXor( p, Amap_Not(pFan0), Amap_Not(pFan1) );\n}"
+    },
+    {
+      "Name": "Amap_ManCreateMuxChoices",
+      "Start": 8479,
+      "End": 8987,
+      "BodyStart": 8612,
+      "Original": "void Amap_ManCreateMuxChoices( Amap_Man_t * p, Amap_Obj_t * pFan0, Amap_Obj_t * pFan1, Amap_Obj_t * pFanC, Amap_Obj_t * pChoices[] )\n{\n    pChoices[0] = Amap_ManCreateMux( p, pFan0,           pFan1,           pFanC           );\n    pChoices[1] = Amap_ManCreateMux( p, Amap_Not(pFan0), Amap_Not(pFan1), pFanC           );\n    pChoices[2] = Amap_ManCreateMux( p, pFan1,           pFan0,           Amap_Not(pFanC) );\n    pChoices[3] = Amap_ManCreateMux( p, Amap_Not(pFan1), Amap_Not(pFan0), Amap_Not(pFanC) );\n}",
+      "Draft": "func Amap_ManCreateMuxChoices(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t, pFanC *Amap_Obj_t, pChoices []*Amap_Obj_t) {\n    pChoices[0] = Amap_ManCreateMux( p, pFan0,           pFan1,           pFanC           );\n    pChoices[1] = Amap_ManCreateMux( p, Amap_Not(pFan0), Amap_Not(pFan1), pFanC           );\n    pChoices[2] = Amap_ManCreateMux( p, pFan1,           pFan0,           Amap_Not(pFanC) );\n    pChoices[3] = Amap_ManCreateMux( p, Amap_Not(pFan1), Amap_Not(pFan0), Amap_Not(pFanC) );\n}"
+    },
+    {
+      "Name": "Amap_AndToObj",
+      "Start": 9258,
+      "End": 9413,
+      "BodyStart": 9319,
+      "Original": "static inline Amap_Obj_t * Amap_AndToObj( Aig_Obj_t * pObj )\n{\n    return Amap_NotCond( (Amap_Obj_t *)Aig_Regular(pObj)-\u003epData, Aig_IsComplement(pObj) );\n}",
+      "Draft": "func Amap_AndToObj(pObj *Aig_Obj_t) *Amap_Obj_t {\n    return Amap_NotCond( (Amap_Obj_t *)Aig_Regular(pObj).pData, Aig_IsComplement(pObj) );\n}"
+    },
+    {
+      "Name": "Amap_ManGetLast_rec",
+      "Start": 9672,
+      "End": 9856,
+      "BodyStart": 9742,
+      "Original": "Amap_Obj_t * Amap_ManGetLast_rec( Amap_Man_t * p, Amap_Obj_t * pObj )\n{\n    if ( pObj-\u003eEquiv == 0 )\n        return pObj;\n    return Amap_ManGetLast_rec( p, Amap_ObjChoice(p, pObj) );\n}",
+      "Draft": "func Amap_ManGetLast_rec(p *Amap_Man_t, pObj *Amap_Obj_t) *Amap_Obj_t {\n    if pObj.Equiv == 0 {\n        return pObj; }\n    return Amap_ManGetLast_rec( p, Amap_ObjChoice(p, pObj) );\n}"
+    },
+    {
+      "Name": "Amap_ManCreate",
+      "Start": 10115,
+      "End": 13113,
+      "BodyStart": 10171,
+      "Original": "void Amap_ManCreate( Amap_Man_t * p, Aig_Man_t * pAig )\n{\n    Vec_Ptr_t * vNodes;\n    Amap_Obj_t * pChoices[4];\n    Aig_Obj_t * pObj, * pFanin, * pPrev, * pFan0, * pFan1, * pFanC;\n    int i, fChoices;\n    if ( pAig-\u003epEquivs )\n        vNodes = Aig_ManDfsChoices( pAig );\n    else\n        vNodes = Aig_ManDfs( pAig, 1 );\n    p-\u003epConst1 = Amap_ManCreateConst1( p );\n    // print warning about excessive memory usage\n    if ( p-\u003epPars-\u003efVerbose )\n    {\n        if ( 1.0 * Aig_ManObjNum(pAig) * sizeof(Amap_Obj_t) / (1\u003c\u003c30) \u003e 0.1 )\n        printf( \"Warning: Mapper allocates %.3f GB for subject graph with %d objects.\\n\", \n            1.0 * Aig_ManObjNum(pAig) * sizeof(Amap_Obj_t) / (1\u003c\u003c30), Aig_ManObjNum(pAig) );\n    }\n    // create PIs and remember them in the old nodes\n    Aig_ManCleanData(pAig);\n    Aig_ManConst1(pAig)-\u003epData = Amap_ManConst1( p );\n    Aig_ManForEachCi( pAig, pObj, i )\n        pObj-\u003epData = Amap_ManCreatePi( p );\n    // load the AIG into the mapper\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        fChoices = 0;\n        if ( p-\u003efUseXor \u0026\u0026 Aig_ObjRecognizeExor(pObj, \u0026pFan0, \u0026pFan1 ) )\n        {\n            Amap_ManCreateXorChoices( p, Amap_AndToObj(pFan0), Amap_AndToObj(pFan1), pChoices );\n            fChoices = 1;\n        }\n        else if ( p-\u003efUseMux \u0026\u0026 Aig_ObjIsMuxType(pObj) )\n        {\n            pFanC = Aig_ObjRecognizeMux( pObj, \u0026pFan1, \u0026pFan0 );\n            Amap_ManCreateMuxChoices( p, Amap_AndToObj(pFan0), Amap_AndToObj(pFan1), Amap_AndToObj(pFanC), pChoices );\n            fChoices = 1;\n        }\n        pObj-\u003epData = Amap_ManCreateAnd( p, (Amap_Obj_t *)Aig_ObjChild0Copy(pObj), (Amap_Obj_t *)Aig_ObjChild1Copy(pObj) );\n        if ( fChoices )\n        {\n            p-\u003enChoicesAdded++;\n            Amap_ObjSetChoice( (Amap_Obj_t *)pObj-\u003epData, pChoices[0] );\n            Amap_ObjSetChoice( pChoices[0], pChoices[1] );\n            Amap_ObjSetChoice( pChoices[1], pChoices[2] );\n            Amap_ObjSetChoice( pChoices[2], pChoices[3] );\n            Amap_ManCreateChoice( p, (Amap_Obj_t *)pObj-\u003epData );\n        }\n        if ( Aig_ObjIsChoice( pAig, pObj ) )\n        {\n//            assert( !fChoices );\n            p-\u003enChoicesGiven++;\n            for ( pPrev = pObj, pFanin = Aig_ObjEquiv(pAig, pObj); pFanin; pPrev = pFanin, pFanin = Aig_ObjEquiv(pAig, pFanin) )\n            {\n                ((Amap_Obj_t *)pFanin-\u003epData)-\u003efRepr = 0;\n                Amap_ObjSetChoice( Amap_ManGetLast_rec(p, (Amap_Obj_t *)pPrev-\u003epData), \n                    (Amap_Obj_t *)pFanin-\u003epData );\n            }\n            Amap_ManCreateChoice( p, (Amap_Obj_t *)pObj-\u003epData );\n        }\n    }\n    Vec_PtrFree( vNodes );\n    // set the primary outputs without copying the phase\n    Aig_ManForEachCo( pAig, pObj, i )\n        pObj-\u003epData = Amap_ManCreatePo( p, (Amap_Obj_t *)Aig_ObjChild0Copy(pObj) );\n    if ( p-\u003epPars-\u003efVerbose )\n        printf( \"Performing mapping with %d given and %d created choices.\\n\", \n            p-\u003enChoicesGiven, p-\u003enChoicesAdded );\n}",
+      "Draft": "func Amap_ManCreate(p *Amap_Man_t, pAig *Aig_Man_t) {\n    var vNodes *Vec_Ptr_t;\n    var pChoices [4]*Amap_Obj_t;\n    var pObj, pFanin, pPrev, pFan0, pFan1, pFanC *Aig_Obj_t;\n    var i, fChoices int32;\n    if pAig.pEquivs {\n        vNodes = Aig_ManDfsChoices( pAig );\n    } else {\n        vNodes = Aig_ManDfs( pAig, 1 ); }\n    p.pConst1 = Amap_ManCreateConst1( p );\n    // print warning about excessive memory usage\n    if p.pPars.fVerbose {\n        if 1.0 * Aig_ManObjNum(pAig) * sizeof(Amap_Obj_t) / (1\u003c\u003c30) \u003e 0.1 {\n        fmt.Printf(\"Warning: Mapper allocates %.3f GB for subject graph with %d objects.\\n\", 1.0 * Aig_ManObjNum(pAig) * sizeof(Amap_Obj_t) / (1\u003c\u003c30), Aig_ManObjNum(pAig)); }\n    }\n    // create PIs and remember them in the old nodes\n    Aig_ManCleanData(pAig);\n    Aig_ManConst1(pAig).pData = Amap_ManConst1( p );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pObj.pData = Amap_ManCreatePi( p );\n    }\n    // load the AIG into the mapper\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        fChoices = 0;\n        if p.fUseXor \u0026\u0026 Aig_ObjRecognizeExor(pObj, \u0026pFan0, \u0026pFan1 ) {\n            Amap_ManCreateXorChoices( p, Amap_AndToObj(pFan0), Amap_AndToObj(pFan1), pChoices );\n            fChoices = 1;\n        \n        } else if p.fUseMux \u0026\u0026 Aig_ObjIsMuxType(pObj) {\n            pFanC = Aig_ObjRecognizeMux( pObj, \u0026pFan1, \u0026pFan0 );\n            Amap_ManCreateMuxChoices( p, Amap_AndToObj(pFan0), Amap_AndToObj(pFan1), Amap_AndToObj(pFanC), pChoices );\n            fChoices = 1;\n        }\n        pObj.pData = Amap_ManCreateAnd( p, (Amap_Obj_t *)Aig_ObjChild0Copy(pObj), (Amap_Obj_t *)Aig_ObjChild1Copy(pObj) );\n        if fChoices != 0 {\n            p.nChoicesAdded++;\n            Amap_ObjSetChoice( (Amap_Obj_t *)pObj.pData, pChoices[0] );\n            Amap_ObjSetChoice( pChoices[0], pChoices[1] );\n            Amap_ObjSetChoice( pChoices[1], pChoices[2] );\n            Amap_ObjSetChoice( pChoices[2], pChoices[3] );\n            Amap_ManCreateChoice( p, (Amap_Obj_t *)pObj.pData );\n        }\n        if Aig_ObjIsChoice( pAig, pObj ) {\n//            assert( !fChoices );\n            p.nChoicesGiven++;\n            for  pPrev = pObj, pFanin = Aig_ObjEquiv(pAig, pObj); pFanin; pPrev = pFanin, pFanin = Aig_ObjEquiv(pAig, pFanin)  {\n                ((Amap_Obj_t *)pFanin.pData).fRepr = 0;\n                Amap_ObjSetChoice( Amap_ManGetLast_rec(p, (Amap_Obj_t *)pPrev.pData), \n                    (Amap_Obj_t *)pFanin.pData );\n            }\n            Amap_ManCreateChoice( p, (Amap_Obj_t *)pObj.pData );\n        }\n    }\n    Vec_PtrFree( vNodes );\n    // set the primary outputs without copying the phase\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        pObj.pData = Amap_ManCreatePo( p, (Amap_Obj_t *)Aig_ObjChild0Copy(pObj) );\n    }\n    if p.pPars.fVerbose {\n        fmt.Printf(\"Performing mapping with %d given and %d created choices.\\n\", p.nChoicesGiven, p.nChoicesAdded); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::mechanical::sizeof::1418",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1418,
+      "End": 1424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::mechanical::sizeof::10605",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10605,
+      "End": 10611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::mechanical::sizeof::10773",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10773,
+      "End": 10779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::pointer-cast::1346",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1346,
+      "End": 1360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::pointer-cast::9346",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9346,
+      "End": 9360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::pointer-cast::11135",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10971,
+      "End": 10971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::pointer-cast::11381",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11090,
+      "End": 11090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::pointer-cast::12005",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11717,
+      "End": 11731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::pointer-cast::12044",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11756,
+      "End": 11770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::pointer-cast::12182",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11894,
+      "End": 11908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::pointer-cast::12438",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12150,
+      "End": 12164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::pointer-cast::12759",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12471,
+      "End": 12485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::pointer-cast::12858",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12570,
+      "End": 12584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::pointer-cast::12908",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12620,
+      "End": 12634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::pointer-cast::12990",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12702,
+      "End": 12716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::pointer-cast::13287",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12835,
+      "End": 12835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::pointer-cast::13383",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12912,
+      "End": 12926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::Amap_ManSetupObj",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManSetupObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1262,
+      "End": 1601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::Amap_ManCreateConst1",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCreateConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1861,
+      "End": 2081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::Amap_ManCreatePi",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCreatePi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2339,
+      "End": 2600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::Amap_ManCreatePo",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCreatePo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2881,
+      "End": 3412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::Amap_ManCreateAnd",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCreateAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3695,
+      "End": 4432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::Amap_ManCreateXor",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCreateXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4715,
+      "End": 5382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::Amap_ManCreateMux",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCreateMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5665,
+      "End": 6578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::Amap_ManCreateChoice",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCreateChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6900,
+      "End": 7533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::Amap_ManCreateXorChoices",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCreateXorChoices",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7806,
+      "End": 8206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::Amap_ManCreateMuxChoices",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCreateMuxChoices",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8479,
+      "End": 8987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::Amap_AndToObj",
+      "Category": "semantic-review",
+      "Symbol": "Amap_AndToObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9258,
+      "End": 9413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::Amap_ManGetLast_rec",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManGetLast_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9672,
+      "End": 9856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::Amap_ManCreate",
+      "Category": "semantic-review",
+      "Symbol": "Amap_ManCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10115,
+      "End": 13113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/amap/amapGraph.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13360
+    }
+  ],
+  "Draft": "package amap\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [amapGraph.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Technology mapper for standard cells.]\n\n  Synopsis    [Internal AIG manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: amapGraph.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"amapInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates object.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManSetupObj(p *Amap_Man_t) *Amap_Obj_t {\n    var pObj *Amap_Obj_t;\n    pObj = (Amap_Obj_t *)Aig_MmFixedEntryFetch( p.pMemObj );\n    memset( pObj, 0, sizeof(Amap_Obj_t) );\n    pObj.nFouts[0] = 1; // needed for flow to work in the first pass\n    pObj.Id = Vec_PtrSize(p.vObjs);\n    Vec_PtrPush( p.vObjs, pObj );\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates constant 1 node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManCreateConst1(p *Amap_Man_t) *Amap_Obj_t {\n    var pObj *Amap_Obj_t;\n    pObj = Amap_ManSetupObj( p );\n    pObj.Type   = AMAP_OBJ_CONST1;\n    pObj.fPhase = 1;\n    p.nObjs[AMAP_OBJ_CONST1]++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates primary input.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManCreatePi(p *Amap_Man_t) *Amap_Obj_t {\n    var pObj *Amap_Obj_t;\n    pObj = Amap_ManSetupObj( p );\n    pObj.Type  = AMAP_OBJ_PI;\n    pObj.IdPio = Vec_PtrSize( p.vPis );\n    Vec_PtrPush( p.vPis, pObj );\n    p.nObjs[AMAP_OBJ_PI]++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates primary output with the given driver.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManCreatePo(p *Amap_Man_t, pFan0 *Amap_Obj_t) *Amap_Obj_t {\n    var pObj *Amap_Obj_t;\n    pObj = Amap_ManSetupObj( p );\n    pObj.IdPio  = Vec_PtrSize( p.vPos );\n    Vec_PtrPush( p.vPos, pObj );\n    pObj.Type   = AMAP_OBJ_PO;\n    pObj.Fan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0).nRefs++;\n    pObj.Level  = Amap_Regular(pFan0).Level;\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    assert(p.nLevelMax \u003c 4094, \"p.nLevelMax \u003c 4094\"); // 2^12-2\n    p.nObjs[AMAP_OBJ_PO]++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create the new node assuming it does not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManCreateAnd(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t) *Amap_Obj_t {\n    var pObj *Amap_Obj_t;\n    pObj = Amap_ManSetupObj( p );\n    pObj.Type   = AMAP_OBJ_AND;\n    pObj.Fan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0).nRefs++;\n    pObj.Fan[1] = Amap_ObjToLit(pFan1);  Amap_Regular(pFan1).nRefs++;\n    assert(Abc_Lit2Var(pObj.Fan[0]) != Abc_Lit2Var(pObj.Fan[1]), \"Abc_Lit2Var(pObj.Fan[0]) != Abc_Lit2Var(pObj.Fan[1])\");\n    pObj.fPhase = Amap_ObjPhaseReal(pFan0) \u0026 Amap_ObjPhaseReal(pFan1);\n    pObj.Level  = 1 + Abc_MaxInt( Amap_Regular(pFan0).Level, Amap_Regular(pFan1).Level );\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    assert(p.nLevelMax \u003c 4094, \"p.nLevelMax \u003c 4094\"); // 2^12-2\n    p.nObjs[AMAP_OBJ_AND]++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create the new node assuming it does not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManCreateXor(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t) *Amap_Obj_t {\n    var pObj *Amap_Obj_t;\n    pObj = Amap_ManSetupObj( p );\n    pObj.Type   = AMAP_OBJ_XOR;\n    pObj.Fan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0).nRefs++;\n    pObj.Fan[1] = Amap_ObjToLit(pFan1);  Amap_Regular(pFan1).nRefs++;\n    pObj.fPhase = Amap_ObjPhaseReal(pFan0) ^ Amap_ObjPhaseReal(pFan1);\n    pObj.Level  = 2 + Abc_MaxInt( Amap_Regular(pFan0).Level, Amap_Regular(pFan1).Level );\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    assert(p.nLevelMax \u003c 4094, \"p.nLevelMax \u003c 4094\"); // 2^12-2\n    p.nObjs[AMAP_OBJ_XOR]++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create the new node assuming it does not exist.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManCreateMux(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t, pFanC *Amap_Obj_t) *Amap_Obj_t {\n    var pObj *Amap_Obj_t;\n    pObj = Amap_ManSetupObj( p );\n    pObj.Type   = AMAP_OBJ_MUX;\n    pObj.Fan[0] = Amap_ObjToLit(pFan0);  Amap_Regular(pFan0).nRefs++;\n    pObj.Fan[1] = Amap_ObjToLit(pFan1);  Amap_Regular(pFan1).nRefs++;\n    pObj.Fan[2] = Amap_ObjToLit(pFanC);  Amap_Regular(pFanC).nRefs++;\n    pObj.fPhase = (Amap_ObjPhaseReal(pFan1) \u0026  Amap_ObjPhaseReal(pFanC)) | \n                   (Amap_ObjPhaseReal(pFan0) \u0026 ~Amap_ObjPhaseReal(pFanC));\n    pObj.Level  = Abc_MaxInt( Amap_Regular(pFan0).Level, Amap_Regular(pFan1).Level );\n    pObj.Level  = 2 + Abc_MaxInt( pObj.Level, Amap_Regular(pFanC).Level );\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    assert(p.nLevelMax \u003c 4094, \"p.nLevelMax \u003c 4094\"); // 2^12-2\n    p.nObjs[AMAP_OBJ_MUX]++;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the choice node.]\n\n  Description [Should be called after the equivalence class nodes are linked.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManCreateChoice(p *Amap_Man_t, pObj *Amap_Obj_t) {\n    var pTemp *Amap_Obj_t;\n    // mark the node as a representative if its class\n//    assert( pObj-\u003efRepr == 0 );\n    pObj.fRepr = 1;\n    // update the level of this node (needed for correct required time computation)\n    for  pTemp = pObj; (pTemp != nil); pTemp = Amap_ObjChoice(p, pTemp)  {\n        pObj.Level = Abc_MaxInt( pObj.Level, pTemp.Level );\n//        pTemp-\u003enVisits++; pTemp-\u003enVisitsCopy++;\n    }\n    // mark the largest level\n    if p.nLevelMax \u003c int32(pObj.Level) {\n        p.nLevelMax = int32(pObj.Level); }\n    assert(p.nLevelMax \u003c 4094, \"p.nLevelMax \u003c 4094\"); // 2^12-2\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates XOR/MUX choices for the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManCreateXorChoices(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t, pChoices []*Amap_Obj_t) {\n    pChoices[0] = Amap_ManCreateXor( p, pFan0,           pFan1 );\n    pChoices[1] = Amap_ManCreateXor( p, Amap_Not(pFan0), pFan1 );\n    pChoices[2] = Amap_ManCreateXor( p, pFan0,           Amap_Not(pFan1) );\n    pChoices[3] = Amap_ManCreateXor( p, Amap_Not(pFan0), Amap_Not(pFan1) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates XOR/MUX choices for the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManCreateMuxChoices(p *Amap_Man_t, pFan0 *Amap_Obj_t, pFan1 *Amap_Obj_t, pFanC *Amap_Obj_t, pChoices []*Amap_Obj_t) {\n    pChoices[0] = Amap_ManCreateMux( p, pFan0,           pFan1,           pFanC           );\n    pChoices[1] = Amap_ManCreateMux( p, Amap_Not(pFan0), Amap_Not(pFan1), pFanC           );\n    pChoices[2] = Amap_ManCreateMux( p, pFan1,           pFan0,           Amap_Not(pFanC) );\n    pChoices[3] = Amap_ManCreateMux( p, Amap_Not(pFan1), Amap_Not(pFan0), Amap_Not(pFanC) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Drags pointer out through the copy.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_AndToObj(pObj *Aig_Obj_t) *Amap_Obj_t {\n    return Amap_NotCond( (Amap_Obj_t *)Aig_Regular(pObj).pData, Aig_IsComplement(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the AIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManGetLast_rec(p *Amap_Man_t, pObj *Amap_Obj_t) *Amap_Obj_t {\n    if pObj.Equiv == 0 {\n        return pObj; }\n    return Amap_ManGetLast_rec( p, Amap_ObjChoice(p, pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the AIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Amap_ManCreate(p *Amap_Man_t, pAig *Aig_Man_t) {\n    var vNodes *Vec_Ptr_t;\n    var pChoices [4]*Amap_Obj_t;\n    var pObj, pFanin, pPrev, pFan0, pFan1, pFanC *Aig_Obj_t;\n    var i, fChoices int32;\n    if pAig.pEquivs {\n        vNodes = Aig_ManDfsChoices( pAig );\n    } else {\n        vNodes = Aig_ManDfs( pAig, 1 ); }\n    p.pConst1 = Amap_ManCreateConst1( p );\n    // print warning about excessive memory usage\n    if p.pPars.fVerbose {\n        if 1.0 * Aig_ManObjNum(pAig) * sizeof(Amap_Obj_t) / (1\u003c\u003c30) \u003e 0.1 {\n        fmt.Printf(\"Warning: Mapper allocates %.3f GB for subject graph with %d objects.\\n\", 1.0 * Aig_ManObjNum(pAig) * sizeof(Amap_Obj_t) / (1\u003c\u003c30), Aig_ManObjNum(pAig)); }\n    }\n    // create PIs and remember them in the old nodes\n    Aig_ManCleanData(pAig);\n    Aig_ManConst1(pAig).pData = Amap_ManConst1( p );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pObj.pData = Amap_ManCreatePi( p );\n    }\n    // load the AIG into the mapper\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        fChoices = 0;\n        if p.fUseXor \u0026\u0026 Aig_ObjRecognizeExor(pObj, \u0026pFan0, \u0026pFan1 ) {\n            Amap_ManCreateXorChoices( p, Amap_AndToObj(pFan0), Amap_AndToObj(pFan1), pChoices );\n            fChoices = 1;\n        \n        } else if p.fUseMux \u0026\u0026 Aig_ObjIsMuxType(pObj) {\n            pFanC = Aig_ObjRecognizeMux( pObj, \u0026pFan1, \u0026pFan0 );\n            Amap_ManCreateMuxChoices( p, Amap_AndToObj(pFan0), Amap_AndToObj(pFan1), Amap_AndToObj(pFanC), pChoices );\n            fChoices = 1;\n        }\n        pObj.pData = Amap_ManCreateAnd( p, (Amap_Obj_t *)Aig_ObjChild0Copy(pObj), (Amap_Obj_t *)Aig_ObjChild1Copy(pObj) );\n        if fChoices != 0 {\n            p.nChoicesAdded++;\n            Amap_ObjSetChoice( (Amap_Obj_t *)pObj.pData, pChoices[0] );\n            Amap_ObjSetChoice( pChoices[0], pChoices[1] );\n            Amap_ObjSetChoice( pChoices[1], pChoices[2] );\n            Amap_ObjSetChoice( pChoices[2], pChoices[3] );\n            Amap_ManCreateChoice( p, (Amap_Obj_t *)pObj.pData );\n        }\n        if Aig_ObjIsChoice( pAig, pObj ) {\n//            assert( !fChoices );\n            p.nChoicesGiven++;\n            for  pPrev = pObj, pFanin = Aig_ObjEquiv(pAig, pObj); pFanin; pPrev = pFanin, pFanin = Aig_ObjEquiv(pAig, pFanin)  {\n                ((Amap_Obj_t *)pFanin.pData).fRepr = 0;\n                Amap_ObjSetChoice( Amap_ManGetLast_rec(p, (Amap_Obj_t *)pPrev.pData), \n                    (Amap_Obj_t *)pFanin.pData );\n            }\n            Amap_ManCreateChoice( p, (Amap_Obj_t *)pObj.pData );\n        }\n    }\n    Vec_PtrFree( vNodes );\n    // set the primary outputs without copying the phase\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        pObj.pData = Amap_ManCreatePo( p, (Amap_Obj_t *)Aig_ObjChild0Copy(pObj) );\n    }\n    if p.pPars.fVerbose {\n        fmt.Printf(\"Performing mapping with %d given and %d created choices.\\n\", p.nChoicesGiven, p.nChoicesAdded); }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

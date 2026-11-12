@@ -1,0 +1,929 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c",
+  "SHA256": "5d7966aa56cb1641dd3a81908420f00117de55a9231f3c38b857e89d91c2478e",
+  "Library": [
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 152,
+        "Column": 11,
+        "ByteOffset": 5911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    max = pow(2.0,float64(n));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 161,
+        "Column": 19,
+        "ByteOffset": 6152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        varSeen = ABC_ALLOC(int, size);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 176,
+        "Column": 17,
+        "ByteOffset": 6554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(varSeen);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 182,
+        "Column": 13,
+        "ByteOffset": 6817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(varSeen);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 186,
+        "Column": 24,
+        "ByteOffset": 6970
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(manager.out,"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 188,
+        "Column": 17,
+        "ByteOffset": 7074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(varSeen);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 200,
+        "Column": 17,
+        "ByteOffset": 7605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(varSeen);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 13,
+        "ByteOffset": 7976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(varSeen);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 509,
+        "Column": 12,
+        "ByteOffset": 20890
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    vars = ABC_ALLOC(DdNode *, numVars);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 534,
+        "Column": 5,
+        "ByteOffset": 21647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(vars);"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 559,
+        "Column": 11,
+        "ByteOffset": 22450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    max = pow(2.0, float64(numVars));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 652,
+        "Column": 12,
+        "ByteOffset": 25932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pmin = ABC_ALLOC(double,1);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 660,
+        "Column": 9,
+        "ByteOffset": 26167
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(pmin);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_SplitSet",
+      "Start": 5312,
+      "End": 7830,
+      "BodyStart": 5415,
+      "Original": "DdNode *\nCudd_SplitSet(\n  DdManager * manager,\n  DdNode * S,\n  DdNode ** xVars,\n  int  n,\n  double  m)\n{\n    DdNode *result;\n    DdNode *zero, *one;\n    double  max, num;\n    st__table *mtable;\n    int *varSeen;\n    int i,index, size;\n\n    size = manager-\u003esize;\n    one = DD_ONE(manager);\n    zero = Cudd_Not(one);\n\n    /* Trivial cases. */\n    if (m == 0.0) {\n        return(zero);\n    }\n    if (S == zero) {\n        return(NULL);\n    }\n\n    max = pow(2.0,(double)n);\n    if (m \u003e max)\n        return(NULL);\n\n    do {\n        manager-\u003ereordered = 0;\n        /* varSeen is used to mark the variables that are encountered\n        ** while traversing the BDD S.\n        */\n        varSeen = ABC_ALLOC(int, size);\n        if (varSeen == NULL) {\n            manager-\u003eerrorCode = CUDD_MEMORY_OUT;\n            return(NULL);\n        }\n        for (i = 0; i \u003c size; i++) {\n            varSeen[i] = -1;\n        }\n        for (i = 0; i \u003c n; i++) {\n            index = (xVars[i])-\u003eindex;\n            varSeen[manager-\u003einvperm[index]] = 0;\n        }\n\n        if (S == one) {\n            if (m == max) {\n                ABC_FREE(varSeen);\n                return(S);\n            }\n            result = selectMintermsFromUniverse(manager,varSeen,m);\n            if (result)\n                cuddRef(result);\n            ABC_FREE(varSeen);\n        } else {\n            mtable = st__init_table( st__ptrcmp, st__ptrhash);\n            if (mtable == NULL) {\n                (void) fprintf(manager-\u003eout,\n                               \"Cudd_SplitSet: out-of-memory.\\n\");\n                ABC_FREE(varSeen);\n                manager-\u003eerrorCode = CUDD_MEMORY_OUT;\n                return(NULL);\n            }\n            /* The nodes of BDD S are annotated by the number of minterms\n            ** in their onset. The node and the number of minterms in its\n            ** onset are stored in mtable.\n            */\n            num = bddAnnotateMintermCount(manager,S,max,mtable);\n            if (m == num) {\n                st__foreach(mtable,cuddStCountfree,NIL(char));\n                st__free_table(mtable);\n                ABC_FREE(varSeen);\n                return(S);\n            }\n            \n            result = cuddSplitSetRecur(manager,mtable,varSeen,S,m,max,0);\n            if (result)\n                cuddRef(result);\n            st__foreach(mtable,cuddStCountfree,NULL);\n            st__free_table(mtable);\n            ABC_FREE(varSeen);\n        }\n    } while (manager-\u003ereordered == 1);\n\n    cuddDeref(result);\n    return(result);\n\n}",
+      "Draft": "func Cudd_SplitSet(manager *DdManager, S *DdNode, xVars **DdNode, n int32, m float64) *DdNode {\n    var result *DdNode;\n    var zero, one *DdNode;\n    var max, num float64;\n    var mtable *st__table;\n    var varSeen *int32;\n    var i, index, size int32;\n\n    size = manager.size;\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    /* Trivial cases. */\n    if m == 0.0 {\n        return(zero);\n    }\n    if S == zero {\n        return(nil);\n    }\n\n    max = math.Pow(float64(2.0), float64(float64(n)));\n    if m \u003e max {\n        return(nil); }\n\n    for {\n        manager.reordered = 0;\n        /* varSeen is used to mark the variables that are encountered\n        ** while traversing the BDD S.\n        */\n        varSeen = ABC_ALLOC(int, size);\n        if varSeen == nil {\n            manager.errorCode = CUDD_MEMORY_OUT;\n            return(nil);\n        }\n        for i = 0; i \u003c size; i++ {\n            varSeen[i] = -1;\n        }\n        for i = 0; i \u003c n; i++ {\n            index = (xVars[i]).index;\n            varSeen[manager.invperm[index]] = 0;\n        }\n\n        if S == one {\n            if m == max {\n                ABC_FREE(varSeen);\n                return(S);\n            }\n            result = selectMintermsFromUniverse(manager,varSeen,m);\n            if result != nil {\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(result).ref); }\n            ABC_FREE(varSeen);\n        } else {\n            mtable = st__init_table( st__ptrcmp, st__ptrhash);\n            if mtable == nil {\n                (void) fmt.Fprintf(manager.out, \"Cudd_SplitSet: out-of-memory.\\n\");\n                ABC_FREE(varSeen);\n                manager.errorCode = CUDD_MEMORY_OUT;\n                return(nil);\n            }\n            /* The nodes of BDD S are annotated by the number of minterms\n            ** in their onset. The node and the number of minterms in its\n            ** onset are stored in mtable.\n            */\n            num = bddAnnotateMintermCount(manager,S,max,mtable);\n            if m == num {\n                st__foreach(mtable,cuddStCountfree,NIL(char));\n                st__free_table(mtable);\n                ABC_FREE(varSeen);\n                return(S);\n            }\n            \n            result = cuddSplitSetRecur(manager,mtable,varSeen,S,m,max,0);\n            if result != nil {\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(result).ref); }\n            st__foreach(mtable,cuddStCountfree,nil);\n            st__free_table(mtable);\n            ABC_FREE(varSeen);\n        }\n    \nif !(manager.reordered == 1) { break }\n} \n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(result).ref);\n    return(result);\n\n}"
+    },
+    {
+      "Name": "cuddSplitSetRecur",
+      "Start": 9127,
+      "End": 15687,
+      "BodyStart": 9272,
+      "Original": "DdNode*\ncuddSplitSetRecur(\n  DdManager * manager,\n  st__table * mtable,\n  int * varSeen,\n  DdNode * p,\n  double  n,\n  double  max,\n  int  index)\n{\n    DdNode *one, *zero, *N, *Nv;\n    DdNode *Nnv, *q, *r, *v;\n    DdNode *result;\n    double *dummy, numT, numE;\n    int variable, positive;\n  \n    statLine(manager);\n    one = DD_ONE(manager);\n    zero = Cudd_Not(one);\n\n    /* If p is constant, extract n minterms from constant 1.  The procedure by\n    ** construction guarantees that minterms will not be extracted from\n    ** constant 0.\n    */\n    if (Cudd_IsConstant(p)) {\n        q = selectMintermsFromUniverse(manager,varSeen,n);\n        return(q);\n    }\n\n    N = Cudd_Regular(p);\n\n    /* Set variable as seen. */\n    variable = N-\u003eindex;\n    varSeen[manager-\u003einvperm[variable]] = -1;\n\n    Nv = cuddT(N);\n    Nnv = cuddE(N);\n    if (Cudd_IsComplement(p)) {\n        Nv = Cudd_Not(Nv);\n        Nnv = Cudd_Not(Nnv);\n    }\n\n    /* If both the children of 'p' are constants, extract n minterms from a\n    ** constant node.\n    */\n    if (Cudd_IsConstant(Nv) \u0026\u0026 Cudd_IsConstant(Nnv)) {\n        q = selectMintermsFromUniverse(manager,varSeen,n);\n        if (q == NULL) {\n            return(NULL);\n        }\n        cuddRef(q);\n        r = cuddBddAndRecur(manager,p,q);\n        if (r == NULL) {\n            Cudd_RecursiveDeref(manager,q);\n            return(NULL);\n        }\n        cuddRef(r);\n        Cudd_RecursiveDeref(manager,q);\n        cuddDeref(r);\n        return(r);\n    }\n  \n    /* Lookup the # of minterms in the onset of the node from the table. */\n    if (!Cudd_IsConstant(Nv)) {\n        if (! st__lookup(mtable, (const char *)Nv, (char **)\u0026dummy)) return(NULL);\n        numT = *dummy/(2*(1\u003c\u003cindex));\n    } else if (Nv == one) {\n        numT = max/(2*(1\u003c\u003cindex));\n    } else {\n        numT = 0;\n    }\n  \n    if (!Cudd_IsConstant(Nnv)) {\n        if (! st__lookup(mtable, (const char *)Nnv, (char **)\u0026dummy)) return(NULL);\n        numE = *dummy/(2*(1\u003c\u003cindex));\n    } else if (Nnv == one) {\n        numE = max/(2*(1\u003c\u003cindex));\n    } else {\n        numE = 0;\n    }\n\n    v = cuddUniqueInter(manager,variable,one,zero);\n    cuddRef(v);\n\n    /* If perfect match. */\n    if (numT == n) {\n        q = cuddBddAndRecur(manager,v,Nv);\n        if (q == NULL) {\n            Cudd_RecursiveDeref(manager,v);\n            return(NULL);\n        }\n        cuddRef(q);\n        Cudd_RecursiveDeref(manager,v);\n        cuddDeref(q);\n        return(q);\n    }\n    if (numE == n) {\n        q = cuddBddAndRecur(manager,Cudd_Not(v),Nnv);\n        if (q == NULL) {\n            Cudd_RecursiveDeref(manager,v);\n            return(NULL);\n        }\n        cuddRef(q);\n        Cudd_RecursiveDeref(manager,v);\n        cuddDeref(q);\n        return(q);\n    }\n    /* If n is greater than numT, extract the difference from the ELSE child\n    ** and retain the function represented by the THEN branch.\n    */\n    if (numT \u003c n) {\n        q = cuddSplitSetRecur(manager,mtable,varSeen,\n                              Nnv,(n-numT),max,index+1);\n        if (q == NULL) {\n            Cudd_RecursiveDeref(manager,v);\n            return(NULL);\n        }\n        cuddRef(q);\n        r = cuddBddIteRecur(manager,v,Nv,q);\n        if (r == NULL) {\n            Cudd_RecursiveDeref(manager,q);\n            Cudd_RecursiveDeref(manager,v);\n            return(NULL);\n        }\n        cuddRef(r);\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        cuddDeref(r);\n        return(r);\n    }\n    /* If n is greater than numE, extract the difference from the THEN child\n    ** and retain the function represented by the ELSE branch.\n    */\n    if (numE \u003c n) {\n        q = cuddSplitSetRecur(manager,mtable,varSeen,\n                              Nv, (n-numE),max,index+1);\n        if (q == NULL) {\n            Cudd_RecursiveDeref(manager,v);\n            return(NULL);\n        }\n        cuddRef(q);\n        r = cuddBddIteRecur(manager,v,q,Nnv);\n        if (r == NULL) {\n            Cudd_RecursiveDeref(manager,q);\n            Cudd_RecursiveDeref(manager,v);\n            return(NULL);\n        }\n        cuddRef(r);\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        cuddDeref(r);    \n        return(r);\n    }\n\n    /* None of the above cases; (n \u003c numT and n \u003c numE) and either of\n    ** the Nv, Nnv or both are not constants. If possible extract the\n    ** required minterms the constant branch.\n    */\n    if (Cudd_IsConstant(Nv) \u0026\u0026 !Cudd_IsConstant(Nnv)) {\n        q = selectMintermsFromUniverse(manager,varSeen,n);\n        if (q == NULL) {\n            Cudd_RecursiveDeref(manager,v);\n            return(NULL);\n        }\n        cuddRef(q);\n        result = cuddBddAndRecur(manager,v,q);\n        if (result == NULL) {\n            Cudd_RecursiveDeref(manager,q);\n            Cudd_RecursiveDeref(manager,v);\n            return(NULL);\n        }\n        cuddRef(result);\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        cuddDeref(result);\n        return(result);\n    } else if (!Cudd_IsConstant(Nv) \u0026\u0026 Cudd_IsConstant(Nnv)) {\n        q = selectMintermsFromUniverse(manager,varSeen,n);\n        if (q == NULL) {\n            Cudd_RecursiveDeref(manager,v);\n            return(NULL);\n        }\n        cuddRef(q);\n        result = cuddBddAndRecur(manager,Cudd_Not(v),q);\n        if (result == NULL) {\n            Cudd_RecursiveDeref(manager,q);\n            Cudd_RecursiveDeref(manager,v);\n            return(NULL);\n        }\n        cuddRef(result);\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        cuddDeref(result);\n        return(result);\n    }\n\n    /* Both Nv and Nnv are not constants. So choose the one which\n    ** has fewer minterms in its onset.\n    */\n    positive = 0;\n    if (numT \u003c numE) {\n        q = cuddSplitSetRecur(manager,mtable,varSeen,\n                              Nv,n,max,index+1);\n        positive = 1;\n    } else {\n        q = cuddSplitSetRecur(manager,mtable,varSeen,\n                              Nnv,n,max,index+1);\n    }\n\n    if (q == NULL) {\n        Cudd_RecursiveDeref(manager,v);\n        return(NULL);\n    }\n    cuddRef(q);\n\n    if (positive) {\n        result = cuddBddAndRecur(manager,v,q);\n    } else {\n        result = cuddBddAndRecur(manager,Cudd_Not(v),q);\n    }\n    if (result == NULL) {\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        return(NULL);\n    }\n    cuddRef(result);\n    Cudd_RecursiveDeref(manager,q);\n    Cudd_RecursiveDeref(manager,v);\n    cuddDeref(result);\n\n    return(result);\n\n}",
+      "Draft": "func cuddSplitSetRecur(manager *DdManager, mtable *st__table, varSeen *int32, p *DdNode, n float64, max float64, index int32) *DdNode {\n    var one, zero, N, Nv *DdNode;\n    var Nnv, q, r, v *DdNode;\n    var result *DdNode;\n    var dummy *float64;\n    var numT float64;\n    var numE float64;\n    var variable, positive int32;\n  \n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    /* If p is constant, extract n minterms from constant 1.  The procedure by\n    ** construction guarantees that minterms will not be extracted from\n    ** constant 0.\n    */\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(p) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        q = selectMintermsFromUniverse(manager,varSeen,n);\n        return(q);\n    }\n\n    // inlining of macro Cudd_Regular\n    N = ((DdNode *)((ptruint)(p) \u0026 ~01));\n\n    /* Set variable as seen. */\n    variable = N.index;\n    varSeen[manager.invperm[variable]] = -1;\n\n    // inlining of macro cuddT\n    Nv = ((N).type.kids.T);\n    // inlining of macro cuddE\n    Nnv = ((N).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (p) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        Nv = ((DdNode *)((ptrint)(Nv) ^ 01));\n        // inlining of macro Cudd_Not\n        Nnv = ((DdNode *)((ptrint)(Nnv) ^ 01));\n    }\n\n    /* If both the children of 'p' are constants, extract n minterms from a\n    ** constant node.\n    */\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if ((((DdNode *)((ptruint)(Nv) \u0026 ~01))).index == CUDD_CONST_INDEX) \u0026\u0026 ((((DdNode *)((ptruint)(Nnv) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        q = selectMintermsFromUniverse(manager,varSeen,n);\n        if q == nil {\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        r = cuddBddAndRecur(manager,p,q);\n        if r == nil {\n            Cudd_RecursiveDeref(manager,q);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(r).ref);\n        Cudd_RecursiveDeref(manager,q);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(r).ref);\n        return(r);\n    }\n  \n    /* Lookup the # of minterms in the onset of the node from the table. */\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if !((((DdNode *)((ptruint)(Nv) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        if ! st__lookup(mtable, (char *)Nv, (char **)\u0026dummy) { return(nil); }\n        numT = *dummy/(2*(1\u003c\u003cindex));\n    } else if Nv == one {\n        numT = max/(2*(1\u003c\u003cindex));\n    } else {\n        numT = 0;\n    }\n  \n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if !((((DdNode *)((ptruint)(Nnv) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        if ! st__lookup(mtable, (char *)Nnv, (char **)\u0026dummy) { return(nil); }\n        numE = *dummy/(2*(1\u003c\u003cindex));\n    } else if Nnv == one {\n        numE = max/(2*(1\u003c\u003cindex));\n    } else {\n        numE = 0;\n    }\n\n    v = cuddUniqueInter(manager,variable,one,zero);\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(v).ref);\n\n    /* If perfect match. */\n    if numT == n {\n        q = cuddBddAndRecur(manager,v,Nv);\n        if q == nil {\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        Cudd_RecursiveDeref(manager,v);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(q).ref);\n        return(q);\n    }\n    if numE == n {\n        // inlining of macro Cudd_Not\n        q = cuddBddAndRecur(manager,((DdNode *)((ptrint)(v) ^ 01)),Nnv);\n        if q == nil {\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        Cudd_RecursiveDeref(manager,v);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(q).ref);\n        return(q);\n    }\n    /* If n is greater than numT, extract the difference from the ELSE child\n    ** and retain the function represented by the THEN branch.\n    */\n    if numT \u003c n {\n        q = cuddSplitSetRecur(manager,mtable,varSeen,\n                              Nnv,(n-numT),max,index+1);\n        if q == nil {\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        r = cuddBddIteRecur(manager,v,Nv,q);\n        if r == nil {\n            Cudd_RecursiveDeref(manager,q);\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(r).ref);\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(r).ref);\n        return(r);\n    }\n    /* If n is greater than numE, extract the difference from the THEN child\n    ** and retain the function represented by the ELSE branch.\n    */\n    if numE \u003c n {\n        q = cuddSplitSetRecur(manager,mtable,varSeen,\n                              Nv, (n-numE),max,index+1);\n        if q == nil {\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        r = cuddBddIteRecur(manager,v,q,Nnv);\n        if r == nil {\n            Cudd_RecursiveDeref(manager,q);\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(r).ref);\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(r).ref);    \n        return(r);\n    }\n\n    /* None of the above cases; (n \u003c numT and n \u003c numE) and either of\n    ** the Nv, Nnv or both are not constants. If possible extract the\n    ** required minterms the constant branch.\n    */\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if ((((DdNode *)((ptruint)(Nv) \u0026 ~01))).index == CUDD_CONST_INDEX) \u0026\u0026 !((((DdNode *)((ptruint)(Nnv) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        q = selectMintermsFromUniverse(manager,varSeen,n);\n        if q == nil {\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        result = cuddBddAndRecur(manager,v,q);\n        if result == nil {\n            Cudd_RecursiveDeref(manager,q);\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(result).ref);\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(result).ref);\n        return(result);\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    } else if !((((DdNode *)((ptruint)(Nv) \u0026 ~01))).index == CUDD_CONST_INDEX) \u0026\u0026 ((((DdNode *)((ptruint)(Nnv) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        q = selectMintermsFromUniverse(manager,varSeen,n);\n        if q == nil {\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        // inlining of macro Cudd_Not\n        result = cuddBddAndRecur(manager,((DdNode *)((ptrint)(v) ^ 01)),q);\n        if result == nil {\n            Cudd_RecursiveDeref(manager,q);\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(result).ref);\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(result).ref);\n        return(result);\n    }\n\n    /* Both Nv and Nnv are not constants. So choose the one which\n    ** has fewer minterms in its onset.\n    */\n    positive = 0;\n    if numT \u003c numE {\n        q = cuddSplitSetRecur(manager,mtable,varSeen,\n                              Nv,n,max,index+1);\n        positive = 1;\n    } else {\n        q = cuddSplitSetRecur(manager,mtable,varSeen,\n                              Nnv,n,max,index+1);\n    }\n\n    if q == nil {\n        Cudd_RecursiveDeref(manager,v);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(q).ref);\n\n    if positive != 0 {\n        result = cuddBddAndRecur(manager,v,q);\n    } else {\n        // inlining of macro Cudd_Not\n        result = cuddBddAndRecur(manager,((DdNode *)((ptrint)(v) ^ 01)),q);\n    }\n    if result == nil {\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(result).ref);\n    Cudd_RecursiveDeref(manager,q);\n    Cudd_RecursiveDeref(manager,v);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(result).ref);\n\n    return(result);\n\n}"
+    },
+    {
+      "Name": "selectMintermsFromUniverse",
+      "Start": 16606,
+      "End": 17771,
+      "BodyStart": 16703,
+      "Original": "static DdNode *\nselectMintermsFromUniverse(\n  DdManager * manager,\n  int * varSeen,\n  double  n)\n{\n    int numVars;\n    int i, size, j;\n     DdNode *one, *zero, *result;\n    DdNode **vars;\n\n    numVars = 0;\n    size = manager-\u003esize;\n    one = DD_ONE(manager);\n    zero = Cudd_Not(one);\n\n    /* Count the number of variables not encountered so far in procedure\n    ** cuddSplitSetRecur.\n    */\n    for (i = size-1; i \u003e= 0; i--) {\n        if(varSeen[i] == 0)\n            numVars++;\n    }\n    vars = ABC_ALLOC(DdNode *, numVars);\n    if (!vars) {\n        manager-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return(NULL);\n    }\n\n    j = 0;\n    for (i = size-1; i \u003e= 0; i--) {\n        if(varSeen[i] == 0) {\n            vars[j] = cuddUniqueInter(manager,manager-\u003eperm[i],one,zero);\n            cuddRef(vars[j]);\n            j++;\n        }\n    }\n\n    /* Compute a function which has n minterms and depends on at most\n    ** numVars variables.\n    */\n    result = mintermsFromUniverse(manager,vars,numVars,n, 0);\n    if (result) \n        cuddRef(result);\n\n    for (i = 0; i \u003c numVars; i++)\n        Cudd_RecursiveDeref(manager,vars[i]);\n    ABC_FREE(vars);\n\n    return(result);\n\n}",
+      "Draft": "func selectMintermsFromUniverse(manager *DdManager, varSeen *int32, n float64) *DdNode {\n    var numVars int32;\n    var i, size, j int32;\n     var one, zero, result *DdNode;\n    var vars **DdNode;\n\n    numVars = 0;\n    size = manager.size;\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    /* Count the number of variables not encountered so far in procedure\n    ** cuddSplitSetRecur.\n    */\n    for i = size-1; i \u003e= 0; i-- {\n        if varSeen[i] == 0 {\n            numVars++; }\n    }\n    vars = ABC_ALLOC(DdNode *, numVars);\n    if !vars {\n        manager.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n\n    j = 0;\n    for i = size-1; i \u003e= 0; i-- {\n        if varSeen[i] == 0 {\n            vars[j] = cuddUniqueInter(manager,manager.perm[i],one,zero);\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(vars[j]).ref);\n            j++;\n        }\n    }\n\n    /* Compute a function which has n minterms and depends on at most\n    ** numVars variables.\n    */\n    result = mintermsFromUniverse(manager,vars,numVars,n, 0);\n    if result != nil { \n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(result).ref); }\n\n    for i = 0; i \u003c numVars; i++ {\n        Cudd_RecursiveDeref(manager,vars[i]);\n    }\n    ABC_FREE(vars);\n\n    return(result);\n\n}"
+    },
+    {
+      "Name": "mintermsFromUniverse",
+      "Start": 18147,
+      "End": 19694,
+      "BodyStart": 18269,
+      "Original": "static DdNode *\nmintermsFromUniverse(\n  DdManager * manager,\n  DdNode ** vars,\n  int  numVars,\n  double  n,\n  int  index)\n{\n    DdNode *one, *zero;\n    DdNode *q, *result;\n    double max, max2;\n    \n    statLine(manager);\n    one = DD_ONE(manager);\n    zero = Cudd_Not(one);\n\n    max = pow(2.0, (double)numVars);\n    max2 = max / 2.0;\n\n    if (n == max)\n        return(one);\n    if (n == 0.0)\n        return(zero);\n    /* if n == 2^(numVars-1), return a single variable */\n    if (n == max2)\n        return vars[index];\n    else if (n \u003e max2) {\n        /* When n \u003e 2^(numVars-1), a single variable vars[index]\n        ** contains 2^(numVars-1) minterms. The rest are extracted\n        ** from a constant with 1 less variable.\n        */\n        q = mintermsFromUniverse(manager,vars,numVars-1,(n-max2),index+1);\n        if (q == NULL)\n            return(NULL);\n        cuddRef(q);\n        result = cuddBddIteRecur(manager,vars[index],one,q);\n    } else {\n        /* When n \u003c 2^(numVars-1), a literal of variable vars[index]\n        ** is selected. The required n minterms are extracted from a\n        ** constant with 1 less variable.\n        */\n        q = mintermsFromUniverse(manager,vars,numVars-1,n,index+1);\n        if (q == NULL)\n            return(NULL);\n        cuddRef(q);\n        result = cuddBddAndRecur(manager,vars[index],q);\n    }\n    \n    if (result == NULL) {\n        Cudd_RecursiveDeref(manager,q);\n        return(NULL);\n    }\n    cuddRef(result);\n    Cudd_RecursiveDeref(manager,q);\n    cuddDeref(result);\n    return(result);\n\n}",
+      "Draft": "func mintermsFromUniverse(manager *DdManager, vars **DdNode, numVars int32, n float64, index int32) *DdNode {\n    var one, zero *DdNode;\n    var q, result *DdNode;\n    var max, max2 float64;\n    \n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    max = math.Pow(float64(2.0), float64(float64(numVars)));\n    max2 = max / 2.0;\n\n    if n == max {\n        return(one); }\n    if n == 0.0 {\n        return(zero); }\n    /* if n == 2^(numVars-1), return a single variable */\n    if n == max2 {\n        return vars[index];\n    } else if n \u003e max2 {\n        /* When n \u003e 2^(numVars-1), a single variable vars[index]\n        ** contains 2^(numVars-1) minterms. The rest are extracted\n        ** from a constant with 1 less variable.\n        */\n        q = mintermsFromUniverse(manager,vars,numVars-1,(n-max2),index+1);\n        if q == nil {\n            return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        result = cuddBddIteRecur(manager,vars[index],one,q);\n    } else {\n        /* When n \u003c 2^(numVars-1), a literal of variable vars[index]\n        ** is selected. The required n minterms are extracted from a\n        ** constant with 1 less variable.\n        */\n        q = mintermsFromUniverse(manager,vars,numVars-1,n,index+1);\n        if q == nil {\n            return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        result = cuddBddAndRecur(manager,vars[index],q);\n    }\n    \n    if result == nil {\n        Cudd_RecursiveDeref(manager,q);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(result).ref);\n    Cudd_RecursiveDeref(manager,q);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(result).ref);\n    return(result);\n\n}"
+    },
+    {
+      "Name": "bddAnnotateMintermCount",
+      "Start": 20219,
+      "End": 21599,
+      "BodyStart": 20334,
+      "Original": "static double\nbddAnnotateMintermCount(\n  DdManager * manager,\n  DdNode * node,\n  double  max,\n  st__table * table)\n{\n\n    DdNode *N,*Nv,*Nnv;\n    register double min_v,min_nv;\n    register double min_N;\n    double *pmin;\n    double *dummy;\n\n    statLine(manager);\n    N = Cudd_Regular(node);\n    if (cuddIsConstant(N)) {\n        if (node == DD_ONE(manager)) {\n            return(max);\n        } else {\n            return(0.0);\n        }\n    }\n\n    if ( st__lookup(table, (const char *)node, (char **)\u0026dummy)) {\n        return(*dummy);\n    }   \n  \n    Nv = cuddT(N);\n    Nnv = cuddE(N);\n    if (N != node) {\n        Nv = Cudd_Not(Nv);\n        Nnv = Cudd_Not(Nnv);\n    }\n\n    /* Recur on the two branches. */\n    min_v  = bddAnnotateMintermCount(manager,Nv,max,table) / 2.0;\n    if (min_v == (double)CUDD_OUT_OF_MEM)\n        return ((double)CUDD_OUT_OF_MEM);\n    min_nv = bddAnnotateMintermCount(manager,Nnv,max,table) / 2.0;\n    if (min_nv == (double)CUDD_OUT_OF_MEM)\n        return ((double)CUDD_OUT_OF_MEM);\n    min_N  = min_v + min_nv;\n\n    pmin = ABC_ALLOC(double,1);\n    if (pmin == NULL) {\n        manager-\u003eerrorCode = CUDD_MEMORY_OUT;\n        return((double)CUDD_OUT_OF_MEM);\n    }\n    *pmin = min_N;\n\n    if ( st__insert(table,(char *)node, (char *)pmin) == st__OUT_OF_MEM) {\n        ABC_FREE(pmin);\n        return((double)CUDD_OUT_OF_MEM);\n    }\n    \n    return(min_N);\n\n}",
+      "Draft": "func bddAnnotateMintermCount(manager *DdManager, node *DdNode, max float64, table *st__table) float64 {\n\n    var N, Nv, Nnv *DdNode;\n    register double min_v,min_nv;\n    register double min_N;\n    var pmin *float64;\n    var dummy *float64;\n\n    statLine(manager);\n    // inlining of macro Cudd_Regular\n    N = ((DdNode *)((ptruint)(node) \u0026 ~01));\n    // inlining of macro cuddIsConstant\n    if (N).index == CUDD_CONST_INDEX {\n        // inlining of macro DD_ONE\n        if node == ((manager).one) {\n            return(max);\n        } else {\n            return(0.0);\n        }\n    }\n\n    if st__lookup(table, (char *)node, (char **)\u0026dummy) {\n        return(*dummy);\n    }   \n  \n    // inlining of macro cuddT\n    Nv = ((N).type.kids.T);\n    // inlining of macro cuddE\n    Nnv = ((N).type.kids.E);\n    if N != node {\n        // inlining of macro Cudd_Not\n        Nv = ((DdNode *)((ptrint)(Nv) ^ 01));\n        // inlining of macro Cudd_Not\n        Nnv = ((DdNode *)((ptrint)(Nnv) ^ 01));\n    }\n\n    /* Recur on the two branches. */\n    min_v  = bddAnnotateMintermCount(manager,Nv,max,table) / 2.0;\n    if min_v == float64(CUDD_OUT_OF_MEM) {\n        return (float64(CUDD_OUT_OF_MEM)); }\n    min_nv = bddAnnotateMintermCount(manager,Nnv,max,table) / 2.0;\n    if min_nv == float64(CUDD_OUT_OF_MEM) {\n        return (float64(CUDD_OUT_OF_MEM)); }\n    min_N  = min_v + min_nv;\n\n    pmin = new(float64);\n    if pmin == nil {\n        manager.errorCode = CUDD_MEMORY_OUT;\n        return(float64(CUDD_OUT_OF_MEM));\n    }\n    *pmin = min_N;\n\n    if st__insert(table,(char *)node, (char *)pmin) == st__OUT_OF_MEM {\n        ABC_FREE(pmin);\n        return(float64(CUDD_OUT_OF_MEM));\n    }\n    \n    return(min_N);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::mechanical::do::5931",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5825,
+      "End": 5827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::5700",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5612,
+      "End": 5612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::9868",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9479,
+      "End": 9479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::10189",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9680,
+      "End": 9680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::10395",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9795,
+      "End": 9795
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::10824",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10001,
+      "End": 10001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::10915",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10029,
+      "End": 10029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::11170",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10164,
+      "End": 10164
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::11337",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10187,
+      "End": 10187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::12182",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10693,
+      "End": 10693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::12298",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10767,
+      "End": 10776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::12582",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10949,
+      "End": 10949
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::12700",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11025,
+      "End": 11034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::13542",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11627,
+      "End": 11627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::16107",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13552,
+      "End": 13552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::16275",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13576,
+      "End": 13576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::17195",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14157,
+      "End": 14157
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::17362",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14180,
+      "End": 14180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::17763",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14429,
+      "End": 14429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::18984",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15392,
+      "End": 15392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::20705",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16877,
+      "End": 16877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::22471",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18407,
+      "End": 18407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::24882",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20491,
+      "End": 20491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::25225",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20710,
+      "End": 20719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::25501",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20839,
+      "End": 20839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::25592",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20867,
+      "End": 20867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::26196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21453,
+      "End": 21461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::pointer-cast::26210",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21467,
+      "End": 21475
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::Cudd_SplitSet",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_SplitSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5312,
+      "End": 7830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::cuddSplitSetRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddSplitSetRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9127,
+      "End": 15687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::selectMintermsFromUniverse",
+      "Category": "semantic-review",
+      "Symbol": "selectMintermsFromUniverse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16606,
+      "End": 17771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::mintermsFromUniverse",
+      "Category": "semantic-review",
+      "Symbol": "mintermsFromUniverse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18147,
+      "End": 19694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::bddAnnotateMintermCount",
+      "Category": "semantic-review",
+      "Symbol": "bddAnnotateMintermCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20219,
+      "End": 21599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::6000",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6000,
+      "End": 6020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::6417",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6417,
+      "End": 6434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::6585",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6585,
+      "End": 6600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::6614",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6614,
+      "End": 6631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::6875",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6875,
+      "End": 6892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::7342",
+      "Category": "macro-inline-review",
+      "Symbol": "NIL",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7342,
+      "End": 7351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::7410",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7410,
+      "End": 7427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::7597",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7597,
+      "End": 7612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::7716",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7716,
+      "End": 7733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::7789",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7789,
+      "End": 7806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::9422",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9422,
+      "End": 9439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::10339",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10339,
+      "End": 10349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::10506",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10506,
+      "End": 10516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::10566",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10566,
+      "End": 10578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::11253",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11253,
+      "End": 11263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::11471",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11471,
+      "End": 11481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::11531",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11531,
+      "End": 11543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::11758",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11758,
+      "End": 11768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::11818",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11818,
+      "End": 11830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::12248",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12248,
+      "End": 12258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::12462",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12462,
+      "End": 12472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::12562",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12562,
+      "End": 12574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::12992",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12992,
+      "End": 13002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::13207",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13207,
+      "End": 13217
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::13307",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13307,
+      "End": 13319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::13772",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13772,
+      "End": 13782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::13993",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13993,
+      "End": 14008
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::14098",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14098,
+      "End": 14115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::14376",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14376,
+      "End": 14386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::14607",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14607,
+      "End": 14622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::14712",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14712,
+      "End": 14729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::15258",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15258,
+      "End": 15268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::15552",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15552,
+      "End": 15567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::15645",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15645,
+      "End": 15662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::17103",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17103,
+      "End": 17131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::17388",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17388,
+      "End": 17404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::17630",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 17630,
+      "End": 17645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::17732",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17732,
+      "End": 17746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::18350",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 18350,
+      "End": 18367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::19016",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19016,
+      "End": 19026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::19418",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19418,
+      "End": 19428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::19596",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19596,
+      "End": 19611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::19653",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 19653,
+      "End": 19670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::20464",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20464,
+      "End": 20481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::21269",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21269,
+      "End": 21288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddSplit.c::macro-inline::21510",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21510,
+      "End": 21524
+    }
+  ],
+  "Draft": "package cudd\n\nimport (\n\t\"fmt\"\n\t\"math\"\n)\n\n/**CFile***********************************************************************\n\n  FileName    [cuddSplit.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Returns a subset of minterms from a boolean function.]\n\n  Description [External functions included in this modoule:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_SplitSet()\n                \u003c/ul\u003e\n        Internal functions included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddSplitSetRecur()\n                \u003c/u\u003e\n        Static functions included in this module:\n                \u003cul\u003e\n                \u003cli\u003e selectMintermsFromUniverse()\n                \u003cli\u003e mintermsFromUniverse()\n                \u003cli\u003e bddAnnotateMintermCount()\n                \u003c/ul\u003e ]\n\n  SeeAlso     []\n\n  Author      [Balakrishna Kumthekar]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Structure declarations                                                    */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static DdNode * selectMintermsFromUniverse (DdManager *manager, int *varSeen, double n);\n\n// static DdNode * mintermsFromUniverse (DdManager *manager, DdNode **vars, int numVars, double n, int index);\n\n// static double bddAnnotateMintermCount (DdManager *manager, DdNode *node, double max, st__table *table);\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns m minterms from a BDD.]\n\n  Description [Returns \u003ccode\u003em\u003c/code\u003e minterms from a BDD whose\n  support has \u003ccode\u003en\u003c/code\u003e variables at most.  The procedure tries\n  to create as few extra nodes as possible. The function represented\n  by \u003ccode\u003eS\u003c/code\u003e depends on at most \u003ccode\u003en\u003c/code\u003e of the variables\n  in \u003ccode\u003exVars\u003c/code\u003e. Returns a BDD with \u003ccode\u003em\u003c/code\u003e minterms\n  of the on-set of S if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Cudd_SplitSet(manager *DdManager, S *DdNode, xVars **DdNode, n int32, m float64) *DdNode {\n    var result *DdNode;\n    var zero, one *DdNode;\n    var max, num float64;\n    var mtable *st__table;\n    var varSeen *int32;\n    var i, index, size int32;\n\n    size = manager.size;\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    /* Trivial cases. */\n    if m == 0.0 {\n        return(zero);\n    }\n    if S == zero {\n        return(nil);\n    }\n\n    max = math.Pow(float64(2.0), float64(float64(n)));\n    if m \u003e max {\n        return(nil); }\n\n    for {\n        manager.reordered = 0;\n        /* varSeen is used to mark the variables that are encountered\n        ** while traversing the BDD S.\n        */\n        varSeen = ABC_ALLOC(int, size);\n        if varSeen == nil {\n            manager.errorCode = CUDD_MEMORY_OUT;\n            return(nil);\n        }\n        for i = 0; i \u003c size; i++ {\n            varSeen[i] = -1;\n        }\n        for i = 0; i \u003c n; i++ {\n            index = (xVars[i]).index;\n            varSeen[manager.invperm[index]] = 0;\n        }\n\n        if S == one {\n            if m == max {\n                ABC_FREE(varSeen);\n                return(S);\n            }\n            result = selectMintermsFromUniverse(manager,varSeen,m);\n            if result != nil {\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(result).ref); }\n            ABC_FREE(varSeen);\n        } else {\n            mtable = st__init_table( st__ptrcmp, st__ptrhash);\n            if mtable == nil {\n                (void) fmt.Fprintf(manager.out, \"Cudd_SplitSet: out-of-memory.\\n\");\n                ABC_FREE(varSeen);\n                manager.errorCode = CUDD_MEMORY_OUT;\n                return(nil);\n            }\n            /* The nodes of BDD S are annotated by the number of minterms\n            ** in their onset. The node and the number of minterms in its\n            ** onset are stored in mtable.\n            */\n            num = bddAnnotateMintermCount(manager,S,max,mtable);\n            if m == num {\n                st__foreach(mtable,cuddStCountfree,NIL(char));\n                st__free_table(mtable);\n                ABC_FREE(varSeen);\n                return(S);\n            }\n            \n            result = cuddSplitSetRecur(manager,mtable,varSeen,S,m,max,0);\n            if result != nil {\n                // inlining of macro cuddRef\n                cuddSatInc(Cudd_Regular(result).ref); }\n            st__foreach(mtable,cuddStCountfree,nil);\n            st__free_table(mtable);\n            ABC_FREE(varSeen);\n        }\n    \nif !(manager.reordered == 1) { break }\n} \n\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(result).ref);\n    return(result);\n\n} /* end of Cudd_SplitSet */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Implements the recursive step of Cudd_SplitSet.]\n\n  Description [Implements the recursive step of Cudd_SplitSet. The\n  procedure recursively traverses the BDD and checks to see if any\n  node satisfies the minterm requirements as specified by 'n'. At any\n  node X, n is compared to the number of minterms in the onset of X's\n  children. If either of the child nodes have exactly n minterms, then\n  that node is returned; else, if n is greater than the onset of one\n  of the child nodes, that node is retained and the difference in the\n  number of minterms is extracted from the other child. In case n\n  minterms can be extracted from constant 1, the algorithm returns the\n  result with at most log(n) nodes.]\n\n  SideEffects [The array 'varSeen' is updated at every recursive call\n  to set the variables traversed by the procedure.]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddSplitSetRecur(manager *DdManager, mtable *st__table, varSeen *int32, p *DdNode, n float64, max float64, index int32) *DdNode {\n    var one, zero, N, Nv *DdNode;\n    var Nnv, q, r, v *DdNode;\n    var result *DdNode;\n    var dummy *float64;\n    var numT float64;\n    var numE float64;\n    var variable, positive int32;\n  \n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    /* If p is constant, extract n minterms from constant 1.  The procedure by\n    ** construction guarantees that minterms will not be extracted from\n    ** constant 0.\n    */\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(p) \u0026 ~01))).index == CUDD_CONST_INDEX {\n        q = selectMintermsFromUniverse(manager,varSeen,n);\n        return(q);\n    }\n\n    // inlining of macro Cudd_Regular\n    N = ((DdNode *)((ptruint)(p) \u0026 ~01));\n\n    /* Set variable as seen. */\n    variable = N.index;\n    varSeen[manager.invperm[variable]] = -1;\n\n    // inlining of macro cuddT\n    Nv = ((N).type.kids.T);\n    // inlining of macro cuddE\n    Nnv = ((N).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (p) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        Nv = ((DdNode *)((ptrint)(Nv) ^ 01));\n        // inlining of macro Cudd_Not\n        Nnv = ((DdNode *)((ptrint)(Nnv) ^ 01));\n    }\n\n    /* If both the children of 'p' are constants, extract n minterms from a\n    ** constant node.\n    */\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if ((((DdNode *)((ptruint)(Nv) \u0026 ~01))).index == CUDD_CONST_INDEX) \u0026\u0026 ((((DdNode *)((ptruint)(Nnv) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        q = selectMintermsFromUniverse(manager,varSeen,n);\n        if q == nil {\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        r = cuddBddAndRecur(manager,p,q);\n        if r == nil {\n            Cudd_RecursiveDeref(manager,q);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(r).ref);\n        Cudd_RecursiveDeref(manager,q);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(r).ref);\n        return(r);\n    }\n  \n    /* Lookup the # of minterms in the onset of the node from the table. */\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if !((((DdNode *)((ptruint)(Nv) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        if ! st__lookup(mtable, (char *)Nv, (char **)\u0026dummy) { return(nil); }\n        numT = *dummy/(2*(1\u003c\u003cindex));\n    } else if Nv == one {\n        numT = max/(2*(1\u003c\u003cindex));\n    } else {\n        numT = 0;\n    }\n  \n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if !((((DdNode *)((ptruint)(Nnv) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        if ! st__lookup(mtable, (char *)Nnv, (char **)\u0026dummy) { return(nil); }\n        numE = *dummy/(2*(1\u003c\u003cindex));\n    } else if Nnv == one {\n        numE = max/(2*(1\u003c\u003cindex));\n    } else {\n        numE = 0;\n    }\n\n    v = cuddUniqueInter(manager,variable,one,zero);\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(v).ref);\n\n    /* If perfect match. */\n    if numT == n {\n        q = cuddBddAndRecur(manager,v,Nv);\n        if q == nil {\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        Cudd_RecursiveDeref(manager,v);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(q).ref);\n        return(q);\n    }\n    if numE == n {\n        // inlining of macro Cudd_Not\n        q = cuddBddAndRecur(manager,((DdNode *)((ptrint)(v) ^ 01)),Nnv);\n        if q == nil {\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        Cudd_RecursiveDeref(manager,v);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(q).ref);\n        return(q);\n    }\n    /* If n is greater than numT, extract the difference from the ELSE child\n    ** and retain the function represented by the THEN branch.\n    */\n    if numT \u003c n {\n        q = cuddSplitSetRecur(manager,mtable,varSeen,\n                              Nnv,(n-numT),max,index+1);\n        if q == nil {\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        r = cuddBddIteRecur(manager,v,Nv,q);\n        if r == nil {\n            Cudd_RecursiveDeref(manager,q);\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(r).ref);\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(r).ref);\n        return(r);\n    }\n    /* If n is greater than numE, extract the difference from the THEN child\n    ** and retain the function represented by the ELSE branch.\n    */\n    if numE \u003c n {\n        q = cuddSplitSetRecur(manager,mtable,varSeen,\n                              Nv, (n-numE),max,index+1);\n        if q == nil {\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        r = cuddBddIteRecur(manager,v,q,Nnv);\n        if r == nil {\n            Cudd_RecursiveDeref(manager,q);\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(r).ref);\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(r).ref);    \n        return(r);\n    }\n\n    /* None of the above cases; (n \u003c numT and n \u003c numE) and either of\n    ** the Nv, Nnv or both are not constants. If possible extract the\n    ** required minterms the constant branch.\n    */\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if ((((DdNode *)((ptruint)(Nv) \u0026 ~01))).index == CUDD_CONST_INDEX) \u0026\u0026 !((((DdNode *)((ptruint)(Nnv) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        q = selectMintermsFromUniverse(manager,varSeen,n);\n        if q == nil {\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        result = cuddBddAndRecur(manager,v,q);\n        if result == nil {\n            Cudd_RecursiveDeref(manager,q);\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(result).ref);\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(result).ref);\n        return(result);\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    } else if !((((DdNode *)((ptruint)(Nv) \u0026 ~01))).index == CUDD_CONST_INDEX) \u0026\u0026 ((((DdNode *)((ptruint)(Nnv) \u0026 ~01))).index == CUDD_CONST_INDEX) {\n        q = selectMintermsFromUniverse(manager,varSeen,n);\n        if q == nil {\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        // inlining of macro Cudd_Not\n        result = cuddBddAndRecur(manager,((DdNode *)((ptrint)(v) ^ 01)),q);\n        if result == nil {\n            Cudd_RecursiveDeref(manager,q);\n            Cudd_RecursiveDeref(manager,v);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(result).ref);\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(result).ref);\n        return(result);\n    }\n\n    /* Both Nv and Nnv are not constants. So choose the one which\n    ** has fewer minterms in its onset.\n    */\n    positive = 0;\n    if numT \u003c numE {\n        q = cuddSplitSetRecur(manager,mtable,varSeen,\n                              Nv,n,max,index+1);\n        positive = 1;\n    } else {\n        q = cuddSplitSetRecur(manager,mtable,varSeen,\n                              Nnv,n,max,index+1);\n    }\n\n    if q == nil {\n        Cudd_RecursiveDeref(manager,v);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(q).ref);\n\n    if positive != 0 {\n        result = cuddBddAndRecur(manager,v,q);\n    } else {\n        // inlining of macro Cudd_Not\n        result = cuddBddAndRecur(manager,((DdNode *)((ptrint)(v) ^ 01)),q);\n    }\n    if result == nil {\n        Cudd_RecursiveDeref(manager,q);\n        Cudd_RecursiveDeref(manager,v);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(result).ref);\n    Cudd_RecursiveDeref(manager,q);\n    Cudd_RecursiveDeref(manager,v);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(result).ref);\n\n    return(result);\n\n} /* end of cuddSplitSetRecur */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis [This function prepares an array of variables which have not been\n  encountered so far when traversing the procedure cuddSplitSetRecur.]\n\n  Description [This function prepares an array of variables which have not been\n  encountered so far when traversing the procedure cuddSplitSetRecur. This\n  array is then used to extract the required number of minterms from a constant\n  1. The algorithm guarantees that the size of BDD will be utmost \\log(n).]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc selectMintermsFromUniverse(manager *DdManager, varSeen *int32, n float64) *DdNode {\n    var numVars int32;\n    var i, size, j int32;\n     var one, zero, result *DdNode;\n    var vars **DdNode;\n\n    numVars = 0;\n    size = manager.size;\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    /* Count the number of variables not encountered so far in procedure\n    ** cuddSplitSetRecur.\n    */\n    for i = size-1; i \u003e= 0; i-- {\n        if varSeen[i] == 0 {\n            numVars++; }\n    }\n    vars = ABC_ALLOC(DdNode *, numVars);\n    if !vars {\n        manager.errorCode = CUDD_MEMORY_OUT;\n        return(nil);\n    }\n\n    j = 0;\n    for i = size-1; i \u003e= 0; i-- {\n        if varSeen[i] == 0 {\n            vars[j] = cuddUniqueInter(manager,manager.perm[i],one,zero);\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(vars[j]).ref);\n            j++;\n        }\n    }\n\n    /* Compute a function which has n minterms and depends on at most\n    ** numVars variables.\n    */\n    result = mintermsFromUniverse(manager,vars,numVars,n, 0);\n    if result != nil { \n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(result).ref); }\n\n    for i = 0; i \u003c numVars; i++ {\n        Cudd_RecursiveDeref(manager,vars[i]);\n    }\n    ABC_FREE(vars);\n\n    return(result);\n\n} /* end of selectMintermsFromUniverse */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Recursive procedure to extract n mintems from constant 1.]\n\n  Description [Recursive procedure to extract n mintems from constant 1.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc mintermsFromUniverse(manager *DdManager, vars **DdNode, numVars int32, n float64, index int32) *DdNode {\n    var one, zero *DdNode;\n    var q, result *DdNode;\n    var max, max2 float64;\n    \n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    max = math.Pow(float64(2.0), float64(float64(numVars)));\n    max2 = max / 2.0;\n\n    if n == max {\n        return(one); }\n    if n == 0.0 {\n        return(zero); }\n    /* if n == 2^(numVars-1), return a single variable */\n    if n == max2 {\n        return vars[index];\n    } else if n \u003e max2 {\n        /* When n \u003e 2^(numVars-1), a single variable vars[index]\n        ** contains 2^(numVars-1) minterms. The rest are extracted\n        ** from a constant with 1 less variable.\n        */\n        q = mintermsFromUniverse(manager,vars,numVars-1,(n-max2),index+1);\n        if q == nil {\n            return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        result = cuddBddIteRecur(manager,vars[index],one,q);\n    } else {\n        /* When n \u003c 2^(numVars-1), a literal of variable vars[index]\n        ** is selected. The required n minterms are extracted from a\n        ** constant with 1 less variable.\n        */\n        q = mintermsFromUniverse(manager,vars,numVars-1,n,index+1);\n        if q == nil {\n            return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(q).ref);\n        result = cuddBddAndRecur(manager,vars[index],q);\n    }\n    \n    if result == nil {\n        Cudd_RecursiveDeref(manager,q);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(result).ref);\n    Cudd_RecursiveDeref(manager,q);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(result).ref);\n    return(result);\n\n} /* end of mintermsFromUniverse */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Annotates every node in the BDD node with its minterm count.]\n\n  Description [Annotates every node in the BDD node with its minterm count.\n  In this function, every node and the minterm count represented by it are\n  stored in a hash table.]\n\n  SideEffects [Fills up 'table' with the pair \u003cnode,minterm_count\u003e.]\n\n******************************************************************************/\nfunc bddAnnotateMintermCount(manager *DdManager, node *DdNode, max float64, table *st__table) float64 {\n\n    var N, Nv, Nnv *DdNode;\n    register double min_v,min_nv;\n    register double min_N;\n    var pmin *float64;\n    var dummy *float64;\n\n    statLine(manager);\n    // inlining of macro Cudd_Regular\n    N = ((DdNode *)((ptruint)(node) \u0026 ~01));\n    // inlining of macro cuddIsConstant\n    if (N).index == CUDD_CONST_INDEX {\n        // inlining of macro DD_ONE\n        if node == ((manager).one) {\n            return(max);\n        } else {\n            return(0.0);\n        }\n    }\n\n    if st__lookup(table, (char *)node, (char **)\u0026dummy) {\n        return(*dummy);\n    }   \n  \n    // inlining of macro cuddT\n    Nv = ((N).type.kids.T);\n    // inlining of macro cuddE\n    Nnv = ((N).type.kids.E);\n    if N != node {\n        // inlining of macro Cudd_Not\n        Nv = ((DdNode *)((ptrint)(Nv) ^ 01));\n        // inlining of macro Cudd_Not\n        Nnv = ((DdNode *)((ptrint)(Nnv) ^ 01));\n    }\n\n    /* Recur on the two branches. */\n    min_v  = bddAnnotateMintermCount(manager,Nv,max,table) / 2.0;\n    if min_v == float64(CUDD_OUT_OF_MEM) {\n        return (float64(CUDD_OUT_OF_MEM)); }\n    min_nv = bddAnnotateMintermCount(manager,Nnv,max,table) / 2.0;\n    if min_nv == float64(CUDD_OUT_OF_MEM) {\n        return (float64(CUDD_OUT_OF_MEM)); }\n    min_N  = min_v + min_nv;\n\n    pmin = new(float64);\n    if pmin == nil {\n        manager.errorCode = CUDD_MEMORY_OUT;\n        return(float64(CUDD_OUT_OF_MEM));\n    }\n    *pmin = min_N;\n\n    if st__insert(table,(char *)node, (char *)pmin) == st__OUT_OF_MEM {\n        ABC_FREE(pmin);\n        return(float64(CUDD_OUT_OF_MEM));\n    }\n    \n    return(min_N);\n\n} /* end of bddAnnotateMintermCount */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,357 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c",
+  "SHA256": "aeb1b481757daaaefae98c618b2b89b2a0d9ee0a2b27699cacde6e80c95451c7",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 18,
+        "ByteOffset": 3022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 3099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vCopies) == nNodes );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 9,
+        "ByteOffset": 3330
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkFromMini(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 90,
+        "Column": 18,
+        "ByteOffset": 3339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Abc_NtkFromMini(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 122,
+        "Column": 5,
+        "ByteOffset": 4380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 159,
+        "Column": 9,
+        "ByteOffset": 5894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 9,
+        "ByteOffset": 6203
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 9,
+        "ByteOffset": 6342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Current network in ABC framework is not defined.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 177,
+        "Column": 9,
+        "ByteOffset": 6623
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 9,
+        "ByteOffset": 6762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Current network in ABC framework is not defined.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NodeFanin0Copy",
+      "Start": 1370,
+      "End": 1652,
+      "BodyStart": 1466,
+      "Original": "Abc_Obj_t * Abc_NodeFanin0Copy( Abc_Ntk_t * pNtk, Vec_Int_t * vCopies, Mini_Aig_t * p, int Id )\n{\n    int Lit = Mini_AigNodeFanin0( p, Id );\n    int AbcLit = Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) );\n    return Abc_ObjFromLit( pNtk, AbcLit );\n}",
+      "Draft": "func Abc_NodeFanin0Copy(pNtk *Abc_Ntk_t, vCopies *Vec_Int_t, p *Mini_Aig_t, Id int32) *Abc_Obj_t {\n    var Lit int32  = Mini_AigNodeFanin0( p, Id );\n    var AbcLit int32  = Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) );\n    return Abc_ObjFromLit( pNtk, AbcLit );\n}"
+    },
+    {
+      "Name": "Abc_NodeFanin1Copy",
+      "Start": 1653,
+      "End": 1935,
+      "BodyStart": 1749,
+      "Original": "Abc_Obj_t * Abc_NodeFanin1Copy( Abc_Ntk_t * pNtk, Vec_Int_t * vCopies, Mini_Aig_t * p, int Id )\n{\n    int Lit = Mini_AigNodeFanin1( p, Id );\n    int AbcLit = Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) );\n    return Abc_ObjFromLit( pNtk, AbcLit );\n}",
+      "Draft": "func Abc_NodeFanin1Copy(pNtk *Abc_Ntk_t, vCopies *Vec_Int_t, p *Mini_Aig_t, Id int32) *Abc_Obj_t {\n    var Lit int32  = Mini_AigNodeFanin1( p, Id );\n    var AbcLit int32  = Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) );\n    return Abc_ObjFromLit( pNtk, AbcLit );\n}"
+    },
+    {
+      "Name": "Abc_NtkFromMiniAig",
+      "Start": 1936,
+      "End": 3646,
+      "BodyStart": 1985,
+      "Original": "Abc_Ntk_t * Abc_NtkFromMiniAig( Mini_Aig_t * p )\n{\n    Abc_Ntk_t * pNtk;\n    Abc_Obj_t * pObj = NULL;\n    Vec_Int_t * vCopies;\n    int i, nNodes;\n    // get the number of nodes\n    nNodes = Mini_AigNodeNum(p);\n    // create ABC network\n    pNtk = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pNtk-\u003epName = Abc_UtilStrsav( \"MiniAig\" );\n    // create mapping from MiniAIG objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, Abc_LitNot(Abc_ObjToLit(Abc_AigConst1(pNtk))) );\n    // iterate through the objects\n    for ( i = 1; i \u003c nNodes; i++ )\n    {\n        if ( Mini_AigNodeIsPi( p, i ) )\n            pObj = Abc_NtkCreatePi(pNtk);\n        else if ( Mini_AigNodeIsPo( p, i ) )\n            Abc_ObjAddFanin( (pObj = Abc_NtkCreatePo(pNtk)), Abc_NodeFanin0Copy(pNtk, vCopies, p, i) );\n        else if ( Mini_AigNodeIsAnd( p, i ) )\n            pObj = Abc_AigAnd((Abc_Aig_t *)pNtk-\u003epManFunc, Abc_NodeFanin0Copy(pNtk, vCopies, p, i), Abc_NodeFanin1Copy(pNtk, vCopies, p, i));\n        else assert( 0 );\n        Vec_IntPush( vCopies, Abc_ObjToLit(pObj) );\n    }\n    assert( Vec_IntSize(vCopies) == nNodes );\n    Abc_AigCleanup( (Abc_Aig_t *)pNtk-\u003epManFunc );\n    Vec_IntFree( vCopies );\n    Abc_NtkAddDummyPiNames( pNtk );\n    Abc_NtkAddDummyPoNames( pNtk );\n    if ( !Abc_NtkCheck( pNtk ) )\n        fprintf( stdout, \"Abc_NtkFromMini(): Network check has failed.\\n\" );\n    // add latches\n    if ( Mini_AigRegNum(p) \u003e 0 )\n    {\n        extern Abc_Ntk_t * Abc_NtkRestrashWithLatches( Abc_Ntk_t * pNtk, int nLatches );\n        Abc_Ntk_t * pTemp;\n        pNtk = Abc_NtkRestrashWithLatches( pTemp = pNtk, Mini_AigRegNum(p) );\n        Abc_NtkDelete( pTemp );\n    }\n    return pNtk;\n}",
+      "Draft": "func Abc_NtkFromMiniAig(p *Mini_Aig_t) *Abc_Ntk_t {\n    var pNtk *Abc_Ntk_t;\n    var pObj *Abc_Obj_t  = nil;\n    var vCopies *Vec_Int_t;\n    var i, nNodes int32;\n    // get the number of nodes\n    nNodes = Mini_AigNodeNum(p);\n    // create ABC network\n    pNtk = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pNtk.pName = Abc_UtilStrsav( \"MiniAig\" );\n    // create mapping from MiniAIG objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, Abc_LitNot(Abc_ObjToLit(Abc_AigConst1(pNtk))) );\n    // iterate through the objects\n    for  i = 1; i \u003c nNodes; i++  {\n        if Mini_AigNodeIsPi( p, i ) {\n            pObj = Abc_NtkCreatePi(pNtk);\n        } else if Mini_AigNodeIsPo( p, i ) {\n            Abc_ObjAddFanin( (pObj = Abc_NtkCreatePo(pNtk)), Abc_NodeFanin0Copy(pNtk, vCopies, p, i) );\n        } else if Mini_AigNodeIsAnd( p, i ) {\n            pObj = Abc_AigAnd((Abc_Aig_t *)pNtk.pManFunc, Abc_NodeFanin0Copy(pNtk, vCopies, p, i), Abc_NodeFanin1Copy(pNtk, vCopies, p, i));\n        } else { assert(false, \"0\"); }\n        Vec_IntPush( vCopies, Abc_ObjToLit(pObj) );\n    }\n    assert(Vec_IntSize(vCopies) == nNodes, \"Vec_IntSize(vCopies) == nNodes\");\n    Abc_AigCleanup( (Abc_Aig_t *)pNtk.pManFunc );\n    Vec_IntFree( vCopies );\n    Abc_NtkAddDummyPiNames( pNtk );\n    Abc_NtkAddDummyPoNames( pNtk );\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkFromMini(): Network check has failed.\\n\"); }\n    // add latches\n    if Mini_AigRegNum(p) \u003e 0 {\n        extern Abc_Ntk_t * Abc_NtkRestrashWithLatches( Abc_Ntk_t * pNtk, int nLatches );\n        var pTemp *Abc_Ntk_t;\n        pNtk = Abc_NtkRestrashWithLatches( pTemp = pNtk, Mini_AigRegNum(p) );\n        Abc_NtkDelete( pTemp );\n    }\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Abc_NodeFanin0Copy2",
+      "Start": 3933,
+      "End": 4059,
+      "BodyStart": 3977,
+      "Original": "int Abc_NodeFanin0Copy2( Abc_Obj_t * pObj )\n{\n    return Abc_LitNotCond( Abc_ObjFanin0(pObj)-\u003eiTemp, Abc_ObjFaninC0(pObj) );\n}",
+      "Draft": "func Abc_NodeFanin0Copy2(pObj *Abc_Obj_t) int32 {\n    return Abc_LitNotCond( Abc_ObjFanin0(pObj).iTemp, Abc_ObjFaninC0(pObj) );\n}"
+    },
+    {
+      "Name": "Abc_NodeFanin1Copy2",
+      "Start": 4060,
+      "End": 4186,
+      "BodyStart": 4104,
+      "Original": "int Abc_NodeFanin1Copy2( Abc_Obj_t * pObj )\n{\n    return Abc_LitNotCond( Abc_ObjFanin1(pObj)-\u003eiTemp, Abc_ObjFaninC1(pObj) );\n}",
+      "Draft": "func Abc_NodeFanin1Copy2(pObj *Abc_Obj_t) int32 {\n    return Abc_LitNotCond( Abc_ObjFanin1(pObj).iTemp, Abc_ObjFaninC1(pObj) );\n}"
+    },
+    {
+      "Name": "Abc_NtkToMiniAig",
+      "Start": 4187,
+      "End": 5023,
+      "BodyStart": 4237,
+      "Original": "Mini_Aig_t * Abc_NtkToMiniAig( Abc_Ntk_t * pNtk )\n{\n    Mini_Aig_t * p;\n    Abc_Obj_t * pObj = NULL;\n    int i;\n    assert( Abc_NtkIsStrash(pNtk) );\n    // create the manager\n    p = Mini_AigStart();\n    // create mapping from MiniAIG into ABC objects\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk)-\u003eiTemp = Mini_AigLitConst1();\n    // create primary inputs\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj-\u003eiTemp = Mini_AigCreatePi(p);\n    // create internal nodes\n    Abc_NtkForEachNode( pNtk, pObj, i )\n        pObj-\u003eiTemp = Mini_AigAnd( p, Abc_NodeFanin0Copy2(pObj), Abc_NodeFanin1Copy2(pObj) );\n    // create primary outputs\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        pObj-\u003eiTemp = Mini_AigCreatePo( p, Abc_NodeFanin0Copy2(pObj) );\n    // set registers\n    Mini_AigSetRegNum( p, Abc_NtkLatchNum(pNtk) );\n    return p;\n}",
+      "Draft": "func Abc_NtkToMiniAig(pNtk *Abc_Ntk_t) *Mini_Aig_t {\n    var p *Mini_Aig_t;\n    var pObj *Abc_Obj_t  = nil;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // create the manager\n    p = Mini_AigStart();\n    // create mapping from MiniAIG into ABC objects\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk).iTemp = Mini_AigLitConst1();\n    // create primary inputs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.iTemp = Mini_AigCreatePi(p);\n    }\n    // create internal nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        pObj.iTemp = Mini_AigAnd( p, Abc_NodeFanin0Copy2(pObj), Abc_NodeFanin1Copy2(pObj) ); }\n    }\n    // create primary outputs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pObj.iTemp = Mini_AigCreatePo( p, Abc_NodeFanin0Copy2(pObj) );\n    }\n    // set registers\n    Mini_AigSetRegNum( p, Abc_NtkLatchNum(pNtk) );\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_NtkInputMiniAig",
+      "Start": 5322,
+      "End": 5636,
+      "BodyStart": 5379,
+      "Original": "void Abc_NtkInputMiniAig( Abc_Frame_t * pAbc, void * p )\n{\n    Abc_Ntk_t * pNtk;\n    if ( pAbc == NULL )\n        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );\n    pNtk = Abc_NtkFromMiniAig( (Mini_Aig_t *)p );\n    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );\n//    Abc_NtkDelete( pNtk );\n}",
+      "Draft": "func Abc_NtkInputMiniAig(pAbc *Abc_Frame_t, p any) {\n    var pNtk *Abc_Ntk_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    pNtk = Abc_NtkFromMiniAig( (Mini_Aig_t *)p );\n    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );\n//    Abc_NtkDelete( pNtk );\n}"
+    },
+    {
+      "Name": "Abc_NtkOutputMiniAig",
+      "Start": 5637,
+      "End": 5985,
+      "BodyStart": 5687,
+      "Original": "void * Abc_NtkOutputMiniAig( Abc_Frame_t * pAbc )\n{\n    Abc_Ntk_t * pNtk;\n    if ( pAbc == NULL )\n        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if ( pNtk == NULL )\n        printf( \"Current network in ABC framework is not defined.\\n\" );\n    return Abc_NtkToMiniAig( pNtk );\n}",
+      "Draft": "func Abc_NtkOutputMiniAig(pAbc *Abc_Frame_t) any {\n    var pNtk *Abc_Ntk_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if pNtk == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\"); }\n    return Abc_NtkToMiniAig( pNtk );\n}"
+    },
+    {
+      "Name": "Abc_NtkSetFlopNum",
+      "Start": 5986,
+      "End": 6404,
+      "BodyStart": 6043,
+      "Original": "void Abc_NtkSetFlopNum( Abc_Frame_t * pAbc, int nFlops )\n{\n    extern void Abc_NtkMakeSeq( Abc_Ntk_t * pNtk, int nFlops );\n    Abc_Ntk_t * pNtk;\n    if ( pAbc == NULL )\n        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if ( pNtk == NULL )\n        printf( \"Current network in ABC framework is not defined.\\n\" );\n    Abc_NtkMakeSeq( pNtk, nFlops );\n}",
+      "Draft": "func Abc_NtkSetFlopNum(pAbc *Abc_Frame_t, nFlops int32) {\n    extern void Abc_NtkMakeSeq( Abc_Ntk_t * pNtk, int nFlops );\n    var pNtk *Abc_Ntk_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if pNtk == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\"); }\n    Abc_NtkMakeSeq( pNtk, nFlops );\n}"
+    },
+    {
+      "Name": "Abc_NtkMiniAigTest",
+      "Start": 6663,
+      "End": 7184,
+      "BodyStart": 6707,
+      "Original": "void Abc_NtkMiniAigTest( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew;\n    Mini_Aig_t * p;\n    p = Abc_NtkToMiniAig( pNtk );\n    pNtkNew = Abc_NtkFromMiniAig( p );\n    Mini_AigStop( p );\n    Abc_NtkPrintStats( pNtkNew, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );\n    Abc_NtkDelete( pNtkNew );\n\n    // test dumping\n    p = Abc_NtkToMiniAig( pNtk );\n    Mini_AigDump( p, \"miniaig.data\" );\n    Mini_AigPrintStats( p );\n    Mini_AigStop( p );\n\n    p = Mini_AigLoad( \"miniaig.data\" );\n    Mini_AigPrintStats( p );\n    Mini_AigStop( p );\n}",
+      "Draft": "func Abc_NtkMiniAigTest(pNtk *Abc_Ntk_t) {\n    var pNtkNew *Abc_Ntk_t;\n    var p *Mini_Aig_t;\n    p = Abc_NtkToMiniAig( pNtk );\n    pNtkNew = Abc_NtkFromMiniAig( p );\n    Mini_AigStop( p );\n    Abc_NtkPrintStats( pNtkNew, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );\n    Abc_NtkDelete( pNtkNew );\n\n    // test dumping\n    p = Abc_NtkToMiniAig( pNtk );\n    Mini_AigDump( p, \"miniaig.data\" );\n    Mini_AigPrintStats( p );\n    Mini_AigStop( p );\n\n    p = Mini_AigLoad( \"miniaig.data\" );\n    Mini_AigPrintStats( p );\n    Mini_AigStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::pointer-cast::2835",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2835,
+      "End": 2848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::pointer-cast::3097",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3097,
+      "End": 3110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::pointer-cast::5913",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5537,
+      "End": 5551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::Abc_NodeFanin0Copy",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFanin0Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1370,
+      "End": 1652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::Abc_NodeFanin1Copy",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFanin1Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1653,
+      "End": 1935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::Abc_NtkFromMiniAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFromMiniAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1936,
+      "End": 3646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::Abc_NodeFanin0Copy2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFanin0Copy2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3933,
+      "End": 4059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::Abc_NodeFanin1Copy2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFanin1Copy2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4060,
+      "End": 4186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::Abc_NtkToMiniAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkToMiniAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4187,
+      "End": 5023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::void-pointer::Abc_NtkInputMiniAig",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NtkInputMiniAig",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5322,
+      "End": 5636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::Abc_NtkInputMiniAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkInputMiniAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5322,
+      "End": 5636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::void-pointer::Abc_NtkOutputMiniAig",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NtkOutputMiniAig",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5637,
+      "End": 5985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::Abc_NtkOutputMiniAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkOutputMiniAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5637,
+      "End": 5985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::Abc_NtkSetFlopNum",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSetFlopNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5986,
+      "End": 6404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::Abc_NtkMiniAigTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMiniAigTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6663,
+      "End": 7184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMini.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7563
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcMini.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Interface to the minimalistic AIG package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcMini.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/main.h\"\n//#include \"aig/miniaig/miniaig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from the AIG manager into ABC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeFanin0Copy(pNtk *Abc_Ntk_t, vCopies *Vec_Int_t, p *Mini_Aig_t, Id int32) *Abc_Obj_t {\n    var Lit int32  = Mini_AigNodeFanin0( p, Id );\n    var AbcLit int32  = Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) );\n    return Abc_ObjFromLit( pNtk, AbcLit );\n}\nfunc Abc_NodeFanin1Copy(pNtk *Abc_Ntk_t, vCopies *Vec_Int_t, p *Mini_Aig_t, Id int32) *Abc_Obj_t {\n    var Lit int32  = Mini_AigNodeFanin1( p, Id );\n    var AbcLit int32  = Abc_LitNotCond( Vec_IntEntry(vCopies, Abc_Lit2Var(Lit)), Abc_LitIsCompl(Lit) );\n    return Abc_ObjFromLit( pNtk, AbcLit );\n}\nfunc Abc_NtkFromMiniAig(p *Mini_Aig_t) *Abc_Ntk_t {\n    var pNtk *Abc_Ntk_t;\n    var pObj *Abc_Obj_t  = nil;\n    var vCopies *Vec_Int_t;\n    var i, nNodes int32;\n    // get the number of nodes\n    nNodes = Mini_AigNodeNum(p);\n    // create ABC network\n    pNtk = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pNtk.pName = Abc_UtilStrsav( \"MiniAig\" );\n    // create mapping from MiniAIG objects into ABC objects\n    vCopies = Vec_IntAlloc( nNodes );\n    Vec_IntPush( vCopies, Abc_LitNot(Abc_ObjToLit(Abc_AigConst1(pNtk))) );\n    // iterate through the objects\n    for  i = 1; i \u003c nNodes; i++  {\n        if Mini_AigNodeIsPi( p, i ) {\n            pObj = Abc_NtkCreatePi(pNtk);\n        } else if Mini_AigNodeIsPo( p, i ) {\n            Abc_ObjAddFanin( (pObj = Abc_NtkCreatePo(pNtk)), Abc_NodeFanin0Copy(pNtk, vCopies, p, i) );\n        } else if Mini_AigNodeIsAnd( p, i ) {\n            pObj = Abc_AigAnd((Abc_Aig_t *)pNtk.pManFunc, Abc_NodeFanin0Copy(pNtk, vCopies, p, i), Abc_NodeFanin1Copy(pNtk, vCopies, p, i));\n        } else { assert(false, \"0\"); }\n        Vec_IntPush( vCopies, Abc_ObjToLit(pObj) );\n    }\n    assert(Vec_IntSize(vCopies) == nNodes, \"Vec_IntSize(vCopies) == nNodes\");\n    Abc_AigCleanup( (Abc_Aig_t *)pNtk.pManFunc );\n    Vec_IntFree( vCopies );\n    Abc_NtkAddDummyPiNames( pNtk );\n    Abc_NtkAddDummyPoNames( pNtk );\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Fprintf(os.Stdout, \"Abc_NtkFromMini(): Network check has failed.\\n\"); }\n    // add latches\n    if Mini_AigRegNum(p) \u003e 0 {\n        extern Abc_Ntk_t * Abc_NtkRestrashWithLatches( Abc_Ntk_t * pNtk, int nLatches );\n        var pTemp *Abc_Ntk_t;\n        pNtk = Abc_NtkRestrashWithLatches( pTemp = pNtk, Mini_AigRegNum(p) );\n        Abc_NtkDelete( pTemp );\n    }\n    return pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from ABC into the AIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeFanin0Copy2(pObj *Abc_Obj_t) int32 {\n    return Abc_LitNotCond( Abc_ObjFanin0(pObj).iTemp, Abc_ObjFaninC0(pObj) );\n}\nfunc Abc_NodeFanin1Copy2(pObj *Abc_Obj_t) int32 {\n    return Abc_LitNotCond( Abc_ObjFanin1(pObj).iTemp, Abc_ObjFaninC1(pObj) );\n}\nfunc Abc_NtkToMiniAig(pNtk *Abc_Ntk_t) *Mini_Aig_t {\n    var p *Mini_Aig_t;\n    var pObj *Abc_Obj_t  = nil;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // create the manager\n    p = Mini_AigStart();\n    // create mapping from MiniAIG into ABC objects\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk).iTemp = Mini_AigLitConst1();\n    // create primary inputs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.iTemp = Mini_AigCreatePi(p);\n    }\n    // create internal nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        pObj.iTemp = Mini_AigAnd( p, Abc_NodeFanin0Copy2(pObj), Abc_NodeFanin1Copy2(pObj) ); }\n    }\n    // create primary outputs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        pObj.iTemp = Mini_AigCreatePo( p, Abc_NodeFanin0Copy2(pObj) );\n    }\n    // set registers\n    Mini_AigSetRegNum( p, Abc_NtkLatchNum(pNtk) );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Procedures to update internal ABC network using AIG node array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkInputMiniAig(pAbc *Abc_Frame_t, p any) {\n    var pNtk *Abc_Ntk_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    pNtk = Abc_NtkFromMiniAig( (Mini_Aig_t *)p );\n    Abc_FrameReplaceCurrentNetwork( pAbc, pNtk );\n//    Abc_NtkDelete( pNtk );\n}\nfunc Abc_NtkOutputMiniAig(pAbc *Abc_Frame_t) any {\n    var pNtk *Abc_Ntk_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if pNtk == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\"); }\n    return Abc_NtkToMiniAig( pNtk );\n}\nfunc Abc_NtkSetFlopNum(pAbc *Abc_Frame_t, nFlops int32) {\n    extern void Abc_NtkMakeSeq( Abc_Ntk_t * pNtk, int nFlops );\n    var pNtk *Abc_Ntk_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if pNtk == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\"); }\n    Abc_NtkMakeSeq( pNtk, nFlops );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Testing the above code.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMiniAigTest(pNtk *Abc_Ntk_t) {\n    var pNtkNew *Abc_Ntk_t;\n    var p *Mini_Aig_t;\n    p = Abc_NtkToMiniAig( pNtk );\n    pNtkNew = Abc_NtkFromMiniAig( p );\n    Mini_AigStop( p );\n    Abc_NtkPrintStats( pNtkNew, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );\n    Abc_NtkDelete( pNtkNew );\n\n    // test dumping\n    p = Abc_NtkToMiniAig( pNtk );\n    Mini_AigDump( p, \"miniaig.data\" );\n    Mini_AigPrintStats( p );\n    Mini_AigStop( p );\n\n    p = Mini_AigLoad( \"miniaig.data\" );\n    Mini_AigPrintStats( p );\n    Mini_AigStop( p );\n}\n\n/*\n    if ( pNtk )\n    {\n        extern void Abc_NtkMiniAigTest( Abc_Ntk_t * pNtk );\n        Abc_NtkMiniAigTest( pNtk );\n\n    }\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

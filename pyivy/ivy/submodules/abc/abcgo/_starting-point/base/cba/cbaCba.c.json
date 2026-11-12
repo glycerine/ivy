@@ -1,0 +1,54 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCba.c",
+  "SHA256": "516e8f6f8b44a056958c559316d5254b6508545f0ecb86b163a75f3ac3ed3e4e",
+  "Functions": [
+    {
+      "Name": "Cba_ManReadCba",
+      "Start": 1240,
+      "End": 1307,
+      "BodyStart": 1287,
+      "Original": "Cba_Man_t * Cba_ManReadCba( char * pFileName )\n{\n    return NULL;\n}",
+      "Draft": "func Cba_ManReadCba(pFileName string) *Cba_Man_t {\n    return nil;\n}"
+    },
+    {
+      "Name": "Cba_ManWriteCba",
+      "Start": 1308,
+      "End": 1367,
+      "BodyStart": 1364,
+      "Original": "void Cba_ManWriteCba( char * pFileName, Cba_Man_t * p )\n{\n}",
+      "Draft": "func Cba_ManWriteCba(pFileName string, p *Cba_Man_t) {\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCba.c::Cba_ManReadCba",
+      "Category": "semantic-review",
+      "Symbol": "Cba_ManReadCba",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1240,
+      "End": 1307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCba.c::Cba_ManWriteCba",
+      "Category": "semantic-review",
+      "Symbol": "Cba_ManWriteCba",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1308,
+      "End": 1367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/cba/cbaCba.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1614
+    }
+  ],
+  "Draft": "package cba\n\n/**CFile****************************************************************\n\n  FileName    [cbaCba.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    [Reading binary representation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - July 21, 2015.]\n\n  Revision    [$Id: cbaCba.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cba.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cba_ManReadCba(pFileName string) *Cba_Man_t {\n    return nil;\n}\nfunc Cba_ManWriteCba(pFileName string, p *Cba_Man_t) {\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,91 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/types.h",
+  "SHA256": "89319da68c0b98b53719252b6c9aff1ef46b90968bd6938a4f92972591fc65c5",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/types.h::macro::vec_act_alloc",
+      "Category": "macro-review",
+      "Symbol": "vec_act_alloc",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 700,
+      "End": 748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/types.h::macro::vec_act_free",
+      "Category": "macro-review",
+      "Symbol": "vec_act_free",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 749,
+      "End": 793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/types.h::macro::vec_act_size",
+      "Category": "macro-review",
+      "Symbol": "vec_act_size",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 794,
+      "End": 838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/types.h::macro::vec_act_data",
+      "Category": "macro-review",
+      "Symbol": "vec_act_data",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 839,
+      "End": 883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/types.h::macro::vec_act_clear",
+      "Category": "macro-review",
+      "Symbol": "vec_act_clear",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 884,
+      "End": 930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/types.h::macro::vec_act_shrink",
+      "Category": "macro-review",
+      "Symbol": "vec_act_shrink",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 931,
+      "End": 991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/types.h::macro::vec_act_at",
+      "Category": "macro-review",
+      "Symbol": "vec_act_at",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 992,
+      "End": 1042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/types.h::macro::vec_act_push_back",
+      "Category": "macro-review",
+      "Symbol": "vec_act_push_back",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1043,
+      "End": 1111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/types.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1238
+    }
+  ],
+  "Draft": "package satoko\n\n//===--- types.h ------------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n\n\n\n//#include \"utils/sdbl.h\"\n//#include \"utils/vec/vec_sdbl.h\"\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_HEADER_START\n\n/* In Satoko ABC version this file is useless */\n\n#define VAR_ACT_INIT_INC SDBL_CONST1\n#define VAR_ACT_LIMIT ABC_CONST(0x014c924d692ca61b)\nconst VAR_ACT_RESCALE = 200\ntypedef sdbl_t act_t;\ntypedef vec_sdbl_t vec_act_t ;\n// Original macro:\n// #define vec_act_alloc(size) vec_sdbl_alloc(size)\n\n// Original macro:\n// #define vec_act_free(vec) vec_sdbl_free(vec)\n\n// Original macro:\n// #define vec_act_size(vec) vec_sdbl_size(vec)\n\n// Original macro:\n// #define vec_act_data(vec) vec_sdbl_data(vec)\n\n// Original macro:\n// #define vec_act_clear(vec) vec_sdbl_clear(vec)\n\n// Original macro:\n// #define vec_act_shrink(vec, size) vec_sdbl_shrink(vec, size)\n\n// Original macro:\n// #define vec_act_at(vec, idx) vec_sdbl_at(vec, idx)\n\n// Original macro:\n// #define vec_act_push_back(vec, value) vec_sdbl_push_back(vec, value)\n\n\n\n#define CLAUSE_ACT_INIT_INC (1 \u003c\u003c 11)\ntypedef unsigned clause_act_t;\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

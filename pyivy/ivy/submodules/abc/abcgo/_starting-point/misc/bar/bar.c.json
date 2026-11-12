@@ -1,0 +1,350 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.c",
+  "SHA256": "08eff327268d1bf09ff7a20679dfe98e75eaad81be9c197e49100fe6907dce31",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 78,
+        "Column": 74,
+        "ByteOffset": 2505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Bar_Progress_t *) malloc(sizeof(Bar_Progress_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Bar_Progress_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 130,
+        "Column": 57,
+        "ByteOffset": 3909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 4411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( p.pFile, \"%s \", pString ); }"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 152,
+        "Column": 24,
+        "ByteOffset": 4472
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  i = (pString? strlen(pString) + 1 : 0); i \u003c p.posCur; i++  {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 9,
+        "ByteOffset": 4527
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( p.pFile, \"-\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 9,
+        "ByteOffset": 4589
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( p.pFile, \"\u003e\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 9,
+        "ByteOffset": 4664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( p.pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 4699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( p.pFile, \"\\r\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 4729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 161,
+        "Column": 13,
+        "ByteOffset": 4737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 182,
+        "Column": 9,
+        "ByteOffset": 5220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( p.pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 5255
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( p.pFile, \"\\r\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 5285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 185,
+        "Column": 13,
+        "ByteOffset": 5293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bar_ProgressStart",
+      "Start": 2097,
+      "End": 2675,
+      "BodyStart": 2165,
+      "Original": "Bar_Progress_t * Bar_ProgressStart( FILE * pFile, int nItemsTotal )\n{\n    Bar_Progress_t * p;\n    Abc_Frame_t * pFrame;\n    pFrame = Abc_FrameReadGlobalFrame();\n    if ( pFrame == NULL )\n        return NULL;\n    if ( !Abc_FrameShowProgress(pFrame) ) return NULL;\n    p = ABC_ALLOC( Bar_Progress_t, 1 );\n    memset( p, 0, sizeof(Bar_Progress_t) );\n    p-\u003epFile       = pFile;\n    p-\u003enItemsTotal = nItemsTotal;\n    p-\u003eposTotal    = 78;\n    p-\u003eposCur      = 1;\n    p-\u003enItemsNext  = (int)((7.0+p-\u003eposCur)*p-\u003enItemsTotal/p-\u003eposTotal);\n    Bar_ProgressShow( p, NULL );\n    return p;\n}",
+      "Draft": "func Bar_ProgressStart(pFile *os.File, nItemsTotal int32) *Bar_Progress_t {\n    var p *Bar_Progress_t;\n    var pFrame *Abc_Frame_t;\n    pFrame = Abc_FrameReadGlobalFrame();\n    if pFrame == nil {\n        return nil; }\n    if !Abc_FrameShowProgress(pFrame) { return nil; }\n    // inlining of macro ABC_ALLOC\n    p = ((Bar_Progress_t *) malloc(sizeof(Bar_Progress_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Bar_Progress_t) );\n    p.pFile       = pFile;\n    p.nItemsTotal = nItemsTotal;\n    p.posTotal    = 78;\n    p.posCur      = 1;\n    p.nItemsNext  = int32(((7.0+p.posCur)*p.nItemsTotal/p.posTotal));\n    Bar_ProgressShow( p, nil );\n    return p;\n}"
+    },
+    {
+      "Name": "Bar_ProgressUpdate_int",
+      "Start": 2936,
+      "End": 3369,
+      "BodyStart": 3017,
+      "Original": "void Bar_ProgressUpdate_int( Bar_Progress_t * p, int nItemsCur, char * pString )\n{\n    if ( p == NULL ) return;\n    if ( nItemsCur \u003c p-\u003enItemsNext )\n        return;\n    if ( nItemsCur \u003e= p-\u003enItemsTotal )\n    {\n        p-\u003eposCur = 78;\n        p-\u003enItemsNext = 0x7FFFFFFF;\n    }\n    else\n    {\n        p-\u003eposCur += 7;\n        p-\u003enItemsNext = (int)((7.0+p-\u003eposCur)*p-\u003enItemsTotal/p-\u003eposTotal);\n    }\n    Bar_ProgressShow( p, pString );\n}",
+      "Draft": "func Bar_ProgressUpdate_int(p *Bar_Progress_t, nItemsCur int32, pString string) {\n    if p == nil { return; }\n    if nItemsCur \u003c p.nItemsNext {\n        return; }\n    if nItemsCur \u003e= p.nItemsTotal {\n        p.posCur = 78;\n        p.nItemsNext = 0x7FFFFFFF;\n    \n    } else {\n        p.posCur += 7;\n        p.nItemsNext = int32(((7.0+p.posCur)*p.nItemsTotal/p.posTotal));\n    }\n    Bar_ProgressShow( p, pString );\n}"
+    },
+    {
+      "Name": "Bar_ProgressStop",
+      "Start": 3629,
+      "End": 3752,
+      "BodyStart": 3673,
+      "Original": "void Bar_ProgressStop( Bar_Progress_t * p )\n{\n    if ( p == NULL ) return;\n    Bar_ProgressClean( p );\n    ABC_FREE( p );\n}",
+      "Draft": "func Bar_ProgressStop(p *Bar_Progress_t) {\n    if p == nil { return; }\n    Bar_ProgressClean( p );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Bar_ProgressShow",
+      "Start": 4030,
+      "End": 4549,
+      "BodyStart": 4090,
+      "Original": "void Bar_ProgressShow( Bar_Progress_t * p, char * pString )\n{\n    int i;\n    if ( p == NULL ) \n        return;\n    if ( Abc_FrameIsBatchMode() )\n        return;\n    if ( pString )\n        fprintf( p-\u003epFile, \"%s \", pString );\n    for ( i = (pString? strlen(pString) + 1 : 0); i \u003c p-\u003eposCur; i++ )\n        fprintf( p-\u003epFile, \"-\" );\n    if ( i == p-\u003eposCur )\n        fprintf( p-\u003epFile, \"\u003e\" );\n    for ( i++  ; i \u003c= p-\u003eposTotal; i++ )\n        fprintf( p-\u003epFile, \" \" );\n    fprintf( p-\u003epFile, \"\\r\" );\n    fflush( stdout );\n}",
+      "Draft": "func Bar_ProgressShow(p *Bar_Progress_t, pString string) {\n    var i int32;\n    if p == nil { \n        return; }\n    if Abc_FrameIsBatchMode() {\n        return; }\n    if pString {\n        fmt.Fprintf(p.pFile, \"%s \", pString); }\n    for  i = (pString? len(pString) + 1 : 0); i \u003c p.posCur; i++  {\n        fmt.Fprintf(p.pFile, \"-\");\n    }\n    if i == p.posCur {\n        fmt.Fprintf(p.pFile, \"\u003e\"); }\n    for  i++  ; i \u003c= p.posTotal; i++  {\n        fmt.Fprintf(p.pFile, \" \");\n    }\n    fmt.Fprintf(p.pFile, \"\\r\");\n    fflush( os.Stdout );\n}"
+    },
+    {
+      "Name": "Bar_ProgressClean",
+      "Start": 4825,
+      "End": 5100,
+      "BodyStart": 4870,
+      "Original": "void Bar_ProgressClean( Bar_Progress_t * p )\n{\n    int i;\n    if ( p == NULL ) \n        return;\n    if ( Abc_FrameIsBatchMode() )\n        return;\n    for ( i = 0; i \u003c= p-\u003eposTotal; i++ )\n        fprintf( p-\u003epFile, \" \" );\n    fprintf( p-\u003epFile, \"\\r\" );\n    fflush( stdout );\n}",
+      "Draft": "func Bar_ProgressClean(p *Bar_Progress_t) {\n    var i int32;\n    if p == nil { \n        return; }\n    if Abc_FrameIsBatchMode() {\n        return; }\n    for  i = 0; i \u003c= p.posTotal; i++  {\n        fmt.Fprintf(p.pFile, \" \");\n    }\n    fmt.Fprintf(p.pFile, \"\\r\");\n    fflush( os.Stdout );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.c::struct::Bar_Progress_t_",
+      "Category": "struct-review",
+      "Symbol": "Bar_Progress_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 858,
+      "End": 1231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.c::mechanical::sizeof::2440",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2368,
+      "End": 2368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.c::mechanical::sizeof::2498",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2418,
+      "End": 2424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.c::pointer-cast::2414",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2368,
+      "End": 2368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.c::pointer-cast::3873",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3736,
+      "End": 3736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.c::Bar_ProgressStart",
+      "Category": "semantic-review",
+      "Symbol": "Bar_ProgressStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2097,
+      "End": 2675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.c::Bar_ProgressUpdate_int",
+      "Category": "semantic-review",
+      "Symbol": "Bar_ProgressUpdate_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2936,
+      "End": 3369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.c::ternary::Bar_ProgressStop",
+      "Category": "ternary-review",
+      "Symbol": "Bar_ProgressStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3629,
+      "End": 3752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.c::Bar_ProgressStop",
+      "Category": "semantic-review",
+      "Symbol": "Bar_ProgressStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3629,
+      "End": 3752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.c::ternary::Bar_ProgressShow",
+      "Category": "ternary-review",
+      "Symbol": "Bar_ProgressShow",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4030,
+      "End": 4549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.c::Bar_ProgressShow",
+      "Category": "semantic-review",
+      "Symbol": "Bar_ProgressShow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4030,
+      "End": 4549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.c::Bar_ProgressClean",
+      "Category": "semantic-review",
+      "Symbol": "Bar_ProgressClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4825,
+      "End": 5100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/bar/bar.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5347
+    }
+  ],
+  "Draft": "package bar\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [bar.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [extra]\n\n  Synopsis    [Progress bar.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bar.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n\n//#include \"misc/util/abc_global.h\"\n//#include \"base/main/main.h\"\n//#include \"bar.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Bar_Progress_t_ struct {\n    nItemsNext              int32;   // the number of items for the next update of the progress bar\n    nItemsTotal              int32;  // the total number of items\n    posTotal              int32;     // the total number of positions\n    posCur              int32;       // the current position\n    pFile            *os.File;        // the output stream \n}\n\n// static void Bar_ProgressShow( Bar_Progress_t * p, char * pString );\n\n// static void Bar_ProgressClean( Bar_Progress_t * p );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the progress bar.]\n\n  Description [The first parameter is the output stream (pFile), where\n  the progress is printed. The current printing position should be the\n  first one on the given line. The second parameters is the total\n  number of items that correspond to 100% position of the progress bar.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bar_ProgressStart(pFile *os.File, nItemsTotal int32) *Bar_Progress_t {\n    var p *Bar_Progress_t;\n    var pFrame *Abc_Frame_t;\n    pFrame = Abc_FrameReadGlobalFrame();\n    if pFrame == nil {\n        return nil; }\n    if !Abc_FrameShowProgress(pFrame) { return nil; }\n    // inlining of macro ABC_ALLOC\n    p = ((Bar_Progress_t *) malloc(sizeof(Bar_Progress_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Bar_Progress_t) );\n    p.pFile       = pFile;\n    p.nItemsTotal = nItemsTotal;\n    p.posTotal    = 78;\n    p.posCur      = 1;\n    p.nItemsNext  = int32(((7.0+p.posCur)*p.nItemsTotal/p.posTotal));\n    Bar_ProgressShow( p, nil );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the progress bar.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bar_ProgressUpdate_int(p *Bar_Progress_t, nItemsCur int32, pString string) {\n    if p == nil { return; }\n    if nItemsCur \u003c p.nItemsNext {\n        return; }\n    if nItemsCur \u003e= p.nItemsTotal {\n        p.posCur = 78;\n        p.nItemsNext = 0x7FFFFFFF;\n    \n    } else {\n        p.posCur += 7;\n        p.nItemsNext = int32(((7.0+p.posCur)*p.nItemsTotal/p.posTotal));\n    }\n    Bar_ProgressShow( p, pString );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the progress bar.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bar_ProgressStop(p *Bar_Progress_t) {\n    if p == nil { return; }\n    Bar_ProgressClean( p );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the progress bar of the given size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bar_ProgressShow(p *Bar_Progress_t, pString string) {\n    var i int32;\n    if p == nil { \n        return; }\n    if Abc_FrameIsBatchMode() {\n        return; }\n    if pString {\n        fmt.Fprintf(p.pFile, \"%s \", pString); }\n    for  i = (pString? len(pString) + 1 : 0); i \u003c p.posCur; i++  {\n        fmt.Fprintf(p.pFile, \"-\");\n    }\n    if i == p.posCur {\n        fmt.Fprintf(p.pFile, \"\u003e\"); }\n    for  i++  ; i \u003c= p.posTotal; i++  {\n        fmt.Fprintf(p.pFile, \" \");\n    }\n    fmt.Fprintf(p.pFile, \"\\r\");\n    fflush( os.Stdout );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans the progress bar before quitting.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bar_ProgressClean(p *Bar_Progress_t) {\n    var i int32;\n    if p == nil { \n        return; }\n    if Abc_FrameIsBatchMode() {\n        return; }\n    for  i = 0; i \u003c= p.posTotal; i++  {\n        fmt.Fprintf(p.pFile, \" \");\n    }\n    fmt.Fprintf(p.pFile, \"\\r\");\n    fflush( os.Stdout );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,481 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdLut.c",
+  "SHA256": "999dbfc89cd79f956d13b9e9a837c374fa9a983d2b24307725785207fd7edbff",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 70,
+        "Column": 13,
+        "ByteOffset": 2234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pStr.nVarIns \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 85,
+        "Column": 13,
+        "ByteOffset": 2911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pStr.nVarIns \u003c= SBD_DIV_MAX );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 9,
+        "ByteOffset": 4007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pStr.nVarIns \u003c= SBD_DIV_MAX );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 9,
+        "ByteOffset": 4245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 13,
+        "ByteOffset": 4604
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( status );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 5,
+        "ByteOffset": 4791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Solution found:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 139,
+        "Column": 9,
+        "ByteOffset": 5010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s%d : \", pStr.fLut ? \"LUT\":\"SEL\", int32((pStr-pStr0)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 141,
+        "Column": 13,
+        "ByteOffset": 5146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", !Abc_LitIsCompl(Vec_IntEntry(vLits, iLit)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 9,
+        "ByteOffset": 5224
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    {\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 13,
+        "ByteOffset": 5300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %d\", pStr.VarIns[m] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 147,
+        "Column": 9,
+        "ByteOffset": 5351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" }\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 5379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iLit == Vec_IntSize(vLits) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 13,
+        "ByteOffset": 6256
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( nIters == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 5,
+        "ByteOffset": 6299
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iLit == Vec_IntSize(vLits) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 216,
+        "Column": 5,
+        "ByteOffset": 7847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vDivSet) \u003c= SBD_DIV_MAX );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 217,
+        "Column": 5,
+        "ByteOffset": 7898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars + nStrs + nPars \u003c= 256 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 254,
+        "Column": 9,
+        "ByteOffset": 9137
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_True );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 257,
+        "Column": 13,
+        "ByteOffset": 9200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Iter %3d : \", nIters );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 17,
+        "ByteOffset": 9291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%d\", !Abc_LitIsCompl(Vec_IntEntry(vLits, i)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 13,
+        "ByteOffset": 9374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"    \" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 13,
+        "ByteOffset": 9821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( status );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 276,
+        "Column": 17,
+        "ByteOffset": 9881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%d\", sat_solver_var_value(pSatCec, iVar) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 9,
+        "ByteOffset": 10111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 282,
+        "Column": 13,
+        "ByteOffset": 10163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %d\\n\", !sat_solver_var_value(pSatCec, VarCecOut) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 290,
+        "Column": 9,
+        "ByteOffset": 10592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_True ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 292,
+        "Column": 9,
+        "ByteOffset": 10674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vLits) == 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sbd_ProblemCountParams",
+      "Start": 1340,
+      "End": 1579,
+      "BodyStart": 1399,
+      "Original": "int Sbd_ProblemCountParams( int nStrs, Sbd_Str_t * pStr0 )\n{\n    Sbd_Str_t * pStr;  int nPars = 0;\n    for ( pStr = pStr0; pStr \u003c pStr0 + nStrs; pStr++ )\n        nPars += pStr-\u003efLut ? 1 \u003c\u003c pStr-\u003enVarIns : pStr-\u003enVarIns;\n    return nPars;\n}",
+      "Draft": "func Sbd_ProblemCountParams(nStrs int32, pStr0 *Sbd_Str_t) int32 {\n    var pStr *Sbd_Str_t;  var nPars int32;\n    for  pStr = pStr0; pStr \u003c pStr0 + nStrs; pStr++  {\n        nPars += pStr.fLut ? 1 \u003c\u003c pStr.nVarIns : pStr.nVarIns;\n    }\n    return nPars;\n}"
+    },
+    {
+      "Name": "Sbd_ProblemAddClauses",
+      "Start": 1613,
+      "End": 3389,
+      "BodyStart": 1714,
+      "Original": "int Sbd_ProblemAddClauses( sat_solver * pSat, int nVars, int nStrs, int * pVars, Sbd_Str_t * pStr0 )\n{   \n    // variable order:  inputs, structure outputs, parameters\n    Sbd_Str_t * pStr;\n    int VarOut = nVars;\n    int VarPar = nVars + nStrs;\n    int m, k, n, status, pLits[SBD_SIZE_MAX+2];\n//printf( \"Start par = %d.  \", VarPar );\n    for ( pStr = pStr0; pStr \u003c pStr0 + nStrs; pStr++, VarOut++ )\n    {\n        if ( pStr-\u003efLut )\n        {\n            int nMints = 1 \u003c\u003c pStr-\u003enVarIns;\n            assert( pStr-\u003enVarIns \u003c= 6 );\n            for ( m = 0; m \u003c nMints; m++, VarPar++ )\n            {\n                for ( k = 0; k \u003c pStr-\u003enVarIns; k++ )\n                    pLits[k] = Abc_Var2Lit( pVars[pStr-\u003eVarIns[k]], (m \u003e\u003e k) \u0026 1 ); \n                for ( n = 0; n \u003c 2; n++ )\n                {\n                    pLits[pStr-\u003enVarIns]   = Abc_Var2Lit( pVars[VarPar], n );\n                    pLits[pStr-\u003enVarIns+1] = Abc_Var2Lit( pVars[VarOut], !n );\n                    status = sat_solver_addclause( pSat, pLits, pLits + pStr-\u003enVarIns + 2 );\n                    if ( !status )\n                        return 0;\n                }\n            }\n        }\n        else\n        {\n            assert( pStr-\u003enVarIns \u003c= SBD_DIV_MAX );\n            for ( k = 0; k \u003c pStr-\u003enVarIns; k++, VarPar++ )\n            {\n                for ( n = 0; n \u003c 2; n++ )\n                {\n                    pLits[0] = Abc_Var2Lit( pVars[VarPar], 1 );\n                    pLits[1] = Abc_Var2Lit( pVars[VarOut], n );\n                    pLits[2] = Abc_Var2Lit( pVars[pStr-\u003eVarIns[k]], !n );\n                    status = sat_solver_addclause( pSat, pLits, pLits + 3 );\n                    if ( !status )\n                        return 0;\n                }\n            }\n        }\n    }\n    return 1;\n}",
+      "Draft": "func Sbd_ProblemAddClauses(pSat *sat_solver, nVars int32, nStrs int32, pVars *int32, pStr0 *Sbd_Str_t) int32 {   \n    // variable order:  inputs, structure outputs, parameters\n    var pStr *Sbd_Str_t;\n    var VarOut int32  = nVars;\n    var VarPar int32  = nVars + nStrs;\n    var m int32;\n    var k int32;\n    var n int32;\n    var status int32;\n    var pLits [SBD_SIZE_MAX+2]int32;\n//printf( \"Start par = %d.  \", VarPar );\n    for  pStr = pStr0; pStr \u003c pStr0 + nStrs; pStr, VarOut = pStr+1, VarOut+1  {\n        if pStr.fLut {\n            var nMints int32  = 1 \u003c\u003c pStr.nVarIns;\n            assert(pStr.nVarIns \u003c= 6, \"pStr.nVarIns \u003c= 6\");\n            for  m = 0; m \u003c nMints; m, VarPar = m+1, VarPar+1  {\n                for  k = 0; k \u003c pStr.nVarIns; k++  {\n                    pLits[k] = Abc_Var2Lit( pVars[pStr.VarIns[k]], (m \u003e\u003e k) \u0026 1 );\n                } \n                for  n = 0; n \u003c 2; n++  {\n                    pLits[pStr.nVarIns]   = Abc_Var2Lit( pVars[VarPar], n );\n                    pLits[pStr.nVarIns+1] = Abc_Var2Lit( pVars[VarOut], !n );\n                    status = sat_solver_addclause( pSat, pLits, pLits + pStr.nVarIns + 2 );\n                    if !(status != 0) {\n                        return 0; }\n                }\n            }\n        \n        } else {\n            assert(pStr.nVarIns \u003c= SBD_DIV_MAX, \"pStr.nVarIns \u003c= SBD_DIV_MAX\");\n            for  k = 0; k \u003c pStr.nVarIns; k, VarPar = k+1, VarPar+1  {\n                for  n = 0; n \u003c 2; n++  {\n                    pLits[0] = Abc_Var2Lit( pVars[VarPar], 1 );\n                    pLits[1] = Abc_Var2Lit( pVars[VarOut], n );\n                    pLits[2] = Abc_Var2Lit( pVars[pStr.VarIns[k]], !n );\n                    status = sat_solver_addclause( pSat, pLits, pLits + 3 );\n                    if !(status != 0) {\n                        return 0; }\n                }\n            }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Sbd_ProblemAddClausesInit",
+      "Start": 3390,
+      "End": 4511,
+      "BodyStart": 3496,
+      "Original": "void Sbd_ProblemAddClausesInit( sat_solver * pSat, int nVars, int nStrs, int * pVars, Sbd_Str_t * pStr0 )\n{\n    Sbd_Str_t * pStr;\n    int VarPar = nVars + nStrs;\n    int m, m2, status, pLits[SBD_DIV_MAX];\n    // make sure selector parameters are mutually exclusive\n    for ( pStr = pStr0; pStr \u003c pStr0 + nStrs; VarPar += pStr-\u003efLut ? 1 \u003c\u003c pStr-\u003enVarIns : pStr-\u003enVarIns, pStr++ )\n    {\n        if ( pStr-\u003efLut )\n            continue;\n        // one variable should be selected\n        assert( pStr-\u003enVarIns \u003c= SBD_DIV_MAX );\n        for ( m = 0; m \u003c pStr-\u003enVarIns; m++ )\n            pLits[m] = Abc_Var2Lit( pVars[VarPar + m], 0 );\n        status = sat_solver_addclause( pSat, pLits, pLits + pStr-\u003enVarIns );\n        assert( status );\n        // two variables cannot be selected\n        for ( m = 0; m \u003c pStr-\u003enVarIns; m++ )\n        for ( m2 = m+1; m2 \u003c pStr-\u003enVarIns; m2++ )\n        {\n            pLits[0] = Abc_Var2Lit( pVars[VarPar + m], 1 );\n            pLits[1] = Abc_Var2Lit( pVars[VarPar + m2], 1 );\n            status = sat_solver_addclause( pSat, pLits, pLits + 2 );\n            assert( status );\n        }\n    }\n}",
+      "Draft": "func Sbd_ProblemAddClausesInit(pSat *sat_solver, nVars int32, nStrs int32, pVars *int32, pStr0 *Sbd_Str_t) {\n    var pStr *Sbd_Str_t;\n    var VarPar int32  = nVars + nStrs;\n    var m int32;\n    var m2 int32;\n    var status int32;\n    var pLits [SBD_DIV_MAX]int32;\n    // make sure selector parameters are mutually exclusive\n    for  pStr = pStr0; pStr \u003c pStr0 + nStrs; VarPar += pStr.fLut ? 1 \u003c\u003c pStr.nVarIns : pStr.nVarIns, pStr++  {\n        if pStr.fLut {\n            continue; }\n        // one variable should be selected\n        assert(pStr.nVarIns \u003c= SBD_DIV_MAX, \"pStr.nVarIns \u003c= SBD_DIV_MAX\");\n        for  m = 0; m \u003c pStr.nVarIns; m++  {\n            pLits[m] = Abc_Var2Lit( pVars[VarPar + m], 0 );\n        }\n        status = sat_solver_addclause( pSat, pLits, pLits + pStr.nVarIns );\n        assert((status != 0), \"status\");\n        // two variables cannot be selected\n        for  m = 0; m \u003c pStr.nVarIns; m++  {\n        for  m2 = m+1; m2 \u003c pStr.nVarIns; m2++  {\n            pLits[0] = Abc_Var2Lit( pVars[VarPar + m], 1 );\n            pLits[1] = Abc_Var2Lit( pVars[VarPar + m2], 1 );\n            status = sat_solver_addclause( pSat, pLits, pLits + 2 );\n            assert((status != 0), \"status\");\n        }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Sbd_ProblemPrintSolution",
+      "Start": 4512,
+      "End": 5195,
+      "BodyStart": 4593,
+      "Original": "void Sbd_ProblemPrintSolution( int nStrs, Sbd_Str_t * pStr0, Vec_Int_t * vLits )\n{\n    Sbd_Str_t * pStr;\n    int m, nIters, iLit = 0;\n    printf( \"Solution found:\\n\" );\n    for ( pStr = pStr0; pStr \u003c pStr0 + nStrs; pStr++ )\n    {\n        nIters = pStr-\u003efLut ? 1 \u003c\u003c pStr-\u003enVarIns : pStr-\u003enVarIns;\n        printf( \"%s%d : \", pStr-\u003efLut ? \"LUT\":\"SEL\", (int)(pStr-pStr0) );\n        for ( m = 0; m \u003c nIters; m++, iLit++ )\n            printf( \"%d\", !Abc_LitIsCompl(Vec_IntEntry(vLits, iLit)) );\n        printf( \"    {\" );\n        for ( m = 0; m \u003c pStr-\u003enVarIns; m++ )\n            printf( \" %d\", pStr-\u003eVarIns[m] );\n        printf( \" }\\n\" );\n    }\n    assert( iLit == Vec_IntSize(vLits) );\n}",
+      "Draft": "func Sbd_ProblemPrintSolution(nStrs int32, pStr0 *Sbd_Str_t, vLits *Vec_Int_t) {\n    var pStr *Sbd_Str_t;\n    var m, nIters, iLit int32;\n    fmt.Printf(\"Solution found:\\n\");\n    for  pStr = pStr0; pStr \u003c pStr0 + nStrs; pStr++  {\n        if pStr.fLut {\n            nIters = 1 \u003c\u003c pStr.nVarIns;\n        } else {\n            nIters = pStr.nVarIns;\n        }\n        fmt.Printf(\"%s%d : \", pStr.fLut ? \"LUT\":\"SEL\", int32((pStr-pStr0)));\n        for  m = 0; m \u003c nIters; m, iLit = m+1, iLit+1  {\n            fmt.Printf(\"%d\", !Abc_LitIsCompl(Vec_IntEntry(vLits, iLit)));\n        }\n        fmt.Printf(\"    {\");\n        for  m = 0; m \u003c pStr.nVarIns; m++  {\n            fmt.Printf(\" %d\", pStr.VarIns[m]);\n        }\n        fmt.Printf(\" }\\n\");\n    }\n    assert(iLit == Vec_IntSize(vLits), \"iLit == Vec_IntSize(vLits)\");\n}"
+    },
+    {
+      "Name": "Sbd_ProblemCollectSolution",
+      "Start": 5196,
+      "End": 6119,
+      "BodyStart": 5279,
+      "Original": "void Sbd_ProblemCollectSolution( int nStrs, Sbd_Str_t * pStr0, Vec_Int_t * vLits )\n{\n    Sbd_Str_t * pStr;\n    int m, nIters, iLit = 0;\n    for ( pStr = pStr0; pStr \u003c pStr0 + nStrs; pStr++ )\n    {\n        pStr-\u003eRes = 0;\n        if ( pStr-\u003efLut )\n        {\n            nIters = 1 \u003c\u003c pStr-\u003enVarIns;\n            for ( m = 0; m \u003c nIters; m++, iLit++ )\n                if ( !Abc_LitIsCompl(Vec_IntEntry(vLits, iLit)) )\n                    Abc_TtSetBit( \u0026pStr-\u003eRes, m );\n            pStr-\u003eRes = Abc_Tt6Stretch( pStr-\u003eRes, pStr-\u003enVarIns );\n        }\n        else\n        {\n            nIters = 0;\n            for ( m = 0; m \u003c pStr-\u003enVarIns; m++, iLit++ )\n                if ( !Abc_LitIsCompl(Vec_IntEntry(vLits, iLit)) )\n                {\n                    pStr-\u003eRes = pStr-\u003eVarIns[m];\n                    nIters++;\n                }\n            assert( nIters == 1 );\n        }\n    }\n    assert( iLit == Vec_IntSize(vLits) );\n}",
+      "Draft": "func Sbd_ProblemCollectSolution(nStrs int32, pStr0 *Sbd_Str_t, vLits *Vec_Int_t) {\n    var pStr *Sbd_Str_t;\n    var m, nIters, iLit int32;\n    for  pStr = pStr0; pStr \u003c pStr0 + nStrs; pStr++  {\n        pStr.Res = 0;\n        if pStr.fLut {\n            nIters = 1 \u003c\u003c pStr.nVarIns;\n            for  m = 0; m \u003c nIters; m, iLit = m+1, iLit+1  {\n                if !Abc_LitIsCompl(Vec_IntEntry(vLits, iLit)) {\n                    Abc_TtSetBit( \u0026pStr.Res, m ); }\n            }\n            pStr.Res = Abc_Tt6Stretch( pStr.Res, pStr.nVarIns );\n        \n        } else {\n            nIters = 0;\n            for  m = 0; m \u003c pStr.nVarIns; m, iLit = m+1, iLit+1  {\n                if !Abc_LitIsCompl(Vec_IntEntry(vLits, iLit)) {\n                    pStr.Res = pStr.VarIns[m];\n                    nIters++;\n                }\n            }\n            assert(nIters == 1, \"nIters == 1\");\n        }\n    }\n    assert(iLit == Vec_IntSize(vLits), \"iLit == Vec_IntSize(vLits)\");\n}"
+    },
+    {
+      "Name": "Sbd_ProblemSolve",
+      "Start": 6395,
+      "End": 10906,
+      "BodyStart": 6696,
+      "Original": "int Sbd_ProblemSolve( Gia_Man_t * p, Vec_Int_t * vMirrors, \n                       int Pivot, Vec_Int_t * vWinObjs, Vec_Int_t * vObj2Var, \n                       Vec_Int_t * vTfo, Vec_Int_t * vRoots, \n                       Vec_Int_t * vDivSet, int nStrs, Sbd_Str_t * pStr0 )  // divisors, structures\n{\n    extern sat_solver * Sbd_ManSatSolver( sat_solver * pSat, Gia_Man_t * p, Vec_Int_t * vMirrors, int Pivot, Vec_Int_t * vWinObjs, Vec_Int_t * vObj2Var, Vec_Int_t * vTfo, Vec_Int_t * vRoots, int fQbf );\n    \n    int fVerbose = 0;\n    abctime clk = Abc_Clock();\n    Vec_Int_t * vLits    = Vec_IntAlloc( 100 );\n    sat_solver * pSatCec = Sbd_ManSatSolver( NULL, p, vMirrors, Pivot, vWinObjs, vObj2Var, vTfo, vRoots, 1 );\n    sat_solver * pSatQbf = sat_solver_new();\n\n    int nVars      = Vec_IntSize( vDivSet );\n    int nPars      = Sbd_ProblemCountParams( nStrs, pStr0 );\n\n    int VarCecOut  = Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo) + Vec_IntSize(vRoots);\n    int VarCecPar  = VarCecOut + nStrs;\n\n    int VarQbfPar  = 0;\n    int VarQbfFree = nPars;\n\n    int pVarsCec[256];\n    int pVarsQbf[256];\n    int i, iVar, iLit, nIters;\n    int RetValue = 0;\n\n    assert( Vec_IntSize(vDivSet) \u003c= SBD_DIV_MAX );\n    assert( nVars + nStrs + nPars \u003c= 256 );\n\n    // collect CEC variables\n    Vec_IntForEachEntry( vDivSet, iVar, i )\n        pVarsCec[i] = iVar;\n    for ( i = 0; i \u003c nStrs; i++ )\n        pVarsCec[nVars + i] = VarCecOut + i;\n    for ( i = 0; i \u003c nPars; i++ )\n        pVarsCec[nVars + nStrs + i] = VarCecPar + i;\n\n    // collect QBF variables\n    for ( i = 0; i \u003c nVars + nStrs; i++ )\n        pVarsQbf[i] = -1;\n    for ( i = 0; i \u003c nPars; i++ )\n        pVarsQbf[nVars + nStrs + i] = VarQbfPar + i;\n\n    // add clauses to the CEC problem\n    Sbd_ProblemAddClauses( pSatCec, nVars, nStrs, pVarsCec, pStr0 );\n\n    // create QBF solver\n    sat_solver_setnvars( pSatQbf, 1000 );\n    Sbd_ProblemAddClausesInit( pSatQbf, nVars, nStrs, pVarsQbf, pStr0 );\n\n    // assume all parameter variables are 0\n    Vec_IntClear( vLits );\n    for ( i = 0; i \u003c nPars; i++ )\n        Vec_IntPush( vLits, Abc_Var2Lit(VarCecPar + i, 1) );\n    for ( nIters = 0; nIters \u003c (1 \u003c\u003c nVars); nIters++ )\n    {\n        // check if these parameters solve the problem\n        int status = sat_solver_solve( pSatCec, Vec_IntArray(vLits), Vec_IntLimit(vLits), 0, 0, 0, 0 );\n        if ( status == l_False ) // solution found\n            break;\n        assert( status == l_True );\n\n        if ( fVerbose )\n        {\n            printf( \"Iter %3d : \", nIters );\n            for ( i = 0; i \u003c nPars; i++ )\n                printf( \"%d\", !Abc_LitIsCompl(Vec_IntEntry(vLits, i)) );\n            printf( \"    \" );\n        }\n\n        Vec_IntClear( vLits );\n        // create new QBF variables\n        for ( i = 0; i \u003c nVars + nStrs; i++ )\n            pVarsQbf[i] = VarQbfFree++;\n        // set their values\n        Vec_IntForEachEntry( vDivSet, iVar, i )\n        {\n            iLit = Abc_Var2Lit( pVarsQbf[i], !sat_solver_var_value(pSatCec, iVar) );\n            status = sat_solver_addclause( pSatQbf, \u0026iLit, \u0026iLit + 1 );\n            assert( status );\n            if ( fVerbose )\n                printf( \"%d\", sat_solver_var_value(pSatCec, iVar) );\n        }\n        iLit = Abc_Var2Lit( pVarsQbf[nVars], sat_solver_var_value(pSatCec, VarCecOut) );\n        status = sat_solver_addclause( pSatQbf, \u0026iLit, \u0026iLit + 1 );\n        assert( status );\n        if ( fVerbose )\n            printf( \" %d\\n\", !sat_solver_var_value(pSatCec, VarCecOut) );\n        // add clauses to the QBF problem\n        if ( !Sbd_ProblemAddClauses( pSatQbf, nVars, nStrs, pVarsQbf, pStr0 ) )\n            break; // solution does not exist\n        // check if solution still exists\n        status = sat_solver_solve( pSatQbf, NULL, NULL, 0, 0, 0, 0 );\n        if ( status == l_False ) // solution does not exist\n            break;\n        assert( status == l_True ); \n        // find the new values of parameters\n        assert( Vec_IntSize(vLits) == 0 );\n        for ( i = 0; i \u003c nPars; i++ )\n            Vec_IntPush( vLits, Abc_Var2Lit(VarCecPar + i, !sat_solver_var_value(pSatQbf, VarQbfPar + i)) );\n    }\n    if ( Vec_IntSize(vLits) \u003e 0 )\n    {\n        //Sbd_ProblemPrintSolution( nStrs, pStr0, vLits );\n        Sbd_ProblemCollectSolution( nStrs, pStr0, vLits );\n        RetValue = 1;\n    }\n    sat_solver_delete( pSatCec );\n    sat_solver_delete( pSatQbf );\n    Vec_IntFree( vLits );\n\n    if ( fVerbose )\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return RetValue;\n}",
+      "Draft": "int Sbd_ProblemSolve( Gia_Man_t * p, Vec_Int_t * vMirrors, \n                       int Pivot, Vec_Int_t * vWinObjs, Vec_Int_t * vObj2Var, \n                       Vec_Int_t * vTfo, Vec_Int_t * vRoots, \n                       Vec_Int_t * vDivSet, int nStrs, Sbd_Str_t * pStr0 )  // divisors, structures\n{\n    extern sat_solver * Sbd_ManSatSolver( sat_solver * pSat, Gia_Man_t * p, Vec_Int_t * vMirrors, int Pivot, Vec_Int_t * vWinObjs, Vec_Int_t * vObj2Var, Vec_Int_t * vTfo, Vec_Int_t * vRoots, int fQbf );\n    \n    var fVerbose int32;\n    var clk abctime  = Abc_Clock();\n    var vLits *Vec_Int_t     = Vec_IntAlloc( 100 );\n    var pSatCec *sat_solver  = Sbd_ManSatSolver( nil, p, vMirrors, Pivot, vWinObjs, vObj2Var, vTfo, vRoots, 1 );\n    var pSatQbf *sat_solver  = sat_solver_new();\n\n    var nVars int32       = Vec_IntSize( vDivSet );\n    var nPars int32       = Sbd_ProblemCountParams( nStrs, pStr0 );\n\n    var VarCecOut int32   = Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo) + Vec_IntSize(vRoots);\n    var VarCecPar int32   = VarCecOut + nStrs;\n\n    var VarQbfPar int32;\n    var VarQbfFree int32  = nPars;\n\n    var pVarsCec [256]int32;\n    var pVarsQbf [256]int32;\n    var i, iVar, iLit, nIters int32;\n    var RetValue int32;\n\n    assert(Vec_IntSize(vDivSet) \u003c= SBD_DIV_MAX, \"Vec_IntSize(vDivSet) \u003c= SBD_DIV_MAX\");\n    assert(nVars + nStrs + nPars \u003c= 256, \"nVars + nStrs + nPars \u003c= 256\");\n\n    // collect CEC variables\n    Vec_IntForEachEntry( vDivSet, iVar, i )\n        pVarsCec[i] = iVar;\n    for  i = 0; i \u003c nStrs; i++  {\n        pVarsCec[nVars + i] = VarCecOut + i;\n    }\n    for  i = 0; i \u003c nPars; i++  {\n        pVarsCec[nVars + nStrs + i] = VarCecPar + i;\n    }\n\n    // collect QBF variables\n    for  i = 0; i \u003c nVars + nStrs; i++  {\n        pVarsQbf[i] = -1;\n    }\n    for  i = 0; i \u003c nPars; i++  {\n        pVarsQbf[nVars + nStrs + i] = VarQbfPar + i;\n    }\n\n    // add clauses to the CEC problem\n    Sbd_ProblemAddClauses( pSatCec, nVars, nStrs, pVarsCec, pStr0 );\n\n    // create QBF solver\n    sat_solver_setnvars( pSatQbf, 1000 );\n    Sbd_ProblemAddClausesInit( pSatQbf, nVars, nStrs, pVarsQbf, pStr0 );\n\n    // assume all parameter variables are 0\n    Vec_IntClear( vLits );\n    for  i = 0; i \u003c nPars; i++  {\n        Vec_IntPush( vLits, Abc_Var2Lit(VarCecPar + i, 1) );\n    }\n    for  nIters = 0; nIters \u003c (1 \u003c\u003c nVars); nIters++  {\n        // check if these parameters solve the problem\n        var status int32  = sat_solver_solve( pSatCec, Vec_IntArray(vLits), Vec_IntLimit(vLits), 0, 0, 0, 0 );\n        if status == l_False { // solution found\n            break; }\n        assert(status == l_True, \"status == l_True\");\n\n        if fVerbose != 0 {\n            fmt.Printf(\"Iter %3d : \", nIters);\n            for  i = 0; i \u003c nPars; i++  {\n                fmt.Printf(\"%d\", !Abc_LitIsCompl(Vec_IntEntry(vLits, i)));\n            }\n            fmt.Printf(\"    \");\n        }\n\n        Vec_IntClear( vLits );\n        // create new QBF variables\n        for  i = 0; i \u003c nVars + nStrs; i++  {\n            pVarsQbf[i] = VarQbfFree++;\n        }\n        // set their values\n        Vec_IntForEachEntry( vDivSet, iVar, i )\n        {\n            iLit = Abc_Var2Lit( pVarsQbf[i], !sat_solver_var_value(pSatCec, iVar) );\n            status = sat_solver_addclause( pSatQbf, \u0026iLit, \u0026iLit + 1 );\n            assert((status != 0), \"status\");\n            if fVerbose != 0 {\n                fmt.Printf(\"%d\", sat_solver_var_value(pSatCec, iVar)); }\n        }\n        iLit = Abc_Var2Lit( pVarsQbf[nVars], sat_solver_var_value(pSatCec, VarCecOut) );\n        status = sat_solver_addclause( pSatQbf, \u0026iLit, \u0026iLit + 1 );\n        assert((status != 0), \"status\");\n        if fVerbose != 0 {\n            fmt.Printf(\" %d\\n\", !sat_solver_var_value(pSatCec, VarCecOut)); }\n        // add clauses to the QBF problem\n        if !(Sbd_ProblemAddClauses( pSatQbf, nVars, nStrs, pVarsQbf, pStr0 ) != 0) {\n            break; } // solution does not exist\n        // check if solution still exists\n        status = sat_solver_solve( pSatQbf, nil, nil, 0, 0, 0, 0 );\n        if status == l_False { // solution does not exist\n            break; }\n        assert(status == l_True, \"status == l_True\"); \n        // find the new values of parameters\n        assert(Vec_IntSize(vLits) == 0, \"Vec_IntSize(vLits) == 0\");\n        for  i = 0; i \u003c nPars; i++  {\n            Vec_IntPush( vLits, Abc_Var2Lit(VarCecPar + i, !sat_solver_var_value(pSatQbf, VarQbfPar + i)) );\n        }\n    }\n    if Vec_IntSize(vLits) \u003e 0 {\n        //Sbd_ProblemPrintSolution( nStrs, pStr0, vLits );\n        Sbd_ProblemCollectSolution( nStrs, pStr0, vLits );\n        RetValue = 1;\n    }\n    sat_solver_delete( pSatCec );\n    sat_solver_delete( pSatQbf );\n    Vec_IntFree( vLits );\n\n    if fVerbose != 0 {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdLut.c::ternary::Sbd_ProblemCountParams",
+      "Category": "ternary-review",
+      "Symbol": "Sbd_ProblemCountParams",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1340,
+      "End": 1579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdLut.c::Sbd_ProblemCountParams",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ProblemCountParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1340,
+      "End": 1579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdLut.c::Sbd_ProblemAddClauses",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ProblemAddClauses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1613,
+      "End": 3389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdLut.c::ternary::Sbd_ProblemAddClausesInit",
+      "Category": "ternary-review",
+      "Symbol": "Sbd_ProblemAddClausesInit",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3390,
+      "End": 4511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdLut.c::Sbd_ProblemAddClausesInit",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ProblemAddClausesInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3390,
+      "End": 4511
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdLut.c::ternary::Sbd_ProblemPrintSolution",
+      "Category": "ternary-review",
+      "Symbol": "Sbd_ProblemPrintSolution",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4512,
+      "End": 5195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdLut.c::Sbd_ProblemPrintSolution",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ProblemPrintSolution",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4512,
+      "End": 5195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdLut.c::Sbd_ProblemCollectSolution",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ProblemCollectSolution",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5196,
+      "End": 6119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdLut.c::Sbd_ProblemSolve",
+      "Category": "semantic-review",
+      "Symbol": "Sbd_ProblemSolve",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6395,
+      "End": 10906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdLut.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdLut.c::macro-inline::7679",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7679,
+      "End": 7718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sbd/sbdLut.c::macro-inline::9266",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9266,
+      "End": 9305
+    }
+  ],
+  "Draft": "package sbd\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sbdLut.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [CNF computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sbdLut.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sbdInt.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n// count the number of parameter variables in the structure\nfunc Sbd_ProblemCountParams(nStrs int32, pStr0 *Sbd_Str_t) int32 {\n    var pStr *Sbd_Str_t;  var nPars int32;\n    for  pStr = pStr0; pStr \u003c pStr0 + nStrs; pStr++  {\n        nPars += pStr.fLut ? 1 \u003c\u003c pStr.nVarIns : pStr.nVarIns;\n    }\n    return nPars;\n}\n// add clauses for the structure\nfunc Sbd_ProblemAddClauses(pSat *sat_solver, nVars int32, nStrs int32, pVars *int32, pStr0 *Sbd_Str_t) int32 {   \n    // variable order:  inputs, structure outputs, parameters\n    var pStr *Sbd_Str_t;\n    var VarOut int32  = nVars;\n    var VarPar int32  = nVars + nStrs;\n    var m int32;\n    var k int32;\n    var n int32;\n    var status int32;\n    var pLits [SBD_SIZE_MAX+2]int32;\n//printf( \"Start par = %d.  \", VarPar );\n    for  pStr = pStr0; pStr \u003c pStr0 + nStrs; pStr, VarOut = pStr+1, VarOut+1  {\n        if pStr.fLut {\n            var nMints int32  = 1 \u003c\u003c pStr.nVarIns;\n            assert(pStr.nVarIns \u003c= 6, \"pStr.nVarIns \u003c= 6\");\n            for  m = 0; m \u003c nMints; m, VarPar = m+1, VarPar+1  {\n                for  k = 0; k \u003c pStr.nVarIns; k++  {\n                    pLits[k] = Abc_Var2Lit( pVars[pStr.VarIns[k]], (m \u003e\u003e k) \u0026 1 );\n                } \n                for  n = 0; n \u003c 2; n++  {\n                    pLits[pStr.nVarIns]   = Abc_Var2Lit( pVars[VarPar], n );\n                    pLits[pStr.nVarIns+1] = Abc_Var2Lit( pVars[VarOut], !n );\n                    status = sat_solver_addclause( pSat, pLits, pLits + pStr.nVarIns + 2 );\n                    if !(status != 0) {\n                        return 0; }\n                }\n            }\n        \n        } else {\n            assert(pStr.nVarIns \u003c= SBD_DIV_MAX, \"pStr.nVarIns \u003c= SBD_DIV_MAX\");\n            for  k = 0; k \u003c pStr.nVarIns; k, VarPar = k+1, VarPar+1  {\n                for  n = 0; n \u003c 2; n++  {\n                    pLits[0] = Abc_Var2Lit( pVars[VarPar], 1 );\n                    pLits[1] = Abc_Var2Lit( pVars[VarOut], n );\n                    pLits[2] = Abc_Var2Lit( pVars[pStr.VarIns[k]], !n );\n                    status = sat_solver_addclause( pSat, pLits, pLits + 3 );\n                    if !(status != 0) {\n                        return 0; }\n                }\n            }\n        }\n    }\n    return 1;\n}\nfunc Sbd_ProblemAddClausesInit(pSat *sat_solver, nVars int32, nStrs int32, pVars *int32, pStr0 *Sbd_Str_t) {\n    var pStr *Sbd_Str_t;\n    var VarPar int32  = nVars + nStrs;\n    var m int32;\n    var m2 int32;\n    var status int32;\n    var pLits [SBD_DIV_MAX]int32;\n    // make sure selector parameters are mutually exclusive\n    for  pStr = pStr0; pStr \u003c pStr0 + nStrs; VarPar += pStr.fLut ? 1 \u003c\u003c pStr.nVarIns : pStr.nVarIns, pStr++  {\n        if pStr.fLut {\n            continue; }\n        // one variable should be selected\n        assert(pStr.nVarIns \u003c= SBD_DIV_MAX, \"pStr.nVarIns \u003c= SBD_DIV_MAX\");\n        for  m = 0; m \u003c pStr.nVarIns; m++  {\n            pLits[m] = Abc_Var2Lit( pVars[VarPar + m], 0 );\n        }\n        status = sat_solver_addclause( pSat, pLits, pLits + pStr.nVarIns );\n        assert((status != 0), \"status\");\n        // two variables cannot be selected\n        for  m = 0; m \u003c pStr.nVarIns; m++  {\n        for  m2 = m+1; m2 \u003c pStr.nVarIns; m2++  {\n            pLits[0] = Abc_Var2Lit( pVars[VarPar + m], 1 );\n            pLits[1] = Abc_Var2Lit( pVars[VarPar + m2], 1 );\n            status = sat_solver_addclause( pSat, pLits, pLits + 2 );\n            assert((status != 0), \"status\");\n        }\n        }\n    }\n}\nfunc Sbd_ProblemPrintSolution(nStrs int32, pStr0 *Sbd_Str_t, vLits *Vec_Int_t) {\n    var pStr *Sbd_Str_t;\n    var m, nIters, iLit int32;\n    fmt.Printf(\"Solution found:\\n\");\n    for  pStr = pStr0; pStr \u003c pStr0 + nStrs; pStr++  {\n        if pStr.fLut {\n            nIters = 1 \u003c\u003c pStr.nVarIns;\n        } else {\n            nIters = pStr.nVarIns;\n        }\n        fmt.Printf(\"%s%d : \", pStr.fLut ? \"LUT\":\"SEL\", int32((pStr-pStr0)));\n        for  m = 0; m \u003c nIters; m, iLit = m+1, iLit+1  {\n            fmt.Printf(\"%d\", !Abc_LitIsCompl(Vec_IntEntry(vLits, iLit)));\n        }\n        fmt.Printf(\"    {\");\n        for  m = 0; m \u003c pStr.nVarIns; m++  {\n            fmt.Printf(\" %d\", pStr.VarIns[m]);\n        }\n        fmt.Printf(\" }\\n\");\n    }\n    assert(iLit == Vec_IntSize(vLits), \"iLit == Vec_IntSize(vLits)\");\n}\nfunc Sbd_ProblemCollectSolution(nStrs int32, pStr0 *Sbd_Str_t, vLits *Vec_Int_t) {\n    var pStr *Sbd_Str_t;\n    var m, nIters, iLit int32;\n    for  pStr = pStr0; pStr \u003c pStr0 + nStrs; pStr++  {\n        pStr.Res = 0;\n        if pStr.fLut {\n            nIters = 1 \u003c\u003c pStr.nVarIns;\n            for  m = 0; m \u003c nIters; m, iLit = m+1, iLit+1  {\n                if !Abc_LitIsCompl(Vec_IntEntry(vLits, iLit)) {\n                    Abc_TtSetBit( \u0026pStr.Res, m ); }\n            }\n            pStr.Res = Abc_Tt6Stretch( pStr.Res, pStr.nVarIns );\n        \n        } else {\n            nIters = 0;\n            for  m = 0; m \u003c pStr.nVarIns; m, iLit = m+1, iLit+1  {\n                if !Abc_LitIsCompl(Vec_IntEntry(vLits, iLit)) {\n                    pStr.Res = pStr.VarIns[m];\n                    nIters++;\n                }\n            }\n            assert(nIters == 1, \"nIters == 1\");\n        }\n    }\n    assert(iLit == Vec_IntSize(vLits), \"iLit == Vec_IntSize(vLits)\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Solves QBF problem for the given window.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Sbd_ProblemSolve( Gia_Man_t * p, Vec_Int_t * vMirrors, \n                       int Pivot, Vec_Int_t * vWinObjs, Vec_Int_t * vObj2Var, \n                       Vec_Int_t * vTfo, Vec_Int_t * vRoots, \n                       Vec_Int_t * vDivSet, int nStrs, Sbd_Str_t * pStr0 )  // divisors, structures\n{\n    extern sat_solver * Sbd_ManSatSolver( sat_solver * pSat, Gia_Man_t * p, Vec_Int_t * vMirrors, int Pivot, Vec_Int_t * vWinObjs, Vec_Int_t * vObj2Var, Vec_Int_t * vTfo, Vec_Int_t * vRoots, int fQbf );\n    \n    var fVerbose int32;\n    var clk abctime  = Abc_Clock();\n    var vLits *Vec_Int_t     = Vec_IntAlloc( 100 );\n    var pSatCec *sat_solver  = Sbd_ManSatSolver( nil, p, vMirrors, Pivot, vWinObjs, vObj2Var, vTfo, vRoots, 1 );\n    var pSatQbf *sat_solver  = sat_solver_new();\n\n    var nVars int32       = Vec_IntSize( vDivSet );\n    var nPars int32       = Sbd_ProblemCountParams( nStrs, pStr0 );\n\n    var VarCecOut int32   = Vec_IntSize(vWinObjs) + Vec_IntSize(vTfo) + Vec_IntSize(vRoots);\n    var VarCecPar int32   = VarCecOut + nStrs;\n\n    var VarQbfPar int32;\n    var VarQbfFree int32  = nPars;\n\n    var pVarsCec [256]int32;\n    var pVarsQbf [256]int32;\n    var i, iVar, iLit, nIters int32;\n    var RetValue int32;\n\n    assert(Vec_IntSize(vDivSet) \u003c= SBD_DIV_MAX, \"Vec_IntSize(vDivSet) \u003c= SBD_DIV_MAX\");\n    assert(nVars + nStrs + nPars \u003c= 256, \"nVars + nStrs + nPars \u003c= 256\");\n\n    // collect CEC variables\n    Vec_IntForEachEntry( vDivSet, iVar, i )\n        pVarsCec[i] = iVar;\n    for  i = 0; i \u003c nStrs; i++  {\n        pVarsCec[nVars + i] = VarCecOut + i;\n    }\n    for  i = 0; i \u003c nPars; i++  {\n        pVarsCec[nVars + nStrs + i] = VarCecPar + i;\n    }\n\n    // collect QBF variables\n    for  i = 0; i \u003c nVars + nStrs; i++  {\n        pVarsQbf[i] = -1;\n    }\n    for  i = 0; i \u003c nPars; i++  {\n        pVarsQbf[nVars + nStrs + i] = VarQbfPar + i;\n    }\n\n    // add clauses to the CEC problem\n    Sbd_ProblemAddClauses( pSatCec, nVars, nStrs, pVarsCec, pStr0 );\n\n    // create QBF solver\n    sat_solver_setnvars( pSatQbf, 1000 );\n    Sbd_ProblemAddClausesInit( pSatQbf, nVars, nStrs, pVarsQbf, pStr0 );\n\n    // assume all parameter variables are 0\n    Vec_IntClear( vLits );\n    for  i = 0; i \u003c nPars; i++  {\n        Vec_IntPush( vLits, Abc_Var2Lit(VarCecPar + i, 1) );\n    }\n    for  nIters = 0; nIters \u003c (1 \u003c\u003c nVars); nIters++  {\n        // check if these parameters solve the problem\n        var status int32  = sat_solver_solve( pSatCec, Vec_IntArray(vLits), Vec_IntLimit(vLits), 0, 0, 0, 0 );\n        if status == l_False { // solution found\n            break; }\n        assert(status == l_True, \"status == l_True\");\n\n        if fVerbose != 0 {\n            fmt.Printf(\"Iter %3d : \", nIters);\n            for  i = 0; i \u003c nPars; i++  {\n                fmt.Printf(\"%d\", !Abc_LitIsCompl(Vec_IntEntry(vLits, i)));\n            }\n            fmt.Printf(\"    \");\n        }\n\n        Vec_IntClear( vLits );\n        // create new QBF variables\n        for  i = 0; i \u003c nVars + nStrs; i++  {\n            pVarsQbf[i] = VarQbfFree++;\n        }\n        // set their values\n        Vec_IntForEachEntry( vDivSet, iVar, i )\n        {\n            iLit = Abc_Var2Lit( pVarsQbf[i], !sat_solver_var_value(pSatCec, iVar) );\n            status = sat_solver_addclause( pSatQbf, \u0026iLit, \u0026iLit + 1 );\n            assert((status != 0), \"status\");\n            if fVerbose != 0 {\n                fmt.Printf(\"%d\", sat_solver_var_value(pSatCec, iVar)); }\n        }\n        iLit = Abc_Var2Lit( pVarsQbf[nVars], sat_solver_var_value(pSatCec, VarCecOut) );\n        status = sat_solver_addclause( pSatQbf, \u0026iLit, \u0026iLit + 1 );\n        assert((status != 0), \"status\");\n        if fVerbose != 0 {\n            fmt.Printf(\" %d\\n\", !sat_solver_var_value(pSatCec, VarCecOut)); }\n        // add clauses to the QBF problem\n        if !(Sbd_ProblemAddClauses( pSatQbf, nVars, nStrs, pVarsQbf, pStr0 ) != 0) {\n            break; } // solution does not exist\n        // check if solution still exists\n        status = sat_solver_solve( pSatQbf, nil, nil, 0, 0, 0, 0 );\n        if status == l_False { // solution does not exist\n            break; }\n        assert(status == l_True, \"status == l_True\"); \n        // find the new values of parameters\n        assert(Vec_IntSize(vLits) == 0, \"Vec_IntSize(vLits) == 0\");\n        for  i = 0; i \u003c nPars; i++  {\n            Vec_IntPush( vLits, Abc_Var2Lit(VarCecPar + i, !sat_solver_var_value(pSatQbf, VarQbfPar + i)) );\n        }\n    }\n    if Vec_IntSize(vLits) \u003e 0 {\n        //Sbd_ProblemPrintSolution( nStrs, pStr0, vLits );\n        Sbd_ProblemCollectSolution( nStrs, pStr0, vLits );\n        RetValue = 1;\n    }\n    sat_solver_delete( pSatCec );\n    sat_solver_delete( pSatQbf );\n    Vec_IntFree( vLits );\n\n    if fVerbose != 0 {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n    return RetValue;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

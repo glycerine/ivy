@@ -1,0 +1,459 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c",
+  "SHA256": "e9c0e466a0645d0293f40d7d2e45e701ed906baa8072861aed5997bcfe76677d",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCut, 0, sizeof(Fpga_Cut_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 2757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"CUT:  Delay = %4.2f. Area = %4.2f. Nodes = %d -\u003e {\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 9,
+        "ByteOffset": 2917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %d\", pCut.ppLeaves[i].Num );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 5,
+        "ByteOffset": 2966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" } \\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 4649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPrev.pNext == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 316,
+        "Column": 9,
+        "ByteOffset": 8834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCutFanin );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 339,
+        "Column": 5,
+        "ByteOffset": 9494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Fpga_FloatEqual( pMan, aResult, aResult2 ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 360,
+        "Column": 5,
+        "ByteOffset": 10115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Fpga_FloatEqual( pMan, aResult, aResult2 ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 389,
+        "Column": 9,
+        "ByteOffset": 10986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNodeChild.nRefs \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 424,
+        "Column": 9,
+        "ByteOffset": 12059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNodeChild.nRefs \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fpga_CutAlloc",
+      "Start": 1228,
+      "End": 1422,
+      "BodyStart": 1273,
+      "Original": "Fpga_Cut_t * Fpga_CutAlloc( Fpga_Man_t * p )\n{\n    Fpga_Cut_t * pCut;\n    pCut = (Fpga_Cut_t *)Extra_MmFixedEntryFetch( p-\u003emmCuts );\n    memset( pCut, 0, sizeof(Fpga_Cut_t) );\n    return pCut;\n}",
+      "Draft": "func Fpga_CutAlloc(p *Fpga_Man_t) *Fpga_Cut_t {\n    var pCut *Fpga_Cut_t;\n    pCut = (Fpga_Cut_t *)Extra_MmFixedEntryFetch( p.mmCuts );\n    memset( pCut, 0, sizeof(Fpga_Cut_t) );\n    return pCut;\n}"
+    },
+    {
+      "Name": "Fpga_CutDup",
+      "Start": 1677,
+      "End": 2014,
+      "BodyStart": 1742,
+      "Original": "Fpga_Cut_t * Fpga_CutDup( Fpga_Man_t * p, Fpga_Cut_t * pCutOld )\n{\n    Fpga_Cut_t * pCutNew;\n    int i;\n    pCutNew = Fpga_CutAlloc( p );\n    pCutNew-\u003epRoot   = pCutOld-\u003epRoot;\n    pCutNew-\u003enLeaves = pCutOld-\u003enLeaves;\n    for ( i = 0; i \u003c pCutOld-\u003enLeaves; i++ )\n        pCutNew-\u003eppLeaves[i] = pCutOld-\u003eppLeaves[i];\n    return pCutNew;\n}",
+      "Draft": "func Fpga_CutDup(p *Fpga_Man_t, pCutOld *Fpga_Cut_t) *Fpga_Cut_t {\n    var pCutNew *Fpga_Cut_t;\n    var i int32;\n    pCutNew = Fpga_CutAlloc( p );\n    pCutNew.pRoot   = pCutOld.pRoot;\n    pCutNew.nLeaves = pCutOld.nLeaves;\n    for  i = 0; i \u003c pCutOld.nLeaves; i++  {\n        pCutNew.ppLeaves[i] = pCutOld.ppLeaves[i];\n    }\n    return pCutNew;\n}"
+    },
+    {
+      "Name": "Fpga_CutFree",
+      "Start": 2270,
+      "End": 2402,
+      "BodyStart": 2325,
+      "Original": "void Fpga_CutFree( Fpga_Man_t * p, Fpga_Cut_t * pCut )\n{\n    if ( pCut )\n    Extra_MmFixedEntryRecycle( p-\u003emmCuts, (char *)pCut );\n}",
+      "Draft": "func Fpga_CutFree(p *Fpga_Man_t, pCut *Fpga_Cut_t) {\n    if pCut != nil {\n    Extra_MmFixedEntryRecycle( p.mmCuts, (char *)pCut ); }\n}"
+    },
+    {
+      "Name": "Fpga_CutPrint",
+      "Start": 2638,
+      "End": 2961,
+      "BodyStart": 2715,
+      "Original": "void Fpga_CutPrint( Fpga_Man_t * p, Fpga_Node_t * pRoot, Fpga_Cut_t * pCut )\n{\n    int i;\n    printf( \"CUT:  Delay = %4.2f. Area = %4.2f. Nodes = %d -\u003e {\", \n        pCut-\u003etArrival, pCut-\u003eaFlow, pRoot-\u003eNum );\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n        printf( \" %d\", pCut-\u003eppLeaves[i]-\u003eNum );\n    printf( \" } \\n\" );\n}",
+      "Draft": "func Fpga_CutPrint(p *Fpga_Man_t, pRoot *Fpga_Node_t, pCut *Fpga_Cut_t) {\n    var i int32;\n    fmt.Printf(\"CUT:  Delay = %4.2f. Area = %4.2f. Nodes = %d -\u003e {\", pCut.tArrival, pCut.aFlow, pRoot.Num);\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        fmt.Printf(\" %d\", pCut.ppLeaves[i].Num);\n    }\n    fmt.Printf(\" } \\n\");\n}"
+    },
+    {
+      "Name": "Fpga_CutCreateSimple",
+      "Start": 3197,
+      "End": 3485,
+      "BodyStart": 3270,
+      "Original": "Fpga_Cut_t * Fpga_CutCreateSimple( Fpga_Man_t * p, Fpga_Node_t * pNode )\n{\n    Fpga_Cut_t * pCut;\n    pCut = Fpga_CutAlloc( p );\n    pCut-\u003epRoot       = pNode;\n    pCut-\u003enLeaves     = 1;\n    pCut-\u003eppLeaves[0] = pNode;\n    pCut-\u003euSign = FPGA_SEQ_SIGN(pCut-\u003eppLeaves[0]);\n    return pCut;\n}",
+      "Draft": "func Fpga_CutCreateSimple(p *Fpga_Man_t, pNode *Fpga_Node_t) *Fpga_Cut_t {\n    var pCut *Fpga_Cut_t;\n    pCut = Fpga_CutAlloc( p );\n    pCut.pRoot       = pNode;\n    pCut.nLeaves     = 1;\n    pCut.ppLeaves[0] = pNode;\n    // inlining of macro FPGA_SEQ_SIGN\n    pCut.uSign = (1 \u003c\u003c (((ABC_PTRUINT_T)pCut.ppLeaves[0])%31));;\n    return pCut;\n}"
+    },
+    {
+      "Name": "Fpga_CutGetRootArea",
+      "Start": 3770,
+      "End": 3890,
+      "BodyStart": 3833,
+      "Original": "float Fpga_CutGetRootArea( Fpga_Man_t * p, Fpga_Cut_t * pCut )\n{\n    return p-\u003epLutLib-\u003epLutAreas[(int)pCut-\u003enLeaves];\n}",
+      "Draft": "func Fpga_CutGetRootArea(p *Fpga_Man_t, pCut *Fpga_Cut_t) float32 {\n    return p.pLutLib.pLutAreas[int32(pCut.nLeaves)];\n}"
+    },
+    {
+      "Name": "Fpga_CutListAppend",
+      "Start": 4126,
+      "End": 4630,
+      "BodyStart": 4202,
+      "Original": "Fpga_Cut_t * Fpga_CutListAppend( Fpga_Cut_t * pSetAll, Fpga_Cut_t * pSets )\n{\n    Fpga_Cut_t * pPrev = NULL; // Suppress \"might be used uninitialized\"\n    Fpga_Cut_t * pTemp;\n    if ( pSetAll == NULL )\n        return pSets;\n    if ( pSets == NULL )\n        return pSetAll;\n    // find the last one\n    for ( pTemp = pSets; pTemp; pTemp = pTemp-\u003epNext )\n        pPrev = pTemp;\n    // append all the end of the current set\n    assert( pPrev-\u003epNext == NULL );\n    pPrev-\u003epNext = pSetAll;\n    return pSets;\n}",
+      "Draft": "func Fpga_CutListAppend(pSetAll *Fpga_Cut_t, pSets *Fpga_Cut_t) *Fpga_Cut_t {\n    var pPrev *Fpga_Cut_t  = nil; // Suppress \"might be used uninitialized\"\n    var pTemp *Fpga_Cut_t;\n    if pSetAll == nil {\n        return pSets; }\n    if pSets == nil {\n        return pSetAll; }\n    // find the last one\n    for  pTemp = pSets; (pTemp != nil); pTemp = pTemp.pNext  {\n        pPrev = pTemp;\n    }\n    // append all the end of the current set\n    assert(pPrev.pNext == nil, \"pPrev.pNext == nil\");\n    pPrev.pNext = pSetAll;\n    return pSets;\n}"
+    },
+    {
+      "Name": "Fpga_CutListRecycle",
+      "Start": 4866,
+      "End": 5230,
+      "BodyStart": 4952,
+      "Original": "void Fpga_CutListRecycle( Fpga_Man_t * p, Fpga_Cut_t * pSetList, Fpga_Cut_t * pSave )\n{\n    Fpga_Cut_t * pNext, * pTemp;\n    for ( pTemp = pSetList, pNext = pTemp? pTemp-\u003epNext : NULL; \n          pTemp; \n          pTemp = pNext, pNext = pNext? pNext-\u003epNext : NULL )\n        if ( pTemp != pSave )\n            Extra_MmFixedEntryRecycle( p-\u003emmCuts, (char *)pTemp );\n}",
+      "Draft": "func Fpga_CutListRecycle(p *Fpga_Man_t, pSetList *Fpga_Cut_t, pSave *Fpga_Cut_t) {\n    var pNext, pTemp *Fpga_Cut_t;\n    for  pTemp = pSetList, pNext = pTemp? pTemp.pNext : nil; \n          (pTemp != nil); \n          pTemp = pNext, pNext = pNext? pNext.pNext : nil  {\n        if pTemp != pSave {\n            Extra_MmFixedEntryRecycle( p.mmCuts, (char *)pTemp ); }\n    }\n}"
+    },
+    {
+      "Name": "Fpga_CutListCount",
+      "Start": 5466,
+      "End": 5630,
+      "BodyStart": 5510,
+      "Original": "int Fpga_CutListCount( Fpga_Cut_t * pSets )\n{\n    Fpga_Cut_t * pTemp;\n    int i;\n    for ( i = 0, pTemp = pSets; pTemp; pTemp = pTemp-\u003epNext, i++ );\n    return i;\n}",
+      "Draft": "func Fpga_CutListCount(pSets *Fpga_Cut_t) int32 {\n    var pTemp *Fpga_Cut_t;\n    var i int32;\n    for  i, pTemp = 0, pSets; (pTemp != nil); pTemp, i = pTemp.pNext, i+1  {}\n    return i;\n}"
+    },
+    {
+      "Name": "Fpga_CutGetParameters",
+      "Start": 7198,
+      "End": 8133,
+      "BodyStart": 7265,
+      "Original": "void Fpga_CutGetParameters( Fpga_Man_t * pMan, Fpga_Cut_t * pCut )\n{\n    Fpga_Cut_t * pFaninCut;\n    int i;\n    pCut-\u003etArrival = -FPGA_FLOAT_LARGE;\n    pCut-\u003eaFlow    = pMan-\u003epLutLib-\u003epLutAreas[(int)pCut-\u003enLeaves];\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n    {\n        pFaninCut = pCut-\u003eppLeaves[i]-\u003epCutBest;\n        if ( pCut-\u003etArrival \u003c pFaninCut-\u003etArrival )\n             pCut-\u003etArrival = pFaninCut-\u003etArrival;\n        // if the fanout count is not set, assume it to be 1\n        if ( pCut-\u003eppLeaves[i]-\u003enRefs == 0 )\n            pCut-\u003eaFlow += pFaninCut-\u003eaFlow;\n        else\n//            pCut-\u003eaFlow += pFaninCut-\u003eaFlow / pCut-\u003eppLeaves[i]-\u003enRefs;\n            pCut-\u003eaFlow += pFaninCut-\u003eaFlow / pCut-\u003eppLeaves[i]-\u003eaEstFanouts;\n    }\n    // use the first pin to compute the delay of the LUT \n    // (this mapper does not support the variable pin delay model)\n    pCut-\u003etArrival += pMan-\u003epLutLib-\u003epLutDelays[(int)pCut-\u003enLeaves][0];\n}",
+      "Draft": "func Fpga_CutGetParameters(pMan *Fpga_Man_t, pCut *Fpga_Cut_t) {\n    var pFaninCut *Fpga_Cut_t;\n    var i int32;\n    pCut.tArrival = -FPGA_FLOAT_LARGE;\n    pCut.aFlow    = pMan.pLutLib.pLutAreas[int32(pCut.nLeaves)];\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pFaninCut = pCut.ppLeaves[i].pCutBest;\n        if pCut.tArrival \u003c pFaninCut.tArrival {\n             pCut.tArrival = pFaninCut.tArrival; }\n        // if the fanout count is not set, assume it to be 1\n        if pCut.ppLeaves[i].nRefs == 0 {\n            pCut.aFlow += pFaninCut.aFlow;\n        } else {\n//            pCut-\u003eaFlow += pFaninCut-\u003eaFlow / pCut-\u003eppLeaves[i]-\u003enRefs;\n            pCut.aFlow += pFaninCut.aFlow / pCut.ppLeaves[i].aEstFanouts; }\n    }\n    // use the first pin to compute the delay of the LUT \n    // (this mapper does not support the variable pin delay model)\n    pCut.tArrival += pMan.pLutLib.pLutDelays[int32(pCut.nLeaves)][0];\n}"
+    },
+    {
+      "Name": "Fpga_CutGetAreaFlow",
+      "Start": 8404,
+      "End": 8865,
+      "BodyStart": 8470,
+      "Original": "float Fpga_CutGetAreaFlow( Fpga_Man_t * pMan, Fpga_Cut_t * pCut )\n{\n    Fpga_Cut_t * pCutFanin;\n    int i;\n    pCut-\u003eaFlow = pMan-\u003epLutLib-\u003epLutAreas[(int)pCut-\u003enLeaves];\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n    {\n        // get the cut implementing this phase of the fanin\n        pCutFanin  = pCut-\u003eppLeaves[i]-\u003epCutBest;   \n        assert( pCutFanin );\n        pCut-\u003eaFlow  += pCutFanin-\u003eaFlow / pCut-\u003eppLeaves[i]-\u003enRefs;\n    }\n    return pCut-\u003eaFlow;\n}",
+      "Draft": "func Fpga_CutGetAreaFlow(pMan *Fpga_Man_t, pCut *Fpga_Cut_t) float32 {\n    var pCutFanin *Fpga_Cut_t;\n    var i int32;\n    pCut.aFlow = pMan.pLutLib.pLutAreas[int32(pCut.nLeaves)];\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        // get the cut implementing this phase of the fanin\n        pCutFanin  = pCut.ppLeaves[i].pCutBest;   \n        assert((pCutFanin != nil), \"pCutFanin\");\n        pCut.aFlow  += pCutFanin.aFlow / pCut.ppLeaves[i].nRefs;\n    }\n    return pCut.aFlow;\n}"
+    },
+    {
+      "Name": "Fpga_CutGetAreaRefed",
+      "Start": 9149,
+      "End": 9478,
+      "BodyStart": 9216,
+      "Original": "float Fpga_CutGetAreaRefed( Fpga_Man_t * pMan, Fpga_Cut_t * pCut )\n{\n    float aResult, aResult2;\n    if ( pCut-\u003enLeaves == 1 )\n        return 0;\n    aResult  = Fpga_CutDeref( pMan, NULL, pCut, 0 );\n    aResult2 = Fpga_CutRef( pMan, NULL, pCut, 0 );\n    assert( Fpga_FloatEqual( pMan, aResult, aResult2 ) );\n    return aResult;\n}",
+      "Draft": "func Fpga_CutGetAreaRefed(pMan *Fpga_Man_t, pCut *Fpga_Cut_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves == 1 {\n        return 0; }\n    aResult  = Fpga_CutDeref( pMan, nil, pCut, 0 );\n    aResult2 = Fpga_CutRef( pMan, nil, pCut, 0 );\n    assert(Fpga_FloatEqual( pMan, aResult, aResult2 ), \"Fpga_FloatEqual( pMan, aResult, aResult2 )\");\n    return aResult;\n}"
+    },
+    {
+      "Name": "Fpga_CutGetAreaDerefed",
+      "Start": 9762,
+      "End": 10093,
+      "BodyStart": 9831,
+      "Original": "float Fpga_CutGetAreaDerefed( Fpga_Man_t * pMan, Fpga_Cut_t * pCut )\n{\n    float aResult, aResult2;\n    if ( pCut-\u003enLeaves == 1 )\n        return 0;\n    aResult2 = Fpga_CutRef( pMan, NULL, pCut, 0 );\n    aResult  = Fpga_CutDeref( pMan, NULL, pCut, 0 );\n    assert( Fpga_FloatEqual( pMan, aResult, aResult2 ) );\n    return aResult;\n}",
+      "Draft": "func Fpga_CutGetAreaDerefed(pMan *Fpga_Man_t, pCut *Fpga_Cut_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves == 1 {\n        return 0; }\n    aResult2 = Fpga_CutRef( pMan, nil, pCut, 0 );\n    aResult  = Fpga_CutDeref( pMan, nil, pCut, 0 );\n    assert(Fpga_FloatEqual( pMan, aResult, aResult2 ), \"Fpga_FloatEqual( pMan, aResult, aResult2 )\");\n    return aResult;\n}"
+    },
+    {
+      "Name": "Fpga_CutRef",
+      "Start": 10403,
+      "End": 11149,
+      "BodyStart": 10496,
+      "Original": "float Fpga_CutRef( Fpga_Man_t * pMan, Fpga_Node_t * pNode, Fpga_Cut_t * pCut, int fFanouts )\n{\n    Fpga_Node_t * pNodeChild;\n    float aArea;\n    int i;\n\n    // deref the fanouts\n//    if ( fFanouts ) \n//        Fpga_CutInsertFanouts( pMan, pNode, pCut );\n\n    // start the area of this cut\n    aArea = pMan-\u003epLutLib-\u003epLutAreas[(int)pCut-\u003enLeaves];\n    // go through the children\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n    {\n        pNodeChild = pCut-\u003eppLeaves[i];\n        assert( pNodeChild-\u003enRefs \u003e= 0 );\n        if ( pNodeChild-\u003enRefs++ \u003e 0 )  \n            continue;\n        if ( !Fpga_NodeIsAnd(pNodeChild) ) \n            continue;\n        aArea += Fpga_CutRef( pMan, pNodeChild, pNodeChild-\u003epCutBest, fFanouts );\n    }\n    return aArea;\n}",
+      "Draft": "func Fpga_CutRef(pMan *Fpga_Man_t, pNode *Fpga_Node_t, pCut *Fpga_Cut_t, fFanouts int32) float32 {\n    var pNodeChild *Fpga_Node_t;\n    var aArea float32;\n    var i int32;\n\n    // deref the fanouts\n//    if ( fFanouts ) \n//        Fpga_CutInsertFanouts( pMan, pNode, pCut );\n\n    // start the area of this cut\n    aArea = pMan.pLutLib.pLutAreas[int32(pCut.nLeaves)];\n    // go through the children\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pNodeChild = pCut.ppLeaves[i];\n        assert(pNodeChild.nRefs \u003e= 0, \"pNodeChild.nRefs \u003e= 0\");\n        if pNodeChild.nRefs++ \u003e 0 {  \n            continue; }\n        if !Fpga_NodeIsAnd(pNodeChild) { \n            continue; }\n        aArea += Fpga_CutRef( pMan, pNodeChild, pNodeChild.pCutBest, fFanouts );\n    }\n    return aArea;\n}"
+    },
+    {
+      "Name": "Fpga_CutDeref",
+      "Start": 11467,
+      "End": 12216,
+      "BodyStart": 11562,
+      "Original": "float Fpga_CutDeref( Fpga_Man_t * pMan, Fpga_Node_t * pNode, Fpga_Cut_t * pCut, int fFanouts )\n{\n    Fpga_Node_t * pNodeChild;\n    float aArea;\n    int i;\n\n    // deref the fanouts\n//    if ( fFanouts ) \n//        Fpga_CutRemoveFanouts( pMan, pNode, pCut );\n\n    // start the area of this cut\n    aArea = pMan-\u003epLutLib-\u003epLutAreas[(int)pCut-\u003enLeaves];\n    // go through the children\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n    {\n        pNodeChild = pCut-\u003eppLeaves[i];\n        assert( pNodeChild-\u003enRefs \u003e 0 );\n        if ( --pNodeChild-\u003enRefs \u003e 0 )  \n            continue;\n        if ( !Fpga_NodeIsAnd(pNodeChild) ) \n            continue;\n        aArea += Fpga_CutDeref( pMan, pNodeChild, pNodeChild-\u003epCutBest, fFanouts );\n    }\n    return aArea;\n}",
+      "Draft": "func Fpga_CutDeref(pMan *Fpga_Man_t, pNode *Fpga_Node_t, pCut *Fpga_Cut_t, fFanouts int32) float32 {\n    var pNodeChild *Fpga_Node_t;\n    var aArea float32;\n    var i int32;\n\n    // deref the fanouts\n//    if ( fFanouts ) \n//        Fpga_CutRemoveFanouts( pMan, pNode, pCut );\n\n    // start the area of this cut\n    aArea = pMan.pLutLib.pLutAreas[int32(pCut.nLeaves)];\n    // go through the children\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pNodeChild = pCut.ppLeaves[i];\n        assert(pNodeChild.nRefs \u003e 0, \"pNodeChild.nRefs \u003e 0\");\n        if --pNodeChild.nRefs \u003e 0 {  \n            continue; }\n        if !Fpga_NodeIsAnd(pNodeChild) { \n            continue; }\n        aArea += Fpga_CutDeref( pMan, pNodeChild, pNodeChild.pCutBest, fFanouts );\n    }\n    return aArea;\n}"
+    },
+    {
+      "Name": "Fpga_MappingSetUsedCuts",
+      "Start": 12506,
+      "End": 12837,
+      "BodyStart": 12556,
+      "Original": "void Fpga_MappingSetUsedCuts( Fpga_Man_t * pMan )\n{\n    int i;\n    for ( i = 0; i \u003c pMan-\u003evNodesAll-\u003enSize; i++ )\n        if ( pMan-\u003evNodesAll-\u003epArray[i]-\u003epCutOld )\n        {\n            pMan-\u003evNodesAll-\u003epArray[i]-\u003epCutBest = pMan-\u003evNodesAll-\u003epArray[i]-\u003epCutOld;\n            pMan-\u003evNodesAll-\u003epArray[i]-\u003epCutOld  = NULL;\n        }\n}",
+      "Draft": "func Fpga_MappingSetUsedCuts(pMan *Fpga_Man_t) {\n    var i int32;\n    for  i = 0; i \u003c pMan.vNodesAll.nSize; i++  {\n        if pMan.vNodesAll.pArray[i].pCutOld {\n            pMan.vNodesAll.pArray[i].pCutBest = pMan.vNodesAll.pArray[i].pCutOld;\n            pMan.vNodesAll.pArray[i].pCutOld  = nil;\n        }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::mechanical::sizeof::1382",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1382,
+      "End": 1388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::pointer-cast::1309",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1309,
+      "End": 1323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::pointer-cast::2385",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2385,
+      "End": 2393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::pointer-cast::5276",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5212,
+      "End": 5220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1228,
+      "End": 1422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutDup",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1677,
+      "End": 2014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutFree",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2270,
+      "End": 2402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutPrint",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2638,
+      "End": 2961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutCreateSimple",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutCreateSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3197,
+      "End": 3485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutGetRootArea",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutGetRootArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3770,
+      "End": 3890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutListAppend",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutListAppend",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4126,
+      "End": 4630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::ternary::Fpga_CutListRecycle",
+      "Category": "ternary-review",
+      "Symbol": "Fpga_CutListRecycle",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4866,
+      "End": 5230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutListRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutListRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4866,
+      "End": 5230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutListCount",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutListCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5466,
+      "End": 5630
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutGetParameters",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutGetParameters",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7198,
+      "End": 8133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutGetAreaFlow",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutGetAreaFlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8404,
+      "End": 8865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutGetAreaRefed",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutGetAreaRefed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9149,
+      "End": 9478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutGetAreaDerefed",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutGetAreaDerefed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9762,
+      "End": 10093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutRef",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10403,
+      "End": 11149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_CutDeref",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_CutDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11467,
+      "End": 12216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::Fpga_MappingSetUsedCuts",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_MappingSetUsedCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12506,
+      "End": 12837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaCutUtils.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13084
+    }
+  ],
+  "Draft": "package fpga\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [fpgaCutUtils.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Generic technology mapping engine.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - August 18, 2004.]\n\n  Revision    [$Id: fpgaCutUtils.h,v 1.0 2003/09/08 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fpgaInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutAlloc(p *Fpga_Man_t) *Fpga_Cut_t {\n    var pCut *Fpga_Cut_t;\n    pCut = (Fpga_Cut_t *)Extra_MmFixedEntryFetch( p.mmCuts );\n    memset( pCut, 0, sizeof(Fpga_Cut_t) );\n    return pCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutDup(p *Fpga_Man_t, pCutOld *Fpga_Cut_t) *Fpga_Cut_t {\n    var pCutNew *Fpga_Cut_t;\n    var i int32;\n    pCutNew = Fpga_CutAlloc( p );\n    pCutNew.pRoot   = pCutOld.pRoot;\n    pCutNew.nLeaves = pCutOld.nLeaves;\n    for  i = 0; i \u003c pCutOld.nLeaves; i++  {\n        pCutNew.ppLeaves[i] = pCutOld.ppLeaves[i];\n    }\n    return pCutNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutFree(p *Fpga_Man_t, pCut *Fpga_Cut_t) {\n    if pCut != nil {\n    Extra_MmFixedEntryRecycle( p.mmCuts, (char *)pCut ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutPrint(p *Fpga_Man_t, pRoot *Fpga_Node_t, pCut *Fpga_Cut_t) {\n    var i int32;\n    fmt.Printf(\"CUT:  Delay = %4.2f. Area = %4.2f. Nodes = %d -\u003e {\", pCut.tArrival, pCut.aFlow, pRoot.Num);\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        fmt.Printf(\" %d\", pCut.ppLeaves[i].Num);\n    }\n    fmt.Printf(\" } \\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutCreateSimple(p *Fpga_Man_t, pNode *Fpga_Node_t) *Fpga_Cut_t {\n    var pCut *Fpga_Cut_t;\n    pCut = Fpga_CutAlloc( p );\n    pCut.pRoot       = pNode;\n    pCut.nLeaves     = 1;\n    pCut.ppLeaves[0] = pNode;\n    // inlining of macro FPGA_SEQ_SIGN\n    pCut.uSign = (1 \u003c\u003c (((ABC_PTRUINT_T)pCut.ppLeaves[0])%31));;\n    return pCut;\n}\n\n\n/**function*************************************************************\n\n  synopsis    [Computes the exact area associated with the cut.]\n\n  description []\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Fpga_CutGetRootArea(p *Fpga_Man_t, pCut *Fpga_Cut_t) float32 {\n    return p.pLutLib.pLutAreas[int32(pCut.nLeaves)];\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutListAppend(pSetAll *Fpga_Cut_t, pSets *Fpga_Cut_t) *Fpga_Cut_t {\n    var pPrev *Fpga_Cut_t  = nil; // Suppress \"might be used uninitialized\"\n    var pTemp *Fpga_Cut_t;\n    if pSetAll == nil {\n        return pSets; }\n    if pSets == nil {\n        return pSetAll; }\n    // find the last one\n    for  pTemp = pSets; (pTemp != nil); pTemp = pTemp.pNext  {\n        pPrev = pTemp;\n    }\n    // append all the end of the current set\n    assert(pPrev.pNext == nil, \"pPrev.pNext == nil\");\n    pPrev.pNext = pSetAll;\n    return pSets;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutListRecycle(p *Fpga_Man_t, pSetList *Fpga_Cut_t, pSave *Fpga_Cut_t) {\n    var pNext, pTemp *Fpga_Cut_t;\n    for  pTemp = pSetList, pNext = pTemp? pTemp.pNext : nil; \n          (pTemp != nil); \n          pTemp = pNext, pNext = pNext? pNext.pNext : nil  {\n        if pTemp != pSave {\n            Extra_MmFixedEntryRecycle( p.mmCuts, (char *)pTemp ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutListCount(pSets *Fpga_Cut_t) int32 {\n    var pTemp *Fpga_Cut_t;\n    var i int32;\n    for  i, pTemp = 0, pSets; (pTemp != nil); pTemp, i = pTemp.pNext, i+1  {}\n    return i;\n}\n\n     \n\n                                                                        \n\n                                               \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                                    \n \n                              \n             \n                                         \n     \n                                               \n                                               \n                                               \n                      \n                                       \n                                             \n                                                        \n                          \n     \n \n\n                                                                        \n\n                                               \n\n                \n               \n                \n\n                \n\n                                                                        \n                                                                                    \n \n          \n                                         \n                                                               \n \n      \n\n/**Function*************************************************************\n\n  Synopsis    [Computes the arrival time and the area flow of the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_CutGetParameters(pMan *Fpga_Man_t, pCut *Fpga_Cut_t) {\n    var pFaninCut *Fpga_Cut_t;\n    var i int32;\n    pCut.tArrival = -FPGA_FLOAT_LARGE;\n    pCut.aFlow    = pMan.pLutLib.pLutAreas[int32(pCut.nLeaves)];\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pFaninCut = pCut.ppLeaves[i].pCutBest;\n        if pCut.tArrival \u003c pFaninCut.tArrival {\n             pCut.tArrival = pFaninCut.tArrival; }\n        // if the fanout count is not set, assume it to be 1\n        if pCut.ppLeaves[i].nRefs == 0 {\n            pCut.aFlow += pFaninCut.aFlow;\n        } else {\n//            pCut-\u003eaFlow += pFaninCut-\u003eaFlow / pCut-\u003eppLeaves[i]-\u003enRefs;\n            pCut.aFlow += pFaninCut.aFlow / pCut.ppLeaves[i].aEstFanouts; }\n    }\n    // use the first pin to compute the delay of the LUT \n    // (this mapper does not support the variable pin delay model)\n    pCut.tArrival += pMan.pLutLib.pLutDelays[int32(pCut.nLeaves)][0];\n}\n\n\n/**function*************************************************************\n\n  synopsis    [Computes the area flow of the cut.]\n\n  description []\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Fpga_CutGetAreaFlow(pMan *Fpga_Man_t, pCut *Fpga_Cut_t) float32 {\n    var pCutFanin *Fpga_Cut_t;\n    var i int32;\n    pCut.aFlow = pMan.pLutLib.pLutAreas[int32(pCut.nLeaves)];\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        // get the cut implementing this phase of the fanin\n        pCutFanin  = pCut.ppLeaves[i].pCutBest;   \n        assert((pCutFanin != nil), \"pCutFanin\");\n        pCut.aFlow  += pCutFanin.aFlow / pCut.ppLeaves[i].nRefs;\n    }\n    return pCut.aFlow;\n}\n\n/**function*************************************************************\n\n  synopsis    [Computes the exact area associated with the cut.]\n\n  description []\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Fpga_CutGetAreaRefed(pMan *Fpga_Man_t, pCut *Fpga_Cut_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves == 1 {\n        return 0; }\n    aResult  = Fpga_CutDeref( pMan, nil, pCut, 0 );\n    aResult2 = Fpga_CutRef( pMan, nil, pCut, 0 );\n    assert(Fpga_FloatEqual( pMan, aResult, aResult2 ), \"Fpga_FloatEqual( pMan, aResult, aResult2 )\");\n    return aResult;\n}\n\n/**function*************************************************************\n\n  synopsis    [Computes the exact area associated with the cut.]\n\n  description []\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Fpga_CutGetAreaDerefed(pMan *Fpga_Man_t, pCut *Fpga_Cut_t) float32 {\n    var aResult, aResult2 float32;\n    if pCut.nLeaves == 1 {\n        return 0; }\n    aResult2 = Fpga_CutRef( pMan, nil, pCut, 0 );\n    aResult  = Fpga_CutDeref( pMan, nil, pCut, 0 );\n    assert(Fpga_FloatEqual( pMan, aResult, aResult2 ), \"Fpga_FloatEqual( pMan, aResult, aResult2 )\");\n    return aResult;\n}\n\n/**function*************************************************************\n\n  synopsis    [References the cut.]\n\n  description [This procedure is similar to the procedure NodeReclaim.]\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Fpga_CutRef(pMan *Fpga_Man_t, pNode *Fpga_Node_t, pCut *Fpga_Cut_t, fFanouts int32) float32 {\n    var pNodeChild *Fpga_Node_t;\n    var aArea float32;\n    var i int32;\n\n    // deref the fanouts\n//    if ( fFanouts ) \n//        Fpga_CutInsertFanouts( pMan, pNode, pCut );\n\n    // start the area of this cut\n    aArea = pMan.pLutLib.pLutAreas[int32(pCut.nLeaves)];\n    // go through the children\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pNodeChild = pCut.ppLeaves[i];\n        assert(pNodeChild.nRefs \u003e= 0, \"pNodeChild.nRefs \u003e= 0\");\n        if pNodeChild.nRefs++ \u003e 0 {  \n            continue; }\n        if !Fpga_NodeIsAnd(pNodeChild) { \n            continue; }\n        aArea += Fpga_CutRef( pMan, pNodeChild, pNodeChild.pCutBest, fFanouts );\n    }\n    return aArea;\n}\n\n/**function*************************************************************\n\n  synopsis    [Dereferences the cut.]\n\n  description [This procedure is similar to the procedure NodeRecusiveDeref.]\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Fpga_CutDeref(pMan *Fpga_Man_t, pNode *Fpga_Node_t, pCut *Fpga_Cut_t, fFanouts int32) float32 {\n    var pNodeChild *Fpga_Node_t;\n    var aArea float32;\n    var i int32;\n\n    // deref the fanouts\n//    if ( fFanouts ) \n//        Fpga_CutRemoveFanouts( pMan, pNode, pCut );\n\n    // start the area of this cut\n    aArea = pMan.pLutLib.pLutAreas[int32(pCut.nLeaves)];\n    // go through the children\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pNodeChild = pCut.ppLeaves[i];\n        assert(pNodeChild.nRefs \u003e 0, \"pNodeChild.nRefs \u003e 0\");\n        if --pNodeChild.nRefs \u003e 0 {  \n            continue; }\n        if !Fpga_NodeIsAnd(pNodeChild) { \n            continue; }\n        aArea += Fpga_CutDeref( pMan, pNodeChild, pNodeChild.pCutBest, fFanouts );\n    }\n    return aArea;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the used cuts to be the currently selected ones.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fpga_MappingSetUsedCuts(pMan *Fpga_Man_t) {\n    var i int32;\n    for  i = 0; i \u003c pMan.vNodesAll.nSize; i++  {\n        if pMan.vNodesAll.pArray[i].pCutOld {\n            pMan.vNodesAll.pArray[i].pCutBest = pMan.vNodesAll.pArray[i].pCutOld;\n            pMan.vNodesAll.pArray[i].pCutOld  = nil;\n        }\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,484 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c",
+  "SHA256": "b42b6d1a369b098f103ae72037bc77ca3e6fd91831a2c584c31614d09476476f",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 105,
+        "Column": 72,
+        "ByteOffset": 3272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Msat_Order_t *) malloc(sizeof(Msat_Order_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 106,
+        "Column": 5,
+        "ByteOffset": 3321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Msat_Order_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 9,
+        "ByteOffset": 4525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i+1 \u003c p.vHeap.nCap );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 152,
+        "Column": 9,
+        "ByteOffset": 4611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( vCone.pArray[i] \u003c p.vIndex.nSize );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 187,
+        "Column": 57,
+        "ByteOffset": 5529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 342,
+        "Column": 5,
+        "ByteOffset": 10166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( /*__starting_point_inline_macro:HOKAY__*/((n) \u003e= 0 \u0026\u0026 (n) \u003c (p).vIndex.nSize) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Msat_OrderAlloc",
+      "Start": 2868,
+      "End": 3190,
+      "BodyStart": 2923,
+      "Original": "Msat_Order_t * Msat_OrderAlloc( Msat_Solver_t * pSat )\n{\n    Msat_Order_t * p;\n    p = ABC_ALLOC( Msat_Order_t, 1 );\n    memset( p, 0, sizeof(Msat_Order_t) );\n    p-\u003epSat   = pSat;\n    p-\u003evIndex = Msat_IntVecAlloc( 0 );\n    p-\u003evHeap  = Msat_IntVecAlloc( 0 );\n    Msat_OrderSetBounds( p, pSat-\u003enVarsAlloc );\n    return p;\n}",
+      "Draft": "func Msat_OrderAlloc(pSat *Msat_Solver_t) *Msat_Order_t {\n    var p *Msat_Order_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Msat_Order_t *) malloc(sizeof(Msat_Order_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Msat_Order_t) );\n    p.pSat   = pSat;\n    p.vIndex = Msat_IntVecAlloc( 0 );\n    p.vHeap  = Msat_IntVecAlloc( 0 );\n    Msat_OrderSetBounds( p, pSat.nVarsAlloc );\n    return p;\n}"
+    },
+    {
+      "Name": "Msat_OrderSetBounds",
+      "Start": 3519,
+      "End": 3730,
+      "BodyStart": 3578,
+      "Original": "void Msat_OrderSetBounds( Msat_Order_t * p, int nVarsMax )\n{\n    Msat_IntVecGrow( p-\u003evIndex, nVarsMax );\n    Msat_IntVecGrow( p-\u003evHeap, nVarsMax + 1 );\n    p-\u003evIndex-\u003enSize = nVarsMax;\n    p-\u003evHeap-\u003enSize = 0;\n}",
+      "Draft": "func Msat_OrderSetBounds(p *Msat_Order_t, nVarsMax int32) {\n    Msat_IntVecGrow( p.vIndex, nVarsMax );\n    Msat_IntVecGrow( p.vHeap, nVarsMax + 1 );\n    p.vIndex.nSize = nVarsMax;\n    p.vHeap.nSize = 0;\n}"
+    },
+    {
+      "Name": "Msat_OrderClean",
+      "Start": 3996,
+      "End": 4443,
+      "BodyStart": 4060,
+      "Original": "void Msat_OrderClean( Msat_Order_t * p, Msat_IntVec_t * vCone )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003evIndex-\u003enSize; i++ )\n        p-\u003evIndex-\u003epArray[i] = 0;\n    for ( i = 0; i \u003c vCone-\u003enSize; i++ )\n    {\n        assert( i+1 \u003c p-\u003evHeap-\u003enCap );\n        p-\u003evHeap-\u003epArray[i+1] = vCone-\u003epArray[i];\n\n        assert( vCone-\u003epArray[i] \u003c p-\u003evIndex-\u003enSize );\n        p-\u003evIndex-\u003epArray[vCone-\u003epArray[i]] = i+1;\n    }\n    p-\u003evHeap-\u003enSize = vCone-\u003enSize + 1;\n}",
+      "Draft": "func Msat_OrderClean(p *Msat_Order_t, vCone *Msat_IntVec_t) {\n    var i int32;\n    for  i = 0; i \u003c p.vIndex.nSize; i++  {\n        p.vIndex.pArray[i] = 0;\n    }\n    for  i = 0; i \u003c vCone.nSize; i++  {\n        assert(i+1 \u003c p.vHeap.nCap, \"i+1 \u003c p.vHeap.nCap\");\n        p.vHeap.pArray[i+1] = vCone.pArray[i];\n\n        assert(vCone.pArray[i] \u003c p.vIndex.nSize, \"vCone.pArray[i] \u003c p.vIndex.nSize\");\n        p.vIndex.pArray[vCone.pArray[i]] = i+1;\n    }\n    p.vHeap.nSize = vCone.nSize + 1;\n}"
+    },
+    {
+      "Name": "Msat_OrderCheck",
+      "Start": 4714,
+      "End": 4796,
+      "BodyStart": 4754,
+      "Original": "int Msat_OrderCheck( Msat_Order_t * p )\n{\n    return Msat_HeapCheck_rec( p, 1 );\n}",
+      "Draft": "func Msat_OrderCheck(p *Msat_Order_t) int32 {\n    return Msat_HeapCheck_rec( p, 1 );\n}"
+    },
+    {
+      "Name": "Msat_OrderFree",
+      "Start": 5061,
+      "End": 5190,
+      "BodyStart": 5101,
+      "Original": "void Msat_OrderFree( Msat_Order_t * p )\n{\n    Msat_IntVecFree( p-\u003evHeap );\n    Msat_IntVecFree( p-\u003evIndex );\n    ABC_FREE( p );\n}",
+      "Draft": "func Msat_OrderFree(p *Msat_Order_t) {\n    Msat_IntVecFree( p.vHeap );\n    Msat_IntVecFree( p.vIndex );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Msat_OrderVarSelect",
+      "Start": 5464,
+      "End": 6036,
+      "BodyStart": 5508,
+      "Original": "int Msat_OrderVarSelect( Msat_Order_t * p )\n{\n    // Activity based decision:\n//    while (!heap.empty()){\n//        Var next = heap.getmin();\n//        if (toLbool(assigns[next]) == l_Undef)\n//            return next;\n//    }\n//    return var_Undef;\n\n    int Var;\n    abctime clk = Abc_Clock();\n\n    while ( !HEMPTY(p) )\n    {\n        Var = Msat_HeapGetTop(p);\n        if ( (p)-\u003epSat-\u003epAssigns[Var] == MSAT_VAR_UNASSIGNED )\n        {\n//assert( Msat_OrderCheck(p) );\ntimeSelect += Abc_Clock() - clk;\n            return Var;\n        }\n    }\n    return MSAT_ORDER_UNKNOWN;\n}",
+      "Draft": "func Msat_OrderVarSelect(p *Msat_Order_t) int32 {\n    // Activity based decision:\n//    while (!heap.empty()){\n//        Var next = heap.getmin();\n//        if (toLbool(assigns[next]) == l_Undef)\n//            return next;\n//    }\n//    return var_Undef;\n\n    var Var int32;\n    var clk abctime  = Abc_Clock();\n\n    // inlining of macro HEMPTY\n    // inlining of macro HSIZE\n    for  !(((p).vHeap.nSize) == 1)  {\n        Var = Msat_HeapGetTop(p);\n        if (p).pSat.pAssigns[Var] == MSAT_VAR_UNASSIGNED {\n//assert( Msat_OrderCheck(p) );\ntimeSelect += Abc_Clock() - clk;\n            return Var;\n        }\n    }\n    return MSAT_ORDER_UNKNOWN;\n}"
+    },
+    {
+      "Name": "Msat_OrderVarAssigned",
+      "Start": 6321,
+      "End": 6380,
+      "BodyStart": 6377,
+      "Original": "void Msat_OrderVarAssigned( Msat_Order_t * p, int Var )\n{\n}",
+      "Draft": "func Msat_OrderVarAssigned(p *Msat_Order_t, Var int32) {\n}"
+    },
+    {
+      "Name": "Msat_OrderVarUnassigned",
+      "Start": 6665,
+      "End": 6906,
+      "BodyStart": 6723,
+      "Original": "void Msat_OrderVarUnassigned( Msat_Order_t * p, int Var )\n{\n//    if (!heap.inHeap(x))\n//        heap.insert(x);\n\n    abctime clk = Abc_Clock();\n    if ( !HINHEAP(p,Var) )\n        Msat_HeapInsert( p, Var );\ntimeSelect += Abc_Clock() - clk;\n}",
+      "Draft": "func Msat_OrderVarUnassigned(p *Msat_Order_t, Var int32) {\n//    if (!heap.inHeap(x))\n//        heap.insert(x);\n\n    var clk abctime  = Abc_Clock();\n    // inlining of macro HINHEAP\n    // inlining of macro HOKAY\n    if !(((Var) \u003e= 0 \u0026\u0026 (Var) \u003c (p).vIndex.nSize) \u0026\u0026 (p).vIndex.pArray[Var] != 0) {\n        Msat_HeapInsert( p, Var ); }\ntimeSelect += Abc_Clock() - clk;\n}"
+    },
+    {
+      "Name": "Msat_OrderUpdate",
+      "Start": 7192,
+      "End": 7428,
+      "BodyStart": 7243,
+      "Original": "void Msat_OrderUpdate( Msat_Order_t * p, int Var )\n{\n//    if (heap.inHeap(x))\n//        heap.increase(x);\n\n    abctime clk = Abc_Clock();\n    if ( HINHEAP(p,Var) )\n        Msat_HeapIncrease( p, Var );\ntimeSelect += Abc_Clock() - clk;\n}",
+      "Draft": "func Msat_OrderUpdate(p *Msat_Order_t, Var int32) {\n//    if (heap.inHeap(x))\n//        heap.increase(x);\n\n    var clk abctime  = Abc_Clock();\n    // inlining of macro HINHEAP\n    // inlining of macro HOKAY\n    if  ((Var) \u003e= 0 \u0026\u0026 (Var) \u003c (p).vIndex.nSize) \u0026\u0026 (p).vIndex.pArray[Var] != 0 {\n        Msat_HeapIncrease( p, Var ); }\ntimeSelect += Abc_Clock() - clk;\n}"
+    },
+    {
+      "Name": "Msat_HeapCheck_rec",
+      "Start": 7704,
+      "End": 8003,
+      "BodyStart": 7754,
+      "Original": "int Msat_HeapCheck_rec( Msat_Order_t * p, int i )\n{\n    return i \u003e= HSIZE(p) ||\n        (\n            ( HPARENT(i) == 0 || !HCOMPARE(p, HHEAP(p, i), HHEAP(p, HPARENT(i))) ) \u0026\u0026\n\n            Msat_HeapCheck_rec( p, HLEFT(i) ) \u0026\u0026 \n            \n            Msat_HeapCheck_rec( p, HRIGHT(i) )\n        );\n}",
+      "Draft": "func Msat_HeapCheck_rec(p *Msat_Order_t, i int32) int32 {\n    // inlining of macro HSIZE\n    return i \u003e= ((p).vHeap.nSize) ||\n        (\n            // inlining of macro HPARENT\n            // inlining of macro HCOMPARE\n            // inlining of macro HHEAP\n            ( ((i)\u003e\u003e1) == 0 || !((p).pSat.pdActivity[((p).vHeap.pArray[i])] \u003e (p).pSat.pdActivity[((p).vHeap.pArray[((i)\u003e\u003e1)])]) ) \u0026\u0026\n\n            // inlining of macro HLEFT\n            Msat_HeapCheck_rec( p, ((i)\u003c\u003c1) ) \u0026\u0026 \n            \n            // inlining of macro HRIGHT\n            Msat_HeapCheck_rec( p, (((i)\u003c\u003c1)+1) )\n        );\n}"
+    },
+    {
+      "Name": "Msat_HeapGetTop",
+      "Start": 8269,
+      "End": 8641,
+      "BodyStart": 8309,
+      "Original": "int Msat_HeapGetTop( Msat_Order_t * p )\n{\n    int Result, NewTop;\n    Result                    = HHEAP(p, 1);\n    NewTop                    = Msat_IntVecPop( p-\u003evHeap );\n    p-\u003evHeap-\u003epArray[1]       = NewTop;\n    p-\u003evIndex-\u003epArray[NewTop] = 1;\n    p-\u003evIndex-\u003epArray[Result] = 0;\n    if ( p-\u003evHeap-\u003enSize \u003e 1 )\n        Msat_HeapPercolateDown( p, 1 );\n    return Result;\n}",
+      "Draft": "func Msat_HeapGetTop(p *Msat_Order_t) int32 {\n    var Result, NewTop int32;\n    // inlining of macro HHEAP\n    Result                    = ((p).vHeap.pArray[1]);\n    NewTop                    = Msat_IntVecPop( p.vHeap );\n    p.vHeap.pArray[1]       = NewTop;\n    p.vIndex.pArray[NewTop] = 1;\n    p.vIndex.pArray[Result] = 0;\n    if p.vHeap.nSize \u003e 1 {\n        Msat_HeapPercolateDown( p, 1 ); }\n    return Result;\n}"
+    },
+    {
+      "Name": "Msat_HeapInsert",
+      "Start": 8901,
+      "End": 9105,
+      "BodyStart": 8949,
+      "Original": "void Msat_HeapInsert( Msat_Order_t * p, int n )\n{\n    assert( HOKAY(p, n) );\n    p-\u003evIndex-\u003epArray[n] = HSIZE(p);\n    Msat_IntVecPush( p-\u003evHeap, n );\n    Msat_HeapPercolateUp( p, p-\u003evIndex-\u003epArray[n] );\n}",
+      "Draft": "func Msat_HeapInsert(p *Msat_Order_t, n int32) {\n    // inlining of macro HOKAY\n    assert(((n) \u003e= 0 \u0026\u0026 (n) \u003c (p).vIndex.nSize), \"/*__starting_point_inline_macro:HOKAY__*/((n) \u003e= 0 \u0026\u0026 (n) \u003c (p).vIndex.nSize)\");\n    // inlining of macro HSIZE\n    p.vIndex.pArray[n] = ((p).vHeap.nSize);\n    Msat_IntVecPush( p.vHeap, n );\n    Msat_HeapPercolateUp( p, p.vIndex.pArray[n] );\n}"
+    },
+    {
+      "Name": "Msat_HeapIncrease",
+      "Start": 9365,
+      "End": 9471,
+      "BodyStart": 9415,
+      "Original": "void Msat_HeapIncrease( Msat_Order_t * p, int n )\n{\n    Msat_HeapPercolateUp( p, p-\u003evIndex-\u003epArray[n] );\n}",
+      "Draft": "func Msat_HeapIncrease(p *Msat_Order_t, n int32) {\n    Msat_HeapPercolateUp( p, p.vIndex.pArray[n] );\n}"
+    },
+    {
+      "Name": "Msat_HeapPercolateUp",
+      "Start": 9726,
+      "End": 10109,
+      "BodyStart": 9779,
+      "Original": "void Msat_HeapPercolateUp( Msat_Order_t * p, int i )\n{\n    int x = HHEAP(p, i);\n    while ( HPARENT(i) != 0 \u0026\u0026 HCOMPARE(p, x, HHEAP(p, HPARENT(i))) )\n    {\n        p-\u003evHeap-\u003epArray[i]            = HHEAP(p, HPARENT(i));\n        p-\u003evIndex-\u003epArray[HHEAP(p, i)] = i;\n        i                              = HPARENT(i);\n    }\n    p-\u003evHeap-\u003epArray[i]  = x;\n    p-\u003evIndex-\u003epArray[x] = i;\n}",
+      "Draft": "func Msat_HeapPercolateUp(p *Msat_Order_t, i int32) {\n    // inlining of macro HHEAP\n    var x int32  = ((p).vHeap.pArray[i]);\n    // inlining of macro HPARENT\n    // inlining of macro HCOMPARE\n    // inlining of macro HHEAP\n    for  ((i)\u003e\u003e1) != 0 \u0026\u0026 ((p).pSat.pdActivity[x] \u003e (p).pSat.pdActivity[((p).vHeap.pArray[((i)\u003e\u003e1)])])  {\n        // inlining of macro HHEAP\n        // inlining of macro HPARENT\n        p.vHeap.pArray[i]            = ((p).vHeap.pArray[((i)\u003e\u003e1)]);\n        // inlining of macro HHEAP\n        p.vIndex.pArray[((p).vHeap.pArray[i])] = i;\n        // inlining of macro HPARENT\n        i                              = ((i)\u003e\u003e1);\n    }\n    p.vHeap.pArray[i]  = x;\n    p.vIndex.pArray[x] = i;\n}"
+    },
+    {
+      "Name": "Msat_HeapPercolateDown",
+      "Start": 10366,
+      "End": 10953,
+      "BodyStart": 10421,
+      "Original": "void Msat_HeapPercolateDown( Msat_Order_t * p, int i )\n{\n    int x = HHEAP(p, i);\n    int Child;\n    while ( HLEFT(i) \u003c HSIZE(p) )\n    {\n        if ( HRIGHT(i) \u003c HSIZE(p) \u0026\u0026 HCOMPARE(p, HHEAP(p, HRIGHT(i)), HHEAP(p, HLEFT(i))) )\n            Child = HRIGHT(i);\n        else\n            Child = HLEFT(i);\n        if ( !HCOMPARE(p, HHEAP(p, Child), x) )\n            break;\n        p-\u003evHeap-\u003epArray[i]            = HHEAP(p, Child);\n        p-\u003evIndex-\u003epArray[HHEAP(p, i)] = i;\n        i                              = Child;\n    }\n    p-\u003evHeap-\u003epArray[i]  = x;\n    p-\u003evIndex-\u003epArray[x] = i;\n}",
+      "Draft": "func Msat_HeapPercolateDown(p *Msat_Order_t, i int32) {\n    // inlining of macro HHEAP\n    var x int32  = ((p).vHeap.pArray[i]);\n    var Child int32;\n    // inlining of macro HLEFT\n    // inlining of macro HSIZE\n    for  ((i)\u003c\u003c1) \u003c ((p).vHeap.nSize)  {\n        // inlining of macro HRIGHT\n        // inlining of macro HSIZE\n        // inlining of macro HCOMPARE\n        // inlining of macro HHEAP\n        // inlining of macro HLEFT\n        if  (((i)\u003c\u003c1)+1) \u003c ((p).vHeap.nSize) \u0026\u0026 ((p).pSat.pdActivity[((p).vHeap.pArray[(((i)\u003c\u003c1)+1)])] \u003e (p).pSat.pdActivity[((p).vHeap.pArray[((i)\u003c\u003c1)])]) {\n            // inlining of macro HRIGHT\n            Child = (((i)\u003c\u003c1)+1);\n        } else {\n            // inlining of macro HLEFT\n            Child = ((i)\u003c\u003c1); }\n        // inlining of macro HCOMPARE\n        // inlining of macro HHEAP\n        if !((p).pSat.pdActivity[((p).vHeap.pArray[Child])] \u003e (p).pSat.pdActivity[x]) {\n            break; }\n        // inlining of macro HHEAP\n        p.vHeap.pArray[i]            = ((p).vHeap.pArray[Child]);\n        // inlining of macro HHEAP\n        p.vIndex.pArray[((p).vHeap.pArray[i])] = i;\n        i                              = Child;\n    }\n    p.vHeap.pArray[i]  = x;\n    p.vIndex.pArray[x] = i;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::struct::Msat_Order_t_",
+      "Category": "struct-review",
+      "Symbol": "Msat_Order_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 959,
+      "End": 1176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::mechanical::sizeof::3025",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2955,
+      "End": 2955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::mechanical::sizeof::3081",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3003,
+      "End": 3009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::pointer-cast::3001",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2955,
+      "End": 2955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::pointer-cast::5309",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5174,
+      "End": 5174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::macro::HLEFT",
+      "Category": "macro-review",
+      "Symbol": "HLEFT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1500,
+      "End": 1539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::macro::HRIGHT",
+      "Category": "macro-review",
+      "Symbol": "HRIGHT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1540,
+      "End": 1582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::macro::HPARENT",
+      "Category": "macro-review",
+      "Symbol": "HPARENT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1583,
+      "End": 1622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::macro::HCOMPARE",
+      "Category": "macro-review",
+      "Symbol": "HCOMPARE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1623,
+      "End": 1707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::macro::HHEAP",
+      "Category": "macro-review",
+      "Symbol": "HHEAP",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1708,
+      "End": 1762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::macro::HSIZE",
+      "Category": "macro-review",
+      "Symbol": "HSIZE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1763,
+      "End": 1813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::macro::HOKAY",
+      "Category": "macro-review",
+      "Symbol": "HOKAY",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1814,
+      "End": 1883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::macro::HINHEAP",
+      "Category": "macro-review",
+      "Symbol": "HINHEAP",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1884,
+      "End": 1959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::macro::HEMPTY",
+      "Category": "macro-review",
+      "Symbol": "HEMPTY",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1960,
+      "End": 2006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_OrderAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2868,
+      "End": 3190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_OrderSetBounds",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderSetBounds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3519,
+      "End": 3730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_OrderClean",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3996,
+      "End": 4443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_OrderCheck",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4714,
+      "End": 4796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::ternary::Msat_OrderFree",
+      "Category": "ternary-review",
+      "Symbol": "Msat_OrderFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5061,
+      "End": 5190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_OrderFree",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5061,
+      "End": 5190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_OrderVarSelect",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderVarSelect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5464,
+      "End": 6036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_OrderVarAssigned",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderVarAssigned",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6321,
+      "End": 6380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_OrderVarUnassigned",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderVarUnassigned",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6665,
+      "End": 6906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_OrderUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Msat_OrderUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7192,
+      "End": 7428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_HeapCheck_rec",
+      "Category": "semantic-review",
+      "Symbol": "Msat_HeapCheck_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7704,
+      "End": 8003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_HeapGetTop",
+      "Category": "semantic-review",
+      "Symbol": "Msat_HeapGetTop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8269,
+      "End": 8641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_HeapInsert",
+      "Category": "semantic-review",
+      "Symbol": "Msat_HeapInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8901,
+      "End": 9105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_HeapIncrease",
+      "Category": "semantic-review",
+      "Symbol": "Msat_HeapIncrease",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9365,
+      "End": 9471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_HeapPercolateUp",
+      "Category": "semantic-review",
+      "Symbol": "Msat_HeapPercolateUp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9726,
+      "End": 10109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::Msat_HeapPercolateDown",
+      "Category": "semantic-review",
+      "Symbol": "Msat_HeapPercolateDown",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10366,
+      "End": 10953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatOrderH.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11201
+    }
+  ],
+  "Draft": "package msat\n\n/**CFile****************************************************************\n\n  FileName    [msatOrder.c]\n\n  PackageName [A C version of SAT solver MINISAT, originally developed \n  in C++ by Niklas Een and Niklas Sorensson, Chalmers University of \n  Technology, Sweden: http://www.cs.chalmers.se/~een/Satzoo.]\n\n  Synopsis    [The manager of variable assignment.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2004.]\n\n  Revision    [$Id: msatOrder.c,v 1.0 2005/05/30 1:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"msatInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// the variable package data structure\ntype Msat_Order_t_ struct {\n    pSat       *Msat_Solver_t;         // the SAT solver \n    vIndex       *Msat_IntVec_t;       // the heap\n    vHeap       *Msat_IntVec_t;        // the mapping of var num into its heap num\n}\n\n//The solver can communicate to the variable order the following parts:\n//- the array of current assignments (pSat-\u003epAssigns)\n//- the array of variable activities (pSat-\u003epdActivity)\n//- the array of variables currently in the cone (pSat-\u003evConeVars)\n//- the array of arrays of variables adjucent to each(pSat-\u003evAdjacents)\n\n// Original macro:\n// #define HLEFT(i)               ((i)\u003c\u003c1)\n\n// Original macro:\n// #define HRIGHT(i)             (((i)\u003c\u003c1)+1)\n\n// Original macro:\n// #define HPARENT(i)             ((i)\u003e\u003e1)\n\n// Original macro:\n// #define HCOMPARE(p, i, j)      ((p)-\u003epSat-\u003epdActivity[i] \u003e (p)-\u003epSat-\u003epdActivity[j])\n\n// Original macro:\n// #define HHEAP(p, i)            ((p)-\u003evHeap-\u003epArray[i])\n\n// Original macro:\n// #define HSIZE(p)               ((p)-\u003evHeap-\u003enSize)\n\n// Original macro:\n// #define HOKAY(p, i)            ((i) \u003e= 0 \u0026\u0026 (i) \u003c (p)-\u003evIndex-\u003enSize)\n\n// Original macro:\n// #define HINHEAP(p, i)          (HOKAY(p, i) \u0026\u0026 (p)-\u003evIndex-\u003epArray[i] != 0)\n\n// Original macro:\n// #define HEMPTY(p)              (HSIZE(p) == 1)\n\n\n// static int Msat_HeapCheck_rec( Msat_Order_t * p, int i );\n\n// static int Msat_HeapGetTop( Msat_Order_t * p );\n\n// static void Msat_HeapInsert( Msat_Order_t * p, int n );\n\n// static void Msat_HeapIncrease( Msat_Order_t * p, int n );\n\n// static void Msat_HeapPercolateUp( Msat_Order_t * p, int i );\n\n// static void Msat_HeapPercolateDown( Msat_Order_t * p, int i );\n\n\nvar timeSelect abctime;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the ordering structure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderAlloc(pSat *Msat_Solver_t) *Msat_Order_t {\n    var p *Msat_Order_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Msat_Order_t *) malloc(sizeof(Msat_Order_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Msat_Order_t) );\n    p.pSat   = pSat;\n    p.vIndex = Msat_IntVecAlloc( 0 );\n    p.vHeap  = Msat_IntVecAlloc( 0 );\n    Msat_OrderSetBounds( p, pSat.nVarsAlloc );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the bound of the ordering structure.]\n\n  Description [Should be called whenever the SAT solver is resized.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderSetBounds(p *Msat_Order_t, nVarsMax int32) {\n    Msat_IntVecGrow( p.vIndex, nVarsMax );\n    Msat_IntVecGrow( p.vHeap, nVarsMax + 1 );\n    p.vIndex.nSize = nVarsMax;\n    p.vHeap.nSize = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Cleans the ordering structure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderClean(p *Msat_Order_t, vCone *Msat_IntVec_t) {\n    var i int32;\n    for  i = 0; i \u003c p.vIndex.nSize; i++  {\n        p.vIndex.pArray[i] = 0;\n    }\n    for  i = 0; i \u003c vCone.nSize; i++  {\n        assert(i+1 \u003c p.vHeap.nCap, \"i+1 \u003c p.vHeap.nCap\");\n        p.vHeap.pArray[i+1] = vCone.pArray[i];\n\n        assert(vCone.pArray[i] \u003c p.vIndex.nSize, \"vCone.pArray[i] \u003c p.vIndex.nSize\");\n        p.vIndex.pArray[vCone.pArray[i]] = i+1;\n    }\n    p.vHeap.nSize = vCone.nSize + 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks that the J-boundary is okay.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderCheck(p *Msat_Order_t) int32 {\n    return Msat_HeapCheck_rec( p, 1 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the ordering structure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderFree(p *Msat_Order_t) {\n    Msat_IntVecFree( p.vHeap );\n    Msat_IntVecFree( p.vIndex );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Selects the next variable to assign.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderVarSelect(p *Msat_Order_t) int32 {\n    // Activity based decision:\n//    while (!heap.empty()){\n//        Var next = heap.getmin();\n//        if (toLbool(assigns[next]) == l_Undef)\n//            return next;\n//    }\n//    return var_Undef;\n\n    var Var int32;\n    var clk abctime  = Abc_Clock();\n\n    // inlining of macro HEMPTY\n    // inlining of macro HSIZE\n    for  !(((p).vHeap.nSize) == 1)  {\n        Var = Msat_HeapGetTop(p);\n        if (p).pSat.pAssigns[Var] == MSAT_VAR_UNASSIGNED {\n//assert( Msat_OrderCheck(p) );\ntimeSelect += Abc_Clock() - clk;\n            return Var;\n        }\n    }\n    return MSAT_ORDER_UNKNOWN;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates J-boundary when the variable is assigned.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderVarAssigned(p *Msat_Order_t, Var int32) {\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the order after a variable is unassigned.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderVarUnassigned(p *Msat_Order_t, Var int32) {\n//    if (!heap.inHeap(x))\n//        heap.insert(x);\n\n    var clk abctime  = Abc_Clock();\n    // inlining of macro HINHEAP\n    // inlining of macro HOKAY\n    if !(((Var) \u003e= 0 \u0026\u0026 (Var) \u003c (p).vIndex.nSize) \u0026\u0026 (p).vIndex.pArray[Var] != 0) {\n        Msat_HeapInsert( p, Var ); }\ntimeSelect += Abc_Clock() - clk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the order after a variable changed weight.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_OrderUpdate(p *Msat_Order_t, Var int32) {\n//    if (heap.inHeap(x))\n//        heap.increase(x);\n\n    var clk abctime  = Abc_Clock();\n    // inlining of macro HINHEAP\n    // inlining of macro HOKAY\n    if  ((Var) \u003e= 0 \u0026\u0026 (Var) \u003c (p).vIndex.nSize) \u0026\u0026 (p).vIndex.pArray[Var] != 0 {\n        Msat_HeapIncrease( p, Var ); }\ntimeSelect += Abc_Clock() - clk;\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the heap property recursively.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_HeapCheck_rec(p *Msat_Order_t, i int32) int32 {\n    // inlining of macro HSIZE\n    return i \u003e= ((p).vHeap.nSize) ||\n        (\n            // inlining of macro HPARENT\n            // inlining of macro HCOMPARE\n            // inlining of macro HHEAP\n            ( ((i)\u003e\u003e1) == 0 || !((p).pSat.pdActivity[((p).vHeap.pArray[i])] \u003e (p).pSat.pdActivity[((p).vHeap.pArray[((i)\u003e\u003e1)])]) ) \u0026\u0026\n\n            // inlining of macro HLEFT\n            Msat_HeapCheck_rec( p, ((i)\u003c\u003c1) ) \u0026\u0026 \n            \n            // inlining of macro HRIGHT\n            Msat_HeapCheck_rec( p, (((i)\u003c\u003c1)+1) )\n        );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Retrieves the minimum element.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_HeapGetTop(p *Msat_Order_t) int32 {\n    var Result, NewTop int32;\n    // inlining of macro HHEAP\n    Result                    = ((p).vHeap.pArray[1]);\n    NewTop                    = Msat_IntVecPop( p.vHeap );\n    p.vHeap.pArray[1]       = NewTop;\n    p.vIndex.pArray[NewTop] = 1;\n    p.vIndex.pArray[Result] = 0;\n    if p.vHeap.nSize \u003e 1 {\n        Msat_HeapPercolateDown( p, 1 ); }\n    return Result;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts the new element.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_HeapInsert(p *Msat_Order_t, n int32) {\n    // inlining of macro HOKAY\n    assert(((n) \u003e= 0 \u0026\u0026 (n) \u003c (p).vIndex.nSize), \"/*__starting_point_inline_macro:HOKAY__*/((n) \u003e= 0 \u0026\u0026 (n) \u003c (p).vIndex.nSize)\");\n    // inlining of macro HSIZE\n    p.vIndex.pArray[n] = ((p).vHeap.nSize);\n    Msat_IntVecPush( p.vHeap, n );\n    Msat_HeapPercolateUp( p, p.vIndex.pArray[n] );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Inserts the new element.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_HeapIncrease(p *Msat_Order_t, n int32) {\n    Msat_HeapPercolateUp( p, p.vIndex.pArray[n] );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Moves the entry up.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_HeapPercolateUp(p *Msat_Order_t, i int32) {\n    // inlining of macro HHEAP\n    var x int32  = ((p).vHeap.pArray[i]);\n    // inlining of macro HPARENT\n    // inlining of macro HCOMPARE\n    // inlining of macro HHEAP\n    for  ((i)\u003e\u003e1) != 0 \u0026\u0026 ((p).pSat.pdActivity[x] \u003e (p).pSat.pdActivity[((p).vHeap.pArray[((i)\u003e\u003e1)])])  {\n        // inlining of macro HHEAP\n        // inlining of macro HPARENT\n        p.vHeap.pArray[i]            = ((p).vHeap.pArray[((i)\u003e\u003e1)]);\n        // inlining of macro HHEAP\n        p.vIndex.pArray[((p).vHeap.pArray[i])] = i;\n        // inlining of macro HPARENT\n        i                              = ((i)\u003e\u003e1);\n    }\n    p.vHeap.pArray[i]  = x;\n    p.vIndex.pArray[x] = i;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Moves the entry down.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_HeapPercolateDown(p *Msat_Order_t, i int32) {\n    // inlining of macro HHEAP\n    var x int32  = ((p).vHeap.pArray[i]);\n    var Child int32;\n    // inlining of macro HLEFT\n    // inlining of macro HSIZE\n    for  ((i)\u003c\u003c1) \u003c ((p).vHeap.nSize)  {\n        // inlining of macro HRIGHT\n        // inlining of macro HSIZE\n        // inlining of macro HCOMPARE\n        // inlining of macro HHEAP\n        // inlining of macro HLEFT\n        if  (((i)\u003c\u003c1)+1) \u003c ((p).vHeap.nSize) \u0026\u0026 ((p).pSat.pdActivity[((p).vHeap.pArray[(((i)\u003c\u003c1)+1)])] \u003e (p).pSat.pdActivity[((p).vHeap.pArray[((i)\u003c\u003c1)])]) {\n            // inlining of macro HRIGHT\n            Child = (((i)\u003c\u003c1)+1);\n        } else {\n            // inlining of macro HLEFT\n            Child = ((i)\u003c\u003c1); }\n        // inlining of macro HCOMPARE\n        // inlining of macro HHEAP\n        if !((p).pSat.pdActivity[((p).vHeap.pArray[Child])] \u003e (p).pSat.pdActivity[x]) {\n            break; }\n        // inlining of macro HHEAP\n        p.vHeap.pArray[i]            = ((p).vHeap.pArray[Child]);\n        // inlining of macro HHEAP\n        p.vIndex.pArray[((p).vHeap.pArray[i])] = i;\n        i                              = Child;\n    }\n    p.vHeap.pArray[i]  = x;\n    p.vIndex.pArray[x] = i;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,19 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.h",
+  "SHA256": "26296563c53339f9d58c1a6c3db05c6476ca6faaaa5c4ea85cc437f75e172686",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/lucky.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1226
+    }
+  ],
+  "Draft": "package lucky\n\n/**CFile****************************************************************\n\n  FileName    [lucky.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Semi-canonical form computation package.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Jake]\n\n  Date        [Started - August 2012]\n\n***********************************************************************/\n\n\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\ntypedef struct\n{\n    int varN;\n    int* swapArray;\n    int swapCtr;\n    int totalSwaps;\n    int* flipArray;\n    int flipCtr;\n    int totalFlips; \n}\npermInfo;\n\n// extern unsigned Kit_TruthSemiCanonicize_new( unsigned * pInOut, unsigned * pAux, int nVars, char * pCanonPerm );\n\n// extern unsigned luckyCanonicizer_final_fast( word * pInOut, int nVars, char * pCanonPerm );\n\n// extern unsigned luckyCanonicizer_final_fast1( word * pInOut, int nVars, char * pCanonPerm );\n\n// extern void resetPCanonPermArray(char* x, int nVars);\n \n// extern permInfo* setPermInfoPtr(int var);\n\n// extern void freePermInfoPtr(permInfo* x);\n\n// extern void simpleMinimal(word* x, word* pAux,word* minimal, permInfo* pi, int nVars);\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

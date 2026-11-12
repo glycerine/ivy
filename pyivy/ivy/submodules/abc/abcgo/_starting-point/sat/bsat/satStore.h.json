@@ -1,0 +1,128 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satStore.h",
+  "SHA256": "ae07eda35b962556779badc03a7a38755984ed34e858bf6dd4aed5ef256151ae",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 44,
+        "Column": 1,
+        "ByteOffset": 1333
+      },
+      "Directive": "#ifdef _WIN32"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satStore.h::struct::Sto_Cls_t::// the clause ID\n    unsigned        fA     :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Sto_Cls_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2617,
+      "End": 2677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satStore.h::struct::Sto_Cls_t::// belongs to A\n    unsigned        fRoot  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Sto_Cls_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2677,
+      "End": 2727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satStore.h::struct::Sto_Cls_t::// original clause\n    unsigned        fVisit :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Sto_Cls_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2727,
+      "End": 2780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satStore.h::struct::Sto_Cls_t::// visited clause\n    unsigned        nLits  : 24;",
+      "Category": "struct-field-review",
+      "Symbol": "Sto_Cls_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2780,
+      "End": 2832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satStore.h::struct::Sto_Cls_t::// the number of literals\n    lit             pLits[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Sto_Cls_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2832,
+      "End": 2889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satStore.h::struct::Sto_Cls_t",
+      "Category": "struct-review",
+      "Symbol": "Sto_Cls_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2376,
+      "End": 2923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satStore.h::struct::Sto_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Sto_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2925,
+      "End": 3649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satStore.h::macro::STO_MAX",
+      "Category": "macro-review",
+      "Symbol": "STO_MAX",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1408,
+      "End": 1453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satStore.h::macro::Sto_ManForEachClause",
+      "Category": "macro-review",
+      "Symbol": "Sto_ManForEachClause",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3684,
+      "End": 3777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satStore.h::macro::Sto_ManForEachClauseRoot",
+      "Category": "macro-review",
+      "Symbol": "Sto_ManForEachClauseRoot",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3778,
+      "End": 3886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satStore.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satStore.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1333,
+      "End": 1406
+    }
+  ],
+  "Draft": "package bsat\n\n/**CFile****************************************************************\n\n  FileName    [satStore.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Proof recording.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: pr.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n/*\n    The trace of SAT solving contains the original clauses of the problem\n    along with the learned clauses derived during SAT solving.\n    The first line of the resulting file contains 3 numbers instead of 2:\n    c \u003cnum_vars\u003e \u003cnum_all_clauses\u003e \u003cnum_root_clauses\u003e\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"satSolver.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n#ifdef _WIN32\n#define inline __inline // compatible with MS VS 6.0\n#endif\n\n// Original macro:\n// #define STO_MAX(a,b)  ((a) \u003e (b) ? (a) : (b))\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n/*\ntypedef unsigned lit;\n// variable/literal conversions (taken from MiniSat)\nstatic inline lit   toLit    (int v)        { return v + v;  }\nstatic inline lit   toLitCond(int v, int c) { return v + v + (c != 0); }\nstatic inline lit   lit_neg  (lit l)        { return l ^ 1;  }\nstatic inline int   lit_var  (lit l)        { return l \u003e\u003e 1; }\nstatic inline int   lit_sign (lit l)        { return l \u0026 1;  }\nstatic inline int   lit_print(lit l)        { return lit_sign(l)? -lit_var(l)-1 : lit_var(l)+1; }\nstatic inline lit   lit_read (int s)        { return s \u003e 0 ? toLit(s-1) : lit_neg(toLit(-s-1)); }\nstatic inline int   lit_check(lit l, int n) { return l \u003e= 0 \u0026\u0026 lit_var(l) \u003c n;                  }\n*/\n\n   \ntype Sto_Cls_t struct {\n    pNext      *Sto_Cls_t;        // the next clause\n    pNext0      *Sto_Cls_t;       // the next 0-watch\n    pNext1      *Sto_Cls_t;       // the next 1-watch\n    Id             int32;           // the clause ID\n    fA uint32; /* C bitfield: 1 bits; review packing and truncation */  // belongs to A\n    fRoot uint32; /* C bitfield: 1 bits; review packing and truncation */  // original clause\n    fVisit uint32; /* C bitfield: 1 bits; review packing and truncation */  // visited clause\n    nLits uint32; /* C bitfield: 24 bits; review packing and truncation */  // the number of literals\n    lit             pLits[0];     // literals of this clause\n}\n\n   \ntype Sto_Man_t struct {\n    // general data\n    nVars             int32;        // the number of variables\n    nRoots             int32;       // the number of root clauses\n    nClauses             int32;     // the number of all clauses\n    nClausesA             int32;    // the number of clauses of A \n    pHead      *Sto_Cls_t;        // the head clause\n    pTail      *Sto_Cls_t;        // the tail clause\n    pEmpty      *Sto_Cls_t;       // the empty clause\n    // memory management\n    nChunkSize             int32;   // the number of bytes in a chunk\n    nChunkUsed             int32;   // the number of bytes used in the last chunk\n    pChunkLast           string;   // the last memory chunk\n}\n\n// iterators through the clauses\n// Original macro:\n// #define Sto_ManForEachClause( p, pCls )      for( pCls = p-\u003epHead; pCls; pCls = pCls-\u003epNext )\n\n// Original macro:\n// #define Sto_ManForEachClauseRoot( p, pCls )  for( pCls = p-\u003epHead; pCls \u0026\u0026 pCls-\u003efRoot; pCls = pCls-\u003epNext )\n\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== satStore.c ==========================================================*/\n// extern Sto_Man_t *  Sto_ManAlloc();\n\n// extern void         Sto_ManFree( Sto_Man_t * p );\n\n// extern int          Sto_ManAddClause( Sto_Man_t * p, lit * pBeg, lit * pEnd );\n\n// extern int          Sto_ManMemoryReport( Sto_Man_t * p );\n\n// extern void         Sto_ManMarkRoots( Sto_Man_t * p );\n\n// extern void         Sto_ManMarkClausesA( Sto_Man_t * p );\n\n// extern void         Sto_ManDumpClauses( Sto_Man_t * p, char * pFileName );\n\n// extern int          Sto_ManChangeLastClause( Sto_Man_t * p );\n\n// extern Sto_Man_t *  Sto_ManLoadClauses( char * pFileName );\n\n\n\n/*=== satInter.c ==========================================================*/\ntype Int_Man_t = Int_Man_t_;\n// extern Int_Man_t *  Int_ManAlloc();\n\n// extern int *        Int_ManSetGlobalVars( Int_Man_t * p, int nGloVars );\n\n// extern void         Int_ManFree( Int_Man_t * p );\n\n// extern int          Int_ManInterpolate( Int_Man_t * p, Sto_Man_t * pCnf, int fVerbose, unsigned ** ppResult );\n\n\n/*=== satInterA.c ==========================================================*/\ntype Inta_Man_t = Inta_Man_t_;\n// extern Inta_Man_t * Inta_ManAlloc();\n\n// extern void         Inta_ManFree( Inta_Man_t * p );\n\n// extern void *       Inta_ManInterpolate( Inta_Man_t * p, Sto_Man_t * pCnf, abctime TimeToStop, void * vVarsAB, int fVerbose );\n\n\n/*=== satInterB.c ==========================================================*/\ntype Intb_Man_t = Intb_Man_t_;\n// extern Intb_Man_t * Intb_ManAlloc();\n\n// extern void         Intb_ManFree( Intb_Man_t * p );\n\n// extern void *       Intb_ManInterpolate( Intb_Man_t * p, Sto_Man_t * pCnf, void * vVarsAB, int fVerbose );\n\n\n/*=== satInterP.c ==========================================================*/\ntype Intp_Man_t = Intp_Man_t_;\n// extern Intp_Man_t * Intp_ManAlloc();\n\n// extern void         Intp_ManFree( Intp_Man_t * p );\n\n// extern void *       Intp_ManUnsatCore( Intp_Man_t * p, Sto_Man_t * pCnf, int fLearned, int fVerbose );\n\n// extern void         Intp_ManUnsatCorePrintForBmc( FILE * pFile, Sto_Man_t * pCnf, void * vCore, void * vVarMap );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

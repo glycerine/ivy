@@ -1,0 +1,919 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c",
+  "SHA256": "6a84770949fea7086d689d47c737d07db933a4e133ee14cb8663699b1ecf663c",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 1857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManObjNum(pF) * nWords == Vec_WrdSize(vSimsF) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 2954
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Output %4d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 9,
+        "ByteOffset": 2993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    RF :  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 9,
+        "ByteOffset": 3025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"0 =%7.3f %%  \",    100.0*nBitsF0/64/nWords );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 91,
+        "Column": 9,
+        "ByteOffset": 3088
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"1 =%7.3f %%  \",    100.0*nBitsF1/64/nWords );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 9,
+        "ByteOffset": 3151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"X =%7.3f %%  \",    100.0*nBitsFx/64/nWords );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 94,
+        "Column": 9,
+        "ByteOffset": 3215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"   GF :  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 9,
+        "ByteOffset": 3246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"0 =%7.3f %%  \",    100.0*nBitsG0/64/nWords );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 9,
+        "ByteOffset": 3309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"1 =%7.3f %%  \",    100.0*nBitsG1/64/nWords );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 97,
+        "Column": 9,
+        "ByteOffset": 3372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"X =%7.3f %%  \",    100.0*nBitsGx/64/nWords );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 9,
+        "ByteOffset": 3436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 129,
+        "Column": 21,
+        "ByteOffset": 4663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"x\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 21,
+        "ByteOffset": 4749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"1\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 21,
+        "ByteOffset": 4809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"0\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 13,
+        "ByteOffset": 4852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 9,
+        "ByteOffset": 4886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 4967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 9982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Acb_ObjIsCio(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 9,
+        "ByteOffset": 10276
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pLits[0] \u003e= 0 \u0026\u0026 pLits[1] \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 300,
+        "Column": 9,
+        "ByteOffset": 11229
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vTemp) == 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 307,
+        "Column": 9,
+        "ByteOffset": 11666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vTemp) == 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 330,
+        "Column": 9,
+        "ByteOffset": 12906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vTemp) == 4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 336,
+        "Column": 5,
+        "ByteOffset": 13138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 391,
+        "Column": 5,
+        "ByteOffset": 15127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCiNum(pOne) == Gia_ManCiNum(pTwo) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 392,
+        "Column": 5,
+        "ByteOffset": 15183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCoNum(pOne) == Gia_ManCoNum(pTwo) );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 468,
+        "Column": 27,
+        "ByteOffset": 18598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pFile *os.File  = fopen( pFileName0, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 470,
+        "Column": 9,
+        "ByteOffset": 18655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open results file \\\"%s\\\".\\n\", pFileName0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 474,
+        "Column": 9,
+        "ByteOffset": 18768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"EQ\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 483,
+        "Column": 9,
+        "ByteOffset": 18913
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"NEQ\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 485,
+        "Column": 13,
+        "ByteOffset": 19099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s %d\\n\", Acb_ObjNameStr(pNtkF, iObj), pModel[i] );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 488,
+        "Column": 5,
+        "ByteOffset": 19188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 489,
+        "Column": 5,
+        "ByteOffset": 19209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Produced output file \\\"%s\\\".\\n\\n\", pFileName0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 507,
+        "Column": 9,
+        "ByteOffset": 19930
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The networks are %s.  \", RetValue == 1 ? \"equivalent\" : (RetValue == 0 ? \"NOT equivalent\" : \"UNDECIDED\") );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 535,
+        "Column": 5,
+        "ByteOffset": 20877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PI = %6d  \",  Acb_NtkCiNum(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 536,
+        "Column": 5,
+        "ByteOffset": 20926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PO = %6d  \",  Acb_NtkCoNum(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 537,
+        "Column": 5,
+        "ByteOffset": 20975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Obj = %6d  \", Acb_NtkObjNum(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 538,
+        "Column": 5,
+        "ByteOffset": 21025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"DC = %4d  \",  nDcs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 539,
+        "Column": 5,
+        "ByteOffset": 21060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Mux = %4d  \", nMuxes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 540,
+        "Column": 5,
+        "ByteOffset": 21097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 570,
+        "Column": 13,
+        "ByteOffset": 22258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot find name \\\"%s\\\" of PI %d of F among PIs of G.\\n\", Acb_ObjNameStr(pNtkF, iObj), i );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 585,
+        "Column": 12,
+        "ByteOffset": 22889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strcmp(pNameF, pNameG) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 587,
+        "Column": 13,
+        "ByteOffset": 23031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Networks have different PI names. Reordering PIs of the implementation network.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 593,
+        "Column": 9,
+        "ByteOffset": 23238
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Networks have the same PI names.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 622,
+        "Column": 5,
+        "ByteOffset": 24191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Acb_NtkCiNum(pNtkF) == Acb_NtkCiNum(pNtkG) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 623,
+        "Column": 5,
+        "ByteOffset": 24249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Acb_NtkCoNum(pNtkF) == Acb_NtkCoNum(pNtkG) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 644,
+        "Column": 66,
+        "ByteOffset": 25260
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManSimTry",
+      "Start": 1385,
+      "End": 4597,
+      "BodyStart": 1438,
+      "Original": "void Gia_ManSimTry( Gia_Man_t * pF, Gia_Man_t * pG )\n{\n    int i, j, n, nWords = 500;\n    Vec_Wrd_t * vSimsF, * vSimsG;\n    Abc_Random(1);\n    Vec_WrdFreeP( \u0026pF-\u003evSimsPi );\n    Vec_WrdFreeP( \u0026pG-\u003evSimsPi );\n    pF-\u003evSimsPi = Vec_WrdStartRandom( Gia_ManCiNum(pF) * nWords );\n    pG-\u003evSimsPi = Vec_WrdDup( pF-\u003evSimsPi );\n    vSimsF = Gia_ManSimPatSim( pF );\n    vSimsG = Gia_ManSimPatSim( pG );\n    assert( Gia_ManObjNum(pF) * nWords == Vec_WrdSize(vSimsF) );\n    for ( i = 0; i \u003c Gia_ManCoNum(pF)/2; i++ )\n    {\n        Gia_Obj_t * pObjFb = Gia_ManCo( pF, 2*i+0 );\n        Gia_Obj_t * pObjFx = Gia_ManCo( pF, 2*i+1 );\n        Gia_Obj_t * pObjGb = Gia_ManCo( pG, 2*i+0 );\n        Gia_Obj_t * pObjGx = Gia_ManCo( pG, 2*i+1 );\n        word * pSimFb = Vec_WrdEntryP(vSimsF, Gia_ObjId(pF, pObjFb)*nWords);\n        word * pSimFx = Vec_WrdEntryP(vSimsF, Gia_ObjId(pF, pObjFx)*nWords);\n        word * pSimGb = Vec_WrdEntryP(vSimsG, Gia_ObjId(pG, pObjGb)*nWords);\n        word * pSimGx = Vec_WrdEntryP(vSimsG, Gia_ObjId(pG, pObjGx)*nWords);\n\n        int nBitsFx = Abc_TtCountOnesVec(pSimFx, nWords);\n        int nBitsF1 = Abc_TtCountOnesVecMask(pSimFx, pSimFb, nWords, 1);\n        int nBitsF0 = nWords*64 - nBitsFx - nBitsF1;\n        \n        int nBitsGx = Abc_TtCountOnesVec(pSimGx, nWords);\n        int nBitsG1 = Abc_TtCountOnesVecMask(pSimGx, pSimGb, nWords, 1);\n        int nBitsG0 = nWords*64 - nBitsGx - nBitsG1;\n        \n        printf( \"Output %4d : \", i );\n\n        printf( \"    RF :  \" );\n        printf( \"0 =%7.3f %%  \",    100.0*nBitsF0/64/nWords );\n        printf( \"1 =%7.3f %%  \",    100.0*nBitsF1/64/nWords );\n        printf( \"X =%7.3f %%  \",    100.0*nBitsFx/64/nWords );\n\n        printf( \"   GF :  \" );\n        printf( \"0 =%7.3f %%  \",    100.0*nBitsG0/64/nWords );\n        printf( \"1 =%7.3f %%  \",    100.0*nBitsG1/64/nWords );\n        printf( \"X =%7.3f %%  \",    100.0*nBitsGx/64/nWords );\n\n        printf( \"\\n\" );\n        if ( i == 20 )\n            break;\n    }\n\n    printf( \"\\n\" );\n    for ( j = 0; j \u003c 20; j++ )\n    {\n        for ( n = 0; n \u003c 2; n++ )\n        {\n            for ( i = 0; i \u003c Gia_ManCoNum(pF)/2; i++ )\n            {\n                Gia_Obj_t * pObjFb = Gia_ManCo( pF, 2*i+0 );\n                Gia_Obj_t * pObjFx = Gia_ManCo( pF, 2*i+1 );\n                Gia_Obj_t * pObjGb = Gia_ManCo( pG, 2*i+0 );\n                Gia_Obj_t * pObjGx = Gia_ManCo( pG, 2*i+1 );\n                word * pSimFb = Vec_WrdEntryP(vSimsF, Gia_ObjId(pF, pObjFb)*nWords);\n                word * pSimFx = Vec_WrdEntryP(vSimsF, Gia_ObjId(pF, pObjFx)*nWords);\n                word * pSimGb = Vec_WrdEntryP(vSimsG, Gia_ObjId(pG, pObjGb)*nWords);\n                word * pSimGx = Vec_WrdEntryP(vSimsG, Gia_ObjId(pG, pObjGx)*nWords);\n                word * pSimb = n ? pSimGb : pSimFb;\n                word * pSimx = n ? pSimGx : pSimFx;\n                if ( Abc_TtGetBit(pSimx, j) )\n                    printf( \"x\" );\n                else if ( Abc_TtGetBit(pSimb, j) )\n                    printf( \"1\" );\n                else\n                    printf( \"0\" );\n            }\n            printf( \"\\n\" );\n        }\n        printf( \"\\n\" );\n    }\n\n    Vec_WrdFree( vSimsF );\n    Vec_WrdFree( vSimsG );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Gia_ManSimTry(pF *Gia_Man_t, pG *Gia_Man_t) {\n    var i int32;\n    var j int32;\n    var n int32;\n    var nWords int32 = 500;\n    var vSimsF, vSimsG *Vec_Wrd_t;\n    Abc_Random(1);\n    Vec_WrdFreeP( \u0026pF.vSimsPi );\n    Vec_WrdFreeP( \u0026pG.vSimsPi );\n    pF.vSimsPi = Vec_WrdStartRandom( Gia_ManCiNum(pF) * nWords );\n    pG.vSimsPi = Vec_WrdDup( pF.vSimsPi );\n    vSimsF = Gia_ManSimPatSim( pF );\n    vSimsG = Gia_ManSimPatSim( pG );\n    assert(Gia_ManObjNum(pF) * nWords == Vec_WrdSize(vSimsF), \"Gia_ManObjNum(pF) * nWords == Vec_WrdSize(vSimsF)\");\n    for  i = 0; i \u003c Gia_ManCoNum(pF)/2; i++  {\n        var pObjFb *Gia_Obj_t  = Gia_ManCo( pF, 2*i+0 );\n        var pObjFx *Gia_Obj_t  = Gia_ManCo( pF, 2*i+1 );\n        var pObjGb *Gia_Obj_t  = Gia_ManCo( pG, 2*i+0 );\n        var pObjGx *Gia_Obj_t  = Gia_ManCo( pG, 2*i+1 );\n        var pSimFb *word  = Vec_WrdEntryP(vSimsF, Gia_ObjId(pF, pObjFb)*nWords);\n        var pSimFx *word  = Vec_WrdEntryP(vSimsF, Gia_ObjId(pF, pObjFx)*nWords);\n        var pSimGb *word  = Vec_WrdEntryP(vSimsG, Gia_ObjId(pG, pObjGb)*nWords);\n        var pSimGx *word  = Vec_WrdEntryP(vSimsG, Gia_ObjId(pG, pObjGx)*nWords);\n\n        var nBitsFx int32  = Abc_TtCountOnesVec(pSimFx, nWords);\n        var nBitsF1 int32  = Abc_TtCountOnesVecMask(pSimFx, pSimFb, nWords, 1);\n        var nBitsF0 int32  = nWords*64 - nBitsFx - nBitsF1;\n        \n        var nBitsGx int32  = Abc_TtCountOnesVec(pSimGx, nWords);\n        var nBitsG1 int32  = Abc_TtCountOnesVecMask(pSimGx, pSimGb, nWords, 1);\n        var nBitsG0 int32  = nWords*64 - nBitsGx - nBitsG1;\n        \n        fmt.Printf(\"Output %4d : \", i);\n\n        fmt.Printf(\"    RF :  \");\n        fmt.Printf(\"0 =%7.3f %%  \", 100.0*nBitsF0/64/nWords);\n        fmt.Printf(\"1 =%7.3f %%  \", 100.0*nBitsF1/64/nWords);\n        fmt.Printf(\"X =%7.3f %%  \", 100.0*nBitsFx/64/nWords);\n\n        fmt.Printf(\"   GF :  \");\n        fmt.Printf(\"0 =%7.3f %%  \", 100.0*nBitsG0/64/nWords);\n        fmt.Printf(\"1 =%7.3f %%  \", 100.0*nBitsG1/64/nWords);\n        fmt.Printf(\"X =%7.3f %%  \", 100.0*nBitsGx/64/nWords);\n\n        fmt.Printf(\"\\n\");\n        if i == 20 {\n            break; }\n    }\n\n    fmt.Printf(\"\\n\");\n    for  j = 0; j \u003c 20; j++  {\n        for  n = 0; n \u003c 2; n++  {\n            for  i = 0; i \u003c Gia_ManCoNum(pF)/2; i++  {\n                var pObjFb *Gia_Obj_t  = Gia_ManCo( pF, 2*i+0 );\n                var pObjFx *Gia_Obj_t  = Gia_ManCo( pF, 2*i+1 );\n                var pObjGb *Gia_Obj_t  = Gia_ManCo( pG, 2*i+0 );\n                var pObjGx *Gia_Obj_t  = Gia_ManCo( pG, 2*i+1 );\n                var pSimFb *word  = Vec_WrdEntryP(vSimsF, Gia_ObjId(pF, pObjFb)*nWords);\n                var pSimFx *word  = Vec_WrdEntryP(vSimsF, Gia_ObjId(pF, pObjFx)*nWords);\n                var pSimGb *word  = Vec_WrdEntryP(vSimsG, Gia_ObjId(pG, pObjGb)*nWords);\n                var pSimGx *word  = Vec_WrdEntryP(vSimsG, Gia_ObjId(pG, pObjGx)*nWords);\n                var pSimb *word;\n                if n != 0 {\n                    pSimb = pSimGb;\n                } else {\n                    pSimb = pSimFb;\n                }\n                var pSimx *word;\n                if n != 0 {\n                    pSimx = pSimGx;\n                } else {\n                    pSimx = pSimFx;\n                }\n                if Abc_TtGetBit(pSimx, j) {\n                    fmt.Printf(\"x\");\n                } else if Abc_TtGetBit(pSimb, j) {\n                    fmt.Printf(\"1\");\n                } else {\n                    fmt.Printf(\"0\"); }\n            }\n            fmt.Printf(\"\\n\");\n        }\n        fmt.Printf(\"\\n\");\n    }\n\n    Vec_WrdFree( vSimsF );\n    Vec_WrdFree( vSimsG );\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Gia_ManDualNot",
+      "Start": 4833,
+      "End": 5051,
+      "BodyStart": 4896,
+      "Original": "void Gia_ManDualNot( Gia_Man_t * p, int LitA[2], int LitZ[2] )\n{\n    LitZ[0]   = Abc_LitNot(LitA[0]);\n    LitZ[1]   = LitA[1];\n    \n    if ( fForceZero ) LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) );\n}",
+      "Draft": "func Gia_ManDualNot(p *Gia_Man_t, LitA []int32, LitZ []int32) {\n    LitZ[0]   = Abc_LitNot(LitA[0]);\n    LitZ[1]   = LitA[1];\n    \n    if fForceZero != 0 { LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) ); }\n}"
+    },
+    {
+      "Name": "Gia_ManDualXor2",
+      "Start": 5138,
+      "End": 5417,
+      "BodyStart": 5215,
+      "Original": "void Gia_ManDualXor2( Gia_Man_t * p, int LitA[2], int LitB[2], int LitZ[2] )\n{\n    LitZ[0]   = Gia_ManHashXor( p, LitA[0], LitB[0] );\n    LitZ[1]   = Gia_ManHashOr( p, LitA[1], LitB[1] );\n    \n    if ( fForceZero ) LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) );\n}",
+      "Draft": "func Gia_ManDualXor2(p *Gia_Man_t, LitA []int32, LitB []int32, LitZ []int32) {\n    LitZ[0]   = Gia_ManHashXor( p, LitA[0], LitB[0] );\n    LitZ[1]   = Gia_ManHashOr( p, LitA[1], LitB[1] );\n    \n    if fForceZero != 0 { LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) ); }\n}"
+    },
+    {
+      "Name": "Gia_ManDualXorN",
+      "Start": 5418,
+      "End": 5701,
+      "BodyStart": 5489,
+      "Original": "void Gia_ManDualXorN( Gia_Man_t * p, int * pLits, int n, int LitZ[2] )\n{\n    int i;\n    LitZ[0] = 0;\n    LitZ[1] = 0;\n    for ( i = 0; i \u003c n; i++ )\n    {\n        LitZ[0] = Gia_ManHashXor( p, LitZ[0], pLits[2*i] );\n        LitZ[1] = Gia_ManHashOr ( p, LitZ[1], pLits[2*i+1] );\n    }\n}",
+      "Draft": "func Gia_ManDualXorN(p *Gia_Man_t, pLits *int32, n int32, LitZ []int32) {\n    var i int32;\n    LitZ[0] = 0;\n    LitZ[1] = 0;\n    for  i = 0; i \u003c n; i++  {\n        LitZ[0] = Gia_ManHashXor( p, LitZ[0], pLits[2*i] );\n        LitZ[1] = Gia_ManHashOr ( p, LitZ[1], pLits[2*i+1] );\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManDualAnd2",
+      "Start": 5788,
+      "End": 6543,
+      "BodyStart": 5865,
+      "Original": "void Gia_ManDualAnd2( Gia_Man_t * p, int LitA[2], int LitB[2], int LitZ[2] )\n{\n    int ZeroA = Gia_ManHashAnd( p, Abc_LitNot(LitA[0]), Abc_LitNot(LitA[1]) );\n    int ZeroB = Gia_ManHashAnd( p, Abc_LitNot(LitB[0]), Abc_LitNot(LitB[1]) );\n    int ZeroZ = Gia_ManHashOr( p, ZeroA, ZeroB );\n    LitZ[0]   = Gia_ManHashAnd( p, LitA[0], LitB[0] );\n    LitZ[1]   = Gia_ManHashAnd( p, Gia_ManHashOr( p, LitA[1], LitB[1] ), Abc_LitNot(ZeroZ) );\n\n    //LitZ[0]   = Gia_ManHashAnd( p, Gia_ManHashAnd(p, LitA[0], Abc_LitNot(LitA[1])), Gia_ManHashAnd(p, LitB[0], Abc_LitNot(LitB[1])) );\n    //LitZ[1]   = Gia_ManHashAnd( p, Gia_ManHashOr(p, LitA[0], LitA[1]), Gia_ManHashOr(p, LitB[0], LitB[1]) );\n    //LitZ[1]   = Gia_ManHashAnd( p, LitZ[1], Abc_LitNot(LitZ[0]) );\n}",
+      "Draft": "func Gia_ManDualAnd2(p *Gia_Man_t, LitA []int32, LitB []int32, LitZ []int32) {\n    var ZeroA int32  = Gia_ManHashAnd( p, Abc_LitNot(LitA[0]), Abc_LitNot(LitA[1]) );\n    var ZeroB int32  = Gia_ManHashAnd( p, Abc_LitNot(LitB[0]), Abc_LitNot(LitB[1]) );\n    var ZeroZ int32  = Gia_ManHashOr( p, ZeroA, ZeroB );\n    LitZ[0]   = Gia_ManHashAnd( p, LitA[0], LitB[0] );\n    LitZ[1]   = Gia_ManHashAnd( p, Gia_ManHashOr( p, LitA[1], LitB[1] ), Abc_LitNot(ZeroZ) );\n\n    //LitZ[0]   = Gia_ManHashAnd( p, Gia_ManHashAnd(p, LitA[0], Abc_LitNot(LitA[1])), Gia_ManHashAnd(p, LitB[0], Abc_LitNot(LitB[1])) );\n    //LitZ[1]   = Gia_ManHashAnd( p, Gia_ManHashOr(p, LitA[0], LitA[1]), Gia_ManHashOr(p, LitB[0], LitB[1]) );\n    //LitZ[1]   = Gia_ManHashAnd( p, LitZ[1], Abc_LitNot(LitZ[0]) );\n}"
+    },
+    {
+      "Name": "Gia_ManDualAndN",
+      "Start": 6544,
+      "End": 7129,
+      "BodyStart": 6615,
+      "Original": "void Gia_ManDualAndN( Gia_Man_t * p, int * pLits, int n, int LitZ[2] )\n{\n    int i, LitZero = 0, LitOne = 0;\n    LitZ[0] = 1;\n    for ( i = 0; i \u003c n; i++ )\n    {\n        int Lit = Gia_ManHashAnd( p, Abc_LitNot(pLits[2*i]), Abc_LitNot(pLits[2*i+1]) );\n        LitZero = Gia_ManHashOr( p, LitZero, Lit );\n        LitOne  = Gia_ManHashOr( p, LitOne,  pLits[2*i+1] );\n        LitZ[0] = Gia_ManHashAnd( p, LitZ[0], pLits[2*i] );\n    }\n    LitZ[1] = Gia_ManHashAnd( p, LitOne, Abc_LitNot(LitZero) );\n    \n    if ( fForceZero ) LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) );\n}",
+      "Draft": "func Gia_ManDualAndN(p *Gia_Man_t, pLits *int32, n int32, LitZ []int32) {\n    var i, LitZero, LitOne int32;\n    LitZ[0] = 1;\n    for  i = 0; i \u003c n; i++  {\n        var Lit int32  = Gia_ManHashAnd( p, Abc_LitNot(pLits[2*i]), Abc_LitNot(pLits[2*i+1]) );\n        LitZero = Gia_ManHashOr( p, LitZero, Lit );\n        LitOne  = Gia_ManHashOr( p, LitOne,  pLits[2*i+1] );\n        LitZ[0] = Gia_ManHashAnd( p, LitZ[0], pLits[2*i] );\n    }\n    LitZ[1] = Gia_ManHashAnd( p, LitOne, Abc_LitNot(LitZero) );\n    \n    if fForceZero != 0 { LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) ); }\n}"
+    },
+    {
+      "Name": "Gia_ManDualDc",
+      "Start": 7217,
+      "End": 7548,
+      "BodyStart": 7292,
+      "Original": "void Gia_ManDualDc( Gia_Man_t * p, int LitC[2], int LitD[2], int LitZ[2] )\n{\n    LitZ[0]   = LitC[0];\n//    LitZ[0]   = Gia_ManHashMux( p, LitD[0], 0, LitC[0] );\n    LitZ[1]   = Gia_ManHashOr(p, Gia_ManHashOr(p,LitD[0],LitD[1]), LitC[1] );\n    \n    if ( fForceZero ) LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) );\n}",
+      "Draft": "func Gia_ManDualDc(p *Gia_Man_t, LitC []int32, LitD []int32, LitZ []int32) {\n    LitZ[0]   = LitC[0];\n//    LitZ[0]   = Gia_ManHashMux( p, LitD[0], 0, LitC[0] );\n    LitZ[1]   = Gia_ManHashOr(p, Gia_ManHashOr(p,LitD[0],LitD[1]), LitC[1] );\n    \n    if fForceZero != 0 { LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) ); }\n}"
+    },
+    {
+      "Name": "Gia_ManDualMux",
+      "Start": 7549,
+      "End": 8757,
+      "BodyStart": 7638,
+      "Original": "void Gia_ManDualMux( Gia_Man_t * p, int LitC[2], int LitT[2], int LitE[2], int LitZ[2] )\n{\n/*\n    // total logic size: 18 nodes\n    int Xnor = Gia_ManHashXor( p, Abc_LitNot(LitT[0]), LitE[0] );\n    int Cond = Gia_ManHashAnd( p, Abc_LitNot(LitT[1]), Abc_LitNot(LitE[1]) );\n    int pTempE[2], pTempT[2];\n    pTempE[0] = Gia_ManHashMux( p, LitC[0], LitT[0], LitE[0] );\n    pTempE[1] = Gia_ManHashMux( p, LitC[0], LitT[1], LitE[1] );\n    //pTempT[0] = LitT[0];\n    pTempT[0] = Gia_ManHashAnd( p, LitT[0], LitE[0] );\n    pTempT[1] = Gia_ManHashAnd( p, Cond, Xnor );\n    LitZ[0] = Gia_ManHashMux( p, LitC[1], pTempT[0], pTempE[0] );\n    LitZ[1] = Gia_ManHashMux( p, LitC[1], pTempT[1], pTempE[1] );\n*/\n    // total logic size: 14 nodes\n    int Xnor = Gia_ManHashXor( p, Abc_LitNot(LitT[0]), LitE[0] );\n    int Cond = Gia_ManHashAnd( p, Abc_LitNot(LitT[1]), Abc_LitNot(LitE[1]) );\n    int XVal1 = Abc_LitNot( Gia_ManHashAnd( p, Cond, Xnor ) );\n    int XVal0 = Gia_ManHashMux( p, LitC[0], LitT[1], LitE[1] );\n    LitZ[0] = Gia_ManHashMux( p, LitC[0], LitT[0], LitE[0] );\n    LitZ[1] = Gia_ManHashMux( p, LitC[1], XVal1, XVal0 );\n\n    if ( fForceZero ) LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) );\n}",
+      "Draft": "func Gia_ManDualMux(p *Gia_Man_t, LitC []int32, LitT []int32, LitE []int32, LitZ []int32) {\n/*\n    // total logic size: 18 nodes\n    int Xnor = Gia_ManHashXor( p, Abc_LitNot(LitT[0]), LitE[0] );\n    int Cond = Gia_ManHashAnd( p, Abc_LitNot(LitT[1]), Abc_LitNot(LitE[1]) );\n    int pTempE[2], pTempT[2];\n    pTempE[0] = Gia_ManHashMux( p, LitC[0], LitT[0], LitE[0] );\n    pTempE[1] = Gia_ManHashMux( p, LitC[0], LitT[1], LitE[1] );\n    //pTempT[0] = LitT[0];\n    pTempT[0] = Gia_ManHashAnd( p, LitT[0], LitE[0] );\n    pTempT[1] = Gia_ManHashAnd( p, Cond, Xnor );\n    LitZ[0] = Gia_ManHashMux( p, LitC[1], pTempT[0], pTempE[0] );\n    LitZ[1] = Gia_ManHashMux( p, LitC[1], pTempT[1], pTempE[1] );\n*/\n    // total logic size: 14 nodes\n    var Xnor int32  = Gia_ManHashXor( p, Abc_LitNot(LitT[0]), LitE[0] );\n    var Cond int32  = Gia_ManHashAnd( p, Abc_LitNot(LitT[1]), Abc_LitNot(LitE[1]) );\n    var XVal1 int32  = Abc_LitNot( Gia_ManHashAnd( p, Cond, Xnor ) );\n    var XVal0 int32  = Gia_ManHashMux( p, LitC[0], LitT[1], LitE[1] );\n    LitZ[0] = Gia_ManHashMux( p, LitC[0], LitT[0], LitE[0] );\n    LitZ[1] = Gia_ManHashMux( p, LitC[1], XVal1, XVal0 );\n\n    if fForceZero != 0 { LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) ); }\n}"
+    },
+    {
+      "Name": "Gia_ManDualCompare",
+      "Start": 8758,
+      "End": 9015,
+      "BodyStart": 8824,
+      "Original": "int Gia_ManDualCompare( Gia_Man_t * p, int LitF[2], int LitS[2] )\n{\n    int iMiter = Gia_ManHashXor( p, LitF[0], LitS[0] );\n    iMiter = Gia_ManHashOr( p, LitF[1], iMiter );\n    iMiter = Gia_ManHashAnd( p, Abc_LitNot(LitS[1]), iMiter );\n    return iMiter;\n}",
+      "Draft": "func Gia_ManDualCompare(p *Gia_Man_t, LitF []int32, LitS []int32) int32 {\n    var iMiter int32  = Gia_ManHashXor( p, LitF[0], LitS[0] );\n    iMiter = Gia_ManHashOr( p, LitF[1], iMiter );\n    iMiter = Gia_ManHashAnd( p, Abc_LitNot(LitS[1]), iMiter );\n    return iMiter;\n}"
+    },
+    {
+      "Name": "Acb_ObjToGiaDual",
+      "Start": 9251,
+      "End": 12426,
+      "BodyStart": 9371,
+      "Original": "void Acb_ObjToGiaDual( Gia_Man_t * pNew, Acb_Ntk_t * p, int iObj, Vec_Int_t * vTemp, Vec_Int_t * vCopies, int pRes[2] )\n{\n    //char * pName = Abc_NamStr( p-\u003epDesign-\u003epStrs, Acb_ObjName(p, iObj) );\n    int * pFanin, iFanin, k, Type;\n    assert( !Acb_ObjIsCio(p, iObj) );\n    Vec_IntClear( vTemp );\n    Acb_ObjForEachFaninFast( p, iObj, pFanin, iFanin, k )\n    {\n        int * pLits = Vec_IntEntryP( vCopies, 2*iFanin );\n        assert( pLits[0] \u003e= 0 \u0026\u0026 pLits[1] \u003e= 0 );\n        Vec_IntPushTwo( vTemp, pLits[0], pLits[1] );\n    }\n    Type = Acb_ObjType( p, iObj );\n    if ( Type == ABC_OPER_CONST_F ) \n    {\n        pRes[0] = 0;\n        pRes[1] = 0;\n        return;\n    }\n    if ( Type == ABC_OPER_CONST_T ) \n    {\n        pRes[0] = 1;\n        pRes[1] = 0;\n        return;\n    }\n    if ( Type == ABC_OPER_CONST_X ) \n    {\n        pRes[0] = 0;\n        pRes[1] = 1;\n        return;\n    }\n    if ( Type == ABC_OPER_BIT_BUF ) \n    {\n        pRes[0] = Vec_IntEntry(vTemp, 0);\n        pRes[1] = Vec_IntEntry(vTemp, 1);\n        return;\n    }\n    if ( Type == ABC_OPER_BIT_INV ) \n    {\n        Gia_ManDualNot( pNew, Vec_IntArray(vTemp), pRes );\n        return;\n    }\n    if ( Type == ABC_OPER_TRI ) \n    {\n        // in the file inputs are ordered as follows:  _DC \\n6_5[9] ( .O(\\108 ), .C(\\96 ), .D(\\107 ));\n        // in this code, we expect them as follows: void Gia_ManDualDc( Gia_Man_t * p, int LitC[2], int LitD[2], int LitZ[2] )\n        assert( Vec_IntSize(vTemp) == 4 );\n        Gia_ManDualDc( pNew, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + 2, pRes );\n        return;\n    }\n    if ( Type == ABC_OPER_BIT_MUX ) \n    {\n        // in the file inputs are ordered as follows:  _HMUX \\U$1 ( .O(\\282 ), .I0(1'b1), .I1(\\277 ), .S(\\281 ));\n        // in this code, we expect them as follows: void Gia_ManDualMux( Gia_Man_t * p, int LitC[2], int LitT[2], int LitE[2], int LitZ[2] )\n        assert( Vec_IntSize(vTemp) == 6 );\n        ABC_SWAP( int, Vec_IntArray(vTemp)[0], Vec_IntArray(vTemp)[4] );\n        ABC_SWAP( int, Vec_IntArray(vTemp)[1], Vec_IntArray(vTemp)[5] );\n        Gia_ManDualMux( pNew, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + 2, Vec_IntArray(vTemp) + 4, pRes );\n        return;\n    }\n    if ( Type == ABC_OPER_BIT_AND || Type == ABC_OPER_BIT_NAND )\n    {\n        Gia_ManDualAndN( pNew, Vec_IntArray(vTemp), Vec_IntSize(vTemp)/2, pRes );\n        if ( Type == ABC_OPER_BIT_NAND )\n            pRes[0] = Abc_LitNot( pRes[0] );\n        return;\n    }\n    if ( Type == ABC_OPER_BIT_OR || Type == ABC_OPER_BIT_NOR )\n    {\n        int * pArray = Vec_IntArray( vTemp );\n        for ( k = 0; k \u003c Vec_IntSize(vTemp)/2; k++ )\n            pArray[2*k] = Abc_LitNot( pArray[2*k] );\n        Gia_ManDualAndN( pNew, pArray, Vec_IntSize(vTemp)/2, pRes );\n        if ( Type == ABC_OPER_BIT_OR )\n            pRes[0] = Abc_LitNot( pRes[0] );\n        return;\n    }\n    if ( Type == ABC_OPER_BIT_XOR || Type == ABC_OPER_BIT_NXOR )\n    {\n        assert( Vec_IntSize(vTemp) == 4 );\n        Gia_ManDualXor2( pNew, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + 2, pRes );\n        if ( Type == ABC_OPER_BIT_NXOR )\n            pRes[0] = Abc_LitNot( pRes[0] );\n        return;\n    }\n    assert( 0 );\n}",
+      "Draft": "func Acb_ObjToGiaDual(pNew *Gia_Man_t, p *Acb_Ntk_t, iObj int32, vTemp *Vec_Int_t, vCopies *Vec_Int_t, pRes []int32) {\n    //char * pName = Abc_NamStr( p-\u003epDesign-\u003epStrs, Acb_ObjName(p, iObj) );\n    var pFanin *int32;\n    var iFanin int32;\n    var k int32;\n    var Type int32;\n    assert(!Acb_ObjIsCio(p, iObj), \"!Acb_ObjIsCio(p, iObj)\");\n    Vec_IntClear( vTemp );\n    // inlining of macro Acb_ObjForEachFaninFast\n    for  k = 0, pFanin = Acb_ObjFanins(p, iObj); k \u003c pFanin[0] \u0026\u0026 ((iFanin = pFanin[k+1]), 1); k++  {\n        var pLits *int32  = Vec_IntEntryP( vCopies, 2*iFanin );\n        assert(pLits[0] \u003e= 0 \u0026\u0026 pLits[1] \u003e= 0, \"pLits[0] \u003e= 0 \u0026\u0026 pLits[1] \u003e= 0\");\n        Vec_IntPushTwo( vTemp, pLits[0], pLits[1] );\n    }\n    Type = Acb_ObjType( p, iObj );\n    if Type == ABC_OPER_CONST_F {\n        pRes[0] = 0;\n        pRes[1] = 0;\n        return;\n    }\n    if Type == ABC_OPER_CONST_T {\n        pRes[0] = 1;\n        pRes[1] = 0;\n        return;\n    }\n    if Type == ABC_OPER_CONST_X {\n        pRes[0] = 0;\n        pRes[1] = 1;\n        return;\n    }\n    if Type == ABC_OPER_BIT_BUF {\n        pRes[0] = Vec_IntEntry(vTemp, 0);\n        pRes[1] = Vec_IntEntry(vTemp, 1);\n        return;\n    }\n    if Type == ABC_OPER_BIT_INV {\n        Gia_ManDualNot( pNew, Vec_IntArray(vTemp), pRes );\n        return;\n    }\n    if Type == ABC_OPER_TRI {\n        // in the file inputs are ordered as follows:  _DC \\n6_5[9] ( .O(\\108 ), .C(\\96 ), .D(\\107 ));\n        // in this code, we expect them as follows: void Gia_ManDualDc( Gia_Man_t * p, int LitC[2], int LitD[2], int LitZ[2] )\n        assert(Vec_IntSize(vTemp) == 4, \"Vec_IntSize(vTemp) == 4\");\n        Gia_ManDualDc( pNew, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + 2, pRes );\n        return;\n    }\n    if Type == ABC_OPER_BIT_MUX {\n        // in the file inputs are ordered as follows:  _HMUX \\U$1 ( .O(\\282 ), .I0(1'b1), .I1(\\277 ), .S(\\281 ));\n        // in this code, we expect them as follows: void Gia_ManDualMux( Gia_Man_t * p, int LitC[2], int LitT[2], int LitE[2], int LitZ[2] )\n        assert(Vec_IntSize(vTemp) == 6, \"Vec_IntSize(vTemp) == 6\");\n        // inlining of macro ABC_SWAP\n        { var t int32  = Vec_IntArray(vTemp)[0]; Vec_IntArray(vTemp)[0] = Vec_IntArray(vTemp)[4]; Vec_IntArray(vTemp)[4] = t; };\n        // inlining of macro ABC_SWAP\n        { var t int32  = Vec_IntArray(vTemp)[1]; Vec_IntArray(vTemp)[1] = Vec_IntArray(vTemp)[5]; Vec_IntArray(vTemp)[5] = t; };\n        Gia_ManDualMux( pNew, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + 2, Vec_IntArray(vTemp) + 4, pRes );\n        return;\n    }\n    if Type == ABC_OPER_BIT_AND || Type == ABC_OPER_BIT_NAND {\n        Gia_ManDualAndN( pNew, Vec_IntArray(vTemp), Vec_IntSize(vTemp)/2, pRes );\n        if Type == ABC_OPER_BIT_NAND {\n            pRes[0] = Abc_LitNot( pRes[0] ); }\n        return;\n    }\n    if Type == ABC_OPER_BIT_OR || Type == ABC_OPER_BIT_NOR {\n        var pArray *int32  = Vec_IntArray( vTemp );\n        for  k = 0; k \u003c Vec_IntSize(vTemp)/2; k++  {\n            pArray[2*k] = Abc_LitNot( pArray[2*k] );\n        }\n        Gia_ManDualAndN( pNew, pArray, Vec_IntSize(vTemp)/2, pRes );\n        if Type == ABC_OPER_BIT_OR {\n            pRes[0] = Abc_LitNot( pRes[0] ); }\n        return;\n    }\n    if Type == ABC_OPER_BIT_XOR || Type == ABC_OPER_BIT_NXOR {\n        assert(Vec_IntSize(vTemp) == 4, \"Vec_IntSize(vTemp) == 4\");\n        Gia_ManDualXor2( pNew, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + 2, pRes );\n        if Type == ABC_OPER_BIT_NXOR {\n            pRes[0] = Abc_LitNot( pRes[0] ); }\n        return;\n    }\n    assert(false, \"0\");\n}"
+    },
+    {
+      "Name": "Acb_NtkGiaDeriveDual",
+      "Start": 12427,
+      "End": 13677,
+      "BodyStart": 12477,
+      "Original": "Gia_Man_t * Acb_NtkGiaDeriveDual( Acb_Ntk_t * p )\n{\n    extern Vec_Int_t * Acb_NtkFindNodes2( Acb_Ntk_t * p );\n    Gia_Man_t * pNew, * pOne;\n    Vec_Int_t * vFanins, * vNodes;\n    Vec_Int_t * vCopies = Vec_IntStartFull( 2*Acb_NtkObjNum(p) );\n    int i, iObj, * pLits;\n    pNew = Gia_ManStart( 5 * Acb_NtkObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav(Acb_NtkName(p));\n    Gia_ManHashAlloc( pNew );\n    pLits = Vec_IntEntryP( vCopies, 0 );\n    pLits[0] = 0;\n    pLits[1] = 0;\n    Acb_NtkForEachCi( p, iObj, i )\n    {\n        pLits = Vec_IntEntryP( vCopies, 2*iObj );\n        pLits[0] = Gia_ManAppendCi(pNew);\n        pLits[1] = 0;\n    }\n    vFanins = Vec_IntAlloc( 4 );\n    vNodes  = Acb_NtkFindNodes2( p );\n    Vec_IntForEachEntry( vNodes, iObj, i )\n    {\n        pLits = Vec_IntEntryP( vCopies, 2*iObj );\n        Acb_ObjToGiaDual( pNew, p, iObj, vFanins, vCopies, pLits );\n    }\n    Vec_IntFree( vNodes );\n    Vec_IntFree( vFanins );\n    Acb_NtkForEachCo( p, iObj, i )\n    {\n        pLits = Vec_IntEntryP( vCopies, 2*Acb_ObjFanin(p, iObj, 0) );\n        Gia_ManAppendCo( pNew, pLits[0] );\n        Gia_ManAppendCo( pNew, pLits[1] );\n    }\n    Vec_IntFree( vCopies );\n    pNew = Gia_ManCleanup( pOne = pNew );\n    Gia_ManStop( pOne );\n    return pNew;\n}",
+      "Draft": "func Acb_NtkGiaDeriveDual(p *Acb_Ntk_t) *Gia_Man_t {\n    extern Vec_Int_t * Acb_NtkFindNodes2( Acb_Ntk_t * p );\n    var pNew, pOne *Gia_Man_t;\n    var vFanins, vNodes *Vec_Int_t;\n    var vCopies *Vec_Int_t  = Vec_IntStartFull( 2*Acb_NtkObjNum(p) );\n    var i int32;\n    var iObj int32;\n    var pLits *int32;\n    pNew = Gia_ManStart( 5 * Acb_NtkObjNum(p) );\n    pNew.pName = Abc_UtilStrsav(Acb_NtkName(p));\n    Gia_ManHashAlloc( pNew );\n    pLits = Vec_IntEntryP( vCopies, 0 );\n    pLits[0] = 0;\n    pLits[1] = 0;\n    // inlining of macro Acb_NtkForEachCi\n    for  i = 0; (i \u003c Acb_NtkCiNum(p))  \u0026\u0026 (((iObj) = Acb_NtkCi(p, i)), 1); i++  {\n        pLits = Vec_IntEntryP( vCopies, 2*iObj );\n        pLits[0] = Gia_ManAppendCi(pNew);\n        pLits[1] = 0;\n    }\n    vFanins = Vec_IntAlloc( 4 );\n    vNodes  = Acb_NtkFindNodes2( p );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((iObj) = Vec_IntEntry(vNodes, i)), 1); i++  {\n        pLits = Vec_IntEntryP( vCopies, 2*iObj );\n        Acb_ObjToGiaDual( pNew, p, iObj, vFanins, vCopies, pLits );\n    }\n    Vec_IntFree( vNodes );\n    Vec_IntFree( vFanins );\n    // inlining of macro Acb_NtkForEachCo\n    for  i = 0; (i \u003c Acb_NtkCoNum(p))  \u0026\u0026 (((iObj) = Acb_NtkCo(p, i)), 1); i++  {\n        pLits = Vec_IntEntryP( vCopies, 2*Acb_ObjFanin(p, iObj, 0) );\n        Gia_ManAppendCo( pNew, pLits[0] );\n        Gia_ManAppendCo( pNew, pLits[1] );\n    }\n    Vec_IntFree( vCopies );\n    pNew = Gia_ManCleanup( pOne = pNew );\n    Gia_ManStop( pOne );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Acb_NtkGiaDeriveMiter",
+      "Start": 13913,
+      "End": 16351,
+      "BodyStart": 13995,
+      "Original": "Gia_Man_t * Acb_NtkGiaDeriveMiter( Gia_Man_t * pOne, Gia_Man_t * pTwo, int Type )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj;\n    int i;\n    assert( Gia_ManCiNum(pOne) == Gia_ManCiNum(pTwo) );\n    assert( Gia_ManCoNum(pOne) == Gia_ManCoNum(pTwo) );\n    pNew = Gia_ManStart( Gia_ManObjNum(pOne) + Gia_ManObjNum(pTwo) + 5*Gia_ManCoNum(pOne)/2 );\n    pNew-\u003epName = Abc_UtilStrsav( \"miter\" );\n    pNew-\u003epSpec = NULL;\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(pOne)-\u003eValue = 0;\n    Gia_ManConst0(pTwo)-\u003eValue = 0;\n    Gia_ManForEachCi( pOne, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi( pNew );\n    Gia_ManForEachCi( pTwo, pObj, i )\n        pObj-\u003eValue = Gia_ManCi(pOne, i)-\u003eValue;\n    Gia_ManForEachAnd( pOne, pObj, i )\n        pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    Gia_ManForEachAnd( pTwo, pObj, i )\n        pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    Gia_ManForEachCo( pOne, pObj, i )\n        pObj-\u003eValue = Gia_ObjFanin0Copy(pObj);\n    Gia_ManForEachCo( pTwo, pObj, i )\n        pObj-\u003eValue = Gia_ObjFanin0Copy(pObj);\n    if ( Type == 0 ) // only main circuit\n    {\n        for ( i = 0; i \u003c Gia_ManCoNum(pOne); i += 2 )\n        {\n            int pLitsF[2] = { Gia_ManCo(pOne, i)-\u003eValue, Gia_ManCo(pOne, i+1)-\u003eValue };\n            int pLitsS[2] = { Gia_ManCo(pTwo, i)-\u003eValue, Gia_ManCo(pTwo, i+1)-\u003eValue };\n            Gia_ManAppendCo( pNew, pLitsF[0] );\n            Gia_ManAppendCo( pNew, pLitsS[0] );\n        }\n    }\n    else if ( Type == 1 ) // only shadow circuit\n    {\n        for ( i = 0; i \u003c Gia_ManCoNum(pOne); i += 2 )\n        {\n            int pLitsF[2] = { Gia_ManCo(pOne, i)-\u003eValue, Gia_ManCo(pOne, i+1)-\u003eValue };\n            int pLitsS[2] = { Gia_ManCo(pTwo, i)-\u003eValue, Gia_ManCo(pTwo, i+1)-\u003eValue };\n            Gia_ManAppendCo( pNew, pLitsF[1] );\n            Gia_ManAppendCo( pNew, pLitsS[1] );\n        }\n    }\n    else // comparator of the two\n    {\n        for ( i = 0; i \u003c Gia_ManCoNum(pOne); i += 2 )\n        {\n            int pLitsF[2] = { Gia_ManCo(pOne, i)-\u003eValue, Gia_ManCo(pOne, i+1)-\u003eValue };\n            int pLitsS[2] = { Gia_ManCo(pTwo, i)-\u003eValue, Gia_ManCo(pTwo, i+1)-\u003eValue };\n            Gia_ManAppendCo( pNew, Gia_ManDualCompare( pNew, pLitsF, pLitsS ) );\n        }\n    }\n    Gia_ManHashStop( pNew );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Acb_NtkGiaDeriveMiter(pOne *Gia_Man_t, pTwo *Gia_Man_t, Type int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(Gia_ManCiNum(pOne) == Gia_ManCiNum(pTwo), \"Gia_ManCiNum(pOne) == Gia_ManCiNum(pTwo)\");\n    assert(Gia_ManCoNum(pOne) == Gia_ManCoNum(pTwo), \"Gia_ManCoNum(pOne) == Gia_ManCoNum(pTwo)\");\n    pNew = Gia_ManStart( Gia_ManObjNum(pOne) + Gia_ManObjNum(pTwo) + 5*Gia_ManCoNum(pOne)/2 );\n    pNew.pName = Abc_UtilStrsav( \"miter\" );\n    pNew.pSpec = nil;\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(pOne).Value = 0;\n    Gia_ManConst0(pTwo).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pOne.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pOne, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pTwo.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pTwo, i)); i++  {\n        pObj.Value = Gia_ManCi(pOne, i).Value;\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pOne.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pOne, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pTwo.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pTwo, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pOne.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pOne, i)); i++  {\n        pObj.Value = Gia_ObjFanin0Copy(pObj);\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pTwo.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pTwo, i)); i++  {\n        pObj.Value = Gia_ObjFanin0Copy(pObj);\n    }\n    if Type == 0 { // only main circuit\n    \n        for  i = 0; i \u003c Gia_ManCoNum(pOne); i += 2  {\n            var pLitsF [2]int32 = [2]int32{ Gia_ManCo(pOne, i).Value, Gia_ManCo(pOne, i+1).Value };\n            var pLitsS [2]int32 = [2]int32{ Gia_ManCo(pTwo, i).Value, Gia_ManCo(pTwo, i+1).Value };\n            Gia_ManAppendCo( pNew, pLitsF[0] );\n            Gia_ManAppendCo( pNew, pLitsS[0] );\n        }\n    \n    } else if Type == 1 { // only shadow circuit\n    \n        for  i = 0; i \u003c Gia_ManCoNum(pOne); i += 2  {\n            var pLitsF [2]int32 = [2]int32{ Gia_ManCo(pOne, i).Value, Gia_ManCo(pOne, i+1).Value };\n            var pLitsS [2]int32 = [2]int32{ Gia_ManCo(pTwo, i).Value, Gia_ManCo(pTwo, i+1).Value };\n            Gia_ManAppendCo( pNew, pLitsF[1] );\n            Gia_ManAppendCo( pNew, pLitsS[1] );\n        }\n    \n    } else { // comparator of the two\n    \n        for  i = 0; i \u003c Gia_ManCoNum(pOne); i += 2  {\n            var pLitsF [2]int32 = [2]int32{ Gia_ManCo(pOne, i).Value, Gia_ManCo(pOne, i+1).Value };\n            var pLitsS [2]int32 = [2]int32{ Gia_ManCo(pTwo, i).Value, Gia_ManCo(pTwo, i+1).Value };\n            Gia_ManAppendCo( pNew, Gia_ManDualCompare( pNew, pLitsF, pLitsS ) );\n        }\n    }\n    Gia_ManHashStop( pNew );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Acb_OutputFile",
+      "Start": 16588,
+      "End": 17304,
+      "BodyStart": 16661,
+      "Original": "void Acb_OutputFile( char * pFileName, Acb_Ntk_t * pNtkF, int * pModel )\n{\n    char * pFileName0 = pFileName? pFileName : \"output\";\n    FILE * pFile = fopen( pFileName0, \"wb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open results file \\\"%s\\\".\\n\", pFileName0 );\n        return;\n    }\n    if ( pModel == NULL )\n        fprintf( pFile, \"EQ\\n\" );\n    else \n    {\n        /*\n        NEQ\n        in 1\n        a 1\n        b 0\n        */\n        int i, iObj;\n        fprintf( pFile, \"NEQ\\n\" );\n        Acb_NtkForEachPi( pNtkF, iObj, i )\n            fprintf( pFile, \"%s %d\\n\", Acb_ObjNameStr(pNtkF, iObj), pModel[i] );\n    }\n    fclose( pFile );\n    printf( \"Produced output file \\\"%s\\\".\\n\\n\", pFileName0 );\n}",
+      "Draft": "func Acb_OutputFile(pFileName string, pNtkF *Acb_Ntk_t, pModel *int32) {\n    var pFileName0 string;\n    if pFileName {\n        pFileName0 = pFileName;\n    } else {\n        pFileName0 = \"output\";\n    }\n    var pFile *os.File  = os.OpenFile(pFileName0, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open results file \\\"%s\\\".\\n\", pFileName0);\n        return;\n    }\n    if pModel == nil {\n        fmt.Fprintf(pFile, \"EQ\\n\");\n    } else {\n        /*\n        NEQ\n        in 1\n        a 1\n        b 0\n        */\n        var i, iObj int32;\n        fmt.Fprintf(pFile, \"NEQ\\n\");\n        // inlining of macro Acb_NtkForEachPi\n        for  i = 0; (i \u003c Acb_NtkPiNum(pNtkF))  \u0026\u0026 (((iObj) = Acb_NtkCi(pNtkF, i)), 1); i++  { \n            fmt.Fprintf(pFile, \"%s %d\\n\", Acb_ObjNameStr(pNtkF, iObj), pModel[i]);\n        }\n    }\n    _ = (pFile).Close();\n    fmt.Printf(\"Produced output file \\\"%s\\\".\\n\\n\", pFileName0);\n}"
+    },
+    {
+      "Name": "Acb_NtkSolve",
+      "Start": 17305,
+      "End": 18176,
+      "BodyStart": 17341,
+      "Original": "int * Acb_NtkSolve( Gia_Man_t * p )\n{\n    extern Abc_Ntk_t * Abc_NtkFromAigPhase( Aig_Man_t * pMan );\n    Aig_Man_t * pMan = Gia_ManToAig( p, 0 );\n    Abc_Ntk_t * pNtkTemp = Abc_NtkFromAigPhase( pMan );\n    Prove_Params_t Params, * pParams = \u0026Params;\n    Prove_ParamsSetDefault( pParams );\n    pParams-\u003efUseRewriting = 1;\n    pParams-\u003efVerbose      = 0;\n    Aig_ManStop( pMan );\n    if ( pNtkTemp )\n    {\n        abctime clk = Abc_Clock();\n        int RetValue = Abc_NtkIvyProve( \u0026pNtkTemp, pParams );\n        int * pModel = pNtkTemp-\u003epModel;\n        pNtkTemp-\u003epModel = NULL;\n        Abc_NtkDelete( pNtkTemp );\n        printf( \"The networks are %s.  \", RetValue == 1 ? \"equivalent\" : (RetValue == 0 ? \"NOT equivalent\" : \"UNDECIDED\") );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        if ( RetValue == 0 )\n            return pModel;\n    }\n    return NULL;\n}",
+      "Draft": "func Acb_NtkSolve(p *Gia_Man_t) *int32 {\n    extern Abc_Ntk_t * Abc_NtkFromAigPhase( Aig_Man_t * pMan );\n    var pMan *Aig_Man_t  = Gia_ManToAig( p, 0 );\n    var pNtkTemp *Abc_Ntk_t  = Abc_NtkFromAigPhase( pMan );\n    var Params Prove_Params_t;\n    var pParams *Prove_Params_t = \u0026Params;\n    Prove_ParamsSetDefault( pParams );\n    pParams.fUseRewriting = 1;\n    pParams.fVerbose      = 0;\n    Aig_ManStop( pMan );\n    if pNtkTemp != nil {\n        var clk abctime  = Abc_Clock();\n        var RetValue int32  = Abc_NtkIvyProve( \u0026pNtkTemp, pParams );\n        var pModel *int32  = pNtkTemp.pModel;\n        pNtkTemp.pModel = nil;\n        Abc_NtkDelete( pNtkTemp );\n        fmt.Printf(\"The networks are %s.  \", RetValue == 1 ? \"equivalent\" : (RetValue == 0 ? \"NOT equivalent\" : \"UNDECIDED\"));\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        if RetValue == 0 {\n            return pModel; }\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Acb_NtkPrintCecStats",
+      "Start": 18431,
+      "End": 18959,
+      "BodyStart": 18477,
+      "Original": "void Acb_NtkPrintCecStats( Acb_Ntk_t * pNtk )\n{\n    int iObj, nDcs = 0, nMuxes = 0;\n    Acb_NtkForEachNode( pNtk, iObj )\n        if ( Acb_ObjType( pNtk, iObj ) == ABC_OPER_TRI )\n            nDcs++;\n        else if ( Acb_ObjType( pNtk, iObj ) == ABC_OPER_BIT_MUX )\n            nMuxes++;\n\n    printf( \"PI = %6d  \",  Acb_NtkCiNum(pNtk) );\n    printf( \"PO = %6d  \",  Acb_NtkCoNum(pNtk) );\n    printf( \"Obj = %6d  \", Acb_NtkObjNum(pNtk) );\n    printf( \"DC = %4d  \",  nDcs );\n    printf( \"Mux = %4d  \", nMuxes );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Acb_NtkPrintCecStats(pNtk *Acb_Ntk_t) {\n    var iObj, nDcs, nMuxes int32;\n    // inlining of macro Acb_NtkForEachNode\n    for  iObj = 1; iObj \u003c Vec_StrSize(\u0026pNtk.vObjType); iObj++  { if !Acb_ObjType(pNtk, iObj) || Acb_ObjIsCio(pNtk, iObj) {} else   \n        if Acb_ObjType( pNtk, iObj ) == ABC_OPER_TRI {\n            nDcs++;\n        } else if Acb_ObjType( pNtk, iObj ) == ABC_OPER_BIT_MUX {\n            nMuxes++; }\n    }\n\n    fmt.Printf(\"PI = %6d  \", Acb_NtkCiNum(pNtk));\n    fmt.Printf(\"PO = %6d  \", Acb_NtkCoNum(pNtk));\n    fmt.Printf(\"Obj = %6d  \", Acb_NtkObjNum(pNtk));\n    fmt.Printf(\"DC = %4d  \", nDcs);\n    fmt.Printf(\"Mux = %4d  \", nMuxes);\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Acb_NtkUpdateCiOrder",
+      "Start": 19217,
+      "End": 20105,
+      "BodyStart": 19283,
+      "Original": "void Acb_NtkUpdateCiOrder( Acb_Ntk_t * pNtkF, Acb_Ntk_t * pNtkG )\n{\n    int i, iObj;\n    Vec_Int_t * vMap = Vec_IntStartFull( Acb_ManNameIdMax(pNtkG-\u003epDesign) );\n    Vec_Int_t * vOrder = Vec_IntStartFull( Acb_NtkCiNum(pNtkG) );\n    Acb_NtkForEachCi( pNtkG, iObj, i )\n        Vec_IntWriteEntry( vMap, Acb_ObjName(pNtkG, iObj), i );\n    Acb_NtkForEachCi( pNtkF, iObj, i )\n    {\n        int NameIdG = Acb_ManStrId( pNtkG-\u003epDesign, Acb_ObjNameStr(pNtkF, iObj) );\n        int iPerm = NameIdG \u003c Vec_IntSize(vMap) ? Vec_IntEntry( vMap, NameIdG ) : -1;\n        if ( iPerm == -1 )\n            printf( \"Cannot find name \\\"%s\\\" of PI %d of F among PIs of G.\\n\", Acb_ObjNameStr(pNtkF, iObj), i );\n        else\n            Vec_IntWriteEntry( vOrder, iPerm, iObj );\n    }\n    Vec_IntClear( \u0026pNtkF-\u003evCis );\n    Vec_IntAppend( \u0026pNtkF-\u003evCis, vOrder );\n    Vec_IntFree( vOrder );\n    Vec_IntFree( vMap );\n}",
+      "Draft": "func Acb_NtkUpdateCiOrder(pNtkF *Acb_Ntk_t, pNtkG *Acb_Ntk_t) {\n    var i, iObj int32;\n    var vMap *Vec_Int_t  = Vec_IntStartFull( Acb_ManNameIdMax(pNtkG.pDesign) );\n    var vOrder *Vec_Int_t  = Vec_IntStartFull( Acb_NtkCiNum(pNtkG) );\n    // inlining of macro Acb_NtkForEachCi\n    for  i = 0; (i \u003c Acb_NtkCiNum(pNtkG))  \u0026\u0026 (((iObj) = Acb_NtkCi(pNtkG, i)), 1); i++  { \n        Vec_IntWriteEntry( vMap, Acb_ObjName(pNtkG, iObj), i );\n    }\n    // inlining of macro Acb_NtkForEachCi\n    for  i = 0; (i \u003c Acb_NtkCiNum(pNtkF))  \u0026\u0026 (((iObj) = Acb_NtkCi(pNtkF, i)), 1); i++  {\n        var NameIdG int32  = Acb_ManStrId( pNtkG.pDesign, Acb_ObjNameStr(pNtkF, iObj) );\n        var iPerm int32;\n        if NameIdG \u003c Vec_IntSize(vMap) {\n            iPerm = Vec_IntEntry( vMap, NameIdG );\n        } else {\n            iPerm = -1;\n        }\n        if iPerm == -1 {\n            fmt.Printf(\"Cannot find name \\\"%s\\\" of PI %d of F among PIs of G.\\n\", Acb_ObjNameStr(pNtkF, iObj), i);\n        } else {\n            Vec_IntWriteEntry( vOrder, iPerm, iObj ); }\n    }\n    Vec_IntClear( \u0026pNtkF.vCis );\n    Vec_IntAppend( \u0026pNtkF.vCis, vOrder );\n    Vec_IntFree( vOrder );\n    Vec_IntFree( vMap );\n}"
+    },
+    {
+      "Name": "Acb_NtkCheckPiOrder",
+      "Start": 20106,
+      "End": 20835,
+      "BodyStart": 20170,
+      "Original": "int Acb_NtkCheckPiOrder( Acb_Ntk_t * pNtkF, Acb_Ntk_t * pNtkG )\n{\n    int i, nPis = Acb_NtkCiNum(pNtkF);\n    for ( i = 0; i \u003c nPis; i++ )\n    {\n        char * pNameF = Acb_ObjNameStr( pNtkF, Acb_NtkCi(pNtkF, i) );\n        char * pNameG = Acb_ObjNameStr( pNtkG, Acb_NtkCi(pNtkG, i) );\n        if ( strcmp(pNameF, pNameG) )\n        {\n//            printf( \"PI %d has different names (%s and %s) in these networks.\\n\", i, pNameF, pNameG );\n            printf( \"Networks have different PI names. Reordering PIs of the implementation network.\\n\" );\n            Acb_NtkUpdateCiOrder( pNtkF, pNtkG );\n            break;\n        }\n    }\n    if ( i == nPis )\n        printf( \"Networks have the same PI names.\\n\" );\n    return i == nPis;\n}",
+      "Draft": "func Acb_NtkCheckPiOrder(pNtkF *Acb_Ntk_t, pNtkG *Acb_Ntk_t) int32 {\n    var i int32;\n    var nPis int32 = Acb_NtkCiNum(pNtkF);\n    for  i = 0; i \u003c nPis; i++  {\n        var pNameF string  = Acb_ObjNameStr( pNtkF, Acb_NtkCi(pNtkF, i) );\n        var pNameG string  = Acb_ObjNameStr( pNtkG, Acb_NtkCi(pNtkG, i) );\n        if int32(strings.Compare(pNameF, pNameG)) != 0 {\n//            printf( \"PI %d has different names (%s and %s) in these networks.\\n\", i, pNameF, pNameG );\n            fmt.Printf(\"Networks have different PI names. Reordering PIs of the implementation network.\\n\");\n            Acb_NtkUpdateCiOrder( pNtkF, pNtkG );\n            break;\n        }\n    }\n    if i == nPis {\n        fmt.Printf(\"Networks have the same PI names.\\n\"); }\n    return i == nPis;\n}"
+    },
+    {
+      "Name": "Acb_NtkRunTest",
+      "Start": 21071,
+      "End": 22883,
+      "BodyStart": 21141,
+      "Original": "void Acb_NtkRunTest( char * pFileNames[4], int fFancy, int fVerbose )\n{\n    extern Acb_Ntk_t * Acb_VerilogSimpleRead( char * pFileName, char * pFileNameW );\n    extern void        Gia_AigerWrite( Gia_Man_t * p, char * pFileName, int fWriteSymbols, int fCompact, int fWriteNewLine );\n\n    int fSolve = 1;\n    int * pModel = NULL;\n    Gia_Man_t * pGiaF = NULL;\n    Gia_Man_t * pGiaG = NULL;\n    Gia_Man_t * pGia  = NULL;\n    Acb_Ntk_t * pNtkF = Acb_VerilogSimpleRead( pFileNames[0], NULL );\n    Acb_Ntk_t * pNtkG = Acb_VerilogSimpleRead( pFileNames[1], NULL );\n    if ( !pNtkF || !pNtkG )\n        return;\n        \n    assert( Acb_NtkCiNum(pNtkF) == Acb_NtkCiNum(pNtkG) );\n    assert( Acb_NtkCoNum(pNtkF) == Acb_NtkCoNum(pNtkG) );\n\n    Acb_NtkCheckPiOrder( pNtkF, pNtkG );\n    //Acb_NtkCheckPiOrder( pNtkG, pNtkF );\n    Acb_NtkPrintCecStats( pNtkF );\n    Acb_NtkPrintCecStats( pNtkG );\n\n    pGiaF = Acb_NtkGiaDeriveDual( pNtkF );\n    pGiaG = Acb_NtkGiaDeriveDual( pNtkG );\n    pGia  = Acb_NtkGiaDeriveMiter( pGiaF, pGiaG, 2 );\n    //Gia_AigerWrite( pGiaF, Extra_FileNameGenericAppend(pFileNames[1], \"_f2.aig\"), 0, 0, 0 );\n    //Gia_AigerWrite( pGiaG, Extra_FileNameGenericAppend(pFileNames[1], \"_g2.aig\"), 0, 0, 0 );\n    //Gia_AigerWrite( pGia,  Extra_FileNameGenericAppend(pFileNames[1], \"_miter_0.aig\"), 0, 0, 0 );\n    //printf( \"Written the miter info file \\\"%s\\\".\\n\", Extra_FileNameGenericAppend(pFileNames[1], \"_miter_0.aig\") );\n\n    //Gia_ManPrintStats( pGia, NULL );\n    //Gia_ManSimTry( pGiaF, pGiaG );\n\n    if ( fSolve )\n    {\n        pModel = Acb_NtkSolve( pGia );\n        Acb_OutputFile( pFileNames[2], pNtkF, pModel );\n        ABC_FREE( pModel );\n    }\n\n    Gia_ManStop( pGia );\n    Gia_ManStop( pGiaF );\n    Gia_ManStop( pGiaG );\n\n    Acb_ManFree( pNtkF-\u003epDesign );\n    Acb_ManFree( pNtkG-\u003epDesign );\n}",
+      "Draft": "func Acb_NtkRunTest(pFileNames []string, fFancy int32, fVerbose int32) {\n    extern Acb_Ntk_t * Acb_VerilogSimpleRead( char * pFileName, char * pFileNameW );\n    extern void        Gia_AigerWrite( Gia_Man_t * p, char * pFileName, int fWriteSymbols, int fCompact, int fWriteNewLine );\n\n    var fSolve int32  = 1;\n    var pModel *int32  = nil;\n    var pGiaF *Gia_Man_t  = nil;\n    var pGiaG *Gia_Man_t  = nil;\n    var pGia *Gia_Man_t   = nil;\n    var pNtkF *Acb_Ntk_t  = Acb_VerilogSimpleRead( pFileNames[0], nil );\n    var pNtkG *Acb_Ntk_t  = Acb_VerilogSimpleRead( pFileNames[1], nil );\n    if !(pNtkF != nil) || !(pNtkG != nil) {\n        return; }\n        \n    assert(Acb_NtkCiNum(pNtkF) == Acb_NtkCiNum(pNtkG), \"Acb_NtkCiNum(pNtkF) == Acb_NtkCiNum(pNtkG)\");\n    assert(Acb_NtkCoNum(pNtkF) == Acb_NtkCoNum(pNtkG), \"Acb_NtkCoNum(pNtkF) == Acb_NtkCoNum(pNtkG)\");\n\n    Acb_NtkCheckPiOrder( pNtkF, pNtkG );\n    //Acb_NtkCheckPiOrder( pNtkG, pNtkF );\n    Acb_NtkPrintCecStats( pNtkF );\n    Acb_NtkPrintCecStats( pNtkG );\n\n    pGiaF = Acb_NtkGiaDeriveDual( pNtkF );\n    pGiaG = Acb_NtkGiaDeriveDual( pNtkG );\n    pGia  = Acb_NtkGiaDeriveMiter( pGiaF, pGiaG, 2 );\n    //Gia_AigerWrite( pGiaF, Extra_FileNameGenericAppend(pFileNames[1], \"_f2.aig\"), 0, 0, 0 );\n    //Gia_AigerWrite( pGiaG, Extra_FileNameGenericAppend(pFileNames[1], \"_g2.aig\"), 0, 0, 0 );\n    //Gia_AigerWrite( pGia,  Extra_FileNameGenericAppend(pFileNames[1], \"_miter_0.aig\"), 0, 0, 0 );\n    //printf( \"Written the miter info file \\\"%s\\\".\\n\", Extra_FileNameGenericAppend(pFileNames[1], \"_miter_0.aig\") );\n\n    //Gia_ManPrintStats( pGia, NULL );\n    //Gia_ManSimTry( pGiaF, pGiaG );\n\n    if fSolve != 0 {\n        pModel = Acb_NtkSolve( pGia );\n        Acb_OutputFile( pFileNames[2], pNtkF, pModel );\n        // inlining of macro ABC_FREE\n        ((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);\n    }\n\n    Gia_ManStop( pGia );\n    Gia_ManStop( pGiaF );\n    Gia_ManStop( pGiaG );\n\n    Acb_ManFree( pNtkF.pDesign );\n    Acb_ManFree( pNtkG.pDesign );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::pointer-cast::24493",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22707,
+      "End": 22707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Gia_ManSimTry",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManSimTry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1385,
+      "End": 4597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Gia_ManDualNot",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDualNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4833,
+      "End": 5051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Gia_ManDualXor2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDualXor2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5138,
+      "End": 5417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Gia_ManDualXorN",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDualXorN",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5418,
+      "End": 5701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Gia_ManDualAnd2",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDualAnd2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5788,
+      "End": 6543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Gia_ManDualAndN",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDualAndN",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6544,
+      "End": 7129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Gia_ManDualDc",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDualDc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7217,
+      "End": 7548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Gia_ManDualMux",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDualMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7549,
+      "End": 8757
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Gia_ManDualCompare",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManDualCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8758,
+      "End": 9015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Acb_ObjToGiaDual",
+      "Category": "semantic-review",
+      "Symbol": "Acb_ObjToGiaDual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9251,
+      "End": 12426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Acb_NtkGiaDeriveDual",
+      "Category": "semantic-review",
+      "Symbol": "Acb_NtkGiaDeriveDual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12427,
+      "End": 13677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Acb_NtkGiaDeriveMiter",
+      "Category": "semantic-review",
+      "Symbol": "Acb_NtkGiaDeriveMiter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13913,
+      "End": 16351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Acb_OutputFile",
+      "Category": "semantic-review",
+      "Symbol": "Acb_OutputFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16588,
+      "End": 17304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::ternary::Acb_NtkSolve",
+      "Category": "ternary-review",
+      "Symbol": "Acb_NtkSolve",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17305,
+      "End": 18176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Acb_NtkSolve",
+      "Category": "semantic-review",
+      "Symbol": "Acb_NtkSolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17305,
+      "End": 18176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Acb_NtkPrintCecStats",
+      "Category": "semantic-review",
+      "Symbol": "Acb_NtkPrintCecStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18431,
+      "End": 18959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Acb_NtkUpdateCiOrder",
+      "Category": "semantic-review",
+      "Symbol": "Acb_NtkUpdateCiOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19217,
+      "End": 20105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Acb_NtkCheckPiOrder",
+      "Category": "semantic-review",
+      "Symbol": "Acb_NtkCheckPiOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20106,
+      "End": 20835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::ternary::Acb_NtkRunTest",
+      "Category": "ternary-review",
+      "Symbol": "Acb_NtkRunTest",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 21071,
+      "End": 22883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::Acb_NtkRunTest",
+      "Category": "semantic-review",
+      "Symbol": "Acb_NtkRunTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21071,
+      "End": 22883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/acb/acbTest.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 23131
+    }
+  ],
+  "Draft": "package acb\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [acbTest.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchical word-level netlist.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - July 21, 2015.]\n\n  Revision    [$Id: acbTest.c,v 1.00 2014/11/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"acb.h\"\n//#include \"aig/saig/saig.h\"\n//#include \"aig/gia/giaAig.h\"\n//#include \"base/abc/abc.h\"\n//#include \"proof/fraig/fraig.h\"\n//#include \"misc/util/utilTruth.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nvar fForceZero int32;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManSimTry(pF *Gia_Man_t, pG *Gia_Man_t) {\n    var i int32;\n    var j int32;\n    var n int32;\n    var nWords int32 = 500;\n    var vSimsF, vSimsG *Vec_Wrd_t;\n    Abc_Random(1);\n    Vec_WrdFreeP( \u0026pF.vSimsPi );\n    Vec_WrdFreeP( \u0026pG.vSimsPi );\n    pF.vSimsPi = Vec_WrdStartRandom( Gia_ManCiNum(pF) * nWords );\n    pG.vSimsPi = Vec_WrdDup( pF.vSimsPi );\n    vSimsF = Gia_ManSimPatSim( pF );\n    vSimsG = Gia_ManSimPatSim( pG );\n    assert(Gia_ManObjNum(pF) * nWords == Vec_WrdSize(vSimsF), \"Gia_ManObjNum(pF) * nWords == Vec_WrdSize(vSimsF)\");\n    for  i = 0; i \u003c Gia_ManCoNum(pF)/2; i++  {\n        var pObjFb *Gia_Obj_t  = Gia_ManCo( pF, 2*i+0 );\n        var pObjFx *Gia_Obj_t  = Gia_ManCo( pF, 2*i+1 );\n        var pObjGb *Gia_Obj_t  = Gia_ManCo( pG, 2*i+0 );\n        var pObjGx *Gia_Obj_t  = Gia_ManCo( pG, 2*i+1 );\n        var pSimFb *word  = Vec_WrdEntryP(vSimsF, Gia_ObjId(pF, pObjFb)*nWords);\n        var pSimFx *word  = Vec_WrdEntryP(vSimsF, Gia_ObjId(pF, pObjFx)*nWords);\n        var pSimGb *word  = Vec_WrdEntryP(vSimsG, Gia_ObjId(pG, pObjGb)*nWords);\n        var pSimGx *word  = Vec_WrdEntryP(vSimsG, Gia_ObjId(pG, pObjGx)*nWords);\n\n        var nBitsFx int32  = Abc_TtCountOnesVec(pSimFx, nWords);\n        var nBitsF1 int32  = Abc_TtCountOnesVecMask(pSimFx, pSimFb, nWords, 1);\n        var nBitsF0 int32  = nWords*64 - nBitsFx - nBitsF1;\n        \n        var nBitsGx int32  = Abc_TtCountOnesVec(pSimGx, nWords);\n        var nBitsG1 int32  = Abc_TtCountOnesVecMask(pSimGx, pSimGb, nWords, 1);\n        var nBitsG0 int32  = nWords*64 - nBitsGx - nBitsG1;\n        \n        fmt.Printf(\"Output %4d : \", i);\n\n        fmt.Printf(\"    RF :  \");\n        fmt.Printf(\"0 =%7.3f %%  \", 100.0*nBitsF0/64/nWords);\n        fmt.Printf(\"1 =%7.3f %%  \", 100.0*nBitsF1/64/nWords);\n        fmt.Printf(\"X =%7.3f %%  \", 100.0*nBitsFx/64/nWords);\n\n        fmt.Printf(\"   GF :  \");\n        fmt.Printf(\"0 =%7.3f %%  \", 100.0*nBitsG0/64/nWords);\n        fmt.Printf(\"1 =%7.3f %%  \", 100.0*nBitsG1/64/nWords);\n        fmt.Printf(\"X =%7.3f %%  \", 100.0*nBitsGx/64/nWords);\n\n        fmt.Printf(\"\\n\");\n        if i == 20 {\n            break; }\n    }\n\n    fmt.Printf(\"\\n\");\n    for  j = 0; j \u003c 20; j++  {\n        for  n = 0; n \u003c 2; n++  {\n            for  i = 0; i \u003c Gia_ManCoNum(pF)/2; i++  {\n                var pObjFb *Gia_Obj_t  = Gia_ManCo( pF, 2*i+0 );\n                var pObjFx *Gia_Obj_t  = Gia_ManCo( pF, 2*i+1 );\n                var pObjGb *Gia_Obj_t  = Gia_ManCo( pG, 2*i+0 );\n                var pObjGx *Gia_Obj_t  = Gia_ManCo( pG, 2*i+1 );\n                var pSimFb *word  = Vec_WrdEntryP(vSimsF, Gia_ObjId(pF, pObjFb)*nWords);\n                var pSimFx *word  = Vec_WrdEntryP(vSimsF, Gia_ObjId(pF, pObjFx)*nWords);\n                var pSimGb *word  = Vec_WrdEntryP(vSimsG, Gia_ObjId(pG, pObjGb)*nWords);\n                var pSimGx *word  = Vec_WrdEntryP(vSimsG, Gia_ObjId(pG, pObjGx)*nWords);\n                var pSimb *word;\n                if n != 0 {\n                    pSimb = pSimGb;\n                } else {\n                    pSimb = pSimFb;\n                }\n                var pSimx *word;\n                if n != 0 {\n                    pSimx = pSimGx;\n                } else {\n                    pSimx = pSimFx;\n                }\n                if Abc_TtGetBit(pSimx, j) {\n                    fmt.Printf(\"x\");\n                } else if Abc_TtGetBit(pSimb, j) {\n                    fmt.Printf(\"1\");\n                } else {\n                    fmt.Printf(\"0\"); }\n            }\n            fmt.Printf(\"\\n\");\n        }\n        fmt.Printf(\"\\n\");\n    }\n\n    Vec_WrdFree( vSimsF );\n    Vec_WrdFree( vSimsG );\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManDualNot(p *Gia_Man_t, LitA []int32, LitZ []int32) {\n    LitZ[0]   = Abc_LitNot(LitA[0]);\n    LitZ[1]   = LitA[1];\n    \n    if fForceZero != 0 { LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) ); }\n}\n// computes Z = XOR(A, B) where A, B, Z belong to {0,1,x} encoded as 0=00, 1=01, x=1-\nfunc Gia_ManDualXor2(p *Gia_Man_t, LitA []int32, LitB []int32, LitZ []int32) {\n    LitZ[0]   = Gia_ManHashXor( p, LitA[0], LitB[0] );\n    LitZ[1]   = Gia_ManHashOr( p, LitA[1], LitB[1] );\n    \n    if fForceZero != 0 { LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) ); }\n}\nfunc Gia_ManDualXorN(p *Gia_Man_t, pLits *int32, n int32, LitZ []int32) {\n    var i int32;\n    LitZ[0] = 0;\n    LitZ[1] = 0;\n    for  i = 0; i \u003c n; i++  {\n        LitZ[0] = Gia_ManHashXor( p, LitZ[0], pLits[2*i] );\n        LitZ[1] = Gia_ManHashOr ( p, LitZ[1], pLits[2*i+1] );\n    }\n}\n// computes Z = AND(A, B) where A, B, Z belong to {0,1,x} encoded as 0=00, 1=01, z=1-\nfunc Gia_ManDualAnd2(p *Gia_Man_t, LitA []int32, LitB []int32, LitZ []int32) {\n    var ZeroA int32  = Gia_ManHashAnd( p, Abc_LitNot(LitA[0]), Abc_LitNot(LitA[1]) );\n    var ZeroB int32  = Gia_ManHashAnd( p, Abc_LitNot(LitB[0]), Abc_LitNot(LitB[1]) );\n    var ZeroZ int32  = Gia_ManHashOr( p, ZeroA, ZeroB );\n    LitZ[0]   = Gia_ManHashAnd( p, LitA[0], LitB[0] );\n    LitZ[1]   = Gia_ManHashAnd( p, Gia_ManHashOr( p, LitA[1], LitB[1] ), Abc_LitNot(ZeroZ) );\n\n    //LitZ[0]   = Gia_ManHashAnd( p, Gia_ManHashAnd(p, LitA[0], Abc_LitNot(LitA[1])), Gia_ManHashAnd(p, LitB[0], Abc_LitNot(LitB[1])) );\n    //LitZ[1]   = Gia_ManHashAnd( p, Gia_ManHashOr(p, LitA[0], LitA[1]), Gia_ManHashOr(p, LitB[0], LitB[1]) );\n    //LitZ[1]   = Gia_ManHashAnd( p, LitZ[1], Abc_LitNot(LitZ[0]) );\n}\nfunc Gia_ManDualAndN(p *Gia_Man_t, pLits *int32, n int32, LitZ []int32) {\n    var i, LitZero, LitOne int32;\n    LitZ[0] = 1;\n    for  i = 0; i \u003c n; i++  {\n        var Lit int32  = Gia_ManHashAnd( p, Abc_LitNot(pLits[2*i]), Abc_LitNot(pLits[2*i+1]) );\n        LitZero = Gia_ManHashOr( p, LitZero, Lit );\n        LitOne  = Gia_ManHashOr( p, LitOne,  pLits[2*i+1] );\n        LitZ[0] = Gia_ManHashAnd( p, LitZ[0], pLits[2*i] );\n    }\n    LitZ[1] = Gia_ManHashAnd( p, LitOne, Abc_LitNot(LitZero) );\n    \n    if fForceZero != 0 { LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) ); }\n}\n/*\nmodule _DC(O, C, D);\n output O;\n input C, D;\n assign O = D ? 1'bx : C;\nendmodule\n*/\nfunc Gia_ManDualDc(p *Gia_Man_t, LitC []int32, LitD []int32, LitZ []int32) {\n    LitZ[0]   = LitC[0];\n//    LitZ[0]   = Gia_ManHashMux( p, LitD[0], 0, LitC[0] );\n    LitZ[1]   = Gia_ManHashOr(p, Gia_ManHashOr(p,LitD[0],LitD[1]), LitC[1] );\n    \n    if fForceZero != 0 { LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) ); }\n}\nfunc Gia_ManDualMux(p *Gia_Man_t, LitC []int32, LitT []int32, LitE []int32, LitZ []int32) {\n/*\n    // total logic size: 18 nodes\n    int Xnor = Gia_ManHashXor( p, Abc_LitNot(LitT[0]), LitE[0] );\n    int Cond = Gia_ManHashAnd( p, Abc_LitNot(LitT[1]), Abc_LitNot(LitE[1]) );\n    int pTempE[2], pTempT[2];\n    pTempE[0] = Gia_ManHashMux( p, LitC[0], LitT[0], LitE[0] );\n    pTempE[1] = Gia_ManHashMux( p, LitC[0], LitT[1], LitE[1] );\n    //pTempT[0] = LitT[0];\n    pTempT[0] = Gia_ManHashAnd( p, LitT[0], LitE[0] );\n    pTempT[1] = Gia_ManHashAnd( p, Cond, Xnor );\n    LitZ[0] = Gia_ManHashMux( p, LitC[1], pTempT[0], pTempE[0] );\n    LitZ[1] = Gia_ManHashMux( p, LitC[1], pTempT[1], pTempE[1] );\n*/\n    // total logic size: 14 nodes\n    var Xnor int32  = Gia_ManHashXor( p, Abc_LitNot(LitT[0]), LitE[0] );\n    var Cond int32  = Gia_ManHashAnd( p, Abc_LitNot(LitT[1]), Abc_LitNot(LitE[1]) );\n    var XVal1 int32  = Abc_LitNot( Gia_ManHashAnd( p, Cond, Xnor ) );\n    var XVal0 int32  = Gia_ManHashMux( p, LitC[0], LitT[1], LitE[1] );\n    LitZ[0] = Gia_ManHashMux( p, LitC[0], LitT[0], LitE[0] );\n    LitZ[1] = Gia_ManHashMux( p, LitC[1], XVal1, XVal0 );\n\n    if fForceZero != 0 { LitZ[0]   = Gia_ManHashAnd( p, LitZ[0], Abc_LitNot(LitZ[1]) ); }\n}\nfunc Gia_ManDualCompare(p *Gia_Man_t, LitF []int32, LitS []int32) int32 {\n    var iMiter int32  = Gia_ManHashXor( p, LitF[0], LitS[0] );\n    iMiter = Gia_ManHashOr( p, LitF[1], iMiter );\n    iMiter = Gia_ManHashAnd( p, Abc_LitNot(LitS[1]), iMiter );\n    return iMiter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acb_ObjToGiaDual(pNew *Gia_Man_t, p *Acb_Ntk_t, iObj int32, vTemp *Vec_Int_t, vCopies *Vec_Int_t, pRes []int32) {\n    //char * pName = Abc_NamStr( p-\u003epDesign-\u003epStrs, Acb_ObjName(p, iObj) );\n    var pFanin *int32;\n    var iFanin int32;\n    var k int32;\n    var Type int32;\n    assert(!Acb_ObjIsCio(p, iObj), \"!Acb_ObjIsCio(p, iObj)\");\n    Vec_IntClear( vTemp );\n    // inlining of macro Acb_ObjForEachFaninFast\n    for  k = 0, pFanin = Acb_ObjFanins(p, iObj); k \u003c pFanin[0] \u0026\u0026 ((iFanin = pFanin[k+1]), 1); k++  {\n        var pLits *int32  = Vec_IntEntryP( vCopies, 2*iFanin );\n        assert(pLits[0] \u003e= 0 \u0026\u0026 pLits[1] \u003e= 0, \"pLits[0] \u003e= 0 \u0026\u0026 pLits[1] \u003e= 0\");\n        Vec_IntPushTwo( vTemp, pLits[0], pLits[1] );\n    }\n    Type = Acb_ObjType( p, iObj );\n    if Type == ABC_OPER_CONST_F {\n        pRes[0] = 0;\n        pRes[1] = 0;\n        return;\n    }\n    if Type == ABC_OPER_CONST_T {\n        pRes[0] = 1;\n        pRes[1] = 0;\n        return;\n    }\n    if Type == ABC_OPER_CONST_X {\n        pRes[0] = 0;\n        pRes[1] = 1;\n        return;\n    }\n    if Type == ABC_OPER_BIT_BUF {\n        pRes[0] = Vec_IntEntry(vTemp, 0);\n        pRes[1] = Vec_IntEntry(vTemp, 1);\n        return;\n    }\n    if Type == ABC_OPER_BIT_INV {\n        Gia_ManDualNot( pNew, Vec_IntArray(vTemp), pRes );\n        return;\n    }\n    if Type == ABC_OPER_TRI {\n        // in the file inputs are ordered as follows:  _DC \\n6_5[9] ( .O(\\108 ), .C(\\96 ), .D(\\107 ));\n        // in this code, we expect them as follows: void Gia_ManDualDc( Gia_Man_t * p, int LitC[2], int LitD[2], int LitZ[2] )\n        assert(Vec_IntSize(vTemp) == 4, \"Vec_IntSize(vTemp) == 4\");\n        Gia_ManDualDc( pNew, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + 2, pRes );\n        return;\n    }\n    if Type == ABC_OPER_BIT_MUX {\n        // in the file inputs are ordered as follows:  _HMUX \\U$1 ( .O(\\282 ), .I0(1'b1), .I1(\\277 ), .S(\\281 ));\n        // in this code, we expect them as follows: void Gia_ManDualMux( Gia_Man_t * p, int LitC[2], int LitT[2], int LitE[2], int LitZ[2] )\n        assert(Vec_IntSize(vTemp) == 6, \"Vec_IntSize(vTemp) == 6\");\n        // inlining of macro ABC_SWAP\n        { var t int32  = Vec_IntArray(vTemp)[0]; Vec_IntArray(vTemp)[0] = Vec_IntArray(vTemp)[4]; Vec_IntArray(vTemp)[4] = t; };\n        // inlining of macro ABC_SWAP\n        { var t int32  = Vec_IntArray(vTemp)[1]; Vec_IntArray(vTemp)[1] = Vec_IntArray(vTemp)[5]; Vec_IntArray(vTemp)[5] = t; };\n        Gia_ManDualMux( pNew, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + 2, Vec_IntArray(vTemp) + 4, pRes );\n        return;\n    }\n    if Type == ABC_OPER_BIT_AND || Type == ABC_OPER_BIT_NAND {\n        Gia_ManDualAndN( pNew, Vec_IntArray(vTemp), Vec_IntSize(vTemp)/2, pRes );\n        if Type == ABC_OPER_BIT_NAND {\n            pRes[0] = Abc_LitNot( pRes[0] ); }\n        return;\n    }\n    if Type == ABC_OPER_BIT_OR || Type == ABC_OPER_BIT_NOR {\n        var pArray *int32  = Vec_IntArray( vTemp );\n        for  k = 0; k \u003c Vec_IntSize(vTemp)/2; k++  {\n            pArray[2*k] = Abc_LitNot( pArray[2*k] );\n        }\n        Gia_ManDualAndN( pNew, pArray, Vec_IntSize(vTemp)/2, pRes );\n        if Type == ABC_OPER_BIT_OR {\n            pRes[0] = Abc_LitNot( pRes[0] ); }\n        return;\n    }\n    if Type == ABC_OPER_BIT_XOR || Type == ABC_OPER_BIT_NXOR {\n        assert(Vec_IntSize(vTemp) == 4, \"Vec_IntSize(vTemp) == 4\");\n        Gia_ManDualXor2( pNew, Vec_IntArray(vTemp), Vec_IntArray(vTemp) + 2, pRes );\n        if Type == ABC_OPER_BIT_NXOR {\n            pRes[0] = Abc_LitNot( pRes[0] ); }\n        return;\n    }\n    assert(false, \"0\");\n}\nfunc Acb_NtkGiaDeriveDual(p *Acb_Ntk_t) *Gia_Man_t {\n    extern Vec_Int_t * Acb_NtkFindNodes2( Acb_Ntk_t * p );\n    var pNew, pOne *Gia_Man_t;\n    var vFanins, vNodes *Vec_Int_t;\n    var vCopies *Vec_Int_t  = Vec_IntStartFull( 2*Acb_NtkObjNum(p) );\n    var i int32;\n    var iObj int32;\n    var pLits *int32;\n    pNew = Gia_ManStart( 5 * Acb_NtkObjNum(p) );\n    pNew.pName = Abc_UtilStrsav(Acb_NtkName(p));\n    Gia_ManHashAlloc( pNew );\n    pLits = Vec_IntEntryP( vCopies, 0 );\n    pLits[0] = 0;\n    pLits[1] = 0;\n    // inlining of macro Acb_NtkForEachCi\n    for  i = 0; (i \u003c Acb_NtkCiNum(p))  \u0026\u0026 (((iObj) = Acb_NtkCi(p, i)), 1); i++  {\n        pLits = Vec_IntEntryP( vCopies, 2*iObj );\n        pLits[0] = Gia_ManAppendCi(pNew);\n        pLits[1] = 0;\n    }\n    vFanins = Vec_IntAlloc( 4 );\n    vNodes  = Acb_NtkFindNodes2( p );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 (((iObj) = Vec_IntEntry(vNodes, i)), 1); i++  {\n        pLits = Vec_IntEntryP( vCopies, 2*iObj );\n        Acb_ObjToGiaDual( pNew, p, iObj, vFanins, vCopies, pLits );\n    }\n    Vec_IntFree( vNodes );\n    Vec_IntFree( vFanins );\n    // inlining of macro Acb_NtkForEachCo\n    for  i = 0; (i \u003c Acb_NtkCoNum(p))  \u0026\u0026 (((iObj) = Acb_NtkCo(p, i)), 1); i++  {\n        pLits = Vec_IntEntryP( vCopies, 2*Acb_ObjFanin(p, iObj, 0) );\n        Gia_ManAppendCo( pNew, pLits[0] );\n        Gia_ManAppendCo( pNew, pLits[1] );\n    }\n    Vec_IntFree( vCopies );\n    pNew = Gia_ManCleanup( pOne = pNew );\n    Gia_ManStop( pOne );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acb_NtkGiaDeriveMiter(pOne *Gia_Man_t, pTwo *Gia_Man_t, Type int32) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(Gia_ManCiNum(pOne) == Gia_ManCiNum(pTwo), \"Gia_ManCiNum(pOne) == Gia_ManCiNum(pTwo)\");\n    assert(Gia_ManCoNum(pOne) == Gia_ManCoNum(pTwo), \"Gia_ManCoNum(pOne) == Gia_ManCoNum(pTwo)\");\n    pNew = Gia_ManStart( Gia_ManObjNum(pOne) + Gia_ManObjNum(pTwo) + 5*Gia_ManCoNum(pOne)/2 );\n    pNew.pName = Abc_UtilStrsav( \"miter\" );\n    pNew.pSpec = nil;\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(pOne).Value = 0;\n    Gia_ManConst0(pTwo).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pOne.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pOne, i)); i++  {\n        pObj.Value = Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(pTwo.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(pTwo, i)); i++  {\n        pObj.Value = Gia_ManCi(pOne, i).Value;\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pOne.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pOne, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c pTwo.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pTwo, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pOne.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pOne, i)); i++  {\n        pObj.Value = Gia_ObjFanin0Copy(pObj);\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pTwo.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pTwo, i)); i++  {\n        pObj.Value = Gia_ObjFanin0Copy(pObj);\n    }\n    if Type == 0 { // only main circuit\n    \n        for  i = 0; i \u003c Gia_ManCoNum(pOne); i += 2  {\n            var pLitsF [2]int32 = [2]int32{ Gia_ManCo(pOne, i).Value, Gia_ManCo(pOne, i+1).Value };\n            var pLitsS [2]int32 = [2]int32{ Gia_ManCo(pTwo, i).Value, Gia_ManCo(pTwo, i+1).Value };\n            Gia_ManAppendCo( pNew, pLitsF[0] );\n            Gia_ManAppendCo( pNew, pLitsS[0] );\n        }\n    \n    } else if Type == 1 { // only shadow circuit\n    \n        for  i = 0; i \u003c Gia_ManCoNum(pOne); i += 2  {\n            var pLitsF [2]int32 = [2]int32{ Gia_ManCo(pOne, i).Value, Gia_ManCo(pOne, i+1).Value };\n            var pLitsS [2]int32 = [2]int32{ Gia_ManCo(pTwo, i).Value, Gia_ManCo(pTwo, i+1).Value };\n            Gia_ManAppendCo( pNew, pLitsF[1] );\n            Gia_ManAppendCo( pNew, pLitsS[1] );\n        }\n    \n    } else { // comparator of the two\n    \n        for  i = 0; i \u003c Gia_ManCoNum(pOne); i += 2  {\n            var pLitsF [2]int32 = [2]int32{ Gia_ManCo(pOne, i).Value, Gia_ManCo(pOne, i+1).Value };\n            var pLitsS [2]int32 = [2]int32{ Gia_ManCo(pTwo, i).Value, Gia_ManCo(pTwo, i+1).Value };\n            Gia_ManAppendCo( pNew, Gia_ManDualCompare( pNew, pLitsF, pLitsS ) );\n        }\n    }\n    Gia_ManHashStop( pNew );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acb_OutputFile(pFileName string, pNtkF *Acb_Ntk_t, pModel *int32) {\n    var pFileName0 string;\n    if pFileName {\n        pFileName0 = pFileName;\n    } else {\n        pFileName0 = \"output\";\n    }\n    var pFile *os.File  = os.OpenFile(pFileName0, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open results file \\\"%s\\\".\\n\", pFileName0);\n        return;\n    }\n    if pModel == nil {\n        fmt.Fprintf(pFile, \"EQ\\n\");\n    } else {\n        /*\n        NEQ\n        in 1\n        a 1\n        b 0\n        */\n        var i, iObj int32;\n        fmt.Fprintf(pFile, \"NEQ\\n\");\n        // inlining of macro Acb_NtkForEachPi\n        for  i = 0; (i \u003c Acb_NtkPiNum(pNtkF))  \u0026\u0026 (((iObj) = Acb_NtkCi(pNtkF, i)), 1); i++  { \n            fmt.Fprintf(pFile, \"%s %d\\n\", Acb_ObjNameStr(pNtkF, iObj), pModel[i]);\n        }\n    }\n    _ = (pFile).Close();\n    fmt.Printf(\"Produced output file \\\"%s\\\".\\n\\n\", pFileName0);\n}\nfunc Acb_NtkSolve(p *Gia_Man_t) *int32 {\n    extern Abc_Ntk_t * Abc_NtkFromAigPhase( Aig_Man_t * pMan );\n    var pMan *Aig_Man_t  = Gia_ManToAig( p, 0 );\n    var pNtkTemp *Abc_Ntk_t  = Abc_NtkFromAigPhase( pMan );\n    var Params Prove_Params_t;\n    var pParams *Prove_Params_t = \u0026Params;\n    Prove_ParamsSetDefault( pParams );\n    pParams.fUseRewriting = 1;\n    pParams.fVerbose      = 0;\n    Aig_ManStop( pMan );\n    if pNtkTemp != nil {\n        var clk abctime  = Abc_Clock();\n        var RetValue int32  = Abc_NtkIvyProve( \u0026pNtkTemp, pParams );\n        var pModel *int32  = pNtkTemp.pModel;\n        pNtkTemp.pModel = nil;\n        Abc_NtkDelete( pNtkTemp );\n        fmt.Printf(\"The networks are %s.  \", RetValue == 1 ? \"equivalent\" : (RetValue == 0 ? \"NOT equivalent\" : \"UNDECIDED\"));\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n        if RetValue == 0 {\n            return pModel; }\n    }\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Various statistics.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acb_NtkPrintCecStats(pNtk *Acb_Ntk_t) {\n    var iObj, nDcs, nMuxes int32;\n    // inlining of macro Acb_NtkForEachNode\n    for  iObj = 1; iObj \u003c Vec_StrSize(\u0026pNtk.vObjType); iObj++  { if !Acb_ObjType(pNtk, iObj) || Acb_ObjIsCio(pNtk, iObj) {} else   \n        if Acb_ObjType( pNtk, iObj ) == ABC_OPER_TRI {\n            nDcs++;\n        } else if Acb_ObjType( pNtk, iObj ) == ABC_OPER_BIT_MUX {\n            nMuxes++; }\n    }\n\n    fmt.Printf(\"PI = %6d  \", Acb_NtkCiNum(pNtk));\n    fmt.Printf(\"PO = %6d  \", Acb_NtkCoNum(pNtk));\n    fmt.Printf(\"Obj = %6d  \", Acb_NtkObjNum(pNtk));\n    fmt.Printf(\"DC = %4d  \", nDcs);\n    fmt.Printf(\"Mux = %4d  \", nMuxes);\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Changing the PI order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acb_NtkUpdateCiOrder(pNtkF *Acb_Ntk_t, pNtkG *Acb_Ntk_t) {\n    var i, iObj int32;\n    var vMap *Vec_Int_t  = Vec_IntStartFull( Acb_ManNameIdMax(pNtkG.pDesign) );\n    var vOrder *Vec_Int_t  = Vec_IntStartFull( Acb_NtkCiNum(pNtkG) );\n    // inlining of macro Acb_NtkForEachCi\n    for  i = 0; (i \u003c Acb_NtkCiNum(pNtkG))  \u0026\u0026 (((iObj) = Acb_NtkCi(pNtkG, i)), 1); i++  { \n        Vec_IntWriteEntry( vMap, Acb_ObjName(pNtkG, iObj), i );\n    }\n    // inlining of macro Acb_NtkForEachCi\n    for  i = 0; (i \u003c Acb_NtkCiNum(pNtkF))  \u0026\u0026 (((iObj) = Acb_NtkCi(pNtkF, i)), 1); i++  {\n        var NameIdG int32  = Acb_ManStrId( pNtkG.pDesign, Acb_ObjNameStr(pNtkF, iObj) );\n        var iPerm int32;\n        if NameIdG \u003c Vec_IntSize(vMap) {\n            iPerm = Vec_IntEntry( vMap, NameIdG );\n        } else {\n            iPerm = -1;\n        }\n        if iPerm == -1 {\n            fmt.Printf(\"Cannot find name \\\"%s\\\" of PI %d of F among PIs of G.\\n\", Acb_ObjNameStr(pNtkF, iObj), i);\n        } else {\n            Vec_IntWriteEntry( vOrder, iPerm, iObj ); }\n    }\n    Vec_IntClear( \u0026pNtkF.vCis );\n    Vec_IntAppend( \u0026pNtkF.vCis, vOrder );\n    Vec_IntFree( vOrder );\n    Vec_IntFree( vMap );\n}\nfunc Acb_NtkCheckPiOrder(pNtkF *Acb_Ntk_t, pNtkG *Acb_Ntk_t) int32 {\n    var i int32;\n    var nPis int32 = Acb_NtkCiNum(pNtkF);\n    for  i = 0; i \u003c nPis; i++  {\n        var pNameF string  = Acb_ObjNameStr( pNtkF, Acb_NtkCi(pNtkF, i) );\n        var pNameG string  = Acb_ObjNameStr( pNtkG, Acb_NtkCi(pNtkG, i) );\n        if int32(strings.Compare(pNameF, pNameG)) != 0 {\n//            printf( \"PI %d has different names (%s and %s) in these networks.\\n\", i, pNameF, pNameG );\n            fmt.Printf(\"Networks have different PI names. Reordering PIs of the implementation network.\\n\");\n            Acb_NtkUpdateCiOrder( pNtkF, pNtkG );\n            break;\n        }\n    }\n    if i == nPis {\n        fmt.Printf(\"Networks have the same PI names.\\n\"); }\n    return i == nPis;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acb_NtkRunTest(pFileNames []string, fFancy int32, fVerbose int32) {\n    extern Acb_Ntk_t * Acb_VerilogSimpleRead( char * pFileName, char * pFileNameW );\n    extern void        Gia_AigerWrite( Gia_Man_t * p, char * pFileName, int fWriteSymbols, int fCompact, int fWriteNewLine );\n\n    var fSolve int32  = 1;\n    var pModel *int32  = nil;\n    var pGiaF *Gia_Man_t  = nil;\n    var pGiaG *Gia_Man_t  = nil;\n    var pGia *Gia_Man_t   = nil;\n    var pNtkF *Acb_Ntk_t  = Acb_VerilogSimpleRead( pFileNames[0], nil );\n    var pNtkG *Acb_Ntk_t  = Acb_VerilogSimpleRead( pFileNames[1], nil );\n    if !(pNtkF != nil) || !(pNtkG != nil) {\n        return; }\n        \n    assert(Acb_NtkCiNum(pNtkF) == Acb_NtkCiNum(pNtkG), \"Acb_NtkCiNum(pNtkF) == Acb_NtkCiNum(pNtkG)\");\n    assert(Acb_NtkCoNum(pNtkF) == Acb_NtkCoNum(pNtkG), \"Acb_NtkCoNum(pNtkF) == Acb_NtkCoNum(pNtkG)\");\n\n    Acb_NtkCheckPiOrder( pNtkF, pNtkG );\n    //Acb_NtkCheckPiOrder( pNtkG, pNtkF );\n    Acb_NtkPrintCecStats( pNtkF );\n    Acb_NtkPrintCecStats( pNtkG );\n\n    pGiaF = Acb_NtkGiaDeriveDual( pNtkF );\n    pGiaG = Acb_NtkGiaDeriveDual( pNtkG );\n    pGia  = Acb_NtkGiaDeriveMiter( pGiaF, pGiaG, 2 );\n    //Gia_AigerWrite( pGiaF, Extra_FileNameGenericAppend(pFileNames[1], \"_f2.aig\"), 0, 0, 0 );\n    //Gia_AigerWrite( pGiaG, Extra_FileNameGenericAppend(pFileNames[1], \"_g2.aig\"), 0, 0, 0 );\n    //Gia_AigerWrite( pGia,  Extra_FileNameGenericAppend(pFileNames[1], \"_miter_0.aig\"), 0, 0, 0 );\n    //printf( \"Written the miter info file \\\"%s\\\".\\n\", Extra_FileNameGenericAppend(pFileNames[1], \"_miter_0.aig\") );\n\n    //Gia_ManPrintStats( pGia, NULL );\n    //Gia_ManSimTry( pGiaF, pGiaG );\n\n    if fSolve != 0 {\n        pModel = Acb_NtkSolve( pGia );\n        Acb_OutputFile( pFileNames[2], pNtkF, pModel );\n        // inlining of macro ABC_FREE\n        ((pModel) ? (free((char *) (pModel)), (pModel) = 0) : 0);\n    }\n\n    Gia_ManStop( pGia );\n    Gia_ManStop( pGiaF );\n    Gia_ManStop( pGiaG );\n\n    Acb_ManFree( pNtkF.pDesign );\n    Acb_ManFree( pNtkG.pDesign );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

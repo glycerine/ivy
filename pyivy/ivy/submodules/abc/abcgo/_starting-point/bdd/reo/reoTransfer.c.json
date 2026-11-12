@@ -1,0 +1,266 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c",
+  "SHA256": "17685074556333e2f10e87be65933a5a35448c5acdf2c64d44ba023a8f97faaf",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 17,
+        "ByteOffset": 2194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pUnit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 17,
+        "ByteOffset": 5400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( bRes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 9,
+        "ByteOffset": 6444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( E != T );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 158,
+        "Column": 9,
+        "ByteOffset": 6470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !/*__starting_point_inline_macro:Cudd_IsComplement__*/(int32( ((ptrint) (T) \u0026 01))) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "reoTransferNodesToUnits_rec",
+      "Start": 1346,
+      "End": 3728,
+      "BodyStart": 1412,
+      "Original": "reo_unit * reoTransferNodesToUnits_rec( reo_man * p, DdNode * F )\n{\n    DdManager * dd = p-\u003edd;\n    reo_unit * pUnit;\n    int HKey = -1; // Suppress \"might be used uninitialized\"\n        int fComp;\n    \n    fComp = Cudd_IsComplement(F);\n    F = Cudd_Regular(F);\n\n    // check the hash-table\n    if ( F-\u003eref != 1 )\n    {\n        // search cache - use linear probing\n        for ( HKey = hashKey2(p-\u003eSignature,F,p-\u003enTableSize); p-\u003eHTable[HKey].Sign == p-\u003eSignature; HKey = (HKey+1) % p-\u003enTableSize )\n            if ( p-\u003eHTable[HKey].Arg1 == (reo_unit *)F )\n            {\n                pUnit = p-\u003eHTable[HKey].Arg2;  \n                assert( pUnit );\n                // increment the edge counter\n                pUnit-\u003en++;\n                return Unit_NotCond( pUnit, fComp );\n            }\n    }\n    // the entry in not found in the cache\n    \n    // create a new entry\n    pUnit         = reoUnitsGetNextUnit( p );\n    pUnit-\u003en      = 1;\n    if ( cuddIsConstant(F) )\n    {\n        pUnit-\u003elev    = REO_CONST_LEVEL;\n        pUnit-\u003epE     = (reo_unit*)(ABC_PTRUINT_T)(cuddV(F));\n        pUnit-\u003epT     = NULL;\n        // check if the diagram that is being reordering has complement edges\n        if ( F != dd-\u003eone )\n            p-\u003efThisIsAdd = 1;\n        // insert the unit into the corresponding plane\n        reoUnitsAddUnitToPlane( \u0026(p-\u003epPlanes[p-\u003enSupp]), pUnit ); // increments the unit counter\n    }\n    else\n    {\n        pUnit-\u003elev    = p-\u003epMapToPlanes[F-\u003eindex];\n        pUnit-\u003epE     = reoTransferNodesToUnits_rec( p, cuddE(F) );\n        pUnit-\u003epT     = reoTransferNodesToUnits_rec( p, cuddT(F) );\n        // insert the unit into the corresponding plane\n        reoUnitsAddUnitToPlane( \u0026(p-\u003epPlanes[pUnit-\u003elev]), pUnit ); // increments the unit counter\n    }\n\n    // add to the hash table\n    if ( F-\u003eref != 1 )\n    {\n        // the next free entry is already found - it is pointed to by HKey\n        // while we traversed the diagram, the hash entry to which HKey points,\n        // might have been used. Make sure that its signature is different.\n        for ( ; p-\u003eHTable[HKey].Sign == p-\u003eSignature; HKey = (HKey+1) % p-\u003enTableSize );\n        p-\u003eHTable[HKey].Sign = p-\u003eSignature;\n        p-\u003eHTable[HKey].Arg1 = (reo_unit *)F;\n        p-\u003eHTable[HKey].Arg2 = pUnit;\n    }\n\n    // increment the counter of nodes\n    p-\u003enNodesCur++;\n    return Unit_NotCond( pUnit, fComp );\n}",
+      "Draft": "func reoTransferNodesToUnits_rec(p *reo_man, F *DdNode) *reo_unit {\n    var dd *DdManager  = p.dd;\n    var pUnit *reo_unit;\n    var HKey int32  = -1; // Suppress \"might be used uninitialized\"\n        var fComp int32;\n    \n    // inlining of macro Cudd_IsComplement\n    fComp = (int32( ((ptrint) (F) \u0026 01)));\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(F) \u0026 ~01));\n\n    // check the hash-table\n    if F.ref != 1 {\n        // search cache - use linear probing\n        // inlining of macro hashKey2\n        for  HKey = (((ABC_PTRUINT_T)(p.Signature) + (ABC_PTRUINT_T)(F) * DD_P1) % p.nTableSize); p.HTable[HKey].Sign == p.Signature; HKey = (HKey+1) % p.nTableSize  {\n            if p.HTable[HKey].Arg1 == (reo_unit *)F {\n                pUnit = p.HTable[HKey].Arg2;  \n                assert((pUnit != nil), \"pUnit\");\n                // increment the edge counter\n                pUnit.n++;\n                // inlining of macro Unit_NotCond\n                return ((reo_unit *)((ABC_PTRUINT_T)(pUnit) ^ (fComp)));\n            }\n        }\n    }\n    // the entry in not found in the cache\n    \n    // create a new entry\n    pUnit         = reoUnitsGetNextUnit( p );\n    pUnit.n      = 1;\n    // inlining of macro cuddIsConstant\n    if  (F).index == CUDD_CONST_INDEX {\n        pUnit.lev    = REO_CONST_LEVEL;\n        // inlining of macro cuddV\n        pUnit.pE     = (reo_unit*)(ABC_PTRUINT_T)(((F).type.value));\n        pUnit.pT     = nil;\n        // check if the diagram that is being reordering has complement edges\n        if F != dd.one {\n            p.fThisIsAdd = 1; }\n        // insert the unit into the corresponding plane\n        reoUnitsAddUnitToPlane( \u0026(p.pPlanes[p.nSupp]), pUnit ); // increments the unit counter\n    \n    } else {\n        pUnit.lev    = p.pMapToPlanes[F.index];\n        // inlining of macro cuddE\n        pUnit.pE     = reoTransferNodesToUnits_rec( p, ((F).type.kids.E) );\n        // inlining of macro cuddT\n        pUnit.pT     = reoTransferNodesToUnits_rec( p, ((F).type.kids.T) );\n        // insert the unit into the corresponding plane\n        reoUnitsAddUnitToPlane( \u0026(p.pPlanes[pUnit.lev]), pUnit ); // increments the unit counter\n    }\n\n    // add to the hash table\n    if F.ref != 1 {\n        // the next free entry is already found - it is pointed to by HKey\n        // while we traversed the diagram, the hash entry to which HKey points,\n        // might have been used. Make sure that its signature is different.\n        for  ; p.HTable[HKey].Sign == p.Signature; HKey = (HKey+1) % p.nTableSize  {}\n        p.HTable[HKey].Sign = p.Signature;\n        p.HTable[HKey].Arg1 = (reo_unit *)F;\n        p.HTable[HKey].Arg2 = pUnit;\n    }\n\n    // increment the counter of nodes\n    p.nNodesCur++;\n    // inlining of macro Unit_NotCond\n    return ((reo_unit *)((ABC_PTRUINT_T)(pUnit) ^ (fComp)));\n}"
+    },
+    {
+      "Name": "reoTransferUnitsToNodes_rec",
+      "Start": 4056,
+      "End": 6716,
+      "BodyStart": 4126,
+      "Original": "DdNode * reoTransferUnitsToNodes_rec( reo_man * p, reo_unit * pUnit )\n{\n    DdManager * dd = p-\u003edd;\n    DdNode * bRes, * E, * T;\n    int HKey = -1; // Suppress \"might be used uninitialized\"\n        int fComp;\n\n    fComp = Cudd_IsComplement(pUnit);\n    pUnit = Unit_Regular(pUnit);\n\n    // check the hash-table\n    if ( pUnit-\u003en != 1 )\n    {\n        for ( HKey = hashKey2(p-\u003eSignature,pUnit,p-\u003enTableSize); p-\u003eHTable[HKey].Sign == p-\u003eSignature; HKey = (HKey+1) % p-\u003enTableSize )\n            if ( p-\u003eHTable[HKey].Arg1 == pUnit )\n            {\n                bRes = (DdNode*) p-\u003eHTable[HKey].Arg2;  \n                assert( bRes );\n                return Cudd_NotCond( bRes, fComp );\n            }\n    }\n\n    // treat the case of constants\n    if ( Unit_IsConstant(pUnit) )\n    {\n        bRes = cuddUniqueConst( dd, ((double)((int)(ABC_PTRUINT_T)(pUnit-\u003epE))) );\n        cuddRef( bRes );\n    }\n    else\n    {\n        // split and recur on children of this node\n        E = reoTransferUnitsToNodes_rec( p, pUnit-\u003epE );\n        if ( E == NULL )\n            return NULL;\n        cuddRef(E);\n\n        T = reoTransferUnitsToNodes_rec( p, pUnit-\u003epT );\n        if ( T == NULL )\n        {\n            Cudd_RecursiveDeref(dd, E);\n            return NULL;\n        }\n        cuddRef(T);\n        \n        // consider the case when Res0 and Res1 are the same node\n        assert( E != T );\n        assert( !Cudd_IsComplement(T) );\n\n        bRes = cuddUniqueInter( dd, p-\u003epMapToDdVarsFinal[pUnit-\u003elev], T, E );\n        if ( bRes == NULL ) \n        {\n            Cudd_RecursiveDeref(dd,E);\n            Cudd_RecursiveDeref(dd,T);\n            return NULL;\n        }\n        cuddRef( bRes );\n        cuddDeref( E );\n        cuddDeref( T );\n    }\n\n    // do not keep the result if the ref count is only 1, since it will not be visited again\n    if ( pUnit-\u003en != 1 )\n    {\n         // while we traversed the diagram, the hash entry to which HKey points,\n         // might have been used. Make sure that its signature is different.\n         for ( ; p-\u003eHTable[HKey].Sign == p-\u003eSignature; HKey = (HKey+1) % p-\u003enTableSize );\n         p-\u003eHTable[HKey].Sign = p-\u003eSignature;\n         p-\u003eHTable[HKey].Arg1 = pUnit;\n         p-\u003eHTable[HKey].Arg2 = (reo_unit *)bRes;  \n\n         // add the DD to the referenced DD list in order to be able to store it in cache\n         p-\u003epRefNodes[p-\u003enRefNodes++] = bRes;  Cudd_Ref( bRes ); \n         // no need to do this, because the garbage collection will not take bRes away\n         // it is held by the diagram in the making\n    }\n    // increment the counter of nodes\n    p-\u003enNodesCur++;\n    cuddDeref( bRes );\n    return Cudd_NotCond( bRes, fComp );\n}",
+      "Draft": "func reoTransferUnitsToNodes_rec(p *reo_man, pUnit *reo_unit) *DdNode {\n    var dd *DdManager  = p.dd;\n    var bRes, E, T *DdNode;\n    var HKey int32  = -1; // Suppress \"might be used uninitialized\"\n        var fComp int32;\n\n    // inlining of macro Cudd_IsComplement\n    fComp = (int32( ((ptrint) (pUnit) \u0026 01)));\n    // inlining of macro Unit_Regular\n    pUnit = ((reo_unit *)((ABC_PTRUINT_T)(pUnit) \u0026 ~01));\n\n    // check the hash-table\n    if pUnit.n != 1 {\n        // inlining of macro hashKey2\n        for  HKey = (((ABC_PTRUINT_T)(p.Signature) + (ABC_PTRUINT_T)(pUnit) * DD_P1) % p.nTableSize); p.HTable[HKey].Sign == p.Signature; HKey = (HKey+1) % p.nTableSize  {\n            if p.HTable[HKey].Arg1 == pUnit {\n                bRes = (DdNode*) p.HTable[HKey].Arg2;  \n                assert(bRes, \"bRes\");\n                // inlining of macro Cudd_NotCond\n                return ((DdNode *)((ptrint)(bRes) ^ (fComp)));\n            }\n        }\n    }\n\n    // treat the case of constants\n    // inlining of macro Unit_IsConstant\n    if  int32(((pUnit).lev == REO_CONST_LEVEL)) != 0 {\n        bRes = cuddUniqueConst( dd, (float64((int32((ABC_PTRUINT_T)(pUnit.pE))))) );\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes).ref);\n    \n    } else {\n        // split and recur on children of this node\n        E = reoTransferUnitsToNodes_rec( p, pUnit.pE );\n        if E == nil {\n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(E).ref);\n\n        T = reoTransferUnitsToNodes_rec( p, pUnit.pT );\n        if T == nil {\n            Cudd_RecursiveDeref(dd, E);\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(T).ref);\n        \n        // consider the case when Res0 and Res1 are the same node\n        assert(E != T, \"E != T\");\n        // inlining of macro Cudd_IsComplement\n        assert(!((int32( ((ptrint) (T) \u0026 01)) != 0)), \"!/*__starting_point_inline_macro:Cudd_IsComplement__*/(int32( ((ptrint) (T) \u0026 01)))\");\n\n        bRes = cuddUniqueInter( dd, p.pMapToDdVarsFinal[pUnit.lev], T, E );\n        if bRes == nil {\n            Cudd_RecursiveDeref(dd,E);\n            Cudd_RecursiveDeref(dd,T);\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(E).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(T).ref);\n    }\n\n    // do not keep the result if the ref count is only 1, since it will not be visited again\n    if pUnit.n != 1 {\n         // while we traversed the diagram, the hash entry to which HKey points,\n         // might have been used. Make sure that its signature is different.\n         for  ; p.HTable[HKey].Sign == p.Signature; HKey = (HKey+1) % p.nTableSize  {}\n         p.HTable[HKey].Sign = p.Signature;\n         p.HTable[HKey].Arg1 = pUnit;\n         p.HTable[HKey].Arg2 = (reo_unit *)bRes;  \n\n         // add the DD to the referenced DD list in order to be able to store it in cache\n         p.pRefNodes[p.nRefNodes++] = bRes;  Cudd_Ref( bRes ); \n         // no need to do this, because the garbage collection will not take bRes away\n         // it is held by the diagram in the making\n    }\n    // increment the counter of nodes\n    p.nNodesCur++;\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(bRes).ref);\n    // inlining of macro Cudd_NotCond\n    return ((DdNode *)((ptrint)(bRes) ^ (fComp)));\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::pointer-cast::1700",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1591,
+      "End": 1591
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::pointer-cast::2094",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1885,
+      "End": 1897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::pointer-cast::2351",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2093,
+      "End": 2093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::pointer-cast::2728",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2386,
+      "End": 2397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::pointer-cast::4062",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3568,
+      "End": 3580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::pointer-cast::4240",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3697,
+      "End": 3697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::pointer-cast::4987",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4316,
+      "End": 4316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::pointer-cast::5399",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4620,
+      "End": 4629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::pointer-cast::5537",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4709,
+      "End": 4709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::pointer-cast::7621",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6272,
+      "End": 6284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::pointer-cast::8147",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6686,
+      "End": 6686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::reoTransferNodesToUnits_rec",
+      "Category": "semantic-review",
+      "Symbol": "reoTransferNodesToUnits_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1346,
+      "End": 3728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::reoTransferUnitsToNodes_rec",
+      "Category": "semantic-review",
+      "Symbol": "reoTransferUnitsToNodes_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4056,
+      "End": 6716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::macro-inline::4925",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4925,
+      "End": 4940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::macro-inline::5130",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5130,
+      "End": 5140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::macro-inline::5318",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5318,
+      "End": 5328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::macro-inline::5711",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5711,
+      "End": 5726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::macro-inline::5736",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5736,
+      "End": 5750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::macro-inline::5760",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5760,
+      "End": 5774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoTransfer.c::macro-inline::6656",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6656,
+      "End": 6673
+    }
+  ],
+  "Draft": "package reo\n\n/**CFile****************************************************************\n\n  FileName    [reoTransfer.c]\n\n  PackageName [REO: A specialized DD reordering engine.]\n\n  Synopsis    [Transfering a DD from the CUDD manager into REO\"s internal data structures and back.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 15, 2002.]\n\n  Revision    [$Id: reoTransfer.c,v 1.0 2002/15/10 03:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"reo.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the DD into the internal reordering data structure.]\n\n  Description [It is important that the hash table is lossless.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc reoTransferNodesToUnits_rec(p *reo_man, F *DdNode) *reo_unit {\n    var dd *DdManager  = p.dd;\n    var pUnit *reo_unit;\n    var HKey int32  = -1; // Suppress \"might be used uninitialized\"\n        var fComp int32;\n    \n    // inlining of macro Cudd_IsComplement\n    fComp = (int32( ((ptrint) (F) \u0026 01)));\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(F) \u0026 ~01));\n\n    // check the hash-table\n    if F.ref != 1 {\n        // search cache - use linear probing\n        // inlining of macro hashKey2\n        for  HKey = (((ABC_PTRUINT_T)(p.Signature) + (ABC_PTRUINT_T)(F) * DD_P1) % p.nTableSize); p.HTable[HKey].Sign == p.Signature; HKey = (HKey+1) % p.nTableSize  {\n            if p.HTable[HKey].Arg1 == (reo_unit *)F {\n                pUnit = p.HTable[HKey].Arg2;  \n                assert((pUnit != nil), \"pUnit\");\n                // increment the edge counter\n                pUnit.n++;\n                // inlining of macro Unit_NotCond\n                return ((reo_unit *)((ABC_PTRUINT_T)(pUnit) ^ (fComp)));\n            }\n        }\n    }\n    // the entry in not found in the cache\n    \n    // create a new entry\n    pUnit         = reoUnitsGetNextUnit( p );\n    pUnit.n      = 1;\n    // inlining of macro cuddIsConstant\n    if  (F).index == CUDD_CONST_INDEX {\n        pUnit.lev    = REO_CONST_LEVEL;\n        // inlining of macro cuddV\n        pUnit.pE     = (reo_unit*)(ABC_PTRUINT_T)(((F).type.value));\n        pUnit.pT     = nil;\n        // check if the diagram that is being reordering has complement edges\n        if F != dd.one {\n            p.fThisIsAdd = 1; }\n        // insert the unit into the corresponding plane\n        reoUnitsAddUnitToPlane( \u0026(p.pPlanes[p.nSupp]), pUnit ); // increments the unit counter\n    \n    } else {\n        pUnit.lev    = p.pMapToPlanes[F.index];\n        // inlining of macro cuddE\n        pUnit.pE     = reoTransferNodesToUnits_rec( p, ((F).type.kids.E) );\n        // inlining of macro cuddT\n        pUnit.pT     = reoTransferNodesToUnits_rec( p, ((F).type.kids.T) );\n        // insert the unit into the corresponding plane\n        reoUnitsAddUnitToPlane( \u0026(p.pPlanes[pUnit.lev]), pUnit ); // increments the unit counter\n    }\n\n    // add to the hash table\n    if F.ref != 1 {\n        // the next free entry is already found - it is pointed to by HKey\n        // while we traversed the diagram, the hash entry to which HKey points,\n        // might have been used. Make sure that its signature is different.\n        for  ; p.HTable[HKey].Sign == p.Signature; HKey = (HKey+1) % p.nTableSize  {}\n        p.HTable[HKey].Sign = p.Signature;\n        p.HTable[HKey].Arg1 = (reo_unit *)F;\n        p.HTable[HKey].Arg2 = pUnit;\n    }\n\n    // increment the counter of nodes\n    p.nNodesCur++;\n    // inlining of macro Unit_NotCond\n    return ((reo_unit *)((ABC_PTRUINT_T)(pUnit) ^ (fComp)));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the DD from the internal reordering data structure.]\n\n  Description [It is important that the hash table is lossless.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc reoTransferUnitsToNodes_rec(p *reo_man, pUnit *reo_unit) *DdNode {\n    var dd *DdManager  = p.dd;\n    var bRes, E, T *DdNode;\n    var HKey int32  = -1; // Suppress \"might be used uninitialized\"\n        var fComp int32;\n\n    // inlining of macro Cudd_IsComplement\n    fComp = (int32( ((ptrint) (pUnit) \u0026 01)));\n    // inlining of macro Unit_Regular\n    pUnit = ((reo_unit *)((ABC_PTRUINT_T)(pUnit) \u0026 ~01));\n\n    // check the hash-table\n    if pUnit.n != 1 {\n        // inlining of macro hashKey2\n        for  HKey = (((ABC_PTRUINT_T)(p.Signature) + (ABC_PTRUINT_T)(pUnit) * DD_P1) % p.nTableSize); p.HTable[HKey].Sign == p.Signature; HKey = (HKey+1) % p.nTableSize  {\n            if p.HTable[HKey].Arg1 == pUnit {\n                bRes = (DdNode*) p.HTable[HKey].Arg2;  \n                assert(bRes, \"bRes\");\n                // inlining of macro Cudd_NotCond\n                return ((DdNode *)((ptrint)(bRes) ^ (fComp)));\n            }\n        }\n    }\n\n    // treat the case of constants\n    // inlining of macro Unit_IsConstant\n    if  int32(((pUnit).lev == REO_CONST_LEVEL)) != 0 {\n        bRes = cuddUniqueConst( dd, (float64((int32((ABC_PTRUINT_T)(pUnit.pE))))) );\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes).ref);\n    \n    } else {\n        // split and recur on children of this node\n        E = reoTransferUnitsToNodes_rec( p, pUnit.pE );\n        if E == nil {\n            return nil; }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(E).ref);\n\n        T = reoTransferUnitsToNodes_rec( p, pUnit.pT );\n        if T == nil {\n            Cudd_RecursiveDeref(dd, E);\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(T).ref);\n        \n        // consider the case when Res0 and Res1 are the same node\n        assert(E != T, \"E != T\");\n        // inlining of macro Cudd_IsComplement\n        assert(!((int32( ((ptrint) (T) \u0026 01)) != 0)), \"!/*__starting_point_inline_macro:Cudd_IsComplement__*/(int32( ((ptrint) (T) \u0026 01)))\");\n\n        bRes = cuddUniqueInter( dd, p.pMapToDdVarsFinal[pUnit.lev], T, E );\n        if bRes == nil {\n            Cudd_RecursiveDeref(dd,E);\n            Cudd_RecursiveDeref(dd,T);\n            return nil;\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(bRes).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(E).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(T).ref);\n    }\n\n    // do not keep the result if the ref count is only 1, since it will not be visited again\n    if pUnit.n != 1 {\n         // while we traversed the diagram, the hash entry to which HKey points,\n         // might have been used. Make sure that its signature is different.\n         for  ; p.HTable[HKey].Sign == p.Signature; HKey = (HKey+1) % p.nTableSize  {}\n         p.HTable[HKey].Sign = p.Signature;\n         p.HTable[HKey].Arg1 = pUnit;\n         p.HTable[HKey].Arg2 = (reo_unit *)bRes;  \n\n         // add the DD to the referenced DD list in order to be able to store it in cache\n         p.pRefNodes[p.nRefNodes++] = bRes;  Cudd_Ref( bRes ); \n         // no need to do this, because the garbage collection will not take bRes away\n         // it is held by the diagram in the making\n    }\n    // increment the counter of nodes\n    p.nNodesCur++;\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(bRes).ref);\n    // inlining of macro Cudd_NotCond\n    return ((DdNode *)((ptrint)(bRes) ^ (fComp)));\n}\n\n////////////////////////////////////////////////////////////////////////\n///                         END OF FILE                              ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,976 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c",
+  "SHA256": "75d1fa2da3545a074dc836813f13a87662baa34f425b5a22e9edeb9edac8814a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 77,
+        "Column": 9,
+        "ByteOffset": 2311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Counter == p.pColSums[iCol] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 9,
+        "ByteOffset": 2894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Counter == p.pRowSums[iRow] );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 14,
+        "ByteOffset": 3700
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pOrder = ABC_CALLOC( int, p.nRows );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 14,
+        "ByteOffset": 3741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pLast  = ABC_CALLOC( int, p.nRows );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 4425
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pLast );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 184,
+        "Column": 9,
+        "ByteOffset": 4863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        strcpy( spStatic_Llb_MtrVarName_Buffer, \"pi\" );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 186,
+        "Column": 9,
+        "ByteOffset": 4958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        strcpy( spStatic_Llb_MtrVarName_Buffer, \"CS\" );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 188,
+        "Column": 9,
+        "ByteOffset": 5055
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        strcpy( spStatic_Llb_MtrVarName_Buffer, \"NS\" );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 190,
+        "Column": 9,
+        "ByteOffset": 5125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        strcpy( spStatic_Llb_MtrVarName_Buffer, \"int\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 9,
+        "ByteOffset": 5809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d : \", iRow );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 9,
+        "ByteOffset": 5843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d \", p.pRowSums[iRow] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 218,
+        "Column": 9,
+        "ByteOffset": 5887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3s \", Llb_MtrVarName(p, iRow) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 220,
+        "Column": 13,
+        "ByteOffset": 5991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", p.pMatrix[iCol][iRow] ? '*' : ' ' );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 9,
+        "ByteOffset": 6060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 5,
+        "ByteOffset": 6086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pOrder );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 25,
+        "ByteOffset": 6496
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pGrp1 *int32  = ABC_CALLOC( int, p.nRows ); "
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 241,
+        "Column": 25,
+        "ByteOffset": 6549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pGrp2 *int32  = ABC_CALLOC( int, p.nRows ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 253,
+        "Column": 9,
+        "ByteOffset": 6959
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iGrp1 \u003c= iGrp2 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 271,
+        "Column": 5,
+        "ByteOffset": 7481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pGrp1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 272,
+        "Column": 5,
+        "ByteOffset": 7504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pGrp2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 273,
+        "Column": 5,
+        "ByteOffset": 7527
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"[%4d x %4d]  Life-span =%6.2f  Max-cut =%5d\\n\", "
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 295,
+        "Column": 9,
+        "ByteOffset": 8131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Llb_Mtr_t, 1 );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 18,
+        "ByteOffset": 8258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pRowSums = ABC_CALLOC( int, nRows );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 301,
+        "Column": 18,
+        "ByteOffset": 8301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pColSums = ABC_CALLOC( int, nCols );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 302,
+        "Column": 18,
+        "ByteOffset": 8344
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pColGrps = ABC_CALLOC( Llb_Grp_t *, nCols );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 303,
+        "Column": 18,
+        "ByteOffset": 8395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pMatrix  = ABC_CALLOC( char *, nCols );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 24,
+        "ByteOffset": 8481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pMatrix[i] = ABC_CALLOC( char, nRows );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 308,
+        "Column": 19,
+        "ByteOffset": 8555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pProdVars = ABC_CALLOC( char, nRows );  // variables in the partial product"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 309,
+        "Column": 19,
+        "ByteOffset": 8637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pProdNums = ABC_CALLOC( int, nRows );   // var counts in the remaining partitions"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 326,
+        "Column": 5,
+        "ByteOffset": 9044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pProdVars );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 327,
+        "Column": 5,
+        "ByteOffset": 9073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pProdNums );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 329,
+        "Column": 9,
+        "ByteOffset": 9142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pMatrix[i] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 331,
+        "Column": 5,
+        "ByteOffset": 9178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pRowSums );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 332,
+        "Column": 5,
+        "ByteOffset": 9206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pColSums );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 5,
+        "ByteOffset": 9234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pMatrix );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 334,
+        "Column": 5,
+        "ByteOffset": 9261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pColGrps );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 335,
+        "Column": 5,
+        "ByteOffset": 9289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 354,
+        "Column": 5,
+        "ByteOffset": 9734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iCol \u003e= 0 \u0026\u0026 iCol \u003c p.nCols );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 359,
+        "Column": 9,
+        "ByteOffset": 9943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iRow \u003e= 0 \u0026\u0026 iRow \u003c p.nRows );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 367,
+        "Column": 9,
+        "ByteOffset": 10221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iRow \u003e= 0 \u0026\u0026 iRow \u003c p.nRows );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_MtrVerifyRowsAll",
+      "Start": 2011,
+      "End": 2337,
+      "BodyStart": 2054,
+      "Original": "void Llb_MtrVerifyRowsAll( Llb_Mtr_t * p )\n{\n    int iRow, iCol, Counter;\n    for ( iCol = 0; iCol \u003c p-\u003enCols; iCol++ )\n    {\n        Counter = 0;\n        for ( iRow = 0; iRow \u003c p-\u003enRows; iRow++ )\n            if ( p-\u003epMatrix[iCol][iRow] == 1 )\n                Counter++;\n        assert( Counter == p-\u003epColSums[iCol] );\n    }\n}",
+      "Draft": "func Llb_MtrVerifyRowsAll(p *Llb_Mtr_t) {\n    var iRow, iCol, Counter int32;\n    for  iCol = 0; iCol \u003c p.nCols; iCol++  {\n        Counter = 0;\n        for  iRow = 0; iRow \u003c p.nRows; iRow++  {\n            if p.pMatrix[iCol][iRow] == 1 {\n                Counter++; }\n        }\n        assert(Counter == p.pColSums[iCol], \"Counter == p.pColSums[iCol]\");\n    }\n}"
+    },
+    {
+      "Name": "Llb_MtrVerifyColumnsAll",
+      "Start": 2588,
+      "End": 2917,
+      "BodyStart": 2634,
+      "Original": "void Llb_MtrVerifyColumnsAll( Llb_Mtr_t * p )\n{\n    int iRow, iCol, Counter;\n    for ( iRow = 0; iRow \u003c p-\u003enRows; iRow++ )\n    {\n        Counter = 0;\n        for ( iCol = 0; iCol \u003c p-\u003enCols; iCol++ )\n            if ( p-\u003epMatrix[iCol][iRow] == 1 )\n                Counter++;\n        assert( Counter == p-\u003epRowSums[iRow] );\n    }\n}",
+      "Draft": "func Llb_MtrVerifyColumnsAll(p *Llb_Mtr_t) {\n    var iRow, iCol, Counter int32;\n    for  iRow = 0; iRow \u003c p.nRows; iRow++  {\n        Counter = 0;\n        for  iCol = 0; iCol \u003c p.nCols; iCol++  {\n            if p.pMatrix[iCol][iRow] == 1 {\n                Counter++; }\n        }\n        assert(Counter == p.pRowSums[iRow], \"Counter == p.pRowSums[iRow]\");\n    }\n}"
+    },
+    {
+      "Name": "Llb_MtrVerifyMatrix",
+      "Start": 3168,
+      "End": 3278,
+      "BodyStart": 3210,
+      "Original": "void Llb_MtrVerifyMatrix( Llb_Mtr_t * p )\n{\n    Llb_MtrVerifyRowsAll( p );\n    Llb_MtrVerifyColumnsAll( p );\n}",
+      "Draft": "func Llb_MtrVerifyMatrix(p *Llb_Mtr_t) {\n    Llb_MtrVerifyRowsAll( p );\n    Llb_MtrVerifyColumnsAll( p );\n}"
+    },
+    {
+      "Name": "Llb_MtrFindVarOrder",
+      "Start": 3553,
+      "End": 4446,
+      "BodyStart": 3596,
+      "Original": "int * Llb_MtrFindVarOrder( Llb_Mtr_t * p )\n{\n    int * pOrder, * pLast;\n    int i, k, fChanges, Temp;\n    pOrder = ABC_CALLOC( int, p-\u003enRows );\n    pLast  = ABC_CALLOC( int, p-\u003enRows );\n    for ( i = 0; i \u003c p-\u003enRows; i++ )\n    {\n        pOrder[i] = i;\n        for ( k = p-\u003enCols - 1; k \u003e= 0; k-- )\n            if ( p-\u003epMatrix[k][i] )\n            {\n                pLast[i] = k;\n                break;\n            }\n    }\n    do\n    {\n        fChanges = 0;\n        for ( i = 0; i \u003c p-\u003enRows - 1; i++ )\n            if ( pLast[i] \u003e pLast[i+1] )\n            {\n                Temp = pOrder[i];\n                pOrder[i] = pOrder[i+1];\n                pOrder[i+1] = Temp;\n\n                Temp = pLast[i];\n                pLast[i] = pLast[i+1];\n                pLast[i+1] = Temp;\n\n                fChanges = 1;\n            }\n    }\n    while ( fChanges );\n    ABC_FREE( pLast );\n    return pOrder;\n}",
+      "Draft": "func Llb_MtrFindVarOrder(p *Llb_Mtr_t) *int32 {\n    var pOrder, pLast *int32;\n    var i, k, fChanges, Temp int32;\n    pOrder = ABC_CALLOC( int, p.nRows );\n    pLast  = ABC_CALLOC( int, p.nRows );\n    for  i = 0; i \u003c p.nRows; i++  {\n        pOrder[i] = i;\n        for  k = p.nCols - 1; k \u003e= 0; k--  {\n            if p.pMatrix[k][i] {\n                pLast[i] = k;\n                break;\n            }\n        }\n    }\n    for\n    {\n        fChanges = 0;\n        for  i = 0; i \u003c p.nRows - 1; i++  {\n            if pLast[i] \u003e pLast[i+1] {\n                Temp = pOrder[i];\n                pOrder[i] = pOrder[i+1];\n                pOrder[i+1] = Temp;\n\n                Temp = pLast[i];\n                pLast[i] = pLast[i+1];\n                pLast[i+1] = Temp;\n\n                fChanges = 1;\n            }\n        }\n    \nif !( fChanges ) { break }\n}\n    \n    ABC_FREE( pLast );\n    return pOrder;\n}"
+    },
+    {
+      "Name": "Llb_MtrVarName",
+      "Start": 4709,
+      "End": 5057,
+      "BodyStart": 4758,
+      "Original": "char * Llb_MtrVarName( Llb_Mtr_t * p, int iVar )\n{\n    static char Buffer[10];\n    if ( iVar \u003c p-\u003enPis )\n        strcpy( Buffer, \"pi\" );\n    else if ( iVar \u003c p-\u003enPis + p-\u003enFfs )\n        strcpy( Buffer, \"CS\" );\n    else if ( iVar \u003e= p-\u003enRows - p-\u003enFfs )\n        strcpy( Buffer, \"NS\" );\n    else \n        strcpy( Buffer, \"int\" );\n    return Buffer;\n}",
+      "Draft": "func Llb_MtrVarName(p *Llb_Mtr_t, iVar int32) string {\n    \n    if iVar \u003c p.nPis {\n        strcpy( spStatic_Llb_MtrVarName_Buffer, \"pi\" );\n    } else if iVar \u003c p.nPis + p.nFfs {\n        strcpy( spStatic_Llb_MtrVarName_Buffer, \"CS\" );\n    } else if iVar \u003e= p.nRows - p.nFfs {\n        strcpy( spStatic_Llb_MtrVarName_Buffer, \"NS\" );\n    } else { \n        strcpy( spStatic_Llb_MtrVarName_Buffer, \"int\" ); }\n    return spStatic_Llb_MtrVarName_Buffer;\n}"
+    },
+    {
+      "Name": "Llb_MtrPrint",
+      "Start": 5335,
+      "End": 5874,
+      "BodyStart": 5382,
+      "Original": "void Llb_MtrPrint( Llb_Mtr_t * p, int fOrder )\n{\n    int * pOrder = NULL;\n    int i, iRow, iCol;\n    if ( fOrder )\n        pOrder = Llb_MtrFindVarOrder( p );\n    for ( i = 0; i \u003c p-\u003enRows; i++ )\n    {\n        iRow = pOrder ? pOrder[i] : i;\n        printf( \"%3d : \", iRow );\n        printf( \"%3d \", p-\u003epRowSums[iRow] );\n        printf( \"%3s \", Llb_MtrVarName(p, iRow) );\n        for ( iCol = 0; iCol \u003c p-\u003enCols; iCol++ )\n            printf( \"%c\", p-\u003epMatrix[iCol][iRow] ? '*' : ' ' );\n        printf( \"\\n\" );\n    }\n    ABC_FREE( pOrder );\n}",
+      "Draft": "func Llb_MtrPrint(p *Llb_Mtr_t, fOrder int32) {\n    var pOrder *int32  = nil;\n    var i, iRow, iCol int32;\n    if fOrder != 0 {\n        pOrder = Llb_MtrFindVarOrder( p ); }\n    for  i = 0; i \u003c p.nRows; i++  {\n        if pOrder != nil {\n            iRow = pOrder[i];\n        } else {\n            iRow = i;\n        }\n        fmt.Printf(\"%3d : \", iRow);\n        fmt.Printf(\"%3d \", p.pRowSums[iRow]);\n        fmt.Printf(\"%3s \", Llb_MtrVarName(p, iRow));\n        for  iCol = 0; iCol \u003c p.nCols; iCol++  {\n            fmt.Printf(\"%c\", p.pMatrix[iCol][iRow] ? '*' : ' ');\n        }\n        fmt.Printf(\"\\n\");\n    }\n    ABC_FREE( pOrder );\n}"
+    },
+    {
+      "Name": "Llb_MtrPrintMatrixStats",
+      "Start": 6125,
+      "End": 7482,
+      "BodyStart": 6171,
+      "Original": "void Llb_MtrPrintMatrixStats( Llb_Mtr_t * p )\n{\n    int iVar, iGrp, iGrp1, iGrp2, Span = 0, nCutSize = 0, nCutSizeMax = 0;\n    int * pGrp1 = ABC_CALLOC( int, p-\u003enRows ); \n    int * pGrp2 = ABC_CALLOC( int, p-\u003enRows ); \n    for ( iVar = 0; iVar \u003c p-\u003enRows; iVar++ )\n    {\n        if ( p-\u003epRowSums[iVar] == 0 )\n            continue;\n        for ( iGrp1 = 0; iGrp1 \u003c p-\u003enCols; iGrp1++ )\n            if ( p-\u003epMatrix[iGrp1][iVar] == 1 )\n                break;\n        for ( iGrp2 = p-\u003enCols - 1; iGrp2 \u003e= 0; iGrp2-- )\n            if ( p-\u003epMatrix[iGrp2][iVar] == 1 )\n                break;\n        assert( iGrp1 \u003c= iGrp2 );\n        pGrp1[iVar] = iGrp1;\n        pGrp2[iVar] = iGrp2;\n        Span += iGrp2 - iGrp1;\n    }\n    // compute span\n    for ( iGrp = 0; iGrp \u003c p-\u003enCols; iGrp++ )\n    {\n        for ( iVar = 0; iVar \u003c p-\u003enRows; iVar++ )\n            if ( pGrp1[iVar] == iGrp )\n                nCutSize++;\n        if ( nCutSizeMax \u003c nCutSize )\n            nCutSizeMax = nCutSize;\n        for ( iVar = 0; iVar \u003c p-\u003enRows; iVar++ )\n            if ( pGrp2[iVar] == iGrp )\n                nCutSize--;\n    }\n    ABC_FREE( pGrp1 );\n    ABC_FREE( pGrp2 );\n    printf( \"[%4d x %4d]  Life-span =%6.2f  Max-cut =%5d\\n\", \n        p-\u003enCols, p-\u003enRows, 1.0*Span/p-\u003enRows, nCutSizeMax );\n    if ( nCutSize )\n        Abc_Print( -1, \"Cut size is not zero (%d).\\n\", nCutSize );\n}",
+      "Draft": "func Llb_MtrPrintMatrixStats(p *Llb_Mtr_t) {\n    var iVar, iGrp, iGrp1, iGrp2, Span, nCutSize, nCutSizeMax int32;\n    var pGrp1 *int32  = ABC_CALLOC( int, p.nRows ); \n    var pGrp2 *int32  = ABC_CALLOC( int, p.nRows ); \n    for  iVar = 0; iVar \u003c p.nRows; iVar++  {\n        if p.pRowSums[iVar] == 0 {\n            continue; }\n        for  iGrp1 = 0; iGrp1 \u003c p.nCols; iGrp1++  {\n            if p.pMatrix[iGrp1][iVar] == 1 {\n                break; }\n        }\n        for  iGrp2 = p.nCols - 1; iGrp2 \u003e= 0; iGrp2--  {\n            if p.pMatrix[iGrp2][iVar] == 1 {\n                break; }\n        }\n        assert(iGrp1 \u003c= iGrp2, \"iGrp1 \u003c= iGrp2\");\n        pGrp1[iVar] = iGrp1;\n        pGrp2[iVar] = iGrp2;\n        Span += iGrp2 - iGrp1;\n    }\n    // compute span\n    for  iGrp = 0; iGrp \u003c p.nCols; iGrp++  {\n        for  iVar = 0; iVar \u003c p.nRows; iVar++  {\n            if pGrp1[iVar] == iGrp {\n                nCutSize++; }\n        }\n        if nCutSizeMax \u003c nCutSize {\n            nCutSizeMax = nCutSize; }\n        for  iVar = 0; iVar \u003c p.nRows; iVar++  {\n            if pGrp2[iVar] == iGrp {\n                nCutSize--; }\n        }\n    }\n    ABC_FREE( pGrp1 );\n    ABC_FREE( pGrp2 );\n    fmt.Printf(\"[%4d x %4d]  Life-span =%6.2f  Max-cut =%5d\\n\", p.nCols, p.nRows, 1.0*Span/p.nRows, nCutSizeMax);\n    if nCutSize {\n        Abc_Print( -1, \"Cut size is not zero (%d).\\n\", nCutSize ); }\n}"
+    },
+    {
+      "Name": "Llb_MtrAlloc",
+      "Start": 7753,
+      "End": 8458,
+      "BodyStart": 7822,
+      "Original": "Llb_Mtr_t * Llb_MtrAlloc( int nPis, int nFfs, int nCols, int nRows )\n{\n    Llb_Mtr_t * p;\n    int i;\n    p = ABC_CALLOC( Llb_Mtr_t, 1 );\n    p-\u003enPis  = nPis;\n    p-\u003enFfs  = nFfs;\n    p-\u003enRows = nRows;\n    p-\u003enCols = nCols;\n    p-\u003epRowSums = ABC_CALLOC( int, nRows );\n    p-\u003epColSums = ABC_CALLOC( int, nCols );\n    p-\u003epColGrps = ABC_CALLOC( Llb_Grp_t *, nCols );\n    p-\u003epMatrix  = ABC_CALLOC( char *, nCols );\n    for ( i = 0; i \u003c nCols; i++ )\n        p-\u003epMatrix[i] = ABC_CALLOC( char, nRows );\n    // partial product\n    p-\u003epProdVars = ABC_CALLOC( char, nRows );  // variables in the partial product\n    p-\u003epProdNums = ABC_CALLOC( int, nRows );   // var counts in the remaining partitions\n    return p;\n}",
+      "Draft": "func Llb_MtrAlloc(nPis int32, nFfs int32, nCols int32, nRows int32) *Llb_Mtr_t {\n    var p *Llb_Mtr_t;\n    var i int32;\n    p = new(Llb_Mtr_t);\n    p.nPis  = nPis;\n    p.nFfs  = nFfs;\n    p.nRows = nRows;\n    p.nCols = nCols;\n    p.pRowSums = ABC_CALLOC( int, nRows );\n    p.pColSums = ABC_CALLOC( int, nCols );\n    p.pColGrps = ABC_CALLOC( Llb_Grp_t *, nCols );\n    p.pMatrix  = ABC_CALLOC( char *, nCols );\n    for  i = 0; i \u003c nCols; i++  {\n        p.pMatrix[i] = ABC_CALLOC( char, nRows );\n    }\n    // partial product\n    p.pProdVars = ABC_CALLOC( char, nRows );  // variables in the partial product\n    p.pProdNums = ABC_CALLOC( int, nRows );   // var counts in the remaining partitions\n    return p;\n}"
+    },
+    {
+      "Name": "Llb_MtrFree",
+      "Start": 8726,
+      "End": 9040,
+      "BodyStart": 8760,
+      "Original": "void Llb_MtrFree( Llb_Mtr_t * p )\n{\n    int i;\n    ABC_FREE( p-\u003epProdVars );\n    ABC_FREE( p-\u003epProdNums );\n    for ( i = 0; i \u003c p-\u003enCols; i++ )\n        ABC_FREE( p-\u003epMatrix[i] );\n    ABC_FREE( p-\u003epRowSums );\n    ABC_FREE( p-\u003epColSums );\n    ABC_FREE( p-\u003epMatrix );\n    ABC_FREE( p-\u003epColGrps );\n    ABC_FREE( p );\n}",
+      "Draft": "func Llb_MtrFree(p *Llb_Mtr_t) {\n    var i int32;\n    ABC_FREE( p.pProdVars );\n    ABC_FREE( p.pProdNums );\n    for  i = 0; i \u003c p.nCols; i++  {\n        ABC_FREE( p.pMatrix[i] );\n    }\n    ABC_FREE( p.pRowSums );\n    ABC_FREE( p.pColSums );\n    ABC_FREE( p.pMatrix );\n    ABC_FREE( p.pColGrps );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Llb_MtrAddColumn",
+      "Start": 9318,
+      "End": 10077,
+      "BodyStart": 9375,
+      "Original": "void Llb_MtrAddColumn( Llb_Mtr_t * p, Llb_Grp_t * pGrp )\n{\n    Aig_Obj_t * pVar;\n    int i, iRow, iCol = pGrp-\u003eId;\n    assert( iCol \u003e= 0 \u0026\u0026 iCol \u003c p-\u003enCols );\n    p-\u003epColGrps[iCol] = pGrp;\n    Vec_PtrForEachEntry( Aig_Obj_t *, pGrp-\u003evIns, pVar, i )\n    {\n        iRow = Vec_IntEntry( pGrp-\u003epMan-\u003evObj2Var, Aig_ObjId(pVar) );\n        assert( iRow \u003e= 0 \u0026\u0026 iRow \u003c p-\u003enRows );\n        p-\u003epMatrix[iCol][iRow] = 1;\n        p-\u003epColSums[iCol]++;\n        p-\u003epRowSums[iRow]++;\n    }\n    Vec_PtrForEachEntry( Aig_Obj_t *, pGrp-\u003evOuts, pVar, i )\n    {\n        iRow = Vec_IntEntry( pGrp-\u003epMan-\u003evObj2Var, Aig_ObjId(pVar) );\n        assert( iRow \u003e= 0 \u0026\u0026 iRow \u003c p-\u003enRows );\n        p-\u003epMatrix[iCol][iRow] = 1;\n        p-\u003epColSums[iCol]++;\n        p-\u003epRowSums[iRow]++;\n    }\n}",
+      "Draft": "func Llb_MtrAddColumn(p *Llb_Mtr_t, pGrp *Llb_Grp_t) {\n    var pVar *Aig_Obj_t;\n    var i int32;\n    var iRow int32;\n    var iCol int32 = pGrp.Id;\n    assert(iCol \u003e= 0 \u0026\u0026 iCol \u003c p.nCols, \"iCol \u003e= 0 \u0026\u0026 iCol \u003c p.nCols\");\n    p.pColGrps[iCol] = pGrp;\n    Vec_PtrForEachEntry( Aig_Obj_t *, pGrp.vIns, pVar, i )\n    {\n        iRow = Vec_IntEntry( pGrp.pMan.vObj2Var, Aig_ObjId(pVar) );\n        assert(iRow \u003e= 0 \u0026\u0026 iRow \u003c p.nRows, \"iRow \u003e= 0 \u0026\u0026 iRow \u003c p.nRows\");\n        p.pMatrix[iCol][iRow] = 1;\n        p.pColSums[iCol]++;\n        p.pRowSums[iRow]++;\n    }\n    Vec_PtrForEachEntry( Aig_Obj_t *, pGrp.vOuts, pVar, i )\n    {\n        iRow = Vec_IntEntry( pGrp.pMan.vObj2Var, Aig_ObjId(pVar) );\n        assert(iRow \u003e= 0 \u0026\u0026 iRow \u003c p.nRows, \"iRow \u003e= 0 \u0026\u0026 iRow \u003c p.nRows\");\n        p.pMatrix[iCol][iRow] = 1;\n        p.pColSums[iCol]++;\n        p.pRowSums[iRow]++;\n    }\n}"
+    },
+    {
+      "Name": "Llb_MtrRemoveSingletonRows",
+      "Start": 10327,
+      "End": 10750,
+      "BodyStart": 10376,
+      "Original": "void Llb_MtrRemoveSingletonRows( Llb_Mtr_t * p )\n{\n    int i, k;\n    for ( i = 0; i \u003c p-\u003enRows; i++ )\n        if ( p-\u003epRowSums[i] \u003c 2 )\n        {\n            p-\u003epRowSums[i] = 0;\n            for ( k = 0; k \u003c p-\u003enCols; k++ )\n            {\n                if ( p-\u003epMatrix[k][i] == 1 )\n                {\n                    p-\u003epMatrix[k][i] = 0;\n                    p-\u003epColSums[k]--;\n                }\n            }\n        }\n}",
+      "Draft": "func Llb_MtrRemoveSingletonRows(p *Llb_Mtr_t) {\n    var i, k int32;\n    for  i = 0; i \u003c p.nRows; i++  {\n        if p.pRowSums[i] \u003c 2 {\n            p.pRowSums[i] = 0;\n            for  k = 0; k \u003c p.nCols; k++  {\n                if p.pMatrix[k][i] == 1 {\n                    p.pMatrix[k][i] = 0;\n                    p.pColSums[k]--;\n                }\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Llb_MtrCreate",
+      "Start": 11000,
+      "End": 11417,
+      "BodyStart": 11043,
+      "Original": "Llb_Mtr_t * Llb_MtrCreate( Llb_Man_t * p )\n{\n    Llb_Mtr_t * pMatrix;\n    Llb_Grp_t * pGroup;\n    int i;\n    pMatrix = Llb_MtrAlloc( Saig_ManPiNum(p-\u003epAig), Saig_ManRegNum(p-\u003epAig), \n        Vec_PtrSize(p-\u003evGroups), Vec_IntSize(p-\u003evVar2Obj) );\n    Vec_PtrForEachEntry( Llb_Grp_t *, p-\u003evGroups, pGroup, i )\n        Llb_MtrAddColumn( pMatrix, pGroup );\n//    Llb_MtrRemoveSingletonRows( pMatrix );\n    return pMatrix;\n}",
+      "Draft": "func Llb_MtrCreate(p *Llb_Man_t) *Llb_Mtr_t {\n    var pMatrix *Llb_Mtr_t;\n    var pGroup *Llb_Grp_t;\n    var i int32;\n    pMatrix = Llb_MtrAlloc( Saig_ManPiNum(p.pAig), Saig_ManRegNum(p.pAig), \n        Vec_PtrSize(p.vGroups), Vec_IntSize(p.vVar2Obj) );\n    Vec_PtrForEachEntry( Llb_Grp_t *, p.vGroups, pGroup, i )\n        Llb_MtrAddColumn( pMatrix, pGroup );\n//    Llb_MtrRemoveSingletonRows( pMatrix );\n    return pMatrix;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::mechanical::do::3978",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3978,
+      "End": 3980
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::mechanical::static::4764",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4764,
+      "End": 4770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::Llb_MtrVerifyRowsAll",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrVerifyRowsAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2011,
+      "End": 2337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::Llb_MtrVerifyColumnsAll",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrVerifyColumnsAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2588,
+      "End": 2917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::Llb_MtrVerifyMatrix",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrVerifyMatrix",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3168,
+      "End": 3278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::Llb_MtrFindVarOrder",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrFindVarOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3553,
+      "End": 4446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::Llb_MtrVarName",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrVarName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4709,
+      "End": 5057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::ternary::Llb_MtrPrint",
+      "Category": "ternary-review",
+      "Symbol": "Llb_MtrPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5335,
+      "End": 5874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::Llb_MtrPrint",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5335,
+      "End": 5874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::Llb_MtrPrintMatrixStats",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrPrintMatrixStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6125,
+      "End": 7482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::Llb_MtrAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7753,
+      "End": 8458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::Llb_MtrFree",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8726,
+      "End": 9040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::Llb_MtrAddColumn",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrAddColumn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9318,
+      "End": 10077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::Llb_MtrRemoveSingletonRows",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrRemoveSingletonRows",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10327,
+      "End": 10750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::Llb_MtrCreate",
+      "Category": "semantic-review",
+      "Symbol": "Llb_MtrCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11000,
+      "End": 11417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::3668",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3668,
+      "End": 3695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::3710",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3710,
+      "End": 3737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::4407",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4407,
+      "End": 4424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::5853",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5853,
+      "End": 5871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::6266",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6266,
+      "End": 6293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::6314",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6314,
+      "End": 6341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::7228",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7228,
+      "End": 7245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::7251",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7251,
+      "End": 7268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::7862",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7862,
+      "End": 7888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::7994",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7994,
+      "End": 8018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::8038",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8038,
+      "End": 8062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::8082",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8082,
+      "End": 8114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::8134",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8134,
+      "End": 8161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::8221",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8221,
+      "End": 8246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::8290",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8290,
+      "End": 8315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::8373",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8373,
+      "End": 8397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::8777",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8777,
+      "End": 8801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::8807",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8807,
+      "End": 8831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::8878",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8878,
+      "End": 8903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::8909",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8909,
+      "End": 8932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::8938",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8938,
+      "End": 8961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::8967",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8967,
+      "End": 8989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::8995",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8995,
+      "End": 9018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::9024",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9024,
+      "End": 9037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::9511",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9511,
+      "End": 9566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::9795",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9795,
+      "End": 9851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Matrix.c::macro-inline::11248",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11248,
+      "End": 11305
+    }
+  ],
+  "Draft": "package llb\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [llb1Matrix.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Partition clustering as a matrix problem.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb1Matrix.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n//              0123              nCols\n//             +---------------------\u003e  \n// pi        0 |  111             row0   pRowSums[0]  \n// pi        1 | 1     11         row1   pRowSums[1] \n// pi        2 |   1  11          row2   pRowSums[2] \n// CS          |1       1\n// CS          |1      111\n// CS          |111    111\n// int         |  11111           \n// int         |     111          \n// int         |       111        \n// int         |         111      \n// NS          |           11 11\n// NS          |            11 1\n// NS          |             111\n//       nRows |\n//             v    \n//              cccc   pColSums[0]\n//              oooo   pColSums[1]\n//              llll   pColSums[2]\n//              0123   pColSums[3]\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Verify columns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrVerifyRowsAll(p *Llb_Mtr_t) {\n    var iRow, iCol, Counter int32;\n    for  iCol = 0; iCol \u003c p.nCols; iCol++  {\n        Counter = 0;\n        for  iRow = 0; iRow \u003c p.nRows; iRow++  {\n            if p.pMatrix[iCol][iRow] == 1 {\n                Counter++; }\n        }\n        assert(Counter == p.pColSums[iCol], \"Counter == p.pColSums[iCol]\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verify columns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrVerifyColumnsAll(p *Llb_Mtr_t) {\n    var iRow, iCol, Counter int32;\n    for  iRow = 0; iRow \u003c p.nRows; iRow++  {\n        Counter = 0;\n        for  iCol = 0; iCol \u003c p.nCols; iCol++  {\n            if p.pMatrix[iCol][iRow] == 1 {\n                Counter++; }\n        }\n        assert(Counter == p.pRowSums[iRow], \"Counter == p.pRowSums[iRow]\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verify columns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrVerifyMatrix(p *Llb_Mtr_t) {\n    Llb_MtrVerifyRowsAll( p );\n    Llb_MtrVerifyColumnsAll( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sort variables in the order of removal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrFindVarOrder(p *Llb_Mtr_t) *int32 {\n    var pOrder, pLast *int32;\n    var i, k, fChanges, Temp int32;\n    pOrder = ABC_CALLOC( int, p.nRows );\n    pLast  = ABC_CALLOC( int, p.nRows );\n    for  i = 0; i \u003c p.nRows; i++  {\n        pOrder[i] = i;\n        for  k = p.nCols - 1; k \u003e= 0; k--  {\n            if p.pMatrix[k][i] {\n                pLast[i] = k;\n                break;\n            }\n        }\n    }\n    for\n    {\n        fChanges = 0;\n        for  i = 0; i \u003c p.nRows - 1; i++  {\n            if pLast[i] \u003e pLast[i+1] {\n                Temp = pOrder[i];\n                pOrder[i] = pOrder[i+1];\n                pOrder[i+1] = Temp;\n\n                Temp = pLast[i];\n                pLast[i] = pLast[i+1];\n                pLast[i+1] = Temp;\n\n                fChanges = 1;\n            }\n        }\n    \nif !( fChanges ) { break }\n}\n    \n    ABC_FREE( pLast );\n    return pOrder;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns type of a variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Llb_MtrVarName_Buffer [10]byte;\nfunc Llb_MtrVarName(p *Llb_Mtr_t, iVar int32) string {\n    \n    if iVar \u003c p.nPis {\n        strcpy( spStatic_Llb_MtrVarName_Buffer, \"pi\" );\n    } else if iVar \u003c p.nPis + p.nFfs {\n        strcpy( spStatic_Llb_MtrVarName_Buffer, \"CS\" );\n    } else if iVar \u003e= p.nRows - p.nFfs {\n        strcpy( spStatic_Llb_MtrVarName_Buffer, \"NS\" );\n    } else { \n        strcpy( spStatic_Llb_MtrVarName_Buffer, \"int\" ); }\n    return spStatic_Llb_MtrVarName_Buffer;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates one column with vars in the array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrPrint(p *Llb_Mtr_t, fOrder int32) {\n    var pOrder *int32  = nil;\n    var i, iRow, iCol int32;\n    if fOrder != 0 {\n        pOrder = Llb_MtrFindVarOrder( p ); }\n    for  i = 0; i \u003c p.nRows; i++  {\n        if pOrder != nil {\n            iRow = pOrder[i];\n        } else {\n            iRow = i;\n        }\n        fmt.Printf(\"%3d : \", iRow);\n        fmt.Printf(\"%3d \", p.pRowSums[iRow]);\n        fmt.Printf(\"%3s \", Llb_MtrVarName(p, iRow));\n        for  iCol = 0; iCol \u003c p.nCols; iCol++  {\n            fmt.Printf(\"%c\", p.pMatrix[iCol][iRow] ? '*' : ' ');\n        }\n        fmt.Printf(\"\\n\");\n    }\n    ABC_FREE( pOrder );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verify columns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrPrintMatrixStats(p *Llb_Mtr_t) {\n    var iVar, iGrp, iGrp1, iGrp2, Span, nCutSize, nCutSizeMax int32;\n    var pGrp1 *int32  = ABC_CALLOC( int, p.nRows ); \n    var pGrp2 *int32  = ABC_CALLOC( int, p.nRows ); \n    for  iVar = 0; iVar \u003c p.nRows; iVar++  {\n        if p.pRowSums[iVar] == 0 {\n            continue; }\n        for  iGrp1 = 0; iGrp1 \u003c p.nCols; iGrp1++  {\n            if p.pMatrix[iGrp1][iVar] == 1 {\n                break; }\n        }\n        for  iGrp2 = p.nCols - 1; iGrp2 \u003e= 0; iGrp2--  {\n            if p.pMatrix[iGrp2][iVar] == 1 {\n                break; }\n        }\n        assert(iGrp1 \u003c= iGrp2, \"iGrp1 \u003c= iGrp2\");\n        pGrp1[iVar] = iGrp1;\n        pGrp2[iVar] = iGrp2;\n        Span += iGrp2 - iGrp1;\n    }\n    // compute span\n    for  iGrp = 0; iGrp \u003c p.nCols; iGrp++  {\n        for  iVar = 0; iVar \u003c p.nRows; iVar++  {\n            if pGrp1[iVar] == iGrp {\n                nCutSize++; }\n        }\n        if nCutSizeMax \u003c nCutSize {\n            nCutSizeMax = nCutSize; }\n        for  iVar = 0; iVar \u003c p.nRows; iVar++  {\n            if pGrp2[iVar] == iGrp {\n                nCutSize--; }\n        }\n    }\n    ABC_FREE( pGrp1 );\n    ABC_FREE( pGrp2 );\n    fmt.Printf(\"[%4d x %4d]  Life-span =%6.2f  Max-cut =%5d\\n\", p.nCols, p.nRows, 1.0*Span/p.nRows, nCutSizeMax);\n    if nCutSize {\n        Abc_Print( -1, \"Cut size is not zero (%d).\\n\", nCutSize ); }\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the matrix representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrAlloc(nPis int32, nFfs int32, nCols int32, nRows int32) *Llb_Mtr_t {\n    var p *Llb_Mtr_t;\n    var i int32;\n    p = new(Llb_Mtr_t);\n    p.nPis  = nPis;\n    p.nFfs  = nFfs;\n    p.nRows = nRows;\n    p.nCols = nCols;\n    p.pRowSums = ABC_CALLOC( int, nRows );\n    p.pColSums = ABC_CALLOC( int, nCols );\n    p.pColGrps = ABC_CALLOC( Llb_Grp_t *, nCols );\n    p.pMatrix  = ABC_CALLOC( char *, nCols );\n    for  i = 0; i \u003c nCols; i++  {\n        p.pMatrix[i] = ABC_CALLOC( char, nRows );\n    }\n    // partial product\n    p.pProdVars = ABC_CALLOC( char, nRows );  // variables in the partial product\n    p.pProdNums = ABC_CALLOC( int, nRows );   // var counts in the remaining partitions\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the matrix representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrFree(p *Llb_Mtr_t) {\n    var i int32;\n    ABC_FREE( p.pProdVars );\n    ABC_FREE( p.pProdNums );\n    for  i = 0; i \u003c p.nCols; i++  {\n        ABC_FREE( p.pMatrix[i] );\n    }\n    ABC_FREE( p.pRowSums );\n    ABC_FREE( p.pColSums );\n    ABC_FREE( p.pMatrix );\n    ABC_FREE( p.pColGrps );\n    ABC_FREE( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates one column with vars in the array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrAddColumn(p *Llb_Mtr_t, pGrp *Llb_Grp_t) {\n    var pVar *Aig_Obj_t;\n    var i int32;\n    var iRow int32;\n    var iCol int32 = pGrp.Id;\n    assert(iCol \u003e= 0 \u0026\u0026 iCol \u003c p.nCols, \"iCol \u003e= 0 \u0026\u0026 iCol \u003c p.nCols\");\n    p.pColGrps[iCol] = pGrp;\n    Vec_PtrForEachEntry( Aig_Obj_t *, pGrp.vIns, pVar, i )\n    {\n        iRow = Vec_IntEntry( pGrp.pMan.vObj2Var, Aig_ObjId(pVar) );\n        assert(iRow \u003e= 0 \u0026\u0026 iRow \u003c p.nRows, \"iRow \u003e= 0 \u0026\u0026 iRow \u003c p.nRows\");\n        p.pMatrix[iCol][iRow] = 1;\n        p.pColSums[iCol]++;\n        p.pRowSums[iRow]++;\n    }\n    Vec_PtrForEachEntry( Aig_Obj_t *, pGrp.vOuts, pVar, i )\n    {\n        iRow = Vec_IntEntry( pGrp.pMan.vObj2Var, Aig_ObjId(pVar) );\n        assert(iRow \u003e= 0 \u0026\u0026 iRow \u003c p.nRows, \"iRow \u003e= 0 \u0026\u0026 iRow \u003c p.nRows\");\n        p.pMatrix[iCol][iRow] = 1;\n        p.pColSums[iCol]++;\n        p.pRowSums[iRow]++;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Matrix reduce.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrRemoveSingletonRows(p *Llb_Mtr_t) {\n    var i, k int32;\n    for  i = 0; i \u003c p.nRows; i++  {\n        if p.pRowSums[i] \u003c 2 {\n            p.pRowSums[i] = 0;\n            for  k = 0; k \u003c p.nCols; k++  {\n                if p.pMatrix[k][i] == 1 {\n                    p.pMatrix[k][i] = 0;\n                    p.pColSums[k]--;\n                }\n            }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Matrix reduce.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_MtrCreate(p *Llb_Man_t) *Llb_Mtr_t {\n    var pMatrix *Llb_Mtr_t;\n    var pGroup *Llb_Grp_t;\n    var i int32;\n    pMatrix = Llb_MtrAlloc( Saig_ManPiNum(p.pAig), Saig_ManRegNum(p.pAig), \n        Vec_PtrSize(p.vGroups), Vec_IntSize(p.vVar2Obj) );\n    Vec_PtrForEachEntry( Llb_Grp_t *, p.vGroups, pGroup, i )\n        Llb_MtrAddColumn( pMatrix, pGroup );\n//    Llb_MtrRemoveSingletonRows( pMatrix );\n    return pMatrix;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

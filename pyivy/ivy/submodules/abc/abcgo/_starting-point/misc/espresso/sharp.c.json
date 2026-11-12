@@ -1,0 +1,129 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sharp.c",
+  "SHA256": "d3e4930dd86bcfb9b2f637efd614241a23b36c8d74b73cf7b0d1bb7d5b511719",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 70,
+        "Column": 9,
+        "ByteOffset": 1525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"# SHARP[%d]: %4d = %4d x %4d, time = %s\\n\","
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 73,
+        "Column": 16,
+        "ByteOffset": 1687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 73,
+        "Column": 23,
+        "ByteOffset": 1694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fflush(stdout);"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sharp.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sharp.c::macro-inline::1374",
+      "Category": "macro-inline-review",
+      "Symbol": "print_time",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1374,
+      "End": 1406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sharp.c::macro-inline::3513",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3513,
+      "End": 3523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sharp.c::macro-inline::3550",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3550,
+      "End": 3560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sharp.c::macro-inline::3580",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3580,
+      "End": 3590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sharp.c::macro-inline::3994",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_and",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3994,
+      "End": 4025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sharp.c::macro-inline::4035",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_or",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4035,
+      "End": 4066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sharp.c::macro-inline::4182",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_diff",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4182,
+      "End": 4212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/sharp.c::macro-inline::4222",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_or",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4222,
+      "End": 4253
+    }
+  ],
+  "Draft": "package espresso\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n    sharp.c -- perform sharp, disjoint sharp, and intersection\n*/\n\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\nvar start_time long;\n\n\n/* cv_sharp -- form the sharp product between two covers */\npcover cv_sharp(A, B)\npcover A, B;\n{\n    pcube last, p;\n    pcover T;\n\n    // inlining of macro new_cover\n    T = sf_new(0, cube.size);\n    // inlining of macro foreach_set\n    for(p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize)\n    T = sf_union(T, cb_sharp(p, B));\n    return T;\n}\n\n\n/* cb_sharp -- form the sharp product between a cube and a cover */\npcover cb_sharp(c, T)\npcube c;\npcover T;\n{\n    if T.count == 0 {\n    // inlining of macro new_cover\n    T = sf_addset(sf_new(1, cube.size), c);\n    } else {\n    start_time = ptime();\n    T = cb_recur_sharp(c, T, 0, T.count-1, 0);\n    }\n    return T;\n}\n\n\n/* recursive formulation to provide balanced merging */\npcover cb_recur_sharp(c, T, first, last, level)\npcube c;\npcover T;\nvar first, last, level int32;\n{\n    pcover temp, left, right;\n    int middle;\n\n    if first == last {\n    // inlining of macro GETSET\n    temp = sharp(c, ((T).data + (T).wsize * (first)));\n    } else {\n    middle = (first + last) / 2;\n    left = cb_recur_sharp(c, T, first, middle, level+1);\n    right = cb_recur_sharp(c, T, middle+1, last, level+1);\n    temp = cv_intersect(left, right);\n    if (debug \u0026 SHARP) \u0026\u0026 level \u003c 4 {\n        fmt.Printf(\"# SHARP[%d]: %4d = %4d x %4d, time = %s\\n\", level, temp.count, left.count, right.count, print_time(ptime() - start_time));\n        (void) fflush(os.Stdout);\n    }\n    // inlining of macro free_cover\n    sf_free(left);\n    // inlining of macro free_cover\n    sf_free(right);\n    }\n    return temp;\n}\n\n\n/* sharp -- form the sharp product between two cubes */\npcover sharp(a, b)\npcube a, b;\n{\n    register int var;\n    register pcube d=cube.temp[0], temp=cube.temp[1], temp1=cube.temp[2];\n    // inlining of macro new_cover\n    pcover r = sf_new(cube.num_vars, cube.size);\n\n    if cdist0(a, b) {\n    set_diff(d, a, b);\n    for var = 0; var \u003c cube.num_vars; var++ {\n        if ! setp_empty(set_and(temp, d, cube.var_mask[var])) {\n        set_diff(temp1, a, cube.var_mask[var]);\n        // inlining of macro GETSET\n        set_or(((r).data + (r).wsize * (r.count++)), temp, temp1);\n        }\n    }\n    } else {\n    r = sf_addset(r, a);\n    }\n    return r;\n}\n\f\npcover make_disjoint(A)\npcover A;\n{\n    pcover R, new;\n    register pset last, p;\n\n    // inlining of macro new_cover\n    R = sf_new(0, cube.size);\n    // inlining of macro foreach_set\n    for p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize {\n    new = cb_dsharp(p, R);\n    R = sf_append(R, new);\n    }\n    return R;\n}\n\n\n/* cv_dsharp -- disjoint-sharp product between two covers */\npcover cv_dsharp(A, B)\npcover A, B;\n{\n    register pcube last, p;\n    pcover T;\n\n    // inlining of macro new_cover\n    T = sf_new(0, cube.size);\n    // inlining of macro foreach_set\n    for p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize {\n    T = sf_union(T, cb_dsharp(p, B));\n    }\n    return T;\n}\n\n\n/* cb1_dsharp -- disjoint-sharp product between a cover and a cube */\npcover cb1_dsharp(T, c)\npcover T;\npcube c;\n{\n    pcube last, p;\n    pcover R;\n\n    // inlining of macro new_cover\n    R = sf_new(T.count, cube.size);\n    // inlining of macro foreach_set\n    for p=T.data,last=p+T.count*T.wsize;p\u003clast;p+=T.wsize {\n    R = sf_union(R, dsharp(p, c));\n    }\n    return R;\n}\n\n\n/* cb_dsharp -- disjoint-sharp product between a cube and a cover */\npcover cb_dsharp(c, T)\npcube c;\npcover T;\n{\n    pcube last, p;\n    pcover Y, Y1;\n\n    if T.count == 0 {\n    // inlining of macro new_cover\n    Y = sf_addset(sf_new(1, cube.size), c);\n    } else {\n    // inlining of macro new_cover\n    Y = sf_new(T.count, cube.size);\n    // inlining of macro GETSET\n    set_copy(((Y).data + (Y).wsize * (Y.count++)), c);\n    // inlining of macro foreach_set\n    for p=T.data,last=p+T.count*T.wsize;p\u003clast;p+=T.wsize {\n        Y1 = cb1_dsharp(Y, p);\n        // inlining of macro free_cover\n        sf_free(Y);\n        Y = Y1;\n    }\n    }\n    return Y;\n}\n\n\n/* dsharp -- form the disjoint-sharp product between two cubes */\npcover dsharp(a, b)\npcube a, b;\n{\n    register pcube mask, diff, and, temp, temp1 = cube.temp[0];\n    int var;\n    pcover r;\n\n    // inlining of macro new_cover\n    r = sf_new(cube.num_vars, cube.size);\n\n    if cdist0(a, b) {\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    diff = set_diff(set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size), a, b);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    and = set_and(set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size), a, b);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    mask = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    for var = 0; var \u003c cube.num_vars; var++ {\n        /* check if position var of \"a and not b\" is not empty */\n        if ! setp_disjoint(diff, cube.var_mask[var]) {\n\n        /* coordinate var equals the difference between a and b */\n        // inlining of macro GETSET\n        temp = ((r).data + (r).wsize * (r.count++));\n        (void) set_and(temp, diff, cube.var_mask[var]);\n\n        /* coordinates 0 ... var-1 equal the intersection */\n        INLINEset_and(temp1, and, mask);\n        INLINEset_or(temp, temp, temp1);\n\n        /* coordinates var+1 .. cube.num_vars equal a */\n        set_or(mask, mask, cube.var_mask[var]);\n        INLINEset_diff(temp1, a, mask);\n        INLINEset_or(temp, temp, temp1);\n        }\n    }\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(diff);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(and);\n    // inlining of macro free_cube\n    // inlining of macro set_free\n    FREE(mask);\n    } else {\n    r = sf_addset(r, a);\n    }\n    return r;\n}\n\f\n/* cv_intersect -- form the intersection of two covers */\n\nconst MAGIC = 500               /* save 500 cubes before containment */\n\npcover cv_intersect(A, B)\npcover A, B;\n{\n    register pcube pi, pj, lasti, lastj, pt;\n    pcover T, Tsave = NULL;\n\n    /* How large should each temporary result cover be ? */\n    // inlining of macro new_cover\n    T = sf_new(MAGIC, cube.size);\n    pt = T.data;\n\n    /* Form pairwise intersection of each cube of A with each cube of B */\n    // inlining of macro foreach_set\n    for pi=A.data,lasti=pi+A.count*A.wsize;pi\u003clasti;pi+=A.wsize {\n    // inlining of macro foreach_set\n    for pj=B.data,lastj=pj+B.count*B.wsize;pj\u003clastj;pj+=B.wsize {\n        if cdist0(pi, pj) {\n        (void) set_and(pt, pi, pj);\n        if ++T.count \u003e= T.capacity {\n            if (Tsave == NULL)\n            Tsave = sf_contain(T);\n            else\n            Tsave = sf_union(Tsave, sf_contain(T));\n            // inlining of macro new_cover\n            T = sf_new(MAGIC, cube.size);\n            pt = T.data;\n        } else\n            pt += T.wsize;\n        }\n    }\n    }\n\n\n    if (Tsave == NULL)\n    Tsave = sf_contain(T);\n    else\n    Tsave = sf_union(Tsave, sf_contain(T));\n    return Tsave;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

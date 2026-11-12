@@ -1,0 +1,122 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSimSat.c",
+  "SHA256": "f3df22d7340492c57f8070dd72045396e2ae7fe745c5d65679ebe7335fe8e75b",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 68,
+        "Column": 13,
+        "ByteOffset": 2633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 73,
+        "Column": 13,
+        "ByteOffset": 2820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 9,
+        "ByteOffset": 3823
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 9,
+        "ByteOffset": 3991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue2 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssw_ManResimulateBit",
+      "Start": 1298,
+      "End": 2601,
+      "BodyStart": 1379,
+      "Original": "void Ssw_ManResimulateBit( Ssw_Man_t * p, Aig_Obj_t * pCand, Aig_Obj_t * pRepr )\n{\n    Aig_Obj_t * pObj;\n    int i, RetValue1, RetValue2;\n    abctime clk = Abc_Clock();\n    // set the PI simulation information\n    Aig_ManConst1(p-\u003epAig)-\u003efMarkB = 1;\n    Aig_ManForEachCi( p-\u003epAig, pObj, i )\n        pObj-\u003efMarkB = Abc_InfoHasBit( p-\u003epPatWords, i );\n    // simulate internal nodes\n    Aig_ManForEachNode( p-\u003epAig, pObj, i )\n        pObj-\u003efMarkB = ( Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj) )\n                     \u0026 ( Aig_ObjFanin1(pObj)-\u003efMarkB ^ Aig_ObjFaninC1(pObj) );\n    // if repr is given, perform refinement\n    if ( pRepr )\n    {\n        // check equivalence classes\n        RetValue1 = Ssw_ClassesRefineConst1( p-\u003eppClasses, 0 );\n        RetValue2 = Ssw_ClassesRefine( p-\u003eppClasses, 0 );\n        // make sure refinement happened\n        if ( Aig_ObjIsConst1(pRepr) )\n        {\n            assert( RetValue1 );\n            if ( RetValue1 == 0 )\n                Abc_Print( 1, \"\\nSsw_ManResimulateBit() Error: RetValue1 does not hold.\\n\" );\n        }\n        else\n        {\n            assert( RetValue2 );\n            if ( RetValue2 == 0 )\n                Abc_Print( 1, \"\\nSsw_ManResimulateBit() Error: RetValue2 does not hold.\\n\" );\n        }\n    }\np-\u003etimeSimSat += Abc_Clock() - clk;\n}",
+      "Draft": "func Ssw_ManResimulateBit(p *Ssw_Man_t, pCand *Aig_Obj_t, pRepr *Aig_Obj_t) {\n    var pObj *Aig_Obj_t;\n    var i, RetValue1, RetValue2 int32;\n    var clk abctime  = Abc_Clock();\n    // set the PI simulation information\n    Aig_ManConst1(p.pAig).fMarkB = 1;\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        pObj.fMarkB = Abc_InfoHasBit( p.pPatWords, i );\n    }\n    // simulate internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) )\n                     \u0026 ( Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj) ); }\n    }\n    // if repr is given, perform refinement\n    if pRepr != nil {\n        // check equivalence classes\n        RetValue1 = Ssw_ClassesRefineConst1( p.ppClasses, 0 );\n        RetValue2 = Ssw_ClassesRefine( p.ppClasses, 0 );\n        // make sure refinement happened\n        if Aig_ObjIsConst1(pRepr) {\n            assert(RetValue1, \"RetValue1\");\n            if RetValue1 == 0 {\n                Abc_Print( 1, \"\\nSsw_ManResimulateBit() Error: RetValue1 does not hold.\\n\" ); }\n        \n        } else {\n            assert((RetValue2 != 0), \"RetValue2\");\n            if RetValue2 == 0 {\n                Abc_Print( 1, \"\\nSsw_ManResimulateBit() Error: RetValue2 does not hold.\\n\" ); }\n        }\n    }\np.timeSimSat += Abc_Clock() - clk;\n}"
+    },
+    {
+      "Name": "Ssw_ManResimulateWord",
+      "Start": 2864,
+      "End": 3764,
+      "BodyStart": 2953,
+      "Original": "void Ssw_ManResimulateWord( Ssw_Man_t * p, Aig_Obj_t * pCand, Aig_Obj_t * pRepr, int f )\n{\n    int RetValue1, RetValue2;\n    abctime clk = Abc_Clock();\n    // set the PI simulation information\n    Ssw_SmlAssignDist1Plus( p-\u003epSml, p-\u003epPatWords );\n    // simulate internal nodes\n    Ssw_SmlSimulateOne( p-\u003epSml );\n    // check equivalence classes\n    RetValue1 = Ssw_ClassesRefineConst1( p-\u003eppClasses, 1 );\n    RetValue2 = Ssw_ClassesRefine( p-\u003eppClasses, 1 );\n    // make sure refinement happened\n    if ( Aig_ObjIsConst1(pRepr) )\n    {\n        assert( RetValue1 );\n        if ( RetValue1 == 0 )\n            Abc_Print( 1, \"\\nSsw_ManResimulateWord() Error: RetValue1 does not hold.\\n\" );\n    }\n    else\n    {\n        assert( RetValue2 );\n        if ( RetValue2 == 0 )\n            Abc_Print( 1, \"\\nSsw_ManResimulateWord() Error: RetValue2 does not hold.\\n\" );\n    }\np-\u003etimeSimSat += Abc_Clock() - clk;\n}",
+      "Draft": "func Ssw_ManResimulateWord(p *Ssw_Man_t, pCand *Aig_Obj_t, pRepr *Aig_Obj_t, f int32) {\n    var RetValue1, RetValue2 int32;\n    var clk abctime  = Abc_Clock();\n    // set the PI simulation information\n    Ssw_SmlAssignDist1Plus( p.pSml, p.pPatWords );\n    // simulate internal nodes\n    Ssw_SmlSimulateOne( p.pSml );\n    // check equivalence classes\n    RetValue1 = Ssw_ClassesRefineConst1( p.ppClasses, 1 );\n    RetValue2 = Ssw_ClassesRefine( p.ppClasses, 1 );\n    // make sure refinement happened\n    if Aig_ObjIsConst1(pRepr) {\n        assert(RetValue1, \"RetValue1\");\n        if RetValue1 == 0 {\n            Abc_Print( 1, \"\\nSsw_ManResimulateWord() Error: RetValue1 does not hold.\\n\" ); }\n    \n    } else {\n        assert((RetValue2 != 0), \"RetValue2\");\n        if RetValue2 == 0 {\n            Abc_Print( 1, \"\\nSsw_ManResimulateWord() Error: RetValue2 does not hold.\\n\" ); }\n    }\np.timeSimSat += Abc_Clock() - clk;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSimSat.c::pointer-cast::1719",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1552,
+      "End": 1552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSimSat.c::pointer-cast::2038",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1682,
+      "End": 1682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSimSat.c::Ssw_ManResimulateBit",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManResimulateBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1298,
+      "End": 2601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSimSat.c::Ssw_ManResimulateWord",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_ManResimulateWord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2864,
+      "End": 3764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswSimSat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4010
+    }
+  ],
+  "Draft": "package ssw\n\n/**CFile****************************************************************\n\n  FileName    [sswSimSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Inductive prover with constraints.]\n\n  Synopsis    [Performs resimulation using counter-examples.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 1, 2008.]\n\n  Revision    [$Id: sswSimSat.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sswInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Handle the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManResimulateBit(p *Ssw_Man_t, pCand *Aig_Obj_t, pRepr *Aig_Obj_t) {\n    var pObj *Aig_Obj_t;\n    var i, RetValue1, RetValue2 int32;\n    var clk abctime  = Abc_Clock();\n    // set the PI simulation information\n    Aig_ManConst1(p.pAig).fMarkB = 1;\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        pObj.fMarkB = Abc_InfoHasBit( p.pPatWords, i );\n    }\n    // simulate internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) )\n                     \u0026 ( Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj) ); }\n    }\n    // if repr is given, perform refinement\n    if pRepr != nil {\n        // check equivalence classes\n        RetValue1 = Ssw_ClassesRefineConst1( p.ppClasses, 0 );\n        RetValue2 = Ssw_ClassesRefine( p.ppClasses, 0 );\n        // make sure refinement happened\n        if Aig_ObjIsConst1(pRepr) {\n            assert(RetValue1, \"RetValue1\");\n            if RetValue1 == 0 {\n                Abc_Print( 1, \"\\nSsw_ManResimulateBit() Error: RetValue1 does not hold.\\n\" ); }\n        \n        } else {\n            assert((RetValue2 != 0), \"RetValue2\");\n            if RetValue2 == 0 {\n                Abc_Print( 1, \"\\nSsw_ManResimulateBit() Error: RetValue2 does not hold.\\n\" ); }\n        }\n    }\np.timeSimSat += Abc_Clock() - clk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Handle the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_ManResimulateWord(p *Ssw_Man_t, pCand *Aig_Obj_t, pRepr *Aig_Obj_t, f int32) {\n    var RetValue1, RetValue2 int32;\n    var clk abctime  = Abc_Clock();\n    // set the PI simulation information\n    Ssw_SmlAssignDist1Plus( p.pSml, p.pPatWords );\n    // simulate internal nodes\n    Ssw_SmlSimulateOne( p.pSml );\n    // check equivalence classes\n    RetValue1 = Ssw_ClassesRefineConst1( p.ppClasses, 1 );\n    RetValue2 = Ssw_ClassesRefine( p.ppClasses, 1 );\n    // make sure refinement happened\n    if Aig_ObjIsConst1(pRepr) {\n        assert(RetValue1, \"RetValue1\");\n        if RetValue1 == 0 {\n            Abc_Print( 1, \"\\nSsw_ManResimulateWord() Error: RetValue1 does not hold.\\n\" ); }\n    \n    } else {\n        assert((RetValue2 != 0), \"RetValue2\");\n        if RetValue2 == 0 {\n            Abc_Print( 1, \"\\nSsw_ManResimulateWord() Error: RetValue2 does not hold.\\n\" ); }\n    }\np.timeSimSat += Abc_Clock() - clk;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

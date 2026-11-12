@@ -1,0 +1,518 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c",
+  "SHA256": "32865b27cd35fa87dfff5cfc8f3fa30e6c2e28e8eba43ccf4f358d49f5686592",
+  "Library": [
+    {
+      "Name": "log",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 691,
+        "Column": 33,
+        "ByteOffset": 26376
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        CUDD_VALUE_TYPE value = log(/*__starting_point_inline_macro:cuddV__*/((f).type.value));"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 98,
+        "Column": 1,
+        "ByteOffset": 3913
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_addApply",
+      "Start": 5593,
+      "End": 5829,
+      "BodyStart": 5676,
+      "Original": "DdNode *\nCudd_addApply(\n  DdManager * dd,\n  DD_AOP op,\n  DdNode * f,\n  DdNode * g)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddAddApplyRecur(dd,op,f,g);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_addApply(dd *DdManager, op DD_AOP, f *DdNode, g *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddAddApplyRecur(dd,op,f,g);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_addPlus",
+      "Start": 6235,
+      "End": 6713,
+      "BodyStart": 6306,
+      "Original": "DdNode *\nCudd_addPlus(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *res;\n    DdNode *F, *G;\n    CUDD_VALUE_TYPE value;\n\n    F = *f; G = *g;\n    if (F == DD_ZERO(dd)) return(G);\n    if (G == DD_ZERO(dd)) return(F);\n    if (cuddIsConstant(F) \u0026\u0026 cuddIsConstant(G)) {\n        value = cuddV(F)+cuddV(G);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    if (F \u003e G) { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addPlus(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var res *DdNode;\n    var F, G *DdNode;\n    CUDD_VALUE_TYPE value;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ZERO\n    if F == ((dd).zero) { return(G); }\n    // inlining of macro DD_ZERO\n    if G == ((dd).zero) { return(F); }\n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        value = ((F).type.value)+((G).type.value);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addTimes",
+      "Start": 7199,
+      "End": 7743,
+      "BodyStart": 7271,
+      "Original": "DdNode *\nCudd_addTimes(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *res;\n    DdNode *F, *G;\n    CUDD_VALUE_TYPE value;\n\n    F = *f; G = *g;\n    if (F == DD_ZERO(dd) || G == DD_ZERO(dd)) return(DD_ZERO(dd));\n    if (F == DD_ONE(dd)) return(G);\n    if (G == DD_ONE(dd)) return(F);\n    if (cuddIsConstant(F) \u0026\u0026 cuddIsConstant(G)) {\n        value = cuddV(F)*cuddV(G);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    if (F \u003e G) { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addTimes(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var res *DdNode;\n    var F, G *DdNode;\n    CUDD_VALUE_TYPE value;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ZERO\n    if F == ((dd).zero) || G == ((dd).zero) { return(((dd).zero)); }\n    // inlining of macro DD_ONE\n    if F == ((dd).one) { return(G); }\n    // inlining of macro DD_ONE\n    if G == ((dd).one) { return(F); }\n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        value = ((F).type.value)*((G).type.value);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addThreshold",
+      "Start": 8164,
+      "End": 8533,
+      "BodyStart": 8240,
+      "Original": "DdNode *\nCudd_addThreshold(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *F, *G;\n\n    F = *f; G = *g;\n    if (F == G || F == DD_PLUS_INFINITY(dd)) return(F);\n    if (cuddIsConstant(F) \u0026\u0026 cuddIsConstant(G)) {\n        if (cuddV(F) \u003e= cuddV(G)) {\n            return(F);\n        } else {\n            return(DD_ZERO(dd));\n        }\n    }\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addThreshold(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_PLUS_INFINITY\n    if F == G || F == ((dd).plusinfinity) { return(F); }\n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        if ((F).type.value) \u003e= ((G).type.value) {\n            return(F);\n        } else {\n            // inlining of macro DD_ZERO\n            return(((dd).zero));\n        }\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addSetNZ",
+      "Start": 8984,
+      "End": 9257,
+      "BodyStart": 9056,
+      "Original": "DdNode *\nCudd_addSetNZ(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *F, *G;\n\n    F = *f; G = *g;\n    if (F == G) return(F);\n    if (F == DD_ZERO(dd)) return(G);\n    if (G == DD_ZERO(dd)) return(F);\n    if (cuddIsConstant(G)) return(G);\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addSetNZ(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    if F == G { return(F); }\n    // inlining of macro DD_ZERO\n    if F == ((dd).zero) { return(G); }\n    // inlining of macro DD_ZERO\n    if G == ((dd).zero) { return(F); }\n    // inlining of macro cuddIsConstant\n    if (G).index == CUDD_CONST_INDEX { return(G); }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addDivide",
+      "Start": 9665,
+      "End": 10170,
+      "BodyStart": 9738,
+      "Original": "DdNode *\nCudd_addDivide(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *res;\n    DdNode *F, *G;\n    CUDD_VALUE_TYPE value;\n\n    F = *f; G = *g;\n    /* We would like to use F == G -\u003e F/G == 1, but F and G may\n    ** contain zeroes. */\n    if (F == DD_ZERO(dd)) return(DD_ZERO(dd));\n    if (G == DD_ONE(dd)) return(F);\n    if (cuddIsConstant(F) \u0026\u0026 cuddIsConstant(G)) {\n        value = cuddV(F)/cuddV(G);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addDivide(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var res *DdNode;\n    var F, G *DdNode;\n    CUDD_VALUE_TYPE value;\n\n    F = *f; G = *g;\n    /* We would like to use F == G -\u003e F/G == 1, but F and G may\n    ** contain zeroes. */\n    // inlining of macro DD_ZERO\n    if F == ((dd).zero) { return(((dd).zero)); }\n    // inlining of macro DD_ONE\n    if G == ((dd).one) { return(F); }\n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        value = ((F).type.value)//*__starting_point_inline_macro:cuddV__*/((G)-\u003etype.value);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addMinus",
+      "Start": 10585,
+      "End": 11050,
+      "BodyStart": 10657,
+      "Original": "DdNode *\nCudd_addMinus(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *res;\n    DdNode *F, *G;\n    CUDD_VALUE_TYPE value;\n\n    F = *f; G = *g;\n    if (F == G) return(DD_ZERO(dd));\n    if (F == DD_ZERO(dd)) return(cuddAddNegateRecur(dd,G));\n    if (G == DD_ZERO(dd)) return(F);\n    if (cuddIsConstant(F) \u0026\u0026 cuddIsConstant(G)) {\n        value = cuddV(F)-cuddV(G);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addMinus(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var res *DdNode;\n    var F, G *DdNode;\n    CUDD_VALUE_TYPE value;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ZERO\n    if F == G { return(((dd).zero)); }\n    // inlining of macro DD_ZERO\n    if F == ((dd).zero) { return(cuddAddNegateRecur(dd,G)); }\n    // inlining of macro DD_ZERO\n    if G == ((dd).zero) { return(F); }\n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        value = ((F).type.value)-((G).type.value);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addMinimum",
+      "Start": 11469,
+      "End": 12125,
+      "BodyStart": 11543,
+      "Original": "DdNode *\nCudd_addMinimum(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *F, *G;\n\n    F = *f; G = *g;\n    if (F == DD_PLUS_INFINITY(dd)) return(G);\n    if (G == DD_PLUS_INFINITY(dd)) return(F);\n    if (F == G) return(F);\n#if 0\n    /* These special cases probably do not pay off. */\n    if (F == DD_MINUS_INFINITY(dd)) return(F);\n    if (G == DD_MINUS_INFINITY(dd)) return(G);\n#endif\n    if (cuddIsConstant(F) \u0026\u0026 cuddIsConstant(G)) {\n        if (cuddV(F) \u003c= cuddV(G)) {\n            return(F);\n        } else {\n            return(G);\n        }\n    }\n    if (F \u003e G) { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addMinimum(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_PLUS_INFINITY\n    if F == ((dd).plusinfinity) { return(G); }\n    // inlining of macro DD_PLUS_INFINITY\n    if G == ((dd).plusinfinity) { return(F); }\n    if F == G { return(F); }\n     \n                                                      \n                                              \n                                              \n      \n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        if ((F).type.value) \u003c= ((G).type.value) {\n            return(F);\n        } else {\n            return(G);\n        }\n    }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addMaximum",
+      "Start": 12546,
+      "End": 13202,
+      "BodyStart": 12620,
+      "Original": "DdNode *\nCudd_addMaximum(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *F, *G;\n\n    F = *f; G = *g;\n    if (F == G) return(F);\n    if (F == DD_MINUS_INFINITY(dd)) return(G);\n    if (G == DD_MINUS_INFINITY(dd)) return(F);\n#if 0\n    /* These special cases probably do not pay off. */\n    if (F == DD_PLUS_INFINITY(dd)) return(F);\n    if (G == DD_PLUS_INFINITY(dd)) return(G);\n#endif\n    if (cuddIsConstant(F) \u0026\u0026 cuddIsConstant(G)) {\n        if (cuddV(F) \u003e= cuddV(G)) {\n            return(F);\n        } else {\n            return(G);\n        }\n    }\n    if (F \u003e G) { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addMaximum(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    if F == G { return(F); }\n    // inlining of macro DD_MINUS_INFINITY\n    if F == ((dd).minusinfinity) { return(G); }\n    // inlining of macro DD_MINUS_INFINITY\n    if G == ((dd).minusinfinity) { return(F); }\n     \n                                                      \n                                             \n                                             \n      \n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        if ((F).type.value) \u003e= ((G).type.value) {\n            return(F);\n        } else {\n            return(G);\n        }\n    }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addOneZeroMaximum",
+      "Start": 13641,
+      "End": 14036,
+      "BodyStart": 13722,
+      "Original": "DdNode *\nCudd_addOneZeroMaximum(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n\n    if (*f == *g) return(DD_ZERO(dd));\n    if (*g == DD_PLUS_INFINITY(dd))\n        return DD_ZERO(dd);\n    if (cuddIsConstant(*f) \u0026\u0026 cuddIsConstant(*g)) {\n        if (cuddV(*f) \u003e cuddV(*g)) {\n            return(DD_ONE(dd));\n        } else {\n            return(DD_ZERO(dd));\n        }\n    }\n\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addOneZeroMaximum(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n\n    // inlining of macro DD_ZERO\n    if *f == *g { return(((dd).zero)); }\n    // inlining of macro DD_PLUS_INFINITY\n    if *g == ((dd).plusinfinity) {\n        // inlining of macro DD_ZERO\n        return ((dd).zero); }\n    // inlining of macro cuddIsConstant\n    if ((*f).index == CUDD_CONST_INDEX) \u0026\u0026 ((*g).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        if ((*f).type.value) \u003e ((*g).type.value) {\n            // inlining of macro DD_ONE\n            return(((dd).one));\n        } else {\n            // inlining of macro DD_ZERO\n            return(((dd).zero));\n        }\n    }\n\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addDiff",
+      "Start": 14490,
+      "End": 15050,
+      "BodyStart": 14561,
+      "Original": "DdNode *\nCudd_addDiff(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *F, *G;\n\n    F = *f; G = *g;\n    if (F == G) return(DD_PLUS_INFINITY(dd));\n    if (F == DD_PLUS_INFINITY(dd)) return(G);\n    if (G == DD_PLUS_INFINITY(dd)) return(F);\n    if (cuddIsConstant(F) \u0026\u0026 cuddIsConstant(G)) {\n        if (cuddV(F) != cuddV(G)) {\n            if (cuddV(F) \u003c cuddV(G)) {\n                return(F);\n            } else {\n                return(G);\n            }\n        } else {\n            return(DD_PLUS_INFINITY(dd));\n        }\n    }\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addDiff(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_PLUS_INFINITY\n    if F == G { return(((dd).plusinfinity)); }\n    // inlining of macro DD_PLUS_INFINITY\n    if F == ((dd).plusinfinity) { return(G); }\n    // inlining of macro DD_PLUS_INFINITY\n    if G == ((dd).plusinfinity) { return(F); }\n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        if ((F).type.value) != ((G).type.value) {\n            // inlining of macro cuddV\n            if ((F).type.value) \u003c ((G).type.value) {\n                return(F);\n            } else {\n                return(G);\n            }\n        } else {\n            // inlining of macro DD_PLUS_INFINITY\n            return(((dd).plusinfinity));\n        }\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addAgreement",
+      "Start": 15462,
+      "End": 15779,
+      "BodyStart": 15538,
+      "Original": "DdNode *\nCudd_addAgreement(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *F, *G;\n\n    F = *f; G = *g;\n    if (F == G) return(F);\n    if (F == dd-\u003ebackground) return(F);\n    if (G == dd-\u003ebackground) return(G);\n    if (cuddIsConstant(F) \u0026\u0026 cuddIsConstant(G)) return(dd-\u003ebackground);\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addAgreement(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    if F == G { return(F); }\n    if F == dd.background { return(F); }\n    if G == dd.background { return(G); }\n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) { return(dd.background); }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addOr",
+      "Start": 16176,
+      "End": 16548,
+      "BodyStart": 16245,
+      "Original": "DdNode *\nCudd_addOr(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *F, *G;\n\n    F = *f; G = *g;\n    if (F == DD_ONE(dd) || G == DD_ONE(dd)) return(DD_ONE(dd));\n    if (cuddIsConstant(F)) return(G);\n    if (cuddIsConstant(G)) return(F);\n    if (F == G) return(F);\n    if (F \u003e G) { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addOr(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ONE\n    if F == ((dd).one) || G == ((dd).one) { return(((dd).one)); }\n    // inlining of macro cuddIsConstant\n    if (F).index == CUDD_CONST_INDEX { return(G); }\n    // inlining of macro cuddIsConstant\n    if (G).index == CUDD_CONST_INDEX { return(F); }\n    if F == G { return(F); }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addNand",
+      "Start": 16926,
+      "End": 17268,
+      "BodyStart": 16997,
+      "Original": "DdNode *\nCudd_addNand(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *F, *G;\n\n    F = *f; G = *g;\n    if (F == DD_ZERO(dd) || G == DD_ZERO(dd)) return(DD_ONE(dd));\n    if (cuddIsConstant(F) \u0026\u0026 cuddIsConstant(G)) return(DD_ZERO(dd));\n    if (F \u003e G) { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addNand(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ZERO\n    // inlining of macro DD_ONE\n    if F == ((dd).zero) || G == ((dd).zero) { return(((dd).one)); }\n    // inlining of macro cuddIsConstant\n    // inlining of macro DD_ZERO\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) { return(((dd).zero)); }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addNor",
+      "Start": 17645,
+      "End": 17984,
+      "BodyStart": 17715,
+      "Original": "DdNode *\nCudd_addNor(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *F, *G;\n\n    F = *f; G = *g;\n    if (F == DD_ONE(dd) || G == DD_ONE(dd)) return(DD_ZERO(dd));\n    if (cuddIsConstant(F) \u0026\u0026 cuddIsConstant(G)) return(DD_ONE(dd));\n    if (F \u003e G) { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addNor(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ONE\n    // inlining of macro DD_ZERO\n    if F == ((dd).one) || G == ((dd).one) { return(((dd).zero)); }\n    // inlining of macro cuddIsConstant\n    // inlining of macro DD_ONE\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) { return(((dd).one)); }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addXor",
+      "Start": 18360,
+      "End": 18802,
+      "BodyStart": 18430,
+      "Original": "DdNode *\nCudd_addXor(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *F, *G;\n\n    F = *f; G = *g;\n    if (F == G) return(DD_ZERO(dd));\n    if (F == DD_ONE(dd) \u0026\u0026 G == DD_ZERO(dd)) return(DD_ONE(dd));\n    if (G == DD_ONE(dd) \u0026\u0026 F == DD_ZERO(dd)) return(DD_ONE(dd));\n    if (cuddIsConstant(F) \u0026\u0026 cuddIsConstant(G)) return(DD_ZERO(dd));\n    if (F \u003e G) { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addXor(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ZERO\n    if F == G { return(((dd).zero)); }\n    // inlining of macro DD_ONE\n    // inlining of macro DD_ZERO\n    if F == ((dd).one) \u0026\u0026 G == ((dd).zero) { return(((dd).one)); }\n    // inlining of macro DD_ONE\n    // inlining of macro DD_ZERO\n    if G == ((dd).one) \u0026\u0026 F == ((dd).zero) { return(((dd).one)); }\n    // inlining of macro cuddIsConstant\n    // inlining of macro DD_ZERO\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) { return(((dd).zero)); }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addXnor",
+      "Start": 19181,
+      "End": 19623,
+      "BodyStart": 19252,
+      "Original": "DdNode *\nCudd_addXnor(\n  DdManager * dd,\n  DdNode ** f,\n  DdNode ** g)\n{\n    DdNode *F, *G;\n\n    F = *f; G = *g;\n    if (F == G) return(DD_ONE(dd));\n    if (F == DD_ONE(dd) \u0026\u0026 G == DD_ONE(dd)) return(DD_ONE(dd));\n    if (G == DD_ZERO(dd) \u0026\u0026 F == DD_ZERO(dd)) return(DD_ONE(dd));\n    if (cuddIsConstant(F) \u0026\u0026 cuddIsConstant(G)) return(DD_ZERO(dd));\n    if (F \u003e G) { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addXnor(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ONE\n    if F == G { return(((dd).one)); }\n    // inlining of macro DD_ONE\n    if F == ((dd).one) \u0026\u0026 G == ((dd).one) { return(((dd).one)); }\n    // inlining of macro DD_ZERO\n    // inlining of macro DD_ONE\n    if G == ((dd).zero) \u0026\u0026 F == ((dd).zero) { return(((dd).one)); }\n    // inlining of macro cuddIsConstant\n    // inlining of macro DD_ZERO\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) { return(((dd).zero)); }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "Cudd_addMonadicApply",
+      "Start": 20052,
+      "End": 20287,
+      "BodyStart": 20129,
+      "Original": "DdNode *\nCudd_addMonadicApply(\n  DdManager * dd,\n  DD_MAOP op,\n  DdNode * f)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddAddMonadicApplyRecur(dd,op,f);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_addMonadicApply(dd *DdManager, op DD_MAOP, f *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddAddMonadicApplyRecur(dd,op,f);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_addLog",
+      "Start": 20748,
+      "End": 20976,
+      "BodyStart": 20802,
+      "Original": "DdNode *\nCudd_addLog(\n  DdManager * dd,\n  DdNode * f)\n{\n    if (cuddIsConstant(f)) {\n        CUDD_VALUE_TYPE value = log(cuddV(f));\n        DdNode *res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    return(NULL);\n\n}",
+      "Draft": "func Cudd_addLog(dd *DdManager, f *DdNode) *DdNode {\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        // inlining of macro cuddV\n        CUDD_VALUE_TYPE value = math.Log(float64(((f).type.value)));\n        var res *DdNode  = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    return(nil);\n\n}"
+    },
+    {
+      "Name": "cuddAddApplyRecur",
+      "Start": 21662,
+      "End": 23106,
+      "BodyStart": 21749,
+      "Original": "DdNode *\ncuddAddApplyRecur(\n  DdManager * dd,\n  DD_AOP op,\n  DdNode * f,\n  DdNode * g)\n{\n    DdNode *res,\n           *fv, *fvn, *gv, *gvn,\n           *T, *E;\n    unsigned int ford, gord;\n    unsigned int index;\n    DD_CTFP cacheOp;\n\n    /* Check terminal cases. Op may swap f and g to increase the\n     * cache hit rate.\n     */\n    statLine(dd);\n    res = (*op)(dd,\u0026f,\u0026g);\n    if (res != NULL) return(res);\n\n    /* Check cache. */\n    cacheOp = (DD_CTFP) op;\n    res = cuddCacheLookup2(dd,cacheOp,f,g);\n    if (res != NULL) return(res);\n\n    /* Recursive step. */\n    ford = cuddI(dd,f-\u003eindex);\n    gord = cuddI(dd,g-\u003eindex);\n    if (ford \u003c= gord) {\n        index = f-\u003eindex;\n        fv = cuddT(f);\n        fvn = cuddE(f);\n    } else {\n        index = g-\u003eindex;\n        fv = fvn = f;\n    }\n    if (gord \u003c= ford) {\n        gv = cuddT(g);\n        gvn = cuddE(g);\n    } else {\n        gv = gvn = g;\n    }\n\n    T = cuddAddApplyRecur(dd,op,fv,gv);\n    if (T == NULL) return(NULL);\n    cuddRef(T);\n\n    E = cuddAddApplyRecur(dd,op,fvn,gvn);\n    if (E == NULL) {\n        Cudd_RecursiveDeref(dd,T);\n        return(NULL);\n    }\n    cuddRef(E);\n\n    res = (T == E) ? T : cuddUniqueInter(dd,(int)index,T,E);\n    if (res == NULL) {\n        Cudd_RecursiveDeref(dd, T);\n        Cudd_RecursiveDeref(dd, E);\n        return(NULL);\n    }\n    cuddDeref(T);\n    cuddDeref(E);\n\n    /* Store result. */\n    cuddCacheInsert2(dd,cacheOp,f,g,res);\n\n    return(res);\n\n}",
+      "Draft": "func cuddAddApplyRecur(dd *DdManager, op DD_AOP, f *DdNode, g *DdNode) *DdNode {\n    var res, fv, fvn, gv, gvn, T, E *DdNode;\n    unsigned int ford, gord;\n    unsigned int index;\n    DD_CTFP cacheOp;\n\n    /* Check terminal cases. Op may swap f and g to increase the\n     * cache hit rate.\n     */\n    statLine(dd);\n    res = (*op)(dd,\u0026f,\u0026g);\n    if res != nil { return(res); }\n\n    /* Check cache. */\n    cacheOp = (DD_CTFP) op;\n    res = cuddCacheLookup2(dd,cacheOp,f,g);\n    if res != nil { return(res); }\n\n    /* Recursive step. */\n    // inlining of macro cuddI\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        ford = int32((f.index));\n    } else {\n        ford = (dd).perm[(f.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        gord = int32((g.index));\n    } else {\n        gord = (dd).perm[(g.index)];\n    }\n    if ford \u003c= gord {\n        index = f.index;\n        // inlining of macro cuddT\n        fv = ((f).type.kids.T);\n        // inlining of macro cuddE\n        fvn = ((f).type.kids.E);\n    } else {\n        index = g.index;\n        fv = fvn = f;\n    }\n    if gord \u003c= ford {\n        // inlining of macro cuddT\n        gv = ((g).type.kids.T);\n        // inlining of macro cuddE\n        gvn = ((g).type.kids.E);\n    } else {\n        gv = gvn = g;\n    }\n\n    T = cuddAddApplyRecur(dd,op,fv,gv);\n    if T == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(T).ref);\n\n    E = cuddAddApplyRecur(dd,op,fvn,gvn);\n    if E == nil {\n        Cudd_RecursiveDeref(dd,T);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(E).ref);\n\n    if T == E {\n        res = T;\n    } else {\n        res = cuddUniqueInter(dd,int32(index),T,E);\n    }\n    if res == nil {\n        Cudd_RecursiveDeref(dd, T);\n        Cudd_RecursiveDeref(dd, E);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(T).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(E).ref);\n\n    /* Store result. */\n    cuddCacheInsert2(dd,cacheOp,f,g,res);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddAddMonadicApplyRecur",
+      "Start": 23563,
+      "End": 24535,
+      "BodyStart": 23644,
+      "Original": "DdNode *\ncuddAddMonadicApplyRecur(\n  DdManager * dd,\n  DD_MAOP op,\n  DdNode * f)\n{\n    DdNode *res, *ft, *fe, *T, *E;\n    unsigned int index;\n\n    /* Check terminal cases. */\n    statLine(dd);\n    res = (*op)(dd,f);\n    if (res != NULL) return(res);\n\n    /* Check cache. */\n    res = cuddCacheLookup1(dd,op,f);\n    if (res != NULL) return(res);\n\n    /* Recursive step. */\n    index = f-\u003eindex;\n    ft = cuddT(f);\n    fe = cuddE(f);\n\n    T = cuddAddMonadicApplyRecur(dd,op,ft);\n    if (T == NULL) return(NULL);\n    cuddRef(T);\n\n    E = cuddAddMonadicApplyRecur(dd,op,fe);\n    if (E == NULL) {\n        Cudd_RecursiveDeref(dd,T);\n        return(NULL);\n    }\n    cuddRef(E);\n\n    res = (T == E) ? T : cuddUniqueInter(dd,(int)index,T,E);\n    if (res == NULL) {\n        Cudd_RecursiveDeref(dd, T);\n        Cudd_RecursiveDeref(dd, E);\n        return(NULL);\n    }\n    cuddDeref(T);\n    cuddDeref(E);\n\n    /* Store result. */\n    cuddCacheInsert1(dd,op,f,res);\n\n    return(res);\n\n}",
+      "Draft": "func cuddAddMonadicApplyRecur(dd *DdManager, op DD_MAOP, f *DdNode) *DdNode {\n    var res, ft, fe, T, E *DdNode;\n    unsigned int index;\n\n    /* Check terminal cases. */\n    statLine(dd);\n    res = (*op)(dd,f);\n    if res != nil { return(res); }\n\n    /* Check cache. */\n    res = cuddCacheLookup1(dd,op,f);\n    if res != nil { return(res); }\n\n    /* Recursive step. */\n    index = f.index;\n    // inlining of macro cuddT\n    ft = ((f).type.kids.T);\n    // inlining of macro cuddE\n    fe = ((f).type.kids.E);\n\n    T = cuddAddMonadicApplyRecur(dd,op,ft);\n    if T == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(T).ref);\n\n    E = cuddAddMonadicApplyRecur(dd,op,fe);\n    if E == nil {\n        Cudd_RecursiveDeref(dd,T);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(E).ref);\n\n    if T == E {\n        res = T;\n    } else {\n        res = cuddUniqueInter(dd,int32(index),T,E);\n    }\n    if res == nil {\n        Cudd_RecursiveDeref(dd, T);\n        Cudd_RecursiveDeref(dd, E);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(T).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(E).ref);\n\n    /* Store result. */\n    cuddCacheInsert1(dd,op,f,res);\n\n    return(res);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::mechanical::do::5661",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5700,
+      "End": 5702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::mechanical::do::25699",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 20153,
+      "End": 20155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addApply",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addApply",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5593,
+      "End": 5829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addPlus",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addPlus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6235,
+      "End": 6713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addTimes",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addTimes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7199,
+      "End": 7743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addThreshold",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addThreshold",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8164,
+      "End": 8533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addSetNZ",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addSetNZ",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8984,
+      "End": 9257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addDivide",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addDivide",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9665,
+      "End": 10170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addMinus",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addMinus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10585,
+      "End": 11050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addMinimum",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addMinimum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11469,
+      "End": 12125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addMaximum",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addMaximum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12546,
+      "End": 13202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addOneZeroMaximum",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addOneZeroMaximum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13641,
+      "End": 14036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addDiff",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addDiff",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14490,
+      "End": 15050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addAgreement",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addAgreement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15462,
+      "End": 15779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addOr",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16176,
+      "End": 16548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addNand",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addNand",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16926,
+      "End": 17268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addNor",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addNor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17645,
+      "End": 17984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addXor",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18360,
+      "End": 18802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addXnor",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addXnor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19181,
+      "End": 19623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addMonadicApply",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addMonadicApply",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20052,
+      "End": 20287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::Cudd_addLog",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_addLog",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20748,
+      "End": 20976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::cuddAddApplyRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddAddApplyRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21662,
+      "End": 23106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::cuddAddMonadicApplyRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddAddMonadicApplyRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23563,
+      "End": 24535
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 24842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3913,
+      "End": 4026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::macro-inline::21995",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21995,
+      "End": 22007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::macro-inline::22643",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22643,
+      "End": 22653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::macro-inline::22786",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22786,
+      "End": 22796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::macro-inline::22987",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 22987,
+      "End": 22999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::macro-inline::23005",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23005,
+      "End": 23017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::macro-inline::23742",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23742,
+      "End": 23754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::macro-inline::24077",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24077,
+      "End": 24087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::macro-inline::24222",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24222,
+      "End": 24232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::macro-inline::24423",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24423,
+      "End": 24435
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAddApply.c::macro-inline::24441",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 24441,
+      "End": 24453
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"math\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddAddApply.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Apply functions for ADDs and their operators.]\n\n  Description [External procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_addApply()\n                \u003cli\u003e Cudd_addMonadicApply()\n                \u003cli\u003e Cudd_addPlus()\n                \u003cli\u003e Cudd_addTimes()\n                \u003cli\u003e Cudd_addThreshold()\n                \u003cli\u003e Cudd_addSetNZ()\n                \u003cli\u003e Cudd_addDivide()\n                \u003cli\u003e Cudd_addMinus()\n                \u003cli\u003e Cudd_addMinimum()\n                \u003cli\u003e Cudd_addMaximum()\n                \u003cli\u003e Cudd_addOneZeroMaximum()\n                \u003cli\u003e Cudd_addDiff()\n                \u003cli\u003e Cudd_addAgreement()\n                \u003cli\u003e Cudd_addOr()\n                \u003cli\u003e Cudd_addNand()\n                \u003cli\u003e Cudd_addNor()\n                \u003cli\u003e Cudd_addXor()\n                \u003cli\u003e Cudd_addXnor()\n                \u003c/ul\u003e\n            Internal procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddAddApplyRecur()\n                \u003cli\u003e cuddAddMonadicApplyRecur()\n                \u003c/ul\u003e]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddAddApply.c,v 1.18 2009/02/19 16:15:26 fabio Exp $\";\n#endif\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Applies op to the corresponding discriminants of f and g.]\n\n  Description [Applies op to the corresponding discriminants of f and g.\n  Returns a pointer to the result if succssful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addMonadicApply Cudd_addPlus Cudd_addTimes\n  Cudd_addThreshold Cudd_addSetNZ Cudd_addDivide Cudd_addMinus Cudd_addMinimum\n  Cudd_addMaximum Cudd_addOneZeroMaximum Cudd_addDiff Cudd_addAgreement\n  Cudd_addOr Cudd_addNand Cudd_addNor Cudd_addXor Cudd_addXnor]\n\n******************************************************************************/\nfunc Cudd_addApply(dd *DdManager, op DD_AOP, f *DdNode, g *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddAddApplyRecur(dd,op,f,g);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_addApply */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Integer and floating point addition.]\n\n  Description [Integer and floating point addition. Returns NULL if not\n  a terminal case; f+g otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addPlus(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var res *DdNode;\n    var F, G *DdNode;\n    CUDD_VALUE_TYPE value;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ZERO\n    if F == ((dd).zero) { return(G); }\n    // inlining of macro DD_ZERO\n    if G == ((dd).zero) { return(F); }\n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        value = ((F).type.value)+((G).type.value);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n} /* end of Cudd_addPlus */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Integer and floating point multiplication.]\n\n  Description [Integer and floating point multiplication. Returns NULL\n  if not a terminal case; f * g otherwise.  This function can be used also\n  to take the AND of two 0-1 ADDs.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addTimes(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var res *DdNode;\n    var F, G *DdNode;\n    CUDD_VALUE_TYPE value;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ZERO\n    if F == ((dd).zero) || G == ((dd).zero) { return(((dd).zero)); }\n    // inlining of macro DD_ONE\n    if F == ((dd).one) { return(G); }\n    // inlining of macro DD_ONE\n    if G == ((dd).one) { return(F); }\n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        value = ((F).type.value)*((G).type.value);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n} /* end of Cudd_addTimes */\n\n\n/**Function********************************************************************\n\n  Synopsis    [f if f\u0026gt;=g; 0 if f\u0026lt;g.]\n\n  Description [Threshold operator for Apply (f if f \u0026gt;=g; 0 if f\u0026lt;g).\n  Returns NULL if not a terminal case; f op g otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addThreshold(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_PLUS_INFINITY\n    if F == G || F == ((dd).plusinfinity) { return(F); }\n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        if ((F).type.value) \u003e= ((G).type.value) {\n            return(F);\n        } else {\n            // inlining of macro DD_ZERO\n            return(((dd).zero));\n        }\n    }\n    return(nil);\n\n} /* end of Cudd_addThreshold */\n\n\n/**Function********************************************************************\n\n  Synopsis    [This operator sets f to the value of g wherever g != 0.]\n\n  Description [This operator sets f to the value of g wherever g != 0.\n  Returns NULL if not a terminal case; f op g otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addSetNZ(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    if F == G { return(F); }\n    // inlining of macro DD_ZERO\n    if F == ((dd).zero) { return(G); }\n    // inlining of macro DD_ZERO\n    if G == ((dd).zero) { return(F); }\n    // inlining of macro cuddIsConstant\n    if (G).index == CUDD_CONST_INDEX { return(G); }\n    return(nil);\n\n} /* end of Cudd_addSetNZ */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Integer and floating point division.]\n\n  Description [Integer and floating point division. Returns NULL if not\n  a terminal case; f / g otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addDivide(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var res *DdNode;\n    var F, G *DdNode;\n    CUDD_VALUE_TYPE value;\n\n    F = *f; G = *g;\n    /* We would like to use F == G -\u003e F/G == 1, but F and G may\n    ** contain zeroes. */\n    // inlining of macro DD_ZERO\n    if F == ((dd).zero) { return(((dd).zero)); }\n    // inlining of macro DD_ONE\n    if G == ((dd).one) { return(F); }\n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        value = ((F).type.value)//*__starting_point_inline_macro:cuddV__*/((G)-\u003etype.value);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    return(nil);\n\n} /* end of Cudd_addDivide */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Integer and floating point subtraction.]\n\n  Description [Integer and floating point subtraction. Returns NULL if\n  not a terminal case; f - g otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addMinus(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var res *DdNode;\n    var F, G *DdNode;\n    CUDD_VALUE_TYPE value;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ZERO\n    if F == G { return(((dd).zero)); }\n    // inlining of macro DD_ZERO\n    if F == ((dd).zero) { return(cuddAddNegateRecur(dd,G)); }\n    // inlining of macro DD_ZERO\n    if G == ((dd).zero) { return(F); }\n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        value = ((F).type.value)-((G).type.value);\n        res = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    return(nil);\n\n} /* end of Cudd_addMinus */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Integer and floating point min.]\n\n  Description [Integer and floating point min for Cudd_addApply.\n  Returns NULL if not a terminal case; min(f,g) otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addMinimum(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_PLUS_INFINITY\n    if F == ((dd).plusinfinity) { return(G); }\n    // inlining of macro DD_PLUS_INFINITY\n    if G == ((dd).plusinfinity) { return(F); }\n    if F == G { return(F); }\n     \n                                                      \n                                              \n                                              \n      \n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        if ((F).type.value) \u003c= ((G).type.value) {\n            return(F);\n        } else {\n            return(G);\n        }\n    }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n} /* end of Cudd_addMinimum */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Integer and floating point max.]\n\n  Description [Integer and floating point max for Cudd_addApply.\n  Returns NULL if not a terminal case; max(f,g) otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addMaximum(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    if F == G { return(F); }\n    // inlining of macro DD_MINUS_INFINITY\n    if F == ((dd).minusinfinity) { return(G); }\n    // inlining of macro DD_MINUS_INFINITY\n    if G == ((dd).minusinfinity) { return(F); }\n     \n                                                      \n                                             \n                                             \n      \n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        if ((F).type.value) \u003e= ((G).type.value) {\n            return(F);\n        } else {\n            return(G);\n        }\n    }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n} /* end of Cudd_addMaximum */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns 1 if f \u0026gt; g and 0 otherwise.]\n\n  Description [Returns 1 if f \u0026gt; g and 0 otherwise. Used in\n  conjunction with Cudd_addApply. Returns NULL if not a terminal\n  case.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addOneZeroMaximum(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n\n    // inlining of macro DD_ZERO\n    if *f == *g { return(((dd).zero)); }\n    // inlining of macro DD_PLUS_INFINITY\n    if *g == ((dd).plusinfinity) {\n        // inlining of macro DD_ZERO\n        return ((dd).zero); }\n    // inlining of macro cuddIsConstant\n    if ((*f).index == CUDD_CONST_INDEX) \u0026\u0026 ((*g).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        if ((*f).type.value) \u003e ((*g).type.value) {\n            // inlining of macro DD_ONE\n            return(((dd).one));\n        } else {\n            // inlining of macro DD_ZERO\n            return(((dd).zero));\n        }\n    }\n\n    return(nil);\n\n} /* end of Cudd_addOneZeroMaximum */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Returns plusinfinity if f=g; returns min(f,g) if f!=g.]\n\n  Description [Returns NULL if not a terminal case; f op g otherwise,\n  where f op g is plusinfinity if f=g; min(f,g) if f!=g.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addDiff(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_PLUS_INFINITY\n    if F == G { return(((dd).plusinfinity)); }\n    // inlining of macro DD_PLUS_INFINITY\n    if F == ((dd).plusinfinity) { return(G); }\n    // inlining of macro DD_PLUS_INFINITY\n    if G == ((dd).plusinfinity) { return(F); }\n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) {\n        // inlining of macro cuddV\n        if ((F).type.value) != ((G).type.value) {\n            // inlining of macro cuddV\n            if ((F).type.value) \u003c ((G).type.value) {\n                return(F);\n            } else {\n                return(G);\n            }\n        } else {\n            // inlining of macro DD_PLUS_INFINITY\n            return(((dd).plusinfinity));\n        }\n    }\n    return(nil);\n\n} /* end of Cudd_addDiff */\n\n\n/**Function********************************************************************\n\n  Synopsis    [f if f==g; background if f!=g.]\n\n  Description [Returns NULL if not a terminal case; f op g otherwise,\n  where f op g is f if f==g; background if f!=g.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addAgreement(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    if F == G { return(F); }\n    if F == dd.background { return(F); }\n    if G == dd.background { return(G); }\n    // inlining of macro cuddIsConstant\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) { return(dd.background); }\n    return(nil);\n\n} /* end of Cudd_addAgreement */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Disjunction of two 0-1 ADDs.]\n\n  Description [Disjunction of two 0-1 ADDs. Returns NULL\n  if not a terminal case; f OR g otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addOr(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ONE\n    if F == ((dd).one) || G == ((dd).one) { return(((dd).one)); }\n    // inlining of macro cuddIsConstant\n    if (F).index == CUDD_CONST_INDEX { return(G); }\n    // inlining of macro cuddIsConstant\n    if (G).index == CUDD_CONST_INDEX { return(F); }\n    if F == G { return(F); }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n} /* end of Cudd_addOr */\n\n\n/**Function********************************************************************\n\n  Synopsis    [NAND of two 0-1 ADDs.]\n\n  Description [NAND of two 0-1 ADDs. Returns NULL\n  if not a terminal case; f NAND g otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addNand(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ZERO\n    // inlining of macro DD_ONE\n    if F == ((dd).zero) || G == ((dd).zero) { return(((dd).one)); }\n    // inlining of macro cuddIsConstant\n    // inlining of macro DD_ZERO\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) { return(((dd).zero)); }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n} /* end of Cudd_addNand */\n\n\n/**Function********************************************************************\n\n  Synopsis    [NOR of two 0-1 ADDs.]\n\n  Description [NOR of two 0-1 ADDs. Returns NULL\n  if not a terminal case; f NOR g otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addNor(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ONE\n    // inlining of macro DD_ZERO\n    if F == ((dd).one) || G == ((dd).one) { return(((dd).zero)); }\n    // inlining of macro cuddIsConstant\n    // inlining of macro DD_ONE\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) { return(((dd).one)); }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n} /* end of Cudd_addNor */\n\n\n/**Function********************************************************************\n\n  Synopsis    [XOR of two 0-1 ADDs.]\n\n  Description [XOR of two 0-1 ADDs. Returns NULL\n  if not a terminal case; f XOR g otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addXor(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ZERO\n    if F == G { return(((dd).zero)); }\n    // inlining of macro DD_ONE\n    // inlining of macro DD_ZERO\n    if F == ((dd).one) \u0026\u0026 G == ((dd).zero) { return(((dd).one)); }\n    // inlining of macro DD_ONE\n    // inlining of macro DD_ZERO\n    if G == ((dd).one) \u0026\u0026 F == ((dd).zero) { return(((dd).one)); }\n    // inlining of macro cuddIsConstant\n    // inlining of macro DD_ZERO\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) { return(((dd).zero)); }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n} /* end of Cudd_addXor */\n\n\n/**Function********************************************************************\n\n  Synopsis    [XNOR of two 0-1 ADDs.]\n\n  Description [XNOR of two 0-1 ADDs. Returns NULL\n  if not a terminal case; f XNOR g otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply]\n\n******************************************************************************/\nfunc Cudd_addXnor(dd *DdManager, f **DdNode, g **DdNode) *DdNode {\n    var F, G *DdNode;\n\n    F = *f; G = *g;\n    // inlining of macro DD_ONE\n    if F == G { return(((dd).one)); }\n    // inlining of macro DD_ONE\n    if F == ((dd).one) \u0026\u0026 G == ((dd).one) { return(((dd).one)); }\n    // inlining of macro DD_ZERO\n    // inlining of macro DD_ONE\n    if G == ((dd).zero) \u0026\u0026 F == ((dd).zero) { return(((dd).one)); }\n    // inlining of macro cuddIsConstant\n    // inlining of macro DD_ZERO\n    if ((F).index == CUDD_CONST_INDEX) \u0026\u0026 ((G).index == CUDD_CONST_INDEX) { return(((dd).zero)); }\n    if F \u003e G { /* swap f and g */\n        *f = G;\n        *g = F;\n    }\n    return(nil);\n\n} /* end of Cudd_addXnor */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Applies op to the discriminants of f.]\n\n  Description [Applies op to the discriminants of f.\n  Returns a pointer to the result if succssful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addApply Cudd_addLog]\n\n******************************************************************************/\nfunc Cudd_addMonadicApply(dd *DdManager, op DD_MAOP, f *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddAddMonadicApplyRecur(dd,op,f);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_addMonadicApply */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Natural logarithm of an ADD.]\n\n  Description [Natural logarithm of an ADDs. Returns NULL\n  if not a terminal case; log(f) otherwise.  The discriminants of f must\n  be positive double's.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addMonadicApply]\n\n******************************************************************************/\nfunc Cudd_addLog(dd *DdManager, f *DdNode) *DdNode {\n    // inlining of macro cuddIsConstant\n    if (f).index == CUDD_CONST_INDEX {\n        // inlining of macro cuddV\n        CUDD_VALUE_TYPE value = math.Log(float64(((f).type.value)));\n        var res *DdNode  = cuddUniqueConst(dd,value);\n        return(res);\n    }\n    return(nil);\n\n} /* end of Cudd_addLog */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_addApply.]\n\n  Description [Performs the recursive step of Cudd_addApply. Returns a\n  pointer to the result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddAddMonadicApplyRecur]\n\n******************************************************************************/\nfunc cuddAddApplyRecur(dd *DdManager, op DD_AOP, f *DdNode, g *DdNode) *DdNode {\n    var res, fv, fvn, gv, gvn, T, E *DdNode;\n    unsigned int ford, gord;\n    unsigned int index;\n    DD_CTFP cacheOp;\n\n    /* Check terminal cases. Op may swap f and g to increase the\n     * cache hit rate.\n     */\n    statLine(dd);\n    res = (*op)(dd,\u0026f,\u0026g);\n    if res != nil { return(res); }\n\n    /* Check cache. */\n    cacheOp = (DD_CTFP) op;\n    res = cuddCacheLookup2(dd,cacheOp,f,g);\n    if res != nil { return(res); }\n\n    /* Recursive step. */\n    // inlining of macro cuddI\n    \n    if (f.index)==CUDD_CONST_INDEX {\n        ford = int32((f.index));\n    } else {\n        ford = (dd).perm[(f.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (g.index)==CUDD_CONST_INDEX {\n        gord = int32((g.index));\n    } else {\n        gord = (dd).perm[(g.index)];\n    }\n    if ford \u003c= gord {\n        index = f.index;\n        // inlining of macro cuddT\n        fv = ((f).type.kids.T);\n        // inlining of macro cuddE\n        fvn = ((f).type.kids.E);\n    } else {\n        index = g.index;\n        fv = fvn = f;\n    }\n    if gord \u003c= ford {\n        // inlining of macro cuddT\n        gv = ((g).type.kids.T);\n        // inlining of macro cuddE\n        gvn = ((g).type.kids.E);\n    } else {\n        gv = gvn = g;\n    }\n\n    T = cuddAddApplyRecur(dd,op,fv,gv);\n    if T == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(T).ref);\n\n    E = cuddAddApplyRecur(dd,op,fvn,gvn);\n    if E == nil {\n        Cudd_RecursiveDeref(dd,T);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(E).ref);\n\n    if T == E {\n        res = T;\n    } else {\n        res = cuddUniqueInter(dd,int32(index),T,E);\n    }\n    if res == nil {\n        Cudd_RecursiveDeref(dd, T);\n        Cudd_RecursiveDeref(dd, E);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(T).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(E).ref);\n\n    /* Store result. */\n    cuddCacheInsert2(dd,cacheOp,f,g,res);\n\n    return(res);\n\n} /* end of cuddAddApplyRecur */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_addMonadicApply.]\n\n  Description [Performs the recursive step of Cudd_addMonadicApply. Returns a\n  pointer to the result if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [cuddAddApplyRecur]\n\n******************************************************************************/\nfunc cuddAddMonadicApplyRecur(dd *DdManager, op DD_MAOP, f *DdNode) *DdNode {\n    var res, ft, fe, T, E *DdNode;\n    unsigned int index;\n\n    /* Check terminal cases. */\n    statLine(dd);\n    res = (*op)(dd,f);\n    if res != nil { return(res); }\n\n    /* Check cache. */\n    res = cuddCacheLookup1(dd,op,f);\n    if res != nil { return(res); }\n\n    /* Recursive step. */\n    index = f.index;\n    // inlining of macro cuddT\n    ft = ((f).type.kids.T);\n    // inlining of macro cuddE\n    fe = ((f).type.kids.E);\n\n    T = cuddAddMonadicApplyRecur(dd,op,ft);\n    if T == nil { return(nil); }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(T).ref);\n\n    E = cuddAddMonadicApplyRecur(dd,op,fe);\n    if E == nil {\n        Cudd_RecursiveDeref(dd,T);\n        return(nil);\n    }\n    // inlining of macro cuddRef\n    cuddSatInc(Cudd_Regular(E).ref);\n\n    if T == E {\n        res = T;\n    } else {\n        res = cuddUniqueInter(dd,int32(index),T,E);\n    }\n    if res == nil {\n        Cudd_RecursiveDeref(dd, T);\n        Cudd_RecursiveDeref(dd, E);\n        return(nil);\n    }\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(T).ref);\n    // inlining of macro cuddDeref\n    cuddSatDec(Cudd_Regular(E).ref);\n\n    /* Store result. */\n    cuddCacheInsert1(dd,op,f,res);\n\n    return(res);\n\n} /* end of cuddAddMonadicApplyRecur */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

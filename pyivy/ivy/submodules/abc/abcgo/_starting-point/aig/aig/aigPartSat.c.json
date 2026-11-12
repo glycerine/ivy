@@ -1,0 +1,713 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c",
+  "SHA256": "801caf55ff54aa7d9e67d53cf7b227ed1c08b52ef87177c30cbdf0b81990a6f7",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 197,
+        "Column": 13,
+        "ByteOffset": 6856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Aig_ObjRefs((Aig_Obj_t *)pObj.pData) \u003c Aig_ObjRefs(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 7059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManNodeNum(pNew) == Vec_PtrSize(vNodes) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 235,
+        "Column": 5,
+        "ByteOffset": 8421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nParts \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 257,
+        "Column": 13,
+        "ByteOffset": 9517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Aig_ManPartSplit(): Skipping partition # %d without nodes (warning).\\n\", i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 325,
+        "Column": 9,
+        "ByteOffset": 12717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fPhase == pObjInit.fPhase );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 385,
+        "Column": 13,
+        "ByteOffset": 15197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); // if it happens, can return 1 (unsatisfiable)"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 403,
+        "Column": 13,
+        "ByteOffset": 16155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 407,
+        "Column": 13,
+        "ByteOffset": 16351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 423,
+        "Column": 13,
+        "ByteOffset": 17253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 427,
+        "Column": 13,
+        "ByteOffset": 17449
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 438,
+        "Column": 9,
+        "ByteOffset": 18025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iSatVarOld != 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 445,
+        "Column": 13,
+        "ByteOffset": 18391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); // if it happens, can return 1 (unsatisfiable)"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 457,
+        "Column": 13,
+        "ByteOffset": 19068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); // if it happens, can return 1 (unsatisfiable)"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 505,
+        "Column": 9,
+        "ByteOffset": 20456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Unknown partitioning algorithm.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 510,
+        "Column": 5,
+        "ByteOffset": 20551
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Partitioning derived %d partitions. \", Vec_IntFindMax(vNode2Part) + 1 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 512,
+        "Column": 73,
+        "ByteOffset": 20784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 522,
+        "Column": 5,
+        "ByteOffset": 21170
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Partions were transformed into AIGs. \" );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 524,
+        "Column": 73,
+        "ByteOffset": 21372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 558,
+        "Column": 13,
+        "ByteOffset": 22864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%4d : Aig = %6d. Vs = %7d. RootCs = %7d. LearnCs = %6d. \","
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 562,
+        "Column": 73,
+        "ByteOffset": 23227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 575,
+        "Column": 13,
+        "ByteOffset": 23574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Exceeded the limit on the total number of conflicts (%d).\\n\", nConfTotal );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ManPartitionMonolithic",
+      "Start": 1767,
+      "End": 1925,
+      "BodyStart": 1823,
+      "Original": "Vec_Int_t * Aig_ManPartitionMonolithic( Aig_Man_t * p )\n{\n    Vec_Int_t * vId2Part;\n    vId2Part = Vec_IntStart( Aig_ManObjNumMax(p) );\n    return vId2Part;\n}",
+      "Draft": "func Aig_ManPartitionMonolithic(p *Aig_Man_t) *Vec_Int_t {\n    var vId2Part *Vec_Int_t;\n    vId2Part = Vec_IntStart( Aig_ManObjNumMax(p) );\n    return vId2Part;\n}"
+    },
+    {
+      "Name": "Aig_ManPartitionLevelized",
+      "Start": 2196,
+      "End": 2653,
+      "BodyStart": 2266,
+      "Original": "Vec_Int_t * Aig_ManPartitionLevelized( Aig_Man_t * p, int nPartSize )\n{\n    Vec_Int_t * vId2Part;\n    Vec_Vec_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i, k, Counter = 0;\n    vNodes = Aig_ManLevelize( p );\n    vId2Part = Vec_IntStart( Aig_ManObjNumMax(p) );\n    Vec_VecForEachEntryReverseReverse( Aig_Obj_t *, vNodes, pObj, i, k )\n        Vec_IntWriteEntry( vId2Part, Aig_ObjId(pObj), Counter++/nPartSize );\n    Vec_VecFree( vNodes );\n    return vId2Part;\n}",
+      "Draft": "func Aig_ManPartitionLevelized(p *Aig_Man_t, nPartSize int32) *Vec_Int_t {\n    var vId2Part *Vec_Int_t;\n    var vNodes *Vec_Vec_t;\n    var pObj *Aig_Obj_t;\n    var i, k, Counter int32;\n    vNodes = Aig_ManLevelize( p );\n    vId2Part = Vec_IntStart( Aig_ManObjNumMax(p) );\n    // inlining of macro Vec_VecForEachEntryReverseReverse\n    // inlining of macro Vec_PtrForEachEntryReverse\n    for  i = Vec_VecSize(vNodes) - 1; i \u003e= 0; i--  {                                                   for  k = Vec_PtrSize(Vec_VecEntry(vNodes, i)) - 1; (k \u003e= 0) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vNodes, i), k)), 1); k--  { \n        Vec_IntWriteEntry( vId2Part, Aig_ObjId(pObj), Counter++/nPartSize );\n    }\n    }\n    Vec_VecFree( vNodes );\n    return vId2Part;\n}"
+    },
+    {
+      "Name": "Aig_ManPartitionDfs",
+      "Start": 2918,
+      "End": 3622,
+      "BodyStart": 2997,
+      "Original": "Vec_Int_t * Aig_ManPartitionDfs( Aig_Man_t * p, int nPartSize, int fPreorder )\n{\n    Vec_Int_t * vId2Part; \n    Vec_Ptr_t * vNodes;\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n    vId2Part = Vec_IntStart( Aig_ManObjNumMax(p) );\n    if ( fPreorder )\n    {\n        vNodes = Aig_ManDfsPreorder( p, 1 );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n            Vec_IntWriteEntry( vId2Part, Aig_ObjId(pObj), Counter++/nPartSize );\n    }\n    else\n    {\n        vNodes = Aig_ManDfs( p, 1 );\n        Vec_PtrForEachEntryReverse( Aig_Obj_t *, vNodes, pObj, i )\n            Vec_IntWriteEntry( vId2Part, Aig_ObjId(pObj), Counter++/nPartSize );\n    }\n    Vec_PtrFree( vNodes );\n    return vId2Part;\n}",
+      "Draft": "func Aig_ManPartitionDfs(p *Aig_Man_t, nPartSize int32, fPreorder int32) *Vec_Int_t {\n    var vId2Part *Vec_Int_t; \n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    vId2Part = Vec_IntStart( Aig_ManObjNumMax(p) );\n    if fPreorder != 0 {\n        vNodes = Aig_ManDfsPreorder( p, 1 );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n            Vec_IntWriteEntry( vId2Part, Aig_ObjId(pObj), Counter++/nPartSize );\n        }\n    \n    } else {\n        vNodes = Aig_ManDfs( p, 1 );\n        // inlining of macro Vec_PtrForEachEntryReverse\n        for  i = Vec_PtrSize(vNodes) - 1; (i \u003e= 0) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i--  {\n            Vec_IntWriteEntry( vId2Part, Aig_ObjId(pObj), Counter++/nPartSize );\n        }\n    }\n    Vec_PtrFree( vNodes );\n    return vId2Part;\n}"
+    },
+    {
+      "Name": "Aig_ManPartSplitOne_rec",
+      "Start": 3895,
+      "End": 4917,
+      "BodyStart": 3998,
+      "Original": "void Aig_ManPartSplitOne_rec( Aig_Man_t * pNew, Aig_Man_t * p, Aig_Obj_t * pObj, Vec_Int_t * vPio2Id )\n{\n    if ( !Aig_ObjIsTravIdCurrent( p, pObj ) )\n    { // new PI\n        Aig_ObjSetTravIdCurrent( p, pObj );\n/*\n        if ( pObj-\u003efMarkA ) // const0\n            pObj-\u003epData = Aig_ManConst0( pNew );\n        else if ( pObj-\u003efMarkB ) // const1\n            pObj-\u003epData = Aig_ManConst1( pNew );\n        else\n*/\n        {\n            pObj-\u003epData = Aig_ObjCreateCi( pNew );\n            if ( pObj-\u003efMarkA ) // const0\n                ((Aig_Obj_t *)pObj-\u003epData)-\u003efMarkA = 1;\n            else if ( pObj-\u003efMarkB ) // const1\n                ((Aig_Obj_t *)pObj-\u003epData)-\u003efMarkB = 1;\n            Vec_IntPush( vPio2Id, Aig_ObjId(pObj) );\n        }\n        return;\n    }\n    if ( pObj-\u003epData ) \n        return;\n    Aig_ManPartSplitOne_rec( pNew, p, Aig_ObjFanin0(pObj), vPio2Id );\n    Aig_ManPartSplitOne_rec( pNew, p, Aig_ObjFanin1(pObj), vPio2Id );\n    pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n}",
+      "Draft": "func Aig_ManPartSplitOne_rec(pNew *Aig_Man_t, p *Aig_Man_t, pObj *Aig_Obj_t, vPio2Id *Vec_Int_t) {\n    if !Aig_ObjIsTravIdCurrent( p, pObj ) { // new PI\n        Aig_ObjSetTravIdCurrent( p, pObj );\n/*\n        if ( pObj-\u003efMarkA ) // const0\n            pObj-\u003epData = Aig_ManConst0( pNew );\n        else if ( pObj-\u003efMarkB ) // const1\n            pObj-\u003epData = Aig_ManConst1( pNew );\n        else\n*/\n        {\n            pObj.pData = Aig_ObjCreateCi( pNew );\n            if pObj.fMarkA { // const0\n                ((Aig_Obj_t *)pObj.pData).fMarkA = 1;\n            } else if pObj.fMarkB { // const1\n                ((Aig_Obj_t *)pObj.pData).fMarkB = 1; }\n            Vec_IntPush( vPio2Id, Aig_ObjId(pObj) );\n        }\n        return;\n    }\n    if pObj.pData { \n        return; }\n    Aig_ManPartSplitOne_rec( pNew, p, Aig_ObjFanin0(pObj), vPio2Id );\n    Aig_ManPartSplitOne_rec( pNew, p, Aig_ObjFanin1(pObj), vPio2Id );\n    pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n}"
+    },
+    {
+      "Name": "Aig_ManPartSplitOne",
+      "Start": 5189,
+      "End": 6264,
+      "BodyStart": 5281,
+      "Original": "Aig_Man_t * Aig_ManPartSplitOne( Aig_Man_t * p, Vec_Ptr_t * vNodes, Vec_Int_t ** pvPio2Id )\n{\n    Vec_Int_t * vPio2Id;\n    Aig_Man_t * pNew;\n    Aig_Obj_t * pObj;\n    int i;\n    // mark these nodes\n    Aig_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        Aig_ObjSetTravIdCurrent( p, pObj );\n        pObj-\u003epData = NULL;\n    }\n    // add these nodes in a DFS order\n    pNew = Aig_ManStart( Vec_PtrSize(vNodes) );\n    vPio2Id = Vec_IntAlloc( 100 );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        Aig_ManPartSplitOne_rec( pNew, p, pObj, vPio2Id );\n    // add the POs\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        if ( Aig_ObjRefs((Aig_Obj_t *)pObj-\u003epData) != Aig_ObjRefs(pObj) )\n        {\n            assert( Aig_ObjRefs((Aig_Obj_t *)pObj-\u003epData) \u003c Aig_ObjRefs(pObj) );\n            Aig_ObjCreateCo( pNew, (Aig_Obj_t *)pObj-\u003epData );\n            Vec_IntPush( vPio2Id, Aig_ObjId(pObj) );\n        }\n    assert( Aig_ManNodeNum(pNew) == Vec_PtrSize(vNodes) );\n    *pvPio2Id = vPio2Id;\n    return pNew;\n}",
+      "Draft": "func Aig_ManPartSplitOne(p *Aig_Man_t, vNodes *Vec_Ptr_t, pvPio2Id **Vec_Int_t) *Aig_Man_t {\n    var vPio2Id *Vec_Int_t;\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // mark these nodes\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Aig_ObjSetTravIdCurrent( p, pObj );\n        pObj.pData = nil;\n    }\n    // add these nodes in a DFS order\n    pNew = Aig_ManStart( Vec_PtrSize(vNodes) );\n    vPio2Id = Vec_IntAlloc( 100 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Aig_ManPartSplitOne_rec( pNew, p, pObj, vPio2Id );\n    }\n    // add the POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Aig_ObjRefs((Aig_Obj_t *)pObj.pData) != Aig_ObjRefs(pObj) {\n            assert(Aig_ObjRefs((Aig_Obj_t *)pObj.pData) \u003c Aig_ObjRefs(pObj), \"Aig_ObjRefs((Aig_Obj_t *)pObj.pData) \u003c Aig_ObjRefs(pObj)\");\n            Aig_ObjCreateCo( pNew, (Aig_Obj_t *)pObj.pData );\n            Vec_IntPush( vPio2Id, Aig_ObjId(pObj) );\n        }\n    }\n    assert(Aig_ManNodeNum(pNew) == Vec_PtrSize(vNodes), \"Aig_ManNodeNum(pNew) == Vec_PtrSize(vNodes)\");\n    *pvPio2Id = vPio2Id;\n    return pNew;\n}"
+    },
+    {
+      "Name": "Aig_ManPartSplit",
+      "Start": 7024,
+      "End": 9022,
+      "BodyStart": 7142,
+      "Original": "Vec_Ptr_t * Aig_ManPartSplit( Aig_Man_t * p, Vec_Int_t * vNode2Part, Vec_Ptr_t ** pvPio2Id, Vec_Ptr_t ** pvPart2Pos )\n{\n    Vec_Vec_t * vGroups, * vPart2Pos;\n    Vec_Ptr_t * vAigs, * vPio2Id, * vNodes;\n    Vec_Int_t * vPio2IdOne;\n    Aig_Man_t * pAig;\n    Aig_Obj_t * pObj, * pDriver;\n    int i, nodePart, nParts;\n    vAigs = Vec_PtrAlloc( 100 );\n    vPio2Id = Vec_PtrAlloc( 100 );\n    // put all nodes into levels according to their partition\n    nParts = Vec_IntFindMax(vNode2Part) + 1;\n    assert( nParts \u003e 0 );\n    vGroups = Vec_VecAlloc( nParts );\n    Vec_IntForEachEntry( vNode2Part, nodePart, i )\n    {\n        pObj = Aig_ManObj( p, i );\n        if ( Aig_ObjIsNode(pObj) )\n            Vec_VecPush( vGroups, nodePart, pObj );\n    }\n\n    // label PIs that should be restricted to some values\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        pDriver = Aig_ObjFanin0(pObj);\n        if ( Aig_ObjIsCi(pDriver) )\n        {\n            if ( Aig_ObjFaninC0(pObj) )\n                pDriver-\u003efMarkA = 1; // const0 PI\n            else\n                pDriver-\u003efMarkB = 1; // const1 PI\n        }\n    }\n\n    // create partitions\n    Vec_VecForEachLevel( vGroups, vNodes, i )\n    {\n        if ( Vec_PtrSize(vNodes) == 0 )\n        {\n            printf( \"Aig_ManPartSplit(): Skipping partition # %d without nodes (warning).\\n\", i );\n            continue;\n        }\n        pAig = Aig_ManPartSplitOne( p, vNodes, \u0026vPio2IdOne );\n        Vec_PtrPush( vPio2Id, vPio2IdOne );\n        Vec_PtrPush( vAigs, pAig );\n    }\n    Vec_VecFree( vGroups );\n\n    // divide POs according to their partitions\n    vPart2Pos = Vec_VecStart( Vec_PtrSize(vAigs) );\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        pDriver = Aig_ObjFanin0(pObj);\n        if ( Aig_ObjIsCi(pDriver) )\n            pDriver-\u003efMarkA = pDriver-\u003efMarkB = 0;\n        else\n            Vec_VecPush( vPart2Pos, Vec_IntEntry(vNode2Part, Aig_ObjFaninId0(pObj)), pObj );\n    }\n\n    *pvPio2Id = vPio2Id;\n    *pvPart2Pos = (Vec_Ptr_t *)vPart2Pos;\n    return vAigs;\n}",
+      "Draft": "func Aig_ManPartSplit(p *Aig_Man_t, vNode2Part *Vec_Int_t, pvPio2Id **Vec_Ptr_t, pvPart2Pos **Vec_Ptr_t) *Vec_Ptr_t {\n    var vGroups, vPart2Pos *Vec_Vec_t;\n    var vAigs, vPio2Id, vNodes *Vec_Ptr_t;\n    var vPio2IdOne *Vec_Int_t;\n    var pAig *Aig_Man_t;\n    var pObj, pDriver *Aig_Obj_t;\n    var i, nodePart, nParts int32;\n    vAigs = Vec_PtrAlloc( 100 );\n    vPio2Id = Vec_PtrAlloc( 100 );\n    // put all nodes into levels according to their partition\n    nParts = Vec_IntFindMax(vNode2Part) + 1;\n    assert(nParts \u003e 0, \"nParts \u003e 0\");\n    vGroups = Vec_VecAlloc( nParts );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNode2Part)) \u0026\u0026 (((nodePart) = Vec_IntEntry(vNode2Part, i)), 1); i++  {\n        pObj = Aig_ManObj( p, i );\n        if Aig_ObjIsNode(pObj) {\n            Vec_VecPush( vGroups, nodePart, pObj ); }\n    }\n\n    // label PIs that should be restricted to some values\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pDriver = Aig_ObjFanin0(pObj);\n        if Aig_ObjIsCi(pDriver) {\n            if Aig_ObjFaninC0(pObj) {\n                pDriver.fMarkA = 1; // const0 PI\n            } else {\n                pDriver.fMarkB = 1; } // const1 PI\n        }\n    }\n\n    // create partitions\n    // inlining of macro Vec_VecForEachLevel\n    for  i = 0; (i \u003c Vec_VecSize(vGroups)) \u0026\u0026 (((vNodes) = Vec_VecEntry(vGroups, i)), 1); i++  {\n        if Vec_PtrSize(vNodes) == 0 {\n            fmt.Printf(\"Aig_ManPartSplit(): Skipping partition # %d without nodes (warning).\\n\", i);\n            continue;\n        }\n        pAig = Aig_ManPartSplitOne( p, vNodes, \u0026vPio2IdOne );\n        Vec_PtrPush( vPio2Id, vPio2IdOne );\n        Vec_PtrPush( vAigs, pAig );\n    }\n    Vec_VecFree( vGroups );\n\n    // divide POs according to their partitions\n    vPart2Pos = Vec_VecStart( Vec_PtrSize(vAigs) );\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pDriver = Aig_ObjFanin0(pObj);\n        if Aig_ObjIsCi(pDriver) {\n            pDriver.fMarkA = pDriver.fMarkB = 0;\n        } else {\n            Vec_VecPush( vPart2Pos, Vec_IntEntry(vNode2Part, Aig_ObjFaninId0(pObj)), pObj ); }\n    }\n\n    *pvPio2Id = vPio2Id;\n    *pvPart2Pos = (Vec_Ptr_t *)vPart2Pos;\n    return vAigs;\n}"
+    },
+    {
+      "Name": "Aig_ManPartResetNodePolarity",
+      "Start": 9319,
+      "End": 9476,
+      "BodyStart": 9374,
+      "Original": "void Aig_ManPartResetNodePolarity( Aig_Man_t * pPart )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    Aig_ManForEachObj( pPart, pObj, i )\n        pObj-\u003efPhase = 0;\n}",
+      "Draft": "func Aig_ManPartResetNodePolarity(pPart *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pPart.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.fPhase = 0; }\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManPartSetNodePolarity",
+      "Start": 9758,
+      "End": 10524,
+      "BodyStart": 9847,
+      "Original": "void Aig_ManPartSetNodePolarity( Aig_Man_t * p, Aig_Man_t * pPart, Vec_Int_t * vPio2Id )\n{\n    Aig_Obj_t * pObj, * pObjInit;\n    int i;\n    Aig_ManConst1(pPart)-\u003efPhase = 1;\n    Aig_ManForEachCi( pPart, pObj, i )\n    {\n        pObjInit = Aig_ManObj( p, Vec_IntEntry(vPio2Id, i) );\n        pObj-\u003efPhase = pObjInit-\u003efPhase;\n    }\n    Aig_ManForEachNode( pPart, pObj, i )\n        pObj-\u003efPhase = (Aig_ObjFanin0(pObj)-\u003efPhase ^ Aig_ObjFaninC0(pObj)) \u0026 (Aig_ObjFanin1(pObj)-\u003efPhase ^ Aig_ObjFaninC1(pObj));\n    Aig_ManForEachCo( pPart, pObj, i )\n    {\n        pObjInit = Aig_ManObj( p, Vec_IntEntry(vPio2Id, Aig_ManCiNum(pPart) + i) );\n        pObj-\u003efPhase = (Aig_ObjFanin0(pObj)-\u003efPhase ^ Aig_ObjFaninC0(pObj));\n        assert( pObj-\u003efPhase == pObjInit-\u003efPhase );\n    }\n}",
+      "Draft": "func Aig_ManPartSetNodePolarity(p *Aig_Man_t, pPart *Aig_Man_t, vPio2Id *Vec_Int_t) {\n    var pObj, pObjInit *Aig_Obj_t;\n    var i int32;\n    Aig_ManConst1(pPart).fPhase = 1;\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pPart.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vCis, i)), 1); i++  {\n        pObjInit = Aig_ManObj( p, Vec_IntEntry(vPio2Id, i) );\n        pObj.fPhase = pObjInit.fPhase;\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pPart.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.fPhase = (Aig_ObjFanin0(pObj).fPhase ^ Aig_ObjFaninC0(pObj)) \u0026 (Aig_ObjFanin1(pObj).fPhase ^ Aig_ObjFaninC1(pObj)); }\n    }\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pPart.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vCos, i)), 1); i++  {\n        pObjInit = Aig_ManObj( p, Vec_IntEntry(vPio2Id, Aig_ManCiNum(pPart) + i) );\n        pObj.fPhase = (Aig_ObjFanin0(pObj).fPhase ^ Aig_ObjFaninC0(pObj));\n        assert(pObj.fPhase == pObjInit.fPhase, \"pObj.fPhase == pObjInit.fPhase\");\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManDeriveCounterExample",
+      "Start": 10806,
+      "End": 11380,
+      "BodyStart": 10898,
+      "Original": "void Aig_ManDeriveCounterExample( Aig_Man_t * p, Vec_Int_t * vNode2Var, sat_solver * pSat )\n{ \n    Vec_Int_t * vPisIds;\n    Aig_Obj_t * pObj;\n    int i;\n    // collect IDs of PI variables\n    // (fanoutless PIs have SAT var 0, which is an unused in the SAT solver -\u003e has value 0)\n    vPisIds = Vec_IntAlloc( Aig_ManCiNum(p) );\n    Aig_ManForEachCi( p, pObj, i )\n        Vec_IntPush( vPisIds, Vec_IntEntry(vNode2Var, Aig_ObjId(pObj)) );\n    // derive the SAT assignment\n    p-\u003epData = Sat_SolverGetModel( pSat, vPisIds-\u003epArray, vPisIds-\u003enSize );\n    Vec_IntFree( vPisIds );\n}",
+      "Draft": "func Aig_ManDeriveCounterExample(p *Aig_Man_t, vNode2Var *Vec_Int_t, pSat *sat_solver) { \n    var vPisIds *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // collect IDs of PI variables\n    // (fanoutless PIs have SAT var 0, which is an unused in the SAT solver -\u003e has value 0)\n    vPisIds = Vec_IntAlloc( Aig_ManCiNum(p) );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        Vec_IntPush( vPisIds, Vec_IntEntry(vNode2Var, Aig_ObjId(pObj)) );\n    }\n    // derive the SAT assignment\n    p.pData = Sat_SolverGetModel( pSat, vPisIds.pArray, vPisIds.nSize );\n    Vec_IntFree( vPisIds );\n}"
+    },
+    {
+      "Name": "Aig_ManAddNewCnfToSolver",
+      "Start": 11877,
+      "End": 16075,
+      "BodyStart": 12056,
+      "Original": "int Aig_ManAddNewCnfToSolver( sat_solver * pSat, Aig_Man_t * pAig, Vec_Int_t * vNode2Var, \n                             Vec_Int_t * vPioIds, Vec_Ptr_t * vPartPos, int fAlignPol )\n{\n    Cnf_Dat_t * pCnf;\n    Aig_Obj_t * pObj;\n    int * pBeg, * pEnd;\n    int i, Lits[2], iSatVarOld, iNodeIdOld;\n    // derive CNF and express it using new SAT variables\n    pCnf = Cnf_Derive( pAig, Aig_ManCoNum(pAig) );\n    Cnf_DataTranformPolarity( pCnf, 1 );\n    Cnf_DataLift( pCnf, sat_solver_nvars(pSat) );\n    // create new variables in the SAT solver\n    sat_solver_setnvars( pSat, sat_solver_nvars(pSat) + pCnf-\u003enVars );\n    // add clauses for this CNF\n    Cnf_CnfForClause( pCnf, pBeg, pEnd, i )\n        if ( !sat_solver_addclause( pSat, pBeg, pEnd ) )\n        {\n            assert( 0 ); // if it happens, can return 1 (unsatisfiable)\n            return 1;\n        }\n    // derive the connector clauses\n    Aig_ManForEachCi( pAig, pObj, i )\n    {\n        iNodeIdOld = Vec_IntEntry( vPioIds, i );\n        iSatVarOld = Vec_IntEntry( vNode2Var, iNodeIdOld );\n        if ( iSatVarOld == 0 ) // iNodeIdOld in the original AIG has no SAT var\n        { \n            // map the corresponding original AIG node into this SAT var\n            Vec_IntWriteEntry( vNode2Var, iNodeIdOld, pCnf-\u003epVarNums[Aig_ObjId(pObj)] );\n            continue;\n        }\n        // add connector clauses \n        Lits[0] = toLitCond( iSatVarOld, 0 );\n        Lits[1] = toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pObj)], 1 );\n        if ( !sat_solver_addclause( pSat, Lits, Lits+2 ) )\n            assert( 0 );\n        Lits[0] = toLitCond( iSatVarOld, 1 );\n        Lits[1] = toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pObj)], 0 );\n        if ( !sat_solver_addclause( pSat, Lits, Lits+2 ) )\n            assert( 0 );\n    }\n    // derive the connector clauses\n    Aig_ManForEachCo( pAig, pObj, i )\n    {\n        iNodeIdOld = Vec_IntEntry( vPioIds, Aig_ManCiNum(pAig) + i );\n        iSatVarOld = Vec_IntEntry( vNode2Var, iNodeIdOld );\n        if ( iSatVarOld == 0 ) // iNodeIdOld in the original AIG has no SAT var\n        { \n            // map the corresponding original AIG node into this SAT var\n            Vec_IntWriteEntry( vNode2Var, iNodeIdOld, pCnf-\u003epVarNums[Aig_ObjId(pObj)] );\n            continue;\n        }\n        // add connector clauses \n        Lits[0] = toLitCond( iSatVarOld, 0 );\n        Lits[1] = toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pObj)], 1 );\n        if ( !sat_solver_addclause( pSat, Lits, Lits+2 ) )\n            assert( 0 );\n        Lits[0] = toLitCond( iSatVarOld, 1 );\n        Lits[1] = toLitCond( pCnf-\u003epVarNums[Aig_ObjId(pObj)], 0 );\n        if ( !sat_solver_addclause( pSat, Lits, Lits+2 ) )\n            assert( 0 );\n    }\n    // transfer the ID of constant 1 node\n    if ( Vec_IntEntry( vNode2Var, 0 ) == 0 )\n        Vec_IntWriteEntry( vNode2Var, 0, pCnf-\u003epVarNums[0] );\n    // remove the CNF\n    Cnf_DataFree( pCnf );\n    // constrain the solver with the literals corresponding to the original POs\n    Vec_PtrForEachEntry( Aig_Obj_t *, vPartPos, pObj, i )\n    {\n        iNodeIdOld = Aig_ObjFaninId0( pObj );\n        iSatVarOld = Vec_IntEntry( vNode2Var, iNodeIdOld );\n        assert( iSatVarOld != 0 );\n        // assert the original PO to be 1\n        Lits[0] = toLitCond( iSatVarOld, Aig_ObjFaninC0(pObj) );\n        // correct the polarity if polarity alignment is enabled\n        if ( fAlignPol \u0026\u0026 Aig_ObjFanin0(pObj)-\u003efPhase ) \n            Lits[0] = lit_neg( Lits[0] );\n        if ( !sat_solver_addclause( pSat, Lits, Lits+1 ) )\n        {\n            assert( 0 ); // if it happens, can return 1 (unsatisfiable)\n            return 1;\n        }\n    }\n    // constrain some the primary inputs to constant values\n    Aig_ManForEachCi( pAig, pObj, i )\n    {\n        if ( !pObj-\u003efMarkA \u0026\u0026 !pObj-\u003efMarkB )\n            continue;\n        iNodeIdOld = Vec_IntEntry( vPioIds, i );\n        iSatVarOld = Vec_IntEntry( vNode2Var, iNodeIdOld );\n        Lits[0] = toLitCond( iSatVarOld, pObj-\u003efMarkA );\n        if ( !sat_solver_addclause( pSat, Lits, Lits+1 ) )\n        {\n            assert( 0 ); // if it happens, can return 1 (unsatisfiable)\n            return 1;\n        }\n        pObj-\u003efMarkA = pObj-\u003efMarkB = 0;\n    }\n    return 0;\n}",
+      "Draft": "func Aig_ManAddNewCnfToSolver(pSat *sat_solver, pAig *Aig_Man_t, vNode2Var *Vec_Int_t, vPioIds *Vec_Int_t, vPartPos *Vec_Ptr_t, fAlignPol int32) int32 {\n    var pCnf *Cnf_Dat_t;\n    var pObj *Aig_Obj_t;\n    var pBeg, pEnd *int32;\n    var i int32;\n    var Lits [2]int32;\n    var iSatVarOld int32;\n    var iNodeIdOld int32;\n    // derive CNF and express it using new SAT variables\n    pCnf = Cnf_Derive( pAig, Aig_ManCoNum(pAig) );\n    Cnf_DataTranformPolarity( pCnf, 1 );\n    Cnf_DataLift( pCnf, sat_solver_nvars(pSat) );\n    // create new variables in the SAT solver\n    sat_solver_setnvars( pSat, sat_solver_nvars(pSat) + pCnf.nVars );\n    // add clauses for this CNF\n    // inlining of macro Cnf_CnfForClause\n    for  i = 0; i \u003c pCnf.nClauses \u0026\u0026 (pBeg = pCnf.pClauses[i]) \u0026\u0026 (pEnd = pCnf.pClauses[i+1]); i++  {\n        if !sat_solver_addclause( pSat, pBeg, pEnd ) {\n            assert(false, \"0\"); // if it happens, can return 1 (unsatisfiable)\n            return 1;\n        }\n    }\n    // derive the connector clauses\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        iNodeIdOld = Vec_IntEntry( vPioIds, i );\n        iSatVarOld = Vec_IntEntry( vNode2Var, iNodeIdOld );\n        if iSatVarOld == 0 { // iNodeIdOld in the original AIG has no SAT var\n         \n            // map the corresponding original AIG node into this SAT var\n            Vec_IntWriteEntry( vNode2Var, iNodeIdOld, pCnf.pVarNums[Aig_ObjId(pObj)] );\n            continue;\n        }\n        // add connector clauses \n        Lits[0] = toLitCond( iSatVarOld, 0 );\n        Lits[1] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], 1 );\n        if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n            assert(false, \"0\"); }\n        Lits[0] = toLitCond( iSatVarOld, 1 );\n        Lits[1] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], 0 );\n        if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n            assert(false, \"0\"); }\n    }\n    // derive the connector clauses\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        iNodeIdOld = Vec_IntEntry( vPioIds, Aig_ManCiNum(pAig) + i );\n        iSatVarOld = Vec_IntEntry( vNode2Var, iNodeIdOld );\n        if iSatVarOld == 0 { // iNodeIdOld in the original AIG has no SAT var\n         \n            // map the corresponding original AIG node into this SAT var\n            Vec_IntWriteEntry( vNode2Var, iNodeIdOld, pCnf.pVarNums[Aig_ObjId(pObj)] );\n            continue;\n        }\n        // add connector clauses \n        Lits[0] = toLitCond( iSatVarOld, 0 );\n        Lits[1] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], 1 );\n        if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n            assert(false, \"0\"); }\n        Lits[0] = toLitCond( iSatVarOld, 1 );\n        Lits[1] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], 0 );\n        if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n            assert(false, \"0\"); }\n    }\n    // transfer the ID of constant 1 node\n    if Vec_IntEntry( vNode2Var, 0 ) == 0 {\n        Vec_IntWriteEntry( vNode2Var, 0, pCnf.pVarNums[0] ); }\n    // remove the CNF\n    Cnf_DataFree( pCnf );\n    // constrain the solver with the literals corresponding to the original POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPartPos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vPartPos, i)), 1); i++  {\n        iNodeIdOld = Aig_ObjFaninId0( pObj );\n        iSatVarOld = Vec_IntEntry( vNode2Var, iNodeIdOld );\n        assert(iSatVarOld != 0, \"iSatVarOld != 0\");\n        // assert the original PO to be 1\n        Lits[0] = toLitCond( iSatVarOld, Aig_ObjFaninC0(pObj) );\n        // correct the polarity if polarity alignment is enabled\n        if (fAlignPol != 0) \u0026\u0026 Aig_ObjFanin0(pObj).fPhase { \n            Lits[0] = lit_neg( Lits[0] ); }\n        if !sat_solver_addclause( pSat, Lits, Lits+1 ) {\n            assert(false, \"0\"); // if it happens, can return 1 (unsatisfiable)\n            return 1;\n        }\n    }\n    // constrain some the primary inputs to constant values\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        if !pObj.fMarkA \u0026\u0026 !pObj.fMarkB {\n            continue; }\n        iNodeIdOld = Vec_IntEntry( vPioIds, i );\n        iSatVarOld = Vec_IntEntry( vNode2Var, iNodeIdOld );\n        Lits[0] = toLitCond( iSatVarOld, pObj.fMarkA );\n        if !sat_solver_addclause( pSat, Lits, Lits+1 ) {\n            assert(false, \"0\"); // if it happens, can return 1 (unsatisfiable)\n            return 1;\n        }\n        pObj.fMarkA = pObj.fMarkB = 0;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Aig_ManPartitionedSat",
+      "Start": 16344,
+      "End": 20304,
+      "BodyStart": 16495,
+      "Original": "int Aig_ManPartitionedSat( Aig_Man_t * p, int nAlgo, int nPartSize, \n    int nConfPart, int nConfTotal, int fAlignPol, int fSynthesize, int fVerbose )\n{\n    sat_solver * pSat;\n    Vec_Ptr_t * vAigs;\n    Vec_Vec_t * vPio2Id, * vPart2Pos;\n    Aig_Man_t * pAig, * pTemp;\n    Vec_Int_t * vNode2Part, * vNode2Var;\n    int nConfRemaining = nConfTotal, nNodes = 0;\n    int i, status, RetValue = -1;\n    abctime clk;\n\n    // perform partitioning according to the selected algorithm\n    clk = Abc_Clock();\n    switch ( nAlgo )\n    {\n    case 0: \n        vNode2Part = Aig_ManPartitionMonolithic( p );\n        break;\n    case 1: \n        vNode2Part = Aig_ManPartitionLevelized( p, nPartSize );\n        break;\n    case 2: \n        vNode2Part = Aig_ManPartitionDfs( p, nPartSize, 0 );\n        break;\n    case 3: \n        vNode2Part = Aig_ManPartitionDfs( p, nPartSize, 1 );\n        break;\n    default:\n        printf( \"Unknown partitioning algorithm.\\n\" );\n        return -1;\n    }\n\n    if ( fVerbose )\n    {\n    printf( \"Partitioning derived %d partitions. \", Vec_IntFindMax(vNode2Part) + 1 );\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n\n    // split the original AIG into partition AIGs (vAigs)\n    // also, derives mapping of PIs/POs of partition AIGs into original nodes\n    // also, derives mapping of POs of the original AIG into partitions\n    vAigs = Aig_ManPartSplit( p, vNode2Part, (Vec_Ptr_t **)\u0026vPio2Id, (Vec_Ptr_t **)\u0026vPart2Pos );\n    Vec_IntFree( vNode2Part );\n\n    if ( fVerbose )\n    {\n    printf( \"Partions were transformed into AIGs. \" );\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n\n    // synthesize partitions\n    if ( fSynthesize )\n    Vec_PtrForEachEntry( Aig_Man_t *, vAigs, pAig, i )\n    {\n        pAig = Dar_ManRwsat( pTemp = pAig, 0, 0 );\n        Vec_PtrWriteEntry( vAigs, i, pAig );\n        Aig_ManStop( pTemp );\n    }\n\n    // start the SAT solver\n    pSat = sat_solver_new();\n//    pSat-\u003everbosity = fVerbose;\n    // start mapping of the original AIG IDs into their SAT variable numbers\n    vNode2Var = Vec_IntStart( Aig_ManObjNumMax(p) );\n\n    // add partitions, one at a time, and run the SAT solver \n    Vec_PtrForEachEntry( Aig_Man_t *, vAigs, pAig, i )\n    {\nclk = Abc_Clock();\n        // transform polarity of the AIG\n        if ( fAlignPol )\n            Aig_ManPartSetNodePolarity( p, pAig, Vec_VecEntryInt(vPio2Id,i) );\n        else\n            Aig_ManPartResetNodePolarity( pAig );\n        // add CNF of this partition to the SAT solver\n        if ( Aig_ManAddNewCnfToSolver( pSat, pAig, vNode2Var, \n            Vec_VecEntryInt(vPio2Id,i), Vec_VecEntry(vPart2Pos,i), fAlignPol ) )\n        {\n            RetValue = 1;\n            break;\n        }\n        // call the SAT solver\n        status = sat_solver_solve( pSat, NULL, NULL, (ABC_INT64_T)nConfRemaining, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if ( fVerbose )\n        {\n            printf( \"%4d : Aig = %6d. Vs = %7d. RootCs = %7d. LearnCs = %6d. \",\n                i, nNodes += Aig_ManNodeNum(pAig), sat_solver_nvars(pSat), \n                (int)pSat-\u003estats.clauses, (int)pSat-\u003estats.learnts );\nABC_PRT( \"Time\", Abc_Clock() - clk );\n        }\n        // analize the result\n        if ( status == l_False )\n        {\n            RetValue = 1;\n            break;\n        }\n        else if ( status == l_True )\n            RetValue = 0;\n        else\n            RetValue = -1;\n        nConfRemaining -= pSat-\u003estats.conflicts;\n        if ( nConfRemaining \u003c= 0 )\n        {\n            printf( \"Exceeded the limit on the total number of conflicts (%d).\\n\", nConfTotal );\n            break;\n        }\n    }\n    if ( RetValue == 0 )\n        Aig_ManDeriveCounterExample( p, vNode2Var, pSat );\n    // cleanup\n    sat_solver_delete( pSat );\n    Vec_PtrForEachEntry( Aig_Man_t *, vAigs, pTemp, i )\n        Aig_ManStop( pTemp );\n    Vec_PtrFree( vAigs );\n    Vec_VecFree( vPio2Id );\n    Vec_VecFree( vPart2Pos );\n    Vec_IntFree( vNode2Var );\n    return RetValue;\n}",
+      "Draft": "func Aig_ManPartitionedSat(p *Aig_Man_t, nAlgo int32, nPartSize int32, nConfPart int32, nConfTotal int32, fAlignPol int32, fSynthesize int32, fVerbose int32) int32 {\n    var pSat *sat_solver;\n    var vAigs *Vec_Ptr_t;\n    var vPio2Id, vPart2Pos *Vec_Vec_t;\n    var pAig, pTemp *Aig_Man_t;\n    var vNode2Part, vNode2Var *Vec_Int_t;\n    var nConfRemaining int32 = nConfTotal;\n    var nNodes int32;\n    var i int32;\n    var status int32;\n    var RetValue int32 = -1;\n    var clk abctime;\n\n    // perform partitioning according to the selected algorithm\n    clk = Abc_Clock();\n    switch  nAlgo  {\n    case 0: \n        vNode2Part = Aig_ManPartitionMonolithic( p );\n        break;\n    case 1: \n        vNode2Part = Aig_ManPartitionLevelized( p, nPartSize );\n        break;\n    case 2: \n        vNode2Part = Aig_ManPartitionDfs( p, nPartSize, 0 );\n        break;\n    case 3: \n        vNode2Part = Aig_ManPartitionDfs( p, nPartSize, 1 );\n        break;\n    default:\n        fmt.Printf(\"Unknown partitioning algorithm.\\n\");\n        return -1;\n    }\n\n    if fVerbose != 0 {\n    fmt.Printf(\"Partitioning derived %d partitions. \", Vec_IntFindMax(vNode2Part) + 1);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n\n    // split the original AIG into partition AIGs (vAigs)\n    // also, derives mapping of PIs/POs of partition AIGs into original nodes\n    // also, derives mapping of POs of the original AIG into partitions\n    vAigs = Aig_ManPartSplit( p, vNode2Part, (Vec_Ptr_t **)\u0026vPio2Id, (Vec_Ptr_t **)\u0026vPart2Pos );\n    Vec_IntFree( vNode2Part );\n\n    if fVerbose != 0 {\n    fmt.Printf(\"Partions were transformed into AIGs. \");\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n\n    // synthesize partitions\n    if fSynthesize != 0 {\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vAigs)) \u0026\u0026 (((pAig) = (Aig_Man_t *)Vec_PtrEntry(vAigs, i)), 1); i++  {\n        pAig = Dar_ManRwsat( pTemp = pAig, 0, 0 );\n        Vec_PtrWriteEntry( vAigs, i, pAig );\n        Aig_ManStop( pTemp );\n    } }\n\n    // start the SAT solver\n    pSat = sat_solver_new();\n//    pSat-\u003everbosity = fVerbose;\n    // start mapping of the original AIG IDs into their SAT variable numbers\n    vNode2Var = Vec_IntStart( Aig_ManObjNumMax(p) );\n\n    // add partitions, one at a time, and run the SAT solver \n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vAigs)) \u0026\u0026 (((pAig) = (Aig_Man_t *)Vec_PtrEntry(vAigs, i)), 1); i++  {\nclk = Abc_Clock();\n        // transform polarity of the AIG\n        if fAlignPol != 0 {\n            Aig_ManPartSetNodePolarity( p, pAig, Vec_VecEntryInt(vPio2Id,i) );\n        } else {\n            Aig_ManPartResetNodePolarity( pAig ); }\n        // add CNF of this partition to the SAT solver\n        if Aig_ManAddNewCnfToSolver( pSat, pAig, vNode2Var, \n            Vec_VecEntryInt(vPio2Id,i), Vec_VecEntry(vPart2Pos,i), fAlignPol ) != 0 {\n            RetValue = 1;\n            break;\n        }\n        // call the SAT solver\n        status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfRemaining, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if fVerbose != 0 {\n            fmt.Printf(\"%4d : Aig = %6d. Vs = %7d. RootCs = %7d. LearnCs = %6d. \", i, nNodes += Aig_ManNodeNum(pAig), sat_solver_nvars(pSat), int32(pSat.stats.clauses), int32(pSat.stats.learnts));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n        // analize the result\n        if status == l_False {\n            RetValue = 1;\n            break;\n        \n        } else if status == l_True {\n            RetValue = 0;\n        } else {\n            RetValue = -1; }\n        nConfRemaining -= pSat.stats.conflicts;\n        if nConfRemaining \u003c= 0 {\n            fmt.Printf(\"Exceeded the limit on the total number of conflicts (%d).\\n\", nConfTotal);\n            break;\n        }\n    }\n    if RetValue == 0 {\n        Aig_ManDeriveCounterExample( p, vNode2Var, pSat ); }\n    // cleanup\n    sat_solver_delete( pSat );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vAigs)) \u0026\u0026 (((pTemp) = (Aig_Man_t *)Vec_PtrEntry(vAigs, i)), 1); i++  {\n        Aig_ManStop( pTemp );\n    }\n    Vec_PtrFree( vAigs );\n    Vec_VecFree( vPio2Id );\n    Vec_VecFree( vPart2Pos );\n    Vec_IntFree( vNode2Var );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::2763",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2458,
+      "End": 2458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::3639",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3228,
+      "End": 3228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::3955",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3427,
+      "End": 3427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::4942",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4424,
+      "End": 4437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::5045",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4527,
+      "End": 4540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::6050",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5424,
+      "End": 5424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::6416",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5685,
+      "End": 5685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::6655",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5819,
+      "End": 5819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::6729",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5896,
+      "End": 5909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::6820",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5987,
+      "End": 6000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::6904",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6071,
+      "End": 6084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::8928",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7825,
+      "End": 7825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::10049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8660,
+      "End": 8660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::10387",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8979,
+      "End": 8992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::10988",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9413,
+      "End": 9413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::11725",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9936,
+      "End": 9936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::12066",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10090,
+      "End": 10090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::12476",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10263,
+      "End": 10263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::13530",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11137,
+      "End": 11137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::15462",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12773,
+      "End": 12773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::16553",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13681,
+      "End": 13681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::17852",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14851,
+      "End": 14851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::18728",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15566,
+      "End": 15566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::21037",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17728,
+      "End": 17742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::21061",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17752,
+      "End": 17766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::21542",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17998,
+      "End": 17998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::22124",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18476,
+      "End": 18476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::pointer-cast::23967",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20086,
+      "End": 20086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::Aig_ManPartitionMonolithic",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPartitionMonolithic",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1767,
+      "End": 1925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::Aig_ManPartitionLevelized",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPartitionLevelized",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2196,
+      "End": 2653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::Aig_ManPartitionDfs",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPartitionDfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2918,
+      "End": 3622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::Aig_ManPartSplitOne_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPartSplitOne_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3895,
+      "End": 4917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::Aig_ManPartSplitOne",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPartSplitOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5189,
+      "End": 6264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::Aig_ManPartSplit",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPartSplit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7024,
+      "End": 9022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::Aig_ManPartResetNodePolarity",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPartResetNodePolarity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9319,
+      "End": 9476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::Aig_ManPartSetNodePolarity",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPartSetNodePolarity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9758,
+      "End": 10524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::Aig_ManDeriveCounterExample",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManDeriveCounterExample",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10806,
+      "End": 11380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::Aig_ManAddNewCnfToSolver",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManAddNewCnfToSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11877,
+      "End": 16075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::Aig_ManPartitionedSat",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPartitionedSat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16344,
+      "End": 20304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartSat.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20551
+    }
+  ],
+  "Draft": "package aig\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [aigPartSat.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Partitioning for SAT solving.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigPartSat.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n//#include \"sat/bsat/satSolver.h\"\n//#include \"sat/cnf/cnf.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/* \n\nThe node partitioners defined in this file return array of intergers \nmapping each AND node's ID into the 0-based number of its partition.\nThe mapping of PIs/POs will be derived automatically in Aig_ManPartSplit().\n\nThe partitions can be ordered in any way, but the recommended ordering\nis to first include partitions whose nodes are closer to the outputs.\n\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern Aig_Man_t * Dar_ManRwsat( Aig_Man_t * pAig, int fBalance, int fVerbose );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [No partitioning.]\n\n  Description [The partitioner ]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPartitionMonolithic(p *Aig_Man_t) *Vec_Int_t {\n    var vId2Part *Vec_Int_t;\n    vId2Part = Vec_IntStart( Aig_ManObjNumMax(p) );\n    return vId2Part;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Partitioning using levelized order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPartitionLevelized(p *Aig_Man_t, nPartSize int32) *Vec_Int_t {\n    var vId2Part *Vec_Int_t;\n    var vNodes *Vec_Vec_t;\n    var pObj *Aig_Obj_t;\n    var i, k, Counter int32;\n    vNodes = Aig_ManLevelize( p );\n    vId2Part = Vec_IntStart( Aig_ManObjNumMax(p) );\n    // inlining of macro Vec_VecForEachEntryReverseReverse\n    // inlining of macro Vec_PtrForEachEntryReverse\n    for  i = Vec_VecSize(vNodes) - 1; i \u003e= 0; i--  {                                                   for  k = Vec_PtrSize(Vec_VecEntry(vNodes, i)) - 1; (k \u003e= 0) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(Vec_VecEntry(vNodes, i), k)), 1); k--  { \n        Vec_IntWriteEntry( vId2Part, Aig_ObjId(pObj), Counter++/nPartSize );\n    }\n    }\n    Vec_VecFree( vNodes );\n    return vId2Part;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Partitioning using DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPartitionDfs(p *Aig_Man_t, nPartSize int32, fPreorder int32) *Vec_Int_t {\n    var vId2Part *Vec_Int_t; \n    var vNodes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    vId2Part = Vec_IntStart( Aig_ManObjNumMax(p) );\n    if fPreorder != 0 {\n        vNodes = Aig_ManDfsPreorder( p, 1 );\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n            Vec_IntWriteEntry( vId2Part, Aig_ObjId(pObj), Counter++/nPartSize );\n        }\n    \n    } else {\n        vNodes = Aig_ManDfs( p, 1 );\n        // inlining of macro Vec_PtrForEachEntryReverse\n        for  i = Vec_PtrSize(vNodes) - 1; (i \u003e= 0) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i--  {\n            Vec_IntWriteEntry( vId2Part, Aig_ObjId(pObj), Counter++/nPartSize );\n        }\n    }\n    Vec_PtrFree( vNodes );\n    return vId2Part;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively constructs the partition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPartSplitOne_rec(pNew *Aig_Man_t, p *Aig_Man_t, pObj *Aig_Obj_t, vPio2Id *Vec_Int_t) {\n    if !Aig_ObjIsTravIdCurrent( p, pObj ) { // new PI\n        Aig_ObjSetTravIdCurrent( p, pObj );\n/*\n        if ( pObj-\u003efMarkA ) // const0\n            pObj-\u003epData = Aig_ManConst0( pNew );\n        else if ( pObj-\u003efMarkB ) // const1\n            pObj-\u003epData = Aig_ManConst1( pNew );\n        else\n*/\n        {\n            pObj.pData = Aig_ObjCreateCi( pNew );\n            if pObj.fMarkA { // const0\n                ((Aig_Obj_t *)pObj.pData).fMarkA = 1;\n            } else if pObj.fMarkB { // const1\n                ((Aig_Obj_t *)pObj.pData).fMarkB = 1; }\n            Vec_IntPush( vPio2Id, Aig_ObjId(pObj) );\n        }\n        return;\n    }\n    if pObj.pData { \n        return; }\n    Aig_ManPartSplitOne_rec( pNew, p, Aig_ObjFanin0(pObj), vPio2Id );\n    Aig_ManPartSplitOne_rec( pNew, p, Aig_ObjFanin1(pObj), vPio2Id );\n    pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Carves out one partition of the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPartSplitOne(p *Aig_Man_t, vNodes *Vec_Ptr_t, pvPio2Id **Vec_Int_t) *Aig_Man_t {\n    var vPio2Id *Vec_Int_t;\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // mark these nodes\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Aig_ObjSetTravIdCurrent( p, pObj );\n        pObj.pData = nil;\n    }\n    // add these nodes in a DFS order\n    pNew = Aig_ManStart( Vec_PtrSize(vNodes) );\n    vPio2Id = Vec_IntAlloc( 100 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Aig_ManPartSplitOne_rec( pNew, p, pObj, vPio2Id );\n    }\n    // add the POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Aig_ObjRefs((Aig_Obj_t *)pObj.pData) != Aig_ObjRefs(pObj) {\n            assert(Aig_ObjRefs((Aig_Obj_t *)pObj.pData) \u003c Aig_ObjRefs(pObj), \"Aig_ObjRefs((Aig_Obj_t *)pObj.pData) \u003c Aig_ObjRefs(pObj)\");\n            Aig_ObjCreateCo( pNew, (Aig_Obj_t *)pObj.pData );\n            Vec_IntPush( vPio2Id, Aig_ObjId(pObj) );\n        }\n    }\n    assert(Aig_ManNodeNum(pNew) == Vec_PtrSize(vNodes), \"Aig_ManNodeNum(pNew) == Vec_PtrSize(vNodes)\");\n    *pvPio2Id = vPio2Id;\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives AIGs for each partition.]\n\n  Description [The first argument is a original AIG. The second argument\n  is the array mapping each AND-node's ID into the 0-based number of its\n  partition. The last argument is the array of arrays (one for each new AIG) \n  mapping the index of each terminal in the new AIG (the index of each \n  terminal is derived by ordering PIs followed by POs in their natural order) \n  into the ID of the corresponding node in the original AIG. The returned \n  value is the array of AIGs representing the partitions.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPartSplit(p *Aig_Man_t, vNode2Part *Vec_Int_t, pvPio2Id **Vec_Ptr_t, pvPart2Pos **Vec_Ptr_t) *Vec_Ptr_t {\n    var vGroups, vPart2Pos *Vec_Vec_t;\n    var vAigs, vPio2Id, vNodes *Vec_Ptr_t;\n    var vPio2IdOne *Vec_Int_t;\n    var pAig *Aig_Man_t;\n    var pObj, pDriver *Aig_Obj_t;\n    var i, nodePart, nParts int32;\n    vAigs = Vec_PtrAlloc( 100 );\n    vPio2Id = Vec_PtrAlloc( 100 );\n    // put all nodes into levels according to their partition\n    nParts = Vec_IntFindMax(vNode2Part) + 1;\n    assert(nParts \u003e 0, \"nParts \u003e 0\");\n    vGroups = Vec_VecAlloc( nParts );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vNode2Part)) \u0026\u0026 (((nodePart) = Vec_IntEntry(vNode2Part, i)), 1); i++  {\n        pObj = Aig_ManObj( p, i );\n        if Aig_ObjIsNode(pObj) {\n            Vec_VecPush( vGroups, nodePart, pObj ); }\n    }\n\n    // label PIs that should be restricted to some values\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pDriver = Aig_ObjFanin0(pObj);\n        if Aig_ObjIsCi(pDriver) {\n            if Aig_ObjFaninC0(pObj) {\n                pDriver.fMarkA = 1; // const0 PI\n            } else {\n                pDriver.fMarkB = 1; } // const1 PI\n        }\n    }\n\n    // create partitions\n    // inlining of macro Vec_VecForEachLevel\n    for  i = 0; (i \u003c Vec_VecSize(vGroups)) \u0026\u0026 (((vNodes) = Vec_VecEntry(vGroups, i)), 1); i++  {\n        if Vec_PtrSize(vNodes) == 0 {\n            fmt.Printf(\"Aig_ManPartSplit(): Skipping partition # %d without nodes (warning).\\n\", i);\n            continue;\n        }\n        pAig = Aig_ManPartSplitOne( p, vNodes, \u0026vPio2IdOne );\n        Vec_PtrPush( vPio2Id, vPio2IdOne );\n        Vec_PtrPush( vAigs, pAig );\n    }\n    Vec_VecFree( vGroups );\n\n    // divide POs according to their partitions\n    vPart2Pos = Vec_VecStart( Vec_PtrSize(vAigs) );\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pDriver = Aig_ObjFanin0(pObj);\n        if Aig_ObjIsCi(pDriver) {\n            pDriver.fMarkA = pDriver.fMarkB = 0;\n        } else {\n            Vec_VecPush( vPart2Pos, Vec_IntEntry(vNode2Part, Aig_ObjFaninId0(pObj)), pObj ); }\n    }\n\n    *pvPio2Id = vPio2Id;\n    *pvPart2Pos = (Vec_Ptr_t *)vPart2Pos;\n    return vAigs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resets node polarity to unbias the polarity of CNF variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPartResetNodePolarity(pPart *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pPart.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.fPhase = 0; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets polarity according to the original nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPartSetNodePolarity(p *Aig_Man_t, pPart *Aig_Man_t, vPio2Id *Vec_Int_t) {\n    var pObj, pObjInit *Aig_Obj_t;\n    var i int32;\n    Aig_ManConst1(pPart).fPhase = 1;\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pPart.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vCis, i)), 1); i++  {\n        pObjInit = Aig_ManObj( p, Vec_IntEntry(vPio2Id, i) );\n        pObj.fPhase = pObjInit.fPhase;\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pPart.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.fPhase = (Aig_ObjFanin0(pObj).fPhase ^ Aig_ObjFaninC0(pObj)) \u0026 (Aig_ObjFanin1(pObj).fPhase ^ Aig_ObjFaninC1(pObj)); }\n    }\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pPart.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vCos, i)), 1); i++  {\n        pObjInit = Aig_ManObj( p, Vec_IntEntry(vPio2Id, Aig_ManCiNum(pPart) + i) );\n        pObj.fPhase = (Aig_ObjFanin0(pObj).fPhase ^ Aig_ObjFaninC0(pObj));\n        assert(pObj.fPhase == pObjInit.fPhase, \"pObj.fPhase == pObjInit.fPhase\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets polarity according to the original nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManDeriveCounterExample(p *Aig_Man_t, vNode2Var *Vec_Int_t, pSat *sat_solver) { \n    var vPisIds *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // collect IDs of PI variables\n    // (fanoutless PIs have SAT var 0, which is an unused in the SAT solver -\u003e has value 0)\n    vPisIds = Vec_IntAlloc( Aig_ManCiNum(p) );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        Vec_IntPush( vPisIds, Vec_IntEntry(vNode2Var, Aig_ObjId(pObj)) );\n    }\n    // derive the SAT assignment\n    p.pData = Sat_SolverGetModel( pSat, vPisIds.pArray, vPisIds.nSize );\n    Vec_IntFree( vPisIds );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives CNF for the partition (pAig) and adds it to solver.]\n\n  Description [Array vPio2Id contains mapping of the PI/PO terminal of pAig\n  into the IDs of the corresponding original nodes. Array vNode2Var contains\n  mapping of the original nodes into their SAT variable numbers.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManAddNewCnfToSolver(pSat *sat_solver, pAig *Aig_Man_t, vNode2Var *Vec_Int_t, vPioIds *Vec_Int_t, vPartPos *Vec_Ptr_t, fAlignPol int32) int32 {\n    var pCnf *Cnf_Dat_t;\n    var pObj *Aig_Obj_t;\n    var pBeg, pEnd *int32;\n    var i int32;\n    var Lits [2]int32;\n    var iSatVarOld int32;\n    var iNodeIdOld int32;\n    // derive CNF and express it using new SAT variables\n    pCnf = Cnf_Derive( pAig, Aig_ManCoNum(pAig) );\n    Cnf_DataTranformPolarity( pCnf, 1 );\n    Cnf_DataLift( pCnf, sat_solver_nvars(pSat) );\n    // create new variables in the SAT solver\n    sat_solver_setnvars( pSat, sat_solver_nvars(pSat) + pCnf.nVars );\n    // add clauses for this CNF\n    // inlining of macro Cnf_CnfForClause\n    for  i = 0; i \u003c pCnf.nClauses \u0026\u0026 (pBeg = pCnf.pClauses[i]) \u0026\u0026 (pEnd = pCnf.pClauses[i+1]); i++  {\n        if !sat_solver_addclause( pSat, pBeg, pEnd ) {\n            assert(false, \"0\"); // if it happens, can return 1 (unsatisfiable)\n            return 1;\n        }\n    }\n    // derive the connector clauses\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        iNodeIdOld = Vec_IntEntry( vPioIds, i );\n        iSatVarOld = Vec_IntEntry( vNode2Var, iNodeIdOld );\n        if iSatVarOld == 0 { // iNodeIdOld in the original AIG has no SAT var\n         \n            // map the corresponding original AIG node into this SAT var\n            Vec_IntWriteEntry( vNode2Var, iNodeIdOld, pCnf.pVarNums[Aig_ObjId(pObj)] );\n            continue;\n        }\n        // add connector clauses \n        Lits[0] = toLitCond( iSatVarOld, 0 );\n        Lits[1] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], 1 );\n        if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n            assert(false, \"0\"); }\n        Lits[0] = toLitCond( iSatVarOld, 1 );\n        Lits[1] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], 0 );\n        if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n            assert(false, \"0\"); }\n    }\n    // derive the connector clauses\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n        iNodeIdOld = Vec_IntEntry( vPioIds, Aig_ManCiNum(pAig) + i );\n        iSatVarOld = Vec_IntEntry( vNode2Var, iNodeIdOld );\n        if iSatVarOld == 0 { // iNodeIdOld in the original AIG has no SAT var\n         \n            // map the corresponding original AIG node into this SAT var\n            Vec_IntWriteEntry( vNode2Var, iNodeIdOld, pCnf.pVarNums[Aig_ObjId(pObj)] );\n            continue;\n        }\n        // add connector clauses \n        Lits[0] = toLitCond( iSatVarOld, 0 );\n        Lits[1] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], 1 );\n        if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n            assert(false, \"0\"); }\n        Lits[0] = toLitCond( iSatVarOld, 1 );\n        Lits[1] = toLitCond( pCnf.pVarNums[Aig_ObjId(pObj)], 0 );\n        if !sat_solver_addclause( pSat, Lits, Lits+2 ) {\n            assert(false, \"0\"); }\n    }\n    // transfer the ID of constant 1 node\n    if Vec_IntEntry( vNode2Var, 0 ) == 0 {\n        Vec_IntWriteEntry( vNode2Var, 0, pCnf.pVarNums[0] ); }\n    // remove the CNF\n    Cnf_DataFree( pCnf );\n    // constrain the solver with the literals corresponding to the original POs\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vPartPos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vPartPos, i)), 1); i++  {\n        iNodeIdOld = Aig_ObjFaninId0( pObj );\n        iSatVarOld = Vec_IntEntry( vNode2Var, iNodeIdOld );\n        assert(iSatVarOld != 0, \"iSatVarOld != 0\");\n        // assert the original PO to be 1\n        Lits[0] = toLitCond( iSatVarOld, Aig_ObjFaninC0(pObj) );\n        // correct the polarity if polarity alignment is enabled\n        if (fAlignPol != 0) \u0026\u0026 Aig_ObjFanin0(pObj).fPhase { \n            Lits[0] = lit_neg( Lits[0] ); }\n        if !sat_solver_addclause( pSat, Lits, Lits+1 ) {\n            assert(false, \"0\"); // if it happens, can return 1 (unsatisfiable)\n            return 1;\n        }\n    }\n    // constrain some the primary inputs to constant values\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        if !pObj.fMarkA \u0026\u0026 !pObj.fMarkB {\n            continue; }\n        iNodeIdOld = Vec_IntEntry( vPioIds, i );\n        iSatVarOld = Vec_IntEntry( vNode2Var, iNodeIdOld );\n        Lits[0] = toLitCond( iSatVarOld, pObj.fMarkA );\n        if !sat_solver_addclause( pSat, Lits, Lits+1 ) {\n            assert(false, \"0\"); // if it happens, can return 1 (unsatisfiable)\n            return 1;\n        }\n        pObj.fMarkA = pObj.fMarkB = 0;\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs partitioned SAT solving.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPartitionedSat(p *Aig_Man_t, nAlgo int32, nPartSize int32, nConfPart int32, nConfTotal int32, fAlignPol int32, fSynthesize int32, fVerbose int32) int32 {\n    var pSat *sat_solver;\n    var vAigs *Vec_Ptr_t;\n    var vPio2Id, vPart2Pos *Vec_Vec_t;\n    var pAig, pTemp *Aig_Man_t;\n    var vNode2Part, vNode2Var *Vec_Int_t;\n    var nConfRemaining int32 = nConfTotal;\n    var nNodes int32;\n    var i int32;\n    var status int32;\n    var RetValue int32 = -1;\n    var clk abctime;\n\n    // perform partitioning according to the selected algorithm\n    clk = Abc_Clock();\n    switch  nAlgo  {\n    case 0: \n        vNode2Part = Aig_ManPartitionMonolithic( p );\n        break;\n    case 1: \n        vNode2Part = Aig_ManPartitionLevelized( p, nPartSize );\n        break;\n    case 2: \n        vNode2Part = Aig_ManPartitionDfs( p, nPartSize, 0 );\n        break;\n    case 3: \n        vNode2Part = Aig_ManPartitionDfs( p, nPartSize, 1 );\n        break;\n    default:\n        fmt.Printf(\"Unknown partitioning algorithm.\\n\");\n        return -1;\n    }\n\n    if fVerbose != 0 {\n    fmt.Printf(\"Partitioning derived %d partitions. \", Vec_IntFindMax(vNode2Part) + 1);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n\n    // split the original AIG into partition AIGs (vAigs)\n    // also, derives mapping of PIs/POs of partition AIGs into original nodes\n    // also, derives mapping of POs of the original AIG into partitions\n    vAigs = Aig_ManPartSplit( p, vNode2Part, (Vec_Ptr_t **)\u0026vPio2Id, (Vec_Ptr_t **)\u0026vPart2Pos );\n    Vec_IntFree( vNode2Part );\n\n    if fVerbose != 0 {\n    fmt.Printf(\"Partions were transformed into AIGs. \");\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n\n    // synthesize partitions\n    if fSynthesize != 0 {\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vAigs)) \u0026\u0026 (((pAig) = (Aig_Man_t *)Vec_PtrEntry(vAigs, i)), 1); i++  {\n        pAig = Dar_ManRwsat( pTemp = pAig, 0, 0 );\n        Vec_PtrWriteEntry( vAigs, i, pAig );\n        Aig_ManStop( pTemp );\n    } }\n\n    // start the SAT solver\n    pSat = sat_solver_new();\n//    pSat-\u003everbosity = fVerbose;\n    // start mapping of the original AIG IDs into their SAT variable numbers\n    vNode2Var = Vec_IntStart( Aig_ManObjNumMax(p) );\n\n    // add partitions, one at a time, and run the SAT solver \n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vAigs)) \u0026\u0026 (((pAig) = (Aig_Man_t *)Vec_PtrEntry(vAigs, i)), 1); i++  {\nclk = Abc_Clock();\n        // transform polarity of the AIG\n        if fAlignPol != 0 {\n            Aig_ManPartSetNodePolarity( p, pAig, Vec_VecEntryInt(vPio2Id,i) );\n        } else {\n            Aig_ManPartResetNodePolarity( pAig ); }\n        // add CNF of this partition to the SAT solver\n        if Aig_ManAddNewCnfToSolver( pSat, pAig, vNode2Var, \n            Vec_VecEntryInt(vPio2Id,i), Vec_VecEntry(vPart2Pos,i), fAlignPol ) != 0 {\n            RetValue = 1;\n            break;\n        }\n        // call the SAT solver\n        status = sat_solver_solve( pSat, nil, nil, (ABC_INT64_T)nConfRemaining, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        if fVerbose != 0 {\n            fmt.Printf(\"%4d : Aig = %6d. Vs = %7d. RootCs = %7d. LearnCs = %6d. \", i, nNodes += Aig_ManNodeNum(pAig), sat_solver_nvars(pSat), int32(pSat.stats.clauses), int32(pSat.stats.learnts));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n        }\n        // analize the result\n        if status == l_False {\n            RetValue = 1;\n            break;\n        \n        } else if status == l_True {\n            RetValue = 0;\n        } else {\n            RetValue = -1; }\n        nConfRemaining -= pSat.stats.conflicts;\n        if nConfRemaining \u003c= 0 {\n            fmt.Printf(\"Exceeded the limit on the total number of conflicts (%d).\\n\", nConfTotal);\n            break;\n        }\n    }\n    if RetValue == 0 {\n        Aig_ManDeriveCounterExample( p, vNode2Var, pSat ); }\n    // cleanup\n    sat_solver_delete( pSat );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vAigs)) \u0026\u0026 (((pTemp) = (Aig_Man_t *)Vec_PtrEntry(vAigs, i)), 1); i++  {\n        Aig_ManStop( pTemp );\n    }\n    Vec_PtrFree( vAigs );\n    Vec_VecFree( vPio2Id );\n    Vec_VecFree( vPart2Pos );\n    Vec_IntFree( vNode2Var );\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,339 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainReal.c",
+  "SHA256": "3583d2ddf7128badaf0dc3a1fd92db421fc7bda5e0d326d8d5e32447d2129a80",
+  "Library": [
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 4114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( sReadCmd,  \"read\"  );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 120,
+        "Column": 5,
+        "ByteOffset": 4149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( sWriteCmd, \"write\" );"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 123,
+        "Column": 80,
+        "ByteOffset": 4289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for (c = Extra_UtilGetopt(argc, argv, \"dm:l:c:q:C:Q:S:hf:F:o:st:T:xb\")) != EOF {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 211,
+        "Column": 26,
+        "ByteOffset": 7199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    if (!strcmp(globalUtilOptarg, \"none\")) == 0 {"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 213,
+        "Column": 25,
+        "ByteOffset": 7303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        sprintf( sReadCmd, \"read_%s\", globalUtilOptarg );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 224,
+        "Column": 26,
+        "ByteOffset": 7627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    if (!strcmp(globalUtilOptarg, \"none\")) == 0 {"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 226,
+        "Column": 25,
+        "ByteOffset": 7733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        sprintf( sWriteCmd, \"write_%s\", globalUtilOptarg);"
+    },
+    {
+      "Name": "stdin",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 260,
+        "Column": 40,
+        "ByteOffset": 8582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pAbc.pGia = Gia_ManFromBridge( stdin, nil );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 286,
+        "Column": 13,
+        "ByteOffset": 9339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            sprintf( sCommandTmp, \"%s %s\", sReadCmd, sInFile );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 294,
+        "Column": 17,
+        "ByteOffset": 9712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                sprintf( sCommandTmp, \"%s %s\", sWriteCmd, sOutFile );"
+    },
+    {
+      "Name": "feof",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 321,
+        "Column": 15,
+        "ByteOffset": 10451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        for  !feof(stdin)  {"
+    },
+    {
+      "Name": "stdin",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 321,
+        "Column": 20,
+        "ByteOffset": 10456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        for  !feof(stdin)  {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 359,
+        "Column": 8,
+        "ByteOffset": 11545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strcmp(s, \"blif\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 361,
+        "Column": 15,
+        "ByteOffset": 11602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if strcmp(s, \"bench\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 363,
+        "Column": 15,
+        "ByteOffset": 11660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if strcmp(s, \"pla\") == 0 {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 365,
+        "Column": 15,
+        "ByteOffset": 11716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else if strcmp(s, \"none\") == 0 {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 368,
+        "Column": 9,
+        "ByteOffset": 11780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pAbc.Err, \"unknown type %s\\n\", s );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 47,
+        "Column": 1,
+        "ByteOffset": 1784
+      },
+      "Directive": "#ifndef WIN32"
+    },
+    {
+      "Location": {
+        "Line": 108,
+        "Column": 1,
+        "ByteOffset": 3752
+      },
+      "Directive": "#if defined(_DEBUG) \u0026\u0026 defined(_MSC_VER)"
+    },
+    {
+      "Location": {
+        "Line": 135,
+        "Column": 1,
+        "ByteOffset": 4600
+      },
+      "Directive": "#if !defined(WIN32) \u0026\u0026 !defined(ABC_NO_RLIMIT)"
+    },
+    {
+      "Location": {
+        "Line": 147,
+        "Column": 1,
+        "ByteOffset": 5212
+      },
+      "Directive": "#if !defined(WIN32) \u0026\u0026 !defined(ABC_NO_RLIMIT)"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_RealMain",
+      "Start": 2845,
+      "End": 12364,
+      "BodyStart": 2889,
+      "Original": "int Abc_RealMain( int argc, char * argv[] )\n{\n    Abc_Frame_t * pAbc;\n    Vec_Str_t* sCommandUsr = Vec_StrAlloc(1000);\n    char sCommandTmp[ABC_MAX_STR], sReadCmd[1000], sWriteCmd[1000];\n    const char * sOutFile, * sInFile;\n    char * sCommand;\n    int  fStatus = 0;\n    int c, fInitSource, fInitRead, fFinalWrite;\n\n    enum {\n        INTERACTIVE, // interactive mode\n        BATCH, // batch mode, run a command and quit\n        BATCH_THEN_INTERACTIVE, // run a command, then back to interactive mode\n        BATCH_QUIET, // as in batch mode, but don't echo the command\n        BATCH_QUIET_THEN_INTERACTIVE, // as in batch then interactive mode, but don't echo the command\n        BATCH_SMT // special batch mode, which expends SMTLIB problem via stdin\n    } fBatch;\n\n    // added to detect memory leaks\n    // watch for {,,msvcrtd.dll}*__p__crtBreakAlloc()\n    // (http://support.microsoft.com/kb/151585)\n#if defined(_DEBUG) \u0026\u0026 defined(_MSC_VER)\n    _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );\n#endif\n\n    // get global frame (singleton pattern)\n    // will be initialized on first call\n    pAbc = Abc_FrameGetGlobalFrame();\n    pAbc-\u003esBinary = argv[0];\n\n    // default options\n    fBatch      = INTERACTIVE;\n    fInitSource = 1;\n    fInitRead   = 0;\n    fFinalWrite = 0;\n    sInFile = sOutFile = NULL;\n    sprintf( sReadCmd,  \"read\"  );\n    sprintf( sWriteCmd, \"write\" );\n\n    Extra_UtilGetoptReset();\n    while ((c = Extra_UtilGetopt(argc, argv, \"dm:l:c:q:C:Q:S:hf:F:o:st:T:xb\")) != EOF) {\n        switch(c) {\n\n            case 'd':                                          \n                enable_dbg_outs ^= 1;                            \n                break;                                          \n\n            case 'm': {\n#if !defined(WIN32) \u0026\u0026 !defined(ABC_NO_RLIMIT)\n                int maxMb = atoi(globalUtilOptarg);             \n                printf(\"Limiting memory use to %d MB\\n\", maxMb);\n                struct rlimit limit = {                         \n                    maxMb * (1llu \u003c\u003c 20), /* soft limit */      \n                    maxMb * (1llu \u003c\u003c 20)  /* hard limit */      \n                };                                              \n                setrlimit(RLIMIT_AS, \u0026limit);                   \n#endif\n                break; \n            }                                         \n            case 'l': {\n#if !defined(WIN32) \u0026\u0026 !defined(ABC_NO_RLIMIT)\n                rlim_t maxTime = atoi(globalUtilOptarg);           \n                printf(\"Limiting time to %d seconds\\n\", (int)maxTime);\n                struct rlimit limit = {                         \n                    maxTime,             /* soft limit */       \n                    maxTime              /* hard limit */       \n                };                                              \n                setrlimit(RLIMIT_CPU, \u0026limit);                  \n#endif\n                break; \n            }                                         \n            case 'c':\n                if( Vec_StrSize(sCommandUsr) \u003e 0 )\n                {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH;\n                break;\n\n            case 'q':\n                if( Vec_StrSize(sCommandUsr) \u003e 0 )\n                {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH_QUIET;\n                break;\n\n            case 'Q':\n                if( Vec_StrSize(sCommandUsr) \u003e 0 )\n                {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH_QUIET_THEN_INTERACTIVE;\n                break;\n\n            case 'C':\n                if( Vec_StrSize(sCommandUsr) \u003e 0 )\n                {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH_THEN_INTERACTIVE;\n                break;\n\n            case 'S':\n                if( Vec_StrSize(sCommandUsr) \u003e 0 )\n                {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH_SMT;\n                break;\n\n            case 'f':\n                if( Vec_StrSize(sCommandUsr) \u003e 0 )\n                {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrPrintF(sCommandUsr, \"source %s\", globalUtilOptarg );\n                fBatch = BATCH;\n                break;\n\n            case 'F':\n                if( Vec_StrSize(sCommandUsr) \u003e 0 )\n                {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrPrintF(sCommandUsr, \"source -x %s\", globalUtilOptarg );\n                fBatch = BATCH;\n                break;\n\n            case 'h':\n                goto usage;\n                break;\n\n            case 'o':\n                sOutFile = globalUtilOptarg;\n                fFinalWrite = 1;\n                break;\n\n            case 's':\n                fInitSource = 0;\n                break;\n\n            case 't':\n                if ( TypeCheck( pAbc, globalUtilOptarg ) )\n                {\n                    if ( (!strcmp(globalUtilOptarg, \"none\")) == 0 )\n                    {\n                        fInitRead = 1;\n                        sprintf( sReadCmd, \"read_%s\", globalUtilOptarg );\n                    }\n                }\n                else {\n                    goto usage;\n                }\n                fBatch = BATCH;\n                break;\n\n            case 'T':\n                if ( TypeCheck( pAbc, globalUtilOptarg ) )\n                {\n                    if ( (!strcmp(globalUtilOptarg, \"none\")) == 0)\n                    {\n                        fFinalWrite = 1;\n                        sprintf( sWriteCmd, \"write_%s\", globalUtilOptarg);\n                    }\n                }\n                else {\n                    goto usage;\n                }\n                fBatch = BATCH;\n                break;\n\n            case 'x':\n                fFinalWrite = 0;\n                fInitRead   = 0;\n                fBatch = BATCH;\n                break;\n\n            case 'b':\n                Abc_FrameSetBridgeMode();\n                break;\n\n            default:\n                goto usage;\n        }\n    }\n\n    Vec_StrPush(sCommandUsr, '\\0');\n\n    if ( fBatch == BATCH_SMT )\n    {\n        Wlc_StdinProcessSmt( pAbc, Vec_StrArray(sCommandUsr) );\n        Abc_Stop();\n        return 0;\n    }\n\n    if ( Abc_FrameIsBridgeMode() )\n    {\n        extern Gia_Man_t * Gia_ManFromBridge( FILE * pFile, Vec_Int_t ** pvInit );\n        pAbc-\u003epGia = Gia_ManFromBridge( stdin, NULL );\n    }\n    else if ( fBatch!=INTERACTIVE \u0026\u0026 fBatch!=BATCH_QUIET \u0026\u0026 fBatch!=BATCH_QUIET_THEN_INTERACTIVE \u0026\u0026 Vec_StrSize(sCommandUsr)\u003e0 )\n        Abc_Print( 1, \"ABC command line: \\\"%s\\\".\\n\\n\", Vec_StrArray(sCommandUsr) );\n\n    if ( fBatch!=INTERACTIVE )\n    {\n        pAbc-\u003efBatchMode = 1;\n\n        if (argc - globalUtilOptind == 0)\n        {\n            sInFile = NULL;\n        }\n        else if (argc - globalUtilOptind == 1)\n        {\n            fInitRead = 1;\n            sInFile = argv[globalUtilOptind];\n        }\n        else\n        {\n            Abc_UtilsPrintUsage( pAbc, argv[0] );\n        }\n\n        // source the resource file\n        if ( fInitSource )\n        {\n            Abc_UtilsSource( pAbc );\n        }\n\n        fStatus = 0;\n        if ( fInitRead \u0026\u0026 sInFile )\n        {\n            sprintf( sCommandTmp, \"%s %s\", sReadCmd, sInFile );\n            fStatus = Cmd_CommandExecute( pAbc, sCommandTmp );\n        }\n\n        if ( fStatus == 0 )\n        {\n            /* cmd line contains `source \u003cfile\u003e' */\n            fStatus = Cmd_CommandExecute( pAbc, Vec_StrArray(sCommandUsr) );\n            if ( (fStatus == 0 || fStatus == -1) \u0026\u0026 fFinalWrite \u0026\u0026 sOutFile )\n            {\n                sprintf( sCommandTmp, \"%s %s\", sWriteCmd, sOutFile );\n                fStatus = Cmd_CommandExecute( pAbc, sCommandTmp );\n            }\n        }\n\n        if (fBatch == BATCH_THEN_INTERACTIVE || fBatch == BATCH_QUIET_THEN_INTERACTIVE){\n            fBatch = INTERACTIVE;\n            pAbc-\u003efBatchMode = 0;\n        }\n    }\n\n    Vec_StrFreeP(\u0026sCommandUsr);\n\n    if ( fBatch==INTERACTIVE )\n    {\n        // start interactive mode\n\n        // print the hello line\n        Abc_UtilsPrintHello( pAbc );\n        // print history of the recent commands\n        Cmd_HistoryPrint( pAbc, 10 );\n\n        // source the resource file\n        if ( fInitSource )\n        {\n            Abc_UtilsSource( pAbc );\n        }\n\n        // execute commands given by the user\n        while ( !feof(stdin) )\n        {\n            // print command line prompt and\n            // get the command from the user\n            sCommand = Abc_UtilsGetUsersInput( pAbc );\n\n            // execute the user's command\n            fStatus = Cmd_CommandExecute( pAbc, sCommand );\n\n            // stop if the user quitted or an error occurred\n            if ( fStatus == -1 || fStatus == -2 )\n                break;\n        }\n    }\n\n    // if the memory should be freed, quit packages\n//    if ( fStatus \u003c 0 ) \n    {\n        Abc_Stop();\n    }\n    return 0;\n\nusage:\n    Abc_UtilsPrintHello( pAbc );\n    Abc_UtilsPrintUsage( pAbc, argv[0] );\n    return 1;\n}",
+      "Draft": "func Abc_RealMain(argc int32, argv []string) int32 {\n    var pAbc *Abc_Frame_t;\n    var sCommandUsr *Vec_Str_t  = Vec_StrAlloc(1000);\n    var sCommandTmp [ABC_MAX_STR]byte;\n    var sReadCmd string // was [1000]byte in C\n\n    var sWriteCmd string // was [1000]byte in C\n\n    char * sOutFile, * sInFile;\n    var sCommand string;\n    var fStatus int32;\n    var c, fInitSource, fInitRead, fFinalWrite int32;\n\n    enum {\n        INTERACTIVE, // interactive mode\n        BATCH, // batch mode, run a command and quit\n        BATCH_THEN_INTERACTIVE, // run a command, then back to interactive mode\n        BATCH_QUIET, // as in batch mode, but don't echo the command\n        BATCH_QUIET_THEN_INTERACTIVE, // as in batch then interactive mode, but don't echo the command\n        BATCH_SMT // special batch mode, which expends SMTLIB problem via stdin\n    }\n fBatch;\n\n    // added to detect memory leaks\n    // watch for {,,msvcrtd.dll}*__p__crtBreakAlloc()\n    // (http://support.microsoft.com/kb/151585)\n#if defined(_DEBUG) \u0026\u0026 defined(_MSC_VER)\n    _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );\n#endif\n\n    // get global frame (singleton pattern)\n    // will be initialized on first call\n    pAbc = Abc_FrameGetGlobalFrame();\n    pAbc.sBinary = argv[0];\n\n    // default options\n    fBatch      = INTERACTIVE;\n    fInitSource = 1;\n    fInitRead   = 0;\n    fFinalWrite = 0;\n    sInFile = sOutFile = nil;\n    sReadCmd = fmt.Sprintf(\"read\");\n    sWriteCmd = fmt.Sprintf(\"write\");\n\n    Extra_UtilGetoptReset();\n    for (c = Extra_UtilGetopt(argc, argv, \"dm:l:c:q:C:Q:S:hf:F:o:st:T:xb\")) != -1 {\n        switch c {\n\n            case 'd':                                          \n                enable_dbg_outs ^= 1;                            \n                break;                                          \n\n            case 'm': {\n#if !defined(WIN32) \u0026\u0026 !defined(ABC_NO_RLIMIT)\n                int maxMb = atoi(globalUtilOptarg);             \n                printf(\"Limiting memory use to %d MB\\n\", maxMb);\n                struct rlimit limit = {                         \n                    maxMb * (1llu \u003c\u003c 20), /* soft limit */      \n                    maxMb * (1llu \u003c\u003c 20)  /* hard limit */      \n                };                                              \n                setrlimit(RLIMIT_AS, \u0026limit);                   \n#endif\n                break; \n            }                                         \n            fallthrough\ncase 'l': {\n#if !defined(WIN32) \u0026\u0026 !defined(ABC_NO_RLIMIT)\n                rlim_t maxTime = atoi(globalUtilOptarg);           \n                printf(\"Limiting time to %d seconds\\n\", (int)maxTime);\n                struct rlimit limit = {                         \n                    maxTime,             /* soft limit */       \n                    maxTime              /* hard limit */       \n                };                                              \n                setrlimit(RLIMIT_CPU, \u0026limit);                  \n#endif\n                break; \n            }                                         \n            fallthrough\ncase 'c':\n                if Vec_StrSize(sCommandUsr) \u003e 0 {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH;\n                break;\n\n            case 'q':\n                if Vec_StrSize(sCommandUsr) \u003e 0 {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH_QUIET;\n                break;\n\n            case 'Q':\n                if Vec_StrSize(sCommandUsr) \u003e 0 {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH_QUIET_THEN_INTERACTIVE;\n                break;\n\n            case 'C':\n                if Vec_StrSize(sCommandUsr) \u003e 0 {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH_THEN_INTERACTIVE;\n                break;\n\n            case 'S':\n                if Vec_StrSize(sCommandUsr) \u003e 0 {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH_SMT;\n                break;\n\n            case 'f':\n                if Vec_StrSize(sCommandUsr) \u003e 0 {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrPrintF(sCommandUsr, \"source %s\", globalUtilOptarg );\n                fBatch = BATCH;\n                break;\n\n            case 'F':\n                if Vec_StrSize(sCommandUsr) \u003e 0 {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrPrintF(sCommandUsr, \"source -x %s\", globalUtilOptarg );\n                fBatch = BATCH;\n                break;\n\n            case 'h':\n                goto usage;\n                break;\n\n            case 'o':\n                sOutFile = globalUtilOptarg;\n                fFinalWrite = 1;\n                break;\n\n            case 's':\n                fInitSource = 0;\n                break;\n\n            case 't':\n                if TypeCheck( pAbc, globalUtilOptarg ) != 0 {\n                    if (!int32(strings.Compare(globalUtilOptarg, \"none\"))) == 0 {\n                        fInitRead = 1;\n                        sReadCmd = fmt.Sprintf(\"read_%s\", globalUtilOptarg);\n                    }\n                \n                } else {\n                    goto usage;\n                }\n                fBatch = BATCH;\n                break;\n\n            case 'T':\n                if TypeCheck( pAbc, globalUtilOptarg ) != 0 {\n                    if (!int32(strings.Compare(globalUtilOptarg, \"none\"))) == 0 {\n                        fFinalWrite = 1;\n                        sWriteCmd = fmt.Sprintf(\"write_%s\", globalUtilOptarg);\n                    }\n                \n                } else {\n                    goto usage;\n                }\n                fBatch = BATCH;\n                break;\n\n            case 'x':\n                fFinalWrite = 0;\n                fInitRead   = 0;\n                fBatch = BATCH;\n                break;\n\n            case 'b':\n                Abc_FrameSetBridgeMode();\n                break;\n\n            default:\n                goto usage;\n        }\n    }\n\n    Vec_StrPush(sCommandUsr, '\\0');\n\n    if fBatch == BATCH_SMT {\n        Wlc_StdinProcessSmt( pAbc, Vec_StrArray(sCommandUsr) );\n        Abc_Stop();\n        return 0;\n    }\n\n    if Abc_FrameIsBridgeMode() {\n        extern Gia_Man_t * Gia_ManFromBridge( FILE * pFile, Vec_Int_t ** pvInit );\n        pAbc.pGia = Gia_ManFromBridge( os.Stdin, nil );\n    \n    } else if fBatch!=INTERACTIVE \u0026\u0026 fBatch!=BATCH_QUIET \u0026\u0026 fBatch!=BATCH_QUIET_THEN_INTERACTIVE \u0026\u0026 Vec_StrSize(sCommandUsr)\u003e0 {\n        Abc_Print( 1, \"ABC command line: \\\"%s\\\".\\n\\n\", Vec_StrArray(sCommandUsr) ); }\n\n    if fBatch!=INTERACTIVE {\n        pAbc.fBatchMode = 1;\n\n        if argc - globalUtilOptind == 0 {\n            sInFile = nil;\n        \n        } else if argc - globalUtilOptind == 1 {\n            fInitRead = 1;\n            sInFile = argv[globalUtilOptind];\n        \n        } else {\n            Abc_UtilsPrintUsage( pAbc, argv[0] );\n        }\n\n        // source the resource file\n        if fInitSource {\n            Abc_UtilsSource( pAbc );\n        }\n\n        fStatus = 0;\n        if fInitRead \u0026\u0026 sInFile {\n            sprintf( sCommandTmp, \"%s %s\", sReadCmd, sInFile );\n            fStatus = Cmd_CommandExecute( pAbc, sCommandTmp );\n        }\n\n        if fStatus == 0 {\n            /* cmd line contains `source \u003cfile\u003e' */\n            fStatus = Cmd_CommandExecute( pAbc, Vec_StrArray(sCommandUsr) );\n            if (fStatus == 0 || fStatus == -1) \u0026\u0026 (fFinalWrite != 0) \u0026\u0026 sOutFile {\n                sprintf( sCommandTmp, \"%s %s\", sWriteCmd, sOutFile );\n                fStatus = Cmd_CommandExecute( pAbc, sCommandTmp );\n            }\n        }\n\n        if fBatch == BATCH_THEN_INTERACTIVE || fBatch == BATCH_QUIET_THEN_INTERACTIVE{\n            fBatch = INTERACTIVE;\n            pAbc.fBatchMode = 0;\n        }\n    }\n\n    Vec_StrFreeP(\u0026sCommandUsr);\n\n    if fBatch==INTERACTIVE {\n        // start interactive mode\n\n        // print the hello line\n        Abc_UtilsPrintHello( pAbc );\n        // print history of the recent commands\n        Cmd_HistoryPrint( pAbc, 10 );\n\n        // source the resource file\n        if fInitSource {\n            Abc_UtilsSource( pAbc );\n        }\n\n        // execute commands given by the user\n        for  !feof(os.Stdin)  {\n            // print command line prompt and\n            // get the command from the user\n            sCommand = Abc_UtilsGetUsersInput( pAbc );\n\n            // execute the user's command\n            fStatus = Cmd_CommandExecute( pAbc, sCommand );\n\n            // stop if the user quitted or an error occurred\n            if fStatus == -1 || fStatus == -2 {\n                break; }\n        }\n    }\n\n    // if the memory should be freed, quit packages\n//    if ( fStatus \u003c 0 ) \n    {\n        Abc_Stop();\n    }\n    return 0;\n\nusage:\n    Abc_UtilsPrintHello( pAbc );\n    Abc_UtilsPrintUsage( pAbc, argv[0] );\n    return 1;\n}"
+    },
+    {
+      "Name": "TypeCheck",
+      "Start": 12762,
+      "End": 13128,
+      "BodyStart": 12821,
+      "Original": "static int TypeCheck( Abc_Frame_t * pAbc, const char * s )\n{\n    if (strcmp(s, \"blif\") == 0)\n        return 1;\n    else if (strcmp(s, \"bench\") == 0)\n        return 1;\n    else if (strcmp(s, \"pla\") == 0)\n        return 1;\n    else if (strcmp(s, \"none\") == 0)\n        return 1;\n    else {\n        fprintf( pAbc-\u003eErr, \"unknown type %s\\n\", s );\n        return 0;\n    }\n}",
+      "Draft": "func TypeCheck(pAbc *Abc_Frame_t, s string) int32 {\n    if int32(strings.Compare(s, \"blif\")) == 0 {\n        return 1;\n    } else if int32(strings.Compare(s, \"bench\")) == 0 {\n        return 1;\n    } else if int32(strings.Compare(s, \"pla\")) == 0 {\n        return 1;\n    } else if int32(strings.Compare(s, \"none\")) == 0 {\n        return 1;\n    } else {\n        fmt.Fprintf(pAbc.Err, \"unknown type %s\\n\", s);\n        return 0;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainReal.c::mechanical::enum::3070",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 3166,
+      "End": 3170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainReal.c::Abc_RealMain",
+      "Category": "semantic-review",
+      "Symbol": "Abc_RealMain",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2845,
+      "End": 12364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainReal.c::TypeCheck",
+      "Category": "semantic-review",
+      "Symbol": "TypeCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12762,
+      "End": 13128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainReal.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainReal.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1784,
+      "End": 1954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainReal.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3752,
+      "End": 3867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainReal.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4600,
+      "End": 5108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainReal.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5212,
+      "End": 5729
+    }
+  ],
+  "Draft": "package main\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\n)\n\n/*////////////////////////////////////////////////////////////////////////////\n\nABC: System for Sequential Synthesis and Verification\n\nhttp://www.eecs.berkeley.edu/~alanmi/abc/\n\nCopyright (c) The Regents of the University of California. All rights reserved.\n\nPermission is hereby granted, without written agreement and without license or\nroyalty fees, to use, copy, modify, and distribute this software and its\ndocumentation for any purpose, provided that the above copyright notice and\nthe following two paragraphs appear in all copies of this software.\n\nIN NO EVENT SHALL THE UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR\nDIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES ARISING OUT OF\nTHE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE UNIVERSITY OF\nCALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n\nTHE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY WARRANTIES, INCLUDING,\nBUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR\nA PARTICULAR PURPOSE. THE SOFTWARE PROVIDED HEREUNDER IS ON AN \"AS IS\" BASIS,\nAND THE UNIVERSITY OF CALIFORNIA HAS NO OBLIGATION TO PROVIDE MAINTENANCE,\nSUPPORT, UPDATES, ENHANCEMENTS, OR MODIFICATIONS.\n\n////////////////////////////////////////////////////////////////////////////*/\n\n/**CFile****************************************************************\n\n  FileName    [main.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [The main package.]\n\n  Synopsis    [Here everything starts.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: main.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n#ifndef WIN32\n#include \u003csys/time.h\u003e    \n#include \u003csys/times.h\u003e   \n#include \u003csys/resource.h\u003e\n#include \u003cunistd.h\u003e      \n#include \u003csignal.h\u003e      \n#include \u003cstdlib.h\u003e\n#endif\n\n//#include \"base/abc/abc.h\"\n//#include \"mainInt.h\"\n//#include \"base/wlc/wlc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int TypeCheck( Abc_Frame_t * pAbc, const char * s);\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\nvar enable_dbg_outs uint32 = 1;  \n\n/**Function*************************************************************\n\n  Synopsis    [The main() procedure.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_RealMain(argc int32, argv []string) int32 {\n    var pAbc *Abc_Frame_t;\n    var sCommandUsr *Vec_Str_t  = Vec_StrAlloc(1000);\n    var sCommandTmp [ABC_MAX_STR]byte;\n    var sReadCmd string // was [1000]byte in C\n\n    var sWriteCmd string // was [1000]byte in C\n\n    char * sOutFile, * sInFile;\n    var sCommand string;\n    var fStatus int32;\n    var c, fInitSource, fInitRead, fFinalWrite int32;\n\n    enum {\n        INTERACTIVE, // interactive mode\n        BATCH, // batch mode, run a command and quit\n        BATCH_THEN_INTERACTIVE, // run a command, then back to interactive mode\n        BATCH_QUIET, // as in batch mode, but don't echo the command\n        BATCH_QUIET_THEN_INTERACTIVE, // as in batch then interactive mode, but don't echo the command\n        BATCH_SMT // special batch mode, which expends SMTLIB problem via stdin\n    }\n fBatch;\n\n    // added to detect memory leaks\n    // watch for {,,msvcrtd.dll}*__p__crtBreakAlloc()\n    // (http://support.microsoft.com/kb/151585)\n#if defined(_DEBUG) \u0026\u0026 defined(_MSC_VER)\n    _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );\n#endif\n\n    // get global frame (singleton pattern)\n    // will be initialized on first call\n    pAbc = Abc_FrameGetGlobalFrame();\n    pAbc.sBinary = argv[0];\n\n    // default options\n    fBatch      = INTERACTIVE;\n    fInitSource = 1;\n    fInitRead   = 0;\n    fFinalWrite = 0;\n    sInFile = sOutFile = nil;\n    sReadCmd = fmt.Sprintf(\"read\");\n    sWriteCmd = fmt.Sprintf(\"write\");\n\n    Extra_UtilGetoptReset();\n    for (c = Extra_UtilGetopt(argc, argv, \"dm:l:c:q:C:Q:S:hf:F:o:st:T:xb\")) != -1 {\n        switch c {\n\n            case 'd':                                          \n                enable_dbg_outs ^= 1;                            \n                break;                                          \n\n            case 'm': {\n#if !defined(WIN32) \u0026\u0026 !defined(ABC_NO_RLIMIT)\n                int maxMb = atoi(globalUtilOptarg);             \n                printf(\"Limiting memory use to %d MB\\n\", maxMb);\n                struct rlimit limit = {                         \n                    maxMb * (1llu \u003c\u003c 20), /* soft limit */      \n                    maxMb * (1llu \u003c\u003c 20)  /* hard limit */      \n                };                                              \n                setrlimit(RLIMIT_AS, \u0026limit);                   \n#endif\n                break; \n            }                                         \n            fallthrough\ncase 'l': {\n#if !defined(WIN32) \u0026\u0026 !defined(ABC_NO_RLIMIT)\n                rlim_t maxTime = atoi(globalUtilOptarg);           \n                printf(\"Limiting time to %d seconds\\n\", (int)maxTime);\n                struct rlimit limit = {                         \n                    maxTime,             /* soft limit */       \n                    maxTime              /* hard limit */       \n                };                                              \n                setrlimit(RLIMIT_CPU, \u0026limit);                  \n#endif\n                break; \n            }                                         \n            fallthrough\ncase 'c':\n                if Vec_StrSize(sCommandUsr) \u003e 0 {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH;\n                break;\n\n            case 'q':\n                if Vec_StrSize(sCommandUsr) \u003e 0 {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH_QUIET;\n                break;\n\n            case 'Q':\n                if Vec_StrSize(sCommandUsr) \u003e 0 {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH_QUIET_THEN_INTERACTIVE;\n                break;\n\n            case 'C':\n                if Vec_StrSize(sCommandUsr) \u003e 0 {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH_THEN_INTERACTIVE;\n                break;\n\n            case 'S':\n                if Vec_StrSize(sCommandUsr) \u003e 0 {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrAppend(sCommandUsr, globalUtilOptarg );\n                fBatch = BATCH_SMT;\n                break;\n\n            case 'f':\n                if Vec_StrSize(sCommandUsr) \u003e 0 {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrPrintF(sCommandUsr, \"source %s\", globalUtilOptarg );\n                fBatch = BATCH;\n                break;\n\n            case 'F':\n                if Vec_StrSize(sCommandUsr) \u003e 0 {\n                    Vec_StrAppend(sCommandUsr, \" ; \");\n                }\n                Vec_StrPrintF(sCommandUsr, \"source -x %s\", globalUtilOptarg );\n                fBatch = BATCH;\n                break;\n\n            case 'h':\n                goto usage;\n                break;\n\n            case 'o':\n                sOutFile = globalUtilOptarg;\n                fFinalWrite = 1;\n                break;\n\n            case 's':\n                fInitSource = 0;\n                break;\n\n            case 't':\n                if TypeCheck( pAbc, globalUtilOptarg ) != 0 {\n                    if (!int32(strings.Compare(globalUtilOptarg, \"none\"))) == 0 {\n                        fInitRead = 1;\n                        sReadCmd = fmt.Sprintf(\"read_%s\", globalUtilOptarg);\n                    }\n                \n                } else {\n                    goto usage;\n                }\n                fBatch = BATCH;\n                break;\n\n            case 'T':\n                if TypeCheck( pAbc, globalUtilOptarg ) != 0 {\n                    if (!int32(strings.Compare(globalUtilOptarg, \"none\"))) == 0 {\n                        fFinalWrite = 1;\n                        sWriteCmd = fmt.Sprintf(\"write_%s\", globalUtilOptarg);\n                    }\n                \n                } else {\n                    goto usage;\n                }\n                fBatch = BATCH;\n                break;\n\n            case 'x':\n                fFinalWrite = 0;\n                fInitRead   = 0;\n                fBatch = BATCH;\n                break;\n\n            case 'b':\n                Abc_FrameSetBridgeMode();\n                break;\n\n            default:\n                goto usage;\n        }\n    }\n\n    Vec_StrPush(sCommandUsr, '\\0');\n\n    if fBatch == BATCH_SMT {\n        Wlc_StdinProcessSmt( pAbc, Vec_StrArray(sCommandUsr) );\n        Abc_Stop();\n        return 0;\n    }\n\n    if Abc_FrameIsBridgeMode() {\n        extern Gia_Man_t * Gia_ManFromBridge( FILE * pFile, Vec_Int_t ** pvInit );\n        pAbc.pGia = Gia_ManFromBridge( os.Stdin, nil );\n    \n    } else if fBatch!=INTERACTIVE \u0026\u0026 fBatch!=BATCH_QUIET \u0026\u0026 fBatch!=BATCH_QUIET_THEN_INTERACTIVE \u0026\u0026 Vec_StrSize(sCommandUsr)\u003e0 {\n        Abc_Print( 1, \"ABC command line: \\\"%s\\\".\\n\\n\", Vec_StrArray(sCommandUsr) ); }\n\n    if fBatch!=INTERACTIVE {\n        pAbc.fBatchMode = 1;\n\n        if argc - globalUtilOptind == 0 {\n            sInFile = nil;\n        \n        } else if argc - globalUtilOptind == 1 {\n            fInitRead = 1;\n            sInFile = argv[globalUtilOptind];\n        \n        } else {\n            Abc_UtilsPrintUsage( pAbc, argv[0] );\n        }\n\n        // source the resource file\n        if fInitSource {\n            Abc_UtilsSource( pAbc );\n        }\n\n        fStatus = 0;\n        if fInitRead \u0026\u0026 sInFile {\n            sprintf( sCommandTmp, \"%s %s\", sReadCmd, sInFile );\n            fStatus = Cmd_CommandExecute( pAbc, sCommandTmp );\n        }\n\n        if fStatus == 0 {\n            /* cmd line contains `source \u003cfile\u003e' */\n            fStatus = Cmd_CommandExecute( pAbc, Vec_StrArray(sCommandUsr) );\n            if (fStatus == 0 || fStatus == -1) \u0026\u0026 (fFinalWrite != 0) \u0026\u0026 sOutFile {\n                sprintf( sCommandTmp, \"%s %s\", sWriteCmd, sOutFile );\n                fStatus = Cmd_CommandExecute( pAbc, sCommandTmp );\n            }\n        }\n\n        if fBatch == BATCH_THEN_INTERACTIVE || fBatch == BATCH_QUIET_THEN_INTERACTIVE{\n            fBatch = INTERACTIVE;\n            pAbc.fBatchMode = 0;\n        }\n    }\n\n    Vec_StrFreeP(\u0026sCommandUsr);\n\n    if fBatch==INTERACTIVE {\n        // start interactive mode\n\n        // print the hello line\n        Abc_UtilsPrintHello( pAbc );\n        // print history of the recent commands\n        Cmd_HistoryPrint( pAbc, 10 );\n\n        // source the resource file\n        if fInitSource {\n            Abc_UtilsSource( pAbc );\n        }\n\n        // execute commands given by the user\n        for  !feof(os.Stdin)  {\n            // print command line prompt and\n            // get the command from the user\n            sCommand = Abc_UtilsGetUsersInput( pAbc );\n\n            // execute the user's command\n            fStatus = Cmd_CommandExecute( pAbc, sCommand );\n\n            // stop if the user quitted or an error occurred\n            if fStatus == -1 || fStatus == -2 {\n                break; }\n        }\n    }\n\n    // if the memory should be freed, quit packages\n//    if ( fStatus \u003c 0 ) \n    {\n        Abc_Stop();\n    }\n    return 0;\n\nusage:\n    Abc_UtilsPrintHello( pAbc );\n    Abc_UtilsPrintUsage( pAbc, argv[0] );\n    return 1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Returns 1 if s is a file type recognized, else returns 0.]\n\n  Description [Returns 1 if s is a file type recognized by ABC, else returns 0. \n  Recognized types are \"blif\", \"bench\", \"pla\", and \"none\".]\n\n  SideEffects []\n\n******************************************************************************/\nfunc TypeCheck(pAbc *Abc_Frame_t, s string) int32 {\n    if int32(strings.Compare(s, \"blif\")) == 0 {\n        return 1;\n    } else if int32(strings.Compare(s, \"bench\")) == 0 {\n        return 1;\n    } else if int32(strings.Compare(s, \"pla\")) == 0 {\n        return 1;\n    } else if int32(strings.Compare(s, \"none\")) == 0 {\n        return 1;\n    } else {\n        fmt.Fprintf(pAbc.Err, \"unknown type %s\\n\", s);\n        return 0;\n    }\n}\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

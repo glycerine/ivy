@@ -1,0 +1,431 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h",
+  "SHA256": "527e131c3b10a1007f4b35698d1d7b00cc5901c5457f319a621fcfc4a8aa2005",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 47,
+        "Column": 1,
+        "ByteOffset": 1458
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 205,
+        "Column": 1,
+        "ByteOffset": 9527
+      },
+      "Directive": "#ifdef FPGA_ALLOCATE_FANOUT"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fpga_FloatMoreThan",
+      "Start": 13314,
+      "End": 13430,
+      "BodyStart": 13393,
+      "Original": "static inline int Fpga_FloatMoreThan( Fpga_Man_t * p, float Arg1, float Arg2 ) { return Arg1 \u003e Arg2 + p-\u003efEpsilon; }",
+      "Draft": "func Fpga_FloatMoreThan(p *Fpga_Man_t, Arg1 float32, Arg2 float32) int32 { return Arg1 \u003e Arg2 + p.fEpsilon; }"
+    },
+    {
+      "Name": "Fpga_FloatLessThan",
+      "Start": 13431,
+      "End": 13547,
+      "BodyStart": 13510,
+      "Original": "static inline int Fpga_FloatLessThan( Fpga_Man_t * p, float Arg1, float Arg2 ) { return Arg1 \u003c Arg2 - p-\u003efEpsilon; }",
+      "Draft": "func Fpga_FloatLessThan(p *Fpga_Man_t, Arg1 float32, Arg2 float32) int32 { return Arg1 \u003c Arg2 - p.fEpsilon; }"
+    },
+    {
+      "Name": "Fpga_FloatEqual",
+      "Start": 13548,
+      "End": 13693,
+      "BodyStart": 13627,
+      "Original": "static inline int Fpga_FloatEqual( Fpga_Man_t * p, float Arg1, float Arg2 )    { return Arg1 \u003e Arg2 - p-\u003efEpsilon \u0026\u0026 Arg1 \u003c Arg2 + p-\u003efEpsilon; }",
+      "Draft": "func Fpga_FloatEqual(p *Fpga_Man_t, Arg1 float32, Arg2 float32) int32 { return Arg1 \u003e Arg2 - p.fEpsilon \u0026\u0026 Arg1 \u003c Arg2 + p.fEpsilon; }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_ManStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Fpga_ManStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3763,
+      "End": 7524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_LutLibStruct_t_::// set to 1 if variable pin delays are specified\n    float               pLutAreas[FPGA_MAX_LUTSIZE+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Fpga_LutLibStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 7747,
+      "End": 7851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_LutLibStruct_t_::// the areas of LUTs\n    float               pLutDelays[FPGA_MAX_LUTSIZE+1][FPGA_MAX_LUTSIZE+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Fpga_LutLibStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 7851,
+      "End": 7948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_LutLibStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Fpga_LutLibStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 7545,
+      "End": 7972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_NodeStruct_t_::// the number of references (fanouts) of the given node\n    unsigned            fMark0 : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fpga_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8475,
+      "End": 8575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_NodeStruct_t_::// the mark used for traversals\n    unsigned            fMark1 : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fpga_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8575,
+      "End": 8646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_NodeStruct_t_::// the mark used for traversals\n    unsigned            fInv   : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fpga_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8646,
+      "End": 8717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_NodeStruct_t_::// the complemented attribute for the equivalent nodes\n    unsigned            Value  : 2;",
+      "Category": "struct-field-review",
+      "Symbol": "Fpga_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8717,
+      "End": 8811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_NodeStruct_t_::// the value of the nodes\n    unsigned            fUsed  : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fpga_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8811,
+      "End": 8876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_NodeStruct_t_::// the flag indicating that the node is used in the mapping\n    unsigned            fTemp  : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Fpga_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8876,
+      "End": 8975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_NodeStruct_t_::// unused\n    unsigned            Level  :11;",
+      "Category": "struct-field-review",
+      "Symbol": "Fpga_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8975,
+      "End": 9024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_NodeStruct_t_::// the level of the given node\n    unsigned            uData  :14;",
+      "Category": "struct-field-review",
+      "Symbol": "Fpga_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 9024,
+      "End": 9094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_NodeStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Fpga_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 7994,
+      "End": 10794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_CutStruct_t_::// the root of the cut\n    Fpga_Node_t *       ppLeaves[FPGA_MAX_LEAVES+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Fpga_CutStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11018,
+      "End": 11102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_CutStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Fpga_CutStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 10829,
+      "End": 11780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::struct::Fpga_NodeVecStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Fpga_NodeVecStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 11805,
+      "End": 12050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::FPGA_MASK",
+      "Category": "macro-review",
+      "Symbol": "FPGA_MASK",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1658,
+      "End": 1721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::FPGA_NUM_BYTES",
+      "Category": "macro-review",
+      "Symbol": "FPGA_NUM_BYTES",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1817,
+      "End": 1881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::FPGA_MIN",
+      "Category": "macro-review",
+      "Symbol": "FPGA_MIN",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1912,
+      "End": 1970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::FPGA_MAX",
+      "Category": "macro-review",
+      "Symbol": "FPGA_MAX",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1971,
+      "End": 2029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::FPGA_SEQ_SIGN",
+      "Category": "macro-review",
+      "Symbol": "FPGA_SEQ_SIGN",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2286,
+      "End": 2349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_CutIsComplement",
+      "Category": "macro-review",
+      "Symbol": "Fpga_CutIsComplement",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2388,
+      "End": 2455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_CutRegular",
+      "Category": "macro-review",
+      "Symbol": "Fpga_CutRegular",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2456,
+      "End": 2532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_CutNot",
+      "Category": "macro-review",
+      "Symbol": "Fpga_CutNot",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2533,
+      "End": 2608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_CutNotCond",
+      "Category": "macro-review",
+      "Symbol": "Fpga_CutNotCond",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2609,
+      "End": 2684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_SeqIsComplement",
+      "Category": "macro-review",
+      "Symbol": "Fpga_SeqIsComplement",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2703,
+      "End": 2777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_SeqRegular",
+      "Category": "macro-review",
+      "Symbol": "Fpga_SeqRegular",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2778,
+      "End": 2861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_SeqIndex",
+      "Category": "macro-review",
+      "Symbol": "Fpga_SeqIndex",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2862,
+      "End": 2935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_SeqIndexCreate",
+      "Category": "macro-review",
+      "Symbol": "Fpga_SeqIndexCreate",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2936,
+      "End": 3036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_NodeReadRef",
+      "Category": "macro-review",
+      "Symbol": "Fpga_NodeReadRef",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3082,
+      "End": 3141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_NodeRef",
+      "Category": "macro-review",
+      "Symbol": "Fpga_NodeRef",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3142,
+      "End": 3203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_NodeIsSimComplement",
+      "Category": "macro-review",
+      "Symbol": "Fpga_NodeIsSimComplement",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3255,
+      "End": 3351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_NodeReadNextFanout",
+      "Category": "macro-review",
+      "Symbol": "Fpga_NodeReadNextFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12099,
+      "End": 12361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_NodeReadNextFanoutPlace",
+      "Category": "macro-review",
+      "Symbol": "Fpga_NodeReadNextFanoutPlace",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12431,
+      "End": 12623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_NodeForEachFanout",
+      "Category": "macro-review",
+      "Symbol": "Fpga_NodeForEachFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12669,
+      "End": 12864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::macro::Fpga_NodeForEachFanoutSafe",
+      "Category": "macro-review",
+      "Symbol": "Fpga_NodeForEachFanoutSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12915,
+      "End": 13312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::Fpga_FloatMoreThan",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_FloatMoreThan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13314,
+      "End": 13430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::Fpga_FloatLessThan",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_FloatLessThan",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13431,
+      "End": 13547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::Fpga_FloatEqual",
+      "Category": "semantic-review",
+      "Symbol": "Fpga_FloatEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13548,
+      "End": 13693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1458,
+      "End": 1531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/fpga/fpgaInt.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9527,
+      "End": 9878
+    }
+  ],
+  "Draft": "package fpga\n\n/**CFile****************************************************************\n\n  FileName    [fpgaInt.h]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Technology mapping for variable-size-LUT FPGAs.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - August 18, 2004.]\n\n  Revision    [$Id: fpgaInt.h,v 1.8 2004/09/30 21:18:10 satrajit Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \"misc/extra/extra.h\"\n//#include \"fpga.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n \n// uncomment to have fanouts represented in the mapping graph\n//#define FPGA_ALLOCATE_FANOUT  1\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n#ifdef _WIN32\n#define inline __inline // compatible with MS VS 6.0\n#endif\n\n// the maximum number of cut leaves (currently does not work for 7)\nconst FPGA_MAX_LEAVES =           6   \n\n// the bit masks\n// Original macro:\n// #define FPGA_MASK(n)             ((~((unsigned)0)) \u003e\u003e (32-(n)))\n\n#define FPGA_FULL                 (~((unsigned)0))\n#define FPGA_NO_VAR               (-9999.0)\n// Original macro:\n// #define FPGA_NUM_BYTES(n)         (((n)/16 + (((n)%16) \u003e 0))*16)\n\n\n// maximum/minimum operators\n// Original macro:\n// #define FPGA_MIN(a,b)             (((a) \u003c (b))? (a) : (b))\n\n// Original macro:\n// #define FPGA_MAX(a,b)             (((a) \u003e (b))? (a) : (b))\n\n\n// the small and large numbers (min/max float are 1.17e-38/3.40e+38)\n#define FPGA_FLOAT_LARGE          ((float)1.0e+20)\n#define FPGA_FLOAT_SMALL          ((float)1.0e-20)\n#define FPGA_INT_LARGE            (10000000)\n\n// the macro to compute the signature\n// Original macro:\n// #define FPGA_SEQ_SIGN(p)        (1 \u003c\u003c (((ABC_PTRUINT_T)p)%31));\n\n\n// internal macros to work with cuts\n// Original macro:\n// #define Fpga_CutIsComplement(p)  (((int)((ABC_PTRUINT_T)(p) \u0026 01)))\n\n// Original macro:\n// #define Fpga_CutRegular(p)       ((Fpga_Cut_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) \n\n// Original macro:\n// #define Fpga_CutNot(p)           ((Fpga_Cut_t *)((ABC_PTRUINT_T)(p) ^ 01)) \n\n// Original macro:\n// #define Fpga_CutNotCond(p,c)     ((Fpga_Cut_t *)((ABC_PTRUINT_T)(p) ^ (c)))\n\n\n// the cut nodes\n// Original macro:\n// #define Fpga_SeqIsComplement( p )      (((int)((ABC_PTRUINT_T) (p) \u0026 01)))\n\n// Original macro:\n// #define Fpga_SeqRegular( p )           ((Fpga_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~015))\n\n// Original macro:\n// #define Fpga_SeqIndex( p )             ((((ABC_PTRUINT_T)(p)) \u003e\u003e 1) \u0026 07)\n\n// Original macro:\n// #define Fpga_SeqIndexCreate( p, Ind )  (((ABC_PTRUINT_T)(p)) | (1 \u003c\u003c (((ABC_PTRUINT_T)(Ind)) \u0026 07)))\n\n\n// internal macros for referencing of nodes\n// Original macro:\n// #define Fpga_NodeReadRef(p)      ((Fpga_Regular(p))-\u003enRefs)\n\n// Original macro:\n// #define Fpga_NodeRef(p)          ((Fpga_Regular(p))-\u003enRefs++)\n\n\n// returns the complemented attribute of the node\n// Original macro:\n// #define Fpga_NodeIsSimComplement(p) (Fpga_IsComplement(p)? !(Fpga_Regular(p)-\u003efInv) : (p)-\u003efInv)\n\n\n// generating random unsigned (#define RAND_MAX 0x7fff)\n#define FPGA_RANDOM_UNSIGNED   ((((unsigned)rand()) \u003c\u003c 24) ^ (((unsigned)rand()) \u003c\u003c 12) ^ ((unsigned)rand()))\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n// the mapping manager\ntype Fpga_ManStruct_t_ struct {\n    // the mapping graph\n    pBins       **Fpga_Node_t;         // the table of nodes hashed by their children\n    nBins                 int32;         // the size of the table\n    pInputs       **Fpga_Node_t;       // the array of inputs\n    nInputs                 int32;       // the number of inputs\n    pOutputs       **Fpga_Node_t;      // the array of outputs\n    nOutputs                 int32;      // the number of outputs\n    nNodes                 int32;        // the total number of nodes\n    nLatches                 int32;      // the number of latches in the circuit\n    pConst1        *Fpga_Node_t;       // the constant 1 node\n    vNodesAll     *Fpga_NodeVec_t;     // the nodes by number\n    vAnds     *Fpga_NodeVec_t;         // the nodes reachable from COs\n    vMapping     *Fpga_NodeVec_t;      // the nodes used in the current mapping\n\n    // info about the original circuit\n    pFileName               string;     // the file name\n    ppOutputNames              *string; // the primary output names\n    pInputArrivals              *float32;// the PI arrival times\n\n    // mapping parameters\n    nVarsMax                 int32;      // the max number of variables\n    fAreaRecovery                 int32; // the flag to use area flow as the first parameter\n    fVerbose                 int32;      // the verbosiness flag\n    fSwitching                 int32;    // minimize the switching activity (instead of area)\n    fLatchPaths                 int32;   // optimize latch paths for delay, other paths for area\n    nTravIds                 int32;      // the counter of traversal IDs\n    DelayTarget               float32;   // the target required times\n\n    // support of choice nodes\n    nChoiceNodes                 int32;  // the number of choice nodes\n    nChoices                 int32;      // the number of all choices\n\n    nCanons                 int32;\n    nMatches                 int32;\n \n    // the supergate library\n    pLutLib      *Fpga_LutLib_t;       // the current LUT library\n\n    // the memory managers\n    mmNodes    *Extra_MmFixed_t;       // the memory manager for nodes\n    mmCuts    *Extra_MmFixed_t;        // the memory manager for cuts\n\n    // resynthesis parameters\n    fResynthesis                 int32;  // the resynthesis flag\n    fRequiredGlo               float32;  // the global required times\n    fRequiredShift               float32;// the shift of the required times\n    fRequiredStart               float32;// the starting global required times\n    fRequiredGain               float32; // the reduction in delay\n    fAreaGlo               float32;      // the total area\n    fAreaGain               float32;     // the reduction in area\n    fEpsilon               float32;      // the epsilon used to compare floats\n    fDelayWindow               float32;  // the delay window for delay-oriented resynthesis\n    DelayLimit               float32;    // for resynthesis\n    AreaLimit               float32;     // for resynthesis\n    TimeLimit               float32;     // for resynthesis\n\n    // runtime statistics\n    timeToMap             int64;     // time to transfer to the mapping structure\n    timeCuts             int64;      // time to compute k-feasible cuts\n    timeTruth             int64;     // time to compute the truth table for each cut\n    timeMatch             int64;     // time to perform matching for each node\n    timeRecover             int64;   // time to perform area recovery\n    timeToNet             int64;     // time to transfer back to the network\n    timeTotal             int64;     // the total mapping time\n    time1             int64;         // time to transfer to the mapping structure\n    time2             int64;         // time to transfer to the mapping structure\n}\n\n// the LUT library\ntype Fpga_LutLibStruct_t_ struct {\n    pName               string;         // the name of the LUT library\n    LutMax                 int32;        // the maximum LUT size \n    fVarPinDelays                 int32; // set to 1 if variable pin delays are specified\n    pLutAreas [FPGA_MAX_LUTSIZE+1]float32; // the areas of LUTs\n    pLutDelays [FPGA_MAX_LUTSIZE+1][FPGA_MAX_LUTSIZE+1]float32;// the delays of LUTs\n}\n\n// the mapping node\ntype Fpga_NodeStruct_t_ struct {\n    // general information about the node\n    pNext        *Fpga_Node_t;         // the next node in the hash table\n    pLevel        *Fpga_Node_t;        // the next node in the linked list by level\n    Num                 int32;           // the unique number of this node\n    NumA                 int32;          // the unique number of this node\n    Num2                 int32;          // the temporary number of this node\n    nRefs                 int32;         // the number of references (fanouts) of the given node\n    fMark0 uint32; /* C bitfield: 1 bits; review packing and truncation */    // the mark used for traversals\n    fMark1 uint32; /* C bitfield: 1 bits; review packing and truncation */    // the mark used for traversals\n    fInv uint32; /* C bitfield: 1 bits; review packing and truncation */    // the complemented attribute for the equivalent nodes\n    Value uint32; /* C bitfield: 2 bits; review packing and truncation */    // the value of the nodes\n    fUsed uint32; /* C bitfield: 1 bits; review packing and truncation */    // the flag indicating that the node is used in the mapping\n    fTemp uint32; /* C bitfield: 1 bits; review packing and truncation */    // unused\n    Level uint32; /* C bitfield: 11 bits; review packing and truncation */    // the level of the given node\n    uData uint32; /* C bitfield: 14 bits; review packing and truncation */    // used to mark the fanins, for which resynthesis was tried\n    TravId                 int32;\n\n    // the successors of this node     \n    p1        *Fpga_Node_t;            // the first child\n    p2        *Fpga_Node_t;            // the second child\n    pNextE        *Fpga_Node_t;        // the next functionally equivalent node\n    pRepr        *Fpga_Node_t;         // the representative of the functionally equivalent class\n\n#ifdef FPGA_ALLOCATE_FANOUT\n    // representation of node's fanouts\n    Fpga_Node_t *       pFanPivot;     // the first fanout of this node\n    Fpga_Node_t *       pFanFanin1;    // the next fanout of p1\n    Fpga_Node_t *       pFanFanin2;    // the next fanout of p2\n//    Fpga_NodeVec_t *    vFanouts;      // the array of fanouts of the gate\n#endif\n\n    // the delay information\n    tRequired               float32;     // the best area flow \n    aEstFanouts               float32;   // the fanout estimation\n    Switching               float32;     // the probability of switching\n    LValue                 int32;        // the l-value of the node\n    nLatches1               int16;     // the number of latches on the first edge\n    nLatches2               int16;     // the number of latches on the second edge\n\n    // cut information\n    pCutBest         *Fpga_Cut_t;      // the best mapping\n    pCutOld         *Fpga_Cut_t;       // the old mapping\n    pCuts         *Fpga_Cut_t;         // mapping choices for the node (elementary comes first)\n    pCutsN         *Fpga_Cut_t;        // mapping choices for the node (elementary comes first)\n\n    // misc information  \n    pData0               string;        // temporary storage for the corresponding network node\n} \n  \n// the cuts used for matching\ntype Fpga_CutStruct_t_ struct {\n    pOne         *Fpga_Cut_t;          // the father of this cut\n    pTwo         *Fpga_Cut_t;          // the mother of this cut\n    pRoot        *Fpga_Node_t;         // the root of the cut\n    Fpga_Node_t *       ppLeaves[FPGA_MAX_LEAVES+1];   // the leaves of this cut\n    fLevel               float32;        // the average level of the fanins\n    uSign            uint32;         // signature for quick comparison\n    fMark                byte;         // the mark to denote visited cut\n    Phase                byte;         // the mark to denote complemented cut\n    nLeaves                byte;       // the number of leaves of this cut\n    nVolume                byte;       // the volume of this cut\n    tArrival               float32;      // the arrival time \n    aFlow               float32;         // the area flow of the cut\n    pNext         *Fpga_Cut_t;         // the pointer to the next cut in the list\n}\n\n// the vector of nodes\ntype Fpga_NodeVecStruct_t_ struct {\n    pArray       **Fpga_Node_t;        // the array of nodes\n    nSize                 int32;         // the number of entries in the array\n    nCap                 int32;          // the number of allocated entries\n}\n\n// getting hold of the next fanout of the node\n// Original macro:\n// #define Fpga_NodeReadNextFanout( pNode, pFanout )                \\\n//     ( ( pFanout == NULL )? NULL :                                \\\n//         ((Fpga_Regular((pFanout)-\u003ep1) == (pNode))?               \\\n//              (pFanout)-\u003epFanFanin1 : (pFanout)-\u003epFanFanin2) )\n\n\n// getting hold of the place where the next fanout will be attached\n// Original macro:\n// #define Fpga_NodeReadNextFanoutPlace( pNode, pFanout )           \\\n//     ( (Fpga_Regular((pFanout)-\u003ep1) == (pNode))?                  \\\n//          \u0026(pFanout)-\u003epFanFanin1 : \u0026(pFanout)-\u003epFanFanin2 )\n\n\n// iterator through the fanouts of the node\n// Original macro:\n// #define Fpga_NodeForEachFanout( pNode, pFanout )                 \\\n//     for ( pFanout = (pNode)-\u003epFanPivot; pFanout;                 \\\n//           pFanout = Fpga_NodeReadNextFanout(pNode, pFanout) )\n\n\n// safe iterator through the fanouts of the node\n// Original macro:\n// #define Fpga_NodeForEachFanoutSafe( pNode, pFanout, pFanout2 )   \\\n//     for ( pFanout  = (pNode)-\u003epFanPivot,                         \\\n//           pFanout2 = Fpga_NodeReadNextFanout(pNode, pFanout);    \\\n//           pFanout;                                               \\\n//           pFanout  = pFanout2,                                   \\\n//           pFanout2 = Fpga_NodeReadNextFanout(pNode, pFanout) )\n\n\nfunc Fpga_FloatMoreThan(p *Fpga_Man_t, Arg1 float32, Arg2 float32) int32 { return Arg1 \u003e Arg2 + p.fEpsilon; }\nfunc Fpga_FloatLessThan(p *Fpga_Man_t, Arg1 float32, Arg2 float32) int32 { return Arg1 \u003c Arg2 - p.fEpsilon; }\nfunc Fpga_FloatEqual(p *Fpga_Man_t, Arg1 float32, Arg2 float32) int32 { return Arg1 \u003e Arg2 - p.fEpsilon \u0026\u0026 Arg1 \u003c Arg2 + p.fEpsilon; }\n\n////////////////////////////////////////////////////////////////////////\n///                       GLOBAL VARIABLES                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== fpgaCut.c ===============================================================*/\n// extern void              Fpga_MappingCuts( Fpga_Man_t * p );\n\n// extern void              Fpga_MappingCreatePiCuts( Fpga_Man_t * p );\n\n// extern int               Fpga_CutCountAll( Fpga_Man_t * pMan );\n\n/*=== fpgaCutUtils.c ===============================================================*/\n// extern Fpga_Cut_t *      Fpga_CutAlloc( Fpga_Man_t * p );\n\n// extern Fpga_Cut_t *      Fpga_CutDup( Fpga_Man_t * p, Fpga_Cut_t * pCutOld );\n\n// extern void              Fpga_CutFree( Fpga_Man_t * p, Fpga_Cut_t * pCut );\n\n// extern void              Fpga_CutPrint( Fpga_Man_t * p, Fpga_Node_t * pRoot, Fpga_Cut_t * pCut );\n\n// extern Fpga_Cut_t *      Fpga_CutCreateSimple( Fpga_Man_t * p, Fpga_Node_t * pNode );\n\n// extern float             Fpga_CutGetRootArea( Fpga_Man_t * p, Fpga_Cut_t * pCut );\n\n// extern Fpga_Cut_t *      Fpga_CutListAppend( Fpga_Cut_t * pSetAll, Fpga_Cut_t * pSets );\n\n// extern void              Fpga_CutListRecycle( Fpga_Man_t * p, Fpga_Cut_t * pSetList, Fpga_Cut_t * pSave );\n\n// extern int               Fpga_CutListCount( Fpga_Cut_t * pSets );\n\n// extern void              Fpga_CutRemoveFanouts( Fpga_Man_t * p, Fpga_Node_t * pNode, Fpga_Cut_t * pCut );\n\n// extern void              Fpga_CutInsertFanouts( Fpga_Man_t * p, Fpga_Node_t * pNode, Fpga_Cut_t * pCut );\n\n// extern float             Fpga_CutGetAreaRefed( Fpga_Man_t * pMan, Fpga_Cut_t * pCut );\n\n// extern float             Fpga_CutGetAreaDerefed( Fpga_Man_t * pMan, Fpga_Cut_t * pCut );\n\n// extern float             Fpga_CutRef( Fpga_Man_t * pMan, Fpga_Node_t * pNode, Fpga_Cut_t * pCut, int fFanouts );\n\n// extern float             Fpga_CutDeref( Fpga_Man_t * pMan, Fpga_Node_t * pNode, Fpga_Cut_t * pCut, int fFanouts );\n\n// extern float             Fpga_CutGetAreaFlow( Fpga_Man_t * pMan, Fpga_Cut_t * pCut );\n\n// extern void              Fpga_CutGetParameters( Fpga_Man_t * pMan, Fpga_Cut_t * pCut );\n\n/*=== fraigFanout.c =============================================================*/\n// extern void              Fpga_NodeAddFaninFanout( Fpga_Node_t * pFanin, Fpga_Node_t * pFanout );\n\n// extern void              Fpga_NodeRemoveFaninFanout( Fpga_Node_t * pFanin, Fpga_Node_t * pFanoutToRemove );\n\n// extern int               Fpga_NodeGetFanoutNum( Fpga_Node_t * pNode );\n\n/*=== fpgaLib.c ============================================================*/\n// extern Fpga_LutLib_t *   Fpga_LutLibRead( char * FileName, int fVerbose );\n\n// extern void              Fpga_LutLibFree( Fpga_LutLib_t * p );\n\n// extern void              Fpga_LutLibPrint( Fpga_LutLib_t * pLutLib );\n\n// extern int               Fpga_LutLibDelaysAreDiscrete( Fpga_LutLib_t * pLutLib );\n\n/*=== fpgaMatch.c ===============================================================*/\n// extern int               Fpga_MappingMatches( Fpga_Man_t * p, int fDelayOriented );\n\n// extern int               Fpga_MappingMatchesArea( Fpga_Man_t * p );\n\n// extern int               Fpga_MappingMatchesSwitch( Fpga_Man_t * p );\n\n/*=== fpgaShow.c =============================================================*/\n// extern void              Fpga_MappingShow( Fpga_Man_t * pMan, char * pFileName );\n\n// extern void              Fpga_MappingShowNodes( Fpga_Man_t * pMan, Fpga_Node_t ** ppRoots, int nRoots, char * pFileName );\n\n/*=== fpgaSwitch.c =============================================================*/\n// extern float             Fpga_CutGetSwitchDerefed( Fpga_Man_t * pMan, Fpga_Node_t * pNode, Fpga_Cut_t * pCut );\n\n// extern float             Fpga_CutRefSwitch( Fpga_Man_t * pMan, Fpga_Node_t * pNode, Fpga_Cut_t * pCut, int fFanouts );\n\n// extern float             Fpga_CutDerefSwitch( Fpga_Man_t * pMan, Fpga_Node_t * pNode, Fpga_Cut_t * pCut, int fFanouts );\n\n// extern float             Fpga_MappingGetSwitching( Fpga_Man_t * pMan, Fpga_NodeVec_t * vMapping );\n\n/*=== fpgaTime.c ===============================================================*/\n// extern float             Fpga_TimeCutComputeArrival( Fpga_Man_t * pMan, Fpga_Cut_t * pCut );\n\n// extern float             Fpga_TimeCutComputeArrival_rec( Fpga_Man_t * pMan, Fpga_Cut_t * pCut );\n\n// extern float             Fpga_TimeComputeArrivalMax( Fpga_Man_t * p );\n\n// extern void              Fpga_TimeComputeRequiredGlobal( Fpga_Man_t * p, int fFirstTime );\n\n// extern void              Fpga_TimeComputeRequired( Fpga_Man_t * p, float fRequired );\n\n// extern void              Fpga_TimePropagateRequired( Fpga_Man_t * p, Fpga_NodeVec_t * vNodes );\n\n// extern void              Fpga_TimePropagateArrival( Fpga_Man_t * p );\n\n/*=== fpgaVec.c =============================================================*/\n// extern Fpga_NodeVec_t *  Fpga_NodeVecAlloc( int nCap );\n\n// extern void              Fpga_NodeVecFree( Fpga_NodeVec_t * p );\n\n// extern Fpga_Node_t **    Fpga_NodeVecReadArray( Fpga_NodeVec_t * p );\n\n// extern int               Fpga_NodeVecReadSize( Fpga_NodeVec_t * p );\n\n// extern void              Fpga_NodeVecGrow( Fpga_NodeVec_t * p, int nCapMin );\n\n// extern void              Fpga_NodeVecShrink( Fpga_NodeVec_t * p, int nSizeNew );\n\n// extern void              Fpga_NodeVecClear( Fpga_NodeVec_t * p );\n\n// extern void              Fpga_NodeVecPush( Fpga_NodeVec_t * p, Fpga_Node_t * Entry );\n\n// extern int               Fpga_NodeVecPushUnique( Fpga_NodeVec_t * p, Fpga_Node_t * Entry );\n\n// extern Fpga_Node_t *     Fpga_NodeVecPop( Fpga_NodeVec_t * p );\n\n// extern void              Fpga_NodeVecWriteEntry( Fpga_NodeVec_t * p, int i, Fpga_Node_t * Entry );\n\n// extern Fpga_Node_t *     Fpga_NodeVecReadEntry( Fpga_NodeVec_t * p, int i );\n\n// extern void              Fpga_NodeVecSortByLevel( Fpga_NodeVec_t * p );\n\n// extern void              Fpga_SortNodesByArrivalTimes( Fpga_NodeVec_t * p );\n\n// extern void              Fpga_NodeVecUnion( Fpga_NodeVec_t * p, Fpga_NodeVec_t * p1, Fpga_NodeVec_t * p2 );\n\n// extern void              Fpga_NodeVecPushOrder( Fpga_NodeVec_t * vNodes, Fpga_Node_t * pNode, int fIncreasing );\n\n// extern void              Fpga_NodeVecReverse( Fpga_NodeVec_t * vNodes );\n\n\n/*=== fpgaUtils.c ===============================================================*/\n// extern Fpga_NodeVec_t *  Fpga_MappingDfs( Fpga_Man_t * pMan, int fCollectEquiv );\n\n// extern Fpga_NodeVec_t *  Fpga_MappingDfsNodes( Fpga_Man_t * pMan, Fpga_Node_t ** ppNodes, int nNodes, int fEquiv );\n\n// extern int               Fpga_CountLevels( Fpga_Man_t * pMan );\n\n// extern float             Fpga_MappingGetAreaFlow( Fpga_Man_t * p );\n\n// extern float             Fpga_MappingArea( Fpga_Man_t * pMan );\n\n// extern float             Fpga_MappingAreaTrav( Fpga_Man_t * pMan );\n\n// extern float             Fpga_MappingSetRefsAndArea( Fpga_Man_t * pMan );\n\n// extern void              Fpga_MappingPrintOutputArrivals( Fpga_Man_t * p );\n\n// extern void              Fpga_MappingSetupTruthTables( unsigned uTruths[][2] );\n\n// extern void              Fpga_MappingSetupMask( unsigned uMask[], int nVarsMax );\n\n// extern void              Fpga_MappingSortByLevel( Fpga_Man_t * pMan, Fpga_NodeVec_t * vNodes, int fIncreasing );\n\n// extern Fpga_NodeVec_t *  Fpga_DfsLim( Fpga_Man_t * pMan, Fpga_Node_t * pNode, int nLevels );\n\n// extern Fpga_NodeVec_t *  Fpga_MappingLevelize( Fpga_Man_t * pMan, Fpga_NodeVec_t * vNodes );\n\n// extern int               Fpga_MappingMaxLevel( Fpga_Man_t * pMan );\n\n// extern void              Fpga_ManReportChoices( Fpga_Man_t * pMan );\n\n// extern void              Fpga_MappingSetChoiceLevels( Fpga_Man_t * pMan );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

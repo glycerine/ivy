@@ -1,0 +1,1120 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c",
+  "SHA256": "671e83b63e9003b59715241f4abd1bc57c58b8fa609f46f12c378cc10a0b8e8b",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 103,
+        "Column": 9,
+        "ByteOffset": 3005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Aig_RMan_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Aig_RMan_t) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 15,
+        "ByteOffset": 3251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pBins = ABC_CALLOC( Aig_Tru_t *, p.nBins );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 5417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pBins != nil );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 189,
+        "Column": 15,
+        "ByteOffset": 5619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pBins = ABC_CALLOC( Aig_Tru_t *, p.nBins );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 197,
+        "Column": 9,
+        "ByteOffset": 6035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *ppPlace == nil ); // should not be there"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 204,
+        "Column": 5,
+        "ByteOffset": 6212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Counter == p.nEntries );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 6293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pBinsOld );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 237,
+        "Column": 5,
+        "ByteOffset": 7212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pEntry.pTruth, pTruth, sizeof(unsigned) * Kit_TruthWordNum(nVars) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 5,
+        "ByteOffset": 7648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total funcs    = %10d\\n\", p.nTotal );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 5,
+        "ByteOffset": 7699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Full DSD funcs = %10d\\n\", p.nTtDsd );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 257,
+        "Column": 5,
+        "ByteOffset": 7750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Part DSD funcs = %10d\\n\", p.nTtDsdPart );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 258,
+        "Column": 5,
+        "ByteOffset": 7805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Non- DSD funcs = %10d\\n\", p.nTtDsdNot );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 7859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Uniq-var funcs = %10d\\n\", p.nUniqueVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 260,
+        "Column": 5,
+        "ByteOffset": 7915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Unique   funcs = %10d\\n\", p.nEntries );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 5,
+        "ByteOffset": 7968
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Distribution of functions:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 9,
+        "ByteOffset": 8055
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d = %8d\\n\", i, p.nVarFuncs[i] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 5,
+        "ByteOffset": 8202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.pBins );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 269,
+        "Column": 5,
+        "ByteOffset": 8227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 290,
+        "Column": 5,
+        "ByteOffset": 8723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( Buffer, \"aiglib%02d.aig\", s_pRMan.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 313,
+        "Column": 9,
+        "ByteOffset": 9408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d/%2d \", pStore2[2*i], pStore2[2*i+1] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 315,
+        "Column": 5,
+        "ByteOffset": 9470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 355,
+        "Column": 9,
+        "ByteOffset": 10502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d : \", v );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 357,
+        "Column": 13,
+        "ByteOffset": 10571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%5d  \", pSigs[2*v+k].nOnes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 358,
+        "Column": 13,
+        "ByteOffset": 10622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"(\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 360,
+        "Column": 17,
+        "ByteOffset": 10695
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%4d \", pSigs[2*v+k].nCofOnes[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 362,
+        "Column": 13,
+        "ByteOffset": 10765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \")  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 364,
+        "Column": 9,
+        "ByteOffset": 10800
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 407,
+        "Column": 12,
+        "ByteOffset": 12178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return memcmp( p0, p1, sizeof(int) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 445,
+        "Column": 13,
+        "ByteOffset": 13209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"=\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 447,
+        "Column": 13,
+        "ByteOffset": 13254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"x\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 449,
+        "Column": 5,
+        "ByteOffset": 13281
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 451,
+        "Column": 5,
+        "ByteOffset": 13302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"0\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 454,
+        "Column": 13,
+        "ByteOffset": 13442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"-\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 456,
+        "Column": 13,
+        "ByteOffset": 13496
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", '0' + i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 458,
+        "Column": 13,
+        "ByteOffset": 13551
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", 'A' + i-10 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 460,
+        "Column": 5,
+        "ByteOffset": 13591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 557,
+        "Column": 9,
+        "ByteOffset": 16514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Decomposition failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 597,
+        "Column": 9,
+        "ByteOffset": 17743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The number of variables in too large.\\n\" );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 621,
+        "Column": 5,
+        "ByteOffset": 18406
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( s_pRMan.pTruthInit, Kit_DsdObjTruth(pObj), (size_t)(4*nWords) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 626,
+        "Column": 5,
+        "ByteOffset": 18648
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( s_pRMan.pTruth, s_pRMan.pTruthInit, 4*nWords );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 678,
+        "Column": 13,
+        "ByteOffset": 20538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Verification failed.\\n\" ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_RManStart",
+      "Start": 2855,
+      "End": 3433,
+      "BodyStart": 2884,
+      "Original": "Aig_RMan_t * Aig_RManStart()\n{\n    static Bdc_Par_t Pars = {0}, * pPars = \u0026Pars;\n    Aig_RMan_t * p;\n    p = ABC_ALLOC( Aig_RMan_t, 1 );\n    memset( p, 0, sizeof(Aig_RMan_t) );\n    p-\u003enVars = RMAN_MAXVARS;\n    p-\u003epAig  = Aig_ManStart( 1000000 );\n    Aig_IthVar( p-\u003epAig, p-\u003enVars-1 );\n    // create hash table\n    p-\u003enBins = Abc_PrimeCudd(5000);\n    p-\u003epBins = ABC_CALLOC( Aig_Tru_t *, p-\u003enBins );\n    p-\u003epMemTrus = Aig_MmFlexStart();\n    // bi-decomposition manager\n    pPars-\u003enVarsMax = p-\u003enVars;\n    pPars-\u003efVerbose = 0;\n    p-\u003epBidec = Bdc_ManAlloc( pPars );\n    return p;\n}",
+      "Draft": "func Aig_RManStart() *Aig_RMan_t {\n    \n    var p *Aig_RMan_t;\n    p = new(Aig_RMan_t);\n    *p = Aig_RMan_t{};\n    p.nVars = RMAN_MAXVARS;\n    p.pAig  = Aig_ManStart( 1000000 );\n    Aig_IthVar( p.pAig, p.nVars-1 );\n    // create hash table\n    p.nBins = Abc_PrimeCudd(5000);\n    p.pBins = ABC_CALLOC( Aig_Tru_t *, p.nBins );\n    p.pMemTrus = Aig_MmFlexStart();\n    // bi-decomposition manager\n    spStatic_Aig_RManStart_pPars.nVarsMax = p.nVars;\n    spStatic_Aig_RManStart_pPars.fVerbose = 0;\n    p.pBidec = Bdc_ManAlloc( spStatic_Aig_RManStart_pPars );\n    return p;\n}"
+    },
+    {
+      "Name": "Aig_RManTableHash",
+      "Start": 3690,
+      "End": 3973,
+      "BodyStart": 3784,
+      "Original": "static inline int Aig_RManTableHash( unsigned * pTruth, int nVars, int nBins, int * pPrimes )\n{\n    int i, nWords = Kit_TruthWordNum( nVars );\n    unsigned uHash = 0;\n    for ( i = 0; i \u003c nWords; i++ )\n        uHash ^= pTruth[i] * pPrimes[i \u0026 0xf];\n    return (int)(uHash % nBins);\n}",
+      "Draft": "func Aig_RManTableHash(pTruth *uint32, nVars int32, nBins int32, pPrimes *int32) int32 {\n    var i int32;\n    var nWords int32 = Kit_TruthWordNum( nVars );\n    var uHash uint32;\n    for  i = 0; i \u003c nWords; i++  {\n        uHash ^= pTruth[i] * pPrimes[i \u0026 0xf];\n    }\n    return int32((uHash % nBins));\n}"
+    },
+    {
+      "Name": "Aig_RManTableLookup",
+      "Start": 4234,
+      "End": 4778,
+      "BodyStart": 4315,
+      "Original": "Aig_Tru_t ** Aig_RManTableLookup( Aig_RMan_t * p, unsigned * pTruth, int nVars )\n{\n    static int s_Primes[16] = { \n        1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, \n        4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147 };\n    Aig_Tru_t ** ppSpot, * pEntry;\n    ppSpot = p-\u003epBins + Aig_RManTableHash( pTruth, nVars, p-\u003enBins, s_Primes );\n    for ( pEntry = *ppSpot; pEntry; ppSpot = \u0026pEntry-\u003epNext, pEntry = pEntry-\u003epNext )\n        if ( Kit_TruthIsEqual( pEntry-\u003epTruth, pTruth, nVars ) )\n            return ppSpot;\n    return ppSpot;\n}",
+      "Draft": "func Aig_RManTableLookup(p *Aig_RMan_t, pTruth *uint32, nVars int32) **Aig_Tru_t {\n    \n    var ppSpot **Aig_Tru_t;\n    var pEntry *Aig_Tru_t;\n    ppSpot = p.pBins + Aig_RManTableHash( pTruth, nVars, p.nBins, spStatic_Aig_RManTableLookup_s_Primes );\n    for  pEntry = *ppSpot; (pEntry != nil); ppSpot = \u0026pEntry.pNext, pEntry = pEntry.pNext  {\n        if Kit_TruthIsEqual( pEntry.pTruth, pTruth, nVars ) {\n            return ppSpot; }\n    }\n    return ppSpot;\n}"
+    },
+    {
+      "Name": "Aig_RManTableResize",
+      "Start": 5036,
+      "End": 6120,
+      "BodyStart": 5079,
+      "Original": "void Aig_RManTableResize( Aig_RMan_t * p )\n{\n    Aig_Tru_t * pEntry, * pNext;\n    Aig_Tru_t ** pBinsOld, ** ppPlace;\n    int nBinsOld, Counter, i;\n    abctime clk;\n    assert( p-\u003epBins != NULL );\nclk = Abc_Clock();\n    // save the old Bins\n    pBinsOld = p-\u003epBins;\n    nBinsOld = p-\u003enBins;\n    // get the new Bins\n    p-\u003enBins = Abc_PrimeCudd( 3 * nBinsOld ); \n    p-\u003epBins = ABC_CALLOC( Aig_Tru_t *, p-\u003enBins );\n    // rehash the entries from the old table\n    Counter = 0;\n    for ( i = 0; i \u003c nBinsOld; i++ )\n    for ( pEntry = pBinsOld[i], pNext = pEntry? pEntry-\u003epNext : NULL; \n          pEntry; pEntry = pNext, pNext = pEntry? pEntry-\u003epNext : NULL )\n    {\n        // get the place where this entry goes in the Bins \n        ppPlace = Aig_RManTableLookup( p, pEntry-\u003epTruth, pEntry-\u003enVars );\n        assert( *ppPlace == NULL ); // should not be there\n        // add the entry to the list\n        *ppPlace = pEntry;\n        pEntry-\u003epNext = NULL;\n        Counter++;\n    }\n    assert( Counter == p-\u003enEntries );\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    ABC_FREE( pBinsOld );\n}",
+      "Draft": "func Aig_RManTableResize(p *Aig_RMan_t) {\n    var pEntry, pNext *Aig_Tru_t;\n    var pBinsOld, ppPlace **Aig_Tru_t;\n    var nBinsOld, Counter, i int32;\n    var clk abctime;\n    assert(p.pBins != nil, \"p.pBins != nil\");\nclk = Abc_Clock();\n    // save the old Bins\n    pBinsOld = p.pBins;\n    nBinsOld = p.nBins;\n    // get the new Bins\n    p.nBins = Abc_PrimeCudd( 3 * nBinsOld ); \n    p.pBins = ABC_CALLOC( Aig_Tru_t *, p.nBins );\n    // rehash the entries from the old table\n    Counter = 0;\n    for  i = 0; i \u003c nBinsOld; i++  {\n    for  pEntry = pBinsOld[i], pNext = pEntry? pEntry.pNext : nil; \n          (pEntry != nil); pEntry = pNext, pNext = pEntry? pEntry.pNext : nil  {\n        // get the place where this entry goes in the Bins \n        ppPlace = Aig_RManTableLookup( p, pEntry.pTruth, pEntry.nVars );\n        assert(*ppPlace == nil, \"*ppPlace == nil\"); // should not be there\n        // add the entry to the list\n        *ppPlace = pEntry;\n        pEntry.pNext = nil;\n        Counter++;\n    }\n    }\n    assert(Counter == p.nEntries, \"Counter == p.nEntries\");\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    ABC_FREE( pBinsOld );\n}"
+    },
+    {
+      "Name": "Aig_RManTableFindOrAdd",
+      "Start": 6411,
+      "End": 7120,
+      "BodyStart": 6486,
+      "Original": "int Aig_RManTableFindOrAdd( Aig_RMan_t * p, unsigned * pTruth, int nVars )\n{\n    Aig_Tru_t ** ppSpot, * pEntry;\n    int nBytes;\n    ppSpot = Aig_RManTableLookup( p, pTruth, nVars );\n    if ( *ppSpot )\n    {\n        (*ppSpot)-\u003enVisits++;\n        return 0;\n    }\n    nBytes = sizeof(Aig_Tru_t) + sizeof(unsigned) * Kit_TruthWordNum(nVars);\n    if ( p-\u003enEntries == 3*p-\u003enBins )\n        Aig_RManTableResize( p );\n    pEntry = (Aig_Tru_t *)Aig_MmFlexEntryFetch( p-\u003epMemTrus, nBytes );\n    pEntry-\u003eId = p-\u003enEntries++;\n    pEntry-\u003enVars = nVars;\n    pEntry-\u003enVisits = 1;\n    pEntry-\u003epNext = NULL;\n    memcpy( pEntry-\u003epTruth, pTruth, sizeof(unsigned) * Kit_TruthWordNum(nVars) );\n    *ppSpot = pEntry;\n    return 1;\n}",
+      "Draft": "func Aig_RManTableFindOrAdd(p *Aig_RMan_t, pTruth *uint32, nVars int32) int32 {\n    var ppSpot **Aig_Tru_t;\n    var pEntry *Aig_Tru_t;\n    var nBytes int32;\n    ppSpot = Aig_RManTableLookup( p, pTruth, nVars );\n    if *ppSpot {\n        (*ppSpot).nVisits++;\n        return 0;\n    }\n    nBytes = sizeof(Aig_Tru_t) + sizeof(unsigned) * Kit_TruthWordNum(nVars);\n    if p.nEntries == 3*p.nBins {\n        Aig_RManTableResize( p ); }\n    pEntry = (Aig_Tru_t *)Aig_MmFlexEntryFetch( p.pMemTrus, nBytes );\n    pEntry.Id = p.nEntries++;\n    pEntry.nVars = nVars;\n    pEntry.nVisits = 1;\n    pEntry.pNext = nil;\n    memcpy( pEntry.pTruth, pTruth, sizeof(unsigned) * Kit_TruthWordNum(nVars) );\n    *ppSpot = pEntry;\n    return 1;\n}"
+    },
+    {
+      "Name": "Aig_RManStop",
+      "Start": 7386,
+      "End": 8040,
+      "BodyStart": 7422,
+      "Original": "void Aig_RManStop( Aig_RMan_t * p )\n{\n    int i;\n    printf( \"Total funcs    = %10d\\n\", p-\u003enTotal );\n    printf( \"Full DSD funcs = %10d\\n\", p-\u003enTtDsd );\n    printf( \"Part DSD funcs = %10d\\n\", p-\u003enTtDsdPart );\n    printf( \"Non- DSD funcs = %10d\\n\", p-\u003enTtDsdNot );\n    printf( \"Uniq-var funcs = %10d\\n\", p-\u003enUniqueVars );\n    printf( \"Unique   funcs = %10d\\n\", p-\u003enEntries );\n    printf( \"Distribution of functions:\\n\" );\n    for ( i = 5; i \u003c= p-\u003enVars; i++ )\n        printf( \"%2d = %8d\\n\", i, p-\u003enVarFuncs[i] );\n    Aig_MmFlexStop( p-\u003epMemTrus, 0 );\n    Aig_ManStop( p-\u003epAig );\n    Bdc_ManFree( p-\u003epBidec );\n    ABC_FREE( p-\u003epBins );\n    ABC_FREE( p );\n}",
+      "Draft": "func Aig_RManStop(p *Aig_RMan_t) {\n    var i int32;\n    fmt.Printf(\"Total funcs    = %10d\\n\", p.nTotal);\n    fmt.Printf(\"Full DSD funcs = %10d\\n\", p.nTtDsd);\n    fmt.Printf(\"Part DSD funcs = %10d\\n\", p.nTtDsdPart);\n    fmt.Printf(\"Non- DSD funcs = %10d\\n\", p.nTtDsdNot);\n    fmt.Printf(\"Uniq-var funcs = %10d\\n\", p.nUniqueVars);\n    fmt.Printf(\"Unique   funcs = %10d\\n\", p.nEntries);\n    fmt.Printf(\"Distribution of functions:\\n\");\n    for  i = 5; i \u003c= p.nVars; i++  {\n        fmt.Printf(\"%2d = %8d\\n\", i, p.nVarFuncs[i]);\n    }\n    Aig_MmFlexStop( p.pMemTrus, 0 );\n    Aig_ManStop( p.pAig );\n    Bdc_ManFree( p.pBidec );\n    ABC_FREE( p.pBins );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Aig_RManQuit",
+      "Start": 8293,
+      "End": 8695,
+      "BodyStart": 8313,
+      "Original": "void Aig_RManQuit()\n{\n//    extern void Ioa_WriteAiger( Aig_Man_t * pMan, char * pFileName, int fWriteSymbols, int fCompact );\n    char Buffer[20];\n    if ( s_pRMan == NULL )\n        return;\n    // dump the library file\n    sprintf( Buffer, \"aiglib%02d.aig\", s_pRMan-\u003enVars );\n    Ioa_WriteAiger( s_pRMan-\u003epAig, Buffer, 0, 1 );\n    // quit the manager\n    Aig_RManStop( s_pRMan );\n    s_pRMan = NULL;\n}",
+      "Draft": "func Aig_RManQuit() {\n//    extern void Ioa_WriteAiger( Aig_Man_t * pMan, char * pFileName, int fWriteSymbols, int fCompact );\n    var Buffer string // was [20]byte in C\n\n    if s_pRMan == nil {\n        return; }\n    // dump the library file\n    Buffer = fmt.Sprintf(\"aiglib%02d.aig\", s_pRMan.nVars);\n    Ioa_WriteAiger( s_pRMan.pAig, Buffer, 0, 1 );\n    // quit the manager\n    Aig_RManStop( s_pRMan );\n    s_pRMan = nil;\n}"
+    },
+    {
+      "Name": "Aig_RManPrintVarProfile",
+      "Start": 8969,
+      "End": 9273,
+      "BodyStart": 9053,
+      "Original": "void Aig_RManPrintVarProfile( unsigned * pTruth, int nVars,  unsigned * pTruthAux )\n{\n    int pStore2[32];\n    int i;\n    Kit_TruthCountOnesInCofsSlow( pTruth, nVars, pStore2, pTruthAux );\n    for ( i = 0; i \u003c nVars; i++ )\n        printf( \"%2d/%2d \", pStore2[2*i], pStore2[2*i+1] );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Aig_RManPrintVarProfile(pTruth *uint32, nVars int32, pTruthAux *uint32) {\n    var pStore2 [32]int32;\n    var i int32;\n    Kit_TruthCountOnesInCofsSlow( pTruth, nVars, pStore2, pTruthAux );\n    for  i = 0; i \u003c nVars; i++  {\n        fmt.Printf(\"%2d/%2d \", pStore2[2*i], pStore2[2*i+1]);\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Aig_RManSortNums",
+      "Start": 9547,
+      "End": 9883,
+      "BodyStart": 9596,
+      "Original": "void Aig_RManSortNums( int * pArray, int nVars )\n{\n    int i, j, best_i, tmp;\n    for ( i = 0; i \u003c nVars-1; i++ )\n    {\n        best_i = i;\n        for ( j = i+1; j \u003c nVars; j++ )\n            if ( pArray[j] \u003e pArray[best_i] )\n                best_i = j;\n        tmp = pArray[i]; pArray[i] = pArray[best_i]; pArray[best_i] = tmp;\n    }\n}",
+      "Draft": "func Aig_RManSortNums(pArray *int32, nVars int32) {\n    var i, j, best_i, tmp int32;\n    for  i = 0; i \u003c nVars-1; i++  {\n        best_i = i;\n        for  j = i+1; j \u003c nVars; j++  {\n            if pArray[j] \u003e pArray[best_i] {\n                best_i = j; }\n        }\n        tmp = pArray[i]; pArray[i] = pArray[best_i]; pArray[best_i] = tmp;\n    }\n}"
+    },
+    {
+      "Name": "Aig_RManPrintSigs",
+      "Start": 10155,
+      "End": 10595,
+      "BodyStart": 10211,
+      "Original": "void Aig_RManPrintSigs( Aig_VSig_t * pSigs, int nVars )\n{\n    int v, i, k;\n    for ( v = 0; v \u003c nVars; v++ )\n    {\n        printf( \"%2d : \", v );\n        for ( k = 0; k \u003c 2; k++ )\n        {\n            printf( \"%5d  \", pSigs[2*v+k].nOnes );\n            printf( \"(\" );\n            for ( i = 0; i \u003c nVars; i++ )\n                printf( \"%4d \", pSigs[2*v+k].nCofOnes[i] );\n            printf( \")  \" );\n        }\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Aig_RManPrintSigs(pSigs *Aig_VSig_t, nVars int32) {\n    var v, i, k int32;\n    for  v = 0; v \u003c nVars; v++  {\n        fmt.Printf(\"%2d : \", v);\n        for  k = 0; k \u003c 2; k++  {\n            fmt.Printf(\"%5d  \", pSigs[2*v+k].nOnes);\n            fmt.Printf(\"(\");\n            for  i = 0; i \u003c nVars; i++  {\n                fmt.Printf(\"%4d \", pSigs[2*v+k].nCofOnes[i]);\n            }\n            fmt.Printf(\")  \");\n        }\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Aig_RManComputeVSigs",
+      "Start": 10869,
+      "End": 11529,
+      "BodyStart": 10964,
+      "Original": "void Aig_RManComputeVSigs( unsigned * pTruth, int nVars, Aig_VSig_t * pSigs, unsigned * pAux )\n{\n    int v;\n    for ( v = 0; v \u003c nVars; v++ )\n    {\n        Kit_TruthCofactor0New( pAux, pTruth, nVars, v );\n        pSigs[2*v+0].nOnes = Kit_TruthCountOnes( pAux, nVars );\n        Kit_TruthCountOnesInCofs0( pAux, nVars, pSigs[2*v+0].nCofOnes );\n        Aig_RManSortNums( pSigs[2*v+0].nCofOnes, nVars );\n\n        Kit_TruthCofactor1New( pAux, pTruth, nVars, v );\n        pSigs[2*v+1].nOnes = Kit_TruthCountOnes( pAux, nVars );\n        Kit_TruthCountOnesInCofs0( pAux, nVars, pSigs[2*v+1].nCofOnes );\n        Aig_RManSortNums( pSigs[2*v+1].nCofOnes, nVars );\n    }\n}",
+      "Draft": "func Aig_RManComputeVSigs(pTruth *uint32, nVars int32, pSigs *Aig_VSig_t, pAux *uint32) {\n    var v int32;\n    for  v = 0; v \u003c nVars; v++  {\n        Kit_TruthCofactor0New( pAux, pTruth, nVars, v );\n        pSigs[2*v+0].nOnes = Kit_TruthCountOnes( pAux, nVars );\n        Kit_TruthCountOnesInCofs0( pAux, nVars, pSigs[2*v+0].nCofOnes );\n        Aig_RManSortNums( pSigs[2*v+0].nCofOnes, nVars );\n\n        Kit_TruthCofactor1New( pAux, pTruth, nVars, v );\n        pSigs[2*v+1].nOnes = Kit_TruthCountOnes( pAux, nVars );\n        Kit_TruthCountOnesInCofs0( pAux, nVars, pSigs[2*v+1].nCofOnes );\n        Aig_RManSortNums( pSigs[2*v+1].nCofOnes, nVars );\n    }\n}"
+    },
+    {
+      "Name": "Aig_RManCompareSigs",
+      "Start": 11802,
+      "End": 11998,
+      "BodyStart": 11887,
+      "Original": "static inline int Aig_RManCompareSigs( Aig_VSig_t * p0, Aig_VSig_t * p1, int nVars )\n{\n//    return memcmp( p0, p1, sizeof(int) + sizeof(int) * nVars );\n    return memcmp( p0, p1, sizeof(int) );\n}",
+      "Draft": "func Aig_RManCompareSigs(p0 *Aig_VSig_t, p1 *Aig_VSig_t, nVars int32) int32 {\n//    return memcmp( p0, p1, sizeof(int) + sizeof(int) * nVars );\n    return memcmp( p0, p1, sizeof(int) );\n}"
+    },
+    {
+      "Name": "Aig_RManVarsAreUnique",
+      "Start": 12272,
+      "End": 12501,
+      "BodyStart": 12332,
+      "Original": "int Aig_RManVarsAreUnique( Aig_VSig_t * pMints, int nVars )\n{\n    int i;\n    for ( i = 0; i \u003c nVars - 1; i++ )\n        if ( Aig_RManCompareSigs( \u0026pMints[2*i], \u0026pMints[2*(i+1)], nVars ) == 0 )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Aig_RManVarsAreUnique(pMints *Aig_VSig_t, nVars int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c nVars - 1; i++  {\n        if Aig_RManCompareSigs( \u0026pMints[2*i], \u0026pMints[2*(i+1)], nVars ) == 0 {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Aig_RManPrintUniqueVars",
+      "Start": 12775,
+      "End": 13353,
+      "BodyStart": 12838,
+      "Original": "void Aig_RManPrintUniqueVars( Aig_VSig_t * pMints, int nVars )\n{\n    int i;\n    for ( i = 0; i \u003c nVars; i++ )\n        if ( Aig_RManCompareSigs( \u0026pMints[2*i], \u0026pMints[2*i+1], nVars ) == 0 )\n            printf( \"=\" );\n        else \n            printf( \"x\" );\n    printf( \"\\n\" );\n\n    printf( \"0\" );\n    for ( i = 1; i \u003c nVars; i++ )\n        if ( Aig_RManCompareSigs( \u0026pMints[2*(i-1)], \u0026pMints[2*i], nVars ) == 0 )\n            printf( \"-\" );\n        else if ( i \u003c 10 )\n            printf( \"%c\", '0' + i );\n        else \n            printf( \"%c\", 'A' + i-10 );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Aig_RManPrintUniqueVars(pMints *Aig_VSig_t, nVars int32) {\n    var i int32;\n    for  i = 0; i \u003c nVars; i++  {\n        if Aig_RManCompareSigs( \u0026pMints[2*i], \u0026pMints[2*i+1], nVars ) == 0 {\n            fmt.Printf(\"=\");\n        } else { \n            fmt.Printf(\"x\"); }\n    }\n    fmt.Printf(\"\\n\");\n\n    fmt.Printf(\"0\");\n    for  i = 1; i \u003c nVars; i++  {\n        if Aig_RManCompareSigs( \u0026pMints[2*(i-1)], \u0026pMints[2*i], nVars ) == 0 {\n            fmt.Printf(\"-\");\n        } else if i \u003c 10 {\n            fmt.Printf(\"%c\", '0' + i);\n        } else { \n            fmt.Printf(\"%c\", 'A' + i-10); }\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Aig_RManSemiCanonicize",
+      "Start": 13636,
+      "End": 15329,
+      "BodyStart": 13768,
+      "Original": "unsigned Aig_RManSemiCanonicize( unsigned * pOut, unsigned * pIn, int nVars, char * pCanonPerm, Aig_VSig_t * pSigs, int fReturnIn )\n{\n    Aig_VSig_t TempSig;\n    int i, Temp, fChange, Counter;\n    unsigned * pTemp, uCanonPhase = 0;\n    // collect signatures \n    Aig_RManComputeVSigs( pIn, nVars, pSigs, pOut );\n    // canonicize phase\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n//        if ( pStore[2*i+0] \u003c= pStore[2*i+1] )\n        if ( Aig_RManCompareSigs( \u0026pSigs[2*i+0], \u0026pSigs[2*i+1], nVars ) \u003c= 0 )\n            continue;\n        uCanonPhase |= (1 \u003c\u003c i);\n        TempSig = pSigs[2*i+0];\n        pSigs[2*i+0] = pSigs[2*i+1];\n        pSigs[2*i+1] = TempSig;\n        Kit_TruthChangePhase( pIn, nVars, i );\n    }\n    // permute\n    Counter = 0;\n    do {\n        fChange = 0;\n        for ( i = 0; i \u003c nVars-1; i++ )\n        {\n//            if ( pStore[2*i] \u003c= pStore[2*(i+1)] )\n            if ( Aig_RManCompareSigs( \u0026pSigs[2*i], \u0026pSigs[2*(i+1)], nVars ) \u003c= 0 )\n                continue;\n            Counter++;\n            fChange = 1;\n\n            Temp = pCanonPerm[i];\n            pCanonPerm[i] = pCanonPerm[i+1];\n            pCanonPerm[i+1] = Temp;\n\n            TempSig = pSigs[2*i];\n            pSigs[2*i] = pSigs[2*(i+1)];\n            pSigs[2*(i+1)] = TempSig;\n\n            TempSig = pSigs[2*i+1];\n            pSigs[2*i+1] = pSigs[2*(i+1)+1];\n            pSigs[2*(i+1)+1] = TempSig;\n\n            Kit_TruthSwapAdjacentVars( pOut, pIn, nVars, i );\n            pTemp = pIn; pIn = pOut; pOut = pTemp;\n        }\n    } while ( fChange );\n\n    // swap if it was moved an even number of times\n    if ( fReturnIn ^ !(Counter \u0026 1) )\n        Kit_TruthCopy( pOut, pIn, nVars );\n    return uCanonPhase;\n}",
+      "Draft": "func Aig_RManSemiCanonicize(pOut *uint32, pIn *uint32, nVars int32, pCanonPerm string, pSigs *Aig_VSig_t, fReturnIn int32) uint32 {\n    var TempSig Aig_VSig_t;\n    var i, Temp, fChange, Counter int32;\n    var pTemp *uint32;\n    var uCanonPhase uint32;\n    // collect signatures \n    Aig_RManComputeVSigs( pIn, nVars, pSigs, pOut );\n    // canonicize phase\n    for  i = 0; i \u003c nVars; i++  {\n//        if ( pStore[2*i+0] \u003c= pStore[2*i+1] )\n        if Aig_RManCompareSigs( \u0026pSigs[2*i+0], \u0026pSigs[2*i+1], nVars ) \u003c= 0 {\n            continue; }\n        uCanonPhase |= (1 \u003c\u003c i);\n        TempSig = pSigs[2*i+0];\n        pSigs[2*i+0] = pSigs[2*i+1];\n        pSigs[2*i+1] = TempSig;\n        Kit_TruthChangePhase( pIn, nVars, i );\n    }\n    // permute\n    Counter = 0;\n    do {\n        fChange = 0;\n        for  i = 0; i \u003c nVars-1; i++  {\n//            if ( pStore[2*i] \u003c= pStore[2*(i+1)] )\n            if Aig_RManCompareSigs( \u0026pSigs[2*i], \u0026pSigs[2*(i+1)], nVars ) \u003c= 0 {\n                continue; }\n            Counter++;\n            fChange = 1;\n\n            Temp = pCanonPerm[i];\n            pCanonPerm[i] = pCanonPerm[i+1];\n            pCanonPerm[i+1] = Temp;\n\n            TempSig = pSigs[2*i];\n            pSigs[2*i] = pSigs[2*(i+1)];\n            pSigs[2*(i+1)] = TempSig;\n\n            TempSig = pSigs[2*i+1];\n            pSigs[2*i+1] = pSigs[2*(i+1)+1];\n            pSigs[2*(i+1)+1] = TempSig;\n\n            Kit_TruthSwapAdjacentVars( pOut, pIn, nVars, i );\n            pTemp = pIn; pIn = pOut; pOut = pTemp;\n        }\n    } while ( fChange );\n\n    // swap if it was moved an even number of times\n    if fReturnIn ^ !(Counter \u0026 1) {\n        Kit_TruthCopy( pOut, pIn, nVars ); }\n    return uCanonPhase;\n}"
+    },
+    {
+      "Name": "Bdc_FunCopyHop",
+      "Start": 15565,
+      "End": 15724,
+      "BodyStart": 15628,
+      "Original": "static inline Aig_Obj_t * Bdc_FunCopyHop( Bdc_Fun_t * pObj )  \n{ return Aig_NotCond( (Aig_Obj_t *)Bdc_FuncCopy(Bdc_Regular(pObj)), Bdc_IsComplement(pObj) );  }",
+      "Draft": "func Bdc_FunCopyHop(pObj *Bdc_Fun_t) *Aig_Obj_t { return Aig_NotCond( (Aig_Obj_t *)Bdc_FuncCopy(Bdc_Regular(pObj)), Bdc_IsComplement(pObj) );  }"
+    },
+    {
+      "Name": "Aig_RManSaveOne",
+      "Start": 15981,
+      "End": 16989,
+      "BodyStart": 16050,
+      "Original": "void Aig_RManSaveOne( Aig_RMan_t * p, unsigned * pTruth, int nVars )\n{\n    int i, nNodes, RetValue;\n    Bdc_Fun_t * pFunc;\n    Aig_Obj_t * pTerm;\n    // perform decomposition\n    RetValue = Bdc_ManDecompose( p-\u003epBidec, pTruth, NULL, nVars, NULL, 1000 );\n    if ( RetValue \u003c 0 )\n    {\n        printf( \"Decomposition failed.\\n\" );\n        return;\n    }\n    // convert back into HOP\n    Bdc_FuncSetCopy( Bdc_ManFunc( p-\u003epBidec, 0 ), Aig_ManConst1(p-\u003epAig) );\n    for ( i = 0; i \u003c nVars; i++ )\n        Bdc_FuncSetCopy( Bdc_ManFunc( p-\u003epBidec, i+1 ), Aig_IthVar(p-\u003epAig, i) );\n    nNodes = Bdc_ManNodeNum(p-\u003epBidec);\n    for ( i = nVars + 1; i \u003c nNodes; i++ )\n    {\n        pFunc = Bdc_ManFunc( p-\u003epBidec, i );\n        Bdc_FuncSetCopy( pFunc, Aig_And( p-\u003epAig, \n            Bdc_FunCopyHop(Bdc_FuncFanin0(pFunc)), \n            Bdc_FunCopyHop(Bdc_FuncFanin1(pFunc)) ) );\n    }\n    pTerm = Bdc_FunCopyHop( Bdc_ManRoot(p-\u003epBidec) );\n    pTerm = Aig_ObjCreateCo( p-\u003epAig, pTerm );\n//    assert( pTerm-\u003efPhase == 0 );\n}",
+      "Draft": "func Aig_RManSaveOne(p *Aig_RMan_t, pTruth *uint32, nVars int32) {\n    var i, nNodes, RetValue int32;\n    var pFunc *Bdc_Fun_t;\n    var pTerm *Aig_Obj_t;\n    // perform decomposition\n    RetValue = Bdc_ManDecompose( p.pBidec, pTruth, nil, nVars, nil, 1000 );\n    if RetValue \u003c 0 {\n        fmt.Printf(\"Decomposition failed.\\n\");\n        return;\n    }\n    // convert back into HOP\n    Bdc_FuncSetCopy( Bdc_ManFunc( p.pBidec, 0 ), Aig_ManConst1(p.pAig) );\n    for  i = 0; i \u003c nVars; i++  {\n        Bdc_FuncSetCopy( Bdc_ManFunc( p.pBidec, i+1 ), Aig_IthVar(p.pAig, i) );\n    }\n    nNodes = Bdc_ManNodeNum(p.pBidec);\n    for  i = nVars + 1; i \u003c nNodes; i++  {\n        pFunc = Bdc_ManFunc( p.pBidec, i );\n        Bdc_FuncSetCopy( pFunc, Aig_And( p.pAig, \n            Bdc_FunCopyHop(Bdc_FuncFanin0(pFunc)), \n            Bdc_FunCopyHop(Bdc_FuncFanin1(pFunc)) ) );\n    }\n    pTerm = Bdc_FunCopyHop( Bdc_ManRoot(p.pBidec) );\n    pTerm = Aig_ObjCreateCo( p.pAig, pTerm );\n//    assert( pTerm-\u003efPhase == 0 );\n}"
+    },
+    {
+      "Name": "Aig_RManRecord",
+      "Start": 17246,
+      "End": 20501,
+      "BodyStart": 17302,
+      "Original": "void Aig_RManRecord( unsigned * pTruth, int nVarsInit )\n{\n    int fVerify = 1;\n    Kit_DsdNtk_t * pNtk;\n    Kit_DsdObj_t * pObj;\n    unsigned uPhaseC;\n    int i, nVars, nWords;\n    int fUniqueVars;\n\n    if ( nVarsInit \u003e RMAN_MAXVARS )\n    {\n        printf( \"The number of variables in too large.\\n\" );\n        return;\n    }\n\n    if ( s_pRMan == NULL )\n        s_pRMan = Aig_RManStart();\n    s_pRMan-\u003enTotal++;\n    // canonicize the function\n    pNtk = Kit_DsdDecompose( pTruth, nVarsInit );\n    pObj = Kit_DsdNonDsdPrimeMax( pNtk );\n    if ( pObj == NULL || pObj-\u003enFans == 3 )\n    {\n        s_pRMan-\u003enTtDsd++;\n        Kit_DsdNtkFree( pNtk );\n        return;\n    }\n    nVars = pObj-\u003enFans;\n    s_pRMan-\u003enVarFuncs[nVars]++;\n    if ( nVars \u003c nVarsInit )\n        s_pRMan-\u003enTtDsdPart++;\n    else\n        s_pRMan-\u003enTtDsdNot++;\n    // compute the number of words\n    nWords = Abc_TruthWordNum( nVars );\n    // copy the function\n    memcpy( s_pRMan-\u003epTruthInit, Kit_DsdObjTruth(pObj), (size_t)(4*nWords) );\n    Kit_DsdNtkFree( pNtk );\n    // canonicize the output\n    if ( s_pRMan-\u003epTruthInit[0] \u0026 1 )\n        Kit_TruthNot( s_pRMan-\u003epTruthInit, s_pRMan-\u003epTruthInit, nVars );\n    memcpy( s_pRMan-\u003epTruth, s_pRMan-\u003epTruthInit, 4*nWords );\n\n    // canonize the function\n    for ( i = 0; i \u003c nVars; i++ )\n        s_pRMan-\u003epPerm[i] = i;\n    uPhaseC = Aig_RManSemiCanonicize( s_pRMan-\u003epTruthTemp, s_pRMan-\u003epTruth, nVars, s_pRMan-\u003epPerm, s_pRMan-\u003epMints, 1 );\n    // check unique variables\n    fUniqueVars = Aig_RManVarsAreUnique( s_pRMan-\u003epMints, nVars );\n    s_pRMan-\u003enUniqueVars += fUniqueVars;\n\n/*\n    printf( \"%4d : \", s_pRMan-\u003enTotal );\n    printf( \"%2d %2d  \", nVarsInit, nVars );\n    Extra_PrintBinary( stdout, \u0026uPhaseC, nVars );\n    printf( \"  \" );\n    for ( i = 0; i \u003c nVars; i++ )\n        printf( \"%2d/%2d \", s_pRMan-\u003epMints[2*i], s_pRMan-\u003epMints[2*i+1] );\n    printf( \"\\n\" );\n    Aig_RManPrintUniqueVars( s_pRMan-\u003epMints, nVars );\nExtra_PrintBinary( stdout, s_pRMan-\u003epTruth, 1\u003c\u003cnVars ); printf( \"\\n\\n\" );\n*/\n/*\n    printf( \"\\n\" );\n    printf( \"%4d : \", s_pRMan-\u003enTotal );\n    printf( \"%2d %2d  \", nVarsInit, nVars );\n    printf( \"   \" );\n    printf( \"\\n\" );\n    Aig_RManPrintUniqueVars( s_pRMan-\u003epMints, nVars );\n//    Aig_RManPrintSigs( s_pRMan-\u003epMints, nVars );\n*/\n\n//Extra_PrintBinary( stdout, s_pRMan-\u003epTruth, 1\u003c\u003cnVars ); printf( \"\\n\\n\" );\n\n    if ( Aig_RManTableFindOrAdd( s_pRMan, s_pRMan-\u003epTruth, nVars ) )\n        Aig_RManSaveOne( s_pRMan, s_pRMan-\u003epTruth, nVars );\n\n    if ( fVerify )\n    {\n        // derive reverse permutation\n        for ( i = 0; i \u003c nVars; i++ )\n            s_pRMan-\u003epPermR[i] = s_pRMan-\u003epPerm[i];\n        // implement permutation\n        Kit_TruthPermute( s_pRMan-\u003epTruthTemp, s_pRMan-\u003epTruth, nVars, s_pRMan-\u003epPermR, 1 );\n        // implement polarity\n        for ( i = 0; i \u003c nVars; i++ )\n            if ( uPhaseC \u0026 (1 \u003c\u003c i) )\n                Kit_TruthChangePhase( s_pRMan-\u003epTruth, nVars, i );\n\n        // perform verification\n        if ( fUniqueVars \u0026\u0026 !Kit_TruthIsEqual( s_pRMan-\u003epTruth, s_pRMan-\u003epTruthInit, nVars ) )\n            printf( \"Verification failed.\\n\" );\n    }\n//Aig_RManPrintVarProfile( s_pRMan-\u003epTruth, nVars, s_pRMan-\u003epTruthTemp );\n//Extra_PrintBinary( stdout, s_pRMan-\u003epTruth, 1\u003c\u003cnVars ); printf( \"\\n\" );\n}",
+      "Draft": "func Aig_RManRecord(pTruth *uint32, nVarsInit int32) {\n    var fVerify int32  = 1;\n    var pNtk *Kit_DsdNtk_t;\n    var pObj *Kit_DsdObj_t;\n    var uPhaseC uint32;\n    var i, nVars, nWords int32;\n    var fUniqueVars int32;\n\n    if nVarsInit \u003e RMAN_MAXVARS {\n        fmt.Printf(\"The number of variables in too large.\\n\");\n        return;\n    }\n\n    if s_pRMan == nil {\n        s_pRMan = Aig_RManStart(); }\n    s_pRMan.nTotal++;\n    // canonicize the function\n    pNtk = Kit_DsdDecompose( pTruth, nVarsInit );\n    pObj = Kit_DsdNonDsdPrimeMax( pNtk );\n    if pObj == nil || pObj.nFans == 3 {\n        s_pRMan.nTtDsd++;\n        Kit_DsdNtkFree( pNtk );\n        return;\n    }\n    nVars = pObj.nFans;\n    s_pRMan.nVarFuncs[nVars]++;\n    if nVars \u003c nVarsInit {\n        s_pRMan.nTtDsdPart++;\n    } else {\n        s_pRMan.nTtDsdNot++; }\n    // compute the number of words\n    nWords = Abc_TruthWordNum( nVars );\n    // copy the function\n    memcpy( s_pRMan.pTruthInit, Kit_DsdObjTruth(pObj), (size_t)(4*nWords) );\n    Kit_DsdNtkFree( pNtk );\n    // canonicize the output\n    if s_pRMan.pTruthInit[0] \u0026 1 {\n        Kit_TruthNot( s_pRMan.pTruthInit, s_pRMan.pTruthInit, nVars ); }\n    memcpy( s_pRMan.pTruth, s_pRMan.pTruthInit, 4*nWords );\n\n    // canonize the function\n    for  i = 0; i \u003c nVars; i++  {\n        s_pRMan.pPerm[i] = i;\n    }\n    uPhaseC = Aig_RManSemiCanonicize( s_pRMan.pTruthTemp, s_pRMan.pTruth, nVars, s_pRMan.pPerm, s_pRMan.pMints, 1 );\n    // check unique variables\n    fUniqueVars = Aig_RManVarsAreUnique( s_pRMan.pMints, nVars );\n    s_pRMan.nUniqueVars += fUniqueVars;\n\n/*\n    printf( \"%4d : \", s_pRMan-\u003enTotal );\n    printf( \"%2d %2d  \", nVarsInit, nVars );\n    Extra_PrintBinary( stdout, \u0026uPhaseC, nVars );\n    printf( \"  \" );\n    for ( i = 0; i \u003c nVars; i++ )\n        printf( \"%2d/%2d \", s_pRMan-\u003epMints[2*i], s_pRMan-\u003epMints[2*i+1] );\n    printf( \"\\n\" );\n    Aig_RManPrintUniqueVars( s_pRMan-\u003epMints, nVars );\nExtra_PrintBinary( stdout, s_pRMan-\u003epTruth, 1\u003c\u003cnVars ); printf( \"\\n\\n\" );\n*/\n/*\n    printf( \"\\n\" );\n    printf( \"%4d : \", s_pRMan-\u003enTotal );\n    printf( \"%2d %2d  \", nVarsInit, nVars );\n    printf( \"   \" );\n    printf( \"\\n\" );\n    Aig_RManPrintUniqueVars( s_pRMan-\u003epMints, nVars );\n//    Aig_RManPrintSigs( s_pRMan-\u003epMints, nVars );\n*/\n\n//Extra_PrintBinary( stdout, s_pRMan-\u003epTruth, 1\u003c\u003cnVars ); printf( \"\\n\\n\" );\n\n    if Aig_RManTableFindOrAdd( s_pRMan, s_pRMan.pTruth, nVars ) != 0 {\n        Aig_RManSaveOne( s_pRMan, s_pRMan.pTruth, nVars ); }\n\n    if fVerify != 0 {\n        // derive reverse permutation\n        for  i = 0; i \u003c nVars; i++  {\n            s_pRMan.pPermR[i] = s_pRMan.pPerm[i];\n        }\n        // implement permutation\n        Kit_TruthPermute( s_pRMan.pTruthTemp, s_pRMan.pTruth, nVars, s_pRMan.pPermR, 1 );\n        // implement polarity\n        for  i = 0; i \u003c nVars; i++  {\n            if uPhaseC \u0026 (1 \u003c\u003c i) {\n                Kit_TruthChangePhase( s_pRMan.pTruth, nVars, i ); }\n        }\n\n        // perform verification\n        if (fUniqueVars != 0) \u0026\u0026 !Kit_TruthIsEqual( s_pRMan.pTruth, s_pRMan.pTruthInit, nVars ) {\n            fmt.Printf(\"Verification failed.\\n\"); }\n    }\n//Aig_RManPrintVarProfile( s_pRMan-\u003epTruth, nVars, s_pRMan-\u003epTruthTemp );\n//Extra_PrintBinary( stdout, s_pRMan-\u003epTruth, 1\u003c\u003cnVars ); printf( \"\\n\" );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_VSig_t::int           nCofOnes[RMAN_MAXVARS];",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_VSig_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1049,
+      "End": 1091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_VSig_t",
+      "Category": "struct-review",
+      "Symbol": "Aig_VSig_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 965,
+      "End": 1094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_Tru_t::unsigned      nVisits : 27;",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Tru_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1199,
+      "End": 1235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_Tru_t::unsigned      nVars   :  5;",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Tru_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1235,
+      "End": 1267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_Tru_t::unsigned      pTruth[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_Tru_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1267,
+      "End": 1296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_Tru_t",
+      "Category": "struct-review",
+      "Symbol": "Aig_Tru_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1096,
+      "End": 1299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_RMan_t::// temporaries\n    unsigned      pTruthInit[RMAX_MAXWORD];",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_RMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1646,
+      "End": 1709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_RMan_t::// canonical truth table\n    unsigned      pTruth[RMAX_MAXWORD];",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_RMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1709,
+      "End": 1774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_RMan_t::// current truth table\n    unsigned      pTruthC[RMAX_MAXWORD];",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_RMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1774,
+      "End": 1842
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_RMan_t::// canonical truth table\n    unsigned      pTruthTemp[RMAX_MAXWORD];",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_RMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1842,
+      "End": 1914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_RMan_t::// temporary truth table\n    Aig_VSig_t    pMints[2*RMAN_MAXVARS];",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_RMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1914,
+      "End": 1981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_RMan_t::// minterm count\n    char          pPerm[RMAN_MAXVARS];",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_RMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1981,
+      "End": 2039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_RMan_t::// permutation\n    char          pPermR[RMAN_MAXVARS];",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_RMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2039,
+      "End": 2099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_RMan_t::// reverse permutation\n    // statistics\n    int           nVarFuncs[RMAN_MAXVARS+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Aig_RMan_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2099,
+      "End": 2189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::struct::Aig_RMan_t",
+      "Category": "struct-review",
+      "Symbol": "Aig_RMan_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1301,
+      "End": 2334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::mechanical::static::2890",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2890,
+      "End": 2896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::mechanical::sizeof::3010",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3010,
+      "End": 3016
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::mechanical::static::4321",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4321,
+      "End": 4327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::mechanical::sizeof::6685",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6685,
+      "End": 6691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::mechanical::sizeof::6705",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6705,
+      "End": 6711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::mechanical::sizeof::7037",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7037,
+      "End": 7043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::mechanical::sizeof::11982",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11982,
+      "End": 11988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::mechanical::do::14384",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14384,
+      "End": 14386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::pointer-cast::6833",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6833,
+      "End": 6846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::pointer-cast::15650",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15650,
+      "End": 15663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManStart",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2855,
+      "End": 3433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManTableHash",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManTableHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3690,
+      "End": 3973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManTableLookup",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManTableLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4234,
+      "End": 4778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::ternary::Aig_RManTableResize",
+      "Category": "ternary-review",
+      "Symbol": "Aig_RManTableResize",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5036,
+      "End": 6120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManTableResize",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManTableResize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5036,
+      "End": 6120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManTableFindOrAdd",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManTableFindOrAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6411,
+      "End": 7120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManStop",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7386,
+      "End": 8040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManQuit",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManQuit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8293,
+      "End": 8695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManPrintVarProfile",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManPrintVarProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8969,
+      "End": 9273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManSortNums",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManSortNums",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9547,
+      "End": 9883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManPrintSigs",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManPrintSigs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10155,
+      "End": 10595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManComputeVSigs",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManComputeVSigs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10869,
+      "End": 11529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManCompareSigs",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManCompareSigs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11802,
+      "End": 11998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManVarsAreUnique",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManVarsAreUnique",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12272,
+      "End": 12501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManPrintUniqueVars",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManPrintUniqueVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12775,
+      "End": 13353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManSemiCanonicize",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManSemiCanonicize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13636,
+      "End": 15329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Bdc_FunCopyHop",
+      "Category": "semantic-review",
+      "Symbol": "Bdc_FunCopyHop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15565,
+      "End": 15724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManSaveOne",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManSaveOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15981,
+      "End": 16989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::Aig_RManRecord",
+      "Category": "semantic-review",
+      "Symbol": "Aig_RManRecord",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17246,
+      "End": 20501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::macro-inline::2964",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2964,
+      "End": 2990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::macro-inline::3216",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3216,
+      "End": 3251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::macro-inline::5412",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5412,
+      "End": 5447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::macro-inline::6097",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6097,
+      "End": 6117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::macro-inline::7998",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7998,
+      "End": 8018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigCanon.c::macro-inline::8024",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8024,
+      "End": 8037
+    }
+  ],
+  "Draft": "package aig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [aigCanon.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Processing the library of semi-canonical AIGs.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigCanon.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n//#include \"bool/kit/kit.h\"\n//#include \"bool/bdc/bdc.h\"\n//#include \"aig/ioa/ioa.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst RMAN_MAXVARS =  12\n#define RMAX_MAXWORD  (RMAN_MAXVARS \u003c= 5 ? 1 : (1 \u003c\u003c (RMAN_MAXVARS - 5)))\n\n   \ntype Aig_VSig_t struct {\n    nOnes           int32;\n    nCofOnes [RMAN_MAXVARS]int32;\n}\n\n   \ntype Aig_Tru_t struct {\n    pNext    *Aig_Tru_t;\n    Id           int32;    \n    nVisits uint32; /* C bitfield: 27 bits; review packing and truncation */\n    nVars uint32; /* C bitfield: 5 bits; review packing and truncation */\n    pTruth [0]uint32;\n}\n\n   \ntype Aig_RMan_t struct {\n    nVars           int32;       // the largest variable number\n    pAig    *Aig_Man_t;        // recorded subgraphs\n    // hash table\n    nBins           int32;\n    pBins   **Aig_Tru_t;\n    nEntries           int32;\n    pMemTrus *Aig_MmFlex_t;\n    // bidecomposion\n    pBidec    *Bdc_Man_t;\n    // temporaries\n    pTruthInit [RMAX_MAXWORD]uint32; // canonical truth table\n    pTruth [RMAX_MAXWORD]uint32;     // current truth table\n    pTruthC [RMAX_MAXWORD]uint32;    // canonical truth table\n    pTruthTemp [RMAX_MAXWORD]uint32; // temporary truth table\n    pMints [2*RMAN_MAXVARS]Aig_VSig_t;   // minterm count\n    pPerm [RMAN_MAXVARS]byte;      // permutation\n    pPermR [RMAN_MAXVARS]byte;     // reverse permutation\n    // statistics\n    nVarFuncs [RMAN_MAXVARS+1]int32;\n    nTotal           int32;\n    nTtDsd           int32;\n    nTtDsdPart           int32;\n    nTtDsdNot           int32;\n    nUniqueVars           int32;\n}\n\nvar s_pRMan *Aig_RMan_t = nil;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates recording manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Aig_RManStart_Pars Bdc_Par_t ;\nvar spStatic_Aig_RManStart_pPars *Bdc_Par_t = \u0026spStatic_Aig_RManStart_Pars;\nfunc Aig_RManStart() *Aig_RMan_t {\n    \n    var p *Aig_RMan_t;\n    p = new(Aig_RMan_t);\n    *p = Aig_RMan_t{};\n    p.nVars = RMAN_MAXVARS;\n    p.pAig  = Aig_ManStart( 1000000 );\n    Aig_IthVar( p.pAig, p.nVars-1 );\n    // create hash table\n    p.nBins = Abc_PrimeCudd(5000);\n    p.pBins = ABC_CALLOC( Aig_Tru_t *, p.nBins );\n    p.pMemTrus = Aig_MmFlexStart();\n    // bi-decomposition manager\n    spStatic_Aig_RManStart_pPars.nVarsMax = p.nVars;\n    spStatic_Aig_RManStart_pPars.fVerbose = 0;\n    p.pBidec = Bdc_ManAlloc( spStatic_Aig_RManStart_pPars );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the hash key.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManTableHash(pTruth *uint32, nVars int32, nBins int32, pPrimes *int32) int32 {\n    var i int32;\n    var nWords int32 = Kit_TruthWordNum( nVars );\n    var uHash uint32;\n    for  i = 0; i \u003c nWords; i++  {\n        uHash ^= pTruth[i] * pPrimes[i \u0026 0xf];\n    }\n    return int32((uHash % nBins));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the given record.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Aig_RManTableLookup_s_Primes [16]int32 = [16]int32{ \n        1291, 1699, 1999, 2357, 2953, 3313, 3907, 4177, \n        4831, 5147, 5647, 6343, 6899, 7103, 7873, 8147 };\nfunc Aig_RManTableLookup(p *Aig_RMan_t, pTruth *uint32, nVars int32) **Aig_Tru_t {\n    \n    var ppSpot **Aig_Tru_t;\n    var pEntry *Aig_Tru_t;\n    ppSpot = p.pBins + Aig_RManTableHash( pTruth, nVars, p.nBins, spStatic_Aig_RManTableLookup_s_Primes );\n    for  pEntry = *ppSpot; (pEntry != nil); ppSpot = \u0026pEntry.pNext, pEntry = pEntry.pNext  {\n        if Kit_TruthIsEqual( pEntry.pTruth, pTruth, nVars ) {\n            return ppSpot; }\n    }\n    return ppSpot;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find or add new entry.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManTableResize(p *Aig_RMan_t) {\n    var pEntry, pNext *Aig_Tru_t;\n    var pBinsOld, ppPlace **Aig_Tru_t;\n    var nBinsOld, Counter, i int32;\n    var clk abctime;\n    assert(p.pBins != nil, \"p.pBins != nil\");\nclk = Abc_Clock();\n    // save the old Bins\n    pBinsOld = p.pBins;\n    nBinsOld = p.nBins;\n    // get the new Bins\n    p.nBins = Abc_PrimeCudd( 3 * nBinsOld ); \n    p.pBins = ABC_CALLOC( Aig_Tru_t *, p.nBins );\n    // rehash the entries from the old table\n    Counter = 0;\n    for  i = 0; i \u003c nBinsOld; i++  {\n    for  pEntry = pBinsOld[i], pNext = pEntry? pEntry.pNext : nil; \n          (pEntry != nil); pEntry = pNext, pNext = pEntry? pEntry.pNext : nil  {\n        // get the place where this entry goes in the Bins \n        ppPlace = Aig_RManTableLookup( p, pEntry.pTruth, pEntry.nVars );\n        assert(*ppPlace == nil, \"*ppPlace == nil\"); // should not be there\n        // add the entry to the list\n        *ppPlace = pEntry;\n        pEntry.pNext = nil;\n        Counter++;\n    }\n    }\n    assert(Counter == p.nEntries, \"Counter == p.nEntries\");\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    ABC_FREE( pBinsOld );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find or add new entry.]\n\n  Description [Returns 1 if this is a new entry.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManTableFindOrAdd(p *Aig_RMan_t, pTruth *uint32, nVars int32) int32 {\n    var ppSpot **Aig_Tru_t;\n    var pEntry *Aig_Tru_t;\n    var nBytes int32;\n    ppSpot = Aig_RManTableLookup( p, pTruth, nVars );\n    if *ppSpot {\n        (*ppSpot).nVisits++;\n        return 0;\n    }\n    nBytes = sizeof(Aig_Tru_t) + sizeof(unsigned) * Kit_TruthWordNum(nVars);\n    if p.nEntries == 3*p.nBins {\n        Aig_RManTableResize( p ); }\n    pEntry = (Aig_Tru_t *)Aig_MmFlexEntryFetch( p.pMemTrus, nBytes );\n    pEntry.Id = p.nEntries++;\n    pEntry.nVars = nVars;\n    pEntry.nVisits = 1;\n    pEntry.pNext = nil;\n    memcpy( pEntry.pTruth, pTruth, sizeof(unsigned) * Kit_TruthWordNum(nVars) );\n    *ppSpot = pEntry;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates recording manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManStop(p *Aig_RMan_t) {\n    var i int32;\n    fmt.Printf(\"Total funcs    = %10d\\n\", p.nTotal);\n    fmt.Printf(\"Full DSD funcs = %10d\\n\", p.nTtDsd);\n    fmt.Printf(\"Part DSD funcs = %10d\\n\", p.nTtDsdPart);\n    fmt.Printf(\"Non- DSD funcs = %10d\\n\", p.nTtDsdNot);\n    fmt.Printf(\"Uniq-var funcs = %10d\\n\", p.nUniqueVars);\n    fmt.Printf(\"Unique   funcs = %10d\\n\", p.nEntries);\n    fmt.Printf(\"Distribution of functions:\\n\");\n    for  i = 5; i \u003c= p.nVars; i++  {\n        fmt.Printf(\"%2d = %8d\\n\", i, p.nVarFuncs[i]);\n    }\n    Aig_MmFlexStop( p.pMemTrus, 0 );\n    Aig_ManStop( p.pAig );\n    Bdc_ManFree( p.pBidec );\n    ABC_FREE( p.pBins );\n    ABC_FREE( p );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Stops recording.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManQuit() {\n//    extern void Ioa_WriteAiger( Aig_Man_t * pMan, char * pFileName, int fWriteSymbols, int fCompact );\n    var Buffer string // was [20]byte in C\n\n    if s_pRMan == nil {\n        return; }\n    // dump the library file\n    Buffer = fmt.Sprintf(\"aiglib%02d.aig\", s_pRMan.nVars);\n    Ioa_WriteAiger( s_pRMan.pAig, Buffer, 0, 1 );\n    // quit the manager\n    Aig_RManStop( s_pRMan );\n    s_pRMan = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if all variables are unique.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManPrintVarProfile(pTruth *uint32, nVars int32, pTruthAux *uint32) {\n    var pStore2 [32]int32;\n    var i int32;\n    Kit_TruthCountOnesInCofsSlow( pTruth, nVars, pStore2, pTruthAux );\n    for  i = 0; i \u003c nVars; i++  {\n        fmt.Printf(\"%2d/%2d \", pStore2[2*i], pStore2[2*i+1]);\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorts numbers in the increasing order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManSortNums(pArray *int32, nVars int32) {\n    var i, j, best_i, tmp int32;\n    for  i = 0; i \u003c nVars-1; i++  {\n        best_i = i;\n        for  j = i+1; j \u003c nVars; j++  {\n            if pArray[j] \u003e pArray[best_i] {\n                best_i = j; }\n        }\n        tmp = pArray[i]; pArray[i] = pArray[best_i]; pArray[best_i] = tmp;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints signatures for all variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManPrintSigs(pSigs *Aig_VSig_t, nVars int32) {\n    var v, i, k int32;\n    for  v = 0; v \u003c nVars; v++  {\n        fmt.Printf(\"%2d : \", v);\n        for  k = 0; k \u003c 2; k++  {\n            fmt.Printf(\"%5d  \", pSigs[2*v+k].nOnes);\n            fmt.Printf(\"(\");\n            for  i = 0; i \u003c nVars; i++  {\n                fmt.Printf(\"%4d \", pSigs[2*v+k].nCofOnes[i]);\n            }\n            fmt.Printf(\")  \");\n        }\n        fmt.Printf(\"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes signatures for all variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManComputeVSigs(pTruth *uint32, nVars int32, pSigs *Aig_VSig_t, pAux *uint32) {\n    var v int32;\n    for  v = 0; v \u003c nVars; v++  {\n        Kit_TruthCofactor0New( pAux, pTruth, nVars, v );\n        pSigs[2*v+0].nOnes = Kit_TruthCountOnes( pAux, nVars );\n        Kit_TruthCountOnesInCofs0( pAux, nVars, pSigs[2*v+0].nCofOnes );\n        Aig_RManSortNums( pSigs[2*v+0].nCofOnes, nVars );\n\n        Kit_TruthCofactor1New( pAux, pTruth, nVars, v );\n        pSigs[2*v+1].nOnes = Kit_TruthCountOnes( pAux, nVars );\n        Kit_TruthCountOnesInCofs0( pAux, nVars, pSigs[2*v+1].nCofOnes );\n        Aig_RManSortNums( pSigs[2*v+1].nCofOnes, nVars );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computs signatures for all variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManCompareSigs(p0 *Aig_VSig_t, p1 *Aig_VSig_t, nVars int32) int32 {\n//    return memcmp( p0, p1, sizeof(int) + sizeof(int) * nVars );\n    return memcmp( p0, p1, sizeof(int) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if all variables are unique.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManVarsAreUnique(pMints *Aig_VSig_t, nVars int32) int32 {\n    var i int32;\n    for  i = 0; i \u003c nVars - 1; i++  {\n        if Aig_RManCompareSigs( \u0026pMints[2*i], \u0026pMints[2*(i+1)], nVars ) == 0 {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if all variables are unique.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManPrintUniqueVars(pMints *Aig_VSig_t, nVars int32) {\n    var i int32;\n    for  i = 0; i \u003c nVars; i++  {\n        if Aig_RManCompareSigs( \u0026pMints[2*i], \u0026pMints[2*i+1], nVars ) == 0 {\n            fmt.Printf(\"=\");\n        } else { \n            fmt.Printf(\"x\"); }\n    }\n    fmt.Printf(\"\\n\");\n\n    fmt.Printf(\"0\");\n    for  i = 1; i \u003c nVars; i++  {\n        if Aig_RManCompareSigs( \u0026pMints[2*(i-1)], \u0026pMints[2*i], nVars ) == 0 {\n            fmt.Printf(\"-\");\n        } else if i \u003c 10 {\n            fmt.Printf(\"%c\", '0' + i);\n        } else { \n            fmt.Printf(\"%c\", 'A' + i-10); }\n    }\n    fmt.Printf(\"\\n\");\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Canonicize the truth table.]\n\n  Description [Returns the phase. ]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManSemiCanonicize(pOut *uint32, pIn *uint32, nVars int32, pCanonPerm string, pSigs *Aig_VSig_t, fReturnIn int32) uint32 {\n    var TempSig Aig_VSig_t;\n    var i, Temp, fChange, Counter int32;\n    var pTemp *uint32;\n    var uCanonPhase uint32;\n    // collect signatures \n    Aig_RManComputeVSigs( pIn, nVars, pSigs, pOut );\n    // canonicize phase\n    for  i = 0; i \u003c nVars; i++  {\n//        if ( pStore[2*i+0] \u003c= pStore[2*i+1] )\n        if Aig_RManCompareSigs( \u0026pSigs[2*i+0], \u0026pSigs[2*i+1], nVars ) \u003c= 0 {\n            continue; }\n        uCanonPhase |= (1 \u003c\u003c i);\n        TempSig = pSigs[2*i+0];\n        pSigs[2*i+0] = pSigs[2*i+1];\n        pSigs[2*i+1] = TempSig;\n        Kit_TruthChangePhase( pIn, nVars, i );\n    }\n    // permute\n    Counter = 0;\n    do {\n        fChange = 0;\n        for  i = 0; i \u003c nVars-1; i++  {\n//            if ( pStore[2*i] \u003c= pStore[2*(i+1)] )\n            if Aig_RManCompareSigs( \u0026pSigs[2*i], \u0026pSigs[2*(i+1)], nVars ) \u003c= 0 {\n                continue; }\n            Counter++;\n            fChange = 1;\n\n            Temp = pCanonPerm[i];\n            pCanonPerm[i] = pCanonPerm[i+1];\n            pCanonPerm[i+1] = Temp;\n\n            TempSig = pSigs[2*i];\n            pSigs[2*i] = pSigs[2*(i+1)];\n            pSigs[2*(i+1)] = TempSig;\n\n            TempSig = pSigs[2*i+1];\n            pSigs[2*i+1] = pSigs[2*(i+1)+1];\n            pSigs[2*(i+1)+1] = TempSig;\n\n            Kit_TruthSwapAdjacentVars( pOut, pIn, nVars, i );\n            pTemp = pIn; pIn = pOut; pOut = pTemp;\n        }\n    } while ( fChange );\n\n    // swap if it was moved an even number of times\n    if fReturnIn ^ !(Counter \u0026 1) {\n        Kit_TruthCopy( pOut, pIn, nVars ); }\n    return uCanonPhase;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bdc_FunCopyHop(pObj *Bdc_Fun_t) *Aig_Obj_t { return Aig_NotCond( (Aig_Obj_t *)Bdc_FuncCopy(Bdc_Regular(pObj)), Bdc_IsComplement(pObj) );  }\n\n/**Function*************************************************************\n\n  Synopsis    [Records one function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManSaveOne(p *Aig_RMan_t, pTruth *uint32, nVars int32) {\n    var i, nNodes, RetValue int32;\n    var pFunc *Bdc_Fun_t;\n    var pTerm *Aig_Obj_t;\n    // perform decomposition\n    RetValue = Bdc_ManDecompose( p.pBidec, pTruth, nil, nVars, nil, 1000 );\n    if RetValue \u003c 0 {\n        fmt.Printf(\"Decomposition failed.\\n\");\n        return;\n    }\n    // convert back into HOP\n    Bdc_FuncSetCopy( Bdc_ManFunc( p.pBidec, 0 ), Aig_ManConst1(p.pAig) );\n    for  i = 0; i \u003c nVars; i++  {\n        Bdc_FuncSetCopy( Bdc_ManFunc( p.pBidec, i+1 ), Aig_IthVar(p.pAig, i) );\n    }\n    nNodes = Bdc_ManNodeNum(p.pBidec);\n    for  i = nVars + 1; i \u003c nNodes; i++  {\n        pFunc = Bdc_ManFunc( p.pBidec, i );\n        Bdc_FuncSetCopy( pFunc, Aig_And( p.pAig, \n            Bdc_FunCopyHop(Bdc_FuncFanin0(pFunc)), \n            Bdc_FunCopyHop(Bdc_FuncFanin1(pFunc)) ) );\n    }\n    pTerm = Bdc_FunCopyHop( Bdc_ManRoot(p.pBidec) );\n    pTerm = Aig_ObjCreateCo( p.pAig, pTerm );\n//    assert( pTerm-\u003efPhase == 0 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Records one function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_RManRecord(pTruth *uint32, nVarsInit int32) {\n    var fVerify int32  = 1;\n    var pNtk *Kit_DsdNtk_t;\n    var pObj *Kit_DsdObj_t;\n    var uPhaseC uint32;\n    var i, nVars, nWords int32;\n    var fUniqueVars int32;\n\n    if nVarsInit \u003e RMAN_MAXVARS {\n        fmt.Printf(\"The number of variables in too large.\\n\");\n        return;\n    }\n\n    if s_pRMan == nil {\n        s_pRMan = Aig_RManStart(); }\n    s_pRMan.nTotal++;\n    // canonicize the function\n    pNtk = Kit_DsdDecompose( pTruth, nVarsInit );\n    pObj = Kit_DsdNonDsdPrimeMax( pNtk );\n    if pObj == nil || pObj.nFans == 3 {\n        s_pRMan.nTtDsd++;\n        Kit_DsdNtkFree( pNtk );\n        return;\n    }\n    nVars = pObj.nFans;\n    s_pRMan.nVarFuncs[nVars]++;\n    if nVars \u003c nVarsInit {\n        s_pRMan.nTtDsdPart++;\n    } else {\n        s_pRMan.nTtDsdNot++; }\n    // compute the number of words\n    nWords = Abc_TruthWordNum( nVars );\n    // copy the function\n    memcpy( s_pRMan.pTruthInit, Kit_DsdObjTruth(pObj), (size_t)(4*nWords) );\n    Kit_DsdNtkFree( pNtk );\n    // canonicize the output\n    if s_pRMan.pTruthInit[0] \u0026 1 {\n        Kit_TruthNot( s_pRMan.pTruthInit, s_pRMan.pTruthInit, nVars ); }\n    memcpy( s_pRMan.pTruth, s_pRMan.pTruthInit, 4*nWords );\n\n    // canonize the function\n    for  i = 0; i \u003c nVars; i++  {\n        s_pRMan.pPerm[i] = i;\n    }\n    uPhaseC = Aig_RManSemiCanonicize( s_pRMan.pTruthTemp, s_pRMan.pTruth, nVars, s_pRMan.pPerm, s_pRMan.pMints, 1 );\n    // check unique variables\n    fUniqueVars = Aig_RManVarsAreUnique( s_pRMan.pMints, nVars );\n    s_pRMan.nUniqueVars += fUniqueVars;\n\n/*\n    printf( \"%4d : \", s_pRMan-\u003enTotal );\n    printf( \"%2d %2d  \", nVarsInit, nVars );\n    Extra_PrintBinary( stdout, \u0026uPhaseC, nVars );\n    printf( \"  \" );\n    for ( i = 0; i \u003c nVars; i++ )\n        printf( \"%2d/%2d \", s_pRMan-\u003epMints[2*i], s_pRMan-\u003epMints[2*i+1] );\n    printf( \"\\n\" );\n    Aig_RManPrintUniqueVars( s_pRMan-\u003epMints, nVars );\nExtra_PrintBinary( stdout, s_pRMan-\u003epTruth, 1\u003c\u003cnVars ); printf( \"\\n\\n\" );\n*/\n/*\n    printf( \"\\n\" );\n    printf( \"%4d : \", s_pRMan-\u003enTotal );\n    printf( \"%2d %2d  \", nVarsInit, nVars );\n    printf( \"   \" );\n    printf( \"\\n\" );\n    Aig_RManPrintUniqueVars( s_pRMan-\u003epMints, nVars );\n//    Aig_RManPrintSigs( s_pRMan-\u003epMints, nVars );\n*/\n\n//Extra_PrintBinary( stdout, s_pRMan-\u003epTruth, 1\u003c\u003cnVars ); printf( \"\\n\\n\" );\n\n    if Aig_RManTableFindOrAdd( s_pRMan, s_pRMan.pTruth, nVars ) != 0 {\n        Aig_RManSaveOne( s_pRMan, s_pRMan.pTruth, nVars ); }\n\n    if fVerify != 0 {\n        // derive reverse permutation\n        for  i = 0; i \u003c nVars; i++  {\n            s_pRMan.pPermR[i] = s_pRMan.pPerm[i];\n        }\n        // implement permutation\n        Kit_TruthPermute( s_pRMan.pTruthTemp, s_pRMan.pTruth, nVars, s_pRMan.pPermR, 1 );\n        // implement polarity\n        for  i = 0; i \u003c nVars; i++  {\n            if uPhaseC \u0026 (1 \u003c\u003c i) {\n                Kit_TruthChangePhase( s_pRMan.pTruth, nVars, i ); }\n        }\n\n        // perform verification\n        if (fUniqueVars != 0) \u0026\u0026 !Kit_TruthIsEqual( s_pRMan.pTruth, s_pRMan.pTruthInit, nVars ) {\n            fmt.Printf(\"Verification failed.\\n\"); }\n    }\n//Aig_RManPrintVarProfile( s_pRMan-\u003epTruth, nVars, s_pRMan-\u003epTruthTemp );\n//Extra_PrintBinary( stdout, s_pRMan-\u003epTruth, 1\u003c\u003cnVars ); printf( \"\\n\" );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

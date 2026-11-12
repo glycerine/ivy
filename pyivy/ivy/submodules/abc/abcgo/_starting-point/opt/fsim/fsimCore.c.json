@@ -1,0 +1,98 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimCore.c",
+  "SHA256": "1245e0fc59e20973de072d4e3092efc74215883c7a39e4237d942324b929d260",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Fsim_ParSim_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 71,
+        "Column": 5,
+        "ByteOffset": 2138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Fsim_ParSwitch_t) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fsim_ManSetDefaultParamsSim",
+      "Start": 1272,
+      "End": 1791,
+      "BodyStart": 1326,
+      "Original": "void Fsim_ManSetDefaultParamsSim( Fsim_ParSim_t * p )\n{\n    memset( p, 0, sizeof(Fsim_ParSim_t) );\n    // user-controlled parameters\n    p-\u003enWords       =   8;    // the number of machine words\n    p-\u003enIters       =  32;    // the number of timeframes\n    p-\u003eTimeLimit    =  60;    // time limit in seconds\n    p-\u003efCheckMiter  =   0;    // check if miter outputs are non-zero \n    p-\u003efVerbose     =   1;    // enables verbose output\n    // internal parameters\n    p-\u003efCompressAig =   0;    // compresses internal data\n}",
+      "Draft": "func Fsim_ManSetDefaultParamsSim(p *Fsim_ParSim_t) {\n    memset( p, 0, sizeof(Fsim_ParSim_t) );\n    // user-controlled parameters\n    p.nWords       =   8;    // the number of machine words\n    p.nIters       =  32;    // the number of timeframes\n    p.TimeLimit    =  60;    // time limit in seconds\n    p.fCheckMiter  =   0;    // check if miter outputs are non-zero \n    p.fVerbose     =   1;    // enables verbose output\n    // internal parameters\n    p.fCompressAig =   0;    // compresses internal data\n}"
+    },
+    {
+      "Name": "Fsim_ManSetDefaultParamsSwitch",
+      "Start": 2066,
+      "End": 2656,
+      "BodyStart": 2126,
+      "Original": "void Fsim_ManSetDefaultParamsSwitch( Fsim_ParSwitch_t * p )\n{\n    memset( p, 0, sizeof(Fsim_ParSwitch_t) );\n    // user-controlled parameters\n    p-\u003enWords       =   1;    // the number of machine words\n    p-\u003enIters       =  48;    // the number of timeframes\n    p-\u003enPref        =  16;    // the number of first timeframes to skip\n    p-\u003enRandPiNum   =   0;    // PI trans prob (0=1/2; 1=1/4; 2=1/8, etc)\n    p-\u003efProbOne     =   1;    // collect probability of one\n    p-\u003efProbTrans   =   1;    // collect probatility of switching\n    p-\u003efVerbose     =   1;    // enables verbose output\n}",
+      "Draft": "func Fsim_ManSetDefaultParamsSwitch(p *Fsim_ParSwitch_t) {\n    memset( p, 0, sizeof(Fsim_ParSwitch_t) );\n    // user-controlled parameters\n    p.nWords       =   1;    // the number of machine words\n    p.nIters       =  48;    // the number of timeframes\n    p.nPref        =  16;    // the number of first timeframes to skip\n    p.nRandPiNum   =   0;    // PI trans prob (0=1/2; 1=1/4; 2=1/8, etc)\n    p.fProbOne     =   1;    // collect probability of one\n    p.fProbTrans   =   1;    // collect probatility of switching\n    p.fVerbose     =   1;    // enables verbose output\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimCore.c::mechanical::sizeof::1346",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1346,
+      "End": 1352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimCore.c::mechanical::sizeof::2146",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2146,
+      "End": 2152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimCore.c::Fsim_ManSetDefaultParamsSim",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManSetDefaultParamsSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1272,
+      "End": 1791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimCore.c::Fsim_ManSetDefaultParamsSwitch",
+      "Category": "semantic-review",
+      "Symbol": "Fsim_ManSetDefaultParamsSwitch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2066,
+      "End": 2656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fsim/fsimCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2903
+    }
+  ],
+  "Draft": "package fsim\n\n/**CFile****************************************************************\n\n  FileName    [fsimCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast sequential AIG simulator.]\n\n  Synopsis    [Core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: fsimCore.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fsimInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManSetDefaultParamsSim(p *Fsim_ParSim_t) {\n    memset( p, 0, sizeof(Fsim_ParSim_t) );\n    // user-controlled parameters\n    p.nWords       =   8;    // the number of machine words\n    p.nIters       =  32;    // the number of timeframes\n    p.TimeLimit    =  60;    // time limit in seconds\n    p.fCheckMiter  =   0;    // check if miter outputs are non-zero \n    p.fVerbose     =   1;    // enables verbose output\n    // internal parameters\n    p.fCompressAig =   0;    // compresses internal data\n}\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fsim_ManSetDefaultParamsSwitch(p *Fsim_ParSwitch_t) {\n    memset( p, 0, sizeof(Fsim_ParSwitch_t) );\n    // user-controlled parameters\n    p.nWords       =   1;    // the number of machine words\n    p.nIters       =  48;    // the number of timeframes\n    p.nPref        =  16;    // the number of first timeframes to skip\n    p.nRandPiNum   =   0;    // PI trans prob (0=1/2; 1=1/4; 2=1/8, etc)\n    p.fProbOne     =   1;    // collect probability of one\n    p.fProbTrans   =   1;    // collect probatility of switching\n    p.fVerbose     =   1;    // enables verbose output\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

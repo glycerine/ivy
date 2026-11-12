@@ -1,0 +1,291 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c",
+  "SHA256": "fc3d4220040d3c9c35f3be559fb79ba193a5ce93995e8426e3fca767e15ff1cc",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 9,
+        "ByteOffset": 2797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( /*__starting_point_inline_macro:Mvc_CubeReadNext__*/((pCube).pNext) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 9,
+        "ByteOffset": 4899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( /*__starting_point_inline_macro:Mvc_CubeReadNext__*/((pCube).pNext) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 10128
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Counter == Mvc_CoverReadCubeNum(pCover) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 306,
+        "Column": 5,
+        "ByteOffset": 10566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCover.pCubes );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mvc_ListAddCubeHead_",
+      "Start": 1203,
+      "End": 1538,
+      "BodyStart": 1271,
+      "Original": "void Mvc_ListAddCubeHead_( Mvc_List_t * pList, Mvc_Cube_t * pCube )\n{\n    if ( pList-\u003epHead == NULL )\n    {\n        Mvc_CubeSetNext( pCube, NULL );\n        pList-\u003epHead = pCube;\n        pList-\u003epTail = pCube;\n    }\n    else\n    {\n        Mvc_CubeSetNext( pCube, pList-\u003epHead );\n        pList-\u003epHead = pCube;\n    }\n    pList-\u003enItems++;\n}",
+      "Draft": "func Mvc_ListAddCubeHead_(pList *Mvc_List_t, pCube *Mvc_Cube_t) {\n    if pList.pHead == nil {\n        // inlining of macro Mvc_CubeSetNext\n        ((pCube).pNext = (nil));\n        pList.pHead = pCube;\n        pList.pTail = pCube;\n    \n    } else {\n        // inlining of macro Mvc_CubeSetNext\n        ((pCube).pNext = (pList.pHead));\n        pList.pHead = pCube;\n    }\n    pList.nItems++;\n}"
+    },
+    {
+      "Name": "Mvc_ListAddCubeTail_",
+      "Start": 1775,
+      "End": 2051,
+      "BodyStart": 1843,
+      "Original": "void Mvc_ListAddCubeTail_( Mvc_List_t * pList, Mvc_Cube_t * pCube )\n{\n    if ( pList-\u003epHead == NULL )\n        pList-\u003epHead = pCube;\n    else\n        Mvc_CubeSetNext( pList-\u003epTail, pCube );\n    pList-\u003epTail    = pCube;\n    Mvc_CubeSetNext( pCube, NULL );\n    pList-\u003enItems++;\n}",
+      "Draft": "func Mvc_ListAddCubeTail_(pList *Mvc_List_t, pCube *Mvc_Cube_t) {\n    if pList.pHead == nil {\n        pList.pHead = pCube;\n    } else {\n        // inlining of macro Mvc_CubeSetNext\n        ((pList.pTail).pNext = (pCube)); }\n    pList.pTail    = pCube;\n    // inlining of macro Mvc_CubeSetNext\n    ((pCube).pNext = (nil));\n    pList.nItems++;\n}"
+    },
+    {
+      "Name": "Mvc_ListDeleteCube_",
+      "Start": 2288,
+      "End": 2696,
+      "BodyStart": 2375,
+      "Original": "void Mvc_ListDeleteCube_( Mvc_List_t * pList, Mvc_Cube_t * pPrev, Mvc_Cube_t * pCube )\n{\n    if ( pPrev == NULL ) // deleting the head cube\n        pList-\u003epHead = Mvc_CubeReadNext(pCube);\n    else\n        pPrev-\u003epNext = pCube-\u003epNext;\n    if ( pList-\u003epTail == pCube ) // deleting the tail cube\n    {\n        assert( Mvc_CubeReadNext(pCube) == NULL );\n        pList-\u003epTail = pPrev;\n    }\n    pList-\u003enItems--;\n}",
+      "Draft": "func Mvc_ListDeleteCube_(pList *Mvc_List_t, pPrev *Mvc_Cube_t, pCube *Mvc_Cube_t) {\n    if pPrev == nil { // deleting the head cube\n        // inlining of macro Mvc_CubeReadNext\n        pList.pHead = ((pCube).pNext);\n    } else {\n        pPrev.pNext = pCube.pNext; }\n    if pList.pTail == pCube { // deleting the tail cube\n    \n        // inlining of macro Mvc_CubeReadNext\n        assert(((pCube).pNext) == nil, \"/*__starting_point_inline_macro:Mvc_CubeReadNext__*/((pCube).pNext) == nil\");\n        pList.pTail = pPrev;\n    }\n    pList.nItems--;\n}"
+    },
+    {
+      "Name": "Mvc_CoverAddCubeHead_",
+      "Start": 2934,
+      "End": 3314,
+      "BodyStart": 3005,
+      "Original": "void Mvc_CoverAddCubeHead_( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube )\n{\n    Mvc_List_t * pList = \u0026pCover-\u003elCubes;\n    if ( pList-\u003epHead == NULL )\n    {\n        Mvc_CubeSetNext( pCube, NULL );\n        pList-\u003epHead = pCube;\n        pList-\u003epTail = pCube;\n    }\n    else\n    {\n        Mvc_CubeSetNext( pCube, pList-\u003epHead );\n        pList-\u003epHead = pCube;\n    }\n    pList-\u003enItems++;\n}",
+      "Draft": "func Mvc_CoverAddCubeHead_(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n    var pList *Mvc_List_t  = \u0026pCover.lCubes;\n    if pList.pHead == nil {\n        // inlining of macro Mvc_CubeSetNext\n        ((pCube).pNext = (nil));\n        pList.pHead = pCube;\n        pList.pTail = pCube;\n    \n    } else {\n        // inlining of macro Mvc_CubeSetNext\n        ((pCube).pNext = (pList.pHead));\n        pList.pHead = pCube;\n    }\n    pList.nItems++;\n}"
+    },
+    {
+      "Name": "Mvc_CoverAddCubeTail_",
+      "Start": 3550,
+      "End": 3872,
+      "BodyStart": 3621,
+      "Original": "void Mvc_CoverAddCubeTail_( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube )\n{\n    Mvc_List_t * pList = \u0026pCover-\u003elCubes;\n\n    if ( pList-\u003epHead == NULL )\n        pList-\u003epHead = pCube;\n    else\n        Mvc_CubeSetNext( pList-\u003epTail, pCube );\n    pList-\u003epTail    = pCube;\n    Mvc_CubeSetNext( pCube, NULL );\n    pList-\u003enItems++;\n}",
+      "Draft": "func Mvc_CoverAddCubeTail_(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n    var pList *Mvc_List_t  = \u0026pCover.lCubes;\n\n    if pList.pHead == nil {\n        pList.pHead = pCube;\n    } else {\n        // inlining of macro Mvc_CubeSetNext\n        ((pList.pTail).pNext = (pCube)); }\n    pList.pTail    = pCube;\n    // inlining of macro Mvc_CubeSetNext\n    ((pCube).pNext = (nil));\n    pList.nItems++;\n}"
+    },
+    {
+      "Name": "Mvc_CoverDeleteCube_",
+      "Start": 4108,
+      "End": 4563,
+      "BodyStart": 4198,
+      "Original": "void Mvc_CoverDeleteCube_( Mvc_Cover_t * pCover, Mvc_Cube_t * pPrev, Mvc_Cube_t * pCube )\n{\n    Mvc_List_t * pList = \u0026pCover-\u003elCubes;\n \n    if ( pPrev == NULL ) // deleting the head cube\n        pList-\u003epHead = Mvc_CubeReadNext(pCube);\n    else\n        pPrev-\u003epNext = pCube-\u003epNext;\n    if ( pList-\u003epTail == pCube ) // deleting the tail cube\n    {\n        assert( Mvc_CubeReadNext(pCube) == NULL );\n        pList-\u003epTail = pPrev;\n    }\n    pList-\u003enItems--;\n}",
+      "Draft": "func Mvc_CoverDeleteCube_(pCover *Mvc_Cover_t, pPrev *Mvc_Cube_t, pCube *Mvc_Cube_t) {\n    var pList *Mvc_List_t  = \u0026pCover.lCubes;\n \n    if pPrev == nil { // deleting the head cube\n        // inlining of macro Mvc_CubeReadNext\n        pList.pHead = ((pCube).pNext);\n    } else {\n        pPrev.pNext = pCube.pNext; }\n    if pList.pTail == pCube { // deleting the tail cube\n    \n        // inlining of macro Mvc_CubeReadNext\n        assert(((pCube).pNext) == nil, \"/*__starting_point_inline_macro:Mvc_CubeReadNext__*/((pCube).pNext) == nil\");\n        pList.pTail = pPrev;\n    }\n    pList.nItems--;\n}"
+    },
+    {
+      "Name": "Mvc_CoverAddDupCubeHead",
+      "Start": 4801,
+      "End": 5030,
+      "BodyStart": 4874,
+      "Original": "void Mvc_CoverAddDupCubeHead( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube )\n{\n    Mvc_Cube_t * pCubeNew;\n    pCubeNew = Mvc_CubeAlloc( pCover );\n    Mvc_CubeBitCopy( pCubeNew, pCube );\n    Mvc_CoverAddCubeHead( pCover, pCubeNew );\n}",
+      "Draft": "func Mvc_CoverAddDupCubeHead(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n    var pCubeNew *Mvc_Cube_t;\n    pCubeNew = Mvc_CubeAlloc( pCover );\n    // inlining of macro Mvc_CubeBitCopy\n    // inlining of macro Mvc_Cube1Words\n    // inlining of macro Mvc_Cube1BitCopy\n    // inlining of macro Mvc_Cube2Words\n    // inlining of macro Mvc_Cube2BitCopy\n    if  (pCubeNew).iLast == 0     { (((pCubeNew).pData[0]) = ((pCube).pData[0])); }    else if  (pCubeNew).iLast == 1{ (((pCubeNew).pData[0]) = ((pCube).pData[0]));\n// inlining of macro Mvc_CubeNBitCopy\n(((pCubeNew).pData[1])=  ((pCube).pData[1]));; }    else                             { {    var _i_ int32;    for _i_ = (pCubeNew).iLast; _i_ \u003e= 0; _i_-- {        ((pCubeNew).pData[_i_]) = ((pCube).pData[_i_]); }}; };\n    // inlining of macro Mvc_CoverAddCubeHead\n    // inlining of macro Mvc_ListAddCubeHead\n    // inlining of macro Mvc_CubeSetNext\n    {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {        if pList.pHead == nil        {            ((pCubeNew).pNext = (nil));            pList.pHead = pCubeNew;            pList.pTail = pCubeNew;        }        else        {            ((pCubeNew).pNext = (pList.pHead));            pList.pHead = pCubeNew;        }\n        pList.nItems++;    };};\n}"
+    },
+    {
+      "Name": "Mvc_CoverAddDupCubeTail",
+      "Start": 5266,
+      "End": 5688,
+      "BodyStart": 5339,
+      "Original": "void Mvc_CoverAddDupCubeTail( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube )\n{\n    Mvc_Cube_t * pCubeNew;\n    // copy the cube as part of this cover\n    pCubeNew = Mvc_CubeAlloc( pCover );\n    Mvc_CubeBitCopy( pCubeNew, pCube );\n    // clean the last bits of the new cube\n//    pCubeNew-\u003epData[pCubeNew-\u003eiLast] \u0026= (BITS_FULL \u003e\u003e pCubeNew-\u003enUnused);\n    // add the cube at the end\n    Mvc_CoverAddCubeTail( pCover, pCubeNew );\n}",
+      "Draft": "func Mvc_CoverAddDupCubeTail(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n    var pCubeNew *Mvc_Cube_t;\n    // copy the cube as part of this cover\n    pCubeNew = Mvc_CubeAlloc( pCover );\n    // inlining of macro Mvc_CubeBitCopy\n    // inlining of macro Mvc_Cube1Words\n    // inlining of macro Mvc_Cube1BitCopy\n    // inlining of macro Mvc_Cube2Words\n    // inlining of macro Mvc_Cube2BitCopy\n    if  (pCubeNew).iLast == 0     { (((pCubeNew).pData[0]) = ((pCube).pData[0])); }    else if  (pCubeNew).iLast == 1{ (((pCubeNew).pData[0]) = ((pCube).pData[0]));\n// inlining of macro Mvc_CubeNBitCopy\n(((pCubeNew).pData[1])=  ((pCube).pData[1]));; }    else                             { {    var _i_ int32;    for _i_ = (pCubeNew).iLast; _i_ \u003e= 0; _i_-- {        ((pCubeNew).pData[_i_]) = ((pCube).pData[_i_]); }}; };\n    // clean the last bits of the new cube\n//    pCubeNew-\u003epData[pCubeNew-\u003eiLast] \u0026= (BITS_FULL \u003e\u003e pCubeNew-\u003enUnused);\n    // add the cube at the end\n    // inlining of macro Mvc_CoverAddCubeTail\n    // inlining of macro Mvc_ListAddCubeTail\n    // inlining of macro Mvc_CubeSetNext\n    {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeNew; }        else {            ((pList.pTail).pNext = (pCubeNew)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeNew;        ((pCubeNew).pNext = (nil));        pList.nItems++;    };};\n}"
+    },
+    {
+      "Name": "Mvc_CoverAddLiteralsOfCube",
+      "Start": 5925,
+      "End": 6180,
+      "BodyStart": 6001,
+      "Original": "void Mvc_CoverAddLiteralsOfCube( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube )\n{\n//    int iBit, Value;\n//    assert( pCover-\u003epLits );\n//    Mvc_CubeForEachBit( pCover, pCube, iBit, Value )\n//        if ( Value )\n//            pCover-\u003epLits[iBit] += Value;\n}",
+      "Draft": "func Mvc_CoverAddLiteralsOfCube(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n//    int iBit, Value;\n//    assert( pCover-\u003epLits );\n//    Mvc_CubeForEachBit( pCover, pCube, iBit, Value )\n//        if ( Value )\n//            pCover-\u003epLits[iBit] += Value;\n}"
+    },
+    {
+      "Name": "Mvc_CoverDeleteLiteralsOfCube",
+      "Start": 6416,
+      "End": 6674,
+      "BodyStart": 6495,
+      "Original": "void Mvc_CoverDeleteLiteralsOfCube( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube )\n{\n//    int iBit, Value;\n//    assert( pCover-\u003epLits );\n//    Mvc_CubeForEachBit( pCover, pCube, iBit, Value )\n//        if ( Value )\n//            pCover-\u003epLits[iBit] -= Value;\n}",
+      "Draft": "func Mvc_CoverDeleteLiteralsOfCube(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n//    int iBit, Value;\n//    assert( pCover-\u003epLits );\n//    Mvc_CubeForEachBit( pCover, pCube, iBit, Value )\n//        if ( Value )\n//            pCover-\u003epLits[iBit] -= Value;\n}"
+    },
+    {
+      "Name": "Mvc_CoverList2Array",
+      "Start": 6960,
+      "End": 7323,
+      "BodyStart": 7009,
+      "Original": "void Mvc_CoverList2Array( Mvc_Cover_t * pCover )\n{\n    Mvc_Cube_t * pCube;\n    int Counter;\n    // resize storage if necessary\n    Mvc_CoverAllocateArrayCubes( pCover );\n    // iterate through the cubes\n    Counter = 0;\n    Mvc_CoverForEachCube( pCover, pCube )\n        pCover-\u003epCubes[ Counter++ ] = pCube;\n    assert( Counter == Mvc_CoverReadCubeNum(pCover) );\n}",
+      "Draft": "func Mvc_CoverList2Array(pCover *Mvc_Cover_t) {\n    var pCube *Mvc_Cube_t;\n    var Counter int32;\n    // resize storage if necessary\n    Mvc_CoverAllocateArrayCubes( pCover );\n    // iterate through the cubes\n    Counter = 0;\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCube = (pCover).lCubes.pHead;          (pCube != nil);          pCube = pCube.pNext  {\n        pCover.pCubes[ Counter++ ] = pCube;\n    }\n    assert(Counter == Mvc_CoverReadCubeNum(pCover), \"Counter == Mvc_CoverReadCubeNum(pCover)\");\n}"
+    },
+    {
+      "Name": "Mvc_CoverArray2List",
+      "Start": 7604,
+      "End": 8357,
+      "BodyStart": 7653,
+      "Original": "void Mvc_CoverArray2List( Mvc_Cover_t * pCover )\n{\n    Mvc_Cube_t * pCube;\n    int nCubes, i;\n\n    assert( pCover-\u003epCubes );\n\n    nCubes = Mvc_CoverReadCubeNum(pCover);\n    if ( nCubes == 0 )\n        return;\n    if ( nCubes == 1 )\n    {\n        pCube    = pCover-\u003epCubes[0];\n        pCube-\u003epNext = NULL;\n        pCover-\u003elCubes.pHead = pCover-\u003elCubes.pTail = pCube;\n        return;\n    }\n    // set up the first cube\n    pCube = pCover-\u003epCubes[0];\n    pCover-\u003elCubes.pHead = pCube;\n    // set up the last cube\n    pCube = pCover-\u003epCubes[nCubes-1];\n    pCube-\u003epNext = NULL;\n    pCover-\u003elCubes.pTail = pCube;\n\n    // link all cubes starting from the first one\n    for ( i = 0; i \u003c nCubes - 1; i++ )\n        pCover-\u003epCubes[i]-\u003epNext = pCover-\u003epCubes[i+1];\n}",
+      "Draft": "func Mvc_CoverArray2List(pCover *Mvc_Cover_t) {\n    var pCube *Mvc_Cube_t;\n    var nCubes, i int32;\n\n    assert(pCover.pCubes, \"pCover.pCubes\");\n\n    nCubes = Mvc_CoverReadCubeNum(pCover);\n    if nCubes == 0 {\n        return; }\n    if nCubes == 1 {\n        pCube    = pCover.pCubes[0];\n        pCube.pNext = nil;\n        pCover.lCubes.pHead = pCover.lCubes.pTail = pCube;\n        return;\n    }\n    // set up the first cube\n    pCube = pCover.pCubes[0];\n    pCover.lCubes.pHead = pCube;\n    // set up the last cube\n    pCube = pCover.pCubes[nCubes-1];\n    pCube.pNext = nil;\n    pCover.lCubes.pTail = pCube;\n\n    // link all cubes starting from the first one\n    for  i = 0; i \u003c nCubes - 1; i++  {\n        pCover.pCubes[i].pNext = pCover.pCubes[i+1];\n    }\n}"
+    },
+    {
+      "Name": "Mvc_ListGetTailFromHead",
+      "Start": 8647,
+      "End": 8872,
+      "BodyStart": 8706,
+      "Original": "Mvc_Cube_t * Mvc_ListGetTailFromHead( Mvc_Cube_t * pHead )\n{\n    Mvc_Cube_t * pCube, * pTail;\n    for ( pTail = pCube = pHead; \n          pCube; \n          pTail = pCube, pCube = Mvc_CubeReadNext(pCube) );\n    return pTail;\n}",
+      "Draft": "func Mvc_ListGetTailFromHead(pHead *Mvc_Cube_t) *Mvc_Cube_t {\n    var pCube, pTail *Mvc_Cube_t;\n    for  pTail = pCube = pHead; \n          (pCube != nil); \n          // inlining of macro Mvc_CubeReadNext\n          pTail = pCube, pCube = ((pCube).pNext)  {}\n    return pTail;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c::Mvc_ListAddCubeHead_",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_ListAddCubeHead_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1203,
+      "End": 1538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c::Mvc_ListAddCubeTail_",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_ListAddCubeTail_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1775,
+      "End": 2051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c::Mvc_ListDeleteCube_",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_ListDeleteCube_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2288,
+      "End": 2696
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c::Mvc_CoverAddCubeHead_",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverAddCubeHead_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2934,
+      "End": 3314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c::Mvc_CoverAddCubeTail_",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverAddCubeTail_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3550,
+      "End": 3872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c::Mvc_CoverDeleteCube_",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverDeleteCube_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4108,
+      "End": 4563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c::Mvc_CoverAddDupCubeHead",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverAddDupCubeHead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4801,
+      "End": 5030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c::Mvc_CoverAddDupCubeTail",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverAddDupCubeTail",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5266,
+      "End": 5688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c::Mvc_CoverAddLiteralsOfCube",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverAddLiteralsOfCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5925,
+      "End": 6180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c::Mvc_CoverDeleteLiteralsOfCube",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverDeleteLiteralsOfCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6416,
+      "End": 6674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c::Mvc_CoverList2Array",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverList2Array",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6960,
+      "End": 7323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c::Mvc_CoverArray2List",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverArray2List",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7604,
+      "End": 8357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c::Mvc_ListGetTailFromHead",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_ListGetTailFromHead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8647,
+      "End": 8872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcList.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9120
+    }
+  ],
+  "Draft": "package mvc\n\n/**CFile****************************************************************\n\n  FileName    [mvcList.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Manipulating list of cubes in the cover.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: mvcList.c,v 1.4 2003/04/03 06:31:50 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mvc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_ListAddCubeHead_(pList *Mvc_List_t, pCube *Mvc_Cube_t) {\n    if pList.pHead == nil {\n        // inlining of macro Mvc_CubeSetNext\n        ((pCube).pNext = (nil));\n        pList.pHead = pCube;\n        pList.pTail = pCube;\n    \n    } else {\n        // inlining of macro Mvc_CubeSetNext\n        ((pCube).pNext = (pList.pHead));\n        pList.pHead = pCube;\n    }\n    pList.nItems++;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_ListAddCubeTail_(pList *Mvc_List_t, pCube *Mvc_Cube_t) {\n    if pList.pHead == nil {\n        pList.pHead = pCube;\n    } else {\n        // inlining of macro Mvc_CubeSetNext\n        ((pList.pTail).pNext = (pCube)); }\n    pList.pTail    = pCube;\n    // inlining of macro Mvc_CubeSetNext\n    ((pCube).pNext = (nil));\n    pList.nItems++;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_ListDeleteCube_(pList *Mvc_List_t, pPrev *Mvc_Cube_t, pCube *Mvc_Cube_t) {\n    if pPrev == nil { // deleting the head cube\n        // inlining of macro Mvc_CubeReadNext\n        pList.pHead = ((pCube).pNext);\n    } else {\n        pPrev.pNext = pCube.pNext; }\n    if pList.pTail == pCube { // deleting the tail cube\n    \n        // inlining of macro Mvc_CubeReadNext\n        assert(((pCube).pNext) == nil, \"/*__starting_point_inline_macro:Mvc_CubeReadNext__*/((pCube).pNext) == nil\");\n        pList.pTail = pPrev;\n    }\n    pList.nItems--;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverAddCubeHead_(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n    var pList *Mvc_List_t  = \u0026pCover.lCubes;\n    if pList.pHead == nil {\n        // inlining of macro Mvc_CubeSetNext\n        ((pCube).pNext = (nil));\n        pList.pHead = pCube;\n        pList.pTail = pCube;\n    \n    } else {\n        // inlining of macro Mvc_CubeSetNext\n        ((pCube).pNext = (pList.pHead));\n        pList.pHead = pCube;\n    }\n    pList.nItems++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverAddCubeTail_(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n    var pList *Mvc_List_t  = \u0026pCover.lCubes;\n\n    if pList.pHead == nil {\n        pList.pHead = pCube;\n    } else {\n        // inlining of macro Mvc_CubeSetNext\n        ((pList.pTail).pNext = (pCube)); }\n    pList.pTail    = pCube;\n    // inlining of macro Mvc_CubeSetNext\n    ((pCube).pNext = (nil));\n    pList.nItems++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverDeleteCube_(pCover *Mvc_Cover_t, pPrev *Mvc_Cube_t, pCube *Mvc_Cube_t) {\n    var pList *Mvc_List_t  = \u0026pCover.lCubes;\n \n    if pPrev == nil { // deleting the head cube\n        // inlining of macro Mvc_CubeReadNext\n        pList.pHead = ((pCube).pNext);\n    } else {\n        pPrev.pNext = pCube.pNext; }\n    if pList.pTail == pCube { // deleting the tail cube\n    \n        // inlining of macro Mvc_CubeReadNext\n        assert(((pCube).pNext) == nil, \"/*__starting_point_inline_macro:Mvc_CubeReadNext__*/((pCube).pNext) == nil\");\n        pList.pTail = pPrev;\n    }\n    pList.nItems--;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverAddDupCubeHead(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n    var pCubeNew *Mvc_Cube_t;\n    pCubeNew = Mvc_CubeAlloc( pCover );\n    // inlining of macro Mvc_CubeBitCopy\n    // inlining of macro Mvc_Cube1Words\n    // inlining of macro Mvc_Cube1BitCopy\n    // inlining of macro Mvc_Cube2Words\n    // inlining of macro Mvc_Cube2BitCopy\n    if  (pCubeNew).iLast == 0     { (((pCubeNew).pData[0]) = ((pCube).pData[0])); }    else if  (pCubeNew).iLast == 1{ (((pCubeNew).pData[0]) = ((pCube).pData[0]));\n// inlining of macro Mvc_CubeNBitCopy\n(((pCubeNew).pData[1])=  ((pCube).pData[1]));; }    else                             { {    var _i_ int32;    for _i_ = (pCubeNew).iLast; _i_ \u003e= 0; _i_-- {        ((pCubeNew).pData[_i_]) = ((pCube).pData[_i_]); }}; };\n    // inlining of macro Mvc_CoverAddCubeHead\n    // inlining of macro Mvc_ListAddCubeHead\n    // inlining of macro Mvc_CubeSetNext\n    {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {        if pList.pHead == nil        {            ((pCubeNew).pNext = (nil));            pList.pHead = pCubeNew;            pList.pTail = pCubeNew;        }        else        {            ((pCubeNew).pNext = (pList.pHead));            pList.pHead = pCubeNew;        }\n        pList.nItems++;    };};\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverAddDupCubeTail(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n    var pCubeNew *Mvc_Cube_t;\n    // copy the cube as part of this cover\n    pCubeNew = Mvc_CubeAlloc( pCover );\n    // inlining of macro Mvc_CubeBitCopy\n    // inlining of macro Mvc_Cube1Words\n    // inlining of macro Mvc_Cube1BitCopy\n    // inlining of macro Mvc_Cube2Words\n    // inlining of macro Mvc_Cube2BitCopy\n    if  (pCubeNew).iLast == 0     { (((pCubeNew).pData[0]) = ((pCube).pData[0])); }    else if  (pCubeNew).iLast == 1{ (((pCubeNew).pData[0]) = ((pCube).pData[0]));\n// inlining of macro Mvc_CubeNBitCopy\n(((pCubeNew).pData[1])=  ((pCube).pData[1]));; }    else                             { {    var _i_ int32;    for _i_ = (pCubeNew).iLast; _i_ \u003e= 0; _i_-- {        ((pCubeNew).pData[_i_]) = ((pCube).pData[_i_]); }}; };\n    // clean the last bits of the new cube\n//    pCubeNew-\u003epData[pCubeNew-\u003eiLast] \u0026= (BITS_FULL \u003e\u003e pCubeNew-\u003enUnused);\n    // add the cube at the end\n    // inlining of macro Mvc_CoverAddCubeTail\n    // inlining of macro Mvc_ListAddCubeTail\n    // inlining of macro Mvc_CubeSetNext\n    {    var pList *Mvc_List_t  = \u0026pCover.lCubes;    {        if pList.pHead == nil {            pList.pHead = pCubeNew; }        else {            ((pList.pTail).pNext = (pCubeNew)); }\n        // inlining of macro Mvc_CubeSetNext\n        pList.pTail    = pCubeNew;        ((pCubeNew).pNext = (nil));        pList.nItems++;    };};\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverAddLiteralsOfCube(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n//    int iBit, Value;\n//    assert( pCover-\u003epLits );\n//    Mvc_CubeForEachBit( pCover, pCube, iBit, Value )\n//        if ( Value )\n//            pCover-\u003epLits[iBit] += Value;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverDeleteLiteralsOfCube(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n//    int iBit, Value;\n//    assert( pCover-\u003epLits );\n//    Mvc_CubeForEachBit( pCover, pCube, iBit, Value )\n//        if ( Value )\n//            pCover-\u003epLits[iBit] -= Value;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the cubes from the list into the array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverList2Array(pCover *Mvc_Cover_t) {\n    var pCube *Mvc_Cube_t;\n    var Counter int32;\n    // resize storage if necessary\n    Mvc_CoverAllocateArrayCubes( pCover );\n    // iterate through the cubes\n    Counter = 0;\n    // inlining of macro Mvc_CoverForEachCube\n    for  pCube = (pCover).lCubes.pHead;          (pCube != nil);          pCube = pCube.pNext  {\n        pCover.pCubes[ Counter++ ] = pCube;\n    }\n    assert(Counter == Mvc_CoverReadCubeNum(pCover), \"Counter == Mvc_CoverReadCubeNum(pCover)\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the cubes from the array into list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverArray2List(pCover *Mvc_Cover_t) {\n    var pCube *Mvc_Cube_t;\n    var nCubes, i int32;\n\n    assert(pCover.pCubes, \"pCover.pCubes\");\n\n    nCubes = Mvc_CoverReadCubeNum(pCover);\n    if nCubes == 0 {\n        return; }\n    if nCubes == 1 {\n        pCube    = pCover.pCubes[0];\n        pCube.pNext = nil;\n        pCover.lCubes.pHead = pCover.lCubes.pTail = pCube;\n        return;\n    }\n    // set up the first cube\n    pCube = pCover.pCubes[0];\n    pCover.lCubes.pHead = pCube;\n    // set up the last cube\n    pCube = pCover.pCubes[nCubes-1];\n    pCube.pNext = nil;\n    pCover.lCubes.pTail = pCube;\n\n    // link all cubes starting from the first one\n    for  i = 0; i \u003c nCubes - 1; i++  {\n        pCover.pCubes[i].pNext = pCover.pCubes[i+1];\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the tail of the linked list given by the head.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_ListGetTailFromHead(pHead *Mvc_Cube_t) *Mvc_Cube_t {\n    var pCube, pTail *Mvc_Cube_t;\n    for  pTail = pCube = pHead; \n          (pCube != nil); \n          // inlining of macro Mvc_CubeReadNext\n          pTail = pCube, pCube = ((pCube).pNext)  {}\n    return pTail;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

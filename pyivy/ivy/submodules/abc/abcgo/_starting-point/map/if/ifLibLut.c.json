@@ -1,0 +1,931 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c",
+  "SHA256": "64cb250f557636fa2eaa4f0c0af6d0af962d087b58bd42cb3cdc14f52098b00c",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 71,
+        "Column": 9,
+        "ByteOffset": 1887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( If_LibLut_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 1920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(If_LibLut_t) );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 80,
+        "Column": 18,
+        "ByteOffset": 2152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( pBuffer, \" \\t\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 13,
+        "ByteOffset": 2394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p.pName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 88,
+        "Column": 13,
+        "ByteOffset": 2427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 13,
+        "ByteOffset": 2454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( pStrMem );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 18,
+        "ByteOffset": 2582
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( nil, \" \\t\\n\" );"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 96,
+        "Column": 34,
+        "ByteOffset": 2639
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pLutAreas[i] = float32(atof(pToken));"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 101,
+        "Column": 44,
+        "ByteOffset": 2784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pLutDelays[i][k++] = float32(atof(pToken));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 13,
+        "ByteOffset": 2967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p.pName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 13,
+        "ByteOffset": 3000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 13,
+        "ByteOffset": 3027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( pStrMem );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 13,
+        "ByteOffset": 3334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p.pName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 13,
+        "ByteOffset": 3367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 13,
+        "ByteOffset": 3394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( pStrMem );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 153,
+        "Column": 5,
+        "ByteOffset": 4632
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pStrMem );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 172,
+        "Column": 9,
+        "ByteOffset": 5147
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Reading LUT library from string has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 172,
+        "Column": 18,
+        "ByteOffset": 5156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Reading LUT library from string has failed.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 205,
+        "Column": 13,
+        "ByteOffset": 6163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( FileName, \"r\" );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 211,
+        "Column": 9,
+        "ByteOffset": 6321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( If_LibLut_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 212,
+        "Column": 5,
+        "ByteOffset": 6354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(If_LibLut_t) );"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 216,
+        "Column": 10,
+        "ByteOffset": 6454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fgets( pBuffer, 1000, pFile ) != nil  {"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 18,
+        "ByteOffset": 6511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( pBuffer, \" \\t\\n\" );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 13,
+        "ByteOffset": 6768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p.pName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 13,
+        "ByteOffset": 6801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 226,
+        "Column": 13,
+        "ByteOffset": 6828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose( pFile );"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 231,
+        "Column": 18,
+        "ByteOffset": 6918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pToken = strtok( nil, \" \\t\\n\" );"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 232,
+        "Column": 34,
+        "ByteOffset": 6975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        p.pLutAreas[i] = float32(atof(pToken));"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 237,
+        "Column": 44,
+        "ByteOffset": 7120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pLutDelays[i][k++] = float32(atof(pToken));"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 13,
+        "ByteOffset": 7211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p.pName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 13,
+        "ByteOffset": 7244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 245,
+        "Column": 13,
+        "ByteOffset": 7363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose( pFile );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 13,
+        "ByteOffset": 7560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p.pName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 13,
+        "ByteOffset": 7593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE( p );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 257,
+        "Column": 13,
+        "ByteOffset": 7692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose( pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 286,
+        "Column": 5,
+        "ByteOffset": 8877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 303,
+        "Column": 12,
+        "ByteOffset": 9259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNew = ABC_ALLOC( If_LibLut_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 5,
+        "ByteOffset": 9716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pLutLib.pName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 324,
+        "Column": 5,
+        "ByteOffset": 9747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pLutLib );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 432,
+        "Column": 5,
+        "ByteOffset": 13314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nLutSize \u003e= 3 \u0026\u0026 nLutSize \u003c= 10 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_LibLutReadString",
+      "Start": 1321,
+      "End": 4719,
+      "BodyStart": 1370,
+      "Original": "If_LibLut_t * If_LibLutReadString( char * pStr )\n{\n    If_LibLut_t * p;\n    Vec_Ptr_t * vStrs;\n    char * pToken, * pBuffer, * pStrNew, * pStrMem;\n    int i, k, j;\n\n    if ( pStr == NULL || pStr[0] == 0 )\n        return NULL;\n\n    vStrs = Vec_PtrAlloc( 1000 );\n    pStrNew = pStrMem = Abc_UtilStrsav( pStr );\n    while ( *pStrNew )\n    {\n        Vec_PtrPush( vStrs, pStrNew );\n        while ( *pStrNew != '\\n' )\n            pStrNew++;\n        while ( *pStrNew == '\\n' )\n            *pStrNew++ = '\\0';\n    }\n\n    p = ABC_ALLOC( If_LibLut_t, 1 );\n    memset( p, 0, sizeof(If_LibLut_t) );\n\n    i = 1;\n    //while ( fgets( pBuffer, 1000, pFile ) != NULL )\n    Vec_PtrForEachEntry( char *, vStrs, pBuffer, j )\n    {\n        if ( pBuffer[0] == 0 )\n            continue;\n        pToken = strtok( pBuffer, \" \\t\\n\" );\n        if ( pToken == NULL )\n            continue;\n        if ( pToken[0] == '#' )\n            continue;\n        if ( i != atoi(pToken) )\n        {\n            Abc_Print( 1, \"Error in the LUT library string.\\n\" );\n            ABC_FREE( p-\u003epName );\n            ABC_FREE( p );\n            ABC_FREE( pStrMem );\n            Vec_PtrFree( vStrs );\n            return NULL;\n        }\n\n        // read area\n        pToken = strtok( NULL, \" \\t\\n\" );\n        p-\u003epLutAreas[i] = (float)atof(pToken);\n\n        // read delays\n        k = 0;\n        while ( (pToken = strtok( NULL, \" \\t\\n\" )) )\n            p-\u003epLutDelays[i][k++] = (float)atof(pToken);\n\n        // check for out-of-bound\n        if ( k \u003e i )\n        {\n            Abc_Print( 1, \"LUT %d has too many pins (%d). Max allowed is %d.\\n\", i, k, i );\n            ABC_FREE( p-\u003epName );\n            ABC_FREE( p );\n            ABC_FREE( pStrMem );\n            Vec_PtrFree( vStrs );\n            return NULL;\n        }\n\n        // check if var delays are specified\n        if ( k \u003e 1 )\n            p-\u003efVarPinDelays = 1;\n\n        if ( i == IF_MAX_LUTSIZE )\n        {\n            Abc_Print( 1, \"Skipping LUTs of size more than %d.\\n\", i );\n            ABC_FREE( p-\u003epName );\n            ABC_FREE( p );\n            ABC_FREE( pStrMem );\n            Vec_PtrFree( vStrs );\n            return NULL;\n        }\n        i++;\n    }\n    p-\u003eLutMax = i-1;\n\n    // check the library\n    if ( p-\u003efVarPinDelays )\n    {\n        for ( i = 1; i \u003c= p-\u003eLutMax; i++ )\n            for ( k = 0; k \u003c i; k++ )\n            {\n                if ( p-\u003epLutDelays[i][k] \u003c= 0.0 )\n                    Abc_Print( 0, \"Pin %d of LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", \n                        k, i, p-\u003epLutDelays[i][k] );\n                if ( k \u0026\u0026 p-\u003epLutDelays[i][k-1] \u003e p-\u003epLutDelays[i][k] )\n                    Abc_Print( 0, \"Pin %d of LUT %d has delay %f. Pin %d of LUT %d has delay %f. Pin delays should be in non-decreasing order. Technology mapping may not work correctly.\\n\", \n                        k-1, i, p-\u003epLutDelays[i][k-1], \n                        k, i, p-\u003epLutDelays[i][k] );\n            }\n    }\n    else\n    {\n        for ( i = 1; i \u003c= p-\u003eLutMax; i++ )\n        {\n            if ( p-\u003epLutDelays[i][0] \u003c= 0.0 )\n                Abc_Print( 0, \"LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", \n                    i, p-\u003epLutDelays[i][0] );\n        }\n    }\n\n    // cleanup\n    ABC_FREE( pStrMem );\n    Vec_PtrFree( vStrs );\n    return p;\n}",
+      "Draft": "func If_LibLutReadString(pStr string) *If_LibLut_t {\n    var p *If_LibLut_t;\n    var vStrs *Vec_Ptr_t;\n    var pToken, pBuffer, pStrNew, pStrMem string;\n    var i, k, j int32;\n\n    if pStr == nil || pStr[0] == 0 {\n        return nil; }\n\n    vStrs = Vec_PtrAlloc( 1000 );\n    pStrNew = pStrMem = Abc_UtilStrsav( pStr );\n    for  *pStrNew  {\n        Vec_PtrPush( vStrs, pStrNew );\n        for  *pStrNew != '\\n'  {\n            pStrNew++;\n        }\n        for  *pStrNew == '\\n'  {\n            *pStrNew++ = '\\0';\n        }\n    }\n\n    p = new(If_LibLut_t);\n    memset( p, 0, sizeof(If_LibLut_t) );\n\n    i = 1;\n    //while ( fgets( pBuffer, 1000, pFile ) != NULL )\n    Vec_PtrForEachEntry( char *, vStrs, pBuffer, j )\n    {\n        if pBuffer[0] == 0 {\n            continue; }\n        pToken = strtok( pBuffer, \" \\t\\n\" );\n        if pToken == nil {\n            continue; }\n        if pToken[0] == '#' {\n            continue; }\n        if i != atoi(pToken) {\n            Abc_Print( 1, \"Error in the LUT library string.\\n\" );\n            ABC_FREE( p.pName );\n            ABC_FREE( p );\n            ABC_FREE( pStrMem );\n            Vec_PtrFree( vStrs );\n            return nil;\n        }\n\n        // read area\n        pToken = strtok( nil, \" \\t\\n\" );\n        p.pLutAreas[i] = float32(atof(pToken));\n\n        // read delays\n        k = 0;\n        for  pToken = strtok( nil, \" \\t\\n\" )  {\n            p.pLutDelays[i][k++] = float32(atof(pToken));\n        }\n\n        // check for out-of-bound\n        if k \u003e i {\n            Abc_Print( 1, \"LUT %d has too many pins (%d). Max allowed is %d.\\n\", i, k, i );\n            ABC_FREE( p.pName );\n            ABC_FREE( p );\n            ABC_FREE( pStrMem );\n            Vec_PtrFree( vStrs );\n            return nil;\n        }\n\n        // check if var delays are specified\n        if k \u003e 1 {\n            p.fVarPinDelays = 1; }\n\n        if i == IF_MAX_LUTSIZE {\n            Abc_Print( 1, \"Skipping LUTs of size more than %d.\\n\", i );\n            ABC_FREE( p.pName );\n            ABC_FREE( p );\n            ABC_FREE( pStrMem );\n            Vec_PtrFree( vStrs );\n            return nil;\n        }\n        i++;\n    }\n    p.LutMax = i-1;\n\n    // check the library\n    if p.fVarPinDelays {\n        for  i = 1; i \u003c= p.LutMax; i++  {\n            for  k = 0; k \u003c i; k++  {\n                if p.pLutDelays[i][k] \u003c= 0.0 {\n                    Abc_Print( 0, \"Pin %d of LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", \n                        k, i, p.pLutDelays[i][k] ); }\n                if (k != 0) \u0026\u0026 p.pLutDelays[i][k-1] \u003e p.pLutDelays[i][k] {\n                    Abc_Print( 0, \"Pin %d of LUT %d has delay %f. Pin %d of LUT %d has delay %f. Pin delays should be in non-decreasing order. Technology mapping may not work correctly.\\n\", \n                        k-1, i, p.pLutDelays[i][k-1], \n                        k, i, p.pLutDelays[i][k] ); }\n            }\n        }\n    \n    } else {\n        for  i = 1; i \u003c= p.LutMax; i++  {\n            if p.pLutDelays[i][0] \u003c= 0.0 {\n                Abc_Print( 0, \"LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", \n                    i, p.pLutDelays[i][0] ); }\n        }\n    }\n\n    // cleanup\n    ABC_FREE( pStrMem );\n    Vec_PtrFree( vStrs );\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_FrameSetLutLibrary",
+      "Start": 4999,
+      "End": 5406,
+      "BodyStart": 5070,
+      "Original": "int Abc_FrameSetLutLibrary( Abc_Frame_t * pAbc, char * pLutLibString )\n{\n    If_LibLut_t * pLib = If_LibLutReadString( pLutLibString );\n    if ( pLib == NULL )\n    {\n        fprintf( stdout, \"Reading LUT library from string has failed.\\n\" );\n        return 0;\n    }\n    // replace the current library\n    If_LibLutFree( (If_LibLut_t *)Abc_FrameReadLibLut() );\n    Abc_FrameSetLibLut( pLib );\n    return 1;\n}",
+      "Draft": "func Abc_FrameSetLutLibrary(pAbc *Abc_Frame_t, pLutLibString string) int32 {\n    var pLib *If_LibLut_t  = If_LibLutReadString( pLutLibString );\n    if pLib == nil {\n        fmt.Fprintf(os.Stdout, \"Reading LUT library from string has failed.\\n\");\n        return 0;\n    }\n    // replace the current library\n    If_LibLutFree( (If_LibLut_t *)Abc_FrameReadLibLut() );\n    Abc_FrameSetLibLut( pLib );\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_FrameSetLutLibraryTest",
+      "Start": 5407,
+      "End": 5704,
+      "BodyStart": 5460,
+      "Original": "int Abc_FrameSetLutLibraryTest( Abc_Frame_t * pAbc )\n{\n    char * pStr = \"1 1.00  1000\\n2 1.00  1000 1200\\n3 1.00  1000 1200 1400\\n4 1.00  1000 1200 1400 1600\\n5 1.00  1000 1200 1400 1600 1800\\n6 1.00  1000 1200 1400 1600 1800 2000\\n\\n\\n\";\n    Abc_FrameSetLutLibrary( pAbc, pStr );\n    return 1;\n}",
+      "Draft": "func Abc_FrameSetLutLibraryTest(pAbc *Abc_Frame_t) int32 {\n    var pStr string  = \"1 1.00  1000\\n2 1.00  1000 1200\\n3 1.00  1000 1200 1400\\n4 1.00  1000 1200 1400 1600\\n5 1.00  1000 1200 1400 1600 1800\\n6 1.00  1000 1200 1400 1600 1800 2000\\n\\n\\n\";\n    Abc_FrameSetLutLibrary( pAbc, pStr );\n    return 1;\n}"
+    },
+    {
+      "Name": "If_LibLutRead",
+      "Start": 5997,
+      "End": 8987,
+      "BodyStart": 6044,
+      "Original": "If_LibLut_t * If_LibLutRead( char * FileName )\n{\n    char pBuffer[1000], * pToken;\n    If_LibLut_t * p;\n    FILE * pFile;\n    int i, k;\n\n    pFile = fopen( FileName, \"r\" );\n    if ( pFile == NULL )\n    {\n        Abc_Print( -1, \"Cannot open LUT library file \\\"%s\\\".\\n\", FileName );\n        return NULL;\n    }\n\n    p = ABC_ALLOC( If_LibLut_t, 1 );\n    memset( p, 0, sizeof(If_LibLut_t) );\n    p-\u003epName = Abc_UtilStrsav( FileName );\n\n    i = 1;\n    while ( fgets( pBuffer, 1000, pFile ) != NULL )\n    {\n        pToken = strtok( pBuffer, \" \\t\\n\" );\n        if ( pToken == NULL )\n            continue;\n        if ( pToken[0] == '#' )\n            continue;\n        if ( i != atoi(pToken) )\n        {\n            Abc_Print( 1, \"Error in the LUT library file \\\"%s\\\".\\n\", FileName );\n            ABC_FREE( p-\u003epName );\n            ABC_FREE( p );\n            fclose( pFile );\n            return NULL;\n        }\n\n        // read area\n        pToken = strtok( NULL, \" \\t\\n\" );\n        p-\u003epLutAreas[i] = (float)atof(pToken);\n\n        // read delays\n        k = 0;\n        while ( (pToken = strtok( NULL, \" \\t\\n\" )) )\n            p-\u003epLutDelays[i][k++] = (float)atof(pToken);\n\n        // check for out-of-bound\n        if ( k \u003e i )\n        {\n            ABC_FREE( p-\u003epName );\n            ABC_FREE( p );\n            Abc_Print( 1, \"LUT %d has too many pins (%d). Max allowed is %d.\\n\", i, k, i );\n            fclose( pFile );\n            return NULL;\n        }\n\n        // check if var delays are specified\n        if ( k \u003e 1 )\n            p-\u003efVarPinDelays = 1;\n\n        if ( i == IF_MAX_LUTSIZE )\n        {\n            ABC_FREE( p-\u003epName );\n            ABC_FREE( p );\n            Abc_Print( 1, \"Skipping LUTs of size more than %d.\\n\", i );\n            fclose( pFile );\n            return NULL;\n        }\n        i++;\n    }\n    p-\u003eLutMax = i-1;\n\n    // check the library\n    if ( p-\u003efVarPinDelays )\n    {\n        for ( i = 1; i \u003c= p-\u003eLutMax; i++ )\n            for ( k = 0; k \u003c i; k++ )\n            {\n                if ( p-\u003epLutDelays[i][k] \u003c= 0.0 )\n                    Abc_Print( 0, \"Pin %d of LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", \n                        k, i, p-\u003epLutDelays[i][k] );\n                if ( k \u0026\u0026 p-\u003epLutDelays[i][k-1] \u003e p-\u003epLutDelays[i][k] )\n                    Abc_Print( 0, \"Pin %d of LUT %d has delay %f. Pin %d of LUT %d has delay %f. Pin delays should be in non-decreasing order. Technology mapping may not work correctly.\\n\", \n                        k-1, i, p-\u003epLutDelays[i][k-1], \n                        k, i, p-\u003epLutDelays[i][k] );\n            }\n    }\n    else\n    {\n        for ( i = 1; i \u003c= p-\u003eLutMax; i++ )\n        {\n            if ( p-\u003epLutDelays[i][0] \u003c= 0.0 )\n                Abc_Print( 0, \"LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", \n                    i, p-\u003epLutDelays[i][0] );\n        }\n    }\n\n    fclose( pFile );\n    return p;\n}",
+      "Draft": "func If_LibLutRead(FileName string) *If_LibLut_t {\n    var pBuffer [1000]byte;\n    var pToken string;\n    var p *If_LibLut_t;\n    var pFile *os.File;\n    var i, k int32;\n\n    pFile = os.Open(FileName);\n    if pFile == nil {\n        Abc_Print( -1, \"Cannot open LUT library file \\\"%s\\\".\\n\", FileName );\n        return nil;\n    }\n\n    p = new(If_LibLut_t);\n    memset( p, 0, sizeof(If_LibLut_t) );\n    p.pName = Abc_UtilStrsav( FileName );\n\n    i = 1;\n    for  fgets( pBuffer, 1000, pFile ) != nil  {\n        pToken = strtok( pBuffer, \" \\t\\n\" );\n        if pToken == nil {\n            continue; }\n        if pToken[0] == '#' {\n            continue; }\n        if i != atoi(pToken) {\n            Abc_Print( 1, \"Error in the LUT library file \\\"%s\\\".\\n\", FileName );\n            ABC_FREE( p.pName );\n            ABC_FREE( p );\n            _ = (pFile).Close();\n            return nil;\n        }\n\n        // read area\n        pToken = strtok( nil, \" \\t\\n\" );\n        p.pLutAreas[i] = float32(atof(pToken));\n\n        // read delays\n        k = 0;\n        for  pToken = strtok( nil, \" \\t\\n\" )  {\n            p.pLutDelays[i][k++] = float32(atof(pToken));\n        }\n\n        // check for out-of-bound\n        if k \u003e i {\n            ABC_FREE( p.pName );\n            ABC_FREE( p );\n            Abc_Print( 1, \"LUT %d has too many pins (%d). Max allowed is %d.\\n\", i, k, i );\n            _ = (pFile).Close();\n            return nil;\n        }\n\n        // check if var delays are specified\n        if k \u003e 1 {\n            p.fVarPinDelays = 1; }\n\n        if i == IF_MAX_LUTSIZE {\n            ABC_FREE( p.pName );\n            ABC_FREE( p );\n            Abc_Print( 1, \"Skipping LUTs of size more than %d.\\n\", i );\n            _ = (pFile).Close();\n            return nil;\n        }\n        i++;\n    }\n    p.LutMax = i-1;\n\n    // check the library\n    if p.fVarPinDelays {\n        for  i = 1; i \u003c= p.LutMax; i++  {\n            for  k = 0; k \u003c i; k++  {\n                if p.pLutDelays[i][k] \u003c= 0.0 {\n                    Abc_Print( 0, \"Pin %d of LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", \n                        k, i, p.pLutDelays[i][k] ); }\n                if (k != 0) \u0026\u0026 p.pLutDelays[i][k-1] \u003e p.pLutDelays[i][k] {\n                    Abc_Print( 0, \"Pin %d of LUT %d has delay %f. Pin %d of LUT %d has delay %f. Pin delays should be in non-decreasing order. Technology mapping may not work correctly.\\n\", \n                        k-1, i, p.pLutDelays[i][k-1], \n                        k, i, p.pLutDelays[i][k] ); }\n            }\n        }\n    \n    } else {\n        for  i = 1; i \u003c= p.LutMax; i++  {\n            if p.pLutDelays[i][0] \u003c= 0.0 {\n                Abc_Print( 0, \"LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", \n                    i, p.pLutDelays[i][0] ); }\n        }\n    }\n\n    _ = (pFile).Close();\n    return p;\n}"
+    },
+    {
+      "Name": "If_LibLutDup",
+      "Start": 9250,
+      "End": 9445,
+      "BodyStart": 9296,
+      "Original": "If_LibLut_t * If_LibLutDup( If_LibLut_t * p )\n{\n    If_LibLut_t * pNew;\n    pNew = ABC_ALLOC( If_LibLut_t, 1 );\n    *pNew = *p;\n    pNew-\u003epName = Abc_UtilStrsav( pNew-\u003epName );\n    return pNew;\n}",
+      "Draft": "func If_LibLutDup(p *If_LibLut_t) *If_LibLut_t {\n    var pNew *If_LibLut_t;\n    pNew = new(If_LibLut_t);\n    *pNew = *p;\n    pNew.pName = Abc_UtilStrsav( pNew.pName );\n    return pNew;\n}"
+    },
+    {
+      "Name": "If_LibLutFree",
+      "Start": 9703,
+      "End": 9850,
+      "BodyStart": 9747,
+      "Original": "void If_LibLutFree( If_LibLut_t * pLutLib )\n{\n    if ( pLutLib == NULL )\n        return;\n    ABC_FREE( pLutLib-\u003epName );\n    ABC_FREE( pLutLib );\n}",
+      "Draft": "func If_LibLutFree(pLutLib *If_LibLut_t) {\n    if pLutLib == nil {\n        return; }\n    ABC_FREE( pLutLib.pName );\n    ABC_FREE( pLutLib );\n}"
+    },
+    {
+      "Name": "If_LibLutPrint",
+      "Start": 10110,
+      "End": 10770,
+      "BodyStart": 10155,
+      "Original": "void If_LibLutPrint( If_LibLut_t * pLutLib )\n{\n    int i, k;\n    Abc_Print( 1, \"# The area/delay of k-variable LUTs:\\n\" );\n    Abc_Print( 1, \"# k    area     delay\\n\" );\n    if ( pLutLib-\u003efVarPinDelays )\n    {\n        for ( i = 1; i \u003c= pLutLib-\u003eLutMax; i++ )\n        {\n            Abc_Print( 1, \"%d   %7.2f  \", i, pLutLib-\u003epLutAreas[i] );\n            for ( k = 0; k \u003c i; k++ )\n                Abc_Print( 1, \" %7.2f\", pLutLib-\u003epLutDelays[i][k] );\n            Abc_Print( 1, \"\\n\" );\n        }\n    }\n    else\n        for ( i = 1; i \u003c= pLutLib-\u003eLutMax; i++ )\n            Abc_Print( 1, \"%d   %7.2f   %7.2f\\n\", i, pLutLib-\u003epLutAreas[i], pLutLib-\u003epLutDelays[i][0] );\n}",
+      "Draft": "func If_LibLutPrint(pLutLib *If_LibLut_t) {\n    var i, k int32;\n    Abc_Print( 1, \"# The area/delay of k-variable LUTs:\\n\" );\n    Abc_Print( 1, \"# k    area     delay\\n\" );\n    if pLutLib.fVarPinDelays {\n        for  i = 1; i \u003c= pLutLib.LutMax; i++  {\n            Abc_Print( 1, \"%d   %7.2f  \", i, pLutLib.pLutAreas[i] );\n            for  k = 0; k \u003c i; k++  {\n                Abc_Print( 1, \" %7.2f\", pLutLib.pLutDelays[i][k] );\n            }\n            Abc_Print( 1, \"\\n\" );\n        }\n    \n    } else {\n        for  i = 1; i \u003c= pLutLib.LutMax; i++  {\n            Abc_Print( 1, \"%d   %7.2f   %7.2f\\n\", i, pLutLib.pLutAreas[i], pLutLib.pLutDelays[i][0] );\n        } }\n}"
+    },
+    {
+      "Name": "If_LibLutDelaysAreDiscrete",
+      "Start": 11043,
+      "End": 11312,
+      "BodyStart": 11099,
+      "Original": "int If_LibLutDelaysAreDiscrete( If_LibLut_t * pLutLib )\n{\n    float Delay;\n    int i;\n    for ( i = 1; i \u003c= pLutLib-\u003eLutMax; i++ )\n    {\n        Delay = pLutLib-\u003epLutDelays[i][0];\n        if ( ((float)((int)Delay)) != Delay )\n            return 0;\n    }\n    return 1;\n}",
+      "Draft": "func If_LibLutDelaysAreDiscrete(pLutLib *If_LibLut_t) int32 {\n    var Delay float32;\n    var i int32;\n    for  i = 1; i \u003c= pLutLib.LutMax; i++  {\n        Delay = pLutLib.pLutDelays[i][0];\n        if (float32((int32(Delay)))) != Delay {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "If_LibLutDelaysAreDifferent",
+      "Start": 11585,
+      "End": 12077,
+      "BodyStart": 11642,
+      "Original": "int If_LibLutDelaysAreDifferent( If_LibLut_t * pLutLib )\n{\n    int i, k;\n    float Delay = pLutLib-\u003epLutDelays[1][0];\n    if ( pLutLib-\u003efVarPinDelays )\n    {\n        for ( i = 2; i \u003c= pLutLib-\u003eLutMax; i++ )\n        for ( k = 0; k \u003c i; k++ )\n            if ( pLutLib-\u003epLutDelays[i][k] != Delay )\n                return 1;\n    }\n    else\n    {\n        for ( i = 2; i \u003c= pLutLib-\u003eLutMax; i++ )\n            if ( pLutLib-\u003epLutDelays[i][0] != Delay )\n                return 1;\n    }\n    return 0;\n}",
+      "Draft": "func If_LibLutDelaysAreDifferent(pLutLib *If_LibLut_t) int32 {\n    var i, k int32;\n    var Delay float32  = pLutLib.pLutDelays[1][0];\n    if pLutLib.fVarPinDelays {\n        for  i = 2; i \u003c= pLutLib.LutMax; i++  {\n        for  k = 0; k \u003c i; k++  {\n            if pLutLib.pLutDelays[i][k] != Delay {\n                return 1; }\n        }\n        }\n    \n    } else {\n        for  i = 2; i \u003c= pLutLib.LutMax; i++  {\n            if pLutLib.pLutDelays[i][0] != Delay {\n                return 1; }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "If_LibLutSetSimple",
+      "Start": 12337,
+      "End": 13782,
+      "BodyStart": 12386,
+      "Original": "If_LibLut_t * If_LibLutSetSimple( int nLutSize )\n{\n    If_LibLut_t s_LutLib10= { \"lutlib\",10, 0, {0,1,1,1,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1},{1},{1},{1}} };\n    If_LibLut_t s_LutLib9 = { \"lutlib\", 9, 0, {0,1,1,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1},{1},{1}} };\n    If_LibLut_t s_LutLib8 = { \"lutlib\", 8, 0, {0,1,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1},{1}} };\n    If_LibLut_t s_LutLib7 = { \"lutlib\", 7, 0, {0,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1}} };\n    If_LibLut_t s_LutLib6 = { \"lutlib\", 6, 0, {0,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1}} };\n    If_LibLut_t s_LutLib5 = { \"lutlib\", 5, 0, {0,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1}} };\n    If_LibLut_t s_LutLib4 = { \"lutlib\", 4, 0, {0,1,1,1,1}, {{0},{1},{1},{1},{1}} };\n    If_LibLut_t s_LutLib3 = { \"lutlib\", 3, 0, {0,1,1,1}, {{0},{1},{1},{1}} };\n    If_LibLut_t * pLutLib;\n    assert( nLutSize \u003e= 3 \u0026\u0026 nLutSize \u003c= 10 );\n    switch ( nLutSize )\n    {\n        case 3:  pLutLib = \u0026s_LutLib3; break;\n        case 4:  pLutLib = \u0026s_LutLib4; break;\n        case 5:  pLutLib = \u0026s_LutLib5; break;\n        case 6:  pLutLib = \u0026s_LutLib6; break;\n        case 7:  pLutLib = \u0026s_LutLib7; break;\n        case 8:  pLutLib = \u0026s_LutLib8; break;\n        case 9:  pLutLib = \u0026s_LutLib9; break;\n        case 10: pLutLib = \u0026s_LutLib10; break;\n        default: pLutLib = NULL; break;\n    }\n    if ( pLutLib == NULL )\n        return NULL;\n    return If_LibLutDup(pLutLib);\n}",
+      "Draft": "func If_LibLutSetSimple(nLutSize int32) *If_LibLut_t {\n    var s_LutLib10 If_LibLut_t = If_LibLut_t{ \"lutlib\",10, 0, {0,1,1,1,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1},{1},{1},{1}} };\n    var s_LutLib9 If_LibLut_t  = If_LibLut_t{ \"lutlib\", 9, 0, {0,1,1,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1},{1},{1}} };\n    var s_LutLib8 If_LibLut_t  = If_LibLut_t{ \"lutlib\", 8, 0, {0,1,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1},{1}} };\n    var s_LutLib7 If_LibLut_t  = If_LibLut_t{ \"lutlib\", 7, 0, {0,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1}} };\n    var s_LutLib6 If_LibLut_t  = If_LibLut_t{ \"lutlib\", 6, 0, {0,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1}} };\n    var s_LutLib5 If_LibLut_t  = If_LibLut_t{ \"lutlib\", 5, 0, {0,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1}} };\n    var s_LutLib4 If_LibLut_t  = If_LibLut_t{ \"lutlib\", 4, 0, {0,1,1,1,1}, {{0},{1},{1},{1},{1}} };\n    var s_LutLib3 If_LibLut_t  = If_LibLut_t{ \"lutlib\", 3, 0, {0,1,1,1}, {{0},{1},{1},{1}} };\n    var pLutLib *If_LibLut_t;\n    assert(nLutSize \u003e= 3 \u0026\u0026 nLutSize \u003c= 10, \"nLutSize \u003e= 3 \u0026\u0026 nLutSize \u003c= 10\");\n    switch  nLutSize  {\n        case 3:  pLutLib = \u0026s_LutLib3; break;\n        case 4:  pLutLib = \u0026s_LutLib4; break;\n        case 5:  pLutLib = \u0026s_LutLib5; break;\n        case 6:  pLutLib = \u0026s_LutLib6; break;\n        case 7:  pLutLib = \u0026s_LutLib7; break;\n        case 8:  pLutLib = \u0026s_LutLib8; break;\n        case 9:  pLutLib = \u0026s_LutLib9; break;\n        case 10: pLutLib = \u0026s_LutLib10; break;\n        default: pLutLib = nil; break;\n    }\n    if pLutLib == nil {\n        return nil; }\n    return If_LibLutDup(pLutLib);\n}"
+    },
+    {
+      "Name": "If_LibLutFastestPinDelay",
+      "Start": 14052,
+      "End": 14155,
+      "BodyStart": 14102,
+      "Original": "float If_LibLutFastestPinDelay( If_LibLut_t * p )\n{\n    return !p? 1.0 : p-\u003epLutDelays[p-\u003eLutMax][0];\n}",
+      "Draft": "func If_LibLutFastestPinDelay(p *If_LibLut_t) float32 {\n    if !(p != nil) {\n        return 1.0;\n    } else {\n        return p.pLutDelays[p.LutMax][0];\n    }\n}"
+    },
+    {
+      "Name": "If_LibLutSlowestPinDelay",
+      "Start": 14425,
+      "End": 14587,
+      "BodyStart": 14475,
+      "Original": "float If_LibLutSlowestPinDelay( If_LibLut_t * p )\n{\n    return !p? 1.0 : (p-\u003efVarPinDelays? p-\u003epLutDelays[p-\u003eLutMax][p-\u003eLutMax-1]: p-\u003epLutDelays[p-\u003eLutMax][0]);\n}",
+      "Draft": "func If_LibLutSlowestPinDelay(p *If_LibLut_t) float32 {\n    if !(p != nil) {\n        return 1.0;\n    } else {\n        if p.fVarPinDelays {\n            return p.pLutDelays[p.LutMax][p.LutMax-1];\n        } else {\n            return p.pLutDelays[p.LutMax][0];\n        }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::mechanical::sizeof::1884",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1884,
+      "End": 1890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::mechanical::sizeof::6361",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6361,
+      "End": 6367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::pointer-cast::5319",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5319,
+      "End": 5334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::If_LibLutReadString",
+      "Category": "semantic-review",
+      "Symbol": "If_LibLutReadString",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1321,
+      "End": 4719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::Abc_FrameSetLutLibrary",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetLutLibrary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4999,
+      "End": 5406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::Abc_FrameSetLutLibraryTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FrameSetLutLibraryTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5407,
+      "End": 5704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::If_LibLutRead",
+      "Category": "semantic-review",
+      "Symbol": "If_LibLutRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5997,
+      "End": 8987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::If_LibLutDup",
+      "Category": "semantic-review",
+      "Symbol": "If_LibLutDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9250,
+      "End": 9445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::If_LibLutFree",
+      "Category": "semantic-review",
+      "Symbol": "If_LibLutFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9703,
+      "End": 9850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::If_LibLutPrint",
+      "Category": "semantic-review",
+      "Symbol": "If_LibLutPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10110,
+      "End": 10770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::If_LibLutDelaysAreDiscrete",
+      "Category": "semantic-review",
+      "Symbol": "If_LibLutDelaysAreDiscrete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11043,
+      "End": 11312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::If_LibLutDelaysAreDifferent",
+      "Category": "semantic-review",
+      "Symbol": "If_LibLutDelaysAreDifferent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11585,
+      "End": 12077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::If_LibLutSetSimple",
+      "Category": "semantic-review",
+      "Symbol": "If_LibLutSetSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12337,
+      "End": 13782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::If_LibLutFastestPinDelay",
+      "Category": "semantic-review",
+      "Symbol": "If_LibLutFastestPinDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14052,
+      "End": 14155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::If_LibLutSlowestPinDelay",
+      "Category": "semantic-review",
+      "Symbol": "If_LibLutSlowestPinDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14425,
+      "End": 14587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::1837",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1837,
+      "End": 1864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::1977",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1977,
+      "End": 2025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::2357",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2357,
+      "End": 2377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::2391",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2391,
+      "End": 2404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::2418",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2418,
+      "End": 2437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::2938",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2938,
+      "End": 2958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::2972",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2972,
+      "End": 2985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::2999",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2999,
+      "End": 3018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::3320",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3320,
+      "End": 3340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::3354",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3354,
+      "End": 3367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::3381",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3381,
+      "End": 3400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::4657",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4657,
+      "End": 4676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::6314",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6314,
+      "End": 6341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::6784",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6784,
+      "End": 6804
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::6818",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6818,
+      "End": 6831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::7235",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7235,
+      "End": 7255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::7269",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7269,
+      "End": 7282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::7599",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7599,
+      "End": 7619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::7633",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7633,
+      "End": 7646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::9333",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9333,
+      "End": 9360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::9796",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9796,
+      "End": 9822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifLibLut.c::macro-inline::9828",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9828,
+      "End": 9847
+    }
+  ],
+  "Draft": "package if_\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ifLibLut.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [LUT library.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifLibLut.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n//#include \"base/main/mainInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the description of LUTs from the LUT library file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_LibLutReadString(pStr string) *If_LibLut_t {\n    var p *If_LibLut_t;\n    var vStrs *Vec_Ptr_t;\n    var pToken, pBuffer, pStrNew, pStrMem string;\n    var i, k, j int32;\n\n    if pStr == nil || pStr[0] == 0 {\n        return nil; }\n\n    vStrs = Vec_PtrAlloc( 1000 );\n    pStrNew = pStrMem = Abc_UtilStrsav( pStr );\n    for  *pStrNew  {\n        Vec_PtrPush( vStrs, pStrNew );\n        for  *pStrNew != '\\n'  {\n            pStrNew++;\n        }\n        for  *pStrNew == '\\n'  {\n            *pStrNew++ = '\\0';\n        }\n    }\n\n    p = new(If_LibLut_t);\n    memset( p, 0, sizeof(If_LibLut_t) );\n\n    i = 1;\n    //while ( fgets( pBuffer, 1000, pFile ) != NULL )\n    Vec_PtrForEachEntry( char *, vStrs, pBuffer, j )\n    {\n        if pBuffer[0] == 0 {\n            continue; }\n        pToken = strtok( pBuffer, \" \\t\\n\" );\n        if pToken == nil {\n            continue; }\n        if pToken[0] == '#' {\n            continue; }\n        if i != atoi(pToken) {\n            Abc_Print( 1, \"Error in the LUT library string.\\n\" );\n            ABC_FREE( p.pName );\n            ABC_FREE( p );\n            ABC_FREE( pStrMem );\n            Vec_PtrFree( vStrs );\n            return nil;\n        }\n\n        // read area\n        pToken = strtok( nil, \" \\t\\n\" );\n        p.pLutAreas[i] = float32(atof(pToken));\n\n        // read delays\n        k = 0;\n        for  pToken = strtok( nil, \" \\t\\n\" )  {\n            p.pLutDelays[i][k++] = float32(atof(pToken));\n        }\n\n        // check for out-of-bound\n        if k \u003e i {\n            Abc_Print( 1, \"LUT %d has too many pins (%d). Max allowed is %d.\\n\", i, k, i );\n            ABC_FREE( p.pName );\n            ABC_FREE( p );\n            ABC_FREE( pStrMem );\n            Vec_PtrFree( vStrs );\n            return nil;\n        }\n\n        // check if var delays are specified\n        if k \u003e 1 {\n            p.fVarPinDelays = 1; }\n\n        if i == IF_MAX_LUTSIZE {\n            Abc_Print( 1, \"Skipping LUTs of size more than %d.\\n\", i );\n            ABC_FREE( p.pName );\n            ABC_FREE( p );\n            ABC_FREE( pStrMem );\n            Vec_PtrFree( vStrs );\n            return nil;\n        }\n        i++;\n    }\n    p.LutMax = i-1;\n\n    // check the library\n    if p.fVarPinDelays {\n        for  i = 1; i \u003c= p.LutMax; i++  {\n            for  k = 0; k \u003c i; k++  {\n                if p.pLutDelays[i][k] \u003c= 0.0 {\n                    Abc_Print( 0, \"Pin %d of LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", \n                        k, i, p.pLutDelays[i][k] ); }\n                if (k != 0) \u0026\u0026 p.pLutDelays[i][k-1] \u003e p.pLutDelays[i][k] {\n                    Abc_Print( 0, \"Pin %d of LUT %d has delay %f. Pin %d of LUT %d has delay %f. Pin delays should be in non-decreasing order. Technology mapping may not work correctly.\\n\", \n                        k-1, i, p.pLutDelays[i][k-1], \n                        k, i, p.pLutDelays[i][k] ); }\n            }\n        }\n    \n    } else {\n        for  i = 1; i \u003c= p.LutMax; i++  {\n            if p.pLutDelays[i][0] \u003c= 0.0 {\n                Abc_Print( 0, \"LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", \n                    i, p.pLutDelays[i][0] ); }\n        }\n    }\n\n    // cleanup\n    ABC_FREE( pStrMem );\n    Vec_PtrFree( vStrs );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the library associated with the string.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_FrameSetLutLibrary(pAbc *Abc_Frame_t, pLutLibString string) int32 {\n    var pLib *If_LibLut_t  = If_LibLutReadString( pLutLibString );\n    if pLib == nil {\n        fmt.Fprintf(os.Stdout, \"Reading LUT library from string has failed.\\n\");\n        return 0;\n    }\n    // replace the current library\n    If_LibLutFree( (If_LibLut_t *)Abc_FrameReadLibLut() );\n    Abc_FrameSetLibLut( pLib );\n    return 1;\n}\nfunc Abc_FrameSetLutLibraryTest(pAbc *Abc_Frame_t) int32 {\n    var pStr string  = \"1 1.00  1000\\n2 1.00  1000 1200\\n3 1.00  1000 1200 1400\\n4 1.00  1000 1200 1400 1600\\n5 1.00  1000 1200 1400 1600 1800\\n6 1.00  1000 1200 1400 1600 1800 2000\\n\\n\\n\";\n    Abc_FrameSetLutLibrary( pAbc, pStr );\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the description of LUTs from the LUT library file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_LibLutRead(FileName string) *If_LibLut_t {\n    var pBuffer [1000]byte;\n    var pToken string;\n    var p *If_LibLut_t;\n    var pFile *os.File;\n    var i, k int32;\n\n    pFile = os.Open(FileName);\n    if pFile == nil {\n        Abc_Print( -1, \"Cannot open LUT library file \\\"%s\\\".\\n\", FileName );\n        return nil;\n    }\n\n    p = new(If_LibLut_t);\n    memset( p, 0, sizeof(If_LibLut_t) );\n    p.pName = Abc_UtilStrsav( FileName );\n\n    i = 1;\n    for  fgets( pBuffer, 1000, pFile ) != nil  {\n        pToken = strtok( pBuffer, \" \\t\\n\" );\n        if pToken == nil {\n            continue; }\n        if pToken[0] == '#' {\n            continue; }\n        if i != atoi(pToken) {\n            Abc_Print( 1, \"Error in the LUT library file \\\"%s\\\".\\n\", FileName );\n            ABC_FREE( p.pName );\n            ABC_FREE( p );\n            _ = (pFile).Close();\n            return nil;\n        }\n\n        // read area\n        pToken = strtok( nil, \" \\t\\n\" );\n        p.pLutAreas[i] = float32(atof(pToken));\n\n        // read delays\n        k = 0;\n        for  pToken = strtok( nil, \" \\t\\n\" )  {\n            p.pLutDelays[i][k++] = float32(atof(pToken));\n        }\n\n        // check for out-of-bound\n        if k \u003e i {\n            ABC_FREE( p.pName );\n            ABC_FREE( p );\n            Abc_Print( 1, \"LUT %d has too many pins (%d). Max allowed is %d.\\n\", i, k, i );\n            _ = (pFile).Close();\n            return nil;\n        }\n\n        // check if var delays are specified\n        if k \u003e 1 {\n            p.fVarPinDelays = 1; }\n\n        if i == IF_MAX_LUTSIZE {\n            ABC_FREE( p.pName );\n            ABC_FREE( p );\n            Abc_Print( 1, \"Skipping LUTs of size more than %d.\\n\", i );\n            _ = (pFile).Close();\n            return nil;\n        }\n        i++;\n    }\n    p.LutMax = i-1;\n\n    // check the library\n    if p.fVarPinDelays {\n        for  i = 1; i \u003c= p.LutMax; i++  {\n            for  k = 0; k \u003c i; k++  {\n                if p.pLutDelays[i][k] \u003c= 0.0 {\n                    Abc_Print( 0, \"Pin %d of LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", \n                        k, i, p.pLutDelays[i][k] ); }\n                if (k != 0) \u0026\u0026 p.pLutDelays[i][k-1] \u003e p.pLutDelays[i][k] {\n                    Abc_Print( 0, \"Pin %d of LUT %d has delay %f. Pin %d of LUT %d has delay %f. Pin delays should be in non-decreasing order. Technology mapping may not work correctly.\\n\", \n                        k-1, i, p.pLutDelays[i][k-1], \n                        k, i, p.pLutDelays[i][k] ); }\n            }\n        }\n    \n    } else {\n        for  i = 1; i \u003c= p.LutMax; i++  {\n            if p.pLutDelays[i][0] \u003c= 0.0 {\n                Abc_Print( 0, \"LUT %d has delay %f. Pin delays should be non-negative numbers. Technology mapping may not work correctly.\\n\", \n                    i, p.pLutDelays[i][0] ); }\n        }\n    }\n\n    _ = (pFile).Close();\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the LUT library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_LibLutDup(p *If_LibLut_t) *If_LibLut_t {\n    var pNew *If_LibLut_t;\n    pNew = new(If_LibLut_t);\n    *pNew = *p;\n    pNew.pName = Abc_UtilStrsav( pNew.pName );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the LUT library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_LibLutFree(pLutLib *If_LibLut_t) {\n    if pLutLib == nil {\n        return; }\n    ABC_FREE( pLutLib.pName );\n    ABC_FREE( pLutLib );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the LUT library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_LibLutPrint(pLutLib *If_LibLut_t) {\n    var i, k int32;\n    Abc_Print( 1, \"# The area/delay of k-variable LUTs:\\n\" );\n    Abc_Print( 1, \"# k    area     delay\\n\" );\n    if pLutLib.fVarPinDelays {\n        for  i = 1; i \u003c= pLutLib.LutMax; i++  {\n            Abc_Print( 1, \"%d   %7.2f  \", i, pLutLib.pLutAreas[i] );\n            for  k = 0; k \u003c i; k++  {\n                Abc_Print( 1, \" %7.2f\", pLutLib.pLutDelays[i][k] );\n            }\n            Abc_Print( 1, \"\\n\" );\n        }\n    \n    } else {\n        for  i = 1; i \u003c= pLutLib.LutMax; i++  {\n            Abc_Print( 1, \"%d   %7.2f   %7.2f\\n\", i, pLutLib.pLutAreas[i], pLutLib.pLutDelays[i][0] );\n        } }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the delays are discrete.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_LibLutDelaysAreDiscrete(pLutLib *If_LibLut_t) int32 {\n    var Delay float32;\n    var i int32;\n    for  i = 1; i \u003c= pLutLib.LutMax; i++  {\n        Delay = pLutLib.pLutDelays[i][0];\n        if (float32((int32(Delay)))) != Delay {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the delays are discrete.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_LibLutDelaysAreDifferent(pLutLib *If_LibLut_t) int32 {\n    var i, k int32;\n    var Delay float32  = pLutLib.pLutDelays[1][0];\n    if pLutLib.fVarPinDelays {\n        for  i = 2; i \u003c= pLutLib.LutMax; i++  {\n        for  k = 0; k \u003c i; k++  {\n            if pLutLib.pLutDelays[i][k] != Delay {\n                return 1; }\n        }\n        }\n    \n    } else {\n        for  i = 2; i \u003c= pLutLib.LutMax; i++  {\n            if pLutLib.pLutDelays[i][0] != Delay {\n                return 1; }\n        }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets simple LUT library.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_LibLutSetSimple(nLutSize int32) *If_LibLut_t {\n    var s_LutLib10 If_LibLut_t = If_LibLut_t{ \"lutlib\",10, 0, {0,1,1,1,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1},{1},{1},{1}} };\n    var s_LutLib9 If_LibLut_t  = If_LibLut_t{ \"lutlib\", 9, 0, {0,1,1,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1},{1},{1}} };\n    var s_LutLib8 If_LibLut_t  = If_LibLut_t{ \"lutlib\", 8, 0, {0,1,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1},{1}} };\n    var s_LutLib7 If_LibLut_t  = If_LibLut_t{ \"lutlib\", 7, 0, {0,1,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1},{1}} };\n    var s_LutLib6 If_LibLut_t  = If_LibLut_t{ \"lutlib\", 6, 0, {0,1,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1},{1}} };\n    var s_LutLib5 If_LibLut_t  = If_LibLut_t{ \"lutlib\", 5, 0, {0,1,1,1,1,1}, {{0},{1},{1},{1},{1},{1}} };\n    var s_LutLib4 If_LibLut_t  = If_LibLut_t{ \"lutlib\", 4, 0, {0,1,1,1,1}, {{0},{1},{1},{1},{1}} };\n    var s_LutLib3 If_LibLut_t  = If_LibLut_t{ \"lutlib\", 3, 0, {0,1,1,1}, {{0},{1},{1},{1}} };\n    var pLutLib *If_LibLut_t;\n    assert(nLutSize \u003e= 3 \u0026\u0026 nLutSize \u003c= 10, \"nLutSize \u003e= 3 \u0026\u0026 nLutSize \u003c= 10\");\n    switch  nLutSize  {\n        case 3:  pLutLib = \u0026s_LutLib3; break;\n        case 4:  pLutLib = \u0026s_LutLib4; break;\n        case 5:  pLutLib = \u0026s_LutLib5; break;\n        case 6:  pLutLib = \u0026s_LutLib6; break;\n        case 7:  pLutLib = \u0026s_LutLib7; break;\n        case 8:  pLutLib = \u0026s_LutLib8; break;\n        case 9:  pLutLib = \u0026s_LutLib9; break;\n        case 10: pLutLib = \u0026s_LutLib10; break;\n        default: pLutLib = nil; break;\n    }\n    if pLutLib == nil {\n        return nil; }\n    return If_LibLutDup(pLutLib);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Gets the delay of the fastest pin.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_LibLutFastestPinDelay(p *If_LibLut_t) float32 {\n    if !(p != nil) {\n        return 1.0;\n    } else {\n        return p.pLutDelays[p.LutMax][0];\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Gets the delay of the slowest pin.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_LibLutSlowestPinDelay(p *If_LibLut_t) float32 {\n    if !(p != nil) {\n        return 1.0;\n    } else {\n        if p.fVarPinDelays {\n            return p.pLutDelays[p.LutMax][p.LutMax-1];\n        } else {\n            return p.pLutDelays[p.LutMax][0];\n        }\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

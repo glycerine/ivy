@@ -1,0 +1,216 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrmisc.c",
+  "SHA256": "4d76312181a88735ddc765e9c2d52f705899c09fac4251920764c528152335f5",
+  "Library": [
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 67,
+        "Column": 12,
+        "ByteOffset": 1790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) sprintf(s, \"c=%d(%d) in=%d out=%d tot=%d\","
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 71,
+        "Column": 12,
+        "ByteOffset": 1939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) sprintf(s, \"c=%d(%d) in=%d mv=%d out=%d\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 105,
+        "Column": 12,
+        "ByteOffset": 2540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\"# %s\\tCost is %s\\n\", name, print_cost(T));"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 106,
+        "Column": 12,
+        "ByteOffset": 2602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 106,
+        "Column": 19,
+        "ByteOffset": 2609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 12,
+        "ByteOffset": 2784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\"# %s\\tTime was %s, cost is %s\\n\","
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 118,
+        "Column": 12,
+        "ByteOffset": 2881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 118,
+        "Column": 19,
+        "ByteOffset": 2888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 12,
+        "ByteOffset": 3177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) printf(\"# %s\\tTime was %s, cost is %s\\n\","
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 136,
+        "Column": 12,
+        "ByteOffset": 3288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 136,
+        "Column": 19,
+        "ByteOffset": 3295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fflush(stdout);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 12,
+        "ByteOffset": 3413
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr, \"espresso: %s\\n\", s);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 145,
+        "Column": 20,
+        "ByteOffset": 3421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(stderr, \"espresso: %s\\n\", s);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 146,
+        "Column": 5,
+        "ByteOffset": 3455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    exit(1);"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrmisc.c::mechanical::static::1709",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1532,
+      "End": 1538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrmisc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrmisc.c::macro-inline::2672",
+      "Category": "macro-inline-review",
+      "Symbol": "print_time",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2672,
+      "End": 2688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/cvrmisc.c::macro-inline::3066",
+      "Category": "macro-inline-review",
+      "Symbol": "print_time",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3066,
+      "End": 3082
+    }
+  ],
+  "Draft": "package espresso\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/* cost -- compute the cost of a cover */\nvoid cover_cost(F, cost)\nIN pcover F;\nINOUT pcost cost;\n{\n    register pcube p, last;\n    pcube *T;\n    int var;\n\n    /* use the routine used by cofactor to decide splitting variables */\n    massive_count(T = cube1list(F));\n    // inlining of macro free_cubelist\n    FREE(T[0]); FREE(T);;\n\n    cost.cubes = F.count;\n    cost.total = cost.in = cost.out = cost.mv = cost.primes = 0;\n\n    /* Count transistors (zeros) for each binary variable (inputs) */\n    for(var = 0; var \u003c cube.num_binary_vars; var++)\n    cost.in += cdata.var_zeros[var];\n\n    /* Count transistors for each mv variable based on sparse/dense */\n    for(var = cube.num_binary_vars; var \u003c cube.num_vars - 1; var++)\n    if (cube.sparse[var])\n        cost.mv += F.count * cube.part_size[var] - cdata.var_zeros[var];\n    else\n        cost.mv += cdata.var_zeros[var];\n\n    /* Count the transistors (ones) for the output variable */\n    if cube.num_binary_vars != cube.num_vars {\n    var = cube.num_vars - 1;\n    cost.out = F.count * cube.part_size[var] - cdata.var_zeros[var];\n    }\n\n    /* Count the number of nonprime cubes */\n    // inlining of macro foreach_set\n    for(p=F.data,last=p+F.count*F.wsize;p\u003clast;p+=F.wsize)\n    // inlining of macro TESTP\n    cost.primes += (p[0] \u0026 (PRIME)) != 0;\n\n    /* Count the total number of literals */\n    cost.total = cost.in + cost.out + cost.mv;\n}\n\n\n/* fmt_cost -- return a string which reports the \"cost\" of a cover */\nchar *fmt_cost(cost)\nIN pcost cost;\n{\n    static char s[200];\n\n    if (cube.num_binary_vars == cube.num_vars - 1)\n    (void) sprintf(s, \"c=%d(%d) in=%d out=%d tot=%d\",\n            cost.cubes, cost.cubes - cost.primes, cost.in,\n            cost.out, cost.total);\n    else\n    (void) sprintf(s, \"c=%d(%d) in=%d mv=%d out=%d\",\n           cost.cubes, cost.cubes - cost.primes, cost.in,\n           cost.mv, cost.out);\n    return s;\n}\n\n\nchar *print_cost(F)\nIN pcover F;\n{\n    cost_t cost;\n    cover_cost(F, \u0026cost);\n    return fmt_cost(\u0026cost);\n}\n\n\n/* copy_cost -- copy a cost function from s to d */\nvoid copy_cost(s, d)\nvar s, d pcost;\n{\n    d.cubes = s.cubes;\n    d.in = s.in;\n    d.out = s.out;\n    d.mv = s.mv;\n    d.total = s.total;\n    d.primes = s.primes;\n}\n\n\n/* size_stamp -- print single line giving the size of a cover */\nvoid size_stamp(T, name)\nIN pcover T;\nIN char *name;\n{\n    (void) fmt.Printf(\"# %s\\tCost is %s\\n\", name, print_cost(T));\n    (void) fflush(os.Stdout);\n}\n\n\n/* print_trace -- print a line reporting size and time after a function */\nvoid print_trace(T, name, time)\npcover T;\nvar name string;\nvar time long;\n{\n    (void) fmt.Printf(\"# %s\\tTime was %s, cost is %s\\n\", name, print_time(time), print_cost(T));\n    (void) fflush(os.Stdout);\n}\n\n\n/* totals -- add time spent in the function into the totals */\nvoid totals(time, i, T, cost)\nvar time long;\nvar i int32;\npcover T;\nvar cost pcost;\n{\n    time = ptime() - time;\n    total_time[i] += time;\n    total_calls[i]++;\n    cover_cost(T, cost);\n    if trace {\n    (void) fmt.Printf(\"# %s\\tTime was %s, cost is %s\\n\", total_name[i], print_time(time), fmt_cost(cost));\n    (void) fflush(os.Stdout);\n    }\n}\n\n\n/* fatal -- report fatal error message and take a dive */\nvoid fatal(s)\nvar s string;\n{\n    (void) fmt.Fprintf(os.Stderr, \"espresso: %s\\n\", s);\n    os.Exit(int(1));\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

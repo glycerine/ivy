@@ -1,0 +1,710 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c",
+  "SHA256": "bd7f756a17b4f40ea8c5ee617530aef872534cc953e4cbac16174c42120670ce",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 77,
+        "Column": 9,
+        "ByteOffset": 2543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pDouble.Weight == Fxu_HeapDoubleReadMaxWeight( p.pHeapDouble ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 82,
+        "Column": 9,
+        "ByteOffset": 2702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pSingle.Weight == Fxu_HeapSingleReadMaxWeight( p.pHeapSingle ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 128,
+        "Column": 5,
+        "ByteOffset": 4688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pVar1.iVar \u003c pVar2.iVar );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 129,
+        "Column": 5,
+        "ByteOffset": 4727
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Fxu_SingleCountCoincidence( p, pVar1, pVar2 ) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 207,
+        "Column": 5,
+        "ByteOffset": 7782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pVar1.iVar \u003c pVar2.iVar );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 7821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Fxu_SingleCountCoincidence( p, pVar1, pVar2 ) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 336,
+        "Column": 9,
+        "ByteOffset": 12515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCubeUse.pOrder == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 346,
+        "Column": 9,
+        "ByteOffset": 13022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCubeUse.lLits.nItems == pPair.nBase + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 347,
+        "Column": 9,
+        "ByteOffset": 13082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCubeRem.lLits.nItems == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 414,
+        "Column": 5,
+        "ByteOffset": 15399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPair.nLits1 == nLits1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 415,
+        "Column": 5,
+        "ByteOffset": 15437
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPair.nLits2 == nLits2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 416,
+        "Column": 5,
+        "ByteOffset": 15475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPair.nBase == nBase );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 578,
+        "Column": 21,
+        "ByteOffset": 21219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( pLit1.pCube.pOrder == nil );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 683,
+        "Column": 5,
+        "ByteOffset": 24666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( (void *)p.vPairs.pArray, (size_t)p.vPairs.nSize, sizeof(Fxu_Pair *), "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 685,
+        "Column": 5,
+        "ByteOffset": 24806
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Fxu_UpdatePairCompare( (Fxu_Pair**)p.vPairs.pArray, (Fxu_Pair**)p.vPairs.pArray + p.vPairs.nSize - 1 ) \u003c 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 723,
+        "Column": 5,
+        "ByteOffset": 25985
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 792,
+        "Column": 13,
+        "ByteOffset": 28044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pDivCur.Weight == pPair.nBase - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 823,
+        "Column": 5,
+        "ByteOffset": 29093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCube.pOrder );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fxu_Update",
+      "Start": 2247,
+      "End": 5054,
+      "BodyStart": 2325,
+      "Original": "void Fxu_Update( Fxu_Matrix * p, Fxu_Single * pSingle, Fxu_Double * pDouble )\n{\n    Fxu_Cube * pCube, * pCubeNew;\n    Fxu_Var * pVarC, * pVarD;\n    Fxu_Var * pVar1, * pVar2;\n\n    // consider trivial cases\n    if ( pSingle == NULL )\n    {\n        assert( pDouble-\u003eWeight == Fxu_HeapDoubleReadMaxWeight( p-\u003epHeapDouble ) );\n        Fxu_UpdateDouble( p );\n        return;\n    }\n    if ( pDouble == NULL )\n    {\n        assert( pSingle-\u003eWeight == Fxu_HeapSingleReadMaxWeight( p-\u003epHeapSingle ) );\n        Fxu_UpdateSingle( p );\n        return;\n    }\n\n    // get the variables of the single\n    pVar1 = pSingle-\u003epVar1;\n    pVar2 = pSingle-\u003epVar2;\n\n    // remove the best double from the heap\n    Fxu_HeapDoubleDelete( p-\u003epHeapDouble, pDouble );\n    // remove the best divisor from the table\n    Fxu_ListTableDelDivisor( p, pDouble );\n\n    // create two new columns (vars)\n    Fxu_UpdateCreateNewVars( p, \u0026pVarC, \u0026pVarD, 1 );\n    // create one new row (cube)\n    pCubeNew = Fxu_MatrixAddCube( p, pVarD, 0 );\n    pCubeNew-\u003epFirst = pCubeNew;\n    // set the first cube of the positive var\n    pVarD-\u003epFirst = pCubeNew;\n\n    // start collecting the affected vars and cubes\n    Fxu_MatrixRingCubesStart( p );\n    Fxu_MatrixRingVarsStart( p );\n    // add the vars\n    Fxu_MatrixRingVarsAdd( p, pVar1 );\n    Fxu_MatrixRingVarsAdd( p, pVar2 );\n    // remove the literals and collect the affected cubes\n    // remove the divisors associated with this cube\n       // add to the affected cube the literal corresponding to the new column\n    Fxu_UpdateMatrixSingleClean( p, pVar1, pVar2, pVarD );\n    // replace each two cubes of the pair by one new cube\n    // the new cube contains the base and the new literal\n    Fxu_UpdateDoublePairs( p, pDouble, pVarC );\n    // stop collecting the affected vars and cubes\n    Fxu_MatrixRingCubesStop( p );\n    Fxu_MatrixRingVarsStop( p );\n\n    // add the literals to the new cube\n    assert( pVar1-\u003eiVar \u003c pVar2-\u003eiVar );\n    assert( Fxu_SingleCountCoincidence( p, pVar1, pVar2 ) == 0 );\n    Fxu_MatrixAddLiteral( p, pCubeNew, pVar1 );\n    Fxu_MatrixAddLiteral( p, pCubeNew, pVar2 );\n\n    // create new doubles; we cannot add them in the same loop\n    // because we first have to create *all* new cubes for each node\n    Fxu_MatrixForEachCubeInRing( p, pCube )\n           Fxu_UpdateAddNewDoubles( p, pCube );\n    // update the singles after removing some literals\n    Fxu_UpdateCleanOldSingles( p );\n\n    // undo the temporary rings with cubes and vars\n    Fxu_MatrixRingCubesUnmark( p );\n    Fxu_MatrixRingVarsUnmark( p );\n    // we should undo the rings before creating new singles\n\n    // create new singles\n    Fxu_UpdateAddNewSingles( p, pVarC );\n    Fxu_UpdateAddNewSingles( p, pVarD );\n\n    // recycle the divisor\n    MEM_FREE_FXU( p, Fxu_Double, 1, pDouble );\n    p-\u003enDivs3++;\n}",
+      "Draft": "func Fxu_Update(p *Fxu_Matrix, pSingle *Fxu_Single, pDouble *Fxu_Double) {\n    var pCube, pCubeNew *Fxu_Cube;\n    var pVarC, pVarD *Fxu_Var;\n    var pVar1, pVar2 *Fxu_Var;\n\n    // consider trivial cases\n    if pSingle == nil {\n        assert(pDouble.Weight == Fxu_HeapDoubleReadMaxWeight( p.pHeapDouble ), \"pDouble.Weight == Fxu_HeapDoubleReadMaxWeight( p.pHeapDouble )\");\n        Fxu_UpdateDouble( p );\n        return;\n    }\n    if pDouble == nil {\n        assert(pSingle.Weight == Fxu_HeapSingleReadMaxWeight( p.pHeapSingle ), \"pSingle.Weight == Fxu_HeapSingleReadMaxWeight( p.pHeapSingle )\");\n        Fxu_UpdateSingle( p );\n        return;\n    }\n\n    // get the variables of the single\n    pVar1 = pSingle.pVar1;\n    pVar2 = pSingle.pVar2;\n\n    // remove the best double from the heap\n    Fxu_HeapDoubleDelete( p.pHeapDouble, pDouble );\n    // remove the best divisor from the table\n    Fxu_ListTableDelDivisor( p, pDouble );\n\n    // create two new columns (vars)\n    Fxu_UpdateCreateNewVars( p, \u0026pVarC, \u0026pVarD, 1 );\n    // create one new row (cube)\n    pCubeNew = Fxu_MatrixAddCube( p, pVarD, 0 );\n    pCubeNew.pFirst = pCubeNew;\n    // set the first cube of the positive var\n    pVarD.pFirst = pCubeNew;\n\n    // start collecting the affected vars and cubes\n    // inlining of macro Fxu_MatrixRingCubesStart\n    ((p).ppTailCubes = \u0026((p).pOrderCubes));\n((p).pOrderCubes = nil);;\n    // inlining of macro Fxu_MatrixRingVarsStart\n    ((p).ppTailVars  = \u0026((p).pOrderVars));\n((p).pOrderVars  = nil);;\n    // add the vars\n    // inlining of macro Fxu_MatrixRingVarsAdd\n    (*((p).ppTailVars ) = pVar1 );\n((p).ppTailVars  = \u0026(pVar1).pOrder );\n((pVar1).pOrder  = (Fxu_Var *)1);;\n    // inlining of macro Fxu_MatrixRingVarsAdd\n    (*((p).ppTailVars ) = pVar2 );\n((p).ppTailVars  = \u0026(pVar2).pOrder );\n((pVar2).pOrder  = (Fxu_Var *)1);;\n    // remove the literals and collect the affected cubes\n    // remove the divisors associated with this cube\n       // add to the affected cube the literal corresponding to the new column\n    Fxu_UpdateMatrixSingleClean( p, pVar1, pVar2, pVarD );\n    // replace each two cubes of the pair by one new cube\n    // the new cube contains the base and the new literal\n    Fxu_UpdateDoublePairs( p, pDouble, pVarC );\n    // stop collecting the affected vars and cubes\n    // inlining of macro Fxu_MatrixRingCubesStop\n    ;\n    // inlining of macro Fxu_MatrixRingVarsStop\n    ;\n\n    // add the literals to the new cube\n    assert(pVar1.iVar \u003c pVar2.iVar, \"pVar1.iVar \u003c pVar2.iVar\");\n    assert(Fxu_SingleCountCoincidence( p, pVar1, pVar2 ) == 0, \"Fxu_SingleCountCoincidence( p, pVar1, pVar2 ) == 0\");\n    Fxu_MatrixAddLiteral( p, pCubeNew, pVar1 );\n    Fxu_MatrixAddLiteral( p, pCubeNew, pVar2 );\n\n    // create new doubles; we cannot add them in the same loop\n    // because we first have to create *all* new cubes for each node\n    // inlining of macro Fxu_MatrixForEachCubeInRing\n    if (p).pOrderCubes {    for  pCube = (p).pOrderCubes;          pCube != (Fxu_Cube *)1;          pCube = pCube.pOrder  {\n           Fxu_UpdateAddNewDoubles( p, pCube );\n    } }\n    // update the singles after removing some literals\n    Fxu_UpdateCleanOldSingles( p );\n\n    // undo the temporary rings with cubes and vars\n    Fxu_MatrixRingCubesUnmark( p );\n    Fxu_MatrixRingVarsUnmark( p );\n    // we should undo the rings before creating new singles\n\n    // create new singles\n    Fxu_UpdateAddNewSingles( p, pVarC );\n    Fxu_UpdateAddNewSingles( p, pVarD );\n\n    // recycle the divisor\n    MEM_FREE_FXU( p, Fxu_Double, 1, pDouble );\n    p.nDivs3++;\n}"
+    },
+    {
+      "Name": "Fxu_UpdateSingle",
+      "Start": 5334,
+      "End": 7396,
+      "BodyStart": 5374,
+      "Original": "void Fxu_UpdateSingle( Fxu_Matrix * p )\n{\n    Fxu_Single * pSingle;\n    Fxu_Cube * pCube, * pCubeNew;\n    Fxu_Var * pVarC, * pVarD;\n    Fxu_Var * pVar1, * pVar2;\n\n    // read the best divisor from the heap\n    pSingle = Fxu_HeapSingleReadMax( p-\u003epHeapSingle );\n    // get the variables of this single-cube divisor\n    pVar1 = pSingle-\u003epVar1;\n    pVar2 = pSingle-\u003epVar2;\n\n    // create two new columns (vars)\n    Fxu_UpdateCreateNewVars( p, \u0026pVarC, \u0026pVarD, 1 );\n    // create one new row (cube)\n    pCubeNew = Fxu_MatrixAddCube( p, pVarD, 0 );\n    pCubeNew-\u003epFirst = pCubeNew;\n    // set the first cube\n    pVarD-\u003epFirst = pCubeNew;\n\n    // start collecting the affected vars and cubes\n    Fxu_MatrixRingCubesStart( p );\n    Fxu_MatrixRingVarsStart( p );\n    // add the vars\n    Fxu_MatrixRingVarsAdd( p, pVar1 );\n    Fxu_MatrixRingVarsAdd( p, pVar2 );\n    // remove the literals and collect the affected cubes\n    // remove the divisors associated with this cube\n       // add to the affected cube the literal corresponding to the new column\n    Fxu_UpdateMatrixSingleClean( p, pVar1, pVar2, pVarD );\n    // stop collecting the affected vars and cubes\n    Fxu_MatrixRingCubesStop( p );\n    Fxu_MatrixRingVarsStop( p );\n\n    // add the literals to the new cube\n    assert( pVar1-\u003eiVar \u003c pVar2-\u003eiVar );\n    assert( Fxu_SingleCountCoincidence( p, pVar1, pVar2 ) == 0 );\n    Fxu_MatrixAddLiteral( p, pCubeNew, pVar1 );\n    Fxu_MatrixAddLiteral( p, pCubeNew, pVar2 );\n\n    // create new doubles; we cannot add them in the same loop\n    // because we first have to create *all* new cubes for each node\n    Fxu_MatrixForEachCubeInRing( p, pCube )\n           Fxu_UpdateAddNewDoubles( p, pCube );\n    // update the singles after removing some literals\n    Fxu_UpdateCleanOldSingles( p );\n    // we should undo the rings before creating new singles\n\n    // unmark the cubes\n    Fxu_MatrixRingCubesUnmark( p );\n    Fxu_MatrixRingVarsUnmark( p );\n\n    // create new singles\n    Fxu_UpdateAddNewSingles( p, pVarC );\n    Fxu_UpdateAddNewSingles( p, pVarD );\n    p-\u003enDivs1++;\n}",
+      "Draft": "func Fxu_UpdateSingle(p *Fxu_Matrix) {\n    var pSingle *Fxu_Single;\n    var pCube, pCubeNew *Fxu_Cube;\n    var pVarC, pVarD *Fxu_Var;\n    var pVar1, pVar2 *Fxu_Var;\n\n    // read the best divisor from the heap\n    pSingle = Fxu_HeapSingleReadMax( p.pHeapSingle );\n    // get the variables of this single-cube divisor\n    pVar1 = pSingle.pVar1;\n    pVar2 = pSingle.pVar2;\n\n    // create two new columns (vars)\n    Fxu_UpdateCreateNewVars( p, \u0026pVarC, \u0026pVarD, 1 );\n    // create one new row (cube)\n    pCubeNew = Fxu_MatrixAddCube( p, pVarD, 0 );\n    pCubeNew.pFirst = pCubeNew;\n    // set the first cube\n    pVarD.pFirst = pCubeNew;\n\n    // start collecting the affected vars and cubes\n    // inlining of macro Fxu_MatrixRingCubesStart\n    ((p).ppTailCubes = \u0026((p).pOrderCubes));\n((p).pOrderCubes = nil);;\n    // inlining of macro Fxu_MatrixRingVarsStart\n    ((p).ppTailVars  = \u0026((p).pOrderVars));\n((p).pOrderVars  = nil);;\n    // add the vars\n    // inlining of macro Fxu_MatrixRingVarsAdd\n    (*((p).ppTailVars ) = pVar1 );\n((p).ppTailVars  = \u0026(pVar1).pOrder );\n((pVar1).pOrder  = (Fxu_Var *)1);;\n    // inlining of macro Fxu_MatrixRingVarsAdd\n    (*((p).ppTailVars ) = pVar2 );\n((p).ppTailVars  = \u0026(pVar2).pOrder );\n((pVar2).pOrder  = (Fxu_Var *)1);;\n    // remove the literals and collect the affected cubes\n    // remove the divisors associated with this cube\n       // add to the affected cube the literal corresponding to the new column\n    Fxu_UpdateMatrixSingleClean( p, pVar1, pVar2, pVarD );\n    // stop collecting the affected vars and cubes\n    // inlining of macro Fxu_MatrixRingCubesStop\n    ;\n    // inlining of macro Fxu_MatrixRingVarsStop\n    ;\n\n    // add the literals to the new cube\n    assert(pVar1.iVar \u003c pVar2.iVar, \"pVar1.iVar \u003c pVar2.iVar\");\n    assert(Fxu_SingleCountCoincidence( p, pVar1, pVar2 ) == 0, \"Fxu_SingleCountCoincidence( p, pVar1, pVar2 ) == 0\");\n    Fxu_MatrixAddLiteral( p, pCubeNew, pVar1 );\n    Fxu_MatrixAddLiteral( p, pCubeNew, pVar2 );\n\n    // create new doubles; we cannot add them in the same loop\n    // because we first have to create *all* new cubes for each node\n    // inlining of macro Fxu_MatrixForEachCubeInRing\n    if (p).pOrderCubes {    for  pCube = (p).pOrderCubes;          pCube != (Fxu_Cube *)1;          pCube = pCube.pOrder  {\n           Fxu_UpdateAddNewDoubles( p, pCube );\n    } }\n    // update the singles after removing some literals\n    Fxu_UpdateCleanOldSingles( p );\n    // we should undo the rings before creating new singles\n\n    // unmark the cubes\n    Fxu_MatrixRingCubesUnmark( p );\n    Fxu_MatrixRingVarsUnmark( p );\n\n    // create new singles\n    Fxu_UpdateAddNewSingles( p, pVarC );\n    Fxu_UpdateAddNewSingles( p, pVarD );\n    p.nDivs1++;\n}"
+    },
+    {
+      "Name": "Fxu_UpdateDouble",
+      "Start": 7689,
+      "End": 9586,
+      "BodyStart": 7729,
+      "Original": "void Fxu_UpdateDouble( Fxu_Matrix * p )\n{\n    Fxu_Double * pDiv;\n    Fxu_Cube * pCube, * pCubeNew1, * pCubeNew2;\n    Fxu_Var * pVarC, * pVarD;\n\n    // remove the best divisor from the heap\n    pDiv = Fxu_HeapDoubleGetMax( p-\u003epHeapDouble );\n    // remove the best divisor from the table\n    Fxu_ListTableDelDivisor( p, pDiv );\n\n    // create two new columns (vars)\n    Fxu_UpdateCreateNewVars( p, \u0026pVarC, \u0026pVarD, 2 );\n    // create two new rows (cubes)\n    pCubeNew1 = Fxu_MatrixAddCube( p, pVarD, 0 );\n    pCubeNew1-\u003epFirst = pCubeNew1;\n    pCubeNew2 = Fxu_MatrixAddCube( p, pVarD, 1 );\n    pCubeNew2-\u003epFirst = pCubeNew1;\n    // set the first cube\n    pVarD-\u003epFirst = pCubeNew1;\n\n    // add the literals to the new cubes\n    Fxu_UpdateMatrixDoubleCreateCubes( p, pCubeNew1, pCubeNew2, pDiv );\n\n    // start collecting the affected cubes and vars\n    Fxu_MatrixRingCubesStart( p );\n    Fxu_MatrixRingVarsStart( p );\n    // replace each two cubes of the pair by one new cube\n    // the new cube contains the base and the new literal\n    Fxu_UpdateDoublePairs( p, pDiv, pVarD );\n    // stop collecting the affected cubes and vars\n    Fxu_MatrixRingCubesStop( p );\n    Fxu_MatrixRingVarsStop( p );\n    \n    // create new doubles; we cannot add them in the same loop\n    // because we first have to create *all* new cubes for each node\n    Fxu_MatrixForEachCubeInRing( p, pCube )\n           Fxu_UpdateAddNewDoubles( p, pCube );\n    // update the singles after removing some literals\n    Fxu_UpdateCleanOldSingles( p );\n\n    // undo the temporary rings with cubes and vars\n    Fxu_MatrixRingCubesUnmark( p );\n    Fxu_MatrixRingVarsUnmark( p );\n    // we should undo the rings before creating new singles\n\n    // create new singles\n    Fxu_UpdateAddNewSingles( p, pVarC );\n    Fxu_UpdateAddNewSingles( p, pVarD );\n\n    // recycle the divisor\n    MEM_FREE_FXU( p, Fxu_Double, 1, pDiv );\n    p-\u003enDivs2++;\n}",
+      "Draft": "func Fxu_UpdateDouble(p *Fxu_Matrix) {\n    var pDiv *Fxu_Double;\n    var pCube, pCubeNew1, pCubeNew2 *Fxu_Cube;\n    var pVarC, pVarD *Fxu_Var;\n\n    // remove the best divisor from the heap\n    pDiv = Fxu_HeapDoubleGetMax( p.pHeapDouble );\n    // remove the best divisor from the table\n    Fxu_ListTableDelDivisor( p, pDiv );\n\n    // create two new columns (vars)\n    Fxu_UpdateCreateNewVars( p, \u0026pVarC, \u0026pVarD, 2 );\n    // create two new rows (cubes)\n    pCubeNew1 = Fxu_MatrixAddCube( p, pVarD, 0 );\n    pCubeNew1.pFirst = pCubeNew1;\n    pCubeNew2 = Fxu_MatrixAddCube( p, pVarD, 1 );\n    pCubeNew2.pFirst = pCubeNew1;\n    // set the first cube\n    pVarD.pFirst = pCubeNew1;\n\n    // add the literals to the new cubes\n    Fxu_UpdateMatrixDoubleCreateCubes( p, pCubeNew1, pCubeNew2, pDiv );\n\n    // start collecting the affected cubes and vars\n    // inlining of macro Fxu_MatrixRingCubesStart\n    ((p).ppTailCubes = \u0026((p).pOrderCubes));\n((p).pOrderCubes = nil);;\n    // inlining of macro Fxu_MatrixRingVarsStart\n    ((p).ppTailVars  = \u0026((p).pOrderVars));\n((p).pOrderVars  = nil);;\n    // replace each two cubes of the pair by one new cube\n    // the new cube contains the base and the new literal\n    Fxu_UpdateDoublePairs( p, pDiv, pVarD );\n    // stop collecting the affected cubes and vars\n    // inlining of macro Fxu_MatrixRingCubesStop\n    ;\n    // inlining of macro Fxu_MatrixRingVarsStop\n    ;\n    \n    // create new doubles; we cannot add them in the same loop\n    // because we first have to create *all* new cubes for each node\n    // inlining of macro Fxu_MatrixForEachCubeInRing\n    if (p).pOrderCubes {    for  pCube = (p).pOrderCubes;          pCube != (Fxu_Cube *)1;          pCube = pCube.pOrder  {\n           Fxu_UpdateAddNewDoubles( p, pCube );\n    } }\n    // update the singles after removing some literals\n    Fxu_UpdateCleanOldSingles( p );\n\n    // undo the temporary rings with cubes and vars\n    Fxu_MatrixRingCubesUnmark( p );\n    Fxu_MatrixRingVarsUnmark( p );\n    // we should undo the rings before creating new singles\n\n    // create new singles\n    Fxu_UpdateAddNewSingles( p, pVarC );\n    Fxu_UpdateAddNewSingles( p, pVarD );\n\n    // recycle the divisor\n    MEM_FREE_FXU( p, Fxu_Double, 1, pDiv );\n    p.nDivs2++;\n}"
+    },
+    {
+      "Name": "Fxu_UpdateDoublePairs",
+      "Start": 9824,
+      "End": 11224,
+      "BodyStart": 9907,
+      "Original": "void Fxu_UpdateDoublePairs( Fxu_Matrix * p, Fxu_Double * pDouble, Fxu_Var * pVar )\n{\n    Fxu_Pair * pPair;\n    Fxu_Cube * pCubeUse, * pCubeRem;\n    int i;\n\n    // collect and sort the pairs\n    Fxu_UpdatePairsSort( p, pDouble );\n//    for ( i = 0; i \u003c p-\u003enPairsTemp; i++ )\n    for ( i = 0; i \u003c p-\u003evPairs-\u003enSize; i++ )\n    {\n        // get the pair\n//        pPair = p-\u003epPairsTemp[i];\n        pPair = (Fxu_Pair *)p-\u003evPairs-\u003epArray[i];\n        // out of the two cubes, select the one which comes earlier\n        pCubeUse = Fxu_PairMinCube( pPair );\n        pCubeRem = Fxu_PairMaxCube( pPair );\n        // collect the affected cube\n        assert( pCubeUse-\u003epOrder == NULL );\n        Fxu_MatrixRingCubesAdd( p, pCubeUse );\n\n        // remove some literals from pCubeUse and all literals from pCubeRem\n        Fxu_UpdateMatrixDoubleClean( p, pCubeUse, pCubeRem );\n        // add a literal that depends on the new variable\n        Fxu_MatrixAddLiteral( p, pCubeUse, pVar );    \n        // check the literal count\n        assert( pCubeUse-\u003elLits.nItems == pPair-\u003enBase + 1 );\n        assert( pCubeRem-\u003elLits.nItems == 0 );\n\n        // update the divisors by removing useless pairs\n        Fxu_UpdateCleanOldDoubles( p, pDouble, pCubeUse );\n        Fxu_UpdateCleanOldDoubles( p, pDouble, pCubeRem );\n        // remove the pair\n        MEM_FREE_FXU( p, Fxu_Pair, 1, pPair );\n    }\n    p-\u003evPairs-\u003enSize = 0;\n}",
+      "Draft": "func Fxu_UpdateDoublePairs(p *Fxu_Matrix, pDouble *Fxu_Double, pVar *Fxu_Var) {\n    var pPair *Fxu_Pair;\n    var pCubeUse, pCubeRem *Fxu_Cube;\n    var i int32;\n\n    // collect and sort the pairs\n    Fxu_UpdatePairsSort( p, pDouble );\n//    for ( i = 0; i \u003c p-\u003enPairsTemp; i++ )\n    for  i = 0; i \u003c p.vPairs.nSize; i++  {\n        // get the pair\n//        pPair = p-\u003epPairsTemp[i];\n        pPair = (Fxu_Pair *)p.vPairs.pArray[i];\n        // out of the two cubes, select the one which comes earlier\n        // inlining of macro Fxu_PairMinCube\n        \n        if (pPair).iCube1 \u003c (pPair).iCube2 {\n            pCubeUse = (pPair).pCube1;\n        } else {\n            pCubeUse = (pPair).pCube2;\n        }\n        // inlining of macro Fxu_PairMaxCube\n        \n        if (pPair).iCube1 \u003e (pPair).iCube2 {\n            pCubeRem = (pPair).pCube1;\n        } else {\n            pCubeRem = (pPair).pCube2;\n        }\n        // collect the affected cube\n        assert(pCubeUse.pOrder == nil, \"pCubeUse.pOrder == nil\");\n        // inlining of macro Fxu_MatrixRingCubesAdd\n        (*((p).ppTailCubes) = pCubeUse);\n((p).ppTailCubes = \u0026(pCubeUse).pOrder);\n((pCubeUse).pOrder = (Fxu_Cube *)1);;\n\n        // remove some literals from pCubeUse and all literals from pCubeRem\n        Fxu_UpdateMatrixDoubleClean( p, pCubeUse, pCubeRem );\n        // add a literal that depends on the new variable\n        Fxu_MatrixAddLiteral( p, pCubeUse, pVar );    \n        // check the literal count\n        assert(pCubeUse.lLits.nItems == pPair.nBase + 1, \"pCubeUse.lLits.nItems == pPair.nBase + 1\");\n        assert(pCubeRem.lLits.nItems == 0, \"pCubeRem.lLits.nItems == 0\");\n\n        // update the divisors by removing useless pairs\n        Fxu_UpdateCleanOldDoubles( p, pDouble, pCubeUse );\n        Fxu_UpdateCleanOldDoubles( p, pDouble, pCubeRem );\n        // remove the pair\n        MEM_FREE_FXU( p, Fxu_Pair, 1, pPair );\n    }\n    p.vPairs.nSize = 0;\n}"
+    },
+    {
+      "Name": "Fxu_UpdateMatrixDoubleCreateCubes",
+      "Start": 11521,
+      "End": 13432,
+      "BodyStart": 11635,
+      "Original": "void Fxu_UpdateMatrixDoubleCreateCubes( Fxu_Matrix * p, Fxu_Cube * pCube1, Fxu_Cube * pCube2, Fxu_Double * pDiv )\n{\n    Fxu_Lit * pLit1, * pLit2;\n    Fxu_Pair * pPair;\n    int nBase, nLits1, nLits2;\n\n    // fill in the SOP and copy the fanins\n    nBase = nLits1 = nLits2 = 0;\n    pPair = pDiv-\u003elPairs.pHead;\n    pLit1 = pPair-\u003epCube1-\u003elLits.pHead;\n    pLit2 = pPair-\u003epCube2-\u003elLits.pHead;\n    while ( 1 )\n    {\n        if ( pLit1 \u0026\u0026 pLit2 )\n        {\n            if ( pLit1-\u003eiVar == pLit2-\u003eiVar )\n            { // skip the cube free part\n                pLit1 = pLit1-\u003epHNext;\n                pLit2 = pLit2-\u003epHNext;\n                nBase++;\n            }\n            else if ( pLit1-\u003eiVar \u003c pLit2-\u003eiVar )\n            {    // add literal to the first cube\n                Fxu_MatrixAddLiteral( p, pCube1, pLit1-\u003epVar );\n                // move to the next literal in this cube\n                pLit1 = pLit1-\u003epHNext;\n                nLits1++;\n            }\n            else\n            {    // add literal to the second cube\n                Fxu_MatrixAddLiteral( p, pCube2, pLit2-\u003epVar );\n                // move to the next literal in this cube\n                pLit2 = pLit2-\u003epHNext;\n                nLits2++;\n            }\n        }\n        else if ( pLit1 \u0026\u0026 !pLit2 )\n        {    // add literal to the first cube\n            Fxu_MatrixAddLiteral( p, pCube1, pLit1-\u003epVar );\n            // move to the next literal in this cube\n            pLit1 = pLit1-\u003epHNext;\n            nLits1++;\n        }\n        else if ( !pLit1 \u0026\u0026 pLit2 )\n        {    // add literal to the second cube\n            Fxu_MatrixAddLiteral( p, pCube2, pLit2-\u003epVar );\n            // move to the next literal in this cube\n            pLit2 = pLit2-\u003epHNext;\n            nLits2++;\n        }\n        else\n            break;\n    }\n    assert( pPair-\u003enLits1 == nLits1 );\n    assert( pPair-\u003enLits2 == nLits2 );\n    assert( pPair-\u003enBase == nBase );\n}",
+      "Draft": "func Fxu_UpdateMatrixDoubleCreateCubes(p *Fxu_Matrix, pCube1 *Fxu_Cube, pCube2 *Fxu_Cube, pDiv *Fxu_Double) {\n    var pLit1, pLit2 *Fxu_Lit;\n    var pPair *Fxu_Pair;\n    var nBase, nLits1, nLits2 int32;\n\n    // fill in the SOP and copy the fanins\n    nBase = nLits1 = nLits2 = 0;\n    pPair = pDiv.lPairs.pHead;\n    pLit1 = pPair.pCube1.lLits.pHead;\n    pLit2 = pPair.pCube2.lLits.pHead;\n    for {\n        if pLit1 \u0026\u0026 (pLit2 != nil) {\n            if pLit1.iVar == pLit2.iVar { // skip the cube free part\n                pLit1 = pLit1.pHNext;\n                pLit2 = pLit2.pHNext;\n                nBase++;\n            \n            } else if pLit1.iVar \u003c pLit2.iVar {    // add literal to the first cube\n                Fxu_MatrixAddLiteral( p, pCube1, pLit1.pVar );\n                // move to the next literal in this cube\n                pLit1 = pLit1.pHNext;\n                nLits1++;\n            \n            } else {    // add literal to the second cube\n                Fxu_MatrixAddLiteral( p, pCube2, pLit2.pVar );\n                // move to the next literal in this cube\n                pLit2 = pLit2.pHNext;\n                nLits2++;\n            }\n        \n        } else if pLit1 \u0026\u0026 !(pLit2 != nil) {    // add literal to the first cube\n            Fxu_MatrixAddLiteral( p, pCube1, pLit1.pVar );\n            // move to the next literal in this cube\n            pLit1 = pLit1.pHNext;\n            nLits1++;\n        \n        } else if !pLit1 \u0026\u0026 (pLit2 != nil) {    // add literal to the second cube\n            Fxu_MatrixAddLiteral( p, pCube2, pLit2.pVar );\n            // move to the next literal in this cube\n            pLit2 = pLit2.pHNext;\n            nLits2++;\n        \n        } else {\n            break; }\n    }\n    assert(pPair.nLits1 == nLits1, \"pPair.nLits1 == nLits1\");\n    assert(pPair.nLits2 == nLits2, \"pPair.nLits2 == nLits2\");\n    assert(pPair.nBase == nBase, \"pPair.nBase == nBase\");\n}"
+    },
+    {
+      "Name": "Fxu_UpdateMatrixDoubleClean",
+      "Start": 13714,
+      "End": 16875,
+      "BodyStart": 13807,
+      "Original": "void Fxu_UpdateMatrixDoubleClean( Fxu_Matrix * p, Fxu_Cube * pCubeUse, Fxu_Cube * pCubeRem )\n{\n    Fxu_Lit * pLit1, * bLit1Next;\n    Fxu_Lit * pLit2, * bLit2Next;\n\n    // initialize the starting literals\n    pLit1     = pCubeUse-\u003elLits.pHead;\n    pLit2     = pCubeRem-\u003elLits.pHead;\n    bLit1Next = pLit1? pLit1-\u003epHNext: NULL;\n    bLit2Next = pLit2? pLit2-\u003epHNext: NULL;\n    // go through the pair and remove the literals in the base\n    // from the first cube and all literals from the second cube\n    while ( 1 )\n    {\n        if ( pLit1 \u0026\u0026 pLit2 )\n        {\n            if ( pLit1-\u003eiVar == pLit2-\u003eiVar )\n            {  // this literal is present in both cubes - it belongs to the base\n                // mark the affected var\n                if ( pLit1-\u003epVar-\u003epOrder == NULL )\n                    Fxu_MatrixRingVarsAdd( p, pLit1-\u003epVar );\n                // leave the base in pCubeUse; delete it from pCubeRem\n                Fxu_MatrixDelLiteral( p, pLit2 );\n                // step to the next literals\n                pLit1     = bLit1Next;\n                pLit2     = bLit2Next;\n                bLit1Next = pLit1? pLit1-\u003epHNext: NULL;\n                bLit2Next = pLit2? pLit2-\u003epHNext: NULL;\n            }\n            else if ( pLit1-\u003eiVar \u003c pLit2-\u003eiVar )\n            { // this literal is present in pCubeUse - remove it\n                // mark the affected var\n                if ( pLit1-\u003epVar-\u003epOrder == NULL )\n                    Fxu_MatrixRingVarsAdd( p, pLit1-\u003epVar );\n                // delete this literal\n                Fxu_MatrixDelLiteral( p, pLit1 );\n                // step to the next literals\n                pLit1     = bLit1Next;\n                bLit1Next = pLit1? pLit1-\u003epHNext: NULL;\n            }\n            else\n            { // this literal is present in pCubeRem - remove it\n                // mark the affected var\n                if ( pLit2-\u003epVar-\u003epOrder == NULL )\n                    Fxu_MatrixRingVarsAdd( p, pLit2-\u003epVar );\n                // delete this literal\n                Fxu_MatrixDelLiteral( p, pLit2 );\n                // step to the next literals\n                pLit2     = bLit2Next;\n                bLit2Next = pLit2? pLit2-\u003epHNext: NULL;\n            }\n        }\n        else if ( pLit1 \u0026\u0026 !pLit2 )\n        { // this literal is present in pCubeUse - leave it\n            // mark the affected var\n            if ( pLit1-\u003epVar-\u003epOrder == NULL )\n                Fxu_MatrixRingVarsAdd( p, pLit1-\u003epVar );\n            // delete this literal\n            Fxu_MatrixDelLiteral( p, pLit1 );\n            // step to the next literals\n            pLit1     = bLit1Next;\n            bLit1Next = pLit1? pLit1-\u003epHNext: NULL;\n        }\n        else if ( !pLit1 \u0026\u0026 pLit2 )\n        { // this literal is present in pCubeRem - remove it\n            // mark the affected var\n            if ( pLit2-\u003epVar-\u003epOrder == NULL )\n                Fxu_MatrixRingVarsAdd( p, pLit2-\u003epVar );\n            // delete this literal\n            Fxu_MatrixDelLiteral( p, pLit2 );\n            // step to the next literals\n            pLit2     = bLit2Next;\n            bLit2Next = pLit2? pLit2-\u003epHNext: NULL;\n        }\n        else\n            break;\n    }\n}",
+      "Draft": "func Fxu_UpdateMatrixDoubleClean(p *Fxu_Matrix, pCubeUse *Fxu_Cube, pCubeRem *Fxu_Cube) {\n    var pLit1, bLit1Next *Fxu_Lit;\n    var pLit2, bLit2Next *Fxu_Lit;\n\n    // initialize the starting literals\n    pLit1     = pCubeUse.lLits.pHead;\n    pLit2     = pCubeRem.lLits.pHead;\n    if pLit1 {\n        bLit1Next = pLit1.pHNext;\n    } else {\n        bLit1Next = nil;\n    }\n    if pLit2 != nil {\n        bLit2Next = pLit2.pHNext;\n    } else {\n        bLit2Next = nil;\n    }\n    // go through the pair and remove the literals in the base\n    // from the first cube and all literals from the second cube\n    for {\n        if pLit1 \u0026\u0026 (pLit2 != nil) {\n            if pLit1.iVar == pLit2.iVar {  // this literal is present in both cubes - it belongs to the base\n                // mark the affected var\n                if pLit1.pVar.pOrder == nil {\n                    // inlining of macro Fxu_MatrixRingVarsAdd\n                    (*((p).ppTailVars ) = pLit1.pVar );\n((p).ppTailVars  = \u0026(pLit1.pVar).pOrder );\n((pLit1.pVar).pOrder  = (Fxu_Var *)1);; }\n                // leave the base in pCubeUse; delete it from pCubeRem\n                Fxu_MatrixDelLiteral( p, pLit2 );\n                // step to the next literals\n                pLit1     = bLit1Next;\n                pLit2     = bLit2Next;\n                if pLit1 {\n                    bLit1Next = pLit1.pHNext;\n                } else {\n                    bLit1Next = nil;\n                }\n                if pLit2 != nil {\n                    bLit2Next = pLit2.pHNext;\n                } else {\n                    bLit2Next = nil;\n                }\n            \n            } else if pLit1.iVar \u003c pLit2.iVar { // this literal is present in pCubeUse - remove it\n                // mark the affected var\n                if pLit1.pVar.pOrder == nil {\n                    // inlining of macro Fxu_MatrixRingVarsAdd\n                    (*((p).ppTailVars ) = pLit1.pVar );\n((p).ppTailVars  = \u0026(pLit1.pVar).pOrder );\n((pLit1.pVar).pOrder  = (Fxu_Var *)1);; }\n                // delete this literal\n                Fxu_MatrixDelLiteral( p, pLit1 );\n                // step to the next literals\n                pLit1     = bLit1Next;\n                if pLit1 {\n                    bLit1Next = pLit1.pHNext;\n                } else {\n                    bLit1Next = nil;\n                }\n            \n            } else { // this literal is present in pCubeRem - remove it\n                // mark the affected var\n                if pLit2.pVar.pOrder == nil {\n                    // inlining of macro Fxu_MatrixRingVarsAdd\n                    (*((p).ppTailVars ) = pLit2.pVar );\n((p).ppTailVars  = \u0026(pLit2.pVar).pOrder );\n((pLit2.pVar).pOrder  = (Fxu_Var *)1);; }\n                // delete this literal\n                Fxu_MatrixDelLiteral( p, pLit2 );\n                // step to the next literals\n                pLit2     = bLit2Next;\n                if pLit2 != nil {\n                    bLit2Next = pLit2.pHNext;\n                } else {\n                    bLit2Next = nil;\n                }\n            }\n        \n        } else if pLit1 \u0026\u0026 !(pLit2 != nil) { // this literal is present in pCubeUse - leave it\n            // mark the affected var\n            if pLit1.pVar.pOrder == nil {\n                // inlining of macro Fxu_MatrixRingVarsAdd\n                (*((p).ppTailVars ) = pLit1.pVar );\n((p).ppTailVars  = \u0026(pLit1.pVar).pOrder );\n((pLit1.pVar).pOrder  = (Fxu_Var *)1);; }\n            // delete this literal\n            Fxu_MatrixDelLiteral( p, pLit1 );\n            // step to the next literals\n            pLit1     = bLit1Next;\n            if pLit1 {\n                bLit1Next = pLit1.pHNext;\n            } else {\n                bLit1Next = nil;\n            }\n        \n        } else if !pLit1 \u0026\u0026 (pLit2 != nil) { // this literal is present in pCubeRem - remove it\n            // mark the affected var\n            if pLit2.pVar.pOrder == nil {\n                // inlining of macro Fxu_MatrixRingVarsAdd\n                (*((p).ppTailVars ) = pLit2.pVar );\n((p).ppTailVars  = \u0026(pLit2.pVar).pOrder );\n((pLit2.pVar).pOrder  = (Fxu_Var *)1);; }\n            // delete this literal\n            Fxu_MatrixDelLiteral( p, pLit2 );\n            // step to the next literals\n            pLit2     = bLit2Next;\n            if pLit2 != nil {\n                bLit2Next = pLit2.pHNext;\n            } else {\n                bLit2Next = nil;\n            }\n        \n        } else {\n            break; }\n    }\n}"
+    },
+    {
+      "Name": "Fxu_UpdateMatrixSingleClean",
+      "Start": 17168,
+      "End": 19744,
+      "BodyStart": 17272,
+      "Original": "void Fxu_UpdateMatrixSingleClean( Fxu_Matrix * p, Fxu_Var * pVar1, Fxu_Var * pVar2, Fxu_Var * pVarNew )\n{\n    Fxu_Lit * pLit1, * bLit1Next;\n    Fxu_Lit * pLit2, * bLit2Next;\n\n    // initialize the starting literals\n    pLit1     = pVar1-\u003elLits.pHead;\n    pLit2     = pVar2-\u003elLits.pHead;\n    bLit1Next = pLit1? pLit1-\u003epVNext: NULL;\n    bLit2Next = pLit2? pLit2-\u003epVNext: NULL;\n    while ( 1 )\n    {\n        if ( pLit1 \u0026\u0026 pLit2 )\n        {\n            if ( pLit1-\u003epCube-\u003epVar-\u003eiVar == pLit2-\u003epCube-\u003epVar-\u003eiVar )\n            { // these literals coincide \n                if ( pLit1-\u003eiCube == pLit2-\u003eiCube )\n                { // these literals coincide \n                \n                    // collect the affected cube\n                    assert( pLit1-\u003epCube-\u003epOrder == NULL );\n                    Fxu_MatrixRingCubesAdd( p, pLit1-\u003epCube );\n\n                    // add the literal to this cube corresponding to the new column\n                    Fxu_MatrixAddLiteral( p, pLit1-\u003epCube, pVarNew );\n                    // clean the old cubes\n                    Fxu_UpdateCleanOldDoubles( p, NULL, pLit1-\u003epCube );\n\n                    // remove the literals \n                    Fxu_MatrixDelLiteral( p, pLit1 );\n                    Fxu_MatrixDelLiteral( p, pLit2 );\n\n                    // go to the next literals\n                    pLit1     = bLit1Next;\n                    pLit2     = bLit2Next;\n                    bLit1Next = pLit1? pLit1-\u003epVNext: NULL;\n                    bLit2Next = pLit2? pLit2-\u003epVNext: NULL;\n                }\n                else if ( pLit1-\u003eiCube \u003c pLit2-\u003eiCube )\n                {\n                    pLit1     = bLit1Next;\n                    bLit1Next = pLit1? pLit1-\u003epVNext: NULL;\n                }\n                else\n                {\n                    pLit2     = bLit2Next;\n                    bLit2Next = pLit2? pLit2-\u003epVNext: NULL;\n                }\n            }\n            else if ( pLit1-\u003epCube-\u003epVar-\u003eiVar \u003c pLit2-\u003epCube-\u003epVar-\u003eiVar )\n            {\n                pLit1     = bLit1Next;\n                bLit1Next = pLit1? pLit1-\u003epVNext: NULL;\n            }\n            else\n            {\n                pLit2     = bLit2Next;\n                bLit2Next = pLit2? pLit2-\u003epVNext: NULL;\n            }\n        }\n        else if ( pLit1 \u0026\u0026 !pLit2 )\n        {\n            pLit1     = bLit1Next;\n            bLit1Next = pLit1? pLit1-\u003epVNext: NULL;\n        }\n        else if ( !pLit1 \u0026\u0026 pLit2 )\n        {\n            pLit2     = bLit2Next;\n            bLit2Next = pLit2? pLit2-\u003epVNext: NULL;\n        }\n        else\n            break;\n    }\n}",
+      "Draft": "func Fxu_UpdateMatrixSingleClean(p *Fxu_Matrix, pVar1 *Fxu_Var, pVar2 *Fxu_Var, pVarNew *Fxu_Var) {\n    var pLit1, bLit1Next *Fxu_Lit;\n    var pLit2, bLit2Next *Fxu_Lit;\n\n    // initialize the starting literals\n    pLit1     = pVar1.lLits.pHead;\n    pLit2     = pVar2.lLits.pHead;\n    if pLit1 {\n        bLit1Next = pLit1.pVNext;\n    } else {\n        bLit1Next = nil;\n    }\n    if pLit2 != nil {\n        bLit2Next = pLit2.pVNext;\n    } else {\n        bLit2Next = nil;\n    }\n    for {\n        if pLit1 \u0026\u0026 (pLit2 != nil) {\n            if pLit1.pCube.pVar.iVar == pLit2.pCube.pVar.iVar { // these literals coincide \n                if pLit1.iCube == pLit2.iCube { // these literals coincide \n                \n                    // collect the affected cube\n                    assert(pLit1.pCube.pOrder == nil, \"pLit1.pCube.pOrder == nil\");\n                    // inlining of macro Fxu_MatrixRingCubesAdd\n                    (*((p).ppTailCubes) = pLit1.pCube);\n((p).ppTailCubes = \u0026(pLit1.pCube).pOrder);\n((pLit1.pCube).pOrder = (Fxu_Cube *)1);;\n\n                    // add the literal to this cube corresponding to the new column\n                    Fxu_MatrixAddLiteral( p, pLit1.pCube, pVarNew );\n                    // clean the old cubes\n                    Fxu_UpdateCleanOldDoubles( p, nil, pLit1.pCube );\n\n                    // remove the literals \n                    Fxu_MatrixDelLiteral( p, pLit1 );\n                    Fxu_MatrixDelLiteral( p, pLit2 );\n\n                    // go to the next literals\n                    pLit1     = bLit1Next;\n                    pLit2     = bLit2Next;\n                    if pLit1 {\n                        bLit1Next = pLit1.pVNext;\n                    } else {\n                        bLit1Next = nil;\n                    }\n                    if pLit2 != nil {\n                        bLit2Next = pLit2.pVNext;\n                    } else {\n                        bLit2Next = nil;\n                    }\n                \n                } else if pLit1.iCube \u003c pLit2.iCube {\n                    pLit1     = bLit1Next;\n                    if pLit1 {\n                        bLit1Next = pLit1.pVNext;\n                    } else {\n                        bLit1Next = nil;\n                    }\n                \n                } else {\n                    pLit2     = bLit2Next;\n                    if pLit2 != nil {\n                        bLit2Next = pLit2.pVNext;\n                    } else {\n                        bLit2Next = nil;\n                    }\n                }\n            \n            } else if pLit1.pCube.pVar.iVar \u003c pLit2.pCube.pVar.iVar {\n                pLit1     = bLit1Next;\n                if pLit1 {\n                    bLit1Next = pLit1.pVNext;\n                } else {\n                    bLit1Next = nil;\n                }\n            \n            } else {\n                pLit2     = bLit2Next;\n                if pLit2 != nil {\n                    bLit2Next = pLit2.pVNext;\n                } else {\n                    bLit2Next = nil;\n                }\n            }\n        \n        } else if pLit1 \u0026\u0026 !(pLit2 != nil) {\n            pLit1     = bLit1Next;\n            if pLit1 {\n                bLit1Next = pLit1.pVNext;\n            } else {\n                bLit1Next = nil;\n            }\n        \n        } else if !pLit1 \u0026\u0026 (pLit2 != nil) {\n            pLit2     = bLit2Next;\n            if pLit2 != nil {\n                bLit2Next = pLit2.pVNext;\n            } else {\n                bLit2Next = nil;\n            }\n        \n        } else {\n            break; }\n    }\n}"
+    },
+    {
+      "Name": "Fxu_UpdatePairsSort",
+      "Start": 19980,
+      "End": 20676,
+      "BodyStart": 20045,
+      "Original": "void Fxu_UpdatePairsSort( Fxu_Matrix * p, Fxu_Double * pDouble )\n{\n    Fxu_Pair * pPair;\n    // order the pairs by the first cube to ensure that new literals are added \n    // to the matrix from top to bottom - collect pairs into the array\n    p-\u003evPairs-\u003enSize = 0;\n    Fxu_DoubleForEachPair( pDouble, pPair )\n        Vec_PtrPush( p-\u003evPairs, pPair );\n    if ( p-\u003evPairs-\u003enSize \u003c 2 )\n        return;\n    // sort\n    qsort( (void *)p-\u003evPairs-\u003epArray, (size_t)p-\u003evPairs-\u003enSize, sizeof(Fxu_Pair *), \n        (int (*)(const void *, const void *)) Fxu_UpdatePairCompare );\n    assert( Fxu_UpdatePairCompare( (Fxu_Pair**)p-\u003evPairs-\u003epArray, (Fxu_Pair**)p-\u003evPairs-\u003epArray + p-\u003evPairs-\u003enSize - 1 ) \u003c 0 );\n}",
+      "Draft": "func Fxu_UpdatePairsSort(p *Fxu_Matrix, pDouble *Fxu_Double) {\n    var pPair *Fxu_Pair;\n    // order the pairs by the first cube to ensure that new literals are added \n    // to the matrix from top to bottom - collect pairs into the array\n    p.vPairs.nSize = 0;\n    // inlining of macro Fxu_DoubleForEachPair\n    for  pPair = (pDouble).lPairs.pHead;          (pPair != nil);          pPair = pPair.pDNext  {\n        Vec_PtrPush( p.vPairs, pPair );\n    }\n    if p.vPairs.nSize \u003c 2 {\n        return; }\n    // sort\n    qsort( (void *)p.vPairs.pArray, (size_t)p.vPairs.nSize, sizeof(Fxu_Pair *), \n            (int (*)(void *, void *)) Fxu_UpdatePairCompare );\n    assert(Fxu_UpdatePairCompare( (Fxu_Pair**)p.vPairs.pArray, (Fxu_Pair**)p.vPairs.pArray + p.vPairs.nSize - 1 ) \u003c 0, \"Fxu_UpdatePairCompare( (Fxu_Pair**)p.vPairs.pArray, (Fxu_Pair**)p.vPairs.pArray + p.vPairs.nSize - 1 ) \u003c 0\");\n}"
+    },
+    {
+      "Name": "Fxu_UpdatePairCompare",
+      "Start": 20931,
+      "End": 21463,
+      "BodyStart": 20995,
+      "Original": "int Fxu_UpdatePairCompare( Fxu_Pair ** ppP1, Fxu_Pair ** ppP2 )\n{\n    Fxu_Cube * pC1 = (*ppP1)-\u003epCube1;\n    Fxu_Cube * pC2 = (*ppP2)-\u003epCube1;\n    int iP1CubeMin, iP2CubeMin;\n    if ( pC1-\u003epVar-\u003eiVar \u003c pC2-\u003epVar-\u003eiVar )\n        return -1;\n    if ( pC1-\u003epVar-\u003eiVar \u003e pC2-\u003epVar-\u003eiVar )\n        return 1;\n    iP1CubeMin = Fxu_PairMinCubeInt( *ppP1 );\n    iP2CubeMin = Fxu_PairMinCubeInt( *ppP2 );\n    if ( iP1CubeMin \u003c iP2CubeMin )\n        return -1;\n    if ( iP1CubeMin \u003e iP2CubeMin )\n        return 1;\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Fxu_UpdatePairCompare(ppP1 **Fxu_Pair, ppP2 **Fxu_Pair) int32 {\n    var pC1 *Fxu_Cube  = (*ppP1).pCube1;\n    var pC2 *Fxu_Cube  = (*ppP2).pCube1;\n    var iP1CubeMin, iP2CubeMin int32;\n    if pC1.pVar.iVar \u003c pC2.pVar.iVar {\n        return -1; }\n    if pC1.pVar.iVar \u003e pC2.pVar.iVar {\n        return 1; }\n    // inlining of macro Fxu_PairMinCubeInt\n    \n    if (*ppP1).iCube1 \u003c (*ppP1).iCube2 {\n        iP1CubeMin = (*ppP1).iCube1;\n    } else {\n        iP1CubeMin = (*ppP1).iCube2;\n    }\n    // inlining of macro Fxu_PairMinCubeInt\n    \n    if (*ppP2).iCube1 \u003c (*ppP2).iCube2 {\n        iP2CubeMin = (*ppP2).iCube1;\n    } else {\n        iP2CubeMin = (*ppP2).iCube2;\n    }\n    if iP1CubeMin \u003c iP2CubeMin {\n        return -1; }\n    if iP1CubeMin \u003e iP2CubeMin {\n        return 1; }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Fxu_UpdateCreateNewVars",
+      "Start": 21706,
+      "End": 22317,
+      "BodyStart": 21803,
+      "Original": "void Fxu_UpdateCreateNewVars( Fxu_Matrix * p, Fxu_Var ** ppVarC, Fxu_Var ** ppVarD, int nCubes )\n{\n    Fxu_Var * pVarC, * pVarD;\n\n    // add a new column for the complement\n    pVarC = Fxu_MatrixAddVar( p );\n    pVarC-\u003enCubes = 0;\n    // add a new column for the divisor\n    pVarD = Fxu_MatrixAddVar( p );\n    pVarD-\u003enCubes = nCubes;\n\n    // mark this entry in the Value2Node array\n//    assert( p-\u003epValue2Node[pVarC-\u003eiVar] \u003e 0 );\n//    p-\u003epValue2Node[pVarD-\u003eiVar  ] = p-\u003epValue2Node[pVarC-\u003eiVar];\n//    p-\u003epValue2Node[pVarD-\u003eiVar+1] = p-\u003epValue2Node[pVarC-\u003eiVar]+1;\n\n    *ppVarC = pVarC;\n    *ppVarD = pVarD;\n}",
+      "Draft": "func Fxu_UpdateCreateNewVars(p *Fxu_Matrix, ppVarC **Fxu_Var, ppVarD **Fxu_Var, nCubes int32) {\n    var pVarC, pVarD *Fxu_Var;\n\n    // add a new column for the complement\n    pVarC = Fxu_MatrixAddVar( p );\n    pVarC.nCubes = 0;\n    // add a new column for the divisor\n    pVarD = Fxu_MatrixAddVar( p );\n    pVarD.nCubes = nCubes;\n\n    // mark this entry in the Value2Node array\n//    assert( p-\u003epValue2Node[pVarC-\u003eiVar] \u003e 0 );\n//    p-\u003epValue2Node[pVarD-\u003eiVar  ] = p-\u003epValue2Node[pVarC-\u003eiVar];\n//    p-\u003epValue2Node[pVarD-\u003eiVar+1] = p-\u003epValue2Node[pVarC-\u003eiVar]+1;\n\n    *ppVarC = pVarC;\n    *ppVarD = pVarD;\n}"
+    },
+    {
+      "Name": "Fxu_UpdateCleanOldDoubles",
+      "Start": 22554,
+      "End": 23892,
+      "BodyStart": 22640,
+      "Original": "void Fxu_UpdateCleanOldDoubles( Fxu_Matrix * p, Fxu_Double * pDiv, Fxu_Cube * pCube )\n{\n    Fxu_Double * pDivCur;\n    Fxu_Pair * pPair;\n    int i;\n\n    // if the cube is a recently introduced one\n    // it does not have pairs allocated\n    // in this case, there is nothing to update\n    if ( pCube-\u003epVar-\u003eppPairs == NULL )\n        return;\n\n    // go through all the pairs of this cube\n    Fxu_CubeForEachPair( pCube, pPair, i )\n    {\n         // get the divisor of this pair\n        pDivCur = pPair-\u003epDiv;\n        // skip the current divisor\n        if ( pDivCur == pDiv )\n            continue;\n        // remove this pair\n        Fxu_ListDoubleDelPair( pDivCur, pPair );    \n        // the divisor may have become useless by now\n        if ( pDivCur-\u003elPairs.nItems == 0 )\n        {\n            assert( pDivCur-\u003eWeight == pPair-\u003enBase - 1 );\n              Fxu_HeapDoubleDelete( p-\u003epHeapDouble, pDivCur );\n            Fxu_MatrixDelDivisor( p, pDivCur );\n        }\n        else\n        {\n            // update the divisor's weight\n            pDivCur-\u003eWeight -= pPair-\u003enLits1 + pPair-\u003enLits2 - 1 + pPair-\u003enBase;\n              Fxu_HeapDoubleUpdate( p-\u003epHeapDouble, pDivCur );\n        }\n        MEM_FREE_FXU( p, Fxu_Pair, 1, pPair );\n    }\n    // finally erase all the pair info associated with this cube\n    Fxu_PairClearStorage( pCube );\n}",
+      "Draft": "func Fxu_UpdateCleanOldDoubles(p *Fxu_Matrix, pDiv *Fxu_Double, pCube *Fxu_Cube) {\n    var pDivCur *Fxu_Double;\n    var pPair *Fxu_Pair;\n    var i int32;\n\n    // if the cube is a recently introduced one\n    // it does not have pairs allocated\n    // in this case, there is nothing to update\n    if pCube.pVar.ppPairs == nil {\n        return; }\n\n    // go through all the pairs of this cube\n    // inlining of macro Fxu_CubeForEachPair\n    for  i = 0;        i \u003c pCube.pVar.nCubes \u0026\u0026 (((pPair) = (pCube).pVar.ppPairs[(pCube).iCube][i]), 1);        i++  {        if pPair == nil {} else {\n         // get the divisor of this pair\n        pDivCur = pPair.pDiv;\n        // skip the current divisor\n        if pDivCur == pDiv {\n            continue; }\n        // remove this pair\n        Fxu_ListDoubleDelPair( pDivCur, pPair );    \n        // the divisor may have become useless by now\n        if pDivCur.lPairs.nItems == 0 {\n            assert(pDivCur.Weight == pPair.nBase - 1, \"pDivCur.Weight == pPair.nBase - 1\");\n              Fxu_HeapDoubleDelete( p.pHeapDouble, pDivCur );\n            Fxu_MatrixDelDivisor( p, pDivCur );\n        \n        } else {\n            // update the divisor's weight\n            pDivCur.Weight -= pPair.nLits1 + pPair.nLits2 - 1 + pPair.nBase;\n              Fxu_HeapDoubleUpdate( p.pHeapDouble, pDivCur );\n        }\n        MEM_FREE_FXU( p, Fxu_Pair, 1, pPair );\n    }\n    }\n    // finally erase all the pair info associated with this cube\n    Fxu_PairClearStorage( pCube );\n}"
+    },
+    {
+      "Name": "Fxu_UpdateAddNewDoubles",
+      "Start": 24316,
+      "End": 25094,
+      "BodyStart": 24381,
+      "Original": "void Fxu_UpdateAddNewDoubles( Fxu_Matrix * p, Fxu_Cube * pCube )\n{\n    Fxu_Cube * pTemp;\n    assert( pCube-\u003epOrder );\n\n    // if the cube is a recently introduced one\n    // it does not have pairs allocated\n    // in this case, there is nothing to update\n    if ( pCube-\u003epVar-\u003eppPairs == NULL )\n        return;\n\n    for ( pTemp = pCube-\u003epFirst; pTemp-\u003epVar == pCube-\u003epVar; pTemp = pTemp-\u003epNext )\n    {\n        // do not add pairs with the empty cubes\n        if ( pTemp-\u003elLits.nItems == 0 )\n            continue;\n        // to prevent adding duplicated pairs of the new cubes\n        // do not add the pair, if the current cube is marked \n        if ( pTemp-\u003epOrder \u0026\u0026 pTemp-\u003eiCube \u003e= pCube-\u003eiCube )\n            continue;\n        Fxu_MatrixAddDivisor( p, pTemp, pCube );\n    }\n}",
+      "Draft": "func Fxu_UpdateAddNewDoubles(p *Fxu_Matrix, pCube *Fxu_Cube) {\n    var pTemp *Fxu_Cube;\n    assert(pCube.pOrder, \"pCube.pOrder\");\n\n    // if the cube is a recently introduced one\n    // it does not have pairs allocated\n    // in this case, there is nothing to update\n    if pCube.pVar.ppPairs == nil {\n        return; }\n\n    for  pTemp = pCube.pFirst; pTemp.pVar == pCube.pVar; pTemp = pTemp.pNext  {\n        // do not add pairs with the empty cubes\n        if pTemp.lLits.nItems == 0 {\n            continue; }\n        // to prevent adding duplicated pairs of the new cubes\n        // do not add the pair, if the current cube is marked \n        if pTemp.pOrder \u0026\u0026 pTemp.iCube \u003e= pCube.iCube {\n            continue; }\n        Fxu_MatrixAddDivisor( p, pTemp, pCube );\n    }\n}"
+    },
+    {
+      "Name": "Fxu_UpdateCleanOldSingles",
+      "Start": 25363,
+      "End": 26318,
+      "BodyStart": 25412,
+      "Original": "void Fxu_UpdateCleanOldSingles( Fxu_Matrix * p )\n{ \n    Fxu_Single * pSingle, * pSingle2;\n    int WeightNew;\n    int Counter = 0;\n\n    Fxu_MatrixForEachSingleSafe( p, pSingle, pSingle2 )\n    {\n        // if at least one of the variables is marked, recalculate\n        if ( pSingle-\u003epVar1-\u003epOrder || pSingle-\u003epVar2-\u003epOrder )\n        {\n            Counter++;\n            // get the new weight\n            WeightNew = -2 + Fxu_SingleCountCoincidence( p, pSingle-\u003epVar1, pSingle-\u003epVar2 );\n            if ( WeightNew \u003e= 0 )\n            {\n                pSingle-\u003eWeight = WeightNew;\n                Fxu_HeapSingleUpdate( p-\u003epHeapSingle, pSingle );\n            }\n            else\n            {\n                Fxu_HeapSingleDelete( p-\u003epHeapSingle, pSingle );\n                Fxu_ListMatrixDelSingle( p, pSingle );\n                MEM_FREE_FXU( p, Fxu_Single, 1, pSingle );\n            }\n        }\n    }\n//    printf( \"Called procedure %d times.\\n\", Counter );\n}",
+      "Draft": "func Fxu_UpdateCleanOldSingles(p *Fxu_Matrix) { \n    var pSingle, pSingle2 *Fxu_Single;\n    var WeightNew int32;\n    var Counter int32;\n\n    // inlining of macro Fxu_MatrixForEachSingleSafe\n    for  pSingle = (p).lSingles.pHead, pSingle2 = (pSingle? pSingle.pNext: nil);          (pSingle != nil);          pSingle = pSingle2, pSingle2 = (pSingle? pSingle.pNext: nil)  {\n        // if at least one of the variables is marked, recalculate\n        if pSingle.pVar1.pOrder || pSingle.pVar2.pOrder {\n            Counter++;\n            // get the new weight\n            WeightNew = -2 + Fxu_SingleCountCoincidence( p, pSingle.pVar1, pSingle.pVar2 );\n            if WeightNew \u003e= 0 {\n                pSingle.Weight = WeightNew;\n                Fxu_HeapSingleUpdate( p.pHeapSingle, pSingle );\n            \n            } else {\n                Fxu_HeapSingleDelete( p.pHeapSingle, pSingle );\n                Fxu_ListMatrixDelSingle( p, pSingle );\n                MEM_FREE_FXU( p, Fxu_Single, 1, pSingle );\n            }\n        }\n    }\n//    printf( \"Called procedure %d times.\\n\", Counter );\n}"
+    },
+    {
+      "Name": "Fxu_UpdateAddNewSingles",
+      "Start": 26587,
+      "End": 26697,
+      "BodyStart": 26650,
+      "Original": "void Fxu_UpdateAddNewSingles( Fxu_Matrix * p, Fxu_Var * pVar )\n{\n    Fxu_MatrixComputeSinglesOne( p, pVar );\n}",
+      "Draft": "func Fxu_UpdateAddNewSingles(p *Fxu_Matrix, pVar *Fxu_Var) {\n    Fxu_MatrixComputeSinglesOne( p, pVar );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::mechanical::sizeof::23503",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 20455,
+      "End": 20461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::3853",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3503,
+      "End": 3503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::4023",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3542,
+      "End": 3542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::5153",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4489,
+      "End": 4489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::7134",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6112,
+      "End": 6112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::7304",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6151,
+      "End": 6151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::8270",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6934,
+      "End": 6934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::10770",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9024,
+      "End": 9024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::11978",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10224,
+      "End": 10236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::12612",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10505,
+      "End": 10505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::16766",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14513,
+      "End": 14513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::17547",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15151,
+      "End": 15151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::18168",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15629,
+      "End": 15629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::18801",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16119,
+      "End": 16119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::19401",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16576,
+      "End": 16576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::20932",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17963,
+      "End": 17963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::23450",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20402,
+      "End": 20410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::23509",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20461,
+      "End": 20473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::23630",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20582,
+      "End": 20594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::pointer-cast::23661",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20613,
+      "End": 20625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::Fxu_Update",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_Update",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2247,
+      "End": 5054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::Fxu_UpdateSingle",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_UpdateSingle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5334,
+      "End": 7396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::Fxu_UpdateDouble",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_UpdateDouble",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7689,
+      "End": 9586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::Fxu_UpdateDoublePairs",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_UpdateDoublePairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9824,
+      "End": 11224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::Fxu_UpdateMatrixDoubleCreateCubes",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_UpdateMatrixDoubleCreateCubes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11521,
+      "End": 13432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::Fxu_UpdateMatrixDoubleClean",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_UpdateMatrixDoubleClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13714,
+      "End": 16875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::Fxu_UpdateMatrixSingleClean",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_UpdateMatrixSingleClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17168,
+      "End": 19744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::Fxu_UpdatePairsSort",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_UpdatePairsSort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19980,
+      "End": 20676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::Fxu_UpdatePairCompare",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_UpdatePairCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20931,
+      "End": 21463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::Fxu_UpdateCreateNewVars",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_UpdateCreateNewVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21706,
+      "End": 22317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::Fxu_UpdateCleanOldDoubles",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_UpdateCleanOldDoubles",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22554,
+      "End": 23892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::Fxu_UpdateAddNewDoubles",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_UpdateAddNewDoubles",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24316,
+      "End": 25094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::ternary::Fxu_UpdateCleanOldSingles",
+      "Category": "ternary-review",
+      "Symbol": "Fxu_UpdateCleanOldSingles",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 25363,
+      "End": 26318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::Fxu_UpdateCleanOldSingles",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_UpdateCleanOldSingles",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25363,
+      "End": 26318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::Fxu_UpdateAddNewSingles",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_UpdateAddNewSingles",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26587,
+      "End": 26697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 26944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::macro-inline::4993",
+      "Category": "macro-inline-review",
+      "Symbol": "MEM_FREE_FXU",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4993,
+      "End": 5034
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::macro-inline::9528",
+      "Category": "macro-inline-review",
+      "Symbol": "MEM_FREE_FXU",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9528,
+      "End": 9566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::macro-inline::11152",
+      "Category": "macro-inline-review",
+      "Symbol": "MEM_FREE_FXU",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11152,
+      "End": 11189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::macro-inline::23746",
+      "Category": "macro-inline-review",
+      "Symbol": "MEM_FREE_FXU",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 23746,
+      "End": 23783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuUpdate.c::macro-inline::26187",
+      "Category": "macro-inline-review",
+      "Symbol": "MEM_FREE_FXU",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 26187,
+      "End": 26228
+    }
+  ],
+  "Draft": "package fxu\n\n/**CFile****************************************************************\n\n  FileName    [fxuUpdate.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Updating the sparse matrix when divisors are accepted.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: fxuUpdate.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fxuInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Fxu_UpdateDoublePairs( Fxu_Matrix * p, Fxu_Double * pDouble, Fxu_Var * pVar );\n\n// static void Fxu_UpdateMatrixDoubleCreateCubes( Fxu_Matrix * p, Fxu_Cube * pCube1, Fxu_Cube * pCube2, Fxu_Double * pDiv );\n\n// static void Fxu_UpdateMatrixDoubleClean( Fxu_Matrix * p, Fxu_Cube * pCubeUse, Fxu_Cube * pCubeRem );\n\n// static void Fxu_UpdateMatrixSingleClean( Fxu_Matrix * p, Fxu_Var * pVar1, Fxu_Var * pVar2, Fxu_Var * pVarNew );\n\n\n// static void Fxu_UpdateCreateNewVars( Fxu_Matrix * p, Fxu_Var ** ppVarC, Fxu_Var ** ppVarD, int nCubes );\n\n// static int  Fxu_UpdatePairCompare( Fxu_Pair ** ppP1, Fxu_Pair ** ppP2 );\n\n// static void Fxu_UpdatePairsSort( Fxu_Matrix * p, Fxu_Double * pDouble );\n\n\n// static void Fxu_UpdateCleanOldDoubles( Fxu_Matrix * p, Fxu_Double * pDiv, Fxu_Cube * pCube );\n\n// static void Fxu_UpdateAddNewDoubles( Fxu_Matrix * p, Fxu_Cube * pCube );\n\n// static void Fxu_UpdateCleanOldSingles( Fxu_Matrix * p );\n\n// static void Fxu_UpdateAddNewSingles( Fxu_Matrix * p, Fxu_Var * pVar );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the matrix after selecting two divisors.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_Update(p *Fxu_Matrix, pSingle *Fxu_Single, pDouble *Fxu_Double) {\n    var pCube, pCubeNew *Fxu_Cube;\n    var pVarC, pVarD *Fxu_Var;\n    var pVar1, pVar2 *Fxu_Var;\n\n    // consider trivial cases\n    if pSingle == nil {\n        assert(pDouble.Weight == Fxu_HeapDoubleReadMaxWeight( p.pHeapDouble ), \"pDouble.Weight == Fxu_HeapDoubleReadMaxWeight( p.pHeapDouble )\");\n        Fxu_UpdateDouble( p );\n        return;\n    }\n    if pDouble == nil {\n        assert(pSingle.Weight == Fxu_HeapSingleReadMaxWeight( p.pHeapSingle ), \"pSingle.Weight == Fxu_HeapSingleReadMaxWeight( p.pHeapSingle )\");\n        Fxu_UpdateSingle( p );\n        return;\n    }\n\n    // get the variables of the single\n    pVar1 = pSingle.pVar1;\n    pVar2 = pSingle.pVar2;\n\n    // remove the best double from the heap\n    Fxu_HeapDoubleDelete( p.pHeapDouble, pDouble );\n    // remove the best divisor from the table\n    Fxu_ListTableDelDivisor( p, pDouble );\n\n    // create two new columns (vars)\n    Fxu_UpdateCreateNewVars( p, \u0026pVarC, \u0026pVarD, 1 );\n    // create one new row (cube)\n    pCubeNew = Fxu_MatrixAddCube( p, pVarD, 0 );\n    pCubeNew.pFirst = pCubeNew;\n    // set the first cube of the positive var\n    pVarD.pFirst = pCubeNew;\n\n    // start collecting the affected vars and cubes\n    // inlining of macro Fxu_MatrixRingCubesStart\n    ((p).ppTailCubes = \u0026((p).pOrderCubes));\n((p).pOrderCubes = nil);;\n    // inlining of macro Fxu_MatrixRingVarsStart\n    ((p).ppTailVars  = \u0026((p).pOrderVars));\n((p).pOrderVars  = nil);;\n    // add the vars\n    // inlining of macro Fxu_MatrixRingVarsAdd\n    (*((p).ppTailVars ) = pVar1 );\n((p).ppTailVars  = \u0026(pVar1).pOrder );\n((pVar1).pOrder  = (Fxu_Var *)1);;\n    // inlining of macro Fxu_MatrixRingVarsAdd\n    (*((p).ppTailVars ) = pVar2 );\n((p).ppTailVars  = \u0026(pVar2).pOrder );\n((pVar2).pOrder  = (Fxu_Var *)1);;\n    // remove the literals and collect the affected cubes\n    // remove the divisors associated with this cube\n       // add to the affected cube the literal corresponding to the new column\n    Fxu_UpdateMatrixSingleClean( p, pVar1, pVar2, pVarD );\n    // replace each two cubes of the pair by one new cube\n    // the new cube contains the base and the new literal\n    Fxu_UpdateDoublePairs( p, pDouble, pVarC );\n    // stop collecting the affected vars and cubes\n    // inlining of macro Fxu_MatrixRingCubesStop\n    ;\n    // inlining of macro Fxu_MatrixRingVarsStop\n    ;\n\n    // add the literals to the new cube\n    assert(pVar1.iVar \u003c pVar2.iVar, \"pVar1.iVar \u003c pVar2.iVar\");\n    assert(Fxu_SingleCountCoincidence( p, pVar1, pVar2 ) == 0, \"Fxu_SingleCountCoincidence( p, pVar1, pVar2 ) == 0\");\n    Fxu_MatrixAddLiteral( p, pCubeNew, pVar1 );\n    Fxu_MatrixAddLiteral( p, pCubeNew, pVar2 );\n\n    // create new doubles; we cannot add them in the same loop\n    // because we first have to create *all* new cubes for each node\n    // inlining of macro Fxu_MatrixForEachCubeInRing\n    if (p).pOrderCubes {    for  pCube = (p).pOrderCubes;          pCube != (Fxu_Cube *)1;          pCube = pCube.pOrder  {\n           Fxu_UpdateAddNewDoubles( p, pCube );\n    } }\n    // update the singles after removing some literals\n    Fxu_UpdateCleanOldSingles( p );\n\n    // undo the temporary rings with cubes and vars\n    Fxu_MatrixRingCubesUnmark( p );\n    Fxu_MatrixRingVarsUnmark( p );\n    // we should undo the rings before creating new singles\n\n    // create new singles\n    Fxu_UpdateAddNewSingles( p, pVarC );\n    Fxu_UpdateAddNewSingles( p, pVarD );\n\n    // recycle the divisor\n    MEM_FREE_FXU( p, Fxu_Double, 1, pDouble );\n    p.nDivs3++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates after accepting single cube divisor.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_UpdateSingle(p *Fxu_Matrix) {\n    var pSingle *Fxu_Single;\n    var pCube, pCubeNew *Fxu_Cube;\n    var pVarC, pVarD *Fxu_Var;\n    var pVar1, pVar2 *Fxu_Var;\n\n    // read the best divisor from the heap\n    pSingle = Fxu_HeapSingleReadMax( p.pHeapSingle );\n    // get the variables of this single-cube divisor\n    pVar1 = pSingle.pVar1;\n    pVar2 = pSingle.pVar2;\n\n    // create two new columns (vars)\n    Fxu_UpdateCreateNewVars( p, \u0026pVarC, \u0026pVarD, 1 );\n    // create one new row (cube)\n    pCubeNew = Fxu_MatrixAddCube( p, pVarD, 0 );\n    pCubeNew.pFirst = pCubeNew;\n    // set the first cube\n    pVarD.pFirst = pCubeNew;\n\n    // start collecting the affected vars and cubes\n    // inlining of macro Fxu_MatrixRingCubesStart\n    ((p).ppTailCubes = \u0026((p).pOrderCubes));\n((p).pOrderCubes = nil);;\n    // inlining of macro Fxu_MatrixRingVarsStart\n    ((p).ppTailVars  = \u0026((p).pOrderVars));\n((p).pOrderVars  = nil);;\n    // add the vars\n    // inlining of macro Fxu_MatrixRingVarsAdd\n    (*((p).ppTailVars ) = pVar1 );\n((p).ppTailVars  = \u0026(pVar1).pOrder );\n((pVar1).pOrder  = (Fxu_Var *)1);;\n    // inlining of macro Fxu_MatrixRingVarsAdd\n    (*((p).ppTailVars ) = pVar2 );\n((p).ppTailVars  = \u0026(pVar2).pOrder );\n((pVar2).pOrder  = (Fxu_Var *)1);;\n    // remove the literals and collect the affected cubes\n    // remove the divisors associated with this cube\n       // add to the affected cube the literal corresponding to the new column\n    Fxu_UpdateMatrixSingleClean( p, pVar1, pVar2, pVarD );\n    // stop collecting the affected vars and cubes\n    // inlining of macro Fxu_MatrixRingCubesStop\n    ;\n    // inlining of macro Fxu_MatrixRingVarsStop\n    ;\n\n    // add the literals to the new cube\n    assert(pVar1.iVar \u003c pVar2.iVar, \"pVar1.iVar \u003c pVar2.iVar\");\n    assert(Fxu_SingleCountCoincidence( p, pVar1, pVar2 ) == 0, \"Fxu_SingleCountCoincidence( p, pVar1, pVar2 ) == 0\");\n    Fxu_MatrixAddLiteral( p, pCubeNew, pVar1 );\n    Fxu_MatrixAddLiteral( p, pCubeNew, pVar2 );\n\n    // create new doubles; we cannot add them in the same loop\n    // because we first have to create *all* new cubes for each node\n    // inlining of macro Fxu_MatrixForEachCubeInRing\n    if (p).pOrderCubes {    for  pCube = (p).pOrderCubes;          pCube != (Fxu_Cube *)1;          pCube = pCube.pOrder  {\n           Fxu_UpdateAddNewDoubles( p, pCube );\n    } }\n    // update the singles after removing some literals\n    Fxu_UpdateCleanOldSingles( p );\n    // we should undo the rings before creating new singles\n\n    // unmark the cubes\n    Fxu_MatrixRingCubesUnmark( p );\n    Fxu_MatrixRingVarsUnmark( p );\n\n    // create new singles\n    Fxu_UpdateAddNewSingles( p, pVarC );\n    Fxu_UpdateAddNewSingles( p, pVarD );\n    p.nDivs1++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the matrix after accepting a double cube divisor.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_UpdateDouble(p *Fxu_Matrix) {\n    var pDiv *Fxu_Double;\n    var pCube, pCubeNew1, pCubeNew2 *Fxu_Cube;\n    var pVarC, pVarD *Fxu_Var;\n\n    // remove the best divisor from the heap\n    pDiv = Fxu_HeapDoubleGetMax( p.pHeapDouble );\n    // remove the best divisor from the table\n    Fxu_ListTableDelDivisor( p, pDiv );\n\n    // create two new columns (vars)\n    Fxu_UpdateCreateNewVars( p, \u0026pVarC, \u0026pVarD, 2 );\n    // create two new rows (cubes)\n    pCubeNew1 = Fxu_MatrixAddCube( p, pVarD, 0 );\n    pCubeNew1.pFirst = pCubeNew1;\n    pCubeNew2 = Fxu_MatrixAddCube( p, pVarD, 1 );\n    pCubeNew2.pFirst = pCubeNew1;\n    // set the first cube\n    pVarD.pFirst = pCubeNew1;\n\n    // add the literals to the new cubes\n    Fxu_UpdateMatrixDoubleCreateCubes( p, pCubeNew1, pCubeNew2, pDiv );\n\n    // start collecting the affected cubes and vars\n    // inlining of macro Fxu_MatrixRingCubesStart\n    ((p).ppTailCubes = \u0026((p).pOrderCubes));\n((p).pOrderCubes = nil);;\n    // inlining of macro Fxu_MatrixRingVarsStart\n    ((p).ppTailVars  = \u0026((p).pOrderVars));\n((p).pOrderVars  = nil);;\n    // replace each two cubes of the pair by one new cube\n    // the new cube contains the base and the new literal\n    Fxu_UpdateDoublePairs( p, pDiv, pVarD );\n    // stop collecting the affected cubes and vars\n    // inlining of macro Fxu_MatrixRingCubesStop\n    ;\n    // inlining of macro Fxu_MatrixRingVarsStop\n    ;\n    \n    // create new doubles; we cannot add them in the same loop\n    // because we first have to create *all* new cubes for each node\n    // inlining of macro Fxu_MatrixForEachCubeInRing\n    if (p).pOrderCubes {    for  pCube = (p).pOrderCubes;          pCube != (Fxu_Cube *)1;          pCube = pCube.pOrder  {\n           Fxu_UpdateAddNewDoubles( p, pCube );\n    } }\n    // update the singles after removing some literals\n    Fxu_UpdateCleanOldSingles( p );\n\n    // undo the temporary rings with cubes and vars\n    Fxu_MatrixRingCubesUnmark( p );\n    Fxu_MatrixRingVarsUnmark( p );\n    // we should undo the rings before creating new singles\n\n    // create new singles\n    Fxu_UpdateAddNewSingles( p, pVarC );\n    Fxu_UpdateAddNewSingles( p, pVarD );\n\n    // recycle the divisor\n    MEM_FREE_FXU( p, Fxu_Double, 1, pDiv );\n    p.nDivs2++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Update the pairs.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_UpdateDoublePairs(p *Fxu_Matrix, pDouble *Fxu_Double, pVar *Fxu_Var) {\n    var pPair *Fxu_Pair;\n    var pCubeUse, pCubeRem *Fxu_Cube;\n    var i int32;\n\n    // collect and sort the pairs\n    Fxu_UpdatePairsSort( p, pDouble );\n//    for ( i = 0; i \u003c p-\u003enPairsTemp; i++ )\n    for  i = 0; i \u003c p.vPairs.nSize; i++  {\n        // get the pair\n//        pPair = p-\u003epPairsTemp[i];\n        pPair = (Fxu_Pair *)p.vPairs.pArray[i];\n        // out of the two cubes, select the one which comes earlier\n        // inlining of macro Fxu_PairMinCube\n        \n        if (pPair).iCube1 \u003c (pPair).iCube2 {\n            pCubeUse = (pPair).pCube1;\n        } else {\n            pCubeUse = (pPair).pCube2;\n        }\n        // inlining of macro Fxu_PairMaxCube\n        \n        if (pPair).iCube1 \u003e (pPair).iCube2 {\n            pCubeRem = (pPair).pCube1;\n        } else {\n            pCubeRem = (pPair).pCube2;\n        }\n        // collect the affected cube\n        assert(pCubeUse.pOrder == nil, \"pCubeUse.pOrder == nil\");\n        // inlining of macro Fxu_MatrixRingCubesAdd\n        (*((p).ppTailCubes) = pCubeUse);\n((p).ppTailCubes = \u0026(pCubeUse).pOrder);\n((pCubeUse).pOrder = (Fxu_Cube *)1);;\n\n        // remove some literals from pCubeUse and all literals from pCubeRem\n        Fxu_UpdateMatrixDoubleClean( p, pCubeUse, pCubeRem );\n        // add a literal that depends on the new variable\n        Fxu_MatrixAddLiteral( p, pCubeUse, pVar );    \n        // check the literal count\n        assert(pCubeUse.lLits.nItems == pPair.nBase + 1, \"pCubeUse.lLits.nItems == pPair.nBase + 1\");\n        assert(pCubeRem.lLits.nItems == 0, \"pCubeRem.lLits.nItems == 0\");\n\n        // update the divisors by removing useless pairs\n        Fxu_UpdateCleanOldDoubles( p, pDouble, pCubeUse );\n        Fxu_UpdateCleanOldDoubles( p, pDouble, pCubeRem );\n        // remove the pair\n        MEM_FREE_FXU( p, Fxu_Pair, 1, pPair );\n    }\n    p.vPairs.nSize = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Add two cubes corresponding to the given double-cube divisor.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_UpdateMatrixDoubleCreateCubes(p *Fxu_Matrix, pCube1 *Fxu_Cube, pCube2 *Fxu_Cube, pDiv *Fxu_Double) {\n    var pLit1, pLit2 *Fxu_Lit;\n    var pPair *Fxu_Pair;\n    var nBase, nLits1, nLits2 int32;\n\n    // fill in the SOP and copy the fanins\n    nBase = nLits1 = nLits2 = 0;\n    pPair = pDiv.lPairs.pHead;\n    pLit1 = pPair.pCube1.lLits.pHead;\n    pLit2 = pPair.pCube2.lLits.pHead;\n    for {\n        if pLit1 \u0026\u0026 (pLit2 != nil) {\n            if pLit1.iVar == pLit2.iVar { // skip the cube free part\n                pLit1 = pLit1.pHNext;\n                pLit2 = pLit2.pHNext;\n                nBase++;\n            \n            } else if pLit1.iVar \u003c pLit2.iVar {    // add literal to the first cube\n                Fxu_MatrixAddLiteral( p, pCube1, pLit1.pVar );\n                // move to the next literal in this cube\n                pLit1 = pLit1.pHNext;\n                nLits1++;\n            \n            } else {    // add literal to the second cube\n                Fxu_MatrixAddLiteral( p, pCube2, pLit2.pVar );\n                // move to the next literal in this cube\n                pLit2 = pLit2.pHNext;\n                nLits2++;\n            }\n        \n        } else if pLit1 \u0026\u0026 !(pLit2 != nil) {    // add literal to the first cube\n            Fxu_MatrixAddLiteral( p, pCube1, pLit1.pVar );\n            // move to the next literal in this cube\n            pLit1 = pLit1.pHNext;\n            nLits1++;\n        \n        } else if !pLit1 \u0026\u0026 (pLit2 != nil) {    // add literal to the second cube\n            Fxu_MatrixAddLiteral( p, pCube2, pLit2.pVar );\n            // move to the next literal in this cube\n            pLit2 = pLit2.pHNext;\n            nLits2++;\n        \n        } else {\n            break; }\n    }\n    assert(pPair.nLits1 == nLits1, \"pPair.nLits1 == nLits1\");\n    assert(pPair.nLits2 == nLits2, \"pPair.nLits2 == nLits2\");\n    assert(pPair.nBase == nBase, \"pPair.nBase == nBase\");\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Create the node equal to double-cube divisor.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_UpdateMatrixDoubleClean(p *Fxu_Matrix, pCubeUse *Fxu_Cube, pCubeRem *Fxu_Cube) {\n    var pLit1, bLit1Next *Fxu_Lit;\n    var pLit2, bLit2Next *Fxu_Lit;\n\n    // initialize the starting literals\n    pLit1     = pCubeUse.lLits.pHead;\n    pLit2     = pCubeRem.lLits.pHead;\n    if pLit1 {\n        bLit1Next = pLit1.pHNext;\n    } else {\n        bLit1Next = nil;\n    }\n    if pLit2 != nil {\n        bLit2Next = pLit2.pHNext;\n    } else {\n        bLit2Next = nil;\n    }\n    // go through the pair and remove the literals in the base\n    // from the first cube and all literals from the second cube\n    for {\n        if pLit1 \u0026\u0026 (pLit2 != nil) {\n            if pLit1.iVar == pLit2.iVar {  // this literal is present in both cubes - it belongs to the base\n                // mark the affected var\n                if pLit1.pVar.pOrder == nil {\n                    // inlining of macro Fxu_MatrixRingVarsAdd\n                    (*((p).ppTailVars ) = pLit1.pVar );\n((p).ppTailVars  = \u0026(pLit1.pVar).pOrder );\n((pLit1.pVar).pOrder  = (Fxu_Var *)1);; }\n                // leave the base in pCubeUse; delete it from pCubeRem\n                Fxu_MatrixDelLiteral( p, pLit2 );\n                // step to the next literals\n                pLit1     = bLit1Next;\n                pLit2     = bLit2Next;\n                if pLit1 {\n                    bLit1Next = pLit1.pHNext;\n                } else {\n                    bLit1Next = nil;\n                }\n                if pLit2 != nil {\n                    bLit2Next = pLit2.pHNext;\n                } else {\n                    bLit2Next = nil;\n                }\n            \n            } else if pLit1.iVar \u003c pLit2.iVar { // this literal is present in pCubeUse - remove it\n                // mark the affected var\n                if pLit1.pVar.pOrder == nil {\n                    // inlining of macro Fxu_MatrixRingVarsAdd\n                    (*((p).ppTailVars ) = pLit1.pVar );\n((p).ppTailVars  = \u0026(pLit1.pVar).pOrder );\n((pLit1.pVar).pOrder  = (Fxu_Var *)1);; }\n                // delete this literal\n                Fxu_MatrixDelLiteral( p, pLit1 );\n                // step to the next literals\n                pLit1     = bLit1Next;\n                if pLit1 {\n                    bLit1Next = pLit1.pHNext;\n                } else {\n                    bLit1Next = nil;\n                }\n            \n            } else { // this literal is present in pCubeRem - remove it\n                // mark the affected var\n                if pLit2.pVar.pOrder == nil {\n                    // inlining of macro Fxu_MatrixRingVarsAdd\n                    (*((p).ppTailVars ) = pLit2.pVar );\n((p).ppTailVars  = \u0026(pLit2.pVar).pOrder );\n((pLit2.pVar).pOrder  = (Fxu_Var *)1);; }\n                // delete this literal\n                Fxu_MatrixDelLiteral( p, pLit2 );\n                // step to the next literals\n                pLit2     = bLit2Next;\n                if pLit2 != nil {\n                    bLit2Next = pLit2.pHNext;\n                } else {\n                    bLit2Next = nil;\n                }\n            }\n        \n        } else if pLit1 \u0026\u0026 !(pLit2 != nil) { // this literal is present in pCubeUse - leave it\n            // mark the affected var\n            if pLit1.pVar.pOrder == nil {\n                // inlining of macro Fxu_MatrixRingVarsAdd\n                (*((p).ppTailVars ) = pLit1.pVar );\n((p).ppTailVars  = \u0026(pLit1.pVar).pOrder );\n((pLit1.pVar).pOrder  = (Fxu_Var *)1);; }\n            // delete this literal\n            Fxu_MatrixDelLiteral( p, pLit1 );\n            // step to the next literals\n            pLit1     = bLit1Next;\n            if pLit1 {\n                bLit1Next = pLit1.pHNext;\n            } else {\n                bLit1Next = nil;\n            }\n        \n        } else if !pLit1 \u0026\u0026 (pLit2 != nil) { // this literal is present in pCubeRem - remove it\n            // mark the affected var\n            if pLit2.pVar.pOrder == nil {\n                // inlining of macro Fxu_MatrixRingVarsAdd\n                (*((p).ppTailVars ) = pLit2.pVar );\n((p).ppTailVars  = \u0026(pLit2.pVar).pOrder );\n((pLit2.pVar).pOrder  = (Fxu_Var *)1);; }\n            // delete this literal\n            Fxu_MatrixDelLiteral( p, pLit2 );\n            // step to the next literals\n            pLit2     = bLit2Next;\n            if pLit2 != nil {\n                bLit2Next = pLit2.pHNext;\n            } else {\n                bLit2Next = nil;\n            }\n        \n        } else {\n            break; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the matrix after selecting a single cube divisor.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_UpdateMatrixSingleClean(p *Fxu_Matrix, pVar1 *Fxu_Var, pVar2 *Fxu_Var, pVarNew *Fxu_Var) {\n    var pLit1, bLit1Next *Fxu_Lit;\n    var pLit2, bLit2Next *Fxu_Lit;\n\n    // initialize the starting literals\n    pLit1     = pVar1.lLits.pHead;\n    pLit2     = pVar2.lLits.pHead;\n    if pLit1 {\n        bLit1Next = pLit1.pVNext;\n    } else {\n        bLit1Next = nil;\n    }\n    if pLit2 != nil {\n        bLit2Next = pLit2.pVNext;\n    } else {\n        bLit2Next = nil;\n    }\n    for {\n        if pLit1 \u0026\u0026 (pLit2 != nil) {\n            if pLit1.pCube.pVar.iVar == pLit2.pCube.pVar.iVar { // these literals coincide \n                if pLit1.iCube == pLit2.iCube { // these literals coincide \n                \n                    // collect the affected cube\n                    assert(pLit1.pCube.pOrder == nil, \"pLit1.pCube.pOrder == nil\");\n                    // inlining of macro Fxu_MatrixRingCubesAdd\n                    (*((p).ppTailCubes) = pLit1.pCube);\n((p).ppTailCubes = \u0026(pLit1.pCube).pOrder);\n((pLit1.pCube).pOrder = (Fxu_Cube *)1);;\n\n                    // add the literal to this cube corresponding to the new column\n                    Fxu_MatrixAddLiteral( p, pLit1.pCube, pVarNew );\n                    // clean the old cubes\n                    Fxu_UpdateCleanOldDoubles( p, nil, pLit1.pCube );\n\n                    // remove the literals \n                    Fxu_MatrixDelLiteral( p, pLit1 );\n                    Fxu_MatrixDelLiteral( p, pLit2 );\n\n                    // go to the next literals\n                    pLit1     = bLit1Next;\n                    pLit2     = bLit2Next;\n                    if pLit1 {\n                        bLit1Next = pLit1.pVNext;\n                    } else {\n                        bLit1Next = nil;\n                    }\n                    if pLit2 != nil {\n                        bLit2Next = pLit2.pVNext;\n                    } else {\n                        bLit2Next = nil;\n                    }\n                \n                } else if pLit1.iCube \u003c pLit2.iCube {\n                    pLit1     = bLit1Next;\n                    if pLit1 {\n                        bLit1Next = pLit1.pVNext;\n                    } else {\n                        bLit1Next = nil;\n                    }\n                \n                } else {\n                    pLit2     = bLit2Next;\n                    if pLit2 != nil {\n                        bLit2Next = pLit2.pVNext;\n                    } else {\n                        bLit2Next = nil;\n                    }\n                }\n            \n            } else if pLit1.pCube.pVar.iVar \u003c pLit2.pCube.pVar.iVar {\n                pLit1     = bLit1Next;\n                if pLit1 {\n                    bLit1Next = pLit1.pVNext;\n                } else {\n                    bLit1Next = nil;\n                }\n            \n            } else {\n                pLit2     = bLit2Next;\n                if pLit2 != nil {\n                    bLit2Next = pLit2.pVNext;\n                } else {\n                    bLit2Next = nil;\n                }\n            }\n        \n        } else if pLit1 \u0026\u0026 !(pLit2 != nil) {\n            pLit1     = bLit1Next;\n            if pLit1 {\n                bLit1Next = pLit1.pVNext;\n            } else {\n                bLit1Next = nil;\n            }\n        \n        } else if !pLit1 \u0026\u0026 (pLit2 != nil) {\n            pLit2     = bLit2Next;\n            if pLit2 != nil {\n                bLit2Next = pLit2.pVNext;\n            } else {\n                bLit2Next = nil;\n            }\n        \n        } else {\n            break; }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sort the pairs.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_UpdatePairsSort(p *Fxu_Matrix, pDouble *Fxu_Double) {\n    var pPair *Fxu_Pair;\n    // order the pairs by the first cube to ensure that new literals are added \n    // to the matrix from top to bottom - collect pairs into the array\n    p.vPairs.nSize = 0;\n    // inlining of macro Fxu_DoubleForEachPair\n    for  pPair = (pDouble).lPairs.pHead;          (pPair != nil);          pPair = pPair.pDNext  {\n        Vec_PtrPush( p.vPairs, pPair );\n    }\n    if p.vPairs.nSize \u003c 2 {\n        return; }\n    // sort\n    qsort( (void *)p.vPairs.pArray, (size_t)p.vPairs.nSize, sizeof(Fxu_Pair *), \n            (int (*)(void *, void *)) Fxu_UpdatePairCompare );\n    assert(Fxu_UpdatePairCompare( (Fxu_Pair**)p.vPairs.pArray, (Fxu_Pair**)p.vPairs.pArray + p.vPairs.nSize - 1 ) \u003c 0, \"Fxu_UpdatePairCompare( (Fxu_Pair**)p.vPairs.pArray, (Fxu_Pair**)p.vPairs.pArray + p.vPairs.nSize - 1 ) \u003c 0\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compares the vars by their number.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_UpdatePairCompare(ppP1 **Fxu_Pair, ppP2 **Fxu_Pair) int32 {\n    var pC1 *Fxu_Cube  = (*ppP1).pCube1;\n    var pC2 *Fxu_Cube  = (*ppP2).pCube1;\n    var iP1CubeMin, iP2CubeMin int32;\n    if pC1.pVar.iVar \u003c pC2.pVar.iVar {\n        return -1; }\n    if pC1.pVar.iVar \u003e pC2.pVar.iVar {\n        return 1; }\n    // inlining of macro Fxu_PairMinCubeInt\n    \n    if (*ppP1).iCube1 \u003c (*ppP1).iCube2 {\n        iP1CubeMin = (*ppP1).iCube1;\n    } else {\n        iP1CubeMin = (*ppP1).iCube2;\n    }\n    // inlining of macro Fxu_PairMinCubeInt\n    \n    if (*ppP2).iCube1 \u003c (*ppP2).iCube2 {\n        iP2CubeMin = (*ppP2).iCube1;\n    } else {\n        iP2CubeMin = (*ppP2).iCube2;\n    }\n    if iP1CubeMin \u003c iP2CubeMin {\n        return -1; }\n    if iP1CubeMin \u003e iP2CubeMin {\n        return 1; }\n    assert(false, \"0\");\n    return 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Create new variables.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_UpdateCreateNewVars(p *Fxu_Matrix, ppVarC **Fxu_Var, ppVarD **Fxu_Var, nCubes int32) {\n    var pVarC, pVarD *Fxu_Var;\n\n    // add a new column for the complement\n    pVarC = Fxu_MatrixAddVar( p );\n    pVarC.nCubes = 0;\n    // add a new column for the divisor\n    pVarD = Fxu_MatrixAddVar( p );\n    pVarD.nCubes = nCubes;\n\n    // mark this entry in the Value2Node array\n//    assert( p-\u003epValue2Node[pVarC-\u003eiVar] \u003e 0 );\n//    p-\u003epValue2Node[pVarD-\u003eiVar  ] = p-\u003epValue2Node[pVarC-\u003eiVar];\n//    p-\u003epValue2Node[pVarD-\u003eiVar+1] = p-\u003epValue2Node[pVarC-\u003eiVar]+1;\n\n    *ppVarC = pVarC;\n    *ppVarD = pVarD;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_UpdateCleanOldDoubles(p *Fxu_Matrix, pDiv *Fxu_Double, pCube *Fxu_Cube) {\n    var pDivCur *Fxu_Double;\n    var pPair *Fxu_Pair;\n    var i int32;\n\n    // if the cube is a recently introduced one\n    // it does not have pairs allocated\n    // in this case, there is nothing to update\n    if pCube.pVar.ppPairs == nil {\n        return; }\n\n    // go through all the pairs of this cube\n    // inlining of macro Fxu_CubeForEachPair\n    for  i = 0;        i \u003c pCube.pVar.nCubes \u0026\u0026 (((pPair) = (pCube).pVar.ppPairs[(pCube).iCube][i]), 1);        i++  {        if pPair == nil {} else {\n         // get the divisor of this pair\n        pDivCur = pPair.pDiv;\n        // skip the current divisor\n        if pDivCur == pDiv {\n            continue; }\n        // remove this pair\n        Fxu_ListDoubleDelPair( pDivCur, pPair );    \n        // the divisor may have become useless by now\n        if pDivCur.lPairs.nItems == 0 {\n            assert(pDivCur.Weight == pPair.nBase - 1, \"pDivCur.Weight == pPair.nBase - 1\");\n              Fxu_HeapDoubleDelete( p.pHeapDouble, pDivCur );\n            Fxu_MatrixDelDivisor( p, pDivCur );\n        \n        } else {\n            // update the divisor's weight\n            pDivCur.Weight -= pPair.nLits1 + pPair.nLits2 - 1 + pPair.nBase;\n              Fxu_HeapDoubleUpdate( p.pHeapDouble, pDivCur );\n        }\n        MEM_FREE_FXU( p, Fxu_Pair, 1, pPair );\n    }\n    }\n    // finally erase all the pair info associated with this cube\n    Fxu_PairClearStorage( pCube );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the new divisors that depend on the cube.]\n\n  Description [Go through all the non-empty cubes of this cover \n  (except the given cube) and, for each of them, add the new divisor \n  with the given cube.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_UpdateAddNewDoubles(p *Fxu_Matrix, pCube *Fxu_Cube) {\n    var pTemp *Fxu_Cube;\n    assert(pCube.pOrder, \"pCube.pOrder\");\n\n    // if the cube is a recently introduced one\n    // it does not have pairs allocated\n    // in this case, there is nothing to update\n    if pCube.pVar.ppPairs == nil {\n        return; }\n\n    for  pTemp = pCube.pFirst; pTemp.pVar == pCube.pVar; pTemp = pTemp.pNext  {\n        // do not add pairs with the empty cubes\n        if pTemp.lLits.nItems == 0 {\n            continue; }\n        // to prevent adding duplicated pairs of the new cubes\n        // do not add the pair, if the current cube is marked \n        if pTemp.pOrder \u0026\u0026 pTemp.iCube \u003e= pCube.iCube {\n            continue; }\n        Fxu_MatrixAddDivisor( p, pTemp, pCube );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes old single cube divisors.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_UpdateCleanOldSingles(p *Fxu_Matrix) { \n    var pSingle, pSingle2 *Fxu_Single;\n    var WeightNew int32;\n    var Counter int32;\n\n    // inlining of macro Fxu_MatrixForEachSingleSafe\n    for  pSingle = (p).lSingles.pHead, pSingle2 = (pSingle? pSingle.pNext: nil);          (pSingle != nil);          pSingle = pSingle2, pSingle2 = (pSingle? pSingle.pNext: nil)  {\n        // if at least one of the variables is marked, recalculate\n        if pSingle.pVar1.pOrder || pSingle.pVar2.pOrder {\n            Counter++;\n            // get the new weight\n            WeightNew = -2 + Fxu_SingleCountCoincidence( p, pSingle.pVar1, pSingle.pVar2 );\n            if WeightNew \u003e= 0 {\n                pSingle.Weight = WeightNew;\n                Fxu_HeapSingleUpdate( p.pHeapSingle, pSingle );\n            \n            } else {\n                Fxu_HeapSingleDelete( p.pHeapSingle, pSingle );\n                Fxu_ListMatrixDelSingle( p, pSingle );\n                MEM_FREE_FXU( p, Fxu_Single, 1, pSingle );\n            }\n        }\n    }\n//    printf( \"Called procedure %d times.\\n\", Counter );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the single cube divisors.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_UpdateAddNewSingles(p *Fxu_Matrix, pVar *Fxu_Var) {\n    Fxu_MatrixComputeSinglesOne( p, pVar );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

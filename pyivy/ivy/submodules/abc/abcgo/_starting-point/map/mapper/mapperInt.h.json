@@ -1,0 +1,587 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h",
+  "SHA256": "f14643b11f0550ff7d9db6e7187f75afadcf1fc494efa5e69383d90794292b03",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 229,
+        "Column": 1,
+        "ByteOffset": 11208
+      },
+      "Directive": "#ifdef MAP_ALLOCATE_FANOUT"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_ManStruct_t_::// the current supergate library\n    unsigned            uTruths[6][2];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_ManStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5587,
+      "End": 5663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_ManStruct_t_::// the elementary truth tables\n    unsigned            uTruthsLarge[10][32];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_ManStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5663,
+      "End": 5740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_ManStruct_t_::// the elementary truth tables\n    int                 nCounts[32];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_ManStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5740,
+      "End": 5808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_ManStruct_t_::// the counter of minterms\n    int                 nCountsBest[32];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_ManStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5808,
+      "End": 5878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_ManStruct_t_::// the memory manager for cuts\n\n    // precomputed N-canonical forms\n    unsigned short *    uCanons;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_ManStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6117,
+      "End": 6226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_ManStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Map_ManStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3372,
+      "End": 7858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperLibStruct_t_::// the table mapping truth tables into supergates\n\n    // data structures for N-canonical form computation\n    unsigned            uTruths[6][2];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_SuperLibStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8671,
+      "End": 8824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperLibStruct_t_::// the elementary truth tables\n    unsigned            uMask[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_SuperLibStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 8824,
+      "End": 8889
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperLibStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Map_SuperLibStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 7885,
+      "End": 9584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_NodeStruct_t_::// the number of references (fanouts) of the given node\n    unsigned            fMark0 : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 10004,
+      "End": 10104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_NodeStruct_t_::// the mark used for traversals\n    unsigned            fMark1 : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 10104,
+      "End": 10175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_NodeStruct_t_::// the mark used for traversals\n    unsigned            fUsed  : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 10175,
+      "End": 10246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_NodeStruct_t_::// the mark to mark the node or its fanins\n    unsigned            fInv   : 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 10246,
+      "End": 10328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_NodeStruct_t_::// the complemented attribute for the equivalent nodes\n    unsigned            fInvert: 1;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 10328,
+      "End": 10422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_NodeStruct_t_::// the flag to denote the use of interter\n    unsigned            Level  :16;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 10422,
+      "End": 10503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_NodeStruct_t_::// the level of the given node\n    unsigned            NumTemp:10;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 10503,
+      "End": 10573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_NodeStruct_t_::// the level of the given node\n    int                 nRefAct[3];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 10573,
+      "End": 10643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_NodeStruct_t_::// estimated fanout for current covering phase, neg and pos and sum\n    float               nRefEst[3];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 10643,
+      "End": 10750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_NodeStruct_t_::// the representative of the functionally equivalent class\n\n/*SP_OPAQUE_f14643b11f0550ff_0_BEGIN*//*SP_OPAQUE_f14643b11f0550ff_0_END*/\n\n    // the delay information\n    Map_Time_t          tArrival[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11139,
+      "End": 11625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_NodeStruct_t_::// the best arrival time of the neg (0) and pos (1) phases\n    Map_Time_t          tRequired[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11625,
+      "End": 11724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_NodeStruct_t_::// the required time of the neg (0) and pos (1) phases\n\n    // misc information  \n    Map_Cut_t *         pCutBest[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 11724,
+      "End": 11844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_NodeStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Map_NodeStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 9606,
+      "End": 12177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_MatchStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Map_MatchStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 12204,
+      "End": 12751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_CutStruct_t_::// the mother of this cut\n    Map_Node_t *        ppLeaves[6];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_CutStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 12989,
+      "End": 13061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_CutStruct_t_::// the mark to denote complemented cut\n    Map_Match_t         M[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_CutStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13395,
+      "End": 13472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_CutStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Map_CutStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 12785,
+      "End": 13527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperStruct_t_::// the ID of the supergate\n    unsigned            fSuper  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_SuperStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13627,
+      "End": 13702
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperStruct_t_::// the flag to distinquish a real super from a fake one\n    unsigned            fExclude:  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_SuperStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13702,
+      "End": 13797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperStruct_t_::// the flag if set causes gate to be excluded from being used for mapping\n    unsigned            nFanins :  3;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_SuperStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13797,
+      "End": 13910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperStruct_t_::// the number of inputs\n    unsigned            nGates  :  3;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_SuperStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13910,
+      "End": 13973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperStruct_t_::// the number of gates inside this supergate\n    unsigned            nFanLimit: 4;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_SuperStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 13973,
+      "End": 14057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperStruct_t_::// the max number of fanout count\n    unsigned            nSupers : 16;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_SuperStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14057,
+      "End": 14130
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperStruct_t_::// the number of supergates in the list\n    unsigned            nPhases :  4;",
+      "Category": "struct-field-review",
+      "Symbol": "Map_SuperStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14130,
+      "End": 14209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperStruct_t_::// the number of phases for matching with canonical form\n    unsigned char       uPhases[4];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_SuperStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14209,
+      "End": 14303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperStruct_t_::// the number of times the supergate is used\n    Map_Super_t *       pFanins[6];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_SuperStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14397,
+      "End": 14486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperStruct_t_::// the root gate\n    unsigned            uTruth[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_SuperStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14546,
+      "End": 14606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperStruct_t_::// the truth table\n    Map_Time_t          tDelaysR[6];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_SuperStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14606,
+      "End": 14666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperStruct_t_::// the pin-to-pin delay constraints for the rise of the output\n    Map_Time_t          tDelaysF[6];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_SuperStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 14666,
+      "End": 14768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_SuperStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Map_SuperStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 13569,
+      "End": 15094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_NodeVecStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Map_NodeVecStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 15119,
+      "End": 15363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_HashTableStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Map_HashTableStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 15384,
+      "End": 15695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_HashEntryStruct_t_::unsigned            uTruth[2];",
+      "Category": "struct-field-review",
+      "Symbol": "Map_HashEntryStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 15759,
+      "End": 15794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::struct::Map_HashEntryStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Map_HashEntryStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 15728,
+      "End": 16086
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::MAP_MASK",
+      "Category": "macro-review",
+      "Symbol": "MAP_MASK",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1532,
+      "End": 1594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::MAP_MIN",
+      "Category": "macro-review",
+      "Symbol": "MAP_MIN",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1718,
+      "End": 1775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::MAP_MAX",
+      "Category": "macro-review",
+      "Symbol": "MAP_MAX",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1776,
+      "End": 1833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_CutIsComplement",
+      "Category": "macro-review",
+      "Symbol": "Map_CutIsComplement",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2213,
+      "End": 2280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_CutRegular",
+      "Category": "macro-review",
+      "Symbol": "Map_CutRegular",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2281,
+      "End": 2355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_CutNot",
+      "Category": "macro-review",
+      "Symbol": "Map_CutNot",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2356,
+      "End": 2429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_CutNotCond",
+      "Category": "macro-review",
+      "Symbol": "Map_CutNotCond",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2430,
+      "End": 2503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_NodeReadRef",
+      "Category": "macro-review",
+      "Symbol": "Map_NodeReadRef",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2549,
+      "End": 2606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_NodeRef",
+      "Category": "macro-review",
+      "Symbol": "Map_NodeRef",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2607,
+      "End": 2666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_InfoSetVar",
+      "Category": "macro-review",
+      "Symbol": "Map_InfoSetVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2722,
+      "End": 2785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_InfoRemVar",
+      "Category": "macro-review",
+      "Symbol": "Map_InfoRemVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2786,
+      "End": 2849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_InfoFlipVar",
+      "Category": "macro-review",
+      "Symbol": "Map_InfoFlipVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2850,
+      "End": 2913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_InfoReadVar",
+      "Category": "macro-review",
+      "Symbol": "Map_InfoReadVar",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2914,
+      "End": 2982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_NodeIsSimComplement",
+      "Category": "macro-review",
+      "Symbol": "Map_NodeIsSimComplement",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3034,
+      "End": 3127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_NodeReadNextFanout",
+      "Category": "macro-review",
+      "Symbol": "Map_NodeReadNextFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16135,
+      "End": 16394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_NodeReadNextFanoutPlace",
+      "Category": "macro-review",
+      "Symbol": "Map_NodeReadNextFanoutPlace",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16464,
+      "End": 16654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_NodeForEachFanout",
+      "Category": "macro-review",
+      "Symbol": "Map_NodeForEachFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16700,
+      "End": 16892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::macro::Map_NodeForEachFanoutSafe",
+      "Category": "macro-review",
+      "Symbol": "Map_NodeForEachFanoutSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 16943,
+      "End": 17334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 26401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperInt.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11208,
+      "End": 11558
+    }
+  ],
+  "Draft": "package mapper\n\n/**CFile****************************************************************\n\n  FileName    [mapperInt.h]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Generic technology mapping engine.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - June 1, 2004.]\n\n  Revision    [$Id: mapperInt.h,v 1.8 2004/09/30 21:18:10 satrajit Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n \n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cfloat.h\u003e\n//#include \u003cmath.h\u003e\n\n//#include \"base/main/main.h\"\n//#include \"map/mio/mio.h\"\n//#include \"mapper.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n// uncomment to have fanouts represented in the mapping graph\n//#define MAP_ALLOCATE_FANOUT  1\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n// the bit masks\n// Original macro:\n// #define MAP_MASK(n)             ((~((unsigned)0)) \u003e\u003e (32-(n)))\n\n#define MAP_FULL                 (~((unsigned)0))\n#define MAP_NO_VAR               (-9999.0)\n\n// maximum/minimum operators\n// Original macro:\n// #define MAP_MIN(a,b)             (((a) \u003c (b))? (a) : (b))\n\n// Original macro:\n// #define MAP_MAX(a,b)             (((a) \u003e (b))? (a) : (b))\n\n\n// the small and large numbers (min/max float are 1.17e-38/3.40e+38)\n#define MAP_FLOAT_LARGE          ((float)(FLT_MAX/10))\n#define MAP_FLOAT_SMALL          ((float)1.0e-03)\n\n// generating random unsigned (#define RAND_MAX 0x7fff)\n#define MAP_RANDOM_UNSIGNED   ((((unsigned)rand()) \u003c\u003c 24) ^ (((unsigned)rand()) \u003c\u003c 12) ^ ((unsigned)rand()))\n\n// internal macros to work with cuts\n// Original macro:\n// #define Map_CutIsComplement(p)  (((int)((ABC_PTRUINT_T) (p) \u0026 01)))\n\n// Original macro:\n// #define Map_CutRegular(p)       ((Map_Cut_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) \n\n// Original macro:\n// #define Map_CutNot(p)           ((Map_Cut_t *)((ABC_PTRUINT_T)(p) ^ 01)) \n\n// Original macro:\n// #define Map_CutNotCond(p,c)     ((Map_Cut_t *)((ABC_PTRUINT_T)(p) ^ (c)))\n\n\n// internal macros for referencing of nodes\n// Original macro:\n// #define Map_NodeReadRef(p)      ((Map_Regular(p))-\u003enRefs)\n\n// Original macro:\n// #define Map_NodeRef(p)          ((Map_Regular(p))-\u003enRefs++)\n\n\n// macros to get hold of the bits in the support info\n// Original macro:\n// #define Map_InfoSetVar(p,i)     (p[(i)\u003e\u003e5] |=  (1\u003c\u003c((i) \u0026 31)))\n\n// Original macro:\n// #define Map_InfoRemVar(p,i)     (p[(i)\u003e\u003e5] \u0026= ~(1\u003c\u003c((i) \u0026 31)))\n\n// Original macro:\n// #define Map_InfoFlipVar(p,i)    (p[(i)\u003e\u003e5] ^=  (1\u003c\u003c((i) \u0026 31)))\n\n// Original macro:\n// #define Map_InfoReadVar(p,i)   ((p[(i)\u003e\u003e5]  \u0026  (1\u003c\u003c((i) \u0026 31))) \u003e 0)\n\n\n// returns the complemented attribute of the node\n// Original macro:\n// #define Map_NodeIsSimComplement(p) (Map_IsComplement(p)? !(Map_Regular(p)-\u003efInv) : (p)-\u003efInv)\n\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n// the mapping manager\ntype Map_ManStruct_t_ struct {\n    // the mapping graph\n    pBins        **Map_Node_t;         // the table of nodes hashed by their children\n    nBins                 int32;         // the size of the table\n    pInputs        **Map_Node_t;       // the array of inputs\n    nInputs                 int32;       // the number of inputs\n    pOutputs        **Map_Node_t;      // the array of outputs\n    nOutputs                 int32;      // the number of outputs\n    nNodes                 int32;        // the total number of nodes\n    pConst1         *Map_Node_t;       // the constant 1 node\n    vMapObjs      *Map_NodeVec_t;      // the array of all nodes\n    vMapBufs      *Map_NodeVec_t;      // the array of all nodes\n    pNodeDelays              *float32;   // the array of node delays\n\n    // info about the original circuit\n    ppOutputNames              *string; // the primary output names\n    pInputArrivals         *Map_Time_t;// the PI arrival times\n    pOutputRequireds         *Map_Time_t;// the PI arrival times\n\n    // mapping parameters\n    nVarsMax                 int32;      // the max number of variables\n    fAreaRecovery                 int32; // the flag to enable area recovery\n    fVerbose                 int32;      // the verbosiness flag\n    fMappingMode                 int32;  // set to 1 when doing area\n    fRequiredGlo               float32;  // the global required times\n    fEpsilon               float32;      // the epsilon used to compare floats\n    AreaBase               float32;      // the area after delay-oriented mapping\n    AreaFinal               float32;     // the area after delay-oriented mapping\n    nIterations                 int32;   // How many matching passes to do\n    fObeyFanoutLimits                 int32;// Should mapper try to obey fanout limits or not\n    DelayTarget               float32;   // the required times set by the user\n    nTravIds                 int32;      // the traversal counter\n    fSwitching                 int32;    // use switching activity\n    fSkipFanout                 int32;   // skip large gates when mapping high-fanout nodes\n    fUseProfile                 int32;   // use standard-cell profile\n\n    // the supergate library\n    pSuperLib     *Map_SuperLib_t;     // the current supergate library\n    uTruths [6][2]uint32; // the elementary truth tables\n    uTruthsLarge [10][32]uint32; // the elementary truth tables\n    nCounts [32]int32;   // the counter of minterms\n    nCountsBest [32]int32;// the counter of minterms\n    vVisited      *Map_NodeVec_t;      // the visited cuts during cut computation\n\n    // the memory managers\n    mmNodes    *Extra_MmFixed_t;       // the memory manager for nodes\n    mmCuts    *Extra_MmFixed_t;        // the memory manager for cuts\n\n    // precomputed N-canonical forms\n    unsigned short *    uCanons;       // N-canonical forms\n    uPhases              *string;       // N-canonical phases\n    pCounters               string;     // counters of phases\n\n    // various statistical variables\n    nChoiceNodes                 int32;  // the number of choice nodes\n    nChoices                 int32;      // the number of all choices\n    nCanons                 int32;       // the number of times N-canonical form was computed\n    nMatches                 int32;      // the number of times supergate matching was performed\n    nPhases                 int32;       // the number of phases considered during matching\n    nFanoutViolations                 int32;  // the number of nodes in mapped circuit violating fanout\n\n    // runtime statistics\n    timeToMap             abctime;     // time to transfer to the mapping structure\n    timeCuts             abctime;      // time to compute k-feasible cuts\n    timeTruth             abctime;     // time to compute the truth table for each cut\n    timeMatch             abctime;     // time to perform matching for each node\n    timeArea             abctime;      // time to recover area after delay oriented mapping\n    timeSweep             abctime;     // time to perform technology dependent sweep\n    timeToNet             abctime;     // time to transfer back to the network\n    timeTotal             abctime;     // the total mapping time\n    time1             abctime;         // time to transfer to the mapping structure\n    time2             abctime;         // time to transfer to the mapping structure\n    time3             abctime;         // time to transfer to the mapping structure\n}\n\n// the supergate library\ntype Map_SuperLibStruct_t_ struct {\n    // general info\n    pName               string;         // the name of the supergate library\n    pGenlib      *Mio_Library_t;       // the generic library\n\n    // other info\n    nVarsMax                 int32;      // the max number of variables\n    nSupersAll                 int32;    // the total number of supergates\n    nSupersReal                 int32;   // the total number of supergates\n    nLines                 int32;        // the total number of lines in the supergate file\n    fVerbose                 int32;      // the verbosity flag\n\n    // hash tables\n    ppSupers       **Map_Super_t;      // the array of supergates\n    tTableC    *Map_HashTable_t;       // the table mapping N-canonical forms into supergates\n    tTable    *Map_HashTable_t;        // the table mapping truth tables into supergates\n\n    // data structures for N-canonical form computation\n    uTruths [6][2]uint32; // the elementary truth tables\n    uMask [2]uint32;      // the mask for the truth table\n\n    // the invertor\n    pGateInv         *Mio_Gate_t;      // the pointer to the intertor gate\n    tDelayInv          Map_Time_t;     // the delay of the inverter\n    AreaInv               float32;       // the area of the inverter\n    AreaBuf               float32;       // the area of the buffer\n    pSuperInv        *Map_Super_t;     // the supergate representing the inverter\n\n    // the memory manager for the internal table\n    mmSupers    *Extra_MmFixed_t;      // the mamory manager for supergates\n    mmEntries    *Extra_MmFixed_t;     // the memory manager for the entries\n    mmForms     *Extra_MmFlex_t;       // the memory manager for formulas\n}\n\n// the mapping node\ntype Map_NodeStruct_t_ struct {\n    // general information about the node\n    p          *Map_Man_t;             // the mapping manager\n    pNext         *Map_Node_t;         // the next node in the hash table\n    Num                 int32;           // the unique number of this node\n    TravId                 int32;        // the traversal ID (use to avoid cleaning marks)\n    nRefs                 int32;         // the number of references (fanouts) of the given node\n    fMark0 uint32; /* C bitfield: 1 bits; review packing and truncation */    // the mark used for traversals\n    fMark1 uint32; /* C bitfield: 1 bits; review packing and truncation */    // the mark used for traversals\n    fUsed uint32; /* C bitfield: 1 bits; review packing and truncation */    // the mark to mark the node or its fanins\n    fInv uint32; /* C bitfield: 1 bits; review packing and truncation */    // the complemented attribute for the equivalent nodes\n    fInvert uint32; /* C bitfield: 1 bits; review packing and truncation */    // the flag to denote the use of interter\n    Level uint32; /* C bitfield: 16 bits; review packing and truncation */    // the level of the given node\n    NumTemp uint32; /* C bitfield: 10 bits; review packing and truncation */    // the level of the given node\n    nRefAct [3]int32;    // estimated fanout for current covering phase, neg and pos and sum\n    nRefEst [3]float32;    // actual fanout for previous covering phase, neg and pos and sum\n    Switching               float32;     // the probability of switching\n\n    // connectivity\n    p1         *Map_Node_t;            // the first child\n    p2         *Map_Node_t;            // the second child\n    pNextE         *Map_Node_t;        // the next functionally equivalent node\n    pRepr         *Map_Node_t;         // the representative of the functionally equivalent class\n\n#ifdef MAP_ALLOCATE_FANOUT\n    // representation of node's fanouts\n    Map_Node_t *        pFanPivot;     // the first fanout of this node\n    Map_Node_t *        pFanFanin1;    // the next fanout of p1\n    Map_Node_t *        pFanFanin2;    // the next fanout of p2\n//    Map_NodeVec_t *     vFanouts;      // the array of fanouts of the gate\n#endif\n\n    // the delay information\n    Map_Time_t          tArrival[2];   // the best arrival time of the neg (0) and pos (1) phases\n    Map_Time_t          tRequired[2];  // the required time of the neg (0) and pos (1) phases\n\n    // misc information  \n    Map_Cut_t *         pCutBest[2];   // the best mapping for neg and pos phase\n    pCuts          *Map_Cut_t;         // mapping choices for the node (elementary comes first)\n    pData0               string;        // temporary storage for the corresponding network node\n    pData1               string;        // temporary storage for the corresponding network node\n} \n\n// the match of the cut\ntype Map_MatchStruct_t_ struct {\n    // information used for matching\n    pSupers        *Map_Super_t;     \n    uPhase            uint32;  \n    // information about the best selected match\n    uPhaseBest            uint32;    // the best phase (the EXOR of match's phase and gate's phase)\n    pSuperBest        *Map_Super_t;    // the best supergate matched\n    // the parameters of the match\n    tArrive          Map_Time_t;       // the arrival time of this match\n    AreaFlow               float32;      // the area flow or area of this match\n}\n  \n// the cuts used for matching\ntype Map_CutStruct_t_ struct {\n    pNext          *Map_Cut_t;         // the pointer to the next cut in the list\n    pOne          *Map_Cut_t;          // the father of this cut\n    pTwo          *Map_Cut_t;          // the mother of this cut\n    Map_Node_t *        ppLeaves[6];   // the leaves of this cut\n    uTruth            uint32;        // truth table for five-input cuts\n    nLeaves                byte;       // the number of leaves\n    nVolume                byte;       // the volume of this cut\n    fMark                byte;         // the mark to denote visited cut\n    Phase                byte;         // the mark to denote complemented cut\n    Map_Match_t         M[2];          // the matches for positive/negative phase\n}\n\n// the supergate internally represented\ntype Map_SuperStruct_t_ struct {\n    Num                 int32;           // the ID of the supergate\n    fSuper uint32; /* C bitfield: 1 bits; review packing and truncation */  // the flag to distinquish a real super from a fake one\n    fExclude uint32; /* C bitfield: 1 bits; review packing and truncation */  // the flag if set causes gate to be excluded from being used for mapping\n    nFanins uint32; /* C bitfield: 3 bits; review packing and truncation */  // the number of inputs\n    nGates uint32; /* C bitfield: 3 bits; review packing and truncation */  // the number of gates inside this supergate\n    nFanLimit uint32; /* C bitfield: 4 bits; review packing and truncation */  // the max number of fanout count\n    nSupers uint32; /* C bitfield: 16 bits; review packing and truncation */  // the number of supergates in the list\n    nPhases uint32; /* C bitfield: 4 bits; review packing and truncation */  // the number of phases for matching with canonical form\n    unsigned char       uPhases[4];    // the maximum of 4 phases for matching with canonical form\n    nUsed                 int32;         // the number of times the supergate is used\n    Map_Super_t *       pFanins[6];    // the fanins of the gate\n    pRoot         *Mio_Gate_t;         // the root gate\n    uTruth [2]uint32;     // the truth table\n    Map_Time_t          tDelaysR[6];   // the pin-to-pin delay constraints for the rise of the output\n    Map_Time_t          tDelaysF[6];   // the pin-to-pin delay constraints for the rise of the output\n    tDelayMax          Map_Time_t;     // the maximum delay\n    Area               float32;          // the area\n    pFormula               string;      // the symbolic formula\n    pNext        *Map_Super_t;         // the pointer to the next super in the list\n}\n\n// the vector of nodes\ntype Map_NodeVecStruct_t_ struct {\n    pArray        **Map_Node_t;        // the array of nodes\n    nSize                 int32;         // the number of entries in the array\n    nCap                 int32;          // the number of allocated entries\n}\n\n// the hash table \ntype Map_HashTableStruct_t_ struct {\n    pBins   **Map_HashEntry_t;         // the table bins\n    nBins                 int32;         // the size of the table\n    nEntries                 int32;      // the total number of entries in the table\n    mmMan    *Extra_MmFixed_t;         // the memory manager for entries\n}\n\n// the entry in the hash table\ntype Map_HashEntryStruct_t_ struct {\n    uTruth [2]uint32;     // the truth table for 6-var function\n    uPhase            uint32;        // the phase to tranform it into the canonical form\n    pGates        *Map_Super_t;        // the linked list of matching supergates\n    pNext    *Map_HashEntry_t;         // the next entry in the hash table\n}\n\n// getting hold of the next fanout of the node\n// Original macro:\n// #define Map_NodeReadNextFanout( pNode, pFanout )                \\\n//     ( ( pFanout == NULL )? NULL :                               \\\n//         ((Map_Regular((pFanout)-\u003ep1) == (pNode))?               \\\n//              (pFanout)-\u003epFanFanin1 : (pFanout)-\u003epFanFanin2) )\n\n\n// getting hold of the place where the next fanout will be attached\n// Original macro:\n// #define Map_NodeReadNextFanoutPlace( pNode, pFanout )           \\\n//     ( (Map_Regular((pFanout)-\u003ep1) == (pNode))?                  \\\n//          \u0026(pFanout)-\u003epFanFanin1 : \u0026(pFanout)-\u003epFanFanin2 )\n\n\n// iterator through the fanouts of the node\n// Original macro:\n// #define Map_NodeForEachFanout( pNode, pFanout )                 \\\n//     for ( pFanout = (pNode)-\u003epFanPivot; pFanout;                \\\n//           pFanout = Map_NodeReadNextFanout(pNode, pFanout) )\n\n\n// safe iterator through the fanouts of the node\n// Original macro:\n// #define Map_NodeForEachFanoutSafe( pNode, pFanout, pFanout2 )   \\\n//     for ( pFanout  = (pNode)-\u003epFanPivot,                        \\\n//           pFanout2 = Map_NodeReadNextFanout(pNode, pFanout);    \\\n//           pFanout;                                              \\\n//           pFanout  = pFanout2,                                  \\\n//           pFanout2 = Map_NodeReadNextFanout(pNode, pFanout) )\n\n\n////////////////////////////////////////////////////////////////////////\n///                       GLOBAL VARIABLES                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== mapperCanon.c =============================================================*/\n/*=== mapperCut.c ===============================================================*/\n// extern void              Map_MappingCuts( Map_Man_t * p );\n\n/*=== mapperCutUtils.c ===============================================================*/\n// extern Map_Cut_t *       Map_CutAlloc( Map_Man_t * p );\n\n// extern void              Map_CutFree( Map_Man_t * p, Map_Cut_t * pCut );\n\n// extern void              Map_CutPrint( Map_Man_t * p, Map_Node_t * pRoot, Map_Cut_t * pCut, int fPhase );\n\n// extern float             Map_CutGetRootArea( Map_Cut_t * pCut, int fPhase );\n\n// extern int               Map_CutGetLeafPhase( Map_Cut_t * pCut, int fPhase, int iLeaf );\n\n// extern int               Map_NodeGetLeafPhase( Map_Node_t * pNode, int fPhase, int iLeaf );\n\n// extern Map_Cut_t *       Map_CutListAppend( Map_Cut_t * pSetAll, Map_Cut_t * pSets );\n\n// extern void              Map_CutListRecycle( Map_Man_t * p, Map_Cut_t * pSetList, Map_Cut_t * pSave );\n\n// extern int               Map_CutListCount( Map_Cut_t * pSets );\n\n// extern void              Map_CutRemoveFanouts( Map_Node_t * pNode, Map_Cut_t * pCut, int fPhase );\n\n// extern void              Map_CutInsertFanouts( Map_Node_t * pNode, Map_Cut_t * pCut, int fPhase );\n\n/*=== mapperFanout.c =============================================================*/\n// extern void              Map_NodeAddFaninFanout( Map_Node_t * pFanin, Map_Node_t * pFanout );\n\n// extern void              Map_NodeRemoveFaninFanout( Map_Node_t * pFanin, Map_Node_t * pFanoutToRemove );\n\n// extern int               Map_NodeGetFanoutNum( Map_Node_t * pNode );\n\n/*=== mapperLib.c ============================================================*/\n// extern Map_SuperLib_t *  Map_SuperLibCreate( Mio_Library_t * pGenlib, Vec_Str_t * vStr, char * pFileName, char * pExcludeFile, int  fAlgorithm, int  fVerbose );\n\n// extern void              Map_SuperLibFree( Map_SuperLib_t * p );\n\n/*=== mapperMatch.c ===============================================================*/\n// extern int               Map_MappingMatches( Map_Man_t * p );\n\n/*=== mapperRefs.c =============================================================*/\n// extern void              Map_MappingEstimateRefsInit( Map_Man_t * p );\n\n// extern void              Map_MappingEstimateRefs( Map_Man_t * p );\n\n// extern float             Map_CutGetAreaFlow( Map_Cut_t * pCut, int fPhase );\n\n// extern float             Map_CutGetAreaRefed( Map_Cut_t * pCut, int fPhase );\n\n// extern float             Map_CutGetAreaDerefed( Map_Cut_t * pCut, int fPhase );\n\n// extern float             Map_CutRef( Map_Cut_t * pCut, int fPhase, int fProfile );\n\n// extern float             Map_CutDeref( Map_Cut_t * pCut, int fPhase, int fProfile );\n\n// extern void              Map_MappingSetRefs( Map_Man_t * pMan );\n\n// extern float             Map_MappingGetArea( Map_Man_t * pMan );\n\n/*=== mapperSwitch.c =============================================================*/\n// extern float             Map_SwitchCutGetDerefed( Map_Node_t * pNode, Map_Cut_t * pCut, int fPhase );\n\n// extern float             Map_SwitchCutRef( Map_Node_t * pNode, Map_Cut_t * pCut, int fPhase );\n\n// extern float             Map_SwitchCutDeref( Map_Node_t * pNode, Map_Cut_t * pCut, int fPhase );\n\n// extern float             Map_MappingGetSwitching( Map_Man_t * pMan );\n\n/*=== mapperTree.c ===============================================================*/\n// extern int               Map_LibraryDeriveGateInfo( Map_SuperLib_t * pLib, st__table * tExcludeGate );\n\n// extern int               Map_LibraryReadFileTreeStr( Map_SuperLib_t * pLib, Mio_Library_t * pGenlib, Vec_Str_t * vStr, char * pFileName );\n\n// extern int               Map_LibraryReadTree( Map_SuperLib_t * pLib, Mio_Library_t * pGenlib, char * pFileName, char * pExcludeFile );\n\n// extern void              Map_LibraryPrintTree( Map_SuperLib_t * pLib );\n\n/*=== mapperSuper.c ===============================================================*/\n// extern int               Map_LibraryRead( Map_SuperLib_t * p, char * pFileName );\n\n// extern void              Map_LibraryPrintSupergate( Map_Super_t * pGate );\n\n/*=== mapperTable.c ============================================================*/\n// extern Map_HashTable_t * Map_SuperTableCreate( Map_SuperLib_t * pLib );\n\n// extern void              Map_SuperTableFree( Map_HashTable_t * p );\n\n// extern int               Map_SuperTableInsertC( Map_HashTable_t * pLib, unsigned uTruthC[], Map_Super_t * pGate );\n\n// extern int               Map_SuperTableInsert( Map_HashTable_t * pLib, unsigned uTruth[], Map_Super_t * pGate, unsigned uPhase );\n\n// extern Map_Super_t *     Map_SuperTableLookup( Map_HashTable_t * p, unsigned uTruth[], unsigned * puPhase );\n\n// extern void              Map_SuperTableSortSupergates( Map_HashTable_t * p, int nSupersMax );\n\n// extern void              Map_SuperTableSortSupergatesByDelay( Map_HashTable_t * p, int nSupersMax );\n\n/*=== mapperTime.c =============================================================*/\n// extern float             Map_TimeCutComputeArrival( Map_Node_t * pNode, Map_Cut_t * pCut, int fPhase, float tWorstCaseLimit );\n\n// extern float             Map_TimeComputeArrivalMax( Map_Man_t * p );\n\n// extern void              Map_TimeComputeRequiredGlobal( Map_Man_t * p );\n\n/*=== mapperTruth.c ===============================================================*/\n// extern void              Map_MappingTruths( Map_Man_t * pMan );\n\n// extern int               Map_TruthsCutDontCare( Map_Man_t * pMan, Map_Cut_t * pCut, unsigned * uTruthDc );\n\n// extern int               Map_TruthCountOnes( unsigned * uTruth, int nLeaves );\n\n// extern int               Map_TruthDetectTwoFirst( unsigned * uTruth, int nLeaves );\n\n/*=== mapperUtils.c ===============================================================*/\n// extern Map_NodeVec_t *   Map_MappingDfs( Map_Man_t * pMan, int fCollectEquiv );\n\n// extern int               Map_MappingCountLevels( Map_Man_t * pMan );\n\n// extern void              Map_MappingUnmark( Map_Man_t * pMan );\n\n// extern void              Map_MappingMark_rec( Map_Node_t * pNode );\n\n// extern void              Map_MappingUnmark_rec( Map_Node_t * pNode );\n\n// extern void              Map_MappingPrintOutputArrivals( Map_Man_t * p );\n\n// extern void              Map_MappingSetupMask( unsigned uMask[], int nVarsMax );\n\n// extern int               Map_MappingNodeIsViolator( Map_Node_t * pNode, Map_Cut_t * pCut, int fPosPol );\n\n// extern float             Map_MappingGetAreaFlow( Map_Man_t * p );\n\n// extern void              Map_MappingSortByLevel( Map_Man_t * pMan, Map_NodeVec_t * vNodes );\n\n// extern int               Map_MappingCountDoubles( Map_Man_t * pMan, Map_NodeVec_t * vNodes );\n\n// extern void              Map_MappingExpandTruth( unsigned uTruth[2], int nVars );\n\n// extern float             Map_MappingPrintSwitching( Map_Man_t * pMan );\n\n// extern void              Map_MappingSetPlacementInfo( Map_Man_t * p );\n\n// extern float             Map_MappingPrintWirelength( Map_Man_t * p );\n\n// extern void              Map_MappingWireReport( Map_Man_t * p );\n\n// extern float             Map_MappingComputeDelayWithFanouts( Map_Man_t * p );\n\n// extern int               Map_MappingGetMaxLevel( Map_Man_t * pMan );\n\n// extern void              Map_MappingSetChoiceLevels( Map_Man_t * pMan );\n\n// extern void              Map_MappingReportChoices( Map_Man_t * pMan );\n\n/*=== mapperVec.c =============================================================*/\n// extern Map_NodeVec_t *   Map_NodeVecAlloc( int nCap );\n\n// extern void              Map_NodeVecFree( Map_NodeVec_t * p );\n\n// extern Map_NodeVec_t *   Map_NodeVecDup( Map_NodeVec_t * p );\n\n// extern Map_Node_t **     Map_NodeVecReadArray( Map_NodeVec_t * p );\n\n// extern int               Map_NodeVecReadSize( Map_NodeVec_t * p );\n\n// extern void              Map_NodeVecGrow( Map_NodeVec_t * p, int nCapMin );\n\n// extern void              Map_NodeVecShrink( Map_NodeVec_t * p, int nSizeNew );\n\n// extern void              Map_NodeVecClear( Map_NodeVec_t * p );\n\n// extern void              Map_NodeVecPush( Map_NodeVec_t * p, Map_Node_t * Entry );\n\n// extern int               Map_NodeVecPushUnique( Map_NodeVec_t * p, Map_Node_t * Entry );\n\n// extern Map_Node_t *      Map_NodeVecPop( Map_NodeVec_t * p );\n\n// extern void              Map_NodeVecRemove( Map_NodeVec_t * p, Map_Node_t * Entry );\n\n// extern void              Map_NodeVecWriteEntry( Map_NodeVec_t * p, int i, Map_Node_t * Entry );\n\n// extern Map_Node_t *      Map_NodeVecReadEntry( Map_NodeVec_t * p, int i );\n\n// extern void              Map_NodeVecSortByLevel( Map_NodeVec_t * p );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

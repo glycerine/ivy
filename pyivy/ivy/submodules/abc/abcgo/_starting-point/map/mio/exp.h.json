@@ -1,0 +1,723 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h",
+  "SHA256": "751113387fa0a7caad243a3a87750da97ac2438528cf84efb65e175b71dacf44",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 3860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (Len0 \u0026 1) \u0026\u0026 (Len1 \u0026 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 4293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(r) == Len0 + Len1 + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 148,
+        "Column": 5,
+        "ByteOffset": 4731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (Len0 \u0026 1) \u0026\u0026 (Len1 \u0026 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 162,
+        "Column": 5,
+        "ByteOffset": 5399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(r) == Len0 + Len1 + 5 );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 196,
+        "Column": 15,
+        "ByteOffset": 6380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    puNodes = ABC_CALLOC( word, Exp_NodeNum(p) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 5,
+        "ByteOffset": 6721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( puNodes );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 9,
+        "ByteOffset": 8283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iRoot \u003c 2 * nVars );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 14,
+        "ByteOffset": 8708
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pStore = ABC_CALLOC( word, 4 * Exp_NodeNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 5,
+        "ByteOffset": 9994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_Lit2Var(iRoot) - nVars == i - 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 10146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pStore );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 323,
+        "Column": 16,
+        "ByteOffset": 11426
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    puFanins = ABC_ALLOC( word *, nVars );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 23,
+        "ByteOffset": 11510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        puFanins[i] = ABC_ALLOC( word, nWords );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 339,
+        "Column": 15,
+        "ByteOffset": 11932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    puNodes = ABC_ALLOC( word *, Exp_NodeNum(p) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 341,
+        "Column": 22,
+        "ByteOffset": 12033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        puNodes[i] = ABC_ALLOC( word, nWords );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 344,
+        "Column": 14,
+        "ByteOffset": 12110
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTemp0 = ABC_ALLOC( word, nWords );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 345,
+        "Column": 14,
+        "ByteOffset": 12150
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTemp1 = ABC_ALLOC( word, nWords );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 353,
+        "Column": 5,
+        "ByteOffset": 12510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pTemp0 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 354,
+        "Column": 5,
+        "ByteOffset": 12534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pTemp1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 359,
+        "Column": 9,
+        "ByteOffset": 12721
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( puFanins[i] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 361,
+        "Column": 5,
+        "ByteOffset": 12756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( puFanins );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 363,
+        "Column": 9,
+        "ByteOffset": 12829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( puNodes[i] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 365,
+        "Column": 5,
+        "ByteOffset": 12863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( puNodes );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Exp_Const0",
+      "Start": 1509,
+      "End": 1657,
+      "BodyStart": 1548,
+      "Original": "static inline Vec_Int_t * Exp_Const0()\n{\n    Vec_Int_t * vExp;\n    vExp = Vec_IntAlloc( 1 );\n    Vec_IntPush( vExp, EXP_CONST0 );\n    return vExp;\n}",
+      "Draft": "func Exp_Const0() *Vec_Int_t {\n    var vExp *Vec_Int_t;\n    vExp = Vec_IntAlloc( 1 );\n    Vec_IntPush( vExp, EXP_CONST0 );\n    return vExp;\n}"
+    },
+    {
+      "Name": "Exp_Const1",
+      "Start": 1658,
+      "End": 1806,
+      "BodyStart": 1697,
+      "Original": "static inline Vec_Int_t * Exp_Const1()\n{\n    Vec_Int_t * vExp;\n    vExp = Vec_IntAlloc( 1 );\n    Vec_IntPush( vExp, EXP_CONST1 );\n    return vExp;\n}",
+      "Draft": "func Exp_Const1() *Vec_Int_t {\n    var vExp *Vec_Int_t;\n    vExp = Vec_IntAlloc( 1 );\n    Vec_IntPush( vExp, EXP_CONST1 );\n    return vExp;\n}"
+    },
+    {
+      "Name": "Exp_IsConst",
+      "Start": 1807,
+      "End": 1936,
+      "BodyStart": 1854,
+      "Original": "static inline int Exp_IsConst( Vec_Int_t * p )\n{\n    return Vec_IntEntry(p,0) == EXP_CONST0 || Vec_IntEntry(p,0) == EXP_CONST1;\n}",
+      "Draft": "func Exp_IsConst(p *Vec_Int_t) int32 {\n    return Vec_IntEntry(p,0) == EXP_CONST0 || Vec_IntEntry(p,0) == EXP_CONST1;\n}"
+    },
+    {
+      "Name": "Exp_IsConst0",
+      "Start": 1937,
+      "End": 2032,
+      "BodyStart": 1985,
+      "Original": "static inline int Exp_IsConst0( Vec_Int_t * p )\n{\n    return Vec_IntEntry(p,0) == EXP_CONST0;\n}",
+      "Draft": "func Exp_IsConst0(p *Vec_Int_t) int32 {\n    return Vec_IntEntry(p,0) == EXP_CONST0;\n}"
+    },
+    {
+      "Name": "Exp_IsConst1",
+      "Start": 2033,
+      "End": 2128,
+      "BodyStart": 2081,
+      "Original": "static inline int Exp_IsConst1( Vec_Int_t * p )\n{\n    return Vec_IntEntry(p,0) == EXP_CONST1;\n}",
+      "Draft": "func Exp_IsConst1(p *Vec_Int_t) int32 {\n    return Vec_IntEntry(p,0) == EXP_CONST1;\n}"
+    },
+    {
+      "Name": "Exp_Var",
+      "Start": 2129,
+      "End": 2282,
+      "BodyStart": 2175,
+      "Original": "static inline Vec_Int_t * Exp_Var( int iVar )\n{\n    Vec_Int_t * vExp;\n    vExp = Vec_IntAlloc( 1 );\n    Vec_IntPush( vExp, 2 * iVar );\n    return vExp;\n}",
+      "Draft": "func Exp_Var(iVar int32) *Vec_Int_t {\n    var vExp *Vec_Int_t;\n    vExp = Vec_IntAlloc( 1 );\n    Vec_IntPush( vExp, 2 * iVar );\n    return vExp;\n}"
+    },
+    {
+      "Name": "Exp_LitShift",
+      "Start": 2283,
+      "End": 2425,
+      "BodyStart": 2347,
+      "Original": "static inline int Exp_LitShift( int nVars, int Lit, int Shift )\n{\n    if ( Lit \u003c 2 * nVars )\n        return Lit;\n    return Lit + 2 * Shift;\n}",
+      "Draft": "func Exp_LitShift(nVars int32, Lit int32, Shift int32) int32 {\n    if Lit \u003c 2 * nVars {\n        return Lit; }\n    return Lit + 2 * Shift;\n}"
+    },
+    {
+      "Name": "Exp_IsLit",
+      "Start": 2426,
+      "End": 2525,
+      "BodyStart": 2471,
+      "Original": "static inline int Exp_IsLit( Vec_Int_t * p )\n{\n    return Vec_IntSize(p) == 1 \u0026\u0026 !Exp_IsConst(p);\n}",
+      "Draft": "func Exp_IsLit(p *Vec_Int_t) int32 {\n    return Vec_IntSize(p) == 1 \u0026\u0026 !Exp_IsConst(p);\n}"
+    },
+    {
+      "Name": "Exp_NodeNum",
+      "Start": 2526,
+      "End": 2605,
+      "BodyStart": 2573,
+      "Original": "static inline int Exp_NodeNum( Vec_Int_t * p )\n{\n    return Vec_IntSize(p)/2;\n}",
+      "Draft": "func Exp_NodeNum(p *Vec_Int_t) int32 {\n    return Vec_IntSize(p)/2;\n}"
+    },
+    {
+      "Name": "Exp_Not",
+      "Start": 2606,
+      "End": 2728,
+      "BodyStart": 2657,
+      "Original": "static inline Vec_Int_t * Exp_Not( Vec_Int_t * p )\n{\n    Vec_IntWriteEntry( p, 0, Vec_IntEntry(p,0) ^ 1 );\n    return p;\n}",
+      "Draft": "func Exp_Not(p *Vec_Int_t) *Vec_Int_t {\n    Vec_IntWriteEntry( p, 0, Vec_IntEntry(p,0) ^ 1 );\n    return p;\n}"
+    },
+    {
+      "Name": "Exp_PrintLit",
+      "Start": 2729,
+      "End": 3084,
+      "BodyStart": 2783,
+      "Original": "static inline void Exp_PrintLit( int nVars, int Lit )\n{\n    if ( Lit == EXP_CONST0 )\n        Abc_Print( 1, \"Const0\" );\n    else if ( Lit == EXP_CONST1 )\n        Abc_Print( 1, \"Const1\" );\n    else if ( Lit \u003c 2 * nVars )\n        Abc_Print( 1, \"%s%c\", (Lit\u00261) ? \"!\" : \" \", 'a' + Lit/2 );\n    else\n        Abc_Print( 1, \"%s%d\", (Lit\u00261) ? \"!\" : \" \", Lit/2 );\n}",
+      "Draft": "func Exp_PrintLit(nVars int32, Lit int32) {\n    if Lit == EXP_CONST0 {\n        Abc_Print( 1, \"Const0\" );\n    } else if Lit == EXP_CONST1 {\n        Abc_Print( 1, \"Const1\" );\n    } else if Lit \u003c 2 * nVars {\n        Abc_Print( 1, \"%s%c\", (Lit\u00261) ? \"!\" : \" \", 'a' + Lit/2 );\n    } else {\n        Abc_Print( 1, \"%s%d\", (Lit\u00261) ? \"!\" : \" \", Lit/2 ); }\n}"
+    },
+    {
+      "Name": "Exp_Print",
+      "Start": 3085,
+      "End": 3530,
+      "BodyStart": 3142,
+      "Original": "static inline void Exp_Print( int nVars, Vec_Int_t * p )\n{\n    int i;\n    for ( i = 0; i \u003c Exp_NodeNum(p); i++ )\n    {\n        Abc_Print( 1, \"%2d = \", nVars + i );\n        Exp_PrintLit( nVars, Vec_IntEntry(p, 2*i+0) );\n        Abc_Print( 1, \" \u0026 \" );\n        Exp_PrintLit( nVars, Vec_IntEntry(p, 2*i+1) );\n        Abc_Print( 1, \"\\n\" );\n    }\n    Abc_Print( 1, \" F = \" );\n    Exp_PrintLit( nVars, Vec_IntEntryLast(p) );\n    Abc_Print( 1, \"\\n\" );\n}",
+      "Draft": "func Exp_Print(nVars int32, p *Vec_Int_t) {\n    var i int32;\n    for  i = 0; i \u003c Exp_NodeNum(p); i++  {\n        Abc_Print( 1, \"%2d = \", nVars + i );\n        Exp_PrintLit( nVars, Vec_IntEntry(p, 2*i+0) );\n        Abc_Print( 1, \" \u0026 \" );\n        Exp_PrintLit( nVars, Vec_IntEntry(p, 2*i+1) );\n        Abc_Print( 1, \"\\n\" );\n    }\n    Abc_Print( 1, \" F = \" );\n    Exp_PrintLit( nVars, Vec_IntEntryLast(p) );\n    Abc_Print( 1, \"\\n\" );\n}"
+    },
+    {
+      "Name": "Exp_Reverse",
+      "Start": 3531,
+      "End": 3633,
+      "BodyStart": 3586,
+      "Original": "static inline Vec_Int_t * Exp_Reverse( Vec_Int_t * p )\n{\n    Vec_IntReverseOrder( p );\n    return p;\n}",
+      "Draft": "func Exp_Reverse(p *Vec_Int_t) *Vec_Int_t {\n    Vec_IntReverseOrder( p );\n    return p;\n}"
+    },
+    {
+      "Name": "Exp_PrintReverse",
+      "Start": 3634,
+      "End": 3772,
+      "BodyStart": 3698,
+      "Original": "static inline void Exp_PrintReverse( int nVars, Vec_Int_t * p )\n{\n    Exp_Reverse( p );\n    Exp_Print( nVars, p );\n    Exp_Reverse( p );\n}",
+      "Draft": "func Exp_PrintReverse(nVars int32, p *Vec_Int_t) {\n    Exp_Reverse( p );\n    Exp_Print( nVars, p );\n    Exp_Reverse( p );\n}"
+    },
+    {
+      "Name": "Exp_And",
+      "Start": 3773,
+      "End": 4489,
+      "BodyStart": 3890,
+      "Original": "static inline Vec_Int_t * Exp_And( int * pMan, int nVars, Vec_Int_t * p0, Vec_Int_t * p1, int fCompl0, int fCompl1 )\n{\n    int i, Len0 = Vec_IntSize(p0), Len1 = Vec_IntSize(p1);\n    Vec_Int_t * r = Vec_IntAlloc( Len0 + Len1 + 1 );\n    assert( (Len0 \u0026 1) \u0026\u0026 (Len1 \u0026 1) );\n    Vec_IntPush( r, 2 * (nVars + Len0/2 + Len1/2) );\n    Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, 0) ^ fCompl0, Len1/2 ) );\n    Vec_IntPush( r, Vec_IntEntry(p1, 0) ^ fCompl1 );\n    for ( i = 1; i \u003c Len0; i++ )\n        Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, i), Len1/2 ) );\n    for ( i = 1; i \u003c Len1; i++ )\n        Vec_IntPush( r, Vec_IntEntry(p1, i) );\n    assert( Vec_IntSize(r) == Len0 + Len1 + 1 );\n    return r;\n}",
+      "Draft": "func Exp_And(pMan *int32, nVars int32, p0 *Vec_Int_t, p1 *Vec_Int_t, fCompl0 int32, fCompl1 int32) *Vec_Int_t {\n    var i int32;\n    var Len0 int32 = Vec_IntSize(p0);\n    var Len1 int32 = Vec_IntSize(p1);\n    var r *Vec_Int_t  = Vec_IntAlloc( Len0 + Len1 + 1 );\n    assert((Len0 \u0026 1) \u0026\u0026 (Len1 \u0026 1), \"(Len0 \u0026 1) \u0026\u0026 (Len1 \u0026 1)\");\n    Vec_IntPush( r, 2 * (nVars + Len0/2 + Len1/2) );\n    Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, 0) ^ fCompl0, Len1/2 ) );\n    Vec_IntPush( r, Vec_IntEntry(p1, 0) ^ fCompl1 );\n    for  i = 1; i \u003c Len0; i++  {\n        Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, i), Len1/2 ) );\n    }\n    for  i = 1; i \u003c Len1; i++  {\n        Vec_IntPush( r, Vec_IntEntry(p1, i) );\n    }\n    assert(Vec_IntSize(r) == Len0 + Len1 + 1, \"Vec_IntSize(r) == Len0 + Len1 + 1\");\n    return r;\n}"
+    },
+    {
+      "Name": "Exp_Or",
+      "Start": 4490,
+      "End": 4641,
+      "BodyStart": 4580,
+      "Original": "static inline Vec_Int_t * Exp_Or( int * pMan, int nVars, Vec_Int_t * p0, Vec_Int_t * p1 )\n{\n    return Exp_Not( Exp_And(pMan, nVars, p0, p1, 1, 1) );\n}",
+      "Draft": "func Exp_Or(pMan *int32, nVars int32, p0 *Vec_Int_t, p1 *Vec_Int_t) *Vec_Int_t {\n    return Exp_Not( Exp_And(pMan, nVars, p0, p1, 1, 1) );\n}"
+    },
+    {
+      "Name": "Exp_Xor",
+      "Start": 4642,
+      "End": 5578,
+      "BodyStart": 4733,
+      "Original": "static inline Vec_Int_t * Exp_Xor( int * pMan, int nVars, Vec_Int_t * p0, Vec_Int_t * p1 )\n{\n    int i, Len0 = Vec_IntSize(p0), Len1 = Vec_IntSize(p1);\n    Vec_Int_t * r = Vec_IntAlloc( Len0 + Len1 + 5 );\n    assert( (Len0 \u0026 1) \u0026\u0026 (Len1 \u0026 1) );\n    Vec_IntPush( r, 2 * (nVars + Len0/2 + Len1/2 + 2)     );\n    Vec_IntPush( r, 2 * (nVars + Len0/2 + Len1/2 + 1) + 1 );\n    Vec_IntPush( r, 2 * (nVars + Len0/2 + Len1/2 + 0) + 1 );\n    Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, 0) ^ 1, Len1/2 ) );\n    Vec_IntPush( r, Vec_IntEntry(p1, 0) );\n    Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, 0), Len1/2 ) );\n    Vec_IntPush( r, Vec_IntEntry(p1, 0) ^ 1 );\n    for ( i = 1; i \u003c Len0; i++ )\n        Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, i), Len1/2 ) );\n    for ( i = 1; i \u003c Len1; i++ )\n        Vec_IntPush( r, Vec_IntEntry(p1, i) );\n    assert( Vec_IntSize(r) == Len0 + Len1 + 5 );\n    return Exp_Not( r );\n}",
+      "Draft": "func Exp_Xor(pMan *int32, nVars int32, p0 *Vec_Int_t, p1 *Vec_Int_t) *Vec_Int_t {\n    var i int32;\n    var Len0 int32 = Vec_IntSize(p0);\n    var Len1 int32 = Vec_IntSize(p1);\n    var r *Vec_Int_t  = Vec_IntAlloc( Len0 + Len1 + 5 );\n    assert((Len0 \u0026 1) \u0026\u0026 (Len1 \u0026 1), \"(Len0 \u0026 1) \u0026\u0026 (Len1 \u0026 1)\");\n    Vec_IntPush( r, 2 * (nVars + Len0/2 + Len1/2 + 2)     );\n    Vec_IntPush( r, 2 * (nVars + Len0/2 + Len1/2 + 1) + 1 );\n    Vec_IntPush( r, 2 * (nVars + Len0/2 + Len1/2 + 0) + 1 );\n    Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, 0) ^ 1, Len1/2 ) );\n    Vec_IntPush( r, Vec_IntEntry(p1, 0) );\n    Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, 0), Len1/2 ) );\n    Vec_IntPush( r, Vec_IntEntry(p1, 0) ^ 1 );\n    for  i = 1; i \u003c Len0; i++  {\n        Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, i), Len1/2 ) );\n    }\n    for  i = 1; i \u003c Len1; i++  {\n        Vec_IntPush( r, Vec_IntEntry(p1, i) );\n    }\n    assert(Vec_IntSize(r) == Len0 + Len1 + 5, \"Vec_IntSize(r) == Len0 + Len1 + 5\");\n    return Exp_Not( r );\n}"
+    },
+    {
+      "Name": "Exp_Truth6Lit",
+      "Start": 5579,
+      "End": 5927,
+      "BodyStart": 5667,
+      "Original": "static inline word Exp_Truth6Lit( int nVars, int Lit, word * puFanins, word * puNodes )\n{\n    if ( Lit == EXP_CONST0 )\n        return 0;\n    if ( Lit == EXP_CONST1 )\n        return ~(word)0;\n    if ( Lit \u003c 2 * nVars )\n        return  (Lit\u00261) ? ~puFanins[Lit/2] : puFanins[Lit/2];\n    return (Lit\u00261) ? ~puNodes[Lit/2-nVars] : puNodes[Lit/2-nVars];\n}",
+      "Draft": "func Exp_Truth6Lit(nVars int32, Lit int32, puFanins *word, puNodes *word) word {\n    if Lit == EXP_CONST0 {\n        return 0; }\n    if Lit == EXP_CONST1 {\n        return ~(word)0; }\n    if Lit \u003c 2 * nVars {\n        if Lit\u00261 {\n            return ~puFanins[Lit/2];\n        } else {\n            return puFanins[Lit/2];\n        } }\n    if Lit\u00261 {\n        return ~puNodes[Lit/2-nVars];\n    } else {\n        return puNodes[Lit/2-nVars];\n    }\n}"
+    },
+    {
+      "Name": "Exp_Truth6",
+      "Start": 5928,
+      "End": 6761,
+      "BodyStart": 6003,
+      "Original": "static inline word Exp_Truth6( int nVars, Vec_Int_t * p, word * puFanins )\n{\n    static word Truth6[6] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000)\n    };\n    word * puNodes, Res;\n    int i;\n    if ( puFanins == NULL )\n        puFanins = (word *)Truth6;\n    puNodes = ABC_CALLOC( word, Exp_NodeNum(p) );\n    for ( i = 0; i \u003c Exp_NodeNum(p); i++ )\n        puNodes[i] = Exp_Truth6Lit( nVars, Vec_IntEntry(p, 2*i+0), puFanins, puNodes ) \u0026 \n                     Exp_Truth6Lit( nVars, Vec_IntEntry(p, 2*i+1), puFanins, puNodes );\n    Res = Exp_Truth6Lit( nVars, Vec_IntEntryLast(p), puFanins, puNodes );\n    ABC_FREE( puNodes );\n    return Res;\n}",
+      "Draft": "func Exp_Truth6(nVars int32, p *Vec_Int_t, puFanins *word) word {\n    static word Truth6[6] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000)\n    };\n    var puNodes *word;\n    var Res word;\n    var i int32;\n    if puFanins == nil {\n        puFanins = (word *)Truth6; }\n    puNodes = ABC_CALLOC( word, Exp_NodeNum(p) );\n    for  i = 0; i \u003c Exp_NodeNum(p); i++  {\n        puNodes[i] = Exp_Truth6Lit( nVars, Vec_IntEntry(p, 2*i+0), puFanins, puNodes ) \u0026 \n                     Exp_Truth6Lit( nVars, Vec_IntEntry(p, 2*i+1), puFanins, puNodes );\n    }\n    Res = Exp_Truth6Lit( nVars, Vec_IntEntryLast(p), puFanins, puNodes );\n    ABC_FREE( puNodes );\n    return Res;\n}"
+    },
+    {
+      "Name": "Exp_Truth8",
+      "Start": 6762,
+      "End": 9844,
+      "BodyStart": 6852,
+      "Original": "static inline void Exp_Truth8( int nVars, Vec_Int_t * p, word ** puFanins, word * puRes )\n{\n    word Truth8[8][4] = {\n        { ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA) },\n        { ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC) },\n        { ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0) },\n        { ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00) },\n        { ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000) },\n        { ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000) },\n        { ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF) },\n        { ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF) }\n    };\n    word * puFaninsInt[8], * pStore, * pThis = NULL;\n    int i, k, iRoot = Vec_IntEntryLast(p);\n    if ( puFanins == NULL )\n    {\n        puFanins = puFaninsInt;\n        for ( k = 0; k \u003c 8; k++ )\n            puFanins[k] = Truth8[k];\n    }\n    if ( Exp_NodeNum(p) == 0 )\n    {\n        assert( iRoot \u003c 2 * nVars );\n        if ( iRoot == EXP_CONST0 || iRoot == EXP_CONST1 )\n            for ( k = 0; k \u003c 4; k++ )\n                puRes[k] = iRoot == EXP_CONST0 ? 0 : ~(word)0;\n        else\n            for ( k = 0; k \u003c 4; k++ )\n                puRes[k] = Abc_LitIsCompl(iRoot) ? ~puFanins[Abc_Lit2Var(iRoot)][k] : puFanins[Abc_Lit2Var(iRoot)][k];\n        return;\n    }\n    pStore = ABC_CALLOC( word, 4 * Exp_NodeNum(p) );\n    for ( i = 0; i \u003c Exp_NodeNum(p); i++ )\n    {\n        int iVar0 = Abc_Lit2Var( Vec_IntEntry(p, 2*i+0) );\n        int iVar1 = Abc_Lit2Var( Vec_IntEntry(p, 2*i+1) );\n        int fCompl0 = Abc_LitIsCompl( Vec_IntEntry(p, 2*i+0) );\n        int fCompl1 = Abc_LitIsCompl( Vec_IntEntry(p, 2*i+1) );\n        word * pIn0 = iVar0 \u003c nVars ? puFanins[iVar0] : pStore + 4 * (iVar0 - nVars);\n        word * pIn1 = iVar1 \u003c nVars ? puFanins[iVar1] : pStore + 4 * (iVar1 - nVars);\n        pThis = pStore + 4 * i;\n        if ( fCompl0 \u0026\u0026 fCompl1 )\n            for ( k = 0; k \u003c 4; k++ )\n                pThis[k] = ~pIn0[k] \u0026 ~pIn1[k];\n        else if ( fCompl0 \u0026\u0026 !fCompl1 )\n            for ( k = 0; k \u003c 4; k++ )\n                pThis[k] = ~pIn0[k] \u0026  pIn1[k];\n        else if ( !fCompl0 \u0026\u0026 fCompl1 )\n            for ( k = 0; k \u003c 4; k++ )\n                pThis[k] =  pIn0[k] \u0026 ~pIn1[k];\n        else //if ( !fCompl0 \u0026\u0026 !fCompl1 )\n            for ( k = 0; k \u003c 4; k++ )\n                pThis[k] =  pIn0[k] \u0026  pIn1[k];\n    }\n    assert( Abc_Lit2Var(iRoot) - nVars == i - 1 );\n    for ( k = 0; k \u003c 4; k++ )\n        puRes[k] = Abc_LitIsCompl(iRoot) ? ~pThis[k] : pThis[k];\n    ABC_FREE( pStore );\n}",
+      "Draft": "func Exp_Truth8(nVars int32, p *Vec_Int_t, puFanins **word, puRes *word) {\n    var Truth8 [8][4]word = [8][4]word{\n        { ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA) },\n        { ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC) },\n        { ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0) },\n        { ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00) },\n        { ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000) },\n        { ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000) },\n        { ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF) },\n        { ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF) },\n    };\n    var puFaninsInt [8]*word;\n    var pStore *word;\n    var pThis *word = nil;\n    var i int32;\n    var k int32;\n    var iRoot int32 = Vec_IntEntryLast(p);\n    if puFanins == nil {\n        puFanins = puFaninsInt;\n        for  k = 0; k \u003c 8; k++  {\n            puFanins[k] = Truth8[k];\n        }\n    }\n    if Exp_NodeNum(p) == 0 {\n        assert(iRoot \u003c 2 * nVars, \"iRoot \u003c 2 * nVars\");\n        if iRoot == EXP_CONST0 || iRoot == EXP_CONST1 {\n            for  k = 0; k \u003c 4; k++  {\n                puRes[k] = iRoot == EXP_CONST0 ? 0 : ~(word)0;\n            }\n        } else {\n            for  k = 0; k \u003c 4; k++  {\n                puRes[k] = Abc_LitIsCompl(iRoot) ? ~puFanins[Abc_Lit2Var(iRoot)][k] : puFanins[Abc_Lit2Var(iRoot)][k];\n            } }\n        return;\n    }\n    pStore = ABC_CALLOC( word, 4 * Exp_NodeNum(p) );\n    for  i = 0; i \u003c Exp_NodeNum(p); i++  {\n        var iVar0 int32  = Abc_Lit2Var( Vec_IntEntry(p, 2*i+0) );\n        var iVar1 int32  = Abc_Lit2Var( Vec_IntEntry(p, 2*i+1) );\n        var fCompl0 int32  = Abc_LitIsCompl( Vec_IntEntry(p, 2*i+0) );\n        var fCompl1 int32  = Abc_LitIsCompl( Vec_IntEntry(p, 2*i+1) );\n        var pIn0 *word;\n        if iVar0 \u003c nVars {\n            pIn0 = puFanins[iVar0];\n        } else {\n            pIn0 = pStore + 4 * (iVar0 - nVars);\n        }\n        var pIn1 *word;\n        if iVar1 \u003c nVars {\n            pIn1 = puFanins[iVar1];\n        } else {\n            pIn1 = pStore + 4 * (iVar1 - nVars);\n        }\n        pThis = pStore + 4 * i;\n        if (fCompl0 != 0) \u0026\u0026 (fCompl1 != 0) {\n            for  k = 0; k \u003c 4; k++  {\n                pThis[k] = ~pIn0[k] \u0026 ~pIn1[k];\n            }\n        } else if (fCompl0 != 0) \u0026\u0026 !(fCompl1 != 0) {\n            for  k = 0; k \u003c 4; k++  {\n                pThis[k] = ~pIn0[k] \u0026  pIn1[k];\n            }\n        } else if !(fCompl0 != 0) \u0026\u0026 (fCompl1 != 0) {\n            for  k = 0; k \u003c 4; k++  {\n                pThis[k] =  pIn0[k] \u0026 ~pIn1[k];\n            }\n        } else { //if ( !fCompl0 \u0026\u0026 !fCompl1 )\n            for  k = 0; k \u003c 4; k++  {\n                pThis[k] =  pIn0[k] \u0026  pIn1[k];\n            } }\n    }\n    assert(Abc_Lit2Var(iRoot) - nVars == i - 1, \"Abc_Lit2Var(iRoot) - nVars == i - 1\");\n    for  k = 0; k \u003c 4; k++  {\n        puRes[k] = Abc_LitIsCompl(iRoot) ? ~pThis[k] : pThis[k];\n    }\n    ABC_FREE( pStore );\n}"
+    },
+    {
+      "Name": "Exp_TruthLit",
+      "Start": 9845,
+      "End": 10448,
+      "BodyStart": 9959,
+      "Original": "static inline void Exp_TruthLit( int nVars, int Lit, word ** puFanins, word ** puNodes, word * pRes, int nWords )\n{\n    int w;\n    if ( Lit == EXP_CONST0 )\n        for ( w = 0; w \u003c nWords; w++ )\n            pRes[w] = 0;\n    else if ( Lit == EXP_CONST1 )\n        for ( w = 0; w \u003c nWords; w++ )\n            pRes[w] = ~(word)0;\n    else if ( Lit \u003c 2 * nVars )\n        for ( w = 0; w \u003c nWords; w++ )\n            pRes[w] = (Lit\u00261) ? ~puFanins[Lit/2][w] : puFanins[Lit/2][w];\n    else\n        for ( w = 0; w \u003c nWords; w++ )\n            pRes[w] = (Lit\u00261) ? ~puNodes[Lit/2-nVars][w] : puNodes[Lit/2-nVars][w];\n}",
+      "Draft": "func Exp_TruthLit(nVars int32, Lit int32, puFanins **word, puNodes **word, pRes *word, nWords int32) {\n    var w int32;\n    if Lit == EXP_CONST0 {\n        for  w = 0; w \u003c nWords; w++  {\n            pRes[w] = 0;\n        }\n    } else if Lit == EXP_CONST1 {\n        for  w = 0; w \u003c nWords; w++  {\n            pRes[w] = ~(word)0;\n        }\n    } else if Lit \u003c 2 * nVars {\n        for  w = 0; w \u003c nWords; w++  {\n            pRes[w] = (Lit\u00261) ? ~puFanins[Lit/2][w] : puFanins[Lit/2][w];\n        }\n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            pRes[w] = (Lit\u00261) ? ~puNodes[Lit/2-nVars][w] : puNodes[Lit/2-nVars][w];\n        } }\n}"
+    },
+    {
+      "Name": "Exp_Truth",
+      "Start": 10449,
+      "End": 12346,
+      "BodyStart": 10519,
+      "Original": "static inline void Exp_Truth( int nVars, Vec_Int_t * p, word * pRes )\n{\n    static word Truth6[6] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000)\n    };\n    word ** puFanins, ** puNodes, * pTemp0, * pTemp1;\n    int i, w, nWords = (nVars \u003c= 6 ? 1 : 1 \u003c\u003c (nVars-6));\n    // create elementary variables\n    puFanins = ABC_ALLOC( word *, nVars );\n    for ( i = 0; i \u003c nVars; i++ )\n        puFanins[i] = ABC_ALLOC( word, nWords );\n    // assign elementary truth tables\n    for ( i = 0; i \u003c nVars; i++ )\n        if ( i \u003c 6 )\n            for ( w = 0; w \u003c nWords; w++ )\n                puFanins[i][w] = Truth6[i];\n        else\n            for ( w = 0; w \u003c nWords; w++ )\n                puFanins[i][w] = (w \u0026 (1 \u003c\u003c (i-6))) ? ~(word)0 : 0;\n    // create intermediate nodes\n    puNodes = ABC_ALLOC( word *, Exp_NodeNum(p) );\n    for ( i = 0; i \u003c Exp_NodeNum(p); i++ )\n        puNodes[i] = ABC_ALLOC( word, nWords );\n    // evaluate the expression\n    pTemp0 = ABC_ALLOC( word, nWords );\n    pTemp1 = ABC_ALLOC( word, nWords );\n    for ( i = 0; i \u003c Exp_NodeNum(p); i++ )\n    {\n        Exp_TruthLit( nVars, Vec_IntEntry(p, 2*i+0), puFanins, puNodes, pTemp0, nWords );\n        Exp_TruthLit( nVars, Vec_IntEntry(p, 2*i+1), puFanins, puNodes, pTemp1, nWords );\n        for ( w = 0; w \u003c nWords; w++ )\n            puNodes[i][w] = pTemp0[w] \u0026 pTemp1[w];\n    }\n    ABC_FREE( pTemp0 );\n    ABC_FREE( pTemp1 );\n    // copy the final result\n    Exp_TruthLit( nVars, Vec_IntEntryLast(p), puFanins, puNodes, pRes, nWords );\n    // cleanup\n    for ( i = 0; i \u003c nVars; i++ )\n        ABC_FREE( puFanins[i] );\n    ABC_FREE( puFanins );\n    for ( i = 0; i \u003c Exp_NodeNum(p); i++ )\n        ABC_FREE( puNodes[i] );\n    ABC_FREE( puNodes );\n}",
+      "Draft": "func Exp_Truth(nVars int32, p *Vec_Int_t, pRes *word) {\n    static word Truth6[6] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000)\n    };\n    var puFanins **word;\n    var puNodes **word;\n    var pTemp0 *word;\n    var pTemp1 *word;\n    var i int32;\n    var w int32;\n    var nWords int32;\n    if nVars \u003c= 6 {\n        nWords = 1;\n    } else {\n        nWords = 1 \u003c\u003c (nVars-6);\n    }\n    // create elementary variables\n    puFanins = ABC_ALLOC( word *, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        puFanins[i] = ABC_ALLOC( word, nWords );\n    }\n    // assign elementary truth tables\n    for  i = 0; i \u003c nVars; i++  {\n        if i \u003c 6 {\n            for  w = 0; w \u003c nWords; w++  {\n                puFanins[i][w] = Truth6[i];\n            }\n        } else {\n            for  w = 0; w \u003c nWords; w++  {\n                puFanins[i][w] = (w \u0026 (1 \u003c\u003c (i-6))) ? ~(word)0 : 0;\n            } }\n    }\n    // create intermediate nodes\n    puNodes = ABC_ALLOC( word *, Exp_NodeNum(p) );\n    for  i = 0; i \u003c Exp_NodeNum(p); i++  {\n        puNodes[i] = ABC_ALLOC( word, nWords );\n    }\n    // evaluate the expression\n    pTemp0 = ABC_ALLOC( word, nWords );\n    pTemp1 = ABC_ALLOC( word, nWords );\n    for  i = 0; i \u003c Exp_NodeNum(p); i++  {\n        Exp_TruthLit( nVars, Vec_IntEntry(p, 2*i+0), puFanins, puNodes, pTemp0, nWords );\n        Exp_TruthLit( nVars, Vec_IntEntry(p, 2*i+1), puFanins, puNodes, pTemp1, nWords );\n        for  w = 0; w \u003c nWords; w++  {\n            puNodes[i][w] = pTemp0[w] \u0026 pTemp1[w];\n        }\n    }\n    ABC_FREE( pTemp0 );\n    ABC_FREE( pTemp1 );\n    // copy the final result\n    Exp_TruthLit( nVars, Vec_IntEntryLast(p), puFanins, puNodes, pRes, nWords );\n    // cleanup\n    for  i = 0; i \u003c nVars; i++  {\n        ABC_FREE( puFanins[i] );\n    }\n    ABC_FREE( puFanins );\n    for  i = 0; i \u003c Exp_NodeNum(p); i++  {\n        ABC_FREE( puNodes[i] );\n    }\n    ABC_FREE( puNodes );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::mechanical::static::6009",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 6009,
+      "End": 6015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::mechanical::static::10525",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 10525,
+      "End": 10531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::pointer-cast::6358",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6358,
+      "End": 6366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_Const0",
+      "Category": "semantic-review",
+      "Symbol": "Exp_Const0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1509,
+      "End": 1657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_Const1",
+      "Category": "semantic-review",
+      "Symbol": "Exp_Const1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1658,
+      "End": 1806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_IsConst",
+      "Category": "semantic-review",
+      "Symbol": "Exp_IsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1807,
+      "End": 1936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_IsConst0",
+      "Category": "semantic-review",
+      "Symbol": "Exp_IsConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1937,
+      "End": 2032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_IsConst1",
+      "Category": "semantic-review",
+      "Symbol": "Exp_IsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2033,
+      "End": 2128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_Var",
+      "Category": "semantic-review",
+      "Symbol": "Exp_Var",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2129,
+      "End": 2282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_LitShift",
+      "Category": "semantic-review",
+      "Symbol": "Exp_LitShift",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2283,
+      "End": 2425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_IsLit",
+      "Category": "semantic-review",
+      "Symbol": "Exp_IsLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2426,
+      "End": 2525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_NodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Exp_NodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2526,
+      "End": 2605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_Not",
+      "Category": "semantic-review",
+      "Symbol": "Exp_Not",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2606,
+      "End": 2728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::ternary::Exp_PrintLit",
+      "Category": "ternary-review",
+      "Symbol": "Exp_PrintLit",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2729,
+      "End": 3084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_PrintLit",
+      "Category": "semantic-review",
+      "Symbol": "Exp_PrintLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2729,
+      "End": 3084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_Print",
+      "Category": "semantic-review",
+      "Symbol": "Exp_Print",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3085,
+      "End": 3530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_Reverse",
+      "Category": "semantic-review",
+      "Symbol": "Exp_Reverse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3531,
+      "End": 3633
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_PrintReverse",
+      "Category": "semantic-review",
+      "Symbol": "Exp_PrintReverse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3634,
+      "End": 3772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_And",
+      "Category": "semantic-review",
+      "Symbol": "Exp_And",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3773,
+      "End": 4489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_Or",
+      "Category": "semantic-review",
+      "Symbol": "Exp_Or",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4490,
+      "End": 4641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_Xor",
+      "Category": "semantic-review",
+      "Symbol": "Exp_Xor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4642,
+      "End": 5578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_Truth6Lit",
+      "Category": "semantic-review",
+      "Symbol": "Exp_Truth6Lit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5579,
+      "End": 5927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_Truth6",
+      "Category": "semantic-review",
+      "Symbol": "Exp_Truth6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5928,
+      "End": 6761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::ternary::Exp_Truth8",
+      "Category": "ternary-review",
+      "Symbol": "Exp_Truth8",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6762,
+      "End": 9844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_Truth8",
+      "Category": "semantic-review",
+      "Symbol": "Exp_Truth8",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6762,
+      "End": 9844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::ternary::Exp_TruthLit",
+      "Category": "ternary-review",
+      "Symbol": "Exp_TruthLit",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9845,
+      "End": 10448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_TruthLit",
+      "Category": "semantic-review",
+      "Symbol": "Exp_TruthLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9845,
+      "End": 10448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::ternary::Exp_Truth",
+      "Category": "ternary-review",
+      "Symbol": "Exp_Truth",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10449,
+      "End": 12346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::Exp_Truth",
+      "Category": "semantic-review",
+      "Symbol": "Exp_Truth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10449,
+      "End": 12346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/exp.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12823
+    }
+  ],
+  "Draft": "package mio\n\n/**CFile****************************************************************\n\n  FileName    [exp.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Boolean expression.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: exp.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nconst EXP_CONST0 = -1\nconst EXP_CONST1 = -2\n\nfunc Exp_Const0() *Vec_Int_t {\n    var vExp *Vec_Int_t;\n    vExp = Vec_IntAlloc( 1 );\n    Vec_IntPush( vExp, EXP_CONST0 );\n    return vExp;\n}\nfunc Exp_Const1() *Vec_Int_t {\n    var vExp *Vec_Int_t;\n    vExp = Vec_IntAlloc( 1 );\n    Vec_IntPush( vExp, EXP_CONST1 );\n    return vExp;\n}\nfunc Exp_IsConst(p *Vec_Int_t) int32 {\n    return Vec_IntEntry(p,0) == EXP_CONST0 || Vec_IntEntry(p,0) == EXP_CONST1;\n}\nfunc Exp_IsConst0(p *Vec_Int_t) int32 {\n    return Vec_IntEntry(p,0) == EXP_CONST0;\n}\nfunc Exp_IsConst1(p *Vec_Int_t) int32 {\n    return Vec_IntEntry(p,0) == EXP_CONST1;\n}\nfunc Exp_Var(iVar int32) *Vec_Int_t {\n    var vExp *Vec_Int_t;\n    vExp = Vec_IntAlloc( 1 );\n    Vec_IntPush( vExp, 2 * iVar );\n    return vExp;\n}\nfunc Exp_LitShift(nVars int32, Lit int32, Shift int32) int32 {\n    if Lit \u003c 2 * nVars {\n        return Lit; }\n    return Lit + 2 * Shift;\n}\nfunc Exp_IsLit(p *Vec_Int_t) int32 {\n    return Vec_IntSize(p) == 1 \u0026\u0026 !Exp_IsConst(p);\n}\nfunc Exp_NodeNum(p *Vec_Int_t) int32 {\n    return Vec_IntSize(p)/2;\n}\nfunc Exp_Not(p *Vec_Int_t) *Vec_Int_t {\n    Vec_IntWriteEntry( p, 0, Vec_IntEntry(p,0) ^ 1 );\n    return p;\n}\nfunc Exp_PrintLit(nVars int32, Lit int32) {\n    if Lit == EXP_CONST0 {\n        Abc_Print( 1, \"Const0\" );\n    } else if Lit == EXP_CONST1 {\n        Abc_Print( 1, \"Const1\" );\n    } else if Lit \u003c 2 * nVars {\n        Abc_Print( 1, \"%s%c\", (Lit\u00261) ? \"!\" : \" \", 'a' + Lit/2 );\n    } else {\n        Abc_Print( 1, \"%s%d\", (Lit\u00261) ? \"!\" : \" \", Lit/2 ); }\n}\nfunc Exp_Print(nVars int32, p *Vec_Int_t) {\n    var i int32;\n    for  i = 0; i \u003c Exp_NodeNum(p); i++  {\n        Abc_Print( 1, \"%2d = \", nVars + i );\n        Exp_PrintLit( nVars, Vec_IntEntry(p, 2*i+0) );\n        Abc_Print( 1, \" \u0026 \" );\n        Exp_PrintLit( nVars, Vec_IntEntry(p, 2*i+1) );\n        Abc_Print( 1, \"\\n\" );\n    }\n    Abc_Print( 1, \" F = \" );\n    Exp_PrintLit( nVars, Vec_IntEntryLast(p) );\n    Abc_Print( 1, \"\\n\" );\n}\nfunc Exp_Reverse(p *Vec_Int_t) *Vec_Int_t {\n    Vec_IntReverseOrder( p );\n    return p;\n}\nfunc Exp_PrintReverse(nVars int32, p *Vec_Int_t) {\n    Exp_Reverse( p );\n    Exp_Print( nVars, p );\n    Exp_Reverse( p );\n}\nfunc Exp_And(pMan *int32, nVars int32, p0 *Vec_Int_t, p1 *Vec_Int_t, fCompl0 int32, fCompl1 int32) *Vec_Int_t {\n    var i int32;\n    var Len0 int32 = Vec_IntSize(p0);\n    var Len1 int32 = Vec_IntSize(p1);\n    var r *Vec_Int_t  = Vec_IntAlloc( Len0 + Len1 + 1 );\n    assert((Len0 \u0026 1) \u0026\u0026 (Len1 \u0026 1), \"(Len0 \u0026 1) \u0026\u0026 (Len1 \u0026 1)\");\n    Vec_IntPush( r, 2 * (nVars + Len0/2 + Len1/2) );\n    Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, 0) ^ fCompl0, Len1/2 ) );\n    Vec_IntPush( r, Vec_IntEntry(p1, 0) ^ fCompl1 );\n    for  i = 1; i \u003c Len0; i++  {\n        Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, i), Len1/2 ) );\n    }\n    for  i = 1; i \u003c Len1; i++  {\n        Vec_IntPush( r, Vec_IntEntry(p1, i) );\n    }\n    assert(Vec_IntSize(r) == Len0 + Len1 + 1, \"Vec_IntSize(r) == Len0 + Len1 + 1\");\n    return r;\n}\nfunc Exp_Or(pMan *int32, nVars int32, p0 *Vec_Int_t, p1 *Vec_Int_t) *Vec_Int_t {\n    return Exp_Not( Exp_And(pMan, nVars, p0, p1, 1, 1) );\n}\nfunc Exp_Xor(pMan *int32, nVars int32, p0 *Vec_Int_t, p1 *Vec_Int_t) *Vec_Int_t {\n    var i int32;\n    var Len0 int32 = Vec_IntSize(p0);\n    var Len1 int32 = Vec_IntSize(p1);\n    var r *Vec_Int_t  = Vec_IntAlloc( Len0 + Len1 + 5 );\n    assert((Len0 \u0026 1) \u0026\u0026 (Len1 \u0026 1), \"(Len0 \u0026 1) \u0026\u0026 (Len1 \u0026 1)\");\n    Vec_IntPush( r, 2 * (nVars + Len0/2 + Len1/2 + 2)     );\n    Vec_IntPush( r, 2 * (nVars + Len0/2 + Len1/2 + 1) + 1 );\n    Vec_IntPush( r, 2 * (nVars + Len0/2 + Len1/2 + 0) + 1 );\n    Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, 0) ^ 1, Len1/2 ) );\n    Vec_IntPush( r, Vec_IntEntry(p1, 0) );\n    Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, 0), Len1/2 ) );\n    Vec_IntPush( r, Vec_IntEntry(p1, 0) ^ 1 );\n    for  i = 1; i \u003c Len0; i++  {\n        Vec_IntPush( r, Exp_LitShift( nVars, Vec_IntEntry(p0, i), Len1/2 ) );\n    }\n    for  i = 1; i \u003c Len1; i++  {\n        Vec_IntPush( r, Vec_IntEntry(p1, i) );\n    }\n    assert(Vec_IntSize(r) == Len0 + Len1 + 5, \"Vec_IntSize(r) == Len0 + Len1 + 5\");\n    return Exp_Not( r );\n}\nfunc Exp_Truth6Lit(nVars int32, Lit int32, puFanins *word, puNodes *word) word {\n    if Lit == EXP_CONST0 {\n        return 0; }\n    if Lit == EXP_CONST1 {\n        return ~(word)0; }\n    if Lit \u003c 2 * nVars {\n        if Lit\u00261 {\n            return ~puFanins[Lit/2];\n        } else {\n            return puFanins[Lit/2];\n        } }\n    if Lit\u00261 {\n        return ~puNodes[Lit/2-nVars];\n    } else {\n        return puNodes[Lit/2-nVars];\n    }\n}\nfunc Exp_Truth6(nVars int32, p *Vec_Int_t, puFanins *word) word {\n    static word Truth6[6] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000)\n    };\n    var puNodes *word;\n    var Res word;\n    var i int32;\n    if puFanins == nil {\n        puFanins = (word *)Truth6; }\n    puNodes = ABC_CALLOC( word, Exp_NodeNum(p) );\n    for  i = 0; i \u003c Exp_NodeNum(p); i++  {\n        puNodes[i] = Exp_Truth6Lit( nVars, Vec_IntEntry(p, 2*i+0), puFanins, puNodes ) \u0026 \n                     Exp_Truth6Lit( nVars, Vec_IntEntry(p, 2*i+1), puFanins, puNodes );\n    }\n    Res = Exp_Truth6Lit( nVars, Vec_IntEntryLast(p), puFanins, puNodes );\n    ABC_FREE( puNodes );\n    return Res;\n}\nfunc Exp_Truth8(nVars int32, p *Vec_Int_t, puFanins **word, puRes *word) {\n    var Truth8 [8][4]word = [8][4]word{\n        { ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA) },\n        { ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC) },\n        { ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0) },\n        { ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00) },\n        { ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000) },\n        { ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000) },\n        { ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF) },\n        { ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF) },\n    };\n    var puFaninsInt [8]*word;\n    var pStore *word;\n    var pThis *word = nil;\n    var i int32;\n    var k int32;\n    var iRoot int32 = Vec_IntEntryLast(p);\n    if puFanins == nil {\n        puFanins = puFaninsInt;\n        for  k = 0; k \u003c 8; k++  {\n            puFanins[k] = Truth8[k];\n        }\n    }\n    if Exp_NodeNum(p) == 0 {\n        assert(iRoot \u003c 2 * nVars, \"iRoot \u003c 2 * nVars\");\n        if iRoot == EXP_CONST0 || iRoot == EXP_CONST1 {\n            for  k = 0; k \u003c 4; k++  {\n                puRes[k] = iRoot == EXP_CONST0 ? 0 : ~(word)0;\n            }\n        } else {\n            for  k = 0; k \u003c 4; k++  {\n                puRes[k] = Abc_LitIsCompl(iRoot) ? ~puFanins[Abc_Lit2Var(iRoot)][k] : puFanins[Abc_Lit2Var(iRoot)][k];\n            } }\n        return;\n    }\n    pStore = ABC_CALLOC( word, 4 * Exp_NodeNum(p) );\n    for  i = 0; i \u003c Exp_NodeNum(p); i++  {\n        var iVar0 int32  = Abc_Lit2Var( Vec_IntEntry(p, 2*i+0) );\n        var iVar1 int32  = Abc_Lit2Var( Vec_IntEntry(p, 2*i+1) );\n        var fCompl0 int32  = Abc_LitIsCompl( Vec_IntEntry(p, 2*i+0) );\n        var fCompl1 int32  = Abc_LitIsCompl( Vec_IntEntry(p, 2*i+1) );\n        var pIn0 *word;\n        if iVar0 \u003c nVars {\n            pIn0 = puFanins[iVar0];\n        } else {\n            pIn0 = pStore + 4 * (iVar0 - nVars);\n        }\n        var pIn1 *word;\n        if iVar1 \u003c nVars {\n            pIn1 = puFanins[iVar1];\n        } else {\n            pIn1 = pStore + 4 * (iVar1 - nVars);\n        }\n        pThis = pStore + 4 * i;\n        if (fCompl0 != 0) \u0026\u0026 (fCompl1 != 0) {\n            for  k = 0; k \u003c 4; k++  {\n                pThis[k] = ~pIn0[k] \u0026 ~pIn1[k];\n            }\n        } else if (fCompl0 != 0) \u0026\u0026 !(fCompl1 != 0) {\n            for  k = 0; k \u003c 4; k++  {\n                pThis[k] = ~pIn0[k] \u0026  pIn1[k];\n            }\n        } else if !(fCompl0 != 0) \u0026\u0026 (fCompl1 != 0) {\n            for  k = 0; k \u003c 4; k++  {\n                pThis[k] =  pIn0[k] \u0026 ~pIn1[k];\n            }\n        } else { //if ( !fCompl0 \u0026\u0026 !fCompl1 )\n            for  k = 0; k \u003c 4; k++  {\n                pThis[k] =  pIn0[k] \u0026  pIn1[k];\n            } }\n    }\n    assert(Abc_Lit2Var(iRoot) - nVars == i - 1, \"Abc_Lit2Var(iRoot) - nVars == i - 1\");\n    for  k = 0; k \u003c 4; k++  {\n        puRes[k] = Abc_LitIsCompl(iRoot) ? ~pThis[k] : pThis[k];\n    }\n    ABC_FREE( pStore );\n}\nfunc Exp_TruthLit(nVars int32, Lit int32, puFanins **word, puNodes **word, pRes *word, nWords int32) {\n    var w int32;\n    if Lit == EXP_CONST0 {\n        for  w = 0; w \u003c nWords; w++  {\n            pRes[w] = 0;\n        }\n    } else if Lit == EXP_CONST1 {\n        for  w = 0; w \u003c nWords; w++  {\n            pRes[w] = ~(word)0;\n        }\n    } else if Lit \u003c 2 * nVars {\n        for  w = 0; w \u003c nWords; w++  {\n            pRes[w] = (Lit\u00261) ? ~puFanins[Lit/2][w] : puFanins[Lit/2][w];\n        }\n    } else {\n        for  w = 0; w \u003c nWords; w++  {\n            pRes[w] = (Lit\u00261) ? ~puNodes[Lit/2-nVars][w] : puNodes[Lit/2-nVars][w];\n        } }\n}\nfunc Exp_Truth(nVars int32, p *Vec_Int_t, pRes *word) {\n    static word Truth6[6] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000)\n    };\n    var puFanins **word;\n    var puNodes **word;\n    var pTemp0 *word;\n    var pTemp1 *word;\n    var i int32;\n    var w int32;\n    var nWords int32;\n    if nVars \u003c= 6 {\n        nWords = 1;\n    } else {\n        nWords = 1 \u003c\u003c (nVars-6);\n    }\n    // create elementary variables\n    puFanins = ABC_ALLOC( word *, nVars );\n    for  i = 0; i \u003c nVars; i++  {\n        puFanins[i] = ABC_ALLOC( word, nWords );\n    }\n    // assign elementary truth tables\n    for  i = 0; i \u003c nVars; i++  {\n        if i \u003c 6 {\n            for  w = 0; w \u003c nWords; w++  {\n                puFanins[i][w] = Truth6[i];\n            }\n        } else {\n            for  w = 0; w \u003c nWords; w++  {\n                puFanins[i][w] = (w \u0026 (1 \u003c\u003c (i-6))) ? ~(word)0 : 0;\n            } }\n    }\n    // create intermediate nodes\n    puNodes = ABC_ALLOC( word *, Exp_NodeNum(p) );\n    for  i = 0; i \u003c Exp_NodeNum(p); i++  {\n        puNodes[i] = ABC_ALLOC( word, nWords );\n    }\n    // evaluate the expression\n    pTemp0 = ABC_ALLOC( word, nWords );\n    pTemp1 = ABC_ALLOC( word, nWords );\n    for  i = 0; i \u003c Exp_NodeNum(p); i++  {\n        Exp_TruthLit( nVars, Vec_IntEntry(p, 2*i+0), puFanins, puNodes, pTemp0, nWords );\n        Exp_TruthLit( nVars, Vec_IntEntry(p, 2*i+1), puFanins, puNodes, pTemp1, nWords );\n        for  w = 0; w \u003c nWords; w++  {\n            puNodes[i][w] = pTemp0[w] \u0026 pTemp1[w];\n        }\n    }\n    ABC_FREE( pTemp0 );\n    ABC_FREE( pTemp1 );\n    // copy the final result\n    Exp_TruthLit( nVars, Vec_IntEntryLast(p), puFanins, puNodes, pRes, nWords );\n    // cleanup\n    for  i = 0; i \u003c nVars; i++  {\n        ABC_FREE( puFanins[i] );\n    }\n    ABC_FREE( puFanins );\n    for  i = 0; i \u003c Exp_NodeNum(p); i++  {\n        ABC_FREE( puNodes[i] );\n    }\n    ABC_FREE( puNodes );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

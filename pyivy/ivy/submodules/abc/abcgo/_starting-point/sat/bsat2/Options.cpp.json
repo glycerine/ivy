@@ -1,0 +1,213 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/Options.cpp",
+  "SHA256": "cd5b94661977201969678c587c362d1404aaa6390fec484a38bd9c018db04b54",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 48,
+        "Column": 52,
+        "ByteOffset": 2265
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strict \u0026\u0026 match(argv[i], \"-\") { fprintf(stderr, \"ERROR! Unknown flag \\\"%s\\\". Use '--%shelp' for help.\\n\", argv[i], Option::getHelpPrefixString()); return 0; } //  exit(0);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 48,
+        "Column": 60,
+        "ByteOffset": 2273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if strict \u0026\u0026 match(argv[i], \"-\") { fprintf(stderr, \"ERROR! Unknown flag \\\"%s\\\". Use '--%shelp' for help.\\n\", argv[i], Option::getHelpPrefixString()); return 0; } //  exit(0);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 65,
+        "Column": 9,
+        "ByteOffset": 2832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, usage, argv[0]);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 65,
+        "Column": 17,
+        "ByteOffset": 2840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf(stderr, usage, argv[0]);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 77,
+        "Column": 13,
+        "ByteOffset": 3198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n%s OPTIONS:\\n\\n\", cat);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 77,
+        "Column": 21,
+        "ByteOffset": 3206
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n%s OPTIONS:\\n\\n\", cat);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 79,
+        "Column": 13,
+        "ByteOffset": 3289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 79,
+        "Column": 21,
+        "ByteOffset": 3297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf(stderr, \"\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 3490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stderr, \"\\nHELP OPTIONS:\\n\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 87,
+        "Column": 13,
+        "ByteOffset": 3498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stderr, \"\\nHELP OPTIONS:\\n\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 3534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stderr, \"  --%shelp        Print help message.\\n\", Option::getHelpPrefixString());"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 88,
+        "Column": 13,
+        "ByteOffset": 3542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stderr, \"  --%shelp        Print help message.\\n\", Option::getHelpPrefixString());"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 3629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stderr, \"  --%shelp-verb   Print verbose help message.\\n\", Option::getHelpPrefixString());"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 89,
+        "Column": 13,
+        "ByteOffset": 3637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stderr, \"  --%shelp-verb   Print verbose help message.\\n\", Option::getHelpPrefixString());"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 5,
+        "ByteOffset": 3732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stderr, \"\\n\");"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 90,
+        "Column": 13,
+        "ByteOffset": 3740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(stderr, \"\\n\");"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat2/Options.cpp::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3850
+    }
+  ],
+  "Draft": "package bsat2\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**************************************************************************************[Options.cc]\nCopyright (c) 2008-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n//#include \"Sort.h\"\n//#include \"Options.h\"\n//#include \"ParseUtils.h\"\n\n//using namespace Minisat;\n\n\nint Minisat::parseOptions(int\u0026 argc, char** argv, bool strict)\n{\n    int i, j;\n    for i = j = 1; i \u003c argc; i++{\n        char* str = argv[i];\n        if match(str, \"--\") \u0026\u0026 match(str, Option::getHelpPrefixString()) \u0026\u0026 match(str, \"help\"){\n            if (*str == '\\0')\n                return printUsageAndExit(argc, argv);\n            else if (match(str, \"-verb\"))\n                return printUsageAndExit(argc, argv, true);\n        } else {\n            bool parsed_ok = false;\n        \n            for int k = 0; !parsed_ok \u0026\u0026 k \u003c Option::getOptionList().size(); k++{\n                parsed_ok = Option::getOptionList()[k].parse(argv[i]);\n\n                // fprintf(stderr, \"checking %d: %s against flag \u003c%s\u003e (%s)\\n\", i, argv[i], Option::getOptionList()[k]-\u003ename, parsed_ok ? \"ok\" : \"skip\");\n            }\n\n            if (!parsed_ok)\n                if strict \u0026\u0026 match(argv[i], \"-\") { fmt.Fprintf(os.Stderr, \"ERROR! Unknown flag \\\"%s\\\". Use '--%shelp' for help.\\n\", argv[i], Option::getHelpPrefixString()); return 0; } //  exit(0);\n                else\n                    argv[j++] = argv[i];\n        }\n    }\n\n    argc -= (i - j);\n    return 1;\n}\n\n\nvoid Minisat::setUsageHelp      (char* str){ Option::getUsageString() = str; }\nvoid Minisat::setHelpPrefixStr  (char* str){ Option::getHelpPrefixString() = str; }\nint Minisat::printUsageAndExit (int argc, char** argv, bool verbose)\n{\n    char* usage = Option::getUsageString();\n    if (usage != NULL)\n        fmt.Fprintf(os.Stderr, usage, argv[0]);\n\n    sort(Option::getOptionList(), Option::OptionLt());\n\n    char* prev_cat  = NULL;\n    char* prev_type = NULL;\n\n    for int i = 0; i \u003c Option::getOptionList().size(); i++{\n        char* cat  = Option::getOptionList()[i].category;\n        char* type = Option::getOptionList()[i].type_name;\n\n        if (cat != prev_cat)\n            fmt.Fprintf(os.Stderr, \"\\n%s OPTIONS:\\n\\n\", cat);\n        else if (type != prev_type)\n            fmt.Fprintf(os.Stderr, \"\\n\");\n\n        Option::getOptionList()[i].help(verbose);\n\n        prev_cat  = Option::getOptionList()[i].category;\n        prev_type = Option::getOptionList()[i].type_name;\n    }\n\n    fmt.Fprintf(os.Stderr, \"\\nHELP OPTIONS:\\n\\n\");\n    fmt.Fprintf(os.Stderr, \"  --%shelp        Print help message.\\n\", Option::getHelpPrefixString());\n    fmt.Fprintf(os.Stderr, \"  --%shelp-verb   Print verbose help message.\\n\", Option::getHelpPrefixString());\n    fmt.Fprintf(os.Stderr, \"\\n\");\n//    exit(0);\n    return 0;\n}\n\n"
+}

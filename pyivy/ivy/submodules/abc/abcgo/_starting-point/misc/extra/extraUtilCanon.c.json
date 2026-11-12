@@ -1,0 +1,284 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCanon.c",
+  "SHA256": "b3a9c10f3372744f6c758f50aca5e85006f828abec51c646955c943a978fbc42",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 380,
+        "Column": 5,
+        "ByteOffset": 13419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsMax \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 381,
+        "Column": 5,
+        "ByteOffset": 13448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsReal \u003c= nVarsMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 529,
+        "Column": 9,
+        "ByteOffset": 18391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nf0 == nf1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 586,
+        "Column": 13,
+        "ByteOffset": 19754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 587,
+        "Column": 25,
+        "ByteOffset": 19796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintHex( stdout, uCanons + i, 5 ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 588,
+        "Column": 9,
+        "ByteOffset": 19831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \", \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 590,
+        "Column": 5,
+        "ByteOffset": 19857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 593,
+        "Column": 9,
+        "ByteOffset": 19914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d */  { %2d,   \", i, pCounters[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 595,
+        "Column": 13,
+        "ByteOffset": 20031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s%d\", k? \", \":\"\", uPhases[i][k] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 597,
+        "Column": 9,
+        "ByteOffset": 20094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" }\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 599,
+        "Column": 5,
+        "ByteOffset": 20122
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_TruthCanonFastN",
+      "Start": 13185,
+      "End": 13713,
+      "BodyStart": 13293,
+      "Original": "int Extra_TruthCanonFastN( int nVarsMax, int nVarsReal, unsigned * pt, unsigned ** pptRes, char ** ppfRes )\n{\n    static unsigned uTruthStore6[2];\n    int RetValue;\n    assert( nVarsMax \u003c= 6 );\n    assert( nVarsReal \u003c= nVarsMax );\n    RetValue = Extra_TruthCanonN_rec( nVarsReal \u003c= 3? 3: nVarsReal, (unsigned char *)pt, pptRes, ppfRes, 0 );\n    if ( nVarsMax == 6 \u0026\u0026 nVarsReal \u003c nVarsMax )\n    {\n        uTruthStore6[0] = **pptRes;\n        uTruthStore6[1] = **pptRes;\n        *pptRes = uTruthStore6;\n    }\n    return RetValue;\n}",
+      "Draft": "func Extra_TruthCanonFastN(nVarsMax int32, nVarsReal int32, pt *uint32, pptRes **uint32, ppfRes *string) int32 {\n    \n    var RetValue int32;\n    assert(nVarsMax \u003c= 6, \"nVarsMax \u003c= 6\");\n    assert(nVarsReal \u003c= nVarsMax, \"nVarsReal \u003c= nVarsMax\");\n    RetValue = Extra_TruthCanonN_rec( nVarsReal \u003c= 3? 3: nVarsReal, (unsigned char *)pt, pptRes, ppfRes, 0 );\n    if nVarsMax == 6 \u0026\u0026 nVarsReal \u003c nVarsMax {\n        spStatic_Extra_TruthCanonFastN_uTruthStore6[0] = **pptRes;\n        spStatic_Extra_TruthCanonFastN_uTruthStore6[1] = **pptRes;\n        *pptRes = spStatic_Extra_TruthCanonFastN_uTruthStore6;\n    }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Extra_TruthCanonN_rec",
+      "Start": 14350,
+      "End": 19109,
+      "BodyStart": 14455,
+      "Original": "int Extra_TruthCanonN_rec( int nVars, unsigned char * pt, unsigned ** pptRes, char ** ppfRes, int Flag )\n{\n    static unsigned uTruthStore[7][2][2];\n    static char uPhaseStore[7][2][64];\n\n    unsigned char * pt0, * pt1;\n    unsigned * ptRes0, * ptRes1, * ptRes;\n    unsigned uInit0, uInit1, uTruth0, uTruth1, uTemp;\n    char * pfRes0, * pfRes1, * pfRes;\n    int nf0, nf1, nfRes, i, nVarsN;\n\n    // table lookup for three vars\n    if ( nVars == 3 )\n    {\n        *pptRes = \u0026s_Truths3[*pt];\n        *ppfRes = s_Phases3[*pt]+1;\n        return s_Phases3[*pt][0];\n    }\n\n    // number of vars for the next call\n    nVarsN = nVars-1;\n    // truth table for the next call\n    pt0 = pt;\n    pt1 = pt + (1 \u003c\u003c nVarsN) / 8;\n    // 5-var truth tables for this call\n//    uInit0 = *((unsigned *)pt0);\n//    uInit1 = *((unsigned *)pt1);\n    if ( nVarsN == 3 )\n    {\n        uInit0 = (pt0[0] \u003c\u003c 24) | (pt0[0] \u003c\u003c 16) | (pt0[0] \u003c\u003c 8) | pt0[0];\n        uInit1 = (pt1[0] \u003c\u003c 24) | (pt1[0] \u003c\u003c 16) | (pt1[0] \u003c\u003c 8) | pt1[0];\n    }\n    else if ( nVarsN == 4 )\n    {\n        uInit0 = (pt0[1] \u003c\u003c 24) | (pt0[0] \u003c\u003c 16) | (pt0[1] \u003c\u003c 8) | pt0[0];\n        uInit1 = (pt1[1] \u003c\u003c 24) | (pt1[0] \u003c\u003c 16) | (pt1[1] \u003c\u003c 8) | pt1[0];\n    }\n    else\n    {\n        uInit0 = (pt0[3] \u003c\u003c 24) | (pt0[2] \u003c\u003c 16) | (pt0[1] \u003c\u003c 8) | pt0[0];\n        uInit1 = (pt1[3] \u003c\u003c 24) | (pt1[2] \u003c\u003c 16) | (pt1[1] \u003c\u003c 8) | pt1[0];\n    }\n\n    // storage for truth tables and phases\n    ptRes  = uTruthStore[nVars][Flag];\n    pfRes  = uPhaseStore[nVars][Flag];\n\n    // solve trivial cases\n    if ( uInit1 == 0 )\n    {\n        nf0 = Extra_TruthCanonN_rec( nVarsN, pt0, \u0026ptRes0, \u0026pfRes0, 0 );\n        uTruth1 = uInit1;\n        uTruth0 = *ptRes0;\n        nfRes   = 0;\n        for ( i = 0; i \u003c nf0; i++ )\n            pfRes[nfRes++] = pfRes0[i];\n        goto finish;\n    }\n    if ( uInit0 == 0 )\n    {\n        nf1 = Extra_TruthCanonN_rec( nVarsN, pt1, \u0026ptRes1, \u0026pfRes1, 1 );\n        uTruth1 = uInit0;\n        uTruth0 = *ptRes1;\n        nfRes   = 0;\n        for ( i = 0; i \u003c nf1; i++ )\n            pfRes[nfRes++] = pfRes1[i] | (1\u003c\u003cnVarsN);\n        goto finish;\n    }\n\n    if ( uInit1 == 0xFFFFFFFF )\n    {\n        nf0 = Extra_TruthCanonN_rec( nVarsN, pt0, \u0026ptRes0, \u0026pfRes0, 0 );\n        uTruth1 = *ptRes0;\n        uTruth0 = uInit1;\n        nfRes   = 0;\n        for ( i = 0; i \u003c nf0; i++ )\n            pfRes[nfRes++] = pfRes0[i] | (1\u003c\u003cnVarsN);\n        goto finish;\n    }\n    if ( uInit0 == 0xFFFFFFFF )\n    {\n        nf1 = Extra_TruthCanonN_rec( nVarsN, pt1, \u0026ptRes1, \u0026pfRes1, 1 );\n        uTruth1 = *ptRes1;\n        uTruth0 = uInit0;\n        nfRes   = 0;\n        for ( i = 0; i \u003c nf1; i++ )\n            pfRes[nfRes++] = pfRes1[i];\n        goto finish;\n    }\n\n    // solve the problem for cofactors\n    nf0 = Extra_TruthCanonN_rec( nVarsN, pt0, \u0026ptRes0, \u0026pfRes0, 0 );\n    nf1 = Extra_TruthCanonN_rec( nVarsN, pt1, \u0026ptRes1, \u0026pfRes1, 1 );\n\n    // combine the result\n    if ( *ptRes1 \u003c *ptRes0 )\n    {\n        uTruth0 = 0xFFFFFFFF;\n        nfRes   = 0;\n        for ( i = 0; i \u003c nf1; i++ )\n        {\n            uTemp = Extra_TruthPolarize( uInit0, pfRes1[i], nVarsN );\n            if ( uTruth0 \u003e uTemp )\n            {\n                nfRes          = 0;\n                uTruth0        = uTemp;\n                pfRes[nfRes++] = pfRes1[i];\n            }\n            else if ( uTruth0 == uTemp ) \n                pfRes[nfRes++] = pfRes1[i];\n        }\n        uTruth1 = *ptRes1;\n    }\n    else if ( *ptRes1 \u003e *ptRes0 )\n    {\n        uTruth0 = 0xFFFFFFFF;\n        nfRes   = 0;\n        for ( i = 0; i \u003c nf0; i++ )\n        {\n            uTemp = Extra_TruthPolarize( uInit1, pfRes0[i], nVarsN );\n            if ( uTruth0 \u003e uTemp )\n            {\n                nfRes          = 0;\n                uTruth0        = uTemp;\n                pfRes[nfRes++] = pfRes0[i] | (1\u003c\u003cnVarsN);\n            }\n            else if ( uTruth0 == uTemp ) \n                pfRes[nfRes++] = pfRes0[i] | (1\u003c\u003cnVarsN);\n        }\n        uTruth1 = *ptRes0;\n    }\n    else \n    {\n        assert( nf0 == nf1 );\n        nfRes = 0; \n        for ( i = 0; i \u003c nf1; i++ )\n            pfRes[nfRes++] = pfRes1[i];\n        for ( i = 0; i \u003c nf0; i++ )\n            pfRes[nfRes++] = pfRes0[i] | (1\u003c\u003cnVarsN);\n        uTruth0 = Extra_TruthPolarize( uInit0, pfRes1[0], nVarsN );\n        uTruth1 = *ptRes0;\n    }\n\nfinish :\n    if ( nVarsN == 3 )\n    {\n        uTruth0 \u0026= 0xFF;\n        uTruth1 \u0026= 0xFF;\n        uTemp = (uTruth1 \u003c\u003c 8) | uTruth0;\n        *ptRes = (uTemp \u003c\u003c 16) | uTemp;\n    }\n    else if ( nVarsN == 4 )\n    {\n        uTruth0 \u0026= 0xFFFF;\n        uTruth1 \u0026= 0xFFFF;\n        *ptRes = (uTruth1 \u003c\u003c 16) | uTruth0;\n    }\n    else if ( nVarsN == 5 )\n    {\n        *(ptRes+0) = uTruth0;\n        *(ptRes+1) = uTruth1;\n    }\n\n    *pptRes = ptRes;\n    *ppfRes = pfRes;\n    return nfRes;\n}",
+      "Draft": "int Extra_TruthCanonN_rec( int nVars, unsigned char * pt, unsigned ** pptRes, char ** ppfRes, int Flag )\n{\n    static unsigned uTruthStore[7][2][2];\n    static char uPhaseStore[7][2][64];\n\n    unsigned char * pt0, * pt1;\n    var ptRes0, ptRes1, ptRes *uint32;\n    var uInit0, uInit1, uTruth0, uTruth1, uTemp uint32;\n    var pfRes0, pfRes1, pfRes string;\n    var nf0, nf1, nfRes, i, nVarsN int32;\n\n    // table lookup for three vars\n    if nVars == 3 {\n        *pptRes = \u0026s_Truths3[*pt];\n        *ppfRes = s_Phases3[*pt]+1;\n        return s_Phases3[*pt][0];\n    }\n\n    // number of vars for the next call\n    nVarsN = nVars-1;\n    // truth table for the next call\n    pt0 = pt;\n    pt1 = pt + (1 \u003c\u003c nVarsN) / 8;\n    // 5-var truth tables for this call\n//    uInit0 = *((unsigned *)pt0);\n//    uInit1 = *((unsigned *)pt1);\n    if nVarsN == 3 {\n        uInit0 = (pt0[0] \u003c\u003c 24) | (pt0[0] \u003c\u003c 16) | (pt0[0] \u003c\u003c 8) | pt0[0];\n        uInit1 = (pt1[0] \u003c\u003c 24) | (pt1[0] \u003c\u003c 16) | (pt1[0] \u003c\u003c 8) | pt1[0];\n    \n    } else if nVarsN == 4 {\n        uInit0 = (pt0[1] \u003c\u003c 24) | (pt0[0] \u003c\u003c 16) | (pt0[1] \u003c\u003c 8) | pt0[0];\n        uInit1 = (pt1[1] \u003c\u003c 24) | (pt1[0] \u003c\u003c 16) | (pt1[1] \u003c\u003c 8) | pt1[0];\n    \n    } else {\n        uInit0 = (pt0[3] \u003c\u003c 24) | (pt0[2] \u003c\u003c 16) | (pt0[1] \u003c\u003c 8) | pt0[0];\n        uInit1 = (pt1[3] \u003c\u003c 24) | (pt1[2] \u003c\u003c 16) | (pt1[1] \u003c\u003c 8) | pt1[0];\n    }\n\n    // storage for truth tables and phases\n    ptRes  = uTruthStore[nVars][Flag];\n    pfRes  = uPhaseStore[nVars][Flag];\n\n    // solve trivial cases\n    if uInit1 == 0 {\n        nf0 = Extra_TruthCanonN_rec( nVarsN, pt0, \u0026ptRes0, \u0026pfRes0, 0 );\n        uTruth1 = uInit1;\n        uTruth0 = *ptRes0;\n        nfRes   = 0;\n        for  i = 0; i \u003c nf0; i++  {\n            pfRes[nfRes++] = pfRes0[i];\n        }\n        goto finish;\n    }\n    if uInit0 == 0 {\n        nf1 = Extra_TruthCanonN_rec( nVarsN, pt1, \u0026ptRes1, \u0026pfRes1, 1 );\n        uTruth1 = uInit0;\n        uTruth0 = *ptRes1;\n        nfRes   = 0;\n        for  i = 0; i \u003c nf1; i++  {\n            pfRes[nfRes++] = pfRes1[i] | (1\u003c\u003cnVarsN);\n        }\n        goto finish;\n    }\n\n    if uInit1 == 0xFFFFFFFF {\n        nf0 = Extra_TruthCanonN_rec( nVarsN, pt0, \u0026ptRes0, \u0026pfRes0, 0 );\n        uTruth1 = *ptRes0;\n        uTruth0 = uInit1;\n        nfRes   = 0;\n        for  i = 0; i \u003c nf0; i++  {\n            pfRes[nfRes++] = pfRes0[i] | (1\u003c\u003cnVarsN);\n        }\n        goto finish;\n    }\n    if uInit0 == 0xFFFFFFFF {\n        nf1 = Extra_TruthCanonN_rec( nVarsN, pt1, \u0026ptRes1, \u0026pfRes1, 1 );\n        uTruth1 = *ptRes1;\n        uTruth0 = uInit0;\n        nfRes   = 0;\n        for  i = 0; i \u003c nf1; i++  {\n            pfRes[nfRes++] = pfRes1[i];\n        }\n        goto finish;\n    }\n\n    // solve the problem for cofactors\n    nf0 = Extra_TruthCanonN_rec( nVarsN, pt0, \u0026ptRes0, \u0026pfRes0, 0 );\n    nf1 = Extra_TruthCanonN_rec( nVarsN, pt1, \u0026ptRes1, \u0026pfRes1, 1 );\n\n    // combine the result\n    if *ptRes1 \u003c *ptRes0 {\n        uTruth0 = 0xFFFFFFFF;\n        nfRes   = 0;\n        for  i = 0; i \u003c nf1; i++  {\n            uTemp = Extra_TruthPolarize( uInit0, pfRes1[i], nVarsN );\n            if uTruth0 \u003e uTemp {\n                nfRes          = 0;\n                uTruth0        = uTemp;\n                pfRes[nfRes++] = pfRes1[i];\n            \n            } else if uTruth0 == uTemp { \n                pfRes[nfRes++] = pfRes1[i]; }\n        }\n        uTruth1 = *ptRes1;\n    \n    } else if *ptRes1 \u003e *ptRes0 {\n        uTruth0 = 0xFFFFFFFF;\n        nfRes   = 0;\n        for  i = 0; i \u003c nf0; i++  {\n            uTemp = Extra_TruthPolarize( uInit1, pfRes0[i], nVarsN );\n            if uTruth0 \u003e uTemp {\n                nfRes          = 0;\n                uTruth0        = uTemp;\n                pfRes[nfRes++] = pfRes0[i] | (1\u003c\u003cnVarsN);\n            \n            } else if uTruth0 == uTemp { \n                pfRes[nfRes++] = pfRes0[i] | (1\u003c\u003cnVarsN); }\n        }\n        uTruth1 = *ptRes0;\n    \n    } else {\n        assert(nf0 == nf1, \"nf0 == nf1\");\n        nfRes = 0; \n        for  i = 0; i \u003c nf1; i++  {\n            pfRes[nfRes++] = pfRes1[i];\n        }\n        for  i = 0; i \u003c nf0; i++  {\n            pfRes[nfRes++] = pfRes0[i] | (1\u003c\u003cnVarsN);\n        }\n        uTruth0 = Extra_TruthPolarize( uInit0, pfRes1[0], nVarsN );\n        uTruth1 = *ptRes0;\n    }\n\nfinish :\n    if nVarsN == 3 {\n        uTruth0 \u0026= 0xFF;\n        uTruth1 \u0026= 0xFF;\n        uTemp = (uTruth1 \u003c\u003c 8) | uTruth0;\n        *ptRes = (uTemp \u003c\u003c 16) | uTemp;\n    \n    } else if nVarsN == 4 {\n        uTruth0 \u0026= 0xFFFF;\n        uTruth1 \u0026= 0xFFFF;\n        *ptRes = (uTruth1 \u003c\u003c 16) | uTruth0;\n    \n    } else if nVarsN == 5 {\n        *(ptRes+0) = uTruth0;\n        *(ptRes+1) = uTruth1;\n    }\n\n    *pptRes = ptRes;\n    *ppfRes = pfRes;\n    return nfRes;\n}"
+    },
+    {
+      "Name": "Map_Var3Print",
+      "Start": 19345,
+      "End": 20060,
+      "BodyStart": 19366,
+      "Original": "void Map_Var3Print()\n{\n    extern void Extra_Truth3VarN( unsigned ** puCanons, char *** puPhases, char ** ppCounters );\n\n    unsigned * uCanons;\n    char ** uPhases;\n    char * pCounters;\n    int i, k;\n\n    Extra_Truth3VarN( \u0026uCanons, \u0026uPhases, \u0026pCounters );\n\n    for ( i = 0; i \u003c 256; i++ )\n    {\n        if ( i % 8 == 0 )\n            printf( \"\\n\" );\n        Extra_PrintHex( stdout, uCanons + i, 5 ); \n        printf( \", \" );\n    }\n    printf( \"\\n\" );\n\n    for ( i = 0; i \u003c 256; i++ )\n    {\n        printf( \"%3d */  { %2d,   \", i, pCounters[i] );\n        for ( k = 0; k \u003c pCounters[i]; k++ )            \n            printf( \"%s%d\", k? \", \":\"\", uPhases[i][k] );\n        printf( \" }\\n\" );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Map_Var3Print() {\n    extern void Extra_Truth3VarN( unsigned ** puCanons, char *** puPhases, char ** ppCounters );\n\n    var uCanons *uint32;\n    var uPhases *string;\n    var pCounters string;\n    var i, k int32;\n\n    Extra_Truth3VarN( \u0026uCanons, \u0026uPhases, \u0026pCounters );\n\n    for  i = 0; i \u003c 256; i++  {\n        if i % 8 == 0 {\n            fmt.Printf(\"\\n\"); }\n        Extra_PrintHex( os.Stdout, uCanons + i, 5 ); \n        fmt.Printf(\", \");\n    }\n    fmt.Printf(\"\\n\");\n\n    for  i = 0; i \u003c 256; i++  {\n        fmt.Printf(\"%3d */  { %2d,   \", i, pCounters[i]);\n        for  k = 0; k \u003c pCounters[i]; k++  {            \n            fmt.Printf(\"%s%d\", k? \", \":\"\", uPhases[i][k]);\n        }\n        fmt.Printf(\" }\\n\");\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Map_Var3Test",
+      "Start": 20296,
+      "End": 20766,
+      "BodyStart": 20316,
+      "Original": "void Map_Var3Test()\n{\n    extern void Extra_Truth3VarN( unsigned ** puCanons, char *** puPhases, char ** ppCounters );\n\n    unsigned * uCanons;\n    char ** uPhases;\n    char * pCounters;\n    int i;\n    unsigned * ptRes;\n    char * pfRes;\n    unsigned uTruth;\n    int Count;\n\n    Extra_Truth3VarN( \u0026uCanons, \u0026uPhases, \u0026pCounters );\n\n    for ( i = 0; i \u003c 256; i++ )\n    {\n        uTruth = i;\n        Count =  Extra_TruthCanonFastN( 5, 3, \u0026uTruth, \u0026ptRes, \u0026pfRes );\n    }\n}",
+      "Draft": "func Map_Var3Test() {\n    extern void Extra_Truth3VarN( unsigned ** puCanons, char *** puPhases, char ** ppCounters );\n\n    var uCanons *uint32;\n    var uPhases *string;\n    var pCounters string;\n    var i int32;\n    var ptRes *uint32;\n    var pfRes string;\n    var uTruth uint32;\n    var Count int32;\n\n    Extra_Truth3VarN( \u0026uCanons, \u0026uPhases, \u0026pCounters );\n\n    for  i = 0; i \u003c 256; i++  {\n        uTruth = i;\n        Count =  Extra_TruthCanonFastN( 5, 3, \u0026uTruth, \u0026ptRes, \u0026pfRes );\n    }\n}"
+    },
+    {
+      "Name": "Map_Var4Test",
+      "Start": 21002,
+      "End": 21506,
+      "BodyStart": 21022,
+      "Original": "void Map_Var4Test()\n{\n    extern void Extra_Truth4VarN( unsigned short ** puCanons, char *** puPhases, char ** ppCounters, int PhaseMax );\n\n    unsigned short * uCanons;\n    char ** uPhases;\n    char * pCounters;\n    int i;\n    unsigned * ptRes;\n    char * pfRes;\n    unsigned uTruth;\n    int Count;\n\n    Extra_Truth4VarN( \u0026uCanons, \u0026uPhases, \u0026pCounters, 16 );\n\n    for ( i = 0; i \u003c 256*256; i++ )\n    {\n        uTruth = i;\n        Count =  Extra_TruthCanonFastN( 5, 4, \u0026uTruth, \u0026ptRes, \u0026pfRes );\n    }\n}",
+      "Draft": "func Map_Var4Test() {\n    extern void Extra_Truth4VarN( unsigned short ** puCanons, char *** puPhases, char ** ppCounters, int PhaseMax );\n\n    unsigned short * uCanons;\n    var uPhases *string;\n    var pCounters string;\n    var i int32;\n    var ptRes *uint32;\n    var pfRes string;\n    var uTruth uint32;\n    var Count int32;\n\n    Extra_Truth4VarN( \u0026uCanons, \u0026uPhases, \u0026pCounters, 16 );\n\n    for  i = 0; i \u003c 256*256; i++  {\n        uTruth = i;\n        Count =  Extra_TruthCanonFastN( 5, 4, \u0026uTruth, \u0026ptRes, \u0026pfRes );\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCanon.c::mechanical::static::13299",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 13299,
+      "End": 13305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCanon.c::mechanical::static::14461",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 14461,
+      "End": 14467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCanon.c::mechanical::static::14503",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 14503,
+      "End": 14509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCanon.c::ternary::Extra_TruthCanonFastN",
+      "Category": "ternary-review",
+      "Symbol": "Extra_TruthCanonFastN",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13185,
+      "End": 13713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCanon.c::Extra_TruthCanonFastN",
+      "Category": "semantic-review",
+      "Symbol": "Extra_TruthCanonFastN",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13185,
+      "End": 13713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCanon.c::Extra_TruthCanonN_rec",
+      "Category": "semantic-review",
+      "Symbol": "Extra_TruthCanonN_rec",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 14350,
+      "End": 19109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCanon.c::ternary::Map_Var3Print",
+      "Category": "ternary-review",
+      "Symbol": "Map_Var3Print",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 19345,
+      "End": 20060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCanon.c::Map_Var3Print",
+      "Category": "semantic-review",
+      "Symbol": "Map_Var3Print",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19345,
+      "End": 20060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCanon.c::Map_Var3Test",
+      "Category": "semantic-review",
+      "Symbol": "Map_Var3Test",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20296,
+      "End": 20766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCanon.c::Map_Var4Test",
+      "Category": "semantic-review",
+      "Symbol": "Map_Var4Test",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21002,
+      "End": 21506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilCanon.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21994
+    }
+  ],
+  "Draft": "package extra\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [extraUtilMisc.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [extra]\n\n  Synopsis    [Computing canonical forms of Boolean functions using truth tables.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: extraUtilMisc.c,v 1.0 2003/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"extra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\nvar s_Truths3 [256]uint32 = [256]uint32{\n    0x00000000, 0x01010101, 0x01010101, 0x03030303, 0x01010101, 0x05050505, 0x06060606, 0x07070707,\n    0x01010101, 0x06060606, 0x05050505, 0x07070707, 0x03030303, 0x07070707, 0x07070707, 0x0f0f0f0f,\n    0x01010101, 0x11111111, 0x12121212, 0x13131313, 0x14141414, 0x15151515, 0x16161616, 0x17171717,\n    0x18181818, 0x19191919, 0x1a1a1a1a, 0x1b1b1b1b, 0x1c1c1c1c, 0x1d1d1d1d, 0x1e1e1e1e, 0x1f1f1f1f,\n    0x01010101, 0x12121212, 0x11111111, 0x13131313, 0x18181818, 0x1a1a1a1a, 0x19191919, 0x1b1b1b1b,\n    0x14141414, 0x16161616, 0x15151515, 0x17171717, 0x1c1c1c1c, 0x1e1e1e1e, 0x1d1d1d1d, 0x1f1f1f1f,\n    0x03030303, 0x13131313, 0x13131313, 0x33333333, 0x1c1c1c1c, 0x35353535, 0x36363636, 0x37373737,\n    0x1c1c1c1c, 0x36363636, 0x35353535, 0x37373737, 0x3c3c3c3c, 0x3d3d3d3d, 0x3d3d3d3d, 0x3f3f3f3f,\n    0x01010101, 0x14141414, 0x18181818, 0x1c1c1c1c, 0x11111111, 0x15151515, 0x19191919, 0x1d1d1d1d,\n    0x12121212, 0x16161616, 0x1a1a1a1a, 0x1e1e1e1e, 0x13131313, 0x17171717, 0x1b1b1b1b, 0x1f1f1f1f,\n    0x05050505, 0x15151515, 0x1a1a1a1a, 0x35353535, 0x15151515, 0x55555555, 0x56565656, 0x57575757,\n    0x1a1a1a1a, 0x56565656, 0x5a5a5a5a, 0x5b5b5b5b, 0x35353535, 0x57575757, 0x5b5b5b5b, 0x5f5f5f5f,\n    0x06060606, 0x16161616, 0x19191919, 0x36363636, 0x19191919, 0x56565656, 0x66666666, 0x67676767,\n    0x16161616, 0x69696969, 0x56565656, 0x6b6b6b6b, 0x36363636, 0x6b6b6b6b, 0x67676767, 0x6f6f6f6f,\n    0x07070707, 0x17171717, 0x1b1b1b1b, 0x37373737, 0x1d1d1d1d, 0x57575757, 0x67676767, 0x77777777,\n    0x1e1e1e1e, 0x6b6b6b6b, 0x5b5b5b5b, 0x7b7b7b7b, 0x3d3d3d3d, 0x7d7d7d7d, 0x7e7e7e7e, 0x7f7f7f7f,\n    0x01010101, 0x18181818, 0x14141414, 0x1c1c1c1c, 0x12121212, 0x1a1a1a1a, 0x16161616, 0x1e1e1e1e,\n    0x11111111, 0x19191919, 0x15151515, 0x1d1d1d1d, 0x13131313, 0x1b1b1b1b, 0x17171717, 0x1f1f1f1f,\n    0x06060606, 0x19191919, 0x16161616, 0x36363636, 0x16161616, 0x56565656, 0x69696969, 0x6b6b6b6b,\n    0x19191919, 0x66666666, 0x56565656, 0x67676767, 0x36363636, 0x67676767, 0x6b6b6b6b, 0x6f6f6f6f,\n    0x05050505, 0x1a1a1a1a, 0x15151515, 0x35353535, 0x1a1a1a1a, 0x5a5a5a5a, 0x56565656, 0x5b5b5b5b,\n    0x15151515, 0x56565656, 0x55555555, 0x57575757, 0x35353535, 0x5b5b5b5b, 0x57575757, 0x5f5f5f5f,\n    0x07070707, 0x1b1b1b1b, 0x17171717, 0x37373737, 0x1e1e1e1e, 0x5b5b5b5b, 0x6b6b6b6b, 0x7b7b7b7b,\n    0x1d1d1d1d, 0x67676767, 0x57575757, 0x77777777, 0x3d3d3d3d, 0x7e7e7e7e, 0x7d7d7d7d, 0x7f7f7f7f,\n    0x03030303, 0x1c1c1c1c, 0x1c1c1c1c, 0x3c3c3c3c, 0x13131313, 0x35353535, 0x36363636, 0x3d3d3d3d,\n    0x13131313, 0x36363636, 0x35353535, 0x3d3d3d3d, 0x33333333, 0x37373737, 0x37373737, 0x3f3f3f3f,\n    0x07070707, 0x1d1d1d1d, 0x1e1e1e1e, 0x3d3d3d3d, 0x17171717, 0x57575757, 0x6b6b6b6b, 0x7d7d7d7d,\n    0x1b1b1b1b, 0x67676767, 0x5b5b5b5b, 0x7e7e7e7e, 0x37373737, 0x77777777, 0x7b7b7b7b, 0x7f7f7f7f,\n    0x07070707, 0x1e1e1e1e, 0x1d1d1d1d, 0x3d3d3d3d, 0x1b1b1b1b, 0x5b5b5b5b, 0x67676767, 0x7e7e7e7e,\n    0x17171717, 0x6b6b6b6b, 0x57575757, 0x7d7d7d7d, 0x37373737, 0x7b7b7b7b, 0x77777777, 0x7f7f7f7f,\n    0x0f0f0f0f, 0x1f1f1f1f, 0x1f1f1f1f, 0x3f3f3f3f, 0x1f1f1f1f, 0x5f5f5f5f, 0x6f6f6f6f, 0x7f7f7f7f,\n    0x1f1f1f1f, 0x6f6f6f6f, 0x5f5f5f5f, 0x7f7f7f7f, 0x3f3f3f3f, 0x7f7f7f7f, 0x7f7f7f7f, 0xffffffff,\n};\n\nstatic char s_Phases3[256][9] = \n{\n/*   0 */  {  8,   0, 1, 2, 3, 4, 5, 6, 7 }, \n/*   1 */  {  1,   0 }, \n/*   2 */  {  1,   1 }, \n/*   3 */  {  2,   0, 1 }, \n/*   4 */  {  1,   2 }, \n/*   5 */  {  2,   0, 2 }, \n/*   6 */  {  2,   0, 3 }, \n/*   7 */  {  1,   0 }, \n/*   8 */  {  1,   3 }, \n/*   9 */  {  2,   1, 2 }, \n/*  10 */  {  2,   1, 3 }, \n/*  11 */  {  1,   1 }, \n/*  12 */  {  2,   2, 3 }, \n/*  13 */  {  1,   2 }, \n/*  14 */  {  1,   3 }, \n/*  15 */  {  4,   0, 1, 2, 3 }, \n/*  16 */  {  1,   4 }, \n/*  17 */  {  2,   0, 4 }, \n/*  18 */  {  2,   0, 5 }, \n/*  19 */  {  1,   0 }, \n/*  20 */  {  2,   0, 6 }, \n/*  21 */  {  1,   0 }, \n/*  22 */  {  1,   0 }, \n/*  23 */  {  1,   0 }, \n/*  24 */  {  2,   0, 7 }, \n/*  25 */  {  1,   0 }, \n/*  26 */  {  1,   0 }, \n/*  27 */  {  1,   0 }, \n/*  28 */  {  1,   0 }, \n/*  29 */  {  1,   0 }, \n/*  30 */  {  1,   0 }, \n/*  31 */  {  1,   0 }, \n/*  32 */  {  1,   5 }, \n/*  33 */  {  2,   1, 4 }, \n/*  34 */  {  2,   1, 5 }, \n/*  35 */  {  1,   1 }, \n/*  36 */  {  2,   1, 6 }, \n/*  37 */  {  1,   1 }, \n/*  38 */  {  1,   1 }, \n/*  39 */  {  1,   1 }, \n/*  40 */  {  2,   1, 7 }, \n/*  41 */  {  1,   1 }, \n/*  42 */  {  1,   1 }, \n/*  43 */  {  1,   1 }, \n/*  44 */  {  1,   1 }, \n/*  45 */  {  1,   1 }, \n/*  46 */  {  1,   1 }, \n/*  47 */  {  1,   1 }, \n/*  48 */  {  2,   4, 5 }, \n/*  49 */  {  1,   4 }, \n/*  50 */  {  1,   5 }, \n/*  51 */  {  4,   0, 1, 4, 5 }, \n/*  52 */  {  1,   6 }, \n/*  53 */  {  1,   0 }, \n/*  54 */  {  1,   0 }, \n/*  55 */  {  1,   0 }, \n/*  56 */  {  1,   7 }, \n/*  57 */  {  1,   1 }, \n/*  58 */  {  1,   1 }, \n/*  59 */  {  1,   1 }, \n/*  60 */  {  4,   0, 1, 6, 7 }, \n/*  61 */  {  1,   0 }, \n/*  62 */  {  1,   1 }, \n/*  63 */  {  2,   0, 1 }, \n/*  64 */  {  1,   6 }, \n/*  65 */  {  2,   2, 4 }, \n/*  66 */  {  2,   2, 5 }, \n/*  67 */  {  1,   2 }, \n/*  68 */  {  2,   2, 6 }, \n/*  69 */  {  1,   2 }, \n/*  70 */  {  1,   2 }, \n/*  71 */  {  1,   2 }, \n/*  72 */  {  2,   2, 7 }, \n/*  73 */  {  1,   2 }, \n/*  74 */  {  1,   2 }, \n/*  75 */  {  1,   2 }, \n/*  76 */  {  1,   2 }, \n/*  77 */  {  1,   2 }, \n/*  78 */  {  1,   2 }, \n/*  79 */  {  1,   2 }, \n/*  80 */  {  2,   4, 6 }, \n/*  81 */  {  1,   4 }, \n/*  82 */  {  1,   5 }, \n/*  83 */  {  1,   4 }, \n/*  84 */  {  1,   6 }, \n/*  85 */  {  4,   0, 2, 4, 6 }, \n/*  86 */  {  1,   0 }, \n/*  87 */  {  1,   0 }, \n/*  88 */  {  1,   7 }, \n/*  89 */  {  1,   2 }, \n/*  90 */  {  4,   0, 2, 5, 7 }, \n/*  91 */  {  1,   0 }, \n/*  92 */  {  1,   6 }, \n/*  93 */  {  1,   2 }, \n/*  94 */  {  1,   2 }, \n/*  95 */  {  2,   0, 2 }, \n/*  96 */  {  2,   4, 7 }, \n/*  97 */  {  1,   4 }, \n/*  98 */  {  1,   5 }, \n/*  99 */  {  1,   4 }, \n/* 100 */  {  1,   6 }, \n/* 101 */  {  1,   4 }, \n/* 102 */  {  4,   0, 3, 4, 7 }, \n/* 103 */  {  1,   0 }, \n/* 104 */  {  1,   7 }, \n/* 105 */  {  4,   0, 3, 5, 6 }, \n/* 106 */  {  1,   7 }, \n/* 107 */  {  1,   0 }, \n/* 108 */  {  1,   7 }, \n/* 109 */  {  1,   3 }, \n/* 110 */  {  1,   3 }, \n/* 111 */  {  2,   0, 3 }, \n/* 112 */  {  1,   4 }, \n/* 113 */  {  1,   4 }, \n/* 114 */  {  1,   5 }, \n/* 115 */  {  1,   4 }, \n/* 116 */  {  1,   6 }, \n/* 117 */  {  1,   4 }, \n/* 118 */  {  1,   4 }, \n/* 119 */  {  2,   0, 4 }, \n/* 120 */  {  1,   7 }, \n/* 121 */  {  1,   5 }, \n/* 122 */  {  1,   5 }, \n/* 123 */  {  2,   0, 5 }, \n/* 124 */  {  1,   6 }, \n/* 125 */  {  2,   0, 6 }, \n/* 126 */  {  2,   0, 7 }, \n/* 127 */  {  1,   0 }, \n/* 128 */  {  1,   7 }, \n/* 129 */  {  2,   3, 4 }, \n/* 130 */  {  2,   3, 5 }, \n/* 131 */  {  1,   3 }, \n/* 132 */  {  2,   3, 6 }, \n/* 133 */  {  1,   3 }, \n/* 134 */  {  1,   3 }, \n/* 135 */  {  1,   3 }, \n/* 136 */  {  2,   3, 7 }, \n/* 137 */  {  1,   3 }, \n/* 138 */  {  1,   3 }, \n/* 139 */  {  1,   3 }, \n/* 140 */  {  1,   3 }, \n/* 141 */  {  1,   3 }, \n/* 142 */  {  1,   3 }, \n/* 143 */  {  1,   3 }, \n/* 144 */  {  2,   5, 6 }, \n/* 145 */  {  1,   4 }, \n/* 146 */  {  1,   5 }, \n/* 147 */  {  1,   5 }, \n/* 148 */  {  1,   6 }, \n/* 149 */  {  1,   6 }, \n/* 150 */  {  4,   1, 2, 4, 7 }, \n/* 151 */  {  1,   1 }, \n/* 152 */  {  1,   7 }, \n/* 153 */  {  4,   1, 2, 5, 6 }, \n/* 154 */  {  1,   5 }, \n/* 155 */  {  1,   1 }, \n/* 156 */  {  1,   6 }, \n/* 157 */  {  1,   2 }, \n/* 158 */  {  1,   2 }, \n/* 159 */  {  2,   1, 2 }, \n/* 160 */  {  2,   5, 7 }, \n/* 161 */  {  1,   4 }, \n/* 162 */  {  1,   5 }, \n/* 163 */  {  1,   5 }, \n/* 164 */  {  1,   6 }, \n/* 165 */  {  4,   1, 3, 4, 6 }, \n/* 166 */  {  1,   3 }, \n/* 167 */  {  1,   1 }, \n/* 168 */  {  1,   7 }, \n/* 169 */  {  1,   1 }, \n/* 170 */  {  4,   1, 3, 5, 7 }, \n/* 171 */  {  1,   1 }, \n/* 172 */  {  1,   7 }, \n/* 173 */  {  1,   3 }, \n/* 174 */  {  1,   3 }, \n/* 175 */  {  2,   1, 3 }, \n/* 176 */  {  1,   5 }, \n/* 177 */  {  1,   4 }, \n/* 178 */  {  1,   5 }, \n/* 179 */  {  1,   5 }, \n/* 180 */  {  1,   6 }, \n/* 181 */  {  1,   4 }, \n/* 182 */  {  1,   4 }, \n/* 183 */  {  2,   1, 4 }, \n/* 184 */  {  1,   7 }, \n/* 185 */  {  1,   5 }, \n/* 186 */  {  1,   5 }, \n/* 187 */  {  2,   1, 5 }, \n/* 188 */  {  1,   7 }, \n/* 189 */  {  2,   1, 6 }, \n/* 190 */  {  2,   1, 7 }, \n/* 191 */  {  1,   1 }, \n/* 192 */  {  2,   6, 7 }, \n/* 193 */  {  1,   4 }, \n/* 194 */  {  1,   5 }, \n/* 195 */  {  4,   2, 3, 4, 5 }, \n/* 196 */  {  1,   6 }, \n/* 197 */  {  1,   2 }, \n/* 198 */  {  1,   3 }, \n/* 199 */  {  1,   2 }, \n/* 200 */  {  1,   7 }, \n/* 201 */  {  1,   2 }, \n/* 202 */  {  1,   3 }, \n/* 203 */  {  1,   3 }, \n/* 204 */  {  4,   2, 3, 6, 7 }, \n/* 205 */  {  1,   2 }, \n/* 206 */  {  1,   3 }, \n/* 207 */  {  2,   2, 3 }, \n/* 208 */  {  1,   6 }, \n/* 209 */  {  1,   4 }, \n/* 210 */  {  1,   5 }, \n/* 211 */  {  1,   4 }, \n/* 212 */  {  1,   6 }, \n/* 213 */  {  1,   6 }, \n/* 214 */  {  1,   7 }, \n/* 215 */  {  2,   2, 4 }, \n/* 216 */  {  1,   7 }, \n/* 217 */  {  1,   6 }, \n/* 218 */  {  1,   7 }, \n/* 219 */  {  2,   2, 5 }, \n/* 220 */  {  1,   6 }, \n/* 221 */  {  2,   2, 6 }, \n/* 222 */  {  2,   2, 7 }, \n/* 223 */  {  1,   2 }, \n/* 224 */  {  1,   7 }, \n/* 225 */  {  1,   4 }, \n/* 226 */  {  1,   5 }, \n/* 227 */  {  1,   5 }, \n/* 228 */  {  1,   6 }, \n/* 229 */  {  1,   6 }, \n/* 230 */  {  1,   7 }, \n/* 231 */  {  2,   3, 4 }, \n/* 232 */  {  1,   7 }, \n/* 233 */  {  1,   6 }, \n/* 234 */  {  1,   7 }, \n/* 235 */  {  2,   3, 5 }, \n/* 236 */  {  1,   7 }, \n/* 237 */  {  2,   3, 6 }, \n/* 238 */  {  2,   3, 7 }, \n/* 239 */  {  1,   3 }, \n/* 240 */  {  4,   4, 5, 6, 7 }, \n/* 241 */  {  1,   4 }, \n/* 242 */  {  1,   5 }, \n/* 243 */  {  2,   4, 5 }, \n/* 244 */  {  1,   6 }, \n/* 245 */  {  2,   4, 6 }, \n/* 246 */  {  2,   4, 7 }, \n/* 247 */  {  1,   4 }, \n/* 248 */  {  1,   7 }, \n/* 249 */  {  2,   5, 6 }, \n/* 250 */  {  2,   5, 7 }, \n/* 251 */  {  1,   5 }, \n/* 252 */  {  2,   6, 7 }, \n/* 253 */  {  1,   6 }, \n/* 254 */  {  1,   7 }, \n/* 255 */  {  8,   0, 1, 2, 3, 4, 5, 6, 7 }\n};\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static int Extra_TruthCanonN_rec( int nVars, unsigned char * pt, unsigned ** pptRes, char ** ppfRes, int Flag );\n\n\n/**AutomaticEnd***************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the N-canonical form of the Boolean function up to 6 inputs.]\n\n  Description [The N-canonical form is defined as the truth table with \n  the minimum integer value. This function exhaustively enumerates \n  through the complete set of 2^N phase assignments.\n  Returns pointers to the static storage to the truth table and phases. \n  This data should be used before the function is called again.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nvar spStatic_Extra_TruthCanonFastN_uTruthStore6 [2]uint32;\nfunc Extra_TruthCanonFastN(nVarsMax int32, nVarsReal int32, pt *uint32, pptRes **uint32, ppfRes *string) int32 {\n    \n    var RetValue int32;\n    assert(nVarsMax \u003c= 6, \"nVarsMax \u003c= 6\");\n    assert(nVarsReal \u003c= nVarsMax, \"nVarsReal \u003c= nVarsMax\");\n    RetValue = Extra_TruthCanonN_rec( nVarsReal \u003c= 3? 3: nVarsReal, (unsigned char *)pt, pptRes, ppfRes, 0 );\n    if nVarsMax == 6 \u0026\u0026 nVarsReal \u003c nVarsMax {\n        spStatic_Extra_TruthCanonFastN_uTruthStore6[0] = **pptRes;\n        spStatic_Extra_TruthCanonFastN_uTruthStore6[1] = **pptRes;\n        *pptRes = spStatic_Extra_TruthCanonFastN_uTruthStore6;\n    }\n    return RetValue;\n}\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function*************************************************************\n\n  Synopsis    [Recursive implementation of the above.]\n\n  Description []\n               \n  SideEffects [This procedure has a bug, which shows on Solaris.\n  Most likely has something to do with the casts, i.g *((unsigned *)pt0)]\n\n  SeeAlso     []\n\n***********************************************************************/\nint Extra_TruthCanonN_rec( int nVars, unsigned char * pt, unsigned ** pptRes, char ** ppfRes, int Flag )\n{\n    static unsigned uTruthStore[7][2][2];\n    static char uPhaseStore[7][2][64];\n\n    unsigned char * pt0, * pt1;\n    var ptRes0, ptRes1, ptRes *uint32;\n    var uInit0, uInit1, uTruth0, uTruth1, uTemp uint32;\n    var pfRes0, pfRes1, pfRes string;\n    var nf0, nf1, nfRes, i, nVarsN int32;\n\n    // table lookup for three vars\n    if nVars == 3 {\n        *pptRes = \u0026s_Truths3[*pt];\n        *ppfRes = s_Phases3[*pt]+1;\n        return s_Phases3[*pt][0];\n    }\n\n    // number of vars for the next call\n    nVarsN = nVars-1;\n    // truth table for the next call\n    pt0 = pt;\n    pt1 = pt + (1 \u003c\u003c nVarsN) / 8;\n    // 5-var truth tables for this call\n//    uInit0 = *((unsigned *)pt0);\n//    uInit1 = *((unsigned *)pt1);\n    if nVarsN == 3 {\n        uInit0 = (pt0[0] \u003c\u003c 24) | (pt0[0] \u003c\u003c 16) | (pt0[0] \u003c\u003c 8) | pt0[0];\n        uInit1 = (pt1[0] \u003c\u003c 24) | (pt1[0] \u003c\u003c 16) | (pt1[0] \u003c\u003c 8) | pt1[0];\n    \n    } else if nVarsN == 4 {\n        uInit0 = (pt0[1] \u003c\u003c 24) | (pt0[0] \u003c\u003c 16) | (pt0[1] \u003c\u003c 8) | pt0[0];\n        uInit1 = (pt1[1] \u003c\u003c 24) | (pt1[0] \u003c\u003c 16) | (pt1[1] \u003c\u003c 8) | pt1[0];\n    \n    } else {\n        uInit0 = (pt0[3] \u003c\u003c 24) | (pt0[2] \u003c\u003c 16) | (pt0[1] \u003c\u003c 8) | pt0[0];\n        uInit1 = (pt1[3] \u003c\u003c 24) | (pt1[2] \u003c\u003c 16) | (pt1[1] \u003c\u003c 8) | pt1[0];\n    }\n\n    // storage for truth tables and phases\n    ptRes  = uTruthStore[nVars][Flag];\n    pfRes  = uPhaseStore[nVars][Flag];\n\n    // solve trivial cases\n    if uInit1 == 0 {\n        nf0 = Extra_TruthCanonN_rec( nVarsN, pt0, \u0026ptRes0, \u0026pfRes0, 0 );\n        uTruth1 = uInit1;\n        uTruth0 = *ptRes0;\n        nfRes   = 0;\n        for  i = 0; i \u003c nf0; i++  {\n            pfRes[nfRes++] = pfRes0[i];\n        }\n        goto finish;\n    }\n    if uInit0 == 0 {\n        nf1 = Extra_TruthCanonN_rec( nVarsN, pt1, \u0026ptRes1, \u0026pfRes1, 1 );\n        uTruth1 = uInit0;\n        uTruth0 = *ptRes1;\n        nfRes   = 0;\n        for  i = 0; i \u003c nf1; i++  {\n            pfRes[nfRes++] = pfRes1[i] | (1\u003c\u003cnVarsN);\n        }\n        goto finish;\n    }\n\n    if uInit1 == 0xFFFFFFFF {\n        nf0 = Extra_TruthCanonN_rec( nVarsN, pt0, \u0026ptRes0, \u0026pfRes0, 0 );\n        uTruth1 = *ptRes0;\n        uTruth0 = uInit1;\n        nfRes   = 0;\n        for  i = 0; i \u003c nf0; i++  {\n            pfRes[nfRes++] = pfRes0[i] | (1\u003c\u003cnVarsN);\n        }\n        goto finish;\n    }\n    if uInit0 == 0xFFFFFFFF {\n        nf1 = Extra_TruthCanonN_rec( nVarsN, pt1, \u0026ptRes1, \u0026pfRes1, 1 );\n        uTruth1 = *ptRes1;\n        uTruth0 = uInit0;\n        nfRes   = 0;\n        for  i = 0; i \u003c nf1; i++  {\n            pfRes[nfRes++] = pfRes1[i];\n        }\n        goto finish;\n    }\n\n    // solve the problem for cofactors\n    nf0 = Extra_TruthCanonN_rec( nVarsN, pt0, \u0026ptRes0, \u0026pfRes0, 0 );\n    nf1 = Extra_TruthCanonN_rec( nVarsN, pt1, \u0026ptRes1, \u0026pfRes1, 1 );\n\n    // combine the result\n    if *ptRes1 \u003c *ptRes0 {\n        uTruth0 = 0xFFFFFFFF;\n        nfRes   = 0;\n        for  i = 0; i \u003c nf1; i++  {\n            uTemp = Extra_TruthPolarize( uInit0, pfRes1[i], nVarsN );\n            if uTruth0 \u003e uTemp {\n                nfRes          = 0;\n                uTruth0        = uTemp;\n                pfRes[nfRes++] = pfRes1[i];\n            \n            } else if uTruth0 == uTemp { \n                pfRes[nfRes++] = pfRes1[i]; }\n        }\n        uTruth1 = *ptRes1;\n    \n    } else if *ptRes1 \u003e *ptRes0 {\n        uTruth0 = 0xFFFFFFFF;\n        nfRes   = 0;\n        for  i = 0; i \u003c nf0; i++  {\n            uTemp = Extra_TruthPolarize( uInit1, pfRes0[i], nVarsN );\n            if uTruth0 \u003e uTemp {\n                nfRes          = 0;\n                uTruth0        = uTemp;\n                pfRes[nfRes++] = pfRes0[i] | (1\u003c\u003cnVarsN);\n            \n            } else if uTruth0 == uTemp { \n                pfRes[nfRes++] = pfRes0[i] | (1\u003c\u003cnVarsN); }\n        }\n        uTruth1 = *ptRes0;\n    \n    } else {\n        assert(nf0 == nf1, \"nf0 == nf1\");\n        nfRes = 0; \n        for  i = 0; i \u003c nf1; i++  {\n            pfRes[nfRes++] = pfRes1[i];\n        }\n        for  i = 0; i \u003c nf0; i++  {\n            pfRes[nfRes++] = pfRes0[i] | (1\u003c\u003cnVarsN);\n        }\n        uTruth0 = Extra_TruthPolarize( uInit0, pfRes1[0], nVarsN );\n        uTruth1 = *ptRes0;\n    }\n\nfinish :\n    if nVarsN == 3 {\n        uTruth0 \u0026= 0xFF;\n        uTruth1 \u0026= 0xFF;\n        uTemp = (uTruth1 \u003c\u003c 8) | uTruth0;\n        *ptRes = (uTemp \u003c\u003c 16) | uTemp;\n    \n    } else if nVarsN == 4 {\n        uTruth0 \u0026= 0xFFFF;\n        uTruth1 \u0026= 0xFFFF;\n        *ptRes = (uTruth1 \u003c\u003c 16) | uTruth0;\n    \n    } else if nVarsN == 5 {\n        *(ptRes+0) = uTruth0;\n        *(ptRes+1) = uTruth1;\n    }\n\n    *pptRes = ptRes;\n    *ppfRes = pfRes;\n    return nfRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_Var3Print() {\n    extern void Extra_Truth3VarN( unsigned ** puCanons, char *** puPhases, char ** ppCounters );\n\n    var uCanons *uint32;\n    var uPhases *string;\n    var pCounters string;\n    var i, k int32;\n\n    Extra_Truth3VarN( \u0026uCanons, \u0026uPhases, \u0026pCounters );\n\n    for  i = 0; i \u003c 256; i++  {\n        if i % 8 == 0 {\n            fmt.Printf(\"\\n\"); }\n        Extra_PrintHex( os.Stdout, uCanons + i, 5 ); \n        fmt.Printf(\", \");\n    }\n    fmt.Printf(\"\\n\");\n\n    for  i = 0; i \u003c 256; i++  {\n        fmt.Printf(\"%3d */  { %2d,   \", i, pCounters[i]);\n        for  k = 0; k \u003c pCounters[i]; k++  {            \n            fmt.Printf(\"%s%d\", k? \", \":\"\", uPhases[i][k]);\n        }\n        fmt.Printf(\" }\\n\");\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_Var3Test() {\n    extern void Extra_Truth3VarN( unsigned ** puCanons, char *** puPhases, char ** ppCounters );\n\n    var uCanons *uint32;\n    var uPhases *string;\n    var pCounters string;\n    var i int32;\n    var ptRes *uint32;\n    var pfRes string;\n    var uTruth uint32;\n    var Count int32;\n\n    Extra_Truth3VarN( \u0026uCanons, \u0026uPhases, \u0026pCounters );\n\n    for  i = 0; i \u003c 256; i++  {\n        uTruth = i;\n        Count =  Extra_TruthCanonFastN( 5, 3, \u0026uTruth, \u0026ptRes, \u0026pfRes );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_Var4Test() {\n    extern void Extra_Truth4VarN( unsigned short ** puCanons, char *** puPhases, char ** ppCounters, int PhaseMax );\n\n    unsigned short * uCanons;\n    var uPhases *string;\n    var pCounters string;\n    var i int32;\n    var ptRes *uint32;\n    var pfRes string;\n    var uTruth uint32;\n    var Count int32;\n\n    Extra_Truth4VarN( \u0026uCanons, \u0026uPhases, \u0026pCounters, 16 );\n\n    for  i = 0; i \u003c 256*256; i++  {\n        uTruth = i;\n        Count =  Extra_TruthCanonFastN( 5, 4, \u0026uTruth, \u0026ptRes, \u0026pfRes );\n    }\n}\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static Functions                                            */\n/*---------------------------------------------------------------------------*/\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

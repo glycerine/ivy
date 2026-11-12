@@ -1,0 +1,191 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c",
+  "SHA256": "e5b5b6c40aa38a5740ed9bed9a98b9c4440ec72a6df7774aba6d4cd0b4e66e47",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 48,
+        "Column": 73,
+        "ByteOffset": 1386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Mvc_Manager_t *) malloc(sizeof(Mvc_Manager_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Mvc_Manager_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 73,
+        "Column": 57,
+        "ByteOffset": 2271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mvc_ManagerStart",
+      "Start": 1228,
+      "End": 1701,
+      "BodyStart": 1263,
+      "Original": "Mvc_Manager_t * Mvc_ManagerStart()\n{\n    Mvc_Manager_t * p;\n    p = ABC_ALLOC( Mvc_Manager_t, 1 );\n    memset( p, 0, sizeof(Mvc_Manager_t) );\n    p-\u003epMan1 = Extra_MmFixedStart( sizeof(Mvc_Cube_t)                              );\n    p-\u003epMan2 = Extra_MmFixedStart( sizeof(Mvc_Cube_t) +     sizeof(Mvc_CubeWord_t) );\n    p-\u003epMan4 = Extra_MmFixedStart( sizeof(Mvc_Cube_t) + 3 * sizeof(Mvc_CubeWord_t) );\n    p-\u003epManC = Extra_MmFixedStart( sizeof(Mvc_Cover_t) );\n    return p;\n}",
+      "Draft": "func Mvc_ManagerStart() *Mvc_Manager_t {\n    var p *Mvc_Manager_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Mvc_Manager_t *) malloc(sizeof(Mvc_Manager_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Mvc_Manager_t) );\n    p.pMan1 = Extra_MmFixedStart( sizeof(Mvc_Cube_t)                              );\n    p.pMan2 = Extra_MmFixedStart( sizeof(Mvc_Cube_t) +     sizeof(Mvc_CubeWord_t) );\n    p.pMan4 = Extra_MmFixedStart( sizeof(Mvc_Cube_t) + 3 * sizeof(Mvc_CubeWord_t) );\n    p.pManC = Extra_MmFixedStart( sizeof(Mvc_Cover_t) );\n    return p;\n}"
+    },
+    {
+      "Name": "Mvc_ManagerFree",
+      "Start": 1937,
+      "End": 2141,
+      "BodyStart": 1979,
+      "Original": "void Mvc_ManagerFree( Mvc_Manager_t * p )\n{\n    Extra_MmFixedStop( p-\u003epMan1 );\n    Extra_MmFixedStop( p-\u003epMan2 );\n    Extra_MmFixedStop( p-\u003epMan4 );\n    Extra_MmFixedStop( p-\u003epManC );\n    ABC_FREE( p );\n}",
+      "Draft": "func Mvc_ManagerFree(p *Mvc_Manager_t) {\n    Extra_MmFixedStop( p.pMan1 );\n    Extra_MmFixedStop( p.pMan2 );\n    Extra_MmFixedStop( p.pMan4 );\n    Extra_MmFixedStop( p.pManC );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c::mechanical::sizeof::1367",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1296,
+      "End": 1296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c::mechanical::sizeof::1424",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1345,
+      "End": 1351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c::mechanical::sizeof::1484",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1405,
+      "End": 1411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c::mechanical::sizeof::1570",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1491,
+      "End": 1497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c::mechanical::sizeof::1595",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1516,
+      "End": 1522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c::mechanical::sizeof::1656",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1577,
+      "End": 1583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c::mechanical::sizeof::1681",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1602,
+      "End": 1608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c::mechanical::sizeof::1742",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1663,
+      "End": 1669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c::pointer-cast::1342",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1296,
+      "End": 1296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c::pointer-cast::2261",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2125,
+      "End": 2125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c::Mvc_ManagerStart",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_ManagerStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1228,
+      "End": 1701
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c::ternary::Mvc_ManagerFree",
+      "Category": "ternary-review",
+      "Symbol": "Mvc_ManagerFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1937,
+      "End": 2141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c::Mvc_ManagerFree",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_ManagerFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1937,
+      "End": 2141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2388
+    }
+  ],
+  "Draft": "package mvc\n\n/**CFile****************************************************************\n\n  FileName    [mvcMan.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Procedures working with the MVC memory manager.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: mvcMan.c,v 1.3 2003/03/19 19:50:26 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstring.h\u003e\n//#include \"mvc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_ManagerStart() *Mvc_Manager_t {\n    var p *Mvc_Manager_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Mvc_Manager_t *) malloc(sizeof(Mvc_Manager_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Mvc_Manager_t) );\n    p.pMan1 = Extra_MmFixedStart( sizeof(Mvc_Cube_t)                              );\n    p.pMan2 = Extra_MmFixedStart( sizeof(Mvc_Cube_t) +     sizeof(Mvc_CubeWord_t) );\n    p.pMan4 = Extra_MmFixedStart( sizeof(Mvc_Cube_t) + 3 * sizeof(Mvc_CubeWord_t) );\n    p.pManC = Extra_MmFixedStart( sizeof(Mvc_Cover_t) );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_ManagerFree(p *Mvc_Manager_t) {\n    Extra_MmFixedStop( p.pMan1 );\n    Extra_MmFixedStop( p.pMan2 );\n    Extra_MmFixedStop( p.pMan4 );\n    Extra_MmFixedStop( p.pManC );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

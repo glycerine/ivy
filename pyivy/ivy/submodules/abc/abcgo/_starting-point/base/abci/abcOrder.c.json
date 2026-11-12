@@ -1,0 +1,175 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcOrder.c",
+  "SHA256": "f0bfd49372370051f63f2ef56cd1d91950a96fee3a6479bdf6b3155d317ee891",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 75,
+        "Column": 13,
+        "ByteOffset": 2113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"r\" );"
+    },
+    {
+      "Name": "fscanf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 77,
+        "Column": 10,
+        "ByteOffset": 2195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  fscanf( pFile, \"%s\", Buffer ) == 1  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 80,
+        "Column": 13,
+        "ByteOffset": 2338
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Name \\\"%s\\\" is not a PI name. Cannot use this order.\\n\", Buffer );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 82,
+        "Column": 13,
+        "ByteOffset": 2460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose( pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 2553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 89,
+        "Column": 9,
+        "ByteOffset": 2628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The number of names in the order (%d) is not the same as the number of PIs (%d).\\n\", Vec_PtrSize(vSupp), Abc_NtkCiNum(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 5,
+        "ByteOffset": 3292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vSupp) == Abc_NtkCiNum(pNtk) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkFindCiOrder",
+      "Start": 1379,
+      "End": 1590,
+      "BodyStart": 1451,
+      "Original": "void Abc_NtkFindCiOrder( Abc_Ntk_t * pNtk, int fReverse, int fVerbose )\n{\n    Vec_Ptr_t * vSupp;\n    vSupp = Abc_NtkSupport( pNtk );\n    Abc_NtkChangeCiOrder( pNtk, vSupp, fReverse );\n    Vec_PtrFree( vSupp );\n}",
+      "Draft": "func Abc_NtkFindCiOrder(pNtk *Abc_Ntk_t, fReverse int32, fVerbose int32) {\n    var vSupp *Vec_Ptr_t;\n    vSupp = Abc_NtkSupport( pNtk );\n    Abc_NtkChangeCiOrder( pNtk, vSupp, fReverse );\n    Vec_PtrFree( vSupp );\n}"
+    },
+    {
+      "Name": "Abc_NtkImplementCiOrder",
+      "Start": 1862,
+      "End": 2867,
+      "BodyStart": 1957,
+      "Original": "void Abc_NtkImplementCiOrder( Abc_Ntk_t * pNtk, char * pFileName, int fReverse, int fVerbose )\n{\n    char Buffer[1000];\n    FILE * pFile;\n    Vec_Ptr_t * vSupp;\n    Abc_Obj_t * pObj;\n    pFile = fopen( pFileName, \"r\" );\n    vSupp = Vec_PtrAlloc( Abc_NtkCiNum(pNtk) );\n    while ( fscanf( pFile, \"%s\", Buffer ) == 1 )\n    {\n        pObj = Abc_NtkFindCi( pNtk, Buffer );\n        if ( pObj == NULL || !Abc_ObjIsCi(pObj) )\n        {\n            printf( \"Name \\\"%s\\\" is not a PI name. Cannot use this order.\\n\", Buffer );\n            Vec_PtrFree( vSupp );\n            fclose( pFile );\n            return;\n        }\n        Vec_PtrPush( vSupp, pObj );\n    }\n    fclose( pFile );\n    if ( Vec_PtrSize(vSupp) != Abc_NtkCiNum(pNtk) )\n    {\n        printf( \"The number of names in the order (%d) is not the same as the number of PIs (%d).\\n\", Vec_PtrSize(vSupp), Abc_NtkCiNum(pNtk) );\n        Vec_PtrFree( vSupp );\n        return;\n    }\n    Abc_NtkChangeCiOrder( pNtk, vSupp, fReverse );\n    Vec_PtrFree( vSupp );\n}",
+      "Draft": "func Abc_NtkImplementCiOrder(pNtk *Abc_Ntk_t, pFileName string, fReverse int32, fVerbose int32) {\n    var Buffer [1000]byte;\n    var pFile *os.File;\n    var vSupp *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    pFile = os.Open(pFileName);\n    vSupp = Vec_PtrAlloc( Abc_NtkCiNum(pNtk) );\n    for  fscanf( pFile, \"%s\", Buffer ) == 1  {\n        pObj = Abc_NtkFindCi( pNtk, Buffer );\n        if pObj == nil || !Abc_ObjIsCi(pObj) {\n            printf( \"Name \\\"%s\\\" is not a PI name. Cannot use this order.\\n\", Buffer );\n            Vec_PtrFree( vSupp );\n            _ = (pFile).Close();\n            return;\n        }\n        Vec_PtrPush( vSupp, pObj );\n    }\n    _ = (pFile).Close();\n    if Vec_PtrSize(vSupp) != Abc_NtkCiNum(pNtk) {\n        fmt.Printf(\"The number of names in the order (%d) is not the same as the number of PIs (%d).\\n\", Vec_PtrSize(vSupp), Abc_NtkCiNum(pNtk));\n        Vec_PtrFree( vSupp );\n        return;\n    }\n    Abc_NtkChangeCiOrder( pNtk, vSupp, fReverse );\n    Vec_PtrFree( vSupp );\n}"
+    },
+    {
+      "Name": "Abc_NtkChangeCiOrder",
+      "Start": 3140,
+      "End": 3905,
+      "BodyStart": 3219,
+      "Original": "void Abc_NtkChangeCiOrder( Abc_Ntk_t * pNtk, Vec_Ptr_t * vSupp, int fReverse )\n{\n    Abc_Obj_t * pObj;\n    int i;\n    assert( Vec_PtrSize(vSupp) == Abc_NtkCiNum(pNtk) );\n    // order CIs using the array\n    if ( fReverse )\n        Vec_PtrForEachEntry( Abc_Obj_t *, vSupp, pObj, i )\n            Vec_PtrWriteEntry( pNtk-\u003evCis, Vec_PtrSize(vSupp)-1-i, pObj );\n    else\n        Vec_PtrForEachEntry( Abc_Obj_t *, vSupp, pObj, i )\n            Vec_PtrWriteEntry( pNtk-\u003evCis, i, pObj );\n    // order PIs accordingly\n    Vec_PtrClear( pNtk-\u003evPis );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        if ( Abc_ObjIsPi(pObj) )\n            Vec_PtrPush( pNtk-\u003evPis, pObj );\n//    Abc_NtkForEachCi( pNtk, pObj, i )\n//        printf( \"%s \", Abc_ObjName(pObj) );\n//    printf( \"\\n\" );\n}",
+      "Draft": "func Abc_NtkChangeCiOrder(pNtk *Abc_Ntk_t, vSupp *Vec_Ptr_t, fReverse int32) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    assert(Vec_PtrSize(vSupp) == Abc_NtkCiNum(pNtk), \"Vec_PtrSize(vSupp) == Abc_NtkCiNum(pNtk)\");\n    // order CIs using the array\n    if fReverse != 0 {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vSupp)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, i)), 1); i++  {\n            Vec_PtrWriteEntry( pNtk.vCis, Vec_PtrSize(vSupp)-1-i, pObj );\n        }\n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vSupp)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, i)), 1); i++  {\n            Vec_PtrWriteEntry( pNtk.vCis, i, pObj );\n        } }\n    // order PIs accordingly\n    Vec_PtrClear( pNtk.vPis );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if Abc_ObjIsPi(pObj) {\n            Vec_PtrPush( pNtk.vPis, pObj ); }\n    }\n//    Abc_NtkForEachCi( pNtk, pObj, i )\n//        printf( \"%s \", Abc_ObjName(pObj) );\n//    printf( \"\\n\" );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcOrder.c::pointer-cast::3478",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3371,
+      "End": 3371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcOrder.c::pointer-cast::3725",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3514,
+      "End": 3514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcOrder.c::Abc_NtkFindCiOrder",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFindCiOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1379,
+      "End": 1590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcOrder.c::Abc_NtkImplementCiOrder",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkImplementCiOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1862,
+      "End": 2867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcOrder.c::Abc_NtkChangeCiOrder",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkChangeCiOrder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3140,
+      "End": 3905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcOrder.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4152
+    }
+  ],
+  "Draft": "package abci\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [abcOrder.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Exploring static BDD variable orders.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcOrder.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Abc_NtkChangeCiOrder( Abc_Ntk_t * pNtk, Vec_Ptr_t * vSupp, int fReverse );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    [Changes the order of primary inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFindCiOrder(pNtk *Abc_Ntk_t, fReverse int32, fVerbose int32) {\n    var vSupp *Vec_Ptr_t;\n    vSupp = Abc_NtkSupport( pNtk );\n    Abc_NtkChangeCiOrder( pNtk, vSupp, fReverse );\n    Vec_PtrFree( vSupp );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implements the given variable order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkImplementCiOrder(pNtk *Abc_Ntk_t, pFileName string, fReverse int32, fVerbose int32) {\n    var Buffer [1000]byte;\n    var pFile *os.File;\n    var vSupp *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    pFile = os.Open(pFileName);\n    vSupp = Vec_PtrAlloc( Abc_NtkCiNum(pNtk) );\n    for  fscanf( pFile, \"%s\", Buffer ) == 1  {\n        pObj = Abc_NtkFindCi( pNtk, Buffer );\n        if pObj == nil || !Abc_ObjIsCi(pObj) {\n            printf( \"Name \\\"%s\\\" is not a PI name. Cannot use this order.\\n\", Buffer );\n            Vec_PtrFree( vSupp );\n            _ = (pFile).Close();\n            return;\n        }\n        Vec_PtrPush( vSupp, pObj );\n    }\n    _ = (pFile).Close();\n    if Vec_PtrSize(vSupp) != Abc_NtkCiNum(pNtk) {\n        fmt.Printf(\"The number of names in the order (%d) is not the same as the number of PIs (%d).\\n\", Vec_PtrSize(vSupp), Abc_NtkCiNum(pNtk));\n        Vec_PtrFree( vSupp );\n        return;\n    }\n    Abc_NtkChangeCiOrder( pNtk, vSupp, fReverse );\n    Vec_PtrFree( vSupp );\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Changes the order of primary inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkChangeCiOrder(pNtk *Abc_Ntk_t, vSupp *Vec_Ptr_t, fReverse int32) {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    assert(Vec_PtrSize(vSupp) == Abc_NtkCiNum(pNtk), \"Vec_PtrSize(vSupp) == Abc_NtkCiNum(pNtk)\");\n    // order CIs using the array\n    if fReverse != 0 {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vSupp)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, i)), 1); i++  {\n            Vec_PtrWriteEntry( pNtk.vCis, Vec_PtrSize(vSupp)-1-i, pObj );\n        }\n    } else {\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vSupp)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vSupp, i)), 1); i++  {\n            Vec_PtrWriteEntry( pNtk.vCis, i, pObj );\n        } }\n    // order PIs accordingly\n    Vec_PtrClear( pNtk.vPis );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if Abc_ObjIsPi(pObj) {\n            Vec_PtrPush( pNtk.vPis, pObj ); }\n    }\n//    Abc_NtkForEachCi( pNtk, pObj, i )\n//        printf( \"%s \", Abc_ObjName(pObj) );\n//    printf( \"\\n\" );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

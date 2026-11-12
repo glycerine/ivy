@@ -1,0 +1,429 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/CGlucoseCore.h",
+  "SHA256": "59d7d4bb68268a32ff1f9d81bd82f58b55b63e588c87bfb54ba322ac00c36a38",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 21,
+        "Column": 2,
+        "ByteOffset": 358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert(v \u003c nVars());"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 22,
+        "Column": 2,
+        "ByteOffset": 380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert(isJReason(v));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 31,
+        "Column": 3,
+        "ByteOffset": 569
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\t\tassert( value(v) != l_False || l_True  != val0 || l_True  != val1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 45,
+        "Column": 3,
+        "ByteOffset": 965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\t\tassert( value(v) == l_Undef || value(v) != l_False || val0 == val1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 3,
+        "ByteOffset": 1185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\t\tassert( l_Undef == val0 \u0026\u0026 l_Undef == val1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 2,
+        "ByteOffset": 1385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert(v \u003c nVars());"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 2,
+        "ByteOffset": 1407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert(isJReason(v));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 3,
+        "ByteOffset": 2185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\t\tassert(isJReason(next));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 2,
+        "ByteOffset": 2376
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert(v \u003c nVars());"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 2,
+        "ByteOffset": 2398
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert(isJReason(v));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 111,
+        "Column": 2,
+        "ByteOffset": 2489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( var_Undef == jwatch[v].prev );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 120,
+        "Column": 2,
+        "ByteOffset": 2681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( !isAND(v) ||  l_False == val0 || l_False == val1  );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 2,
+        "ByteOffset": 2743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert(  isAND(v) || (l_Undef != val0 \u0026\u0026 l_Undef != val1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 161,
+        "Column": 2,
+        "ByteOffset": 3748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( var_Undef == jwatch[member].next \u0026\u0026 var_Undef == jwatch[member].prev );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 2,
+        "ByteOffset": 4127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( var_Undef != prev ); // must be in a list to be deleted "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 176,
+        "Column": 2,
+        "ByteOffset": 4193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( jwatch[prev].next == member || jwatch[prev].head == member );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 205,
+        "Column": 4,
+        "ByteOffset": 4770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\t\t\tprintf(\"\\t%8d is not justified (value=%d, level=%3d)\\n\", x, l_True == value(x)? 1: 0, vardata[x].level);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 4,
+        "ByteOffset": 4893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\t\t\tassert(false);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 3,
+        "ByteOffset": 4934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\t\tprintf(\"%d just-fails\\n\", nJustFail);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 272,
+        "Column": 2,
+        "ByteOffset": 6900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( var(lit1) != var(lit2) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 278,
+        "Column": 2,
+        "ByteOffset": 7125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( (toLit(~0) == lit1 \u0026\u0026 toLit(~0) == lit2) || ((v\u003c\u003c1)+1 \u003c var2FaninLits.size()) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 2,
+        "ByteOffset": 7291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( toLit(~0) != lit1 \u0026\u0026 toLit(~0) != lit2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 307,
+        "Column": 2,
+        "ByteOffset": 8098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert(v \u003c nVars());"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 312,
+        "Column": 2,
+        "ByteOffset": 8258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( toLit(~0) == lit0 || var(lit0) \u003c nVars() );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 313,
+        "Column": 2,
+        "ByteOffset": 8311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( toLit(~0) == lit1 || var(lit1) \u003c nVars() );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 341,
+        "Column": 2,
+        "ByteOffset": 9077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( var(p) \u003c var2Fanout0.size() );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 358,
+        "Column": 2,
+        "ByteOffset": 9560
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( var(faninLit) == v );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 370,
+        "Column": 4,
+        "ByteOffset": 9895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\t\t\tassert( l_True == value(faninLit) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 432,
+        "Column": 4,
+        "ByteOffset": 11680
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\t\t\tassert( l_True == value(v) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 467,
+        "Column": 2,
+        "ByteOffset": 12679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( isTwoFanin(v) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 505,
+        "Column": 2,
+        "ByteOffset": 13579
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( 3 \u003e= sz );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 506,
+        "Column": 2,
+        "ByteOffset": 13599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( CRef_Undef != itpc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 512,
+        "Column": 2,
+        "ByteOffset": 13749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\tassert( isTwoFanin(v) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 549,
+        "Column": 4,
+        "ByteOffset": 14585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "\t\t\tassert( t == var0 || t == var1 );"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/CGlucoseCore.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16054
+    }
+  ],
+  "Draft": "package glucose2\n\nimport \"fmt\"\n\n// The code in this file was developed by He-Teng Zhang (National Taiwan University)\n\n\n\n\n/*\n * justification for glucose \n */\n\n//#include \"sat/glucose2/Options.h\"\n//#include \"sat/glucose2/Solver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\nnamespace Gluco2 {\ninline int  Solver::justUsage() { return jftr; }\n\ninline Lit  Solver::gateJustFanin(Var v) {\n\tassert(v \u003c nVars(), \"v \u003c nVars()\");\n\tassert(isJReason(v), \"isJReason(v)\");\n\n\n\tlbool val0, val1;\n\tval0 = value(getFaninLit0(v));\n\tval1 = value(getFaninLit1(v));\n\n\tif isAND(v){\n\t\t// should be handled by conflict analysis before entering here\n\t\tassert(value(v) != l_False || l_True  != val0 || l_True  != val1, \"value(v) != l_False || l_True  != val0 || l_True  != val1\");\n\n\t\tif(val0 == l_False || val1 == l_False)\n\t\t\treturn lit_Undef;\n\n\t\t// branch \n\t\tif(val0 == l_True)\n\t\t\treturn ~getFaninLit1(v);\n\t\tif(val1 == l_True)\n\t\t\treturn ~getFaninLit0(v);\n\n\t\treturn maxActiveLit( ~getFaninLit0(v), ~getFaninLit1(v) );\n\t} else { // xor scope\n\t\t// should be handled by conflict analysis before entering here\n\t\tassert(value(v) == l_Undef || value(v) != l_False || val0 == val1, \"value(v) == l_Undef || value(v) != l_False || val0 == val1\");\n\n\t\t// both are assigned\n\t\tif( l_Undef != val0 \u0026\u0026 l_Undef != val1 )\n\t\t\treturn lit_Undef;\n\n\t\t// should be handled by propagation before entering here\n\t\tassert(l_Undef == val0 \u0026\u0026 l_Undef == val1, \"l_Undef == val0 \u0026\u0026 l_Undef == val1\");\n\t\treturn maxActiveLit( getFaninPlt0(v), getFaninPlt1(v) );\n\t}\n}\n\n\n// a var should at most be enqueued one time\ninline void Solver::pushJustQueue(Var v){\n\tassert(v \u003c nVars(), \"v \u003c nVars()\");\n\tassert(isJReason(v), \"isJReason(v)\");\n\n\tif( ! isRoundWatch(v) )\\\n\t\treturn;\n\n\n\tjdata[v].act_fanin = activity[getFaninVar0(v)] \u003e activity[getFaninVar1(v)]? activity[getFaninVar0(v)]: activity[getFaninVar1(v)];\n\tjdata[v].now = true;\n\n\tjheap.update(v);\n}\n\ninline void Solver::ResetJustData(bool fCleanMemory){\n\tjstack.shrink_( jstack.size() );\n\tjheap .clear(fCleanMemory);\n}\n\ninline Lit Solver::pickJustLit( Var\u0026 j_reason ){\n\tVar next = var_Undef;\n\tLit jlit = lit_Undef;\n\n\tfor  int i = 0; i \u003c jstack.size(); i ++ {\n\t\tVar x = jstack[i];\n\t\tif( l_Undef != value(getFaninLit0(x)) || l_Undef != value(getFaninLit1(x)) )\n\t\t\tcontinue;\n\t\tpushJustQueue(x);\n\t}\n\tjstack.shrink_( jstack.size() );\n\twhile( ! jheap.empty() \u0026\u0026 var_Undef != (next = jheap.removeMin()) ){\n\t\tif( ! jdata[next].now )\n\t\t\tcontinue; \n\n\t\tassert(isJReason(next), \"isJReason(next)\");\n\t\tif( lit_Undef != (jlit = gateJustFanin(next)) )\n\t\t\tbreak;\n\t\tgateAddJwatch(next);\n\t}\n\n\tj_reason = next;\n\treturn jlit;\n}\n\n\ninline void Solver::gateAddJwatch(Var v){\n\tassert(v \u003c nVars(), \"v \u003c nVars()\");\n\tassert(isJReason(v), \"isJReason(v)\");\n\n\tif( var_Undef != jwatch[v].prev ) // already in jwatch\n\t\treturn;\n\n\tassert(var_Undef == jwatch[v].prev, \"var_Undef == jwatch[v].prev\");\n\n\tlbool val0, val1;\n\tVar var0, var1;\n\tvar0 = getFaninVar0(v);\n\tvar1 = getFaninVar1(v);\n\tval0 = value(getFaninLit0(v));\n\tval1 = value(getFaninLit1(v));\n\n\tassert(!isAND(v) ||  l_False == val0 || l_False == val1, \"!isAND(v) ||  l_False == val0 || l_False == val1\");\n\tassert(isAND(v) || (l_Undef != val0 \u0026\u0026 l_Undef != val1), \"isAND(v) || (l_Undef != val0 \u0026\u0026 l_Undef != val1)\");\n\n\tif (val0 == l_False \u0026\u0026 val1 == l_False) || !isAND(v){\n\t\taddJwatch(vardata[var0].level \u003c vardata[var1].level? var0: var1, v);\n\t\treturn;\n\t}\n\n\taddJwatch(l_False == val0? var0: var1, v);\n}\n\ninline void Solver::gateClearJwatch( Var v, int backtrack_level ){\n\tif( var_Undef == jwatch[v].head )\n\t\treturn ;\n\n\tVar member, next;\n\tmember = jwatch[v].head;\n\twhile( var_Undef != member ){\n\t\tnext = jwatch[member].next;\n\n\t\tdelJwatch( member );\n\n\t\tif( vardata[member].level \u003c= backtrack_level )\n\t\t\tpushJustQueue(member);\n\n\t\tmember = next;\n\t}\n}\n\ninline void Solver::updateJustActivity( Var v ){\n\tfor Lit lfo = var2Fanout0[ v ]; lfo != toLit(~0); lfo = var2FanoutN[ toInt(lfo) ] {\n\t\tVar x = var(lfo);\n\t\tif jdata[x].now \u0026\u0026 jheap.inHeap(x){\n\t\t\tjdata[x].act_fanin = activity[getFaninVar0(x)] \u003e activity[getFaninVar1(x)]? activity[getFaninVar0(x)]: activity[getFaninVar1(x)];\n\t\t\tjheap.update(x);\n\t\t}\n\t}\n}\n\n\ninline void Solver::addJwatch( Var host, Var member ){\n\tassert(var_Undef == jwatch[member].next \u0026\u0026 var_Undef == jwatch[member].prev, \"var_Undef == jwatch[member].next \u0026\u0026 var_Undef == jwatch[member].prev\");\n\n\tif( var_Undef != jwatch[host].head )\n\t\tjwatch[jwatch[host].head].prev = member;\n\n\tjwatch[member].next = jwatch[host].head;\n\tjwatch[member].prev = host;\n\tjwatch[host].head = member;\n}\n\ninline void Solver::delJwatch( Var member ){\n\tVar prev = jwatch[member].prev;\n\tVar next = jwatch[member].next;\n\n\tassert(var_Undef != prev, \"var_Undef != prev\"); // must be in a list to be deleted \n\tassert(jwatch[prev].next == member || jwatch[prev].head == member, \"jwatch[prev].next == member || jwatch[prev].head == member\");\n\n\tif( jwatch[prev].next == member )\n\t\tjwatch[prev].next = next;\n\telse \n\t\tjwatch[prev].head = next;\n\n\tif( var_Undef != next )\n\t\tjwatch[next].prev = prev;\n\n\tjwatch[member].prev = var_Undef;\n\tjwatch[member].next = var_Undef;\n}\n\n\n/*\n * circuit propagation \n */\n\ninline void Solver::justCheck(){\n\tLit lit;\n\tint i, nJustFail = 0;\n\tfor i=0; i\u003ctrail.size(); i++{\n\t\tVar      x  = var(trail[i]);\n\t\tif( ! isRoundWatch(x) )\n\t\t\tcontinue;\n\t\tif( !isJReason(x) )\n\t\t\tcontinue;\n\t\tif lit_Undef != (lit = gateJustFanin(x)){\n\t\t\tfmt.Printf(\"\\t%8d is not justified (value=%d, level=%3d)\\n\", x, l_True == value(x)? 1: 0, vardata[x].level);\nnJustFail ++;\n\n\t\t\tassert(false, \"false\");\n\t\t}\n\t}\n\tif( nJustFail )\n\t\tfmt.Printf(\"%d just-fails\\n\", nJustFail);\n}\n/**\ninline void Solver::delVarFaninLits( Var v ){\n\tif( toLit(~0) != getFaninLit0(v) ){\n\t\tif( toLit(~0) == var2FanoutP[ (v\u003c\u003c1) + 0 ] ){\n\t\t\t// head of linked-list \n\t\t\tLit root = mkLit(getFaninVar0(v));\n\t\t\tLit next = var2FanoutN[ (v\u003c\u003c1) + 0 ];\n\t\t\tif( toLit(~0) != next ){\n\t\t\t\tassert( var2Fanout0[ toInt(root) ] == toLit((v\u003c\u003c1) + 0) );\n\t\t\t\tassert( var2FanoutP[ toInt(next) ] == toLit((v\u003c\u003c1) + 0) );\n\t\t\t\tvar2Fanout0[ getFaninVar0(v) ] = next;\n\t\t\t\tvar2FanoutP[ toInt(next) ] = toLit(~0);\n\t\t\t}\n\t\t} else {\n\t\t\tLit prev = var2FanoutP[ (v\u003c\u003c1) + 0 ];\n\t\t\tLit next = var2FanoutN[ (v\u003c\u003c1) + 0 ];\n\t\t\tif( toLit(~0) != next ){\n\t\t\t\tassert( var2FanoutN[ toInt(prev) ] == toLit((v\u003c\u003c1) + 0) );\n\t\t\t\tassert( var2FanoutP[ toInt(next) ] == toLit((v\u003c\u003c1) + 0) );\n\t\t\t\tvar2FanoutN[ toInt(prev) ] = next;\n\t\t\t\tvar2FanoutP[ toInt(next) ] = prev;\n\t\t\t}\n\t\t}\n\t}\n\n\n\tif( toLit(~0) != getFaninLit1(v) ){\n\t\tif( toLit(~0) == var2FanoutP[ (v\u003c\u003c1) + 1 ] ){\n\t\t\t// head of linked-list \n\t\t\tLit root = mkLit(getFaninVar1(v));\n\t\t\tLit next = var2FanoutN[ (v\u003c\u003c1) + 1 ];\n\t\t\tif( toLit(~0) != next ){\n\t\t\t\tassert( var2Fanout0[ toInt(root) ] == toLit((v\u003c\u003c1) + 1) );\n\t\t\t\tassert( var2FanoutP[ toInt(next) ] == toLit((v\u003c\u003c1) + 1) );\n\t\t\t\tvar2Fanout0[ getFaninVar1(v) ] = next;\n\t\t\t\tvar2FanoutP[ toInt(next) ] = toLit(~0);\n\t\t\t}\n\t\t} else {\n\t\t\tLit prev = var2FanoutP[ (v\u003c\u003c1) + 1 ];\n\t\t\tLit next = var2FanoutN[ (v\u003c\u003c1) + 1 ];\n\t\t\tif( toLit(~0) != next ){\n\t\t\t\tassert( var2FanoutN[ toInt(prev) ] == toLit((v\u003c\u003c1) + 1) );\n\t\t\t\tassert( var2FanoutP[ toInt(next) ] == toLit((v\u003c\u003c1) + 1) );\n\t\t\t\tvar2FanoutN[ toInt(prev) ] = next;\n\t\t\t\tvar2FanoutP[ toInt(next) ] = prev;\n\t\t\t}\n\t\t}\n\t}\n\n\tvar2FanoutP  [ (v\u003c\u003c1) + 0 ] = toLit(~0);\n\tvar2FanoutP  [ (v\u003c\u003c1) + 1 ] = toLit(~0);\n\tvar2FanoutN  [ (v\u003c\u003c1) + 0 ] = toLit(~0);\n\tvar2FanoutN  [ (v\u003c\u003c1) + 1 ] = toLit(~0);\n\tvar2FaninLits[ (v\u003c\u003c1) + 0 ] = toLit(~0);\n\tvar2FaninLits[ (v\u003c\u003c1) + 1 ] = toLit(~0);\n}\n**/\ninline void Solver::setVarFaninLits( Var v, Lit lit1, Lit lit2 ){\n\tassert(var(lit1) != var(lit2), \"var(lit1) != var(lit2)\");\n\tint mincap = var(lit1) \u003c var(lit2)? var(lit2): var(lit1);\n\tmincap = (v \u003c mincap? mincap: v) + 1;\n\n\tif( var2FaninLits.size() \u003c (mincap\u003c\u003c1) )\n\t\tvar2FaninLits.growTo( (mincap\u003c\u003c1), toLit(~0));\n\tassert((toLit(~0) == lit1 \u0026\u0026 toLit(~0) == lit2) || ((v\u003c\u003c1)+1 \u003c var2FaninLits.size()), \"(toLit(~0) == lit1 \u0026\u0026 toLit(~0) == lit2) || ((v\u003c\u003c1)+1 \u003c var2FaninLits.size())\");\n\tvar2FaninLits[ (v\u003c\u003c1) + 0 ] = lit1;\n\tvar2FaninLits[ (v\u003c\u003c1) + 1 ] = lit2;\n\n\n\tassert(toLit(~0) != lit1 \u0026\u0026 toLit(~0) != lit2, \"toLit(~0) != lit1 \u0026\u0026 toLit(~0) != lit2\");\n\n\n\tif( var2FanoutN.size() \u003c (mincap\u003c\u003c1) )\n\t\tvar2FanoutN.growTo( (mincap\u003c\u003c1), toLit(~0));\n\t//if( var2FanoutP.size() \u003c (mincap\u003c\u003c1) )\n\t//\tvar2FanoutP.growTo( (mincap\u003c\u003c1), toLit(~0));\n\tif( var2Fanout0.size() \u003c mincap )\n\t\tvar2Fanout0.growTo( mincap, toLit(~0));\n\n\tvar2FanoutN[ (v\u003c\u003c1) + 0 ] = var2Fanout0[ var(lit1) ];\n\tvar2FanoutN[ (v\u003c\u003c1) + 1 ] = var2Fanout0[ var(lit2) ];\n\tvar2Fanout0[ var(lit1) ] = toLit( (v\u003c\u003c1) + 0 );\n\tvar2Fanout0[ var(lit2) ] = toLit( (v\u003c\u003c1) + 1 );\n\n\t//if( toLit(~0) != var2FanoutN[ (v\u003c\u003c1) + 0 ] )\n\t//\tvar2FanoutP[ toInt(var2FanoutN[ (v\u003c\u003c1) + 0 ]) ] = toLit((v\u003c\u003c1) + 0);\n\n\t//if( toLit(~0) != var2FanoutN[ (v\u003c\u003c1) + 1 ] )\n\t//\tvar2FanoutP[ toInt(var2FanoutN[ (v\u003c\u003c1) + 1 ]) ] = toLit((v\u003c\u003c1) + 1);\n}\n\n\ninline bool Solver::isTwoFanin( Var v ) {\n\tassert(v \u003c nVars(), \"v \u003c nVars()\");\n\tif( var2FaninLits.size() \u003c= (v\u003c\u003c1)+1 )\n\t\treturn false;\n\tLit lit0 = var2FaninLits[ (v\u003c\u003c1) + 0 ];\n\tLit lit1 = var2FaninLits[ (v\u003c\u003c1) + 1 ];\n\tassert(toLit(~0) == lit0 || var(lit0) \u003c nVars(), \"toLit(~0) == lit0 || var(lit0) \u003c nVars()\");\n\tassert(toLit(~0) == lit1 || var(lit1) \u003c nVars(), \"toLit(~0) == lit1 || var(lit1) \u003c nVars()\");\n    lit0.x = lit1.x = 0; // suppress the warning - alanmi\n\treturn toLit(~0) != var2FaninLits[ (v\u003c\u003c1) + 0 ] \u0026\u0026 toLit(~0) != var2FaninLits[ (v\u003c\u003c1) + 1 ];\n}\n\n// this implementation return the last conflict encountered\n// which follows minisat concept\ninline CRef Solver::gatePropagate( Lit p ){\n\tCRef confl = CRef_Undef, stats;\n\tif( justUsage() \u003c 2 || var2FaninLits.size() \u003c= var(p) )\n\t\treturn CRef_Undef;\n\n\tif( ! isRoundWatch(var(p)) )\n\t\treturn CRef_Undef;\n\n\tif( ! isTwoFanin( var(p) ) )\n\t\tgoto check_fanout;\n\n\n\t// check fanin consistency \n\tif CRef_Undef != (stats = gatePropagateCheckThis( var(p) )){\n\t\tconfl = stats;\n\t\tif( l_True == value(var(p)) )\n\t\t\treturn confl;\n\t}\n\n\t// check fanout consistency\ncheck_fanout:\n\tassert(var(p) \u003c var2Fanout0.size(), \"var(p) \u003c var2Fanout0.size()\");\n\n\tfor  Lit lfo = var2Fanout0[ var(p) ]; lfo != toLit(~0); lfo = var2FanoutN[ toInt(lfo) ]  {\n\t\tif( ! isRoundWatch(var(lfo)) ) continue;\n\n\t\tif CRef_Undef != (stats = gatePropagateCheckFanout( var(p), lfo )){\n\t\t\tconfl = stats;\n\t\t\tif( l_True == value(var(lfo)) )\n\t\t\t\treturn confl;\n\t\t}\n\t}\n\n\treturn confl;\n}\n\ninline CRef Solver::gatePropagateCheckFanout( Var v, Lit lfo ){\n\tLit faninLit = sign(lfo)? getFaninLit1(var(lfo)): getFaninLit0(var(lfo));\n\tassert(var(faninLit) == v, \"var(faninLit) == v\");\n\tif isAND(var(lfo)){\n\t\tif l_False == value(faninLit) {\n\t\t\tif( l_False == value(var(lfo)) )\n\t\t\t\treturn CRef_Undef;\n\n\t\t\tif( l_True == value(var(lfo)) )\n\t\t\t\treturn Var2CRef(var(lfo));\n\t\t\t\n\t\t\tjwatch[var(lfo)].header.dir = sign(lfo);\n\t\t\tuncheckedEnqueue(~mkLit(var(lfo)), Var2CRef( var(lfo) ) );\n\t\t} else {\n\t\t\tassert(l_True == value(faninLit), \"l_True == value(faninLit)\");\n\n\t\t\tif( l_True == value(var(lfo)) )\n\t\t\t\treturn CRef_Undef;\n\t\t\t\n\t\t\t// check value of the other fanin \n\t\t\tLit faninLitP = sign(lfo)? getFaninLit0(var(lfo)): getFaninLit1(var(lfo));\n\t\t\tif l_False == value(var(lfo)){\n\t\t\t\t\n\t\t\t\tif( l_False == value(faninLitP) )\n\t\t\t\t\treturn CRef_Undef;\n\n\t\t\t\tif( l_True == value(faninLitP) )\n\t\t\t\t\treturn Var2CRef(var(lfo));\n\n\t\t\t\tuncheckedEnqueue( ~faninLitP, Var2CRef( var(lfo) ) );\n\t\t\t}\n\t\t\telse\n\t\t\tif( l_True == value(faninLitP) )\n\t\t\t\tuncheckedEnqueue( mkLit(var(lfo)), Var2CRef( var(lfo) ) );\n\t\t}\n\t} else { // xor scope\n\t\t// check value of the other fanin \n\t\tLit faninLitP = sign(lfo)? getFaninLit0(var(lfo)): getFaninLit1(var(lfo));\n\n\t\tlbool val0, val1, valo;\n\t\tval0 = value(faninLit );\n\t\tval1 = value(faninLitP);\n\t\tvalo = value(var(lfo));\n\n\t\tif( l_Undef == val1 \u0026\u0026 l_Undef == valo )\n\t\t\treturn CRef_Undef;\n\t\telse\n\t\tif( l_Undef == val1 )\n\t\t\tuncheckedEnqueue( ~faninLitP ^ ( (l_True == val0) ^ (l_True == valo) ), Var2CRef( var(lfo) ) );\n\t\telse\n\t\tif( l_Undef == valo )\n\t\t\tuncheckedEnqueue( ~mkLit( var(lfo), (l_True == val0) ^ (l_True == val1) ), Var2CRef( var(lfo) ) );\n\t\telse\n\t\tif( l_False  == (valo ^ (val0 == val1)) )\n\t\t\treturn Var2CRef(var(lfo));\n\n\t}\n\t\n\treturn CRef_Undef;\n}\n\ninline CRef Solver::gatePropagateCheckThis( Var v ){\n\tCRef confl = CRef_Undef;\n\tif isAND(v){\n\t\tif l_False == value(v){\n\t\t\tif( l_True == value(getFaninLit0(v)) \u0026\u0026 l_True == value(getFaninLit1(v)) )\n\t\t\t\treturn Var2CRef(v);\n\n\t\t\tif( l_False == value(getFaninLit0(v)) || l_False == value(getFaninLit1(v)) )\n\t\t\t\treturn CRef_Undef;\n\n\t\t\tif( l_True == value(getFaninLit0(v)) )\n\t\t\t\tuncheckedEnqueue(~getFaninLit1( v ), Var2CRef( v ) );\n\t\t\tif( l_True == value(getFaninLit1(v)) )\n\t\t\t\tuncheckedEnqueue(~getFaninLit0( v ), Var2CRef( v ) );\n\t\t} else {\n\t\t\tassert(l_True == value(v), \"l_True == value(v)\");\n\t\t\tif( l_False == value(getFaninLit0(v)) || l_False == value(getFaninLit1(v)) )\n\t\t\t\tconfl = Var2CRef(v);\n\n\t\t\tif( l_Undef == value( getFaninLit0( v )) )\n\t\t\t\tuncheckedEnqueue( getFaninLit0( v ), Var2CRef( v ) );\n\n\t\t\tif( l_Undef == value( getFaninLit1( v )) )\n\t\t\t\tuncheckedEnqueue( getFaninLit1( v ), Var2CRef( v ) );\n\n\t\t}\n\t} else { // xor scope\n\t\tlbool val0, val1, valo;\n\t\tval0 = value(getFaninLit0(v));\n\t\tval1 = value(getFaninLit1(v));\n\t\tvalo = value(v);\n\t\tif( l_Undef == val0 \u0026\u0026 l_Undef == val1 )\n\t\t\treturn CRef_Undef;\n\t\tif( l_Undef == val0 )\n\t\t\tuncheckedEnqueue(~getFaninLit0( v ) ^ ( (l_True == val1) ^ (l_True == valo) ), Var2CRef( v ) );\n\t\telse\n\t\tif( l_Undef == val1 )\n\t\t\tuncheckedEnqueue(~getFaninLit1( v ) ^ ( (l_True == val0) ^ (l_True == valo) ), Var2CRef( v ) );\n\t\telse\n\t\tif( l_False == (valo ^ (val0 == val1)) )\n\t\t\treturn Var2CRef(v);\n\t}\n\n\treturn confl;\n}\n\ninline CRef Solver::getConfClause( CRef r ){\n\tif( !isGateCRef(r) )\n\t\treturn r;\n\tVar v = CRef2Var(r);\n\tassert(isTwoFanin(v), \"isTwoFanin(v)\");\n\n\tif isAND(v){\n\t\tif l_False == value(v){\n\t\t\tsetItpcSize(3);\n\t\t\tClause\u0026 c = ca[itpc];\n\t\t\tc[0] = mkLit(v);\n\t\t\tc[1] = ~getFaninLit0( v );\n\t\t\tc[2] = ~getFaninLit1( v );\n\t\t} else {\n\t\t\tsetItpcSize(2);\n\t\t\tClause\u0026 c = ca[itpc];\n\t\t\tc[0] = ~mkLit(v);\n\n\t\t\tlbool val0 = value(getFaninLit0(v));\n\t\t\tlbool val1 = value(getFaninLit1(v));\n\n\t\t\tif( l_False == val0 \u0026\u0026 l_False == val1 )\n\t\t\t\tc[1] = level(getFaninVar0(v)) \u003c level(getFaninVar1(v))? getFaninLit0( v ): getFaninLit1( v );\n\t\t\telse\n\t\t\tif( l_False == val0 )\n\t\t\t\tc[1] = getFaninLit0( v );\n\t\t\telse\n\t\t\t\tc[1] = getFaninLit1( v );\n\t\t}\n\t} else { // xor scope\n\t\tsetItpcSize(3);\n\t\tClause\u0026 c = ca[itpc];\n\t\tc[0] = mkLit(v, l_True == value(v));\n\t\tc[1] = mkLit(getFaninVar0(v), l_True == value(getFaninVar0(v)));\n\t\tc[2] = mkLit(getFaninVar1(v), l_True == value(getFaninVar1(v)));\n\t}\n\t\n\n\treturn itpc;\n}\n\ninline void Solver::setItpcSize( int sz ){\n\tassert(3 \u003e= sz, \"3 \u003e= sz\");\n\tassert(CRef_Undef != itpc, \"CRef_Undef != itpc\");\n\tca[itpc].header.size = sz;\n}\n\ninline CRef Solver::interpret( Var v, Var t )\n{ // get gate-clause on implication graph\n\tassert(isTwoFanin(v), \"isTwoFanin(v)\");\n\n\tlbool val0, val1, valo;\n\tVar var0, var1;\n\tvar0 = getFaninVar0( v );\n\tvar1 = getFaninVar1( v );\n\tval0 = value(var0);\n\tval1 = value(var1);\n\tvalo = value( v );\n\n\t// phased values\n\tif(l_Undef != val0) val0 = val0 ^ getFaninC0( v );\n\tif(l_Undef != val1) val1 = val1 ^ getFaninC1( v );\n\n\n\tif isAND(v){\n\t\tif v == t{ // tracing output \n\t\t\tif l_False == valo{\n\t\t\t\tsetItpcSize(2);\n\t\t\t\tClause\u0026 c = ca[itpc];\n\t\t\t\tc[0] = ~mkLit(v);\n\n\t\t\t\tif( l_False == val0 \u0026\u0026 l_False == val1 )\n\t\t\t\t\tc[1] = 0 == jwatch[v].header.dir ? getFaninLit0( v ): getFaninLit1( v );\n\t\t\t\telse\n\t\t\t\tif( l_False == val0 )\n\t\t\t\t\tc[1] = getFaninLit0( v );\n\t\t\t\telse\n\t\t\t\t\tc[1] = getFaninLit1( v );\n\t\t\t} else {\n\t\t\t\tsetItpcSize(3);\n\t\t\t\tClause\u0026 c = ca[itpc];\n\t\t\t\tc[0] = mkLit(v);\n\t\t\t\tc[1] = ~getFaninLit0( v );\n\t\t\t\tc[2] = ~getFaninLit1( v );\n\t\t\t}\n\t\t} else {\n\t\t\tassert(t == var0 || t == var1, \"t == var0 || t == var1\");\n\t\t\tif l_False == valo{\n\t\t\t\tsetItpcSize(3);\n\t\t\t\tClause\u0026 c = ca[itpc];\n\t\t\t\tc[0] = ~getFaninLit0( v );\n\t\t\t\tc[1] = ~getFaninLit1( v );\n\t\t\t\tc[2] = mkLit(v);\n\t\t\t\tif( t == var1 )\n\t                c[1].x ^= c[0].x, c[0].x ^= c[1].x, c[1].x ^= c[0].x;\n\t\t\t} else {\n\t\t\t\tsetItpcSize(2);\n\t\t\t\tClause\u0026 c = ca[itpc];\n\t\t\t\tc[0] =  t == var0? getFaninLit0( v ): getFaninLit1( v );\n\t\t\t\tc[1] = ~mkLit(v);\n\t\t\t}\n\t\t}\n\t} else { // xor scope\n\t\tsetItpcSize(3);\n\t\tClause\u0026 c = ca[itpc];\n\t\tif v == t{\n\t\t\tc[0] = mkLit(v, l_False == value(v));\n\t\t\tc[1] = mkLit(var0, l_True == value(var0));\n\t\t\tc[2] = mkLit(var1, l_True == value(var1));\n\t\t} else {\n\t\t\tif( t == var0)\n\t\t\t\tc[0] = mkLit(var0, l_False == value(var0)), c[1] = mkLit(var1, l_True  == value(var1));\n\t\t\telse\n\t\t\t\tc[1] = mkLit(var0, l_True  == value(var0)), c[0] = mkLit(var1, l_False == value(var1));\n\t\t\tc[2] = mkLit(v, l_True == value(v));\n\t\t}\n\t}\n\n\treturn itpc;\n}\n\ninline CRef Solver::castCRef( Lit p ){\n\tCRef cr = reason( var(p) );\n\tif( CRef_Undef == cr )\n\t\treturn cr;\n\tif( ! isGateCRef(cr) )\n\t\treturn cr;\n\tVar v = CRef2Var(cr);\n\treturn interpret(v,var(p));\n}\n\ninline void Solver::markCone( Var v ){\n\tif( var2TravId[v] \u003e= travId )\n\t\treturn;\n\tvar2TravId[v] = travId;\n\n\tif( !isTwoFanin(v) )\n\t\treturn;\n\tmarkCone( getFaninVar0(v) );\n\tmarkCone( getFaninVar1(v) );\n}\n\n};\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

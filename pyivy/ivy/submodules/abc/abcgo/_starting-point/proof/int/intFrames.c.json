@@ -1,0 +1,126 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intFrames.c",
+  "SHA256": "39d77789443fdbfc2de22d6e485406fbc2a980f1b4e26e307b3f70b4be4dd350",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) == 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Inter_ManFramesInter",
+      "Start": 1493,
+      "End": 3942,
+      "BodyStart": 1595,
+      "Original": "Aig_Man_t * Inter_ManFramesInter( Aig_Man_t * pAig, int nFrames, int fAddRegOuts, int fUseTwoFrames )\n{\n    Aig_Man_t * pFrames;\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    Aig_Obj_t * pLastPo = NULL;\n    int i, f;\n    assert( Saig_ManRegNum(pAig) \u003e 0 );\n    assert( Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) == 1 );\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    if ( fAddRegOuts )\n    {\n        Saig_ManForEachLo( pAig, pObj, i )\n            pObj-\u003epData = Aig_ManConst0( pFrames );\n    }\n    else\n    {\n        Saig_ManForEachLo( pAig, pObj, i )\n            pObj-\u003epData = Aig_ObjCreateCi( pFrames );\n    }\n    // add timeframes\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        // create PI nodes for this frame\n        Saig_ManForEachPi( pAig, pObj, i )\n            pObj-\u003epData = Aig_ObjCreateCi( pFrames );\n        // add internal nodes of this frame\n        Aig_ManForEachNode( pAig, pObj, i )\n            pObj-\u003epData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n        // add outputs for constraints\n        Saig_ManForEachPo( pAig, pObj, i )\n        {\n            if ( i \u003c Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) )\n                continue;\n            Aig_ObjCreateCo( pFrames, Aig_Not( Aig_ObjChild0Copy(pObj) ) );\n        }\n        if ( f == nFrames - 1 )\n            break;\n        // remember the last PO\n        pObj = Aig_ManCo( pAig, 0 );\n        pLastPo = Aig_ObjChild0Copy(pObj);\n        // save register inputs\n        Saig_ManForEachLi( pAig, pObj, i )\n            pObj-\u003epData = Aig_ObjChild0Copy(pObj);\n        // transfer to register outputs\n        Saig_ManForEachLiLo(  pAig, pObjLi, pObjLo, i )\n            pObjLo-\u003epData = pObjLi-\u003epData;\n    }\n    // create POs for each register output\n    if ( fAddRegOuts )\n    {\n        Saig_ManForEachLi( pAig, pObj, i )\n            Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n    }\n    // create the only PO of the manager\n    else\n    {\n        pObj = Aig_ManCo( pAig, 0 );\n        // add the last PO\n        if ( pLastPo == NULL || !fUseTwoFrames )\n            pLastPo = Aig_ObjChild0Copy(pObj);\n        else\n            pLastPo = Aig_Or( pFrames, pLastPo, Aig_ObjChild0Copy(pObj) );\n        Aig_ObjCreateCo( pFrames, pLastPo );\n    }\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}",
+      "Draft": "func Inter_ManFramesInter(pAig *Aig_Man_t, nFrames int32, fAddRegOuts int32, fUseTwoFrames int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var pLastPo *Aig_Obj_t  = nil;\n    var i, f int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    assert(Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) == 1, \"Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) == 1\");\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    if fAddRegOuts != 0 {\n        // inlining of macro Saig_ManForEachLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n            pObj.pData = Aig_ManConst0( pFrames );\n        }\n    \n    } else {\n        // inlining of macro Saig_ManForEachLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi( pFrames );\n        }\n    }\n    // add timeframes\n    for  f = 0; f \u003c nFrames; f++  {\n        // create PI nodes for this frame\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi( pFrames );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n        // add outputs for constraints\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n            if i \u003c Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) {\n                continue; }\n            Aig_ObjCreateCo( pFrames, Aig_Not( Aig_ObjChild0Copy(pObj) ) );\n        }\n        if f == nFrames - 1 {\n            break; }\n        // remember the last PO\n        pObj = Aig_ManCo( pAig, 0 );\n        pLastPo = Aig_ObjChild0Copy(pObj);\n        // save register inputs\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            pObj.pData = Aig_ObjChild0Copy(pObj);\n        }\n        // transfer to register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLo.pData = pObjLi.pData;\n        }\n    }\n    // create POs for each register output\n    if fAddRegOuts != 0 {\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n        }\n    \n    // create the only PO of the manager\n    } else {\n        pObj = Aig_ManCo( pAig, 0 );\n        // add the last PO\n        if pLastPo == nil || !(fUseTwoFrames != 0) {\n            pLastPo = Aig_ObjChild0Copy(pObj);\n        } else {\n            pLastPo = Aig_Or( pFrames, pLastPo, Aig_ObjChild0Copy(pObj) ); }\n        Aig_ObjCreateCo( pFrames, pLastPo );\n    }\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intFrames.c::pointer-cast::2153",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2046,
+      "End": 2046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intFrames.c::pointer-cast::2414",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2162,
+      "End": 2162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intFrames.c::pointer-cast::2826",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2371,
+      "End": 2371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intFrames.c::pointer-cast::3152",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2512,
+      "End": 2512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intFrames.c::pointer-cast::3568",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2691,
+      "End": 2691
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intFrames.c::pointer-cast::4120",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3118,
+      "End": 3118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intFrames.c::pointer-cast::4721",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3429,
+      "End": 3429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intFrames.c::Inter_ManFramesInter",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManFramesInter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1493,
+      "End": 3942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intFrames.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4189
+    }
+  ],
+  "Draft": "package int\n\n/**CFile****************************************************************\n\n  FileName    [intFrames.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [Sequential AIG unrolling for interpolation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 24, 2008.]\n\n  Revision    [$Id: intFrames.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"intInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Create timeframes of the manager for interpolation.]\n\n  Description [The resulting manager is combinational. The primary inputs\n  corresponding to register outputs are ordered first. The only POs of the \n  manager is the property output of the last timeframe.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManFramesInter(pAig *Aig_Man_t, nFrames int32, fAddRegOuts int32, fUseTwoFrames int32) *Aig_Man_t {\n    var pFrames *Aig_Man_t;\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var pLastPo *Aig_Obj_t  = nil;\n    var i, f int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    assert(Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) == 1, \"Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) == 1\");\n    pFrames = Aig_ManStart( Aig_ManNodeNum(pAig) * nFrames );\n    // map the constant node\n    Aig_ManConst1(pAig).pData = Aig_ManConst1( pFrames );\n    // create variables for register outputs\n    if fAddRegOuts != 0 {\n        // inlining of macro Saig_ManForEachLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n            pObj.pData = Aig_ManConst0( pFrames );\n        }\n    \n    } else {\n        // inlining of macro Saig_ManForEachLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi( pFrames );\n        }\n    }\n    // add timeframes\n    for  f = 0; f \u003c nFrames; f++  {\n        // create PI nodes for this frame\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.pData = Aig_ObjCreateCi( pFrames );\n        }\n        // add internal nodes of this frame\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.pData = Aig_And( pFrames, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n        }\n        // add outputs for constraints\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n            if i \u003c Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) {\n                continue; }\n            Aig_ObjCreateCo( pFrames, Aig_Not( Aig_ObjChild0Copy(pObj) ) );\n        }\n        if f == nFrames - 1 {\n            break; }\n        // remember the last PO\n        pObj = Aig_ManCo( pAig, 0 );\n        pLastPo = Aig_ObjChild0Copy(pObj);\n        // save register inputs\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            pObj.pData = Aig_ObjChild0Copy(pObj);\n        }\n        // transfer to register outputs\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObjLo.pData = pObjLi.pData;\n        }\n    }\n    // create POs for each register output\n    if fAddRegOuts != 0 {\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n            Aig_ObjCreateCo( pFrames, Aig_ObjChild0Copy(pObj) );\n        }\n    \n    // create the only PO of the manager\n    } else {\n        pObj = Aig_ManCo( pAig, 0 );\n        // add the last PO\n        if pLastPo == nil || !(fUseTwoFrames != 0) {\n            pLastPo = Aig_ObjChild0Copy(pObj);\n        } else {\n            pLastPo = Aig_Or( pFrames, pLastPo, Aig_ObjChild0Copy(pObj) ); }\n        Aig_ObjCreateCo( pFrames, pLastPo );\n    }\n    Aig_ManCleanup( pFrames );\n    return pFrames;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

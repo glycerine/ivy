@@ -1,0 +1,458 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h",
+  "SHA256": "7cf564e4b5da8baa7e08c0a85bd0e387ef95eb488f74f4853c61da248a532af0",
+  "Functions": [
+    {
+      "Name": "var2lit",
+      "Start": 4071,
+      "End": 4185,
+      "BodyStart": 4131,
+      "Original": "static inline unsigned var2lit(unsigned var, char polarity)\n{\n    return var + var + ((unsigned) polarity != 0);\n}",
+      "Draft": "func var2lit(var uint32, polarity byte) uint32 {\n    return var + var + (uint32( polarity) != 0);\n}"
+    },
+    {
+      "Name": "lit2var",
+      "Start": 4187,
+      "End": 4256,
+      "BodyStart": 4232,
+      "Original": "static inline unsigned lit2var(unsigned lit)\n{\n    return lit \u003e\u003e 1;\n}",
+      "Draft": "func lit2var(lit uint32) uint32 {\n    return lit \u003e\u003e 1;\n}"
+    },
+    {
+      "Name": "var_value",
+      "Start": 4443,
+      "End": 4543,
+      "BodyStart": 4499,
+      "Original": "static inline char var_value(solver_t *s, unsigned var)\n{\n    return vec_char_at(s-\u003eassigns, var);\n}",
+      "Draft": "func var_value(s *solver_t, var uint32) byte {\n    return vec_char_at(s.assigns, var);\n}"
+    },
+    {
+      "Name": "var_dlevel",
+      "Start": 4545,
+      "End": 4649,
+      "BodyStart": 4606,
+      "Original": "static inline unsigned var_dlevel(solver_t *s, unsigned var)\n{\n    return vec_uint_at(s-\u003elevels, var);\n}",
+      "Draft": "func var_dlevel(s *solver_t, var uint32) uint32 {\n    return vec_uint_at(s.levels, var);\n}"
+    },
+    {
+      "Name": "var_reason",
+      "Start": 4651,
+      "End": 4756,
+      "BodyStart": 4712,
+      "Original": "static inline unsigned var_reason(solver_t *s, unsigned var)\n{\n    return vec_uint_at(s-\u003ereasons, var);\n}",
+      "Draft": "func var_reason(s *solver_t, var uint32) uint32 {\n    return vec_uint_at(s.reasons, var);\n}"
+    },
+    {
+      "Name": "var_mark",
+      "Start": 4757,
+      "End": 4858,
+      "BodyStart": 4811,
+      "Original": "static inline int var_mark(solver_t *s, unsigned var)\n{\n    return (int)vec_char_at(s-\u003emarks, var);\n}",
+      "Draft": "func var_mark(s *solver_t, var uint32) int32 {\n    return int32(vec_char_at(s.marks, var));\n}"
+    },
+    {
+      "Name": "var_set_mark",
+      "Start": 4859,
+      "End": 4960,
+      "BodyStart": 4918,
+      "Original": "static inline void var_set_mark(solver_t *s, unsigned var)\n{\n    vec_char_assign(s-\u003emarks, var, 1);\n}",
+      "Draft": "func var_set_mark(s *solver_t, var uint32) {\n    vec_char_assign(s.marks, var, 1);\n}"
+    },
+    {
+      "Name": "var_clean_mark",
+      "Start": 4961,
+      "End": 5064,
+      "BodyStart": 5022,
+      "Original": "static inline void var_clean_mark(solver_t *s, unsigned var)\n{\n    vec_char_assign(s-\u003emarks, var, 0);\n}",
+      "Draft": "func var_clean_mark(s *solver_t, var uint32) {\n    vec_char_assign(s.marks, var, 0);\n}"
+    },
+    {
+      "Name": "lit_compl",
+      "Start": 5251,
+      "End": 5321,
+      "BodyStart": 5298,
+      "Original": "static inline unsigned lit_compl(unsigned lit)\n{\n    return lit ^ 1;\n}",
+      "Draft": "func lit_compl(lit uint32) uint32 {\n    return lit ^ 1;\n}"
+    },
+    {
+      "Name": "lit_polarity",
+      "Start": 5323,
+      "End": 5400,
+      "BodyStart": 5369,
+      "Original": "static inline char lit_polarity(unsigned lit)\n{\n    return (char)(lit \u0026 1);\n}",
+      "Draft": "func lit_polarity(lit uint32) byte {\n    return byte((lit \u0026 1));\n}"
+    },
+    {
+      "Name": "lit_value",
+      "Start": 5402,
+      "End": 5531,
+      "BodyStart": 5458,
+      "Original": "static inline char lit_value(solver_t *s, unsigned lit)\n{\n    return lit_polarity(lit) ^ vec_char_at(s-\u003eassigns, lit2var(lit));\n}",
+      "Draft": "func lit_value(s *solver_t, lit uint32) byte {\n    return lit_polarity(lit) ^ vec_char_at(s.assigns, lit2var(lit));\n}"
+    },
+    {
+      "Name": "lit_dlevel",
+      "Start": 5533,
+      "End": 5646,
+      "BodyStart": 5594,
+      "Original": "static inline unsigned lit_dlevel(solver_t *s, unsigned lit)\n{\n    return vec_uint_at(s-\u003elevels, lit2var(lit));\n}",
+      "Draft": "func lit_dlevel(s *solver_t, lit uint32) uint32 {\n    return vec_uint_at(s.levels, lit2var(lit));\n}"
+    },
+    {
+      "Name": "lit_reason",
+      "Start": 5648,
+      "End": 5762,
+      "BodyStart": 5709,
+      "Original": "static inline unsigned lit_reason(solver_t *s, unsigned lit)\n{\n    return vec_uint_at(s-\u003ereasons, lit2var(lit));\n}",
+      "Draft": "func lit_reason(s *solver_t, lit uint32) uint32 {\n    return vec_uint_at(s.reasons, lit2var(lit));\n}"
+    },
+    {
+      "Name": "solver_check_limits",
+      "Start": 5958,
+      "End": 6190,
+      "BodyStart": 6014,
+      "Original": "static inline unsigned solver_check_limits(solver_t *s)\n{\n    return (s-\u003eopts.conf_limit == 0 || s-\u003eopts.conf_limit \u003e= s-\u003estats.n_conflicts) \u0026\u0026\n           (s-\u003eopts.prop_limit == 0 || s-\u003eopts.prop_limit \u003e= s-\u003estats.n_propagations);\n}",
+      "Draft": "func solver_check_limits(s *solver_t) uint32 {\n    return (s.opts.conf_limit == 0 || s.opts.conf_limit \u003e= s.stats.n_conflicts) \u0026\u0026\n           (s.opts.prop_limit == 0 || s.opts.prop_limit \u003e= s.stats.n_propagations);\n}"
+    },
+    {
+      "Name": "solver_dlevel",
+      "Start": 6230,
+      "End": 6323,
+      "BodyStart": 6280,
+      "Original": "static inline unsigned solver_dlevel(solver_t *s)\n{\n    return vec_uint_size(s-\u003etrail_lim);\n}",
+      "Draft": "func solver_dlevel(s *solver_t) uint32 {\n    return vec_uint_size(s.trail_lim);\n}"
+    },
+    {
+      "Name": "solver_enqueue",
+      "Start": 6325,
+      "End": 6716,
+      "BodyStart": 6402,
+      "Original": "static inline int solver_enqueue(solver_t *s, unsigned lit, unsigned reason)\n{\n    unsigned var = lit2var(lit);\n\n    vec_char_assign(s-\u003eassigns, var, lit_polarity(lit));\n    vec_char_assign(s-\u003epolarity, var, lit_polarity(lit));\n    vec_uint_assign(s-\u003elevels, var, solver_dlevel(s));\n    vec_uint_assign(s-\u003ereasons, var, reason);\n    vec_uint_push_back(s-\u003etrail, lit);\n    return SATOKO_OK;\n}",
+      "Draft": "func solver_enqueue(s *solver_t, lit uint32, reason uint32) int32 {\n    var var uint32  = lit2var(lit);\n\n    vec_char_assign(s.assigns, var, lit_polarity(lit));\n    vec_char_assign(s.polarity, var, lit_polarity(lit));\n    vec_uint_assign(s.levels, var, solver_dlevel(s));\n    vec_uint_assign(s.reasons, var, reason);\n    vec_uint_push_back(s.trail, lit);\n    return SATOKO_OK;\n}"
+    },
+    {
+      "Name": "solver_has_marks",
+      "Start": 6718,
+      "End": 6805,
+      "BodyStart": 6766,
+      "Original": "static inline int solver_has_marks(satoko_t *s)\n{\n    return (int)(s-\u003emarks != NULL);\n}",
+      "Draft": "func solver_has_marks(s *satoko_t) int32 {\n    return int32((s.marks != nil));\n}"
+    },
+    {
+      "Name": "solver_stop",
+      "Start": 6807,
+      "End": 6887,
+      "BodyStart": 6850,
+      "Original": "static inline int solver_stop(satoko_t *s)\n{\n    return s-\u003epstop \u0026\u0026 *s-\u003epstop;\n}",
+      "Draft": "func solver_stop(s *satoko_t) int32 {\n    return s.pstop \u0026\u0026 *s.pstop;\n}"
+    },
+    {
+      "Name": "clause_fetch",
+      "Start": 7078,
+      "End": 7197,
+      "BodyStart": 7148,
+      "Original": "static inline struct clause *clause_fetch(solver_t *s, unsigned cref)\n{\n    return cdb_handler(s-\u003eall_clauses, cref);\n}",
+      "Draft": "func clause_fetch(s *solver_t, cref uint32) *struct clause {\n    return cdb_handler(s.all_clauses, cref);\n}"
+    },
+    {
+      "Name": "clause_watch",
+      "Start": 7199,
+      "End": 7690,
+      "BodyStart": 7259,
+      "Original": "static inline void clause_watch(solver_t *s, unsigned cref)\n{\n    struct clause *clause = cdb_handler(s-\u003eall_clauses, cref);\n    struct watcher w1;\n    struct watcher w2;\n\n    w1.cref = cref;\n    w2.cref = cref;\n    w1.blocker = clause-\u003edata[1].lit;\n    w2.blocker = clause-\u003edata[0].lit;\n    watch_list_push(vec_wl_at(s-\u003ewatches, lit_compl(clause-\u003edata[0].lit)), w1, (clause-\u003esize == 2));\n    watch_list_push(vec_wl_at(s-\u003ewatches, lit_compl(clause-\u003edata[1].lit)), w2, (clause-\u003esize == 2));\n}",
+      "Draft": "func clause_watch(s *solver_t, cref uint32) {\n    struct clause *clause = cdb_handler(s.all_clauses, cref);\n    struct watcher w1;\n    struct watcher w2;\n\n    w1.cref = cref;\n    w2.cref = cref;\n    w1.blocker = clause.data[1].lit;\n    w2.blocker = clause.data[0].lit;\n    watch_list_push(vec_wl_at(s.watches, lit_compl(clause.data[0].lit)), w1, (clause.size == 2));\n    watch_list_push(vec_wl_at(s.watches, lit_compl(clause.data[1].lit)), w2, (clause.size == 2));\n}"
+    },
+    {
+      "Name": "clause_unwatch",
+      "Start": 7692,
+      "End": 8030,
+      "BodyStart": 7754,
+      "Original": "static inline void clause_unwatch(solver_t *s, unsigned cref)\n{\n    struct clause *clause = cdb_handler(s-\u003eall_clauses, cref);\n    watch_list_remove(vec_wl_at(s-\u003ewatches, lit_compl(clause-\u003edata[0].lit)), cref, (clause-\u003esize == 2));\n    watch_list_remove(vec_wl_at(s-\u003ewatches, lit_compl(clause-\u003edata[1].lit)), cref, (clause-\u003esize == 2));\n}",
+      "Draft": "func clause_unwatch(s *solver_t, cref uint32) {\n    struct clause *clause = cdb_handler(s.all_clauses, cref);\n    watch_list_remove(vec_wl_at(s.watches, lit_compl(clause.data[0].lit)), cref, (clause.size == 2));\n    watch_list_remove(vec_wl_at(s.watches, lit_compl(clause.data[1].lit)), cref, (clause.size == 2));\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::struct::solver_t::/* Clauses Database */\n    struct cdb *all_clauses;",
+      "Category": "struct-field-review",
+      "Symbol": "solver_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 978,
+      "End": 1035
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::struct::solver_t::int   (*pFuncStop)(int);",
+      "Category": "struct-field-review",
+      "Symbol": "solver_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3310,
+      "End": 3350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::struct::solver_t::struct satoko_stats stats;",
+      "Category": "struct-field-review",
+      "Symbol": "solver_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3350,
+      "End": 3384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::struct::solver_t::struct satoko_opts opts;",
+      "Category": "struct-field-review",
+      "Symbol": "solver_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3384,
+      "End": 3413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::struct::solver_t",
+      "Category": "struct-review",
+      "Symbol": "solver_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 828,
+      "End": 3416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::pointer-cast::3598",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3598,
+      "End": 3610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::pointer-cast::3699",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3699,
+      "End": 3711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::pointer-cast::3814",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3814,
+      "End": 3826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::pointer-cast::3866",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3866,
+      "End": 3878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::var2lit",
+      "Category": "semantic-review",
+      "Symbol": "var2lit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4071,
+      "End": 4185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::lit2var",
+      "Category": "semantic-review",
+      "Symbol": "lit2var",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4187,
+      "End": 4256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::var_value",
+      "Category": "semantic-review",
+      "Symbol": "var_value",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4443,
+      "End": 4543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::var_dlevel",
+      "Category": "semantic-review",
+      "Symbol": "var_dlevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4545,
+      "End": 4649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::var_reason",
+      "Category": "semantic-review",
+      "Symbol": "var_reason",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4651,
+      "End": 4756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::var_mark",
+      "Category": "semantic-review",
+      "Symbol": "var_mark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4757,
+      "End": 4858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::var_set_mark",
+      "Category": "semantic-review",
+      "Symbol": "var_set_mark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4859,
+      "End": 4960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::var_clean_mark",
+      "Category": "semantic-review",
+      "Symbol": "var_clean_mark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4961,
+      "End": 5064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::lit_compl",
+      "Category": "semantic-review",
+      "Symbol": "lit_compl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5251,
+      "End": 5321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::lit_polarity",
+      "Category": "semantic-review",
+      "Symbol": "lit_polarity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5323,
+      "End": 5400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::lit_value",
+      "Category": "semantic-review",
+      "Symbol": "lit_value",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5402,
+      "End": 5531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::lit_dlevel",
+      "Category": "semantic-review",
+      "Symbol": "lit_dlevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5533,
+      "End": 5646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::lit_reason",
+      "Category": "semantic-review",
+      "Symbol": "lit_reason",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5648,
+      "End": 5762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::solver_check_limits",
+      "Category": "semantic-review",
+      "Symbol": "solver_check_limits",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5958,
+      "End": 6190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::solver_dlevel",
+      "Category": "semantic-review",
+      "Symbol": "solver_dlevel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6230,
+      "End": 6323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::solver_enqueue",
+      "Category": "semantic-review",
+      "Symbol": "solver_enqueue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6325,
+      "End": 6716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::solver_has_marks",
+      "Category": "semantic-review",
+      "Symbol": "solver_has_marks",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6718,
+      "End": 6805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::solver_stop",
+      "Category": "semantic-review",
+      "Symbol": "solver_stop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6807,
+      "End": 6887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::clause_fetch",
+      "Category": "semantic-review",
+      "Symbol": "clause_fetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7078,
+      "End": 7197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::clause_watch",
+      "Category": "semantic-review",
+      "Symbol": "clause_watch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7199,
+      "End": 7690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::clause_unwatch",
+      "Category": "semantic-review",
+      "Symbol": "clause_unwatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7692,
+      "End": 8030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8087
+    }
+  ],
+  "Draft": "package satoko\n\n//===--- solver.h -----------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n\n\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"clause.h\"\n//#include \"cdb.h\"\n//#include \"satoko.h\"\n//#include \"types.h\"\n//#include \"watch_list.h\"\n//#include \"utils/b_queue.h\"\n//#include \"utils/heap.h\"\n//#include \"utils/mem.h\"\n//#include \"utils/misc.h\"\n//#include \"utils/vec/vec_char.h\"\n//#include \"utils/vec/vec_sdbl.h\"\n//#include \"utils/vec/vec_uint.h\"\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_HEADER_START\n\n\n\nconst UNDEF = 0xFFFFFFFF\n\n   \ntype solver_t struct {\n    status int32;\n    /* User data */\n    assumptions *vec_uint_t;\n    final_conflict *vec_uint_t;\n\n    /* Clauses Database */\n    struct cdb *all_clauses;\n    learnts *vec_uint_t;\n    originals *vec_uint_t;\n    watches *vec_wl_t;\n\n    /* Activity heuristic */\n    var_act_inc act_t; /* Amount to bump next variable with. */\n    clause_act_inc clause_act_t; /* Amount to bump next clause with. */\n\n    /* Variable Information */\n    activity *vec_act_t; /* A heuristic measurement of the activity of a variable. */\n    var_order *heap_t;\n    levels *vec_uint_t;  /* Decision level of the current assignment */\n    reasons *vec_uint_t; /* Reason (clause) of the current assignment */\n    assigns *vec_char_t;\n    polarity *vec_char_t;\n\n    /* Assignments */\n    trail *vec_uint_t;\n    trail_lim *vec_uint_t; /* Separator indices for different decision levels in 'trail'. */\n    i_qhead uint32; /* Head of propagation queue (as index into the trail). */\n    n_assigns_simplify uint32; /* Number of top-level assignments since\n                    last execution of 'simplify()'. */\n    n_props_simplify long;  /* Remaining number of propagations that\n                   must be made before next execution of\n                   'simplify()'. */\n\n    /* Temporary data used by Analyze */\n    temp_lits *vec_uint_t;\n    seen *vec_char_t;\n    tagged *vec_uint_t; /* Stack */\n    stack *vec_uint_t;\n    last_dlevel *vec_uint_t;\n\n    /* Temporary data used by Search method */\n    bq_trail *b_queue_t;\n    bq_lbd *b_queue_t;\n    RC1 long;\n    RC2 long;\n    n_confl_bfr_reduce long;\n    sum_lbd float32;\n\n    /* Misc temporary */\n    cur_stamp uint32; /* Used for marking literals and levels of interest */\n    stamps *vec_uint_t; /* Multipurpose stamp used to calculate LBD and\n                 * clauses minimization with binary resolution */\n\n    /* Bookmark */\n    book_cl_orig uint32; /* Bookmark for orignal problem clauses vector */\n    book_cl_lrnt uint32; /* Bookmark for learnt clauses vector */\n    book_cdb uint32;     /* Bookmark clause database size */\n    book_vars uint32;    /* Bookmark number of variables */\n    book_trail uint32;   /* Bookmark trail size */\n    // unsigned book_qhead;   /* Bookmark propagation queue head */\n\n    /* Temporary data used for solving cones */\n    marks *vec_char_t;\n    \n    /* Callbacks to stop the solver */\n    nRuntimeLimit abctime;\n    pstop    *int32;\n    RunId     int32;           \n    int   (*pFuncStop)(int);  \n\n    struct satoko_stats stats;\n    struct satoko_opts opts;\n}\n\n//===------------------------------------------------------------------------===\n// extern unsigned solver_clause_create(solver_t *, vec_uint_t *, unsigned);\n\n// extern char solver_search(solver_t *);\n\n// extern void solver_cancel_until(solver_t *, unsigned);\n\n// extern unsigned solver_propagate(solver_t *);\n\n\n/* Debuging */\n// extern void solver_debug_check(solver_t *, int);\n\n// extern void solver_debug_check_trail(solver_t *);\n\n// extern void solver_debug_check_clauses(solver_t *);\n\n\n//===------------------------------------------------------------------------===\n// Inline var/lit functions\n//===------------------------------------------------------------------------===\nfunc var2lit(var uint32, polarity byte) uint32 {\n    return var + var + (uint32( polarity) != 0);\n}\n\nfunc lit2var(lit uint32) uint32 {\n    return lit \u003e\u003e 1;\n}\n//===------------------------------------------------------------------------===\n// Inline var functions\n//===------------------------------------------------------------------------===\nfunc var_value(s *solver_t, var uint32) byte {\n    return vec_char_at(s.assigns, var);\n}\n\nfunc var_dlevel(s *solver_t, var uint32) uint32 {\n    return vec_uint_at(s.levels, var);\n}\n\nfunc var_reason(s *solver_t, var uint32) uint32 {\n    return vec_uint_at(s.reasons, var);\n}\nfunc var_mark(s *solver_t, var uint32) int32 {\n    return int32(vec_char_at(s.marks, var));\n}\nfunc var_set_mark(s *solver_t, var uint32) {\n    vec_char_assign(s.marks, var, 1);\n}\nfunc var_clean_mark(s *solver_t, var uint32) {\n    vec_char_assign(s.marks, var, 0);\n}\n//===------------------------------------------------------------------------===\n// Inline lit functions\n//===------------------------------------------------------------------------===\nfunc lit_compl(lit uint32) uint32 {\n    return lit ^ 1;\n}\n\nfunc lit_polarity(lit uint32) byte {\n    return byte((lit \u0026 1));\n}\n\nfunc lit_value(s *solver_t, lit uint32) byte {\n    return lit_polarity(lit) ^ vec_char_at(s.assigns, lit2var(lit));\n}\n\nfunc lit_dlevel(s *solver_t, lit uint32) uint32 {\n    return vec_uint_at(s.levels, lit2var(lit));\n}\n\nfunc lit_reason(s *solver_t, lit uint32) uint32 {\n    return vec_uint_at(s.reasons, lit2var(lit));\n}\n//===------------------------------------------------------------------------===\n// Inline solver minor functions\n//===------------------------------------------------------------------------===\nfunc solver_check_limits(s *solver_t) uint32 {\n    return (s.opts.conf_limit == 0 || s.opts.conf_limit \u003e= s.stats.n_conflicts) \u0026\u0026\n           (s.opts.prop_limit == 0 || s.opts.prop_limit \u003e= s.stats.n_propagations);\n}\n\n/** Returns current decision level */\nfunc solver_dlevel(s *solver_t) uint32 {\n    return vec_uint_size(s.trail_lim);\n}\n\nfunc solver_enqueue(s *solver_t, lit uint32, reason uint32) int32 {\n    var var uint32  = lit2var(lit);\n\n    vec_char_assign(s.assigns, var, lit_polarity(lit));\n    vec_char_assign(s.polarity, var, lit_polarity(lit));\n    vec_uint_assign(s.levels, var, solver_dlevel(s));\n    vec_uint_assign(s.reasons, var, reason);\n    vec_uint_push_back(s.trail, lit);\n    return SATOKO_OK;\n}\n\nfunc solver_has_marks(s *satoko_t) int32 {\n    return int32((s.marks != nil));\n}\n\nfunc solver_stop(s *satoko_t) int32 {\n    return s.pstop \u0026\u0026 *s.pstop;\n}\n\n//===------------------------------------------------------------------------===\n// Inline clause functions\n//===------------------------------------------------------------------------===\nfunc clause_fetch(s *solver_t, cref uint32) *struct clause {\n    return cdb_handler(s.all_clauses, cref);\n}\n\nfunc clause_watch(s *solver_t, cref uint32) {\n    struct clause *clause = cdb_handler(s.all_clauses, cref);\n    struct watcher w1;\n    struct watcher w2;\n\n    w1.cref = cref;\n    w2.cref = cref;\n    w1.blocker = clause.data[1].lit;\n    w2.blocker = clause.data[0].lit;\n    watch_list_push(vec_wl_at(s.watches, lit_compl(clause.data[0].lit)), w1, (clause.size == 2));\n    watch_list_push(vec_wl_at(s.watches, lit_compl(clause.data[1].lit)), w2, (clause.size == 2));\n}\n\nfunc clause_unwatch(s *solver_t, cref uint32) {\n    struct clause *clause = cdb_handler(s.all_clauses, cref);\n    watch_list_remove(vec_wl_at(s.watches, lit_compl(clause.data[0].lit)), cref, (clause.size == 2));\n    watch_list_remove(vec_wl_at(s.watches, lit_compl(clause.data[1].lit)), cref, (clause.size == 2));\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n"
+}

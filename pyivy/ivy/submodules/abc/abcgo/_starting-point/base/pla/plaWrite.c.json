@@ -1,0 +1,104 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaWrite.c",
+  "SHA256": "7c8a37091c6a0b432b01b5c8a030bc0fd6ab698f2e65859b451218379dba821d",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 94,
+        "Column": 31,
+        "ByteOffset": 3302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        var pFile *os.File  = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 13,
+        "ByteOffset": 3366
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 98,
+        "Column": 13,
+        "ByteOffset": 3458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fwrite( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 99,
+        "Column": 13,
+        "ByteOffset": 3529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Pla_WritePlaInt",
+      "Start": 1224,
+      "End": 2784,
+      "BodyStart": 1269,
+      "Original": "Vec_Str_t * Pla_WritePlaInt( Pla_Man_t * p )\n{\n    Vec_Str_t * vOut = Vec_StrAlloc( 10000 );\n    char * pLits = \"-01?\";\n    word * pCubeIn, * pCubeOut; \n    int i, k, Lit; \n    // write comments\n    Vec_StrPrintStr( vOut, \"# SOP \\\"\" );\n    Vec_StrPrintStr( vOut, Pla_ManName(p) );\n    Vec_StrPrintStr( vOut, \"\\\" written via PLA package in ABC on \" );\n    Vec_StrPrintStr( vOut, Extra_TimeStamp() );\n    Vec_StrPrintStr( vOut, \"\\n\\n\" );\n    // write header\n    if ( p-\u003eType != PLA_FILE_FD )\n    {\n        if ( p-\u003eType == PLA_FILE_F )\n            Vec_StrPrintStr( vOut, \".type f\\n\" );\n        else if ( p-\u003eType == PLA_FILE_FR )\n            Vec_StrPrintStr( vOut, \".type fr\\n\" );\n        else if ( p-\u003eType == PLA_FILE_FDR )\n            Vec_StrPrintStr( vOut, \".type fdr\\n\" );\n        else if ( p-\u003eType == PLA_FILE_NONE )\n            Vec_StrPrintStr( vOut, \".type ???\\n\" );\n    }\n    Vec_StrPrintStr( vOut, \".i \" );\n    Vec_StrPrintNum( vOut, p-\u003enIns );\n    Vec_StrPrintStr( vOut, \"\\n.o \" );\n    Vec_StrPrintNum( vOut, p-\u003enOuts );\n    Vec_StrPrintStr( vOut, \"\\n.p \" );\n    Vec_StrPrintNum( vOut, Pla_ManCubeNum(p) );\n    Vec_StrPrintStr( vOut, \"\\n\" );\n    // write cube\n    Pla_ForEachCubeInOut( p, pCubeIn, pCubeOut, i )\n    {\n        Pla_CubeForEachLit( p-\u003enIns, pCubeIn, Lit, k )\n            Vec_StrPush( vOut, pLits[Lit] );\n        Vec_StrPush( vOut, ' ' );\n        Pla_CubeForEachLit( p-\u003enOuts, pCubeOut, Lit, k )\n            Vec_StrPush( vOut, pLits[Lit] );\n        Vec_StrPush( vOut, '\\n' );\n    }\n    Vec_StrPrintStr( vOut, \".e\\n\\n\\0\" );\n    return vOut;\n}",
+      "Draft": "func Pla_WritePlaInt(p *Pla_Man_t) *Vec_Str_t {\n    var vOut *Vec_Str_t  = Vec_StrAlloc( 10000 );\n    var pLits string  = \"-01?\";\n    var pCubeIn, pCubeOut *word; \n    var i, k, Lit int32; \n    // write comments\n    Vec_StrPrintStr( vOut, \"# SOP \\\"\" );\n    Vec_StrPrintStr( vOut, Pla_ManName(p) );\n    Vec_StrPrintStr( vOut, \"\\\" written via PLA package in ABC on \" );\n    Vec_StrPrintStr( vOut, Extra_TimeStamp() );\n    Vec_StrPrintStr( vOut, \"\\n\\n\" );\n    // write header\n    if p.Type != PLA_FILE_FD {\n        if p.Type == PLA_FILE_F {\n            Vec_StrPrintStr( vOut, \".type f\\n\" );\n        } else if p.Type == PLA_FILE_FR {\n            Vec_StrPrintStr( vOut, \".type fr\\n\" );\n        } else if p.Type == PLA_FILE_FDR {\n            Vec_StrPrintStr( vOut, \".type fdr\\n\" );\n        } else if p.Type == PLA_FILE_NONE {\n            Vec_StrPrintStr( vOut, \".type ???\\n\" ); }\n    }\n    Vec_StrPrintStr( vOut, \".i \" );\n    Vec_StrPrintNum( vOut, p.nIns );\n    Vec_StrPrintStr( vOut, \"\\n.o \" );\n    Vec_StrPrintNum( vOut, p.nOuts );\n    Vec_StrPrintStr( vOut, \"\\n.p \" );\n    Vec_StrPrintNum( vOut, Pla_ManCubeNum(p) );\n    Vec_StrPrintStr( vOut, \"\\n\" );\n    // write cube\n    // inlining of macro Pla_ForEachCubeInOut\n    for  i = 0; (i \u003c Pla_ManCubeNum(p))  \u0026\u0026 (((pCubeIn) = Pla_CubeIn(p, i)), 1)  \u0026\u0026 (((pCubeOut) = Pla_CubeOut(p, i)), 1); i++  {\n        // inlining of macro Pla_CubeForEachLit\n        for  k = 0; (k \u003c p.nIns)  \u0026\u0026 (((Lit) = Pla_CubeGetLit(pCubeIn, k)), 1); k++  {\n            Vec_StrPush( vOut, pLits[Lit] );\n        }\n        Vec_StrPush( vOut, ' ' );\n        // inlining of macro Pla_CubeForEachLit\n        for  k = 0; (k \u003c p.nOuts)  \u0026\u0026 (((Lit) = Pla_CubeGetLit(pCubeOut, k)), 1); k++  {\n            Vec_StrPush( vOut, pLits[Lit] );\n        }\n        Vec_StrPush( vOut, '\\n' );\n    }\n    Vec_StrPrintStr( vOut, \".e\\n\\n\\0\" );\n    return vOut;\n}"
+    },
+    {
+      "Name": "Pla_WritePla",
+      "Start": 2788,
+      "End": 3247,
+      "BodyStart": 2841,
+      "Original": "void Pla_WritePla( Pla_Man_t * p, char * pFileName )\n{\n    Vec_Str_t * vOut = Pla_WritePlaInt( p );\n    if ( Vec_StrSize(vOut) \u003e 0 )\n    {\n        FILE * pFile = fopen( pFileName, \"wb\" );\n        if ( pFile == NULL )\n            printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );\n        else\n        {\n            fwrite( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n            fclose( pFile );\n        }\n    }\n    Vec_StrFreeP( \u0026vOut );\n}",
+      "Draft": "func Pla_WritePla(p *Pla_Man_t, pFileName string) {\n    var vOut *Vec_Str_t  = Pla_WritePlaInt( p );\n    if Vec_StrSize(vOut) \u003e 0 {\n        var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        if pFile == nil {\n            fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        } else {\n            fwrite( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n            _ = (pFile).Close();\n        }\n    }\n    Vec_StrFreeP( \u0026vOut );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaWrite.c::Pla_WritePlaInt",
+      "Category": "semantic-review",
+      "Symbol": "Pla_WritePlaInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1224,
+      "End": 2784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaWrite.c::Pla_WritePla",
+      "Category": "semantic-review",
+      "Symbol": "Pla_WritePla",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2788,
+      "End": 3247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/pla/plaWrite.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3495
+    }
+  ],
+  "Draft": "package pla\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [plaWrite.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SOP manager.]\n\n  Synopsis    [Scalable SOP transformations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - March 18, 2015.]\n\n  Revision    [$Id: plaWrite.c,v 1.00 2014/09/12 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"pla.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pla_WritePlaInt(p *Pla_Man_t) *Vec_Str_t {\n    var vOut *Vec_Str_t  = Vec_StrAlloc( 10000 );\n    var pLits string  = \"-01?\";\n    var pCubeIn, pCubeOut *word; \n    var i, k, Lit int32; \n    // write comments\n    Vec_StrPrintStr( vOut, \"# SOP \\\"\" );\n    Vec_StrPrintStr( vOut, Pla_ManName(p) );\n    Vec_StrPrintStr( vOut, \"\\\" written via PLA package in ABC on \" );\n    Vec_StrPrintStr( vOut, Extra_TimeStamp() );\n    Vec_StrPrintStr( vOut, \"\\n\\n\" );\n    // write header\n    if p.Type != PLA_FILE_FD {\n        if p.Type == PLA_FILE_F {\n            Vec_StrPrintStr( vOut, \".type f\\n\" );\n        } else if p.Type == PLA_FILE_FR {\n            Vec_StrPrintStr( vOut, \".type fr\\n\" );\n        } else if p.Type == PLA_FILE_FDR {\n            Vec_StrPrintStr( vOut, \".type fdr\\n\" );\n        } else if p.Type == PLA_FILE_NONE {\n            Vec_StrPrintStr( vOut, \".type ???\\n\" ); }\n    }\n    Vec_StrPrintStr( vOut, \".i \" );\n    Vec_StrPrintNum( vOut, p.nIns );\n    Vec_StrPrintStr( vOut, \"\\n.o \" );\n    Vec_StrPrintNum( vOut, p.nOuts );\n    Vec_StrPrintStr( vOut, \"\\n.p \" );\n    Vec_StrPrintNum( vOut, Pla_ManCubeNum(p) );\n    Vec_StrPrintStr( vOut, \"\\n\" );\n    // write cube\n    // inlining of macro Pla_ForEachCubeInOut\n    for  i = 0; (i \u003c Pla_ManCubeNum(p))  \u0026\u0026 (((pCubeIn) = Pla_CubeIn(p, i)), 1)  \u0026\u0026 (((pCubeOut) = Pla_CubeOut(p, i)), 1); i++  {\n        // inlining of macro Pla_CubeForEachLit\n        for  k = 0; (k \u003c p.nIns)  \u0026\u0026 (((Lit) = Pla_CubeGetLit(pCubeIn, k)), 1); k++  {\n            Vec_StrPush( vOut, pLits[Lit] );\n        }\n        Vec_StrPush( vOut, ' ' );\n        // inlining of macro Pla_CubeForEachLit\n        for  k = 0; (k \u003c p.nOuts)  \u0026\u0026 (((Lit) = Pla_CubeGetLit(pCubeOut, k)), 1); k++  {\n            Vec_StrPush( vOut, pLits[Lit] );\n        }\n        Vec_StrPush( vOut, '\\n' );\n    }\n    Vec_StrPrintStr( vOut, \".e\\n\\n\\0\" );\n    return vOut;\n}   \nfunc Pla_WritePla(p *Pla_Man_t, pFileName string) {\n    var vOut *Vec_Str_t  = Pla_WritePlaInt( p );\n    if Vec_StrSize(vOut) \u003e 0 {\n        var pFile *os.File  = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n        if pFile == nil {\n            fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        } else {\n            fwrite( Vec_StrArray(vOut), 1, Vec_StrSize(vOut), pFile );\n            _ = (pFile).Close();\n        }\n    }\n    Vec_StrFreeP( \u0026vOut );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

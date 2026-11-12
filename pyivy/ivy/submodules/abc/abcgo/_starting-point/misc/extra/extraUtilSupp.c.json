@@ -1,0 +1,954 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c",
+  "SHA256": "91d205315baf3d4219f781fb37b09285453f77a25336a38b87b5bfa9ab26fe9e",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 9,
+        "ByteOffset": 3323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The total of %d pairs fail verification.\\n\", Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 9,
+        "ByteOffset": 3409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification successful.\\n\" ); }"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 132,
+        "Column": 85,
+        "ByteOffset": 3923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pMap *uint32  = /*__starting_point_inline_macro:ABC_CALLOC__*/((unsigned *) calloc((size_t)(1 \u003c\u003c Abc_MaxInt(0,nBits-5)), sizeof(unsigned))); "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 146,
+        "Column": 60,
+        "ByteOffset": 4482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pMap) ? (free((char *) (pMap)), (pMap) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 181,
+        "Column": 9,
+        "ByteOffset": 5365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", int32(((uMask \u003e\u003e i) \u0026 1)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 5418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 9,
+        "ByteOffset": 5998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d : %6d  %6.2f %%\\n\", k, Counts[k], 100.0 * Counts[k] / Vec_WrdSize(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 9,
+        "ByteOffset": 7799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 9,
+        "ByteOffset": 7830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d  \", Vec_WrdSize(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 286,
+        "Column": 5,
+        "ByteOffset": 8651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c 100 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 5,
+        "ByteOffset": 8678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"M = %2d  N = %2d : \", nOnes, nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 8729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"K = %6d   \",  Vec_WrdSize(vRes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 289,
+        "Column": 5,
+        "ByteOffset": 8777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total = %12.0f  \", 0.5 * Vec_WrdSize(vRes) * (Vec_WrdSize(vRes) - 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 290,
+        "Column": 5,
+        "ByteOffset": 8862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Distinct = %8d  \",  Vec_WrdSize(vPairs) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 295,
+        "Column": 5,
+        "ByteOffset": 9095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Solution with %d variables found.  \", nVarsMin );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 324,
+        "Column": 22,
+        "ByteOffset": 9979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pStr == nil { printf( \"Cannot open input file (%s).\\n\", pFileName ); return nil; }"
+    },
+    {
+      "Name": "strstr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 12,
+        "ByteOffset": 10059
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCur = strstr( pStr, pStart );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 326,
+        "Column": 22,
+        "ByteOffset": 10104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pCur == nil { printf( \"Cannot find beginning of cube cover (%s).\\n\", pStart ); return nil; }"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 327,
+        "Column": 14,
+        "ByteOffset": 10196
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( pCur + strlen(pStart), \" \\t\\r\\n,\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 327,
+        "Column": 29,
+        "ByteOffset": 10211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pToken = strtok( pCur + strlen(pStart), \" \\t\\r\\n,\" );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 328,
+        "Column": 14,
+        "ByteOffset": 10254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nCubes = atoi( pToken );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 329,
+        "Column": 41,
+        "ByteOffset": 10310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if nCubes \u003c 1 || nCubes \u003e 1000000 { printf( \"The number of cubes in not in the range [1; 1000000].\\n\" ); return nil; }"
+    },
+    {
+      "Name": "strtok",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 332,
+        "Column": 20,
+        "ByteOffset": 10470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (pToken = strtok(nil, \" \\t\\r\\n,\")) != nil  {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 333,
+        "Column": 12,
+        "ByteOffset": 10516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if strlen(pToken) \u003e 2 {"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 334,
+        "Column": 17,
+        "ByteOffset": 10553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if !strncmp(pToken, \"INPUT\", strlen(\"INPUT\")) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 334,
+        "Column": 42,
+        "ByteOffset": 10578
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if !strncmp(pToken, \"INPUT\", strlen(\"INPUT\")) {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 336,
+        "Column": 28,
+        "ByteOffset": 10649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if iVar \u003e 64 { printf( \"The number of inputs (%d) is too high.\\n\", iVar ); Vec_WrdFree(vRes); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 339,
+        "Column": 39,
+        "ByteOffset": 10839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else if nVars != iVar { printf( \"The number of inputs (%d) does not match declaration (%d).\\n\", nVars, iVar ); Vec_WrdFree(vRes); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 347,
+        "Column": 14,
+        "ByteOffset": 11248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "             printf( \"Strange literal representation (%s) of cube %d.\\n\", pToken, nCubes ); Vec_WrdFree(vRes); return nil; }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 350,
+        "Column": 60,
+        "ByteOffset": 11441
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pStr) ? (free((char *) (pStr)), (pStr) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 351,
+        "Column": 38,
+        "ByteOffset": 11519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if Vec_WrdSize(vRes) != nCubes { printf( \"The number of cubes (%d) does not match declaration (%d).\\n\", Vec_WrdSize(vRes), nCubes ); Vec_WrdFree(vRes); return nil; "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 353,
+        "Column": 9,
+        "ByteOffset": 11672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Successfully parsed function with %d inputs and %d cubes.\\n\", nVars, nCubes ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 383,
+        "Column": 5,
+        "ByteOffset": 12592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pStore == Vec_WrdLimit(vPairs) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 387,
+        "Column": 5,
+        "ByteOffset": 12770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Successfully generated diff matrix with %10d rows (%6.2f %%).  \", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 426,
+        "Column": 5,
+        "ByteOffset": 14055
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_WecLevelSize(pS, iVar) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 451,
+        "Column": 9,
+        "ByteOffset": 14951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d : S = %3d  D = %3d\\n\", v, Vec_WecLevelSize(pS, v), Vec_WecLevelSize(pD, v) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 463,
+        "Column": 81,
+        "ByteOffset": 15456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pCounts *int32  = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(Vec_WrdSize(p))));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 495,
+        "Column": 63,
+        "ByteOffset": 16773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pCounts) ? (free((char *) (pCounts)), (pCounts) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 525,
+        "Column": 5,
+        "ByteOffset": 17605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Solution with %d variables found.  \", nVarsMin );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_SuppCountOnes",
+      "Start": 1466,
+      "End": 1680,
+      "BodyStart": 1516,
+      "Original": "static inline int Abc_SuppCountOnes( unsigned i )\n{\n    i = i - ((i \u003e\u003e 1) \u0026 0x55555555);\n    i = (i \u0026 0x33333333) + ((i \u003e\u003e 2) \u0026 0x33333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F);\n    return (i*(0x01010101))\u003e\u003e24;\n}",
+      "Draft": "func Abc_SuppCountOnes(i uint32) int32 {\n    i = i - ((i \u003e\u003e 1) \u0026 0x55555555);\n    i = (i \u0026 0x33333333) + ((i \u003e\u003e 2) \u0026 0x33333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F);\n    return (i*(0x01010101))\u003e\u003e24;\n}"
+    },
+    {
+      "Name": "Abc_SuppGen",
+      "Start": 1681,
+      "End": 1924,
+      "BodyStart": 1721,
+      "Original": "Vec_Wrd_t * Abc_SuppGen( int m, int n )\n{\n    Vec_Wrd_t * vRes = Vec_WrdAlloc( 1000 );\n    int i, Size = (1 \u003c\u003c n);\n    for ( i = 0; i \u003c Size; i++ )\n        if ( Abc_SuppCountOnes(i) == m )\n            Vec_WrdPush( vRes, i );\n    return vRes;\n}",
+      "Draft": "func Abc_SuppGen(m int32, n int32) *Vec_Wrd_t {\n    var vRes *Vec_Wrd_t  = Vec_WrdAlloc( 1000 );\n    var i int32;\n    var Size int32 = (1 \u003c\u003c n);\n    for  i = 0; i \u003c Size; i++  {\n        if Abc_SuppCountOnes(i) == m {\n            Vec_WrdPush( vRes, i ); }\n    }\n    return vRes;\n}"
+    },
+    {
+      "Name": "Abc_SuppVerify",
+      "Start": 2181,
+      "End": 3295,
+      "BodyStart": 2259,
+      "Original": "void Abc_SuppVerify( Vec_Wrd_t * p, word * pMatrix, int nVars, int nVarsMin )\n{\n    Vec_Wrd_t * pNew;\n    word * pLimit, * pEntry1, * pEntry2;\n    word Entry, EntryNew;\n    int i, k, v, Value, Counter = 0;\n    pNew = Vec_WrdAlloc( Vec_WrdSize(p) );\n    Vec_WrdForEachEntry( p, Entry, i )\n    {\n        EntryNew = 0;\n        for ( v = 0; v \u003c nVarsMin; v++ )\n        {\n            Value = 0;\n            for ( k = 0; k \u003c nVars; k++ )\n                if ( ((pMatrix[v] \u003e\u003e k) \u0026 1) \u0026\u0026 ((Entry \u003e\u003e k) \u0026 1) )\n                    Value ^= 1;\n            if ( Value )\n                EntryNew |= (((word)1) \u003c\u003c v);            \n        }\n        Vec_WrdPush( pNew, EntryNew );\n    }\n    // check that they are disjoint\n    pLimit  = Vec_WrdLimit(pNew);\n    pEntry1 = Vec_WrdArray(pNew);\n    for ( ; pEntry1 \u003c pLimit; pEntry1++ )\n    for ( pEntry2 = pEntry1 + 1; pEntry2 \u003c pLimit; pEntry2++ )\n        if ( *pEntry1 == *pEntry2 )\n            Counter++;\n    if ( Counter )\n        printf( \"The total of %d pairs fail verification.\\n\", Counter );\n    else\n        printf( \"Verification successful.\\n\" );\n    Vec_WrdFree( pNew );\n}",
+      "Draft": "func Abc_SuppVerify(p *Vec_Wrd_t, pMatrix *word, nVars int32, nVarsMin int32) {\n    var pNew *Vec_Wrd_t;\n    var pLimit, pEntry1, pEntry2 *word;\n    var Entry, EntryNew word;\n    var i, k, v, Value, Counter int32;\n    pNew = Vec_WrdAlloc( Vec_WrdSize(p) );\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(p)) \u0026\u0026 (((Entry) = Vec_WrdEntry(p, i)), 1); i++  {\n        EntryNew = 0;\n        for  v = 0; v \u003c nVarsMin; v++  {\n            Value = 0;\n            for  k = 0; k \u003c nVars; k++  {\n                if ((pMatrix[v] \u003e\u003e k) \u0026 1) \u0026\u0026 ((Entry \u003e\u003e k) \u0026 1) {\n                    Value ^= 1; }\n            }\n            if Value != 0 {\n                EntryNew |= (((word)1) \u003c\u003c v); }            \n        }\n        Vec_WrdPush( pNew, EntryNew );\n    }\n    // check that they are disjoint\n    pLimit  = Vec_WrdLimit(pNew);\n    pEntry1 = Vec_WrdArray(pNew);\n    for  ; pEntry1 \u003c pLimit; pEntry1++  {\n    for  pEntry2 = pEntry1 + 1; pEntry2 \u003c pLimit; pEntry2++  {\n        if *pEntry1 == *pEntry2 {\n            Counter++; }\n    }\n    }\n    if Counter != 0 {\n        fmt.Printf(\"The total of %d pairs fail verification.\\n\", Counter);\n    } else {\n        fmt.Printf(\"Verification successful.\\n\"); }\n    Vec_WrdFree( pNew );\n}"
+    },
+    {
+      "Name": "Abc_SuppGenPairs",
+      "Start": 3546,
+      "End": 4171,
+      "BodyStart": 3603,
+      "Original": "Vec_Wrd_t * Abc_SuppGenPairs( Vec_Wrd_t * p, int nBits )\n{\n    Vec_Wrd_t * vRes = Vec_WrdAlloc( 1000 );\n    unsigned * pMap = ABC_CALLOC( unsigned, 1 \u003c\u003c Abc_MaxInt(0,nBits-5) ); \n    word * pLimit = Vec_WrdLimit(p);\n    word * pEntry1 = Vec_WrdArray(p);\n    word * pEntry2, Value;\n    for ( ; pEntry1 \u003c pLimit; pEntry1++ )\n    for ( pEntry2 = pEntry1 + 1; pEntry2 \u003c pLimit; pEntry2++ )\n    {\n        Value = *pEntry1 ^ *pEntry2;\n        if ( Abc_InfoHasBit(pMap, (int)Value) )\n            continue;\n        Abc_InfoXorBit( pMap, (int)Value );\n        Vec_WrdPush( vRes, Value );\n    }\n    ABC_FREE( pMap );\n    return vRes;\n}",
+      "Draft": "func Abc_SuppGenPairs(p *Vec_Wrd_t, nBits int32) *Vec_Wrd_t {\n    var vRes *Vec_Wrd_t  = Vec_WrdAlloc( 1000 );\n    // inlining of macro ABC_CALLOC\n    var pMap *uint32  = ((unsigned *) calloc((size_t)(1 \u003c\u003c Abc_MaxInt(0,nBits-5)), sizeof(unsigned))); \n    var pLimit *word  = Vec_WrdLimit(p);\n    var pEntry1 *word  = Vec_WrdArray(p);\n    var pEntry2 *word;\n    var Value word;\n    for  ; pEntry1 \u003c pLimit; pEntry1++  {\n    for  pEntry2 = pEntry1 + 1; pEntry2 \u003c pLimit; pEntry2++  {\n        Value = *pEntry1 ^ *pEntry2;\n        if Abc_InfoHasBit(pMap, int32(Value)) {\n            continue; }\n        Abc_InfoXorBit( pMap, int32(Value) );\n        Vec_WrdPush( vRes, Value );\n    }\n    }\n    // inlining of macro ABC_FREE\n    ((pMap) ? (free((char *) (pMap)), (pMap) = 0) : 0);\n    return vRes;\n}"
+    },
+    {
+      "Name": "Abc_SuppGenPairs2",
+      "Start": 4172,
+      "End": 4572,
+      "BodyStart": 4226,
+      "Original": "Vec_Wrd_t * Abc_SuppGenPairs2( int nOnes, int nBits )\n{\n    Vec_Wrd_t * vRes = Vec_WrdAlloc( 1000 );\n    int i, k, Size = (1 \u003c\u003c nBits), Value;\n    for ( i = 0; i \u003c Size; i++ )\n    {\n        Value = Abc_SuppCountOnes(i);\n        for ( k = 1; k \u003c= nOnes; k++ )\n            if ( Value == 2*k )\n                break;\n        if ( k \u003c= nOnes )\n            Vec_WrdPush( vRes, i );\n    }\n    return vRes;\n}",
+      "Draft": "func Abc_SuppGenPairs2(nOnes int32, nBits int32) *Vec_Wrd_t {\n    var vRes *Vec_Wrd_t  = Vec_WrdAlloc( 1000 );\n    var i int32;\n    var k int32;\n    var Size int32 = (1 \u003c\u003c nBits);\n    var Value int32;\n    for  i = 0; i \u003c Size; i++  {\n        Value = Abc_SuppCountOnes(i);\n        for  k = 1; k \u003c= nOnes; k++  {\n            if Value == 2*k {\n                break; }\n        }\n        if k \u003c= nOnes {\n            Vec_WrdPush( vRes, i ); }\n    }\n    return vRes;\n}"
+    },
+    {
+      "Name": "Abc_SuppPrintMask",
+      "Start": 4824,
+      "End": 4989,
+      "BodyStart": 4872,
+      "Original": "void Abc_SuppPrintMask( word uMask, int nBits )\n{\n    int i;\n    for ( i = 0; i \u003c nBits; i++ )\n        printf( \"%d\", (int)((uMask \u003e\u003e i) \u0026 1) );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Abc_SuppPrintMask(uMask word, nBits int32) {\n    var i int32;\n    for  i = 0; i \u003c nBits; i++  {\n        fmt.Printf(\"%d\", int32(((uMask \u003e\u003e i) \u0026 1)));\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Abc_SuppGenProfile",
+      "Start": 4990,
+      "End": 5240,
+      "BodyStart": 5057,
+      "Original": "void Abc_SuppGenProfile( Vec_Wrd_t * p, int nBits, int * pCounts )\n{\n    word Ent;\n    int i, k, b;\n    Vec_WrdForEachEntry( p, Ent, i )\n        for ( b = ((Ent \u003e\u003e nBits) \u0026 1), k = 0; k \u003c nBits; k++ )\n            pCounts[k] += ((Ent \u003e\u003e k) \u0026 1) ^ b;\n}",
+      "Draft": "func Abc_SuppGenProfile(p *Vec_Wrd_t, nBits int32, pCounts *int32) {\n    var Ent word;\n    var i, k, b int32;\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(p)) \u0026\u0026 (((Ent) = Vec_WrdEntry(p, i)), 1); i++  {\n        for  b = ((Ent \u003e\u003e nBits) \u0026 1), k = 0; k \u003c nBits; k++  {\n            pCounts[k] += ((Ent \u003e\u003e k) \u0026 1) ^ b;\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_SuppPrintProfile",
+      "Start": 5241,
+      "End": 5498,
+      "BodyStart": 5295,
+      "Original": "void Abc_SuppPrintProfile( Vec_Wrd_t * p, int nBits )\n{\n    int k, Counts[64] = {0};\n    Abc_SuppGenProfile( p, nBits, Counts );\n    for ( k = 0; k \u003c nBits; k++ )\n        printf( \"%2d : %6d  %6.2f %%\\n\", k, Counts[k], 100.0 * Counts[k] / Vec_WrdSize(p) );\n}",
+      "Draft": "func Abc_SuppPrintProfile(p *Vec_Wrd_t, nBits int32) {\n    var k int32;\n    var Counts [64]int32 ;\n    Abc_SuppGenProfile( p, nBits, Counts );\n    for  k = 0; k \u003c nBits; k++  {\n        fmt.Printf(\"%2d : %6d  %6.2f %%\\n\", k, Counts[k], 100.0 * Counts[k] / Vec_WrdSize(p));\n    }\n}"
+    },
+    {
+      "Name": "Abc_SuppGenFindBest",
+      "Start": 5499,
+      "End": 5797,
+      "BodyStart": 5565,
+      "Original": "int Abc_SuppGenFindBest( Vec_Wrd_t * p, int nBits, int * pMerit )\n{\n    int k, kBest = 0, Counts[64] = {0};\n    Abc_SuppGenProfile( p, nBits, Counts );\n    for ( k = 1; k \u003c nBits; k++ )\n        if ( Counts[kBest] \u003c Counts[k] )\n            kBest = k;\n    *pMerit = Counts[kBest];\n    return kBest;\n}",
+      "Draft": "func Abc_SuppGenFindBest(p *Vec_Wrd_t, nBits int32, pMerit *int32) int32 {\n    var k int32;\n    var kBest int32;\n    var Counts [64]int32 ;\n    Abc_SuppGenProfile( p, nBits, Counts );\n    for  k = 1; k \u003c nBits; k++  {\n        if Counts[kBest] \u003c Counts[k] {\n            kBest = k; }\n    }\n    *pMerit = Counts[kBest];\n    return kBest;\n}"
+    },
+    {
+      "Name": "Abc_SuppGenSelectVar",
+      "Start": 5798,
+      "End": 6061,
+      "BodyStart": 5862,
+      "Original": "void Abc_SuppGenSelectVar( Vec_Wrd_t * p, int nBits, int iVar )\n{\n    word * pEntry = Vec_WrdArray(p);\n    word * pLimit = Vec_WrdLimit(p);\n    for ( ; pEntry \u003c pLimit; pEntry++ )\n        if ( (*pEntry \u003e\u003e iVar) \u0026 1 )\n            *pEntry ^= (((word)1) \u003c\u003c nBits);\n}",
+      "Draft": "func Abc_SuppGenSelectVar(p *Vec_Wrd_t, nBits int32, iVar int32) {\n    var pEntry *word  = Vec_WrdArray(p);\n    var pLimit *word  = Vec_WrdLimit(p);\n    for  ; pEntry \u003c pLimit; pEntry++  {\n        if (*pEntry \u003e\u003e iVar) \u0026 1 {\n            *pEntry ^= (((word)1) \u003c\u003c nBits); }\n    }\n}"
+    },
+    {
+      "Name": "Abc_SuppGenFilter",
+      "Start": 6062,
+      "End": 6299,
+      "BodyStart": 6113,
+      "Original": "void Abc_SuppGenFilter( Vec_Wrd_t * p, int nBits )\n{\n    word Ent;\n    int i, k = 0;\n    Vec_WrdForEachEntry( p, Ent, i )\n        if ( ((Ent \u003e\u003e nBits) \u0026 1) == 0 )\n            Vec_WrdWriteEntry( p, k++, Ent );\n    Vec_WrdShrink( p, k );\n}",
+      "Draft": "func Abc_SuppGenFilter(p *Vec_Wrd_t, nBits int32) {\n    var Ent word;\n    var i, k int32;\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(p)) \u0026\u0026 (((Ent) = Vec_WrdEntry(p, i)), 1); i++  {\n        if ((Ent \u003e\u003e nBits) \u0026 1) == 0 {\n            Vec_WrdWriteEntry( p, k++, Ent ); }\n    }\n    Vec_WrdShrink( p, k );\n}"
+    },
+    {
+      "Name": "Abc_SuppFindOne",
+      "Start": 6300,
+      "End": 6654,
+      "BodyStart": 6349,
+      "Original": "word Abc_SuppFindOne( Vec_Wrd_t * p, int nBits )\n{\n    word uMask = 0;\n    int Prev = -1, This, Var;\n    while ( 1 )\n    {\n        Var = Abc_SuppGenFindBest( p, nBits, \u0026This );\n        if ( Prev \u003e= This )\n            break;\n        Prev = This;\n        Abc_SuppGenSelectVar( p, nBits, Var );\n        uMask |= (((word)1) \u003c\u003c Var);\n    }\n    return uMask;\n}",
+      "Draft": "func Abc_SuppFindOne(p *Vec_Wrd_t, nBits int32) word {\n    var uMask word;\n    var Prev int32 = -1;\n    var This int32;\n    var Var int32;\n    for {\n        Var = Abc_SuppGenFindBest( p, nBits, \u0026This );\n        if Prev \u003e= This {\n            break; }\n        Prev = This;\n        Abc_SuppGenSelectVar( p, nBits, Var );\n        uMask |= (((word)1) \u003c\u003c Var);\n    }\n    return uMask;\n}"
+    },
+    {
+      "Name": "Abc_SuppMinimize",
+      "Start": 6655,
+      "End": 7171,
+      "BodyStart": 6734,
+      "Original": "int Abc_SuppMinimize( word * pMatrix, Vec_Wrd_t * p, int nBits, int fVerbose )\n{\n    int i;\n    for ( i = 0; Vec_WrdSize(p) \u003e 0; i++ )\n    {\n//        Abc_SuppPrintProfile( p, nBits );\n        pMatrix[i] = Abc_SuppFindOne( p, nBits );\n        Abc_SuppGenFilter( p, nBits );   \n        if ( !fVerbose )\n            continue;\n        // print stats\n        printf( \"%2d : \", i );\n        printf( \"%6d  \", Vec_WrdSize(p) );\n        Abc_SuppPrintMask( pMatrix[i], nBits );\n//        printf( \"\\n\" );\n    }\n    return i;\n}",
+      "Draft": "func Abc_SuppMinimize(pMatrix *word, p *Vec_Wrd_t, nBits int32, fVerbose int32) int32 {\n    var i int32;\n    for  i = 0; Vec_WrdSize(p) \u003e 0; i++  {\n//        Abc_SuppPrintProfile( p, nBits );\n        pMatrix[i] = Abc_SuppFindOne( p, nBits );\n        Abc_SuppGenFilter( p, nBits );   \n        if !(fVerbose != 0) {\n            continue; }\n        // print stats\n        fmt.Printf(\"%2d : \", i);\n        fmt.Printf(\"%6d  \", Vec_WrdSize(p));\n        Abc_SuppPrintMask( pMatrix[i], nBits );\n//        printf( \"\\n\" );\n    }\n    return i;\n}"
+    },
+    {
+      "Name": "Abc_SuppTest",
+      "Start": 7429,
+      "End": 8465,
+      "BodyStart": 7513,
+      "Original": "void Abc_SuppTest( int nOnes, int nVars, int fUseSimple, int fCheck, int fVerbose )\n{\n    int nVarsMin;\n    word Matrix[64];\n    abctime clk = Abc_Clock();\n    // create the problem\n    Vec_Wrd_t * vRes = Abc_SuppGen( nOnes, nVars );\n    Vec_Wrd_t * vPairs = fUseSimple ? Abc_SuppGenPairs2( nOnes, nVars ) : Abc_SuppGenPairs( vRes, nVars );\n    assert( nVars \u003c 100 );\n    printf( \"M = %2d  N = %2d : \", nOnes, nVars );\n    printf( \"K = %6d   \",  Vec_WrdSize(vRes) );\n    printf( \"Total = %12.0f  \", 0.5 * Vec_WrdSize(vRes) * (Vec_WrdSize(vRes) - 1) );\n    printf( \"Distinct = %8d  \",  Vec_WrdSize(vPairs) );\n    Abc_PrintTime( 1, \"Reduction time\", Abc_Clock() - clk );\n    // solve the problem\n    clk = Abc_Clock();\n    nVarsMin = Abc_SuppMinimize( Matrix, vPairs, nVars, fVerbose );\n    printf( \"Solution with %d variables found.  \", nVarsMin );\n    Abc_PrintTime( 1, \"Covering time\", Abc_Clock() - clk );\n    if ( fCheck )\n        Abc_SuppVerify( vRes, Matrix, nVars, nVarsMin );\n    Vec_WrdFree( vPairs );\n    Vec_WrdFree( vRes );\n}",
+      "Draft": "func Abc_SuppTest(nOnes int32, nVars int32, fUseSimple int32, fCheck int32, fVerbose int32) {\n    var nVarsMin int32;\n    var Matrix [64]word;\n    var clk abctime  = Abc_Clock();\n    // create the problem\n    var vRes *Vec_Wrd_t  = Abc_SuppGen( nOnes, nVars );\n    var vPairs *Vec_Wrd_t;\n    if fUseSimple != 0 {\n        vPairs = Abc_SuppGenPairs2( nOnes, nVars );\n    } else {\n        vPairs = Abc_SuppGenPairs( vRes, nVars );\n    }\n    assert(nVars \u003c 100, \"nVars \u003c 100\");\n    fmt.Printf(\"M = %2d  N = %2d : \", nOnes, nVars);\n    fmt.Printf(\"K = %6d   \", Vec_WrdSize(vRes));\n    fmt.Printf(\"Total = %12.0f  \", 0.5 * Vec_WrdSize(vRes) * (Vec_WrdSize(vRes) - 1));\n    fmt.Printf(\"Distinct = %8d  \", Vec_WrdSize(vPairs));\n    Abc_PrintTime( 1, \"Reduction time\", Abc_Clock() - clk );\n    // solve the problem\n    clk = Abc_Clock();\n    nVarsMin = Abc_SuppMinimize( Matrix, vPairs, nVars, fVerbose );\n    fmt.Printf(\"Solution with %d variables found.  \", nVarsMin);\n    Abc_PrintTime( 1, \"Covering time\", Abc_Clock() - clk );\n    if fCheck != 0 {\n        Abc_SuppVerify( vRes, Matrix, nVars, nVarsMin ); }\n    Vec_WrdFree( vPairs );\n    Vec_WrdFree( vRes );\n}"
+    },
+    {
+      "Name": "Abc_SuppReadMin",
+      "Start": 8760,
+      "End": 10888,
+      "BodyStart": 8822,
+      "Original": "Vec_Wrd_t * Abc_SuppReadMin( char * pFileName, int * pnVars )\n{\n    Vec_Wrd_t * vRes; word uCube;\n    int nCubes = 0, nVars = -1, iVar;\n    char * pCur, * pToken, * pStart = \"INPUT F-COVER\";\n    char * pStr = Extra_FileReadContents( pFileName );\n    if ( pStr == NULL )\n        { printf( \"Cannot open input file (%s).\\n\", pFileName ); return NULL; }\n    pCur = strstr( pStr, pStart );\n    if ( pCur == NULL )\n        { printf( \"Cannot find beginning of cube cover (%s).\\n\", pStart ); return NULL; }\n    pToken = strtok( pCur + strlen(pStart), \" \\t\\r\\n,\" );\n    nCubes = atoi( pToken );\n    if ( nCubes \u003c 1 || nCubes \u003e 1000000 )\n        { printf( \"The number of cubes in not in the range [1; 1000000].\\n\" ); return NULL; }\n    vRes = Vec_WrdAlloc( 1000 );\n    uCube = 0; iVar = 0;\n    while ( (pToken = strtok(NULL, \" \\t\\r\\n,\")) != NULL )\n    {\n        if ( strlen(pToken) \u003e 2 )\n        {\n            if ( !strncmp(pToken, \"INPUT\", strlen(\"INPUT\")) )\n                break;\n            if ( iVar \u003e 64 )\n                { printf( \"The number of inputs (%d) is too high.\\n\", iVar ); Vec_WrdFree(vRes); return NULL; }\n            if ( nVars == -1 )\n                nVars = iVar;\n            else if ( nVars != iVar )\n                { printf( \"The number of inputs (%d) does not match declaration (%d).\\n\", nVars, iVar ); Vec_WrdFree(vRes); return NULL; }\n            Vec_WrdPush( vRes, uCube );\n            uCube = 0; iVar = 0;\n            continue;\n        }\n        if ( pToken[1] == '0' \u0026\u0026 pToken[0] == '1' ) // value 1\n            uCube |= (((word)1) \u003c\u003c iVar);\n        else if ( pToken[1] != '1' || pToken[0] != '0' ) // value 0\n            { printf( \"Strange literal representation (%s) of cube %d.\\n\", pToken, nCubes ); Vec_WrdFree(vRes); return NULL; }\n        iVar++;\n    }\n    ABC_FREE( pStr );\n    if ( Vec_WrdSize(vRes) != nCubes )\n        { printf( \"The number of cubes (%d) does not match declaration (%d).\\n\", Vec_WrdSize(vRes), nCubes ); Vec_WrdFree(vRes); return NULL; }\n    else\n        printf( \"Successfully parsed function with %d inputs and %d cubes.\\n\", nVars, nCubes );\n    *pnVars = nVars;\n    return vRes;\n}",
+      "Draft": "func Abc_SuppReadMin(pFileName string, pnVars *int32) *Vec_Wrd_t {\n    var vRes *Vec_Wrd_t; var uCube word;\n    var nCubes int32;\n    var nVars int32 = -1;\n    var iVar int32;\n    var pCur string;\n    var pToken string;\n    var pStart string = \"INPUT F-COVER\";\n    var pStr string  = Extra_FileReadContents( pFileName );\n    if pStr == nil { fmt.Printf(\"Cannot open input file (%s).\\n\", pFileName); return nil; }\n    pCur = strstr( pStr, pStart );\n    if pCur == nil { fmt.Printf(\"Cannot find beginning of cube cover (%s).\\n\", pStart); return nil; }\n    pToken = strtok( pCur + len(pStart), \" \\t\\r\\n,\" );\n    nCubes = strconv.Atoi(pToken);\n    if nCubes \u003c 1 || nCubes \u003e 1000000 { fmt.Printf(\"The number of cubes in not in the range [1; 1000000].\\n\"); return nil; }\n    vRes = Vec_WrdAlloc( 1000 );\n    uCube = 0; iVar = 0;\n    for  (pToken = strtok(nil, \" \\t\\r\\n,\")) != nil  {\n        if len(pToken) \u003e 2 {\n            if !strncmp(pToken, \"INPUT\", len(\"INPUT\")) {\n                break; }\n            if iVar \u003e 64 { fmt.Printf(\"The number of inputs (%d) is too high.\\n\", iVar); Vec_WrdFree(vRes); return nil; }\n            if nVars == -1 {\n                nVars = iVar;\n            } else if nVars != iVar { fmt.Printf(\"The number of inputs (%d) does not match declaration (%d).\\n\", nVars, iVar); Vec_WrdFree(vRes); return nil; }\n            Vec_WrdPush( vRes, uCube );\n            uCube = 0; iVar = 0;\n            continue;\n        }\n        if pToken[1] == '0' \u0026\u0026 pToken[0] == '1' { // value 1\n            uCube |= (((word)1) \u003c\u003c iVar);\n        } else if pToken[1] != '1' || pToken[0] != '0' { // value 0\n             fmt.Printf(\"Strange literal representation (%s) of cube %d.\\n\", pToken, nCubes); Vec_WrdFree(vRes); return nil; }\n        iVar++;\n    }\n    // inlining of macro ABC_FREE\n    ((pStr) ? (free((char *) (pStr)), (pStr) = 0) : 0);\n    if Vec_WrdSize(vRes) != nCubes { fmt.Printf(\"The number of cubes (%d) does not match declaration (%d).\\n\", Vec_WrdSize(vRes), nCubes); Vec_WrdFree(vRes); return nil; \n    } else {\n        fmt.Printf(\"Successfully parsed function with %d inputs and %d cubes.\\n\", nVars, nCubes); }\n    *pnVars = nVars;\n    return vRes;\n}"
+    },
+    {
+      "Name": "Abc_SuppDiffMatrix",
+      "Start": 11124,
+      "End": 12051,
+      "BodyStart": 11177,
+      "Original": "Vec_Wrd_t * Abc_SuppDiffMatrix( Vec_Wrd_t * vCubes )\n{\n    abctime clk = Abc_Clock();\n    word * pEnt2, * pEnt = Vec_WrdArray( vCubes );\n    word * pLimit = Vec_WrdLimit( vCubes );\n    Vec_Wrd_t * vRes, * vPairs = Vec_WrdAlloc( Vec_WrdSize(vCubes) * (Vec_WrdSize(vCubes) - 1) / 2 );\n    word * pStore = Vec_WrdArray( vPairs );\n    for ( ; pEnt \u003c pLimit; pEnt++ )\n    for ( pEnt2 = pEnt+1; pEnt2 \u003c pLimit; pEnt2++ )\n        *pStore++ = *pEnt ^ *pEnt2;\n    vPairs-\u003enSize = Vec_WrdCap(vPairs);\n    assert( pStore == Vec_WrdLimit(vPairs) );\n//    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    vRes = Vec_WrdUniqifyHash( vPairs, 1 );\n    vRes = Vec_WrdDup( vPairs );\n    printf( \"Successfully generated diff matrix with %10d rows (%6.2f %%).  \", \n        Vec_WrdSize(vRes), 100.0 * Vec_WrdSize(vRes) / Vec_WrdSize(vPairs) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Vec_WrdFree( vPairs );\n    return vRes;    \n}",
+      "Draft": "func Abc_SuppDiffMatrix(vCubes *Vec_Wrd_t) *Vec_Wrd_t {\n    var clk abctime  = Abc_Clock();\n    var pEnt2 *word;\n    var pEnt *word = Vec_WrdArray( vCubes );\n    var pLimit *word  = Vec_WrdLimit( vCubes );\n    var vRes *Vec_Wrd_t;\n    var vPairs *Vec_Wrd_t = Vec_WrdAlloc( Vec_WrdSize(vCubes) * (Vec_WrdSize(vCubes) - 1) / 2 );\n    var pStore *word  = Vec_WrdArray( vPairs );\n    for  ; pEnt \u003c pLimit; pEnt++  {\n    for  pEnt2 = pEnt+1; pEnt2 \u003c pLimit; pEnt2++  {\n        *pStore++ = *pEnt ^ *pEnt2;\n    }\n    }\n    vPairs.nSize = Vec_WrdCap(vPairs);\n    assert(pStore == Vec_WrdLimit(vPairs), \"pStore == Vec_WrdLimit(vPairs)\");\n//    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    vRes = Vec_WrdUniqifyHash( vPairs, 1 );\n    vRes = Vec_WrdDup( vPairs );\n    fmt.Printf(\"Successfully generated diff matrix with %10d rows (%6.2f %%).  \", Vec_WrdSize(vRes), 100.0 * Vec_WrdSize(vRes) / Vec_WrdSize(vPairs));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Vec_WrdFree( vPairs );\n    return vRes;    \n}"
+    },
+    {
+      "Name": "Abc_SuppCountOnes64",
+      "Start": 12311,
+      "End": 12563,
+      "BodyStart": 12359,
+      "Original": "static inline int Abc_SuppCountOnes64( word i )\n{\n    i = i - ((i \u003e\u003e 1) \u0026 0x5555555555555555);\n    i = (i \u0026 0x3333333333333333) + ((i \u003e\u003e 2) \u0026 0x3333333333333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F0F0F0F0F);\n    return (i*(0x0101010101010101))\u003e\u003e56;\n}",
+      "Draft": "func Abc_SuppCountOnes64(i word) int32 {\n    i = i - ((i \u003e\u003e 1) \u0026 0x5555555555555555);\n    i = (i \u0026 0x3333333333333333) + ((i \u003e\u003e 2) \u0026 0x3333333333333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F0F0F0F0F);\n    return (i*(0x0101010101010101))\u003e\u003e56;\n}"
+    },
+    {
+      "Name": "Abc_SuppFindVar",
+      "Start": 12564,
+      "End": 12910,
+      "BodyStart": 12629,
+      "Original": "int Abc_SuppFindVar( Vec_Wec_t * pS, Vec_Wec_t * pD, int nVars )\n{\n    int v, vBest = -1, dBest = -1;\n    for ( v = 0; v \u003c nVars; v++ )\n    {\n        if ( Vec_WecLevelSize(pS, v) )\n            continue;\n        if ( vBest == -1 || dBest \u003e Vec_WecLevelSize(pD, v) )\n            vBest = v, dBest = Vec_WecLevelSize(pD, v);\n    }\n    return vBest;\n}",
+      "Draft": "func Abc_SuppFindVar(pS *Vec_Wec_t, pD *Vec_Wec_t, nVars int32) int32 {\n    var v int32;\n    var vBest int32 = -1;\n    var dBest int32 = -1;\n    for  v = 0; v \u003c nVars; v++  {\n        if Vec_WecLevelSize(pS, v) {\n            continue; }\n        if vBest == -1 || dBest \u003e Vec_WecLevelSize(pD, v) {\n            vBest = v;\ndBest = Vec_WecLevelSize(pD, v); }\n    }\n    return vBest;\n}"
+    },
+    {
+      "Name": "Abc_SuppRemove",
+      "Start": 12911,
+      "End": 13739,
+      "BodyStart": 13016,
+      "Original": "void Abc_SuppRemove( Vec_Wrd_t * p, int * pCounts, Vec_Wec_t * pS, Vec_Wec_t * pD, int iVar, int nVars )\n{\n    word Entry; int i, v;\n    assert( Vec_WecLevelSize(pS, iVar) == 0 );\n    Vec_IntClear( Vec_WecEntry(pD, iVar) );\n    Vec_WrdForEachEntry( p, Entry, i )\n    {\n        if ( ((Entry \u003e\u003e iVar) \u0026 1) == 0 )\n            continue;\n        pCounts[i]--;\n        if ( pCounts[i] == 1 )\n        {\n            for ( v = 0; v \u003c nVars; v++ )\n                if ( (Entry \u003e\u003e v) \u0026 1 )\n                {\n                    Vec_IntRemove( Vec_WecEntry(pD, v), i );\n                    Vec_WecPush( pS, v, i );\n                }\n        }\n        else if ( pCounts[i] == 2 )\n        {\n            for ( v = 0; v \u003c nVars; v++ )\n                if ( (Entry \u003e\u003e v) \u0026 1 )\n                    Vec_WecPush( pD, v, i );\n        }        \n    }\n}",
+      "Draft": "func Abc_SuppRemove(p *Vec_Wrd_t, pCounts *int32, pS *Vec_Wec_t, pD *Vec_Wec_t, iVar int32, nVars int32) {\n    var Entry word; var i, v int32;\n    assert(Vec_WecLevelSize(pS, iVar) == 0, \"Vec_WecLevelSize(pS, iVar) == 0\");\n    Vec_IntClear( Vec_WecEntry(pD, iVar) );\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(p)) \u0026\u0026 (((Entry) = Vec_WrdEntry(p, i)), 1); i++  {\n        if ((Entry \u003e\u003e iVar) \u0026 1) == 0 {\n            continue; }\n        pCounts[i]--;\n        if pCounts[i] == 1 {\n            for  v = 0; v \u003c nVars; v++  {\n                if (Entry \u003e\u003e v) \u0026 1 {\n                    Vec_IntRemove( Vec_WecEntry(pD, v), i );\n                    Vec_WecPush( pS, v, i );\n                }\n            }\n        \n        } else if pCounts[i] == 2 {\n            for  v = 0; v \u003c nVars; v++  {\n                if (Entry \u003e\u003e v) \u0026 1 {\n                    Vec_WecPush( pD, v, i ); }\n            }\n        }        \n    }\n}"
+    },
+    {
+      "Name": "Abc_SuppProfile",
+      "Start": 13740,
+      "End": 13953,
+      "BodyStart": 13806,
+      "Original": "void Abc_SuppProfile( Vec_Wec_t * pS, Vec_Wec_t * pD, int nVars )\n{\n    int v;\n    for ( v = 0; v \u003c nVars; v++ )\n        printf( \"%2d : S = %3d  D = %3d\\n\", v, Vec_WecLevelSize(pS, v), Vec_WecLevelSize(pD, v) );\n}",
+      "Draft": "func Abc_SuppProfile(pS *Vec_Wec_t, pD *Vec_Wec_t, nVars int32) {\n    var v int32;\n    for  v = 0; v \u003c nVars; v++  {\n        fmt.Printf(\"%2d : S = %3d  D = %3d\\n\", v, Vec_WecLevelSize(pS, v), Vec_WecLevelSize(pD, v));\n    }\n}"
+    },
+    {
+      "Name": "Abc_SuppSolve",
+      "Start": 13954,
+      "End": 15437,
+      "BodyStart": 14000,
+      "Original": "int Abc_SuppSolve( Vec_Wrd_t * p, int nVars )\n{\n    abctime clk = Abc_Clock();\n    Vec_Wrd_t * pNew = Vec_WrdDup( p );\n    Vec_Wec_t * vSingles = Vec_WecStart( 64 );\n    Vec_Wec_t * vDoubles = Vec_WecStart( 64 );\n    word Entry; int i, v, iVar, nVarsNew = nVars;\n    int * pCounts = ABC_ALLOC( int, Vec_WrdSize(p) );\n    Vec_WrdForEachEntry( p, Entry, i )\n    {\n        pCounts[i] = Abc_SuppCountOnes64( Entry );\n        if ( pCounts[i] == 1 )\n        {\n            for ( v = 0; v \u003c nVars; v++ )\n                if ( (Entry \u003e\u003e v) \u0026 1 )\n                    Vec_WecPush( vSingles, v, i );\n        }\n        else if ( pCounts[i] == 2 )\n        {\n            for ( v = 0; v \u003c nVars; v++ )\n                if ( (Entry \u003e\u003e v) \u0026 1 )\n                    Vec_WecPush( vDoubles, v, i );\n        }\n    }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    Abc_SuppProfile( vSingles, vDoubles, nVars );\n    // find variable in 0 singles and the smallest doubles\n    while ( 1 )\n    {\n        iVar = Abc_SuppFindVar( vSingles, vDoubles, nVars );\n        if ( iVar == -1 )\n            break;\n//        printf( \"Selected variable %d.\\n\", iVar );\n        Abc_SuppRemove( pNew, pCounts, vSingles, vDoubles, iVar, nVars );\n//        Abc_SuppProfile( vSingles, vDoubles, nVars );\n        nVarsNew--;\n    }\n//    printf( \"Result = %d (out of %d)\\n\", nVarsNew, nVars );\n    Vec_WecFree( vSingles );\n    Vec_WecFree( vDoubles );\n    Vec_WrdFree( pNew );\n    ABC_FREE( pCounts );\n    return nVarsNew;\n}",
+      "Draft": "func Abc_SuppSolve(p *Vec_Wrd_t, nVars int32) int32 {\n    var clk abctime  = Abc_Clock();\n    var pNew *Vec_Wrd_t  = Vec_WrdDup( p );\n    var vSingles *Vec_Wec_t  = Vec_WecStart( 64 );\n    var vDoubles *Vec_Wec_t  = Vec_WecStart( 64 );\n    var Entry word; var i int32;\nvar v int32;\nvar iVar int32;\nvar nVarsNew int32 = nVars;\n    // inlining of macro ABC_ALLOC\n    var pCounts *int32  = ((int *) malloc(sizeof(int) * (size_t)(Vec_WrdSize(p))));\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(p)) \u0026\u0026 (((Entry) = Vec_WrdEntry(p, i)), 1); i++  {\n        pCounts[i] = Abc_SuppCountOnes64( Entry );\n        if pCounts[i] == 1 {\n            for  v = 0; v \u003c nVars; v++  {\n                if (Entry \u003e\u003e v) \u0026 1 {\n                    Vec_WecPush( vSingles, v, i ); }\n            }\n        \n        } else if pCounts[i] == 2 {\n            for  v = 0; v \u003c nVars; v++  {\n                if (Entry \u003e\u003e v) \u0026 1 {\n                    Vec_WecPush( vDoubles, v, i ); }\n            }\n        }\n    }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    Abc_SuppProfile( vSingles, vDoubles, nVars );\n    // find variable in 0 singles and the smallest doubles\n    for {\n        iVar = Abc_SuppFindVar( vSingles, vDoubles, nVars );\n        if iVar == -1 {\n            break; }\n//        printf( \"Selected variable %d.\\n\", iVar );\n        Abc_SuppRemove( pNew, pCounts, vSingles, vDoubles, iVar, nVars );\n//        Abc_SuppProfile( vSingles, vDoubles, nVars );\n        nVarsNew--;\n    }\n//    printf( \"Result = %d (out of %d)\\n\", nVarsNew, nVars );\n    Vec_WecFree( vSingles );\n    Vec_WecFree( vDoubles );\n    Vec_WrdFree( pNew );\n    // inlining of macro ABC_FREE\n    ((pCounts) ? (free((char *) (pCounts)), (pCounts) = 0) : 0);\n    return nVarsNew;\n}"
+    },
+    {
+      "Name": "Abc_SuppReadMinTest",
+      "Start": 15673,
+      "End": 16341,
+      "BodyStart": 15718,
+      "Original": "void Abc_SuppReadMinTest( char * pFileName )\n{\n//    int fVerbose = 0;\n    abctime clk = Abc_Clock();\n//    word Matrix[64];\n    int nVars, nVarsMin;\n    Vec_Wrd_t * vPairs, * vCubes;\n    vCubes = Abc_SuppReadMin( pFileName, \u0026nVars );\n    if ( vCubes == NULL )\n        return;\n    vPairs = Abc_SuppDiffMatrix( vCubes );\n    Vec_WrdFreeP( \u0026vCubes );\n    // solve the problem\n    clk = Abc_Clock();\n//    nVarsMin = Abc_SuppMinimize( Matrix, vPairs, nVars, fVerbose );\n    nVarsMin = Abc_SuppSolve( vPairs, nVars );\n    printf( \"Solution with %d variables found.  \", nVarsMin );\n    Abc_PrintTime( 1, \"Covering time\", Abc_Clock() - clk );\n\n    Vec_WrdFreeP( \u0026vPairs );\n}",
+      "Draft": "func Abc_SuppReadMinTest(pFileName string) {\n//    int fVerbose = 0;\n    var clk abctime  = Abc_Clock();\n//    word Matrix[64];\n    var nVars, nVarsMin int32;\n    var vPairs, vCubes *Vec_Wrd_t;\n    vCubes = Abc_SuppReadMin( pFileName, \u0026nVars );\n    if vCubes == nil {\n        return; }\n    vPairs = Abc_SuppDiffMatrix( vCubes );\n    Vec_WrdFreeP( \u0026vCubes );\n    // solve the problem\n    clk = Abc_Clock();\n//    nVarsMin = Abc_SuppMinimize( Matrix, vPairs, nVars, fVerbose );\n    nVarsMin = Abc_SuppSolve( vPairs, nVars );\n    fmt.Printf(\"Solution with %d variables found.  \", nVarsMin);\n    Abc_PrintTime( 1, \"Covering time\", Abc_Clock() - clk );\n\n    Vec_WrdFreeP( \u0026vPairs );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::mechanical::sizeof::3877",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3672,
+      "End": 3672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::mechanical::sizeof::14927",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14237,
+      "End": 14237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::pointer-cast::3819",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3672,
+      "End": 3672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::pointer-cast::4368",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4135,
+      "End": 4135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::pointer-cast::11054",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10543,
+      "End": 10543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::pointer-cast::14912",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14237,
+      "End": 14237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::pointer-cast::16255",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15394,
+      "End": 15394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppCountOnes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppCountOnes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1466,
+      "End": 1680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppGen",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppGen",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1681,
+      "End": 1924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppVerify",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2181,
+      "End": 3295
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::ternary::Abc_SuppGenPairs",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SuppGenPairs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3546,
+      "End": 4171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppGenPairs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppGenPairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3546,
+      "End": 4171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppGenPairs2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppGenPairs2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4172,
+      "End": 4572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppPrintMask",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppPrintMask",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4824,
+      "End": 4989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppGenProfile",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppGenProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4990,
+      "End": 5240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppPrintProfile",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppPrintProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5241,
+      "End": 5498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppGenFindBest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppGenFindBest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5499,
+      "End": 5797
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppGenSelectVar",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppGenSelectVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5798,
+      "End": 6061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppGenFilter",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppGenFilter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6062,
+      "End": 6299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppFindOne",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppFindOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6300,
+      "End": 6654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppMinimize",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppMinimize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6655,
+      "End": 7171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7429,
+      "End": 8465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::ternary::Abc_SuppReadMin",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SuppReadMin",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8760,
+      "End": 10888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppReadMin",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppReadMin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8760,
+      "End": 10888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppDiffMatrix",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppDiffMatrix",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11124,
+      "End": 12051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppCountOnes64",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppCountOnes64",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12311,
+      "End": 12563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppFindVar",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppFindVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12564,
+      "End": 12910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppRemove",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppRemove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12911,
+      "End": 13739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppProfile",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13740,
+      "End": 13953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::ternary::Abc_SuppSolve",
+      "Category": "ternary-review",
+      "Symbol": "Abc_SuppSolve",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13954,
+      "End": 15437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppSolve",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppSolve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13954,
+      "End": 15437
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::Abc_SuppReadMinTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_SuppReadMinTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15673,
+      "End": 16341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilSupp.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16588
+    }
+  ],
+  "Draft": "package extra\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [extraUtilSupp.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [extra]\n\n  Synopsis    [Support minimization.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: extraUtilSupp.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \"misc/vec/vec.h\"\n//#include \"misc/vec/vecWec.h\"\n//#include \"extra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern void         Extra_PrintBinary( FILE * pFile, unsigned Sign[], int nBits );\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Generate m-out-of-n vectors.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SuppCountOnes(i uint32) int32 {\n    i = i - ((i \u003e\u003e 1) \u0026 0x55555555);\n    i = (i \u0026 0x33333333) + ((i \u003e\u003e 2) \u0026 0x33333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F);\n    return (i*(0x01010101))\u003e\u003e24;\n}\nfunc Abc_SuppGen(m int32, n int32) *Vec_Wrd_t {\n    var vRes *Vec_Wrd_t  = Vec_WrdAlloc( 1000 );\n    var i int32;\n    var Size int32 = (1 \u003c\u003c n);\n    for  i = 0; i \u003c Size; i++  {\n        if Abc_SuppCountOnes(i) == m {\n            Vec_WrdPush( vRes, i ); }\n    }\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform verification.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SuppVerify(p *Vec_Wrd_t, pMatrix *word, nVars int32, nVarsMin int32) {\n    var pNew *Vec_Wrd_t;\n    var pLimit, pEntry1, pEntry2 *word;\n    var Entry, EntryNew word;\n    var i, k, v, Value, Counter int32;\n    pNew = Vec_WrdAlloc( Vec_WrdSize(p) );\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(p)) \u0026\u0026 (((Entry) = Vec_WrdEntry(p, i)), 1); i++  {\n        EntryNew = 0;\n        for  v = 0; v \u003c nVarsMin; v++  {\n            Value = 0;\n            for  k = 0; k \u003c nVars; k++  {\n                if ((pMatrix[v] \u003e\u003e k) \u0026 1) \u0026\u0026 ((Entry \u003e\u003e k) \u0026 1) {\n                    Value ^= 1; }\n            }\n            if Value != 0 {\n                EntryNew |= (((word)1) \u003c\u003c v); }            \n        }\n        Vec_WrdPush( pNew, EntryNew );\n    }\n    // check that they are disjoint\n    pLimit  = Vec_WrdLimit(pNew);\n    pEntry1 = Vec_WrdArray(pNew);\n    for  ; pEntry1 \u003c pLimit; pEntry1++  {\n    for  pEntry2 = pEntry1 + 1; pEntry2 \u003c pLimit; pEntry2++  {\n        if *pEntry1 == *pEntry2 {\n            Counter++; }\n    }\n    }\n    if Counter != 0 {\n        fmt.Printf(\"The total of %d pairs fail verification.\\n\", Counter);\n    } else {\n        fmt.Printf(\"Verification successful.\\n\"); }\n    Vec_WrdFree( pNew );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Generate pairs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SuppGenPairs(p *Vec_Wrd_t, nBits int32) *Vec_Wrd_t {\n    var vRes *Vec_Wrd_t  = Vec_WrdAlloc( 1000 );\n    // inlining of macro ABC_CALLOC\n    var pMap *uint32  = ((unsigned *) calloc((size_t)(1 \u003c\u003c Abc_MaxInt(0,nBits-5)), sizeof(unsigned))); \n    var pLimit *word  = Vec_WrdLimit(p);\n    var pEntry1 *word  = Vec_WrdArray(p);\n    var pEntry2 *word;\n    var Value word;\n    for  ; pEntry1 \u003c pLimit; pEntry1++  {\n    for  pEntry2 = pEntry1 + 1; pEntry2 \u003c pLimit; pEntry2++  {\n        Value = *pEntry1 ^ *pEntry2;\n        if Abc_InfoHasBit(pMap, int32(Value)) {\n            continue; }\n        Abc_InfoXorBit( pMap, int32(Value) );\n        Vec_WrdPush( vRes, Value );\n    }\n    }\n    // inlining of macro ABC_FREE\n    ((pMap) ? (free((char *) (pMap)), (pMap) = 0) : 0);\n    return vRes;\n}\nfunc Abc_SuppGenPairs2(nOnes int32, nBits int32) *Vec_Wrd_t {\n    var vRes *Vec_Wrd_t  = Vec_WrdAlloc( 1000 );\n    var i int32;\n    var k int32;\n    var Size int32 = (1 \u003c\u003c nBits);\n    var Value int32;\n    for  i = 0; i \u003c Size; i++  {\n        Value = Abc_SuppCountOnes(i);\n        for  k = 1; k \u003c= nOnes; k++  {\n            if Value == 2*k {\n                break; }\n        }\n        if k \u003c= nOnes {\n            Vec_WrdPush( vRes, i ); }\n    }\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Select variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SuppPrintMask(uMask word, nBits int32) {\n    var i int32;\n    for  i = 0; i \u003c nBits; i++  {\n        fmt.Printf(\"%d\", int32(((uMask \u003e\u003e i) \u0026 1)));\n    }\n    fmt.Printf(\"\\n\");\n}\nfunc Abc_SuppGenProfile(p *Vec_Wrd_t, nBits int32, pCounts *int32) {\n    var Ent word;\n    var i, k, b int32;\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(p)) \u0026\u0026 (((Ent) = Vec_WrdEntry(p, i)), 1); i++  {\n        for  b = ((Ent \u003e\u003e nBits) \u0026 1), k = 0; k \u003c nBits; k++  {\n            pCounts[k] += ((Ent \u003e\u003e k) \u0026 1) ^ b;\n        }\n    }\n}\nfunc Abc_SuppPrintProfile(p *Vec_Wrd_t, nBits int32) {\n    var k int32;\n    var Counts [64]int32 ;\n    Abc_SuppGenProfile( p, nBits, Counts );\n    for  k = 0; k \u003c nBits; k++  {\n        fmt.Printf(\"%2d : %6d  %6.2f %%\\n\", k, Counts[k], 100.0 * Counts[k] / Vec_WrdSize(p));\n    }\n}\nfunc Abc_SuppGenFindBest(p *Vec_Wrd_t, nBits int32, pMerit *int32) int32 {\n    var k int32;\n    var kBest int32;\n    var Counts [64]int32 ;\n    Abc_SuppGenProfile( p, nBits, Counts );\n    for  k = 1; k \u003c nBits; k++  {\n        if Counts[kBest] \u003c Counts[k] {\n            kBest = k; }\n    }\n    *pMerit = Counts[kBest];\n    return kBest;\n}\nfunc Abc_SuppGenSelectVar(p *Vec_Wrd_t, nBits int32, iVar int32) {\n    var pEntry *word  = Vec_WrdArray(p);\n    var pLimit *word  = Vec_WrdLimit(p);\n    for  ; pEntry \u003c pLimit; pEntry++  {\n        if (*pEntry \u003e\u003e iVar) \u0026 1 {\n            *pEntry ^= (((word)1) \u003c\u003c nBits); }\n    }\n}\nfunc Abc_SuppGenFilter(p *Vec_Wrd_t, nBits int32) {\n    var Ent word;\n    var i, k int32;\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(p)) \u0026\u0026 (((Ent) = Vec_WrdEntry(p, i)), 1); i++  {\n        if ((Ent \u003e\u003e nBits) \u0026 1) == 0 {\n            Vec_WrdWriteEntry( p, k++, Ent ); }\n    }\n    Vec_WrdShrink( p, k );\n}\nfunc Abc_SuppFindOne(p *Vec_Wrd_t, nBits int32) word {\n    var uMask word;\n    var Prev int32 = -1;\n    var This int32;\n    var Var int32;\n    for {\n        Var = Abc_SuppGenFindBest( p, nBits, \u0026This );\n        if Prev \u003e= This {\n            break; }\n        Prev = This;\n        Abc_SuppGenSelectVar( p, nBits, Var );\n        uMask |= (((word)1) \u003c\u003c Var);\n    }\n    return uMask;\n}\nfunc Abc_SuppMinimize(pMatrix *word, p *Vec_Wrd_t, nBits int32, fVerbose int32) int32 {\n    var i int32;\n    for  i = 0; Vec_WrdSize(p) \u003e 0; i++  {\n//        Abc_SuppPrintProfile( p, nBits );\n        pMatrix[i] = Abc_SuppFindOne( p, nBits );\n        Abc_SuppGenFilter( p, nBits );   \n        if !(fVerbose != 0) {\n            continue; }\n        // print stats\n        fmt.Printf(\"%2d : \", i);\n        fmt.Printf(\"%6d  \", Vec_WrdSize(p));\n        Abc_SuppPrintMask( pMatrix[i], nBits );\n//        printf( \"\\n\" );\n    }\n    return i;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SuppTest(nOnes int32, nVars int32, fUseSimple int32, fCheck int32, fVerbose int32) {\n    var nVarsMin int32;\n    var Matrix [64]word;\n    var clk abctime  = Abc_Clock();\n    // create the problem\n    var vRes *Vec_Wrd_t  = Abc_SuppGen( nOnes, nVars );\n    var vPairs *Vec_Wrd_t;\n    if fUseSimple != 0 {\n        vPairs = Abc_SuppGenPairs2( nOnes, nVars );\n    } else {\n        vPairs = Abc_SuppGenPairs( vRes, nVars );\n    }\n    assert(nVars \u003c 100, \"nVars \u003c 100\");\n    fmt.Printf(\"M = %2d  N = %2d : \", nOnes, nVars);\n    fmt.Printf(\"K = %6d   \", Vec_WrdSize(vRes));\n    fmt.Printf(\"Total = %12.0f  \", 0.5 * Vec_WrdSize(vRes) * (Vec_WrdSize(vRes) - 1));\n    fmt.Printf(\"Distinct = %8d  \", Vec_WrdSize(vPairs));\n    Abc_PrintTime( 1, \"Reduction time\", Abc_Clock() - clk );\n    // solve the problem\n    clk = Abc_Clock();\n    nVarsMin = Abc_SuppMinimize( Matrix, vPairs, nVars, fVerbose );\n    fmt.Printf(\"Solution with %d variables found.  \", nVarsMin);\n    Abc_PrintTime( 1, \"Covering time\", Abc_Clock() - clk );\n    if fCheck != 0 {\n        Abc_SuppVerify( vRes, Matrix, nVars, nVarsMin ); }\n    Vec_WrdFree( vPairs );\n    Vec_WrdFree( vRes );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the input part of the cubes specified in MIN format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SuppReadMin(pFileName string, pnVars *int32) *Vec_Wrd_t {\n    var vRes *Vec_Wrd_t; var uCube word;\n    var nCubes int32;\n    var nVars int32 = -1;\n    var iVar int32;\n    var pCur string;\n    var pToken string;\n    var pStart string = \"INPUT F-COVER\";\n    var pStr string  = Extra_FileReadContents( pFileName );\n    if pStr == nil { fmt.Printf(\"Cannot open input file (%s).\\n\", pFileName); return nil; }\n    pCur = strstr( pStr, pStart );\n    if pCur == nil { fmt.Printf(\"Cannot find beginning of cube cover (%s).\\n\", pStart); return nil; }\n    pToken = strtok( pCur + len(pStart), \" \\t\\r\\n,\" );\n    nCubes = strconv.Atoi(pToken);\n    if nCubes \u003c 1 || nCubes \u003e 1000000 { fmt.Printf(\"The number of cubes in not in the range [1; 1000000].\\n\"); return nil; }\n    vRes = Vec_WrdAlloc( 1000 );\n    uCube = 0; iVar = 0;\n    for  (pToken = strtok(nil, \" \\t\\r\\n,\")) != nil  {\n        if len(pToken) \u003e 2 {\n            if !strncmp(pToken, \"INPUT\", len(\"INPUT\")) {\n                break; }\n            if iVar \u003e 64 { fmt.Printf(\"The number of inputs (%d) is too high.\\n\", iVar); Vec_WrdFree(vRes); return nil; }\n            if nVars == -1 {\n                nVars = iVar;\n            } else if nVars != iVar { fmt.Printf(\"The number of inputs (%d) does not match declaration (%d).\\n\", nVars, iVar); Vec_WrdFree(vRes); return nil; }\n            Vec_WrdPush( vRes, uCube );\n            uCube = 0; iVar = 0;\n            continue;\n        }\n        if pToken[1] == '0' \u0026\u0026 pToken[0] == '1' { // value 1\n            uCube |= (((word)1) \u003c\u003c iVar);\n        } else if pToken[1] != '1' || pToken[0] != '0' { // value 0\n             fmt.Printf(\"Strange literal representation (%s) of cube %d.\\n\", pToken, nCubes); Vec_WrdFree(vRes); return nil; }\n        iVar++;\n    }\n    // inlining of macro ABC_FREE\n    ((pStr) ? (free((char *) (pStr)), (pStr) = 0) : 0);\n    if Vec_WrdSize(vRes) != nCubes { fmt.Printf(\"The number of cubes (%d) does not match declaration (%d).\\n\", Vec_WrdSize(vRes), nCubes); Vec_WrdFree(vRes); return nil; \n    } else {\n        fmt.Printf(\"Successfully parsed function with %d inputs and %d cubes.\\n\", nVars, nCubes); }\n    *pnVars = nVars;\n    return vRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SuppDiffMatrix(vCubes *Vec_Wrd_t) *Vec_Wrd_t {\n    var clk abctime  = Abc_Clock();\n    var pEnt2 *word;\n    var pEnt *word = Vec_WrdArray( vCubes );\n    var pLimit *word  = Vec_WrdLimit( vCubes );\n    var vRes *Vec_Wrd_t;\n    var vPairs *Vec_Wrd_t = Vec_WrdAlloc( Vec_WrdSize(vCubes) * (Vec_WrdSize(vCubes) - 1) / 2 );\n    var pStore *word  = Vec_WrdArray( vPairs );\n    for  ; pEnt \u003c pLimit; pEnt++  {\n    for  pEnt2 = pEnt+1; pEnt2 \u003c pLimit; pEnt2++  {\n        *pStore++ = *pEnt ^ *pEnt2;\n    }\n    }\n    vPairs.nSize = Vec_WrdCap(vPairs);\n    assert(pStore == Vec_WrdLimit(vPairs), \"pStore == Vec_WrdLimit(vPairs)\");\n//    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    vRes = Vec_WrdUniqifyHash( vPairs, 1 );\n    vRes = Vec_WrdDup( vPairs );\n    fmt.Printf(\"Successfully generated diff matrix with %10d rows (%6.2f %%).  \", Vec_WrdSize(vRes), 100.0 * Vec_WrdSize(vRes) / Vec_WrdSize(vPairs));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    Vec_WrdFree( vPairs );\n    return vRes;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Solve difference matrix.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SuppCountOnes64(i word) int32 {\n    i = i - ((i \u003e\u003e 1) \u0026 0x5555555555555555);\n    i = (i \u0026 0x3333333333333333) + ((i \u003e\u003e 2) \u0026 0x3333333333333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F0F0F0F0F);\n    return (i*(0x0101010101010101))\u003e\u003e56;\n}\nfunc Abc_SuppFindVar(pS *Vec_Wec_t, pD *Vec_Wec_t, nVars int32) int32 {\n    var v int32;\n    var vBest int32 = -1;\n    var dBest int32 = -1;\n    for  v = 0; v \u003c nVars; v++  {\n        if Vec_WecLevelSize(pS, v) {\n            continue; }\n        if vBest == -1 || dBest \u003e Vec_WecLevelSize(pD, v) {\n            vBest = v;\ndBest = Vec_WecLevelSize(pD, v); }\n    }\n    return vBest;\n}\nfunc Abc_SuppRemove(p *Vec_Wrd_t, pCounts *int32, pS *Vec_Wec_t, pD *Vec_Wec_t, iVar int32, nVars int32) {\n    var Entry word; var i, v int32;\n    assert(Vec_WecLevelSize(pS, iVar) == 0, \"Vec_WecLevelSize(pS, iVar) == 0\");\n    Vec_IntClear( Vec_WecEntry(pD, iVar) );\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(p)) \u0026\u0026 (((Entry) = Vec_WrdEntry(p, i)), 1); i++  {\n        if ((Entry \u003e\u003e iVar) \u0026 1) == 0 {\n            continue; }\n        pCounts[i]--;\n        if pCounts[i] == 1 {\n            for  v = 0; v \u003c nVars; v++  {\n                if (Entry \u003e\u003e v) \u0026 1 {\n                    Vec_IntRemove( Vec_WecEntry(pD, v), i );\n                    Vec_WecPush( pS, v, i );\n                }\n            }\n        \n        } else if pCounts[i] == 2 {\n            for  v = 0; v \u003c nVars; v++  {\n                if (Entry \u003e\u003e v) \u0026 1 {\n                    Vec_WecPush( pD, v, i ); }\n            }\n        }        \n    }\n}\nfunc Abc_SuppProfile(pS *Vec_Wec_t, pD *Vec_Wec_t, nVars int32) {\n    var v int32;\n    for  v = 0; v \u003c nVars; v++  {\n        fmt.Printf(\"%2d : S = %3d  D = %3d\\n\", v, Vec_WecLevelSize(pS, v), Vec_WecLevelSize(pD, v));\n    }\n}\nfunc Abc_SuppSolve(p *Vec_Wrd_t, nVars int32) int32 {\n    var clk abctime  = Abc_Clock();\n    var pNew *Vec_Wrd_t  = Vec_WrdDup( p );\n    var vSingles *Vec_Wec_t  = Vec_WecStart( 64 );\n    var vDoubles *Vec_Wec_t  = Vec_WecStart( 64 );\n    var Entry word; var i int32;\nvar v int32;\nvar iVar int32;\nvar nVarsNew int32 = nVars;\n    // inlining of macro ABC_ALLOC\n    var pCounts *int32  = ((int *) malloc(sizeof(int) * (size_t)(Vec_WrdSize(p))));\n    // inlining of macro Vec_WrdForEachEntry\n    for  i = 0; (i \u003c Vec_WrdSize(p)) \u0026\u0026 (((Entry) = Vec_WrdEntry(p, i)), 1); i++  {\n        pCounts[i] = Abc_SuppCountOnes64( Entry );\n        if pCounts[i] == 1 {\n            for  v = 0; v \u003c nVars; v++  {\n                if (Entry \u003e\u003e v) \u0026 1 {\n                    Vec_WecPush( vSingles, v, i ); }\n            }\n        \n        } else if pCounts[i] == 2 {\n            for  v = 0; v \u003c nVars; v++  {\n                if (Entry \u003e\u003e v) \u0026 1 {\n                    Vec_WecPush( vDoubles, v, i ); }\n            }\n        }\n    }\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n//    Abc_SuppProfile( vSingles, vDoubles, nVars );\n    // find variable in 0 singles and the smallest doubles\n    for {\n        iVar = Abc_SuppFindVar( vSingles, vDoubles, nVars );\n        if iVar == -1 {\n            break; }\n//        printf( \"Selected variable %d.\\n\", iVar );\n        Abc_SuppRemove( pNew, pCounts, vSingles, vDoubles, iVar, nVars );\n//        Abc_SuppProfile( vSingles, vDoubles, nVars );\n        nVarsNew--;\n    }\n//    printf( \"Result = %d (out of %d)\\n\", nVarsNew, nVars );\n    Vec_WecFree( vSingles );\n    Vec_WecFree( vDoubles );\n    Vec_WrdFree( pNew );\n    // inlining of macro ABC_FREE\n    ((pCounts) ? (free((char *) (pCounts)), (pCounts) = 0) : 0);\n    return nVarsNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_SuppReadMinTest(pFileName string) {\n//    int fVerbose = 0;\n    var clk abctime  = Abc_Clock();\n//    word Matrix[64];\n    var nVars, nVarsMin int32;\n    var vPairs, vCubes *Vec_Wrd_t;\n    vCubes = Abc_SuppReadMin( pFileName, \u0026nVars );\n    if vCubes == nil {\n        return; }\n    vPairs = Abc_SuppDiffMatrix( vCubes );\n    Vec_WrdFreeP( \u0026vCubes );\n    // solve the problem\n    clk = Abc_Clock();\n//    nVarsMin = Abc_SuppMinimize( Matrix, vPairs, nVars, fVerbose );\n    nVarsMin = Abc_SuppSolve( vPairs, nVars );\n    fmt.Printf(\"Solution with %d variables found.  \", nVarsMin);\n    Abc_PrintTime( 1, \"Covering time\", Abc_Clock() - clk );\n\n    Vec_WrdFreeP( \u0026vPairs );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

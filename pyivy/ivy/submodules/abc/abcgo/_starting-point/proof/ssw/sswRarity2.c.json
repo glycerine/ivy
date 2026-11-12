@@ -1,0 +1,785 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c",
+  "SHA256": "c140b3a216bf242083ed15e45e1cd090ea530b2fd8ce0121caed21fe00863d2f",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 2114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 2184
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 2362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 2432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 96,
+        "Column": 73,
+        "ByteOffset": 3505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pRarity  = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)((1 \u003c\u003c nBinSize) * p.nGroups), sizeof(int)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 97,
+        "Column": 77,
+        "ByteOffset": 3642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pGroupValues = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(p.nGroups), sizeof(int)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 98,
+        "Column": 77,
+        "ByteOffset": 3761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pPatCosts = /*__starting_point_inline_macro:ABC_CALLOC__*/((double *) calloc((size_t)(p.nWords * 32), sizeof(double)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 120,
+        "Column": 70,
+        "ByteOffset": 4421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pGroupValues) ? (free((char *) (p.pGroupValues)), (p.pGroupValues) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 121,
+        "Column": 67,
+        "ByteOffset": 4548
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pPatCosts) ? (free((char *) (p.pPatCosts)), (p.pPatCosts) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 122,
+        "Column": 65,
+        "ByteOffset": 4667
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pRarity) ? (free((char *) (p.pRarity)), (p.pRarity) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 123,
+        "Column": 57,
+        "ByteOffset": 4774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 203,
+        "Column": 13,
+        "ByteOffset": 7561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Value \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 9,
+        "ByteOffset": 8180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iPatBest \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 8714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vInits) == Aig_ManRegNum(p.pAig) * p.nWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 276,
+        "Column": 5,
+        "ByteOffset": 11078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == pCex.nBits );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 309,
+        "Column": 33,
+        "ByteOffset": 12295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nTimeToStop = TimeOut * CLOCKS_PER_SEC + Abc_Clock();"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 314,
+        "Column": 5,
+        "ByteOffset": 12403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 315,
+        "Column": 5,
+        "ByteOffset": 12442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManConstrNum(pAig) == 0 );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 387,
+        "Column": 33,
+        "ByteOffset": 14998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nTimeToStop = TimeOut * CLOCKS_PER_SEC + Abc_Clock();"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 392,
+        "Column": 5,
+        "ByteOffset": 15106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 393,
+        "Column": 5,
+        "ByteOffset": 15145
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManConstrNum(pAig) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 406,
+        "Column": 5,
+        "ByteOffset": 15670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vInits == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 417,
+        "Column": 5,
+        "ByteOffset": 16039
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vInits) == Aig_ManRegNum(pAig) * nWords );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 492,
+        "Column": 68,
+        "ByteOffset": 18997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 493,
+        "Column": 68,
+        "ByteOffset": 19113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssw_RarGetBinPat",
+      "Start": 1783,
+      "End": 2045,
+      "BodyStart": 1859,
+      "Original": "static inline int  Ssw_RarGetBinPat( Ssw_RarMan_t * p, int iBin, int iPat )\n{\n    assert( iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p-\u003epAig) / p-\u003enBinSize );\n    assert( iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p-\u003enBinSize) );\n    return p-\u003epRarity[iBin * (1 \u003c\u003c p-\u003enBinSize) + iPat];\n}",
+      "Draft": "func Ssw_RarGetBinPat(p *Ssw_RarMan_t, iBin int32, iPat int32) int32 {\n    assert(iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize, \"iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize\");\n    assert(iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize), \"iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize)\");\n    return p.pRarity[iBin * (1 \u003c\u003c p.nBinSize) + iPat];\n}"
+    },
+    {
+      "Name": "Ssw_RarSetBinPat",
+      "Start": 2046,
+      "End": 2320,
+      "BodyStart": 2133,
+      "Original": "static inline void Ssw_RarSetBinPat( Ssw_RarMan_t * p, int iBin, int iPat, int Value )\n{\n    assert( iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p-\u003epAig) / p-\u003enBinSize );\n    assert( iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p-\u003enBinSize) );\n    p-\u003epRarity[iBin * (1 \u003c\u003c p-\u003enBinSize) + iPat] = Value;\n}",
+      "Draft": "func Ssw_RarSetBinPat(p *Ssw_RarMan_t, iBin int32, iPat int32, Value int32) {\n    assert(iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize, \"iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize\");\n    assert(iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize), \"iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize)\");\n    p.pRarity[iBin * (1 \u003c\u003c p.nBinSize) + iPat] = Value;\n}"
+    },
+    {
+      "Name": "Ssw_RarAddToBinPat",
+      "Start": 2321,
+      "End": 2580,
+      "BodyStart": 2399,
+      "Original": "static inline void Ssw_RarAddToBinPat( Ssw_RarMan_t * p, int iBin, int iPat )\n{\n    assert( iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p-\u003epAig) / p-\u003enBinSize );\n    assert( iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p-\u003enBinSize) );\n    p-\u003epRarity[iBin * (1 \u003c\u003c p-\u003enBinSize) + iPat]++;\n}",
+      "Draft": "func Ssw_RarAddToBinPat(p *Ssw_RarMan_t, iBin int32, iPat int32) {\n    assert(iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize, \"iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize\");\n    assert(iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize), \"iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize)\");\n    p.pRarity[iBin * (1 \u003c\u003c p.nBinSize) + iPat]++;\n}"
+    },
+    {
+      "Name": "Ssw_RarManStart",
+      "Start": 3021,
+      "End": 3752,
+      "BodyStart": 3132,
+      "Original": "static Ssw_RarMan_t * Ssw_RarManStart( Aig_Man_t * pAig, int nWords, int nFrames, int nBinSize, int fVerbose )\n{\n    Ssw_RarMan_t * p;\n    if ( Aig_ManRegNum(pAig) \u003c nBinSize || nBinSize \u003c= 0 )\n        return NULL;\n    p = ABC_CALLOC( Ssw_RarMan_t, 1 );\n    p-\u003epAig = pAig;\n    p-\u003enWords = nWords;\n    p-\u003enFrames = nFrames;\n    p-\u003enBinSize = nBinSize;\n    p-\u003efVerbose = fVerbose;\n    p-\u003enGroups  = Aig_ManRegNum(pAig) / nBinSize;\n    p-\u003epRarity  = ABC_CALLOC( int, (1 \u003c\u003c nBinSize) * p-\u003enGroups );\n    p-\u003epGroupValues = ABC_CALLOC( int, p-\u003enGroups );\n    p-\u003epPatCosts = ABC_CALLOC( double, p-\u003enWords * 32 );\n    p-\u003epSml = Ssw_SmlStart( pAig, 0, nFrames, nWords );\n    p-\u003evSimInfo = Ssw_SmlSimDataPointers( p-\u003epSml );\n    return p;\n}",
+      "Draft": "func Ssw_RarManStart(pAig *Aig_Man_t, nWords int32, nFrames int32, nBinSize int32, fVerbose int32) *Ssw_RarMan_t {\n    var p *Ssw_RarMan_t;\n    if Aig_ManRegNum(pAig) \u003c nBinSize || nBinSize \u003c= 0 {\n        return nil; }\n    // inlining of macro ABC_CALLOC\n    p = \u0026Ssw_RarMan_t{};\n    p.pAig = pAig;\n    p.nWords = nWords;\n    p.nFrames = nFrames;\n    p.nBinSize = nBinSize;\n    p.fVerbose = fVerbose;\n    p.nGroups  = Aig_ManRegNum(pAig) / nBinSize;\n    // inlining of macro ABC_CALLOC\n    p.pRarity  = ((int *) calloc((size_t)((1 \u003c\u003c nBinSize) * p.nGroups), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    p.pGroupValues = ((int *) calloc((size_t)(p.nGroups), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    p.pPatCosts = ((double *) calloc((size_t)(p.nWords * 32), sizeof(double)));\n    p.pSml = Ssw_SmlStart( pAig, 0, nFrames, nWords );\n    p.vSimInfo = Ssw_SmlSimDataPointers( p.pSml );\n    return p;\n}"
+    },
+    {
+      "Name": "Ssw_RarManStop",
+      "Start": 3973,
+      "End": 4299,
+      "BodyStart": 4020,
+      "Original": "static void Ssw_RarManStop( Ssw_RarMan_t * p )\n{\n    if ( p-\u003epSml ) Ssw_SmlStop( p-\u003epSml );\n    if ( p-\u003eppClasses ) Ssw_ClassesStop( p-\u003eppClasses );\n    Vec_PtrFreeP( \u0026p-\u003evSimInfo );\n    Vec_IntFreeP( \u0026p-\u003evInits );\n    ABC_FREE( p-\u003epGroupValues );\n    ABC_FREE( p-\u003epPatCosts );\n    ABC_FREE( p-\u003epRarity );\n    ABC_FREE( p );\n}",
+      "Draft": "func Ssw_RarManStop(p *Ssw_RarMan_t) {\n    if p.pSml { Ssw_SmlStop( p.pSml ); }\n    if p.ppClasses { Ssw_ClassesStop( p.ppClasses ); }\n    Vec_PtrFreeP( \u0026p.vSimInfo );\n    Vec_IntFreeP( \u0026p.vInits );\n    // inlining of macro ABC_FREE\n    ((p.pGroupValues) ? (free((char *) (p.pGroupValues)), (p.pGroupValues) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPatCosts) ? (free((char *) (p.pPatCosts)), (p.pPatCosts) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pRarity) ? (free((char *) (p.pRarity)), (p.pRarity) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Ssw_RarUpdateCounters",
+      "Start": 4560,
+      "End": 5677,
+      "BodyStart": 4614,
+      "Original": "static void Ssw_RarUpdateCounters( Ssw_RarMan_t * p )\n{\n    Aig_Obj_t * pObj;\n    unsigned * pData;\n    int i, k;\n/*\n    Saig_ManForEachLi( p-\u003epAig, pObj, i )\n    {\n        pData = (unsigned *)Vec_PtrEntry( p-\u003evSimInfo, Aig_ObjId(pObj) ) + p-\u003enWords * (p-\u003enFrames - 1);\n        Extra_PrintBinary( stdout, pData, 32 );  Abc_Print( 1, \"\\n\" );\n    }\n*/\n    for ( k = 0; k \u003c p-\u003enWords * 32; k++ )\n    {\n        for ( i = 0; i \u003c p-\u003enGroups; i++ )\n            p-\u003epGroupValues[i] = 0;\n        Saig_ManForEachLi( p-\u003epAig, pObj, i )\n        {\n            pData = (unsigned *)Vec_PtrEntry( p-\u003evSimInfo, Aig_ObjId(pObj) ) + p-\u003enWords * (p-\u003enFrames - 1);\n            if ( Abc_InfoHasBit(pData, k) \u0026\u0026 i / p-\u003enBinSize \u003c p-\u003enGroups )\n                p-\u003epGroupValues[i / p-\u003enBinSize] |= (1 \u003c\u003c (i % p-\u003enBinSize));\n        }\n        for ( i = 0; i \u003c p-\u003enGroups; i++ )\n            Ssw_RarAddToBinPat( p, i, p-\u003epGroupValues[i] );\n    }\n/*\n    for ( i = 0; i \u003c p-\u003enGroups; i++ )\n    {\n        for ( k = 0; k \u003c (1 \u003c\u003c p-\u003enBinSize); k++ )\n            Abc_Print( 1, \"%d \", Ssw_RarGetBinPat(p, i, k) );\n        Abc_Print( 1, \"\\n\" );\n    }\n*/\n}",
+      "Draft": "func Ssw_RarUpdateCounters(p *Ssw_RarMan_t) {\n    var pObj *Aig_Obj_t;\n    var pData *uint32;\n    var i, k int32;\n/*\n    Saig_ManForEachLi( p-\u003epAig, pObj, i )\n    {\n        pData = (unsigned *)Vec_PtrEntry( p-\u003evSimInfo, Aig_ObjId(pObj) ) + p-\u003enWords * (p-\u003enFrames - 1);\n        Extra_PrintBinary( stdout, pData, 32 );  Abc_Print( 1, \"\\n\" );\n    }\n*/\n    for  k = 0; k \u003c p.nWords * 32; k++  {\n        for  i = 0; i \u003c p.nGroups; i++  {\n            p.pGroupValues[i] = 0;\n        }\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {\n            pData = (unsigned *)Vec_PtrEntry( p.vSimInfo, Aig_ObjId(pObj) ) + p.nWords * (p.nFrames - 1);\n            if Abc_InfoHasBit(pData, k) \u0026\u0026 i / p.nBinSize \u003c p.nGroups {\n                p.pGroupValues[i / p.nBinSize] |= (1 \u003c\u003c (i % p.nBinSize)); }\n        }\n        for  i = 0; i \u003c p.nGroups; i++  {\n            Ssw_RarAddToBinPat( p, i, p.pGroupValues[i] );\n        }\n    }\n/*\n    for ( i = 0; i \u003c p-\u003enGroups; i++ )\n    {\n        for ( k = 0; k \u003c (1 \u003c\u003c p-\u003enBinSize); k++ )\n            Abc_Print( 1, \"%d \", Ssw_RarGetBinPat(p, i, k) );\n        Abc_Print( 1, \"\\n\" );\n    }\n*/\n}"
+    },
+    {
+      "Name": "Ssw_RarTransferPatterns",
+      "Start": 5934,
+      "End": 7890,
+      "BodyStart": 6010,
+      "Original": "static void Ssw_RarTransferPatterns( Ssw_RarMan_t * p, Vec_Int_t * vInits )\n{\n    Aig_Obj_t * pObj;\n    unsigned * pData;\n    int i, k, Value;\n\n    // for each pattern\n    for ( k = 0; k \u003c p-\u003enWords * 32; k++ )\n    {\n        for ( i = 0; i \u003c p-\u003enGroups; i++ )\n            p-\u003epGroupValues[i] = 0;\n        // compute its group values\n        Saig_ManForEachLi( p-\u003epAig, pObj, i )\n        {\n            pData = (unsigned *)Vec_PtrEntry( p-\u003evSimInfo, Aig_ObjId(pObj) ) + p-\u003enWords * (p-\u003enFrames - 1);\n            if ( Abc_InfoHasBit(pData, k) \u0026\u0026 i / p-\u003enBinSize \u003c p-\u003enGroups )\n                p-\u003epGroupValues[i / p-\u003enBinSize] |= (1 \u003c\u003c (i % p-\u003enBinSize));\n        }\n        // find the cost of its values\n        p-\u003epPatCosts[k] = 0.0;\n        for ( i = 0; i \u003c p-\u003enGroups; i++ )\n        {\n            Value = Ssw_RarGetBinPat( p, i, p-\u003epGroupValues[i] );\n            assert( Value \u003e 0 );\n            p-\u003epPatCosts[k] += 1.0/(Value*Value);\n        }\n        // print the result\n//        Abc_Print( 1, \"%3d : %9.6f\\n\", k, p-\u003epPatCosts[k] );\n    }\n\n    // choose as many as there are words\n    Vec_IntClear( vInits );\n    for ( i = 0; i \u003c p-\u003enWords; i++ )\n    {\n        // select the best\n        int iPatBest = -1;\n        double iCostBest = -ABC_INFINITY;\n        for ( k = 0; k \u003c p-\u003enWords * 32; k++ )\n            if ( iCostBest \u003c p-\u003epPatCosts[k] )\n            {\n                iCostBest = p-\u003epPatCosts[k];\n                iPatBest  = k;\n            }\n        // remove from costs\n        assert( iPatBest \u003e= 0 );\n        p-\u003epPatCosts[iPatBest] = -ABC_INFINITY;\n        // set the flops\n        Saig_ManForEachLi( p-\u003epAig, pObj, k )\n        {\n            pData = (unsigned *)Vec_PtrEntry( p-\u003evSimInfo, Aig_ObjId(pObj) ) + p-\u003enWords * (p-\u003enFrames - 1);\n            Vec_IntPush( vInits, Abc_InfoHasBit(pData, iPatBest) );\n        }\n//Abc_Print( 1, \"Best pattern %5d\\n\", iPatBest );\n    }\n    assert( Vec_IntSize(vInits) == Aig_ManRegNum(p-\u003epAig) * p-\u003enWords );\n}",
+      "Draft": "func Ssw_RarTransferPatterns(p *Ssw_RarMan_t, vInits *Vec_Int_t) {\n    var pObj *Aig_Obj_t;\n    var pData *uint32;\n    var i, k, Value int32;\n\n    // for each pattern\n    for  k = 0; k \u003c p.nWords * 32; k++  {\n        for  i = 0; i \u003c p.nGroups; i++  {\n            p.pGroupValues[i] = 0;\n        }\n        // compute its group values\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {\n            pData = (unsigned *)Vec_PtrEntry( p.vSimInfo, Aig_ObjId(pObj) ) + p.nWords * (p.nFrames - 1);\n            if Abc_InfoHasBit(pData, k) \u0026\u0026 i / p.nBinSize \u003c p.nGroups {\n                p.pGroupValues[i / p.nBinSize] |= (1 \u003c\u003c (i % p.nBinSize)); }\n        }\n        // find the cost of its values\n        p.pPatCosts[k] = 0.0;\n        for  i = 0; i \u003c p.nGroups; i++  {\n            Value = Ssw_RarGetBinPat( p, i, p.pGroupValues[i] );\n            assert(Value \u003e 0, \"Value \u003e 0\");\n            p.pPatCosts[k] += 1.0/(Value*Value);\n        }\n        // print the result\n//        Abc_Print( 1, \"%3d : %9.6f\\n\", k, p-\u003epPatCosts[k] );\n    }\n\n    // choose as many as there are words\n    Vec_IntClear( vInits );\n    for  i = 0; i \u003c p.nWords; i++  {\n        // select the best\n        var iPatBest int32  = -1;\n        var iCostBest float64  = -ABC_INFINITY;\n        for  k = 0; k \u003c p.nWords * 32; k++  {\n            if iCostBest \u003c p.pPatCosts[k] {\n                iCostBest = p.pPatCosts[k];\n                iPatBest  = k;\n            }\n        }\n        // remove from costs\n        assert(iPatBest \u003e= 0, \"iPatBest \u003e= 0\");\n        p.pPatCosts[iPatBest] = -ABC_INFINITY;\n        // set the flops\n        // inlining of macro Saig_ManForEachLi\n        for  k = 0; (k \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, k+Saig_ManPoNum(p.pAig))), 1); k++  {\n            pData = (unsigned *)Vec_PtrEntry( p.vSimInfo, Aig_ObjId(pObj) ) + p.nWords * (p.nFrames - 1);\n            Vec_IntPush( vInits, Abc_InfoHasBit(pData, iPatBest) );\n        }\n//Abc_Print( 1, \"Best pattern %5d\\n\", iPatBest );\n    }\n    assert(Vec_IntSize(vInits) == Aig_ManRegNum(p.pAig) * p.nWords, \"Vec_IntSize(vInits) == Aig_ManRegNum(p.pAig) * p.nWords\");\n}"
+    },
+    {
+      "Name": "Ssw_RarFindStartingState",
+      "Start": 8183,
+      "End": 9724,
+      "BodyStart": 8265,
+      "Original": "static Vec_Int_t * Ssw_RarFindStartingState( Aig_Man_t * pAig, Abc_Cex_t * pCex )\n{\n    Vec_Int_t * vInit;\n    Aig_Obj_t * pObj, * pObjLi;\n    int f, i, iBit;\n    // assign register outputs\n    Saig_ManForEachLi( pAig, pObj, i )\n        pObj-\u003efMarkB = Abc_InfoHasBit( pCex-\u003epData, i );\n    // simulate the timeframes\n    iBit = pCex-\u003enRegs;\n    for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n    {\n        // set the PI simulation information\n        Aig_ManConst1(pAig)-\u003efMarkB = 1;\n        Saig_ManForEachPi( pAig, pObj, i )\n            pObj-\u003efMarkB = Abc_InfoHasBit( pCex-\u003epData, iBit++ );\n        Saig_ManForEachLiLo( pAig, pObjLi, pObj, i )\n            pObj-\u003efMarkB = pObjLi-\u003efMarkB;\n        // simulate internal nodes\n        Aig_ManForEachNode( pAig, pObj, i )\n            pObj-\u003efMarkB = ( Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj) )\n                         \u0026 ( Aig_ObjFanin1(pObj)-\u003efMarkB ^ Aig_ObjFaninC1(pObj) );\n        // assign the COs\n        Aig_ManForEachCo( pAig, pObj, i )\n            pObj-\u003efMarkB = ( Aig_ObjFanin0(pObj)-\u003efMarkB ^ Aig_ObjFaninC0(pObj) );\n    }\n    assert( iBit == pCex-\u003enBits );\n    // check that the output failed as expected -- cannot check because it is not an SRM!\n//    pObj = Aig_ManCo( pAig, pCex-\u003eiPo );\n//    if ( pObj-\u003efMarkB != 1 )\n//        Abc_Print( 1, \"The counter-example does not refine the output.\\n\" );\n    // record the new pattern\n    vInit = Vec_IntAlloc( Saig_ManRegNum(pAig) );\n    Saig_ManForEachLo( pAig, pObj, i )\n        Vec_IntPush( vInit, pObj-\u003efMarkB );\n    return vInit;\n}",
+      "Draft": "func Ssw_RarFindStartingState(pAig *Aig_Man_t, pCex *Abc_Cex_t) *Vec_Int_t {\n    var vInit *Vec_Int_t;\n    var pObj, pObjLi *Aig_Obj_t;\n    var f, i, iBit int32;\n    // assign register outputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        pObj.fMarkB = Abc_InfoHasBit( pCex.pData, i );\n    }\n    // simulate the timeframes\n    iBit = pCex.nRegs;\n    for  f = 0; f \u003c= pCex.iFrame; f++  {\n        // set the PI simulation information\n        Aig_ManConst1(pAig).fMarkB = 1;\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.fMarkB = Abc_InfoHasBit( pCex.pData, iBit++ );\n        }\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObj)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObj.fMarkB = pObjLi.fMarkB;\n        }\n        // simulate internal nodes\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) )\n                         \u0026 ( Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj) ); }\n        }\n        // assign the COs\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n            pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) );\n        }\n    }\n    assert(iBit == pCex.nBits, \"iBit == pCex.nBits\");\n    // check that the output failed as expected -- cannot check because it is not an SRM!\n//    pObj = Aig_ManCo( pAig, pCex-\u003eiPo );\n//    if ( pObj-\u003efMarkB != 1 )\n//        Abc_Print( 1, \"The counter-example does not refine the output.\\n\" );\n    // record the new pattern\n    vInit = Vec_IntAlloc( Saig_ManRegNum(pAig) );\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        Vec_IntPush( vInit, pObj.fMarkB );\n    }\n    return vInit;\n}"
+    },
+    {
+      "Name": "Ssw_RarSimulate2",
+      "Start": 9991,
+      "End": 12327,
+      "BodyStart": 10111,
+      "Original": "int Ssw_RarSimulate2( Aig_Man_t * pAig, int nFrames, int nWords, int nBinSize, int nRounds, int TimeOut, int fVerbose )\n{\n    int fMiter = 1;\n    Ssw_RarMan_t * p;\n    int r;\n    abctime clk, clkTotal = Abc_Clock();\n    abctime nTimeToStop = TimeOut ? TimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0;\n    int RetValue = -1;\n    assert( Aig_ManRegNum(pAig) \u003e 0 );\n    assert( Aig_ManConstrNum(pAig) == 0 );\n    // consider the case of empty AIG\n    if ( Aig_ManNodeNum(pAig) == 0 )\n        return -1;\n    if ( fVerbose )\n        Abc_Print( 1, \"Simulating %d words through %d frames with %d binsize, %d rounds, and %d sec timeout.\\n\",\n            nWords, nFrames, nBinSize, nRounds, TimeOut );\n    // reset random numbers\n    Aig_ManRandom( 1 );\n\n    // create manager\n    p = Ssw_RarManStart( pAig, nWords, nFrames, nBinSize, fVerbose );\n    p-\u003evInits = Vec_IntStart( Aig_ManRegNum(pAig) * nWords );\n    Ssw_SmlInitializeSpecial( p-\u003epSml, p-\u003evInits );\n\n    // perform simulation rounds\n    for ( r = 0; r \u003c nRounds; r++ )\n    {\n        clk = Abc_Clock();\n        // simulate\n        Ssw_SmlSimulateOne( p-\u003epSml );\n        if ( fMiter \u0026\u0026 Ssw_SmlCheckNonConstOutputs(p-\u003epSml) )\n        {\n            if ( fVerbose ) Abc_Print( 1, \"\\n\" );\n            Abc_Print( 1, \"Simulation asserted a PO in frame f: %d \u003c= f \u003c %d.\\n\", r * nFrames, (r+1) * nFrames );\n            RetValue = 0;\n            break;\n        }\n        // get initialization patterns\n        Ssw_RarUpdateCounters( p );\n        Ssw_RarTransferPatterns( p, p-\u003evInits );\n        Ssw_SmlInitializeSpecial( p-\u003epSml, p-\u003evInits );\n        // printout\n        if ( fVerbose )\n        {\n//            Abc_Print( 1, \"Round %3d:  \", r );\n//            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            Abc_Print( 1, \".\" );\n        }\n        // check timeout\n        if ( TimeOut \u0026\u0026 Abc_Clock() \u003e nTimeToStop )\n        {\n            if ( fVerbose ) Abc_Print( 1, \"\\n\" );\n            Abc_Print( 1, \"Reached timeout (%d seconds).\\n\",  TimeOut );\n            break;\n        }\n    }\n    if ( r == nRounds )\n    {\n        if ( fVerbose ) Abc_Print( 1, \"\\n\" );\n        Abc_Print( 1, \"Simulation did not assert POs in the first %d frames.  \", nRounds * nFrames );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n    }\n    // cleanup\n    Ssw_RarManStop( p );\n    return RetValue;\n}",
+      "Draft": "func Ssw_RarSimulate2(pAig *Aig_Man_t, nFrames int32, nWords int32, nBinSize int32, nRounds int32, TimeOut int32, fVerbose int32) int32 {\n    var fMiter int32  = 1;\n    var p *Ssw_RarMan_t;\n    var r int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    var nTimeToStop abctime;\n    if TimeOut {\n        nTimeToStop = TimeOut * int64(time.Second) + Abc_Clock();\n    } else {\n        nTimeToStop = 0;\n    }\n    var RetValue int32  = -1;\n    assert(Aig_ManRegNum(pAig) \u003e 0, \"Aig_ManRegNum(pAig) \u003e 0\");\n    assert(Aig_ManConstrNum(pAig) == 0, \"Aig_ManConstrNum(pAig) == 0\");\n    // consider the case of empty AIG\n    if Aig_ManNodeNum(pAig) == 0 {\n        return -1; }\n    if fVerbose != 0 {\n        Abc_Print( 1, \"Simulating %d words through %d frames with %d binsize, %d rounds, and %d sec timeout.\\n\",\n            nWords, nFrames, nBinSize, nRounds, TimeOut ); }\n    // reset random numbers\n    Aig_ManRandom( 1 );\n\n    // create manager\n    p = Ssw_RarManStart( pAig, nWords, nFrames, nBinSize, fVerbose );\n    p.vInits = Vec_IntStart( Aig_ManRegNum(pAig) * nWords );\n    Ssw_SmlInitializeSpecial( p.pSml, p.vInits );\n\n    // perform simulation rounds\n    for  r = 0; r \u003c nRounds; r++  {\n        clk = Abc_Clock();\n        // simulate\n        Ssw_SmlSimulateOne( p.pSml );\n        if (fMiter != 0) \u0026\u0026 Ssw_SmlCheckNonConstOutputs(p.pSml) {\n            if fVerbose != 0 { Abc_Print( 1, \"\\n\" ); }\n            Abc_Print( 1, \"Simulation asserted a PO in frame f: %d \u003c= f \u003c %d.\\n\", r * nFrames, (r+1) * nFrames );\n            RetValue = 0;\n            break;\n        }\n        // get initialization patterns\n        Ssw_RarUpdateCounters( p );\n        Ssw_RarTransferPatterns( p, p.vInits );\n        Ssw_SmlInitializeSpecial( p.pSml, p.vInits );\n        // printout\n        if fVerbose != 0 {\n//            Abc_Print( 1, \"Round %3d:  \", r );\n//            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            Abc_Print( 1, \".\" );\n        }\n        // check timeout\n        if TimeOut \u0026\u0026 Abc_Clock() \u003e nTimeToStop {\n            if fVerbose != 0 { Abc_Print( 1, \"\\n\" ); }\n            Abc_Print( 1, \"Reached timeout (%d seconds).\\n\",  TimeOut );\n            break;\n        }\n    }\n    if r == nRounds {\n        if fVerbose != 0 { Abc_Print( 1, \"\\n\" ); }\n        Abc_Print( 1, \"Simulation did not assert POs in the first %d frames.  \", nRounds * nFrames );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n    }\n    // cleanup\n    Ssw_RarManStop( p );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Ssw_RarSignalFilter2",
+      "Start": 12600,
+      "End": 16257,
+      "BodyStart": 12758,
+      "Original": "int Ssw_RarSignalFilter2( Aig_Man_t * pAig, int nFrames, int nWords, int nBinSize, int nRounds, int TimeOut, Abc_Cex_t * pCex, int fLatchOnly, int fVerbose )\n{\n    int fMiter = 0;\n    Ssw_RarMan_t * p;\n    int r, i, k;\n    abctime clkTotal = Abc_Clock();\n    abctime nTimeToStop = TimeOut ? TimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0;\n    int RetValue = -1;\n    assert( Aig_ManRegNum(pAig) \u003e 0 );\n    assert( Aig_ManConstrNum(pAig) == 0 );\n    // consider the case of empty AIG\n    if ( Aig_ManNodeNum(pAig) == 0 )\n        return -1;\n    if ( fVerbose )\n        Abc_Print( 1, \"Filtering equivs with %d words through %d frames with %d binsize, %d rounds, and %d sec timeout.\\n\",\n            nWords, nFrames, nBinSize, nRounds, TimeOut );\n    // reset random numbers\n    Aig_ManRandom( 1 );\n\n    // create manager\n    p = Ssw_RarManStart( pAig, nWords, nFrames, nBinSize, fVerbose );\n    // compute starting state if needed\n    assert( p-\u003evInits == NULL );\n    if ( pCex )\n        p-\u003evInits = Ssw_RarFindStartingState( pAig, pCex );\n    else\n        p-\u003evInits = Vec_IntStart( Aig_ManRegNum(pAig) );\n    // duplicate the array\n    for ( i = 1; i \u003c nWords; i++ )\n        for ( k = 0; k \u003c Aig_ManRegNum(pAig); k++ )\n            Vec_IntPush( p-\u003evInits, Vec_IntEntry(p-\u003evInits, k) );\n    assert( Vec_IntSize(p-\u003evInits) == Aig_ManRegNum(pAig) * nWords );\n    // initialize simulation manager\n    Ssw_SmlInitializeSpecial( p-\u003epSml, p-\u003evInits );\n\n    // create trivial equivalence classes with all nodes being candidates for constant 1\n    if ( pAig-\u003epReprs == NULL )\n        p-\u003eppClasses = Ssw_ClassesPrepareSimple( pAig, fLatchOnly, 0 );\n    else\n        p-\u003eppClasses = Ssw_ClassesPrepareFromReprs( pAig );\n    Ssw_ClassesSetData( p-\u003eppClasses, p-\u003epSml, NULL, (int(*)(void *,Aig_Obj_t *))Ssw_SmlObjIsConstWord, (int(*)(void *,Aig_Obj_t *,Aig_Obj_t *))Ssw_SmlObjsAreEqualWord );\n    // print the stats\n    if ( fVerbose )\n    {\n        Abc_Print( 1, \"Initial  :  \" );\n        Ssw_ClassesPrint( p-\u003eppClasses, 0 );\n    }\n    // refine classes using BMC\n    for ( r = 0; r \u003c nRounds; r++ )\n    {\n        // start filtering equivalence classes\n        if ( Ssw_ClassesCand1Num(p-\u003eppClasses) == 0 \u0026\u0026 Ssw_ClassesClassNum(p-\u003eppClasses) == 0 )\n        {\n            Abc_Print( 1, \"All equivalences are refined away.\\n\" );\n            break;\n        }\n        // simulate\n        Ssw_SmlSimulateOne( p-\u003epSml );\n        if ( fMiter \u0026\u0026 Ssw_SmlCheckNonConstOutputs(p-\u003epSml) )\n        {\n            if ( fVerbose ) Abc_Print( 1, \"\\n\" );\n            Abc_Print( 1, \"Simulation asserted a PO in frame f: %d \u003c= f \u003c %d.\\n\", r * nFrames, (r+1) * nFrames );\n            RetValue = 0;\n            break;\n        }\n        // check equivalence classes\n        Ssw_ClassesRefineConst1( p-\u003eppClasses, 1 );\n        Ssw_ClassesRefine( p-\u003eppClasses, 1 );\n        // printout\n        if ( fVerbose )\n        {\n            Abc_Print( 1, \"Round %3d:  \", r );\n            Ssw_ClassesPrint( p-\u003eppClasses, 0 );\n        }\n        // get initialization patterns\n        Ssw_RarUpdateCounters( p );\n        Ssw_RarTransferPatterns( p, p-\u003evInits );\n        Ssw_SmlInitializeSpecial( p-\u003epSml, p-\u003evInits );\n        // check timeout\n        if ( TimeOut \u0026\u0026 Abc_Clock() \u003e nTimeToStop )\n        {\n            if ( fVerbose ) Abc_Print( 1, \"\\n\" );\n            Abc_Print( 1, \"Reached timeout (%d seconds).\\n\",  TimeOut );\n            break;\n        }\n    }\n    if ( r == nRounds )\n    {\n        Abc_Print( 1, \"Simulation did not assert POs in the first %d frames.  \", nRounds * nFrames );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n    }\n    // cleanup\n    Ssw_RarManStop( p );\n    return -1;\n}",
+      "Draft": "func Ssw_RarSignalFilter2(pAig *Aig_Man_t, nFrames int32, nWords int32, nBinSize int32, nRounds int32, TimeOut int32, pCex *Abc_Cex_t, fLatchOnly int32, fVerbose int32) int32 {\n    var fMiter int32;\n    var p *Ssw_RarMan_t;\n    var r, i, k int32;\n    var clkTotal abctime  = Abc_Clock();\n    var nTimeToStop abctime;\n    if TimeOut {\n        nTimeToStop = TimeOut * int64(time.Second) + Abc_Clock();\n    } else {\n        nTimeToStop = 0;\n    }\n    var RetValue int32  = -1;\n    assert(Aig_ManRegNum(pAig) \u003e 0, \"Aig_ManRegNum(pAig) \u003e 0\");\n    assert(Aig_ManConstrNum(pAig) == 0, \"Aig_ManConstrNum(pAig) == 0\");\n    // consider the case of empty AIG\n    if Aig_ManNodeNum(pAig) == 0 {\n        return -1; }\n    if fVerbose != 0 {\n        Abc_Print( 1, \"Filtering equivs with %d words through %d frames with %d binsize, %d rounds, and %d sec timeout.\\n\",\n            nWords, nFrames, nBinSize, nRounds, TimeOut ); }\n    // reset random numbers\n    Aig_ManRandom( 1 );\n\n    // create manager\n    p = Ssw_RarManStart( pAig, nWords, nFrames, nBinSize, fVerbose );\n    // compute starting state if needed\n    assert(p.vInits == nil, \"p.vInits == nil\");\n    if pCex != nil {\n        p.vInits = Ssw_RarFindStartingState( pAig, pCex );\n    } else {\n        p.vInits = Vec_IntStart( Aig_ManRegNum(pAig) ); }\n    // duplicate the array\n    for  i = 1; i \u003c nWords; i++  {\n        for  k = 0; k \u003c Aig_ManRegNum(pAig); k++  {\n            Vec_IntPush( p.vInits, Vec_IntEntry(p.vInits, k) );\n        }\n    }\n    assert(Vec_IntSize(p.vInits) == Aig_ManRegNum(pAig) * nWords, \"Vec_IntSize(p.vInits) == Aig_ManRegNum(pAig) * nWords\");\n    // initialize simulation manager\n    Ssw_SmlInitializeSpecial( p.pSml, p.vInits );\n\n    // create trivial equivalence classes with all nodes being candidates for constant 1\n    if pAig.pReprs == nil {\n        p.ppClasses = Ssw_ClassesPrepareSimple( pAig, fLatchOnly, 0 );\n    } else {\n        p.ppClasses = Ssw_ClassesPrepareFromReprs( pAig ); }\n    Ssw_ClassesSetData( p.ppClasses, p.pSml, nil, (int(*)(void *,Aig_Obj_t *))Ssw_SmlObjIsConstWord, (int(*)(void *,Aig_Obj_t *,Aig_Obj_t *))Ssw_SmlObjsAreEqualWord );\n    // print the stats\n    if fVerbose != 0 {\n        Abc_Print( 1, \"Initial  :  \" );\n        Ssw_ClassesPrint( p.ppClasses, 0 );\n    }\n    // refine classes using BMC\n    for  r = 0; r \u003c nRounds; r++  {\n        // start filtering equivalence classes\n        if Ssw_ClassesCand1Num(p.ppClasses) == 0 \u0026\u0026 Ssw_ClassesClassNum(p.ppClasses) == 0 {\n            Abc_Print( 1, \"All equivalences are refined away.\\n\" );\n            break;\n        }\n        // simulate\n        Ssw_SmlSimulateOne( p.pSml );\n        if (fMiter != 0) \u0026\u0026 Ssw_SmlCheckNonConstOutputs(p.pSml) {\n            if fVerbose != 0 { Abc_Print( 1, \"\\n\" ); }\n            Abc_Print( 1, \"Simulation asserted a PO in frame f: %d \u003c= f \u003c %d.\\n\", r * nFrames, (r+1) * nFrames );\n            RetValue = 0;\n            break;\n        }\n        // check equivalence classes\n        Ssw_ClassesRefineConst1( p.ppClasses, 1 );\n        Ssw_ClassesRefine( p.ppClasses, 1 );\n        // printout\n        if fVerbose != 0 {\n            Abc_Print( 1, \"Round %3d:  \", r );\n            Ssw_ClassesPrint( p.ppClasses, 0 );\n        }\n        // get initialization patterns\n        Ssw_RarUpdateCounters( p );\n        Ssw_RarTransferPatterns( p, p.vInits );\n        Ssw_SmlInitializeSpecial( p.pSml, p.vInits );\n        // check timeout\n        if TimeOut \u0026\u0026 Abc_Clock() \u003e nTimeToStop {\n            if fVerbose != 0 { Abc_Print( 1, \"\\n\" ); }\n            Abc_Print( 1, \"Reached timeout (%d seconds).\\n\",  TimeOut );\n            break;\n        }\n    }\n    if r == nRounds {\n        Abc_Print( 1, \"Simulation did not assert POs in the first %d frames.  \", nRounds * nFrames );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n    }\n    // cleanup\n    Ssw_RarManStop( p );\n    return -1;\n}"
+    },
+    {
+      "Name": "Ssw_RarSignalFilterGia2",
+      "Start": 16529,
+      "End": 17114,
+      "BodyStart": 16687,
+      "Original": "int Ssw_RarSignalFilterGia2( Gia_Man_t * p, int nFrames, int nWords, int nBinSize, int nRounds, int TimeOut, Abc_Cex_t * pCex, int fLatchOnly, int fVerbose )\n{\n    Aig_Man_t * pAig;\n    int RetValue;\n    pAig = Gia_ManToAigSimple( p );\n    if ( p-\u003epReprs != NULL )\n    {\n        Gia_ManReprToAigRepr2( pAig, p );\n        ABC_FREE( p-\u003epReprs );\n        ABC_FREE( p-\u003epNexts );\n    }\n    RetValue = Ssw_RarSignalFilter2( pAig, nFrames, nWords, nBinSize, nRounds, TimeOut, pCex, fLatchOnly, fVerbose );\n    Gia_ManReprFromAigRepr( pAig, p );\n    Aig_ManStop( pAig );\n    return RetValue;\n}",
+      "Draft": "func Ssw_RarSignalFilterGia2(p *Gia_Man_t, nFrames int32, nWords int32, nBinSize int32, nRounds int32, TimeOut int32, pCex *Abc_Cex_t, fLatchOnly int32, fVerbose int32) int32 {\n    var pAig *Aig_Man_t;\n    var RetValue int32;\n    pAig = Gia_ManToAigSimple( p );\n    if p.pReprs != nil {\n        Gia_ManReprToAigRepr2( pAig, p );\n        // inlining of macro ABC_FREE\n        ((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);\n    }\n    RetValue = Ssw_RarSignalFilter2( pAig, nFrames, nWords, nBinSize, nRounds, TimeOut, pCex, fLatchOnly, fVerbose );\n    Gia_ManReprFromAigRepr( pAig, p );\n    Aig_ManStop( pAig );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::struct::Ssw_RarMan_t",
+      "Category": "struct-review",
+      "Symbol": "Ssw_RarMan_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 848,
+      "End": 1781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::mechanical::sizeof::3328",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3244,
+      "End": 3244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::mechanical::sizeof::3648",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3469,
+      "End": 3469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::mechanical::sizeof::3769",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3540,
+      "End": 3540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::mechanical::sizeof::3894",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3590,
+      "End": 3590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::3291",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3244,
+      "End": 3244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::3593",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3469,
+      "End": 3469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::3732",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3540,
+      "End": 3540
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::3850",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3590,
+      "End": 3590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::4547",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4192,
+      "End": 4192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::4677",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4225,
+      "End": 4225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::4799",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4255,
+      "End": 4255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::4908",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4283,
+      "End": 4283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::5796",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5046,
+      "End": 5046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::5905",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5114,
+      "End": 5126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::7175",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6274,
+      "End": 6274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::7284",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6342,
+      "End": 6354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::8577",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7525,
+      "End": 7525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::8686",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7593,
+      "End": 7605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::9577",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8377,
+      "End": 8377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::10069",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8666,
+      "End": 8666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::10640",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8906,
+      "End": 8906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::11111",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9141,
+      "End": 9141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::11722",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9626,
+      "End": 9626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::19049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16850,
+      "End": 16850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::pointer-cast::19168",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16881,
+      "End": 16881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::Ssw_RarGetBinPat",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_RarGetBinPat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1783,
+      "End": 2045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::Ssw_RarSetBinPat",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_RarSetBinPat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2046,
+      "End": 2320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::Ssw_RarAddToBinPat",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_RarAddToBinPat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2321,
+      "End": 2580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::Ssw_RarManStart",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_RarManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3021,
+      "End": 3752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::ternary::Ssw_RarManStop",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_RarManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3973,
+      "End": 4299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::Ssw_RarManStop",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_RarManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3973,
+      "End": 4299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::Ssw_RarUpdateCounters",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_RarUpdateCounters",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4560,
+      "End": 5677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::Ssw_RarTransferPatterns",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_RarTransferPatterns",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5934,
+      "End": 7890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::Ssw_RarFindStartingState",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_RarFindStartingState",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8183,
+      "End": 9724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::Ssw_RarSimulate2",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_RarSimulate2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9991,
+      "End": 12327
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::Ssw_RarSignalFilter2",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_RarSignalFilter2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12600,
+      "End": 16257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::ternary::Ssw_RarSignalFilterGia2",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_RarSignalFilterGia2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16529,
+      "End": 17114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::Ssw_RarSignalFilterGia2",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_RarSignalFilterGia2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16529,
+      "End": 17114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswRarity2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17363
+    }
+  ],
+  "Draft": "package ssw\n\nimport \"time\"\n\n/**CFile****************************************************************\n\n  FileName    [sswRarity.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Inductive prover with constraints.]\n\n  Synopsis    [Rarity-driven refinement of equivalence classes.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 1, 2008.]\n\n  Revision    [$Id: sswRarity.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sswInt.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Ssw_RarMan_t struct {\n    // parameters\n    nWords            int32;       // the number of words to simulate\n    nFrames            int32;      // the number of frames to simulate\n    nBinSize            int32;     // the number of flops in one group\n    fVerbose            int32;     // the verbosiness flag\n    nGroups            int32;      // the number of flop groups\n    // internal data\n    pAig     *Aig_Man_t;         // AIG with equivalence classes\n    ppClasses     *Ssw_Cla_t;    // equivalence classes\n    pSml     *Ssw_Sml_t;         // simulation manager\n    vSimInfo     *Vec_Ptr_t;     // simulation info from pSml manager\n    vInits     *Vec_Int_t;       // initial state\n    // rarity data\n    pRarity           *int32;      // occur counts for patterns in groups\n    pGroupValues           *int32; // occur counts in each group\n    pPatCosts        *float64;    // pattern costs\n\n}\n\nfunc Ssw_RarGetBinPat(p *Ssw_RarMan_t, iBin int32, iPat int32) int32 {\n    assert(iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize, \"iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize\");\n    assert(iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize), \"iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize)\");\n    return p.pRarity[iBin * (1 \u003c\u003c p.nBinSize) + iPat];\n}\nfunc Ssw_RarSetBinPat(p *Ssw_RarMan_t, iBin int32, iPat int32, Value int32) {\n    assert(iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize, \"iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize\");\n    assert(iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize), \"iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize)\");\n    p.pRarity[iBin * (1 \u003c\u003c p.nBinSize) + iPat] = Value;\n}\nfunc Ssw_RarAddToBinPat(p *Ssw_RarMan_t, iBin int32, iPat int32) {\n    assert(iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize, \"iBin \u003e= 0 \u0026\u0026 iBin \u003c Aig_ManRegNum(p.pAig) / p.nBinSize\");\n    assert(iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize), \"iPat \u003e= 0 \u0026\u0026 iPat \u003c (1 \u003c\u003c p.nBinSize)\");\n    p.pRarity[iBin * (1 \u003c\u003c p.nBinSize) + iPat]++;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_RarManStart(pAig *Aig_Man_t, nWords int32, nFrames int32, nBinSize int32, fVerbose int32) *Ssw_RarMan_t {\n    var p *Ssw_RarMan_t;\n    if Aig_ManRegNum(pAig) \u003c nBinSize || nBinSize \u003c= 0 {\n        return nil; }\n    // inlining of macro ABC_CALLOC\n    p = \u0026Ssw_RarMan_t{};\n    p.pAig = pAig;\n    p.nWords = nWords;\n    p.nFrames = nFrames;\n    p.nBinSize = nBinSize;\n    p.fVerbose = fVerbose;\n    p.nGroups  = Aig_ManRegNum(pAig) / nBinSize;\n    // inlining of macro ABC_CALLOC\n    p.pRarity  = ((int *) calloc((size_t)((1 \u003c\u003c nBinSize) * p.nGroups), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    p.pGroupValues = ((int *) calloc((size_t)(p.nGroups), sizeof(int)));\n    // inlining of macro ABC_CALLOC\n    p.pPatCosts = ((double *) calloc((size_t)(p.nWords * 32), sizeof(double)));\n    p.pSml = Ssw_SmlStart( pAig, 0, nFrames, nWords );\n    p.vSimInfo = Ssw_SmlSimDataPointers( p.pSml );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_RarManStop(p *Ssw_RarMan_t) {\n    if p.pSml { Ssw_SmlStop( p.pSml ); }\n    if p.ppClasses { Ssw_ClassesStop( p.ppClasses ); }\n    Vec_PtrFreeP( \u0026p.vSimInfo );\n    Vec_IntFreeP( \u0026p.vInits );\n    // inlining of macro ABC_FREE\n    ((p.pGroupValues) ? (free((char *) (p.pGroupValues)), (p.pGroupValues) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPatCosts) ? (free((char *) (p.pPatCosts)), (p.pPatCosts) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pRarity) ? (free((char *) (p.pRarity)), (p.pRarity) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Updates rarity counters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_RarUpdateCounters(p *Ssw_RarMan_t) {\n    var pObj *Aig_Obj_t;\n    var pData *uint32;\n    var i, k int32;\n/*\n    Saig_ManForEachLi( p-\u003epAig, pObj, i )\n    {\n        pData = (unsigned *)Vec_PtrEntry( p-\u003evSimInfo, Aig_ObjId(pObj) ) + p-\u003enWords * (p-\u003enFrames - 1);\n        Extra_PrintBinary( stdout, pData, 32 );  Abc_Print( 1, \"\\n\" );\n    }\n*/\n    for  k = 0; k \u003c p.nWords * 32; k++  {\n        for  i = 0; i \u003c p.nGroups; i++  {\n            p.pGroupValues[i] = 0;\n        }\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {\n            pData = (unsigned *)Vec_PtrEntry( p.vSimInfo, Aig_ObjId(pObj) ) + p.nWords * (p.nFrames - 1);\n            if Abc_InfoHasBit(pData, k) \u0026\u0026 i / p.nBinSize \u003c p.nGroups {\n                p.pGroupValues[i / p.nBinSize] |= (1 \u003c\u003c (i % p.nBinSize)); }\n        }\n        for  i = 0; i \u003c p.nGroups; i++  {\n            Ssw_RarAddToBinPat( p, i, p.pGroupValues[i] );\n        }\n    }\n/*\n    for ( i = 0; i \u003c p-\u003enGroups; i++ )\n    {\n        for ( k = 0; k \u003c (1 \u003c\u003c p-\u003enBinSize); k++ )\n            Abc_Print( 1, \"%d \", Ssw_RarGetBinPat(p, i, k) );\n        Abc_Print( 1, \"\\n\" );\n    }\n*/\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Select best patterns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_RarTransferPatterns(p *Ssw_RarMan_t, vInits *Vec_Int_t) {\n    var pObj *Aig_Obj_t;\n    var pData *uint32;\n    var i, k, Value int32;\n\n    // for each pattern\n    for  k = 0; k \u003c p.nWords * 32; k++  {\n        for  i = 0; i \u003c p.nGroups; i++  {\n            p.pGroupValues[i] = 0;\n        }\n        // compute its group values\n        // inlining of macro Saig_ManForEachLi\n        for  i = 0; (i \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i+Saig_ManPoNum(p.pAig))), 1); i++  {\n            pData = (unsigned *)Vec_PtrEntry( p.vSimInfo, Aig_ObjId(pObj) ) + p.nWords * (p.nFrames - 1);\n            if Abc_InfoHasBit(pData, k) \u0026\u0026 i / p.nBinSize \u003c p.nGroups {\n                p.pGroupValues[i / p.nBinSize] |= (1 \u003c\u003c (i % p.nBinSize)); }\n        }\n        // find the cost of its values\n        p.pPatCosts[k] = 0.0;\n        for  i = 0; i \u003c p.nGroups; i++  {\n            Value = Ssw_RarGetBinPat( p, i, p.pGroupValues[i] );\n            assert(Value \u003e 0, \"Value \u003e 0\");\n            p.pPatCosts[k] += 1.0/(Value*Value);\n        }\n        // print the result\n//        Abc_Print( 1, \"%3d : %9.6f\\n\", k, p-\u003epPatCosts[k] );\n    }\n\n    // choose as many as there are words\n    Vec_IntClear( vInits );\n    for  i = 0; i \u003c p.nWords; i++  {\n        // select the best\n        var iPatBest int32  = -1;\n        var iCostBest float64  = -ABC_INFINITY;\n        for  k = 0; k \u003c p.nWords * 32; k++  {\n            if iCostBest \u003c p.pPatCosts[k] {\n                iCostBest = p.pPatCosts[k];\n                iPatBest  = k;\n            }\n        }\n        // remove from costs\n        assert(iPatBest \u003e= 0, \"iPatBest \u003e= 0\");\n        p.pPatCosts[iPatBest] = -ABC_INFINITY;\n        // set the flops\n        // inlining of macro Saig_ManForEachLi\n        for  k = 0; (k \u003c Saig_ManRegNum(p.pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, k+Saig_ManPoNum(p.pAig))), 1); k++  {\n            pData = (unsigned *)Vec_PtrEntry( p.vSimInfo, Aig_ObjId(pObj) ) + p.nWords * (p.nFrames - 1);\n            Vec_IntPush( vInits, Abc_InfoHasBit(pData, iPatBest) );\n        }\n//Abc_Print( 1, \"Best pattern %5d\\n\", iPatBest );\n    }\n    assert(Vec_IntSize(vInits) == Aig_ManRegNum(p.pAig) * p.nWords, \"Vec_IntSize(vInits) == Aig_ManRegNum(p.pAig) * p.nWords\");\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs fraiging for one node.]\n\n  Description [Returns the fraiged node.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_RarFindStartingState(pAig *Aig_Man_t, pCex *Abc_Cex_t) *Vec_Int_t {\n    var vInit *Vec_Int_t;\n    var pObj, pObjLi *Aig_Obj_t;\n    var f, i, iBit int32;\n    // assign register outputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        pObj.fMarkB = Abc_InfoHasBit( pCex.pData, i );\n    }\n    // simulate the timeframes\n    iBit = pCex.nRegs;\n    for  f = 0; f \u003c= pCex.iFrame; f++  {\n        // set the PI simulation information\n        Aig_ManConst1(pAig).fMarkB = 1;\n        // inlining of macro Saig_ManForEachPi\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n            pObj.fMarkB = Abc_InfoHasBit( pCex.pData, iBit++ );\n        }\n        // inlining of macro Saig_ManForEachLiLo\n        for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObj)=Saig_ManLo(pAig, i)), 1); i++  {\n            pObj.fMarkB = pObjLi.fMarkB;\n        }\n        // simulate internal nodes\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) )\n                         \u0026 ( Aig_ObjFanin1(pObj).fMarkB ^ Aig_ObjFaninC1(pObj) ); }\n        }\n        // assign the COs\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i)), 1); i++  {\n            pObj.fMarkB = ( Aig_ObjFanin0(pObj).fMarkB ^ Aig_ObjFaninC0(pObj) );\n        }\n    }\n    assert(iBit == pCex.nBits, \"iBit == pCex.nBits\");\n    // check that the output failed as expected -- cannot check because it is not an SRM!\n//    pObj = Aig_ManCo( pAig, pCex-\u003eiPo );\n//    if ( pObj-\u003efMarkB != 1 )\n//        Abc_Print( 1, \"The counter-example does not refine the output.\\n\" );\n    // record the new pattern\n    vInit = Vec_IntAlloc( Saig_ManRegNum(pAig) );\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        Vec_IntPush( vInit, pObj.fMarkB );\n    }\n    return vInit;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Perform sequential simulation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_RarSimulate2(pAig *Aig_Man_t, nFrames int32, nWords int32, nBinSize int32, nRounds int32, TimeOut int32, fVerbose int32) int32 {\n    var fMiter int32  = 1;\n    var p *Ssw_RarMan_t;\n    var r int32;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    var nTimeToStop abctime;\n    if TimeOut {\n        nTimeToStop = TimeOut * int64(time.Second) + Abc_Clock();\n    } else {\n        nTimeToStop = 0;\n    }\n    var RetValue int32  = -1;\n    assert(Aig_ManRegNum(pAig) \u003e 0, \"Aig_ManRegNum(pAig) \u003e 0\");\n    assert(Aig_ManConstrNum(pAig) == 0, \"Aig_ManConstrNum(pAig) == 0\");\n    // consider the case of empty AIG\n    if Aig_ManNodeNum(pAig) == 0 {\n        return -1; }\n    if fVerbose != 0 {\n        Abc_Print( 1, \"Simulating %d words through %d frames with %d binsize, %d rounds, and %d sec timeout.\\n\",\n            nWords, nFrames, nBinSize, nRounds, TimeOut ); }\n    // reset random numbers\n    Aig_ManRandom( 1 );\n\n    // create manager\n    p = Ssw_RarManStart( pAig, nWords, nFrames, nBinSize, fVerbose );\n    p.vInits = Vec_IntStart( Aig_ManRegNum(pAig) * nWords );\n    Ssw_SmlInitializeSpecial( p.pSml, p.vInits );\n\n    // perform simulation rounds\n    for  r = 0; r \u003c nRounds; r++  {\n        clk = Abc_Clock();\n        // simulate\n        Ssw_SmlSimulateOne( p.pSml );\n        if (fMiter != 0) \u0026\u0026 Ssw_SmlCheckNonConstOutputs(p.pSml) {\n            if fVerbose != 0 { Abc_Print( 1, \"\\n\" ); }\n            Abc_Print( 1, \"Simulation asserted a PO in frame f: %d \u003c= f \u003c %d.\\n\", r * nFrames, (r+1) * nFrames );\n            RetValue = 0;\n            break;\n        }\n        // get initialization patterns\n        Ssw_RarUpdateCounters( p );\n        Ssw_RarTransferPatterns( p, p.vInits );\n        Ssw_SmlInitializeSpecial( p.pSml, p.vInits );\n        // printout\n        if fVerbose != 0 {\n//            Abc_Print( 1, \"Round %3d:  \", r );\n//            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            Abc_Print( 1, \".\" );\n        }\n        // check timeout\n        if TimeOut \u0026\u0026 Abc_Clock() \u003e nTimeToStop {\n            if fVerbose != 0 { Abc_Print( 1, \"\\n\" ); }\n            Abc_Print( 1, \"Reached timeout (%d seconds).\\n\",  TimeOut );\n            break;\n        }\n    }\n    if r == nRounds {\n        if fVerbose != 0 { Abc_Print( 1, \"\\n\" ); }\n        Abc_Print( 1, \"Simulation did not assert POs in the first %d frames.  \", nRounds * nFrames );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n    }\n    // cleanup\n    Ssw_RarManStop( p );\n    return RetValue;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Filter equivalence classes of nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_RarSignalFilter2(pAig *Aig_Man_t, nFrames int32, nWords int32, nBinSize int32, nRounds int32, TimeOut int32, pCex *Abc_Cex_t, fLatchOnly int32, fVerbose int32) int32 {\n    var fMiter int32;\n    var p *Ssw_RarMan_t;\n    var r, i, k int32;\n    var clkTotal abctime  = Abc_Clock();\n    var nTimeToStop abctime;\n    if TimeOut {\n        nTimeToStop = TimeOut * int64(time.Second) + Abc_Clock();\n    } else {\n        nTimeToStop = 0;\n    }\n    var RetValue int32  = -1;\n    assert(Aig_ManRegNum(pAig) \u003e 0, \"Aig_ManRegNum(pAig) \u003e 0\");\n    assert(Aig_ManConstrNum(pAig) == 0, \"Aig_ManConstrNum(pAig) == 0\");\n    // consider the case of empty AIG\n    if Aig_ManNodeNum(pAig) == 0 {\n        return -1; }\n    if fVerbose != 0 {\n        Abc_Print( 1, \"Filtering equivs with %d words through %d frames with %d binsize, %d rounds, and %d sec timeout.\\n\",\n            nWords, nFrames, nBinSize, nRounds, TimeOut ); }\n    // reset random numbers\n    Aig_ManRandom( 1 );\n\n    // create manager\n    p = Ssw_RarManStart( pAig, nWords, nFrames, nBinSize, fVerbose );\n    // compute starting state if needed\n    assert(p.vInits == nil, \"p.vInits == nil\");\n    if pCex != nil {\n        p.vInits = Ssw_RarFindStartingState( pAig, pCex );\n    } else {\n        p.vInits = Vec_IntStart( Aig_ManRegNum(pAig) ); }\n    // duplicate the array\n    for  i = 1; i \u003c nWords; i++  {\n        for  k = 0; k \u003c Aig_ManRegNum(pAig); k++  {\n            Vec_IntPush( p.vInits, Vec_IntEntry(p.vInits, k) );\n        }\n    }\n    assert(Vec_IntSize(p.vInits) == Aig_ManRegNum(pAig) * nWords, \"Vec_IntSize(p.vInits) == Aig_ManRegNum(pAig) * nWords\");\n    // initialize simulation manager\n    Ssw_SmlInitializeSpecial( p.pSml, p.vInits );\n\n    // create trivial equivalence classes with all nodes being candidates for constant 1\n    if pAig.pReprs == nil {\n        p.ppClasses = Ssw_ClassesPrepareSimple( pAig, fLatchOnly, 0 );\n    } else {\n        p.ppClasses = Ssw_ClassesPrepareFromReprs( pAig ); }\n    Ssw_ClassesSetData( p.ppClasses, p.pSml, nil, (int(*)(void *,Aig_Obj_t *))Ssw_SmlObjIsConstWord, (int(*)(void *,Aig_Obj_t *,Aig_Obj_t *))Ssw_SmlObjsAreEqualWord );\n    // print the stats\n    if fVerbose != 0 {\n        Abc_Print( 1, \"Initial  :  \" );\n        Ssw_ClassesPrint( p.ppClasses, 0 );\n    }\n    // refine classes using BMC\n    for  r = 0; r \u003c nRounds; r++  {\n        // start filtering equivalence classes\n        if Ssw_ClassesCand1Num(p.ppClasses) == 0 \u0026\u0026 Ssw_ClassesClassNum(p.ppClasses) == 0 {\n            Abc_Print( 1, \"All equivalences are refined away.\\n\" );\n            break;\n        }\n        // simulate\n        Ssw_SmlSimulateOne( p.pSml );\n        if (fMiter != 0) \u0026\u0026 Ssw_SmlCheckNonConstOutputs(p.pSml) {\n            if fVerbose != 0 { Abc_Print( 1, \"\\n\" ); }\n            Abc_Print( 1, \"Simulation asserted a PO in frame f: %d \u003c= f \u003c %d.\\n\", r * nFrames, (r+1) * nFrames );\n            RetValue = 0;\n            break;\n        }\n        // check equivalence classes\n        Ssw_ClassesRefineConst1( p.ppClasses, 1 );\n        Ssw_ClassesRefine( p.ppClasses, 1 );\n        // printout\n        if fVerbose != 0 {\n            Abc_Print( 1, \"Round %3d:  \", r );\n            Ssw_ClassesPrint( p.ppClasses, 0 );\n        }\n        // get initialization patterns\n        Ssw_RarUpdateCounters( p );\n        Ssw_RarTransferPatterns( p, p.vInits );\n        Ssw_SmlInitializeSpecial( p.pSml, p.vInits );\n        // check timeout\n        if TimeOut \u0026\u0026 Abc_Clock() \u003e nTimeToStop {\n            if fVerbose != 0 { Abc_Print( 1, \"\\n\" ); }\n            Abc_Print( 1, \"Reached timeout (%d seconds).\\n\",  TimeOut );\n            break;\n        }\n    }\n    if r == nRounds {\n        Abc_Print( 1, \"Simulation did not assert POs in the first %d frames.  \", nRounds * nFrames );\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkTotal );\n    }\n    // cleanup\n    Ssw_RarManStop( p );\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Filter equivalence classes of nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_RarSignalFilterGia2(p *Gia_Man_t, nFrames int32, nWords int32, nBinSize int32, nRounds int32, TimeOut int32, pCex *Abc_Cex_t, fLatchOnly int32, fVerbose int32) int32 {\n    var pAig *Aig_Man_t;\n    var RetValue int32;\n    pAig = Gia_ManToAigSimple( p );\n    if p.pReprs != nil {\n        Gia_ManReprToAigRepr2( pAig, p );\n        // inlining of macro ABC_FREE\n        ((p.pReprs) ? (free((char *) (p.pReprs)), (p.pReprs) = 0) : 0);\n        // inlining of macro ABC_FREE\n        ((p.pNexts) ? (free((char *) (p.pNexts)), (p.pNexts) = 0) : 0);\n    }\n    RetValue = Ssw_RarSignalFilter2( pAig, nFrames, nWords, nBinSize, nRounds, TimeOut, pCex, fLatchOnly, fVerbose );\n    Gia_ManReprFromAigRepr( pAig, p );\n    Aig_ManStop( pAig );\n    return RetValue;\n}\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

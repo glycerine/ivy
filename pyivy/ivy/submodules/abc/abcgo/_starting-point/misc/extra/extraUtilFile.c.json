@@ -1,0 +1,2167 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c",
+  "SHA256": "0770d2afbe856407cfe5e28fc84dde204f53a40a365d4c5c5c6178b90ec91359",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 86,
+        "Column": 13,
+        "ByteOffset": 3129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileNameOther, \"r\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 89,
+        "Column": 17,
+        "ByteOffset": 3284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pFile = fopen( pFileNameOther, \"r\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 92,
+        "Column": 21,
+        "ByteOffset": 3451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pFile = fopen( pFileNameOther, \"r\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 95,
+        "Column": 25,
+        "ByteOffset": 3630
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                pFile = fopen( pFileNameOther, \"r\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 98,
+        "Column": 29,
+        "ByteOffset": 3821
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    pFile = fopen( pFileNameOther, \"r\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 103,
+        "Column": 64,
+        "ByteOffset": 3962
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pFileGen) ? (free((char *) (pFileGen)), (pFileGen) = 0) : 0);"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 105,
+        "Column": 9,
+        "ByteOffset": 4034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 126,
+        "Column": 28,
+        "ByteOffset": 4568
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  pDot = FileName + strlen(FileName)-1; pDot \u003e= FileName; pDot--  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 147,
+        "Column": 5,
+        "ByteOffset": 5086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( strlen(pBase) + strlen(pSuffix) \u003c 500 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 147,
+        "Column": 13,
+        "ByteOffset": 5094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( strlen(pBase) + strlen(pSuffix) \u003c 500 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 147,
+        "Column": 29,
+        "ByteOffset": 5110
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( strlen(pBase) + strlen(pSuffix) \u003c 500 );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 148,
+        "Column": 5,
+        "ByteOffset": 5139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( spStatic_Extra_FileNameAppend_Buffer, \"%s%s\", pBase, pSuffix );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 186,
+        "Column": 5,
+        "ByteOffset": 6102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( strlen(pBase) + strlen(pSuffix) \u003c 1000 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 186,
+        "Column": 13,
+        "ByteOffset": 6110
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( strlen(pBase) + strlen(pSuffix) \u003c 1000 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 186,
+        "Column": 29,
+        "ByteOffset": 6126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( strlen(pBase) + strlen(pSuffix) \u003c 1000 );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 187,
+        "Column": 5,
+        "ByteOffset": 6156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( spStatic_Extra_FileNameGenericAppend_Buffer, pBase );"
+    },
+    {
+      "Name": "strcat",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 190,
+        "Column": 5,
+        "ByteOffset": 6319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcat( spStatic_Extra_FileNameGenericAppend_Buffer, pSuffix );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 227,
+        "Column": 28,
+        "ByteOffset": 7228
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  pRes = FileName + strlen(FileName) - 1; pRes \u003e= FileName; pRes--  {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 236,
+        "Column": 28,
+        "ByteOffset": 7529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  pRes = FileName + strlen(FileName) - 1; pRes \u003e= FileName; pRes--  {"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 243,
+        "Column": 64,
+        "ByteOffset": 7801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((FileName) ? (free((char *) (FileName)), (FileName) = 0) : 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 260,
+        "Column": 69,
+        "ByteOffset": 8428
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pStore = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(pEnd - pBeg + 1)));"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 281,
+        "Column": 13,
+        "ByteOffset": 8963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 9,
+        "ByteOffset": 9019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Extra_FileCheck():  File \\\"%s\\\" does not exist.\\n\", pFileName );"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 286,
+        "Column": 5,
+        "ByteOffset": 9121
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );"
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 287,
+        "Column": 8,
+        "ByteOffset": 9157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if ftell( pFile ) == 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 288,
+        "Column": 9,
+        "ByteOffset": 9187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Extra_FileCheck():  File \\\"%s\\\" is empty.\\n\", pFileName ); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 289,
+        "Column": 5,
+        "ByteOffset": 9261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 307,
+        "Column": 13,
+        "ByteOffset": 9669
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 309,
+        "Column": 9,
+        "ByteOffset": 9725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Extra_FileSize(): The file is unavailable (absent or open).\\n\" );"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 312,
+        "Column": 5,
+        "ByteOffset": 9828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );  "
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 313,
+        "Column": 17,
+        "ByteOffset": 9875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nFileSize = ftell( pFile ); "
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 314,
+        "Column": 5,
+        "ByteOffset": 9896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 335,
+        "Column": 5,
+        "ByteOffset": 10369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );  "
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 336,
+        "Column": 17,
+        "ByteOffset": 10416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nFileSize = ftell( pFile );  "
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 338,
+        "Column": 5,
+        "ByteOffset": 10501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile ); "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 340,
+        "Column": 70,
+        "ByteOffset": 10637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(nFileSize + 3)));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 341,
+        "Column": 16,
+        "ByteOffset": 10701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( pBuffer, nFileSize, 1, pFile );"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 352,
+        "Column": 5,
+        "ByteOffset": 11051
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );  "
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 353,
+        "Column": 13,
+        "ByteOffset": 11094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nSize = ftell( pFile );  "
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 354,
+        "Column": 5,
+        "ByteOffset": 11116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile ); "
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 356,
+        "Column": 5,
+        "ByteOffset": 11173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile2, 0, SEEK_END );  "
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 357,
+        "Column": 14,
+        "ByteOffset": 11218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nSize2 = ftell( pFile2 );  "
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 358,
+        "Column": 5,
+        "ByteOffset": 11241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile2 ); "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 360,
+        "Column": 70,
+        "ByteOffset": 11378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(nSize + nSize2 + 3)));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 361,
+        "Column": 16,
+        "ByteOffset": 11447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( pBuffer,         nSize,  1, pFile );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 362,
+        "Column": 16,
+        "ByteOffset": 11506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( pBuffer + nSize, nSize2, 1, pFile2 );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 383,
+        "Column": 13,
+        "ByteOffset": 12082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 389,
+        "Column": 17,
+        "ByteOffset": 12224
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFile {  fclose( pFile ); }"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 395,
+        "Column": 14,
+        "ByteOffset": 12409
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile  = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 396,
+        "Column": 14,
+        "ByteOffset": 12448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile2 = fopen( pFileName2, \"rb\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 402,
+        "Column": 17,
+        "ByteOffset": 12610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFile {  fclose( pFile ); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 403,
+        "Column": 17,
+        "ByteOffset": 12645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFile2 { fclose( pFile2 ); }"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 420,
+        "Column": 22,
+        "ByteOffset": 13093
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var lenF int32 = strlen(pFileName);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 422,
+        "Column": 16,
+        "ByteOffset": 13140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        lenS = strlen(pS1);"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 426,
+        "Column": 32,
+        "ByteOffset": 13221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if lenS \u0026\u0026 lenF \u003e lenS \u0026\u0026 !strncmp( pFileName+lenF-lenS, pS1, lenS ) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 429,
+        "Column": 16,
+        "ByteOffset": 13313
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        lenS = strlen(pS2);"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 433,
+        "Column": 32,
+        "ByteOffset": 13394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if lenS \u0026\u0026 lenF \u003e lenS \u0026\u0026 !strncmp( pFileName+lenF-lenS, pS2, lenS ) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 436,
+        "Column": 16,
+        "ByteOffset": 13486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        lenS = strlen(pS3);"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 440,
+        "Column": 32,
+        "ByteOffset": 13567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if lenS \u0026\u0026 lenF \u003e lenS \u0026\u0026 !strncmp( pFileName+lenF-lenS, pS3, lenS ) {"
+    },
+    {
+      "Name": "time",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 462,
+        "Column": 5,
+        "ByteOffset": 14079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    time( \u0026ltime );"
+    },
+    {
+      "Name": "asctime",
+      "Status": "review",
+      "Message": "CPU vs wall clock, epoch, time_t width, timezone and struct layouts must be chosen.",
+      "Location": {
+        "Line": 463,
+        "Column": 17,
+        "ByteOffset": 14111
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    TimeStamp = asctime( localtime( \u0026ltime ) );"
+    },
+    {
+      "Name": "localtime",
+      "Status": "review",
+      "Message": "CPU vs wall clock, epoch, time_t width, timezone and struct layouts must be chosen.",
+      "Location": {
+        "Line": 463,
+        "Column": 26,
+        "ByteOffset": 14120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    TimeStamp = asctime( localtime( \u0026ltime ) );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 464,
+        "Column": 16,
+        "ByteOffset": 14158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    TimeStamp[ strlen(TimeStamp) - 1 ] = 0;"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "review",
+      "Message": "String copy/append needs a standalone call and a known string destination; buffer aliasing/capacity and pointer-result uses remain for review.",
+      "Location": {
+        "Line": 465,
+        "Column": 5,
+        "ByteOffset": 14191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( spStatic_Extra_TimeStamp_Buffer, TimeStamp );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 489,
+        "Column": 13,
+        "ByteOffset": 14778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 509,
+        "Column": 9,
+        "ByteOffset": 15201
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%c\", '0' + Abc_InfoHasBit(Sign, i) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 516,
+        "Column": 9,
+        "ByteOffset": 15423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%c\", '0' + Abc_InfoHasBit(Sign, i) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 542,
+        "Column": 18,
+        "ByteOffset": 16266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); return 0; }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 579,
+        "Column": 13,
+        "ByteOffset": 17337
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d\", Digit );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 581,
+        "Column": 13,
+        "ByteOffset": 17397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%c\", 'a' + Digit-10 ); }"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 599,
+        "Column": 39,
+        "ByteOffset": 17899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if nVars == 0 \u0026\u0026 !(Sign[0] \u0026 1) { sprintf(pString, \"0\"); return; } // const0"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 600,
+        "Column": 39,
+        "ByteOffset": 17980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if nVars == 0 \u0026\u0026  (Sign[0] \u0026 1) { sprintf(pString, \"1\"); return; } // const1"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 601,
+        "Column": 39,
+        "ByteOffset": 18061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if nVars == 1 \u0026\u0026  (Sign[0] \u0026 1) { sprintf(pString, \"1\"); return; } // inverter"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 602,
+        "Column": 39,
+        "ByteOffset": 18144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if nVars == 1 \u0026\u0026 !(Sign[0] \u0026 1) { sprintf(pString, \"2\"); return; } // buffer"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 631,
+        "Column": 5,
+        "ByteOffset": 18949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"0x\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 637,
+        "Column": 13,
+        "ByteOffset": 19174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d\", Digit );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 639,
+        "Column": 13,
+        "ByteOffset": 19234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%c\", 'A' + Digit-10 ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 653,
+        "Column": 13,
+        "ByteOffset": 19693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d\", Digit );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 655,
+        "Column": 13,
+        "ByteOffset": 19753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%c\", 'A' + Digit-10 ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 663,
+        "Column": 5,
+        "ByteOffset": 19991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"0x\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 669,
+        "Column": 13,
+        "ByteOffset": 20211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d\", Digit );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 671,
+        "Column": 13,
+        "ByteOffset": 20271
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%c\", 'A' + Digit-10 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 690,
+        "Column": 9,
+        "ByteOffset": 20758
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%c\", Char );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 693,
+        "Column": 9,
+        "ByteOffset": 20817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 712,
+        "Column": 72,
+        "ByteOffset": 21463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pTemp = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(pStrGiven) + strlen(pStrAdd) + 2)));"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 712,
+        "Column": 103,
+        "ByteOffset": 21494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pTemp = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(pStrGiven) + strlen(pStrAdd) + 2)));"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 712,
+        "Column": 123,
+        "ByteOffset": 21514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pTemp = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(strlen(pStrGiven) + strlen(pStrAdd) + 2)));"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 713,
+        "Column": 9,
+        "ByteOffset": 21546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( pTemp, \"%s%s\", pStrGiven, pStrAdd );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 714,
+        "Column": 69,
+        "ByteOffset": 21660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pStrGiven) ? (free((char *) (pStrGiven)), (pStrGiven) = 0) : 0);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 760,
+        "Column": 12,
+        "ByteOffset": 22790
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    return strcmp(*(char **)pp1, *(char **)pp2);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 779,
+        "Column": 13,
+        "ByteOffset": 23268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 781,
+        "Column": 9,
+        "ByteOffset": 23324
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Extra_FileSort(): Cannot open file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 785,
+        "Column": 5,
+        "ByteOffset": 23460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 787,
+        "Column": 9,
+        "ByteOffset": 23511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Extra_FileSort(): Cannot read contents of file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 795,
+        "Column": 23,
+        "ByteOffset": 23791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pLines = (char **)malloc( sizeof(char *) * nLines );"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 805,
+        "Column": 5,
+        "ByteOffset": 24072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort( pLines, (size_t)nLines, sizeof(char *), (int(*)(void *,void *))Extra_StringCompare );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 807,
+        "Column": 13,
+        "ByteOffset": 24201
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileNameOut, \"wb\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 810,
+        "Column": 13,
+        "ByteOffset": 24303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s\\n\", pLines[i] ); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 812,
+        "Column": 5,
+        "ByteOffset": 24352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 814,
+        "Column": 5,
+        "ByteOffset": 24388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free( pLines );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 815,
+        "Column": 5,
+        "ByteOffset": 24408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free( pContents );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 817,
+        "Column": 5,
+        "ByteOffset": 24456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The file after sorting is \\\"%s\\\".\\n\", pFileNameOut );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 837,
+        "Column": 13,
+        "ByteOffset": 24949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 839,
+        "Column": 9,
+        "ByteOffset": 25005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Extra_FileLineNumAdd(): Cannot open file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 842,
+        "Column": 14,
+        "ByteOffset": 25115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile2 = fopen( pFileNameOut, \"wb\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 844,
+        "Column": 9,
+        "ByteOffset": 25175
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 845,
+        "Column": 9,
+        "ByteOffset": 25200
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Extra_FileLineNumAdd(): Cannot open file \\\"%s\\\".\\n\", pFileNameOut );"
+    },
+    {
+      "Name": "fgets",
+      "Status": "review",
+      "Message": "fgets needs a known byte array/slice; string mutation or raw-pointer capacity requires a representation decision.",
+      "Location": {
+        "Line": 848,
+        "Column": 21,
+        "ByteOffset": 25320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  iLine = 0; fgets( Buffer, 1000, pFile ); iLine++  {"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "review",
+      "Message": "sprintf count-result or complex destination requires structural repair.",
+      "Location": {
+        "Line": 849,
+        "Column": 9,
+        "ByteOffset": 25369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Buffer + strlen(Buffer) - 2, \"%03d\\n%c\", iLine, 0 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 849,
+        "Column": 27,
+        "ByteOffset": 25387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Buffer + strlen(Buffer) - 2, \"%03d\\n%c\", iLine, 0 );"
+    },
+    {
+      "Name": "fputs",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 850,
+        "Column": 9,
+        "ByteOffset": 25439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fputs( Buffer, pFile2 );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 852,
+        "Column": 5,
+        "ByteOffset": 25474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 853,
+        "Column": 5,
+        "ByteOffset": 25495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 855,
+        "Column": 5,
+        "ByteOffset": 25542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The resulting file is \\\"%s\\\".\\n\", pFileNameOut );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Extra_FileGetSimilarName",
+      "Start": 2690,
+      "End": 4076,
+      "BodyStart": 2807,
+      "Original": "char * Extra_FileGetSimilarName( char * pFileNameWrong, char * pS1, char * pS2, char * pS3, char * pS4, char * pS5 )\n{\n    FILE * pFile;\n    char * pFileNameOther;\n    char * pFileGen;\n\n    if ( pS1 == NULL )\n        return NULL;\n\n    // get the generic file name\n    pFileGen = Extra_FileNameGeneric( pFileNameWrong );\n    pFileNameOther = Extra_FileNameAppend( pFileGen, pS1 );\n    pFile = fopen( pFileNameOther, \"r\" );\n    if ( pFile == NULL \u0026\u0026 pS2 )\n    { // try one more\n        pFileNameOther = Extra_FileNameAppend( pFileGen, pS2 );\n        pFile = fopen( pFileNameOther, \"r\" );\n        if ( pFile == NULL \u0026\u0026 pS3 )\n        { // try one more\n            pFileNameOther = Extra_FileNameAppend( pFileGen, pS3 );\n            pFile = fopen( pFileNameOther, \"r\" );\n            if ( pFile == NULL \u0026\u0026 pS4 )\n            { // try one more\n                pFileNameOther = Extra_FileNameAppend( pFileGen, pS4 );\n                pFile = fopen( pFileNameOther, \"r\" );\n                if ( pFile == NULL \u0026\u0026 pS5 )\n                { // try one more\n                    pFileNameOther = Extra_FileNameAppend( pFileGen, pS5 );\n                    pFile = fopen( pFileNameOther, \"r\" );\n                }\n            }\n        }\n    }\n    ABC_FREE( pFileGen );\n    if ( pFile )\n    {\n        fclose( pFile );\n        return pFileNameOther;\n    }\n    // did not find :(\n    return NULL;            \n}",
+      "Draft": "func Extra_FileGetSimilarName(pFileNameWrong string, pS1 string, pS2 string, pS3 string, pS4 string, pS5 string) string {\n    var pFile *os.File;\n    var pFileNameOther string;\n    var pFileGen string;\n\n    if pS1 == nil {\n        return nil; }\n\n    // get the generic file name\n    pFileGen = Extra_FileNameGeneric( pFileNameWrong );\n    pFileNameOther = Extra_FileNameAppend( pFileGen, pS1 );\n    pFile = os.Open(pFileNameOther);\n    if pFile == nil \u0026\u0026 pS2 { // try one more\n        pFileNameOther = Extra_FileNameAppend( pFileGen, pS2 );\n        pFile = os.Open(pFileNameOther);\n        if pFile == nil \u0026\u0026 pS3 { // try one more\n            pFileNameOther = Extra_FileNameAppend( pFileGen, pS3 );\n            pFile = os.Open(pFileNameOther);\n            if pFile == nil \u0026\u0026 pS4 { // try one more\n                pFileNameOther = Extra_FileNameAppend( pFileGen, pS4 );\n                pFile = os.Open(pFileNameOther);\n                if pFile == nil \u0026\u0026 pS5 { // try one more\n                    pFileNameOther = Extra_FileNameAppend( pFileGen, pS5 );\n                    pFile = os.Open(pFileNameOther);\n                }\n            }\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pFileGen) ? (free((char *) (pFileGen)), (pFileGen) = 0) : 0);\n    if pFile != nil {\n        _ = (pFile).Close();\n        return pFileNameOther;\n    }\n    // did not find :(\n    return nil;            \n}"
+    },
+    {
+      "Name": "Extra_FileNameExtension",
+      "Start": 4339,
+      "End": 4623,
+      "BodyStart": 4389,
+      "Original": "char * Extra_FileNameExtension( char * FileName )\n{\n    char * pDot;\n    // find the last \"dot\" in the file name, if it is present\n    for ( pDot = FileName + strlen(FileName)-1; pDot \u003e= FileName; pDot-- )\n        if ( *pDot == '.' )\n            return pDot + 1;\n   return FileName;\n}",
+      "Draft": "func Extra_FileNameExtension(FileName string) string {\n    var pDot string;\n    // find the last \"dot\" in the file name, if it is present\n    for  pDot = FileName + len(FileName)-1; pDot \u003e= FileName; pDot--  {\n        if *pDot == '.' {\n            return pDot + 1; }\n    }\n   return FileName;\n}"
+    },
+    {
+      "Name": "Extra_FileNameAppend",
+      "Start": 4883,
+      "End": 5094,
+      "BodyStart": 4943,
+      "Original": "char * Extra_FileNameAppend( char * pBase, char * pSuffix )\n{\n    static char Buffer[500];\n    assert( strlen(pBase) + strlen(pSuffix) \u003c 500 );\n    sprintf( Buffer, \"%s%s\", pBase, pSuffix );\n    return Buffer;\n}",
+      "Draft": "func Extra_FileNameAppend(pBase string, pSuffix string) string {\n    \n    assert(len(pBase) + len(pSuffix) \u003c 500, \"strlen(pBase) + strlen(pSuffix) \u003c 500\");\n    spStatic_Extra_FileNameAppend_Buffer = fmt.Sprintf(\"%s%s\", pBase, pSuffix);\n    return spStatic_Extra_FileNameAppend_Buffer;\n}"
+    },
+    {
+      "Name": "Extra_FileNameGeneric",
+      "Start": 5315,
+      "End": 5509,
+      "BodyStart": 5363,
+      "Original": "char * Extra_FileNameGeneric( char * FileName )\n{\n    char * pDot, * pRes;\n    pRes = Extra_UtilStrsav( FileName );\n    if ( (pDot = strrchr( pRes, '.' )) )\n        *pDot = 0;\n    return pRes;\n}",
+      "Draft": "func Extra_FileNameGeneric(FileName string) string {\n    var pDot, pRes string;\n    pRes = Extra_UtilStrsav( FileName );\n    if pDot = strrchr( pRes, '.' ) {\n        *pDot = 0; }\n    return pRes;\n}"
+    },
+    {
+      "Name": "Extra_FileNameGenericAppend",
+      "Start": 5769,
+      "End": 6081,
+      "BodyStart": 5836,
+      "Original": "char * Extra_FileNameGenericAppend( char * pBase, char * pSuffix )\n{\n    static char Buffer[1000];\n    char * pDot;\n    assert( strlen(pBase) + strlen(pSuffix) \u003c 1000 );\n    strcpy( Buffer, pBase );\n    if ( (pDot = strrchr( Buffer, '.' )) )\n        *pDot = 0;\n    strcat( Buffer, pSuffix );\n    return Buffer;\n}",
+      "Draft": "func Extra_FileNameGenericAppend(pBase string, pSuffix string) string {\n    \n    var pDot string;\n    assert(len(pBase) + len(pSuffix) \u003c 1000, \"strlen(pBase) + strlen(pSuffix) \u003c 1000\");\n    strcpy( spStatic_Extra_FileNameGenericAppend_Buffer, pBase );\n    if pDot = strrchr( spStatic_Extra_FileNameGenericAppend_Buffer, '.' ) {\n        *pDot = 0; }\n    strcat( spStatic_Extra_FileNameGenericAppend_Buffer, pSuffix );\n    return spStatic_Extra_FileNameGenericAppend_Buffer;\n}"
+    },
+    {
+      "Name": "Extra_FileNameCorrectPath",
+      "Start": 6302,
+      "End": 6531,
+      "BodyStart": 6352,
+      "Original": "void Extra_FileNameCorrectPath( char * FileName )\n{\n    char * pStart;\n    if ( FileName )\n        for ( pStart = FileName; *pStart; pStart++ )\n            if ( *pStart == '\u003e' || *pStart == '\\\\' )\n                *pStart = '/';\n}",
+      "Draft": "func Extra_FileNameCorrectPath(FileName string) {\n    var pStart string;\n    if FileName {\n        for  pStart = FileName; *pStart; pStart++  {\n            if *pStart == '\u003e' || *pStart == '\\\\' {\n                *pStart = '/'; }\n        } }\n}"
+    },
+    {
+      "Name": "Extra_FileNameWithoutPath",
+      "Start": 6752,
+      "End": 6996,
+      "BodyStart": 6804,
+      "Original": "char * Extra_FileNameWithoutPath( char * FileName )\n{\n    char * pRes;\n    for ( pRes = FileName + strlen(FileName) - 1; pRes \u003e= FileName; pRes-- )\n        if ( *pRes == '\\\\' || *pRes == '/' )\n            return pRes + 1;\n    return FileName;\n}",
+      "Draft": "func Extra_FileNameWithoutPath(FileName string) string {\n    var pRes string;\n    for  pRes = FileName + len(FileName) - 1; pRes \u003e= FileName; pRes--  {\n        if *pRes == '\\\\' || *pRes == '/' {\n            return pRes + 1; }\n    }\n    return FileName;\n}"
+    },
+    {
+      "Name": "Extra_FilePathWithoutName",
+      "Start": 6997,
+      "End": 7397,
+      "BodyStart": 7049,
+      "Original": "char * Extra_FilePathWithoutName( char * FileName )\n{\n    char * pRes;\n    FileName = Abc_UtilStrsav( FileName );\n    for ( pRes = FileName + strlen(FileName) - 1; pRes \u003e= FileName; pRes-- )\n        if ( *pRes == '\\\\' || *pRes == '/' )\n        {\n           *pRes = 0;\n           Extra_FileNameCorrectPath( FileName );\n           return FileName;\n        }\n    ABC_FREE( FileName );\n    return NULL;\n}",
+      "Draft": "func Extra_FilePathWithoutName(FileName string) string {\n    var pRes string;\n    FileName = Abc_UtilStrsav( FileName );\n    for  pRes = FileName + len(FileName) - 1; pRes \u003e= FileName; pRes--  {\n        if *pRes == '\\\\' || *pRes == '/' {\n           *pRes = 0;\n           Extra_FileNameCorrectPath( FileName );\n           return FileName;\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((FileName) ? (free((char *) (FileName)), (FileName) = 0) : 0);\n    return nil;\n}"
+    },
+    {
+      "Name": "Extra_FileDesignName",
+      "Start": 7398,
+      "End": 8039,
+      "BodyStart": 7446,
+      "Original": "char * Extra_FileDesignName( char * pFileName )\n{\n    char * pBeg, * pEnd, * pStore, * pCur;\n    // find the first dot\n    for ( pEnd = pFileName; *pEnd; pEnd++ )\n        if ( *pEnd == '.' )\n            break;\n    // find the first char\n    for ( pBeg = pEnd - 1; pBeg \u003e= pFileName; pBeg-- )\n        if ( !((*pBeg \u003e= 'a' \u0026\u0026 *pBeg \u003c= 'z') || (*pBeg \u003e= 'A' \u0026\u0026 *pBeg \u003c= 'Z') || (*pBeg \u003e= '0' \u0026\u0026 *pBeg \u003c= '9') || *pBeg == '_') )\n            break;\n    pBeg++;\n    // fill up storage\n    pStore = ABC_ALLOC( char, pEnd - pBeg + 1 );\n    for ( pCur = pStore; pBeg \u003c pEnd; pBeg++, pCur++ )\n        *pCur = *pBeg;\n    *pCur = 0;\n    return pStore;\n}",
+      "Draft": "func Extra_FileDesignName(pFileName string) string {\n    var pBeg, pEnd, pStore, pCur string;\n    // find the first dot\n    for  pEnd = pFileName; *pEnd; pEnd++  {\n        if *pEnd == '.' {\n            break; }\n    }\n    // find the first char\n    for  pBeg = pEnd - 1; pBeg \u003e= pFileName; pBeg--  {\n        if !((*pBeg \u003e= 'a' \u0026\u0026 *pBeg \u003c= 'z') || (*pBeg \u003e= 'A' \u0026\u0026 *pBeg \u003c= 'Z') || (*pBeg \u003e= '0' \u0026\u0026 *pBeg \u003c= '9') || *pBeg == '_') {\n            break; }\n    }\n    pBeg++;\n    // fill up storage\n    // inlining of macro ABC_ALLOC\n    pStore = ((char *) malloc(sizeof(char) * (size_t)(pEnd - pBeg + 1)));\n    for  pCur = pStore; pBeg \u003c pEnd; pBeg, pCur = pBeg+1, pCur+1  {\n        *pCur = *pBeg;\n    }\n    *pCur = 0;\n    return pStore;\n}"
+    },
+    {
+      "Name": "Extra_FileCheck",
+      "Start": 8308,
+      "End": 8719,
+      "BodyStart": 8348,
+      "Original": "int Extra_FileCheck( char * pFileName )\n{\n    FILE * pFile;\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Extra_FileCheck():  File \\\"%s\\\" does not exist.\\n\", pFileName );\n        return 0;\n    }\n    fseek( pFile, 0, SEEK_END );\n    if ( ftell( pFile ) == 0 )\n        printf( \"Extra_FileCheck():  File \\\"%s\\\" is empty.\\n\", pFileName );\n    fclose( pFile );\n    return 1;\n}",
+      "Draft": "func Extra_FileCheck(pFileName string) int32 {\n    var pFile *os.File;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Extra_FileCheck():  File \\\"%s\\\" does not exist.\\n\", pFileName);\n        return 0;\n    }\n    fseek( pFile, 0, SEEK_END );\n    if ftell( pFile ) == 0 {\n        fmt.Printf(\"Extra_FileCheck():  File \\\"%s\\\" is empty.\\n\", pFileName); }\n    _ = (pFile).Close();\n    return 1;\n}"
+    },
+    {
+      "Name": "Extra_FileSize",
+      "Start": 8988,
+      "End": 9354,
+      "BodyStart": 9027,
+      "Original": "int Extra_FileSize( char * pFileName )\n{\n    FILE * pFile;\n    int nFileSize;\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Extra_FileSize(): The file is unavailable (absent or open).\\n\" );\n        return 0;\n    }\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile ); \n    fclose( pFile );\n    return nFileSize;\n}",
+      "Draft": "func Extra_FileSize(pFileName string) int32 {\n    var pFile *os.File;\n    var nFileSize int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Extra_FileSize(): The file is unavailable (absent or open).\\n\");\n        return 0;\n    }\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile ); \n    _ = (pFile).Close();\n    return nFileSize;\n}"
+    },
+    {
+      "Name": "Extra_FileRead",
+      "Start": 9630,
+      "End": 10198,
+      "BodyStart": 9668,
+      "Original": "char * Extra_FileRead( FILE * pFile )\n{\n    int nFileSize;\n    char * pBuffer;\n    int RetValue;\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    // move the file current reading position to the beginning\n    rewind( pFile ); \n    // load the contents of the file into memory\n    pBuffer = ABC_ALLOC( char, nFileSize + 3 );\n    RetValue = fread( pBuffer, nFileSize, 1, pFile );\n    // terminate the string with '\\0'\n    pBuffer[ nFileSize + 0] = '\\n';\n    pBuffer[ nFileSize + 1] = '\\0';\n    return pBuffer;\n}",
+      "Draft": "func Extra_FileRead(pFile *os.File) string {\n    var nFileSize int32;\n    var pBuffer string;\n    var RetValue int32;\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    // move the file current reading position to the beginning\n    rewind( pFile ); \n    // load the contents of the file into memory\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(nFileSize + 3)));\n    RetValue = fread( pBuffer, nFileSize, 1, pFile );\n    // terminate the string with '\\0'\n    pBuffer[ nFileSize + 0] = '\\n';\n    pBuffer[ nFileSize + 1] = '\\0';\n    return pBuffer;\n}"
+    },
+    {
+      "Name": "Extra_FileRead2",
+      "Start": 10199,
+      "End": 10926,
+      "BodyStart": 10253,
+      "Original": "char * Extra_FileRead2( FILE * pFile, FILE * pFile2 )\n{\n    char * pBuffer;\n    int nSize, nSize2;\n    int RetValue;\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nSize = ftell( pFile );  \n    rewind( pFile ); \n    // get the file size, in bytes\n    fseek( pFile2, 0, SEEK_END );  \n    nSize2 = ftell( pFile2 );  \n    rewind( pFile2 ); \n    // load the contents of the file into memory\n    pBuffer = ABC_ALLOC( char, nSize + nSize2 + 3 );\n    RetValue = fread( pBuffer,         nSize,  1, pFile );\n    RetValue = fread( pBuffer + nSize, nSize2, 1, pFile2 );\n    // terminate the string with '\\0'\n    pBuffer[ nSize + nSize2 + 0] = '\\n';\n    pBuffer[ nSize + nSize2 + 1] = '\\0';\n    return pBuffer;\n}",
+      "Draft": "func Extra_FileRead2(pFile *os.File, pFile2 *os.File) string {\n    var pBuffer string;\n    var nSize, nSize2 int32;\n    var RetValue int32;\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nSize = ftell( pFile );  \n    rewind( pFile ); \n    // get the file size, in bytes\n    fseek( pFile2, 0, SEEK_END );  \n    nSize2 = ftell( pFile2 );  \n    rewind( pFile2 ); \n    // load the contents of the file into memory\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(nSize + nSize2 + 3)));\n    RetValue = fread( pBuffer,         nSize,  1, pFile );\n    RetValue = fread( pBuffer + nSize, nSize2, 1, pFile2 );\n    // terminate the string with '\\0'\n    pBuffer[ nSize + nSize2 + 0] = '\\n';\n    pBuffer[ nSize + nSize2 + 1] = '\\0';\n    return pBuffer;\n}"
+    },
+    {
+      "Name": "Extra_FileReadContents",
+      "Start": 11201,
+      "End": 11439,
+      "BodyStart": 11251,
+      "Original": "char * Extra_FileReadContents( char * pFileName )\n{\n    FILE * pFile;\n    char * pBuffer;\n    pFile = fopen( pFileName, \"rb\" );\n    pBuffer = pFile ? Extra_FileRead( pFile ) : NULL;\n    if ( pFile )  fclose( pFile );\n    return pBuffer;\n}",
+      "Draft": "func Extra_FileReadContents(pFileName string) string {\n    var pFile *os.File;\n    var pBuffer string;\n    pFile = os.Open(pFileName);\n    if pFile != nil {\n        pBuffer = Extra_FileRead( pFile );\n    } else {\n        pBuffer = nil;\n    }\n    if pFile != nil {  _ = (pFile).Close(); }\n    return pBuffer;\n}"
+    },
+    {
+      "Name": "Extra_FileReadContents2",
+      "Start": 11440,
+      "End": 11806,
+      "BodyStart": 11510,
+      "Original": "char * Extra_FileReadContents2( char * pFileName, char * pFileName2 )\n{\n    FILE * pFile, * pFile2;\n    char * pBuffer;\n    pFile  = fopen( pFileName, \"rb\" );\n    pFile2 = fopen( pFileName2, \"rb\" );\n    pBuffer = (pFile \u0026\u0026 pFile2) ? Extra_FileRead2( pFile, pFile2 ) : NULL;\n    if ( pFile )  fclose( pFile );\n    if ( pFile2 ) fclose( pFile2 );\n    return pBuffer;\n}",
+      "Draft": "func Extra_FileReadContents2(pFileName string, pFileName2 string) string {\n    var pFile, pFile2 *os.File;\n    var pBuffer string;\n    pFile  = os.Open(pFileName);\n    pFile2 = os.Open(pFileName2);\n    if (pFile != nil) \u0026\u0026 (pFile2 != nil) {\n        pBuffer = Extra_FileRead2( pFile, pFile2 );\n    } else {\n        pBuffer = nil;\n    }\n    if pFile != nil {  _ = (pFile).Close(); }\n    if pFile2 != nil { _ = (pFile2).Close(); }\n    return pBuffer;\n}"
+    },
+    {
+      "Name": "Extra_FileIsType",
+      "Start": 12088,
+      "End": 12609,
+      "BodyStart": 12165,
+      "Original": "int Extra_FileIsType( char * pFileName, char * pS1, char * pS2, char * pS3 )\n{\n    int lenS, lenF = strlen(pFileName);\n    lenS = pS1 ? strlen(pS1) : 0;\n    if ( lenS \u0026\u0026 lenF \u003e lenS \u0026\u0026 !strncmp( pFileName+lenF-lenS, pS1, lenS ) )\n        return 1;\n    lenS = pS2 ? strlen(pS2) : 0;\n    if ( lenS \u0026\u0026 lenF \u003e lenS \u0026\u0026 !strncmp( pFileName+lenF-lenS, pS2, lenS ) )\n        return 1;\n    lenS = pS3 ? strlen(pS3) : 0;\n    if ( lenS \u0026\u0026 lenF \u003e lenS \u0026\u0026 !strncmp( pFileName+lenF-lenS, pS3, lenS ) )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Extra_FileIsType(pFileName string, pS1 string, pS2 string, pS3 string) int32 {\n    var lenS int32;\n    var lenF int32 = len(pFileName);\n    if pS1 {\n        lenS = len(pS1);\n    } else {\n        lenS = 0;\n    }\n    if (lenS != 0) \u0026\u0026 lenF \u003e lenS \u0026\u0026 !strncmp( pFileName+lenF-lenS, pS1, lenS ) {\n        return 1; }\n    if pS2 {\n        lenS = len(pS2);\n    } else {\n        lenS = 0;\n    }\n    if (lenS != 0) \u0026\u0026 lenF \u003e lenS \u0026\u0026 !strncmp( pFileName+lenF-lenS, pS2, lenS ) {\n        return 1; }\n    if pS3 {\n        lenS = len(pS3);\n    } else {\n        lenS = 0;\n    }\n    if (lenS != 0) \u0026\u0026 lenF \u003e lenS \u0026\u0026 !strncmp( pFileName+lenF-lenS, pS3, lenS ) {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Extra_TimeStamp",
+      "Start": 12879,
+      "End": 13168,
+      "BodyStart": 12904,
+      "Original": "char * Extra_TimeStamp()\n{\n    static char Buffer[100];\n    char * TimeStamp;\n    time_t ltime;\n    // get the current time\n    time( \u0026ltime );\n    TimeStamp = asctime( localtime( \u0026ltime ) );\n    TimeStamp[ strlen(TimeStamp) - 1 ] = 0;\n    strcpy( Buffer, TimeStamp );\n    return Buffer;\n}",
+      "Draft": "func Extra_TimeStamp() string {\n    \n    var TimeStamp string;\n    var ltime int64;\n    // get the current time\n    time( \u0026ltime );\n    TimeStamp = asctime( localtime( \u0026ltime ) );\n    TimeStamp[ len(TimeStamp) - 1 ] = 0;\n    strcpy( spStatic_Extra_TimeStamp_Buffer, TimeStamp );\n    return spStatic_Extra_TimeStamp_Buffer;\n}"
+    },
+    {
+      "Name": "Extra_ReadBinary",
+      "Start": 13389,
+      "End": 13698,
+      "BodyStart": 13432,
+      "Original": "unsigned Extra_ReadBinary( char * Buffer )\n{\n    unsigned Result;\n    int i;\n\n    Result = 0;\n    for ( i = 0; Buffer[i]; i++ )\n        if ( Buffer[i] == '0' || Buffer[i] == '1' )\n            Result = Result * 2 + Buffer[i] - '0';\n        else\n        {\n            assert( 0 );\n        }\n    return Result;\n}",
+      "Draft": "func Extra_ReadBinary(Buffer string) uint32 {\n    var Result uint32;\n    var i int32;\n\n    Result = 0;\n    for  i = 0; Buffer[i]; i++  {\n        if Buffer[i] == '0' || Buffer[i] == '1' {\n            Result = Result * 2 + Buffer[i] - '0';\n        } else {\n            assert(false, \"0\");\n        }\n    }\n    return Result;\n}"
+    },
+    {
+      "Name": "Extra_PrintBinary",
+      "Start": 13941,
+      "End": 14152,
+      "BodyStart": 14008,
+      "Original": "void Extra_PrintBinary( FILE * pFile, unsigned Sign[], int nBits )\n{\n    int i;\n    for ( i = nBits-1; i \u003e= 0; i-- )\n        fprintf( pFile, \"%c\", '0' + Abc_InfoHasBit(Sign, i) );\n//    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Extra_PrintBinary(pFile *os.File, Sign []uint32, nBits int32) {\n    var i int32;\n    for  i = nBits-1; i \u003e= 0; i--  {\n        fmt.Fprintf(pFile, \"%c\", '0' + Abc_InfoHasBit(Sign, i));\n    }\n//    fprintf( pFile, \"\\n\" );\n}"
+    },
+    {
+      "Name": "Extra_PrintBinary2",
+      "Start": 14153,
+      "End": 14362,
+      "BodyStart": 14221,
+      "Original": "void Extra_PrintBinary2( FILE * pFile, unsigned Sign[], int nBits )\n{\n    int i;\n    for ( i = 0; i \u003c nBits; i++ )\n        fprintf( pFile, \"%c\", '0' + Abc_InfoHasBit(Sign, i) );\n//    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Extra_PrintBinary2(pFile *os.File, Sign []uint32, nBits int32) {\n    var i int32;\n    for  i = 0; i \u003c nBits; i++  {\n        fmt.Fprintf(pFile, \"%c\", '0' + Abc_InfoHasBit(Sign, i));\n    }\n//    fprintf( pFile, \"\\n\" );\n}"
+    },
+    {
+      "Name": "Extra_ReadHex",
+      "Start": 14641,
+      "End": 15208,
+      "BodyStart": 14707,
+      "Original": "int Extra_ReadHex( unsigned Sign[], char * pString, int nDigits )\n{\n    int Digit, k, c;\n    for ( k = 0; k \u003c nDigits; k++ )\n    {\n        c = nDigits-1-k;\n        if ( pString[c] \u003e= '0' \u0026\u0026 pString[c] \u003c= '9' )\n            Digit = pString[c] - '0';\n        else if ( pString[c] \u003e= 'A' \u0026\u0026 pString[c] \u003c= 'F' )\n            Digit = pString[c] - 'A' + 10;\n        else if ( pString[c] \u003e= 'a' \u0026\u0026 pString[c] \u003c= 'f' )\n            Digit = pString[c] - 'a' + 10;\n        else { assert( 0 ); return 0; }\n        Sign[k/8] |= ( (Digit \u0026 15) \u003c\u003c ((k%8) * 4) );\n    }\n    return 1;\n}",
+      "Draft": "func Extra_ReadHex(Sign []uint32, pString string, nDigits int32) int32 {\n    var Digit, k, c int32;\n    for  k = 0; k \u003c nDigits; k++  {\n        c = nDigits-1-k;\n        if pString[c] \u003e= '0' \u0026\u0026 pString[c] \u003c= '9' {\n            Digit = pString[c] - '0';\n        } else if pString[c] \u003e= 'A' \u0026\u0026 pString[c] \u003c= 'F' {\n            Digit = pString[c] - 'A' + 10;\n        } else if pString[c] \u003e= 'a' \u0026\u0026 pString[c] \u003c= 'f' {\n            Digit = pString[c] - 'a' + 10;\n        } else { assert(false, \"0\"); return 0; }\n        Sign[k/8] |= ( (Digit \u0026 15) \u003c\u003c ((k%8) * 4) );\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Extra_ReadHexadecimal",
+      "Start": 15209,
+      "End": 15585,
+      "BodyStart": 15281,
+      "Original": "int Extra_ReadHexadecimal( unsigned Sign[], char * pString, int nVars )\n{\n    int nWords, nDigits, k;\n    nWords = Extra_TruthWordNum( nVars );\n    for ( k = 0; k \u003c nWords; k++ )\n        Sign[k] = 0;\n    // read the number from the string\n    nDigits = (1 \u003c\u003c nVars) / 4;\n    if ( nDigits == 0 )\n        nDigits = 1;\n    Extra_ReadHex( Sign, pString, nDigits );\n    return 1;\n}",
+      "Draft": "func Extra_ReadHexadecimal(Sign []uint32, pString string, nVars int32) int32 {\n    var nWords, nDigits, k int32;\n    nWords = Extra_TruthWordNum( nVars );\n    for  k = 0; k \u003c nWords; k++  {\n        Sign[k] = 0;\n    }\n    // read the number from the string\n    nDigits = (1 \u003c\u003c nVars) / 4;\n    if nDigits == 0 {\n        nDigits = 1; }\n    Extra_ReadHex( Sign, pString, nDigits );\n    return 1;\n}"
+    },
+    {
+      "Name": "Extra_PrintHexadecimal",
+      "Start": 15857,
+      "End": 16297,
+      "BodyStart": 15929,
+      "Original": "void Extra_PrintHexadecimal( FILE * pFile, unsigned Sign[], int nVars )\n{\n    int nDigits, Digit, k;\n    // write the number into the file\n    nDigits = (1 \u003c\u003c nVars) / 4;\n    for ( k = nDigits - 1; k \u003e= 0; k-- )\n    {\n        Digit = ((Sign[k/8] \u003e\u003e ((k%8) * 4)) \u0026 15);\n        if ( Digit \u003c 10 )\n            fprintf( pFile, \"%d\", Digit );\n        else\n            fprintf( pFile, \"%c\", 'a' + Digit-10 );\n    }\n//    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Extra_PrintHexadecimal(pFile *os.File, Sign []uint32, nVars int32) {\n    var nDigits, Digit, k int32;\n    // write the number into the file\n    nDigits = (1 \u003c\u003c nVars) / 4;\n    for  k = nDigits - 1; k \u003e= 0; k--  {\n        Digit = ((Sign[k/8] \u003e\u003e ((k%8) * 4)) \u0026 15);\n        if Digit \u003c 10 {\n            fmt.Fprintf(pFile, \"%d\", Digit);\n        } else {\n            fmt.Fprintf(pFile, \"%c\", 'a' + Digit-10); }\n    }\n//    fprintf( pFile, \"\\n\" );\n}"
+    },
+    {
+      "Name": "Extra_PrintHexadecimalString",
+      "Start": 16569,
+      "End": 17361,
+      "BodyStart": 16649,
+      "Original": "void Extra_PrintHexadecimalString( char * pString, unsigned Sign[], int nVars )\n{\n    int nDigits, Digit, k;\n    if ( nVars == 0 \u0026\u0026 !(Sign[0] \u0026 1) ) { sprintf(pString, \"0\"); return; } // const0\n    if ( nVars == 0 \u0026\u0026  (Sign[0] \u0026 1) ) { sprintf(pString, \"1\"); return; } // const1\n    if ( nVars == 1 \u0026\u0026  (Sign[0] \u0026 1) ) { sprintf(pString, \"1\"); return; } // inverter\n    if ( nVars == 1 \u0026\u0026 !(Sign[0] \u0026 1) ) { sprintf(pString, \"2\"); return; } // buffer\n    // write the number into the file\n    nDigits = (1 \u003c\u003c nVars) / 4;\n    for ( k = nDigits - 1; k \u003e= 0; k-- )\n    {\n        Digit = ((Sign[k/8] \u003e\u003e ((k%8) * 4)) \u0026 15);\n        if ( Digit \u003c 10 )\n            *pString++ = '0' + Digit;\n        else\n            *pString++ = 'a' + Digit-10;\n    }\n//    fprintf( pFile, \"\\n\" );\n    *pString = 0;\n}",
+      "Draft": "func Extra_PrintHexadecimalString(pString string, Sign []uint32, nVars int32) {\n    var nDigits, Digit, k int32;\n    if nVars == 0 \u0026\u0026 !(Sign[0] \u0026 1) { pString = fmt.Sprintf(\"0\"); return; } // const0\n    if nVars == 0 \u0026\u0026  (Sign[0] \u0026 1) { pString = fmt.Sprintf(\"1\"); return; } // const1\n    if nVars == 1 \u0026\u0026  (Sign[0] \u0026 1) { pString = fmt.Sprintf(\"1\"); return; } // inverter\n    if nVars == 1 \u0026\u0026 !(Sign[0] \u0026 1) { pString = fmt.Sprintf(\"2\"); return; } // buffer\n    // write the number into the file\n    nDigits = (1 \u003c\u003c nVars) / 4;\n    for  k = nDigits - 1; k \u003e= 0; k--  {\n        Digit = ((Sign[k/8] \u003e\u003e ((k%8) * 4)) \u0026 15);\n        if Digit \u003c 10 {\n            *pString++ = '0' + Digit;\n        } else {\n            *pString++ = 'a' + Digit-10; }\n    }\n//    fprintf( pFile, \"\\n\" );\n    *pString = 0;\n}"
+    },
+    {
+      "Name": "Extra_PrintHex",
+      "Start": 17633,
+      "End": 18145,
+      "BodyStart": 17699,
+      "Original": "void Extra_PrintHex( FILE * pFile, unsigned * pTruth, int nVars )\n{\n    int nMints, nDigits, Digit, k;\n\n    // write the number into the file\n    fprintf( pFile, \"0x\" );\n    nMints  = (1 \u003c\u003c nVars);\n    nDigits = nMints / 4 + ((nMints % 4) \u003e 0);\n    for ( k = nDigits - 1; k \u003e= 0; k-- )\n    {\n        Digit = ((pTruth[k/8] \u003e\u003e (k * 4)) \u0026 15);\n        if ( Digit \u003c 10 )\n            fprintf( pFile, \"%d\", Digit );\n        else\n            fprintf( pFile, \"%c\", 'A' + Digit-10 );\n    }\n//    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Extra_PrintHex(pFile *os.File, pTruth *uint32, nVars int32) {\n    var nMints, nDigits, Digit, k int32;\n\n    // write the number into the file\n    fmt.Fprintf(pFile, \"0x\");\n    nMints  = (1 \u003c\u003c nVars);\n    nDigits = nMints / 4 + ((nMints % 4) \u003e 0);\n    for  k = nDigits - 1; k \u003e= 0; k--  {\n        Digit = ((pTruth[k/8] \u003e\u003e (k * 4)) \u0026 15);\n        if Digit \u003c 10 {\n            fmt.Fprintf(pFile, \"%d\", Digit);\n        } else {\n            fmt.Fprintf(pFile, \"%c\", 'A' + Digit-10); }\n    }\n//    fprintf( pFile, \"\\n\" );\n}"
+    },
+    {
+      "Name": "Extra_PrintHex2",
+      "Start": 18146,
+      "End": 18661,
+      "BodyStart": 18213,
+      "Original": "void Extra_PrintHex2( FILE * pFile, unsigned * pTruth, int nVars )\n{\n    int nMints, nDigits, Digit, k;\n\n    // write the number into the file\n    //fprintf( pFile, \"0x\" );\n    nMints  = (1 \u003c\u003c nVars);\n    nDigits = nMints / 4 + ((nMints % 4) \u003e 0);\n    for ( k = nDigits - 1; k \u003e= 0; k-- )\n    {\n        Digit = ((pTruth[k/8] \u003e\u003e (k * 4)) \u0026 15);\n        if ( Digit \u003c 10 )\n            fprintf( pFile, \"%d\", Digit );\n        else\n            fprintf( pFile, \"%c\", 'A' + Digit-10 );\n    }\n//    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Extra_PrintHex2(pFile *os.File, pTruth *uint32, nVars int32) {\n    var nMints, nDigits, Digit, k int32;\n\n    // write the number into the file\n    //fprintf( pFile, \"0x\" );\n    nMints  = (1 \u003c\u003c nVars);\n    nDigits = nMints / 4 + ((nMints % 4) \u003e 0);\n    for  k = nDigits - 1; k \u003e= 0; k--  {\n        Digit = ((pTruth[k/8] \u003e\u003e (k * 4)) \u0026 15);\n        if Digit \u003c 10 {\n            fmt.Fprintf(pFile, \"%d\", Digit);\n        } else {\n            fmt.Fprintf(pFile, \"%c\", 'A' + Digit-10); }\n    }\n//    fprintf( pFile, \"\\n\" );\n}"
+    },
+    {
+      "Name": "Extra_PrintHexReverse",
+      "Start": 18662,
+      "End": 19176,
+      "BodyStart": 18735,
+      "Original": "void Extra_PrintHexReverse( FILE * pFile, unsigned * pTruth, int nVars )\n{\n    int nMints, nDigits, Digit, k;\n\n    // write the number into the file\n    fprintf( pFile, \"0x\" );\n    nMints  = (1 \u003c\u003c nVars);\n    nDigits = nMints / 4 + ((nMints % 4) \u003e 0);\n    for ( k = 0; k \u003c nDigits; k++ )\n    {\n        Digit = ((pTruth[k/8] \u003e\u003e (k * 4)) \u0026 15);\n        if ( Digit \u003c 10 )\n            fprintf( pFile, \"%d\", Digit );\n        else\n            fprintf( pFile, \"%c\", 'A' + Digit-10 );\n    }\n//    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Extra_PrintHexReverse(pFile *os.File, pTruth *uint32, nVars int32) {\n    var nMints, nDigits, Digit, k int32;\n\n    // write the number into the file\n    fmt.Fprintf(pFile, \"0x\");\n    nMints  = (1 \u003c\u003c nVars);\n    nDigits = nMints / 4 + ((nMints % 4) \u003e 0);\n    for  k = 0; k \u003c nDigits; k++  {\n        Digit = ((pTruth[k/8] \u003e\u003e (k * 4)) \u0026 15);\n        if Digit \u003c 10 {\n            fmt.Fprintf(pFile, \"%d\", Digit);\n        } else {\n            fmt.Fprintf(pFile, \"%c\", 'A' + Digit-10); }\n    }\n//    fprintf( pFile, \"\\n\" );\n}"
+    },
+    {
+      "Name": "Extra_PrintSymbols",
+      "Start": 19436,
+      "End": 19646,
+      "BodyStart": 19518,
+      "Original": "void Extra_PrintSymbols( FILE * pFile, char Char, int nTimes, int fPrintNewLine )\n{\n    int i;\n    for ( i = 0; i \u003c nTimes; i++ )\n        printf( \"%c\", Char );\n    if ( fPrintNewLine )\n        printf( \"\\n\" );\n}",
+      "Draft": "func Extra_PrintSymbols(pFile *os.File, Char byte, nTimes int32, fPrintNewLine int32) {\n    var i int32;\n    for  i = 0; i \u003c nTimes; i++  {\n        fmt.Printf(\"%c\", Char);\n    }\n    if fPrintNewLine != 0 {\n        fmt.Printf(\"\\n\"); }\n}"
+    },
+    {
+      "Name": "Extra_StringAppend",
+      "Start": 20094,
+      "End": 20443,
+      "BodyStart": 20156,
+      "Original": "char * Extra_StringAppend( char * pStrGiven, char * pStrAdd )\n{\n    char * pTemp;\n    if ( pStrGiven )\n    {\n        pTemp = ABC_ALLOC( char, strlen(pStrGiven) + strlen(pStrAdd) + 2 );\n        sprintf( pTemp, \"%s%s\", pStrGiven, pStrAdd );\n        ABC_FREE( pStrGiven );\n    }\n    else\n        pTemp = Extra_UtilStrsav( pStrAdd );\n    return pTemp;\n}",
+      "Draft": "func Extra_StringAppend(pStrGiven string, pStrAdd string) string {\n    var pTemp string;\n    if pStrGiven {\n        // inlining of macro ABC_ALLOC\n        pTemp = ((char *) malloc(sizeof(char) * (size_t)(len(pStrGiven) + len(pStrAdd) + 2)));\n        pTemp = fmt.Sprintf(\"%s%s\", pStrGiven, pStrAdd);\n        // inlining of macro ABC_FREE\n        ((pStrGiven) ? (free((char *) (pStrGiven)), (pStrGiven) = 0) : 0);\n    \n    } else {\n        pTemp = Extra_UtilStrsav( pStrAdd ); }\n    return pTemp;\n}"
+    },
+    {
+      "Name": "Extra_StringClean",
+      "Start": 20716,
+      "End": 21089,
+      "BodyStart": 20777,
+      "Original": "void Extra_StringClean( char * pStrGiven, char * pCharKeep )\n{\n    char * pTemp, * pChar, * pSave = pStrGiven;\n    for ( pTemp = pStrGiven; *pTemp; pTemp++ )\n    {\n        for ( pChar = pCharKeep; *pChar; pChar++ )\n            if ( *pTemp == *pChar )\n                break;\n        if ( *pChar == 0 )\n            continue;\n        *pSave++ = *pTemp;\n    }\n    *pSave = 0;\n}",
+      "Draft": "func Extra_StringClean(pStrGiven string, pCharKeep string) {\n    var pTemp string;\n    var pChar string;\n    var pSave string = pStrGiven;\n    for  pTemp = pStrGiven; *pTemp; pTemp++  {\n        for  pChar = pCharKeep; *pChar; pChar++  {\n            if *pTemp == *pChar {\n                break; }\n        }\n        if *pChar == 0 {\n            continue; }\n        *pSave++ = *pTemp;\n    }\n    *pSave = 0;\n}"
+    },
+    {
+      "Name": "Extra_StringCompare",
+      "Start": 21338,
+      "End": 21452,
+      "BodyStart": 21400,
+      "Original": "int Extra_StringCompare( const char * pp1, const char * pp2 )\n{\n    return strcmp(*(char **)pp1, *(char **)pp2);\n}",
+      "Draft": "func Extra_StringCompare(pp1 string, pp2 string) int32 {\n    return int32(strings.Compare(*(char **)pp1, *(char **)pp2));\n}"
+    },
+    {
+      "Name": "Extra_FileSort",
+      "Start": 21712,
+      "End": 23151,
+      "BodyStart": 21773,
+      "Original": "void Extra_FileSort( char * pFileName, char * pFileNameOut )\n{\n    FILE * pFile;\n    char * pContents;\n    char ** pLines;\n    int i, nLines, Begin;\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Extra_FileSort(): Cannot open file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    pContents = Extra_FileRead( pFile );\n    fclose( pFile );\n    if ( pContents == NULL )\n    {\n        printf( \"Extra_FileSort(): Cannot read contents of file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    // count end of lines\n    for ( nLines = 0, i = 0; pContents[i]; i++ )\n        nLines += (pContents[i] == '\\n');\n    // break the file into lines\n    pLines = (char **)malloc( sizeof(char *) * nLines );\n    Begin = 0;\n    for ( nLines = 0, i = 0; pContents[i]; i++ )\n        if ( pContents[i] == '\\n' )\n        {\n            pContents[i] = 0;\n            pLines[nLines++] = pContents + Begin;\n            Begin = i + 1;\n        }\n    // sort the lines\n    qsort( pLines, (size_t)nLines, sizeof(char *), (int(*)(const void *,const void *))Extra_StringCompare );\n    // write a new file\n    pFile = fopen( pFileNameOut, \"wb\" );\n    for ( i = 0; i \u003c nLines; i++ )\n        if ( pLines[i][0] )\n            fprintf( pFile, \"%s\\n\", pLines[i] );\n    fclose( pFile );\n    // cleanup\n    free( pLines );\n    free( pContents );\n    // report the result\n    printf( \"The file after sorting is \\\"%s\\\".\\n\", pFileNameOut );\n}",
+      "Draft": "func Extra_FileSort(pFileName string, pFileNameOut string) {\n    var pFile *os.File;\n    var pContents string;\n    var pLines *string;\n    var i, nLines, Begin int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Extra_FileSort(): Cannot open file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    pContents = Extra_FileRead( pFile );\n    _ = (pFile).Close();\n    if pContents == nil {\n        fmt.Printf(\"Extra_FileSort(): Cannot read contents of file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    // count end of lines\n    for  nLines, i = 0, 0; pContents[i]; i++  {\n        nLines += (pContents[i] == '\\n');\n    }\n    // break the file into lines\n    pLines = (char **)malloc( sizeof(char *) * nLines );\n    Begin = 0;\n    for  nLines, i = 0, 0; pContents[i]; i++  {\n        if pContents[i] == '\\n' {\n            pContents[i] = 0;\n            pLines[nLines++] = pContents + Begin;\n            Begin = i + 1;\n        }\n    }\n    // sort the lines\n    qsort( pLines, (size_t)nLines, sizeof(char *), (int(*)(void *,void *))Extra_StringCompare );\n    // write a new file\n    pFile = os.OpenFile(pFileNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    for  i = 0; i \u003c nLines; i++  {\n        if pLines[i][0] {\n            fmt.Fprintf(pFile, \"%s\\n\", pLines[i]); }\n    }\n    _ = (pFile).Close();\n    // cleanup\n    free( pLines );\n    free( pContents );\n    // report the result\n    fmt.Printf(\"The file after sorting is \\\"%s\\\".\\n\", pFileNameOut);\n}"
+    },
+    {
+      "Name": "Extra_FileLineNumAdd",
+      "Start": 23404,
+      "End": 24237,
+      "BodyStart": 23471,
+      "Original": "void Extra_FileLineNumAdd( char * pFileName, char * pFileNameOut )\n{\n    char Buffer[1000];\n    FILE * pFile;\n    FILE * pFile2;\n    int iLine;\n    pFile = fopen( pFileName, \"rb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Extra_FileLineNumAdd(): Cannot open file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    pFile2 = fopen( pFileNameOut, \"wb\" );\n    if ( pFile2 == NULL )\n    {\n        fclose( pFile );\n        printf( \"Extra_FileLineNumAdd(): Cannot open file \\\"%s\\\".\\n\", pFileNameOut );\n        return;\n    }\n    for ( iLine = 0; fgets( Buffer, 1000, pFile ); iLine++ )\n    {\n        sprintf( Buffer + strlen(Buffer) - 2, \"%03d\\n%c\", iLine, 0 );\n        fputs( Buffer, pFile2 );\n    }\n    fclose( pFile );\n    fclose( pFile2 );\n    // report the result\n    printf( \"The resulting file is \\\"%s\\\".\\n\", pFileNameOut );\n}",
+      "Draft": "func Extra_FileLineNumAdd(pFileName string, pFileNameOut string) {\n    var Buffer [1000]byte;\n    var pFile *os.File;\n    var pFile2 *os.File;\n    var iLine int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Extra_FileLineNumAdd(): Cannot open file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    pFile2 = os.OpenFile(pFileNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile2 == nil {\n        _ = (pFile).Close();\n        fmt.Printf(\"Extra_FileLineNumAdd(): Cannot open file \\\"%s\\\".\\n\", pFileNameOut);\n        return;\n    }\n    for  iLine = 0; fgets( Buffer, 1000, pFile ); iLine++  {\n        sprintf( Buffer + len(Buffer) - 2, \"%03d\\n%c\", iLine, 0 );\n        fputs( Buffer, pFile2 );\n    }\n    _ = (pFile).Close();\n    _ = (pFile2).Close();\n    // report the result\n    fmt.Printf(\"The resulting file is \\\"%s\\\".\\n\", pFileNameOut);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::mechanical::static::5035",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4949,
+      "End": 4955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::mechanical::static::5928",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 5842,
+      "End": 5848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::mechanical::sizeof::8124",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7890,
+      "End": 7890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::mechanical::sizeof::10283",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9979,
+      "End": 9979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::mechanical::sizeof::11001",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10627,
+      "End": 10627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::mechanical::static::13292",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 12910,
+      "End": 12916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::mechanical::sizeof::20663",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 20219,
+      "End": 20219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::mechanical::sizeof::22957",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22417,
+      "End": 22423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::mechanical::sizeof::23268",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22728,
+      "End": 22734
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::pointer-cast::3980",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3916,
+      "End": 3916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::pointer-cast::7507",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7357,
+      "End": 7357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::pointer-cast::8108",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7890,
+      "End": 7890
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::pointer-cast::10267",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9979,
+      "End": 9979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::pointer-cast::10985",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10627,
+      "End": 10627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::pointer-cast::20647",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20219,
+      "End": 20219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::pointer-cast::20858",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20341,
+      "End": 20341
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::pointer-cast::21961",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21421,
+      "End": 21430
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::pointer-cast::21976",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21436,
+      "End": 21445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::pointer-cast::22940",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22400,
+      "End": 22409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::pointer-cast::22963",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22423,
+      "End": 22431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::pointer-cast::23274",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22734,
+      "End": 22742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::ternary::Extra_FileGetSimilarName",
+      "Category": "ternary-review",
+      "Symbol": "Extra_FileGetSimilarName",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2690,
+      "End": 4076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileGetSimilarName",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileGetSimilarName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2690,
+      "End": 4076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileNameExtension",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileNameExtension",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4339,
+      "End": 4623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileNameAppend",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileNameAppend",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4883,
+      "End": 5094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileNameGeneric",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileNameGeneric",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5315,
+      "End": 5509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileNameGenericAppend",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileNameGenericAppend",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5769,
+      "End": 6081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileNameCorrectPath",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileNameCorrectPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6302,
+      "End": 6531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileNameWithoutPath",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileNameWithoutPath",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6752,
+      "End": 6996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::ternary::Extra_FilePathWithoutName",
+      "Category": "ternary-review",
+      "Symbol": "Extra_FilePathWithoutName",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6997,
+      "End": 7397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FilePathWithoutName",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FilePathWithoutName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6997,
+      "End": 7397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileDesignName",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileDesignName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7398,
+      "End": 8039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileCheck",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8308,
+      "End": 8719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileSize",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8988,
+      "End": 9354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileRead",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9630,
+      "End": 10198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileRead2",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileRead2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10199,
+      "End": 10926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileReadContents",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileReadContents",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11201,
+      "End": 11439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileReadContents2",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileReadContents2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11440,
+      "End": 11806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileIsType",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileIsType",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12088,
+      "End": 12609
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_TimeStamp",
+      "Category": "semantic-review",
+      "Symbol": "Extra_TimeStamp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12879,
+      "End": 13168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_ReadBinary",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ReadBinary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13389,
+      "End": 13698
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_PrintBinary",
+      "Category": "semantic-review",
+      "Symbol": "Extra_PrintBinary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13941,
+      "End": 14152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_PrintBinary2",
+      "Category": "semantic-review",
+      "Symbol": "Extra_PrintBinary2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14153,
+      "End": 14362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_ReadHex",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ReadHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14641,
+      "End": 15208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_ReadHexadecimal",
+      "Category": "semantic-review",
+      "Symbol": "Extra_ReadHexadecimal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15209,
+      "End": 15585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_PrintHexadecimal",
+      "Category": "semantic-review",
+      "Symbol": "Extra_PrintHexadecimal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15857,
+      "End": 16297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_PrintHexadecimalString",
+      "Category": "semantic-review",
+      "Symbol": "Extra_PrintHexadecimalString",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16569,
+      "End": 17361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_PrintHex",
+      "Category": "semantic-review",
+      "Symbol": "Extra_PrintHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17633,
+      "End": 18145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_PrintHex2",
+      "Category": "semantic-review",
+      "Symbol": "Extra_PrintHex2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18146,
+      "End": 18661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_PrintHexReverse",
+      "Category": "semantic-review",
+      "Symbol": "Extra_PrintHexReverse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18662,
+      "End": 19176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_PrintSymbols",
+      "Category": "semantic-review",
+      "Symbol": "Extra_PrintSymbols",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19436,
+      "End": 19646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::ternary::Extra_StringAppend",
+      "Category": "ternary-review",
+      "Symbol": "Extra_StringAppend",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 20094,
+      "End": 20443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_StringAppend",
+      "Category": "semantic-review",
+      "Symbol": "Extra_StringAppend",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20094,
+      "End": 20443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_StringClean",
+      "Category": "semantic-review",
+      "Symbol": "Extra_StringClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20716,
+      "End": 21089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_StringCompare",
+      "Category": "semantic-review",
+      "Symbol": "Extra_StringCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21338,
+      "End": 21452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileSort",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileSort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21712,
+      "End": 23151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::Extra_FileLineNumAdd",
+      "Category": "semantic-review",
+      "Symbol": "Extra_FileLineNumAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23404,
+      "End": 24237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/extra/extraUtilFile.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 25429
+    }
+  ],
+  "Draft": "package extra\n\nimport (\n\t\"fmt\"\n\t\"strings\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [extraUtilFile.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [extra]\n\n  Synopsis    [File management utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: extraUtilFile.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"extra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/**Function*************************************************************\n\n  Synopsis    [Tries to find a file name with a different extension.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileGetSimilarName(pFileNameWrong string, pS1 string, pS2 string, pS3 string, pS4 string, pS5 string) string {\n    var pFile *os.File;\n    var pFileNameOther string;\n    var pFileGen string;\n\n    if pS1 == nil {\n        return nil; }\n\n    // get the generic file name\n    pFileGen = Extra_FileNameGeneric( pFileNameWrong );\n    pFileNameOther = Extra_FileNameAppend( pFileGen, pS1 );\n    pFile = os.Open(pFileNameOther);\n    if pFile == nil \u0026\u0026 pS2 { // try one more\n        pFileNameOther = Extra_FileNameAppend( pFileGen, pS2 );\n        pFile = os.Open(pFileNameOther);\n        if pFile == nil \u0026\u0026 pS3 { // try one more\n            pFileNameOther = Extra_FileNameAppend( pFileGen, pS3 );\n            pFile = os.Open(pFileNameOther);\n            if pFile == nil \u0026\u0026 pS4 { // try one more\n                pFileNameOther = Extra_FileNameAppend( pFileGen, pS4 );\n                pFile = os.Open(pFileNameOther);\n                if pFile == nil \u0026\u0026 pS5 { // try one more\n                    pFileNameOther = Extra_FileNameAppend( pFileGen, pS5 );\n                    pFile = os.Open(pFileNameOther);\n                }\n            }\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pFileGen) ? (free((char *) (pFileGen)), (pFileGen) = 0) : 0);\n    if pFile != nil {\n        _ = (pFile).Close();\n        return pFileNameOther;\n    }\n    // did not find :(\n    return nil;            \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the pointer to the file extension.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileNameExtension(FileName string) string {\n    var pDot string;\n    // find the last \"dot\" in the file name, if it is present\n    for  pDot = FileName + len(FileName)-1; pDot \u003e= FileName; pDot--  {\n        if *pDot == '.' {\n            return pDot + 1; }\n    }\n   return FileName;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the composite name of the file.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Extra_FileNameAppend_Buffer string // was [500]byte in C\n\nfunc Extra_FileNameAppend(pBase string, pSuffix string) string {\n    \n    assert(len(pBase) + len(pSuffix) \u003c 500, \"strlen(pBase) + strlen(pSuffix) \u003c 500\");\n    spStatic_Extra_FileNameAppend_Buffer = fmt.Sprintf(\"%s%s\", pBase, pSuffix);\n    return spStatic_Extra_FileNameAppend_Buffer;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileNameGeneric(FileName string) string {\n    var pDot, pRes string;\n    pRes = Extra_UtilStrsav( FileName );\n    if pDot = strrchr( pRes, '.' ) {\n        *pDot = 0; }\n    return pRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the composite name of the file.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Extra_FileNameGenericAppend_Buffer [1000]byte;\nfunc Extra_FileNameGenericAppend(pBase string, pSuffix string) string {\n    \n    var pDot string;\n    assert(len(pBase) + len(pSuffix) \u003c 1000, \"strlen(pBase) + strlen(pSuffix) \u003c 1000\");\n    strcpy( spStatic_Extra_FileNameGenericAppend_Buffer, pBase );\n    if pDot = strrchr( spStatic_Extra_FileNameGenericAppend_Buffer, '.' ) {\n        *pDot = 0; }\n    strcat( spStatic_Extra_FileNameGenericAppend_Buffer, pSuffix );\n    return spStatic_Extra_FileNameGenericAppend_Buffer;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileNameCorrectPath(FileName string) {\n    var pStart string;\n    if FileName {\n        for  pStart = FileName; *pStart; pStart++  {\n            if *pStart == '\u003e' || *pStart == '\\\\' {\n                *pStart = '/'; }\n        } }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileNameWithoutPath(FileName string) string {\n    var pRes string;\n    for  pRes = FileName + len(FileName) - 1; pRes \u003e= FileName; pRes--  {\n        if *pRes == '\\\\' || *pRes == '/' {\n            return pRes + 1; }\n    }\n    return FileName;\n}\nfunc Extra_FilePathWithoutName(FileName string) string {\n    var pRes string;\n    FileName = Abc_UtilStrsav( FileName );\n    for  pRes = FileName + len(FileName) - 1; pRes \u003e= FileName; pRes--  {\n        if *pRes == '\\\\' || *pRes == '/' {\n           *pRes = 0;\n           Extra_FileNameCorrectPath( FileName );\n           return FileName;\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((FileName) ? (free((char *) (FileName)), (FileName) = 0) : 0);\n    return nil;\n}\nfunc Extra_FileDesignName(pFileName string) string {\n    var pBeg, pEnd, pStore, pCur string;\n    // find the first dot\n    for  pEnd = pFileName; *pEnd; pEnd++  {\n        if *pEnd == '.' {\n            break; }\n    }\n    // find the first char\n    for  pBeg = pEnd - 1; pBeg \u003e= pFileName; pBeg--  {\n        if !((*pBeg \u003e= 'a' \u0026\u0026 *pBeg \u003c= 'z') || (*pBeg \u003e= 'A' \u0026\u0026 *pBeg \u003c= 'Z') || (*pBeg \u003e= '0' \u0026\u0026 *pBeg \u003c= '9') || *pBeg == '_') {\n            break; }\n    }\n    pBeg++;\n    // fill up storage\n    // inlining of macro ABC_ALLOC\n    pStore = ((char *) malloc(sizeof(char) * (size_t)(pEnd - pBeg + 1)));\n    for  pCur = pStore; pBeg \u003c pEnd; pBeg, pCur = pBeg+1, pCur+1  {\n        *pCur = *pBeg;\n    }\n    *pCur = 0;\n    return pStore;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the file size.]\n\n  Description [The file should be closed.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileCheck(pFileName string) int32 {\n    var pFile *os.File;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Extra_FileCheck():  File \\\"%s\\\" does not exist.\\n\", pFileName);\n        return 0;\n    }\n    fseek( pFile, 0, SEEK_END );\n    if ftell( pFile ) == 0 {\n        fmt.Printf(\"Extra_FileCheck():  File \\\"%s\\\" is empty.\\n\", pFileName); }\n    _ = (pFile).Close();\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the file size.]\n\n  Description [The file should be closed.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileSize(pFileName string) int32 {\n    var pFile *os.File;\n    var nFileSize int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Extra_FileSize(): The file is unavailable (absent or open).\\n\");\n        return 0;\n    }\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile ); \n    _ = (pFile).Close();\n    return nFileSize;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Read the file into the internal buffer.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileRead(pFile *os.File) string {\n    var nFileSize int32;\n    var pBuffer string;\n    var RetValue int32;\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    // move the file current reading position to the beginning\n    rewind( pFile ); \n    // load the contents of the file into memory\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(nFileSize + 3)));\n    RetValue = fread( pBuffer, nFileSize, 1, pFile );\n    // terminate the string with '\\0'\n    pBuffer[ nFileSize + 0] = '\\n';\n    pBuffer[ nFileSize + 1] = '\\0';\n    return pBuffer;\n}\nfunc Extra_FileRead2(pFile *os.File, pFile2 *os.File) string {\n    var pBuffer string;\n    var nSize, nSize2 int32;\n    var RetValue int32;\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nSize = ftell( pFile );  \n    rewind( pFile ); \n    // get the file size, in bytes\n    fseek( pFile2, 0, SEEK_END );  \n    nSize2 = ftell( pFile2 );  \n    rewind( pFile2 ); \n    // load the contents of the file into memory\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((char *) malloc(sizeof(char) * (size_t)(nSize + nSize2 + 3)));\n    RetValue = fread( pBuffer,         nSize,  1, pFile );\n    RetValue = fread( pBuffer + nSize, nSize2, 1, pFile2 );\n    // terminate the string with '\\0'\n    pBuffer[ nSize + nSize2 + 0] = '\\n';\n    pBuffer[ nSize + nSize2 + 1] = '\\0';\n    return pBuffer;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read the file into the internal buffer.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileReadContents(pFileName string) string {\n    var pFile *os.File;\n    var pBuffer string;\n    pFile = os.Open(pFileName);\n    if pFile != nil {\n        pBuffer = Extra_FileRead( pFile );\n    } else {\n        pBuffer = nil;\n    }\n    if pFile != nil {  _ = (pFile).Close(); }\n    return pBuffer;\n}\nfunc Extra_FileReadContents2(pFileName string, pFileName2 string) string {\n    var pFile, pFile2 *os.File;\n    var pBuffer string;\n    pFile  = os.Open(pFileName);\n    pFile2 = os.Open(pFileName2);\n    if (pFile != nil) \u0026\u0026 (pFile2 != nil) {\n        pBuffer = Extra_FileRead2( pFile, pFile2 );\n    } else {\n        pBuffer = nil;\n    }\n    if pFile != nil {  _ = (pFile).Close(); }\n    if pFile2 != nil { _ = (pFile2).Close(); }\n    return pBuffer;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns one if the file has a given extension.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileIsType(pFileName string, pS1 string, pS2 string, pS3 string) int32 {\n    var lenS int32;\n    var lenF int32 = len(pFileName);\n    if pS1 {\n        lenS = len(pS1);\n    } else {\n        lenS = 0;\n    }\n    if (lenS != 0) \u0026\u0026 lenF \u003e lenS \u0026\u0026 !strncmp( pFileName+lenF-lenS, pS1, lenS ) {\n        return 1; }\n    if pS2 {\n        lenS = len(pS2);\n    } else {\n        lenS = 0;\n    }\n    if (lenS != 0) \u0026\u0026 lenF \u003e lenS \u0026\u0026 !strncmp( pFileName+lenF-lenS, pS2, lenS ) {\n        return 1; }\n    if pS3 {\n        lenS = len(pS3);\n    } else {\n        lenS = 0;\n    }\n    if (lenS != 0) \u0026\u0026 lenF \u003e lenS \u0026\u0026 !strncmp( pFileName+lenF-lenS, pS3, lenS ) {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the time stamp.]\n\n  Description [The file should be closed.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Extra_TimeStamp_Buffer [100]byte;\nfunc Extra_TimeStamp() string {\n    \n    var TimeStamp string;\n    var ltime int64;\n    // get the current time\n    time( \u0026ltime );\n    TimeStamp = asctime( localtime( \u0026ltime ) );\n    TimeStamp[ len(TimeStamp) - 1 ] = 0;\n    strcpy( spStatic_Extra_TimeStamp_Buffer, TimeStamp );\n    return spStatic_Extra_TimeStamp_Buffer;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ReadBinary(Buffer string) uint32 {\n    var Result uint32;\n    var i int32;\n\n    Result = 0;\n    for  i = 0; Buffer[i]; i++  {\n        if Buffer[i] == '0' || Buffer[i] == '1' {\n            Result = Result * 2 + Buffer[i] - '0';\n        } else {\n            assert(false, \"0\");\n        }\n    }\n    return Result;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the bit string.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_PrintBinary(pFile *os.File, Sign []uint32, nBits int32) {\n    var i int32;\n    for  i = nBits-1; i \u003e= 0; i--  {\n        fmt.Fprintf(pFile, \"%c\", '0' + Abc_InfoHasBit(Sign, i));\n    }\n//    fprintf( pFile, \"\\n\" );\n}\nfunc Extra_PrintBinary2(pFile *os.File, Sign []uint32, nBits int32) {\n    var i int32;\n    for  i = 0; i \u003c nBits; i++  {\n        fmt.Fprintf(pFile, \"%c\", '0' + Abc_InfoHasBit(Sign, i));\n    }\n//    fprintf( pFile, \"\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the hex unsigned into the bit-string.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_ReadHex(Sign []uint32, pString string, nDigits int32) int32 {\n    var Digit, k, c int32;\n    for  k = 0; k \u003c nDigits; k++  {\n        c = nDigits-1-k;\n        if pString[c] \u003e= '0' \u0026\u0026 pString[c] \u003c= '9' {\n            Digit = pString[c] - '0';\n        } else if pString[c] \u003e= 'A' \u0026\u0026 pString[c] \u003c= 'F' {\n            Digit = pString[c] - 'A' + 10;\n        } else if pString[c] \u003e= 'a' \u0026\u0026 pString[c] \u003c= 'f' {\n            Digit = pString[c] - 'a' + 10;\n        } else { assert(false, \"0\"); return 0; }\n        Sign[k/8] |= ( (Digit \u0026 15) \u003c\u003c ((k%8) * 4) );\n    }\n    return 1;\n}\nfunc Extra_ReadHexadecimal(Sign []uint32, pString string, nVars int32) int32 {\n    var nWords, nDigits, k int32;\n    nWords = Extra_TruthWordNum( nVars );\n    for  k = 0; k \u003c nWords; k++  {\n        Sign[k] = 0;\n    }\n    // read the number from the string\n    nDigits = (1 \u003c\u003c nVars) / 4;\n    if nDigits == 0 {\n        nDigits = 1; }\n    Extra_ReadHex( Sign, pString, nDigits );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the hex unsigned into a file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_PrintHexadecimal(pFile *os.File, Sign []uint32, nVars int32) {\n    var nDigits, Digit, k int32;\n    // write the number into the file\n    nDigits = (1 \u003c\u003c nVars) / 4;\n    for  k = nDigits - 1; k \u003e= 0; k--  {\n        Digit = ((Sign[k/8] \u003e\u003e ((k%8) * 4)) \u0026 15);\n        if Digit \u003c 10 {\n            fmt.Fprintf(pFile, \"%d\", Digit);\n        } else {\n            fmt.Fprintf(pFile, \"%c\", 'a' + Digit-10); }\n    }\n//    fprintf( pFile, \"\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the hex unsigned into a file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_PrintHexadecimalString(pString string, Sign []uint32, nVars int32) {\n    var nDigits, Digit, k int32;\n    if nVars == 0 \u0026\u0026 !(Sign[0] \u0026 1) { pString = fmt.Sprintf(\"0\"); return; } // const0\n    if nVars == 0 \u0026\u0026  (Sign[0] \u0026 1) { pString = fmt.Sprintf(\"1\"); return; } // const1\n    if nVars == 1 \u0026\u0026  (Sign[0] \u0026 1) { pString = fmt.Sprintf(\"1\"); return; } // inverter\n    if nVars == 1 \u0026\u0026 !(Sign[0] \u0026 1) { pString = fmt.Sprintf(\"2\"); return; } // buffer\n    // write the number into the file\n    nDigits = (1 \u003c\u003c nVars) / 4;\n    for  k = nDigits - 1; k \u003e= 0; k--  {\n        Digit = ((Sign[k/8] \u003e\u003e ((k%8) * 4)) \u0026 15);\n        if Digit \u003c 10 {\n            *pString++ = '0' + Digit;\n        } else {\n            *pString++ = 'a' + Digit-10; }\n    }\n//    fprintf( pFile, \"\\n\" );\n    *pString = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the hex unsigned into a file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_PrintHex(pFile *os.File, pTruth *uint32, nVars int32) {\n    var nMints, nDigits, Digit, k int32;\n\n    // write the number into the file\n    fmt.Fprintf(pFile, \"0x\");\n    nMints  = (1 \u003c\u003c nVars);\n    nDigits = nMints / 4 + ((nMints % 4) \u003e 0);\n    for  k = nDigits - 1; k \u003e= 0; k--  {\n        Digit = ((pTruth[k/8] \u003e\u003e (k * 4)) \u0026 15);\n        if Digit \u003c 10 {\n            fmt.Fprintf(pFile, \"%d\", Digit);\n        } else {\n            fmt.Fprintf(pFile, \"%c\", 'A' + Digit-10); }\n    }\n//    fprintf( pFile, \"\\n\" );\n}\nfunc Extra_PrintHex2(pFile *os.File, pTruth *uint32, nVars int32) {\n    var nMints, nDigits, Digit, k int32;\n\n    // write the number into the file\n    //fprintf( pFile, \"0x\" );\n    nMints  = (1 \u003c\u003c nVars);\n    nDigits = nMints / 4 + ((nMints % 4) \u003e 0);\n    for  k = nDigits - 1; k \u003e= 0; k--  {\n        Digit = ((pTruth[k/8] \u003e\u003e (k * 4)) \u0026 15);\n        if Digit \u003c 10 {\n            fmt.Fprintf(pFile, \"%d\", Digit);\n        } else {\n            fmt.Fprintf(pFile, \"%c\", 'A' + Digit-10); }\n    }\n//    fprintf( pFile, \"\\n\" );\n}\nfunc Extra_PrintHexReverse(pFile *os.File, pTruth *uint32, nVars int32) {\n    var nMints, nDigits, Digit, k int32;\n\n    // write the number into the file\n    fmt.Fprintf(pFile, \"0x\");\n    nMints  = (1 \u003c\u003c nVars);\n    nDigits = nMints / 4 + ((nMints % 4) \u003e 0);\n    for  k = 0; k \u003c nDigits; k++  {\n        Digit = ((pTruth[k/8] \u003e\u003e (k * 4)) \u0026 15);\n        if Digit \u003c 10 {\n            fmt.Fprintf(pFile, \"%d\", Digit);\n        } else {\n            fmt.Fprintf(pFile, \"%c\", 'A' + Digit-10); }\n    }\n//    fprintf( pFile, \"\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the composite name of the file.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_PrintSymbols(pFile *os.File, Char byte, nTimes int32, fPrintNewLine int32) {\n    var i int32;\n    for  i = 0; i \u003c nTimes; i++  {\n        fmt.Printf(\"%c\", Char);\n    }\n    if fPrintNewLine != 0 {\n        fmt.Printf(\"\\n\"); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Appends the string.]\n\n  Description [Assumes that the given string (pStrGiven) has been allocated\n  before using malloc(). The additional string has not been allocated.\n  Allocs more root, appends the additional part, frees the old given string.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_StringAppend(pStrGiven string, pStrAdd string) string {\n    var pTemp string;\n    if pStrGiven {\n        // inlining of macro ABC_ALLOC\n        pTemp = ((char *) malloc(sizeof(char) * (size_t)(len(pStrGiven) + len(pStrAdd) + 2)));\n        pTemp = fmt.Sprintf(\"%s%s\", pStrGiven, pStrAdd);\n        // inlining of macro ABC_FREE\n        ((pStrGiven) ? (free((char *) (pStrGiven)), (pStrGiven) = 0) : 0);\n    \n    } else {\n        pTemp = Extra_UtilStrsav( pStrAdd ); }\n    return pTemp;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Only keep characters belonging to the second string.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_StringClean(pStrGiven string, pCharKeep string) {\n    var pTemp string;\n    var pChar string;\n    var pSave string = pStrGiven;\n    for  pTemp = pStrGiven; *pTemp; pTemp++  {\n        for  pChar = pCharKeep; *pChar; pChar++  {\n            if *pTemp == *pChar {\n                break; }\n        }\n        if *pChar == 0 {\n            continue; }\n        *pSave++ = *pTemp;\n    }\n    *pSave = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [String comparison procedure.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_StringCompare(pp1 string, pp2 string) int32 {\n    return int32(strings.Compare(*(char **)pp1, *(char **)pp2));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sorts lines in the file alphabetically.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileSort(pFileName string, pFileNameOut string) {\n    var pFile *os.File;\n    var pContents string;\n    var pLines *string;\n    var i, nLines, Begin int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Extra_FileSort(): Cannot open file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    pContents = Extra_FileRead( pFile );\n    _ = (pFile).Close();\n    if pContents == nil {\n        fmt.Printf(\"Extra_FileSort(): Cannot read contents of file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    // count end of lines\n    for  nLines, i = 0, 0; pContents[i]; i++  {\n        nLines += (pContents[i] == '\\n');\n    }\n    // break the file into lines\n    pLines = (char **)malloc( sizeof(char *) * nLines );\n    Begin = 0;\n    for  nLines, i = 0, 0; pContents[i]; i++  {\n        if pContents[i] == '\\n' {\n            pContents[i] = 0;\n            pLines[nLines++] = pContents + Begin;\n            Begin = i + 1;\n        }\n    }\n    // sort the lines\n    qsort( pLines, (size_t)nLines, sizeof(char *), (int(*)(void *,void *))Extra_StringCompare );\n    // write a new file\n    pFile = os.OpenFile(pFileNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    for  i = 0; i \u003c nLines; i++  {\n        if pLines[i][0] {\n            fmt.Fprintf(pFile, \"%s\\n\", pLines[i]); }\n    }\n    _ = (pFile).Close();\n    // cleanup\n    free( pLines );\n    free( pContents );\n    // report the result\n    fmt.Printf(\"The file after sorting is \\\"%s\\\".\\n\", pFileNameOut);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Appends line number in the end.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Extra_FileLineNumAdd(pFileName string, pFileNameOut string) {\n    var Buffer [1000]byte;\n    var pFile *os.File;\n    var pFile2 *os.File;\n    var iLine int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Extra_FileLineNumAdd(): Cannot open file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    pFile2 = os.OpenFile(pFileNameOut, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile2 == nil {\n        _ = (pFile).Close();\n        fmt.Printf(\"Extra_FileLineNumAdd(): Cannot open file \\\"%s\\\".\\n\", pFileNameOut);\n        return;\n    }\n    for  iLine = 0; fgets( Buffer, 1000, pFile ); iLine++  {\n        sprintf( Buffer + len(Buffer) - 2, \"%03d\\n%c\", iLine, 0 );\n        fputs( Buffer, pFile2 );\n    }\n    _ = (pFile).Close();\n    _ = (pFile2).Close();\n    // report the result\n    fmt.Printf(\"The resulting file is \\\"%s\\\".\\n\", pFileNameOut);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n/*\nint main( int argc, char ** argv )\n{\n    if ( argc == 2 )\n        Extra_FileSort( argv[1], Extra_FileNameAppend(argv[1], \"_sorted\") );\n    else\n        printf( \"%s: Wrong number of command line arguments.\\n\", argv[0] );\n    return 1;\n}\n*/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static Functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

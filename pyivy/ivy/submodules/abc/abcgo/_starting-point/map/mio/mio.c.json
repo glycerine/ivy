@@ -1,0 +1,1419 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c",
+  "SHA256": "f777d064205991e3314c059793cbf38305c3c18b131a3dfd05d26c0cb0170d20",
+  "Library": [
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 207,
+        "Column": 54,
+        "ByteOffset": 7395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = Extra_UtilGetopt(argc, argv, \"vh\")) != EOF  {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 9,
+        "ByteOffset": 7848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Cannot open input file \\\"%s\\\". \", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 228,
+        "Column": 13,
+        "ByteOffset": 8024
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pErr, \"Did you mean \\\"%s\\\"?\", pFileName ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 9,
+        "ByteOffset": 8086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 8137
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 237,
+        "Column": 9,
+        "ByteOffset": 8269
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( strlen(pFileName) \u003c 900 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 237,
+        "Column": 17,
+        "ByteOffset": 8277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( strlen(pFileName) \u003c 900 );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 238,
+        "Column": 9,
+        "ByteOffset": 8312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Command, \"read_genlib %s\", Extra_FileNameGenericAppend(pFileName, \".genlib\") );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 13,
+        "ByteOffset": 8839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Reading library has filed.\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 257,
+        "Column": 5,
+        "ByteOffset": 8915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"usage: read_liberty [-vh]\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 258,
+        "Column": 5,
+        "ByteOffset": 8966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t         read standard cell library in Liberty format\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 9050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t         (if the library contains more than one gate\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 260,
+        "Column": 5,
+        "ByteOffset": 9133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t         with the same Boolean function, only the gate\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 5,
+        "ByteOffset": 9218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t         with the smallest area will be used)\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 262,
+        "Column": 5,
+        "ByteOffset": 9294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-v     : toggle verbose printout [default = %s]\\n\", fVerbose? \"yes\": \"no\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 5,
+        "ByteOffset": 9393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-h     : enable verbose output\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 293,
+        "Column": 57,
+        "ByteOffset": 10218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = Extra_UtilGetopt(argc, argv, \"WEnvh\")) != EOF  {"
+    },
+    {
+      "Name": "atof",
+      "Status": "review",
+      "Message": "Prefix consumption, endptr, locale, bases, overflow and errno need explicit decisions.",
+      "Location": {
+        "Line": 300,
+        "Column": 37,
+        "ByteOffset": 10514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                WireDelay = float32(atof(argv[globalUtilOptind]));"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 9,
+        "ByteOffset": 11522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Cannot open input file \\\"%s\\\". \", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 335,
+        "Column": 13,
+        "ByteOffset": 11698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pErr, \"Did you mean \\\"%s\\\"?\", pFileName ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 336,
+        "Column": 9,
+        "ByteOffset": 11760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 339,
+        "Column": 5,
+        "ByteOffset": 11811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 344,
+        "Column": 9,
+        "ByteOffset": 11957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Reading genlib library has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 348,
+        "Column": 9,
+        "ByteOffset": 12064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Entered genlib library with %d gates from file \\\"%s\\\".\\n\", Mio_LibraryReadGateNum(pLib), pFileName ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 364,
+        "Column": 9,
+        "ByteOffset": 12610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Reading second genlib library has failed.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 371,
+        "Column": 5,
+        "ByteOffset": 12758
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"usage: read_genlib [-W float] [-E filename] [-nvh]\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 372,
+        "Column": 5,
+        "ByteOffset": 12834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t           read the library from a genlib file\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 373,
+        "Column": 5,
+        "ByteOffset": 12911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t           (if the library contains more than one gate\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 374,
+        "Column": 5,
+        "ByteOffset": 12996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t           with the same Boolean function, only the gate\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 375,
+        "Column": 5,
+        "ByteOffset": 13083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t           with the smallest area will be used)\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 376,
+        "Column": 5,
+        "ByteOffset": 13161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-W float : wire delay (added to pin-to-pin gate delays) [default = %g]\\n\", WireDelay );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 377,
+        "Column": 5,
+        "ByteOffset": 13273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-E file :  the file name with gates to be excluded [default = none]\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 378,
+        "Column": 5,
+        "ByteOffset": 13369
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-n       : toggle replacing gate/pin names by short strings [default = %s]\\n\", fShortNames? \"yes\": \"no\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 379,
+        "Column": 5,
+        "ByteOffset": 13498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-v       : toggle verbose printout [default = %s]\\n\", fVerbose? \"yes\": \"no\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 380,
+        "Column": 5,
+        "ByteOffset": 13599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-h       : enable verbose output\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 407,
+        "Column": 56,
+        "ByteOffset": 14342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = Extra_UtilGetopt(argc, argv, \"agvh\")) != EOF  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 426,
+        "Column": 9,
+        "ByteOffset": 14781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Library is not available.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 430,
+        "Column": 9,
+        "ByteOffset": 14892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The file name is not given.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 435,
+        "Column": 13,
+        "ByteOffset": 15012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 437,
+        "Column": 9,
+        "ByteOffset": 15067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Error! Cannot open file \\\"%s\\\" for writing the library.\\n\", pFileName );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 444,
+        "Column": 5,
+        "ByteOffset": 15401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 445,
+        "Column": 5,
+        "ByteOffset": 15422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The current genlib library is written into file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 449,
+        "Column": 5,
+        "ByteOffset": 15530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\nusage: write_genlib [-agvh] \u003cfile\u003e\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 450,
+        "Column": 5,
+        "ByteOffset": 15592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          writes the current genlib library into a file\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 451,
+        "Column": 5,
+        "ByteOffset": 15678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-a      : toggles writing min-area gates [default = %s]\\n\", fSelected? \"yes\" : \"no\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 452,
+        "Column": 5,
+        "ByteOffset": 15787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-g      : toggles writing the library in Verilog [default = %s]\\n\", fVerilog? \"yes\" : \"no\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 453,
+        "Column": 5,
+        "ByteOffset": 15903
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", fVerbose? \"yes\" : \"no\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 454,
+        "Column": 5,
+        "ByteOffset": 16015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-h      : print the command usage\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 455,
+        "Column": 5,
+        "ByteOffset": 16076
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t\u003cfile\u003e  : optional file name to write the library\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 482,
+        "Column": 56,
+        "ByteOffset": 16825
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = Extra_UtilGetopt(argc, argv, \"savh\")) != EOF  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 501,
+        "Column": 9,
+        "ByteOffset": 17262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Library is not available.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 504,
+        "Column": 23,
+        "ByteOffset": 17349
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Mio_WriteLibrary( stdout, (Mio_Library_t *)Abc_FrameReadLibGen(), 0, fShort, fSelected );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 508,
+        "Column": 5,
+        "ByteOffset": 17447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\nusage: print_genlib [-savh]\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 509,
+        "Column": 5,
+        "ByteOffset": 17502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          print the current genlib library\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 510,
+        "Column": 5,
+        "ByteOffset": 17575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-s      : toggles writing short form [default = %s]\\n\", fShort? \"yes\" : \"no\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 511,
+        "Column": 5,
+        "ByteOffset": 17677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-a      : toggles writing min-area gates [default = %s]\\n\", fSelected? \"yes\" : \"no\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 512,
+        "Column": 5,
+        "ByteOffset": 17786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", fVerbose? \"yes\" : \"no\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 513,
+        "Column": 5,
+        "ByteOffset": 17898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-h      : print the command usage\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 540,
+        "Column": 53,
+        "ByteOffset": 18580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = Extra_UtilGetopt(argc, argv, \"h\")) != EOF  {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 555,
+        "Column": 9,
+        "ByteOffset": 18889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"There is no Genlib library entered.\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 562,
+        "Column": 9,
+        "ByteOffset": 19123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"Cannot open input file \\\"%s\\\". \", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 564,
+        "Column": 13,
+        "ByteOffset": 19293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pErr, \"Did you mean \\\"%s\\\"?\", pFileName ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 565,
+        "Column": 9,
+        "ByteOffset": 19355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pErr, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 571,
+        "Column": 5,
+        "ByteOffset": 19477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 575,
+        "Column": 5,
+        "ByteOffset": 19520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"usage: read_profile [-h] \u003cfile\u003e\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 576,
+        "Column": 5,
+        "ByteOffset": 19577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          read a gate profile from a profile file\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 577,
+        "Column": 5,
+        "ByteOffset": 19657
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-h      : enable verbose output\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 578,
+        "Column": 5,
+        "ByteOffset": 19716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t\u003cfile\u003e  : file name to read the profile\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 602,
+        "Column": 53,
+        "ByteOffset": 20391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = Extra_UtilGetopt(argc, argv, \"h\")) != EOF  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 612,
+        "Column": 9,
+        "ByteOffset": 20601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Library is not available.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 616,
+        "Column": 9,
+        "ByteOffset": 20712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The file name is not given.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 621,
+        "Column": 13,
+        "ByteOffset": 20832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 623,
+        "Column": 9,
+        "ByteOffset": 20887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Error! Cannot open file \\\"%s\\\" for writing the library.\\n\", pFileName );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 627,
+        "Column": 5,
+        "ByteOffset": 21075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 628,
+        "Column": 5,
+        "ByteOffset": 21096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The current profile is written into file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 632,
+        "Column": 5,
+        "ByteOffset": 21197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\nusage: write_profile [-h] \u003cfile\u003e\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 633,
+        "Column": 5,
+        "ByteOffset": 21257
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          writes the current profile into a file\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 634,
+        "Column": 5,
+        "ByteOffset": 21336
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-h      : print the command usage\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 635,
+        "Column": 5,
+        "ByteOffset": 21397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t\u003cfile\u003e  : file name to write the profile\\n\");"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 662,
+        "Column": 56,
+        "ByteOffset": 22138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    for  (c = Extra_UtilGetopt(argc, argv, \"savh\")) != EOF  {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 681,
+        "Column": 9,
+        "ByteOffset": 22575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Library is not available.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 684,
+        "Column": 30,
+        "ByteOffset": 22669
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Mio_LibraryWriteProfile( stdout, (Mio_Library_t *)Abc_FrameReadLibGen() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 688,
+        "Column": 5,
+        "ByteOffset": 22745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\nusage: print_profile [-h]\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 689,
+        "Column": 5,
+        "ByteOffset": 22798
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t          print the current gate profile\\n\" );  "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 690,
+        "Column": 5,
+        "ByteOffset": 22869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pErr, \"\\t-h      : print the command usage\\n\");"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 21,
+        "Column": 1,
+        "ByteOffset": 503
+      },
+      "Directive": "#ifndef WIN32"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mio_Init",
+      "Start": 3584,
+      "End": 4512,
+      "BodyStart": 3620,
+      "Original": "void Mio_Init( Abc_Frame_t * pAbc )\n{\n//    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_liberty\",   Mio_CommandReadLiberty,  0 ); \n\n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_genlib\",    Mio_CommandReadGenlib,  0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"write_genlib\",   Mio_CommandWriteGenlib, 0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"print_genlib\",   Mio_CommandPrintGenlib, 0 ); \n\n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_profile\",   Mio_CommandReadProfile,  0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"write_profile\",  Mio_CommandWriteProfile, 0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"print_profile\",  Mio_CommandPrintProfile, 0 ); \n\n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_library\",   Mio_CommandReadGenlib,  0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"write_library\",  Mio_CommandWriteGenlib, 0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"print_library\",  Mio_CommandPrintGenlib, 0 ); \n}",
+      "Draft": "func Mio_Init(pAbc *Abc_Frame_t) {\n//    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_liberty\",   Mio_CommandReadLiberty,  0 ); \n\n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_genlib\",    Mio_CommandReadGenlib,  0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"write_genlib\",   Mio_CommandWriteGenlib, 0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"print_genlib\",   Mio_CommandPrintGenlib, 0 ); \n\n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_profile\",   Mio_CommandReadProfile,  0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"write_profile\",  Mio_CommandWriteProfile, 0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"print_profile\",  Mio_CommandPrintProfile, 0 ); \n\n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_library\",   Mio_CommandReadGenlib,  0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"write_library\",  Mio_CommandWriteGenlib, 0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"print_library\",  Mio_CommandPrintGenlib, 0 ); \n}"
+    },
+    {
+      "Name": "Mio_End",
+      "Start": 4748,
+      "End": 4909,
+      "BodyStart": 4783,
+      "Original": "void Mio_End( Abc_Frame_t * pAbc )\n{\n    Mio_LibraryDelete( (Mio_Library_t *)Abc_FrameReadLibGen() );\n    Amap_LibFree( (Amap_Lib_t *)Abc_FrameReadLibGen2() );\n}",
+      "Draft": "func Mio_End(pAbc *Abc_Frame_t) {\n    Mio_LibraryDelete( (Mio_Library_t *)Abc_FrameReadLibGen() );\n    Amap_LibFree( (Amap_Lib_t *)Abc_FrameReadLibGen2() );\n}"
+    },
+    {
+      "Name": "Mio_UpdateGenlib",
+      "Start": 5145,
+      "End": 5685,
+      "BodyStart": 5191,
+      "Original": "void Mio_UpdateGenlib( Mio_Library_t * pLib )\n{\n    // free the current superlib because it depends on the old Mio library\n    if ( Abc_FrameReadLibSuper() )\n    {\n        Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n        Abc_FrameSetLibSuper( NULL );\n    }\n\n    // replace the current library\n    Mio_LibraryDelete( (Mio_Library_t *)Abc_FrameReadLibGen() );\n    Abc_FrameSetLibGen( pLib );\n\n    // replace the current library\n    Amap_LibFree( (Amap_Lib_t *)Abc_FrameReadLibGen2() );\n    Abc_FrameSetLibGen2( NULL );\n}",
+      "Draft": "func Mio_UpdateGenlib(pLib *Mio_Library_t) {\n    // free the current superlib because it depends on the old Mio library\n    if Abc_FrameReadLibSuper() {\n        Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n        Abc_FrameSetLibSuper( nil );\n    }\n\n    // replace the current library\n    Mio_LibraryDelete( (Mio_Library_t *)Abc_FrameReadLibGen() );\n    Abc_FrameSetLibGen( pLib );\n\n    // replace the current library\n    Amap_LibFree( (Amap_Lib_t *)Abc_FrameReadLibGen2() );\n    Abc_FrameSetLibGen2( nil );\n}"
+    },
+    {
+      "Name": "Mio_UpdateGenlib2",
+      "Start": 5686,
+      "End": 6626,
+      "BodyStart": 5779,
+      "Original": "int Mio_UpdateGenlib2( Vec_Str_t * vStr, Vec_Str_t * vStr2, char * pFileName, int fVerbose )\n{\n    Mio_Library_t * pLib;\n    // set the new network\n    pLib = Mio_LibraryRead( pFileName, Vec_StrArray(vStr), NULL, fVerbose );  \n    if ( pLib == NULL )\n        return 0;\n\n    // free the current superlib because it depends on the old Mio library\n    if ( Abc_FrameReadLibSuper() )\n    {\n        Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n        Abc_FrameSetLibSuper( NULL );\n    }\n\n    // replace the current library\n    Mio_LibraryDelete( (Mio_Library_t *)Abc_FrameReadLibGen() );\n    Abc_FrameSetLibGen( pLib );\n\n    // set the new network\n    pLib = (Mio_Library_t *)Amap_LibReadAndPrepare( pFileName, Vec_StrArray(vStr2), 0, 0 );  \n    if ( pLib == NULL )\n        return 0;\n\n    // replace the current library\n    Amap_LibFree( (Amap_Lib_t *)Abc_FrameReadLibGen2() );\n    Abc_FrameSetLibGen2( pLib );\n    return 1;\n}",
+      "Draft": "func Mio_UpdateGenlib2(vStr *Vec_Str_t, vStr2 *Vec_Str_t, pFileName string, fVerbose int32) int32 {\n    var pLib *Mio_Library_t;\n    // set the new network\n    pLib = Mio_LibraryRead( pFileName, Vec_StrArray(vStr), nil, fVerbose );  \n    if pLib == nil {\n        return 0; }\n\n    // free the current superlib because it depends on the old Mio library\n    if Abc_FrameReadLibSuper() {\n        Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n        Abc_FrameSetLibSuper( nil );\n    }\n\n    // replace the current library\n    Mio_LibraryDelete( (Mio_Library_t *)Abc_FrameReadLibGen() );\n    Abc_FrameSetLibGen( pLib );\n\n    // set the new network\n    pLib = (Mio_Library_t *)Amap_LibReadAndPrepare( pFileName, Vec_StrArray(vStr2), 0, 0 );  \n    if pLib == nil {\n        return 0; }\n\n    // replace the current library\n    Amap_LibFree( (Amap_Lib_t *)Abc_FrameReadLibGen2() );\n    Abc_FrameSetLibGen2( pLib );\n    return 1;\n}"
+    },
+    {
+      "Name": "Mio_CommandReadLiberty",
+      "Start": 6862,
+      "End": 9392,
+      "BodyStart": 6934,
+      "Original": "int Mio_CommandReadLiberty( Abc_Frame_t * pAbc, int argc, char **argv )\n{\n    int fUseFileInterface = 0;\n    char Command[1000];\n    FILE * pFile;\n    FILE * pOut, * pErr;\n    char * pFileName;\n    int fVerbose;\n    int c;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 0;\n    Extra_UtilGetoptReset();\n    while ( (c = Extra_UtilGetopt(argc, argv, \"vh\")) != EOF ) \n    {\n        switch (c) \n        {\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if ( argc != globalUtilOptind + 1 )\n        goto usage;\n\n    // get the input file name\n    pFileName = argv[globalUtilOptind];\n    if ( (pFile = Io_FileOpen( pFileName, \"open_path\", \"r\", 0 )) == NULL )\n    {\n        fprintf( pErr, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if ( (pFileName = Extra_FileGetSimilarName( pFileName, \".genlib\", \".lib\", \".scl\", \".g\", NULL )) )\n            fprintf( pErr, \"Did you mean \\\"%s\\\"?\", pFileName );\n        fprintf( pErr, \"\\n\" );\n        return 1;\n    }\n    fclose( pFile );\n\n    if ( fUseFileInterface )\n    {\n        if ( !Amap_LibertyParse( pFileName, fVerbose ) )\n            return 0;\n        assert( strlen(pFileName) \u003c 900 );\n        sprintf( Command, \"read_genlib %s\", Extra_FileNameGenericAppend(pFileName, \".genlib\") );\n        Cmd_CommandExecute( pAbc, Command );\n    }\n    else\n    {\n        Vec_Str_t * vStr, * vStr2;\n        int RetValue;\n        vStr = Amap_LibertyParseStr( pFileName, fVerbose );\n        if ( vStr == NULL )\n            return 0;\n        vStr2 = Vec_StrDup(vStr);\n        RetValue = Mio_UpdateGenlib2( vStr, vStr2, pFileName, fVerbose );\n        Vec_StrFree( vStr );\n        Vec_StrFree( vStr2 );\n        if ( !RetValue )\n            printf( \"Reading library has filed.\\n\" );\n    }\n    return 0;\n\nusage:\n    fprintf( pErr, \"usage: read_liberty [-vh]\\n\");\n    fprintf( pErr, \"\\t         read standard cell library in Liberty format\\n\" );  \n    fprintf( pErr, \"\\t         (if the library contains more than one gate\\n\" );  \n    fprintf( pErr, \"\\t         with the same Boolean function, only the gate\\n\" );  \n    fprintf( pErr, \"\\t         with the smallest area will be used)\\n\" );  \n    fprintf( pErr, \"\\t-v     : toggle verbose printout [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    fprintf( pErr, \"\\t-h     : enable verbose output\\n\");\n    return 1;       \n}",
+      "Draft": "func Mio_CommandReadLiberty(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var fUseFileInterface int32;\n    var Command string // was [1000]byte in C\n\n    var pFile *os.File;\n    var pOut, pErr *os.File;\n    var pFileName string;\n    var fVerbose int32;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 0;\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"vh\")) != -1  {\n        switch c {\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if argc != globalUtilOptind + 1 {\n        goto usage; }\n\n    // get the input file name\n    pFileName = argv[globalUtilOptind];\n    if (pFile = Io_FileOpen( pFileName, \"open_path\", \"r\", 0 )) == nil {\n        fmt.Fprintf(pErr, \"Cannot open input file \\\"%s\\\". \", pFileName);\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".genlib\", \".lib\", \".scl\", \".g\", nil ) {\n            fmt.Fprintf(pErr, \"Did you mean \\\"%s\\\"?\", pFileName); }\n        fmt.Fprintf(pErr, \"\\n\");\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    if fUseFileInterface != 0 {\n        if !Amap_LibertyParse( pFileName, fVerbose ) {\n            return 0; }\n        assert(len(pFileName) \u003c 900, \"strlen(pFileName) \u003c 900\");\n        Command = fmt.Sprintf(\"read_genlib %s\", Extra_FileNameGenericAppend(pFileName, \".genlib\"));\n        Cmd_CommandExecute( pAbc, Command );\n    \n    } else {\n        var vStr, vStr2 *Vec_Str_t;\n        var RetValue int32;\n        vStr = Amap_LibertyParseStr( pFileName, fVerbose );\n        if vStr == nil {\n            return 0; }\n        vStr2 = Vec_StrDup(vStr);\n        RetValue = Mio_UpdateGenlib2( vStr, vStr2, pFileName, fVerbose );\n        Vec_StrFree( vStr );\n        Vec_StrFree( vStr2 );\n        if !(RetValue != 0) {\n            fmt.Printf(\"Reading library has filed.\\n\"); }\n    }\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"usage: read_liberty [-vh]\\n\");\n    fmt.Fprintf(pErr, \"\\t         read standard cell library in Liberty format\\n\");  \n    fmt.Fprintf(pErr, \"\\t         (if the library contains more than one gate\\n\");  \n    fmt.Fprintf(pErr, \"\\t         with the same Boolean function, only the gate\\n\");  \n    fmt.Fprintf(pErr, \"\\t         with the smallest area will be used)\\n\");  \n    fmt.Fprintf(pErr, \"\\t-v     : toggle verbose printout [default = %s]\\n\", fVerbose? \"yes\": \"no\");\n    fmt.Fprintf(pErr, \"\\t-h     : enable verbose output\\n\");\n    return 1;       \n}"
+    },
+    {
+      "Name": "Mio_CommandReadGenlib",
+      "Start": 9628,
+      "End": 13639,
+      "BodyStart": 9699,
+      "Original": "int Mio_CommandReadGenlib( Abc_Frame_t * pAbc, int argc, char **argv )\n{\n    FILE * pFile;\n    FILE * pOut, * pErr;\n    Mio_Library_t * pLib;\n    Amap_Lib_t * pLib2;\n    char * pFileName;\n    char * pExcludeFile = NULL;\n    double WireDelay = 0.0;\n    int fShortNames = 0;\n    int c, fVerbose = 1;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n    Extra_UtilGetoptReset();\n    while ( (c = Extra_UtilGetopt(argc, argv, \"WEnvh\")) != EOF ) \n    {\n        switch (c) \n        {\n            case 'W':\n                if ( globalUtilOptind \u003e= argc )\n                {\n                    Abc_Print( -1, \"Command line switch \\\"-W\\\" should be followed by a floating point number.\\n\" );\n                    goto usage;\n                }\n                WireDelay = (float)atof(argv[globalUtilOptind]);\n                globalUtilOptind++;\n                if ( WireDelay \u003c= 0.0 ) \n                    goto usage;\n                break;\n            case 'E':\n                if ( globalUtilOptind \u003e= argc )\n                {\n                    Abc_Print( -1, \"Command line switch \\\"-E\\\" should be followed by a file name.\\n\" );\n                    goto usage;\n                }\n                pExcludeFile = argv[globalUtilOptind];\n                globalUtilOptind++;\n                break;\n            case 'n':\n                fShortNames ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if ( argc != globalUtilOptind + 1 )\n    {\n        goto usage;\n    }\n\n    // get the input file name\n    pFileName = argv[globalUtilOptind];\n    if ( (pFile = Io_FileOpen( pFileName, \"open_path\", \"r\", 0 )) == NULL )\n    {\n        fprintf( pErr, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if ( (pFileName = Extra_FileGetSimilarName( pFileName, \".genlib\", \".lib\", \".scl\", \".g\", NULL )) )\n            fprintf( pErr, \"Did you mean \\\"%s\\\"?\", pFileName );\n        fprintf( pErr, \"\\n\" );\n        return 1;\n    }\n    fclose( pFile );\n\n    // set the new network\n    pLib = Mio_LibraryRead( pFileName, NULL, pExcludeFile, fVerbose );  \n    if ( pLib == NULL )\n    {\n        fprintf( pErr, \"Reading genlib library has failed.\\n\" );\n        return 1;\n    }\n    if ( fVerbose )\n        printf( \"Entered genlib library with %d gates from file \\\"%s\\\".\\n\", Mio_LibraryReadGateNum(pLib), pFileName );\n\n    // convert the library if needed\n    if ( fShortNames )\n        Mio_LibraryShortNames( pLib );\n\n    // add the fixed number (wire delay) to all delays in the library\n    if ( WireDelay != 0.0 )\n        Mio_LibraryShiftDelay( pLib, WireDelay );\n\n    // prepare libraries\n    Mio_UpdateGenlib( pLib );\n\n    // replace the current library\n    pLib2 = Amap_LibReadAndPrepare( pFileName, NULL, 0, 0 );  \n    if ( pLib2 == NULL )\n    {\n        fprintf( pErr, \"Reading second genlib library has failed.\\n\" );\n        return 1;\n    }\n    Abc_FrameSetLibGen2( pLib2 );\n    return 0;\n\nusage:\n    fprintf( pErr, \"usage: read_genlib [-W float] [-E filename] [-nvh]\\n\");\n    fprintf( pErr, \"\\t           read the library from a genlib file\\n\" );  \n    fprintf( pErr, \"\\t           (if the library contains more than one gate\\n\" );  \n    fprintf( pErr, \"\\t           with the same Boolean function, only the gate\\n\" );  \n    fprintf( pErr, \"\\t           with the smallest area will be used)\\n\" );  \n    fprintf( pErr, \"\\t-W float : wire delay (added to pin-to-pin gate delays) [default = %g]\\n\", WireDelay );  \n    fprintf( pErr, \"\\t-E file :  the file name with gates to be excluded [default = none]\\n\" );\n    fprintf( pErr, \"\\t-n       : toggle replacing gate/pin names by short strings [default = %s]\\n\", fShortNames? \"yes\": \"no\" );\n    fprintf( pErr, \"\\t-v       : toggle verbose printout [default = %s]\\n\", fVerbose? \"yes\": \"no\" );\n    fprintf( pErr, \"\\t-h       : enable verbose output\\n\");\n    return 1;       \n}",
+      "Draft": "func Mio_CommandReadGenlib(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var pOut, pErr *os.File;\n    var pLib *Mio_Library_t;\n    var pLib2 *Amap_Lib_t;\n    var pFileName string;\n    var pExcludeFile string  = nil;\n    var WireDelay float64  = 0.0;\n    var fShortNames int32;\n    var c int32;\n    var fVerbose int32 = 1;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"WEnvh\")) != -1  {\n        switch c {\n            case 'W':\n                if globalUtilOptind \u003e= argc {\n                    Abc_Print( -1, \"Command line switch \\\"-W\\\" should be followed by a floating point number.\\n\" );\n                    goto usage;\n                }\n                WireDelay = float32(atof(argv[globalUtilOptind]));\n                globalUtilOptind++;\n                if WireDelay \u003c= 0.0 { \n                    goto usage; }\n                break;\n            case 'E':\n                if globalUtilOptind \u003e= argc {\n                    Abc_Print( -1, \"Command line switch \\\"-E\\\" should be followed by a file name.\\n\" );\n                    goto usage;\n                }\n                pExcludeFile = argv[globalUtilOptind];\n                globalUtilOptind++;\n                break;\n            case 'n':\n                fShortNames ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if argc != globalUtilOptind + 1 {\n        goto usage;\n    }\n\n    // get the input file name\n    pFileName = argv[globalUtilOptind];\n    if (pFile = Io_FileOpen( pFileName, \"open_path\", \"r\", 0 )) == nil {\n        fmt.Fprintf(pErr, \"Cannot open input file \\\"%s\\\". \", pFileName);\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".genlib\", \".lib\", \".scl\", \".g\", nil ) {\n            fmt.Fprintf(pErr, \"Did you mean \\\"%s\\\"?\", pFileName); }\n        fmt.Fprintf(pErr, \"\\n\");\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    // set the new network\n    pLib = Mio_LibraryRead( pFileName, nil, pExcludeFile, fVerbose );  \n    if pLib == nil {\n        fmt.Fprintf(pErr, \"Reading genlib library has failed.\\n\");\n        return 1;\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Entered genlib library with %d gates from file \\\"%s\\\".\\n\", Mio_LibraryReadGateNum(pLib), pFileName); }\n\n    // convert the library if needed\n    if fShortNames != 0 {\n        Mio_LibraryShortNames( pLib ); }\n\n    // add the fixed number (wire delay) to all delays in the library\n    if WireDelay != 0.0 {\n        Mio_LibraryShiftDelay( pLib, WireDelay ); }\n\n    // prepare libraries\n    Mio_UpdateGenlib( pLib );\n\n    // replace the current library\n    pLib2 = Amap_LibReadAndPrepare( pFileName, nil, 0, 0 );  \n    if pLib2 == nil {\n        fmt.Fprintf(pErr, \"Reading second genlib library has failed.\\n\");\n        return 1;\n    }\n    Abc_FrameSetLibGen2( pLib2 );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"usage: read_genlib [-W float] [-E filename] [-nvh]\\n\");\n    fmt.Fprintf(pErr, \"\\t           read the library from a genlib file\\n\");  \n    fmt.Fprintf(pErr, \"\\t           (if the library contains more than one gate\\n\");  \n    fmt.Fprintf(pErr, \"\\t           with the same Boolean function, only the gate\\n\");  \n    fmt.Fprintf(pErr, \"\\t           with the smallest area will be used)\\n\");  \n    fmt.Fprintf(pErr, \"\\t-W float : wire delay (added to pin-to-pin gate delays) [default = %g]\\n\", WireDelay);  \n    fmt.Fprintf(pErr, \"\\t-E file :  the file name with gates to be excluded [default = none]\\n\");\n    fmt.Fprintf(pErr, \"\\t-n       : toggle replacing gate/pin names by short strings [default = %s]\\n\", fShortNames? \"yes\": \"no\");\n    fmt.Fprintf(pErr, \"\\t-v       : toggle verbose printout [default = %s]\\n\", fVerbose? \"yes\": \"no\");\n    fmt.Fprintf(pErr, \"\\t-h       : enable verbose output\\n\");\n    return 1;       \n}"
+    },
+    {
+      "Name": "Mio_CommandWriteGenlib",
+      "Start": 13915,
+      "End": 16150,
+      "BodyStart": 13987,
+      "Original": "int Mio_CommandWriteGenlib( Abc_Frame_t * pAbc, int argc, char **argv )\n{\n    FILE * pOut, * pErr, * pFile;\n    char * pFileName;\n    int fSelected = 0;\n    int fVerilog = 0;\n    int fVerbose = 0;\n    int c;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    Extra_UtilGetoptReset();\n    while ( (c = Extra_UtilGetopt(argc, argv, \"agvh\")) != EOF ) \n    {\n        switch (c) \n        {\n            case 'a':\n                fSelected ^= 1;\n                break;\n            case 'g':\n                fVerilog ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if ( Abc_FrameReadLibGen() == NULL )\n    {\n        printf( \"Library is not available.\\n\" );\n        return 1;\n    }\n    if ( argc != globalUtilOptind + 1 )\n    {\n        printf( \"The file name is not given.\\n\" );\n        return 1;\n    }\n\n    pFileName = argv[globalUtilOptind];\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Error! Cannot open file \\\"%s\\\" for writing the library.\\n\", pFileName );\n        return 1;\n    }\n    if ( fVerilog )\n        Mio_WriteLibraryVerilog( pFile, (Mio_Library_t *)Abc_FrameReadLibGen(), 0, 0, fSelected );\n    else\n        Mio_WriteLibrary( pFile, (Mio_Library_t *)Abc_FrameReadLibGen(), 0, 0, fSelected );\n    fclose( pFile );\n    printf( \"The current genlib library is written into file \\\"%s\\\".\\n\", pFileName );\n    return 0;\n\nusage:\n    fprintf( pErr, \"\\nusage: write_genlib [-agvh] \u003cfile\u003e\\n\");\n    fprintf( pErr, \"\\t          writes the current genlib library into a file\\n\" );  \n    fprintf( pErr, \"\\t-a      : toggles writing min-area gates [default = %s]\\n\", fSelected? \"yes\" : \"no\" );\n    fprintf( pErr, \"\\t-g      : toggles writing the library in Verilog [default = %s]\\n\", fVerilog? \"yes\" : \"no\" );\n    fprintf( pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", fVerbose? \"yes\" : \"no\" );\n    fprintf( pErr, \"\\t-h      : print the command usage\\n\");\n    fprintf( pErr, \"\\t\u003cfile\u003e  : optional file name to write the library\\n\");\n    return 1;       \n}",
+      "Draft": "func Mio_CommandWriteGenlib(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr, pFile *os.File;\n    var pFileName string;\n    var fSelected int32;\n    var fVerilog int32;\n    var fVerbose int32;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"agvh\")) != -1  {\n        switch c {\n            case 'a':\n                fSelected ^= 1;\n                break;\n            case 'g':\n                fVerilog ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if Abc_FrameReadLibGen() == nil {\n        fmt.Printf(\"Library is not available.\\n\");\n        return 1;\n    }\n    if argc != globalUtilOptind + 1 {\n        fmt.Printf(\"The file name is not given.\\n\");\n        return 1;\n    }\n\n    pFileName = argv[globalUtilOptind];\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Error! Cannot open file \\\"%s\\\" for writing the library.\\n\", pFileName);\n        return 1;\n    }\n    if fVerilog != 0 {\n        Mio_WriteLibraryVerilog( pFile, (Mio_Library_t *)Abc_FrameReadLibGen(), 0, 0, fSelected );\n    } else {\n        Mio_WriteLibrary( pFile, (Mio_Library_t *)Abc_FrameReadLibGen(), 0, 0, fSelected ); }\n    _ = (pFile).Close();\n    fmt.Printf(\"The current genlib library is written into file \\\"%s\\\".\\n\", pFileName);\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: write_genlib [-agvh] \u003cfile\u003e\\n\");\n    fmt.Fprintf(pErr, \"\\t          writes the current genlib library into a file\\n\");  \n    fmt.Fprintf(pErr, \"\\t-a      : toggles writing min-area gates [default = %s]\\n\", fSelected? \"yes\" : \"no\");\n    fmt.Fprintf(pErr, \"\\t-g      : toggles writing the library in Verilog [default = %s]\\n\", fVerilog? \"yes\" : \"no\");\n    fmt.Fprintf(pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", fVerbose? \"yes\" : \"no\");\n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    fmt.Fprintf(pErr, \"\\t\u003cfile\u003e  : optional file name to write the library\\n\");\n    return 1;       \n}"
+    },
+    {
+      "Name": "Mio_CommandPrintGenlib",
+      "Start": 16426,
+      "End": 17962,
+      "BodyStart": 16498,
+      "Original": "int Mio_CommandPrintGenlib( Abc_Frame_t * pAbc, int argc, char **argv )\n{\n    FILE * pOut, * pErr;\n    int fShort = 0;\n    int fSelected = 0;\n    int fVerbose = 0;\n    int c;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    Extra_UtilGetoptReset();\n    while ( (c = Extra_UtilGetopt(argc, argv, \"savh\")) != EOF ) \n    {\n        switch (c) \n        {\n            case 's':\n                fShort ^= 1;\n                break;\n            case 'a':\n                fSelected ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if ( Abc_FrameReadLibGen() == NULL )\n    {\n        printf( \"Library is not available.\\n\" );\n        return 1;\n    }\n    Mio_WriteLibrary( stdout, (Mio_Library_t *)Abc_FrameReadLibGen(), 0, fShort, fSelected );\n    return 0;\n\nusage:\n    fprintf( pErr, \"\\nusage: print_genlib [-savh]\\n\");\n    fprintf( pErr, \"\\t          print the current genlib library\\n\" );  \n    fprintf( pErr, \"\\t-s      : toggles writing short form [default = %s]\\n\", fShort? \"yes\" : \"no\" );\n    fprintf( pErr, \"\\t-a      : toggles writing min-area gates [default = %s]\\n\", fSelected? \"yes\" : \"no\" );\n    fprintf( pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", fVerbose? \"yes\" : \"no\" );\n    fprintf( pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       \n}",
+      "Draft": "func Mio_CommandPrintGenlib(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr *os.File;\n    var fShort int32;\n    var fSelected int32;\n    var fVerbose int32;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"savh\")) != -1  {\n        switch c {\n            case 's':\n                fShort ^= 1;\n                break;\n            case 'a':\n                fSelected ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if Abc_FrameReadLibGen() == nil {\n        fmt.Printf(\"Library is not available.\\n\");\n        return 1;\n    }\n    Mio_WriteLibrary( os.Stdout, (Mio_Library_t *)Abc_FrameReadLibGen(), 0, fShort, fSelected );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: print_genlib [-savh]\\n\");\n    fmt.Fprintf(pErr, \"\\t          print the current genlib library\\n\");  \n    fmt.Fprintf(pErr, \"\\t-s      : toggles writing short form [default = %s]\\n\", fShort? \"yes\" : \"no\");\n    fmt.Fprintf(pErr, \"\\t-a      : toggles writing min-area gates [default = %s]\\n\", fSelected? \"yes\" : \"no\");\n    fmt.Fprintf(pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", fVerbose? \"yes\" : \"no\");\n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       \n}"
+    },
+    {
+      "Name": "Mio_CommandReadProfile",
+      "Start": 18199,
+      "End": 19816,
+      "BodyStart": 18271,
+      "Original": "int Mio_CommandReadProfile( Abc_Frame_t * pAbc, int argc, char **argv )\n{\n    FILE * pFile, * pOut, * pErr;\n    Mio_Library_t * pLib;\n    char * pFileName;\n    int c;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    Extra_UtilGetoptReset();\n    while ( (c = Extra_UtilGetopt(argc, argv, \"h\")) != EOF ) \n    {\n        switch (c) \n        {\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if ( argc != globalUtilOptind + 1 )\n    {\n        goto usage;\n    }\n\n    pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n    if ( pLib == NULL )\n    {\n        fprintf( pErr, \"There is no Genlib library entered.\\n\" );\n        return 1;\n    }\n\n    // get the input file name\n    pFileName = argv[globalUtilOptind];\n    if ( (pFile = Io_FileOpen( pFileName, \"open_path\", \"r\", 0 )) == NULL )\n    {\n        fprintf( pErr, \"Cannot open input file \\\"%s\\\". \", pFileName );\n        if ( (pFileName = Extra_FileGetSimilarName( pFileName, \".profile\", NULL, NULL, NULL, NULL )) )\n            fprintf( pErr, \"Did you mean \\\"%s\\\"?\", pFileName );\n        fprintf( pErr, \"\\n\" );\n        return 1;\n    }\n\n    // set the new network\n    Mio_LibraryReadProfile( pFile, pLib );\n    fclose( pFile );\n    return 0;\n\nusage:\n    fprintf( pErr, \"usage: read_profile [-h] \u003cfile\u003e\\n\");\n    fprintf( pErr, \"\\t          read a gate profile from a profile file\\n\" );  \n    fprintf( pErr, \"\\t-h      : enable verbose output\\n\");\n    fprintf( pErr, \"\\t\u003cfile\u003e  : file name to read the profile\\n\");\n    return 1;       \n}",
+      "Draft": "func Mio_CommandReadProfile(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile, pOut, pErr *os.File;\n    var pLib *Mio_Library_t;\n    var pFileName string;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"h\")) != -1  {\n        switch c {\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if argc != globalUtilOptind + 1 {\n        goto usage;\n    }\n\n    pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n    if pLib == nil {\n        fmt.Fprintf(pErr, \"There is no Genlib library entered.\\n\");\n        return 1;\n    }\n\n    // get the input file name\n    pFileName = argv[globalUtilOptind];\n    if (pFile = Io_FileOpen( pFileName, \"open_path\", \"r\", 0 )) == nil {\n        fmt.Fprintf(pErr, \"Cannot open input file \\\"%s\\\". \", pFileName);\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".profile\", nil, nil, nil, nil ) {\n            fmt.Fprintf(pErr, \"Did you mean \\\"%s\\\"?\", pFileName); }\n        fmt.Fprintf(pErr, \"\\n\");\n        return 1;\n    }\n\n    // set the new network\n    Mio_LibraryReadProfile( pFile, pLib );\n    _ = (pFile).Close();\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"usage: read_profile [-h] \u003cfile\u003e\\n\");\n    fmt.Fprintf(pErr, \"\\t          read a gate profile from a profile file\\n\");  \n    fmt.Fprintf(pErr, \"\\t-h      : enable verbose output\\n\");\n    fmt.Fprintf(pErr, \"\\t\u003cfile\u003e  : file name to read the profile\\n\");\n    return 1;       \n}"
+    },
+    {
+      "Name": "Mio_CommandWriteProfile",
+      "Start": 20092,
+      "End": 21525,
+      "BodyStart": 20165,
+      "Original": "int Mio_CommandWriteProfile( Abc_Frame_t * pAbc, int argc, char **argv )\n{\n    FILE * pOut, * pErr, * pFile;\n    char * pFileName;\n    int c;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    Extra_UtilGetoptReset();\n    while ( (c = Extra_UtilGetopt(argc, argv, \"h\")) != EOF ) \n    {\n        switch (c) \n        {\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if ( Abc_FrameReadLibGen() == NULL )\n    {\n        printf( \"Library is not available.\\n\" );\n        return 1;\n    }\n    if ( argc != globalUtilOptind + 1 )\n    {\n        printf( \"The file name is not given.\\n\" );\n        return 1;\n    }\n\n    pFileName = argv[globalUtilOptind];\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Error! Cannot open file \\\"%s\\\" for writing the library.\\n\", pFileName );\n        return 1;\n    }\n    Mio_LibraryWriteProfile( pFile, (Mio_Library_t *)Abc_FrameReadLibGen() );\n    fclose( pFile );\n    printf( \"The current profile is written into file \\\"%s\\\".\\n\", pFileName );\n    return 0;\n\nusage:\n    fprintf( pErr, \"\\nusage: write_profile [-h] \u003cfile\u003e\\n\");\n    fprintf( pErr, \"\\t          writes the current profile into a file\\n\" );  \n    fprintf( pErr, \"\\t-h      : print the command usage\\n\");\n    fprintf( pErr, \"\\t\u003cfile\u003e  : file name to write the profile\\n\");\n    return 1;       \n}",
+      "Draft": "func Mio_CommandWriteProfile(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr, pFile *os.File;\n    var pFileName string;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"h\")) != -1  {\n        switch c {\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if Abc_FrameReadLibGen() == nil {\n        fmt.Printf(\"Library is not available.\\n\");\n        return 1;\n    }\n    if argc != globalUtilOptind + 1 {\n        fmt.Printf(\"The file name is not given.\\n\");\n        return 1;\n    }\n\n    pFileName = argv[globalUtilOptind];\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Error! Cannot open file \\\"%s\\\" for writing the library.\\n\", pFileName);\n        return 1;\n    }\n    Mio_LibraryWriteProfile( pFile, (Mio_Library_t *)Abc_FrameReadLibGen() );\n    _ = (pFile).Close();\n    fmt.Printf(\"The current profile is written into file \\\"%s\\\".\\n\", pFileName);\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: write_profile [-h] \u003cfile\u003e\\n\");\n    fmt.Fprintf(pErr, \"\\t          writes the current profile into a file\\n\");  \n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    fmt.Fprintf(pErr, \"\\t\u003cfile\u003e  : file name to write the profile\\n\");\n    return 1;       \n}"
+    },
+    {
+      "Name": "Mio_CommandPrintProfile",
+      "Start": 21801,
+      "End": 22996,
+      "BodyStart": 21874,
+      "Original": "int Mio_CommandPrintProfile( Abc_Frame_t * pAbc, int argc, char **argv )\n{\n    FILE * pOut, * pErr;\n    int fShort = 0;\n    int fSelected = 0;\n    int fVerbose = 0;\n    int c;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    Extra_UtilGetoptReset();\n    while ( (c = Extra_UtilGetopt(argc, argv, \"savh\")) != EOF ) \n    {\n        switch (c) \n        {\n            case 's':\n                fShort ^= 1;\n                break;\n            case 'a':\n                fSelected ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if ( Abc_FrameReadLibGen() == NULL )\n    {\n        printf( \"Library is not available.\\n\" );\n        return 1;\n    }\n    Mio_LibraryWriteProfile( stdout, (Mio_Library_t *)Abc_FrameReadLibGen() );\n    return 0;\n\nusage:\n    fprintf( pErr, \"\\nusage: print_profile [-h]\\n\");\n    fprintf( pErr, \"\\t          print the current gate profile\\n\" );  \n    fprintf( pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       \n}",
+      "Draft": "func Mio_CommandPrintProfile(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr *os.File;\n    var fShort int32;\n    var fSelected int32;\n    var fVerbose int32;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"savh\")) != -1  {\n        switch c {\n            case 's':\n                fShort ^= 1;\n                break;\n            case 'a':\n                fSelected ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if Abc_FrameReadLibGen() == nil {\n        fmt.Printf(\"Library is not available.\\n\");\n        return 1;\n    }\n    Mio_LibraryWriteProfile( os.Stdout, (Mio_Library_t *)Abc_FrameReadLibGen() );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: print_profile [-h]\\n\");\n    fmt.Fprintf(pErr, \"\\t          print the current gate profile\\n\");  \n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::4842",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4808,
+      "End": 4825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::4902",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4868,
+      "End": 4882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::5369",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5335,
+      "End": 5353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::5517",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5483,
+      "End": 5500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::5645",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5611,
+      "End": 5625
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::6132",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6098,
+      "End": 6116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::6280",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6246,
+      "End": 6263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::6393",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6359,
+      "End": 6376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::6572",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6538,
+      "End": 6552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::15250",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15216,
+      "End": 15233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::15351",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15317,
+      "End": 15334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::17376",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17342,
+      "End": 17359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::18845",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18811,
+      "End": 18828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::21105",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21071,
+      "End": 21088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::pointer-cast::22759",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22725,
+      "End": 22742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::Mio_Init",
+      "Category": "semantic-review",
+      "Symbol": "Mio_Init",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3584,
+      "End": 4512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::Mio_End",
+      "Category": "semantic-review",
+      "Symbol": "Mio_End",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4748,
+      "End": 4909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::Mio_UpdateGenlib",
+      "Category": "semantic-review",
+      "Symbol": "Mio_UpdateGenlib",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5145,
+      "End": 5685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::Mio_UpdateGenlib2",
+      "Category": "semantic-review",
+      "Symbol": "Mio_UpdateGenlib2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5686,
+      "End": 6626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::ternary::Mio_CommandReadLiberty",
+      "Category": "ternary-review",
+      "Symbol": "Mio_CommandReadLiberty",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6862,
+      "End": 9392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::Mio_CommandReadLiberty",
+      "Category": "semantic-review",
+      "Symbol": "Mio_CommandReadLiberty",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6862,
+      "End": 9392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::ternary::Mio_CommandReadGenlib",
+      "Category": "ternary-review",
+      "Symbol": "Mio_CommandReadGenlib",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9628,
+      "End": 13639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::Mio_CommandReadGenlib",
+      "Category": "semantic-review",
+      "Symbol": "Mio_CommandReadGenlib",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9628,
+      "End": 13639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::ternary::Mio_CommandWriteGenlib",
+      "Category": "ternary-review",
+      "Symbol": "Mio_CommandWriteGenlib",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13915,
+      "End": 16150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::Mio_CommandWriteGenlib",
+      "Category": "semantic-review",
+      "Symbol": "Mio_CommandWriteGenlib",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13915,
+      "End": 16150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::ternary::Mio_CommandPrintGenlib",
+      "Category": "ternary-review",
+      "Symbol": "Mio_CommandPrintGenlib",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16426,
+      "End": 17962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::Mio_CommandPrintGenlib",
+      "Category": "semantic-review",
+      "Symbol": "Mio_CommandPrintGenlib",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16426,
+      "End": 17962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::Mio_CommandReadProfile",
+      "Category": "semantic-review",
+      "Symbol": "Mio_CommandReadProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18199,
+      "End": 19816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::Mio_CommandWriteProfile",
+      "Category": "semantic-review",
+      "Symbol": "Mio_CommandWriteProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20092,
+      "End": 21525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::Mio_CommandPrintProfile",
+      "Category": "semantic-review",
+      "Symbol": "Mio_CommandPrintProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21801,
+      "End": 22996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 23242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mio.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 503,
+      "End": 543
+    }
+  ],
+  "Draft": "package mio\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  pFileName    [mio.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [File reading/writing for technology mapping.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 18, 2003.]\n\n  Revision    [$Id: mio.c,v 1.4 2004/08/05 18:34:51 satrajit Exp $]\n\n***********************************************************************/\n\n#define _BSD_SOURCE\n\n#ifndef WIN32\n#include \u003cunistd.h\u003e\n#endif\n\n//#include \"base/main/main.h\"\n//#include \"mio.h\"\n//#include \"map/mapper/mapper.h\"\n//#include \"map/amap/amap.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static int Mio_CommandReadLiberty( Abc_Frame_t * pAbc, int argc, char **argv );\n\n// static int Mio_CommandReadGenlib( Abc_Frame_t * pAbc, int argc, char **argv );\n\n// static int Mio_CommandWriteGenlib( Abc_Frame_t * pAbc, int argc, char **argv );\n\n// static int Mio_CommandPrintGenlib( Abc_Frame_t * pAbc, int argc, char **argv );\n\n// static int Mio_CommandReadProfile( Abc_Frame_t * pAbc, int argc, char **argv );\n\n// static int Mio_CommandWriteProfile( Abc_Frame_t * pAbc, int argc, char **argv );\n\n// static int Mio_CommandPrintProfile( Abc_Frame_t * pAbc, int argc, char **argv );\n\n\n/*\n// internal version of genlib library\nstatic char * pMcncGenlib[25] = {\n    \"GATE inv1    1   O=!a;             PIN * INV     1 999 0.9 0.0 0.9 0.0\\n\",\n    \"GATE inv2    2   O=!a;             PIN * INV     2 999 1.0 0.0 1.0 0.0\\n\",\n    \"GATE inv3    3   O=!a;             PIN * INV     3 999 1.1 0.0 1.1 0.0\\n\",\n    \"GATE inv4    4   O=!a;             PIN * INV     4 999 1.2 0.0 1.2 0.0\\n\",\n    \"GATE nand2   2   O=!(a*b);         PIN * INV     1 999 1.0 0.0 1.0 0.0\\n\",\n    \"GATE nand3   3   O=!(a*b*c);       PIN * INV     1 999 1.1 0.0 1.1 0.0\\n\",\n    \"GATE nand4   4   O=!(a*b*c*d);     PIN * INV     1 999 1.4 0.0 1.4 0.0\\n\",\n    \"GATE nor2    2   O=!(a+b);         PIN * INV     1 999 1.4 0.0 1.4 0.0\\n\",\n    \"GATE nor3    3   O=!(a+b+c);       PIN * INV     1 999 2.4 0.0 2.4 0.0\\n\",\n    \"GATE nor4    4   O=!(a+b+c+d);     PIN * INV     1 999 3.8 0.0 3.8 0.0\\n\",\n    \"GATE xora    5   O=a*!b+!a*b;      PIN * UNKNOWN 2 999 1.9 0.0 1.9 0.0\\n\",\n    \"GATE xorb    5   O=!(a*b+!a*!b);   PIN * UNKNOWN 2 999 1.9 0.0 1.9 0.0\\n\",\n    \"GATE xnora   5   O=a*b+!a*!b;      PIN * UNKNOWN 2 999 2.1 0.0 2.1 0.0\\n\",\n    \"GATE xnorb   5   O=!(!a*b+a*!b);   PIN * UNKNOWN 2 999 2.1 0.0 2.1 0.0\\n\",\n    \"GATE aoi21   3   O=!(a*b+c);       PIN * INV     1 999 1.6 0.0 1.6 0.0\\n\",\n    \"GATE aoi22   4   O=!(a*b+c*d);     PIN * INV     1 999 2.0 0.0 2.0 0.0\\n\",\n    \"GATE oai21   3   O=!((a+b)*c);     PIN * INV     1 999 1.6 0.0 1.6 0.0\\n\",\n    \"GATE oai22   4   O=!((a+b)*(c+d)); PIN * INV     1 999 2.0 0.0 2.0 0.0\\n\",\n    \"GATE buf     1   O=a;              PIN * NONINV  1 999 1.0 0.0 1.0 0.0\\n\",\n    \"GATE zero    0   O=CONST0;\\n\",\n    \"GATE one     0   O=CONST1;\\n\"\n};\n*/\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_Init(pAbc *Abc_Frame_t) {\n//    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_liberty\",   Mio_CommandReadLiberty,  0 ); \n\n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_genlib\",    Mio_CommandReadGenlib,  0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"write_genlib\",   Mio_CommandWriteGenlib, 0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"print_genlib\",   Mio_CommandPrintGenlib, 0 ); \n\n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_profile\",   Mio_CommandReadProfile,  0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"write_profile\",  Mio_CommandWriteProfile, 0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"print_profile\",  Mio_CommandPrintProfile, 0 ); \n\n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"read_library\",   Mio_CommandReadGenlib,  0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"write_library\",  Mio_CommandWriteGenlib, 0 ); \n    Cmd_CommandAdd( pAbc, \"SC mapping\", \"print_library\",  Mio_CommandPrintGenlib, 0 ); \n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_End(pAbc *Abc_Frame_t) {\n    Mio_LibraryDelete( (Mio_Library_t *)Abc_FrameReadLibGen() );\n    Amap_LibFree( (Amap_Lib_t *)Abc_FrameReadLibGen2() );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_UpdateGenlib(pLib *Mio_Library_t) {\n    // free the current superlib because it depends on the old Mio library\n    if Abc_FrameReadLibSuper() {\n        Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n        Abc_FrameSetLibSuper( nil );\n    }\n\n    // replace the current library\n    Mio_LibraryDelete( (Mio_Library_t *)Abc_FrameReadLibGen() );\n    Abc_FrameSetLibGen( pLib );\n\n    // replace the current library\n    Amap_LibFree( (Amap_Lib_t *)Abc_FrameReadLibGen2() );\n    Abc_FrameSetLibGen2( nil );\n}\nfunc Mio_UpdateGenlib2(vStr *Vec_Str_t, vStr2 *Vec_Str_t, pFileName string, fVerbose int32) int32 {\n    var pLib *Mio_Library_t;\n    // set the new network\n    pLib = Mio_LibraryRead( pFileName, Vec_StrArray(vStr), nil, fVerbose );  \n    if pLib == nil {\n        return 0; }\n\n    // free the current superlib because it depends on the old Mio library\n    if Abc_FrameReadLibSuper() {\n        Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n        Abc_FrameSetLibSuper( nil );\n    }\n\n    // replace the current library\n    Mio_LibraryDelete( (Mio_Library_t *)Abc_FrameReadLibGen() );\n    Abc_FrameSetLibGen( pLib );\n\n    // set the new network\n    pLib = (Mio_Library_t *)Amap_LibReadAndPrepare( pFileName, Vec_StrArray(vStr2), 0, 0 );  \n    if pLib == nil {\n        return 0; }\n\n    // replace the current library\n    Amap_LibFree( (Amap_Lib_t *)Abc_FrameReadLibGen2() );\n    Abc_FrameSetLibGen2( pLib );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_CommandReadLiberty(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var fUseFileInterface int32;\n    var Command string // was [1000]byte in C\n\n    var pFile *os.File;\n    var pOut, pErr *os.File;\n    var pFileName string;\n    var fVerbose int32;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    fVerbose = 0;\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"vh\")) != -1  {\n        switch c {\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n\n    if argc != globalUtilOptind + 1 {\n        goto usage; }\n\n    // get the input file name\n    pFileName = argv[globalUtilOptind];\n    if (pFile = Io_FileOpen( pFileName, \"open_path\", \"r\", 0 )) == nil {\n        fmt.Fprintf(pErr, \"Cannot open input file \\\"%s\\\". \", pFileName);\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".genlib\", \".lib\", \".scl\", \".g\", nil ) {\n            fmt.Fprintf(pErr, \"Did you mean \\\"%s\\\"?\", pFileName); }\n        fmt.Fprintf(pErr, \"\\n\");\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    if fUseFileInterface != 0 {\n        if !Amap_LibertyParse( pFileName, fVerbose ) {\n            return 0; }\n        assert(len(pFileName) \u003c 900, \"strlen(pFileName) \u003c 900\");\n        Command = fmt.Sprintf(\"read_genlib %s\", Extra_FileNameGenericAppend(pFileName, \".genlib\"));\n        Cmd_CommandExecute( pAbc, Command );\n    \n    } else {\n        var vStr, vStr2 *Vec_Str_t;\n        var RetValue int32;\n        vStr = Amap_LibertyParseStr( pFileName, fVerbose );\n        if vStr == nil {\n            return 0; }\n        vStr2 = Vec_StrDup(vStr);\n        RetValue = Mio_UpdateGenlib2( vStr, vStr2, pFileName, fVerbose );\n        Vec_StrFree( vStr );\n        Vec_StrFree( vStr2 );\n        if !(RetValue != 0) {\n            fmt.Printf(\"Reading library has filed.\\n\"); }\n    }\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"usage: read_liberty [-vh]\\n\");\n    fmt.Fprintf(pErr, \"\\t         read standard cell library in Liberty format\\n\");  \n    fmt.Fprintf(pErr, \"\\t         (if the library contains more than one gate\\n\");  \n    fmt.Fprintf(pErr, \"\\t         with the same Boolean function, only the gate\\n\");  \n    fmt.Fprintf(pErr, \"\\t         with the smallest area will be used)\\n\");  \n    fmt.Fprintf(pErr, \"\\t-v     : toggle verbose printout [default = %s]\\n\", fVerbose? \"yes\": \"no\");\n    fmt.Fprintf(pErr, \"\\t-h     : enable verbose output\\n\");\n    return 1;       \n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_CommandReadGenlib(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile *os.File;\n    var pOut, pErr *os.File;\n    var pLib *Mio_Library_t;\n    var pLib2 *Amap_Lib_t;\n    var pFileName string;\n    var pExcludeFile string  = nil;\n    var WireDelay float64  = 0.0;\n    var fShortNames int32;\n    var c int32;\n    var fVerbose int32 = 1;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"WEnvh\")) != -1  {\n        switch c {\n            case 'W':\n                if globalUtilOptind \u003e= argc {\n                    Abc_Print( -1, \"Command line switch \\\"-W\\\" should be followed by a floating point number.\\n\" );\n                    goto usage;\n                }\n                WireDelay = float32(atof(argv[globalUtilOptind]));\n                globalUtilOptind++;\n                if WireDelay \u003c= 0.0 { \n                    goto usage; }\n                break;\n            case 'E':\n                if globalUtilOptind \u003e= argc {\n                    Abc_Print( -1, \"Command line switch \\\"-E\\\" should be followed by a file name.\\n\" );\n                    goto usage;\n                }\n                pExcludeFile = argv[globalUtilOptind];\n                globalUtilOptind++;\n                break;\n            case 'n':\n                fShortNames ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if argc != globalUtilOptind + 1 {\n        goto usage;\n    }\n\n    // get the input file name\n    pFileName = argv[globalUtilOptind];\n    if (pFile = Io_FileOpen( pFileName, \"open_path\", \"r\", 0 )) == nil {\n        fmt.Fprintf(pErr, \"Cannot open input file \\\"%s\\\". \", pFileName);\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".genlib\", \".lib\", \".scl\", \".g\", nil ) {\n            fmt.Fprintf(pErr, \"Did you mean \\\"%s\\\"?\", pFileName); }\n        fmt.Fprintf(pErr, \"\\n\");\n        return 1;\n    }\n    _ = (pFile).Close();\n\n    // set the new network\n    pLib = Mio_LibraryRead( pFileName, nil, pExcludeFile, fVerbose );  \n    if pLib == nil {\n        fmt.Fprintf(pErr, \"Reading genlib library has failed.\\n\");\n        return 1;\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Entered genlib library with %d gates from file \\\"%s\\\".\\n\", Mio_LibraryReadGateNum(pLib), pFileName); }\n\n    // convert the library if needed\n    if fShortNames != 0 {\n        Mio_LibraryShortNames( pLib ); }\n\n    // add the fixed number (wire delay) to all delays in the library\n    if WireDelay != 0.0 {\n        Mio_LibraryShiftDelay( pLib, WireDelay ); }\n\n    // prepare libraries\n    Mio_UpdateGenlib( pLib );\n\n    // replace the current library\n    pLib2 = Amap_LibReadAndPrepare( pFileName, nil, 0, 0 );  \n    if pLib2 == nil {\n        fmt.Fprintf(pErr, \"Reading second genlib library has failed.\\n\");\n        return 1;\n    }\n    Abc_FrameSetLibGen2( pLib2 );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"usage: read_genlib [-W float] [-E filename] [-nvh]\\n\");\n    fmt.Fprintf(pErr, \"\\t           read the library from a genlib file\\n\");  \n    fmt.Fprintf(pErr, \"\\t           (if the library contains more than one gate\\n\");  \n    fmt.Fprintf(pErr, \"\\t           with the same Boolean function, only the gate\\n\");  \n    fmt.Fprintf(pErr, \"\\t           with the smallest area will be used)\\n\");  \n    fmt.Fprintf(pErr, \"\\t-W float : wire delay (added to pin-to-pin gate delays) [default = %g]\\n\", WireDelay);  \n    fmt.Fprintf(pErr, \"\\t-E file :  the file name with gates to be excluded [default = none]\\n\");\n    fmt.Fprintf(pErr, \"\\t-n       : toggle replacing gate/pin names by short strings [default = %s]\\n\", fShortNames? \"yes\": \"no\");\n    fmt.Fprintf(pErr, \"\\t-v       : toggle verbose printout [default = %s]\\n\", fVerbose? \"yes\": \"no\");\n    fmt.Fprintf(pErr, \"\\t-h       : enable verbose output\\n\");\n    return 1;       \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Command procedure to read LUT libraries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_CommandWriteGenlib(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr, pFile *os.File;\n    var pFileName string;\n    var fSelected int32;\n    var fVerilog int32;\n    var fVerbose int32;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"agvh\")) != -1  {\n        switch c {\n            case 'a':\n                fSelected ^= 1;\n                break;\n            case 'g':\n                fVerilog ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if Abc_FrameReadLibGen() == nil {\n        fmt.Printf(\"Library is not available.\\n\");\n        return 1;\n    }\n    if argc != globalUtilOptind + 1 {\n        fmt.Printf(\"The file name is not given.\\n\");\n        return 1;\n    }\n\n    pFileName = argv[globalUtilOptind];\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Error! Cannot open file \\\"%s\\\" for writing the library.\\n\", pFileName);\n        return 1;\n    }\n    if fVerilog != 0 {\n        Mio_WriteLibraryVerilog( pFile, (Mio_Library_t *)Abc_FrameReadLibGen(), 0, 0, fSelected );\n    } else {\n        Mio_WriteLibrary( pFile, (Mio_Library_t *)Abc_FrameReadLibGen(), 0, 0, fSelected ); }\n    _ = (pFile).Close();\n    fmt.Printf(\"The current genlib library is written into file \\\"%s\\\".\\n\", pFileName);\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: write_genlib [-agvh] \u003cfile\u003e\\n\");\n    fmt.Fprintf(pErr, \"\\t          writes the current genlib library into a file\\n\");  \n    fmt.Fprintf(pErr, \"\\t-a      : toggles writing min-area gates [default = %s]\\n\", fSelected? \"yes\" : \"no\");\n    fmt.Fprintf(pErr, \"\\t-g      : toggles writing the library in Verilog [default = %s]\\n\", fVerilog? \"yes\" : \"no\");\n    fmt.Fprintf(pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", fVerbose? \"yes\" : \"no\");\n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    fmt.Fprintf(pErr, \"\\t\u003cfile\u003e  : optional file name to write the library\\n\");\n    return 1;       \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Command procedure to read LUT libraries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_CommandPrintGenlib(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr *os.File;\n    var fShort int32;\n    var fSelected int32;\n    var fVerbose int32;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"savh\")) != -1  {\n        switch c {\n            case 's':\n                fShort ^= 1;\n                break;\n            case 'a':\n                fSelected ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if Abc_FrameReadLibGen() == nil {\n        fmt.Printf(\"Library is not available.\\n\");\n        return 1;\n    }\n    Mio_WriteLibrary( os.Stdout, (Mio_Library_t *)Abc_FrameReadLibGen(), 0, fShort, fSelected );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: print_genlib [-savh]\\n\");\n    fmt.Fprintf(pErr, \"\\t          print the current genlib library\\n\");  \n    fmt.Fprintf(pErr, \"\\t-s      : toggles writing short form [default = %s]\\n\", fShort? \"yes\" : \"no\");\n    fmt.Fprintf(pErr, \"\\t-a      : toggles writing min-area gates [default = %s]\\n\", fSelected? \"yes\" : \"no\");\n    fmt.Fprintf(pErr, \"\\t-v      : toggles enabling of verbose output [default = %s]\\n\", fVerbose? \"yes\" : \"no\");\n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       \n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_CommandReadProfile(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pFile, pOut, pErr *os.File;\n    var pLib *Mio_Library_t;\n    var pFileName string;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"h\")) != -1  {\n        switch c {\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if argc != globalUtilOptind + 1 {\n        goto usage;\n    }\n\n    pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n    if pLib == nil {\n        fmt.Fprintf(pErr, \"There is no Genlib library entered.\\n\");\n        return 1;\n    }\n\n    // get the input file name\n    pFileName = argv[globalUtilOptind];\n    if (pFile = Io_FileOpen( pFileName, \"open_path\", \"r\", 0 )) == nil {\n        fmt.Fprintf(pErr, \"Cannot open input file \\\"%s\\\". \", pFileName);\n        if pFileName = Extra_FileGetSimilarName( pFileName, \".profile\", nil, nil, nil, nil ) {\n            fmt.Fprintf(pErr, \"Did you mean \\\"%s\\\"?\", pFileName); }\n        fmt.Fprintf(pErr, \"\\n\");\n        return 1;\n    }\n\n    // set the new network\n    Mio_LibraryReadProfile( pFile, pLib );\n    _ = (pFile).Close();\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"usage: read_profile [-h] \u003cfile\u003e\\n\");\n    fmt.Fprintf(pErr, \"\\t          read a gate profile from a profile file\\n\");  \n    fmt.Fprintf(pErr, \"\\t-h      : enable verbose output\\n\");\n    fmt.Fprintf(pErr, \"\\t\u003cfile\u003e  : file name to read the profile\\n\");\n    return 1;       \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Command procedure to read LUT libraries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_CommandWriteProfile(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr, pFile *os.File;\n    var pFileName string;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"h\")) != -1  {\n        switch c {\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if Abc_FrameReadLibGen() == nil {\n        fmt.Printf(\"Library is not available.\\n\");\n        return 1;\n    }\n    if argc != globalUtilOptind + 1 {\n        fmt.Printf(\"The file name is not given.\\n\");\n        return 1;\n    }\n\n    pFileName = argv[globalUtilOptind];\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Error! Cannot open file \\\"%s\\\" for writing the library.\\n\", pFileName);\n        return 1;\n    }\n    Mio_LibraryWriteProfile( pFile, (Mio_Library_t *)Abc_FrameReadLibGen() );\n    _ = (pFile).Close();\n    fmt.Printf(\"The current profile is written into file \\\"%s\\\".\\n\", pFileName);\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: write_profile [-h] \u003cfile\u003e\\n\");\n    fmt.Fprintf(pErr, \"\\t          writes the current profile into a file\\n\");  \n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    fmt.Fprintf(pErr, \"\\t\u003cfile\u003e  : file name to write the profile\\n\");\n    return 1;       \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Command procedure to read LUT libraries.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_CommandPrintProfile(pAbc *Abc_Frame_t, argc int32, argv *string) int32 {\n    var pOut, pErr *os.File;\n    var fShort int32;\n    var fSelected int32;\n    var fVerbose int32;\n    var c int32;\n\n    pOut = Abc_FrameReadOut(pAbc);\n    pErr = Abc_FrameReadErr(pAbc);\n\n    // set the defaults\n    Extra_UtilGetoptReset();\n    for  (c = Extra_UtilGetopt(argc, argv, \"savh\")) != -1  {\n        switch c {\n            case 's':\n                fShort ^= 1;\n                break;\n            case 'a':\n                fSelected ^= 1;\n                break;\n            case 'v':\n                fVerbose ^= 1;\n                break;\n            case 'h':\n                goto usage;\n                break;\n            default:\n                goto usage;\n        }\n    }\n    if Abc_FrameReadLibGen() == nil {\n        fmt.Printf(\"Library is not available.\\n\");\n        return 1;\n    }\n    Mio_LibraryWriteProfile( os.Stdout, (Mio_Library_t *)Abc_FrameReadLibGen() );\n    return 0;\n\nusage:\n    fmt.Fprintf(pErr, \"\\nusage: print_profile [-h]\\n\");\n    fmt.Fprintf(pErr, \"\\t          print the current gate profile\\n\");  \n    fmt.Fprintf(pErr, \"\\t-h      : print the command usage\\n\");\n    return 1;       \n}\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

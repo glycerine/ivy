@@ -1,0 +1,350 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c",
+  "SHA256": "f4735b0f0712299e25f4b15437c6fd7d712825d7c03773064cec6b5a609bcaab",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 233,
+        "Column": 5,
+        "ByteOffset": 7541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar1C \u003c iVar2C );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 258,
+        "Column": 5,
+        "ByteOffset": 8295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsC1 == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 8323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsC2 == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 262,
+        "Column": 5,
+        "ByteOffset": 8401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar1 \u003c iVar2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 305,
+        "Column": 5,
+        "ByteOffset": 9748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsC1 == 2 \u0026\u0026 nVarsC2 == 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 311,
+        "Column": 5,
+        "ByteOffset": 9897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar11 \u003c iVar21 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 460,
+        "Column": 5,
+        "ByteOffset": 13713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsC1 \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 461,
+        "Column": 5,
+        "ByteOffset": 13740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsC2 \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 462,
+        "Column": 5,
+        "ByteOffset": 13767
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( piVarsC1[0] \u003c piVarsC2[0] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 561,
+        "Column": 13,
+        "ByteOffset": 17335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Coin \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fxu_Select",
+      "Start": 1926,
+      "End": 6873,
+      "BodyStart": 2007,
+      "Original": "int Fxu_Select( Fxu_Matrix * p, Fxu_Single ** ppSingle, Fxu_Double ** ppDouble )\n{\n    // the top entries\n    Fxu_Single * pSingles[MAX_SIZE_LOOKAHEAD] = {0};\n    Fxu_Double * pDoubles[MAX_SIZE_LOOKAHEAD] = {0};\n    // the complements\n    Fxu_Double * pSCompl[MAX_SIZE_LOOKAHEAD] = {0};\n    Fxu_Single * pDComplS[MAX_SIZE_LOOKAHEAD] = {0};\n    Fxu_Double * pDComplD[MAX_SIZE_LOOKAHEAD] = {0};\n    Fxu_Pair * pPair;\n    int nSingles;\n    int nDoubles;\n    int i;\n    int WeightBest;\n    int WeightCur;\n    int iNum, fBestS;\n\n    // collect the top entries from the queues\n    for ( nSingles = 0; nSingles \u003c MAX_SIZE_LOOKAHEAD; nSingles++ )\n    {\n        pSingles[nSingles] = Fxu_HeapSingleGetMax( p-\u003epHeapSingle );\n        if ( pSingles[nSingles] == NULL )\n            break;\n    }\n    // put them back into the queue\n    for ( i = 0; i \u003c nSingles; i++ )\n        if ( pSingles[i] )\n            Fxu_HeapSingleInsert( p-\u003epHeapSingle, pSingles[i] );\n        \n    // the same for doubles\n    // collect the top entries from the queues\n    for ( nDoubles = 0; nDoubles \u003c MAX_SIZE_LOOKAHEAD; nDoubles++ )\n    {\n        pDoubles[nDoubles] = Fxu_HeapDoubleGetMax( p-\u003epHeapDouble );\n        if ( pDoubles[nDoubles] == NULL )\n            break;\n    }\n    // put them back into the queue\n    for ( i = 0; i \u003c nDoubles; i++ )\n        if ( pDoubles[i] )\n            Fxu_HeapDoubleInsert( p-\u003epHeapDouble, pDoubles[i] );\n\n    // for each single, find the complement double (if any)\n    for ( i = 0; i \u003c nSingles; i++ )\n        if ( pSingles[i] )\n            pSCompl[i] = Fxu_MatrixFindComplementSingle( p, pSingles[i] );\n\n    // for each double, find the complement single or double (if any)\n    for ( i = 0; i \u003c nDoubles; i++ )\n        if ( pDoubles[i] )\n        {\n            pPair = pDoubles[i]-\u003elPairs.pHead;\n            if ( pPair-\u003enLits1 == 1 \u0026\u0026 pPair-\u003enLits2 == 1 )\n            {\n                pDComplS[i] = Fxu_MatrixFindComplementDouble2( p, pDoubles[i] );\n                pDComplD[i] = NULL;\n            }\n//            else if ( pPair-\u003enLits1 == 2 \u0026\u0026 pPair-\u003enLits2 == 2 )\n//            {\n//                pDComplS[i] = NULL;\n//                pDComplD[i] = Fxu_MatrixFindComplementDouble4( p, pDoubles[i] );\n//            }\n            else\n            {\n                pDComplS[i] = NULL;\n                pDComplD[i] = NULL;\n            }\n        }\n\n    // select the best pair\n    WeightBest = -1;\n    for ( i = 0; i \u003c nSingles; i++ )\n    {\n        WeightCur = pSingles[i]-\u003eWeight;\n        if ( pSCompl[i] )\n        {\n            // add the weight of the double\n            WeightCur += pSCompl[i]-\u003eWeight;\n            // there is no need to implement this double, so...\n            pPair      = pSCompl[i]-\u003elPairs.pHead;\n            WeightCur += pPair-\u003enLits1 + pPair-\u003enLits2;\n        }\n        if ( WeightBest \u003c WeightCur )\n        {\n            WeightBest = WeightCur;\n            *ppSingle = pSingles[i];\n            *ppDouble = pSCompl[i];\n            fBestS = 1;\n            iNum = i;\n        }\n    }\n    for ( i = 0; i \u003c nDoubles; i++ )\n    {\n        WeightCur = pDoubles[i]-\u003eWeight;\n        if ( pDComplS[i] )\n        {\n            // add the weight of the single\n            WeightCur += pDComplS[i]-\u003eWeight;\n            // there is no need to implement this double, so...\n            pPair      = pDoubles[i]-\u003elPairs.pHead;\n            WeightCur += pPair-\u003enLits1 + pPair-\u003enLits2;\n        }\n        if ( WeightBest \u003c WeightCur )\n        {\n            WeightBest = WeightCur;\n            *ppSingle = pDComplS[i];\n            *ppDouble = pDoubles[i];\n            fBestS = 0;\n            iNum = i;\n        }\n    }\n/*\n    // print the statistics\n    printf( \"\\n\" );\n    for ( i = 0; i \u003c nSingles; i++ )\n    {\n        printf( \"Single #%d: Weight = %3d. \", i, pSingles[i]-\u003eWeight );\n        printf( \"Compl: \" );\n        if ( pSCompl[i] == NULL )\n            printf( \"None.\" );\n        else\n            printf( \"D  Weight = %3d  Sum = %3d\", \n                pSCompl[i]-\u003eWeight, pSCompl[i]-\u003eWeight + pSingles[i]-\u003eWeight );\n        printf( \"\\n\" );\n    }\n    printf( \"\\n\" );\n    for ( i = 0; i \u003c nDoubles; i++ )\n    {\n        printf( \"Double #%d: Weight = %3d. \", i, pDoubles[i]-\u003eWeight );\n        printf( \"Compl: \" );\n        if ( pDComplS[i] == NULL \u0026\u0026 pDComplD[i] == NULL )\n            printf( \"None.\" );\n        else if ( pDComplS[i] )\n            printf( \"S  Weight = %3d  Sum = %3d\", \n                pDComplS[i]-\u003eWeight, pDComplS[i]-\u003eWeight + pDoubles[i]-\u003eWeight );\n        else if ( pDComplD[i] )\n            printf( \"D  Weight = %3d  Sum = %3d\", \n                pDComplD[i]-\u003eWeight, pDComplD[i]-\u003eWeight + pDoubles[i]-\u003eWeight );\n        printf( \"\\n\" );\n    }\n    if ( WeightBest == -1 )\n        printf( \"Selected NONE\\n\" );\n    else\n    {\n        printf( \"Selected = %s.  \", fBestS? \"S\": \"D\" );\n        printf( \"Number = %d.  \", iNum );\n        printf( \"Weight = %d.\\n\", WeightBest );\n    }\n    printf( \"\\n\" );\n*/\n    return WeightBest;\n}",
+      "Draft": "func Fxu_Select(p *Fxu_Matrix, ppSingle **Fxu_Single, ppDouble **Fxu_Double) int32 {\n    // the top entries\n    var pSingles [MAX_SIZE_LOOKAHEAD]*Fxu_Single ;\n    var pDoubles [MAX_SIZE_LOOKAHEAD]*Fxu_Double ;\n    // the complements\n    var pSCompl [MAX_SIZE_LOOKAHEAD]*Fxu_Double ;\n    var pDComplS [MAX_SIZE_LOOKAHEAD]*Fxu_Single ;\n    var pDComplD [MAX_SIZE_LOOKAHEAD]*Fxu_Double ;\n    var pPair *Fxu_Pair;\n    var nSingles int32;\n    var nDoubles int32;\n    var i int32;\n    var WeightBest int32;\n    var WeightCur int32;\n    var iNum, fBestS int32;\n\n    // collect the top entries from the queues\n    for  nSingles = 0; nSingles \u003c MAX_SIZE_LOOKAHEAD; nSingles++  {\n        pSingles[nSingles] = Fxu_HeapSingleGetMax( p.pHeapSingle );\n        if pSingles[nSingles] == nil {\n            break; }\n    }\n    // put them back into the queue\n    for  i = 0; i \u003c nSingles; i++  {\n        if pSingles[i] {\n            Fxu_HeapSingleInsert( p.pHeapSingle, pSingles[i] ); }\n    }\n        \n    // the same for doubles\n    // collect the top entries from the queues\n    for  nDoubles = 0; nDoubles \u003c MAX_SIZE_LOOKAHEAD; nDoubles++  {\n        pDoubles[nDoubles] = Fxu_HeapDoubleGetMax( p.pHeapDouble );\n        if pDoubles[nDoubles] == nil {\n            break; }\n    }\n    // put them back into the queue\n    for  i = 0; i \u003c nDoubles; i++  {\n        if pDoubles[i] {\n            Fxu_HeapDoubleInsert( p.pHeapDouble, pDoubles[i] ); }\n    }\n\n    // for each single, find the complement double (if any)\n    for  i = 0; i \u003c nSingles; i++  {\n        if pSingles[i] {\n            pSCompl[i] = Fxu_MatrixFindComplementSingle( p, pSingles[i] ); }\n    }\n\n    // for each double, find the complement single or double (if any)\n    for  i = 0; i \u003c nDoubles; i++  {\n        if pDoubles[i] {\n            pPair = pDoubles[i].lPairs.pHead;\n            if pPair.nLits1 == 1 \u0026\u0026 pPair.nLits2 == 1 {\n                pDComplS[i] = Fxu_MatrixFindComplementDouble2( p, pDoubles[i] );\n                pDComplD[i] = nil;\n            \n//            else if ( pPair-\u003enLits1 == 2 \u0026\u0026 pPair-\u003enLits2 == 2 )\n//            {\n//                pDComplS[i] = NULL;\n//                pDComplD[i] = Fxu_MatrixFindComplementDouble4( p, pDoubles[i] );\n//            }\n            } else {\n                pDComplS[i] = nil;\n                pDComplD[i] = nil;\n            }\n        }\n    }\n\n    // select the best pair\n    WeightBest = -1;\n    for  i = 0; i \u003c nSingles; i++  {\n        WeightCur = pSingles[i].Weight;\n        if pSCompl[i] {\n            // add the weight of the double\n            WeightCur += pSCompl[i].Weight;\n            // there is no need to implement this double, so...\n            pPair      = pSCompl[i].lPairs.pHead;\n            WeightCur += pPair.nLits1 + pPair.nLits2;\n        }\n        if WeightBest \u003c WeightCur {\n            WeightBest = WeightCur;\n            *ppSingle = pSingles[i];\n            *ppDouble = pSCompl[i];\n            fBestS = 1;\n            iNum = i;\n        }\n    }\n    for  i = 0; i \u003c nDoubles; i++  {\n        WeightCur = pDoubles[i].Weight;\n        if pDComplS[i] {\n            // add the weight of the single\n            WeightCur += pDComplS[i].Weight;\n            // there is no need to implement this double, so...\n            pPair      = pDoubles[i].lPairs.pHead;\n            WeightCur += pPair.nLits1 + pPair.nLits2;\n        }\n        if WeightBest \u003c WeightCur {\n            WeightBest = WeightCur;\n            *ppSingle = pDComplS[i];\n            *ppDouble = pDoubles[i];\n            fBestS = 0;\n            iNum = i;\n        }\n    }\n/*\n    // print the statistics\n    printf( \"\\n\" );\n    for ( i = 0; i \u003c nSingles; i++ )\n    {\n        printf( \"Single #%d: Weight = %3d. \", i, pSingles[i]-\u003eWeight );\n        printf( \"Compl: \" );\n        if ( pSCompl[i] == NULL )\n            printf( \"None.\" );\n        else\n            printf( \"D  Weight = %3d  Sum = %3d\", \n                pSCompl[i]-\u003eWeight, pSCompl[i]-\u003eWeight + pSingles[i]-\u003eWeight );\n        printf( \"\\n\" );\n    }\n    printf( \"\\n\" );\n    for ( i = 0; i \u003c nDoubles; i++ )\n    {\n        printf( \"Double #%d: Weight = %3d. \", i, pDoubles[i]-\u003eWeight );\n        printf( \"Compl: \" );\n        if ( pDComplS[i] == NULL \u0026\u0026 pDComplD[i] == NULL )\n            printf( \"None.\" );\n        else if ( pDComplS[i] )\n            printf( \"S  Weight = %3d  Sum = %3d\", \n                pDComplS[i]-\u003eWeight, pDComplS[i]-\u003eWeight + pDoubles[i]-\u003eWeight );\n        else if ( pDComplD[i] )\n            printf( \"D  Weight = %3d  Sum = %3d\", \n                pDComplD[i]-\u003eWeight, pDComplD[i]-\u003eWeight + pDoubles[i]-\u003eWeight );\n        printf( \"\\n\" );\n    }\n    if ( WeightBest == -1 )\n        printf( \"Selected NONE\\n\" );\n    else\n    {\n        printf( \"Selected = %s.  \", fBestS? \"S\": \"D\" );\n        printf( \"Number = %d.  \", iNum );\n        printf( \"Weight = %d.\\n\", WeightBest );\n    }\n    printf( \"\\n\" );\n*/\n    return WeightBest;\n}"
+    },
+    {
+      "Name": "Fxu_MatrixFindComplementSingle",
+      "Start": 7110,
+      "End": 7656,
+      "BodyStart": 7194,
+      "Original": "Fxu_Double * Fxu_MatrixFindComplementSingle( Fxu_Matrix * p, Fxu_Single * pSingle )\n{\n//    int * pValue2Node = p-\u003epValue2Node;\n    int iVar1,  iVar2;\n    int iVar1C, iVar2C;\n    // get the variables of this single div\n    iVar1  = pSingle-\u003epVar1-\u003eiVar;\n    iVar2  = pSingle-\u003epVar2-\u003eiVar;\n    iVar1C = Fxu_MatrixFindComplement( p, iVar1 );\n    iVar2C = Fxu_MatrixFindComplement( p, iVar2 );\n    if ( iVar1C == -1 || iVar2C == -1 )\n        return NULL;\n    assert( iVar1C \u003c iVar2C );\n    return Fxu_MatrixFindDouble( p, \u0026iVar1C, \u0026iVar2C, 1, 1 );\n}",
+      "Draft": "func Fxu_MatrixFindComplementSingle(p *Fxu_Matrix, pSingle *Fxu_Single) *Fxu_Double {\n//    int * pValue2Node = p-\u003epValue2Node;\n    var iVar1, iVar2 int32;\n    var iVar1C, iVar2C int32;\n    // get the variables of this single div\n    iVar1  = pSingle.pVar1.iVar;\n    iVar2  = pSingle.pVar2.iVar;\n    iVar1C = Fxu_MatrixFindComplement( p, iVar1 );\n    iVar2C = Fxu_MatrixFindComplement( p, iVar2 );\n    if iVar1C == -1 || iVar2C == -1 {\n        return nil; }\n    assert(iVar1C \u003c iVar2C, \"iVar1C \u003c iVar2C\");\n    return Fxu_MatrixFindDouble( p, \u0026iVar1C, \u0026iVar2C, 1, 1 );\n}"
+    },
+    {
+      "Name": "Fxu_MatrixFindComplementDouble2",
+      "Start": 7892,
+      "End": 8962,
+      "BodyStart": 7977,
+      "Original": "Fxu_Single * Fxu_MatrixFindComplementDouble2( Fxu_Matrix * p, Fxu_Double * pDouble )\n{\n//    int * pValue2Node = p-\u003epValue2Node;\n    int piVarsC1[10], piVarsC2[10];\n    int nVarsC1, nVarsC2;\n    int iVar1,  iVar2, iVarTemp;\n    int iVar1C, iVar2C;\n    Fxu_Single * pSingle;\n\n    // get the variables of this double div\n    Fxu_MatrixGetDoubleVars( p, pDouble, piVarsC1, piVarsC2, \u0026nVarsC1, \u0026nVarsC2 );\n    assert( nVarsC1 == 1 );\n    assert( nVarsC2 == 1 );\n    iVar1 = piVarsC1[0];\n    iVar2 = piVarsC2[0];\n    assert( iVar1 \u003c iVar2 );\n\n    iVar1C = Fxu_MatrixFindComplement( p, iVar1 );\n    iVar2C = Fxu_MatrixFindComplement( p, iVar2 );\n    if ( iVar1C == -1 || iVar2C == -1 )\n        return NULL;\n \n    // go through the queque and find this one\n//    assert( iVar1C \u003c iVar2C );\n    if ( iVar1C \u003e iVar2C )\n    {\n        iVarTemp = iVar1C;\n        iVar1C = iVar2C;\n        iVar2C = iVarTemp;\n    }\n\n    Fxu_MatrixForEachSingle( p, pSingle )\n        if ( pSingle-\u003epVar1-\u003eiVar == iVar1C \u0026\u0026 pSingle-\u003epVar2-\u003eiVar == iVar2C )\n            return pSingle;\n    return NULL;\n}",
+      "Draft": "func Fxu_MatrixFindComplementDouble2(p *Fxu_Matrix, pDouble *Fxu_Double) *Fxu_Single {\n//    int * pValue2Node = p-\u003epValue2Node;\n    var piVarsC1, piVarsC2 [10]int32;\n    var nVarsC1, nVarsC2 int32;\n    var iVar1, iVar2, iVarTemp int32;\n    var iVar1C, iVar2C int32;\n    var pSingle *Fxu_Single;\n\n    // get the variables of this double div\n    Fxu_MatrixGetDoubleVars( p, pDouble, piVarsC1, piVarsC2, \u0026nVarsC1, \u0026nVarsC2 );\n    assert(nVarsC1 == 1, \"nVarsC1 == 1\");\n    assert(nVarsC2 == 1, \"nVarsC2 == 1\");\n    iVar1 = piVarsC1[0];\n    iVar2 = piVarsC2[0];\n    assert(iVar1 \u003c iVar2, \"iVar1 \u003c iVar2\");\n\n    iVar1C = Fxu_MatrixFindComplement( p, iVar1 );\n    iVar2C = Fxu_MatrixFindComplement( p, iVar2 );\n    if iVar1C == -1 || iVar2C == -1 {\n        return nil; }\n \n    // go through the queque and find this one\n//    assert( iVar1C \u003c iVar2C );\n    if iVar1C \u003e iVar2C {\n        iVarTemp = iVar1C;\n        iVar1C = iVar2C;\n        iVar2C = iVarTemp;\n    }\n\n    // inlining of macro Fxu_MatrixForEachSingle\n    for  pSingle = (p).lSingles.pHead;          (pSingle != nil);          pSingle = pSingle.pNext  {\n        if pSingle.pVar1.iVar == iVar1C \u0026\u0026 pSingle.pVar2.iVar == iVar2C {\n            return pSingle; }\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Fxu_MatrixFindComplementDouble4",
+      "Start": 9198,
+      "End": 10501,
+      "BodyStart": 9283,
+      "Original": "Fxu_Double * Fxu_MatrixFindComplementDouble4( Fxu_Matrix * p, Fxu_Double * pDouble )\n{\n//    int * pValue2Node = p-\u003epValue2Node;\n    int piVarsC1[10], piVarsC2[10];\n    int nVarsC1, nVarsC2;\n    int iVar11,  iVar12,  iVar21,  iVar22;\n    int iVar11C, iVar12C, iVar21C, iVar22C;\n    int RetValue;\n\n    // get the variables of this double div\n    Fxu_MatrixGetDoubleVars( p, pDouble, piVarsC1, piVarsC2, \u0026nVarsC1, \u0026nVarsC2 );\n    assert( nVarsC1 == 2 \u0026\u0026 nVarsC2 == 2 );\n\n    iVar11 = piVarsC1[0];\n    iVar12 = piVarsC1[1];\n    iVar21 = piVarsC2[0];\n    iVar22 = piVarsC2[1];\n    assert( iVar11 \u003c iVar21 );\n\n    iVar11C = Fxu_MatrixFindComplement( p, iVar11 );\n    iVar12C = Fxu_MatrixFindComplement( p, iVar12 );\n    iVar21C = Fxu_MatrixFindComplement( p, iVar21 );\n    iVar22C = Fxu_MatrixFindComplement( p, iVar22 );\n    if ( iVar11C == -1 || iVar12C == -1 || iVar21C == -1 || iVar22C == -1 )\n        return NULL;\n    if ( iVar11C != iVar21 || iVar12C != iVar22 || \n         iVar21C != iVar11 || iVar22C != iVar12 )\n         return NULL;\n\n    // a'b' + ab   =\u003e  a'b  + ab'\n    // a'b  + ab'  =\u003e  a'b' + ab\n    // swap the second pair in each cube\n    RetValue    = piVarsC1[1];\n    piVarsC1[1] = piVarsC2[1];\n    piVarsC2[1] = RetValue;\n\n    return Fxu_MatrixFindDouble( p, piVarsC1, piVarsC2, 2, 2 );\n}",
+      "Draft": "func Fxu_MatrixFindComplementDouble4(p *Fxu_Matrix, pDouble *Fxu_Double) *Fxu_Double {\n//    int * pValue2Node = p-\u003epValue2Node;\n    var piVarsC1, piVarsC2 [10]int32;\n    var nVarsC1, nVarsC2 int32;\n    var iVar11, iVar12, iVar21, iVar22 int32;\n    var iVar11C, iVar12C, iVar21C, iVar22C int32;\n    var RetValue int32;\n\n    // get the variables of this double div\n    Fxu_MatrixGetDoubleVars( p, pDouble, piVarsC1, piVarsC2, \u0026nVarsC1, \u0026nVarsC2 );\n    assert(nVarsC1 == 2 \u0026\u0026 nVarsC2 == 2, \"nVarsC1 == 2 \u0026\u0026 nVarsC2 == 2\");\n\n    iVar11 = piVarsC1[0];\n    iVar12 = piVarsC1[1];\n    iVar21 = piVarsC2[0];\n    iVar22 = piVarsC2[1];\n    assert(iVar11 \u003c iVar21, \"iVar11 \u003c iVar21\");\n\n    iVar11C = Fxu_MatrixFindComplement( p, iVar11 );\n    iVar12C = Fxu_MatrixFindComplement( p, iVar12 );\n    iVar21C = Fxu_MatrixFindComplement( p, iVar21 );\n    iVar22C = Fxu_MatrixFindComplement( p, iVar22 );\n    if iVar11C == -1 || iVar12C == -1 || iVar21C == -1 || iVar22C == -1 {\n        return nil; }\n    if iVar11C != iVar21 || iVar12C != iVar22 || \n         iVar21C != iVar11 || iVar22C != iVar12 {\n         return nil; }\n\n    // a'b' + ab   =\u003e  a'b  + ab'\n    // a'b  + ab'  =\u003e  a'b' + ab\n    // swap the second pair in each cube\n    RetValue    = piVarsC1[1];\n    piVarsC1[1] = piVarsC2[1];\n    piVarsC2[1] = RetValue;\n\n    return Fxu_MatrixFindDouble( p, piVarsC1, piVarsC2, 2, 2 );\n}"
+    },
+    {
+      "Name": "Fxu_MatrixFindComplement",
+      "Start": 10738,
+      "End": 11607,
+      "BodyStart": 10795,
+      "Original": "int Fxu_MatrixFindComplement( Fxu_Matrix * p, int iVar )\n{\n    return iVar ^ 1;\n/*\n//    int * pValue2Node = p-\u003epValue2Node;\n    int iVarC;\n    int iNode;\n    int Beg, End;\n\n    // get the nodes\n    iNode = pValue2Node[iVar];\n    // get the first node with the same var\n    for ( Beg = iVar; Beg \u003e= 0; Beg-- )\n        if ( pValue2Node[Beg] != iNode )\n        {\n            Beg++;\n            break;\n        }\n    // get the last node with the same var\n    for ( End = iVar;          ; End++ )\n        if ( pValue2Node[End] != iNode )\n        {\n            End--;\n            break;\n        }\n\n    // if one of the vars is not binary, quit\n    if ( End - Beg \u003e 1 )\n        return -1;\n\n    // get the complements\n    if ( iVar == Beg )\n        iVarC = End;\n    else if ( iVar == End ) \n        iVarC = Beg;\n    else\n    {\n        assert( 0 );\n    }\n    return iVarC;\n*/\n}",
+      "Draft": "func Fxu_MatrixFindComplement(p *Fxu_Matrix, iVar int32) int32 {\n    return iVar ^ 1;\n/*\n//    int * pValue2Node = p-\u003epValue2Node;\n    int iVarC;\n    int iNode;\n    int Beg, End;\n\n    // get the nodes\n    iNode = pValue2Node[iVar];\n    // get the first node with the same var\n    for ( Beg = iVar; Beg \u003e= 0; Beg-- )\n        if ( pValue2Node[Beg] != iNode )\n        {\n            Beg++;\n            break;\n        }\n    // get the last node with the same var\n    for ( End = iVar;          ; End++ )\n        if ( pValue2Node[End] != iNode )\n        {\n            End--;\n            break;\n        }\n\n    // if one of the vars is not binary, quit\n    if ( End - Beg \u003e 1 )\n        return -1;\n\n    // get the complements\n    if ( iVar == Beg )\n        iVarC = End;\n    else if ( iVar == End ) \n        iVarC = Beg;\n    else\n    {\n        assert( 0 );\n    }\n    return iVarC;\n*/\n}"
+    },
+    {
+      "Name": "Fxu_MatrixGetDoubleVars",
+      "Start": 11844,
+      "End": 13167,
+      "BodyStart": 11982,
+      "Original": "void Fxu_MatrixGetDoubleVars( Fxu_Matrix * p, Fxu_Double * pDouble, \n    int piVarsC1[], int piVarsC2[], int * pnVarsC1, int * pnVarsC2 )\n{\n    Fxu_Pair * pPair;\n    Fxu_Lit * pLit1, * pLit2;\n    int nLits1, nLits2;\n\n    // get the first pair\n    pPair = pDouble-\u003elPairs.pHead;\n    // init the parameters\n    nLits1 = 0;\n    nLits2 = 0;\n    pLit1 = pPair-\u003epCube1-\u003elLits.pHead;\n    pLit2 = pPair-\u003epCube2-\u003elLits.pHead;\n    while ( 1 )\n    {\n        if ( pLit1 \u0026\u0026 pLit2 )\n        {\n            if ( pLit1-\u003eiVar == pLit2-\u003eiVar )\n            { // ensure cube-free\n                pLit1 = pLit1-\u003epHNext;\n                pLit2 = pLit2-\u003epHNext;\n            }\n            else if ( pLit1-\u003eiVar \u003c pLit2-\u003eiVar )\n            {\n                piVarsC1[nLits1++] = pLit1-\u003eiVar;\n                 pLit1 = pLit1-\u003epHNext;\n           }\n            else\n            {\n                piVarsC2[nLits2++] = pLit2-\u003eiVar;\n                pLit2 = pLit2-\u003epHNext;\n            }\n        }\n        else if ( pLit1 \u0026\u0026 !pLit2 )\n        {\n            piVarsC1[nLits1++] = pLit1-\u003eiVar;\n            pLit1 = pLit1-\u003epHNext;\n        }\n        else if ( !pLit1 \u0026\u0026 pLit2 )\n        {\n            piVarsC2[nLits2++] = pLit2-\u003eiVar;\n            pLit2 = pLit2-\u003epHNext;\n        }\n        else\n            break;\n    }\n    *pnVarsC1 = nLits1;\n    *pnVarsC2 = nLits2;\n}",
+      "Draft": "func Fxu_MatrixGetDoubleVars(p *Fxu_Matrix, pDouble *Fxu_Double, piVarsC1 []int32, piVarsC2 []int32, pnVarsC1 *int32, pnVarsC2 *int32) {\n    var pPair *Fxu_Pair;\n    var pLit1, pLit2 *Fxu_Lit;\n    var nLits1, nLits2 int32;\n\n    // get the first pair\n    pPair = pDouble.lPairs.pHead;\n    // init the parameters\n    nLits1 = 0;\n    nLits2 = 0;\n    pLit1 = pPair.pCube1.lLits.pHead;\n    pLit2 = pPair.pCube2.lLits.pHead;\n    for {\n        if pLit1 \u0026\u0026 (pLit2 != nil) {\n            if pLit1.iVar == pLit2.iVar { // ensure cube-free\n                pLit1 = pLit1.pHNext;\n                pLit2 = pLit2.pHNext;\n            \n            } else if pLit1.iVar \u003c pLit2.iVar {\n                piVarsC1[nLits1++] = pLit1.iVar;\n                 pLit1 = pLit1.pHNext;\n           \n            } else {\n                piVarsC2[nLits2++] = pLit2.iVar;\n                pLit2 = pLit2.pHNext;\n            }\n        \n        } else if pLit1 \u0026\u0026 !(pLit2 != nil) {\n            piVarsC1[nLits1++] = pLit1.iVar;\n            pLit1 = pLit1.pHNext;\n        \n        } else if !pLit1 \u0026\u0026 (pLit2 != nil) {\n            piVarsC2[nLits2++] = pLit2.iVar;\n            pLit2 = pLit2.pHNext;\n        \n        } else {\n            break; }\n    }\n    *pnVarsC1 = nLits1;\n    *pnVarsC2 = nLits2;\n}"
+    },
+    {
+      "Name": "Fxu_MatrixFindDouble",
+      "Start": 13404,
+      "End": 14743,
+      "BodyStart": 13520,
+      "Original": "Fxu_Double * Fxu_MatrixFindDouble( Fxu_Matrix * p, \n     int piVarsC1[], int piVarsC2[], int nVarsC1, int nVarsC2 )\n{\n    int piVarsC1_[100], piVarsC2_[100];\n    int nVarsC1_, nVarsC2_, i;\n    Fxu_Double * pDouble;\n    Fxu_Pair * pPair;\n    unsigned Key;\n\n    assert( nVarsC1 \u003e 0 );\n    assert( nVarsC2 \u003e 0 );\n    assert( piVarsC1[0] \u003c piVarsC2[0] );\n\n    // get the hash key\n    Key = Fxu_PairHashKeyArray( p, piVarsC1, piVarsC2, nVarsC1, nVarsC2 );\n    \n    // check if the divisor for this pair already exists\n    Key %= p-\u003enTableSize;\n    Fxu_TableForEachDouble( p, Key, pDouble )\n    {\n        pPair = pDouble-\u003elPairs.pHead;\n        if ( pPair-\u003enLits1 != nVarsC1 )\n            continue;\n        if ( pPair-\u003enLits2 != nVarsC2 )\n            continue;\n        // get the cubes of this divisor\n        Fxu_MatrixGetDoubleVars( p, pDouble, piVarsC1_, piVarsC2_, \u0026nVarsC1_, \u0026nVarsC2_ );\n        // compare lits of the first cube\n        for ( i = 0; i \u003c nVarsC1; i++ )\n            if ( piVarsC1[i] != piVarsC1_[i] )\n                break;\n        if ( i != nVarsC1 )\n            continue;\n        // compare lits of the second cube\n        for ( i = 0; i \u003c nVarsC2; i++ )\n            if ( piVarsC2[i] != piVarsC2_[i] )\n                break;\n        if ( i != nVarsC2 )\n            continue;\n        return pDouble;\n    }\n    return NULL;\n}",
+      "Draft": "func Fxu_MatrixFindDouble(p *Fxu_Matrix, piVarsC1 []int32, piVarsC2 []int32, nVarsC1 int32, nVarsC2 int32) *Fxu_Double {\n    var piVarsC1_, piVarsC2_ [100]int32;\n    var nVarsC1_, nVarsC2_, i int32;\n    var pDouble *Fxu_Double;\n    var pPair *Fxu_Pair;\n    var Key uint32;\n\n    assert(nVarsC1 \u003e 0, \"nVarsC1 \u003e 0\");\n    assert(nVarsC2 \u003e 0, \"nVarsC2 \u003e 0\");\n    assert(piVarsC1[0] \u003c piVarsC2[0], \"piVarsC1[0] \u003c piVarsC2[0]\");\n\n    // get the hash key\n    Key = Fxu_PairHashKeyArray( p, piVarsC1, piVarsC2, nVarsC1, nVarsC2 );\n    \n    // check if the divisor for this pair already exists\n    Key %= p.nTableSize;\n    // inlining of macro Fxu_TableForEachDouble\n    for  pDouble = (p).pTable[Key].pHead;          (pDouble != nil);          pDouble = pDouble.pNext  {\n        pPair = pDouble.lPairs.pHead;\n        if pPair.nLits1 != nVarsC1 {\n            continue; }\n        if pPair.nLits2 != nVarsC2 {\n            continue; }\n        // get the cubes of this divisor\n        Fxu_MatrixGetDoubleVars( p, pDouble, piVarsC1_, piVarsC2_, \u0026nVarsC1_, \u0026nVarsC2_ );\n        // compare lits of the first cube\n        for  i = 0; i \u003c nVarsC1; i++  {\n            if piVarsC1[i] != piVarsC1_[i] {\n                break; }\n        }\n        if i != nVarsC1 {\n            continue; }\n        // compare lits of the second cube\n        for  i = 0; i \u003c nVarsC2; i++  {\n            if piVarsC2[i] != piVarsC2_[i] {\n                break; }\n        }\n        if i != nVarsC2 {\n            continue; }\n        return pDouble;\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Fxu_SelectSCD",
+      "Start": 14983,
+      "End": 17246,
+      "BodyStart": 15074,
+      "Original": "int Fxu_SelectSCD( Fxu_Matrix * p, int WeightLimit, Fxu_Var ** ppVar1, Fxu_Var ** ppVar2 )\n{\n//    int * pValue2Node = p-\u003epValue2Node;\n    Fxu_Var * pVar1;\n    Fxu_Var * pVar2, * pVarTemp;\n    Fxu_Lit * pLitV, * pLitH;\n    int Coin;\n    int CounterAll;\n    int CounterTest;\n    int WeightCur;\n    int WeightBest;\n\n    CounterAll = 0;\n    CounterTest = 0;\n\n    WeightBest = -10;\n    \n    // iterate through the columns in the matrix\n    Fxu_MatrixForEachVariable( p, pVar1 )\n    {\n        // start collecting the affected vars\n        Fxu_MatrixRingVarsStart( p );\n\n        // go through all the literals of this variable\n        for ( pLitV = pVar1-\u003elLits.pHead; pLitV; pLitV = pLitV-\u003epVNext )\n        {\n            // for this literal, go through all the horizontal literals\n            for ( pLitH = pLitV-\u003epHNext; pLitH; pLitH = pLitH-\u003epHNext )\n            {\n                // get another variable\n                pVar2 = pLitH-\u003epVar;\n                CounterAll++;\n                // skip the var if it is already used\n                if ( pVar2-\u003epOrder )\n                    continue;\n                // skip the var if it belongs to the same node\n//                if ( pValue2Node[pVar1-\u003eiVar] == pValue2Node[pVar2-\u003eiVar] )\n//                    continue;\n                // collect the var\n                Fxu_MatrixRingVarsAdd( p, pVar2 );\n            }\n        }\n        // stop collecting the selected vars\n        Fxu_MatrixRingVarsStop( p );\n\n        // iterate through the selected vars\n        Fxu_MatrixForEachVarInRing( p, pVar2 )\n        {\n            CounterTest++;\n\n            // count the coincidence\n            Coin = Fxu_SingleCountCoincidence( p, pVar1, pVar2 );\n            assert( Coin \u003e 0 );\n\n            // get the new weight\n            WeightCur = Coin - 2;\n\n            // compare the weights\n            if ( WeightBest \u003c WeightCur )\n            {\n                WeightBest = WeightCur;\n                *ppVar1 = pVar1;\n                *ppVar2 = pVar2;\n            }\n        }\n        // unmark the vars\n        Fxu_MatrixForEachVarInRingSafe( p, pVar2, pVarTemp )\n            pVar2-\u003epOrder = NULL;\n        Fxu_MatrixRingVarsReset( p );\n    }\n\n//    if ( WeightBest == WeightLimit )\n//        return -1;\n    return WeightBest;\n}",
+      "Draft": "func Fxu_SelectSCD(p *Fxu_Matrix, WeightLimit int32, ppVar1 **Fxu_Var, ppVar2 **Fxu_Var) int32 {\n//    int * pValue2Node = p-\u003epValue2Node;\n    var pVar1 *Fxu_Var;\n    var pVar2, pVarTemp *Fxu_Var;\n    var pLitV, pLitH *Fxu_Lit;\n    var Coin int32;\n    var CounterAll int32;\n    var CounterTest int32;\n    var WeightCur int32;\n    var WeightBest int32;\n\n    CounterAll = 0;\n    CounterTest = 0;\n\n    WeightBest = -10;\n    \n    // iterate through the columns in the matrix\n    // inlining of macro Fxu_MatrixForEachVariable\n    for  pVar1 = (p).lVars.pHead;          (pVar1 != nil);          pVar1 = pVar1.pNext  {\n        // start collecting the affected vars\n        // inlining of macro Fxu_MatrixRingVarsStart\n        ((p).ppTailVars  = \u0026((p).pOrderVars));\n((p).pOrderVars  = nil);;\n\n        // go through all the literals of this variable\n        for  pLitV = pVar1.lLits.pHead; pLitV; pLitV = pLitV.pVNext  {\n            // for this literal, go through all the horizontal literals\n            for  pLitH = pLitV.pHNext; (pLitH != nil); pLitH = pLitH.pHNext  {\n                // get another variable\n                pVar2 = pLitH.pVar;\n                CounterAll++;\n                // skip the var if it is already used\n                if pVar2.pOrder {\n                    continue; }\n                // skip the var if it belongs to the same node\n//                if ( pValue2Node[pVar1-\u003eiVar] == pValue2Node[pVar2-\u003eiVar] )\n//                    continue;\n                // collect the var\n                // inlining of macro Fxu_MatrixRingVarsAdd\n                (*((p).ppTailVars ) = pVar2 );\n((p).ppTailVars  = \u0026(pVar2).pOrder );\n((pVar2).pOrder  = (Fxu_Var *)1);;\n            }\n        }\n        // stop collecting the selected vars\n        // inlining of macro Fxu_MatrixRingVarsStop\n        ;\n\n        // iterate through the selected vars\n        // inlining of macro Fxu_MatrixForEachVarInRing\n        if (p).pOrderVars {    for  pVar2 = (p).pOrderVars;          pVar2 != (Fxu_Var *)1;          pVar2 = pVar2.pOrder  {\n            CounterTest++;\n\n            // count the coincidence\n            Coin = Fxu_SingleCountCoincidence( p, pVar1, pVar2 );\n            assert(Coin \u003e 0, \"Coin \u003e 0\");\n\n            // get the new weight\n            WeightCur = Coin - 2;\n\n            // compare the weights\n            if WeightBest \u003c WeightCur {\n                WeightBest = WeightCur;\n                *ppVar1 = pVar1;\n                *ppVar2 = pVar2;\n            }\n        } }\n        // unmark the vars\n        // inlining of macro Fxu_MatrixForEachVarInRingSafe\n        if (p).pOrderVars {    for  pVar2 = (p).pOrderVars, pVarTemp = ((pVar2 != (Fxu_Var *)1)? pVar2.pOrder: (Fxu_Var *)1);          pVar2 != (Fxu_Var *)1;          pVar2 = pVarTemp, pVarTemp = ((pVar2 != (Fxu_Var *)1)? pVar2.pOrder: (Fxu_Var *)1)  {\n            pVar2.pOrder = nil;\n        } }\n        // inlining of macro Fxu_MatrixRingVarsReset\n        ((p).pOrderVars  = nil);\n((p).ppTailVars  = nil);;\n    }\n\n//    if ( WeightBest == WeightLimit )\n//        return -1;\n    return WeightBest;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::pointer-cast::16872",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16297,
+      "End": 16297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::pointer-cast::17216",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16492,
+      "End": 16492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::pointer-cast::17907",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17030,
+      "End": 17030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::pointer-cast::17937",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17030,
+      "End": 17030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::pointer-cast::17970",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17030,
+      "End": 17030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::pointer-cast::18033",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17030,
+      "End": 17030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::pointer-cast::18063",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17030,
+      "End": 17030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::Fxu_Select",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_Select",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1926,
+      "End": 6873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::Fxu_MatrixFindComplementSingle",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MatrixFindComplementSingle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7110,
+      "End": 7656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::Fxu_MatrixFindComplementDouble2",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MatrixFindComplementDouble2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7892,
+      "End": 8962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::Fxu_MatrixFindComplementDouble4",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MatrixFindComplementDouble4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9198,
+      "End": 10501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::Fxu_MatrixFindComplement",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MatrixFindComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10738,
+      "End": 11607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::Fxu_MatrixGetDoubleVars",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MatrixGetDoubleVars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11844,
+      "End": 13167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::Fxu_MatrixFindDouble",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MatrixFindDouble",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13404,
+      "End": 14743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::ternary::Fxu_SelectSCD",
+      "Category": "ternary-review",
+      "Symbol": "Fxu_SelectSCD",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 14983,
+      "End": 17246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::Fxu_SelectSCD",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_SelectSCD",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14983,
+      "End": 17246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSelect.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17494
+    }
+  ],
+  "Draft": "package fxu\n\n/**CFile****************************************************************\n\n  FileName    [fxuSelect.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Procedures to select the best divisor/complement pair.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: fxuSelect.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fxuInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst MAX_SIZE_LOOKAHEAD =      20\n\n// static int Fxu_MatrixFindComplement( Fxu_Matrix * p, int iVar );\n\n\n// static Fxu_Double * Fxu_MatrixFindComplementSingle( Fxu_Matrix * p, Fxu_Single * pSingle );\n\n// static Fxu_Single * Fxu_MatrixFindComplementDouble2( Fxu_Matrix * p, Fxu_Double * pDouble );\n\n// static Fxu_Double * Fxu_MatrixFindComplementDouble4( Fxu_Matrix * p, Fxu_Double * pDouble );\n\n\n// Fxu_Double * Fxu_MatrixFindDouble( Fxu_Matrix * p, \n//      int piVarsC1[], int piVarsC2[], int nVarsC1, int nVarsC2 );\n\n// void Fxu_MatrixGetDoubleVars( Fxu_Matrix * p, Fxu_Double * pDouble, \n//     int piVarsC1[], int piVarsC2[], int * pnVarsC1, int * pnVarsC2 );\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Selects the best pair (Single,Double) and returns their weight.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_Select(p *Fxu_Matrix, ppSingle **Fxu_Single, ppDouble **Fxu_Double) int32 {\n    // the top entries\n    var pSingles [MAX_SIZE_LOOKAHEAD]*Fxu_Single ;\n    var pDoubles [MAX_SIZE_LOOKAHEAD]*Fxu_Double ;\n    // the complements\n    var pSCompl [MAX_SIZE_LOOKAHEAD]*Fxu_Double ;\n    var pDComplS [MAX_SIZE_LOOKAHEAD]*Fxu_Single ;\n    var pDComplD [MAX_SIZE_LOOKAHEAD]*Fxu_Double ;\n    var pPair *Fxu_Pair;\n    var nSingles int32;\n    var nDoubles int32;\n    var i int32;\n    var WeightBest int32;\n    var WeightCur int32;\n    var iNum, fBestS int32;\n\n    // collect the top entries from the queues\n    for  nSingles = 0; nSingles \u003c MAX_SIZE_LOOKAHEAD; nSingles++  {\n        pSingles[nSingles] = Fxu_HeapSingleGetMax( p.pHeapSingle );\n        if pSingles[nSingles] == nil {\n            break; }\n    }\n    // put them back into the queue\n    for  i = 0; i \u003c nSingles; i++  {\n        if pSingles[i] {\n            Fxu_HeapSingleInsert( p.pHeapSingle, pSingles[i] ); }\n    }\n        \n    // the same for doubles\n    // collect the top entries from the queues\n    for  nDoubles = 0; nDoubles \u003c MAX_SIZE_LOOKAHEAD; nDoubles++  {\n        pDoubles[nDoubles] = Fxu_HeapDoubleGetMax( p.pHeapDouble );\n        if pDoubles[nDoubles] == nil {\n            break; }\n    }\n    // put them back into the queue\n    for  i = 0; i \u003c nDoubles; i++  {\n        if pDoubles[i] {\n            Fxu_HeapDoubleInsert( p.pHeapDouble, pDoubles[i] ); }\n    }\n\n    // for each single, find the complement double (if any)\n    for  i = 0; i \u003c nSingles; i++  {\n        if pSingles[i] {\n            pSCompl[i] = Fxu_MatrixFindComplementSingle( p, pSingles[i] ); }\n    }\n\n    // for each double, find the complement single or double (if any)\n    for  i = 0; i \u003c nDoubles; i++  {\n        if pDoubles[i] {\n            pPair = pDoubles[i].lPairs.pHead;\n            if pPair.nLits1 == 1 \u0026\u0026 pPair.nLits2 == 1 {\n                pDComplS[i] = Fxu_MatrixFindComplementDouble2( p, pDoubles[i] );\n                pDComplD[i] = nil;\n            \n//            else if ( pPair-\u003enLits1 == 2 \u0026\u0026 pPair-\u003enLits2 == 2 )\n//            {\n//                pDComplS[i] = NULL;\n//                pDComplD[i] = Fxu_MatrixFindComplementDouble4( p, pDoubles[i] );\n//            }\n            } else {\n                pDComplS[i] = nil;\n                pDComplD[i] = nil;\n            }\n        }\n    }\n\n    // select the best pair\n    WeightBest = -1;\n    for  i = 0; i \u003c nSingles; i++  {\n        WeightCur = pSingles[i].Weight;\n        if pSCompl[i] {\n            // add the weight of the double\n            WeightCur += pSCompl[i].Weight;\n            // there is no need to implement this double, so...\n            pPair      = pSCompl[i].lPairs.pHead;\n            WeightCur += pPair.nLits1 + pPair.nLits2;\n        }\n        if WeightBest \u003c WeightCur {\n            WeightBest = WeightCur;\n            *ppSingle = pSingles[i];\n            *ppDouble = pSCompl[i];\n            fBestS = 1;\n            iNum = i;\n        }\n    }\n    for  i = 0; i \u003c nDoubles; i++  {\n        WeightCur = pDoubles[i].Weight;\n        if pDComplS[i] {\n            // add the weight of the single\n            WeightCur += pDComplS[i].Weight;\n            // there is no need to implement this double, so...\n            pPair      = pDoubles[i].lPairs.pHead;\n            WeightCur += pPair.nLits1 + pPair.nLits2;\n        }\n        if WeightBest \u003c WeightCur {\n            WeightBest = WeightCur;\n            *ppSingle = pDComplS[i];\n            *ppDouble = pDoubles[i];\n            fBestS = 0;\n            iNum = i;\n        }\n    }\n/*\n    // print the statistics\n    printf( \"\\n\" );\n    for ( i = 0; i \u003c nSingles; i++ )\n    {\n        printf( \"Single #%d: Weight = %3d. \", i, pSingles[i]-\u003eWeight );\n        printf( \"Compl: \" );\n        if ( pSCompl[i] == NULL )\n            printf( \"None.\" );\n        else\n            printf( \"D  Weight = %3d  Sum = %3d\", \n                pSCompl[i]-\u003eWeight, pSCompl[i]-\u003eWeight + pSingles[i]-\u003eWeight );\n        printf( \"\\n\" );\n    }\n    printf( \"\\n\" );\n    for ( i = 0; i \u003c nDoubles; i++ )\n    {\n        printf( \"Double #%d: Weight = %3d. \", i, pDoubles[i]-\u003eWeight );\n        printf( \"Compl: \" );\n        if ( pDComplS[i] == NULL \u0026\u0026 pDComplD[i] == NULL )\n            printf( \"None.\" );\n        else if ( pDComplS[i] )\n            printf( \"S  Weight = %3d  Sum = %3d\", \n                pDComplS[i]-\u003eWeight, pDComplS[i]-\u003eWeight + pDoubles[i]-\u003eWeight );\n        else if ( pDComplD[i] )\n            printf( \"D  Weight = %3d  Sum = %3d\", \n                pDComplD[i]-\u003eWeight, pDComplD[i]-\u003eWeight + pDoubles[i]-\u003eWeight );\n        printf( \"\\n\" );\n    }\n    if ( WeightBest == -1 )\n        printf( \"Selected NONE\\n\" );\n    else\n    {\n        printf( \"Selected = %s.  \", fBestS? \"S\": \"D\" );\n        printf( \"Number = %d.  \", iNum );\n        printf( \"Weight = %d.\\n\", WeightBest );\n    }\n    printf( \"\\n\" );\n*/\n    return WeightBest;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MatrixFindComplementSingle(p *Fxu_Matrix, pSingle *Fxu_Single) *Fxu_Double {\n//    int * pValue2Node = p-\u003epValue2Node;\n    var iVar1, iVar2 int32;\n    var iVar1C, iVar2C int32;\n    // get the variables of this single div\n    iVar1  = pSingle.pVar1.iVar;\n    iVar2  = pSingle.pVar2.iVar;\n    iVar1C = Fxu_MatrixFindComplement( p, iVar1 );\n    iVar2C = Fxu_MatrixFindComplement( p, iVar2 );\n    if iVar1C == -1 || iVar2C == -1 {\n        return nil; }\n    assert(iVar1C \u003c iVar2C, \"iVar1C \u003c iVar2C\");\n    return Fxu_MatrixFindDouble( p, \u0026iVar1C, \u0026iVar2C, 1, 1 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MatrixFindComplementDouble2(p *Fxu_Matrix, pDouble *Fxu_Double) *Fxu_Single {\n//    int * pValue2Node = p-\u003epValue2Node;\n    var piVarsC1, piVarsC2 [10]int32;\n    var nVarsC1, nVarsC2 int32;\n    var iVar1, iVar2, iVarTemp int32;\n    var iVar1C, iVar2C int32;\n    var pSingle *Fxu_Single;\n\n    // get the variables of this double div\n    Fxu_MatrixGetDoubleVars( p, pDouble, piVarsC1, piVarsC2, \u0026nVarsC1, \u0026nVarsC2 );\n    assert(nVarsC1 == 1, \"nVarsC1 == 1\");\n    assert(nVarsC2 == 1, \"nVarsC2 == 1\");\n    iVar1 = piVarsC1[0];\n    iVar2 = piVarsC2[0];\n    assert(iVar1 \u003c iVar2, \"iVar1 \u003c iVar2\");\n\n    iVar1C = Fxu_MatrixFindComplement( p, iVar1 );\n    iVar2C = Fxu_MatrixFindComplement( p, iVar2 );\n    if iVar1C == -1 || iVar2C == -1 {\n        return nil; }\n \n    // go through the queque and find this one\n//    assert( iVar1C \u003c iVar2C );\n    if iVar1C \u003e iVar2C {\n        iVarTemp = iVar1C;\n        iVar1C = iVar2C;\n        iVar2C = iVarTemp;\n    }\n\n    // inlining of macro Fxu_MatrixForEachSingle\n    for  pSingle = (p).lSingles.pHead;          (pSingle != nil);          pSingle = pSingle.pNext  {\n        if pSingle.pVar1.iVar == iVar1C \u0026\u0026 pSingle.pVar2.iVar == iVar2C {\n            return pSingle; }\n    }\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MatrixFindComplementDouble4(p *Fxu_Matrix, pDouble *Fxu_Double) *Fxu_Double {\n//    int * pValue2Node = p-\u003epValue2Node;\n    var piVarsC1, piVarsC2 [10]int32;\n    var nVarsC1, nVarsC2 int32;\n    var iVar11, iVar12, iVar21, iVar22 int32;\n    var iVar11C, iVar12C, iVar21C, iVar22C int32;\n    var RetValue int32;\n\n    // get the variables of this double div\n    Fxu_MatrixGetDoubleVars( p, pDouble, piVarsC1, piVarsC2, \u0026nVarsC1, \u0026nVarsC2 );\n    assert(nVarsC1 == 2 \u0026\u0026 nVarsC2 == 2, \"nVarsC1 == 2 \u0026\u0026 nVarsC2 == 2\");\n\n    iVar11 = piVarsC1[0];\n    iVar12 = piVarsC1[1];\n    iVar21 = piVarsC2[0];\n    iVar22 = piVarsC2[1];\n    assert(iVar11 \u003c iVar21, \"iVar11 \u003c iVar21\");\n\n    iVar11C = Fxu_MatrixFindComplement( p, iVar11 );\n    iVar12C = Fxu_MatrixFindComplement( p, iVar12 );\n    iVar21C = Fxu_MatrixFindComplement( p, iVar21 );\n    iVar22C = Fxu_MatrixFindComplement( p, iVar22 );\n    if iVar11C == -1 || iVar12C == -1 || iVar21C == -1 || iVar22C == -1 {\n        return nil; }\n    if iVar11C != iVar21 || iVar12C != iVar22 || \n         iVar21C != iVar11 || iVar22C != iVar12 {\n         return nil; }\n\n    // a'b' + ab   =\u003e  a'b  + ab'\n    // a'b  + ab'  =\u003e  a'b' + ab\n    // swap the second pair in each cube\n    RetValue    = piVarsC1[1];\n    piVarsC1[1] = piVarsC2[1];\n    piVarsC2[1] = RetValue;\n\n    return Fxu_MatrixFindDouble( p, piVarsC1, piVarsC2, 2, 2 );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MatrixFindComplement(p *Fxu_Matrix, iVar int32) int32 {\n    return iVar ^ 1;\n/*\n//    int * pValue2Node = p-\u003epValue2Node;\n    int iVarC;\n    int iNode;\n    int Beg, End;\n\n    // get the nodes\n    iNode = pValue2Node[iVar];\n    // get the first node with the same var\n    for ( Beg = iVar; Beg \u003e= 0; Beg-- )\n        if ( pValue2Node[Beg] != iNode )\n        {\n            Beg++;\n            break;\n        }\n    // get the last node with the same var\n    for ( End = iVar;          ; End++ )\n        if ( pValue2Node[End] != iNode )\n        {\n            End--;\n            break;\n        }\n\n    // if one of the vars is not binary, quit\n    if ( End - Beg \u003e 1 )\n        return -1;\n\n    // get the complements\n    if ( iVar == Beg )\n        iVarC = End;\n    else if ( iVar == End ) \n        iVarC = Beg;\n    else\n    {\n        assert( 0 );\n    }\n    return iVarC;\n*/\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MatrixGetDoubleVars(p *Fxu_Matrix, pDouble *Fxu_Double, piVarsC1 []int32, piVarsC2 []int32, pnVarsC1 *int32, pnVarsC2 *int32) {\n    var pPair *Fxu_Pair;\n    var pLit1, pLit2 *Fxu_Lit;\n    var nLits1, nLits2 int32;\n\n    // get the first pair\n    pPair = pDouble.lPairs.pHead;\n    // init the parameters\n    nLits1 = 0;\n    nLits2 = 0;\n    pLit1 = pPair.pCube1.lLits.pHead;\n    pLit2 = pPair.pCube2.lLits.pHead;\n    for {\n        if pLit1 \u0026\u0026 (pLit2 != nil) {\n            if pLit1.iVar == pLit2.iVar { // ensure cube-free\n                pLit1 = pLit1.pHNext;\n                pLit2 = pLit2.pHNext;\n            \n            } else if pLit1.iVar \u003c pLit2.iVar {\n                piVarsC1[nLits1++] = pLit1.iVar;\n                 pLit1 = pLit1.pHNext;\n           \n            } else {\n                piVarsC2[nLits2++] = pLit2.iVar;\n                pLit2 = pLit2.pHNext;\n            }\n        \n        } else if pLit1 \u0026\u0026 !(pLit2 != nil) {\n            piVarsC1[nLits1++] = pLit1.iVar;\n            pLit1 = pLit1.pHNext;\n        \n        } else if !pLit1 \u0026\u0026 (pLit2 != nil) {\n            piVarsC2[nLits2++] = pLit2.iVar;\n            pLit2 = pLit2.pHNext;\n        \n        } else {\n            break; }\n    }\n    *pnVarsC1 = nLits1;\n    *pnVarsC2 = nLits2;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MatrixFindDouble(p *Fxu_Matrix, piVarsC1 []int32, piVarsC2 []int32, nVarsC1 int32, nVarsC2 int32) *Fxu_Double {\n    var piVarsC1_, piVarsC2_ [100]int32;\n    var nVarsC1_, nVarsC2_, i int32;\n    var pDouble *Fxu_Double;\n    var pPair *Fxu_Pair;\n    var Key uint32;\n\n    assert(nVarsC1 \u003e 0, \"nVarsC1 \u003e 0\");\n    assert(nVarsC2 \u003e 0, \"nVarsC2 \u003e 0\");\n    assert(piVarsC1[0] \u003c piVarsC2[0], \"piVarsC1[0] \u003c piVarsC2[0]\");\n\n    // get the hash key\n    Key = Fxu_PairHashKeyArray( p, piVarsC1, piVarsC2, nVarsC1, nVarsC2 );\n    \n    // check if the divisor for this pair already exists\n    Key %= p.nTableSize;\n    // inlining of macro Fxu_TableForEachDouble\n    for  pDouble = (p).pTable[Key].pHead;          (pDouble != nil);          pDouble = pDouble.pNext  {\n        pPair = pDouble.lPairs.pHead;\n        if pPair.nLits1 != nVarsC1 {\n            continue; }\n        if pPair.nLits2 != nVarsC2 {\n            continue; }\n        // get the cubes of this divisor\n        Fxu_MatrixGetDoubleVars( p, pDouble, piVarsC1_, piVarsC2_, \u0026nVarsC1_, \u0026nVarsC2_ );\n        // compare lits of the first cube\n        for  i = 0; i \u003c nVarsC1; i++  {\n            if piVarsC1[i] != piVarsC1_[i] {\n                break; }\n        }\n        if i != nVarsC1 {\n            continue; }\n        // compare lits of the second cube\n        for  i = 0; i \u003c nVarsC2; i++  {\n            if piVarsC2[i] != piVarsC2_[i] {\n                break; }\n        }\n        if i != nVarsC2 {\n            continue; }\n        return pDouble;\n    }\n    return nil;\n}\n\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_SelectSCD(p *Fxu_Matrix, WeightLimit int32, ppVar1 **Fxu_Var, ppVar2 **Fxu_Var) int32 {\n//    int * pValue2Node = p-\u003epValue2Node;\n    var pVar1 *Fxu_Var;\n    var pVar2, pVarTemp *Fxu_Var;\n    var pLitV, pLitH *Fxu_Lit;\n    var Coin int32;\n    var CounterAll int32;\n    var CounterTest int32;\n    var WeightCur int32;\n    var WeightBest int32;\n\n    CounterAll = 0;\n    CounterTest = 0;\n\n    WeightBest = -10;\n    \n    // iterate through the columns in the matrix\n    // inlining of macro Fxu_MatrixForEachVariable\n    for  pVar1 = (p).lVars.pHead;          (pVar1 != nil);          pVar1 = pVar1.pNext  {\n        // start collecting the affected vars\n        // inlining of macro Fxu_MatrixRingVarsStart\n        ((p).ppTailVars  = \u0026((p).pOrderVars));\n((p).pOrderVars  = nil);;\n\n        // go through all the literals of this variable\n        for  pLitV = pVar1.lLits.pHead; pLitV; pLitV = pLitV.pVNext  {\n            // for this literal, go through all the horizontal literals\n            for  pLitH = pLitV.pHNext; (pLitH != nil); pLitH = pLitH.pHNext  {\n                // get another variable\n                pVar2 = pLitH.pVar;\n                CounterAll++;\n                // skip the var if it is already used\n                if pVar2.pOrder {\n                    continue; }\n                // skip the var if it belongs to the same node\n//                if ( pValue2Node[pVar1-\u003eiVar] == pValue2Node[pVar2-\u003eiVar] )\n//                    continue;\n                // collect the var\n                // inlining of macro Fxu_MatrixRingVarsAdd\n                (*((p).ppTailVars ) = pVar2 );\n((p).ppTailVars  = \u0026(pVar2).pOrder );\n((pVar2).pOrder  = (Fxu_Var *)1);;\n            }\n        }\n        // stop collecting the selected vars\n        // inlining of macro Fxu_MatrixRingVarsStop\n        ;\n\n        // iterate through the selected vars\n        // inlining of macro Fxu_MatrixForEachVarInRing\n        if (p).pOrderVars {    for  pVar2 = (p).pOrderVars;          pVar2 != (Fxu_Var *)1;          pVar2 = pVar2.pOrder  {\n            CounterTest++;\n\n            // count the coincidence\n            Coin = Fxu_SingleCountCoincidence( p, pVar1, pVar2 );\n            assert(Coin \u003e 0, \"Coin \u003e 0\");\n\n            // get the new weight\n            WeightCur = Coin - 2;\n\n            // compare the weights\n            if WeightBest \u003c WeightCur {\n                WeightBest = WeightCur;\n                *ppVar1 = pVar1;\n                *ppVar2 = pVar2;\n            }\n        } }\n        // unmark the vars\n        // inlining of macro Fxu_MatrixForEachVarInRingSafe\n        if (p).pOrderVars {    for  pVar2 = (p).pOrderVars, pVarTemp = ((pVar2 != (Fxu_Var *)1)? pVar2.pOrder: (Fxu_Var *)1);          pVar2 != (Fxu_Var *)1;          pVar2 = pVarTemp, pVarTemp = ((pVar2 != (Fxu_Var *)1)? pVar2.pOrder: (Fxu_Var *)1)  {\n            pVar2.pOrder = nil;\n        } }\n        // inlining of macro Fxu_MatrixRingVarsReset\n        ((p).pOrderVars  = nil);\n((p).ppTailVars  = nil);;\n    }\n\n//    if ( WeightBest == WeightLimit )\n//        return -1;\n    return WeightBest;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

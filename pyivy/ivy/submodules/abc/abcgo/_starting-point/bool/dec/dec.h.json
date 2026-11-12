@@ -1,0 +1,946 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h",
+  "SHA256": "75da8328d5ea39829f408213e032a31bc75a7c72ea5ecee4a0f700bff2152392",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 229,
+        "Column": 14,
+        "ByteOffset": 8203
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGraph = ABC_ALLOC( Dec_Graph_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 230,
+        "Column": 5,
+        "ByteOffset": 8236
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pGraph, 0, sizeof(Dec_Graph_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 21,
+        "ByteOffset": 8392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGraph.pNodes = ABC_ALLOC( Dec_Node_t, pGraph.nCap );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 235,
+        "Column": 5,
+        "ByteOffset": 8434
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pGraph.pNodes, 0, sizeof(Dec_Node_t) * pGraph.nSize );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 252,
+        "Column": 14,
+        "ByteOffset": 8864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGraph = ABC_ALLOC( Dec_Graph_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 253,
+        "Column": 5,
+        "ByteOffset": 8897
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pGraph, 0, sizeof(Dec_Graph_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 272,
+        "Column": 14,
+        "ByteOffset": 9358
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pGraph = ABC_ALLOC( Dec_Graph_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 273,
+        "Column": 5,
+        "ByteOffset": 9391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pGraph, 0, sizeof(Dec_Graph_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 291,
+        "Column": 5,
+        "ByteOffset": 9853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 \u003c= iLeaf \u0026\u0026 iLeaf \u003c nLeaves );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 310,
+        "Column": 5,
+        "ByteOffset": 10352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pGraph.pNodes );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 311,
+        "Column": 5,
+        "ByteOffset": 10383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pGraph );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 507,
+        "Column": 5,
+        "ByteOffset": 15201
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Dec_GraphIsVar( pGraph ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 523,
+        "Column": 5,
+        "ByteOffset": 15629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Dec_GraphIsVar( pGraph ) );"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 556,
+        "Column": 25,
+        "ByteOffset": 16537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pGraph.pNodes = ABC_REALLOC( Dec_Node_t, pGraph.pNodes, 2 * pGraph.nCap ); "
+    },
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 560,
+        "Column": 5,
+        "ByteOffset": 16692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pNode, 0, sizeof(Dec_Node_t) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dec_EdgeCreate",
+      "Start": 5698,
+      "End": 5849,
+      "BodyStart": 5765,
+      "Original": "static inline Dec_Edge_t Dec_EdgeCreate( int Node, int fCompl )   \n{\n    Dec_Edge_t eEdge = { (unsigned)fCompl, (unsigned)Node }; \n    return eEdge; \n}",
+      "Draft": "func Dec_EdgeCreate(Node int32, fCompl int32) Dec_Edge_t {\n    var eEdge Dec_Edge_t  = Dec_Edge_t{ uint32(fCompl), uint32(Node) }; \n    return eEdge; \n}"
+    },
+    {
+      "Name": "Dec_EdgeToInt",
+      "Start": 6125,
+      "End": 6234,
+      "BodyStart": 6185,
+      "Original": "static inline unsigned Dec_EdgeToInt( Dec_Edge_t eEdge )   \n{\n    return (eEdge.Node \u003c\u003c 1) | eEdge.fCompl; \n}",
+      "Draft": "func Dec_EdgeToInt(eEdge Dec_Edge_t) uint32 {\n    return (eEdge.Node \u003c\u003c 1) | eEdge.fCompl; \n}"
+    },
+    {
+      "Name": "Dec_IntToEdge",
+      "Start": 6510,
+      "End": 6623,
+      "BodyStart": 6569,
+      "Original": "static inline Dec_Edge_t Dec_IntToEdge( unsigned Edge )   \n{\n    return Dec_EdgeCreate( Edge \u003e\u003e 1, Edge \u0026 1 ); \n}",
+      "Draft": "func Dec_IntToEdge(Edge uint32) Dec_Edge_t {\n    return Dec_EdgeCreate( Edge \u003e\u003e 1, Edge \u0026 1 ); \n}"
+    },
+    {
+      "Name": "Dec_EdgeToInt_",
+      "Start": 6899,
+      "End": 7021,
+      "BodyStart": 6957,
+      "Original": "static inline unsigned    Dec_EdgeToInt_( Dec_Edge_t m )  { union { Dec_Edge_t x; unsigned y; } v; v.x = m; return v.y;  }",
+      "Draft": "func Dec_EdgeToInt_(m Dec_Edge_t) uint32 { union { var x Dec_Edge_t; var y uint32; }\n v; v.x = m; return v.y;  }"
+    },
+    {
+      "Name": "Dec_IntToEdge_",
+      "Start": 7400,
+      "End": 7522,
+      "BodyStart": 7458,
+      "Original": "static inline Dec_Edge_t  Dec_IntToEdge_( unsigned m )    { union { Dec_Edge_t x; unsigned y; } v; v.y = m; return v.x;  }",
+      "Draft": "func Dec_IntToEdge_(m uint32) Dec_Edge_t { union { var x Dec_Edge_t; var y uint32; }\n v; v.y = m; return v.x;  }"
+    },
+    {
+      "Name": "Dec_GraphCreate",
+      "Start": 7909,
+      "End": 8333,
+      "BodyStart": 7971,
+      "Original": "static inline Dec_Graph_t * Dec_GraphCreate( int nLeaves )   \n{\n    Dec_Graph_t * pGraph;\n    pGraph = ABC_ALLOC( Dec_Graph_t, 1 );\n    memset( pGraph, 0, sizeof(Dec_Graph_t) );\n    pGraph-\u003enLeaves = nLeaves;\n    pGraph-\u003enSize = nLeaves;\n    pGraph-\u003enCap = 2 * nLeaves + 50;\n    pGraph-\u003epNodes = ABC_ALLOC( Dec_Node_t, pGraph-\u003enCap );\n    memset( pGraph-\u003epNodes, 0, sizeof(Dec_Node_t) * pGraph-\u003enSize );\n    return pGraph;\n}",
+      "Draft": "func Dec_GraphCreate(nLeaves int32) *Dec_Graph_t {\n    var pGraph *Dec_Graph_t;\n    pGraph = new(Dec_Graph_t);\n    *pGraph = Dec_Graph_t{};\n    pGraph.nLeaves = nLeaves;\n    pGraph.nSize = nLeaves;\n    pGraph.nCap = 2 * nLeaves + 50;\n    pGraph.pNodes = ABC_ALLOC( Dec_Node_t, pGraph.nCap );\n    memset( pGraph.pNodes, 0, sizeof(Dec_Node_t) * pGraph.nSize );\n    return pGraph;\n}"
+    },
+    {
+      "Name": "Dec_GraphCreateConst0",
+      "Start": 8594,
+      "End": 8839,
+      "BodyStart": 8649,
+      "Original": "static inline Dec_Graph_t * Dec_GraphCreateConst0()   \n{\n    Dec_Graph_t * pGraph;\n    pGraph = ABC_ALLOC( Dec_Graph_t, 1 );\n    memset( pGraph, 0, sizeof(Dec_Graph_t) );\n    pGraph-\u003efConst = 1;\n    pGraph-\u003eeRoot.fCompl = 1;\n    return pGraph;\n}",
+      "Draft": "func Dec_GraphCreateConst0() *Dec_Graph_t {\n    var pGraph *Dec_Graph_t;\n    pGraph = new(Dec_Graph_t);\n    *pGraph = Dec_Graph_t{};\n    pGraph.fConst = 1;\n    pGraph.eRoot.fCompl = 1;\n    return pGraph;\n}"
+    },
+    {
+      "Name": "Dec_GraphCreateConst1",
+      "Start": 9100,
+      "End": 9315,
+      "BodyStart": 9155,
+      "Original": "static inline Dec_Graph_t * Dec_GraphCreateConst1()   \n{\n    Dec_Graph_t * pGraph;\n    pGraph = ABC_ALLOC( Dec_Graph_t, 1 );\n    memset( pGraph, 0, sizeof(Dec_Graph_t) );\n    pGraph-\u003efConst = 1;\n    return pGraph;\n}",
+      "Draft": "func Dec_GraphCreateConst1() *Dec_Graph_t {\n    var pGraph *Dec_Graph_t;\n    pGraph = new(Dec_Graph_t);\n    *pGraph = Dec_Graph_t{};\n    pGraph.fConst = 1;\n    return pGraph;\n}"
+    },
+    {
+      "Name": "Dec_GraphCreateLeaf",
+      "Start": 9577,
+      "End": 9869,
+      "BodyStart": 9666,
+      "Original": "static inline Dec_Graph_t * Dec_GraphCreateLeaf( int iLeaf, int nLeaves, int fCompl )   \n{\n    Dec_Graph_t * pGraph;\n    assert( 0 \u003c= iLeaf \u0026\u0026 iLeaf \u003c nLeaves );\n    pGraph = Dec_GraphCreate( nLeaves );\n    pGraph-\u003eeRoot.Node   = iLeaf;\n    pGraph-\u003eeRoot.fCompl = fCompl;\n    return pGraph;\n}",
+      "Draft": "func Dec_GraphCreateLeaf(iLeaf int32, nLeaves int32, fCompl int32) *Dec_Graph_t {\n    var pGraph *Dec_Graph_t;\n    assert(0 \u003c= iLeaf \u0026\u0026 iLeaf \u003c nLeaves, \"0 \u003c= iLeaf \u0026\u0026 iLeaf \u003c nLeaves\");\n    pGraph = Dec_GraphCreate( nLeaves );\n    pGraph.eRoot.Node   = iLeaf;\n    pGraph.eRoot.fCompl = fCompl;\n    return pGraph;\n}"
+    },
+    {
+      "Name": "Dec_GraphFree",
+      "Start": 10153,
+      "End": 10272,
+      "BodyStart": 10213,
+      "Original": "static inline void Dec_GraphFree( Dec_Graph_t * pGraph )   \n{\n    ABC_FREE( pGraph-\u003epNodes );\n    ABC_FREE( pGraph );\n}",
+      "Draft": "func Dec_GraphFree(pGraph *Dec_Graph_t) {\n    ABC_FREE( pGraph.pNodes );\n    ABC_FREE( pGraph );\n}"
+    },
+    {
+      "Name": "Dec_GraphIsConst",
+      "Start": 10545,
+      "End": 10637,
+      "BodyStart": 10607,
+      "Original": "static inline int Dec_GraphIsConst( Dec_Graph_t * pGraph )   \n{\n    return pGraph-\u003efConst;\n}",
+      "Draft": "func Dec_GraphIsConst(pGraph *Dec_Graph_t) int32 {\n    return pGraph.fConst;\n}"
+    },
+    {
+      "Name": "Dec_GraphIsConst0",
+      "Start": 10910,
+      "End": 11027,
+      "BodyStart": 10973,
+      "Original": "static inline int Dec_GraphIsConst0( Dec_Graph_t * pGraph )   \n{\n    return pGraph-\u003efConst \u0026\u0026 pGraph-\u003eeRoot.fCompl;\n}",
+      "Draft": "func Dec_GraphIsConst0(pGraph *Dec_Graph_t) int32 {\n    return pGraph.fConst \u0026\u0026 pGraph.eRoot.fCompl;\n}"
+    },
+    {
+      "Name": "Dec_GraphIsConst1",
+      "Start": 11300,
+      "End": 11418,
+      "BodyStart": 11363,
+      "Original": "static inline int Dec_GraphIsConst1( Dec_Graph_t * pGraph )   \n{\n    return pGraph-\u003efConst \u0026\u0026 !pGraph-\u003eeRoot.fCompl;\n}",
+      "Draft": "func Dec_GraphIsConst1(pGraph *Dec_Graph_t) int32 {\n    return pGraph.fConst \u0026\u0026 !pGraph.eRoot.fCompl;\n}"
+    },
+    {
+      "Name": "Dec_GraphIsComplement",
+      "Start": 11693,
+      "End": 11796,
+      "BodyStart": 11760,
+      "Original": "static inline int Dec_GraphIsComplement( Dec_Graph_t * pGraph )   \n{\n    return pGraph-\u003eeRoot.fCompl;\n}",
+      "Draft": "func Dec_GraphIsComplement(pGraph *Dec_Graph_t) int32 {\n    return pGraph.eRoot.fCompl;\n}"
+    },
+    {
+      "Name": "Dec_GraphComplement",
+      "Start": 12068,
+      "End": 12168,
+      "BodyStart": 12134,
+      "Original": "static inline void Dec_GraphComplement( Dec_Graph_t * pGraph )   \n{\n    pGraph-\u003eeRoot.fCompl ^= 1;\n}",
+      "Draft": "func Dec_GraphComplement(pGraph *Dec_Graph_t) {\n    pGraph.eRoot.fCompl ^= 1;\n}"
+    },
+    {
+      "Name": "Dec_GraphLeaveNum",
+      "Start": 12434,
+      "End": 12528,
+      "BodyStart": 12497,
+      "Original": "static inline int Dec_GraphLeaveNum( Dec_Graph_t * pGraph )   \n{\n    return pGraph-\u003enLeaves;\n}",
+      "Draft": "func Dec_GraphLeaveNum(pGraph *Dec_Graph_t) int32 {\n    return pGraph.nLeaves;\n}"
+    },
+    {
+      "Name": "Dec_GraphNodeNum",
+      "Start": 12801,
+      "End": 12910,
+      "BodyStart": 12863,
+      "Original": "static inline int Dec_GraphNodeNum( Dec_Graph_t * pGraph )   \n{\n    return pGraph-\u003enSize - pGraph-\u003enLeaves;\n}",
+      "Draft": "func Dec_GraphNodeNum(pGraph *Dec_Graph_t) int32 {\n    return pGraph.nSize - pGraph.nLeaves;\n}"
+    },
+    {
+      "Name": "Dec_GraphNode",
+      "Start": 13178,
+      "End": 13287,
+      "BodyStart": 13253,
+      "Original": "static inline Dec_Node_t * Dec_GraphNode( Dec_Graph_t * pGraph, int i )   \n{\n    return pGraph-\u003epNodes + i;\n}",
+      "Draft": "func Dec_GraphNode(pGraph *Dec_Graph_t, i int32) *Dec_Node_t {\n    return pGraph.pNodes + i;\n}"
+    },
+    {
+      "Name": "Dec_GraphNodeLast",
+      "Start": 13555,
+      "End": 13677,
+      "BodyStart": 13627,
+      "Original": "static inline Dec_Node_t * Dec_GraphNodeLast( Dec_Graph_t * pGraph )   \n{\n    return pGraph-\u003epNodes + pGraph-\u003enSize - 1;\n}",
+      "Draft": "func Dec_GraphNodeLast(pGraph *Dec_Graph_t) *Dec_Node_t {\n    return pGraph.pNodes + pGraph.nSize - 1;\n}"
+    },
+    {
+      "Name": "Dec_GraphNodeInt",
+      "Start": 13950,
+      "End": 14070,
+      "BodyStart": 14032,
+      "Original": "static inline int Dec_GraphNodeInt( Dec_Graph_t * pGraph, Dec_Node_t * pNode )   \n{\n    return pNode - pGraph-\u003epNodes;\n}",
+      "Draft": "func Dec_GraphNodeInt(pGraph *Dec_Graph_t, pNode *Dec_Node_t) int32 {\n    return pNode - pGraph.pNodes;\n}"
+    },
+    {
+      "Name": "Dec_GraphIsVar",
+      "Start": 14356,
+      "End": 14478,
+      "BodyStart": 14416,
+      "Original": "static inline int Dec_GraphIsVar( Dec_Graph_t * pGraph )   \n{\n    return pGraph-\u003eeRoot.Node \u003c (unsigned)pGraph-\u003enLeaves;\n}",
+      "Draft": "func Dec_GraphIsVar(pGraph *Dec_Graph_t) int32 {\n    return pGraph.eRoot.Node \u003c uint32(pGraph.nLeaves);\n}"
+    },
+    {
+      "Name": "Dec_GraphNodeIsVar",
+      "Start": 14764,
+      "End": 14912,
+      "BodyStart": 14848,
+      "Original": "static inline int Dec_GraphNodeIsVar( Dec_Graph_t * pGraph, Dec_Node_t * pNode )   \n{\n    return Dec_GraphNodeInt(pGraph,pNode) \u003c pGraph-\u003enLeaves;\n}",
+      "Draft": "func Dec_GraphNodeIsVar(pGraph *Dec_Graph_t, pNode *Dec_Node_t) int32 {\n    return Dec_GraphNodeInt(pGraph,pNode) \u003c pGraph.nLeaves;\n}"
+    },
+    {
+      "Name": "Dec_GraphVar",
+      "Start": 15200,
+      "End": 15366,
+      "BodyStart": 15267,
+      "Original": "static inline Dec_Node_t * Dec_GraphVar( Dec_Graph_t * pGraph )   \n{\n    assert( Dec_GraphIsVar( pGraph ) );\n    return Dec_GraphNode( pGraph, pGraph-\u003eeRoot.Node );\n}",
+      "Draft": "func Dec_GraphVar(pGraph *Dec_Graph_t) *Dec_Node_t {\n    assert((Dec_GraphIsVar( pGraph ) != 0), \"Dec_GraphIsVar( pGraph )\");\n    return Dec_GraphNode( pGraph, pGraph.eRoot.Node );\n}"
+    },
+    {
+      "Name": "Dec_GraphVarInt",
+      "Start": 15648,
+      "End": 15813,
+      "BodyStart": 15709,
+      "Original": "static inline int Dec_GraphVarInt( Dec_Graph_t * pGraph )   \n{\n    assert( Dec_GraphIsVar( pGraph ) );\n    return Dec_GraphNodeInt( pGraph, Dec_GraphVar(pGraph) );\n}",
+      "Draft": "func Dec_GraphVarInt(pGraph *Dec_Graph_t) int32 {\n    assert((Dec_GraphIsVar( pGraph ) != 0), \"Dec_GraphIsVar( pGraph )\");\n    return Dec_GraphNodeInt( pGraph, Dec_GraphVar(pGraph) );\n}"
+    },
+    {
+      "Name": "Dec_GraphSetRoot",
+      "Start": 16076,
+      "End": 16187,
+      "BodyStart": 16157,
+      "Original": "static inline void Dec_GraphSetRoot( Dec_Graph_t * pGraph, Dec_Edge_t eRoot )   \n{\n    pGraph-\u003eeRoot = eRoot;\n}",
+      "Draft": "func Dec_GraphSetRoot(pGraph *Dec_Graph_t, eRoot Dec_Edge_t) {\n    pGraph.eRoot = eRoot;\n}"
+    },
+    {
+      "Name": "Dec_GraphAppendNode",
+      "Start": 16496,
+      "End": 16888,
+      "BodyStart": 16570,
+      "Original": "static inline Dec_Node_t * Dec_GraphAppendNode( Dec_Graph_t * pGraph )   \n{\n    Dec_Node_t * pNode;\n    if ( pGraph-\u003enSize == pGraph-\u003enCap )\n    {\n        pGraph-\u003epNodes = ABC_REALLOC( Dec_Node_t, pGraph-\u003epNodes, 2 * pGraph-\u003enCap ); \n        pGraph-\u003enCap   = 2 * pGraph-\u003enCap;\n    }\n    pNode = pGraph-\u003epNodes + pGraph-\u003enSize++;\n    memset( pNode, 0, sizeof(Dec_Node_t) );\n    return pNode;\n}",
+      "Draft": "func Dec_GraphAppendNode(pGraph *Dec_Graph_t) *Dec_Node_t {\n    var pNode *Dec_Node_t;\n    if pGraph.nSize == pGraph.nCap {\n        pGraph.pNodes = ABC_REALLOC( Dec_Node_t, pGraph.pNodes, 2 * pGraph.nCap ); \n        pGraph.nCap   = 2 * pGraph.nCap;\n    }\n    pNode = pGraph.pNodes + pGraph.nSize++;\n    *pNode = Dec_Node_t{};\n    return pNode;\n}"
+    },
+    {
+      "Name": "Dec_GraphAddNodeAnd",
+      "Start": 17144,
+      "End": 17561,
+      "BodyStart": 17251,
+      "Original": "static inline Dec_Edge_t Dec_GraphAddNodeAnd( Dec_Graph_t * pGraph, Dec_Edge_t eEdge0, Dec_Edge_t eEdge1 )\n{\n    Dec_Node_t * pNode;\n    // get the new node\n    pNode = Dec_GraphAppendNode( pGraph );\n    // set the inputs and other info\n    pNode-\u003eeEdge0 = eEdge0;\n    pNode-\u003eeEdge1 = eEdge1;\n    pNode-\u003efCompl0 = eEdge0.fCompl;\n    pNode-\u003efCompl1 = eEdge1.fCompl;\n    return Dec_EdgeCreate( pGraph-\u003enSize - 1, 0 );\n}",
+      "Draft": "func Dec_GraphAddNodeAnd(pGraph *Dec_Graph_t, eEdge0 Dec_Edge_t, eEdge1 Dec_Edge_t) Dec_Edge_t {\n    var pNode *Dec_Node_t;\n    // get the new node\n    pNode = Dec_GraphAppendNode( pGraph );\n    // set the inputs and other info\n    pNode.eEdge0 = eEdge0;\n    pNode.eEdge1 = eEdge1;\n    pNode.fCompl0 = eEdge0.fCompl;\n    pNode.fCompl1 = eEdge1.fCompl;\n    return Dec_EdgeCreate( pGraph.nSize - 1, 0 );\n}"
+    },
+    {
+      "Name": "Dec_GraphAddNodeOr",
+      "Start": 17816,
+      "End": 18396,
+      "BodyStart": 17922,
+      "Original": "static inline Dec_Edge_t Dec_GraphAddNodeOr( Dec_Graph_t * pGraph, Dec_Edge_t eEdge0, Dec_Edge_t eEdge1 )\n{\n    Dec_Node_t * pNode;\n    // get the new node\n    pNode = Dec_GraphAppendNode( pGraph );\n    // set the inputs and other info\n    pNode-\u003eeEdge0 = eEdge0;\n    pNode-\u003eeEdge1 = eEdge1;\n    pNode-\u003efCompl0 = eEdge0.fCompl;\n    pNode-\u003efCompl1 = eEdge1.fCompl;\n    // make adjustments for the OR gate\n    pNode-\u003efNodeOr = 1;\n    pNode-\u003eeEdge0.fCompl = !pNode-\u003eeEdge0.fCompl;\n    pNode-\u003eeEdge1.fCompl = !pNode-\u003eeEdge1.fCompl;\n    return Dec_EdgeCreate( pGraph-\u003enSize - 1, 1 );\n}",
+      "Draft": "func Dec_GraphAddNodeOr(pGraph *Dec_Graph_t, eEdge0 Dec_Edge_t, eEdge1 Dec_Edge_t) Dec_Edge_t {\n    var pNode *Dec_Node_t;\n    // get the new node\n    pNode = Dec_GraphAppendNode( pGraph );\n    // set the inputs and other info\n    pNode.eEdge0 = eEdge0;\n    pNode.eEdge1 = eEdge1;\n    pNode.fCompl0 = eEdge0.fCompl;\n    pNode.fCompl1 = eEdge1.fCompl;\n    // make adjustments for the OR gate\n    pNode.fNodeOr = 1;\n    pNode.eEdge0.fCompl = !pNode.eEdge0.fCompl;\n    pNode.eEdge1.fCompl = !pNode.eEdge1.fCompl;\n    return Dec_EdgeCreate( pGraph.nSize - 1, 1 );\n}"
+    },
+    {
+      "Name": "Dec_GraphAddNodeXor",
+      "Start": 18652,
+      "End": 19621,
+      "BodyStart": 18769,
+      "Original": "static inline Dec_Edge_t Dec_GraphAddNodeXor( Dec_Graph_t * pGraph, Dec_Edge_t eEdge0, Dec_Edge_t eEdge1, int Type )\n{\n    Dec_Edge_t eNode0, eNode1, eNode;\n    if ( Type == 0 )\n    {\n        // derive the first AND\n        eEdge0.fCompl ^= 1;\n        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        eEdge0.fCompl ^= 1;\n        // derive the second AND\n        eEdge1.fCompl ^= 1;\n        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the final OR\n        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n    }\n    else\n    {\n        // derive the first AND\n        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the second AND\n        eEdge0.fCompl ^= 1;\n        eEdge1.fCompl ^= 1;\n        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the final OR\n        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n        eNode.fCompl ^= 1;\n    }\n    return eNode;\n}",
+      "Draft": "func Dec_GraphAddNodeXor(pGraph *Dec_Graph_t, eEdge0 Dec_Edge_t, eEdge1 Dec_Edge_t, Type int32) Dec_Edge_t {\n    var eNode0, eNode1, eNode Dec_Edge_t;\n    if Type == 0 {\n        // derive the first AND\n        eEdge0.fCompl ^= 1;\n        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        eEdge0.fCompl ^= 1;\n        // derive the second AND\n        eEdge1.fCompl ^= 1;\n        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the final OR\n        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n    \n    } else {\n        // derive the first AND\n        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the second AND\n        eEdge0.fCompl ^= 1;\n        eEdge1.fCompl ^= 1;\n        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the final OR\n        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n        eNode.fCompl ^= 1;\n    }\n    return eNode;\n}"
+    },
+    {
+      "Name": "Dec_GraphAddNodeMux",
+      "Start": 19877,
+      "End": 20873,
+      "BodyStart": 20013,
+      "Original": "static inline Dec_Edge_t Dec_GraphAddNodeMux( Dec_Graph_t * pGraph, Dec_Edge_t eEdgeC, Dec_Edge_t eEdgeT, Dec_Edge_t eEdgeE, int Type )\n{\n    Dec_Edge_t eNode0, eNode1, eNode;\n    if ( Type == 0 )\n    {\n        // derive the first AND\n        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeT );\n        // derive the second AND\n        eEdgeC.fCompl ^= 1;\n        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeE );\n        // derive the final OR\n        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n    }\n    else\n    {\n        // complement the arguments\n        eEdgeT.fCompl ^= 1;\n        eEdgeE.fCompl ^= 1;\n        // derive the first AND\n        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeT );\n        // derive the second AND\n        eEdgeC.fCompl ^= 1;\n        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeE );\n        // derive the final OR\n        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n        eNode.fCompl ^= 1;\n    }\n    return eNode;\n}",
+      "Draft": "func Dec_GraphAddNodeMux(pGraph *Dec_Graph_t, eEdgeC Dec_Edge_t, eEdgeT Dec_Edge_t, eEdgeE Dec_Edge_t, Type int32) Dec_Edge_t {\n    var eNode0, eNode1, eNode Dec_Edge_t;\n    if Type == 0 {\n        // derive the first AND\n        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeT );\n        // derive the second AND\n        eEdgeC.fCompl ^= 1;\n        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeE );\n        // derive the final OR\n        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n    \n    } else {\n        // complement the arguments\n        eEdgeT.fCompl ^= 1;\n        eEdgeE.fCompl ^= 1;\n        // derive the first AND\n        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeT );\n        // derive the second AND\n        eEdgeC.fCompl ^= 1;\n        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeE );\n        // derive the final OR\n        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n        eNode.fCompl ^= 1;\n    }\n    return eNode;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Edge_t::unsigned          fCompl   :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Dec_Edge_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1348,
+      "End": 1385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Edge_t::// the complemented bit\n    unsigned          Node     : 30;",
+      "Category": "struct-field-review",
+      "Symbol": "Dec_Edge_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1385,
+      "End": 1448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Edge_t",
+      "Category": "struct-review",
+      "Symbol": "Dec_Edge_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1289,
+      "End": 1499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Node_t::// the right child of the node\n    // other info\n    union { int       iFunc;           // the literal of the node (AIG)\n    void *            pFunc; };",
+      "Category": "struct-field-review",
+      "Symbol": "Dec_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1659,
+      "End": 1821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Node_t::// the function of the node (BDD or AIG)\n    unsigned          Level    : 14;",
+      "Category": "struct-field-review",
+      "Symbol": "Dec_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1821,
+      "End": 1906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Node_t::// the level of this node in the global AIG\n    // printing info \n    unsigned          fNodeOr  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Dec_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1906,
+      "End": 2011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Node_t::// marks the original OR node\n    unsigned          fCompl0  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Dec_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2011,
+      "End": 2080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Node_t::// marks the original complemented edge\n    unsigned          fCompl1  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Dec_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2080,
+      "End": 2159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Node_t::// marks the original complemented edge\n    // latch info\n    unsigned          nLat0    :  5;",
+      "Category": "struct-field-review",
+      "Symbol": "Dec_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2159,
+      "End": 2256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Node_t::// the number of latches on the first edge\n    unsigned          nLat1    :  5;",
+      "Category": "struct-field-review",
+      "Symbol": "Dec_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2256,
+      "End": 2338
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Node_t::// the number of latches on the second edge\n    unsigned          nLat2    :  5;",
+      "Category": "struct-field-review",
+      "Symbol": "Dec_Node_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2338,
+      "End": 2421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Node_t",
+      "Category": "struct-review",
+      "Symbol": "Dec_Node_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1501,
+      "End": 2470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Graph_t",
+      "Category": "struct-review",
+      "Symbol": "Dec_Graph_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2472,
+      "End": 2982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Man_t::// storage for literals \n    // precomputation information about 4-variable functions\n    unsigned short *  puCanons;",
+      "Category": "struct-field-review",
+      "Symbol": "Dec_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3221,
+      "End": 3349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Man_t::// canonical permutations\n    unsigned char *   pMap;",
+      "Category": "struct-field-review",
+      "Symbol": "Dec_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3464,
+      "End": 3527
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::struct::Dec_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Dec_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2984,
+      "End": 3584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::mechanical::union::1722",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1722,
+      "End": 1727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::mechanical::union::6959",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 6959,
+      "End": 6964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::mechanical::union::7460",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 7460,
+      "End": 7465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::mechanical::sizeof::8064",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8064,
+      "End": 8070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::mechanical::sizeof::8275",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8275,
+      "End": 8281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::mechanical::sizeof::8742",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8742,
+      "End": 8748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::mechanical::sizeof::9248",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9248,
+      "End": 9254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::mechanical::sizeof::16847",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16847,
+      "End": 16853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::macro::Dec_GraphForEachLeaf",
+      "Category": "macro-review",
+      "Symbol": "Dec_GraphForEachLeaf",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3838,
+      "End": 4026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::macro::Dec_GraphForEachNode",
+      "Category": "macro-review",
+      "Symbol": "Dec_GraphForEachNode",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4066,
+      "End": 4267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_EdgeCreate",
+      "Category": "semantic-review",
+      "Symbol": "Dec_EdgeCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5698,
+      "End": 5849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_EdgeToInt",
+      "Category": "semantic-review",
+      "Symbol": "Dec_EdgeToInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6125,
+      "End": 6234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_IntToEdge",
+      "Category": "semantic-review",
+      "Symbol": "Dec_IntToEdge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6510,
+      "End": 6623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_EdgeToInt_",
+      "Category": "semantic-review",
+      "Symbol": "Dec_EdgeToInt_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6899,
+      "End": 7021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_IntToEdge_",
+      "Category": "semantic-review",
+      "Symbol": "Dec_IntToEdge_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7400,
+      "End": 7522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphCreate",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7909,
+      "End": 8333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphCreateConst0",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphCreateConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8594,
+      "End": 8839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphCreateConst1",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphCreateConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9100,
+      "End": 9315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphCreateLeaf",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphCreateLeaf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9577,
+      "End": 9869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphFree",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10153,
+      "End": 10272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10545,
+      "End": 10637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphIsConst0",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphIsConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10910,
+      "End": 11027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphIsConst1",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphIsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11300,
+      "End": 11418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphIsComplement",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphIsComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11693,
+      "End": 11796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphComplement",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12068,
+      "End": 12168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphLeaveNum",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphLeaveNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12434,
+      "End": 12528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphNodeNum",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphNodeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12801,
+      "End": 12910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphNode",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13178,
+      "End": 13287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphNodeLast",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphNodeLast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13555,
+      "End": 13677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphNodeInt",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphNodeInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13950,
+      "End": 14070
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphIsVar",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphIsVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14356,
+      "End": 14478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphNodeIsVar",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphNodeIsVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14764,
+      "End": 14912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphVar",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15200,
+      "End": 15366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphVarInt",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphVarInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15648,
+      "End": 15813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphSetRoot",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphSetRoot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16076,
+      "End": 16187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphAppendNode",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphAppendNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16496,
+      "End": 16888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphAddNodeAnd",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphAddNodeAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17144,
+      "End": 17561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphAddNodeOr",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphAddNodeOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17816,
+      "End": 18396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphAddNodeXor",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphAddNodeXor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18652,
+      "End": 19621
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::Dec_GraphAddNodeMux",
+      "Category": "semantic-review",
+      "Symbol": "Dec_GraphAddNodeMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19877,
+      "End": 20873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/dec/dec.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21133
+    }
+  ],
+  "Draft": "package dec\n\n/**CFile****************************************************************\n\n  FileName    [dec.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [A simple decomposition tree/node data structure and its APIs.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: dec.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Dec_Edge_t struct {\n    fCompl uint32; /* C bitfield: 1 bits; review packing and truncation */   // the complemented bit\n    Node uint32; /* C bitfield: 30 bits; review packing and truncation */   // the decomposition node pointed by the edge\n}\n\n   \ntype Dec_Node_t struct {\n    eEdge0        Dec_Edge_t;          // the left child of the node\n    eEdge1        Dec_Edge_t;          // the right child of the node\n    // other info\n    union { int       iFunc;           // the literal of the node (AIG)\n    void *            pFunc; };        // the function of the node (BDD or AIG)\n    Level uint32; /* C bitfield: 14 bits; review packing and truncation */   // the level of this node in the global AIG\n    // printing info \n    fNodeOr uint32; /* C bitfield: 1 bits; review packing and truncation */   // marks the original OR node\n    fCompl0 uint32; /* C bitfield: 1 bits; review packing and truncation */   // marks the original complemented edge\n    fCompl1 uint32; /* C bitfield: 1 bits; review packing and truncation */   // marks the original complemented edge\n    // latch info\n    nLat0 uint32; /* C bitfield: 5 bits; review packing and truncation */   // the number of latches on the first edge\n    nLat1 uint32; /* C bitfield: 5 bits; review packing and truncation */   // the number of latches on the second edge\n    nLat2 uint32; /* C bitfield: 5 bits; review packing and truncation */   // the number of latches on the output edge\n}\n\n   \ntype Dec_Graph_t struct {\n    fConst               int32;          // marks the constant 1 graph\n    nLeaves               int32;         // the number of leaves\n    nSize               int32;           // the number of nodes (including the leaves) \n    nCap               int32;            // the number of allocated nodes\n    pNodes       *Dec_Node_t;          // the array of leaves and internal nodes\n    eRoot        Dec_Edge_t;           // the pointer to the topmost node\n}\n\n   \ntype Dec_Man_t struct {\n    pMvcMem             any;         // memory manager for MVC cover (used for factoring)\n    vCubes        *Vec_Int_t;          // storage for cubes\n    vLits        *Vec_Int_t;           // storage for literals \n    // precomputation information about 4-variable functions\n    unsigned short *  puCanons;        // canonical forms\n    pPhases             string;         // canonical phases\n    pPerms             string;          // canonical permutations\n    unsigned char *   pMap;            // mapping of functions into class numbers\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                        ITERATORS                                 ///\n////////////////////////////////////////////////////////////////////////\n\n// iterator through the leaves\n// Original macro:\n// #define Dec_GraphForEachLeaf( pGraph, pLeaf, i )                                              \\\n//     for ( i = 0; (i \u003c (pGraph)-\u003enLeaves) \u0026\u0026 (((pLeaf) = Dec_GraphNode(pGraph, i)), 1); i++ )\n\n// iterator through the internal nodes\n// Original macro:\n// #define Dec_GraphForEachNode( pGraph, pAnd, i )                                               \\\n//     for ( i = (pGraph)-\u003enLeaves; (i \u003c (pGraph)-\u003enSize) \u0026\u0026 (((pAnd) = Dec_GraphNode(pGraph, i)), 1); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== decAbc.c ========================================================*/\n/*=== decFactor.c ========================================================*/\n// extern Dec_Graph_t *  Dec_Factor( char * pSop );\n\n/*=== decMan.c ========================================================*/\n// extern Dec_Man_t *    Dec_ManStart();\n\n// extern void           Dec_ManStop( Dec_Man_t * p );\n\n/*=== decPrint.c ========================================================*/\n// extern void           Dec_GraphPrint( FILE * pFile, Dec_Graph_t * pGraph, char * pNamesIn[], char * pNameOut );\n\n/*=== decUtil.c ========================================================*/\n// extern unsigned       Dec_GraphDeriveTruth( Dec_Graph_t * pGraph );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates an edge pointing to the node in the given polarity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_EdgeCreate(Node int32, fCompl int32) Dec_Edge_t {\n    var eEdge Dec_Edge_t  = Dec_Edge_t{ uint32(fCompl), uint32(Node) }; \n    return eEdge; \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the edge into unsigned integer.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_EdgeToInt(eEdge Dec_Edge_t) uint32 {\n    return (eEdge.Node \u003c\u003c 1) | eEdge.fCompl; \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts unsigned integer into the edge.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_IntToEdge(Edge uint32) Dec_Edge_t {\n    return Dec_EdgeCreate( Edge \u003e\u003e 1, Edge \u0026 1 ); \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the edge into unsigned integer.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_EdgeToInt_(m Dec_Edge_t) uint32 { union { var x Dec_Edge_t; var y uint32; }\n v; v.x = m; return v.y;  }\n/*\nstatic inline unsigned Dec_EdgeToInt_( Dec_Edge_t eEdge )   \n{\n    return *(unsigned *)\u0026eEdge;\n}\n*/\n\n/**Function*************************************************************\n\n  Synopsis    [Converts unsigned integer into the edge.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_IntToEdge_(m uint32) Dec_Edge_t { union { var x Dec_Edge_t; var y uint32; }\n v; v.y = m; return v.x;  }\n/*\nstatic inline Dec_Edge_t Dec_IntToEdge_( unsigned Edge )   \n{\n    return *(Dec_Edge_t *)\u0026Edge;\n}\n*/\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a graph with the given number of leaves.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphCreate(nLeaves int32) *Dec_Graph_t {\n    var pGraph *Dec_Graph_t;\n    pGraph = new(Dec_Graph_t);\n    *pGraph = Dec_Graph_t{};\n    pGraph.nLeaves = nLeaves;\n    pGraph.nSize = nLeaves;\n    pGraph.nCap = 2 * nLeaves + 50;\n    pGraph.pNodes = ABC_ALLOC( Dec_Node_t, pGraph.nCap );\n    memset( pGraph.pNodes, 0, sizeof(Dec_Node_t) * pGraph.nSize );\n    return pGraph;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates constant 0 graph.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphCreateConst0() *Dec_Graph_t {\n    var pGraph *Dec_Graph_t;\n    pGraph = new(Dec_Graph_t);\n    *pGraph = Dec_Graph_t{};\n    pGraph.fConst = 1;\n    pGraph.eRoot.fCompl = 1;\n    return pGraph;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates constant 1 graph.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphCreateConst1() *Dec_Graph_t {\n    var pGraph *Dec_Graph_t;\n    pGraph = new(Dec_Graph_t);\n    *pGraph = Dec_Graph_t{};\n    pGraph.fConst = 1;\n    return pGraph;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the literal graph.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphCreateLeaf(iLeaf int32, nLeaves int32, fCompl int32) *Dec_Graph_t {\n    var pGraph *Dec_Graph_t;\n    assert(0 \u003c= iLeaf \u0026\u0026 iLeaf \u003c nLeaves, \"0 \u003c= iLeaf \u0026\u0026 iLeaf \u003c nLeaves\");\n    pGraph = Dec_GraphCreate( nLeaves );\n    pGraph.eRoot.Node   = iLeaf;\n    pGraph.eRoot.fCompl = fCompl;\n    return pGraph;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a graph with the given number of leaves.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphFree(pGraph *Dec_Graph_t) {\n    ABC_FREE( pGraph.pNodes );\n    ABC_FREE( pGraph );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the graph is a constant.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphIsConst(pGraph *Dec_Graph_t) int32 {\n    return pGraph.fConst;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the graph is constant 0.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphIsConst0(pGraph *Dec_Graph_t) int32 {\n    return pGraph.fConst \u0026\u0026 pGraph.eRoot.fCompl;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the graph is constant 1.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphIsConst1(pGraph *Dec_Graph_t) int32 {\n    return pGraph.fConst \u0026\u0026 !pGraph.eRoot.fCompl;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the graph is complemented.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphIsComplement(pGraph *Dec_Graph_t) int32 {\n    return pGraph.eRoot.fCompl;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the graph is complemented.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphComplement(pGraph *Dec_Graph_t) {\n    pGraph.eRoot.fCompl ^= 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of leaves.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphLeaveNum(pGraph *Dec_Graph_t) int32 {\n    return pGraph.nLeaves;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of internal nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphNodeNum(pGraph *Dec_Graph_t) int32 {\n    return pGraph.nSize - pGraph.nLeaves;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the pointer to the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphNode(pGraph *Dec_Graph_t, i int32) *Dec_Node_t {\n    return pGraph.pNodes + i;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the pointer to the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphNodeLast(pGraph *Dec_Graph_t) *Dec_Node_t {\n    return pGraph.pNodes + pGraph.nSize - 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of the given node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphNodeInt(pGraph *Dec_Graph_t, pNode *Dec_Node_t) int32 {\n    return pNode - pGraph.pNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Check if the graph represents elementary variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphIsVar(pGraph *Dec_Graph_t) int32 {\n    return pGraph.eRoot.Node \u003c uint32(pGraph.nLeaves);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Check if the graph represents elementary variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphNodeIsVar(pGraph *Dec_Graph_t, pNode *Dec_Node_t) int32 {\n    return Dec_GraphNodeInt(pGraph,pNode) \u003c pGraph.nLeaves;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the elementary variable elementary variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphVar(pGraph *Dec_Graph_t) *Dec_Node_t {\n    assert((Dec_GraphIsVar( pGraph ) != 0), \"Dec_GraphIsVar( pGraph )\");\n    return Dec_GraphNode( pGraph, pGraph.eRoot.Node );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of the elementary variable.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphVarInt(pGraph *Dec_Graph_t) int32 {\n    assert((Dec_GraphIsVar( pGraph ) != 0), \"Dec_GraphIsVar( pGraph )\");\n    return Dec_GraphNodeInt( pGraph, Dec_GraphVar(pGraph) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the root of the graph.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphSetRoot(pGraph *Dec_Graph_t, eRoot Dec_Edge_t) {\n    pGraph.eRoot = eRoot;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Appends a new node to the graph.]\n\n  Description [This procedure is meant for internal use.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphAppendNode(pGraph *Dec_Graph_t) *Dec_Node_t {\n    var pNode *Dec_Node_t;\n    if pGraph.nSize == pGraph.nCap {\n        pGraph.pNodes = ABC_REALLOC( Dec_Node_t, pGraph.pNodes, 2 * pGraph.nCap ); \n        pGraph.nCap   = 2 * pGraph.nCap;\n    }\n    pNode = pGraph.pNodes + pGraph.nSize++;\n    *pNode = Dec_Node_t{};\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates an AND node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphAddNodeAnd(pGraph *Dec_Graph_t, eEdge0 Dec_Edge_t, eEdge1 Dec_Edge_t) Dec_Edge_t {\n    var pNode *Dec_Node_t;\n    // get the new node\n    pNode = Dec_GraphAppendNode( pGraph );\n    // set the inputs and other info\n    pNode.eEdge0 = eEdge0;\n    pNode.eEdge1 = eEdge1;\n    pNode.fCompl0 = eEdge0.fCompl;\n    pNode.fCompl1 = eEdge1.fCompl;\n    return Dec_EdgeCreate( pGraph.nSize - 1, 0 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates an OR node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphAddNodeOr(pGraph *Dec_Graph_t, eEdge0 Dec_Edge_t, eEdge1 Dec_Edge_t) Dec_Edge_t {\n    var pNode *Dec_Node_t;\n    // get the new node\n    pNode = Dec_GraphAppendNode( pGraph );\n    // set the inputs and other info\n    pNode.eEdge0 = eEdge0;\n    pNode.eEdge1 = eEdge1;\n    pNode.fCompl0 = eEdge0.fCompl;\n    pNode.fCompl1 = eEdge1.fCompl;\n    // make adjustments for the OR gate\n    pNode.fNodeOr = 1;\n    pNode.eEdge0.fCompl = !pNode.eEdge0.fCompl;\n    pNode.eEdge1.fCompl = !pNode.eEdge1.fCompl;\n    return Dec_EdgeCreate( pGraph.nSize - 1, 1 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates an XOR node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphAddNodeXor(pGraph *Dec_Graph_t, eEdge0 Dec_Edge_t, eEdge1 Dec_Edge_t, Type int32) Dec_Edge_t {\n    var eNode0, eNode1, eNode Dec_Edge_t;\n    if Type == 0 {\n        // derive the first AND\n        eEdge0.fCompl ^= 1;\n        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        eEdge0.fCompl ^= 1;\n        // derive the second AND\n        eEdge1.fCompl ^= 1;\n        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the final OR\n        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n    \n    } else {\n        // derive the first AND\n        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the second AND\n        eEdge0.fCompl ^= 1;\n        eEdge1.fCompl ^= 1;\n        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdge0, eEdge1 );\n        // derive the final OR\n        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n        eNode.fCompl ^= 1;\n    }\n    return eNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates an XOR node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dec_GraphAddNodeMux(pGraph *Dec_Graph_t, eEdgeC Dec_Edge_t, eEdgeT Dec_Edge_t, eEdgeE Dec_Edge_t, Type int32) Dec_Edge_t {\n    var eNode0, eNode1, eNode Dec_Edge_t;\n    if Type == 0 {\n        // derive the first AND\n        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeT );\n        // derive the second AND\n        eEdgeC.fCompl ^= 1;\n        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeE );\n        // derive the final OR\n        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n    \n    } else {\n        // complement the arguments\n        eEdgeT.fCompl ^= 1;\n        eEdgeE.fCompl ^= 1;\n        // derive the first AND\n        eNode0 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeT );\n        // derive the second AND\n        eEdgeC.fCompl ^= 1;\n        eNode1 = Dec_GraphAddNodeAnd( pGraph, eEdgeC, eEdgeE );\n        // derive the final OR\n        eNode = Dec_GraphAddNodeOr( pGraph, eNode0, eNode1 );\n        eNode.fCompl ^= 1;\n    }\n    return eNode;\n}\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

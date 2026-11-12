@@ -1,0 +1,847 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c",
+  "SHA256": "03697e27cf4e208b3acf519cc70f46db5f6003f3f7385f1df3ab68f30558c225",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 98,
+        "Column": 5,
+        "ByteOffset": 3017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 7061
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 199,
+        "Column": 5,
+        "ByteOffset": 7262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 7683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 220,
+        "Column": 5,
+        "ByteOffset": 7900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 238,
+        "Column": 5,
+        "ByteOffset": 8372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 243,
+        "Column": 5,
+        "ByteOffset": 8611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 260,
+        "Column": 5,
+        "ByteOffset": 9046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 9253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 10191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 305,
+        "Column": 5,
+        "ByteOffset": 10466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 311,
+        "Column": 5,
+        "ByteOffset": 10663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pPivot) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 329,
+        "Column": 5,
+        "ByteOffset": 11180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 335,
+        "Column": 5,
+        "ByteOffset": 11481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 383,
+        "Column": 5,
+        "ByteOffset": 13173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 397,
+        "Column": 5,
+        "ByteOffset": 13652
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 415,
+        "Column": 9,
+        "ByteOffset": 14219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Hop_Compose(): The PI variable %d is not defined.\\n\", iVar );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 437,
+        "Column": 5,
+        "ByteOffset": 14979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 451,
+        "Column": 5,
+        "ByteOffset": 15458
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 469,
+        "Column": 9,
+        "ByteOffset": 16013
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Hop_Complement(): The PI variable %d is not defined.\\n\", iVar );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 491,
+        "Column": 5,
+        "ByteOffset": 16733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 497,
+        "Column": 5,
+        "ByteOffset": 17016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 517,
+        "Column": 9,
+        "ByteOffset": 17609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Hop_Remap(): The number of variables (%d) is more than the manager size (%d).\\n\", nVars, Hop_ManPiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 535,
+        "Column": 5,
+        "ByteOffset": 18386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k \u003e 0 \u0026\u0026 k \u003c nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 564,
+        "Column": 9,
+        "ByteOffset": 19476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pPermute[i] \u003e= 0 \u0026\u0026 pPermute[i] \u003c Hop_ManPiNum(p) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Hop_ManDfs_rec",
+      "Start": 1284,
+      "End": 1675,
+      "BodyStart": 1344,
+      "Original": "void Hop_ManDfs_rec( Hop_Obj_t * pObj, Vec_Ptr_t * vNodes )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return;\n    Hop_ManDfs_rec( Hop_ObjFanin0(pObj), vNodes );\n    Hop_ManDfs_rec( Hop_ObjFanin1(pObj), vNodes );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA(pObj);\n    Vec_PtrPush( vNodes, pObj );\n}",
+      "Draft": "func Hop_ManDfs_rec(pObj *Hop_Obj_t, vNodes *Vec_Ptr_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Hop_ManDfs_rec( Hop_ObjFanin0(pObj), vNodes );\n    Hop_ManDfs_rec( Hop_ObjFanin1(pObj), vNodes );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA(pObj);\n    Vec_PtrPush( vNodes, pObj );\n}"
+    },
+    {
+      "Name": "Hop_ManDfs",
+      "Start": 1952,
+      "End": 2266,
+      "BodyStart": 1992,
+      "Original": "Vec_Ptr_t * Hop_ManDfs( Hop_Man_t * p )\n{\n    Vec_Ptr_t * vNodes;\n    Hop_Obj_t * pObj;\n    int i;\n    vNodes = Vec_PtrAlloc( Hop_ManNodeNum(p) );\n    Hop_ManForEachNode( p, pObj, i )\n        Hop_ManDfs_rec( pObj, vNodes );\n    Hop_ManForEachNode( p, pObj, i )\n        Hop_ObjClearMarkA(pObj);\n    return vNodes;\n}",
+      "Draft": "func Hop_ManDfs(p *Hop_Man_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Hop_Obj_t;\n    var i int32;\n    vNodes = Vec_PtrAlloc( Hop_ManNodeNum(p) );\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pObj) = p.pTable[i]) == nil {} else {\n        Hop_ManDfs_rec( pObj, vNodes ); }\n    }\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pObj) = p.pTable[i]) == nil {} else {\n        Hop_ObjClearMarkA(pObj); }\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Hop_ManDfsNode",
+      "Start": 2543,
+      "End": 2884,
+      "BodyStart": 2606,
+      "Original": "Vec_Ptr_t * Hop_ManDfsNode( Hop_Man_t * p, Hop_Obj_t * pNode )\n{\n    Vec_Ptr_t * vNodes;\n    Hop_Obj_t * pObj;\n    int i;\n    assert( !Hop_IsComplement(pNode) );\n    vNodes = Vec_PtrAlloc( 16 );\n    Hop_ManDfs_rec( pNode, vNodes );\n    Vec_PtrForEachEntry( Hop_Obj_t *, vNodes, pObj, i )\n        Hop_ObjClearMarkA(pObj);\n    return vNodes;\n}",
+      "Draft": "func Hop_ManDfsNode(p *Hop_Man_t, pNode *Hop_Obj_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Hop_Obj_t;\n    var i int32;\n    assert(!Hop_IsComplement(pNode), \"!Hop_IsComplement(pNode)\");\n    vNodes = Vec_PtrAlloc( 16 );\n    Hop_ManDfs_rec( pNode, vNodes );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Hop_ObjClearMarkA(pObj);\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Hop_ManCountLevels",
+      "Start": 3169,
+      "End": 4015,
+      "BodyStart": 3209,
+      "Original": "int Hop_ManCountLevels( Hop_Man_t * p )\n{\n    Vec_Ptr_t * vNodes;\n    Hop_Obj_t * pObj;\n    int i, LevelsMax, Level0, Level1;\n    // initialize the levels\n    Hop_ManConst1(p)-\u003epData = NULL;\n    Hop_ManForEachPi( p, pObj, i )\n        pObj-\u003epData = NULL;\n    // compute levels in a DFS order\n    vNodes = Hop_ManDfs( p );\n    Vec_PtrForEachEntry( Hop_Obj_t *, vNodes, pObj, i )\n    {\n        Level0 = (int)(ABC_PTRUINT_T)Hop_ObjFanin0(pObj)-\u003epData;\n        Level1 = (int)(ABC_PTRUINT_T)Hop_ObjFanin1(pObj)-\u003epData;\n        pObj-\u003epData = (void *)(ABC_PTRUINT_T)(1 + Hop_ObjIsExor(pObj) + Abc_MaxInt(Level0, Level1));\n    }\n    Vec_PtrFree( vNodes );\n    // get levels of the POs\n    LevelsMax = 0;\n    Hop_ManForEachPo( p, pObj, i )\n        LevelsMax = Abc_MaxInt( LevelsMax, (int)(ABC_PTRUINT_T)Hop_ObjFanin0(pObj)-\u003epData );\n    return LevelsMax;\n}",
+      "Draft": "func Hop_ManCountLevels(p *Hop_Man_t) int32 {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Hop_Obj_t;\n    var i, LevelsMax, Level0, Level1 int32;\n    // initialize the levels\n    Hop_ManConst1(p).pData = nil;\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        pObj.pData = nil;\n    }\n    // compute levels in a DFS order\n    vNodes = Hop_ManDfs( p );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Level0 = int32((ABC_PTRUINT_T))Hop_ObjFanin0(pObj).pData;\n        Level1 = int32((ABC_PTRUINT_T))Hop_ObjFanin1(pObj).pData;\n        pObj.pData = (void *)(ABC_PTRUINT_T)(1 + Hop_ObjIsExor(pObj) + Abc_MaxInt(Level0, Level1));\n    }\n    Vec_PtrFree( vNodes );\n    // get levels of the POs\n    LevelsMax = 0;\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        LevelsMax = Abc_MaxInt( LevelsMax, int32((ABC_PTRUINT_T))Hop_ObjFanin0(pObj).pData );\n    }\n    return LevelsMax;\n}"
+    },
+    {
+      "Name": "Hop_ManCreateRefs",
+      "Start": 4299,
+      "End": 4931,
+      "BodyStart": 4339,
+      "Original": "void Hop_ManCreateRefs( Hop_Man_t * p )\n{\n    Hop_Obj_t * pObj;\n    int i;\n    if ( p-\u003efRefCount )\n        return;\n    p-\u003efRefCount = 1;\n    // clear refs\n    Hop_ObjClearRef( Hop_ManConst1(p) );\n    Hop_ManForEachPi( p, pObj, i )\n        Hop_ObjClearRef( pObj );\n    Hop_ManForEachNode( p, pObj, i )\n        Hop_ObjClearRef( pObj );\n    Hop_ManForEachPo( p, pObj, i )\n        Hop_ObjClearRef( pObj );\n    // set refs\n    Hop_ManForEachNode( p, pObj, i )\n    {\n        Hop_ObjRef( Hop_ObjFanin0(pObj) );\n        Hop_ObjRef( Hop_ObjFanin1(pObj) );\n    }\n    Hop_ManForEachPo( p, pObj, i )\n        Hop_ObjRef( Hop_ObjFanin0(pObj) );\n}",
+      "Draft": "func Hop_ManCreateRefs(p *Hop_Man_t) {\n    var pObj *Hop_Obj_t;\n    var i int32;\n    if p.fRefCount {\n        return; }\n    p.fRefCount = 1;\n    // clear refs\n    Hop_ObjClearRef( Hop_ManConst1(p) );\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        Hop_ObjClearRef( pObj );\n    }\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pObj) = p.pTable[i]) == nil {} else {\n        Hop_ObjClearRef( pObj ); }\n    }\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        Hop_ObjClearRef( pObj );\n    }\n    // set refs\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pObj) = p.pTable[i]) == nil {} else {\n        Hop_ObjRef( Hop_ObjFanin0(pObj) );\n        Hop_ObjRef( Hop_ObjFanin1(pObj) );\n    }\n    }\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        Hop_ObjRef( Hop_ObjFanin0(pObj) );\n    }\n}"
+    },
+    {
+      "Name": "Hop_ConeMark_rec",
+      "Start": 5218,
+      "End": 5548,
+      "BodyStart": 5260,
+      "Original": "void Hop_ConeMark_rec( Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return;\n    Hop_ConeMark_rec( Hop_ObjFanin0(pObj) );\n    Hop_ConeMark_rec( Hop_ObjFanin1(pObj) );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Hop_ConeMark_rec(pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Hop_ConeMark_rec( Hop_ObjFanin0(pObj) );\n    Hop_ConeMark_rec( Hop_ObjFanin1(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Hop_ConeCleanAndMark_rec",
+      "Start": 5835,
+      "End": 6213,
+      "BodyStart": 5885,
+      "Original": "void Hop_ConeCleanAndMark_rec( Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return;\n    Hop_ConeCleanAndMark_rec( Hop_ObjFanin0(pObj) );\n    Hop_ConeCleanAndMark_rec( Hop_ObjFanin1(pObj) );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n    pObj-\u003epData = NULL;\n}",
+      "Draft": "func Hop_ConeCleanAndMark_rec(pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Hop_ConeCleanAndMark_rec( Hop_ObjFanin0(pObj) );\n    Hop_ConeCleanAndMark_rec( Hop_ObjFanin1(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n    pObj.pData = nil;\n}"
+    },
+    {
+      "Name": "Hop_ConeCountAndMark_rec",
+      "Start": 6500,
+      "End": 6912,
+      "BodyStart": 6549,
+      "Original": "int Hop_ConeCountAndMark_rec( Hop_Obj_t * pObj )\n{\n    int Counter;\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return 0;\n    Counter = 1 + Hop_ConeCountAndMark_rec( Hop_ObjFanin0(pObj) ) + \n        Hop_ConeCountAndMark_rec( Hop_ObjFanin1(pObj) );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n    return Counter;\n}",
+      "Draft": "func Hop_ConeCountAndMark_rec(pObj *Hop_Obj_t) int32 {\n    var Counter int32;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return 0; }\n    Counter = 1 + Hop_ConeCountAndMark_rec( Hop_ObjFanin0(pObj) ) + \n        Hop_ConeCountAndMark_rec( Hop_ObjFanin1(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Hop_ConeUnmark_rec",
+      "Start": 7199,
+      "End": 7538,
+      "BodyStart": 7243,
+      "Original": "void Hop_ConeUnmark_rec( Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) )\n        return;\n    Hop_ConeUnmark_rec( Hop_ObjFanin0(pObj) ); \n    Hop_ConeUnmark_rec( Hop_ObjFanin1(pObj) );\n    assert( Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjClearMarkA( pObj );\n}",
+      "Draft": "func Hop_ConeUnmark_rec(pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) {\n        return; }\n    Hop_ConeUnmark_rec( Hop_ObjFanin0(pObj) ); \n    Hop_ConeUnmark_rec( Hop_ObjFanin1(pObj) );\n    assert(Hop_ObjIsMarkA(pObj), \"Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjClearMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Hop_DagSize",
+      "Start": 7825,
+      "End": 8007,
+      "BodyStart": 7861,
+      "Original": "int Hop_DagSize( Hop_Obj_t * pObj )\n{\n    int Counter;\n    Counter = Hop_ConeCountAndMark_rec( Hop_Regular(pObj) );\n    Hop_ConeUnmark_rec( Hop_Regular(pObj) );\n    return Counter;\n}",
+      "Draft": "func Hop_DagSize(pObj *Hop_Obj_t) int32 {\n    var Counter int32;\n    Counter = Hop_ConeCountAndMark_rec( Hop_Regular(pObj) );\n    Hop_ConeUnmark_rec( Hop_Regular(pObj) );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Hop_ObjFanoutCount_rec",
+      "Start": 8285,
+      "End": 8749,
+      "BodyStart": 8352,
+      "Original": "int Hop_ObjFanoutCount_rec( Hop_Obj_t * pObj, Hop_Obj_t * pPivot )\n{\n    int Counter;\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return (int)(pObj == pPivot);\n    Counter = Hop_ObjFanoutCount_rec( Hop_ObjFanin0(pObj), pPivot ) + \n              Hop_ObjFanoutCount_rec( Hop_ObjFanin1(pObj), pPivot );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n    return Counter;\n}",
+      "Draft": "func Hop_ObjFanoutCount_rec(pObj *Hop_Obj_t, pPivot *Hop_Obj_t) int32 {\n    var Counter int32;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return int32((pObj == pPivot)); }\n    Counter = Hop_ObjFanoutCount_rec( Hop_ObjFanin0(pObj), pPivot ) + \n              Hop_ObjFanoutCount_rec( Hop_ObjFanin1(pObj), pPivot );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Hop_ObjFanoutCount",
+      "Start": 8750,
+      "End": 9006,
+      "BodyStart": 8813,
+      "Original": "int Hop_ObjFanoutCount( Hop_Obj_t * pObj, Hop_Obj_t * pPivot )\n{\n    int Counter;\n    assert( !Hop_IsComplement(pPivot) );\n    Counter = Hop_ObjFanoutCount_rec( Hop_Regular(pObj), pPivot );\n    Hop_ConeUnmark_rec( Hop_Regular(pObj) );\n    return Counter;\n}",
+      "Draft": "func Hop_ObjFanoutCount(pObj *Hop_Obj_t, pPivot *Hop_Obj_t) int32 {\n    var Counter int32;\n    assert(!Hop_IsComplement(pPivot), \"!Hop_IsComplement(pPivot)\");\n    Counter = Hop_ObjFanoutCount_rec( Hop_Regular(pObj), pPivot );\n    Hop_ConeUnmark_rec( Hop_Regular(pObj) );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Hop_Transfer_rec",
+      "Start": 9290,
+      "End": 9740,
+      "BodyStart": 9351,
+      "Original": "void Hop_Transfer_rec( Hop_Man_t * pDest, Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return;\n    Hop_Transfer_rec( pDest, Hop_ObjFanin0(pObj) ); \n    Hop_Transfer_rec( pDest, Hop_ObjFanin1(pObj) );\n    pObj-\u003epData = Hop_And( pDest, Hop_ObjChild0Copy(pObj), Hop_ObjChild1Copy(pObj) );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Hop_Transfer_rec(pDest *Hop_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Hop_Transfer_rec( pDest, Hop_ObjFanin0(pObj) ); \n    Hop_Transfer_rec( pDest, Hop_ObjFanin1(pObj) );\n    pObj.pData = Hop_And( pDest, Hop_ObjChild0Copy(pObj), Hop_ObjChild1Copy(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Hop_Transfer",
+      "Start": 10024,
+      "End": 10767,
+      "BodyStart": 10119,
+      "Original": "Hop_Obj_t * Hop_Transfer( Hop_Man_t * pSour, Hop_Man_t * pDest, Hop_Obj_t * pRoot, int nVars )\n{\n    Hop_Obj_t * pObj;\n    int i;\n    // solve simple cases\n    if ( pSour == pDest )\n        return pRoot;\n    if ( Hop_ObjIsConst1( Hop_Regular(pRoot) ) )\n        return Hop_NotCond( Hop_ManConst1(pDest), Hop_IsComplement(pRoot) );\n    // set the PI mapping\n    Hop_ManForEachPi( pSour, pObj, i )\n    {\n        if ( i == nVars )\n           break;\n        pObj-\u003epData = Hop_IthVar(pDest, i);\n    }\n    // transfer and set markings\n    Hop_Transfer_rec( pDest, Hop_Regular(pRoot) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot)-\u003epData, Hop_IsComplement(pRoot) );\n}",
+      "Draft": "func Hop_Transfer(pSour *Hop_Man_t, pDest *Hop_Man_t, pRoot *Hop_Obj_t, nVars int32) *Hop_Obj_t {\n    var pObj *Hop_Obj_t;\n    var i int32;\n    // solve simple cases\n    if pSour == pDest {\n        return pRoot; }\n    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {\n        return Hop_NotCond( Hop_ManConst1(pDest), Hop_IsComplement(pRoot) ); }\n    // set the PI mapping\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pSour.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(pSour.vPis, i)), 1); i++  {\n        if i == nVars {\n           break; }\n        pObj.pData = Hop_IthVar(pDest, i);\n    }\n    // transfer and set markings\n    Hop_Transfer_rec( pDest, Hop_Regular(pRoot) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );\n}"
+    },
+    {
+      "Name": "Hop_Compose_rec",
+      "Start": 11074,
+      "End": 11677,
+      "BodyStart": 11167,
+      "Original": "void Hop_Compose_rec( Hop_Man_t * p, Hop_Obj_t * pObj, Hop_Obj_t * pFunc, Hop_Obj_t * pVar )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( Hop_ObjIsMarkA(pObj) )\n        return;\n    if ( Hop_ObjIsConst1(pObj) || Hop_ObjIsPi(pObj) )\n    {\n        pObj-\u003epData = pObj == pVar ? pFunc : pObj;\n        return;\n    }\n    Hop_Compose_rec( p, Hop_ObjFanin0(pObj), pFunc, pVar ); \n    Hop_Compose_rec( p, Hop_ObjFanin1(pObj), pFunc, pVar );\n    pObj-\u003epData = Hop_And( p, Hop_ObjChild0Copy(pObj), Hop_ObjChild1Copy(pObj) );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Hop_Compose_rec(p *Hop_Man_t, pObj *Hop_Obj_t, pFunc *Hop_Obj_t, pVar *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if Hop_ObjIsMarkA(pObj) {\n        return; }\n    if Hop_ObjIsConst1(pObj) || Hop_ObjIsPi(pObj) {\n        if pObj == pVar {\n            pObj.pData = pFunc;\n        } else {\n            pObj.pData = pObj;\n        }\n        return;\n    }\n    Hop_Compose_rec( p, Hop_ObjFanin0(pObj), pFunc, pVar ); \n    Hop_Compose_rec( p, Hop_ObjFanin1(pObj), pFunc, pVar );\n    pObj.pData = Hop_And( p, Hop_ObjChild0Copy(pObj), Hop_ObjChild1Copy(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Hop_Compose",
+      "Start": 11984,
+      "End": 12544,
+      "BodyStart": 12073,
+      "Original": "Hop_Obj_t * Hop_Compose( Hop_Man_t * p, Hop_Obj_t * pRoot, Hop_Obj_t * pFunc, int iVar )\n{\n    // quit if the PI variable is not defined\n    if ( iVar \u003e= Hop_ManPiNum(p) )\n    {\n        printf( \"Hop_Compose(): The PI variable %d is not defined.\\n\", iVar );\n        return NULL;\n    }\n    // recursively perform composition\n    Hop_Compose_rec( p, Hop_Regular(pRoot), pFunc, Hop_ManPi(p, iVar) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot)-\u003epData, Hop_IsComplement(pRoot) );\n}",
+      "Draft": "func Hop_Compose(p *Hop_Man_t, pRoot *Hop_Obj_t, pFunc *Hop_Obj_t, iVar int32) *Hop_Obj_t {\n    // quit if the PI variable is not defined\n    if iVar \u003e= Hop_ManPiNum(p) {\n        fmt.Printf(\"Hop_Compose(): The PI variable %d is not defined.\\n\", iVar);\n        return nil;\n    }\n    // recursively perform composition\n    Hop_Compose_rec( p, Hop_Regular(pRoot), pFunc, Hop_ManPi(p, iVar) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );\n}"
+    },
+    {
+      "Name": "Hop_Complement_rec",
+      "Start": 12854,
+      "End": 13441,
+      "BodyStart": 12931,
+      "Original": "void Hop_Complement_rec( Hop_Man_t * p, Hop_Obj_t * pObj, Hop_Obj_t * pVar )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( Hop_ObjIsMarkA(pObj) )\n        return;\n    if ( Hop_ObjIsConst1(pObj) || Hop_ObjIsPi(pObj) )\n    {\n        pObj-\u003epData = pObj == pVar ? Hop_Not(pObj) : pObj;\n        return;\n    }\n    Hop_Complement_rec( p, Hop_ObjFanin0(pObj), pVar ); \n    Hop_Complement_rec( p, Hop_ObjFanin1(pObj), pVar );\n    pObj-\u003epData = Hop_And( p, Hop_ObjChild0Copy(pObj), Hop_ObjChild1Copy(pObj) );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Hop_Complement_rec(p *Hop_Man_t, pObj *Hop_Obj_t, pVar *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if Hop_ObjIsMarkA(pObj) {\n        return; }\n    if Hop_ObjIsConst1(pObj) || Hop_ObjIsPi(pObj) {\n        if pObj == pVar {\n            pObj.pData = Hop_Not(pObj);\n        } else {\n            pObj.pData = pObj;\n        }\n        return;\n    }\n    Hop_Complement_rec( p, Hop_ObjFanin0(pObj), pVar ); \n    Hop_Complement_rec( p, Hop_ObjFanin1(pObj), pVar );\n    pObj.pData = Hop_And( p, Hop_ObjChild0Copy(pObj), Hop_ObjChild1Copy(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Hop_Complement",
+      "Start": 13751,
+      "End": 14294,
+      "BodyStart": 13824,
+      "Original": "Hop_Obj_t * Hop_Complement( Hop_Man_t * p, Hop_Obj_t * pRoot, int iVar )\n{\n    // quit if the PI variable is not defined\n    if ( iVar \u003e= Hop_ManPiNum(p) )\n    {\n        printf( \"Hop_Complement(): The PI variable %d is not defined.\\n\", iVar );\n        return NULL;\n    }\n    // recursively perform composition\n    Hop_Complement_rec( p, Hop_Regular(pRoot), Hop_ManPi(p, iVar) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot)-\u003epData, Hop_IsComplement(pRoot) );\n}",
+      "Draft": "func Hop_Complement(p *Hop_Man_t, pRoot *Hop_Obj_t, iVar int32) *Hop_Obj_t {\n    // quit if the PI variable is not defined\n    if iVar \u003e= Hop_ManPiNum(p) {\n        fmt.Printf(\"Hop_Complement(): The PI variable %d is not defined.\\n\", iVar);\n        return nil;\n    }\n    // recursively perform composition\n    Hop_Complement_rec( p, Hop_Regular(pRoot), Hop_ManPi(p, iVar) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );\n}"
+    },
+    {
+      "Name": "Hop_Remap_rec",
+      "Start": 14587,
+      "End": 15012,
+      "BodyStart": 14641,
+      "Original": "void Hop_Remap_rec( Hop_Man_t * p, Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return;\n    Hop_Remap_rec( p, Hop_ObjFanin0(pObj) ); \n    Hop_Remap_rec( p, Hop_ObjFanin1(pObj) );\n    pObj-\u003epData = Hop_And( p, Hop_ObjChild0Copy(pObj), Hop_ObjChild1Copy(pObj) );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Hop_Remap_rec(p *Hop_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Hop_Remap_rec( p, Hop_ObjFanin0(pObj) ); \n    Hop_Remap_rec( p, Hop_ObjFanin1(pObj) );\n    pObj.pData = Hop_And( p, Hop_ObjChild0Copy(pObj), Hop_ObjChild1Copy(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Hop_Remap",
+      "Start": 15305,
+      "End": 16404,
+      "BodyStart": 15390,
+      "Original": "Hop_Obj_t * Hop_Remap( Hop_Man_t * p, Hop_Obj_t * pRoot, unsigned uSupp, int nVars )\n{\n    Hop_Obj_t * pObj;\n    int i, k;\n    // quit if the PI variable is not defined\n    if ( nVars \u003e Hop_ManPiNum(p) )\n    {\n        printf( \"Hop_Remap(): The number of variables (%d) is more than the manager size (%d).\\n\", nVars, Hop_ManPiNum(p) );\n        return NULL;\n    }\n    // return if constant\n    if ( Hop_ObjIsConst1( Hop_Regular(pRoot) ) )\n        return pRoot;\n    if ( uSupp == 0 )\n        return Hop_NotCond( Hop_ManConst0(p), Hop_ObjPhaseCompl(pRoot) );\n    // set the PI mapping\n    k = 0;\n    Hop_ManForEachPi( p, pObj, i )\n    {\n        if ( i == nVars )\n           break;\n        if ( uSupp \u0026 (1 \u003c\u003c i) )\n            pObj-\u003epData = Hop_IthVar(p, k++);\n        else\n            pObj-\u003epData = Hop_ManConst0(p);\n    }\n    assert( k \u003e 0 \u0026\u0026 k \u003c nVars );\n    // recursively perform composition\n    Hop_Remap_rec( p, Hop_Regular(pRoot) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot)-\u003epData, Hop_IsComplement(pRoot) );\n}",
+      "Draft": "func Hop_Remap(p *Hop_Man_t, pRoot *Hop_Obj_t, uSupp uint32, nVars int32) *Hop_Obj_t {\n    var pObj *Hop_Obj_t;\n    var i, k int32;\n    // quit if the PI variable is not defined\n    if nVars \u003e Hop_ManPiNum(p) {\n        fmt.Printf(\"Hop_Remap(): The number of variables (%d) is more than the manager size (%d).\\n\", nVars, Hop_ManPiNum(p));\n        return nil;\n    }\n    // return if constant\n    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {\n        return pRoot; }\n    if uSupp == 0 {\n        return Hop_NotCond( Hop_ManConst0(p), Hop_ObjPhaseCompl(pRoot) ); }\n    // set the PI mapping\n    k = 0;\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        if i == nVars {\n           break; }\n        if uSupp \u0026 (1 \u003c\u003c i) {\n            pObj.pData = Hop_IthVar(p, k++);\n        } else {\n            pObj.pData = Hop_ManConst0(p); }\n    }\n    assert(k \u003e 0 \u0026\u0026 k \u003c nVars, \"k \u003e 0 \u0026\u0026 k \u003c nVars\");\n    // recursively perform composition\n    Hop_Remap_rec( p, Hop_Regular(pRoot) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );\n}"
+    },
+    {
+      "Name": "Hop_Permute",
+      "Start": 16691,
+      "End": 17400,
+      "BodyStart": 16782,
+      "Original": "Hop_Obj_t * Hop_Permute( Hop_Man_t * p, Hop_Obj_t * pRoot, int nRootVars, int * pPermute )\n{\n    Hop_Obj_t * pObj;\n    int i;\n    // return if constant\n    if ( Hop_ObjIsConst1( Hop_Regular(pRoot) ) )\n        return pRoot;\n    // create mapping\n    Hop_ManForEachPi( p, pObj, i )\n    {\n        if ( i == nRootVars )\n            break;\n        assert( pPermute[i] \u003e= 0 \u0026\u0026 pPermute[i] \u003c Hop_ManPiNum(p) );\n        pObj-\u003epData = Hop_IthVar( p, pPermute[i] );\n    }\n    // recursively perform composition\n    Hop_Remap_rec( p, Hop_Regular(pRoot) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot)-\u003epData, Hop_IsComplement(pRoot) );\n}",
+      "Draft": "func Hop_Permute(p *Hop_Man_t, pRoot *Hop_Obj_t, nRootVars int32, pPermute *int32) *Hop_Obj_t {\n    var pObj *Hop_Obj_t;\n    var i int32;\n    // return if constant\n    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {\n        return pRoot; }\n    // create mapping\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        if i == nRootVars {\n            break; }\n        assert(pPermute[i] \u003e= 0 \u0026\u0026 pPermute[i] \u003c Hop_ManPiNum(p), \"pPermute[i] \u003e= 0 \u0026\u0026 pPermute[i] \u003c Hop_ManPiNum(p)\");\n        pObj.pData = Hop_IthVar( p, pPermute[i] );\n    }\n    // recursively perform composition\n    Hop_Remap_rec( p, Hop_Regular(pRoot) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::3191",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2779,
+      "End": 2779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::3934",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3364,
+      "End": 3364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::4191",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3494,
+      "End": 3494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::4398",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3704,
+      "End": 3712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::4723",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3868,
+      "End": 3868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::5534",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4499,
+      "End": 4499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::6004",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4637,
+      "End": 4637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::6555",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4856,
+      "End": 4856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::12267",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10384,
+      "End": 10384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::12601",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10699,
+      "End": 10712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::14378",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12476,
+      "End": 12489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::16128",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14226,
+      "End": 14239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::17964",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15901,
+      "End": 15901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::18418",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16336,
+      "End": 16349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::19183",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16940,
+      "End": 16940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::pointer-cast::19594",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17332,
+      "End": 17345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_ManDfs_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManDfs_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1284,
+      "End": 1675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_ManDfs",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManDfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1952,
+      "End": 2266
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_ManDfsNode",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManDfsNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2543,
+      "End": 2884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_ManCountLevels",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManCountLevels",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3169,
+      "End": 4015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_ManCreateRefs",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManCreateRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4299,
+      "End": 4931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_ConeMark_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ConeMark_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5218,
+      "End": 5548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_ConeCleanAndMark_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ConeCleanAndMark_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5835,
+      "End": 6213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_ConeCountAndMark_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ConeCountAndMark_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6500,
+      "End": 6912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_ConeUnmark_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ConeUnmark_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7199,
+      "End": 7538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_DagSize",
+      "Category": "semantic-review",
+      "Symbol": "Hop_DagSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7825,
+      "End": 8007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_ObjFanoutCount_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjFanoutCount_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8285,
+      "End": 8749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_ObjFanoutCount",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ObjFanoutCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8750,
+      "End": 9006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_Transfer_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Transfer_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9290,
+      "End": 9740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_Transfer",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Transfer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10024,
+      "End": 10767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_Compose_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Compose_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11074,
+      "End": 11677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_Compose",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Compose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11984,
+      "End": 12544
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_Complement_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Complement_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12854,
+      "End": 13441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_Complement",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Complement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13751,
+      "End": 14294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_Remap_rec",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Remap_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14587,
+      "End": 15012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_Remap",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Remap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15305,
+      "End": 16404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::Hop_Permute",
+      "Category": "semantic-review",
+      "Symbol": "Hop_Permute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16691,
+      "End": 17400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopDfs.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17647
+    }
+  ],
+  "Draft": "package hop\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [hopDfs.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Minimalistic And-Inverter Graph package.]\n\n  Synopsis    [DFS traversal procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: hopDfs.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"hop.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Collects internal nodes in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManDfs_rec(pObj *Hop_Obj_t, vNodes *Vec_Ptr_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Hop_ManDfs_rec( Hop_ObjFanin0(pObj), vNodes );\n    Hop_ManDfs_rec( Hop_ObjFanin1(pObj), vNodes );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA(pObj);\n    Vec_PtrPush( vNodes, pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects internal nodes in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManDfs(p *Hop_Man_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Hop_Obj_t;\n    var i int32;\n    vNodes = Vec_PtrAlloc( Hop_ManNodeNum(p) );\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pObj) = p.pTable[i]) == nil {} else {\n        Hop_ManDfs_rec( pObj, vNodes ); }\n    }\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pObj) = p.pTable[i]) == nil {} else {\n        Hop_ObjClearMarkA(pObj); }\n    }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects internal nodes in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManDfsNode(p *Hop_Man_t, pNode *Hop_Obj_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Hop_Obj_t;\n    var i int32;\n    assert(!Hop_IsComplement(pNode), \"!Hop_IsComplement(pNode)\");\n    vNodes = Vec_PtrAlloc( 16 );\n    Hop_ManDfs_rec( pNode, vNodes );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Hop_ObjClearMarkA(pObj);\n    }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the max number of levels in the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManCountLevels(p *Hop_Man_t) int32 {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Hop_Obj_t;\n    var i, LevelsMax, Level0, Level1 int32;\n    // initialize the levels\n    Hop_ManConst1(p).pData = nil;\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        pObj.pData = nil;\n    }\n    // compute levels in a DFS order\n    vNodes = Hop_ManDfs( p );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Level0 = int32((ABC_PTRUINT_T))Hop_ObjFanin0(pObj).pData;\n        Level1 = int32((ABC_PTRUINT_T))Hop_ObjFanin1(pObj).pData;\n        pObj.pData = (void *)(ABC_PTRUINT_T)(1 + Hop_ObjIsExor(pObj) + Abc_MaxInt(Level0, Level1));\n    }\n    Vec_PtrFree( vNodes );\n    // get levels of the POs\n    LevelsMax = 0;\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        LevelsMax = Abc_MaxInt( LevelsMax, int32((ABC_PTRUINT_T))Hop_ObjFanin0(pObj).pData );\n    }\n    return LevelsMax;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates correct reference counters at each node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManCreateRefs(p *Hop_Man_t) {\n    var pObj *Hop_Obj_t;\n    var i int32;\n    if p.fRefCount {\n        return; }\n    p.fRefCount = 1;\n    // clear refs\n    Hop_ObjClearRef( Hop_ManConst1(p) );\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        Hop_ObjClearRef( pObj );\n    }\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pObj) = p.pTable[i]) == nil {} else {\n        Hop_ObjClearRef( pObj ); }\n    }\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        Hop_ObjClearRef( pObj );\n    }\n    // set refs\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pObj) = p.pTable[i]) == nil {} else {\n        Hop_ObjRef( Hop_ObjFanin0(pObj) );\n        Hop_ObjRef( Hop_ObjFanin1(pObj) );\n    }\n    }\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        Hop_ObjRef( Hop_ObjFanin0(pObj) );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of AIG nodes rooted at this cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ConeMark_rec(pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Hop_ConeMark_rec( Hop_ObjFanin0(pObj) );\n    Hop_ConeMark_rec( Hop_ObjFanin1(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of AIG nodes rooted at this cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ConeCleanAndMark_rec(pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Hop_ConeCleanAndMark_rec( Hop_ObjFanin0(pObj) );\n    Hop_ConeCleanAndMark_rec( Hop_ObjFanin1(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n    pObj.pData = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of AIG nodes rooted at this cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ConeCountAndMark_rec(pObj *Hop_Obj_t) int32 {\n    var Counter int32;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return 0; }\n    Counter = 1 + Hop_ConeCountAndMark_rec( Hop_ObjFanin0(pObj) ) + \n        Hop_ConeCountAndMark_rec( Hop_ObjFanin1(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of AIG nodes rooted at this cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ConeUnmark_rec(pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) {\n        return; }\n    Hop_ConeUnmark_rec( Hop_ObjFanin0(pObj) ); \n    Hop_ConeUnmark_rec( Hop_ObjFanin1(pObj) );\n    assert(Hop_ObjIsMarkA(pObj), \"Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjClearMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of AIG nodes rooted at this cone.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_DagSize(pObj *Hop_Obj_t) int32 {\n    var Counter int32;\n    Counter = Hop_ConeCountAndMark_rec( Hop_Regular(pObj) );\n    Hop_ConeUnmark_rec( Hop_Regular(pObj) );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts how many fanout the given node has.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ObjFanoutCount_rec(pObj *Hop_Obj_t, pPivot *Hop_Obj_t) int32 {\n    var Counter int32;\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return int32((pObj == pPivot)); }\n    Counter = Hop_ObjFanoutCount_rec( Hop_ObjFanin0(pObj), pPivot ) + \n              Hop_ObjFanoutCount_rec( Hop_ObjFanin1(pObj), pPivot );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n    return Counter;\n}\nfunc Hop_ObjFanoutCount(pObj *Hop_Obj_t, pPivot *Hop_Obj_t) int32 {\n    var Counter int32;\n    assert(!Hop_IsComplement(pPivot), \"!Hop_IsComplement(pPivot)\");\n    Counter = Hop_ObjFanoutCount_rec( Hop_Regular(pObj), pPivot );\n    Hop_ConeUnmark_rec( Hop_Regular(pObj) );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the AIG from one manager into another.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Transfer_rec(pDest *Hop_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Hop_Transfer_rec( pDest, Hop_ObjFanin0(pObj) ); \n    Hop_Transfer_rec( pDest, Hop_ObjFanin1(pObj) );\n    pObj.pData = Hop_And( pDest, Hop_ObjChild0Copy(pObj), Hop_ObjChild1Copy(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the AIG from one manager into another.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Transfer(pSour *Hop_Man_t, pDest *Hop_Man_t, pRoot *Hop_Obj_t, nVars int32) *Hop_Obj_t {\n    var pObj *Hop_Obj_t;\n    var i int32;\n    // solve simple cases\n    if pSour == pDest {\n        return pRoot; }\n    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {\n        return Hop_NotCond( Hop_ManConst1(pDest), Hop_IsComplement(pRoot) ); }\n    // set the PI mapping\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pSour.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(pSour.vPis, i)), 1); i++  {\n        if i == nVars {\n           break; }\n        pObj.pData = Hop_IthVar(pDest, i);\n    }\n    // transfer and set markings\n    Hop_Transfer_rec( pDest, Hop_Regular(pRoot) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Composes the AIG (pRoot) with the function (pFunc) using PI var (iVar).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Compose_rec(p *Hop_Man_t, pObj *Hop_Obj_t, pFunc *Hop_Obj_t, pVar *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if Hop_ObjIsMarkA(pObj) {\n        return; }\n    if Hop_ObjIsConst1(pObj) || Hop_ObjIsPi(pObj) {\n        if pObj == pVar {\n            pObj.pData = pFunc;\n        } else {\n            pObj.pData = pObj;\n        }\n        return;\n    }\n    Hop_Compose_rec( p, Hop_ObjFanin0(pObj), pFunc, pVar ); \n    Hop_Compose_rec( p, Hop_ObjFanin1(pObj), pFunc, pVar );\n    pObj.pData = Hop_And( p, Hop_ObjChild0Copy(pObj), Hop_ObjChild1Copy(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Composes the AIG (pRoot) with the function (pFunc) using PI var (iVar).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Compose(p *Hop_Man_t, pRoot *Hop_Obj_t, pFunc *Hop_Obj_t, iVar int32) *Hop_Obj_t {\n    // quit if the PI variable is not defined\n    if iVar \u003e= Hop_ManPiNum(p) {\n        fmt.Printf(\"Hop_Compose(): The PI variable %d is not defined.\\n\", iVar);\n        return nil;\n    }\n    // recursively perform composition\n    Hop_Compose_rec( p, Hop_Regular(pRoot), pFunc, Hop_ManPi(p, iVar) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Complements the AIG (pRoot) with the function (pFunc) using PI var (iVar).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Complement_rec(p *Hop_Man_t, pObj *Hop_Obj_t, pVar *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if Hop_ObjIsMarkA(pObj) {\n        return; }\n    if Hop_ObjIsConst1(pObj) || Hop_ObjIsPi(pObj) {\n        if pObj == pVar {\n            pObj.pData = Hop_Not(pObj);\n        } else {\n            pObj.pData = pObj;\n        }\n        return;\n    }\n    Hop_Complement_rec( p, Hop_ObjFanin0(pObj), pVar ); \n    Hop_Complement_rec( p, Hop_ObjFanin1(pObj), pVar );\n    pObj.pData = Hop_And( p, Hop_ObjChild0Copy(pObj), Hop_ObjChild1Copy(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Complements the AIG (pRoot) with the function (pFunc) using PI var (iVar).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Complement(p *Hop_Man_t, pRoot *Hop_Obj_t, iVar int32) *Hop_Obj_t {\n    // quit if the PI variable is not defined\n    if iVar \u003e= Hop_ManPiNum(p) {\n        fmt.Printf(\"Hop_Complement(): The PI variable %d is not defined.\\n\", iVar);\n        return nil;\n    }\n    // recursively perform composition\n    Hop_Complement_rec( p, Hop_Regular(pRoot), Hop_ManPi(p, iVar) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Remaps the AIG (pRoot) to have the given support (uSupp).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Remap_rec(p *Hop_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Hop_Remap_rec( p, Hop_ObjFanin0(pObj) ); \n    Hop_Remap_rec( p, Hop_ObjFanin1(pObj) );\n    pObj.pData = Hop_And( p, Hop_ObjChild0Copy(pObj), Hop_ObjChild1Copy(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Remaps the AIG (pRoot) to have the given support (uSupp).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Remap(p *Hop_Man_t, pRoot *Hop_Obj_t, uSupp uint32, nVars int32) *Hop_Obj_t {\n    var pObj *Hop_Obj_t;\n    var i, k int32;\n    // quit if the PI variable is not defined\n    if nVars \u003e Hop_ManPiNum(p) {\n        fmt.Printf(\"Hop_Remap(): The number of variables (%d) is more than the manager size (%d).\\n\", nVars, Hop_ManPiNum(p));\n        return nil;\n    }\n    // return if constant\n    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {\n        return pRoot; }\n    if uSupp == 0 {\n        return Hop_NotCond( Hop_ManConst0(p), Hop_ObjPhaseCompl(pRoot) ); }\n    // set the PI mapping\n    k = 0;\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        if i == nVars {\n           break; }\n        if uSupp \u0026 (1 \u003c\u003c i) {\n            pObj.pData = Hop_IthVar(p, k++);\n        } else {\n            pObj.pData = Hop_ManConst0(p); }\n    }\n    assert(k \u003e 0 \u0026\u0026 k \u003c nVars, \"k \u003e 0 \u0026\u0026 k \u003c nVars\");\n    // recursively perform composition\n    Hop_Remap_rec( p, Hop_Regular(pRoot) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Permute the AIG according to the given permutation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_Permute(p *Hop_Man_t, pRoot *Hop_Obj_t, nRootVars int32, pPermute *int32) *Hop_Obj_t {\n    var pObj *Hop_Obj_t;\n    var i int32;\n    // return if constant\n    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {\n        return pRoot; }\n    // create mapping\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        if i == nRootVars {\n            break; }\n        assert(pPermute[i] \u003e= 0 \u0026\u0026 pPermute[i] \u003c Hop_ManPiNum(p), \"pPermute[i] \u003e= 0 \u0026\u0026 pPermute[i] \u003c Hop_ManPiNum(p)\");\n        pObj.pData = Hop_IthVar( p, pPermute[i] );\n    }\n    // recursively perform composition\n    Hop_Remap_rec( p, Hop_Regular(pRoot) );\n    // clear the markings\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    return Hop_NotCond( (Hop_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

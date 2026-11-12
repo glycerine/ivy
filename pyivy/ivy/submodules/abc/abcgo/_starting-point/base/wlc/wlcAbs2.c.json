@@ -1,0 +1,372 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcAbs2.c",
+  "SHA256": "af63703fae40f507dfe949db4d7f32c1b54c5a9fb42c361d1cbc5c16adeaaa45",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 9,
+        "ByteOffset": 3156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abstraction engine marked %d adds/subs, %d muls/divs, %d muxes, and %d flops to be abstracted away.\\n\", Count[0], Count[1], Count[2], Count[3] ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 108,
+        "Column": 9,
+        "ByteOffset": 4189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Wlc_ObjIsPi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 8829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCexCare.nPis == pCex.nPis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 5,
+        "ByteOffset": 11193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Wlc_ObjIsCi(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 11412
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count1 == Count2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 330,
+        "Column": 13,
+        "ByteOffset": 13775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\nIteration %d:\\n\", nIters ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 13,
+        "ByteOffset": 14788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Derived abstraction with %d objects and %d PPIs. Bit-blasted AIG stats are:\\n\", Wlc_NtkObjNum(pAbs), Vec_IntSize(vPisNew) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 365,
+        "Column": 13,
+        "ByteOffset": 15329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue ); // proved or undecided"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 384,
+        "Column": 13,
+        "ByteOffset": 15935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Refinement of CEX in frame %d came up with %d un-abstacted PPIs, whose MFFCs include %d objects.\\n\", pCex.iFrame, Vec_IntSize(vRefine), nNodes ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 391,
+        "Column": 9,
+        "ByteOffset": 16244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 392,
+        "Column": 5,
+        "ByteOffset": 16266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Abstraction \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 394,
+        "Column": 9,
+        "ByteOffset": 16323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"resulted in a real CEX\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 396,
+        "Column": 9,
+        "ByteOffset": 16397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"is successfully proved\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 398,
+        "Column": 9,
+        "ByteOffset": 16455
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"timed out\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 399,
+        "Column": 5,
+        "ByteOffset": 16484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" after %d iterations. \", nIters );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Wlc_NtkAbsMarkOpers",
+      "Start": 1587,
+      "End": 3262,
+      "BodyStart": 1697,
+      "Original": "static Vec_Bit_t * Wlc_NtkAbsMarkOpers( Wlc_Ntk_t * p, Wlc_Par_t * pPars, Vec_Bit_t * vUnmark, int fVerbose )\n{\n    Vec_Bit_t * vLeaves = Vec_BitStart( Wlc_NtkObjNumMax(p) );\n    Wlc_Obj_t * pObj; int i, Count[4] = {0};\n    Wlc_NtkForEachObj( p, pObj, i )\n    {\n        if ( vUnmark \u0026\u0026 Vec_BitEntry(vUnmark, i) ) // not allow this object to be abstracted away\n            continue;\n        if ( pObj-\u003eType == WLC_OBJ_ARI_ADD || pObj-\u003eType == WLC_OBJ_ARI_SUB || pObj-\u003eType == WLC_OBJ_ARI_MINUS )\n        {\n            if ( Wlc_ObjRange(pObj) \u003e= pPars-\u003enBitsAdd )\n                Vec_BitWriteEntry( vLeaves, Wlc_ObjId(p, pObj), 1 ), Count[0]++;\n            continue;\n        }\n        if ( pObj-\u003eType == WLC_OBJ_ARI_MULTI || pObj-\u003eType == WLC_OBJ_ARI_DIVIDE || pObj-\u003eType == WLC_OBJ_ARI_REM || pObj-\u003eType == WLC_OBJ_ARI_MODULUS )\n        {\n            if ( Wlc_ObjRange(pObj) \u003e= pPars-\u003enBitsMul )\n                Vec_BitWriteEntry( vLeaves, Wlc_ObjId(p, pObj), 1 ), Count[1]++;\n            continue;\n        }\n        if ( pObj-\u003eType == WLC_OBJ_MUX )\n        {\n            if ( Wlc_ObjRange(pObj) \u003e= pPars-\u003enBitsMux )\n                Vec_BitWriteEntry( vLeaves, Wlc_ObjId(p, pObj), 1 ), Count[2]++;\n            continue;\n        }\n        if ( Wlc_ObjIsCi(pObj) \u0026\u0026 !Wlc_ObjIsPi(pObj) )\n        {\n            if ( Wlc_ObjRange(pObj) \u003e= pPars-\u003enBitsFlop )\n                Vec_BitWriteEntry( vLeaves, Wlc_ObjId(p, pObj), 1 ), Count[3]++;\n            continue;\n        }\n    }\n    if ( fVerbose )\n        printf( \"Abstraction engine marked %d adds/subs, %d muls/divs, %d muxes, and %d flops to be abstracted away.\\n\", Count[0], Count[1], Count[2], Count[3] );\n    return vLeaves;\n}",
+      "Draft": "func Wlc_NtkAbsMarkOpers(p *Wlc_Ntk_t, pPars *Wlc_Par_t, vUnmark *Vec_Bit_t, fVerbose int32) *Vec_Bit_t {\n    var vLeaves *Vec_Bit_t  = Vec_BitStart( Wlc_NtkObjNumMax(p) );\n    var pObj *Wlc_Obj_t; var i int32;\nvar Count [4]int32 ;\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        if (vUnmark != nil) \u0026\u0026 Vec_BitEntry(vUnmark, i) { // not allow this object to be abstracted away\n            continue; }\n        if pObj.Type == WLC_OBJ_ARI_ADD || pObj.Type == WLC_OBJ_ARI_SUB || pObj.Type == WLC_OBJ_ARI_MINUS {\n            if Wlc_ObjRange(pObj) \u003e= pPars.nBitsAdd {\n                Vec_BitWriteEntry( vLeaves, Wlc_ObjId(p, pObj), 1 );\nCount[0]++; }\n            continue;\n        }\n        if pObj.Type == WLC_OBJ_ARI_MULTI || pObj.Type == WLC_OBJ_ARI_DIVIDE || pObj.Type == WLC_OBJ_ARI_REM || pObj.Type == WLC_OBJ_ARI_MODULUS {\n            if Wlc_ObjRange(pObj) \u003e= pPars.nBitsMul {\n                Vec_BitWriteEntry( vLeaves, Wlc_ObjId(p, pObj), 1 );\nCount[1]++; }\n            continue;\n        }\n        if pObj.Type == WLC_OBJ_MUX {\n            if Wlc_ObjRange(pObj) \u003e= pPars.nBitsMux {\n                Vec_BitWriteEntry( vLeaves, Wlc_ObjId(p, pObj), 1 );\nCount[2]++; }\n            continue;\n        }\n        if Wlc_ObjIsCi(pObj) \u0026\u0026 !Wlc_ObjIsPi(pObj) {\n            if Wlc_ObjRange(pObj) \u003e= pPars.nBitsFlop {\n                Vec_BitWriteEntry( vLeaves, Wlc_ObjId(p, pObj), 1 );\nCount[3]++; }\n            continue;\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Abstraction engine marked %d adds/subs, %d muls/divs, %d muxes, and %d flops to be abstracted away.\\n\", Count[0], Count[1], Count[2], Count[3]); }\n    return vLeaves;\n}"
+    },
+    {
+      "Name": "Wlc_NtkAbsMarkNodes_rec",
+      "Start": 3836,
+      "End": 4594,
+      "BodyStart": 3990,
+      "Original": "static void Wlc_NtkAbsMarkNodes_rec( Wlc_Ntk_t * p, Wlc_Obj_t * pObj, Vec_Bit_t * vLeaves, Vec_Int_t * vPisOld, Vec_Int_t * vPisNew, Vec_Int_t * vFlops )\n{\n    int i, iFanin;\n    if ( pObj-\u003eMark )\n        return;\n    pObj-\u003eMark = 1;\n    if ( Vec_BitEntry(vLeaves, Wlc_ObjId(p, pObj)) )\n    {\n        assert( !Wlc_ObjIsPi(pObj) );\n        Vec_IntPush( vPisNew, Wlc_ObjId(p, pObj) );\n        return;\n    }\n    if ( Wlc_ObjIsCi(pObj) )\n    {\n        if ( Wlc_ObjIsPi(pObj) )\n            Vec_IntPush( vPisOld, Wlc_ObjId(p, pObj) );\n        else\n            Vec_IntPush( vFlops, Wlc_ObjId(p, pObj) );\n        return;\n    }\n    Wlc_ObjForEachFanin( pObj, iFanin, i )\n        Wlc_NtkAbsMarkNodes_rec( p, Wlc_NtkObj(p, iFanin), vLeaves, vPisOld, vPisNew, vFlops );\n}",
+      "Draft": "func Wlc_NtkAbsMarkNodes_rec(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, vLeaves *Vec_Bit_t, vPisOld *Vec_Int_t, vPisNew *Vec_Int_t, vFlops *Vec_Int_t) {\n    var i, iFanin int32;\n    if pObj.Mark {\n        return; }\n    pObj.Mark = 1;\n    if Vec_BitEntry(vLeaves, Wlc_ObjId(p, pObj)) {\n        assert(!Wlc_ObjIsPi(pObj), \"!Wlc_ObjIsPi(pObj)\");\n        Vec_IntPush( vPisNew, Wlc_ObjId(p, pObj) );\n        return;\n    }\n    if Wlc_ObjIsCi(pObj) {\n        if Wlc_ObjIsPi(pObj) {\n            Vec_IntPush( vPisOld, Wlc_ObjId(p, pObj) );\n        } else {\n            Vec_IntPush( vFlops, Wlc_ObjId(p, pObj) ); }\n        return;\n    }\n    // inlining of macro Wlc_ObjForEachFanin\n    for  i = 0; (i \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((iFanin) = Wlc_ObjFaninId(pObj, i)), 1); i++  {\n        Wlc_NtkAbsMarkNodes_rec( p, Wlc_NtkObj(p, iFanin), vLeaves, vPisOld, vPisNew, vFlops );\n    }\n}"
+    },
+    {
+      "Name": "Wlc_NtkAbsMarkNodes",
+      "Start": 4595,
+      "End": 5493,
+      "BodyStart": 4727,
+      "Original": "static void Wlc_NtkAbsMarkNodes( Wlc_Ntk_t * p, Vec_Bit_t * vLeaves, Vec_Int_t * vPisOld, Vec_Int_t * vPisNew, Vec_Int_t * vFlops )\n{\n    Wlc_Obj_t * pObj;\n    int i, Count = 0;\n    Wlc_NtkCleanMarks( p );\n    Wlc_NtkForEachCo( p, pObj, i )\n        Wlc_NtkAbsMarkNodes_rec( p, pObj, vLeaves, vPisOld, vPisNew, vFlops );\n    Wlc_NtkForEachObjVec( vFlops, p, pObj, i )\n        Wlc_NtkAbsMarkNodes_rec( p, Wlc_ObjFo2Fi(p, pObj), vLeaves, vPisOld, vPisNew, vFlops );\n    Wlc_NtkForEachObj( p, pObj, i )\n        Count += pObj-\u003eMark;\n//    printf( \"Collected %d old PIs, %d new PIs, %d flops, and %d other objects.\\n\", \n//        Vec_IntSize(vPisOld), Vec_IntSize(vPisNew), Vec_IntSize(vFlops), \n//        Count - Vec_IntSize(vPisOld) - Vec_IntSize(vPisNew) - Vec_IntSize(vFlops) );\n    Vec_IntSort( vPisOld, 0 );\n    Vec_IntSort( vPisNew, 0 );\n    Vec_IntSort( vFlops, 0 );\n    Wlc_NtkCleanMarks( p );\n}",
+      "Draft": "func Wlc_NtkAbsMarkNodes(p *Wlc_Ntk_t, vLeaves *Vec_Bit_t, vPisOld *Vec_Int_t, vPisNew *Vec_Int_t, vFlops *Vec_Int_t) {\n    var pObj *Wlc_Obj_t;\n    var i, Count int32;\n    Wlc_NtkCleanMarks( p );\n    // inlining of macro Wlc_NtkForEachCo\n    for  i = 0; (i \u003c Wlc_NtkCoNum(p)) \u0026\u0026 (((pObj) = Wlc_NtkCo(p, i)), 1); i++  {\n        Wlc_NtkAbsMarkNodes_rec( p, pObj, vLeaves, vPisOld, vPisNew, vFlops );\n    }\n    // inlining of macro Wlc_NtkForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vFlops)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, Vec_IntEntry(vFlops, i))), 1); i++  {\n        Wlc_NtkAbsMarkNodes_rec( p, Wlc_ObjFo2Fi(p, pObj), vLeaves, vPisOld, vPisNew, vFlops );\n    }\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        Count += pObj.Mark;\n    }\n//    printf( \"Collected %d old PIs, %d new PIs, %d flops, and %d other objects.\\n\", \n//        Vec_IntSize(vPisOld), Vec_IntSize(vPisNew), Vec_IntSize(vFlops), \n//        Count - Vec_IntSize(vPisOld) - Vec_IntSize(vPisNew) - Vec_IntSize(vFlops) );\n    Vec_IntSort( vPisOld, 0 );\n    Vec_IntSort( vPisNew, 0 );\n    Vec_IntSort( vFlops, 0 );\n    Wlc_NtkCleanMarks( p );\n}"
+    },
+    {
+      "Name": "Wlc_NtkAbs",
+      "Start": 6157,
+      "End": 6856,
+      "BodyStart": 6281,
+      "Original": "static Wlc_Ntk_t * Wlc_NtkAbs( Wlc_Ntk_t * p, Wlc_Par_t * pPars, Vec_Bit_t * vUnmark, Vec_Int_t ** pvPisNew, int fVerbose )\n{\n    Wlc_Ntk_t * pNtkNew = NULL;\n    Vec_Int_t * vPisOld = Vec_IntAlloc( 100 );\n    Vec_Int_t * vPisNew = Vec_IntAlloc( 100 );\n    Vec_Int_t * vFlops  = Vec_IntAlloc( 100 );\n    Vec_Bit_t * vLeaves = Wlc_NtkAbsMarkOpers( p, pPars, vUnmark, fVerbose );\n    Wlc_NtkAbsMarkNodes( p, vLeaves, vPisOld, vPisNew, vFlops );\n    Vec_BitFree( vLeaves );\n    pNtkNew = Wlc_NtkDupDfsAbs( p, vPisOld, vPisNew, vFlops );\n    Vec_IntFree( vPisOld );\n    Vec_IntFree( vFlops );\n    if ( pvPisNew )\n        *pvPisNew = vPisNew;\n    else\n        Vec_IntFree( vPisNew );\n    return pNtkNew;\n}",
+      "Draft": "func Wlc_NtkAbs(p *Wlc_Ntk_t, pPars *Wlc_Par_t, vUnmark *Vec_Bit_t, pvPisNew **Vec_Int_t, fVerbose int32) *Wlc_Ntk_t {\n    var pNtkNew *Wlc_Ntk_t  = nil;\n    var vPisOld *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vPisNew *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vFlops *Vec_Int_t   = Vec_IntAlloc( 100 );\n    var vLeaves *Vec_Bit_t  = Wlc_NtkAbsMarkOpers( p, pPars, vUnmark, fVerbose );\n    Wlc_NtkAbsMarkNodes( p, vLeaves, vPisOld, vPisNew, vFlops );\n    Vec_BitFree( vLeaves );\n    pNtkNew = Wlc_NtkDupDfsAbs( p, vPisOld, vPisNew, vFlops );\n    Vec_IntFree( vPisOld );\n    Vec_IntFree( vFlops );\n    if pvPisNew {\n        *pvPisNew = vPisNew;\n    } else {\n        Vec_IntFree( vPisNew ); }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Wlc_NtkAbsRefinement",
+      "Start": 7398,
+      "End": 8681,
+      "BodyStart": 7512,
+      "Original": "static Vec_Int_t * Wlc_NtkAbsRefinement( Wlc_Ntk_t * p, Gia_Man_t * pGia, Abc_Cex_t * pCex, Vec_Int_t * vPisNew )\n{\n    Vec_Int_t * vRefine = Vec_IntAlloc( 100 );\n    Abc_Cex_t * pCexCare;\n    Wlc_Obj_t * pObj; \n    // count the number of bit-level PPIs and map them into word-level objects they were derived from\n    int f, i, b, nRealPis, nPpiBits = 0;\n    Vec_Int_t * vMap = Vec_IntStartFull( pCex-\u003enPis );\n    Wlc_NtkForEachObjVec( vPisNew, p, pObj, i )\n        for ( b = 0; b \u003c Wlc_ObjRange(pObj); b++ )\n            Vec_IntWriteEntry( vMap, nPpiBits++, Wlc_ObjId(p, pObj) );\n    // since PPIs are ordered last, the previous bits are real PIs\n    nRealPis = pCex-\u003enPis - nPpiBits;\n    // find the care-set\n    pCexCare = Bmc_CexCareMinimizeAig( pGia, nRealPis, pCex, 1, 0, 0 );\n    assert( pCexCare-\u003enPis == pCex-\u003enPis );\n    // detect care PPIs\n    for ( f = 0; f \u003c= pCexCare-\u003eiFrame; f++ )\n        for ( i = nRealPis; i \u003c pCexCare-\u003enPis; i++ )\n            if ( Abc_InfoHasBit(pCexCare-\u003epData, pCexCare-\u003enRegs + pCexCare-\u003enPis * f + i) )\n                Vec_IntPushUniqueOrder( vRefine, Vec_IntEntry(vMap, i-nRealPis) );\n    Abc_CexFree( pCexCare );\n    Vec_IntFree( vMap );\n    if ( Vec_IntSize(vRefine) == 0 )// real CEX\n        Vec_IntFreeP( \u0026vRefine );\n    return vRefine;\n}",
+      "Draft": "func Wlc_NtkAbsRefinement(p *Wlc_Ntk_t, pGia *Gia_Man_t, pCex *Abc_Cex_t, vPisNew *Vec_Int_t) *Vec_Int_t {\n    var vRefine *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var pCexCare *Abc_Cex_t;\n    var pObj *Wlc_Obj_t; \n    // count the number of bit-level PPIs and map them into word-level objects they were derived from\n    var f, i, b, nRealPis, nPpiBits int32;\n    var vMap *Vec_Int_t  = Vec_IntStartFull( pCex.nPis );\n    // inlining of macro Wlc_NtkForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vPisNew)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, Vec_IntEntry(vPisNew, i))), 1); i++  {\n        for  b = 0; b \u003c Wlc_ObjRange(pObj); b++  {\n            Vec_IntWriteEntry( vMap, nPpiBits++, Wlc_ObjId(p, pObj) );\n        }\n    }\n    // since PPIs are ordered last, the previous bits are real PIs\n    nRealPis = pCex.nPis - nPpiBits;\n    // find the care-set\n    pCexCare = Bmc_CexCareMinimizeAig( pGia, nRealPis, pCex, 1, 0, 0 );\n    assert(pCexCare.nPis == pCex.nPis, \"pCexCare.nPis == pCex.nPis\");\n    // detect care PPIs\n    for  f = 0; f \u003c= pCexCare.iFrame; f++  {\n        for  i = nRealPis; i \u003c pCexCare.nPis; i++  {\n            if Abc_InfoHasBit(pCexCare.pData, pCexCare.nRegs + pCexCare.nPis * f + i) {\n                Vec_IntPushUniqueOrder( vRefine, Vec_IntEntry(vMap, i-nRealPis) ); }\n        }\n    }\n    Abc_CexFree( pCexCare );\n    Vec_IntFree( vMap );\n    if Vec_IntSize(vRefine) == 0 {// real CEX\n        Vec_IntFreeP( \u0026vRefine ); }\n    return vRefine;\n}"
+    },
+    {
+      "Name": "Wlc_NtkNodeDeref_rec",
+      "Start": 9061,
+      "End": 9548,
+      "BodyStart": 9150,
+      "Original": "static int Wlc_NtkNodeDeref_rec( Wlc_Ntk_t * p, Wlc_Obj_t * pNode, Vec_Bit_t * vUnmark )\n{\n    int i, Fanin, Counter = 1;\n    if ( Wlc_ObjIsCi(pNode) )\n        return 0;\n    Vec_BitWriteEntry( vUnmark, Wlc_ObjId(p, pNode), 1 );\n    Wlc_ObjForEachFanin( pNode, Fanin, i )\n    {\n        Vec_IntAddToEntry( \u0026p-\u003evRefs, Fanin, -1 );\n        if ( Vec_IntEntry(\u0026p-\u003evRefs, Fanin) == 0 )\n            Counter += Wlc_NtkNodeDeref_rec( p, Wlc_NtkObj(p, Fanin), vUnmark );\n    }\n    return Counter;\n}",
+      "Draft": "func Wlc_NtkNodeDeref_rec(p *Wlc_Ntk_t, pNode *Wlc_Obj_t, vUnmark *Vec_Bit_t) int32 {\n    var i int32;\n    var Fanin int32;\n    var Counter int32 = 1;\n    if Wlc_ObjIsCi(pNode) {\n        return 0; }\n    Vec_BitWriteEntry( vUnmark, Wlc_ObjId(p, pNode), 1 );\n    // inlining of macro Wlc_ObjForEachFanin\n    for  i = 0; (i \u003c Wlc_ObjFaninNum(pNode)) \u0026\u0026 (((Fanin) = Wlc_ObjFaninId(pNode, i)), 1); i++  {\n        Vec_IntAddToEntry( \u0026p.vRefs, Fanin, -1 );\n        if Vec_IntEntry(\u0026p.vRefs, Fanin) == 0 {\n            Counter += Wlc_NtkNodeDeref_rec( p, Wlc_NtkObj(p, Fanin), vUnmark ); }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Wlc_NtkNodeRef_rec",
+      "Start": 9549,
+      "End": 9943,
+      "BodyStart": 9615,
+      "Original": "static int Wlc_NtkNodeRef_rec( Wlc_Ntk_t * p, Wlc_Obj_t * pNode )\n{\n    int i, Fanin, Counter = 1;\n    if ( Wlc_ObjIsCi(pNode) )\n        return 0;\n    Wlc_ObjForEachFanin( pNode, Fanin, i )\n    {\n        if ( Vec_IntEntry(\u0026p-\u003evRefs, Fanin) == 0 )\n            Counter += Wlc_NtkNodeRef_rec( p, Wlc_NtkObj(p, Fanin) );\n        Vec_IntAddToEntry( \u0026p-\u003evRefs, Fanin, 1 );\n    }\n    return Counter;\n}",
+      "Draft": "func Wlc_NtkNodeRef_rec(p *Wlc_Ntk_t, pNode *Wlc_Obj_t) int32 {\n    var i int32;\n    var Fanin int32;\n    var Counter int32 = 1;\n    if Wlc_ObjIsCi(pNode) {\n        return 0; }\n    // inlining of macro Wlc_ObjForEachFanin\n    for  i = 0; (i \u003c Wlc_ObjFaninNum(pNode)) \u0026\u0026 (((Fanin) = Wlc_ObjFaninId(pNode, i)), 1); i++  {\n        if Vec_IntEntry(\u0026p.vRefs, Fanin) == 0 {\n            Counter += Wlc_NtkNodeRef_rec( p, Wlc_NtkObj(p, Fanin) ); }\n        Vec_IntAddToEntry( \u0026p.vRefs, Fanin, 1 );\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Wlc_NtkMarkMffc",
+      "Start": 9944,
+      "End": 10550,
+      "BodyStart": 10028,
+      "Original": "static int Wlc_NtkMarkMffc( Wlc_Ntk_t * p, Wlc_Obj_t * pNode, Vec_Bit_t * vUnmark )\n{\n    int Count1, Count2;\n    // if this is a flop output, compute MFFC of the corresponding flop input\n    while ( Wlc_ObjIsCi(pNode) )\n    {\n        Vec_BitWriteEntry( vUnmark, Wlc_ObjId(p, pNode), 1 );\n        pNode = Wlc_ObjFo2Fi(p, pNode);\n    }\n    assert( !Wlc_ObjIsCi(pNode) );\n    // dereference the node (and set the bits in vUnmark)\n    Count1 = Wlc_NtkNodeDeref_rec( p, pNode, vUnmark );\n    // reference it back\n    Count2 = Wlc_NtkNodeRef_rec( p, pNode );\n    assert( Count1 == Count2 );\n    return Count1;\n}",
+      "Draft": "func Wlc_NtkMarkMffc(p *Wlc_Ntk_t, pNode *Wlc_Obj_t, vUnmark *Vec_Bit_t) int32 {\n    var Count1, Count2 int32;\n    // if this is a flop output, compute MFFC of the corresponding flop input\n    for  Wlc_ObjIsCi(pNode)  {\n        Vec_BitWriteEntry( vUnmark, Wlc_ObjId(p, pNode), 1 );\n        pNode = Wlc_ObjFo2Fi(p, pNode);\n    }\n    assert(!Wlc_ObjIsCi(pNode), \"!Wlc_ObjIsCi(pNode)\");\n    // dereference the node (and set the bits in vUnmark)\n    Count1 = Wlc_NtkNodeDeref_rec( p, pNode, vUnmark );\n    // reference it back\n    Count2 = Wlc_NtkNodeRef_rec( p, pNode );\n    assert(Count1 == Count2, \"Count1 == Count2\");\n    return Count1;\n}"
+    },
+    {
+      "Name": "Wlc_NtkRemoveFromAbstraction",
+      "Start": 10551,
+      "End": 10884,
+      "BodyStart": 10650,
+      "Original": "static int Wlc_NtkRemoveFromAbstraction( Wlc_Ntk_t * p, Vec_Int_t * vRefine, Vec_Bit_t * vUnmark )\n{\n    Wlc_Obj_t * pObj; int i, nNodes = 0;\n    if ( Vec_IntSize(\u0026p-\u003evRefs) == 0 )\n        Wlc_NtkSetRefs( p );\n    Wlc_NtkForEachObjVec( vRefine, p, pObj, i )\n        nNodes += Wlc_NtkMarkMffc( p, pObj, vUnmark );\n    return nNodes;\n}",
+      "Draft": "func Wlc_NtkRemoveFromAbstraction(p *Wlc_Ntk_t, vRefine *Vec_Int_t, vUnmark *Vec_Bit_t) int32 {\n    var pObj *Wlc_Obj_t; var i, nNodes int32;\n    if Vec_IntSize(\u0026p.vRefs) == 0 {\n        Wlc_NtkSetRefs( p ); }\n    // inlining of macro Wlc_NtkForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vRefine)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, Vec_IntEntry(vRefine, i))), 1); i++  {\n        nNodes += Wlc_NtkMarkMffc( p, pObj, vUnmark );\n    }\n    return nNodes;\n}"
+    },
+    {
+      "Name": "Wlc_NtkAbsCore2",
+      "Start": 11496,
+      "End": 15541,
+      "BodyStart": 11552,
+      "Original": "int Wlc_NtkAbsCore2( Wlc_Ntk_t * p, Wlc_Par_t * pPars )\n{\n    abctime clk = Abc_Clock();\n    int nIters, nNodes, nDcFlops, RetValue = -1;\n    // start the bitmap to mark objects that cannot be abstracted because of refinement\n    // currently, this bitmap is empty because abstraction begins without refinement\n    Vec_Bit_t * vUnmark = Vec_BitStart( Wlc_NtkObjNumMax(p) );\n    // set up parameters to run PDR\n    Pdr_Par_t PdrPars, * pPdrPars = \u0026PdrPars;\n    Pdr_ManSetDefaultParams( pPdrPars );\n    pPdrPars-\u003efUseAbs    = 1;   // use 'pdr -t'  (on-the-fly abstraction)\n    pPdrPars-\u003efCtgs      = 1;   // use 'pdr -nc' (improved generalization)\n    pPdrPars-\u003efSkipDown  = 0;   // use 'pdr -nc' (improved generalization)\n    //pPdrPars-\u003enRestLimit = 500; // reset queue or proof-obligations when it gets larger than this\n    pPdrPars-\u003efVerbose   = pPars-\u003efPdrVerbose;\n    // perform refinement iterations\n    for ( nIters = 1; nIters \u003c pPars-\u003enIterMax; nIters++ )\n    {\n        Aig_Man_t * pAig;\n        Abc_Cex_t * pCex;\n        Vec_Int_t * vPisNew, * vRefine;  \n        Gia_Man_t * pGia, * pTemp;\n        Wlc_Ntk_t * pAbs;\n\n        if ( pPars-\u003efVerbose )\n            printf( \"\\nIteration %d:\\n\", nIters );\n\n        // get abstracted GIA and the set of pseudo-PIs (vPisNew)\n        pAbs = Wlc_NtkAbs( p, pPars, vUnmark, \u0026vPisNew, pPars-\u003efVerbose );\n        pGia = Wlc_NtkBitBlast( pAbs, NULL );\n\n        // if the abstraction has flops with DC-init state,\n        // new PIs were introduced by bit-blasting at the end of the PI list\n        // here we move these variables to be *before* PPIs, because\n        // PPIs are supposed to be at the end of the PI list for refinement\n        nDcFlops = Wlc_NtkDcFlopNum(pAbs);\n        if ( nDcFlops \u003e 0 ) // DC-init flops are present\n        {\n            pGia = Gia_ManPermuteInputs( pTemp = pGia, Wlc_NtkCountObjBits(p, vPisNew), nDcFlops );\n            Gia_ManStop( pTemp );\n        }\n        // if the word-level outputs have to be XORs, this is a place to do it\n        if ( pPars-\u003efXorOutput )\n        {\n            pGia = Gia_ManTransformMiter2( pTemp = pGia );\n            Gia_ManStop( pTemp );\n        }\n        if ( pPars-\u003efVerbose )\n        {\n            printf( \"Derived abstraction with %d objects and %d PPIs. Bit-blasted AIG stats are:\\n\", Wlc_NtkObjNum(pAbs), Vec_IntSize(vPisNew) ); \n            Gia_ManPrintStats( pGia, NULL );\n        }\n        Wlc_NtkFree( pAbs );\n\n        // try to prove abstracted GIA by converting it to AIG and calling PDR\n        pAig = Gia_ManToAigSimple( pGia );\n        RetValue = Pdr_ManSolve( pAig, pPdrPars );\n        pCex = pAig-\u003epSeqModel; pAig-\u003epSeqModel = NULL;\n        Aig_ManStop( pAig );\n\n        // consider outcomes\n        if ( pCex == NULL ) \n        {\n            assert( RetValue ); // proved or undecided\n            Gia_ManStop( pGia );\n            Vec_IntFree( vPisNew );\n            break;\n        }\n\n        // perform refinement\n        vRefine = Wlc_NtkAbsRefinement( p, pGia, pCex, vPisNew );\n        Gia_ManStop( pGia );\n        Vec_IntFree( vPisNew );\n        if ( vRefine == NULL ) // real CEX\n        {\n            Abc_CexFree( pCex ); // return CEX in the future\n            break;\n        }\n\n        // update the set of objects to be un-abstracted\n        nNodes = Wlc_NtkRemoveFromAbstraction( p, vRefine, vUnmark );\n        if ( pPars-\u003efVerbose )\n            printf( \"Refinement of CEX in frame %d came up with %d un-abstacted PPIs, whose MFFCs include %d objects.\\n\", pCex-\u003eiFrame, Vec_IntSize(vRefine), nNodes );\n        Vec_IntFree( vRefine );\n        Abc_CexFree( pCex );\n    }\n    Vec_BitFree( vUnmark );\n    // report the result\n    if ( pPars-\u003efVerbose )\n        printf( \"\\n\" );\n    printf( \"Abstraction \" );\n    if ( RetValue == 0 )\n        printf( \"resulted in a real CEX\" );\n    else if ( RetValue == 1 )\n        printf( \"is successfully proved\" );\n    else \n        printf( \"timed out\" );\n    printf( \" after %d iterations. \", nIters );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return RetValue;\n}",
+      "Draft": "func Wlc_NtkAbsCore2(p *Wlc_Ntk_t, pPars *Wlc_Par_t) int32 {\n    var clk abctime  = Abc_Clock();\n    var nIters int32;\n    var nNodes int32;\n    var nDcFlops int32;\n    var RetValue int32 = -1;\n    // start the bitmap to mark objects that cannot be abstracted because of refinement\n    // currently, this bitmap is empty because abstraction begins without refinement\n    var vUnmark *Vec_Bit_t  = Vec_BitStart( Wlc_NtkObjNumMax(p) );\n    // set up parameters to run PDR\n    var PdrPars Pdr_Par_t;\n    var pPdrPars *Pdr_Par_t = \u0026PdrPars;\n    Pdr_ManSetDefaultParams( pPdrPars );\n    pPdrPars.fUseAbs    = 1;   // use 'pdr -t'  (on-the-fly abstraction)\n    pPdrPars.fCtgs      = 1;   // use 'pdr -nc' (improved generalization)\n    pPdrPars.fSkipDown  = 0;   // use 'pdr -nc' (improved generalization)\n    //pPdrPars-\u003enRestLimit = 500; // reset queue or proof-obligations when it gets larger than this\n    pPdrPars.fVerbose   = pPars.fPdrVerbose;\n    // perform refinement iterations\n    for  nIters = 1; nIters \u003c pPars.nIterMax; nIters++  {\n        var pAig *Aig_Man_t;\n        var pCex *Abc_Cex_t;\n        var vPisNew, vRefine *Vec_Int_t;  \n        var pGia, pTemp *Gia_Man_t;\n        var pAbs *Wlc_Ntk_t;\n\n        if pPars.fVerbose {\n            fmt.Printf(\"\\nIteration %d:\\n\", nIters); }\n\n        // get abstracted GIA and the set of pseudo-PIs (vPisNew)\n        pAbs = Wlc_NtkAbs( p, pPars, vUnmark, \u0026vPisNew, pPars.fVerbose );\n        pGia = Wlc_NtkBitBlast( pAbs, nil );\n\n        // if the abstraction has flops with DC-init state,\n        // new PIs were introduced by bit-blasting at the end of the PI list\n        // here we move these variables to be *before* PPIs, because\n        // PPIs are supposed to be at the end of the PI list for refinement\n        nDcFlops = Wlc_NtkDcFlopNum(pAbs);\n        if nDcFlops \u003e 0 { // DC-init flops are present\n        \n            pGia = Gia_ManPermuteInputs( pTemp = pGia, Wlc_NtkCountObjBits(p, vPisNew), nDcFlops );\n            Gia_ManStop( pTemp );\n        }\n        // if the word-level outputs have to be XORs, this is a place to do it\n        if pPars.fXorOutput {\n            pGia = Gia_ManTransformMiter2( pTemp = pGia );\n            Gia_ManStop( pTemp );\n        }\n        if pPars.fVerbose {\n            fmt.Printf(\"Derived abstraction with %d objects and %d PPIs. Bit-blasted AIG stats are:\\n\", Wlc_NtkObjNum(pAbs), Vec_IntSize(vPisNew)); \n            Gia_ManPrintStats( pGia, nil );\n        }\n        Wlc_NtkFree( pAbs );\n\n        // try to prove abstracted GIA by converting it to AIG and calling PDR\n        pAig = Gia_ManToAigSimple( pGia );\n        RetValue = Pdr_ManSolve( pAig, pPdrPars );\n        pCex = pAig.pSeqModel; pAig.pSeqModel = nil;\n        Aig_ManStop( pAig );\n\n        // consider outcomes\n        if pCex == nil {\n            assert((RetValue != 0), \"RetValue\"); // proved or undecided\n            Gia_ManStop( pGia );\n            Vec_IntFree( vPisNew );\n            break;\n        }\n\n        // perform refinement\n        vRefine = Wlc_NtkAbsRefinement( p, pGia, pCex, vPisNew );\n        Gia_ManStop( pGia );\n        Vec_IntFree( vPisNew );\n        if vRefine == nil { // real CEX\n        \n            Abc_CexFree( pCex ); // return CEX in the future\n            break;\n        }\n\n        // update the set of objects to be un-abstracted\n        nNodes = Wlc_NtkRemoveFromAbstraction( p, vRefine, vUnmark );\n        if pPars.fVerbose {\n            fmt.Printf(\"Refinement of CEX in frame %d came up with %d un-abstacted PPIs, whose MFFCs include %d objects.\\n\", pCex.iFrame, Vec_IntSize(vRefine), nNodes); }\n        Vec_IntFree( vRefine );\n        Abc_CexFree( pCex );\n    }\n    Vec_BitFree( vUnmark );\n    // report the result\n    if pPars.fVerbose {\n        fmt.Printf(\"\\n\"); }\n    fmt.Printf(\"Abstraction \");\n    if RetValue == 0 {\n        fmt.Printf(\"resulted in a real CEX\");\n    } else if RetValue == 1 {\n        fmt.Printf(\"is successfully proved\");\n    } else { \n        fmt.Printf(\"timed out\"); }\n    fmt.Printf(\" after %d iterations. \", nIters);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcAbs2.c::Wlc_NtkAbsMarkOpers",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkAbsMarkOpers",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1587,
+      "End": 3262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcAbs2.c::Wlc_NtkAbsMarkNodes_rec",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkAbsMarkNodes_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3836,
+      "End": 4594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcAbs2.c::Wlc_NtkAbsMarkNodes",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkAbsMarkNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4595,
+      "End": 5493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcAbs2.c::Wlc_NtkAbs",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkAbs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6157,
+      "End": 6856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcAbs2.c::Wlc_NtkAbsRefinement",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkAbsRefinement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7398,
+      "End": 8681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcAbs2.c::Wlc_NtkNodeDeref_rec",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkNodeDeref_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9061,
+      "End": 9548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcAbs2.c::Wlc_NtkNodeRef_rec",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkNodeRef_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9549,
+      "End": 9943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcAbs2.c::Wlc_NtkMarkMffc",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkMarkMffc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9944,
+      "End": 10550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcAbs2.c::Wlc_NtkRemoveFromAbstraction",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkRemoveFromAbstraction",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10551,
+      "End": 10884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcAbs2.c::Wlc_NtkAbsCore2",
+      "Category": "semantic-review",
+      "Symbol": "Wlc_NtkAbsCore2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11496,
+      "End": 15541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wlc/wlcAbs2.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15788
+    }
+  ],
+  "Draft": "package wlc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [wlcAbs2.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Verilog parser.]\n\n  Synopsis    [Abstraction for word-level networks.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 22, 2014.]\n\n  Revision    [$Id: wlcAbs2.c,v 1.00 2014/09/12 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"wlc.h\"\n//#include \"proof/pdr/pdr.h\"\n//#include \"aig/gia/giaAig.h\"\n//#include \"sat/bmc/bmc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Mark operators that meet the abstraction criteria.]\n\n  Description [This procedure returns the array of objects (vLeaves) that \n  should be abstracted because of their high bit-width. It uses input array (vUnmark)\n  to not abstract those objects that have been refined in the previous rounds.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkAbsMarkOpers(p *Wlc_Ntk_t, pPars *Wlc_Par_t, vUnmark *Vec_Bit_t, fVerbose int32) *Vec_Bit_t {\n    var vLeaves *Vec_Bit_t  = Vec_BitStart( Wlc_NtkObjNumMax(p) );\n    var pObj *Wlc_Obj_t; var i int32;\nvar Count [4]int32 ;\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        if (vUnmark != nil) \u0026\u0026 Vec_BitEntry(vUnmark, i) { // not allow this object to be abstracted away\n            continue; }\n        if pObj.Type == WLC_OBJ_ARI_ADD || pObj.Type == WLC_OBJ_ARI_SUB || pObj.Type == WLC_OBJ_ARI_MINUS {\n            if Wlc_ObjRange(pObj) \u003e= pPars.nBitsAdd {\n                Vec_BitWriteEntry( vLeaves, Wlc_ObjId(p, pObj), 1 );\nCount[0]++; }\n            continue;\n        }\n        if pObj.Type == WLC_OBJ_ARI_MULTI || pObj.Type == WLC_OBJ_ARI_DIVIDE || pObj.Type == WLC_OBJ_ARI_REM || pObj.Type == WLC_OBJ_ARI_MODULUS {\n            if Wlc_ObjRange(pObj) \u003e= pPars.nBitsMul {\n                Vec_BitWriteEntry( vLeaves, Wlc_ObjId(p, pObj), 1 );\nCount[1]++; }\n            continue;\n        }\n        if pObj.Type == WLC_OBJ_MUX {\n            if Wlc_ObjRange(pObj) \u003e= pPars.nBitsMux {\n                Vec_BitWriteEntry( vLeaves, Wlc_ObjId(p, pObj), 1 );\nCount[2]++; }\n            continue;\n        }\n        if Wlc_ObjIsCi(pObj) \u0026\u0026 !Wlc_ObjIsPi(pObj) {\n            if Wlc_ObjRange(pObj) \u003e= pPars.nBitsFlop {\n                Vec_BitWriteEntry( vLeaves, Wlc_ObjId(p, pObj), 1 );\nCount[3]++; }\n            continue;\n        }\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Abstraction engine marked %d adds/subs, %d muls/divs, %d muxes, and %d flops to be abstracted away.\\n\", Count[0], Count[1], Count[2], Count[3]); }\n    return vLeaves;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks nodes to be included in the abstracted network.]\n\n  Description [Marks all objects that will be included in the abstracted model.  \n  Stops at the objects (vLeaves) that are abstracted away. Returns three arrays:\n  a subset of original PIs (vPisOld), a subset of pseudo-PIs (vPisNew) and the\n  set of flops present as flops in the abstracted network.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkAbsMarkNodes_rec(p *Wlc_Ntk_t, pObj *Wlc_Obj_t, vLeaves *Vec_Bit_t, vPisOld *Vec_Int_t, vPisNew *Vec_Int_t, vFlops *Vec_Int_t) {\n    var i, iFanin int32;\n    if pObj.Mark {\n        return; }\n    pObj.Mark = 1;\n    if Vec_BitEntry(vLeaves, Wlc_ObjId(p, pObj)) {\n        assert(!Wlc_ObjIsPi(pObj), \"!Wlc_ObjIsPi(pObj)\");\n        Vec_IntPush( vPisNew, Wlc_ObjId(p, pObj) );\n        return;\n    }\n    if Wlc_ObjIsCi(pObj) {\n        if Wlc_ObjIsPi(pObj) {\n            Vec_IntPush( vPisOld, Wlc_ObjId(p, pObj) );\n        } else {\n            Vec_IntPush( vFlops, Wlc_ObjId(p, pObj) ); }\n        return;\n    }\n    // inlining of macro Wlc_ObjForEachFanin\n    for  i = 0; (i \u003c Wlc_ObjFaninNum(pObj)) \u0026\u0026 (((iFanin) = Wlc_ObjFaninId(pObj, i)), 1); i++  {\n        Wlc_NtkAbsMarkNodes_rec( p, Wlc_NtkObj(p, iFanin), vLeaves, vPisOld, vPisNew, vFlops );\n    }\n}\nfunc Wlc_NtkAbsMarkNodes(p *Wlc_Ntk_t, vLeaves *Vec_Bit_t, vPisOld *Vec_Int_t, vPisNew *Vec_Int_t, vFlops *Vec_Int_t) {\n    var pObj *Wlc_Obj_t;\n    var i, Count int32;\n    Wlc_NtkCleanMarks( p );\n    // inlining of macro Wlc_NtkForEachCo\n    for  i = 0; (i \u003c Wlc_NtkCoNum(p)) \u0026\u0026 (((pObj) = Wlc_NtkCo(p, i)), 1); i++  {\n        Wlc_NtkAbsMarkNodes_rec( p, pObj, vLeaves, vPisOld, vPisNew, vFlops );\n    }\n    // inlining of macro Wlc_NtkForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vFlops)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, Vec_IntEntry(vFlops, i))), 1); i++  {\n        Wlc_NtkAbsMarkNodes_rec( p, Wlc_ObjFo2Fi(p, pObj), vLeaves, vPisOld, vPisNew, vFlops );\n    }\n    // inlining of macro Wlc_NtkForEachObj\n    for  i = 1; (i \u003c Wlc_NtkObjNumMax(p)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, i)), 1); i++  {\n        Count += pObj.Mark;\n    }\n//    printf( \"Collected %d old PIs, %d new PIs, %d flops, and %d other objects.\\n\", \n//        Vec_IntSize(vPisOld), Vec_IntSize(vPisNew), Vec_IntSize(vFlops), \n//        Count - Vec_IntSize(vPisOld) - Vec_IntSize(vPisNew) - Vec_IntSize(vFlops) );\n    Vec_IntSort( vPisOld, 0 );\n    Vec_IntSort( vPisNew, 0 );\n    Vec_IntSort( vFlops, 0 );\n    Wlc_NtkCleanMarks( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derive word-level abstracted model based on the parameter values.]\n\n  Description [Retuns the word-level abstracted network and the set of pseudo-PIs \n  (vPisNew), which were created during abstraction. If the abstraction is\n  satisfiable, some of the pseudo-PIs will be un-abstracted. These pseudo-PIs\n  and their MFFC cones will be listed in the array (vUnmark), which will\n  force the abstraction to not stop at these pseudo-PIs in the future.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkAbs(p *Wlc_Ntk_t, pPars *Wlc_Par_t, vUnmark *Vec_Bit_t, pvPisNew **Vec_Int_t, fVerbose int32) *Wlc_Ntk_t {\n    var pNtkNew *Wlc_Ntk_t  = nil;\n    var vPisOld *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vPisNew *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vFlops *Vec_Int_t   = Vec_IntAlloc( 100 );\n    var vLeaves *Vec_Bit_t  = Wlc_NtkAbsMarkOpers( p, pPars, vUnmark, fVerbose );\n    Wlc_NtkAbsMarkNodes( p, vLeaves, vPisOld, vPisNew, vFlops );\n    Vec_BitFree( vLeaves );\n    pNtkNew = Wlc_NtkDupDfsAbs( p, vPisOld, vPisNew, vFlops );\n    Vec_IntFree( vPisOld );\n    Vec_IntFree( vFlops );\n    if pvPisNew {\n        *pvPisNew = vPisNew;\n    } else {\n        Vec_IntFree( vPisNew ); }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find what objects need to be un-abstracted.]\n\n  Description [Returns a subset of pseudo-PIs (vPisNew), which will be \n  prevented from being abstracted in the future rounds of abstraction.\n  The AIG manager (pGia) is a bit-level view of the abstracted model.\n  The counter-example (pCex) is used to find waht PPIs to refine.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkAbsRefinement(p *Wlc_Ntk_t, pGia *Gia_Man_t, pCex *Abc_Cex_t, vPisNew *Vec_Int_t) *Vec_Int_t {\n    var vRefine *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var pCexCare *Abc_Cex_t;\n    var pObj *Wlc_Obj_t; \n    // count the number of bit-level PPIs and map them into word-level objects they were derived from\n    var f, i, b, nRealPis, nPpiBits int32;\n    var vMap *Vec_Int_t  = Vec_IntStartFull( pCex.nPis );\n    // inlining of macro Wlc_NtkForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vPisNew)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, Vec_IntEntry(vPisNew, i))), 1); i++  {\n        for  b = 0; b \u003c Wlc_ObjRange(pObj); b++  {\n            Vec_IntWriteEntry( vMap, nPpiBits++, Wlc_ObjId(p, pObj) );\n        }\n    }\n    // since PPIs are ordered last, the previous bits are real PIs\n    nRealPis = pCex.nPis - nPpiBits;\n    // find the care-set\n    pCexCare = Bmc_CexCareMinimizeAig( pGia, nRealPis, pCex, 1, 0, 0 );\n    assert(pCexCare.nPis == pCex.nPis, \"pCexCare.nPis == pCex.nPis\");\n    // detect care PPIs\n    for  f = 0; f \u003c= pCexCare.iFrame; f++  {\n        for  i = nRealPis; i \u003c pCexCare.nPis; i++  {\n            if Abc_InfoHasBit(pCexCare.pData, pCexCare.nRegs + pCexCare.nPis * f + i) {\n                Vec_IntPushUniqueOrder( vRefine, Vec_IntEntry(vMap, i-nRealPis) ); }\n        }\n    }\n    Abc_CexFree( pCexCare );\n    Vec_IntFree( vMap );\n    if Vec_IntSize(vRefine) == 0 {// real CEX\n        Vec_IntFreeP( \u0026vRefine ); }\n    return vRefine;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Mark MFFC cones of the un-abstracted objects.]\n\n  Description [The MFFC cones of the objects in vRefine are traversed\n  and all their nodes are marked in vUnmark.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkNodeDeref_rec(p *Wlc_Ntk_t, pNode *Wlc_Obj_t, vUnmark *Vec_Bit_t) int32 {\n    var i int32;\n    var Fanin int32;\n    var Counter int32 = 1;\n    if Wlc_ObjIsCi(pNode) {\n        return 0; }\n    Vec_BitWriteEntry( vUnmark, Wlc_ObjId(p, pNode), 1 );\n    // inlining of macro Wlc_ObjForEachFanin\n    for  i = 0; (i \u003c Wlc_ObjFaninNum(pNode)) \u0026\u0026 (((Fanin) = Wlc_ObjFaninId(pNode, i)), 1); i++  {\n        Vec_IntAddToEntry( \u0026p.vRefs, Fanin, -1 );\n        if Vec_IntEntry(\u0026p.vRefs, Fanin) == 0 {\n            Counter += Wlc_NtkNodeDeref_rec( p, Wlc_NtkObj(p, Fanin), vUnmark ); }\n    }\n    return Counter;\n}\nfunc Wlc_NtkNodeRef_rec(p *Wlc_Ntk_t, pNode *Wlc_Obj_t) int32 {\n    var i int32;\n    var Fanin int32;\n    var Counter int32 = 1;\n    if Wlc_ObjIsCi(pNode) {\n        return 0; }\n    // inlining of macro Wlc_ObjForEachFanin\n    for  i = 0; (i \u003c Wlc_ObjFaninNum(pNode)) \u0026\u0026 (((Fanin) = Wlc_ObjFaninId(pNode, i)), 1); i++  {\n        if Vec_IntEntry(\u0026p.vRefs, Fanin) == 0 {\n            Counter += Wlc_NtkNodeRef_rec( p, Wlc_NtkObj(p, Fanin) ); }\n        Vec_IntAddToEntry( \u0026p.vRefs, Fanin, 1 );\n    }\n    return Counter;\n}\nfunc Wlc_NtkMarkMffc(p *Wlc_Ntk_t, pNode *Wlc_Obj_t, vUnmark *Vec_Bit_t) int32 {\n    var Count1, Count2 int32;\n    // if this is a flop output, compute MFFC of the corresponding flop input\n    for  Wlc_ObjIsCi(pNode)  {\n        Vec_BitWriteEntry( vUnmark, Wlc_ObjId(p, pNode), 1 );\n        pNode = Wlc_ObjFo2Fi(p, pNode);\n    }\n    assert(!Wlc_ObjIsCi(pNode), \"!Wlc_ObjIsCi(pNode)\");\n    // dereference the node (and set the bits in vUnmark)\n    Count1 = Wlc_NtkNodeDeref_rec( p, pNode, vUnmark );\n    // reference it back\n    Count2 = Wlc_NtkNodeRef_rec( p, pNode );\n    assert(Count1 == Count2, \"Count1 == Count2\");\n    return Count1;\n}\nfunc Wlc_NtkRemoveFromAbstraction(p *Wlc_Ntk_t, vRefine *Vec_Int_t, vUnmark *Vec_Bit_t) int32 {\n    var pObj *Wlc_Obj_t; var i, nNodes int32;\n    if Vec_IntSize(\u0026p.vRefs) == 0 {\n        Wlc_NtkSetRefs( p ); }\n    // inlining of macro Wlc_NtkForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vRefine)) \u0026\u0026 (((pObj) = Wlc_NtkObj(p, Vec_IntEntry(vRefine, i))), 1); i++  {\n        nNodes += Wlc_NtkMarkMffc( p, pObj, vUnmark );\n    }\n    return nNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs abstraction.]\n\n  Description [Derives initial abstraction based on user-specified\n  parameter values, which tell what is the smallest bit-width of a\n  primitive that is being abstracted away.  Currently only add/sub,\n  mul/div, mux, and flop are supported with individual parameters.\n  The second step is to refine the initial abstraction until the\n  point when the property is proved.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wlc_NtkAbsCore2(p *Wlc_Ntk_t, pPars *Wlc_Par_t) int32 {\n    var clk abctime  = Abc_Clock();\n    var nIters int32;\n    var nNodes int32;\n    var nDcFlops int32;\n    var RetValue int32 = -1;\n    // start the bitmap to mark objects that cannot be abstracted because of refinement\n    // currently, this bitmap is empty because abstraction begins without refinement\n    var vUnmark *Vec_Bit_t  = Vec_BitStart( Wlc_NtkObjNumMax(p) );\n    // set up parameters to run PDR\n    var PdrPars Pdr_Par_t;\n    var pPdrPars *Pdr_Par_t = \u0026PdrPars;\n    Pdr_ManSetDefaultParams( pPdrPars );\n    pPdrPars.fUseAbs    = 1;   // use 'pdr -t'  (on-the-fly abstraction)\n    pPdrPars.fCtgs      = 1;   // use 'pdr -nc' (improved generalization)\n    pPdrPars.fSkipDown  = 0;   // use 'pdr -nc' (improved generalization)\n    //pPdrPars-\u003enRestLimit = 500; // reset queue or proof-obligations when it gets larger than this\n    pPdrPars.fVerbose   = pPars.fPdrVerbose;\n    // perform refinement iterations\n    for  nIters = 1; nIters \u003c pPars.nIterMax; nIters++  {\n        var pAig *Aig_Man_t;\n        var pCex *Abc_Cex_t;\n        var vPisNew, vRefine *Vec_Int_t;  \n        var pGia, pTemp *Gia_Man_t;\n        var pAbs *Wlc_Ntk_t;\n\n        if pPars.fVerbose {\n            fmt.Printf(\"\\nIteration %d:\\n\", nIters); }\n\n        // get abstracted GIA and the set of pseudo-PIs (vPisNew)\n        pAbs = Wlc_NtkAbs( p, pPars, vUnmark, \u0026vPisNew, pPars.fVerbose );\n        pGia = Wlc_NtkBitBlast( pAbs, nil );\n\n        // if the abstraction has flops with DC-init state,\n        // new PIs were introduced by bit-blasting at the end of the PI list\n        // here we move these variables to be *before* PPIs, because\n        // PPIs are supposed to be at the end of the PI list for refinement\n        nDcFlops = Wlc_NtkDcFlopNum(pAbs);\n        if nDcFlops \u003e 0 { // DC-init flops are present\n        \n            pGia = Gia_ManPermuteInputs( pTemp = pGia, Wlc_NtkCountObjBits(p, vPisNew), nDcFlops );\n            Gia_ManStop( pTemp );\n        }\n        // if the word-level outputs have to be XORs, this is a place to do it\n        if pPars.fXorOutput {\n            pGia = Gia_ManTransformMiter2( pTemp = pGia );\n            Gia_ManStop( pTemp );\n        }\n        if pPars.fVerbose {\n            fmt.Printf(\"Derived abstraction with %d objects and %d PPIs. Bit-blasted AIG stats are:\\n\", Wlc_NtkObjNum(pAbs), Vec_IntSize(vPisNew)); \n            Gia_ManPrintStats( pGia, nil );\n        }\n        Wlc_NtkFree( pAbs );\n\n        // try to prove abstracted GIA by converting it to AIG and calling PDR\n        pAig = Gia_ManToAigSimple( pGia );\n        RetValue = Pdr_ManSolve( pAig, pPdrPars );\n        pCex = pAig.pSeqModel; pAig.pSeqModel = nil;\n        Aig_ManStop( pAig );\n\n        // consider outcomes\n        if pCex == nil {\n            assert((RetValue != 0), \"RetValue\"); // proved or undecided\n            Gia_ManStop( pGia );\n            Vec_IntFree( vPisNew );\n            break;\n        }\n\n        // perform refinement\n        vRefine = Wlc_NtkAbsRefinement( p, pGia, pCex, vPisNew );\n        Gia_ManStop( pGia );\n        Vec_IntFree( vPisNew );\n        if vRefine == nil { // real CEX\n        \n            Abc_CexFree( pCex ); // return CEX in the future\n            break;\n        }\n\n        // update the set of objects to be un-abstracted\n        nNodes = Wlc_NtkRemoveFromAbstraction( p, vRefine, vUnmark );\n        if pPars.fVerbose {\n            fmt.Printf(\"Refinement of CEX in frame %d came up with %d un-abstacted PPIs, whose MFFCs include %d objects.\\n\", pCex.iFrame, Vec_IntSize(vRefine), nNodes); }\n        Vec_IntFree( vRefine );\n        Abc_CexFree( pCex );\n    }\n    Vec_BitFree( vUnmark );\n    // report the result\n    if pPars.fVerbose {\n        fmt.Printf(\"\\n\"); }\n    fmt.Printf(\"Abstraction \");\n    if RetValue == 0 {\n        fmt.Printf(\"resulted in a real CEX\");\n    } else if RetValue == 1 {\n        fmt.Printf(\"is successfully proved\");\n    } else { \n        fmt.Printf(\"timed out\"); }\n    fmt.Printf(\" after %d iterations. \", nIters);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

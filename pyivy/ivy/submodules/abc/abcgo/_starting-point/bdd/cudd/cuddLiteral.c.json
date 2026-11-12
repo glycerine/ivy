@@ -1,0 +1,235 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c",
+  "SHA256": "02b14508ae955e1db619584c2250fa3906afc55ed64200a17f0255a90c70c82f",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 79,
+        "Column": 1,
+        "ByteOffset": 3265
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_bddLiteralSetIntersection",
+      "Start": 4907,
+      "End": 5161,
+      "BodyStart": 4994,
+      "Original": "DdNode *\nCudd_bddLiteralSetIntersection(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * g)\n{\n    DdNode *res;\n\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddBddLiteralSetIntersectionRecur(dd,f,g);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_bddLiteralSetIntersection(dd *DdManager, f *DdNode, g *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddBddLiteralSetIntersectionRecur(dd,f,g);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddBddLiteralSetIntersectionRecur",
+      "Start": 5951,
+      "End": 8850,
+      "BodyStart": 6042,
+      "Original": "DdNode *\ncuddBddLiteralSetIntersectionRecur(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * g)\n{\n    DdNode *res, *tmp;\n    DdNode *F, *G;\n    DdNode *fc, *gc;\n    DdNode *one;\n    DdNode *zero;\n    unsigned int topf, topg, comple;\n    int phasef, phaseg;\n\n    statLine(dd);\n    if (f == g) return(f);\n\n    F = Cudd_Regular(f);\n    G = Cudd_Regular(g);\n    one = DD_ONE(dd);\n\n    /* Here f != g. If F == G, then f and g are complementary.\n    ** Since they are two cubes, this case only occurs when f == v,\n    ** g == v', and v is a variable or its complement.\n    */\n    if (F == G) return(one);\n\n    zero = Cudd_Not(one);\n    topf = cuddI(dd,F-\u003eindex);\n    topg = cuddI(dd,G-\u003eindex);\n    /* Look for a variable common to both cubes. If there are none, this\n    ** loop will stop when the constant node is reached in both cubes.\n    */\n    while (topf != topg) {\n        if (topf \u003c topg) {      /* move down on f */\n            comple = f != F;\n            f = cuddT(F);\n            if (comple) f = Cudd_Not(f);\n            if (f == zero) {\n                f = cuddE(F);\n                if (comple) f = Cudd_Not(f);\n            }\n            F = Cudd_Regular(f);\n            topf = cuddI(dd,F-\u003eindex);\n        } else if (topg \u003c topf) {\n            comple = g != G;\n            g = cuddT(G);\n            if (comple) g = Cudd_Not(g);\n            if (g == zero) {\n                g = cuddE(G);\n                if (comple) g = Cudd_Not(g);\n            }\n            G = Cudd_Regular(g);\n            topg = cuddI(dd,G-\u003eindex);\n        }\n    }\n\n    /* At this point, f == one \u003c=\u003e g == 1. It suffices to test one of them. */\n    if (f == one) return(one);\n\n    res = cuddCacheLookup2(dd,Cudd_bddLiteralSetIntersection,f,g);\n    if (res != NULL) {\n        return(res);\n    }\n\n    /* Here f and g are both non constant and have the same top variable. */\n    comple = f != F;\n    fc = cuddT(F);\n    phasef = 1;\n    if (comple) fc = Cudd_Not(fc);\n    if (fc == zero) {\n        fc = cuddE(F);\n        phasef = 0;\n        if (comple) fc = Cudd_Not(fc);\n    }\n    comple = g != G;\n    gc = cuddT(G);\n    phaseg = 1;\n    if (comple) gc = Cudd_Not(gc);\n    if (gc == zero) {\n        gc = cuddE(G);\n        phaseg = 0;\n        if (comple) gc = Cudd_Not(gc);\n    }\n\n    tmp = cuddBddLiteralSetIntersectionRecur(dd,fc,gc);\n    if (tmp == NULL) {\n        return(NULL);\n    }\n\n    if (phasef != phaseg) {\n        res = tmp;\n    } else {\n        cuddRef(tmp);\n        if (phasef == 0) {\n            res = cuddBddAndRecur(dd,Cudd_Not(dd-\u003evars[F-\u003eindex]),tmp);\n        } else {\n            res = cuddBddAndRecur(dd,dd-\u003evars[F-\u003eindex],tmp);\n        }\n        if (res == NULL) {\n            Cudd_RecursiveDeref(dd,tmp);\n            return(NULL);\n        }\n        cuddDeref(tmp); /* Just cuddDeref, because it is included in result */\n    }\n\n    cuddCacheInsert2(dd,Cudd_bddLiteralSetIntersection,f,g,res);\n\n    return(res);\n\n}",
+      "Draft": "func cuddBddLiteralSetIntersectionRecur(dd *DdManager, f *DdNode, g *DdNode) *DdNode {\n    var res, tmp *DdNode;\n    var F, G *DdNode;\n    var fc, gc *DdNode;\n    var one *DdNode;\n    var zero *DdNode;\n    unsigned int topf, topg, comple;\n    var phasef, phaseg int32;\n\n    statLine(dd);\n    if f == g { return(f); }\n\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n\n    /* Here f != g. If F == G, then f and g are complementary.\n    ** Since they are two cubes, this case only occurs when f == v,\n    ** g == v', and v is a variable or its complement.\n    */\n    if F == G { return(one); }\n\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n    // inlining of macro cuddI\n    \n    if (F.index)==CUDD_CONST_INDEX {\n        topf = int32((F.index));\n    } else {\n        topf = (dd).perm[(F.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (G.index)==CUDD_CONST_INDEX {\n        topg = int32((G.index));\n    } else {\n        topg = (dd).perm[(G.index)];\n    }\n    /* Look for a variable common to both cubes. If there are none, this\n    ** loop will stop when the constant node is reached in both cubes.\n    */\n    for topf != topg {\n        if topf \u003c topg {      /* move down on f */\n            comple = f != F;\n            // inlining of macro cuddT\n            f = ((F).type.kids.T);\n            // inlining of macro Cudd_Not\n            if comple { f = ((DdNode *)((ptrint)(f) ^ 01)); }\n            if f == zero {\n                // inlining of macro cuddE\n                f = ((F).type.kids.E);\n                // inlining of macro Cudd_Not\n                if comple { f = ((DdNode *)((ptrint)(f) ^ 01)); }\n            }\n            // inlining of macro Cudd_Regular\n            F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n            // inlining of macro cuddI\n            \n            if (F.index)==CUDD_CONST_INDEX {\n                topf = int32((F.index));\n            } else {\n                topf = (dd).perm[(F.index)];\n            }\n        } else if topg \u003c topf {\n            comple = g != G;\n            // inlining of macro cuddT\n            g = ((G).type.kids.T);\n            // inlining of macro Cudd_Not\n            if comple { g = ((DdNode *)((ptrint)(g) ^ 01)); }\n            if g == zero {\n                // inlining of macro cuddE\n                g = ((G).type.kids.E);\n                // inlining of macro Cudd_Not\n                if comple { g = ((DdNode *)((ptrint)(g) ^ 01)); }\n            }\n            // inlining of macro Cudd_Regular\n            G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n            // inlining of macro cuddI\n            \n            if (G.index)==CUDD_CONST_INDEX {\n                topg = int32((G.index));\n            } else {\n                topg = (dd).perm[(G.index)];\n            }\n        }\n    }\n\n    /* At this point, f == one \u003c=\u003e g == 1. It suffices to test one of them. */\n    if f == one { return(one); }\n\n    res = cuddCacheLookup2(dd,Cudd_bddLiteralSetIntersection,f,g);\n    if res != nil {\n        return(res);\n    }\n\n    /* Here f and g are both non constant and have the same top variable. */\n    comple = f != F;\n    // inlining of macro cuddT\n    fc = ((F).type.kids.T);\n    phasef = 1;\n    // inlining of macro Cudd_Not\n    if comple { fc = ((DdNode *)((ptrint)(fc) ^ 01)); }\n    if fc == zero {\n        // inlining of macro cuddE\n        fc = ((F).type.kids.E);\n        phasef = 0;\n        // inlining of macro Cudd_Not\n        if comple { fc = ((DdNode *)((ptrint)(fc) ^ 01)); }\n    }\n    comple = g != G;\n    // inlining of macro cuddT\n    gc = ((G).type.kids.T);\n    phaseg = 1;\n    // inlining of macro Cudd_Not\n    if comple { gc = ((DdNode *)((ptrint)(gc) ^ 01)); }\n    if gc == zero {\n        // inlining of macro cuddE\n        gc = ((G).type.kids.E);\n        phaseg = 0;\n        // inlining of macro Cudd_Not\n        if comple { gc = ((DdNode *)((ptrint)(gc) ^ 01)); }\n    }\n\n    tmp = cuddBddLiteralSetIntersectionRecur(dd,fc,gc);\n    if tmp == nil {\n        return(nil);\n    }\n\n    if phasef != phaseg {\n        res = tmp;\n    } else {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(tmp).ref);\n        if phasef == 0 {\n            // inlining of macro Cudd_Not\n            res = cuddBddAndRecur(dd,((DdNode *)((ptrint)(dd.vars[F.index]) ^ 01)),tmp);\n        } else {\n            res = cuddBddAndRecur(dd,dd.vars[F.index],tmp);\n        }\n        if res == nil {\n            Cudd_RecursiveDeref(dd,tmp);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(tmp).ref); /* Just cuddDeref, because it is included in result */\n    }\n\n    cuddCacheInsert2(dd,Cudd_bddLiteralSetIntersection,f,g,res);\n\n    return(res);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::mechanical::do::4981",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5018,
+      "End": 5020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::pointer-cast::6270",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6258,
+      "End": 6258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::pointer-cast::6360",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6283,
+      "End": 6283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::pointer-cast::6738",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6557,
+      "End": 6557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::pointer-cast::7431",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6948,
+      "End": 6948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::pointer-cast::7649",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7052,
+      "End": 7052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::pointer-cast::7759",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7095,
+      "End": 7095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::pointer-cast::8138",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7268,
+      "End": 7268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::pointer-cast::8356",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7372,
+      "End": 7372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::pointer-cast::8466",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7415,
+      "End": 7415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::pointer-cast::9128",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7871,
+      "End": 7871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::pointer-cast::9346",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7975,
+      "End": 7975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::pointer-cast::9557",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8072,
+      "End": 8072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::pointer-cast::9775",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8176,
+      "End": 8176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::pointer-cast::10178",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8451,
+      "End": 8451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::Cudd_bddLiteralSetIntersection",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_bddLiteralSetIntersection",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4907,
+      "End": 5161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::cuddBddLiteralSetIntersectionRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddBddLiteralSetIntersectionRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5951,
+      "End": 8850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3265,
+      "End": 3376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::macro-inline::6208",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6208,
+      "End": 6220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::macro-inline::8373",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8373,
+      "End": 8385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddLiteral.c::macro-inline::8687",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8687,
+      "End": 8701
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddLiteral.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions for manipulation of literal sets represented by\n  BDDs.]\n\n  Description [External procedures included in this file:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_bddLiteralSetIntersection()\n                \u003c/ul\u003e\n            Internal procedures included in this file:\n                \u003cul\u003e\n                \u003cli\u003e cuddBddLiteralSetIntersectionRecur()\n                \u003c/ul\u003e]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddLiteral.c,v 1.8 2004/08/13 18:04:50 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the intesection of two sets of literals\n  represented as BDDs.]\n\n  Description [Computes the intesection of two sets of literals\n  represented as BDDs. Each set is represented as a cube of the\n  literals in the set. The empty set is represented by the constant 1.\n  No variable can be simultaneously present in both phases in a set.\n  Returns a pointer to the BDD representing the intersected sets, if\n  successful; NULL otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc Cudd_bddLiteralSetIntersection(dd *DdManager, f *DdNode, g *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        dd.reordered = 0;\n        res = cuddBddLiteralSetIntersectionRecur(dd,f,g);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_bddLiteralSetIntersection */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of\n  Cudd_bddLiteralSetIntersection.]\n\n  Description [Performs the recursive step of\n  Cudd_bddLiteralSetIntersection. Scans the cubes for common variables,\n  and checks whether they agree in phase.  Returns a pointer to the\n  resulting cube if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc cuddBddLiteralSetIntersectionRecur(dd *DdManager, f *DdNode, g *DdNode) *DdNode {\n    var res, tmp *DdNode;\n    var F, G *DdNode;\n    var fc, gc *DdNode;\n    var one *DdNode;\n    var zero *DdNode;\n    unsigned int topf, topg, comple;\n    var phasef, phaseg int32;\n\n    statLine(dd);\n    if f == g { return(f); }\n\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n\n    /* Here f != g. If F == G, then f and g are complementary.\n    ** Since they are two cubes, this case only occurs when f == v,\n    ** g == v', and v is a variable or its complement.\n    */\n    if F == G { return(one); }\n\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n    // inlining of macro cuddI\n    \n    if (F.index)==CUDD_CONST_INDEX {\n        topf = int32((F.index));\n    } else {\n        topf = (dd).perm[(F.index)];\n    }\n    // inlining of macro cuddI\n    \n    if (G.index)==CUDD_CONST_INDEX {\n        topg = int32((G.index));\n    } else {\n        topg = (dd).perm[(G.index)];\n    }\n    /* Look for a variable common to both cubes. If there are none, this\n    ** loop will stop when the constant node is reached in both cubes.\n    */\n    for topf != topg {\n        if topf \u003c topg {      /* move down on f */\n            comple = f != F;\n            // inlining of macro cuddT\n            f = ((F).type.kids.T);\n            // inlining of macro Cudd_Not\n            if comple { f = ((DdNode *)((ptrint)(f) ^ 01)); }\n            if f == zero {\n                // inlining of macro cuddE\n                f = ((F).type.kids.E);\n                // inlining of macro Cudd_Not\n                if comple { f = ((DdNode *)((ptrint)(f) ^ 01)); }\n            }\n            // inlining of macro Cudd_Regular\n            F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n            // inlining of macro cuddI\n            \n            if (F.index)==CUDD_CONST_INDEX {\n                topf = int32((F.index));\n            } else {\n                topf = (dd).perm[(F.index)];\n            }\n        } else if topg \u003c topf {\n            comple = g != G;\n            // inlining of macro cuddT\n            g = ((G).type.kids.T);\n            // inlining of macro Cudd_Not\n            if comple { g = ((DdNode *)((ptrint)(g) ^ 01)); }\n            if g == zero {\n                // inlining of macro cuddE\n                g = ((G).type.kids.E);\n                // inlining of macro Cudd_Not\n                if comple { g = ((DdNode *)((ptrint)(g) ^ 01)); }\n            }\n            // inlining of macro Cudd_Regular\n            G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n            // inlining of macro cuddI\n            \n            if (G.index)==CUDD_CONST_INDEX {\n                topg = int32((G.index));\n            } else {\n                topg = (dd).perm[(G.index)];\n            }\n        }\n    }\n\n    /* At this point, f == one \u003c=\u003e g == 1. It suffices to test one of them. */\n    if f == one { return(one); }\n\n    res = cuddCacheLookup2(dd,Cudd_bddLiteralSetIntersection,f,g);\n    if res != nil {\n        return(res);\n    }\n\n    /* Here f and g are both non constant and have the same top variable. */\n    comple = f != F;\n    // inlining of macro cuddT\n    fc = ((F).type.kids.T);\n    phasef = 1;\n    // inlining of macro Cudd_Not\n    if comple { fc = ((DdNode *)((ptrint)(fc) ^ 01)); }\n    if fc == zero {\n        // inlining of macro cuddE\n        fc = ((F).type.kids.E);\n        phasef = 0;\n        // inlining of macro Cudd_Not\n        if comple { fc = ((DdNode *)((ptrint)(fc) ^ 01)); }\n    }\n    comple = g != G;\n    // inlining of macro cuddT\n    gc = ((G).type.kids.T);\n    phaseg = 1;\n    // inlining of macro Cudd_Not\n    if comple { gc = ((DdNode *)((ptrint)(gc) ^ 01)); }\n    if gc == zero {\n        // inlining of macro cuddE\n        gc = ((G).type.kids.E);\n        phaseg = 0;\n        // inlining of macro Cudd_Not\n        if comple { gc = ((DdNode *)((ptrint)(gc) ^ 01)); }\n    }\n\n    tmp = cuddBddLiteralSetIntersectionRecur(dd,fc,gc);\n    if tmp == nil {\n        return(nil);\n    }\n\n    if phasef != phaseg {\n        res = tmp;\n    } else {\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(tmp).ref);\n        if phasef == 0 {\n            // inlining of macro Cudd_Not\n            res = cuddBddAndRecur(dd,((DdNode *)((ptrint)(dd.vars[F.index]) ^ 01)),tmp);\n        } else {\n            res = cuddBddAndRecur(dd,dd.vars[F.index],tmp);\n        }\n        if res == nil {\n            Cudd_RecursiveDeref(dd,tmp);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(tmp).ref); /* Just cuddDeref, because it is included in result */\n    }\n\n    cuddCacheInsert2(dd,Cudd_bddLiteralSetIntersection,f,g,res);\n\n    return(res);\n\n} /* end of cuddBddLiteralSetIntersectionRecur */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

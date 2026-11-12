@@ -1,0 +1,1277 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h",
+  "SHA256": "aa8f258960662968ff7b0925d4cda10df2259daca6784fa581b34bff326e08de",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "converted",
+      "Message": "Whole known struct reset to its Go zero value; raw layout is not reproduced.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 3357
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Vec_Mem_t) );"
+    },
+    {
+      "Name": "ABC_CALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 101,
+        "Column": 9,
+        "ByteOffset": 3620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_CALLOC( Vec_Mem_t, 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 111,
+        "Column": 9,
+        "ByteOffset": 3888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.ppPages[i] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 113,
+        "Column": 5,
+        "ByteOffset": 3924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.ppPages );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 5782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 \u0026\u0026 i \u003c p.nEntries );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 5947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nEntries \u003e 0 );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 6139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memmove( pPlace, pEntry, sizeof(word) * p.nEntrySize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 6253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i \u003e= 0 );"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 29,
+        "ByteOffset": 6516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                p.ppPages = ABC_REALLOC( word *, p.ppPages, (p.nPageAlloc = p.nPageAlloc ? 2 * p.nPageAlloc : iPageNew + 32) ); }"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 32,
+        "ByteOffset": 6749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                p.ppPages[k] = ABC_ALLOC( word, p.nEntrySize * (1 \u003c\u003c p.LogPageSze) );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 7113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memmove( pPlace, pEntry, sizeof(word) * (size_t)p.nEntrySize );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 232,
+        "Column": 5,
+        "ByteOffset": 7288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memmove( pPlace, pEntry, sizeof(word) * (size_t)p.nEntrySize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 249,
+        "Column": 5,
+        "ByteOffset": 7698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nEntriesNew \u003c= p.nEntries );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 253,
+        "Column": 9,
+        "ByteOffset": 7866
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.ppPages[i] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 5,
+        "ByteOffset": 8195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 271,
+        "Column": 9,
+        "ByteOffset": 8268
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%d\", HexDigit );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 273,
+        "Column": 9,
+        "ByteOffset": 8323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%c\", 'A' + HexDigit-10 ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 278,
+        "Column": 17,
+        "ByteOffset": 8483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFile == stdout {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 279,
+        "Column": 9,
+        "ByteOffset": 8500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Memory vector has %d entries: \\n\", Vec_MemEntryNum(pVec) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 9,
+        "ByteOffset": 8923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 302,
+        "Column": 5,
+        "ByteOffset": 9287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vTable == nil \u0026\u0026 p.vNexts == nil );"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 327,
+        "Column": 13,
+        "ByteOffset": 10244
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !memcmp( Vec_MemReadEntry(p, *pSpot), pEntry, sizeof(word) * p.nEntrySize ) { // equal"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 340,
+        "Column": 9,
+        "ByteOffset": 10668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d \", Count );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 342,
+        "Column": 5,
+        "ByteOffset": 10702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 353,
+        "Column": 9,
+        "ByteOffset": 11155
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *pSpot == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 357,
+        "Column": 5,
+        "ByteOffset": 11266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nEntries == Vec_IntSize(p.vNexts) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 5,
+        "ByteOffset": 11668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nEntries == Vec_IntSize(p.vNexts) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 404,
+        "Column": 25,
+        "ByteOffset": 12556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var uTruth *word  = ABC_ALLOC( word, nWords ); "
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 407,
+        "Column": 5,
+        "ByteOffset": 12684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( uTruth, 0x00, sizeof(word) * nWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 408,
+        "Column": 50,
+        "ByteOffset": 12780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Value = Vec_MemHashInsert( vTtMem, uTruth ); assert( Value == 0 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 410,
+        "Column": 9,
+        "ByteOffset": 12826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( uTruth, 0x55, sizeof(word) * nWords );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 412,
+        "Column": 9,
+        "ByteOffset": 12894
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( uTruth, 0xAA, sizeof(word) * nWords ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 413,
+        "Column": 50,
+        "ByteOffset": 12992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Value = Vec_MemHashInsert( vTtMem, uTruth ); assert( Value == 1 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 414,
+        "Column": 5,
+        "ByteOffset": 13018
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( uTruth );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 425,
+        "Column": 25,
+        "ByteOffset": 13272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var uTruth *word  = ABC_ALLOC( word, nWords ); "
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 426,
+        "Column": 5,
+        "ByteOffset": 13304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( uTruth, 0xCA, sizeof(word) * nWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 427,
+        "Column": 45,
+        "ByteOffset": 13395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Value = Vec_MemHashInsert( p, uTruth ); assert( Value == 2 );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 428,
+        "Column": 5,
+        "ByteOffset": 13421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( uTruth );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 433,
+        "Column": 5,
+        "ByteOffset": 13575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( pFileName, \"tt_%s_%02d.txt\", pName ? pName : nil, nLutSize );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 435,
+        "Column": 17,
+        "ByteOffset": 13677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 437,
+        "Column": 17,
+        "ByteOffset": 13732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pFile = stdout;"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 440,
+        "Column": 17,
+        "ByteOffset": 13791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pFile != stdout {"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 441,
+        "Column": 9,
+        "ByteOffset": 13808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fclose( pFile ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 442,
+        "Column": 5,
+        "ByteOffset": 13831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Dumped %d %d-var truth tables into file \\\"%s\\\" (%.2f MB).\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Vec_MemAlloc_",
+      "Start": 3309,
+      "End": 3567,
+      "BodyStart": 3391,
+      "Original": "static inline void Vec_MemAlloc_( Vec_Mem_t * p, int nEntrySize, int LogPageSze )\n{\n    memset( p, 0, sizeof(Vec_Mem_t) );\n    p-\u003enEntrySize = nEntrySize;\n    p-\u003eLogPageSze = LogPageSze;\n    p-\u003ePageMask   = (1 \u003c\u003c p-\u003eLogPageSze) - 1;\n    p-\u003eiPage      = -1;\n}",
+      "Draft": "func Vec_MemAlloc_(p *Vec_Mem_t, nEntrySize int32, LogPageSze int32) {\n    *p = Vec_Mem_t{};\n    p.nEntrySize = nEntrySize;\n    p.LogPageSze = LogPageSze;\n    p.PageMask   = (1 \u003c\u003c p.LogPageSze) - 1;\n    p.iPage      = -1;\n}"
+    },
+    {
+      "Name": "Vec_MemAlloc",
+      "Start": 3568,
+      "End": 3847,
+      "BodyStart": 3641,
+      "Original": "static inline Vec_Mem_t * Vec_MemAlloc( int nEntrySize, int LogPageSze )\n{\n    Vec_Mem_t * p;\n    p = ABC_CALLOC( Vec_Mem_t, 1 );\n    p-\u003enEntrySize = nEntrySize;\n    p-\u003eLogPageSze = LogPageSze;\n    p-\u003ePageMask   = (1 \u003c\u003c p-\u003eLogPageSze) - 1;\n    p-\u003eiPage      = -1;\n    return p;\n}",
+      "Draft": "func Vec_MemAlloc(nEntrySize int32, LogPageSze int32) *Vec_Mem_t {\n    var p *Vec_Mem_t;\n    p = new(Vec_Mem_t);\n    p.nEntrySize = nEntrySize;\n    p.LogPageSze = LogPageSze;\n    p.PageMask   = (1 \u003c\u003c p.LogPageSze) - 1;\n    p.iPage      = -1;\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_MemFree",
+      "Start": 3848,
+      "End": 4030,
+      "BodyStart": 3896,
+      "Original": "static inline void Vec_MemFree( Vec_Mem_t * p )\n{\n    int i;\n    for ( i = 0; i \u003c= p-\u003eiPage; i++ )\n        ABC_FREE( p-\u003eppPages[i] );\n    ABC_FREE( p-\u003eppPages );\n    ABC_FREE( p );\n}",
+      "Draft": "func Vec_MemFree(p *Vec_Mem_t) {\n    var i int32;\n    for  i = 0; i \u003c= p.iPage; i++  {\n        ABC_FREE( p.ppPages[i] );\n    }\n    ABC_FREE( p.ppPages );\n    ABC_FREE( p );\n}"
+    },
+    {
+      "Name": "Vec_MemFreeP",
+      "Start": 4031,
+      "End": 4160,
+      "BodyStart": 4081,
+      "Original": "static inline void Vec_MemFreeP( Vec_Mem_t ** p )\n{\n    if ( *p == NULL )\n        return;\n    Vec_MemFree( *p );\n    *p = NULL;\n}",
+      "Draft": "func Vec_MemFreeP(p **Vec_Mem_t) {\n    if *p == nil {\n        return; }\n    Vec_MemFree( *p );\n    *p = nil;\n}"
+    },
+    {
+      "Name": "Vec_MemDup",
+      "Start": 4161,
+      "End": 4261,
+      "BodyStart": 4218,
+      "Original": "static inline Vec_Mem_t * Vec_MemDup( Vec_Mem_t * pVec )\n{\n    Vec_Mem_t * p = NULL;\n    return p;\n}",
+      "Draft": "func Vec_MemDup(pVec *Vec_Mem_t) *Vec_Mem_t {\n    var p *Vec_Mem_t  = nil;\n    return p;\n}"
+    },
+    {
+      "Name": "Vec_MemFill",
+      "Start": 4526,
+      "End": 4594,
+      "BodyStart": 4591,
+      "Original": "static inline void Vec_MemFill( Vec_Mem_t * pVec, int nEntries )\n{\n}",
+      "Draft": "func Vec_MemFill(pVec *Vec_Mem_t, nEntries int32) {\n}"
+    },
+    {
+      "Name": "Vec_MemClean",
+      "Start": 4595,
+      "End": 4664,
+      "BodyStart": 4661,
+      "Original": "static inline void Vec_MemClean( Vec_Mem_t * pVec, int nEntries )\n{\n}",
+      "Draft": "func Vec_MemClean(pVec *Vec_Mem_t, nEntries int32) {\n}"
+    },
+    {
+      "Name": "Vec_MemEntrySize",
+      "Start": 4900,
+      "End": 4981,
+      "BodyStart": 4952,
+      "Original": "static inline int Vec_MemEntrySize( Vec_Mem_t * p )\n{\n    return p-\u003enEntrySize;\n}",
+      "Draft": "func Vec_MemEntrySize(p *Vec_Mem_t) int32 {\n    return p.nEntrySize;\n}"
+    },
+    {
+      "Name": "Vec_MemEntryNum",
+      "Start": 4982,
+      "End": 5060,
+      "BodyStart": 5033,
+      "Original": "static inline int Vec_MemEntryNum( Vec_Mem_t * p )\n{\n    return p-\u003enEntries;\n}",
+      "Draft": "func Vec_MemEntryNum(p *Vec_Mem_t) int32 {\n    return p.nEntries;\n}"
+    },
+    {
+      "Name": "Vec_MemPageSize",
+      "Start": 5061,
+      "End": 5141,
+      "BodyStart": 5112,
+      "Original": "static inline int Vec_MemPageSize( Vec_Mem_t * p )\n{\n    return p-\u003eLogPageSze;\n}",
+      "Draft": "func Vec_MemPageSize(p *Vec_Mem_t) int32 {\n    return p.LogPageSze;\n}"
+    },
+    {
+      "Name": "Vec_MemPageNum",
+      "Start": 5142,
+      "End": 5218,
+      "BodyStart": 5192,
+      "Original": "static inline int Vec_MemPageNum( Vec_Mem_t * p )\n{\n    return p-\u003eiPage+1;\n}",
+      "Draft": "func Vec_MemPageNum(p *Vec_Mem_t) int32 {\n    return p.iPage+1;\n}"
+    },
+    {
+      "Name": "Vec_MemMemory",
+      "Start": 5454,
+      "End": 5667,
+      "BodyStart": 5506,
+      "Original": "static inline double Vec_MemMemory( Vec_Mem_t * p )\n{\n    return (double)sizeof(word) * p-\u003enEntrySize * (1 \u003c\u003c p-\u003eLogPageSze) * (p-\u003eiPage + 1) + (double)sizeof(word *) * p-\u003enPageAlloc + (double)sizeof(Vec_Mem_t);\n}",
+      "Draft": "func Vec_MemMemory(p *Vec_Mem_t) float64 {\n    return float64(sizeof(word)) * p.nEntrySize * (1 \u003c\u003c p.LogPageSze) * (p.iPage + 1) + float64(sizeof(word *)) * p.nPageAlloc + float64(sizeof(Vec_Mem_t));\n}"
+    },
+    {
+      "Name": "Vec_MemReadEntry",
+      "Start": 5903,
+      "End": 6088,
+      "BodyStart": 5965,
+      "Original": "static inline word * Vec_MemReadEntry( Vec_Mem_t * p, int i )\n{\n    assert( i \u003e= 0 \u0026\u0026 i \u003c p-\u003enEntries );\n    return p-\u003eppPages[i \u003e\u003e p-\u003eLogPageSze] + p-\u003enEntrySize * (i \u0026 p-\u003ePageMask);\n}",
+      "Draft": "func Vec_MemReadEntry(p *Vec_Mem_t, i int32) *word {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nEntries, \"i \u003e= 0 \u0026\u0026 i \u003c p.nEntries\");\n    return p.ppPages[i \u003e\u003e p.LogPageSze] + p.nEntrySize * (i \u0026 p.PageMask);\n}"
+    },
+    {
+      "Name": "Vec_MemReadEntryLast",
+      "Start": 6089,
+      "End": 6231,
+      "BodyStart": 6148,
+      "Original": "static inline word * Vec_MemReadEntryLast( Vec_Mem_t * p )\n{\n    assert( p-\u003enEntries \u003e 0 );\n    return Vec_MemReadEntry( p, p-\u003enEntries-1 );\n}",
+      "Draft": "func Vec_MemReadEntryLast(p *Vec_Mem_t) *word {\n    assert(p.nEntries \u003e 0, \"p.nEntries \u003e 0\");\n    return Vec_MemReadEntry( p, p.nEntries-1 );\n}"
+    },
+    {
+      "Name": "Vec_MemWriteEntry",
+      "Start": 6232,
+      "End": 6418,
+      "BodyStart": 6308,
+      "Original": "static inline void Vec_MemWriteEntry( Vec_Mem_t * p, int i, word * pEntry )\n{\n    word * pPlace = Vec_MemReadEntry( p, i );\n    memmove( pPlace, pEntry, sizeof(word) * p-\u003enEntrySize );\n}",
+      "Draft": "func Vec_MemWriteEntry(p *Vec_Mem_t, i int32, pEntry *word) {\n    var pPlace *word  = Vec_MemReadEntry( p, i );\n    memmove( pPlace, pEntry, sizeof(word) * p.nEntrySize );\n}"
+    },
+    {
+      "Name": "Vec_MemGetEntry",
+      "Start": 6419,
+      "End": 7229,
+      "BodyStart": 6480,
+      "Original": "static inline word * Vec_MemGetEntry( Vec_Mem_t * p, int i )\n{\n    assert( i \u003e= 0 );\n    if ( i \u003e= p-\u003enEntries )\n    {\n        int k, iPageNew = (i \u003e\u003e p-\u003eLogPageSze);\n        if ( p-\u003eiPage \u003c iPageNew )\n        {\n            // realloc page pointers if needed\n            if ( iPageNew \u003e= p-\u003enPageAlloc )\n                p-\u003eppPages = ABC_REALLOC( word *, p-\u003eppPages, (p-\u003enPageAlloc = p-\u003enPageAlloc ? 2 * p-\u003enPageAlloc : iPageNew + 32) );\n            // allocate new pages if needed\n            for ( k = p-\u003eiPage + 1; k \u003c= iPageNew; k++ )\n                p-\u003eppPages[k] = ABC_ALLOC( word, p-\u003enEntrySize * (1 \u003c\u003c p-\u003eLogPageSze) );\n            // update page counter\n            p-\u003eiPage = iPageNew;\n        }\n        // update entry counter\n        p-\u003enEntries = i + 1;\n    }\n    return Vec_MemReadEntry( p, i );\n}",
+      "Draft": "func Vec_MemGetEntry(p *Vec_Mem_t, i int32) *word {\n    assert(i \u003e= 0, \"i \u003e= 0\");\n    if i \u003e= p.nEntries {\n        var k int32;\n        var iPageNew int32 = (i \u003e\u003e p.LogPageSze);\n        if p.iPage \u003c iPageNew {\n            // realloc page pointers if needed\n            if iPageNew \u003e= p.nPageAlloc {\n                p.ppPages = ABC_REALLOC( word *, p.ppPages, (p.nPageAlloc = p.nPageAlloc ? 2 * p.nPageAlloc : iPageNew + 32) ); }\n            // allocate new pages if needed\n            for  k = p.iPage + 1; k \u003c= iPageNew; k++  {\n                p.ppPages[k] = ABC_ALLOC( word, p.nEntrySize * (1 \u003c\u003c p.LogPageSze) );\n            }\n            // update page counter\n            p.iPage = iPageNew;\n        }\n        // update entry counter\n        p.nEntries = i + 1;\n    }\n    return Vec_MemReadEntry( p, i );\n}"
+    },
+    {
+      "Name": "Vec_MemSetEntry",
+      "Start": 7230,
+      "End": 7421,
+      "BodyStart": 7304,
+      "Original": "static inline void Vec_MemSetEntry( Vec_Mem_t * p, int i, word * pEntry )\n{\n    word * pPlace = Vec_MemGetEntry( p, i );\n    memmove( pPlace, pEntry, sizeof(word) * (size_t)p-\u003enEntrySize );\n}",
+      "Draft": "func Vec_MemSetEntry(p *Vec_Mem_t, i int32, pEntry *word) {\n    var pPlace *word  = Vec_MemGetEntry( p, i );\n    memmove( pPlace, pEntry, sizeof(word) * (size_t)p.nEntrySize );\n}"
+    },
+    {
+      "Name": "Vec_MemPush",
+      "Start": 7422,
+      "End": 7612,
+      "BodyStart": 7485,
+      "Original": "static inline void Vec_MemPush( Vec_Mem_t * p, word * pEntry )\n{\n    word * pPlace = Vec_MemGetEntry( p, p-\u003enEntries );\n    memmove( pPlace, pEntry, sizeof(word) * (size_t)p-\u003enEntrySize );\n}",
+      "Draft": "func Vec_MemPush(p *Vec_Mem_t, pEntry *word) {\n    var pPlace *word  = Vec_MemGetEntry( p, p.nEntries );\n    memmove( pPlace, pEntry, sizeof(word) * (size_t)p.nEntrySize );\n}"
+    },
+    {
+      "Name": "Vec_MemShrink",
+      "Start": 7848,
+      "End": 8154,
+      "BodyStart": 7915,
+      "Original": "static inline void Vec_MemShrink( Vec_Mem_t * p, int nEntriesNew )\n{\n    int i, iPageOld = p-\u003eiPage;\n    assert( nEntriesNew \u003c= p-\u003enEntries );\n    p-\u003enEntries = nEntriesNew;\n    p-\u003eiPage = (nEntriesNew \u003e\u003e p-\u003eLogPageSze);\n    for ( i = p-\u003eiPage + 1; i \u003c= iPageOld; i++ )\n        ABC_FREE( p-\u003eppPages[i] );\n}",
+      "Draft": "func Vec_MemShrink(p *Vec_Mem_t, nEntriesNew int32) {\n    var i int32;\n    var iPageOld int32 = p.iPage;\n    assert(nEntriesNew \u003c= p.nEntries, \"nEntriesNew \u003c= p.nEntries\");\n    p.nEntries = nEntriesNew;\n    p.iPage = (nEntriesNew \u003e\u003e p.LogPageSze);\n    for  i = p.iPage + 1; i \u003c= iPageOld; i++  {\n        ABC_FREE( p.ppPages[i] );\n    }\n}"
+    },
+    {
+      "Name": "Vec_MemDumpDigit",
+      "Start": 8390,
+      "End": 8632,
+      "BodyStart": 8456,
+      "Original": "static inline void Vec_MemDumpDigit( FILE * pFile, int HexDigit )\n{\n    assert( HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16 );\n    if ( HexDigit \u003c 10 )\n        fprintf( pFile, \"%d\", HexDigit );\n    else\n        fprintf( pFile, \"%c\", 'A' + HexDigit-10 );\n}",
+      "Draft": "func Vec_MemDumpDigit(pFile *os.File, HexDigit int32) {\n    assert(HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16, \"HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16\");\n    if HexDigit \u003c 10 {\n        fmt.Fprintf(pFile, \"%d\", HexDigit);\n    } else {\n        fmt.Fprintf(pFile, \"%c\", 'A' + HexDigit-10); }\n}"
+    },
+    {
+      "Name": "Vec_MemDump",
+      "Start": 8633,
+      "End": 9098,
+      "BodyStart": 8698,
+      "Original": "static inline void Vec_MemDump( FILE * pFile, Vec_Mem_t * pVec )\n{\n    word * pEntry;\n    int i, w, d;\n    if ( pFile == stdout )\n        printf( \"Memory vector has %d entries: \\n\", Vec_MemEntryNum(pVec) );\n    Vec_MemForEachEntry( pVec, pEntry, i )\n    {\n        for ( w = pVec-\u003enEntrySize - 1; w \u003e= 0; w-- )\n            for ( d = 15; d \u003e= 0; d-- )\n                Vec_MemDumpDigit( pFile, (int)(pEntry[w] \u003e\u003e (d\u003c\u003c2)) \u0026 15 );\n        fprintf( pFile, \"\\n\" );\n    }\n}",
+      "Draft": "func Vec_MemDump(pFile *os.File, pVec *Vec_Mem_t) {\n    var pEntry *word;\n    var i, w, d int32;\n    if pFile == os.Stdout {\n        fmt.Printf(\"Memory vector has %d entries: \\n\", Vec_MemEntryNum(pVec)); }\n    // inlining of macro Vec_MemForEachEntry\n    for  i = 0; (i \u003c Vec_MemEntryNum(pVec)) \u0026\u0026 ((pEntry) = Vec_MemReadEntry(pVec, i)); i++  {\n        for  w = pVec.nEntrySize - 1; w \u003e= 0; w--  {\n            for  d = 15; d \u003e= 0; d--  {\n                Vec_MemDumpDigit( pFile, int32((pEntry[w] \u003e\u003e (d\u003c\u003c2))) \u0026 15 );\n            }\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Vec_MemHashAlloc",
+      "Start": 9371,
+      "End": 9604,
+      "BodyStart": 9440,
+      "Original": "static inline void Vec_MemHashAlloc( Vec_Mem_t * p, int nTableSize )\n{\n    assert( p-\u003evTable == NULL \u0026\u0026 p-\u003evNexts == NULL );\n    p-\u003evTable = Vec_IntStartFull( Abc_PrimeCudd(nTableSize) );\n    p-\u003evNexts = Vec_IntAlloc( nTableSize );\n}",
+      "Draft": "func Vec_MemHashAlloc(p *Vec_Mem_t, nTableSize int32) {\n    assert(p.vTable == nil \u0026\u0026 p.vNexts == nil, \"p.vTable == nil \u0026\u0026 p.vNexts == nil\");\n    p.vTable = Vec_IntStartFull( Abc_PrimeCudd(nTableSize) );\n    p.vNexts = Vec_IntAlloc( nTableSize );\n}"
+    },
+    {
+      "Name": "Vec_MemHashFree",
+      "Start": 9605,
+      "End": 9761,
+      "BodyStart": 9657,
+      "Original": "static inline void Vec_MemHashFree( Vec_Mem_t * p )\n{\n    if ( p == NULL )\n        return;\n    Vec_IntFreeP( \u0026p-\u003evTable );\n    Vec_IntFreeP( \u0026p-\u003evNexts );\n}",
+      "Draft": "func Vec_MemHashFree(p *Vec_Mem_t) {\n    if p == nil {\n        return; }\n    Vec_IntFreeP( \u0026p.vTable );\n    Vec_IntFreeP( \u0026p.vNexts );\n}"
+    },
+    {
+      "Name": "Vec_MemHashKey",
+      "Start": 9762,
+      "End": 10145,
+      "BodyStart": 9832,
+      "Original": "static inline unsigned Vec_MemHashKey( Vec_Mem_t * p, word * pEntry )\n{\n    static int s_Primes[8] = { 1699, 4177, 5147, 5647, 6343, 7103, 7873, 8147 };\n    int i, nData = 2 * p-\u003enEntrySize;\n    unsigned * pData = (unsigned *)pEntry;\n    unsigned uHash = 0;\n    for ( i = 0; i \u003c nData; i++ )\n        uHash += pData[i] * s_Primes[i \u0026 0x7];\n    return uHash % Vec_IntSize(p-\u003evTable);\n}",
+      "Draft": "func Vec_MemHashKey(p *Vec_Mem_t, pEntry *word) uint32 {\n    \n    var i int32;\n    var nData int32 = 2 * p.nEntrySize;\n    var pData *uint32  = (unsigned *)pEntry;\n    var uHash uint32;\n    for  i = 0; i \u003c nData; i++  {\n        uHash += pData[i] * spStatic_Vec_MemHashKey_s_Primes[i \u0026 0x7];\n    }\n    return uHash % Vec_IntSize(p.vTable);\n}"
+    },
+    {
+      "Name": "Vec_MemHashLookup",
+      "Start": 10146,
+      "End": 10499,
+      "BodyStart": 10209,
+      "Original": "static int * Vec_MemHashLookup( Vec_Mem_t * p, word * pEntry )\n{\n    int * pSpot = Vec_IntEntryP( p-\u003evTable, Vec_MemHashKey(p, pEntry) );\n    for ( ; *pSpot != -1; pSpot = Vec_IntEntryP(p-\u003evNexts, *pSpot) )\n        if ( !memcmp( Vec_MemReadEntry(p, *pSpot), pEntry, sizeof(word) * p-\u003enEntrySize ) ) // equal\n            return pSpot;\n    return pSpot;\n}",
+      "Draft": "func Vec_MemHashLookup(p *Vec_Mem_t, pEntry *word) *int32 {\n    var pSpot *int32  = Vec_IntEntryP( p.vTable, Vec_MemHashKey(p, pEntry) );\n    for  ; *pSpot != -1; pSpot = Vec_IntEntryP(p.vNexts, *pSpot)  {\n        if !memcmp( Vec_MemReadEntry(p, *pSpot), pEntry, sizeof(word) * p.nEntrySize ) { // equal\n            return pSpot; }\n    }\n    return pSpot;\n}"
+    },
+    {
+      "Name": "Vec_MemHashProfile",
+      "Start": 10500,
+      "End": 10829,
+      "BodyStart": 10548,
+      "Original": "static void Vec_MemHashProfile( Vec_Mem_t * p )\n{\n    int e;\n    for ( e = 0; e \u003c 1000; e++ )\n    {\n        int Count = 0;\n        int * pSpot = Vec_IntEntryP( p-\u003evTable, e );\n        for ( ; *pSpot != -1; pSpot = Vec_IntEntryP(p-\u003evNexts, *pSpot) )\n            Count++;\n        printf( \"%d \", Count );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Vec_MemHashProfile(p *Vec_Mem_t) {\n    var e int32;\n    for  e = 0; e \u003c 1000; e++  {\n        var Count int32;\n        var pSpot *int32  = Vec_IntEntryP( p.vTable, e );\n        for  ; *pSpot != -1; pSpot = Vec_IntEntryP(p.vNexts, *pSpot)  {\n            Count++;\n        }\n        fmt.Printf(\"%d \", Count);\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Vec_MemHashResize",
+      "Start": 10830,
+      "End": 11322,
+      "BodyStart": 10877,
+      "Original": "static void Vec_MemHashResize( Vec_Mem_t * p )\n{\n    word * pEntry;\n    int i, * pSpot;\n    //Vec_MemHashProfile( p );\n    Vec_IntFill( p-\u003evTable, Abc_PrimeCudd(2 * Vec_IntSize(p-\u003evTable)), -1 );\n    Vec_IntClear( p-\u003evNexts );\n    Vec_MemForEachEntry( p, pEntry, i )\n    {\n        pSpot = Vec_MemHashLookup( p, pEntry );\n        assert( *pSpot == -1 );\n        *pSpot = Vec_IntSize(p-\u003evNexts);\n        Vec_IntPush( p-\u003evNexts, -1 );\n    }\n    assert( p-\u003enEntries == Vec_IntSize(p-\u003evNexts) );\n}",
+      "Draft": "func Vec_MemHashResize(p *Vec_Mem_t) {\n    var pEntry *word;\n    var i int32;\n    var pSpot *int32;\n    //Vec_MemHashProfile( p );\n    Vec_IntFill( p.vTable, Abc_PrimeCudd(2 * Vec_IntSize(p.vTable)), -1 );\n    Vec_IntClear( p.vNexts );\n    // inlining of macro Vec_MemForEachEntry\n    for  i = 0; (i \u003c Vec_MemEntryNum(p)) \u0026\u0026 ((pEntry) = Vec_MemReadEntry(p, i)); i++  {\n        pSpot = Vec_MemHashLookup( p, pEntry );\n        assert(*pSpot == -1, \"*pSpot == -1\");\n        *pSpot = Vec_IntSize(p.vNexts);\n        Vec_IntPush( p.vNexts, -1 );\n    }\n    assert(p.nEntries == Vec_IntSize(p.vNexts), \"p.nEntries == Vec_IntSize(p.vNexts)\");\n}"
+    },
+    {
+      "Name": "Vec_MemHashInsert",
+      "Start": 11323,
+      "End": 11768,
+      "BodyStart": 11384,
+      "Original": "static int Vec_MemHashInsert( Vec_Mem_t * p, word * pEntry )\n{\n    int * pSpot;\n    if ( p-\u003enEntries \u003e Vec_IntSize(p-\u003evTable) )\n        Vec_MemHashResize( p );\n    pSpot = Vec_MemHashLookup( p, pEntry );\n    if ( *pSpot != -1 )\n        return *pSpot;\n    *pSpot = Vec_IntSize(p-\u003evNexts);\n    Vec_IntPush( p-\u003evNexts, -1 );\n    Vec_MemPush( p, pEntry );\n    assert( p-\u003enEntries == Vec_IntSize(p-\u003evNexts) );\n    return Vec_IntSize(p-\u003evNexts) - 1;\n}",
+      "Draft": "func Vec_MemHashInsert(p *Vec_Mem_t, pEntry *word) int32 {\n    var pSpot *int32;\n    if p.nEntries \u003e Vec_IntSize(p.vTable) {\n        Vec_MemHashResize( p ); }\n    pSpot = Vec_MemHashLookup( p, pEntry );\n    if *pSpot != -1 {\n        return *pSpot; }\n    *pSpot = Vec_IntSize(p.vNexts);\n    Vec_IntPush( p.vNexts, -1 );\n    Vec_MemPush( p, pEntry );\n    assert(p.nEntries == Vec_IntSize(p.vNexts), \"p.nEntries == Vec_IntSize(p.vNexts)\");\n    return Vec_IntSize(p.vNexts) - 1;\n}"
+    },
+    {
+      "Name": "Vec_MemAllocForTTSimple",
+      "Start": 12054,
+      "End": 12287,
+      "BodyStart": 12117,
+      "Original": "static inline Vec_Mem_t * Vec_MemAllocForTTSimple( int nVars )\n{\n    int nWords = (nVars \u003c= 6 ? 1 : (1 \u003c\u003c (nVars - 6)));\n    Vec_Mem_t * vTtMem = Vec_MemAlloc( nWords, 12 );\n    Vec_MemHashAlloc( vTtMem, 10000 );\n    return vTtMem;\n}",
+      "Draft": "func Vec_MemAllocForTTSimple(nVars int32) *Vec_Mem_t {\n    var nWords int32;\n    if nVars \u003c= 6 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars - 6));\n    }\n    var vTtMem *Vec_Mem_t  = Vec_MemAlloc( nWords, 12 );\n    Vec_MemHashAlloc( vTtMem, 10000 );\n    return vTtMem;\n}"
+    },
+    {
+      "Name": "Vec_MemAllocForTT",
+      "Start": 12288,
+      "End": 12936,
+      "BodyStart": 12357,
+      "Original": "static inline Vec_Mem_t * Vec_MemAllocForTT( int nVars, int fCompl )\n{\n    int Value, nWords = (nVars \u003c= 6 ? 1 : (1 \u003c\u003c (nVars - 6)));\n    word * uTruth = ABC_ALLOC( word, nWords ); \n    Vec_Mem_t * vTtMem = Vec_MemAlloc( nWords, 12 );\n    Vec_MemHashAlloc( vTtMem, 10000 );\n    memset( uTruth, 0x00, sizeof(word) * nWords );\n    Value = Vec_MemHashInsert( vTtMem, uTruth ); assert( Value == 0 );\n    if ( fCompl )\n        memset( uTruth, 0x55, sizeof(word) * nWords );\n    else\n        memset( uTruth, 0xAA, sizeof(word) * nWords );\n    Value = Vec_MemHashInsert( vTtMem, uTruth ); assert( Value == 1 );\n    ABC_FREE( uTruth );\n    return vTtMem;\n}",
+      "Draft": "func Vec_MemAllocForTT(nVars int32, fCompl int32) *Vec_Mem_t {\n    var Value int32;\n    var nWords int32;\n    if nVars \u003c= 6 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars - 6));\n    }\n    var uTruth *word  = ABC_ALLOC( word, nWords ); \n    var vTtMem *Vec_Mem_t  = Vec_MemAlloc( nWords, 12 );\n    Vec_MemHashAlloc( vTtMem, 10000 );\n    memset( uTruth, 0x00, sizeof(word) * nWords );\n    Value = Vec_MemHashInsert( vTtMem, uTruth ); assert(Value == 0, \"Value == 0\");\n    if fCompl != 0 {\n        memset( uTruth, 0x55, sizeof(word) * nWords );\n    } else {\n        memset( uTruth, 0xAA, sizeof(word) * nWords ); }\n    Value = Vec_MemHashInsert( vTtMem, uTruth ); assert(Value == 1, \"Value == 1\");\n    ABC_FREE( uTruth );\n    return vTtMem;\n}"
+    },
+    {
+      "Name": "Vec_MemAddMuxTT",
+      "Start": 12937,
+      "End": 13255,
+      "BodyStart": 13000,
+      "Original": "static inline void Vec_MemAddMuxTT( Vec_Mem_t * p, int nVars )\n{\n    int Value, nWords = (nVars \u003c= 6 ? 1 : (1 \u003c\u003c (nVars - 6)));\n    word * uTruth = ABC_ALLOC( word, nWords ); \n    memset( uTruth, 0xCA, sizeof(word) * nWords );\n    Value = Vec_MemHashInsert( p, uTruth ); assert( Value == 2 );\n    ABC_FREE( uTruth );\n}",
+      "Draft": "func Vec_MemAddMuxTT(p *Vec_Mem_t, nVars int32) {\n    var Value int32;\n    var nWords int32;\n    if nVars \u003c= 6 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars - 6));\n    }\n    var uTruth *word  = ABC_ALLOC( word, nWords ); \n    memset( uTruth, 0xCA, sizeof(word) * nWords );\n    Value = Vec_MemHashInsert( p, uTruth ); assert(Value == 2, \"Value == 2\");\n    ABC_FREE( uTruth );\n}"
+    },
+    {
+      "Name": "Vec_MemDumpTruthTables",
+      "Start": 13256,
+      "End": 13816,
+      "BodyStart": 13343,
+      "Original": "static inline void Vec_MemDumpTruthTables( Vec_Mem_t * p, char * pName, int nLutSize )\n{\n    FILE * pFile;\n    char pFileName[1000];\n    sprintf( pFileName, \"tt_%s_%02d.txt\", pName ? pName : NULL, nLutSize );\n    pFile = pName ? fopen( pFileName, \"wb\" ) : stdout;\n    Vec_MemDump( pFile, p );\n    if ( pFile != stdout )\n        fclose( pFile );\n    printf( \"Dumped %d %d-var truth tables into file \\\"%s\\\" (%.2f MB).\\n\", \n        Vec_MemEntryNum(p), nLutSize, pName ? pFileName : \"stdout\",\n        8.0 * Vec_MemEntryNum(p) * Vec_MemEntrySize(p) / (1 \u003c\u003c 20) );\n}",
+      "Draft": "func Vec_MemDumpTruthTables(p *Vec_Mem_t, pName string, nLutSize int32) {\n    var pFile *os.File;\n    var pFileName string // was [1000]byte in C\n\n    pFileName = fmt.Sprintf(\"tt_%s_%02d.txt\", pName ? pName : nil, nLutSize);\n    if pName {\n        pFile = fopen( pFileName, \"wb\" );\n    } else {\n        pFile = os.Stdout;\n    }\n    Vec_MemDump( pFile, p );\n    if pFile != os.Stdout {\n        _ = (pFile).Close(); }\n    fmt.Printf(\"Dumped %d %d-var truth tables into file \\\"%s\\\" (%.2f MB).\\n\", Vec_MemEntryNum(p), nLutSize, pName ? pFileName : \"stdout\", 8.0 * Vec_MemEntryNum(p) * Vec_MemEntrySize(p) / (1 \u003c\u003c 20));\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::struct::Vec_Mem_t",
+      "Category": "struct-review",
+      "Symbol": "Vec_Mem_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1697,
+      "End": 2330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::mechanical::sizeof::3411",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3411,
+      "End": 3417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::mechanical::sizeof::5527",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5527,
+      "End": 5533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::mechanical::sizeof::5606",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5606,
+      "End": 5612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::mechanical::sizeof::5647",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5647,
+      "End": 5653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::mechanical::sizeof::6385",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6385,
+      "End": 6391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::mechanical::sizeof::7380",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7380,
+      "End": 7386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::mechanical::sizeof::7571",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7571,
+      "End": 7577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::mechanical::static::9944",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 9838,
+      "End": 9844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::mechanical::sizeof::10518",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10412,
+      "End": 10418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::mechanical::sizeof::12797",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12588,
+      "End": 12594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::mechanical::sizeof::12941",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12732,
+      "End": 12738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::mechanical::sizeof::13005",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12796,
+      "End": 12802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::mechanical::sizeof::13348",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13139,
+      "End": 13145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::pointer-cast::5612",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5612,
+      "End": 5620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::pointer-cast::10082",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9976,
+      "End": 9988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::macro::Vec_MemForEachEntry",
+      "Category": "macro-review",
+      "Symbol": "Vec_MemForEachEntry",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2552,
+      "End": 2730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemAlloc_",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemAlloc_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3309,
+      "End": 3567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3568,
+      "End": 3847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemFree",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3848,
+      "End": 4030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemFreeP",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemFreeP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4031,
+      "End": 4160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemDup",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4161,
+      "End": 4261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemFill",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemFill",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4526,
+      "End": 4594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemClean",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4595,
+      "End": 4664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemEntrySize",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemEntrySize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4900,
+      "End": 4981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemEntryNum",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemEntryNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4982,
+      "End": 5060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemPageSize",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemPageSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5061,
+      "End": 5141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemPageNum",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemPageNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5142,
+      "End": 5218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemMemory",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5454,
+      "End": 5667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemReadEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemReadEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5903,
+      "End": 6088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemReadEntryLast",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemReadEntryLast",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6089,
+      "End": 6231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemWriteEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemWriteEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6232,
+      "End": 6418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::ternary::Vec_MemGetEntry",
+      "Category": "ternary-review",
+      "Symbol": "Vec_MemGetEntry",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6419,
+      "End": 7229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemGetEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemGetEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6419,
+      "End": 7229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemSetEntry",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemSetEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7230,
+      "End": 7421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemPush",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemPush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7422,
+      "End": 7612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemShrink",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemShrink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7848,
+      "End": 8154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemDumpDigit",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemDumpDigit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8390,
+      "End": 8632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemDump",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemDump",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8633,
+      "End": 9098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemHashAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemHashAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9371,
+      "End": 9604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemHashFree",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemHashFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9605,
+      "End": 9761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemHashKey",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemHashKey",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9762,
+      "End": 10145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemHashLookup",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemHashLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10146,
+      "End": 10499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemHashProfile",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemHashProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10500,
+      "End": 10829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemHashResize",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemHashResize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10830,
+      "End": 11322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemHashInsert",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemHashInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11323,
+      "End": 11768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemAllocForTTSimple",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemAllocForTTSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12054,
+      "End": 12287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemAllocForTT",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemAllocForTT",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12288,
+      "End": 12936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemAddMuxTT",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemAddMuxTT",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12937,
+      "End": 13255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::ternary::Vec_MemDumpTruthTables",
+      "Category": "ternary-review",
+      "Symbol": "Vec_MemDumpTruthTables",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13256,
+      "End": 13816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::Vec_MemDumpTruthTables",
+      "Category": "semantic-review",
+      "Symbol": "Vec_MemDumpTruthTables",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13256,
+      "End": 13816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/vec/vecMem.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14072
+    }
+  ],
+  "Draft": "package vec\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [vecMem.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Resizable arrays.]\n\n  Synopsis    [Resizable array of memory pieces.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - July 20, 2012.]\n\n  Revision    [$Id: vecMem.h,v 1.00 2012/07/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n\n//ABC_NAMESPACE_HEADER_START\n\n/* \n   This vector stores pieces of memory of the given size.\n   It is useful for representing truth tables and any other objects\n   of the fixed size.  It is better that Extra_MmFixed because the\n   entry IDs can be used as handles to retrieve memory pieces without \n   the need for an array of pointers from entry IDs into memory pieces\n   (this can save 8(4) bytes per object on a 64(32)-bit platform).\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n         \ntype Vec_Mem_t struct {\n    nEntrySize              int32;  // entry size (in terms of 8-byte words)\n    nEntries              int32;    // number of entries currently used\n    LogPageSze              int32;  // log2 of page size (in terms of entries)\n    PageMask              int32;    // page mask\n    nPageAlloc              int32;  // number of pages currently allocated\n    iPage              int32;       // the number of a page currently used   \n    ppPages           **word;     // memory pages\n    vTable       *Vec_Int_t;      // hash table\n    vNexts       *Vec_Int_t;      // next pointers\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n// Original macro:\n// #define Vec_MemForEachEntry( p, pEntry, i )                                              \\\n//     for ( i = 0; (i \u003c Vec_MemEntryNum(p)) \u0026\u0026 ((pEntry) = Vec_MemReadEntry(p, i)); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates a memory vector.]\n\n  Description [Entry size is in terms of 8-byte words. Page size is log2\n  of the number of entries on one page.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemAlloc_(p *Vec_Mem_t, nEntrySize int32, LogPageSze int32) {\n    *p = Vec_Mem_t{};\n    p.nEntrySize = nEntrySize;\n    p.LogPageSze = LogPageSze;\n    p.PageMask   = (1 \u003c\u003c p.LogPageSze) - 1;\n    p.iPage      = -1;\n}\nfunc Vec_MemAlloc(nEntrySize int32, LogPageSze int32) *Vec_Mem_t {\n    var p *Vec_Mem_t;\n    p = new(Vec_Mem_t);\n    p.nEntrySize = nEntrySize;\n    p.LogPageSze = LogPageSze;\n    p.PageMask   = (1 \u003c\u003c p.LogPageSze) - 1;\n    p.iPage      = -1;\n    return p;\n}\nfunc Vec_MemFree(p *Vec_Mem_t) {\n    var i int32;\n    for  i = 0; i \u003c= p.iPage; i++  {\n        ABC_FREE( p.ppPages[i] );\n    }\n    ABC_FREE( p.ppPages );\n    ABC_FREE( p );\n}\nfunc Vec_MemFreeP(p **Vec_Mem_t) {\n    if *p == nil {\n        return; }\n    Vec_MemFree( *p );\n    *p = nil;\n}\nfunc Vec_MemDup(pVec *Vec_Mem_t) *Vec_Mem_t {\n    var p *Vec_Mem_t  = nil;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the integer array.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemFill(pVec *Vec_Mem_t, nEntries int32) {\n}\nfunc Vec_MemClean(pVec *Vec_Mem_t, nEntries int32) {\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemEntrySize(p *Vec_Mem_t) int32 {\n    return p.nEntrySize;\n}\nfunc Vec_MemEntryNum(p *Vec_Mem_t) int32 {\n    return p.nEntries;\n}\nfunc Vec_MemPageSize(p *Vec_Mem_t) int32 {\n    return p.LogPageSze;\n}\nfunc Vec_MemPageNum(p *Vec_Mem_t) int32 {\n    return p.iPage+1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemMemory(p *Vec_Mem_t) float64 {\n    return float64(sizeof(word)) * p.nEntrySize * (1 \u003c\u003c p.LogPageSze) * (p.iPage + 1) + float64(sizeof(word *)) * p.nPageAlloc + float64(sizeof(Vec_Mem_t));\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemReadEntry(p *Vec_Mem_t, i int32) *word {\n    assert(i \u003e= 0 \u0026\u0026 i \u003c p.nEntries, \"i \u003e= 0 \u0026\u0026 i \u003c p.nEntries\");\n    return p.ppPages[i \u003e\u003e p.LogPageSze] + p.nEntrySize * (i \u0026 p.PageMask);\n}\nfunc Vec_MemReadEntryLast(p *Vec_Mem_t) *word {\n    assert(p.nEntries \u003e 0, \"p.nEntries \u003e 0\");\n    return Vec_MemReadEntry( p, p.nEntries-1 );\n}\nfunc Vec_MemWriteEntry(p *Vec_Mem_t, i int32, pEntry *word) {\n    var pPlace *word  = Vec_MemReadEntry( p, i );\n    memmove( pPlace, pEntry, sizeof(word) * p.nEntrySize );\n}\nfunc Vec_MemGetEntry(p *Vec_Mem_t, i int32) *word {\n    assert(i \u003e= 0, \"i \u003e= 0\");\n    if i \u003e= p.nEntries {\n        var k int32;\n        var iPageNew int32 = (i \u003e\u003e p.LogPageSze);\n        if p.iPage \u003c iPageNew {\n            // realloc page pointers if needed\n            if iPageNew \u003e= p.nPageAlloc {\n                p.ppPages = ABC_REALLOC( word *, p.ppPages, (p.nPageAlloc = p.nPageAlloc ? 2 * p.nPageAlloc : iPageNew + 32) ); }\n            // allocate new pages if needed\n            for  k = p.iPage + 1; k \u003c= iPageNew; k++  {\n                p.ppPages[k] = ABC_ALLOC( word, p.nEntrySize * (1 \u003c\u003c p.LogPageSze) );\n            }\n            // update page counter\n            p.iPage = iPageNew;\n        }\n        // update entry counter\n        p.nEntries = i + 1;\n    }\n    return Vec_MemReadEntry( p, i );\n}\nfunc Vec_MemSetEntry(p *Vec_Mem_t, i int32, pEntry *word) {\n    var pPlace *word  = Vec_MemGetEntry( p, i );\n    memmove( pPlace, pEntry, sizeof(word) * (size_t)p.nEntrySize );\n}\nfunc Vec_MemPush(p *Vec_Mem_t, pEntry *word) {\n    var pPlace *word  = Vec_MemGetEntry( p, p.nEntries );\n    memmove( pPlace, pEntry, sizeof(word) * (size_t)p.nEntrySize );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemShrink(p *Vec_Mem_t, nEntriesNew int32) {\n    var i int32;\n    var iPageOld int32 = p.iPage;\n    assert(nEntriesNew \u003c= p.nEntries, \"nEntriesNew \u003c= p.nEntries\");\n    p.nEntries = nEntriesNew;\n    p.iPage = (nEntriesNew \u003e\u003e p.LogPageSze);\n    for  i = p.iPage + 1; i \u003c= iPageOld; i++  {\n        ABC_FREE( p.ppPages[i] );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemDumpDigit(pFile *os.File, HexDigit int32) {\n    assert(HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16, \"HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16\");\n    if HexDigit \u003c 10 {\n        fmt.Fprintf(pFile, \"%d\", HexDigit);\n    } else {\n        fmt.Fprintf(pFile, \"%c\", 'A' + HexDigit-10); }\n}\nfunc Vec_MemDump(pFile *os.File, pVec *Vec_Mem_t) {\n    var pEntry *word;\n    var i, w, d int32;\n    if pFile == os.Stdout {\n        fmt.Printf(\"Memory vector has %d entries: \\n\", Vec_MemEntryNum(pVec)); }\n    // inlining of macro Vec_MemForEachEntry\n    for  i = 0; (i \u003c Vec_MemEntryNum(pVec)) \u0026\u0026 ((pEntry) = Vec_MemReadEntry(pVec, i)); i++  {\n        for  w = pVec.nEntrySize - 1; w \u003e= 0; w--  {\n            for  d = 15; d \u003e= 0; d--  {\n                Vec_MemDumpDigit( pFile, int32((pEntry[w] \u003e\u003e (d\u003c\u003c2))) \u0026 15 );\n            }\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Hashing entries in the memory vector.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemHashAlloc(p *Vec_Mem_t, nTableSize int32) {\n    assert(p.vTable == nil \u0026\u0026 p.vNexts == nil, \"p.vTable == nil \u0026\u0026 p.vNexts == nil\");\n    p.vTable = Vec_IntStartFull( Abc_PrimeCudd(nTableSize) );\n    p.vNexts = Vec_IntAlloc( nTableSize );\n}\nfunc Vec_MemHashFree(p *Vec_Mem_t) {\n    if p == nil {\n        return; }\n    Vec_IntFreeP( \u0026p.vTable );\n    Vec_IntFreeP( \u0026p.vNexts );\n}\nvar spStatic_Vec_MemHashKey_s_Primes [8]int32 = [8]int32{ 1699, 4177, 5147, 5647, 6343, 7103, 7873, 8147 };\nfunc Vec_MemHashKey(p *Vec_Mem_t, pEntry *word) uint32 {\n    \n    var i int32;\n    var nData int32 = 2 * p.nEntrySize;\n    var pData *uint32  = (unsigned *)pEntry;\n    var uHash uint32;\n    for  i = 0; i \u003c nData; i++  {\n        uHash += pData[i] * spStatic_Vec_MemHashKey_s_Primes[i \u0026 0x7];\n    }\n    return uHash % Vec_IntSize(p.vTable);\n}\nfunc Vec_MemHashLookup(p *Vec_Mem_t, pEntry *word) *int32 {\n    var pSpot *int32  = Vec_IntEntryP( p.vTable, Vec_MemHashKey(p, pEntry) );\n    for  ; *pSpot != -1; pSpot = Vec_IntEntryP(p.vNexts, *pSpot)  {\n        if !memcmp( Vec_MemReadEntry(p, *pSpot), pEntry, sizeof(word) * p.nEntrySize ) { // equal\n            return pSpot; }\n    }\n    return pSpot;\n}\nfunc Vec_MemHashProfile(p *Vec_Mem_t) {\n    var e int32;\n    for  e = 0; e \u003c 1000; e++  {\n        var Count int32;\n        var pSpot *int32  = Vec_IntEntryP( p.vTable, e );\n        for  ; *pSpot != -1; pSpot = Vec_IntEntryP(p.vNexts, *pSpot)  {\n            Count++;\n        }\n        fmt.Printf(\"%d \", Count);\n    }\n    fmt.Printf(\"\\n\");\n}\nfunc Vec_MemHashResize(p *Vec_Mem_t) {\n    var pEntry *word;\n    var i int32;\n    var pSpot *int32;\n    //Vec_MemHashProfile( p );\n    Vec_IntFill( p.vTable, Abc_PrimeCudd(2 * Vec_IntSize(p.vTable)), -1 );\n    Vec_IntClear( p.vNexts );\n    // inlining of macro Vec_MemForEachEntry\n    for  i = 0; (i \u003c Vec_MemEntryNum(p)) \u0026\u0026 ((pEntry) = Vec_MemReadEntry(p, i)); i++  {\n        pSpot = Vec_MemHashLookup( p, pEntry );\n        assert(*pSpot == -1, \"*pSpot == -1\");\n        *pSpot = Vec_IntSize(p.vNexts);\n        Vec_IntPush( p.vNexts, -1 );\n    }\n    assert(p.nEntries == Vec_IntSize(p.vNexts), \"p.nEntries == Vec_IntSize(p.vNexts)\");\n}\nfunc Vec_MemHashInsert(p *Vec_Mem_t, pEntry *word) int32 {\n    var pSpot *int32;\n    if p.nEntries \u003e Vec_IntSize(p.vTable) {\n        Vec_MemHashResize( p ); }\n    pSpot = Vec_MemHashLookup( p, pEntry );\n    if *pSpot != -1 {\n        return *pSpot; }\n    *pSpot = Vec_IntSize(p.vNexts);\n    Vec_IntPush( p.vNexts, -1 );\n    Vec_MemPush( p, pEntry );\n    assert(p.nEntries == Vec_IntSize(p.vNexts), \"p.nEntries == Vec_IntSize(p.vNexts)\");\n    return Vec_IntSize(p.vNexts) - 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates memory vector for storing truth tables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Vec_MemAllocForTTSimple(nVars int32) *Vec_Mem_t {\n    var nWords int32;\n    if nVars \u003c= 6 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars - 6));\n    }\n    var vTtMem *Vec_Mem_t  = Vec_MemAlloc( nWords, 12 );\n    Vec_MemHashAlloc( vTtMem, 10000 );\n    return vTtMem;\n}\nfunc Vec_MemAllocForTT(nVars int32, fCompl int32) *Vec_Mem_t {\n    var Value int32;\n    var nWords int32;\n    if nVars \u003c= 6 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars - 6));\n    }\n    var uTruth *word  = ABC_ALLOC( word, nWords ); \n    var vTtMem *Vec_Mem_t  = Vec_MemAlloc( nWords, 12 );\n    Vec_MemHashAlloc( vTtMem, 10000 );\n    memset( uTruth, 0x00, sizeof(word) * nWords );\n    Value = Vec_MemHashInsert( vTtMem, uTruth ); assert(Value == 0, \"Value == 0\");\n    if fCompl != 0 {\n        memset( uTruth, 0x55, sizeof(word) * nWords );\n    } else {\n        memset( uTruth, 0xAA, sizeof(word) * nWords ); }\n    Value = Vec_MemHashInsert( vTtMem, uTruth ); assert(Value == 1, \"Value == 1\");\n    ABC_FREE( uTruth );\n    return vTtMem;\n}\nfunc Vec_MemAddMuxTT(p *Vec_Mem_t, nVars int32) {\n    var Value int32;\n    var nWords int32;\n    if nVars \u003c= 6 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars - 6));\n    }\n    var uTruth *word  = ABC_ALLOC( word, nWords ); \n    memset( uTruth, 0xCA, sizeof(word) * nWords );\n    Value = Vec_MemHashInsert( p, uTruth ); assert(Value == 2, \"Value == 2\");\n    ABC_FREE( uTruth );\n}\nfunc Vec_MemDumpTruthTables(p *Vec_Mem_t, pName string, nLutSize int32) {\n    var pFile *os.File;\n    var pFileName string // was [1000]byte in C\n\n    pFileName = fmt.Sprintf(\"tt_%s_%02d.txt\", pName ? pName : nil, nLutSize);\n    if pName {\n        pFile = fopen( pFileName, \"wb\" );\n    } else {\n        pFile = os.Stdout;\n    }\n    Vec_MemDump( pFile, p );\n    if pFile != os.Stdout {\n        _ = (pFile).Close(); }\n    fmt.Printf(\"Dumped %d %d-var truth tables into file \\\"%s\\\" (%.2f MB).\\n\", Vec_MemEntryNum(p), nLutSize, pName ? pFileName : \"stdout\", 8.0 * Vec_MemEntryNum(p) * Vec_MemEntrySize(p) / (1 \u003c\u003c 20));\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

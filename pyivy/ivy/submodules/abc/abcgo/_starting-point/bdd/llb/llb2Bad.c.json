@@ -1,0 +1,224 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c",
+  "SHA256": "0c15eaa68133c57408f91d3f48131982158c6b4aa0e10537300c7706ae592dab",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Cudd_ReadSize(dd) == Aig_ManCiNum(pInit) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Cudd_ReadSize(dd) == Aig_ManCiNum(pInit) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_BddComputeBad",
+      "Start": 1261,
+      "End": 3329,
+      "BodyStart": 1342,
+      "Original": "DdNode * Llb_BddComputeBad( Aig_Man_t * pInit, DdManager * dd, abctime TimeOut )\n{\n    Vec_Ptr_t * vNodes;\n    DdNode * bBdd0, * bBdd1, * bTemp, * bResult;\n    Aig_Obj_t * pObj;\n    int i, k;\n    assert( Cudd_ReadSize(dd) == Aig_ManCiNum(pInit) );\n    // initialize elementary variables\n    Aig_ManConst1(pInit)-\u003epData = Cudd_ReadOne( dd );\n    Saig_ManForEachLo( pInit, pObj, i )\n        pObj-\u003epData = Cudd_bddIthVar( dd, i );\n    Saig_ManForEachPi( pInit, pObj, i )\n        pObj-\u003epData = Cudd_bddIthVar( dd, Aig_ManRegNum(pInit) + i );\n    // compute internal nodes\n    vNodes = Aig_ManDfsNodes( pInit, (Aig_Obj_t **)Vec_PtrArray(pInit-\u003evCos), Saig_ManPoNum(pInit) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        if ( !Aig_ObjIsNode(pObj) )\n            continue;\n        bBdd0 = Cudd_NotCond( (DdNode *)Aig_ObjFanin0(pObj)-\u003epData, Aig_ObjFaninC0(pObj) );\n        bBdd1 = Cudd_NotCond( (DdNode *)Aig_ObjFanin1(pObj)-\u003epData, Aig_ObjFaninC1(pObj) );\n//        pObj-\u003epData = Extra_bddAndTime( dd, bBdd0, bBdd1, TimeOut );\n        pObj-\u003epData = Cudd_bddAnd( dd, bBdd0, bBdd1 );\n        if ( pObj-\u003epData == NULL )\n        {\n            Vec_PtrForEachEntryStop( Aig_Obj_t *, vNodes, pObj, k, i )\n                if ( pObj-\u003epData )\n                    Cudd_RecursiveDeref( dd, (DdNode *)pObj-\u003epData );\n            Vec_PtrFree( vNodes );\n            return NULL;\n        }\n        Cudd_Ref( (DdNode *)pObj-\u003epData );\n    }\n    // quantify PIs of each PO\n    bResult = Cudd_ReadLogicZero( dd );  Cudd_Ref( bResult );\n    Saig_ManForEachPo( pInit, pObj, i )\n    {\n        bBdd0   = Cudd_NotCond( Aig_ObjFanin0(pObj)-\u003epData, Aig_ObjFaninC0(pObj) );\n        bResult = Cudd_bddOr( dd, bTemp = bResult, bBdd0 );     Cudd_Ref( bResult );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    // deref\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        if ( !Aig_ObjIsNode(pObj) )\n            continue;\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj-\u003epData );\n    }\n    Vec_PtrFree( vNodes );\n    Cudd_Deref( bResult );\n    return bResult;\n}",
+      "Draft": "func Llb_BddComputeBad(pInit *Aig_Man_t, dd *DdManager, TimeOut abctime) *DdNode {\n    var vNodes *Vec_Ptr_t;\n    var bBdd0, bBdd1, bTemp, bResult *DdNode;\n    var pObj *Aig_Obj_t;\n    var i, k int32;\n    assert(Cudd_ReadSize(dd) == Aig_ManCiNum(pInit), \"Cudd_ReadSize(dd) == Aig_ManCiNum(pInit)\");\n    // initialize elementary variables\n    Aig_ManConst1(pInit).pData = Cudd_ReadOne( dd );\n    Saig_ManForEachLo( pInit, pObj, i )\n        pObj.pData = Cudd_bddIthVar( dd, i );\n    Saig_ManForEachPi( pInit, pObj, i )\n        pObj.pData = Cudd_bddIthVar( dd, Aig_ManRegNum(pInit) + i );\n    // compute internal nodes\n    vNodes = Aig_ManDfsNodes( pInit, (Aig_Obj_t **)Vec_PtrArray(pInit.vCos), Saig_ManPoNum(pInit) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        if !Aig_ObjIsNode(pObj) {\n            continue; }\n        // inlining of macro Cudd_NotCond\n        bBdd0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        // inlining of macro Cudd_NotCond\n        bBdd1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));\n//        pObj-\u003epData = Extra_bddAndTime( dd, bBdd0, bBdd1, TimeOut );\n        pObj.pData = Cudd_bddAnd( dd, bBdd0, bBdd1 );\n        if pObj.pData == nil {\n            Vec_PtrForEachEntryStop( Aig_Obj_t *, vNodes, pObj, k, i )\n                if ( pObj.pData )\n                    Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n            Vec_PtrFree( vNodes );\n            return nil;\n        }\n        Cudd_Ref( (DdNode *)pObj.pData );\n    }\n    // quantify PIs of each PO\n    bResult = Cudd_ReadLogicZero( dd );  Cudd_Ref( bResult );\n    Saig_ManForEachPo( pInit, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        bBdd0   = ((DdNode *)((ptrint)(Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        bResult = Cudd_bddOr( dd, bTemp = bResult, bBdd0 );     Cudd_Ref( bResult );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    // deref\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        if !Aig_ObjIsNode(pObj) {\n            continue; }\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n    }\n    Vec_PtrFree( vNodes );\n    Cudd_Deref( bResult );\n    return bResult;\n}"
+    },
+    {
+      "Name": "Llb_BddQuantifyPis",
+      "Start": 3565,
+      "End": 4360,
+      "BodyStart": 3646,
+      "Original": "DdNode * Llb_BddQuantifyPis( Aig_Man_t * pInit, DdManager * dd, DdNode * bFunc )\n{\n    DdNode * bVar, * bCube, * bTemp;\n    Aig_Obj_t * pObj;\n    int i;\n    abctime TimeStop;\n    assert( Cudd_ReadSize(dd) == Aig_ManCiNum(pInit) );\n    TimeStop = dd-\u003eTimeStop; dd-\u003eTimeStop = 0;\n    // create PI cube\n    bCube = Cudd_ReadOne( dd );  Cudd_Ref( bCube );\n    Saig_ManForEachPi( pInit, pObj, i )    {\n        bVar  = Cudd_bddIthVar( dd, Aig_ManRegNum(pInit) + i );\n        bCube = Cudd_bddAnd( dd, bTemp = bCube, bVar );  Cudd_Ref( bCube );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    // quantify PI cube\n    bFunc = Cudd_bddExistAbstract( dd, bFunc, bCube );  Cudd_Ref( bFunc );\n    Cudd_RecursiveDeref( dd, bCube );\n    Cudd_Deref( bFunc );\n    dd-\u003eTimeStop = TimeStop;\n    return bFunc;\n}",
+      "Draft": "func Llb_BddQuantifyPis(pInit *Aig_Man_t, dd *DdManager, bFunc *DdNode) *DdNode {\n    var bVar, bCube, bTemp *DdNode;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var TimeStop abctime;\n    assert(Cudd_ReadSize(dd) == Aig_ManCiNum(pInit), \"Cudd_ReadSize(dd) == Aig_ManCiNum(pInit)\");\n    TimeStop = dd.TimeStop; dd.TimeStop = 0;\n    // create PI cube\n    bCube = Cudd_ReadOne( dd );  Cudd_Ref( bCube );\n    Saig_ManForEachPi( pInit, pObj, i )    {\n        bVar  = Cudd_bddIthVar( dd, Aig_ManRegNum(pInit) + i );\n        bCube = Cudd_bddAnd( dd, bTemp = bCube, bVar );  Cudd_Ref( bCube );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    // quantify PI cube\n    bFunc = Cudd_bddExistAbstract( dd, bFunc, bCube );  Cudd_Ref( bFunc );\n    Cudd_RecursiveDeref( dd, bCube );\n    Cudd_Deref( bFunc );\n    dd.TimeStop = TimeStop;\n    return bFunc;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::pointer-cast::1866",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1866,
+      "End": 1880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::pointer-cast::2116",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2067,
+      "End": 2067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::pointer-cast::2136",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2067,
+      "End": 2067
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::pointer-cast::2267",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2159,
+      "End": 2159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::pointer-cast::2287",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2159,
+      "End": 2159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::pointer-cast::2675",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2557,
+      "End": 2567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::pointer-cast::2788",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2670,
+      "End": 2680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::pointer-cast::3025",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2858,
+      "End": 2858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::pointer-cast::3400",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3223,
+      "End": 3233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::Llb_BddComputeBad",
+      "Category": "semantic-review",
+      "Symbol": "Llb_BddComputeBad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1261,
+      "End": 3329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::Llb_BddQuantifyPis",
+      "Category": "semantic-review",
+      "Symbol": "Llb_BddQuantifyPis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3565,
+      "End": 4360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::macro-inline::1606",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1606,
+      "End": 1641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::macro-inline::1693",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1693,
+      "End": 1728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::macro-inline::1935",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1935,
+      "End": 1986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::macro-inline::2418",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntryStop",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2418,
+      "End": 2476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::macro-inline::2798",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2798,
+      "End": 2833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::macro-inline::3074",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3074,
+      "End": 3125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Bad.c::macro-inline::3921",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3921,
+      "End": 3956
+    }
+  ],
+  "Draft": "package llb\n\n/**CFile****************************************************************\n\n  FileName    [llb2Bad.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Computing bad states.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb2Bad.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    [Computes bad in working manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_BddComputeBad(pInit *Aig_Man_t, dd *DdManager, TimeOut abctime) *DdNode {\n    var vNodes *Vec_Ptr_t;\n    var bBdd0, bBdd1, bTemp, bResult *DdNode;\n    var pObj *Aig_Obj_t;\n    var i, k int32;\n    assert(Cudd_ReadSize(dd) == Aig_ManCiNum(pInit), \"Cudd_ReadSize(dd) == Aig_ManCiNum(pInit)\");\n    // initialize elementary variables\n    Aig_ManConst1(pInit).pData = Cudd_ReadOne( dd );\n    Saig_ManForEachLo( pInit, pObj, i )\n        pObj.pData = Cudd_bddIthVar( dd, i );\n    Saig_ManForEachPi( pInit, pObj, i )\n        pObj.pData = Cudd_bddIthVar( dd, Aig_ManRegNum(pInit) + i );\n    // compute internal nodes\n    vNodes = Aig_ManDfsNodes( pInit, (Aig_Obj_t **)Vec_PtrArray(pInit.vCos), Saig_ManPoNum(pInit) );\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        if !Aig_ObjIsNode(pObj) {\n            continue; }\n        // inlining of macro Cudd_NotCond\n        bBdd0 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        // inlining of macro Cudd_NotCond\n        bBdd1 = ((DdNode *)((ptrint)((DdNode *)Aig_ObjFanin1(pObj).pData) ^ (Aig_ObjFaninC1(pObj))));\n//        pObj-\u003epData = Extra_bddAndTime( dd, bBdd0, bBdd1, TimeOut );\n        pObj.pData = Cudd_bddAnd( dd, bBdd0, bBdd1 );\n        if pObj.pData == nil {\n            Vec_PtrForEachEntryStop( Aig_Obj_t *, vNodes, pObj, k, i )\n                if ( pObj.pData )\n                    Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n            Vec_PtrFree( vNodes );\n            return nil;\n        }\n        Cudd_Ref( (DdNode *)pObj.pData );\n    }\n    // quantify PIs of each PO\n    bResult = Cudd_ReadLogicZero( dd );  Cudd_Ref( bResult );\n    Saig_ManForEachPo( pInit, pObj, i )\n    {\n        // inlining of macro Cudd_NotCond\n        bBdd0   = ((DdNode *)((ptrint)(Aig_ObjFanin0(pObj).pData) ^ (Aig_ObjFaninC0(pObj))));\n        bResult = Cudd_bddOr( dd, bTemp = bResult, bBdd0 );     Cudd_Ref( bResult );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    // deref\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n    {\n        if !Aig_ObjIsNode(pObj) {\n            continue; }\n        Cudd_RecursiveDeref( dd, (DdNode *)pObj.pData );\n    }\n    Vec_PtrFree( vNodes );\n    Cudd_Deref( bResult );\n    return bResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_BddQuantifyPis(pInit *Aig_Man_t, dd *DdManager, bFunc *DdNode) *DdNode {\n    var bVar, bCube, bTemp *DdNode;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var TimeStop abctime;\n    assert(Cudd_ReadSize(dd) == Aig_ManCiNum(pInit), \"Cudd_ReadSize(dd) == Aig_ManCiNum(pInit)\");\n    TimeStop = dd.TimeStop; dd.TimeStop = 0;\n    // create PI cube\n    bCube = Cudd_ReadOne( dd );  Cudd_Ref( bCube );\n    Saig_ManForEachPi( pInit, pObj, i )    {\n        bVar  = Cudd_bddIthVar( dd, Aig_ManRegNum(pInit) + i );\n        bCube = Cudd_bddAnd( dd, bTemp = bCube, bVar );  Cudd_Ref( bCube );\n        Cudd_RecursiveDeref( dd, bTemp );\n    }\n    // quantify PI cube\n    bFunc = Cudd_bddExistAbstract( dd, bFunc, bCube );  Cudd_Ref( bFunc );\n    Cudd_RecursiveDeref( dd, bCube );\n    Cudd_Deref( bFunc );\n    dd.TimeStop = TimeStop;\n    return bFunc;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

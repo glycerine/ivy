@@ -1,0 +1,47 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intInt.h",
+  "SHA256": "2dd1cd6d8be1865f1407f438ef17dec1cd28ff6e1e89a33813b06ca2abd38e74",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 124,
+        "Column": 1,
+        "ByteOffset": 5206
+      },
+      "Directive": "#ifdef ABC_USE_LIBRARIES"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intInt.h::struct::Inter_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Inter_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1419,
+      "End": 2740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intInt.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5206,
+      "End": 5340
+    }
+  ],
+  "Draft": "package int\n\n/**CFile****************************************************************\n\n  FileName    [intInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [Internal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 24, 2008.]\n\n  Revision    [$Id: intInt.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"aig/saig/saig.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satSolver.h\"\n//#include \"sat/bsat/satStore.h\"\n//#include \"int.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// interpolation manager\n   \ntype Inter_Man_t struct {\n    // AIG manager\n    pAig       *Aig_Man_t;         // the original AIG manager\n    pAigTrans       *Aig_Man_t;    // the transformed original AIG manager\n    pCnfAig       *Cnf_Dat_t;      // CNF for the original manager\n    // interpolant\n    pInter       *Aig_Man_t;       // the current interpolant\n    pCnfInter       *Cnf_Dat_t;    // CNF for the current interplant\n    // timeframes\n    pFrames       *Aig_Man_t;      // the timeframes      \n    pCnfFrames       *Cnf_Dat_t;   // CNF for the timeframes \n    // other data\n    vVarsAB       *Vec_Int_t;      // the variables participating in \n    // temporary place for the new interpolant\n    pInterNew       *Aig_Man_t;\n    vInters       *Vec_Ptr_t;\n    // parameters\n    nFrames              int32;      // the number of timeframes\n    nConfCur              int32;     // the current number of conflicts\n    nConfLimit              int32;   // the limit on the number of conflicts\n    fVerbose              int32;     // the verbosiness flag\n    pFileName            string;\n    // runtime\n    timeRwr          abctime;\n    timeCnf          abctime;\n    timeSat          abctime;\n    timeInt          abctime;\n    timeEqu          abctime;\n    timeOther          abctime;\n    timeTotal          abctime;\n}\n\n// containment checking manager\ntype Inter_Check_t = Inter_Check_t_;\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== intCheck.c ============================================================*/\n// extern Inter_Check_t * Inter_CheckStart( Aig_Man_t * pTrans, int nFramesK );\n\n// extern void            Inter_CheckStop( Inter_Check_t * p );\n\n// extern int             Inter_CheckPerform( Inter_Check_t * p, Cnf_Dat_t * pCnf, abctime nTimeNewOut );\n\n\n/*=== intContain.c ============================================================*/\n// extern int             Inter_ManCheckContainment( Aig_Man_t * pNew, Aig_Man_t * pOld );\n\n// extern int             Inter_ManCheckEquivalence( Aig_Man_t * pNew, Aig_Man_t * pOld );\n\n// extern int             Inter_ManCheckInductiveContainment( Aig_Man_t * pTrans, Aig_Man_t * pInter, int nSteps, int fBackward );\n\n\n/*=== intCtrex.c ============================================================*/\n// extern void *          Inter_ManGetCounterExample( Aig_Man_t * pAig, int nFrames, int fVerbose );\n\n\n/*=== intDup.c ============================================================*/\n// extern Aig_Man_t *     Inter_ManStartInitState( int nRegs );\n\n// extern Aig_Man_t *     Inter_ManStartDuplicated( Aig_Man_t * p );\n\n// extern Aig_Man_t *     Inter_ManStartOneOutput( Aig_Man_t * p, int fAddFirstPo );\n\n\n/*=== intFrames.c ============================================================*/\n// extern Aig_Man_t *     Inter_ManFramesInter( Aig_Man_t * pAig, int nFrames, int fAddRegOuts, int fUseTwoFrames );\n\n\n/*=== intMan.c ============================================================*/\n// extern Inter_Man_t *   Inter_ManCreate( Aig_Man_t * pAig, Inter_ManParams_t * pPars );\n\n// extern void            Inter_ManClean( Inter_Man_t * p );\n\n// extern void            Inter_ManStop( Inter_Man_t * p, int fProved );\n\n\n/*=== intM114.c ============================================================*/\n// extern int             Inter_ManPerformOneStep( Inter_Man_t * p, int fUseBias, int fUseBackward, abctime nTimeNewOut );\n\n\n/*=== intM114p.c ============================================================*/\n#ifdef ABC_USE_LIBRARIES\nextern int             Inter_ManPerformOneStepM114p( Inter_Man_t * p, int fUsePudlak, int fUseOther );\n#endif\n\n/*=== intUtil.c ============================================================*/\n// extern int             Inter_ManCheckInitialState( Aig_Man_t * p );\n\n// extern int             Inter_ManCheckAllStates( Aig_Man_t * p );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

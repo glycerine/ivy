@@ -1,0 +1,551 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c",
+  "SHA256": "2423d7b449dd10a2708ee40a7a8fbc8242eaf81bd767d86f0e189c57ddc7ac25",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 123,
+        "Column": 17,
+        "ByteOffset": 4277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( tCur == pCells[k].uTruth );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 130,
+        "Column": 68,
+        "ByteOffset": 4514
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pPerm[i]) ? (free((char *) (pPerm[i])), (pPerm[i]) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 9,
+        "ByteOffset": 4592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"In this library, %d cell pairs have equal functions (for example, %s and %s).\\n\", Count/2, pCells[iGate1].pName, pCells[iGate2].pName ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 143,
+        "Column": 5,
+        "ByteOffset": 5043
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCells == Vec_IntSize(vFirst) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 150,
+        "Column": 9,
+        "ByteOffset": 5325
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d : %8s   Fanins = %d   \", i, pCells[i].pName, nFanins );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 13,
+        "ByteOffset": 5770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d : {\", n );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 17,
+        "ByteOffset": 5853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \" %d \", (iPerm \u003e\u003e (v \u003c\u003c 2)) \u0026 15 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 162,
+        "Column": 13,
+        "ByteOffset": 5923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"}  Index = %d  \", Index );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 13,
+        "ByteOffset": 5972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Gain = %6.2f  \", Scl_Int2Flt(Diff) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 179,
+        "Column": 5,
+        "ByteOffset": 6565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Used records = %d.  All records = %d.\\n\", nRecUsed, Vec_IntSize(vInfo)/3 - nRecUsed );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 6665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCells == Vec_IntSize(vFirst) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 183,
+        "Column": 62,
+        "ByteOffset": 6820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pCells) ? (free((char *) (pCells)), (pCells) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 245,
+        "Column": 5,
+        "ByteOffset": 8752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFanin \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 309,
+        "Column": 5,
+        "ByteOffset": 11340
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFanin \u003e 0 \u0026\u0026 pNodeInfo[3*iFanin] != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 317,
+        "Column": 9,
+        "ByteOffset": 11782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFanoutNum(pObj) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 338,
+        "Column": 13,
+        "ByteOffset": 12793
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_ObjFanoutNum(pNext) == 0 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 384,
+        "Column": 62,
+        "ByteOffset": 14805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pCells) ? (free((char *) (pCells)), (pCells) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 387,
+        "Column": 9,
+        "ByteOffset": 14877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total gain in area = %6.2f after %d changes (including %d inverters). \", Scl_Int2Flt(GainAll), Count, CountInv ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkPrecomputeCellPairs",
+      "Start": 1449,
+      "End": 4294,
+      "BodyStart": 1524,
+      "Original": "Vec_Int_t * Abc_NtkPrecomputeCellPairs( Mio_Cell2_t * pCells, int nCells )\n{\n    Vec_Int_t * vInfo = Vec_IntAlloc( 1000 );\n    word iBestArea, tCur, iThis;\n    int * pPerm[7], nPerms[7], Perm[7], * Perm1, * Perm2;\n    int iBestCell, iBestPerm, iBestDiff;\n    int i, k, n, v, p, Count = 0;\n    int iGate1 = -1, iGate2 = -1;\n\n    for ( i = 1; i \u003c= 6; i++ )\n        pPerm[i] = Extra_PermSchedule( i );\n    for ( i = 1; i \u003c= 6; i++ )\n        nPerms[i] = Extra_Factorial( i );\n\n    for ( i = 2; i \u003c nCells; i++ )\n    {\n        int nFanins = pCells[i].nFanins;\n        for ( n = 0; n \u003c= nFanins; n++ )\n        {\n            // get the truth table\n            iThis = (n == nFanins) ? ~pCells[i].uTruth : Abc_Tt6Flip(pCells[i].uTruth, n);\n            // init the comparison\n            iBestArea = ~((word)0);\n            iBestCell = iBestPerm = iBestDiff = -1;\n            // iterate through cells\n            for ( k = 2; k \u003c nCells; k++ )\n            {\n                if ( nFanins != (int)pCells[k].nFanins )\n                    continue;\n                if ( i != k \u0026\u0026 pCells[i].uTruth == pCells[k].uTruth )\n                {\n                    iGate1 = i;\n                    iGate2 = k;\n                    Count++;\n                    continue;\n                }\n                // set unit permutation\n                for ( v = 0; v \u003c nFanins; v++ )\n                    Perm[v] = v;\n                // go through all permutation of Cell[k]\n                tCur = pCells[k].uTruth;\n                for ( p = 0; p \u003c nPerms[nFanins]; p++ )\n                {\n                    if ( iThis == tCur \u0026\u0026 iBestArea \u003e pCells[k].AreaW ) \n                    {\n                        iBestArea = pCells[k].AreaW;\n                        iBestCell = k;\n                        iBestPerm = 0;\n                        for ( v = 0; v \u003c nFanins; v++ )\n                            iBestPerm |= (v \u003c\u003c (Perm[v] \u003c\u003c 2));\n                        iBestDiff = (pCells[i].AreaW \u003e= pCells[k].AreaW) ? (int)(pCells[i].AreaW - pCells[k].AreaW) : -(int)(pCells[k].AreaW - pCells[i].AreaW);\n                    }\n                    if ( nPerms[nFanins] == 1 )\n                        continue;\n                    // update\n                    tCur  = Abc_Tt6SwapAdjacent( tCur, pPerm[nFanins][p] );\n                    Perm1 = Perm + pPerm[nFanins][p];\n                    Perm2 = Perm1 + 1;\n                    ABC_SWAP( int, *Perm1, *Perm2 );\n                }\n                assert( tCur == pCells[k].uTruth );\n            }\n            Vec_IntPushThree( vInfo, iBestCell, iBestPerm, iBestDiff );\n        }\n    }\n\n    for ( i = 1; i \u003c= 6; i++ )\n        ABC_FREE( pPerm[i] );\n    if ( Count )\n        printf( \"In this library, %d cell pairs have equal functions (for example, %s and %s).\\n\", Count/2, pCells[iGate1].pName, pCells[iGate2].pName );\n    return vInfo;\n}",
+      "Draft": "func Abc_NtkPrecomputeCellPairs(pCells *Mio_Cell2_t, nCells int32) *Vec_Int_t {\n    var vInfo *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var iBestArea, tCur, iThis word;\n    var pPerm [7]*int32;\n    var nPerms [7]int32;\n    var Perm [7]int32;\n    var Perm1 *int32;\n    var Perm2 *int32;\n    var iBestCell, iBestPerm, iBestDiff int32;\n    var i, k, n, v, p, Count int32;\n    var iGate1 int32 = -1;\n    var iGate2 int32 = -1;\n\n    for  i = 1; i \u003c= 6; i++  {\n        pPerm[i] = Extra_PermSchedule( i );\n    }\n    for  i = 1; i \u003c= 6; i++  {\n        nPerms[i] = Extra_Factorial( i );\n    }\n\n    for  i = 2; i \u003c nCells; i++  {\n        var nFanins int32  = pCells[i].nFanins;\n        for  n = 0; n \u003c= nFanins; n++  {\n            // get the truth table\n            if n == nFanins {\n                iThis = ~pCells[i].uTruth;\n            } else {\n                iThis = Abc_Tt6Flip(pCells[i].uTruth, n);\n            }\n            // init the comparison\n            iBestArea = ~((word)0);\n            iBestCell = iBestPerm = iBestDiff = -1;\n            // iterate through cells\n            for  k = 2; k \u003c nCells; k++  {\n                if nFanins != int32(pCells[k].nFanins) {\n                    continue; }\n                if i != k \u0026\u0026 pCells[i].uTruth == pCells[k].uTruth {\n                    iGate1 = i;\n                    iGate2 = k;\n                    Count++;\n                    continue;\n                }\n                // set unit permutation\n                for  v = 0; v \u003c nFanins; v++  {\n                    Perm[v] = v;\n                }\n                // go through all permutation of Cell[k]\n                tCur = pCells[k].uTruth;\n                for  p = 0; p \u003c nPerms[nFanins]; p++  {\n                    if iThis == tCur \u0026\u0026 iBestArea \u003e pCells[k].AreaW {\n                        iBestArea = pCells[k].AreaW;\n                        iBestCell = k;\n                        iBestPerm = 0;\n                        for  v = 0; v \u003c nFanins; v++  {\n                            iBestPerm |= (v \u003c\u003c (Perm[v] \u003c\u003c 2));\n                        }\n                        if pCells[i].AreaW \u003e= pCells[k].AreaW {\n                            iBestDiff = int32((pCells[i].AreaW - pCells[k].AreaW));\n                        } else {\n                            iBestDiff = -int32((pCells[k].AreaW - pCells[i].AreaW));\n                        }\n                    }\n                    if nPerms[nFanins] == 1 {\n                        continue; }\n                    // update\n                    tCur  = Abc_Tt6SwapAdjacent( tCur, pPerm[nFanins][p] );\n                    Perm1 = Perm + pPerm[nFanins][p];\n                    Perm2 = Perm1 + 1;\n                    // inlining of macro ABC_SWAP\n                    { var t int32  = *Perm1; *Perm1 = *Perm2; *Perm2 = t; };\n                }\n                assert(tCur == pCells[k].uTruth, \"tCur == pCells[k].uTruth\");\n            }\n            Vec_IntPushThree( vInfo, iBestCell, iBestPerm, iBestDiff );\n        }\n    }\n\n    for  i = 1; i \u003c= 6; i++  {\n        // inlining of macro ABC_FREE\n        ((pPerm[i]) ? (free((char *) (pPerm[i])), (pPerm[i]) = 0) : 0);\n    }\n    if Count != 0 {\n        fmt.Printf(\"In this library, %d cell pairs have equal functions (for example, %s and %s).\\n\", Count/2, pCells[iGate1].pName, pCells[iGate2].pName); }\n    return vInfo;\n}"
+    },
+    {
+      "Name": "Abc_NtkPrecomputeFirsts",
+      "Start": 4295,
+      "End": 4636,
+      "BodyStart": 4367,
+      "Original": "Vec_Int_t * Abc_NtkPrecomputeFirsts( Mio_Cell2_t * pCells, int nCells )\n{\n    int i, Index = 0;\n    Vec_Int_t * vFirst = Vec_IntStartFull( 2 ); \n    for ( i = 2; i \u003c nCells; i++ )\n    {\n        Vec_IntPush( vFirst, Index );\n        Index += 3 * (pCells[i].nFanins + 1);\n    }\n    assert( nCells == Vec_IntSize(vFirst) );\n    return vFirst;\n}",
+      "Draft": "func Abc_NtkPrecomputeFirsts(pCells *Mio_Cell2_t, nCells int32) *Vec_Int_t {\n    var i, Index int32;\n    var vFirst *Vec_Int_t  = Vec_IntStartFull( 2 ); \n    for  i = 2; i \u003c nCells; i++  {\n        Vec_IntPush( vFirst, Index );\n        Index += 3 * (pCells[i].nFanins + 1);\n    }\n    assert(nCells == Vec_IntSize(vFirst), \"nCells == Vec_IntSize(vFirst)\");\n    return vFirst;\n}"
+    },
+    {
+      "Name": "Abc_NtkPrecomputePrint",
+      "Start": 4637,
+      "End": 5669,
+      "BodyStart": 4719,
+      "Original": "int Abc_NtkPrecomputePrint( Mio_Cell2_t * pCells, int nCells, Vec_Int_t * vInfo )\n{\n    int i, n, v, Index = 0, nRecUsed = 0;\n    for ( i = 2; i \u003c nCells; i++ )\n    {\n        int nFanins = pCells[i].nFanins;\n        printf( \"%3d : %8s   Fanins = %d   \", i, pCells[i].pName, nFanins );\n        Dau_DsdPrintFromTruth( \u0026pCells[i].uTruth, nFanins );\n        for ( n = 0; n \u003c= nFanins; n++, Index += 3 )\n        {\n            int iCellA = Vec_IntEntry( vInfo, Index+0 );\n            int iPerm  = Vec_IntEntry( vInfo, Index+1 );\n            int Diff   = Vec_IntEntry( vInfo, Index+2 );\n            if ( iCellA == -1 )\n                continue;\n            printf( \"%d : {\", n );\n            for ( v = 0; v \u003c nFanins; v++ )\n                printf( \" %d \", (iPerm \u003e\u003e (v \u003c\u003c 2)) \u0026 15 );\n            printf( \"}  Index = %d  \", Index );\n\n            printf( \"Gain = %6.2f  \", Scl_Int2Flt(Diff) );\n            Dau_DsdPrintFromTruth( \u0026pCells[iCellA].uTruth, pCells[iCellA].nFanins );\n            nRecUsed++;\n        }\n    }\n    return nRecUsed;\n}",
+      "Draft": "func Abc_NtkPrecomputePrint(pCells *Mio_Cell2_t, nCells int32, vInfo *Vec_Int_t) int32 {\n    var i, n, v, Index, nRecUsed int32;\n    for  i = 2; i \u003c nCells; i++  {\n        var nFanins int32  = pCells[i].nFanins;\n        fmt.Printf(\"%3d : %8s   Fanins = %d   \", i, pCells[i].pName, nFanins);\n        Dau_DsdPrintFromTruth( \u0026pCells[i].uTruth, nFanins );\n        for  n = 0; n \u003c= nFanins; n++, Index += 3  {\n            var iCellA int32  = Vec_IntEntry( vInfo, Index+0 );\n            var iPerm int32   = Vec_IntEntry( vInfo, Index+1 );\n            var Diff int32    = Vec_IntEntry( vInfo, Index+2 );\n            if iCellA == -1 {\n                continue; }\n            fmt.Printf(\"%d : {\", n);\n            for  v = 0; v \u003c nFanins; v++  {\n                fmt.Printf(\" %d \", (iPerm \u003e\u003e (v \u003c\u003c 2)) \u0026 15);\n            }\n            fmt.Printf(\"}  Index = %d  \", Index);\n\n            fmt.Printf(\"Gain = %6.2f  \", Scl_Int2Flt(Diff));\n            Dau_DsdPrintFromTruth( \u0026pCells[iCellA].uTruth, pCells[iCellA].nFanins );\n            nRecUsed++;\n        }\n    }\n    return nRecUsed;\n}"
+    },
+    {
+      "Name": "Abc_NtkPrecomputeCellPairsTest",
+      "Start": 5671,
+      "End": 6262,
+      "BodyStart": 5709,
+      "Original": "void Abc_NtkPrecomputeCellPairsTest()\n{\n    int nCells;\n    Mio_Cell2_t * pCells = Mio_CollectRootsNewDefault2( 6, \u0026nCells, 0 );\n    Vec_Int_t * vInfo = Abc_NtkPrecomputeCellPairs( pCells, nCells );\n    int nRecUsed = Abc_NtkPrecomputePrint( pCells, nCells, vInfo );\n    // iterate through the cells\n    Vec_Int_t * vFirst = Abc_NtkPrecomputeFirsts( pCells, nCells );\n    printf( \"Used records = %d.  All records = %d.\\n\", nRecUsed, Vec_IntSize(vInfo)/3 - nRecUsed );\n    assert( nCells == Vec_IntSize(vFirst) );\n    Vec_IntFree( vFirst );\n    Vec_IntFree( vInfo );\n    ABC_FREE( pCells );\n}",
+      "Draft": "func Abc_NtkPrecomputeCellPairsTest() {\n    var nCells int32;\n    var pCells *Mio_Cell2_t  = Mio_CollectRootsNewDefault2( 6, \u0026nCells, 0 );\n    var vInfo *Vec_Int_t  = Abc_NtkPrecomputeCellPairs( pCells, nCells );\n    var nRecUsed int32  = Abc_NtkPrecomputePrint( pCells, nCells, vInfo );\n    // iterate through the cells\n    var vFirst *Vec_Int_t  = Abc_NtkPrecomputeFirsts( pCells, nCells );\n    fmt.Printf(\"Used records = %d.  All records = %d.\\n\", nRecUsed, Vec_IntSize(vInfo)/3 - nRecUsed);\n    assert(nCells == Vec_IntSize(vFirst), \"nCells == Vec_IntSize(vFirst)\");\n    Vec_IntFree( vFirst );\n    Vec_IntFree( vInfo );\n    // inlining of macro ABC_FREE\n    ((pCells) ? (free((char *) (pCells)), (pCells) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Abc_NodeCheckFanoutHasFanin",
+      "Start": 6264,
+      "End": 6508,
+      "BodyStart": 6337,
+      "Original": "int Abc_NodeCheckFanoutHasFanin( Abc_Obj_t * pNode, Abc_Obj_t * pFanin )\n{\n    Abc_Obj_t * pThis;\n    int i;\n    Abc_ObjForEachFanout( pNode, pThis, i )\n        if ( Abc_NodeFindFanin(pThis, pFanin) \u003e= 0 )\n            return i;\n    return -1;\n}",
+      "Draft": "func Abc_NodeCheckFanoutHasFanin(pNode *Abc_Obj_t, pFanin *Abc_Obj_t) int32 {\n    var pThis *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pNode)) \u0026\u0026 (((pThis) = Abc_ObjFanout(pNode, i)), 1); i++  {\n        if Abc_NodeFindFanin(pThis, pFanin) \u003e= 0 {\n            return i; }\n    }\n    return -1;\n}"
+    },
+    {
+      "Name": "Abc_ObjHasDupFanins",
+      "Start": 6761,
+      "End": 7050,
+      "BodyStart": 6805,
+      "Original": "int Abc_ObjHasDupFanins( Abc_Obj_t * pObj )\n{\n    int * pArray = pObj-\u003evFanins.pArray;\n    int i, k, Limit = Abc_ObjFaninNum(pObj);\n    for ( i = 0; i \u003c Limit; i++ )\n        for ( k = i+1; k \u003c Limit; k++ )\n            if ( pArray[i] == pArray[k] )\n                return 1;\n    return 0;\n}",
+      "Draft": "func Abc_ObjHasDupFanins(pObj *Abc_Obj_t) int32 {\n    var pArray *int32  = pObj.vFanins.pArray;\n    var i int32;\n    var k int32;\n    var Limit int32 = Abc_ObjFaninNum(pObj);\n    for  i = 0; i \u003c Limit; i++  {\n        for  k = i+1; k \u003c Limit; k++  {\n            if pArray[i] == pArray[k] {\n                return 1; }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_ObjHasDupFanouts",
+      "Start": 7051,
+      "End": 7343,
+      "BodyStart": 7096,
+      "Original": "int Abc_ObjHasDupFanouts( Abc_Obj_t * pObj )\n{\n    int * pArray = pObj-\u003evFanouts.pArray;\n    int i, k, Limit = Abc_ObjFanoutNum(pObj);\n    for ( i = 0; i \u003c Limit; i++ )\n        for ( k = i+1; k \u003c Limit; k++ )\n            if ( pArray[i] == pArray[k] )\n                return 1;\n    return 0;\n}",
+      "Draft": "func Abc_ObjHasDupFanouts(pObj *Abc_Obj_t) int32 {\n    var pArray *int32  = pObj.vFanouts.pArray;\n    var i int32;\n    var k int32;\n    var Limit int32 = Abc_ObjFanoutNum(pObj);\n    for  i = 0; i \u003c Limit; i++  {\n        for  k = i+1; k \u003c Limit; k++  {\n            if pArray[i] == pArray[k] {\n                return 1; }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_ObjChangeEval",
+      "Start": 7344,
+      "End": 8964,
+      "BodyStart": 7454,
+      "Original": "int Abc_ObjChangeEval( Abc_Obj_t * pObj, Vec_Int_t * vInfo, Vec_Int_t * vFirst, int InvArea, int * pfUseInv )\n{\n    Abc_Obj_t * pNext;\n    //Mio_Gate_t * pGate = (Mio_Gate_t *)pObj-\u003epData;\n    int iFanCell, iNodeCell = Mio_GateReadCell( (Mio_Gate_t *)pObj-\u003epData );\n    int * pFanInfo, * pNodeInfo = Vec_IntEntryP( vInfo, Vec_IntEntry(vFirst, iNodeCell) );\n    int i, fNeedInv = 0, Gain = 0, iFanin = Abc_ObjFaninNum(pObj), fUseInv = Abc_NodeIsInv(pObj);\n    assert( iFanin \u003e 0 );\n    *pfUseInv = 0;\n    if ( pNodeInfo[3*iFanin] == -1 )\n        return 0;\n    if ( fUseInv )\n        Gain = InvArea;\n    else\n        Gain = pNodeInfo[3*iFanin+2];\n    Abc_ObjForEachFanout( pObj, pNext, i )\n    {\n        if ( fUseInv \u0026\u0026 Abc_NodeFindFanin(pNext, Abc_ObjFanin0(pObj)) \u003e= 0 )\n            return 0;\n        if ( Abc_ObjHasDupFanins(pNext) )\n            return 0;\n        if ( !Abc_ObjIsNode(pNext) || Abc_NodeIsBuf(pNext) )\n        {\n            fNeedInv = 1;\n            continue;\n        }\n        if ( Abc_NodeIsInv(pNext) )\n        {\n            if ( Abc_NodeCheckFanoutHasFanin(pNext, pObj) \u003e= 0 )\n                return 0;\n            Gain += InvArea;\n            continue;\n        }\n        iFanCell = Mio_GateReadCell( (Mio_Gate_t *)pNext-\u003epData );\n        pFanInfo = Vec_IntEntryP( vInfo, Vec_IntEntry(vFirst, iFanCell) );\n        iFanin   = Abc_NodeFindFanin( pNext, pObj );\n        if ( pFanInfo[3*iFanin] == -1 )\n        {\n            fNeedInv = 1;\n            continue;\n        }\n        Gain += pFanInfo[3*iFanin+2];\n    }\n    if ( fNeedInv )\n        Gain -= InvArea;\n    *pfUseInv = fNeedInv;\n    return Gain;\n}",
+      "Draft": "func Abc_ObjChangeEval(pObj *Abc_Obj_t, vInfo *Vec_Int_t, vFirst *Vec_Int_t, InvArea int32, pfUseInv *int32) int32 {\n    var pNext *Abc_Obj_t;\n    //Mio_Gate_t * pGate = (Mio_Gate_t *)pObj-\u003epData;\n    var iFanCell int32;\n    var iNodeCell int32 = Mio_GateReadCell( (Mio_Gate_t *)pObj.pData );\n    var pFanInfo *int32;\n    var pNodeInfo *int32 = Vec_IntEntryP( vInfo, Vec_IntEntry(vFirst, iNodeCell) );\n    var i int32;\n    var fNeedInv int32;\n    var Gain int32;\n    var iFanin int32 = Abc_ObjFaninNum(pObj);\n    var fUseInv int32 = Abc_NodeIsInv(pObj);\n    assert(iFanin \u003e 0, \"iFanin \u003e 0\");\n    *pfUseInv = 0;\n    if pNodeInfo[3*iFanin] == -1 {\n        return 0; }\n    if fUseInv != 0 {\n        Gain = InvArea;\n    } else {\n        Gain = pNodeInfo[3*iFanin+2]; }\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        if (fUseInv != 0) \u0026\u0026 Abc_NodeFindFanin(pNext, Abc_ObjFanin0(pObj)) \u003e= 0 {\n            return 0; }\n        if Abc_ObjHasDupFanins(pNext) != 0 {\n            return 0; }\n        if !Abc_ObjIsNode(pNext) || Abc_NodeIsBuf(pNext) {\n            fNeedInv = 1;\n            continue;\n        }\n        if Abc_NodeIsInv(pNext) {\n            if Abc_NodeCheckFanoutHasFanin(pNext, pObj) \u003e= 0 {\n                return 0; }\n            Gain += InvArea;\n            continue;\n        }\n        iFanCell = Mio_GateReadCell( (Mio_Gate_t *)pNext.pData );\n        pFanInfo = Vec_IntEntryP( vInfo, Vec_IntEntry(vFirst, iFanCell) );\n        iFanin   = Abc_NodeFindFanin( pNext, pObj );\n        if pFanInfo[3*iFanin] == -1 {\n            fNeedInv = 1;\n            continue;\n        }\n        Gain += pFanInfo[3*iFanin+2];\n    }\n    if fNeedInv != 0 {\n        Gain -= InvArea; }\n    *pfUseInv = fNeedInv;\n    return Gain;\n}"
+    },
+    {
+      "Name": "Abc_ObjChangeUpdate",
+      "Start": 8965,
+      "End": 9731,
+      "BodyStart": 9080,
+      "Original": "void Abc_ObjChangeUpdate( Abc_Obj_t * pObj, int iFanin, Mio_Cell2_t * pCells, int * pNodeInfo, Vec_Int_t * vTemp )\n{\n    int v, Perm, iNodeCell = pNodeInfo[3*iFanin];\n    //Mio_Gate_t * pGate = (Mio_Gate_t *)pObj-\u003epData;\n    //Abc_ObjPrint( stdout, pObj );\n    //printf( \"Replacing fanout %d with %s by %s with fanin %d.\\n\", Abc_ObjId(pObj), Mio_GateReadName(pGate), Mio_GateReadName((Mio_Gate_t *)pCells[iNodeCell].pMioGate), iFanin );\n    pObj-\u003epData = (Mio_Gate_t *)pCells[iNodeCell].pMioGate;\n    Perm = pNodeInfo[3*iFanin+1];\n    Vec_IntClear( vTemp );\n    for ( v = 0; v \u003c Abc_ObjFaninNum(pObj); v++ )\n        Vec_IntPush( vTemp, Abc_ObjFaninId(pObj, (Perm \u003e\u003e (v \u003c\u003c 2)) \u0026 15) );\n    Vec_IntClear( \u0026pObj-\u003evFanins );\n    Vec_IntAppend( \u0026pObj-\u003evFanins, vTemp );\n}",
+      "Draft": "func Abc_ObjChangeUpdate(pObj *Abc_Obj_t, iFanin int32, pCells *Mio_Cell2_t, pNodeInfo *int32, vTemp *Vec_Int_t) {\n    var v int32;\n    var Perm int32;\n    var iNodeCell int32 = pNodeInfo[3*iFanin];\n    //Mio_Gate_t * pGate = (Mio_Gate_t *)pObj-\u003epData;\n    //Abc_ObjPrint( stdout, pObj );\n    //printf( \"Replacing fanout %d with %s by %s with fanin %d.\\n\", Abc_ObjId(pObj), Mio_GateReadName(pGate), Mio_GateReadName((Mio_Gate_t *)pCells[iNodeCell].pMioGate), iFanin );\n    pObj.pData = (Mio_Gate_t *)pCells[iNodeCell].pMioGate;\n    Perm = pNodeInfo[3*iFanin+1];\n    Vec_IntClear( vTemp );\n    for  v = 0; v \u003c Abc_ObjFaninNum(pObj); v++  {\n        Vec_IntPush( vTemp, Abc_ObjFaninId(pObj, (Perm \u003e\u003e (v \u003c\u003c 2)) \u0026 15) );\n    }\n    Vec_IntClear( \u0026pObj.vFanins );\n    Vec_IntAppend( \u0026pObj.vFanins, vTemp );\n}"
+    },
+    {
+      "Name": "Abc_ObjChangePerform",
+      "Start": 9732,
+      "End": 11846,
+      "BodyStart": 9914,
+      "Original": "void Abc_ObjChangePerform( Abc_Obj_t * pObj, Vec_Int_t * vInfo, Vec_Int_t * vFirst, int fUseInv, Vec_Int_t * vTemp, Vec_Ptr_t * vFanout, Vec_Ptr_t * vFanout2, Mio_Cell2_t * pCells )\n{\n    Abc_Obj_t * pNext, * pNext2, * pNodeInv = NULL;\n    int iFanCell, iNodeCell = Mio_GateReadCell( (Mio_Gate_t *)pObj-\u003epData );\n    int * pFanInfo, * pNodeInfo = Vec_IntEntryP( vInfo, Vec_IntEntry(vFirst, iNodeCell) );\n    int i, k, iFanin = Abc_ObjFaninNum(pObj);\n    assert( iFanin \u003e 0 \u0026\u0026 pNodeInfo[3*iFanin] != -1 );\n    // update the node\n    Abc_NodeCollectFanouts( pObj, vFanout );\n    if ( Abc_NodeIsInv(pObj) )\n    {\n        Abc_Obj_t * pFanin = Abc_ObjFanin0(pObj);\n        Vec_PtrForEachEntry( Abc_Obj_t *, vFanout, pNext, k )\n            Abc_ObjPatchFanin( pNext, pObj, pFanin );\n        assert( Abc_ObjFanoutNum(pObj) == 0 );\n        Abc_NtkDeleteObj(pObj);\n        pObj = pFanin;\n//        assert( fUseInv == 0 );\n    }\n    else\n        Abc_ObjChangeUpdate( pObj, iFanin, pCells, pNodeInfo, vTemp );\n    // add inverter if needed\n    if ( fUseInv )\n        pNodeInv = Abc_NtkCreateNodeInv(pObj-\u003epNtk, pObj);\n    // update the fanouts\n    Vec_PtrForEachEntry( Abc_Obj_t *, vFanout, pNext, i )\n    {\n        if ( !Abc_ObjIsNode(pNext) || Abc_NodeIsBuf(pNext) )\n        {\n            Abc_ObjPatchFanin( pNext, pObj, pNodeInv );\n            continue;\n        }\n        if ( Abc_NodeIsInv(pNext) )\n        {\n            Abc_NodeCollectFanouts( pNext, vFanout2 );\n            Vec_PtrForEachEntry( Abc_Obj_t *, vFanout2, pNext2, k )\n                Abc_ObjPatchFanin( pNext2, pNext, pObj );\n            assert( Abc_ObjFanoutNum(pNext) == 0 );\n            Abc_NtkDeleteObj(pNext);\n            continue;\n        }\n        iFanin   = Abc_NodeFindFanin( pNext, pObj );\n        iFanCell = Mio_GateReadCell( (Mio_Gate_t *)pNext-\u003epData );\n        pFanInfo = Vec_IntEntryP( vInfo, Vec_IntEntry(vFirst, iFanCell) );\n        if ( pFanInfo[3*iFanin] == -1 )\n        {\n            Abc_ObjPatchFanin( pNext, pObj, pNodeInv );\n            continue;\n        }\n        Abc_ObjChangeUpdate( pNext, iFanin, pCells, pFanInfo, vTemp );\n    }\n}",
+      "Draft": "func Abc_ObjChangePerform(pObj *Abc_Obj_t, vInfo *Vec_Int_t, vFirst *Vec_Int_t, fUseInv int32, vTemp *Vec_Int_t, vFanout *Vec_Ptr_t, vFanout2 *Vec_Ptr_t, pCells *Mio_Cell2_t) {\n    var pNext *Abc_Obj_t;\n    var pNext2 *Abc_Obj_t;\n    var pNodeInv *Abc_Obj_t = nil;\n    var iFanCell int32;\n    var iNodeCell int32 = Mio_GateReadCell( (Mio_Gate_t *)pObj.pData );\n    var pFanInfo *int32;\n    var pNodeInfo *int32 = Vec_IntEntryP( vInfo, Vec_IntEntry(vFirst, iNodeCell) );\n    var i int32;\n    var k int32;\n    var iFanin int32 = Abc_ObjFaninNum(pObj);\n    assert(iFanin \u003e 0 \u0026\u0026 pNodeInfo[3*iFanin] != -1, \"iFanin \u003e 0 \u0026\u0026 pNodeInfo[3*iFanin] != -1\");\n    // update the node\n    Abc_NodeCollectFanouts( pObj, vFanout );\n    if Abc_NodeIsInv(pObj) {\n        var pFanin *Abc_Obj_t  = Abc_ObjFanin0(pObj);\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vFanout)) \u0026\u0026 (((pNext) = (Abc_Obj_t *)Vec_PtrEntry(vFanout, k)), 1); k++  {\n            Abc_ObjPatchFanin( pNext, pObj, pFanin );\n        }\n        assert(Abc_ObjFanoutNum(pObj) == 0, \"Abc_ObjFanoutNum(pObj) == 0\");\n        Abc_NtkDeleteObj(pObj);\n        pObj = pFanin;\n//        assert( fUseInv == 0 );\n    \n    } else {\n        Abc_ObjChangeUpdate( pObj, iFanin, pCells, pNodeInfo, vTemp ); }\n    // add inverter if needed\n    if fUseInv != 0 {\n        pNodeInv = Abc_NtkCreateNodeInv(pObj.pNtk, pObj); }\n    // update the fanouts\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanout)) \u0026\u0026 (((pNext) = (Abc_Obj_t *)Vec_PtrEntry(vFanout, i)), 1); i++  {\n        if !Abc_ObjIsNode(pNext) || Abc_NodeIsBuf(pNext) {\n            Abc_ObjPatchFanin( pNext, pObj, pNodeInv );\n            continue;\n        }\n        if Abc_NodeIsInv(pNext) {\n            Abc_NodeCollectFanouts( pNext, vFanout2 );\n            // inlining of macro Vec_PtrForEachEntry\n            for  k = 0; (k \u003c Vec_PtrSize(vFanout2)) \u0026\u0026 (((pNext2) = (Abc_Obj_t *)Vec_PtrEntry(vFanout2, k)), 1); k++  {\n                Abc_ObjPatchFanin( pNext2, pNext, pObj );\n            }\n            assert(Abc_ObjFanoutNum(pNext) == 0, \"Abc_ObjFanoutNum(pNext) == 0\");\n            Abc_NtkDeleteObj(pNext);\n            continue;\n        }\n        iFanin   = Abc_NodeFindFanin( pNext, pObj );\n        iFanCell = Mio_GateReadCell( (Mio_Gate_t *)pNext.pData );\n        pFanInfo = Vec_IntEntryP( vInfo, Vec_IntEntry(vFirst, iFanCell) );\n        if pFanInfo[3*iFanin] == -1 {\n            Abc_ObjPatchFanin( pNext, pObj, pNodeInv );\n            continue;\n        }\n        Abc_ObjChangeUpdate( pNext, iFanin, pCells, pFanInfo, vTemp );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkChangePerform",
+      "Start": 11847,
+      "End": 13345,
+      "BodyStart": 11907,
+      "Original": "void Abc_NtkChangePerform( Abc_Ntk_t * pNtk, int fVerbose )\n{\n    abctime clk = Abc_Clock();\n    int i, fNeedInv, nCells, Gain, GainAll = 0, Count = 0, CountInv = 0;\n    Mio_Cell2_t * pCells = Mio_CollectRootsNewDefault2( 6, \u0026nCells, 0 );\n    Vec_Int_t * vInfo = Abc_NtkPrecomputeCellPairs( pCells, nCells );\n    Vec_Int_t * vFirst = Abc_NtkPrecomputeFirsts( pCells, nCells );\n\n    Vec_Ptr_t * vFanout = Vec_PtrAlloc( 100 );\n    Vec_Ptr_t * vFanout2 = Vec_PtrAlloc( 100 );\n    Vec_Int_t * vTemp = Vec_IntAlloc( 100 );\n    Abc_Obj_t * pObj;\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        if ( Abc_ObjFaninNum(pObj) \u003c 2 \u0026\u0026 !Abc_NodeIsInv(pObj) )\n            continue;\n        if ( Abc_ObjHasDupFanouts(pObj) )\n            continue;\n        Gain = Abc_ObjChangeEval( pObj, vInfo, vFirst, (int)pCells[3].AreaW, \u0026fNeedInv );\n        if ( Gain \u003c= 0 )\n            continue;\n        //printf( \"Obj %d\\n\", Abc_ObjId(pObj) );\n        Count++;\n        CountInv += Abc_NodeIsInv(pObj);\n        GainAll += Gain;\n        Abc_ObjChangePerform( pObj, vInfo, vFirst, fNeedInv, vTemp, vFanout, vFanout2, pCells );\n    }\n    Vec_PtrFree( vFanout2 );\n    Vec_PtrFree( vFanout );\n    Vec_IntFree( vTemp );\n\n    Vec_IntFree( vFirst );\n    Vec_IntFree( vInfo );\n    ABC_FREE( pCells );\n\n    if ( fVerbose )\n        printf( \"Total gain in area = %6.2f after %d changes (including %d inverters). \", Scl_Int2Flt(GainAll), Count, CountInv );\n    if ( fVerbose )\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Abc_NtkChangePerform(pNtk *Abc_Ntk_t, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n    var i, fNeedInv, nCells, Gain, GainAll, Count, CountInv int32;\n    var pCells *Mio_Cell2_t  = Mio_CollectRootsNewDefault2( 6, \u0026nCells, 0 );\n    var vInfo *Vec_Int_t  = Abc_NtkPrecomputeCellPairs( pCells, nCells );\n    var vFirst *Vec_Int_t  = Abc_NtkPrecomputeFirsts( pCells, nCells );\n\n    var vFanout *Vec_Ptr_t  = Vec_PtrAlloc( 100 );\n    var vFanout2 *Vec_Ptr_t  = Vec_PtrAlloc( 100 );\n    var vTemp *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var pObj *Abc_Obj_t;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if Abc_ObjFaninNum(pObj) \u003c 2 \u0026\u0026 !Abc_NodeIsInv(pObj) {\n            continue; }\n        if Abc_ObjHasDupFanouts(pObj) != 0 {\n            continue; }\n        Gain = Abc_ObjChangeEval( pObj, vInfo, vFirst, int32(pCells[3].AreaW), \u0026fNeedInv );\n        if Gain \u003c= 0 {\n            continue; }\n        //printf( \"Obj %d\\n\", Abc_ObjId(pObj) );\n        Count++;\n        CountInv += Abc_NodeIsInv(pObj);\n        GainAll += Gain;\n        Abc_ObjChangePerform( pObj, vInfo, vFirst, fNeedInv, vTemp, vFanout, vFanout2, pCells );\n    }\n    }\n    Vec_PtrFree( vFanout2 );\n    Vec_PtrFree( vFanout );\n    Vec_IntFree( vTemp );\n\n    Vec_IntFree( vFirst );\n    Vec_IntFree( vInfo );\n    // inlining of macro ABC_FREE\n    ((pCells) ? (free((char *) (pCells)), (pCells) = 0) : 0);\n\n    if fVerbose != 0 {\n        fmt.Printf(\"Total gain in area = %6.2f after %d changes (including %d inverters). \", Scl_Int2Flt(GainAll), Count, CountInv); }\n    if fVerbose != 0 {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::pointer-cast::4207",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4082,
+      "End": 4082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::pointer-cast::6450",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6241,
+      "End": 6241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::pointer-cast::7920",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7581,
+      "End": 7595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::pointer-cast::9013",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8565,
+      "End": 8579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::pointer-cast::9868",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9420,
+      "End": 9434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::pointer-cast::10464",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10016,
+      "End": 10030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::pointer-cast::10958",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10400,
+      "End": 10400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::pointer-cast::11532",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10868,
+      "End": 10868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::pointer-cast::11972",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11200,
+      "End": 11200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::pointer-cast::12292",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11525,
+      "End": 11539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::pointer-cast::14100",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13097,
+      "End": 13097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::ternary::Abc_NtkPrecomputeCellPairs",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkPrecomputeCellPairs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1449,
+      "End": 4294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::Abc_NtkPrecomputeCellPairs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPrecomputeCellPairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1449,
+      "End": 4294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::Abc_NtkPrecomputeFirsts",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPrecomputeFirsts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4295,
+      "End": 4636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::Abc_NtkPrecomputePrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPrecomputePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4637,
+      "End": 5669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::ternary::Abc_NtkPrecomputeCellPairsTest",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkPrecomputeCellPairsTest",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5671,
+      "End": 6262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::Abc_NtkPrecomputeCellPairsTest",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPrecomputeCellPairsTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5671,
+      "End": 6262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::Abc_NodeCheckFanoutHasFanin",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeCheckFanoutHasFanin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6264,
+      "End": 6508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::Abc_ObjHasDupFanins",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjHasDupFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6761,
+      "End": 7050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::Abc_ObjHasDupFanouts",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjHasDupFanouts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7051,
+      "End": 7343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::Abc_ObjChangeEval",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjChangeEval",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7344,
+      "End": 8964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::Abc_ObjChangeUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjChangeUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8965,
+      "End": 9731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::Abc_ObjChangePerform",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjChangePerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9732,
+      "End": 11846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::ternary::Abc_NtkChangePerform",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkChangePerform",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11847,
+      "End": 13345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::Abc_NtkChangePerform",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkChangePerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11847,
+      "End": 13345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmArea.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13592
+    }
+  ],
+  "Draft": "package sfm\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sfmArea.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [Area optimization.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sfmArea.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sfmInt.h\"\n//#include \"map/mio/mio.h\"\n//#include \"misc/util/utilTruth.h\"\n//#include \"misc/util/utilNam.h\"\n//#include \"map/scl/sclLib.h\"\n//#include \"map/scl/sclCon.h\"\n//#include \"opt/dau/dau.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Precompute cell parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPrecomputeCellPairs(pCells *Mio_Cell2_t, nCells int32) *Vec_Int_t {\n    var vInfo *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    var iBestArea, tCur, iThis word;\n    var pPerm [7]*int32;\n    var nPerms [7]int32;\n    var Perm [7]int32;\n    var Perm1 *int32;\n    var Perm2 *int32;\n    var iBestCell, iBestPerm, iBestDiff int32;\n    var i, k, n, v, p, Count int32;\n    var iGate1 int32 = -1;\n    var iGate2 int32 = -1;\n\n    for  i = 1; i \u003c= 6; i++  {\n        pPerm[i] = Extra_PermSchedule( i );\n    }\n    for  i = 1; i \u003c= 6; i++  {\n        nPerms[i] = Extra_Factorial( i );\n    }\n\n    for  i = 2; i \u003c nCells; i++  {\n        var nFanins int32  = pCells[i].nFanins;\n        for  n = 0; n \u003c= nFanins; n++  {\n            // get the truth table\n            if n == nFanins {\n                iThis = ~pCells[i].uTruth;\n            } else {\n                iThis = Abc_Tt6Flip(pCells[i].uTruth, n);\n            }\n            // init the comparison\n            iBestArea = ~((word)0);\n            iBestCell = iBestPerm = iBestDiff = -1;\n            // iterate through cells\n            for  k = 2; k \u003c nCells; k++  {\n                if nFanins != int32(pCells[k].nFanins) {\n                    continue; }\n                if i != k \u0026\u0026 pCells[i].uTruth == pCells[k].uTruth {\n                    iGate1 = i;\n                    iGate2 = k;\n                    Count++;\n                    continue;\n                }\n                // set unit permutation\n                for  v = 0; v \u003c nFanins; v++  {\n                    Perm[v] = v;\n                }\n                // go through all permutation of Cell[k]\n                tCur = pCells[k].uTruth;\n                for  p = 0; p \u003c nPerms[nFanins]; p++  {\n                    if iThis == tCur \u0026\u0026 iBestArea \u003e pCells[k].AreaW {\n                        iBestArea = pCells[k].AreaW;\n                        iBestCell = k;\n                        iBestPerm = 0;\n                        for  v = 0; v \u003c nFanins; v++  {\n                            iBestPerm |= (v \u003c\u003c (Perm[v] \u003c\u003c 2));\n                        }\n                        if pCells[i].AreaW \u003e= pCells[k].AreaW {\n                            iBestDiff = int32((pCells[i].AreaW - pCells[k].AreaW));\n                        } else {\n                            iBestDiff = -int32((pCells[k].AreaW - pCells[i].AreaW));\n                        }\n                    }\n                    if nPerms[nFanins] == 1 {\n                        continue; }\n                    // update\n                    tCur  = Abc_Tt6SwapAdjacent( tCur, pPerm[nFanins][p] );\n                    Perm1 = Perm + pPerm[nFanins][p];\n                    Perm2 = Perm1 + 1;\n                    // inlining of macro ABC_SWAP\n                    { var t int32  = *Perm1; *Perm1 = *Perm2; *Perm2 = t; };\n                }\n                assert(tCur == pCells[k].uTruth, \"tCur == pCells[k].uTruth\");\n            }\n            Vec_IntPushThree( vInfo, iBestCell, iBestPerm, iBestDiff );\n        }\n    }\n\n    for  i = 1; i \u003c= 6; i++  {\n        // inlining of macro ABC_FREE\n        ((pPerm[i]) ? (free((char *) (pPerm[i])), (pPerm[i]) = 0) : 0);\n    }\n    if Count != 0 {\n        fmt.Printf(\"In this library, %d cell pairs have equal functions (for example, %s and %s).\\n\", Count/2, pCells[iGate1].pName, pCells[iGate2].pName); }\n    return vInfo;\n}\nfunc Abc_NtkPrecomputeFirsts(pCells *Mio_Cell2_t, nCells int32) *Vec_Int_t {\n    var i, Index int32;\n    var vFirst *Vec_Int_t  = Vec_IntStartFull( 2 ); \n    for  i = 2; i \u003c nCells; i++  {\n        Vec_IntPush( vFirst, Index );\n        Index += 3 * (pCells[i].nFanins + 1);\n    }\n    assert(nCells == Vec_IntSize(vFirst), \"nCells == Vec_IntSize(vFirst)\");\n    return vFirst;\n}\nfunc Abc_NtkPrecomputePrint(pCells *Mio_Cell2_t, nCells int32, vInfo *Vec_Int_t) int32 {\n    var i, n, v, Index, nRecUsed int32;\n    for  i = 2; i \u003c nCells; i++  {\n        var nFanins int32  = pCells[i].nFanins;\n        fmt.Printf(\"%3d : %8s   Fanins = %d   \", i, pCells[i].pName, nFanins);\n        Dau_DsdPrintFromTruth( \u0026pCells[i].uTruth, nFanins );\n        for  n = 0; n \u003c= nFanins; n++, Index += 3  {\n            var iCellA int32  = Vec_IntEntry( vInfo, Index+0 );\n            var iPerm int32   = Vec_IntEntry( vInfo, Index+1 );\n            var Diff int32    = Vec_IntEntry( vInfo, Index+2 );\n            if iCellA == -1 {\n                continue; }\n            fmt.Printf(\"%d : {\", n);\n            for  v = 0; v \u003c nFanins; v++  {\n                fmt.Printf(\" %d \", (iPerm \u003e\u003e (v \u003c\u003c 2)) \u0026 15);\n            }\n            fmt.Printf(\"}  Index = %d  \", Index);\n\n            fmt.Printf(\"Gain = %6.2f  \", Scl_Int2Flt(Diff));\n            Dau_DsdPrintFromTruth( \u0026pCells[iCellA].uTruth, pCells[iCellA].nFanins );\n            nRecUsed++;\n        }\n    }\n    return nRecUsed;\n}\n\nfunc Abc_NtkPrecomputeCellPairsTest() {\n    var nCells int32;\n    var pCells *Mio_Cell2_t  = Mio_CollectRootsNewDefault2( 6, \u0026nCells, 0 );\n    var vInfo *Vec_Int_t  = Abc_NtkPrecomputeCellPairs( pCells, nCells );\n    var nRecUsed int32  = Abc_NtkPrecomputePrint( pCells, nCells, vInfo );\n    // iterate through the cells\n    var vFirst *Vec_Int_t  = Abc_NtkPrecomputeFirsts( pCells, nCells );\n    fmt.Printf(\"Used records = %d.  All records = %d.\\n\", nRecUsed, Vec_IntSize(vInfo)/3 - nRecUsed);\n    assert(nCells == Vec_IntSize(vFirst), \"nCells == Vec_IntSize(vFirst)\");\n    Vec_IntFree( vFirst );\n    Vec_IntFree( vInfo );\n    // inlining of macro ABC_FREE\n    ((pCells) ? (free((char *) (pCells)), (pCells) = 0) : 0);\n}\n\nfunc Abc_NodeCheckFanoutHasFanin(pNode *Abc_Obj_t, pFanin *Abc_Obj_t) int32 {\n    var pThis *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pNode)) \u0026\u0026 (((pThis) = Abc_ObjFanout(pNode, i)), 1); i++  {\n        if Abc_NodeFindFanin(pThis, pFanin) \u003e= 0 {\n            return i; }\n    }\n    return -1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Evaluate changes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ObjHasDupFanins(pObj *Abc_Obj_t) int32 {\n    var pArray *int32  = pObj.vFanins.pArray;\n    var i int32;\n    var k int32;\n    var Limit int32 = Abc_ObjFaninNum(pObj);\n    for  i = 0; i \u003c Limit; i++  {\n        for  k = i+1; k \u003c Limit; k++  {\n            if pArray[i] == pArray[k] {\n                return 1; }\n        }\n    }\n    return 0;\n}\nfunc Abc_ObjHasDupFanouts(pObj *Abc_Obj_t) int32 {\n    var pArray *int32  = pObj.vFanouts.pArray;\n    var i int32;\n    var k int32;\n    var Limit int32 = Abc_ObjFanoutNum(pObj);\n    for  i = 0; i \u003c Limit; i++  {\n        for  k = i+1; k \u003c Limit; k++  {\n            if pArray[i] == pArray[k] {\n                return 1; }\n        }\n    }\n    return 0;\n}\nfunc Abc_ObjChangeEval(pObj *Abc_Obj_t, vInfo *Vec_Int_t, vFirst *Vec_Int_t, InvArea int32, pfUseInv *int32) int32 {\n    var pNext *Abc_Obj_t;\n    //Mio_Gate_t * pGate = (Mio_Gate_t *)pObj-\u003epData;\n    var iFanCell int32;\n    var iNodeCell int32 = Mio_GateReadCell( (Mio_Gate_t *)pObj.pData );\n    var pFanInfo *int32;\n    var pNodeInfo *int32 = Vec_IntEntryP( vInfo, Vec_IntEntry(vFirst, iNodeCell) );\n    var i int32;\n    var fNeedInv int32;\n    var Gain int32;\n    var iFanin int32 = Abc_ObjFaninNum(pObj);\n    var fUseInv int32 = Abc_NodeIsInv(pObj);\n    assert(iFanin \u003e 0, \"iFanin \u003e 0\");\n    *pfUseInv = 0;\n    if pNodeInfo[3*iFanin] == -1 {\n        return 0; }\n    if fUseInv != 0 {\n        Gain = InvArea;\n    } else {\n        Gain = pNodeInfo[3*iFanin+2]; }\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, i)), 1); i++  {\n        if (fUseInv != 0) \u0026\u0026 Abc_NodeFindFanin(pNext, Abc_ObjFanin0(pObj)) \u003e= 0 {\n            return 0; }\n        if Abc_ObjHasDupFanins(pNext) != 0 {\n            return 0; }\n        if !Abc_ObjIsNode(pNext) || Abc_NodeIsBuf(pNext) {\n            fNeedInv = 1;\n            continue;\n        }\n        if Abc_NodeIsInv(pNext) {\n            if Abc_NodeCheckFanoutHasFanin(pNext, pObj) \u003e= 0 {\n                return 0; }\n            Gain += InvArea;\n            continue;\n        }\n        iFanCell = Mio_GateReadCell( (Mio_Gate_t *)pNext.pData );\n        pFanInfo = Vec_IntEntryP( vInfo, Vec_IntEntry(vFirst, iFanCell) );\n        iFanin   = Abc_NodeFindFanin( pNext, pObj );\n        if pFanInfo[3*iFanin] == -1 {\n            fNeedInv = 1;\n            continue;\n        }\n        Gain += pFanInfo[3*iFanin+2];\n    }\n    if fNeedInv != 0 {\n        Gain -= InvArea; }\n    *pfUseInv = fNeedInv;\n    return Gain;\n}\nfunc Abc_ObjChangeUpdate(pObj *Abc_Obj_t, iFanin int32, pCells *Mio_Cell2_t, pNodeInfo *int32, vTemp *Vec_Int_t) {\n    var v int32;\n    var Perm int32;\n    var iNodeCell int32 = pNodeInfo[3*iFanin];\n    //Mio_Gate_t * pGate = (Mio_Gate_t *)pObj-\u003epData;\n    //Abc_ObjPrint( stdout, pObj );\n    //printf( \"Replacing fanout %d with %s by %s with fanin %d.\\n\", Abc_ObjId(pObj), Mio_GateReadName(pGate), Mio_GateReadName((Mio_Gate_t *)pCells[iNodeCell].pMioGate), iFanin );\n    pObj.pData = (Mio_Gate_t *)pCells[iNodeCell].pMioGate;\n    Perm = pNodeInfo[3*iFanin+1];\n    Vec_IntClear( vTemp );\n    for  v = 0; v \u003c Abc_ObjFaninNum(pObj); v++  {\n        Vec_IntPush( vTemp, Abc_ObjFaninId(pObj, (Perm \u003e\u003e (v \u003c\u003c 2)) \u0026 15) );\n    }\n    Vec_IntClear( \u0026pObj.vFanins );\n    Vec_IntAppend( \u0026pObj.vFanins, vTemp );\n}\nfunc Abc_ObjChangePerform(pObj *Abc_Obj_t, vInfo *Vec_Int_t, vFirst *Vec_Int_t, fUseInv int32, vTemp *Vec_Int_t, vFanout *Vec_Ptr_t, vFanout2 *Vec_Ptr_t, pCells *Mio_Cell2_t) {\n    var pNext *Abc_Obj_t;\n    var pNext2 *Abc_Obj_t;\n    var pNodeInv *Abc_Obj_t = nil;\n    var iFanCell int32;\n    var iNodeCell int32 = Mio_GateReadCell( (Mio_Gate_t *)pObj.pData );\n    var pFanInfo *int32;\n    var pNodeInfo *int32 = Vec_IntEntryP( vInfo, Vec_IntEntry(vFirst, iNodeCell) );\n    var i int32;\n    var k int32;\n    var iFanin int32 = Abc_ObjFaninNum(pObj);\n    assert(iFanin \u003e 0 \u0026\u0026 pNodeInfo[3*iFanin] != -1, \"iFanin \u003e 0 \u0026\u0026 pNodeInfo[3*iFanin] != -1\");\n    // update the node\n    Abc_NodeCollectFanouts( pObj, vFanout );\n    if Abc_NodeIsInv(pObj) {\n        var pFanin *Abc_Obj_t  = Abc_ObjFanin0(pObj);\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vFanout)) \u0026\u0026 (((pNext) = (Abc_Obj_t *)Vec_PtrEntry(vFanout, k)), 1); k++  {\n            Abc_ObjPatchFanin( pNext, pObj, pFanin );\n        }\n        assert(Abc_ObjFanoutNum(pObj) == 0, \"Abc_ObjFanoutNum(pObj) == 0\");\n        Abc_NtkDeleteObj(pObj);\n        pObj = pFanin;\n//        assert( fUseInv == 0 );\n    \n    } else {\n        Abc_ObjChangeUpdate( pObj, iFanin, pCells, pNodeInfo, vTemp ); }\n    // add inverter if needed\n    if fUseInv != 0 {\n        pNodeInv = Abc_NtkCreateNodeInv(pObj.pNtk, pObj); }\n    // update the fanouts\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vFanout)) \u0026\u0026 (((pNext) = (Abc_Obj_t *)Vec_PtrEntry(vFanout, i)), 1); i++  {\n        if !Abc_ObjIsNode(pNext) || Abc_NodeIsBuf(pNext) {\n            Abc_ObjPatchFanin( pNext, pObj, pNodeInv );\n            continue;\n        }\n        if Abc_NodeIsInv(pNext) {\n            Abc_NodeCollectFanouts( pNext, vFanout2 );\n            // inlining of macro Vec_PtrForEachEntry\n            for  k = 0; (k \u003c Vec_PtrSize(vFanout2)) \u0026\u0026 (((pNext2) = (Abc_Obj_t *)Vec_PtrEntry(vFanout2, k)), 1); k++  {\n                Abc_ObjPatchFanin( pNext2, pNext, pObj );\n            }\n            assert(Abc_ObjFanoutNum(pNext) == 0, \"Abc_ObjFanoutNum(pNext) == 0\");\n            Abc_NtkDeleteObj(pNext);\n            continue;\n        }\n        iFanin   = Abc_NodeFindFanin( pNext, pObj );\n        iFanCell = Mio_GateReadCell( (Mio_Gate_t *)pNext.pData );\n        pFanInfo = Vec_IntEntryP( vInfo, Vec_IntEntry(vFirst, iFanCell) );\n        if pFanInfo[3*iFanin] == -1 {\n            Abc_ObjPatchFanin( pNext, pObj, pNodeInv );\n            continue;\n        }\n        Abc_ObjChangeUpdate( pNext, iFanin, pCells, pFanInfo, vTemp );\n    }\n}\nfunc Abc_NtkChangePerform(pNtk *Abc_Ntk_t, fVerbose int32) {\n    var clk abctime  = Abc_Clock();\n    var i, fNeedInv, nCells, Gain, GainAll, Count, CountInv int32;\n    var pCells *Mio_Cell2_t  = Mio_CollectRootsNewDefault2( 6, \u0026nCells, 0 );\n    var vInfo *Vec_Int_t  = Abc_NtkPrecomputeCellPairs( pCells, nCells );\n    var vFirst *Vec_Int_t  = Abc_NtkPrecomputeFirsts( pCells, nCells );\n\n    var vFanout *Vec_Ptr_t  = Vec_PtrAlloc( 100 );\n    var vFanout2 *Vec_Ptr_t  = Vec_PtrAlloc( 100 );\n    var vTemp *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var pObj *Abc_Obj_t;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if Abc_ObjFaninNum(pObj) \u003c 2 \u0026\u0026 !Abc_NodeIsInv(pObj) {\n            continue; }\n        if Abc_ObjHasDupFanouts(pObj) != 0 {\n            continue; }\n        Gain = Abc_ObjChangeEval( pObj, vInfo, vFirst, int32(pCells[3].AreaW), \u0026fNeedInv );\n        if Gain \u003c= 0 {\n            continue; }\n        //printf( \"Obj %d\\n\", Abc_ObjId(pObj) );\n        Count++;\n        CountInv += Abc_NodeIsInv(pObj);\n        GainAll += Gain;\n        Abc_ObjChangePerform( pObj, vInfo, vFirst, fNeedInv, vTemp, vFanout, vFanout2, pCells );\n    }\n    }\n    Vec_PtrFree( vFanout2 );\n    Vec_PtrFree( vFanout );\n    Vec_IntFree( vTemp );\n\n    Vec_IntFree( vFirst );\n    Vec_IntFree( vInfo );\n    // inlining of macro ABC_FREE\n    ((pCells) ? (free((char *) (pCells)), (pCells) = 0) : 0);\n\n    if fVerbose != 0 {\n        fmt.Printf(\"Total gain in area = %6.2f after %d changes (including %d inverters). \", Scl_Int2Flt(GainAll), Count, CountInv); }\n    if fVerbose != 0 {\n        Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

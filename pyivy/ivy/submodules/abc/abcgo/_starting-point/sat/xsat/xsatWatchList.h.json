@@ -1,0 +1,690 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h",
+  "SHA256": "49cb65e3c980341dbea92ce7e5b68c267a88de96cadb5e541e19d5f77de08b78",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 69,
+        "Column": 68,
+        "ByteOffset": 1733
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((v.pArray) ? (free((char *) (v.pArray)), (v.pArray) = 0) : 0); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 2363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(k \u003c= v.nSize);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 2693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( v );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 126,
+        "Column": 44,
+        "ByteOffset": 3000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            v.pArray = ((xSAT_Watcher_t *) realloc((char *)(v.pArray), sizeof(xSAT_Watcher_t) * (size_t)(newsize)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 128,
+        "Column": 44,
+        "ByteOffset": 3134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            v.pArray = ((xSAT_Watcher_t *) malloc(sizeof(xSAT_Watcher_t) * (size_t)(newsize)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 13,
+        "ByteOffset": 3238
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Failed to realloc memory from %.1f MB to %.1f MB.\\n\","
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 133,
+        "Column": 13,
+        "ByteOffset": 3380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 133,
+        "Column": 21,
+        "ByteOffset": 3388
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 5,
+        "ByteOffset": 4176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( j \u003c xSAT_WatchListSize( v ) );"
+    },
+    {
+      "Name": "memmove",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 173,
+        "Column": 5,
+        "ByteOffset": 4219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memmove( v.pArray + j, v.pArray + j + 1, ( v.nSize - j - 1 ) * sizeof( xSAT_Watcher_t ) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 189,
+        "Column": 105,
+        "ByteOffset": 4717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var v *xSAT_VecWatchList_t  = /*__starting_point_inline_macro:ABC_ALLOC__*/((xSAT_VecWatchList_t *) malloc(sizeof(xSAT_VecWatchList_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 193,
+        "Column": 107,
+        "ByteOffset": 4912
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    v.pArray = ( xSAT_WatchList_t * ) /*__starting_point_inline_macro:ABC_CALLOC__*/((xSAT_WatchList_t *) calloc((size_t)(sizeof( xSAT_WatchList_t ) * v.nCap), sizeof(xSAT_WatchList_t)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 214,
+        "Column": 64,
+        "ByteOffset": 5450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((v.pArray) ? (free((char *) (v.pArray)), (v.pArray) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 215,
+        "Column": 57,
+        "ByteOffset": 5555
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((v) ? (free((char *) (v)), (v) = 0) : 0);"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 240,
+        "Column": 46,
+        "ByteOffset": 6168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            v.pArray = ((xSAT_WatchList_t *) realloc((char *)(v.pArray), sizeof(xSAT_WatchList_t) * (size_t)(newsize)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 242,
+        "Column": 46,
+        "ByteOffset": 6306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            v.pArray = ((xSAT_WatchList_t *) malloc(sizeof(xSAT_WatchList_t) * (size_t)(newsize)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 244,
+        "Column": 9,
+        "ByteOffset": 6379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( v.pArray + v.nCap, 0, sizeof( xSAT_WatchList_t ) * ( newsize - v.nCap ) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 246,
+        "Column": 13,
+        "ByteOffset": 6503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Failed to realloc memory from %.1f MB to %.1f MB.\\n\","
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 248,
+        "Column": 13,
+        "ByteOffset": 6645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 248,
+        "Column": 21,
+        "ByteOffset": 6653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 268,
+        "Column": 5,
+        "ByteOffset": 7033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iEntry \u003c v.nCap );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 5,
+        "ByteOffset": 7064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iEntry \u003c v.nSize );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "xSAT_WatchListFree",
+      "Start": 1787,
+      "End": 1904,
+      "BodyStart": 1849,
+      "Original": "static inline void xSAT_WatchListFree( xSAT_WatchList_t * v )\n{\n    if ( v-\u003epArray )\n        ABC_FREE( v-\u003epArray );\n}",
+      "Draft": "func xSAT_WatchListFree(v *xSAT_WatchList_t) {\n    if v.pArray {\n        // inlining of macro ABC_FREE\n        ((v.pArray) ? (free((char *) (v.pArray)), (v.pArray) = 0) : 0); }\n}"
+    },
+    {
+      "Name": "xSAT_WatchListSize",
+      "Start": 2125,
+      "End": 2211,
+      "BodyStart": 2187,
+      "Original": "static inline int  xSAT_WatchListSize( xSAT_WatchList_t * v )\n{\n    return v-\u003enSize;\n}",
+      "Draft": "func xSAT_WatchListSize(v *xSAT_WatchList_t) int32 {\n    return v.nSize;\n}"
+    },
+    {
+      "Name": "xSAT_WatchListShrink",
+      "Start": 2432,
+      "End": 2551,
+      "BodyStart": 2503,
+      "Original": "static inline void xSAT_WatchListShrink( xSAT_WatchList_t * v, int k )\n{\n    assert(k \u003c= v-\u003enSize);\n    v-\u003enSize = k;\n}",
+      "Draft": "func xSAT_WatchListShrink(v *xSAT_WatchList_t, k int32) {\n    assert(k \u003c= v.nSize, \"k \u003c= v.nSize\");\n    v.nSize = k;\n}"
+    },
+    {
+      "Name": "xSAT_WatchListPush",
+      "Start": 2772,
+      "End": 3337,
+      "BodyStart": 2852,
+      "Original": "static inline void xSAT_WatchListPush( xSAT_WatchList_t * v, xSAT_Watcher_t e )\n{\n    assert( v );\n    if ( v-\u003enSize == v-\u003enCap )\n    {\n        int newsize = ( v-\u003enCap \u003c 4 ) ? 4 : ( v-\u003enCap / 2 ) * 3;\n\n        v-\u003epArray = ABC_REALLOC( xSAT_Watcher_t, v-\u003epArray, newsize );\n        if ( v-\u003epArray == NULL )\n        {\n            printf( \"Failed to realloc memory from %.1f MB to %.1f MB.\\n\",\n                1.0 * v-\u003enCap / (1\u003c\u003c20), 1.0 * newsize / (1\u003c\u003c20) );\n            fflush( stdout );\n        }\n        v-\u003enCap = newsize;\n    }\n\n    v-\u003epArray[v-\u003enSize++] = e;\n}",
+      "Draft": "func xSAT_WatchListPush(v *xSAT_WatchList_t, e xSAT_Watcher_t) {\n    assert(v, \"v\");\n    if v.nSize == v.nCap {\n        var newsize int32;\n        if v.nCap \u003c 4 {\n            newsize = 4;\n        } else {\n            newsize = ( v.nCap / 2 ) * 3;\n        }\n\n        // inlining of macro ABC_REALLOC\n        \n        if v.pArray {\n            v.pArray = ((xSAT_Watcher_t *) realloc((char *)(v.pArray), sizeof(xSAT_Watcher_t) * (size_t)(newsize)));\n        } else {\n            v.pArray = ((xSAT_Watcher_t *) malloc(sizeof(xSAT_Watcher_t) * (size_t)(newsize)));\n        }\n        if v.pArray == nil {\n            fmt.Printf(\"Failed to realloc memory from %.1f MB to %.1f MB.\\n\", 1.0 * v.nCap / (1\u003c\u003c20), 1.0 * newsize / (1\u003c\u003c20));\n            fflush( os.Stdout );\n        }\n        v.nCap = newsize;\n    }\n\n    v.pArray[v.nSize++] = e;\n}"
+    },
+    {
+      "Name": "xSAT_WatchListArray",
+      "Start": 3558,
+      "End": 3657,
+      "BodyStart": 3632,
+      "Original": "static inline xSAT_Watcher_t* xSAT_WatchListArray( xSAT_WatchList_t * v )\n{\n    return v-\u003epArray;\n}",
+      "Draft": "func xSAT_WatchListArray(v *xSAT_WatchList_t) *xSAT_Watcher_t {\n    return v.pArray;\n}"
+    },
+    {
+      "Name": "xSAT_WatchListRemove",
+      "Start": 3878,
+      "End": 4224,
+      "BodyStart": 3957,
+      "Original": "static inline void xSAT_WatchListRemove( xSAT_WatchList_t * v, unsigned CRef )\n{\n    xSAT_Watcher_t* ws = xSAT_WatchListArray(v);\n    int j = 0;\n\n    for ( ; ws[j].CRef != CRef; j++ );\n    assert( j \u003c xSAT_WatchListSize( v ) );\n    memmove( v-\u003epArray + j, v-\u003epArray + j + 1, ( v-\u003enSize - j - 1 ) * sizeof( xSAT_Watcher_t ) );\n    v-\u003enSize -= 1;\n}",
+      "Draft": "func xSAT_WatchListRemove(v *xSAT_WatchList_t, CRef uint32) {\n    var ws *xSAT_Watcher_t  = xSAT_WatchListArray(v);\n    var j int32;\n\n    for  ; ws[j].CRef != CRef; j++  {}\n    assert(j \u003c xSAT_WatchListSize( v ), \"j \u003c xSAT_WatchListSize( v )\");\n    memmove( v.pArray + j, v.pArray + j + 1, ( v.nSize - j - 1 ) * sizeof( xSAT_Watcher_t ) );\n    v.nSize -= 1;\n}"
+    },
+    {
+      "Name": "xSAT_VecWatchListAlloc",
+      "Start": 4445,
+      "End": 4746,
+      "BodyStart": 4516,
+      "Original": "static inline xSAT_VecWatchList_t * xSAT_VecWatchListAlloc( int nCap )\n{\n    xSAT_VecWatchList_t * v = ABC_ALLOC( xSAT_VecWatchList_t, 1 );\n\n    v-\u003enCap   = 4;\n    v-\u003enSize  = 0;\n    v-\u003epArray = ( xSAT_WatchList_t * ) ABC_CALLOC(xSAT_WatchList_t, sizeof( xSAT_WatchList_t ) * v-\u003enCap);\n    return v;\n}",
+      "Draft": "func xSAT_VecWatchListAlloc(nCap int32) *xSAT_VecWatchList_t {\n    // inlining of macro ABC_ALLOC\n    var v *xSAT_VecWatchList_t  = ((xSAT_VecWatchList_t *) malloc(sizeof(xSAT_VecWatchList_t) * (size_t)(1)));\n\n    v.nCap   = 4;\n    v.nSize  = 0;\n    // inlining of macro ABC_CALLOC\n    v.pArray = ( xSAT_WatchList_t * ) ((xSAT_WatchList_t *) calloc((size_t)(sizeof( xSAT_WatchList_t ) * v.nCap), sizeof(xSAT_WatchList_t)));\n    return v;\n}"
+    },
+    {
+      "Name": "xSAT_VecWatchListFree",
+      "Start": 4967,
+      "End": 5176,
+      "BodyStart": 5034,
+      "Original": "static inline void xSAT_VecWatchListFree( xSAT_VecWatchList_t* v )\n{\n    int i;\n    for( i = 0; i \u003c v-\u003enSize; i++ )\n        xSAT_WatchListFree( v-\u003epArray + i );\n\n    ABC_FREE( v-\u003epArray );\n    ABC_FREE( v );\n}",
+      "Draft": "func xSAT_VecWatchListFree(v *xSAT_VecWatchList_t) {\n    var i int32;\n    for  i = 0; i \u003c v.nSize; i++  {\n        xSAT_WatchListFree( v.pArray + i );\n    }\n\n    // inlining of macro ABC_FREE\n    ((v.pArray) ? (free((char *) (v.pArray)), (v.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((v) ? (free((char *) (v)), (v) = 0) : 0);\n}"
+    },
+    {
+      "Name": "xSAT_VecWatchListPush",
+      "Start": 5397,
+      "End": 6019,
+      "BodyStart": 5464,
+      "Original": "static inline void xSAT_VecWatchListPush( xSAT_VecWatchList_t* v )\n{\n    if ( v-\u003enSize == v-\u003enCap )\n    {\n        int newsize = (v-\u003enCap \u003c 4) ? v-\u003enCap * 2 : (v-\u003enCap / 2) * 3;\n\n        v-\u003epArray = ABC_REALLOC( xSAT_WatchList_t, v-\u003epArray, newsize );\n        memset( v-\u003epArray + v-\u003enCap, 0, sizeof( xSAT_WatchList_t ) * ( newsize - v-\u003enCap ) );\n        if ( v-\u003epArray == NULL )\n        {\n            printf( \"Failed to realloc memory from %.1f MB to %.1f MB.\\n\",\n                1.0 * v-\u003enCap / (1\u003c\u003c20), 1.0 * newsize / (1\u003c\u003c20) );\n            fflush( stdout );\n        }\n        v-\u003enCap = newsize;\n    }\n\n    v-\u003enSize++;\n}",
+      "Draft": "func xSAT_VecWatchListPush(v *xSAT_VecWatchList_t) {\n    if v.nSize == v.nCap {\n        var newsize int32;\n        if v.nCap \u003c 4 {\n            newsize = v.nCap * 2;\n        } else {\n            newsize = (v.nCap / 2) * 3;\n        }\n\n        // inlining of macro ABC_REALLOC\n        \n        if v.pArray {\n            v.pArray = ((xSAT_WatchList_t *) realloc((char *)(v.pArray), sizeof(xSAT_WatchList_t) * (size_t)(newsize)));\n        } else {\n            v.pArray = ((xSAT_WatchList_t *) malloc(sizeof(xSAT_WatchList_t) * (size_t)(newsize)));\n        }\n        memset( v.pArray + v.nCap, 0, sizeof( xSAT_WatchList_t ) * ( newsize - v.nCap ) );\n        if v.pArray == nil {\n            fmt.Printf(\"Failed to realloc memory from %.1f MB to %.1f MB.\\n\", 1.0 * v.nCap / (1\u003c\u003c20), 1.0 * newsize / (1\u003c\u003c20));\n            fflush( os.Stdout );\n        }\n        v.nCap = newsize;\n    }\n\n    v.nSize++;\n}"
+    },
+    {
+      "Name": "xSAT_VecWatchListEntry",
+      "Start": 6240,
+      "End": 6433,
+      "BodyStart": 6334,
+      "Original": "static inline xSAT_WatchList_t * xSAT_VecWatchListEntry( xSAT_VecWatchList_t* v, int iEntry )\n{\n    assert( iEntry \u003c v-\u003enCap );\n    assert( iEntry \u003c v-\u003enSize );\n    return v-\u003epArray + iEntry;\n}",
+      "Draft": "func xSAT_VecWatchListEntry(v *xSAT_VecWatchList_t, iEntry int32) *xSAT_WatchList_t {\n    assert(iEntry \u003c v.nCap, \"iEntry \u003c v.nCap\");\n    assert(iEntry \u003c v.nSize, \"iEntry \u003c v.nSize\");\n    return v.pArray + iEntry;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::struct::xSAT_Watcher_t",
+      "Category": "struct-review",
+      "Symbol": "xSAT_Watcher_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1165,
+      "End": 1275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::struct::xSAT_WatchList_t",
+      "Category": "struct-review",
+      "Symbol": "xSAT_WatchList_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1277,
+      "End": 1415
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::struct::xSAT_VecWatchList_t",
+      "Category": "struct-review",
+      "Symbol": "xSAT_VecWatchList_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1417,
+      "End": 1566
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::mechanical::sizeof::3193",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2994,
+      "End": 2994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::mechanical::sizeof::3276",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2994,
+      "End": 2994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::mechanical::sizeof::4454",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4176,
+      "End": 4182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::mechanical::sizeof::4903",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4548,
+      "End": 4548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::mechanical::sizeof::5110",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4663,
+      "End": 4663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::mechanical::sizeof::5149",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4663,
+      "End": 4663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::mechanical::sizeof::6314",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5595,
+      "End": 5595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::mechanical::sizeof::6401",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5595,
+      "End": 5595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::mechanical::sizeof::6490",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5688,
+      "End": 5694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::pointer-cast::1945",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1880,
+      "End": 1880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::pointer-cast::3145",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2994,
+      "End": 2994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::pointer-cast::3172",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2994,
+      "End": 2994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::pointer-cast::3250",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2994,
+      "End": 2994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::pointer-cast::4872",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4548,
+      "End": 4548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::pointer-cast::5003",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4640,
+      "End": 4662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::pointer-cast::5073",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4663,
+      "End": 4663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::pointer-cast::5644",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5133,
+      "End": 5133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::pointer-cast::5751",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5160,
+      "End": 5160
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::pointer-cast::6264",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5595,
+      "End": 5595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::pointer-cast::6293",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5595,
+      "End": 5595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::pointer-cast::6373",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5595,
+      "End": 5595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::ternary::xSAT_WatchListFree",
+      "Category": "ternary-review",
+      "Symbol": "xSAT_WatchListFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1787,
+      "End": 1904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::xSAT_WatchListFree",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_WatchListFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1787,
+      "End": 1904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::xSAT_WatchListSize",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_WatchListSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2125,
+      "End": 2211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::xSAT_WatchListShrink",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_WatchListShrink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2432,
+      "End": 2551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::xSAT_WatchListPush",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_WatchListPush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2772,
+      "End": 3337
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::xSAT_WatchListArray",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_WatchListArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3558,
+      "End": 3657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::xSAT_WatchListRemove",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_WatchListRemove",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3878,
+      "End": 4224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::xSAT_VecWatchListAlloc",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_VecWatchListAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4445,
+      "End": 4746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::ternary::xSAT_VecWatchListFree",
+      "Category": "ternary-review",
+      "Symbol": "xSAT_VecWatchListFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4967,
+      "End": 5176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::xSAT_VecWatchListFree",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_VecWatchListFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4967,
+      "End": 5176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::xSAT_VecWatchListPush",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_VecWatchListPush",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5397,
+      "End": 6019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::xSAT_VecWatchListEntry",
+      "Category": "semantic-review",
+      "Symbol": "xSAT_VecWatchListEntry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6240,
+      "End": 6433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsatWatchList.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6468
+    }
+  ],
+  "Draft": "package xsat\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [xsatWatchList.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [xSAT - A SAT solver written in C.\n               Read the license file for more info.]\n\n  Synopsis    [Watch list and its related structures implementation]\n\n  Author      [Bruno Schmitt \u003cboschmitt@inf.ufrgs.br\u003e]\n\n  Affiliation [UC Berkeley / UFRGS]\n\n  Date        [Ver. 1.0. Started - November 10, 2016.]\n\n  Revision    []\n\n***********************************************************************/\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n//#include \"misc/util/abc_global.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n   \ntype xSAT_Watcher_t struct {\n    CRef uint32;\n    Blocker int32;\n}\n\n   \ntype xSAT_WatchList_t struct {\n    nCap int32;\n    nSize int32;\n    pArray  *xSAT_Watcher_t;\n}\n\n   \ntype xSAT_VecWatchList_t struct {\n    nCap int32;\n    nSize int32;\n    pArray  *xSAT_WatchList_t;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_WatchListFree(v *xSAT_WatchList_t) {\n    if v.pArray {\n        // inlining of macro ABC_FREE\n        ((v.pArray) ? (free((char *) (v.pArray)), (v.pArray) = 0) : 0); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_WatchListSize(v *xSAT_WatchList_t) int32 {\n    return v.nSize;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_WatchListShrink(v *xSAT_WatchList_t, k int32) {\n    assert(k \u003c= v.nSize, \"k \u003c= v.nSize\");\n    v.nSize = k;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_WatchListPush(v *xSAT_WatchList_t, e xSAT_Watcher_t) {\n    assert(v, \"v\");\n    if v.nSize == v.nCap {\n        var newsize int32;\n        if v.nCap \u003c 4 {\n            newsize = 4;\n        } else {\n            newsize = ( v.nCap / 2 ) * 3;\n        }\n\n        // inlining of macro ABC_REALLOC\n        \n        if v.pArray {\n            v.pArray = ((xSAT_Watcher_t *) realloc((char *)(v.pArray), sizeof(xSAT_Watcher_t) * (size_t)(newsize)));\n        } else {\n            v.pArray = ((xSAT_Watcher_t *) malloc(sizeof(xSAT_Watcher_t) * (size_t)(newsize)));\n        }\n        if v.pArray == nil {\n            fmt.Printf(\"Failed to realloc memory from %.1f MB to %.1f MB.\\n\", 1.0 * v.nCap / (1\u003c\u003c20), 1.0 * newsize / (1\u003c\u003c20));\n            fflush( os.Stdout );\n        }\n        v.nCap = newsize;\n    }\n\n    v.pArray[v.nSize++] = e;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_WatchListArray(v *xSAT_WatchList_t) *xSAT_Watcher_t {\n    return v.pArray;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_WatchListRemove(v *xSAT_WatchList_t, CRef uint32) {\n    var ws *xSAT_Watcher_t  = xSAT_WatchListArray(v);\n    var j int32;\n\n    for  ; ws[j].CRef != CRef; j++  {}\n    assert(j \u003c xSAT_WatchListSize( v ), \"j \u003c xSAT_WatchListSize( v )\");\n    memmove( v.pArray + j, v.pArray + j + 1, ( v.nSize - j - 1 ) * sizeof( xSAT_Watcher_t ) );\n    v.nSize -= 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_VecWatchListAlloc(nCap int32) *xSAT_VecWatchList_t {\n    // inlining of macro ABC_ALLOC\n    var v *xSAT_VecWatchList_t  = ((xSAT_VecWatchList_t *) malloc(sizeof(xSAT_VecWatchList_t) * (size_t)(1)));\n\n    v.nCap   = 4;\n    v.nSize  = 0;\n    // inlining of macro ABC_CALLOC\n    v.pArray = ( xSAT_WatchList_t * ) ((xSAT_WatchList_t *) calloc((size_t)(sizeof( xSAT_WatchList_t ) * v.nCap), sizeof(xSAT_WatchList_t)));\n    return v;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_VecWatchListFree(v *xSAT_VecWatchList_t) {\n    var i int32;\n    for  i = 0; i \u003c v.nSize; i++  {\n        xSAT_WatchListFree( v.pArray + i );\n    }\n\n    // inlining of macro ABC_FREE\n    ((v.pArray) ? (free((char *) (v.pArray)), (v.pArray) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((v) ? (free((char *) (v)), (v) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_VecWatchListPush(v *xSAT_VecWatchList_t) {\n    if v.nSize == v.nCap {\n        var newsize int32;\n        if v.nCap \u003c 4 {\n            newsize = v.nCap * 2;\n        } else {\n            newsize = (v.nCap / 2) * 3;\n        }\n\n        // inlining of macro ABC_REALLOC\n        \n        if v.pArray {\n            v.pArray = ((xSAT_WatchList_t *) realloc((char *)(v.pArray), sizeof(xSAT_WatchList_t) * (size_t)(newsize)));\n        } else {\n            v.pArray = ((xSAT_WatchList_t *) malloc(sizeof(xSAT_WatchList_t) * (size_t)(newsize)));\n        }\n        memset( v.pArray + v.nCap, 0, sizeof( xSAT_WatchList_t ) * ( newsize - v.nCap ) );\n        if v.pArray == nil {\n            fmt.Printf(\"Failed to realloc memory from %.1f MB to %.1f MB.\\n\", 1.0 * v.nCap / (1\u003c\u003c20), 1.0 * newsize / (1\u003c\u003c20));\n            fflush( os.Stdout );\n        }\n        v.nCap = newsize;\n    }\n\n    v.nSize++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc xSAT_VecWatchListEntry(v *xSAT_VecWatchList_t, iEntry int32) *xSAT_WatchList_t {\n    assert(iEntry \u003c v.nCap, \"iEntry \u003c v.nCap\");\n    assert(iEntry \u003c v.nSize, \"iEntry \u003c v.nSize\");\n    return v.pArray + iEntry;\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

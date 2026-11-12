@@ -1,0 +1,1550 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c",
+  "SHA256": "b59e76cd537215ad70f3be053449719b2d851cbcde20fed432a0dbac1a26eef4",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 5554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsConst0(pObj) || pObj.Value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 5605
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( int32(pObj.Value) \u003c p.nObjsFrame );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 5653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( f \u003e= 0 \u0026\u0026 f \u003c= p.pCex.iFrame ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 148,
+        "Column": 5,
+        "ByteOffset": 6688
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(Rf2_ObjVec(p, pObj)) == 2*p.nMapWords );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 6753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( Rf2_ObjA(p, pObj), Rf2_ObjA(p, pFanin), sizeof(unsigned) * 2 * p.nMapWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 154,
+        "Column": 5,
+        "ByteOffset": 6967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 5,
+        "ByteOffset": 7001
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( One == int32(pObj.fMark0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 5,
+        "ByteOffset": 7042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( One == int32((Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 7123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( One == int32((Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj))) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 7204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(Rf2_ObjVec(p, pObj)) == 2*p.nMapWords );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 181,
+        "Column": 13,
+        "ByteOffset": 8144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", Abc_InfoHasBit(pInfo, i) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 5,
+        "ByteOffset": 8198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 187,
+        "Column": 13,
+        "ByteOffset": 8464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", !Abc_InfoHasBit(pInfo, i) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 8519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 9073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(pGia) == 1 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 215,
+        "Column": 77,
+        "ByteOffset": 9346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pvVecs = /*__starting_point_inline_macro:ABC_CALLOC__*/((Vec_Int_t *) calloc((size_t)(Gia_ManObjNum(pGia)), sizeof(Vec_Int_t)));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 228,
+        "Column": 9,
+        "ByteOffset": 9986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abstraction refinement runtime statistics:\\n\" );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 230,
+        "Column": 76,
+        "ByteOffset": 10212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeFwd)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeFwd)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 232,
+        "Column": 76,
+        "ByteOffset": 10487
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeBwd)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeBwd)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 234,
+        "Column": 76,
+        "ByteOffset": 10762
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeVer)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeVer)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 236,
+        "Column": 76,
+        "ByteOffset": 11037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeOther)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((timeOther)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 238,
+        "Column": 78,
+        "ByteOffset": 11314
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 239,
+        "Column": 9,
+        "ByteOffset": 11431
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Total calls = %d.  Average refine = %.1f. GIA mem = %.3f MB.  Other mem = %.3f MB.\\n\", "
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 245,
+        "Column": 64,
+        "ByteOffset": 11769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pvVecs) ? (free((char *) (p.pvVecs)), (p.pvVecs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 246,
+        "Column": 57,
+        "ByteOffset": 11874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 275,
+        "Column": 9,
+        "ByteOffset": 12869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 285,
+        "Column": 9,
+        "ByteOffset": 13315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 296,
+        "Column": 5,
+        "ByteOffset": 13872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 319,
+        "Column": 13,
+        "ByteOffset": 14651
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 324,
+        "Column": 17,
+        "ByteOffset": 14902
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( pObj.Value \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 330,
+        "Column": 13,
+        "ByteOffset": 15204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 332,
+        "Column": 13,
+        "ByteOffset": 15341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !pRnm.fPPi );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 347,
+        "Column": 13,
+        "ByteOffset": 15924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 361,
+        "Column": 5,
+        "ByteOffset": 16658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == p.pCex.nBits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 364,
+        "Column": 9,
+        "ByteOffset": 16788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Output value is incorrect.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 451,
+        "Column": 9,
+        "ByteOffset": 20007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.fPhase );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 459,
+        "Column": 14,
+        "ByteOffset": 20422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 469,
+        "Column": 9,
+        "ByteOffset": 20822
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vVec) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 484,
+        "Column": 5,
+        "ByteOffset": 21372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\nMap (%d): \", Vec_IntSize(p.vMap) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 488,
+        "Column": 13,
+        "ByteOffset": 21667
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d=%d \", i, Vec_IntSize(vVec) - 1 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 494,
+        "Column": 5,
+        "ByteOffset": 21969
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 496,
+        "Column": 5,
+        "ByteOffset": 22014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Int (%d): \", Vec_IntSize(p.vFanins) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 500,
+        "Column": 13,
+        "ByteOffset": 22316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d=%d \", i, Vec_IntSize(vVec) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 507,
+        "Column": 5,
+        "ByteOffset": 22658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 510,
+        "Column": 9,
+        "ByteOffset": 22854
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d \", Entry );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 512,
+        "Column": 5,
+        "ByteOffset": 22888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 554,
+        "Column": 13,
+        "ByteOffset": 24133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", '0' + ((Entry\u003e\u003ek) \u0026 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 556,
+        "Column": 9,
+        "ByteOffset": 24191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 577,
+        "Column": 9,
+        "ByteOffset": 24712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Before: \\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 600,
+        "Column": 9,
+        "ByteOffset": 25724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"After: \\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 627,
+        "Column": 5,
+        "ByteOffset": 26618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Considering %d PPIs combined into %d groups of size %d.\\n\", k, (k-1)/nGroupSize+1, nGroupSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 655,
+        "Column": 21,
+        "ByteOffset": 27772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"1\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 658,
+        "Column": 21,
+        "ByteOffset": 27843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"0\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 661,
+        "Column": 17,
+        "ByteOffset": 27910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"-\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 663,
+        "Column": 9,
+        "ByteOffset": 27945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" %3d \\n\", Counter );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 696,
+        "Column": 13,
+        "ByteOffset": 28994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 703,
+        "Column": 17,
+        "ByteOffset": 29558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( i \u003c 31 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 705,
+        "Column": 17,
+        "ByteOffset": 29666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Vec_IntSize(Rf2_ObjVec(p, pObj)) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 730,
+        "Column": 13,
+        "ByteOffset": 30781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 753,
+        "Column": 5,
+        "ByteOffset": 32096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == p.pCex.nBits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 755,
+        "Column": 9,
+        "ByteOffset": 32178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Output value is incorrect.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 783,
+        "Column": 13,
+        "ByteOffset": 33167
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 805,
+        "Column": 13,
+        "ByteOffset": 34202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 817,
+        "Column": 5,
+        "ByteOffset": 34883
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == p.pCex.nBits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 819,
+        "Column": 9,
+        "ByteOffset": 34965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Output value is incorrect.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 821,
+        "Column": 5,
+        "ByteOffset": 35014
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Bounds: \\n\" );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 841,
+        "Column": 22,
+        "ByteOffset": 35642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var clk2 int64 = clock();"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 861,
+        "Column": 9,
+        "ByteOffset": 36204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Empty set of justifying subsets.\\n\" );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 872,
+        "Column": 11,
+        "ByteOffset": 36537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    clk = clock();"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 876,
+        "Column": 18,
+        "ByteOffset": 36720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.timeVer += clock() - clk;"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 877,
+        "Column": 20,
+        "ByteOffset": 36754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.timeTotal += clock() - clk2;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Rf2_ManObj",
+      "Start": 5323,
+      "End": 5612,
+      "BodyStart": 5404,
+      "Original": "static inline Rf2_Obj_t * Rf2_ManObj( Rf2_Man_t * p, Gia_Obj_t * pObj, int f )  \n{ \n    assert( Gia_ObjIsConst0(pObj) || pObj-\u003eValue );\n    assert( (int)pObj-\u003eValue \u003c p-\u003enObjsFrame );\n    assert( f \u003e= 0 \u0026\u0026 f \u003c= p-\u003epCex-\u003eiFrame ); \n    return p-\u003epObjs + f * p-\u003enObjsFrame + pObj-\u003eValue;  \n}",
+      "Draft": "func Rf2_ManObj(p *Rf2_Man_t, pObj *Gia_Obj_t, f int32) *Rf2_Obj_t { \n    assert(Gia_ObjIsConst0(pObj) || pObj.Value, \"Gia_ObjIsConst0(pObj) || pObj.Value\");\n    assert(int32(pObj.Value) \u003c p.nObjsFrame, \"int32(pObj.Value) \u003c p.nObjsFrame\");\n    assert(f \u003e= 0 \u0026\u0026 f \u003c= p.pCex.iFrame, \"f \u003e= 0 \u0026\u0026 f \u003c= p.pCex.iFrame\"); \n    return p.pObjs + f * p.nObjsFrame + pObj.Value;  \n}"
+    },
+    {
+      "Name": "Rf2_ObjVec",
+      "Start": 5614,
+      "End": 5740,
+      "BodyStart": 5688,
+      "Original": "static inline Vec_Int_t * Rf2_ObjVec( Rf2_Man_t * p, Gia_Obj_t * pObj )  \n{\n    return p-\u003epvVecs + Gia_ObjId(p-\u003epGia, pObj);\n}",
+      "Draft": "func Rf2_ObjVec(p *Rf2_Man_t, pObj *Gia_Obj_t) *Vec_Int_t {\n    return p.pvVecs + Gia_ObjId(p.pGia, pObj);\n}"
+    },
+    {
+      "Name": "Rf2_ObjA",
+      "Start": 5743,
+      "End": 5875,
+      "BodyStart": 5814,
+      "Original": "static inline unsigned * Rf2_ObjA( Rf2_Man_t * p, Gia_Obj_t * pObj )  \n{\n    return (unsigned *)Vec_IntArray(Rf2_ObjVec(p, pObj));\n}",
+      "Draft": "func Rf2_ObjA(p *Rf2_Man_t, pObj *Gia_Obj_t) *uint32 {\n    return (unsigned *)Vec_IntArray(Rf2_ObjVec(p, pObj));\n}"
+    },
+    {
+      "Name": "Rf2_ObjN",
+      "Start": 5876,
+      "End": 6023,
+      "BodyStart": 5947,
+      "Original": "static inline unsigned * Rf2_ObjN( Rf2_Man_t * p, Gia_Obj_t * pObj )  \n{\n    return (unsigned *)Vec_IntArray(Rf2_ObjVec(p, pObj)) + p-\u003enMapWords;\n}",
+      "Draft": "func Rf2_ObjN(p *Rf2_Man_t, pObj *Gia_Obj_t) *uint32 {\n    return (unsigned *)Vec_IntArray(Rf2_ObjVec(p, pObj)) + p.nMapWords;\n}"
+    },
+    {
+      "Name": "Rf2_ObjClear",
+      "Start": 6024,
+      "End": 6155,
+      "BodyStart": 6093,
+      "Original": "static inline void Rf2_ObjClear( Rf2_Man_t * p, Gia_Obj_t * pObj )  \n{\n    Vec_IntFill( Rf2_ObjVec(p, pObj), 2*p-\u003enMapWords, 0 );\n}",
+      "Draft": "func Rf2_ObjClear(p *Rf2_Man_t, pObj *Gia_Obj_t) {\n    Vec_IntFill( Rf2_ObjVec(p, pObj), 2*p.nMapWords, 0 );\n}"
+    },
+    {
+      "Name": "Rf2_ObjStart",
+      "Start": 6156,
+      "End": 6551,
+      "BodyStart": 6232,
+      "Original": "static inline void Rf2_ObjStart( Rf2_Man_t * p, Gia_Obj_t * pObj, int i )  \n{\n    Vec_Int_t * vVec = Rf2_ObjVec(p, pObj);\n    int w;\n    Vec_IntClear( vVec );\n    for ( w = 0; w \u003c p-\u003enMapWords; w++ )\n        Vec_IntPush( vVec, 0 );\n    for ( w = 0; w \u003c p-\u003enMapWords; w++ )\n        Vec_IntPush( vVec, ~0 );\n    Abc_InfoSetBit( Rf2_ObjA(p, pObj), i );\n    Abc_InfoXorBit( Rf2_ObjN(p, pObj), i );\n}",
+      "Draft": "func Rf2_ObjStart(p *Rf2_Man_t, pObj *Gia_Obj_t, i int32) {\n    var vVec *Vec_Int_t  = Rf2_ObjVec(p, pObj);\n    var w int32;\n    Vec_IntClear( vVec );\n    for  w = 0; w \u003c p.nMapWords; w++  {\n        Vec_IntPush( vVec, 0 );\n    }\n    for  w = 0; w \u003c p.nMapWords; w++  {\n        Vec_IntPush( vVec, ~0 );\n    }\n    Abc_InfoSetBit( Rf2_ObjA(p, pObj), i );\n    Abc_InfoXorBit( Rf2_ObjN(p, pObj), i );\n}"
+    },
+    {
+      "Name": "Rf2_ObjCopy",
+      "Start": 6552,
+      "End": 6800,
+      "BodyStart": 6640,
+      "Original": "static inline void Rf2_ObjCopy( Rf2_Man_t * p, Gia_Obj_t * pObj, Gia_Obj_t * pFanin )  \n{\n    assert( Vec_IntSize(Rf2_ObjVec(p, pObj)) == 2*p-\u003enMapWords );\n    memcpy( Rf2_ObjA(p, pObj), Rf2_ObjA(p, pFanin), sizeof(unsigned) * 2 * p-\u003enMapWords );\n}",
+      "Draft": "func Rf2_ObjCopy(p *Rf2_Man_t, pObj *Gia_Obj_t, pFanin *Gia_Obj_t) {\n    assert(Vec_IntSize(Rf2_ObjVec(p, pObj)) == 2*p.nMapWords, \"Vec_IntSize(Rf2_ObjVec(p, pObj)) == 2*p.nMapWords\");\n    memcpy( Rf2_ObjA(p, pObj), Rf2_ObjA(p, pFanin), sizeof(unsigned) * 2 * p.nMapWords );\n}"
+    },
+    {
+      "Name": "Rf2_ObjDeriveAnd",
+      "Start": 6801,
+      "End": 7739,
+      "BodyStart": 6883,
+      "Original": "static inline void Rf2_ObjDeriveAnd( Rf2_Man_t * p, Gia_Obj_t * pObj, int One )  \n{\n    unsigned * pInfo, * pInfo0, * pInfo1;\n    int i;\n    assert( Gia_ObjIsAnd(pObj) );\n    assert( One == (int)pObj-\u003efMark0 );\n    assert( One == (int)(Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) );\n    assert( One == (int)(Gia_ObjFanin1(pObj)-\u003efMark0 ^ Gia_ObjFaninC1(pObj)) );\n    assert( Vec_IntSize(Rf2_ObjVec(p, pObj)) == 2*p-\u003enMapWords );\n\n    pInfo  = Rf2_ObjA( p, pObj );\n    pInfo0 = Rf2_ObjA( p, Gia_ObjFanin0(pObj) );\n    pInfo1 = Rf2_ObjA( p, Gia_ObjFanin1(pObj) );\n    for ( i = 0; i \u003c p-\u003enMapWords; i++ )\n        pInfo[i] = One ? (pInfo0[i] \u0026 pInfo1[i]) : (pInfo0[i] | pInfo1[i]);\n\n    pInfo  = Rf2_ObjN( p, pObj );\n    pInfo0 = Rf2_ObjN( p, Gia_ObjFanin0(pObj) );\n    pInfo1 = Rf2_ObjN( p, Gia_ObjFanin1(pObj) );\n    for ( i = 0; i \u003c p-\u003enMapWords; i++ )\n        pInfo[i] = One ? (pInfo0[i] | pInfo1[i]) : (pInfo0[i] \u0026 pInfo1[i]);\n}",
+      "Draft": "func Rf2_ObjDeriveAnd(p *Rf2_Man_t, pObj *Gia_Obj_t, One int32) {\n    var pInfo, pInfo0, pInfo1 *uint32;\n    var i int32;\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    assert(One == int32(pObj.fMark0), \"One == int32(pObj.fMark0)\");\n    assert(One == int32((Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj))), \"One == int32((Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)))\");\n    assert(One == int32((Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj))), \"One == int32((Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)))\");\n    assert(Vec_IntSize(Rf2_ObjVec(p, pObj)) == 2*p.nMapWords, \"Vec_IntSize(Rf2_ObjVec(p, pObj)) == 2*p.nMapWords\");\n\n    pInfo  = Rf2_ObjA( p, pObj );\n    pInfo0 = Rf2_ObjA( p, Gia_ObjFanin0(pObj) );\n    pInfo1 = Rf2_ObjA( p, Gia_ObjFanin1(pObj) );\n    for  i = 0; i \u003c p.nMapWords; i++  {\n        pInfo[i] = One ? (pInfo0[i] \u0026 pInfo1[i]) : (pInfo0[i] | pInfo1[i]);\n    }\n\n    pInfo  = Rf2_ObjN( p, pObj );\n    pInfo0 = Rf2_ObjN( p, Gia_ObjFanin0(pObj) );\n    pInfo1 = Rf2_ObjN( p, Gia_ObjFanin1(pObj) );\n    for  i = 0; i \u003c p.nMapWords; i++  {\n        pInfo[i] = One ? (pInfo0[i] | pInfo1[i]) : (pInfo0[i] \u0026 pInfo1[i]);\n    }\n}"
+    },
+    {
+      "Name": "Rf2_ObjPrint",
+      "Start": 7740,
+      "End": 8282,
+      "BodyStart": 7810,
+      "Original": "static inline void Rf2_ObjPrint( Rf2_Man_t * p, Gia_Obj_t * pRoot )  \n{\n    Gia_Obj_t * pObj;\n    unsigned * pInfo;\n    int i;\n    pInfo  = Rf2_ObjA( p, pRoot );\n    Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n        if ( !Gia_ObjIsPi(p-\u003epGia, pObj) )\n            printf( \"%d\", Abc_InfoHasBit(pInfo, i) );\n    printf( \"\\n\" );\n    pInfo  = Rf2_ObjN( p, pRoot );\n    Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n        if ( !Gia_ObjIsPi(p-\u003epGia, pObj) )\n            printf( \"%d\", !Abc_InfoHasBit(pInfo, i) );\n    printf( \"\\n\" );\n\n}",
+      "Draft": "func Rf2_ObjPrint(p *Rf2_Man_t, pRoot *Gia_Obj_t) {\n    var pObj *Gia_Obj_t;\n    var pInfo *uint32;\n    var i int32;\n    pInfo  = Rf2_ObjA( p, pRoot );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        if !Gia_ObjIsPi(p.pGia, pObj) {\n            fmt.Printf(\"%d\", Abc_InfoHasBit(pInfo, i)); }\n    }\n    fmt.Printf(\"\\n\");\n    pInfo  = Rf2_ObjN( p, pRoot );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        if !Gia_ObjIsPi(p.pGia, pObj) {\n            fmt.Printf(\"%d\", !Abc_InfoHasBit(pInfo, i)); }\n    }\n    fmt.Printf(\"\\n\");\n\n}"
+    },
+    {
+      "Name": "Rf2_ManStart",
+      "Start": 8761,
+      "End": 9172,
+      "BodyStart": 8806,
+      "Original": "Rf2_Man_t * Rf2_ManStart( Gia_Man_t * pGia )\n{\n    Rf2_Man_t * p;\n    assert( Gia_ManPoNum(pGia) == 1 );\n    p = ABC_CALLOC( Rf2_Man_t, 1 );\n    p-\u003epGia = pGia;\n    p-\u003evObjs = Vec_IntAlloc( 1000 );\n    p-\u003evFanins = Vec_IntAlloc( 1000 );\n    p-\u003epvVecs = ABC_CALLOC( Vec_Int_t, Gia_ManObjNum(pGia) );\n    p-\u003evGrp2Ppi = Vec_VecStart( 100 );\n    Gia_ManCleanMark0(pGia);\n    Gia_ManCleanMark1(pGia);\n    return p;\n}",
+      "Draft": "func Rf2_ManStart(pGia *Gia_Man_t) *Rf2_Man_t {\n    \n    assert(Gia_ManPoNum(pGia) == 1, \"Gia_ManPoNum(pGia) == 1\");\n    // inlining of macro ABC_CALLOC\n    p := \u0026Rf2_Man_t{};\n    p.pGia = pGia;\n    p.vObjs = Vec_IntAlloc( 1000 );\n    p.vFanins = Vec_IntAlloc( 1000 );\n    // inlining of macro ABC_CALLOC\n    p.pvVecs = ((Vec_Int_t *) calloc((size_t)(Gia_ManObjNum(pGia)), sizeof(Vec_Int_t)));\n    p.vGrp2Ppi = Vec_VecStart( 100 );\n    Gia_ManCleanMark0(pGia);\n    Gia_ManCleanMark1(pGia);\n    return p;\n}"
+    },
+    {
+      "Name": "Rf2_ManStop",
+      "Start": 9173,
+      "End": 10366,
+      "BodyStart": 9221,
+      "Original": "void Rf2_ManStop( Rf2_Man_t * p, int fProfile )\n{\n    if ( !p ) return;\n    // print runtime statistics\n    if ( fProfile \u0026\u0026 p-\u003enCalls )\n    {\n        double MemGia = sizeof(Gia_Man_t) + sizeof(Gia_Obj_t) * p-\u003epGia-\u003enObjsAlloc + sizeof(int) * p-\u003epGia-\u003enTravIdsAlloc;\n        double MemOther = sizeof(Rf2_Man_t) + sizeof(Rf2_Obj_t) * p-\u003enObjsAlloc + sizeof(int) * Vec_IntCap(p-\u003evObjs);\n        clock_t timeOther = p-\u003etimeTotal - p-\u003etimeFwd - p-\u003etimeBwd - p-\u003etimeVer;\n        printf( \"Abstraction refinement runtime statistics:\\n\" );\n        ABC_PRTP( \"Sensetization\", p-\u003etimeFwd,   p-\u003etimeTotal );\n        ABC_PRTP( \"Justification\", p-\u003etimeBwd,   p-\u003etimeTotal );\n        ABC_PRTP( \"Verification \", p-\u003etimeVer,   p-\u003etimeTotal );\n        ABC_PRTP( \"Other        \", timeOther,    p-\u003etimeTotal );\n        ABC_PRTP( \"TOTAL        \", p-\u003etimeTotal, p-\u003etimeTotal );\n        printf( \"Total calls = %d.  Average refine = %.1f. GIA mem = %.3f MB.  Other mem = %.3f MB.\\n\", \n            p-\u003enCalls, 1.0*p-\u003enRefines/p-\u003enCalls, MemGia/(1\u003c\u003c20), MemOther/(1\u003c\u003c20) );\n    }\n    Vec_IntFree( p-\u003evObjs );\n    Vec_IntFree( p-\u003evFanins );\n    Vec_VecFree( p-\u003evGrp2Ppi );\n    ABC_FREE( p-\u003epvVecs );\n    ABC_FREE( p );\n}",
+      "Draft": "func Rf2_ManStop(p *Rf2_Man_t, fProfile int32) {\n    if !p { return; }\n    // print runtime statistics\n    if (fProfile != 0) \u0026\u0026 p.nCalls {\n        var MemGia float64  = sizeof(Gia_Man_t) + sizeof(Gia_Obj_t) * p.pGia.nObjsAlloc + sizeof(int) * p.pGia.nTravIdsAlloc;\n        var MemOther float64  = sizeof(Rf2_Man_t) + sizeof(Rf2_Obj_t) * p.nObjsAlloc + sizeof(int) * Vec_IntCap(p.vObjs);\n        var timeOther int64  = p.timeTotal - p.timeFwd - p.timeBwd - p.timeVer;\n        fmt.Printf(\"Abstraction refinement runtime statistics:\\n\");\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Sensetization\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeFwd)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeFwd)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Justification\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeBwd)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeBwd)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Verification \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeVer)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeVer)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Other        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((timeOther)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"TOTAL        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n        fmt.Printf(\"Total calls = %d.  Average refine = %.1f. GIA mem = %.3f MB.  Other mem = %.3f MB.\\n\", p.nCalls, 1.0*p.nRefines/p.nCalls, MemGia/(1\u003c\u003c20), MemOther/(1\u003c\u003c20));\n    }\n    Vec_IntFree( p.vObjs );\n    Vec_IntFree( p.vFanins );\n    Vec_VecFree( p.vGrp2Ppi );\n    // inlining of macro ABC_FREE\n    ((p.pvVecs) ? (free((char *) (p.pvVecs)), (p.pvVecs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Rf2_ManMemoryUsage",
+      "Start": 10367,
+      "End": 10498,
+      "BodyStart": 10410,
+      "Original": "double Rf2_ManMemoryUsage( Rf2_Man_t * p )\n{\n    return (double)(sizeof(Rf2_Man_t) + sizeof(Vec_Int_t) * Gia_ManObjNum(p-\u003epGia));\n}",
+      "Draft": "func Rf2_ManMemoryUsage(p *Rf2_Man_t) float64 {\n    return float64((sizeof(Rf2_Man_t) + sizeof(Vec_Int_t) * Gia_ManObjNum(p.pGia)));\n}"
+    },
+    {
+      "Name": "Rf2_ManCollect_rec",
+      "Start": 10854,
+      "End": 11396,
+      "BodyStart": 10932,
+      "Original": "void Rf2_ManCollect_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vObjs )\n{\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if ( Gia_ObjIsCo(pObj) )\n        Rf2_ManCollect_rec( p, Gia_ObjFanin0(pObj), vObjs );\n    else if ( Gia_ObjIsAnd(pObj) )\n    {\n        Rf2_ManCollect_rec( p, Gia_ObjFanin0(pObj), vObjs );\n        Rf2_ManCollect_rec( p, Gia_ObjFanin1(pObj), vObjs );\n    }\n    else if ( !Gia_ObjIsRo(p, pObj) )\n        assert( 0 );\n    Vec_IntPush( vObjs, Gia_ObjId(p, pObj) );\n}",
+      "Draft": "func Rf2_ManCollect_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vObjs *Vec_Int_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCo(pObj) {\n        Rf2_ManCollect_rec( p, Gia_ObjFanin0(pObj), vObjs );\n    } else if Gia_ObjIsAnd(pObj) {\n        Rf2_ManCollect_rec( p, Gia_ObjFanin0(pObj), vObjs );\n        Rf2_ManCollect_rec( p, Gia_ObjFanin1(pObj), vObjs );\n    \n    } else if !Gia_ObjIsRo(p, pObj) {\n        assert(false, \"0\"); }\n    Vec_IntPush( vObjs, Gia_ObjId(p, pObj) );\n}"
+    },
+    {
+      "Name": "Rf2_ManCollect",
+      "Start": 11397,
+      "End": 12154,
+      "BodyStart": 11434,
+      "Original": "void Rf2_ManCollect( Rf2_Man_t * p )\n{\n    Gia_Obj_t * pObj = NULL;\n    int i;\n    // mark const/PIs/PPIs\n    Gia_ManIncrementTravId( p-\u003epGia );\n    Gia_ObjSetTravIdCurrent( p-\u003epGia, Gia_ManConst0(p-\u003epGia) );\n    Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n    {\n        assert( Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj) );\n        Gia_ObjSetTravIdCurrent( p-\u003epGia, pObj );\n    }\n    // collect objects\n    Vec_IntClear( p-\u003evObjs );\n    Rf2_ManCollect_rec( p-\u003epGia, Gia_ManPo(p-\u003epGia, 0), p-\u003evObjs );\n    Gia_ManForEachObjVec( p-\u003evObjs, p-\u003epGia, pObj, i )\n        if ( Gia_ObjIsRo(p-\u003epGia, pObj) )\n            Rf2_ManCollect_rec( p-\u003epGia, Gia_ObjRoToRi(p-\u003epGia, pObj), p-\u003evObjs );\n    // the last object should be a CO\n    assert( Gia_ObjIsCo(pObj) );\n}",
+      "Draft": "func Rf2_ManCollect(p *Rf2_Man_t) {\n    var pObj *Gia_Obj_t  = nil;\n    var i int32;\n    // mark const/PIs/PPIs\n    Gia_ManIncrementTravId( p.pGia );\n    Gia_ObjSetTravIdCurrent( p.pGia, Gia_ManConst0(p.pGia) );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        assert(Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj)\");\n        Gia_ObjSetTravIdCurrent( p.pGia, pObj );\n    }\n    // collect objects\n    Vec_IntClear( p.vObjs );\n    Rf2_ManCollect_rec( p.pGia, Gia_ManPo(p.pGia, 0), p.vObjs );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vObjs,i))); i++  {\n        if Gia_ObjIsRo(p.pGia, pObj) {\n            Rf2_ManCollect_rec( p.pGia, Gia_ObjRoToRi(p.pGia, pObj), p.vObjs ); }\n    }\n    // the last object should be a CO\n    assert(Gia_ObjIsCo(pObj), \"Gia_ObjIsCo(pObj)\");\n}"
+    },
+    {
+      "Name": "Rf2_ManSensitize",
+      "Start": 12422,
+      "End": 14955,
+      "BodyStart": 12460,
+      "Original": "int Rf2_ManSensitize( Rf2_Man_t * p )\n{\n    Rf2_Obj_t * pRnm, * pRnm0, * pRnm1;\n    Gia_Obj_t * pObj;\n    int f, i, iBit = p-\u003epCex-\u003enRegs;\n    // const0 is initialized automatically in all timeframes\n    for ( f = 0; f \u003c= p-\u003epCex-\u003eiFrame; f++, iBit += p-\u003epCex-\u003enPis )\n    {\n        Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n        {\n            assert( Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj) );\n            pRnm = Rf2_ManObj( p, pObj, f );\n            pRnm-\u003eValue = Abc_InfoHasBit( p-\u003epCex-\u003epData, iBit + i );\n            if ( !Gia_ObjIsPi(p-\u003epGia, pObj) ) // this is PPI\n            {\n                assert( pObj-\u003eValue \u003e 0 );\n                pRnm-\u003ePrio = pObj-\u003eValue;\n                pRnm-\u003efPPi = 1;\n            }\n        }\n        Gia_ManForEachObjVec( p-\u003evObjs, p-\u003epGia, pObj, i )\n        {\n            assert( Gia_ObjIsRo(p-\u003epGia, pObj) || Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) );\n            pRnm = Rf2_ManObj( p, pObj, f );\n            assert( !pRnm-\u003efPPi );\n            if ( Gia_ObjIsRo(p-\u003epGia, pObj) )\n            {\n                if ( f == 0 )\n                    continue;\n                pRnm0 = Rf2_ManObj( p, Gia_ObjRoToRi(p-\u003epGia, pObj), f-1 );\n                pRnm-\u003eValue = pRnm0-\u003eValue;\n                pRnm-\u003ePrio  = pRnm0-\u003ePrio;\n                continue;\n            }\n            if ( Gia_ObjIsCo(pObj) )\n            {\n                pRnm0 = Rf2_ManObj( p, Gia_ObjFanin0(pObj), f );\n                pRnm-\u003eValue = (pRnm0-\u003eValue ^ Gia_ObjFaninC0(pObj));\n                pRnm-\u003ePrio  = pRnm0-\u003ePrio;\n                continue;\n            }\n            assert( Gia_ObjIsAnd(pObj) );\n            pRnm0 = Rf2_ManObj( p, Gia_ObjFanin0(pObj), f );\n            pRnm1 = Rf2_ManObj( p, Gia_ObjFanin1(pObj), f );\n            pRnm-\u003eValue = (pRnm0-\u003eValue ^ Gia_ObjFaninC0(pObj)) \u0026 (pRnm1-\u003eValue ^ Gia_ObjFaninC1(pObj));\n            if ( pRnm-\u003eValue == 1 )\n                pRnm-\u003ePrio  = Abc_MaxInt( pRnm0-\u003ePrio, pRnm1-\u003ePrio );\n            else if ( (pRnm0-\u003eValue ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (pRnm1-\u003eValue ^ Gia_ObjFaninC1(pObj)) == 0 )\n                pRnm-\u003ePrio  = Abc_MinInt( pRnm0-\u003ePrio, pRnm1-\u003ePrio ); // choice\n            else if ( (pRnm0-\u003eValue ^ Gia_ObjFaninC0(pObj)) == 0 )\n                pRnm-\u003ePrio  = pRnm0-\u003ePrio;\n            else \n                pRnm-\u003ePrio  = pRnm1-\u003ePrio;\n        }\n    }\n    assert( iBit == p-\u003epCex-\u003enBits );\n    pRnm = Rf2_ManObj( p, Gia_ManPo(p-\u003epGia, 0), p-\u003epCex-\u003eiFrame );\n    if ( pRnm-\u003eValue != 1 )\n        printf( \"Output value is incorrect.\\n\" );\n    return pRnm-\u003ePrio;\n}",
+      "Draft": "func Rf2_ManSensitize(p *Rf2_Man_t) int32 {\n    var pRnm, pRnm0, pRnm1 *Rf2_Obj_t;\n    var pObj *Gia_Obj_t;\n    var f int32;\n    var i int32;\n    var iBit int32 = p.pCex.nRegs;\n    // const0 is initialized automatically in all timeframes\n    for  f = 0; f \u003c= p.pCex.iFrame; f++, iBit += p.pCex.nPis  {\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n            assert(Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj)\");\n            pRnm = Rf2_ManObj( p, pObj, f );\n            pRnm.Value = Abc_InfoHasBit( p.pCex.pData, iBit + i );\n            if !Gia_ObjIsPi(p.pGia, pObj) { // this is PPI\n            \n                assert(pObj.Value \u003e 0, \"pObj.Value \u003e 0\");\n                pRnm.Prio = pObj.Value;\n                pRnm.fPPi = 1;\n            }\n        }\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vObjs,i))); i++  {\n            assert(Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj), \"Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj)\");\n            pRnm = Rf2_ManObj( p, pObj, f );\n            assert(!pRnm.fPPi, \"!pRnm.fPPi\");\n            if Gia_ObjIsRo(p.pGia, pObj) {\n                if f == 0 {\n                    continue; }\n                pRnm0 = Rf2_ManObj( p, Gia_ObjRoToRi(p.pGia, pObj), f-1 );\n                pRnm.Value = pRnm0.Value;\n                pRnm.Prio  = pRnm0.Prio;\n                continue;\n            }\n            if Gia_ObjIsCo(pObj) {\n                pRnm0 = Rf2_ManObj( p, Gia_ObjFanin0(pObj), f );\n                pRnm.Value = (pRnm0.Value ^ Gia_ObjFaninC0(pObj));\n                pRnm.Prio  = pRnm0.Prio;\n                continue;\n            }\n            assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n            pRnm0 = Rf2_ManObj( p, Gia_ObjFanin0(pObj), f );\n            pRnm1 = Rf2_ManObj( p, Gia_ObjFanin1(pObj), f );\n            pRnm.Value = (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) \u0026 (pRnm1.Value ^ Gia_ObjFaninC1(pObj));\n            if pRnm.Value == 1 {\n                pRnm.Prio  = Abc_MaxInt( pRnm0.Prio, pRnm1.Prio );\n            } else if (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (pRnm1.Value ^ Gia_ObjFaninC1(pObj)) == 0 {\n                pRnm.Prio  = Abc_MinInt( pRnm0.Prio, pRnm1.Prio ); // choice\n            } else if (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) == 0 {\n                pRnm.Prio  = pRnm0.Prio;\n            } else { \n                pRnm.Prio  = pRnm1.Prio; }\n        }\n    }\n    assert(iBit == p.pCex.nBits, \"iBit == p.pCex.nBits\");\n    pRnm = Rf2_ManObj( p, Gia_ManPo(p.pGia, 0), p.pCex.iFrame );\n    if pRnm.Value != 1 {\n        fmt.Printf(\"Output value is incorrect.\\n\"); }\n    return pRnm.Prio;\n}"
+    },
+    {
+      "Name": "Rf2_ManVerifyUsingTerSim",
+      "Start": 15213,
+      "End": 16670,
+      "BodyStart": 15333,
+      "Original": "void Rf2_ManVerifyUsingTerSim( Gia_Man_t * p, Abc_Cex_t * pCex, Vec_Int_t * vMap, Vec_Int_t * vObjs, Vec_Int_t * vRes )\n{\n    Gia_Obj_t * pObj;\n    int i, f, iBit = pCex-\u003enRegs;\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    for ( f = 0; f \u003c= pCex-\u003eiFrame; f++, iBit += pCex-\u003enPis )\n    {\n        Gia_ManForEachObjVec( vMap, p, pObj, i )\n        {\n            pObj-\u003eValue = Abc_InfoHasBit( pCex-\u003epData, iBit + i );\n            if ( !Gia_ObjIsPi(p, pObj) )\n                Gia_ObjTerSimSetX( pObj );\n            else if ( pObj-\u003eValue )\n                Gia_ObjTerSimSet1( pObj );\n            else\n                Gia_ObjTerSimSet0( pObj );\n        }\n        Gia_ManForEachObjVec( vRes, p, pObj, i ) // vRes is subset of vMap\n        {\n            if ( pObj-\u003eValue )\n                Gia_ObjTerSimSet1( pObj );\n            else\n                Gia_ObjTerSimSet0( pObj );\n        }\n        Gia_ManForEachObjVec( vObjs, p, pObj, i )\n        {\n            if ( Gia_ObjIsCo(pObj) )\n                Gia_ObjTerSimCo( pObj );\n            else if ( Gia_ObjIsAnd(pObj) )\n                Gia_ObjTerSimAnd( pObj );\n            else if ( f == 0 )\n                Gia_ObjTerSimSet0( pObj );\n            else\n                Gia_ObjTerSimRo( p, pObj );\n        }\n    }\n    Gia_ManForEachObjVec( vMap, p, pObj, i )\n        pObj-\u003eValue = 0;\n    pObj = Gia_ManPo( p, 0 );\n    if ( !Gia_ObjTerSimGet1(pObj) )\n        Abc_Print( 1, \"\\nRefinement verification has failed!!!\\n\" );\n}",
+      "Draft": "func Rf2_ManVerifyUsingTerSim(p *Gia_Man_t, pCex *Abc_Cex_t, vMap *Vec_Int_t, vObjs *Vec_Int_t, vRes *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var f int32;\n    var iBit int32 = pCex.nRegs;\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    for  f = 0; f \u003c= pCex.iFrame; f++, iBit += pCex.nPis  {\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vMap,i))); i++  {\n            pObj.Value = Abc_InfoHasBit( pCex.pData, iBit + i );\n            if !Gia_ObjIsPi(p, pObj) {\n                Gia_ObjTerSimSetX( pObj );\n            } else if pObj.Value {\n                Gia_ObjTerSimSet1( pObj );\n            } else {\n                Gia_ObjTerSimSet0( pObj ); }\n        }\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vRes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRes,i))); i++  { // vRes is subset of vMap\n        \n            if pObj.Value {\n                Gia_ObjTerSimSet1( pObj );\n            } else {\n                Gia_ObjTerSimSet0( pObj ); }\n        }\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {\n            if Gia_ObjIsCo(pObj) {\n                Gia_ObjTerSimCo( pObj );\n            } else if Gia_ObjIsAnd(pObj) {\n                Gia_ObjTerSimAnd( pObj );\n            } else if f == 0 {\n                Gia_ObjTerSimSet0( pObj );\n            } else {\n                Gia_ObjTerSimRo( p, pObj ); }\n        }\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vMap,i))); i++  {\n        pObj.Value = 0;\n    }\n    pObj = Gia_ManPo( p, 0 );\n    if !Gia_ObjTerSimGet1(pObj) {\n        Abc_Print( 1, \"\\nRefinement verification has failed!!!\\n\" ); }\n}"
+    },
+    {
+      "Name": "Rf2_ManGatherFanins_rec",
+      "Start": 16958,
+      "End": 18111,
+      "BodyStart": 17078,
+      "Original": "void Rf2_ManGatherFanins_rec( Rf2_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vFanins, int Depth, int RootId, int fFirst )\n{\n    if ( Gia_ObjIsTravIdCurrent(p-\u003epGia, pObj) )\n        return;\n    Gia_ObjSetTravIdCurrent(p-\u003epGia, pObj);\n    if ( pObj-\u003efPhase \u0026\u0026 !fFirst )\n    {\n        Vec_Int_t * vVec = Rf2_ObjVec( p, pObj );\n//        if ( Vec_IntEntry( vVec, 0 ) == 0 )\n//            return;\n        if ( Vec_IntSize(vVec) == 0 )\n            Vec_IntPush( vFanins, Gia_ObjId(p-\u003epGia, pObj) );\n        Vec_IntPushUnique( vVec, RootId );\n        if ( Depth == 0 )\n            return;\n    }\n    if ( Gia_ObjIsPi(p-\u003epGia, pObj) || Gia_ObjIsConst0(pObj) )\n        return;\n    if ( Gia_ObjIsRo(p-\u003epGia, pObj) )\n    {\n        assert( pObj-\u003efPhase );\n        pObj = Gia_ObjRoToRi(p-\u003epGia, pObj);\n        Rf2_ManGatherFanins_rec( p, Gia_ObjFanin0(pObj), vFanins, Depth - 1, RootId, 0 );\n    }\n    else if ( Gia_ObjIsAnd(pObj) )\n    {\n        Rf2_ManGatherFanins_rec( p, Gia_ObjFanin0(pObj), vFanins, Depth - pObj-\u003efPhase, RootId, 0 );\n        Rf2_ManGatherFanins_rec( p, Gia_ObjFanin1(pObj), vFanins, Depth - pObj-\u003efPhase, RootId, 0 );\n    }\n    else assert( 0 );\n}",
+      "Draft": "func Rf2_ManGatherFanins_rec(p *Rf2_Man_t, pObj *Gia_Obj_t, vFanins *Vec_Int_t, Depth int32, RootId int32, fFirst int32) {\n    if Gia_ObjIsTravIdCurrent(p.pGia, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p.pGia, pObj);\n    if pObj.fPhase \u0026\u0026 !(fFirst != 0) {\n        var vVec *Vec_Int_t  = Rf2_ObjVec( p, pObj );\n//        if ( Vec_IntEntry( vVec, 0 ) == 0 )\n//            return;\n        if Vec_IntSize(vVec) == 0 {\n            Vec_IntPush( vFanins, Gia_ObjId(p.pGia, pObj) ); }\n        Vec_IntPushUnique( vVec, RootId );\n        if Depth == 0 {\n            return; }\n    }\n    if Gia_ObjIsPi(p.pGia, pObj) || Gia_ObjIsConst0(pObj) {\n        return; }\n    if Gia_ObjIsRo(p.pGia, pObj) {\n        assert(pObj.fPhase, \"pObj.fPhase\");\n        pObj = Gia_ObjRoToRi(p.pGia, pObj);\n        Rf2_ManGatherFanins_rec( p, Gia_ObjFanin0(pObj), vFanins, Depth - 1, RootId, 0 );\n    \n    } else if Gia_ObjIsAnd(pObj) {\n        Rf2_ManGatherFanins_rec( p, Gia_ObjFanin0(pObj), vFanins, Depth - pObj.fPhase, RootId, 0 );\n        Rf2_ManGatherFanins_rec( p, Gia_ObjFanin1(pObj), vFanins, Depth - pObj.fPhase, RootId, 0 );\n    \n    } else { assert(false, \"0\"); }\n}"
+    },
+    {
+      "Name": "Rf2_ManGatherFanins",
+      "Start": 18112,
+      "End": 19846,
+      "BodyStart": 18165,
+      "Original": "void Rf2_ManGatherFanins( Rf2_Man_t * p, int Depth )\n{\n    Vec_Int_t * vUsed;\n    Vec_Int_t * vVec;\n    Gia_Obj_t * pObj;\n    int i, k, Entry;\n    // mark PPIs\n    Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n    {\n        vVec = Rf2_ObjVec( p, pObj );\n        assert( Vec_IntSize(vVec) == 0 );\n        Vec_IntPush( vVec, 0 );\n    }\n    // collect internal\n    Vec_IntClear( p-\u003evFanins );\n    Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n    {\n        if ( Gia_ObjIsPi(p-\u003epGia, pObj) )\n            continue;\n        Gia_ManIncrementTravId( p-\u003epGia );\n        Rf2_ManGatherFanins_rec( p, pObj, p-\u003evFanins, Depth, i, 1 );\n    }\n\n    vUsed = Vec_IntStart( Vec_IntSize(p-\u003evMap) );\n\n    // evaluate collected\n    printf( \"\\nMap (%d): \", Vec_IntSize(p-\u003evMap) );\n    Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n    {\n        vVec = Rf2_ObjVec( p, pObj );\n        if ( Vec_IntSize(vVec) \u003e 1 )\n            printf( \"%d=%d \", i, Vec_IntSize(vVec) - 1 );\n        Vec_IntForEachEntryStart( vVec, Entry, k, 1 )\n            Vec_IntAddToEntry( vUsed, Entry, 1 );\n        Vec_IntClear( vVec );\n    }\n    printf( \"\\n\" );\n    // evaluate internal\n    printf( \"Int (%d): \", Vec_IntSize(p-\u003evFanins) );\n    Gia_ManForEachObjVec( p-\u003evFanins, p-\u003epGia, pObj, i )\n    {\n        vVec = Rf2_ObjVec( p, pObj );\n        if ( Vec_IntSize(vVec) \u003e 1 )\n            printf( \"%d=%d \", i, Vec_IntSize(vVec) );\n        if ( Vec_IntSize(vVec) \u003e 1 )\n            Vec_IntForEachEntry( vVec, Entry, k )\n                Vec_IntAddToEntry( vUsed, Entry, 1 );\n        Vec_IntClear( vVec );\n    }\n    printf( \"\\n\" );\n    // evaluate PPIs    \n    Vec_IntForEachEntry( vUsed, Entry, k )\n        printf( \"%d \", Entry );\n    printf( \"\\n\" );\n\n    Vec_IntFree( vUsed );\n}",
+      "Draft": "func Rf2_ManGatherFanins(p *Rf2_Man_t, Depth int32) {\n    var vUsed *Vec_Int_t;\n    var vVec *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, k, Entry int32;\n    // mark PPIs\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        vVec = Rf2_ObjVec( p, pObj );\n        assert(Vec_IntSize(vVec) == 0, \"Vec_IntSize(vVec) == 0\");\n        Vec_IntPush( vVec, 0 );\n    }\n    // collect internal\n    Vec_IntClear( p.vFanins );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        if Gia_ObjIsPi(p.pGia, pObj) {\n            continue; }\n        Gia_ManIncrementTravId( p.pGia );\n        Rf2_ManGatherFanins_rec( p, pObj, p.vFanins, Depth, i, 1 );\n    }\n\n    vUsed = Vec_IntStart( Vec_IntSize(p.vMap) );\n\n    // evaluate collected\n    fmt.Printf(\"\\nMap (%d): \", Vec_IntSize(p.vMap));\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        vVec = Rf2_ObjVec( p, pObj );\n        if Vec_IntSize(vVec) \u003e 1 {\n            fmt.Printf(\"%d=%d \", i, Vec_IntSize(vVec) - 1); }\n        // inlining of macro Vec_IntForEachEntryStart\n        for  k = 1; (k \u003c Vec_IntSize(vVec)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVec, k)), 1); k++  {\n            Vec_IntAddToEntry( vUsed, Entry, 1 );\n        }\n        Vec_IntClear( vVec );\n    }\n    fmt.Printf(\"\\n\");\n    // evaluate internal\n    fmt.Printf(\"Int (%d): \", Vec_IntSize(p.vFanins));\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vFanins)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vFanins,i))); i++  {\n        vVec = Rf2_ObjVec( p, pObj );\n        if Vec_IntSize(vVec) \u003e 1 {\n            fmt.Printf(\"%d=%d \", i, Vec_IntSize(vVec)); }\n        if Vec_IntSize(vVec) \u003e 1 {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vVec)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVec, k)), 1); k++  {\n                Vec_IntAddToEntry( vUsed, Entry, 1 );\n            } }\n        Vec_IntClear( vVec );\n    }\n    fmt.Printf(\"\\n\");\n    // evaluate PPIs    \n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vUsed)) \u0026\u0026 (((Entry) = Vec_IntEntry(vUsed, k)), 1); k++  {\n        fmt.Printf(\"%d \", Entry);\n    }\n    fmt.Printf(\"\\n\");\n\n    Vec_IntFree( vUsed );\n}"
+    },
+    {
+      "Name": "Rf2_ManCountPpis",
+      "Start": 20132,
+      "End": 20388,
+      "BodyStart": 20184,
+      "Original": "static inline int Rf2_ManCountPpis( Rf2_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i, Counter = 0;\n    Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n        if ( !Gia_ObjIsPi(p-\u003epGia, pObj) ) // this is PPI\n            Counter++;\n    return Counter;\n}",
+      "Draft": "func Rf2_ManCountPpis(p *Rf2_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        if !Gia_ObjIsPi(p.pGia, pObj) { // this is PPI\n            Counter++; }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Rf2_ManPrintVector",
+      "Start": 20673,
+      "End": 20924,
+      "BodyStart": 20737,
+      "Original": "static inline void Rf2_ManPrintVector( Vec_Int_t * p, int Num )\n{\n    int i, k, Entry;\n    Vec_IntForEachEntry( p, Entry, i )\n    {\n        for ( k = 0; k \u003c Num; k++ )\n            printf( \"%c\", '0' + ((Entry\u003e\u003ek) \u0026 1) );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Rf2_ManPrintVector(p *Vec_Int_t, Num int32) {\n    var i, k, Entry int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p)) \u0026\u0026 (((Entry) = Vec_IntEntry(p, i)), 1); i++  {\n        for  k = 0; k \u003c Num; k++  {\n            fmt.Printf(\"%c\", '0' + ((Entry\u003e\u003ek) \u0026 1));\n        }\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Rf2_ManProcessVector",
+      "Start": 21209,
+      "End": 22247,
+      "BodyStart": 21277,
+      "Original": "static inline void Rf2_ManProcessVector( Vec_Int_t * p, int Limit )\n{\n//    int Start = Vec_IntSize(p);\n    int Start = 0;\n    int i, j, k, Entry, Entry2;\n//    printf( \"%d\", Vec_IntSize(p) );\n    if ( Start \u003e 5 )\n    {\n        printf( \"Before: \\n\" );\n        Rf2_ManPrintVector( p, 31 );\n    }\n\n    k = 0;\n    Vec_IntForEachEntry( p, Entry, i )\n        if ( Gia_WordCountOnes((unsigned)Entry) \u003c= Limit )\n            Vec_IntWriteEntry( p, k++, Entry );\n    Vec_IntShrink( p, k );            \n    Vec_IntSort( p, 0 );\n    k = 0;\n    Vec_IntForEachEntry( p, Entry, i )\n    {\n        Vec_IntForEachEntryStop( p, Entry2, j, i )\n            if ( (Entry2 \u0026 Entry) == Entry2 ) // Entry2 is a subset of Entry\n                break; \n        if ( j == i ) // Entry is not contained in any Entry2\n            Vec_IntWriteEntry( p, k++, Entry );\n    }\n    Vec_IntShrink( p, k );            \n//    printf( \"-\u003e%d \", Vec_IntSize(p) );\n    if ( Start \u003e 5 )\n    {\n        printf( \"After: \\n\" );\n        Rf2_ManPrintVector( p, 31 );\n        k = 0;\n    }\n}",
+      "Draft": "func Rf2_ManProcessVector(p *Vec_Int_t, Limit int32) {\n//    int Start = Vec_IntSize(p);\n    var Start int32;\n    var i, j, k, Entry, Entry2 int32;\n//    printf( \"%d\", Vec_IntSize(p) );\n    if Start \u003e 5 {\n        fmt.Printf(\"Before: \\n\");\n        Rf2_ManPrintVector( p, 31 );\n    }\n\n    k = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p)) \u0026\u0026 (((Entry) = Vec_IntEntry(p, i)), 1); i++  {\n        if Gia_WordCountOnes(uint32(Entry)) \u003c= Limit {\n            Vec_IntWriteEntry( p, k++, Entry ); }\n    }\n    Vec_IntShrink( p, k );            \n    Vec_IntSort( p, 0 );\n    k = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p)) \u0026\u0026 (((Entry) = Vec_IntEntry(p, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntryStop\n        for  j = 0; (j \u003c i) \u0026\u0026 (((Entry2) = Vec_IntEntry(p, j)), 1); j++  {\n            if (Entry2 \u0026 Entry) == Entry2 { // Entry2 is a subset of Entry\n                break; }\n        } \n        if j == i { // Entry is not contained in any Entry2\n            Vec_IntWriteEntry( p, k++, Entry ); }\n    }\n    Vec_IntShrink( p, k );            \n//    printf( \"-\u003e%d \", Vec_IntSize(p) );\n    if Start \u003e 5 {\n        fmt.Printf(\"After: \\n\");\n        Rf2_ManPrintVector( p, 31 );\n        k = 0;\n    }\n}"
+    },
+    {
+      "Name": "Rf2_ManAssignJustIds",
+      "Start": 22532,
+      "End": 23062,
+      "BodyStart": 22574,
+      "Original": "int Rf2_ManAssignJustIds( Rf2_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int nPpis = Rf2_ManCountPpis( p );\n    int nGroupSize = (nPpis / 30) + (nPpis % 30 \u003e 0);\n    int i, k = 0;\n    Vec_VecClear( p-\u003evGrp2Ppi );\n    Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n        if ( !Gia_ObjIsPi(p-\u003epGia, pObj) ) // this is PPI\n            Vec_VecPushInt( p-\u003evGrp2Ppi, (k++ / nGroupSize), i );\n    printf( \"Considering %d PPIs combined into %d groups of size %d.\\n\", k, (k-1)/nGroupSize+1, nGroupSize );\n    return (k-1)/nGroupSize+1;\n}",
+      "Draft": "func Rf2_ManAssignJustIds(p *Rf2_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var nPpis int32  = Rf2_ManCountPpis( p );\n    var nGroupSize int32  = (nPpis / 30) + (nPpis % 30 \u003e 0);\n    var i, k int32;\n    Vec_VecClear( p.vGrp2Ppi );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        if !Gia_ObjIsPi(p.pGia, pObj) { // this is PPI\n            Vec_VecPushInt( p.vGrp2Ppi, (k++ / nGroupSize), i ); }\n    }\n    fmt.Printf(\"Considering %d PPIs combined into %d groups of size %d.\\n\", k, (k-1)/nGroupSize+1, nGroupSize);\n    return (k-1)/nGroupSize+1;\n}"
+    },
+    {
+      "Name": "Rf2_ManPrintVectorSpecial",
+      "Start": 23347,
+      "End": 24082,
+      "BodyStart": 23427,
+      "Original": "static inline void Rf2_ManPrintVectorSpecial( Rf2_Man_t * p, Vec_Int_t * vVec )\n{\n    Gia_Obj_t * pObj;\n    int nPpis = Rf2_ManCountPpis( p );\n    int nGroupSize = (nPpis / 30) + (nPpis % 30 \u003e 0);\n    int s, i, k, Entry, Counter;\n\n    Vec_IntForEachEntry( vVec, Entry, s )\n    {\n        k = 0;\n        Counter = 0;\n        Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n        {\n            if ( !Gia_ObjIsPi(p-\u003epGia, pObj) ) // this is PPI\n            {\n                if ( (Entry \u003e\u003e (k++ / nGroupSize)) \u0026 1 )\n                    printf( \"1\" ), Counter++;\n                else\n                    printf( \"0\" );\n            }\n            else\n                printf( \"-\" );\n        }\n        printf( \" %3d \\n\", Counter );\n    }\n}",
+      "Draft": "func Rf2_ManPrintVectorSpecial(p *Rf2_Man_t, vVec *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var nPpis int32  = Rf2_ManCountPpis( p );\n    var nGroupSize int32  = (nPpis / 30) + (nPpis % 30 \u003e 0);\n    var s, i, k, Entry, Counter int32;\n\n    // inlining of macro Vec_IntForEachEntry\n    for  s = 0; (s \u003c Vec_IntSize(vVec)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVec, s)), 1); s++  {\n        k = 0;\n        Counter = 0;\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n            if !Gia_ObjIsPi(p.pGia, pObj) { // this is PPI\n            \n                if (Entry \u003e\u003e (k++ / nGroupSize)) \u0026 1 {\n                    fmt.Printf(\"1\");\nCounter++;\n                } else {\n                    fmt.Printf(\"0\"); }\n            \n            } else {\n                fmt.Printf(\"-\"); }\n        }\n        fmt.Printf(\" %3d \\n\", Counter);\n    }\n}"
+    },
+    {
+      "Name": "Rf2_ManPropagate",
+      "Start": 24353,
+      "End": 27736,
+      "BodyStart": 24410,
+      "Original": "Vec_Int_t * Rf2_ManPropagate( Rf2_Man_t * p, int Limit )\n{\n    Vec_Int_t * vVec, * vVec0, * vVec1;\n    Gia_Obj_t * pObj;\n    int f, i, k, j, Entry, Entry2, iBit = p-\u003epCex-\u003enRegs;\n    // init constant\n    pObj = Gia_ManConst0(p-\u003epGia);\n    pObj-\u003efMark0 = 0;\n    Vec_IntFill( Rf2_ObjVec(p, pObj), 1, 0 );\n    // iterate through the timeframes\n    for ( f = 0; f \u003c= p-\u003epCex-\u003eiFrame; f++, iBit += p-\u003epCex-\u003enPis )\n    {\n        // initialize frontier values and init justification sets\n        Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n        {\n            assert( Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj) );\n            pObj-\u003efMark0 = Abc_InfoHasBit( p-\u003epCex-\u003epData, iBit + i );\n            Vec_IntFill( Rf2_ObjVec(p, pObj), 1, 0 );\n        }\n        // assign justification sets for PPis\n        Vec_VecForEachLevelInt( p-\u003evGrp2Ppi, vVec, i )\n            Vec_IntForEachEntry( vVec, Entry, k )\n            {\n                assert( i \u003c 31 );\n                pObj = Gia_ManObj( p-\u003epGia, Vec_IntEntry(p-\u003evMap, Entry) );\n                assert( Vec_IntSize(Rf2_ObjVec(p, pObj)) == 1 );\n                Vec_IntAddToEntry( Rf2_ObjVec(p, pObj), 0, (1 \u003c\u003c i) );\n            }\n        // propagate internal nodes\n        Gia_ManForEachObjVec( p-\u003evObjs, p-\u003epGia, pObj, i )\n        {\n            pObj-\u003efMark0 = 0;\n            vVec = Rf2_ObjVec(p, pObj);\n            Vec_IntClear( vVec );\n            if ( Gia_ObjIsRo(p-\u003epGia, pObj) )\n            {\n                if ( f == 0 )\n                {\n                    Vec_IntPush( vVec, 0 );\n                    continue;\n                }\n                pObj-\u003efMark0 = Gia_ObjRoToRi(p-\u003epGia, pObj)-\u003efMark0;\n                vVec0 = Rf2_ObjVec( p, Gia_ObjRoToRi(p-\u003epGia, pObj) );\n                Vec_IntAppend( vVec, vVec0 );\n                continue;\n            }\n            if ( Gia_ObjIsCo(pObj) )\n            {\n                pObj-\u003efMark0 = (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj));\n                vVec0 = Rf2_ObjVec( p, Gia_ObjFanin0(pObj) );\n                Vec_IntAppend( vVec, vVec0 );\n                continue;\n            }\n            assert( Gia_ObjIsAnd(pObj) );\n            vVec0 = Rf2_ObjVec(p, Gia_ObjFanin0(pObj));\n            vVec1 = Rf2_ObjVec(p, Gia_ObjFanin1(pObj));\n            pObj-\u003efMark0 = (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Gia_ObjFanin1(pObj)-\u003efMark0 ^ Gia_ObjFaninC1(pObj));\n            if ( pObj-\u003efMark0 == 1 )\n            {\n                Vec_IntForEachEntry( vVec0, Entry, k )\n                    Vec_IntForEachEntry( vVec1, Entry2, j )\n                        Vec_IntPush( vVec, Entry | Entry2 );\n                Rf2_ManProcessVector( vVec, Limit );\n            }\n            else if ( (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (Gia_ObjFanin1(pObj)-\u003efMark0 ^ Gia_ObjFaninC1(pObj)) == 0 )\n            {\n                Vec_IntAppend( vVec, vVec0 );\n                Vec_IntAppend( vVec, vVec1 );\n                Rf2_ManProcessVector( vVec, Limit );\n            }\n            else if ( (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) == 0 )\n                Vec_IntAppend( vVec, vVec0 );\n            else \n                Vec_IntAppend( vVec, vVec1 );\n        }\n    }\n    assert( iBit == p-\u003epCex-\u003enBits );\n    if ( Gia_ManPo(p-\u003epGia, 0)-\u003efMark0 != 1 )\n        printf( \"Output value is incorrect.\\n\" );\n    return Rf2_ObjVec(p, Gia_ManPo(p-\u003epGia, 0));\n}",
+      "Draft": "func Rf2_ManPropagate(p *Rf2_Man_t, Limit int32) *Vec_Int_t {\n    var vVec, vVec0, vVec1 *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var f int32;\n    var i int32;\n    var k int32;\n    var j int32;\n    var Entry int32;\n    var Entry2 int32;\n    var iBit int32 = p.pCex.nRegs;\n    // init constant\n    pObj = Gia_ManConst0(p.pGia);\n    pObj.fMark0 = 0;\n    Vec_IntFill( Rf2_ObjVec(p, pObj), 1, 0 );\n    // iterate through the timeframes\n    for  f = 0; f \u003c= p.pCex.iFrame; f++, iBit += p.pCex.nPis  {\n        // initialize frontier values and init justification sets\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n            assert(Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj)\");\n            pObj.fMark0 = Abc_InfoHasBit( p.pCex.pData, iBit + i );\n            Vec_IntFill( Rf2_ObjVec(p, pObj), 1, 0 );\n        }\n        // assign justification sets for PPis\n        // inlining of macro Vec_VecForEachLevelInt\n        for  i = 0; (i \u003c Vec_VecSize(p.vGrp2Ppi)) \u0026\u0026 (((vVec) = Vec_VecEntryInt(p.vGrp2Ppi, i)), 1); i++  {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vVec)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVec, k)), 1); k++  {\n                assert(i \u003c 31, \"i \u003c 31\");\n                pObj = Gia_ManObj( p.pGia, Vec_IntEntry(p.vMap, Entry) );\n                assert(Vec_IntSize(Rf2_ObjVec(p, pObj)) == 1, \"Vec_IntSize(Rf2_ObjVec(p, pObj)) == 1\");\n                Vec_IntAddToEntry( Rf2_ObjVec(p, pObj), 0, (1 \u003c\u003c i) );\n            }\n        }\n        // propagate internal nodes\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vObjs,i))); i++  {\n            pObj.fMark0 = 0;\n            vVec = Rf2_ObjVec(p, pObj);\n            Vec_IntClear( vVec );\n            if Gia_ObjIsRo(p.pGia, pObj) {\n                if f == 0 {\n                    Vec_IntPush( vVec, 0 );\n                    continue;\n                }\n                pObj.fMark0 = Gia_ObjRoToRi(p.pGia, pObj).fMark0;\n                vVec0 = Rf2_ObjVec( p, Gia_ObjRoToRi(p.pGia, pObj) );\n                Vec_IntAppend( vVec, vVec0 );\n                continue;\n            }\n            if Gia_ObjIsCo(pObj) {\n                pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj));\n                vVec0 = Rf2_ObjVec( p, Gia_ObjFanin0(pObj) );\n                Vec_IntAppend( vVec, vVec0 );\n                continue;\n            }\n            assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n            vVec0 = Rf2_ObjVec(p, Gia_ObjFanin0(pObj));\n            vVec1 = Rf2_ObjVec(p, Gia_ObjFanin1(pObj));\n            pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj));\n            if pObj.fMark0 == 1 {\n                // inlining of macro Vec_IntForEachEntry\n                for  k = 0; (k \u003c Vec_IntSize(vVec0)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVec0, k)), 1); k++  {\n                    // inlining of macro Vec_IntForEachEntry\n                    for  j = 0; (j \u003c Vec_IntSize(vVec1)) \u0026\u0026 (((Entry2) = Vec_IntEntry(vVec1, j)), 1); j++  {\n                        Vec_IntPush( vVec, Entry | Entry2 );\n                    }\n                }\n                Rf2_ManProcessVector( vVec, Limit );\n            \n            } else if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)) == 0 {\n                Vec_IntAppend( vVec, vVec0 );\n                Vec_IntAppend( vVec, vVec1 );\n                Rf2_ManProcessVector( vVec, Limit );\n            \n            } else if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 {\n                Vec_IntAppend( vVec, vVec0 );\n            } else { \n                Vec_IntAppend( vVec, vVec1 ); }\n        }\n    }\n    assert(iBit == p.pCex.nBits, \"iBit == p.pCex.nBits\");\n    if Gia_ManPo(p.pGia, 0).fMark0 != 1 {\n        fmt.Printf(\"Output value is incorrect.\\n\"); }\n    return Rf2_ObjVec(p, Gia_ManPo(p.pGia, 0));\n}"
+    },
+    {
+      "Name": "Rf2_ManBounds",
+      "Start": 28007,
+      "End": 30404,
+      "BodyStart": 28043,
+      "Original": "void Rf2_ManBounds( Rf2_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int f, i, iBit = p-\u003epCex-\u003enRegs;\n    // init constant\n    pObj = Gia_ManConst0(p-\u003epGia);\n    pObj-\u003efMark0 = 0;\n    Rf2_ObjStart( p, pObj, Vec_IntSize(p-\u003evMap) + Vec_IntSize(p-\u003evObjs) );\n    // iterate through the timeframes\n    for ( f = 0; f \u003c= p-\u003epCex-\u003eiFrame; f++, iBit += p-\u003epCex-\u003enPis )\n    {\n        // initialize frontier values and init justification sets\n        Gia_ManForEachObjVec( p-\u003evMap, p-\u003epGia, pObj, i )\n        {\n            assert( Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj) );\n            pObj-\u003efMark0 = Abc_InfoHasBit( p-\u003epCex-\u003epData, iBit + i );\n            Rf2_ObjStart( p, pObj, i );\n        }\n        // propagate internal nodes\n        Gia_ManForEachObjVec( p-\u003evObjs, p-\u003epGia, pObj, i )\n        {\n            pObj-\u003efMark0 = 0;\n            Rf2_ObjClear( p, pObj );\n            if ( Gia_ObjIsRo(p-\u003epGia, pObj) )\n            {\n                if ( f == 0 )\n                {\n                    Rf2_ObjStart( p, pObj, Vec_IntSize(p-\u003evMap) + i );\n                    continue;\n                }\n                pObj-\u003efMark0 = Gia_ObjRoToRi(p-\u003epGia, pObj)-\u003efMark0;\n                Rf2_ObjCopy( p, pObj, Gia_ObjRoToRi(p-\u003epGia, pObj) );\n                continue;\n            }\n            if ( Gia_ObjIsCo(pObj) )\n            {\n                pObj-\u003efMark0 = (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj));\n                Rf2_ObjCopy( p, pObj, Gia_ObjFanin0(pObj) );\n                continue;\n            }\n            assert( Gia_ObjIsAnd(pObj) );\n            pObj-\u003efMark0 = (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Gia_ObjFanin1(pObj)-\u003efMark0 ^ Gia_ObjFaninC1(pObj));\n            if ( pObj-\u003efMark0 == 1 )\n                Rf2_ObjDeriveAnd( p, pObj, 1 );\n            else if ( (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (Gia_ObjFanin1(pObj)-\u003efMark0 ^ Gia_ObjFaninC1(pObj)) == 0 )\n                Rf2_ObjDeriveAnd( p, pObj, 0 );\n            else if ( (Gia_ObjFanin0(pObj)-\u003efMark0 ^ Gia_ObjFaninC0(pObj)) == 0 )\n                Rf2_ObjCopy( p, pObj, Gia_ObjFanin0(pObj) );\n            else \n                Rf2_ObjCopy( p, pObj, Gia_ObjFanin1(pObj) );\n        }\n    }\n    assert( iBit == p-\u003epCex-\u003enBits );\n    if ( Gia_ManPo(p-\u003epGia, 0)-\u003efMark0 != 1 )\n        printf( \"Output value is incorrect.\\n\" );\n\n    printf( \"Bounds: \\n\" );\n    Rf2_ObjPrint( p, Gia_ManPo(p-\u003epGia, 0) );\n}",
+      "Draft": "func Rf2_ManBounds(p *Rf2_Man_t) {\n    var pObj *Gia_Obj_t;\n    var f int32;\n    var i int32;\n    var iBit int32 = p.pCex.nRegs;\n    // init constant\n    pObj = Gia_ManConst0(p.pGia);\n    pObj.fMark0 = 0;\n    Rf2_ObjStart( p, pObj, Vec_IntSize(p.vMap) + Vec_IntSize(p.vObjs) );\n    // iterate through the timeframes\n    for  f = 0; f \u003c= p.pCex.iFrame; f++, iBit += p.pCex.nPis  {\n        // initialize frontier values and init justification sets\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n            assert(Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj)\");\n            pObj.fMark0 = Abc_InfoHasBit( p.pCex.pData, iBit + i );\n            Rf2_ObjStart( p, pObj, i );\n        }\n        // propagate internal nodes\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vObjs,i))); i++  {\n            pObj.fMark0 = 0;\n            Rf2_ObjClear( p, pObj );\n            if Gia_ObjIsRo(p.pGia, pObj) {\n                if f == 0 {\n                    Rf2_ObjStart( p, pObj, Vec_IntSize(p.vMap) + i );\n                    continue;\n                }\n                pObj.fMark0 = Gia_ObjRoToRi(p.pGia, pObj).fMark0;\n                Rf2_ObjCopy( p, pObj, Gia_ObjRoToRi(p.pGia, pObj) );\n                continue;\n            }\n            if Gia_ObjIsCo(pObj) {\n                pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj));\n                Rf2_ObjCopy( p, pObj, Gia_ObjFanin0(pObj) );\n                continue;\n            }\n            assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n            pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj));\n            if pObj.fMark0 == 1 {\n                Rf2_ObjDeriveAnd( p, pObj, 1 );\n            } else if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)) == 0 {\n                Rf2_ObjDeriveAnd( p, pObj, 0 );\n            } else if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 {\n                Rf2_ObjCopy( p, pObj, Gia_ObjFanin0(pObj) );\n            } else { \n                Rf2_ObjCopy( p, pObj, Gia_ObjFanin1(pObj) ); }\n        }\n    }\n    assert(iBit == p.pCex.nBits, \"iBit == p.pCex.nBits\");\n    if Gia_ManPo(p.pGia, 0).fMark0 != 1 {\n        fmt.Printf(\"Output value is incorrect.\\n\"); }\n\n    fmt.Printf(\"Bounds: \\n\");\n    Rf2_ObjPrint( p, Gia_ManPo(p.pGia, 0) );\n}"
+    },
+    {
+      "Name": "Rf2_ManRefine",
+      "Start": 30692,
+      "End": 32143,
+      "BodyStart": 30802,
+      "Original": "Vec_Int_t * Rf2_ManRefine( Rf2_Man_t * p, Abc_Cex_t * pCex, Vec_Int_t * vMap, int fPropFanout, int fVerbose )\n{\n    Vec_Int_t * vJusts;\n//    Vec_Int_t * vSelected = Vec_IntAlloc( 100 );\n    Vec_Int_t * vSelected = NULL;\n    clock_t clk, clk2 = clock();\n    int nGroups;\n    p-\u003enCalls++;\n    // initialize\n    p-\u003epCex = pCex;\n    p-\u003evMap = vMap;\n    p-\u003efPropFanout = fPropFanout;\n    p-\u003efVerbose    = fVerbose;\n    // collects used objects\n    Rf2_ManCollect( p );\n    // collect reconvergence points\n//    Rf2_ManGatherFanins( p, 2 );\n    // propagate justification IDs\n    nGroups = Rf2_ManAssignJustIds( p );\n    vJusts = Rf2_ManPropagate( p, 32 );\n\n//    printf( \"\\n\" );\n//    Rf2_ManPrintVector( vJusts, nGroups );\n    Rf2_ManPrintVectorSpecial( p, vJusts );\n    if ( Vec_IntSize(vJusts) == 0 )\n    {\n        printf( \"Empty set of justifying subsets.\\n\" );\n        return NULL;\n    }\n\n//    p-\u003enMapWords = Abc_BitWordNum( Vec_IntSize(p-\u003evMap) + Vec_IntSize(p-\u003evObjs) + 1 ); // Map + Flops + Const\n//    Rf2_ManBounds( p );\n\n    // select the result\n//    Abc_PrintTime( 1, \"Time\", clock() - clk2 );\n\n    // verify (empty) refinement\n    clk = clock();\n//    Rf2_ManVerifyUsingTerSim( p-\u003epGia, p-\u003epCex, p-\u003evMap, p-\u003evObjs, vSelected );\n//    Vec_IntUniqify( vSelected );\n//    Vec_IntReverseOrder( vSelected );\n    p-\u003etimeVer += clock() - clk;\n    p-\u003etimeTotal += clock() - clk2;\n//    p-\u003enRefines += Vec_IntSize(vSelected);\n    return vSelected;\n}",
+      "Draft": "func Rf2_ManRefine(p *Rf2_Man_t, pCex *Abc_Cex_t, vMap *Vec_Int_t, fPropFanout int32, fVerbose int32) *Vec_Int_t {\n    var vJusts *Vec_Int_t;\n//    Vec_Int_t * vSelected = Vec_IntAlloc( 100 );\n    var vSelected *Vec_Int_t  = nil;\n    var clk int64;\n    var clk2 int64 = time.Now().UnixNano();\n    var nGroups int32;\n    p.nCalls++;\n    // initialize\n    p.pCex = pCex;\n    p.vMap = vMap;\n    p.fPropFanout = fPropFanout;\n    p.fVerbose    = fVerbose;\n    // collects used objects\n    Rf2_ManCollect( p );\n    // collect reconvergence points\n//    Rf2_ManGatherFanins( p, 2 );\n    // propagate justification IDs\n    nGroups = Rf2_ManAssignJustIds( p );\n    vJusts = Rf2_ManPropagate( p, 32 );\n\n//    printf( \"\\n\" );\n//    Rf2_ManPrintVector( vJusts, nGroups );\n    Rf2_ManPrintVectorSpecial( p, vJusts );\n    if Vec_IntSize(vJusts) == 0 {\n        fmt.Printf(\"Empty set of justifying subsets.\\n\");\n        return nil;\n    }\n\n//    p-\u003enMapWords = Abc_BitWordNum( Vec_IntSize(p-\u003evMap) + Vec_IntSize(p-\u003evObjs) + 1 ); // Map + Flops + Const\n//    Rf2_ManBounds( p );\n\n    // select the result\n//    Abc_PrintTime( 1, \"Time\", clock() - clk2 );\n\n    // verify (empty) refinement\n    clk = time.Now().UnixNano();\n//    Rf2_ManVerifyUsingTerSim( p-\u003epGia, p-\u003epCex, p-\u003evMap, p-\u003evObjs, vSelected );\n//    Vec_IntUniqify( vSelected );\n//    Vec_IntReverseOrder( vSelected );\n    p.timeVer += time.Now().UnixNano() - clk;\n    p.timeTotal += time.Now().UnixNano() - clk2;\n//    p-\u003enRefines += Vec_IntSize(vSelected);\n    return vSelected;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::struct::Rf2_Obj_t::unsigned       Value     :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Rf2_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3642,
+      "End": 3677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::struct::Rf2_Obj_t::// binary value\n    unsigned       fVisit    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Rf2_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3677,
+      "End": 3729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::struct::Rf2_Obj_t::// visited object\n    unsigned       fPPi      :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Rf2_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3729,
+      "End": 3783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::struct::Rf2_Obj_t::// PPI object\n    unsigned       Prio      : 24;",
+      "Category": "struct-field-review",
+      "Symbol": "Rf2_Obj_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3783,
+      "End": 3833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::struct::Rf2_Obj_t",
+      "Category": "struct-review",
+      "Symbol": "Rf2_Obj_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 3565,
+      "End": 3863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::struct::Rf2_Man_t_",
+      "Category": "struct-review",
+      "Symbol": "Rf2_Man_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3865,
+      "End": 5286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::mechanical::sizeof::6760",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6760,
+      "End": 6766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::mechanical::sizeof::9179",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8874,
+      "End": 8874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::mechanical::sizeof::9411",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9014,
+      "End": 9014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::mechanical::sizeof::9712",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9340,
+      "End": 9346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::mechanical::sizeof::9732",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9360,
+      "End": 9366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::mechanical::sizeof::9774",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9402,
+      "End": 9408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::mechanical::sizeof::9838",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9466,
+      "End": 9472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::mechanical::sizeof::9858",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9486,
+      "End": 9492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::mechanical::sizeof::9894",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9522,
+      "End": 9528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::mechanical::sizeof::12016",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10432,
+      "End": 10438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::mechanical::sizeof::12036",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10452,
+      "End": 10458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::pointer-cast::5827",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5827,
+      "End": 5839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::pointer-cast::5960",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5960,
+      "End": 5972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::pointer-cast::9145",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8874,
+      "End": 8874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::pointer-cast::9359",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9014,
+      "End": 9014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::pointer-cast::11812",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10323,
+      "End": 10323
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::pointer-cast::11919",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10350,
+      "End": 10350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManObj",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5323,
+      "End": 5612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ObjVec",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ObjVec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5614,
+      "End": 5740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ObjA",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ObjA",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5743,
+      "End": 5875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ObjN",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ObjN",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5876,
+      "End": 6023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ObjClear",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ObjClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6024,
+      "End": 6155
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ObjStart",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ObjStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6156,
+      "End": 6551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ObjCopy",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ObjCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6552,
+      "End": 6800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::ternary::Rf2_ObjDeriveAnd",
+      "Category": "ternary-review",
+      "Symbol": "Rf2_ObjDeriveAnd",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6801,
+      "End": 7739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ObjDeriveAnd",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ObjDeriveAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6801,
+      "End": 7739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ObjPrint",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ObjPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7740,
+      "End": 8282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8761,
+      "End": 9172
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::ternary::Rf2_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Rf2_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9173,
+      "End": 10366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9173,
+      "End": 10366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManMemoryUsage",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManMemoryUsage",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10367,
+      "End": 10498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManCollect_rec",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManCollect_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10854,
+      "End": 11396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManCollect",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManCollect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11397,
+      "End": 12154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManSensitize",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManSensitize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12422,
+      "End": 14955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManVerifyUsingTerSim",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManVerifyUsingTerSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15213,
+      "End": 16670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManGatherFanins_rec",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManGatherFanins_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16958,
+      "End": 18111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManGatherFanins",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManGatherFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18112,
+      "End": 19846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManCountPpis",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManCountPpis",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20132,
+      "End": 20388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManPrintVector",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManPrintVector",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20673,
+      "End": 20924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManProcessVector",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManProcessVector",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21209,
+      "End": 22247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManAssignJustIds",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManAssignJustIds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22532,
+      "End": 23062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManPrintVectorSpecial",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManPrintVectorSpecial",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23347,
+      "End": 24082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManPropagate",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManPropagate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24353,
+      "End": 27736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManBounds",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManBounds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28007,
+      "End": 30404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::Rf2_ManRefine",
+      "Category": "semantic-review",
+      "Symbol": "Rf2_ManRefine",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30692,
+      "End": 32143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 32390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absRefJ.c::macro-inline::552",
+      "Category": "macro-inline-review",
+      "Symbol": "include",
+      "Status": "open",
+      "Message": "Local include not resolved for macro expansion; supply Options.IncludePaths when using the library.",
+      "Start": 552,
+      "End": 572
+    }
+  ],
+  "Draft": "package abs\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [absRef2.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Abstraction package.]\n\n  Synopsis    [Refinement manager to compute all justifying subsets.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: absRef2.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"abs.h\"\n//#include \"absRef2.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/*\n    Description of the refinement manager\n\n    This refinement manager should be \n    * started by calling Rf2_ManStart()\n       this procedure takes one argument, the user's seq miter as a GIA manager\n       - the manager should have only one property output\n       - this manager should not change while the refinement manager is alive\n       - it cannot be used by external applications for any purpose\n       - when the refinement manager stop, GIA manager is the same as at the beginning\n       - in the meantime, it will have some data-structures attached to its nodes...\n    * stopped by calling Rf2_ManStop()\n    * between starting and stopping, refinements are obtained by calling Rf2_ManRefine()\n\n    Procedure Rf2_ManRefine() takes the following arguments:\n    * the refinement manager previously started by Rf2_ManStart()\n    * counter-example (CEX) obtained by abstracting some logic of GIA\n    * mapping (vMap) of inputs of the CEX into the object IDs of the GIA manager\n       - only PI, flop outputs, and internal AND nodes can be used in vMap\n       - the ordering of objects in vMap is not important\n       - however, the index of a non-PI object in vMap is used as its priority\n         (the smaller the index, the more likely this non-PI object apears in a refinement)\n       - only the logic between PO and the objects listed in vMap is traversed by the manager\n         (as a result, GIA can be arbitrarily large, but only objects used in the abstraction\n         and the pseudo-PI, that is, objects in the cut, will be visited by the manager)\n    * flag fPropFanout defines whether value propagation is done through the fanout\n       - it this flag is enabled, theoretically refinement should be better (the result smaller)\n    * flag fVerbose may print some statistics\n\n    The refinement manager returns a minimal-size array of integer IDs of GIA objects\n    which should be added to the abstraction to possibly prevent the given counter-example\n       - only flop output and internal AND nodes from vMap may appear in the resulting array\n       - if the resulting array is empty, the CEX is a true CEX \n         (in other words, non-PI objects are not needed to set the PO value to 1)\n\n    Verification of the selected refinement is performed by \n       - initializing all PI objects in vMap to value 0 or 1 they have in the CEX\n       - initializing all remaining objects in vMap to value X\n       - initializing objects used in the refiment to value 0 or 1 they have in the CEX\n       - simulating through as many timeframes as required by the CEX\n       - if the PO value in the last frame is 1, the refinement is correct\n         (however, the minimality of the refinement is not currently checked)\n        \n*/\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n    // refinement object\ntype Rf2_Obj_t struct {\n    Value uint32; /* C bitfield: 1 bits; review packing and truncation */  // binary value\n    fVisit uint32; /* C bitfield: 1 bits; review packing and truncation */  // visited object\n    fPPi uint32; /* C bitfield: 1 bits; review packing and truncation */  // PPI object\n    Prio uint32; /* C bitfield: 24 bits; review packing and truncation */  // priority (0 - highest)\n}\n\ntype Rf2_Man_t_ struct {\n    // user data\n    pGia     *Gia_Man_t;            // working AIG manager (it is completely owned by this package)\n    pCex     *Abc_Cex_t;            // counter-example\n    vMap     *Vec_Int_t;            // mapping of CEX inputs into objects (PI + PPI, in any order)\n    fPropFanout            int32;     // propagate fanouts\n    fVerbose            int32;        // verbose flag\n    // traversing data\n    vObjs     *Vec_Int_t;           // internal objects used in value propagation\n    vFanins     *Vec_Int_t;         // fanins of the PPI nodes\n    pvVecs     *Vec_Int_t;          // vectors of integers for each object\n    vGrp2Ppi     *Vec_Vec_t;        // for each node, the set of PPIs to include\n    nMapWords            int32;\n    // internal data\n    pObjs     *Rf2_Obj_t;           // refinement objects\n    nObjs            int32;           // the number of used objects\n    nObjsAlloc            int32;      // the number of allocated objects\n    nObjsFrame            int32;      // the number of used objects in each frame\n    nCalls            int32;          // total number of calls\n    nRefines            int32;        // total refined objects\n    // statistics  \n    timeFwd        int64;         // forward propagation\n    timeBwd        int64;         // backward propagation\n    timeVer        int64;         // ternary simulation\n    timeTotal        int64;       // other time\n}\n\n// accessing the refinement object\nfunc Rf2_ManObj(p *Rf2_Man_t, pObj *Gia_Obj_t, f int32) *Rf2_Obj_t { \n    assert(Gia_ObjIsConst0(pObj) || pObj.Value, \"Gia_ObjIsConst0(pObj) || pObj.Value\");\n    assert(int32(pObj.Value) \u003c p.nObjsFrame, \"int32(pObj.Value) \u003c p.nObjsFrame\");\n    assert(f \u003e= 0 \u0026\u0026 f \u003c= p.pCex.iFrame, \"f \u003e= 0 \u0026\u0026 f \u003c= p.pCex.iFrame\"); \n    return p.pObjs + f * p.nObjsFrame + pObj.Value;  \n}\n\nfunc Rf2_ObjVec(p *Rf2_Man_t, pObj *Gia_Obj_t) *Vec_Int_t {\n    return p.pvVecs + Gia_ObjId(p.pGia, pObj);\n}\n\n\nfunc Rf2_ObjA(p *Rf2_Man_t, pObj *Gia_Obj_t) *uint32 {\n    return (unsigned *)Vec_IntArray(Rf2_ObjVec(p, pObj));\n}\nfunc Rf2_ObjN(p *Rf2_Man_t, pObj *Gia_Obj_t) *uint32 {\n    return (unsigned *)Vec_IntArray(Rf2_ObjVec(p, pObj)) + p.nMapWords;\n}\nfunc Rf2_ObjClear(p *Rf2_Man_t, pObj *Gia_Obj_t) {\n    Vec_IntFill( Rf2_ObjVec(p, pObj), 2*p.nMapWords, 0 );\n}\nfunc Rf2_ObjStart(p *Rf2_Man_t, pObj *Gia_Obj_t, i int32) {\n    var vVec *Vec_Int_t  = Rf2_ObjVec(p, pObj);\n    var w int32;\n    Vec_IntClear( vVec );\n    for  w = 0; w \u003c p.nMapWords; w++  {\n        Vec_IntPush( vVec, 0 );\n    }\n    for  w = 0; w \u003c p.nMapWords; w++  {\n        Vec_IntPush( vVec, ~0 );\n    }\n    Abc_InfoSetBit( Rf2_ObjA(p, pObj), i );\n    Abc_InfoXorBit( Rf2_ObjN(p, pObj), i );\n}\nfunc Rf2_ObjCopy(p *Rf2_Man_t, pObj *Gia_Obj_t, pFanin *Gia_Obj_t) {\n    assert(Vec_IntSize(Rf2_ObjVec(p, pObj)) == 2*p.nMapWords, \"Vec_IntSize(Rf2_ObjVec(p, pObj)) == 2*p.nMapWords\");\n    memcpy( Rf2_ObjA(p, pObj), Rf2_ObjA(p, pFanin), sizeof(unsigned) * 2 * p.nMapWords );\n}\nfunc Rf2_ObjDeriveAnd(p *Rf2_Man_t, pObj *Gia_Obj_t, One int32) {\n    var pInfo, pInfo0, pInfo1 *uint32;\n    var i int32;\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    assert(One == int32(pObj.fMark0), \"One == int32(pObj.fMark0)\");\n    assert(One == int32((Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj))), \"One == int32((Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)))\");\n    assert(One == int32((Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj))), \"One == int32((Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)))\");\n    assert(Vec_IntSize(Rf2_ObjVec(p, pObj)) == 2*p.nMapWords, \"Vec_IntSize(Rf2_ObjVec(p, pObj)) == 2*p.nMapWords\");\n\n    pInfo  = Rf2_ObjA( p, pObj );\n    pInfo0 = Rf2_ObjA( p, Gia_ObjFanin0(pObj) );\n    pInfo1 = Rf2_ObjA( p, Gia_ObjFanin1(pObj) );\n    for  i = 0; i \u003c p.nMapWords; i++  {\n        pInfo[i] = One ? (pInfo0[i] \u0026 pInfo1[i]) : (pInfo0[i] | pInfo1[i]);\n    }\n\n    pInfo  = Rf2_ObjN( p, pObj );\n    pInfo0 = Rf2_ObjN( p, Gia_ObjFanin0(pObj) );\n    pInfo1 = Rf2_ObjN( p, Gia_ObjFanin1(pObj) );\n    for  i = 0; i \u003c p.nMapWords; i++  {\n        pInfo[i] = One ? (pInfo0[i] | pInfo1[i]) : (pInfo0[i] \u0026 pInfo1[i]);\n    }\n}\nfunc Rf2_ObjPrint(p *Rf2_Man_t, pRoot *Gia_Obj_t) {\n    var pObj *Gia_Obj_t;\n    var pInfo *uint32;\n    var i int32;\n    pInfo  = Rf2_ObjA( p, pRoot );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        if !Gia_ObjIsPi(p.pGia, pObj) {\n            fmt.Printf(\"%d\", Abc_InfoHasBit(pInfo, i)); }\n    }\n    fmt.Printf(\"\\n\");\n    pInfo  = Rf2_ObjN( p, pRoot );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        if !Gia_ObjIsPi(p.pGia, pObj) {\n            fmt.Printf(\"%d\", !Abc_InfoHasBit(pInfo, i)); }\n    }\n    fmt.Printf(\"\\n\");\n\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    [Creates a new manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rf2_ManStart(pGia *Gia_Man_t) *Rf2_Man_t {\n    \n    assert(Gia_ManPoNum(pGia) == 1, \"Gia_ManPoNum(pGia) == 1\");\n    // inlining of macro ABC_CALLOC\n    p := \u0026Rf2_Man_t{};\n    p.pGia = pGia;\n    p.vObjs = Vec_IntAlloc( 1000 );\n    p.vFanins = Vec_IntAlloc( 1000 );\n    // inlining of macro ABC_CALLOC\n    p.pvVecs = ((Vec_Int_t *) calloc((size_t)(Gia_ManObjNum(pGia)), sizeof(Vec_Int_t)));\n    p.vGrp2Ppi = Vec_VecStart( 100 );\n    Gia_ManCleanMark0(pGia);\n    Gia_ManCleanMark1(pGia);\n    return p;\n}\nfunc Rf2_ManStop(p *Rf2_Man_t, fProfile int32) {\n    if !p { return; }\n    // print runtime statistics\n    if (fProfile != 0) \u0026\u0026 p.nCalls {\n        var MemGia float64  = sizeof(Gia_Man_t) + sizeof(Gia_Obj_t) * p.pGia.nObjsAlloc + sizeof(int) * p.pGia.nTravIdsAlloc;\n        var MemOther float64  = sizeof(Rf2_Man_t) + sizeof(Rf2_Obj_t) * p.nObjsAlloc + sizeof(int) * Vec_IntCap(p.vObjs);\n        var timeOther int64  = p.timeTotal - p.timeFwd - p.timeBwd - p.timeVer;\n        fmt.Printf(\"Abstraction refinement runtime statistics:\\n\");\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Sensetization\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeFwd)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeFwd)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Justification\"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeBwd)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeBwd)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Verification \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeVer)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeVer)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"Other        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((timeOther)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((timeOther)))/(float64((p.timeTotal))) : 0.0);;\n        // inlining of macro ABC_PRTP\n        Abc_Print(1, \"%s =\", (\"TOTAL        \"));\nAbc_Print(1, \"%9.2f sec (%6.2f %%)\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))), (float64((p.timeTotal)))? 100.0*(float64((p.timeTotal)))/(float64((p.timeTotal))) : 0.0);;\n        fmt.Printf(\"Total calls = %d.  Average refine = %.1f. GIA mem = %.3f MB.  Other mem = %.3f MB.\\n\", p.nCalls, 1.0*p.nRefines/p.nCalls, MemGia/(1\u003c\u003c20), MemOther/(1\u003c\u003c20));\n    }\n    Vec_IntFree( p.vObjs );\n    Vec_IntFree( p.vFanins );\n    Vec_VecFree( p.vGrp2Ppi );\n    // inlining of macro ABC_FREE\n    ((p.pvVecs) ? (free((char *) (p.pvVecs)), (p.pvVecs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Rf2_ManMemoryUsage(p *Rf2_Man_t) float64 {\n    return float64((sizeof(Rf2_Man_t) + sizeof(Vec_Int_t) * Gia_ManObjNum(p.pGia)));\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collect internal objects to be used in value propagation.]\n\n  Description [Resulting array vObjs contains RO, AND, PO/RI in a topo order.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rf2_ManCollect_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vObjs *Vec_Int_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCo(pObj) {\n        Rf2_ManCollect_rec( p, Gia_ObjFanin0(pObj), vObjs );\n    } else if Gia_ObjIsAnd(pObj) {\n        Rf2_ManCollect_rec( p, Gia_ObjFanin0(pObj), vObjs );\n        Rf2_ManCollect_rec( p, Gia_ObjFanin1(pObj), vObjs );\n    \n    } else if !Gia_ObjIsRo(p, pObj) {\n        assert(false, \"0\"); }\n    Vec_IntPush( vObjs, Gia_ObjId(p, pObj) );\n}\nfunc Rf2_ManCollect(p *Rf2_Man_t) {\n    var pObj *Gia_Obj_t  = nil;\n    var i int32;\n    // mark const/PIs/PPIs\n    Gia_ManIncrementTravId( p.pGia );\n    Gia_ObjSetTravIdCurrent( p.pGia, Gia_ManConst0(p.pGia) );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        assert(Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj)\");\n        Gia_ObjSetTravIdCurrent( p.pGia, pObj );\n    }\n    // collect objects\n    Vec_IntClear( p.vObjs );\n    Rf2_ManCollect_rec( p.pGia, Gia_ManPo(p.pGia, 0), p.vObjs );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vObjs,i))); i++  {\n        if Gia_ObjIsRo(p.pGia, pObj) {\n            Rf2_ManCollect_rec( p.pGia, Gia_ObjRoToRi(p.pGia, pObj), p.vObjs ); }\n    }\n    // the last object should be a CO\n    assert(Gia_ObjIsCo(pObj), \"Gia_ObjIsCo(pObj)\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs sensitization analysis.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rf2_ManSensitize(p *Rf2_Man_t) int32 {\n    var pRnm, pRnm0, pRnm1 *Rf2_Obj_t;\n    var pObj *Gia_Obj_t;\n    var f int32;\n    var i int32;\n    var iBit int32 = p.pCex.nRegs;\n    // const0 is initialized automatically in all timeframes\n    for  f = 0; f \u003c= p.pCex.iFrame; f++, iBit += p.pCex.nPis  {\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n            assert(Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj)\");\n            pRnm = Rf2_ManObj( p, pObj, f );\n            pRnm.Value = Abc_InfoHasBit( p.pCex.pData, iBit + i );\n            if !Gia_ObjIsPi(p.pGia, pObj) { // this is PPI\n            \n                assert(pObj.Value \u003e 0, \"pObj.Value \u003e 0\");\n                pRnm.Prio = pObj.Value;\n                pRnm.fPPi = 1;\n            }\n        }\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vObjs,i))); i++  {\n            assert(Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj), \"Gia_ObjIsRo(p.pGia, pObj) || Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj)\");\n            pRnm = Rf2_ManObj( p, pObj, f );\n            assert(!pRnm.fPPi, \"!pRnm.fPPi\");\n            if Gia_ObjIsRo(p.pGia, pObj) {\n                if f == 0 {\n                    continue; }\n                pRnm0 = Rf2_ManObj( p, Gia_ObjRoToRi(p.pGia, pObj), f-1 );\n                pRnm.Value = pRnm0.Value;\n                pRnm.Prio  = pRnm0.Prio;\n                continue;\n            }\n            if Gia_ObjIsCo(pObj) {\n                pRnm0 = Rf2_ManObj( p, Gia_ObjFanin0(pObj), f );\n                pRnm.Value = (pRnm0.Value ^ Gia_ObjFaninC0(pObj));\n                pRnm.Prio  = pRnm0.Prio;\n                continue;\n            }\n            assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n            pRnm0 = Rf2_ManObj( p, Gia_ObjFanin0(pObj), f );\n            pRnm1 = Rf2_ManObj( p, Gia_ObjFanin1(pObj), f );\n            pRnm.Value = (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) \u0026 (pRnm1.Value ^ Gia_ObjFaninC1(pObj));\n            if pRnm.Value == 1 {\n                pRnm.Prio  = Abc_MaxInt( pRnm0.Prio, pRnm1.Prio );\n            } else if (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (pRnm1.Value ^ Gia_ObjFaninC1(pObj)) == 0 {\n                pRnm.Prio  = Abc_MinInt( pRnm0.Prio, pRnm1.Prio ); // choice\n            } else if (pRnm0.Value ^ Gia_ObjFaninC0(pObj)) == 0 {\n                pRnm.Prio  = pRnm0.Prio;\n            } else { \n                pRnm.Prio  = pRnm1.Prio; }\n        }\n    }\n    assert(iBit == p.pCex.nBits, \"iBit == p.pCex.nBits\");\n    pRnm = Rf2_ManObj( p, Gia_ManPo(p.pGia, 0), p.pCex.iFrame );\n    if pRnm.Value != 1 {\n        fmt.Printf(\"Output value is incorrect.\\n\"); }\n    return pRnm.Prio;\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs refinement.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rf2_ManVerifyUsingTerSim(p *Gia_Man_t, pCex *Abc_Cex_t, vMap *Vec_Int_t, vObjs *Vec_Int_t, vRes *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var f int32;\n    var iBit int32 = pCex.nRegs;\n    Gia_ObjTerSimSet0( Gia_ManConst0(p) );\n    for  f = 0; f \u003c= pCex.iFrame; f++, iBit += pCex.nPis  {\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vMap,i))); i++  {\n            pObj.Value = Abc_InfoHasBit( pCex.pData, iBit + i );\n            if !Gia_ObjIsPi(p, pObj) {\n                Gia_ObjTerSimSetX( pObj );\n            } else if pObj.Value {\n                Gia_ObjTerSimSet1( pObj );\n            } else {\n                Gia_ObjTerSimSet0( pObj ); }\n        }\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vRes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vRes,i))); i++  { // vRes is subset of vMap\n        \n            if pObj.Value {\n                Gia_ObjTerSimSet1( pObj );\n            } else {\n                Gia_ObjTerSimSet0( pObj ); }\n        }\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vObjs,i))); i++  {\n            if Gia_ObjIsCo(pObj) {\n                Gia_ObjTerSimCo( pObj );\n            } else if Gia_ObjIsAnd(pObj) {\n                Gia_ObjTerSimAnd( pObj );\n            } else if f == 0 {\n                Gia_ObjTerSimSet0( pObj );\n            } else {\n                Gia_ObjTerSimRo( p, pObj ); }\n        }\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vMap,i))); i++  {\n        pObj.Value = 0;\n    }\n    pObj = Gia_ManPo( p, 0 );\n    if !Gia_ObjTerSimGet1(pObj) {\n        Abc_Print( 1, \"\\nRefinement verification has failed!!!\\n\" ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the refinement for a given counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rf2_ManGatherFanins_rec(p *Rf2_Man_t, pObj *Gia_Obj_t, vFanins *Vec_Int_t, Depth int32, RootId int32, fFirst int32) {\n    if Gia_ObjIsTravIdCurrent(p.pGia, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p.pGia, pObj);\n    if pObj.fPhase \u0026\u0026 !(fFirst != 0) {\n        var vVec *Vec_Int_t  = Rf2_ObjVec( p, pObj );\n//        if ( Vec_IntEntry( vVec, 0 ) == 0 )\n//            return;\n        if Vec_IntSize(vVec) == 0 {\n            Vec_IntPush( vFanins, Gia_ObjId(p.pGia, pObj) ); }\n        Vec_IntPushUnique( vVec, RootId );\n        if Depth == 0 {\n            return; }\n    }\n    if Gia_ObjIsPi(p.pGia, pObj) || Gia_ObjIsConst0(pObj) {\n        return; }\n    if Gia_ObjIsRo(p.pGia, pObj) {\n        assert(pObj.fPhase, \"pObj.fPhase\");\n        pObj = Gia_ObjRoToRi(p.pGia, pObj);\n        Rf2_ManGatherFanins_rec( p, Gia_ObjFanin0(pObj), vFanins, Depth - 1, RootId, 0 );\n    \n    } else if Gia_ObjIsAnd(pObj) {\n        Rf2_ManGatherFanins_rec( p, Gia_ObjFanin0(pObj), vFanins, Depth - pObj.fPhase, RootId, 0 );\n        Rf2_ManGatherFanins_rec( p, Gia_ObjFanin1(pObj), vFanins, Depth - pObj.fPhase, RootId, 0 );\n    \n    } else { assert(false, \"0\"); }\n}\nfunc Rf2_ManGatherFanins(p *Rf2_Man_t, Depth int32) {\n    var vUsed *Vec_Int_t;\n    var vVec *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, k, Entry int32;\n    // mark PPIs\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        vVec = Rf2_ObjVec( p, pObj );\n        assert(Vec_IntSize(vVec) == 0, \"Vec_IntSize(vVec) == 0\");\n        Vec_IntPush( vVec, 0 );\n    }\n    // collect internal\n    Vec_IntClear( p.vFanins );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        if Gia_ObjIsPi(p.pGia, pObj) {\n            continue; }\n        Gia_ManIncrementTravId( p.pGia );\n        Rf2_ManGatherFanins_rec( p, pObj, p.vFanins, Depth, i, 1 );\n    }\n\n    vUsed = Vec_IntStart( Vec_IntSize(p.vMap) );\n\n    // evaluate collected\n    fmt.Printf(\"\\nMap (%d): \", Vec_IntSize(p.vMap));\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        vVec = Rf2_ObjVec( p, pObj );\n        if Vec_IntSize(vVec) \u003e 1 {\n            fmt.Printf(\"%d=%d \", i, Vec_IntSize(vVec) - 1); }\n        // inlining of macro Vec_IntForEachEntryStart\n        for  k = 1; (k \u003c Vec_IntSize(vVec)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVec, k)), 1); k++  {\n            Vec_IntAddToEntry( vUsed, Entry, 1 );\n        }\n        Vec_IntClear( vVec );\n    }\n    fmt.Printf(\"\\n\");\n    // evaluate internal\n    fmt.Printf(\"Int (%d): \", Vec_IntSize(p.vFanins));\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vFanins)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vFanins,i))); i++  {\n        vVec = Rf2_ObjVec( p, pObj );\n        if Vec_IntSize(vVec) \u003e 1 {\n            fmt.Printf(\"%d=%d \", i, Vec_IntSize(vVec)); }\n        if Vec_IntSize(vVec) \u003e 1 {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vVec)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVec, k)), 1); k++  {\n                Vec_IntAddToEntry( vUsed, Entry, 1 );\n            } }\n        Vec_IntClear( vVec );\n    }\n    fmt.Printf(\"\\n\");\n    // evaluate PPIs    \n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vUsed)) \u0026\u0026 (((Entry) = Vec_IntEntry(vUsed, k)), 1); k++  {\n        fmt.Printf(\"%d \", Entry);\n    }\n    fmt.Printf(\"\\n\");\n\n    Vec_IntFree( vUsed );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Sort, make dup- and containment-free, and filter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rf2_ManCountPpis(p *Rf2_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        if !Gia_ObjIsPi(p.pGia, pObj) { // this is PPI\n            Counter++; }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sort, make dup- and containment-free, and filter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rf2_ManPrintVector(p *Vec_Int_t, Num int32) {\n    var i, k, Entry int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p)) \u0026\u0026 (((Entry) = Vec_IntEntry(p, i)), 1); i++  {\n        for  k = 0; k \u003c Num; k++  {\n            fmt.Printf(\"%c\", '0' + ((Entry\u003e\u003ek) \u0026 1));\n        }\n        fmt.Printf(\"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sort, make dup- and containment-free, and filter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rf2_ManProcessVector(p *Vec_Int_t, Limit int32) {\n//    int Start = Vec_IntSize(p);\n    var Start int32;\n    var i, j, k, Entry, Entry2 int32;\n//    printf( \"%d\", Vec_IntSize(p) );\n    if Start \u003e 5 {\n        fmt.Printf(\"Before: \\n\");\n        Rf2_ManPrintVector( p, 31 );\n    }\n\n    k = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p)) \u0026\u0026 (((Entry) = Vec_IntEntry(p, i)), 1); i++  {\n        if Gia_WordCountOnes(uint32(Entry)) \u003c= Limit {\n            Vec_IntWriteEntry( p, k++, Entry ); }\n    }\n    Vec_IntShrink( p, k );            \n    Vec_IntSort( p, 0 );\n    k = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p)) \u0026\u0026 (((Entry) = Vec_IntEntry(p, i)), 1); i++  {\n        // inlining of macro Vec_IntForEachEntryStop\n        for  j = 0; (j \u003c i) \u0026\u0026 (((Entry2) = Vec_IntEntry(p, j)), 1); j++  {\n            if (Entry2 \u0026 Entry) == Entry2 { // Entry2 is a subset of Entry\n                break; }\n        } \n        if j == i { // Entry is not contained in any Entry2\n            Vec_IntWriteEntry( p, k++, Entry ); }\n    }\n    Vec_IntShrink( p, k );            \n//    printf( \"-\u003e%d \", Vec_IntSize(p) );\n    if Start \u003e 5 {\n        fmt.Printf(\"After: \\n\");\n        Rf2_ManPrintVector( p, 31 );\n        k = 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Assigns a unique justifification ID for each PPI.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rf2_ManAssignJustIds(p *Rf2_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var nPpis int32  = Rf2_ManCountPpis( p );\n    var nGroupSize int32  = (nPpis / 30) + (nPpis % 30 \u003e 0);\n    var i, k int32;\n    Vec_VecClear( p.vGrp2Ppi );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n        if !Gia_ObjIsPi(p.pGia, pObj) { // this is PPI\n            Vec_VecPushInt( p.vGrp2Ppi, (k++ / nGroupSize), i ); }\n    }\n    fmt.Printf(\"Considering %d PPIs combined into %d groups of size %d.\\n\", k, (k-1)/nGroupSize+1, nGroupSize);\n    return (k-1)/nGroupSize+1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sort, make dup- and containment-free, and filter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rf2_ManPrintVectorSpecial(p *Rf2_Man_t, vVec *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var nPpis int32  = Rf2_ManCountPpis( p );\n    var nGroupSize int32  = (nPpis / 30) + (nPpis % 30 \u003e 0);\n    var s, i, k, Entry, Counter int32;\n\n    // inlining of macro Vec_IntForEachEntry\n    for  s = 0; (s \u003c Vec_IntSize(vVec)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVec, s)), 1); s++  {\n        k = 0;\n        Counter = 0;\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n            if !Gia_ObjIsPi(p.pGia, pObj) { // this is PPI\n            \n                if (Entry \u003e\u003e (k++ / nGroupSize)) \u0026 1 {\n                    fmt.Printf(\"1\");\nCounter++;\n                } else {\n                    fmt.Printf(\"0\"); }\n            \n            } else {\n                fmt.Printf(\"-\"); }\n        }\n        fmt.Printf(\" %3d \\n\", Counter);\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs justification propagation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rf2_ManPropagate(p *Rf2_Man_t, Limit int32) *Vec_Int_t {\n    var vVec, vVec0, vVec1 *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var f int32;\n    var i int32;\n    var k int32;\n    var j int32;\n    var Entry int32;\n    var Entry2 int32;\n    var iBit int32 = p.pCex.nRegs;\n    // init constant\n    pObj = Gia_ManConst0(p.pGia);\n    pObj.fMark0 = 0;\n    Vec_IntFill( Rf2_ObjVec(p, pObj), 1, 0 );\n    // iterate through the timeframes\n    for  f = 0; f \u003c= p.pCex.iFrame; f++, iBit += p.pCex.nPis  {\n        // initialize frontier values and init justification sets\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n            assert(Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj)\");\n            pObj.fMark0 = Abc_InfoHasBit( p.pCex.pData, iBit + i );\n            Vec_IntFill( Rf2_ObjVec(p, pObj), 1, 0 );\n        }\n        // assign justification sets for PPis\n        // inlining of macro Vec_VecForEachLevelInt\n        for  i = 0; (i \u003c Vec_VecSize(p.vGrp2Ppi)) \u0026\u0026 (((vVec) = Vec_VecEntryInt(p.vGrp2Ppi, i)), 1); i++  {\n            // inlining of macro Vec_IntForEachEntry\n            for  k = 0; (k \u003c Vec_IntSize(vVec)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVec, k)), 1); k++  {\n                assert(i \u003c 31, \"i \u003c 31\");\n                pObj = Gia_ManObj( p.pGia, Vec_IntEntry(p.vMap, Entry) );\n                assert(Vec_IntSize(Rf2_ObjVec(p, pObj)) == 1, \"Vec_IntSize(Rf2_ObjVec(p, pObj)) == 1\");\n                Vec_IntAddToEntry( Rf2_ObjVec(p, pObj), 0, (1 \u003c\u003c i) );\n            }\n        }\n        // propagate internal nodes\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vObjs,i))); i++  {\n            pObj.fMark0 = 0;\n            vVec = Rf2_ObjVec(p, pObj);\n            Vec_IntClear( vVec );\n            if Gia_ObjIsRo(p.pGia, pObj) {\n                if f == 0 {\n                    Vec_IntPush( vVec, 0 );\n                    continue;\n                }\n                pObj.fMark0 = Gia_ObjRoToRi(p.pGia, pObj).fMark0;\n                vVec0 = Rf2_ObjVec( p, Gia_ObjRoToRi(p.pGia, pObj) );\n                Vec_IntAppend( vVec, vVec0 );\n                continue;\n            }\n            if Gia_ObjIsCo(pObj) {\n                pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj));\n                vVec0 = Rf2_ObjVec( p, Gia_ObjFanin0(pObj) );\n                Vec_IntAppend( vVec, vVec0 );\n                continue;\n            }\n            assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n            vVec0 = Rf2_ObjVec(p, Gia_ObjFanin0(pObj));\n            vVec1 = Rf2_ObjVec(p, Gia_ObjFanin1(pObj));\n            pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj));\n            if pObj.fMark0 == 1 {\n                // inlining of macro Vec_IntForEachEntry\n                for  k = 0; (k \u003c Vec_IntSize(vVec0)) \u0026\u0026 (((Entry) = Vec_IntEntry(vVec0, k)), 1); k++  {\n                    // inlining of macro Vec_IntForEachEntry\n                    for  j = 0; (j \u003c Vec_IntSize(vVec1)) \u0026\u0026 (((Entry2) = Vec_IntEntry(vVec1, j)), 1); j++  {\n                        Vec_IntPush( vVec, Entry | Entry2 );\n                    }\n                }\n                Rf2_ManProcessVector( vVec, Limit );\n            \n            } else if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)) == 0 {\n                Vec_IntAppend( vVec, vVec0 );\n                Vec_IntAppend( vVec, vVec1 );\n                Rf2_ManProcessVector( vVec, Limit );\n            \n            } else if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 {\n                Vec_IntAppend( vVec, vVec0 );\n            } else { \n                Vec_IntAppend( vVec, vVec1 ); }\n        }\n    }\n    assert(iBit == p.pCex.nBits, \"iBit == p.pCex.nBits\");\n    if Gia_ManPo(p.pGia, 0).fMark0 != 1 {\n        fmt.Printf(\"Output value is incorrect.\\n\"); }\n    return Rf2_ObjVec(p, Gia_ManPo(p.pGia, 0));\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs justification propagation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rf2_ManBounds(p *Rf2_Man_t) {\n    var pObj *Gia_Obj_t;\n    var f int32;\n    var i int32;\n    var iBit int32 = p.pCex.nRegs;\n    // init constant\n    pObj = Gia_ManConst0(p.pGia);\n    pObj.fMark0 = 0;\n    Rf2_ObjStart( p, pObj, Vec_IntSize(p.vMap) + Vec_IntSize(p.vObjs) );\n    // iterate through the timeframes\n    for  f = 0; f \u003c= p.pCex.iFrame; f++, iBit += p.pCex.nPis  {\n        // initialize frontier values and init justification sets\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vMap)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vMap,i))); i++  {\n            assert(Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsCi(pObj) || Gia_ObjIsAnd(pObj)\");\n            pObj.fMark0 = Abc_InfoHasBit( p.pCex.pData, iBit + i );\n            Rf2_ObjStart( p, pObj, i );\n        }\n        // propagate internal nodes\n        // inlining of macro Gia_ManForEachObjVec\n        for  i = 0; (i \u003c Vec_IntSize(p.vObjs)) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, Vec_IntEntry(p.vObjs,i))); i++  {\n            pObj.fMark0 = 0;\n            Rf2_ObjClear( p, pObj );\n            if Gia_ObjIsRo(p.pGia, pObj) {\n                if f == 0 {\n                    Rf2_ObjStart( p, pObj, Vec_IntSize(p.vMap) + i );\n                    continue;\n                }\n                pObj.fMark0 = Gia_ObjRoToRi(p.pGia, pObj).fMark0;\n                Rf2_ObjCopy( p, pObj, Gia_ObjRoToRi(p.pGia, pObj) );\n                continue;\n            }\n            if Gia_ObjIsCo(pObj) {\n                pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj));\n                Rf2_ObjCopy( p, pObj, Gia_ObjFanin0(pObj) );\n                continue;\n            }\n            assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n            pObj.fMark0 = (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) \u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj));\n            if pObj.fMark0 == 1 {\n                Rf2_ObjDeriveAnd( p, pObj, 1 );\n            } else if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 \u0026\u0026 (Gia_ObjFanin1(pObj).fMark0 ^ Gia_ObjFaninC1(pObj)) == 0 {\n                Rf2_ObjDeriveAnd( p, pObj, 0 );\n            } else if (Gia_ObjFanin0(pObj).fMark0 ^ Gia_ObjFaninC0(pObj)) == 0 {\n                Rf2_ObjCopy( p, pObj, Gia_ObjFanin0(pObj) );\n            } else { \n                Rf2_ObjCopy( p, pObj, Gia_ObjFanin1(pObj) ); }\n        }\n    }\n    assert(iBit == p.pCex.nBits, \"iBit == p.pCex.nBits\");\n    if Gia_ManPo(p.pGia, 0).fMark0 != 1 {\n        fmt.Printf(\"Output value is incorrect.\\n\"); }\n\n    fmt.Printf(\"Bounds: \\n\");\n    Rf2_ObjPrint( p, Gia_ManPo(p.pGia, 0) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the refinement for a given counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rf2_ManRefine(p *Rf2_Man_t, pCex *Abc_Cex_t, vMap *Vec_Int_t, fPropFanout int32, fVerbose int32) *Vec_Int_t {\n    var vJusts *Vec_Int_t;\n//    Vec_Int_t * vSelected = Vec_IntAlloc( 100 );\n    var vSelected *Vec_Int_t  = nil;\n    var clk int64;\n    var clk2 int64 = time.Now().UnixNano();\n    var nGroups int32;\n    p.nCalls++;\n    // initialize\n    p.pCex = pCex;\n    p.vMap = vMap;\n    p.fPropFanout = fPropFanout;\n    p.fVerbose    = fVerbose;\n    // collects used objects\n    Rf2_ManCollect( p );\n    // collect reconvergence points\n//    Rf2_ManGatherFanins( p, 2 );\n    // propagate justification IDs\n    nGroups = Rf2_ManAssignJustIds( p );\n    vJusts = Rf2_ManPropagate( p, 32 );\n\n//    printf( \"\\n\" );\n//    Rf2_ManPrintVector( vJusts, nGroups );\n    Rf2_ManPrintVectorSpecial( p, vJusts );\n    if Vec_IntSize(vJusts) == 0 {\n        fmt.Printf(\"Empty set of justifying subsets.\\n\");\n        return nil;\n    }\n\n//    p-\u003enMapWords = Abc_BitWordNum( Vec_IntSize(p-\u003evMap) + Vec_IntSize(p-\u003evObjs) + 1 ); // Map + Flops + Const\n//    Rf2_ManBounds( p );\n\n    // select the result\n//    Abc_PrintTime( 1, \"Time\", clock() - clk2 );\n\n    // verify (empty) refinement\n    clk = time.Now().UnixNano();\n//    Rf2_ManVerifyUsingTerSim( p-\u003epGia, p-\u003epCex, p-\u003evMap, p-\u003evObjs, vSelected );\n//    Vec_IntUniqify( vSelected );\n//    Vec_IntReverseOrder( vSelected );\n    p.timeVer += time.Now().UnixNano() - clk;\n    p.timeTotal += time.Now().UnixNano() - clk2;\n//    p-\u003enRefines += Vec_IntSize(vSelected);\n    return vSelected;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

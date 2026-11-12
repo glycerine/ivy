@@ -1,0 +1,2317 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c",
+  "SHA256": "b248de8677fca24646c7c9c7bd66e49eae27ac8717eb7c3cbd174511079506c3",
+  "Library": [
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 94,
+        "Column": 24,
+        "ByteOffset": 7898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Extra_PrintBinary( stdout, \u0026t, 16 ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 7921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 97,
+        "Column": 5,
+        "ByteOffset": 7976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 98,
+        "Column": 5,
+        "ByteOffset": 7995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" %d\", (z \u003e\u003e 16) \u0026 7 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 99,
+        "Column": 5,
+        "ByteOffset": 8031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" %d\", (z \u003e\u003e 20) \u0026 7 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 8067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" %d\", (z \u003e\u003e 24) \u0026 7 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 8103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" %d\", (z \u003e\u003e 28) \u0026 7 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 8139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 8387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 154,
+        "Column": 60,
+        "ByteOffset": 9634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Kit_DsdPrintFromTruth( (unsigned*)pF, nVars ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 155,
+        "Column": 63,
+        "ByteOffset": 9712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Kit_DsdPrintFromTruth( (unsigned*)pN[k], nVars ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 156,
+        "Column": 13,
+        "ByteOffset": 9740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Verification failed!\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 10106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e= 6 \u0026\u0026 nVars \u003c= 8 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 221,
+        "Column": 5,
+        "ByteOffset": 11502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003c nVars - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 261,
+        "Column": 5,
+        "ByteOffset": 12925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Var2Pla[v] \u003c= p );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 277,
+        "Column": 5,
+        "ByteOffset": 13448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Pla2Var[p] == v );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 326,
+        "Column": 5,
+        "ByteOffset": 14847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003c nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 362,
+        "Column": 5,
+        "ByteOffset": 15817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003c nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 389,
+        "Column": 5,
+        "ByteOffset": 16632
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Num16 \u003c (1\u003c\u003c16)-1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 395,
+        "Column": 9,
+        "ByteOffset": 16860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Pla2Var[Var2Pla[i]] == i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 406,
+        "Column": 5,
+        "ByteOffset": 17175
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e= 6 \u0026\u0026 nVars \u003c= 8 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 409,
+        "Column": 9,
+        "ByteOffset": 17273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( If_Dec08HasVar( pF, nVars, i ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 435,
+        "Column": 9,
+        "ByteOffset": 18114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Count[v] \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 450,
+        "Column": 5,
+        "ByteOffset": 18556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( v \u003c= 210 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_Dec08WordNum",
+      "Start": 7578,
+      "End": 7672,
+      "BodyStart": 7625,
+      "Original": "static inline int If_Dec08WordNum( int nVars )\n{\n    return nVars \u003c= 6 ? 1 : 1 \u003c\u003c (nVars-6);\n}",
+      "Draft": "func If_Dec08WordNum(nVars int32) int32 {\n    if nVars \u003c= 6 {\n        return 1;\n    } else {\n        return 1 \u003c\u003c (nVars-6);\n    }\n}"
+    },
+    {
+      "Name": "If_Dec08PrintConfigOne",
+      "Start": 7673,
+      "End": 8066,
+      "BodyStart": 7722,
+      "Original": "static void If_Dec08PrintConfigOne( unsigned z )\n{\n    unsigned t;\n    t = (z \u0026 0xffff) | ((z \u0026 0xffff) \u003c\u003c 16);\n    Extra_PrintBinary( stdout, \u0026t, 16 ); \n    printf( \" \" );\n    Kit_DsdPrintFromTruth( \u0026t, 4 );\n    printf( \" \" );\n    printf( \" %d\", (z \u003e\u003e 16) \u0026 7 );\n    printf( \" %d\", (z \u003e\u003e 20) \u0026 7 );\n    printf( \" %d\", (z \u003e\u003e 24) \u0026 7 );\n    printf( \" %d\", (z \u003e\u003e 28) \u0026 7 );\n    printf( \"\\n\" );\n}",
+      "Draft": "func If_Dec08PrintConfigOne(z uint32) {\n    var t uint32;\n    t = (z \u0026 0xffff) | ((z \u0026 0xffff) \u003c\u003c 16);\n    Extra_PrintBinary( os.Stdout, \u0026t, 16 ); \n    fmt.Printf(\" \");\n    Kit_DsdPrintFromTruth( \u0026t, 4 );\n    fmt.Printf(\" \");\n    fmt.Printf(\" %d\", (z \u003e\u003e 16) \u0026 7);\n    fmt.Printf(\" %d\", (z \u003e\u003e 20) \u0026 7);\n    fmt.Printf(\" %d\", (z \u003e\u003e 24) \u0026 7);\n    fmt.Printf(\" %d\", (z \u003e\u003e 28) \u0026 7);\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "If_Dec08PrintConfig",
+      "Start": 8067,
+      "End": 8171,
+      "BodyStart": 8109,
+      "Original": "void If_Dec08PrintConfig( unsigned * pZ )\n{\n    while ( *pZ )\n        If_Dec08PrintConfigOne( *pZ++ );\n}",
+      "Draft": "func If_Dec08PrintConfig(pZ *uint32) {\n    for  *pZ  {\n        If_Dec08PrintConfigOne( *pZ++ );\n    }\n}"
+    },
+    {
+      "Name": "If_Dec08ComposeLut4",
+      "Start": 8172,
+      "End": 8792,
+      "BodyStart": 8254,
+      "Original": "static inline void If_Dec08ComposeLut4( int t, word ** pF, word * pR, int nVars )\n{\n    word pC[16];\n    int m, w, v, nWords;\n    assert( nVars \u003c= 10 );\n    nWords = If_Dec08WordNum( nVars );\n    for ( w = 0; w \u003c nWords; w++ )\n        pR[w] = 0;\n    for ( m = 0; m \u003c 16; m++ )\n    {\n        if ( !((t \u003e\u003e m) \u0026 1) )\n            continue;\n        for ( w = 0; w \u003c nWords; w++ )\n            pC[w] = ~(word)0;\n        for ( v = 0; v \u003c 4; v++ )\n            for ( w = 0; w \u003c nWords; w++ )\n                pC[w] \u0026= ((m \u003e\u003e v) \u0026 1) ? pF[v][w] : ~pF[v][w];\n        for ( w = 0; w \u003c nWords; w++ )\n            pR[w] |= pC[w];\n    }\n}",
+      "Draft": "func If_Dec08ComposeLut4(t int32, pF **word, pR *word, nVars int32) {\n    var pC [16]word;\n    var m, w, v, nWords int32;\n    assert(nVars \u003c= 10, \"nVars \u003c= 10\");\n    nWords = If_Dec08WordNum( nVars );\n    for  w = 0; w \u003c nWords; w++  {\n        pR[w] = 0;\n    }\n    for  m = 0; m \u003c 16; m++  {\n        if !((t \u003e\u003e m) \u0026 1) {\n            continue; }\n        for  w = 0; w \u003c nWords; w++  {\n            pC[w] = ~(word)0;\n        }\n        for  v = 0; v \u003c 4; v++  {\n            for  w = 0; w \u003c nWords; w++  {\n                pC[w] \u0026= ((m \u003e\u003e v) \u0026 1) ? pF[v][w] : ~pF[v][w];\n            }\n        }\n        for  w = 0; w \u003c nWords; w++  {\n            pR[w] |= pC[w];\n        }\n    }\n}"
+    },
+    {
+      "Name": "If_Dec08Verify",
+      "Start": 8793,
+      "End": 9640,
+      "BodyStart": 8852,
+      "Original": "void If_Dec08Verify( word * pF, int nVars, unsigned * pZ )\n{\n    word pN[16][16], * pG[4];\n    int i, w, v, k, nWords;\n    unsigned z;\n    nWords = If_Dec08WordNum( nVars );\n    for ( k = 0; k \u003c nVars; k++ )\n        for ( w = 0; w \u003c nWords; w++ )\n            pN[k][w] = Truth10[k][w];\n    for ( i = 0; (z = pZ[i]); i++, k++ )\n    {\n        for ( v = 0; v \u003c 4; v++ )\n            pG[v] = pN[ (z \u003e\u003e (16+(v\u003c\u003c2))) \u0026 7 ];\n        If_Dec08ComposeLut4( (int)(z \u0026 0xffff), pG, pN[k], nVars );\n    }\n    k--;\n    for ( w = 0; w \u003c nWords; w++ )\n        if ( pN[k][w] != pF[w] )\n        {\n            If_Dec08PrintConfig( pZ );\n            Kit_DsdPrintFromTruth( (unsigned*)pF, nVars ); printf( \"\\n\" );\n            Kit_DsdPrintFromTruth( (unsigned*)pN[k], nVars ); printf( \"\\n\" );\n            printf( \"Verification failed!\\n\" );\n            break;\n        }\n}",
+      "Draft": "func If_Dec08Verify(pF *word, nVars int32, pZ *uint32) {\n    var pN [16][16]word;\n    var pG [4]*word;\n    var i, w, v, k, nWords int32;\n    var z uint32;\n    nWords = If_Dec08WordNum( nVars );\n    for  k = 0; k \u003c nVars; k++  {\n        for  w = 0; w \u003c nWords; w++  {\n            pN[k][w] = Truth10[k][w];\n        }\n    }\n    for  i = 0; (z = pZ[i]); i, k = i+1, k+1  {\n        for  v = 0; v \u003c 4; v++  {\n            pG[v] = pN[ (z \u003e\u003e (16+(v\u003c\u003c2))) \u0026 7 ];\n        }\n        If_Dec08ComposeLut4( int32((z \u0026 0xffff)), pG, pN[k], nVars );\n    }\n    k--;\n    for  w = 0; w \u003c nWords; w++  {\n        if pN[k][w] != pF[w] {\n            If_Dec08PrintConfig( pZ );\n            Kit_DsdPrintFromTruth( (unsigned*)pF, nVars ); fmt.Printf(\"\\n\");\n            Kit_DsdPrintFromTruth( (unsigned*)pN[k], nVars ); fmt.Printf(\"\\n\");\n            fmt.Printf(\"Verification failed!\\n\");\n            break;\n        }\n    }\n}"
+    },
+    {
+      "Name": "If_Dec08CofCount2",
+      "Start": 9683,
+      "End": 10280,
+      "BodyStart": 9743,
+      "Original": "static inline int If_Dec08CofCount2( word * pF, int nVars )\n{\n    int nShift = (1 \u003c\u003c (nVars - 3));\n    word Mask  = (((word)1) \u003c\u003c nShift) - 1;\n    word iCof0 = pF[0] \u0026 Mask;\n    word iCof1 = iCof0, iCof;\n    int i;\n    assert( nVars \u003e= 6 \u0026\u0026 nVars \u003c= 8 );\n//    if ( nVars == 10 )\n//        Mask = ~(word)0;\n    for ( i = 1; i \u003c 8; i++ )\n    {\n        iCof = (pF[(i * nShift) / 64] \u003e\u003e ((i * nShift) \u0026 63)) \u0026 Mask;\n        if ( iCof == iCof0 )\n            continue;\n        if ( iCof1 == iCof0 )\n            iCof1 = iCof;\n        else if ( iCof != iCof1 )\n            return 3;\n    }\n    return 2;\n}",
+      "Draft": "func If_Dec08CofCount2(pF *word, nVars int32) int32 {\n    var nShift int32  = (1 \u003c\u003c (nVars - 3));\n    var Mask word   = (((word)1) \u003c\u003c nShift) - 1;\n    var iCof0 word  = pF[0] \u0026 Mask;\n    var iCof1 word = iCof0;\n    var iCof word;\n    var i int32;\n    assert(nVars \u003e= 6 \u0026\u0026 nVars \u003c= 8, \"nVars \u003e= 6 \u0026\u0026 nVars \u003c= 8\");\n//    if ( nVars == 10 )\n//        Mask = ~(word)0;\n    for  i = 1; i \u003c 8; i++  {\n        iCof = (pF[(i * nShift) / 64] \u003e\u003e ((i * nShift) \u0026 63)) \u0026 Mask;\n        if iCof == iCof0 {\n            continue; }\n        if iCof1 == iCof0 {\n            iCof1 = iCof;\n        } else if iCof != iCof1 {\n            return 3; }\n    }\n    return 2;\n}"
+    },
+    {
+      "Name": "If_Dec08CofCount",
+      "Start": 10281,
+      "End": 10844,
+      "BodyStart": 10340,
+      "Original": "static inline int If_Dec08CofCount( word * pF, int nVars )\n{\n    int nShift = (1 \u003c\u003c (nVars - 3));\n    word Mask  = (((word)1) \u003c\u003c nShift) - 1;\n    word iCofs[16], iCof;\n    int i, c, nCofs = 1;\n//    if ( nVars == 10 )\n//        Mask = ~(word)0;\n    iCofs[0] = pF[0] \u0026 Mask;\n    for ( i = 1; i \u003c 8; i++ )\n    {\n        iCof = (pF[(i * nShift) / 64] \u003e\u003e ((i * nShift) \u0026 63)) \u0026 Mask;\n        for ( c = 0; c \u003c nCofs; c++ )\n            if ( iCof == iCofs[c] )\n                break;\n        if ( c == nCofs )\n            iCofs[nCofs++] = iCof;\n    }\n    return nCofs;\n}",
+      "Draft": "func If_Dec08CofCount(pF *word, nVars int32) int32 {\n    var nShift int32  = (1 \u003c\u003c (nVars - 3));\n    var Mask word   = (((word)1) \u003c\u003c nShift) - 1;\n    var iCofs [16]word;\n    var iCof word;\n    var i int32;\n    var c int32;\n    var nCofs int32 = 1;\n//    if ( nVars == 10 )\n//        Mask = ~(word)0;\n    iCofs[0] = pF[0] \u0026 Mask;\n    for  i = 1; i \u003c 8; i++  {\n        iCof = (pF[(i * nShift) / 64] \u003e\u003e ((i * nShift) \u0026 63)) \u0026 Mask;\n        for  c = 0; c \u003c nCofs; c++  {\n            if iCof == iCofs[c] {\n                break; }\n        }\n        if c == nCofs {\n            iCofs[nCofs++] = iCof; }\n    }\n    return nCofs;\n}"
+    },
+    {
+      "Name": "If_Dec08Copy",
+      "Start": 10891,
+      "End": 11071,
+      "BodyStart": 10961,
+      "Original": "static inline void If_Dec08Copy( word * pOut, word * pIn, int nVars )\n{\n    int w, nWords = If_Dec08WordNum( nVars );\n    for ( w = 0; w \u003c nWords; w++ )\n        pOut[w] = pIn[w];\n}",
+      "Draft": "func If_Dec08Copy(pOut *word, pIn *word, nVars int32) {\n    var w int32;\n    var nWords int32 = If_Dec08WordNum( nVars );\n    for  w = 0; w \u003c nWords; w++  {\n        pOut[w] = pIn[w];\n    }\n}"
+    },
+    {
+      "Name": "If_Dec08SwapAdjacent",
+      "Start": 11072,
+      "End": 12359,
+      "BodyStart": 11160,
+      "Original": "static inline void If_Dec08SwapAdjacent( word * pOut, word * pIn, int iVar, int nVars )\n{\n    int i, k, nWords = If_Dec08WordNum( nVars );\n    assert( iVar \u003c nVars - 1 );\n    if ( iVar \u003c 5 )\n    {\n        int Shift = (1 \u003c\u003c iVar);\n        for ( i = 0; i \u003c nWords; i++ )\n            pOut[i] = (pIn[i] \u0026 PMasks[iVar][0]) | ((pIn[i] \u0026 PMasks[iVar][1]) \u003c\u003c Shift) | ((pIn[i] \u0026 PMasks[iVar][2]) \u003e\u003e Shift);\n    }\n    else if ( iVar \u003e 5 )\n    {\n        int Step = (1 \u003c\u003c (iVar - 6));\n        for ( k = 0; k \u003c nWords; k += 4*Step )\n        {\n            for ( i = 0; i \u003c Step; i++ )\n                pOut[i] = pIn[i];\n            for ( i = 0; i \u003c Step; i++ )\n                pOut[Step+i] = pIn[2*Step+i];\n            for ( i = 0; i \u003c Step; i++ )\n                pOut[2*Step+i] = pIn[Step+i];\n            for ( i = 0; i \u003c Step; i++ )\n                pOut[3*Step+i] = pIn[3*Step+i];\n            pIn  += 4*Step;\n            pOut += 4*Step;\n        }\n    }\n    else // if ( iVar == 5 )\n    {\n        for ( i = 0; i \u003c nWords; i += 2 )\n        {\n            pOut[i]   = (pIn[i]   \u0026 ABC_CONST(0x00000000FFFFFFFF)) | ((pIn[i+1] \u0026 ABC_CONST(0x00000000FFFFFFFF)) \u003c\u003c 32);\n            pOut[i+1] = (pIn[i+1] \u0026 ABC_CONST(0xFFFFFFFF00000000)) | ((pIn[i]   \u0026 ABC_CONST(0xFFFFFFFF00000000)) \u003e\u003e 32);\n        }\n    }\n}",
+      "Draft": "func If_Dec08SwapAdjacent(pOut *word, pIn *word, iVar int32, nVars int32) {\n    var i int32;\n    var k int32;\n    var nWords int32 = If_Dec08WordNum( nVars );\n    assert(iVar \u003c nVars - 1, \"iVar \u003c nVars - 1\");\n    if iVar \u003c 5 {\n        var Shift int32  = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            pOut[i] = (pIn[i] \u0026 PMasks[iVar][0]) | ((pIn[i] \u0026 PMasks[iVar][1]) \u003c\u003c Shift) | ((pIn[i] \u0026 PMasks[iVar][2]) \u003e\u003e Shift);\n        }\n    \n    } else if iVar \u003e 5 {\n        var Step int32  = (1 \u003c\u003c (iVar - 6));\n        for  k = 0; k \u003c nWords; k += 4*Step  {\n            for  i = 0; i \u003c Step; i++  {\n                pOut[i] = pIn[i];\n            }\n            for  i = 0; i \u003c Step; i++  {\n                pOut[Step+i] = pIn[2*Step+i];\n            }\n            for  i = 0; i \u003c Step; i++  {\n                pOut[2*Step+i] = pIn[Step+i];\n            }\n            for  i = 0; i \u003c Step; i++  {\n                pOut[3*Step+i] = pIn[3*Step+i];\n            }\n            pIn  += 4*Step;\n            pOut += 4*Step;\n        }\n    \n    } else { // if ( iVar == 5 )\n    \n        for  i = 0; i \u003c nWords; i += 2  {\n            pOut[i]   = (pIn[i]   \u0026 ABC_CONST(0x00000000FFFFFFFF)) | ((pIn[i+1] \u0026 ABC_CONST(0x00000000FFFFFFFF)) \u003c\u003c 32);\n            pOut[i+1] = (pIn[i+1] \u0026 ABC_CONST(0xFFFFFFFF00000000)) | ((pIn[i]   \u0026 ABC_CONST(0xFFFFFFFF00000000)) \u003e\u003e 32);\n        }\n    }\n}"
+    },
+    {
+      "Name": "If_Dec08MoveTo",
+      "Start": 12360,
+      "End": 13115,
+      "BodyStart": 12462,
+      "Original": "static inline void If_Dec08MoveTo( word * pF, int nVars, int v, int p, int Pla2Var[], int Var2Pla[] )\n{\n    word pG[16], * pIn = pF, * pOut = pG, * pTemp;\n    int iPlace0, iPlace1, Count = 0;\n    assert( Var2Pla[v] \u003c= p );\n    while ( Var2Pla[v] != p )\n    {\n        iPlace0 = Var2Pla[v];\n        iPlace1 = Var2Pla[v]+1;\n        If_Dec08SwapAdjacent( pOut, pIn, iPlace0, nVars );\n        pTemp = pIn; pIn = pOut, pOut = pTemp;\n        Var2Pla[Pla2Var[iPlace0]]++;\n        Var2Pla[Pla2Var[iPlace1]]--;\n        Pla2Var[iPlace0] ^= Pla2Var[iPlace1];\n        Pla2Var[iPlace1] ^= Pla2Var[iPlace0];\n        Pla2Var[iPlace0] ^= Pla2Var[iPlace1];\n        Count++;\n    }\n    if ( Count \u0026 1 )\n        If_Dec08Copy( pF, pIn, nVars );\n    assert( Pla2Var[p] == v );\n}",
+      "Draft": "func If_Dec08MoveTo(pF *word, nVars int32, v int32, p int32, Pla2Var []int32, Var2Pla []int32) {\n    var pG [16]word;\n    var pIn *word = pF;\n    var pOut *word = pG;\n    var pTemp *word;\n    var iPlace0, iPlace1, Count int32;\n    assert(Var2Pla[v] \u003c= p, \"Var2Pla[v] \u003c= p\");\n    for  Var2Pla[v] != p  {\n        iPlace0 = Var2Pla[v];\n        iPlace1 = Var2Pla[v]+1;\n        If_Dec08SwapAdjacent( pOut, pIn, iPlace0, nVars );\n        pTemp = pIn; pIn = pOut;\npOut = pTemp;\n        Var2Pla[Pla2Var[iPlace0]]++;\n        Var2Pla[Pla2Var[iPlace1]]--;\n        Pla2Var[iPlace0] ^= Pla2Var[iPlace1];\n        Pla2Var[iPlace1] ^= Pla2Var[iPlace0];\n        Pla2Var[iPlace0] ^= Pla2Var[iPlace1];\n        Count++;\n    }\n    if Count \u0026 1 {\n        If_Dec08Copy( pF, pIn, nVars ); }\n    assert(Pla2Var[p] == v, \"Pla2Var[p] == v\");\n}"
+    },
+    {
+      "Name": "If_DecSuppIsMinBase",
+      "Start": 14288,
+      "End": 14376,
+      "BodyStart": 14338,
+      "Original": "static inline int If_DecSuppIsMinBase( int Supp )\n{\n    return (Supp \u0026 (Supp+1)) == 0;\n}",
+      "Draft": "func If_DecSuppIsMinBase(Supp int32) int32 {\n    return (Supp \u0026 (Supp+1)) == 0;\n}"
+    },
+    {
+      "Name": "If_Dec08HasVar",
+      "Start": 14377,
+      "End": 15033,
+      "BodyStart": 14443,
+      "Original": "static inline int If_Dec08HasVar( word * t, int nVars, int iVar )\n{\n    int nWords = If_Dec08WordNum( nVars );\n    assert( iVar \u003c nVars );\n    if ( iVar \u003c 6 )\n    {\n        int i, Shift = (1 \u003c\u003c iVar);\n        for ( i = 0; i \u003c nWords; i++ )\n            if ( (t[i] \u0026 ~Truth6[iVar]) != ((t[i] \u0026 Truth6[iVar]) \u003e\u003e Shift) )\n                return 1;\n        return 0;\n    }\n    else\n    {\n        int i, k, Step = (1 \u003c\u003c (iVar - 6));\n        for ( k = 0; k \u003c nWords; k += 2*Step )\n        {\n            for ( i = 0; i \u003c Step; i++ )\n                if ( t[i] != t[Step+i] )\n                    return 1;\n            t += 2*Step;\n        }\n        return 0;\n    }\n}",
+      "Draft": "func If_Dec08HasVar(t *word, nVars int32, iVar int32) int32 {\n    var nWords int32  = If_Dec08WordNum( nVars );\n    assert(iVar \u003c nVars, \"iVar \u003c nVars\");\n    if iVar \u003c 6 {\n        var i int32;\n        var Shift int32 = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            if (t[i] \u0026 ~Truth6[iVar]) != ((t[i] \u0026 Truth6[iVar]) \u003e\u003e Shift) {\n                return 1; }\n        }\n        return 0;\n    \n    } else {\n        var i int32;\n        var k int32;\n        var Step int32 = (1 \u003c\u003c (iVar - 6));\n        for  k = 0; k \u003c nWords; k += 2*Step  {\n            for  i = 0; i \u003c Step; i++  {\n                if t[i] != t[Step+i] {\n                    return 1; }\n            }\n            t += 2*Step;\n        }\n        return 0;\n    }\n}"
+    },
+    {
+      "Name": "If_Dec08Support",
+      "Start": 15034,
+      "End": 15241,
+      "BodyStart": 15091,
+      "Original": "static inline int If_Dec08Support( word * t, int nVars )\n{\n    int v, Supp = 0;\n    for ( v = 0; v \u003c nVars; v++ )\n        if ( If_Dec08HasVar( t, nVars, v ) )\n            Supp |= (1 \u003c\u003c v);\n    return Supp;\n}",
+      "Draft": "func If_Dec08Support(t *word, nVars int32) int32 {\n    var v, Supp int32;\n    for  v = 0; v \u003c nVars; v++  {\n        if If_Dec08HasVar( t, nVars, v ) != 0 {\n            Supp |= (1 \u003c\u003c v); }\n    }\n    return Supp;\n}"
+    },
+    {
+      "Name": "If_Dec08Cofactors",
+      "Start": 15253,
+      "End": 16134,
+      "BodyStart": 15338,
+      "Original": "void If_Dec08Cofactors( word * pF, int nVars, int iVar, word * pCof0, word * pCof1 )\n{\n    int nWords = If_Dec08WordNum( nVars );\n    assert( iVar \u003c nVars );\n    if ( iVar \u003c 6 )\n    {\n        int i, Shift = (1 \u003c\u003c iVar);\n        for ( i = 0; i \u003c nWords; i++ )\n        {\n            pCof0[i] = (pF[i] \u0026 ~Truth6[iVar]) | ((pF[i] \u0026 ~Truth6[iVar]) \u003c\u003c Shift);\n            pCof1[i] = (pF[i] \u0026  Truth6[iVar]) | ((pF[i] \u0026  Truth6[iVar]) \u003e\u003e Shift);\n        }\n        return;\n    }\n    else\n    {\n        int i, k, Step = (1 \u003c\u003c (iVar - 6));\n        for ( k = 0; k \u003c nWords; k += 2*Step )\n        {\n            for ( i = 0; i \u003c Step; i++ )\n            {\n                pCof0[i] = pCof0[Step+i] = pF[i];\n                pCof1[i] = pCof1[Step+i] = pF[Step+i];\n            }\n            pF    += 2*Step;\n            pCof0 += 2*Step;\n            pCof1 += 2*Step;\n        }\n        return;\n    }\n}",
+      "Draft": "func If_Dec08Cofactors(pF *word, nVars int32, iVar int32, pCof0 *word, pCof1 *word) {\n    var nWords int32  = If_Dec08WordNum( nVars );\n    assert(iVar \u003c nVars, \"iVar \u003c nVars\");\n    if iVar \u003c 6 {\n        var i int32;\n        var Shift int32 = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            pCof0[i] = (pF[i] \u0026 ~Truth6[iVar]) | ((pF[i] \u0026 ~Truth6[iVar]) \u003c\u003c Shift);\n            pCof1[i] = (pF[i] \u0026  Truth6[iVar]) | ((pF[i] \u0026  Truth6[iVar]) \u003e\u003e Shift);\n        }\n        return;\n    \n    } else {\n        var i int32;\n        var k int32;\n        var Step int32 = (1 \u003c\u003c (iVar - 6));\n        for  k = 0; k \u003c nWords; k += 2*Step  {\n            for  i = 0; i \u003c Step; i++  {\n                pCof0[i] = pCof0[Step+i] = pF[i];\n                pCof1[i] = pCof1[Step+i] = pF[Step+i];\n            }\n            pF    += 2*Step;\n            pCof0 += 2*Step;\n            pCof1 += 2*Step;\n        }\n        return;\n    }\n}"
+    },
+    {
+      "Name": "If_Dec08Count16",
+      "Start": 16135,
+      "End": 16285,
+      "BodyStart": 16182,
+      "Original": "static inline int If_Dec08Count16( int Num16 )\n{\n    assert( Num16 \u003c (1\u003c\u003c16)-1 );\n    return BitCount8[Num16 \u0026 255] + BitCount8[(Num16 \u003e\u003e 8) \u0026 255];\n}",
+      "Draft": "func If_Dec08Count16(Num16 int32) int32 {\n    assert(Num16 \u003c (1\u003c\u003c16)-1, \"Num16 \u003c (1\u003c\u003c16)-1\");\n    return BitCount8[Num16 \u0026 255] + BitCount8[(Num16 \u003e\u003e 8) \u0026 255];\n}"
+    },
+    {
+      "Name": "If_DecVerifyPerm",
+      "Start": 16286,
+      "End": 16461,
+      "BodyStart": 16369,
+      "Original": "static inline void If_DecVerifyPerm( int Pla2Var[10], int Var2Pla[10], int nVars )\n{\n    int i;\n    for ( i = 0; i \u003c nVars; i++ )\n        assert( Pla2Var[Var2Pla[i]] == i );\n}",
+      "Draft": "func If_DecVerifyPerm(Pla2Var []int32, Var2Pla []int32, nVars int32) {\n    var i int32;\n    for  i = 0; i \u003c nVars; i++  {\n        assert(Pla2Var[Var2Pla[i]] == i, \"Pla2Var[Var2Pla[i]] == i\");\n    }\n}"
+    },
+    {
+      "Name": "If_Dec08Perform",
+      "Start": 16463,
+      "End": 18999,
+      "BodyStart": 16520,
+      "Original": "int If_Dec08Perform( word * pF, int nVars, int fDerive )\n{ \n//    static int Cnt = 0;\n    word pCof0[16], pCof1[16];\n    int Pla2Var[10], Var2Pla[10], Count[210], Masks[210];\n    int i, i0,i1,i2, v, x;\n    assert( nVars \u003e= 6 \u0026\u0026 nVars \u003c= 8 );\n    // start arrays\n    for ( i = 0; i \u003c nVars; i++ )\n    {\n        assert( If_Dec08HasVar( pF, nVars, i ) );\n        Pla2Var[i] = Var2Pla[i] = i;\n    }\n/*\n    Cnt++;\n//if ( Cnt == 108 )\n{\nprintf( \"%d\\n\", Cnt );\n//Extra_PrintHex( stdout, (unsigned *)pF, nVars );\n//printf( \"\\n\" ); \nKit_DsdPrintFromTruth( (unsigned *)pF, nVars );\nprintf( \"\\n\" );\nprintf( \"\\n\" );\n}\n*/\n    // generate permutations\n    v = 0;\n    for ( i0 = 0;    i0 \u003c nVars; i0++ )\n    for ( i1 = i0+1; i1 \u003c nVars; i1++ )\n    for ( i2 = i1+1; i2 \u003c nVars; i2++, v++ )\n    {\n        If_Dec08MoveTo( pF, nVars, i0, nVars-1, Pla2Var, Var2Pla );\n        If_Dec08MoveTo( pF, nVars, i1, nVars-2, Pla2Var, Var2Pla );\n        If_Dec08MoveTo( pF, nVars, i2, nVars-3, Pla2Var, Var2Pla );\n        If_DecVerifyPerm( Pla2Var, Var2Pla, nVars );\n        Count[v] = If_Dec08CofCount( pF, nVars );\n        Masks[v] = (1 \u003c\u003c i0) | (1 \u003c\u003c i1) | (1 \u003c\u003c i2);\n        assert( Count[v] \u003e 1 );\n//printf( \"%d \", Count[v] );\n        if ( Count[v] == 2 || Count[v] \u003e 5 )\n            continue;\n        for ( x = 0; x \u003c 4; x++ )\n        {\n            If_Dec08Cofactors( pF, nVars, nVars-1-x, pCof0, pCof1 );\n            if ( If_Dec08CofCount2(pCof0, nVars) \u003c= 2 \u0026\u0026 If_Dec08CofCount2(pCof1, nVars) \u003c= 2 )\n            {\n                Count[v] = -Count[v];\n                break;\n            }\n        }\n    }\n//printf( \"\\n\" );\n    assert( v \u003c= 210 );\n    // check if there are compatible bound sets\n    for ( i0 = 0; i0 \u003c v; i0++ )\n    for ( i1 = i0+1; i1 \u003c v; i1++ )\n    {\n        if ( If_Dec08Count16(Masks[i0] \u0026 Masks[i1]) \u003e 8 - nVars )\n            continue;\n        if ( nVars == 8 )\n        {\n            if ( Count[i0] == 2 \u0026\u0026 Count[i1] == 2 )\n                return 1;\n        }\n        else if ( nVars == 7 )\n        {\n            if ( (Count[i0] == 2 \u0026\u0026 Count[i1] == 2) || \n                 (Count[i0] == 2 \u0026\u0026 Count[i1] \u003c  0) || \n                 (Count[i0] \u003c  0 \u0026\u0026 Count[i1] == 2) )\n                return 1;\n        }\n        else\n        {\n            if ( (Count[i0] == 2 \u0026\u0026 Count[i1] == 2) || \n                 (Count[i0] == 2 \u0026\u0026 Count[i1] \u003c  0) || \n                 (Count[i0] \u003c  0 \u0026\u0026 Count[i1] == 2) || \n                 (Count[i0] \u003c  0 \u0026\u0026 Count[i1] \u003c  0) )\n                return 1;\n        }\n    }\n//    printf( \"not found\\n\" );\n    return 0;\n}",
+      "Draft": "func If_Dec08Perform(pF *word, nVars int32, fDerive int32) int32 { \n//    static int Cnt = 0;\n    var pCof0, pCof1 [16]word;\n    var Pla2Var [10]int32;\n    var Var2Pla [10]int32;\n    var Count [210]int32;\n    var Masks [210]int32;\n    var i, i0, i1, i2, v, x int32;\n    assert(nVars \u003e= 6 \u0026\u0026 nVars \u003c= 8, \"nVars \u003e= 6 \u0026\u0026 nVars \u003c= 8\");\n    // start arrays\n    for  i = 0; i \u003c nVars; i++  {\n        assert((If_Dec08HasVar( pF, nVars, i ) != 0), \"If_Dec08HasVar( pF, nVars, i )\");\n        Pla2Var[i] = Var2Pla[i] = i;\n    }\n/*\n    Cnt++;\n//if ( Cnt == 108 )\n{\nprintf( \"%d\\n\", Cnt );\n//Extra_PrintHex( stdout, (unsigned *)pF, nVars );\n//printf( \"\\n\" ); \nKit_DsdPrintFromTruth( (unsigned *)pF, nVars );\nprintf( \"\\n\" );\nprintf( \"\\n\" );\n}\n*/\n    // generate permutations\n    v = 0;\n    for  i0 = 0;    i0 \u003c nVars; i0++  {\n    for  i1 = i0+1; i1 \u003c nVars; i1++  {\n    for  i2 = i1+1; i2 \u003c nVars; i2, v = i2+1, v+1  {\n        If_Dec08MoveTo( pF, nVars, i0, nVars-1, Pla2Var, Var2Pla );\n        If_Dec08MoveTo( pF, nVars, i1, nVars-2, Pla2Var, Var2Pla );\n        If_Dec08MoveTo( pF, nVars, i2, nVars-3, Pla2Var, Var2Pla );\n        If_DecVerifyPerm( Pla2Var, Var2Pla, nVars );\n        Count[v] = If_Dec08CofCount( pF, nVars );\n        Masks[v] = (1 \u003c\u003c i0) | (1 \u003c\u003c i1) | (1 \u003c\u003c i2);\n        assert(Count[v] \u003e 1, \"Count[v] \u003e 1\");\n//printf( \"%d \", Count[v] );\n        if Count[v] == 2 || Count[v] \u003e 5 {\n            continue; }\n        for  x = 0; x \u003c 4; x++  {\n            If_Dec08Cofactors( pF, nVars, nVars-1-x, pCof0, pCof1 );\n            if If_Dec08CofCount2(pCof0, nVars) \u003c= 2 \u0026\u0026 If_Dec08CofCount2(pCof1, nVars) \u003c= 2 {\n                Count[v] = -Count[v];\n                break;\n            }\n        }\n    }\n    }\n    }\n//printf( \"\\n\" );\n    assert(v \u003c= 210, \"v \u003c= 210\");\n    // check if there are compatible bound sets\n    for  i0 = 0; i0 \u003c v; i0++  {\n    for  i1 = i0+1; i1 \u003c v; i1++  {\n        if If_Dec08Count16(Masks[i0] \u0026 Masks[i1]) \u003e 8 - nVars {\n            continue; }\n        if nVars == 8 {\n            if Count[i0] == 2 \u0026\u0026 Count[i1] == 2 {\n                return 1; }\n        \n        } else if nVars == 7 {\n            if (Count[i0] == 2 \u0026\u0026 Count[i1] == 2) || \n                 (Count[i0] == 2 \u0026\u0026 Count[i1] \u003c  0) || \n                 (Count[i0] \u003c  0 \u0026\u0026 Count[i1] == 2) {\n                return 1; }\n        \n        } else {\n            if (Count[i0] == 2 \u0026\u0026 Count[i1] == 2) || \n                 (Count[i0] == 2 \u0026\u0026 Count[i1] \u003c  0) || \n                 (Count[i0] \u003c  0 \u0026\u0026 Count[i1] == 2) || \n                 (Count[i0] \u003c  0 \u0026\u0026 Count[i1] \u003c  0) {\n                return 1; }\n        }\n    }\n    }\n//    printf( \"not found\\n\" );\n    return 0;\n}"
+    },
+    {
+      "Name": "If_CutPerformCheck08",
+      "Start": 19262,
+      "End": 19794,
+      "BodyStart": 19359,
+      "Original": "int If_CutPerformCheck08( If_Man_t * p, unsigned * pTruth, int nVars, int nLeaves, char * pStr )\n{\n    int nSupp, fDerive = 0;\n    word pF[16];\n    if ( nLeaves \u003c= 5 )\n        return 1;\n    If_Dec08Copy( pF, (word *)pTruth, nVars );\n    nSupp = If_Dec08Support( pF, nLeaves );\n    if ( !nSupp || !If_DecSuppIsMinBase(nSupp) )\n        return 0;\n    if ( If_Dec08Perform( pF, nLeaves, fDerive ) )\n    {\n//        printf( \"1\" );\n        return 1;\n//        If_Dec08Verify( t, nLeaves, NULL );\n    }\n//    printf( \"0\" );\n    return 0;\n}",
+      "Draft": "func If_CutPerformCheck08(p *If_Man_t, pTruth *uint32, nVars int32, nLeaves int32, pStr string) int32 {\n    var nSupp, fDerive int32;\n    var pF [16]word;\n    if nLeaves \u003c= 5 {\n        return 1; }\n    If_Dec08Copy( pF, (word *)pTruth, nVars );\n    nSupp = If_Dec08Support( pF, nLeaves );\n    if !nSupp || !(If_DecSuppIsMinBase(nSupp) != 0) {\n        return 0; }\n    if If_Dec08Perform( pF, nLeaves, fDerive ) != 0 {\n//        printf( \"1\" );\n        return 1;\n//        If_Dec08Verify( t, nLeaves, NULL );\n    }\n//    printf( \"0\" );\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::pointer-cast::9444",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9444,
+      "End": 9455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::pointer-cast::9519",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9519,
+      "End": 9530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::pointer-cast::19470",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19470,
+      "End": 19478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08WordNum",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08WordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7578,
+      "End": 7672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08PrintConfigOne",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08PrintConfigOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7673,
+      "End": 8066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08PrintConfig",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08PrintConfig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8067,
+      "End": 8171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::ternary::If_Dec08ComposeLut4",
+      "Category": "ternary-review",
+      "Symbol": "If_Dec08ComposeLut4",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8172,
+      "End": 8792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08ComposeLut4",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08ComposeLut4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8172,
+      "End": 8792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08Verify",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08Verify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8793,
+      "End": 9640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08CofCount2",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08CofCount2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9683,
+      "End": 10280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08CofCount",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08CofCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10281,
+      "End": 10844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08Copy",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08Copy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10891,
+      "End": 11071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08SwapAdjacent",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08SwapAdjacent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11072,
+      "End": 12359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08MoveTo",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08MoveTo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12360,
+      "End": 13115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_DecSuppIsMinBase",
+      "Category": "semantic-review",
+      "Symbol": "If_DecSuppIsMinBase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14288,
+      "End": 14376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08HasVar",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08HasVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14377,
+      "End": 15033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08Support",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08Support",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15034,
+      "End": 15241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08Cofactors",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08Cofactors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15253,
+      "End": 16134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08Count16",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08Count16",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16135,
+      "End": 16285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_DecVerifyPerm",
+      "Category": "semantic-review",
+      "Symbol": "If_DecVerifyPerm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16286,
+      "End": 16461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_Dec08Perform",
+      "Category": "semantic-review",
+      "Symbol": "If_Dec08Perform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16463,
+      "End": 18999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::If_CutPerformCheck08",
+      "Category": "semantic-review",
+      "Symbol": "If_CutPerformCheck08",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19262,
+      "End": 19794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::1544",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1544,
+      "End": 1573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::1575",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1575,
+      "End": 1604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::1606",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1606,
+      "End": 1635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::1645",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1645,
+      "End": 1674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::1676",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1676,
+      "End": 1705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::1707",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1707,
+      "End": 1736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::1746",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1746,
+      "End": 1775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::1777",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1777,
+      "End": 1806
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::1808",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1808,
+      "End": 1837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::1847",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1847,
+      "End": 1876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::1878",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1878,
+      "End": 1907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::1909",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1909,
+      "End": 1938
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::1948",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1948,
+      "End": 1977
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::1979",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1979,
+      "End": 2008
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2010",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2010,
+      "End": 2039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2102",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2102,
+      "End": 2131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2137",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2137,
+      "End": 2166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2172",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2172,
+      "End": 2201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2207",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2207,
+      "End": 2236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2242",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2242,
+      "End": 2271
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2277",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2277,
+      "End": 2306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2347",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2347,
+      "End": 2376
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2377",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2377,
+      "End": 2406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2407",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2407,
+      "End": 2436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2437",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2437,
+      "End": 2466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2467",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2467,
+      "End": 2496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2497",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2497,
+      "End": 2526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2527",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2527,
+      "End": 2556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2557",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2557,
+      "End": 2586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2587",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2587,
+      "End": 2616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2617",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2617,
+      "End": 2646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2647",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2647,
+      "End": 2676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2677",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2677,
+      "End": 2706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2707",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2707,
+      "End": 2736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2737",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2737,
+      "End": 2766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2767",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2767,
+      "End": 2796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2797",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2797,
+      "End": 2826
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2834",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2834,
+      "End": 2863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2864",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2864,
+      "End": 2893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2894",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2894,
+      "End": 2923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2924",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2924,
+      "End": 2953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2954",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2954,
+      "End": 2983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::2984",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2984,
+      "End": 3013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3014",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3014,
+      "End": 3043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3044",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3044,
+      "End": 3073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3074",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3074,
+      "End": 3103
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3104",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3104,
+      "End": 3133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3134",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3134,
+      "End": 3163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3164",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3164,
+      "End": 3193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3194",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3194,
+      "End": 3223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3224",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3224,
+      "End": 3253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3254",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3254,
+      "End": 3283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3284",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3284,
+      "End": 3313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3321",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3321,
+      "End": 3350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3351",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3351,
+      "End": 3380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3381",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3381,
+      "End": 3410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3411",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3411,
+      "End": 3440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3441",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3441,
+      "End": 3470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3471",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3471,
+      "End": 3500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3501",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3501,
+      "End": 3530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3531",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3531,
+      "End": 3560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3561",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3561,
+      "End": 3590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3591",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3591,
+      "End": 3620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3621",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3621,
+      "End": 3650
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3651",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3651,
+      "End": 3680
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3681",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3681,
+      "End": 3710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3711",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3711,
+      "End": 3740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3741",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3741,
+      "End": 3770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3771",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3771,
+      "End": 3800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3808",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3808,
+      "End": 3837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3838",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3838,
+      "End": 3867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3868",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3868,
+      "End": 3897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3898",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3898,
+      "End": 3927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3928",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3928,
+      "End": 3957
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3958",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3958,
+      "End": 3987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::3988",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3988,
+      "End": 4017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4018",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4018,
+      "End": 4047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4048",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4048,
+      "End": 4077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4078",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4078,
+      "End": 4107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4108",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4108,
+      "End": 4137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4138",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4138,
+      "End": 4167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4168",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4168,
+      "End": 4197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4198",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4198,
+      "End": 4227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4228",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4228,
+      "End": 4257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4258",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4258,
+      "End": 4287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4295",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4295,
+      "End": 4324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4325",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4325,
+      "End": 4354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4355",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4355,
+      "End": 4384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4385",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4385,
+      "End": 4414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4415",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4415,
+      "End": 4444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4445",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4445,
+      "End": 4474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4475",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4475,
+      "End": 4504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4505",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4505,
+      "End": 4534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4535",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4535,
+      "End": 4564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4565",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4565,
+      "End": 4594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4595",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4595,
+      "End": 4624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4625",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4625,
+      "End": 4654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4655",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4655,
+      "End": 4684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4685",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4685,
+      "End": 4714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4715",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4715,
+      "End": 4744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4745",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4745,
+      "End": 4774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4782",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4782,
+      "End": 4811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4812",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4812,
+      "End": 4841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4842",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4842,
+      "End": 4871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4872",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4872,
+      "End": 4901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4902",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4902,
+      "End": 4931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4932",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4932,
+      "End": 4961
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4962",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4962,
+      "End": 4991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::4992",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4992,
+      "End": 5021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5022",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5022,
+      "End": 5051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5052",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5052,
+      "End": 5081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5082",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5082,
+      "End": 5111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5112",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5112,
+      "End": 5141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5142",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5142,
+      "End": 5171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5172",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5172,
+      "End": 5201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5202",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5202,
+      "End": 5231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5232",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5232,
+      "End": 5261
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5269",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5269,
+      "End": 5298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5299",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5299,
+      "End": 5328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5329",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5329,
+      "End": 5358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5359",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5359,
+      "End": 5388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5389",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5389,
+      "End": 5418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5419",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5419,
+      "End": 5448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5449",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5449,
+      "End": 5478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5479",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5479,
+      "End": 5508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5509",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5509,
+      "End": 5538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5539",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5539,
+      "End": 5568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5569",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5569,
+      "End": 5598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5599",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5599,
+      "End": 5628
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5629",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5629,
+      "End": 5658
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5659",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5659,
+      "End": 5688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5689",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5689,
+      "End": 5718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5719",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5719,
+      "End": 5748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5756",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5756,
+      "End": 5785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5786",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5786,
+      "End": 5815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5816",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5816,
+      "End": 5845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5846",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5846,
+      "End": 5875
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5876",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5876,
+      "End": 5905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5906",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5906,
+      "End": 5935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5936",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5936,
+      "End": 5965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5966",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5966,
+      "End": 5995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::5996",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5996,
+      "End": 6025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6026",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6026,
+      "End": 6055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6056",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6056,
+      "End": 6085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6086",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6086,
+      "End": 6115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6116",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6116,
+      "End": 6145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6146",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6146,
+      "End": 6175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6176",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6176,
+      "End": 6205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6206",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6206,
+      "End": 6235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6243",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6243,
+      "End": 6272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6273",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6273,
+      "End": 6302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6303",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6303,
+      "End": 6332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6333",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6333,
+      "End": 6362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6363",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6363,
+      "End": 6392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6393",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6393,
+      "End": 6422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6423",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6423,
+      "End": 6452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6453",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6453,
+      "End": 6482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6483",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6483,
+      "End": 6512
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6513",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6513,
+      "End": 6542
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6543",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6543,
+      "End": 6572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6573",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6573,
+      "End": 6602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6603",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6603,
+      "End": 6632
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6633",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6633,
+      "End": 6662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6663",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6663,
+      "End": 6692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6693",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6693,
+      "End": 6722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6730",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6730,
+      "End": 6759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6760",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6760,
+      "End": 6789
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6790",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6790,
+      "End": 6819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6820",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6820,
+      "End": 6849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6850",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6850,
+      "End": 6879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6880",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6880,
+      "End": 6909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6910",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6910,
+      "End": 6939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6940",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6940,
+      "End": 6969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::6970",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6970,
+      "End": 6999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::7000",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7000,
+      "End": 7029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::7030",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7030,
+      "End": 7059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::7060",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7060,
+      "End": 7089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::7090",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7090,
+      "End": 7119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::7120",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7120,
+      "End": 7149
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::7150",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7150,
+      "End": 7179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::7180",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7180,
+      "End": 7209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::12136",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12136,
+      "End": 12165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::12182",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12182,
+      "End": 12211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::12257",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12257,
+      "End": 12286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDec08.c::macro-inline::12303",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12303,
+      "End": 12332
+    }
+  ],
+  "Draft": "package if_\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [ifDec08.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [Performs additional check.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifDec08.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// the bit count for the first 256 integer numbers\nvar BitCount8 [256]int32 = [256]int32{\n    0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,\n    1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n    1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n    2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n    1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n    2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n    2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n    3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,4,5,5,6,5,6,6,7,5,6,6,7,6,7,7,8,\n};\n// variable swapping code\nvar PMasks [5][3]word = [5][3]word{\n    { ABC_CONST(0x9999999999999999), ABC_CONST(0x2222222222222222), ABC_CONST(0x4444444444444444) },\n    { ABC_CONST(0xC3C3C3C3C3C3C3C3), ABC_CONST(0x0C0C0C0C0C0C0C0C), ABC_CONST(0x3030303030303030) },\n    { ABC_CONST(0xF00FF00FF00FF00F), ABC_CONST(0x00F000F000F000F0), ABC_CONST(0x0F000F000F000F00) },\n    { ABC_CONST(0xFF0000FFFF0000FF), ABC_CONST(0x0000FF000000FF00), ABC_CONST(0x00FF000000FF0000) },\n    { ABC_CONST(0xFFFF00000000FFFF), ABC_CONST(0x00000000FFFF0000), ABC_CONST(0x0000FFFF00000000) },\n};\n// elementary truth tables\nvar Truth6 [6]word = [6]word{\n    ABC_CONST(0xAAAAAAAAAAAAAAAA),\n    ABC_CONST(0xCCCCCCCCCCCCCCCC),\n    ABC_CONST(0xF0F0F0F0F0F0F0F0),\n    ABC_CONST(0xFF00FF00FF00FF00),\n    ABC_CONST(0xFFFF0000FFFF0000),\n    ABC_CONST(0xFFFFFFFF00000000),\n};\nvar Truth10 [10][16]word = [10][16]word{\n    {ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA),ABC_CONST(0xAAAAAAAAAAAAAAAA)},\n    {ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC),ABC_CONST(0xCCCCCCCCCCCCCCCC)},\n    {ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0),ABC_CONST(0xF0F0F0F0F0F0F0F0)},\n    {ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00),ABC_CONST(0xFF00FF00FF00FF00)},\n    {ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000),ABC_CONST(0xFFFF0000FFFF0000)},\n    {ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000),ABC_CONST(0xFFFFFFFF00000000)},\n    {ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF)},\n    {ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF)},\n    {ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF)},\n    {ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0x0000000000000000),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF),ABC_CONST(0xFFFFFFFFFFFFFFFF)},\n};\n\n// extern void Kit_DsdPrintFromTruth( unsigned * pTruth, int nVars );\n\n// extern void Extra_PrintBinary( FILE * pFile, unsigned Sign[], int nBits );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\nfunc If_Dec08WordNum(nVars int32) int32 {\n    if nVars \u003c= 6 {\n        return 1;\n    } else {\n        return 1 \u003c\u003c (nVars-6);\n    }\n}\nfunc If_Dec08PrintConfigOne(z uint32) {\n    var t uint32;\n    t = (z \u0026 0xffff) | ((z \u0026 0xffff) \u003c\u003c 16);\n    Extra_PrintBinary( os.Stdout, \u0026t, 16 ); \n    fmt.Printf(\" \");\n    Kit_DsdPrintFromTruth( \u0026t, 4 );\n    fmt.Printf(\" \");\n    fmt.Printf(\" %d\", (z \u003e\u003e 16) \u0026 7);\n    fmt.Printf(\" %d\", (z \u003e\u003e 20) \u0026 7);\n    fmt.Printf(\" %d\", (z \u003e\u003e 24) \u0026 7);\n    fmt.Printf(\" %d\", (z \u003e\u003e 28) \u0026 7);\n    fmt.Printf(\"\\n\");\n}\nfunc If_Dec08PrintConfig(pZ *uint32) {\n    for  *pZ  {\n        If_Dec08PrintConfigOne( *pZ++ );\n    }\n}\nfunc If_Dec08ComposeLut4(t int32, pF **word, pR *word, nVars int32) {\n    var pC [16]word;\n    var m, w, v, nWords int32;\n    assert(nVars \u003c= 10, \"nVars \u003c= 10\");\n    nWords = If_Dec08WordNum( nVars );\n    for  w = 0; w \u003c nWords; w++  {\n        pR[w] = 0;\n    }\n    for  m = 0; m \u003c 16; m++  {\n        if !((t \u003e\u003e m) \u0026 1) {\n            continue; }\n        for  w = 0; w \u003c nWords; w++  {\n            pC[w] = ~(word)0;\n        }\n        for  v = 0; v \u003c 4; v++  {\n            for  w = 0; w \u003c nWords; w++  {\n                pC[w] \u0026= ((m \u003e\u003e v) \u0026 1) ? pF[v][w] : ~pF[v][w];\n            }\n        }\n        for  w = 0; w \u003c nWords; w++  {\n            pR[w] |= pC[w];\n        }\n    }\n}\nfunc If_Dec08Verify(pF *word, nVars int32, pZ *uint32) {\n    var pN [16][16]word;\n    var pG [4]*word;\n    var i, w, v, k, nWords int32;\n    var z uint32;\n    nWords = If_Dec08WordNum( nVars );\n    for  k = 0; k \u003c nVars; k++  {\n        for  w = 0; w \u003c nWords; w++  {\n            pN[k][w] = Truth10[k][w];\n        }\n    }\n    for  i = 0; (z = pZ[i]); i, k = i+1, k+1  {\n        for  v = 0; v \u003c 4; v++  {\n            pG[v] = pN[ (z \u003e\u003e (16+(v\u003c\u003c2))) \u0026 7 ];\n        }\n        If_Dec08ComposeLut4( int32((z \u0026 0xffff)), pG, pN[k], nVars );\n    }\n    k--;\n    for  w = 0; w \u003c nWords; w++  {\n        if pN[k][w] != pF[w] {\n            If_Dec08PrintConfig( pZ );\n            Kit_DsdPrintFromTruth( (unsigned*)pF, nVars ); fmt.Printf(\"\\n\");\n            Kit_DsdPrintFromTruth( (unsigned*)pN[k], nVars ); fmt.Printf(\"\\n\");\n            fmt.Printf(\"Verification failed!\\n\");\n            break;\n        }\n    }\n}\n\n\n// count the number of unique cofactors\nfunc If_Dec08CofCount2(pF *word, nVars int32) int32 {\n    var nShift int32  = (1 \u003c\u003c (nVars - 3));\n    var Mask word   = (((word)1) \u003c\u003c nShift) - 1;\n    var iCof0 word  = pF[0] \u0026 Mask;\n    var iCof1 word = iCof0;\n    var iCof word;\n    var i int32;\n    assert(nVars \u003e= 6 \u0026\u0026 nVars \u003c= 8, \"nVars \u003e= 6 \u0026\u0026 nVars \u003c= 8\");\n//    if ( nVars == 10 )\n//        Mask = ~(word)0;\n    for  i = 1; i \u003c 8; i++  {\n        iCof = (pF[(i * nShift) / 64] \u003e\u003e ((i * nShift) \u0026 63)) \u0026 Mask;\n        if iCof == iCof0 {\n            continue; }\n        if iCof1 == iCof0 {\n            iCof1 = iCof;\n        } else if iCof != iCof1 {\n            return 3; }\n    }\n    return 2;\n}\nfunc If_Dec08CofCount(pF *word, nVars int32) int32 {\n    var nShift int32  = (1 \u003c\u003c (nVars - 3));\n    var Mask word   = (((word)1) \u003c\u003c nShift) - 1;\n    var iCofs [16]word;\n    var iCof word;\n    var i int32;\n    var c int32;\n    var nCofs int32 = 1;\n//    if ( nVars == 10 )\n//        Mask = ~(word)0;\n    iCofs[0] = pF[0] \u0026 Mask;\n    for  i = 1; i \u003c 8; i++  {\n        iCof = (pF[(i * nShift) / 64] \u003e\u003e ((i * nShift) \u0026 63)) \u0026 Mask;\n        for  c = 0; c \u003c nCofs; c++  {\n            if iCof == iCofs[c] {\n                break; }\n        }\n        if c == nCofs {\n            iCofs[nCofs++] = iCof; }\n    }\n    return nCofs;\n}\n\n\n// variable permutation for large functions\nfunc If_Dec08Copy(pOut *word, pIn *word, nVars int32) {\n    var w int32;\n    var nWords int32 = If_Dec08WordNum( nVars );\n    for  w = 0; w \u003c nWords; w++  {\n        pOut[w] = pIn[w];\n    }\n}\nfunc If_Dec08SwapAdjacent(pOut *word, pIn *word, iVar int32, nVars int32) {\n    var i int32;\n    var k int32;\n    var nWords int32 = If_Dec08WordNum( nVars );\n    assert(iVar \u003c nVars - 1, \"iVar \u003c nVars - 1\");\n    if iVar \u003c 5 {\n        var Shift int32  = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            pOut[i] = (pIn[i] \u0026 PMasks[iVar][0]) | ((pIn[i] \u0026 PMasks[iVar][1]) \u003c\u003c Shift) | ((pIn[i] \u0026 PMasks[iVar][2]) \u003e\u003e Shift);\n        }\n    \n    } else if iVar \u003e 5 {\n        var Step int32  = (1 \u003c\u003c (iVar - 6));\n        for  k = 0; k \u003c nWords; k += 4*Step  {\n            for  i = 0; i \u003c Step; i++  {\n                pOut[i] = pIn[i];\n            }\n            for  i = 0; i \u003c Step; i++  {\n                pOut[Step+i] = pIn[2*Step+i];\n            }\n            for  i = 0; i \u003c Step; i++  {\n                pOut[2*Step+i] = pIn[Step+i];\n            }\n            for  i = 0; i \u003c Step; i++  {\n                pOut[3*Step+i] = pIn[3*Step+i];\n            }\n            pIn  += 4*Step;\n            pOut += 4*Step;\n        }\n    \n    } else { // if ( iVar == 5 )\n    \n        for  i = 0; i \u003c nWords; i += 2  {\n            pOut[i]   = (pIn[i]   \u0026 ABC_CONST(0x00000000FFFFFFFF)) | ((pIn[i+1] \u0026 ABC_CONST(0x00000000FFFFFFFF)) \u003c\u003c 32);\n            pOut[i+1] = (pIn[i+1] \u0026 ABC_CONST(0xFFFFFFFF00000000)) | ((pIn[i]   \u0026 ABC_CONST(0xFFFFFFFF00000000)) \u003e\u003e 32);\n        }\n    }\n}\nfunc If_Dec08MoveTo(pF *word, nVars int32, v int32, p int32, Pla2Var []int32, Var2Pla []int32) {\n    var pG [16]word;\n    var pIn *word = pF;\n    var pOut *word = pG;\n    var pTemp *word;\n    var iPlace0, iPlace1, Count int32;\n    assert(Var2Pla[v] \u003c= p, \"Var2Pla[v] \u003c= p\");\n    for  Var2Pla[v] != p  {\n        iPlace0 = Var2Pla[v];\n        iPlace1 = Var2Pla[v]+1;\n        If_Dec08SwapAdjacent( pOut, pIn, iPlace0, nVars );\n        pTemp = pIn; pIn = pOut;\npOut = pTemp;\n        Var2Pla[Pla2Var[iPlace0]]++;\n        Var2Pla[Pla2Var[iPlace1]]--;\n        Pla2Var[iPlace0] ^= Pla2Var[iPlace1];\n        Pla2Var[iPlace1] ^= Pla2Var[iPlace0];\n        Pla2Var[iPlace0] ^= Pla2Var[iPlace1];\n        Count++;\n    }\n    if Count \u0026 1 {\n        If_Dec08Copy( pF, pIn, nVars ); }\n    assert(Pla2Var[p] == v, \"Pla2Var[p] == v\");\n}\n/*\n// derive binary function\nstatic inline int If_Dec08DeriveCount2( word * pF, word * pRes, int nVars )\n{\n    int nShift = (1 \u003c\u003c (nVars - 4));\n    word Mask  = (((word)1) \u003c\u003c nShift) - 1;\n    int i, MaskDec = 0;\n    word iCof0 = pF[0] \u0026 Mask;\n    word iCof1 = pF[0] \u0026 Mask;\n    word iCof, * pCof0, * pCof1;\n    if ( nVars == 10 )\n        Mask = ~(word)0;\n    for ( i = 1; i \u003c 16; i++ )\n    {\n        iCof = (pF[(i * nShift) / 64] \u003e\u003e ((i * nShift) \u0026 63)) \u0026 Mask;\n        if ( *pCof0 != iCof )\n        {\n            *pCof1 = iCof;\n            MaskDec |= (1 \u003c\u003c i);\n        }\n    }\n    *pRes = ((iCof1 \u003c\u003c nShift) | iCof0);\n    return MaskDec;\n}\nstatic inline word If_DecTruthStretch( word t, int nVars )\n{\n    assert( nVars \u003e 1 );\n    if ( nVars == 1 )\n        nVars++, t = (t \u0026 0x3) | ((t \u0026 0x3) \u003c\u003c 2);\n    if ( nVars == 2 )\n        nVars++, t = (t \u0026 0xF) | ((t \u0026 0xF) \u003c\u003c 4);\n    if ( nVars == 3 )\n        nVars++, t = (t \u0026 0xFF) | ((t \u0026 0xFF) \u003c\u003c 8);\n    if ( nVars == 4 )\n        nVars++, t = (t \u0026 0xFFFF) | ((t \u0026 0xFFFF) \u003c\u003c 16);\n    if ( nVars == 5 )\n        nVars++, t = (t \u0026 0xFFFFFFFF) | ((t \u0026 0xFFFFFFFF) \u003c\u003c 32);\n    assert( nVars \u003e= 6 );\n}\n*/\n\n// support minimization\nfunc If_DecSuppIsMinBase(Supp int32) int32 {\n    return (Supp \u0026 (Supp+1)) == 0;\n}\nfunc If_Dec08HasVar(t *word, nVars int32, iVar int32) int32 {\n    var nWords int32  = If_Dec08WordNum( nVars );\n    assert(iVar \u003c nVars, \"iVar \u003c nVars\");\n    if iVar \u003c 6 {\n        var i int32;\n        var Shift int32 = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            if (t[i] \u0026 ~Truth6[iVar]) != ((t[i] \u0026 Truth6[iVar]) \u003e\u003e Shift) {\n                return 1; }\n        }\n        return 0;\n    \n    } else {\n        var i int32;\n        var k int32;\n        var Step int32 = (1 \u003c\u003c (iVar - 6));\n        for  k = 0; k \u003c nWords; k += 2*Step  {\n            for  i = 0; i \u003c Step; i++  {\n                if t[i] != t[Step+i] {\n                    return 1; }\n            }\n            t += 2*Step;\n        }\n        return 0;\n    }\n}\nfunc If_Dec08Support(t *word, nVars int32) int32 {\n    var v, Supp int32;\n    for  v = 0; v \u003c nVars; v++  {\n        if If_Dec08HasVar( t, nVars, v ) != 0 {\n            Supp |= (1 \u003c\u003c v); }\n    }\n    return Supp;\n}\n\n// checks\nfunc If_Dec08Cofactors(pF *word, nVars int32, iVar int32, pCof0 *word, pCof1 *word) {\n    var nWords int32  = If_Dec08WordNum( nVars );\n    assert(iVar \u003c nVars, \"iVar \u003c nVars\");\n    if iVar \u003c 6 {\n        var i int32;\n        var Shift int32 = (1 \u003c\u003c iVar);\n        for  i = 0; i \u003c nWords; i++  {\n            pCof0[i] = (pF[i] \u0026 ~Truth6[iVar]) | ((pF[i] \u0026 ~Truth6[iVar]) \u003c\u003c Shift);\n            pCof1[i] = (pF[i] \u0026  Truth6[iVar]) | ((pF[i] \u0026  Truth6[iVar]) \u003e\u003e Shift);\n        }\n        return;\n    \n    } else {\n        var i int32;\n        var k int32;\n        var Step int32 = (1 \u003c\u003c (iVar - 6));\n        for  k = 0; k \u003c nWords; k += 2*Step  {\n            for  i = 0; i \u003c Step; i++  {\n                pCof0[i] = pCof0[Step+i] = pF[i];\n                pCof1[i] = pCof1[Step+i] = pF[Step+i];\n            }\n            pF    += 2*Step;\n            pCof0 += 2*Step;\n            pCof1 += 2*Step;\n        }\n        return;\n    }\n}\nfunc If_Dec08Count16(Num16 int32) int32 {\n    assert(Num16 \u003c (1\u003c\u003c16)-1, \"Num16 \u003c (1\u003c\u003c16)-1\");\n    return BitCount8[Num16 \u0026 255] + BitCount8[(Num16 \u003e\u003e 8) \u0026 255];\n}\nfunc If_DecVerifyPerm(Pla2Var []int32, Var2Pla []int32, nVars int32) {\n    var i int32;\n    for  i = 0; i \u003c nVars; i++  {\n        assert(Pla2Var[Var2Pla[i]] == i, \"Pla2Var[Var2Pla[i]] == i\");\n    }\n} \nfunc If_Dec08Perform(pF *word, nVars int32, fDerive int32) int32 { \n//    static int Cnt = 0;\n    var pCof0, pCof1 [16]word;\n    var Pla2Var [10]int32;\n    var Var2Pla [10]int32;\n    var Count [210]int32;\n    var Masks [210]int32;\n    var i, i0, i1, i2, v, x int32;\n    assert(nVars \u003e= 6 \u0026\u0026 nVars \u003c= 8, \"nVars \u003e= 6 \u0026\u0026 nVars \u003c= 8\");\n    // start arrays\n    for  i = 0; i \u003c nVars; i++  {\n        assert((If_Dec08HasVar( pF, nVars, i ) != 0), \"If_Dec08HasVar( pF, nVars, i )\");\n        Pla2Var[i] = Var2Pla[i] = i;\n    }\n/*\n    Cnt++;\n//if ( Cnt == 108 )\n{\nprintf( \"%d\\n\", Cnt );\n//Extra_PrintHex( stdout, (unsigned *)pF, nVars );\n//printf( \"\\n\" ); \nKit_DsdPrintFromTruth( (unsigned *)pF, nVars );\nprintf( \"\\n\" );\nprintf( \"\\n\" );\n}\n*/\n    // generate permutations\n    v = 0;\n    for  i0 = 0;    i0 \u003c nVars; i0++  {\n    for  i1 = i0+1; i1 \u003c nVars; i1++  {\n    for  i2 = i1+1; i2 \u003c nVars; i2, v = i2+1, v+1  {\n        If_Dec08MoveTo( pF, nVars, i0, nVars-1, Pla2Var, Var2Pla );\n        If_Dec08MoveTo( pF, nVars, i1, nVars-2, Pla2Var, Var2Pla );\n        If_Dec08MoveTo( pF, nVars, i2, nVars-3, Pla2Var, Var2Pla );\n        If_DecVerifyPerm( Pla2Var, Var2Pla, nVars );\n        Count[v] = If_Dec08CofCount( pF, nVars );\n        Masks[v] = (1 \u003c\u003c i0) | (1 \u003c\u003c i1) | (1 \u003c\u003c i2);\n        assert(Count[v] \u003e 1, \"Count[v] \u003e 1\");\n//printf( \"%d \", Count[v] );\n        if Count[v] == 2 || Count[v] \u003e 5 {\n            continue; }\n        for  x = 0; x \u003c 4; x++  {\n            If_Dec08Cofactors( pF, nVars, nVars-1-x, pCof0, pCof1 );\n            if If_Dec08CofCount2(pCof0, nVars) \u003c= 2 \u0026\u0026 If_Dec08CofCount2(pCof1, nVars) \u003c= 2 {\n                Count[v] = -Count[v];\n                break;\n            }\n        }\n    }\n    }\n    }\n//printf( \"\\n\" );\n    assert(v \u003c= 210, \"v \u003c= 210\");\n    // check if there are compatible bound sets\n    for  i0 = 0; i0 \u003c v; i0++  {\n    for  i1 = i0+1; i1 \u003c v; i1++  {\n        if If_Dec08Count16(Masks[i0] \u0026 Masks[i1]) \u003e 8 - nVars {\n            continue; }\n        if nVars == 8 {\n            if Count[i0] == 2 \u0026\u0026 Count[i1] == 2 {\n                return 1; }\n        \n        } else if nVars == 7 {\n            if (Count[i0] == 2 \u0026\u0026 Count[i1] == 2) || \n                 (Count[i0] == 2 \u0026\u0026 Count[i1] \u003c  0) || \n                 (Count[i0] \u003c  0 \u0026\u0026 Count[i1] == 2) {\n                return 1; }\n        \n        } else {\n            if (Count[i0] == 2 \u0026\u0026 Count[i1] == 2) || \n                 (Count[i0] == 2 \u0026\u0026 Count[i1] \u003c  0) || \n                 (Count[i0] \u003c  0 \u0026\u0026 Count[i1] == 2) || \n                 (Count[i0] \u003c  0 \u0026\u0026 Count[i1] \u003c  0) {\n                return 1; }\n        }\n    }\n    }\n//    printf( \"not found\\n\" );\n    return 0;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Performs additional check.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutPerformCheck08(p *If_Man_t, pTruth *uint32, nVars int32, nLeaves int32, pStr string) int32 {\n    var nSupp, fDerive int32;\n    var pF [16]word;\n    if nLeaves \u003c= 5 {\n        return 1; }\n    If_Dec08Copy( pF, (word *)pTruth, nVars );\n    nSupp = If_Dec08Support( pF, nLeaves );\n    if !nSupp || !(If_DecSuppIsMinBase(nSupp) != 0) {\n        return 0; }\n    if If_Dec08Perform( pF, nLeaves, fDerive ) != 0 {\n//        printf( \"1\" );\n        return 1;\n//        If_Dec08Verify( t, nLeaves, NULL );\n    }\n//    printf( \"0\" );\n    return 0;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

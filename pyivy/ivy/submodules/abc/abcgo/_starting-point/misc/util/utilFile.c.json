@@ -1,0 +1,301 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c",
+  "SHA256": "29615bbe7e8a0078fad9fd436b99c8ed431df15431430dd7fffcfecbdef24c1d",
+  "Library": [
+    {
+      "Name": "vfprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 9,
+        "ByteOffset": 3360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    n = vfprintf(spStatic_vnsprintf_dummy_file, format, args);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 131,
+        "Column": 66,
+        "ByteOffset": 3480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ret = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(n + 1)));"
+    },
+    {
+      "Name": "vsprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 3571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    vsprintf(ret, format, args);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 3679
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(ret[n] == 0);"
+    },
+    {
+      "Name": "va_start",
+      "Status": "review",
+      "Message": "C va_list ABI has no direct Go representation.",
+      "Location": {
+        "Line": 144,
+        "Column": 5,
+        "ByteOffset": 3801
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    va_start(args, format);"
+    },
+    {
+      "Name": "va_end",
+      "Status": "review",
+      "Message": "C va_list ABI has no direct Go representation.",
+      "Location": {
+        "Line": 146,
+        "Column": 5,
+        "ByteOffset": 3864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    va_end(args);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 28,
+        "Column": 1,
+        "ByteOffset": 635
+      },
+      "Directive": "#if defined(_MSC_VER) || defined(__MINGW32__)"
+    },
+    {
+      "Location": {
+        "Line": 61,
+        "Column": 1,
+        "ByteOffset": 1571
+      },
+      "Directive": "#if defined(_MSC_VER)"
+    },
+    {
+      "Location": {
+        "Line": 91,
+        "Column": 1,
+        "ByteOffset": 2516
+      },
+      "Directive": "#if defined(_MSC_VER) || defined(__MINGW32__)"
+    },
+    {
+      "Location": {
+        "Line": 177,
+        "Column": 1,
+        "ByteOffset": 4567
+      },
+      "Directive": "#if !defined(_MSC_VER) \u0026\u0026 !defined(__MINGW32)"
+    },
+    {
+      "Location": {
+        "Line": 184,
+        "Column": 1,
+        "ByteOffset": 4721
+      },
+      "Directive": "#if defined(__va_copy)"
+    },
+    {
+      "Location": {
+        "Line": 187,
+        "Column": 3,
+        "ByteOffset": 4784
+      },
+      "Directive": "#if defined(va_copy)"
+    },
+    {
+      "Location": {
+        "Line": 198,
+        "Column": 1,
+        "ByteOffset": 5040
+      },
+      "Directive": "#if !defined(__va_copy) \u0026\u0026 defined(va_copy)"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "realTimeAbs",
+      "Start": 1498,
+      "End": 2026,
+      "BodyStart": 1569,
+      "Original": "static ABC_UINT64_T realTimeAbs()  // -- absolute time in nano-seconds\n{\n#if defined(_MSC_VER)\n    LARGE_INTEGER f, t;\n    double realTime_freq;\n    int ok;\n\n    ok = QueryPerformanceFrequency(\u0026f); assert(ok);\n    realTime_freq = 1.0 / (__int64)(((ABC_UINT64_T)f.LowPart) | ((ABC_UINT64_T)f.HighPart \u003c\u003c 32));\n\n    ok = QueryPerformanceCounter(\u0026t); assert(ok);\n    return (ABC_UINT64_T)(__int64)(((__int64)(((ABC_UINT64_T)t.LowPart | ((ABC_UINT64_T)t.HighPart \u003c\u003c 32))) * realTime_freq * 1000000000));\n#else\n    return 0;\n#endif\n}",
+      "Draft": "static ABC_UINT64_T realTimeAbs()  // -- absolute time in nano-seconds\n{\n#if defined(_MSC_VER)\n    LARGE_INTEGER f, t;\n    double realTime_freq;\n    int ok;\n\n    ok = QueryPerformanceFrequency(\u0026f); assert(ok);\n    realTime_freq = 1.0 / (__int64)(((ABC_UINT64_T)f.LowPart) | ((ABC_UINT64_T)f.HighPart \u003c\u003c 32));\n\n    ok = QueryPerformanceCounter(\u0026t); assert(ok);\n    return (ABC_UINT64_T)(__int64)(((__int64)(((ABC_UINT64_T)t.LowPart | ((ABC_UINT64_T)t.HighPart \u003c\u003c 32))) * realTime_freq * 1000000000));\n#else\n    return 0;\n#endif\n}"
+    },
+    {
+      "Name": "tmpFile",
+      "Start": 2445,
+      "End": 3604,
+      "BodyStart": 2514,
+      "Original": "int tmpFile(const char* prefix, const char* suffix, char** out_name)\n{\n#if defined(_MSC_VER) || defined(__MINGW32__)\n    int i, fd;\n    *out_name = (char*)malloc(strlen(prefix) + strlen(suffix) + 27);\n    for (i = 0; i \u003c 10; i++){\n        sprintf(*out_name, \"%s%I64X%d%s\", prefix, realTimeAbs(), _getpid(), suffix);\n        fd = _open(*out_name, O_CREAT | O_EXCL | O_BINARY | O_RDWR, _S_IREAD | _S_IWRITE);\n        if (fd == -1){\n            free(*out_name);\n            *out_name = NULL;\n        }\n        return fd;\n    }\n    assert(0);  // -- could not open temporary file\n    return 0;\n#else\n    int fd;\n    *out_name = (char*)malloc(strlen(prefix) + strlen(suffix) + 7);\n    assert(*out_name != NULL);\n    sprintf(*out_name, \"%sXXXXXX\", prefix);\n    fd = mkstemp(*out_name);\n    if (fd == -1){\n        free(*out_name);\n        *out_name = NULL;\n    }else{\n        // Kludge:\n        close(fd);\n        unlink(*out_name);\n        strcat(*out_name, suffix);\n        fd = open(*out_name, O_CREAT | O_EXCL | O_RDWR, S_IREAD | S_IWRITE);\n        if (fd == -1){\n            free(*out_name);\n            *out_name = NULL;\n        }\n    }\n    return fd;\n#endif\n}",
+      "Draft": "func tmpFile(prefix string, suffix string, out_name *string) int32 {\n#if defined(_MSC_VER) || defined(__MINGW32__)\n    int i, fd;\n    *out_name = (char*)malloc(strlen(prefix) + strlen(suffix) + 27);\n    for (i = 0; i \u003c 10; i++){\n        sprintf(*out_name, \"%s%I64X%d%s\", prefix, realTimeAbs(), _getpid(), suffix);\n        fd = _open(*out_name, O_CREAT | O_EXCL | O_BINARY | O_RDWR, _S_IREAD | _S_IWRITE);\n        if (fd == -1){\n            free(*out_name);\n            *out_name = NULL;\n        }\n        return fd;\n    }\n    assert(0);  // -- could not open temporary file\n    return 0;\n#else\n    int fd;\n    *out_name = (char*)malloc(strlen(prefix) + strlen(suffix) + 7);\n    assert(*out_name != NULL);\n    sprintf(*out_name, \"%sXXXXXX\", prefix);\n    fd = mkstemp(*out_name);\n    if (fd == -1){\n        free(*out_name);\n        *out_name = NULL;\n    }else{\n        // Kludge:\n        close(fd);\n        unlink(*out_name);\n        strcat(*out_name, suffix);\n        fd = open(*out_name, O_CREAT | O_EXCL | O_RDWR, S_IREAD | S_IWRITE);\n        if (fd == -1){\n            free(*out_name);\n            *out_name = NULL;\n        }\n    }\n    return fd;\n#endif\n}"
+    },
+    {
+      "Name": "vnsprintf",
+      "Start": 4393,
+      "End": 5156,
+      "BodyStart": 4443,
+      "Original": "char* vnsprintf(const char* format, va_list args)\n{\n    unsigned n;\n    char*    ret;\n    va_list  args_copy;\n\n    static FILE* dummy_file = NULL;\n    if (!dummy_file)\n    {\n#if !defined(_MSC_VER) \u0026\u0026 !defined(__MINGW32)\n        dummy_file = fopen(\"/dev/null\", \"wb\");\n#else\n        dummy_file = fopen(\"NUL\", \"wb\");\n#endif\n    }\n\n#if defined(__va_copy)\n    __va_copy(args_copy, args);\n#else\n  #if defined(va_copy)\n    va_copy(args_copy, args);\n  #else\n    args_copy = args;\n  #endif\n#endif\n    n = vfprintf(dummy_file, format, args);\n    ret = ABC_ALLOC( char, n + 1 );\n    ret[n] = (char)255;\n    args = args_copy;\n    vsprintf(ret, format, args);\n#if !defined(__va_copy) \u0026\u0026 defined(va_copy)\n    va_end(args_copy);\n#endif\n    assert(ret[n] == 0);\n    return ret;\n}",
+      "Draft": "func vnsprintf(format string, args va_list) string {\n    var n uint32;\n    var ret string;\n    var args_copy va_list;\n\n    \n    if !(spStatic_vnsprintf_dummy_file != nil) {\n#if !defined(_MSC_VER) \u0026\u0026 !defined(__MINGW32)\n        dummy_file = fopen(\"/dev/null\", \"wb\");\n#else\n        dummy_file = fopen(\"NUL\", \"wb\");\n#endif\n    }\n\n#if defined(__va_copy)\n    __va_copy(args_copy, args);\n#else\n  #if defined(va_copy)\n    va_copy(args_copy, args);\n  #else\n    args_copy = args;\n  #endif\n#endif\n    n = vfprintf(spStatic_vnsprintf_dummy_file, format, args);\n    // inlining of macro ABC_ALLOC\n    ret = ((char *) malloc(sizeof(char) * (size_t)(n + 1)));\n    ret[n] = byte(255);\n    args = args_copy;\n    vsprintf(ret, format, args);\n#if !defined(__va_copy) \u0026\u0026 defined(va_copy)\n    va_end(args_copy);\n#endif\n    assert(ret[n] == 0, \"ret[n] == 0\");\n    return ret;\n}"
+    },
+    {
+      "Name": "nsprintf",
+      "Start": 5158,
+      "End": 5331,
+      "BodyStart": 5198,
+      "Original": "char* nsprintf(const char* format, ...)\n{\n    char* ret;\n    va_list args;\n    va_start(args, format);\n    ret = vnsprintf(format, args);\n    va_end(args);\n    return ret;\n}",
+      "Draft": "char* nsprintf(char* format, ...)\n{\n    var ret string;\n    var args va_list;\n    va_start(args, format);\n    ret = vnsprintf(format, args);\n    va_end(args);\n    return ret;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c::mechanical::static::3055",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4508,
+      "End": 4514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c::mechanical::sizeof::3387",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4935,
+      "End": 4935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c::pointer-cast::3371",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4935,
+      "End": 4935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c::realTimeAbs",
+      "Category": "semantic-review",
+      "Symbol": "realTimeAbs",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1498,
+      "End": 2026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c::tmpFile",
+      "Category": "semantic-review",
+      "Symbol": "tmpFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2445,
+      "End": 3604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c::vnsprintf",
+      "Category": "semantic-review",
+      "Symbol": "vnsprintf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4393,
+      "End": 5156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c::nsprintf",
+      "Category": "semantic-review",
+      "Symbol": "nsprintf",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5158,
+      "End": 5331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 635,
+      "End": 771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1571,
+      "End": 2024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2516,
+      "End": 3602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4567,
+      "End": 4713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4721,
+      "End": 4880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilFile.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5040,
+      "End": 5113
+    }
+  ],
+  "Draft": "package util\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [utilFile.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Temporary file utilities.]\n\n  Synopsis    [Temporary file utilities.]\n\n  Author      [Niklas Een]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 29, 2010.]\n\n  Revision    [$Id: utilFile.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cassert.h\u003e\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cfcntl.h\u003e\n//#include \u003csys/stat.h\u003e\n\n#if defined(_MSC_VER) || defined(__MINGW32__)\n#include \u003cwindows.h\u003e\n#include \u003cprocess.h\u003e\n#include \u003cio.h\u003e\n#else\n#include \u003cunistd.h\u003e\n#endif\n\n//#include \"abc_global.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nstatic ABC_UINT64_T realTimeAbs()  // -- absolute time in nano-seconds\n{\n#if defined(_MSC_VER)\n    LARGE_INTEGER f, t;\n    double realTime_freq;\n    int ok;\n\n    ok = QueryPerformanceFrequency(\u0026f); assert(ok);\n    realTime_freq = 1.0 / (__int64)(((ABC_UINT64_T)f.LowPart) | ((ABC_UINT64_T)f.HighPart \u003c\u003c 32));\n\n    ok = QueryPerformanceCounter(\u0026t); assert(ok);\n    return (ABC_UINT64_T)(__int64)(((__int64)(((ABC_UINT64_T)t.LowPart | ((ABC_UINT64_T)t.HighPart \u003c\u003c 32))) * realTime_freq * 1000000000));\n#else\n    return 0;\n#endif\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Opens a temporary file.]\n\n  Description [Opens a temporary file with given prefix and returns file \n  descriptor (-1 on failure) and a string containing the name of the file \n  (to be freed by caller).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc tmpFile(prefix string, suffix string, out_name *string) int32 {\n#if defined(_MSC_VER) || defined(__MINGW32__)\n    int i, fd;\n    *out_name = (char*)malloc(strlen(prefix) + strlen(suffix) + 27);\n    for (i = 0; i \u003c 10; i++){\n        sprintf(*out_name, \"%s%I64X%d%s\", prefix, realTimeAbs(), _getpid(), suffix);\n        fd = _open(*out_name, O_CREAT | O_EXCL | O_BINARY | O_RDWR, _S_IREAD | _S_IWRITE);\n        if (fd == -1){\n            free(*out_name);\n            *out_name = NULL;\n        }\n        return fd;\n    }\n    assert(0);  // -- could not open temporary file\n    return 0;\n#else\n    int fd;\n    *out_name = (char*)malloc(strlen(prefix) + strlen(suffix) + 7);\n    assert(*out_name != NULL);\n    sprintf(*out_name, \"%sXXXXXX\", prefix);\n    fd = mkstemp(*out_name);\n    if (fd == -1){\n        free(*out_name);\n        *out_name = NULL;\n    }else{\n        // Kludge:\n        close(fd);\n        unlink(*out_name);\n        strcat(*out_name, suffix);\n        fd = open(*out_name, O_CREAT | O_EXCL | O_RDWR, S_IREAD | S_IWRITE);\n        if (fd == -1){\n            free(*out_name);\n            *out_name = NULL;\n        }\n    }\n    return fd;\n#endif\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n/*\nint main(int argc, char** argv)\n{\n    char* tmp_filename;\n    int   fd = tmpFile(\"__abctmp_\", \u0026tmp_filename);\n    FILE* out = fdopen(fd, \"wb\");\n\n    fprintf(out, \"This file contains important information.\\n\");\n    fclose(out);\n\n    printf(\"Created: %s\\n\", tmp_filename);\n    free(tmp_filename);\n\n    return 0;\n}\n*/\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_vnsprintf_dummy_file *os.File = nil;\nfunc vnsprintf(format string, args va_list) string {\n    var n uint32;\n    var ret string;\n    var args_copy va_list;\n\n    \n    if !(spStatic_vnsprintf_dummy_file != nil) {\n#if !defined(_MSC_VER) \u0026\u0026 !defined(__MINGW32)\n        dummy_file = fopen(\"/dev/null\", \"wb\");\n#else\n        dummy_file = fopen(\"NUL\", \"wb\");\n#endif\n    }\n\n#if defined(__va_copy)\n    __va_copy(args_copy, args);\n#else\n  #if defined(va_copy)\n    va_copy(args_copy, args);\n  #else\n    args_copy = args;\n  #endif\n#endif\n    n = vfprintf(spStatic_vnsprintf_dummy_file, format, args);\n    // inlining of macro ABC_ALLOC\n    ret = ((char *) malloc(sizeof(char) * (size_t)(n + 1)));\n    ret[n] = byte(255);\n    args = args_copy;\n    vsprintf(ret, format, args);\n#if !defined(__va_copy) \u0026\u0026 defined(va_copy)\n    va_end(args_copy);\n#endif\n    assert(ret[n] == 0, \"ret[n] == 0\");\n    return ret;\n}\n\nchar* nsprintf(char* format, ...)\n{\n    var ret string;\n    var args va_list;\n    va_start(args, format);\n    ret = vnsprintf(format, args);\n    va_end(args);\n    return ret;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

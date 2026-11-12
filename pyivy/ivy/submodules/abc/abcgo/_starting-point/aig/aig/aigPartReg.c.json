@@ -1,0 +1,933 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c",
+  "SHA256": "06196a402185135637b9e866d083af0fe7259760b90835b979744855f8436555",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 69,
+        "Column": 72,
+        "ByteOffset": 2329
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Aig_ManPre_t *) malloc(sizeof(Aig_ManPre_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 70,
+        "Column": 5,
+        "ByteOffset": 2378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Aig_ManPre_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 79,
+        "Column": 75,
+        "ByteOffset": 2780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pfUsedRegs = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(Aig_ManRegNum(p.pAig))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pfUsedRegs, 0, sizeof(char) * Aig_ManRegNum(p.pAig) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 81,
+        "Column": 76,
+        "ByteOffset": 2981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pfPartVars  = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(Aig_ManRegNum(p.pAig))));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 104,
+        "Column": 68,
+        "ByteOffset": 3665
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pfUsedRegs) ? (free((char *) (p.pfUsedRegs)), (p.pfUsedRegs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 105,
+        "Column": 68,
+        "ByteOffset": 3789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pfPartVars) ? (free((char *) (p.pfPartVars)), (p.pfPartVars) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 106,
+        "Column": 57,
+        "ByteOffset": 3902
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 9,
+        "ByteOffset": 7261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( p.pfPartVars[iReg] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 212,
+        "Column": 9,
+        "ByteOffset": 7354
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 9,
+        "ByteOffset": 7400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !p.pfPartVars[iReg] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 281,
+        "Column": 9,
+        "ByteOffset": 10392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Partition contains %d groups of 1-hot registers: { \", Vec_PtrSize(vOnehotsPart) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 13,
+        "ByteOffset": 10675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d \", Vec_IntSize(vGroup) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 9,
+        "ByteOffset": 10731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"}\\n\" );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 369,
+        "Column": 74,
+        "ByteOffset": 14903
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pMapBack = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(Aig_ManObjNumMax(pNew))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 370,
+        "Column": 9,
+        "ByteOffset": 14968
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( pMapBack, 0xff, sizeof(int) * Aig_ManObjNumMax(pNew) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 418,
+        "Column": 9,
+        "ByteOffset": 16851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( p.pfPartVars, 0, sizeof(char) * Aig_ManRegNum(p.pAig) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 439,
+        "Column": 1,
+        "ByteOffset": 17904
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Part %3d  SUMMARY:  Free = %4d. Total = %4d. Ratio = %6.2f. Unique = %4d.\\n\", i,"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 465,
+        "Column": 9,
+        "ByteOffset": 18753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Overlap size (%d) is more or equal than the partition size (%d).\\n\", nOverSize, nPartSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 466,
+        "Column": 9,
+        "ByteOffset": 18863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Adjusting it to be equal to half of the partition size.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 469,
+        "Column": 5,
+        "ByteOffset": 18977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nOverSize \u003c nPartSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 500,
+        "Column": 5,
+        "ByteOffset": 19939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nPartSize \u0026\u0026 Vec_IntSize(vDomain) \u003e nPartSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 502,
+        "Column": 9,
+        "ByteOffset": 20036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Overlap size (%d) is more or equal than the partition size (%d).\\n\", nOverSize, nPartSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 503,
+        "Column": 9,
+        "ByteOffset": 20146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Adjusting it to be equal to half of the partition size.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 506,
+        "Column": 5,
+        "ByteOffset": 20260
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nOverSize \u003c nPartSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 538,
+        "Column": 13,
+        "ByteOffset": 21353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d \", pObj.iData - (Aig_ManCiNum(p) - Aig_ManRegNum(p)) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 572,
+        "Column": 9,
+        "ByteOffset": 22689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Latch %d: \", Counter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 574,
+        "Column": 1,
+        "ByteOffset": 22795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"%d=%d \\n\", Counter, Vec_PtrSize(vLos)-nPrev );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 577,
+        "Column": 5,
+        "ByteOffset": 22896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total collected = %d. Total regs = %d.\\n\", Vec_PtrSize(vLos), Aig_ManRegNum(p) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_ManRegManStart",
+      "Start": 2174,
+      "End": 2858,
+      "BodyStart": 2243,
+      "Original": "Aig_ManPre_t * Aig_ManRegManStart( Aig_Man_t * pAig, int nPartSize )\n{\n    Aig_ManPre_t * p;\n    p = ABC_ALLOC( Aig_ManPre_t, 1 );\n    memset( p, 0, sizeof(Aig_ManPre_t) );\n    p-\u003epAig      = pAig;\n    p-\u003evMatrix   = Aig_ManSupportsRegisters( pAig );\n    p-\u003enRegsMax  = nPartSize;\n    p-\u003evParts    = Vec_PtrAlloc(256);\n    p-\u003evRegs     = Vec_IntAlloc(256);\n    p-\u003evUniques  = Vec_IntAlloc(256);\n    p-\u003evFreeVars = Vec_IntAlloc(256);\n    p-\u003evPartCost = Vec_FltAlloc(256);\n    p-\u003epfUsedRegs = ABC_ALLOC( char, Aig_ManRegNum(p-\u003epAig) );\n    memset( p-\u003epfUsedRegs, 0, sizeof(char) * Aig_ManRegNum(p-\u003epAig) );\n    p-\u003epfPartVars  = ABC_ALLOC( char, Aig_ManRegNum(p-\u003epAig) );\n    return p;\n}",
+      "Draft": "func Aig_ManRegManStart(pAig *Aig_Man_t, nPartSize int32) *Aig_ManPre_t {\n    var p *Aig_ManPre_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Aig_ManPre_t *) malloc(sizeof(Aig_ManPre_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Aig_ManPre_t) );\n    p.pAig      = pAig;\n    p.vMatrix   = Aig_ManSupportsRegisters( pAig );\n    p.nRegsMax  = nPartSize;\n    p.vParts    = Vec_PtrAlloc(256);\n    p.vRegs     = Vec_IntAlloc(256);\n    p.vUniques  = Vec_IntAlloc(256);\n    p.vFreeVars = Vec_IntAlloc(256);\n    p.vPartCost = Vec_FltAlloc(256);\n    // inlining of macro ABC_ALLOC\n    p.pfUsedRegs = ((char *) malloc(sizeof(char) * (size_t)(Aig_ManRegNum(p.pAig))));\n    memset( p.pfUsedRegs, 0, sizeof(char) * Aig_ManRegNum(p.pAig) );\n    // inlining of macro ABC_ALLOC\n    p.pfPartVars  = ((char *) malloc(sizeof(char) * (size_t)(Aig_ManRegNum(p.pAig))));\n    return p;\n}"
+    },
+    {
+      "Name": "Aig_ManRegManStop",
+      "Start": 3129,
+      "End": 3495,
+      "BodyStart": 3172,
+      "Original": "void Aig_ManRegManStop( Aig_ManPre_t * p )\n{\n    Vec_VecFree( (Vec_Vec_t *)p-\u003evMatrix );\n    if ( p-\u003evParts )\n        Vec_VecFree( (Vec_Vec_t *)p-\u003evParts );\n    Vec_IntFree( p-\u003evRegs );\n    Vec_IntFree( p-\u003evUniques );\n    Vec_IntFree( p-\u003evFreeVars );\n    Vec_FltFree( p-\u003evPartCost );\n    ABC_FREE( p-\u003epfUsedRegs );\n    ABC_FREE( p-\u003epfPartVars );\n    ABC_FREE( p );\n}",
+      "Draft": "func Aig_ManRegManStop(p *Aig_ManPre_t) {\n    Vec_VecFree( (Vec_Vec_t *)p.vMatrix );\n    if p.vParts {\n        Vec_VecFree( (Vec_Vec_t *)p.vParts ); }\n    Vec_IntFree( p.vRegs );\n    Vec_IntFree( p.vUniques );\n    Vec_IntFree( p.vFreeVars );\n    Vec_FltFree( p.vPartCost );\n    // inlining of macro ABC_FREE\n    ((p.pfUsedRegs) ? (free((char *) (p.pfUsedRegs)), (p.pfUsedRegs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pfPartVars) ? (free((char *) (p.pfPartVars)), (p.pfPartVars) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Aig_ManRegFindSeed",
+      "Start": 3877,
+      "End": 4478,
+      "BodyStart": 3920,
+      "Original": "int Aig_ManRegFindSeed( Aig_ManPre_t * p )\n{\n    Vec_Int_t * vRegs;\n    int i, k, iReg;\n    int iMax = -1; // Suppress \"might be used uninitialized\"\n    int nRegsCur, nRegsMax = -1;\n    for ( i = 0; i \u003c Aig_ManRegNum(p-\u003epAig); i++ )\n    {\n        if ( p-\u003epfUsedRegs[i] )\n            continue;\n        nRegsCur = 0;\n        vRegs = (Vec_Int_t *)Vec_PtrEntry( p-\u003evMatrix, i );\n        Vec_IntForEachEntry( vRegs, iReg, k )\n            nRegsCur += !p-\u003epfUsedRegs[iReg];\n        if ( nRegsMax \u003c nRegsCur )\n        {\n            nRegsMax = nRegsCur;\n            iMax = i;\n        }\n    }\n    return iMax;\n}",
+      "Draft": "func Aig_ManRegFindSeed(p *Aig_ManPre_t) int32 {\n    var vRegs *Vec_Int_t;\n    var i, k, iReg int32;\n    var iMax int32  = -1; // Suppress \"might be used uninitialized\"\n    var nRegsCur int32;\n    var nRegsMax int32 = -1;\n    for  i = 0; i \u003c Aig_ManRegNum(p.pAig); i++  {\n        if p.pfUsedRegs[i] {\n            continue; }\n        nRegsCur = 0;\n        vRegs = (Vec_Int_t *)Vec_PtrEntry( p.vMatrix, i );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vRegs)) \u0026\u0026 (((iReg) = Vec_IntEntry(vRegs, k)), 1); k++  {\n            nRegsCur += !p.pfUsedRegs[iReg];\n        }\n        if nRegsMax \u003c nRegsCur {\n            nRegsMax = nRegsCur;\n            iMax = i;\n        }\n    }\n    return iMax;\n}"
+    },
+    {
+      "Name": "Aig_ManRegFindBestVar",
+      "Start": 4764,
+      "End": 5753,
+      "BodyStart": 4810,
+      "Original": "int Aig_ManRegFindBestVar( Aig_ManPre_t * p )\n{\n    Vec_Int_t * vSupp;\n    int nNewVars, nNewVarsBest = ABC_INFINITY;\n    int iVarFree, iVarSupp, iVarBest = -1, i, k;\n    // go through the free variables\n    Vec_IntForEachEntry( p-\u003evFreeVars, iVarFree, i )\n    {\n//        if ( p-\u003epfUsedRegs[iVarFree] )\n//            continue;\n        // get support of this variable\n        vSupp = (Vec_Int_t *)Vec_PtrEntry( p-\u003evMatrix, iVarFree );\n        // count the number of new vars\n        nNewVars = 0;\n        Vec_IntForEachEntry( vSupp, iVarSupp, k )\n        {\n            if ( p-\u003epfPartVars[iVarSupp] )\n                continue;\n            nNewVars += 1 + 3 * p-\u003epfUsedRegs[iVarSupp];\n        }\n        // quit if there is no new variables\n        if ( nNewVars == 0 )\n            return iVarFree;\n        // compare the cost of this\n        if ( nNewVarsBest \u003e nNewVars )\n        {\n            nNewVarsBest = nNewVars;\n            iVarBest = iVarFree;\n        }\n    }\n    return iVarBest;\n}",
+      "Draft": "func Aig_ManRegFindBestVar(p *Aig_ManPre_t) int32 {\n    var vSupp *Vec_Int_t;\n    var nNewVars int32;\n    var nNewVarsBest int32 = ABC_INFINITY;\n    var iVarFree int32;\n    var iVarSupp int32;\n    var iVarBest int32 = -1;\n    var i int32;\n    var k int32;\n    // go through the free variables\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vFreeVars)) \u0026\u0026 (((iVarFree) = Vec_IntEntry(p.vFreeVars, i)), 1); i++  {\n//        if ( p-\u003epfUsedRegs[iVarFree] )\n//            continue;\n        // get support of this variable\n        vSupp = (Vec_Int_t *)Vec_PtrEntry( p.vMatrix, iVarFree );\n        // count the number of new vars\n        nNewVars = 0;\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((iVarSupp) = Vec_IntEntry(vSupp, k)), 1); k++  {\n            if p.pfPartVars[iVarSupp] {\n                continue; }\n            nNewVars += 1 + 3 * p.pfUsedRegs[iVarSupp];\n        }\n        // quit if there is no new variables\n        if nNewVars == 0 {\n            return iVarFree; }\n        // compare the cost of this\n        if nNewVarsBest \u003e nNewVars {\n            nNewVarsBest = nNewVars;\n            iVarBest = iVarFree;\n        }\n    }\n    return iVarBest;\n}"
+    },
+    {
+      "Name": "Aig_ManRegPartitionAdd",
+      "Start": 6024,
+      "End": 7076,
+      "BodyStart": 6082,
+      "Original": "void Aig_ManRegPartitionAdd( Aig_ManPre_t * p, int iReg )\n{\n    Vec_Int_t * vSupp;\n    int RetValue, iVar, i;\n    // make sure this is a new variable\n//    assert( !p-\u003epfUsedRegs[iReg] );\n    if ( !p-\u003epfUsedRegs[iReg] )\n    {\n        p-\u003epfUsedRegs[iReg] = 1;\n        Vec_IntPush( p-\u003evUniques, iReg );\n    }\n    // remove it from the free variables\n    if ( Vec_IntSize(p-\u003evFreeVars) \u003e 0 )\n    {\n        assert( p-\u003epfPartVars[iReg] );\n        RetValue = Vec_IntRemove( p-\u003evFreeVars, iReg );\n        assert( RetValue );\n    }\n    else\n        assert( !p-\u003epfPartVars[iReg] );\n    // add it to the partition\n    p-\u003epfPartVars[iReg] = 1;\n    Vec_IntPush( p-\u003evRegs, iReg );\n    // add new variables\n    vSupp = (Vec_Int_t *)Vec_PtrEntry( p-\u003evMatrix, iReg );\n    Vec_IntForEachEntry( vSupp, iVar, i )\n    {\n        if ( p-\u003epfPartVars[iVar] )\n            continue;\n        p-\u003epfPartVars[iVar] = 1;\n        Vec_IntPush( p-\u003evFreeVars, iVar );\n    }\n    // add it to the cost\n    Vec_FltPush( p-\u003evPartCost, 1.0*Vec_IntSize(p-\u003evFreeVars)/Vec_IntSize(p-\u003evRegs) );\n}",
+      "Draft": "func Aig_ManRegPartitionAdd(p *Aig_ManPre_t, iReg int32) {\n    var vSupp *Vec_Int_t;\n    var RetValue, iVar, i int32;\n    // make sure this is a new variable\n//    assert( !p-\u003epfUsedRegs[iReg] );\n    if !p.pfUsedRegs[iReg] {\n        p.pfUsedRegs[iReg] = 1;\n        Vec_IntPush( p.vUniques, iReg );\n    }\n    // remove it from the free variables\n    if Vec_IntSize(p.vFreeVars) \u003e 0 {\n        assert(p.pfPartVars[iReg], \"p.pfPartVars[iReg]\");\n        RetValue = Vec_IntRemove( p.vFreeVars, iReg );\n        assert(RetValue, \"RetValue\");\n    \n    } else {\n        assert(!p.pfPartVars[iReg], \"!p.pfPartVars[iReg]\"); }\n    // add it to the partition\n    p.pfPartVars[iReg] = 1;\n    Vec_IntPush( p.vRegs, iReg );\n    // add new variables\n    vSupp = (Vec_Int_t *)Vec_PtrEntry( p.vMatrix, iReg );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((iVar) = Vec_IntEntry(vSupp, i)), 1); i++  {\n        if p.pfPartVars[iVar] {\n            continue; }\n        p.pfPartVars[iVar] = 1;\n        Vec_IntPush( p.vFreeVars, iVar );\n    }\n    // add it to the cost\n    Vec_FltPush( p.vPartCost, 1.0*Vec_IntSize(p.vFreeVars)/Vec_IntSize(p.vRegs) );\n}"
+    },
+    {
+      "Name": "Aig_ManRegProjectOnehots",
+      "Start": 7462,
+      "End": 9173,
+      "BodyStart": 7574,
+      "Original": "Vec_Ptr_t * Aig_ManRegProjectOnehots( Aig_Man_t * pAig, Aig_Man_t * pPart, Vec_Ptr_t * vOnehots, int fVerbose )\n{\n    Vec_Ptr_t * vOnehotsPart = NULL;\n    Vec_Int_t * vGroup, * vGroupNew;\n    Aig_Obj_t * pObj, * pObjNew;\n    int nOffset, iReg, i, k;\n    // set the PI numbers\n    Aig_ManForEachCi( pPart, pObj, i )\n        pObj-\u003eiData = i;\n    // go through each group and check if registers are involved in this one\n    nOffset = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n    Vec_PtrForEachEntry( Vec_Int_t *, vOnehots, vGroup, i )\n    {\n        vGroupNew = NULL;\n        Vec_IntForEachEntry( vGroup, iReg, k )\n        {\n            pObj = Aig_ManCi( pAig, nOffset+iReg );\n            if ( !Aig_ObjIsTravIdCurrent(pAig, pObj) )\n                continue;\n            if ( vGroupNew == NULL )\n                vGroupNew = Vec_IntAlloc( Vec_IntSize(vGroup) );\n            pObjNew = (Aig_Obj_t *)pObj-\u003epData;\n            Vec_IntPush( vGroupNew, pObjNew-\u003eiData );\n        }\n        if ( vGroupNew == NULL )\n            continue;\n        if ( Vec_IntSize(vGroupNew) \u003e 1 )\n        {\n            if ( vOnehotsPart == NULL )\n                vOnehotsPart = Vec_PtrAlloc( 100 );\n            Vec_PtrPush( vOnehotsPart, vGroupNew );\n        }\n        else\n            Vec_IntFree( vGroupNew );\n    }\n    // clear the PI numbers\n    Aig_ManForEachCi( pPart, pObj, i )\n        pObj-\u003eiData = 0;\n    // print out\n    if ( vOnehotsPart \u0026\u0026 fVerbose )\n    {\n        printf( \"Partition contains %d groups of 1-hot registers: { \", Vec_PtrSize(vOnehotsPart) );\n        Vec_PtrForEachEntry( Vec_Int_t *, vOnehotsPart, vGroup, k )\n            printf( \"%d \", Vec_IntSize(vGroup) );\n        printf( \"}\\n\" );\n    }\n    return vOnehotsPart;\n}",
+      "Draft": "func Aig_ManRegProjectOnehots(pAig *Aig_Man_t, pPart *Aig_Man_t, vOnehots *Vec_Ptr_t, fVerbose int32) *Vec_Ptr_t {\n    var vOnehotsPart *Vec_Ptr_t  = nil;\n    var vGroup, vGroupNew *Vec_Int_t;\n    var pObj, pObjNew *Aig_Obj_t;\n    var nOffset, iReg, i, k int32;\n    // set the PI numbers\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pPart.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vCis, i)), 1); i++  {\n        pObj.iData = i;\n    }\n    // go through each group and check if registers are involved in this one\n    nOffset = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vOnehots)) \u0026\u0026 (((vGroup) = (Vec_Int_t *)Vec_PtrEntry(vOnehots, i)), 1); i++  {\n        vGroupNew = nil;\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vGroup)) \u0026\u0026 (((iReg) = Vec_IntEntry(vGroup, k)), 1); k++  {\n            pObj = Aig_ManCi( pAig, nOffset+iReg );\n            if !Aig_ObjIsTravIdCurrent(pAig, pObj) {\n                continue; }\n            if vGroupNew == nil {\n                vGroupNew = Vec_IntAlloc( Vec_IntSize(vGroup) ); }\n            pObjNew = (Aig_Obj_t *)pObj.pData;\n            Vec_IntPush( vGroupNew, pObjNew.iData );\n        }\n        if vGroupNew == nil {\n            continue; }\n        if Vec_IntSize(vGroupNew) \u003e 1 {\n            if vOnehotsPart == nil {\n                vOnehotsPart = Vec_PtrAlloc( 100 ); }\n            Vec_PtrPush( vOnehotsPart, vGroupNew );\n        \n        } else {\n            Vec_IntFree( vGroupNew ); }\n    }\n    // clear the PI numbers\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pPart.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vCis, i)), 1); i++  {\n        pObj.iData = 0;\n    }\n    // print out\n    if (vOnehotsPart != nil) \u0026\u0026 (fVerbose != 0) {\n        fmt.Printf(\"Partition contains %d groups of 1-hot registers: { \", Vec_PtrSize(vOnehotsPart));\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vOnehotsPart)) \u0026\u0026 (((vGroup) = (Vec_Int_t *)Vec_PtrEntry(vOnehotsPart, k)), 1); k++  {\n            fmt.Printf(\"%d \", Vec_IntSize(vGroup));\n        }\n        fmt.Printf(\"}\\n\");\n    }\n    return vOnehotsPart;\n}"
+    },
+    {
+      "Name": "Aig_ManRegCreatePart",
+      "Start": 9444,
+      "End": 12881,
+      "BodyStart": 9571,
+      "Original": "Aig_Man_t * Aig_ManRegCreatePart( Aig_Man_t * pAig, Vec_Int_t * vPart, int * pnCountPis, int * pnCountRegs, int ** ppMapBack )\n{\n    Aig_Man_t * pNew;\n    Aig_Obj_t * pObj, * pObjNew;\n    Vec_Ptr_t * vNodes;\n    Vec_Ptr_t * vRoots;\n    int nOffset, iOut, i;\n    int nCountPis, nCountRegs;\n    int * pMapBack;\n    // collect roots\n    vRoots = Vec_PtrAlloc( Vec_IntSize(vPart) );\n    nOffset = Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig);\n    Vec_IntForEachEntry( vPart, iOut, i )\n    {\n        pObj = Aig_ManCo(pAig, nOffset+iOut);\n        Vec_PtrPush( vRoots, Aig_ObjFanin0(pObj) );\n    }\n    // collect/mark nodes/PIs in the DFS order\n    vNodes = Aig_ManDfsNodes( pAig, (Aig_Obj_t **)Vec_PtrArray(vRoots), Vec_PtrSize(vRoots) );\n    Vec_PtrFree( vRoots );\n    // unmark register outputs\n    nOffset = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n    Vec_IntForEachEntry( vPart, iOut, i )\n    {\n        pObj = Aig_ManCi(pAig, nOffset+iOut);\n        Aig_ObjSetTravIdPrevious( pAig, pObj );\n    }\n    // count pure PIs\n    nCountPis = nCountRegs = 0;\n    Aig_ManForEachPiSeq( pAig, pObj, i )\n        nCountPis += Aig_ObjIsTravIdCurrent(pAig, pObj);\n    // count outputs of other registers\n    Aig_ManForEachLoSeq( pAig, pObj, i )\n        nCountRegs += Aig_ObjIsTravIdCurrent(pAig, pObj); \n    if ( pnCountPis )\n        *pnCountPis = nCountPis;\n    if ( pnCountRegs )\n        *pnCountRegs = nCountRegs;\n    // create the new manager\n    pNew = Aig_ManStart( Vec_PtrSize(vNodes) );\n    Aig_ManConst1(pAig)-\u003epData = Aig_ManConst1(pNew);\n    // create the PIs\n    Aig_ManForEachCi( pAig, pObj, i )\n        if ( Aig_ObjIsTravIdCurrent(pAig, pObj) )\n            pObj-\u003epData = Aig_ObjCreateCi(pNew);\n    // add variables for the register outputs\n    // create fake POs to hold the register outputs\n    nOffset = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n    Vec_IntForEachEntry( vPart, iOut, i )\n    {\n        pObj = Aig_ManCi(pAig, nOffset+iOut);\n        pObj-\u003epData = Aig_ObjCreateCi(pNew);\n        Aig_ObjCreateCo( pNew, (Aig_Obj_t *)pObj-\u003epData );\n        Aig_ObjSetTravIdCurrent( pAig, pObj ); // added\n    }\n    // create the nodes\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        if ( Aig_ObjIsNode(pObj) )\n            pObj-\u003epData = Aig_And(pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    // add real POs for the registers\n    nOffset = Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig);\n    Vec_IntForEachEntry( vPart, iOut, i )\n    {\n        pObj = Aig_ManCo( pAig, nOffset+iOut );\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    pNew-\u003enRegs = Vec_IntSize(vPart);\n    // create map\n    if ( ppMapBack )\n    {\n        pMapBack = ABC_ALLOC( int, Aig_ManObjNumMax(pNew) );\n        memset( pMapBack, 0xff, sizeof(int) * Aig_ManObjNumMax(pNew) );\n        // map constant nodes\n        pMapBack[0] = 0;\n        // logic cones of register outputs\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes, pObj, i )\n        {\n            pObjNew = Aig_Regular((Aig_Obj_t *)pObj-\u003epData);\n            pMapBack[pObjNew-\u003eId] = pObj-\u003eId;\n        }\n        // map register outputs\n        nOffset = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n        Vec_IntForEachEntry( vPart, iOut, i )\n        {\n            pObj = Aig_ManCi(pAig, nOffset+iOut);\n            pObjNew = (Aig_Obj_t *)pObj-\u003epData;\n            pMapBack[pObjNew-\u003eId] = pObj-\u003eId;\n        }\n        *ppMapBack = pMapBack;\n    }\n    Vec_PtrFree( vNodes );\n    return pNew;\n}",
+      "Draft": "func Aig_ManRegCreatePart(pAig *Aig_Man_t, vPart *Vec_Int_t, pnCountPis *int32, pnCountRegs *int32, ppMapBack **int32) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj, pObjNew *Aig_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var vRoots *Vec_Ptr_t;\n    var nOffset, iOut, i int32;\n    var nCountPis, nCountRegs int32;\n    var pMapBack *int32;\n    // collect roots\n    vRoots = Vec_PtrAlloc( Vec_IntSize(vPart) );\n    nOffset = Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vPart)) \u0026\u0026 (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {\n        pObj = Aig_ManCo(pAig, nOffset+iOut);\n        Vec_PtrPush( vRoots, Aig_ObjFanin0(pObj) );\n    }\n    // collect/mark nodes/PIs in the DFS order\n    vNodes = Aig_ManDfsNodes( pAig, (Aig_Obj_t **)Vec_PtrArray(vRoots), Vec_PtrSize(vRoots) );\n    Vec_PtrFree( vRoots );\n    // unmark register outputs\n    nOffset = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vPart)) \u0026\u0026 (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {\n        pObj = Aig_ManCi(pAig, nOffset+iOut);\n        Aig_ObjSetTravIdPrevious( pAig, pObj );\n    }\n    // count pure PIs\n    nCountPis = nCountRegs = 0;\n    // inlining of macro Aig_ManForEachPiSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        nCountPis += Aig_ObjIsTravIdCurrent(pAig, pObj);\n    }\n    // count outputs of other registers\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig); (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        nCountRegs += Aig_ObjIsTravIdCurrent(pAig, pObj);\n    } \n    if pnCountPis != nil {\n        *pnCountPis = nCountPis; }\n    if pnCountRegs != nil {\n        *pnCountRegs = nCountRegs; }\n    // create the new manager\n    pNew = Aig_ManStart( Vec_PtrSize(vNodes) );\n    Aig_ManConst1(pAig).pData = Aig_ManConst1(pNew);\n    // create the PIs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n            pObj.pData = Aig_ObjCreateCi(pNew); }\n    }\n    // add variables for the register outputs\n    // create fake POs to hold the register outputs\n    nOffset = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vPart)) \u0026\u0026 (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {\n        pObj = Aig_ManCi(pAig, nOffset+iOut);\n        pObj.pData = Aig_ObjCreateCi(pNew);\n        Aig_ObjCreateCo( pNew, (Aig_Obj_t *)pObj.pData );\n        Aig_ObjSetTravIdCurrent( pAig, pObj ); // added\n    }\n    // create the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Aig_ObjIsNode(pObj) {\n            pObj.pData = Aig_And(pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // add real POs for the registers\n    nOffset = Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vPart)) \u0026\u0026 (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {\n        pObj = Aig_ManCo( pAig, nOffset+iOut );\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    pNew.nRegs = Vec_IntSize(vPart);\n    // create map\n    if ppMapBack {\n        // inlining of macro ABC_ALLOC\n        pMapBack = ((int *) malloc(sizeof(int) * (size_t)(Aig_ManObjNumMax(pNew))));\n        memset( pMapBack, 0xff, sizeof(int) * Aig_ManObjNumMax(pNew) );\n        // map constant nodes\n        pMapBack[0] = 0;\n        // logic cones of register outputs\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n            pObjNew = Aig_Regular((Aig_Obj_t *)pObj.pData);\n            pMapBack[pObjNew.Id] = pObj.Id;\n        }\n        // map register outputs\n        nOffset = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vPart)) \u0026\u0026 (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {\n            pObj = Aig_ManCi(pAig, nOffset+iOut);\n            pObjNew = (Aig_Obj_t *)pObj.pData;\n            pMapBack[pObjNew.Id] = pObj.Id;\n        }\n        *ppMapBack = pMapBack;\n    }\n    Vec_PtrFree( vNodes );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Aig_ManRegPartitionSmart",
+      "Start": 13152,
+      "End": 15286,
+      "BodyStart": 13224,
+      "Original": "Vec_Ptr_t * Aig_ManRegPartitionSmart( Aig_Man_t * pAig, int nPartSize )\n{\n    extern void Ioa_WriteAiger( Aig_Man_t * pMan, char * pFileName, int fWriteSymbols, int fCompact );\n\n    Aig_ManPre_t * p;\n    Vec_Ptr_t * vResult;\n    int iSeed, iNext, i, k;\n    // create the manager\n    p = Aig_ManRegManStart( pAig, nPartSize );\n    // add partitions as long as registers remain\n    for ( i = 0; (iSeed = Aig_ManRegFindSeed(p)) \u003e= 0; i++ )\n    {\n//printf( \"Seed variable = %d.\\n\", iSeed );\n        // clean the current partition information\n        Vec_IntClear( p-\u003evRegs );\n        Vec_IntClear( p-\u003evUniques );\n        Vec_IntClear( p-\u003evFreeVars );\n        Vec_FltClear( p-\u003evPartCost );\n        memset( p-\u003epfPartVars, 0, sizeof(char) * Aig_ManRegNum(p-\u003epAig) );\n        // add the register and its partition support\n        Aig_ManRegPartitionAdd( p, iSeed );\n        // select the best var to add\n        for ( k = 0; Vec_IntSize(p-\u003evRegs) \u003c p-\u003enRegsMax; k++ )\n        {\n            // get the next best variable\n            iNext = Aig_ManRegFindBestVar( p );\n            if ( iNext == -1 )\n                break;\n            // add the register to the support of the partition\n            Aig_ManRegPartitionAdd( p, iNext );\n            // report the result\n//printf( \"Part %3d  Reg %3d : Free = %4d. Total = %4d. Ratio = %6.2f. Unique = %4d.\\n\", i, k, \n//                Vec_IntSize(p-\u003evFreeVars), Vec_IntSize(p-\u003evRegs), \n//                1.0*Vec_IntSize(p-\u003evFreeVars)/Vec_IntSize(p-\u003evRegs), Vec_IntSize(p-\u003evUniques) );\n            // quit if there are not free variables\n            if ( Vec_IntSize(p-\u003evFreeVars) == 0 )\n                break;\n        }\n        // add this partition to the set\n        Vec_PtrPush( p-\u003evParts, Vec_IntDup(p-\u003evRegs) );        \nprintf( \"Part %3d  SUMMARY:  Free = %4d. Total = %4d. Ratio = %6.2f. Unique = %4d.\\n\", i,\n                Vec_IntSize(p-\u003evFreeVars), Vec_IntSize(p-\u003evRegs), \n                1.0*Vec_IntSize(p-\u003evFreeVars)/Vec_IntSize(p-\u003evRegs), Vec_IntSize(p-\u003evUniques) );\n//printf( \"\\n\" ); \n    }\n    vResult = p-\u003evParts; p-\u003evParts = NULL;\n    Aig_ManRegManStop( p );\n    return vResult;\n}",
+      "Draft": "func Aig_ManRegPartitionSmart(pAig *Aig_Man_t, nPartSize int32) *Vec_Ptr_t {\n    extern void Ioa_WriteAiger( Aig_Man_t * pMan, char * pFileName, int fWriteSymbols, int fCompact );\n\n    var p *Aig_ManPre_t;\n    var vResult *Vec_Ptr_t;\n    var iSeed, iNext, i, k int32;\n    // create the manager\n    p = Aig_ManRegManStart( pAig, nPartSize );\n    // add partitions as long as registers remain\n    for  i = 0; (iSeed = Aig_ManRegFindSeed(p)) \u003e= 0; i++  {\n//printf( \"Seed variable = %d.\\n\", iSeed );\n        // clean the current partition information\n        Vec_IntClear( p.vRegs );\n        Vec_IntClear( p.vUniques );\n        Vec_IntClear( p.vFreeVars );\n        Vec_FltClear( p.vPartCost );\n        memset( p.pfPartVars, 0, sizeof(char) * Aig_ManRegNum(p.pAig) );\n        // add the register and its partition support\n        Aig_ManRegPartitionAdd( p, iSeed );\n        // select the best var to add\n        for  k = 0; Vec_IntSize(p.vRegs) \u003c p.nRegsMax; k++  {\n            // get the next best variable\n            iNext = Aig_ManRegFindBestVar( p );\n            if iNext == -1 {\n                break; }\n            // add the register to the support of the partition\n            Aig_ManRegPartitionAdd( p, iNext );\n            // report the result\n//printf( \"Part %3d  Reg %3d : Free = %4d. Total = %4d. Ratio = %6.2f. Unique = %4d.\\n\", i, k, \n//                Vec_IntSize(p-\u003evFreeVars), Vec_IntSize(p-\u003evRegs), \n//                1.0*Vec_IntSize(p-\u003evFreeVars)/Vec_IntSize(p-\u003evRegs), Vec_IntSize(p-\u003evUniques) );\n            // quit if there are not free variables\n            if Vec_IntSize(p.vFreeVars) == 0 {\n                break; }\n        }\n        // add this partition to the set\n        Vec_PtrPush( p.vParts, Vec_IntDup(p.vRegs) );        \nfmt.Printf(\"Part %3d  SUMMARY:  Free = %4d. Total = %4d. Ratio = %6.2f. Unique = %4d.\\n\", i, Vec_IntSize(p.vFreeVars), Vec_IntSize(p.vRegs), 1.0*Vec_IntSize(p.vFreeVars)/Vec_IntSize(p.vRegs), Vec_IntSize(p.vUniques));\n//printf( \"\\n\" ); \n    }\n    vResult = p.vParts; p.vParts = nil;\n    Aig_ManRegManStop( p );\n    return vResult;\n}"
+    },
+    {
+      "Name": "Aig_ManRegPartitionSimple",
+      "Start": 15557,
+      "End": 16492,
+      "BodyStart": 15645,
+      "Original": "Vec_Ptr_t * Aig_ManRegPartitionSimple( Aig_Man_t * pAig, int nPartSize, int nOverSize )\n{\n    Vec_Ptr_t * vResult;\n    Vec_Int_t * vPart;\n    int i, Counter;\n    if ( nOverSize \u003e= nPartSize )\n    {\n        printf( \"Overlap size (%d) is more or equal than the partition size (%d).\\n\", nOverSize, nPartSize );\n        printf( \"Adjusting it to be equal to half of the partition size.\\n\" );\n        nOverSize = nPartSize/2;\n    }\n    assert( nOverSize \u003c nPartSize );\n    vResult = Vec_PtrAlloc( 100 );\n    for ( Counter = 0; Counter \u003c Aig_ManRegNum(pAig); Counter -= nOverSize )\n    {\n        vPart = Vec_IntAlloc( nPartSize );\n        for ( i = 0; i \u003c nPartSize; i++, Counter++ )\n            if ( Counter \u003c Aig_ManRegNum(pAig) )\n                Vec_IntPush( vPart, Counter );\n        if ( Vec_IntSize(vPart) \u003c= nOverSize )\n            Vec_IntFree(vPart);\n        else\n            Vec_PtrPush( vResult, vPart );\n    }\n    return vResult;\n}",
+      "Draft": "func Aig_ManRegPartitionSimple(pAig *Aig_Man_t, nPartSize int32, nOverSize int32) *Vec_Ptr_t {\n    var vResult *Vec_Ptr_t;\n    var vPart *Vec_Int_t;\n    var i, Counter int32;\n    if nOverSize \u003e= nPartSize {\n        fmt.Printf(\"Overlap size (%d) is more or equal than the partition size (%d).\\n\", nOverSize, nPartSize);\n        fmt.Printf(\"Adjusting it to be equal to half of the partition size.\\n\");\n        nOverSize = nPartSize/2;\n    }\n    assert(nOverSize \u003c nPartSize, \"nOverSize \u003c nPartSize\");\n    vResult = Vec_PtrAlloc( 100 );\n    for  Counter = 0; Counter \u003c Aig_ManRegNum(pAig); Counter -= nOverSize  {\n        vPart = Vec_IntAlloc( nPartSize );\n        for  i = 0; i \u003c nPartSize; i, Counter = i+1, Counter+1  {\n            if Counter \u003c Aig_ManRegNum(pAig) {\n                Vec_IntPush( vPart, Counter ); }\n        }\n        if Vec_IntSize(vPart) \u003c= nOverSize {\n            Vec_IntFree(vPart);\n        } else {\n            Vec_PtrPush( vResult, vPart ); }\n    }\n    return vResult;\n}"
+    },
+    {
+      "Name": "Aig_ManPartDivide",
+      "Start": 16773,
+      "End": 17723,
+      "BodyStart": 16870,
+      "Original": "void Aig_ManPartDivide( Vec_Ptr_t * vResult, Vec_Int_t * vDomain, int nPartSize, int nOverSize )\n{\n    Vec_Int_t * vPart;\n    int i, Counter;\n    assert( nPartSize \u0026\u0026 Vec_IntSize(vDomain) \u003e nPartSize );\n    if ( nOverSize \u003e= nPartSize )\n    {\n        printf( \"Overlap size (%d) is more or equal than the partition size (%d).\\n\", nOverSize, nPartSize );\n        printf( \"Adjusting it to be equal to half of the partition size.\\n\" );\n        nOverSize = nPartSize/2;\n    }\n    assert( nOverSize \u003c nPartSize );\n    for ( Counter = 0; Counter \u003c Vec_IntSize(vDomain); Counter -= nOverSize )\n    {\n        vPart = Vec_IntAlloc( nPartSize );\n        for ( i = 0; i \u003c nPartSize; i++, Counter++ )\n            if ( Counter \u003c Vec_IntSize(vDomain) )\n                Vec_IntPush( vPart, Vec_IntEntry(vDomain, Counter) );\n        if ( Vec_IntSize(vPart) \u003c= nOverSize )\n            Vec_IntFree(vPart);\n        else\n            Vec_PtrPush( vResult, vPart );\n    }\n}",
+      "Draft": "func Aig_ManPartDivide(vResult *Vec_Ptr_t, vDomain *Vec_Int_t, nPartSize int32, nOverSize int32) {\n    var vPart *Vec_Int_t;\n    var i, Counter int32;\n    assert((nPartSize != 0) \u0026\u0026 Vec_IntSize(vDomain) \u003e nPartSize, \"nPartSize \u0026\u0026 Vec_IntSize(vDomain) \u003e nPartSize\");\n    if nOverSize \u003e= nPartSize {\n        fmt.Printf(\"Overlap size (%d) is more or equal than the partition size (%d).\\n\", nOverSize, nPartSize);\n        fmt.Printf(\"Adjusting it to be equal to half of the partition size.\\n\");\n        nOverSize = nPartSize/2;\n    }\n    assert(nOverSize \u003c nPartSize, \"nOverSize \u003c nPartSize\");\n    for  Counter = 0; Counter \u003c Vec_IntSize(vDomain); Counter -= nOverSize  {\n        vPart = Vec_IntAlloc( nPartSize );\n        for  i = 0; i \u003c nPartSize; i, Counter = i+1, Counter+1  {\n            if Counter \u003c Vec_IntSize(vDomain) {\n                Vec_IntPush( vPart, Vec_IntEntry(vDomain, Counter) ); }\n        }\n        if Vec_IntSize(vPart) \u003c= nOverSize {\n            Vec_IntFree(vPart);\n        } else {\n            Vec_PtrPush( vResult, vPart ); }\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManRegPartitionTraverse_rec",
+      "Start": 17994,
+      "End": 18586,
+      "BodyStart": 18084,
+      "Original": "void Aig_ManRegPartitionTraverse_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Vec_Ptr_t * vLos )\n{\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Aig_ObjSetTravIdCurrent( p, pObj );\n    if ( Aig_ObjIsCi(pObj) )\n    {\n        if ( pObj-\u003eiData \u003e= Aig_ManCiNum(p) - Aig_ManRegNum(p) )\n        {\n            Vec_PtrPush( vLos, pObj );\n            printf( \"%d \", pObj-\u003eiData - (Aig_ManCiNum(p) - Aig_ManRegNum(p)) );\n        }\n        return;\n    }\n    Aig_ManRegPartitionTraverse_rec( p, Aig_ObjFanin0(pObj), vLos );\n    Aig_ManRegPartitionTraverse_rec( p, Aig_ObjFanin1(pObj), vLos );\n}",
+      "Draft": "func Aig_ManRegPartitionTraverse_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vLos *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent( p, pObj );\n    if Aig_ObjIsCi(pObj) {\n        if pObj.iData \u003e= Aig_ManCiNum(p) - Aig_ManRegNum(p) {\n            Vec_PtrPush( vLos, pObj );\n            fmt.Printf(\"%d \", pObj.iData - (Aig_ManCiNum(p) - Aig_ManRegNum(p)));\n        }\n        return;\n    }\n    Aig_ManRegPartitionTraverse_rec( p, Aig_ObjFanin0(pObj), vLos );\n    Aig_ManRegPartitionTraverse_rec( p, Aig_ObjFanin1(pObj), vLos );\n}"
+    },
+    {
+      "Name": "Aig_ManRegPartitionTraverse",
+      "Start": 18857,
+      "End": 19595,
+      "BodyStart": 18914,
+      "Original": "Vec_Ptr_t * Aig_ManRegPartitionTraverse( Aig_Man_t * p )\n{\n    Vec_Ptr_t * vLos;\n    Aig_Obj_t * pObj;\n    int i, nPrev, Counter;\n    // mark the registers\n    Aig_ManForEachCi( p, pObj, i )\n       pObj-\u003eiData = i; \n    // collect registers\n    vLos = Vec_PtrAlloc( Aig_ManRegNum(p) );\n    nPrev = 0;\n    Counter = 0;\n    Aig_ManIncrementTravId( p );\n    Aig_ManForEachLiSeq( p, pObj, i )\n    {\n        ++Counter;\n        printf( \"Latch %d: \", Counter );\n        Aig_ManRegPartitionTraverse_rec( p, Aig_ObjFanin0(pObj), vLos );\nprintf( \"%d=%d \\n\", Counter, Vec_PtrSize(vLos)-nPrev );\n        nPrev = Vec_PtrSize(vLos);\n    }\n    printf( \"Total collected = %d. Total regs = %d.\\n\", Vec_PtrSize(vLos), Aig_ManRegNum(p) );\n    return vLos;\n}",
+      "Draft": "func Aig_ManRegPartitionTraverse(p *Aig_Man_t) *Vec_Ptr_t {\n    var vLos *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i, nPrev, Counter int32;\n    // mark the registers\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n       pObj.iData = i;\n    } \n    // collect registers\n    vLos = Vec_PtrAlloc( Aig_ManRegNum(p) );\n    nPrev = 0;\n    Counter = 0;\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Aig_ManForEachLiSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        ++Counter;\n        fmt.Printf(\"Latch %d: \", Counter);\n        Aig_ManRegPartitionTraverse_rec( p, Aig_ObjFanin0(pObj), vLos );\nfmt.Printf(\"%d=%d \\n\", Counter, Vec_PtrSize(vLos)-nPrev);\n        nPrev = Vec_PtrSize(vLos);\n    }\n    fmt.Printf(\"Total collected = %d. Total regs = %d.\\n\", Vec_PtrSize(vLos), Aig_ManRegNum(p));\n    return vLos;\n}"
+    },
+    {
+      "Name": "Aig_ManRegPartitionLinear",
+      "Start": 19866,
+      "End": 20054,
+      "BodyStart": 19939,
+      "Original": "Vec_Ptr_t * Aig_ManRegPartitionLinear( Aig_Man_t * pAig, int nPartSize )\n{\n    Vec_Ptr_t * vLos;\n    vLos = Aig_ManRegPartitionTraverse( pAig );\n    Vec_PtrFree( vLos );\n    return NULL;\n}",
+      "Draft": "func Aig_ManRegPartitionLinear(pAig *Aig_Man_t, nPartSize int32) *Vec_Ptr_t {\n    var vLos *Vec_Ptr_t;\n    vLos = Aig_ManRegPartitionTraverse( pAig );\n    Vec_PtrFree( vLos );\n    return nil;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::struct::Aig_ManPre_t",
+      "Category": "struct-review",
+      "Symbol": "Aig_ManPre_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 797,
+      "End": 1682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::mechanical::sizeof::2345",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2275,
+      "End": 2275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::mechanical::sizeof::2401",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2323,
+      "End": 2329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::mechanical::sizeof::2805",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2665,
+      "End": 2665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::mechanical::sizeof::2886",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2738,
+      "End": 2744
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::mechanical::sizeof::3010",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2800,
+      "End": 2800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::mechanical::sizeof::14888",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12100,
+      "End": 12100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::mechanical::sizeof::14970",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 12174,
+      "End": 12180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::mechanical::sizeof::16876",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 13871,
+      "End": 13877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::2321",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2275,
+      "End": 2275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::2789",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2665,
+      "End": 2665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::2994",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2800,
+      "End": 2800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::3409",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3191,
+      "End": 3204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::3478",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3260,
+      "End": 3273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::3704",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3417,
+      "End": 3417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::3831",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3448,
+      "End": 3448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::3946",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3479,
+      "End": 3479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::4690",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4208,
+      "End": 4221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::5845",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5148,
+      "End": 5161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::7530",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6729,
+      "End": 6742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::8812",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7742,
+      "End": 7742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::9138",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7937,
+      "End": 7937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::9640",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8339,
+      "End": 8352
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::10245",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8779,
+      "End": 8779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::10607",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9006,
+      "End": 9006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::11812",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10112,
+      "End": 10126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::12479",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10489,
+      "End": 10489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::12842",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10627,
+      "End": 10627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::13389",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10994,
+      "End": 10994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::13967",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11449,
+      "End": 11462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::14193",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11567,
+      "End": 11567
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::14873",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12100,
+      "End": 12100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::15224",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12320,
+      "End": 12320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::15317",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12416,
+      "End": 12429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::15722",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12717,
+      "End": 12730
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::22183",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19017,
+      "End": 19017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::pointer-cast::22597",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19212,
+      "End": 19212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::Aig_ManRegManStart",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRegManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2174,
+      "End": 2858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::ternary::Aig_ManRegManStop",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ManRegManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3129,
+      "End": 3495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::Aig_ManRegManStop",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRegManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3129,
+      "End": 3495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::Aig_ManRegFindSeed",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRegFindSeed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3877,
+      "End": 4478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::Aig_ManRegFindBestVar",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRegFindBestVar",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4764,
+      "End": 5753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::Aig_ManRegPartitionAdd",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRegPartitionAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6024,
+      "End": 7076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::Aig_ManRegProjectOnehots",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRegProjectOnehots",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7462,
+      "End": 9173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::Aig_ManRegCreatePart",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRegCreatePart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9444,
+      "End": 12881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::Aig_ManRegPartitionSmart",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRegPartitionSmart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13152,
+      "End": 15286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::Aig_ManRegPartitionSimple",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRegPartitionSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15557,
+      "End": 16492
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::Aig_ManPartDivide",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPartDivide",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16773,
+      "End": 17723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::Aig_ManRegPartitionTraverse_rec",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRegPartitionTraverse_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17994,
+      "End": 18586
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::Aig_ManRegPartitionTraverse",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRegPartitionTraverse",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18857,
+      "End": 19595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::Aig_ManRegPartitionLinear",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManRegPartitionLinear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19866,
+      "End": 20054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPartReg.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20302
+    }
+  ],
+  "Draft": "package aig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [aigPartReg.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Register partitioning algorithm.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigPartReg.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n//#include \"fra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n           \n\ntype Aig_ManPre_t struct {\n    // input data    \n    pAig      *Aig_Man_t;            // seq AIG manager \n    vMatrix      *Vec_Ptr_t;         // register dependency\n    nRegsMax             int32;        // the max number of registers in the cluster\n    // information about partitions\n    vParts      *Vec_Ptr_t;          // the partitions\n    pfUsedRegs           string;      // the registers already included in the partitions\n    // info about the current partition\n    vRegs      *Vec_Int_t;           // registers of this partition\n    vUniques      *Vec_Int_t;        // unique registers of this partition\n    vFreeVars      *Vec_Int_t;       // free variables of this partition\n    vPartCost      *Vec_Flt_t;       // costs of adding each variable\n    pfPartVars           string;      // input/output registers of the partition\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes partitioning of registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRegManStart(pAig *Aig_Man_t, nPartSize int32) *Aig_ManPre_t {\n    var p *Aig_ManPre_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Aig_ManPre_t *) malloc(sizeof(Aig_ManPre_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Aig_ManPre_t) );\n    p.pAig      = pAig;\n    p.vMatrix   = Aig_ManSupportsRegisters( pAig );\n    p.nRegsMax  = nPartSize;\n    p.vParts    = Vec_PtrAlloc(256);\n    p.vRegs     = Vec_IntAlloc(256);\n    p.vUniques  = Vec_IntAlloc(256);\n    p.vFreeVars = Vec_IntAlloc(256);\n    p.vPartCost = Vec_FltAlloc(256);\n    // inlining of macro ABC_ALLOC\n    p.pfUsedRegs = ((char *) malloc(sizeof(char) * (size_t)(Aig_ManRegNum(p.pAig))));\n    memset( p.pfUsedRegs, 0, sizeof(char) * Aig_ManRegNum(p.pAig) );\n    // inlining of macro ABC_ALLOC\n    p.pfPartVars  = ((char *) malloc(sizeof(char) * (size_t)(Aig_ManRegNum(p.pAig))));\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes partitioning of registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRegManStop(p *Aig_ManPre_t) {\n    Vec_VecFree( (Vec_Vec_t *)p.vMatrix );\n    if p.vParts {\n        Vec_VecFree( (Vec_Vec_t *)p.vParts ); }\n    Vec_IntFree( p.vRegs );\n    Vec_IntFree( p.vUniques );\n    Vec_IntFree( p.vFreeVars );\n    Vec_FltFree( p.vPartCost );\n    // inlining of macro ABC_FREE\n    ((p.pfUsedRegs) ? (free((char *) (p.pfUsedRegs)), (p.pfUsedRegs) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pfPartVars) ? (free((char *) (p.pfPartVars)), (p.pfPartVars) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Determines what register to use as the seed.]\n\n  Description [The register is selected as the one having the largest\n  number of non-taken registers in its support.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRegFindSeed(p *Aig_ManPre_t) int32 {\n    var vRegs *Vec_Int_t;\n    var i, k, iReg int32;\n    var iMax int32  = -1; // Suppress \"might be used uninitialized\"\n    var nRegsCur int32;\n    var nRegsMax int32 = -1;\n    for  i = 0; i \u003c Aig_ManRegNum(p.pAig); i++  {\n        if p.pfUsedRegs[i] {\n            continue; }\n        nRegsCur = 0;\n        vRegs = (Vec_Int_t *)Vec_PtrEntry( p.vMatrix, i );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vRegs)) \u0026\u0026 (((iReg) = Vec_IntEntry(vRegs, k)), 1); k++  {\n            nRegsCur += !p.pfUsedRegs[iReg];\n        }\n        if nRegsMax \u003c nRegsCur {\n            nRegsMax = nRegsCur;\n            iMax = i;\n        }\n    }\n    return iMax;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the next register to be added to the set.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRegFindBestVar(p *Aig_ManPre_t) int32 {\n    var vSupp *Vec_Int_t;\n    var nNewVars int32;\n    var nNewVarsBest int32 = ABC_INFINITY;\n    var iVarFree int32;\n    var iVarSupp int32;\n    var iVarBest int32 = -1;\n    var i int32;\n    var k int32;\n    // go through the free variables\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vFreeVars)) \u0026\u0026 (((iVarFree) = Vec_IntEntry(p.vFreeVars, i)), 1); i++  {\n//        if ( p-\u003epfUsedRegs[iVarFree] )\n//            continue;\n        // get support of this variable\n        vSupp = (Vec_Int_t *)Vec_PtrEntry( p.vMatrix, iVarFree );\n        // count the number of new vars\n        nNewVars = 0;\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((iVarSupp) = Vec_IntEntry(vSupp, k)), 1); k++  {\n            if p.pfPartVars[iVarSupp] {\n                continue; }\n            nNewVars += 1 + 3 * p.pfUsedRegs[iVarSupp];\n        }\n        // quit if there is no new variables\n        if nNewVars == 0 {\n            return iVarFree; }\n        // compare the cost of this\n        if nNewVarsBest \u003e nNewVars {\n            nNewVarsBest = nNewVars;\n            iVarBest = iVarFree;\n        }\n    }\n    return iVarBest;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes partitioning of registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRegPartitionAdd(p *Aig_ManPre_t, iReg int32) {\n    var vSupp *Vec_Int_t;\n    var RetValue, iVar, i int32;\n    // make sure this is a new variable\n//    assert( !p-\u003epfUsedRegs[iReg] );\n    if !p.pfUsedRegs[iReg] {\n        p.pfUsedRegs[iReg] = 1;\n        Vec_IntPush( p.vUniques, iReg );\n    }\n    // remove it from the free variables\n    if Vec_IntSize(p.vFreeVars) \u003e 0 {\n        assert(p.pfPartVars[iReg], \"p.pfPartVars[iReg]\");\n        RetValue = Vec_IntRemove( p.vFreeVars, iReg );\n        assert(RetValue, \"RetValue\");\n    \n    } else {\n        assert(!p.pfPartVars[iReg], \"!p.pfPartVars[iReg]\"); }\n    // add it to the partition\n    p.pfPartVars[iReg] = 1;\n    Vec_IntPush( p.vRegs, iReg );\n    // add new variables\n    vSupp = (Vec_Int_t *)Vec_PtrEntry( p.vMatrix, iReg );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((iVar) = Vec_IntEntry(vSupp, i)), 1); i++  {\n        if p.pfPartVars[iVar] {\n            continue; }\n        p.pfPartVars[iVar] = 1;\n        Vec_IntPush( p.vFreeVars, iVar );\n    }\n    // add it to the cost\n    Vec_FltPush( p.vPartCost, 1.0*Vec_IntSize(p.vFreeVars)/Vec_IntSize(p.vRegs) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates projection of 1-hot registers onto the given partition.]\n\n  Description [Assumes that the relevant register outputs are labeled with\n  the current traversal ID.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRegProjectOnehots(pAig *Aig_Man_t, pPart *Aig_Man_t, vOnehots *Vec_Ptr_t, fVerbose int32) *Vec_Ptr_t {\n    var vOnehotsPart *Vec_Ptr_t  = nil;\n    var vGroup, vGroupNew *Vec_Int_t;\n    var pObj, pObjNew *Aig_Obj_t;\n    var nOffset, iReg, i, k int32;\n    // set the PI numbers\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pPart.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vCis, i)), 1); i++  {\n        pObj.iData = i;\n    }\n    // go through each group and check if registers are involved in this one\n    nOffset = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vOnehots)) \u0026\u0026 (((vGroup) = (Vec_Int_t *)Vec_PtrEntry(vOnehots, i)), 1); i++  {\n        vGroupNew = nil;\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vGroup)) \u0026\u0026 (((iReg) = Vec_IntEntry(vGroup, k)), 1); k++  {\n            pObj = Aig_ManCi( pAig, nOffset+iReg );\n            if !Aig_ObjIsTravIdCurrent(pAig, pObj) {\n                continue; }\n            if vGroupNew == nil {\n                vGroupNew = Vec_IntAlloc( Vec_IntSize(vGroup) ); }\n            pObjNew = (Aig_Obj_t *)pObj.pData;\n            Vec_IntPush( vGroupNew, pObjNew.iData );\n        }\n        if vGroupNew == nil {\n            continue; }\n        if Vec_IntSize(vGroupNew) \u003e 1 {\n            if vOnehotsPart == nil {\n                vOnehotsPart = Vec_PtrAlloc( 100 ); }\n            Vec_PtrPush( vOnehotsPart, vGroupNew );\n        \n        } else {\n            Vec_IntFree( vGroupNew ); }\n    }\n    // clear the PI numbers\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pPart.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pPart.vCis, i)), 1); i++  {\n        pObj.iData = 0;\n    }\n    // print out\n    if (vOnehotsPart != nil) \u0026\u0026 (fVerbose != 0) {\n        fmt.Printf(\"Partition contains %d groups of 1-hot registers: { \", Vec_PtrSize(vOnehotsPart));\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vOnehotsPart)) \u0026\u0026 (((vGroup) = (Vec_Int_t *)Vec_PtrEntry(vOnehotsPart, k)), 1); k++  {\n            fmt.Printf(\"%d \", Vec_IntSize(vGroup));\n        }\n        fmt.Printf(\"}\\n\");\n    }\n    return vOnehotsPart;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes partitioning of registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRegCreatePart(pAig *Aig_Man_t, vPart *Vec_Int_t, pnCountPis *int32, pnCountRegs *int32, ppMapBack **int32) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj, pObjNew *Aig_Obj_t;\n    var vNodes *Vec_Ptr_t;\n    var vRoots *Vec_Ptr_t;\n    var nOffset, iOut, i int32;\n    var nCountPis, nCountRegs int32;\n    var pMapBack *int32;\n    // collect roots\n    vRoots = Vec_PtrAlloc( Vec_IntSize(vPart) );\n    nOffset = Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vPart)) \u0026\u0026 (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {\n        pObj = Aig_ManCo(pAig, nOffset+iOut);\n        Vec_PtrPush( vRoots, Aig_ObjFanin0(pObj) );\n    }\n    // collect/mark nodes/PIs in the DFS order\n    vNodes = Aig_ManDfsNodes( pAig, (Aig_Obj_t **)Vec_PtrArray(vRoots), Vec_PtrSize(vRoots) );\n    Vec_PtrFree( vRoots );\n    // unmark register outputs\n    nOffset = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vPart)) \u0026\u0026 (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {\n        pObj = Aig_ManCi(pAig, nOffset+iOut);\n        Aig_ObjSetTravIdPrevious( pAig, pObj );\n    }\n    // count pure PIs\n    nCountPis = nCountRegs = 0;\n    // inlining of macro Aig_ManForEachPiSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        nCountPis += Aig_ObjIsTravIdCurrent(pAig, pObj);\n    }\n    // count outputs of other registers\n    // inlining of macro Aig_ManForEachLoSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig); (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        nCountRegs += Aig_ObjIsTravIdCurrent(pAig, pObj);\n    } \n    if pnCountPis != nil {\n        *pnCountPis = nCountPis; }\n    if pnCountRegs != nil {\n        *pnCountRegs = nCountRegs; }\n    // create the new manager\n    pNew = Aig_ManStart( Vec_PtrSize(vNodes) );\n    Aig_ManConst1(pAig).pData = Aig_ManConst1(pNew);\n    // create the PIs\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        if Aig_ObjIsTravIdCurrent(pAig, pObj) {\n            pObj.pData = Aig_ObjCreateCi(pNew); }\n    }\n    // add variables for the register outputs\n    // create fake POs to hold the register outputs\n    nOffset = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vPart)) \u0026\u0026 (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {\n        pObj = Aig_ManCi(pAig, nOffset+iOut);\n        pObj.pData = Aig_ObjCreateCi(pNew);\n        Aig_ObjCreateCo( pNew, (Aig_Obj_t *)pObj.pData );\n        Aig_ObjSetTravIdCurrent( pAig, pObj ); // added\n    }\n    // create the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Aig_ObjIsNode(pObj) {\n            pObj.pData = Aig_And(pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // add real POs for the registers\n    nOffset = Aig_ManCoNum(pAig)-Aig_ManRegNum(pAig);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vPart)) \u0026\u0026 (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {\n        pObj = Aig_ManCo( pAig, nOffset+iOut );\n        Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    pNew.nRegs = Vec_IntSize(vPart);\n    // create map\n    if ppMapBack {\n        // inlining of macro ABC_ALLOC\n        pMapBack = ((int *) malloc(sizeof(int) * (size_t)(Aig_ManObjNumMax(pNew))));\n        memset( pMapBack, 0xff, sizeof(int) * Aig_ManObjNumMax(pNew) );\n        // map constant nodes\n        pMapBack[0] = 0;\n        // logic cones of register outputs\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n            pObjNew = Aig_Regular((Aig_Obj_t *)pObj.pData);\n            pMapBack[pObjNew.Id] = pObj.Id;\n        }\n        // map register outputs\n        nOffset = Aig_ManCiNum(pAig)-Aig_ManRegNum(pAig);\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vPart)) \u0026\u0026 (((iOut) = Vec_IntEntry(vPart, i)), 1); i++  {\n            pObj = Aig_ManCi(pAig, nOffset+iOut);\n            pObjNew = (Aig_Obj_t *)pObj.pData;\n            pMapBack[pObjNew.Id] = pObj.Id;\n        }\n        *ppMapBack = pMapBack;\n    }\n    Vec_PtrFree( vNodes );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes partitioning of registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRegPartitionSmart(pAig *Aig_Man_t, nPartSize int32) *Vec_Ptr_t {\n    extern void Ioa_WriteAiger( Aig_Man_t * pMan, char * pFileName, int fWriteSymbols, int fCompact );\n\n    var p *Aig_ManPre_t;\n    var vResult *Vec_Ptr_t;\n    var iSeed, iNext, i, k int32;\n    // create the manager\n    p = Aig_ManRegManStart( pAig, nPartSize );\n    // add partitions as long as registers remain\n    for  i = 0; (iSeed = Aig_ManRegFindSeed(p)) \u003e= 0; i++  {\n//printf( \"Seed variable = %d.\\n\", iSeed );\n        // clean the current partition information\n        Vec_IntClear( p.vRegs );\n        Vec_IntClear( p.vUniques );\n        Vec_IntClear( p.vFreeVars );\n        Vec_FltClear( p.vPartCost );\n        memset( p.pfPartVars, 0, sizeof(char) * Aig_ManRegNum(p.pAig) );\n        // add the register and its partition support\n        Aig_ManRegPartitionAdd( p, iSeed );\n        // select the best var to add\n        for  k = 0; Vec_IntSize(p.vRegs) \u003c p.nRegsMax; k++  {\n            // get the next best variable\n            iNext = Aig_ManRegFindBestVar( p );\n            if iNext == -1 {\n                break; }\n            // add the register to the support of the partition\n            Aig_ManRegPartitionAdd( p, iNext );\n            // report the result\n//printf( \"Part %3d  Reg %3d : Free = %4d. Total = %4d. Ratio = %6.2f. Unique = %4d.\\n\", i, k, \n//                Vec_IntSize(p-\u003evFreeVars), Vec_IntSize(p-\u003evRegs), \n//                1.0*Vec_IntSize(p-\u003evFreeVars)/Vec_IntSize(p-\u003evRegs), Vec_IntSize(p-\u003evUniques) );\n            // quit if there are not free variables\n            if Vec_IntSize(p.vFreeVars) == 0 {\n                break; }\n        }\n        // add this partition to the set\n        Vec_PtrPush( p.vParts, Vec_IntDup(p.vRegs) );        \nfmt.Printf(\"Part %3d  SUMMARY:  Free = %4d. Total = %4d. Ratio = %6.2f. Unique = %4d.\\n\", i, Vec_IntSize(p.vFreeVars), Vec_IntSize(p.vRegs), 1.0*Vec_IntSize(p.vFreeVars)/Vec_IntSize(p.vRegs), Vec_IntSize(p.vUniques));\n//printf( \"\\n\" ); \n    }\n    vResult = p.vParts; p.vParts = nil;\n    Aig_ManRegManStop( p );\n    return vResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes partitioning of registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRegPartitionSimple(pAig *Aig_Man_t, nPartSize int32, nOverSize int32) *Vec_Ptr_t {\n    var vResult *Vec_Ptr_t;\n    var vPart *Vec_Int_t;\n    var i, Counter int32;\n    if nOverSize \u003e= nPartSize {\n        fmt.Printf(\"Overlap size (%d) is more or equal than the partition size (%d).\\n\", nOverSize, nPartSize);\n        fmt.Printf(\"Adjusting it to be equal to half of the partition size.\\n\");\n        nOverSize = nPartSize/2;\n    }\n    assert(nOverSize \u003c nPartSize, \"nOverSize \u003c nPartSize\");\n    vResult = Vec_PtrAlloc( 100 );\n    for  Counter = 0; Counter \u003c Aig_ManRegNum(pAig); Counter -= nOverSize  {\n        vPart = Vec_IntAlloc( nPartSize );\n        for  i = 0; i \u003c nPartSize; i, Counter = i+1, Counter+1  {\n            if Counter \u003c Aig_ManRegNum(pAig) {\n                Vec_IntPush( vPart, Counter ); }\n        }\n        if Vec_IntSize(vPart) \u003c= nOverSize {\n            Vec_IntFree(vPart);\n        } else {\n            Vec_PtrPush( vResult, vPart ); }\n    }\n    return vResult;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Divides a large partition into several ones.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPartDivide(vResult *Vec_Ptr_t, vDomain *Vec_Int_t, nPartSize int32, nOverSize int32) {\n    var vPart *Vec_Int_t;\n    var i, Counter int32;\n    assert((nPartSize != 0) \u0026\u0026 Vec_IntSize(vDomain) \u003e nPartSize, \"nPartSize \u0026\u0026 Vec_IntSize(vDomain) \u003e nPartSize\");\n    if nOverSize \u003e= nPartSize {\n        fmt.Printf(\"Overlap size (%d) is more or equal than the partition size (%d).\\n\", nOverSize, nPartSize);\n        fmt.Printf(\"Adjusting it to be equal to half of the partition size.\\n\");\n        nOverSize = nPartSize/2;\n    }\n    assert(nOverSize \u003c nPartSize, \"nOverSize \u003c nPartSize\");\n    for  Counter = 0; Counter \u003c Vec_IntSize(vDomain); Counter -= nOverSize  {\n        vPart = Vec_IntAlloc( nPartSize );\n        for  i = 0; i \u003c nPartSize; i, Counter = i+1, Counter+1  {\n            if Counter \u003c Vec_IntSize(vDomain) {\n                Vec_IntPush( vPart, Vec_IntEntry(vDomain, Counter) ); }\n        }\n        if Vec_IntSize(vPart) \u003c= nOverSize {\n            Vec_IntFree(vPart);\n        } else {\n            Vec_PtrPush( vResult, vPart ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes partitioning of registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRegPartitionTraverse_rec(p *Aig_Man_t, pObj *Aig_Obj_t, vLos *Vec_Ptr_t) {\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Aig_ObjSetTravIdCurrent( p, pObj );\n    if Aig_ObjIsCi(pObj) {\n        if pObj.iData \u003e= Aig_ManCiNum(p) - Aig_ManRegNum(p) {\n            Vec_PtrPush( vLos, pObj );\n            fmt.Printf(\"%d \", pObj.iData - (Aig_ManCiNum(p) - Aig_ManRegNum(p)));\n        }\n        return;\n    }\n    Aig_ManRegPartitionTraverse_rec( p, Aig_ObjFanin0(pObj), vLos );\n    Aig_ManRegPartitionTraverse_rec( p, Aig_ObjFanin1(pObj), vLos );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes partitioning of registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRegPartitionTraverse(p *Aig_Man_t) *Vec_Ptr_t {\n    var vLos *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i, nPrev, Counter int32;\n    // mark the registers\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n       pObj.iData = i;\n    } \n    // collect registers\n    vLos = Vec_PtrAlloc( Aig_ManRegNum(p) );\n    nPrev = 0;\n    Counter = 0;\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Aig_ManForEachLiSeq\n    // inlining of macro Vec_PtrForEachEntryStart\n    for  i = Aig_ManCoNum(p)-Aig_ManRegNum(p); (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        ++Counter;\n        fmt.Printf(\"Latch %d: \", Counter);\n        Aig_ManRegPartitionTraverse_rec( p, Aig_ObjFanin0(pObj), vLos );\nfmt.Printf(\"%d=%d \\n\", Counter, Vec_PtrSize(vLos)-nPrev);\n        nPrev = Vec_PtrSize(vLos);\n    }\n    fmt.Printf(\"Total collected = %d. Total regs = %d.\\n\", Vec_PtrSize(vLos), Aig_ManRegNum(p));\n    return vLos;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes partitioning of registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManRegPartitionLinear(pAig *Aig_Man_t, nPartSize int32) *Vec_Ptr_t {\n    var vLos *Vec_Ptr_t;\n    vLos = Aig_ManRegPartitionTraverse( pAig );\n    Vec_PtrFree( vLos );\n    return nil;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

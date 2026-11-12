@@ -1,0 +1,73 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCore.c",
+  "SHA256": "633371e0457c2fe539847f54b750e5063a07b7e887b32a16e9c4a67bb54fa6ae",
+  "Functions": [
+    {
+      "Name": "Csw_Sweep",
+      "Start": 1197,
+      "End": 3055,
+      "BodyStart": 1281,
+      "Original": "Aig_Man_t * Csw_Sweep( Aig_Man_t * pAig, int nCutsMax, int nLeafMax, int fVerbose )\n{\n    Csw_Man_t * p;\n    Aig_Man_t * pRes;\n    Aig_Obj_t * pObj, * pObjNew, * pObjRes;\n    int i;\n    abctime clk;\nclk = Abc_Clock();\n    // start the manager\n    p = Csw_ManStart( pAig, nCutsMax, nLeafMax, fVerbose );\n    // set elementary cuts at the PIs\n    Aig_ManForEachCi( p-\u003epManRes, pObj, i )\n    {\n        Csw_ObjPrepareCuts( p, pObj, 1 );\n        Csw_ObjAddRefs( p, pObj, Aig_ManCi(p-\u003epManAig,i)-\u003enRefs );\n    }\n    // process the nodes\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        // create the new node\n        pObjNew = Aig_And( p-\u003epManRes, Csw_ObjChild0Equiv(p, pObj), Csw_ObjChild1Equiv(p, pObj) );\n        // check if this node can be represented using another node\n//        pObjRes = Csw_ObjSweep( p, Aig_Regular(pObjNew), pObj-\u003enRefs \u003e 1 );\n//        pObjRes = Aig_NotCond( pObjRes, Aig_IsComplement(pObjNew) );\n        // try recursively if resubsitution is used\n        do {\n            pObjRes = Csw_ObjSweep( p, Aig_Regular(pObjNew), pObj-\u003enRefs \u003e 1 );\n            pObjRes = Aig_NotCond( pObjRes, Aig_IsComplement(pObjNew) );        \n            pObjNew = pObjRes;\n        } while ( Csw_ObjCuts(p, Aig_Regular(pObjNew)) == NULL \u0026\u0026 !Aig_ObjIsConst1(Aig_Regular(pObjNew)) );\n        // save the resulting node\n        Csw_ObjSetEquiv( p, pObj, pObjRes );\n        // add to the reference counter\n        Csw_ObjAddRefs( p, Aig_Regular(pObjRes), pObj-\u003enRefs );\n    }\n    // add the POs\n    Aig_ManForEachCo( pAig, pObj, i )\n        Aig_ObjCreateCo( p-\u003epManRes, Csw_ObjChild0Equiv(p, pObj) );\n    // remove dangling nodes \n    Aig_ManCleanup( p-\u003epManRes );\n    // return the resulting manager\np-\u003etimeTotal = Abc_Clock() - clk;\np-\u003etimeOther = p-\u003etimeTotal - p-\u003etimeCuts - p-\u003etimeHash;\n    pRes = p-\u003epManRes;\n    Csw_ManStop( p );\n    return pRes;\n}",
+      "Draft": "func Csw_Sweep(pAig *Aig_Man_t, nCutsMax int32, nLeafMax int32, fVerbose int32) *Aig_Man_t {\n    var p *Csw_Man_t;\n    var pRes *Aig_Man_t;\n    var pObj, pObjNew, pObjRes *Aig_Obj_t;\n    var i int32;\n    var clk abctime;\nclk = Abc_Clock();\n    // start the manager\n    p = Csw_ManStart( pAig, nCutsMax, nLeafMax, fVerbose );\n    // set elementary cuts at the PIs\n    Aig_ManForEachCi( p.pManRes, pObj, i )\n    {\n        Csw_ObjPrepareCuts( p, pObj, 1 );\n        Csw_ObjAddRefs( p, pObj, Aig_ManCi(p.pManAig,i).nRefs );\n    }\n    // process the nodes\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        // create the new node\n        pObjNew = Aig_And( p.pManRes, Csw_ObjChild0Equiv(p, pObj), Csw_ObjChild1Equiv(p, pObj) );\n        // check if this node can be represented using another node\n//        pObjRes = Csw_ObjSweep( p, Aig_Regular(pObjNew), pObj-\u003enRefs \u003e 1 );\n//        pObjRes = Aig_NotCond( pObjRes, Aig_IsComplement(pObjNew) );\n        // try recursively if resubsitution is used\n        for {\n            pObjRes = Csw_ObjSweep( p, Aig_Regular(pObjNew), pObj.nRefs \u003e 1 );\n            pObjRes = Aig_NotCond( pObjRes, Aig_IsComplement(pObjNew) );        \n            pObjNew = pObjRes;\n        \nif !( Csw_ObjCuts(p, Aig_Regular(pObjNew)) == nil \u0026\u0026 !Aig_ObjIsConst1(Aig_Regular(pObjNew)) ) { break }\n} \n        // save the resulting node\n        Csw_ObjSetEquiv( p, pObj, pObjRes );\n        // add to the reference counter\n        Csw_ObjAddRefs( p, Aig_Regular(pObjRes), pObj.nRefs );\n    }\n    // add the POs\n    Aig_ManForEachCo( pAig, pObj, i )\n        Aig_ObjCreateCo( p.pManRes, Csw_ObjChild0Equiv(p, pObj) );\n    // remove dangling nodes \n    Aig_ManCleanup( p.pManRes );\n    // return the resulting manager\np.timeTotal = Abc_Clock() - clk;\np.timeOther = p.timeTotal - p.timeCuts - p.timeHash;\n    pRes = p.pManRes;\n    Csw_ManStop( p );\n    return pRes;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCore.c::mechanical::do::2181",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 2181,
+      "End": 2183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCore.c::Csw_Sweep",
+      "Category": "semantic-review",
+      "Symbol": "Csw_Sweep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1197,
+      "End": 3055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCore.c::macro-inline::1542",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1542,
+      "End": 1581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCore.c::macro-inline::1732",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1732,
+      "End": 1767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/csw/cswCore.c::macro-inline::2699",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2699,
+      "End": 2732
+    }
+  ],
+  "Draft": "package csw\n\n/**CFile****************************************************************\n\n  FileName    [cswCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Cut sweeping.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - July 11, 2007.]\n\n  Revision    [$Id: cswCore.c,v 1.00 2007/07/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cswInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Csw_Sweep(pAig *Aig_Man_t, nCutsMax int32, nLeafMax int32, fVerbose int32) *Aig_Man_t {\n    var p *Csw_Man_t;\n    var pRes *Aig_Man_t;\n    var pObj, pObjNew, pObjRes *Aig_Obj_t;\n    var i int32;\n    var clk abctime;\nclk = Abc_Clock();\n    // start the manager\n    p = Csw_ManStart( pAig, nCutsMax, nLeafMax, fVerbose );\n    // set elementary cuts at the PIs\n    Aig_ManForEachCi( p.pManRes, pObj, i )\n    {\n        Csw_ObjPrepareCuts( p, pObj, 1 );\n        Csw_ObjAddRefs( p, pObj, Aig_ManCi(p.pManAig,i).nRefs );\n    }\n    // process the nodes\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        // create the new node\n        pObjNew = Aig_And( p.pManRes, Csw_ObjChild0Equiv(p, pObj), Csw_ObjChild1Equiv(p, pObj) );\n        // check if this node can be represented using another node\n//        pObjRes = Csw_ObjSweep( p, Aig_Regular(pObjNew), pObj-\u003enRefs \u003e 1 );\n//        pObjRes = Aig_NotCond( pObjRes, Aig_IsComplement(pObjNew) );\n        // try recursively if resubsitution is used\n        for {\n            pObjRes = Csw_ObjSweep( p, Aig_Regular(pObjNew), pObj.nRefs \u003e 1 );\n            pObjRes = Aig_NotCond( pObjRes, Aig_IsComplement(pObjNew) );        \n            pObjNew = pObjRes;\n        \nif !( Csw_ObjCuts(p, Aig_Regular(pObjNew)) == nil \u0026\u0026 !Aig_ObjIsConst1(Aig_Regular(pObjNew)) ) { break }\n} \n        // save the resulting node\n        Csw_ObjSetEquiv( p, pObj, pObjRes );\n        // add to the reference counter\n        Csw_ObjAddRefs( p, Aig_Regular(pObjRes), pObj.nRefs );\n    }\n    // add the POs\n    Aig_ManForEachCo( pAig, pObj, i )\n        Aig_ObjCreateCo( p.pManRes, Csw_ObjChild0Equiv(p, pObj) );\n    // remove dangling nodes \n    Aig_ManCleanup( p.pManRes );\n    // return the resulting manager\np.timeTotal = Abc_Clock() - clk;\np.timeOther = p.timeTotal - p.timeCuts - p.timeHash;\n    pRes = p.pManRes;\n    Csw_ManStop( p );\n    return pRes;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

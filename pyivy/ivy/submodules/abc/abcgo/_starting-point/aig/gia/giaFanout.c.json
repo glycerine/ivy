@@ -1,0 +1,786 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c",
+  "SHA256": "f48d11c9768adae0fe36debb34dd52a1b170915a30f08552bb6e226eff675c47",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 38,
+        "Column": 55,
+        "ByteOffset": 909
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Gia_FanoutCreate(FanId int32, Num int32) int32 { assert( Num \u003c 2 ); return (FanId \u003c\u003c 1) | Num;   } "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 44,
+        "Column": 59,
+        "ByteOffset": 1404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Gia_ObjFanout0Int(p *Gia_Man_t, ObjId int32) int32 { assert(ObjId \u003c p.nFansAlloc);  return p.pFanData[5*ObjId];                         }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 45,
+        "Column": 58,
+        "ByteOffset": 1546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Gia_ObjFanoutNext(p *Gia_Man_t, iFan int32) int32 { assert(iFan/2 \u003c p.nFansAlloc); return p.pFanData[5*(iFan \u003e\u003e 1) + 3 + (iFan \u0026 1)];  }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 5,
+        "ByteOffset": 2643
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFanData == nil );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 78,
+        "Column": 72,
+        "ByteOffset": 2850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pFanData = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(5 * p.nFansAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pFanData, 0, sizeof(int) * 5 * p.nFansAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 3645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFanData != nil );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 102,
+        "Column": 66,
+        "ByteOffset": 3739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pFanData) ? (free((char *) (p.pFanData)), (p.pFanData) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 5,
+        "ByteOffset": 4300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFanData );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 4326
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pObj) \u0026\u0026 !Gia_IsComplement(pFanout) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 4395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjId(p, pFanout) \u003e 0 );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 131,
+        "Column": 35,
+        "ByteOffset": 4725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pFanData = ((int *) realloc((char *)(p.pFanData), sizeof(int) * (size_t)(5 * nFansAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 133,
+        "Column": 35,
+        "ByteOffset": 4848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pFanData = ((int *) malloc(sizeof(int) * (size_t)(5 * nFansAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 135,
+        "Column": 9,
+        "ByteOffset": 4915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( p.pFanData + 5 * p.nFansAlloc, 0, sizeof(int) * 5 * (nFansAlloc - p.nFansAlloc) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 138,
+        "Column": 5,
+        "ByteOffset": 5051
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjId(p, pObj) \u003c p.nFansAlloc \u0026\u0026 Gia_ObjId(p, pFanout) \u003c p.nFansAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 151,
+        "Column": 9,
+        "ByteOffset": 5617
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *pNext == *pFirst );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 177,
+        "Column": 5,
+        "ByteOffset": 6245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFanData \u0026\u0026 Gia_ObjId(p, pObj) \u003c p.nFansAlloc \u0026\u0026 Gia_ObjId(p, pFanout) \u003c p.nFansAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 178,
+        "Column": 5,
+        "ByteOffset": 6348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_IsComplement(pObj) \u0026\u0026 !Gia_IsComplement(pFanout) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 179,
+        "Column": 5,
+        "ByteOffset": 6417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjId(p, pFanout) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 6752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pPrev == iFan );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 186,
+        "Column": 5,
+        "ByteOffset": 6782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pNext == iFan );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 188,
+        "Column": 5,
+        "ByteOffset": 6874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pFirst \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 230,
+        "Column": 5,
+        "ByteOffset": 8049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iOffset \u003c= Vec_IntSize(vEdgeMap) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 8537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vFanoutNums == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 251,
+        "Column": 5,
+        "ByteOffset": 8573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vFanout == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 284,
+        "Column": 9,
+        "ByteOffset": 10162
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vCounts, i) == Gia_ObjFanoutNum(p, pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 334,
+        "Column": 5,
+        "ByteOffset": 11719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vFanoutNums == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 335,
+        "Column": 5,
+        "ByteOffset": 11755
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vFanout == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 364,
+        "Column": 9,
+        "ByteOffset": 13262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntEntry(vCounts, i) == Gia_ObjFanoutNum(p, pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 403,
+        "Column": 9,
+        "ByteOffset": 14292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"   Fanouts : \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 405,
+        "Column": 13,
+        "ByteOffset": 14503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%5d \", Gia_ObjId(p, pFanout) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 407,
+        "Column": 9,
+        "ByteOffset": 14562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_FanoutCreate",
+      "Start": 838,
+      "End": 951,
+      "BodyStart": 900,
+      "Original": "static inline int   Gia_FanoutCreate( int FanId, int Num )    { assert( Num \u003c 2 ); return (FanId \u003c\u003c 1) | Num;   }",
+      "Draft": "func Gia_FanoutCreate(FanId int32, Num int32) int32 { assert(Num \u003c 2, \"Num \u003c 2\"); return (FanId \u003c\u003c 1) | Num;   }"
+    },
+    {
+      "Name": "Gia_FanoutObj",
+      "Start": 953,
+      "End": 1066,
+      "BodyStart": 1015,
+      "Original": "static inline int * Gia_FanoutObj( int * pData, int ObjId )   { return pData + 5*ObjId;                         }",
+      "Draft": "func Gia_FanoutObj(pData *int32, ObjId int32) *int32 { return pData + 5*ObjId;                         }"
+    },
+    {
+      "Name": "Gia_FanoutPrev",
+      "Start": 1067,
+      "End": 1180,
+      "BodyStart": 1129,
+      "Original": "static inline int * Gia_FanoutPrev( int * pData, int iFan )   { return pData + 5*(iFan \u003e\u003e 1) + 1 + (iFan \u0026 1);  }",
+      "Draft": "func Gia_FanoutPrev(pData *int32, iFan int32) *int32 { return pData + 5*(iFan \u003e\u003e 1) + 1 + (iFan \u0026 1);  }"
+    },
+    {
+      "Name": "Gia_FanoutNext",
+      "Start": 1181,
+      "End": 1294,
+      "BodyStart": 1243,
+      "Original": "static inline int * Gia_FanoutNext( int * pData, int iFan )   { return pData + 5*(iFan \u003e\u003e 1) + 3 + (iFan \u0026 1);  }",
+      "Draft": "func Gia_FanoutNext(pData *int32, iFan int32) *int32 { return pData + 5*(iFan \u003e\u003e 1) + 3 + (iFan \u0026 1);  }"
+    },
+    {
+      "Name": "Gia_ObjFanout0Int",
+      "Start": 1366,
+      "End": 1523,
+      "BodyStart": 1435,
+      "Original": "static inline int     Gia_ObjFanout0Int( Gia_Man_t * p, int ObjId )  { assert(ObjId \u003c p-\u003enFansAlloc);  return p-\u003epFanData[5*ObjId];                         }",
+      "Draft": "func Gia_ObjFanout0Int(p *Gia_Man_t, ObjId int32) int32 { assert(ObjId \u003c p.nFansAlloc, \"ObjId \u003c p.nFansAlloc\");  return p.pFanData[5*ObjId];                         }"
+    },
+    {
+      "Name": "Gia_ObjFanoutNext",
+      "Start": 1524,
+      "End": 1681,
+      "BodyStart": 1593,
+      "Original": "static inline int     Gia_ObjFanoutNext( Gia_Man_t * p, int iFan )   { assert(iFan/2 \u003c p-\u003enFansAlloc); return p-\u003epFanData[5*(iFan \u003e\u003e 1) + 3 + (iFan \u0026 1)];  }",
+      "Draft": "func Gia_ObjFanoutNext(p *Gia_Man_t, iFan int32) int32 { assert(iFan/2 \u003c p.nFansAlloc, \"iFan/2 \u003c p.nFansAlloc\"); return p.pFanData[5*(iFan \u003e\u003e 1) + 3 + (iFan \u0026 1)];  }"
+    },
+    {
+      "Name": "Gia_ManFanoutStart",
+      "Start": 2539,
+      "End": 3193,
+      "BodyStart": 2580,
+      "Original": "void Gia_ManFanoutStart( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i;\n    // allocate fanout datastructure\n    assert( p-\u003epFanData == NULL );\n    p-\u003enFansAlloc = 2 * Gia_ManObjNum(p);\n    if ( p-\u003enFansAlloc \u003c (1\u003c\u003c12) )\n        p-\u003enFansAlloc = (1\u003c\u003c12);\n    p-\u003epFanData = ABC_ALLOC( int, 5 * p-\u003enFansAlloc );\n    memset( p-\u003epFanData, 0, sizeof(int) * 5 * p-\u003enFansAlloc );\n    // add fanouts for all objects\n    Gia_ManForEachObj( p, pObj, i )\n    {\n        if ( Gia_ObjChild0(pObj) )\n            Gia_ObjAddFanout( p, Gia_ObjFanin0(pObj), pObj );\n        if ( Gia_ObjChild1(pObj) )\n            Gia_ObjAddFanout( p, Gia_ObjFanin1(pObj), pObj );\n    }\n}",
+      "Draft": "func Gia_ManFanoutStart(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // allocate fanout datastructure\n    assert(p.pFanData == nil, \"p.pFanData == nil\");\n    p.nFansAlloc = 2 * Gia_ManObjNum(p);\n    if p.nFansAlloc \u003c (1\u003c\u003c12) {\n        p.nFansAlloc = (1\u003c\u003c12); }\n    // inlining of macro ABC_ALLOC\n    p.pFanData = ((int *) malloc(sizeof(int) * (size_t)(5 * p.nFansAlloc)));\n    memset( p.pFanData, 0, sizeof(int) * 5 * p.nFansAlloc );\n    // add fanouts for all objects\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjChild0(pObj) {\n            Gia_ObjAddFanout( p, Gia_ObjFanin0(pObj), pObj ); }\n        if Gia_ObjChild1(pObj) {\n            Gia_ObjAddFanout( p, Gia_ObjFanin1(pObj), pObj ); }\n    }\n}"
+    },
+    {
+      "Name": "Gia_ManFanoutStop",
+      "Start": 3475,
+      "End": 3605,
+      "BodyStart": 3515,
+      "Original": "void Gia_ManFanoutStop( Gia_Man_t * p )\n{\n    assert( p-\u003epFanData != NULL );\n    ABC_FREE( p-\u003epFanData );\n    p-\u003enFansAlloc = 0;\n}",
+      "Draft": "func Gia_ManFanoutStop(p *Gia_Man_t) {\n    assert(p.pFanData != nil, \"p.pFanData != nil\");\n    // inlining of macro ABC_FREE\n    ((p.pFanData) ? (free((char *) (p.pFanData)), (p.pFanData) = 0) : 0);\n    p.nFansAlloc = 0;\n}"
+    },
+    {
+      "Name": "Gia_ObjAddFanout",
+      "Start": 3878,
+      "End": 5279,
+      "BodyStart": 3956,
+      "Original": "void Gia_ObjAddFanout( Gia_Man_t * p, Gia_Obj_t * pObj, Gia_Obj_t * pFanout )\n{\n    int iFan, * pFirst, * pPrevC, * pNextC, * pPrev, * pNext;\n    assert( p-\u003epFanData );\n    assert( !Gia_IsComplement(pObj) \u0026\u0026 !Gia_IsComplement(pFanout) );\n    assert( Gia_ObjId(p, pFanout) \u003e 0 );\n    if ( Gia_ObjId(p, pObj) \u003e= p-\u003enFansAlloc || Gia_ObjId(p, pFanout) \u003e= p-\u003enFansAlloc )\n    {\n        int nFansAlloc = 2 * Abc_MaxInt( Gia_ObjId(p, pObj), Gia_ObjId(p, pFanout) ); \n        p-\u003epFanData = ABC_REALLOC( int, p-\u003epFanData, 5 * nFansAlloc );\n        memset( p-\u003epFanData + 5 * p-\u003enFansAlloc, 0, sizeof(int) * 5 * (nFansAlloc - p-\u003enFansAlloc) );\n        p-\u003enFansAlloc = nFansAlloc;\n    }\n    assert( Gia_ObjId(p, pObj) \u003c p-\u003enFansAlloc \u0026\u0026 Gia_ObjId(p, pFanout) \u003c p-\u003enFansAlloc );\n    iFan   = Gia_FanoutCreate( Gia_ObjId(p, pFanout), Gia_ObjWhatFanin(p, pFanout, pObj) );\n    pPrevC = Gia_FanoutPrev( p-\u003epFanData, iFan );\n    pNextC = Gia_FanoutNext( p-\u003epFanData, iFan );\n    pFirst = Gia_FanoutObj( p-\u003epFanData, Gia_ObjId(p, pObj) );\n    if ( *pFirst == 0 )\n    {\n        *pFirst = iFan;\n        *pPrevC = iFan;\n        *pNextC = iFan;\n    }\n    else\n    {\n        pPrev = Gia_FanoutPrev( p-\u003epFanData, *pFirst );\n        pNext = Gia_FanoutNext( p-\u003epFanData, *pPrev );\n        assert( *pNext == *pFirst );\n        *pPrevC = *pPrev;\n        *pNextC = *pFirst;\n        *pPrev  = iFan;\n        *pNext  = iFan;\n    }\n}",
+      "Draft": "func Gia_ObjAddFanout(p *Gia_Man_t, pObj *Gia_Obj_t, pFanout *Gia_Obj_t) {\n    var iFan int32;\n    var pFirst *int32;\n    var pPrevC *int32;\n    var pNextC *int32;\n    var pPrev *int32;\n    var pNext *int32;\n    assert(p.pFanData, \"p.pFanData\");\n    assert(!Gia_IsComplement(pObj) \u0026\u0026 !Gia_IsComplement(pFanout), \"!Gia_IsComplement(pObj) \u0026\u0026 !Gia_IsComplement(pFanout)\");\n    assert(Gia_ObjId(p, pFanout) \u003e 0, \"Gia_ObjId(p, pFanout) \u003e 0\");\n    if Gia_ObjId(p, pObj) \u003e= p.nFansAlloc || Gia_ObjId(p, pFanout) \u003e= p.nFansAlloc {\n        var nFansAlloc int32  = 2 * Abc_MaxInt( Gia_ObjId(p, pObj), Gia_ObjId(p, pFanout) ); \n        // inlining of macro ABC_REALLOC\n        \n        if p.pFanData {\n            p.pFanData = ((int *) realloc((char *)(p.pFanData), sizeof(int) * (size_t)(5 * nFansAlloc)));\n        } else {\n            p.pFanData = ((int *) malloc(sizeof(int) * (size_t)(5 * nFansAlloc)));\n        }\n        memset( p.pFanData + 5 * p.nFansAlloc, 0, sizeof(int) * 5 * (nFansAlloc - p.nFansAlloc) );\n        p.nFansAlloc = nFansAlloc;\n    }\n    assert(Gia_ObjId(p, pObj) \u003c p.nFansAlloc \u0026\u0026 Gia_ObjId(p, pFanout) \u003c p.nFansAlloc, \"Gia_ObjId(p, pObj) \u003c p.nFansAlloc \u0026\u0026 Gia_ObjId(p, pFanout) \u003c p.nFansAlloc\");\n    iFan   = Gia_FanoutCreate( Gia_ObjId(p, pFanout), Gia_ObjWhatFanin(p, pFanout, pObj) );\n    pPrevC = Gia_FanoutPrev( p.pFanData, iFan );\n    pNextC = Gia_FanoutNext( p.pFanData, iFan );\n    pFirst = Gia_FanoutObj( p.pFanData, Gia_ObjId(p, pObj) );\n    if *pFirst == 0 {\n        *pFirst = iFan;\n        *pPrevC = iFan;\n        *pNextC = iFan;\n    \n    } else {\n        pPrev = Gia_FanoutPrev( p.pFanData, *pFirst );\n        pNext = Gia_FanoutNext( p.pFanData, *pPrev );\n        assert(*pNext == *pFirst, \"*pNext == *pFirst\");\n        *pPrevC = *pPrev;\n        *pNextC = *pFirst;\n        *pPrev  = iFan;\n        *pNext  = iFan;\n    }\n}"
+    },
+    {
+      "Name": "Gia_ObjRemoveFanout",
+      "Start": 5555,
+      "End": 6707,
+      "BodyStart": 5636,
+      "Original": "void Gia_ObjRemoveFanout( Gia_Man_t * p, Gia_Obj_t * pObj, Gia_Obj_t * pFanout )\n{\n    int iFan, * pFirst, * pPrevC, * pNextC, * pPrev, * pNext;\n    assert( p-\u003epFanData \u0026\u0026 Gia_ObjId(p, pObj) \u003c p-\u003enFansAlloc \u0026\u0026 Gia_ObjId(p, pFanout) \u003c p-\u003enFansAlloc );\n    assert( !Gia_IsComplement(pObj) \u0026\u0026 !Gia_IsComplement(pFanout) );\n    assert( Gia_ObjId(p, pFanout) \u003e 0 );\n    iFan   = Gia_FanoutCreate( Gia_ObjId(p, pFanout), Gia_ObjWhatFanin(p, pFanout, pObj) );\n    pPrevC = Gia_FanoutPrev( p-\u003epFanData, iFan );\n    pNextC = Gia_FanoutNext( p-\u003epFanData, iFan );\n    pPrev  = Gia_FanoutPrev( p-\u003epFanData, *pNextC );\n    pNext  = Gia_FanoutNext( p-\u003epFanData, *pPrevC );\n    assert( *pPrev == iFan );\n    assert( *pNext == iFan );\n    pFirst = Gia_FanoutObj( p-\u003epFanData, Gia_ObjId(p, pObj) );\n    assert( *pFirst \u003e 0 );\n    if ( *pFirst == iFan )\n    {\n        if ( *pNextC == iFan )\n        {\n            *pFirst = 0;\n            *pPrev  = 0;\n            *pNext  = 0;\n            *pPrevC = 0;\n            *pNextC = 0;\n            return;\n        }\n        *pFirst = *pNextC;\n    }\n    *pPrev  = *pPrevC;\n    *pNext  = *pNextC;\n    *pPrevC = 0;\n    *pNextC = 0;\n}",
+      "Draft": "func Gia_ObjRemoveFanout(p *Gia_Man_t, pObj *Gia_Obj_t, pFanout *Gia_Obj_t) {\n    var iFan int32;\n    var pFirst *int32;\n    var pPrevC *int32;\n    var pNextC *int32;\n    var pPrev *int32;\n    var pNext *int32;\n    assert(p.pFanData \u0026\u0026 Gia_ObjId(p, pObj) \u003c p.nFansAlloc \u0026\u0026 Gia_ObjId(p, pFanout) \u003c p.nFansAlloc, \"p.pFanData \u0026\u0026 Gia_ObjId(p, pObj) \u003c p.nFansAlloc \u0026\u0026 Gia_ObjId(p, pFanout) \u003c p.nFansAlloc\");\n    assert(!Gia_IsComplement(pObj) \u0026\u0026 !Gia_IsComplement(pFanout), \"!Gia_IsComplement(pObj) \u0026\u0026 !Gia_IsComplement(pFanout)\");\n    assert(Gia_ObjId(p, pFanout) \u003e 0, \"Gia_ObjId(p, pFanout) \u003e 0\");\n    iFan   = Gia_FanoutCreate( Gia_ObjId(p, pFanout), Gia_ObjWhatFanin(p, pFanout, pObj) );\n    pPrevC = Gia_FanoutPrev( p.pFanData, iFan );\n    pNextC = Gia_FanoutNext( p.pFanData, iFan );\n    pPrev  = Gia_FanoutPrev( p.pFanData, *pNextC );\n    pNext  = Gia_FanoutNext( p.pFanData, *pPrevC );\n    assert(*pPrev == iFan, \"*pPrev == iFan\");\n    assert(*pNext == iFan, \"*pNext == iFan\");\n    pFirst = Gia_FanoutObj( p.pFanData, Gia_ObjId(p, pObj) );\n    assert(*pFirst \u003e 0, \"*pFirst \u003e 0\");\n    if *pFirst == iFan {\n        if *pNextC == iFan {\n            *pFirst = 0;\n            *pPrev  = 0;\n            *pNext  = 0;\n            *pPrevC = 0;\n            *pNextC = 0;\n            return;\n        }\n        *pFirst = *pNextC;\n    }\n    *pPrev  = *pPrevC;\n    *pNext  = *pNextC;\n    *pPrevC = 0;\n    *pNextC = 0;\n}"
+    },
+    {
+      "Name": "Gia_ManStartFanoutMap",
+      "Start": 6975,
+      "End": 7510,
+      "BodyStart": 7051,
+      "Original": "Vec_Int_t * Gia_ManStartFanoutMap( Gia_Man_t * p, Vec_Int_t * vFanoutNums )\n{\n    Vec_Int_t * vEdgeMap;\n    Gia_Obj_t * pObj;\n    int i, iOffset;\n    iOffset  = Gia_ManObjNum(p);\n    vEdgeMap = Vec_IntStart( iOffset + Gia_ManMuxNum(p) + 2 * Gia_ManAndNum(p) + Gia_ManCoNum(p) - Gia_ManBufNum(p) );\n    Gia_ManForEachObj( p, pObj, i )\n    {\n        Vec_IntWriteEntry( vEdgeMap, i, iOffset );\n        iOffset += Vec_IntEntry( vFanoutNums, Gia_ObjId(p, pObj) );\n    }\n    assert( iOffset \u003c= Vec_IntSize(vEdgeMap) );\n    return vEdgeMap;\n}",
+      "Draft": "func Gia_ManStartFanoutMap(p *Gia_Man_t, vFanoutNums *Vec_Int_t) *Vec_Int_t {\n    var vEdgeMap *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, iOffset int32;\n    iOffset  = Gia_ManObjNum(p);\n    vEdgeMap = Vec_IntStart( iOffset + Gia_ManMuxNum(p) + 2 * Gia_ManAndNum(p) + Gia_ManCoNum(p) - Gia_ManBufNum(p) );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        Vec_IntWriteEntry( vEdgeMap, i, iOffset );\n        iOffset += Vec_IntEntry( vFanoutNums, Gia_ObjId(p, pObj) );\n    }\n    assert(iOffset \u003c= Vec_IntSize(vEdgeMap), \"iOffset \u003c= Vec_IntSize(vEdgeMap)\");\n    return vEdgeMap;\n}"
+    },
+    {
+      "Name": "Gia_ManStaticFanoutStart",
+      "Start": 7770,
+      "End": 9521,
+      "BodyStart": 7817,
+      "Original": "void Gia_ManStaticFanoutStart( Gia_Man_t * p )\n{\n    Vec_Int_t * vCounts;\n    int * pRefsOld;\n    Gia_Obj_t * pObj, * pFanin;\n    int i, iFanout;\n    assert( p-\u003evFanoutNums == NULL );\n    assert( p-\u003evFanout == NULL );\n    // recompute reference counters\n    pRefsOld = p-\u003epRefs; p-\u003epRefs = NULL;\n    Gia_ManCreateRefs(p);\n    p-\u003evFanoutNums = Vec_IntAllocArray( p-\u003epRefs, Gia_ManObjNum(p) );\n    p-\u003epRefs = pRefsOld;\n    // start the fanout maps\n    p-\u003evFanout = Gia_ManStartFanoutMap( p, p-\u003evFanoutNums );\n    // incrementally add fanouts\n    vCounts = Vec_IntStart( Gia_ManObjNum(p) );\n    Gia_ManForEachObj( p, pObj, i )\n    {\n        if ( Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) )\n        {\n            pFanin = Gia_ObjFanin0(pObj);\n            iFanout = Vec_IntEntry( vCounts, Gia_ObjId(p, pFanin) );\n            Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n            Vec_IntAddToEntry( vCounts, Gia_ObjId(p, pFanin), 1 );\n        }\n        if ( Gia_ObjIsAnd(pObj) \u0026\u0026 !Gia_ObjIsBuf(pObj) )\n        {\n            pFanin = Gia_ObjFanin1(pObj);\n            iFanout = Vec_IntEntry( vCounts, Gia_ObjId(p, pFanin) );\n            Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n            Vec_IntAddToEntry( vCounts, Gia_ObjId(p, pFanin), 1 );\n        }\n        if ( Gia_ObjIsMux(p, pObj) )\n        {\n\n            pFanin = Gia_ObjFanin2(p, pObj);\n            iFanout = Vec_IntEntry( vCounts, Gia_ObjId(p, pFanin) );\n            Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n            Vec_IntAddToEntry( vCounts, Gia_ObjId(p, pFanin), 1 );\n        }\n    }\n    // double-check the current number of fanouts added\n    Gia_ManForEachObj( p, pObj, i )\n        assert( Vec_IntEntry(vCounts, i) == Gia_ObjFanoutNum(p, pObj) );\n    Vec_IntFree( vCounts );\n}",
+      "Draft": "func Gia_ManStaticFanoutStart(p *Gia_Man_t) {\n    var vCounts *Vec_Int_t;\n    var pRefsOld *int32;\n    var pObj, pFanin *Gia_Obj_t;\n    var i, iFanout int32;\n    assert(p.vFanoutNums == nil, \"p.vFanoutNums == nil\");\n    assert(p.vFanout == nil, \"p.vFanout == nil\");\n    // recompute reference counters\n    pRefsOld = p.pRefs; p.pRefs = nil;\n    Gia_ManCreateRefs(p);\n    p.vFanoutNums = Vec_IntAllocArray( p.pRefs, Gia_ManObjNum(p) );\n    p.pRefs = pRefsOld;\n    // start the fanout maps\n    p.vFanout = Gia_ManStartFanoutMap( p, p.vFanoutNums );\n    // incrementally add fanouts\n    vCounts = Vec_IntStart( Gia_ManObjNum(p) );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) {\n            pFanin = Gia_ObjFanin0(pObj);\n            iFanout = Vec_IntEntry( vCounts, Gia_ObjId(p, pFanin) );\n            Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n            Vec_IntAddToEntry( vCounts, Gia_ObjId(p, pFanin), 1 );\n        }\n        if Gia_ObjIsAnd(pObj) \u0026\u0026 !Gia_ObjIsBuf(pObj) {\n            pFanin = Gia_ObjFanin1(pObj);\n            iFanout = Vec_IntEntry( vCounts, Gia_ObjId(p, pFanin) );\n            Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n            Vec_IntAddToEntry( vCounts, Gia_ObjId(p, pFanin), 1 );\n        }\n        if Gia_ObjIsMux(p, pObj) {\n\n            pFanin = Gia_ObjFanin2(p, pObj);\n            iFanout = Vec_IntEntry( vCounts, Gia_ObjId(p, pFanin) );\n            Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n            Vec_IntAddToEntry( vCounts, Gia_ObjId(p, pFanin), 1 );\n        }\n    }\n    // double-check the current number of fanouts added\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        assert(Vec_IntEntry(vCounts, i) == Gia_ObjFanoutNum(p, pObj), \"Vec_IntEntry(vCounts, i) == Gia_ObjFanoutNum(p, pObj)\");\n    }\n    Vec_IntFree( vCounts );\n}"
+    },
+    {
+      "Name": "Gia_ManStartMappingFanoutMap",
+      "Start": 9787,
+      "End": 10433,
+      "BodyStart": 9870,
+      "Original": "Vec_Int_t * Gia_ManStartMappingFanoutMap( Gia_Man_t * p, Vec_Int_t * vFanoutNums )\n{\n    Gia_Obj_t * pObj;\n    int i, iOffset = Gia_ManObjNum(p);\n    Vec_Int_t * vEdgeMap = Vec_IntAlloc( 2 * iOffset );\n    Vec_IntFill( vEdgeMap, iOffset, 0 );\n    Gia_ManForEachObj( p, pObj, i )\n    {\n        if ( Vec_IntEntry(vFanoutNums, i) == 0 )\n            continue;\n        Vec_IntWriteEntry( vEdgeMap, i, iOffset );\n        iOffset += Vec_IntEntry( vFanoutNums, i );\n        Vec_IntFillExtra( vEdgeMap, iOffset, 0 );\n    }\n    //printf( \"Fanout map is %.2fx larger than AIG manager.\\n\", 1.0*Vec_IntSize(vEdgeMap)/Gia_ManObjNum(p) );\n    return vEdgeMap;\n}",
+      "Draft": "func Gia_ManStartMappingFanoutMap(p *Gia_Man_t, vFanoutNums *Vec_Int_t) *Vec_Int_t {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var iOffset int32 = Gia_ManObjNum(p);\n    var vEdgeMap *Vec_Int_t  = Vec_IntAlloc( 2 * iOffset );\n    Vec_IntFill( vEdgeMap, iOffset, 0 );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Vec_IntEntry(vFanoutNums, i) == 0 {\n            continue; }\n        Vec_IntWriteEntry( vEdgeMap, i, iOffset );\n        iOffset += Vec_IntEntry( vFanoutNums, i );\n        Vec_IntFillExtra( vEdgeMap, iOffset, 0 );\n    }\n    //printf( \"Fanout map is %.2fx larger than AIG manager.\\n\", 1.0*Vec_IntSize(vEdgeMap)/Gia_ManObjNum(p) );\n    return vEdgeMap;\n}"
+    },
+    {
+      "Name": "Gia_ManStaticMappingFanoutStart",
+      "Start": 10693,
+      "End": 12137,
+      "BodyStart": 10747,
+      "Original": "void Gia_ManStaticMappingFanoutStart( Gia_Man_t * p )\n{\n    Vec_Int_t * vCounts;\n    int * pRefsOld;\n    Gia_Obj_t * pObj, * pFanin;\n    int i, k, iFan, iFanout;\n    assert( p-\u003evFanoutNums == NULL );\n    assert( p-\u003evFanout == NULL );\n    // recompute reference counters\n    pRefsOld = p-\u003epLutRefs; p-\u003epLutRefs = NULL;\n    Gia_ManSetLutRefs(p);\n    p-\u003evFanoutNums = Vec_IntAllocArray( p-\u003epLutRefs, Gia_ManObjNum(p) );\n    p-\u003epLutRefs = pRefsOld;\n    // start the fanout maps\n    p-\u003evFanout = Gia_ManStartMappingFanoutMap( p, p-\u003evFanoutNums );\n    // incrementally add fanouts\n    vCounts = Vec_IntStart( Gia_ManObjNum(p) );\n    Gia_ManForEachLut( p, i )\n    {\n        pObj = Gia_ManObj( p, i );\n        Gia_LutForEachFanin( p, i, iFan, k )\n        {\n            pFanin = Gia_ManObj( p, iFan );\n            iFanout = Vec_IntEntry( vCounts, iFan );\n            Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n            Vec_IntAddToEntry( vCounts, iFan, 1 );\n        }\n    }\n    Gia_ManForEachCo( p, pObj, i )\n    {\n        iFan = Gia_ObjFaninId0p(p, pObj);\n        pFanin = Gia_ManObj( p, iFan );\n        iFanout = Vec_IntEntry( vCounts, iFan );\n        Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n        Vec_IntAddToEntry( vCounts, iFan, 1 );\n    }\n    // double-check the current number of fanouts added\n    Gia_ManForEachObj( p, pObj, i )\n        assert( Vec_IntEntry(vCounts, i) == Gia_ObjFanoutNum(p, pObj) );\n    Vec_IntFree( vCounts );\n}",
+      "Draft": "func Gia_ManStaticMappingFanoutStart(p *Gia_Man_t) {\n    var vCounts *Vec_Int_t;\n    var pRefsOld *int32;\n    var pObj, pFanin *Gia_Obj_t;\n    var i, k, iFan, iFanout int32;\n    assert(p.vFanoutNums == nil, \"p.vFanoutNums == nil\");\n    assert(p.vFanout == nil, \"p.vFanout == nil\");\n    // recompute reference counters\n    pRefsOld = p.pLutRefs; p.pLutRefs = nil;\n    Gia_ManSetLutRefs(p);\n    p.vFanoutNums = Vec_IntAllocArray( p.pLutRefs, Gia_ManObjNum(p) );\n    p.pLutRefs = pRefsOld;\n    // start the fanout maps\n    p.vFanout = Gia_ManStartMappingFanoutMap( p, p.vFanoutNums );\n    // incrementally add fanouts\n    vCounts = Vec_IntStart( Gia_ManObjNum(p) );\n    // inlining of macro Gia_ManForEachLut\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {\n        pObj = Gia_ManObj( p, i );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n            pFanin = Gia_ManObj( p, iFan );\n            iFanout = Vec_IntEntry( vCounts, iFan );\n            Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n            Vec_IntAddToEntry( vCounts, iFan, 1 );\n        }\n    }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        iFan = Gia_ObjFaninId0p(p, pObj);\n        pFanin = Gia_ManObj( p, iFan );\n        iFanout = Vec_IntEntry( vCounts, iFan );\n        Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n        Vec_IntAddToEntry( vCounts, iFan, 1 );\n    }\n    // double-check the current number of fanouts added\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        assert(Vec_IntEntry(vCounts, i) == Gia_ObjFanoutNum(p, pObj), \"Vec_IntEntry(vCounts, i) == Gia_ObjFanoutNum(p, pObj)\");\n    }\n    Vec_IntFree( vCounts );\n}"
+    },
+    {
+      "Name": "Gia_ManStaticFanoutStop",
+      "Start": 12399,
+      "End": 12518,
+      "BodyStart": 12445,
+      "Original": "void Gia_ManStaticFanoutStop( Gia_Man_t * p )\n{\n    Vec_IntFreeP( \u0026p-\u003evFanoutNums );\n    Vec_IntFreeP( \u0026p-\u003evFanout );\n}",
+      "Draft": "func Gia_ManStaticFanoutStop(p *Gia_Man_t) {\n    Vec_IntFreeP( \u0026p.vFanoutNums );\n    Vec_IntFreeP( \u0026p.vFanout );\n}"
+    },
+    {
+      "Name": "Gia_ManStaticFanoutTest",
+      "Start": 12775,
+      "End": 13191,
+      "BodyStart": 12821,
+      "Original": "void Gia_ManStaticFanoutTest( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj, * pFanout;\n    int i, k;\n    Gia_ManStaticFanoutStart( p );\n    Gia_ManForEachObj( p, pObj, i )\n    {\n        Gia_ObjPrint( p, pObj );\n        printf( \"   Fanouts : \" );\n        Gia_ObjForEachFanoutStatic( p, pObj, pFanout, k )\n            printf( \"%5d \", Gia_ObjId(p, pFanout) );\n        printf( \"\\n\" );\n    }\n    Gia_ManStaticFanoutStop( p );\n}",
+      "Draft": "func Gia_ManStaticFanoutTest(p *Gia_Man_t) {\n    var pObj, pFanout *Gia_Obj_t;\n    var i, k int32;\n    Gia_ManStaticFanoutStart( p );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        Gia_ObjPrint( p, pObj );\n        fmt.Printf(\"   Fanouts : \");\n        // inlining of macro Gia_ObjForEachFanoutStatic\n        for  k = 0; (k \u003c Gia_ObjFanoutNum(p, pObj))   \u0026\u0026 (((pFanout) = Gia_ObjFanout(p, pObj, k)), 1); k++  {\n            fmt.Printf(\"%5d \", Gia_ObjId(p, pFanout));\n        }\n        fmt.Printf(\"\\n\");\n    }\n    Gia_ManStaticFanoutStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::mechanical::sizeof::2876",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2815,
+      "End": 2815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::mechanical::sizeof::2949",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2880,
+      "End": 2886
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::mechanical::sizeof::4713",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4361,
+      "End": 4361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::mechanical::sizeof::4781",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4361,
+      "End": 4361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::mechanical::sizeof::4876",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4462,
+      "End": 4468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::pointer-cast::2861",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2815,
+      "End": 2815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::pointer-cast::3779",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3556,
+      "End": 3556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::pointer-cast::4674",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4361,
+      "End": 4361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::pointer-cast::4690",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4361,
+      "End": 4361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::pointer-cast::4766",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4361,
+      "End": 4361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::macro::Gia_ObjForEachFanout",
+      "Category": "macro-review",
+      "Symbol": "Gia_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 1712,
+      "End": 2038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_FanoutCreate",
+      "Category": "semantic-review",
+      "Symbol": "Gia_FanoutCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 838,
+      "End": 951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_FanoutObj",
+      "Category": "semantic-review",
+      "Symbol": "Gia_FanoutObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 953,
+      "End": 1066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_FanoutPrev",
+      "Category": "semantic-review",
+      "Symbol": "Gia_FanoutPrev",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1067,
+      "End": 1180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_FanoutNext",
+      "Category": "semantic-review",
+      "Symbol": "Gia_FanoutNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1181,
+      "End": 1294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_ObjFanout0Int",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjFanout0Int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1366,
+      "End": 1523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_ObjFanoutNext",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjFanoutNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1524,
+      "End": 1681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_ManFanoutStart",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFanoutStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2539,
+      "End": 3193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::ternary::Gia_ManFanoutStop",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManFanoutStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3475,
+      "End": 3605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_ManFanoutStop",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManFanoutStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3475,
+      "End": 3605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_ObjAddFanout",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjAddFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3878,
+      "End": 5279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_ObjRemoveFanout",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ObjRemoveFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5555,
+      "End": 6707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_ManStartFanoutMap",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManStartFanoutMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6975,
+      "End": 7510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_ManStaticFanoutStart",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManStaticFanoutStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7770,
+      "End": 9521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_ManStartMappingFanoutMap",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManStartMappingFanoutMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9787,
+      "End": 10433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_ManStaticMappingFanoutStart",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManStaticMappingFanoutStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10693,
+      "End": 12137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_ManStaticFanoutStop",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManStaticFanoutStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12399,
+      "End": 12518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::Gia_ManStaticFanoutTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManStaticFanoutTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12775,
+      "End": 13191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaFanout.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13438
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaFanout.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaFanout.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// 0: first iFan\n// 1: prev iFan0\n// 2: prev iFan1\n// 3: next iFan0\n// 4: next iFan1\n\nfunc Gia_FanoutCreate(FanId int32, Num int32) int32 { assert(Num \u003c 2, \"Num \u003c 2\"); return (FanId \u003c\u003c 1) | Num;   } \nfunc Gia_FanoutObj(pData *int32, ObjId int32) *int32 { return pData + 5*ObjId;                         }\nfunc Gia_FanoutPrev(pData *int32, iFan int32) *int32 { return pData + 5*(iFan \u003e\u003e 1) + 1 + (iFan \u0026 1);  }\nfunc Gia_FanoutNext(pData *int32, iFan int32) *int32 { return pData + 5*(iFan \u003e\u003e 1) + 3 + (iFan \u0026 1);  }\n\n// these two procedures are only here for the use inside the iterator\nfunc Gia_ObjFanout0Int(p *Gia_Man_t, ObjId int32) int32 { assert(ObjId \u003c p.nFansAlloc, \"ObjId \u003c p.nFansAlloc\");  return p.pFanData[5*ObjId];                         }\nfunc Gia_ObjFanoutNext(p *Gia_Man_t, iFan int32) int32 { assert(iFan/2 \u003c p.nFansAlloc, \"iFan/2 \u003c p.nFansAlloc\"); return p.pFanData[5*(iFan \u003e\u003e 1) + 3 + (iFan \u0026 1)];  }\n\n// iterator over the fanouts\n// Original macro:\n// #define Gia_ObjForEachFanout( p, pObj, pFanout, iFan, i )                       \\\n//     for ( assert(p-\u003epFanData), i = 0; (i \u003c (int)(pObj)-\u003enRefs) \u0026\u0026               \\\n//           (((iFan) = i? Gia_ObjFanoutNext(p, iFan) : Gia_ObjFanout0Int(p, Gia_ObjId(p, pObj))), 1) \u0026\u0026 \\\n//           (((pFanout) = Gia_ManObj(p, iFan\u003e\u003e1)), 1); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Create fanout for all objects in the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFanoutStart(p *Gia_Man_t) {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    // allocate fanout datastructure\n    assert(p.pFanData == nil, \"p.pFanData == nil\");\n    p.nFansAlloc = 2 * Gia_ManObjNum(p);\n    if p.nFansAlloc \u003c (1\u003c\u003c12) {\n        p.nFansAlloc = (1\u003c\u003c12); }\n    // inlining of macro ABC_ALLOC\n    p.pFanData = ((int *) malloc(sizeof(int) * (size_t)(5 * p.nFansAlloc)));\n    memset( p.pFanData, 0, sizeof(int) * 5 * p.nFansAlloc );\n    // add fanouts for all objects\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjChild0(pObj) {\n            Gia_ObjAddFanout( p, Gia_ObjFanin0(pObj), pObj ); }\n        if Gia_ObjChild1(pObj) {\n            Gia_ObjAddFanout( p, Gia_ObjFanin1(pObj), pObj ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes fanout for all objects in the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManFanoutStop(p *Gia_Man_t) {\n    assert(p.pFanData != nil, \"p.pFanData != nil\");\n    // inlining of macro ABC_FREE\n    ((p.pFanData) ? (free((char *) (p.pFanData)), (p.pFanData) = 0) : 0);\n    p.nFansAlloc = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds fanout (pFanout) of node (pObj).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ObjAddFanout(p *Gia_Man_t, pObj *Gia_Obj_t, pFanout *Gia_Obj_t) {\n    var iFan int32;\n    var pFirst *int32;\n    var pPrevC *int32;\n    var pNextC *int32;\n    var pPrev *int32;\n    var pNext *int32;\n    assert(p.pFanData, \"p.pFanData\");\n    assert(!Gia_IsComplement(pObj) \u0026\u0026 !Gia_IsComplement(pFanout), \"!Gia_IsComplement(pObj) \u0026\u0026 !Gia_IsComplement(pFanout)\");\n    assert(Gia_ObjId(p, pFanout) \u003e 0, \"Gia_ObjId(p, pFanout) \u003e 0\");\n    if Gia_ObjId(p, pObj) \u003e= p.nFansAlloc || Gia_ObjId(p, pFanout) \u003e= p.nFansAlloc {\n        var nFansAlloc int32  = 2 * Abc_MaxInt( Gia_ObjId(p, pObj), Gia_ObjId(p, pFanout) ); \n        // inlining of macro ABC_REALLOC\n        \n        if p.pFanData {\n            p.pFanData = ((int *) realloc((char *)(p.pFanData), sizeof(int) * (size_t)(5 * nFansAlloc)));\n        } else {\n            p.pFanData = ((int *) malloc(sizeof(int) * (size_t)(5 * nFansAlloc)));\n        }\n        memset( p.pFanData + 5 * p.nFansAlloc, 0, sizeof(int) * 5 * (nFansAlloc - p.nFansAlloc) );\n        p.nFansAlloc = nFansAlloc;\n    }\n    assert(Gia_ObjId(p, pObj) \u003c p.nFansAlloc \u0026\u0026 Gia_ObjId(p, pFanout) \u003c p.nFansAlloc, \"Gia_ObjId(p, pObj) \u003c p.nFansAlloc \u0026\u0026 Gia_ObjId(p, pFanout) \u003c p.nFansAlloc\");\n    iFan   = Gia_FanoutCreate( Gia_ObjId(p, pFanout), Gia_ObjWhatFanin(p, pFanout, pObj) );\n    pPrevC = Gia_FanoutPrev( p.pFanData, iFan );\n    pNextC = Gia_FanoutNext( p.pFanData, iFan );\n    pFirst = Gia_FanoutObj( p.pFanData, Gia_ObjId(p, pObj) );\n    if *pFirst == 0 {\n        *pFirst = iFan;\n        *pPrevC = iFan;\n        *pNextC = iFan;\n    \n    } else {\n        pPrev = Gia_FanoutPrev( p.pFanData, *pFirst );\n        pNext = Gia_FanoutNext( p.pFanData, *pPrev );\n        assert(*pNext == *pFirst, \"*pNext == *pFirst\");\n        *pPrevC = *pPrev;\n        *pNextC = *pFirst;\n        *pPrev  = iFan;\n        *pNext  = iFan;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes fanout (pFanout) of node (pObj).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ObjRemoveFanout(p *Gia_Man_t, pObj *Gia_Obj_t, pFanout *Gia_Obj_t) {\n    var iFan int32;\n    var pFirst *int32;\n    var pPrevC *int32;\n    var pNextC *int32;\n    var pPrev *int32;\n    var pNext *int32;\n    assert(p.pFanData \u0026\u0026 Gia_ObjId(p, pObj) \u003c p.nFansAlloc \u0026\u0026 Gia_ObjId(p, pFanout) \u003c p.nFansAlloc, \"p.pFanData \u0026\u0026 Gia_ObjId(p, pObj) \u003c p.nFansAlloc \u0026\u0026 Gia_ObjId(p, pFanout) \u003c p.nFansAlloc\");\n    assert(!Gia_IsComplement(pObj) \u0026\u0026 !Gia_IsComplement(pFanout), \"!Gia_IsComplement(pObj) \u0026\u0026 !Gia_IsComplement(pFanout)\");\n    assert(Gia_ObjId(p, pFanout) \u003e 0, \"Gia_ObjId(p, pFanout) \u003e 0\");\n    iFan   = Gia_FanoutCreate( Gia_ObjId(p, pFanout), Gia_ObjWhatFanin(p, pFanout, pObj) );\n    pPrevC = Gia_FanoutPrev( p.pFanData, iFan );\n    pNextC = Gia_FanoutNext( p.pFanData, iFan );\n    pPrev  = Gia_FanoutPrev( p.pFanData, *pNextC );\n    pNext  = Gia_FanoutNext( p.pFanData, *pPrevC );\n    assert(*pPrev == iFan, \"*pPrev == iFan\");\n    assert(*pNext == iFan, \"*pNext == iFan\");\n    pFirst = Gia_FanoutObj( p.pFanData, Gia_ObjId(p, pObj) );\n    assert(*pFirst \u003e 0, \"*pFirst \u003e 0\");\n    if *pFirst == iFan {\n        if *pNextC == iFan {\n            *pFirst = 0;\n            *pPrev  = 0;\n            *pNext  = 0;\n            *pPrevC = 0;\n            *pNextC = 0;\n            return;\n        }\n        *pFirst = *pNextC;\n    }\n    *pPrev  = *pPrevC;\n    *pNext  = *pNextC;\n    *pPrevC = 0;\n    *pNextC = 0;\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compute the map of all edges.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManStartFanoutMap(p *Gia_Man_t, vFanoutNums *Vec_Int_t) *Vec_Int_t {\n    var vEdgeMap *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, iOffset int32;\n    iOffset  = Gia_ManObjNum(p);\n    vEdgeMap = Vec_IntStart( iOffset + Gia_ManMuxNum(p) + 2 * Gia_ManAndNum(p) + Gia_ManCoNum(p) - Gia_ManBufNum(p) );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        Vec_IntWriteEntry( vEdgeMap, i, iOffset );\n        iOffset += Vec_IntEntry( vFanoutNums, Gia_ObjId(p, pObj) );\n    }\n    assert(iOffset \u003c= Vec_IntSize(vEdgeMap), \"iOffset \u003c= Vec_IntSize(vEdgeMap)\");\n    return vEdgeMap;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates static fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManStaticFanoutStart(p *Gia_Man_t) {\n    var vCounts *Vec_Int_t;\n    var pRefsOld *int32;\n    var pObj, pFanin *Gia_Obj_t;\n    var i, iFanout int32;\n    assert(p.vFanoutNums == nil, \"p.vFanoutNums == nil\");\n    assert(p.vFanout == nil, \"p.vFanout == nil\");\n    // recompute reference counters\n    pRefsOld = p.pRefs; p.pRefs = nil;\n    Gia_ManCreateRefs(p);\n    p.vFanoutNums = Vec_IntAllocArray( p.pRefs, Gia_ManObjNum(p) );\n    p.pRefs = pRefsOld;\n    // start the fanout maps\n    p.vFanout = Gia_ManStartFanoutMap( p, p.vFanoutNums );\n    // incrementally add fanouts\n    vCounts = Vec_IntStart( Gia_ManObjNum(p) );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Gia_ObjIsAnd(pObj) || Gia_ObjIsCo(pObj) {\n            pFanin = Gia_ObjFanin0(pObj);\n            iFanout = Vec_IntEntry( vCounts, Gia_ObjId(p, pFanin) );\n            Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n            Vec_IntAddToEntry( vCounts, Gia_ObjId(p, pFanin), 1 );\n        }\n        if Gia_ObjIsAnd(pObj) \u0026\u0026 !Gia_ObjIsBuf(pObj) {\n            pFanin = Gia_ObjFanin1(pObj);\n            iFanout = Vec_IntEntry( vCounts, Gia_ObjId(p, pFanin) );\n            Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n            Vec_IntAddToEntry( vCounts, Gia_ObjId(p, pFanin), 1 );\n        }\n        if Gia_ObjIsMux(p, pObj) {\n\n            pFanin = Gia_ObjFanin2(p, pObj);\n            iFanout = Vec_IntEntry( vCounts, Gia_ObjId(p, pFanin) );\n            Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n            Vec_IntAddToEntry( vCounts, Gia_ObjId(p, pFanin), 1 );\n        }\n    }\n    // double-check the current number of fanouts added\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        assert(Vec_IntEntry(vCounts, i) == Gia_ObjFanoutNum(p, pObj), \"Vec_IntEntry(vCounts, i) == Gia_ObjFanoutNum(p, pObj)\");\n    }\n    Vec_IntFree( vCounts );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compute the map of all edges.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManStartMappingFanoutMap(p *Gia_Man_t, vFanoutNums *Vec_Int_t) *Vec_Int_t {\n    var pObj *Gia_Obj_t;\n    var i int32;\n    var iOffset int32 = Gia_ManObjNum(p);\n    var vEdgeMap *Vec_Int_t  = Vec_IntAlloc( 2 * iOffset );\n    Vec_IntFill( vEdgeMap, iOffset, 0 );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Vec_IntEntry(vFanoutNums, i) == 0 {\n            continue; }\n        Vec_IntWriteEntry( vEdgeMap, i, iOffset );\n        iOffset += Vec_IntEntry( vFanoutNums, i );\n        Vec_IntFillExtra( vEdgeMap, iOffset, 0 );\n    }\n    //printf( \"Fanout map is %.2fx larger than AIG manager.\\n\", 1.0*Vec_IntSize(vEdgeMap)/Gia_ManObjNum(p) );\n    return vEdgeMap;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates static fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManStaticMappingFanoutStart(p *Gia_Man_t) {\n    var vCounts *Vec_Int_t;\n    var pRefsOld *int32;\n    var pObj, pFanin *Gia_Obj_t;\n    var i, k, iFan, iFanout int32;\n    assert(p.vFanoutNums == nil, \"p.vFanoutNums == nil\");\n    assert(p.vFanout == nil, \"p.vFanout == nil\");\n    // recompute reference counters\n    pRefsOld = p.pLutRefs; p.pLutRefs = nil;\n    Gia_ManSetLutRefs(p);\n    p.vFanoutNums = Vec_IntAllocArray( p.pLutRefs, Gia_ManObjNum(p) );\n    p.pLutRefs = pRefsOld;\n    // start the fanout maps\n    p.vFanout = Gia_ManStartMappingFanoutMap( p, p.vFanoutNums );\n    // incrementally add fanouts\n    vCounts = Vec_IntStart( Gia_ManObjNum(p) );\n    // inlining of macro Gia_ManForEachLut\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {\n        pObj = Gia_ManObj( p, i );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n            pFanin = Gia_ManObj( p, iFan );\n            iFanout = Vec_IntEntry( vCounts, iFan );\n            Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n            Vec_IntAddToEntry( vCounts, iFan, 1 );\n        }\n    }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        iFan = Gia_ObjFaninId0p(p, pObj);\n        pFanin = Gia_ManObj( p, iFan );\n        iFanout = Vec_IntEntry( vCounts, iFan );\n        Gia_ObjSetFanout( p, pFanin, iFanout, pObj );\n        Vec_IntAddToEntry( vCounts, iFan, 1 );\n    }\n    // double-check the current number of fanouts added\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        assert(Vec_IntEntry(vCounts, i) == Gia_ObjFanoutNum(p, pObj), \"Vec_IntEntry(vCounts, i) == Gia_ObjFanoutNum(p, pObj)\");\n    }\n    Vec_IntFree( vCounts );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates static fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManStaticFanoutStop(p *Gia_Man_t) {\n    Vec_IntFreeP( \u0026p.vFanoutNums );\n    Vec_IntFreeP( \u0026p.vFanout );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Tests static fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManStaticFanoutTest(p *Gia_Man_t) {\n    var pObj, pFanout *Gia_Obj_t;\n    var i, k int32;\n    Gia_ManStaticFanoutStart( p );\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        Gia_ObjPrint( p, pObj );\n        fmt.Printf(\"   Fanouts : \");\n        // inlining of macro Gia_ObjForEachFanoutStatic\n        for  k = 0; (k \u003c Gia_ObjFanoutNum(p, pObj))   \u0026\u0026 (((pFanout) = Gia_ObjFanout(p, pObj, k)), 1); k++  {\n            fmt.Printf(\"%5d \", Gia_ObjId(p, pFanout));\n        }\n        fmt.Printf(\"\\n\");\n    }\n    Gia_ManStaticFanoutStop( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

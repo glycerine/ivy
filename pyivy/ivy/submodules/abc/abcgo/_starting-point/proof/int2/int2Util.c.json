@@ -1,0 +1,126 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Util.c",
+  "SHA256": "467ab0e669772043f7fa623c198a2aab774977eb893ff6bbd648e3a31bc4a9f0",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 58,
+        "Column": 17,
+        "ByteOffset": 1752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Vec_IntEntry(vSop, i + k) \u003c 2 * nRegs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 77,
+        "Column": 5,
+        "ByteOffset": 2429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 3584
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPoNum(p) == 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Int2_ManComputeCoPres",
+      "Start": 1224,
+      "End": 1984,
+      "BodyStart": 1289,
+      "Original": "Vec_Int_t * Int2_ManComputeCoPres( Vec_Int_t * vSop, int nRegs )\n{\n    Vec_Int_t * vCoPres, * vMap;\n    vCoPres = Vec_IntAlloc( 100 );\n    if ( vSop == NULL )\n        Vec_IntPush( vCoPres, 0 );\n    else\n    {\n        int i, k, Limit;\n        vMap = Vec_IntStart( nRegs );\n        Vec_IntForEachEntryStart( vSop, Limit, i, 1 )\n        {\n            for ( k = 0; k \u003c Limit; k++ )\n            {\n                i++;\n                assert( Vec_IntEntry(vSop, i + k) \u003c 2 * nRegs );\n                Vec_IntWriteEntry( vMap, Abc_Lit2Var(Vec_IntEntry(vSop, i + k)), 1 );\n            }\n        }\n        Vec_IntForEachEntry( vMap, Limit, i )\n            if ( Limit )\n                Vec_IntPush( vCoPres, i+1 );\n        Vec_IntFree( vMap );\n    }\n    return vCoPres;\n}",
+      "Draft": "func Int2_ManComputeCoPres(vSop *Vec_Int_t, nRegs int32) *Vec_Int_t {\n    var vCoPres, vMap *Vec_Int_t;\n    vCoPres = Vec_IntAlloc( 100 );\n    if vSop == nil {\n        Vec_IntPush( vCoPres, 0 );\n    } else {\n        var i, k, Limit int32;\n        vMap = Vec_IntStart( nRegs );\n        // inlining of macro Vec_IntForEachEntryStart\n        for  i = 1; (i \u003c Vec_IntSize(vSop)) \u0026\u0026 (((Limit) = Vec_IntEntry(vSop, i)), 1); i++  {\n            for  k = 0; k \u003c Limit; k++  {\n                i++;\n                assert(Vec_IntEntry(vSop, i + k) \u003c 2 * nRegs, \"Vec_IntEntry(vSop, i + k) \u003c 2 * nRegs\");\n                Vec_IntWriteEntry( vMap, Abc_Lit2Var(Vec_IntEntry(vSop, i + k)), 1 );\n            }\n        }\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vMap)) \u0026\u0026 (((Limit) = Vec_IntEntry(vMap, i)), 1); i++  {\n            if Limit != 0 {\n                Vec_IntPush( vCoPres, i+1 ); }\n        }\n        Vec_IntFree( vMap );\n    }\n    return vCoPres;\n}"
+    },
+    {
+      "Name": "Int2_ManCollectInternal_rec",
+      "Start": 1986,
+      "End": 2434,
+      "BodyStart": 2074,
+      "Original": "void Int2_ManCollectInternal_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vNodes )\n{\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if ( Gia_ObjIsCi(pObj) )\n        return;\n    assert( Gia_ObjIsAnd(pObj) );\n    Int2_ManCollectInternal_rec( p, Gia_ObjFanin0(pObj), vNodes );\n    Int2_ManCollectInternal_rec( p, Gia_ObjFanin1(pObj), vNodes );\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n}",
+      "Draft": "func Int2_ManCollectInternal_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        return; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Int2_ManCollectInternal_rec( p, Gia_ObjFanin0(pObj), vNodes );\n    Int2_ManCollectInternal_rec( p, Gia_ObjFanin1(pObj), vNodes );\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n}"
+    },
+    {
+      "Name": "Int2_ManCollectInternal",
+      "Start": 2435,
+      "End": 2921,
+      "BodyStart": 2509,
+      "Original": "Vec_Int_t * Int2_ManCollectInternal( Gia_Man_t * p, Vec_Int_t * vCoPres )\n{\n    Vec_Int_t * vNodes;\n    Gia_Obj_t * pObj;\n    int i, Entry;\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrent(p, Gia_ManConst0(p));\n    Gia_ManForEachCi( p, pObj, i )\n        Gia_ObjSetTravIdCurrent(p, pObj);\n    vNodes = Vec_IntAlloc( 1000 );\n    Vec_IntForEachEntry( vCoPres, Entry, i )\n        Int2_ManCollectInternal_rec( p, Gia_ObjFanin0(Gia_ManCo(p, Entry)), vNodes );\n    return vNodes;\n}",
+      "Draft": "func Int2_ManCollectInternal(p *Gia_Man_t, vCoPres *Vec_Int_t) *Vec_Int_t {\n    var vNodes *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, Entry int32;\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrent(p, Gia_ManConst0(p));\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        Gia_ObjSetTravIdCurrent(p, pObj);\n    }\n    vNodes = Vec_IntAlloc( 1000 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCoPres)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCoPres, i)), 1); i++  {\n        Int2_ManCollectInternal_rec( p, Gia_ObjFanin0(Gia_ManCo(p, Entry)), vNodes );\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Int2_ManProbToGia",
+      "Start": 2922,
+      "End": 4510,
+      "BodyStart": 2987,
+      "Original": "Gia_Man_t * Int2_ManProbToGia( Gia_Man_t * p, Vec_Int_t * vSop )\n{\n    Vec_Int_t * vCoPres, * vNodes;\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj;\n    int i, k, Entry, Limit;\n    int Lit, Cube, Sop;\n    assert( Gia_ManPoNum(p) == 1 );\n    // collect COs and ANDs\n    vCoPres = Int2_ManComputeCoPres( vSop, Gia_ManRegNum(p) );\n    vNodes = Int2_ManCollectInternal( p, vCoPres );\n    // create new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi(pNew);\n    Gia_ManHashAlloc( pNew );\n    Gia_ManForEachObjVec( vNodes, p, pObj, i )\n        pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    Vec_IntForEachEntry( vCoPres, Entry, i )\n    {\n        pObj = Gia_ManCo(p, Entry);\n        pObj-\u003eValue = Gia_ObjFanin0Copy( pObj );\n    }\n    // create additional cubes\n    Sop = 0;\n    Vec_IntForEachEntryStart( vSop, Limit, i, 1 )\n    {\n        Cube = 1;\n        for ( k = 0; k \u003c Limit; k++ )\n        {\n            i++;\n            Lit = Vec_IntEntry( vSop, i + k );\n            pObj = Gia_ManRi( p, Abc_Lit2Var(Lit) );\n            Cube = Gia_ManHashAnd( pNew, Cube, Abc_LitNotCond(pObj-\u003eValue, Abc_LitIsCompl(Lit)) );\n        }\n        Sop = Gia_ManHashOr( pNew, Sop, Cube );\n    }\n    Gia_ManAppendCo( pNew, Sop );\n    Gia_ManHashStop( pNew );\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Int2_ManProbToGia(p *Gia_Man_t, vSop *Vec_Int_t) *Gia_Man_t {\n    var vCoPres, vNodes *Vec_Int_t;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i, k, Entry, Limit int32;\n    var Lit, Cube, Sop int32;\n    assert(Gia_ManPoNum(p) == 1, \"Gia_ManPoNum(p) == 1\");\n    // collect COs and ANDs\n    vCoPres = Int2_ManComputeCoPres( vSop, Gia_ManRegNum(p) );\n    vNodes = Int2_ManCollectInternal( p, vCoPres );\n    // create new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi(pNew);\n    }\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,i))); i++  {\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCoPres)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCoPres, i)), 1); i++  {\n        pObj = Gia_ManCo(p, Entry);\n        pObj.Value = Gia_ObjFanin0Copy( pObj );\n    }\n    // create additional cubes\n    Sop = 0;\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vSop)) \u0026\u0026 (((Limit) = Vec_IntEntry(vSop, i)), 1); i++  {\n        Cube = 1;\n        for  k = 0; k \u003c Limit; k++  {\n            i++;\n            Lit = Vec_IntEntry( vSop, i + k );\n            pObj = Gia_ManRi( p, Abc_Lit2Var(Lit) );\n            Cube = Gia_ManHashAnd( pNew, Cube, Abc_LitNotCond(pObj.Value, Abc_LitIsCompl(Lit)) );\n        }\n        Sop = Gia_ManHashOr( pNew, Sop, Cube );\n    }\n    Gia_ManAppendCo( pNew, Sop );\n    Gia_ManHashStop( pNew );\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Util.c::Int2_ManComputeCoPres",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManComputeCoPres",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1224,
+      "End": 1984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Util.c::Int2_ManCollectInternal_rec",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManCollectInternal_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1986,
+      "End": 2434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Util.c::Int2_ManCollectInternal",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManCollectInternal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2435,
+      "End": 2921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Util.c::Int2_ManProbToGia",
+      "Category": "semantic-review",
+      "Symbol": "Int2_ManProbToGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2922,
+      "End": 4510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int2/int2Util.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4757
+    }
+  ],
+  "Draft": "package int2\n\n/**CFile****************************************************************\n\n  FileName    [int2Util.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [Various utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Dec 1, 2013.]\n\n  Revision    [$Id: int2Util.c,v 1.00 2013/12/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"int2Int.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Int2_ManComputeCoPres(vSop *Vec_Int_t, nRegs int32) *Vec_Int_t {\n    var vCoPres, vMap *Vec_Int_t;\n    vCoPres = Vec_IntAlloc( 100 );\n    if vSop == nil {\n        Vec_IntPush( vCoPres, 0 );\n    } else {\n        var i, k, Limit int32;\n        vMap = Vec_IntStart( nRegs );\n        // inlining of macro Vec_IntForEachEntryStart\n        for  i = 1; (i \u003c Vec_IntSize(vSop)) \u0026\u0026 (((Limit) = Vec_IntEntry(vSop, i)), 1); i++  {\n            for  k = 0; k \u003c Limit; k++  {\n                i++;\n                assert(Vec_IntEntry(vSop, i + k) \u003c 2 * nRegs, \"Vec_IntEntry(vSop, i + k) \u003c 2 * nRegs\");\n                Vec_IntWriteEntry( vMap, Abc_Lit2Var(Vec_IntEntry(vSop, i + k)), 1 );\n            }\n        }\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vMap)) \u0026\u0026 (((Limit) = Vec_IntEntry(vMap, i)), 1); i++  {\n            if Limit != 0 {\n                Vec_IntPush( vCoPres, i+1 ); }\n        }\n        Vec_IntFree( vMap );\n    }\n    return vCoPres;\n}\n\nfunc Int2_ManCollectInternal_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        return; }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Int2_ManCollectInternal_rec( p, Gia_ObjFanin0(pObj), vNodes );\n    Int2_ManCollectInternal_rec( p, Gia_ObjFanin1(pObj), vNodes );\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n}\nfunc Int2_ManCollectInternal(p *Gia_Man_t, vCoPres *Vec_Int_t) *Vec_Int_t {\n    var vNodes *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, Entry int32;\n    Gia_ManIncrementTravId( p );\n    Gia_ObjSetTravIdCurrent(p, Gia_ManConst0(p));\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        Gia_ObjSetTravIdCurrent(p, pObj);\n    }\n    vNodes = Vec_IntAlloc( 1000 );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCoPres)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCoPres, i)), 1); i++  {\n        Int2_ManCollectInternal_rec( p, Gia_ObjFanin0(Gia_ManCo(p, Entry)), vNodes );\n    }\n    return vNodes;\n}\nfunc Int2_ManProbToGia(p *Gia_Man_t, vSop *Vec_Int_t) *Gia_Man_t {\n    var vCoPres, vNodes *Vec_Int_t;\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i, k, Entry, Limit int32;\n    var Lit, Cube, Sop int32;\n    assert(Gia_ManPoNum(p) == 1, \"Gia_ManPoNum(p) == 1\");\n    // collect COs and ANDs\n    vCoPres = Int2_ManComputeCoPres( vSop, Gia_ManRegNum(p) );\n    vNodes = Int2_ManCollectInternal( p, vCoPres );\n    // create new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi(pNew);\n    }\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,i))); i++  {\n        pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCoPres)) \u0026\u0026 (((Entry) = Vec_IntEntry(vCoPres, i)), 1); i++  {\n        pObj = Gia_ManCo(p, Entry);\n        pObj.Value = Gia_ObjFanin0Copy( pObj );\n    }\n    // create additional cubes\n    Sop = 0;\n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vSop)) \u0026\u0026 (((Limit) = Vec_IntEntry(vSop, i)), 1); i++  {\n        Cube = 1;\n        for  k = 0; k \u003c Limit; k++  {\n            i++;\n            Lit = Vec_IntEntry( vSop, i + k );\n            pObj = Gia_ManRi( p, Abc_Lit2Var(Lit) );\n            Cube = Gia_ManHashAnd( pNew, Cube, Abc_LitNotCond(pObj.Value, Abc_LitIsCompl(Lit)) );\n        }\n        Sop = Gia_ManHashOr( pNew, Sop, Cube );\n    }\n    Gia_ManAppendCo( pNew, Sop );\n    Gia_ManHashStop( pNew );\n    // cleanup\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

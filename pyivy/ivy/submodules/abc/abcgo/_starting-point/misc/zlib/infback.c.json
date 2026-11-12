@@ -1,0 +1,1365 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c",
+  "SHA256": "2547d14a2143439566c0ca701b767402d021dbabdfb45438c781f3971b8bc4d1",
+  "Library": [
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 56,
+        "Column": 13,
+        "ByteOffset": 1939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Tracev((stderr, \"inflate: allocated\\n\"));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 295,
+        "Column": 25,
+        "ByteOffset": 10567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Tracev((stderr, \"inflate:     stored block%s\\n\","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 301,
+        "Column": 25,
+        "ByteOffset": 10849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Tracev((stderr, \"inflate:     fixed codes block%s\\n\","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 306,
+        "Column": 25,
+        "ByteOffset": 11131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Tracev((stderr, \"inflate:     dynamic codes block%s\\n\","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 338,
+        "Column": 21,
+        "ByteOffset": 12699
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Tracev((stderr, \"inflate:       stored length %u\\n\","
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 362,
+        "Column": 21,
+        "ByteOffset": 14003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Tracev((stderr, \"inflate:       stored end\\n\"));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 389,
+        "Column": 21,
+        "ByteOffset": 15611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Tracev((stderr, \"inflate:       table sizes ok\\n\"));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 420,
+        "Column": 21,
+        "ByteOffset": 17218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Tracev((stderr, \"inflate:       code lengths ok\\n\"));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 552,
+        "Column": 21,
+        "ByteOffset": 24519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Tracev((stderr, \"inflate:       codes ok\\n\"));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 606,
+        "Column": 26,
+        "ByteOffset": 27528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Tracevv((stderr, here.val \u003e= 0x20 \u0026\u0026 here.val \u003c 0x7f ?"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 620,
+        "Column": 26,
+        "ByteOffset": 28293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Tracevv((stderr, \"inflate:         end of block\\n\"));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 648,
+        "Column": 22,
+        "ByteOffset": 29675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Tracevv((stderr, \"inflate:         length %u\\n\", state.length));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 710,
+        "Column": 22,
+        "ByteOffset": 33181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Tracevv((stderr, \"inflate:         distance %u\\n\", state.offset));"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 770,
+        "Column": 13,
+        "ByteOffset": 35151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Tracev((stderr, \"inflate: end\\n\"));"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 77,
+        "Column": 1,
+        "ByteOffset": 2786
+      },
+      "Directive": "#ifdef BUILDFIXED"
+    },
+    {
+      "Location": {
+        "Line": 354,
+        "Column": 1,
+        "ByteOffset": 12408
+      },
+      "Directive": "#ifndef PKZIP_BUG_WORKAROUND"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "inflateBackInit_",
+      "Start": 1023,
+      "End": 2159,
+      "BodyStart": 1149,
+      "Original": "int ZEXPORT inflateBackInit_(z_streamp strm, int windowBits, unsigned char FAR *window, const char *version, int stream_size)\n{\n    struct inflate_state FAR *state;\n\n    if (version == Z_NULL || version[0] != ZLIB_VERSION[0] ||\n        stream_size != (int)(sizeof(z_stream)))\n        return Z_VERSION_ERROR;\n    if (strm == Z_NULL || window == Z_NULL ||\n        windowBits \u003c 8 || windowBits \u003e 15)\n        return Z_STREAM_ERROR;\n    strm-\u003emsg = Z_NULL;                 /* in case we return an error */\n    if (strm-\u003ezalloc == (alloc_func)0) {\n        strm-\u003ezalloc = zcalloc;\n        strm-\u003eopaque = (voidpf)0;\n    }\n    if (strm-\u003ezfree == (free_func)0) strm-\u003ezfree = zcfree;\n    state = (struct inflate_state FAR *)ZALLOC(strm, 1,\n                                               sizeof(struct inflate_state));\n    if (state == Z_NULL) return Z_MEM_ERROR;\n    Tracev((stderr, \"inflate: allocated\\n\"));\n    strm-\u003estate = (struct internal_state FAR *)state;\n    state-\u003edmax = 32768U;\n    state-\u003ewbits = windowBits;\n    state-\u003ewsize = 1U \u003c\u003c windowBits;\n    state-\u003ewindow = window;\n    state-\u003ewnext = 0;\n    state-\u003ewhave = 0;\n    return Z_OK;\n}",
+      "Draft": "int ZEXPORT inflateBackInit_(z_streamp strm, int windowBits, unsigned char FAR *window, char *version, int stream_size)\n{\n    struct inflate_state FAR *state;\n\n    if version == Z_NULL || version[0] != ZLIB_VERSION[0] ||\n        stream_size != int32((sizeof(z_stream))) {\n        return Z_VERSION_ERROR; }\n    if strm == Z_NULL || window == Z_NULL ||\n        windowBits \u003c 8 || windowBits \u003e 15 {\n        return Z_STREAM_ERROR; }\n    strm.msg = Z_NULL;                 /* in case we return an error */\n    if strm.zalloc == (alloc_func)0 {\n        strm.zalloc = zcalloc;\n        strm.opaque = (voidpf)0;\n    }\n    if strm.zfree == (free_func)0 { strm.zfree = zcfree; }\n    // inlining of macro ZALLOC\n    state = (struct inflate_state FAR *)(*((strm).zalloc))((strm).opaque, (1), (sizeof(struct inflate_state)));\n    if state == Z_NULL { return Z_MEM_ERROR; }\n    Tracev((os.Stderr, \"inflate: allocated\\n\"));\n    strm.state = (struct internal_state FAR *)state;\n    state.dmax = uint32(32768);\n    state.wbits = windowBits;\n    state.wsize = uint32(1) \u003c\u003c windowBits;\n    state.window = window;\n    state.wnext = 0;\n    state.whave = 0;\n    return Z_OK;\n}"
+    },
+    {
+      "Name": "fixedtables",
+      "Start": 2728,
+      "End": 3896,
+      "BodyStart": 2784,
+      "Original": "local void fixedtables(struct inflate_state FAR *state)\n{\n#ifdef BUILDFIXED\n    static int virgin = 1;\n    static code *lenfix, *distfix;\n    static code fixed[544];\n\n    /* build fixed huffman tables if first call (may not be thread safe) */\n    if (virgin) {\n        unsigned sym, bits;\n        static code *next;\n\n        /* literal/length table */\n        sym = 0;\n        while (sym \u003c 144) state-\u003elens[sym++] = 8;\n        while (sym \u003c 256) state-\u003elens[sym++] = 9;\n        while (sym \u003c 280) state-\u003elens[sym++] = 7;\n        while (sym \u003c 288) state-\u003elens[sym++] = 8;\n        next = fixed;\n        lenfix = next;\n        bits = 9;\n        inflate_table(LENS, state-\u003elens, 288, \u0026(next), \u0026(bits), state-\u003ework);\n\n        /* distance table */\n        sym = 0;\n        while (sym \u003c 32) state-\u003elens[sym++] = 5;\n        distfix = next;\n        bits = 5;\n        inflate_table(DISTS, state-\u003elens, 32, \u0026(next), \u0026(bits), state-\u003ework);\n\n        /* do this just once */\n        virgin = 0;\n    }\n#else /* !BUILDFIXED */\n#   include \"inffixed.h\"\n#endif /* BUILDFIXED */\n    state-\u003elencode = lenfix;\n    state-\u003elenbits = 9;\n    state-\u003edistcode = distfix;\n    state-\u003edistbits = 5;\n}",
+      "Draft": "local void fixedtables(struct inflate_state FAR *state)\n{\n#ifdef BUILDFIXED\n    static int virgin = 1;\n    static code *lenfix, *distfix;\n    static code fixed[544];\n\n    /* build fixed huffman tables if first call (may not be thread safe) */\n    if (virgin) {\n        unsigned sym, bits;\n        static code *next;\n\n        /* literal/length table */\n        sym = 0;\n        while (sym \u003c 144) state-\u003elens[sym++] = 8;\n        while (sym \u003c 256) state-\u003elens[sym++] = 9;\n        while (sym \u003c 280) state-\u003elens[sym++] = 7;\n        while (sym \u003c 288) state-\u003elens[sym++] = 8;\n        next = fixed;\n        lenfix = next;\n        bits = 9;\n        inflate_table(LENS, state-\u003elens, 288, \u0026(next), \u0026(bits), state-\u003ework);\n\n        /* distance table */\n        sym = 0;\n        while (sym \u003c 32) state-\u003elens[sym++] = 5;\n        distfix = next;\n        bits = 5;\n        inflate_table(DISTS, state-\u003elens, 32, \u0026(next), \u0026(bits), state-\u003ework);\n\n        /* do this just once */\n        virgin = 0;\n    }\n#else /* !BUILDFIXED */\n#   include \"inffixed.h\"\n#endif /* BUILDFIXED */\n    state.lencode = lenfix;\n    state.lenbits = 9;\n    state.distcode = distfix;\n    state.distbits = 5;\n}"
+    },
+    {
+      "Name": "inflateBack",
+      "Start": 8097,
+      "End": 22374,
+      "BodyStart": 8202,
+      "Original": "int ZEXPORT inflateBack(z_streamp strm, in_func in, void FAR *in_desc, out_func out, void FAR *out_desc)\n{\n    struct inflate_state FAR *state;\n    unsigned char FAR *next;    /* next input */\n    unsigned char FAR *put;     /* next output */\n    unsigned have, left;        /* available input and output */\n    unsigned long hold;         /* bit buffer */\n    unsigned bits;              /* bits in bit buffer */\n    unsigned copy;              /* number of stored or match bytes to copy */\n    unsigned char FAR *from;    /* where to copy match bytes from */\n    code here;                  /* current decoding table entry */\n    code last;                  /* parent table entry */\n    unsigned len;               /* length to copy for repeats, bits to drop */\n    int ret;                    /* return code */\n    static const unsigned short order[19] = /* permutation of code lengths */\n        {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};\n\n    /* Check that the strm exists and that the state was initialized */\n    if (strm == Z_NULL || strm-\u003estate == Z_NULL)\n        return Z_STREAM_ERROR;\n    state = (struct inflate_state FAR *)strm-\u003estate;\n\n    /* Reset the state */\n    strm-\u003emsg = Z_NULL;\n    state-\u003emode = TYPE;\n    state-\u003elast = 0;\n    state-\u003ewhave = 0;\n    next = strm-\u003enext_in;\n    have = next != Z_NULL ? strm-\u003eavail_in : 0;\n    hold = 0;\n    bits = 0;\n    put = state-\u003ewindow;\n    left = state-\u003ewsize;\n\n    /* Inflate until end of block marked as last */\n    for (;;)\n        switch (state-\u003emode) {\n        case TYPE:\n            /* determine and dispatch block type */\n            if (state-\u003elast) {\n                BYTEBITS();\n                state-\u003emode = DONE;\n                break;\n            }\n            NEEDBITS(3);\n            state-\u003elast = BITS(1);\n            DROPBITS(1);\n            switch (BITS(2)) {\n            case 0:                             /* stored block */\n                Tracev((stderr, \"inflate:     stored block%s\\n\",\n                        state-\u003elast ? \" (last)\" : \"\"));\n                state-\u003emode = STORED;\n                break;\n            case 1:                             /* fixed block */\n                fixedtables(state);\n                Tracev((stderr, \"inflate:     fixed codes block%s\\n\",\n                        state-\u003elast ? \" (last)\" : \"\"));\n                state-\u003emode = LEN;              /* decode codes */\n                break;\n            case 2:                             /* dynamic block */\n                Tracev((stderr, \"inflate:     dynamic codes block%s\\n\",\n                        state-\u003elast ? \" (last)\" : \"\"));\n                state-\u003emode = TABLE;\n                break;\n            case 3:\n                strm-\u003emsg = (char *)\"invalid block type\";\n                state-\u003emode = BAD;\n            }\n            DROPBITS(2);\n            break;\n\n        case STORED:\n            /* get and verify stored block length */\n            BYTEBITS();                         /* go to byte boundary */\n            NEEDBITS(32);\n            if ((hold \u0026 0xffff) != ((hold \u003e\u003e 16) ^ 0xffff)) {\n                strm-\u003emsg = (char *)\"invalid stored block lengths\";\n                state-\u003emode = BAD;\n                break;\n            }\n            state-\u003elength = (unsigned)hold \u0026 0xffff;\n            Tracev((stderr, \"inflate:       stored length %u\\n\",\n                    state-\u003elength));\n            INITBITS();\n\n            /* copy stored block from input to output */\n            while (state-\u003elength != 0) {\n                copy = state-\u003elength;\n                PULL();\n                ROOM();\n                if (copy \u003e have) copy = have;\n                if (copy \u003e left) copy = left;\n                zmemcpy(put, next, copy);\n                have -= copy;\n                next += copy;\n                left -= copy;\n                put += copy;\n                state-\u003elength -= copy;\n            }\n            Tracev((stderr, \"inflate:       stored end\\n\"));\n            state-\u003emode = TYPE;\n            break;\n\n        case TABLE:\n            /* get dynamic table entries descriptor */\n            NEEDBITS(14);\n            state-\u003enlen = BITS(5) + 257;\n            DROPBITS(5);\n            state-\u003endist = BITS(5) + 1;\n            DROPBITS(5);\n            state-\u003encode = BITS(4) + 4;\n            DROPBITS(4);\n#ifndef PKZIP_BUG_WORKAROUND\n            if (state-\u003enlen \u003e 286 || state-\u003endist \u003e 30) {\n                strm-\u003emsg = (char *)\"too many length or distance symbols\";\n                state-\u003emode = BAD;\n                break;\n            }\n#endif\n            Tracev((stderr, \"inflate:       table sizes ok\\n\"));\n\n            /* get code length code lengths (not a typo) */\n            state-\u003ehave = 0;\n            while (state-\u003ehave \u003c state-\u003encode) {\n                NEEDBITS(3);\n                state-\u003elens[order[state-\u003ehave++]] = (unsigned short)BITS(3);\n                DROPBITS(3);\n            }\n            while (state-\u003ehave \u003c 19)\n                state-\u003elens[order[state-\u003ehave++]] = 0;\n            state-\u003enext = state-\u003ecodes;\n            state-\u003elencode = (code const FAR *)(state-\u003enext);\n            state-\u003elenbits = 7;\n            ret = inflate_table(CODES, state-\u003elens, 19, \u0026(state-\u003enext),\n                                \u0026(state-\u003elenbits), state-\u003ework);\n            if (ret) {\n                strm-\u003emsg = (char *)\"invalid code lengths set\";\n                state-\u003emode = BAD;\n                break;\n            }\n            Tracev((stderr, \"inflate:       code lengths ok\\n\"));\n\n            /* get length and distance code code lengths */\n            state-\u003ehave = 0;\n            while (state-\u003ehave \u003c state-\u003enlen + state-\u003endist) {\n                for (;;) {\n                    here = state-\u003elencode[BITS(state-\u003elenbits)];\n                    if ((unsigned)(here.bits) \u003c= bits) break;\n                    PULLBYTE();\n                }\n                if (here.val \u003c 16) {\n                    NEEDBITS(here.bits);\n                    DROPBITS(here.bits);\n                    state-\u003elens[state-\u003ehave++] = here.val;\n                }\n                else {\n                    if (here.val == 16) {\n                        NEEDBITS(here.bits + 2);\n                        DROPBITS(here.bits);\n                        if (state-\u003ehave == 0) {\n                            strm-\u003emsg = (char *)\"invalid bit length repeat\";\n                            state-\u003emode = BAD;\n                            break;\n                        }\n                        len = (unsigned)(state-\u003elens[state-\u003ehave - 1]);\n                        copy = 3 + BITS(2);\n                        DROPBITS(2);\n                    }\n                    else if (here.val == 17) {\n                        NEEDBITS(here.bits + 3);\n                        DROPBITS(here.bits);\n                        len = 0;\n                        copy = 3 + BITS(3);\n                        DROPBITS(3);\n                    }\n                    else {\n                        NEEDBITS(here.bits + 7);\n                        DROPBITS(here.bits);\n                        len = 0;\n                        copy = 11 + BITS(7);\n                        DROPBITS(7);\n                    }\n                    if (state-\u003ehave + copy \u003e state-\u003enlen + state-\u003endist) {\n                        strm-\u003emsg = (char *)\"invalid bit length repeat\";\n                        state-\u003emode = BAD;\n                        break;\n                    }\n                    while (copy--)\n                        state-\u003elens[state-\u003ehave++] = (unsigned short)len;\n                }\n            }\n\n            /* handle error breaks in while */\n            if (state-\u003emode == BAD) break;\n\n            /* check for end-of-block code (better have one) */\n            if (state-\u003elens[256] == 0) {\n                strm-\u003emsg = (char *)\"invalid code -- missing end-of-block\";\n                state-\u003emode = BAD;\n                break;\n            }\n\n            /* build code tables -- note: do not change the lenbits or distbits\n               values here (9 and 6) without reading the comments in inftrees.h\n               concerning the ENOUGH constants, which depend on those values */\n            state-\u003enext = state-\u003ecodes;\n            state-\u003elencode = (code const FAR *)(state-\u003enext);\n            state-\u003elenbits = 9;\n            ret = inflate_table(LENS, state-\u003elens, state-\u003enlen, \u0026(state-\u003enext),\n                                \u0026(state-\u003elenbits), state-\u003ework);\n            if (ret) {\n                strm-\u003emsg = (char *)\"invalid literal/lengths set\";\n                state-\u003emode = BAD;\n                break;\n            }\n            state-\u003edistcode = (code const FAR *)(state-\u003enext);\n            state-\u003edistbits = 6;\n            ret = inflate_table(DISTS, state-\u003elens + state-\u003enlen, state-\u003endist,\n                            \u0026(state-\u003enext), \u0026(state-\u003edistbits), state-\u003ework);\n            if (ret) {\n                strm-\u003emsg = (char *)\"invalid distances set\";\n                state-\u003emode = BAD;\n                break;\n            }\n            Tracev((stderr, \"inflate:       codes ok\\n\"));\n            state-\u003emode = LEN;\n\n        case LEN:\n            /* use inflate_fast() if we have enough input and output */\n            if (have \u003e= 6 \u0026\u0026 left \u003e= 258) {\n                RESTORE();\n                if (state-\u003ewhave \u003c state-\u003ewsize)\n                    state-\u003ewhave = state-\u003ewsize - left;\n                inflate_fast(strm, state-\u003ewsize);\n                LOAD();\n                break;\n            }\n\n            /* get a literal, length, or end-of-block code */\n            for (;;) {\n                here = state-\u003elencode[BITS(state-\u003elenbits)];\n                if ((unsigned)(here.bits) \u003c= bits) break;\n                PULLBYTE();\n            }\n            if (here.op \u0026\u0026 (here.op \u0026 0xf0) == 0) {\n                last = here;\n                for (;;) {\n                    here = state-\u003elencode[last.val +\n                            (BITS(last.bits + last.op) \u003e\u003e last.bits)];\n                    if ((unsigned)(last.bits + here.bits) \u003c= bits) break;\n                    PULLBYTE();\n                }\n                DROPBITS(last.bits);\n            }\n            DROPBITS(here.bits);\n            state-\u003elength = (unsigned)here.val;\n\n            /* process literal */\n            if (here.op == 0) {\n                Tracevv((stderr, here.val \u003e= 0x20 \u0026\u0026 here.val \u003c 0x7f ?\n                        \"inflate:         literal '%c'\\n\" :\n                        \"inflate:         literal 0x%02x\\n\", here.val));\n                ROOM();\n                *put++ = (unsigned char)(state-\u003elength);\n                left--;\n                state-\u003emode = LEN;\n                break;\n            }\n\n            /* process end of block */\n            if (here.op \u0026 32) {\n                Tracevv((stderr, \"inflate:         end of block\\n\"));\n                state-\u003emode = TYPE;\n                break;\n            }\n\n            /* invalid code */\n            if (here.op \u0026 64) {\n                strm-\u003emsg = (char *)\"invalid literal/length code\";\n                state-\u003emode = BAD;\n                break;\n            }\n\n            /* length code -- get extra bits, if any */\n            state-\u003eextra = (unsigned)(here.op) \u0026 15;\n            if (state-\u003eextra != 0) {\n                NEEDBITS(state-\u003eextra);\n                state-\u003elength += BITS(state-\u003eextra);\n                DROPBITS(state-\u003eextra);\n            }\n            Tracevv((stderr, \"inflate:         length %u\\n\", state-\u003elength));\n\n            /* get distance code */\n            for (;;) {\n                here = state-\u003edistcode[BITS(state-\u003edistbits)];\n                if ((unsigned)(here.bits) \u003c= bits) break;\n                PULLBYTE();\n            }\n            if ((here.op \u0026 0xf0) == 0) {\n                last = here;\n                for (;;) {\n                    here = state-\u003edistcode[last.val +\n                            (BITS(last.bits + last.op) \u003e\u003e last.bits)];\n                    if ((unsigned)(last.bits + here.bits) \u003c= bits) break;\n                    PULLBYTE();\n                }\n                DROPBITS(last.bits);\n            }\n            DROPBITS(here.bits);\n            if (here.op \u0026 64) {\n                strm-\u003emsg = (char *)\"invalid distance code\";\n                state-\u003emode = BAD;\n                break;\n            }\n            state-\u003eoffset = (unsigned)here.val;\n\n            /* get distance extra bits, if any */\n            state-\u003eextra = (unsigned)(here.op) \u0026 15;\n            if (state-\u003eextra != 0) {\n                NEEDBITS(state-\u003eextra);\n                state-\u003eoffset += BITS(state-\u003eextra);\n                DROPBITS(state-\u003eextra);\n            }\n            if (state-\u003eoffset \u003e state-\u003ewsize - (state-\u003ewhave \u003c state-\u003ewsize ?\n                                                left : 0)) {\n                strm-\u003emsg = (char *)\"invalid distance too far back\";\n                state-\u003emode = BAD;\n                break;\n            }\n            Tracevv((stderr, \"inflate:         distance %u\\n\", state-\u003eoffset));\n\n            /* copy match from window to output */\n            do {\n                ROOM();\n                copy = state-\u003ewsize - state-\u003eoffset;\n                if (copy \u003c left) {\n                    from = put + copy;\n                    copy = left - copy;\n                }\n                else {\n                    from = put - state-\u003eoffset;\n                    copy = left;\n                }\n                if (copy \u003e state-\u003elength) copy = state-\u003elength;\n                state-\u003elength -= copy;\n                left -= copy;\n                do {\n                    *put++ = *from++;\n                } while (--copy);\n            } while (state-\u003elength != 0);\n            break;\n\n        case DONE:\n            /* inflate stream terminated properly -- write leftover output */\n            ret = Z_STREAM_END;\n            if (left \u003c state-\u003ewsize) {\n                if (out(out_desc, state-\u003ewindow, state-\u003ewsize - left))\n                    ret = Z_BUF_ERROR;\n            }\n            goto inf_leave;\n\n        case BAD:\n            ret = Z_DATA_ERROR;\n            goto inf_leave;\n\n        default:                /* can't happen, but makes compilers happy */\n            ret = Z_STREAM_ERROR;\n            goto inf_leave;\n        }\n\n    /* Return unused input */\n  inf_leave:\n    strm-\u003enext_in = next;\n    strm-\u003eavail_in = have;\n    return ret;\n}",
+      "Draft": "int ZEXPORT inflateBack(z_streamp strm, in_func in, void FAR *in_desc, out_func out, void FAR *out_desc)\n{\n    struct inflate_state FAR *state;\n    unsigned char FAR *next;    /* next input */\n    unsigned char FAR *put;     /* next output */\n    var have, left uint32;        /* available input and output */\n    unsigned long hold;         /* bit buffer */\n    var bits uint32;              /* bits in bit buffer */\n    var copy uint32;              /* number of stored or match bytes to copy */\n    unsigned char FAR *from;    /* where to copy match bytes from */\n    var here code;                  /* current decoding table entry */\n    var last code;                  /* parent table entry */\n    var len uint32;               /* length to copy for repeats, bits to drop */\n    var ret int32;                    /* return code */\n    static unsigned short order[19] = /* permutation of code lengths */\n        {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};\n\n    /* Check that the strm exists and that the state was initialized */\n    if strm == Z_NULL || strm.state == Z_NULL {\n        return Z_STREAM_ERROR; }\n    state = (struct inflate_state FAR *)strm.state;\n\n    /* Reset the state */\n    strm.msg = Z_NULL;\n    state.mode = TYPE;\n    state.last = 0;\n    state.whave = 0;\n    next = strm.next_in;\n    if next != Z_NULL {\n        have = strm.avail_in;\n    } else {\n        have = 0;\n    }\n    hold = 0;\n    bits = 0;\n    put = state.window;\n    left = state.wsize;\n\n    /* Inflate until end of block marked as last */\n    for {\n        switch state.mode {\n        case TYPE:\n            /* determine and dispatch block type */\n            if state.last {\n                // inlining of macro BYTEBITS\n                for {         hold \u003e\u003e= bits \u0026 7;         bits -= bits \u0026 7;     \nif !(false) { break }\n} \n                state.mode = DONE;\n                break;\n            }\n            // inlining of macro NEEDBITS\n            // inlining of macro PULLBYTE\n            // inlining of macro PULL\n            for {         for bits \u003c uint32((3)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n            // inlining of macro BITS\n            state.last = (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (1)) - 1));\n            // inlining of macro DROPBITS\n            for {         hold \u003e\u003e= (1);         bits -= uint32((1));     \nif !(false) { break }\n} \n            // inlining of macro BITS\n            switch uint32(hold) \u0026 ((uint32(1) \u003c\u003c (2)) - 1) {\n            case 0:                             /* stored block */\n                Tracev((os.Stderr, \"inflate:     stored block%s\\n\",\n                        state.last ? \" (last)\" : \"\"));\n                state.mode = STORED;\n                break;\n            case 1:                             /* fixed block */\n                fixedtables(state);\n                Tracev((os.Stderr, \"inflate:     fixed codes block%s\\n\",\n                        state.last ? \" (last)\" : \"\"));\n                state.mode = LEN;              /* decode codes */\n                break;\n            case 2:                             /* dynamic block */\n                Tracev((os.Stderr, \"inflate:     dynamic codes block%s\\n\",\n                        state.last ? \" (last)\" : \"\"));\n                state.mode = TABLE;\n                break;\n            case 3:\n                strm.msg = (char *)\"invalid block type\";\n                state.mode = BAD;\n            }\n            // inlining of macro DROPBITS\n            for {         hold \u003e\u003e= (2);         bits -= uint32((2));     \nif !(false) { break }\n} \n            break;\n\n        case STORED:\n            /* get and verify stored block length */\n            // inlining of macro BYTEBITS\n            for {         hold \u003e\u003e= bits \u0026 7;         bits -= bits \u0026 7;     \nif !(false) { break }\n}                          /* go to byte boundary */\n            // inlining of macro NEEDBITS\n            // inlining of macro PULLBYTE\n            // inlining of macro PULL\n            for {         for bits \u003c uint32((32)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n            if (hold \u0026 0xffff) != ((hold \u003e\u003e 16) ^ 0xffff) {\n                strm.msg = (char *)\"invalid stored block lengths\";\n                state.mode = BAD;\n                break;\n            }\n            state.length = uint32(hold) \u0026 0xffff;\n            Tracev((os.Stderr, \"inflate:       stored length %u\\n\",\n                    state.length));\n            // inlining of macro INITBITS\n            for {         hold = 0;         bits = 0;     \nif !(false) { break }\n} \n\n            /* copy stored block from input to output */\n            for state.length != 0 {\n                copy = state.length;\n                // inlining of macro PULL\n                for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n} \n                // inlining of macro ROOM\n                for {         if left == 0 {             put = state.window;             left = state.wsize;             state.whave = left;             if out(out_desc, put, left) {                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n} \n                if copy \u003e have { copy = have; }\n                if copy \u003e left { copy = left; }\n                zmemcpy(put, next, copy);\n                have -= copy;\n                next += copy;\n                left -= copy;\n                put += copy;\n                state.length -= copy;\n            }\n            Tracev((os.Stderr, \"inflate:       stored end\\n\"));\n            state.mode = TYPE;\n            break;\n\n        case TABLE:\n            /* get dynamic table entries descriptor */\n            // inlining of macro NEEDBITS\n            // inlining of macro PULLBYTE\n            // inlining of macro PULL\n            for {         for bits \u003c uint32((14)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n            // inlining of macro BITS\n            state.nlen = (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (5)) - 1)) + 257;\n            // inlining of macro DROPBITS\n            for {         hold \u003e\u003e= (5);         bits -= uint32((5));     \nif !(false) { break }\n} \n            // inlining of macro BITS\n            state.ndist = (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (5)) - 1)) + 1;\n            // inlining of macro DROPBITS\n            for {         hold \u003e\u003e= (5);         bits -= uint32((5));     \nif !(false) { break }\n} \n            // inlining of macro BITS\n            state.ncode = (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (4)) - 1)) + 4;\n            // inlining of macro DROPBITS\n            for {         hold \u003e\u003e= (4);         bits -= uint32((4));     \nif !(false) { break }\n} \n#ifndef PKZIP_BUG_WORKAROUND\n            if (state-\u003enlen \u003e 286 || state-\u003endist \u003e 30) {\n                strm-\u003emsg = (char *)\"too many length or distance symbols\";\n                state-\u003emode = BAD;\n                break;\n            }\n#endif\n            Tracev((os.Stderr, \"inflate:       table sizes ok\\n\"));\n\n            /* get code length code lengths (not a typo) */\n            state.have = 0;\n            for state.have \u003c state.ncode {\n                // inlining of macro NEEDBITS\n                // inlining of macro PULLBYTE\n                // inlining of macro PULL\n                for {         for bits \u003c uint32((3)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n                // inlining of macro BITS\n                state.lens[order[state.have++]] = (unsigned short)(uint32(hold) \u0026 ((uint32(1) \u003c\u003c (3)) - 1));\n                // inlining of macro DROPBITS\n                for {         hold \u003e\u003e= (3);         bits -= uint32((3));     \nif !(false) { break }\n} \n            }\n            for state.have \u003c 19 {\n                state.lens[order[state.have++]] = 0;\n            }\n            state.next = state.codes;\n            state.lencode = (code FAR *)(state.next);\n            state.lenbits = 7;\n            ret = inflate_table(CODES, state.lens, 19, \u0026(state.next),\n                                \u0026(state.lenbits), state.work);\n            if ret != 0 {\n                strm.msg = (char *)\"invalid code lengths set\";\n                state.mode = BAD;\n                break;\n            }\n            Tracev((os.Stderr, \"inflate:       code lengths ok\\n\"));\n\n            /* get length and distance code code lengths */\n            state.have = 0;\n            for state.have \u003c state.nlen + state.ndist {\n                for {\n                    // inlining of macro BITS\n                    here = state.lencode[(uint32(hold) \u0026 ((uint32(1) \u003c\u003c (state.lenbits)) - 1))];\n                    if uint32((here.bits)) \u003c= bits { break; }\n                    // inlining of macro PULLBYTE\n                    // inlining of macro PULL\n                    for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n} \n                }\n                if here.val \u003c 16 {\n                    // inlining of macro NEEDBITS\n                    // inlining of macro PULLBYTE\n                    // inlining of macro PULL\n                    for {         for bits \u003c uint32((here.bits)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n                    // inlining of macro DROPBITS\n                    for {         hold \u003e\u003e= (here.bits);         bits -= uint32((here.bits));     \nif !(false) { break }\n} \n                    state.lens[state.have++] = here.val;\n                \n                } else {\n                    if here.val == 16 {\n                        // inlining of macro NEEDBITS\n                        // inlining of macro PULLBYTE\n                        // inlining of macro PULL\n                        for {         for bits \u003c uint32((here.bits + 2)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n                        // inlining of macro DROPBITS\n                        for {         hold \u003e\u003e= (here.bits);         bits -= uint32((here.bits));     \nif !(false) { break }\n} \n                        if state.have == 0 {\n                            strm.msg = (char *)\"invalid bit length repeat\";\n                            state.mode = BAD;\n                            break;\n                        }\n                        len = uint32((state.lens[state.have - 1]));\n                        // inlining of macro BITS\n                        copy = 3 + (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (2)) - 1));\n                        // inlining of macro DROPBITS\n                        for {         hold \u003e\u003e= (2);         bits -= uint32((2));     \nif !(false) { break }\n} \n                    \n                    } else if here.val == 17 {\n                        // inlining of macro NEEDBITS\n                        // inlining of macro PULLBYTE\n                        // inlining of macro PULL\n                        for {         for bits \u003c uint32((here.bits + 3)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n                        // inlining of macro DROPBITS\n                        for {         hold \u003e\u003e= (here.bits);         bits -= uint32((here.bits));     \nif !(false) { break }\n} \n                        len = 0;\n                        // inlining of macro BITS\n                        copy = 3 + (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (3)) - 1));\n                        // inlining of macro DROPBITS\n                        for {         hold \u003e\u003e= (3);         bits -= uint32((3));     \nif !(false) { break }\n} \n                    \n                    } else {\n                        // inlining of macro NEEDBITS\n                        // inlining of macro PULLBYTE\n                        // inlining of macro PULL\n                        for {         for bits \u003c uint32((here.bits + 7)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n                        // inlining of macro DROPBITS\n                        for {         hold \u003e\u003e= (here.bits);         bits -= uint32((here.bits));     \nif !(false) { break }\n} \n                        len = 0;\n                        // inlining of macro BITS\n                        copy = 11 + (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (7)) - 1));\n                        // inlining of macro DROPBITS\n                        for {         hold \u003e\u003e= (7);         bits -= uint32((7));     \nif !(false) { break }\n} \n                    }\n                    if state.have + copy \u003e state.nlen + state.ndist {\n                        strm.msg = (char *)\"invalid bit length repeat\";\n                        state.mode = BAD;\n                        break;\n                    }\n                    for copy-- {\n                        state.lens[state.have++] = (unsigned short)len;\n                    }\n                }\n            }\n\n            /* handle error breaks in while */\n            if state.mode == BAD { break; }\n\n            /* check for end-of-block code (better have one) */\n            if state.lens[256] == 0 {\n                strm.msg = (char *)\"invalid code -- missing end-of-block\";\n                state.mode = BAD;\n                break;\n            }\n\n            /* build code tables -- note: do not change the lenbits or distbits\n               values here (9 and 6) without reading the comments in inftrees.h\n               concerning the ENOUGH constants, which depend on those values */\n            state.next = state.codes;\n            state.lencode = (code FAR *)(state.next);\n            state.lenbits = 9;\n            ret = inflate_table(LENS, state.lens, state.nlen, \u0026(state.next),\n                                \u0026(state.lenbits), state.work);\n            if ret != 0 {\n                strm.msg = (char *)\"invalid literal/lengths set\";\n                state.mode = BAD;\n                break;\n            }\n            state.distcode = (code FAR *)(state.next);\n            state.distbits = 6;\n            ret = inflate_table(DISTS, state.lens + state.nlen, state.ndist,\n                            \u0026(state.next), \u0026(state.distbits), state.work);\n            if ret != 0 {\n                strm.msg = (char *)\"invalid distances set\";\n                state.mode = BAD;\n                break;\n            }\n            Tracev((os.Stderr, \"inflate:       codes ok\\n\"));\n            state.mode = LEN;\n\n        fallthrough\ncase LEN:\n            /* use inflate_fast() if we have enough input and output */\n            if have \u003e= 6 \u0026\u0026 left \u003e= 258 {\n                // inlining of macro RESTORE\n                for {         strm.next_out = put;         strm.avail_out = left;         strm.next_in = next;         strm.avail_in = have;         state.hold = hold;         state.bits = bits;     \nif !(false) { break }\n} \n                if state.whave \u003c state.wsize {\n                    state.whave = state.wsize - left; }\n                inflate_fast(strm, state.wsize);\n                // inlining of macro LOAD\n                for {         put = strm.next_out;         left = strm.avail_out;         next = strm.next_in;         have = strm.avail_in;         hold = state.hold;         bits = state.bits;     \nif !(false) { break }\n} \n                break;\n            }\n\n            /* get a literal, length, or end-of-block code */\n            for {\n                // inlining of macro BITS\n                here = state.lencode[(uint32(hold) \u0026 ((uint32(1) \u003c\u003c (state.lenbits)) - 1))];\n                if uint32((here.bits)) \u003c= bits { break; }\n                // inlining of macro PULLBYTE\n                // inlining of macro PULL\n                for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n} \n            }\n            if here.op \u0026\u0026 (here.op \u0026 0xf0) == 0 {\n                last = here;\n                for {\n                    here = state.lencode[last.val +\n                            // inlining of macro BITS\n                            ((uint32(hold) \u0026 ((uint32(1) \u003c\u003c (last.bits + last.op)) - 1)) \u003e\u003e last.bits)];\n                    if uint32((last.bits + here.bits)) \u003c= bits { break; }\n                    // inlining of macro PULLBYTE\n                    // inlining of macro PULL\n                    for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n} \n                }\n                // inlining of macro DROPBITS\n                for {         hold \u003e\u003e= (last.bits);         bits -= uint32((last.bits));     \nif !(false) { break }\n} \n            }\n            // inlining of macro DROPBITS\n            for {         hold \u003e\u003e= (here.bits);         bits -= uint32((here.bits));     \nif !(false) { break }\n} \n            state.length = uint32(here.val);\n\n            /* process literal */\n            if here.op == 0 {\n                Tracevv((os.Stderr, here.val \u003e= 0x20 \u0026\u0026 here.val \u003c 0x7f ?\n                        \"inflate:         literal '%c'\\n\" :\n                        \"inflate:         literal 0x%02x\\n\", here.val));\n                // inlining of macro ROOM\n                for {         if left == 0 {             put = state.window;             left = state.wsize;             state.whave = left;             if out(out_desc, put, left) {                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n} \n                *put++ = (unsigned char)(state.length);\n                left--;\n                state.mode = LEN;\n                break;\n            }\n\n            /* process end of block */\n            if here.op \u0026 32 {\n                Tracevv((os.Stderr, \"inflate:         end of block\\n\"));\n                state.mode = TYPE;\n                break;\n            }\n\n            /* invalid code */\n            if here.op \u0026 64 {\n                strm.msg = (char *)\"invalid literal/length code\";\n                state.mode = BAD;\n                break;\n            }\n\n            /* length code -- get extra bits, if any */\n            state.extra = uint32((here.op)) \u0026 15;\n            if state.extra != 0 {\n                // inlining of macro NEEDBITS\n                // inlining of macro PULLBYTE\n                // inlining of macro PULL\n                for {         for bits \u003c uint32((state.extra)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n                // inlining of macro BITS\n                state.length += (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (state.extra)) - 1));\n                // inlining of macro DROPBITS\n                for {         hold \u003e\u003e= (state.extra);         bits -= uint32((state.extra));     \nif !(false) { break }\n} \n            }\n            Tracevv((os.Stderr, \"inflate:         length %u\\n\", state.length));\n\n            /* get distance code */\n            for {\n                // inlining of macro BITS\n                here = state.distcode[(uint32(hold) \u0026 ((uint32(1) \u003c\u003c (state.distbits)) - 1))];\n                if uint32((here.bits)) \u003c= bits { break; }\n                // inlining of macro PULLBYTE\n                // inlining of macro PULL\n                for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n} \n            }\n            if (here.op \u0026 0xf0) == 0 {\n                last = here;\n                for {\n                    here = state.distcode[last.val +\n                            // inlining of macro BITS\n                            ((uint32(hold) \u0026 ((uint32(1) \u003c\u003c (last.bits + last.op)) - 1)) \u003e\u003e last.bits)];\n                    if uint32((last.bits + here.bits)) \u003c= bits { break; }\n                    // inlining of macro PULLBYTE\n                    // inlining of macro PULL\n                    for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n} \n                }\n                // inlining of macro DROPBITS\n                for {         hold \u003e\u003e= (last.bits);         bits -= uint32((last.bits));     \nif !(false) { break }\n} \n            }\n            // inlining of macro DROPBITS\n            for {         hold \u003e\u003e= (here.bits);         bits -= uint32((here.bits));     \nif !(false) { break }\n} \n            if here.op \u0026 64 {\n                strm.msg = (char *)\"invalid distance code\";\n                state.mode = BAD;\n                break;\n            }\n            state.offset = uint32(here.val);\n\n            /* get distance extra bits, if any */\n            state.extra = uint32((here.op)) \u0026 15;\n            if state.extra != 0 {\n                // inlining of macro NEEDBITS\n                // inlining of macro PULLBYTE\n                // inlining of macro PULL\n                for {         for bits \u003c uint32((state.extra)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n                // inlining of macro BITS\n                state.offset += (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (state.extra)) - 1));\n                // inlining of macro DROPBITS\n                for {         hold \u003e\u003e= (state.extra);         bits -= uint32((state.extra));     \nif !(false) { break }\n} \n            }\n            if state.offset \u003e state.wsize - (state.whave \u003c state.wsize ?\n                                                left : 0) {\n                strm.msg = (char *)\"invalid distance too far back\";\n                state.mode = BAD;\n                break;\n            }\n            Tracevv((os.Stderr, \"inflate:         distance %u\\n\", state.offset));\n\n            /* copy match from window to output */\n            for {\n                // inlining of macro ROOM\n                for {         if left == 0 {             put = state.window;             left = state.wsize;             state.whave = left;             if out(out_desc, put, left) {                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n} \n                copy = state.wsize - state.offset;\n                if copy \u003c left {\n                    from = put + copy;\n                    copy = left - copy;\n                \n                } else {\n                    from = put - state.offset;\n                    copy = left;\n                }\n                if copy \u003e state.length { copy = state.length; }\n                state.length -= copy;\n                left -= copy;\n                for {\n                    *put++ = *from++;\n                \nif !(--copy) { break }\n} \n            \nif !(state.length != 0) { break }\n} \n            break;\n\n        case DONE:\n            /* inflate stream terminated properly -- write leftover output */\n            ret = Z_STREAM_END;\n            if left \u003c state.wsize {\n                if out(out_desc, state.window, state.wsize - left) {\n                    ret = Z_BUF_ERROR; }\n            }\n            goto inf_leave;\n\n        case BAD:\n            ret = Z_DATA_ERROR;\n            goto inf_leave;\n\n        default:                /* can't happen, but makes compilers happy */\n            ret = Z_STREAM_ERROR;\n            goto inf_leave;\n        }\n    }\n\n    /* Return unused input */\n  inf_leave:\n    strm.next_in = next;\n    strm.avail_in = have;\n    return ret;\n}"
+    },
+    {
+      "Name": "inflateBackEnd",
+      "Start": 22376,
+      "End": 22646,
+      "BodyStart": 22419,
+      "Original": "int ZEXPORT inflateBackEnd(z_streamp strm)\n{\n    if (strm == Z_NULL || strm-\u003estate == Z_NULL || strm-\u003ezfree == (free_func)0)\n        return Z_STREAM_ERROR;\n    ZFREE(strm, strm-\u003estate);\n    strm-\u003estate = Z_NULL;\n    Tracev((stderr, \"inflate: end\\n\"));\n    return Z_OK;\n}",
+      "Draft": "func inflateBackEnd(strm z_streamp) int ZEXPORT {\n    if strm == Z_NULL || strm.state == Z_NULL || strm.zfree == (free_func)0 {\n        return Z_STREAM_ERROR; }\n    ZFREE(strm, strm.state);\n    strm.state = Z_NULL;\n    Tracev((os.Stderr, \"inflate: end\\n\"));\n    return Z_OK;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::sizeof::1280",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1280,
+      "End": 1286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::sizeof::1820",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1736,
+      "End": 1736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::static::8012",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 8915,
+      "End": 8921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::8897",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9756,
+      "End": 9756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::9101",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9853,
+      "End": 9853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::9199",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9853,
+      "End": 9853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::9252",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9853,
+      "End": 9853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::9768",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 9913,
+      "End": 9913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::10949",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 10919,
+      "End": 10919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::11174",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11038,
+      "End": 11038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::11355",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11112,
+      "End": 11112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::11454",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11112,
+      "End": 11112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::11507",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11112,
+      "End": 11112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::12276",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11495,
+      "End": 11495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::12527",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11660,
+      "End": 11660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::12820",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 11684,
+      "End": 11684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::13651",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12198,
+      "End": 12198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::13750",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12198,
+      "End": 12198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::13803",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12198,
+      "End": 12198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::14325",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12265,
+      "End": 12265
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::14565",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12330,
+      "End": 12330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::14805",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12395,
+      "End": 12395
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::15219",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12869,
+      "End": 12869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::15317",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12869,
+      "End": 12869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::15370",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12869,
+      "End": 12869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::15932",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12975,
+      "End": 12975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::17049",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 13917,
+      "End": 13917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::17102",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 13917,
+      "End": 13917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::17560",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14004,
+      "End": 14004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::17666",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14004,
+      "End": 14004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::17719",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14004,
+      "End": 14004
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::18139",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14045,
+      "End": 14045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::18440",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14232,
+      "End": 14232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::18550",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14232,
+      "End": 14232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::18603",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14232,
+      "End": 14232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::19027",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14281,
+      "End": 14281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::19604",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14675,
+      "End": 14675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::19816",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14781,
+      "End": 14781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::19926",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14781,
+      "End": 14781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::19979",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14781,
+      "End": 14781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::20403",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14830,
+      "End": 14830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::20708",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 14952,
+      "End": 14952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::20900",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 15038,
+      "End": 15038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::21010",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 15038,
+      "End": 15038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::21063",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 15038,
+      "End": 15038
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::21487",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 15087,
+      "End": 15087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::21793",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 15210,
+      "End": 15210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::23996",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 17308,
+      "End": 17308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::24408",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 17490,
+      "End": 17490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::24980",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 17756,
+      "End": 17756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::25033",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 17756,
+      "End": 17756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::25825",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 18108,
+      "End": 18108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::25878",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 18108,
+      "End": 18108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::26295",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 18154,
+      "End": 18154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::26456",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 18201,
+      "End": 18201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::26922",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 18557,
+      "End": 18557
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::27981",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 19299,
+      "End": 19299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::28090",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 19299,
+      "End": 19299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::28143",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 19299,
+      "End": 19299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::28681",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 19392,
+      "End": 19392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::29180",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 19705,
+      "End": 19705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::29233",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 19705,
+      "End": 19705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::30015",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 20047,
+      "End": 20047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::30068",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 20047,
+      "End": 20047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::30485",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 20093,
+      "End": 20093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::30646",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 20140,
+      "End": 20140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::31151",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 20531,
+      "End": 20531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::31260",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 20531,
+      "End": 20531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::31313",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 20531,
+      "End": 20531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::31851",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 20624,
+      "End": 20624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::32386",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 21086,
+      "End": 21088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::32447",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 21107,
+      "End": 21107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::mechanical::do::33184",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 21571,
+      "End": 21573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::pointer-cast::10814",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10828,
+      "End": 10836
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::pointer-cast::11953",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11216,
+      "End": 11224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::pointer-cast::16435",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13416,
+      "End": 13424
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::pointer-cast::19206",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14390,
+      "End": 14398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::pointer-cast::22001",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15356,
+      "End": 15364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::pointer-cast::22500",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15855,
+      "End": 15863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::pointer-cast::23191",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16546,
+      "End": 16554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::pointer-cast::23607",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16962,
+      "End": 16970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::pointer-cast::27663",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19025,
+      "End": 19033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::pointer-cast::30797",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20221,
+      "End": 20229
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::pointer-cast::32129",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20829,
+      "End": 20837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro::LOAD",
+      "Category": "macro-review",
+      "Symbol": "LOAD",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 3977,
+      "End": 4211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro::RESTORE",
+      "Category": "macro-review",
+      "Symbol": "RESTORE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4263,
+      "End": 4500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro::INITBITS",
+      "Category": "macro-review",
+      "Symbol": "INITBITS",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4540,
+      "End": 4627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro::PULL",
+      "Category": "macro-review",
+      "Symbol": "PULL",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 4757,
+      "End": 5031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro::PULLBYTE",
+      "Category": "macro-review",
+      "Symbol": "PULLBYTE",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5163,
+      "End": 5319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro::NEEDBITS",
+      "Category": "macro-review",
+      "Symbol": "NEEDBITS",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5493,
+      "End": 5606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro::BITS",
+      "Category": "macro-review",
+      "Symbol": "BITS",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5668,
+      "End": 5726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro::DROPBITS",
+      "Category": "macro-review",
+      "Symbol": "DROPBITS",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5773,
+      "End": 5878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro::BYTEBITS",
+      "Category": "macro-review",
+      "Symbol": "BYTEBITS",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 5947,
+      "End": 6051
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro::ROOM",
+      "Category": "macro-review",
+      "Symbol": "ROOM",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 6216,
+      "End": 6536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::inflateBackInit_",
+      "Category": "semantic-review",
+      "Symbol": "inflateBackInit_",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1023,
+      "End": 2159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::fixedtables",
+      "Category": "semantic-review",
+      "Symbol": "fixedtables",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 2728,
+      "End": 3896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::ternary::inflateBack",
+      "Category": "ternary-review",
+      "Symbol": "inflateBack",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8097,
+      "End": 22374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::inflateBack",
+      "Category": "semantic-review",
+      "Symbol": "inflateBack",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 8097,
+      "End": 22374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::inflateBackEnd",
+      "Category": "semantic-review",
+      "Symbol": "inflateBackEnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22376,
+      "End": 22646
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 22673
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 2786,
+      "End": 3785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 12408,
+      "End": 12648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::724",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 724,
+      "End": 761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::1035",
+      "Category": "macro-inline-review",
+      "Symbol": "inflateBackInit_",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1035,
+      "End": 1148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::1879",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1879,
+      "End": 1919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::8109",
+      "Category": "macro-inline-review",
+      "Symbol": "inflateBack",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8109,
+      "End": 8201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::10040",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10040,
+      "End": 10143
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::10324",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10324,
+      "End": 10432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::10608",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10608,
+      "End": 10718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::11393",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11393,
+      "End": 11481
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::11800",
+      "Category": "macro-inline-review",
+      "Symbol": "zmemcpy",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11800,
+      "End": 11824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::12010",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12010,
+      "End": 12057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::12661",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12661,
+      "End": 12712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::13246",
+      "Category": "macro-inline-review",
+      "Symbol": "inflate_table",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13246,
+      "End": 13363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::13536",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13536,
+      "End": 13588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::16368",
+      "Category": "macro-inline-review",
+      "Symbol": "inflate_table",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16368,
+      "End": 16493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::16771",
+      "Category": "macro-inline-review",
+      "Symbol": "inflate_table",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16771,
+      "End": 16909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::17079",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17079,
+      "End": 17124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::17440",
+      "Category": "macro-inline-review",
+      "Symbol": "inflate_fast",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17440,
+      "End": 17472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::18353",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracevv",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18353,
+      "End": 18539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::18806",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracevv",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18806,
+      "End": 18858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::19442",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracevv",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19442,
+      "End": 19506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::20954",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracevv",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20954,
+      "End": 21020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::22388",
+      "Category": "macro-inline-review",
+      "Symbol": "inflateBackEnd",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22388,
+      "End": 22418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::22536",
+      "Category": "macro-inline-review",
+      "Symbol": "ZFREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22536,
+      "End": 22560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/infback.c::macro-inline::22592",
+      "Category": "macro-inline-review",
+      "Symbol": "Tracev",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22592,
+      "End": 22626
+    }
+  ],
+  "Draft": "package zlib\n\nimport \"os\"\n\n/* infback.c -- inflate using a call-back interface\n * Copyright (C) 1995-2009 Mark Adler\n * For conditions of distribution and use, see copyright notice in zlib.h\n */\n\n/*\n   This code is largely copied from inflate.c.  Normally either infback.o or\n   inflate.o would be linked into an application--not both.  The interface\n   with inffast.c is retained so that optimized assembler-coded versions of\n   inflate_fast() can be used with either inflate.c or infback.c.\n */\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \"misc/util/abc_global.h\"\n\n//#include \"zutil.h\"\n//#include \"inftrees.h\"\n//#include \"inflate.h\"\n//#include \"inffast.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/* function prototypes */\n// local void fixedtables OF((struct inflate_state FAR *state));\n\n\n/*\n   strm provides memory allocation functions in zalloc and zfree, or\n   Z_NULL to use the library memory allocation functions.\n\n   windowBits is in the range 8..15, and window is a user-supplied\n   window and output buffer that is 2**windowBits bytes.\n */\nint ZEXPORT inflateBackInit_(z_streamp strm, int windowBits, unsigned char FAR *window, char *version, int stream_size)\n{\n    struct inflate_state FAR *state;\n\n    if version == Z_NULL || version[0] != ZLIB_VERSION[0] ||\n        stream_size != int32((sizeof(z_stream))) {\n        return Z_VERSION_ERROR; }\n    if strm == Z_NULL || window == Z_NULL ||\n        windowBits \u003c 8 || windowBits \u003e 15 {\n        return Z_STREAM_ERROR; }\n    strm.msg = Z_NULL;                 /* in case we return an error */\n    if strm.zalloc == (alloc_func)0 {\n        strm.zalloc = zcalloc;\n        strm.opaque = (voidpf)0;\n    }\n    if strm.zfree == (free_func)0 { strm.zfree = zcfree; }\n    // inlining of macro ZALLOC\n    state = (struct inflate_state FAR *)(*((strm).zalloc))((strm).opaque, (1), (sizeof(struct inflate_state)));\n    if state == Z_NULL { return Z_MEM_ERROR; }\n    Tracev((os.Stderr, \"inflate: allocated\\n\"));\n    strm.state = (struct internal_state FAR *)state;\n    state.dmax = uint32(32768);\n    state.wbits = windowBits;\n    state.wsize = uint32(1) \u003c\u003c windowBits;\n    state.window = window;\n    state.wnext = 0;\n    state.whave = 0;\n    return Z_OK;\n}\n\n/*\n   Return state with length and distance decoding tables and index sizes set to\n   fixed code decoding.  Normally this returns fixed tables from inffixed.h.\n   If BUILDFIXED is defined, then instead this routine builds the tables the\n   first time it's called, and returns those tables the first time and\n   thereafter.  This reduces the size of the code by about 2K bytes, in\n   exchange for a little execution time.  However, BUILDFIXED should not be\n   used for threaded applications, since the rewriting of the tables and virgin\n   may not be thread-safe.\n */\nlocal void fixedtables(struct inflate_state FAR *state)\n{\n#ifdef BUILDFIXED\n    static int virgin = 1;\n    static code *lenfix, *distfix;\n    static code fixed[544];\n\n    /* build fixed huffman tables if first call (may not be thread safe) */\n    if (virgin) {\n        unsigned sym, bits;\n        static code *next;\n\n        /* literal/length table */\n        sym = 0;\n        while (sym \u003c 144) state-\u003elens[sym++] = 8;\n        while (sym \u003c 256) state-\u003elens[sym++] = 9;\n        while (sym \u003c 280) state-\u003elens[sym++] = 7;\n        while (sym \u003c 288) state-\u003elens[sym++] = 8;\n        next = fixed;\n        lenfix = next;\n        bits = 9;\n        inflate_table(LENS, state-\u003elens, 288, \u0026(next), \u0026(bits), state-\u003ework);\n\n        /* distance table */\n        sym = 0;\n        while (sym \u003c 32) state-\u003elens[sym++] = 5;\n        distfix = next;\n        bits = 5;\n        inflate_table(DISTS, state-\u003elens, 32, \u0026(next), \u0026(bits), state-\u003ework);\n\n        /* do this just once */\n        virgin = 0;\n    }\n#else /* !BUILDFIXED */\n#   include \"inffixed.h\"\n#endif /* BUILDFIXED */\n    state.lencode = lenfix;\n    state.lenbits = 9;\n    state.distcode = distfix;\n    state.distbits = 5;\n}\n\n/* Macros for inflateBack(): */\n\n/* Load returned state from inflate_fast() */\n// Original macro:\n// #define LOAD() \\\n//     do { \\\n//         put = strm-\u003enext_out; \\\n//         left = strm-\u003eavail_out; \\\n//         next = strm-\u003enext_in; \\\n//         have = strm-\u003eavail_in; \\\n//         hold = state-\u003ehold; \\\n//         bits = state-\u003ebits; \\\n//     } while (0)\n\n\n/* Set state from registers for inflate_fast() */\n// Original macro:\n// #define RESTORE() \\\n//     do { \\\n//         strm-\u003enext_out = put; \\\n//         strm-\u003eavail_out = left; \\\n//         strm-\u003enext_in = next; \\\n//         strm-\u003eavail_in = have; \\\n//         state-\u003ehold = hold; \\\n//         state-\u003ebits = bits; \\\n//     } while (0)\n\n\n/* Clear the input bit accumulator */\n// Original macro:\n// #define INITBITS() \\\n//     do { \\\n//         hold = 0; \\\n//         bits = 0; \\\n//     } while (0)\n\n\n/* Assure that some input is available.  If input is requested, but denied,\n   then return a Z_BUF_ERROR from inflateBack(). */\n// Original macro:\n// #define PULL() \\\n//     do { \\\n//         if (have == 0) { \\\n//             have = in(in_desc, \u0026next); \\\n//             if (have == 0) { \\\n//                 next = Z_NULL; \\\n//                 ret = Z_BUF_ERROR; \\\n//                 goto inf_leave; \\\n//             } \\\n//         } \\\n//     } while (0)\n\n\n/* Get a byte of input into the bit accumulator, or return from inflateBack()\n   with an error if there is no input available. */\n// Original macro:\n// #define PULLBYTE() \\\n//     do { \\\n//         PULL(); \\\n//         have--; \\\n//         hold += (unsigned long)(*next++) \u003c\u003c bits; \\\n//         bits += 8; \\\n//     } while (0)\n\n\n/* Assure that there are at least n bits in the bit accumulator.  If there is\n   not enough available input to do that, then return from inflateBack() with\n   an error. */\n// Original macro:\n// #define NEEDBITS(n) \\\n//     do { \\\n//         while (bits \u003c (unsigned)(n)) \\\n//             PULLBYTE(); \\\n//     } while (0)\n\n\n/* Return the low n bits of the bit accumulator (n \u003c 16) */\n// Original macro:\n// #define BITS(n) \\\n//     ((unsigned)hold \u0026 ((1U \u003c\u003c (n)) - 1))\n\n\n/* Remove n bits from the bit accumulator */\n// Original macro:\n// #define DROPBITS(n) \\\n//     do { \\\n//         hold \u003e\u003e= (n); \\\n//         bits -= (unsigned)(n); \\\n//     } while (0)\n\n\n/* Remove zero to seven bits as needed to go to a byte boundary */\n// Original macro:\n// #define BYTEBITS() \\\n//     do { \\\n//         hold \u003e\u003e= bits \u0026 7; \\\n//         bits -= bits \u0026 7; \\\n//     } while (0)\n\n\n/* Assure that some output space is available, by writing out the window\n   if it's full.  If the write fails, return from inflateBack() with a\n   Z_BUF_ERROR. */\n// Original macro:\n// #define ROOM() \\\n//     do { \\\n//         if (left == 0) { \\\n//             put = state-\u003ewindow; \\\n//             left = state-\u003ewsize; \\\n//             state-\u003ewhave = left; \\\n//             if (out(out_desc, put, left)) { \\\n//                 ret = Z_BUF_ERROR; \\\n//                 goto inf_leave; \\\n//             } \\\n//         } \\\n//     } while (0)\n\n\n/*\n   strm provides the memory allocation functions and window buffer on input,\n   and provides information on the unused input on return.  For Z_DATA_ERROR\n   returns, strm will also provide an error message.\n\n   in() and out() are the call-back input and output functions.  When\n   inflateBack() needs more input, it calls in().  When inflateBack() has\n   filled the window with output, or when it completes with data in the\n   window, it calls out() to write out the data.  The application must not\n   change the provided input until in() is called again or inflateBack()\n   returns.  The application must not change the window/output buffer until\n   inflateBack() returns.\n\n   in() and out() are called with a descriptor parameter provided in the\n   inflateBack() call.  This parameter can be a structure that provides the\n   information required to do the read or write, as well as accumulated\n   information on the input and output such as totals and check values.\n\n   in() should return zero on failure.  out() should return non-zero on\n   failure.  If either in() or out() fails, than inflateBack() returns a\n   Z_BUF_ERROR.  strm-\u003enext_in can be checked for Z_NULL to see whether it\n   was in() or out() that caused in the error.  Otherwise,  inflateBack()\n   returns Z_STREAM_END on success, Z_DATA_ERROR for an deflate format\n   error, or Z_MEM_ERROR if it could not allocate memory for the state.\n   inflateBack() can also return Z_STREAM_ERROR if the input parameters\n   are not correct, i.e. strm is Z_NULL or the state was not initialized.\n */\nint ZEXPORT inflateBack(z_streamp strm, in_func in, void FAR *in_desc, out_func out, void FAR *out_desc)\n{\n    struct inflate_state FAR *state;\n    unsigned char FAR *next;    /* next input */\n    unsigned char FAR *put;     /* next output */\n    var have, left uint32;        /* available input and output */\n    unsigned long hold;         /* bit buffer */\n    var bits uint32;              /* bits in bit buffer */\n    var copy uint32;              /* number of stored or match bytes to copy */\n    unsigned char FAR *from;    /* where to copy match bytes from */\n    var here code;                  /* current decoding table entry */\n    var last code;                  /* parent table entry */\n    var len uint32;               /* length to copy for repeats, bits to drop */\n    var ret int32;                    /* return code */\n    static unsigned short order[19] = /* permutation of code lengths */\n        {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};\n\n    /* Check that the strm exists and that the state was initialized */\n    if strm == Z_NULL || strm.state == Z_NULL {\n        return Z_STREAM_ERROR; }\n    state = (struct inflate_state FAR *)strm.state;\n\n    /* Reset the state */\n    strm.msg = Z_NULL;\n    state.mode = TYPE;\n    state.last = 0;\n    state.whave = 0;\n    next = strm.next_in;\n    if next != Z_NULL {\n        have = strm.avail_in;\n    } else {\n        have = 0;\n    }\n    hold = 0;\n    bits = 0;\n    put = state.window;\n    left = state.wsize;\n\n    /* Inflate until end of block marked as last */\n    for {\n        switch state.mode {\n        case TYPE:\n            /* determine and dispatch block type */\n            if state.last {\n                // inlining of macro BYTEBITS\n                for {         hold \u003e\u003e= bits \u0026 7;         bits -= bits \u0026 7;     \nif !(false) { break }\n} \n                state.mode = DONE;\n                break;\n            }\n            // inlining of macro NEEDBITS\n            // inlining of macro PULLBYTE\n            // inlining of macro PULL\n            for {         for bits \u003c uint32((3)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n            // inlining of macro BITS\n            state.last = (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (1)) - 1));\n            // inlining of macro DROPBITS\n            for {         hold \u003e\u003e= (1);         bits -= uint32((1));     \nif !(false) { break }\n} \n            // inlining of macro BITS\n            switch uint32(hold) \u0026 ((uint32(1) \u003c\u003c (2)) - 1) {\n            case 0:                             /* stored block */\n                Tracev((os.Stderr, \"inflate:     stored block%s\\n\",\n                        state.last ? \" (last)\" : \"\"));\n                state.mode = STORED;\n                break;\n            case 1:                             /* fixed block */\n                fixedtables(state);\n                Tracev((os.Stderr, \"inflate:     fixed codes block%s\\n\",\n                        state.last ? \" (last)\" : \"\"));\n                state.mode = LEN;              /* decode codes */\n                break;\n            case 2:                             /* dynamic block */\n                Tracev((os.Stderr, \"inflate:     dynamic codes block%s\\n\",\n                        state.last ? \" (last)\" : \"\"));\n                state.mode = TABLE;\n                break;\n            case 3:\n                strm.msg = (char *)\"invalid block type\";\n                state.mode = BAD;\n            }\n            // inlining of macro DROPBITS\n            for {         hold \u003e\u003e= (2);         bits -= uint32((2));     \nif !(false) { break }\n} \n            break;\n\n        case STORED:\n            /* get and verify stored block length */\n            // inlining of macro BYTEBITS\n            for {         hold \u003e\u003e= bits \u0026 7;         bits -= bits \u0026 7;     \nif !(false) { break }\n}                          /* go to byte boundary */\n            // inlining of macro NEEDBITS\n            // inlining of macro PULLBYTE\n            // inlining of macro PULL\n            for {         for bits \u003c uint32((32)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n            if (hold \u0026 0xffff) != ((hold \u003e\u003e 16) ^ 0xffff) {\n                strm.msg = (char *)\"invalid stored block lengths\";\n                state.mode = BAD;\n                break;\n            }\n            state.length = uint32(hold) \u0026 0xffff;\n            Tracev((os.Stderr, \"inflate:       stored length %u\\n\",\n                    state.length));\n            // inlining of macro INITBITS\n            for {         hold = 0;         bits = 0;     \nif !(false) { break }\n} \n\n            /* copy stored block from input to output */\n            for state.length != 0 {\n                copy = state.length;\n                // inlining of macro PULL\n                for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n} \n                // inlining of macro ROOM\n                for {         if left == 0 {             put = state.window;             left = state.wsize;             state.whave = left;             if out(out_desc, put, left) {                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n} \n                if copy \u003e have { copy = have; }\n                if copy \u003e left { copy = left; }\n                zmemcpy(put, next, copy);\n                have -= copy;\n                next += copy;\n                left -= copy;\n                put += copy;\n                state.length -= copy;\n            }\n            Tracev((os.Stderr, \"inflate:       stored end\\n\"));\n            state.mode = TYPE;\n            break;\n\n        case TABLE:\n            /* get dynamic table entries descriptor */\n            // inlining of macro NEEDBITS\n            // inlining of macro PULLBYTE\n            // inlining of macro PULL\n            for {         for bits \u003c uint32((14)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n            // inlining of macro BITS\n            state.nlen = (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (5)) - 1)) + 257;\n            // inlining of macro DROPBITS\n            for {         hold \u003e\u003e= (5);         bits -= uint32((5));     \nif !(false) { break }\n} \n            // inlining of macro BITS\n            state.ndist = (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (5)) - 1)) + 1;\n            // inlining of macro DROPBITS\n            for {         hold \u003e\u003e= (5);         bits -= uint32((5));     \nif !(false) { break }\n} \n            // inlining of macro BITS\n            state.ncode = (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (4)) - 1)) + 4;\n            // inlining of macro DROPBITS\n            for {         hold \u003e\u003e= (4);         bits -= uint32((4));     \nif !(false) { break }\n} \n#ifndef PKZIP_BUG_WORKAROUND\n            if (state-\u003enlen \u003e 286 || state-\u003endist \u003e 30) {\n                strm-\u003emsg = (char *)\"too many length or distance symbols\";\n                state-\u003emode = BAD;\n                break;\n            }\n#endif\n            Tracev((os.Stderr, \"inflate:       table sizes ok\\n\"));\n\n            /* get code length code lengths (not a typo) */\n            state.have = 0;\n            for state.have \u003c state.ncode {\n                // inlining of macro NEEDBITS\n                // inlining of macro PULLBYTE\n                // inlining of macro PULL\n                for {         for bits \u003c uint32((3)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n                // inlining of macro BITS\n                state.lens[order[state.have++]] = (unsigned short)(uint32(hold) \u0026 ((uint32(1) \u003c\u003c (3)) - 1));\n                // inlining of macro DROPBITS\n                for {         hold \u003e\u003e= (3);         bits -= uint32((3));     \nif !(false) { break }\n} \n            }\n            for state.have \u003c 19 {\n                state.lens[order[state.have++]] = 0;\n            }\n            state.next = state.codes;\n            state.lencode = (code FAR *)(state.next);\n            state.lenbits = 7;\n            ret = inflate_table(CODES, state.lens, 19, \u0026(state.next),\n                                \u0026(state.lenbits), state.work);\n            if ret != 0 {\n                strm.msg = (char *)\"invalid code lengths set\";\n                state.mode = BAD;\n                break;\n            }\n            Tracev((os.Stderr, \"inflate:       code lengths ok\\n\"));\n\n            /* get length and distance code code lengths */\n            state.have = 0;\n            for state.have \u003c state.nlen + state.ndist {\n                for {\n                    // inlining of macro BITS\n                    here = state.lencode[(uint32(hold) \u0026 ((uint32(1) \u003c\u003c (state.lenbits)) - 1))];\n                    if uint32((here.bits)) \u003c= bits { break; }\n                    // inlining of macro PULLBYTE\n                    // inlining of macro PULL\n                    for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n} \n                }\n                if here.val \u003c 16 {\n                    // inlining of macro NEEDBITS\n                    // inlining of macro PULLBYTE\n                    // inlining of macro PULL\n                    for {         for bits \u003c uint32((here.bits)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n                    // inlining of macro DROPBITS\n                    for {         hold \u003e\u003e= (here.bits);         bits -= uint32((here.bits));     \nif !(false) { break }\n} \n                    state.lens[state.have++] = here.val;\n                \n                } else {\n                    if here.val == 16 {\n                        // inlining of macro NEEDBITS\n                        // inlining of macro PULLBYTE\n                        // inlining of macro PULL\n                        for {         for bits \u003c uint32((here.bits + 2)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n                        // inlining of macro DROPBITS\n                        for {         hold \u003e\u003e= (here.bits);         bits -= uint32((here.bits));     \nif !(false) { break }\n} \n                        if state.have == 0 {\n                            strm.msg = (char *)\"invalid bit length repeat\";\n                            state.mode = BAD;\n                            break;\n                        }\n                        len = uint32((state.lens[state.have - 1]));\n                        // inlining of macro BITS\n                        copy = 3 + (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (2)) - 1));\n                        // inlining of macro DROPBITS\n                        for {         hold \u003e\u003e= (2);         bits -= uint32((2));     \nif !(false) { break }\n} \n                    \n                    } else if here.val == 17 {\n                        // inlining of macro NEEDBITS\n                        // inlining of macro PULLBYTE\n                        // inlining of macro PULL\n                        for {         for bits \u003c uint32((here.bits + 3)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n                        // inlining of macro DROPBITS\n                        for {         hold \u003e\u003e= (here.bits);         bits -= uint32((here.bits));     \nif !(false) { break }\n} \n                        len = 0;\n                        // inlining of macro BITS\n                        copy = 3 + (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (3)) - 1));\n                        // inlining of macro DROPBITS\n                        for {         hold \u003e\u003e= (3);         bits -= uint32((3));     \nif !(false) { break }\n} \n                    \n                    } else {\n                        // inlining of macro NEEDBITS\n                        // inlining of macro PULLBYTE\n                        // inlining of macro PULL\n                        for {         for bits \u003c uint32((here.bits + 7)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n                        // inlining of macro DROPBITS\n                        for {         hold \u003e\u003e= (here.bits);         bits -= uint32((here.bits));     \nif !(false) { break }\n} \n                        len = 0;\n                        // inlining of macro BITS\n                        copy = 11 + (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (7)) - 1));\n                        // inlining of macro DROPBITS\n                        for {         hold \u003e\u003e= (7);         bits -= uint32((7));     \nif !(false) { break }\n} \n                    }\n                    if state.have + copy \u003e state.nlen + state.ndist {\n                        strm.msg = (char *)\"invalid bit length repeat\";\n                        state.mode = BAD;\n                        break;\n                    }\n                    for copy-- {\n                        state.lens[state.have++] = (unsigned short)len;\n                    }\n                }\n            }\n\n            /* handle error breaks in while */\n            if state.mode == BAD { break; }\n\n            /* check for end-of-block code (better have one) */\n            if state.lens[256] == 0 {\n                strm.msg = (char *)\"invalid code -- missing end-of-block\";\n                state.mode = BAD;\n                break;\n            }\n\n            /* build code tables -- note: do not change the lenbits or distbits\n               values here (9 and 6) without reading the comments in inftrees.h\n               concerning the ENOUGH constants, which depend on those values */\n            state.next = state.codes;\n            state.lencode = (code FAR *)(state.next);\n            state.lenbits = 9;\n            ret = inflate_table(LENS, state.lens, state.nlen, \u0026(state.next),\n                                \u0026(state.lenbits), state.work);\n            if ret != 0 {\n                strm.msg = (char *)\"invalid literal/lengths set\";\n                state.mode = BAD;\n                break;\n            }\n            state.distcode = (code FAR *)(state.next);\n            state.distbits = 6;\n            ret = inflate_table(DISTS, state.lens + state.nlen, state.ndist,\n                            \u0026(state.next), \u0026(state.distbits), state.work);\n            if ret != 0 {\n                strm.msg = (char *)\"invalid distances set\";\n                state.mode = BAD;\n                break;\n            }\n            Tracev((os.Stderr, \"inflate:       codes ok\\n\"));\n            state.mode = LEN;\n\n        fallthrough\ncase LEN:\n            /* use inflate_fast() if we have enough input and output */\n            if have \u003e= 6 \u0026\u0026 left \u003e= 258 {\n                // inlining of macro RESTORE\n                for {         strm.next_out = put;         strm.avail_out = left;         strm.next_in = next;         strm.avail_in = have;         state.hold = hold;         state.bits = bits;     \nif !(false) { break }\n} \n                if state.whave \u003c state.wsize {\n                    state.whave = state.wsize - left; }\n                inflate_fast(strm, state.wsize);\n                // inlining of macro LOAD\n                for {         put = strm.next_out;         left = strm.avail_out;         next = strm.next_in;         have = strm.avail_in;         hold = state.hold;         bits = state.bits;     \nif !(false) { break }\n} \n                break;\n            }\n\n            /* get a literal, length, or end-of-block code */\n            for {\n                // inlining of macro BITS\n                here = state.lencode[(uint32(hold) \u0026 ((uint32(1) \u003c\u003c (state.lenbits)) - 1))];\n                if uint32((here.bits)) \u003c= bits { break; }\n                // inlining of macro PULLBYTE\n                // inlining of macro PULL\n                for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n} \n            }\n            if here.op \u0026\u0026 (here.op \u0026 0xf0) == 0 {\n                last = here;\n                for {\n                    here = state.lencode[last.val +\n                            // inlining of macro BITS\n                            ((uint32(hold) \u0026 ((uint32(1) \u003c\u003c (last.bits + last.op)) - 1)) \u003e\u003e last.bits)];\n                    if uint32((last.bits + here.bits)) \u003c= bits { break; }\n                    // inlining of macro PULLBYTE\n                    // inlining of macro PULL\n                    for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n} \n                }\n                // inlining of macro DROPBITS\n                for {         hold \u003e\u003e= (last.bits);         bits -= uint32((last.bits));     \nif !(false) { break }\n} \n            }\n            // inlining of macro DROPBITS\n            for {         hold \u003e\u003e= (here.bits);         bits -= uint32((here.bits));     \nif !(false) { break }\n} \n            state.length = uint32(here.val);\n\n            /* process literal */\n            if here.op == 0 {\n                Tracevv((os.Stderr, here.val \u003e= 0x20 \u0026\u0026 here.val \u003c 0x7f ?\n                        \"inflate:         literal '%c'\\n\" :\n                        \"inflate:         literal 0x%02x\\n\", here.val));\n                // inlining of macro ROOM\n                for {         if left == 0 {             put = state.window;             left = state.wsize;             state.whave = left;             if out(out_desc, put, left) {                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n} \n                *put++ = (unsigned char)(state.length);\n                left--;\n                state.mode = LEN;\n                break;\n            }\n\n            /* process end of block */\n            if here.op \u0026 32 {\n                Tracevv((os.Stderr, \"inflate:         end of block\\n\"));\n                state.mode = TYPE;\n                break;\n            }\n\n            /* invalid code */\n            if here.op \u0026 64 {\n                strm.msg = (char *)\"invalid literal/length code\";\n                state.mode = BAD;\n                break;\n            }\n\n            /* length code -- get extra bits, if any */\n            state.extra = uint32((here.op)) \u0026 15;\n            if state.extra != 0 {\n                // inlining of macro NEEDBITS\n                // inlining of macro PULLBYTE\n                // inlining of macro PULL\n                for {         for bits \u003c uint32((state.extra)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n                // inlining of macro BITS\n                state.length += (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (state.extra)) - 1));\n                // inlining of macro DROPBITS\n                for {         hold \u003e\u003e= (state.extra);         bits -= uint32((state.extra));     \nif !(false) { break }\n} \n            }\n            Tracevv((os.Stderr, \"inflate:         length %u\\n\", state.length));\n\n            /* get distance code */\n            for {\n                // inlining of macro BITS\n                here = state.distcode[(uint32(hold) \u0026 ((uint32(1) \u003c\u003c (state.distbits)) - 1))];\n                if uint32((here.bits)) \u003c= bits { break; }\n                // inlining of macro PULLBYTE\n                // inlining of macro PULL\n                for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n} \n            }\n            if (here.op \u0026 0xf0) == 0 {\n                last = here;\n                for {\n                    here = state.distcode[last.val +\n                            // inlining of macro BITS\n                            ((uint32(hold) \u0026 ((uint32(1) \u003c\u003c (last.bits + last.op)) - 1)) \u003e\u003e last.bits)];\n                    if uint32((last.bits + here.bits)) \u003c= bits { break; }\n                    // inlining of macro PULLBYTE\n                    // inlining of macro PULL\n                    for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n} \n                }\n                // inlining of macro DROPBITS\n                for {         hold \u003e\u003e= (last.bits);         bits -= uint32((last.bits));     \nif !(false) { break }\n} \n            }\n            // inlining of macro DROPBITS\n            for {         hold \u003e\u003e= (here.bits);         bits -= uint32((here.bits));     \nif !(false) { break }\n} \n            if here.op \u0026 64 {\n                strm.msg = (char *)\"invalid distance code\";\n                state.mode = BAD;\n                break;\n            }\n            state.offset = uint32(here.val);\n\n            /* get distance extra bits, if any */\n            state.extra = uint32((here.op)) \u0026 15;\n            if state.extra != 0 {\n                // inlining of macro NEEDBITS\n                // inlining of macro PULLBYTE\n                // inlining of macro PULL\n                for {         for bits \u003c uint32((state.extra)) {             for {         for {         if have == 0 {             have = in(in_desc, \u0026next);             if have == 0 {                 next = Z_NULL;                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n}\n          have--;         hold += (unsigned long)(*next++) \u003c\u003c bits;         bits += 8;     \nif !(false) { break }\n}  }     \nif !(false) { break }\n} \n                // inlining of macro BITS\n                state.offset += (uint32(hold) \u0026 ((uint32(1) \u003c\u003c (state.extra)) - 1));\n                // inlining of macro DROPBITS\n                for {         hold \u003e\u003e= (state.extra);         bits -= uint32((state.extra));     \nif !(false) { break }\n} \n            }\n            if state.offset \u003e state.wsize - (state.whave \u003c state.wsize ?\n                                                left : 0) {\n                strm.msg = (char *)\"invalid distance too far back\";\n                state.mode = BAD;\n                break;\n            }\n            Tracevv((os.Stderr, \"inflate:         distance %u\\n\", state.offset));\n\n            /* copy match from window to output */\n            for {\n                // inlining of macro ROOM\n                for {         if left == 0 {             put = state.window;             left = state.wsize;             state.whave = left;             if out(out_desc, put, left) {                 ret = Z_BUF_ERROR;                 goto inf_leave;             }         }     \nif !(false) { break }\n} \n                copy = state.wsize - state.offset;\n                if copy \u003c left {\n                    from = put + copy;\n                    copy = left - copy;\n                \n                } else {\n                    from = put - state.offset;\n                    copy = left;\n                }\n                if copy \u003e state.length { copy = state.length; }\n                state.length -= copy;\n                left -= copy;\n                for {\n                    *put++ = *from++;\n                \nif !(--copy) { break }\n} \n            \nif !(state.length != 0) { break }\n} \n            break;\n\n        case DONE:\n            /* inflate stream terminated properly -- write leftover output */\n            ret = Z_STREAM_END;\n            if left \u003c state.wsize {\n                if out(out_desc, state.window, state.wsize - left) {\n                    ret = Z_BUF_ERROR; }\n            }\n            goto inf_leave;\n\n        case BAD:\n            ret = Z_DATA_ERROR;\n            goto inf_leave;\n\n        default:                /* can't happen, but makes compilers happy */\n            ret = Z_STREAM_ERROR;\n            goto inf_leave;\n        }\n    }\n\n    /* Return unused input */\n  inf_leave:\n    strm.next_in = next;\n    strm.avail_in = have;\n    return ret;\n}\n\nfunc inflateBackEnd(strm z_streamp) int ZEXPORT {\n    if strm == Z_NULL || strm.state == Z_NULL || strm.zfree == (free_func)0 {\n        return Z_STREAM_ERROR; }\n    ZFREE(strm, strm.state);\n    strm.state = Z_NULL;\n    Tracev((os.Stderr, \"inflate: end\\n\"));\n    return Z_OK;\n}\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,760 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c",
+  "SHA256": "5688f89d4df16de77f0a4a9e514e4f6ccb6752072d2ca0923ec81185b156bfca",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 9,
+        "ByteOffset": 2199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj0.pData == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 75,
+        "Column": 9,
+        "ByteOffset": 2237
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj1.pData == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 82,
+        "Column": 5,
+        "ByteOffset": 2440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj0.pData == pObj1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 5,
+        "ByteOffset": 2476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj1.pData == pObj0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 2803
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj0.pData == pObj1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 88,
+        "Column": 9,
+        "ByteOffset": 2843
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj1.pData == pObj0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 9,
+        "ByteOffset": 3182
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj0.pData == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 9,
+        "ByteOffset": 3220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj1.pData == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 70,
+        "ByteOffset": 5833
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:Aig_ObjForEachFanout__*/for  assert(p.pFanData), k = 0; (k \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFan) = k? Aig_ObjFanoutNext(p, iFan) : Aig_ObjFanout0Int(p, pObj.Id)), 1) \u0026\u0026           (((pNext) = Aig_ManObj(p, iFan\u003e\u003e1)), 1); k++  {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 13,
+        "ByteOffset": 8600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pNext1.pData == pNext0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 239,
+        "Column": 13,
+        "ByteOffset": 9066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pNext1.pData == pNext0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 318,
+        "Column": 5,
+        "ByteOffset": 12005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCiNum(p0) == Aig_ManCiNum(p1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 319,
+        "Column": 5,
+        "ByteOffset": 12057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCoNum(p0) == Aig_ManCoNum(p1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 320,
+        "Column": 5,
+        "ByteOffset": 12109
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p0) == Aig_ManRegNum(p1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 321,
+        "Column": 5,
+        "ByteOffset": 12163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManObjNum(p0) == Aig_ManObjNum(p1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 359,
+        "Column": 9,
+        "ByteOffset": 13545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj0.pData != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 360,
+        "Column": 9,
+        "ByteOffset": 13583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj1.pData != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 368,
+        "Column": 9,
+        "ByteOffset": 13920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Aig_IsComplement(pObj0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 9,
+        "ByteOffset": 13964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Aig_IsComplement(pObj1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 370,
+        "Column": 9,
+        "ByteOffset": 14008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjType(pObj0) == Aig_ObjType(pObj1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 373,
+        "Column": 9,
+        "ByteOffset": 14124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjIsNode(pObj0) || Saig_ObjIsLo(pMiter, pObj0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 374,
+        "Column": 9,
+        "ByteOffset": 14195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ObjIsNode(pObj1) || Saig_ObjIsLo(pMiter, pObj1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 375,
+        "Column": 9,
+        "ByteOffset": 14266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj0.Id \u003c pObj1.Id );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 473,
+        "Column": 73,
+        "ByteOffset": 18367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 546,
+        "Column": 5,
+        "ByteOffset": 20772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pPart0) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 547,
+        "Column": 5,
+        "ByteOffset": 20813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(pPart1) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 548,
+        "Column": 5,
+        "ByteOffset": 20854
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManPiNum(pPart0) == Saig_ManPiNum(pPart1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 549,
+        "Column": 5,
+        "ByteOffset": 20916
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManPoNum(pPart0) == Saig_ManPoNum(pPart1) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssw_CreatePair",
+      "Start": 1309,
+      "End": 1520,
+      "BodyStart": 1389,
+      "Original": "void Ssw_CreatePair( Vec_Int_t * vPairs, Aig_Obj_t * pObj0, Aig_Obj_t * pObj1 )\n{\n    pObj0-\u003epData = pObj1;\n    pObj1-\u003epData = pObj0;\n    Vec_IntPush( vPairs, pObj0-\u003eId );\n    Vec_IntPush( vPairs, pObj1-\u003eId );\n}",
+      "Draft": "func Ssw_CreatePair(vPairs *Vec_Int_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) {\n    pObj0.pData = pObj1;\n    pObj1.pData = pObj0;\n    Vec_IntPush( vPairs, pObj0.Id );\n    Vec_IntPush( vPairs, pObj1.Id );\n}"
+    },
+    {
+      "Name": "Ssw_MatchingStart",
+      "Start": 1809,
+      "End": 3469,
+      "BodyStart": 1886,
+      "Original": "void Ssw_MatchingStart( Aig_Man_t * p0, Aig_Man_t * p1, Vec_Int_t * vPairs )\n{\n    Aig_Obj_t * pObj0, * pObj1;\n    int i;\n    // create matching\n    Aig_ManCleanData( p0 );\n    Aig_ManCleanData( p1 );\n    for ( i = 0; i \u003c Vec_IntSize(vPairs); i += 2 )\n    {\n        pObj0 = Aig_ManObj( p0, Vec_IntEntry(vPairs, i) );\n        pObj1 = Aig_ManObj( p1, Vec_IntEntry(vPairs, i+1) );\n        assert( pObj0-\u003epData == NULL );\n        assert( pObj1-\u003epData == NULL );\n        pObj0-\u003epData = pObj1;\n        pObj1-\u003epData = pObj0;\n    }\n    // make sure constants are matched\n    pObj0 = Aig_ManConst1( p0 );\n    pObj1 = Aig_ManConst1( p1 );\n    assert( pObj0-\u003epData == pObj1 );\n    assert( pObj1-\u003epData == pObj0 );\n    // make sure PIs are matched\n    Saig_ManForEachPi( p0, pObj0, i )\n    {\n        pObj1 = Aig_ManCi( p1, i );\n        assert( pObj0-\u003epData == pObj1 );\n        assert( pObj1-\u003epData == pObj0 );\n    }\n    // make sure the POs are not matched\n    Aig_ManForEachCo( p0, pObj0, i )\n    {\n        pObj1 = Aig_ManCo( p1, i );\n        assert( pObj0-\u003epData == NULL );\n        assert( pObj1-\u003epData == NULL );\n    }\n\n    // check that LIs/LOs are matched in sync\n    Saig_ManForEachLo( p0, pObj0, i )\n    {\n        if ( pObj0-\u003epData == NULL )\n            continue;\n        pObj1 = (Aig_Obj_t *)pObj0-\u003epData;\n        if ( !Saig_ObjIsLo(p1, pObj1) )\n            Abc_Print( 1, \"Mismatch between LO pairs.\\n\" );\n    }\n    Saig_ManForEachLo( p1, pObj1, i )\n    {\n        if ( pObj1-\u003epData == NULL )\n            continue;\n        pObj0 = (Aig_Obj_t *)pObj1-\u003epData;\n        if ( !Saig_ObjIsLo(p0, pObj0) )\n            Abc_Print( 1, \"Mismatch between LO pairs.\\n\" );\n    }\n}",
+      "Draft": "func Ssw_MatchingStart(p0 *Aig_Man_t, p1 *Aig_Man_t, vPairs *Vec_Int_t) {\n    var pObj0, pObj1 *Aig_Obj_t;\n    var i int32;\n    // create matching\n    Aig_ManCleanData( p0 );\n    Aig_ManCleanData( p1 );\n    for  i = 0; i \u003c Vec_IntSize(vPairs); i += 2  {\n        pObj0 = Aig_ManObj( p0, Vec_IntEntry(vPairs, i) );\n        pObj1 = Aig_ManObj( p1, Vec_IntEntry(vPairs, i+1) );\n        assert(pObj0.pData == nil, \"pObj0.pData == nil\");\n        assert(pObj1.pData == nil, \"pObj1.pData == nil\");\n        pObj0.pData = pObj1;\n        pObj1.pData = pObj0;\n    }\n    // make sure constants are matched\n    pObj0 = Aig_ManConst1( p0 );\n    pObj1 = Aig_ManConst1( p1 );\n    assert(pObj0.pData == pObj1, \"pObj0.pData == pObj1\");\n    assert(pObj1.pData == pObj0, \"pObj1.pData == pObj0\");\n    // make sure PIs are matched\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p0)) \u0026\u0026 (((pObj0) = (Aig_Obj_t *)Vec_PtrEntry(p0.vCis, i)), 1); i++  {\n        pObj1 = Aig_ManCi( p1, i );\n        assert(pObj0.pData == pObj1, \"pObj0.pData == pObj1\");\n        assert(pObj1.pData == pObj0, \"pObj1.pData == pObj0\");\n    }\n    // make sure the POs are not matched\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p0.vCos)) \u0026\u0026 (((pObj0) = (Aig_Obj_t *)Vec_PtrEntry(p0.vCos, i)), 1); i++  {\n        pObj1 = Aig_ManCo( p1, i );\n        assert(pObj0.pData == nil, \"pObj0.pData == nil\");\n        assert(pObj1.pData == nil, \"pObj1.pData == nil\");\n    }\n\n    // check that LIs/LOs are matched in sync\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p0)) \u0026\u0026 (((pObj0) = (Aig_Obj_t *)Vec_PtrEntry(p0.vCis, i+Saig_ManPiNum(p0))), 1); i++  {\n        if pObj0.pData == nil {\n            continue; }\n        pObj1 = (Aig_Obj_t *)pObj0.pData;\n        if !Saig_ObjIsLo(p1, pObj1) {\n            Abc_Print( 1, \"Mismatch between LO pairs.\\n\" ); }\n    }\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p1)) \u0026\u0026 (((pObj1) = (Aig_Obj_t *)Vec_PtrEntry(p1.vCis, i+Saig_ManPiNum(p1))), 1); i++  {\n        if pObj1.pData == nil {\n            continue; }\n        pObj0 = (Aig_Obj_t *)pObj1.pData;\n        if !Saig_ObjIsLo(p0, pObj0) {\n            Abc_Print( 1, \"Mismatch between LO pairs.\\n\" ); }\n    }\n}"
+    },
+    {
+      "Name": "Ssw_MatchingExtendOne",
+      "Start": 3758,
+      "End": 5447,
+      "BodyStart": 3822,
+      "Original": "void Ssw_MatchingExtendOne( Aig_Man_t * p, Vec_Ptr_t * vNodes )\n{\n    Aig_Obj_t * pNext, * pObj;\n    int i, k, iFan = -1;\n    Vec_PtrClear( vNodes );\n    Aig_ManIncrementTravId( p );\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if ( !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) )\n            continue;\n        if ( pObj-\u003epData != NULL )\n            continue;\n        if ( Saig_ObjIsLo(p, pObj) )\n        {\n            pNext = Saig_ObjLoToLi(p, pObj);\n            pNext = Aig_ObjFanin0(pNext);\n            if ( pNext-\u003epData \u0026\u0026 !Aig_ObjIsTravIdCurrent(p, pNext) \u0026\u0026 !Aig_ObjIsConst1(pNext) )\n            {\n                Aig_ObjSetTravIdCurrent(p, pNext);\n                Vec_PtrPush( vNodes, pNext );\n            }\n        }\n        if ( Aig_ObjIsNode(pObj) )\n        {\n            pNext = Aig_ObjFanin0(pObj);\n            if ( pNext-\u003epData \u0026\u0026 !Aig_ObjIsTravIdCurrent(p, pNext) )\n            {\n                Aig_ObjSetTravIdCurrent(p, pNext);\n                Vec_PtrPush( vNodes, pNext );\n            }\n            pNext = Aig_ObjFanin1(pObj);\n            if ( pNext-\u003epData \u0026\u0026 !Aig_ObjIsTravIdCurrent(p, pNext) )\n            {\n                Aig_ObjSetTravIdCurrent(p, pNext);\n                Vec_PtrPush( vNodes, pNext );\n            }\n        }\n        Aig_ObjForEachFanout( p, pObj, pNext, iFan, k )\n        {\n            if ( Saig_ObjIsPo(p, pNext) )\n                continue;\n            if ( Saig_ObjIsLi(p, pNext) )\n                pNext = Saig_ObjLiToLo(p, pNext);\n            if ( pNext-\u003epData \u0026\u0026 !Aig_ObjIsTravIdCurrent(p, pNext) )\n            {\n                Aig_ObjSetTravIdCurrent(p, pNext);\n                Vec_PtrPush( vNodes, pNext );\n            }\n        }\n    }\n}",
+      "Draft": "func Ssw_MatchingExtendOne(p *Aig_Man_t, vNodes *Vec_Ptr_t) {\n    var pNext, pObj *Aig_Obj_t;\n    var i int32;\n    var k int32;\n    var iFan int32 = -1;\n    Vec_PtrClear( vNodes );\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) {\n            continue; }\n        if pObj.pData != nil {\n            continue; }\n        if Saig_ObjIsLo(p, pObj) {\n            pNext = Saig_ObjLoToLi(p, pObj);\n            pNext = Aig_ObjFanin0(pNext);\n            if pNext.pData \u0026\u0026 !Aig_ObjIsTravIdCurrent(p, pNext) \u0026\u0026 !Aig_ObjIsConst1(pNext) {\n                Aig_ObjSetTravIdCurrent(p, pNext);\n                Vec_PtrPush( vNodes, pNext );\n            }\n        }\n        if Aig_ObjIsNode(pObj) {\n            pNext = Aig_ObjFanin0(pObj);\n            if pNext.pData \u0026\u0026 !Aig_ObjIsTravIdCurrent(p, pNext) {\n                Aig_ObjSetTravIdCurrent(p, pNext);\n                Vec_PtrPush( vNodes, pNext );\n            }\n            pNext = Aig_ObjFanin1(pObj);\n            if pNext.pData \u0026\u0026 !Aig_ObjIsTravIdCurrent(p, pNext) {\n                Aig_ObjSetTravIdCurrent(p, pNext);\n                Vec_PtrPush( vNodes, pNext );\n            }\n        }\n        // inlining of macro Aig_ObjForEachFanout\n        for  assert(p.pFanData, \"p.pFanData\"), k = 0; (k \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFan) = k? Aig_ObjFanoutNext(p, iFan) : Aig_ObjFanout0Int(p, pObj.Id)), 1) \u0026\u0026           (((pNext) = Aig_ManObj(p, iFan\u003e\u003e1)), 1); k++  {\n            if Saig_ObjIsPo(p, pNext) {\n                continue; }\n            if Saig_ObjIsLi(p, pNext) {\n                pNext = Saig_ObjLiToLo(p, pNext); }\n            if pNext.pData \u0026\u0026 !Aig_ObjIsTravIdCurrent(p, pNext) {\n                Aig_ObjSetTravIdCurrent(p, pNext);\n                Vec_PtrPush( vNodes, pNext );\n            }\n        }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Ssw_MatchingCountUnmached",
+      "Start": 5721,
+      "End": 6041,
+      "BodyStart": 5768,
+      "Original": "int Ssw_MatchingCountUnmached( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if ( !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) )\n            continue;\n        if ( pObj-\u003epData != NULL )\n            continue;\n        Counter++;\n    }\n    return Counter;\n}",
+      "Draft": "func Ssw_MatchingCountUnmached(p *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) {\n            continue; }\n        if pObj.pData != nil {\n            continue; }\n        Counter++;\n    }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Ssw_MatchingExtend",
+      "Start": 6330,
+      "End": 8339,
+      "BodyStart": 6413,
+      "Original": "void Ssw_MatchingExtend( Aig_Man_t * p0, Aig_Man_t * p1, int nDist, int fVerbose )\n{\n    Vec_Ptr_t * vNodes0, * vNodes1;\n    Aig_Obj_t * pNext0, * pNext1;\n    int d, k;\n    Aig_ManFanoutStart(p0);\n    Aig_ManFanoutStart(p1);\n    vNodes0 = Vec_PtrAlloc( 1000 );\n    vNodes1 = Vec_PtrAlloc( 1000 );\n    if ( fVerbose )\n    {\n        int nUnmached = Ssw_MatchingCountUnmached(p0);\n        Abc_Print( 1, \"Extending islands by %d steps:\\n\", nDist );\n        Abc_Print( 1, \"%2d : Total = %6d. Unmatched = %6d.  Ratio = %6.2f %%\\n\",\n            0, Aig_ManCiNum(p0) + Aig_ManNodeNum(p0),\n            nUnmached, 100.0 * nUnmached/(Aig_ManCiNum(p0) + Aig_ManNodeNum(p0)) );\n    }\n    for ( d = 0; d \u003c nDist; d++ )\n    {\n        Ssw_MatchingExtendOne( p0, vNodes0 );\n        Ssw_MatchingExtendOne( p1, vNodes1 );\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes0, pNext0, k )\n        {\n            pNext1 = (Aig_Obj_t *)pNext0-\u003epData;\n            if ( pNext1 == NULL )\n                continue;\n            assert( pNext1-\u003epData == pNext0 );\n            if ( Saig_ObjIsPi(p0, pNext1) )\n                continue;\n            pNext0-\u003epData = NULL;\n            pNext1-\u003epData = NULL;\n        }\n        Vec_PtrForEachEntry( Aig_Obj_t *, vNodes1, pNext0, k )\n        {\n            pNext1 = (Aig_Obj_t *)pNext0-\u003epData;\n            if ( pNext1 == NULL )\n                continue;\n            assert( pNext1-\u003epData == pNext0 );\n            if ( Saig_ObjIsPi(p1, pNext1) )\n                continue;\n            pNext0-\u003epData = NULL;\n            pNext1-\u003epData = NULL;\n        }\n        if ( fVerbose )\n        {\n            int nUnmached = Ssw_MatchingCountUnmached(p0);\n            Abc_Print( 1, \"%2d : Total = %6d. Unmatched = %6d.  Ratio = %6.2f %%\\n\",\n                d+1, Aig_ManCiNum(p0) + Aig_ManNodeNum(p0),\n                nUnmached, 100.0 * nUnmached/(Aig_ManCiNum(p0) + Aig_ManNodeNum(p0)) );\n        }\n    }\n    Vec_PtrFree( vNodes0 );\n    Vec_PtrFree( vNodes1 );\n    Aig_ManFanoutStop(p0);\n    Aig_ManFanoutStop(p1);\n}",
+      "Draft": "func Ssw_MatchingExtend(p0 *Aig_Man_t, p1 *Aig_Man_t, nDist int32, fVerbose int32) {\n    var vNodes0, vNodes1 *Vec_Ptr_t;\n    var pNext0, pNext1 *Aig_Obj_t;\n    var d, k int32;\n    Aig_ManFanoutStart(p0);\n    Aig_ManFanoutStart(p1);\n    vNodes0 = Vec_PtrAlloc( 1000 );\n    vNodes1 = Vec_PtrAlloc( 1000 );\n    if fVerbose != 0 {\n        var nUnmached int32  = Ssw_MatchingCountUnmached(p0);\n        Abc_Print( 1, \"Extending islands by %d steps:\\n\", nDist );\n        Abc_Print( 1, \"%2d : Total = %6d. Unmatched = %6d.  Ratio = %6.2f %%\\n\",\n            0, Aig_ManCiNum(p0) + Aig_ManNodeNum(p0),\n            nUnmached, 100.0 * nUnmached/(Aig_ManCiNum(p0) + Aig_ManNodeNum(p0)) );\n    }\n    for  d = 0; d \u003c nDist; d++  {\n        Ssw_MatchingExtendOne( p0, vNodes0 );\n        Ssw_MatchingExtendOne( p1, vNodes1 );\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vNodes0)) \u0026\u0026 (((pNext0) = (Aig_Obj_t *)Vec_PtrEntry(vNodes0, k)), 1); k++  {\n            pNext1 = (Aig_Obj_t *)pNext0.pData;\n            if pNext1 == nil {\n                continue; }\n            assert(pNext1.pData == pNext0, \"pNext1.pData == pNext0\");\n            if Saig_ObjIsPi(p0, pNext1) {\n                continue; }\n            pNext0.pData = nil;\n            pNext1.pData = nil;\n        }\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vNodes1)) \u0026\u0026 (((pNext0) = (Aig_Obj_t *)Vec_PtrEntry(vNodes1, k)), 1); k++  {\n            pNext1 = (Aig_Obj_t *)pNext0.pData;\n            if pNext1 == nil {\n                continue; }\n            assert(pNext1.pData == pNext0, \"pNext1.pData == pNext0\");\n            if Saig_ObjIsPi(p1, pNext1) {\n                continue; }\n            pNext0.pData = nil;\n            pNext1.pData = nil;\n        }\n        if fVerbose != 0 {\n            var nUnmached int32  = Ssw_MatchingCountUnmached(p0);\n            Abc_Print( 1, \"%2d : Total = %6d. Unmatched = %6d.  Ratio = %6.2f %%\\n\",\n                d+1, Aig_ManCiNum(p0) + Aig_ManNodeNum(p0),\n                nUnmached, 100.0 * nUnmached/(Aig_ManCiNum(p0) + Aig_ManNodeNum(p0)) );\n        }\n    }\n    Vec_PtrFree( vNodes0 );\n    Vec_PtrFree( vNodes1 );\n    Aig_ManFanoutStop(p0);\n    Aig_ManFanoutStop(p1);\n}"
+    },
+    {
+      "Name": "Ssw_MatchingComplete",
+      "Start": 8613,
+      "End": 9727,
+      "BodyStart": 8673,
+      "Original": "void Ssw_MatchingComplete( Aig_Man_t * p0, Aig_Man_t * p1 )\n{\n    Vec_Ptr_t * vNewLis;\n    Aig_Obj_t * pObj0, * pObj0Li, * pObj1;\n    int i;\n    // create register outputs in p0 that are absent in p1\n    vNewLis = Vec_PtrAlloc( 100 );\n    Saig_ManForEachLiLo( p0, pObj0Li, pObj0, i )\n    {\n        if ( pObj0-\u003epData != NULL )\n            continue;\n        pObj1 = Aig_ObjCreateCi( p1 );\n        pObj0-\u003epData = pObj1;\n        pObj1-\u003epData = pObj0;\n        Vec_PtrPush( vNewLis, pObj0Li );\n    }\n    // add missing nodes in the topological order\n    Aig_ManForEachNode( p0, pObj0, i )\n    {\n        if ( pObj0-\u003epData != NULL )\n            continue;\n        pObj1 = Aig_And( p1, Aig_ObjChild0Copy(pObj0), Aig_ObjChild1Copy(pObj0) );\n        pObj0-\u003epData = pObj1;\n        pObj1-\u003epData = pObj0;\n    }\n    // create register outputs in p0 that are absent in p1\n    Vec_PtrForEachEntry( Aig_Obj_t *, vNewLis, pObj0Li, i )\n        Aig_ObjCreateCo( p1, Aig_ObjChild0Copy(pObj0Li) );\n    // increment the number of registers\n    Aig_ManSetRegNum( p1, Aig_ManRegNum(p1) + Vec_PtrSize(vNewLis) );\n    Vec_PtrFree( vNewLis );\n}",
+      "Draft": "func Ssw_MatchingComplete(p0 *Aig_Man_t, p1 *Aig_Man_t) {\n    var vNewLis *Vec_Ptr_t;\n    var pObj0, pObj0Li, pObj1 *Aig_Obj_t;\n    var i int32;\n    // create register outputs in p0 that are absent in p1\n    vNewLis = Vec_PtrAlloc( 100 );\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p0)) \u0026\u0026 (((pObj0Li) = Saig_ManLi(p0, i)), 1)            \u0026\u0026 (((pObj0)=Saig_ManLo(p0, i)), 1); i++  {\n        if pObj0.pData != nil {\n            continue; }\n        pObj1 = Aig_ObjCreateCi( p1 );\n        pObj0.pData = pObj1;\n        pObj1.pData = pObj0;\n        Vec_PtrPush( vNewLis, pObj0Li );\n    }\n    // add missing nodes in the topological order\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p0.vObjs)) \u0026\u0026 (((pObj0) = (Aig_Obj_t *)Vec_PtrEntry(p0.vObjs, i)), 1); i++  { if (pObj0) == nil || !Aig_ObjIsNode(pObj0) {} else {\n        if pObj0.pData != nil {\n            continue; }\n        pObj1 = Aig_And( p1, Aig_ObjChild0Copy(pObj0), Aig_ObjChild1Copy(pObj0) );\n        pObj0.pData = pObj1;\n        pObj1.pData = pObj0;\n    }\n    }\n    // create register outputs in p0 that are absent in p1\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNewLis)) \u0026\u0026 (((pObj0Li) = (Aig_Obj_t *)Vec_PtrEntry(vNewLis, i)), 1); i++  {\n        Aig_ObjCreateCo( p1, Aig_ObjChild0Copy(pObj0Li) );\n    }\n    // increment the number of registers\n    Aig_ManSetRegNum( p1, Aig_ManRegNum(p1) + Vec_PtrSize(vNewLis) );\n    Vec_PtrFree( vNewLis );\n}"
+    },
+    {
+      "Name": "Ssw_MatchingPairs",
+      "Start": 9999,
+      "End": 10716,
+      "BodyStart": 10063,
+      "Original": "Vec_Int_t * Ssw_MatchingPairs( Aig_Man_t * p0, Aig_Man_t * p1 )\n{\n    Vec_Int_t * vPairsNew;\n    Aig_Obj_t * pObj0, * pObj1;\n    int i;\n    // check correctness\n    assert( Aig_ManCiNum(p0) == Aig_ManCiNum(p1) );\n    assert( Aig_ManCoNum(p0) == Aig_ManCoNum(p1) );\n    assert( Aig_ManRegNum(p0) == Aig_ManRegNum(p1) );\n    assert( Aig_ManObjNum(p0) == Aig_ManObjNum(p1) );\n    // create complete pairs\n    vPairsNew = Vec_IntAlloc( 2*Aig_ManObjNum(p0) );\n    Aig_ManForEachObj( p0, pObj0, i )\n    {\n        if ( Aig_ObjIsCo(pObj0) )\n            continue;\n        pObj1 = (Aig_Obj_t *)pObj0-\u003epData;\n        Vec_IntPush( vPairsNew, pObj0-\u003eId );\n        Vec_IntPush( vPairsNew, pObj1-\u003eId );\n    }\n    return vPairsNew;\n}",
+      "Draft": "func Ssw_MatchingPairs(p0 *Aig_Man_t, p1 *Aig_Man_t) *Vec_Int_t {\n    var vPairsNew *Vec_Int_t;\n    var pObj0, pObj1 *Aig_Obj_t;\n    var i int32;\n    // check correctness\n    assert(Aig_ManCiNum(p0) == Aig_ManCiNum(p1), \"Aig_ManCiNum(p0) == Aig_ManCiNum(p1)\");\n    assert(Aig_ManCoNum(p0) == Aig_ManCoNum(p1), \"Aig_ManCoNum(p0) == Aig_ManCoNum(p1)\");\n    assert(Aig_ManRegNum(p0) == Aig_ManRegNum(p1), \"Aig_ManRegNum(p0) == Aig_ManRegNum(p1)\");\n    assert(Aig_ManObjNum(p0) == Aig_ManObjNum(p1), \"Aig_ManObjNum(p0) == Aig_ManObjNum(p1)\");\n    // create complete pairs\n    vPairsNew = Vec_IntAlloc( 2*Aig_ManObjNum(p0) );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p0.vObjs)) \u0026\u0026 (((pObj0) = (Aig_Obj_t *)Vec_PtrEntry(p0.vObjs, i)), 1); i++  { if (pObj0) == nil {} else {\n        if Aig_ObjIsCo(pObj0) {\n            continue; }\n        pObj1 = (Aig_Obj_t *)pObj0.pData;\n        Vec_IntPush( vPairsNew, pObj0.Id );\n        Vec_IntPush( vPairsNew, pObj1.Id );\n    }\n    }\n    return vPairsNew;\n}"
+    },
+    {
+      "Name": "Ssw_MatchingMiter",
+      "Start": 11021,
+      "End": 12385,
+      "BodyStart": 11128,
+      "Original": "Vec_Int_t * Ssw_MatchingMiter( Aig_Man_t * pMiter, Aig_Man_t * p0, Aig_Man_t * p1, Vec_Int_t * vPairsAll )\n{\n    Vec_Int_t * vPairsMiter;\n    Aig_Obj_t * pObj0, * pObj1;\n    int i;\n    // create matching of nodes in the miter\n    vPairsMiter = Vec_IntAlloc( 2*Aig_ManObjNum(p0) );\n    for ( i = 0; i \u003c Vec_IntSize(vPairsAll); i += 2 )\n    {\n        pObj0 = Aig_ManObj( p0, Vec_IntEntry(vPairsAll, i) );\n        pObj1 = Aig_ManObj( p1, Vec_IntEntry(vPairsAll, i+1) );\n        assert( pObj0-\u003epData != NULL );\n        assert( pObj1-\u003epData != NULL );\n        if ( pObj0-\u003epData == pObj1-\u003epData )\n            continue;\n        if ( Aig_ObjIsNone((Aig_Obj_t *)pObj0-\u003epData) || Aig_ObjIsNone((Aig_Obj_t *)pObj1-\u003epData) )\n            continue;\n        // get the miter nodes\n        pObj0 = (Aig_Obj_t *)pObj0-\u003epData;\n        pObj1 = (Aig_Obj_t *)pObj1-\u003epData;\n        assert( !Aig_IsComplement(pObj0) );\n        assert( !Aig_IsComplement(pObj1) );\n        assert( Aig_ObjType(pObj0) == Aig_ObjType(pObj1) );\n        if ( Aig_ObjIsCo(pObj0) )\n            continue;\n        assert( Aig_ObjIsNode(pObj0) || Saig_ObjIsLo(pMiter, pObj0) );\n        assert( Aig_ObjIsNode(pObj1) || Saig_ObjIsLo(pMiter, pObj1) );\n        assert( pObj0-\u003eId \u003c pObj1-\u003eId );\n        Vec_IntPush( vPairsMiter, pObj0-\u003eId );\n        Vec_IntPush( vPairsMiter, pObj1-\u003eId );\n    }\n    return vPairsMiter;\n}",
+      "Draft": "func Ssw_MatchingMiter(pMiter *Aig_Man_t, p0 *Aig_Man_t, p1 *Aig_Man_t, vPairsAll *Vec_Int_t) *Vec_Int_t {\n    var vPairsMiter *Vec_Int_t;\n    var pObj0, pObj1 *Aig_Obj_t;\n    var i int32;\n    // create matching of nodes in the miter\n    vPairsMiter = Vec_IntAlloc( 2*Aig_ManObjNum(p0) );\n    for  i = 0; i \u003c Vec_IntSize(vPairsAll); i += 2  {\n        pObj0 = Aig_ManObj( p0, Vec_IntEntry(vPairsAll, i) );\n        pObj1 = Aig_ManObj( p1, Vec_IntEntry(vPairsAll, i+1) );\n        assert(pObj0.pData != nil, \"pObj0.pData != nil\");\n        assert(pObj1.pData != nil, \"pObj1.pData != nil\");\n        if pObj0.pData == pObj1.pData {\n            continue; }\n        if Aig_ObjIsNone((Aig_Obj_t *)pObj0.pData) || Aig_ObjIsNone((Aig_Obj_t *)pObj1.pData) {\n            continue; }\n        // get the miter nodes\n        pObj0 = (Aig_Obj_t *)pObj0.pData;\n        pObj1 = (Aig_Obj_t *)pObj1.pData;\n        assert(!Aig_IsComplement(pObj0), \"!Aig_IsComplement(pObj0)\");\n        assert(!Aig_IsComplement(pObj1), \"!Aig_IsComplement(pObj1)\");\n        assert(Aig_ObjType(pObj0) == Aig_ObjType(pObj1), \"Aig_ObjType(pObj0) == Aig_ObjType(pObj1)\");\n        if Aig_ObjIsCo(pObj0) {\n            continue; }\n        assert(Aig_ObjIsNode(pObj0) || Saig_ObjIsLo(pMiter, pObj0), \"Aig_ObjIsNode(pObj0) || Saig_ObjIsLo(pMiter, pObj0)\");\n        assert(Aig_ObjIsNode(pObj1) || Saig_ObjIsLo(pMiter, pObj1), \"Aig_ObjIsNode(pObj1) || Saig_ObjIsLo(pMiter, pObj1)\");\n        assert(pObj0.Id \u003c pObj1.Id, \"pObj0.Id \u003c pObj1.Id\");\n        Vec_IntPush( vPairsMiter, pObj0.Id );\n        Vec_IntPush( vPairsMiter, pObj1.Id );\n    }\n    return vPairsMiter;\n}"
+    },
+    {
+      "Name": "Ssw_SecWithSimilaritySweep",
+      "Start": 12695,
+      "End": 14791,
+      "BodyStart": 12808,
+      "Original": "Aig_Man_t * Ssw_SecWithSimilaritySweep( Aig_Man_t * p0, Aig_Man_t * p1, Vec_Int_t * vPairs, Ssw_Pars_t * pPars )\n{\n    Ssw_Man_t * p;\n    Vec_Int_t * vPairsAll, * vPairsMiter;\n    Aig_Man_t * pMiter, * pAigNew;\n    // derive full matching\n    Ssw_MatchingStart( p0, p1, vPairs );\n    if ( pPars-\u003enIsleDist )\n        Ssw_MatchingExtend( p0, p1, pPars-\u003enIsleDist, pPars-\u003efVerbose );\n    Ssw_MatchingComplete( p0, p1 );\n    Ssw_MatchingComplete( p1, p0 );\n    vPairsAll = Ssw_MatchingPairs( p0, p1 );\n    // create miter and transfer matching\n    pMiter = Saig_ManCreateMiter( p0, p1, 0 );\n    vPairsMiter = Ssw_MatchingMiter( pMiter, p0, p1, vPairsAll );\n    Vec_IntFree( vPairsAll );\n    // start the induction manager\n    p = Ssw_ManCreate( pMiter, pPars );\n    // create equivalence classes using these IDs\n    if ( p-\u003epPars-\u003efPartSigCorr )\n        p-\u003eppClasses = Ssw_ClassesPreparePairsSimple( pMiter, vPairsMiter );\n    else\n        p-\u003eppClasses = Ssw_ClassesPrepare( pMiter, pPars-\u003enFramesK, pPars-\u003efLatchCorr, pPars-\u003efConstCorr, pPars-\u003efOutputCorr, pPars-\u003enMaxLevs, pPars-\u003efVerbose );\n    if ( p-\u003epPars-\u003efDumpSRInit )\n    {\n        if ( p-\u003epPars-\u003efPartSigCorr )\n        {\n            Aig_Man_t * pSRed = Ssw_SpeculativeReduction( p );\n            Aig_ManDumpBlif( pSRed, \"srm_part.blif\", NULL, NULL );\n            Aig_ManStop( pSRed );\n            Abc_Print( 1, \"Speculatively reduced miter is saved in file \\\"%s\\\".\\n\", \"srm_part.blif\" );\n        }\n        else\n            Abc_Print( 1, \"Dumping speculative miter is possible only for partial signal correspondence (switch \\\"-c\\\").\\n\" );\n    }\n    p-\u003epSml = Ssw_SmlStart( pMiter, 0, 1 + p-\u003epPars-\u003enFramesAddSim, 1 );\n    Ssw_ClassesSetData( p-\u003eppClasses, p-\u003epSml, (unsigned(*)(void *,Aig_Obj_t *))Ssw_SmlObjHashWord, (int(*)(void *,Aig_Obj_t *))Ssw_SmlObjIsConstWord, (int(*)(void *,Aig_Obj_t *,Aig_Obj_t *))Ssw_SmlObjsAreEqualWord );\n    // perform refinement of classes\n    pAigNew = Ssw_SignalCorrespondenceRefine( p );\n    // cleanup\n    Ssw_ManStop( p );\n    Aig_ManStop( pMiter );\n    Vec_IntFree( vPairsMiter );\n    return pAigNew;\n}",
+      "Draft": "func Ssw_SecWithSimilaritySweep(p0 *Aig_Man_t, p1 *Aig_Man_t, vPairs *Vec_Int_t, pPars *Ssw_Pars_t) *Aig_Man_t {\n    var p *Ssw_Man_t;\n    var vPairsAll, vPairsMiter *Vec_Int_t;\n    var pMiter, pAigNew *Aig_Man_t;\n    // derive full matching\n    Ssw_MatchingStart( p0, p1, vPairs );\n    if pPars.nIsleDist {\n        Ssw_MatchingExtend( p0, p1, pPars.nIsleDist, pPars.fVerbose ); }\n    Ssw_MatchingComplete( p0, p1 );\n    Ssw_MatchingComplete( p1, p0 );\n    vPairsAll = Ssw_MatchingPairs( p0, p1 );\n    // create miter and transfer matching\n    pMiter = Saig_ManCreateMiter( p0, p1, 0 );\n    vPairsMiter = Ssw_MatchingMiter( pMiter, p0, p1, vPairsAll );\n    Vec_IntFree( vPairsAll );\n    // start the induction manager\n    p = Ssw_ManCreate( pMiter, pPars );\n    // create equivalence classes using these IDs\n    if p.pPars.fPartSigCorr {\n        p.ppClasses = Ssw_ClassesPreparePairsSimple( pMiter, vPairsMiter );\n    } else {\n        p.ppClasses = Ssw_ClassesPrepare( pMiter, pPars.nFramesK, pPars.fLatchCorr, pPars.fConstCorr, pPars.fOutputCorr, pPars.nMaxLevs, pPars.fVerbose ); }\n    if p.pPars.fDumpSRInit {\n        if p.pPars.fPartSigCorr {\n            var pSRed *Aig_Man_t  = Ssw_SpeculativeReduction( p );\n            Aig_ManDumpBlif( pSRed, \"srm_part.blif\", nil, nil );\n            Aig_ManStop( pSRed );\n            Abc_Print( 1, \"Speculatively reduced miter is saved in file \\\"%s\\\".\\n\", \"srm_part.blif\" );\n        \n        } else {\n            Abc_Print( 1, \"Dumping speculative miter is possible only for partial signal correspondence (switch \\\"-c\\\").\\n\" ); }\n    }\n    p.pSml = Ssw_SmlStart( pMiter, 0, 1 + p.pPars.nFramesAddSim, 1 );\n    Ssw_ClassesSetData( p.ppClasses, p.pSml, (unsigned(*)(void *,Aig_Obj_t *))Ssw_SmlObjHashWord, (int(*)(void *,Aig_Obj_t *))Ssw_SmlObjIsConstWord, (int(*)(void *,Aig_Obj_t *,Aig_Obj_t *))Ssw_SmlObjsAreEqualWord );\n    // perform refinement of classes\n    pAigNew = Ssw_SignalCorrespondenceRefine( p );\n    // cleanup\n    Ssw_ManStop( p );\n    Aig_ManStop( pMiter );\n    Vec_IntFree( vPairsMiter );\n    return pAigNew;\n}"
+    },
+    {
+      "Name": "Ssw_SecWithSimilarityPairs",
+      "Start": 15320,
+      "End": 16279,
+      "BodyStart": 15425,
+      "Original": "int Ssw_SecWithSimilarityPairs( Aig_Man_t * p0, Aig_Man_t * p1, Vec_Int_t * vPairs, Ssw_Pars_t * pPars )\n{\n    Ssw_Pars_t Pars;\n    Aig_Man_t * pAigRes;\n    int RetValue;\n    abctime clk = Abc_Clock();\n    // derive parameters if not given\n    if ( pPars == NULL )\n        Ssw_ManSetDefaultParams( pPars = \u0026Pars );\n    // reduce the AIG with pairs\n    pAigRes = Ssw_SecWithSimilaritySweep( p0, p1, vPairs, pPars );\n    // report the result of verification\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if ( RetValue == 1 )\n        Abc_Print( 1, \"Verification successful.  \" );\n    else if ( RetValue == 0 )\n        Abc_Print( 1, \"Verification failed with a counter-example.  \" );\n    else\n        Abc_Print( 1, \"Verification UNDECIDED. The number of remaining regs = %d (total = %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(p0)+Aig_ManRegNum(p1) );\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    Aig_ManStop( pAigRes );\n    return RetValue;\n}",
+      "Draft": "func Ssw_SecWithSimilarityPairs(p0 *Aig_Man_t, p1 *Aig_Man_t, vPairs *Vec_Int_t, pPars *Ssw_Pars_t) int32 {\n    var Pars Ssw_Pars_t;\n    var pAigRes *Aig_Man_t;\n    var RetValue int32;\n    var clk abctime  = Abc_Clock();\n    // derive parameters if not given\n    if pPars == nil {\n        Ssw_ManSetDefaultParams( pPars = \u0026Pars ); }\n    // reduce the AIG with pairs\n    pAigRes = Ssw_SecWithSimilaritySweep( p0, p1, vPairs, pPars );\n    // report the result of verification\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if RetValue == 1 {\n        Abc_Print( 1, \"Verification successful.  \" );\n    } else if RetValue == 0 {\n        Abc_Print( 1, \"Verification failed with a counter-example.  \" );\n    } else {\n        Abc_Print( 1, \"Verification UNDECIDED. The number of remaining regs = %d (total = %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(p0)+Aig_ManRegNum(p1) ); }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    Aig_ManStop( pAigRes );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Saig_StrSimPerformMatching_hack",
+      "Start": 16563,
+      "End": 17006,
+      "BodyStart": 16641,
+      "Original": "Vec_Int_t * Saig_StrSimPerformMatching_hack( Aig_Man_t * p0, Aig_Man_t * p1 )\n{\n    Vec_Int_t * vPairs;\n    Aig_Obj_t * pObj;\n    int i;\n    // create array of pairs\n    vPairs = Vec_IntAlloc( 100 );\n    Aig_ManForEachObj( p0, pObj, i )\n    {\n        if ( !Aig_ObjIsConst1(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) )\n            continue;\n        Vec_IntPush( vPairs, i );\n        Vec_IntPush( vPairs, i );\n    }\n    return vPairs;\n}",
+      "Draft": "func Saig_StrSimPerformMatching_hack(p0 *Aig_Man_t, p1 *Aig_Man_t) *Vec_Int_t {\n    var vPairs *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // create array of pairs\n    vPairs = Vec_IntAlloc( 100 );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p0.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p0.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsConst1(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) {\n            continue; }\n        Vec_IntPush( vPairs, i );\n        Vec_IntPush( vPairs, i );\n    }\n    }\n    return vPairs;\n}"
+    },
+    {
+      "Name": "Ssw_SecWithSimilarity",
+      "Start": 17280,
+      "End": 18994,
+      "BodyStart": 17360,
+      "Original": "int Ssw_SecWithSimilarity( Aig_Man_t * p0, Aig_Man_t * p1, Ssw_Pars_t * pPars )\n{\n    Vec_Int_t * vPairs;\n    Aig_Man_t * pPart0, * pPart1;\n    int RetValue;\n    if ( pPars-\u003efVerbose )\n        Abc_Print( 1, \"Performing sequential verification using structural similarity.\\n\" );\n    // consider the case when a miter is given\n    if ( p1 == NULL )\n    {\n        if ( pPars-\u003efVerbose )\n        {\n            Aig_ManPrintStats( p0 );\n        }\n        // demiter the miter\n        if ( !Saig_ManDemiterSimpleDiff( p0, \u0026pPart0, \u0026pPart1 ) )\n        {\n            Abc_Print( 1, \"Demitering has failed.\\n\" );\n            return -1;\n        }\n    }\n    else\n    {\n        pPart0 = Aig_ManDupSimple( p0 );\n        pPart1 = Aig_ManDupSimple( p1 );\n    }\n    if ( pPars-\u003efVerbose )\n    {\n//        Aig_ManPrintStats( pPart0 );\n//        Aig_ManPrintStats( pPart1 );\n        if ( p1 == NULL )\n        {\n//        Aig_ManDumpBlif( pPart0, \"part0.blif\", NULL, NULL );\n//        Aig_ManDumpBlif( pPart1, \"part1.blif\", NULL, NULL );\n//        Abc_Print( 1, \"The result of demitering is written into files \\\"%s\\\" and \\\"%s\\\".\\n\", \"part0.blif\", \"part1.blif\" );\n        }\n    }\n    assert( Aig_ManRegNum(pPart0) \u003e 0 );\n    assert( Aig_ManRegNum(pPart1) \u003e 0 );\n    assert( Saig_ManPiNum(pPart0) == Saig_ManPiNum(pPart1) );\n    assert( Saig_ManPoNum(pPart0) == Saig_ManPoNum(pPart1) );\n    // derive pairs\n//    vPairs = Saig_StrSimPerformMatching_hack( pPart0, pPart1 );\n    vPairs = Saig_StrSimPerformMatching( pPart0, pPart1, 0, pPars-\u003efVerbose, NULL );\n    RetValue = Ssw_SecWithSimilarityPairs( pPart0, pPart1, vPairs, pPars );\n    Aig_ManStop( pPart0 );\n    Aig_ManStop( pPart1 );\n    Vec_IntFree( vPairs );\n    return RetValue;\n}",
+      "Draft": "func Ssw_SecWithSimilarity(p0 *Aig_Man_t, p1 *Aig_Man_t, pPars *Ssw_Pars_t) int32 {\n    var vPairs *Vec_Int_t;\n    var pPart0, pPart1 *Aig_Man_t;\n    var RetValue int32;\n    if pPars.fVerbose {\n        Abc_Print( 1, \"Performing sequential verification using structural similarity.\\n\" ); }\n    // consider the case when a miter is given\n    if p1 == nil {\n        if pPars.fVerbose {\n            Aig_ManPrintStats( p0 );\n        }\n        // demiter the miter\n        if !Saig_ManDemiterSimpleDiff( p0, \u0026pPart0, \u0026pPart1 ) {\n            Abc_Print( 1, \"Demitering has failed.\\n\" );\n            return -1;\n        }\n    \n    } else {\n        pPart0 = Aig_ManDupSimple( p0 );\n        pPart1 = Aig_ManDupSimple( p1 );\n    }\n    if pPars.fVerbose {\n//        Aig_ManPrintStats( pPart0 );\n//        Aig_ManPrintStats( pPart1 );\n        if p1 == nil {\n//        Aig_ManDumpBlif( pPart0, \"part0.blif\", NULL, NULL );\n//        Aig_ManDumpBlif( pPart1, \"part1.blif\", NULL, NULL );\n//        Abc_Print( 1, \"The result of demitering is written into files \\\"%s\\\" and \\\"%s\\\".\\n\", \"part0.blif\", \"part1.blif\" );\n        }\n    }\n    assert(Aig_ManRegNum(pPart0) \u003e 0, \"Aig_ManRegNum(pPart0) \u003e 0\");\n    assert(Aig_ManRegNum(pPart1) \u003e 0, \"Aig_ManRegNum(pPart1) \u003e 0\");\n    assert(Saig_ManPiNum(pPart0) == Saig_ManPiNum(pPart1), \"Saig_ManPiNum(pPart0) == Saig_ManPiNum(pPart1)\");\n    assert(Saig_ManPoNum(pPart0) == Saig_ManPoNum(pPart1), \"Saig_ManPoNum(pPart0) == Saig_ManPoNum(pPart1)\");\n    // derive pairs\n//    vPairs = Saig_StrSimPerformMatching_hack( pPart0, pPart1 );\n    vPairs = Saig_StrSimPerformMatching( pPart0, pPart1, 0, pPars.fVerbose, nil );\n    RetValue = Ssw_SecWithSimilarityPairs( pPart0, pPart1, vPairs, pPars );\n    Aig_ManStop( pPart0 );\n    Aig_ManStop( pPart1 );\n    Vec_IntFree( vPairs );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::2713",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2549,
+      "End": 2549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::3102",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2758,
+      "End": 2758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::3438",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2970,
+      "End": 2970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::3587",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3084,
+      "End": 3097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::3830",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3221,
+      "End": 3221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::3979",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3335,
+      "End": 3348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::4752",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3945,
+      "End": 3945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::7072",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5820,
+      "End": 5820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::8552",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7140,
+      "End": 7140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::8633",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7226,
+      "End": 7239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::9035",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7517,
+      "End": 7517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::9116",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7603,
+      "End": 7616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::10982",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9161,
+      "End": 9161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::11478",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9472,
+      "End": 9472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::12623",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10458,
+      "End": 10458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::12784",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10570,
+      "End": 10583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::13875",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11661,
+      "End": 11674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::13919",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11705,
+      "End": 11718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::14017",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11803,
+      "End": 11816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::14060",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11846,
+      "End": 11859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::pointer-cast::19273",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16767,
+      "End": 16767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::Ssw_CreatePair",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_CreatePair",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1309,
+      "End": 1520
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::Ssw_MatchingStart",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_MatchingStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1809,
+      "End": 3469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::ternary::Ssw_MatchingExtendOne",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_MatchingExtendOne",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3758,
+      "End": 5447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::Ssw_MatchingExtendOne",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_MatchingExtendOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3758,
+      "End": 5447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::Ssw_MatchingCountUnmached",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_MatchingCountUnmached",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5721,
+      "End": 6041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::Ssw_MatchingExtend",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_MatchingExtend",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6330,
+      "End": 8339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::Ssw_MatchingComplete",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_MatchingComplete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8613,
+      "End": 9727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::Ssw_MatchingPairs",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_MatchingPairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9999,
+      "End": 10716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::Ssw_MatchingMiter",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_MatchingMiter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11021,
+      "End": 12385
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::Ssw_SecWithSimilaritySweep",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SecWithSimilaritySweep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12695,
+      "End": 14791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::Ssw_SecWithSimilarityPairs",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SecWithSimilarityPairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15320,
+      "End": 16279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::Saig_StrSimPerformMatching_hack",
+      "Category": "semantic-review",
+      "Symbol": "Saig_StrSimPerformMatching_hack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16563,
+      "End": 17006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::Ssw_SecWithSimilarity",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SecWithSimilarity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17280,
+      "End": 18994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswIslands.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19240
+    }
+  ],
+  "Draft": "package ssw\n\nimport \"time\"\n\n/**CFile****************************************************************\n\n  FileName    [sswIslands.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Inductive prover with constraints.]\n\n  Synopsis    [Detection of islands of difference.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 1, 2008.]\n\n  Revision    [$Id: sswIslands.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sswInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates pair of structurally equivalent nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_CreatePair(vPairs *Vec_Int_t, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) {\n    pObj0.pData = pObj1;\n    pObj1.pData = pObj0;\n    Vec_IntPush( vPairs, pObj0.Id );\n    Vec_IntPush( vPairs, pObj1.Id );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Establishes relationship between nodes using pairing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_MatchingStart(p0 *Aig_Man_t, p1 *Aig_Man_t, vPairs *Vec_Int_t) {\n    var pObj0, pObj1 *Aig_Obj_t;\n    var i int32;\n    // create matching\n    Aig_ManCleanData( p0 );\n    Aig_ManCleanData( p1 );\n    for  i = 0; i \u003c Vec_IntSize(vPairs); i += 2  {\n        pObj0 = Aig_ManObj( p0, Vec_IntEntry(vPairs, i) );\n        pObj1 = Aig_ManObj( p1, Vec_IntEntry(vPairs, i+1) );\n        assert(pObj0.pData == nil, \"pObj0.pData == nil\");\n        assert(pObj1.pData == nil, \"pObj1.pData == nil\");\n        pObj0.pData = pObj1;\n        pObj1.pData = pObj0;\n    }\n    // make sure constants are matched\n    pObj0 = Aig_ManConst1( p0 );\n    pObj1 = Aig_ManConst1( p1 );\n    assert(pObj0.pData == pObj1, \"pObj0.pData == pObj1\");\n    assert(pObj1.pData == pObj0, \"pObj1.pData == pObj0\");\n    // make sure PIs are matched\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p0)) \u0026\u0026 (((pObj0) = (Aig_Obj_t *)Vec_PtrEntry(p0.vCis, i)), 1); i++  {\n        pObj1 = Aig_ManCi( p1, i );\n        assert(pObj0.pData == pObj1, \"pObj0.pData == pObj1\");\n        assert(pObj1.pData == pObj0, \"pObj1.pData == pObj0\");\n    }\n    // make sure the POs are not matched\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p0.vCos)) \u0026\u0026 (((pObj0) = (Aig_Obj_t *)Vec_PtrEntry(p0.vCos, i)), 1); i++  {\n        pObj1 = Aig_ManCo( p1, i );\n        assert(pObj0.pData == nil, \"pObj0.pData == nil\");\n        assert(pObj1.pData == nil, \"pObj1.pData == nil\");\n    }\n\n    // check that LIs/LOs are matched in sync\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p0)) \u0026\u0026 (((pObj0) = (Aig_Obj_t *)Vec_PtrEntry(p0.vCis, i+Saig_ManPiNum(p0))), 1); i++  {\n        if pObj0.pData == nil {\n            continue; }\n        pObj1 = (Aig_Obj_t *)pObj0.pData;\n        if !Saig_ObjIsLo(p1, pObj1) {\n            Abc_Print( 1, \"Mismatch between LO pairs.\\n\" ); }\n    }\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p1)) \u0026\u0026 (((pObj1) = (Aig_Obj_t *)Vec_PtrEntry(p1.vCis, i+Saig_ManPiNum(p1))), 1); i++  {\n        if pObj1.pData == nil {\n            continue; }\n        pObj0 = (Aig_Obj_t *)pObj1.pData;\n        if !Saig_ObjIsLo(p0, pObj0) {\n            Abc_Print( 1, \"Mismatch between LO pairs.\\n\" ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Establishes relationship between nodes using pairing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_MatchingExtendOne(p *Aig_Man_t, vNodes *Vec_Ptr_t) {\n    var pNext, pObj *Aig_Obj_t;\n    var i int32;\n    var k int32;\n    var iFan int32 = -1;\n    Vec_PtrClear( vNodes );\n    Aig_ManIncrementTravId( p );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) {\n            continue; }\n        if pObj.pData != nil {\n            continue; }\n        if Saig_ObjIsLo(p, pObj) {\n            pNext = Saig_ObjLoToLi(p, pObj);\n            pNext = Aig_ObjFanin0(pNext);\n            if pNext.pData \u0026\u0026 !Aig_ObjIsTravIdCurrent(p, pNext) \u0026\u0026 !Aig_ObjIsConst1(pNext) {\n                Aig_ObjSetTravIdCurrent(p, pNext);\n                Vec_PtrPush( vNodes, pNext );\n            }\n        }\n        if Aig_ObjIsNode(pObj) {\n            pNext = Aig_ObjFanin0(pObj);\n            if pNext.pData \u0026\u0026 !Aig_ObjIsTravIdCurrent(p, pNext) {\n                Aig_ObjSetTravIdCurrent(p, pNext);\n                Vec_PtrPush( vNodes, pNext );\n            }\n            pNext = Aig_ObjFanin1(pObj);\n            if pNext.pData \u0026\u0026 !Aig_ObjIsTravIdCurrent(p, pNext) {\n                Aig_ObjSetTravIdCurrent(p, pNext);\n                Vec_PtrPush( vNodes, pNext );\n            }\n        }\n        // inlining of macro Aig_ObjForEachFanout\n        for  assert(p.pFanData, \"p.pFanData\"), k = 0; (k \u003c int32((pObj).nRefs)) \u0026\u0026                         (((iFan) = k? Aig_ObjFanoutNext(p, iFan) : Aig_ObjFanout0Int(p, pObj.Id)), 1) \u0026\u0026           (((pNext) = Aig_ManObj(p, iFan\u003e\u003e1)), 1); k++  {\n            if Saig_ObjIsPo(p, pNext) {\n                continue; }\n            if Saig_ObjIsLi(p, pNext) {\n                pNext = Saig_ObjLiToLo(p, pNext); }\n            if pNext.pData \u0026\u0026 !Aig_ObjIsTravIdCurrent(p, pNext) {\n                Aig_ObjSetTravIdCurrent(p, pNext);\n                Vec_PtrPush( vNodes, pNext );\n            }\n        }\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Establishes relationship between nodes using pairing.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_MatchingCountUnmached(p *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsNode(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) {\n            continue; }\n        if pObj.pData != nil {\n            continue; }\n        Counter++;\n    }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Establishes relationship between nodes using pairing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_MatchingExtend(p0 *Aig_Man_t, p1 *Aig_Man_t, nDist int32, fVerbose int32) {\n    var vNodes0, vNodes1 *Vec_Ptr_t;\n    var pNext0, pNext1 *Aig_Obj_t;\n    var d, k int32;\n    Aig_ManFanoutStart(p0);\n    Aig_ManFanoutStart(p1);\n    vNodes0 = Vec_PtrAlloc( 1000 );\n    vNodes1 = Vec_PtrAlloc( 1000 );\n    if fVerbose != 0 {\n        var nUnmached int32  = Ssw_MatchingCountUnmached(p0);\n        Abc_Print( 1, \"Extending islands by %d steps:\\n\", nDist );\n        Abc_Print( 1, \"%2d : Total = %6d. Unmatched = %6d.  Ratio = %6.2f %%\\n\",\n            0, Aig_ManCiNum(p0) + Aig_ManNodeNum(p0),\n            nUnmached, 100.0 * nUnmached/(Aig_ManCiNum(p0) + Aig_ManNodeNum(p0)) );\n    }\n    for  d = 0; d \u003c nDist; d++  {\n        Ssw_MatchingExtendOne( p0, vNodes0 );\n        Ssw_MatchingExtendOne( p1, vNodes1 );\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vNodes0)) \u0026\u0026 (((pNext0) = (Aig_Obj_t *)Vec_PtrEntry(vNodes0, k)), 1); k++  {\n            pNext1 = (Aig_Obj_t *)pNext0.pData;\n            if pNext1 == nil {\n                continue; }\n            assert(pNext1.pData == pNext0, \"pNext1.pData == pNext0\");\n            if Saig_ObjIsPi(p0, pNext1) {\n                continue; }\n            pNext0.pData = nil;\n            pNext1.pData = nil;\n        }\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vNodes1)) \u0026\u0026 (((pNext0) = (Aig_Obj_t *)Vec_PtrEntry(vNodes1, k)), 1); k++  {\n            pNext1 = (Aig_Obj_t *)pNext0.pData;\n            if pNext1 == nil {\n                continue; }\n            assert(pNext1.pData == pNext0, \"pNext1.pData == pNext0\");\n            if Saig_ObjIsPi(p1, pNext1) {\n                continue; }\n            pNext0.pData = nil;\n            pNext1.pData = nil;\n        }\n        if fVerbose != 0 {\n            var nUnmached int32  = Ssw_MatchingCountUnmached(p0);\n            Abc_Print( 1, \"%2d : Total = %6d. Unmatched = %6d.  Ratio = %6.2f %%\\n\",\n                d+1, Aig_ManCiNum(p0) + Aig_ManNodeNum(p0),\n                nUnmached, 100.0 * nUnmached/(Aig_ManCiNum(p0) + Aig_ManNodeNum(p0)) );\n        }\n    }\n    Vec_PtrFree( vNodes0 );\n    Vec_PtrFree( vNodes1 );\n    Aig_ManFanoutStop(p0);\n    Aig_ManFanoutStop(p1);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Used differences in p0 to complete p1.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_MatchingComplete(p0 *Aig_Man_t, p1 *Aig_Man_t) {\n    var vNewLis *Vec_Ptr_t;\n    var pObj0, pObj0Li, pObj1 *Aig_Obj_t;\n    var i int32;\n    // create register outputs in p0 that are absent in p1\n    vNewLis = Vec_PtrAlloc( 100 );\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p0)) \u0026\u0026 (((pObj0Li) = Saig_ManLi(p0, i)), 1)            \u0026\u0026 (((pObj0)=Saig_ManLo(p0, i)), 1); i++  {\n        if pObj0.pData != nil {\n            continue; }\n        pObj1 = Aig_ObjCreateCi( p1 );\n        pObj0.pData = pObj1;\n        pObj1.pData = pObj0;\n        Vec_PtrPush( vNewLis, pObj0Li );\n    }\n    // add missing nodes in the topological order\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p0.vObjs)) \u0026\u0026 (((pObj0) = (Aig_Obj_t *)Vec_PtrEntry(p0.vObjs, i)), 1); i++  { if (pObj0) == nil || !Aig_ObjIsNode(pObj0) {} else {\n        if pObj0.pData != nil {\n            continue; }\n        pObj1 = Aig_And( p1, Aig_ObjChild0Copy(pObj0), Aig_ObjChild1Copy(pObj0) );\n        pObj0.pData = pObj1;\n        pObj1.pData = pObj0;\n    }\n    }\n    // create register outputs in p0 that are absent in p1\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNewLis)) \u0026\u0026 (((pObj0Li) = (Aig_Obj_t *)Vec_PtrEntry(vNewLis, i)), 1); i++  {\n        Aig_ObjCreateCo( p1, Aig_ObjChild0Copy(pObj0Li) );\n    }\n    // increment the number of registers\n    Aig_ManSetRegNum( p1, Aig_ManRegNum(p1) + Vec_PtrSize(vNewLis) );\n    Vec_PtrFree( vNewLis );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derives matching for all pairs.]\n\n  Description [Modifies both AIGs.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_MatchingPairs(p0 *Aig_Man_t, p1 *Aig_Man_t) *Vec_Int_t {\n    var vPairsNew *Vec_Int_t;\n    var pObj0, pObj1 *Aig_Obj_t;\n    var i int32;\n    // check correctness\n    assert(Aig_ManCiNum(p0) == Aig_ManCiNum(p1), \"Aig_ManCiNum(p0) == Aig_ManCiNum(p1)\");\n    assert(Aig_ManCoNum(p0) == Aig_ManCoNum(p1), \"Aig_ManCoNum(p0) == Aig_ManCoNum(p1)\");\n    assert(Aig_ManRegNum(p0) == Aig_ManRegNum(p1), \"Aig_ManRegNum(p0) == Aig_ManRegNum(p1)\");\n    assert(Aig_ManObjNum(p0) == Aig_ManObjNum(p1), \"Aig_ManObjNum(p0) == Aig_ManObjNum(p1)\");\n    // create complete pairs\n    vPairsNew = Vec_IntAlloc( 2*Aig_ManObjNum(p0) );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p0.vObjs)) \u0026\u0026 (((pObj0) = (Aig_Obj_t *)Vec_PtrEntry(p0.vObjs, i)), 1); i++  { if (pObj0) == nil {} else {\n        if Aig_ObjIsCo(pObj0) {\n            continue; }\n        pObj1 = (Aig_Obj_t *)pObj0.pData;\n        Vec_IntPush( vPairsNew, pObj0.Id );\n        Vec_IntPush( vPairsNew, pObj1.Id );\n    }\n    }\n    return vPairsNew;\n}\n\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transfers the result of matching to miter.]\n\n  Description [The array of pairs should be complete.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_MatchingMiter(pMiter *Aig_Man_t, p0 *Aig_Man_t, p1 *Aig_Man_t, vPairsAll *Vec_Int_t) *Vec_Int_t {\n    var vPairsMiter *Vec_Int_t;\n    var pObj0, pObj1 *Aig_Obj_t;\n    var i int32;\n    // create matching of nodes in the miter\n    vPairsMiter = Vec_IntAlloc( 2*Aig_ManObjNum(p0) );\n    for  i = 0; i \u003c Vec_IntSize(vPairsAll); i += 2  {\n        pObj0 = Aig_ManObj( p0, Vec_IntEntry(vPairsAll, i) );\n        pObj1 = Aig_ManObj( p1, Vec_IntEntry(vPairsAll, i+1) );\n        assert(pObj0.pData != nil, \"pObj0.pData != nil\");\n        assert(pObj1.pData != nil, \"pObj1.pData != nil\");\n        if pObj0.pData == pObj1.pData {\n            continue; }\n        if Aig_ObjIsNone((Aig_Obj_t *)pObj0.pData) || Aig_ObjIsNone((Aig_Obj_t *)pObj1.pData) {\n            continue; }\n        // get the miter nodes\n        pObj0 = (Aig_Obj_t *)pObj0.pData;\n        pObj1 = (Aig_Obj_t *)pObj1.pData;\n        assert(!Aig_IsComplement(pObj0), \"!Aig_IsComplement(pObj0)\");\n        assert(!Aig_IsComplement(pObj1), \"!Aig_IsComplement(pObj1)\");\n        assert(Aig_ObjType(pObj0) == Aig_ObjType(pObj1), \"Aig_ObjType(pObj0) == Aig_ObjType(pObj1)\");\n        if Aig_ObjIsCo(pObj0) {\n            continue; }\n        assert(Aig_ObjIsNode(pObj0) || Saig_ObjIsLo(pMiter, pObj0), \"Aig_ObjIsNode(pObj0) || Saig_ObjIsLo(pMiter, pObj0)\");\n        assert(Aig_ObjIsNode(pObj1) || Saig_ObjIsLo(pMiter, pObj1), \"Aig_ObjIsNode(pObj1) || Saig_ObjIsLo(pMiter, pObj1)\");\n        assert(pObj0.Id \u003c pObj1.Id, \"pObj0.Id \u003c pObj1.Id\");\n        Vec_IntPush( vPairsMiter, pObj0.Id );\n        Vec_IntPush( vPairsMiter, pObj1.Id );\n    }\n    return vPairsMiter;\n}\n\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Solves SEC using structural similarity.]\n\n  Description [Modifies both p0 and p1 by adding extra logic.]\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SecWithSimilaritySweep(p0 *Aig_Man_t, p1 *Aig_Man_t, vPairs *Vec_Int_t, pPars *Ssw_Pars_t) *Aig_Man_t {\n    var p *Ssw_Man_t;\n    var vPairsAll, vPairsMiter *Vec_Int_t;\n    var pMiter, pAigNew *Aig_Man_t;\n    // derive full matching\n    Ssw_MatchingStart( p0, p1, vPairs );\n    if pPars.nIsleDist {\n        Ssw_MatchingExtend( p0, p1, pPars.nIsleDist, pPars.fVerbose ); }\n    Ssw_MatchingComplete( p0, p1 );\n    Ssw_MatchingComplete( p1, p0 );\n    vPairsAll = Ssw_MatchingPairs( p0, p1 );\n    // create miter and transfer matching\n    pMiter = Saig_ManCreateMiter( p0, p1, 0 );\n    vPairsMiter = Ssw_MatchingMiter( pMiter, p0, p1, vPairsAll );\n    Vec_IntFree( vPairsAll );\n    // start the induction manager\n    p = Ssw_ManCreate( pMiter, pPars );\n    // create equivalence classes using these IDs\n    if p.pPars.fPartSigCorr {\n        p.ppClasses = Ssw_ClassesPreparePairsSimple( pMiter, vPairsMiter );\n    } else {\n        p.ppClasses = Ssw_ClassesPrepare( pMiter, pPars.nFramesK, pPars.fLatchCorr, pPars.fConstCorr, pPars.fOutputCorr, pPars.nMaxLevs, pPars.fVerbose ); }\n    if p.pPars.fDumpSRInit {\n        if p.pPars.fPartSigCorr {\n            var pSRed *Aig_Man_t  = Ssw_SpeculativeReduction( p );\n            Aig_ManDumpBlif( pSRed, \"srm_part.blif\", nil, nil );\n            Aig_ManStop( pSRed );\n            Abc_Print( 1, \"Speculatively reduced miter is saved in file \\\"%s\\\".\\n\", \"srm_part.blif\" );\n        \n        } else {\n            Abc_Print( 1, \"Dumping speculative miter is possible only for partial signal correspondence (switch \\\"-c\\\").\\n\" ); }\n    }\n    p.pSml = Ssw_SmlStart( pMiter, 0, 1 + p.pPars.nFramesAddSim, 1 );\n    Ssw_ClassesSetData( p.ppClasses, p.pSml, (unsigned(*)(void *,Aig_Obj_t *))Ssw_SmlObjHashWord, (int(*)(void *,Aig_Obj_t *))Ssw_SmlObjIsConstWord, (int(*)(void *,Aig_Obj_t *,Aig_Obj_t *))Ssw_SmlObjsAreEqualWord );\n    // perform refinement of classes\n    pAigNew = Ssw_SignalCorrespondenceRefine( p );\n    // cleanup\n    Ssw_ManStop( p );\n    Aig_ManStop( pMiter );\n    Vec_IntFree( vPairsMiter );\n    return pAigNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Solves SEC with structural similarity.]\n\n  Description [The first two arguments are pointers to the AIG managers.\n  The third argument is the array of pairs of IDs of structurally equivalent\n  nodes from the first and second managers, respectively.]\n               \n  SideEffects [The managers will be updated by adding \"islands of difference\".]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SecWithSimilarityPairs(p0 *Aig_Man_t, p1 *Aig_Man_t, vPairs *Vec_Int_t, pPars *Ssw_Pars_t) int32 {\n    var Pars Ssw_Pars_t;\n    var pAigRes *Aig_Man_t;\n    var RetValue int32;\n    var clk abctime  = Abc_Clock();\n    // derive parameters if not given\n    if pPars == nil {\n        Ssw_ManSetDefaultParams( pPars = \u0026Pars ); }\n    // reduce the AIG with pairs\n    pAigRes = Ssw_SecWithSimilaritySweep( p0, p1, vPairs, pPars );\n    // report the result of verification\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if RetValue == 1 {\n        Abc_Print( 1, \"Verification successful.  \" );\n    } else if RetValue == 0 {\n        Abc_Print( 1, \"Verification failed with a counter-example.  \" );\n    } else {\n        Abc_Print( 1, \"Verification UNDECIDED. The number of remaining regs = %d (total = %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(p0)+Aig_ManRegNum(p1) ); }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    Aig_ManStop( pAigRes );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dummy procedure to detect structural similarity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_StrSimPerformMatching_hack(p0 *Aig_Man_t, p1 *Aig_Man_t) *Vec_Int_t {\n    var vPairs *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // create array of pairs\n    vPairs = Vec_IntAlloc( 100 );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p0.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p0.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if !Aig_ObjIsConst1(pObj) \u0026\u0026 !Aig_ObjIsCi(pObj) \u0026\u0026 !Aig_ObjIsNode(pObj) {\n            continue; }\n        Vec_IntPush( vPairs, i );\n        Vec_IntPush( vPairs, i );\n    }\n    }\n    return vPairs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Solves SEC with structural similarity.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SecWithSimilarity(p0 *Aig_Man_t, p1 *Aig_Man_t, pPars *Ssw_Pars_t) int32 {\n    var vPairs *Vec_Int_t;\n    var pPart0, pPart1 *Aig_Man_t;\n    var RetValue int32;\n    if pPars.fVerbose {\n        Abc_Print( 1, \"Performing sequential verification using structural similarity.\\n\" ); }\n    // consider the case when a miter is given\n    if p1 == nil {\n        if pPars.fVerbose {\n            Aig_ManPrintStats( p0 );\n        }\n        // demiter the miter\n        if !Saig_ManDemiterSimpleDiff( p0, \u0026pPart0, \u0026pPart1 ) {\n            Abc_Print( 1, \"Demitering has failed.\\n\" );\n            return -1;\n        }\n    \n    } else {\n        pPart0 = Aig_ManDupSimple( p0 );\n        pPart1 = Aig_ManDupSimple( p1 );\n    }\n    if pPars.fVerbose {\n//        Aig_ManPrintStats( pPart0 );\n//        Aig_ManPrintStats( pPart1 );\n        if p1 == nil {\n//        Aig_ManDumpBlif( pPart0, \"part0.blif\", NULL, NULL );\n//        Aig_ManDumpBlif( pPart1, \"part1.blif\", NULL, NULL );\n//        Abc_Print( 1, \"The result of demitering is written into files \\\"%s\\\" and \\\"%s\\\".\\n\", \"part0.blif\", \"part1.blif\" );\n        }\n    }\n    assert(Aig_ManRegNum(pPart0) \u003e 0, \"Aig_ManRegNum(pPart0) \u003e 0\");\n    assert(Aig_ManRegNum(pPart1) \u003e 0, \"Aig_ManRegNum(pPart1) \u003e 0\");\n    assert(Saig_ManPiNum(pPart0) == Saig_ManPiNum(pPart1), \"Saig_ManPiNum(pPart0) == Saig_ManPiNum(pPart1)\");\n    assert(Saig_ManPoNum(pPart0) == Saig_ManPoNum(pPart1), \"Saig_ManPoNum(pPart0) == Saig_ManPoNum(pPart1)\");\n    // derive pairs\n//    vPairs = Saig_StrSimPerformMatching_hack( pPart0, pPart1 );\n    vPairs = Saig_StrSimPerformMatching( pPart0, pPart1, 0, pPars.fVerbose, nil );\n    RetValue = Ssw_SecWithSimilarityPairs( pPart0, pPart1, vPairs, pPars );\n    Aig_ManStop( pPart0 );\n    Aig_ManStop( pPart1 );\n    Vec_IntFree( vPairs );\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

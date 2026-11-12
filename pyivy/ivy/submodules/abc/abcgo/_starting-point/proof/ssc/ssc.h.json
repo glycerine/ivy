@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/ssc.h",
+  "SHA256": "e80cabfd1dcb8317b1d1389ad17e48cbfe85d1285142dc80149ecd5abfbd63a2",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/ssc.h::struct::Ssc_Pars_t",
+      "Category": "struct-review",
+      "Symbol": "Ssc_Pars_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1283,
+      "End": 1834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssc/ssc.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2861
+    }
+  ],
+  "Draft": "package ssc\n\n/**CFile****************************************************************\n\n  FileName    [ssc.h] \n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT sweeping under constraints.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 29, 2008.]\n\n  Revision    [$Id: ssc.h,v 1.00 2008/07/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// choicing parameters\n   \ntype Ssc_Pars_t struct {\n    nWords              int32;        // the number of simulation words\n    nBTLimit              int32;      // conflict limit at a node\n    nSatVarMax              int32;    // the max number of SAT variables\n    nCallsRecycle              int32; // calls to perform before recycling SAT solver\n    fAppend              int32;       // append constraints to the resulting AIG\n    fVerbose              int32;      // verbose stats\n    fVerify              int32;       // enable internal verification\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== sscCore.c ==========================================================*/\n// extern void          Ssc_ManSetDefaultParams( Ssc_Pars_t * p );\n\n// extern Gia_Man_t *   Ssc_PerformSweeping( Gia_Man_t * pAig, Gia_Man_t * pCare, Ssc_Pars_t * pPars );\n\n// extern Gia_Man_t *   Ssc_PerformSweepingConstr( Gia_Man_t * p, Ssc_Pars_t * pPars );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

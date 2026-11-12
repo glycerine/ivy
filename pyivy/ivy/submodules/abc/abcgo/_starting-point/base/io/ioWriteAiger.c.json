@@ -1,0 +1,2016 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c",
+  "SHA256": "95fd57a22e317862d0e87e6b637b742ec981e791e58076c77e59533f7954c3e1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 280,
+        "Column": 5,
+        "ByteOffset": 10395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 13,
+        "ByteOffset": 10766
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Io_WriteAiger(): Cannot write AIGER format with non-0 latch init values. Run \\\"zero\\\".\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 287,
+        "Column": 22,
+        "ByteOffset": 10775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Io_WriteAiger(): Cannot write AIGER format with non-0 latch init values. Run \\\"zero\\\".\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 293,
+        "Column": 13,
+        "ByteOffset": 10957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 295,
+        "Column": 9,
+        "ByteOffset": 11013
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteAiger(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 295,
+        "Column": 18,
+        "ByteOffset": 11022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteAiger(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 310,
+        "Column": 5,
+        "ByteOffset": 11770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"aig%s %u %u %u %u %u\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 319,
+        "Column": 9,
+        "ByteOffset": 12120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %u %u\", Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk), Abc_NtkConstrNum(pNtk) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 5,
+        "ByteOffset": 12223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 334,
+        "Column": 17,
+        "ByteOffset": 13041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%u\\n\", uLit );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 336,
+        "Column": 17,
+        "ByteOffset": 13138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%u 1\\n\", uLit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 339,
+        "Column": 17,
+        "ByteOffset": 13302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 340,
+        "Column": 17,
+        "ByteOffset": 13386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%u %u\\n\", uLit, Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanout0(pLatch)), 0 ) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 347,
+        "Column": 13,
+        "ByteOffset": 13741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%u\\n\", Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ) );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 353,
+        "Column": 9,
+        "ByteOffset": 14030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fwrite( Vec_StrArray(vBinary), 1, Vec_StrSize(vBinary), pFile );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 362,
+        "Column": 15,
+        "ByteOffset": 14367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = ABC_ALLOC( unsigned char, nBufferSize );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 363,
+        "Column": 41,
+        "ByteOffset": 14448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 374,
+        "Column": 9,
+        "ByteOffset": 15126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( uLit1 \u003c uLit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 378,
+        "Column": 13,
+        "ByteOffset": 15350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Io_WriteAiger(): AIGER generation has failed because the allocated buffer is too small.\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 379,
+        "Column": 13,
+        "ByteOffset": 15465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose( pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 384,
+        "Column": 5,
+        "ByteOffset": 15528
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Pos \u003c nBufferSize );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 388,
+        "Column": 5,
+        "ByteOffset": 15626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fwrite( pBuffer, 1, Pos, pFile );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 389,
+        "Column": 5,
+        "ByteOffset": 15664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pBuffer );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 395,
+        "Column": 13,
+        "ByteOffset": 15915
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"i%d %s\\n\", i, Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 399,
+        "Column": 13,
+        "ByteOffset": 16214
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"l%d %s\\n\", i, Abc_ObjName(Abc_ObjFanout0(pObj)) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 404,
+        "Column": 17,
+        "ByteOffset": 16502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"o%d %s\\n\", i, Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 406,
+        "Column": 17,
+        "ByteOffset": 16642
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"b%d %s\\n\", i, Abc_ObjName(pObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 408,
+        "Column": 17,
+        "ByteOffset": 16731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"c%d %s\\n\", i - (Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk)), Abc_ObjName(pObj) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 413,
+        "Column": 5,
+        "ByteOffset": 16879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"c\\n\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 414,
+        "Column": 22,
+        "ByteOffset": 16925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pNtk.pName \u0026\u0026 strlen(pNtk.pName) \u003e 0 {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 415,
+        "Column": 9,
+        "ByteOffset": 16958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \".model %s\\n\", pNtk.pName ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 416,
+        "Column": 5,
+        "ByteOffset": 17009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"This file was produced by ABC on %s\\n\", Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 417,
+        "Column": 5,
+        "ByteOffset": 17091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"For information about AIGER format, refer to %s\\n\", \"http://fmv.jku.at/aiger\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 418,
+        "Column": 5,
+        "ByteOffset": 17193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 440,
+        "Column": 5,
+        "ByteOffset": 17774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 444,
+        "Column": 9,
+        "ByteOffset": 17985
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteAigerGz(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 444,
+        "Column": 18,
+        "ByteOffset": 17994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Io_WriteAigerGz(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 488,
+        "Column": 13,
+        "ByteOffset": 20256
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 503,
+        "Column": 15,
+        "ByteOffset": 20998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = ABC_ALLOC( unsigned char, nBufferSize );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 504,
+        "Column": 41,
+        "ByteOffset": 21079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 515,
+        "Column": 9,
+        "ByteOffset": 21757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( uLit1 \u003c uLit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 519,
+        "Column": 13,
+        "ByteOffset": 21961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Io_WriteAiger(): AIGER generation has failed because the allocated buffer is too small.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 525,
+        "Column": 5,
+        "ByteOffset": 22140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Pos \u003c nBufferSize );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 530,
+        "Column": 5,
+        "ByteOffset": 22272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pBuffer );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 555,
+        "Column": 22,
+        "ByteOffset": 23539
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pNtk.pName \u0026\u0026 strlen(pNtk.pName) \u003e 0 {"
+    },
+    {
+      "Name": "va_start",
+      "Status": "review",
+      "Message": "C va_list ABI has no direct Go representation.",
+      "Location": {
+        "Line": 589,
+        "Column": 13,
+        "ByteOffset": 24427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            va_start(ap,fmt);"
+    },
+    {
+      "Name": "vsnprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 590,
+        "Column": 24,
+        "ByteOffset": 24468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            b.nBytes = vsnprintf(b.buf,b.nBytesMax,fmt,ap);"
+    },
+    {
+      "Name": "va_end",
+      "Status": "review",
+      "Message": "C va_list ABI has no direct Go representation.",
+      "Location": {
+        "Line": 591,
+        "Column": 13,
+        "ByteOffset": 24517
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            va_end(ap);"
+    },
+    {
+      "Name": "ABC_REALLOC",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 598,
+        "Column": 26,
+        "ByteOffset": 24768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if (newBuf = ABC_REALLOC( char,b.buf,b.nBytesMax )) == nil {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 605,
+        "Column": 13,
+        "ByteOffset": 25011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Ioa_WriteBlif(): I/O error writing to compressed stream.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 605,
+        "Column": 22,
+        "ByteOffset": 25020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Ioa_WriteBlif(): I/O error writing to compressed stream.\\n\" );"
+    },
+    {
+      "Name": "va_start",
+      "Status": "review",
+      "Message": "C va_list ABI has no direct Go representation.",
+      "Location": {
+        "Line": 612,
+        "Column": 9,
+        "ByteOffset": 25212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        va_start(ap,fmt);"
+    },
+    {
+      "Name": "vfprintf",
+      "Status": "review",
+      "Message": "Result counts, formats, bounds, state, positioning or lifetime require structural repair.",
+      "Location": {
+        "Line": 613,
+        "Column": 13,
+        "ByteOffset": 25242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        n = vfprintf( b.f, fmt, ap);"
+    },
+    {
+      "Name": "va_end",
+      "Status": "review",
+      "Message": "C va_list ABI has no direct Go representation.",
+      "Location": {
+        "Line": 614,
+        "Column": 9,
+        "ByteOffset": 25275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        va_end(ap);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 648,
+        "Column": 5,
+        "ByteOffset": 26112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 655,
+        "Column": 13,
+        "ByteOffset": 26483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Io_WriteAiger(): Cannot write AIGER format with non-0 latch init values. Run \\\"zero\\\".\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 655,
+        "Column": 22,
+        "ByteOffset": 26492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Io_WriteAiger(): Cannot write AIGER format with non-0 latch init values. Run \\\"zero\\\".\\n\" );"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 661,
+        "Column": 9,
+        "ByteOffset": 26664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strncmp(pFileName+strlen(pFileName)-3,\".gz\",3) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 661,
+        "Column": 27,
+        "ByteOffset": 26682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strncmp(pFileName+strlen(pFileName)-3,\".gz\",3) {"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 666,
+        "Column": 5,
+        "ByteOffset": 26799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(\u0026b,0,sizeof(b));"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 668,
+        "Column": 13,
+        "ByteOffset": 26862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    b.buf = ABC_ALLOC( char,b.nBytesMax );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 671,
+        "Column": 11,
+        "ByteOffset": 26935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    b.f = fopen( pFileName, \"wb\" ); "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 673,
+        "Column": 9,
+        "ByteOffset": 26990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Ioa_WriteBlif(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 673,
+        "Column": 18,
+        "ByteOffset": 26999
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Ioa_WriteBlif(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 674,
+        "Column": 9,
+        "ByteOffset": 27086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(b.buf);"
+    },
+    {
+      "Name": "strncmp",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 677,
+        "Column": 9,
+        "ByteOffset": 27133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strncmp(pFileName+strlen(pFileName)-4,\".bz2\",4) {"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 677,
+        "Column": 27,
+        "ByteOffset": 27151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strncmp(pFileName+strlen(pFileName)-4,\".bz2\",4) {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 681,
+        "Column": 13,
+        "ByteOffset": 27342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Ioa_WriteBlif(): Cannot start compressed stream.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 681,
+        "Column": 22,
+        "ByteOffset": 27351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Ioa_WriteBlif(): Cannot start compressed stream.\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 682,
+        "Column": 13,
+        "ByteOffset": 27427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose( b.f );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 683,
+        "Column": 13,
+        "ByteOffset": 27454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(b.buf);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 728,
+        "Column": 17,
+        "ByteOffset": 29701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch) );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 743,
+        "Column": 13,
+        "ByteOffset": 30457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fwrite( Vec_StrArray(vBinary), 1, Vec_StrSize(vBinary), b.f );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 747,
+        "Column": 17,
+        "ByteOffset": 30680
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( stdout, \"Io_WriteAiger(): I/O error writing to compressed stream.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 747,
+        "Column": 26,
+        "ByteOffset": 30689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( stdout, \"Io_WriteAiger(): I/O error writing to compressed stream.\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 748,
+        "Column": 17,
+        "ByteOffset": 30777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fclose( b.f );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 749,
+        "Column": 17,
+        "ByteOffset": 30808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                ABC_FREE(b.buf);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 762,
+        "Column": 15,
+        "ByteOffset": 31185
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = ABC_ALLOC( unsigned char, nBufferSize );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 763,
+        "Column": 41,
+        "ByteOffset": 31266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 774,
+        "Column": 9,
+        "ByteOffset": 31944
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( uLit1 \u003c uLit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 778,
+        "Column": 13,
+        "ByteOffset": 32168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Io_WriteAiger(): AIGER generation has failed because the allocated buffer is too small.\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 779,
+        "Column": 13,
+        "ByteOffset": 32283
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose( b.f );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 780,
+        "Column": 13,
+        "ByteOffset": 32310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(b.buf);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 786,
+        "Column": 5,
+        "ByteOffset": 32421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Pos \u003c nBufferSize );"
+    },
+    {
+      "Name": "fwrite",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 791,
+        "Column": 9,
+        "ByteOffset": 32537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fwrite( pBuffer, 1, Pos, b.f );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 795,
+        "Column": 13,
+        "ByteOffset": 32682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Io_WriteAiger(): I/O error writing to compressed stream.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 795,
+        "Column": 22,
+        "ByteOffset": 32691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Io_WriteAiger(): I/O error writing to compressed stream.\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 796,
+        "Column": 13,
+        "ByteOffset": 32775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose( b.f );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 797,
+        "Column": 13,
+        "ByteOffset": 32802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(b.buf);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 801,
+        "Column": 5,
+        "ByteOffset": 32859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pBuffer );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 827,
+        "Column": 26,
+        "ByteOffset": 34158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pNtk.pName \u0026\u0026 strlen(pNtk.pName) \u003e 0 {"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 837,
+        "Column": 13,
+        "ByteOffset": 34591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Io_WriteAiger(): I/O error closing compressed stream.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 837,
+        "Column": 22,
+        "ByteOffset": 34600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Io_WriteAiger(): I/O error closing compressed stream.\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 838,
+        "Column": 13,
+        "ByteOffset": 34681
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fclose( b.f );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 839,
+        "Column": 13,
+        "ByteOffset": 34708
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            ABC_FREE(b.buf);"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 843,
+        "Column": 5,
+        "ByteOffset": 34765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( b.f );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 844,
+        "Column": 5,
+        "ByteOffset": 34784
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(b.buf);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 872,
+        "Column": 5,
+        "ByteOffset": 35502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCex != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 886,
+        "Column": 9,
+        "ByteOffset": 35900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"AIG parameters do not match those of the CEX.\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 891,
+        "Column": 13,
+        "ByteOffset": 36022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 892,
+        "Column": 5,
+        "ByteOffset": 36052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"1\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 895,
+        "Column": 9,
+        "ByteOffset": 36144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"0\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 897,
+        "Column": 5,
+        "ByteOffset": 36177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 902,
+        "Column": 13,
+        "ByteOffset": 36362
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d\", Abc_InfoHasBit(pCex.pData, b) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 905,
+        "Column": 9,
+        "ByteOffset": 36510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 914,
+        "Column": 13,
+        "ByteOffset": 37532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d\", pObj.fMarkA );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 916,
+        "Column": 9,
+        "ByteOffset": 37587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 918,
+        "Column": 13,
+        "ByteOffset": 37809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d\", pObj.fMarkA );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 920,
+        "Column": 9,
+        "ByteOffset": 37864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 924,
+        "Column": 13,
+        "ByteOffset": 38138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d\", pObj.fMarkA );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 926,
+        "Column": 9,
+        "ByteOffset": 38193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" \" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 931,
+        "Column": 5,
+        "ByteOffset": 38476
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( b == pCex.nBits );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 932,
+        "Column": 5,
+        "ByteOffset": 38507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 38,
+        "Column": 1,
+        "ByteOffset": 890
+      },
+      "Directive": "#ifdef _WIN32"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Io_ObjMakeLit",
+      "Start": 5615,
+      "End": 5733,
+      "BodyStart": 5684,
+      "Original": "static unsigned Io_ObjMakeLit( int Var, int fCompl )                 { return (Var \u003c\u003c 1) | fCompl;                   }",
+      "Draft": "func Io_ObjMakeLit(Var int32, fCompl int32) uint32 { return (Var \u003c\u003c 1) | fCompl;                   }"
+    },
+    {
+      "Name": "Io_ObjAigerNum",
+      "Start": 5734,
+      "End": 5851,
+      "BodyStart": 5803,
+      "Original": "static unsigned Io_ObjAigerNum( Abc_Obj_t * pObj )                   { return (unsigned)(ABC_PTRINT_T)pObj-\u003epCopy;  }",
+      "Draft": "func Io_ObjAigerNum(pObj *Abc_Obj_t) uint32 { return uint32((ABC_PTRINT_T))pObj.pCopy;  }"
+    },
+    {
+      "Name": "Io_ObjSetAigerNum",
+      "Start": 5852,
+      "End": 5974,
+      "BodyStart": 5921,
+      "Original": "static void     Io_ObjSetAigerNum( Abc_Obj_t * pObj, unsigned Num )  { pObj-\u003epCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Num;     }",
+      "Draft": "func Io_ObjSetAigerNum(pObj *Abc_Obj_t, Num uint32) { pObj.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Num;     }"
+    },
+    {
+      "Name": "Io_WriteAigerEncode",
+      "Start": 6617,
+      "End": 6929,
+      "BodyStart": 6689,
+      "Original": "int Io_WriteAigerEncode( unsigned char * pBuffer, int Pos, unsigned x )\n{\n    unsigned char ch;\n    while (x \u0026 ~0x7f)\n    {\n        ch = (x \u0026 0x7f) | 0x80;\n//        putc (ch, file);\n        pBuffer[Pos++] = ch;\n        x \u003e\u003e= 7;\n    }\n    ch = x;\n//    putc (ch, file);\n    pBuffer[Pos++] = ch;\n    return Pos;\n}",
+      "Draft": "int Io_WriteAigerEncode( unsigned char * pBuffer, int Pos, unsigned x )\n{\n    unsigned char ch;\n    for x \u0026 ~0x7f {\n        ch = (x \u0026 0x7f) | 0x80;\n//        putc (ch, file);\n        pBuffer[Pos++] = ch;\n        x \u003e\u003e= 7;\n    }\n    ch = x;\n//    putc (ch, file);\n    pBuffer[Pos++] = ch;\n    return Pos;\n}"
+    },
+    {
+      "Name": "Io_WriteAigerLiterals",
+      "Start": 7195,
+      "End": 7825,
+      "BodyStart": 7249,
+      "Original": "Vec_Int_t * Io_WriteAigerLiterals( Abc_Ntk_t * pNtk )\n{\n    Vec_Int_t * vLits;\n    Abc_Obj_t * pObj, * pDriver;\n    int i;\n    vLits = Vec_IntAlloc( Abc_NtkCoNum(pNtk) );\n    Abc_NtkForEachLatchInput( pNtk, pObj, i )\n    {\n        pDriver = Abc_ObjFanin0(pObj);\n        Vec_IntPush( vLits, Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ) );\n    }\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        pDriver = Abc_ObjFanin0(pObj);\n        Vec_IntPush( vLits, Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ) );\n    }\n    return vLits;\n}",
+      "Draft": "func Io_WriteAigerLiterals(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vLits *Vec_Int_t;\n    var pObj, pDriver *Abc_Obj_t;\n    var i int32;\n    vLits = Vec_IntAlloc( Abc_NtkCoNum(pNtk) );\n    // inlining of macro Abc_NtkForEachLatchInput\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)); i++  {                                                  if !(Abc_ObjIsLatch(Abc_NtkBox(pNtk, i)) \u0026\u0026 (((pObj) = Abc_ObjFanin0(Abc_NtkBox(pNtk, i))), 1)) {} else {\n        pDriver = Abc_ObjFanin0(pObj);\n        Vec_IntPush( vLits, Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ) );\n    }\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pDriver = Abc_ObjFanin0(pObj);\n        Vec_IntPush( vLits, Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ) );\n    }\n    return vLits;\n}"
+    },
+    {
+      "Name": "Io_WriteEncodeLiterals",
+      "Start": 8093,
+      "End": 9286,
+      "BodyStart": 8149,
+      "Original": "Vec_Str_t * Io_WriteEncodeLiterals( Vec_Int_t * vLits )\n{\n    Vec_Str_t * vBinary;\n    int Pos = 0, Lit, LitPrev, Diff, i;\n    vBinary = Vec_StrAlloc( 2 * Vec_IntSize(vLits) );\n    LitPrev = Vec_IntEntry( vLits, 0 );\n    Pos = Io_WriteAigerEncode( (unsigned char *)Vec_StrArray(vBinary), Pos, LitPrev ); \n    Vec_IntForEachEntryStart( vLits, Lit, i, 1 )\n    {\n        Diff = Lit - LitPrev;\n        Diff = (Lit \u003c LitPrev)? -Diff : Diff;\n        Diff = (Diff \u003c\u003c 1) | (int)(Lit \u003c LitPrev);\n        Pos = Io_WriteAigerEncode( (unsigned char *)Vec_StrArray(vBinary), Pos, Diff );\n        LitPrev = Lit;\n        if ( Pos + 10 \u003e vBinary-\u003enCap )\n            Vec_StrGrow( vBinary, vBinary-\u003enCap+1 );\n    }\n    vBinary-\u003enSize = Pos;\n/*\n    // verify\n    {\n        extern Vec_Int_t * Io_WriteDecodeLiterals( char ** ppPos, int nEntries );\n        char * pPos = Vec_StrArray( vBinary );\n        Vec_Int_t * vTemp = Io_WriteDecodeLiterals( \u0026pPos, Vec_IntSize(vLits) );\n        for ( i = 0; i \u003c Vec_IntSize(vLits); i++ )\n        {\n            int Entry1 = Vec_IntEntry(vLits,i);\n            int Entry2 = Vec_IntEntry(vTemp,i);\n            assert( Entry1 == Entry2 );\n        }\n    }\n*/\n    return vBinary;\n}",
+      "Draft": "func Io_WriteEncodeLiterals(vLits *Vec_Int_t) *Vec_Str_t {\n    var vBinary *Vec_Str_t;\n    var Pos, Lit, LitPrev, Diff, i int32;\n    vBinary = Vec_StrAlloc( 2 * Vec_IntSize(vLits) );\n    LitPrev = Vec_IntEntry( vLits, 0 );\n    Pos = Io_WriteAigerEncode( (unsigned char *)Vec_StrArray(vBinary), Pos, LitPrev ); \n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vLits)) \u0026\u0026 (((Lit) = Vec_IntEntry(vLits, i)), 1); i++  {\n        Diff = Lit - LitPrev;\n        if Lit \u003c LitPrev {\n            Diff = -Diff;\n        } else {\n            Diff = Diff;\n        }\n        Diff = (Diff \u003c\u003c 1) | int32((Lit \u003c LitPrev));\n        Pos = Io_WriteAigerEncode( (unsigned char *)Vec_StrArray(vBinary), Pos, Diff );\n        LitPrev = Lit;\n        if Pos + 10 \u003e vBinary.nCap {\n            Vec_StrGrow( vBinary, vBinary.nCap+1 ); }\n    }\n    vBinary.nSize = Pos;\n/*\n    // verify\n    {\n        extern Vec_Int_t * Io_WriteDecodeLiterals( char ** ppPos, int nEntries );\n        char * pPos = Vec_StrArray( vBinary );\n        Vec_Int_t * vTemp = Io_WriteDecodeLiterals( \u0026pPos, Vec_IntSize(vLits) );\n        for ( i = 0; i \u003c Vec_IntSize(vLits); i++ )\n        {\n            int Entry1 = Vec_IntEntry(vLits,i);\n            int Entry2 = Vec_IntEntry(vTemp,i);\n            assert( Entry1 == Entry2 );\n        }\n    }\n*/\n    return vBinary;\n}"
+    },
+    {
+      "Name": "Io_WriteAiger_old",
+      "Start": 9551,
+      "End": 15538,
+      "BodyStart": 9645,
+      "Original": "void Io_WriteAiger_old( Abc_Ntk_t * pNtk, char * pFileName, int fWriteSymbols, int fCompact )\n{\n    ProgressBar * pProgress;\n    FILE * pFile;\n    Abc_Obj_t * pObj, * pDriver, * pLatch;\n    int i, nNodes, nBufferSize, Pos, fExtended;\n    unsigned char * pBuffer;\n    unsigned uLit0, uLit1, uLit;\n\n    fExtended = Abc_NtkConstrNum(pNtk);\n\n    assert( Abc_NtkIsStrash(pNtk) );\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        if ( !Abc_LatchIsInit0(pObj) )\n        {\n            if ( !fCompact )\n            {\n                fExtended = 1;\n                break;\n            }\n            fprintf( stdout, \"Io_WriteAiger(): Cannot write AIGER format with non-0 latch init values. Run \\\"zero\\\".\\n\" );\n            return;\n        }\n\n    // start the output stream\n    pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n    {\n        fprintf( stdout, \"Io_WriteAiger(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n\n    // set the node numbers to be used in the output file\n    nNodes = 0;\n    Io_ObjSetAigerNum( Abc_AigConst1(pNtk), nNodes++ );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        Io_ObjSetAigerNum( pObj, nNodes++ );\n    Abc_AigForEachAnd( pNtk, pObj, i )\n        Io_ObjSetAigerNum( pObj, nNodes++ );\n\n    // write the header \"M I L O A\" where M = I + L + A\n    fprintf( pFile, \"aig%s %u %u %u %u %u\", \n        fCompact? \"2\" : \"\",\n        Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) + Abc_NtkNodeNum(pNtk), \n        Abc_NtkPiNum(pNtk),\n        Abc_NtkLatchNum(pNtk),\n        fExtended ? 0 : Abc_NtkPoNum(pNtk),\n        Abc_NtkNodeNum(pNtk) );\n    // write the extended header \"B C J F\"\n    if ( fExtended )\n        fprintf( pFile, \" %u %u\", Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk), Abc_NtkConstrNum(pNtk) );\n    fprintf( pFile, \"\\n\" );\n\n    // if the driver node is a constant, we need to complement the literal below\n    // because, in the AIGER format, literal 0/1 is represented as number 0/1\n    // while, in ABC, constant 1 node has number 0 and so literal 0/1 will be 1/0\n\n    Abc_NtkInvertConstraints( pNtk );\n    if ( !fCompact ) \n    {\n        // write latch drivers\n        Abc_NtkForEachLatch( pNtk, pLatch, i )\n        {\n            pObj = Abc_ObjFanin0(pLatch);\n            pDriver = Abc_ObjFanin0(pObj);\n            uLit = Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) );\n            if ( Abc_LatchIsInit0(pLatch) )\n                fprintf( pFile, \"%u\\n\", uLit );\n            else if ( Abc_LatchIsInit1(pLatch) )\n                fprintf( pFile, \"%u 1\\n\", uLit );\n            else\n            {\n                // Both None and DC are written as 'uninitialized' e.g. a free boolean value\n                assert( Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch) );\n                fprintf( pFile, \"%u %u\\n\", uLit, Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanout0(pLatch)), 0 ) );\n            }\n        }\n        // write PO drivers\n        Abc_NtkForEachPo( pNtk, pObj, i )\n        {\n            pDriver = Abc_ObjFanin0(pObj);\n            fprintf( pFile, \"%u\\n\", Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ) );\n        }\n    }\n    else\n    {\n        Vec_Int_t * vLits = Io_WriteAigerLiterals( pNtk );\n        Vec_Str_t * vBinary = Io_WriteEncodeLiterals( vLits );\n        fwrite( Vec_StrArray(vBinary), 1, Vec_StrSize(vBinary), pFile );\n        Vec_StrFree( vBinary );\n        Vec_IntFree( vLits );\n    }\n    Abc_NtkInvertConstraints( pNtk );\n\n    // write the nodes into the buffer\n    Pos = 0;\n    nBufferSize = 6 * Abc_NtkNodeNum(pNtk) + 100; // skeptically assuming 3 chars per one AIG edge\n    pBuffer = ABC_ALLOC( unsigned char, nBufferSize );\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );\n    Abc_AigForEachAnd( pNtk, pObj, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        uLit  = Io_ObjMakeLit( Io_ObjAigerNum(pObj), 0 );\n        uLit0 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin0(pObj)), Abc_ObjFaninC0(pObj) );\n        uLit1 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin1(pObj)), Abc_ObjFaninC1(pObj) );\n        if ( uLit0 \u003e uLit1 )\n        {\n            unsigned Temp = uLit0;\n            uLit0 = uLit1;\n            uLit1 = Temp;\n        }\n        assert( uLit1 \u003c uLit );\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, (unsigned)(uLit  - uLit1) );\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, (unsigned)(uLit1 - uLit0) );\n        if ( Pos \u003e nBufferSize - 10 )\n        {\n            printf( \"Io_WriteAiger(): AIGER generation has failed because the allocated buffer is too small.\\n\" );\n            fclose( pFile );\n            return;\n        }\n    }\n    assert( Pos \u003c nBufferSize );\n    Extra_ProgressBarStop( pProgress );\n\n    // write the buffer\n    fwrite( pBuffer, 1, Pos, pFile );\n    ABC_FREE( pBuffer );\n\n    // write the symbol table\n    if ( fWriteSymbols )\n    {\n        // write PIs\n        Abc_NtkForEachPi( pNtk, pObj, i )\n            fprintf( pFile, \"i%d %s\\n\", i, Abc_ObjName(pObj) );\n        // write latches\n        Abc_NtkForEachLatch( pNtk, pObj, i )\n            fprintf( pFile, \"l%d %s\\n\", i, Abc_ObjName(Abc_ObjFanout0(pObj)) );\n        // write POs\n        Abc_NtkForEachPo( pNtk, pObj, i )\n            if ( !fExtended )\n                fprintf( pFile, \"o%d %s\\n\", i, Abc_ObjName(pObj) );\n            else if ( i \u003c Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk) )\n                fprintf( pFile, \"b%d %s\\n\", i, Abc_ObjName(pObj) );\n            else\n                fprintf( pFile, \"c%d %s\\n\", i - (Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk)), Abc_ObjName(pObj) );\n    }\n\n    // write the comment\n    fprintf( pFile, \"c\\n\" );\n    if ( pNtk-\u003epName \u0026\u0026 strlen(pNtk-\u003epName) \u003e 0 )\n        fprintf( pFile, \".model %s\\n\", pNtk-\u003epName );\n    fprintf( pFile, \"This file was produced by ABC on %s\\n\", Extra_TimeStamp() );\n    fprintf( pFile, \"For information about AIGER format, refer to %s\\n\", \"http://fmv.jku.at/aiger\" );\n    fclose( pFile );\n}",
+      "Draft": "func Io_WriteAiger_old(pNtk *Abc_Ntk_t, pFileName string, fWriteSymbols int32, fCompact int32) {\n    var pProgress *ProgressBar;\n    var pFile *os.File;\n    var pObj, pDriver, pLatch *Abc_Obj_t;\n    var i, nNodes, nBufferSize, Pos, fExtended int32;\n    unsigned char * pBuffer;\n    var uLit0, uLit1, uLit uint32;\n\n    fExtended = Abc_NtkConstrNum(pNtk);\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else\n        if !Abc_LatchIsInit0(pObj) {\n            if !(fCompact != 0) {\n                fExtended = 1;\n                break;\n            }\n            spFmt.Fprintf(os.Stdout, \"Io_WriteAiger(): Cannot write AIGER format with non-0 latch init values. Run \\\"zero\\\".\\n\");\n            return;\n        }\n    }\n\n    // start the output stream\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        spFmt.Fprintf(os.Stdout, \"Io_WriteAiger(): Cannot open the output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n\n    // set the node numbers to be used in the output file\n    nNodes = 0;\n    Io_ObjSetAigerNum( Abc_AigConst1(pNtk), nNodes++ );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Io_ObjSetAigerNum( pObj, nNodes++ );\n    }\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Io_ObjSetAigerNum( pObj, nNodes++ ); }\n    }\n\n    // write the header \"M I L O A\" where M = I + L + A\n    spFmt.Fprintf(pFile, \"aig%s %d %d %d %d %d\", fCompact? \"2\" : \"\", Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) + Abc_NtkNodeNum(pNtk), Abc_NtkPiNum(pNtk), Abc_NtkLatchNum(pNtk), fExtended ? 0 : Abc_NtkPoNum(pNtk), Abc_NtkNodeNum(pNtk));\n    // write the extended header \"B C J F\"\n    if fExtended != 0 {\n        spFmt.Fprintf(pFile, \" %d %d\", Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk), Abc_NtkConstrNum(pNtk)); }\n    spFmt.Fprintf(pFile, \"\\n\");\n\n    // if the driver node is a constant, we need to complement the literal below\n    // because, in the AIGER format, literal 0/1 is represented as number 0/1\n    // while, in ABC, constant 1 node has number 0 and so literal 0/1 will be 1/0\n\n    Abc_NtkInvertConstraints( pNtk );\n    if !(fCompact != 0) {\n        // write latch drivers\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n            pObj = Abc_ObjFanin0(pLatch);\n            pDriver = Abc_ObjFanin0(pObj);\n            uLit = Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) );\n            if Abc_LatchIsInit0(pLatch) {\n                spFmt.Fprintf(pFile, \"%d\\n\", uLit);\n            } else if Abc_LatchIsInit1(pLatch) {\n                spFmt.Fprintf(pFile, \"%d 1\\n\", uLit);\n            } else {\n                // Both None and DC are written as 'uninitialized' e.g. a free boolean value\n                assert(Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch), \"Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch)\");\n                spFmt.Fprintf(pFile, \"%d %d\\n\", uLit, Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanout0(pLatch)), 0 ));\n            }\n        }\n        }\n        // write PO drivers\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            pDriver = Abc_ObjFanin0(pObj);\n            spFmt.Fprintf(pFile, \"%d\\n\", Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ));\n        }\n    \n    } else {\n        var vLits *Vec_Int_t  = Io_WriteAigerLiterals( pNtk );\n        var vBinary *Vec_Str_t  = Io_WriteEncodeLiterals( vLits );\n        fwrite( Vec_StrArray(vBinary), 1, Vec_StrSize(vBinary), pFile );\n        Vec_StrFree( vBinary );\n        Vec_IntFree( vLits );\n    }\n    Abc_NtkInvertConstraints( pNtk );\n\n    // write the nodes into the buffer\n    Pos = 0;\n    nBufferSize = 6 * Abc_NtkNodeNum(pNtk) + 100; // skeptically assuming 3 chars per one AIG edge\n    pBuffer = ABC_ALLOC( unsigned char, nBufferSize );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        uLit  = Io_ObjMakeLit( Io_ObjAigerNum(pObj), 0 );\n        uLit0 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin0(pObj)), Abc_ObjFaninC0(pObj) );\n        uLit1 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin1(pObj)), Abc_ObjFaninC1(pObj) );\n        if uLit0 \u003e uLit1 {\n            var Temp uint32  = uLit0;\n            uLit0 = uLit1;\n            uLit1 = Temp;\n        }\n        assert(uLit1 \u003c uLit, \"uLit1 \u003c uLit\");\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, uint32((uLit  - uLit1)) );\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, uint32((uLit1 - uLit0)) );\n        if Pos \u003e nBufferSize - 10 {\n            spFmt.Printf(\"Io_WriteAiger(): AIGER generation has failed because the allocated buffer is too small.\\n\");\n            _ = (pFile).Close();\n            return;\n        }\n    }\n    }\n    assert(Pos \u003c nBufferSize, \"Pos \u003c nBufferSize\");\n    Extra_ProgressBarStop( pProgress );\n\n    // write the buffer\n    fwrite( pBuffer, 1, Pos, pFile );\n    ABC_FREE( pBuffer );\n\n    // write the symbol table\n    if fWriteSymbols != 0 {\n        // write PIs\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n            spFmt.Fprintf(pFile, \"i%d %s\\n\", i, Abc_ObjName(pObj));\n        }\n        // write latches\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n            spFmt.Fprintf(pFile, \"l%d %s\\n\", i, Abc_ObjName(Abc_ObjFanout0(pObj))); }\n        }\n        // write POs\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            if !(fExtended != 0) {\n                spFmt.Fprintf(pFile, \"o%d %s\\n\", i, Abc_ObjName(pObj));\n            } else if i \u003c Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk) {\n                spFmt.Fprintf(pFile, \"b%d %s\\n\", i, Abc_ObjName(pObj));\n            } else {\n                spFmt.Fprintf(pFile, \"c%d %s\\n\", i - (Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk)), Abc_ObjName(pObj)); }\n        }\n    }\n\n    // write the comment\n    spFmt.Fprintf(pFile, \"c\\n\");\n    if pNtk.pName \u0026\u0026 len(pNtk.pName) \u003e 0 {\n        spFmt.Fprintf(pFile, \".model %s\\n\", pNtk.pName); }\n    spFmt.Fprintf(pFile, \"This file was produced by ABC on %s\\n\", Extra_TimeStamp());\n    spFmt.Fprintf(pFile, \"For information about AIGER format, refer to %s\\n\", \"http://fmv.jku.at/aiger\");\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "Io_WriteAigerGz",
+      "Start": 15803,
+      "End": 21087,
+      "BodyStart": 15881,
+      "Original": "void Io_WriteAigerGz( Abc_Ntk_t * pNtk, char * pFileName, int fWriteSymbols )\n{\n    ProgressBar * pProgress;\n    gzFile pFile;\n    Abc_Obj_t * pObj, * pDriver, * pLatch;\n    int i, nNodes, Pos, nBufferSize, fExtended;\n    unsigned char * pBuffer;\n    unsigned uLit0, uLit1, uLit;\n\n    assert( Abc_NtkIsStrash(pNtk) );\n    // start the output stream\n    pFile = gzopen( pFileName, \"wb\" ); // if pFileName doesn't end in \".gz\" then this acts as a passthrough to fopen\n    if ( pFile == NULL )\n    {\n        fprintf( stdout, \"Io_WriteAigerGz(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n\n    fExtended = Abc_NtkConstrNum(pNtk);\n\n    // set the node numbers to be used in the output file\n    nNodes = 0;\n    Io_ObjSetAigerNum( Abc_AigConst1(pNtk), nNodes++ );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        Io_ObjSetAigerNum( pObj, nNodes++ );\n    Abc_AigForEachAnd( pNtk, pObj, i )\n        Io_ObjSetAigerNum( pObj, nNodes++ );\n\n    // write the header \"M I L O A\" where M = I + L + A\n    gzprintf( pFile, \"aig %u %u %u %u %u\", \n              Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) + Abc_NtkNodeNum(pNtk), \n              Abc_NtkPiNum(pNtk),\n              Abc_NtkLatchNum(pNtk),\n              fExtended ? 0 : Abc_NtkPoNum(pNtk),\n              Abc_NtkNodeNum(pNtk) );\n    // write the extended header \"B C J F\"\n    if ( fExtended )\n        gzprintf( pFile, \" %u %u\", Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk), Abc_NtkConstrNum(pNtk) );\n    gzprintf( pFile, \"\\n\" ); \n\n    // if the driver node is a constant, we need to complement the literal below\n    // because, in the AIGER format, literal 0/1 is represented as number 0/1\n    // while, in ABC, constant 1 node has number 0 and so literal 0/1 will be 1/0\n\n    // write latch drivers\n    Abc_NtkInvertConstraints( pNtk );\n    Abc_NtkForEachLatch( pNtk, pLatch, i )\n    {\n        pObj = Abc_ObjFanin0(pLatch);\n        pDriver = Abc_ObjFanin0(pObj);\n        uLit = Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) );\n        if ( Abc_LatchIsInit0(pLatch) )\n            gzprintf( pFile, \"%u\\n\", uLit );\n        else if ( Abc_LatchIsInit1(pLatch) )\n            gzprintf( pFile, \"%u 1\\n\", uLit );\n        else\n        {\n            // Both None and DC are written as 'uninitialized' e.g. a free boolean value\n            assert( Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch) );\n            gzprintf( pFile, \"%u %u\\n\", uLit, Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanout0(pLatch)), 0 ) );\n        }\n    }\n    // write PO drivers\n    Abc_NtkForEachPo( pNtk, pObj, i )\n    {\n        pDriver = Abc_ObjFanin0(pObj);\n        gzprintf( pFile, \"%u\\n\", Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ) );\n    }\n    Abc_NtkInvertConstraints( pNtk );\n\n    // write the nodes into the buffer\n    Pos = 0;\n    nBufferSize = 6 * Abc_NtkNodeNum(pNtk) + 100; // skeptically assuming 3 chars per one AIG edge\n    pBuffer = ABC_ALLOC( unsigned char, nBufferSize );\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );\n    Abc_AigForEachAnd( pNtk, pObj, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        uLit  = Io_ObjMakeLit( Io_ObjAigerNum(pObj), 0 );\n        uLit0 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin0(pObj)), Abc_ObjFaninC0(pObj) );\n        uLit1 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin1(pObj)), Abc_ObjFaninC1(pObj) );\n        if ( uLit0 \u003e uLit1 )\n        {\n            unsigned Temp = uLit0;\n            uLit0 = uLit1;\n            uLit1 = Temp;\n        }\n        assert( uLit1 \u003c uLit );\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, uLit  - uLit1 );\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, uLit1 - uLit0 );\n        if ( Pos \u003e nBufferSize - 10 )\n        {\n            printf( \"Io_WriteAiger(): AIGER generation has failed because the allocated buffer is too small.\\n\" );\n            gzclose( pFile );\n            return;\n        }\n    }\n    assert( Pos \u003c nBufferSize );\n    Extra_ProgressBarStop( pProgress );\n\n    // write the buffer\n    gzwrite(pFile, pBuffer, Pos);\n    ABC_FREE( pBuffer );\n\n    // write the symbol table\n    if ( fWriteSymbols )\n    {\n        // write PIs\n        Abc_NtkForEachPi( pNtk, pObj, i )\n            gzprintf( pFile, \"i%d %s\\n\", i, Abc_ObjName(pObj) );\n        // write latches\n        Abc_NtkForEachLatch( pNtk, pObj, i )\n            gzprintf( pFile, \"l%d %s\\n\", i, Abc_ObjName(Abc_ObjFanout0(pObj)) );\n        // write POs\n        Abc_NtkForEachPo( pNtk, pObj, i )\n            if ( !fExtended )\n                gzprintf( pFile, \"o%d %s\\n\", i, Abc_ObjName(pObj) );\n            else if ( i \u003c Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk) )\n                gzprintf( pFile, \"b%d %s\\n\", i, Abc_ObjName(pObj) );\n            else\n                gzprintf( pFile, \"c%d %s\\n\", i - (Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk)), Abc_ObjName(pObj) );\n    }\n\n    // write the comment\n    gzprintf( pFile, \"c\\n\" );\n    if ( pNtk-\u003epName \u0026\u0026 strlen(pNtk-\u003epName) \u003e 0 )\n        gzprintf( pFile, \".model %s\\n\", pNtk-\u003epName );\n    gzprintf( pFile, \"This file was produced by ABC on %s\\n\", Extra_TimeStamp() );\n    gzprintf( pFile, \"For information about AIGER format, refer to %s\\n\", \"http://fmv.jku.at/aiger\" );\n    gzclose( pFile );\n}",
+      "Draft": "func Io_WriteAigerGz(pNtk *Abc_Ntk_t, pFileName string, fWriteSymbols int32) {\n    var pProgress *ProgressBar;\n    var pFile gzFile;\n    var pObj, pDriver, pLatch *Abc_Obj_t;\n    var i, nNodes, Pos, nBufferSize, fExtended int32;\n    unsigned char * pBuffer;\n    var uLit0, uLit1, uLit uint32;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // start the output stream\n    pFile = gzopen( pFileName, \"wb\" ); // if pFileName doesn't end in \".gz\" then this acts as a passthrough to fopen\n    if pFile == nil {\n        spFmt.Fprintf(os.Stdout, \"Io_WriteAigerGz(): Cannot open the output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n\n    fExtended = Abc_NtkConstrNum(pNtk);\n\n    // set the node numbers to be used in the output file\n    nNodes = 0;\n    Io_ObjSetAigerNum( Abc_AigConst1(pNtk), nNodes++ );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Io_ObjSetAigerNum( pObj, nNodes++ );\n    }\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Io_ObjSetAigerNum( pObj, nNodes++ ); }\n    }\n\n    // write the header \"M I L O A\" where M = I + L + A\n    gzprintf( pFile, \"aig %u %u %u %u %u\", \n              Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) + Abc_NtkNodeNum(pNtk), \n              Abc_NtkPiNum(pNtk),\n              Abc_NtkLatchNum(pNtk),\n              fExtended ? 0 : Abc_NtkPoNum(pNtk),\n              Abc_NtkNodeNum(pNtk) );\n    // write the extended header \"B C J F\"\n    if fExtended != 0 {\n        gzprintf( pFile, \" %u %u\", Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk), Abc_NtkConstrNum(pNtk) ); }\n    gzprintf( pFile, \"\\n\" ); \n\n    // if the driver node is a constant, we need to complement the literal below\n    // because, in the AIGER format, literal 0/1 is represented as number 0/1\n    // while, in ABC, constant 1 node has number 0 and so literal 0/1 will be 1/0\n\n    // write latch drivers\n    Abc_NtkInvertConstraints( pNtk );\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n        pObj = Abc_ObjFanin0(pLatch);\n        pDriver = Abc_ObjFanin0(pObj);\n        uLit = Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) );\n        if Abc_LatchIsInit0(pLatch) {\n            gzprintf( pFile, \"%u\\n\", uLit );\n        } else if Abc_LatchIsInit1(pLatch) {\n            gzprintf( pFile, \"%u 1\\n\", uLit );\n        } else {\n            // Both None and DC are written as 'uninitialized' e.g. a free boolean value\n            assert(Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch), \"Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch)\");\n            gzprintf( pFile, \"%u %u\\n\", uLit, Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanout0(pLatch)), 0 ) );\n        }\n    }\n    }\n    // write PO drivers\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pDriver = Abc_ObjFanin0(pObj);\n        gzprintf( pFile, \"%u\\n\", Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ) );\n    }\n    Abc_NtkInvertConstraints( pNtk );\n\n    // write the nodes into the buffer\n    Pos = 0;\n    nBufferSize = 6 * Abc_NtkNodeNum(pNtk) + 100; // skeptically assuming 3 chars per one AIG edge\n    pBuffer = ABC_ALLOC( unsigned char, nBufferSize );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        uLit  = Io_ObjMakeLit( Io_ObjAigerNum(pObj), 0 );\n        uLit0 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin0(pObj)), Abc_ObjFaninC0(pObj) );\n        uLit1 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin1(pObj)), Abc_ObjFaninC1(pObj) );\n        if uLit0 \u003e uLit1 {\n            var Temp uint32  = uLit0;\n            uLit0 = uLit1;\n            uLit1 = Temp;\n        }\n        assert(uLit1 \u003c uLit, \"uLit1 \u003c uLit\");\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, uLit  - uLit1 );\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, uLit1 - uLit0 );\n        if Pos \u003e nBufferSize - 10 {\n            spFmt.Printf(\"Io_WriteAiger(): AIGER generation has failed because the allocated buffer is too small.\\n\");\n            gzclose( pFile );\n            return;\n        }\n    }\n    }\n    assert(Pos \u003c nBufferSize, \"Pos \u003c nBufferSize\");\n    Extra_ProgressBarStop( pProgress );\n\n    // write the buffer\n    gzwrite(pFile, pBuffer, Pos);\n    ABC_FREE( pBuffer );\n\n    // write the symbol table\n    if fWriteSymbols != 0 {\n        // write PIs\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n            gzprintf( pFile, \"i%d %s\\n\", i, Abc_ObjName(pObj) );\n        }\n        // write latches\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n            gzprintf( pFile, \"l%d %s\\n\", i, Abc_ObjName(Abc_ObjFanout0(pObj)) ); }\n        }\n        // write POs\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            if !(fExtended != 0) {\n                gzprintf( pFile, \"o%d %s\\n\", i, Abc_ObjName(pObj) );\n            } else if i \u003c Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk) {\n                gzprintf( pFile, \"b%d %s\\n\", i, Abc_ObjName(pObj) );\n            } else {\n                gzprintf( pFile, \"c%d %s\\n\", i - (Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk)), Abc_ObjName(pObj) ); }\n        }\n    }\n\n    // write the comment\n    gzprintf( pFile, \"c\\n\" );\n    if pNtk.pName \u0026\u0026 len(pNtk.pName) \u003e 0 {\n        gzprintf( pFile, \".model %s\\n\", pNtk.pName ); }\n    gzprintf( pFile, \"This file was produced by ABC on %s\\n\", Extra_TimeStamp() );\n    gzprintf( pFile, \"For information about AIGER format, refer to %s\\n\", \"http://fmv.jku.at/aiger\" );\n    gzclose( pFile );\n}"
+    },
+    {
+      "Name": "fprintfBz2Aig",
+      "Start": 21519,
+      "End": 22569,
+      "BodyStart": 21569,
+      "Original": "int fprintfBz2Aig( bz2file * b, char * fmt, ... ) {\n    if (b-\u003eb) {\n        char * newBuf;\n        int bzError;\n        va_list ap;\n        while (1) {\n            va_start(ap,fmt);\n            b-\u003enBytes = vsnprintf(b-\u003ebuf,b-\u003enBytesMax,fmt,ap);\n            va_end(ap);\n            if (b-\u003enBytes \u003e -1 \u0026\u0026 b-\u003enBytes \u003c b-\u003enBytesMax)\n                break;\n            if (b-\u003enBytes \u003e -1)\n                b-\u003enBytesMax = b-\u003enBytes + 1;\n            else\n                b-\u003enBytesMax *= 2;\n            if ((newBuf = ABC_REALLOC( char,b-\u003ebuf,b-\u003enBytesMax )) == NULL)\n                return -1;\n            else\n                b-\u003ebuf = newBuf;\n        }\n        BZ2_bzWrite( \u0026bzError, b-\u003eb, b-\u003ebuf, b-\u003enBytes );\n        if (bzError == BZ_IO_ERROR) {\n            fprintf( stdout, \"Ioa_WriteBlif(): I/O error writing to compressed stream.\\n\" );\n            return -1;\n        }\n        return b-\u003enBytes;\n    } else {\n        int n;\n        va_list ap;\n        va_start(ap,fmt);\n        n = vfprintf( b-\u003ef, fmt, ap);\n        va_end(ap);\n        return n;\n    }\n}",
+      "Draft": "int fprintfBz2Aig( bz2file * b, char * fmt, ... ) {\n    if b.b {\n        var newBuf string;\n        var bzError int32;\n        va_list ap;\n        for {\n            va_start(ap,fmt);\n            b.nBytes = vsnprintf(b.buf,b.nBytesMax,fmt,ap);\n            va_end(ap);\n            if b.nBytes \u003e -1 \u0026\u0026 b.nBytes \u003c b.nBytesMax {\n                break; }\n            if b.nBytes \u003e -1 {\n                b.nBytesMax = b.nBytes + 1;\n            } else {\n                b.nBytesMax *= 2; }\n            if (newBuf = ABC_REALLOC( char,b.buf,b.nBytesMax )) == nil {\n                return -1;\n            } else {\n                b.buf = newBuf; }\n        }\n        BZ2_bzWrite( \u0026bzError, b.b, b.buf, b.nBytes );\n        if bzError == BZ_IO_ERROR {\n            spFmt.Fprintf(os.Stdout, \"Ioa_WriteBlif(): I/O error writing to compressed stream.\\n\");\n            return -1;\n        }\n        return b.nBytes;\n    } else {\n        var n int32;\n        va_list ap;\n        va_start(ap,fmt);\n        n = vfprintf( b.f, fmt, ap);\n        va_end(ap);\n        return n;\n    }\n}"
+    },
+    {
+      "Name": "Io_WriteAiger",
+      "Start": 22834,
+      "End": 30924,
+      "BodyStart": 22937,
+      "Original": "void Io_WriteAiger( Abc_Ntk_t * pNtk, char * pFileName, int fWriteSymbols, int fCompact, int fUnique )\n{\n    ProgressBar * pProgress;\n//    FILE * pFile;\n    Abc_Obj_t * pObj, * pDriver, * pLatch;\n    int i, nNodes, nBufferSize, bzError, Pos, fExtended;\n    unsigned char * pBuffer;\n    unsigned uLit0, uLit1, uLit;\n    bz2file b;\n\n    // define unique writing\n    if ( fUnique )\n    {\n        fWriteSymbols = 0;\n        fCompact = 0;\n    }\n\n    fExtended = Abc_NtkConstrNum(pNtk);\n\n    // check that the network is valid\n    assert( Abc_NtkIsStrash(pNtk) );\n    Abc_NtkForEachLatch( pNtk, pObj, i )\n        if ( !Abc_LatchIsInit0(pObj) )\n        {\n            if ( !fCompact )\n            {\n                fExtended = 1;\n                break;\n            }\n            fprintf( stdout, \"Io_WriteAiger(): Cannot write AIGER format with non-0 latch init values. Run \\\"zero\\\".\\n\" );\n            return;\n        }\n\n    // write the GZ file\n    if (!strncmp(pFileName+strlen(pFileName)-3,\".gz\",3)) \n    {\n        Io_WriteAigerGz( pNtk, pFileName, fWriteSymbols );\n        return;\n    }\n\n    memset(\u0026b,0,sizeof(b));\n    b.nBytesMax = (1\u003c\u003c12);\n    b.buf = ABC_ALLOC( char,b.nBytesMax );\n\n    // start the output stream\n    b.f = fopen( pFileName, \"wb\" ); \n    if ( b.f == NULL )\n    {\n        fprintf( stdout, \"Ioa_WriteBlif(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );\n        ABC_FREE(b.buf);\n        return;\n    }\n    if (!strncmp(pFileName+strlen(pFileName)-4,\".bz2\",4)) {\n        b.b = BZ2_bzWriteOpen( \u0026bzError, b.f, 9, 0, 0 );\n        if ( bzError != BZ_OK ) {\n            BZ2_bzWriteClose( \u0026bzError, b.b, 0, NULL, NULL );\n            fprintf( stdout, \"Ioa_WriteBlif(): Cannot start compressed stream.\\n\" );\n            fclose( b.f );\n            ABC_FREE(b.buf);\n            return;\n        }\n    }\n\n    // set the node numbers to be used in the output file\n    nNodes = 0;\n    Io_ObjSetAigerNum( Abc_AigConst1(pNtk), nNodes++ );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        Io_ObjSetAigerNum( pObj, nNodes++ );\n    Abc_AigForEachAnd( pNtk, pObj, i )\n        Io_ObjSetAigerNum( pObj, nNodes++ );\n\n    // write the header \"M I L O A\" where M = I + L + A\n    fprintfBz2Aig( \u0026b, \"aig%s %u %u %u %u %u\", \n        fCompact? \"2\" : \"\",\n        Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) + Abc_NtkNodeNum(pNtk), \n        Abc_NtkPiNum(pNtk),\n        Abc_NtkLatchNum(pNtk),\n        fExtended ? 0 : Abc_NtkPoNum(pNtk),\n        Abc_NtkNodeNum(pNtk) );\n    // write the extended header \"B C J F\"\n    if ( fExtended )\n        fprintfBz2Aig( \u0026b, \" %u %u\", Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk), Abc_NtkConstrNum(pNtk) );\n    fprintfBz2Aig( \u0026b, \"\\n\" );\n\n    // if the driver node is a constant, we need to complement the literal below\n    // because, in the AIGER format, literal 0/1 is represented as number 0/1\n    // while, in ABC, constant 1 node has number 0 and so literal 0/1 will be 1/0\n\n    Abc_NtkInvertConstraints( pNtk );\n    if ( !fCompact ) \n    {\n        // write latch drivers\n        Abc_NtkForEachLatch( pNtk, pLatch, i )\n        {\n            pObj = Abc_ObjFanin0(pLatch);\n            pDriver = Abc_ObjFanin0(pObj);\n            uLit = Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) );\n            if ( Abc_LatchIsInit0(pLatch) )\n                fprintfBz2Aig( \u0026b, \"%u\\n\", uLit );\n            else if ( Abc_LatchIsInit1(pLatch) )\n                fprintfBz2Aig( \u0026b, \"%u 1\\n\", uLit );\n            else\n            {\n                // Both None and DC are written as 'uninitialized' e.g. a free boolean value\n                assert( Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch) );\n                fprintfBz2Aig( \u0026b, \"%u %u\\n\", uLit, Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanout0(pLatch)), 0 ) );\n            }\n        }\n        // write PO drivers\n        Abc_NtkForEachPo( pNtk, pObj, i )\n        {\n            pDriver = Abc_ObjFanin0(pObj);\n            fprintfBz2Aig( \u0026b, \"%u\\n\", Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ) );\n        }\n    }\n    else\n    {\n        Vec_Int_t * vLits = Io_WriteAigerLiterals( pNtk );\n        Vec_Str_t * vBinary = Io_WriteEncodeLiterals( vLits );\n        if ( !b.b )\n            fwrite( Vec_StrArray(vBinary), 1, Vec_StrSize(vBinary), b.f );\n        else\n        {\n            BZ2_bzWrite( \u0026bzError, b.b, Vec_StrArray(vBinary), Vec_StrSize(vBinary) );\n            if (bzError == BZ_IO_ERROR) {\n                fprintf( stdout, \"Io_WriteAiger(): I/O error writing to compressed stream.\\n\" );\n                fclose( b.f );\n                ABC_FREE(b.buf);\n                Vec_StrFree( vBinary );\n                return;\n            }\n        }\n        Vec_StrFree( vBinary );\n        Vec_IntFree( vLits );\n    }\n    Abc_NtkInvertConstraints( pNtk );\n\n    // write the nodes into the buffer\n    Pos = 0;\n    nBufferSize = 6 * Abc_NtkNodeNum(pNtk) + 100; // skeptically assuming 3 chars per one AIG edge\n    pBuffer = ABC_ALLOC( unsigned char, nBufferSize );\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );\n    Abc_AigForEachAnd( pNtk, pObj, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        uLit  = Io_ObjMakeLit( Io_ObjAigerNum(pObj), 0 );\n        uLit0 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin0(pObj)), Abc_ObjFaninC0(pObj) );\n        uLit1 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin1(pObj)), Abc_ObjFaninC1(pObj) );\n        if ( uLit0 \u003e uLit1 )\n        {\n            unsigned Temp = uLit0;\n            uLit0 = uLit1;\n            uLit1 = Temp;\n        }\n        assert( uLit1 \u003c uLit );\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, (unsigned)(uLit  - uLit1) );\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, (unsigned)(uLit1 - uLit0) );\n        if ( Pos \u003e nBufferSize - 10 )\n        {\n            printf( \"Io_WriteAiger(): AIGER generation has failed because the allocated buffer is too small.\\n\" );\n            fclose( b.f );\n            ABC_FREE(b.buf);\n            Extra_ProgressBarStop( pProgress );\n            return;\n        }\n    }\n    assert( Pos \u003c nBufferSize );\n    Extra_ProgressBarStop( pProgress );\n\n    // write the buffer\n    if ( !b.b )\n        fwrite( pBuffer, 1, Pos, b.f );\n    else\n    {\n        BZ2_bzWrite( \u0026bzError, b.b, pBuffer, Pos );\n        if (bzError == BZ_IO_ERROR) {\n            fprintf( stdout, \"Io_WriteAiger(): I/O error writing to compressed stream.\\n\" );\n            fclose( b.f );\n            ABC_FREE(b.buf);\n            return;\n        }\n    }\n    ABC_FREE( pBuffer );\n\n    // write the symbol table\n    if ( fWriteSymbols )\n    {\n        // write PIs\n        Abc_NtkForEachPi( pNtk, pObj, i )\n            fprintfBz2Aig( \u0026b, \"i%d %s\\n\", i, Abc_ObjName(pObj) );\n        // write latches\n        Abc_NtkForEachLatch( pNtk, pObj, i )\n            fprintfBz2Aig( \u0026b, \"l%d %s\\n\", i, Abc_ObjName(Abc_ObjFanout0(pObj)) );\n        // write POs\n        Abc_NtkForEachPo( pNtk, pObj, i )\n            if ( !fExtended )\n                fprintfBz2Aig( \u0026b, \"o%d %s\\n\", i, Abc_ObjName(pObj) );\n            else if ( i \u003c Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk) )\n                fprintfBz2Aig( \u0026b, \"b%d %s\\n\", i, Abc_ObjName(pObj) );\n            else\n                fprintfBz2Aig( \u0026b, \"c%d %s\\n\", i - (Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk)), Abc_ObjName(pObj) );\n    }\n\n    // write the comment\n    fprintfBz2Aig( \u0026b, \"c\" );\n    if ( !fUnique )\n    {\n        if ( pNtk-\u003epName \u0026\u0026 strlen(pNtk-\u003epName) \u003e 0 )\n            fprintfBz2Aig( \u0026b, \"\\n%s%c\", pNtk-\u003epName, '\\0' );\n        fprintfBz2Aig( \u0026b, \"\\nThis file was written by ABC on %s\\n\", Extra_TimeStamp() );\n        fprintfBz2Aig( \u0026b, \"For information about AIGER format, refer to %s\\n\", \"http://fmv.jku.at/aiger\" );\n    }\n\n    // close the file\n    if (b.b) {\n        BZ2_bzWriteClose( \u0026bzError, b.b, 0, NULL, NULL );\n        if (bzError == BZ_IO_ERROR) {\n            fprintf( stdout, \"Io_WriteAiger(): I/O error closing compressed stream.\\n\" );\n            fclose( b.f );\n            ABC_FREE(b.buf);\n            return;\n        }\n    }\n    fclose( b.f );\n    ABC_FREE(b.buf);\n}",
+      "Draft": "func Io_WriteAiger(pNtk *Abc_Ntk_t, pFileName string, fWriteSymbols int32, fCompact int32, fUnique int32) {\n    var pProgress *ProgressBar;\n//    FILE * pFile;\n    var pObj, pDriver, pLatch *Abc_Obj_t;\n    var i, nNodes, nBufferSize, bzError, Pos, fExtended int32;\n    unsigned char * pBuffer;\n    var uLit0, uLit1, uLit uint32;\n    var b bz2file;\n\n    // define unique writing\n    if fUnique != 0 {\n        fWriteSymbols = 0;\n        fCompact = 0;\n    }\n\n    fExtended = Abc_NtkConstrNum(pNtk);\n\n    // check that the network is valid\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else\n        if !Abc_LatchIsInit0(pObj) {\n            if !(fCompact != 0) {\n                fExtended = 1;\n                break;\n            }\n            spFmt.Fprintf(os.Stdout, \"Io_WriteAiger(): Cannot write AIGER format with non-0 latch init values. Run \\\"zero\\\".\\n\");\n            return;\n        }\n    }\n\n    // write the GZ file\n    if !strncmp(pFileName+len(pFileName)-3,\".gz\",3) {\n        Io_WriteAigerGz( pNtk, pFileName, fWriteSymbols );\n        return;\n    }\n\n    memset(\u0026b,0,sizeof(b));\n    b.nBytesMax = (1\u003c\u003c12);\n    b.buf = ABC_ALLOC( char,b.nBytesMax );\n\n    // start the output stream\n    b.f = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666); \n    if b.f == nil {\n        spFmt.Fprintf(os.Stdout, \"Ioa_WriteBlif(): Cannot open the output file \\\"%s\\\".\\n\", pFileName);\n        ABC_FREE(b.buf);\n        return;\n    }\n    if !strncmp(pFileName+len(pFileName)-4,\".bz2\",4) {\n        b.b = BZ2_bzWriteOpen( \u0026bzError, b.f, 9, 0, 0 );\n        if bzError != BZ_OK {\n            BZ2_bzWriteClose( \u0026bzError, b.b, 0, nil, nil );\n            spFmt.Fprintf(os.Stdout, \"Ioa_WriteBlif(): Cannot start compressed stream.\\n\");\n            _ = (b.f).Close();\n            ABC_FREE(b.buf);\n            return;\n        }\n    }\n\n    // set the node numbers to be used in the output file\n    nNodes = 0;\n    Io_ObjSetAigerNum( Abc_AigConst1(pNtk), nNodes++ );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Io_ObjSetAigerNum( pObj, nNodes++ );\n    }\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Io_ObjSetAigerNum( pObj, nNodes++ ); }\n    }\n\n    // write the header \"M I L O A\" where M = I + L + A\n    fprintfBz2Aig( \u0026b, \"aig%s %u %u %u %u %u\", \n        fCompact? \"2\" : \"\",\n        Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) + Abc_NtkNodeNum(pNtk), \n        Abc_NtkPiNum(pNtk),\n        Abc_NtkLatchNum(pNtk),\n        fExtended ? 0 : Abc_NtkPoNum(pNtk),\n        Abc_NtkNodeNum(pNtk) );\n    // write the extended header \"B C J F\"\n    if fExtended != 0 {\n        fprintfBz2Aig( \u0026b, \" %u %u\", Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk), Abc_NtkConstrNum(pNtk) ); }\n    fprintfBz2Aig( \u0026b, \"\\n\" );\n\n    // if the driver node is a constant, we need to complement the literal below\n    // because, in the AIGER format, literal 0/1 is represented as number 0/1\n    // while, in ABC, constant 1 node has number 0 and so literal 0/1 will be 1/0\n\n    Abc_NtkInvertConstraints( pNtk );\n    if !(fCompact != 0) {\n        // write latch drivers\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n            pObj = Abc_ObjFanin0(pLatch);\n            pDriver = Abc_ObjFanin0(pObj);\n            uLit = Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) );\n            if Abc_LatchIsInit0(pLatch) {\n                fprintfBz2Aig( \u0026b, \"%u\\n\", uLit );\n            } else if Abc_LatchIsInit1(pLatch) {\n                fprintfBz2Aig( \u0026b, \"%u 1\\n\", uLit );\n            } else {\n                // Both None and DC are written as 'uninitialized' e.g. a free boolean value\n                assert(Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch), \"Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch)\");\n                fprintfBz2Aig( \u0026b, \"%u %u\\n\", uLit, Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanout0(pLatch)), 0 ) );\n            }\n        }\n        }\n        // write PO drivers\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            pDriver = Abc_ObjFanin0(pObj);\n            fprintfBz2Aig( \u0026b, \"%u\\n\", Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ) );\n        }\n    \n    } else {\n        var vLits *Vec_Int_t  = Io_WriteAigerLiterals( pNtk );\n        var vBinary *Vec_Str_t  = Io_WriteEncodeLiterals( vLits );\n        if !b.b {\n            fwrite( Vec_StrArray(vBinary), 1, Vec_StrSize(vBinary), b.f );\n        } else {\n            BZ2_bzWrite( \u0026bzError, b.b, Vec_StrArray(vBinary), Vec_StrSize(vBinary) );\n            if bzError == BZ_IO_ERROR {\n                spFmt.Fprintf(os.Stdout, \"Io_WriteAiger(): I/O error writing to compressed stream.\\n\");\n                _ = (b.f).Close();\n                ABC_FREE(b.buf);\n                Vec_StrFree( vBinary );\n                return;\n            }\n        }\n        Vec_StrFree( vBinary );\n        Vec_IntFree( vLits );\n    }\n    Abc_NtkInvertConstraints( pNtk );\n\n    // write the nodes into the buffer\n    Pos = 0;\n    nBufferSize = 6 * Abc_NtkNodeNum(pNtk) + 100; // skeptically assuming 3 chars per one AIG edge\n    pBuffer = ABC_ALLOC( unsigned char, nBufferSize );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        uLit  = Io_ObjMakeLit( Io_ObjAigerNum(pObj), 0 );\n        uLit0 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin0(pObj)), Abc_ObjFaninC0(pObj) );\n        uLit1 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin1(pObj)), Abc_ObjFaninC1(pObj) );\n        if uLit0 \u003e uLit1 {\n            var Temp uint32  = uLit0;\n            uLit0 = uLit1;\n            uLit1 = Temp;\n        }\n        assert(uLit1 \u003c uLit, \"uLit1 \u003c uLit\");\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, uint32((uLit  - uLit1)) );\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, uint32((uLit1 - uLit0)) );\n        if Pos \u003e nBufferSize - 10 {\n            spFmt.Printf(\"Io_WriteAiger(): AIGER generation has failed because the allocated buffer is too small.\\n\");\n            _ = (b.f).Close();\n            ABC_FREE(b.buf);\n            Extra_ProgressBarStop( pProgress );\n            return;\n        }\n    }\n    }\n    assert(Pos \u003c nBufferSize, \"Pos \u003c nBufferSize\");\n    Extra_ProgressBarStop( pProgress );\n\n    // write the buffer\n    if !b.b {\n        fwrite( pBuffer, 1, Pos, b.f );\n    } else {\n        BZ2_bzWrite( \u0026bzError, b.b, pBuffer, Pos );\n        if bzError == BZ_IO_ERROR {\n            spFmt.Fprintf(os.Stdout, \"Io_WriteAiger(): I/O error writing to compressed stream.\\n\");\n            _ = (b.f).Close();\n            ABC_FREE(b.buf);\n            return;\n        }\n    }\n    ABC_FREE( pBuffer );\n\n    // write the symbol table\n    if fWriteSymbols != 0 {\n        // write PIs\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n            fprintfBz2Aig( \u0026b, \"i%d %s\\n\", i, Abc_ObjName(pObj) );\n        }\n        // write latches\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n            fprintfBz2Aig( \u0026b, \"l%d %s\\n\", i, Abc_ObjName(Abc_ObjFanout0(pObj)) ); }\n        }\n        // write POs\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            if !(fExtended != 0) {\n                fprintfBz2Aig( \u0026b, \"o%d %s\\n\", i, Abc_ObjName(pObj) );\n            } else if i \u003c Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk) {\n                fprintfBz2Aig( \u0026b, \"b%d %s\\n\", i, Abc_ObjName(pObj) );\n            } else {\n                fprintfBz2Aig( \u0026b, \"c%d %s\\n\", i - (Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk)), Abc_ObjName(pObj) ); }\n        }\n    }\n\n    // write the comment\n    fprintfBz2Aig( \u0026b, \"c\" );\n    if !(fUnique != 0) {\n        if pNtk.pName \u0026\u0026 len(pNtk.pName) \u003e 0 {\n            fprintfBz2Aig( \u0026b, \"\\n%s%c\", pNtk.pName, '\\0' ); }\n        fprintfBz2Aig( \u0026b, \"\\nThis file was written by ABC on %s\\n\", Extra_TimeStamp() );\n        fprintfBz2Aig( \u0026b, \"For information about AIGER format, refer to %s\\n\", \"http://fmv.jku.at/aiger\" );\n    }\n\n    // close the file\n    if b.b {\n        BZ2_bzWriteClose( \u0026bzError, b.b, 0, nil, nil );\n        if bzError == BZ_IO_ERROR {\n            spFmt.Fprintf(os.Stdout, \"Io_WriteAiger(): I/O error closing compressed stream.\\n\");\n            _ = (b.f).Close();\n            ABC_FREE(b.buf);\n            return;\n        }\n    }\n    _ = (b.f).Close();\n    ABC_FREE(b.buf);\n}"
+    },
+    {
+      "Name": "Io_WriteAigerCex",
+      "Start": 31295,
+      "End": 33644,
+      "BodyStart": 31384,
+      "Original": "void Io_WriteAigerCex( Abc_Cex_t * pCex, Abc_Ntk_t * pNtk, void * pG, char * pFileName )\n{\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    FILE * pFile;\n    Aig_Man_t * pAig;\n    Aig_Obj_t * pObj, * pObj2;\n    Gia_Man_t * pGia = (Gia_Man_t *)pG;\n    int k, f, b;\n    assert( pCex != NULL );\n\n    // derive AIG\n    if ( pNtk != NULL \u0026\u0026 \n         Abc_NtkPiNum(pNtk)    == pCex-\u003enPis \u0026\u0026 \n         Abc_NtkLatchNum(pNtk) == pCex-\u003enRegs )\n    {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n    }\n    else if ( pGia != NULL \u0026\u0026 \n         Gia_ManPiNum(pGia)  == pCex-\u003enPis \u0026\u0026 \n         Gia_ManRegNum(pGia) == pCex-\u003enRegs )\n    {\n        pAig = Gia_ManToAigSimple( pGia );\n    }\n    else\n    {\n        printf( \"AIG parameters do not match those of the CEX.\\n\" );\n        return;\n    }\n\n    // create output file\n    pFile = fopen( pFileName, \"wb\" );\n    fprintf( pFile, \"1\\n\" );\n    b = pCex-\u003enRegs;\n    for ( k = 0; k \u003c pCex-\u003enRegs; k++ )\n        fprintf( pFile, \"0\" );\n    fprintf( pFile, \" \" );\n    Aig_ManCleanMarkA( pAig );\n    Aig_ManConst1(pAig)-\u003efMarkA = 1;\n    for ( f = 0; f \u003c= pCex-\u003eiFrame; f++ )\n    {\n        for ( k = 0; k \u003c pCex-\u003enPis; k++ )\n        {\n            fprintf( pFile, \"%d\", Abc_InfoHasBit(pCex-\u003epData, b) );\n            Aig_ManCi( pAig, k )-\u003efMarkA = Abc_InfoHasBit(pCex-\u003epData, b++);\n        }\n        fprintf( pFile, \" \" );\n        Aig_ManForEachNode( pAig, pObj, k )\n            pObj-\u003efMarkA = (Aig_ObjFanin0(pObj)-\u003efMarkA ^ Aig_ObjFaninC0(pObj)) \u0026\n                           (Aig_ObjFanin1(pObj)-\u003efMarkA ^ Aig_ObjFaninC1(pObj));\n        Aig_ManForEachCo( pAig, pObj, k )\n            pObj-\u003efMarkA = (Aig_ObjFanin0(pObj)-\u003efMarkA ^ Aig_ObjFaninC0(pObj));\n        Saig_ManForEachPo( pAig, pObj, k )\n            fprintf( pFile, \"%d\", pObj-\u003efMarkA );\n        fprintf( pFile, \" \" );\n        Saig_ManForEachLi( pAig, pObj, k )\n            fprintf( pFile, \"%d\", pObj-\u003efMarkA );\n        fprintf( pFile, \"\\n\" );\n        if ( f == pCex-\u003eiFrame )\n            break;\n        Saig_ManForEachLi( pAig, pObj, k )\n            fprintf( pFile, \"%d\", pObj-\u003efMarkA );\n        fprintf( pFile, \" \" );\n        Saig_ManForEachLiLo( pAig, pObj, pObj2, k )\n            pObj2-\u003efMarkA = pObj-\u003efMarkA;\n    }  \n    assert( b == pCex-\u003enBits );\n    fclose( pFile );\n    Aig_ManCleanMarkA( pAig );\n    Aig_ManStop( pAig );\n}",
+      "Draft": "func Io_WriteAigerCex(pCex *Abc_Cex_t, pNtk *Abc_Ntk_t, pG any, pFileName string) {\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    var pFile *os.File;\n    var pAig *Aig_Man_t;\n    var pObj, pObj2 *Aig_Obj_t;\n    var pGia *Gia_Man_t  = (Gia_Man_t *)pG;\n    var k, f, b int32;\n    assert(pCex != nil, \"pCex != nil\");\n\n    // derive AIG\n    if pNtk != nil \u0026\u0026 \n         Abc_NtkPiNum(pNtk)    == pCex.nPis \u0026\u0026 \n         Abc_NtkLatchNum(pNtk) == pCex.nRegs {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n    \n    } else if pGia != nil \u0026\u0026 \n         Gia_ManPiNum(pGia)  == pCex.nPis \u0026\u0026 \n         Gia_ManRegNum(pGia) == pCex.nRegs {\n        pAig = Gia_ManToAigSimple( pGia );\n    \n    } else {\n        spFmt.Printf(\"AIG parameters do not match those of the CEX.\\n\");\n        return;\n    }\n\n    // create output file\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    spFmt.Fprintf(pFile, \"1\\n\");\n    b = pCex.nRegs;\n    for  k = 0; k \u003c pCex.nRegs; k++  {\n        spFmt.Fprintf(pFile, \"0\");\n    }\n    spFmt.Fprintf(pFile, \" \");\n    Aig_ManCleanMarkA( pAig );\n    Aig_ManConst1(pAig).fMarkA = 1;\n    for  f = 0; f \u003c= pCex.iFrame; f++  {\n        for  k = 0; k \u003c pCex.nPis; k++  {\n            spFmt.Fprintf(pFile, \"%d\", Abc_InfoHasBit(pCex.pData, b));\n            Aig_ManCi( pAig, k ).fMarkA = Abc_InfoHasBit(pCex.pData, b++);\n        }\n        spFmt.Fprintf(pFile, \" \");\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.fMarkA = (Aig_ObjFanin0(pObj).fMarkA ^ Aig_ObjFaninC0(pObj)) \u0026\n                           (Aig_ObjFanin1(pObj).fMarkA ^ Aig_ObjFaninC1(pObj)); }\n        }\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {\n            pObj.fMarkA = (Aig_ObjFanin0(pObj).fMarkA ^ Aig_ObjFaninC0(pObj));\n        }\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {\n            spFmt.Fprintf(pFile, \"%d\", pObj.fMarkA);\n        }\n        spFmt.Fprintf(pFile, \" \");\n        // inlining of macro Saig_ManForEachLi\n        for  k = 0; (k \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k+Saig_ManPoNum(pAig))), 1); k++  {\n            spFmt.Fprintf(pFile, \"%d\", pObj.fMarkA);\n        }\n        spFmt.Fprintf(pFile, \"\\n\");\n        if f == pCex.iFrame {\n            break; }\n        // inlining of macro Saig_ManForEachLi\n        for  k = 0; (k \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k+Saig_ManPoNum(pAig))), 1); k++  {\n            spFmt.Fprintf(pFile, \"%d\", pObj.fMarkA);\n        }\n        spFmt.Fprintf(pFile, \" \");\n        // inlining of macro Saig_ManForEachLiLo\n        for  k = 0; (k \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = Saig_ManLi(pAig, k)), 1)            \u0026\u0026 (((pObj2)=Saig_ManLo(pAig, k)), 1); k++  {\n            pObj2.fMarkA = pObj.fMarkA;\n        }\n    }  \n    assert(b == pCex.nBits, \"b == pCex.nBits\");\n    _ = (pFile).Close();\n    Aig_ManCleanMarkA( pAig );\n    Aig_ManStop( pAig );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::mechanical::sizeof::26859",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23935,
+      "End": 23941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::pointer-cast::5962",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5937,
+      "End": 5950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::pointer-cast::35565",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31565,
+      "End": 31578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::pointer-cast::36852",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32685,
+      "End": 32685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::pointer-cast::37295",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32892,
+      "End": 32892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::pointer-cast::37602",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33015,
+      "End": 33015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::pointer-cast::37851",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33139,
+      "End": 33139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::pointer-cast::38173",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33316,
+      "End": 33316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::Io_ObjMakeLit",
+      "Category": "semantic-review",
+      "Symbol": "Io_ObjMakeLit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5615,
+      "End": 5733
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::Io_ObjAigerNum",
+      "Category": "semantic-review",
+      "Symbol": "Io_ObjAigerNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5734,
+      "End": 5851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::Io_ObjSetAigerNum",
+      "Category": "semantic-review",
+      "Symbol": "Io_ObjSetAigerNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5852,
+      "End": 5974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::Io_WriteAigerEncode",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteAigerEncode",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6617,
+      "End": 6929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::Io_WriteAigerLiterals",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteAigerLiterals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7195,
+      "End": 7825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::Io_WriteEncodeLiterals",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteEncodeLiterals",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8093,
+      "End": 9286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::ternary::Io_WriteAiger_old",
+      "Category": "ternary-review",
+      "Symbol": "Io_WriteAiger_old",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9551,
+      "End": 15538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::Io_WriteAiger_old",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteAiger_old",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9551,
+      "End": 15538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::ternary::Io_WriteAigerGz",
+      "Category": "ternary-review",
+      "Symbol": "Io_WriteAigerGz",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15803,
+      "End": 21087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::Io_WriteAigerGz",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteAigerGz",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15803,
+      "End": 21087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::fprintfBz2Aig",
+      "Category": "semantic-review",
+      "Symbol": "fprintfBz2Aig",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 21519,
+      "End": 22569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::ternary::Io_WriteAiger",
+      "Category": "ternary-review",
+      "Symbol": "Io_WriteAiger",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 22834,
+      "End": 30924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::Io_WriteAiger",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteAiger",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22834,
+      "End": 30924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::void-pointer::Io_WriteAigerCex",
+      "Category": "void-pointer-review",
+      "Symbol": "Io_WriteAigerCex",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 31295,
+      "End": 33644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::Io_WriteAigerCex",
+      "Category": "semantic-review",
+      "Symbol": "Io_WriteAigerCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31295,
+      "End": 33644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 33891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 890,
+      "End": 939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::13223",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13223,
+      "End": 13262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::14373",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14373,
+      "End": 14392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::16164",
+      "Category": "macro-inline-review",
+      "Symbol": "gzopen",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16164,
+      "End": 16189
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::16820",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16820,
+      "End": 17099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::17173",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17173,
+      "End": 17269
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::17275",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17275,
+      "End": 17298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::17899",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17899,
+      "End": 17930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::17989",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17989,
+      "End": 18022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::18228",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18228,
+      "End": 18322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::18455",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18455,
+      "End": 18577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::18789",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18789,
+      "End": 18828
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::19722",
+      "Category": "macro-inline-review",
+      "Symbol": "gzclose",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19722,
+      "End": 19738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::19878",
+      "Category": "macro-inline-review",
+      "Symbol": "gzwrite",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19878,
+      "End": 19906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::19912",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19912,
+      "End": 19931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::20070",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20070,
+      "End": 20121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::20205",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20205,
+      "End": 20272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::20383",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20383,
+      "End": 20434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::20524",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20524,
+      "End": 20575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::20610",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20610,
+      "End": 20709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::20747",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20747,
+      "End": 20771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::20831",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20831,
+      "End": 20876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::20882",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20882,
+      "End": 20959
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::20965",
+      "Category": "macro-inline-review",
+      "Symbol": "gzprintf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20965,
+      "End": 21062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::21068",
+      "Category": "macro-inline-review",
+      "Symbol": "gzclose",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21068,
+      "End": 21084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::21725",
+      "Category": "macro-inline-review",
+      "Symbol": "vsnprintf",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 21725,
+      "End": 21762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::22027",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_REALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 22027,
+      "End": 22066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::23986",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 23986,
+      "End": 24015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::24219",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24219,
+      "End": 24234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::24595",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 24595,
+      "End": 24610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::27439",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27439,
+      "End": 27454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::27816",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27816,
+      "End": 27855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::28800",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28800,
+      "End": 28815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::29292",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29292,
+      "End": 29307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::29349",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 29349,
+      "End": 29368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::30830",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30830,
+      "End": 30845
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioWriteAiger.c::macro-inline::30906",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 30906,
+      "End": 30921
+    }
+  ],
+  "Draft": "package io\n\nimport spFmt \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ioWriteAiger.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to write binary AIGER format developed by\n  Armin Biere, Johannes Kepler University (http://fmv.jku.at/)]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - December 16, 2006.]\n\n  Revision    [$Id: ioWriteAiger.c,v 1.00 2006/12/16 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n// The code in this file is developed in collaboration with Mark Jarvin of Toronto.\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/bzlib/bzlib.h\"\n//#include \"misc/zlib/zlib.h\"\n//#include \"ioAbc.h\"\n\n\n\n//ABC_NAMESPACE_IMPL_START\n\n\n#ifdef _WIN32\n#define vsnprintf _vsnprintf\n#endif\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n/*\n    The following is taken from the AIGER format description, \n    which can be found at http://fmv.jku.at/aiger\n*/\n\n\n/*\n         The AIGER And-Inverter Graph (AIG) Format Version 20061129\n         ----------------------------------------------------------\n              Armin Biere, Johannes Kepler University, 2006\n\n  This report describes the AIG file format as used by the AIGER library.\n  The purpose of this report is not only to motivate and document the\n  format, but also to allow independent implementations of writers and\n  readers by giving precise and unambiguous definitions.\n\n  ...\n\nIntroduction\n\n  The name AIGER contains as one part the acronym AIG of And-Inverter\n  Graphs and also if pronounced in German sounds like the name of the\n  'Eiger', a mountain in the Swiss alps.  This choice should emphasize the\n  origin of this format. It was first openly discussed at the Alpine\n  Verification Meeting 2006 in Ascona as a way to provide a simple, compact\n  file format for a model checking competition affiliated to CAV 2007.\n\n  ...\n\nBinary Format Definition\n\n  The binary format is semantically a subset of the ASCII format with a\n  slightly different syntax.  The binary format may need to reencode\n  literals, but translating a file in binary format into ASCII format and\n  then back in to binary format will result in the same file.\n\n  The main differences of the binary format to the ASCII format are as\n  follows.  After the header the list of input literals and all the\n  current state literals of a latch can be omitted.  Furthermore the\n  definitions of the AND gates are binary encoded.  However, the symbol\n  table and the comment section are as in the ASCII format.\n\n  The header of an AIGER file in binary format has 'aig' as format\n  identifier, but otherwise is identical to the ASCII header.  The standard\n  file extension for the binary format is therefore '.aig'. \n  \n  A header for the binary format is still in ASCII encoding:\n\n    aig M I L O A\n\n  Constants, variables and literals are handled in the same way as in the\n  ASCII format.  The first simplifying restriction is on the variable\n  indices of inputs and latches.  The variable indices of inputs come first,\n  followed by the pseudo-primary inputs of the latches and then the variable\n  indices of all LHS of AND gates:\n\n    input variable indices        1,          2,  ... ,  I\n    latch variable indices      I+1,        I+2,  ... ,  (I+L)\n    AND variable indices      I+L+1,      I+L+2,  ... ,  (I+L+A) == M\n\n  The corresponding unsigned literals are\n\n    input literals                2,          4,  ... ,  2*I\n    latch literals            2*I+2,      2*I+4,  ... ,  2*(I+L)\n    AND literals          2*(I+L)+2,  2*(I+L)+4,  ... ,  2*(I+L+A) == 2*M\n                    \n  All literals have to be defined, and therefore 'M = I + L + A'.  With this\n  restriction it becomes possible that the inputs and the current state\n  literals of the latches do not have to be listed explicitly.  Therefore,\n  after the header only the list of 'L' next state literals follows, one per\n  latch on a single line, and then the 'O' outputs, again one per line.\n\n  In the binary format we assume that the AND gates are ordered and respect\n  the child parent relation.  AND gates with smaller literals on the LHS\n  come first.  Therefore we can assume that the literals on the right-hand\n  side of a definition of an AND gate are smaller than the LHS literal.\n  Furthermore we can sort the literals on the RHS, such that the larger\n  literal comes first.  A definition thus consists of three literals\n    \n      lhs rhs0 rhs1\n\n  with 'lhs' even and 'lhs \u003e rhs0 \u003e= rhs1'.  Also the variable indices are\n  pairwise different to avoid combinational self loops.  Since the LHS\n  indices of the definitions are all consecutive (as even integers),\n  the binary format does not have to keep 'lhs'.  In addition, we can use\n  the order restriction and only write the differences 'delta0' and 'delta1'\n  instead of 'rhs0' and 'rhs1', with\n\n      delta0 = lhs - rhs0,  delta1 = rhs0 - rhs1\n  \n  The differences will all be strictly positive, and in practice often very\n  small.  We can take advantage of this fact by the simple little-endian\n  encoding of unsigned integers of the next section.  After the binary delta\n  encoding of the RHSs of all AND gates, the optional symbol table and\n  optional comment section start in the same format as in the ASCII case.\n\n  ...\n\n*/\n\nfunc Io_ObjMakeLit(Var int32, fCompl int32) uint32 { return (Var \u003c\u003c 1) | fCompl;                   }\nfunc Io_ObjAigerNum(pObj *Abc_Obj_t) uint32 { return uint32((ABC_PTRINT_T))pObj.pCopy;  }\nfunc Io_ObjSetAigerNum(pObj *Abc_Obj_t, Num uint32) { pObj.pCopy = (Abc_Obj_t *)(ABC_PTRINT_T)Num;     }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one unsigned AIG edge to the output buffer.]\n\n  Description [This procedure is a slightly modified version of Armin Biere's\n  procedure \"void encode (FILE * file, unsigned x)\" ]\n  \n  SideEffects [Returns the current writing position.]\n\n  SeeAlso     []\n\n***********************************************************************/\nint Io_WriteAigerEncode( unsigned char * pBuffer, int Pos, unsigned x )\n{\n    unsigned char ch;\n    for x \u0026 ~0x7f {\n        ch = (x \u0026 0x7f) | 0x80;\n//        putc (ch, file);\n        pBuffer[Pos++] = ch;\n        x \u003e\u003e= 7;\n    }\n    ch = x;\n//    putc (ch, file);\n    pBuffer[Pos++] = ch;\n    return Pos;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Create the array of literals to be written.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteAigerLiterals(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vLits *Vec_Int_t;\n    var pObj, pDriver *Abc_Obj_t;\n    var i int32;\n    vLits = Vec_IntAlloc( Abc_NtkCoNum(pNtk) );\n    // inlining of macro Abc_NtkForEachLatchInput\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)); i++  {                                                  if !(Abc_ObjIsLatch(Abc_NtkBox(pNtk, i)) \u0026\u0026 (((pObj) = Abc_ObjFanin0(Abc_NtkBox(pNtk, i))), 1)) {} else {\n        pDriver = Abc_ObjFanin0(pObj);\n        Vec_IntPush( vLits, Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ) );\n    }\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pDriver = Abc_ObjFanin0(pObj);\n        Vec_IntPush( vLits, Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ) );\n    }\n    return vLits;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the binary encoded array of literals.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteEncodeLiterals(vLits *Vec_Int_t) *Vec_Str_t {\n    var vBinary *Vec_Str_t;\n    var Pos, Lit, LitPrev, Diff, i int32;\n    vBinary = Vec_StrAlloc( 2 * Vec_IntSize(vLits) );\n    LitPrev = Vec_IntEntry( vLits, 0 );\n    Pos = Io_WriteAigerEncode( (unsigned char *)Vec_StrArray(vBinary), Pos, LitPrev ); \n    // inlining of macro Vec_IntForEachEntryStart\n    for  i = 1; (i \u003c Vec_IntSize(vLits)) \u0026\u0026 (((Lit) = Vec_IntEntry(vLits, i)), 1); i++  {\n        Diff = Lit - LitPrev;\n        if Lit \u003c LitPrev {\n            Diff = -Diff;\n        } else {\n            Diff = Diff;\n        }\n        Diff = (Diff \u003c\u003c 1) | int32((Lit \u003c LitPrev));\n        Pos = Io_WriteAigerEncode( (unsigned char *)Vec_StrArray(vBinary), Pos, Diff );\n        LitPrev = Lit;\n        if Pos + 10 \u003e vBinary.nCap {\n            Vec_StrGrow( vBinary, vBinary.nCap+1 ); }\n    }\n    vBinary.nSize = Pos;\n/*\n    // verify\n    {\n        extern Vec_Int_t * Io_WriteDecodeLiterals( char ** ppPos, int nEntries );\n        char * pPos = Vec_StrArray( vBinary );\n        Vec_Int_t * vTemp = Io_WriteDecodeLiterals( \u0026pPos, Vec_IntSize(vLits) );\n        for ( i = 0; i \u003c Vec_IntSize(vLits); i++ )\n        {\n            int Entry1 = Vec_IntEntry(vLits,i);\n            int Entry2 = Vec_IntEntry(vTemp,i);\n            assert( Entry1 == Entry2 );\n        }\n    }\n*/\n    return vBinary;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the AIG in the binary AIGER format.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteAiger_old(pNtk *Abc_Ntk_t, pFileName string, fWriteSymbols int32, fCompact int32) {\n    var pProgress *ProgressBar;\n    var pFile *os.File;\n    var pObj, pDriver, pLatch *Abc_Obj_t;\n    var i, nNodes, nBufferSize, Pos, fExtended int32;\n    unsigned char * pBuffer;\n    var uLit0, uLit1, uLit uint32;\n\n    fExtended = Abc_NtkConstrNum(pNtk);\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else\n        if !Abc_LatchIsInit0(pObj) {\n            if !(fCompact != 0) {\n                fExtended = 1;\n                break;\n            }\n            spFmt.Fprintf(os.Stdout, \"Io_WriteAiger(): Cannot write AIGER format with non-0 latch init values. Run \\\"zero\\\".\\n\");\n            return;\n        }\n    }\n\n    // start the output stream\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        spFmt.Fprintf(os.Stdout, \"Io_WriteAiger(): Cannot open the output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n\n    // set the node numbers to be used in the output file\n    nNodes = 0;\n    Io_ObjSetAigerNum( Abc_AigConst1(pNtk), nNodes++ );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Io_ObjSetAigerNum( pObj, nNodes++ );\n    }\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Io_ObjSetAigerNum( pObj, nNodes++ ); }\n    }\n\n    // write the header \"M I L O A\" where M = I + L + A\n    spFmt.Fprintf(pFile, \"aig%s %d %d %d %d %d\", fCompact? \"2\" : \"\", Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) + Abc_NtkNodeNum(pNtk), Abc_NtkPiNum(pNtk), Abc_NtkLatchNum(pNtk), fExtended ? 0 : Abc_NtkPoNum(pNtk), Abc_NtkNodeNum(pNtk));\n    // write the extended header \"B C J F\"\n    if fExtended != 0 {\n        spFmt.Fprintf(pFile, \" %d %d\", Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk), Abc_NtkConstrNum(pNtk)); }\n    spFmt.Fprintf(pFile, \"\\n\");\n\n    // if the driver node is a constant, we need to complement the literal below\n    // because, in the AIGER format, literal 0/1 is represented as number 0/1\n    // while, in ABC, constant 1 node has number 0 and so literal 0/1 will be 1/0\n\n    Abc_NtkInvertConstraints( pNtk );\n    if !(fCompact != 0) {\n        // write latch drivers\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n            pObj = Abc_ObjFanin0(pLatch);\n            pDriver = Abc_ObjFanin0(pObj);\n            uLit = Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) );\n            if Abc_LatchIsInit0(pLatch) {\n                spFmt.Fprintf(pFile, \"%d\\n\", uLit);\n            } else if Abc_LatchIsInit1(pLatch) {\n                spFmt.Fprintf(pFile, \"%d 1\\n\", uLit);\n            } else {\n                // Both None and DC are written as 'uninitialized' e.g. a free boolean value\n                assert(Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch), \"Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch)\");\n                spFmt.Fprintf(pFile, \"%d %d\\n\", uLit, Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanout0(pLatch)), 0 ));\n            }\n        }\n        }\n        // write PO drivers\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            pDriver = Abc_ObjFanin0(pObj);\n            spFmt.Fprintf(pFile, \"%d\\n\", Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ));\n        }\n    \n    } else {\n        var vLits *Vec_Int_t  = Io_WriteAigerLiterals( pNtk );\n        var vBinary *Vec_Str_t  = Io_WriteEncodeLiterals( vLits );\n        fwrite( Vec_StrArray(vBinary), 1, Vec_StrSize(vBinary), pFile );\n        Vec_StrFree( vBinary );\n        Vec_IntFree( vLits );\n    }\n    Abc_NtkInvertConstraints( pNtk );\n\n    // write the nodes into the buffer\n    Pos = 0;\n    nBufferSize = 6 * Abc_NtkNodeNum(pNtk) + 100; // skeptically assuming 3 chars per one AIG edge\n    pBuffer = ABC_ALLOC( unsigned char, nBufferSize );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        uLit  = Io_ObjMakeLit( Io_ObjAigerNum(pObj), 0 );\n        uLit0 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin0(pObj)), Abc_ObjFaninC0(pObj) );\n        uLit1 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin1(pObj)), Abc_ObjFaninC1(pObj) );\n        if uLit0 \u003e uLit1 {\n            var Temp uint32  = uLit0;\n            uLit0 = uLit1;\n            uLit1 = Temp;\n        }\n        assert(uLit1 \u003c uLit, \"uLit1 \u003c uLit\");\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, uint32((uLit  - uLit1)) );\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, uint32((uLit1 - uLit0)) );\n        if Pos \u003e nBufferSize - 10 {\n            spFmt.Printf(\"Io_WriteAiger(): AIGER generation has failed because the allocated buffer is too small.\\n\");\n            _ = (pFile).Close();\n            return;\n        }\n    }\n    }\n    assert(Pos \u003c nBufferSize, \"Pos \u003c nBufferSize\");\n    Extra_ProgressBarStop( pProgress );\n\n    // write the buffer\n    fwrite( pBuffer, 1, Pos, pFile );\n    ABC_FREE( pBuffer );\n\n    // write the symbol table\n    if fWriteSymbols != 0 {\n        // write PIs\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n            spFmt.Fprintf(pFile, \"i%d %s\\n\", i, Abc_ObjName(pObj));\n        }\n        // write latches\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n            spFmt.Fprintf(pFile, \"l%d %s\\n\", i, Abc_ObjName(Abc_ObjFanout0(pObj))); }\n        }\n        // write POs\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            if !(fExtended != 0) {\n                spFmt.Fprintf(pFile, \"o%d %s\\n\", i, Abc_ObjName(pObj));\n            } else if i \u003c Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk) {\n                spFmt.Fprintf(pFile, \"b%d %s\\n\", i, Abc_ObjName(pObj));\n            } else {\n                spFmt.Fprintf(pFile, \"c%d %s\\n\", i - (Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk)), Abc_ObjName(pObj)); }\n        }\n    }\n\n    // write the comment\n    spFmt.Fprintf(pFile, \"c\\n\");\n    if pNtk.pName \u0026\u0026 len(pNtk.pName) \u003e 0 {\n        spFmt.Fprintf(pFile, \".model %s\\n\", pNtk.pName); }\n    spFmt.Fprintf(pFile, \"This file was produced by ABC on %s\\n\", Extra_TimeStamp());\n    spFmt.Fprintf(pFile, \"For information about AIGER format, refer to %s\\n\", \"http://fmv.jku.at/aiger\");\n    _ = (pFile).Close();\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the AIG in the binary AIGER format.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteAigerGz(pNtk *Abc_Ntk_t, pFileName string, fWriteSymbols int32) {\n    var pProgress *ProgressBar;\n    var pFile gzFile;\n    var pObj, pDriver, pLatch *Abc_Obj_t;\n    var i, nNodes, Pos, nBufferSize, fExtended int32;\n    unsigned char * pBuffer;\n    var uLit0, uLit1, uLit uint32;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // start the output stream\n    pFile = gzopen( pFileName, \"wb\" ); // if pFileName doesn't end in \".gz\" then this acts as a passthrough to fopen\n    if pFile == nil {\n        spFmt.Fprintf(os.Stdout, \"Io_WriteAigerGz(): Cannot open the output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n\n    fExtended = Abc_NtkConstrNum(pNtk);\n\n    // set the node numbers to be used in the output file\n    nNodes = 0;\n    Io_ObjSetAigerNum( Abc_AigConst1(pNtk), nNodes++ );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Io_ObjSetAigerNum( pObj, nNodes++ );\n    }\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Io_ObjSetAigerNum( pObj, nNodes++ ); }\n    }\n\n    // write the header \"M I L O A\" where M = I + L + A\n    gzprintf( pFile, \"aig %u %u %u %u %u\", \n              Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) + Abc_NtkNodeNum(pNtk), \n              Abc_NtkPiNum(pNtk),\n              Abc_NtkLatchNum(pNtk),\n              fExtended ? 0 : Abc_NtkPoNum(pNtk),\n              Abc_NtkNodeNum(pNtk) );\n    // write the extended header \"B C J F\"\n    if fExtended != 0 {\n        gzprintf( pFile, \" %u %u\", Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk), Abc_NtkConstrNum(pNtk) ); }\n    gzprintf( pFile, \"\\n\" ); \n\n    // if the driver node is a constant, we need to complement the literal below\n    // because, in the AIGER format, literal 0/1 is represented as number 0/1\n    // while, in ABC, constant 1 node has number 0 and so literal 0/1 will be 1/0\n\n    // write latch drivers\n    Abc_NtkInvertConstraints( pNtk );\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n        pObj = Abc_ObjFanin0(pLatch);\n        pDriver = Abc_ObjFanin0(pObj);\n        uLit = Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) );\n        if Abc_LatchIsInit0(pLatch) {\n            gzprintf( pFile, \"%u\\n\", uLit );\n        } else if Abc_LatchIsInit1(pLatch) {\n            gzprintf( pFile, \"%u 1\\n\", uLit );\n        } else {\n            // Both None and DC are written as 'uninitialized' e.g. a free boolean value\n            assert(Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch), \"Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch)\");\n            gzprintf( pFile, \"%u %u\\n\", uLit, Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanout0(pLatch)), 0 ) );\n        }\n    }\n    }\n    // write PO drivers\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pDriver = Abc_ObjFanin0(pObj);\n        gzprintf( pFile, \"%u\\n\", Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ) );\n    }\n    Abc_NtkInvertConstraints( pNtk );\n\n    // write the nodes into the buffer\n    Pos = 0;\n    nBufferSize = 6 * Abc_NtkNodeNum(pNtk) + 100; // skeptically assuming 3 chars per one AIG edge\n    pBuffer = ABC_ALLOC( unsigned char, nBufferSize );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        uLit  = Io_ObjMakeLit( Io_ObjAigerNum(pObj), 0 );\n        uLit0 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin0(pObj)), Abc_ObjFaninC0(pObj) );\n        uLit1 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin1(pObj)), Abc_ObjFaninC1(pObj) );\n        if uLit0 \u003e uLit1 {\n            var Temp uint32  = uLit0;\n            uLit0 = uLit1;\n            uLit1 = Temp;\n        }\n        assert(uLit1 \u003c uLit, \"uLit1 \u003c uLit\");\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, uLit  - uLit1 );\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, uLit1 - uLit0 );\n        if Pos \u003e nBufferSize - 10 {\n            spFmt.Printf(\"Io_WriteAiger(): AIGER generation has failed because the allocated buffer is too small.\\n\");\n            gzclose( pFile );\n            return;\n        }\n    }\n    }\n    assert(Pos \u003c nBufferSize, \"Pos \u003c nBufferSize\");\n    Extra_ProgressBarStop( pProgress );\n\n    // write the buffer\n    gzwrite(pFile, pBuffer, Pos);\n    ABC_FREE( pBuffer );\n\n    // write the symbol table\n    if fWriteSymbols != 0 {\n        // write PIs\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n            gzprintf( pFile, \"i%d %s\\n\", i, Abc_ObjName(pObj) );\n        }\n        // write latches\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n            gzprintf( pFile, \"l%d %s\\n\", i, Abc_ObjName(Abc_ObjFanout0(pObj)) ); }\n        }\n        // write POs\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            if !(fExtended != 0) {\n                gzprintf( pFile, \"o%d %s\\n\", i, Abc_ObjName(pObj) );\n            } else if i \u003c Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk) {\n                gzprintf( pFile, \"b%d %s\\n\", i, Abc_ObjName(pObj) );\n            } else {\n                gzprintf( pFile, \"c%d %s\\n\", i - (Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk)), Abc_ObjName(pObj) ); }\n        }\n    }\n\n    // write the comment\n    gzprintf( pFile, \"c\\n\" );\n    if pNtk.pName \u0026\u0026 len(pNtk.pName) \u003e 0 {\n        gzprintf( pFile, \".model %s\\n\", pNtk.pName ); }\n    gzprintf( pFile, \"This file was produced by ABC on %s\\n\", Extra_TimeStamp() );\n    gzprintf( pFile, \"For information about AIGER format, refer to %s\\n\", \"http://fmv.jku.at/aiger\" );\n    gzclose( pFile );\n}\n\n \n/**Function*************************************************************\n\n  Synopsis    [Procedure to write data into BZ2 file.]\n\n  Description [Based on the vsnprintf() man page.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\ntypedef struct bz2file {\n  FILE   * f;\n  BZFILE * b;\n  char   * buf;\n  int      nBytes;\n  int      nBytesMax;\n}\n bz2file;\n\nint fprintfBz2Aig( bz2file * b, char * fmt, ... ) {\n    if b.b {\n        var newBuf string;\n        var bzError int32;\n        va_list ap;\n        for {\n            va_start(ap,fmt);\n            b.nBytes = vsnprintf(b.buf,b.nBytesMax,fmt,ap);\n            va_end(ap);\n            if b.nBytes \u003e -1 \u0026\u0026 b.nBytes \u003c b.nBytesMax {\n                break; }\n            if b.nBytes \u003e -1 {\n                b.nBytesMax = b.nBytes + 1;\n            } else {\n                b.nBytesMax *= 2; }\n            if (newBuf = ABC_REALLOC( char,b.buf,b.nBytesMax )) == nil {\n                return -1;\n            } else {\n                b.buf = newBuf; }\n        }\n        BZ2_bzWrite( \u0026bzError, b.b, b.buf, b.nBytes );\n        if bzError == BZ_IO_ERROR {\n            spFmt.Fprintf(os.Stdout, \"Ioa_WriteBlif(): I/O error writing to compressed stream.\\n\");\n            return -1;\n        }\n        return b.nBytes;\n    } else {\n        var n int32;\n        va_list ap;\n        va_start(ap,fmt);\n        n = vfprintf( b.f, fmt, ap);\n        va_end(ap);\n        return n;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the AIG in the binary AIGER format.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteAiger(pNtk *Abc_Ntk_t, pFileName string, fWriteSymbols int32, fCompact int32, fUnique int32) {\n    var pProgress *ProgressBar;\n//    FILE * pFile;\n    var pObj, pDriver, pLatch *Abc_Obj_t;\n    var i, nNodes, nBufferSize, bzError, Pos, fExtended int32;\n    unsigned char * pBuffer;\n    var uLit0, uLit1, uLit uint32;\n    var b bz2file;\n\n    // define unique writing\n    if fUnique != 0 {\n        fWriteSymbols = 0;\n        fCompact = 0;\n    }\n\n    fExtended = Abc_NtkConstrNum(pNtk);\n\n    // check that the network is valid\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // inlining of macro Abc_NtkForEachLatch\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else\n        if !Abc_LatchIsInit0(pObj) {\n            if !(fCompact != 0) {\n                fExtended = 1;\n                break;\n            }\n            spFmt.Fprintf(os.Stdout, \"Io_WriteAiger(): Cannot write AIGER format with non-0 latch init values. Run \\\"zero\\\".\\n\");\n            return;\n        }\n    }\n\n    // write the GZ file\n    if !strncmp(pFileName+len(pFileName)-3,\".gz\",3) {\n        Io_WriteAigerGz( pNtk, pFileName, fWriteSymbols );\n        return;\n    }\n\n    memset(\u0026b,0,sizeof(b));\n    b.nBytesMax = (1\u003c\u003c12);\n    b.buf = ABC_ALLOC( char,b.nBytesMax );\n\n    // start the output stream\n    b.f = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666); \n    if b.f == nil {\n        spFmt.Fprintf(os.Stdout, \"Ioa_WriteBlif(): Cannot open the output file \\\"%s\\\".\\n\", pFileName);\n        ABC_FREE(b.buf);\n        return;\n    }\n    if !strncmp(pFileName+len(pFileName)-4,\".bz2\",4) {\n        b.b = BZ2_bzWriteOpen( \u0026bzError, b.f, 9, 0, 0 );\n        if bzError != BZ_OK {\n            BZ2_bzWriteClose( \u0026bzError, b.b, 0, nil, nil );\n            spFmt.Fprintf(os.Stdout, \"Ioa_WriteBlif(): Cannot start compressed stream.\\n\");\n            _ = (b.f).Close();\n            ABC_FREE(b.buf);\n            return;\n        }\n    }\n\n    // set the node numbers to be used in the output file\n    nNodes = 0;\n    Io_ObjSetAigerNum( Abc_AigConst1(pNtk), nNodes++ );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Io_ObjSetAigerNum( pObj, nNodes++ );\n    }\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Io_ObjSetAigerNum( pObj, nNodes++ ); }\n    }\n\n    // write the header \"M I L O A\" where M = I + L + A\n    fprintfBz2Aig( \u0026b, \"aig%s %u %u %u %u %u\", \n        fCompact? \"2\" : \"\",\n        Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) + Abc_NtkNodeNum(pNtk), \n        Abc_NtkPiNum(pNtk),\n        Abc_NtkLatchNum(pNtk),\n        fExtended ? 0 : Abc_NtkPoNum(pNtk),\n        Abc_NtkNodeNum(pNtk) );\n    // write the extended header \"B C J F\"\n    if fExtended != 0 {\n        fprintfBz2Aig( \u0026b, \" %u %u\", Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk), Abc_NtkConstrNum(pNtk) ); }\n    fprintfBz2Aig( \u0026b, \"\\n\" );\n\n    // if the driver node is a constant, we need to complement the literal below\n    // because, in the AIGER format, literal 0/1 is represented as number 0/1\n    // while, in ABC, constant 1 node has number 0 and so literal 0/1 will be 1/0\n\n    Abc_NtkInvertConstraints( pNtk );\n    if !(fCompact != 0) {\n        // write latch drivers\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pLatch) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pLatch) {} else {\n            pObj = Abc_ObjFanin0(pLatch);\n            pDriver = Abc_ObjFanin0(pObj);\n            uLit = Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) );\n            if Abc_LatchIsInit0(pLatch) {\n                fprintfBz2Aig( \u0026b, \"%u\\n\", uLit );\n            } else if Abc_LatchIsInit1(pLatch) {\n                fprintfBz2Aig( \u0026b, \"%u 1\\n\", uLit );\n            } else {\n                // Both None and DC are written as 'uninitialized' e.g. a free boolean value\n                assert(Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch), \"Abc_LatchIsInitNone(pLatch) || Abc_LatchIsInitDc(pLatch)\");\n                fprintfBz2Aig( \u0026b, \"%u %u\\n\", uLit, Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanout0(pLatch)), 0 ) );\n            }\n        }\n        }\n        // write PO drivers\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            pDriver = Abc_ObjFanin0(pObj);\n            fprintfBz2Aig( \u0026b, \"%u\\n\", Io_ObjMakeLit( Io_ObjAigerNum(pDriver), Abc_ObjFaninC0(pObj) ^ (Io_ObjAigerNum(pDriver) == 0) ) );\n        }\n    \n    } else {\n        var vLits *Vec_Int_t  = Io_WriteAigerLiterals( pNtk );\n        var vBinary *Vec_Str_t  = Io_WriteEncodeLiterals( vLits );\n        if !b.b {\n            fwrite( Vec_StrArray(vBinary), 1, Vec_StrSize(vBinary), b.f );\n        } else {\n            BZ2_bzWrite( \u0026bzError, b.b, Vec_StrArray(vBinary), Vec_StrSize(vBinary) );\n            if bzError == BZ_IO_ERROR {\n                spFmt.Fprintf(os.Stdout, \"Io_WriteAiger(): I/O error writing to compressed stream.\\n\");\n                _ = (b.f).Close();\n                ABC_FREE(b.buf);\n                Vec_StrFree( vBinary );\n                return;\n            }\n        }\n        Vec_StrFree( vBinary );\n        Vec_IntFree( vLits );\n    }\n    Abc_NtkInvertConstraints( pNtk );\n\n    // write the nodes into the buffer\n    Pos = 0;\n    nBufferSize = 6 * Abc_NtkNodeNum(pNtk) + 100; // skeptically assuming 3 chars per one AIG edge\n    pBuffer = ABC_ALLOC( unsigned char, nBufferSize );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_AigForEachAnd\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_AigNodeIsAnd(pObj) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        uLit  = Io_ObjMakeLit( Io_ObjAigerNum(pObj), 0 );\n        uLit0 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin0(pObj)), Abc_ObjFaninC0(pObj) );\n        uLit1 = Io_ObjMakeLit( Io_ObjAigerNum(Abc_ObjFanin1(pObj)), Abc_ObjFaninC1(pObj) );\n        if uLit0 \u003e uLit1 {\n            var Temp uint32  = uLit0;\n            uLit0 = uLit1;\n            uLit1 = Temp;\n        }\n        assert(uLit1 \u003c uLit, \"uLit1 \u003c uLit\");\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, uint32((uLit  - uLit1)) );\n        Pos = Io_WriteAigerEncode( pBuffer, Pos, uint32((uLit1 - uLit0)) );\n        if Pos \u003e nBufferSize - 10 {\n            spFmt.Printf(\"Io_WriteAiger(): AIGER generation has failed because the allocated buffer is too small.\\n\");\n            _ = (b.f).Close();\n            ABC_FREE(b.buf);\n            Extra_ProgressBarStop( pProgress );\n            return;\n        }\n    }\n    }\n    assert(Pos \u003c nBufferSize, \"Pos \u003c nBufferSize\");\n    Extra_ProgressBarStop( pProgress );\n\n    // write the buffer\n    if !b.b {\n        fwrite( pBuffer, 1, Pos, b.f );\n    } else {\n        BZ2_bzWrite( \u0026bzError, b.b, pBuffer, Pos );\n        if bzError == BZ_IO_ERROR {\n            spFmt.Fprintf(os.Stdout, \"Io_WriteAiger(): I/O error writing to compressed stream.\\n\");\n            _ = (b.f).Close();\n            ABC_FREE(b.buf);\n            return;\n        }\n    }\n    ABC_FREE( pBuffer );\n\n    // write the symbol table\n    if fWriteSymbols != 0 {\n        // write PIs\n        // inlining of macro Abc_NtkForEachPi\n        for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n            fprintfBz2Aig( \u0026b, \"i%d %s\\n\", i, Abc_ObjName(pObj) );\n        }\n        // write latches\n        // inlining of macro Abc_NtkForEachLatch\n        for  i = 0; (i \u003c Vec_PtrSize((pNtk).vBoxes)) \u0026\u0026 (((pObj) = Abc_NtkBox(pNtk, i)), 1); i++  {           if !Abc_ObjIsLatch(pObj) {} else {\n            fprintfBz2Aig( \u0026b, \"l%d %s\\n\", i, Abc_ObjName(Abc_ObjFanout0(pObj)) ); }\n        }\n        // write POs\n        // inlining of macro Abc_NtkForEachPo\n        for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n            if !(fExtended != 0) {\n                fprintfBz2Aig( \u0026b, \"o%d %s\\n\", i, Abc_ObjName(pObj) );\n            } else if i \u003c Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk) {\n                fprintfBz2Aig( \u0026b, \"b%d %s\\n\", i, Abc_ObjName(pObj) );\n            } else {\n                fprintfBz2Aig( \u0026b, \"c%d %s\\n\", i - (Abc_NtkPoNum(pNtk) - Abc_NtkConstrNum(pNtk)), Abc_ObjName(pObj) ); }\n        }\n    }\n\n    // write the comment\n    fprintfBz2Aig( \u0026b, \"c\" );\n    if !(fUnique != 0) {\n        if pNtk.pName \u0026\u0026 len(pNtk.pName) \u003e 0 {\n            fprintfBz2Aig( \u0026b, \"\\n%s%c\", pNtk.pName, '\\0' ); }\n        fprintfBz2Aig( \u0026b, \"\\nThis file was written by ABC on %s\\n\", Extra_TimeStamp() );\n        fprintfBz2Aig( \u0026b, \"For information about AIGER format, refer to %s\\n\", \"http://fmv.jku.at/aiger\" );\n    }\n\n    // close the file\n    if b.b {\n        BZ2_bzWriteClose( \u0026bzError, b.b, 0, nil, nil );\n        if bzError == BZ_IO_ERROR {\n            spFmt.Fprintf(os.Stdout, \"Io_WriteAiger(): I/O error closing compressed stream.\\n\");\n            _ = (b.f).Close();\n            ABC_FREE(b.buf);\n            return;\n        }\n    }\n    _ = (b.f).Close();\n    ABC_FREE(b.buf);\n}\n\n//ABC_NAMESPACE_IMPL_END\n\n//#include \"aig/gia/giaAig.h\"\n//#include \"aig/saig/saig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/**Function*************************************************************\n\n  Synopsis    [Writes the AIG in the binary AIGER format.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_WriteAigerCex(pCex *Abc_Cex_t, pNtk *Abc_Ntk_t, pG any, pFileName string) {\n    extern Aig_Man_t * Abc_NtkToDar( Abc_Ntk_t * pNtk, int fExors, int fRegisters );\n    var pFile *os.File;\n    var pAig *Aig_Man_t;\n    var pObj, pObj2 *Aig_Obj_t;\n    var pGia *Gia_Man_t  = (Gia_Man_t *)pG;\n    var k, f, b int32;\n    assert(pCex != nil, \"pCex != nil\");\n\n    // derive AIG\n    if pNtk != nil \u0026\u0026 \n         Abc_NtkPiNum(pNtk)    == pCex.nPis \u0026\u0026 \n         Abc_NtkLatchNum(pNtk) == pCex.nRegs {\n        pAig = Abc_NtkToDar( pNtk, 0, 1 );\n    \n    } else if pGia != nil \u0026\u0026 \n         Gia_ManPiNum(pGia)  == pCex.nPis \u0026\u0026 \n         Gia_ManRegNum(pGia) == pCex.nRegs {\n        pAig = Gia_ManToAigSimple( pGia );\n    \n    } else {\n        spFmt.Printf(\"AIG parameters do not match those of the CEX.\\n\");\n        return;\n    }\n\n    // create output file\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    spFmt.Fprintf(pFile, \"1\\n\");\n    b = pCex.nRegs;\n    for  k = 0; k \u003c pCex.nRegs; k++  {\n        spFmt.Fprintf(pFile, \"0\");\n    }\n    spFmt.Fprintf(pFile, \" \");\n    Aig_ManCleanMarkA( pAig );\n    Aig_ManConst1(pAig).fMarkA = 1;\n    for  f = 0; f \u003c= pCex.iFrame; f++  {\n        for  k = 0; k \u003c pCex.nPis; k++  {\n            spFmt.Fprintf(pFile, \"%d\", Abc_InfoHasBit(pCex.pData, b));\n            Aig_ManCi( pAig, k ).fMarkA = Abc_InfoHasBit(pCex.pData, b++);\n        }\n        spFmt.Fprintf(pFile, \" \");\n        // inlining of macro Aig_ManForEachNode\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, k)), 1); k++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n            pObj.fMarkA = (Aig_ObjFanin0(pObj).fMarkA ^ Aig_ObjFaninC0(pObj)) \u0026\n                           (Aig_ObjFanin1(pObj).fMarkA ^ Aig_ObjFaninC1(pObj)); }\n        }\n        // inlining of macro Aig_ManForEachCo\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {\n            pObj.fMarkA = (Aig_ObjFanin0(pObj).fMarkA ^ Aig_ObjFaninC0(pObj));\n        }\n        // inlining of macro Saig_ManForEachPo\n        // inlining of macro Vec_PtrForEachEntryStop\n        for  k = 0; (k \u003c Saig_ManPoNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k)), 1); k++  {\n            spFmt.Fprintf(pFile, \"%d\", pObj.fMarkA);\n        }\n        spFmt.Fprintf(pFile, \" \");\n        // inlining of macro Saig_ManForEachLi\n        for  k = 0; (k \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k+Saig_ManPoNum(pAig))), 1); k++  {\n            spFmt.Fprintf(pFile, \"%d\", pObj.fMarkA);\n        }\n        spFmt.Fprintf(pFile, \"\\n\");\n        if f == pCex.iFrame {\n            break; }\n        // inlining of macro Saig_ManForEachLi\n        for  k = 0; (k \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, k+Saig_ManPoNum(pAig))), 1); k++  {\n            spFmt.Fprintf(pFile, \"%d\", pObj.fMarkA);\n        }\n        spFmt.Fprintf(pFile, \" \");\n        // inlining of macro Saig_ManForEachLiLo\n        for  k = 0; (k \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = Saig_ManLi(pAig, k)), 1)            \u0026\u0026 (((pObj2)=Saig_ManLo(pAig, k)), 1); k++  {\n            pObj2.fMarkA = pObj.fMarkA;\n        }\n    }  \n    assert(b == pCex.nBits, \"b == pCex.nBits\");\n    _ = (pFile).Close();\n    Aig_ManCleanMarkA( pAig );\n    Aig_ManStop( pAig );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

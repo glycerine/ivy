@@ -1,0 +1,351 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c",
+  "SHA256": "ae54f1a6fff912b0a06452c3bb8a1ed79b840ce335a26535ca8be22fd862282c",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 82,
+        "Column": 1,
+        "ByteOffset": 3281
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_bddAndAbstract",
+      "Start": 4942,
+      "End": 5219,
+      "BodyStart": 5040,
+      "Original": "DdNode *\nCudd_bddAndAbstract(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * g,\n  DdNode * cube)\n{\n    DdNode *res;\n\n    do {\n        manager-\u003ereordered = 0;\n        res = cuddBddAndAbstractRecur(manager, f, g, cube);\n    } while (manager-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_bddAndAbstract(manager *DdManager, f *DdNode, g *DdNode, cube *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        manager.reordered = 0;\n        res = cuddBddAndAbstractRecur(manager, f, g, cube);\n    \nif !(manager.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_bddAndAbstractLimit",
+      "Start": 5931,
+      "End": 6422,
+      "BodyStart": 6056,
+      "Original": "DdNode *\nCudd_bddAndAbstractLimit(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * g,\n  DdNode * cube,\n  unsigned int limit)\n{\n    DdNode *res;\n    unsigned int saveLimit = manager-\u003emaxLive;\n\n    manager-\u003emaxLive = (manager-\u003ekeys - manager-\u003edead) +\n      (manager-\u003ekeysZ - manager-\u003edeadZ) + limit;\n    do {\n        manager-\u003ereordered = 0;\n        res = cuddBddAndAbstractRecur(manager, f, g, cube);\n    } while (manager-\u003ereordered == 1);\n    manager-\u003emaxLive = saveLimit;\n    return(res);\n\n}",
+      "Draft": "DdNode *\nCudd_bddAndAbstractLimit(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * g,\n  DdNode * cube,\n  unsigned int limit)\n{\n    var res *DdNode;\n    unsigned int saveLimit = manager.maxLive;\n\n    manager.maxLive = (manager.keys - manager.dead) +\n      (manager.keysZ - manager.deadZ) + limit;\n    for {\n        manager.reordered = 0;\n        res = cuddBddAndAbstractRecur(manager, f, g, cube);\n    \nif !(manager.reordered == 1) { break }\n} \n    manager.maxLive = saveLimit;\n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddBddAndAbstractRecur",
+      "Start": 7225,
+      "End": 12367,
+      "BodyStart": 7327,
+      "Original": "DdNode *\ncuddBddAndAbstractRecur(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * g,\n  DdNode * cube)\n{\n    DdNode *F, *ft, *fe, *G, *gt, *ge;\n    DdNode *one, *zero, *r, *t, *e;\n    unsigned int topf, topg, topcube, top, index;\n\n    statLine(manager);\n    one = DD_ONE(manager);\n    zero = Cudd_Not(one);\n\n    /* Terminal cases. */\n    if (f == zero || g == zero || f == Cudd_Not(g)) return(zero);\n    if (f == one \u0026\u0026 g == one)   return(one);\n\n    if (cube == one) {\n        return(cuddBddAndRecur(manager, f, g));\n    }\n    if (f == one || f == g) {\n        return(cuddBddExistAbstractRecur(manager, g, cube));\n    }\n    if (g == one) {\n        return(cuddBddExistAbstractRecur(manager, f, cube));\n    }\n    /* At this point f, g, and cube are not constant. */\n\n    if (f \u003e g) { /* Try to increase cache efficiency. */\n        DdNode *tmp = f;\n        f = g;\n        g = tmp;\n    }\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    F = Cudd_Regular(f);\n    G = Cudd_Regular(g);\n    topf = manager-\u003eperm[F-\u003eindex];\n    topg = manager-\u003eperm[G-\u003eindex];\n    top = ddMin(topf, topg);\n    topcube = manager-\u003eperm[cube-\u003eindex];\n\n    while (topcube \u003c top) {\n        cube = cuddT(cube);\n        if (cube == one) {\n            return(cuddBddAndRecur(manager, f, g));\n        }\n        topcube = manager-\u003eperm[cube-\u003eindex];\n    }\n    /* Now, topcube \u003e= top. */\n\n    /* Check cache. */\n    if (F-\u003eref != 1 || G-\u003eref != 1) {\n        r = cuddCacheLookup(manager, DD_BDD_AND_ABSTRACT_TAG, f, g, cube);\n        if (r != NULL) {\n            return(r);\n        }\n    }\n\n    if ( manager-\u003eTimeStop \u0026\u0026 Abc_Clock() \u003e manager-\u003eTimeStop )\n        return NULL;\n\n    if (topf == top) {\n        index = F-\u003eindex;\n        ft = cuddT(F);\n        fe = cuddE(F);\n        if (Cudd_IsComplement(f)) {\n            ft = Cudd_Not(ft);\n            fe = Cudd_Not(fe);\n        }\n    } else {\n        index = G-\u003eindex;\n        ft = fe = f;\n    }\n\n    if (topg == top) {\n        gt = cuddT(G);\n        ge = cuddE(G);\n        if (Cudd_IsComplement(g)) {\n            gt = Cudd_Not(gt);\n            ge = Cudd_Not(ge);\n        }\n    } else {\n        gt = ge = g;\n    }\n\n    if (topcube == top) {       /* quantify */\n        DdNode *Cube = cuddT(cube);\n        t = cuddBddAndAbstractRecur(manager, ft, gt, Cube);\n        if (t == NULL) return(NULL);\n        /* Special case: 1 OR anything = 1. Hence, no need to compute\n        ** the else branch if t is 1. Likewise t + t * anything == t.\n        ** Notice that t == fe implies that fe does not depend on the\n        ** variables in Cube. Likewise for t == ge.\n        */\n        if (t == one || t == fe || t == ge) {\n            if (F-\u003eref != 1 || G-\u003eref != 1)\n                cuddCacheInsert(manager, DD_BDD_AND_ABSTRACT_TAG,\n                                f, g, cube, t);\n            return(t);\n        }\n        cuddRef(t);\n        /* Special case: t + !t * anything == t + anything. */\n        if (t == Cudd_Not(fe)) {\n            e = cuddBddExistAbstractRecur(manager, ge, Cube);\n        } else if (t == Cudd_Not(ge)) {\n            e = cuddBddExistAbstractRecur(manager, fe, Cube);\n        } else {\n            e = cuddBddAndAbstractRecur(manager, fe, ge, Cube);\n        }\n        if (e == NULL) {\n            Cudd_IterDerefBdd(manager, t);\n            return(NULL);\n        }\n        if (t == e) {\n            r = t;\n            cuddDeref(t);\n        } else {\n            cuddRef(e);\n            r = cuddBddAndRecur(manager, Cudd_Not(t), Cudd_Not(e));\n            if (r == NULL) {\n                Cudd_IterDerefBdd(manager, t);\n                Cudd_IterDerefBdd(manager, e);\n                return(NULL);\n            }\n            r = Cudd_Not(r);\n            cuddRef(r);\n            Cudd_DelayedDerefBdd(manager, t);\n            Cudd_DelayedDerefBdd(manager, e);\n            cuddDeref(r);\n        }\n    } else {\n        t = cuddBddAndAbstractRecur(manager, ft, gt, cube);\n        if (t == NULL) return(NULL);\n        cuddRef(t);\n        e = cuddBddAndAbstractRecur(manager, fe, ge, cube);\n        if (e == NULL) {\n            Cudd_IterDerefBdd(manager, t);\n            return(NULL);\n        }\n        if (t == e) {\n            r = t;\n            cuddDeref(t);\n        } else {\n            cuddRef(e);\n            if (Cudd_IsComplement(t)) {\n                r = cuddUniqueInter(manager, (int) index,\n                                    Cudd_Not(t), Cudd_Not(e));\n                if (r == NULL) {\n                    Cudd_IterDerefBdd(manager, t);\n                    Cudd_IterDerefBdd(manager, e);\n                    return(NULL);\n                }\n                r = Cudd_Not(r);\n            } else {\n                r = cuddUniqueInter(manager,(int)index,t,e);\n                if (r == NULL) {\n                    Cudd_IterDerefBdd(manager, t);\n                    Cudd_IterDerefBdd(manager, e);\n                    return(NULL);\n                }\n            }\n            cuddDeref(e);\n            cuddDeref(t);\n        }\n    }\n\n    if (F-\u003eref != 1 || G-\u003eref != 1)\n        cuddCacheInsert(manager, DD_BDD_AND_ABSTRACT_TAG, f, g, cube, r);\n    return (r);\n\n}",
+      "Draft": "func cuddBddAndAbstractRecur(manager *DdManager, f *DdNode, g *DdNode, cube *DdNode) *DdNode {\n    var F, ft, fe, G, gt, ge *DdNode;\n    var one, zero, r, t, e *DdNode;\n    unsigned int topf, topg, topcube, top, index;\n\n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    /* Terminal cases. */\n    // inlining of macro Cudd_Not\n    if f == zero || g == zero || f == ((DdNode *)((ptrint)(g) ^ 01)) { return(zero); }\n    if f == one \u0026\u0026 g == one {   return(one); }\n\n    if cube == one {\n        return(cuddBddAndRecur(manager, f, g));\n    }\n    if f == one || f == g {\n        return(cuddBddExistAbstractRecur(manager, g, cube));\n    }\n    if g == one {\n        return(cuddBddExistAbstractRecur(manager, f, cube));\n    }\n    /* At this point f, g, and cube are not constant. */\n\n    if f \u003e g { /* Try to increase cache efficiency. */\n        var tmp *DdNode  = f;\n        f = g;\n        g = tmp;\n    }\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    topf = manager.perm[F.index];\n    topg = manager.perm[G.index];\n    // inlining of macro ddMin\n    \n    if (topg) \u003c (topf) {\n        top = (topg);\n    } else {\n        top = (topf);\n    }\n    topcube = manager.perm[cube.index];\n\n    for topcube \u003c top {\n        // inlining of macro cuddT\n        cube = ((cube).type.kids.T);\n        if cube == one {\n            return(cuddBddAndRecur(manager, f, g));\n        }\n        topcube = manager.perm[cube.index];\n    }\n    /* Now, topcube \u003e= top. */\n\n    /* Check cache. */\n    if F.ref != 1 || G.ref != 1 {\n        r = cuddCacheLookup(manager, DD_BDD_AND_ABSTRACT_TAG, f, g, cube);\n        if r != nil {\n            return(r);\n        }\n    }\n\n    if manager.TimeStop \u0026\u0026 Abc_Clock() \u003e manager.TimeStop {\n        return nil; }\n\n    if topf == top {\n        index = F.index;\n        // inlining of macro cuddT\n        ft = ((F).type.kids.T);\n        // inlining of macro cuddE\n        fe = ((F).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (f) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            ft = ((DdNode *)((ptrint)(ft) ^ 01));\n            // inlining of macro Cudd_Not\n            fe = ((DdNode *)((ptrint)(fe) ^ 01));\n        }\n    } else {\n        index = G.index;\n        ft = fe = f;\n    }\n\n    if topg == top {\n        // inlining of macro cuddT\n        gt = ((G).type.kids.T);\n        // inlining of macro cuddE\n        ge = ((G).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (g) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            gt = ((DdNode *)((ptrint)(gt) ^ 01));\n            // inlining of macro Cudd_Not\n            ge = ((DdNode *)((ptrint)(ge) ^ 01));\n        }\n    } else {\n        gt = ge = g;\n    }\n\n    if topcube == top {       /* quantify */\n        // inlining of macro cuddT\n        var Cube *DdNode  = ((cube).type.kids.T);\n        t = cuddBddAndAbstractRecur(manager, ft, gt, Cube);\n        if t == nil { return(nil); }\n        /* Special case: 1 OR anything = 1. Hence, no need to compute\n        ** the else branch if t is 1. Likewise t + t * anything == t.\n        ** Notice that t == fe implies that fe does not depend on the\n        ** variables in Cube. Likewise for t == ge.\n        */\n        if t == one || t == fe || t == ge {\n            if F.ref != 1 || G.ref != 1 {\n                cuddCacheInsert(manager, DD_BDD_AND_ABSTRACT_TAG,\n                                f, g, cube, t); }\n            return(t);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        /* Special case: t + !t * anything == t + anything. */\n        // inlining of macro Cudd_Not\n        if t == ((DdNode *)((ptrint)(fe) ^ 01)) {\n            e = cuddBddExistAbstractRecur(manager, ge, Cube);\n        // inlining of macro Cudd_Not\n        } else if t == ((DdNode *)((ptrint)(ge) ^ 01)) {\n            e = cuddBddExistAbstractRecur(manager, fe, Cube);\n        } else {\n            e = cuddBddAndAbstractRecur(manager, fe, ge, Cube);\n        }\n        if e == nil {\n            Cudd_IterDerefBdd(manager, t);\n            return(nil);\n        }\n        if t == e {\n            r = t;\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(t).ref);\n        } else {\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(e).ref);\n            // inlining of macro Cudd_Not\n            r = cuddBddAndRecur(manager, ((DdNode *)((ptrint)(t) ^ 01)), ((DdNode *)((ptrint)(e) ^ 01)));\n            if r == nil {\n                Cudd_IterDerefBdd(manager, t);\n                Cudd_IterDerefBdd(manager, e);\n                return(nil);\n            }\n            // inlining of macro Cudd_Not\n            r = ((DdNode *)((ptrint)(r) ^ 01));\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(r).ref);\n            Cudd_DelayedDerefBdd(manager, t);\n            Cudd_DelayedDerefBdd(manager, e);\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(r).ref);\n        }\n    } else {\n        t = cuddBddAndAbstractRecur(manager, ft, gt, cube);\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        e = cuddBddAndAbstractRecur(manager, fe, ge, cube);\n        if e == nil {\n            Cudd_IterDerefBdd(manager, t);\n            return(nil);\n        }\n        if t == e {\n            r = t;\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(t).ref);\n        } else {\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(e).ref);\n            // inlining of macro Cudd_IsComplement\n            if int32( ((ptrint) (t) \u0026 01)) != 0 {\n                r = cuddUniqueInter(manager, int32( index),\n                                    // inlining of macro Cudd_Not\n                                    ((DdNode *)((ptrint)(t) ^ 01)), ((DdNode *)((ptrint)(e) ^ 01)));\n                if r == nil {\n                    Cudd_IterDerefBdd(manager, t);\n                    Cudd_IterDerefBdd(manager, e);\n                    return(nil);\n                }\n                // inlining of macro Cudd_Not\n                r = ((DdNode *)((ptrint)(r) ^ 01));\n            } else {\n                r = cuddUniqueInter(manager,int32(index),t,e);\n                if r == nil {\n                    Cudd_IterDerefBdd(manager, t);\n                    Cudd_IterDerefBdd(manager, e);\n                    return(nil);\n                }\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(e).ref);\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(t).ref);\n        }\n    }\n\n    if F.ref != 1 || G.ref != 1 {\n        cuddCacheInsert(manager, DD_BDD_AND_ABSTRACT_TAG, f, g, cube, r); }\n    return (r);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::mechanical::do::5027",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5064,
+      "End": 5066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::mechanical::do::6196",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 6233,
+      "End": 6235
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::7567",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7516,
+      "End": 7516
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::7711",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7597,
+      "End": 7597
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::8406",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8225,
+      "End": 8225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::8496",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8250,
+      "End": 8250
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::9656",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9075,
+      "End": 9075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::9750",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9106,
+      "End": 9106
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::10188",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9319,
+      "End": 9319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::10282",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9350,
+      "End": 9350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::11316",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10205,
+      "End": 10205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::11481",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10307,
+      "End": 10307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::12096",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10729,
+      "End": 10729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::12172",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10742,
+      "End": 10742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::12432",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10939,
+      "End": 10939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::13581",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11640,
+      "End": 11640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::13657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11653,
+      "End": 11653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::pointer-cast::13941",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11874,
+      "End": 11874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::Cudd_bddAndAbstract",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_bddAndAbstract",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4942,
+      "End": 5219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::Cudd_bddAndAbstractLimit",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_bddAndAbstractLimit",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5931,
+      "End": 6422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::cuddBddAndAbstractRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddBddAndAbstractRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7225,
+      "End": 12367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3281,
+      "End": 3392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::macro-inline::7459",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7459,
+      "End": 7476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::macro-inline::10113",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10113,
+      "End": 10123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::macro-inline::10633",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10633,
+      "End": 10645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::macro-inline::10676",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10676,
+      "End": 10686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::macro-inline::10964",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10964,
+      "End": 10974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::macro-inline::11080",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11080,
+      "End": 11092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::macro-inline::11222",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11222,
+      "End": 11232
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::macro-inline::11451",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11451,
+      "End": 11463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::macro-inline::11494",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11494,
+      "End": 11504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::macro-inline::12182",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12182,
+      "End": 12194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddAndAbs.c::macro-inline::12208",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12208,
+      "End": 12220
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddAndAbs.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Combined AND and existential abstraction for BDDs]\n\n  Description [External procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_bddAndAbstract()\n                \u003cli\u003e Cudd_bddAndAbstractLimit()\n                \u003c/ul\u003e\n            Internal procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddBddAndAbstractRecur()\n                \u003c/ul\u003e]\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddAndAbs.c,v 1.19 2004/08/13 18:04:46 fabio Exp $\";\n#endif\n\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis [Takes the AND of two BDDs and simultaneously abstracts the\n  variables in cube.]\n\n  Description [Takes the AND of two BDDs and simultaneously abstracts\n  the variables in cube. The variables are existentially abstracted.\n  Returns a pointer to the result is successful; NULL otherwise.\n  Cudd_bddAndAbstract implements the semiring matrix multiplication\n  algorithm for the boolean semiring.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_addMatrixMultiply Cudd_addTriangle Cudd_bddAnd]\n\n******************************************************************************/\nfunc Cudd_bddAndAbstract(manager *DdManager, f *DdNode, g *DdNode, cube *DdNode) *DdNode {\n    var res *DdNode;\n\n    for {\n        manager.reordered = 0;\n        res = cuddBddAndAbstractRecur(manager, f, g, cube);\n    \nif !(manager.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_bddAndAbstract */\n\n\n/**Function********************************************************************\n\n  Synopsis [Takes the AND of two BDDs and simultaneously abstracts the\n  variables in cube.  Returns NULL if too many nodes are required.]\n\n  Description [Takes the AND of two BDDs and simultaneously abstracts\n  the variables in cube. The variables are existentially abstracted.\n  Returns a pointer to the result is successful; NULL otherwise.\n  In particular, if the number of new nodes created exceeds\n  \u003ccode\u003elimit\u003c/code\u003e, this function returns NULL.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddAndAbstract]\n\n******************************************************************************/\nDdNode *\nCudd_bddAndAbstractLimit(\n  DdManager * manager,\n  DdNode * f,\n  DdNode * g,\n  DdNode * cube,\n  unsigned int limit)\n{\n    var res *DdNode;\n    unsigned int saveLimit = manager.maxLive;\n\n    manager.maxLive = (manager.keys - manager.dead) +\n      (manager.keysZ - manager.deadZ) + limit;\n    for {\n        manager.reordered = 0;\n        res = cuddBddAndAbstractRecur(manager, f, g, cube);\n    \nif !(manager.reordered == 1) { break }\n} \n    manager.maxLive = saveLimit;\n    return(res);\n\n} /* end of Cudd_bddAndAbstractLimit */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis [Takes the AND of two BDDs and simultaneously abstracts the\n  variables in cube.]\n\n  Description [Takes the AND of two BDDs and simultaneously abstracts\n  the variables in cube. The variables are existentially abstracted.\n  Returns a pointer to the result is successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddAndAbstract]\n\n******************************************************************************/\nfunc cuddBddAndAbstractRecur(manager *DdManager, f *DdNode, g *DdNode, cube *DdNode) *DdNode {\n    var F, ft, fe, G, gt, ge *DdNode;\n    var one, zero, r, t, e *DdNode;\n    unsigned int topf, topg, topcube, top, index;\n\n    statLine(manager);\n    // inlining of macro DD_ONE\n    one = ((manager).one);\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n\n    /* Terminal cases. */\n    // inlining of macro Cudd_Not\n    if f == zero || g == zero || f == ((DdNode *)((ptrint)(g) ^ 01)) { return(zero); }\n    if f == one \u0026\u0026 g == one {   return(one); }\n\n    if cube == one {\n        return(cuddBddAndRecur(manager, f, g));\n    }\n    if f == one || f == g {\n        return(cuddBddExistAbstractRecur(manager, g, cube));\n    }\n    if g == one {\n        return(cuddBddExistAbstractRecur(manager, f, cube));\n    }\n    /* At this point f, g, and cube are not constant. */\n\n    if f \u003e g { /* Try to increase cache efficiency. */\n        var tmp *DdNode  = f;\n        f = g;\n        g = tmp;\n    }\n\n    /* Here we can skip the use of cuddI, because the operands are known\n    ** to be non-constant.\n    */\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    topf = manager.perm[F.index];\n    topg = manager.perm[G.index];\n    // inlining of macro ddMin\n    \n    if (topg) \u003c (topf) {\n        top = (topg);\n    } else {\n        top = (topf);\n    }\n    topcube = manager.perm[cube.index];\n\n    for topcube \u003c top {\n        // inlining of macro cuddT\n        cube = ((cube).type.kids.T);\n        if cube == one {\n            return(cuddBddAndRecur(manager, f, g));\n        }\n        topcube = manager.perm[cube.index];\n    }\n    /* Now, topcube \u003e= top. */\n\n    /* Check cache. */\n    if F.ref != 1 || G.ref != 1 {\n        r = cuddCacheLookup(manager, DD_BDD_AND_ABSTRACT_TAG, f, g, cube);\n        if r != nil {\n            return(r);\n        }\n    }\n\n    if manager.TimeStop \u0026\u0026 Abc_Clock() \u003e manager.TimeStop {\n        return nil; }\n\n    if topf == top {\n        index = F.index;\n        // inlining of macro cuddT\n        ft = ((F).type.kids.T);\n        // inlining of macro cuddE\n        fe = ((F).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (f) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            ft = ((DdNode *)((ptrint)(ft) ^ 01));\n            // inlining of macro Cudd_Not\n            fe = ((DdNode *)((ptrint)(fe) ^ 01));\n        }\n    } else {\n        index = G.index;\n        ft = fe = f;\n    }\n\n    if topg == top {\n        // inlining of macro cuddT\n        gt = ((G).type.kids.T);\n        // inlining of macro cuddE\n        ge = ((G).type.kids.E);\n        // inlining of macro Cudd_IsComplement\n        if int32( ((ptrint) (g) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            gt = ((DdNode *)((ptrint)(gt) ^ 01));\n            // inlining of macro Cudd_Not\n            ge = ((DdNode *)((ptrint)(ge) ^ 01));\n        }\n    } else {\n        gt = ge = g;\n    }\n\n    if topcube == top {       /* quantify */\n        // inlining of macro cuddT\n        var Cube *DdNode  = ((cube).type.kids.T);\n        t = cuddBddAndAbstractRecur(manager, ft, gt, Cube);\n        if t == nil { return(nil); }\n        /* Special case: 1 OR anything = 1. Hence, no need to compute\n        ** the else branch if t is 1. Likewise t + t * anything == t.\n        ** Notice that t == fe implies that fe does not depend on the\n        ** variables in Cube. Likewise for t == ge.\n        */\n        if t == one || t == fe || t == ge {\n            if F.ref != 1 || G.ref != 1 {\n                cuddCacheInsert(manager, DD_BDD_AND_ABSTRACT_TAG,\n                                f, g, cube, t); }\n            return(t);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        /* Special case: t + !t * anything == t + anything. */\n        // inlining of macro Cudd_Not\n        if t == ((DdNode *)((ptrint)(fe) ^ 01)) {\n            e = cuddBddExistAbstractRecur(manager, ge, Cube);\n        // inlining of macro Cudd_Not\n        } else if t == ((DdNode *)((ptrint)(ge) ^ 01)) {\n            e = cuddBddExistAbstractRecur(manager, fe, Cube);\n        } else {\n            e = cuddBddAndAbstractRecur(manager, fe, ge, Cube);\n        }\n        if e == nil {\n            Cudd_IterDerefBdd(manager, t);\n            return(nil);\n        }\n        if t == e {\n            r = t;\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(t).ref);\n        } else {\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(e).ref);\n            // inlining of macro Cudd_Not\n            r = cuddBddAndRecur(manager, ((DdNode *)((ptrint)(t) ^ 01)), ((DdNode *)((ptrint)(e) ^ 01)));\n            if r == nil {\n                Cudd_IterDerefBdd(manager, t);\n                Cudd_IterDerefBdd(manager, e);\n                return(nil);\n            }\n            // inlining of macro Cudd_Not\n            r = ((DdNode *)((ptrint)(r) ^ 01));\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(r).ref);\n            Cudd_DelayedDerefBdd(manager, t);\n            Cudd_DelayedDerefBdd(manager, e);\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(r).ref);\n        }\n    } else {\n        t = cuddBddAndAbstractRecur(manager, ft, gt, cube);\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        e = cuddBddAndAbstractRecur(manager, fe, ge, cube);\n        if e == nil {\n            Cudd_IterDerefBdd(manager, t);\n            return(nil);\n        }\n        if t == e {\n            r = t;\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(t).ref);\n        } else {\n            // inlining of macro cuddRef\n            cuddSatInc(Cudd_Regular(e).ref);\n            // inlining of macro Cudd_IsComplement\n            if int32( ((ptrint) (t) \u0026 01)) != 0 {\n                r = cuddUniqueInter(manager, int32( index),\n                                    // inlining of macro Cudd_Not\n                                    ((DdNode *)((ptrint)(t) ^ 01)), ((DdNode *)((ptrint)(e) ^ 01)));\n                if r == nil {\n                    Cudd_IterDerefBdd(manager, t);\n                    Cudd_IterDerefBdd(manager, e);\n                    return(nil);\n                }\n                // inlining of macro Cudd_Not\n                r = ((DdNode *)((ptrint)(r) ^ 01));\n            } else {\n                r = cuddUniqueInter(manager,int32(index),t,e);\n                if r == nil {\n                    Cudd_IterDerefBdd(manager, t);\n                    Cudd_IterDerefBdd(manager, e);\n                    return(nil);\n                }\n            }\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(e).ref);\n            // inlining of macro cuddDeref\n            cuddSatDec(Cudd_Regular(t).ref);\n        }\n    }\n\n    if F.ref != 1 || G.ref != 1 {\n        cuddCacheInsert(manager, DD_BDD_AND_ABSTRACT_TAG, f, g, cube, r); }\n    return (r);\n\n} /* end of cuddBddAndAbstractRecur */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

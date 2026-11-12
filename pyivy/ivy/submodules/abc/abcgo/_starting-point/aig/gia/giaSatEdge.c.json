@@ -1,0 +1,667 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c",
+  "SHA256": "c5824f984984d1d967ac5f53ad149bdb7425d7e3c0079e950544f6889ee9b8a3",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 2765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManHasMapping(p) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 101,
+        "Column": 70,
+        "ByteOffset": 3714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((p.pLutRefs) ? (free((char *) (p.pLutRefs)), (p.pLutRefs) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 118,
+        "Column": 65,
+        "ByteOffset": 4552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pLevels) ? (free((char *) (p.pLevels)), (p.pLevels) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 131,
+        "Column": 9,
+        "ByteOffset": 5160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsCi(pObj) || Gia_ObjIsLut(p.pGia, iLut) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 205,
+        "Column": 65,
+        "ByteOffset": 7530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pLevels) ? (free((char *) (p.pLevels)), (p.pLevels) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 207,
+        "Column": 57,
+        "ByteOffset": 7650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 252,
+        "Column": 25,
+        "ByteOffset": 9552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        assert( nVars \u003c nVarsLut );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 258,
+        "Column": 29,
+        "ByteOffset": 9948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 29,
+        "ByteOffset": 10696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 287,
+        "Column": 17,
+        "ByteOffset": 11256
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( nVars \u003c= nVarsLut );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 293,
+        "Column": 25,
+        "ByteOffset": 11599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 300,
+        "Column": 17,
+        "ByteOffset": 11869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( nVars != 1 \u0026\u0026 nVars \u003c nVarsLut );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 306,
+        "Column": 21,
+        "ByteOffset": 12186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 311,
+        "Column": 21,
+        "ByteOffset": 12418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 319,
+        "Column": 21,
+        "ByteOffset": 12802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 325,
+        "Column": 21,
+        "ByteOffset": 13095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 331,
+        "Column": 5,
+        "ByteOffset": 13189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count == p.nVars );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 5,
+        "ByteOffset": 13239
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Delay constraints = %d. \", sat_solver_nclauses(p.pSat) - nConstr ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 360,
+        "Column": 17,
+        "ByteOffset": 14730
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 372,
+        "Column": 17,
+        "ByteOffset": 15578
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( value );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 383,
+        "Column": 9,
+        "ByteOffset": 15981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( value );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 386,
+        "Column": 5,
+        "ByteOffset": 16026
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Edge constraints = %d. \", sat_solver_nclauses(p.pSat) - nConstr ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 441,
+        "Column": 5,
+        "ByteOffset": 17672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Running SatEdge with starting delay %d and edge %d (edge vars %d, total vars %d)\\n\", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 447,
+        "Column": 65,
+        "ByteOffset": 18108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sat_solver_set_runtime_limit( p.pSat, nTimeOut ? nTimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 462,
+        "Column": 13,
+        "ByteOffset": 18993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Proved UNSAT for delay %d.  \", Delay );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 479,
+        "Column": 17,
+        "ByteOffset": 19645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Solution with delay %2d and %5d edges exists. Conf = %8d.  \", Delay, Count, nConfs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 487,
+        "Column": 21,
+        "ByteOffset": 20033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%d=%d \", i, sat_solver_var_value(p.pSat, i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 489,
+        "Column": 17,
+        "ByteOffset": 20123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 492,
+        "Column": 21,
+        "ByteOffset": 20232
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%d=%d \", i, sat_solver_var_value(p.pSat, i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 494,
+        "Column": 17,
+        "ByteOffset": 20322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 500,
+        "Column": 21,
+        "ByteOffset": 20463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Proved UNSAT for delay %d.  \", Delay );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 502,
+        "Column": 21,
+        "ByteOffset": 20557
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Resource limit reached for delay %d.  \", Delay ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Seg_ManCountIntEdges",
+      "Start": 2553,
+      "End": 3455,
+      "BodyStart": 2659,
+      "Original": "Vec_Int_t * Seg_ManCountIntEdges( Gia_Man_t * p, Vec_Int_t * vPolars, Vec_Int_t * vToSkip, int nFanouts )\n{\n    int i, iLut, iFanin;\n    Vec_Int_t * vEdges = Vec_IntAlloc( 1000 );\n    assert( Gia_ManHasMapping(p) );\n    Vec_IntClear( vPolars );\n    Vec_IntClear( vToSkip );\n    if ( nFanouts )\n        Gia_ManSetLutRefs( p );\n    Gia_ManForEachLut( p, iLut )\n        Gia_LutForEachFanin( p, iLut, iFanin, i )\n            if ( Gia_ObjIsAnd(Gia_ManObj(p, iFanin)) )\n            {\n                if ( p-\u003evEdge1 \u0026\u0026 Gia_ObjCheckEdge(p, iFanin, iLut) )\n                    Vec_IntPush( vPolars, Vec_IntSize(vEdges)/2 );\n                if ( nFanouts \u0026\u0026 Gia_ObjLutRefNumId(p, iFanin) \u003e= nFanouts )\n                    Vec_IntPush( vToSkip, Vec_IntSize(vEdges)/2 );\n                Vec_IntPushTwo( vEdges, iFanin, iLut );\n            }\n    if ( nFanouts )\n        ABC_FREE( p-\u003epLutRefs );\n    return vEdges;\n}",
+      "Draft": "func Seg_ManCountIntEdges(p *Gia_Man_t, vPolars *Vec_Int_t, vToSkip *Vec_Int_t, nFanouts int32) *Vec_Int_t {\n    var i, iLut, iFanin int32;\n    var vEdges *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");\n    Vec_IntClear( vPolars );\n    Vec_IntClear( vToSkip );\n    if nFanouts != 0 {\n        Gia_ManSetLutRefs( p ); }\n    // inlining of macro Gia_ManForEachLut\n    for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut(p, iLut) {} else {\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p,iLut) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p,iLut)[i]),1); i++  {\n            if Gia_ObjIsAnd(Gia_ManObj(p, iFanin)) {\n                if p.vEdge1 \u0026\u0026 Gia_ObjCheckEdge(p, iFanin, iLut) {\n                    Vec_IntPush( vPolars, Vec_IntSize(vEdges)/2 ); }\n                if (nFanouts != 0) \u0026\u0026 Gia_ObjLutRefNumId(p, iFanin) \u003e= nFanouts {\n                    Vec_IntPush( vToSkip, Vec_IntSize(vEdges)/2 ); }\n                Vec_IntPushTwo( vEdges, iFanin, iLut );\n            }\n        } }\n    }\n    if nFanouts != 0 {\n        // inlining of macro ABC_FREE\n        ((p.pLutRefs) ? (free((char *) (p.pLutRefs)), (p.pLutRefs) = 0) : 0); }\n    return vEdges;\n}"
+    },
+    {
+      "Name": "Seg_ManCollectObjEdges",
+      "Start": 3456,
+      "End": 3766,
+      "BodyStart": 3524,
+      "Original": "Vec_Wec_t * Seg_ManCollectObjEdges( Vec_Int_t * vEdges, int nObjs )\n{\n    int iFanin, iObj, i;\n    Vec_Wec_t * vRes = Vec_WecStart( nObjs );\n    Vec_IntForEachEntryDouble( vEdges, iFanin, iObj, i )\n    {\n        Vec_WecPush( vRes, iFanin, i/2 );\n        Vec_WecPush( vRes, iObj, i/2 );\n    }\n    return vRes;\n}",
+      "Draft": "func Seg_ManCollectObjEdges(vEdges *Vec_Int_t, nObjs int32) *Vec_Wec_t {\n    var iFanin, iObj, i int32;\n    var vRes *Vec_Wec_t  = Vec_WecStart( nObjs );\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vEdges)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vEdges, i)), 1) \u0026\u0026 (((iObj) = Vec_IntEntry(vEdges, i+1)), 1); i += 2  {\n        Vec_WecPush( vRes, iFanin, i/2 );\n        Vec_WecPush( vRes, iObj, i/2 );\n    }\n    return vRes;\n}"
+    },
+    {
+      "Name": "Seg_ManCountIntLevels",
+      "Start": 3767,
+      "End": 4827,
+      "BodyStart": 3825,
+      "Original": "int Seg_ManCountIntLevels( Seg_Man_t * p, int iStartVar )\n{\n    Gia_Obj_t * pObj;\n    int iLut, nVars;\n    Vec_IntFill( p-\u003evFirsts, Gia_ManObjNum(p-\u003epGia), -1 );\n    Vec_IntFill( p-\u003evNvars,  Gia_ManObjNum(p-\u003epGia), 0 );\n    ABC_FREE( p-\u003epLevels );\n    if ( p-\u003epGia-\u003epManTime )\n    {\n        p-\u003eDelayMax = Gia_ManLutLevelWithBoxes( p-\u003epGia );\n        p-\u003epLevels = Vec_IntReleaseArray( p-\u003epGia-\u003evLevels );\n        Vec_IntFreeP( \u0026p-\u003epGia-\u003evLevels );\n    }\n    else\n        p-\u003eDelayMax = Gia_ManLutLevel( p-\u003epGia, \u0026p-\u003epLevels );\n    Gia_ManForEachObj1( p-\u003epGia, pObj, iLut )\n    {\n        if ( Gia_ObjIsCo(pObj) )\n            continue;\n        if ( Gia_ObjIsAnd(pObj) \u0026\u0026 !Gia_ObjIsLut(p-\u003epGia, iLut) )\n            continue;\n        assert( Gia_ObjIsCi(pObj) || Gia_ObjIsLut(p-\u003epGia, iLut) );\n        Vec_IntWriteEntry( p-\u003evFirsts, iLut, iStartVar );\n        //assert( p-\u003epLevels[iLut] \u003e 0 );\n        nVars = p-\u003epLevels[iLut] \u003c 2 ? 0 : p-\u003epLevels[iLut];\n        Vec_IntWriteEntry( p-\u003evNvars,  iLut, nVars );\n        iStartVar += nVars;\n    }\n    return iStartVar;\n}",
+      "Draft": "func Seg_ManCountIntLevels(p *Seg_Man_t, iStartVar int32) int32 {\n    var pObj *Gia_Obj_t;\n    var iLut, nVars int32;\n    Vec_IntFill( p.vFirsts, Gia_ManObjNum(p.pGia), -1 );\n    Vec_IntFill( p.vNvars,  Gia_ManObjNum(p.pGia), 0 );\n    // inlining of macro ABC_FREE\n    ((p.pLevels) ? (free((char *) (p.pLevels)), (p.pLevels) = 0) : 0);\n    if p.pGia.pManTime {\n        p.DelayMax = Gia_ManLutLevelWithBoxes( p.pGia );\n        p.pLevels = Vec_IntReleaseArray( p.pGia.vLevels );\n        Vec_IntFreeP( \u0026p.pGia.vLevels );\n    \n    } else {\n        p.DelayMax = Gia_ManLutLevel( p.pGia, \u0026p.pLevels ); }\n    // inlining of macro Gia_ManForEachObj1\n    for  iLut = 1; (iLut \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, iLut)); iLut++  {\n        if Gia_ObjIsCo(pObj) {\n            continue; }\n        if Gia_ObjIsAnd(pObj) \u0026\u0026 !Gia_ObjIsLut(p.pGia, iLut) {\n            continue; }\n        assert(Gia_ObjIsCi(pObj) || Gia_ObjIsLut(p.pGia, iLut), \"Gia_ObjIsCi(pObj) || Gia_ObjIsLut(p.pGia, iLut)\");\n        Vec_IntWriteEntry( p.vFirsts, iLut, iStartVar );\n        //assert( p-\u003epLevels[iLut] \u003e 0 );\n        if p.pLevels[iLut] \u003c 2 {\n            nVars = 0;\n        } else {\n            nVars = p.pLevels[iLut];\n        }\n        Vec_IntWriteEntry( p.vNvars,  iLut, nVars );\n        iStartVar += nVars;\n    }\n    return iStartVar;\n}"
+    },
+    {
+      "Name": "Seg_ManAlloc",
+      "Start": 5063,
+      "End": 6049,
+      "BodyStart": 5122,
+      "Original": "Seg_Man_t * Seg_ManAlloc( Gia_Man_t * pGia, int nFanouts )\n{\n    int nVarsAll;\n    Seg_Man_t * p = ABC_CALLOC( Seg_Man_t, 1 );\n    p-\u003evPolars    = Vec_IntAlloc( 1000 ); \n    p-\u003evToSkip    = Vec_IntAlloc( 1000 ); \n    p-\u003evEdges     = Seg_ManCountIntEdges( pGia, p-\u003evPolars, p-\u003evToSkip, nFanouts );\n    p-\u003enVars      = Vec_IntSize(p-\u003evEdges)/2;\n    p-\u003eLogN       = Abc_Base2Log(p-\u003enVars);\n    p-\u003ePower2     = 1 \u003c\u003c p-\u003eLogN;\n    //p-\u003epSat       = Sbm_AddCardinSolver( p-\u003eLogN, \u0026p-\u003evCardVars );\n    p-\u003epSat       = sat_solver_new();\n    sat_solver_setnvars( p-\u003epSat, p-\u003enVars );\n    p-\u003eFirstVar   = sat_solver_nvars( p-\u003epSat );\n    sat_solver_bookmark( p-\u003epSat );\n    p-\u003epGia       = pGia;\n    // internal\n    p-\u003evFirsts    = Vec_IntAlloc( 0 ); \n    p-\u003evNvars     = Vec_IntAlloc( 0 ); \n    p-\u003evLits      = Vec_IntAlloc( 0 ); \n    nVarsAll      = Seg_ManCountIntLevels( p, p-\u003eFirstVar );\n    sat_solver_setnvars( p-\u003epSat, nVarsAll );\n    // other\n    Gia_ManFillValue( pGia );\n    return p;\n}",
+      "Draft": "func Seg_ManAlloc(pGia *Gia_Man_t, nFanouts int32) *Seg_Man_t {\n    var nVarsAll int32;\n    // inlining of macro ABC_CALLOC\n    var p *Seg_Man_t  = \u0026Seg_Man_t{};\n    p.vPolars    = Vec_IntAlloc( 1000 ); \n    p.vToSkip    = Vec_IntAlloc( 1000 ); \n    p.vEdges     = Seg_ManCountIntEdges( pGia, p.vPolars, p.vToSkip, nFanouts );\n    p.nVars      = Vec_IntSize(p.vEdges)/2;\n    p.LogN       = Abc_Base2Log(p.nVars);\n    p.Power2     = 1 \u003c\u003c p.LogN;\n    //p-\u003epSat       = Sbm_AddCardinSolver( p-\u003eLogN, \u0026p-\u003evCardVars );\n    p.pSat       = sat_solver_new();\n    sat_solver_setnvars( p.pSat, p.nVars );\n    p.FirstVar   = sat_solver_nvars( p.pSat );\n    sat_solver_bookmark( p.pSat );\n    p.pGia       = pGia;\n    // internal\n    p.vFirsts    = Vec_IntAlloc( 0 ); \n    p.vNvars     = Vec_IntAlloc( 0 ); \n    p.vLits      = Vec_IntAlloc( 0 ); \n    nVarsAll      = Seg_ManCountIntLevels( p, p.FirstVar );\n    sat_solver_setnvars( p.pSat, nVarsAll );\n    // other\n    Gia_ManFillValue( pGia );\n    return p;\n}"
+    },
+    {
+      "Name": "Seg_ManClean",
+      "Start": 6050,
+      "End": 6442,
+      "BodyStart": 6085,
+      "Original": "void Seg_ManClean( Seg_Man_t * p )\n{\n    p-\u003etimeStart = Abc_Clock();\n    sat_solver_rollback( p-\u003epSat );\n    sat_solver_bookmark( p-\u003epSat );\n    // internal\n    Vec_IntClear( p-\u003evEdges );\n    Vec_IntClear( p-\u003evFirsts );\n    Vec_IntClear( p-\u003evNvars );\n    Vec_IntClear( p-\u003evLits );\n    Vec_IntClear( p-\u003evPolars );\n    Vec_IntClear( p-\u003evToSkip );\n    // other\n    Gia_ManFillValue( p-\u003epGia );\n}",
+      "Draft": "func Seg_ManClean(p *Seg_Man_t) {\n    p.timeStart = Abc_Clock();\n    sat_solver_rollback( p.pSat );\n    sat_solver_bookmark( p.pSat );\n    // internal\n    Vec_IntClear( p.vEdges );\n    Vec_IntClear( p.vFirsts );\n    Vec_IntClear( p.vNvars );\n    Vec_IntClear( p.vLits );\n    Vec_IntClear( p.vPolars );\n    Vec_IntClear( p.vToSkip );\n    // other\n    Gia_ManFillValue( p.pGia );\n}"
+    },
+    {
+      "Name": "Seg_ManStop",
+      "Start": 6443,
+      "End": 6807,
+      "BodyStart": 6477,
+      "Original": "void Seg_ManStop( Seg_Man_t * p )\n{\n    sat_solver_delete( p-\u003epSat );\n    //Vec_IntFree( p-\u003evCardVars );\n    // internal\n    Vec_IntFree( p-\u003evEdges );\n    Vec_IntFree( p-\u003evFirsts );\n    Vec_IntFree( p-\u003evNvars );\n    Vec_IntFree( p-\u003evLits );\n    Vec_IntFree( p-\u003evPolars );\n    Vec_IntFree( p-\u003evToSkip );\n    ABC_FREE( p-\u003epLevels );\n    // other\n    ABC_FREE( p );\n}",
+      "Draft": "func Seg_ManStop(p *Seg_Man_t) {\n    sat_solver_delete( p.pSat );\n    //Vec_IntFree( p-\u003evCardVars );\n    // internal\n    Vec_IntFree( p.vEdges );\n    Vec_IntFree( p.vFirsts );\n    Vec_IntFree( p.vNvars );\n    Vec_IntFree( p.vLits );\n    Vec_IntFree( p.vPolars );\n    Vec_IntFree( p.vToSkip );\n    // inlining of macro ABC_FREE\n    ((p.pLevels) ? (free((char *) (p.pLevels)), (p.pLevels) = 0) : 0);\n    // other\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Seg_ManCreateCnf",
+      "Start": 7043,
+      "End": 14480,
+      "BodyStart": 7106,
+      "Original": "void Seg_ManCreateCnf( Seg_Man_t * p, int fTwo, int fVerbose )\n{\n    Tim_Man_t * pTim = (Tim_Man_t *)p-\u003epGia-\u003epManTime;\n    Gia_Obj_t * pObj;\n    Vec_Wec_t * vObjEdges;\n    Vec_Int_t * vLevel;\n    int iLut, iFanin, iFirst;\n    int pLits[3], Count = 0;\n    int i, k, nVars, Edge, value;\n    abctime clk = Abc_Clock();\n    // edge delay constraints\n    int nConstr = sat_solver_nclauses(p-\u003epSat);\n    Gia_ManForEachObj( p-\u003epGia, pObj, iLut )\n    {\n        int iFirstLut = Vec_IntEntry( p-\u003evFirsts, iLut );\n        int nVarsLut  = Vec_IntEntry( p-\u003evNvars, iLut );\n        if ( pTim \u0026\u0026 Gia_ObjIsCi(pObj) )\n        {\n            int iBox = Tim_ManBoxForCi( pTim, Gia_ObjCioId(pObj) );\n            if ( nVarsLut \u003e 0 \u0026\u0026 iBox \u003e= 0 )\n            {\n                int iCiId = Tim_ManBoxOutputFirst( pTim, iBox );\n                if ( iCiId == Gia_ObjCioId(pObj) ) // first input\n                {\n                    int nIns = Tim_ManBoxInputNum( pTim, iBox );\n                    int iIn0 = Tim_ManBoxInputFirst( pTim, iBox );\n                    for ( i = 0; i \u003c nIns-1; i++ ) // skip carry-in pin\n                    {\n                        Gia_Obj_t * pOut = Gia_ManCo( p-\u003epGia, iIn0+i );\n                        int iDriverId = Gia_ObjFaninId0p( p-\u003epGia, pOut );\n                        int AddOn;\n\n                        iFirst = Vec_IntEntry( p-\u003evFirsts, iDriverId );\n                        nVars  = Vec_IntEntry( p-\u003evNvars, iDriverId );\n                        assert( nVars \u003c nVarsLut );\n                        AddOn = (int)(nVars \u003c nVarsLut);\n                        for ( k = 0; k \u003c nVars; k++ )\n                        {\n                            pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                            pLits[1] = Abc_Var2Lit( iFirstLut+k+AddOn, 0 );\n                            value = sat_solver_addclause( p-\u003epSat, pLits, pLits+2 );\n                            assert( value );\n                        }\n                    }\n                }\n                else // intermediate input\n                {\n                    Gia_Obj_t * pIn = Gia_ManCi( p-\u003epGia, iCiId );\n                    int iObjId = Gia_ObjId( p-\u003epGia, pIn );\n\n                    iFirst = Vec_IntEntry( p-\u003evFirsts, iObjId );\n                    nVars  = Vec_IntEntry( p-\u003evNvars, iObjId );\n                    if ( nVars \u003e 0 )\n                    {\n                        for ( k = 0; k \u003c nVars; k++ )\n                        {\n                            pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                            pLits[1] = Abc_Var2Lit( iFirstLut+k, 0 );\n                            value = sat_solver_addclause( p-\u003epSat, pLits, pLits+2 );\n                            assert( value );\n                        }\n                    }\n                }\n            }\n            continue;\n        }\n        if ( !Gia_ObjIsLut(p-\u003epGia, iLut) )\n            continue;\n        Gia_LutForEachFanin( p-\u003epGia, iLut, iFanin, i )\n            if ( pTim \u0026\u0026 Gia_ObjIsCi(Gia_ManObj(p-\u003epGia, iFanin)) )\n            {\n                iFirst = Vec_IntEntry( p-\u003evFirsts, iFanin );\n                nVars  = Vec_IntEntry( p-\u003evNvars, iFanin );\n                assert( nVars \u003c= nVarsLut );\n                if ( nVars \u003e 0 )\n                {\n                    for ( k = 0; k \u003c nVars; k++ )\n                    {\n                        pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                        pLits[1] = Abc_Var2Lit( iFirstLut+k, 0 );\n                        value = sat_solver_addclause( p-\u003epSat, pLits, pLits+2 );\n                        assert( value );\n                    }\n                }\n            }\n            else if ( Gia_ObjIsAnd(Gia_ManObj(p-\u003epGia, iFanin)) )\n            {\n                iFirst = Vec_IntEntry( p-\u003evFirsts, iFanin );\n                nVars  = Vec_IntEntry( p-\u003evNvars, iFanin );\n                assert( nVars != 1 \u0026\u0026 nVars \u003c nVarsLut );\n                // add initial\n                if ( nVars == 0 )\n                {\n                    pLits[0] = Abc_Var2Lit( Count, 1 );\n                    pLits[1] = Abc_Var2Lit( iFirstLut, 0 );\n                    value = sat_solver_addclause( p-\u003epSat, pLits, pLits+2 );\n                    assert( value );\n\n                    pLits[0] = Abc_Var2Lit( Count, 0 );\n                    pLits[1] = Abc_Var2Lit( iFirstLut+1, 0 );\n                    value = sat_solver_addclause( p-\u003epSat, pLits, pLits+2 );\n                    assert( value );\n                }\n                // add others\n                for ( k = 0; k \u003c nVars; k++ )\n                {\n                    pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                    pLits[1] = Abc_Var2Lit( Count, 1 );\n                    pLits[2] = Abc_Var2Lit( iFirstLut+k, 0 );\n                    value = sat_solver_addclause( p-\u003epSat, pLits, pLits+3 );\n                    assert( value );\n\n                    pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                    pLits[1] = Abc_Var2Lit( Count, 0 );\n                    pLits[2] = Abc_Var2Lit( iFirstLut+k+1, 0 );\n                    value = sat_solver_addclause( p-\u003epSat, pLits, pLits+3 );\n                    assert( value );\n                }\n                Count++;\n            }\n    }\n    assert( Count == p-\u003enVars );\n    if ( fVerbose )\n    printf( \"Delay constraints = %d. \", sat_solver_nclauses(p-\u003epSat) - nConstr );\n    nConstr = sat_solver_nclauses(p-\u003epSat);\n/*\n    // delay relationship constraints\n    Vec_IntForEachEntryTwo( p-\u003evFirsts, p-\u003evNvars, iFirst, nVars, iLut )\n    {\n        if ( nVars \u003c 2 )\n            continue;\n        for ( i = 1; i \u003c nVars; i++ )\n        {\n            pLits[0] = Abc_Var2Lit( iFirst + i - 1, 1 );\n            pLits[1] = Abc_Var2Lit( iFirst + i,     0 );\n            value = sat_solver_addclause( p-\u003epSat, pLits, pLits+2 );\n            assert( value );\n        }\n    }\n*/\n    // edge compatibility constraint\n    vObjEdges = Seg_ManCollectObjEdges( p-\u003evEdges, Gia_ManObjNum(p-\u003epGia) );\n    Vec_WecForEachLevel( vObjEdges, vLevel, i )\n    {\n        int v1, v2, v3, Var1, Var2, Var3;\n        if ( (!fTwo \u0026\u0026 Vec_IntSize(vLevel) \u003e= 2) || (fTwo \u0026\u0026 Vec_IntSize(vLevel) \u003e 10) )\n        {\n            Vec_IntForEachEntry( vLevel, Var1, v1 )\n            Vec_IntForEachEntryStart( vLevel, Var2, v2, v1 + 1 )\n            {\n                pLits[0] = Abc_Var2Lit( Var1, 1 );\n                pLits[1] = Abc_Var2Lit( Var2, 1 );\n                value = sat_solver_addclause( p-\u003epSat, pLits, pLits+2 );\n                assert( value );\n            }\n        }\n        else if ( fTwo \u0026\u0026 Vec_IntSize(vLevel) \u003e= 3 )\n        {\n            Vec_IntForEachEntry( vLevel, Var1, v1 )\n            Vec_IntForEachEntryStart( vLevel, Var2, v2, v1 + 1 )\n            Vec_IntForEachEntryStart( vLevel, Var3, v3, v2 + 1 )\n            {\n                pLits[0] = Abc_Var2Lit( Var1, 1 );\n                pLits[1] = Abc_Var2Lit( Var2, 1 );\n                pLits[2] = Abc_Var2Lit( Var3, 1 );\n                value = sat_solver_addclause( p-\u003epSat, pLits, pLits+3 );\n                assert( value );\n            }\n        }\n    }\n    Vec_WecFree( vObjEdges );\n    // block forbidden edges\n    Vec_IntForEachEntry( p-\u003evToSkip, Edge, i )\n    {\n        pLits[0] = Abc_Var2Lit( Edge, 1 );\n        value = sat_solver_addclause( p-\u003epSat, pLits, pLits+1 );\n        assert( value );\n    }\n    if ( fVerbose )\n    printf( \"Edge constraints = %d. \", sat_solver_nclauses(p-\u003epSat) - nConstr );\n    if ( fVerbose )\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Seg_ManCreateCnf(p *Seg_Man_t, fTwo int32, fVerbose int32) {\n    var pTim *Tim_Man_t  = (Tim_Man_t *)p.pGia.pManTime;\n    var pObj *Gia_Obj_t;\n    var vObjEdges *Vec_Wec_t;\n    var vLevel *Vec_Int_t;\n    var iLut, iFanin, iFirst int32;\n    var pLits [3]int32;\n    var Count int32;\n    var i, k, nVars, Edge, value int32;\n    var clk abctime  = Abc_Clock();\n    // edge delay constraints\n    var nConstr int32  = sat_solver_nclauses(p.pSat);\n    // inlining of macro Gia_ManForEachObj\n    for  iLut = 0; (iLut \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, iLut)); iLut++  {\n        var iFirstLut int32  = Vec_IntEntry( p.vFirsts, iLut );\n        var nVarsLut int32   = Vec_IntEntry( p.vNvars, iLut );\n        if (pTim != nil) \u0026\u0026 Gia_ObjIsCi(pObj) {\n            var iBox int32  = Tim_ManBoxForCi( pTim, Gia_ObjCioId(pObj) );\n            if nVarsLut \u003e 0 \u0026\u0026 iBox \u003e= 0 {\n                var iCiId int32  = Tim_ManBoxOutputFirst( pTim, iBox );\n                if iCiId == Gia_ObjCioId(pObj) { // first input\n                \n                    var nIns int32  = Tim_ManBoxInputNum( pTim, iBox );\n                    var iIn0 int32  = Tim_ManBoxInputFirst( pTim, iBox );\n                    for  i = 0; i \u003c nIns-1; i++  { // skip carry-in pin\n                    \n                        var pOut *Gia_Obj_t  = Gia_ManCo( p.pGia, iIn0+i );\n                        var iDriverId int32  = Gia_ObjFaninId0p( p.pGia, pOut );\n                        var AddOn int32;\n\n                        iFirst = Vec_IntEntry( p.vFirsts, iDriverId );\n                        nVars  = Vec_IntEntry( p.vNvars, iDriverId );\n                        assert(nVars \u003c nVarsLut, \"nVars \u003c nVarsLut\");\n                        AddOn = int32((nVars \u003c nVarsLut));\n                        for  k = 0; k \u003c nVars; k++  {\n                            pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                            pLits[1] = Abc_Var2Lit( iFirstLut+k+AddOn, 0 );\n                            value = sat_solver_addclause( p.pSat, pLits, pLits+2 );\n                            assert((value != 0), \"value\");\n                        }\n                    }\n                \n                } else { // intermediate input\n                \n                    var pIn *Gia_Obj_t  = Gia_ManCi( p.pGia, iCiId );\n                    var iObjId int32  = Gia_ObjId( p.pGia, pIn );\n\n                    iFirst = Vec_IntEntry( p.vFirsts, iObjId );\n                    nVars  = Vec_IntEntry( p.vNvars, iObjId );\n                    if nVars \u003e 0 {\n                        for  k = 0; k \u003c nVars; k++  {\n                            pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                            pLits[1] = Abc_Var2Lit( iFirstLut+k, 0 );\n                            value = sat_solver_addclause( p.pSat, pLits, pLits+2 );\n                            assert((value != 0), \"value\");\n                        }\n                    }\n                }\n            }\n            continue;\n        }\n        if !Gia_ObjIsLut(p.pGia, iLut) {\n            continue; }\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iLut) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iLut)[i]),1); i++  {\n            if (pTim != nil) \u0026\u0026 Gia_ObjIsCi(Gia_ManObj(p.pGia, iFanin)) {\n                iFirst = Vec_IntEntry( p.vFirsts, iFanin );\n                nVars  = Vec_IntEntry( p.vNvars, iFanin );\n                assert(nVars \u003c= nVarsLut, \"nVars \u003c= nVarsLut\");\n                if nVars \u003e 0 {\n                    for  k = 0; k \u003c nVars; k++  {\n                        pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                        pLits[1] = Abc_Var2Lit( iFirstLut+k, 0 );\n                        value = sat_solver_addclause( p.pSat, pLits, pLits+2 );\n                        assert((value != 0), \"value\");\n                    }\n                }\n            \n            } else if Gia_ObjIsAnd(Gia_ManObj(p.pGia, iFanin)) {\n                iFirst = Vec_IntEntry( p.vFirsts, iFanin );\n                nVars  = Vec_IntEntry( p.vNvars, iFanin );\n                assert(nVars != 1 \u0026\u0026 nVars \u003c nVarsLut, \"nVars != 1 \u0026\u0026 nVars \u003c nVarsLut\");\n                // add initial\n                if nVars == 0 {\n                    pLits[0] = Abc_Var2Lit( Count, 1 );\n                    pLits[1] = Abc_Var2Lit( iFirstLut, 0 );\n                    value = sat_solver_addclause( p.pSat, pLits, pLits+2 );\n                    assert((value != 0), \"value\");\n\n                    pLits[0] = Abc_Var2Lit( Count, 0 );\n                    pLits[1] = Abc_Var2Lit( iFirstLut+1, 0 );\n                    value = sat_solver_addclause( p.pSat, pLits, pLits+2 );\n                    assert((value != 0), \"value\");\n                }\n                // add others\n                for  k = 0; k \u003c nVars; k++  {\n                    pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                    pLits[1] = Abc_Var2Lit( Count, 1 );\n                    pLits[2] = Abc_Var2Lit( iFirstLut+k, 0 );\n                    value = sat_solver_addclause( p.pSat, pLits, pLits+3 );\n                    assert((value != 0), \"value\");\n\n                    pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                    pLits[1] = Abc_Var2Lit( Count, 0 );\n                    pLits[2] = Abc_Var2Lit( iFirstLut+k+1, 0 );\n                    value = sat_solver_addclause( p.pSat, pLits, pLits+3 );\n                    assert((value != 0), \"value\");\n                }\n                Count++;\n            }\n        }\n    }\n    assert(Count == p.nVars, \"Count == p.nVars\");\n    if fVerbose != 0 {\n    fmt.Printf(\"Delay constraints = %d. \", sat_solver_nclauses(p.pSat) - nConstr); }\n    nConstr = sat_solver_nclauses(p.pSat);\n/*\n    // delay relationship constraints\n    Vec_IntForEachEntryTwo( p-\u003evFirsts, p-\u003evNvars, iFirst, nVars, iLut )\n    {\n        if ( nVars \u003c 2 )\n            continue;\n        for ( i = 1; i \u003c nVars; i++ )\n        {\n            pLits[0] = Abc_Var2Lit( iFirst + i - 1, 1 );\n            pLits[1] = Abc_Var2Lit( iFirst + i,     0 );\n            value = sat_solver_addclause( p-\u003epSat, pLits, pLits+2 );\n            assert( value );\n        }\n    }\n*/\n    // edge compatibility constraint\n    vObjEdges = Seg_ManCollectObjEdges( p.vEdges, Gia_ManObjNum(p.pGia) );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vObjEdges)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vObjEdges, i)), 1); i++  {\n        var v1, v2, v3, Var1, Var2, Var3 int32;\n        if (!(fTwo != 0) \u0026\u0026 Vec_IntSize(vLevel) \u003e= 2) || ((fTwo != 0) \u0026\u0026 Vec_IntSize(vLevel) \u003e 10) {\n            // inlining of macro Vec_IntForEachEntry\n            for  v1 = 0; (v1 \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Var1) = Vec_IntEntry(vLevel, v1)), 1); v1++  {\n            // inlining of macro Vec_IntForEachEntryStart\n            for  v2 = v1 + 1; (v2 \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Var2) = Vec_IntEntry(vLevel, v2)), 1); v2++  {\n                pLits[0] = Abc_Var2Lit( Var1, 1 );\n                pLits[1] = Abc_Var2Lit( Var2, 1 );\n                value = sat_solver_addclause( p.pSat, pLits, pLits+2 );\n                assert((value != 0), \"value\");\n            }\n            }\n        \n        } else if (fTwo != 0) \u0026\u0026 Vec_IntSize(vLevel) \u003e= 3 {\n            // inlining of macro Vec_IntForEachEntry\n            for  v1 = 0; (v1 \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Var1) = Vec_IntEntry(vLevel, v1)), 1); v1++  {\n            // inlining of macro Vec_IntForEachEntryStart\n            for  v2 = v1 + 1; (v2 \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Var2) = Vec_IntEntry(vLevel, v2)), 1); v2++  {\n            // inlining of macro Vec_IntForEachEntryStart\n            for  v3 = v2 + 1; (v3 \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Var3) = Vec_IntEntry(vLevel, v3)), 1); v3++  {\n                pLits[0] = Abc_Var2Lit( Var1, 1 );\n                pLits[1] = Abc_Var2Lit( Var2, 1 );\n                pLits[2] = Abc_Var2Lit( Var3, 1 );\n                value = sat_solver_addclause( p.pSat, pLits, pLits+3 );\n                assert((value != 0), \"value\");\n            }\n            }\n            }\n        }\n    }\n    Vec_WecFree( vObjEdges );\n    // block forbidden edges\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vToSkip)) \u0026\u0026 (((Edge) = Vec_IntEntry(p.vToSkip, i)), 1); i++  {\n        pLits[0] = Abc_Var2Lit( Edge, 1 );\n        value = sat_solver_addclause( p.pSat, pLits, pLits+1 );\n        assert((value != 0), \"value\");\n    }\n    if fVerbose != 0 {\n    fmt.Printf(\"Edge constraints = %d. \", sat_solver_nclauses(p.pSat) - nConstr); }\n    if fVerbose != 0 {\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n}"
+    },
+    {
+      "Name": "Seg_ManConvertResult",
+      "Start": 14716,
+      "End": 15025,
+      "BodyStart": 14766,
+      "Original": "Vec_Int_t * Seg_ManConvertResult( Seg_Man_t * p )\n{\n    int iFanin, iObj, i;\n    Vec_Int_t * vEdges2 = Vec_IntAlloc( 1000 );\n    Vec_IntForEachEntryDouble( p-\u003evEdges, iFanin, iObj, i )\n        if ( sat_solver_var_value(p-\u003epSat, i/2) )\n            Vec_IntPushTwo( vEdges2, iFanin, iObj );\n    return vEdges2;\n}",
+      "Draft": "func Seg_ManConvertResult(p *Seg_Man_t) *Vec_Int_t {\n    var iFanin, iObj, i int32;\n    var vEdges2 *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(p.vEdges)) \u0026\u0026 (((iFanin) = Vec_IntEntry(p.vEdges, i)), 1) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vEdges, i+1)), 1); i += 2  {\n        if sat_solver_var_value(p.pSat, i/2) {\n            Vec_IntPushTwo( vEdges2, iFanin, iObj ); }\n    }\n    return vEdges2;\n}"
+    },
+    {
+      "Name": "Seg_ManComputeDelay",
+      "Start": 15261,
+      "End": 18805,
+      "BodyStart": 15359,
+      "Original": "void Seg_ManComputeDelay( Gia_Man_t * pGia, int DelayInit, int nFanouts, int fTwo, int fVerbose )\n{\n    int nBTLimit = 0;\n    int nTimeOut = 0;\n    int fVeryVerbose = 0;\n\n    Gia_Obj_t * pObj;\n    abctime clk = Abc_Clock();\n    Vec_Int_t * vEdges2 = NULL;\n    int i, iLut, iFirst, nVars, status, Delay, nConfs;\n    Seg_Man_t * p = Seg_ManAlloc( pGia, nFanouts );\n    int DelayStart = DelayInit ? DelayInit : p-\u003eDelayMax;\n\n    if ( fVerbose )\n    printf( \"Running SatEdge with starting delay %d and edge %d (edge vars %d, total vars %d)\\n\", \n        DelayStart, fTwo+1, p-\u003eFirstVar, sat_solver_nvars(p-\u003epSat) );\n    Seg_ManCreateCnf( p, fTwo, fVerbose );\n    //Sat_SolverWriteDimacs( p-\u003epSat, \"test_edge.cnf\", NULL, NULL, 0 );\n    // set resource limits\n    sat_solver_set_resource_limits( p-\u003epSat, nBTLimit, 0, 0, 0 );\n    sat_solver_set_runtime_limit( p-\u003epSat, nTimeOut ? nTimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0 );\n    sat_solver_set_random( p-\u003epSat, 1 );\n    sat_solver_set_polarity( p-\u003epSat, Vec_IntArray(p-\u003evPolars), Vec_IntSize(p-\u003evPolars) );\n    //sat_solver_set_var_activity( p-\u003epSat, NULL, p-\u003enVars );\n    // increment delay gradually\n    for ( Delay = p-\u003eDelayMax; Delay \u003e= 0; Delay-- )\n    {\n        // we constrain COs, although it would be fine to constrain only POs\n        Gia_ManForEachCoDriver( p-\u003epGia, pObj, i )\n        {\n            iLut   = Gia_ObjId( p-\u003epGia, pObj );\n            iFirst = Vec_IntEntry( p-\u003evFirsts, iLut );\n            nVars  = Vec_IntEntry( p-\u003evNvars, iLut );\n            if ( Delay \u003c nVars \u0026\u0026 !sat_solver_push(p-\u003epSat, Abc_Var2Lit(iFirst + Delay, 1)) )\n                break;\n        }\n        if ( i \u003c Gia_ManCoNum(p-\u003epGia) )\n        {\n            printf( \"Proved UNSAT for delay %d.  \", Delay );\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            break;\n        }\n        if ( Delay \u003e DelayStart )\n            continue;\n        // solve with assumptions\n        //clk = Abc_Clock();\n        nConfs = sat_solver_nconflicts( p-\u003epSat );\n        status = sat_solver_solve_internal( p-\u003epSat );\n        nConfs = sat_solver_nconflicts( p-\u003epSat ) - nConfs;\n        if ( status == l_True )\n        {\n            if ( fVerbose )\n            {\n                int Count = 0;\n                for ( i = 0; i \u003c p-\u003enVars; i++ )\n                    Count += sat_solver_var_value(p-\u003epSat, i);\n                printf( \"Solution with delay %2d and %5d edges exists. Conf = %8d.  \", Delay, Count, nConfs );\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            // save the result\n            Vec_IntFreeP( \u0026vEdges2 );\n            vEdges2 = Seg_ManConvertResult( p );\n            if ( fVeryVerbose )\n            {\n                for ( i = 0; i \u003c p-\u003enVars; i++ )\n                    printf( \"%d=%d \", i, sat_solver_var_value(p-\u003epSat, i) );\n                printf( \"   \" );\n\n                for ( i = p-\u003enVars; i \u003c sat_solver_nvars(p-\u003epSat); i++ )\n                    printf( \"%d=%d \", i, sat_solver_var_value(p-\u003epSat, i) );\n                printf( \"\\n\" );\n            }\n        }\n        else\n        {\n            if ( fVerbose )\n            {\n                if ( status == l_False )\n                    printf( \"Proved UNSAT for delay %d.  \", Delay );\n                else\n                    printf( \"Resource limit reached for delay %d.  \", Delay );\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            break;\n        }\n    }\n    Gia_ManEdgeFromArray( p-\u003epGia, vEdges2 );\n    Vec_IntFreeP( \u0026vEdges2 );\n    Seg_ManStop( p );\n}",
+      "Draft": "func Seg_ManComputeDelay(pGia *Gia_Man_t, DelayInit int32, nFanouts int32, fTwo int32, fVerbose int32) {\n    var nBTLimit int32;\n    var nTimeOut int32;\n    var fVeryVerbose int32;\n\n    var pObj *Gia_Obj_t;\n    var clk abctime  = Abc_Clock();\n    var vEdges2 *Vec_Int_t  = nil;\n    var i, iLut, iFirst, nVars, status, Delay, nConfs int32;\n    var p *Seg_Man_t  = Seg_ManAlloc( pGia, nFanouts );\n    var DelayStart int32;\n    if DelayInit != 0 {\n        DelayStart = DelayInit;\n    } else {\n        DelayStart = p.DelayMax;\n    }\n\n    if fVerbose != 0 {\n    fmt.Printf(\"Running SatEdge with starting delay %d and edge %d (edge vars %d, total vars %d)\\n\", DelayStart, fTwo+1, p.FirstVar, sat_solver_nvars(p.pSat)); }\n    Seg_ManCreateCnf( p, fTwo, fVerbose );\n    //Sat_SolverWriteDimacs( p-\u003epSat, \"test_edge.cnf\", NULL, NULL, 0 );\n    // set resource limits\n    sat_solver_set_resource_limits( p.pSat, nBTLimit, 0, 0, 0 );\n    sat_solver_set_runtime_limit( p.pSat, nTimeOut ? nTimeOut * int64(time.Second) + Abc_Clock(): 0 );\n    sat_solver_set_random( p.pSat, 1 );\n    sat_solver_set_polarity( p.pSat, Vec_IntArray(p.vPolars), Vec_IntSize(p.vPolars) );\n    //sat_solver_set_var_activity( p-\u003epSat, NULL, p-\u003enVars );\n    // increment delay gradually\n    for  Delay = p.DelayMax; Delay \u003e= 0; Delay--  {\n        // we constrain COs, although it would be fine to constrain only POs\n        // inlining of macro Gia_ManForEachCoDriver\n        for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ObjFanin0(Gia_ManCo(p.pGia, i))); i++  {\n            iLut   = Gia_ObjId( p.pGia, pObj );\n            iFirst = Vec_IntEntry( p.vFirsts, iLut );\n            nVars  = Vec_IntEntry( p.vNvars, iLut );\n            if Delay \u003c nVars \u0026\u0026 !sat_solver_push(p.pSat, Abc_Var2Lit(iFirst + Delay, 1)) {\n                break; }\n        }\n        if i \u003c Gia_ManCoNum(p.pGia) {\n            fmt.Printf(\"Proved UNSAT for delay %d.  \", Delay);\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            break;\n        }\n        if Delay \u003e DelayStart {\n            continue; }\n        // solve with assumptions\n        //clk = Abc_Clock();\n        nConfs = sat_solver_nconflicts( p.pSat );\n        status = sat_solver_solve_internal( p.pSat );\n        nConfs = sat_solver_nconflicts( p.pSat ) - nConfs;\n        if status == l_True {\n            if fVerbose != 0 {\n                var Count int32;\n                for  i = 0; i \u003c p.nVars; i++  {\n                    Count += sat_solver_var_value(p.pSat, i);\n                }\n                fmt.Printf(\"Solution with delay %2d and %5d edges exists. Conf = %8d.  \", Delay, Count, nConfs);\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            // save the result\n            Vec_IntFreeP( \u0026vEdges2 );\n            vEdges2 = Seg_ManConvertResult( p );\n            if fVeryVerbose != 0 {\n                for  i = 0; i \u003c p.nVars; i++  {\n                    fmt.Printf(\"%d=%d \", i, sat_solver_var_value(p.pSat, i));\n                }\n                fmt.Printf(\"   \");\n\n                for  i = p.nVars; i \u003c sat_solver_nvars(p.pSat); i++  {\n                    fmt.Printf(\"%d=%d \", i, sat_solver_var_value(p.pSat, i));\n                }\n                fmt.Printf(\"\\n\");\n            }\n        \n        } else {\n            if fVerbose != 0 {\n                if status == l_False {\n                    fmt.Printf(\"Proved UNSAT for delay %d.  \", Delay);\n                } else {\n                    fmt.Printf(\"Resource limit reached for delay %d.  \", Delay); }\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            break;\n        }\n    }\n    Gia_ManEdgeFromArray( p.pGia, vEdges2 );\n    Vec_IntFreeP( \u0026vEdges2 );\n    Seg_ManStop( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::struct::Seg_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Seg_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 811,
+      "End": 1973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::mechanical::sizeof::5894",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5162,
+      "End": 5162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::pointer-cast::3695",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3410,
+      "End": 3410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::pointer-cast::4516",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3991,
+      "End": 3991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::pointer-cast::5860",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5162,
+      "End": 5162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::pointer-cast::7541",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6750,
+      "End": 6750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::pointer-cast::7663",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6791,
+      "End": 6791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::pointer-cast::8018",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7131,
+      "End": 7144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::ternary::Seg_ManCountIntEdges",
+      "Category": "ternary-review",
+      "Symbol": "Seg_ManCountIntEdges",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2553,
+      "End": 3455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::Seg_ManCountIntEdges",
+      "Category": "semantic-review",
+      "Symbol": "Seg_ManCountIntEdges",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2553,
+      "End": 3455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::Seg_ManCollectObjEdges",
+      "Category": "semantic-review",
+      "Symbol": "Seg_ManCollectObjEdges",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3456,
+      "End": 3766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::ternary::Seg_ManCountIntLevels",
+      "Category": "ternary-review",
+      "Symbol": "Seg_ManCountIntLevels",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3767,
+      "End": 4827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::Seg_ManCountIntLevels",
+      "Category": "semantic-review",
+      "Symbol": "Seg_ManCountIntLevels",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3767,
+      "End": 4827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::Seg_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Seg_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5063,
+      "End": 6049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::Seg_ManClean",
+      "Category": "semantic-review",
+      "Symbol": "Seg_ManClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6050,
+      "End": 6442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::ternary::Seg_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Seg_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6443,
+      "End": 6807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::Seg_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Seg_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6443,
+      "End": 6807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::Seg_ManCreateCnf",
+      "Category": "semantic-review",
+      "Symbol": "Seg_ManCreateCnf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7043,
+      "End": 14480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::Seg_ManConvertResult",
+      "Category": "semantic-review",
+      "Symbol": "Seg_ManConvertResult",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14716,
+      "End": 15025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::ternary::Seg_ManComputeDelay",
+      "Category": "ternary-review",
+      "Symbol": "Seg_ManComputeDelay",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 15261,
+      "End": 18805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::Seg_ManComputeDelay",
+      "Category": "semantic-review",
+      "Symbol": "Seg_ManComputeDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15261,
+      "End": 18805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaSatEdge.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 19053
+    }
+  ],
+  "Draft": "package gia\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [giaSatEdge.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaSatEdge.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"misc/tim/tim.h\"\n//#include \"sat/bsat/satStore.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Seg_Man_t struct {\n    pSat    *sat_solver;         // SAT solver\n    //Vec_Int_t *    vCardVars;    // candinality variables\n    nVars            int32;        // max vars (edge num)\n    LogN            int32;         // base-2 log of max vars\n    Power2            int32;       // power-2 of LogN\n    FirstVar            int32;     // first variable to be used\n    // parameters\n    nBTLimit            int32;     // conflicts\n    DelayMax            int32;     // external delay\n    nEdges            int32;       // the number of edges\n    fDelay            int32;       // delay mode\n    fReverse            int32;     // reverse windowing\n    fVerbose            int32;     // verbose\n    // window\n    pGia     *Gia_Man_t;\n    vPolars     *Vec_Int_t;      // polarity\n    vToSkip     *Vec_Int_t;      // edges to skip\n    vEdges     *Vec_Int_t;       // edges as fanin/fanout pairs \n    vFirsts     *Vec_Int_t;      // first SAT variable\n    vNvars     *Vec_Int_t;       // number of SAT variables\n    vLits     *Vec_Int_t;        // literals\n    pLevels           *int32;      // levels\n\n    // statistics\n    timeStart        abctime;\n}\n\n// extern sat_solver * Sbm_AddCardinSolver( int LogN, Vec_Int_t ** pvVars );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Count the number of edges between internal nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Seg_ManCountIntEdges(p *Gia_Man_t, vPolars *Vec_Int_t, vToSkip *Vec_Int_t, nFanouts int32) *Vec_Int_t {\n    var i, iLut, iFanin int32;\n    var vEdges *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");\n    Vec_IntClear( vPolars );\n    Vec_IntClear( vToSkip );\n    if nFanouts != 0 {\n        Gia_ManSetLutRefs( p ); }\n    // inlining of macro Gia_ManForEachLut\n    for  iLut = 1; iLut \u003c Gia_ManObjNum(p); iLut++  { if !Gia_ObjIsLut(p, iLut) {} else {\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p,iLut) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p,iLut)[i]),1); i++  {\n            if Gia_ObjIsAnd(Gia_ManObj(p, iFanin)) {\n                if p.vEdge1 \u0026\u0026 Gia_ObjCheckEdge(p, iFanin, iLut) {\n                    Vec_IntPush( vPolars, Vec_IntSize(vEdges)/2 ); }\n                if (nFanouts != 0) \u0026\u0026 Gia_ObjLutRefNumId(p, iFanin) \u003e= nFanouts {\n                    Vec_IntPush( vToSkip, Vec_IntSize(vEdges)/2 ); }\n                Vec_IntPushTwo( vEdges, iFanin, iLut );\n            }\n        } }\n    }\n    if nFanouts != 0 {\n        // inlining of macro ABC_FREE\n        ((p.pLutRefs) ? (free((char *) (p.pLutRefs)), (p.pLutRefs) = 0) : 0); }\n    return vEdges;\n}\nfunc Seg_ManCollectObjEdges(vEdges *Vec_Int_t, nObjs int32) *Vec_Wec_t {\n    var iFanin, iObj, i int32;\n    var vRes *Vec_Wec_t  = Vec_WecStart( nObjs );\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(vEdges)) \u0026\u0026 (((iFanin) = Vec_IntEntry(vEdges, i)), 1) \u0026\u0026 (((iObj) = Vec_IntEntry(vEdges, i+1)), 1); i += 2  {\n        Vec_WecPush( vRes, iFanin, i/2 );\n        Vec_WecPush( vRes, iObj, i/2 );\n    }\n    return vRes;\n}\nfunc Seg_ManCountIntLevels(p *Seg_Man_t, iStartVar int32) int32 {\n    var pObj *Gia_Obj_t;\n    var iLut, nVars int32;\n    Vec_IntFill( p.vFirsts, Gia_ManObjNum(p.pGia), -1 );\n    Vec_IntFill( p.vNvars,  Gia_ManObjNum(p.pGia), 0 );\n    // inlining of macro ABC_FREE\n    ((p.pLevels) ? (free((char *) (p.pLevels)), (p.pLevels) = 0) : 0);\n    if p.pGia.pManTime {\n        p.DelayMax = Gia_ManLutLevelWithBoxes( p.pGia );\n        p.pLevels = Vec_IntReleaseArray( p.pGia.vLevels );\n        Vec_IntFreeP( \u0026p.pGia.vLevels );\n    \n    } else {\n        p.DelayMax = Gia_ManLutLevel( p.pGia, \u0026p.pLevels ); }\n    // inlining of macro Gia_ManForEachObj1\n    for  iLut = 1; (iLut \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, iLut)); iLut++  {\n        if Gia_ObjIsCo(pObj) {\n            continue; }\n        if Gia_ObjIsAnd(pObj) \u0026\u0026 !Gia_ObjIsLut(p.pGia, iLut) {\n            continue; }\n        assert(Gia_ObjIsCi(pObj) || Gia_ObjIsLut(p.pGia, iLut), \"Gia_ObjIsCi(pObj) || Gia_ObjIsLut(p.pGia, iLut)\");\n        Vec_IntWriteEntry( p.vFirsts, iLut, iStartVar );\n        //assert( p-\u003epLevels[iLut] \u003e 0 );\n        if p.pLevels[iLut] \u003c 2 {\n            nVars = 0;\n        } else {\n            nVars = p.pLevels[iLut];\n        }\n        Vec_IntWriteEntry( p.vNvars,  iLut, nVars );\n        iStartVar += nVars;\n    }\n    return iStartVar;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Seg_ManAlloc(pGia *Gia_Man_t, nFanouts int32) *Seg_Man_t {\n    var nVarsAll int32;\n    // inlining of macro ABC_CALLOC\n    var p *Seg_Man_t  = \u0026Seg_Man_t{};\n    p.vPolars    = Vec_IntAlloc( 1000 ); \n    p.vToSkip    = Vec_IntAlloc( 1000 ); \n    p.vEdges     = Seg_ManCountIntEdges( pGia, p.vPolars, p.vToSkip, nFanouts );\n    p.nVars      = Vec_IntSize(p.vEdges)/2;\n    p.LogN       = Abc_Base2Log(p.nVars);\n    p.Power2     = 1 \u003c\u003c p.LogN;\n    //p-\u003epSat       = Sbm_AddCardinSolver( p-\u003eLogN, \u0026p-\u003evCardVars );\n    p.pSat       = sat_solver_new();\n    sat_solver_setnvars( p.pSat, p.nVars );\n    p.FirstVar   = sat_solver_nvars( p.pSat );\n    sat_solver_bookmark( p.pSat );\n    p.pGia       = pGia;\n    // internal\n    p.vFirsts    = Vec_IntAlloc( 0 ); \n    p.vNvars     = Vec_IntAlloc( 0 ); \n    p.vLits      = Vec_IntAlloc( 0 ); \n    nVarsAll      = Seg_ManCountIntLevels( p, p.FirstVar );\n    sat_solver_setnvars( p.pSat, nVarsAll );\n    // other\n    Gia_ManFillValue( pGia );\n    return p;\n}\nfunc Seg_ManClean(p *Seg_Man_t) {\n    p.timeStart = Abc_Clock();\n    sat_solver_rollback( p.pSat );\n    sat_solver_bookmark( p.pSat );\n    // internal\n    Vec_IntClear( p.vEdges );\n    Vec_IntClear( p.vFirsts );\n    Vec_IntClear( p.vNvars );\n    Vec_IntClear( p.vLits );\n    Vec_IntClear( p.vPolars );\n    Vec_IntClear( p.vToSkip );\n    // other\n    Gia_ManFillValue( p.pGia );\n}\nfunc Seg_ManStop(p *Seg_Man_t) {\n    sat_solver_delete( p.pSat );\n    //Vec_IntFree( p-\u003evCardVars );\n    // internal\n    Vec_IntFree( p.vEdges );\n    Vec_IntFree( p.vFirsts );\n    Vec_IntFree( p.vNvars );\n    Vec_IntFree( p.vLits );\n    Vec_IntFree( p.vPolars );\n    Vec_IntFree( p.vToSkip );\n    // inlining of macro ABC_FREE\n    ((p.pLevels) ? (free((char *) (p.pLevels)), (p.pLevels) = 0) : 0);\n    // other\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Seg_ManCreateCnf(p *Seg_Man_t, fTwo int32, fVerbose int32) {\n    var pTim *Tim_Man_t  = (Tim_Man_t *)p.pGia.pManTime;\n    var pObj *Gia_Obj_t;\n    var vObjEdges *Vec_Wec_t;\n    var vLevel *Vec_Int_t;\n    var iLut, iFanin, iFirst int32;\n    var pLits [3]int32;\n    var Count int32;\n    var i, k, nVars, Edge, value int32;\n    var clk abctime  = Abc_Clock();\n    // edge delay constraints\n    var nConstr int32  = sat_solver_nclauses(p.pSat);\n    // inlining of macro Gia_ManForEachObj\n    for  iLut = 0; (iLut \u003c p.pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p.pGia, iLut)); iLut++  {\n        var iFirstLut int32  = Vec_IntEntry( p.vFirsts, iLut );\n        var nVarsLut int32   = Vec_IntEntry( p.vNvars, iLut );\n        if (pTim != nil) \u0026\u0026 Gia_ObjIsCi(pObj) {\n            var iBox int32  = Tim_ManBoxForCi( pTim, Gia_ObjCioId(pObj) );\n            if nVarsLut \u003e 0 \u0026\u0026 iBox \u003e= 0 {\n                var iCiId int32  = Tim_ManBoxOutputFirst( pTim, iBox );\n                if iCiId == Gia_ObjCioId(pObj) { // first input\n                \n                    var nIns int32  = Tim_ManBoxInputNum( pTim, iBox );\n                    var iIn0 int32  = Tim_ManBoxInputFirst( pTim, iBox );\n                    for  i = 0; i \u003c nIns-1; i++  { // skip carry-in pin\n                    \n                        var pOut *Gia_Obj_t  = Gia_ManCo( p.pGia, iIn0+i );\n                        var iDriverId int32  = Gia_ObjFaninId0p( p.pGia, pOut );\n                        var AddOn int32;\n\n                        iFirst = Vec_IntEntry( p.vFirsts, iDriverId );\n                        nVars  = Vec_IntEntry( p.vNvars, iDriverId );\n                        assert(nVars \u003c nVarsLut, \"nVars \u003c nVarsLut\");\n                        AddOn = int32((nVars \u003c nVarsLut));\n                        for  k = 0; k \u003c nVars; k++  {\n                            pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                            pLits[1] = Abc_Var2Lit( iFirstLut+k+AddOn, 0 );\n                            value = sat_solver_addclause( p.pSat, pLits, pLits+2 );\n                            assert((value != 0), \"value\");\n                        }\n                    }\n                \n                } else { // intermediate input\n                \n                    var pIn *Gia_Obj_t  = Gia_ManCi( p.pGia, iCiId );\n                    var iObjId int32  = Gia_ObjId( p.pGia, pIn );\n\n                    iFirst = Vec_IntEntry( p.vFirsts, iObjId );\n                    nVars  = Vec_IntEntry( p.vNvars, iObjId );\n                    if nVars \u003e 0 {\n                        for  k = 0; k \u003c nVars; k++  {\n                            pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                            pLits[1] = Abc_Var2Lit( iFirstLut+k, 0 );\n                            value = sat_solver_addclause( p.pSat, pLits, pLits+2 );\n                            assert((value != 0), \"value\");\n                        }\n                    }\n                }\n            }\n            continue;\n        }\n        if !Gia_ObjIsLut(p.pGia, iLut) {\n            continue; }\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iLut) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iLut)[i]),1); i++  {\n            if (pTim != nil) \u0026\u0026 Gia_ObjIsCi(Gia_ManObj(p.pGia, iFanin)) {\n                iFirst = Vec_IntEntry( p.vFirsts, iFanin );\n                nVars  = Vec_IntEntry( p.vNvars, iFanin );\n                assert(nVars \u003c= nVarsLut, \"nVars \u003c= nVarsLut\");\n                if nVars \u003e 0 {\n                    for  k = 0; k \u003c nVars; k++  {\n                        pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                        pLits[1] = Abc_Var2Lit( iFirstLut+k, 0 );\n                        value = sat_solver_addclause( p.pSat, pLits, pLits+2 );\n                        assert((value != 0), \"value\");\n                    }\n                }\n            \n            } else if Gia_ObjIsAnd(Gia_ManObj(p.pGia, iFanin)) {\n                iFirst = Vec_IntEntry( p.vFirsts, iFanin );\n                nVars  = Vec_IntEntry( p.vNvars, iFanin );\n                assert(nVars != 1 \u0026\u0026 nVars \u003c nVarsLut, \"nVars != 1 \u0026\u0026 nVars \u003c nVarsLut\");\n                // add initial\n                if nVars == 0 {\n                    pLits[0] = Abc_Var2Lit( Count, 1 );\n                    pLits[1] = Abc_Var2Lit( iFirstLut, 0 );\n                    value = sat_solver_addclause( p.pSat, pLits, pLits+2 );\n                    assert((value != 0), \"value\");\n\n                    pLits[0] = Abc_Var2Lit( Count, 0 );\n                    pLits[1] = Abc_Var2Lit( iFirstLut+1, 0 );\n                    value = sat_solver_addclause( p.pSat, pLits, pLits+2 );\n                    assert((value != 0), \"value\");\n                }\n                // add others\n                for  k = 0; k \u003c nVars; k++  {\n                    pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                    pLits[1] = Abc_Var2Lit( Count, 1 );\n                    pLits[2] = Abc_Var2Lit( iFirstLut+k, 0 );\n                    value = sat_solver_addclause( p.pSat, pLits, pLits+3 );\n                    assert((value != 0), \"value\");\n\n                    pLits[0] = Abc_Var2Lit( iFirst+k, 1 );\n                    pLits[1] = Abc_Var2Lit( Count, 0 );\n                    pLits[2] = Abc_Var2Lit( iFirstLut+k+1, 0 );\n                    value = sat_solver_addclause( p.pSat, pLits, pLits+3 );\n                    assert((value != 0), \"value\");\n                }\n                Count++;\n            }\n        }\n    }\n    assert(Count == p.nVars, \"Count == p.nVars\");\n    if fVerbose != 0 {\n    fmt.Printf(\"Delay constraints = %d. \", sat_solver_nclauses(p.pSat) - nConstr); }\n    nConstr = sat_solver_nclauses(p.pSat);\n/*\n    // delay relationship constraints\n    Vec_IntForEachEntryTwo( p-\u003evFirsts, p-\u003evNvars, iFirst, nVars, iLut )\n    {\n        if ( nVars \u003c 2 )\n            continue;\n        for ( i = 1; i \u003c nVars; i++ )\n        {\n            pLits[0] = Abc_Var2Lit( iFirst + i - 1, 1 );\n            pLits[1] = Abc_Var2Lit( iFirst + i,     0 );\n            value = sat_solver_addclause( p-\u003epSat, pLits, pLits+2 );\n            assert( value );\n        }\n    }\n*/\n    // edge compatibility constraint\n    vObjEdges = Seg_ManCollectObjEdges( p.vEdges, Gia_ManObjNum(p.pGia) );\n    // inlining of macro Vec_WecForEachLevel\n    for  i = 0; (i \u003c Vec_WecSize(vObjEdges)) \u0026\u0026 (((vLevel) = Vec_WecEntry(vObjEdges, i)), 1); i++  {\n        var v1, v2, v3, Var1, Var2, Var3 int32;\n        if (!(fTwo != 0) \u0026\u0026 Vec_IntSize(vLevel) \u003e= 2) || ((fTwo != 0) \u0026\u0026 Vec_IntSize(vLevel) \u003e 10) {\n            // inlining of macro Vec_IntForEachEntry\n            for  v1 = 0; (v1 \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Var1) = Vec_IntEntry(vLevel, v1)), 1); v1++  {\n            // inlining of macro Vec_IntForEachEntryStart\n            for  v2 = v1 + 1; (v2 \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Var2) = Vec_IntEntry(vLevel, v2)), 1); v2++  {\n                pLits[0] = Abc_Var2Lit( Var1, 1 );\n                pLits[1] = Abc_Var2Lit( Var2, 1 );\n                value = sat_solver_addclause( p.pSat, pLits, pLits+2 );\n                assert((value != 0), \"value\");\n            }\n            }\n        \n        } else if (fTwo != 0) \u0026\u0026 Vec_IntSize(vLevel) \u003e= 3 {\n            // inlining of macro Vec_IntForEachEntry\n            for  v1 = 0; (v1 \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Var1) = Vec_IntEntry(vLevel, v1)), 1); v1++  {\n            // inlining of macro Vec_IntForEachEntryStart\n            for  v2 = v1 + 1; (v2 \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Var2) = Vec_IntEntry(vLevel, v2)), 1); v2++  {\n            // inlining of macro Vec_IntForEachEntryStart\n            for  v3 = v2 + 1; (v3 \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((Var3) = Vec_IntEntry(vLevel, v3)), 1); v3++  {\n                pLits[0] = Abc_Var2Lit( Var1, 1 );\n                pLits[1] = Abc_Var2Lit( Var2, 1 );\n                pLits[2] = Abc_Var2Lit( Var3, 1 );\n                value = sat_solver_addclause( p.pSat, pLits, pLits+3 );\n                assert((value != 0), \"value\");\n            }\n            }\n            }\n        }\n    }\n    Vec_WecFree( vObjEdges );\n    // block forbidden edges\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vToSkip)) \u0026\u0026 (((Edge) = Vec_IntEntry(p.vToSkip, i)), 1); i++  {\n        pLits[0] = Abc_Var2Lit( Edge, 1 );\n        value = sat_solver_addclause( p.pSat, pLits, pLits+1 );\n        assert((value != 0), \"value\");\n    }\n    if fVerbose != 0 {\n    fmt.Printf(\"Edge constraints = %d. \", sat_solver_nclauses(p.pSat) - nConstr); }\n    if fVerbose != 0 {\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Seg_ManConvertResult(p *Seg_Man_t) *Vec_Int_t {\n    var iFanin, iObj, i int32;\n    var vEdges2 *Vec_Int_t  = Vec_IntAlloc( 1000 );\n    // inlining of macro Vec_IntForEachEntryDouble\n    for  i = 0; (i+1 \u003c Vec_IntSize(p.vEdges)) \u0026\u0026 (((iFanin) = Vec_IntEntry(p.vEdges, i)), 1) \u0026\u0026 (((iObj) = Vec_IntEntry(p.vEdges, i+1)), 1); i += 2  {\n        if sat_solver_var_value(p.pSat, i/2) {\n            Vec_IntPushTwo( vEdges2, iFanin, iObj ); }\n    }\n    return vEdges2;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Seg_ManComputeDelay(pGia *Gia_Man_t, DelayInit int32, nFanouts int32, fTwo int32, fVerbose int32) {\n    var nBTLimit int32;\n    var nTimeOut int32;\n    var fVeryVerbose int32;\n\n    var pObj *Gia_Obj_t;\n    var clk abctime  = Abc_Clock();\n    var vEdges2 *Vec_Int_t  = nil;\n    var i, iLut, iFirst, nVars, status, Delay, nConfs int32;\n    var p *Seg_Man_t  = Seg_ManAlloc( pGia, nFanouts );\n    var DelayStart int32;\n    if DelayInit != 0 {\n        DelayStart = DelayInit;\n    } else {\n        DelayStart = p.DelayMax;\n    }\n\n    if fVerbose != 0 {\n    fmt.Printf(\"Running SatEdge with starting delay %d and edge %d (edge vars %d, total vars %d)\\n\", DelayStart, fTwo+1, p.FirstVar, sat_solver_nvars(p.pSat)); }\n    Seg_ManCreateCnf( p, fTwo, fVerbose );\n    //Sat_SolverWriteDimacs( p-\u003epSat, \"test_edge.cnf\", NULL, NULL, 0 );\n    // set resource limits\n    sat_solver_set_resource_limits( p.pSat, nBTLimit, 0, 0, 0 );\n    sat_solver_set_runtime_limit( p.pSat, nTimeOut ? nTimeOut * int64(time.Second) + Abc_Clock(): 0 );\n    sat_solver_set_random( p.pSat, 1 );\n    sat_solver_set_polarity( p.pSat, Vec_IntArray(p.vPolars), Vec_IntSize(p.vPolars) );\n    //sat_solver_set_var_activity( p-\u003epSat, NULL, p-\u003enVars );\n    // increment delay gradually\n    for  Delay = p.DelayMax; Delay \u003e= 0; Delay--  {\n        // we constrain COs, although it would be fine to constrain only POs\n        // inlining of macro Gia_ManForEachCoDriver\n        for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ObjFanin0(Gia_ManCo(p.pGia, i))); i++  {\n            iLut   = Gia_ObjId( p.pGia, pObj );\n            iFirst = Vec_IntEntry( p.vFirsts, iLut );\n            nVars  = Vec_IntEntry( p.vNvars, iLut );\n            if Delay \u003c nVars \u0026\u0026 !sat_solver_push(p.pSat, Abc_Var2Lit(iFirst + Delay, 1)) {\n                break; }\n        }\n        if i \u003c Gia_ManCoNum(p.pGia) {\n            fmt.Printf(\"Proved UNSAT for delay %d.  \", Delay);\n            Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            break;\n        }\n        if Delay \u003e DelayStart {\n            continue; }\n        // solve with assumptions\n        //clk = Abc_Clock();\n        nConfs = sat_solver_nconflicts( p.pSat );\n        status = sat_solver_solve_internal( p.pSat );\n        nConfs = sat_solver_nconflicts( p.pSat ) - nConfs;\n        if status == l_True {\n            if fVerbose != 0 {\n                var Count int32;\n                for  i = 0; i \u003c p.nVars; i++  {\n                    Count += sat_solver_var_value(p.pSat, i);\n                }\n                fmt.Printf(\"Solution with delay %2d and %5d edges exists. Conf = %8d.  \", Delay, Count, nConfs);\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            // save the result\n            Vec_IntFreeP( \u0026vEdges2 );\n            vEdges2 = Seg_ManConvertResult( p );\n            if fVeryVerbose != 0 {\n                for  i = 0; i \u003c p.nVars; i++  {\n                    fmt.Printf(\"%d=%d \", i, sat_solver_var_value(p.pSat, i));\n                }\n                fmt.Printf(\"   \");\n\n                for  i = p.nVars; i \u003c sat_solver_nvars(p.pSat); i++  {\n                    fmt.Printf(\"%d=%d \", i, sat_solver_var_value(p.pSat, i));\n                }\n                fmt.Printf(\"\\n\");\n            }\n        \n        } else {\n            if fVerbose != 0 {\n                if status == l_False {\n                    fmt.Printf(\"Proved UNSAT for delay %d.  \", Delay);\n                } else {\n                    fmt.Printf(\"Resource limit reached for delay %d.  \", Delay); }\n                Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n            }\n            break;\n        }\n    }\n    Gia_ManEdgeFromArray( p.pGia, vEdges2 );\n    Vec_IntFreeP( \u0026vEdges2 );\n    Seg_ManStop( p );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

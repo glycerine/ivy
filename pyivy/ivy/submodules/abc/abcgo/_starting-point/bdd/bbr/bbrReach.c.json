@@ -1,0 +1,1126 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c",
+  "SHA256": "849467950fb9ab4477d4dad905ba58bfed4c152a60c7d56fafcab81f5d653331",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1594
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Saig_ParBbr_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iStart \u003c= iStop );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iStart \u003e= 0 \u0026\u0026 iStart \u003c= dd.size );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iStop \u003e= 0  \u0026\u0026 iStop  \u003c= dd.size );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 9,
+        "ByteOffset": 3116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\nThe number of referenced nodes = %d\\n\\n\", RetValue ); }"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 130,
+        "Column": 15,
+        "ByteOffset": 3791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pbVarsX = ABC_ALLOC( DdNode *, dd.size );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 15,
+        "ByteOffset": 3837
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pbVarsY = ABC_ALLOC( DdNode *, dd.size );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 4391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pbVarsX );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 5,
+        "ByteOffset": 4416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pbVarsY );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 165,
+        "Column": 17,
+        "ByteOffset": 4944
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pbOutputs = ABC_ALLOC( DdNode *, Saig_ManPoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 191,
+        "Column": 5,
+        "ByteOffset": 5658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( dd.size == Saig_ManCiNum(p) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 15,
+        "ByteOffset": 5971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pbParts = ABC_ALLOC( DdNode *, Saig_ManRegNum(p) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 13,
+        "ByteOffset": 6370
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"BDD nodes in the partitions before reordering %d.\\n\", Cudd_SharingSize(pbParts,Saig_ManRegNum(p)) ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 213,
+        "Column": 22,
+        "ByteOffset": 6379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"BDD nodes in the partitions before reordering %d.\\n\", Cudd_SharingSize(pbParts,Saig_ManRegNum(p)) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 13,
+        "ByteOffset": 6620
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"BDD nodes in the partitions after reordering %d.\\n\", Cudd_SharingSize(pbParts,Saig_ManRegNum(p)) ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 217,
+        "Column": 22,
+        "ByteOffset": 6629
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"BDD nodes in the partitions after reordering %d.\\n\", Cudd_SharingSize(pbParts,Saig_ManRegNum(p)) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 13,
+        "ByteOffset": 8452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"BDDs blew up during qualitification scheduling.  \" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 277,
+        "Column": 68,
+        "ByteOffset": 9035
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pPars.TimeLimit \u0026\u0026 pPars.TimeLimit \u003c= (Abc_Clock()-clk)/CLOCKS_PER_SEC {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 278,
+        "Column": 13,
+        "ByteOffset": 9064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Reached timeout after image computation (%d seconds).\\n\",  pPars.TimeLimit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 296,
+        "Column": 17,
+        "ByteOffset": 9749
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"BDDs blew up during image computation.  \" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 325,
+        "Column": 17,
+        "ByteOffset": 10997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( p.pSeqModel == nil );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 350,
+        "Column": 13,
+        "ByteOffset": 12361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Frame = %3d. BDD = %5d. \", nIters, nBddSize ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 350,
+        "Column": 22,
+        "ByteOffset": 12370
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Frame = %3d. BDD = %5d. \", nIters, nBddSize ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 353,
+        "Column": 17,
+        "ByteOffset": 12549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( stdout, \"Reordering... Before = %5d. \", Cudd_DagSize(bReached) ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 353,
+        "Column": 26,
+        "ByteOffset": 12558
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( stdout, \"Reordering... Before = %5d. \", Cudd_DagSize(bReached) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 357,
+        "Column": 17,
+        "ByteOffset": 12777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( stdout, \"After = %5d.\\r\", Cudd_DagSize(bReached) ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 357,
+        "Column": 26,
+        "ByteOffset": 12786
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( stdout, \"After = %5d.\\r\", Cudd_DagSize(bReached) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 362,
+        "Column": 13,
+        "ByteOffset": 12958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"\\n\" ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 362,
+        "Column": 22,
+        "ByteOffset": 12967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"\\n\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 367,
+        "Column": 13,
+        "ByteOffset": 13174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/pow(2.0, Saig_ManRegNum(p)) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 367,
+        "Column": 22,
+        "ByteOffset": 13183
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/pow(2.0, Saig_ManRegNum(p)) );"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 367,
+        "Column": 99,
+        "ByteOffset": 13260
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/pow(2.0, Saig_ManRegNum(p)) );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 368,
+        "Column": 13,
+        "ByteOffset": 13303
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout ); "
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 368,
+        "Column": 21,
+        "ByteOffset": 13311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout ); "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 388,
+        "Column": 13,
+        "ByteOffset": 13963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Reachability analysis is stopped after %d frames.\\n\", nIters );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 388,
+        "Column": 22,
+        "ByteOffset": 13972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Reachability analysis is stopped after %d frames.\\n\", nIters );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 390,
+        "Column": 13,
+        "ByteOffset": 14074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Reachability analysis completed after %d frames.\\n\", nIters ); }"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 390,
+        "Column": 22,
+        "ByteOffset": 14083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( stdout, \"Reachability analysis completed after %d frames.\\n\", nIters ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 391,
+        "Column": 9,
+        "ByteOffset": 14165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/pow(2.0, Saig_ManRegNum(p)) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 391,
+        "Column": 18,
+        "ByteOffset": 14174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/pow(2.0, Saig_ManRegNum(p)) );"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 391,
+        "Column": 95,
+        "ByteOffset": 14251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/pow(2.0, Saig_ManRegNum(p)) );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 392,
+        "Column": 9,
+        "ByteOffset": 14290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 392,
+        "Column": 17,
+        "ByteOffset": 14298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 400,
+        "Column": 9,
+        "ByteOffset": 14454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The miter is proved unreachable after %d iterations.  \", nIters );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 405,
+        "Column": 5,
+        "ByteOffset": 14597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(nIters \u003e= pPars.nIterMax || nBddSize \u003e= pPars.nBddMax);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 407,
+        "Column": 7,
+        "ByteOffset": 14690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "      printf( \"Verified only for states reachable in %d frames.  \", nIters ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 432,
+        "Column": 5,
+        "ByteOffset": 15438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManRegNum(p) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 438,
+        "Column": 13,
+        "ByteOffset": 15671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The number of intermediate BDD nodes exceeded the limit (%d).\\n\", pPars.nBddMax ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 442,
+        "Column": 9,
+        "ByteOffset": 15822
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Shared BDD size is %6d nodes.\\n\", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 445,
+        "Column": 64,
+        "ByteOffset": 16003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pPars.TimeLimit \u0026\u0026 pPars.TimeLimit \u003c= (Abc_Clock()-clk)/CLOCKS_PER_SEC {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 446,
+        "Column": 9,
+        "ByteOffset": 16028
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Reached timeout after constructing global BDDs (%d seconds).\\n\",  pPars.TimeLimit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 473,
+        "Column": 13,
+        "ByteOffset": 17052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( p.pSeqModel == nil );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 496,
+        "Column": 5,
+        "ByteOffset": 17974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pbParts );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 500,
+        "Column": 5,
+        "ByteOffset": 18099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pbOutputs );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 509,
+        "Column": 5,
+        "ByteOffset": 18316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 509,
+        "Column": 13,
+        "ByteOffset": 18324
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 540,
+        "Column": 5,
+        "ByteOffset": 19222
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManCiNum(p) \u003c Aig_ManCiNum(pInit) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 541,
+        "Column": 5,
+        "ByteOffset": 19275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManRegNum(p) == Aig_ManRegNum(pInit) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 549,
+        "Column": 5,
+        "ByteOffset": 19547
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCexOld != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 579,
+        "Column": 5,
+        "ByteOffset": 20695
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBitOld \u003c iBitNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 580,
+        "Column": 5,
+        "ByteOffset": 20728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBitOld == pCexOld.nBits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 581,
+        "Column": 5,
+        "ByteOffset": 20768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBitNew == pCexNew.nBits );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bbr_ManSetDefaultParams",
+      "Start": 1514,
+      "End": 1880,
+      "BodyStart": 1564,
+      "Original": "void Bbr_ManSetDefaultParams( Saig_ParBbr_t * p )\n{\n    memset( p, 0, sizeof(Saig_ParBbr_t) );\n    p-\u003eTimeLimit     =     0;\n    p-\u003enBddMax       = 50000;\n    p-\u003enIterMax      =  1000;\n    p-\u003efPartition    =     1;\n    p-\u003efReorder      =     1;\n    p-\u003efReorderImage =     1;\n    p-\u003efVerbose      =     0;\n    p-\u003efSilent       =     0;\n    p-\u003eiFrame        =    -1;\n}",
+      "Draft": "func Bbr_ManSetDefaultParams(p *Saig_ParBbr_t) {\n    memset( p, 0, sizeof(Saig_ParBbr_t) );\n    p.TimeLimit     =     0;\n    p.nBddMax       = 50000;\n    p.nIterMax      =  1000;\n    p.fPartition    =     1;\n    p.fReorder      =     1;\n    p.fReorderImage =     1;\n    p.fVerbose      =     0;\n    p.fSilent       =     0;\n    p.iFrame        =    -1;\n}"
+    },
+    {
+      "Name": "Bbr_bddComputeRangeCube",
+      "Start": 2173,
+      "End": 2693,
+      "BodyStart": 2247,
+      "Original": "DdNode * Bbr_bddComputeRangeCube( DdManager * dd, int iStart, int iStop )\n{\n    DdNode * bTemp, * bProd;\n    int i;\n    assert( iStart \u003c= iStop );\n    assert( iStart \u003e= 0 \u0026\u0026 iStart \u003c= dd-\u003esize );\n    assert( iStop \u003e= 0  \u0026\u0026 iStop  \u003c= dd-\u003esize );\n    bProd = (dd)-\u003eone;         Cudd_Ref( bProd );\n    for ( i = iStart; i \u003c iStop; i++ )\n    {\n        bProd = Cudd_bddAnd( dd, bTemp = bProd, dd-\u003evars[i] );      Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bTemp ); \n    }\n    Cudd_Deref( bProd );\n    return bProd;\n}",
+      "Draft": "func Bbr_bddComputeRangeCube(dd *DdManager, iStart int32, iStop int32) *DdNode {\n    var bTemp, bProd *DdNode;\n    var i int32;\n    assert(iStart \u003c= iStop, \"iStart \u003c= iStop\");\n    assert(iStart \u003e= 0 \u0026\u0026 iStart \u003c= dd.size, \"iStart \u003e= 0 \u0026\u0026 iStart \u003c= dd.size\");\n    assert(iStop \u003e= 0  \u0026\u0026 iStop  \u003c= dd.size, \"iStop \u003e= 0  \u0026\u0026 iStop  \u003c= dd.size\");\n    bProd = (dd).one;         Cudd_Ref( bProd );\n    for  i = iStart; i \u003c iStop; i++  {\n        bProd = Cudd_bddAnd( dd, bTemp = bProd, dd.vars[i] );      Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bTemp ); \n    }\n    Cudd_Deref( bProd );\n    return bProd;\n}"
+    },
+    {
+      "Name": "Bbr_StopManager",
+      "Start": 2914,
+      "End": 3219,
+      "BodyStart": 2953,
+      "Original": "void Bbr_StopManager( DdManager * dd )\n{\n    int RetValue;\n    // check for remaining references in the package\n    RetValue = Cudd_CheckZeroRef( dd );\n    if ( RetValue \u003e 0 )\n        printf( \"\\nThe number of referenced nodes = %d\\n\\n\", RetValue );\n//  Cudd_PrintInfo( dd, stdout );\n    Cudd_Quit( dd );\n}",
+      "Draft": "func Bbr_StopManager(dd *DdManager) {\n    var RetValue int32;\n    // check for remaining references in the package\n    RetValue = Cudd_CheckZeroRef( dd );\n    if RetValue \u003e 0 {\n        fmt.Printf(\"\\nThe number of referenced nodes = %d\\n\\n\", RetValue); }\n//  Cudd_PrintInfo( dd, stdout );\n    Cudd_Quit( dd );\n}"
+    },
+    {
+      "Name": "Aig_ManInitStateVarMap",
+      "Start": 3511,
+      "End": 4392,
+      "BodyStart": 3590,
+      "Original": "DdNode * Aig_ManInitStateVarMap( DdManager * dd, Aig_Man_t * p, int fVerbose )\n{\n    DdNode ** pbVarsX, ** pbVarsY;\n    DdNode * bTemp, * bProd;\n    Aig_Obj_t * pLatch;\n    int i;\n\n    // set the variable mapping for Cudd_bddVarMap()\n    pbVarsX = ABC_ALLOC( DdNode *, dd-\u003esize );\n    pbVarsY = ABC_ALLOC( DdNode *, dd-\u003esize );\n    bProd = (dd)-\u003eone;         Cudd_Ref( bProd );\n    Saig_ManForEachLo( p, pLatch, i )\n    {\n        pbVarsX[i] = dd-\u003evars[ Saig_ManPiNum(p) + i ];\n        pbVarsY[i] = dd-\u003evars[ Saig_ManCiNum(p) + i ];\n        // get the initial value of the latch\n        bProd = Cudd_bddAnd( dd, bTemp = bProd, Cudd_Not(pbVarsX[i]) );      Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bTemp ); \n    }\n    Cudd_SetVarMap( dd, pbVarsX, pbVarsY, Saig_ManRegNum(p) );\n    ABC_FREE( pbVarsX );\n    ABC_FREE( pbVarsY );\n\n    Cudd_Deref( bProd );\n    return bProd;\n}",
+      "Draft": "func Aig_ManInitStateVarMap(dd *DdManager, p *Aig_Man_t, fVerbose int32) *DdNode {\n    var pbVarsX, pbVarsY **DdNode;\n    var bTemp, bProd *DdNode;\n    var pLatch *Aig_Obj_t;\n    var i int32;\n\n    // set the variable mapping for Cudd_bddVarMap()\n    pbVarsX = ABC_ALLOC( DdNode *, dd.size );\n    pbVarsY = ABC_ALLOC( DdNode *, dd.size );\n    bProd = (dd).one;         Cudd_Ref( bProd );\n    Saig_ManForEachLo( p, pLatch, i )\n    {\n        pbVarsX[i] = dd.vars[ Saig_ManPiNum(p) + i ];\n        pbVarsY[i] = dd.vars[ Saig_ManCiNum(p) + i ];\n        // get the initial value of the latch\n        // inlining of macro Cudd_Not\n        bProd = Cudd_bddAnd( dd, bTemp = bProd, ((DdNode *)((ptrint)(pbVarsX[i]) ^ 01)) );      Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bTemp ); \n    }\n    Cudd_SetVarMap( dd, pbVarsX, pbVarsY, Saig_ManRegNum(p) );\n    ABC_FREE( pbVarsX );\n    ABC_FREE( pbVarsY );\n\n    Cudd_Deref( bProd );\n    return bProd;\n}"
+    },
+    {
+      "Name": "Aig_ManCreateOutputs",
+      "Start": 4662,
+      "End": 5030,
+      "BodyStart": 4726,
+      "Original": "DdNode ** Aig_ManCreateOutputs( DdManager * dd, Aig_Man_t * p )\n{\n    DdNode ** pbOutputs;\n    Aig_Obj_t * pNode;\n    int i;\n    // compute the transition relation\n    pbOutputs = ABC_ALLOC( DdNode *, Saig_ManPoNum(p) );\n    Saig_ManForEachPo( p, pNode, i )\n    {\n        pbOutputs[i] = Aig_ObjGlobalBdd(pNode);  Cudd_Ref( pbOutputs[i] );\n    }\n    return pbOutputs;\n}",
+      "Draft": "func Aig_ManCreateOutputs(dd *DdManager, p *Aig_Man_t) **DdNode {\n    var pbOutputs **DdNode;\n    var pNode *Aig_Obj_t;\n    var i int32;\n    // compute the transition relation\n    pbOutputs = ABC_ALLOC( DdNode *, Saig_ManPoNum(p) );\n    Saig_ManForEachPo( p, pNode, i )\n    {\n        pbOutputs[i] = Aig_ObjGlobalBdd(pNode);  Cudd_Ref( pbOutputs[i] );\n    }\n    return pbOutputs;\n}"
+    },
+    {
+      "Name": "Aig_ManCreatePartitions",
+      "Start": 5303,
+      "End": 6651,
+      "BodyStart": 5398,
+      "Original": "DdNode ** Aig_ManCreatePartitions( DdManager * dd, Aig_Man_t * p, int fReorder, int fVerbose )\n{\n    DdNode ** pbParts;\n    DdNode * bVar;\n    Aig_Obj_t * pNode;\n    int i;\n\n    // extand the BDD manager to represent NS variables\n    assert( dd-\u003esize == Saig_ManCiNum(p) );\n    Cudd_bddIthVar( dd, Saig_ManCiNum(p) + Saig_ManRegNum(p) - 1 );\n\n    // enable reordering\n    if ( fReorder )\n        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );\n    else\n        Cudd_AutodynDisable( dd );\n\n    // compute the transition relation\n    pbParts = ABC_ALLOC( DdNode *, Saig_ManRegNum(p) );\n    Saig_ManForEachLi( p, pNode, i )\n    {\n        bVar  = Cudd_bddIthVar( dd, Saig_ManCiNum(p) + i );\n        pbParts[i] = Cudd_bddXnor( dd, bVar, Aig_ObjGlobalBdd(pNode) );  Cudd_Ref( pbParts[i] );\n    }\n    // free global BDDs\n    Aig_ManFreeGlobalBdds( p, dd );\n\n    // reorder and disable reordering\n    if ( fReorder )\n    {\n        if ( fVerbose )\n            fprintf( stdout, \"BDD nodes in the partitions before reordering %d.\\n\", Cudd_SharingSize(pbParts,Saig_ManRegNum(p)) );\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n        Cudd_AutodynDisable( dd );\n        if ( fVerbose )\n            fprintf( stdout, \"BDD nodes in the partitions after reordering %d.\\n\", Cudd_SharingSize(pbParts,Saig_ManRegNum(p)) );\n    }\n    return pbParts;\n}",
+      "Draft": "func Aig_ManCreatePartitions(dd *DdManager, p *Aig_Man_t, fReorder int32, fVerbose int32) **DdNode {\n    var pbParts **DdNode;\n    var bVar *DdNode;\n    var pNode *Aig_Obj_t;\n    var i int32;\n\n    // extand the BDD manager to represent NS variables\n    assert(dd.size == Saig_ManCiNum(p), \"dd.size == Saig_ManCiNum(p)\");\n    Cudd_bddIthVar( dd, Saig_ManCiNum(p) + Saig_ManRegNum(p) - 1 );\n\n    // enable reordering\n    if fReorder != 0 {\n        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );\n    } else {\n        Cudd_AutodynDisable( dd ); }\n\n    // compute the transition relation\n    pbParts = ABC_ALLOC( DdNode *, Saig_ManRegNum(p) );\n    Saig_ManForEachLi( p, pNode, i )\n    {\n        bVar  = Cudd_bddIthVar( dd, Saig_ManCiNum(p) + i );\n        pbParts[i] = Cudd_bddXnor( dd, bVar, Aig_ObjGlobalBdd(pNode) );  Cudd_Ref( pbParts[i] );\n    }\n    // free global BDDs\n    Aig_ManFreeGlobalBdds( p, dd );\n\n    // reorder and disable reordering\n    if fReorder != 0 {\n        if fVerbose != 0 {\n            fmt.Fprintf(os.Stdout, \"BDD nodes in the partitions before reordering %d.\\n\", Cudd_SharingSize(pbParts,Saig_ManRegNum(p))); }\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n        Cudd_AutodynDisable( dd );\n        if fVerbose != 0 {\n            fmt.Fprintf(os.Stdout, \"BDD nodes in the partitions after reordering %d.\\n\", Cudd_SharingSize(pbParts,Saig_ManRegNum(p))); }\n    }\n    return pbParts;\n}"
+    },
+    {
+      "Name": "Aig_ManComputeReachable",
+      "Start": 6926,
+      "End": 14655,
+      "BodyStart": 7088,
+      "Original": "int Aig_ManComputeReachable( DdManager * dd, Aig_Man_t * p, DdNode ** pbParts, DdNode * bInitial, DdNode ** pbOutputs, Saig_ParBbr_t * pPars, int fCheckOutputs )\n{\n    int fInternalReorder = 0;\n    Bbr_ImageTree_t * pTree = NULL; // Suppress \"might be used uninitialized\"\n    Bbr_ImageTree2_t * pTree2 = NULL; // Supprses \"might be used uninitialized\"\n    DdNode * bReached, * bCubeCs;\n    DdNode * bCurrent;\n    DdNode * bNext = NULL; // Suppress \"might be used uninitialized\"\n    DdNode * bTemp;\n    Cudd_ReorderingType method;\n    int i, nIters, nBddSize = 0, status;\n    int nThreshold = 10000;\n    abctime clk = Abc_Clock();\n    Vec_Ptr_t * vOnionRings;\n    int fixedPoint = 0;\n\n    status = Cudd_ReorderingStatus( dd, \u0026method );\n    if ( status )\n        Cudd_AutodynDisable( dd );\n\n    // start the image computation\n    bCubeCs  = Bbr_bddComputeRangeCube( dd, Saig_ManPiNum(p), Saig_ManCiNum(p) );    Cudd_Ref( bCubeCs );\n    if ( pPars-\u003efPartition )\n        pTree = Bbr_bddImageStart( dd, bCubeCs, Saig_ManRegNum(p), pbParts, Saig_ManRegNum(p), dd-\u003evars+Saig_ManCiNum(p), pPars-\u003enBddMax, pPars-\u003efVerbose );\n    else\n        pTree2 = Bbr_bddImageStart2( dd, bCubeCs, Saig_ManRegNum(p), pbParts, Saig_ManRegNum(p), dd-\u003evars+Saig_ManCiNum(p), pPars-\u003efVerbose );\n    Cudd_RecursiveDeref( dd, bCubeCs );\n    if ( pTree == NULL )\n    {\n        if ( !pPars-\u003efSilent )\n            printf( \"BDDs blew up during qualitification scheduling.  \" );\n        return -1;\n    }\n\n    if ( status )\n        Cudd_AutodynEnable( dd, method );\n\n    // start the onion rings\n    vOnionRings = Vec_PtrAlloc( 1000 );\n\n    // perform reachability analysis\n    bCurrent = bInitial;   Cudd_Ref( bCurrent );\n    bReached = bInitial;   Cudd_Ref( bReached );\n    Vec_PtrPush( vOnionRings, bCurrent );  Cudd_Ref( bCurrent );\n    for ( nIters = 0; nIters \u003c pPars-\u003enIterMax; nIters++ )\n    { \n        // check the runtime limit\n        if ( pPars-\u003eTimeLimit \u0026\u0026 pPars-\u003eTimeLimit \u003c= (Abc_Clock()-clk)/CLOCKS_PER_SEC )\n        {\n            printf( \"Reached timeout after image computation (%d seconds).\\n\",  pPars-\u003eTimeLimit );\n            Vec_PtrFree( vOnionRings );\n            // undo the image tree\n            if ( pPars-\u003efPartition )\n                Bbr_bddImageTreeDelete( pTree );\n            else\n                Bbr_bddImageTreeDelete2( pTree2 );\n            pPars-\u003eiFrame = nIters - 1;\n            return -1;\n        }\n\n        // compute the next states\n        if ( pPars-\u003efPartition )\n            bNext = Bbr_bddImageCompute( pTree, bCurrent );           \n        else\n            bNext = Bbr_bddImageCompute2( pTree2, bCurrent );  \n        if ( bNext == NULL )\n        {\n            if ( !pPars-\u003efSilent )\n                printf( \"BDDs blew up during image computation.  \" );\n            if ( pPars-\u003efPartition )\n                Bbr_bddImageTreeDelete( pTree );\n            else\n                Bbr_bddImageTreeDelete2( pTree2 );\n            Vec_PtrFree( vOnionRings );\n            pPars-\u003eiFrame = nIters - 1;\n            return -1;\n        }\n        Cudd_Ref( bNext );\n        Cudd_RecursiveDeref( dd, bCurrent );\n\n        // remap these states into the current state vars\n        bNext = Cudd_bddVarMap( dd, bTemp = bNext );                    Cudd_Ref( bNext );\n        Cudd_RecursiveDeref( dd, bTemp );\n        // check if there are any new states\n        if ( Cudd_bddLeq( dd, bNext, bReached ) ) {\n            fixedPoint = 1;\n            break;\n        }\n        // check the BDD size\n        nBddSize = Cudd_DagSize(bNext);\n        if ( nBddSize \u003e pPars-\u003enBddMax )\n            break;\n        // check the result\n        for ( i = 0; i \u003c Saig_ManPoNum(p); i++ )\n        {\n            if ( fCheckOutputs \u0026\u0026 !Cudd_bddLeq( dd, bNext, Cudd_Not(pbOutputs[i]) ) )\n            {\n                DdNode * bIntersect;\n                bIntersect = Cudd_bddIntersect( dd, bNext, pbOutputs[i] );  Cudd_Ref( bIntersect );\n                assert( p-\u003epSeqModel == NULL );\n                p-\u003epSeqModel = Aig_ManVerifyUsingBddsCountExample( p, dd, pbParts, \n                    vOnionRings, bIntersect, i, pPars-\u003efVerbose, pPars-\u003efSilent ); \n                Cudd_RecursiveDeref( dd, bIntersect );\n                if ( !pPars-\u003efSilent )\n                    Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d. \", i, p-\u003epName, Vec_PtrSize(vOnionRings) );\n                Cudd_RecursiveDeref( dd, bReached );\n                bReached = NULL;\n                pPars-\u003eiFrame = nIters;\n                break;\n            }\n        }\n        if ( i \u003c Saig_ManPoNum(p) )\n            break;\n        // get the new states\n        bCurrent = Cudd_bddAnd( dd, bNext, Cudd_Not(bReached) );        Cudd_Ref( bCurrent );\n        Vec_PtrPush( vOnionRings, bCurrent );  Cudd_Ref( bCurrent );\n        // minimize the new states with the reached states\n//        bCurrent = Cudd_bddConstrain( dd, bTemp = bCurrent, Cudd_Not(bReached) ); Cudd_Ref( bCurrent );\n//        Cudd_RecursiveDeref( dd, bTemp );\n        // add to the reached states\n        bReached = Cudd_bddOr( dd, bTemp = bReached, bNext );           Cudd_Ref( bReached );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bNext );\n        if ( pPars-\u003efVerbose )\n            fprintf( stdout, \"Frame = %3d. BDD = %5d. \", nIters, nBddSize );\n        if ( fInternalReorder \u0026\u0026 pPars-\u003efReorder \u0026\u0026 nBddSize \u003e nThreshold )\n        {\n            if ( pPars-\u003efVerbose )\n                fprintf( stdout, \"Reordering... Before = %5d. \", Cudd_DagSize(bReached) );\n            Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n            Cudd_AutodynDisable( dd );\n            if ( pPars-\u003efVerbose )\n                fprintf( stdout, \"After = %5d.\\r\", Cudd_DagSize(bReached) );\n            nThreshold *= 2;\n        }\n        if ( pPars-\u003efVerbose )\n//            fprintf( stdout, \"\\r\" );\n            fprintf( stdout, \"\\n\" );\n\n        if ( pPars-\u003efVerbose )\n        {\n            double nMints = Cudd_CountMinterm(dd, bReached, Saig_ManRegNum(p) );\n//            Extra_bddPrint( dd, bReached );printf( \"\\n\" );\n            fprintf( stdout, \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/pow(2.0, Saig_ManRegNum(p)) );\n            fflush( stdout ); \n        }\n\n    }\n    Cudd_RecursiveDeref( dd, bNext );\n    // free the onion rings\n    Vec_PtrForEachEntry( DdNode *, vOnionRings, bTemp, i )\n        Cudd_RecursiveDeref( dd, bTemp );\n    Vec_PtrFree( vOnionRings );\n    // undo the image tree\n    if ( pPars-\u003efPartition )\n        Bbr_bddImageTreeDelete( pTree );\n    else\n        Bbr_bddImageTreeDelete2( pTree2 );\n    if ( bReached == NULL )\n        return 0; // proved reachable\n    // report the stats\n    if ( pPars-\u003efVerbose )\n    {\n        double nMints = Cudd_CountMinterm(dd, bReached, Saig_ManRegNum(p) );\n        if ( nIters \u003e pPars-\u003enIterMax || nBddSize \u003e pPars-\u003enBddMax )\n            fprintf( stdout, \"Reachability analysis is stopped after %d frames.\\n\", nIters );\n        else\n            fprintf( stdout, \"Reachability analysis completed after %d frames.\\n\", nIters );\n        fprintf( stdout, \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/pow(2.0, Saig_ManRegNum(p)) );\n        fflush( stdout );\n    }\n//ABC_PRB( dd, bReached );\n    Cudd_RecursiveDeref( dd, bReached );\n    // SPG\n    //\n    if ( fixedPoint ) {\n      if ( !pPars-\u003efSilent ) {\n        printf( \"The miter is proved unreachable after %d iterations.  \", nIters );\n      }\n      pPars-\u003eiFrame = nIters - 1;\n      return 1;\n    }\n    assert(nIters \u003e= pPars-\u003enIterMax || nBddSize \u003e= pPars-\u003enBddMax);\n    if ( !pPars-\u003efSilent )\n      printf( \"Verified only for states reachable in %d frames.  \", nIters );\n    pPars-\u003eiFrame = nIters - 1;\n    return -1; // undecided\n}",
+      "Draft": "func Aig_ManComputeReachable(dd *DdManager, p *Aig_Man_t, pbParts **DdNode, bInitial *DdNode, pbOutputs **DdNode, pPars *Saig_ParBbr_t, fCheckOutputs int32) int32 {\n    var fInternalReorder int32;\n    var pTree *Bbr_ImageTree_t  = nil; // Suppress \"might be used uninitialized\"\n    var pTree2 *Bbr_ImageTree2_t  = nil; // Supprses \"might be used uninitialized\"\n    var bReached, bCubeCs *DdNode;\n    var bCurrent *DdNode;\n    var bNext *DdNode  = nil; // Suppress \"might be used uninitialized\"\n    var bTemp *DdNode;\n    var method Cudd_ReorderingType;\n    var i, nIters, nBddSize, status int32;\n    var nThreshold int32  = 10000;\n    var clk abctime  = Abc_Clock();\n    var vOnionRings *Vec_Ptr_t;\n    var fixedPoint int32;\n\n    status = Cudd_ReorderingStatus( dd, \u0026method );\n    if status != 0 {\n        Cudd_AutodynDisable( dd ); }\n\n    // start the image computation\n    bCubeCs  = Bbr_bddComputeRangeCube( dd, Saig_ManPiNum(p), Saig_ManCiNum(p) );    Cudd_Ref( bCubeCs );\n    if pPars.fPartition {\n        pTree = Bbr_bddImageStart( dd, bCubeCs, Saig_ManRegNum(p), pbParts, Saig_ManRegNum(p), dd.vars+Saig_ManCiNum(p), pPars.nBddMax, pPars.fVerbose );\n    } else {\n        pTree2 = Bbr_bddImageStart2( dd, bCubeCs, Saig_ManRegNum(p), pbParts, Saig_ManRegNum(p), dd.vars+Saig_ManCiNum(p), pPars.fVerbose ); }\n    Cudd_RecursiveDeref( dd, bCubeCs );\n    if pTree == nil {\n        if !pPars.fSilent {\n            fmt.Printf(\"BDDs blew up during qualitification scheduling.  \"); }\n        return -1;\n    }\n\n    if status != 0 {\n        Cudd_AutodynEnable( dd, method ); }\n\n    // start the onion rings\n    vOnionRings = Vec_PtrAlloc( 1000 );\n\n    // perform reachability analysis\n    bCurrent = bInitial;   Cudd_Ref( bCurrent );\n    bReached = bInitial;   Cudd_Ref( bReached );\n    Vec_PtrPush( vOnionRings, bCurrent );  Cudd_Ref( bCurrent );\n    for  nIters = 0; nIters \u003c pPars.nIterMax; nIters++  { \n        // check the runtime limit\n        if pPars.TimeLimit \u0026\u0026 pPars.TimeLimit \u003c= (Abc_Clock()-clk)/int64(time.Second) {\n            fmt.Printf(\"Reached timeout after image computation (%d seconds).\\n\", pPars.TimeLimit);\n            Vec_PtrFree( vOnionRings );\n            // undo the image tree\n            if pPars.fPartition {\n                Bbr_bddImageTreeDelete( pTree );\n            } else {\n                Bbr_bddImageTreeDelete2( pTree2 ); }\n            pPars.iFrame = nIters - 1;\n            return -1;\n        }\n\n        // compute the next states\n        if pPars.fPartition {\n            bNext = Bbr_bddImageCompute( pTree, bCurrent );           \n        } else {\n            bNext = Bbr_bddImageCompute2( pTree2, bCurrent ); }  \n        if bNext == nil {\n            if !pPars.fSilent {\n                fmt.Printf(\"BDDs blew up during image computation.  \"); }\n            if pPars.fPartition {\n                Bbr_bddImageTreeDelete( pTree );\n            } else {\n                Bbr_bddImageTreeDelete2( pTree2 ); }\n            Vec_PtrFree( vOnionRings );\n            pPars.iFrame = nIters - 1;\n            return -1;\n        }\n        Cudd_Ref( bNext );\n        Cudd_RecursiveDeref( dd, bCurrent );\n\n        // remap these states into the current state vars\n        bNext = Cudd_bddVarMap( dd, bTemp = bNext );                    Cudd_Ref( bNext );\n        Cudd_RecursiveDeref( dd, bTemp );\n        // check if there are any new states\n        if Cudd_bddLeq( dd, bNext, bReached ) {\n            fixedPoint = 1;\n            break;\n        }\n        // check the BDD size\n        nBddSize = Cudd_DagSize(bNext);\n        if nBddSize \u003e pPars.nBddMax {\n            break; }\n        // check the result\n        for  i = 0; i \u003c Saig_ManPoNum(p); i++  {\n            // inlining of macro Cudd_Not\n            if fCheckOutputs \u0026\u0026 !Cudd_bddLeq( dd, bNext, ((DdNode *)((ptrint)(pbOutputs[i]) ^ 01)) ) {\n                var bIntersect *DdNode;\n                bIntersect = Cudd_bddIntersect( dd, bNext, pbOutputs[i] );  Cudd_Ref( bIntersect );\n                assert(p.pSeqModel == nil, \"p.pSeqModel == nil\");\n                p.pSeqModel = Aig_ManVerifyUsingBddsCountExample( p, dd, pbParts, \n                    vOnionRings, bIntersect, i, pPars.fVerbose, pPars.fSilent ); \n                Cudd_RecursiveDeref( dd, bIntersect );\n                if !pPars.fSilent {\n                    Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d. \", i, p.pName, Vec_PtrSize(vOnionRings) ); }\n                Cudd_RecursiveDeref( dd, bReached );\n                bReached = nil;\n                pPars.iFrame = nIters;\n                break;\n            }\n        }\n        if i \u003c Saig_ManPoNum(p) {\n            break; }\n        // get the new states\n        // inlining of macro Cudd_Not\n        bCurrent = Cudd_bddAnd( dd, bNext, ((DdNode *)((ptrint)(bReached) ^ 01)) );        Cudd_Ref( bCurrent );\n        Vec_PtrPush( vOnionRings, bCurrent );  Cudd_Ref( bCurrent );\n        // minimize the new states with the reached states\n//        bCurrent = Cudd_bddConstrain( dd, bTemp = bCurrent, Cudd_Not(bReached) ); Cudd_Ref( bCurrent );\n//        Cudd_RecursiveDeref( dd, bTemp );\n        // add to the reached states\n        bReached = Cudd_bddOr( dd, bTemp = bReached, bNext );           Cudd_Ref( bReached );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bNext );\n        if pPars.fVerbose {\n            fmt.Fprintf(os.Stdout, \"Frame = %3d. BDD = %5d. \", nIters, nBddSize); }\n        if (fInternalReorder != 0) \u0026\u0026 pPars.fReorder \u0026\u0026 nBddSize \u003e nThreshold {\n            if pPars.fVerbose {\n                fmt.Fprintf(os.Stdout, \"Reordering... Before = %5d. \", Cudd_DagSize(bReached)); }\n            Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n            Cudd_AutodynDisable( dd );\n            if pPars.fVerbose {\n                fmt.Fprintf(os.Stdout, \"After = %5d.\\r\", Cudd_DagSize(bReached)); }\n            nThreshold *= 2;\n        }\n        if pPars.fVerbose {\n//            fprintf( stdout, \"\\r\" );\n            fmt.Fprintf(os.Stdout, \"\\n\"); }\n\n        if pPars.fVerbose {\n            var nMints float64  = Cudd_CountMinterm(dd, bReached, Saig_ManRegNum(p) );\n//            Extra_bddPrint( dd, bReached );printf( \"\\n\" );\n            fmt.Fprintf(os.Stdout, \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/math.Pow(float64(2.0), float64(Saig_ManRegNum(p))));\n            fflush( os.Stdout ); \n        }\n\n    }\n    Cudd_RecursiveDeref( dd, bNext );\n    // free the onion rings\n    Vec_PtrForEachEntry( DdNode *, vOnionRings, bTemp, i )\n        Cudd_RecursiveDeref( dd, bTemp );\n    Vec_PtrFree( vOnionRings );\n    // undo the image tree\n    if pPars.fPartition {\n        Bbr_bddImageTreeDelete( pTree );\n    } else {\n        Bbr_bddImageTreeDelete2( pTree2 ); }\n    if bReached == nil {\n        return 0; } // proved reachable\n    // report the stats\n    if pPars.fVerbose {\n        var nMints float64  = Cudd_CountMinterm(dd, bReached, Saig_ManRegNum(p) );\n        if nIters \u003e pPars.nIterMax || nBddSize \u003e pPars.nBddMax {\n            fmt.Fprintf(os.Stdout, \"Reachability analysis is stopped after %d frames.\\n\", nIters);\n        } else {\n            fmt.Fprintf(os.Stdout, \"Reachability analysis completed after %d frames.\\n\", nIters); }\n        fmt.Fprintf(os.Stdout, \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/math.Pow(float64(2.0), float64(Saig_ManRegNum(p))));\n        fflush( os.Stdout );\n    }\n//ABC_PRB( dd, bReached );\n    Cudd_RecursiveDeref( dd, bReached );\n    // SPG\n    //\n    if fixedPoint != 0 {\n      if !pPars.fSilent {\n        fmt.Printf(\"The miter is proved unreachable after %d iterations.  \", nIters);\n      }\n      pPars.iFrame = nIters - 1;\n      return 1;\n    }\n    assert(nIters \u003e= pPars.nIterMax || nBddSize \u003e= pPars.nBddMax, \"nIters \u003e= pPars.nIterMax || nBddSize \u003e= pPars.nBddMax\");\n    if !pPars.fSilent {\n      fmt.Printf(\"Verified only for states reachable in %d frames.  \", nIters); }\n    pPars.iFrame = nIters - 1;\n    return -1; // undecided\n}"
+    },
+    {
+      "Name": "Aig_ManVerifyUsingBdds_int",
+      "Start": 14947,
+      "End": 18152,
+      "BodyStart": 15018,
+      "Original": "int Aig_ManVerifyUsingBdds_int( Aig_Man_t * p, Saig_ParBbr_t * pPars )\n{\n    int fCheckOutputs = !pPars-\u003efSkipOutCheck;\n    DdManager * dd;\n    DdNode ** pbParts, ** pbOutputs;\n    DdNode * bInitial, * bTemp;\n    int RetValue, i;\n    abctime clk = Abc_Clock();\n    Vec_Ptr_t * vOnionRings;\n\n    assert( Saig_ManRegNum(p) \u003e 0 );\n\n    // compute the global BDDs of the latches\n    dd = Aig_ManComputeGlobalBdds( p, pPars-\u003enBddMax, 1, pPars-\u003efReorder, pPars-\u003efVerbose );    \n    if ( dd == NULL )\n    {\n        if ( !pPars-\u003efSilent )\n            printf( \"The number of intermediate BDD nodes exceeded the limit (%d).\\n\", pPars-\u003enBddMax );\n        return -1;\n    }\n    if ( pPars-\u003efVerbose )\n        printf( \"Shared BDD size is %6d nodes.\\n\", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd) );\n\n    // check the runtime limit\n    if ( pPars-\u003eTimeLimit \u0026\u0026 pPars-\u003eTimeLimit \u003c= (Abc_Clock()-clk)/CLOCKS_PER_SEC )\n    {\n        printf( \"Reached timeout after constructing global BDDs (%d seconds).\\n\",  pPars-\u003eTimeLimit );\n        Cudd_Quit( dd );\n        return -1;\n    }\n\n    // start the onion rings\n    vOnionRings = Vec_PtrAlloc( 1000 );\n\n    // save outputs\n    pbOutputs = Aig_ManCreateOutputs( dd, p );\n\n    // create partitions\n    pbParts = Aig_ManCreatePartitions( dd, p, pPars-\u003efReorder, pPars-\u003efVerbose );\n\n    // create the initial state and the variable map\n    bInitial  = Aig_ManInitStateVarMap( dd, p, pPars-\u003efVerbose );  Cudd_Ref( bInitial );\n\n    // set reordering\n    if ( pPars-\u003efReorderImage )\n        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );\n\n    // check the result\n    RetValue = -1;\n    for ( i = 0; i \u003c Saig_ManPoNum(p); i++ )\n    {\n        if ( fCheckOutputs \u0026\u0026 !Cudd_bddLeq( dd, bInitial, Cudd_Not(pbOutputs[i]) ) )\n        {\n            DdNode * bIntersect;\n            bIntersect = Cudd_bddIntersect( dd, bInitial, pbOutputs[i] );  Cudd_Ref( bIntersect );\n            assert( p-\u003epSeqModel == NULL );\n            p-\u003epSeqModel = Aig_ManVerifyUsingBddsCountExample( p, dd, pbParts, \n                vOnionRings, bIntersect, i, pPars-\u003efVerbose, pPars-\u003efSilent ); \n            Cudd_RecursiveDeref( dd, bIntersect );\n            if ( !pPars-\u003efSilent )\n                Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d. \", i, p-\u003epName, -1 );\n            RetValue = 0;\n            break;\n        }\n    }\n    // free the onion rings\n    Vec_PtrForEachEntry( DdNode *, vOnionRings, bTemp, i )\n        Cudd_RecursiveDeref( dd, bTemp );\n    Vec_PtrFree( vOnionRings );\n    // explore reachable states\n    if ( RetValue == -1 )\n        RetValue = Aig_ManComputeReachable( dd, p, pbParts, bInitial, pbOutputs, pPars, fCheckOutputs ); \n\n    // cleanup\n    Cudd_RecursiveDeref( dd, bInitial );\n    for ( i = 0; i \u003c Saig_ManRegNum(p); i++ )\n        Cudd_RecursiveDeref( dd, pbParts[i] );\n    ABC_FREE( pbParts );\n    for ( i = 0; i \u003c Saig_ManPoNum(p); i++ )\n        Cudd_RecursiveDeref( dd, pbOutputs[i] );\n    ABC_FREE( pbOutputs );\n//    if ( RetValue == -1 )\n        Cudd_Quit( dd );\n//    else\n//        Bbr_StopManager( dd );\n\n    // report the runtime\n    if ( !pPars-\u003efSilent )\n    {\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    fflush( stdout );\n    }\n    return RetValue;\n}",
+      "Draft": "func Aig_ManVerifyUsingBdds_int(p *Aig_Man_t, pPars *Saig_ParBbr_t) int32 {\n    var fCheckOutputs int32  = !pPars.fSkipOutCheck;\n    var dd *DdManager;\n    var pbParts, pbOutputs **DdNode;\n    var bInitial, bTemp *DdNode;\n    var RetValue, i int32;\n    var clk abctime  = Abc_Clock();\n    var vOnionRings *Vec_Ptr_t;\n\n    assert(Saig_ManRegNum(p) \u003e 0, \"Saig_ManRegNum(p) \u003e 0\");\n\n    // compute the global BDDs of the latches\n    dd = Aig_ManComputeGlobalBdds( p, pPars.nBddMax, 1, pPars.fReorder, pPars.fVerbose );    \n    if dd == nil {\n        if !pPars.fSilent {\n            fmt.Printf(\"The number of intermediate BDD nodes exceeded the limit (%d).\\n\", pPars.nBddMax); }\n        return -1;\n    }\n    if pPars.fVerbose {\n        fmt.Printf(\"Shared BDD size is %6d nodes.\\n\", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd)); }\n\n    // check the runtime limit\n    if pPars.TimeLimit \u0026\u0026 pPars.TimeLimit \u003c= (Abc_Clock()-clk)/int64(time.Second) {\n        fmt.Printf(\"Reached timeout after constructing global BDDs (%d seconds).\\n\", pPars.TimeLimit);\n        Cudd_Quit( dd );\n        return -1;\n    }\n\n    // start the onion rings\n    vOnionRings = Vec_PtrAlloc( 1000 );\n\n    // save outputs\n    pbOutputs = Aig_ManCreateOutputs( dd, p );\n\n    // create partitions\n    pbParts = Aig_ManCreatePartitions( dd, p, pPars.fReorder, pPars.fVerbose );\n\n    // create the initial state and the variable map\n    bInitial  = Aig_ManInitStateVarMap( dd, p, pPars.fVerbose );  Cudd_Ref( bInitial );\n\n    // set reordering\n    if pPars.fReorderImage {\n        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT ); }\n\n    // check the result\n    RetValue = -1;\n    for  i = 0; i \u003c Saig_ManPoNum(p); i++  {\n        // inlining of macro Cudd_Not\n        if fCheckOutputs \u0026\u0026 !Cudd_bddLeq( dd, bInitial, ((DdNode *)((ptrint)(pbOutputs[i]) ^ 01)) ) {\n            var bIntersect *DdNode;\n            bIntersect = Cudd_bddIntersect( dd, bInitial, pbOutputs[i] );  Cudd_Ref( bIntersect );\n            assert(p.pSeqModel == nil, \"p.pSeqModel == nil\");\n            p.pSeqModel = Aig_ManVerifyUsingBddsCountExample( p, dd, pbParts, \n                vOnionRings, bIntersect, i, pPars.fVerbose, pPars.fSilent ); \n            Cudd_RecursiveDeref( dd, bIntersect );\n            if !pPars.fSilent {\n                Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d. \", i, p.pName, -1 ); }\n            RetValue = 0;\n            break;\n        }\n    }\n    // free the onion rings\n    Vec_PtrForEachEntry( DdNode *, vOnionRings, bTemp, i )\n        Cudd_RecursiveDeref( dd, bTemp );\n    Vec_PtrFree( vOnionRings );\n    // explore reachable states\n    if RetValue == -1 {\n        RetValue = Aig_ManComputeReachable( dd, p, pbParts, bInitial, pbOutputs, pPars, fCheckOutputs ); } \n\n    // cleanup\n    Cudd_RecursiveDeref( dd, bInitial );\n    for  i = 0; i \u003c Saig_ManRegNum(p); i++  {\n        Cudd_RecursiveDeref( dd, pbParts[i] );\n    }\n    ABC_FREE( pbParts );\n    for  i = 0; i \u003c Saig_ManPoNum(p); i++  {\n        Cudd_RecursiveDeref( dd, pbOutputs[i] );\n    }\n    ABC_FREE( pbOutputs );\n//    if ( RetValue == -1 )\n        Cudd_Quit( dd );\n//    else\n//        Bbr_StopManager( dd );\n\n    // report the runtime\n    if !pPars.fSilent {\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    fflush( os.Stdout );\n    }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Aig_ManVerifyUsingBdds",
+      "Start": 18443,
+      "End": 20700,
+      "BodyStart": 18514,
+      "Original": "int Aig_ManVerifyUsingBdds( Aig_Man_t * pInit, Saig_ParBbr_t * pPars )\n{\n    Abc_Cex_t * pCexOld, * pCexNew;\n    Aig_Man_t * p;\n    Aig_Obj_t * pObj;\n    Vec_Int_t * vInputMap;\n    int i, k, Entry, iBitOld, iBitNew, RetValue;\n//    pPars-\u003efVerbose = 1;\n    // check if there are PIs without fanout\n    Saig_ManForEachPi( pInit, pObj, i )\n        if ( Aig_ObjRefs(pObj) == 0 )\n            break;\n    if ( i == Saig_ManPiNum(pInit) )\n        return Aig_ManVerifyUsingBdds_int( pInit, pPars );\n    // create new AIG\n    p = Aig_ManDupTrim( pInit );\n    assert( Aig_ManCiNum(p) \u003c Aig_ManCiNum(pInit) );\n    assert( Aig_ManRegNum(p) == Aig_ManRegNum(pInit) );\n    RetValue = Aig_ManVerifyUsingBdds_int( p, pPars );\n    if ( RetValue != 0 )\n    {\n        Aig_ManStop( p );\n        return RetValue;\n    }\n    // the problem is satisfiable - remap the pattern\n    pCexOld = p-\u003epSeqModel;\n    assert( pCexOld != NULL );\n    // create input map\n    vInputMap = Vec_IntAlloc( Saig_ManPiNum(pInit) );\n    Saig_ManForEachPi( pInit, pObj, i )\n        if ( pObj-\u003epData != NULL )\n            Vec_IntPush( vInputMap, Aig_ObjCioId((Aig_Obj_t *)pObj-\u003epData) );\n        else\n            Vec_IntPush( vInputMap, -1 );\n    // create new pattern\n    pCexNew = Abc_CexAlloc( Saig_ManRegNum(pInit), Saig_ManPiNum(pInit), pCexOld-\u003eiFrame+1 );\n    pCexNew-\u003eiFrame = pCexOld-\u003eiFrame;\n    pCexNew-\u003eiPo    = pCexOld-\u003eiPo;\n    // copy the bit-data\n    for ( iBitOld = 0; iBitOld \u003c pCexOld-\u003enRegs; iBitOld++ )\n        if ( Abc_InfoHasBit( pCexOld-\u003epData, iBitOld ) )\n            Abc_InfoSetBit( pCexNew-\u003epData, iBitOld );\n    // copy the primary input data\n    iBitNew = iBitOld;\n    for ( i = 0; i \u003c= pCexNew-\u003eiFrame; i++ )\n    {\n        Vec_IntForEachEntry( vInputMap, Entry, k )\n        {\n            if ( Entry == -1 )\n                continue;\n            if ( Abc_InfoHasBit( pCexOld-\u003epData, iBitOld + Entry ) )\n                Abc_InfoSetBit( pCexNew-\u003epData, iBitNew + k );\n        }\n        iBitOld += Saig_ManPiNum(p);\n        iBitNew += Saig_ManPiNum(pInit);\n    }\n    assert( iBitOld \u003c iBitNew );\n    assert( iBitOld == pCexOld-\u003enBits );\n    assert( iBitNew == pCexNew-\u003enBits );\n    Vec_IntFree( vInputMap );\n    pInit-\u003epSeqModel = pCexNew;\n    Aig_ManStop( p );\n    return 0;\n}",
+      "Draft": "func Aig_ManVerifyUsingBdds(pInit *Aig_Man_t, pPars *Saig_ParBbr_t) int32 {\n    var pCexOld, pCexNew *Abc_Cex_t;\n    var p *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var vInputMap *Vec_Int_t;\n    var i, k, Entry, iBitOld, iBitNew, RetValue int32;\n//    pPars-\u003efVerbose = 1;\n    // check if there are PIs without fanout\n    Saig_ManForEachPi( pInit, pObj, i )\n        if ( Aig_ObjRefs(pObj) == 0 )\n            break;\n    if i == Saig_ManPiNum(pInit) {\n        return Aig_ManVerifyUsingBdds_int( pInit, pPars ); }\n    // create new AIG\n    p = Aig_ManDupTrim( pInit );\n    assert(Aig_ManCiNum(p) \u003c Aig_ManCiNum(pInit), \"Aig_ManCiNum(p) \u003c Aig_ManCiNum(pInit)\");\n    assert(Aig_ManRegNum(p) == Aig_ManRegNum(pInit), \"Aig_ManRegNum(p) == Aig_ManRegNum(pInit)\");\n    RetValue = Aig_ManVerifyUsingBdds_int( p, pPars );\n    if RetValue != 0 {\n        Aig_ManStop( p );\n        return RetValue;\n    }\n    // the problem is satisfiable - remap the pattern\n    pCexOld = p.pSeqModel;\n    assert(pCexOld != nil, \"pCexOld != nil\");\n    // create input map\n    vInputMap = Vec_IntAlloc( Saig_ManPiNum(pInit) );\n    Saig_ManForEachPi( pInit, pObj, i )\n        if ( pObj.pData != nil )\n            Vec_IntPush( vInputMap, Aig_ObjCioId((Aig_Obj_t *)pObj.pData) );\n        else\n            Vec_IntPush( vInputMap, -1 );\n    // create new pattern\n    pCexNew = Abc_CexAlloc( Saig_ManRegNum(pInit), Saig_ManPiNum(pInit), pCexOld.iFrame+1 );\n    pCexNew.iFrame = pCexOld.iFrame;\n    pCexNew.iPo    = pCexOld.iPo;\n    // copy the bit-data\n    for  iBitOld = 0; iBitOld \u003c pCexOld.nRegs; iBitOld++  {\n        if Abc_InfoHasBit( pCexOld.pData, iBitOld ) {\n            Abc_InfoSetBit( pCexNew.pData, iBitOld ); }\n    }\n    // copy the primary input data\n    iBitNew = iBitOld;\n    for  i = 0; i \u003c= pCexNew.iFrame; i++  {\n        Vec_IntForEachEntry( vInputMap, Entry, k )\n        {\n            if Entry == -1 {\n                continue; }\n            if Abc_InfoHasBit( pCexOld.pData, iBitOld + Entry ) {\n                Abc_InfoSetBit( pCexNew.pData, iBitNew + k ); }\n        }\n        iBitOld += Saig_ManPiNum(p);\n        iBitNew += Saig_ManPiNum(pInit);\n    }\n    assert(iBitOld \u003c iBitNew, \"iBitOld \u003c iBitNew\");\n    assert(iBitOld == pCexOld.nBits, \"iBitOld == pCexOld.nBits\");\n    assert(iBitNew == pCexNew.nBits, \"iBitNew == pCexNew.nBits\");\n    Vec_IntFree( vInputMap );\n    pInit.pSeqModel = pCexNew;\n    Aig_ManStop( p );\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::mechanical::sizeof::1584",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1584,
+      "End": 1590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::pointer-cast::4182",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4137,
+      "End": 4137
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::pointer-cast::10759",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10651,
+      "End": 10651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::pointer-cast::11742",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11571,
+      "End": 11571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::pointer-cast::16891",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16657,
+      "End": 16657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::pointer-cast::19808",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19556,
+      "End": 19569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::Bbr_ManSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_ManSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1514,
+      "End": 1880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::Bbr_bddComputeRangeCube",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_bddComputeRangeCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2173,
+      "End": 2693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::Bbr_StopManager",
+      "Category": "semantic-review",
+      "Symbol": "Bbr_StopManager",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2914,
+      "End": 3219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::Aig_ManInitStateVarMap",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManInitStateVarMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3511,
+      "End": 4392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::Aig_ManCreateOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCreateOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4662,
+      "End": 5030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::Aig_ManCreatePartitions",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManCreatePartitions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5303,
+      "End": 6651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::Aig_ManComputeReachable",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManComputeReachable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6926,
+      "End": 14655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::Aig_ManVerifyUsingBdds_int",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManVerifyUsingBdds_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14947,
+      "End": 18152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::Aig_ManVerifyUsingBdds",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManVerifyUsingBdds",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18443,
+      "End": 20700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::3759",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3759,
+      "End": 3790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::3806",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3806,
+      "End": 3837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::3893",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3893,
+      "End": 3926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::4301",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4301,
+      "End": 4320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::4326",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4326,
+      "End": 4345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::4842",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4842,
+      "End": 4881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::4887",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4887,
+      "End": 4919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::5847",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5847,
+      "End": 5887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::5893",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5893,
+      "End": 5925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::13227",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13227,
+      "End": 13281
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::17314",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17314,
+      "End": 17368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::17761",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17761,
+      "End": 17780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::17880",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17880,
+      "End": 17901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::18064",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18064,
+      "End": 18100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::18745",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18745,
+      "End": 18780
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::19436",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachPi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19436,
+      "End": 19471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/bbr/bbrReach.c::macro-inline::20150",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20150,
+      "End": 20192
+    }
+  ],
+  "Draft": "package bbr\n\nimport (\n\t\"fmt\"\n\t\"math\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [bbrReach.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD-based reachability analysis.]\n\n  Synopsis    [Procedures to perform reachability analysis.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bbrReach.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bbr.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern Abc_Cex_t * Aig_ManVerifyUsingBddsCountExample( Aig_Man_t * p, DdManager * dd, \n//     DdNode ** pbParts, Vec_Ptr_t * vOnionRings, DdNode * bCubeFirst, \n//     int iOutput, int fVerbose, int fSilent );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default resynthesis parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_ManSetDefaultParams(p *Saig_ParBbr_t) {\n    memset( p, 0, sizeof(Saig_ParBbr_t) );\n    p.TimeLimit     =     0;\n    p.nBddMax       = 50000;\n    p.nIterMax      =  1000;\n    p.fPartition    =     1;\n    p.fReorder      =     1;\n    p.fReorderImage =     1;\n    p.fVerbose      =     0;\n    p.fSilent       =     0;\n    p.iFrame        =    -1;\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the reordering-sensitive step of Extra_bddMove().]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Bbr_bddComputeRangeCube(dd *DdManager, iStart int32, iStop int32) *DdNode {\n    var bTemp, bProd *DdNode;\n    var i int32;\n    assert(iStart \u003c= iStop, \"iStart \u003c= iStop\");\n    assert(iStart \u003e= 0 \u0026\u0026 iStart \u003c= dd.size, \"iStart \u003e= 0 \u0026\u0026 iStart \u003c= dd.size\");\n    assert(iStop \u003e= 0  \u0026\u0026 iStop  \u003c= dd.size, \"iStop \u003e= 0  \u0026\u0026 iStop  \u003c= dd.size\");\n    bProd = (dd).one;         Cudd_Ref( bProd );\n    for  i = iStart; i \u003c iStop; i++  {\n        bProd = Cudd_bddAnd( dd, bTemp = bProd, dd.vars[i] );      Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bTemp ); \n    }\n    Cudd_Deref( bProd );\n    return bProd;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbr_StopManager(dd *DdManager) {\n    var RetValue int32;\n    // check for remaining references in the package\n    RetValue = Cudd_CheckZeroRef( dd );\n    if RetValue \u003e 0 {\n        fmt.Printf(\"\\nThe number of referenced nodes = %d\\n\\n\", RetValue); }\n//  Cudd_PrintInfo( dd, stdout );\n    Cudd_Quit( dd );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the initial state and sets up the variable map.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManInitStateVarMap(dd *DdManager, p *Aig_Man_t, fVerbose int32) *DdNode {\n    var pbVarsX, pbVarsY **DdNode;\n    var bTemp, bProd *DdNode;\n    var pLatch *Aig_Obj_t;\n    var i int32;\n\n    // set the variable mapping for Cudd_bddVarMap()\n    pbVarsX = ABC_ALLOC( DdNode *, dd.size );\n    pbVarsY = ABC_ALLOC( DdNode *, dd.size );\n    bProd = (dd).one;         Cudd_Ref( bProd );\n    Saig_ManForEachLo( p, pLatch, i )\n    {\n        pbVarsX[i] = dd.vars[ Saig_ManPiNum(p) + i ];\n        pbVarsY[i] = dd.vars[ Saig_ManCiNum(p) + i ];\n        // get the initial value of the latch\n        // inlining of macro Cudd_Not\n        bProd = Cudd_bddAnd( dd, bTemp = bProd, ((DdNode *)((ptrint)(pbVarsX[i]) ^ 01)) );      Cudd_Ref( bProd );\n        Cudd_RecursiveDeref( dd, bTemp ); \n    }\n    Cudd_SetVarMap( dd, pbVarsX, pbVarsY, Saig_ManRegNum(p) );\n    ABC_FREE( pbVarsX );\n    ABC_FREE( pbVarsY );\n\n    Cudd_Deref( bProd );\n    return bProd;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the array of output BDDs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManCreateOutputs(dd *DdManager, p *Aig_Man_t) **DdNode {\n    var pbOutputs **DdNode;\n    var pNode *Aig_Obj_t;\n    var i int32;\n    // compute the transition relation\n    pbOutputs = ABC_ALLOC( DdNode *, Saig_ManPoNum(p) );\n    Saig_ManForEachPo( p, pNode, i )\n    {\n        pbOutputs[i] = Aig_ObjGlobalBdd(pNode);  Cudd_Ref( pbOutputs[i] );\n    }\n    return pbOutputs;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the array of partition BDDs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManCreatePartitions(dd *DdManager, p *Aig_Man_t, fReorder int32, fVerbose int32) **DdNode {\n    var pbParts **DdNode;\n    var bVar *DdNode;\n    var pNode *Aig_Obj_t;\n    var i int32;\n\n    // extand the BDD manager to represent NS variables\n    assert(dd.size == Saig_ManCiNum(p), \"dd.size == Saig_ManCiNum(p)\");\n    Cudd_bddIthVar( dd, Saig_ManCiNum(p) + Saig_ManRegNum(p) - 1 );\n\n    // enable reordering\n    if fReorder != 0 {\n        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT );\n    } else {\n        Cudd_AutodynDisable( dd ); }\n\n    // compute the transition relation\n    pbParts = ABC_ALLOC( DdNode *, Saig_ManRegNum(p) );\n    Saig_ManForEachLi( p, pNode, i )\n    {\n        bVar  = Cudd_bddIthVar( dd, Saig_ManCiNum(p) + i );\n        pbParts[i] = Cudd_bddXnor( dd, bVar, Aig_ObjGlobalBdd(pNode) );  Cudd_Ref( pbParts[i] );\n    }\n    // free global BDDs\n    Aig_ManFreeGlobalBdds( p, dd );\n\n    // reorder and disable reordering\n    if fReorder != 0 {\n        if fVerbose != 0 {\n            fmt.Fprintf(os.Stdout, \"BDD nodes in the partitions before reordering %d.\\n\", Cudd_SharingSize(pbParts,Saig_ManRegNum(p))); }\n        Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n        Cudd_AutodynDisable( dd );\n        if fVerbose != 0 {\n            fmt.Fprintf(os.Stdout, \"BDD nodes in the partitions after reordering %d.\\n\", Cudd_SharingSize(pbParts,Saig_ManRegNum(p))); }\n    }\n    return pbParts;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the set of unreachable states.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManComputeReachable(dd *DdManager, p *Aig_Man_t, pbParts **DdNode, bInitial *DdNode, pbOutputs **DdNode, pPars *Saig_ParBbr_t, fCheckOutputs int32) int32 {\n    var fInternalReorder int32;\n    var pTree *Bbr_ImageTree_t  = nil; // Suppress \"might be used uninitialized\"\n    var pTree2 *Bbr_ImageTree2_t  = nil; // Supprses \"might be used uninitialized\"\n    var bReached, bCubeCs *DdNode;\n    var bCurrent *DdNode;\n    var bNext *DdNode  = nil; // Suppress \"might be used uninitialized\"\n    var bTemp *DdNode;\n    var method Cudd_ReorderingType;\n    var i, nIters, nBddSize, status int32;\n    var nThreshold int32  = 10000;\n    var clk abctime  = Abc_Clock();\n    var vOnionRings *Vec_Ptr_t;\n    var fixedPoint int32;\n\n    status = Cudd_ReorderingStatus( dd, \u0026method );\n    if status != 0 {\n        Cudd_AutodynDisable( dd ); }\n\n    // start the image computation\n    bCubeCs  = Bbr_bddComputeRangeCube( dd, Saig_ManPiNum(p), Saig_ManCiNum(p) );    Cudd_Ref( bCubeCs );\n    if pPars.fPartition {\n        pTree = Bbr_bddImageStart( dd, bCubeCs, Saig_ManRegNum(p), pbParts, Saig_ManRegNum(p), dd.vars+Saig_ManCiNum(p), pPars.nBddMax, pPars.fVerbose );\n    } else {\n        pTree2 = Bbr_bddImageStart2( dd, bCubeCs, Saig_ManRegNum(p), pbParts, Saig_ManRegNum(p), dd.vars+Saig_ManCiNum(p), pPars.fVerbose ); }\n    Cudd_RecursiveDeref( dd, bCubeCs );\n    if pTree == nil {\n        if !pPars.fSilent {\n            fmt.Printf(\"BDDs blew up during qualitification scheduling.  \"); }\n        return -1;\n    }\n\n    if status != 0 {\n        Cudd_AutodynEnable( dd, method ); }\n\n    // start the onion rings\n    vOnionRings = Vec_PtrAlloc( 1000 );\n\n    // perform reachability analysis\n    bCurrent = bInitial;   Cudd_Ref( bCurrent );\n    bReached = bInitial;   Cudd_Ref( bReached );\n    Vec_PtrPush( vOnionRings, bCurrent );  Cudd_Ref( bCurrent );\n    for  nIters = 0; nIters \u003c pPars.nIterMax; nIters++  { \n        // check the runtime limit\n        if pPars.TimeLimit \u0026\u0026 pPars.TimeLimit \u003c= (Abc_Clock()-clk)/int64(time.Second) {\n            fmt.Printf(\"Reached timeout after image computation (%d seconds).\\n\", pPars.TimeLimit);\n            Vec_PtrFree( vOnionRings );\n            // undo the image tree\n            if pPars.fPartition {\n                Bbr_bddImageTreeDelete( pTree );\n            } else {\n                Bbr_bddImageTreeDelete2( pTree2 ); }\n            pPars.iFrame = nIters - 1;\n            return -1;\n        }\n\n        // compute the next states\n        if pPars.fPartition {\n            bNext = Bbr_bddImageCompute( pTree, bCurrent );           \n        } else {\n            bNext = Bbr_bddImageCompute2( pTree2, bCurrent ); }  \n        if bNext == nil {\n            if !pPars.fSilent {\n                fmt.Printf(\"BDDs blew up during image computation.  \"); }\n            if pPars.fPartition {\n                Bbr_bddImageTreeDelete( pTree );\n            } else {\n                Bbr_bddImageTreeDelete2( pTree2 ); }\n            Vec_PtrFree( vOnionRings );\n            pPars.iFrame = nIters - 1;\n            return -1;\n        }\n        Cudd_Ref( bNext );\n        Cudd_RecursiveDeref( dd, bCurrent );\n\n        // remap these states into the current state vars\n        bNext = Cudd_bddVarMap( dd, bTemp = bNext );                    Cudd_Ref( bNext );\n        Cudd_RecursiveDeref( dd, bTemp );\n        // check if there are any new states\n        if Cudd_bddLeq( dd, bNext, bReached ) {\n            fixedPoint = 1;\n            break;\n        }\n        // check the BDD size\n        nBddSize = Cudd_DagSize(bNext);\n        if nBddSize \u003e pPars.nBddMax {\n            break; }\n        // check the result\n        for  i = 0; i \u003c Saig_ManPoNum(p); i++  {\n            // inlining of macro Cudd_Not\n            if fCheckOutputs \u0026\u0026 !Cudd_bddLeq( dd, bNext, ((DdNode *)((ptrint)(pbOutputs[i]) ^ 01)) ) {\n                var bIntersect *DdNode;\n                bIntersect = Cudd_bddIntersect( dd, bNext, pbOutputs[i] );  Cudd_Ref( bIntersect );\n                assert(p.pSeqModel == nil, \"p.pSeqModel == nil\");\n                p.pSeqModel = Aig_ManVerifyUsingBddsCountExample( p, dd, pbParts, \n                    vOnionRings, bIntersect, i, pPars.fVerbose, pPars.fSilent ); \n                Cudd_RecursiveDeref( dd, bIntersect );\n                if !pPars.fSilent {\n                    Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d. \", i, p.pName, Vec_PtrSize(vOnionRings) ); }\n                Cudd_RecursiveDeref( dd, bReached );\n                bReached = nil;\n                pPars.iFrame = nIters;\n                break;\n            }\n        }\n        if i \u003c Saig_ManPoNum(p) {\n            break; }\n        // get the new states\n        // inlining of macro Cudd_Not\n        bCurrent = Cudd_bddAnd( dd, bNext, ((DdNode *)((ptrint)(bReached) ^ 01)) );        Cudd_Ref( bCurrent );\n        Vec_PtrPush( vOnionRings, bCurrent );  Cudd_Ref( bCurrent );\n        // minimize the new states with the reached states\n//        bCurrent = Cudd_bddConstrain( dd, bTemp = bCurrent, Cudd_Not(bReached) ); Cudd_Ref( bCurrent );\n//        Cudd_RecursiveDeref( dd, bTemp );\n        // add to the reached states\n        bReached = Cudd_bddOr( dd, bTemp = bReached, bNext );           Cudd_Ref( bReached );\n        Cudd_RecursiveDeref( dd, bTemp );\n        Cudd_RecursiveDeref( dd, bNext );\n        if pPars.fVerbose {\n            fmt.Fprintf(os.Stdout, \"Frame = %3d. BDD = %5d. \", nIters, nBddSize); }\n        if (fInternalReorder != 0) \u0026\u0026 pPars.fReorder \u0026\u0026 nBddSize \u003e nThreshold {\n            if pPars.fVerbose {\n                fmt.Fprintf(os.Stdout, \"Reordering... Before = %5d. \", Cudd_DagSize(bReached)); }\n            Cudd_ReduceHeap( dd, CUDD_REORDER_SYMM_SIFT, 100 );\n            Cudd_AutodynDisable( dd );\n            if pPars.fVerbose {\n                fmt.Fprintf(os.Stdout, \"After = %5d.\\r\", Cudd_DagSize(bReached)); }\n            nThreshold *= 2;\n        }\n        if pPars.fVerbose {\n//            fprintf( stdout, \"\\r\" );\n            fmt.Fprintf(os.Stdout, \"\\n\"); }\n\n        if pPars.fVerbose {\n            var nMints float64  = Cudd_CountMinterm(dd, bReached, Saig_ManRegNum(p) );\n//            Extra_bddPrint( dd, bReached );printf( \"\\n\" );\n            fmt.Fprintf(os.Stdout, \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/math.Pow(float64(2.0), float64(Saig_ManRegNum(p))));\n            fflush( os.Stdout ); \n        }\n\n    }\n    Cudd_RecursiveDeref( dd, bNext );\n    // free the onion rings\n    Vec_PtrForEachEntry( DdNode *, vOnionRings, bTemp, i )\n        Cudd_RecursiveDeref( dd, bTemp );\n    Vec_PtrFree( vOnionRings );\n    // undo the image tree\n    if pPars.fPartition {\n        Bbr_bddImageTreeDelete( pTree );\n    } else {\n        Bbr_bddImageTreeDelete2( pTree2 ); }\n    if bReached == nil {\n        return 0; } // proved reachable\n    // report the stats\n    if pPars.fVerbose {\n        var nMints float64  = Cudd_CountMinterm(dd, bReached, Saig_ManRegNum(p) );\n        if nIters \u003e pPars.nIterMax || nBddSize \u003e pPars.nBddMax {\n            fmt.Fprintf(os.Stdout, \"Reachability analysis is stopped after %d frames.\\n\", nIters);\n        } else {\n            fmt.Fprintf(os.Stdout, \"Reachability analysis completed after %d frames.\\n\", nIters); }\n        fmt.Fprintf(os.Stdout, \"Reachable states = %.0f. (Ratio = %.4f %%)\\n\", nMints, 100.0*nMints/math.Pow(float64(2.0), float64(Saig_ManRegNum(p))));\n        fflush( os.Stdout );\n    }\n//ABC_PRB( dd, bReached );\n    Cudd_RecursiveDeref( dd, bReached );\n    // SPG\n    //\n    if fixedPoint != 0 {\n      if !pPars.fSilent {\n        fmt.Printf(\"The miter is proved unreachable after %d iterations.  \", nIters);\n      }\n      pPars.iFrame = nIters - 1;\n      return 1;\n    }\n    assert(nIters \u003e= pPars.nIterMax || nBddSize \u003e= pPars.nBddMax, \"nIters \u003e= pPars.nIterMax || nBddSize \u003e= pPars.nBddMax\");\n    if !pPars.fSilent {\n      fmt.Printf(\"Verified only for states reachable in %d frames.  \", nIters); }\n    pPars.iFrame = nIters - 1;\n    return -1; // undecided\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs reachability to see if any PO can be asserted.]\n\n  Description []\n               \n  SideEffects []\n \n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManVerifyUsingBdds_int(p *Aig_Man_t, pPars *Saig_ParBbr_t) int32 {\n    var fCheckOutputs int32  = !pPars.fSkipOutCheck;\n    var dd *DdManager;\n    var pbParts, pbOutputs **DdNode;\n    var bInitial, bTemp *DdNode;\n    var RetValue, i int32;\n    var clk abctime  = Abc_Clock();\n    var vOnionRings *Vec_Ptr_t;\n\n    assert(Saig_ManRegNum(p) \u003e 0, \"Saig_ManRegNum(p) \u003e 0\");\n\n    // compute the global BDDs of the latches\n    dd = Aig_ManComputeGlobalBdds( p, pPars.nBddMax, 1, pPars.fReorder, pPars.fVerbose );    \n    if dd == nil {\n        if !pPars.fSilent {\n            fmt.Printf(\"The number of intermediate BDD nodes exceeded the limit (%d).\\n\", pPars.nBddMax); }\n        return -1;\n    }\n    if pPars.fVerbose {\n        fmt.Printf(\"Shared BDD size is %6d nodes.\\n\", Cudd_ReadKeys(dd) - Cudd_ReadDead(dd)); }\n\n    // check the runtime limit\n    if pPars.TimeLimit \u0026\u0026 pPars.TimeLimit \u003c= (Abc_Clock()-clk)/int64(time.Second) {\n        fmt.Printf(\"Reached timeout after constructing global BDDs (%d seconds).\\n\", pPars.TimeLimit);\n        Cudd_Quit( dd );\n        return -1;\n    }\n\n    // start the onion rings\n    vOnionRings = Vec_PtrAlloc( 1000 );\n\n    // save outputs\n    pbOutputs = Aig_ManCreateOutputs( dd, p );\n\n    // create partitions\n    pbParts = Aig_ManCreatePartitions( dd, p, pPars.fReorder, pPars.fVerbose );\n\n    // create the initial state and the variable map\n    bInitial  = Aig_ManInitStateVarMap( dd, p, pPars.fVerbose );  Cudd_Ref( bInitial );\n\n    // set reordering\n    if pPars.fReorderImage {\n        Cudd_AutodynEnable( dd, CUDD_REORDER_SYMM_SIFT ); }\n\n    // check the result\n    RetValue = -1;\n    for  i = 0; i \u003c Saig_ManPoNum(p); i++  {\n        // inlining of macro Cudd_Not\n        if fCheckOutputs \u0026\u0026 !Cudd_bddLeq( dd, bInitial, ((DdNode *)((ptrint)(pbOutputs[i]) ^ 01)) ) {\n            var bIntersect *DdNode;\n            bIntersect = Cudd_bddIntersect( dd, bInitial, pbOutputs[i] );  Cudd_Ref( bIntersect );\n            assert(p.pSeqModel == nil, \"p.pSeqModel == nil\");\n            p.pSeqModel = Aig_ManVerifyUsingBddsCountExample( p, dd, pbParts, \n                vOnionRings, bIntersect, i, pPars.fVerbose, pPars.fSilent ); \n            Cudd_RecursiveDeref( dd, bIntersect );\n            if !pPars.fSilent {\n                Abc_Print( 1, \"Output %d of miter \\\"%s\\\" was asserted in frame %d. \", i, p.pName, -1 ); }\n            RetValue = 0;\n            break;\n        }\n    }\n    // free the onion rings\n    Vec_PtrForEachEntry( DdNode *, vOnionRings, bTemp, i )\n        Cudd_RecursiveDeref( dd, bTemp );\n    Vec_PtrFree( vOnionRings );\n    // explore reachable states\n    if RetValue == -1 {\n        RetValue = Aig_ManComputeReachable( dd, p, pbParts, bInitial, pbOutputs, pPars, fCheckOutputs ); } \n\n    // cleanup\n    Cudd_RecursiveDeref( dd, bInitial );\n    for  i = 0; i \u003c Saig_ManRegNum(p); i++  {\n        Cudd_RecursiveDeref( dd, pbParts[i] );\n    }\n    ABC_FREE( pbParts );\n    for  i = 0; i \u003c Saig_ManPoNum(p); i++  {\n        Cudd_RecursiveDeref( dd, pbOutputs[i] );\n    }\n    ABC_FREE( pbOutputs );\n//    if ( RetValue == -1 )\n        Cudd_Quit( dd );\n//    else\n//        Bbr_StopManager( dd );\n\n    // report the runtime\n    if !pPars.fSilent {\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    fflush( os.Stdout );\n    }\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs reachability to see if any PO can be asserted.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManVerifyUsingBdds(pInit *Aig_Man_t, pPars *Saig_ParBbr_t) int32 {\n    var pCexOld, pCexNew *Abc_Cex_t;\n    var p *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var vInputMap *Vec_Int_t;\n    var i, k, Entry, iBitOld, iBitNew, RetValue int32;\n//    pPars-\u003efVerbose = 1;\n    // check if there are PIs without fanout\n    Saig_ManForEachPi( pInit, pObj, i )\n        if ( Aig_ObjRefs(pObj) == 0 )\n            break;\n    if i == Saig_ManPiNum(pInit) {\n        return Aig_ManVerifyUsingBdds_int( pInit, pPars ); }\n    // create new AIG\n    p = Aig_ManDupTrim( pInit );\n    assert(Aig_ManCiNum(p) \u003c Aig_ManCiNum(pInit), \"Aig_ManCiNum(p) \u003c Aig_ManCiNum(pInit)\");\n    assert(Aig_ManRegNum(p) == Aig_ManRegNum(pInit), \"Aig_ManRegNum(p) == Aig_ManRegNum(pInit)\");\n    RetValue = Aig_ManVerifyUsingBdds_int( p, pPars );\n    if RetValue != 0 {\n        Aig_ManStop( p );\n        return RetValue;\n    }\n    // the problem is satisfiable - remap the pattern\n    pCexOld = p.pSeqModel;\n    assert(pCexOld != nil, \"pCexOld != nil\");\n    // create input map\n    vInputMap = Vec_IntAlloc( Saig_ManPiNum(pInit) );\n    Saig_ManForEachPi( pInit, pObj, i )\n        if ( pObj.pData != nil )\n            Vec_IntPush( vInputMap, Aig_ObjCioId((Aig_Obj_t *)pObj.pData) );\n        else\n            Vec_IntPush( vInputMap, -1 );\n    // create new pattern\n    pCexNew = Abc_CexAlloc( Saig_ManRegNum(pInit), Saig_ManPiNum(pInit), pCexOld.iFrame+1 );\n    pCexNew.iFrame = pCexOld.iFrame;\n    pCexNew.iPo    = pCexOld.iPo;\n    // copy the bit-data\n    for  iBitOld = 0; iBitOld \u003c pCexOld.nRegs; iBitOld++  {\n        if Abc_InfoHasBit( pCexOld.pData, iBitOld ) {\n            Abc_InfoSetBit( pCexNew.pData, iBitOld ); }\n    }\n    // copy the primary input data\n    iBitNew = iBitOld;\n    for  i = 0; i \u003c= pCexNew.iFrame; i++  {\n        Vec_IntForEachEntry( vInputMap, Entry, k )\n        {\n            if Entry == -1 {\n                continue; }\n            if Abc_InfoHasBit( pCexOld.pData, iBitOld + Entry ) {\n                Abc_InfoSetBit( pCexNew.pData, iBitNew + k ); }\n        }\n        iBitOld += Saig_ManPiNum(p);\n        iBitNew += Saig_ManPiNum(pInit);\n    }\n    assert(iBitOld \u003c iBitNew, \"iBitOld \u003c iBitNew\");\n    assert(iBitOld == pCexOld.nBits, \"iBitOld == pCexOld.nBits\");\n    assert(iBitNew == pCexNew.nBits, \"iBitNew == pCexNew.nBits\");\n    Vec_IntFree( vInputMap );\n    pInit.pSeqModel = pCexNew;\n    Aig_ManStop( p );\n    return 0;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

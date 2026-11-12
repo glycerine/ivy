@@ -1,0 +1,1373 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c",
+  "SHA256": "77a80fe336e5e55c3cbf268980a1c32d59d408d8f5fa10d3477a8ed1e1aa83cc",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 75,
+        "ByteOffset": 1643
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Mio_LibraryReadGateById(pLib *Mio_Library_t, Id int32) *Mio_Gate_t { assert( pLib.ppGates0[Id].Cell == Id ); return pLib.ppGates0[Id];}"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 73,
+        "Column": 123,
+        "ByteOffset": 4152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Mio_LibrarySetName(pLib *Mio_Library_t, pName string) { /*__starting_point_inline_macro:ABC_FREE__*/((pLib.pName) ? (free((char *) (pLib.pName)), (pLib.pName) = 0) : 0); pLib.pName = pName;         }"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 90,
+        "Column": 18,
+        "ByteOffset": 4864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        LenCur = strlen( Mio_GateReadName(pGate) );"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 114,
+        "Column": 9,
+        "ByteOffset": 5519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if !strcmp(pGate.pOutName, pOutName) {"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 116,
+        "Column": 24,
+        "ByteOffset": 5601
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pGate.pTwin \u0026\u0026 !strcmp(pGate.pTwin.pOutName, pOutName) {"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mio_LibraryReadName",
+      "Start": 1209,
+      "End": 1310,
+      "BodyStart": 1282,
+      "Original": "char *            Mio_LibraryReadName          ( Mio_Library_t * pLib )  { return pLib-\u003epName;      }",
+      "Draft": "func Mio_LibraryReadName(pLib *Mio_Library_t) string { return pLib.pName;      }"
+    },
+    {
+      "Name": "Mio_LibraryReadGateNum",
+      "Start": 1311,
+      "End": 1412,
+      "BodyStart": 1384,
+      "Original": "int               Mio_LibraryReadGateNum       ( Mio_Library_t * pLib )  { return pLib-\u003enGates;     }",
+      "Draft": "func Mio_LibraryReadGateNum(pLib *Mio_Library_t) int32 { return pLib.nGates;     }"
+    },
+    {
+      "Name": "Mio_LibraryReadGates",
+      "Start": 1413,
+      "End": 1514,
+      "BodyStart": 1486,
+      "Original": "Mio_Gate_t *      Mio_LibraryReadGates         ( Mio_Library_t * pLib )  { return pLib-\u003epGates;     }",
+      "Draft": "func Mio_LibraryReadGates(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGates;     }"
+    },
+    {
+      "Name": "Mio_LibraryReadGateArray",
+      "Start": 1515,
+      "End": 1616,
+      "BodyStart": 1588,
+      "Original": "Mio_Gate_t **     Mio_LibraryReadGateArray     ( Mio_Library_t * pLib )  { return pLib-\u003eppGatesName;}",
+      "Draft": "func Mio_LibraryReadGateArray(pLib *Mio_Library_t) **Mio_Gate_t { return pLib.ppGatesName;}"
+    },
+    {
+      "Name": "Mio_LibraryReadGateById",
+      "Start": 1617,
+      "End": 1768,
+      "BodyStart": 1697,
+      "Original": "Mio_Gate_t *      Mio_LibraryReadGateById      ( Mio_Library_t * pLib, int Id ) { assert( pLib-\u003eppGates0[Id]-\u003eCell == Id ); return pLib-\u003eppGates0[Id];}",
+      "Draft": "func Mio_LibraryReadGateById(pLib *Mio_Library_t, Id int32) *Mio_Gate_t { assert(pLib.ppGates0[Id].Cell == Id, \"pLib.ppGates0[Id].Cell == Id\"); return pLib.ppGates0[Id];}"
+    },
+    {
+      "Name": "Mio_LibraryReadBuf",
+      "Start": 1769,
+      "End": 1870,
+      "BodyStart": 1842,
+      "Original": "Mio_Gate_t *      Mio_LibraryReadBuf           ( Mio_Library_t * pLib )  { return pLib-\u003epGateBuf;   }",
+      "Draft": "func Mio_LibraryReadBuf(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGateBuf;   }"
+    },
+    {
+      "Name": "Mio_LibraryReadInv",
+      "Start": 1871,
+      "End": 1972,
+      "BodyStart": 1944,
+      "Original": "Mio_Gate_t *      Mio_LibraryReadInv           ( Mio_Library_t * pLib )  { return pLib-\u003epGateInv;   }",
+      "Draft": "func Mio_LibraryReadInv(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGateInv;   }"
+    },
+    {
+      "Name": "Mio_LibraryReadConst0",
+      "Start": 1973,
+      "End": 2074,
+      "BodyStart": 2046,
+      "Original": "Mio_Gate_t *      Mio_LibraryReadConst0        ( Mio_Library_t * pLib )  { return pLib-\u003epGate0;     }",
+      "Draft": "func Mio_LibraryReadConst0(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGate0;     }"
+    },
+    {
+      "Name": "Mio_LibraryReadConst1",
+      "Start": 2075,
+      "End": 2176,
+      "BodyStart": 2148,
+      "Original": "Mio_Gate_t *      Mio_LibraryReadConst1        ( Mio_Library_t * pLib )  { return pLib-\u003epGate1;     }",
+      "Draft": "func Mio_LibraryReadConst1(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGate1;     }"
+    },
+    {
+      "Name": "Mio_LibraryReadNand2",
+      "Start": 2177,
+      "End": 2278,
+      "BodyStart": 2250,
+      "Original": "Mio_Gate_t *      Mio_LibraryReadNand2         ( Mio_Library_t * pLib )  { return pLib-\u003epGateNand2; }",
+      "Draft": "func Mio_LibraryReadNand2(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGateNand2; }"
+    },
+    {
+      "Name": "Mio_LibraryReadAnd2",
+      "Start": 2279,
+      "End": 2380,
+      "BodyStart": 2352,
+      "Original": "Mio_Gate_t *      Mio_LibraryReadAnd2          ( Mio_Library_t * pLib )  { return pLib-\u003epGateAnd2;  }",
+      "Draft": "func Mio_LibraryReadAnd2(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGateAnd2;  }"
+    },
+    {
+      "Name": "Mio_LibraryReadNor2",
+      "Start": 2381,
+      "End": 2482,
+      "BodyStart": 2454,
+      "Original": "Mio_Gate_t *      Mio_LibraryReadNor2          ( Mio_Library_t * pLib )  { return pLib-\u003epGateNor2;  }",
+      "Draft": "func Mio_LibraryReadNor2(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGateNor2;  }"
+    },
+    {
+      "Name": "Mio_LibraryReadOr2",
+      "Start": 2483,
+      "End": 2584,
+      "BodyStart": 2556,
+      "Original": "Mio_Gate_t *      Mio_LibraryReadOr2           ( Mio_Library_t * pLib )  { return pLib-\u003epGateOr2;   }",
+      "Draft": "func Mio_LibraryReadOr2(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGateOr2;   }"
+    },
+    {
+      "Name": "Mio_LibraryReadDelayInvRise",
+      "Start": 2585,
+      "End": 2743,
+      "BodyStart": 2658,
+      "Original": "float             Mio_LibraryReadDelayInvRise  ( Mio_Library_t * pLib )  { return (float)(pLib-\u003epGateInv?   pLib-\u003epGateInv-\u003epPins-\u003edDelayBlockRise   : 0.0); }",
+      "Draft": "func Mio_LibraryReadDelayInvRise(pLib *Mio_Library_t) float32 { return float32((pLib.pGateInv?   pLib.pGateInv.pPins.dDelayBlockRise   : 0.0)); }"
+    },
+    {
+      "Name": "Mio_LibraryReadDelayInvFall",
+      "Start": 2744,
+      "End": 2902,
+      "BodyStart": 2817,
+      "Original": "float             Mio_LibraryReadDelayInvFall  ( Mio_Library_t * pLib )  { return (float)(pLib-\u003epGateInv?   pLib-\u003epGateInv-\u003epPins-\u003edDelayBlockFall   : 0.0); }",
+      "Draft": "func Mio_LibraryReadDelayInvFall(pLib *Mio_Library_t) float32 { return float32((pLib.pGateInv?   pLib.pGateInv.pPins.dDelayBlockFall   : 0.0)); }"
+    },
+    {
+      "Name": "Mio_LibraryReadDelayInvMax",
+      "Start": 2903,
+      "End": 3061,
+      "BodyStart": 2976,
+      "Original": "float             Mio_LibraryReadDelayInvMax   ( Mio_Library_t * pLib )  { return (float)(pLib-\u003epGateInv?   pLib-\u003epGateInv-\u003epPins-\u003edDelayBlockMax    : 0.0); }",
+      "Draft": "func Mio_LibraryReadDelayInvMax(pLib *Mio_Library_t) float32 { return float32((pLib.pGateInv?   pLib.pGateInv.pPins.dDelayBlockMax    : 0.0)); }"
+    },
+    {
+      "Name": "Mio_LibraryReadDelayNand2Rise",
+      "Start": 3062,
+      "End": 3220,
+      "BodyStart": 3135,
+      "Original": "float             Mio_LibraryReadDelayNand2Rise( Mio_Library_t * pLib )  { return (float)(pLib-\u003epGateNand2? pLib-\u003epGateNand2-\u003epPins-\u003edDelayBlockRise : 0.0); }",
+      "Draft": "func Mio_LibraryReadDelayNand2Rise(pLib *Mio_Library_t) float32 { return float32((pLib.pGateNand2? pLib.pGateNand2.pPins.dDelayBlockRise : 0.0)); }"
+    },
+    {
+      "Name": "Mio_LibraryReadDelayNand2Fall",
+      "Start": 3221,
+      "End": 3379,
+      "BodyStart": 3294,
+      "Original": "float             Mio_LibraryReadDelayNand2Fall( Mio_Library_t * pLib )  { return (float)(pLib-\u003epGateNand2? pLib-\u003epGateNand2-\u003epPins-\u003edDelayBlockFall : 0.0); }",
+      "Draft": "func Mio_LibraryReadDelayNand2Fall(pLib *Mio_Library_t) float32 { return float32((pLib.pGateNand2? pLib.pGateNand2.pPins.dDelayBlockFall : 0.0)); }"
+    },
+    {
+      "Name": "Mio_LibraryReadDelayNand2Max",
+      "Start": 3380,
+      "End": 3538,
+      "BodyStart": 3453,
+      "Original": "float             Mio_LibraryReadDelayNand2Max ( Mio_Library_t * pLib )  { return (float)(pLib-\u003epGateNand2? pLib-\u003epGateNand2-\u003epPins-\u003edDelayBlockMax  : 0.0); }",
+      "Draft": "func Mio_LibraryReadDelayNand2Max(pLib *Mio_Library_t) float32 { return float32((pLib.pGateNand2? pLib.pGateNand2.pPins.dDelayBlockMax  : 0.0)); }"
+    },
+    {
+      "Name": "Mio_LibraryReadDelayAnd2Max",
+      "Start": 3539,
+      "End": 3697,
+      "BodyStart": 3612,
+      "Original": "float             Mio_LibraryReadDelayAnd2Max  ( Mio_Library_t * pLib )  { return (float)(pLib-\u003epGateAnd2?  pLib-\u003epGateAnd2-\u003epPins-\u003edDelayBlockMax   : 0.0); }",
+      "Draft": "func Mio_LibraryReadDelayAnd2Max(pLib *Mio_Library_t) float32 { return float32((pLib.pGateAnd2?  pLib.pGateAnd2.pPins.dDelayBlockMax   : 0.0)); }"
+    },
+    {
+      "Name": "Mio_LibraryReadDelayAigNode",
+      "Start": 3698,
+      "End": 3871,
+      "BodyStart": 3771,
+      "Original": "float             Mio_LibraryReadDelayAigNode  ( Mio_Library_t * pLib )  { return pLib-\u003epGateAnd2 ? Mio_LibraryReadDelayAnd2Max(pLib) : Mio_LibraryReadDelayNand2Max(pLib); }",
+      "Draft": "func Mio_LibraryReadDelayAigNode(pLib *Mio_Library_t) float32 { if pLib.pGateAnd2 {\n    return Mio_LibraryReadDelayAnd2Max(pLib);\n} else {\n    return Mio_LibraryReadDelayNand2Max(pLib);\n} }"
+    },
+    {
+      "Name": "Mio_LibraryReadAreaInv",
+      "Start": 3909,
+      "End": 4050,
+      "BodyStart": 3982,
+      "Original": "float             Mio_LibraryReadAreaInv       ( Mio_Library_t * pLib )  { return (float)(pLib-\u003epGateInv?   pLib-\u003epGateInv-\u003edArea   : 0.0); }",
+      "Draft": "func Mio_LibraryReadAreaInv(pLib *Mio_Library_t) float32 { return float32((pLib.pGateInv?   pLib.pGateInv.dArea   : 0.0)); }"
+    },
+    {
+      "Name": "Mio_LibraryReadAreaBuf",
+      "Start": 4051,
+      "End": 4192,
+      "BodyStart": 4124,
+      "Original": "float             Mio_LibraryReadAreaBuf       ( Mio_Library_t * pLib )  { return (float)(pLib-\u003epGateBuf?   pLib-\u003epGateBuf-\u003edArea   : 0.0); }",
+      "Draft": "func Mio_LibraryReadAreaBuf(pLib *Mio_Library_t) float32 { return float32((pLib.pGateBuf?   pLib.pGateBuf.dArea   : 0.0)); }"
+    },
+    {
+      "Name": "Mio_LibraryReadAreaNand2",
+      "Start": 4193,
+      "End": 4334,
+      "BodyStart": 4266,
+      "Original": "float             Mio_LibraryReadAreaNand2     ( Mio_Library_t * pLib )  { return (float)(pLib-\u003epGateNand2? pLib-\u003epGateNand2-\u003edArea : 0.0); }",
+      "Draft": "func Mio_LibraryReadAreaNand2(pLib *Mio_Library_t) float32 { return float32((pLib.pGateNand2? pLib.pGateNand2.dArea : 0.0)); }"
+    },
+    {
+      "Name": "Mio_LibrarySetName",
+      "Start": 4335,
+      "End": 4476,
+      "BodyStart": 4421,
+      "Original": "void              Mio_LibrarySetName           ( Mio_Library_t * pLib, char * pName ) { ABC_FREE(pLib-\u003epName); pLib-\u003epName = pName;         }",
+      "Draft": "// inlining of macro ABC_FREE\nfunc Mio_LibrarySetName(pLib *Mio_Library_t, pName string) { ((pLib.pName) ? (free((char *) (pLib.pName)), (pLib.pName) = 0) : 0); pLib.pName = pName;         }"
+    },
+    {
+      "Name": "Mio_LibraryReadGateNameMax",
+      "Start": 4742,
+      "End": 5037,
+      "BodyStart": 4797,
+      "Original": "int Mio_LibraryReadGateNameMax( Mio_Library_t * pLib )\n{\n    Mio_Gate_t * pGate;\n    int LenMax = 0, LenCur;\n    Mio_LibraryForEachGate( pLib, pGate )\n    {\n        LenCur = strlen( Mio_GateReadName(pGate) );\n        if ( LenMax \u003c LenCur )\n            LenMax = LenCur;\n    }\n    return LenMax;\n}",
+      "Draft": "func Mio_LibraryReadGateNameMax(pLib *Mio_Library_t) int32 {\n    var pGate *Mio_Gate_t;\n    var LenMax, LenCur int32;\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        LenCur = len(Mio_GateReadName(pGate));\n        if LenMax \u003c LenCur {\n            LenMax = LenCur; }\n    }\n    return LenMax;\n}"
+    },
+    {
+      "Name": "Mio_LibraryReadGateByName",
+      "Start": 5302,
+      "End": 5752,
+      "BodyStart": 5402,
+      "Original": "Mio_Gate_t * Mio_LibraryReadGateByName( Mio_Library_t * pLib, char * pName, char * pOutName )      \n{ \n    Mio_Gate_t * pGate;\n    if ( ! st__lookup( pLib-\u003etName2Gate, pName, (char **)\u0026pGate ) )\n        return NULL;\n    if ( pOutName == NULL )\n        return pGate;\n    if ( !strcmp(pGate-\u003epOutName, pOutName) )\n        return pGate;\n    if ( pGate-\u003epTwin \u0026\u0026 !strcmp(pGate-\u003epTwin-\u003epOutName, pOutName) )\n        return pGate-\u003epTwin;\n    return NULL;\n}",
+      "Draft": "func Mio_LibraryReadGateByName(pLib *Mio_Library_t, pName string, pOutName string) *Mio_Gate_t { \n    var pGate *Mio_Gate_t;\n    if ! st__lookup( pLib.tName2Gate, pName, (char **)\u0026pGate ) {\n        return nil; }\n    if pOutName == nil {\n        return pGate; }\n    if !(int32(strings.Compare(pGate.pOutName, pOutName)) != 0) {\n        return pGate; }\n    if pGate.pTwin \u0026\u0026 !(int32(strings.Compare(pGate.pTwin.pOutName, pOutName)) != 0) {\n        return pGate.pTwin; }\n    return nil;\n}"
+    },
+    {
+      "Name": "Mio_LibraryReadGateByTruth",
+      "Start": 6044,
+      "End": 6285,
+      "BodyStart": 6116,
+      "Original": "Mio_Gate_t * Mio_LibraryReadGateByTruth( Mio_Library_t * pLib, word t )\n{\n    Mio_Gate_t * pGate;\n    Mio_LibraryForEachGate( pLib, pGate )\n        if ( pGate-\u003enInputs \u003c= 6 \u0026\u0026 pGate-\u003euTruth == t )\n            return pGate;\n    return NULL;\n}",
+      "Draft": "func Mio_LibraryReadGateByTruth(pLib *Mio_Library_t, t word) *Mio_Gate_t {\n    var pGate *Mio_Gate_t;\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        if pGate.nInputs \u003c= 6 \u0026\u0026 pGate.uTruth == t {\n            return pGate; }\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Mio_LibraryReadSopByName",
+      "Start": 6550,
+      "End": 6765,
+      "BodyStart": 6626,
+      "Original": "char * Mio_LibraryReadSopByName( Mio_Library_t * pLib, char * pName )      \n{ \n    Mio_Gate_t * pGate;\n    if ( st__lookup( pLib-\u003etName2Gate, pName, (char **)\u0026pGate ) )\n        return pGate-\u003epSop;\n    return NULL;\n}",
+      "Draft": "func Mio_LibraryReadSopByName(pLib *Mio_Library_t, pName string) string { \n    var pGate *Mio_Gate_t;\n    if st__lookup( pLib.tName2Gate, pName, (char **)\u0026pGate ) {\n        return pGate.pSop; }\n    return nil;\n}"
+    },
+    {
+      "Name": "Mio_GateReadName",
+      "Start": 7001,
+      "End": 7102,
+      "BodyStart": 7074,
+      "Original": "char *            Mio_GateReadName     ( Mio_Gate_t * pGate )            { return pGate-\u003epName;     }",
+      "Draft": "func Mio_GateReadName(pGate *Mio_Gate_t) string { return pGate.pName;     }"
+    },
+    {
+      "Name": "Mio_GateReadOutName",
+      "Start": 7103,
+      "End": 7204,
+      "BodyStart": 7176,
+      "Original": "char *            Mio_GateReadOutName  ( Mio_Gate_t * pGate )            { return pGate-\u003epOutName;  }",
+      "Draft": "func Mio_GateReadOutName(pGate *Mio_Gate_t) string { return pGate.pOutName;  }"
+    },
+    {
+      "Name": "Mio_GateReadArea",
+      "Start": 7205,
+      "End": 7306,
+      "BodyStart": 7278,
+      "Original": "double            Mio_GateReadArea     ( Mio_Gate_t * pGate )            { return pGate-\u003edArea;     }",
+      "Draft": "func Mio_GateReadArea(pGate *Mio_Gate_t) float64 { return pGate.dArea;     }"
+    },
+    {
+      "Name": "Mio_GateReadForm",
+      "Start": 7307,
+      "End": 7408,
+      "BodyStart": 7380,
+      "Original": "char *            Mio_GateReadForm     ( Mio_Gate_t * pGate )            { return pGate-\u003epForm;     }",
+      "Draft": "func Mio_GateReadForm(pGate *Mio_Gate_t) string { return pGate.pForm;     }"
+    },
+    {
+      "Name": "Mio_GateReadPins",
+      "Start": 7409,
+      "End": 7510,
+      "BodyStart": 7482,
+      "Original": "Mio_Pin_t *       Mio_GateReadPins     ( Mio_Gate_t * pGate )            { return pGate-\u003epPins;     }",
+      "Draft": "func Mio_GateReadPins(pGate *Mio_Gate_t) *Mio_Pin_t { return pGate.pPins;     }"
+    },
+    {
+      "Name": "Mio_GateReadLib",
+      "Start": 7511,
+      "End": 7612,
+      "BodyStart": 7584,
+      "Original": "Mio_Library_t *   Mio_GateReadLib      ( Mio_Gate_t * pGate )            { return pGate-\u003epLib;      }",
+      "Draft": "func Mio_GateReadLib(pGate *Mio_Gate_t) *Mio_Library_t { return pGate.pLib;      }"
+    },
+    {
+      "Name": "Mio_GateReadNext",
+      "Start": 7613,
+      "End": 7714,
+      "BodyStart": 7686,
+      "Original": "Mio_Gate_t *      Mio_GateReadNext     ( Mio_Gate_t * pGate )            { return pGate-\u003epNext;     }",
+      "Draft": "func Mio_GateReadNext(pGate *Mio_Gate_t) *Mio_Gate_t { return pGate.pNext;     }"
+    },
+    {
+      "Name": "Mio_GateReadTwin",
+      "Start": 7715,
+      "End": 7816,
+      "BodyStart": 7788,
+      "Original": "Mio_Gate_t *      Mio_GateReadTwin     ( Mio_Gate_t * pGate )            { return pGate-\u003epTwin;     }",
+      "Draft": "func Mio_GateReadTwin(pGate *Mio_Gate_t) *Mio_Gate_t { return pGate.pTwin;     }"
+    },
+    {
+      "Name": "Mio_GateReadPinNum",
+      "Start": 7817,
+      "End": 7918,
+      "BodyStart": 7890,
+      "Original": "int               Mio_GateReadPinNum   ( Mio_Gate_t * pGate )            { return pGate-\u003enInputs;   }",
+      "Draft": "func Mio_GateReadPinNum(pGate *Mio_Gate_t) int32 { return pGate.nInputs;   }"
+    },
+    {
+      "Name": "Mio_GateReadDelayMax",
+      "Start": 7919,
+      "End": 8020,
+      "BodyStart": 7992,
+      "Original": "double            Mio_GateReadDelayMax ( Mio_Gate_t * pGate )            { return pGate-\u003edDelayMax; }",
+      "Draft": "func Mio_GateReadDelayMax(pGate *Mio_Gate_t) float64 { return pGate.dDelayMax; }"
+    },
+    {
+      "Name": "Mio_GateReadSop",
+      "Start": 8021,
+      "End": 8122,
+      "BodyStart": 8094,
+      "Original": "char *            Mio_GateReadSop      ( Mio_Gate_t * pGate )            { return pGate-\u003epSop;      }",
+      "Draft": "func Mio_GateReadSop(pGate *Mio_Gate_t) string { return pGate.pSop;      }"
+    },
+    {
+      "Name": "Mio_GateReadExpr",
+      "Start": 8123,
+      "End": 8224,
+      "BodyStart": 8196,
+      "Original": "Vec_Int_t *       Mio_GateReadExpr     ( Mio_Gate_t * pGate )            { return pGate-\u003evExpr;     }",
+      "Draft": "func Mio_GateReadExpr(pGate *Mio_Gate_t) *Vec_Int_t { return pGate.vExpr;     }"
+    },
+    {
+      "Name": "Mio_GateReadTruth",
+      "Start": 8225,
+      "End": 8351,
+      "BodyStart": 8298,
+      "Original": "word              Mio_GateReadTruth    ( Mio_Gate_t * pGate )            { return pGate-\u003enInputs \u003c= 6 ? pGate-\u003euTruth : 0;   }",
+      "Draft": "func Mio_GateReadTruth(pGate *Mio_Gate_t) word { if pGate.nInputs \u003c= 6 {\n    return pGate.uTruth;\n} else {\n    return 0;\n}   }"
+    },
+    {
+      "Name": "Mio_GateReadTruthP",
+      "Start": 8352,
+      "End": 8488,
+      "BodyStart": 8425,
+      "Original": "word *            Mio_GateReadTruthP   ( Mio_Gate_t * pGate )            { return pGate-\u003enInputs \u003c= 6 ? \u0026pGate-\u003euTruth: pGate-\u003epTruth; }",
+      "Draft": "func Mio_GateReadTruthP(pGate *Mio_Gate_t) *word { if pGate.nInputs \u003c= 6 {\n    return \u0026pGate.uTruth;\n} else {\n    return pGate.pTruth;\n} }"
+    },
+    {
+      "Name": "Mio_GateReadValue",
+      "Start": 8489,
+      "End": 8590,
+      "BodyStart": 8562,
+      "Original": "int               Mio_GateReadValue    ( Mio_Gate_t * pGate )            { return pGate-\u003eValue;     }",
+      "Draft": "func Mio_GateReadValue(pGate *Mio_Gate_t) int32 { return pGate.Value;     }"
+    },
+    {
+      "Name": "Mio_GateReadCell",
+      "Start": 8591,
+      "End": 8692,
+      "BodyStart": 8664,
+      "Original": "int               Mio_GateReadCell     ( Mio_Gate_t * pGate )            { return pGate-\u003eCell;      }",
+      "Draft": "func Mio_GateReadCell(pGate *Mio_Gate_t) int32 { return pGate.Cell;      }"
+    },
+    {
+      "Name": "Mio_GateReadProfile",
+      "Start": 8693,
+      "End": 8794,
+      "BodyStart": 8766,
+      "Original": "int               Mio_GateReadProfile  ( Mio_Gate_t * pGate )            { return pGate-\u003eProfile;   }",
+      "Draft": "func Mio_GateReadProfile(pGate *Mio_Gate_t) int32 { return pGate.Profile;   }"
+    },
+    {
+      "Name": "Mio_GateReadProfile2",
+      "Start": 8795,
+      "End": 8896,
+      "BodyStart": 8868,
+      "Original": "int               Mio_GateReadProfile2 ( Mio_Gate_t * pGate )            { return pGate-\u003eProfile2;  }",
+      "Draft": "func Mio_GateReadProfile2(pGate *Mio_Gate_t) int32 { return pGate.Profile2;  }"
+    },
+    {
+      "Name": "Mio_GateSetValue",
+      "Start": 8897,
+      "End": 8998,
+      "BodyStart": 8970,
+      "Original": "void              Mio_GateSetValue     ( Mio_Gate_t * pGate, int Value ) { pGate-\u003eValue = Value;    }",
+      "Draft": "func Mio_GateSetValue(pGate *Mio_Gate_t, Value int32) { pGate.Value = Value;    }"
+    },
+    {
+      "Name": "Mio_GateSetCell",
+      "Start": 8999,
+      "End": 9100,
+      "BodyStart": 9072,
+      "Original": "void              Mio_GateSetCell      ( Mio_Gate_t * pGate, int Cell )  { pGate-\u003eCell  = Cell;     }",
+      "Draft": "func Mio_GateSetCell(pGate *Mio_Gate_t, Cell int32) { pGate.Cell  = Cell;     }"
+    },
+    {
+      "Name": "Mio_GateSetProfile",
+      "Start": 9101,
+      "End": 9202,
+      "BodyStart": 9174,
+      "Original": "void              Mio_GateSetProfile   ( Mio_Gate_t * pGate, int Prof )  { pGate-\u003eProfile = Prof;   }",
+      "Draft": "func Mio_GateSetProfile(pGate *Mio_Gate_t, Prof int32) { pGate.Profile = Prof;   }"
+    },
+    {
+      "Name": "Mio_GateSetProfile2",
+      "Start": 9203,
+      "End": 9304,
+      "BodyStart": 9276,
+      "Original": "void              Mio_GateSetProfile2  ( Mio_Gate_t * pGate, int Prof )  { pGate-\u003eProfile2 = Prof;  }",
+      "Draft": "func Mio_GateSetProfile2(pGate *Mio_Gate_t, Prof int32) { pGate.Profile2 = Prof;  }"
+    },
+    {
+      "Name": "Mio_GateIncProfile2",
+      "Start": 9305,
+      "End": 9406,
+      "BodyStart": 9378,
+      "Original": "void              Mio_GateIncProfile2  ( Mio_Gate_t * pGate )            { pGate-\u003eProfile2++;       }",
+      "Draft": "func Mio_GateIncProfile2(pGate *Mio_Gate_t) { pGate.Profile2++;       }"
+    },
+    {
+      "Name": "Mio_GateDecProfile2",
+      "Start": 9407,
+      "End": 9508,
+      "BodyStart": 9480,
+      "Original": "void              Mio_GateDecProfile2  ( Mio_Gate_t * pGate )            { pGate-\u003eProfile2--;       }",
+      "Draft": "func Mio_GateDecProfile2(pGate *Mio_Gate_t) { pGate.Profile2--;       }"
+    },
+    {
+      "Name": "Mio_GateAddToProfile",
+      "Start": 9509,
+      "End": 9610,
+      "BodyStart": 9582,
+      "Original": "void              Mio_GateAddToProfile ( Mio_Gate_t * pGate, int Prof )  { pGate-\u003eProfile  += Prof; }",
+      "Draft": "func Mio_GateAddToProfile(pGate *Mio_Gate_t, Prof int32) { pGate.Profile  += Prof; }"
+    },
+    {
+      "Name": "Mio_GateAddToProfile2",
+      "Start": 9611,
+      "End": 9712,
+      "BodyStart": 9684,
+      "Original": "void              Mio_GateAddToProfile2( Mio_Gate_t * pGate, int Prof )  { pGate-\u003eProfile2 += Prof; }",
+      "Draft": "func Mio_GateAddToProfile2(pGate *Mio_Gate_t, Prof int32) { pGate.Profile2 += Prof; }"
+    },
+    {
+      "Name": "Mio_GateIsInv",
+      "Start": 9713,
+      "End": 9844,
+      "BodyStart": 9786,
+      "Original": "int               Mio_GateIsInv        ( Mio_Gate_t * pGate )            { return pGate-\u003euTruth == ABC_CONST(0x5555555555555555); }",
+      "Draft": "func Mio_GateIsInv(pGate *Mio_Gate_t) int32 { return pGate.uTruth == ABC_CONST(0x5555555555555555); }"
+    },
+    {
+      "Name": "Mio_PinReadName",
+      "Start": 10080,
+      "End": 10183,
+      "BodyStart": 10150,
+      "Original": "char *            Mio_PinReadName           ( Mio_Pin_t * pPin )      { return pPin-\u003epName;           }",
+      "Draft": "func Mio_PinReadName(pPin *Mio_Pin_t) string { return pPin.pName;           }"
+    },
+    {
+      "Name": "Mio_PinReadPhase",
+      "Start": 10184,
+      "End": 10287,
+      "BodyStart": 10254,
+      "Original": "Mio_PinPhase_t    Mio_PinReadPhase          ( Mio_Pin_t * pPin )      { return pPin-\u003ePhase;           }",
+      "Draft": "func Mio_PinReadPhase(pPin *Mio_Pin_t) Mio_PinPhase_t { return pPin.Phase;           }"
+    },
+    {
+      "Name": "Mio_PinReadInputLoad",
+      "Start": 10288,
+      "End": 10391,
+      "BodyStart": 10358,
+      "Original": "double            Mio_PinReadInputLoad      ( Mio_Pin_t * pPin )      { return pPin-\u003edLoadInput;      }",
+      "Draft": "func Mio_PinReadInputLoad(pPin *Mio_Pin_t) float64 { return pPin.dLoadInput;      }"
+    },
+    {
+      "Name": "Mio_PinReadMaxLoad",
+      "Start": 10392,
+      "End": 10495,
+      "BodyStart": 10462,
+      "Original": "double            Mio_PinReadMaxLoad        ( Mio_Pin_t * pPin )      { return pPin-\u003edLoadMax;        }",
+      "Draft": "func Mio_PinReadMaxLoad(pPin *Mio_Pin_t) float64 { return pPin.dLoadMax;        }"
+    },
+    {
+      "Name": "Mio_PinReadDelayBlockRise",
+      "Start": 10496,
+      "End": 10599,
+      "BodyStart": 10566,
+      "Original": "double            Mio_PinReadDelayBlockRise ( Mio_Pin_t * pPin )      { return pPin-\u003edDelayBlockRise; }",
+      "Draft": "func Mio_PinReadDelayBlockRise(pPin *Mio_Pin_t) float64 { return pPin.dDelayBlockRise; }"
+    },
+    {
+      "Name": "Mio_PinReadDelayFanoutRise",
+      "Start": 10600,
+      "End": 10703,
+      "BodyStart": 10670,
+      "Original": "double            Mio_PinReadDelayFanoutRise( Mio_Pin_t * pPin )      { return pPin-\u003edDelayFanoutRise;}",
+      "Draft": "func Mio_PinReadDelayFanoutRise(pPin *Mio_Pin_t) float64 { return pPin.dDelayFanoutRise;}"
+    },
+    {
+      "Name": "Mio_PinReadDelayBlockFall",
+      "Start": 10704,
+      "End": 10807,
+      "BodyStart": 10774,
+      "Original": "double            Mio_PinReadDelayBlockFall ( Mio_Pin_t * pPin )      { return pPin-\u003edDelayBlockFall; }",
+      "Draft": "func Mio_PinReadDelayBlockFall(pPin *Mio_Pin_t) float64 { return pPin.dDelayBlockFall; }"
+    },
+    {
+      "Name": "Mio_PinReadDelayFanoutFall",
+      "Start": 10808,
+      "End": 10911,
+      "BodyStart": 10878,
+      "Original": "double            Mio_PinReadDelayFanoutFall( Mio_Pin_t * pPin )      { return pPin-\u003edDelayFanoutFall;}",
+      "Draft": "func Mio_PinReadDelayFanoutFall(pPin *Mio_Pin_t) float64 { return pPin.dDelayFanoutFall;}"
+    },
+    {
+      "Name": "Mio_PinReadDelayBlockMax",
+      "Start": 10912,
+      "End": 11015,
+      "BodyStart": 10982,
+      "Original": "double            Mio_PinReadDelayBlockMax  ( Mio_Pin_t * pPin )      { return pPin-\u003edDelayBlockMax;  }",
+      "Draft": "func Mio_PinReadDelayBlockMax(pPin *Mio_Pin_t) float64 { return pPin.dDelayBlockMax;  }"
+    },
+    {
+      "Name": "Mio_PinReadNext",
+      "Start": 11016,
+      "End": 11119,
+      "BodyStart": 11086,
+      "Original": "Mio_Pin_t *       Mio_PinReadNext           ( Mio_Pin_t * pPin )      { return pPin-\u003epNext;           }",
+      "Draft": "func Mio_PinReadNext(pPin *Mio_Pin_t) *Mio_Pin_t { return pPin.pNext;           }"
+    },
+    {
+      "Name": "Mio_GateReadPinName",
+      "Start": 11355,
+      "End": 11578,
+      "BodyStart": 11414,
+      "Original": "char * Mio_GateReadPinName( Mio_Gate_t * pGate, int iPin )\n{\n    Mio_Pin_t * pPin;\n    int i = 0;\n    Mio_GateForEachPin( pGate, pPin )\n        if ( i++ == iPin )\n            return Mio_PinReadName(pPin);\n    return NULL;\n}",
+      "Draft": "func Mio_GateReadPinName(pGate *Mio_Gate_t, iPin int32) string {\n    var pPin *Mio_Pin_t;\n    var i int32;\n    // inlining of macro Mio_GateForEachPin\n    for  pPin = Mio_GateReadPins(pGate);                                 (pPin != nil);                                                          pPin = Mio_PinReadNext(pPin)  {\n        if i++ == iPin {\n            return Mio_PinReadName(pPin); }\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Mio_GateReadPinDelay",
+      "Start": 11579,
+      "End": 11846,
+      "BodyStart": 11638,
+      "Original": "float Mio_GateReadPinDelay( Mio_Gate_t * pGate, int iPin )\n{\n    Mio_Pin_t * pPin;\n    int i = 0;\n    Mio_GateForEachPin( pGate, pPin )\n        if ( i++ == iPin )\n            return 0.5 * pPin-\u003edDelayBlockRise + 0.5 * pPin-\u003edDelayBlockFall;\n    return ABC_INFINITY;\n}",
+      "Draft": "func Mio_GateReadPinDelay(pGate *Mio_Gate_t, iPin int32) float32 {\n    var pPin *Mio_Pin_t;\n    var i int32;\n    // inlining of macro Mio_GateForEachPin\n    for  pPin = Mio_GateReadPins(pGate);                                 (pPin != nil);                                                          pPin = Mio_PinReadNext(pPin)  {\n        if i++ == iPin {\n            return 0.5 * pPin.dDelayBlockRise + 0.5 * pPin.dDelayBlockFall; }\n    }\n    return ABC_INFINITY;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::pointer-cast::4490",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4423,
+      "End": 4423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::pointer-cast::5758",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5477,
+      "End": 5486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::pointer-cast::7167",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6699,
+      "End": 6708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadName",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1209,
+      "End": 1310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadGateNum",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadGateNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1311,
+      "End": 1412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadGates",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadGates",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1413,
+      "End": 1514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadGateArray",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadGateArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1515,
+      "End": 1616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadGateById",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadGateById",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1617,
+      "End": 1768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadBuf",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadBuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1769,
+      "End": 1870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadInv",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1871,
+      "End": 1972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadConst0",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1973,
+      "End": 2074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadConst1",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2075,
+      "End": 2176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadNand2",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadNand2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2177,
+      "End": 2278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadAnd2",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadAnd2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2279,
+      "End": 2380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadNor2",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadNor2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2381,
+      "End": 2482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadOr2",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadOr2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2483,
+      "End": 2584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::ternary::Mio_LibraryReadDelayInvRise",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibraryReadDelayInvRise",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2585,
+      "End": 2743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadDelayInvRise",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadDelayInvRise",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2585,
+      "End": 2743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::ternary::Mio_LibraryReadDelayInvFall",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibraryReadDelayInvFall",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2744,
+      "End": 2902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadDelayInvFall",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadDelayInvFall",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2744,
+      "End": 2902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::ternary::Mio_LibraryReadDelayInvMax",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibraryReadDelayInvMax",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2903,
+      "End": 3061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadDelayInvMax",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadDelayInvMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2903,
+      "End": 3061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::ternary::Mio_LibraryReadDelayNand2Rise",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibraryReadDelayNand2Rise",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3062,
+      "End": 3220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadDelayNand2Rise",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadDelayNand2Rise",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3062,
+      "End": 3220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::ternary::Mio_LibraryReadDelayNand2Fall",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibraryReadDelayNand2Fall",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3221,
+      "End": 3379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadDelayNand2Fall",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadDelayNand2Fall",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3221,
+      "End": 3379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::ternary::Mio_LibraryReadDelayNand2Max",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibraryReadDelayNand2Max",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3380,
+      "End": 3538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadDelayNand2Max",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadDelayNand2Max",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3380,
+      "End": 3538
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::ternary::Mio_LibraryReadDelayAnd2Max",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibraryReadDelayAnd2Max",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3539,
+      "End": 3697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadDelayAnd2Max",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadDelayAnd2Max",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3539,
+      "End": 3697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadDelayAigNode",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadDelayAigNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3698,
+      "End": 3871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::ternary::Mio_LibraryReadAreaInv",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibraryReadAreaInv",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3909,
+      "End": 4050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadAreaInv",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadAreaInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3909,
+      "End": 4050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::ternary::Mio_LibraryReadAreaBuf",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibraryReadAreaBuf",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4051,
+      "End": 4192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadAreaBuf",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadAreaBuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4051,
+      "End": 4192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::ternary::Mio_LibraryReadAreaNand2",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibraryReadAreaNand2",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4193,
+      "End": 4334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadAreaNand2",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadAreaNand2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4193,
+      "End": 4334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::ternary::Mio_LibrarySetName",
+      "Category": "ternary-review",
+      "Symbol": "Mio_LibrarySetName",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4335,
+      "End": 4476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibrarySetName",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibrarySetName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4335,
+      "End": 4476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadGateNameMax",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadGateNameMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4742,
+      "End": 5037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadGateByName",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadGateByName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5302,
+      "End": 5752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadGateByTruth",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadGateByTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6044,
+      "End": 6285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_LibraryReadSopByName",
+      "Category": "semantic-review",
+      "Symbol": "Mio_LibraryReadSopByName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6550,
+      "End": 6765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadName",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7001,
+      "End": 7102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadOutName",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadOutName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7103,
+      "End": 7204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadArea",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7205,
+      "End": 7306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadForm",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadForm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7307,
+      "End": 7408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadPins",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadPins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7409,
+      "End": 7510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadLib",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadLib",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7511,
+      "End": 7612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadNext",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7613,
+      "End": 7714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadTwin",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadTwin",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7715,
+      "End": 7816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadPinNum",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadPinNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7817,
+      "End": 7918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadDelayMax",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadDelayMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7919,
+      "End": 8020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadSop",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadSop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8021,
+      "End": 8122
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadExpr",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadExpr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8123,
+      "End": 8224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadTruth",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8225,
+      "End": 8351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadTruthP",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadTruthP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8352,
+      "End": 8488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadValue",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8489,
+      "End": 8590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadCell",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadCell",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8591,
+      "End": 8692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadProfile",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8693,
+      "End": 8794
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadProfile2",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadProfile2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8795,
+      "End": 8896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateSetValue",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateSetValue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8897,
+      "End": 8998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateSetCell",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateSetCell",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8999,
+      "End": 9100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateSetProfile",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateSetProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9101,
+      "End": 9202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateSetProfile2",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateSetProfile2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9203,
+      "End": 9304
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateIncProfile2",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateIncProfile2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9305,
+      "End": 9406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateDecProfile2",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateDecProfile2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9407,
+      "End": 9508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateAddToProfile",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateAddToProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9509,
+      "End": 9610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateAddToProfile2",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateAddToProfile2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9611,
+      "End": 9712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateIsInv",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateIsInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9713,
+      "End": 9844
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_PinReadName",
+      "Category": "semantic-review",
+      "Symbol": "Mio_PinReadName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10080,
+      "End": 10183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_PinReadPhase",
+      "Category": "semantic-review",
+      "Symbol": "Mio_PinReadPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10184,
+      "End": 10287
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_PinReadInputLoad",
+      "Category": "semantic-review",
+      "Symbol": "Mio_PinReadInputLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10288,
+      "End": 10391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_PinReadMaxLoad",
+      "Category": "semantic-review",
+      "Symbol": "Mio_PinReadMaxLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10392,
+      "End": 10495
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_PinReadDelayBlockRise",
+      "Category": "semantic-review",
+      "Symbol": "Mio_PinReadDelayBlockRise",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10496,
+      "End": 10599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_PinReadDelayFanoutRise",
+      "Category": "semantic-review",
+      "Symbol": "Mio_PinReadDelayFanoutRise",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10600,
+      "End": 10703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_PinReadDelayBlockFall",
+      "Category": "semantic-review",
+      "Symbol": "Mio_PinReadDelayBlockFall",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10704,
+      "End": 10807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_PinReadDelayFanoutFall",
+      "Category": "semantic-review",
+      "Symbol": "Mio_PinReadDelayFanoutFall",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10808,
+      "End": 10911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_PinReadDelayBlockMax",
+      "Category": "semantic-review",
+      "Symbol": "Mio_PinReadDelayBlockMax",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10912,
+      "End": 11015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_PinReadNext",
+      "Category": "semantic-review",
+      "Symbol": "Mio_PinReadNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11016,
+      "End": 11119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadPinName",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadPinName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11355,
+      "End": 11578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::Mio_GateReadPinDelay",
+      "Category": "semantic-review",
+      "Symbol": "Mio_GateReadPinDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11579,
+      "End": 11846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mio/mioApi.c::macro-inline::9812",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9812,
+      "End": 9841
+    }
+  ],
+  "Draft": "package mio\n\nimport \"strings\"\n\n/**CFile****************************************************************\n\n  FileName    [mioApi.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [File reading/writing for technology mapping.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 8, 2003.]\n\n  Revision    [$Id: mioApi.c,v 1.4 2004/06/28 14:20:25 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mioInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryReadName(pLib *Mio_Library_t) string { return pLib.pName;      }\nfunc Mio_LibraryReadGateNum(pLib *Mio_Library_t) int32 { return pLib.nGates;     }\nfunc Mio_LibraryReadGates(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGates;     }\nfunc Mio_LibraryReadGateArray(pLib *Mio_Library_t) **Mio_Gate_t { return pLib.ppGatesName;}\nfunc Mio_LibraryReadGateById(pLib *Mio_Library_t, Id int32) *Mio_Gate_t { assert(pLib.ppGates0[Id].Cell == Id, \"pLib.ppGates0[Id].Cell == Id\"); return pLib.ppGates0[Id];}\nfunc Mio_LibraryReadBuf(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGateBuf;   }\nfunc Mio_LibraryReadInv(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGateInv;   }\nfunc Mio_LibraryReadConst0(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGate0;     }\nfunc Mio_LibraryReadConst1(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGate1;     }\nfunc Mio_LibraryReadNand2(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGateNand2; }\nfunc Mio_LibraryReadAnd2(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGateAnd2;  }\nfunc Mio_LibraryReadNor2(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGateNor2;  }\nfunc Mio_LibraryReadOr2(pLib *Mio_Library_t) *Mio_Gate_t { return pLib.pGateOr2;   }\nfunc Mio_LibraryReadDelayInvRise(pLib *Mio_Library_t) float32 { return float32((pLib.pGateInv?   pLib.pGateInv.pPins.dDelayBlockRise   : 0.0)); }\nfunc Mio_LibraryReadDelayInvFall(pLib *Mio_Library_t) float32 { return float32((pLib.pGateInv?   pLib.pGateInv.pPins.dDelayBlockFall   : 0.0)); }\nfunc Mio_LibraryReadDelayInvMax(pLib *Mio_Library_t) float32 { return float32((pLib.pGateInv?   pLib.pGateInv.pPins.dDelayBlockMax    : 0.0)); }\nfunc Mio_LibraryReadDelayNand2Rise(pLib *Mio_Library_t) float32 { return float32((pLib.pGateNand2? pLib.pGateNand2.pPins.dDelayBlockRise : 0.0)); }\nfunc Mio_LibraryReadDelayNand2Fall(pLib *Mio_Library_t) float32 { return float32((pLib.pGateNand2? pLib.pGateNand2.pPins.dDelayBlockFall : 0.0)); }\nfunc Mio_LibraryReadDelayNand2Max(pLib *Mio_Library_t) float32 { return float32((pLib.pGateNand2? pLib.pGateNand2.pPins.dDelayBlockMax  : 0.0)); }\nfunc Mio_LibraryReadDelayAnd2Max(pLib *Mio_Library_t) float32 { return float32((pLib.pGateAnd2?  pLib.pGateAnd2.pPins.dDelayBlockMax   : 0.0)); }\nfunc Mio_LibraryReadDelayAigNode(pLib *Mio_Library_t) float32 { if pLib.pGateAnd2 {\n    return Mio_LibraryReadDelayAnd2Max(pLib);\n} else {\n    return Mio_LibraryReadDelayNand2Max(pLib);\n} } // approximate delay of the AIG node\nfunc Mio_LibraryReadAreaInv(pLib *Mio_Library_t) float32 { return float32((pLib.pGateInv?   pLib.pGateInv.dArea   : 0.0)); }\nfunc Mio_LibraryReadAreaBuf(pLib *Mio_Library_t) float32 { return float32((pLib.pGateBuf?   pLib.pGateBuf.dArea   : 0.0)); }\nfunc Mio_LibraryReadAreaNand2(pLib *Mio_Library_t) float32 { return float32((pLib.pGateNand2? pLib.pGateNand2.dArea : 0.0)); }\n// inlining of macro ABC_FREE\nfunc Mio_LibrarySetName(pLib *Mio_Library_t, pName string) { ((pLib.pName) ? (free((char *) (pLib.pName)), (pLib.pName) = 0) : 0); pLib.pName = pName;         }\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the longest gate name.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryReadGateNameMax(pLib *Mio_Library_t) int32 {\n    var pGate *Mio_Gate_t;\n    var LenMax, LenCur int32;\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        LenCur = len(Mio_GateReadName(pGate));\n        if LenMax \u003c LenCur {\n            LenMax = LenCur; }\n    }\n    return LenMax;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read Mvc of the gate by name.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryReadGateByName(pLib *Mio_Library_t, pName string, pOutName string) *Mio_Gate_t { \n    var pGate *Mio_Gate_t;\n    if ! st__lookup( pLib.tName2Gate, pName, (char **)\u0026pGate ) {\n        return nil; }\n    if pOutName == nil {\n        return pGate; }\n    if !(int32(strings.Compare(pGate.pOutName, pOutName)) != 0) {\n        return pGate; }\n    if pGate.pTwin \u0026\u0026 !(int32(strings.Compare(pGate.pTwin.pOutName, pOutName)) != 0) {\n        return pGate.pTwin; }\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the first gate in the library with the given TT.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryReadGateByTruth(pLib *Mio_Library_t, t word) *Mio_Gate_t {\n    var pGate *Mio_Gate_t;\n    // inlining of macro Mio_LibraryForEachGate\n    for  pGate = Mio_LibraryReadGates(pLib);                             (pGate != nil);                                                         pGate = Mio_GateReadNext(pGate)  {\n        if pGate.nInputs \u003c= 6 \u0026\u0026 pGate.uTruth == t {\n            return pGate; }\n    }\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read Mvc of the gate by name.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_LibraryReadSopByName(pLib *Mio_Library_t, pName string) string { \n    var pGate *Mio_Gate_t;\n    if st__lookup( pLib.tName2Gate, pName, (char **)\u0026pGate ) {\n        return pGate.pSop; }\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_GateReadName(pGate *Mio_Gate_t) string { return pGate.pName;     }\nfunc Mio_GateReadOutName(pGate *Mio_Gate_t) string { return pGate.pOutName;  }\nfunc Mio_GateReadArea(pGate *Mio_Gate_t) float64 { return pGate.dArea;     }\nfunc Mio_GateReadForm(pGate *Mio_Gate_t) string { return pGate.pForm;     }\nfunc Mio_GateReadPins(pGate *Mio_Gate_t) *Mio_Pin_t { return pGate.pPins;     }\nfunc Mio_GateReadLib(pGate *Mio_Gate_t) *Mio_Library_t { return pGate.pLib;      }\nfunc Mio_GateReadNext(pGate *Mio_Gate_t) *Mio_Gate_t { return pGate.pNext;     }\nfunc Mio_GateReadTwin(pGate *Mio_Gate_t) *Mio_Gate_t { return pGate.pTwin;     }\nfunc Mio_GateReadPinNum(pGate *Mio_Gate_t) int32 { return pGate.nInputs;   }\nfunc Mio_GateReadDelayMax(pGate *Mio_Gate_t) float64 { return pGate.dDelayMax; }\nfunc Mio_GateReadSop(pGate *Mio_Gate_t) string { return pGate.pSop;      }\nfunc Mio_GateReadExpr(pGate *Mio_Gate_t) *Vec_Int_t { return pGate.vExpr;     }\nfunc Mio_GateReadTruth(pGate *Mio_Gate_t) word { if pGate.nInputs \u003c= 6 {\n    return pGate.uTruth;\n} else {\n    return 0;\n}   }\nfunc Mio_GateReadTruthP(pGate *Mio_Gate_t) *word { if pGate.nInputs \u003c= 6 {\n    return \u0026pGate.uTruth;\n} else {\n    return pGate.pTruth;\n} }\nfunc Mio_GateReadValue(pGate *Mio_Gate_t) int32 { return pGate.Value;     }\nfunc Mio_GateReadCell(pGate *Mio_Gate_t) int32 { return pGate.Cell;      }\nfunc Mio_GateReadProfile(pGate *Mio_Gate_t) int32 { return pGate.Profile;   }\nfunc Mio_GateReadProfile2(pGate *Mio_Gate_t) int32 { return pGate.Profile2;  }\nfunc Mio_GateSetValue(pGate *Mio_Gate_t, Value int32) { pGate.Value = Value;    }\nfunc Mio_GateSetCell(pGate *Mio_Gate_t, Cell int32) { pGate.Cell  = Cell;     }\nfunc Mio_GateSetProfile(pGate *Mio_Gate_t, Prof int32) { pGate.Profile = Prof;   }\nfunc Mio_GateSetProfile2(pGate *Mio_Gate_t, Prof int32) { pGate.Profile2 = Prof;  }\nfunc Mio_GateIncProfile2(pGate *Mio_Gate_t) { pGate.Profile2++;       }\nfunc Mio_GateDecProfile2(pGate *Mio_Gate_t) { pGate.Profile2--;       }\nfunc Mio_GateAddToProfile(pGate *Mio_Gate_t, Prof int32) { pGate.Profile  += Prof; }\nfunc Mio_GateAddToProfile2(pGate *Mio_Gate_t, Prof int32) { pGate.Profile2 += Prof; }\nfunc Mio_GateIsInv(pGate *Mio_Gate_t) int32 { return pGate.uTruth == ABC_CONST(0x5555555555555555); }\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_PinReadName(pPin *Mio_Pin_t) string { return pPin.pName;           }\nfunc Mio_PinReadPhase(pPin *Mio_Pin_t) Mio_PinPhase_t { return pPin.Phase;           }\nfunc Mio_PinReadInputLoad(pPin *Mio_Pin_t) float64 { return pPin.dLoadInput;      }\nfunc Mio_PinReadMaxLoad(pPin *Mio_Pin_t) float64 { return pPin.dLoadMax;        }\nfunc Mio_PinReadDelayBlockRise(pPin *Mio_Pin_t) float64 { return pPin.dDelayBlockRise; }\nfunc Mio_PinReadDelayFanoutRise(pPin *Mio_Pin_t) float64 { return pPin.dDelayFanoutRise;}\nfunc Mio_PinReadDelayBlockFall(pPin *Mio_Pin_t) float64 { return pPin.dDelayBlockFall; }\nfunc Mio_PinReadDelayFanoutFall(pPin *Mio_Pin_t) float64 { return pPin.dDelayFanoutFall;}\nfunc Mio_PinReadDelayBlockMax(pPin *Mio_Pin_t) float64 { return pPin.dDelayBlockMax;  }\nfunc Mio_PinReadNext(pPin *Mio_Pin_t) *Mio_Pin_t { return pPin.pNext;           }\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mio_GateReadPinName(pGate *Mio_Gate_t, iPin int32) string {\n    var pPin *Mio_Pin_t;\n    var i int32;\n    // inlining of macro Mio_GateForEachPin\n    for  pPin = Mio_GateReadPins(pGate);                                 (pPin != nil);                                                          pPin = Mio_PinReadNext(pPin)  {\n        if i++ == iPin {\n            return Mio_PinReadName(pPin); }\n    }\n    return nil;\n}\nfunc Mio_GateReadPinDelay(pGate *Mio_Gate_t, iPin int32) float32 {\n    var pPin *Mio_Pin_t;\n    var i int32;\n    // inlining of macro Mio_GateForEachPin\n    for  pPin = Mio_GateReadPins(pGate);                                 (pPin != nil);                                                          pPin = Mio_PinReadNext(pPin)  {\n        if i++ == iPin {\n            return 0.5 * pPin.dDelayBlockRise + 0.5 * pPin.dDelayBlockFall; }\n    }\n    return ABC_INFINITY;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,351 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMaxi.c",
+  "SHA256": "aca5553c94b83953f615b592b7e8206fb5b90879c40bc7e04cd36108d9a33104",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 5,
+        "ByteOffset": 2599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !vInit || Vec_IntSize(vInit) == Gia_ManRegNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 18,
+        "ByteOffset": 3723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 133,
+        "Column": 5,
+        "ByteOffset": 4958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManPiNum(pNew) == 2 * Gia_ManRegNum(p) + nFrames * Gia_ManPiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 5980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManRegNum(p) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 167,
+        "Column": 9,
+        "ByteOffset": 6038
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Running with %d frames and %sgiven init state.\\n\", nFrames, vInit ? \"\":\"no \" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 171,
+        "Column": 63,
+        "ByteOffset": 6266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sat_solver_set_runtime_limit( pSat, nTimeOut ? nTimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 174,
+        "Column": 13,
+        "ByteOffset": 6436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 194,
+        "Column": 9,
+        "ByteOffset": 7291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Iter%6d : \",       0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 195,
+        "Column": 9,
+        "ByteOffset": 7332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Var =%10d  \",      sat_solver_nvars(pSat) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 196,
+        "Column": 9,
+        "ByteOffset": 7394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Clause =%10d  \",   sat_solver_nclauses(pSat) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 197,
+        "Column": 9,
+        "ByteOffset": 7459
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Conflict =%10d  \", sat_solver_nconflicts(pSat) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 198,
+        "Column": 9,
+        "ByteOffset": 7526
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Subset =%6d  \",    Vec_IntSize(vLits) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 209,
+        "Column": 13,
+        "ByteOffset": 8069
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Timeout reached after %d seconds and %d iterations.  \", nTimeOut, Iter );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 215,
+        "Column": 13,
+        "ByteOffset": 8287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"The problem is SAT after %d iterations.  \", Iter );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 218,
+        "Column": 9,
+        "ByteOffset": 8385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( status == l_False );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 13,
+        "ByteOffset": 8498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Iter%6d : \",       Iter+1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 222,
+        "Column": 13,
+        "ByteOffset": 8548
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Var =%10d  \",      sat_solver_nvars(pSat) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 223,
+        "Column": 13,
+        "ByteOffset": 8614
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Clause =%10d  \",   sat_solver_nclauses(pSat) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 13,
+        "ByteOffset": 8683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Conflict =%10d  \", sat_solver_nconflicts(pSat) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 13,
+        "ByteOffset": 8754
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Subset =%6d  \",    nLits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 232,
+        "Column": 13,
+        "ByteOffset": 9015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Reached fixed point with %d entries after %d iterations.  \", Vec_IntSize(vLits), Iter+1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cnf_DeriveGiaRemapped",
+      "Start": 1298,
+      "End": 1550,
+      "BodyStart": 1363,
+      "Original": "static inline Cnf_Dat_t * Cnf_DeriveGiaRemapped( Gia_Man_t * p )\n{\n    Cnf_Dat_t * pCnf;\n    Aig_Man_t * pAig = Gia_ManToAigSimple( p );\n    pAig-\u003enRegs = 0;\n    pCnf = Cnf_Derive( pAig, Aig_ManCoNum(pAig) );\n    Aig_ManStop( pAig );\n    return pCnf;\n}",
+      "Draft": "func Cnf_DeriveGiaRemapped(p *Gia_Man_t) *Cnf_Dat_t {\n    var pCnf *Cnf_Dat_t;\n    var pAig *Aig_Man_t  = Gia_ManToAigSimple( p );\n    pAig.nRegs = 0;\n    pCnf = Cnf_Derive( pAig, Aig_ManCoNum(pAig) );\n    Aig_ManStop( pAig );\n    return pCnf;\n}"
+    },
+    {
+      "Name": "Gia_ManMaxiUnfold",
+      "Start": 1786,
+      "End": 3930,
+      "BodyStart": 1879,
+      "Original": "Gia_Man_t * Gia_ManMaxiUnfold( Gia_Man_t * p, int nFrames, int fUseVars, Vec_Int_t * vInit )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj;\n    int i, f;\n    pNew = Gia_ManStart( fUseVars * 2 * Gia_ManRegNum(p) + nFrames * Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    // control/data variables\n    Gia_ManForEachRo( p, pObj, i )\n        Gia_ManAppendCi( pNew );\n    Gia_ManForEachRo( p, pObj, i )\n        Gia_ManAppendCi( pNew );\n    // build timeframes\n    assert( !vInit || Vec_IntSize(vInit) == Gia_ManRegNum(p) );\n    Gia_ManForEachRo( p, pObj, i )\n    {\n        int Value = Vec_IntEntry( vInit, i );\n        int iCtrl = Gia_ManCiLit( pNew, i );\n        int iData = Gia_ManCiLit( pNew, Gia_ManRegNum(p)+i );\n        // decide based on Value\n        if ( Value == 0 )\n            pObj-\u003eValue = fUseVars ? Gia_ManHashAnd(pNew, iCtrl, iData) : 0;\n        else if ( Value == 1 )\n            pObj-\u003eValue = fUseVars ? Gia_ManHashOr(pNew, Abc_LitNot(iCtrl), iData) : 1;\n        else if ( Value == 2 )\n            pObj-\u003eValue = Gia_ManHashAnd(pNew, iCtrl, iData);\n        else if ( Value == 3 )\n            pObj-\u003eValue = Gia_ManHashOr(pNew, Abc_LitNot(iCtrl), iData);\n        else if ( Value == 4 )\n            pObj-\u003eValue = 0;\n        else if ( Value == 5 )\n            pObj-\u003eValue = 1;\n        else assert( 0 );\n    }\n    for ( f = 0; f \u003c nFrames; f++ )\n    {\n        Gia_ManForEachPi( p, pObj, i )\n            pObj-\u003eValue = Gia_ManAppendCi( pNew );\n        Gia_ManForEachAnd( p, pObj, i )\n            pObj-\u003eValue = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        Gia_ManForEachRi( p, pObj, i )\n            pObj-\u003eValue = Gia_ObjFanin0Copy(pObj);\n        Gia_ManForEachRo( p, pObj, i )\n            pObj-\u003eValue = Gia_ObjRoToRi(p, pObj)-\u003eValue;\n    }\n    Gia_ManForEachRi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCo( pNew, pObj-\u003eValue );\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    assert( Gia_ManPiNum(pNew) == 2 * Gia_ManRegNum(p) + nFrames * Gia_ManPiNum(p) );\n    return pNew;\n}",
+      "Draft": "func Gia_ManMaxiUnfold(p *Gia_Man_t, nFrames int32, fUseVars int32, vInit *Vec_Int_t) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i, f int32;\n    pNew = Gia_ManStart( fUseVars * 2 * Gia_ManRegNum(p) + nFrames * Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(p).Value = 0;\n    // control/data variables\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        Gia_ManAppendCi( pNew );\n    }\n    // build timeframes\n    assert(!(vInit != nil) || Vec_IntSize(vInit) == Gia_ManRegNum(p), \"!vInit || Vec_IntSize(vInit) == Gia_ManRegNum(p)\");\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        var Value int32  = Vec_IntEntry( vInit, i );\n        var iCtrl int32  = Gia_ManCiLit( pNew, i );\n        var iData int32  = Gia_ManCiLit( pNew, Gia_ManRegNum(p)+i );\n        // decide based on Value\n        if Value == 0 {\n            if fUseVars != 0 {\n                pObj.Value = Gia_ManHashAnd(pNew, iCtrl, iData);\n            } else {\n                pObj.Value = 0;\n            }\n        } else if Value == 1 {\n            if fUseVars != 0 {\n                pObj.Value = Gia_ManHashOr(pNew, Abc_LitNot(iCtrl), iData);\n            } else {\n                pObj.Value = 1;\n            }\n        } else if Value == 2 {\n            pObj.Value = Gia_ManHashAnd(pNew, iCtrl, iData);\n        } else if Value == 3 {\n            pObj.Value = Gia_ManHashOr(pNew, Abc_LitNot(iCtrl), iData);\n        } else if Value == 4 {\n            pObj.Value = 0;\n        } else if Value == 5 {\n            pObj.Value = 1;\n        } else { assert(false, \"0\"); }\n    }\n    for  f = 0; f \u003c nFrames; f++  {\n        // inlining of macro Gia_ManForEachPi\n        for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        }\n        // inlining of macro Gia_ManForEachRi\n        for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n            pObj.Value = Gia_ObjFanin0Copy(pObj);\n        }\n        // inlining of macro Gia_ManForEachRo\n        for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n            pObj.Value = Gia_ObjRoToRi(p, pObj).Value;\n        }\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, pObj.Value );\n    }\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    assert(Gia_ManPiNum(pNew) == 2 * Gia_ManRegNum(p) + nFrames * Gia_ManPiNum(p), \"Gia_ManPiNum(pNew) == 2 * Gia_ManRegNum(p) + nFrames * Gia_ManPiNum(p)\");\n    return pNew;\n}"
+    },
+    {
+      "Name": "Gia_ManMaxiPerform",
+      "Start": 4167,
+      "End": 8858,
+      "BodyStart": 4275,
+      "Original": "Vec_Int_t * Gia_ManMaxiPerform( Gia_Man_t * p, Vec_Int_t * vInit, int nFrames, int nTimeOut, int fVerbose )\n{\n    int nIterMax = 1000000;\n    int i, iLit, Iter, status;\n    int nLits, * pLits;\n    abctime clkTotal = Abc_Clock();\n    abctime clkSat = 0;\n    Vec_Int_t * vLits, * vMap;\n    sat_solver * pSat;\n    Gia_Obj_t * pObj;\n    Gia_Man_t * p0 = Gia_ManMaxiUnfold( p, nFrames, 0, vInit );\n    Gia_Man_t * p1 = Gia_ManMaxiUnfold( p, nFrames, 1, vInit );\n    Gia_Man_t * pM = Gia_ManMiter( p0, p1, 0, 0, 0, 0, 0 );\n    Cnf_Dat_t * pCnf = Cnf_DeriveGiaRemapped( pM );\n    Gia_ManStop( p0 );\n    Gia_ManStop( p1 );\n    assert( Gia_ManRegNum(p) \u003e 0 );\n    if ( fVerbose )\n        printf( \"Running with %d frames and %sgiven init state.\\n\", nFrames, vInit ? \"\":\"no \" );\n\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, pCnf-\u003enVars );\n    sat_solver_set_runtime_limit( pSat, nTimeOut ? nTimeOut * CLOCKS_PER_SEC + Abc_Clock(): 0 );\n    for ( i = 0; i \u003c pCnf-\u003enClauses; i++ )\n        if ( !sat_solver_addclause( pSat, pCnf-\u003epClauses[i], pCnf-\u003epClauses[i+1] ) )\n            assert( 0 );\n\n    // add one large OR clause\n    vLits = Vec_IntAlloc( Gia_ManCoNum(p) );\n    Gia_ManForEachCo( pM, pObj, i )\n        Vec_IntPush( vLits, Abc_Var2Lit(pCnf-\u003epVarNums[Gia_ObjId(pM, pObj)], 0) );\n    sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n\n    // create assumptions\n    Vec_IntClear( vLits );\n    Gia_ManForEachPi( pM, pObj, i )\n        if ( i == Gia_ManRegNum(p) )\n            break;\n        else if ( Vec_IntEntry(vInit, i) == 0 || Vec_IntEntry(vInit, i) == 1 )\n            Vec_IntPush( vLits, Abc_Var2Lit(pCnf-\u003epVarNums[Gia_ObjId(pM, pObj)], 1) );\n\n    if ( fVerbose )\n    {\n        printf( \"Iter%6d : \",       0 );\n        printf( \"Var =%10d  \",      sat_solver_nvars(pSat) );\n        printf( \"Clause =%10d  \",   sat_solver_nclauses(pSat) );\n        printf( \"Conflict =%10d  \", sat_solver_nconflicts(pSat) );\n        printf( \"Subset =%6d  \",    Vec_IntSize(vLits) );\n        Abc_PrintTime( 1, \"Time\", clkSat );\n//      ABC_PRTr( \"Solver time\", clkSat );\n    }\n    for ( Iter = 0; Iter \u003c nIterMax; Iter++ )\n    {\n        abctime clk = Abc_Clock();\n        status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        clkSat += Abc_Clock() - clk;\n        if ( status == l_Undef )\n        {\n//            if ( fVerbose )\n//                printf( \"\\n\" );\n            printf( \"Timeout reached after %d seconds and %d iterations.  \", nTimeOut, Iter );\n            break;\n        }\n        if ( status == l_True )\n        {\n//            if ( fVerbose )\n//                printf( \"\\n\" );\n            printf( \"The problem is SAT after %d iterations.  \", Iter );\n            break;\n        }\n        assert( status == l_False );\n        nLits = sat_solver_final( pSat, \u0026pLits );\n        if ( fVerbose )\n        {\n            printf( \"Iter%6d : \",       Iter+1 );\n            printf( \"Var =%10d  \",      sat_solver_nvars(pSat) );\n            printf( \"Clause =%10d  \",   sat_solver_nclauses(pSat) );\n            printf( \"Conflict =%10d  \", sat_solver_nconflicts(pSat) );\n            printf( \"Subset =%6d  \",    nLits );\n            Abc_PrintTime( 1, \"Time\", clkSat );\n//            ABC_PRTr( \"Solver time\", clkSat );\n        }\n        if ( Vec_IntSize(vLits) == nLits )\n        {\n//            if ( fVerbose )\n//                printf( \"\\n\" );\n            printf( \"Reached fixed point with %d entries after %d iterations.  \", Vec_IntSize(vLits), Iter+1 );\n            break;\n        }\n        // collect used literals\n        Vec_IntClear( vLits );\n        for ( i = 0; i \u003c nLits; i++ )\n            Vec_IntPush( vLits, Abc_LitNot(pLits[i]) );\n    }\n    // create map\n    vMap = Vec_IntStart( pCnf-\u003enVars );\n    Vec_IntForEachEntry( vLits, iLit, i )\n        Vec_IntWriteEntry( vMap, Abc_Lit2Var(iLit), 1 );\n\n    // create output\n    Vec_IntFree( vLits );\n    vLits = Vec_IntDup(vInit);\n    Gia_ManForEachPi( pM, pObj, i )\n        if ( i == Gia_ManRegNum(p) )\n            break;\n        else if ( Vec_IntEntry(vLits, i) == 4 || Vec_IntEntry(vLits, i) == 5 )\n            Vec_IntWriteEntry( vLits, i, Vec_IntEntry(vLits, i) );\n        else if ( (Vec_IntEntry(vLits, i) == 0 || Vec_IntEntry(vLits, i) == 1) \u0026\u0026 !Vec_IntEntry(vMap, pCnf-\u003epVarNums[Gia_ObjId(pM, pObj)]) )\n            Vec_IntWriteEntry( vLits, i, Vec_IntEntry(vLits, i) | 2 );\n    Vec_IntFree( vMap );\n\n    // cleanup\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n    Gia_ManStop( pM );\n    Abc_PrintTime( 1, \"Total runtime\", Abc_Clock() - clkTotal );\n    return vLits;\n}",
+      "Draft": "func Gia_ManMaxiPerform(p *Gia_Man_t, vInit *Vec_Int_t, nFrames int32, nTimeOut int32, fVerbose int32) *Vec_Int_t {\n    var nIterMax int32  = 1000000;\n    var i, iLit, Iter, status int32;\n    var nLits int32;\n    var pLits *int32;\n    var clkTotal abctime  = Abc_Clock();\n    var clkSat abctime;\n    var vLits, vMap *Vec_Int_t;\n    var pSat *sat_solver;\n    var pObj *Gia_Obj_t;\n    var p0 *Gia_Man_t  = Gia_ManMaxiUnfold( p, nFrames, 0, vInit );\n    var p1 *Gia_Man_t  = Gia_ManMaxiUnfold( p, nFrames, 1, vInit );\n    var pM *Gia_Man_t  = Gia_ManMiter( p0, p1, 0, 0, 0, 0, 0 );\n    var pCnf *Cnf_Dat_t  = Cnf_DeriveGiaRemapped( pM );\n    Gia_ManStop( p0 );\n    Gia_ManStop( p1 );\n    assert(Gia_ManRegNum(p) \u003e 0, \"Gia_ManRegNum(p) \u003e 0\");\n    if fVerbose != 0 {\n        fmt.Printf(\"Running with %d frames and %sgiven init state.\\n\", nFrames, vInit ? \"\":\"no \"); }\n\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, pCnf.nVars );\n    sat_solver_set_runtime_limit( pSat, nTimeOut ? nTimeOut * int64(time.Second) + Abc_Clock(): 0 );\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1] ) {\n            assert(false, \"0\"); }\n    }\n\n    // add one large OR clause\n    vLits = Vec_IntAlloc( Gia_ManCoNum(p) );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pM.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pM, i)); i++  {\n        Vec_IntPush( vLits, Abc_Var2Lit(pCnf.pVarNums[Gia_ObjId(pM, pObj)], 0) );\n    }\n    sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n\n    // create assumptions\n    Vec_IntClear( vLits );\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(pM)) \u0026\u0026 ((pObj) = Gia_ManCi(pM, i)); i++  {\n        if i == Gia_ManRegNum(p) {\n            break;\n        } else if Vec_IntEntry(vInit, i) == 0 || Vec_IntEntry(vInit, i) == 1 {\n            Vec_IntPush( vLits, Abc_Var2Lit(pCnf.pVarNums[Gia_ObjId(pM, pObj)], 1) ); }\n    }\n\n    if fVerbose != 0 {\n        fmt.Printf(\"Iter%6d : \", 0);\n        fmt.Printf(\"Var =%10d  \", sat_solver_nvars(pSat));\n        fmt.Printf(\"Clause =%10d  \", sat_solver_nclauses(pSat));\n        fmt.Printf(\"Conflict =%10d  \", sat_solver_nconflicts(pSat));\n        fmt.Printf(\"Subset =%6d  \", Vec_IntSize(vLits));\n        Abc_PrintTime( 1, \"Time\", clkSat );\n//      ABC_PRTr( \"Solver time\", clkSat );\n    }\n    for  Iter = 0; Iter \u003c nIterMax; Iter++  {\n        var clk abctime  = Abc_Clock();\n        status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        clkSat += Abc_Clock() - clk;\n        if status == l_Undef {\n//            if ( fVerbose )\n//                printf( \"\\n\" );\n            fmt.Printf(\"Timeout reached after %d seconds and %d iterations.  \", nTimeOut, Iter);\n            break;\n        }\n        if status == l_True {\n//            if ( fVerbose )\n//                printf( \"\\n\" );\n            fmt.Printf(\"The problem is SAT after %d iterations.  \", Iter);\n            break;\n        }\n        assert(status == l_False, \"status == l_False\");\n        nLits = sat_solver_final( pSat, \u0026pLits );\n        if fVerbose != 0 {\n            fmt.Printf(\"Iter%6d : \", Iter+1);\n            fmt.Printf(\"Var =%10d  \", sat_solver_nvars(pSat));\n            fmt.Printf(\"Clause =%10d  \", sat_solver_nclauses(pSat));\n            fmt.Printf(\"Conflict =%10d  \", sat_solver_nconflicts(pSat));\n            fmt.Printf(\"Subset =%6d  \", nLits);\n            Abc_PrintTime( 1, \"Time\", clkSat );\n//            ABC_PRTr( \"Solver time\", clkSat );\n        }\n        if Vec_IntSize(vLits) == nLits {\n//            if ( fVerbose )\n//                printf( \"\\n\" );\n            fmt.Printf(\"Reached fixed point with %d entries after %d iterations.  \", Vec_IntSize(vLits), Iter+1);\n            break;\n        }\n        // collect used literals\n        Vec_IntClear( vLits );\n        for  i = 0; i \u003c nLits; i++  {\n            Vec_IntPush( vLits, Abc_LitNot(pLits[i]) );\n        }\n    }\n    // create map\n    vMap = Vec_IntStart( pCnf.nVars );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLits, i)), 1); i++  {\n        Vec_IntWriteEntry( vMap, Abc_Lit2Var(iLit), 1 );\n    }\n\n    // create output\n    Vec_IntFree( vLits );\n    vLits = Vec_IntDup(vInit);\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(pM)) \u0026\u0026 ((pObj) = Gia_ManCi(pM, i)); i++  {\n        if i == Gia_ManRegNum(p) {\n            break;\n        } else if Vec_IntEntry(vLits, i) == 4 || Vec_IntEntry(vLits, i) == 5 {\n            Vec_IntWriteEntry( vLits, i, Vec_IntEntry(vLits, i) );\n        } else if (Vec_IntEntry(vLits, i) == 0 || Vec_IntEntry(vLits, i) == 1) \u0026\u0026 !Vec_IntEntry(vMap, pCnf.pVarNums[Gia_ObjId(pM, pObj)]) {\n            Vec_IntWriteEntry( vLits, i, Vec_IntEntry(vLits, i) | 2 ); }\n    }\n    Vec_IntFree( vMap );\n\n    // cleanup\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n    Gia_ManStop( pM );\n    Abc_PrintTime( 1, \"Total runtime\", Abc_Clock() - clkTotal );\n    return vLits;\n}"
+    },
+    {
+      "Name": "Gia_ManMaxiTest",
+      "Start": 9094,
+      "End": 9466,
+      "BodyStart": 9222,
+      "Original": "Vec_Int_t * Gia_ManMaxiTest( Gia_Man_t * p, Vec_Int_t * vInit0, int nFrames, int nWords, int nTimeOut, int fSim, int fVerbose )\n{\n    Vec_Int_t * vRes, * vInit;\n    vInit = vInit0 ? vInit0 : Vec_IntStart( Gia_ManRegNum(p) );\n    vRes = Gia_ManMaxiPerform( p, vInit, nFrames, nTimeOut, fVerbose );\n    if ( vInit != vInit0 )\n        Vec_IntFree( vInit );\n    return vRes;\n}",
+      "Draft": "func Gia_ManMaxiTest(p *Gia_Man_t, vInit0 *Vec_Int_t, nFrames int32, nWords int32, nTimeOut int32, fSim int32, fVerbose int32) *Vec_Int_t {\n    var vRes, vInit *Vec_Int_t;\n    if vInit0 != nil {\n        vInit = vInit0;\n    } else {\n        vInit = Vec_IntStart( Gia_ManRegNum(p) );\n    }\n    vRes = Gia_ManMaxiPerform( p, vInit, nFrames, nTimeOut, fVerbose );\n    if vInit != vInit0 {\n        Vec_IntFree( vInit ); }\n    return vRes;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMaxi.c::Cnf_DeriveGiaRemapped",
+      "Category": "semantic-review",
+      "Symbol": "Cnf_DeriveGiaRemapped",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1298,
+      "End": 1550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMaxi.c::Gia_ManMaxiUnfold",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMaxiUnfold",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1786,
+      "End": 3930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMaxi.c::ternary::Gia_ManMaxiPerform",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManMaxiPerform",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4167,
+      "End": 8858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMaxi.c::Gia_ManMaxiPerform",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMaxiPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4167,
+      "End": 8858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMaxi.c::Gia_ManMaxiTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMaxiTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9094,
+      "End": 9466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMaxi.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9713
+    }
+  ],
+  "Draft": "package bmc\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [bmcMaxi.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based bounded model checking.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bmcMaxi.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bmc.h\"\n//#include \"sat/cnf/cnf.h\"\n//#include \"sat/bsat/satStore.h\"\n//#include \"aig/gia/giaAig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cnf_DeriveGiaRemapped(p *Gia_Man_t) *Cnf_Dat_t {\n    var pCnf *Cnf_Dat_t;\n    var pAig *Aig_Man_t  = Gia_ManToAigSimple( p );\n    pAig.nRegs = 0;\n    pCnf = Cnf_Derive( pAig, Aig_ManCoNum(pAig) );\n    Aig_ManStop( pAig );\n    return pCnf;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManMaxiUnfold(p *Gia_Man_t, nFrames int32, fUseVars int32, vInit *Vec_Int_t) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i, f int32;\n    pNew = Gia_ManStart( fUseVars * 2 * Gia_ManRegNum(p) + nFrames * Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    Gia_ManHashAlloc( pNew );\n    Gia_ManConst0(p).Value = 0;\n    // control/data variables\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        Gia_ManAppendCi( pNew );\n    }\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        Gia_ManAppendCi( pNew );\n    }\n    // build timeframes\n    assert(!(vInit != nil) || Vec_IntSize(vInit) == Gia_ManRegNum(p), \"!vInit || Vec_IntSize(vInit) == Gia_ManRegNum(p)\");\n    // inlining of macro Gia_ManForEachRo\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n        var Value int32  = Vec_IntEntry( vInit, i );\n        var iCtrl int32  = Gia_ManCiLit( pNew, i );\n        var iData int32  = Gia_ManCiLit( pNew, Gia_ManRegNum(p)+i );\n        // decide based on Value\n        if Value == 0 {\n            if fUseVars != 0 {\n                pObj.Value = Gia_ManHashAnd(pNew, iCtrl, iData);\n            } else {\n                pObj.Value = 0;\n            }\n        } else if Value == 1 {\n            if fUseVars != 0 {\n                pObj.Value = Gia_ManHashOr(pNew, Abc_LitNot(iCtrl), iData);\n            } else {\n                pObj.Value = 1;\n            }\n        } else if Value == 2 {\n            pObj.Value = Gia_ManHashAnd(pNew, iCtrl, iData);\n        } else if Value == 3 {\n            pObj.Value = Gia_ManHashOr(pNew, Abc_LitNot(iCtrl), iData);\n        } else if Value == 4 {\n            pObj.Value = 0;\n        } else if Value == 5 {\n            pObj.Value = 1;\n        } else { assert(false, \"0\"); }\n    }\n    for  f = 0; f \u003c nFrames; f++  {\n        // inlining of macro Gia_ManForEachPi\n        for  i = 0; (i \u003c Gia_ManPiNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n            pObj.Value = Gia_ManAppendCi( pNew );\n        }\n        // inlining of macro Gia_ManForEachAnd\n        for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n            pObj.Value = Gia_ManHashAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n        }\n        // inlining of macro Gia_ManForEachRi\n        for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n            pObj.Value = Gia_ObjFanin0Copy(pObj);\n        }\n        // inlining of macro Gia_ManForEachRo\n        for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCi(p, Gia_ManPiNum(p)+i)); i++  {\n            pObj.Value = Gia_ObjRoToRi(p, pObj).Value;\n        }\n    }\n    // inlining of macro Gia_ManForEachRi\n    for  i = 0; (i \u003c Gia_ManRegNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, Gia_ManPoNum(p)+i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, pObj.Value );\n    }\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    assert(Gia_ManPiNum(pNew) == 2 * Gia_ManRegNum(p) + nFrames * Gia_ManPiNum(p), \"Gia_ManPiNum(pNew) == 2 * Gia_ManRegNum(p) + nFrames * Gia_ManPiNum(p)\");\n    return pNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManMaxiPerform(p *Gia_Man_t, vInit *Vec_Int_t, nFrames int32, nTimeOut int32, fVerbose int32) *Vec_Int_t {\n    var nIterMax int32  = 1000000;\n    var i, iLit, Iter, status int32;\n    var nLits int32;\n    var pLits *int32;\n    var clkTotal abctime  = Abc_Clock();\n    var clkSat abctime;\n    var vLits, vMap *Vec_Int_t;\n    var pSat *sat_solver;\n    var pObj *Gia_Obj_t;\n    var p0 *Gia_Man_t  = Gia_ManMaxiUnfold( p, nFrames, 0, vInit );\n    var p1 *Gia_Man_t  = Gia_ManMaxiUnfold( p, nFrames, 1, vInit );\n    var pM *Gia_Man_t  = Gia_ManMiter( p0, p1, 0, 0, 0, 0, 0 );\n    var pCnf *Cnf_Dat_t  = Cnf_DeriveGiaRemapped( pM );\n    Gia_ManStop( p0 );\n    Gia_ManStop( p1 );\n    assert(Gia_ManRegNum(p) \u003e 0, \"Gia_ManRegNum(p) \u003e 0\");\n    if fVerbose != 0 {\n        fmt.Printf(\"Running with %d frames and %sgiven init state.\\n\", nFrames, vInit ? \"\":\"no \"); }\n\n    pSat = sat_solver_new();\n    sat_solver_setnvars( pSat, pCnf.nVars );\n    sat_solver_set_runtime_limit( pSat, nTimeOut ? nTimeOut * int64(time.Second) + Abc_Clock(): 0 );\n    for  i = 0; i \u003c pCnf.nClauses; i++  {\n        if !sat_solver_addclause( pSat, pCnf.pClauses[i], pCnf.pClauses[i+1] ) {\n            assert(false, \"0\"); }\n    }\n\n    // add one large OR clause\n    vLits = Vec_IntAlloc( Gia_ManCoNum(p) );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pM.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pM, i)); i++  {\n        Vec_IntPush( vLits, Abc_Var2Lit(pCnf.pVarNums[Gia_ObjId(pM, pObj)], 0) );\n    }\n    sat_solver_addclause( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits) );\n\n    // create assumptions\n    Vec_IntClear( vLits );\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(pM)) \u0026\u0026 ((pObj) = Gia_ManCi(pM, i)); i++  {\n        if i == Gia_ManRegNum(p) {\n            break;\n        } else if Vec_IntEntry(vInit, i) == 0 || Vec_IntEntry(vInit, i) == 1 {\n            Vec_IntPush( vLits, Abc_Var2Lit(pCnf.pVarNums[Gia_ObjId(pM, pObj)], 1) ); }\n    }\n\n    if fVerbose != 0 {\n        fmt.Printf(\"Iter%6d : \", 0);\n        fmt.Printf(\"Var =%10d  \", sat_solver_nvars(pSat));\n        fmt.Printf(\"Clause =%10d  \", sat_solver_nclauses(pSat));\n        fmt.Printf(\"Conflict =%10d  \", sat_solver_nconflicts(pSat));\n        fmt.Printf(\"Subset =%6d  \", Vec_IntSize(vLits));\n        Abc_PrintTime( 1, \"Time\", clkSat );\n//      ABC_PRTr( \"Solver time\", clkSat );\n    }\n    for  Iter = 0; Iter \u003c nIterMax; Iter++  {\n        var clk abctime  = Abc_Clock();\n        status = sat_solver_solve( pSat, Vec_IntArray(vLits), Vec_IntArray(vLits) + Vec_IntSize(vLits), (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0, (ABC_INT64_T)0 );\n        clkSat += Abc_Clock() - clk;\n        if status == l_Undef {\n//            if ( fVerbose )\n//                printf( \"\\n\" );\n            fmt.Printf(\"Timeout reached after %d seconds and %d iterations.  \", nTimeOut, Iter);\n            break;\n        }\n        if status == l_True {\n//            if ( fVerbose )\n//                printf( \"\\n\" );\n            fmt.Printf(\"The problem is SAT after %d iterations.  \", Iter);\n            break;\n        }\n        assert(status == l_False, \"status == l_False\");\n        nLits = sat_solver_final( pSat, \u0026pLits );\n        if fVerbose != 0 {\n            fmt.Printf(\"Iter%6d : \", Iter+1);\n            fmt.Printf(\"Var =%10d  \", sat_solver_nvars(pSat));\n            fmt.Printf(\"Clause =%10d  \", sat_solver_nclauses(pSat));\n            fmt.Printf(\"Conflict =%10d  \", sat_solver_nconflicts(pSat));\n            fmt.Printf(\"Subset =%6d  \", nLits);\n            Abc_PrintTime( 1, \"Time\", clkSat );\n//            ABC_PRTr( \"Solver time\", clkSat );\n        }\n        if Vec_IntSize(vLits) == nLits {\n//            if ( fVerbose )\n//                printf( \"\\n\" );\n            fmt.Printf(\"Reached fixed point with %d entries after %d iterations.  \", Vec_IntSize(vLits), Iter+1);\n            break;\n        }\n        // collect used literals\n        Vec_IntClear( vLits );\n        for  i = 0; i \u003c nLits; i++  {\n            Vec_IntPush( vLits, Abc_LitNot(pLits[i]) );\n        }\n    }\n    // create map\n    vMap = Vec_IntStart( pCnf.nVars );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLits)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLits, i)), 1); i++  {\n        Vec_IntWriteEntry( vMap, Abc_Lit2Var(iLit), 1 );\n    }\n\n    // create output\n    Vec_IntFree( vLits );\n    vLits = Vec_IntDup(vInit);\n    // inlining of macro Gia_ManForEachPi\n    for  i = 0; (i \u003c Gia_ManPiNum(pM)) \u0026\u0026 ((pObj) = Gia_ManCi(pM, i)); i++  {\n        if i == Gia_ManRegNum(p) {\n            break;\n        } else if Vec_IntEntry(vLits, i) == 4 || Vec_IntEntry(vLits, i) == 5 {\n            Vec_IntWriteEntry( vLits, i, Vec_IntEntry(vLits, i) );\n        } else if (Vec_IntEntry(vLits, i) == 0 || Vec_IntEntry(vLits, i) == 1) \u0026\u0026 !Vec_IntEntry(vMap, pCnf.pVarNums[Gia_ObjId(pM, pObj)]) {\n            Vec_IntWriteEntry( vLits, i, Vec_IntEntry(vLits, i) | 2 ); }\n    }\n    Vec_IntFree( vMap );\n\n    // cleanup\n    sat_solver_delete( pSat );\n    Cnf_DataFree( pCnf );\n    Gia_ManStop( pM );\n    Abc_PrintTime( 1, \"Total runtime\", Abc_Clock() - clkTotal );\n    return vLits;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManMaxiTest(p *Gia_Man_t, vInit0 *Vec_Int_t, nFrames int32, nWords int32, nTimeOut int32, fSim int32, fVerbose int32) *Vec_Int_t {\n    var vRes, vInit *Vec_Int_t;\n    if vInit0 != nil {\n        vInit = vInit0;\n    } else {\n        vInit = Vec_IntStart( Gia_ManRegNum(p) );\n    }\n    vRes = Gia_ManMaxiPerform( p, vInit, nFrames, nTimeOut, fVerbose );\n    if vInit != vInit0 {\n        Vec_IntFree( vInit ); }\n    return vRes;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

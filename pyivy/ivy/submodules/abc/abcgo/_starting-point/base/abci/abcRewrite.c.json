@@ -1,0 +1,545 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c",
+  "SHA256": "0d721499ffc8bfe9ad3c4f81df4402f69a420fb629ce38189aaca081af7d218a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2588
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 118,
+        "Column": 41,
+        "ByteOffset": 3653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, nNodes );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 192,
+        "Column": 9,
+        "ByteOffset": 6295
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkRewrite: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 218,
+        "Column": 5,
+        "ByteOffset": 7017
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( spStatic_Abc_NtkStartCutManForRewrite_pParams, 0, sizeof(Cut_Params_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 8756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\nNode %s\\n\", Abc_ObjName(pNode) );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 257,
+        "Column": 28,
+        "ByteOffset": 9025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintBinary( stdout, (unsigned *)\u0026pCut.uSign, 16 ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 258,
+        "Column": 9,
+        "ByteOffset": 9073
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 260,
+        "Column": 9,
+        "ByteOffset": 9134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 13,
+        "ByteOffset": 9789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%6d : %c\\n\", pNode.Id, 'a'+i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 9,
+        "ByteOffset": 9870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d : %2d = \", pNode.Id, i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 293,
+        "Column": 13,
+        "ByteOffset": 10226
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", 'a' + k );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 295,
+        "Column": 13,
+        "ByteOffset": 10280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", k ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 296,
+        "Column": 9,
+        "ByteOffset": 10309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s \", Abc_ObjFaninC0(pNode)? \"\\'\" : \"\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 303,
+        "Column": 13,
+        "ByteOffset": 10678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", 'a' + k );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 13,
+        "ByteOffset": 10732
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", k ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 9,
+        "ByteOffset": 10761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%s \", Abc_ObjFaninC1(pNode)? \"\\'\" : \"\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 308,
+        "Column": 13,
+        "ByteOffset": 10852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" root\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 309,
+        "Column": 9,
+        "ByteOffset": 10881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 311,
+        "Column": 5,
+        "ByteOffset": 10907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 381,
+        "Column": 5,
+        "ByteOffset": 12922
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 409,
+        "Column": 5,
+        "ByteOffset": 13946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"(%d,%d:%d) \", CountA, CountB, CountA+CountB-Vec_PtrSize(vLeaves) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkRewrite",
+      "Start": 1972,
+      "End": 6135,
+      "BodyStart": 2094,
+      "Original": "int Abc_NtkRewrite( Abc_Ntk_t * pNtk, int fUpdateLevel, int fUseZeros, int fVerbose, int fVeryVerbose, int fPlaceEnable )\n{\n    extern void           Dec_GraphUpdateNetwork( Abc_Obj_t * pRoot, Dec_Graph_t * pGraph, int fUpdateLevel, int nGain );\n    ProgressBar * pProgress;\n    Cut_Man_t * pManCut;\n    Rwr_Man_t * pManRwr;\n    Abc_Obj_t * pNode;\n//    Vec_Ptr_t * vAddedCells = NULL, * vUpdatedNets = NULL;\n    Dec_Graph_t * pGraph;\n    int i, nNodes, nGain, fCompl;\n    abctime clk, clkStart = Abc_Clock();\n\n    assert( Abc_NtkIsStrash(pNtk) );\n    // cleanup the AIG\n    Abc_AigCleanup((Abc_Aig_t *)pNtk-\u003epManFunc);\n/*\n    {\n        Vec_Vec_t * vParts;\n        vParts = Abc_NtkPartitionSmart( pNtk, 50, 1 );\n        Vec_VecFree( vParts );\n    }\n*/\n\n    // start placement package\n//    if ( fPlaceEnable )\n//    {\n//        Abc_PlaceBegin( pNtk );\n//        vAddedCells = Abc_AigUpdateStart( pNtk-\u003epManFunc, \u0026vUpdatedNets );\n//    }\n\n    // start the rewriting manager\n    pManRwr = Rwr_ManStart( 0 );\n    if ( pManRwr == NULL )\n        return 0;\n    // compute the reverse levels if level update is requested\n    if ( fUpdateLevel )\n        Abc_NtkStartReverseLevels( pNtk, 0 );\n    // start the cut manager\nclk = Abc_Clock();\n    pManCut = Abc_NtkStartCutManForRewrite( pNtk );\nRwr_ManAddTimeCuts( pManRwr, Abc_Clock() - clk );\n    pNtk-\u003epManCut = pManCut;\n\n    if ( fVeryVerbose )\n        Rwr_ScoresClean( pManRwr );\n\n    // resynthesize each node once\n    pManRwr-\u003enNodesBeg = Abc_NtkNodeNum(pNtk);\n    nNodes = Abc_NtkObjNumMax(pNtk);\n    pProgress = Extra_ProgressBarStart( stdout, nNodes );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        // stop if all nodes have been tried once\n        if ( i \u003e= nNodes )\n            break;\n        // skip persistant nodes\n        if ( Abc_NodeIsPersistant(pNode) )\n            continue;\n        // skip the nodes with many fanouts\n        if ( Abc_ObjFanoutNum(pNode) \u003e 1000 )\n            continue;\n\n        // for each cut, try to resynthesize it\n        nGain = Rwr_NodeRewrite( pManRwr, pManCut, pNode, fUpdateLevel, fUseZeros, fPlaceEnable );\n        if ( !(nGain \u003e 0 || (nGain == 0 \u0026\u0026 fUseZeros)) )\n            continue;\n        // if we end up here, a rewriting step is accepted\n\n        // get hold of the new subgraph to be added to the AIG\n        pGraph = (Dec_Graph_t *)Rwr_ManReadDecs(pManRwr);\n        fCompl = Rwr_ManReadCompl(pManRwr);\n\n        // reset the array of the changed nodes\n        if ( fPlaceEnable )\n            Abc_AigUpdateReset( (Abc_Aig_t *)pNtk-\u003epManFunc );\n\n        // complement the FF if needed\n        if ( fCompl ) Dec_GraphComplement( pGraph );\nclk = Abc_Clock();\n        Dec_GraphUpdateNetwork( pNode, pGraph, fUpdateLevel, nGain );\nRwr_ManAddTimeUpdate( pManRwr, Abc_Clock() - clk );\n        if ( fCompl ) Dec_GraphComplement( pGraph );\n\n        // use the array of changed nodes to update placement\n//        if ( fPlaceEnable )\n//            Abc_PlaceUpdate( vAddedCells, vUpdatedNets );\n    }\n    Extra_ProgressBarStop( pProgress );\nRwr_ManAddTimeTotal( pManRwr, Abc_Clock() - clkStart );\n    // print stats\n    pManRwr-\u003enNodesEnd = Abc_NtkNodeNum(pNtk);\n    if ( fVerbose )\n        Rwr_ManPrintStats( pManRwr );\n//        Rwr_ManPrintStatsFile( pManRwr );\n    if ( fVeryVerbose )\n        Rwr_ScoresReport( pManRwr );\n    // delete the managers\n    Rwr_ManStop( pManRwr );\n    Cut_ManStop( pManCut );\n    pNtk-\u003epManCut = NULL;\n\n    // start placement package\n//    if ( fPlaceEnable )\n//    {\n//        Abc_PlaceEnd( pNtk );\n//        Abc_AigUpdateStop( pNtk-\u003epManFunc );\n//    }\n\n    // put the nodes into the DFS order and reassign their IDs\n    {\n//        abctime clk = Abc_Clock();\n    Abc_NtkReassignIds( pNtk );\n//        ABC_PRT( \"time\", Abc_Clock() - clk );\n    }\n//    Abc_AigCheckFaninOrder( pNtk-\u003epManFunc );\n    // fix the levels\n    if ( fUpdateLevel )\n        Abc_NtkStopReverseLevels( pNtk );\n    else\n        Abc_NtkLevel( pNtk );\n    // check\n    if ( !Abc_NtkCheck( pNtk ) )\n    {\n        printf( \"Abc_NtkRewrite: The network check has failed.\\n\" );\n        return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Abc_NtkRewrite(pNtk *Abc_Ntk_t, fUpdateLevel int32, fUseZeros int32, fVerbose int32, fVeryVerbose int32, fPlaceEnable int32) int32 {\n    extern void           Dec_GraphUpdateNetwork( Abc_Obj_t * pRoot, Dec_Graph_t * pGraph, int fUpdateLevel, int nGain );\n    var pProgress *ProgressBar;\n    var pManCut *Cut_Man_t;\n    var pManRwr *Rwr_Man_t;\n    var pNode *Abc_Obj_t;\n//    Vec_Ptr_t * vAddedCells = NULL, * vUpdatedNets = NULL;\n    var pGraph *Dec_Graph_t;\n    var i, nNodes, nGain, fCompl int32;\n    var clk abctime;\n    var clkStart abctime = Abc_Clock();\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // cleanup the AIG\n    Abc_AigCleanup((Abc_Aig_t *)pNtk.pManFunc);\n/*\n    {\n        Vec_Vec_t * vParts;\n        vParts = Abc_NtkPartitionSmart( pNtk, 50, 1 );\n        Vec_VecFree( vParts );\n    }\n*/\n\n    // start placement package\n//    if ( fPlaceEnable )\n//    {\n//        Abc_PlaceBegin( pNtk );\n//        vAddedCells = Abc_AigUpdateStart( pNtk-\u003epManFunc, \u0026vUpdatedNets );\n//    }\n\n    // start the rewriting manager\n    pManRwr = Rwr_ManStart( 0 );\n    if pManRwr == nil {\n        return 0; }\n    // compute the reverse levels if level update is requested\n    if fUpdateLevel != 0 {\n        Abc_NtkStartReverseLevels( pNtk, 0 ); }\n    // start the cut manager\nclk = Abc_Clock();\n    pManCut = Abc_NtkStartCutManForRewrite( pNtk );\nRwr_ManAddTimeCuts( pManRwr, Abc_Clock() - clk );\n    pNtk.pManCut = pManCut;\n\n    if fVeryVerbose != 0 {\n        Rwr_ScoresClean( pManRwr ); }\n\n    // resynthesize each node once\n    pManRwr.nNodesBeg = Abc_NtkNodeNum(pNtk);\n    nNodes = Abc_NtkObjNumMax(pNtk);\n    pProgress = Extra_ProgressBarStart( os.Stdout, nNodes );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        // stop if all nodes have been tried once\n        if i \u003e= nNodes {\n            break; }\n        // skip persistant nodes\n        if Abc_NodeIsPersistant(pNode) {\n            continue; }\n        // skip the nodes with many fanouts\n        if Abc_ObjFanoutNum(pNode) \u003e 1000 {\n            continue; }\n\n        // for each cut, try to resynthesize it\n        nGain = Rwr_NodeRewrite( pManRwr, pManCut, pNode, fUpdateLevel, fUseZeros, fPlaceEnable );\n        if !(nGain \u003e 0 || (nGain == 0 \u0026\u0026 (fUseZeros != 0))) {\n            continue; }\n        // if we end up here, a rewriting step is accepted\n\n        // get hold of the new subgraph to be added to the AIG\n        pGraph = (Dec_Graph_t *)Rwr_ManReadDecs(pManRwr);\n        fCompl = Rwr_ManReadCompl(pManRwr);\n\n        // reset the array of the changed nodes\n        if fPlaceEnable != 0 {\n            Abc_AigUpdateReset( (Abc_Aig_t *)pNtk.pManFunc ); }\n\n        // complement the FF if needed\n        if fCompl != 0 { Dec_GraphComplement( pGraph ); }\nclk = Abc_Clock();\n        Dec_GraphUpdateNetwork( pNode, pGraph, fUpdateLevel, nGain );\nRwr_ManAddTimeUpdate( pManRwr, Abc_Clock() - clk );\n        if fCompl != 0 { Dec_GraphComplement( pGraph ); }\n\n        // use the array of changed nodes to update placement\n//        if ( fPlaceEnable )\n//            Abc_PlaceUpdate( vAddedCells, vUpdatedNets );\n    }\n    }\n    Extra_ProgressBarStop( pProgress );\nRwr_ManAddTimeTotal( pManRwr, Abc_Clock() - clkStart );\n    // print stats\n    pManRwr.nNodesEnd = Abc_NtkNodeNum(pNtk);\n    if fVerbose != 0 {\n        Rwr_ManPrintStats( pManRwr ); }\n//        Rwr_ManPrintStatsFile( pManRwr );\n    if fVeryVerbose != 0 {\n        Rwr_ScoresReport( pManRwr ); }\n    // delete the managers\n    Rwr_ManStop( pManRwr );\n    Cut_ManStop( pManCut );\n    pNtk.pManCut = nil;\n\n    // start placement package\n//    if ( fPlaceEnable )\n//    {\n//        Abc_PlaceEnd( pNtk );\n//        Abc_AigUpdateStop( pNtk-\u003epManFunc );\n//    }\n\n    // put the nodes into the DFS order and reassign their IDs\n    {\n//        abctime clk = Abc_Clock();\n    Abc_NtkReassignIds( pNtk );\n//        ABC_PRT( \"time\", Abc_Clock() - clk );\n    }\n//    Abc_AigCheckFaninOrder( pNtk-\u003epManFunc );\n    // fix the levels\n    if fUpdateLevel != 0 {\n        Abc_NtkStopReverseLevels( pNtk );\n    } else {\n        Abc_NtkLevel( pNtk ); }\n    // check\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Printf(\"Abc_NtkRewrite: The network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkStartCutManForRewrite",
+      "Start": 6409,
+      "End": 7459,
+      "BodyStart": 6470,
+      "Original": "Cut_Man_t * Abc_NtkStartCutManForRewrite( Abc_Ntk_t * pNtk )\n{\n    static Cut_Params_t Params, * pParams = \u0026Params;\n    Cut_Man_t * pManCut;\n    Abc_Obj_t * pObj;\n    int i;\n    // start the cut manager\n    memset( pParams, 0, sizeof(Cut_Params_t) );\n    pParams-\u003enVarsMax  = 4;     // the max cut size (\"k\" of the k-feasible cuts)\n    pParams-\u003enKeepMax  = 250;   // the max number of cuts kept at a node\n    pParams-\u003efTruth    = 1;     // compute truth tables\n    pParams-\u003efFilter   = 1;     // filter dominated cuts\n    pParams-\u003efSeq      = 0;     // compute sequential cuts\n    pParams-\u003efDrop     = 0;     // drop cuts on the fly\n    pParams-\u003efVerbose  = 0;     // the verbosiness flag\n    pParams-\u003enIdsMax   = Abc_NtkObjNumMax( pNtk );\n    pManCut = Cut_ManStart( pParams );\n    if ( pParams-\u003efDrop )\n        Cut_ManSetFanoutCounts( pManCut, Abc_NtkFanoutCounts(pNtk) );\n    // set cuts for PIs\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        if ( Abc_ObjFanoutNum(pObj) \u003e 0 )\n            Cut_NodeSetTriv( pManCut, pObj-\u003eId );\n    return pManCut;\n}",
+      "Draft": "func Abc_NtkStartCutManForRewrite(pNtk *Abc_Ntk_t) *Cut_Man_t {\n    \n    var pManCut *Cut_Man_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // start the cut manager\n    memset( spStatic_Abc_NtkStartCutManForRewrite_pParams, 0, sizeof(Cut_Params_t) );\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.nVarsMax  = 4;     // the max cut size (\"k\" of the k-feasible cuts)\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.nKeepMax  = 250;   // the max number of cuts kept at a node\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.fTruth    = 1;     // compute truth tables\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.fFilter   = 1;     // filter dominated cuts\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.fSeq      = 0;     // compute sequential cuts\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.fDrop     = 0;     // drop cuts on the fly\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.fVerbose  = 0;     // the verbosiness flag\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.nIdsMax   = Abc_NtkObjNumMax( pNtk );\n    pManCut = Cut_ManStart( spStatic_Abc_NtkStartCutManForRewrite_pParams );\n    if spStatic_Abc_NtkStartCutManForRewrite_pParams.fDrop {\n        Cut_ManSetFanoutCounts( pManCut, Abc_NtkFanoutCounts(pNtk) ); }\n    // set cuts for PIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if Abc_ObjFanoutNum(pObj) \u003e 0 {\n            Cut_NodeSetTriv( pManCut, pObj.Id ); }\n    }\n    return pManCut;\n}"
+    },
+    {
+      "Name": "Abc_NodePrintCuts",
+      "Start": 7724,
+      "End": 8136,
+      "BodyStart": 7768,
+      "Original": "void Abc_NodePrintCuts( Abc_Obj_t * pNode )\n{\n    Vec_Ptr_t * vCuts;\n    Cut_Cut_t * pCut;\n    int k;\n\n    printf( \"\\nNode %s\\n\", Abc_ObjName(pNode) );\n    vCuts = (Vec_Ptr_t *)pNode-\u003epCopy;\n    Vec_PtrForEachEntry( Cut_Cut_t *, vCuts, pCut, k )\n    {\n        Extra_PrintBinary( stdout, (unsigned *)\u0026pCut-\u003euSign, 16 ); \n        printf( \"   \" );\n        Cut_CutPrint( pCut, 0 );   \n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Abc_NodePrintCuts(pNode *Abc_Obj_t) {\n    var vCuts *Vec_Ptr_t;\n    var pCut *Cut_Cut_t;\n    var k int32;\n\n    fmt.Printf(\"\\nNode %s\\n\", Abc_ObjName(pNode));\n    vCuts = (Vec_Ptr_t *)pNode.pCopy;\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(vCuts)) \u0026\u0026 (((pCut) = (Cut_Cut_t *)Vec_PtrEntry(vCuts, k)), 1); k++  {\n        Extra_PrintBinary( os.Stdout, (unsigned *)\u0026pCut.uSign, 16 ); \n        fmt.Printf(\"   \");\n        Cut_CutPrint( pCut, 0 );   \n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Abc_ManRewritePrintDivs",
+      "Start": 8373,
+      "End": 9579,
+      "BodyStart": 8436,
+      "Original": "void Abc_ManRewritePrintDivs( Vec_Ptr_t * vDivs, int nLeaves )\n{\n    Abc_Obj_t * pFanin, * pNode, * pRoot;\n    int i, k;\n    pRoot = (Abc_Obj_t *)Vec_PtrEntryLast(vDivs);\n    // print the nodes\n    Vec_PtrForEachEntry( Abc_Obj_t *, vDivs, pNode, i )\n    {\n        if ( i \u003c nLeaves )\n        {\n            printf( \"%6d : %c\\n\", pNode-\u003eId, 'a'+i );\n            continue;\n        }\n        printf( \"%6d : %2d = \", pNode-\u003eId, i );\n        // find the first fanin\n        Vec_PtrForEachEntry( Abc_Obj_t *, vDivs, pFanin, k )\n            if ( Abc_ObjFanin0(pNode) == pFanin )\n                break;\n        if ( k \u003c nLeaves )\n            printf( \"%c\", 'a' + k );\n        else\n            printf( \"%d\", k );\n        printf( \"%s \", Abc_ObjFaninC0(pNode)? \"\\'\" : \"\" );\n        // find the second fanin\n        Vec_PtrForEachEntry( Abc_Obj_t *, vDivs, pFanin, k )\n            if ( Abc_ObjFanin1(pNode) == pFanin )\n                break;\n        if ( k \u003c nLeaves )\n            printf( \"%c\", 'a' + k );\n        else\n            printf( \"%d\", k );\n        printf( \"%s \", Abc_ObjFaninC1(pNode)? \"\\'\" : \"\" );\n        if ( pNode == pRoot )\n            printf( \" root\" );\n        printf( \"\\n\" );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Abc_ManRewritePrintDivs(vDivs *Vec_Ptr_t, nLeaves int32) {\n    var pFanin, pNode, pRoot *Abc_Obj_t;\n    var i, k int32;\n    pRoot = (Abc_Obj_t *)Vec_PtrEntryLast(vDivs);\n    // print the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDivs)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vDivs, i)), 1); i++  {\n        if i \u003c nLeaves {\n            fmt.Printf(\"%6d : %c\\n\", pNode.Id, 'a'+i);\n            continue;\n        }\n        fmt.Printf(\"%6d : %2d = \", pNode.Id, i);\n        // find the first fanin\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vDivs)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(vDivs, k)), 1); k++  {\n            if Abc_ObjFanin0(pNode) == pFanin {\n                break; }\n        }\n        if k \u003c nLeaves {\n            fmt.Printf(\"%c\", 'a' + k);\n        } else {\n            fmt.Printf(\"%d\", k); }\n        fmt.Printf(\"%s \", Abc_ObjFaninC0(pNode)? \"\\'\" : \"\");\n        // find the second fanin\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vDivs)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(vDivs, k)), 1); k++  {\n            if Abc_ObjFanin1(pNode) == pFanin {\n                break; }\n        }\n        if k \u003c nLeaves {\n            fmt.Printf(\"%c\", 'a' + k);\n        } else {\n            fmt.Printf(\"%d\", k); }\n        fmt.Printf(\"%s \", Abc_ObjFaninC1(pNode)? \"\\'\" : \"\");\n        if pNode == pRoot {\n            fmt.Printf(\" root\"); }\n        fmt.Printf(\"\\n\");\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Abc_ManShowCutCone_rec",
+      "Start": 9815,
+      "End": 10132,
+      "BodyStart": 9883,
+      "Original": "void Abc_ManShowCutCone_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vDivs )\n{\n    if ( Abc_NodeIsTravIdCurrent(pNode) )\n        return;\n    Abc_NodeSetTravIdCurrent(pNode);\n    Abc_ManShowCutCone_rec( Abc_ObjFanin0(pNode), vDivs );\n    Abc_ManShowCutCone_rec( Abc_ObjFanin1(pNode), vDivs );\n    Vec_PtrPush( vDivs, pNode );\n}",
+      "Draft": "func Abc_ManShowCutCone_rec(pNode *Abc_Obj_t, vDivs *Vec_Ptr_t) {\n    if Abc_NodeIsTravIdCurrent(pNode) {\n        return; }\n    Abc_NodeSetTravIdCurrent(pNode);\n    Abc_ManShowCutCone_rec( Abc_ObjFanin0(pNode), vDivs );\n    Abc_ManShowCutCone_rec( Abc_ObjFanin1(pNode), vDivs );\n    Vec_PtrPush( vDivs, pNode );\n}"
+    },
+    {
+      "Name": "Abc_ManShowCutCone",
+      "Start": 10368,
+      "End": 10907,
+      "BodyStart": 10434,
+      "Original": "void Abc_ManShowCutCone( Abc_Obj_t * pNode, Vec_Ptr_t * vLeaves )\n{\n    Abc_Ntk_t * pNtk = pNode-\u003epNtk;\n    Abc_Obj_t * pObj;\n    Vec_Ptr_t * vDivs;\n    int i;\n    vDivs = Vec_PtrAlloc( 100 );\n    Abc_NtkIncrementTravId( pNtk );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pObj, i )\n    {\n        Abc_NodeSetTravIdCurrent( Abc_ObjRegular(pObj) );\n        Vec_PtrPush( vDivs, Abc_ObjRegular(pObj) );\n    }\n    Abc_ManShowCutCone_rec( pNode, vDivs );\n    Abc_ManRewritePrintDivs( vDivs, Vec_PtrSize(vLeaves) );\n    Vec_PtrFree( vDivs );\n}",
+      "Draft": "func Abc_ManShowCutCone(pNode *Abc_Obj_t, vLeaves *Vec_Ptr_t) {\n    var pNtk *Abc_Ntk_t  = pNode.pNtk;\n    var pObj *Abc_Obj_t;\n    var vDivs *Vec_Ptr_t;\n    var i int32;\n    vDivs = Vec_PtrAlloc( 100 );\n    Abc_NtkIncrementTravId( pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( Abc_ObjRegular(pObj) );\n        Vec_PtrPush( vDivs, Abc_ObjRegular(pObj) );\n    }\n    Abc_ManShowCutCone_rec( pNode, vDivs );\n    Abc_ManRewritePrintDivs( vDivs, Vec_PtrSize(vLeaves) );\n    Vec_PtrFree( vDivs );\n}"
+    },
+    {
+      "Name": "Abc_RwrExpWithCut_rec",
+      "Start": 11144,
+      "End": 11645,
+      "BodyStart": 11224,
+      "Original": "void Abc_RwrExpWithCut_rec( Abc_Obj_t * pNode, Vec_Ptr_t * vLeaves, int fUseA )\n{\n    if ( Vec_PtrFind(vLeaves, pNode) \u003e= 0 || Vec_PtrFind(vLeaves, Abc_ObjNot(pNode)) \u003e= 0 )\n    {\n        if ( fUseA )\n            Abc_ObjRegular(pNode)-\u003efMarkA = 1;\n        else\n            Abc_ObjRegular(pNode)-\u003efMarkB = 1;\n        return;\n    }\n    assert( Abc_ObjIsNode(pNode) );\n    Abc_RwrExpWithCut_rec( Abc_ObjFanin0(pNode), vLeaves, fUseA );\n    Abc_RwrExpWithCut_rec( Abc_ObjFanin1(pNode), vLeaves, fUseA );\n}",
+      "Draft": "func Abc_RwrExpWithCut_rec(pNode *Abc_Obj_t, vLeaves *Vec_Ptr_t, fUseA int32) {\n    if Vec_PtrFind(vLeaves, pNode) \u003e= 0 || Vec_PtrFind(vLeaves, Abc_ObjNot(pNode)) \u003e= 0 {\n        if fUseA != 0 {\n            Abc_ObjRegular(pNode).fMarkA = 1;\n        } else {\n            Abc_ObjRegular(pNode).fMarkB = 1; }\n        return;\n    }\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    Abc_RwrExpWithCut_rec( Abc_ObjFanin0(pNode), vLeaves, fUseA );\n    Abc_RwrExpWithCut_rec( Abc_ObjFanin1(pNode), vLeaves, fUseA );\n}"
+    },
+    {
+      "Name": "Abc_RwrExpWithCut",
+      "Start": 11881,
+      "End": 12479,
+      "BodyStart": 11946,
+      "Original": "void Abc_RwrExpWithCut( Abc_Obj_t * pNode, Vec_Ptr_t * vLeaves )\n{\n    Abc_Obj_t * pObj;\n    int i, CountA, CountB;\n    Abc_RwrExpWithCut_rec( Abc_ObjFanin0(pNode), vLeaves, 1 );\n    Abc_RwrExpWithCut_rec( Abc_ObjFanin1(pNode), vLeaves, 0 );\n    CountA = CountB = 0;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vLeaves, pObj, i )\n    {\n        CountA += Abc_ObjRegular(pObj)-\u003efMarkA;\n        CountB += Abc_ObjRegular(pObj)-\u003efMarkB;\n        Abc_ObjRegular(pObj)-\u003efMarkA = 0;\n        Abc_ObjRegular(pObj)-\u003efMarkB = 0;\n    }\n    printf( \"(%d,%d:%d) \", CountA, CountB, CountA+CountB-Vec_PtrSize(vLeaves) );\n}",
+      "Draft": "func Abc_RwrExpWithCut(pNode *Abc_Obj_t, vLeaves *Vec_Ptr_t) {\n    var pObj *Abc_Obj_t;\n    var i, CountA, CountB int32;\n    Abc_RwrExpWithCut_rec( Abc_ObjFanin0(pNode), vLeaves, 1 );\n    Abc_RwrExpWithCut_rec( Abc_ObjFanin1(pNode), vLeaves, 0 );\n    CountA = CountB = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        CountA += Abc_ObjRegular(pObj).fMarkA;\n        CountB += Abc_ObjRegular(pObj).fMarkB;\n        Abc_ObjRegular(pObj).fMarkA = 0;\n        Abc_ObjRegular(pObj).fMarkB = 0;\n    }\n    fmt.Printf(\"(%d,%d:%d) \", CountA, CountB, CountA+CountB-Vec_PtrSize(vLeaves));\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::mechanical::static::6652",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 6476,
+      "End": 6482
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::mechanical::sizeof::6812",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6636,
+      "End": 6642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::pointer-cast::2562",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2562,
+      "End": 2575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::pointer-cast::4525",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4349,
+      "End": 4364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::pointer-cast::4719",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4543,
+      "End": 4556
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::pointer-cast::8165",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7888,
+      "End": 7901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::pointer-cast::8303",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7919,
+      "End": 7919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::pointer-cast::8392",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8011,
+      "End": 8023
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::pointer-cast::8887",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8506,
+      "End": 8519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::pointer-cast::9060",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8571,
+      "End": 8571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::pointer-cast::9434",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8840,
+      "End": 8840
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::pointer-cast::9872",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9174,
+      "End": 9174
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::pointer-cast::11403",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10601,
+      "End": 10601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::pointer-cast::13060",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12152,
+      "End": 12152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::Abc_NtkRewrite",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkRewrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1972,
+      "End": 6135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::Abc_NtkStartCutManForRewrite",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkStartCutManForRewrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6409,
+      "End": 7459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::Abc_NodePrintCuts",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodePrintCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7724,
+      "End": 8136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::ternary::Abc_ManRewritePrintDivs",
+      "Category": "ternary-review",
+      "Symbol": "Abc_ManRewritePrintDivs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8373,
+      "End": 9579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::Abc_ManRewritePrintDivs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ManRewritePrintDivs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8373,
+      "End": 9579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::Abc_ManShowCutCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ManShowCutCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9815,
+      "End": 10132
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::Abc_ManShowCutCone",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ManShowCutCone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10368,
+      "End": 10907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::Abc_RwrExpWithCut_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_RwrExpWithCut_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11144,
+      "End": 11645
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::Abc_RwrExpWithCut",
+      "Category": "semantic-review",
+      "Symbol": "Abc_RwrExpWithCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11881,
+      "End": 12479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcRewrite.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 12727
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcRewrite.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Technology-independent resynthesis of the AIG based on DAG aware rewriting.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcRewrite.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"opt/rwr/rwr.h\"\n//#include \"bool/dec/dec.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*\n    The ideas realized in this package are inspired by the paper:\n    Per Bjesse, Arne Boralv, \"DAG-aware circuit compression for \n    formal verification\", Proc. ICCAD 2004, pp. 42-49.\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static Cut_Man_t * Abc_NtkStartCutManForRewrite( Abc_Ntk_t * pNtk );\n\n// static void        Abc_NodePrintCuts( Abc_Obj_t * pNode );\n\n// static void        Abc_ManShowCutCone( Abc_Obj_t * pNode, Vec_Ptr_t * vLeaves );\n\n\n// extern void  Abc_PlaceBegin( Abc_Ntk_t * pNtk );\n\n// extern void  Abc_PlaceEnd( Abc_Ntk_t * pNtk );\n\n// extern void  Abc_PlaceUpdate( Vec_Ptr_t * vAddedCells, Vec_Ptr_t * vUpdatedNets );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Performs incremental rewriting of the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkRewrite(pNtk *Abc_Ntk_t, fUpdateLevel int32, fUseZeros int32, fVerbose int32, fVeryVerbose int32, fPlaceEnable int32) int32 {\n    extern void           Dec_GraphUpdateNetwork( Abc_Obj_t * pRoot, Dec_Graph_t * pGraph, int fUpdateLevel, int nGain );\n    var pProgress *ProgressBar;\n    var pManCut *Cut_Man_t;\n    var pManRwr *Rwr_Man_t;\n    var pNode *Abc_Obj_t;\n//    Vec_Ptr_t * vAddedCells = NULL, * vUpdatedNets = NULL;\n    var pGraph *Dec_Graph_t;\n    var i, nNodes, nGain, fCompl int32;\n    var clk abctime;\n    var clkStart abctime = Abc_Clock();\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // cleanup the AIG\n    Abc_AigCleanup((Abc_Aig_t *)pNtk.pManFunc);\n/*\n    {\n        Vec_Vec_t * vParts;\n        vParts = Abc_NtkPartitionSmart( pNtk, 50, 1 );\n        Vec_VecFree( vParts );\n    }\n*/\n\n    // start placement package\n//    if ( fPlaceEnable )\n//    {\n//        Abc_PlaceBegin( pNtk );\n//        vAddedCells = Abc_AigUpdateStart( pNtk-\u003epManFunc, \u0026vUpdatedNets );\n//    }\n\n    // start the rewriting manager\n    pManRwr = Rwr_ManStart( 0 );\n    if pManRwr == nil {\n        return 0; }\n    // compute the reverse levels if level update is requested\n    if fUpdateLevel != 0 {\n        Abc_NtkStartReverseLevels( pNtk, 0 ); }\n    // start the cut manager\nclk = Abc_Clock();\n    pManCut = Abc_NtkStartCutManForRewrite( pNtk );\nRwr_ManAddTimeCuts( pManRwr, Abc_Clock() - clk );\n    pNtk.pManCut = pManCut;\n\n    if fVeryVerbose != 0 {\n        Rwr_ScoresClean( pManRwr ); }\n\n    // resynthesize each node once\n    pManRwr.nNodesBeg = Abc_NtkNodeNum(pNtk);\n    nNodes = Abc_NtkObjNumMax(pNtk);\n    pProgress = Extra_ProgressBarStart( os.Stdout, nNodes );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        // stop if all nodes have been tried once\n        if i \u003e= nNodes {\n            break; }\n        // skip persistant nodes\n        if Abc_NodeIsPersistant(pNode) {\n            continue; }\n        // skip the nodes with many fanouts\n        if Abc_ObjFanoutNum(pNode) \u003e 1000 {\n            continue; }\n\n        // for each cut, try to resynthesize it\n        nGain = Rwr_NodeRewrite( pManRwr, pManCut, pNode, fUpdateLevel, fUseZeros, fPlaceEnable );\n        if !(nGain \u003e 0 || (nGain == 0 \u0026\u0026 (fUseZeros != 0))) {\n            continue; }\n        // if we end up here, a rewriting step is accepted\n\n        // get hold of the new subgraph to be added to the AIG\n        pGraph = (Dec_Graph_t *)Rwr_ManReadDecs(pManRwr);\n        fCompl = Rwr_ManReadCompl(pManRwr);\n\n        // reset the array of the changed nodes\n        if fPlaceEnable != 0 {\n            Abc_AigUpdateReset( (Abc_Aig_t *)pNtk.pManFunc ); }\n\n        // complement the FF if needed\n        if fCompl != 0 { Dec_GraphComplement( pGraph ); }\nclk = Abc_Clock();\n        Dec_GraphUpdateNetwork( pNode, pGraph, fUpdateLevel, nGain );\nRwr_ManAddTimeUpdate( pManRwr, Abc_Clock() - clk );\n        if fCompl != 0 { Dec_GraphComplement( pGraph ); }\n\n        // use the array of changed nodes to update placement\n//        if ( fPlaceEnable )\n//            Abc_PlaceUpdate( vAddedCells, vUpdatedNets );\n    }\n    }\n    Extra_ProgressBarStop( pProgress );\nRwr_ManAddTimeTotal( pManRwr, Abc_Clock() - clkStart );\n    // print stats\n    pManRwr.nNodesEnd = Abc_NtkNodeNum(pNtk);\n    if fVerbose != 0 {\n        Rwr_ManPrintStats( pManRwr ); }\n//        Rwr_ManPrintStatsFile( pManRwr );\n    if fVeryVerbose != 0 {\n        Rwr_ScoresReport( pManRwr ); }\n    // delete the managers\n    Rwr_ManStop( pManRwr );\n    Cut_ManStop( pManCut );\n    pNtk.pManCut = nil;\n\n    // start placement package\n//    if ( fPlaceEnable )\n//    {\n//        Abc_PlaceEnd( pNtk );\n//        Abc_AigUpdateStop( pNtk-\u003epManFunc );\n//    }\n\n    // put the nodes into the DFS order and reassign their IDs\n    {\n//        abctime clk = Abc_Clock();\n    Abc_NtkReassignIds( pNtk );\n//        ABC_PRT( \"time\", Abc_Clock() - clk );\n    }\n//    Abc_AigCheckFaninOrder( pNtk-\u003epManFunc );\n    // fix the levels\n    if fUpdateLevel != 0 {\n        Abc_NtkStopReverseLevels( pNtk );\n    } else {\n        Abc_NtkLevel( pNtk ); }\n    // check\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Printf(\"Abc_NtkRewrite: The network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the cut manager for rewriting.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Abc_NtkStartCutManForRewrite_Params Cut_Params_t;\nvar spStatic_Abc_NtkStartCutManForRewrite_pParams *Cut_Params_t = \u0026spStatic_Abc_NtkStartCutManForRewrite_Params;\nfunc Abc_NtkStartCutManForRewrite(pNtk *Abc_Ntk_t) *Cut_Man_t {\n    \n    var pManCut *Cut_Man_t;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // start the cut manager\n    memset( spStatic_Abc_NtkStartCutManForRewrite_pParams, 0, sizeof(Cut_Params_t) );\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.nVarsMax  = 4;     // the max cut size (\"k\" of the k-feasible cuts)\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.nKeepMax  = 250;   // the max number of cuts kept at a node\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.fTruth    = 1;     // compute truth tables\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.fFilter   = 1;     // filter dominated cuts\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.fSeq      = 0;     // compute sequential cuts\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.fDrop     = 0;     // drop cuts on the fly\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.fVerbose  = 0;     // the verbosiness flag\n    spStatic_Abc_NtkStartCutManForRewrite_pParams.nIdsMax   = Abc_NtkObjNumMax( pNtk );\n    pManCut = Cut_ManStart( spStatic_Abc_NtkStartCutManForRewrite_pParams );\n    if spStatic_Abc_NtkStartCutManForRewrite_pParams.fDrop {\n        Cut_ManSetFanoutCounts( pManCut, Abc_NtkFanoutCounts(pNtk) ); }\n    // set cuts for PIs\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if Abc_ObjFanoutNum(pObj) \u003e 0 {\n            Cut_NodeSetTriv( pManCut, pObj.Id ); }\n    }\n    return pManCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the cuts at the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodePrintCuts(pNode *Abc_Obj_t) {\n    var vCuts *Vec_Ptr_t;\n    var pCut *Cut_Cut_t;\n    var k int32;\n\n    fmt.Printf(\"\\nNode %s\\n\", Abc_ObjName(pNode));\n    vCuts = (Vec_Ptr_t *)pNode.pCopy;\n    // inlining of macro Vec_PtrForEachEntry\n    for  k = 0; (k \u003c Vec_PtrSize(vCuts)) \u0026\u0026 (((pCut) = (Cut_Cut_t *)Vec_PtrEntry(vCuts, k)), 1); k++  {\n        Extra_PrintBinary( os.Stdout, (unsigned *)\u0026pCut.uSign, 16 ); \n        fmt.Printf(\"   \");\n        Cut_CutPrint( pCut, 0 );   \n        fmt.Printf(\"\\n\");\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ManRewritePrintDivs(vDivs *Vec_Ptr_t, nLeaves int32) {\n    var pFanin, pNode, pRoot *Abc_Obj_t;\n    var i, k int32;\n    pRoot = (Abc_Obj_t *)Vec_PtrEntryLast(vDivs);\n    // print the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vDivs)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vDivs, i)), 1); i++  {\n        if i \u003c nLeaves {\n            fmt.Printf(\"%6d : %c\\n\", pNode.Id, 'a'+i);\n            continue;\n        }\n        fmt.Printf(\"%6d : %2d = \", pNode.Id, i);\n        // find the first fanin\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vDivs)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(vDivs, k)), 1); k++  {\n            if Abc_ObjFanin0(pNode) == pFanin {\n                break; }\n        }\n        if k \u003c nLeaves {\n            fmt.Printf(\"%c\", 'a' + k);\n        } else {\n            fmt.Printf(\"%d\", k); }\n        fmt.Printf(\"%s \", Abc_ObjFaninC0(pNode)? \"\\'\" : \"\");\n        // find the second fanin\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vDivs)) \u0026\u0026 (((pFanin) = (Abc_Obj_t *)Vec_PtrEntry(vDivs, k)), 1); k++  {\n            if Abc_ObjFanin1(pNode) == pFanin {\n                break; }\n        }\n        if k \u003c nLeaves {\n            fmt.Printf(\"%c\", 'a' + k);\n        } else {\n            fmt.Printf(\"%d\", k); }\n        fmt.Printf(\"%s \", Abc_ObjFaninC1(pNode)? \"\\'\" : \"\");\n        if pNode == pRoot {\n            fmt.Printf(\" root\"); }\n        fmt.Printf(\"\\n\");\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ManShowCutCone_rec(pNode *Abc_Obj_t, vDivs *Vec_Ptr_t) {\n    if Abc_NodeIsTravIdCurrent(pNode) {\n        return; }\n    Abc_NodeSetTravIdCurrent(pNode);\n    Abc_ManShowCutCone_rec( Abc_ObjFanin0(pNode), vDivs );\n    Abc_ManShowCutCone_rec( Abc_ObjFanin1(pNode), vDivs );\n    Vec_PtrPush( vDivs, pNode );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ManShowCutCone(pNode *Abc_Obj_t, vLeaves *Vec_Ptr_t) {\n    var pNtk *Abc_Ntk_t  = pNode.pNtk;\n    var pObj *Abc_Obj_t;\n    var vDivs *Vec_Ptr_t;\n    var i int32;\n    vDivs = Vec_PtrAlloc( 100 );\n    Abc_NtkIncrementTravId( pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        Abc_NodeSetTravIdCurrent( Abc_ObjRegular(pObj) );\n        Vec_PtrPush( vDivs, Abc_ObjRegular(pObj) );\n    }\n    Abc_ManShowCutCone_rec( pNode, vDivs );\n    Abc_ManRewritePrintDivs( vDivs, Vec_PtrSize(vLeaves) );\n    Vec_PtrFree( vDivs );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_RwrExpWithCut_rec(pNode *Abc_Obj_t, vLeaves *Vec_Ptr_t, fUseA int32) {\n    if Vec_PtrFind(vLeaves, pNode) \u003e= 0 || Vec_PtrFind(vLeaves, Abc_ObjNot(pNode)) \u003e= 0 {\n        if fUseA != 0 {\n            Abc_ObjRegular(pNode).fMarkA = 1;\n        } else {\n            Abc_ObjRegular(pNode).fMarkB = 1; }\n        return;\n    }\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    Abc_RwrExpWithCut_rec( Abc_ObjFanin0(pNode), vLeaves, fUseA );\n    Abc_RwrExpWithCut_rec( Abc_ObjFanin1(pNode), vLeaves, fUseA );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_RwrExpWithCut(pNode *Abc_Obj_t, vLeaves *Vec_Ptr_t) {\n    var pObj *Abc_Obj_t;\n    var i, CountA, CountB int32;\n    Abc_RwrExpWithCut_rec( Abc_ObjFanin0(pNode), vLeaves, 1 );\n    Abc_RwrExpWithCut_rec( Abc_ObjFanin1(pNode), vLeaves, 0 );\n    CountA = CountB = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vLeaves)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vLeaves, i)), 1); i++  {\n        CountA += Abc_ObjRegular(pObj).fMarkA;\n        CountB += Abc_ObjRegular(pObj).fMarkB;\n        Abc_ObjRegular(pObj).fMarkA = 0;\n        Abc_ObjRegular(pObj).fMarkB = 0;\n    }\n    fmt.Printf(\"(%d,%d:%d) \", CountA, CountB, CountA+CountB-Vec_PtrSize(vLeaves));\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

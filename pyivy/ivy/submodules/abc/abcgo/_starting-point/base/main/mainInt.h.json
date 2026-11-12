@@ -1,0 +1,73 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainInt.h",
+  "SHA256": "3df9172d557efbec41ba62768204401908c14531ef1a8812b3dfdcc5bbf8e7cf",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 37,
+        "Column": 1,
+        "ByteOffset": 986
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 153,
+        "Column": 1,
+        "ByteOffset": 6330
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainInt.h::struct::Abc_FrameInitializer_t",
+      "Category": "struct-review",
+      "Symbol": "Abc_FrameInitializer_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 6832,
+      "End": 7083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainInt.h::struct::Abc_Frame_t_",
+      "Category": "struct-review",
+      "Symbol": "Abc_Frame_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1742,
+      "End": 6728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainInt.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 986,
+      "End": 1045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/main/mainInt.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6330,
+      "End": 6416
+    }
+  ],
+  "Draft": "package main\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [mainInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [The main package.]\n\n  Synopsis    [Internal declarations of the main package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: mainInt.h,v 1.1 2008/05/14 22:13:13 wudenni Exp $]\n\n***********************************************************************/\n\n\n\n\n \n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \"main.h\"\n//#include \"misc/tim/tim.h\"\n//#include \"map/if/if.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"aig/gia/gia.h\"\n//#include \"proof/ssw/ssw.h\"\n//#include \"proof/fra/fra.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n// the current version\nconst ABC_VERSION = \"UC Berkeley, ABC 1.01\"\n\n// the maximum length of an input line \n#define ABC_MAX_STR     (1\u003c\u003c15)\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\ntypedef void (*Abc_Frame_Callback_BmcFrameDone_Func)(int frame, int po, int status);\n\ntype Abc_Frame_t_ struct {\n    // general info\n    sVersion           string;      // the name of the current version\n    sBinary           string;       // the name of the binary running\n    // commands, aliases, etc\n    tCommands       *st__table;     // the command table\n    tAliases       *st__table;      // the alias table\n    tFlags       *st__table;        // the flag table\n    aHistory      *Vec_Ptr_t;      // the command history\n    // the functionality\n    pNtkCur      *Abc_Ntk_t;       // the current network\n    pNtkBestDelay      *Abc_Ntk_t; // the current network\n    pNtkBestArea      *Abc_Ntk_t;  // the current network\n    pNtkBackup      *Abc_Ntk_t;    // the current network\n    nSteps             int32;        // the counter of different network processed\n    fSource             int32;       // marks the source mode\n    fAutoexac             int32;     // marks the autoexec mode\n    fBatchMode             int32;    // batch mode flag\n    fBridgeMode             int32;   // bridge mode flag\n    // save/load\n    pNtkBest      *Abc_Ntk_t;        // the current network\n    nBestNtkArea           float32;   // best area\n    nBestNtkDelay           float32;  // best delay\n    nBestNtkNodes             int32;  // best nodes\n    nBestNtkLevels             int32; // best levels\n\n    // output streams\n    Out           *os.File;\n    Err           *os.File;\n    Hst           *os.File;\n    // used for runtime measurement\n    TimeCommand          float64;   // the runtime of the last command\n    TimeTotal          float64;     // the total runtime of all commands\n    // temporary storage for structural choices\n    vStore      *Vec_Ptr_t;        // networks to be used by choice\n    // decomposition package    \n    pManDec           any;       // decomposition manager\n    pManDsd           any;       // decomposition manager\n    pManDsd2           any;      // decomposition manager\n    // libraries for mapping\n    pLibLut           any;       // the current LUT library\n    pLibBox           any;       // the current box library\n    pLibGen           any;       // the current genlib\n    pLibGen2           any;      // the current genlib\n    pLibSuper           any;     // the current supergate library\n    pLibScl           any;       // the current Liberty library\n    pAbcCon           any;       // constraint manager\n    // timing constraints\n    pDrivingCell           string;  // name of the driving cell\n    MaxLoad           float32;       // maximum output load\n    // inductive don't-cares\n    vIndFlops      *Vec_Int_t;\n    nIndFrames             int32;\n\n    // new code\n    pGia      *Gia_Man_t;          // alternative current network as a light-weight AIG\n    pGia2      *Gia_Man_t;         // copy of the above\n    pGiaBest      *Gia_Man_t;      // copy of the above\n    pGiaBest2      *Gia_Man_t;     // copy of the above\n    pGiaSaved      *Gia_Man_t;     // copy of the above\n    nBestLuts             int32;     // best LUT count\n    nBestEdges             int32;    // best edge count\n    nBestLevels             int32;   // best level count\n    nBestLuts2             int32;     // best LUT count\n    nBestEdges2             int32;    // best edge count\n    nBestLevels2             int32;   // best level count\n    pCex      *Abc_Cex_t;          // a counter-example to fail the current network\n    pCex2      *Abc_Cex_t;         // copy of the above\n    vCexVec      *Vec_Ptr_t;       // a vector of counter-examples if more than one PO fails\n    vPoEquivs      *Vec_Ptr_t;     // equivalence classes of isomorphic primary outputs\n    vStatuses      *Vec_Int_t;     // problem status for each output\n    vAbcObjIds      *Vec_Int_t;    // object IDs\n    Status             int32;                // the status of verification problem (proved=1, disproved=0, undecided=-1)\n    nFrames             int32;               // the number of time frames completed by BMC\n    vPlugInComBinPairs      *Vec_Ptr_t;    // pairs of command and its binary name\n    vLTLProperties_global      *Vec_Ptr_t; // related to LTL\n    vSignalNames      *Vec_Ptr_t;  // temporary storage for signal names\n    pSpecName           string;\n    pSave1           any; \n    pSave2           any; \n    pSave3           any; \n    pSave4           any; \n    pAbc85Ntl           any;\n    pAbc85Ntl2           any;\n    pAbc85Best           any;\n    pAbc85Delay           any;\n    pAbcWlc           any;\n    pAbcWlcInv      *Vec_Int_t;\n    pAbcBac           any;\n    pAbcCba           any;\n    pAbcPla           any;\n    pJsonStrs      *Abc_Nam_t;\n    vJsonObjs      *Vec_Wec_t;\n#ifdef ABC_USE_CUDD\n    DdManager *     dd;            // temporary BDD package\n#endif\n    pGiaMiniAig      *Gia_Man_t; \n    pGiaMiniLut      *Gia_Man_t; \n    vCopyMiniAig      *Vec_Int_t;\n    vCopyMiniLut      *Vec_Int_t;\n    pArray            *int32;\n    pBoxes            *int32;\n    pNdr           any;\n    pNdrArray            *int32;\n\n    pFuncOnFrameDone Abc_Frame_Callback_BmcFrameDone_Func;\n}\n\ntypedef void (*Abc_Frame_Initialization_Func)( Abc_Frame_t * pAbc );\n\nstruct Abc_FrameInitializer_t_;\n   \n\ntype Abc_FrameInitializer_t struct {\n    init Abc_Frame_Initialization_Func;\n    destroy Abc_Frame_Initialization_Func;\n\n    next *Abc_FrameInitializer_t;\n    prev *Abc_FrameInitializer_t;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       GLOBAL VARIABLES                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== mvMain.c ===========================================================*/\nextern ABC_DLL int             main( int argc, char * argv[] );\n/*=== mvInit.c ===================================================*/\nextern ABC_DLL void            Abc_FrameInit( Abc_Frame_t * pAbc );\nextern ABC_DLL void            Abc_FrameEnd( Abc_Frame_t * pAbc );\nextern ABC_DLL void            Abc_FrameAddInitializer( Abc_FrameInitializer_t* p );\n/*=== mvFrame.c =====================================================*/\nextern ABC_DLL Abc_Frame_t *   Abc_FrameAllocate();\nextern ABC_DLL void            Abc_FrameDeallocate( Abc_Frame_t * p );\n/*=== mvUtils.c =====================================================*/\nextern ABC_DLL char *          Abc_UtilsGetVersion( Abc_Frame_t * pAbc );\nextern ABC_DLL char *          Abc_UtilsGetUsersInput( Abc_Frame_t * pAbc );\nextern ABC_DLL void            Abc_UtilsPrintHello( Abc_Frame_t * pAbc );\nextern ABC_DLL void            Abc_UtilsPrintUsage( Abc_Frame_t * pAbc, char * ProgName );\nextern ABC_DLL void            Abc_UtilsSource( Abc_Frame_t * pAbc );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

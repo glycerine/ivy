@@ -1,0 +1,278 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitHop.c",
+  "SHA256": "dbba2a77f9ab51ba1c9a0a927dc3533791215b0a4f389be5b5689f81473ae9dc",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 96,
+        "Column": 9,
+        "ByteOffset": 3592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Kit_TruthToGia(): Converting truth table to AIG has failed for function:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 97,
+        "Column": 49,
+        "ByteOffset": 3728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Kit_DsdPrintFromTruth( pTruth, nVars ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 9,
+        "ByteOffset": 4446
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Kit_TruthToGia2(): Converting truth table to AIG has failed for function:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 50,
+        "ByteOffset": 4584
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Kit_DsdPrintFromTruth( pTruth0, nVars ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 50,
+        "ByteOffset": 4649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Kit_DsdPrintFromTruth( pTruth1, nVars ); printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 9,
+        "ByteOffset": 7136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Kit_TruthToHop(): Converting truth table to AIG has failed for function:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 179,
+        "Column": 49,
+        "ByteOffset": 7272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Kit_DsdPrintFromTruth( pTruth, nVars ); printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Kit_GraphToGiaInternal",
+      "Start": 1317,
+      "End": 2373,
+      "BodyStart": 1397,
+      "Original": "int Kit_GraphToGiaInternal( Gia_Man_t * pMan, Kit_Graph_t * pGraph, int fHash )\n{\n    Kit_Node_t * pNode = NULL;\n    int i, pAnd0, pAnd1;\n    // check for constant function\n    if ( Kit_GraphIsConst(pGraph) )\n        return Abc_LitNotCond( 1, Kit_GraphIsComplement(pGraph) );\n    // check for a literal\n    if ( Kit_GraphIsVar(pGraph) )\n        return Abc_LitNotCond( Kit_GraphVar(pGraph)-\u003eiFunc, Kit_GraphIsComplement(pGraph) );\n    // build the AIG nodes corresponding to the AND gates of the graph\n    Kit_GraphForEachNode( pGraph, pNode, i )\n    {\n        pAnd0 = Abc_LitNotCond( Kit_GraphNode(pGraph, pNode-\u003eeEdge0.Node)-\u003eiFunc, pNode-\u003eeEdge0.fCompl ); \n        pAnd1 = Abc_LitNotCond( Kit_GraphNode(pGraph, pNode-\u003eeEdge1.Node)-\u003eiFunc, pNode-\u003eeEdge1.fCompl ); \n        if ( fHash )\n            pNode-\u003eiFunc = Gia_ManHashAnd( pMan, pAnd0, pAnd1 );\n        else\n            pNode-\u003eiFunc = Gia_ManAppendAnd2( pMan, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Abc_LitNotCond( pNode-\u003eiFunc, Kit_GraphIsComplement(pGraph) );\n}",
+      "Draft": "func Kit_GraphToGiaInternal(pMan *Gia_Man_t, pGraph *Kit_Graph_t, fHash int32) int32 {\n    var pNode *Kit_Node_t  = nil;\n    var i, pAnd0, pAnd1 int32;\n    // check for constant function\n    if Kit_GraphIsConst(pGraph) {\n        return Abc_LitNotCond( 1, Kit_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Kit_GraphIsVar(pGraph) {\n        return Abc_LitNotCond( Kit_GraphVar(pGraph).iFunc, Kit_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Kit_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Abc_LitNotCond( Kit_GraphNode(pGraph, pNode.eEdge0.Node).iFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Abc_LitNotCond( Kit_GraphNode(pGraph, pNode.eEdge1.Node).iFunc, pNode.eEdge1.fCompl ); \n        if fHash != 0 {\n            pNode.iFunc = Gia_ManHashAnd( pMan, pAnd0, pAnd1 );\n        } else {\n            pNode.iFunc = Gia_ManAppendAnd2( pMan, pAnd0, pAnd1 ); }\n    }\n    // complement the result if necessary\n    return Abc_LitNotCond( pNode.iFunc, Kit_GraphIsComplement(pGraph) );\n}"
+    },
+    {
+      "Name": "Kit_GraphToGia",
+      "Start": 2374,
+      "End": 2765,
+      "BodyStart": 2467,
+      "Original": "int Kit_GraphToGia( Gia_Man_t * pMan, Kit_Graph_t * pGraph, Vec_Int_t * vLeaves, int fHash )\n{\n    Kit_Node_t * pNode = NULL;\n    int i;\n    // collect the fanins\n    Kit_GraphForEachLeaf( pGraph, pNode, i )\n        pNode-\u003eiFunc = vLeaves ? Vec_IntEntry(vLeaves, i) : Gia_Obj2Lit(pMan, Gia_ManPi(pMan, i));\n    // perform strashing\n    return Kit_GraphToGiaInternal( pMan, pGraph, fHash );\n}",
+      "Draft": "func Kit_GraphToGia(pMan *Gia_Man_t, pGraph *Kit_Graph_t, vLeaves *Vec_Int_t, fHash int32) int32 {\n    var pNode *Kit_Node_t  = nil;\n    var i int32;\n    // collect the fanins\n    // inlining of macro Kit_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        if vLeaves != nil {\n            pNode.iFunc = Vec_IntEntry(vLeaves, i);\n        } else {\n            pNode.iFunc = Gia_Obj2Lit(pMan, Gia_ManPi(pMan, i));\n        }\n    }\n    // perform strashing\n    return Kit_GraphToGiaInternal( pMan, pGraph, fHash );\n}"
+    },
+    {
+      "Name": "Kit_TruthToGia",
+      "Start": 2766,
+      "End": 3579,
+      "BodyStart": 2888,
+      "Original": "int Kit_TruthToGia( Gia_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory, Vec_Int_t * vLeaves, int fHash )\n{\n    int iLit;\n    Kit_Graph_t * pGraph;\n    // transform truth table into the decomposition tree\n    if ( vMemory == NULL )\n    {\n        vMemory = Vec_IntAlloc( 0 );\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );\n        Vec_IntFree( vMemory );\n    }\n    else\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );\n    if ( pGraph == NULL )\n    {\n        printf( \"Kit_TruthToGia(): Converting truth table to AIG has failed for function:\\n\" );\n        Kit_DsdPrintFromTruth( pTruth, nVars ); printf( \"\\n\" );\n    }\n    // derive the AIG for the decomposition tree\n    iLit = Kit_GraphToGia( pMan, pGraph, vLeaves, fHash );\n    Kit_GraphFree( pGraph );\n    return iLit;\n}",
+      "Draft": "func Kit_TruthToGia(pMan *Gia_Man_t, pTruth *uint32, nVars int32, vMemory *Vec_Int_t, vLeaves *Vec_Int_t, fHash int32) int32 {\n    var iLit int32;\n    var pGraph *Kit_Graph_t;\n    // transform truth table into the decomposition tree\n    if vMemory == nil {\n        vMemory = Vec_IntAlloc( 0 );\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );\n        Vec_IntFree( vMemory );\n    \n    } else {\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory ); }\n    if pGraph == nil {\n        fmt.Printf(\"Kit_TruthToGia(): Converting truth table to AIG has failed for function:\\n\");\n        Kit_DsdPrintFromTruth( pTruth, nVars ); fmt.Printf(\"\\n\");\n    }\n    // derive the AIG for the decomposition tree\n    iLit = Kit_GraphToGia( pMan, pGraph, vLeaves, fHash );\n    Kit_GraphFree( pGraph );\n    return iLit;\n}"
+    },
+    {
+      "Name": "Kit_TruthToGia2",
+      "Start": 3580,
+      "End": 4504,
+      "BodyStart": 3724,
+      "Original": "int Kit_TruthToGia2( Gia_Man_t * pMan, unsigned * pTruth0, unsigned * pTruth1, int nVars, Vec_Int_t * vMemory, Vec_Int_t * vLeaves, int fHash )\n{\n    int iLit;\n    Kit_Graph_t * pGraph;\n    // transform truth table into the decomposition tree\n    if ( vMemory == NULL )\n    {\n        vMemory = Vec_IntAlloc( 0 );\n        pGraph = Kit_TruthToGraph2( pTruth0, pTruth1, nVars, vMemory );\n        Vec_IntFree( vMemory );\n    }\n    else\n        pGraph = Kit_TruthToGraph2( pTruth0, pTruth1, nVars, vMemory );\n    if ( pGraph == NULL )\n    {\n        printf( \"Kit_TruthToGia2(): Converting truth table to AIG has failed for function:\\n\" );\n        Kit_DsdPrintFromTruth( pTruth0, nVars ); printf( \"\\n\" );\n        Kit_DsdPrintFromTruth( pTruth1, nVars ); printf( \"\\n\" );\n    }\n    // derive the AIG for the decomposition tree\n    iLit = Kit_GraphToGia( pMan, pGraph, vLeaves, fHash );\n    Kit_GraphFree( pGraph );\n    return iLit;\n}",
+      "Draft": "func Kit_TruthToGia2(pMan *Gia_Man_t, pTruth0 *uint32, pTruth1 *uint32, nVars int32, vMemory *Vec_Int_t, vLeaves *Vec_Int_t, fHash int32) int32 {\n    var iLit int32;\n    var pGraph *Kit_Graph_t;\n    // transform truth table into the decomposition tree\n    if vMemory == nil {\n        vMemory = Vec_IntAlloc( 0 );\n        pGraph = Kit_TruthToGraph2( pTruth0, pTruth1, nVars, vMemory );\n        Vec_IntFree( vMemory );\n    \n    } else {\n        pGraph = Kit_TruthToGraph2( pTruth0, pTruth1, nVars, vMemory ); }\n    if pGraph == nil {\n        fmt.Printf(\"Kit_TruthToGia2(): Converting truth table to AIG has failed for function:\\n\");\n        Kit_DsdPrintFromTruth( pTruth0, nVars ); fmt.Printf(\"\\n\");\n        Kit_DsdPrintFromTruth( pTruth1, nVars ); fmt.Printf(\"\\n\");\n    }\n    // derive the AIG for the decomposition tree\n    iLit = Kit_GraphToGia( pMan, pGraph, vLeaves, fHash );\n    Kit_GraphFree( pGraph );\n    return iLit;\n}"
+    },
+    {
+      "Name": "Kit_GraphToHopInternal",
+      "Start": 4788,
+      "End": 5801,
+      "BodyStart": 4865,
+      "Original": "Hop_Obj_t * Kit_GraphToHopInternal( Hop_Man_t * pMan, Kit_Graph_t * pGraph )\n{\n    Kit_Node_t * pNode = NULL;\n    Hop_Obj_t * pAnd0, * pAnd1;\n    int i;\n    // check for constant function\n    if ( Kit_GraphIsConst(pGraph) )\n        return Hop_NotCond( Hop_ManConst1(pMan), Kit_GraphIsComplement(pGraph) );\n    // check for a literal\n    if ( Kit_GraphIsVar(pGraph) )\n        return Hop_NotCond( (Hop_Obj_t *)Kit_GraphVar(pGraph)-\u003epFunc, Kit_GraphIsComplement(pGraph) );\n    // build the AIG nodes corresponding to the AND gates of the graph\n    Kit_GraphForEachNode( pGraph, pNode, i )\n    {\n        pAnd0 = Hop_NotCond( (Hop_Obj_t *)Kit_GraphNode(pGraph, pNode-\u003eeEdge0.Node)-\u003epFunc, pNode-\u003eeEdge0.fCompl ); \n        pAnd1 = Hop_NotCond( (Hop_Obj_t *)Kit_GraphNode(pGraph, pNode-\u003eeEdge1.Node)-\u003epFunc, pNode-\u003eeEdge1.fCompl ); \n        pNode-\u003epFunc = Hop_And( pMan, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Hop_NotCond( (Hop_Obj_t *)pNode-\u003epFunc, Kit_GraphIsComplement(pGraph) );\n}",
+      "Draft": "func Kit_GraphToHopInternal(pMan *Hop_Man_t, pGraph *Kit_Graph_t) *Hop_Obj_t {\n    var pNode *Kit_Node_t  = nil;\n    var pAnd0, pAnd1 *Hop_Obj_t;\n    var i int32;\n    // check for constant function\n    if Kit_GraphIsConst(pGraph) {\n        return Hop_NotCond( Hop_ManConst1(pMan), Kit_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Kit_GraphIsVar(pGraph) {\n        return Hop_NotCond( (Hop_Obj_t *)Kit_GraphVar(pGraph).pFunc, Kit_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Kit_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Hop_NotCond( (Hop_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Hop_NotCond( (Hop_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n        pNode.pFunc = Hop_And( pMan, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Hop_NotCond( (Hop_Obj_t *)pNode.pFunc, Kit_GraphIsComplement(pGraph) );\n}"
+    },
+    {
+      "Name": "Kit_GraphToHop",
+      "Start": 5802,
+      "End": 6109,
+      "BodyStart": 5871,
+      "Original": "Hop_Obj_t * Kit_GraphToHop( Hop_Man_t * pMan, Kit_Graph_t * pGraph )\n{\n    Kit_Node_t * pNode = NULL;\n    int i;\n    // collect the fanins\n    Kit_GraphForEachLeaf( pGraph, pNode, i )\n        pNode-\u003epFunc = Hop_IthVar( pMan, i );\n    // perform strashing\n    return Kit_GraphToHopInternal( pMan, pGraph );\n}",
+      "Draft": "func Kit_GraphToHop(pMan *Hop_Man_t, pGraph *Kit_Graph_t) *Hop_Obj_t {\n    var pNode *Kit_Node_t  = nil;\n    var i int32;\n    // collect the fanins\n    // inlining of macro Kit_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pNode.pFunc = Hop_IthVar( pMan, i );\n    }\n    // perform strashing\n    return Kit_GraphToHopInternal( pMan, pGraph );\n}"
+    },
+    {
+      "Name": "Kit_TruthToHop",
+      "Start": 6110,
+      "End": 6891,
+      "BodyStart": 6208,
+      "Original": "Hop_Obj_t * Kit_TruthToHop( Hop_Man_t * pMan, unsigned * pTruth, int nVars, Vec_Int_t * vMemory )\n{\n    Hop_Obj_t * pObj;\n    Kit_Graph_t * pGraph;\n    // transform truth table into the decomposition tree\n    if ( vMemory == NULL )\n    {\n        vMemory = Vec_IntAlloc( 0 );\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );\n        Vec_IntFree( vMemory );\n    }\n    else\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );\n    if ( pGraph == NULL )\n    {\n        printf( \"Kit_TruthToHop(): Converting truth table to AIG has failed for function:\\n\" );\n        Kit_DsdPrintFromTruth( pTruth, nVars ); printf( \"\\n\" );\n    }\n    // derive the AIG for the decomposition tree\n    pObj = Kit_GraphToHop( pMan, pGraph );\n    Kit_GraphFree( pGraph );\n    return pObj;\n}",
+      "Draft": "func Kit_TruthToHop(pMan *Hop_Man_t, pTruth *uint32, nVars int32, vMemory *Vec_Int_t) *Hop_Obj_t {\n    var pObj *Hop_Obj_t;\n    var pGraph *Kit_Graph_t;\n    // transform truth table into the decomposition tree\n    if vMemory == nil {\n        vMemory = Vec_IntAlloc( 0 );\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );\n        Vec_IntFree( vMemory );\n    \n    } else {\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory ); }\n    if pGraph == nil {\n        fmt.Printf(\"Kit_TruthToHop(): Converting truth table to AIG has failed for function:\\n\");\n        Kit_DsdPrintFromTruth( pTruth, nVars ); fmt.Printf(\"\\n\");\n    }\n    // derive the AIG for the decomposition tree\n    pObj = Kit_GraphToHop( pMan, pGraph );\n    Kit_GraphFree( pGraph );\n    return pObj;\n}"
+    },
+    {
+      "Name": "Kit_CoverToHop",
+      "Start": 7165,
+      "End": 7550,
+      "BodyStart": 7264,
+      "Original": "Hop_Obj_t * Kit_CoverToHop( Hop_Man_t * pMan, Vec_Int_t * vCover, int nVars, Vec_Int_t * vMemory )\n{\n    Kit_Graph_t * pGraph;\n    Hop_Obj_t * pFunc;\n    // perform factoring\n    Vec_IntClear( vMemory );\n    pGraph = Kit_SopFactor( vCover, 0, nVars, vMemory );\n    // convert graph to the AIG\n    pFunc = Kit_GraphToHop( pMan, pGraph );\n    Kit_GraphFree( pGraph );\n    return pFunc;\n}",
+      "Draft": "func Kit_CoverToHop(pMan *Hop_Man_t, vCover *Vec_Int_t, nVars int32, vMemory *Vec_Int_t) *Hop_Obj_t {\n    var pGraph *Kit_Graph_t;\n    var pFunc *Hop_Obj_t;\n    // perform factoring\n    Vec_IntClear( vMemory );\n    pGraph = Kit_SopFactor( vCover, 0, nVars, vMemory );\n    // convert graph to the AIG\n    pFunc = Kit_GraphToHop( pMan, pGraph );\n    Kit_GraphFree( pGraph );\n    return pFunc;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitHop.c::pointer-cast::5405",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5183,
+      "End": 5196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitHop.c::pointer-cast::5749",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5409,
+      "End": 5422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitHop.c::pointer-cast::5866",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5526,
+      "End": 5539
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitHop.c::pointer-cast::6080",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5740,
+      "End": 5753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitHop.c::Kit_GraphToGiaInternal",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphToGiaInternal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1317,
+      "End": 2373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitHop.c::Kit_GraphToGia",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphToGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2374,
+      "End": 2765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitHop.c::Kit_TruthToGia",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthToGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2766,
+      "End": 3579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitHop.c::Kit_TruthToGia2",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthToGia2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3580,
+      "End": 4504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitHop.c::Kit_GraphToHopInternal",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphToHopInternal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4788,
+      "End": 5801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitHop.c::Kit_GraphToHop",
+      "Category": "semantic-review",
+      "Symbol": "Kit_GraphToHop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5802,
+      "End": 6109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitHop.c::Kit_TruthToHop",
+      "Category": "semantic-review",
+      "Symbol": "Kit_TruthToHop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6110,
+      "End": 6891
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitHop.c::Kit_CoverToHop",
+      "Category": "semantic-review",
+      "Symbol": "Kit_CoverToHop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7165,
+      "End": 7550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitHop.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7797
+    }
+  ],
+  "Draft": "package kit\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [kitHop.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Computation kit.]\n\n  Synopsis    [Procedures involving AIGs.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Dec 6, 2006.]\n\n  Revision    [$Id: kitHop.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"kit.h\"\n//#include \"aig/hop/hop.h\"\n//#include \"aig/gia/gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the decomposition graph into the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphToGiaInternal(pMan *Gia_Man_t, pGraph *Kit_Graph_t, fHash int32) int32 {\n    var pNode *Kit_Node_t  = nil;\n    var i, pAnd0, pAnd1 int32;\n    // check for constant function\n    if Kit_GraphIsConst(pGraph) {\n        return Abc_LitNotCond( 1, Kit_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Kit_GraphIsVar(pGraph) {\n        return Abc_LitNotCond( Kit_GraphVar(pGraph).iFunc, Kit_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Kit_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Abc_LitNotCond( Kit_GraphNode(pGraph, pNode.eEdge0.Node).iFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Abc_LitNotCond( Kit_GraphNode(pGraph, pNode.eEdge1.Node).iFunc, pNode.eEdge1.fCompl ); \n        if fHash != 0 {\n            pNode.iFunc = Gia_ManHashAnd( pMan, pAnd0, pAnd1 );\n        } else {\n            pNode.iFunc = Gia_ManAppendAnd2( pMan, pAnd0, pAnd1 ); }\n    }\n    // complement the result if necessary\n    return Abc_LitNotCond( pNode.iFunc, Kit_GraphIsComplement(pGraph) );\n}\nfunc Kit_GraphToGia(pMan *Gia_Man_t, pGraph *Kit_Graph_t, vLeaves *Vec_Int_t, fHash int32) int32 {\n    var pNode *Kit_Node_t  = nil;\n    var i int32;\n    // collect the fanins\n    // inlining of macro Kit_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        if vLeaves != nil {\n            pNode.iFunc = Vec_IntEntry(vLeaves, i);\n        } else {\n            pNode.iFunc = Gia_Obj2Lit(pMan, Gia_ManPi(pMan, i));\n        }\n    }\n    // perform strashing\n    return Kit_GraphToGiaInternal( pMan, pGraph, fHash );\n}\nfunc Kit_TruthToGia(pMan *Gia_Man_t, pTruth *uint32, nVars int32, vMemory *Vec_Int_t, vLeaves *Vec_Int_t, fHash int32) int32 {\n    var iLit int32;\n    var pGraph *Kit_Graph_t;\n    // transform truth table into the decomposition tree\n    if vMemory == nil {\n        vMemory = Vec_IntAlloc( 0 );\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );\n        Vec_IntFree( vMemory );\n    \n    } else {\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory ); }\n    if pGraph == nil {\n        fmt.Printf(\"Kit_TruthToGia(): Converting truth table to AIG has failed for function:\\n\");\n        Kit_DsdPrintFromTruth( pTruth, nVars ); fmt.Printf(\"\\n\");\n    }\n    // derive the AIG for the decomposition tree\n    iLit = Kit_GraphToGia( pMan, pGraph, vLeaves, fHash );\n    Kit_GraphFree( pGraph );\n    return iLit;\n}\nfunc Kit_TruthToGia2(pMan *Gia_Man_t, pTruth0 *uint32, pTruth1 *uint32, nVars int32, vMemory *Vec_Int_t, vLeaves *Vec_Int_t, fHash int32) int32 {\n    var iLit int32;\n    var pGraph *Kit_Graph_t;\n    // transform truth table into the decomposition tree\n    if vMemory == nil {\n        vMemory = Vec_IntAlloc( 0 );\n        pGraph = Kit_TruthToGraph2( pTruth0, pTruth1, nVars, vMemory );\n        Vec_IntFree( vMemory );\n    \n    } else {\n        pGraph = Kit_TruthToGraph2( pTruth0, pTruth1, nVars, vMemory ); }\n    if pGraph == nil {\n        fmt.Printf(\"Kit_TruthToGia2(): Converting truth table to AIG has failed for function:\\n\");\n        Kit_DsdPrintFromTruth( pTruth0, nVars ); fmt.Printf(\"\\n\");\n        Kit_DsdPrintFromTruth( pTruth1, nVars ); fmt.Printf(\"\\n\");\n    }\n    // derive the AIG for the decomposition tree\n    iLit = Kit_GraphToGia( pMan, pGraph, vLeaves, fHash );\n    Kit_GraphFree( pGraph );\n    return iLit;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms the decomposition graph into the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_GraphToHopInternal(pMan *Hop_Man_t, pGraph *Kit_Graph_t) *Hop_Obj_t {\n    var pNode *Kit_Node_t  = nil;\n    var pAnd0, pAnd1 *Hop_Obj_t;\n    var i int32;\n    // check for constant function\n    if Kit_GraphIsConst(pGraph) {\n        return Hop_NotCond( Hop_ManConst1(pMan), Kit_GraphIsComplement(pGraph) ); }\n    // check for a literal\n    if Kit_GraphIsVar(pGraph) {\n        return Hop_NotCond( (Hop_Obj_t *)Kit_GraphVar(pGraph).pFunc, Kit_GraphIsComplement(pGraph) ); }\n    // build the AIG nodes corresponding to the AND gates of the graph\n    // inlining of macro Kit_GraphForEachNode\n    for  i = (pGraph).nLeaves; (i \u003c (pGraph).nSize) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pAnd0 = Hop_NotCond( (Hop_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge0.Node).pFunc, pNode.eEdge0.fCompl ); \n        pAnd1 = Hop_NotCond( (Hop_Obj_t *)Kit_GraphNode(pGraph, pNode.eEdge1.Node).pFunc, pNode.eEdge1.fCompl ); \n        pNode.pFunc = Hop_And( pMan, pAnd0, pAnd1 );\n    }\n    // complement the result if necessary\n    return Hop_NotCond( (Hop_Obj_t *)pNode.pFunc, Kit_GraphIsComplement(pGraph) );\n}\nfunc Kit_GraphToHop(pMan *Hop_Man_t, pGraph *Kit_Graph_t) *Hop_Obj_t {\n    var pNode *Kit_Node_t  = nil;\n    var i int32;\n    // collect the fanins\n    // inlining of macro Kit_GraphForEachLeaf\n    for  i = 0; (i \u003c (pGraph).nLeaves) \u0026\u0026 (((pNode) = Kit_GraphNode(pGraph, i)), 1); i++  {\n        pNode.pFunc = Hop_IthVar( pMan, i );\n    }\n    // perform strashing\n    return Kit_GraphToHopInternal( pMan, pGraph );\n}\nfunc Kit_TruthToHop(pMan *Hop_Man_t, pTruth *uint32, nVars int32, vMemory *Vec_Int_t) *Hop_Obj_t {\n    var pObj *Hop_Obj_t;\n    var pGraph *Kit_Graph_t;\n    // transform truth table into the decomposition tree\n    if vMemory == nil {\n        vMemory = Vec_IntAlloc( 0 );\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory );\n        Vec_IntFree( vMemory );\n    \n    } else {\n        pGraph = Kit_TruthToGraph( pTruth, nVars, vMemory ); }\n    if pGraph == nil {\n        fmt.Printf(\"Kit_TruthToHop(): Converting truth table to AIG has failed for function:\\n\");\n        Kit_DsdPrintFromTruth( pTruth, nVars ); fmt.Printf(\"\\n\");\n    }\n    // derive the AIG for the decomposition tree\n    pObj = Kit_GraphToHop( pMan, pGraph );\n    Kit_GraphFree( pGraph );\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Strashes one logic node using its SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_CoverToHop(pMan *Hop_Man_t, vCover *Vec_Int_t, nVars int32, vMemory *Vec_Int_t) *Hop_Obj_t {\n    var pGraph *Kit_Graph_t;\n    var pFunc *Hop_Obj_t;\n    // perform factoring\n    Vec_IntClear( vMemory );\n    pGraph = Kit_SopFactor( vCover, 0, nVars, vMemory );\n    // convert graph to the AIG\n    pFunc = Kit_GraphToHop( pMan, pGraph );\n    Kit_GraphFree( pGraph );\n    return pFunc;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,216 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c",
+  "SHA256": "92e38e78a3cff8f39fb10561a249da9ff6d59e51350da7937f2bef94572011c2",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 46,
+        "Column": 9,
+        "ByteOffset": 971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert(ncol \u003c= cdata.vars_unate);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 9,
+        "ByteOffset": 9450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"# EXACT_MINCOV[%d]: %4d = %4d x %4d, time = %s\\n\","
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 280,
+        "Column": 16,
+        "ByteOffset": 9637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 280,
+        "Column": 23,
+        "ByteOffset": 9644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fflush(stdout);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 296,
+        "Column": 5,
+        "ByteOffset": 10211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"MINCOV: family of all minimal coverings is\\n\");"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::pointer-cast::568",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 518,
+      "End": 518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::pointer-cast::678",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 569,
+      "End": 569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::macro-inline::1782",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_fill",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1782,
+      "End": 1811
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::macro-inline::2539",
+      "Category": "macro-inline-review",
+      "Symbol": "PUTSIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2539,
+      "End": 2561
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::macro-inline::3756",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3756,
+      "End": 3775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::macro-inline::3851",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3851,
+      "End": 3858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::macro-inline::3929",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3929,
+      "End": 3936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::macro-inline::3957",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3957,
+      "End": 3964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::macro-inline::4979",
+      "Category": "macro-inline-review",
+      "Symbol": "SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4979,
+      "End": 4986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::macro-inline::5004",
+      "Category": "macro-inline-review",
+      "Symbol": "PUTSIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5004,
+      "End": 5017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::macro-inline::6687",
+      "Category": "macro-inline-review",
+      "Symbol": "print_time",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6687,
+      "End": 6714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::macro-inline::6952",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6952,
+      "End": 6971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::macro-inline::7021",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_diff",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7021,
+      "End": 7045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::macro-inline::9410",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_copy",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9410,
+      "End": 9434
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/unate.c::macro-inline::9981",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_copy",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9981,
+      "End": 10005
+    }
+  ],
+  "Draft": "package espresso\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n/*\n *  unate.c -- routines for dealing with unate functions\n */\n\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n// static pset_family abs_covered();\n\n// static pset_family abs_covered_many();\n\n// static int abs_select_restricted();\n\n\npcover map_cover_to_unate(T)\npcube *T;\n{\n    register unsigned int word_test, word_set, bit_test, bit_set;\n    register pcube p, pA;\n    pset_family A;\n    pcube *T1;\n    int ncol, i;\n\n    // inlining of macro CUBELISTSIZE\n    A = sf_new((((pcube *) T[1] - T) - 3), cdata.vars_unate);\n    // inlining of macro CUBELISTSIZE\n    A.count = (((pcube *) T[1] - T) - 3);\n    // inlining of macro foreachi_set\n    for p, i = A.data, 0;i\u003cA.count;p+=A.wsize,i++ {\n    (void) set_clear(p, A.sf_size);\n    }\n    ncol = 0;\n\n    for i = 0; i \u003c cube.size; i++ {\n    if cdata.part_zeros[i] \u003e 0 {\n        assert(ncol \u003c= cdata.vars_unate, \"ncol \u003c= cdata.vars_unate\");\n\n        /* Copy a column from T to A */\n        // inlining of macro WHICH_WORD\n        word_test = (((i) \u003e\u003e LOGBPI) + 1);\n        // inlining of macro WHICH_BIT\n        bit_test = 1 \u003c\u003c ((i) \u0026 (BPI-1));\n        // inlining of macro WHICH_WORD\n        word_set = (((ncol) \u003e\u003e LOGBPI) + 1);\n        // inlining of macro WHICH_BIT\n        bit_set = 1 \u003c\u003c ((ncol) \u0026 (BPI-1));\n\n        pA = A.data;\n        for T1 = T+2; (p = *T1++) != 0;  {\n        if (p[word_test] \u0026 bit_test) == 0 {\n            pA[word_set] |= bit_set;\n        }\n        pA += A.wsize;\n        }\n\n        ncol++;\n    }\n    }\n\n    return A;\n}\n\f\npcover map_unate_to_cover(A)\nvar A pset_family;\n{\n    register int i, ncol, lp;\n    register pcube p, pB;\n    int var, nunate, *unate;\n    pcube last;\n    pset_family B;\n\n    B = sf_new(A.count, cube.size);\n    B.count = A.count;\n\n    /* Find the unate variables */\n    unate = ALLOC(int, cube.num_vars);\n    nunate = 0;\n    for var = 0; var \u003c cube.num_vars; var++ {\n    if cdata.is_unate[var] {\n        unate[nunate++] = var;\n    }\n    }\n\n    /* Loop for each set of A */\n    pB = B.data;\n    // inlining of macro foreach_set\n    for p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize {\n\n    /* Initialize this set of B */\n    INLINEset_fill(pB, cube.size);\n\n    /* Now loop for the unate variables; if the part is in A,\n     * then this variable of B should be a single 1 in the unate\n     * part.\n     */\n    for ncol = 0; ncol \u003c nunate; ncol++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if p[(((ncol) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((ncol) \u0026 (BPI-1))) {\n        lp = cube.last_part[unate[ncol]];\n        for i = cube.first_part[unate[ncol]]; i \u003c= lp; i++ {\n            if cdata.part_zeros[i] == 0 {\n            // inlining of macro set_remove\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            (pB[(((i) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((i) \u0026 (BPI-1))));\n            }\n        }\n        }\n    }\n    pB += B.wsize;\n    }\n\n    FREE(unate);\n    return B;\n}\n\f\n/*\n *  unate_compl\n */\n\npset_family unate_compl(A)\nvar A pset_family;\n{\n    register pset p, last;\n\n    /* Make sure A is single-cube containment minimal */\n/*    A = sf_rev_contain(A);*/\n\n    // inlining of macro foreach_set\n    for p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize {\n    PUTSIZE(p, set_ord(p));\n    }\n\n    /* Recursively find the complement */\n    A = unate_complement(A);\n\n    /* Now, we can guarantee a minimal result by containing the result */\n    A = sf_rev_contain(A);\n    return A;\n}\n\n\n/*\n *  Assume SIZE(p) records the size of each set\n */\npset_family unate_complement(A)\nvar A pset_family;            /* disposes of A */\n{\n    pset_family Abar;\n    register pset p, p1, restrict;\n    register int i;\n    int max_i, min_set_ord, j;\n\n    /* Check for no sets in the matrix -- complement is the universe */\n    if A.count == 0 {\n    sf_free(A);\n    Abar = sf_new(1, A.sf_size);\n    // inlining of macro GETSET\n    (void) set_clear(((Abar).data + (Abar).wsize * (Abar.count++)), A.sf_size);\n\n    /* Check for a single set in the maxtrix -- compute de Morgan complement */\n    } else if A.count == 1 {\n    p = A.data;\n    Abar = sf_new(A.sf_size, A.sf_size);\n    for i = 0; i \u003c A.sf_size; i++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if p[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1))) {\n        // inlining of macro GETSET\n        p1 = set_clear(((Abar).data + (Abar).wsize * (Abar.count++)), A.sf_size);\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (p1[(((i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i) \u0026 (BPI-1)));\n        }\n    }\n    sf_free(A);\n\n    } else {\n\n    /* Select splitting variable as the variable which belongs to a set\n     * of the smallest size, and which has greatest column count\n     */\n    // inlining of macro set_new\n    restrict = set_clear(ALLOC(unsigned int, SET_SIZE(A.sf_size)), A.sf_size);\n    min_set_ord = A.sf_size + 1;\n    // inlining of macro foreachi_set\n    for p, i = A.data, 0;i\u003cA.count;p+=A.wsize,i++ {\n        if SIZE(p) \u003c min_set_ord {\n        set_copy(restrict, p);\n        min_set_ord = SIZE(p);\n        } else if SIZE(p) == min_set_ord {\n        set_or(restrict, restrict, p);\n        }\n    }\n\n    /* Check for no data (shouldn't happen ?) */\n    if min_set_ord == 0 {\n        A.count = 0;\n        Abar = A;\n\n    /* Check for \"essential\" columns */\n    } else if min_set_ord == 1 {\n        Abar = unate_complement(abs_covered_many(A, restrict));\n        sf_free(A);\n        // inlining of macro foreachi_set\n        for p, i = Abar.data, 0;i\u003cAbar.count;p+=Abar.wsize,i++ {\n        set_or(p, p, restrict);\n        }\n\n    /* else, recur as usual */\n    } else {\n        max_i = abs_select_restricted(A, restrict);\n\n        /* Select those rows of A which are not covered by max_i,\n         * recursively find all minimal covers of these rows, and\n         * then add back in max_i\n         */\n        Abar = unate_complement(abs_covered(A, max_i));\n        // inlining of macro foreachi_set\n        for p, i = Abar.data, 0;i\u003cAbar.count;p+=Abar.wsize,i++ {\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (p[(((max_i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((max_i) \u0026 (BPI-1)));\n        }\n\n        /* Now recur on A with all zero's on column max_i */\n        // inlining of macro foreachi_set\n        for p, i = A.data, 0;i\u003cA.count;p+=A.wsize,i++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if p[(((max_i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((max_i) \u0026 (BPI-1))) {\n            // inlining of macro set_remove\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            (p[(((max_i) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((max_i) \u0026 (BPI-1))));\n            j = SIZE(p) - 1;\n            PUTSIZE(p, j);\n        }\n        }\n\n        Abar = sf_append(Abar, unate_complement(A));\n    }\n    // inlining of macro set_free\n    FREE(restrict);\n    }\n\n    return Abar;\n}\n\f\npset_family exact_minimum_cover(T)\nIN pset_family T;\n{\n    register pset p, last, p1;\n    register int i, n;\n    int lev, lvl;\n    pset nlast;\n    pset_family temp;\n    long start = ptime();\n    struct {\n    pset_family sf;\n    int level;\n    }\n stack[32];                /* 32 suffices for 2 ** 32 cubes ! */\n\n    if (T.count \u003c= 0)\n    return sf_new(1, T.sf_size);\n    for(n = T.count, lev = 0; n != 0; n \u003e\u003e= 1, lev++)   ;\n\n    /* A simple heuristic ordering */\n    T = lex_sort(sf_save(T));\n\n    /* Push a full set on the stack to get things started */\n    n = 1;\n    stack[0].sf = sf_new(1, T.sf_size);\n    stack[0].level = lev;\n    // inlining of macro GETSET\n    set_fill(((stack[0].sf).data + (stack[0].sf).wsize * (stack[0].sf.count++)), T.sf_size);\n\n    // inlining of macro GETSET\n    nlast = ((T).data + (T).wsize * (T.count - 1));\n    // inlining of macro foreach_set\n    for p=T.data,last=p+T.count*T.wsize;p\u003clast;p+=T.wsize {\n\n    /* \"unstack\" the set into a family */\n    temp = sf_new(set_ord(p), T.sf_size);\n    for(i = 0; i \u003c T.sf_size; i++)\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if p[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1))) {\n        // inlining of macro GETSET\n        p1 = set_fill(((temp).data + (temp).wsize * (temp.count++)), T.sf_size);\n        // inlining of macro set_remove\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (p1[(((i) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((i) \u0026 (BPI-1))));\n        }\n    stack[n].sf = temp;\n    stack[n++].level = lev;\n\n    /* Pop the stack and perform (leveled) intersections */\n    while (n \u003e 1 \u0026\u0026 (stack[n-1].level==stack[n-2].level || p == nlast)) {\n        temp = unate_intersect(stack[n-1].sf, stack[n-2].sf, FALSE);\n        lvl = MIN(stack[n-1].level, stack[n-2].level) - 1;\n        if debug \u0026 MINCOV \u0026\u0026 lvl \u003c 10 {\n        fmt.Printf(\"# EXACT_MINCOV[%d]: %4d = %4d x %4d, time = %s\\n\", lvl, temp.count, stack[n-1].sf.count, stack[n-2].sf.count, print_time(ptime() - start));\n        (void) fflush(os.Stdout);\n        }\n        sf_free(stack[n-2].sf);\n        sf_free(stack[n-1].sf);\n        stack[n-2].sf = temp;\n        stack[n-2].level = lvl;\n        n--;\n    }\n    }\n\n    temp = stack[0].sf;\n    // inlining of macro set_new\n    p1 = set_fill(set_clear(ALLOC(unsigned int, SET_SIZE(T.sf_size)), T.sf_size), T.sf_size);\n    // inlining of macro foreach_set\n    for(p=temp.data,last=p+temp.count*temp.wsize;p\u003clast;p+=temp.wsize)\n    INLINEset_diff(p, p1, p);\n    // inlining of macro set_free\n    FREE(p1);\n    if debug \u0026 MINCOV1 {\n    fmt.Printf(\"MINCOV: family of all minimal coverings is\\n\");\n    sf_print(temp);\n    }\n    sf_free(T);         /* this is the copy of T we made ... */\n    return temp;\n}\n\f\n/*\n *  unate_intersect -- intersect two unate covers\n *\n *  If largest_only is TRUE, then only the largest cube(s) are returned\n */\n\nconst MAGIC = 500               /* save 500 cubes before containment */\n\npset_family unate_intersect(A, B, largest_only)\nvar A, B pset_family;\nvar largest_only bool;\n{\n    register pset pi, pj, lasti, lastj, pt;\n    pset_family T, Tsave;\n    bool save;\n    int maxord, ord;\n\n    /* How large should each temporary result cover be ? */\n    T = sf_new(MAGIC, A.sf_size);\n    Tsave = NULL;\n    maxord = 0;\n    pt = T.data;\n\n    /* Form pairwise intersection of each set of A with each cube of B */\n    // inlining of macro foreach_set\n    for pi=A.data,lasti=pi+A.count*A.wsize;pi\u003clasti;pi+=A.wsize {\n\n    // inlining of macro foreach_set\n    for pj=B.data,lastj=pj+B.count*B.wsize;pj\u003clastj;pj+=B.wsize {\n\n        save = set_andp(pt, pi, pj);\n\n        /* Check if we want the largest only */\n        if save \u0026\u0026 largest_only {\n        if (ord = set_ord(pt)) \u003e maxord {\n            /* discard Tsave and T */\n            if Tsave != NULL {\n            sf_free(Tsave);\n            Tsave = NULL;\n            }\n            pt = T.data;\n            T.count = 0;\n            /* Re-create pt (which was just thrown away) */\n            (void) set_and(pt, pi, pj);\n            maxord = ord;\n        } else if ord \u003c maxord {\n            save = FALSE;\n        }\n        }\n\n        if save {\n        if ++T.count \u003e= T.capacity {\n            T = sf_contain(T);\n            Tsave = (Tsave == NULL) ? T : sf_union(Tsave, T);\n            T = sf_new(MAGIC, A.sf_size);\n            pt = T.data;\n        } else {\n            pt += T.wsize;\n        }\n        }\n    }\n    }\n\n\n    /* Contain the final result and merge it into Tsave */\n    T = sf_contain(T);\n    Tsave = (Tsave == NULL) ? T : sf_union(Tsave, T);\n\n    return Tsave;\n}\n\f\n/*\n *  abs_covered -- after selecting a new column for the selected set,\n *  create a new matrix which is only those rows which are still uncovered\n */\nstatic pset_family\nabs_covered(A, pick)\nvar A pset_family;\nregister int pick;\n{\n    register pset last, p, pdest;\n    register pset_family Aprime;\n\n    Aprime = sf_new(A.count, A.sf_size);\n    pdest = Aprime.data;\n    // inlining of macro foreach_set\n    for(p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize)\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if ! (p[(((pick) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((pick) \u0026 (BPI-1)))) {\n        INLINEset_copy(pdest, p);\n        Aprime.count++;\n        pdest += Aprime.wsize;\n    }\n    return Aprime;\n}\n\n\n/*\n *  abs_covered_many -- after selecting many columns for ther selected set,\n *  create a new matrix which is only those rows which are still uncovered\n */\nstatic pset_family\nabs_covered_many(A, pick_set)\nvar A pset_family;\nregister pset pick_set;\n{\n    register pset last, p, pdest;\n    register pset_family Aprime;\n\n    Aprime = sf_new(A.count, A.sf_size);\n    pdest = Aprime.data;\n    // inlining of macro foreach_set\n    for(p=A.data,last=p+A.count*A.wsize;p\u003clast;p+=A.wsize)\n    if setp_disjoint(p, pick_set) {\n        INLINEset_copy(pdest, p);\n        Aprime.count++;\n        pdest += Aprime.wsize;\n    }\n    return Aprime;\n}\n\n\n/*\n *  abs_select_restricted -- select the column of maximum column count which\n *  also belongs to the set \"restrict\"; weight each column of a set as\n *  1 / (set_ord(p) - 1).\n */\nstatic int\nabs_select_restricted(A, restrict)\nvar A pset_family;\nvar restrict pset;\n{\n    register int i, best_var, best_count, *count;\n\n    /* Sum the elements in these columns */\n    count = sf_count_restricted(A, restrict);\n\n    /* Find which variable has maximum weight */\n    best_var = -1;\n    best_count = 0;\n    for i = 0; i \u003c A.sf_size; i++ {\n    if count[i] \u003e best_count {\n        best_var = i;\n        best_count = count[i];\n    }\n    }\n    FREE(count);\n\n    if (best_var == -1)\n    fatal(\"abs_select_restricted: should not have best_var == -1\");\n\n    return best_var;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

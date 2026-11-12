@@ -1,0 +1,1572 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c",
+  "SHA256": "24aa39d64b9980a2455e15321e76e270bd0f56b72a1f998fc4221c503a3330cb",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 72,
+        "Column": 3,
+        "ByteOffset": 2140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(pManMR.vSinkDistHist);"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 73,
+        "Column": 3,
+        "ByteOffset": 2172
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  memset(Vec_IntArray(pManMR.vSinkDistHist), 0, sizeof(int)*Vec_IntSize(pManMR.vSinkDistHist));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 2914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pObj);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 5450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pPred);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 185,
+        "Column": 5,
+        "ByteOffset": 5469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(!pManMR.fIsForward);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 7660
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pPred);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 371,
+        "Column": 3,
+        "ByteOffset": 10278
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(min_dist \u003c Vec_IntSize(pManMR.vSinkDistHist));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 416,
+        "Column": 3,
+        "ByteOffset": 11505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "  assert(min_dist \u003c Vec_IntSize(pManMR.vSinkDistHist));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 443,
+        "Column": 5,
+        "ByteOffset": 12180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pPred);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 444,
+        "Column": 5,
+        "ByteOffset": 12199
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(!pManMR.fIsForward);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 513,
+        "Column": 5,
+        "ByteOffset": 14000
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(pPred);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 62,
+        "Column": 1,
+        "ByteOffset": 1962
+      },
+      "Directive": "#if !defined(IGNORE_TIMING)"
+    },
+    {
+      "Location": {
+        "Line": 133,
+        "Column": 1,
+        "ByteOffset": 4151
+      },
+      "Directive": "#if !defined(IGNORE_TIMING)"
+    },
+    {
+      "Location": {
+        "Line": 167,
+        "Column": 1,
+        "ByteOffset": 5146
+      },
+      "Directive": "#if !defined(IGNORE_TIMING)"
+    },
+    {
+      "Location": {
+        "Line": 182,
+        "Column": 1,
+        "ByteOffset": 5535
+      },
+      "Directive": "#if !defined(IGNORE_TIMING)"
+    },
+    {
+      "Location": {
+        "Line": 198,
+        "Column": 1,
+        "ByteOffset": 5957
+      },
+      "Directive": "#ifdef DEBUG_PREORDER"
+    },
+    {
+      "Location": {
+        "Line": 226,
+        "Column": 1,
+        "ByteOffset": 6549
+      },
+      "Directive": "#ifdef DEBUG_VISITED"
+    },
+    {
+      "Location": {
+        "Line": 236,
+        "Column": 1,
+        "ByteOffset": 6850
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 247,
+        "Column": 1,
+        "ByteOffset": 7101
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 263,
+        "Column": 1,
+        "ByteOffset": 7477
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 271,
+        "Column": 1,
+        "ByteOffset": 7611
+      },
+      "Directive": "#if !defined(IGNORE_TIMING)"
+    },
+    {
+      "Location": {
+        "Line": 277,
+        "Column": 1,
+        "ByteOffset": 7854
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 294,
+        "Column": 1,
+        "ByteOffset": 8161
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 306,
+        "Column": 1,
+        "ByteOffset": 8322
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 319,
+        "Column": 1,
+        "ByteOffset": 8570
+      },
+      "Directive": "#ifdef DEBUG_VISITED"
+    },
+    {
+      "Location": {
+        "Line": 343,
+        "Column": 1,
+        "ByteOffset": 9154
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 358,
+        "Column": 1,
+        "ByteOffset": 9405
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 372,
+        "Column": 1,
+        "ByteOffset": 9753
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 380,
+        "Column": 1,
+        "ByteOffset": 9888
+      },
+      "Directive": "#if !defined(IGNORE_TIMING)"
+    },
+    {
+      "Location": {
+        "Line": 386,
+        "Column": 1,
+        "ByteOffset": 10130
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 400,
+        "Column": 1,
+        "ByteOffset": 10314
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 442,
+        "Column": 1,
+        "ByteOffset": 11374
+      },
+      "Directive": "#if !defined(IGNORE_TIMING)"
+    },
+    {
+      "Location": {
+        "Line": 493,
+        "Column": 1,
+        "ByteOffset": 12735
+      },
+      "Directive": "#if !defined(IGNORE_TIMING)"
+    },
+    {
+      "Location": {
+        "Line": 548,
+        "Column": 1,
+        "ByteOffset": 14116
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 558,
+        "Column": 1,
+        "ByteOffset": 14330
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 573,
+        "Column": 1,
+        "ByteOffset": 14660
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 581,
+        "Column": 1,
+        "ByteOffset": 14794
+      },
+      "Directive": "#if !defined(IGNORE_TIMING)"
+    },
+    {
+      "Location": {
+        "Line": 586,
+        "Column": 1,
+        "ByteOffset": 14997
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 601,
+        "Column": 1,
+        "ByteOffset": 15271
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 610,
+        "Column": 1,
+        "ByteOffset": 15366
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 642,
+        "Column": 1,
+        "ByteOffset": 16039
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 656,
+        "Column": 1,
+        "ByteOffset": 16256
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 669,
+        "Column": 1,
+        "ByteOffset": 16575
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 677,
+        "Column": 1,
+        "ByteOffset": 16701
+      },
+      "Directive": "#if !defined(IGNORE_TIMING)"
+    },
+    {
+      "Location": {
+        "Line": 682,
+        "Column": 1,
+        "ByteOffset": 16904
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    },
+    {
+      "Location": {
+        "Line": 694,
+        "Column": 1,
+        "ByteOffset": 17034
+      },
+      "Directive": "#ifdef DEBUG_PRINT_FLOWS"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "dfsfast_preorder",
+      "Start": 1679,
+      "End": 6203,
+      "BodyStart": 1720,
+      "Original": "void dfsfast_preorder( Abc_Ntk_t *pNtk ) {\n  Abc_Obj_t *pObj, *pNext;\n  Vec_Ptr_t *vTimeIn, *qn = Vec_PtrAlloc(Abc_NtkObjNum(pNtk));\n  Vec_Int_t *qe = Vec_IntAlloc(Abc_NtkObjNum(pNtk));\n  int i, j, d = 0, end;\n  int qpos = 0;\n\n  // create reverse timing edges for backward traversal\n#if !defined(IGNORE_TIMING)\n  if (pManMR-\u003emaxDelay) {\n    Abc_NtkForEachObj( pNtk, pObj, i ) {\n      Vec_PtrForEachEntry( Abc_Obj_t *, FTIMEEDGES(pObj), pNext, j ) {\n        vTimeIn = FDATA(pNext)-\u003evNodes;\n        if (!vTimeIn) {\n          vTimeIn = FDATA(pNext)-\u003evNodes = Vec_PtrAlloc(2);\n        }\n        Vec_PtrPush(vTimeIn, pObj);\n      }\n    }\n  }\n#endif\n\n  // clear histogram\n  assert(pManMR-\u003evSinkDistHist);\n  memset(Vec_IntArray(pManMR-\u003evSinkDistHist), 0, sizeof(int)*Vec_IntSize(pManMR-\u003evSinkDistHist));\n\n  // seed queue : latches, PIOs, and blocks\n  Abc_NtkForEachObj( pNtk, pObj, i )\n    if (Abc_ObjIsPo(pObj) ||\n        Abc_ObjIsLatch(pObj) || \n        (pManMR-\u003efIsForward \u0026\u0026 FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR-\u003econstraintMask)) {\n      Vec_PtrPush(qn, pObj);\n      Vec_IntPush(qe, 'r');\n      FDATA(pObj)-\u003er_dist = 1;\n    } else if (Abc_ObjIsPi(pObj) || \n               (!pManMR-\u003efIsForward \u0026\u0026 FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR-\u003econstraintMask)) {\n      Vec_PtrPush(qn, pObj);\n      Vec_IntPush(qe, 'e');\n      FDATA(pObj)-\u003ee_dist = 1;\n    }\n\n  // until queue is empty...\n  while(qpos \u003c Vec_PtrSize(qn)) {\n    pObj = (Abc_Obj_t *)Vec_PtrEntry(qn, qpos);\n    assert(pObj);\n    end = Vec_IntEntry(qe, qpos);\n    qpos++;\n    \n    if (end == 'r') {\n      d = FDATA(pObj)-\u003er_dist;\n\n      // 1. structural edges\n      if (pManMR-\u003efIsForward) {\n        Abc_ObjForEachFanin( pObj, pNext, i )\n          if (!FDATA(pNext)-\u003ee_dist) {\n            FDATA(pNext)-\u003ee_dist = d+1;\n            Vec_PtrPush(qn, pNext);\n            Vec_IntPush(qe, 'e');\n          }\n      } else\n        Abc_ObjForEachFanout( pObj, pNext, i )\n          if (!FDATA(pNext)-\u003ee_dist) {\n            FDATA(pNext)-\u003ee_dist = d+1;\n            Vec_PtrPush(qn, pNext);\n            Vec_IntPush(qe, 'e');\n          }\n\n      if (d == 1) continue;\n\n      // 2. reverse edges (forward retiming only)\n      if (pManMR-\u003efIsForward) {\n        Abc_ObjForEachFanout( pObj, pNext, i )\n          if (!FDATA(pNext)-\u003er_dist \u0026\u0026 !Abc_ObjIsLatch(pNext)) {\n            FDATA(pNext)-\u003er_dist = d+1;\n            Vec_PtrPush(qn, pNext);\n            Vec_IntPush(qe, 'r');\n          }          \n\n      // 3. timimg edges (forward retiming only)\n#if !defined(IGNORE_TIMING)\n        if (pManMR-\u003emaxDelay \u0026\u0026 FDATA(pObj)-\u003evNodes)\n          Vec_PtrForEachEntry(Abc_Obj_t *, FDATA(pObj)-\u003evNodes, pNext, i ) {\n            if (!FDATA(pNext)-\u003er_dist) {\n              FDATA(pNext)-\u003er_dist = d+1;\n              Vec_PtrPush(qn, pNext);\n              Vec_IntPush(qe, 'r');\n            }\n          }\n#endif\n      }\n      \n    } else { // if 'e'\n      if (Abc_ObjIsLatch(pObj)) continue;\n\n      d = FDATA(pObj)-\u003ee_dist;\n\n      // 1. through node\n      if (!FDATA(pObj)-\u003er_dist) {\n        FDATA(pObj)-\u003er_dist = d+1;\n        Vec_PtrPush(qn, pObj);\n        Vec_IntPush(qe, 'r');\n      }\n\n      // 2. reverse edges (backward retiming only)\n      if (!pManMR-\u003efIsForward) {\n        Abc_ObjForEachFanin( pObj, pNext, i )\n          if (!FDATA(pNext)-\u003ee_dist \u0026\u0026 !Abc_ObjIsLatch(pNext)) {\n            FDATA(pNext)-\u003ee_dist = d+1;\n            Vec_PtrPush(qn, pNext);\n            Vec_IntPush(qe, 'e');\n          }  \n\n      // 3. timimg edges (backward retiming only)\n#if !defined(IGNORE_TIMING)\n        if (pManMR-\u003emaxDelay \u0026\u0026 FDATA(pObj)-\u003evNodes)\n          Vec_PtrForEachEntry(Abc_Obj_t *, FDATA(pObj)-\u003evNodes, pNext, i ) {\n            if (!FDATA(pNext)-\u003ee_dist) {\n              FDATA(pNext)-\u003ee_dist = d+1;\n              Vec_PtrPush(qn, pNext);\n              Vec_IntPush(qe, 'e');\n            }\n          }\n#endif\n      }\n    }\n  }\n \n  // free time edges\n#if !defined(IGNORE_TIMING)\n  if (pManMR-\u003emaxDelay) {\n    Abc_NtkForEachObj( pNtk, pObj, i ) {\n      vTimeIn = FDATA(pObj)-\u003evNodes;\n      if (vTimeIn) {\n        Vec_PtrFree(vTimeIn);\n        FDATA(pObj)-\u003evNodes = 0;\n      }\n    }\n  }\n#endif\n\n  Abc_NtkForEachObj( pNtk, pObj, i ) {\n    Vec_IntAddToEntry(pManMR-\u003evSinkDistHist, FDATA(pObj)-\u003er_dist, 1);\n    Vec_IntAddToEntry(pManMR-\u003evSinkDistHist, FDATA(pObj)-\u003ee_dist, 1);\n\n#ifdef DEBUG_PREORDER\n    printf(\"node %d\\t: r=%d\\te=%d\\n\", Abc_ObjId(pObj), FDATA(pObj)-\u003er_dist, FDATA(pObj)-\u003ee_dist);\n#endif\n  }\n\n  // printf(\"\\t\\tpre-ordered (max depth=%d)\\n\", d+1);\n\n  // deallocate\n  Vec_PtrFree( qn );\n  Vec_IntFree( qe );\n}",
+      "Draft": "func dfsfast_preorder(pNtk *Abc_Ntk_t) {\n  var pObj, pNext *Abc_Obj_t;\n  var vTimeIn *Vec_Ptr_t;\n  var qn *Vec_Ptr_t = Vec_PtrAlloc(Abc_NtkObjNum(pNtk));\n  var qe *Vec_Int_t  = Vec_IntAlloc(Abc_NtkObjNum(pNtk));\n  var i, j, d, end int32;\n  var qpos int32;\n\n  // create reverse timing edges for backward traversal\n#if !defined(IGNORE_TIMING)\n  if (pManMR-\u003emaxDelay) {\n    Abc_NtkForEachObj( pNtk, pObj, i ) {\n      Vec_PtrForEachEntry( Abc_Obj_t *, FTIMEEDGES(pObj), pNext, j ) {\n        vTimeIn = FDATA(pNext)-\u003evNodes;\n        if (!vTimeIn) {\n          vTimeIn = FDATA(pNext)-\u003evNodes = Vec_PtrAlloc(2);\n        }\n        Vec_PtrPush(vTimeIn, pObj);\n      }\n    }\n  }\n#endif\n\n  // clear histogram\n  assert(pManMR.vSinkDistHist, \"pManMR.vSinkDistHist\");\n  memset(Vec_IntArray(pManMR.vSinkDistHist), 0, sizeof(int)*Vec_IntSize(pManMR.vSinkDistHist));\n\n  // seed queue : latches, PIOs, and blocks\n  Abc_NtkForEachObj( pNtk, pObj, i )\n    if Abc_ObjIsPo(pObj) ||\n        Abc_ObjIsLatch(pObj) || \n        (pManMR.fIsForward \u0026\u0026 FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR.constraintMask) {\n      Vec_PtrPush(qn, pObj);\n      Vec_IntPush(qe, 'r');\n      FDATA(pObj).r_dist = 1;\n    } else if Abc_ObjIsPi(pObj) || \n               (!pManMR.fIsForward \u0026\u0026 FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR.constraintMask) {\n      Vec_PtrPush(qn, pObj);\n      Vec_IntPush(qe, 'e');\n      FDATA(pObj).e_dist = 1;\n    }\n\n  // until queue is empty...\n  for qpos \u003c Vec_PtrSize(qn) {\n    pObj = (Abc_Obj_t *)Vec_PtrEntry(qn, qpos);\n    assert((pObj != nil), \"pObj\");\n    end = Vec_IntEntry(qe, qpos);\n    qpos++;\n    \n    if end == 'r' {\n      d = FDATA(pObj).r_dist;\n\n      // 1. structural edges\n      if pManMR.fIsForward {\n        Abc_ObjForEachFanin( pObj, pNext, i )\n          if !FDATA(pNext).e_dist {\n            FDATA(pNext).e_dist = d+1;\n            Vec_PtrPush(qn, pNext);\n            Vec_IntPush(qe, 'e');\n          }\n      } else\n        Abc_ObjForEachFanout( pObj, pNext, i )\n          if !FDATA(pNext).e_dist {\n            FDATA(pNext).e_dist = d+1;\n            Vec_PtrPush(qn, pNext);\n            Vec_IntPush(qe, 'e');\n          }\n\n      if d == 1 { continue; }\n\n      // 2. reverse edges (forward retiming only)\n      if pManMR.fIsForward {\n        Abc_ObjForEachFanout( pObj, pNext, i )\n          if !FDATA(pNext).r_dist \u0026\u0026 !Abc_ObjIsLatch(pNext) {\n            FDATA(pNext).r_dist = d+1;\n            Vec_PtrPush(qn, pNext);\n            Vec_IntPush(qe, 'r');\n          }          \n\n      // 3. timimg edges (forward retiming only)\n#if !defined(IGNORE_TIMING)\n        if (pManMR-\u003emaxDelay \u0026\u0026 FDATA(pObj)-\u003evNodes)\n          Vec_PtrForEachEntry(Abc_Obj_t *, FDATA(pObj)-\u003evNodes, pNext, i ) {\n            if (!FDATA(pNext)-\u003er_dist) {\n              FDATA(pNext)-\u003er_dist = d+1;\n              Vec_PtrPush(qn, pNext);\n              Vec_IntPush(qe, 'r');\n            }\n          }\n#endif\n      }\n      \n    } else { // if 'e'\n      if Abc_ObjIsLatch(pObj) { continue; }\n\n      d = FDATA(pObj).e_dist;\n\n      // 1. through node\n      if !FDATA(pObj).r_dist {\n        FDATA(pObj).r_dist = d+1;\n        Vec_PtrPush(qn, pObj);\n        Vec_IntPush(qe, 'r');\n      }\n\n      // 2. reverse edges (backward retiming only)\n      if !pManMR.fIsForward {\n        Abc_ObjForEachFanin( pObj, pNext, i )\n          if !FDATA(pNext).e_dist \u0026\u0026 !Abc_ObjIsLatch(pNext) {\n            FDATA(pNext).e_dist = d+1;\n            Vec_PtrPush(qn, pNext);\n            Vec_IntPush(qe, 'e');\n          }  \n\n      // 3. timimg edges (backward retiming only)\n#if !defined(IGNORE_TIMING)\n        if (pManMR-\u003emaxDelay \u0026\u0026 FDATA(pObj)-\u003evNodes)\n          Vec_PtrForEachEntry(Abc_Obj_t *, FDATA(pObj)-\u003evNodes, pNext, i ) {\n            if (!FDATA(pNext)-\u003ee_dist) {\n              FDATA(pNext)-\u003ee_dist = d+1;\n              Vec_PtrPush(qn, pNext);\n              Vec_IntPush(qe, 'e');\n            }\n          }\n#endif\n      }\n    }\n  }\n \n  // free time edges\n#if !defined(IGNORE_TIMING)\n  if (pManMR-\u003emaxDelay) {\n    Abc_NtkForEachObj( pNtk, pObj, i ) {\n      vTimeIn = FDATA(pObj)-\u003evNodes;\n      if (vTimeIn) {\n        Vec_PtrFree(vTimeIn);\n        FDATA(pObj)-\u003evNodes = 0;\n      }\n    }\n  }\n#endif\n\n  Abc_NtkForEachObj( pNtk, pObj, i ) {\n    Vec_IntAddToEntry(pManMR.vSinkDistHist, FDATA(pObj).r_dist, 1);\n    Vec_IntAddToEntry(pManMR.vSinkDistHist, FDATA(pObj).e_dist, 1);\n\n#ifdef DEBUG_PREORDER\n    printf(\"node %d\\t: r=%d\\te=%d\\n\", Abc_ObjId(pObj), FDATA(pObj)-\u003er_dist, FDATA(pObj)-\u003ee_dist);\n#endif\n  }\n\n  // printf(\"\\t\\tpre-ordered (max depth=%d)\\n\", d+1);\n\n  // deallocate\n  Vec_PtrFree( qn );\n  Vec_IntFree( qe );\n}"
+    },
+    {
+      "Name": "dfsfast_e",
+      "Start": 6205,
+      "End": 8429,
+      "BodyStart": 6256,
+      "Original": "int dfsfast_e( Abc_Obj_t *pObj, Abc_Obj_t *pPred ) {\n  int i;\n  Abc_Obj_t *pNext;\n  \n  if (pManMR-\u003efSinkDistTerminate) return 0;\n\n  // have we reached the sink?\n  if(FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR-\u003econstraintMask ||\n     Abc_ObjIsPi(pObj)) {\n    assert(pPred);\n    assert(!pManMR-\u003efIsForward);\n    return 1;\n  }\n\n  FSET(pObj, VISITED_E);\n\n#ifdef DEBUG_VISITED\n  printf(\"(%de=%d) \", Abc_ObjId(pObj), FDATA(pObj)-\u003ee_dist);\n#endif  \n\n  // 1. structural edges\n  if (pManMR-\u003efIsForward)\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      if (!FTEST(pNext, VISITED_R) \u0026\u0026\n          FDIST(pObj, e, pNext, r) \u0026\u0026\n          dfsfast_r(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"o\");\n#endif\n        goto found;\n      }\n    }\n  else\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      if (!FTEST(pNext, VISITED_R) \u0026\u0026\n          FDIST(pObj, e, pNext, r) \u0026\u0026\n          dfsfast_r(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"o\");\n#endif\n        goto found;\n      }\n    }  \n  \n  if (Abc_ObjIsLatch(pObj))\n    goto not_found;\n\n  // 2. reverse edges (backward retiming only)\n  if (!pManMR-\u003efIsForward) { \n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      if (!FTEST(pNext, VISITED_E) \u0026\u0026\n          FDIST(pObj, e, pNext, e) \u0026\u0026\n          dfsfast_e(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"i\");\n#endif\n        goto found;\n      }\n    }\n\n  // 3. timing edges (backward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t *, FTIMEEDGES(pObj), pNext, i) {\n        if (!FTEST(pNext, VISITED_E) \u0026\u0026\n            FDIST(pObj, e, pNext, e) \u0026\u0026\n            dfsfast_e(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n          printf(\"o\");\n#endif\n          goto found;\n        }\n      }\n#endif\n  }\n  \n  // unwind\n  if (FTEST(pObj, FLOW) \u0026\u0026 \n      !FTEST(pObj, VISITED_R) \u0026\u0026\n      FDIST(pObj, e, pObj, r) \u0026\u0026\n      dfsfast_r(pObj, FGETPRED(pObj))) {\n\n    FUNSET(pObj, FLOW);\n    FSETPRED(pObj, NULL);\n#ifdef DEBUG_PRINT_FLOWS\n    printf(\"u\");\n#endif\n    goto found;\n  }\n  \n not_found:\n  FUNSET(pObj, VISITED_E);\n  dfsfast_e_retreat(pObj);\n  return 0;\n  \n found:\n#ifdef DEBUG_PRINT_FLOWS\n  printf(\"%d \", Abc_ObjId(pObj));\n#endif \n  FUNSET(pObj, VISITED_E);\n  return 1;\n}",
+      "Draft": "func dfsfast_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {\n  var i int32;\n  var pNext *Abc_Obj_t;\n  \n  if pManMR.fSinkDistTerminate { return 0; }\n\n  // have we reached the sink?\n  if FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR.constraintMask ||\n     Abc_ObjIsPi(pObj) {\n    assert((pPred != nil), \"pPred\");\n    assert(!pManMR.fIsForward, \"!pManMR.fIsForward\");\n    return 1;\n  }\n\n  FSET(pObj, VISITED_E);\n\n#ifdef DEBUG_VISITED\n  printf(\"(%de=%d) \", Abc_ObjId(pObj), FDATA(pObj)-\u003ee_dist);\n#endif  \n\n  // 1. structural edges\n  if (pManMR.fIsForward)\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_R) \u0026\u0026\n          FDIST(pObj, e, pNext, r) \u0026\u0026\n          (dfsfast_r(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"o\");\n#endif\n        goto found;\n      }\n    }\n  else\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_R) \u0026\u0026\n          FDIST(pObj, e, pNext, r) \u0026\u0026\n          (dfsfast_r(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"o\");\n#endif\n        goto found;\n      }\n    }  \n  \n  if Abc_ObjIsLatch(pObj) {\n    goto not_found; }\n\n  // 2. reverse edges (backward retiming only)\n  if !pManMR.fIsForward { \n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_E) \u0026\u0026\n          FDIST(pObj, e, pNext, e) \u0026\u0026\n          (dfsfast_e(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"i\");\n#endif\n        goto found;\n      }\n    }\n\n  // 3. timing edges (backward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t *, FTIMEEDGES(pObj), pNext, i) {\n        if (!FTEST(pNext, VISITED_E) \u0026\u0026\n            FDIST(pObj, e, pNext, e) \u0026\u0026\n            dfsfast_e(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n          printf(\"o\");\n#endif\n          goto found;\n        }\n      }\n#endif\n  }\n  \n  // unwind\n  if FTEST(pObj, FLOW) \u0026\u0026 \n      !FTEST(pObj, VISITED_R) \u0026\u0026\n      FDIST(pObj, e, pObj, r) \u0026\u0026\n      (dfsfast_r(pObj, FGETPRED(pObj)) != 0) {\n\n    FUNSET(pObj, FLOW);\n    FSETPRED(pObj, nil);\n#ifdef DEBUG_PRINT_FLOWS\n    printf(\"u\");\n#endif\n    goto found;\n  }\n  \n not_found:\n  FUNSET(pObj, VISITED_E);\n  dfsfast_e_retreat(pObj);\n  return 0;\n  \n found:\n#ifdef DEBUG_PRINT_FLOWS\n  printf(\"%d \", Abc_ObjId(pObj));\n#endif \n  FUNSET(pObj, VISITED_E);\n  return 1;\n}"
+    },
+    {
+      "Name": "dfsfast_r",
+      "Start": 8431,
+      "End": 10420,
+      "BodyStart": 8482,
+      "Original": "int dfsfast_r( Abc_Obj_t *pObj, Abc_Obj_t *pPred ) {\n  int i;\n  Abc_Obj_t *pNext, *pOldPred;\n\n  if (pManMR-\u003efSinkDistTerminate) return 0;\n\n#ifdef DEBUG_VISITED\n  printf(\"(%dr=%d) \", Abc_ObjId(pObj), FDATA(pObj)-\u003er_dist);\n#endif  \n\n  // have we reached the sink?\n  if (Abc_ObjIsLatch(pObj) ||\n      (pManMR-\u003efIsForward \u0026\u0026 Abc_ObjIsPo(pObj)) || \n      (pManMR-\u003efIsForward \u0026\u0026 FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR-\u003econstraintMask)) {\n    assert(pPred);\n    return 1;\n  }\n\n  FSET(pObj, VISITED_R);\n\n  if (FTEST(pObj, FLOW)) {\n\n    pOldPred = FGETPRED(pObj);\n    if (pOldPred \u0026\u0026 \n        !FTEST(pOldPred, VISITED_E) \u0026\u0026\n        FDIST(pObj, r, pOldPred, e) \u0026\u0026\n        dfsfast_e(pOldPred, pOldPred)) {\n\n      FSETPRED(pObj, pPred);\n\n#ifdef DEBUG_PRINT_FLOWS\n      printf(\"fr\");\n#endif\n      goto found;\n    }\n    \n  } else {\n\n    if (!FTEST(pObj, VISITED_E) \u0026\u0026\n        FDIST(pObj, r, pObj, e) \u0026\u0026\n        dfsfast_e(pObj, pObj)) {\n\n      FSET(pObj, FLOW);\n      FSETPRED(pObj, pPred);\n\n#ifdef DEBUG_PRINT_FLOWS\n      printf(\"f\");\n#endif\n      goto found;\n    }\n  }\n \n  // 2. reverse edges (forward retiming only)\n  if (pManMR-\u003efIsForward) {\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      if (!FTEST(pNext, VISITED_R) \u0026\u0026\n          FDIST(pObj, r, pNext, r) \u0026\u0026\n          !Abc_ObjIsLatch(pNext) \u0026\u0026\n          dfsfast_r(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"i\");\n#endif\n        goto found;\n      }\n    }\n  \n  // 3. timing edges (forward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        if (!FTEST(pNext, VISITED_R) \u0026\u0026\n            FDIST(pObj, r, pNext, r) \u0026\u0026\n            dfsfast_r(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n          printf(\"o\");\n#endif\n          goto found;\n        }\n      }\n#endif\n  }\n  \n  FUNSET(pObj, VISITED_R);\n  dfsfast_r_retreat(pObj);\n  return 0;\n\n found:\n#ifdef DEBUG_PRINT_FLOWS\n  printf(\"%d \", Abc_ObjId(pObj));\n#endif\n  FUNSET(pObj, VISITED_R);\n  return 1;\n}",
+      "Draft": "func dfsfast_r(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {\n  var i int32;\n  var pNext, pOldPred *Abc_Obj_t;\n\n  if pManMR.fSinkDistTerminate { return 0; }\n\n#ifdef DEBUG_VISITED\n  printf(\"(%dr=%d) \", Abc_ObjId(pObj), FDATA(pObj)-\u003er_dist);\n#endif  \n\n  // have we reached the sink?\n  if Abc_ObjIsLatch(pObj) ||\n      (pManMR.fIsForward \u0026\u0026 Abc_ObjIsPo(pObj)) || \n      (pManMR.fIsForward \u0026\u0026 FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR.constraintMask) {\n    assert((pPred != nil), \"pPred\");\n    return 1;\n  }\n\n  FSET(pObj, VISITED_R);\n\n  if FTEST(pObj, FLOW) {\n\n    pOldPred = FGETPRED(pObj);\n    if (pOldPred != nil) \u0026\u0026 \n        !FTEST(pOldPred, VISITED_E) \u0026\u0026\n        FDIST(pObj, r, pOldPred, e) \u0026\u0026\n        (dfsfast_e(pOldPred, pOldPred) != 0) {\n\n      FSETPRED(pObj, pPred);\n\n#ifdef DEBUG_PRINT_FLOWS\n      printf(\"fr\");\n#endif\n      goto found;\n    }\n    \n  } else {\n\n    if !FTEST(pObj, VISITED_E) \u0026\u0026\n        FDIST(pObj, r, pObj, e) \u0026\u0026\n        (dfsfast_e(pObj, pObj) != 0) {\n\n      FSET(pObj, FLOW);\n      FSETPRED(pObj, pPred);\n\n#ifdef DEBUG_PRINT_FLOWS\n      printf(\"f\");\n#endif\n      goto found;\n    }\n  }\n \n  // 2. reverse edges (forward retiming only)\n  if pManMR.fIsForward {\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_R) \u0026\u0026\n          FDIST(pObj, r, pNext, r) \u0026\u0026\n          !Abc_ObjIsLatch(pNext) \u0026\u0026\n          (dfsfast_r(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"i\");\n#endif\n        goto found;\n      }\n    }\n  \n  // 3. timing edges (forward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        if (!FTEST(pNext, VISITED_R) \u0026\u0026\n            FDIST(pObj, r, pNext, r) \u0026\u0026\n            dfsfast_r(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n          printf(\"o\");\n#endif\n          goto found;\n        }\n      }\n#endif\n  }\n  \n  FUNSET(pObj, VISITED_R);\n  dfsfast_r_retreat(pObj);\n  return 0;\n\n found:\n#ifdef DEBUG_PRINT_FLOWS\n  printf(\"%d \", Abc_ObjId(pObj));\n#endif\n  FUNSET(pObj, VISITED_R);\n  return 1;\n}"
+    },
+    {
+      "Name": "dfsfast_e_retreat",
+      "Start": 10422,
+      "End": 11982,
+      "BodyStart": 10462,
+      "Original": "void\ndfsfast_e_retreat(Abc_Obj_t *pObj) {\n  Abc_Obj_t *pNext;\n  int i, *h;\n  int old_dist = FDATA(pObj)-\u003ee_dist;\n  int adj_dist, min_dist = MAX_DIST;\n  \n  // 1. structural edges\n  if (pManMR-\u003efIsForward)\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      adj_dist = FDATA(pNext)-\u003er_dist;\n      if (adj_dist) min_dist = MIN(min_dist, adj_dist);\n    }\n  else\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      adj_dist = FDATA(pNext)-\u003er_dist;\n      if (adj_dist) min_dist = MIN(min_dist, adj_dist);\n    }\n\n  if (Abc_ObjIsLatch(pObj)) goto update;\n\n  // 2. through\n  if (FTEST(pObj, FLOW)) {\n    adj_dist = FDATA(pObj)-\u003er_dist;\n    if (adj_dist) min_dist = MIN(min_dist, adj_dist);\n  }\n\n  // 3. reverse edges (backward retiming only)\n  if (!pManMR-\u003efIsForward) {\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      adj_dist = FDATA(pNext)-\u003ee_dist;\n      if (adj_dist) min_dist = MIN(min_dist, adj_dist);\n    }\n\n  // 4. timing edges (backward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        adj_dist = FDATA(pNext)-\u003ee_dist;\n        if (adj_dist) min_dist = MIN(min_dist, adj_dist);\n      }\n#endif\n  }\n\n update:\n  ++min_dist;\n  if (min_dist \u003e= MAX_DIST) min_dist = 0;\n  // printf(\"[%de=%d-\u003e%d] \", Abc_ObjId(pObj), old_dist, min_dist+1);\n  FDATA(pObj)-\u003ee_dist = min_dist;\n\n  assert(min_dist \u003c Vec_IntSize(pManMR-\u003evSinkDistHist));\n  h = Vec_IntArray(pManMR-\u003evSinkDistHist);\n  h[old_dist]--;\n  h[min_dist]++;\n  if (!h[old_dist]) {\n    pManMR-\u003efSinkDistTerminate = 1;\n  }\n}",
+      "Draft": "func dfsfast_e_retreat(pObj *Abc_Obj_t) {\n  var pNext *Abc_Obj_t;\n  var i int32;\n  var h *int32;\n  var old_dist int32  = FDATA(pObj).e_dist;\n  var adj_dist int32;\n  var min_dist int32 = MAX_DIST;\n  \n  // 1. structural edges\n  if (pManMR.fIsForward)\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      adj_dist = FDATA(pNext).r_dist;\n      if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }\n    }\n  else\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      adj_dist = FDATA(pNext).r_dist;\n      if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }\n    }\n\n  if Abc_ObjIsLatch(pObj) { goto update; }\n\n  // 2. through\n  if FTEST(pObj, FLOW) {\n    adj_dist = FDATA(pObj).r_dist;\n    if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }\n  }\n\n  // 3. reverse edges (backward retiming only)\n  if !pManMR.fIsForward {\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      adj_dist = FDATA(pNext).e_dist;\n      if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }\n    }\n\n  // 4. timing edges (backward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        adj_dist = FDATA(pNext)-\u003ee_dist;\n        if (adj_dist) min_dist = MIN(min_dist, adj_dist);\n      }\n#endif\n  }\n\n update:\n  ++min_dist;\n  if min_dist \u003e= MAX_DIST { min_dist = 0; }\n  // printf(\"[%de=%d-\u003e%d] \", Abc_ObjId(pObj), old_dist, min_dist+1);\n  FDATA(pObj).e_dist = min_dist;\n\n  assert(min_dist \u003c Vec_IntSize(pManMR.vSinkDistHist), \"min_dist \u003c Vec_IntSize(pManMR.vSinkDistHist)\");\n  h = Vec_IntArray(pManMR.vSinkDistHist);\n  h[old_dist]--;\n  h[min_dist]++;\n  if !h[old_dist] {\n    pManMR.fSinkDistTerminate = 1;\n  }\n}"
+    },
+    {
+      "Name": "dfsfast_r_retreat",
+      "Start": 11984,
+      "End": 13333,
+      "BodyStart": 12024,
+      "Original": "void\ndfsfast_r_retreat(Abc_Obj_t *pObj) {\n  Abc_Obj_t *pNext;\n  int i, *h;\n  int old_dist = FDATA(pObj)-\u003er_dist;\n  int adj_dist, min_dist = MAX_DIST;\n  \n  // 1. through or pred\n  if (FTEST(pObj, FLOW)) {\n    if (FGETPRED(pObj)) {\n      adj_dist = FDATA(FGETPRED(pObj))-\u003ee_dist;\n      if (adj_dist) min_dist = MIN(min_dist, adj_dist);\n    }\n  } else {\n    adj_dist = FDATA(pObj)-\u003ee_dist;\n    if (adj_dist) min_dist = MIN(min_dist, adj_dist);\n  }\n\n  // 2. reverse edges (forward retiming only)\n  if (pManMR-\u003efIsForward) {\n    Abc_ObjForEachFanin( pObj, pNext, i )\n      if (!Abc_ObjIsLatch(pNext)) {\n        adj_dist = FDATA(pNext)-\u003er_dist;\n        if (adj_dist) min_dist = MIN(min_dist, adj_dist);\n      }\n\n  // 3. timing edges (forward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        adj_dist = FDATA(pNext)-\u003er_dist;\n        if (adj_dist) min_dist = MIN(min_dist, adj_dist);\n      }\n#endif\n  }\n\n  ++min_dist;\n  if (min_dist \u003e= MAX_DIST) min_dist = 0;\n  //printf(\"[%dr=%d-\u003e%d] \", Abc_ObjId(pObj), old_dist, min_dist+1);\n  FDATA(pObj)-\u003er_dist = min_dist;\n\n  assert(min_dist \u003c Vec_IntSize(pManMR-\u003evSinkDistHist));\n  h = Vec_IntArray(pManMR-\u003evSinkDistHist);\n  h[old_dist]--;\n  h[min_dist]++;\n  if (!h[old_dist]) {\n    pManMR-\u003efSinkDistTerminate = 1;\n  }\n}",
+      "Draft": "func dfsfast_r_retreat(pObj *Abc_Obj_t) {\n  var pNext *Abc_Obj_t;\n  var i int32;\n  var h *int32;\n  var old_dist int32  = FDATA(pObj).r_dist;\n  var adj_dist int32;\n  var min_dist int32 = MAX_DIST;\n  \n  // 1. through or pred\n  if FTEST(pObj, FLOW) {\n    if FGETPRED(pObj) {\n      adj_dist = FDATA(FGETPRED(pObj)).e_dist;\n      if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }\n    }\n  } else {\n    adj_dist = FDATA(pObj).e_dist;\n    if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }\n  }\n\n  // 2. reverse edges (forward retiming only)\n  if pManMR.fIsForward {\n    Abc_ObjForEachFanin( pObj, pNext, i )\n      if !Abc_ObjIsLatch(pNext) {\n        adj_dist = FDATA(pNext).r_dist;\n        if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }\n      }\n\n  // 3. timing edges (forward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        adj_dist = FDATA(pNext)-\u003er_dist;\n        if (adj_dist) min_dist = MIN(min_dist, adj_dist);\n      }\n#endif\n  }\n\n  ++min_dist;\n  if min_dist \u003e= MAX_DIST { min_dist = 0; }\n  //printf(\"[%dr=%d-\u003e%d] \", Abc_ObjId(pObj), old_dist, min_dist+1);\n  FDATA(pObj).r_dist = min_dist;\n\n  assert(min_dist \u003c Vec_IntSize(pManMR.vSinkDistHist), \"min_dist \u003c Vec_IntSize(pManMR.vSinkDistHist)\");\n  h = Vec_IntArray(pManMR.vSinkDistHist);\n  h[old_dist]--;\n  h[min_dist]++;\n  if !h[old_dist] {\n    pManMR.fSinkDistTerminate = 1;\n  }\n}"
+    },
+    {
+      "Name": "dfsplain_e",
+      "Start": 13627,
+      "End": 15446,
+      "BodyStart": 13679,
+      "Original": "int dfsplain_e( Abc_Obj_t *pObj, Abc_Obj_t *pPred ) {\n  int i;\n  Abc_Obj_t *pNext;\n  \n  if (FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR-\u003econstraintMask || \n      Abc_ObjIsPi(pObj)) {\n    assert(pPred);\n    assert(!pManMR-\u003efIsForward);\n    return 1;\n  }\n\n  FSET(pObj, VISITED_E);\n  \n  // printf(\" %de\\n\", Abc_ObjId(pObj));\n  \n  // 1. structural edges\n  if (pManMR-\u003efIsForward)\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      if (!FTEST(pNext, VISITED_R) \u0026\u0026\n          dfsplain_r(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"o\");\n#endif\n        goto found;\n      }\n    }\n  else\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      if (!FTEST(pNext, VISITED_R) \u0026\u0026\n          dfsplain_r(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"o\");\n#endif\n        goto found;\n      }\n    }\n  \n  if (Abc_ObjIsLatch(pObj))\n    return 0;\n\n  // 2. reverse edges (backward retiming only)\n  if (!pManMR-\u003efIsForward) {\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      if (!FTEST(pNext, VISITED_E) \u0026\u0026\n          dfsplain_e(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"i\");\n#endif\n        goto found;\n      }\n    }\n\n  // 3. timing edges (backward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        if (!FTEST(pNext, VISITED_E) \u0026\u0026\n            dfsplain_e(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n          printf(\"o\");\n#endif\n          goto found;\n        }\n      }\n#endif\n  }\n  \n  // unwind\n  if (FTEST(pObj, FLOW) \u0026\u0026 \n      !FTEST(pObj, VISITED_R) \u0026\u0026\n      dfsplain_r(pObj, FGETPRED(pObj))) {\n    FUNSET(pObj, FLOW);\n    FSETPRED(pObj, NULL);\n#ifdef DEBUG_PRINT_FLOWS\n    printf(\"u\");\n#endif\n    goto found;\n  }\n  \n  return 0;\n  \n found:\n#ifdef DEBUG_PRINT_FLOWS\n  printf(\"%d \", Abc_ObjId(pObj));\n#endif\n\n  return 1;\n}",
+      "Draft": "func dfsplain_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {\n  var i int32;\n  var pNext *Abc_Obj_t;\n  \n  if FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR.constraintMask || \n      Abc_ObjIsPi(pObj) {\n    assert((pPred != nil), \"pPred\");\n    assert(!pManMR.fIsForward, \"!pManMR.fIsForward\");\n    return 1;\n  }\n\n  FSET(pObj, VISITED_E);\n  \n  // printf(\" %de\\n\", Abc_ObjId(pObj));\n  \n  // 1. structural edges\n  if (pManMR.fIsForward)\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_R) \u0026\u0026\n          (dfsplain_r(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"o\");\n#endif\n        goto found;\n      }\n    }\n  else\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_R) \u0026\u0026\n          (dfsplain_r(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"o\");\n#endif\n        goto found;\n      }\n    }\n  \n  if Abc_ObjIsLatch(pObj) {\n    return 0; }\n\n  // 2. reverse edges (backward retiming only)\n  if !pManMR.fIsForward {\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_E) \u0026\u0026\n          (dfsplain_e(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"i\");\n#endif\n        goto found;\n      }\n    }\n\n  // 3. timing edges (backward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        if (!FTEST(pNext, VISITED_E) \u0026\u0026\n            dfsplain_e(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n          printf(\"o\");\n#endif\n          goto found;\n        }\n      }\n#endif\n  }\n  \n  // unwind\n  if FTEST(pObj, FLOW) \u0026\u0026 \n      !FTEST(pObj, VISITED_R) \u0026\u0026\n      (dfsplain_r(pObj, FGETPRED(pObj)) != 0) {\n    FUNSET(pObj, FLOW);\n    FSETPRED(pObj, nil);\n#ifdef DEBUG_PRINT_FLOWS\n    printf(\"u\");\n#endif\n    goto found;\n  }\n  \n  return 0;\n  \n found:\n#ifdef DEBUG_PRINT_FLOWS\n  printf(\"%d \", Abc_ObjId(pObj));\n#endif\n\n  return 1;\n}"
+    },
+    {
+      "Name": "dfsplain_r",
+      "Start": 15448,
+      "End": 17113,
+      "BodyStart": 15500,
+      "Original": "int dfsplain_r( Abc_Obj_t *pObj, Abc_Obj_t *pPred ) {\n  int i;\n  Abc_Obj_t *pNext, *pOldPred;\n\n  // have we reached the sink?\n  if (Abc_ObjIsLatch(pObj) || \n      (pManMR-\u003efIsForward \u0026\u0026 Abc_ObjIsPo(pObj)) || \n      (pManMR-\u003efIsForward \u0026\u0026 FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR-\u003econstraintMask)) {\n    assert(pPred);\n    return 1;\n  }\n\n  FSET(pObj, VISITED_R);\n\n  // printf(\" %dr\\n\", Abc_ObjId(pObj));\n\n  if (FTEST(pObj, FLOW)) {\n\n    pOldPred = FGETPRED(pObj);\n    if (pOldPred \u0026\u0026 \n        !FTEST(pOldPred, VISITED_E) \u0026\u0026\n        dfsplain_e(pOldPred, pOldPred)) {\n\n      FSETPRED(pObj, pPred);\n\n#ifdef DEBUG_PRINT_FLOWS\n      printf(\"fr\");\n#endif\n      goto found;\n    }\n    \n  } else {\n\n    if (!FTEST(pObj, VISITED_E) \u0026\u0026\n        dfsplain_e(pObj, pObj)) {\n\n      FSET(pObj, FLOW);\n      FSETPRED(pObj, pPred);\n\n#ifdef DEBUG_PRINT_FLOWS\n      printf(\"f\");\n#endif\n      goto found;\n    }\n  }\n \n  // 2. follow reverse edges\n  if (pManMR-\u003efIsForward) { // forward retiming only\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      if (!FTEST(pNext, VISITED_R) \u0026\u0026\n          !Abc_ObjIsLatch(pNext) \u0026\u0026\n          dfsplain_r(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"i\");\n#endif\n        goto found;\n      }\n    }\n  \n  // 3. timing edges (forward only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        if (!FTEST(pNext, VISITED_R) \u0026\u0026\n            dfsplain_r(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n          printf(\"o\");\n#endif\n          goto found;\n        }\n      }\n#endif\n  }\n  \n  return 0;\n\n found:\n#ifdef DEBUG_PRINT_FLOWS\n  printf(\"%d \", Abc_ObjId(pObj));\n#endif\n  return 1;\n}",
+      "Draft": "func dfsplain_r(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {\n  var i int32;\n  var pNext, pOldPred *Abc_Obj_t;\n\n  // have we reached the sink?\n  if Abc_ObjIsLatch(pObj) || \n      (pManMR.fIsForward \u0026\u0026 Abc_ObjIsPo(pObj)) || \n      (pManMR.fIsForward \u0026\u0026 FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR.constraintMask) {\n    assert((pPred != nil), \"pPred\");\n    return 1;\n  }\n\n  FSET(pObj, VISITED_R);\n\n  // printf(\" %dr\\n\", Abc_ObjId(pObj));\n\n  if FTEST(pObj, FLOW) {\n\n    pOldPred = FGETPRED(pObj);\n    if (pOldPred != nil) \u0026\u0026 \n        !FTEST(pOldPred, VISITED_E) \u0026\u0026\n        (dfsplain_e(pOldPred, pOldPred) != 0) {\n\n      FSETPRED(pObj, pPred);\n\n#ifdef DEBUG_PRINT_FLOWS\n      printf(\"fr\");\n#endif\n      goto found;\n    }\n    \n  } else {\n\n    if !FTEST(pObj, VISITED_E) \u0026\u0026\n        (dfsplain_e(pObj, pObj) != 0) {\n\n      FSET(pObj, FLOW);\n      FSETPRED(pObj, pPred);\n\n#ifdef DEBUG_PRINT_FLOWS\n      printf(\"f\");\n#endif\n      goto found;\n    }\n  }\n \n  // 2. follow reverse edges\n  if pManMR.fIsForward { // forward retiming only\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_R) \u0026\u0026\n          !Abc_ObjIsLatch(pNext) \u0026\u0026\n          (dfsplain_r(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"i\");\n#endif\n        goto found;\n      }\n    }\n  \n  // 3. timing edges (forward only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        if (!FTEST(pNext, VISITED_R) \u0026\u0026\n            dfsplain_r(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n          printf(\"o\");\n#endif\n          goto found;\n        }\n      }\n#endif\n  }\n  \n  return 0;\n\n found:\n#ifdef DEBUG_PRINT_FLOWS\n  printf(\"%d \", Abc_ObjId(pObj));\n#endif\n  return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::mechanical::sizeof::2141",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2427,
+      "End": 2433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::pointer-cast::2810",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3096,
+      "End": 3109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro::FDIST",
+      "Category": "macro-review",
+      "Symbol": "FDIST",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 881,
+      "End": 963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::dfsfast_preorder",
+      "Category": "semantic-review",
+      "Symbol": "dfsfast_preorder",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1679,
+      "End": 6203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::dfsfast_e",
+      "Category": "semantic-review",
+      "Symbol": "dfsfast_e",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6205,
+      "End": 8429
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::dfsfast_r",
+      "Category": "semantic-review",
+      "Symbol": "dfsfast_r",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8431,
+      "End": 10420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::dfsfast_e_retreat",
+      "Category": "semantic-review",
+      "Symbol": "dfsfast_e_retreat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10422,
+      "End": 11982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::dfsfast_r_retreat",
+      "Category": "semantic-review",
+      "Symbol": "dfsfast_r_retreat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11984,
+      "End": 13333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::dfsplain_e",
+      "Category": "semantic-review",
+      "Symbol": "dfsplain_e",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13627,
+      "End": 15446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::dfsplain_r",
+      "Category": "semantic-review",
+      "Symbol": "dfsplain_r",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15448,
+      "End": 17113
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1962,
+      "End": 2322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4151,
+      "End": 4498
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5146,
+      "End": 5493
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5535,
+      "End": 5775
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5957,
+      "End": 6083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6549,
+      "End": 6639
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6850,
+      "End": 6902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7101,
+      "End": 7153
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7477,
+      "End": 7529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7611,
+      "End": 7955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8161,
+      "End": 8209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8322,
+      "End": 8388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8570,
+      "End": 8660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::13",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9154,
+      "End": 9205
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::14",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9405,
+      "End": 9455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::15",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9753,
+      "End": 9805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::16",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 9888,
+      "End": 10231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::17",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 10314,
+      "End": 10379
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::18",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11374,
+      "End": 11610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::19",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 12735,
+      "End": 12971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::20",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 14116,
+      "End": 14168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::21",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 14330,
+      "End": 14382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::22",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 14660,
+      "End": 14712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::23",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 14794,
+      "End": 15098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::24",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 15271,
+      "End": 15319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::25",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 15366,
+      "End": 15431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::26",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16039,
+      "End": 16090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::27",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16256,
+      "End": 16306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::28",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16575,
+      "End": 16627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::29",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16701,
+      "End": 17005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::conditional::30",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17034,
+      "End": 17099
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::2651",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2651,
+      "End": 2677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::2770",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2770,
+      "End": 2781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::2871",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2871,
+      "End": 2897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::2990",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2990,
+      "End": 3001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::3234",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3234,
+      "End": 3245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::3378",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3378,
+      "End": 3390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::3414",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3414,
+      "End": 3426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::3599",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3599,
+      "End": 3611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::3635",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3635,
+      "End": 3647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::3919",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3919,
+      "End": 3931
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::3981",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3981,
+      "End": 3993
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::4590",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4590,
+      "End": 4601
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::4648",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4648,
+      "End": 4659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::4679",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4679,
+      "End": 4690
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::4921",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4921,
+      "End": 4933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::4983",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4983,
+      "End": 4995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::5861",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5861,
+      "End": 5872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::5931",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5931,
+      "End": 5942
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::6371",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6371,
+      "End": 6397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::6525",
+      "Category": "macro-inline-review",
+      "Symbol": "FSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6525,
+      "End": 6546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::6748",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6748,
+      "End": 6771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::6785",
+      "Category": "macro-inline-review",
+      "Symbol": "FDIST",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 6785,
+      "End": 6809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::6999",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6999,
+      "End": 7022
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::7036",
+      "Category": "macro-inline-review",
+      "Symbol": "FDIST",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 7036,
+      "End": 7060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::7375",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7375,
+      "End": 7398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::7412",
+      "Category": "macro-inline-review",
+      "Symbol": "FDIST",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 7412,
+      "End": 7436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::7981",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7981,
+      "End": 7998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::8010",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8010,
+      "End": 8032
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::8042",
+      "Category": "macro-inline-review",
+      "Symbol": "FDIST",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 8042,
+      "End": 8065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::8115",
+      "Category": "macro-inline-review",
+      "Symbol": "FUNSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8115,
+      "End": 8133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::8247",
+      "Category": "macro-inline-review",
+      "Symbol": "FUNSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8247,
+      "End": 8270
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::8391",
+      "Category": "macro-inline-review",
+      "Symbol": "FUNSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8391,
+      "End": 8414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::8804",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8804,
+      "End": 8830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::8900",
+      "Category": "macro-inline-review",
+      "Symbol": "FSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8900,
+      "End": 8921
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::8930",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 8930,
+      "End": 8947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::9013",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9013,
+      "End": 9039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::9051",
+      "Category": "macro-inline-review",
+      "Symbol": "FDIST",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 9051,
+      "End": 9078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::9256",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9256,
+      "End": 9278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::9290",
+      "Category": "macro-inline-review",
+      "Symbol": "FDIST",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 9290,
+      "End": 9313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::9357",
+      "Category": "macro-inline-review",
+      "Symbol": "FSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9357,
+      "End": 9373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::9615",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9615,
+      "End": 9638
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::9652",
+      "Category": "macro-inline-review",
+      "Symbol": "FDIST",
+      "Status": "open",
+      "Message": "Stringification and token pasting require manual expansion.",
+      "Start": 9652,
+      "End": 9676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::10241",
+      "Category": "macro-inline-review",
+      "Symbol": "FUNSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10241,
+      "End": 10264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::10382",
+      "Category": "macro-inline-review",
+      "Symbol": "FUNSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10382,
+      "End": 10405
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::10514",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10514,
+      "End": 10525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::10688",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10688,
+      "End": 10700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::10741",
+      "Category": "macro-inline-review",
+      "Symbol": "MIN",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10741,
+      "End": 10764
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::10840",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10840,
+      "End": 10852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::10893",
+      "Category": "macro-inline-review",
+      "Symbol": "MIN",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10893,
+      "End": 10916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::10989",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 10989,
+      "End": 11006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::11025",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11025,
+      "End": 11036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::11075",
+      "Category": "macro-inline-review",
+      "Symbol": "MIN",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11075,
+      "End": 11098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::11243",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11243,
+      "End": 11255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::11296",
+      "Category": "macro-inline-review",
+      "Symbol": "MIN",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11296,
+      "End": 11319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::11752",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11752,
+      "End": 11763
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::12076",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12076,
+      "End": 12087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::12167",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12167,
+      "End": 12184
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::12231",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12231,
+      "End": 12252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::12293",
+      "Category": "macro-inline-review",
+      "Symbol": "MIN",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12293,
+      "End": 12316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::12350",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12350,
+      "End": 12361
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::12400",
+      "Category": "macro-inline-review",
+      "Symbol": "MIN",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12400,
+      "End": 12423
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::12601",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12601,
+      "End": 12613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::12656",
+      "Category": "macro-inline-review",
+      "Symbol": "MIN",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12656,
+      "End": 12679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::13103",
+      "Category": "macro-inline-review",
+      "Symbol": "FDATA",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13103,
+      "End": 13114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::13719",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13719,
+      "End": 13745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::13875",
+      "Category": "macro-inline-review",
+      "Symbol": "FSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13875,
+      "End": 13896
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::14051",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14051,
+      "End": 14074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::14265",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14265,
+      "End": 14288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::14595",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 14595,
+      "End": 14618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::15124",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15124,
+      "End": 15141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::15153",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15153,
+      "End": 15175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::15225",
+      "Category": "macro-inline-review",
+      "Symbol": "FUNSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15225,
+      "End": 15243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::15686",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15686,
+      "End": 15712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::15782",
+      "Category": "macro-inline-review",
+      "Symbol": "FSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15782,
+      "End": 15803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::15853",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15853,
+      "End": 15870
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::15936",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15936,
+      "End": 15962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::16141",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16141,
+      "End": 16163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::16208",
+      "Category": "macro-inline-review",
+      "Symbol": "FSET",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16208,
+      "End": 16224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fret/fretFlow.c::macro-inline::16474",
+      "Category": "macro-inline-review",
+      "Symbol": "FTEST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 16474,
+      "End": 16497
+    }
+  ],
+  "Draft": "package fret\n\n/**CFile****************************************************************\n\n  FileName    [fretFlow.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Flow-based retiming package.]\n\n  Synopsis    [Max-flow computation.]\n\n  Author      [Aaron Hurst]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2008.]\n\n  Revision    [$Id: fretFlow.c,v 1.00 2008/01/01 00:00:00 ahurst Exp $]\n\n***********************************************************************/\n\n//#include \"fretime.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void dfsfast_e_retreat( Abc_Obj_t *pObj );\n\n// static void dfsfast_r_retreat( Abc_Obj_t *pObj );\n\n\n// Original macro:\n// #define FDIST(xn, xe, yn, ye) (FDATA(xn)-\u003exe##_dist == (FDATA(yn)-\u003eye##_dist + 1))\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Fast DFS.]\n\n  Description [Uses sink-distance-histogram heuristic.  May not find all\n               flow paths: this occurs in a small number of cases where\n               the flow predecessor points to a non-adjacent node and\n               the distance ordering is perturbed.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n\nfunc dfsfast_preorder(pNtk *Abc_Ntk_t) {\n  var pObj, pNext *Abc_Obj_t;\n  var vTimeIn *Vec_Ptr_t;\n  var qn *Vec_Ptr_t = Vec_PtrAlloc(Abc_NtkObjNum(pNtk));\n  var qe *Vec_Int_t  = Vec_IntAlloc(Abc_NtkObjNum(pNtk));\n  var i, j, d, end int32;\n  var qpos int32;\n\n  // create reverse timing edges for backward traversal\n#if !defined(IGNORE_TIMING)\n  if (pManMR-\u003emaxDelay) {\n    Abc_NtkForEachObj( pNtk, pObj, i ) {\n      Vec_PtrForEachEntry( Abc_Obj_t *, FTIMEEDGES(pObj), pNext, j ) {\n        vTimeIn = FDATA(pNext)-\u003evNodes;\n        if (!vTimeIn) {\n          vTimeIn = FDATA(pNext)-\u003evNodes = Vec_PtrAlloc(2);\n        }\n        Vec_PtrPush(vTimeIn, pObj);\n      }\n    }\n  }\n#endif\n\n  // clear histogram\n  assert(pManMR.vSinkDistHist, \"pManMR.vSinkDistHist\");\n  memset(Vec_IntArray(pManMR.vSinkDistHist), 0, sizeof(int)*Vec_IntSize(pManMR.vSinkDistHist));\n\n  // seed queue : latches, PIOs, and blocks\n  Abc_NtkForEachObj( pNtk, pObj, i )\n    if Abc_ObjIsPo(pObj) ||\n        Abc_ObjIsLatch(pObj) || \n        (pManMR.fIsForward \u0026\u0026 FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR.constraintMask) {\n      Vec_PtrPush(qn, pObj);\n      Vec_IntPush(qe, 'r');\n      FDATA(pObj).r_dist = 1;\n    } else if Abc_ObjIsPi(pObj) || \n               (!pManMR.fIsForward \u0026\u0026 FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR.constraintMask) {\n      Vec_PtrPush(qn, pObj);\n      Vec_IntPush(qe, 'e');\n      FDATA(pObj).e_dist = 1;\n    }\n\n  // until queue is empty...\n  for qpos \u003c Vec_PtrSize(qn) {\n    pObj = (Abc_Obj_t *)Vec_PtrEntry(qn, qpos);\n    assert((pObj != nil), \"pObj\");\n    end = Vec_IntEntry(qe, qpos);\n    qpos++;\n    \n    if end == 'r' {\n      d = FDATA(pObj).r_dist;\n\n      // 1. structural edges\n      if pManMR.fIsForward {\n        Abc_ObjForEachFanin( pObj, pNext, i )\n          if !FDATA(pNext).e_dist {\n            FDATA(pNext).e_dist = d+1;\n            Vec_PtrPush(qn, pNext);\n            Vec_IntPush(qe, 'e');\n          }\n      } else\n        Abc_ObjForEachFanout( pObj, pNext, i )\n          if !FDATA(pNext).e_dist {\n            FDATA(pNext).e_dist = d+1;\n            Vec_PtrPush(qn, pNext);\n            Vec_IntPush(qe, 'e');\n          }\n\n      if d == 1 { continue; }\n\n      // 2. reverse edges (forward retiming only)\n      if pManMR.fIsForward {\n        Abc_ObjForEachFanout( pObj, pNext, i )\n          if !FDATA(pNext).r_dist \u0026\u0026 !Abc_ObjIsLatch(pNext) {\n            FDATA(pNext).r_dist = d+1;\n            Vec_PtrPush(qn, pNext);\n            Vec_IntPush(qe, 'r');\n          }          \n\n      // 3. timimg edges (forward retiming only)\n#if !defined(IGNORE_TIMING)\n        if (pManMR-\u003emaxDelay \u0026\u0026 FDATA(pObj)-\u003evNodes)\n          Vec_PtrForEachEntry(Abc_Obj_t *, FDATA(pObj)-\u003evNodes, pNext, i ) {\n            if (!FDATA(pNext)-\u003er_dist) {\n              FDATA(pNext)-\u003er_dist = d+1;\n              Vec_PtrPush(qn, pNext);\n              Vec_IntPush(qe, 'r');\n            }\n          }\n#endif\n      }\n      \n    } else { // if 'e'\n      if Abc_ObjIsLatch(pObj) { continue; }\n\n      d = FDATA(pObj).e_dist;\n\n      // 1. through node\n      if !FDATA(pObj).r_dist {\n        FDATA(pObj).r_dist = d+1;\n        Vec_PtrPush(qn, pObj);\n        Vec_IntPush(qe, 'r');\n      }\n\n      // 2. reverse edges (backward retiming only)\n      if !pManMR.fIsForward {\n        Abc_ObjForEachFanin( pObj, pNext, i )\n          if !FDATA(pNext).e_dist \u0026\u0026 !Abc_ObjIsLatch(pNext) {\n            FDATA(pNext).e_dist = d+1;\n            Vec_PtrPush(qn, pNext);\n            Vec_IntPush(qe, 'e');\n          }  \n\n      // 3. timimg edges (backward retiming only)\n#if !defined(IGNORE_TIMING)\n        if (pManMR-\u003emaxDelay \u0026\u0026 FDATA(pObj)-\u003evNodes)\n          Vec_PtrForEachEntry(Abc_Obj_t *, FDATA(pObj)-\u003evNodes, pNext, i ) {\n            if (!FDATA(pNext)-\u003ee_dist) {\n              FDATA(pNext)-\u003ee_dist = d+1;\n              Vec_PtrPush(qn, pNext);\n              Vec_IntPush(qe, 'e');\n            }\n          }\n#endif\n      }\n    }\n  }\n \n  // free time edges\n#if !defined(IGNORE_TIMING)\n  if (pManMR-\u003emaxDelay) {\n    Abc_NtkForEachObj( pNtk, pObj, i ) {\n      vTimeIn = FDATA(pObj)-\u003evNodes;\n      if (vTimeIn) {\n        Vec_PtrFree(vTimeIn);\n        FDATA(pObj)-\u003evNodes = 0;\n      }\n    }\n  }\n#endif\n\n  Abc_NtkForEachObj( pNtk, pObj, i ) {\n    Vec_IntAddToEntry(pManMR.vSinkDistHist, FDATA(pObj).r_dist, 1);\n    Vec_IntAddToEntry(pManMR.vSinkDistHist, FDATA(pObj).e_dist, 1);\n\n#ifdef DEBUG_PREORDER\n    printf(\"node %d\\t: r=%d\\te=%d\\n\", Abc_ObjId(pObj), FDATA(pObj)-\u003er_dist, FDATA(pObj)-\u003ee_dist);\n#endif\n  }\n\n  // printf(\"\\t\\tpre-ordered (max depth=%d)\\n\", d+1);\n\n  // deallocate\n  Vec_PtrFree( qn );\n  Vec_IntFree( qe );\n}\n\nfunc dfsfast_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {\n  var i int32;\n  var pNext *Abc_Obj_t;\n  \n  if pManMR.fSinkDistTerminate { return 0; }\n\n  // have we reached the sink?\n  if FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR.constraintMask ||\n     Abc_ObjIsPi(pObj) {\n    assert((pPred != nil), \"pPred\");\n    assert(!pManMR.fIsForward, \"!pManMR.fIsForward\");\n    return 1;\n  }\n\n  FSET(pObj, VISITED_E);\n\n#ifdef DEBUG_VISITED\n  printf(\"(%de=%d) \", Abc_ObjId(pObj), FDATA(pObj)-\u003ee_dist);\n#endif  \n\n  // 1. structural edges\n  if (pManMR.fIsForward)\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_R) \u0026\u0026\n          FDIST(pObj, e, pNext, r) \u0026\u0026\n          (dfsfast_r(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"o\");\n#endif\n        goto found;\n      }\n    }\n  else\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_R) \u0026\u0026\n          FDIST(pObj, e, pNext, r) \u0026\u0026\n          (dfsfast_r(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"o\");\n#endif\n        goto found;\n      }\n    }  \n  \n  if Abc_ObjIsLatch(pObj) {\n    goto not_found; }\n\n  // 2. reverse edges (backward retiming only)\n  if !pManMR.fIsForward { \n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_E) \u0026\u0026\n          FDIST(pObj, e, pNext, e) \u0026\u0026\n          (dfsfast_e(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"i\");\n#endif\n        goto found;\n      }\n    }\n\n  // 3. timing edges (backward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t *, FTIMEEDGES(pObj), pNext, i) {\n        if (!FTEST(pNext, VISITED_E) \u0026\u0026\n            FDIST(pObj, e, pNext, e) \u0026\u0026\n            dfsfast_e(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n          printf(\"o\");\n#endif\n          goto found;\n        }\n      }\n#endif\n  }\n  \n  // unwind\n  if FTEST(pObj, FLOW) \u0026\u0026 \n      !FTEST(pObj, VISITED_R) \u0026\u0026\n      FDIST(pObj, e, pObj, r) \u0026\u0026\n      (dfsfast_r(pObj, FGETPRED(pObj)) != 0) {\n\n    FUNSET(pObj, FLOW);\n    FSETPRED(pObj, nil);\n#ifdef DEBUG_PRINT_FLOWS\n    printf(\"u\");\n#endif\n    goto found;\n  }\n  \n not_found:\n  FUNSET(pObj, VISITED_E);\n  dfsfast_e_retreat(pObj);\n  return 0;\n  \n found:\n#ifdef DEBUG_PRINT_FLOWS\n  printf(\"%d \", Abc_ObjId(pObj));\n#endif \n  FUNSET(pObj, VISITED_E);\n  return 1;\n}\n\nfunc dfsfast_r(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {\n  var i int32;\n  var pNext, pOldPred *Abc_Obj_t;\n\n  if pManMR.fSinkDistTerminate { return 0; }\n\n#ifdef DEBUG_VISITED\n  printf(\"(%dr=%d) \", Abc_ObjId(pObj), FDATA(pObj)-\u003er_dist);\n#endif  \n\n  // have we reached the sink?\n  if Abc_ObjIsLatch(pObj) ||\n      (pManMR.fIsForward \u0026\u0026 Abc_ObjIsPo(pObj)) || \n      (pManMR.fIsForward \u0026\u0026 FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR.constraintMask) {\n    assert((pPred != nil), \"pPred\");\n    return 1;\n  }\n\n  FSET(pObj, VISITED_R);\n\n  if FTEST(pObj, FLOW) {\n\n    pOldPred = FGETPRED(pObj);\n    if (pOldPred != nil) \u0026\u0026 \n        !FTEST(pOldPred, VISITED_E) \u0026\u0026\n        FDIST(pObj, r, pOldPred, e) \u0026\u0026\n        (dfsfast_e(pOldPred, pOldPred) != 0) {\n\n      FSETPRED(pObj, pPred);\n\n#ifdef DEBUG_PRINT_FLOWS\n      printf(\"fr\");\n#endif\n      goto found;\n    }\n    \n  } else {\n\n    if !FTEST(pObj, VISITED_E) \u0026\u0026\n        FDIST(pObj, r, pObj, e) \u0026\u0026\n        (dfsfast_e(pObj, pObj) != 0) {\n\n      FSET(pObj, FLOW);\n      FSETPRED(pObj, pPred);\n\n#ifdef DEBUG_PRINT_FLOWS\n      printf(\"f\");\n#endif\n      goto found;\n    }\n  }\n \n  // 2. reverse edges (forward retiming only)\n  if pManMR.fIsForward {\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_R) \u0026\u0026\n          FDIST(pObj, r, pNext, r) \u0026\u0026\n          !Abc_ObjIsLatch(pNext) \u0026\u0026\n          (dfsfast_r(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"i\");\n#endif\n        goto found;\n      }\n    }\n  \n  // 3. timing edges (forward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        if (!FTEST(pNext, VISITED_R) \u0026\u0026\n            FDIST(pObj, r, pNext, r) \u0026\u0026\n            dfsfast_r(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n          printf(\"o\");\n#endif\n          goto found;\n        }\n      }\n#endif\n  }\n  \n  FUNSET(pObj, VISITED_R);\n  dfsfast_r_retreat(pObj);\n  return 0;\n\n found:\n#ifdef DEBUG_PRINT_FLOWS\n  printf(\"%d \", Abc_ObjId(pObj));\n#endif\n  FUNSET(pObj, VISITED_R);\n  return 1;\n}\n\nfunc dfsfast_e_retreat(pObj *Abc_Obj_t) {\n  var pNext *Abc_Obj_t;\n  var i int32;\n  var h *int32;\n  var old_dist int32  = FDATA(pObj).e_dist;\n  var adj_dist int32;\n  var min_dist int32 = MAX_DIST;\n  \n  // 1. structural edges\n  if (pManMR.fIsForward)\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      adj_dist = FDATA(pNext).r_dist;\n      if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }\n    }\n  else\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      adj_dist = FDATA(pNext).r_dist;\n      if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }\n    }\n\n  if Abc_ObjIsLatch(pObj) { goto update; }\n\n  // 2. through\n  if FTEST(pObj, FLOW) {\n    adj_dist = FDATA(pObj).r_dist;\n    if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }\n  }\n\n  // 3. reverse edges (backward retiming only)\n  if !pManMR.fIsForward {\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      adj_dist = FDATA(pNext).e_dist;\n      if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }\n    }\n\n  // 4. timing edges (backward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        adj_dist = FDATA(pNext)-\u003ee_dist;\n        if (adj_dist) min_dist = MIN(min_dist, adj_dist);\n      }\n#endif\n  }\n\n update:\n  ++min_dist;\n  if min_dist \u003e= MAX_DIST { min_dist = 0; }\n  // printf(\"[%de=%d-\u003e%d] \", Abc_ObjId(pObj), old_dist, min_dist+1);\n  FDATA(pObj).e_dist = min_dist;\n\n  assert(min_dist \u003c Vec_IntSize(pManMR.vSinkDistHist), \"min_dist \u003c Vec_IntSize(pManMR.vSinkDistHist)\");\n  h = Vec_IntArray(pManMR.vSinkDistHist);\n  h[old_dist]--;\n  h[min_dist]++;\n  if !h[old_dist] {\n    pManMR.fSinkDistTerminate = 1;\n  }\n}\n\nfunc dfsfast_r_retreat(pObj *Abc_Obj_t) {\n  var pNext *Abc_Obj_t;\n  var i int32;\n  var h *int32;\n  var old_dist int32  = FDATA(pObj).r_dist;\n  var adj_dist int32;\n  var min_dist int32 = MAX_DIST;\n  \n  // 1. through or pred\n  if FTEST(pObj, FLOW) {\n    if FGETPRED(pObj) {\n      adj_dist = FDATA(FGETPRED(pObj)).e_dist;\n      if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }\n    }\n  } else {\n    adj_dist = FDATA(pObj).e_dist;\n    if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }\n  }\n\n  // 2. reverse edges (forward retiming only)\n  if pManMR.fIsForward {\n    Abc_ObjForEachFanin( pObj, pNext, i )\n      if !Abc_ObjIsLatch(pNext) {\n        adj_dist = FDATA(pNext).r_dist;\n        if adj_dist != 0 { min_dist = MIN(min_dist, adj_dist); }\n      }\n\n  // 3. timing edges (forward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        adj_dist = FDATA(pNext)-\u003er_dist;\n        if (adj_dist) min_dist = MIN(min_dist, adj_dist);\n      }\n#endif\n  }\n\n  ++min_dist;\n  if min_dist \u003e= MAX_DIST { min_dist = 0; }\n  //printf(\"[%dr=%d-\u003e%d] \", Abc_ObjId(pObj), old_dist, min_dist+1);\n  FDATA(pObj).r_dist = min_dist;\n\n  assert(min_dist \u003c Vec_IntSize(pManMR.vSinkDistHist), \"min_dist \u003c Vec_IntSize(pManMR.vSinkDistHist)\");\n  h = Vec_IntArray(pManMR.vSinkDistHist);\n  h[old_dist]--;\n  h[min_dist]++;\n  if !h[old_dist] {\n    pManMR.fSinkDistTerminate = 1;\n  }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Plain DFS.]\n\n  Description [Does not use sink-distance-histogram heuristic.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n\nfunc dfsplain_e(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {\n  var i int32;\n  var pNext *Abc_Obj_t;\n  \n  if FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR.constraintMask || \n      Abc_ObjIsPi(pObj) {\n    assert((pPred != nil), \"pPred\");\n    assert(!pManMR.fIsForward, \"!pManMR.fIsForward\");\n    return 1;\n  }\n\n  FSET(pObj, VISITED_E);\n  \n  // printf(\" %de\\n\", Abc_ObjId(pObj));\n  \n  // 1. structural edges\n  if (pManMR.fIsForward)\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_R) \u0026\u0026\n          (dfsplain_r(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"o\");\n#endif\n        goto found;\n      }\n    }\n  else\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_R) \u0026\u0026\n          (dfsplain_r(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"o\");\n#endif\n        goto found;\n      }\n    }\n  \n  if Abc_ObjIsLatch(pObj) {\n    return 0; }\n\n  // 2. reverse edges (backward retiming only)\n  if !pManMR.fIsForward {\n    Abc_ObjForEachFanout( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_E) \u0026\u0026\n          (dfsplain_e(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"i\");\n#endif\n        goto found;\n      }\n    }\n\n  // 3. timing edges (backward retiming only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        if (!FTEST(pNext, VISITED_E) \u0026\u0026\n            dfsplain_e(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n          printf(\"o\");\n#endif\n          goto found;\n        }\n      }\n#endif\n  }\n  \n  // unwind\n  if FTEST(pObj, FLOW) \u0026\u0026 \n      !FTEST(pObj, VISITED_R) \u0026\u0026\n      (dfsplain_r(pObj, FGETPRED(pObj)) != 0) {\n    FUNSET(pObj, FLOW);\n    FSETPRED(pObj, nil);\n#ifdef DEBUG_PRINT_FLOWS\n    printf(\"u\");\n#endif\n    goto found;\n  }\n  \n  return 0;\n  \n found:\n#ifdef DEBUG_PRINT_FLOWS\n  printf(\"%d \", Abc_ObjId(pObj));\n#endif\n\n  return 1;\n}\n\nfunc dfsplain_r(pObj *Abc_Obj_t, pPred *Abc_Obj_t) int32 {\n  var i int32;\n  var pNext, pOldPred *Abc_Obj_t;\n\n  // have we reached the sink?\n  if Abc_ObjIsLatch(pObj) || \n      (pManMR.fIsForward \u0026\u0026 Abc_ObjIsPo(pObj)) || \n      (pManMR.fIsForward \u0026\u0026 FTEST(pObj, BLOCK_OR_CONS) \u0026 pManMR.constraintMask) {\n    assert((pPred != nil), \"pPred\");\n    return 1;\n  }\n\n  FSET(pObj, VISITED_R);\n\n  // printf(\" %dr\\n\", Abc_ObjId(pObj));\n\n  if FTEST(pObj, FLOW) {\n\n    pOldPred = FGETPRED(pObj);\n    if (pOldPred != nil) \u0026\u0026 \n        !FTEST(pOldPred, VISITED_E) \u0026\u0026\n        (dfsplain_e(pOldPred, pOldPred) != 0) {\n\n      FSETPRED(pObj, pPred);\n\n#ifdef DEBUG_PRINT_FLOWS\n      printf(\"fr\");\n#endif\n      goto found;\n    }\n    \n  } else {\n\n    if !FTEST(pObj, VISITED_E) \u0026\u0026\n        (dfsplain_e(pObj, pObj) != 0) {\n\n      FSET(pObj, FLOW);\n      FSETPRED(pObj, pPred);\n\n#ifdef DEBUG_PRINT_FLOWS\n      printf(\"f\");\n#endif\n      goto found;\n    }\n  }\n \n  // 2. follow reverse edges\n  if pManMR.fIsForward { // forward retiming only\n    Abc_ObjForEachFanin( pObj, pNext, i ) {\n      if !FTEST(pNext, VISITED_R) \u0026\u0026\n          !Abc_ObjIsLatch(pNext) \u0026\u0026\n          (dfsplain_r(pNext, pPred) != 0) {\n#ifdef DEBUG_PRINT_FLOWS\n        printf(\"i\");\n#endif\n        goto found;\n      }\n    }\n  \n  // 3. timing edges (forward only)\n#if !defined(IGNORE_TIMING)\n    if (pManMR-\u003emaxDelay) \n      Vec_PtrForEachEntry(Abc_Obj_t*, FTIMEEDGES(pObj), pNext, i) {\n        if (!FTEST(pNext, VISITED_R) \u0026\u0026\n            dfsplain_r(pNext, pPred)) {\n#ifdef DEBUG_PRINT_FLOWS\n          printf(\"o\");\n#endif\n          goto found;\n        }\n      }\n#endif\n  }\n  \n  return 0;\n\n found:\n#ifdef DEBUG_PRINT_FLOWS\n  printf(\"%d \", Abc_ObjId(pObj));\n#endif\n  return 1;\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

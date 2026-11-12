@@ -1,0 +1,263 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutExpand.c",
+  "SHA256": "48d0ced5acddf6038df926ddb34bef5ddfac3c3c912128c452934fc6d10f57db",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 9,
+        "ByteOffset": 1680
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut.pLeaves[i] == pCut1.pLeaves[k] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 2845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutF.nVarsMax == pCutT.nVarsMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 2893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutF.nVarsMax == pCutRes.nVarsMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 2943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutF.nVarsMax \u003c= CUT_CELL_MVAR );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 97,
+        "Column": 5,
+        "ByteOffset": 3072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutF.nLeaves \u003c= pCutF.nVarsMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 99,
+        "Column": 9,
+        "ByteOffset": 3176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCutF.pLeaves[i] \u003c pCutF.pLeaves[i+1] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 3315
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutT.nLeaves \u003c= pCutT.nVarsMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 9,
+        "ByteOffset": 3419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCutT.pLeaves[i] \u003c pCutT.pLeaves[i+1] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 107,
+        "Column": 5,
+        "ByteOffset": 3565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCutRes.nLeaves \u003c= pCutRes.nVarsMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 109,
+        "Column": 9,
+        "ByteOffset": 3675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCutRes.pLeaves[i] \u003c pCutRes.pLeaves[i+1] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 9,
+        "ByteOffset": 4074
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( k \u003c int32(pCutRes.nLeaves) ); // node i from pCutF is not found in pCutRes!!!"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 9,
+        "ByteOffset": 4430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( k \u003c int32(pCutRes.nLeaves) ); // node i from pCutT is not found in pCutRes!!!"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 4752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( NodeIndex \u003e= 0 );  // Node should be in pCutF"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 6270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Extra_WordCountOnes(uPhase) == int32(pCutF.nLeaves) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 174,
+        "Column": 5,
+        "ByteOffset": 6944
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Extra_WordCountOnes(uPhase) == int32(pCutT.nLeaves) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cut_TruthPhase",
+      "Start": 1364,
+      "End": 1796,
+      "BodyStart": 1441,
+      "Original": "static inline unsigned Cut_TruthPhase( Cut_Cut_t * pCut, Cut_Cut_t * pCut1 )\n{\n    unsigned uPhase = 0;\n    int i, k;\n    for ( i = k = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n    {\n        if ( k == (int)pCut1-\u003enLeaves )\n            break;\n        if ( pCut-\u003epLeaves[i] \u003c pCut1-\u003epLeaves[k] )\n            continue;\n        assert( pCut-\u003epLeaves[i] == pCut1-\u003epLeaves[k] );\n        uPhase |= (1 \u003c\u003c i);\n        k++;\n    }\n    return uPhase;\n}",
+      "Draft": "func Cut_TruthPhase(pCut *Cut_Cut_t, pCut1 *Cut_Cut_t) uint32 {\n    var uPhase uint32;\n    var i, k int32;\n    for  i = k = 0; i \u003c int32(pCut.nLeaves); i++  {\n        if k == int32(pCut1.nLeaves) {\n            break; }\n        if pCut.pLeaves[i] \u003c pCut1.pLeaves[k] {\n            continue; }\n        assert(pCut.pLeaves[i] == pCut1.pLeaves[k], \"pCut.pLeaves[i] == pCut1.pLeaves[k]\");\n        uPhase |= (1 \u003c\u003c i);\n        k++;\n    }\n    return uPhase;\n}"
+    },
+    {
+      "Name": "Cut_TruthCompose",
+      "Start": 2428,
+      "End": 7030,
+      "BodyStart": 2521,
+      "Original": "void Cut_TruthCompose( Cut_Cut_t * pCutF, int Node, Cut_Cut_t * pCutT, Cut_Cut_t * pCutRes )\n{\n    static unsigned uCof0[1\u003c\u003c(CUT_CELL_MVAR-5)];\n    static unsigned uCof1[1\u003c\u003c(CUT_CELL_MVAR-5)];\n    static unsigned uTemp[1\u003c\u003c(CUT_CELL_MVAR-5)];\n    unsigned * pIn, * pOut, * pTemp;\n    unsigned uPhase;\n    int NodeIndex, i, k;\n\n    // sanity checks\n    assert( pCutF-\u003enVarsMax == pCutT-\u003enVarsMax );\n    assert( pCutF-\u003enVarsMax == pCutRes-\u003enVarsMax );\n    assert( pCutF-\u003enVarsMax \u003c= CUT_CELL_MVAR );\n    // the factor cut (pCutF) should have its nodes sorted in the ascending order\n    assert( pCutF-\u003enLeaves \u003c= pCutF-\u003enVarsMax );\n    for ( i = 0; i \u003c (int)pCutF-\u003enLeaves - 1; i++ )\n        assert( pCutF-\u003epLeaves[i] \u003c pCutF-\u003epLeaves[i+1] );\n    // the tree cut (pCutT) should have its nodes sorted in the ascending order\n    assert( pCutT-\u003enLeaves \u003c= pCutT-\u003enVarsMax );\n    for ( i = 0; i \u003c (int)pCutT-\u003enLeaves - 1; i++ )\n        assert( pCutT-\u003epLeaves[i] \u003c pCutT-\u003epLeaves[i+1] );\n    // the resulting cut (pCutRes) should have its nodes sorted in the ascending order\n    assert( pCutRes-\u003enLeaves \u003c= pCutRes-\u003enVarsMax );\n    for ( i = 0; i \u003c (int)pCutRes-\u003enLeaves - 1; i++ )\n        assert( pCutRes-\u003epLeaves[i] \u003c pCutRes-\u003epLeaves[i+1] );\n    // make sure that every node in pCutF (except Node) appears in pCutRes\n    for ( i = 0; i \u003c (int)pCutF-\u003enLeaves; i++ )\n    {\n        if ( pCutF-\u003epLeaves[i] == Node )\n            continue;\n        for ( k = 0; k \u003c (int)pCutRes-\u003enLeaves; k++ )\n            if ( pCutF-\u003epLeaves[i] == pCutRes-\u003epLeaves[k] )\n                break;\n        assert( k \u003c (int)pCutRes-\u003enLeaves ); // node i from pCutF is not found in pCutRes!!!\n    }\n    // make sure that every node in pCutT appears in pCutRes\n    for ( i = 0; i \u003c (int)pCutT-\u003enLeaves; i++ )\n    {\n        for ( k = 0; k \u003c (int)pCutRes-\u003enLeaves; k++ )\n            if ( pCutT-\u003epLeaves[i] == pCutRes-\u003epLeaves[k] )\n                break;\n        assert( k \u003c (int)pCutRes-\u003enLeaves ); // node i from pCutT is not found in pCutRes!!!\n    }\n\n\n    // find the index of the given node in the factor cut\n    NodeIndex = -1;\n    for ( NodeIndex = 0; NodeIndex \u003c (int)pCutF-\u003enLeaves; NodeIndex++ )\n        if ( pCutF-\u003epLeaves[NodeIndex] == Node )\n            break;\n    assert( NodeIndex \u003e= 0 );  // Node should be in pCutF\n\n    // copy the truth table\n    Extra_TruthCopy( uTemp, Cut_CutReadTruth(pCutF), pCutF-\u003enLeaves );\n\n    // bubble-move the NodeIndex variable to be the last one (the most significant one)\n    pIn = uTemp; pOut = uCof0; // uCof0 is used for temporary storage here\n    for ( i = NodeIndex; i \u003c (int)pCutF-\u003enLeaves - 1; i++ )\n    {\n        Extra_TruthSwapAdjacentVars( pOut, pIn, pCutF-\u003enLeaves, i );\n        pTemp = pIn; pIn = pOut; pOut = pTemp;\n    }\n    if ( (pCutF-\u003enLeaves - 1 - NodeIndex) \u0026 1 )\n        Extra_TruthCopy( pOut, pIn, pCutF-\u003enLeaves );\n    // the result of stretching is in uTemp\n\n    // cofactor the factor cut with respect to the node\n    Extra_TruthCopy( uCof0, uTemp, pCutF-\u003enLeaves );\n    Extra_TruthCofactor0( uCof0, pCutF-\u003enLeaves, pCutF-\u003enLeaves-1 );\n    Extra_TruthCopy( uCof1, uTemp, pCutF-\u003enLeaves );\n    Extra_TruthCofactor1( uCof1, pCutF-\u003enLeaves, pCutF-\u003enLeaves-1 );\n\n    // temporarily shrink the factor cut's variables by removing Node \n    for ( i = NodeIndex; i \u003c (int)pCutF-\u003enLeaves - 1; i++ )\n        pCutF-\u003epLeaves[i] = pCutF-\u003epLeaves[i+1];\n    pCutF-\u003enLeaves--;\n\n    // spread out the cofactors' truth tables to the same var order as the resulting cut\n    uPhase = Cut_TruthPhase(pCutRes, pCutF);\n    assert( Extra_WordCountOnes(uPhase) == (int)pCutF-\u003enLeaves );\n    Extra_TruthStretch( uTemp, uCof0, pCutF-\u003enLeaves, pCutF-\u003enVarsMax, uPhase );\n    Extra_TruthCopy( uCof0, uTemp, pCutF-\u003enVarsMax );\n    Extra_TruthStretch( uTemp, uCof1, pCutF-\u003enLeaves, pCutF-\u003enVarsMax, uPhase );\n    Extra_TruthCopy( uCof1, uTemp, pCutF-\u003enVarsMax );\n\n    // spread out the tree cut's truth table to the same var order as the resulting cut\n    uPhase = Cut_TruthPhase(pCutRes, pCutT); \n    assert( Extra_WordCountOnes(uPhase) == (int)pCutT-\u003enLeaves );\n    Extra_TruthStretch( uTemp, Cut_CutReadTruth(pCutT), pCutT-\u003enLeaves, pCutT-\u003enVarsMax, uPhase );\n\n    // create the resulting truth table\n    pTemp = Cut_CutReadTruth(pCutRes);\n    for ( i = Extra_TruthWordNum(pCutRes-\u003enLeaves)-1; i \u003e= 0; i-- )\n        pTemp[i] = (uCof0[i] \u0026 ~uTemp[i]) | (uCof1[i] \u0026 uTemp[i]);\n\n    // undo the removal of the node from the cut\n    for ( i = (int)pCutF-\u003enLeaves - 1; i \u003e= NodeIndex; --i )\n        pCutF-\u003epLeaves[i+1] = pCutF-\u003epLeaves[i];\n    pCutF-\u003epLeaves[NodeIndex] = Node;\n    pCutF-\u003enLeaves++;\n}",
+      "Draft": "func Cut_TruthCompose(pCutF *Cut_Cut_t, Node int32, pCutT *Cut_Cut_t, pCutRes *Cut_Cut_t) {\n    \n    \n    \n    var pIn, pOut, pTemp *uint32;\n    var uPhase uint32;\n    var NodeIndex, i, k int32;\n\n    // sanity checks\n    assert(pCutF.nVarsMax == pCutT.nVarsMax, \"pCutF.nVarsMax == pCutT.nVarsMax\");\n    assert(pCutF.nVarsMax == pCutRes.nVarsMax, \"pCutF.nVarsMax == pCutRes.nVarsMax\");\n    assert(pCutF.nVarsMax \u003c= CUT_CELL_MVAR, \"pCutF.nVarsMax \u003c= CUT_CELL_MVAR\");\n    // the factor cut (pCutF) should have its nodes sorted in the ascending order\n    assert(pCutF.nLeaves \u003c= pCutF.nVarsMax, \"pCutF.nLeaves \u003c= pCutF.nVarsMax\");\n    for  i = 0; i \u003c int32(pCutF.nLeaves) - 1; i++  {\n        assert(pCutF.pLeaves[i] \u003c pCutF.pLeaves[i+1], \"pCutF.pLeaves[i] \u003c pCutF.pLeaves[i+1]\");\n    }\n    // the tree cut (pCutT) should have its nodes sorted in the ascending order\n    assert(pCutT.nLeaves \u003c= pCutT.nVarsMax, \"pCutT.nLeaves \u003c= pCutT.nVarsMax\");\n    for  i = 0; i \u003c int32(pCutT.nLeaves) - 1; i++  {\n        assert(pCutT.pLeaves[i] \u003c pCutT.pLeaves[i+1], \"pCutT.pLeaves[i] \u003c pCutT.pLeaves[i+1]\");\n    }\n    // the resulting cut (pCutRes) should have its nodes sorted in the ascending order\n    assert(pCutRes.nLeaves \u003c= pCutRes.nVarsMax, \"pCutRes.nLeaves \u003c= pCutRes.nVarsMax\");\n    for  i = 0; i \u003c int32(pCutRes.nLeaves) - 1; i++  {\n        assert(pCutRes.pLeaves[i] \u003c pCutRes.pLeaves[i+1], \"pCutRes.pLeaves[i] \u003c pCutRes.pLeaves[i+1]\");\n    }\n    // make sure that every node in pCutF (except Node) appears in pCutRes\n    for  i = 0; i \u003c int32(pCutF.nLeaves); i++  {\n        if pCutF.pLeaves[i] == Node {\n            continue; }\n        for  k = 0; k \u003c int32(pCutRes.nLeaves); k++  {\n            if pCutF.pLeaves[i] == pCutRes.pLeaves[k] {\n                break; }\n        }\n        assert(k \u003c int32(pCutRes.nLeaves), \"k \u003c int32(pCutRes.nLeaves)\"); // node i from pCutF is not found in pCutRes!!!\n    }\n    // make sure that every node in pCutT appears in pCutRes\n    for  i = 0; i \u003c int32(pCutT.nLeaves); i++  {\n        for  k = 0; k \u003c int32(pCutRes.nLeaves); k++  {\n            if pCutT.pLeaves[i] == pCutRes.pLeaves[k] {\n                break; }\n        }\n        assert(k \u003c int32(pCutRes.nLeaves), \"k \u003c int32(pCutRes.nLeaves)\"); // node i from pCutT is not found in pCutRes!!!\n    }\n\n\n    // find the index of the given node in the factor cut\n    NodeIndex = -1;\n    for  NodeIndex = 0; NodeIndex \u003c int32(pCutF.nLeaves); NodeIndex++  {\n        if pCutF.pLeaves[NodeIndex] == Node {\n            break; }\n    }\n    assert(NodeIndex \u003e= 0, \"NodeIndex \u003e= 0\");  // Node should be in pCutF\n\n    // copy the truth table\n    Extra_TruthCopy( spStatic_Cut_TruthCompose_uTemp, Cut_CutReadTruth(pCutF), pCutF.nLeaves );\n\n    // bubble-move the NodeIndex variable to be the last one (the most significant one)\n    pIn = spStatic_Cut_TruthCompose_uTemp; pOut = spStatic_Cut_TruthCompose_uCof0; // uCof0 is used for temporary storage here\n    for  i = NodeIndex; i \u003c int32(pCutF.nLeaves) - 1; i++  {\n        Extra_TruthSwapAdjacentVars( pOut, pIn, pCutF.nLeaves, i );\n        pTemp = pIn; pIn = pOut; pOut = pTemp;\n    }\n    if (pCutF.nLeaves - 1 - NodeIndex) \u0026 1 {\n        Extra_TruthCopy( pOut, pIn, pCutF.nLeaves ); }\n    // the result of stretching is in uTemp\n\n    // cofactor the factor cut with respect to the node\n    Extra_TruthCopy( spStatic_Cut_TruthCompose_uCof0, spStatic_Cut_TruthCompose_uTemp, pCutF.nLeaves );\n    Extra_TruthCofactor0( spStatic_Cut_TruthCompose_uCof0, pCutF.nLeaves, pCutF.nLeaves-1 );\n    Extra_TruthCopy( spStatic_Cut_TruthCompose_uCof1, spStatic_Cut_TruthCompose_uTemp, pCutF.nLeaves );\n    Extra_TruthCofactor1( spStatic_Cut_TruthCompose_uCof1, pCutF.nLeaves, pCutF.nLeaves-1 );\n\n    // temporarily shrink the factor cut's variables by removing Node \n    for  i = NodeIndex; i \u003c int32(pCutF.nLeaves) - 1; i++  {\n        pCutF.pLeaves[i] = pCutF.pLeaves[i+1];\n    }\n    pCutF.nLeaves--;\n\n    // spread out the cofactors' truth tables to the same var order as the resulting cut\n    uPhase = Cut_TruthPhase(pCutRes, pCutF);\n    assert(Extra_WordCountOnes(uPhase) == int32(pCutF.nLeaves), \"Extra_WordCountOnes(uPhase) == int32(pCutF.nLeaves)\");\n    Extra_TruthStretch( spStatic_Cut_TruthCompose_uTemp, spStatic_Cut_TruthCompose_uCof0, pCutF.nLeaves, pCutF.nVarsMax, uPhase );\n    Extra_TruthCopy( spStatic_Cut_TruthCompose_uCof0, spStatic_Cut_TruthCompose_uTemp, pCutF.nVarsMax );\n    Extra_TruthStretch( spStatic_Cut_TruthCompose_uTemp, spStatic_Cut_TruthCompose_uCof1, pCutF.nLeaves, pCutF.nVarsMax, uPhase );\n    Extra_TruthCopy( spStatic_Cut_TruthCompose_uCof1, spStatic_Cut_TruthCompose_uTemp, pCutF.nVarsMax );\n\n    // spread out the tree cut's truth table to the same var order as the resulting cut\n    uPhase = Cut_TruthPhase(pCutRes, pCutT); \n    assert(Extra_WordCountOnes(uPhase) == int32(pCutT.nLeaves), \"Extra_WordCountOnes(uPhase) == int32(pCutT.nLeaves)\");\n    Extra_TruthStretch( spStatic_Cut_TruthCompose_uTemp, Cut_CutReadTruth(pCutT), pCutT.nLeaves, pCutT.nVarsMax, uPhase );\n\n    // create the resulting truth table\n    pTemp = Cut_CutReadTruth(pCutRes);\n    for  i = Extra_TruthWordNum(pCutRes.nLeaves)-1; i \u003e= 0; i--  {\n        pTemp[i] = (spStatic_Cut_TruthCompose_uCof0[i] \u0026 ~spStatic_Cut_TruthCompose_uTemp[i]) | (spStatic_Cut_TruthCompose_uCof1[i] \u0026 spStatic_Cut_TruthCompose_uTemp[i]);\n    }\n\n    // undo the removal of the node from the cut\n    for  i = int32(pCutF.nLeaves) - 1; i \u003e= NodeIndex; --i  {\n        pCutF.pLeaves[i+1] = pCutF.pLeaves[i];\n    }\n    pCutF.pLeaves[NodeIndex] = Node;\n    pCutF.nLeaves++;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutExpand.c::mechanical::static::2527",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2527,
+      "End": 2533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutExpand.c::mechanical::static::2576",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2576,
+      "End": 2582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutExpand.c::mechanical::static::2625",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2625,
+      "End": 2631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutExpand.c::Cut_TruthPhase",
+      "Category": "semantic-review",
+      "Symbol": "Cut_TruthPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1364,
+      "End": 1796
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutExpand.c::Cut_TruthCompose",
+      "Category": "semantic-review",
+      "Symbol": "Cut_TruthCompose",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2428,
+      "End": 7030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutExpand.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7277
+    }
+  ],
+  "Draft": "package cut\n\n/**CFile****************************************************************\n\n  FileName    [cutExpand.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [K-feasible cut computation package.]\n\n  Synopsis    [Computes the truth table of the cut after expansion.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cutExpand.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cutInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst CUT_CELL_MVAR =  9\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the stretching phase of the cut w.r.t. the merged cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_TruthPhase(pCut *Cut_Cut_t, pCut1 *Cut_Cut_t) uint32 {\n    var uPhase uint32;\n    var i, k int32;\n    for  i = k = 0; i \u003c int32(pCut.nLeaves); i++  {\n        if k == int32(pCut1.nLeaves) {\n            break; }\n        if pCut.pLeaves[i] \u003c pCut1.pLeaves[k] {\n            continue; }\n        assert(pCut.pLeaves[i] == pCut1.pLeaves[k], \"pCut.pLeaves[i] == pCut1.pLeaves[k]\");\n        uPhase |= (1 \u003c\u003c i);\n        k++;\n    }\n    return uPhase;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the truth table of the composition of cuts.]\n\n  Description [Inputs are: \n  - a factor cut (truth table is stored inside)\n  - a node in the factor cut\n  - a tree cut to be substituted (truth table is stored inside)\n  - the resulting cut (truth table will be filled in).\n  Note that all cuts, including the resulting one, should be already \n  computed and the nodes should be stored in the ascending order.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Cut_TruthCompose_uCof0 [1\u003c\u003c(CUT_CELL_MVAR-5)]uint32;\nvar spStatic_Cut_TruthCompose_uCof1 [1\u003c\u003c(CUT_CELL_MVAR-5)]uint32;\nvar spStatic_Cut_TruthCompose_uTemp [1\u003c\u003c(CUT_CELL_MVAR-5)]uint32;\nfunc Cut_TruthCompose(pCutF *Cut_Cut_t, Node int32, pCutT *Cut_Cut_t, pCutRes *Cut_Cut_t) {\n    \n    \n    \n    var pIn, pOut, pTemp *uint32;\n    var uPhase uint32;\n    var NodeIndex, i, k int32;\n\n    // sanity checks\n    assert(pCutF.nVarsMax == pCutT.nVarsMax, \"pCutF.nVarsMax == pCutT.nVarsMax\");\n    assert(pCutF.nVarsMax == pCutRes.nVarsMax, \"pCutF.nVarsMax == pCutRes.nVarsMax\");\n    assert(pCutF.nVarsMax \u003c= CUT_CELL_MVAR, \"pCutF.nVarsMax \u003c= CUT_CELL_MVAR\");\n    // the factor cut (pCutF) should have its nodes sorted in the ascending order\n    assert(pCutF.nLeaves \u003c= pCutF.nVarsMax, \"pCutF.nLeaves \u003c= pCutF.nVarsMax\");\n    for  i = 0; i \u003c int32(pCutF.nLeaves) - 1; i++  {\n        assert(pCutF.pLeaves[i] \u003c pCutF.pLeaves[i+1], \"pCutF.pLeaves[i] \u003c pCutF.pLeaves[i+1]\");\n    }\n    // the tree cut (pCutT) should have its nodes sorted in the ascending order\n    assert(pCutT.nLeaves \u003c= pCutT.nVarsMax, \"pCutT.nLeaves \u003c= pCutT.nVarsMax\");\n    for  i = 0; i \u003c int32(pCutT.nLeaves) - 1; i++  {\n        assert(pCutT.pLeaves[i] \u003c pCutT.pLeaves[i+1], \"pCutT.pLeaves[i] \u003c pCutT.pLeaves[i+1]\");\n    }\n    // the resulting cut (pCutRes) should have its nodes sorted in the ascending order\n    assert(pCutRes.nLeaves \u003c= pCutRes.nVarsMax, \"pCutRes.nLeaves \u003c= pCutRes.nVarsMax\");\n    for  i = 0; i \u003c int32(pCutRes.nLeaves) - 1; i++  {\n        assert(pCutRes.pLeaves[i] \u003c pCutRes.pLeaves[i+1], \"pCutRes.pLeaves[i] \u003c pCutRes.pLeaves[i+1]\");\n    }\n    // make sure that every node in pCutF (except Node) appears in pCutRes\n    for  i = 0; i \u003c int32(pCutF.nLeaves); i++  {\n        if pCutF.pLeaves[i] == Node {\n            continue; }\n        for  k = 0; k \u003c int32(pCutRes.nLeaves); k++  {\n            if pCutF.pLeaves[i] == pCutRes.pLeaves[k] {\n                break; }\n        }\n        assert(k \u003c int32(pCutRes.nLeaves), \"k \u003c int32(pCutRes.nLeaves)\"); // node i from pCutF is not found in pCutRes!!!\n    }\n    // make sure that every node in pCutT appears in pCutRes\n    for  i = 0; i \u003c int32(pCutT.nLeaves); i++  {\n        for  k = 0; k \u003c int32(pCutRes.nLeaves); k++  {\n            if pCutT.pLeaves[i] == pCutRes.pLeaves[k] {\n                break; }\n        }\n        assert(k \u003c int32(pCutRes.nLeaves), \"k \u003c int32(pCutRes.nLeaves)\"); // node i from pCutT is not found in pCutRes!!!\n    }\n\n\n    // find the index of the given node in the factor cut\n    NodeIndex = -1;\n    for  NodeIndex = 0; NodeIndex \u003c int32(pCutF.nLeaves); NodeIndex++  {\n        if pCutF.pLeaves[NodeIndex] == Node {\n            break; }\n    }\n    assert(NodeIndex \u003e= 0, \"NodeIndex \u003e= 0\");  // Node should be in pCutF\n\n    // copy the truth table\n    Extra_TruthCopy( spStatic_Cut_TruthCompose_uTemp, Cut_CutReadTruth(pCutF), pCutF.nLeaves );\n\n    // bubble-move the NodeIndex variable to be the last one (the most significant one)\n    pIn = spStatic_Cut_TruthCompose_uTemp; pOut = spStatic_Cut_TruthCompose_uCof0; // uCof0 is used for temporary storage here\n    for  i = NodeIndex; i \u003c int32(pCutF.nLeaves) - 1; i++  {\n        Extra_TruthSwapAdjacentVars( pOut, pIn, pCutF.nLeaves, i );\n        pTemp = pIn; pIn = pOut; pOut = pTemp;\n    }\n    if (pCutF.nLeaves - 1 - NodeIndex) \u0026 1 {\n        Extra_TruthCopy( pOut, pIn, pCutF.nLeaves ); }\n    // the result of stretching is in uTemp\n\n    // cofactor the factor cut with respect to the node\n    Extra_TruthCopy( spStatic_Cut_TruthCompose_uCof0, spStatic_Cut_TruthCompose_uTemp, pCutF.nLeaves );\n    Extra_TruthCofactor0( spStatic_Cut_TruthCompose_uCof0, pCutF.nLeaves, pCutF.nLeaves-1 );\n    Extra_TruthCopy( spStatic_Cut_TruthCompose_uCof1, spStatic_Cut_TruthCompose_uTemp, pCutF.nLeaves );\n    Extra_TruthCofactor1( spStatic_Cut_TruthCompose_uCof1, pCutF.nLeaves, pCutF.nLeaves-1 );\n\n    // temporarily shrink the factor cut's variables by removing Node \n    for  i = NodeIndex; i \u003c int32(pCutF.nLeaves) - 1; i++  {\n        pCutF.pLeaves[i] = pCutF.pLeaves[i+1];\n    }\n    pCutF.nLeaves--;\n\n    // spread out the cofactors' truth tables to the same var order as the resulting cut\n    uPhase = Cut_TruthPhase(pCutRes, pCutF);\n    assert(Extra_WordCountOnes(uPhase) == int32(pCutF.nLeaves), \"Extra_WordCountOnes(uPhase) == int32(pCutF.nLeaves)\");\n    Extra_TruthStretch( spStatic_Cut_TruthCompose_uTemp, spStatic_Cut_TruthCompose_uCof0, pCutF.nLeaves, pCutF.nVarsMax, uPhase );\n    Extra_TruthCopy( spStatic_Cut_TruthCompose_uCof0, spStatic_Cut_TruthCompose_uTemp, pCutF.nVarsMax );\n    Extra_TruthStretch( spStatic_Cut_TruthCompose_uTemp, spStatic_Cut_TruthCompose_uCof1, pCutF.nLeaves, pCutF.nVarsMax, uPhase );\n    Extra_TruthCopy( spStatic_Cut_TruthCompose_uCof1, spStatic_Cut_TruthCompose_uTemp, pCutF.nVarsMax );\n\n    // spread out the tree cut's truth table to the same var order as the resulting cut\n    uPhase = Cut_TruthPhase(pCutRes, pCutT); \n    assert(Extra_WordCountOnes(uPhase) == int32(pCutT.nLeaves), \"Extra_WordCountOnes(uPhase) == int32(pCutT.nLeaves)\");\n    Extra_TruthStretch( spStatic_Cut_TruthCompose_uTemp, Cut_CutReadTruth(pCutT), pCutT.nLeaves, pCutT.nVarsMax, uPhase );\n\n    // create the resulting truth table\n    pTemp = Cut_CutReadTruth(pCutRes);\n    for  i = Extra_TruthWordNum(pCutRes.nLeaves)-1; i \u003e= 0; i--  {\n        pTemp[i] = (spStatic_Cut_TruthCompose_uCof0[i] \u0026 ~spStatic_Cut_TruthCompose_uTemp[i]) | (spStatic_Cut_TruthCompose_uCof1[i] \u0026 spStatic_Cut_TruthCompose_uTemp[i]);\n    }\n\n    // undo the removal of the node from the cut\n    for  i = int32(pCutF.nLeaves) - 1; i \u003e= NodeIndex; --i  {\n        pCutF.pLeaves[i+1] = pCutF.pLeaves[i];\n    }\n    pCutF.pLeaves[NodeIndex] = Node;\n    pCutF.nLeaves++;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

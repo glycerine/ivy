@@ -1,0 +1,123 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/rows.c",
+  "SHA256": "9f750fbc8774a8b84ade5c006890f836925eebe23feb74cbedac861565c84885",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 292,
+        "Column": 12,
+        "ByteOffset": 5791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    (void) fprintf(fp, \" %d\", p.col_num);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 25,
+        "Column": 1,
+        "ByteOffset": 258
+      },
+      "Directive": "#ifdef FAST_AND_LOOSE"
+    },
+    {
+      "Location": {
+        "Line": 56,
+        "Column": 1,
+        "ByteOffset": 1031
+      },
+      "Directive": "#if defined(FAST_AND_LOOSE) \u0026\u0026 ! defined(COLS)"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "sm_row_alloc",
+      "Start": 204,
+      "End": 732,
+      "BodyStart": 228,
+      "Original": "sm_row *\nsm_row_alloc()\n{\n    register sm_row *prow;\n\n#ifdef FAST_AND_LOOSE\n    if (sm_row_freelist == NIL(sm_row)) {\n    prow = ALLOC(sm_row, 1);\n    } else {\n    prow = sm_row_freelist;\n    sm_row_freelist = prow-\u003enext_row;\n    }\n#else\n    prow = ALLOC(sm_row, 1);\n#endif\n\n    prow-\u003erow_num = 0;\n    prow-\u003elength = 0;\n    prow-\u003efirst_col = prow-\u003elast_col = NIL(sm_element);\n    prow-\u003enext_row = prow-\u003eprev_row = NIL(sm_row);\n    prow-\u003eflag = 0;\n    prow-\u003euser_word = NIL(char);        /* for our user ... */\n    return prow;\n}",
+      "Draft": "func sm_row_alloc() *sm_row {\n    register sm_row *prow;\n\n#ifdef FAST_AND_LOOSE\n    if (sm_row_freelist == NIL(sm_row)) {\n    prow = ALLOC(sm_row, 1);\n    } else {\n    prow = sm_row_freelist;\n    sm_row_freelist = prow-\u003enext_row;\n    }\n#else\n    prow = ALLOC(sm_row, 1);\n#endif\n\n    prow.row_num = 0;\n    prow.length = 0;\n    prow.first_col = prow.last_col = NIL(sm_element);\n    prow.next_row = prow.prev_row = NIL(sm_row);\n    prow.flag = 0;\n    prow.user_word = NIL(char);        /* for our user ... */\n    return prow;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/rows.c::sm_row_alloc",
+      "Category": "semantic-review",
+      "Symbol": "sm_row_alloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 204,
+      "End": 732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/rows.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/rows.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 258,
+      "End": 477
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/rows.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1031,
+      "End": 1569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/rows.c::macro-inline::2090",
+      "Category": "macro-inline-review",
+      "Symbol": "sm_element_alloc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2090,
+      "End": 2115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/rows.c::macro-inline::2340",
+      "Category": "macro-inline-review",
+      "Symbol": "sm_element_free",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2340,
+      "End": 2364
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/rows.c::macro-inline::2821",
+      "Category": "macro-inline-review",
+      "Symbol": "sm_element_free",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2821,
+      "End": 2839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/rows.c::macro-inline::5855",
+      "Category": "macro-inline-review",
+      "Symbol": "sm_element_free",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5855,
+      "End": 5873
+    }
+  ],
+  "Draft": "package espresso\n\nimport \"fmt\"\n\nimport \"os\"\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"port.h\"\n//#include \"sparse_int.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*\n *  allocate a new row vector \n */\nfunc sm_row_alloc() *sm_row {\n    register sm_row *prow;\n\n#ifdef FAST_AND_LOOSE\n    if (sm_row_freelist == NIL(sm_row)) {\n    prow = ALLOC(sm_row, 1);\n    } else {\n    prow = sm_row_freelist;\n    sm_row_freelist = prow-\u003enext_row;\n    }\n#else\n    prow = ALLOC(sm_row, 1);\n#endif\n\n    prow.row_num = 0;\n    prow.length = 0;\n    prow.first_col = prow.last_col = NIL(sm_element);\n    prow.next_row = prow.prev_row = NIL(sm_row);\n    prow.flag = 0;\n    prow.user_word = NIL(char);        /* for our user ... */\n    return prow;\n}\n\n\n/*\n *  free a row vector -- for FAST_AND_LOOSE, this is real cheap for rows;\n *  however, freeing a column must still walk down the column discarding\n *  the elements one-by-one; that is the only use for the extra '-DCOLS'\n *  compile flag ...\n */\nvoid\nsm_row_free(prow)\nregister sm_row *prow;\n{\n#if defined(FAST_AND_LOOSE) \u0026\u0026 ! defined(COLS)\n    if (prow-\u003efirst_col != NIL(sm_element)) {\n    /* Add the linked list of row items to the free list */\n    prow-\u003elast_col-\u003enext_col = sm_element_freelist;\n    sm_element_freelist = prow-\u003efirst_col;\n    }\n\n    /* Add the row to the free list of rows */\n    prow-\u003enext_row = sm_row_freelist;\n    sm_row_freelist = prow;\n#else\n    register sm_element *p, *pnext;\n\n    for(p = prow-\u003efirst_col; p != 0; p = pnext) {\n    pnext = p-\u003enext_col;\n    sm_element_free(p);\n    }\n    FREE(prow);\n#endif\n}\n\n\n/*\n *  duplicate an existing row\n */\nsm_row *\nsm_row_dup(prow)\nregister sm_row *prow;\n{\n    register sm_row *pnew;\n    register sm_element *p;\n\n    pnew = sm_row_alloc();\n    for p = prow.first_col; p != 0; p = p.next_col {\n    (void) sm_row_insert(pnew, p.col_num);\n    }\n    return pnew;\n}\n\n\n/*\n *  insert an element into a row vector \n */\nsm_element *\nsm_row_insert(prow, col)\nregister sm_row *prow;\nregister int col;\n{\n    register sm_element *test, *element;\n\n    /* get a new item, save its address */\n    sm_element_alloc(element);\n    test = element;\n    sorted_insert(sm_element, prow.first_col, prow.last_col, prow.length, \n            next_col, prev_col, col_num, col, test);\n\n    /* if item was not used, free it */\n    if element != test {\n    sm_element_free(element);\n    }\n\n    /* either way, return the current new value */\n    return test;\n}\n\n\n/*\n *  remove an element from a row vector \n */\nvoid\nsm_row_remove(prow, col)\nregister sm_row *prow;\nregister int col;\n{\n    register sm_element *p;\n\n    for(p = prow.first_col; p != 0 \u0026\u0026 p.col_num \u003c col; p = p.next_col)\n    ;\n    if p != 0 \u0026\u0026 p.col_num == col {\n    // inlining of macro dll_unlink\n    {     if p.prev_col == 0 {     prow.first_col = p.next_col;     } else {     p.prev_col.next_col = p.next_col;     }\n     if p.next_col == 0 {     prow.last_col = p.prev_col;     } else {     p.next_col.prev_col = p.prev_col;     }\n     prow.length--; };\n    sm_element_free(p);\n    }\n}\n\n\n/*\n *  find an element (if it is in the row vector)\n */\nsm_element *\nsm_row_find(prow, col)\nvar prow *sm_row;\nvar col int32;\n{\n    register sm_element *p;\n\n    for(p = prow.first_col; p != 0 \u0026\u0026 p.col_num \u003c col; p = p.next_col)\n    ;\n    if p != 0 \u0026\u0026 p.col_num == col {\n    return p;\n    } else {\n    return NIL(sm_element);\n    }\n}\n\f\n/*\n *  return 1 if row p2 contains row p1; 0 otherwise\n */\nint \nsm_row_contains(p1, p2)\nvar p1, p2 *sm_row;\n{\n    register sm_element *q1, *q2;\n\n    q1 = p1.first_col;\n    q2 = p2.first_col;\n    while (q1 != 0) {\n    if q2 == 0 || q1.col_num \u003c q2.col_num {\n        return 0;\n    } else if q1.col_num == q2.col_num {\n        q1 = q1.next_col;\n        q2 = q2.next_col;\n    } else {\n        q2 = q2.next_col;\n    }\n    }\n    return 1;\n}\n\n\n/*\n *  return 1 if row p1 and row p2 share an element in common\n */\nint \nsm_row_intersects(p1, p2)\nvar p1, p2 *sm_row;\n{\n    register sm_element *q1, *q2;\n\n    q1 = p1.first_col;\n    q2 = p2.first_col;\n    if (q1 == 0 || q2 == 0) return 0;\n    for {\n    if q1.col_num \u003c q2.col_num {\n        if (q1 = q1.next_col) == 0 {\n        return 0;\n        }\n    } else if q1.col_num \u003e q2.col_num {\n        if (q2 = q2.next_col) == 0 {\n        return 0;\n        }\n    } else {\n        return 1;\n    }\n    }\n}\n\n\n/*\n *  compare two rows, lexical ordering\n */\nint \nsm_row_compare(p1, p2)\nvar p1, p2 *sm_row;\n{\n    register sm_element *q1, *q2;\n\n    q1 = p1.first_col;\n    q2 = p2.first_col;\n    while(q1 != 0 \u0026\u0026 q2 != 0) {\n    if q1.col_num != q2.col_num {\n        return q1.col_num - q2.col_num;\n    }\n    q1 = q1.next_col;\n    q2 = q2.next_col;\n    }\n\n    if q1 != 0 {\n    return 1;\n    } else if q2 != 0 {\n    return -1;\n    } else {\n    return 0;\n    }\n}\n\n\n/*\n *  return the intersection\n */\nsm_row *\nsm_row_and(p1, p2)\nvar p1, p2 *sm_row;\n{\n    register sm_element *q1, *q2;\n    register sm_row *result;\n\n    result = sm_row_alloc();\n    q1 = p1.first_col;\n    q2 = p2.first_col;\n    if (q1 == 0 || q2 == 0) return result;\n    for {\n    if q1.col_num \u003c q2.col_num {\n        if (q1 = q1.next_col) == 0 {\n        return result;\n        }\n    } else if q1.col_num \u003e q2.col_num {\n        if (q2 = q2.next_col) == 0 {\n        return result;\n        }\n    } else {\n        (void) sm_row_insert(result, q1.col_num);\n        if (q1 = q1.next_col) == 0 {\n        return result;\n        }\n        if (q2 = q2.next_col) == 0 {\n        return result;\n        }\n    }\n    }\n}\n\f\nint \nsm_row_hash(prow, modulus)\nvar prow *sm_row;\nvar modulus int32;\n{\n    register int sum;\n    register sm_element *p;\n\n    sum = 0;\n    for p = prow.first_col; p != 0; p = p.next_col {\n    sum = (sum*17 + p.col_num) % modulus;\n    }\n    return sum;\n}\n\f\n/*\n *  remove an element from a row vector (given a pointer to the element) \n */\nvoid\nsm_row_remove_element(prow, p)\nregister sm_row *prow;\nregister sm_element *p;\n{\n    // inlining of macro dll_unlink\n    {     if p.prev_col == 0 {     prow.first_col = p.next_col;     } else {     p.prev_col.next_col = p.next_col;     }\n     if p.next_col == 0 {     prow.last_col = p.prev_col;     } else {     p.next_col.prev_col = p.prev_col;     }\n     prow.length--; };\n    sm_element_free(p);\n}\n\n\nvoid\nsm_row_print(fp, prow)\nvar fp *os.File;\nvar prow *sm_row;\n{\n    sm_element *p;\n\n    for p = prow.first_col; p != 0; p = p.next_col {\n    (void) fmt.Fprintf(fp, \" %d\", p.col_num);\n    }\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

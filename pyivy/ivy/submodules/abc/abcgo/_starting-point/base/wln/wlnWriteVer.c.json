@@ -1,0 +1,2332 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWriteVer.c",
+  "SHA256": "fdc2bc60a5a92d11b06f8d05e13d9c1803a7971b873316073d749a5ddebbb377",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nOuts \u003e 0 \u0026\u0026 nOuts \u003c= 64 \u0026\u0026 (64 % nOuts) == 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"module table%d(ind, val);\\n\", Id );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  input  [%d:0] ind;\\n\", nFans-1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1654
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  output [%d:0] val;\\n\", nOuts-1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1711
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  reg    [%d:0] val;\\n\", nOuts-1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1768
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  always @(ind)\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1811
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  begin\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"    case (ind)\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"      %d\\'h%x: val = %d\\'h%x;\\n\", nFans, m, nOuts, uint32(((pTable[(nOuts * m) \u003e\u003e 6] \u003e\u003e ((nOuts * m) \u0026 63)) \u0026 Abc_Tt6Mask(nOuts))) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 2084
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"    endcase\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 2123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  end\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 2156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"endmodule\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 2193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 129,
+        "Column": 23,
+        "ByteOffset": 4422
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        AddedLength = strlen(pName) + 2;"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 131,
+        "Column": 13,
+        "ByteOffset": 4542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"\\n   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 4686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %s%s\", pName, (i==Vec_IntSize(vVec)-1)? \"\" : \",\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 144,
+        "Column": 5,
+        "ByteOffset": 4939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"module %s ( \", p.pName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 145,
+        "Column": 5,
+        "ByteOffset": 4986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 148,
+        "Column": 9,
+        "ByteOffset": 5102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \",\\n   \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 5,
+        "ByteOffset": 5223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"  );\\n\" );"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 157,
+        "Column": 9,
+        "ByteOffset": 5604
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Range, \"%s[%d:%d]%*s\", (!p.fSmtLib \u0026\u0026 Wln_ObjIsSigned(p, iObj)) ? \"signed \":\"       \", End, Beg, 8-nDigits, \"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 9,
+        "ByteOffset": 5735
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"  \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 160,
+        "Column": 13,
+        "ByteOffset": 5805
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"input  \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 162,
+        "Column": 13,
+        "ByteOffset": 5887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"output \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 13,
+        "ByteOffset": 5945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"       \" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 166,
+        "Column": 13,
+        "ByteOffset": 6023
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"wire %s %s ;\\n\", Range, Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 169,
+        "Column": 13,
+        "ByteOffset": 6166
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"  assign                         \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 13,
+        "ByteOffset": 6233
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%-16s = %s ;\\n\", Wln_ObjName(p, iObj), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 174,
+        "Column": 13,
+        "ByteOffset": 6474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"reg  %s \", Range );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 176,
+        "Column": 13,
+        "ByteOffset": 6540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"wire %s \", Range ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 179,
+        "Column": 13,
+        "ByteOffset": 6710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s ;              table%d\", Wln_ObjName(p, iObj), Wln_ObjFanin1(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 13,
+        "ByteOffset": 6815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" s%d_Index(%s, \", iObj, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 181,
+        "Column": 13,
+        "ByteOffset": 6910
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s)\",             Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 185,
+        "Column": 13,
+        "ByteOffset": 7113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s ;           LUT\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 186,
+        "Column": 13,
+        "ByteOffset": 7187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" lut%d (%s, \", iObj, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 188,
+        "Column": 17,
+        "ByteOffset": 7344
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s, \", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 190,
+        "Column": 13,
+        "ByteOffset": 7438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s)\",             Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 193,
+        "Column": 13,
+        "ByteOffset": 7562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%-16s = %s\", Wln_ObjName(p, iObj), Wln_ObjConstString(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 198,
+        "Column": 13,
+        "ByteOffset": 7945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Num0 \u003e 0 \u0026\u0026 Num0 \u003c Wln_ObjRange(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 13,
+        "ByteOffset": 8009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%-16s = \", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 17,
+        "ByteOffset": 8138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"(%s \u003e\u003e %d) | (%s \u003c\u003c %d)\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num0, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 17,
+        "ByteOffset": 8312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"(%s \u003c\u003c %d) | (%s \u003e\u003e %d)\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num0, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num1 ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 206,
+        "Column": 13,
+        "ByteOffset": 8534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 207,
+        "Column": 13,
+        "ByteOffset": 8596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"         \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 13,
+        "ByteOffset": 8639
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"always @( \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 17,
+        "ByteOffset": 8872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s%s\", k ? \" or \":\"\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 13,
+        "ByteOffset": 8983
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" )\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 213,
+        "Column": 13,
+        "ByteOffset": 9021
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"           \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 214,
+        "Column": 13,
+        "ByteOffset": 9066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"begin\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 215,
+        "Column": 13,
+        "ByteOffset": 9107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"             \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 13,
+        "ByteOffset": 9154
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"case ( %s )\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 219,
+        "Column": 17,
+        "ByteOffset": 9468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"               \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 220,
+        "Column": 17,
+        "ByteOffset": 9521
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%d : %s = \", k-1, Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 17,
+        "ByteOffset": 9596
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 224,
+        "Column": 13,
+        "ByteOffset": 9706
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"             \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 13,
+        "ByteOffset": 9753
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"endcase\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 226,
+        "Column": 13,
+        "ByteOffset": 9796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"           \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 227,
+        "Column": 13,
+        "ByteOffset": 9841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"end\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 231,
+        "Column": 13,
+        "ByteOffset": 9972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 232,
+        "Column": 13,
+        "ByteOffset": 10034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"         \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 233,
+        "Column": 13,
+        "ByteOffset": 10077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"always @( \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 17,
+        "ByteOffset": 10310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s%s\", k ? \" or \":\"\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 237,
+        "Column": 13,
+        "ByteOffset": 10421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" )\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 238,
+        "Column": 13,
+        "ByteOffset": 10459
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"           \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 239,
+        "Column": 13,
+        "ByteOffset": 10504
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"begin\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 13,
+        "ByteOffset": 10545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"             \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 241,
+        "Column": 13,
+        "ByteOffset": 10592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"case ( %s )\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 244,
+        "Column": 17,
+        "ByteOffset": 10906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"               \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 245,
+        "Column": 17,
+        "ByteOffset": 10959
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%d\\'b\", Wln_ObjFaninNum(p, iObj)-1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 21,
+        "ByteOffset": 11101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"%d\", int32((j==k)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 17,
+        "ByteOffset": 11174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" : %s = \", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 250,
+        "Column": 17,
+        "ByteOffset": 11242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 253,
+        "Column": 13,
+        "ByteOffset": 11352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"               \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 13,
+        "ByteOffset": 11401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"default\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 13,
+        "ByteOffset": 11442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" : %s = \", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 13,
+        "ByteOffset": 11506
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%d\\'b\", Wln_ObjRange(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 258,
+        "Column": 17,
+        "ByteOffset": 11633
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%d\", 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 260,
+        "Column": 13,
+        "ByteOffset": 11686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" ;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 13,
+        "ByteOffset": 11724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"             \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 262,
+        "Column": 13,
+        "ByteOffset": 11771
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"endcase\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 13,
+        "ByteOffset": 11814
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"           \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 264,
+        "Column": 13,
+        "ByteOffset": 11859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"end\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 13,
+        "ByteOffset": 12063
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( (1 \u003c\u003c nRange) == Wln_ObjRange(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 13,
+        "ByteOffset": 12125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 272,
+        "Column": 17,
+        "ByteOffset": 12249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"         \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 273,
+        "Column": 17,
+        "ByteOffset": 12296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"wire \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 274,
+        "Column": 17,
+        "ByteOffset": 12339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s_\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 276,
+        "Column": 21,
+        "ByteOffset": 12453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"%d\", (k \u003e\u003e (nRange-1-j)) \u0026 1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 278,
+        "Column": 17,
+        "ByteOffset": 12536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" = \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 21,
+        "ByteOffset": 12628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"%s%s%s[%d]\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 284,
+        "Column": 17,
+        "ByteOffset": 12849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" ;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 286,
+        "Column": 13,
+        "ByteOffset": 12901
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"         \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 13,
+        "ByteOffset": 12944
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"assign %s = { \", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 289,
+        "Column": 17,
+        "ByteOffset": 13079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s%s_\", k \u003c Wln_ObjRange(p, iObj)-1 ? \", \":\"\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 291,
+        "Column": 21,
+        "ByteOffset": 13234
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"%d\", (k \u003e\u003e (nRange-1-j)) \u0026 1 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 294,
+        "Column": 13,
+        "ByteOffset": 13327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" } ;\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 299,
+        "Column": 13,
+        "ByteOffset": 13508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 13,
+        "ByteOffset": 13570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"         \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 301,
+        "Column": 13,
+        "ByteOffset": 13613
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"assign \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 302,
+        "Column": 13,
+        "ByteOffset": 13654
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s = %s ? %s + %s + %s : %s - %s - %s ;\\n\", "
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 311,
+        "Column": 17,
+        "ByteOffset": 14282
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 312,
+        "Column": 17,
+        "ByteOffset": 14348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"         \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 313,
+        "Column": 17,
+        "ByteOffset": 14395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s (\", Wln_ObjType(p, iObj) == ABC_OPER_RAMR ? \"ABC_READ\" : \"ABC_WRITE\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 315,
+        "Column": 21,
+        "ByteOffset": 14696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \" .%s(%s),\", k==0 ? \"mem_in\" : (k==1 ? \"addr\": \"data\"), Wln_ObjName(p, iFanin) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 317,
+        "Column": 17,
+        "ByteOffset": 14830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" .%s(%s) ) ;\\n\", Wln_ObjType(p, iObj) == ABC_OPER_RAMR ? \"data\" : \"mem_out\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 330,
+        "Column": 17,
+        "ByteOffset": 15513
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( nBitsMem % nBitsDat == 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 331,
+        "Column": 17,
+        "ByteOffset": 15565
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 332,
+        "Column": 17,
+        "ByteOffset": 15631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"         \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 17,
+        "ByteOffset": 15678
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s_%d (\", Wln_ObjType(p, iObj) == ABC_OPER_RAMR ? \"CPL_MEM_READ\" : \"CPL_MEM_WRITE\", Depth );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 335,
+        "Column": 21,
+        "ByteOffset": 15997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \" .%s(%s),\", k==0 ? \"mem_data_in\" : (k==1 ? \"addr_in\": \"data_in\"), Wln_ObjName(p, iFanin) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 337,
+        "Column": 17,
+        "ByteOffset": 16142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" .%s(%s) ) ;\\n\", \"data_out\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 342,
+        "Column": 13,
+        "ByteOffset": 16333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 346,
+        "Column": 13,
+        "ByteOffset": 16443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \"%-16s = \", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 348,
+        "Column": 17,
+        "ByteOffset": 16569
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 350,
+        "Column": 17,
+        "ByteOffset": 16714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s ? \", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 351,
+        "Column": 17,
+        "ByteOffset": 16797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s : \", Wln_ObjName(p, Wln_ObjFanin1(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 352,
+        "Column": 17,
+        "ByteOffset": 16880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s\",    Wln_ObjName(p, Wln_ObjFanin2(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 355,
+        "Column": 17,
+        "ByteOffset": 17041
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"-%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 357,
+        "Column": 17,
+        "ByteOffset": 17187
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"~%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 359,
+        "Column": 17,
+        "ByteOffset": 17335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"!%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 361,
+        "Column": 17,
+        "ByteOffset": 17481
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"\u0026%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 363,
+        "Column": 17,
+        "ByteOffset": 17626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"|%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 365,
+        "Column": 17,
+        "ByteOffset": 17772
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"^%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 367,
+        "Column": 17,
+        "ByteOffset": 17919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"~\u0026%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 369,
+        "Column": 17,
+        "ByteOffset": 18066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"~|%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 371,
+        "Column": 17,
+        "ByteOffset": 18214
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"~^%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 373,
+        "Column": 17,
+        "ByteOffset": 18359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s [%d:%d]\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Wln_ObjRangeEnd(p, iObj), Wln_ObjRangeBeg(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 375,
+        "Column": 17,
+        "ByteOffset": 18564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"{ {%d{%s[%d]}}, %s }\", Wln_ObjRange(p, iObj) - Wln_ObjRange(p, Wln_ObjFanin0(p, iObj)), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Wln_ObjRange(p, Wln_ObjFanin0(p, iObj)) - 1, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 377,
+        "Column": 17,
+        "ByteOffset": 18877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"{ {%d{1\\'b0}}, %s }\", Wln_ObjRange(p, iObj) - Wln_ObjRange(p, Wln_ObjFanin0(p, iObj)), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 379,
+        "Column": 17,
+        "ByteOffset": 19103
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"{\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 381,
+        "Column": 21,
+        "ByteOffset": 19335
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \" %s%s\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)), k == Wln_ObjFaninNum(p, iObj)-1 ? \"\":\",\" ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 383,
+        "Column": 17,
+        "ByteOffset": 19482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" }\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 386,
+        "Column": 17,
+        "ByteOffset": 19556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \"%s \", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 388,
+        "Column": 21,
+        "ByteOffset": 19705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"\u003e\u003e\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 390,
+        "Column": 21,
+        "ByteOffset": 19819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"\u003e\u003e\u003e\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 392,
+        "Column": 21,
+        "ByteOffset": 19933
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"\u003c\u003c\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 394,
+        "Column": 21,
+        "ByteOffset": 20047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"\u003c\u003c\u003c\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 396,
+        "Column": 21,
+        "ByteOffset": 20161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"\u0026\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 398,
+        "Column": 21,
+        "ByteOffset": 20272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"|\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 400,
+        "Column": 21,
+        "ByteOffset": 20384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"^\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 402,
+        "Column": 21,
+        "ByteOffset": 20497
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"~\u0026\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 404,
+        "Column": 21,
+        "ByteOffset": 20610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"~|\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 406,
+        "Column": 21,
+        "ByteOffset": 20724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"~^\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 408,
+        "Column": 21,
+        "ByteOffset": 20840
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"=\u003e\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 410,
+        "Column": 21,
+        "ByteOffset": 20955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"\u0026\u0026\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 412,
+        "Column": 21,
+        "ByteOffset": 21069
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"||\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 414,
+        "Column": 21,
+        "ByteOffset": 21184
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"^^\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 416,
+        "Column": 21,
+        "ByteOffset": 21298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"==\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 418,
+        "Column": 21,
+        "ByteOffset": 21415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"!=\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 420,
+        "Column": 21,
+        "ByteOffset": 21530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"\u003c\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 422,
+        "Column": 21,
+        "ByteOffset": 21644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"\u003e\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 424,
+        "Column": 21,
+        "ByteOffset": 21761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"\u003c=\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 426,
+        "Column": 21,
+        "ByteOffset": 21879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"\u003e=\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 428,
+        "Column": 21,
+        "ByteOffset": 21992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"+\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 430,
+        "Column": 21,
+        "ByteOffset": 22104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"-\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 432,
+        "Column": 21,
+        "ByteOffset": 22216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"*\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 434,
+        "Column": 21,
+        "ByteOffset": 22328
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"/\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 436,
+        "Column": 21,
+        "ByteOffset": 22440
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"%%\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 438,
+        "Column": 21,
+        "ByteOffset": 22553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"%%\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 440,
+        "Column": 21,
+        "ByteOffset": 22666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"**\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 442,
+        "Column": 21,
+        "ByteOffset": 22780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"@\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 444,
+        "Column": 21,
+        "ByteOffset": 22895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"#\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 447,
+        "Column": 21,
+        "ByteOffset": 22998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Failed to write node \\\"%s\\\" with unknown operator type (%d).\\n\", Wln_ObjName(p, iObj), Wln_ObjType(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 448,
+        "Column": 21,
+        "ByteOffset": 23138
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \"???\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 451,
+        "Column": 17,
+        "ByteOffset": 23229
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf( pFile, \" %s\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 1)) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 453,
+        "Column": 21,
+        "ByteOffset": 23412
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    fprintf( pFile, \" + %s\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 2)) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 456,
+        "Column": 9,
+        "ByteOffset": 23515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" ;%s\\n\", (p.fSmtLib \u0026\u0026 Wln_ObjIsSigned(p, iObj)) ? \" // signed SMT-LIB operator\" : \"\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 460,
+        "Column": 5,
+        "ByteOffset": 23676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 463,
+        "Column": 9,
+        "ByteOffset": 23947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"         \" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 464,
+        "Column": 9,
+        "ByteOffset": 23986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%s (\", \"ABC_DFFRSE\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 466,
+        "Column": 25,
+        "ByteOffset": 24229
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if iFanin { fprintf( pFile, \" .%s(%s),\", pInNames[k], Wln_ObjName(p, iFanin) ); }"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 468,
+        "Column": 9,
+        "ByteOffset": 24317
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" .%s(%s) ) ;\\n\", \"q\", Wln_ObjName(p, iObj) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 470,
+        "Column": 5,
+        "ByteOffset": 24390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 471,
+        "Column": 5,
+        "ByteOffset": 24418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"endmodule\\n\\n\" );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 475,
+        "Column": 13,
+        "ByteOffset": 24544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 477,
+        "Column": 9,
+        "ByteOffset": 24599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Wln_WriteVer(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 477,
+        "Column": 18,
+        "ByteOffset": 24608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( stdout, \"Wln_WriteVer(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 480,
+        "Column": 5,
+        "ByteOffset": 24712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"// Benchmark \\\"%s\\\" from file \\\"%s\\\" written by ABC on %s\\n\", p.pName, p.pSpec ? p.pSpec : \"unknown\", Extra_TimeStamp() );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 481,
+        "Column": 5,
+        "ByteOffset": 24856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 486,
+        "Column": 5,
+        "ByteOffset": 25003
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 487,
+        "Column": 5,
+        "ByteOffset": 25031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Wln_WriteTableOne",
+      "Start": 1229,
+      "End": 2159,
+      "BodyStart": 1313,
+      "Original": "void Wln_WriteTableOne( FILE * pFile, int nFans, int nOuts, word * pTable, int Id )\n{\n    int m, nMints = (1\u003c\u003cnFans);\n//    Abc_TtPrintHexArrayRev( stdout, pTable, nMints );  printf( \"\\n\" );\n    assert( nOuts \u003e 0 \u0026\u0026 nOuts \u003c= 64 \u0026\u0026 (64 % nOuts) == 0 );\n    fprintf( pFile, \"module table%d(ind, val);\\n\", Id );\n    fprintf( pFile, \"  input  [%d:0] ind;\\n\", nFans-1 );\n    fprintf( pFile, \"  output [%d:0] val;\\n\", nOuts-1 );\n    fprintf( pFile, \"  reg    [%d:0] val;\\n\", nOuts-1 );\n    fprintf( pFile, \"  always @(ind)\\n\" );\n    fprintf( pFile, \"  begin\\n\" );\n    fprintf( pFile, \"    case (ind)\\n\" );\n    for ( m = 0; m \u003c nMints; m++ )\n    fprintf( pFile, \"      %d\\'h%x: val = %d\\'h%x;\\n\", nFans, m, nOuts, (unsigned)((pTable[(nOuts * m) \u003e\u003e 6] \u003e\u003e ((nOuts * m) \u0026 63)) \u0026 Abc_Tt6Mask(nOuts)) );\n    fprintf( pFile, \"    endcase\\n\" );\n    fprintf( pFile, \"  end\\n\" );\n    fprintf( pFile, \"endmodule\\n\" );\n    fprintf( pFile, \"\\n\" );\n}",
+      "Draft": "func Wln_WriteTableOne(pFile *os.File, nFans int32, nOuts int32, pTable *word, Id int32) {\n    var m int32;\n    var nMints int32 = (1\u003c\u003cnFans);\n//    Abc_TtPrintHexArrayRev( stdout, pTable, nMints );  printf( \"\\n\" );\n    assert(nOuts \u003e 0 \u0026\u0026 nOuts \u003c= 64 \u0026\u0026 (64 % nOuts) == 0, \"nOuts \u003e 0 \u0026\u0026 nOuts \u003c= 64 \u0026\u0026 (64 % nOuts) == 0\");\n    fmt.Fprintf(pFile, \"module table%d(ind, val);\\n\", Id);\n    fmt.Fprintf(pFile, \"  input  [%d:0] ind;\\n\", nFans-1);\n    fmt.Fprintf(pFile, \"  output [%d:0] val;\\n\", nOuts-1);\n    fmt.Fprintf(pFile, \"  reg    [%d:0] val;\\n\", nOuts-1);\n    fmt.Fprintf(pFile, \"  always @(ind)\\n\");\n    fmt.Fprintf(pFile, \"  begin\\n\");\n    fmt.Fprintf(pFile, \"    case (ind)\\n\");\n    for  m = 0; m \u003c nMints; m++  {\n    fmt.Fprintf(pFile, \"      %d\\'h%x: val = %d\\'h%x;\\n\", nFans, m, nOuts, uint32(((pTable[(nOuts * m) \u003e\u003e 6] \u003e\u003e ((nOuts * m) \u0026 63)) \u0026 Abc_Tt6Mask(nOuts))));\n    }\n    fmt.Fprintf(pFile, \"    endcase\\n\");\n    fmt.Fprintf(pFile, \"  end\\n\");\n    fmt.Fprintf(pFile, \"endmodule\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n}"
+    },
+    {
+      "Name": "Wln_WriteTables",
+      "Start": 2160,
+      "End": 2909,
+      "BodyStart": 2212,
+      "Original": "void Wln_WriteTables( FILE * pFile, Wln_Ntk_t * p )\n{\n    Vec_Int_t * vNodes;\n    word * pTable; \n    int i, iObj;\n    if ( p-\u003evTables == NULL || Vec_PtrSize(p-\u003evTables) == 0 )\n        return;\n    // map tables into their nodes\n    vNodes = Vec_IntStart( Vec_PtrSize(p-\u003evTables) );\n    Wln_NtkForEachObj( p, iObj )\n        if ( Wln_ObjType(p, iObj) == ABC_OPER_TABLE )\n            Vec_IntWriteEntry( vNodes, Wln_ObjFanin1(p, iObj), iObj );\n    // write tables\n    Vec_PtrForEachEntry( word *, p-\u003evTables, pTable, i )\n    {\n        int iNode  = Vec_IntEntry( vNodes, i );\n        int iFanin = Wln_ObjFanin0( p, iNode );\n        Wln_WriteTableOne( pFile, Wln_ObjRange(p, iFanin), Wln_ObjRange(p, iNode), pTable, i );\n    }\n    Vec_IntFree( vNodes );\n}",
+      "Draft": "func Wln_WriteTables(pFile *os.File, p *Wln_Ntk_t) {\n    var vNodes *Vec_Int_t;\n    var pTable *word; \n    var i, iObj int32;\n    if p.vTables == nil || Vec_PtrSize(p.vTables) == 0 {\n        return; }\n    // map tables into their nodes\n    vNodes = Vec_IntStart( Vec_PtrSize(p.vTables) );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        if Wln_ObjType(p, iObj) == ABC_OPER_TABLE {\n            Vec_IntWriteEntry( vNodes, Wln_ObjFanin1(p, iObj), iObj ); }\n    }\n    // write tables\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTables)) \u0026\u0026 (((pTable) = (word *)Vec_PtrEntry(p.vTables, i)), 1); i++  {\n        var iNode int32   = Vec_IntEntry( vNodes, i );\n        var iFanin int32  = Wln_ObjFanin0( p, iNode );\n        Wln_WriteTableOne( pFile, Wln_ObjRange(p, iFanin), Wln_ObjRange(p, iNode), pTable, i );\n    }\n    Vec_IntFree( vNodes );\n}"
+    },
+    {
+      "Name": "Wln_WriteAddPos",
+      "Start": 3204,
+      "End": 3370,
+      "BodyStart": 3242,
+      "Original": "void Wln_WriteAddPos( Wln_Ntk_t * p )\n{\n    int iObj;\n    Wln_NtkForEachObj( p, iObj )\n        if ( !Wln_ObjIsCio(p, iObj) )\n            Wln_ObjCreateCo( p, iObj );\n}",
+      "Draft": "func Wln_WriteAddPos(p *Wln_Ntk_t) {\n    var iObj int32;\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        if !Wln_ObjIsCio(p, iObj) {\n            Wln_ObjCreateCo( p, iObj ); }\n    }\n}"
+    },
+    {
+      "Name": "Wln_WriteVerIntVec",
+      "Start": 3607,
+      "End": 4373,
+      "BodyStart": 3691,
+      "Original": "void Wln_WriteVerIntVec( FILE * pFile, Wln_Ntk_t * p, Vec_Int_t * vVec, int Start )\n{\n    char * pName;\n    int LineLength  = Start;\n    int NameCounter = 0;\n    int AddedLength, i, iObj;\n    Vec_IntForEachEntry( vVec, iObj, i )\n    {\n        pName = Wln_ObjName( p, iObj );\n        // get the line length after this name is written\n        AddedLength = strlen(pName) + 2;\n        if ( NameCounter \u0026\u0026 LineLength + AddedLength + 3 \u003e 70 )\n        { // write the line extender\n            fprintf( pFile, \"\\n   \" );\n            // reset the line length\n            LineLength  = Start;\n            NameCounter = 0;\n        }\n        fprintf( pFile, \" %s%s\", pName, (i==Vec_IntSize(vVec)-1)? \"\" : \",\" );\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n}",
+      "Draft": "func Wln_WriteVerIntVec(pFile *os.File, p *Wln_Ntk_t, vVec *Vec_Int_t, Start int32) {\n    var pName string;\n    var LineLength int32   = Start;\n    var NameCounter int32;\n    var AddedLength, i, iObj int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vVec)) \u0026\u0026 (((iObj) = Vec_IntEntry(vVec, i)), 1); i++  {\n        pName = Wln_ObjName( p, iObj );\n        // get the line length after this name is written\n        AddedLength = len(pName) + 2;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e 70 { // write the line extender\n            fmt.Fprintf(pFile, \"\\n   \");\n            // reset the line length\n            LineLength  = Start;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s%s\", pName, (i==Vec_IntSize(vVec)-1)? \"\" : \",\");\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n}"
+    },
+    {
+      "Name": "Wln_WriteVerInt",
+      "Start": 4375,
+      "End": 22619,
+      "BodyStart": 4427,
+      "Original": "void Wln_WriteVerInt( FILE * pFile, Wln_Ntk_t * p )\n{\n    int k, j, iObj, iFanin;\n    char Range[100];\n    fprintf( pFile, \"module %s ( \", p-\u003epName );\n    fprintf( pFile, \"\\n   \" );\n    if ( Wln_NtkCiNum(p) \u003e 0 )\n    {\n        Wln_WriteVerIntVec( pFile, p, \u0026p-\u003evCis, 3 );\n        fprintf( pFile, \",\\n   \" );\n    }\n    if ( Wln_NtkCoNum(p) \u003e 0 )\n        Wln_WriteVerIntVec( pFile, p, \u0026p-\u003evCos, 3 );\n    fprintf( pFile, \"  );\\n\" );\n    Wln_NtkForEachObj( p, iObj )\n    {\n        int End = Wln_ObjRangeEnd(p, iObj);\n        int Beg = Wln_ObjRangeBeg(p, iObj);\n        int nDigits = Abc_Base10Log(Abc_AbsInt(End)+1) + Abc_Base10Log(Abc_AbsInt(Beg)+1) + (int)(End \u003c 0) + (int)(Beg \u003c 0);\n        sprintf( Range, \"%s[%d:%d]%*s\", (!p-\u003efSmtLib \u0026\u0026 Wln_ObjIsSigned(p, iObj)) ? \"signed \":\"       \", End, Beg, 8-nDigits, \"\" );\n        fprintf( pFile, \"  \" );\n        if ( Wln_ObjIsCi(p, iObj) )\n            fprintf( pFile, \"input  \" );\n        else if ( Wln_ObjIsCo(p, iObj) )\n            fprintf( pFile, \"output \" );\n        else\n            fprintf( pFile, \"       \" );\n        if ( Wln_ObjIsCio(p, iObj) )\n        {\n            fprintf( pFile, \"wire %s %s ;\\n\", Range, Wln_ObjName(p, iObj) );\n            if ( Wln_ObjIsCi(p, iObj) )\n                continue;\n            fprintf( pFile, \"  assign                         \" );\n            fprintf( pFile, \"%-16s = %s ;\\n\", Wln_ObjName(p, iObj), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            continue;\n        }\n        if ( Wln_ObjType(p, iObj) == ABC_OPER_SEL_NMUX || Wln_ObjType(p, iObj) == ABC_OPER_SEL_SEL )\n            fprintf( pFile, \"reg  %s \", Range );\n        else\n            fprintf( pFile, \"wire %s \", Range );\n        if ( Wln_ObjType(p, iObj) == ABC_OPER_TABLE )\n        {\n            // wire [3:0] s4972; table0 s4972_Index(s4971, s4972);\n            fprintf( pFile, \"%s ;              table%d\", Wln_ObjName(p, iObj), Wln_ObjFanin1(p, iObj) );\n            fprintf( pFile, \" s%d_Index(%s, \", iObj, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            fprintf( pFile, \"%s)\",             Wln_ObjName(p, iObj) );\n        }\n        else if ( Wln_ObjType(p, iObj) == ABC_OPER_LUT )\n        {\n            // wire [3:0] s4972; LUT lut4972_Index(s4971, s4972);\n            fprintf( pFile, \"%s ;           LUT\", Wln_ObjName(p, iObj) );\n            fprintf( pFile, \" lut%d (%s, \", iObj, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            for ( k = 1; k \u003c Wln_ObjFaninNum(p, iObj); k++ )\n                fprintf( pFile, \"%s, \", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)) );\n            fprintf( pFile, \"%s)\",             Wln_ObjName(p, iObj) );\n        }\n        else if ( Wln_ObjIsConst(p, iObj) )\n            fprintf( pFile, \"%-16s = %s\", Wln_ObjName(p, iObj), Wln_ObjConstString(p, iObj) );\n        else if ( Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_ROTR || Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_ROTL )\n        {\n            //  wire [27:0] s4960 = (s57 \u003e\u003e 17) | (s57 \u003c\u003c 11);\n            int Num0 = Wln_ObjFanin1(p, iObj);\n            int Num1 = Wln_ObjRange(p, iObj) - Num0;\n            assert( Num0 \u003e 0 \u0026\u0026 Num0 \u003c Wln_ObjRange(p, iObj) );\n            fprintf( pFile, \"%-16s = \", Wln_ObjName(p, iObj) );\n            if ( Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_ROTR )\n                fprintf( pFile, \"(%s \u003e\u003e %d) | (%s \u003c\u003c %d)\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num0, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num1 );\n            else\n                fprintf( pFile, \"(%s \u003c\u003c %d) | (%s \u003e\u003e %d)\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num0, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num1 );\n        }\n        else if ( Wln_ObjType(p, iObj) == ABC_OPER_SEL_NMUX )\n        {\n            fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, iObj) );\n            fprintf( pFile, \"         \" );\n            fprintf( pFile, \"always @( \" );\n            Wln_ObjForEachFanin( p, iObj, iFanin, k )\n                fprintf( pFile, \"%s%s\", k ? \" or \":\"\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)) );\n            fprintf( pFile, \" )\\n\" );\n            fprintf( pFile, \"           \" );\n            fprintf( pFile, \"begin\\n\" );\n            fprintf( pFile, \"             \" );\n            fprintf( pFile, \"case ( %s )\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)) );\n            Wln_ObjForEachFanin( p, iObj, iFanin, k )\n            {\n                if ( !k ) continue;\n                fprintf( pFile, \"               \" );\n                fprintf( pFile, \"%d : %s = \", k-1, Wln_ObjName(p, iObj) );\n                fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)) );\n            }\n            fprintf( pFile, \"             \" );\n            fprintf( pFile, \"endcase\\n\" );\n            fprintf( pFile, \"           \" );\n            fprintf( pFile, \"end\\n\" );\n            continue;\n        }\n        else if ( Wln_ObjType(p, iObj) == ABC_OPER_SEL_SEL )\n        {\n            fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, iObj) );\n            fprintf( pFile, \"         \" );\n            fprintf( pFile, \"always @( \" );\n            Wln_ObjForEachFanin( p, iObj, iFanin, k )\n                fprintf( pFile, \"%s%s\", k ? \" or \":\"\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)) );\n            fprintf( pFile, \" )\\n\" );\n            fprintf( pFile, \"           \" );\n            fprintf( pFile, \"begin\\n\" );\n            fprintf( pFile, \"             \" );\n            fprintf( pFile, \"case ( %s )\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)) );\n            Wln_ObjForEachFanin( p, iObj, iFanin, k )\n            {\n                if ( !k ) continue;\n                fprintf( pFile, \"               \" );\n                fprintf( pFile, \"%d\\'b\", Wln_ObjFaninNum(p, iObj)-1 );\n                for ( j = Wln_ObjFaninNum(p, iObj)-1; j \u003e 0; j-- )\n                    fprintf( pFile, \"%d\", (int)(j==k) );\n                fprintf( pFile, \" : %s = \", Wln_ObjName(p, iObj) );\n                fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)) );\n            }\n            fprintf( pFile, \"               \" );\n            fprintf( pFile, \"default\" );\n            fprintf( pFile, \" : %s = \", Wln_ObjName(p, iObj) );\n            fprintf( pFile, \"%d\\'b\", Wln_ObjRange(p, iObj) );\n            for ( j = Wln_ObjRange(p, iObj)-1; j \u003e= 0; j-- )\n                fprintf( pFile, \"%d\", 0 );\n            fprintf( pFile, \" ;\\n\" );\n            fprintf( pFile, \"             \" );\n            fprintf( pFile, \"endcase\\n\" );\n            fprintf( pFile, \"           \" );\n            fprintf( pFile, \"end\\n\" );\n            continue;\n        }\n        else if ( Wln_ObjType(p, iObj) == ABC_OPER_SEL_DEC )\n        {\n            int nRange = Wln_ObjRange(p, Wln_ObjFanin0(p, iObj));\n            assert( (1 \u003c\u003c nRange) == Wln_ObjRange(p, iObj) );\n            fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, iObj) );\n            for ( k = 0; k \u003c Wln_ObjRange(p, iObj); k++ )\n            {\n                fprintf( pFile, \"         \" );\n                fprintf( pFile, \"wire \" );\n                fprintf( pFile, \"%s_\", Wln_ObjName(p, iObj) );\n                for ( j = 0; j \u003c nRange; j++ )\n                    fprintf( pFile, \"%d\", (k \u003e\u003e (nRange-1-j)) \u0026 1 );\n                fprintf( pFile, \" = \" );\n                for ( j = 0; j \u003c nRange; j++ )\n                    fprintf( pFile, \"%s%s%s[%d]\", \n                        j ? \" \u0026 \":\"\", ((k \u003e\u003e (nRange-1-j)) \u0026 1) ? \" \":\"~\", \n                        Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)), nRange-1-j );\n                fprintf( pFile, \" ;\\n\" );\n            }\n            fprintf( pFile, \"         \" );\n            fprintf( pFile, \"assign %s = { \", Wln_ObjName(p, iObj) );\n            for ( k = Wln_ObjRange(p, iObj)-1; k \u003e= 0; k-- )\n            {\n                fprintf( pFile, \"%s%s_\", k \u003c Wln_ObjRange(p, iObj)-1 ? \", \":\"\", Wln_ObjName(p, iObj) );\n                for ( j = 0; j \u003c nRange; j++ )\n                    fprintf( pFile, \"%d\", (k \u003e\u003e (nRange-1-j)) \u0026 1 );\n            }\n            fprintf( pFile, \" } ;\\n\" );\n            continue;\n        }\n        else if ( Wln_ObjType(p, iObj) == ABC_OPER_ARI_ADDSUB )\n        {\n            // out = mode ? a+b+cin : a-b-cin\n            fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, iObj) );\n            fprintf( pFile, \"         \" );\n            fprintf( pFile, \"assign \" );\n            fprintf( pFile, \"%s = %s ? %s + %s + %s : %s - %s - %s ;\\n\", \n                        Wln_ObjName(p, iObj), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)),\n                        Wln_ObjName(p, Wln_ObjFanin2(p, iObj)), Wln_ObjName(p, Wln_ObjFanin(p, iObj,3)), Wln_ObjName(p, Wln_ObjFanin1(p, iObj)),\n                        Wln_ObjName(p, Wln_ObjFanin2(p, iObj)), Wln_ObjName(p, Wln_ObjFanin(p, iObj,3)), Wln_ObjName(p, Wln_ObjFanin1(p, iObj)) \n                   );\n            continue;\n        }\n        else if ( Wln_ObjType(p, iObj) == ABC_OPER_RAMR || Wln_ObjType(p, iObj) == ABC_OPER_RAMW )\n        {\n            if ( 1 )\n            {\n                fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, iObj) );\n                fprintf( pFile, \"         \" );\n                fprintf( pFile, \"%s (\", Wln_ObjType(p, iObj) == ABC_OPER_RAMR ? \"ABC_READ\" : \"ABC_WRITE\" );\n                Wln_ObjForEachFanin( p, iObj, iFanin, k )\n                    fprintf( pFile, \" .%s(%s),\", k==0 ? \"mem_in\" : (k==1 ? \"addr\": \"data\"), Wln_ObjName(p, iFanin) );\n                fprintf( pFile, \" .%s(%s) ) ;\\n\", Wln_ObjType(p, iObj) == ABC_OPER_RAMR ? \"data\" : \"mem_out\", Wln_ObjName(p, iObj) );\n                continue;\n            }\n            else\n            {\n                int nBitsMem  = Wln_ObjRange(p,  Wln_ObjFanin(p, iObj, 0) );\n                //int nBitsAddr = Wln_ObjRange(p,  Wln_ObjFanin(p, iObj, 1) );\n                int nBitsDat  = Wln_ObjType(p, iObj) == ABC_OPER_RAMR ? Wln_ObjRange(p, iObj) : Wln_ObjRange(p, Wln_ObjFanin(p, iObj, 2));\n                int Depth     = nBitsMem / nBitsDat;\n                assert( nBitsMem % nBitsDat == 0 );\n                fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, iObj) );\n                fprintf( pFile, \"         \" );\n                fprintf( pFile, \"%s_%d (\", Wln_ObjType(p, iObj) == ABC_OPER_RAMR ? \"CPL_MEM_READ\" : \"CPL_MEM_WRITE\", Depth );\n                Wln_ObjForEachFanin( p, iObj, iFanin, k )\n                    fprintf( pFile, \" .%s(%s),\", k==0 ? \"mem_data_in\" : (k==1 ? \"addr_in\": \"data_in\"), Wln_ObjName(p, iFanin) );\n                fprintf( pFile, \" .%s(%s) ) ;\\n\", \"data_out\", Wln_ObjName(p, iObj) );\n                continue;\n            }\n        }\n        else if ( Wln_ObjType(p, iObj) == ABC_OPER_DFFRSE )\n        {\n            fprintf( pFile, \"%s ;\\n\", Wln_ObjName(p, iObj) );\n            continue;\n        }\n        else \n        {\n            fprintf( pFile, \"%-16s = \", Wln_ObjName(p, iObj) );\n            if ( Wln_ObjType(p, iObj) == ABC_OPER_BIT_BUF )\n                fprintf( pFile, \"%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            else if ( Wln_ObjType(p, iObj) == ABC_OPER_BIT_MUX )\n            {\n                fprintf( pFile, \"%s ? \", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n                fprintf( pFile, \"%s : \", Wln_ObjName(p, Wln_ObjFanin1(p, iObj)) );\n                fprintf( pFile, \"%s\",    Wln_ObjName(p, Wln_ObjFanin2(p, iObj)) );\n            }\n            else if ( Wln_ObjType(p, iObj) == ABC_OPER_ARI_MIN )\n                fprintf( pFile, \"-%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            else if ( Wln_ObjType(p, iObj) == ABC_OPER_BIT_INV )\n                fprintf( pFile, \"~%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            else if ( Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_NOT )\n                fprintf( pFile, \"!%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            else if ( Wln_ObjType(p, iObj) == ABC_OPER_RED_AND )\n                fprintf( pFile, \"\u0026%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            else if ( Wln_ObjType(p, iObj) == ABC_OPER_RED_OR )\n                fprintf( pFile, \"|%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            else if ( Wln_ObjType(p, iObj) == ABC_OPER_RED_XOR )\n                fprintf( pFile, \"^%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            else if ( Wln_ObjType(p, iObj) == ABC_OPER_RED_NAND )\n                fprintf( pFile, \"~\u0026%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            else if ( Wln_ObjType(p, iObj) == ABC_OPER_RED_NOR )\n                fprintf( pFile, \"~|%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            else if ( Wln_ObjType(p, iObj) == ABC_OPER_RED_NXOR )\n                fprintf( pFile, \"~^%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            else if ( Wln_ObjType(p, iObj) == ABC_OPER_SLICE )\n                fprintf( pFile, \"%s [%d:%d]\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Wln_ObjRangeEnd(p, iObj), Wln_ObjRangeBeg(p, iObj) );\n            else if ( Wln_ObjType(p, iObj) == ABC_OPER_SIGNEXT )\n                fprintf( pFile, \"{ {%d{%s[%d]}}, %s }\", Wln_ObjRange(p, iObj) - Wln_ObjRange(p, Wln_ObjFanin0(p, iObj)), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Wln_ObjRange(p, Wln_ObjFanin0(p, iObj)) - 1, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            else if ( Wln_ObjType(p, iObj) == ABC_OPER_ZEROPAD )\n                fprintf( pFile, \"{ {%d{1\\'b0}}, %s }\", Wln_ObjRange(p, iObj) - Wln_ObjRange(p, Wln_ObjFanin0(p, iObj)), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)) );\n            else if ( Wln_ObjType(p, iObj) == ABC_OPER_CONCAT )\n            {\n                fprintf( pFile, \"{\" );\n                Wln_ObjForEachFanin( p, iObj, iFanin, k )\n                    fprintf( pFile, \" %s%s\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)), k == Wln_ObjFaninNum(p, iObj)-1 ? \"\":\",\" );\n                fprintf( pFile, \" }\" );\n            }\n            else\n            {\n                fprintf( pFile, \"%s \", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)) );\n                if ( Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_R )\n                    fprintf( pFile, \"\u003e\u003e\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_RA )\n                    fprintf( pFile, \"\u003e\u003e\u003e\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_L )\n                    fprintf( pFile, \"\u003c\u003c\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_LA )\n                    fprintf( pFile, \"\u003c\u003c\u003c\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_BIT_AND )\n                    fprintf( pFile, \"\u0026\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_BIT_OR )\n                    fprintf( pFile, \"|\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_BIT_XOR )\n                    fprintf( pFile, \"^\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_BIT_NAND )\n                    fprintf( pFile, \"~\u0026\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_BIT_NOR )\n                    fprintf( pFile, \"~|\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_BIT_NXOR )\n                    fprintf( pFile, \"~^\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_IMPL )\n                    fprintf( pFile, \"=\u003e\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_AND )\n                    fprintf( pFile, \"\u0026\u0026\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_OR )\n                    fprintf( pFile, \"||\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_XOR )\n                    fprintf( pFile, \"^^\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_COMP_EQU )\n                    fprintf( pFile, \"==\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_COMP_NOTEQU )\n                    fprintf( pFile, \"!=\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_COMP_LESS )\n                    fprintf( pFile, \"\u003c\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_COMP_MORE )\n                    fprintf( pFile, \"\u003e\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_COMP_LESSEQU )\n                    fprintf( pFile, \"\u003c=\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_COMP_MOREEQU )\n                    fprintf( pFile, \"\u003e=\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_ARI_ADD )\n                    fprintf( pFile, \"+\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_ARI_SUB )\n                    fprintf( pFile, \"-\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_ARI_MUL )\n                    fprintf( pFile, \"*\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_ARI_DIV )\n                    fprintf( pFile, \"/\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_ARI_REM )\n                    fprintf( pFile, \"%%\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_ARI_MOD )\n                    fprintf( pFile, \"%%\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_ARI_POW )\n                    fprintf( pFile, \"**\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_ARI_SQRT )\n                    fprintf( pFile, \"@\" );\n                else if ( Wln_ObjType(p, iObj) == ABC_OPER_ARI_SQUARE )\n                    fprintf( pFile, \"#\" );\n                else \n                {\n                    //assert( 0 );\n                    printf( \"Failed to write node \\\"%s\\\" with unknown operator type (%d).\\n\", Wln_ObjName(p, iObj), Wln_ObjType(p, iObj) );\n                    fprintf( pFile, \"???\\n\" );\n                    continue;\n                }\n                fprintf( pFile, \" %s\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 1)) );\n                if ( Wln_ObjFaninNum(p, iObj) == 3 \u0026\u0026 Wln_ObjType(p, iObj) == ABC_OPER_ARI_ADD ) \n                    fprintf( pFile, \" + %s\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 2)) );\n            }\n        }\n        fprintf( pFile, \" ;%s\\n\", (p-\u003efSmtLib \u0026\u0026 Wln_ObjIsSigned(p, iObj)) ? \" // signed SMT-LIB operator\" : \"\" );\n    }\n    iFanin = 0;\n    // write DFFs in the end\n    fprintf( pFile, \"\\n\" );\n    Wln_NtkForEachFf( p, iObj, j )\n    {\n        char * pInNames[8] = {\"d\", \"clk\", \"reset\", \"set\", \"enable\", \"async\", \"sre\", \"init\"};\n        fprintf( pFile, \"         \" );\n        fprintf( pFile, \"%s (\", \"ABC_DFFRSE\" );\n        Wln_ObjForEachFanin( p, iObj, iFanin, k )\n            if ( iFanin ) fprintf( pFile, \" .%s(%s),\", pInNames[k], Wln_ObjName(p, iFanin) );\n        fprintf( pFile, \" .%s(%s) ) ;\\n\", \"q\", Wln_ObjName(p, iObj) );\n    }\n    fprintf( pFile, \"\\n\" );\n    fprintf( pFile, \"endmodule\\n\\n\" );\n}",
+      "Draft": "func Wln_WriteVerInt(pFile *os.File, p *Wln_Ntk_t) {\n    var k, j, iObj, iFanin int32;\n    var Range string // was [100]byte in C\n\n    fmt.Fprintf(pFile, \"module %s ( \", p.pName);\n    fmt.Fprintf(pFile, \"\\n   \");\n    if Wln_NtkCiNum(p) \u003e 0 {\n        Wln_WriteVerIntVec( pFile, p, \u0026p.vCis, 3 );\n        fmt.Fprintf(pFile, \",\\n   \");\n    }\n    if Wln_NtkCoNum(p) \u003e 0 {\n        Wln_WriteVerIntVec( pFile, p, \u0026p.vCos, 3 ); }\n    fmt.Fprintf(pFile, \"  );\\n\");\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        var End int32  = Wln_ObjRangeEnd(p, iObj);\n        var Beg int32  = Wln_ObjRangeBeg(p, iObj);\n        var nDigits int32  = Abc_Base10Log(Abc_AbsInt(End)+1) + Abc_Base10Log(Abc_AbsInt(Beg)+1) + int32((End \u003c 0)) + int32((Beg \u003c 0));\n        Range = fmt.Sprintf(\"%s[%d:%d]%*s\", (!p.fSmtLib \u0026\u0026 Wln_ObjIsSigned(p, iObj)) ? \"signed \":\"       \", End, Beg, 8-nDigits, \"\");\n        fmt.Fprintf(pFile, \"  \");\n        if Wln_ObjIsCi(p, iObj) {\n            fmt.Fprintf(pFile, \"input  \");\n        } else if Wln_ObjIsCo(p, iObj) {\n            fmt.Fprintf(pFile, \"output \");\n        } else {\n            fmt.Fprintf(pFile, \"       \"); }\n        if Wln_ObjIsCio(p, iObj) {\n            fprintf( pFile, \"wire %s %s ;\\n\", Range, Wln_ObjName(p, iObj) );\n            if Wln_ObjIsCi(p, iObj) {\n                continue; }\n            fmt.Fprintf(pFile, \"  assign                         \");\n            fmt.Fprintf(pFile, \"%-16s = %s ;\\n\", Wln_ObjName(p, iObj), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            continue;\n        }\n        if Wln_ObjType(p, iObj) == ABC_OPER_SEL_NMUX || Wln_ObjType(p, iObj) == ABC_OPER_SEL_SEL {\n            fprintf( pFile, \"reg  %s \", Range );\n        } else {\n            fprintf( pFile, \"wire %s \", Range ); }\n        if Wln_ObjType(p, iObj) == ABC_OPER_TABLE {\n            // wire [3:0] s4972; table0 s4972_Index(s4971, s4972);\n            fmt.Fprintf(pFile, \"%s ;              table%d\", Wln_ObjName(p, iObj), Wln_ObjFanin1(p, iObj));\n            fmt.Fprintf(pFile, \" s%d_Index(%s, \", iObj, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            fmt.Fprintf(pFile, \"%s)\", Wln_ObjName(p, iObj));\n        \n        } else if Wln_ObjType(p, iObj) == ABC_OPER_LUT {\n            // wire [3:0] s4972; LUT lut4972_Index(s4971, s4972);\n            fmt.Fprintf(pFile, \"%s ;           LUT\", Wln_ObjName(p, iObj));\n            fmt.Fprintf(pFile, \" lut%d (%s, \", iObj, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            for  k = 1; k \u003c Wln_ObjFaninNum(p, iObj); k++  {\n                fmt.Fprintf(pFile, \"%s, \", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)));\n            }\n            fmt.Fprintf(pFile, \"%s)\", Wln_ObjName(p, iObj));\n        \n        } else if Wln_ObjIsConst(p, iObj) {\n            fmt.Fprintf(pFile, \"%-16s = %s\", Wln_ObjName(p, iObj), Wln_ObjConstString(p, iObj));\n        } else if Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_ROTR || Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_ROTL {\n            //  wire [27:0] s4960 = (s57 \u003e\u003e 17) | (s57 \u003c\u003c 11);\n            var Num0 int32  = Wln_ObjFanin1(p, iObj);\n            var Num1 int32  = Wln_ObjRange(p, iObj) - Num0;\n            assert(Num0 \u003e 0 \u0026\u0026 Num0 \u003c Wln_ObjRange(p, iObj), \"Num0 \u003e 0 \u0026\u0026 Num0 \u003c Wln_ObjRange(p, iObj)\");\n            fmt.Fprintf(pFile, \"%-16s = \", Wln_ObjName(p, iObj));\n            if Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_ROTR {\n                fmt.Fprintf(pFile, \"(%s \u003e\u003e %d) | (%s \u003c\u003c %d)\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num0, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num1);\n            } else {\n                fmt.Fprintf(pFile, \"(%s \u003c\u003c %d) | (%s \u003e\u003e %d)\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num0, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num1); }\n        \n        } else if Wln_ObjType(p, iObj) == ABC_OPER_SEL_NMUX {\n            fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, iObj));\n            fmt.Fprintf(pFile, \"         \");\n            fmt.Fprintf(pFile, \"always @( \");\n            // inlining of macro Wln_ObjForEachFanin\n            for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n                fmt.Fprintf(pFile, \"%s%s\", k ? \" or \":\"\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k))); }\n            }\n            fmt.Fprintf(pFile, \" )\\n\");\n            fmt.Fprintf(pFile, \"           \");\n            fmt.Fprintf(pFile, \"begin\\n\");\n            fmt.Fprintf(pFile, \"             \");\n            fmt.Fprintf(pFile, \"case ( %s )\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)));\n            // inlining of macro Wln_ObjForEachFanin\n            for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n                if !k { continue; }\n                fmt.Fprintf(pFile, \"               \");\n                fmt.Fprintf(pFile, \"%d : %s = \", k-1, Wln_ObjName(p, iObj));\n                fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)));\n            }\n            }\n            fmt.Fprintf(pFile, \"             \");\n            fmt.Fprintf(pFile, \"endcase\\n\");\n            fmt.Fprintf(pFile, \"           \");\n            fmt.Fprintf(pFile, \"end\\n\");\n            continue;\n        \n        } else if Wln_ObjType(p, iObj) == ABC_OPER_SEL_SEL {\n            fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, iObj));\n            fmt.Fprintf(pFile, \"         \");\n            fmt.Fprintf(pFile, \"always @( \");\n            // inlining of macro Wln_ObjForEachFanin\n            for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n                fmt.Fprintf(pFile, \"%s%s\", k ? \" or \":\"\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k))); }\n            }\n            fmt.Fprintf(pFile, \" )\\n\");\n            fmt.Fprintf(pFile, \"           \");\n            fmt.Fprintf(pFile, \"begin\\n\");\n            fmt.Fprintf(pFile, \"             \");\n            fmt.Fprintf(pFile, \"case ( %s )\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)));\n            // inlining of macro Wln_ObjForEachFanin\n            for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n                if !k { continue; }\n                fmt.Fprintf(pFile, \"               \");\n                fmt.Fprintf(pFile, \"%d\\'b\", Wln_ObjFaninNum(p, iObj)-1);\n                for  j = Wln_ObjFaninNum(p, iObj)-1; j \u003e 0; j--  {\n                    fmt.Fprintf(pFile, \"%d\", int32((j==k)));\n                }\n                fmt.Fprintf(pFile, \" : %s = \", Wln_ObjName(p, iObj));\n                fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)));\n            }\n            }\n            fmt.Fprintf(pFile, \"               \");\n            fmt.Fprintf(pFile, \"default\");\n            fmt.Fprintf(pFile, \" : %s = \", Wln_ObjName(p, iObj));\n            fmt.Fprintf(pFile, \"%d\\'b\", Wln_ObjRange(p, iObj));\n            for  j = Wln_ObjRange(p, iObj)-1; j \u003e= 0; j--  {\n                fmt.Fprintf(pFile, \"%d\", 0);\n            }\n            fmt.Fprintf(pFile, \" ;\\n\");\n            fmt.Fprintf(pFile, \"             \");\n            fmt.Fprintf(pFile, \"endcase\\n\");\n            fmt.Fprintf(pFile, \"           \");\n            fmt.Fprintf(pFile, \"end\\n\");\n            continue;\n        \n        } else if Wln_ObjType(p, iObj) == ABC_OPER_SEL_DEC {\n            var nRange int32  = Wln_ObjRange(p, Wln_ObjFanin0(p, iObj));\n            assert((1 \u003c\u003c nRange) == Wln_ObjRange(p, iObj), \"(1 \u003c\u003c nRange) == Wln_ObjRange(p, iObj)\");\n            fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, iObj));\n            for  k = 0; k \u003c Wln_ObjRange(p, iObj); k++  {\n                fmt.Fprintf(pFile, \"         \");\n                fmt.Fprintf(pFile, \"wire \");\n                fmt.Fprintf(pFile, \"%s_\", Wln_ObjName(p, iObj));\n                for  j = 0; j \u003c nRange; j++  {\n                    fmt.Fprintf(pFile, \"%d\", (k \u003e\u003e (nRange-1-j)) \u0026 1);\n                }\n                fmt.Fprintf(pFile, \" = \");\n                for  j = 0; j \u003c nRange; j++  {\n                    fmt.Fprintf(pFile, \"%s%s%s[%d]\", j ? \" \u0026 \":\"\", ((k \u003e\u003e (nRange-1-j)) \u0026 1) ? \" \":\"~\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)), nRange-1-j);\n                }\n                fmt.Fprintf(pFile, \" ;\\n\");\n            }\n            fmt.Fprintf(pFile, \"         \");\n            fmt.Fprintf(pFile, \"assign %s = { \", Wln_ObjName(p, iObj));\n            for  k = Wln_ObjRange(p, iObj)-1; k \u003e= 0; k--  {\n                fmt.Fprintf(pFile, \"%s%s_\", k \u003c Wln_ObjRange(p, iObj)-1 ? \", \":\"\", Wln_ObjName(p, iObj));\n                for  j = 0; j \u003c nRange; j++  {\n                    fmt.Fprintf(pFile, \"%d\", (k \u003e\u003e (nRange-1-j)) \u0026 1);\n                }\n            }\n            fmt.Fprintf(pFile, \" } ;\\n\");\n            continue;\n        \n        } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_ADDSUB {\n            // out = mode ? a+b+cin : a-b-cin\n            fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, iObj));\n            fmt.Fprintf(pFile, \"         \");\n            fmt.Fprintf(pFile, \"assign \");\n            fmt.Fprintf(pFile, \"%s = %s ? %s + %s + %s : %s - %s - %s ;\\n\", Wln_ObjName(p, iObj), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Wln_ObjName(p, Wln_ObjFanin2(p, iObj)), Wln_ObjName(p, Wln_ObjFanin(p, iObj,3)), Wln_ObjName(p, Wln_ObjFanin1(p, iObj)), Wln_ObjName(p, Wln_ObjFanin2(p, iObj)), Wln_ObjName(p, Wln_ObjFanin(p, iObj,3)), Wln_ObjName(p, Wln_ObjFanin1(p, iObj)));\n            continue;\n        \n        } else if Wln_ObjType(p, iObj) == ABC_OPER_RAMR || Wln_ObjType(p, iObj) == ABC_OPER_RAMW {\n            if true {\n                fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, iObj));\n                fmt.Fprintf(pFile, \"         \");\n                fmt.Fprintf(pFile, \"%s (\", Wln_ObjType(p, iObj) == ABC_OPER_RAMR ? \"ABC_READ\" : \"ABC_WRITE\");\n                // inlining of macro Wln_ObjForEachFanin\n                for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n                    fmt.Fprintf(pFile, \" .%s(%s),\", k==0 ? \"mem_in\" : (k==1 ? \"addr\": \"data\"), Wln_ObjName(p, iFanin)); }\n                }\n                fmt.Fprintf(pFile, \" .%s(%s) ) ;\\n\", Wln_ObjType(p, iObj) == ABC_OPER_RAMR ? \"data\" : \"mem_out\", Wln_ObjName(p, iObj));\n                continue;\n            \n            } else {\n                var nBitsMem int32   = Wln_ObjRange(p,  Wln_ObjFanin(p, iObj, 0) );\n                //int nBitsAddr = Wln_ObjRange(p,  Wln_ObjFanin(p, iObj, 1) );\n                var nBitsDat int32;\n                if Wln_ObjType(p, iObj) == ABC_OPER_RAMR {\n                    nBitsDat = Wln_ObjRange(p, iObj);\n                } else {\n                    nBitsDat = Wln_ObjRange(p, Wln_ObjFanin(p, iObj, 2));\n                }\n                var Depth int32      = nBitsMem / nBitsDat;\n                assert(nBitsMem % nBitsDat == 0, \"nBitsMem % nBitsDat == 0\");\n                fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, iObj));\n                fmt.Fprintf(pFile, \"         \");\n                fmt.Fprintf(pFile, \"%s_%d (\", Wln_ObjType(p, iObj) == ABC_OPER_RAMR ? \"CPL_MEM_READ\" : \"CPL_MEM_WRITE\", Depth);\n                // inlining of macro Wln_ObjForEachFanin\n                for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n                    fmt.Fprintf(pFile, \" .%s(%s),\", k==0 ? \"mem_data_in\" : (k==1 ? \"addr_in\": \"data_in\"), Wln_ObjName(p, iFanin)); }\n                }\n                fmt.Fprintf(pFile, \" .%s(%s) ) ;\\n\", \"data_out\", Wln_ObjName(p, iObj));\n                continue;\n            }\n        \n        } else if Wln_ObjType(p, iObj) == ABC_OPER_DFFRSE {\n            fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, iObj));\n            continue;\n        \n        } else {\n            fmt.Fprintf(pFile, \"%-16s = \", Wln_ObjName(p, iObj));\n            if Wln_ObjType(p, iObj) == ABC_OPER_BIT_BUF {\n                fmt.Fprintf(pFile, \"%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_MUX {\n                fmt.Fprintf(pFile, \"%s ? \", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n                fmt.Fprintf(pFile, \"%s : \", Wln_ObjName(p, Wln_ObjFanin1(p, iObj)));\n                fmt.Fprintf(pFile, \"%s\", Wln_ObjName(p, Wln_ObjFanin2(p, iObj)));\n            \n            } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_MIN {\n                fmt.Fprintf(pFile, \"-%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_INV {\n                fmt.Fprintf(pFile, \"~%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_NOT {\n                fmt.Fprintf(pFile, \"!%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_RED_AND {\n                fmt.Fprintf(pFile, \"\u0026%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_RED_OR {\n                fmt.Fprintf(pFile, \"|%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_RED_XOR {\n                fmt.Fprintf(pFile, \"^%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_RED_NAND {\n                fmt.Fprintf(pFile, \"~\u0026%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_RED_NOR {\n                fmt.Fprintf(pFile, \"~|%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_RED_NXOR {\n                fmt.Fprintf(pFile, \"~^%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_SLICE {\n                fmt.Fprintf(pFile, \"%s [%d:%d]\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Wln_ObjRangeEnd(p, iObj), Wln_ObjRangeBeg(p, iObj));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_SIGNEXT {\n                fmt.Fprintf(pFile, \"{ {%d{%s[%d]}}, %s }\", Wln_ObjRange(p, iObj) - Wln_ObjRange(p, Wln_ObjFanin0(p, iObj)), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Wln_ObjRange(p, Wln_ObjFanin0(p, iObj)) - 1, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_ZEROPAD {\n                fmt.Fprintf(pFile, \"{ {%d{1\\'b0}}, %s }\", Wln_ObjRange(p, iObj) - Wln_ObjRange(p, Wln_ObjFanin0(p, iObj)), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_CONCAT {\n                fmt.Fprintf(pFile, \"{\");\n                // inlining of macro Wln_ObjForEachFanin\n                for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n                    fmt.Fprintf(pFile, \" %s%s\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)), k == Wln_ObjFaninNum(p, iObj)-1 ? \"\":\",\"); }\n                }\n                fmt.Fprintf(pFile, \" }\");\n            \n            } else {\n                fmt.Fprintf(pFile, \"%s \", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)));\n                if Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_R {\n                    fmt.Fprintf(pFile, \"\u003e\u003e\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_RA {\n                    fmt.Fprintf(pFile, \"\u003e\u003e\u003e\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_L {\n                    fmt.Fprintf(pFile, \"\u003c\u003c\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_LA {\n                    fmt.Fprintf(pFile, \"\u003c\u003c\u003c\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_AND {\n                    fmt.Fprintf(pFile, \"\u0026\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_OR {\n                    fmt.Fprintf(pFile, \"|\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_XOR {\n                    fmt.Fprintf(pFile, \"^\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_NAND {\n                    fmt.Fprintf(pFile, \"~\u0026\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_NOR {\n                    fmt.Fprintf(pFile, \"~|\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_NXOR {\n                    fmt.Fprintf(pFile, \"~^\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_IMPL {\n                    fmt.Fprintf(pFile, \"=\u003e\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_AND {\n                    fmt.Fprintf(pFile, \"\u0026\u0026\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_OR {\n                    fmt.Fprintf(pFile, \"||\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_XOR {\n                    fmt.Fprintf(pFile, \"^^\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_COMP_EQU {\n                    fmt.Fprintf(pFile, \"==\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_COMP_NOTEQU {\n                    fmt.Fprintf(pFile, \"!=\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_COMP_LESS {\n                    fmt.Fprintf(pFile, \"\u003c\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_COMP_MORE {\n                    fmt.Fprintf(pFile, \"\u003e\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_COMP_LESSEQU {\n                    fmt.Fprintf(pFile, \"\u003c=\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_COMP_MOREEQU {\n                    fmt.Fprintf(pFile, \"\u003e=\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_ADD {\n                    fmt.Fprintf(pFile, \"+\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_SUB {\n                    fmt.Fprintf(pFile, \"-\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_MUL {\n                    fmt.Fprintf(pFile, \"*\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_DIV {\n                    fmt.Fprintf(pFile, \"/\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_REM {\n                    fmt.Fprintf(pFile, \"%%\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_MOD {\n                    fmt.Fprintf(pFile, \"%%\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_POW {\n                    fmt.Fprintf(pFile, \"**\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_SQRT {\n                    fmt.Fprintf(pFile, \"@\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_SQUARE {\n                    fmt.Fprintf(pFile, \"#\");\n                } else {\n                    //assert( 0 );\n                    fmt.Printf(\"Failed to write node \\\"%s\\\" with unknown operator type (%d).\\n\", Wln_ObjName(p, iObj), Wln_ObjType(p, iObj));\n                    fmt.Fprintf(pFile, \"???\\n\");\n                    continue;\n                }\n                fmt.Fprintf(pFile, \" %s\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 1)));\n                if Wln_ObjFaninNum(p, iObj) == 3 \u0026\u0026 Wln_ObjType(p, iObj) == ABC_OPER_ARI_ADD { \n                    fmt.Fprintf(pFile, \" + %s\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 2))); }\n            }\n        }\n        fmt.Fprintf(pFile, \" ;%s\\n\", (p.fSmtLib \u0026\u0026 Wln_ObjIsSigned(p, iObj)) ? \" // signed SMT-LIB operator\" : \"\");\n    }\n    iFanin = 0;\n    // write DFFs in the end\n    fmt.Fprintf(pFile, \"\\n\");\n    // inlining of macro Wln_NtkForEachFf\n    for  j = 0; (j \u003c Wln_NtkFfNum(p)) \u0026\u0026 (((iObj) = Wln_NtkFf(p, j)), 1); j++  {\n        var pInNames [8]string = [8]string{\"d\", \"clk\", \"reset\", \"set\", \"enable\", \"async\", \"sre\", \"init\"};\n        fmt.Fprintf(pFile, \"         \");\n        fmt.Fprintf(pFile, \"%s (\", \"ABC_DFFRSE\");\n        // inlining of macro Wln_ObjForEachFanin\n        for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else\n            if iFanin != 0 { fmt.Fprintf(pFile, \" .%s(%s),\", pInNames[k], Wln_ObjName(p, iFanin)); }\n        }\n        fmt.Fprintf(pFile, \" .%s(%s) ) ;\\n\", \"q\", Wln_ObjName(p, iObj));\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"endmodule\\n\\n\");\n}"
+    },
+    {
+      "Name": "Wln_WriteVer",
+      "Start": 22621,
+      "End": 23223,
+      "BodyStart": 22674,
+      "Original": "void Wln_WriteVer( Wln_Ntk_t * p, char * pFileName )\n{\n    FILE * pFile;\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        fprintf( stdout, \"Wln_WriteVer(): Cannot open the output file \\\"%s\\\".\\n\", pFileName );\n        return;\n    }\n    fprintf( pFile, \"// Benchmark \\\"%s\\\" from file \\\"%s\\\" written by ABC on %s\\n\", p-\u003epName, p-\u003epSpec ? p-\u003epSpec : \"unknown\", Extra_TimeStamp() );\n    fprintf( pFile, \"\\n\" );\n    Wln_WriteTables( pFile, p );\n//    if ( fAddCos )\n//        Wln_WriteAddPos( p );\n    Wln_WriteVerInt( pFile, p );\n    fprintf( pFile, \"\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func Wln_WriteVer(p *Wln_Ntk_t, pFileName string) {\n    var pFile *os.File;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Wln_WriteVer(): Cannot open the output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"// Benchmark \\\"%s\\\" from file \\\"%s\\\" written by ABC on %s\\n\", p.pName, p.pSpec ? p.pSpec : \"unknown\", Extra_TimeStamp());\n    fmt.Fprintf(pFile, \"\\n\");\n    Wln_WriteTables( pFile, p );\n//    if ( fAddCos )\n//        Wln_WriteAddPos( p );\n    Wln_WriteVerInt( pFile, p );\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWriteVer.c::pointer-cast::2812",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2624,
+      "End": 2624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWriteVer.c::Wln_WriteTableOne",
+      "Category": "semantic-review",
+      "Symbol": "Wln_WriteTableOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1229,
+      "End": 2159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWriteVer.c::Wln_WriteTables",
+      "Category": "semantic-review",
+      "Symbol": "Wln_WriteTables",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2160,
+      "End": 2909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWriteVer.c::Wln_WriteAddPos",
+      "Category": "semantic-review",
+      "Symbol": "Wln_WriteAddPos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3204,
+      "End": 3370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWriteVer.c::ternary::Wln_WriteVerIntVec",
+      "Category": "ternary-review",
+      "Symbol": "Wln_WriteVerIntVec",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3607,
+      "End": 4373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWriteVer.c::Wln_WriteVerIntVec",
+      "Category": "semantic-review",
+      "Symbol": "Wln_WriteVerIntVec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3607,
+      "End": 4373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWriteVer.c::ternary::Wln_WriteVerInt",
+      "Category": "ternary-review",
+      "Symbol": "Wln_WriteVerInt",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4375,
+      "End": 22619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWriteVer.c::Wln_WriteVerInt",
+      "Category": "semantic-review",
+      "Symbol": "Wln_WriteVerInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4375,
+      "End": 22619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWriteVer.c::ternary::Wln_WriteVer",
+      "Category": "ternary-review",
+      "Symbol": "Wln_WriteVer",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 22621,
+      "End": 23223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWriteVer.c::Wln_WriteVer",
+      "Category": "semantic-review",
+      "Symbol": "Wln_WriteVer",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22621,
+      "End": 23223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/wln/wlnWriteVer.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 23470
+    }
+  ],
+  "Draft": "package wln\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [wlnWriteVer.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Word-level network.]\n\n  Synopsis    [Writing Verilog.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 23, 2018.]\n\n  Revision    [$Id: wlnWriteVer.c,v 1.00 2018/09/23 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"wln.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_WriteTableOne(pFile *os.File, nFans int32, nOuts int32, pTable *word, Id int32) {\n    var m int32;\n    var nMints int32 = (1\u003c\u003cnFans);\n//    Abc_TtPrintHexArrayRev( stdout, pTable, nMints );  printf( \"\\n\" );\n    assert(nOuts \u003e 0 \u0026\u0026 nOuts \u003c= 64 \u0026\u0026 (64 % nOuts) == 0, \"nOuts \u003e 0 \u0026\u0026 nOuts \u003c= 64 \u0026\u0026 (64 % nOuts) == 0\");\n    fmt.Fprintf(pFile, \"module table%d(ind, val);\\n\", Id);\n    fmt.Fprintf(pFile, \"  input  [%d:0] ind;\\n\", nFans-1);\n    fmt.Fprintf(pFile, \"  output [%d:0] val;\\n\", nOuts-1);\n    fmt.Fprintf(pFile, \"  reg    [%d:0] val;\\n\", nOuts-1);\n    fmt.Fprintf(pFile, \"  always @(ind)\\n\");\n    fmt.Fprintf(pFile, \"  begin\\n\");\n    fmt.Fprintf(pFile, \"    case (ind)\\n\");\n    for  m = 0; m \u003c nMints; m++  {\n    fmt.Fprintf(pFile, \"      %d\\'h%x: val = %d\\'h%x;\\n\", nFans, m, nOuts, uint32(((pTable[(nOuts * m) \u003e\u003e 6] \u003e\u003e ((nOuts * m) \u0026 63)) \u0026 Abc_Tt6Mask(nOuts))));\n    }\n    fmt.Fprintf(pFile, \"    endcase\\n\");\n    fmt.Fprintf(pFile, \"  end\\n\");\n    fmt.Fprintf(pFile, \"endmodule\\n\");\n    fmt.Fprintf(pFile, \"\\n\");\n}\nfunc Wln_WriteTables(pFile *os.File, p *Wln_Ntk_t) {\n    var vNodes *Vec_Int_t;\n    var pTable *word; \n    var i, iObj int32;\n    if p.vTables == nil || Vec_PtrSize(p.vTables) == 0 {\n        return; }\n    // map tables into their nodes\n    vNodes = Vec_IntStart( Vec_PtrSize(p.vTables) );\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        if Wln_ObjType(p, iObj) == ABC_OPER_TABLE {\n            Vec_IntWriteEntry( vNodes, Wln_ObjFanin1(p, iObj), iObj ); }\n    }\n    // write tables\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vTables)) \u0026\u0026 (((pTable) = (word *)Vec_PtrEntry(p.vTables, i)), 1); i++  {\n        var iNode int32   = Vec_IntEntry( vNodes, i );\n        var iFanin int32  = Wln_ObjFanin0( p, iNode );\n        Wln_WriteTableOne( pFile, Wln_ObjRange(p, iFanin), Wln_ObjRange(p, iNode), pTable, i );\n    }\n    Vec_IntFree( vNodes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [This was used to add POs to each node except PIs and MUXes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_WriteAddPos(p *Wln_Ntk_t) {\n    var iObj int32;\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        if !Wln_ObjIsCio(p, iObj) {\n            Wln_ObjCreateCo( p, iObj ); }\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Wln_WriteVerIntVec(pFile *os.File, p *Wln_Ntk_t, vVec *Vec_Int_t, Start int32) {\n    var pName string;\n    var LineLength int32   = Start;\n    var NameCounter int32;\n    var AddedLength, i, iObj int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vVec)) \u0026\u0026 (((iObj) = Vec_IntEntry(vVec, i)), 1); i++  {\n        pName = Wln_ObjName( p, iObj );\n        // get the line length after this name is written\n        AddedLength = len(pName) + 2;\n        if (NameCounter != 0) \u0026\u0026 LineLength + AddedLength + 3 \u003e 70 { // write the line extender\n            fmt.Fprintf(pFile, \"\\n   \");\n            // reset the line length\n            LineLength  = Start;\n            NameCounter = 0;\n        }\n        fmt.Fprintf(pFile, \" %s%s\", pName, (i==Vec_IntSize(vVec)-1)? \"\" : \",\");\n        LineLength += AddedLength;\n        NameCounter++;\n    }\n} \nfunc Wln_WriteVerInt(pFile *os.File, p *Wln_Ntk_t) {\n    var k, j, iObj, iFanin int32;\n    var Range string // was [100]byte in C\n\n    fmt.Fprintf(pFile, \"module %s ( \", p.pName);\n    fmt.Fprintf(pFile, \"\\n   \");\n    if Wln_NtkCiNum(p) \u003e 0 {\n        Wln_WriteVerIntVec( pFile, p, \u0026p.vCis, 3 );\n        fmt.Fprintf(pFile, \",\\n   \");\n    }\n    if Wln_NtkCoNum(p) \u003e 0 {\n        Wln_WriteVerIntVec( pFile, p, \u0026p.vCos, 3 ); }\n    fmt.Fprintf(pFile, \"  );\\n\");\n    // inlining of macro Wln_NtkForEachObj\n    for  iObj = 1; iObj \u003c Wln_NtkObjNum(p); iObj++  {\n        var End int32  = Wln_ObjRangeEnd(p, iObj);\n        var Beg int32  = Wln_ObjRangeBeg(p, iObj);\n        var nDigits int32  = Abc_Base10Log(Abc_AbsInt(End)+1) + Abc_Base10Log(Abc_AbsInt(Beg)+1) + int32((End \u003c 0)) + int32((Beg \u003c 0));\n        Range = fmt.Sprintf(\"%s[%d:%d]%*s\", (!p.fSmtLib \u0026\u0026 Wln_ObjIsSigned(p, iObj)) ? \"signed \":\"       \", End, Beg, 8-nDigits, \"\");\n        fmt.Fprintf(pFile, \"  \");\n        if Wln_ObjIsCi(p, iObj) {\n            fmt.Fprintf(pFile, \"input  \");\n        } else if Wln_ObjIsCo(p, iObj) {\n            fmt.Fprintf(pFile, \"output \");\n        } else {\n            fmt.Fprintf(pFile, \"       \"); }\n        if Wln_ObjIsCio(p, iObj) {\n            fprintf( pFile, \"wire %s %s ;\\n\", Range, Wln_ObjName(p, iObj) );\n            if Wln_ObjIsCi(p, iObj) {\n                continue; }\n            fmt.Fprintf(pFile, \"  assign                         \");\n            fmt.Fprintf(pFile, \"%-16s = %s ;\\n\", Wln_ObjName(p, iObj), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            continue;\n        }\n        if Wln_ObjType(p, iObj) == ABC_OPER_SEL_NMUX || Wln_ObjType(p, iObj) == ABC_OPER_SEL_SEL {\n            fprintf( pFile, \"reg  %s \", Range );\n        } else {\n            fprintf( pFile, \"wire %s \", Range ); }\n        if Wln_ObjType(p, iObj) == ABC_OPER_TABLE {\n            // wire [3:0] s4972; table0 s4972_Index(s4971, s4972);\n            fmt.Fprintf(pFile, \"%s ;              table%d\", Wln_ObjName(p, iObj), Wln_ObjFanin1(p, iObj));\n            fmt.Fprintf(pFile, \" s%d_Index(%s, \", iObj, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            fmt.Fprintf(pFile, \"%s)\", Wln_ObjName(p, iObj));\n        \n        } else if Wln_ObjType(p, iObj) == ABC_OPER_LUT {\n            // wire [3:0] s4972; LUT lut4972_Index(s4971, s4972);\n            fmt.Fprintf(pFile, \"%s ;           LUT\", Wln_ObjName(p, iObj));\n            fmt.Fprintf(pFile, \" lut%d (%s, \", iObj, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            for  k = 1; k \u003c Wln_ObjFaninNum(p, iObj); k++  {\n                fmt.Fprintf(pFile, \"%s, \", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)));\n            }\n            fmt.Fprintf(pFile, \"%s)\", Wln_ObjName(p, iObj));\n        \n        } else if Wln_ObjIsConst(p, iObj) {\n            fmt.Fprintf(pFile, \"%-16s = %s\", Wln_ObjName(p, iObj), Wln_ObjConstString(p, iObj));\n        } else if Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_ROTR || Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_ROTL {\n            //  wire [27:0] s4960 = (s57 \u003e\u003e 17) | (s57 \u003c\u003c 11);\n            var Num0 int32  = Wln_ObjFanin1(p, iObj);\n            var Num1 int32  = Wln_ObjRange(p, iObj) - Num0;\n            assert(Num0 \u003e 0 \u0026\u0026 Num0 \u003c Wln_ObjRange(p, iObj), \"Num0 \u003e 0 \u0026\u0026 Num0 \u003c Wln_ObjRange(p, iObj)\");\n            fmt.Fprintf(pFile, \"%-16s = \", Wln_ObjName(p, iObj));\n            if Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_ROTR {\n                fmt.Fprintf(pFile, \"(%s \u003e\u003e %d) | (%s \u003c\u003c %d)\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num0, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num1);\n            } else {\n                fmt.Fprintf(pFile, \"(%s \u003c\u003c %d) | (%s \u003e\u003e %d)\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num0, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Num1); }\n        \n        } else if Wln_ObjType(p, iObj) == ABC_OPER_SEL_NMUX {\n            fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, iObj));\n            fmt.Fprintf(pFile, \"         \");\n            fmt.Fprintf(pFile, \"always @( \");\n            // inlining of macro Wln_ObjForEachFanin\n            for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n                fmt.Fprintf(pFile, \"%s%s\", k ? \" or \":\"\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k))); }\n            }\n            fmt.Fprintf(pFile, \" )\\n\");\n            fmt.Fprintf(pFile, \"           \");\n            fmt.Fprintf(pFile, \"begin\\n\");\n            fmt.Fprintf(pFile, \"             \");\n            fmt.Fprintf(pFile, \"case ( %s )\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)));\n            // inlining of macro Wln_ObjForEachFanin\n            for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n                if !k { continue; }\n                fmt.Fprintf(pFile, \"               \");\n                fmt.Fprintf(pFile, \"%d : %s = \", k-1, Wln_ObjName(p, iObj));\n                fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)));\n            }\n            }\n            fmt.Fprintf(pFile, \"             \");\n            fmt.Fprintf(pFile, \"endcase\\n\");\n            fmt.Fprintf(pFile, \"           \");\n            fmt.Fprintf(pFile, \"end\\n\");\n            continue;\n        \n        } else if Wln_ObjType(p, iObj) == ABC_OPER_SEL_SEL {\n            fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, iObj));\n            fmt.Fprintf(pFile, \"         \");\n            fmt.Fprintf(pFile, \"always @( \");\n            // inlining of macro Wln_ObjForEachFanin\n            for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n                fmt.Fprintf(pFile, \"%s%s\", k ? \" or \":\"\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k))); }\n            }\n            fmt.Fprintf(pFile, \" )\\n\");\n            fmt.Fprintf(pFile, \"           \");\n            fmt.Fprintf(pFile, \"begin\\n\");\n            fmt.Fprintf(pFile, \"             \");\n            fmt.Fprintf(pFile, \"case ( %s )\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)));\n            // inlining of macro Wln_ObjForEachFanin\n            for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n                if !k { continue; }\n                fmt.Fprintf(pFile, \"               \");\n                fmt.Fprintf(pFile, \"%d\\'b\", Wln_ObjFaninNum(p, iObj)-1);\n                for  j = Wln_ObjFaninNum(p, iObj)-1; j \u003e 0; j--  {\n                    fmt.Fprintf(pFile, \"%d\", int32((j==k)));\n                }\n                fmt.Fprintf(pFile, \" : %s = \", Wln_ObjName(p, iObj));\n                fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)));\n            }\n            }\n            fmt.Fprintf(pFile, \"               \");\n            fmt.Fprintf(pFile, \"default\");\n            fmt.Fprintf(pFile, \" : %s = \", Wln_ObjName(p, iObj));\n            fmt.Fprintf(pFile, \"%d\\'b\", Wln_ObjRange(p, iObj));\n            for  j = Wln_ObjRange(p, iObj)-1; j \u003e= 0; j--  {\n                fmt.Fprintf(pFile, \"%d\", 0);\n            }\n            fmt.Fprintf(pFile, \" ;\\n\");\n            fmt.Fprintf(pFile, \"             \");\n            fmt.Fprintf(pFile, \"endcase\\n\");\n            fmt.Fprintf(pFile, \"           \");\n            fmt.Fprintf(pFile, \"end\\n\");\n            continue;\n        \n        } else if Wln_ObjType(p, iObj) == ABC_OPER_SEL_DEC {\n            var nRange int32  = Wln_ObjRange(p, Wln_ObjFanin0(p, iObj));\n            assert((1 \u003c\u003c nRange) == Wln_ObjRange(p, iObj), \"(1 \u003c\u003c nRange) == Wln_ObjRange(p, iObj)\");\n            fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, iObj));\n            for  k = 0; k \u003c Wln_ObjRange(p, iObj); k++  {\n                fmt.Fprintf(pFile, \"         \");\n                fmt.Fprintf(pFile, \"wire \");\n                fmt.Fprintf(pFile, \"%s_\", Wln_ObjName(p, iObj));\n                for  j = 0; j \u003c nRange; j++  {\n                    fmt.Fprintf(pFile, \"%d\", (k \u003e\u003e (nRange-1-j)) \u0026 1);\n                }\n                fmt.Fprintf(pFile, \" = \");\n                for  j = 0; j \u003c nRange; j++  {\n                    fmt.Fprintf(pFile, \"%s%s%s[%d]\", j ? \" \u0026 \":\"\", ((k \u003e\u003e (nRange-1-j)) \u0026 1) ? \" \":\"~\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)), nRange-1-j);\n                }\n                fmt.Fprintf(pFile, \" ;\\n\");\n            }\n            fmt.Fprintf(pFile, \"         \");\n            fmt.Fprintf(pFile, \"assign %s = { \", Wln_ObjName(p, iObj));\n            for  k = Wln_ObjRange(p, iObj)-1; k \u003e= 0; k--  {\n                fmt.Fprintf(pFile, \"%s%s_\", k \u003c Wln_ObjRange(p, iObj)-1 ? \", \":\"\", Wln_ObjName(p, iObj));\n                for  j = 0; j \u003c nRange; j++  {\n                    fmt.Fprintf(pFile, \"%d\", (k \u003e\u003e (nRange-1-j)) \u0026 1);\n                }\n            }\n            fmt.Fprintf(pFile, \" } ;\\n\");\n            continue;\n        \n        } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_ADDSUB {\n            // out = mode ? a+b+cin : a-b-cin\n            fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, iObj));\n            fmt.Fprintf(pFile, \"         \");\n            fmt.Fprintf(pFile, \"assign \");\n            fmt.Fprintf(pFile, \"%s = %s ? %s + %s + %s : %s - %s - %s ;\\n\", Wln_ObjName(p, iObj), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Wln_ObjName(p, Wln_ObjFanin2(p, iObj)), Wln_ObjName(p, Wln_ObjFanin(p, iObj,3)), Wln_ObjName(p, Wln_ObjFanin1(p, iObj)), Wln_ObjName(p, Wln_ObjFanin2(p, iObj)), Wln_ObjName(p, Wln_ObjFanin(p, iObj,3)), Wln_ObjName(p, Wln_ObjFanin1(p, iObj)));\n            continue;\n        \n        } else if Wln_ObjType(p, iObj) == ABC_OPER_RAMR || Wln_ObjType(p, iObj) == ABC_OPER_RAMW {\n            if true {\n                fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, iObj));\n                fmt.Fprintf(pFile, \"         \");\n                fmt.Fprintf(pFile, \"%s (\", Wln_ObjType(p, iObj) == ABC_OPER_RAMR ? \"ABC_READ\" : \"ABC_WRITE\");\n                // inlining of macro Wln_ObjForEachFanin\n                for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n                    fmt.Fprintf(pFile, \" .%s(%s),\", k==0 ? \"mem_in\" : (k==1 ? \"addr\": \"data\"), Wln_ObjName(p, iFanin)); }\n                }\n                fmt.Fprintf(pFile, \" .%s(%s) ) ;\\n\", Wln_ObjType(p, iObj) == ABC_OPER_RAMR ? \"data\" : \"mem_out\", Wln_ObjName(p, iObj));\n                continue;\n            \n            } else {\n                var nBitsMem int32   = Wln_ObjRange(p,  Wln_ObjFanin(p, iObj, 0) );\n                //int nBitsAddr = Wln_ObjRange(p,  Wln_ObjFanin(p, iObj, 1) );\n                var nBitsDat int32;\n                if Wln_ObjType(p, iObj) == ABC_OPER_RAMR {\n                    nBitsDat = Wln_ObjRange(p, iObj);\n                } else {\n                    nBitsDat = Wln_ObjRange(p, Wln_ObjFanin(p, iObj, 2));\n                }\n                var Depth int32      = nBitsMem / nBitsDat;\n                assert(nBitsMem % nBitsDat == 0, \"nBitsMem % nBitsDat == 0\");\n                fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, iObj));\n                fmt.Fprintf(pFile, \"         \");\n                fmt.Fprintf(pFile, \"%s_%d (\", Wln_ObjType(p, iObj) == ABC_OPER_RAMR ? \"CPL_MEM_READ\" : \"CPL_MEM_WRITE\", Depth);\n                // inlining of macro Wln_ObjForEachFanin\n                for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n                    fmt.Fprintf(pFile, \" .%s(%s),\", k==0 ? \"mem_data_in\" : (k==1 ? \"addr_in\": \"data_in\"), Wln_ObjName(p, iFanin)); }\n                }\n                fmt.Fprintf(pFile, \" .%s(%s) ) ;\\n\", \"data_out\", Wln_ObjName(p, iObj));\n                continue;\n            }\n        \n        } else if Wln_ObjType(p, iObj) == ABC_OPER_DFFRSE {\n            fmt.Fprintf(pFile, \"%s ;\\n\", Wln_ObjName(p, iObj));\n            continue;\n        \n        } else {\n            fmt.Fprintf(pFile, \"%-16s = \", Wln_ObjName(p, iObj));\n            if Wln_ObjType(p, iObj) == ABC_OPER_BIT_BUF {\n                fmt.Fprintf(pFile, \"%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_MUX {\n                fmt.Fprintf(pFile, \"%s ? \", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n                fmt.Fprintf(pFile, \"%s : \", Wln_ObjName(p, Wln_ObjFanin1(p, iObj)));\n                fmt.Fprintf(pFile, \"%s\", Wln_ObjName(p, Wln_ObjFanin2(p, iObj)));\n            \n            } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_MIN {\n                fmt.Fprintf(pFile, \"-%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_INV {\n                fmt.Fprintf(pFile, \"~%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_NOT {\n                fmt.Fprintf(pFile, \"!%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_RED_AND {\n                fmt.Fprintf(pFile, \"\u0026%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_RED_OR {\n                fmt.Fprintf(pFile, \"|%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_RED_XOR {\n                fmt.Fprintf(pFile, \"^%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_RED_NAND {\n                fmt.Fprintf(pFile, \"~\u0026%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_RED_NOR {\n                fmt.Fprintf(pFile, \"~|%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_RED_NXOR {\n                fmt.Fprintf(pFile, \"~^%s\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_SLICE {\n                fmt.Fprintf(pFile, \"%s [%d:%d]\", Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Wln_ObjRangeEnd(p, iObj), Wln_ObjRangeBeg(p, iObj));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_SIGNEXT {\n                fmt.Fprintf(pFile, \"{ {%d{%s[%d]}}, %s }\", Wln_ObjRange(p, iObj) - Wln_ObjRange(p, Wln_ObjFanin0(p, iObj)), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)), Wln_ObjRange(p, Wln_ObjFanin0(p, iObj)) - 1, Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_ZEROPAD {\n                fmt.Fprintf(pFile, \"{ {%d{1\\'b0}}, %s }\", Wln_ObjRange(p, iObj) - Wln_ObjRange(p, Wln_ObjFanin0(p, iObj)), Wln_ObjName(p, Wln_ObjFanin0(p, iObj)));\n            } else if Wln_ObjType(p, iObj) == ABC_OPER_CONCAT {\n                fmt.Fprintf(pFile, \"{\");\n                // inlining of macro Wln_ObjForEachFanin\n                for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else {\n                    fmt.Fprintf(pFile, \" %s%s\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, k)), k == Wln_ObjFaninNum(p, iObj)-1 ? \"\":\",\"); }\n                }\n                fmt.Fprintf(pFile, \" }\");\n            \n            } else {\n                fmt.Fprintf(pFile, \"%s \", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 0)));\n                if Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_R {\n                    fmt.Fprintf(pFile, \"\u003e\u003e\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_RA {\n                    fmt.Fprintf(pFile, \"\u003e\u003e\u003e\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_L {\n                    fmt.Fprintf(pFile, \"\u003c\u003c\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_SHIFT_LA {\n                    fmt.Fprintf(pFile, \"\u003c\u003c\u003c\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_AND {\n                    fmt.Fprintf(pFile, \"\u0026\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_OR {\n                    fmt.Fprintf(pFile, \"|\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_XOR {\n                    fmt.Fprintf(pFile, \"^\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_NAND {\n                    fmt.Fprintf(pFile, \"~\u0026\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_NOR {\n                    fmt.Fprintf(pFile, \"~|\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_BIT_NXOR {\n                    fmt.Fprintf(pFile, \"~^\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_IMPL {\n                    fmt.Fprintf(pFile, \"=\u003e\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_AND {\n                    fmt.Fprintf(pFile, \"\u0026\u0026\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_OR {\n                    fmt.Fprintf(pFile, \"||\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_LOGIC_XOR {\n                    fmt.Fprintf(pFile, \"^^\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_COMP_EQU {\n                    fmt.Fprintf(pFile, \"==\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_COMP_NOTEQU {\n                    fmt.Fprintf(pFile, \"!=\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_COMP_LESS {\n                    fmt.Fprintf(pFile, \"\u003c\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_COMP_MORE {\n                    fmt.Fprintf(pFile, \"\u003e\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_COMP_LESSEQU {\n                    fmt.Fprintf(pFile, \"\u003c=\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_COMP_MOREEQU {\n                    fmt.Fprintf(pFile, \"\u003e=\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_ADD {\n                    fmt.Fprintf(pFile, \"+\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_SUB {\n                    fmt.Fprintf(pFile, \"-\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_MUL {\n                    fmt.Fprintf(pFile, \"*\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_DIV {\n                    fmt.Fprintf(pFile, \"/\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_REM {\n                    fmt.Fprintf(pFile, \"%%\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_MOD {\n                    fmt.Fprintf(pFile, \"%%\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_POW {\n                    fmt.Fprintf(pFile, \"**\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_SQRT {\n                    fmt.Fprintf(pFile, \"@\");\n                } else if Wln_ObjType(p, iObj) == ABC_OPER_ARI_SQUARE {\n                    fmt.Fprintf(pFile, \"#\");\n                } else {\n                    //assert( 0 );\n                    fmt.Printf(\"Failed to write node \\\"%s\\\" with unknown operator type (%d).\\n\", Wln_ObjName(p, iObj), Wln_ObjType(p, iObj));\n                    fmt.Fprintf(pFile, \"???\\n\");\n                    continue;\n                }\n                fmt.Fprintf(pFile, \" %s\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 1)));\n                if Wln_ObjFaninNum(p, iObj) == 3 \u0026\u0026 Wln_ObjType(p, iObj) == ABC_OPER_ARI_ADD { \n                    fmt.Fprintf(pFile, \" + %s\", Wln_ObjName(p, Wln_ObjFanin(p, iObj, 2))); }\n            }\n        }\n        fmt.Fprintf(pFile, \" ;%s\\n\", (p.fSmtLib \u0026\u0026 Wln_ObjIsSigned(p, iObj)) ? \" // signed SMT-LIB operator\" : \"\");\n    }\n    iFanin = 0;\n    // write DFFs in the end\n    fmt.Fprintf(pFile, \"\\n\");\n    // inlining of macro Wln_NtkForEachFf\n    for  j = 0; (j \u003c Wln_NtkFfNum(p)) \u0026\u0026 (((iObj) = Wln_NtkFf(p, j)), 1); j++  {\n        var pInNames [8]string = [8]string{\"d\", \"clk\", \"reset\", \"set\", \"enable\", \"async\", \"sre\", \"init\"};\n        fmt.Fprintf(pFile, \"         \");\n        fmt.Fprintf(pFile, \"%s (\", \"ABC_DFFRSE\");\n        // inlining of macro Wln_ObjForEachFanin\n        for  k = 0; (k \u003c Wln_ObjFaninNum(p, iObj)) \u0026\u0026 (((iFanin) = Wln_ObjFanin(p, iObj, k)), 1); k++  { if !(iFanin != 0) {} else\n            if iFanin != 0 { fmt.Fprintf(pFile, \" .%s(%s),\", pInNames[k], Wln_ObjName(p, iFanin)); }\n        }\n        fmt.Fprintf(pFile, \" .%s(%s) ) ;\\n\", \"q\", Wln_ObjName(p, iObj));\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    fmt.Fprintf(pFile, \"endmodule\\n\\n\");\n} \nfunc Wln_WriteVer(p *Wln_Ntk_t, pFileName string) {\n    var pFile *os.File;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Fprintf(os.Stdout, \"Wln_WriteVer(): Cannot open the output file \\\"%s\\\".\\n\", pFileName);\n        return;\n    }\n    fmt.Fprintf(pFile, \"// Benchmark \\\"%s\\\" from file \\\"%s\\\" written by ABC on %s\\n\", p.pName, p.pSpec ? p.pSpec : \"unknown\", Extra_TimeStamp());\n    fmt.Fprintf(pFile, \"\\n\");\n    Wln_WriteTables( pFile, p );\n//    if ( fAddCos )\n//        Wln_WriteAddPos( p );\n    Wln_WriteVerInt( pFile, p );\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

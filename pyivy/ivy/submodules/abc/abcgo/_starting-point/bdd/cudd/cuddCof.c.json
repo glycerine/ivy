@@ -1,0 +1,331 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c",
+  "SHA256": "bdd0bf2b385909be9820bf0484b200412563cae134ce59ff2f5d0320ddbf999b",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 127,
+        "Column": 16,
+        "ByteOffset": 5086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fprintf(dd.err,\"Cudd_Cofactor: Invalid restriction 1\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 269,
+        "Column": 20,
+        "ByteOffset": 10423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            (void) fprintf(dd.out,"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 85,
+        "Column": 1,
+        "ByteOffset": 3302
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_Cofactor",
+      "Start": 4770,
+      "End": 5214,
+      "BodyStart": 4840,
+      "Original": "DdNode *\nCudd_Cofactor(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * g)\n{\n    DdNode *res,*zero;\n\n    zero = Cudd_Not(DD_ONE(dd));\n    if (g == zero || g == DD_ZERO(dd)) {\n        (void) fprintf(dd-\u003eerr,\"Cudd_Cofactor: Invalid restriction 1\\n\");\n        dd-\u003eerrorCode = CUDD_INVALID_ARG;\n        return(NULL);\n    }\n    do {\n        dd-\u003ereordered = 0;\n        res = cuddCofactorRecur(dd,f,g);\n    } while (dd-\u003ereordered == 1);\n    return(res);\n\n}",
+      "Draft": "func Cudd_Cofactor(dd *DdManager, f *DdNode, g *DdNode) *DdNode {\n    var res, zero *DdNode;\n\n    // inlining of macro Cudd_Not\n    // inlining of macro DD_ONE\n    zero = ((DdNode *)((ptrint)(((dd).one)) ^ 01));\n    // inlining of macro DD_ZERO\n    if g == zero || g == ((dd).zero) {\n        (void) fmt.Fprintf(dd.err, \"Cudd_Cofactor: Invalid restriction 1\\n\");\n        dd.errorCode = CUDD_INVALID_ARG;\n        return(nil);\n    }\n    for {\n        dd.reordered = 0;\n        res = cuddCofactorRecur(dd,f,g);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddGetBranches",
+      "Start": 5750,
+      "End": 5997,
+      "BodyStart": 5818,
+      "Original": "void\ncuddGetBranches(\n  DdNode * g,\n  DdNode ** g1,\n  DdNode ** g0)\n{\n    DdNode      *G = Cudd_Regular(g);\n\n    *g1 = cuddT(G);\n    *g0 = cuddE(G);\n    if (Cudd_IsComplement(g)) {\n        *g1 = Cudd_Not(*g1);\n        *g0 = Cudd_Not(*g0);\n    }\n\n}",
+      "Draft": "func cuddGetBranches(g *DdNode, g1 **DdNode, g0 **DdNode) {\n    // inlining of macro Cudd_Regular\n    var G *DdNode  = ((DdNode *)((ptruint)(g) \u0026 ~01));\n\n    // inlining of macro cuddT\n    *g1 = ((G).type.kids.T);\n    // inlining of macro cuddE\n    *g0 = ((G).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (g) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        *g1 = ((DdNode *)((ptrint)(*g1) ^ 01));\n        // inlining of macro Cudd_Not\n        *g0 = ((DdNode *)((ptrint)(*g0) ^ 01));\n    }\n\n}"
+    },
+    {
+      "Name": "cuddCheckCube",
+      "Start": 6487,
+      "End": 6877,
+      "BodyStart": 6538,
+      "Original": "int\ncuddCheckCube(\n  DdManager * dd,\n  DdNode * g)\n{\n    DdNode *g1,*g0,*one,*zero;\n    \n    one = DD_ONE(dd);\n    if (g == one) return(1);\n    if (Cudd_IsConstant(g)) return(0);\n\n    zero = Cudd_Not(one);\n    cuddGetBranches(g,\u0026g1,\u0026g0);\n\n    if (g0 == zero) {\n        return(cuddCheckCube(dd, g1));\n    }\n    if (g1 == zero) {\n        return(cuddCheckCube(dd, g0));\n    }\n    return(0);\n\n}",
+      "Draft": "func cuddCheckCube(dd *DdManager, g *DdNode) int32 {\n    var g1, g0, one, zero *DdNode;\n    \n    // inlining of macro DD_ONE\n    one = ((dd).one);\n    if g == one { return(1); }\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(g) \u0026 ~01))).index == CUDD_CONST_INDEX { return(0); }\n\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n    cuddGetBranches(g,\u0026g1,\u0026g0);\n\n    if g0 == zero {\n        return(cuddCheckCube(dd, g1));\n    }\n    if g1 == zero {\n        return(cuddCheckCube(dd, g0));\n    }\n    return(0);\n\n}"
+    },
+    {
+      "Name": "cuddCofactorRecur",
+      "Start": 7314,
+      "End": 10021,
+      "BodyStart": 7388,
+      "Original": "DdNode *\ncuddCofactorRecur(\n  DdManager * dd,\n  DdNode * f,\n  DdNode * g)\n{\n    DdNode *one,*zero,*F,*G,*g1,*g0,*f1,*f0,*t,*e,*r;\n    unsigned int topf,topg;\n    int comple;\n\n    statLine(dd);\n    F = Cudd_Regular(f);\n    if (cuddIsConstant(F)) return(f);\n\n    one = DD_ONE(dd);\n\n    /* The invariant g != 0 is true on entry to this procedure and is\n    ** recursively maintained by it. Therefore it suffices to test g\n    ** against one to make sure it is not constant.\n    */\n    if (g == one) return(f);\n    /* From now on, f and g are known not to be constants. */\n\n    comple = f != F;\n    r = cuddCacheLookup2(dd,Cudd_Cofactor,F,g);\n    if (r != NULL) {\n        return(Cudd_NotCond(r,comple));\n    }\n\n    topf = dd-\u003eperm[F-\u003eindex];\n    G = Cudd_Regular(g);\n    topg = dd-\u003eperm[G-\u003eindex];\n\n    /* We take the cofactors of F because we are going to rely on\n    ** the fact that the cofactors of the complement are the complements\n    ** of the cofactors to better utilize the cache. Variable comple\n    ** remembers whether we have to complement the result or not.\n    */\n    if (topf \u003c= topg) {\n        f1 = cuddT(F); f0 = cuddE(F);\n    } else {\n        f1 = f0 = F;\n    }\n    if (topg \u003c= topf) {\n        g1 = cuddT(G); g0 = cuddE(G);\n        if (g != G) { g1 = Cudd_Not(g1); g0 = Cudd_Not(g0); }\n    } else {\n        g1 = g0 = g;\n    }\n\n    zero = Cudd_Not(one);\n    if (topf \u003e= topg) {\n        if (g0 == zero || g0 == DD_ZERO(dd)) {\n            r = cuddCofactorRecur(dd, f1, g1);\n        } else if (g1 == zero || g1 == DD_ZERO(dd)) {\n            r = cuddCofactorRecur(dd, f0, g0);\n        } else {\n            (void) fprintf(dd-\u003eout,\n                           \"Cudd_Cofactor: Invalid restriction 2\\n\");\n            dd-\u003eerrorCode = CUDD_INVALID_ARG;\n            return(NULL);\n        }\n        if (r == NULL) return(NULL);\n    } else /* if (topf \u003c topg) */ {\n        t = cuddCofactorRecur(dd, f1, g);\n        if (t == NULL) return(NULL);\n        cuddRef(t);\n        e = cuddCofactorRecur(dd, f0, g);\n        if (e == NULL) {\n            Cudd_RecursiveDeref(dd, t);\n            return(NULL);\n        }\n        cuddRef(e);\n\n        if (t == e) {\n            r = t;\n        } else if (Cudd_IsComplement(t)) {\n            r = cuddUniqueInter(dd,(int)F-\u003eindex,Cudd_Not(t),Cudd_Not(e));\n            if (r != NULL)\n                r = Cudd_Not(r);\n        } else {\n            r = cuddUniqueInter(dd,(int)F-\u003eindex,t,e);\n        }\n        if (r == NULL) {\n            Cudd_RecursiveDeref(dd ,e);\n            Cudd_RecursiveDeref(dd ,t);\n            return(NULL);\n        }\n        cuddDeref(t);\n        cuddDeref(e);\n    }\n\n    cuddCacheInsert2(dd,Cudd_Cofactor,F,g,r);\n\n    return(Cudd_NotCond(r,comple));\n\n}",
+      "Draft": "func cuddCofactorRecur(dd *DdManager, f *DdNode, g *DdNode) *DdNode {\n    var one, zero, F, G, g1, g0, f1, f0, t, e, r *DdNode;\n    unsigned int topf,topg;\n    var comple int32;\n\n    statLine(dd);\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro cuddIsConstant\n    if (F).index == CUDD_CONST_INDEX { return(f); }\n\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n\n    /* The invariant g != 0 is true on entry to this procedure and is\n    ** recursively maintained by it. Therefore it suffices to test g\n    ** against one to make sure it is not constant.\n    */\n    if g == one { return(f); }\n    /* From now on, f and g are known not to be constants. */\n\n    comple = f != F;\n    r = cuddCacheLookup2(dd,Cudd_Cofactor,F,g);\n    if r != nil {\n        // inlining of macro Cudd_NotCond\n        return(((DdNode *)((ptrint)(r) ^ (comple))));\n    }\n\n    topf = dd.perm[F.index];\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    topg = dd.perm[G.index];\n\n    /* We take the cofactors of F because we are going to rely on\n    ** the fact that the cofactors of the complement are the complements\n    ** of the cofactors to better utilize the cache. Variable comple\n    ** remembers whether we have to complement the result or not.\n    */\n    if topf \u003c= topg {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        f1 = ((F).type.kids.T); f0 = ((F).type.kids.E);\n    } else {\n        f1 = f0 = F;\n    }\n    if topg \u003c= topf {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        g1 = ((G).type.kids.T); g0 = ((G).type.kids.E);\n        // inlining of macro Cudd_Not\n        if g != G { g1 = ((DdNode *)((ptrint)(g1) ^ 01)); g0 = ((DdNode *)((ptrint)(g0) ^ 01)); }\n    } else {\n        g1 = g0 = g;\n    }\n\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n    if topf \u003e= topg {\n        // inlining of macro DD_ZERO\n        if g0 == zero || g0 == ((dd).zero) {\n            r = cuddCofactorRecur(dd, f1, g1);\n        // inlining of macro DD_ZERO\n        } else if g1 == zero || g1 == ((dd).zero) {\n            r = cuddCofactorRecur(dd, f0, g0);\n        } else {\n            (void) fmt.Fprintf(dd.out, \"Cudd_Cofactor: Invalid restriction 2\\n\");\n            dd.errorCode = CUDD_INVALID_ARG;\n            return(nil);\n        }\n        if r == nil { return(nil); }\n    } else /* if (topf \u003c topg) */ {\n        t = cuddCofactorRecur(dd, f1, g);\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        e = cuddCofactorRecur(dd, f0, g);\n        if e == nil {\n            Cudd_RecursiveDeref(dd, t);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n\n        if t == e {\n            r = t;\n        // inlining of macro Cudd_IsComplement\n        } else if int32( ((ptrint) (t) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            r = cuddUniqueInter(dd,int32(F.index),((DdNode *)((ptrint)(t) ^ 01)),((DdNode *)((ptrint)(e) ^ 01)));\n            if r != nil {\n                // inlining of macro Cudd_Not\n                r = ((DdNode *)((ptrint)(r) ^ 01)); }\n        } else {\n            r = cuddUniqueInter(dd,int32(F.index),t,e);\n        }\n        if r == nil {\n            Cudd_RecursiveDeref(dd ,e);\n            Cudd_RecursiveDeref(dd ,t);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert2(dd,Cudd_Cofactor,F,g,r);\n\n    // inlining of macro Cudd_NotCond\n    return(((DdNode *)((ptrint)(r) ^ (comple))));\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::mechanical::do::5205",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5088,
+      "End": 5090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::4889",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4877,
+      "End": 4877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::6007",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5841,
+      "End": 5841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::6334",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5945,
+      "End": 5945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::6426",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5974,
+      "End": 5974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::7250",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6635,
+      "End": 6635
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::7380",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6678,
+      "End": 6678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::8284",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7515,
+      "End": 7515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::8931",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7989,
+      "End": 7989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::9064",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8060,
+      "End": 8060
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::9850",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8581,
+      "End": 8581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::9932",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8600,
+      "End": 8600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::10063",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8668,
+      "End": 8668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::11312",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9576,
+      "End": 9576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::11387",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9588,
+      "End": 9588
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::11511",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9649,
+      "End": 9649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::pointer-cast::12053",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9994,
+      "End": 9994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::Cudd_Cofactor",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_Cofactor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4770,
+      "End": 5214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::cuddGetBranches",
+      "Category": "semantic-review",
+      "Symbol": "cuddGetBranches",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5750,
+      "End": 5997
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::cuddCheckCube",
+      "Category": "semantic-review",
+      "Symbol": "cuddCheckCube",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6487,
+      "End": 6877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::cuddCofactorRecur",
+      "Category": "semantic-review",
+      "Symbol": "cuddCofactorRecur",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7314,
+      "End": 10021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10322
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3302,
+      "End": 3409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::macro-inline::7493",
+      "Category": "macro-inline-review",
+      "Symbol": "statLine",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 7493,
+      "End": 7505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::macro-inline::9267",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9267,
+      "End": 9277
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::macro-inline::9430",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatInc",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9430,
+      "End": 9440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::macro-inline::9893",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9893,
+      "End": 9905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddCof.c::macro-inline::9915",
+      "Category": "macro-inline-review",
+      "Symbol": "cuddSatDec",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 9915,
+      "End": 9927
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"fmt\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddCof.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Cofactoring functions.]\n\n  Description [External procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_Cofactor()\n                \u003c/ul\u003e\n               Internal procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e cuddGetBranches()\n                \u003cli\u003e cuddCheckCube()\n                \u003cli\u003e cuddCofactorRecur()\n                \u003c/ul\u003e\n              ]\n\n  SeeAlso     []\n\n  Author      [Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddCof.c,v 1.9 2004/08/13 18:04:47 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n\n/**AutomaticEnd***************************************************************/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the cofactor of f with respect to g.]\n\n  Description [Computes the cofactor of f with respect to g; g must be\n  the BDD or the ADD of a cube. Returns a pointer to the cofactor if\n  successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_bddConstrain Cudd_bddRestrict]\n\n******************************************************************************/\nfunc Cudd_Cofactor(dd *DdManager, f *DdNode, g *DdNode) *DdNode {\n    var res, zero *DdNode;\n\n    // inlining of macro Cudd_Not\n    // inlining of macro DD_ONE\n    zero = ((DdNode *)((ptrint)(((dd).one)) ^ 01));\n    // inlining of macro DD_ZERO\n    if g == zero || g == ((dd).zero) {\n        (void) fmt.Fprintf(dd.err, \"Cudd_Cofactor: Invalid restriction 1\\n\");\n        dd.errorCode = CUDD_INVALID_ARG;\n        return(nil);\n    }\n    for {\n        dd.reordered = 0;\n        res = cuddCofactorRecur(dd,f,g);\n    \nif !(dd.reordered == 1) { break }\n} \n    return(res);\n\n} /* end of Cudd_Cofactor */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Computes the children of g.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddGetBranches(g *DdNode, g1 **DdNode, g0 **DdNode) {\n    // inlining of macro Cudd_Regular\n    var G *DdNode  = ((DdNode *)((ptruint)(g) \u0026 ~01));\n\n    // inlining of macro cuddT\n    *g1 = ((G).type.kids.T);\n    // inlining of macro cuddE\n    *g0 = ((G).type.kids.E);\n    // inlining of macro Cudd_IsComplement\n    if int32( ((ptrint) (g) \u0026 01)) != 0 {\n        // inlining of macro Cudd_Not\n        *g1 = ((DdNode *)((ptrint)(*g1) ^ 01));\n        // inlining of macro Cudd_Not\n        *g0 = ((DdNode *)((ptrint)(*g0) ^ 01));\n    }\n\n} /* end of cuddGetBranches */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks whether g is the BDD of a cube.]\n\n  Description [Checks whether g is the BDD of a cube. Returns 1 in case\n  of success; 0 otherwise. The constant 1 is a valid cube, but all other\n  constant functions cause cuddCheckCube to return 0.]\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddCheckCube(dd *DdManager, g *DdNode) int32 {\n    var g1, g0, one, zero *DdNode;\n    \n    // inlining of macro DD_ONE\n    one = ((dd).one);\n    if g == one { return(1); }\n    // inlining of macro Cudd_IsConstant\n    // inlining of macro Cudd_Regular\n    if (((DdNode *)((ptruint)(g) \u0026 ~01))).index == CUDD_CONST_INDEX { return(0); }\n\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n    cuddGetBranches(g,\u0026g1,\u0026g0);\n\n    if g0 == zero {\n        return(cuddCheckCube(dd, g1));\n    }\n    if g1 == zero {\n        return(cuddCheckCube(dd, g0));\n    }\n    return(0);\n\n} /* end of cuddCheckCube */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Performs the recursive step of Cudd_Cofactor.]\n\n  Description [Performs the recursive step of Cudd_Cofactor. Returns a\n  pointer to the cofactor if successful; NULL otherwise.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_Cofactor]\n\n******************************************************************************/\nfunc cuddCofactorRecur(dd *DdManager, f *DdNode, g *DdNode) *DdNode {\n    var one, zero, F, G, g1, g0, f1, f0, t, e, r *DdNode;\n    unsigned int topf,topg;\n    var comple int32;\n\n    statLine(dd);\n    // inlining of macro Cudd_Regular\n    F = ((DdNode *)((ptruint)(f) \u0026 ~01));\n    // inlining of macro cuddIsConstant\n    if (F).index == CUDD_CONST_INDEX { return(f); }\n\n    // inlining of macro DD_ONE\n    one = ((dd).one);\n\n    /* The invariant g != 0 is true on entry to this procedure and is\n    ** recursively maintained by it. Therefore it suffices to test g\n    ** against one to make sure it is not constant.\n    */\n    if g == one { return(f); }\n    /* From now on, f and g are known not to be constants. */\n\n    comple = f != F;\n    r = cuddCacheLookup2(dd,Cudd_Cofactor,F,g);\n    if r != nil {\n        // inlining of macro Cudd_NotCond\n        return(((DdNode *)((ptrint)(r) ^ (comple))));\n    }\n\n    topf = dd.perm[F.index];\n    // inlining of macro Cudd_Regular\n    G = ((DdNode *)((ptruint)(g) \u0026 ~01));\n    topg = dd.perm[G.index];\n\n    /* We take the cofactors of F because we are going to rely on\n    ** the fact that the cofactors of the complement are the complements\n    ** of the cofactors to better utilize the cache. Variable comple\n    ** remembers whether we have to complement the result or not.\n    */\n    if topf \u003c= topg {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        f1 = ((F).type.kids.T); f0 = ((F).type.kids.E);\n    } else {\n        f1 = f0 = F;\n    }\n    if topg \u003c= topf {\n        // inlining of macro cuddT\n        // inlining of macro cuddE\n        g1 = ((G).type.kids.T); g0 = ((G).type.kids.E);\n        // inlining of macro Cudd_Not\n        if g != G { g1 = ((DdNode *)((ptrint)(g1) ^ 01)); g0 = ((DdNode *)((ptrint)(g0) ^ 01)); }\n    } else {\n        g1 = g0 = g;\n    }\n\n    // inlining of macro Cudd_Not\n    zero = ((DdNode *)((ptrint)(one) ^ 01));\n    if topf \u003e= topg {\n        // inlining of macro DD_ZERO\n        if g0 == zero || g0 == ((dd).zero) {\n            r = cuddCofactorRecur(dd, f1, g1);\n        // inlining of macro DD_ZERO\n        } else if g1 == zero || g1 == ((dd).zero) {\n            r = cuddCofactorRecur(dd, f0, g0);\n        } else {\n            (void) fmt.Fprintf(dd.out, \"Cudd_Cofactor: Invalid restriction 2\\n\");\n            dd.errorCode = CUDD_INVALID_ARG;\n            return(nil);\n        }\n        if r == nil { return(nil); }\n    } else /* if (topf \u003c topg) */ {\n        t = cuddCofactorRecur(dd, f1, g);\n        if t == nil { return(nil); }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(t).ref);\n        e = cuddCofactorRecur(dd, f0, g);\n        if e == nil {\n            Cudd_RecursiveDeref(dd, t);\n            return(nil);\n        }\n        // inlining of macro cuddRef\n        cuddSatInc(Cudd_Regular(e).ref);\n\n        if t == e {\n            r = t;\n        // inlining of macro Cudd_IsComplement\n        } else if int32( ((ptrint) (t) \u0026 01)) != 0 {\n            // inlining of macro Cudd_Not\n            r = cuddUniqueInter(dd,int32(F.index),((DdNode *)((ptrint)(t) ^ 01)),((DdNode *)((ptrint)(e) ^ 01)));\n            if r != nil {\n                // inlining of macro Cudd_Not\n                r = ((DdNode *)((ptrint)(r) ^ 01)); }\n        } else {\n            r = cuddUniqueInter(dd,int32(F.index),t,e);\n        }\n        if r == nil {\n            Cudd_RecursiveDeref(dd ,e);\n            Cudd_RecursiveDeref(dd ,t);\n            return(nil);\n        }\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(t).ref);\n        // inlining of macro cuddDeref\n        cuddSatDec(Cudd_Regular(e).ref);\n    }\n\n    cuddCacheInsert2(dd,Cudd_Cofactor,F,g,r);\n\n    // inlining of macro Cudd_NotCond\n    return(((DdNode *)((ptrint)(r) ^ (comple))));\n\n} /* end of cuddCofactorRecur */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n//ABC_NAMESPACE_IMPL_END\n\n\n"
+}

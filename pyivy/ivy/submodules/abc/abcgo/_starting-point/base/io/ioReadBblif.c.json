@@ -1,0 +1,420 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c",
+  "SHA256": "de82b3f29754766f9eb2c31c43ce7f653d0c0dc0136b2f866f0a643774c1f11a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 18,
+        "ByteOffset": 2690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 90,
+        "Column": 9,
+        "ByteOffset": 3511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Bbl_ManToAbc(): Network check has failed.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 4319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Bbl_ObjIsMarked(pObj) ); // checks if acyclic"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 172,
+        "Column": 80,
+        "ByteOffset": 6411
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFForms = /*__starting_point_inline_macro:ABC_CALLOC__*/((Dec_Graph_t * *) calloc((size_t)(Bbl_ManFncSize(p)), sizeof(Dec_Graph_t *)));"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 179,
+        "Column": 73,
+        "ByteOffset": 6902
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 208,
+        "Column": 73,
+        "ByteOffset": 8371
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 222,
+        "Column": 63,
+        "ByteOffset": 9019
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pFForms) ? (free((char *) (pFForms)), (pFForms) = 0) : 0);"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 230,
+        "Column": 73,
+        "ByteOffset": 9359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 307,
+        "Column": 1,
+        "ByteOffset": 11467
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"Runtime stats:\\n\" );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 309,
+        "Column": 60,
+        "ByteOffset": 11637
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk1)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 311,
+        "Column": 60,
+        "ByteOffset": 11797
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk2)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 313,
+        "Column": 60,
+        "ByteOffset": 11957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk3)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 315,
+        "Column": 60,
+        "ByteOffset": 12117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk4)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 317,
+        "Column": 60,
+        "ByteOffset": 12277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk5)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 340,
+        "Column": 9,
+        "ByteOffset": 12869
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_ReadBaf: The network check has failed.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Bbl_ManToAbc",
+      "Start": 1909,
+      "End": 3245,
+      "BodyStart": 1951,
+      "Original": "Abc_Ntk_t * Bbl_ManToAbc( Bbl_Man_t * p )\n{\n    Abc_Ntk_t * pNtk;\n    Abc_Obj_t * pObjNew = NULL;\n    Bbl_Obj_t * pObj, * pFanin;\n    Vec_Ptr_t * vCopy;\n    // start the network\n    pNtk = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );\n    pNtk-\u003epName = Extra_UtilStrsav( Bbl_ManName(p) );\n    // create objects\n    vCopy = Vec_PtrStart( 1000 );\n    Bbl_ManForEachObj( p, pObj )\n    {\n        if ( Bbl_ObjIsInput(pObj) )\n            pObjNew = Abc_NtkCreatePi( pNtk );\n        else if ( Bbl_ObjIsOutput(pObj) )\n            pObjNew = Abc_NtkCreatePo( pNtk );\n        else if ( Bbl_ObjIsLut(pObj) )\n            pObjNew = Abc_NtkCreateNode( pNtk );\n        else assert( 0 );\n        if ( Bbl_ObjIsLut(pObj) )\n            pObjNew-\u003epData = Abc_SopRegister( (Mem_Flex_t *)pNtk-\u003epManFunc, Bbl_ObjSop(p, pObj) );\n        Vec_PtrSetEntry( vCopy, Bbl_ObjId(pObj), pObjNew );\n    }\n    // connect objects\n    Bbl_ManForEachObj( p, pObj )\n        Bbl_ObjForEachFanin( pObj, pFanin )\n            Abc_ObjAddFanin( (Abc_Obj_t *)Vec_PtrEntry(vCopy, Bbl_ObjId(pObj)), (Abc_Obj_t *)Vec_PtrEntry(vCopy, Bbl_ObjId(pFanin)) );\n    // finalize\n    Vec_PtrFree( vCopy );\n    Abc_NtkAddDummyPiNames( pNtk );\n    Abc_NtkAddDummyPoNames( pNtk );\n    if ( !Abc_NtkCheck( pNtk ) )\n        printf( \"Bbl_ManToAbc(): Network check has failed.\\n\" );\n    return pNtk;\n}",
+      "Draft": "func Bbl_ManToAbc(p *Bbl_Man_t) *Abc_Ntk_t {\n    var pNtk *Abc_Ntk_t;\n    var pObjNew *Abc_Obj_t  = nil;\n    var pObj, pFanin *Bbl_Obj_t;\n    var vCopy *Vec_Ptr_t;\n    // start the network\n    pNtk = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );\n    pNtk.pName = Extra_UtilStrsav( Bbl_ManName(p) );\n    // create objects\n    vCopy = Vec_PtrStart( 1000 );\n    // inlining of macro Bbl_ManForEachObj\n    for  pObj = Bbl_ManObjFirst(p); (pObj != nil); pObj = Bbl_ManObjNext(p, pObj)  {\n        if Bbl_ObjIsInput(pObj) {\n            pObjNew = Abc_NtkCreatePi( pNtk );\n        } else if Bbl_ObjIsOutput(pObj) {\n            pObjNew = Abc_NtkCreatePo( pNtk );\n        } else if Bbl_ObjIsLut(pObj) {\n            pObjNew = Abc_NtkCreateNode( pNtk );\n        } else { assert(false, \"0\"); }\n        if Bbl_ObjIsLut(pObj) {\n            pObjNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, Bbl_ObjSop(p, pObj) ); }\n        Vec_PtrSetEntry( vCopy, Bbl_ObjId(pObj), pObjNew );\n    }\n    // connect objects\n    // inlining of macro Bbl_ManForEachObj\n    for  pObj = Bbl_ManObjFirst(p); (pObj != nil); pObj = Bbl_ManObjNext(p, pObj)  {\n        // inlining of macro Bbl_ObjForEachFanin\n        for  pFanin = Bbl_ObjFaninFirst(pObj); (pFanin != nil); pFanin = Bbl_ObjFaninNext(pObj, pFanin)  {\n            Abc_ObjAddFanin( (Abc_Obj_t *)Vec_PtrEntry(vCopy, Bbl_ObjId(pObj)), (Abc_Obj_t *)Vec_PtrEntry(vCopy, Bbl_ObjId(pFanin)) );\n        }\n    }\n    // finalize\n    Vec_PtrFree( vCopy );\n    Abc_NtkAddDummyPiNames( pNtk );\n    Abc_NtkAddDummyPoNames( pNtk );\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Printf(\"Bbl_ManToAbc(): Network check has failed.\\n\"); }\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Bbl_ManDfs_rec",
+      "Start": 3521,
+      "End": 3976,
+      "BodyStart": 3581,
+      "Original": "void Bbl_ManDfs_rec( Bbl_Obj_t * pObj, Vec_Ptr_t * vNodes )\n{\n    extern void Bbl_ObjMark( Bbl_Obj_t * p );\n    extern int  Bbl_ObjIsMarked( Bbl_Obj_t * p );\n    Bbl_Obj_t * pFanin;\n    if ( Bbl_ObjIsMarked(pObj) || Bbl_ObjIsInput(pObj) )\n        return;\n    Bbl_ObjForEachFanin( pObj, pFanin )\n        Bbl_ManDfs_rec( pFanin, vNodes );\n    assert( !Bbl_ObjIsMarked(pObj) ); // checks if acyclic\n    Bbl_ObjMark( pObj );\n    Vec_PtrPush( vNodes, pObj );\n}",
+      "Draft": "func Bbl_ManDfs_rec(pObj *Bbl_Obj_t, vNodes *Vec_Ptr_t) {\n    extern void Bbl_ObjMark( Bbl_Obj_t * p );\n    extern int  Bbl_ObjIsMarked( Bbl_Obj_t * p );\n    var pFanin *Bbl_Obj_t;\n    if Bbl_ObjIsMarked(pObj) || Bbl_ObjIsInput(pObj) {\n        return; }\n    // inlining of macro Bbl_ObjForEachFanin\n    for  pFanin = Bbl_ObjFaninFirst(pObj); (pFanin != nil); pFanin = Bbl_ObjFaninNext(pObj, pFanin)  {\n        Bbl_ManDfs_rec( pFanin, vNodes );\n    }\n    assert(!Bbl_ObjIsMarked(pObj), \"!Bbl_ObjIsMarked(pObj)\"); // checks if acyclic\n    Bbl_ObjMark( pObj );\n    Vec_PtrPush( vNodes, pObj );\n}"
+    },
+    {
+      "Name": "Bbl_ManDfs",
+      "Start": 4252,
+      "End": 4506,
+      "BodyStart": 4292,
+      "Original": "Vec_Ptr_t * Bbl_ManDfs( Bbl_Man_t * p )\n{\n    Vec_Ptr_t * vNodes;\n    Bbl_Obj_t * pObj;\n    vNodes = Vec_PtrAlloc( 1000 );\n    Bbl_ManForEachObj( p, pObj )\n        if ( Bbl_ObjIsLut(pObj) )\n            Bbl_ManDfs_rec( pObj, vNodes );\n    return vNodes;\n}",
+      "Draft": "func Bbl_ManDfs(p *Bbl_Man_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Bbl_Obj_t;\n    vNodes = Vec_PtrAlloc( 1000 );\n    // inlining of macro Bbl_ManForEachObj\n    for  pObj = Bbl_ManObjFirst(p); (pObj != nil); pObj = Bbl_ManObjNext(p, pObj)  {\n        if Bbl_ObjIsLut(pObj) {\n            Bbl_ManDfs_rec( pObj, vNodes ); }\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Bbl_ManToAig",
+      "Start": 5224,
+      "End": 7861,
+      "BodyStart": 5266,
+      "Original": "Abc_Ntk_t * Bbl_ManToAig( Bbl_Man_t * p )\n{\n    extern int Bbl_ManFncSize( Bbl_Man_t * p );\n    extern int Bbl_ObjFncHandle( Bbl_Obj_t * p );\n    extern Abc_Obj_t * Dec_GraphToAig( Abc_Ntk_t * pNtk, Dec_Graph_t * pFForm, Vec_Ptr_t * vFaninAigs );\n    int fVerbose = 0;\n    Abc_Ntk_t * pNtk;\n    Abc_Obj_t * pObjNew = NULL;\n    Bbl_Obj_t * pObj, * pFanin;\n    Vec_Ptr_t * vCopy, * vNodes, * vFaninAigs;\n    Dec_Graph_t ** pFForms;\n    int i;\n    abctime clk;\nclk = Abc_Clock();\n    // map SOP handles into factored forms\n    pFForms = ABC_CALLOC( Dec_Graph_t *, Bbl_ManFncSize(p) );\n    Bbl_ManForEachObj( p, pObj )\n        if ( pFForms[Bbl_ObjFncHandle(pObj)] == NULL )\n            pFForms[Bbl_ObjFncHandle(pObj)] = Dec_Factor( Bbl_ObjSop(p, pObj) );\nif ( fVerbose )\nABC_PRT( \"Fct\", Abc_Clock() - clk );\n    // start the network\n    pNtk = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pNtk-\u003epName = Extra_UtilStrsav( Bbl_ManName(p) );\n    vCopy = Vec_PtrStart( 1000 );\n    // create CIs\n    Bbl_ManForEachObj( p, pObj )\n    {\n        if ( !Bbl_ObjIsInput(pObj) )\n            continue;\n        Vec_PtrSetEntry( vCopy, Bbl_ObjId(pObj), Abc_NtkCreatePi(pNtk) );\n    }\nclk = Abc_Clock();\n    // create internal nodes\n    vNodes = Bbl_ManDfs( p );\n    vFaninAigs = Vec_PtrAlloc( 100 );\n    Vec_PtrForEachEntry( Bbl_Obj_t *, vNodes, pObj, i )\n    {\n        // collect fanin AIGs\n        Vec_PtrClear( vFaninAigs );\n        Bbl_ObjForEachFanin( pObj, pFanin )\n            Vec_PtrPush( vFaninAigs, Vec_PtrEntry( vCopy, Bbl_ObjId(pFanin) ) );\n        // create the new node\n        pObjNew = Dec_GraphToAig( pNtk, pFForms[Bbl_ObjFncHandle(pObj)], vFaninAigs );\n        Vec_PtrSetEntry( vCopy, Bbl_ObjId(pObj), pObjNew );\n    }\n    Vec_PtrFree( vFaninAigs );\n    Vec_PtrFree( vNodes );\nif ( fVerbose )\nABC_PRT( \"AIG\", Abc_Clock() - clk );\n    // create COs\n    Bbl_ManForEachObj( p, pObj )\n    {\n        if ( !Bbl_ObjIsOutput(pObj) )\n            continue;\n        pObjNew = (Abc_Obj_t *)Vec_PtrEntry( vCopy, Bbl_ObjId(Bbl_ObjFaninFirst(pObj)) );\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pNtk), pObjNew );\n    }\n    Abc_AigCleanup( (Abc_Aig_t *)pNtk-\u003epManFunc );\n    // clear factored forms\n    for ( i = Bbl_ManFncSize(p) - 1; i \u003e= 0; i-- )\n        if ( pFForms[i] )\n            Dec_GraphFree( pFForms[i] );\n    ABC_FREE( pFForms );\n    // finalize\nclk = Abc_Clock();\n    Vec_PtrFree( vCopy );\n    Abc_NtkAddDummyPiNames( pNtk );\n    Abc_NtkAddDummyPoNames( pNtk );\nif ( fVerbose )\nABC_PRT( \"Nam\", Abc_Clock() - clk );\n//    if ( !Abc_NtkCheck( pNtk ) )\n//        printf( \"Bbl_ManToAig(): Network check has failed.\\n\" );\n    return pNtk;\n}",
+      "Draft": "func Bbl_ManToAig(p *Bbl_Man_t) *Abc_Ntk_t {\n    extern int Bbl_ManFncSize( Bbl_Man_t * p );\n    extern int Bbl_ObjFncHandle( Bbl_Obj_t * p );\n    extern Abc_Obj_t * Dec_GraphToAig( Abc_Ntk_t * pNtk, Dec_Graph_t * pFForm, Vec_Ptr_t * vFaninAigs );\n    var fVerbose int32;\n    var pNtk *Abc_Ntk_t;\n    var pObjNew *Abc_Obj_t  = nil;\n    var pObj, pFanin *Bbl_Obj_t;\n    var vCopy, vNodes, vFaninAigs *Vec_Ptr_t;\n    var pFForms **Dec_Graph_t;\n    var i int32;\n    var clk abctime;\nclk = Abc_Clock();\n    // map SOP handles into factored forms\n    // inlining of macro ABC_CALLOC\n    pFForms = ((Dec_Graph_t * *) calloc((size_t)(Bbl_ManFncSize(p)), sizeof(Dec_Graph_t *)));\n    // inlining of macro Bbl_ManForEachObj\n    for  pObj = Bbl_ManObjFirst(p); (pObj != nil); pObj = Bbl_ManObjNext(p, pObj)  {\n        if pFForms[Bbl_ObjFncHandle(pObj)] == nil {\n            pFForms[Bbl_ObjFncHandle(pObj)] = Dec_Factor( Bbl_ObjSop(p, pObj) ); }\n    }\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Fct\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\n    // start the network\n    pNtk = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pNtk.pName = Extra_UtilStrsav( Bbl_ManName(p) );\n    vCopy = Vec_PtrStart( 1000 );\n    // create CIs\n    // inlining of macro Bbl_ManForEachObj\n    for  pObj = Bbl_ManObjFirst(p); (pObj != nil); pObj = Bbl_ManObjNext(p, pObj)  {\n        if !Bbl_ObjIsInput(pObj) {\n            continue; }\n        Vec_PtrSetEntry( vCopy, Bbl_ObjId(pObj), Abc_NtkCreatePi(pNtk) );\n    }\nclk = Abc_Clock();\n    // create internal nodes\n    vNodes = Bbl_ManDfs( p );\n    vFaninAigs = Vec_PtrAlloc( 100 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Bbl_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // collect fanin AIGs\n        Vec_PtrClear( vFaninAigs );\n        // inlining of macro Bbl_ObjForEachFanin\n        for  pFanin = Bbl_ObjFaninFirst(pObj); (pFanin != nil); pFanin = Bbl_ObjFaninNext(pObj, pFanin)  {\n            Vec_PtrPush( vFaninAigs, Vec_PtrEntry( vCopy, Bbl_ObjId(pFanin) ) );\n        }\n        // create the new node\n        pObjNew = Dec_GraphToAig( pNtk, pFForms[Bbl_ObjFncHandle(pObj)], vFaninAigs );\n        Vec_PtrSetEntry( vCopy, Bbl_ObjId(pObj), pObjNew );\n    }\n    Vec_PtrFree( vFaninAigs );\n    Vec_PtrFree( vNodes );\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"AIG\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\n    // create COs\n    // inlining of macro Bbl_ManForEachObj\n    for  pObj = Bbl_ManObjFirst(p); (pObj != nil); pObj = Bbl_ManObjNext(p, pObj)  {\n        if !Bbl_ObjIsOutput(pObj) {\n            continue; }\n        pObjNew = (Abc_Obj_t *)Vec_PtrEntry( vCopy, Bbl_ObjId(Bbl_ObjFaninFirst(pObj)) );\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pNtk), pObjNew );\n    }\n    Abc_AigCleanup( (Abc_Aig_t *)pNtk.pManFunc );\n    // clear factored forms\n    for  i = Bbl_ManFncSize(p) - 1; i \u003e= 0; i--  {\n        if pFForms[i] {\n            Dec_GraphFree( pFForms[i] ); }\n    }\n    // inlining of macro ABC_FREE\n    ((pFForms) ? (free((char *) (pFForms)), (pFForms) = 0) : 0);\n    // finalize\nclk = Abc_Clock();\n    Vec_PtrFree( vCopy );\n    Abc_NtkAddDummyPiNames( pNtk );\n    Abc_NtkAddDummyPoNames( pNtk );\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Nam\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\n//    if ( !Abc_NtkCheck( pNtk ) )\n//        printf( \"Bbl_ManToAig(): Network check has failed.\\n\" );\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Bbl_ManVerify",
+      "Start": 8148,
+      "End": 8596,
+      "BodyStart": 8207,
+      "Original": "void Bbl_ManVerify( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2 )\n{\n    extern void Abc_NtkCecFraig( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int nSeconds, int fVerbose );\n    Abc_Ntk_t * pAig1, * pAig2;\n    pAig1 = Abc_NtkStrash( pNtk1, 0, 1, 0 );\n    pAig2 = Abc_NtkStrash( pNtk2, 0, 1, 0 );\n    Abc_NtkShortNames( pAig1 );\n    Abc_NtkShortNames( pAig2 );\n    Abc_NtkCecFraig( pAig1, pAig2, 0, 0 );\n    Abc_NtkDelete( pAig1 );\n    Abc_NtkDelete( pAig2 );\n}",
+      "Draft": "func Bbl_ManVerify(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t) {\n    extern void Abc_NtkCecFraig( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int nSeconds, int fVerbose );\n    var pAig1, pAig2 *Abc_Ntk_t;\n    pAig1 = Abc_NtkStrash( pNtk1, 0, 1, 0 );\n    pAig2 = Abc_NtkStrash( pNtk2, 0, 1, 0 );\n    Abc_NtkShortNames( pAig1 );\n    Abc_NtkShortNames( pAig2 );\n    Abc_NtkCecFraig( pAig1, pAig2, 0, 0 );\n    Abc_NtkDelete( pAig1 );\n    Abc_NtkDelete( pAig2 );\n}"
+    },
+    {
+      "Name": "Bbl_ManTest",
+      "Start": 8867,
+      "End": 10006,
+      "BodyStart": 8904,
+      "Original": "void Bbl_ManTest( Abc_Ntk_t * pNtk )\n{\n    extern Bbl_Man_t * Bbl_ManFromAbc( Abc_Ntk_t * pNtk );\n\n    Abc_Ntk_t * pNtkNew;\n    Bbl_Man_t * p, * pNew;\n    char * pFileName = \"test.bblif\";\n    abctime clk, clk1, clk2, clk3, clk4, clk5;\nclk = Abc_Clock();\n    p = Bbl_ManFromAbc( pNtk );\n    Bbl_ManPrintStats( p );\nclk1 = Abc_Clock() - clk;\n//Bbl_ManDumpBlif( p, \"test_bbl.blif\" );\n\n    // write into file and back\nclk = Abc_Clock();\n    Bbl_ManDumpBinaryBlif( p, pFileName );\nclk2 = Abc_Clock() - clk;\n\n    // read from file\nclk = Abc_Clock();\n    pNew = Bbl_ManReadBinaryBlif( pFileName );\n    Bbl_ManStop( p ); p = pNew;\nclk3 = Abc_Clock() - clk;\n\n    // generate ABC network\nclk = Abc_Clock();\n    pNtkNew = Bbl_ManToAig( p );\n//    pNtkNew = Bbl_ManToAbc( p );\n    Bbl_ManStop( p );\nclk4 = Abc_Clock() - clk;\n\n    // equivalence check\nclk = Abc_Clock();\n//    Bbl_ManVerify( pNtk, pNtkNew );\n    Abc_NtkDelete( pNtkNew );\nclk5 = Abc_Clock() - clk;\n\nprintf( \"Runtime stats:\\n\" );\nABC_PRT( \"ABC to Man\", clk1 );\nABC_PRT( \"Writing   \", clk2 );\nABC_PRT( \"Reading   \", clk3 );\nABC_PRT( \"Man to ABC\", clk4 );\nABC_PRT( \"Verify    \", clk5 );\n}",
+      "Draft": "func Bbl_ManTest(pNtk *Abc_Ntk_t) {\n    extern Bbl_Man_t * Bbl_ManFromAbc( Abc_Ntk_t * pNtk );\n\n    var pNtkNew *Abc_Ntk_t;\n    var p, pNew *Bbl_Man_t;\n    var pFileName string  = \"test.bblif\";\n    var clk, clk1, clk2, clk3, clk4, clk5 abctime;\nclk = Abc_Clock();\n    p = Bbl_ManFromAbc( pNtk );\n    Bbl_ManPrintStats( p );\nclk1 = Abc_Clock() - clk;\n//Bbl_ManDumpBlif( p, \"test_bbl.blif\" );\n\n    // write into file and back\nclk = Abc_Clock();\n    Bbl_ManDumpBinaryBlif( p, pFileName );\nclk2 = Abc_Clock() - clk;\n\n    // read from file\nclk = Abc_Clock();\n    pNew = Bbl_ManReadBinaryBlif( pFileName );\n    Bbl_ManStop( p ); p = pNew;\nclk3 = Abc_Clock() - clk;\n\n    // generate ABC network\nclk = Abc_Clock();\n    pNtkNew = Bbl_ManToAig( p );\n//    pNtkNew = Bbl_ManToAbc( p );\n    Bbl_ManStop( p );\nclk4 = Abc_Clock() - clk;\n\n    // equivalence check\nclk = Abc_Clock();\n//    Bbl_ManVerify( pNtk, pNtkNew );\n    Abc_NtkDelete( pNtkNew );\nclk5 = Abc_Clock() - clk;\n\nfmt.Printf(\"Runtime stats:\\n\");\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"ABC to Man\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk1)))/(float64(int64(time.Second))));;\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Writing   \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk2)))/(float64(int64(time.Second))));;\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Reading   \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk3)))/(float64(int64(time.Second))));;\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Man to ABC\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk4)))/(float64(int64(time.Second))));;\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Verify    \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk5)))/(float64(int64(time.Second))));;\n}"
+    },
+    {
+      "Name": "Io_ReadBblif",
+      "Start": 10264,
+      "End": 10714,
+      "BodyStart": 10321,
+      "Original": "Abc_Ntk_t * Io_ReadBblif( char * pFileName, int fCheck )\n{\n    Bbl_Man_t * p;\n    Abc_Ntk_t * pNtkNew;\n    // read the file\n    p = Bbl_ManReadBinaryBlif( pFileName );\n    pNtkNew = Bbl_ManToAig( p );\n    Bbl_ManStop( p );\n    // check the result\n    if ( fCheck \u0026\u0026 !Abc_NtkCheckRead( pNtkNew ) )\n    {\n        printf( \"Io_ReadBaf: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Io_ReadBblif(pFileName string, fCheck int32) *Abc_Ntk_t {\n    var p *Bbl_Man_t;\n    var pNtkNew *Abc_Ntk_t;\n    // read the file\n    p = Bbl_ManReadBinaryBlif( pFileName );\n    pNtkNew = Bbl_ManToAig( p );\n    Bbl_ManStop( p );\n    // check the result\n    if (fCheck != 0) \u0026\u0026 !Abc_NtkCheckRead( pNtkNew ) {\n        fmt.Printf(\"Io_ReadBaf: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::mechanical::sizeof::6365",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5758,
+      "End": 5758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::pointer-cast::2757",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2661,
+      "End": 2675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::pointer-cast::3210",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2909,
+      "End": 2922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::pointer-cast::3261",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2960,
+      "End": 2973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::pointer-cast::6311",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5758,
+      "End": 5758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::pointer-cast::6371",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5758,
+      "End": 5758
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::pointer-cast::7529",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6517,
+      "End": 6517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::pointer-cast::8538",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7196,
+      "End": 7209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::pointer-cast::8695",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7353,
+      "End": 7366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::pointer-cast::8939",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7534,
+      "End": 7534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::Bbl_ManToAbc",
+      "Category": "semantic-review",
+      "Symbol": "Bbl_ManToAbc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1909,
+      "End": 3245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::Bbl_ManDfs_rec",
+      "Category": "semantic-review",
+      "Symbol": "Bbl_ManDfs_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3521,
+      "End": 3976
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::Bbl_ManDfs",
+      "Category": "semantic-review",
+      "Symbol": "Bbl_ManDfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4252,
+      "End": 4506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::ternary::Bbl_ManToAig",
+      "Category": "ternary-review",
+      "Symbol": "Bbl_ManToAig",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5224,
+      "End": 7861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::Bbl_ManToAig",
+      "Category": "semantic-review",
+      "Symbol": "Bbl_ManToAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5224,
+      "End": 7861
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::Bbl_ManVerify",
+      "Category": "semantic-review",
+      "Symbol": "Bbl_ManVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8148,
+      "End": 8596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::Bbl_ManTest",
+      "Category": "semantic-review",
+      "Symbol": "Bbl_ManTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8867,
+      "End": 10006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::Io_ReadBblif",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadBblif",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10264,
+      "End": 10714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBblif.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10961
+    }
+  ],
+  "Draft": "package io\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [ioReadBblif.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to read AIG in the binary format.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: ioReadBblif.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioAbc.h\"\n//#include \"bool/dec/dec.h\"\n//#include \"misc/bbl/bblif.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n// For description of Binary BLIF format, refer to \"abc/src/aig/bbl/bblif.h\"\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Fnction*************************************************************\n\n  Synopsis    [Constructs ABC network from the manager.]\n\n  Description [The ABC network is started, as well as the array vCopy,\n  which will map the new ID of each object in the BBLIF manager into\n  the ponter ot the corresponding object in the ABC. For each internal\n  node, determined by Bbl_ObjIsLut(), the SOP representation is created\n  by retrieving the SOP representation of the BBLIF object. Finally,\n  the objects are connected using fanin/fanout creation, and the dummy\n  names are assigned because ABC requires each CI/CO to have a name.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbl_ManToAbc(p *Bbl_Man_t) *Abc_Ntk_t {\n    var pNtk *Abc_Ntk_t;\n    var pObjNew *Abc_Obj_t  = nil;\n    var pObj, pFanin *Bbl_Obj_t;\n    var vCopy *Vec_Ptr_t;\n    // start the network\n    pNtk = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );\n    pNtk.pName = Extra_UtilStrsav( Bbl_ManName(p) );\n    // create objects\n    vCopy = Vec_PtrStart( 1000 );\n    // inlining of macro Bbl_ManForEachObj\n    for  pObj = Bbl_ManObjFirst(p); (pObj != nil); pObj = Bbl_ManObjNext(p, pObj)  {\n        if Bbl_ObjIsInput(pObj) {\n            pObjNew = Abc_NtkCreatePi( pNtk );\n        } else if Bbl_ObjIsOutput(pObj) {\n            pObjNew = Abc_NtkCreatePo( pNtk );\n        } else if Bbl_ObjIsLut(pObj) {\n            pObjNew = Abc_NtkCreateNode( pNtk );\n        } else { assert(false, \"0\"); }\n        if Bbl_ObjIsLut(pObj) {\n            pObjNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, Bbl_ObjSop(p, pObj) ); }\n        Vec_PtrSetEntry( vCopy, Bbl_ObjId(pObj), pObjNew );\n    }\n    // connect objects\n    // inlining of macro Bbl_ManForEachObj\n    for  pObj = Bbl_ManObjFirst(p); (pObj != nil); pObj = Bbl_ManObjNext(p, pObj)  {\n        // inlining of macro Bbl_ObjForEachFanin\n        for  pFanin = Bbl_ObjFaninFirst(pObj); (pFanin != nil); pFanin = Bbl_ObjFaninNext(pObj, pFanin)  {\n            Abc_ObjAddFanin( (Abc_Obj_t *)Vec_PtrEntry(vCopy, Bbl_ObjId(pObj)), (Abc_Obj_t *)Vec_PtrEntry(vCopy, Bbl_ObjId(pFanin)) );\n        }\n    }\n    // finalize\n    Vec_PtrFree( vCopy );\n    Abc_NtkAddDummyPiNames( pNtk );\n    Abc_NtkAddDummyPoNames( pNtk );\n    if !Abc_NtkCheck( pNtk ) {\n        fmt.Printf(\"Bbl_ManToAbc(): Network check has failed.\\n\"); }\n    return pNtk;\n}\n\n/**Fnction*************************************************************\n\n  Synopsis    [Collects internal nodes in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbl_ManDfs_rec(pObj *Bbl_Obj_t, vNodes *Vec_Ptr_t) {\n    extern void Bbl_ObjMark( Bbl_Obj_t * p );\n    extern int  Bbl_ObjIsMarked( Bbl_Obj_t * p );\n    var pFanin *Bbl_Obj_t;\n    if Bbl_ObjIsMarked(pObj) || Bbl_ObjIsInput(pObj) {\n        return; }\n    // inlining of macro Bbl_ObjForEachFanin\n    for  pFanin = Bbl_ObjFaninFirst(pObj); (pFanin != nil); pFanin = Bbl_ObjFaninNext(pObj, pFanin)  {\n        Bbl_ManDfs_rec( pFanin, vNodes );\n    }\n    assert(!Bbl_ObjIsMarked(pObj), \"!Bbl_ObjIsMarked(pObj)\"); // checks if acyclic\n    Bbl_ObjMark( pObj );\n    Vec_PtrPush( vNodes, pObj );\n}\n\n/**Fnction*************************************************************\n\n  Synopsis    [Collects internal nodes in the DFS order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbl_ManDfs(p *Bbl_Man_t) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Bbl_Obj_t;\n    vNodes = Vec_PtrAlloc( 1000 );\n    // inlining of macro Bbl_ManForEachObj\n    for  pObj = Bbl_ManObjFirst(p); (pObj != nil); pObj = Bbl_ManObjNext(p, pObj)  {\n        if Bbl_ObjIsLut(pObj) {\n            Bbl_ManDfs_rec( pObj, vNodes ); }\n    }\n    return vNodes;\n}\n\n/**Fnction*************************************************************\n\n  Synopsis    [Constructs AIG in ABC from the manager.]\n\n  Description [The ABC network is started, as well as the array vCopy,\n  which will map the new ID of each object in the BBLIF manager into\n  the ponter ot the corresponding AIG object in the ABC. For each internal\n  node in a topological oder the AIG representation is created\n  by factoring the SOP representation of the BBLIF object. Finally,\n  the CO objects are created, and the dummy names are assigned because \n  ABC requires each CI/CO to have a name.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbl_ManToAig(p *Bbl_Man_t) *Abc_Ntk_t {\n    extern int Bbl_ManFncSize( Bbl_Man_t * p );\n    extern int Bbl_ObjFncHandle( Bbl_Obj_t * p );\n    extern Abc_Obj_t * Dec_GraphToAig( Abc_Ntk_t * pNtk, Dec_Graph_t * pFForm, Vec_Ptr_t * vFaninAigs );\n    var fVerbose int32;\n    var pNtk *Abc_Ntk_t;\n    var pObjNew *Abc_Obj_t  = nil;\n    var pObj, pFanin *Bbl_Obj_t;\n    var vCopy, vNodes, vFaninAigs *Vec_Ptr_t;\n    var pFForms **Dec_Graph_t;\n    var i int32;\n    var clk abctime;\nclk = Abc_Clock();\n    // map SOP handles into factored forms\n    // inlining of macro ABC_CALLOC\n    pFForms = ((Dec_Graph_t * *) calloc((size_t)(Bbl_ManFncSize(p)), sizeof(Dec_Graph_t *)));\n    // inlining of macro Bbl_ManForEachObj\n    for  pObj = Bbl_ManObjFirst(p); (pObj != nil); pObj = Bbl_ManObjNext(p, pObj)  {\n        if pFForms[Bbl_ObjFncHandle(pObj)] == nil {\n            pFForms[Bbl_ObjFncHandle(pObj)] = Dec_Factor( Bbl_ObjSop(p, pObj) ); }\n    }\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Fct\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\n    // start the network\n    pNtk = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pNtk.pName = Extra_UtilStrsav( Bbl_ManName(p) );\n    vCopy = Vec_PtrStart( 1000 );\n    // create CIs\n    // inlining of macro Bbl_ManForEachObj\n    for  pObj = Bbl_ManObjFirst(p); (pObj != nil); pObj = Bbl_ManObjNext(p, pObj)  {\n        if !Bbl_ObjIsInput(pObj) {\n            continue; }\n        Vec_PtrSetEntry( vCopy, Bbl_ObjId(pObj), Abc_NtkCreatePi(pNtk) );\n    }\nclk = Abc_Clock();\n    // create internal nodes\n    vNodes = Bbl_ManDfs( p );\n    vFaninAigs = Vec_PtrAlloc( 100 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Bbl_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        // collect fanin AIGs\n        Vec_PtrClear( vFaninAigs );\n        // inlining of macro Bbl_ObjForEachFanin\n        for  pFanin = Bbl_ObjFaninFirst(pObj); (pFanin != nil); pFanin = Bbl_ObjFaninNext(pObj, pFanin)  {\n            Vec_PtrPush( vFaninAigs, Vec_PtrEntry( vCopy, Bbl_ObjId(pFanin) ) );\n        }\n        // create the new node\n        pObjNew = Dec_GraphToAig( pNtk, pFForms[Bbl_ObjFncHandle(pObj)], vFaninAigs );\n        Vec_PtrSetEntry( vCopy, Bbl_ObjId(pObj), pObjNew );\n    }\n    Vec_PtrFree( vFaninAigs );\n    Vec_PtrFree( vNodes );\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"AIG\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\n    // create COs\n    // inlining of macro Bbl_ManForEachObj\n    for  pObj = Bbl_ManObjFirst(p); (pObj != nil); pObj = Bbl_ManObjNext(p, pObj)  {\n        if !Bbl_ObjIsOutput(pObj) {\n            continue; }\n        pObjNew = (Abc_Obj_t *)Vec_PtrEntry( vCopy, Bbl_ObjId(Bbl_ObjFaninFirst(pObj)) );\n        Abc_ObjAddFanin( Abc_NtkCreatePo(pNtk), pObjNew );\n    }\n    Abc_AigCleanup( (Abc_Aig_t *)pNtk.pManFunc );\n    // clear factored forms\n    for  i = Bbl_ManFncSize(p) - 1; i \u003e= 0; i--  {\n        if pFForms[i] {\n            Dec_GraphFree( pFForms[i] ); }\n    }\n    // inlining of macro ABC_FREE\n    ((pFForms) ? (free((char *) (pFForms)), (pFForms) = 0) : 0);\n    // finalize\nclk = Abc_Clock();\n    Vec_PtrFree( vCopy );\n    Abc_NtkAddDummyPiNames( pNtk );\n    Abc_NtkAddDummyPoNames( pNtk );\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Nam\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));; }\n//    if ( !Abc_NtkCheck( pNtk ) )\n//        printf( \"Bbl_ManToAig(): Network check has failed.\\n\" );\n    return pNtk;\n}\n\n/**Fnction*************************************************************\n\n  Synopsis    [Verifies equivalence for two combinational networks.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbl_ManVerify(pNtk1 *Abc_Ntk_t, pNtk2 *Abc_Ntk_t) {\n    extern void Abc_NtkCecFraig( Abc_Ntk_t * pNtk1, Abc_Ntk_t * pNtk2, int nSeconds, int fVerbose );\n    var pAig1, pAig2 *Abc_Ntk_t;\n    pAig1 = Abc_NtkStrash( pNtk1, 0, 1, 0 );\n    pAig2 = Abc_NtkStrash( pNtk2, 0, 1, 0 );\n    Abc_NtkShortNames( pAig1 );\n    Abc_NtkShortNames( pAig2 );\n    Abc_NtkCecFraig( pAig1, pAig2, 0, 0 );\n    Abc_NtkDelete( pAig1 );\n    Abc_NtkDelete( pAig2 );\n}\n\n/**Fnction*************************************************************\n\n  Synopsis    [Performs testing of the new manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Bbl_ManTest(pNtk *Abc_Ntk_t) {\n    extern Bbl_Man_t * Bbl_ManFromAbc( Abc_Ntk_t * pNtk );\n\n    var pNtkNew *Abc_Ntk_t;\n    var p, pNew *Bbl_Man_t;\n    var pFileName string  = \"test.bblif\";\n    var clk, clk1, clk2, clk3, clk4, clk5 abctime;\nclk = Abc_Clock();\n    p = Bbl_ManFromAbc( pNtk );\n    Bbl_ManPrintStats( p );\nclk1 = Abc_Clock() - clk;\n//Bbl_ManDumpBlif( p, \"test_bbl.blif\" );\n\n    // write into file and back\nclk = Abc_Clock();\n    Bbl_ManDumpBinaryBlif( p, pFileName );\nclk2 = Abc_Clock() - clk;\n\n    // read from file\nclk = Abc_Clock();\n    pNew = Bbl_ManReadBinaryBlif( pFileName );\n    Bbl_ManStop( p ); p = pNew;\nclk3 = Abc_Clock() - clk;\n\n    // generate ABC network\nclk = Abc_Clock();\n    pNtkNew = Bbl_ManToAig( p );\n//    pNtkNew = Bbl_ManToAbc( p );\n    Bbl_ManStop( p );\nclk4 = Abc_Clock() - clk;\n\n    // equivalence check\nclk = Abc_Clock();\n//    Bbl_ManVerify( pNtk, pNtkNew );\n    Abc_NtkDelete( pNtkNew );\nclk5 = Abc_Clock() - clk;\n\nfmt.Printf(\"Runtime stats:\\n\");\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"ABC to Man\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk1)))/(float64(int64(time.Second))));;\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Writing   \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk2)))/(float64(int64(time.Second))));;\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Reading   \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk3)))/(float64(int64(time.Second))));;\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Man to ABC\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk4)))/(float64(int64(time.Second))));;\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Verify    \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clk5)))/(float64(int64(time.Second))));;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the AIG in the binary format.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadBblif(pFileName string, fCheck int32) *Abc_Ntk_t {\n    var p *Bbl_Man_t;\n    var pNtkNew *Abc_Ntk_t;\n    // read the file\n    p = Bbl_ManReadBinaryBlif( pFileName );\n    pNtkNew = Bbl_ManToAig( p );\n    Bbl_ManStop( p );\n    // check the result\n    if (fCheck != 0) \u0026\u0026 !Abc_NtkCheckRead( pNtkNew ) {\n        fmt.Printf(\"Io_ReadBaf: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

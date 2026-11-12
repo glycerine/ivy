@@ -1,0 +1,400 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c",
+  "SHA256": "4ff00d5f499b153b2af1963c771456832f7265ba31307e5fa2f47c0deb578f0d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 46,
+        "Column": 5,
+        "ByteOffset": 1301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsHash(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 77,
+        "Column": 5,
+        "ByteOffset": 2254
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 80,
+        "Column": 5,
+        "ByteOffset": 2345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjIsLatch(pObj) || Ivy_ObjFaninId0(pObj) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Ivy_ObjFaninId1(pObj) == 0 || Ivy_ObjFaninId0(pObj) \u003c Ivy_ObjFaninId1(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 108,
+        "Column": 5,
+        "ByteOffset": 3386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 3636
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pPlace == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 4082
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 139,
+        "Column": 5,
+        "ByteOffset": 4208
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pPlace == pObj.Id ); // node should be in the table"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 5116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Ivy_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 169,
+        "Column": 5,
+        "ByteOffset": 5242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pPlace == pObj.Id ); // node should be in the table"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 213,
+        "Column": 70,
+        "ByteOffset": 6491
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pTable = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(p.nTableSize)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 214,
+        "Column": 5,
+        "ByteOffset": 6542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pTable, 0, sizeof(int) * p.nTableSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 9,
+        "ByteOffset": 6911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *pPlace == 0 ); // should not be in the table"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 231,
+        "Column": 65,
+        "ByteOffset": 7333
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pTableOld) ? (free((char *) (pTableOld)), (pTableOld) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 13,
+        "ByteOffset": 7837
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d \", Counter );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_Hash",
+      "Start": 801,
+      "End": 1136,
+      "BodyStart": 862,
+      "Original": "static unsigned Ivy_Hash( Ivy_Obj_t * pObj, int TableSize ) \n{\n    unsigned Key = Ivy_ObjIsExor(pObj) * 1699;\n    Key ^= Ivy_ObjFaninId0(pObj) * 7937;\n    Key ^= Ivy_ObjFaninId1(pObj) * 2971;\n    Key ^= Ivy_ObjFaninC0(pObj) * 911;\n    Key ^= Ivy_ObjFaninC1(pObj) * 353;\n    Key ^= Ivy_ObjInit(pObj) * 911;\n    return Key % TableSize;\n}",
+      "Draft": "func Ivy_Hash(pObj *Ivy_Obj_t, TableSize int32) uint32 {\n    var Key uint32  = Ivy_ObjIsExor(pObj) * 1699;\n    Key ^= Ivy_ObjFaninId0(pObj) * 7937;\n    Key ^= Ivy_ObjFaninId1(pObj) * 2971;\n    Key ^= Ivy_ObjFaninC0(pObj) * 911;\n    Key ^= Ivy_ObjFaninC1(pObj) * 353;\n    Key ^= Ivy_ObjInit(pObj) * 911;\n    return Key % TableSize;\n}"
+    },
+    {
+      "Name": "Ivy_TableFind",
+      "Start": 1207,
+      "End": 1490,
+      "BodyStart": 1269,
+      "Original": "static int * Ivy_TableFind( Ivy_Man_t * p, Ivy_Obj_t * pObj )\n{\n    int i;\n    assert( Ivy_ObjIsHash(pObj) );\n    for ( i = Ivy_Hash(pObj, p-\u003enTableSize); p-\u003epTable[i]; i = (i+1) % p-\u003enTableSize )\n        if ( p-\u003epTable[i] == pObj-\u003eId )\n            break;\n    return p-\u003epTable + i;\n}",
+      "Draft": "func Ivy_TableFind(p *Ivy_Man_t, pObj *Ivy_Obj_t) *int32 {\n    var i int32;\n    assert(Ivy_ObjIsHash(pObj), \"Ivy_ObjIsHash(pObj)\");\n    for  i = Ivy_Hash(pObj, p.nTableSize); p.pTable[i]; i = (i+1) % p.nTableSize  {\n        if p.pTable[i] == pObj.Id {\n            break; }\n    }\n    return p.pTable + i;\n}"
+    },
+    {
+      "Name": "Ivy_TableLookup",
+      "Start": 2118,
+      "End": 3020,
+      "BodyStart": 2181,
+      "Original": "Ivy_Obj_t * Ivy_TableLookup( Ivy_Man_t * p, Ivy_Obj_t * pObj )\n{\n    Ivy_Obj_t * pEntry;\n    int i;\n    assert( !Ivy_IsComplement(pObj) );\n    if ( !Ivy_ObjIsHash(pObj) )\n        return NULL;\n    assert( Ivy_ObjIsLatch(pObj) || Ivy_ObjFaninId0(pObj) \u003e 0 );\n    assert( Ivy_ObjFaninId1(pObj) == 0 || Ivy_ObjFaninId0(pObj) \u003c Ivy_ObjFaninId1(pObj) );\n    if ( Ivy_ObjFanin0(pObj)-\u003enRefs == 0 || (Ivy_ObjChild1(pObj) \u0026\u0026 Ivy_ObjFanin1(pObj)-\u003enRefs == 0) )\n        return NULL;\n    for ( i = Ivy_Hash(pObj, p-\u003enTableSize); p-\u003epTable[i]; i = (i+1) % p-\u003enTableSize )\n    {\n        pEntry = Ivy_ManObj( p, p-\u003epTable[i] );\n        if ( Ivy_ObjChild0(pEntry) == Ivy_ObjChild0(pObj) \u0026\u0026 \n             Ivy_ObjChild1(pEntry) == Ivy_ObjChild1(pObj) \u0026\u0026 \n             Ivy_ObjInit(pEntry) == Ivy_ObjInit(pObj) \u0026\u0026 \n             Ivy_ObjType(pEntry) == Ivy_ObjType(pObj) )\n            return pEntry;\n    }\n    return NULL;\n}",
+      "Draft": "func Ivy_TableLookup(p *Ivy_Man_t, pObj *Ivy_Obj_t) *Ivy_Obj_t {\n    var pEntry *Ivy_Obj_t;\n    var i int32;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    if !Ivy_ObjIsHash(pObj) {\n        return nil; }\n    assert(Ivy_ObjIsLatch(pObj) || Ivy_ObjFaninId0(pObj) \u003e 0, \"Ivy_ObjIsLatch(pObj) || Ivy_ObjFaninId0(pObj) \u003e 0\");\n    assert(Ivy_ObjFaninId1(pObj) == 0 || Ivy_ObjFaninId0(pObj) \u003c Ivy_ObjFaninId1(pObj), \"Ivy_ObjFaninId1(pObj) == 0 || Ivy_ObjFaninId0(pObj) \u003c Ivy_ObjFaninId1(pObj)\");\n    if Ivy_ObjFanin0(pObj).nRefs == 0 || (Ivy_ObjChild1(pObj) \u0026\u0026 Ivy_ObjFanin1(pObj).nRefs == 0) {\n        return nil; }\n    for  i = Ivy_Hash(pObj, p.nTableSize); p.pTable[i]; i = (i+1) % p.nTableSize  {\n        pEntry = Ivy_ManObj( p, p.pTable[i] );\n        if Ivy_ObjChild0(pEntry) == Ivy_ObjChild0(pObj) \u0026\u0026 \n             Ivy_ObjChild1(pEntry) == Ivy_ObjChild1(pObj) \u0026\u0026 \n             Ivy_ObjInit(pEntry) == Ivy_ObjInit(pObj) \u0026\u0026 \n             Ivy_ObjType(pEntry) == Ivy_ObjType(pObj) {\n            return pEntry; }\n    }\n    return nil;\n}"
+    },
+    {
+      "Name": "Ivy_TableInsert",
+      "Start": 3288,
+      "End": 3677,
+      "BodyStart": 3344,
+      "Original": "void Ivy_TableInsert( Ivy_Man_t * p, Ivy_Obj_t * pObj )\n{\n    int * pPlace;\n    assert( !Ivy_IsComplement(pObj) );\n    if ( !Ivy_ObjIsHash(pObj) )\n        return;\n    if ( (pObj-\u003eId \u0026 63) == 0 )\n    {\n        if ( p-\u003enTableSize \u003c 2 * Ivy_ManHashObjNum(p) )\n            Ivy_TableResize( p );\n    }\n    pPlace = Ivy_TableFind( p, pObj );\n    assert( *pPlace == 0 );\n    *pPlace = pObj-\u003eId;\n}",
+      "Draft": "func Ivy_TableInsert(p *Ivy_Man_t, pObj *Ivy_Obj_t) {\n    var pPlace *int32;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    if !Ivy_ObjIsHash(pObj) {\n        return; }\n    if (pObj.Id \u0026 63) == 0 {\n        if p.nTableSize \u003c 2 * Ivy_ManHashObjNum(p) {\n            Ivy_TableResize( p ); }\n    }\n    pPlace = Ivy_TableFind( p, pObj );\n    assert(*pPlace == 0, \"*pPlace == 0\");\n    *pPlace = pObj.Id;\n}"
+    },
+    {
+      "Name": "Ivy_TableDelete",
+      "Start": 3950,
+      "End": 4529,
+      "BodyStart": 4006,
+      "Original": "void Ivy_TableDelete( Ivy_Man_t * p, Ivy_Obj_t * pObj )\n{\n    Ivy_Obj_t * pEntry;\n    int i, * pPlace;\n    assert( !Ivy_IsComplement(pObj) );\n    if ( !Ivy_ObjIsHash(pObj) )\n        return;\n    pPlace = Ivy_TableFind( p, pObj );\n    assert( *pPlace == pObj-\u003eId ); // node should be in the table\n    *pPlace = 0;\n    // rehash the adjacent entries\n    i = pPlace - p-\u003epTable;\n    for ( i = (i+1) % p-\u003enTableSize; p-\u003epTable[i]; i = (i+1) % p-\u003enTableSize )\n    {\n        pEntry = Ivy_ManObj( p, p-\u003epTable[i] );\n        p-\u003epTable[i] = 0;\n        Ivy_TableInsert( p, pEntry );\n    }\n}",
+      "Draft": "func Ivy_TableDelete(p *Ivy_Man_t, pObj *Ivy_Obj_t) {\n    var pEntry *Ivy_Obj_t;\n    var i int32;\n    var pPlace *int32;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    if !Ivy_ObjIsHash(pObj) {\n        return; }\n    pPlace = Ivy_TableFind( p, pObj );\n    assert(*pPlace == pObj.Id, \"*pPlace == pObj.Id\"); // node should be in the table\n    *pPlace = 0;\n    // rehash the adjacent entries\n    i = pPlace - p.pTable;\n    for  i = (i+1) % p.nTableSize; p.pTable[i]; i = (i+1) % p.nTableSize  {\n        pEntry = Ivy_ManObj( p, p.pTable[i] );\n        p.pTable[i] = 0;\n        Ivy_TableInsert( p, pEntry );\n    }\n}"
+    },
+    {
+      "Name": "Ivy_TableUpdate",
+      "Start": 5007,
+      "End": 5315,
+      "BodyStart": 5077,
+      "Original": "void Ivy_TableUpdate( Ivy_Man_t * p, Ivy_Obj_t * pObj, int ObjIdNew )\n{\n    int * pPlace;\n    assert( !Ivy_IsComplement(pObj) );\n    if ( !Ivy_ObjIsHash(pObj) )\n        return;\n    pPlace = Ivy_TableFind( p, pObj );\n    assert( *pPlace == pObj-\u003eId ); // node should be in the table\n    *pPlace = ObjIdNew; \n}",
+      "Draft": "func Ivy_TableUpdate(p *Ivy_Man_t, pObj *Ivy_Obj_t, ObjIdNew int32) {\n    var pPlace *int32;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    if !Ivy_ObjIsHash(pObj) {\n        return; }\n    pPlace = Ivy_TableFind( p, pObj );\n    assert(*pPlace == pObj.Id, \"*pPlace == pObj.Id\"); // node should be in the table\n    *pPlace = ObjIdNew; \n}"
+    },
+    {
+      "Name": "Ivy_TableCountEntries",
+      "Start": 5590,
+      "End": 5762,
+      "BodyStart": 5633,
+      "Original": "int Ivy_TableCountEntries( Ivy_Man_t * p )\n{\n    int i, Counter = 0;\n    for ( i = 0; i \u003c p-\u003enTableSize; i++ )\n        Counter += (p-\u003epTable[i] != 0);\n    return Counter;\n}",
+      "Draft": "func Ivy_TableCountEntries(p *Ivy_Man_t) int32 {\n    var i, Counter int32;\n    for  i = 0; i \u003c p.nTableSize; i++  {\n        Counter += (p.pTable[i] != 0);\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Ivy_TableResize",
+      "Start": 6062,
+      "End": 7207,
+      "BodyStart": 6100,
+      "Original": "void Ivy_TableResize( Ivy_Man_t * p )\n{\n    int * pTableOld, * pPlace;\n    int nTableSizeOld, Counter, nEntries, e;\n    abctime clk;\nclk = Abc_Clock();\n    // save the old table\n    pTableOld = p-\u003epTable;\n    nTableSizeOld = p-\u003enTableSize;\n    // get the new table\n    p-\u003enTableSize = Abc_PrimeCudd( 5 * Ivy_ManHashObjNum(p) ); \n    p-\u003epTable = ABC_ALLOC( int, p-\u003enTableSize );\n    memset( p-\u003epTable, 0, sizeof(int) * p-\u003enTableSize );\n    // rehash the entries from the old table\n    Counter = 0;\n    for ( e = 0; e \u003c nTableSizeOld; e++ )\n    {\n        if ( pTableOld[e] == 0 )\n            continue;\n        Counter++;\n        // get the place where this entry goes in the table table\n        pPlace = Ivy_TableFind( p, Ivy_ManObj(p, pTableOld[e]) );\n        assert( *pPlace == 0 ); // should not be in the table\n        *pPlace = pTableOld[e];\n    }\n    nEntries = Ivy_ManHashObjNum(p);\n//    assert( Counter == nEntries );\n//    printf( \"Increasing the structural table size from %6d to %6d. \", nTableSizeOld, p-\u003enTableSize );\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    // replace the table and the parameters\n    ABC_FREE( pTableOld );\n}",
+      "Draft": "func Ivy_TableResize(p *Ivy_Man_t) {\n    var pTableOld, pPlace *int32;\n    var nTableSizeOld, Counter, nEntries, e int32;\n    var clk abctime;\nclk = Abc_Clock();\n    // save the old table\n    pTableOld = p.pTable;\n    nTableSizeOld = p.nTableSize;\n    // get the new table\n    p.nTableSize = Abc_PrimeCudd( 5 * Ivy_ManHashObjNum(p) ); \n    // inlining of macro ABC_ALLOC\n    p.pTable = ((int *) malloc(sizeof(int) * (size_t)(p.nTableSize)));\n    memset( p.pTable, 0, sizeof(int) * p.nTableSize );\n    // rehash the entries from the old table\n    Counter = 0;\n    for  e = 0; e \u003c nTableSizeOld; e++  {\n        if pTableOld[e] == 0 {\n            continue; }\n        Counter++;\n        // get the place where this entry goes in the table table\n        pPlace = Ivy_TableFind( p, Ivy_ManObj(p, pTableOld[e]) );\n        assert(*pPlace == 0, \"*pPlace == 0\"); // should not be in the table\n        *pPlace = pTableOld[e];\n    }\n    nEntries = Ivy_ManHashObjNum(p);\n//    assert( Counter == nEntries );\n//    printf( \"Increasing the structural table size from %6d to %6d. \", nTableSizeOld, p-\u003enTableSize );\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    // replace the table and the parameters\n    // inlining of macro ABC_FREE\n    ((pTableOld) ? (free((char *) (pTableOld)), (pTableOld) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Ivy_TableProfile",
+      "Start": 7466,
+      "End": 7748,
+      "BodyStart": 7505,
+      "Original": "void Ivy_TableProfile( Ivy_Man_t * p )\n{\n    int i, Counter = 0;\n    for ( i = 0; i \u003c p-\u003enTableSize; i++ )\n    {\n        if ( p-\u003epTable[i] )\n            Counter++;\n        else if ( Counter )\n        {\n            printf( \"%d \", Counter );\n            Counter = 0;\n        }\n    }\n}",
+      "Draft": "func Ivy_TableProfile(p *Ivy_Man_t) {\n    var i, Counter int32;\n    for  i = 0; i \u003c p.nTableSize; i++  {\n        if p.pTable[i] {\n            Counter++;\n        } else if Counter != 0 {\n            fmt.Printf(\"%d \", Counter);\n            Counter = 0;\n        }\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::mechanical::sizeof::6468",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6407,
+      "End": 6407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::mechanical::sizeof::6535",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6466,
+      "End": 6472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::pointer-cast::6453",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6407,
+      "End": 6407
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::pointer-cast::7317",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7183,
+      "End": 7183
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::Ivy_Hash",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_Hash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 801,
+      "End": 1136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::Ivy_TableFind",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TableFind",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1207,
+      "End": 1490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::Ivy_TableLookup",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TableLookup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2118,
+      "End": 3020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::Ivy_TableInsert",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TableInsert",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3288,
+      "End": 3677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::Ivy_TableDelete",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TableDelete",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3950,
+      "End": 4529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::Ivy_TableUpdate",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TableUpdate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5007,
+      "End": 5315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::Ivy_TableCountEntries",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TableCountEntries",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5590,
+      "End": 5762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::ternary::Ivy_TableResize",
+      "Category": "ternary-review",
+      "Symbol": "Ivy_TableResize",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6062,
+      "End": 7207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::Ivy_TableResize",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TableResize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6062,
+      "End": 7207
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::Ivy_TableProfile",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_TableProfile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7466,
+      "End": 7748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyTable.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7996
+    }
+  ],
+  "Draft": "package ivy\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [ivyTable.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [Structural hashing table.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006. ]\n\n  Revision    [$Id: ivyTable.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// hashing the node\nfunc Ivy_Hash(pObj *Ivy_Obj_t, TableSize int32) uint32 {\n    var Key uint32  = Ivy_ObjIsExor(pObj) * 1699;\n    Key ^= Ivy_ObjFaninId0(pObj) * 7937;\n    Key ^= Ivy_ObjFaninId1(pObj) * 2971;\n    Key ^= Ivy_ObjFaninC0(pObj) * 911;\n    Key ^= Ivy_ObjFaninC1(pObj) * 353;\n    Key ^= Ivy_ObjInit(pObj) * 911;\n    return Key % TableSize;\n}\n\n// returns the place where this node is stored (or should be stored)\nfunc Ivy_TableFind(p *Ivy_Man_t, pObj *Ivy_Obj_t) *int32 {\n    var i int32;\n    assert(Ivy_ObjIsHash(pObj), \"Ivy_ObjIsHash(pObj)\");\n    for  i = Ivy_Hash(pObj, p.nTableSize); p.pTable[i]; i = (i+1) % p.nTableSize  {\n        if p.pTable[i] == pObj.Id {\n            break; }\n    }\n    return p.pTable + i;\n}\n\n// static void         Ivy_TableResize( Ivy_Man_t * p );\n\n// static unsigned int Cudd_PrimeAig( unsigned int  p );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    [Checks if node with the given attributes is in the hash table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_TableLookup(p *Ivy_Man_t, pObj *Ivy_Obj_t) *Ivy_Obj_t {\n    var pEntry *Ivy_Obj_t;\n    var i int32;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    if !Ivy_ObjIsHash(pObj) {\n        return nil; }\n    assert(Ivy_ObjIsLatch(pObj) || Ivy_ObjFaninId0(pObj) \u003e 0, \"Ivy_ObjIsLatch(pObj) || Ivy_ObjFaninId0(pObj) \u003e 0\");\n    assert(Ivy_ObjFaninId1(pObj) == 0 || Ivy_ObjFaninId0(pObj) \u003c Ivy_ObjFaninId1(pObj), \"Ivy_ObjFaninId1(pObj) == 0 || Ivy_ObjFaninId0(pObj) \u003c Ivy_ObjFaninId1(pObj)\");\n    if Ivy_ObjFanin0(pObj).nRefs == 0 || (Ivy_ObjChild1(pObj) \u0026\u0026 Ivy_ObjFanin1(pObj).nRefs == 0) {\n        return nil; }\n    for  i = Ivy_Hash(pObj, p.nTableSize); p.pTable[i]; i = (i+1) % p.nTableSize  {\n        pEntry = Ivy_ManObj( p, p.pTable[i] );\n        if Ivy_ObjChild0(pEntry) == Ivy_ObjChild0(pObj) \u0026\u0026 \n             Ivy_ObjChild1(pEntry) == Ivy_ObjChild1(pObj) \u0026\u0026 \n             Ivy_ObjInit(pEntry) == Ivy_ObjInit(pObj) \u0026\u0026 \n             Ivy_ObjType(pEntry) == Ivy_ObjType(pObj) {\n            return pEntry; }\n    }\n    return nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the node to the hash table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_TableInsert(p *Ivy_Man_t, pObj *Ivy_Obj_t) {\n    var pPlace *int32;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    if !Ivy_ObjIsHash(pObj) {\n        return; }\n    if (pObj.Id \u0026 63) == 0 {\n        if p.nTableSize \u003c 2 * Ivy_ManHashObjNum(p) {\n            Ivy_TableResize( p ); }\n    }\n    pPlace = Ivy_TableFind( p, pObj );\n    assert(*pPlace == 0, \"*pPlace == 0\");\n    *pPlace = pObj.Id;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the node from the hash table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_TableDelete(p *Ivy_Man_t, pObj *Ivy_Obj_t) {\n    var pEntry *Ivy_Obj_t;\n    var i int32;\n    var pPlace *int32;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    if !Ivy_ObjIsHash(pObj) {\n        return; }\n    pPlace = Ivy_TableFind( p, pObj );\n    assert(*pPlace == pObj.Id, \"*pPlace == pObj.Id\"); // node should be in the table\n    *pPlace = 0;\n    // rehash the adjacent entries\n    i = pPlace - p.pTable;\n    for  i = (i+1) % p.nTableSize; p.pTable[i]; i = (i+1) % p.nTableSize  {\n        pEntry = Ivy_ManObj( p, p.pTable[i] );\n        p.pTable[i] = 0;\n        Ivy_TableInsert( p, pEntry );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Updates the table to point to the new node.]\n\n  Description [If the old node (pObj) is in the table, updates the table\n  to point to an object with different ID (ObjIdNew). The table should\n  not contain an object with ObjIdNew (this is currently not checked).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_TableUpdate(p *Ivy_Man_t, pObj *Ivy_Obj_t, ObjIdNew int32) {\n    var pPlace *int32;\n    assert(!Ivy_IsComplement(pObj), \"!Ivy_IsComplement(pObj)\");\n    if !Ivy_ObjIsHash(pObj) {\n        return; }\n    pPlace = Ivy_TableFind( p, pObj );\n    assert(*pPlace == pObj.Id, \"*pPlace == pObj.Id\"); // node should be in the table\n    *pPlace = ObjIdNew; \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Count the number of nodes in the table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_TableCountEntries(p *Ivy_Man_t) int32 {\n    var i, Counter int32;\n    for  i = 0; i \u003c p.nTableSize; i++  {\n        Counter += (p.pTable[i] != 0);\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Resizes the table.]\n\n  Description [Typically this procedure should not be called.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_TableResize(p *Ivy_Man_t) {\n    var pTableOld, pPlace *int32;\n    var nTableSizeOld, Counter, nEntries, e int32;\n    var clk abctime;\nclk = Abc_Clock();\n    // save the old table\n    pTableOld = p.pTable;\n    nTableSizeOld = p.nTableSize;\n    // get the new table\n    p.nTableSize = Abc_PrimeCudd( 5 * Ivy_ManHashObjNum(p) ); \n    // inlining of macro ABC_ALLOC\n    p.pTable = ((int *) malloc(sizeof(int) * (size_t)(p.nTableSize)));\n    memset( p.pTable, 0, sizeof(int) * p.nTableSize );\n    // rehash the entries from the old table\n    Counter = 0;\n    for  e = 0; e \u003c nTableSizeOld; e++  {\n        if pTableOld[e] == 0 {\n            continue; }\n        Counter++;\n        // get the place where this entry goes in the table table\n        pPlace = Ivy_TableFind( p, Ivy_ManObj(p, pTableOld[e]) );\n        assert(*pPlace == 0, \"*pPlace == 0\"); // should not be in the table\n        *pPlace = pTableOld[e];\n    }\n    nEntries = Ivy_ManHashObjNum(p);\n//    assert( Counter == nEntries );\n//    printf( \"Increasing the structural table size from %6d to %6d. \", nTableSizeOld, p-\u003enTableSize );\n//    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    // replace the table and the parameters\n    // inlining of macro ABC_FREE\n    ((pTableOld) ? (free((char *) (pTableOld)), (pTableOld) = 0) : 0);\n}\n\n/**Function********************************************************************\n\n  Synopsis    [Profiles the hash table.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc Ivy_TableProfile(p *Ivy_Man_t) {\n    var i, Counter int32;\n    for  i = 0; i \u003c p.nTableSize; i++  {\n        if p.pTable[i] {\n            Counter++;\n        } else if Counter != 0 {\n            fmt.Printf(\"%d \", Counter);\n            Counter = 0;\n        }\n    }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

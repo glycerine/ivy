@@ -1,0 +1,78 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Alg.h",
+  "SHA256": "5580db5878b1166cdfb738e83d3c489943de04bef5689907162ef627de45e11e",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 44,
+        "Column": 5,
+        "ByteOffset": 1849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(j \u003c ts.size());"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Alg.h::mechanical::static::1763",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1763,
+      "End": 1769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Alg.h::mechanical::static::1993",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1993,
+      "End": 1999
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Alg.h::mechanical::static::2322",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2322,
+      "End": 2328
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Alg.h::mechanical::static::2425",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2425,
+      "End": 2431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Alg.h::mechanical::static::2664",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2664,
+      "End": 2670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/Alg.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2888
+    }
+  ],
+  "Draft": "package glucose2\n\n/*******************************************************************************************[Alg.h]\nCopyright (c) 2003-2006, Niklas Een, Niklas Sorensson\nCopyright (c) 2007-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n\n\n\n//#include \"sat/glucose2/Vec.h\"\n\n//ABC_NAMESPACE_CXX_HEADER_START\n\nnamespace Gluco2 {\n\n//=================================================================================================\n// Useful functions on vector-like types:\n\n//=================================================================================================\n// Removing and searching for elements:\n//\n\ntemplate\u003cclass V, class T\u003e\nstatic inline void remove(V\u0026 ts, T\u0026 t)\n{\n    int j = 0;\n    for (; j \u003c ts.size() \u0026\u0026 ts[j] != t; j++);\n    assert(j \u003c ts.size(), \"j \u003c ts.size()\");\n    for (; j \u003c ts.size()-1; j++) ts[j] = ts[j+1];\n    ts.pop();\n}\n\n\ntemplate\u003cclass V, class T\u003e\nstatic inline bool find(V\u0026 ts, T\u0026 t)\n{\n    int j = 0;\n    for (; j \u003c ts.size() \u0026\u0026 ts[j] != t; j++);\n    return j \u003c ts.size();\n}\n\n\n//=================================================================================================\n// Copying vectors with support for nested vector types:\n//\n\n// Base case:\ntemplate\u003cclass T\u003e\nstatic inline void copy(T\u0026 from, T\u0026 to)\n{\n    to = from;\n}\n\n// Recursive case:\ntemplate\u003cclass T\u003e\nstatic inline void copy(vec\u003cT\u003e\u0026 from, vec\u003cT\u003e\u0026 to, bool append = false)\n{\n    if (!append)\n        to.clear();\n    for int i = 0; i \u003c from.size(); i++{\n        to.push();\n        copy(from[i], to.last());\n    }\n}\n\ntemplate\u003cclass T\u003e\nstatic inline void append(vec\u003cT\u003e\u0026 from, vec\u003cT\u003e\u0026 to){ copy(from, to, true); }\n\n//=================================================================================================\n}\n\n//ABC_NAMESPACE_CXX_HEADER_END\n\n\n"
+}

@@ -1,0 +1,54 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/libhmetis.h",
+  "SHA256": "d944653568f462520b60ef7c66187aaa56614b9669e1db99912caba6da821c0a",
+  "Functions": [
+    {
+      "Name": "HMETIS_PartRecursive",
+      "Start": 145,
+      "End": 465,
+      "BodyStart": 463,
+      "Original": "static void HMETIS_PartRecursive(int nvtxs, \n              int nhedges, \n              int *vwgts, \n              int *eptr,\n              int *eind,\n              int *hewgts, \n              int nparts, \n              int nbfactor, \n              int *options, \n              int *part, \n              int *edgecnt ) {}",
+      "Draft": "func HMETIS_PartRecursive(nvtxs int32, nhedges int32, vwgts *int32, eptr *int32, eind *int32, hewgts *int32, nparts int32, nbfactor int32, options *int32, part *int32, edgecnt *int32) {}"
+    },
+    {
+      "Name": "HMETIS_PartKway",
+      "Start": 472,
+      "End": 778,
+      "BodyStart": 776,
+      "Original": "static void HMETIS_PartKway(int nvtxs, \n             int nhedges, \n             int *vwgts, \n             int *eptr, \n             int *eind,\n             int *hewgts, \n             int nparts, \n             int nbfactor, \n             int *options, \n             int *part, \n             int *edgecnt ) {}",
+      "Draft": "func HMETIS_PartKway(nvtxs int32, nhedges int32, vwgts *int32, eptr *int32, eind *int32, hewgts *int32, nparts int32, nbfactor int32, options *int32, part *int32, edgecnt *int32) {}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/libhmetis.h::HMETIS_PartRecursive",
+      "Category": "semantic-review",
+      "Symbol": "HMETIS_PartRecursive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 145,
+      "End": 465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/libhmetis.h::HMETIS_PartKway",
+      "Category": "semantic-review",
+      "Symbol": "HMETIS_PartKway",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 472,
+      "End": 778
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/libhmetis.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 819
+    }
+  ],
+  "Draft": "package place\n\n// A. Hurst ahurst@eecs.berkeley.edu\n\n\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\nfunc HMETIS_PartRecursive(nvtxs int32, nhedges int32, vwgts *int32, eptr *int32, eind *int32, hewgts *int32, nparts int32, nbfactor int32, options *int32, part *int32, edgecnt *int32) {} //;\n\n\nfunc HMETIS_PartKway(nvtxs int32, nhedges int32, vwgts *int32, eptr *int32, eind *int32, hewgts *int32, nparts int32, nbfactor int32, options *int32, part *int32, edgecnt *int32) {} //;\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

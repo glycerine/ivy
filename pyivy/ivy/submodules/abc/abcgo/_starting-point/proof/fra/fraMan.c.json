@@ -1,0 +1,1121 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c",
+  "SHA256": "c1fab7dc28f764e6f3abb5d7b88f2cacd322bbea0cf7cd3287bdb0f509c8dd58",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPars, 0, sizeof(Fra_Par_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 77,
+        "Column": 5,
+        "ByteOffset": 2692
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPars, 0, sizeof(Fra_Par_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 109,
+        "Column": 69,
+        "ByteOffset": 4130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Fra_Man_t *) malloc(sizeof(Fra_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 110,
+        "Column": 5,
+        "ByteOffset": 4176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Fra_Man_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 117,
+        "Column": 79,
+        "ByteOffset": 4597
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pPatWords  = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nPatWords))); "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 122,
+        "Column": 82,
+        "ByteOffset": 4875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pMemFraig  = /*__starting_point_inline_macro:ABC_ALLOC__*/((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(p.nSizeAlloc * p.nFramesAll)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 4949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pMemFraig, 0, sizeof(Aig_Obj_t *) * p.nSizeAlloc * p.nFramesAll );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 157,
+        "Column": 45,
+        "ByteOffset": 6205
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pMemFanins = ((Vec_Ptr_t * *) realloc((char *)(p.pMemFanins), sizeof(Vec_Ptr_t *) * (size_t)(nMemAllocNew)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 159,
+        "Column": 45,
+        "ByteOffset": 6346
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pMemFanins = ((Vec_Ptr_t * *) malloc(sizeof(Vec_Ptr_t *) * (size_t)(nMemAllocNew)));"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 163,
+        "Column": 38,
+        "ByteOffset": 6531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pMemSatNums = ((int *) realloc((char *)(p.pMemSatNums), sizeof(int) * (size_t)(nMemAllocNew)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 165,
+        "Column": 38,
+        "ByteOffset": 6658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pMemSatNums = ((int *) malloc(sizeof(int) * (size_t)(nMemAllocNew)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 170,
+        "Column": 5,
+        "ByteOffset": 6792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pMemFanins, 0, sizeof(Vec_Ptr_t *) * p.nMemAlloc );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 171,
+        "Column": 5,
+        "ByteOffset": 6858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pMemSatNums, 0, sizeof(int) * p.nMemAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 7320
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pManFraig == nil );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 207,
+        "Column": 82,
+        "ByteOffset": 8591
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pMemFanins = /*__starting_point_inline_macro:ABC_ALLOC__*/((Vec_Ptr_t * *) malloc(sizeof(Vec_Ptr_t *) * (size_t)(p.nMemAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 208,
+        "Column": 5,
+        "ByteOffset": 8649
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pMemFanins, 0, sizeof(Vec_Ptr_t *) * p.nMemAlloc );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 209,
+        "Column": 75,
+        "ByteOffset": 8785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pMemSatNums = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(p.nMemAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 8835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pMemSatNums, 0, sizeof(int) * p.nMemAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 212,
+        "Column": 5,
+        "ByteOffset": 8954
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pManFraig.pData == nil );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 256,
+        "Column": 84,
+        "ByteOffset": 10302
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:ABC_FREE__*/((p.pManAig.pObjCopies) ? (free((char *) (p.pManAig.pObjCopies)), (p.pManAig.pObjCopies) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 268,
+        "Column": 67,
+        "ByteOffset": 10889
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMemFraig) ? (free((char *) (p.pMemFraig)), (p.pMemFraig) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 269,
+        "Column": 68,
+        "ByteOffset": 11011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMemFanins) ? (free((char *) (p.pMemFanins)), (p.pMemFanins) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 270,
+        "Column": 69,
+        "ByteOffset": 11136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pMemSatNums) ? (free((char *) (p.pMemSatNums)), (p.pMemSatNums) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 271,
+        "Column": 67,
+        "ByteOffset": 11261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pPatWords) ? (free((char *) (p.pPatWords)), (p.pPatWords) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 272,
+        "Column": 57,
+        "ByteOffset": 11372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 288,
+        "Column": 5,
+        "ByteOffset": 11842
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"SimWord = %d. Round = %d.  Mem = %0.2f MB.  LitBeg = %d.  LitEnd = %d. (%6.2f %%).\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 290,
+        "Column": 5,
+        "ByteOffset": 12068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Proof = %d. Cex = %d. Fail = %d. FailReal = %d. C-lim = %d. ImpRatio = %6.2f %%\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 292,
+        "Column": 5,
+        "ByteOffset": 12291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\\n\", "
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 295,
+        "Column": 51,
+        "ByteOffset": 12625
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.pSat {             Sat_SolverPrintStats( stdout, p.pSat ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 298,
+        "Column": 70,
+        "ByteOffset": 12879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.pSml.timeSim)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 300,
+        "Column": 66,
+        "ByteOffset": 13055
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTrav)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 303,
+        "Column": 65,
+        "ByteOffset": 13249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeRwr)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 306,
+        "Column": 65,
+        "ByteOffset": 13430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSat)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 308,
+        "Column": 70,
+        "ByteOffset": 13610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 310,
+        "Column": 68,
+        "ByteOffset": 13788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSatSat)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 312,
+        "Column": 69,
+        "ByteOffset": 13967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSatFail)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 314,
+        "Column": 65,
+        "ByteOffset": 14142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeRef)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 316,
+        "Column": 67,
+        "ByteOffset": 14319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 318,
+        "Column": 63,
+        "ByteOffset": 14505
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time1)))/(float64(CLOCKS_PER_SEC)));; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 320,
+        "Column": 5,
+        "ByteOffset": 14551
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Speculations = %d.\\n\", p.nSpeculs ); }"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 321,
+        "Column": 5,
+        "ByteOffset": 14603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 321,
+        "Column": 13,
+        "ByteOffset": 14611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fra_ParamsDefault",
+      "Start": 1258,
+      "End": 2368,
+      "BodyStart": 1302,
+      "Original": "void Fra_ParamsDefault( Fra_Par_t * pPars )\n{\n    memset( pPars, 0, sizeof(Fra_Par_t) );\n    pPars-\u003enSimWords        =       32;  // the number of words in the simulation info\n    pPars-\u003edSimSatur        =    0.005;  // the ratio of refined classes when saturation is reached\n    pPars-\u003efPatScores       =        0;  // enables simulation pattern scoring\n    pPars-\u003eMaxScore         =       25;  // max score after which resimulation is used\n    pPars-\u003efDoSparse        =        1;  // skips sparse functions\n//    pPars-\u003edActConeRatio    =     0.05;  // the ratio of cone to be bumped\n//    pPars-\u003edActConeBumpMax  =      5.0;  // the largest bump of activity\n    pPars-\u003edActConeRatio    =      0.3;  // the ratio of cone to be bumped\n    pPars-\u003edActConeBumpMax  =     10.0;  // the largest bump of activity\n    pPars-\u003enBTLimitNode     =      100;  // conflict limit at a node\n    pPars-\u003enBTLimitMiter    =   500000;  // conflict limit at an output\n    pPars-\u003enFramesK         =        0;  // the number of timeframes to unroll\n    pPars-\u003efConeBias        =        1;\n    pPars-\u003efRewrite         =        0;\n}",
+      "Draft": "func Fra_ParamsDefault(pPars *Fra_Par_t) {\n    memset( pPars, 0, sizeof(Fra_Par_t) );\n    pPars.nSimWords        =       32;  // the number of words in the simulation info\n    pPars.dSimSatur        =    0.005;  // the ratio of refined classes when saturation is reached\n    pPars.fPatScores       =        0;  // enables simulation pattern scoring\n    pPars.MaxScore         =       25;  // max score after which resimulation is used\n    pPars.fDoSparse        =        1;  // skips sparse functions\n//    pPars-\u003edActConeRatio    =     0.05;  // the ratio of cone to be bumped\n//    pPars-\u003edActConeBumpMax  =      5.0;  // the largest bump of activity\n    pPars.dActConeRatio    =      0.3;  // the ratio of cone to be bumped\n    pPars.dActConeBumpMax  =     10.0;  // the largest bump of activity\n    pPars.nBTLimitNode     =      100;  // conflict limit at a node\n    pPars.nBTLimitMiter    =   500000;  // conflict limit at an output\n    pPars.nFramesK         =        0;  // the number of timeframes to unroll\n    pPars.fConeBias        =        1;\n    pPars.fRewrite         =        0;\n}"
+    },
+    {
+      "Name": "Fra_ParamsDefaultSeq",
+      "Start": 2640,
+      "End": 3641,
+      "BodyStart": 2687,
+      "Original": "void Fra_ParamsDefaultSeq( Fra_Par_t * pPars )\n{\n    memset( pPars, 0, sizeof(Fra_Par_t) );\n    pPars-\u003enSimWords        =        1;  // the number of words in the simulation info\n    pPars-\u003edSimSatur        =    0.005;  // the ratio of refined classes when saturation is reached\n    pPars-\u003efPatScores       =        0;  // enables simulation pattern scoring\n    pPars-\u003eMaxScore         =       25;  // max score after which resimulation is used\n    pPars-\u003efDoSparse        =        1;  // skips sparse functions\n    pPars-\u003edActConeRatio    =      0.3;  // the ratio of cone to be bumped\n    pPars-\u003edActConeBumpMax  =     10.0;  // the largest bump of activity\n    pPars-\u003enBTLimitNode     = 10000000;  // conflict limit at a node\n    pPars-\u003enBTLimitMiter    =   500000;  // conflict limit at an output\n    pPars-\u003enFramesK         =        1;  // the number of timeframes to unroll\n    pPars-\u003efConeBias        =        0;\n    pPars-\u003efRewrite         =        0;\n    pPars-\u003efLatchCorr       =        0;\n}",
+      "Draft": "func Fra_ParamsDefaultSeq(pPars *Fra_Par_t) {\n    memset( pPars, 0, sizeof(Fra_Par_t) );\n    pPars.nSimWords        =        1;  // the number of words in the simulation info\n    pPars.dSimSatur        =    0.005;  // the ratio of refined classes when saturation is reached\n    pPars.fPatScores       =        0;  // enables simulation pattern scoring\n    pPars.MaxScore         =       25;  // max score after which resimulation is used\n    pPars.fDoSparse        =        1;  // skips sparse functions\n    pPars.dActConeRatio    =      0.3;  // the ratio of cone to be bumped\n    pPars.dActConeBumpMax  =     10.0;  // the largest bump of activity\n    pPars.nBTLimitNode     = 10000000;  // conflict limit at a node\n    pPars.nBTLimitMiter    =   500000;  // conflict limit at an output\n    pPars.nFramesK         =        1;  // the number of timeframes to unroll\n    pPars.fConeBias        =        0;\n    pPars.fRewrite         =        0;\n    pPars.fLatchCorr       =        0;\n}"
+    },
+    {
+      "Name": "Fra_ManStart",
+      "Start": 3906,
+      "End": 5024,
+      "BodyStart": 3973,
+      "Original": "Fra_Man_t * Fra_ManStart( Aig_Man_t * pManAig, Fra_Par_t * pPars )\n{\n    Fra_Man_t * p;\n    Aig_Obj_t * pObj;\n    int i;\n    // allocate the fraiging manager\n    p = ABC_ALLOC( Fra_Man_t, 1 );\n    memset( p, 0, sizeof(Fra_Man_t) );\n    p-\u003epPars      = pPars;\n    p-\u003epManAig    = pManAig;\n    p-\u003enSizeAlloc = Aig_ManObjNumMax( pManAig );\n    p-\u003enFramesAll = pPars-\u003enFramesK + 1;\n    // allocate storage for sim pattern\n    p-\u003enPatWords  = Abc_BitWordNum( (Aig_ManCiNum(pManAig) - Aig_ManRegNum(pManAig)) * p-\u003enFramesAll + Aig_ManRegNum(pManAig) );\n    p-\u003epPatWords  = ABC_ALLOC( unsigned, p-\u003enPatWords ); \n    p-\u003evPiVars    = Vec_PtrAlloc( 100 );\n    // equivalence classes\n    p-\u003epCla       = Fra_ClassesStart( pManAig );\n    // allocate other members\n    p-\u003epMemFraig  = ABC_ALLOC( Aig_Obj_t *, p-\u003enSizeAlloc * p-\u003enFramesAll );\n    memset( p-\u003epMemFraig, 0, sizeof(Aig_Obj_t *) * p-\u003enSizeAlloc * p-\u003enFramesAll );\n    // set random number generator\n//    srand( 0xABCABC );\n    Aig_ManRandom(1);\n    // set the pointer to the manager\n    Aig_ManForEachObj( p-\u003epManAig, pObj, i )\n        pObj-\u003epData = p;\n    return p;\n}",
+      "Draft": "func Fra_ManStart(pManAig *Aig_Man_t, pPars *Fra_Par_t) *Fra_Man_t {\n    var p *Fra_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // allocate the fraiging manager\n    // inlining of macro ABC_ALLOC\n    p = ((Fra_Man_t *) malloc(sizeof(Fra_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fra_Man_t) );\n    p.pPars      = pPars;\n    p.pManAig    = pManAig;\n    p.nSizeAlloc = Aig_ManObjNumMax( pManAig );\n    p.nFramesAll = pPars.nFramesK + 1;\n    // allocate storage for sim pattern\n    p.nPatWords  = Abc_BitWordNum( (Aig_ManCiNum(pManAig) - Aig_ManRegNum(pManAig)) * p.nFramesAll + Aig_ManRegNum(pManAig) );\n    // inlining of macro ABC_ALLOC\n    p.pPatWords  = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nPatWords))); \n    p.vPiVars    = Vec_PtrAlloc( 100 );\n    // equivalence classes\n    p.pCla       = Fra_ClassesStart( pManAig );\n    // allocate other members\n    // inlining of macro ABC_ALLOC\n    p.pMemFraig  = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(p.nSizeAlloc * p.nFramesAll)));\n    memset( p.pMemFraig, 0, sizeof(Aig_Obj_t *) * p.nSizeAlloc * p.nFramesAll );\n    // set random number generator\n//    srand( 0xABCABC );\n    Aig_ManRandom(1);\n    // set the pointer to the manager\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.pData = p; }\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Fra_ManClean",
+      "Start": 5288,
+      "End": 6006,
+      "BodyStart": 5338,
+      "Original": "void Fra_ManClean( Fra_Man_t * p, int nNodesMax )\n{\n    int i;\n    // remove old arrays\n    for ( i = 0; i \u003c p-\u003enMemAlloc; i++ )\n        if ( p-\u003epMemFanins[i] \u0026\u0026 p-\u003epMemFanins[i] != (void *)1 )\n            Vec_PtrFree( p-\u003epMemFanins[i] );\n    // realloc for the new size\n    if ( p-\u003enMemAlloc \u003c nNodesMax )\n    {\n        int nMemAllocNew = nNodesMax + 5000;\n        p-\u003epMemFanins = ABC_REALLOC( Vec_Ptr_t *, p-\u003epMemFanins, nMemAllocNew );\n        p-\u003epMemSatNums = ABC_REALLOC( int, p-\u003epMemSatNums, nMemAllocNew );\n        p-\u003enMemAlloc = nMemAllocNew;\n    }\n    // prepare for the new run\n    memset( p-\u003epMemFanins, 0, sizeof(Vec_Ptr_t *) * p-\u003enMemAlloc );\n    memset( p-\u003epMemSatNums, 0, sizeof(int) * p-\u003enMemAlloc );\n}",
+      "Draft": "func Fra_ManClean(p *Fra_Man_t, nNodesMax int32) {\n    var i int32;\n    // remove old arrays\n    for  i = 0; i \u003c p.nMemAlloc; i++  {\n        if p.pMemFanins[i] \u0026\u0026 p.pMemFanins[i] != (void *)1 {\n            Vec_PtrFree( p.pMemFanins[i] ); }\n    }\n    // realloc for the new size\n    if p.nMemAlloc \u003c nNodesMax {\n        var nMemAllocNew int32  = nNodesMax + 5000;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pMemFanins {\n            p.pMemFanins = ((Vec_Ptr_t * *) realloc((char *)(p.pMemFanins), sizeof(Vec_Ptr_t *) * (size_t)(nMemAllocNew)));\n        } else {\n            p.pMemFanins = ((Vec_Ptr_t * *) malloc(sizeof(Vec_Ptr_t *) * (size_t)(nMemAllocNew)));\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if p.pMemSatNums {\n            p.pMemSatNums = ((int *) realloc((char *)(p.pMemSatNums), sizeof(int) * (size_t)(nMemAllocNew)));\n        } else {\n            p.pMemSatNums = ((int *) malloc(sizeof(int) * (size_t)(nMemAllocNew)));\n        }\n        p.nMemAlloc = nMemAllocNew;\n    }\n    // prepare for the new run\n    memset( p.pMemFanins, 0, sizeof(Vec_Ptr_t *) * p.nMemAlloc );\n    memset( p.pMemSatNums, 0, sizeof(int) * p.nMemAlloc );\n}"
+    },
+    {
+      "Name": "Fra_ManPrepareComb",
+      "Start": 6285,
+      "End": 7559,
+      "BodyStart": 6333,
+      "Original": "Aig_Man_t * Fra_ManPrepareComb( Fra_Man_t * p )\n{\n    Aig_Man_t * pManFraig;\n    Aig_Obj_t * pObj;\n    int i;\n    assert( p-\u003epManFraig == NULL );\n    // start the fraig package\n    pManFraig = Aig_ManStart( Aig_ManObjNumMax(p-\u003epManAig) );\n    pManFraig-\u003epName = Abc_UtilStrsav( p-\u003epManAig-\u003epName );\n    pManFraig-\u003epSpec = Abc_UtilStrsav( p-\u003epManAig-\u003epSpec );\n    pManFraig-\u003enRegs    = p-\u003epManAig-\u003enRegs;\n    pManFraig-\u003enAsserts = p-\u003epManAig-\u003enAsserts;\n    // set the pointers to the available fraig nodes\n    Fra_ObjSetFraig( Aig_ManConst1(p-\u003epManAig), 0, Aig_ManConst1(pManFraig) );\n    Aig_ManForEachCi( p-\u003epManAig, pObj, i )\n        Fra_ObjSetFraig( pObj, 0, Aig_ObjCreateCi(pManFraig) );\n    // set the pointers to the manager\n    Aig_ManForEachObj( pManFraig, pObj, i )\n        pObj-\u003epData = p;\n    // allocate memory for mapping FRAIG nodes into SAT numbers and fanins\n    p-\u003enMemAlloc = p-\u003enSizeAlloc;\n    p-\u003epMemFanins = ABC_ALLOC( Vec_Ptr_t *, p-\u003enMemAlloc );\n    memset( p-\u003epMemFanins, 0, sizeof(Vec_Ptr_t *) * p-\u003enMemAlloc );\n    p-\u003epMemSatNums = ABC_ALLOC( int, p-\u003enMemAlloc );\n    memset( p-\u003epMemSatNums, 0, sizeof(int) * p-\u003enMemAlloc );\n    // make sure the satisfying assignment is node assigned\n    assert( pManFraig-\u003epData == NULL );\n    return pManFraig;\n}",
+      "Draft": "func Fra_ManPrepareComb(p *Fra_Man_t) *Aig_Man_t {\n    var pManFraig *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(p.pManFraig == nil, \"p.pManFraig == nil\");\n    // start the fraig package\n    pManFraig = Aig_ManStart( Aig_ManObjNumMax(p.pManAig) );\n    pManFraig.pName = Abc_UtilStrsav( p.pManAig.pName );\n    pManFraig.pSpec = Abc_UtilStrsav( p.pManAig.pSpec );\n    pManFraig.nRegs    = p.pManAig.nRegs;\n    pManFraig.nAsserts = p.pManAig.nAsserts;\n    // set the pointers to the available fraig nodes\n    Fra_ObjSetFraig( Aig_ManConst1(p.pManAig), 0, Aig_ManConst1(pManFraig) );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        Fra_ObjSetFraig( pObj, 0, Aig_ObjCreateCi(pManFraig) );\n    }\n    // set the pointers to the manager\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pManFraig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pManFraig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.pData = p; }\n    }\n    // allocate memory for mapping FRAIG nodes into SAT numbers and fanins\n    p.nMemAlloc = p.nSizeAlloc;\n    // inlining of macro ABC_ALLOC\n    p.pMemFanins = ((Vec_Ptr_t * *) malloc(sizeof(Vec_Ptr_t *) * (size_t)(p.nMemAlloc)));\n    memset( p.pMemFanins, 0, sizeof(Vec_Ptr_t *) * p.nMemAlloc );\n    // inlining of macro ABC_ALLOC\n    p.pMemSatNums = ((int *) malloc(sizeof(int) * (size_t)(p.nMemAlloc)));\n    memset( p.pMemSatNums, 0, sizeof(int) * p.nMemAlloc );\n    // make sure the satisfying assignment is node assigned\n    assert(pManFraig.pData == nil, \"pManFraig.pData == nil\");\n    return pManFraig;\n}"
+    },
+    {
+      "Name": "Fra_ManFinalizeComb",
+      "Start": 7844,
+      "End": 8110,
+      "BodyStart": 7886,
+      "Original": "void Fra_ManFinalizeComb( Fra_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    // add the POs\n    Aig_ManForEachCo( p-\u003epManAig, pObj, i )\n        Aig_ObjCreateCo( p-\u003epManFraig, Fra_ObjChild0Fra(pObj,0) );\n    // postprocess\n    Aig_ManCleanMarkB( p-\u003epManFraig );\n}",
+      "Draft": "func Fra_ManFinalizeComb(p *Fra_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // add the POs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCos, i)), 1); i++  {\n        Aig_ObjCreateCo( p.pManFraig, Fra_ObjChild0Fra(pObj,0) );\n    }\n    // postprocess\n    Aig_ManCleanMarkB( p.pManFraig );\n}"
+    },
+    {
+      "Name": "Fra_ManStop",
+      "Start": 8374,
+      "End": 9247,
+      "BodyStart": 8408,
+      "Original": "void Fra_ManStop( Fra_Man_t * p )\n{\n    if ( p-\u003epPars-\u003efVerbose )\n        Fra_ManPrint( p );\n    // save mapping from original nodes into FRAIG nodes\n    if ( p-\u003epManAig )\n    {\n        if ( p-\u003epManAig-\u003epObjCopies )\n            ABC_FREE( p-\u003epManAig-\u003epObjCopies );\n        p-\u003epManAig-\u003epObjCopies = p-\u003epMemFraig;\n        p-\u003epMemFraig = NULL;\n    }\n    Fra_ManClean( p, 0 );\n    if ( p-\u003evTimeouts ) Vec_PtrFree( p-\u003evTimeouts );\n    if ( p-\u003evPiVars )   Vec_PtrFree( p-\u003evPiVars );\n    if ( p-\u003epSat )      sat_solver_delete( p-\u003epSat );\n    if ( p-\u003epCla  )     Fra_ClassesStop( p-\u003epCla );\n    if ( p-\u003epSml )      Fra_SmlStop( p-\u003epSml );\n    if ( p-\u003evCex )      Vec_IntFree( p-\u003evCex );\n    if ( p-\u003evOneHots )  Vec_IntFree( p-\u003evOneHots );\n    ABC_FREE( p-\u003epMemFraig );\n    ABC_FREE( p-\u003epMemFanins );\n    ABC_FREE( p-\u003epMemSatNums );\n    ABC_FREE( p-\u003epPatWords );\n    ABC_FREE( p );\n}",
+      "Draft": "func Fra_ManStop(p *Fra_Man_t) {\n    if p.pPars.fVerbose {\n        Fra_ManPrint( p ); }\n    // save mapping from original nodes into FRAIG nodes\n    if p.pManAig {\n        if p.pManAig.pObjCopies {\n            // inlining of macro ABC_FREE\n            ((p.pManAig.pObjCopies) ? (free((char *) (p.pManAig.pObjCopies)), (p.pManAig.pObjCopies) = 0) : 0); }\n        p.pManAig.pObjCopies = p.pMemFraig;\n        p.pMemFraig = nil;\n    }\n    Fra_ManClean( p, 0 );\n    if p.vTimeouts { Vec_PtrFree( p.vTimeouts ); }\n    if p.vPiVars {   Vec_PtrFree( p.vPiVars ); }\n    if p.pSat {      sat_solver_delete( p.pSat ); }\n    if p.pCla {     Fra_ClassesStop( p.pCla ); }\n    if p.pSml {      Fra_SmlStop( p.pSml ); }\n    if p.vCex {      Vec_IntFree( p.vCex ); }\n    if p.vOneHots {  Vec_IntFree( p.vOneHots ); }\n    // inlining of macro ABC_FREE\n    ((p.pMemFraig) ? (free((char *) (p.pMemFraig)), (p.pMemFraig) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMemFanins) ? (free((char *) (p.pMemFanins)), (p.pMemFanins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMemSatNums) ? (free((char *) (p.pMemSatNums)), (p.pMemSatNums) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPatWords) ? (free((char *) (p.pPatWords)), (p.pPatWords) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Fra_ManPrint",
+      "Start": 9521,
+      "End": 11238,
+      "BodyStart": 9556,
+      "Original": "void Fra_ManPrint( Fra_Man_t * p )\n{\n    double nMemory = 1.0*Aig_ManObjNumMax(p-\u003epManAig)*(p-\u003epSml-\u003enWordsTotal*sizeof(unsigned)+6*sizeof(void*))/(1\u003c\u003c20);\n    printf( \"SimWord = %d. Round = %d.  Mem = %0.2f MB.  LitBeg = %d.  LitEnd = %d. (%6.2f %%).\\n\", \n        p-\u003epPars-\u003enSimWords, p-\u003epSml-\u003enSimRounds, nMemory, p-\u003enLitsBeg, p-\u003enLitsEnd, 100.0*p-\u003enLitsEnd/(p-\u003enLitsBeg?p-\u003enLitsBeg:1) );\n    printf( \"Proof = %d. Cex = %d. Fail = %d. FailReal = %d. C-lim = %d. ImpRatio = %6.2f %%\\n\", \n        p-\u003enSatProof, p-\u003enSatCallsSat, p-\u003enSatFails, p-\u003enSatFailsReal, p-\u003epPars-\u003enBTLimitNode, Fra_ImpComputeStateSpaceRatio(p) );\n    printf( \"NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\\n\", \n        p-\u003enNodesBeg, p-\u003enNodesEnd, 100.0*(p-\u003enNodesBeg-p-\u003enNodesEnd)/(p-\u003enNodesBeg?p-\u003enNodesBeg:1), \n        p-\u003enRegsBeg, p-\u003enRegsEnd, 100.0*(p-\u003enRegsBeg-p-\u003enRegsEnd)/(p-\u003enRegsBeg?p-\u003enRegsBeg:1) );\n    if ( p-\u003epSat )             Sat_SolverPrintStats( stdout, p-\u003epSat );\n    if ( p-\u003epPars-\u003efUse1Hot )  Fra_OneHotEstimateCoverage( p, p-\u003evOneHots );\n    ABC_PRT( \"AIG simulation  \", p-\u003epSml-\u003etimeSim  );\n    ABC_PRT( \"AIG traversal   \", p-\u003etimeTrav );\n    if ( p-\u003etimeRwr )\n    {\n    ABC_PRT( \"AIG rewriting   \", p-\u003etimeRwr  );\n    }\n    ABC_PRT( \"SAT solving     \", p-\u003etimeSat  );\n    ABC_PRT( \"    Unsat       \", p-\u003etimeSatUnsat );\n    ABC_PRT( \"    Sat         \", p-\u003etimeSatSat   );\n    ABC_PRT( \"    Fail        \", p-\u003etimeSatFail  );\n    ABC_PRT( \"Class refining  \", p-\u003etimeRef   );\n    ABC_PRT( \"TOTAL RUNTIME   \", p-\u003etimeTotal );\n    if ( p-\u003etime1 ) { ABC_PRT( \"time1           \", p-\u003etime1 ); }\n    if ( p-\u003enSpeculs )\n    printf( \"Speculations = %d.\\n\", p-\u003enSpeculs );\n    fflush( stdout );\n}",
+      "Draft": "func Fra_ManPrint(p *Fra_Man_t) {\n    var nMemory float64  = 1.0*Aig_ManObjNumMax(p.pManAig)*(p.pSml.nWordsTotal*sizeof(unsigned)+6*sizeof(void*))/(1\u003c\u003c20);\n    fmt.Printf(\"SimWord = %d. Round = %d.  Mem = %0.2f MB.  LitBeg = %d.  LitEnd = %d. (%6.2f %%).\\n\", p.pPars.nSimWords, p.pSml.nSimRounds, nMemory, p.nLitsBeg, p.nLitsEnd, 100.0*p.nLitsEnd/(p.nLitsBeg?p.nLitsBeg:1));\n    fmt.Printf(\"Proof = %d. Cex = %d. Fail = %d. FailReal = %d. C-lim = %d. ImpRatio = %6.2f %%\\n\", p.nSatProof, p.nSatCallsSat, p.nSatFails, p.nSatFailsReal, p.pPars.nBTLimitNode, Fra_ImpComputeStateSpaceRatio(p));\n    fmt.Printf(\"NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\\n\", p.nNodesBeg, p.nNodesEnd, 100.0*(p.nNodesBeg-p.nNodesEnd)/(p.nNodesBeg?p.nNodesBeg:1), p.nRegsBeg, p.nRegsEnd, 100.0*(p.nRegsBeg-p.nRegsEnd)/(p.nRegsBeg?p.nRegsBeg:1));\n    if p.pSat {             Sat_SolverPrintStats( os.Stdout, p.pSat ); }\n    if p.pPars.fUse1Hot {  Fra_OneHotEstimateCoverage( p, p.vOneHots ); }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"AIG simulation  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.pSml.timeSim)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"AIG traversal   \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTrav)))/(float64(int64(time.Second))));;\n    if p.timeRwr {\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"AIG rewriting   \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeRwr)))/(float64(int64(time.Second))));;\n    }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"SAT solving     \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSat)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"    Unsat       \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"    Sat         \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSatSat)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"    Fail        \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSatFail)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Class refining  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeRef)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"TOTAL RUNTIME   \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    if p.time1 { Abc_Print(1, \"%s =\", (\"time1           \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time1)))/(float64(int64(time.Second))));; }\n    if p.nSpeculs {\n    fmt.Printf(\"Speculations = %d.\\n\", p.nSpeculs); }\n    fflush( os.Stdout );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::1326",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1326,
+      "End": 1332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::2711",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2711,
+      "End": 2717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::4139",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4072,
+      "End": 4072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::4192",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4117,
+      "End": 4123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::4614",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4473,
+      "End": 4473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::4896",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4678,
+      "End": 4678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::4990",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4764,
+      "End": 4770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::6233",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5670,
+      "End": 5670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::6315",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5670,
+      "End": 5670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::6499",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5752,
+      "End": 5752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::6565",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5752,
+      "End": 5752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::6710",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5906,
+      "End": 5912
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::6779",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5975,
+      "End": 5981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::8496",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7214,
+      "End": 7214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::8574",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7284,
+      "End": 7290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::8694",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7343,
+      "End": 7343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::8765",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7406,
+      "End": 7412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::11750",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9634,
+      "End": 9640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::mechanical::sizeof::11769",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9653,
+      "End": 9659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::4118",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4072,
+      "End": 4072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::4594",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4473,
+      "End": 4473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::4873",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4678,
+      "End": 4678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::4902",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4678,
+      "End": 4678
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::4996",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4770,
+      "End": 4783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::5341",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4943,
+      "End": 4943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::5917",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5470,
+      "End": 5478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::6184",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5670,
+      "End": 5670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::6208",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5670,
+      "End": 5670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::6239",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5670,
+      "End": 5670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::6292",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5670,
+      "End": 5670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::6321",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5670,
+      "End": 5670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::6457",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5752,
+      "End": 5752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::6473",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5752,
+      "End": 5752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::6550",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5752,
+      "End": 5752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::6716",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5912,
+      "End": 5925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::7847",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6873,
+      "End": 6873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::8184",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7020,
+      "End": 7020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::8473",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7214,
+      "End": 7214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::8502",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7214,
+      "End": 7214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::8580",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7290,
+      "End": 7303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::8679",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7343,
+      "End": 7343
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::9473",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7944,
+      "End": 7944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::10228",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8602,
+      "End": 8602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::10838",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9108,
+      "End": 9108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::10963",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9138,
+      "End": 9138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::11091",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9169,
+      "End": 9169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::11219",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9201,
+      "End": 9201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::11332",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9231,
+      "End": 9231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::pointer-cast::11775",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9659,
+      "End": 9666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::Fra_ParamsDefault",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ParamsDefault",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1258,
+      "End": 2368
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::Fra_ParamsDefaultSeq",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ParamsDefaultSeq",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2640,
+      "End": 3641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::Fra_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3906,
+      "End": 5024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::Fra_ManClean",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ManClean",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5288,
+      "End": 6006
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::Fra_ManPrepareComb",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ManPrepareComb",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6285,
+      "End": 7559
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::Fra_ManFinalizeComb",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ManFinalizeComb",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7844,
+      "End": 8110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::ternary::Fra_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Fra_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8374,
+      "End": 9247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::Fra_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8374,
+      "End": 9247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::ternary::Fra_ManPrint",
+      "Category": "ternary-review",
+      "Symbol": "Fra_ManPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 9521,
+      "End": 11238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::Fra_ManPrint",
+      "Category": "semantic-review",
+      "Symbol": "Fra_ManPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9521,
+      "End": 11238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fra/fraMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11485
+    }
+  ],
+  "Draft": "package fra\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [fraMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [New FRAIG package.]\n\n  Synopsis    [Starts the FRAIG manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 30, 2007.]\n\n  Revision    [$Id: fraMan.c,v 1.00 2007/06/30 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the default solving parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_ParamsDefault(pPars *Fra_Par_t) {\n    memset( pPars, 0, sizeof(Fra_Par_t) );\n    pPars.nSimWords        =       32;  // the number of words in the simulation info\n    pPars.dSimSatur        =    0.005;  // the ratio of refined classes when saturation is reached\n    pPars.fPatScores       =        0;  // enables simulation pattern scoring\n    pPars.MaxScore         =       25;  // max score after which resimulation is used\n    pPars.fDoSparse        =        1;  // skips sparse functions\n//    pPars-\u003edActConeRatio    =     0.05;  // the ratio of cone to be bumped\n//    pPars-\u003edActConeBumpMax  =      5.0;  // the largest bump of activity\n    pPars.dActConeRatio    =      0.3;  // the ratio of cone to be bumped\n    pPars.dActConeBumpMax  =     10.0;  // the largest bump of activity\n    pPars.nBTLimitNode     =      100;  // conflict limit at a node\n    pPars.nBTLimitMiter    =   500000;  // conflict limit at an output\n    pPars.nFramesK         =        0;  // the number of timeframes to unroll\n    pPars.fConeBias        =        1;\n    pPars.fRewrite         =        0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the default solving parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_ParamsDefaultSeq(pPars *Fra_Par_t) {\n    memset( pPars, 0, sizeof(Fra_Par_t) );\n    pPars.nSimWords        =        1;  // the number of words in the simulation info\n    pPars.dSimSatur        =    0.005;  // the ratio of refined classes when saturation is reached\n    pPars.fPatScores       =        0;  // enables simulation pattern scoring\n    pPars.MaxScore         =       25;  // max score after which resimulation is used\n    pPars.fDoSparse        =        1;  // skips sparse functions\n    pPars.dActConeRatio    =      0.3;  // the ratio of cone to be bumped\n    pPars.dActConeBumpMax  =     10.0;  // the largest bump of activity\n    pPars.nBTLimitNode     = 10000000;  // conflict limit at a node\n    pPars.nBTLimitMiter    =   500000;  // conflict limit at an output\n    pPars.nFramesK         =        1;  // the number of timeframes to unroll\n    pPars.fConeBias        =        0;\n    pPars.fRewrite         =        0;\n    pPars.fLatchCorr       =        0;\n} \n\n/**Function*************************************************************\n\n  Synopsis    [Starts the fraiging manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_ManStart(pManAig *Aig_Man_t, pPars *Fra_Par_t) *Fra_Man_t {\n    var p *Fra_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // allocate the fraiging manager\n    // inlining of macro ABC_ALLOC\n    p = ((Fra_Man_t *) malloc(sizeof(Fra_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Fra_Man_t) );\n    p.pPars      = pPars;\n    p.pManAig    = pManAig;\n    p.nSizeAlloc = Aig_ManObjNumMax( pManAig );\n    p.nFramesAll = pPars.nFramesK + 1;\n    // allocate storage for sim pattern\n    p.nPatWords  = Abc_BitWordNum( (Aig_ManCiNum(pManAig) - Aig_ManRegNum(pManAig)) * p.nFramesAll + Aig_ManRegNum(pManAig) );\n    // inlining of macro ABC_ALLOC\n    p.pPatWords  = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(p.nPatWords))); \n    p.vPiVars    = Vec_PtrAlloc( 100 );\n    // equivalence classes\n    p.pCla       = Fra_ClassesStart( pManAig );\n    // allocate other members\n    // inlining of macro ABC_ALLOC\n    p.pMemFraig  = ((Aig_Obj_t * *) malloc(sizeof(Aig_Obj_t *) * (size_t)(p.nSizeAlloc * p.nFramesAll)));\n    memset( p.pMemFraig, 0, sizeof(Aig_Obj_t *) * p.nSizeAlloc * p.nFramesAll );\n    // set random number generator\n//    srand( 0xABCABC );\n    Aig_ManRandom(1);\n    // set the pointer to the manager\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.pData = p; }\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the fraiging manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_ManClean(p *Fra_Man_t, nNodesMax int32) {\n    var i int32;\n    // remove old arrays\n    for  i = 0; i \u003c p.nMemAlloc; i++  {\n        if p.pMemFanins[i] \u0026\u0026 p.pMemFanins[i] != (void *)1 {\n            Vec_PtrFree( p.pMemFanins[i] ); }\n    }\n    // realloc for the new size\n    if p.nMemAlloc \u003c nNodesMax {\n        var nMemAllocNew int32  = nNodesMax + 5000;\n        // inlining of macro ABC_REALLOC\n        \n        if p.pMemFanins {\n            p.pMemFanins = ((Vec_Ptr_t * *) realloc((char *)(p.pMemFanins), sizeof(Vec_Ptr_t *) * (size_t)(nMemAllocNew)));\n        } else {\n            p.pMemFanins = ((Vec_Ptr_t * *) malloc(sizeof(Vec_Ptr_t *) * (size_t)(nMemAllocNew)));\n        }\n        // inlining of macro ABC_REALLOC\n        \n        if p.pMemSatNums {\n            p.pMemSatNums = ((int *) realloc((char *)(p.pMemSatNums), sizeof(int) * (size_t)(nMemAllocNew)));\n        } else {\n            p.pMemSatNums = ((int *) malloc(sizeof(int) * (size_t)(nMemAllocNew)));\n        }\n        p.nMemAlloc = nMemAllocNew;\n    }\n    // prepare for the new run\n    memset( p.pMemFanins, 0, sizeof(Vec_Ptr_t *) * p.nMemAlloc );\n    memset( p.pMemSatNums, 0, sizeof(int) * p.nMemAlloc );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prepares the new manager to begin fraiging.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_ManPrepareComb(p *Fra_Man_t) *Aig_Man_t {\n    var pManFraig *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(p.pManFraig == nil, \"p.pManFraig == nil\");\n    // start the fraig package\n    pManFraig = Aig_ManStart( Aig_ManObjNumMax(p.pManAig) );\n    pManFraig.pName = Abc_UtilStrsav( p.pManAig.pName );\n    pManFraig.pSpec = Abc_UtilStrsav( p.pManAig.pSpec );\n    pManFraig.nRegs    = p.pManAig.nRegs;\n    pManFraig.nAsserts = p.pManAig.nAsserts;\n    // set the pointers to the available fraig nodes\n    Fra_ObjSetFraig( Aig_ManConst1(p.pManAig), 0, Aig_ManConst1(pManFraig) );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCis, i)), 1); i++  {\n        Fra_ObjSetFraig( pObj, 0, Aig_ObjCreateCi(pManFraig) );\n    }\n    // set the pointers to the manager\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pManFraig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pManFraig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pObj.pData = p; }\n    }\n    // allocate memory for mapping FRAIG nodes into SAT numbers and fanins\n    p.nMemAlloc = p.nSizeAlloc;\n    // inlining of macro ABC_ALLOC\n    p.pMemFanins = ((Vec_Ptr_t * *) malloc(sizeof(Vec_Ptr_t *) * (size_t)(p.nMemAlloc)));\n    memset( p.pMemFanins, 0, sizeof(Vec_Ptr_t *) * p.nMemAlloc );\n    // inlining of macro ABC_ALLOC\n    p.pMemSatNums = ((int *) malloc(sizeof(int) * (size_t)(p.nMemAlloc)));\n    memset( p.pMemSatNums, 0, sizeof(int) * p.nMemAlloc );\n    // make sure the satisfying assignment is node assigned\n    assert(pManFraig.pData == nil, \"pManFraig.pData == nil\");\n    return pManFraig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finalizes the combinational miter after fraiging.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_ManFinalizeComb(p *Fra_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // add the POs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pManAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pManAig.vCos, i)), 1); i++  {\n        Aig_ObjCreateCo( p.pManFraig, Fra_ObjChild0Fra(pObj,0) );\n    }\n    // postprocess\n    Aig_ManCleanMarkB( p.pManFraig );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the fraiging manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_ManStop(p *Fra_Man_t) {\n    if p.pPars.fVerbose {\n        Fra_ManPrint( p ); }\n    // save mapping from original nodes into FRAIG nodes\n    if p.pManAig {\n        if p.pManAig.pObjCopies {\n            // inlining of macro ABC_FREE\n            ((p.pManAig.pObjCopies) ? (free((char *) (p.pManAig.pObjCopies)), (p.pManAig.pObjCopies) = 0) : 0); }\n        p.pManAig.pObjCopies = p.pMemFraig;\n        p.pMemFraig = nil;\n    }\n    Fra_ManClean( p, 0 );\n    if p.vTimeouts { Vec_PtrFree( p.vTimeouts ); }\n    if p.vPiVars {   Vec_PtrFree( p.vPiVars ); }\n    if p.pSat {      sat_solver_delete( p.pSat ); }\n    if p.pCla {     Fra_ClassesStop( p.pCla ); }\n    if p.pSml {      Fra_SmlStop( p.pSml ); }\n    if p.vCex {      Vec_IntFree( p.vCex ); }\n    if p.vOneHots {  Vec_IntFree( p.vOneHots ); }\n    // inlining of macro ABC_FREE\n    ((p.pMemFraig) ? (free((char *) (p.pMemFraig)), (p.pMemFraig) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMemFanins) ? (free((char *) (p.pMemFanins)), (p.pMemFanins) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pMemSatNums) ? (free((char *) (p.pMemSatNums)), (p.pMemSatNums) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pPatWords) ? (free((char *) (p.pPatWords)), (p.pPatWords) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints stats for the fraiging manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fra_ManPrint(p *Fra_Man_t) {\n    var nMemory float64  = 1.0*Aig_ManObjNumMax(p.pManAig)*(p.pSml.nWordsTotal*sizeof(unsigned)+6*sizeof(void*))/(1\u003c\u003c20);\n    fmt.Printf(\"SimWord = %d. Round = %d.  Mem = %0.2f MB.  LitBeg = %d.  LitEnd = %d. (%6.2f %%).\\n\", p.pPars.nSimWords, p.pSml.nSimRounds, nMemory, p.nLitsBeg, p.nLitsEnd, 100.0*p.nLitsEnd/(p.nLitsBeg?p.nLitsBeg:1));\n    fmt.Printf(\"Proof = %d. Cex = %d. Fail = %d. FailReal = %d. C-lim = %d. ImpRatio = %6.2f %%\\n\", p.nSatProof, p.nSatCallsSat, p.nSatFails, p.nSatFailsReal, p.pPars.nBTLimitNode, Fra_ImpComputeStateSpaceRatio(p));\n    fmt.Printf(\"NBeg = %d. NEnd = %d. (Gain = %6.2f %%).  RBeg = %d. REnd = %d. (Gain = %6.2f %%).\\n\", p.nNodesBeg, p.nNodesEnd, 100.0*(p.nNodesBeg-p.nNodesEnd)/(p.nNodesBeg?p.nNodesBeg:1), p.nRegsBeg, p.nRegsEnd, 100.0*(p.nRegsBeg-p.nRegsEnd)/(p.nRegsBeg?p.nRegsBeg:1));\n    if p.pSat {             Sat_SolverPrintStats( os.Stdout, p.pSat ); }\n    if p.pPars.fUse1Hot {  Fra_OneHotEstimateCoverage( p, p.vOneHots ); }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"AIG simulation  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.pSml.timeSim)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"AIG traversal   \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTrav)))/(float64(int64(time.Second))));;\n    if p.timeRwr {\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"AIG rewriting   \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeRwr)))/(float64(int64(time.Second))));;\n    }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"SAT solving     \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSat)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"    Unsat       \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSatUnsat)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"    Sat         \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSatSat)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"    Fail        \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeSatFail)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Class refining  \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeRef)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"TOTAL RUNTIME   \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.timeTotal)))/(float64(int64(time.Second))));;\n    // inlining of macro ABC_PRT\n    if p.time1 { Abc_Print(1, \"%s =\", (\"time1           \"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((p.time1)))/(float64(int64(time.Second))));; }\n    if p.nSpeculs {\n    fmt.Printf(\"Speculations = %d.\\n\", p.nSpeculs); }\n    fflush( os.Stdout );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

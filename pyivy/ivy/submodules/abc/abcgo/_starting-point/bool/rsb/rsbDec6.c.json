@@ -1,0 +1,1383 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c",
+  "SHA256": "4516acbcac580c577d19ebdefa91b353155b7d6e59cd28f9cfe21e01a44279f2",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 9,
+        "ByteOffset": 2550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification of CEX has failed: f(A) == f(B)!!!\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 88,
+        "Column": 13,
+        "ByteOffset": 2740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Verification of CEX has failed: g[%d](A) != g[%d](B)!!!\\n\", i, i ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 2947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCexes \u003c 64 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 128,
+        "Column": 5,
+        "ByteOffset": 3974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nGs \u003e 0 \u0026\u0026 nGs \u003c 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 143,
+        "Column": 13,
+        "ByteOffset": 4717
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( (~f[w] \u0026 CofA) \u0026\u0026 (f[w] \u0026 CofA) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 167,
+        "Column": 17,
+        "ByteOffset": 5763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( (f[k] \u0026 CofA) \u0026\u0026 (~f[w] \u0026 CofB) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 197,
+        "Column": 9,
+        "ByteOffset": 6526
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 199,
+        "Column": 5,
+        "ByteOffset": 6554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 9,
+        "ByteOffset": 6610
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", (i % 100) / 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 5,
+        "ByteOffset": 6652
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 205,
+        "Column": 9,
+        "ByteOffset": 6705
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", (i % 100) / 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 207,
+        "Column": 5,
+        "ByteOffset": 6747
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 210,
+        "Column": 9,
+        "ByteOffset": 6802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 212,
+        "Column": 5,
+        "ByteOffset": 6830
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 214,
+        "Column": 9,
+        "ByteOffset": 6886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", i % 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 5,
+        "ByteOffset": 6920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 218,
+        "Column": 9,
+        "ByteOffset": 6973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", i % 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 220,
+        "Column": 5,
+        "ByteOffset": 7007
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 5,
+        "ByteOffset": 7027
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 236,
+        "Column": 9,
+        "ByteOffset": 7447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nCands \u003c= 4 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 17,
+        "ByteOffset": 7574
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"%4d\", pCands[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 17,
+        "ByteOffset": 7639
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"    \" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 245,
+        "Column": 9,
+        "ByteOffset": 7709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 13,
+        "ByteOffset": 7773
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", Abc_TtGetBit( pCexes + i, c ) ? '.' : '+' );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 9,
+        "ByteOffset": 7850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"|\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 13,
+        "ByteOffset": 7911
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", Abc_TtGetBit( pCexes + i, c ) ? '.' : '+' );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 253,
+        "Column": 9,
+        "ByteOffset": 7988
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  %3d\\n\", c );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 5,
+        "ByteOffset": 8022
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 9,
+        "ByteOffset": 8109
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 5,
+        "ByteOffset": 8137
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 9,
+        "ByteOffset": 8193
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", Abc_TtCountOnes(pCexes[i]) / 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 8252
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 9,
+        "ByteOffset": 8305
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", Abc_TtCountOnes(pCexes[i]) / 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 269,
+        "Column": 5,
+        "ByteOffset": 8364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 272,
+        "Column": 9,
+        "ByteOffset": 8419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 8447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"  \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 276,
+        "Column": 9,
+        "ByteOffset": 8503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", Abc_TtCountOnes(pCexes[i]) % 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 278,
+        "Column": 5,
+        "ByteOffset": 8562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 9,
+        "ByteOffset": 8615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", Abc_TtCountOnes(pCexes[i]) % 10 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 282,
+        "Column": 5,
+        "ByteOffset": 8674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 8694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 326,
+        "Column": 5,
+        "ByteOffset": 9819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Rsb_DecTryCex( f, iCexT0, iCexF0 ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 327,
+        "Column": 5,
+        "ByteOffset": 9870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Rsb_DecTryCex( f, iCexT0, iCexF1 ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 328,
+        "Column": 5,
+        "ByteOffset": 9921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Rsb_DecTryCex( f, iCexT1, iCexF0 ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 329,
+        "Column": 5,
+        "ByteOffset": 9972
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Rsb_DecTryCex( f, iCexT1, iCexF1 ) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 374,
+        "Column": 5,
+        "ByteOffset": 11523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCexes, 0, sizeof(word) * nGsAll );  "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 388,
+        "Column": 54,
+        "ByteOffset": 12198
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Kit_DsdPrintFromTruth( \u0026uTruth, 1 ); printf( \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 418,
+        "Column": 54,
+        "ByteOffset": 13273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Kit_DsdPrintFromTruth( \u0026uTruth, 2 ); printf( \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 452,
+        "Column": 54,
+        "ByteOffset": 14485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Kit_DsdPrintFromTruth( \u0026uTruth, 3 ); printf( \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 490,
+        "Column": 54,
+        "ByteOffset": 15832
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                Kit_DsdPrintFromTruth( \u0026uTruth, 4 ); printf( \"   \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 537,
+        "Column": 5,
+        "ByteOffset": 17191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Offset : \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 540,
+        "Column": 5,
+        "ByteOffset": 17309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Onset  : \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 542,
+        "Column": 5,
+        "ByteOffset": 17394
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Result : \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 544,
+        "Column": 58,
+        "ByteOffset": 17532
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Kit_DsdPrintFromTruth( (unsigned *)\u0026wIsop, nVars );  printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 547,
+        "Column": 5,
+        "ByteOffset": 17576
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Func   : \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 549,
+        "Column": 58,
+        "ByteOffset": 17714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Kit_DsdPrintFromTruth( (unsigned *)f, nVarsAll );    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 551,
+        "Column": 9,
+        "ByteOffset": 17770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Div%3d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 552,
+        "Column": 66,
+        "ByteOffset": 17861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Kit_DsdPrintFromTruth( (unsigned *)ppGs[i], nVarsAll );  printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 554,
+        "Column": 5,
+        "ByteOffset": 17887
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Solution : \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 556,
+        "Column": 9,
+        "ByteOffset": 17971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d \", Vec_IntEntry(p.vFanins, i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 558,
+        "Column": 5,
+        "ByteOffset": 18026
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 586,
+        "Column": 9,
+        "ByteOffset": 18989
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Num \u003c nGs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 605,
+        "Column": 9,
+        "ByteOffset": 19627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Verification failed.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 639,
+        "Column": 13,
+        "ByteOffset": 20866
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Verified orig decomp with %d vars {\", Vec_IntSize(p.vFaninsOld) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 641,
+        "Column": 17,
+        "ByteOffset": 21016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \" %d\", Entry );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 642,
+        "Column": 13,
+        "ByteOffset": 21052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" }\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 649,
+        "Column": 13,
+        "ByteOffset": 21217
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Verified orig decomp with %d vars {\", Vec_IntSize(p.vFaninsOld) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 651,
+        "Column": 17,
+        "ByteOffset": 21367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \" %d\", Entry );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 652,
+        "Column": 13,
+        "ByteOffset": 21403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" }\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 653,
+        "Column": 13,
+        "ByteOffset": 21433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Verification FAILED.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 659,
+        "Column": 5,
+        "ByteOffset": 21554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nGs \u003c nGsAll );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 665,
+        "Column": 13,
+        "ByteOffset": 21727
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Found decomp with %d vars {\", Vec_IntSize(p.vFanins) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 667,
+        "Column": 17,
+        "ByteOffset": 21863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \" %d\", Entry );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 668,
+        "Column": 13,
+        "ByteOffset": 21899
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" }\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 676,
+        "Column": 9,
+        "ByteOffset": 22152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Did not find decomposition with 4 variables.\\n\" ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 703,
+        "Column": 5,
+        "ByteOffset": 22867
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nGs \u003c 200 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Rsb_DecTry0",
+      "Start": 1249,
+      "End": 1329,
+      "BodyStart": 1295,
+      "Original": "static inline unsigned Rsb_DecTry0( word c ) \n{\n    return (unsigned)(c != 0);\n}",
+      "Draft": "func Rsb_DecTry0(c word) uint32 {\n    return uint32((c != 0));\n}"
+    },
+    {
+      "Name": "Rsb_DecTry1",
+      "Start": 1330,
+      "End": 1446,
+      "BodyStart": 1385,
+      "Original": "static inline unsigned Rsb_DecTry1( word c, word f1 ) \n{\n    return (Rsb_DecTry0(c\u0026f1) \u003c\u003c 1) | Rsb_DecTry0(c\u0026~f1);\n}",
+      "Draft": "func Rsb_DecTry1(c word, f1 word) uint32 {\n    return (Rsb_DecTry0(c\u0026f1) \u003c\u003c 1) | Rsb_DecTry0(c\u0026~f1);\n}"
+    },
+    {
+      "Name": "Rsb_DecTry2",
+      "Start": 1447,
+      "End": 1580,
+      "BodyStart": 1511,
+      "Original": "static inline unsigned Rsb_DecTry2( word c, word f1, word f2 ) \n{\n    return (Rsb_DecTry1(c\u0026f2, f1) \u003c\u003c 2) | Rsb_DecTry1(c\u0026~f2, f1);\n}",
+      "Draft": "func Rsb_DecTry2(c word, f1 word, f2 word) uint32 {\n    return (Rsb_DecTry1(c\u0026f2, f1) \u003c\u003c 2) | Rsb_DecTry1(c\u0026~f2, f1);\n}"
+    },
+    {
+      "Name": "Rsb_DecTry3",
+      "Start": 1581,
+      "End": 1731,
+      "BodyStart": 1654,
+      "Original": "static inline unsigned Rsb_DecTry3( word c, word f1, word f2, word f3 ) \n{\n    return (Rsb_DecTry2(c\u0026f3, f1, f2) \u003c\u003c 4) | Rsb_DecTry2(c\u0026~f3, f1, f2);\n}",
+      "Draft": "func Rsb_DecTry3(c word, f1 word, f2 word, f3 word) uint32 {\n    return (Rsb_DecTry2(c\u0026f3, f1, f2) \u003c\u003c 4) | Rsb_DecTry2(c\u0026~f3, f1, f2);\n}"
+    },
+    {
+      "Name": "Rsb_DecTry4",
+      "Start": 1732,
+      "End": 1899,
+      "BodyStart": 1814,
+      "Original": "static inline unsigned Rsb_DecTry4( word c, word f1, word f2, word f3, word f4 ) \n{\n    return (Rsb_DecTry3(c\u0026f4, f1, f2, f3) \u003c\u003c 8) | Rsb_DecTry3(c\u0026~f4, f1, f2, f3);\n}",
+      "Draft": "func Rsb_DecTry4(c word, f1 word, f2 word, f3 word, f4 word) uint32 {\n    return (Rsb_DecTry3(c\u0026f4, f1, f2, f3) \u003c\u003c 8) | Rsb_DecTry3(c\u0026~f4, f1, f2, f3);\n}"
+    },
+    {
+      "Name": "Rsb_DecTry5",
+      "Start": 1900,
+      "End": 2085,
+      "BodyStart": 1991,
+      "Original": "static inline unsigned Rsb_DecTry5( word c, word f1, word f2, word f3, word f4, word f5 ) \n{\n    return (Rsb_DecTry4(c\u0026f5, f1, f2, f3, f4) \u003c\u003c 16) | Rsb_DecTry4(c\u0026~f5, f1, f2, f3, f4);\n}",
+      "Draft": "func Rsb_DecTry5(c word, f1 word, f2 word, f3 word, f4 word, f5 word) uint32 {\n    return (Rsb_DecTry4(c\u0026f5, f1, f2, f3, f4) \u003c\u003c 16) | Rsb_DecTry4(c\u0026~f5, f1, f2, f3, f4);\n}"
+    },
+    {
+      "Name": "Rsb_DecTryCex",
+      "Start": 2321,
+      "End": 2452,
+      "BodyStart": 2388,
+      "Original": "static inline int Rsb_DecTryCex( word * g, int iCexA, int iCexB ) \n{\n    return Abc_TtGetBit(g, iCexA) == Abc_TtGetBit(g, iCexB);\n}",
+      "Draft": "func Rsb_DecTryCex(g *word, iCexA int32, iCexB int32) int32 {\n    return Abc_TtGetBit(g, iCexA) == Abc_TtGetBit(g, iCexB);\n}"
+    },
+    {
+      "Name": "Rsb_DecVerifyCex",
+      "Start": 2453,
+      "End": 2903,
+      "BodyStart": 2544,
+      "Original": "static inline void Rsb_DecVerifyCex( word * f, word ** g, int nGs, int iCexA, int iCexB ) \n{\n    int i;\n    // f distinquished it\n    if ( Rsb_DecTryCex( f, iCexA, iCexB ) )\n        printf( \"Verification of CEX has failed: f(A) == f(B)!!!\\n\" );\n    // g do not distinguish it\n    for ( i = 0; i \u003c nGs; i++ )\n        if ( !Rsb_DecTryCex( g[i], iCexA, iCexB ) )\n            printf( \"Verification of CEX has failed: g[%d](A) != g[%d](B)!!!\\n\", i, i );\n}",
+      "Draft": "func Rsb_DecVerifyCex(f *word, g **word, nGs int32, iCexA int32, iCexB int32) {\n    var i int32;\n    // f distinquished it\n    if Rsb_DecTryCex( f, iCexA, iCexB ) != 0 {\n        fmt.Printf(\"Verification of CEX has failed: f(A) == f(B)!!!\\n\"); }\n    // g do not distinguish it\n    for  i = 0; i \u003c nGs; i++  {\n        if !(Rsb_DecTryCex( g[i], iCexA, iCexB ) != 0) {\n            fmt.Printf(\"Verification of CEX has failed: g[%d](A) != g[%d](B)!!!\\n\", i, i); }\n    }\n}"
+    },
+    {
+      "Name": "Rsb_DecRecordCex",
+      "Start": 2904,
+      "End": 3182,
+      "BodyStart": 3012,
+      "Original": "static inline void Rsb_DecRecordCex( word ** g, int nGs, int iCexA, int iCexB, word * pCexes, int nCexes ) \n{\n    int i;\n    assert( nCexes \u003c 64 );\n    for ( i = 0; i \u003c nGs; i++ )\n        if ( Rsb_DecTryCex(g[i], iCexA, iCexB) )\n            Abc_TtSetBit( pCexes + i, nCexes );\n}",
+      "Draft": "func Rsb_DecRecordCex(g **word, nGs int32, iCexA int32, iCexB int32, pCexes *word, nCexes int32) {\n    var i int32;\n    assert(nCexes \u003c 64, \"nCexes \u003c 64\");\n    for  i = 0; i \u003c nGs; i++  {\n        if Rsb_DecTryCex(g[i], iCexA, iCexB) != 0 {\n            Abc_TtSetBit( pCexes + i, nCexes ); }\n    }\n}"
+    },
+    {
+      "Name": "Rsb_DecCofactor",
+      "Start": 3462,
+      "End": 3682,
+      "BodyStart": 3538,
+      "Original": "static inline word Rsb_DecCofactor( word ** g, int nGs, int w, int iMint ) \n{\n    int i;\n    word Cof = ~(word)0;\n    for ( i = 0; i \u003c nGs; i++ )\n        Cof \u0026=  ((iMint \u003e\u003e i) \u0026 1) ? g[i][w] : ~g[i][w];\n    return Cof;\n}",
+      "Draft": "func Rsb_DecCofactor(g **word, nGs int32, w int32, iMint int32) word {\n    var i int32;\n    var Cof word  = ~(word)0;\n    for  i = 0; i \u003c nGs; i++  {\n        Cof \u0026=  ((iMint \u003e\u003e i) \u0026 1) ? g[i][w] : ~g[i][w];\n    }\n    return Cof;\n}"
+    },
+    {
+      "Name": "Rsb_DecCheck",
+      "Start": 3683,
+      "End": 6074,
+      "BodyStart": 3792,
+      "Original": "unsigned Rsb_DecCheck( int nVars, word * f, word ** g, int nGs, unsigned * pPat, int * pCexA, int * pCexB ) \n{\n    word CofA, CofB;\n    int nWords = Abc_TtWordNum( nVars );\n    int w, k, iMint, iShift = ( 1 \u003c\u003c nGs );\n    unsigned uMask = (~(unsigned)0) \u003e\u003e (32-iShift);\n    unsigned uTotal = 0;\n    assert( nGs \u003e 0 \u0026\u0026 nGs \u003c 5 );\n    for ( w = 0; w \u003c nWords; w++ )\n    {\n        // generate decomposition pattern\n        if ( nGs == 1 )\n            pPat[w] = Rsb_DecTry2( ~(word)0, g[0][w], f[w] );\n        else if ( nGs == 2 )\n            pPat[w] = Rsb_DecTry3( ~(word)0, g[0][w], g[1][w], f[w] );\n        else if ( nGs == 3 )\n            pPat[w] = Rsb_DecTry4( ~(word)0, g[0][w], g[1][w], g[2][w], f[w] );\n        else if ( nGs == 4 )\n            pPat[w] = Rsb_DecTry5( ~(word)0, g[0][w], g[1][w], g[2][w], g[3][w], f[w] );\n        // check if it is consistent\n        iMint = Abc_Tt6FirstBit( (pPat[w] \u003e\u003e iShift) \u0026 pPat[w] \u0026 uMask );\n        if ( iMint \u003e= 0 )\n        {   // generate a cex\n            CofA = Rsb_DecCofactor( g, nGs, w, iMint );\n            assert( (~f[w] \u0026 CofA) \u0026\u0026 (f[w] \u0026 CofA) );\n            *pCexA = w * 64 + Abc_Tt6FirstBit( ~f[w] \u0026 CofA );\n            *pCexB = w * 64 + Abc_Tt6FirstBit(  f[w] \u0026 CofA );\n            return 0;\n        }\n        uTotal |= pPat[w];\n        if ( w == 0 )\n            continue;\n        // check if it is consistent with other patterns seen so far\n        iMint = Abc_Tt6FirstBit( (uTotal \u003e\u003e iShift) \u0026 uTotal \u0026 uMask );\n        if ( iMint == -1 )\n            continue;\n        // find an overlap and generate a cex\n        for ( k = 0; k \u003c w; k++ )\n        {\n            iMint = Abc_Tt6FirstBit( ((pPat[k] | pPat[w]) \u003e\u003e iShift) \u0026 (pPat[k] | pPat[w]) \u0026 uMask );\n            if ( iMint == -1 )\n                continue;\n            CofA = Rsb_DecCofactor( g, nGs, k, iMint );\n            CofB = Rsb_DecCofactor( g, nGs, w, iMint );\n            if ( (~f[k] \u0026 CofA) \u0026\u0026 (f[w] \u0026 CofB) )\n            {\n                *pCexA = k * 64 + Abc_Tt6FirstBit( ~f[k] \u0026 CofA );\n                *pCexB = w * 64 + Abc_Tt6FirstBit(  f[w] \u0026 CofB );\n            }\n            else\n            {\n                assert( (f[k] \u0026 CofA) \u0026\u0026 (~f[w] \u0026 CofB) );\n                *pCexA = k * 64 + Abc_Tt6FirstBit(  f[k] \u0026 CofA );\n                *pCexB = w * 64 + Abc_Tt6FirstBit( ~f[w] \u0026 CofB );\n            }\n            return 0;\n        }\n    }\n    return uTotal;\n}",
+      "Draft": "func Rsb_DecCheck(nVars int32, f *word, g **word, nGs int32, pPat *uint32, pCexA *int32, pCexB *int32) uint32 {\n    var CofA, CofB word;\n    var nWords int32  = Abc_TtWordNum( nVars );\n    var w int32;\n    var k int32;\n    var iMint int32;\n    var iShift int32 = ( 1 \u003c\u003c nGs );\n    var uMask uint32  = (~uint32(0)) \u003e\u003e (32-iShift);\n    var uTotal uint32;\n    assert(nGs \u003e 0 \u0026\u0026 nGs \u003c 5, \"nGs \u003e 0 \u0026\u0026 nGs \u003c 5\");\n    for  w = 0; w \u003c nWords; w++  {\n        // generate decomposition pattern\n        if nGs == 1 {\n            pPat[w] = Rsb_DecTry2( ~(word)0, g[0][w], f[w] );\n        } else if nGs == 2 {\n            pPat[w] = Rsb_DecTry3( ~(word)0, g[0][w], g[1][w], f[w] );\n        } else if nGs == 3 {\n            pPat[w] = Rsb_DecTry4( ~(word)0, g[0][w], g[1][w], g[2][w], f[w] );\n        } else if nGs == 4 {\n            pPat[w] = Rsb_DecTry5( ~(word)0, g[0][w], g[1][w], g[2][w], g[3][w], f[w] ); }\n        // check if it is consistent\n        iMint = Abc_Tt6FirstBit( (pPat[w] \u003e\u003e iShift) \u0026 pPat[w] \u0026 uMask );\n        if iMint \u003e= 0 {   // generate a cex\n            CofA = Rsb_DecCofactor( g, nGs, w, iMint );\n            assert((~f[w] \u0026 CofA) \u0026\u0026 (f[w] \u0026 CofA), \"(~f[w] \u0026 CofA) \u0026\u0026 (f[w] \u0026 CofA)\");\n            *pCexA = w * 64 + Abc_Tt6FirstBit( ~f[w] \u0026 CofA );\n            *pCexB = w * 64 + Abc_Tt6FirstBit(  f[w] \u0026 CofA );\n            return 0;\n        }\n        uTotal |= pPat[w];\n        if w == 0 {\n            continue; }\n        // check if it is consistent with other patterns seen so far\n        iMint = Abc_Tt6FirstBit( (uTotal \u003e\u003e iShift) \u0026 uTotal \u0026 uMask );\n        if iMint == -1 {\n            continue; }\n        // find an overlap and generate a cex\n        for  k = 0; k \u003c w; k++  {\n            iMint = Abc_Tt6FirstBit( ((pPat[k] | pPat[w]) \u003e\u003e iShift) \u0026 (pPat[k] | pPat[w]) \u0026 uMask );\n            if iMint == -1 {\n                continue; }\n            CofA = Rsb_DecCofactor( g, nGs, k, iMint );\n            CofB = Rsb_DecCofactor( g, nGs, w, iMint );\n            if (~f[k] \u0026 CofA) \u0026\u0026 (f[w] \u0026 CofB) {\n                *pCexA = k * 64 + Abc_Tt6FirstBit( ~f[k] \u0026 CofA );\n                *pCexB = w * 64 + Abc_Tt6FirstBit(  f[w] \u0026 CofB );\n            \n            } else {\n                assert((f[k] \u0026 CofA) \u0026\u0026 (~f[w] \u0026 CofB), \"(f[k] \u0026 CofA) \u0026\u0026 (~f[w] \u0026 CofB)\");\n                *pCexA = k * 64 + Abc_Tt6FirstBit(  f[k] \u0026 CofA );\n                *pCexB = w * 64 + Abc_Tt6FirstBit( ~f[w] \u0026 CofB );\n            }\n            return 0;\n        }\n    }\n    return uTotal;\n}"
+    },
+    {
+      "Name": "Rsb_DecPrintTable",
+      "Start": 6310,
+      "End": 8653,
+      "BodyStart": 6392,
+      "Original": "void Rsb_DecPrintTable( word * pCexes, int nGs, int nGsAll, Vec_Int_t * vTries ) \n{\n    int pCands[16], nCands;\n    int i, c, Cand, iStart = 0;\n    if ( Vec_IntSize(vTries) == 0 )\n        return;\n\n//    printf( \"\\n\" );\n    for ( i = 0; i \u003c 4; i++ )\n        printf( \"    \" );\n    printf( \"  \" );\n    for ( i = 0; i \u003c nGs; i++ )\n        printf( \"%d\", (i % 100) / 10 );\n    printf( \"|\" );\n    for ( ; i \u003c nGsAll; i++ )\n        printf( \"%d\", (i % 100) / 10 );\n    printf( \"\\n\" );\n\n    for ( i = 0; i \u003c 4; i++ )\n        printf( \"    \" );\n    printf( \"  \" );\n    for ( i = 0; i \u003c nGs; i++ )\n        printf( \"%d\", i % 10 );\n    printf( \"|\" );\n    for ( ; i \u003c nGsAll; i++ )\n        printf( \"%d\", i % 10 );\n    printf( \"\\n\" );\n    printf( \"\\n\" );\n\n    for ( c = 0; iStart \u003c Vec_IntSize(vTries); c++ )\n    {\n        // collect candidates\n        for ( i = 0; i \u003c 4; i++ )\n            pCands[i] = -1;\n        nCands = 0;\n        Vec_IntForEachEntryStart( vTries, Cand, i, iStart )\n            if ( Cand == -1 )\n            {\n                iStart = i + 1;\n                break;\n            }\n            else\n                pCands[nCands++] = Cand;\n        assert( nCands \u003c= 4 );\n        // print them\n        for ( i = 0; i \u003c 4; i++ )\n            if ( pCands[i] \u003e= 0 )\n                printf( \"%4d\", pCands[i] );\n            else\n                printf( \"    \" );\n        // print the bit-string\n        printf( \"  \" );\n        for ( i = 0; i \u003c nGs; i++ )\n            printf( \"%c\", Abc_TtGetBit( pCexes + i, c ) ? '.' : '+' );\n        printf( \"|\" );\n        for ( ; i \u003c nGsAll; i++ )\n            printf( \"%c\", Abc_TtGetBit( pCexes + i, c ) ? '.' : '+' );\n        printf( \"  %3d\\n\", c );\n    }\n    printf( \"\\n\" );\n\n    // write the number of ones\n    for ( i = 0; i \u003c 4; i++ )\n        printf( \"    \" );\n    printf( \"  \" );\n    for ( i = 0; i \u003c nGs; i++ )\n        printf( \"%d\", Abc_TtCountOnes(pCexes[i]) / 10 );\n    printf( \"|\" );\n    for ( ; i \u003c nGsAll; i++ )\n        printf( \"%d\", Abc_TtCountOnes(pCexes[i]) / 10 );\n    printf( \"\\n\" );\n\n    for ( i = 0; i \u003c 4; i++ )\n        printf( \"    \" );\n    printf( \"  \" );\n    for ( i = 0; i \u003c nGs; i++ )\n        printf( \"%d\", Abc_TtCountOnes(pCexes[i]) % 10 );\n    printf( \"|\" );\n    for ( ; i \u003c nGsAll; i++ )\n        printf( \"%d\", Abc_TtCountOnes(pCexes[i]) % 10 );\n    printf( \"\\n\" );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Rsb_DecPrintTable(pCexes *word, nGs int32, nGsAll int32, vTries *Vec_Int_t) {\n    var pCands [16]int32;\n    var nCands int32;\n    var i, c, Cand, iStart int32;\n    if Vec_IntSize(vTries) == 0 {\n        return; }\n\n//    printf( \"\\n\" );\n    for  i = 0; i \u003c 4; i++  {\n        fmt.Printf(\"    \");\n    }\n    fmt.Printf(\"  \");\n    for  i = 0; i \u003c nGs; i++  {\n        fmt.Printf(\"%d\", (i % 100) / 10);\n    }\n    fmt.Printf(\"|\");\n    for  ; i \u003c nGsAll; i++  {\n        fmt.Printf(\"%d\", (i % 100) / 10);\n    }\n    fmt.Printf(\"\\n\");\n\n    for  i = 0; i \u003c 4; i++  {\n        fmt.Printf(\"    \");\n    }\n    fmt.Printf(\"  \");\n    for  i = 0; i \u003c nGs; i++  {\n        fmt.Printf(\"%d\", i % 10);\n    }\n    fmt.Printf(\"|\");\n    for  ; i \u003c nGsAll; i++  {\n        fmt.Printf(\"%d\", i % 10);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"\\n\");\n\n    for  c = 0; iStart \u003c Vec_IntSize(vTries); c++  {\n        // collect candidates\n        for  i = 0; i \u003c 4; i++  {\n            pCands[i] = -1;\n        }\n        nCands = 0;\n        Vec_IntForEachEntryStart( vTries, Cand, i, iStart )\n            if Cand == -1 {\n                iStart = i + 1;\n                break;\n            \n            } else {\n                pCands[nCands++] = Cand; }\n        assert(nCands \u003c= 4, \"nCands \u003c= 4\");\n        // print them\n        for  i = 0; i \u003c 4; i++  {\n            if pCands[i] \u003e= 0 {\n                fmt.Printf(\"%4d\", pCands[i]);\n            } else {\n                fmt.Printf(\"    \"); }\n        }\n        // print the bit-string\n        fmt.Printf(\"  \");\n        for  i = 0; i \u003c nGs; i++  {\n            fmt.Printf(\"%c\", Abc_TtGetBit( pCexes + i, c ) ? '.' : '+');\n        }\n        fmt.Printf(\"|\");\n        for  ; i \u003c nGsAll; i++  {\n            fmt.Printf(\"%c\", Abc_TtGetBit( pCexes + i, c ) ? '.' : '+');\n        }\n        fmt.Printf(\"  %3d\\n\", c);\n    }\n    fmt.Printf(\"\\n\");\n\n    // write the number of ones\n    for  i = 0; i \u003c 4; i++  {\n        fmt.Printf(\"    \");\n    }\n    fmt.Printf(\"  \");\n    for  i = 0; i \u003c nGs; i++  {\n        fmt.Printf(\"%d\", Abc_TtCountOnes(pCexes[i]) / 10);\n    }\n    fmt.Printf(\"|\");\n    for  ; i \u003c nGsAll; i++  {\n        fmt.Printf(\"%d\", Abc_TtCountOnes(pCexes[i]) / 10);\n    }\n    fmt.Printf(\"\\n\");\n\n    for  i = 0; i \u003c 4; i++  {\n        fmt.Printf(\"    \");\n    }\n    fmt.Printf(\"  \");\n    for  i = 0; i \u003c nGs; i++  {\n        fmt.Printf(\"%d\", Abc_TtCountOnes(pCexes[i]) % 10);\n    }\n    fmt.Printf(\"|\");\n    for  ; i \u003c nGsAll; i++  {\n        fmt.Printf(\"%d\", Abc_TtCountOnes(pCexes[i]) % 10);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Rsb_DecInitCexes",
+      "Start": 9000,
+      "End": 10185,
+      "BodyStart": 9112,
+      "Original": "int Rsb_DecInitCexes( int nVars, word * f, word ** g, int nGs, int nGsAll, word * pCexes, Vec_Int_t * vTries ) \n{\n    int nWords = Abc_TtWordNum( nVars );\n    int ValueB = Abc_TtGetBit( f, 0 );\n    int ValueE = Abc_TtGetBit( f, 64*nWords-1 );\n    int iCexT0, iCexT1, iCexF0, iCexF1;\n\n    iCexT0 = ValueB  ? 0           : Abc_TtFindFirstBit( f, nVars );\n    iCexT1 = ValueE  ? 64*nWords-1 : Abc_TtFindLastBit( f, nVars );\n\n    iCexF0 = !ValueB ? 0           : Abc_TtFindFirstZero( f, nVars );\n    iCexF1 = !ValueE ? 64*nWords-1 : Abc_TtFindLastZero( f, nVars );\n\n    assert( !Rsb_DecTryCex( f, iCexT0, iCexF0 ) );\n    assert( !Rsb_DecTryCex( f, iCexT0, iCexF1 ) );\n    assert( !Rsb_DecTryCex( f, iCexT1, iCexF0 ) );\n    assert( !Rsb_DecTryCex( f, iCexT1, iCexF1 ) );\n\n    Rsb_DecRecordCex( g, nGsAll, iCexT0, iCexF0, pCexes, 0 );\n    Rsb_DecRecordCex( g, nGsAll, iCexT0, iCexF1, pCexes, 1 );\n    Rsb_DecRecordCex( g, nGsAll, iCexT1, iCexF0, pCexes, 2 );\n    Rsb_DecRecordCex( g, nGsAll, iCexT1, iCexF1, pCexes, 3 );\n\n    if ( vTries )\n    {\n    Vec_IntPush( vTries, -1 );\n    Vec_IntPush( vTries, -1 );\n    Vec_IntPush( vTries, -1 );\n    Vec_IntPush( vTries, -1 );\n    }\n    return 4;\n}",
+      "Draft": "func Rsb_DecInitCexes(nVars int32, f *word, g **word, nGs int32, nGsAll int32, pCexes *word, vTries *Vec_Int_t) int32 {\n    var nWords int32  = Abc_TtWordNum( nVars );\n    var ValueB int32  = Abc_TtGetBit( f, 0 );\n    var ValueE int32  = Abc_TtGetBit( f, 64*nWords-1 );\n    var iCexT0, iCexT1, iCexF0, iCexF1 int32;\n\n    if ValueB != 0 {\n        iCexT0 = 0;\n    } else {\n        iCexT0 = Abc_TtFindFirstBit( f, nVars );\n    }\n    if ValueE != 0 {\n        iCexT1 = 64*nWords-1;\n    } else {\n        iCexT1 = Abc_TtFindLastBit( f, nVars );\n    }\n\n    if !(ValueB != 0) {\n        iCexF0 = 0;\n    } else {\n        iCexF0 = Abc_TtFindFirstZero( f, nVars );\n    }\n    if !(ValueE != 0) {\n        iCexF1 = 64*nWords-1;\n    } else {\n        iCexF1 = Abc_TtFindLastZero( f, nVars );\n    }\n\n    assert(!(Rsb_DecTryCex( f, iCexT0, iCexF0 ) != 0), \"!Rsb_DecTryCex( f, iCexT0, iCexF0 )\");\n    assert(!(Rsb_DecTryCex( f, iCexT0, iCexF1 ) != 0), \"!Rsb_DecTryCex( f, iCexT0, iCexF1 )\");\n    assert(!(Rsb_DecTryCex( f, iCexT1, iCexF0 ) != 0), \"!Rsb_DecTryCex( f, iCexT1, iCexF0 )\");\n    assert(!(Rsb_DecTryCex( f, iCexT1, iCexF1 ) != 0), \"!Rsb_DecTryCex( f, iCexT1, iCexF1 )\");\n\n    Rsb_DecRecordCex( g, nGsAll, iCexT0, iCexF0, pCexes, 0 );\n    Rsb_DecRecordCex( g, nGsAll, iCexT0, iCexF1, pCexes, 1 );\n    Rsb_DecRecordCex( g, nGsAll, iCexT1, iCexF0, pCexes, 2 );\n    Rsb_DecRecordCex( g, nGsAll, iCexT1, iCexF1, pCexes, 3 );\n\n    if vTries != nil {\n    Vec_IntPush( vTries, -1 );\n    Vec_IntPush( vTries, -1 );\n    Vec_IntPush( vTries, -1 );\n    Vec_IntPush( vTries, -1 );\n    }\n    return 4;\n}"
+    },
+    {
+      "Name": "Rsb_DecPerformInt",
+      "Start": 10563,
+      "End": 16428,
+      "BodyStart": 10675,
+      "Original": "unsigned Rsb_DecPerformInt( Rsb_Man_t * p, int nVars, word * f, word ** g, int nGs, int nGsAll, int fFindAll ) \n{\n    word * pCexes = Vec_WrdArray(p-\u003evCexes);\n    unsigned * pPat = (unsigned *)Vec_IntArray(p-\u003evDecPats);\n    /*\n    The following filtering hueristic can be used:\n    after the first round (if there is more than 5 cexes, \n    remove all the divisors, except fanins of the node\n    This should lead to a speadup without sacrifying quality.\n\n    Another idea is to precompute several counter-examples\n    like the first and last 0 and 1 mints of the function\n    which yields 4 cexes.\n    */\n\n    word * pDivs[16];\n    unsigned uTruth = 0;\n    int i, k, j, n, iCexA, iCexB, nCexes = 0;\n    memset( pCexes, 0, sizeof(word) * nGsAll );  \n    Vec_IntClear( p-\u003evTries );\n    // populate the counter-examples with the three most obvious\n//    nCexes = Rsb_DecInitCexes( nVars, f, g, nGs, nGsAll, pCexes, vTries );\n    // start by checking each function\n    p-\u003evFanins-\u003enSize = 1;\n    for ( i = 0; i \u003c nGs; i++ )\n    {\n        if ( pCexes[i] )\n            continue;\n        pDivs[0] = g[i];  p-\u003evFanins-\u003epArray[0] = i;\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p-\u003evFanins), pPat, \u0026iCexA, \u0026iCexB );\n        if ( uTruth )\n        {\n            if ( fFindAll )\n            {\n                uTruth = (unsigned)Abc_Tt6Stretch( (word)uTruth, 1 );\n                Kit_DsdPrintFromTruth( \u0026uTruth, 1 ); printf( \"   \" );\n                Vec_IntPrint(p-\u003evFanins);\n                continue;\n            }\n            else\n                return uTruth;\n        }\n        if ( nCexes == 64 )\n            return 0;\n        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p-\u003evFanins), iCexA, iCexB );\n        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );\n        if ( !p-\u003efVerbose )\n            continue;\n        Vec_IntPush( p-\u003evTries, i );\n        Vec_IntPush( p-\u003evTries, -1 );\n    }\n    if ( p-\u003enDecMax == 1 )\n        return 0;\n    // continue by checking pairs\n    p-\u003evFanins-\u003enSize = 2;\n    for ( i = 1; i \u003c nGs; i++ )\n    for ( k = 0; k \u003c i; k++ )\n    {\n        if ( pCexes[i] \u0026 pCexes[k] )\n            continue;\n        pDivs[0] = g[i];  p-\u003evFanins-\u003epArray[0] = i;\n        pDivs[1] = g[k];  p-\u003evFanins-\u003epArray[1] = k;\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p-\u003evFanins), pPat, \u0026iCexA, \u0026iCexB );\n        if ( uTruth )\n        {\n            if ( fFindAll )\n            {\n                uTruth = (unsigned)Abc_Tt6Stretch( (word)uTruth, 2 );\n                Kit_DsdPrintFromTruth( \u0026uTruth, 2 ); printf( \"   \" );\n                Vec_IntPrint(p-\u003evFanins);\n                continue;\n            }\n            else\n                return uTruth;\n        }\n        if ( nCexes == 64 )\n            return 0;\n        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p-\u003evFanins), iCexA, iCexB );\n        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );\n        if ( !p-\u003efVerbose )\n            continue;\n        Vec_IntPush( p-\u003evTries, i );\n        Vec_IntPush( p-\u003evTries, k );\n        Vec_IntPush( p-\u003evTries, -1 );\n    }\n    if ( p-\u003enDecMax == 2 )\n        return 0;\n    // continue by checking triples\n    p-\u003evFanins-\u003enSize = 3;\n    for ( i = 2; i \u003c nGs; i++ )\n    for ( k = 1; k \u003c i; k++ )\n    for ( j = 0; j \u003c k; j++ )\n    {\n        if ( pCexes[i] \u0026 pCexes[k] \u0026 pCexes[j] )\n            continue;\n        pDivs[0] = g[i];  p-\u003evFanins-\u003epArray[0] = i;\n        pDivs[1] = g[k];  p-\u003evFanins-\u003epArray[1] = k;\n        pDivs[2] = g[j];  p-\u003evFanins-\u003epArray[2] = j;\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p-\u003evFanins), pPat, \u0026iCexA, \u0026iCexB );\n        if ( uTruth )\n        {\n            if ( fFindAll )\n            {\n                uTruth = (unsigned)Abc_Tt6Stretch( (word)uTruth, 3 );\n                Kit_DsdPrintFromTruth( \u0026uTruth, 3 ); printf( \"   \" );\n                Vec_IntPrint(p-\u003evFanins);\n                continue;\n            }\n            else\n                return uTruth;\n        }\n        if ( nCexes == 64 )\n            return 0;\n        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p-\u003evFanins), iCexA, iCexB );\n        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );\n        if ( !p-\u003efVerbose )\n            continue;\n        Vec_IntPush( p-\u003evTries, i );\n        Vec_IntPush( p-\u003evTries, k );\n        Vec_IntPush( p-\u003evTries, j );\n        Vec_IntPush( p-\u003evTries, -1 );\n    }\n    if ( p-\u003enDecMax == 3 )\n        return 0;\n    // continue by checking quadras\n    p-\u003evFanins-\u003enSize = 4;\n    for ( i = 3; i \u003c nGs; i++ )\n    for ( k = 2; k \u003c i; k++ )\n    for ( j = 1; j \u003c k; j++ )\n    for ( n = 0; n \u003c j; n++ )\n    {\n        if ( pCexes[i] \u0026 pCexes[k] \u0026 pCexes[j] \u0026 pCexes[n] )\n            continue;\n        pDivs[0] = g[i];  p-\u003evFanins-\u003epArray[0] = i;\n        pDivs[1] = g[k];  p-\u003evFanins-\u003epArray[1] = k;\n        pDivs[2] = g[j];  p-\u003evFanins-\u003epArray[2] = j;\n        pDivs[3] = g[n];  p-\u003evFanins-\u003epArray[3] = n;\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p-\u003evFanins), pPat, \u0026iCexA, \u0026iCexB );\n        if ( uTruth )\n        {\n            if ( fFindAll )\n            {\n                uTruth = (unsigned)Abc_Tt6Stretch( (word)uTruth, 4 );\n                Kit_DsdPrintFromTruth( \u0026uTruth, 4 ); printf( \"   \" );\n                Vec_IntPrint(p-\u003evFanins);\n                continue;\n            }\n            else\n                return uTruth;\n        }\n        if ( nCexes == 64 )\n            return 0;\n        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p-\u003evFanins), iCexA, iCexB );\n        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );\n        if ( !p-\u003efVerbose )\n            continue;\n        Vec_IntPush( p-\u003evTries, i );\n        Vec_IntPush( p-\u003evTries, k );\n        Vec_IntPush( p-\u003evTries, j );\n        Vec_IntPush( p-\u003evTries, n );\n        Vec_IntPush( p-\u003evTries, -1 );\n    }\n//    printf( \"%d \", nCexes );\n    if ( p-\u003enDecMax == 4 )\n        return 0;\n    return 0;\n}",
+      "Draft": "func Rsb_DecPerformInt(p *Rsb_Man_t, nVars int32, f *word, g **word, nGs int32, nGsAll int32, fFindAll int32) uint32 {\n    var pCexes *word  = Vec_WrdArray(p.vCexes);\n    var pPat *uint32  = (unsigned *)Vec_IntArray(p.vDecPats);\n    /*\n    The following filtering hueristic can be used:\n    after the first round (if there is more than 5 cexes, \n    remove all the divisors, except fanins of the node\n    This should lead to a speadup without sacrifying quality.\n\n    Another idea is to precompute several counter-examples\n    like the first and last 0 and 1 mints of the function\n    which yields 4 cexes.\n    */\n\n    var pDivs [16]*word;\n    var uTruth uint32;\n    var i, k, j, n, iCexA, iCexB, nCexes int32;\n    memset( pCexes, 0, sizeof(word) * nGsAll );  \n    Vec_IntClear( p.vTries );\n    // populate the counter-examples with the three most obvious\n//    nCexes = Rsb_DecInitCexes( nVars, f, g, nGs, nGsAll, pCexes, vTries );\n    // start by checking each function\n    p.vFanins.nSize = 1;\n    for  i = 0; i \u003c nGs; i++  {\n        if pCexes[i] {\n            continue; }\n        pDivs[0] = g[i];  p.vFanins.pArray[0] = i;\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFanins), pPat, \u0026iCexA, \u0026iCexB );\n        if uTruth != 0 {\n            if fFindAll != 0 {\n                uTruth = uint32(Abc_Tt6Stretch( (word)uTruth, 1 ));\n                Kit_DsdPrintFromTruth( \u0026uTruth, 1 ); fmt.Printf(\"   \");\n                Vec_IntPrint(p.vFanins);\n                continue;\n            \n            } else {\n                return uTruth; }\n        }\n        if nCexes == 64 {\n            return 0; }\n        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p.vFanins), iCexA, iCexB );\n        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );\n        if !p.fVerbose {\n            continue; }\n        Vec_IntPush( p.vTries, i );\n        Vec_IntPush( p.vTries, -1 );\n    }\n    if p.nDecMax == 1 {\n        return 0; }\n    // continue by checking pairs\n    p.vFanins.nSize = 2;\n    for  i = 1; i \u003c nGs; i++  {\n    for  k = 0; k \u003c i; k++  {\n        if pCexes[i] \u0026 pCexes[k] {\n            continue; }\n        pDivs[0] = g[i];  p.vFanins.pArray[0] = i;\n        pDivs[1] = g[k];  p.vFanins.pArray[1] = k;\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFanins), pPat, \u0026iCexA, \u0026iCexB );\n        if uTruth != 0 {\n            if fFindAll != 0 {\n                uTruth = uint32(Abc_Tt6Stretch( (word)uTruth, 2 ));\n                Kit_DsdPrintFromTruth( \u0026uTruth, 2 ); fmt.Printf(\"   \");\n                Vec_IntPrint(p.vFanins);\n                continue;\n            \n            } else {\n                return uTruth; }\n        }\n        if nCexes == 64 {\n            return 0; }\n        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p.vFanins), iCexA, iCexB );\n        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );\n        if !p.fVerbose {\n            continue; }\n        Vec_IntPush( p.vTries, i );\n        Vec_IntPush( p.vTries, k );\n        Vec_IntPush( p.vTries, -1 );\n    }\n    }\n    if p.nDecMax == 2 {\n        return 0; }\n    // continue by checking triples\n    p.vFanins.nSize = 3;\n    for  i = 2; i \u003c nGs; i++  {\n    for  k = 1; k \u003c i; k++  {\n    for  j = 0; j \u003c k; j++  {\n        if pCexes[i] \u0026 pCexes[k] \u0026 pCexes[j] {\n            continue; }\n        pDivs[0] = g[i];  p.vFanins.pArray[0] = i;\n        pDivs[1] = g[k];  p.vFanins.pArray[1] = k;\n        pDivs[2] = g[j];  p.vFanins.pArray[2] = j;\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFanins), pPat, \u0026iCexA, \u0026iCexB );\n        if uTruth != 0 {\n            if fFindAll != 0 {\n                uTruth = uint32(Abc_Tt6Stretch( (word)uTruth, 3 ));\n                Kit_DsdPrintFromTruth( \u0026uTruth, 3 ); fmt.Printf(\"   \");\n                Vec_IntPrint(p.vFanins);\n                continue;\n            \n            } else {\n                return uTruth; }\n        }\n        if nCexes == 64 {\n            return 0; }\n        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p.vFanins), iCexA, iCexB );\n        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );\n        if !p.fVerbose {\n            continue; }\n        Vec_IntPush( p.vTries, i );\n        Vec_IntPush( p.vTries, k );\n        Vec_IntPush( p.vTries, j );\n        Vec_IntPush( p.vTries, -1 );\n    }\n    }\n    }\n    if p.nDecMax == 3 {\n        return 0; }\n    // continue by checking quadras\n    p.vFanins.nSize = 4;\n    for  i = 3; i \u003c nGs; i++  {\n    for  k = 2; k \u003c i; k++  {\n    for  j = 1; j \u003c k; j++  {\n    for  n = 0; n \u003c j; n++  {\n        if pCexes[i] \u0026 pCexes[k] \u0026 pCexes[j] \u0026 pCexes[n] {\n            continue; }\n        pDivs[0] = g[i];  p.vFanins.pArray[0] = i;\n        pDivs[1] = g[k];  p.vFanins.pArray[1] = k;\n        pDivs[2] = g[j];  p.vFanins.pArray[2] = j;\n        pDivs[3] = g[n];  p.vFanins.pArray[3] = n;\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFanins), pPat, \u0026iCexA, \u0026iCexB );\n        if uTruth != 0 {\n            if fFindAll != 0 {\n                uTruth = uint32(Abc_Tt6Stretch( (word)uTruth, 4 ));\n                Kit_DsdPrintFromTruth( \u0026uTruth, 4 ); fmt.Printf(\"   \");\n                Vec_IntPrint(p.vFanins);\n                continue;\n            \n            } else {\n                return uTruth; }\n        }\n        if nCexes == 64 {\n            return 0; }\n        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p.vFanins), iCexA, iCexB );\n        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );\n        if !p.fVerbose {\n            continue; }\n        Vec_IntPush( p.vTries, i );\n        Vec_IntPush( p.vTries, k );\n        Vec_IntPush( p.vTries, j );\n        Vec_IntPush( p.vTries, n );\n        Vec_IntPush( p.vTries, -1 );\n    }\n    }\n    }\n    }\n//    printf( \"%d \", nCexes );\n    if p.nDecMax == 4 {\n        return 0; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Rsb_DecPrintFunc",
+      "Start": 16695,
+      "End": 17911,
+      "BodyStart": 16798,
+      "Original": "void Rsb_DecPrintFunc( Rsb_Man_t * p, unsigned Truth4, word * f, word ** ppGs, int nGs, int nVarsAll )\n{\n    int nVars  =  Vec_IntSize(p-\u003evFanins);\n    word Copy  =  Truth4;\n    word wOn   =  Abc_Tt6Stretch( Copy \u003e\u003e (1 \u003c\u003c nVars), nVars );\n    word wOnDc = ~Abc_Tt6Stretch( Copy, nVars );\n    word wIsop =  Abc_Tt6Isop( wOn, wOnDc, nVars, NULL );\n    int i;\n\n    printf( \"Offset : \" );\n    Abc_TtPrintBinary( \u0026Copy, nVars );  //printf( \"\\n\" );\n    Copy \u003e\u003e= ((word)1 \u003c\u003c nVars);\n    printf( \"Onset  : \" );\n    Abc_TtPrintBinary( \u0026Copy, nVars );  //printf( \"\\n\" );\n    printf( \"Result : \" );\n    Abc_TtPrintBinary( \u0026wIsop, nVars ); //printf( \"\\n\" );\n    Kit_DsdPrintFromTruth( (unsigned *)\u0026wIsop, nVars );  printf( \"\\n\" );\n\n    // print functions\n    printf( \"Func   : \" );\n    Abc_TtPrintBinary( f, nVarsAll );   //printf( \"\\n\" );\n    Kit_DsdPrintFromTruth( (unsigned *)f, nVarsAll );    printf( \"\\n\" );\n    for ( i = 0; i \u003c nGs; i++ )\n    {\n        printf( \"Div%3d : \", i );\n        Kit_DsdPrintFromTruth( (unsigned *)ppGs[i], nVarsAll );  printf( \"\\n\" );\n    }\n    printf( \"Solution : \" );\n    for ( i = 0; i \u003c Vec_IntSize(p-\u003evFanins); i++ )\n        printf( \"%d \", Vec_IntEntry(p-\u003evFanins, i) );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Rsb_DecPrintFunc(p *Rsb_Man_t, Truth4 uint32, f *word, ppGs **word, nGs int32, nVarsAll int32) {\n    var nVars int32   =  Vec_IntSize(p.vFanins);\n    var Copy word   =  Truth4;\n    var wOn word    =  Abc_Tt6Stretch( Copy \u003e\u003e (1 \u003c\u003c nVars), nVars );\n    var wOnDc word  = ~Abc_Tt6Stretch( Copy, nVars );\n    var wIsop word  =  Abc_Tt6Isop( wOn, wOnDc, nVars, nil );\n    var i int32;\n\n    fmt.Printf(\"Offset : \");\n    Abc_TtPrintBinary( \u0026Copy, nVars );  //printf( \"\\n\" );\n    Copy \u003e\u003e= ((word)1 \u003c\u003c nVars);\n    fmt.Printf(\"Onset  : \");\n    Abc_TtPrintBinary( \u0026Copy, nVars );  //printf( \"\\n\" );\n    fmt.Printf(\"Result : \");\n    Abc_TtPrintBinary( \u0026wIsop, nVars ); //printf( \"\\n\" );\n    Kit_DsdPrintFromTruth( (unsigned *)\u0026wIsop, nVars );  fmt.Printf(\"\\n\");\n\n    // print functions\n    fmt.Printf(\"Func   : \");\n    Abc_TtPrintBinary( f, nVarsAll );   //printf( \"\\n\" );\n    Kit_DsdPrintFromTruth( (unsigned *)f, nVarsAll );    fmt.Printf(\"\\n\");\n    for  i = 0; i \u003c nGs; i++  {\n        fmt.Printf(\"Div%3d : \", i);\n        Kit_DsdPrintFromTruth( (unsigned *)ppGs[i], nVarsAll );  fmt.Printf(\"\\n\");\n    }\n    fmt.Printf(\"Solution : \");\n    for  i = 0; i \u003c Vec_IntSize(p.vFanins); i++  {\n        fmt.Printf(\"%d \", Vec_IntEntry(p.vFanins, i));\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Rsb_DecVerify",
+      "Start": 18178,
+      "End": 19585,
+      "BodyStart": 18301,
+      "Original": "int Rsb_DecVerify( Rsb_Man_t * p, int nVars, word * f, word ** g, int nGs, unsigned Truth4, word * pTemp1, word * pTemp2 )\n{\n    word * pFanins[16];\n    int b, m, Num, nSuppSize;\n    int nWords = Abc_TtWordNum(nVars);\n    Truth4 \u003e\u003e= (1 \u003c\u003c Vec_IntSize(p-\u003evFanins));\n    Truth4 = (unsigned)Abc_Tt6Stretch( (word)Truth4, Vec_IntSize(p-\u003evFanins) );\n//Kit_DsdPrintFromTruth( (unsigned *)\u0026Truth4, Vec_IntSize(p-\u003evFanins) );\n//printf( \"\\n\" );\n//    nSuppSize = Rsb_Word6SupportSize( Truth4 );\n//    assert( nSuppSize == Vec_IntSize(p-\u003evFanins) );\n    nSuppSize = Vec_IntSize(p-\u003evFanins);\n    // collect the fanins\n    Vec_IntForEachEntry( p-\u003evFanins, Num, b )\n    {\n        assert( Num \u003c nGs );\n        pFanins[b] = g[Num];\n    }\n    // create the or of ands\n    Abc_TtClear( pTemp1, nWords );\n    for ( m = 0; m \u003c (1\u003c\u003cnSuppSize); m++ )\n    {\n        if ( ((Truth4 \u003e\u003e m) \u0026 1) == 0 )\n            continue;\n        Abc_TtFill( pTemp2, nWords );\n        for ( b = 0; b \u003c nSuppSize; b++ )\n            if ( (m \u003e\u003e b) \u0026 1 )\n                Abc_TtAnd( pTemp2, pTemp2, pFanins[b], nWords, 0 );\n            else\n                Abc_TtSharp( pTemp2, pTemp2, pFanins[b], nWords );\n        Abc_TtOr( pTemp1, pTemp1, pTemp2, nWords );\n    }\n    // check the function\n    if ( !Abc_TtEqual( pTemp1, f, nWords ) )\n        printf( \"Verification failed.\\n\" );\n//    else\n//        printf( \"Verification passed.\\n\" );\n    return 1;\n}",
+      "Draft": "func Rsb_DecVerify(p *Rsb_Man_t, nVars int32, f *word, g **word, nGs int32, Truth4 uint32, pTemp1 *word, pTemp2 *word) int32 {\n    var pFanins [16]*word;\n    var b, m, Num, nSuppSize int32;\n    var nWords int32  = Abc_TtWordNum(nVars);\n    Truth4 \u003e\u003e= (1 \u003c\u003c Vec_IntSize(p.vFanins));\n    Truth4 = uint32(Abc_Tt6Stretch( (word)Truth4, Vec_IntSize(p.vFanins) ));\n//Kit_DsdPrintFromTruth( (unsigned *)\u0026Truth4, Vec_IntSize(p-\u003evFanins) );\n//printf( \"\\n\" );\n//    nSuppSize = Rsb_Word6SupportSize( Truth4 );\n//    assert( nSuppSize == Vec_IntSize(p-\u003evFanins) );\n    nSuppSize = Vec_IntSize(p.vFanins);\n    // collect the fanins\n    Vec_IntForEachEntry( p.vFanins, Num, b )\n    {\n        assert(Num \u003c nGs, \"Num \u003c nGs\");\n        pFanins[b] = g[Num];\n    }\n    // create the or of ands\n    Abc_TtClear( pTemp1, nWords );\n    for  m = 0; m \u003c (1\u003c\u003cnSuppSize); m++  {\n        if ((Truth4 \u003e\u003e m) \u0026 1) == 0 {\n            continue; }\n        Abc_TtFill( pTemp2, nWords );\n        for  b = 0; b \u003c nSuppSize; b++  {\n            if (m \u003e\u003e b) \u0026 1 {\n                Abc_TtAnd( pTemp2, pTemp2, pFanins[b], nWords, 0 );\n            } else {\n                Abc_TtSharp( pTemp2, pTemp2, pFanins[b], nWords ); }\n        }\n        Abc_TtOr( pTemp1, pTemp1, pTemp2, nWords );\n    }\n    // check the function\n    if !Abc_TtEqual( pTemp1, f, nWords ) {\n        fmt.Printf(\"Verification failed.\\n\"); }\n//    else\n//        printf( \"Verification passed.\\n\" );\n    return 1;\n}"
+    },
+    {
+      "Name": "Rsb_ManPerform",
+      "Start": 19963,
+      "End": 22238,
+      "BodyStart": 20073,
+      "Original": "unsigned Rsb_ManPerform( Rsb_Man_t * p, int nVars, word * f, word ** g, int nGs, int nGsAll, int fVerbose0 ) \n{\n    word * pCexes = Vec_WrdArray(p-\u003evCexes);\n    unsigned * pPat = (unsigned *)Vec_IntArray(p-\u003evDecPats);\n    int fVerbose = 0;//(nGs \u003e 40);\n    Vec_Int_t * vTries = NULL;\n    unsigned uTruth;\n\n    // verify original decomposition\n    if ( Vec_IntSize(p-\u003evFaninsOld) \u0026\u0026 Vec_IntSize(p-\u003evFaninsOld) \u003c= 4 )\n    {\n        word * pDivs[8];\n        int i, Entry, iCexA, iCexB;\n        Vec_IntForEachEntry( p-\u003evFaninsOld, Entry, i )\n            pDivs[i] = g[Entry];\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p-\u003evFaninsOld), pPat, \u0026iCexA, \u0026iCexB );\n//        assert( uTruth != 0 );\n        if ( fVerbose )\n        {\n            printf( \"Verified orig decomp with %d vars {\", Vec_IntSize(p-\u003evFaninsOld) );\n            Vec_IntForEachEntry( p-\u003evFaninsOld, Entry, i )\n                printf( \" %d\", Entry );\n            printf( \" }\\n\" );\n        }\n        if ( uTruth )\n        {\n//            if ( fVerbose )\n//                Rsb_DecPrintFunc( p, uTruth );\n        }\n        else \n        {\n            printf( \"Verified orig decomp with %d vars {\", Vec_IntSize(p-\u003evFaninsOld) );\n            Vec_IntForEachEntry( p-\u003evFaninsOld, Entry, i )\n                printf( \" %d\", Entry );\n            printf( \" }\\n\" );\n            printf( \"Verification FAILED.\\n\" );\n        }\n    }\n    // start tries\nif ( fVerbose )\nvTries = Vec_IntAlloc( 100 );\n    assert( nGs \u003c nGsAll );\n    uTruth = Rsb_DecPerformInt( p, nVars, f, g, nGs, nGsAll, 0 );\n\n    if ( uTruth )\n    {\n        if ( fVerbose )\n        {\n            int i, Entry;\n            printf( \"Found decomp with %d vars {\", Vec_IntSize(p-\u003evFanins) );\n            Vec_IntForEachEntry( p-\u003evFanins, Entry, i )\n                printf( \" %d\", Entry );\n            printf( \" }\\n\" );\n//            Rsb_DecPrintFunc( p, uTruth );\n//            Rsb_DecVerify( nVars, f, g, nGs, p-\u003evFanins, uTruth, g[nGsAll], g[nGsAll+1] );\n        }\n    }\n    else \n    {\n        Vec_IntShrink( p-\u003evFanins, 0 );\n        if ( fVerbose )\n        printf( \"Did not find decomposition with 4 variables.\\n\" );\n    }\n\nif ( fVerbose )\nRsb_DecPrintTable( pCexes, nGs, nGsAll, vTries );\nif ( fVerbose )\nVec_IntFree( vTries );\n    return uTruth;\n}",
+      "Draft": "func Rsb_ManPerform(p *Rsb_Man_t, nVars int32, f *word, g **word, nGs int32, nGsAll int32, fVerbose0 int32) uint32 {\n    var pCexes *word  = Vec_WrdArray(p.vCexes);\n    var pPat *uint32  = (unsigned *)Vec_IntArray(p.vDecPats);\n    var fVerbose int32;//(nGs \u003e 40);\n    var vTries *Vec_Int_t  = nil;\n    var uTruth uint32;\n\n    // verify original decomposition\n    if Vec_IntSize(p.vFaninsOld) \u0026\u0026 Vec_IntSize(p.vFaninsOld) \u003c= 4 {\n        var pDivs [8]*word;\n        var i, Entry, iCexA, iCexB int32;\n        Vec_IntForEachEntry( p.vFaninsOld, Entry, i )\n            pDivs[i] = g[Entry];\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFaninsOld), pPat, \u0026iCexA, \u0026iCexB );\n//        assert( uTruth != 0 );\n        if fVerbose != 0 {\n            fmt.Printf(\"Verified orig decomp with %d vars {\", Vec_IntSize(p.vFaninsOld));\n            Vec_IntForEachEntry( p.vFaninsOld, Entry, i )\n                fmt.Printf(\" %d\", Entry);\n            fmt.Printf(\" }\\n\");\n        }\n        if uTruth != 0 {\n//            if ( fVerbose )\n//                Rsb_DecPrintFunc( p, uTruth );\n        \n        } else {\n            fmt.Printf(\"Verified orig decomp with %d vars {\", Vec_IntSize(p.vFaninsOld));\n            Vec_IntForEachEntry( p.vFaninsOld, Entry, i )\n                fmt.Printf(\" %d\", Entry);\n            fmt.Printf(\" }\\n\");\n            fmt.Printf(\"Verification FAILED.\\n\");\n        }\n    }\n    // start tries\nif fVerbose != 0 {\nvTries = Vec_IntAlloc( 100 ); }\n    assert(nGs \u003c nGsAll, \"nGs \u003c nGsAll\");\n    uTruth = Rsb_DecPerformInt( p, nVars, f, g, nGs, nGsAll, 0 );\n\n    if uTruth != 0 {\n        if fVerbose != 0 {\n            var i, Entry int32;\n            fmt.Printf(\"Found decomp with %d vars {\", Vec_IntSize(p.vFanins));\n            Vec_IntForEachEntry( p.vFanins, Entry, i )\n                fmt.Printf(\" %d\", Entry);\n            fmt.Printf(\" }\\n\");\n//            Rsb_DecPrintFunc( p, uTruth );\n//            Rsb_DecVerify( nVars, f, g, nGs, p-\u003evFanins, uTruth, g[nGsAll], g[nGsAll+1] );\n        }\n    \n    } else {\n        Vec_IntShrink( p.vFanins, 0 );\n        if fVerbose != 0 {\n        fmt.Printf(\"Did not find decomposition with 4 variables.\\n\"); }\n    }\n\nif fVerbose != 0 {\nRsb_DecPrintTable( pCexes, nGs, nGsAll, vTries ); }\nif fVerbose != 0 {\nVec_IntFree( vTries ); }\n    return uTruth;\n}"
+    },
+    {
+      "Name": "Rsb_ManPerformResub6",
+      "Start": 22474,
+      "End": 23311,
+      "BodyStart": 22615,
+      "Original": "int Rsb_ManPerformResub6( Rsb_Man_t * p, int nVarsAll, word uTruth, Vec_Wrd_t * vDivTruths, word * puTruth0, word * puTruth1, int fVerbose )\n{\n    word * pGs[200];\n    unsigned uTruthRes;\n    int i, nVars, nGs = Vec_WrdSize(vDivTruths);\n    assert( nGs \u003c 200 );\n    for ( i = 0; i \u003c nGs; i++ )\n        pGs[i] = Vec_WrdEntryP(vDivTruths,i);\n    uTruthRes = Rsb_DecPerformInt( p, nVarsAll, \u0026uTruth, pGs, nGs, nGs, 0 );\n    if ( uTruthRes == 0 )\n        return 0;\n\n    if ( fVerbose )\n        Rsb_DecPrintFunc( p, uTruthRes, \u0026uTruth, pGs, nGs, nVarsAll );\n    if ( fVerbose )\n        Rsb_DecPrintTable( Vec_WrdArray(p-\u003evCexes), nGs, nGs, p-\u003evTries );\n\n    nVars = Vec_IntSize(p-\u003evFanins);\n    *puTruth0 = Abc_Tt6Stretch( uTruthRes,                 nVars );\n    *puTruth1 = Abc_Tt6Stretch( uTruthRes \u003e\u003e (1 \u003c\u003c nVars), nVars );\n    return 1;\n}",
+      "Draft": "func Rsb_ManPerformResub6(p *Rsb_Man_t, nVarsAll int32, uTruth word, vDivTruths *Vec_Wrd_t, puTruth0 *word, puTruth1 *word, fVerbose int32) int32 {\n    var pGs [200]*word;\n    var uTruthRes uint32;\n    var i int32;\n    var nVars int32;\n    var nGs int32 = Vec_WrdSize(vDivTruths);\n    assert(nGs \u003c 200, \"nGs \u003c 200\");\n    for  i = 0; i \u003c nGs; i++  {\n        pGs[i] = Vec_WrdEntryP(vDivTruths,i);\n    }\n    uTruthRes = Rsb_DecPerformInt( p, nVarsAll, \u0026uTruth, pGs, nGs, nGs, 0 );\n    if uTruthRes == 0 {\n        return 0; }\n\n    if fVerbose != 0 {\n        Rsb_DecPrintFunc( p, uTruthRes, \u0026uTruth, pGs, nGs, nVarsAll ); }\n    if fVerbose != 0 {\n        Rsb_DecPrintTable( Vec_WrdArray(p.vCexes), nGs, nGs, p.vTries ); }\n\n    nVars = Vec_IntSize(p.vFanins);\n    *puTruth0 = Abc_Tt6Stretch( uTruthRes,                 nVars );\n    *puTruth1 = Abc_Tt6Stretch( uTruthRes \u003e\u003e (1 \u003c\u003c nVars), nVars );\n    return 1;\n}"
+    },
+    {
+      "Name": "Rsb_ManPerformResub6Test",
+      "Start": 23547,
+      "End": 24450,
+      "BodyStart": 23579,
+      "Original": "void Rsb_ManPerformResub6Test()\n{\n    Rsb_Man_t * p;\n    Vec_Wrd_t * vDivTruths;\n    int RetValue;\n    word a = s_Truths6[0];\n    word b = s_Truths6[1];\n    word c = s_Truths6[2];\n    word d = s_Truths6[3];\n    word e = s_Truths6[4];\n    word f = s_Truths6[5];\n    word ab = a \u0026 b;\n    word cd = c \u0026 d;\n    word ef = e \u0026 f;\n    word F = ab | cd | ef;\n    word uTruth0, uTruth1;\n\n    vDivTruths = Vec_WrdAlloc( 100 );\n    Vec_WrdPush( vDivTruths, a );\n    Vec_WrdPush( vDivTruths, b );\n    Vec_WrdPush( vDivTruths, c );\n    Vec_WrdPush( vDivTruths, d );\n    Vec_WrdPush( vDivTruths, e );\n    Vec_WrdPush( vDivTruths, f );\n    Vec_WrdPush( vDivTruths, ab );\n    Vec_WrdPush( vDivTruths, cd );\n    Vec_WrdPush( vDivTruths, ef );\n\n    p = Rsb_ManAlloc( 6, 64, 4, 1 );\n\n    RetValue = Rsb_ManPerformResub6( p, 6, F, vDivTruths, \u0026uTruth0, \u0026uTruth1, 1 );\n\n    Rsb_ManFree( p );\n    Vec_WrdFree( vDivTruths );\n}",
+      "Draft": "func Rsb_ManPerformResub6Test() {\n    var p *Rsb_Man_t;\n    var vDivTruths *Vec_Wrd_t;\n    var RetValue int32;\n    var a word  = s_Truths6[0];\n    var b word  = s_Truths6[1];\n    var c word  = s_Truths6[2];\n    var d word  = s_Truths6[3];\n    var e word  = s_Truths6[4];\n    var f word  = s_Truths6[5];\n    var ab word  = a \u0026 b;\n    var cd word  = c \u0026 d;\n    var ef word  = e \u0026 f;\n    var F word  = ab | cd | ef;\n    var uTruth0, uTruth1 word;\n\n    vDivTruths = Vec_WrdAlloc( 100 );\n    Vec_WrdPush( vDivTruths, a );\n    Vec_WrdPush( vDivTruths, b );\n    Vec_WrdPush( vDivTruths, c );\n    Vec_WrdPush( vDivTruths, d );\n    Vec_WrdPush( vDivTruths, e );\n    Vec_WrdPush( vDivTruths, f );\n    Vec_WrdPush( vDivTruths, ab );\n    Vec_WrdPush( vDivTruths, cd );\n    Vec_WrdPush( vDivTruths, ef );\n\n    p = Rsb_ManAlloc( 6, 64, 4, 1 );\n\n    RetValue = Rsb_ManPerformResub6( p, 6, F, vDivTruths, \u0026uTruth0, \u0026uTruth1, 1 );\n\n    Rsb_ManFree( p );\n    Vec_WrdFree( vDivTruths );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::mechanical::sizeof::11285",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11285,
+      "End": 11291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::pointer-cast::10744",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10744,
+      "End": 10756
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::pointer-cast::17368",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17368,
+      "End": 17380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::pointer-cast::17550",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17550,
+      "End": 17562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::pointer-cast::17699",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17699,
+      "End": 17711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::pointer-cast::20142",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20142,
+      "End": 20154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecTry0",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecTry0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1249,
+      "End": 1329
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecTry1",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecTry1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1330,
+      "End": 1446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecTry2",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecTry2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1447,
+      "End": 1580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecTry3",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecTry3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1581,
+      "End": 1731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecTry4",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecTry4",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1732,
+      "End": 1899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecTry5",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecTry5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1900,
+      "End": 2085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecTryCex",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecTryCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2321,
+      "End": 2452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecVerifyCex",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecVerifyCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2453,
+      "End": 2903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecRecordCex",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecRecordCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2904,
+      "End": 3182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::ternary::Rsb_DecCofactor",
+      "Category": "ternary-review",
+      "Symbol": "Rsb_DecCofactor",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3462,
+      "End": 3682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecCofactor",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecCofactor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3462,
+      "End": 3682
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecCheck",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3683,
+      "End": 6074
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::ternary::Rsb_DecPrintTable",
+      "Category": "ternary-review",
+      "Symbol": "Rsb_DecPrintTable",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6310,
+      "End": 8653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecPrintTable",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecPrintTable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6310,
+      "End": 8653
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecInitCexes",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecInitCexes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9000,
+      "End": 10185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecPerformInt",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecPerformInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10563,
+      "End": 16428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecPrintFunc",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecPrintFunc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16695,
+      "End": 17911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_DecVerify",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_DecVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18178,
+      "End": 19585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_ManPerform",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_ManPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19963,
+      "End": 22238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_ManPerformResub6",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_ManPerformResub6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22474,
+      "End": 23311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::Rsb_ManPerformResub6Test",
+      "Category": "semantic-review",
+      "Symbol": "Rsb_ManPerformResub6Test",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23547,
+      "End": 24450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 24697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::macro-inline::7228",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntryStart",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7228,
+      "End": 7279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::macro-inline::18789",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 18789,
+      "End": 18830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::macro-inline::20454",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20454,
+      "End": 20500
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::macro-inline::20802",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20802,
+      "End": 20848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::macro-inline::21175",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21175,
+      "End": 21221
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/rsb/rsbDec6.c::macro-inline::21690",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 21690,
+      "End": 21733
+    }
+  ],
+  "Draft": "package rsb\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [rsbDec6.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Truth-table-based resubstitution.]\n\n  Synopsis    [Implementation of the algorithm.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: rsbDec6.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"rsbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rsb_DecTry0(c word) uint32 {\n    return uint32((c != 0));\n}\nfunc Rsb_DecTry1(c word, f1 word) uint32 {\n    return (Rsb_DecTry0(c\u0026f1) \u003c\u003c 1) | Rsb_DecTry0(c\u0026~f1);\n}\nfunc Rsb_DecTry2(c word, f1 word, f2 word) uint32 {\n    return (Rsb_DecTry1(c\u0026f2, f1) \u003c\u003c 2) | Rsb_DecTry1(c\u0026~f2, f1);\n}\nfunc Rsb_DecTry3(c word, f1 word, f2 word, f3 word) uint32 {\n    return (Rsb_DecTry2(c\u0026f3, f1, f2) \u003c\u003c 4) | Rsb_DecTry2(c\u0026~f3, f1, f2);\n}\nfunc Rsb_DecTry4(c word, f1 word, f2 word, f3 word, f4 word) uint32 {\n    return (Rsb_DecTry3(c\u0026f4, f1, f2, f3) \u003c\u003c 8) | Rsb_DecTry3(c\u0026~f4, f1, f2, f3);\n}\nfunc Rsb_DecTry5(c word, f1 word, f2 word, f3 word, f4 word, f5 word) uint32 {\n    return (Rsb_DecTry4(c\u0026f5, f1, f2, f3, f4) \u003c\u003c 16) | Rsb_DecTry4(c\u0026~f5, f1, f2, f3, f4);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rsb_DecTryCex(g *word, iCexA int32, iCexB int32) int32 {\n    return Abc_TtGetBit(g, iCexA) == Abc_TtGetBit(g, iCexB);\n}\nfunc Rsb_DecVerifyCex(f *word, g **word, nGs int32, iCexA int32, iCexB int32) {\n    var i int32;\n    // f distinquished it\n    if Rsb_DecTryCex( f, iCexA, iCexB ) != 0 {\n        fmt.Printf(\"Verification of CEX has failed: f(A) == f(B)!!!\\n\"); }\n    // g do not distinguish it\n    for  i = 0; i \u003c nGs; i++  {\n        if !(Rsb_DecTryCex( g[i], iCexA, iCexB ) != 0) {\n            fmt.Printf(\"Verification of CEX has failed: g[%d](A) != g[%d](B)!!!\\n\", i, i); }\n    }\n}\nfunc Rsb_DecRecordCex(g **word, nGs int32, iCexA int32, iCexB int32, pCexes *word, nCexes int32) {\n    var i int32;\n    assert(nCexes \u003c 64, \"nCexes \u003c 64\");\n    for  i = 0; i \u003c nGs; i++  {\n        if Rsb_DecTryCex(g[i], iCexA, iCexB) != 0 {\n            Abc_TtSetBit( pCexes + i, nCexes ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks decomposability of f with divisors g.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rsb_DecCofactor(g **word, nGs int32, w int32, iMint int32) word {\n    var i int32;\n    var Cof word  = ~(word)0;\n    for  i = 0; i \u003c nGs; i++  {\n        Cof \u0026=  ((iMint \u003e\u003e i) \u0026 1) ? g[i][w] : ~g[i][w];\n    }\n    return Cof;\n}\nfunc Rsb_DecCheck(nVars int32, f *word, g **word, nGs int32, pPat *uint32, pCexA *int32, pCexB *int32) uint32 {\n    var CofA, CofB word;\n    var nWords int32  = Abc_TtWordNum( nVars );\n    var w int32;\n    var k int32;\n    var iMint int32;\n    var iShift int32 = ( 1 \u003c\u003c nGs );\n    var uMask uint32  = (~uint32(0)) \u003e\u003e (32-iShift);\n    var uTotal uint32;\n    assert(nGs \u003e 0 \u0026\u0026 nGs \u003c 5, \"nGs \u003e 0 \u0026\u0026 nGs \u003c 5\");\n    for  w = 0; w \u003c nWords; w++  {\n        // generate decomposition pattern\n        if nGs == 1 {\n            pPat[w] = Rsb_DecTry2( ~(word)0, g[0][w], f[w] );\n        } else if nGs == 2 {\n            pPat[w] = Rsb_DecTry3( ~(word)0, g[0][w], g[1][w], f[w] );\n        } else if nGs == 3 {\n            pPat[w] = Rsb_DecTry4( ~(word)0, g[0][w], g[1][w], g[2][w], f[w] );\n        } else if nGs == 4 {\n            pPat[w] = Rsb_DecTry5( ~(word)0, g[0][w], g[1][w], g[2][w], g[3][w], f[w] ); }\n        // check if it is consistent\n        iMint = Abc_Tt6FirstBit( (pPat[w] \u003e\u003e iShift) \u0026 pPat[w] \u0026 uMask );\n        if iMint \u003e= 0 {   // generate a cex\n            CofA = Rsb_DecCofactor( g, nGs, w, iMint );\n            assert((~f[w] \u0026 CofA) \u0026\u0026 (f[w] \u0026 CofA), \"(~f[w] \u0026 CofA) \u0026\u0026 (f[w] \u0026 CofA)\");\n            *pCexA = w * 64 + Abc_Tt6FirstBit( ~f[w] \u0026 CofA );\n            *pCexB = w * 64 + Abc_Tt6FirstBit(  f[w] \u0026 CofA );\n            return 0;\n        }\n        uTotal |= pPat[w];\n        if w == 0 {\n            continue; }\n        // check if it is consistent with other patterns seen so far\n        iMint = Abc_Tt6FirstBit( (uTotal \u003e\u003e iShift) \u0026 uTotal \u0026 uMask );\n        if iMint == -1 {\n            continue; }\n        // find an overlap and generate a cex\n        for  k = 0; k \u003c w; k++  {\n            iMint = Abc_Tt6FirstBit( ((pPat[k] | pPat[w]) \u003e\u003e iShift) \u0026 (pPat[k] | pPat[w]) \u0026 uMask );\n            if iMint == -1 {\n                continue; }\n            CofA = Rsb_DecCofactor( g, nGs, k, iMint );\n            CofB = Rsb_DecCofactor( g, nGs, w, iMint );\n            if (~f[k] \u0026 CofA) \u0026\u0026 (f[w] \u0026 CofB) {\n                *pCexA = k * 64 + Abc_Tt6FirstBit( ~f[k] \u0026 CofA );\n                *pCexB = w * 64 + Abc_Tt6FirstBit(  f[w] \u0026 CofB );\n            \n            } else {\n                assert((f[k] \u0026 CofA) \u0026\u0026 (~f[w] \u0026 CofB), \"(f[k] \u0026 CofA) \u0026\u0026 (~f[w] \u0026 CofB)\");\n                *pCexA = k * 64 + Abc_Tt6FirstBit(  f[k] \u0026 CofA );\n                *pCexB = w * 64 + Abc_Tt6FirstBit( ~f[w] \u0026 CofB );\n            }\n            return 0;\n        }\n    }\n    return uTotal;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rsb_DecPrintTable(pCexes *word, nGs int32, nGsAll int32, vTries *Vec_Int_t) {\n    var pCands [16]int32;\n    var nCands int32;\n    var i, c, Cand, iStart int32;\n    if Vec_IntSize(vTries) == 0 {\n        return; }\n\n//    printf( \"\\n\" );\n    for  i = 0; i \u003c 4; i++  {\n        fmt.Printf(\"    \");\n    }\n    fmt.Printf(\"  \");\n    for  i = 0; i \u003c nGs; i++  {\n        fmt.Printf(\"%d\", (i % 100) / 10);\n    }\n    fmt.Printf(\"|\");\n    for  ; i \u003c nGsAll; i++  {\n        fmt.Printf(\"%d\", (i % 100) / 10);\n    }\n    fmt.Printf(\"\\n\");\n\n    for  i = 0; i \u003c 4; i++  {\n        fmt.Printf(\"    \");\n    }\n    fmt.Printf(\"  \");\n    for  i = 0; i \u003c nGs; i++  {\n        fmt.Printf(\"%d\", i % 10);\n    }\n    fmt.Printf(\"|\");\n    for  ; i \u003c nGsAll; i++  {\n        fmt.Printf(\"%d\", i % 10);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"\\n\");\n\n    for  c = 0; iStart \u003c Vec_IntSize(vTries); c++  {\n        // collect candidates\n        for  i = 0; i \u003c 4; i++  {\n            pCands[i] = -1;\n        }\n        nCands = 0;\n        Vec_IntForEachEntryStart( vTries, Cand, i, iStart )\n            if Cand == -1 {\n                iStart = i + 1;\n                break;\n            \n            } else {\n                pCands[nCands++] = Cand; }\n        assert(nCands \u003c= 4, \"nCands \u003c= 4\");\n        // print them\n        for  i = 0; i \u003c 4; i++  {\n            if pCands[i] \u003e= 0 {\n                fmt.Printf(\"%4d\", pCands[i]);\n            } else {\n                fmt.Printf(\"    \"); }\n        }\n        // print the bit-string\n        fmt.Printf(\"  \");\n        for  i = 0; i \u003c nGs; i++  {\n            fmt.Printf(\"%c\", Abc_TtGetBit( pCexes + i, c ) ? '.' : '+');\n        }\n        fmt.Printf(\"|\");\n        for  ; i \u003c nGsAll; i++  {\n            fmt.Printf(\"%c\", Abc_TtGetBit( pCexes + i, c ) ? '.' : '+');\n        }\n        fmt.Printf(\"  %3d\\n\", c);\n    }\n    fmt.Printf(\"\\n\");\n\n    // write the number of ones\n    for  i = 0; i \u003c 4; i++  {\n        fmt.Printf(\"    \");\n    }\n    fmt.Printf(\"  \");\n    for  i = 0; i \u003c nGs; i++  {\n        fmt.Printf(\"%d\", Abc_TtCountOnes(pCexes[i]) / 10);\n    }\n    fmt.Printf(\"|\");\n    for  ; i \u003c nGsAll; i++  {\n        fmt.Printf(\"%d\", Abc_TtCountOnes(pCexes[i]) / 10);\n    }\n    fmt.Printf(\"\\n\");\n\n    for  i = 0; i \u003c 4; i++  {\n        fmt.Printf(\"    \");\n    }\n    fmt.Printf(\"  \");\n    for  i = 0; i \u003c nGs; i++  {\n        fmt.Printf(\"%d\", Abc_TtCountOnes(pCexes[i]) % 10);\n    }\n    fmt.Printf(\"|\");\n    for  ; i \u003c nGsAll; i++  {\n        fmt.Printf(\"%d\", Abc_TtCountOnes(pCexes[i]) % 10);\n    }\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Init ]\n\n  Description [Returns the numbers of the decomposition functions and \n  the truth table of a function up to 4 variables.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rsb_DecInitCexes(nVars int32, f *word, g **word, nGs int32, nGsAll int32, pCexes *word, vTries *Vec_Int_t) int32 {\n    var nWords int32  = Abc_TtWordNum( nVars );\n    var ValueB int32  = Abc_TtGetBit( f, 0 );\n    var ValueE int32  = Abc_TtGetBit( f, 64*nWords-1 );\n    var iCexT0, iCexT1, iCexF0, iCexF1 int32;\n\n    if ValueB != 0 {\n        iCexT0 = 0;\n    } else {\n        iCexT0 = Abc_TtFindFirstBit( f, nVars );\n    }\n    if ValueE != 0 {\n        iCexT1 = 64*nWords-1;\n    } else {\n        iCexT1 = Abc_TtFindLastBit( f, nVars );\n    }\n\n    if !(ValueB != 0) {\n        iCexF0 = 0;\n    } else {\n        iCexF0 = Abc_TtFindFirstZero( f, nVars );\n    }\n    if !(ValueE != 0) {\n        iCexF1 = 64*nWords-1;\n    } else {\n        iCexF1 = Abc_TtFindLastZero( f, nVars );\n    }\n\n    assert(!(Rsb_DecTryCex( f, iCexT0, iCexF0 ) != 0), \"!Rsb_DecTryCex( f, iCexT0, iCexF0 )\");\n    assert(!(Rsb_DecTryCex( f, iCexT0, iCexF1 ) != 0), \"!Rsb_DecTryCex( f, iCexT0, iCexF1 )\");\n    assert(!(Rsb_DecTryCex( f, iCexT1, iCexF0 ) != 0), \"!Rsb_DecTryCex( f, iCexT1, iCexF0 )\");\n    assert(!(Rsb_DecTryCex( f, iCexT1, iCexF1 ) != 0), \"!Rsb_DecTryCex( f, iCexT1, iCexF1 )\");\n\n    Rsb_DecRecordCex( g, nGsAll, iCexT0, iCexF0, pCexes, 0 );\n    Rsb_DecRecordCex( g, nGsAll, iCexT0, iCexF1, pCexes, 1 );\n    Rsb_DecRecordCex( g, nGsAll, iCexT1, iCexF0, pCexes, 2 );\n    Rsb_DecRecordCex( g, nGsAll, iCexT1, iCexF1, pCexes, 3 );\n\n    if vTries != nil {\n    Vec_IntPush( vTries, -1 );\n    Vec_IntPush( vTries, -1 );\n    Vec_IntPush( vTries, -1 );\n    Vec_IntPush( vTries, -1 );\n    }\n    return 4;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds a setset of gs to decompose f.]\n\n  Description [Returns the numbers of the decomposition functions and \n  the truth table of a function up to 4 variables.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rsb_DecPerformInt(p *Rsb_Man_t, nVars int32, f *word, g **word, nGs int32, nGsAll int32, fFindAll int32) uint32 {\n    var pCexes *word  = Vec_WrdArray(p.vCexes);\n    var pPat *uint32  = (unsigned *)Vec_IntArray(p.vDecPats);\n    /*\n    The following filtering hueristic can be used:\n    after the first round (if there is more than 5 cexes, \n    remove all the divisors, except fanins of the node\n    This should lead to a speadup without sacrifying quality.\n\n    Another idea is to precompute several counter-examples\n    like the first and last 0 and 1 mints of the function\n    which yields 4 cexes.\n    */\n\n    var pDivs [16]*word;\n    var uTruth uint32;\n    var i, k, j, n, iCexA, iCexB, nCexes int32;\n    memset( pCexes, 0, sizeof(word) * nGsAll );  \n    Vec_IntClear( p.vTries );\n    // populate the counter-examples with the three most obvious\n//    nCexes = Rsb_DecInitCexes( nVars, f, g, nGs, nGsAll, pCexes, vTries );\n    // start by checking each function\n    p.vFanins.nSize = 1;\n    for  i = 0; i \u003c nGs; i++  {\n        if pCexes[i] {\n            continue; }\n        pDivs[0] = g[i];  p.vFanins.pArray[0] = i;\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFanins), pPat, \u0026iCexA, \u0026iCexB );\n        if uTruth != 0 {\n            if fFindAll != 0 {\n                uTruth = uint32(Abc_Tt6Stretch( (word)uTruth, 1 ));\n                Kit_DsdPrintFromTruth( \u0026uTruth, 1 ); fmt.Printf(\"   \");\n                Vec_IntPrint(p.vFanins);\n                continue;\n            \n            } else {\n                return uTruth; }\n        }\n        if nCexes == 64 {\n            return 0; }\n        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p.vFanins), iCexA, iCexB );\n        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );\n        if !p.fVerbose {\n            continue; }\n        Vec_IntPush( p.vTries, i );\n        Vec_IntPush( p.vTries, -1 );\n    }\n    if p.nDecMax == 1 {\n        return 0; }\n    // continue by checking pairs\n    p.vFanins.nSize = 2;\n    for  i = 1; i \u003c nGs; i++  {\n    for  k = 0; k \u003c i; k++  {\n        if pCexes[i] \u0026 pCexes[k] {\n            continue; }\n        pDivs[0] = g[i];  p.vFanins.pArray[0] = i;\n        pDivs[1] = g[k];  p.vFanins.pArray[1] = k;\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFanins), pPat, \u0026iCexA, \u0026iCexB );\n        if uTruth != 0 {\n            if fFindAll != 0 {\n                uTruth = uint32(Abc_Tt6Stretch( (word)uTruth, 2 ));\n                Kit_DsdPrintFromTruth( \u0026uTruth, 2 ); fmt.Printf(\"   \");\n                Vec_IntPrint(p.vFanins);\n                continue;\n            \n            } else {\n                return uTruth; }\n        }\n        if nCexes == 64 {\n            return 0; }\n        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p.vFanins), iCexA, iCexB );\n        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );\n        if !p.fVerbose {\n            continue; }\n        Vec_IntPush( p.vTries, i );\n        Vec_IntPush( p.vTries, k );\n        Vec_IntPush( p.vTries, -1 );\n    }\n    }\n    if p.nDecMax == 2 {\n        return 0; }\n    // continue by checking triples\n    p.vFanins.nSize = 3;\n    for  i = 2; i \u003c nGs; i++  {\n    for  k = 1; k \u003c i; k++  {\n    for  j = 0; j \u003c k; j++  {\n        if pCexes[i] \u0026 pCexes[k] \u0026 pCexes[j] {\n            continue; }\n        pDivs[0] = g[i];  p.vFanins.pArray[0] = i;\n        pDivs[1] = g[k];  p.vFanins.pArray[1] = k;\n        pDivs[2] = g[j];  p.vFanins.pArray[2] = j;\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFanins), pPat, \u0026iCexA, \u0026iCexB );\n        if uTruth != 0 {\n            if fFindAll != 0 {\n                uTruth = uint32(Abc_Tt6Stretch( (word)uTruth, 3 ));\n                Kit_DsdPrintFromTruth( \u0026uTruth, 3 ); fmt.Printf(\"   \");\n                Vec_IntPrint(p.vFanins);\n                continue;\n            \n            } else {\n                return uTruth; }\n        }\n        if nCexes == 64 {\n            return 0; }\n        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p.vFanins), iCexA, iCexB );\n        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );\n        if !p.fVerbose {\n            continue; }\n        Vec_IntPush( p.vTries, i );\n        Vec_IntPush( p.vTries, k );\n        Vec_IntPush( p.vTries, j );\n        Vec_IntPush( p.vTries, -1 );\n    }\n    }\n    }\n    if p.nDecMax == 3 {\n        return 0; }\n    // continue by checking quadras\n    p.vFanins.nSize = 4;\n    for  i = 3; i \u003c nGs; i++  {\n    for  k = 2; k \u003c i; k++  {\n    for  j = 1; j \u003c k; j++  {\n    for  n = 0; n \u003c j; n++  {\n        if pCexes[i] \u0026 pCexes[k] \u0026 pCexes[j] \u0026 pCexes[n] {\n            continue; }\n        pDivs[0] = g[i];  p.vFanins.pArray[0] = i;\n        pDivs[1] = g[k];  p.vFanins.pArray[1] = k;\n        pDivs[2] = g[j];  p.vFanins.pArray[2] = j;\n        pDivs[3] = g[n];  p.vFanins.pArray[3] = n;\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFanins), pPat, \u0026iCexA, \u0026iCexB );\n        if uTruth != 0 {\n            if fFindAll != 0 {\n                uTruth = uint32(Abc_Tt6Stretch( (word)uTruth, 4 ));\n                Kit_DsdPrintFromTruth( \u0026uTruth, 4 ); fmt.Printf(\"   \");\n                Vec_IntPrint(p.vFanins);\n                continue;\n            \n            } else {\n                return uTruth; }\n        }\n        if nCexes == 64 {\n            return 0; }\n        Rsb_DecVerifyCex( f, pDivs, Vec_IntSize(p.vFanins), iCexA, iCexB );\n        Rsb_DecRecordCex( g, nGsAll, iCexA, iCexB, pCexes, nCexes++ );\n        if !p.fVerbose {\n            continue; }\n        Vec_IntPush( p.vTries, i );\n        Vec_IntPush( p.vTries, k );\n        Vec_IntPush( p.vTries, j );\n        Vec_IntPush( p.vTries, n );\n        Vec_IntPush( p.vTries, -1 );\n    }\n    }\n    }\n    }\n//    printf( \"%d \", nCexes );\n    if p.nDecMax == 4 {\n        return 0; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies 4-input decomposition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rsb_DecPrintFunc(p *Rsb_Man_t, Truth4 uint32, f *word, ppGs **word, nGs int32, nVarsAll int32) {\n    var nVars int32   =  Vec_IntSize(p.vFanins);\n    var Copy word   =  Truth4;\n    var wOn word    =  Abc_Tt6Stretch( Copy \u003e\u003e (1 \u003c\u003c nVars), nVars );\n    var wOnDc word  = ~Abc_Tt6Stretch( Copy, nVars );\n    var wIsop word  =  Abc_Tt6Isop( wOn, wOnDc, nVars, nil );\n    var i int32;\n\n    fmt.Printf(\"Offset : \");\n    Abc_TtPrintBinary( \u0026Copy, nVars );  //printf( \"\\n\" );\n    Copy \u003e\u003e= ((word)1 \u003c\u003c nVars);\n    fmt.Printf(\"Onset  : \");\n    Abc_TtPrintBinary( \u0026Copy, nVars );  //printf( \"\\n\" );\n    fmt.Printf(\"Result : \");\n    Abc_TtPrintBinary( \u0026wIsop, nVars ); //printf( \"\\n\" );\n    Kit_DsdPrintFromTruth( (unsigned *)\u0026wIsop, nVars );  fmt.Printf(\"\\n\");\n\n    // print functions\n    fmt.Printf(\"Func   : \");\n    Abc_TtPrintBinary( f, nVarsAll );   //printf( \"\\n\" );\n    Kit_DsdPrintFromTruth( (unsigned *)f, nVarsAll );    fmt.Printf(\"\\n\");\n    for  i = 0; i \u003c nGs; i++  {\n        fmt.Printf(\"Div%3d : \", i);\n        Kit_DsdPrintFromTruth( (unsigned *)ppGs[i], nVarsAll );  fmt.Printf(\"\\n\");\n    }\n    fmt.Printf(\"Solution : \");\n    for  i = 0; i \u003c Vec_IntSize(p.vFanins); i++  {\n        fmt.Printf(\"%d \", Vec_IntEntry(p.vFanins, i));\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies 4-input decomposition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rsb_DecVerify(p *Rsb_Man_t, nVars int32, f *word, g **word, nGs int32, Truth4 uint32, pTemp1 *word, pTemp2 *word) int32 {\n    var pFanins [16]*word;\n    var b, m, Num, nSuppSize int32;\n    var nWords int32  = Abc_TtWordNum(nVars);\n    Truth4 \u003e\u003e= (1 \u003c\u003c Vec_IntSize(p.vFanins));\n    Truth4 = uint32(Abc_Tt6Stretch( (word)Truth4, Vec_IntSize(p.vFanins) ));\n//Kit_DsdPrintFromTruth( (unsigned *)\u0026Truth4, Vec_IntSize(p-\u003evFanins) );\n//printf( \"\\n\" );\n//    nSuppSize = Rsb_Word6SupportSize( Truth4 );\n//    assert( nSuppSize == Vec_IntSize(p-\u003evFanins) );\n    nSuppSize = Vec_IntSize(p.vFanins);\n    // collect the fanins\n    Vec_IntForEachEntry( p.vFanins, Num, b )\n    {\n        assert(Num \u003c nGs, \"Num \u003c nGs\");\n        pFanins[b] = g[Num];\n    }\n    // create the or of ands\n    Abc_TtClear( pTemp1, nWords );\n    for  m = 0; m \u003c (1\u003c\u003cnSuppSize); m++  {\n        if ((Truth4 \u003e\u003e m) \u0026 1) == 0 {\n            continue; }\n        Abc_TtFill( pTemp2, nWords );\n        for  b = 0; b \u003c nSuppSize; b++  {\n            if (m \u003e\u003e b) \u0026 1 {\n                Abc_TtAnd( pTemp2, pTemp2, pFanins[b], nWords, 0 );\n            } else {\n                Abc_TtSharp( pTemp2, pTemp2, pFanins[b], nWords ); }\n        }\n        Abc_TtOr( pTemp1, pTemp1, pTemp2, nWords );\n    }\n    // check the function\n    if !Abc_TtEqual( pTemp1, f, nWords ) {\n        fmt.Printf(\"Verification failed.\\n\"); }\n//    else\n//        printf( \"Verification passed.\\n\" );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Finds a setset of gs to decompose f.]\n\n  Description [Returns the numbers of the decomposition functions and \n  the truth table of a function up to 4 variables.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rsb_ManPerform(p *Rsb_Man_t, nVars int32, f *word, g **word, nGs int32, nGsAll int32, fVerbose0 int32) uint32 {\n    var pCexes *word  = Vec_WrdArray(p.vCexes);\n    var pPat *uint32  = (unsigned *)Vec_IntArray(p.vDecPats);\n    var fVerbose int32;//(nGs \u003e 40);\n    var vTries *Vec_Int_t  = nil;\n    var uTruth uint32;\n\n    // verify original decomposition\n    if Vec_IntSize(p.vFaninsOld) \u0026\u0026 Vec_IntSize(p.vFaninsOld) \u003c= 4 {\n        var pDivs [8]*word;\n        var i, Entry, iCexA, iCexB int32;\n        Vec_IntForEachEntry( p.vFaninsOld, Entry, i )\n            pDivs[i] = g[Entry];\n        uTruth = Rsb_DecCheck( nVars, f, pDivs, Vec_IntSize(p.vFaninsOld), pPat, \u0026iCexA, \u0026iCexB );\n//        assert( uTruth != 0 );\n        if fVerbose != 0 {\n            fmt.Printf(\"Verified orig decomp with %d vars {\", Vec_IntSize(p.vFaninsOld));\n            Vec_IntForEachEntry( p.vFaninsOld, Entry, i )\n                fmt.Printf(\" %d\", Entry);\n            fmt.Printf(\" }\\n\");\n        }\n        if uTruth != 0 {\n//            if ( fVerbose )\n//                Rsb_DecPrintFunc( p, uTruth );\n        \n        } else {\n            fmt.Printf(\"Verified orig decomp with %d vars {\", Vec_IntSize(p.vFaninsOld));\n            Vec_IntForEachEntry( p.vFaninsOld, Entry, i )\n                fmt.Printf(\" %d\", Entry);\n            fmt.Printf(\" }\\n\");\n            fmt.Printf(\"Verification FAILED.\\n\");\n        }\n    }\n    // start tries\nif fVerbose != 0 {\nvTries = Vec_IntAlloc( 100 ); }\n    assert(nGs \u003c nGsAll, \"nGs \u003c nGsAll\");\n    uTruth = Rsb_DecPerformInt( p, nVars, f, g, nGs, nGsAll, 0 );\n\n    if uTruth != 0 {\n        if fVerbose != 0 {\n            var i, Entry int32;\n            fmt.Printf(\"Found decomp with %d vars {\", Vec_IntSize(p.vFanins));\n            Vec_IntForEachEntry( p.vFanins, Entry, i )\n                fmt.Printf(\" %d\", Entry);\n            fmt.Printf(\" }\\n\");\n//            Rsb_DecPrintFunc( p, uTruth );\n//            Rsb_DecVerify( nVars, f, g, nGs, p-\u003evFanins, uTruth, g[nGsAll], g[nGsAll+1] );\n        }\n    \n    } else {\n        Vec_IntShrink( p.vFanins, 0 );\n        if fVerbose != 0 {\n        fmt.Printf(\"Did not find decomposition with 4 variables.\\n\"); }\n    }\n\nif fVerbose != 0 {\nRsb_DecPrintTable( pCexes, nGs, nGsAll, vTries ); }\nif fVerbose != 0 {\nVec_IntFree( vTries ); }\n    return uTruth;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rsb_ManPerformResub6(p *Rsb_Man_t, nVarsAll int32, uTruth word, vDivTruths *Vec_Wrd_t, puTruth0 *word, puTruth1 *word, fVerbose int32) int32 {\n    var pGs [200]*word;\n    var uTruthRes uint32;\n    var i int32;\n    var nVars int32;\n    var nGs int32 = Vec_WrdSize(vDivTruths);\n    assert(nGs \u003c 200, \"nGs \u003c 200\");\n    for  i = 0; i \u003c nGs; i++  {\n        pGs[i] = Vec_WrdEntryP(vDivTruths,i);\n    }\n    uTruthRes = Rsb_DecPerformInt( p, nVarsAll, \u0026uTruth, pGs, nGs, nGs, 0 );\n    if uTruthRes == 0 {\n        return 0; }\n\n    if fVerbose != 0 {\n        Rsb_DecPrintFunc( p, uTruthRes, \u0026uTruth, pGs, nGs, nVarsAll ); }\n    if fVerbose != 0 {\n        Rsb_DecPrintTable( Vec_WrdArray(p.vCexes), nGs, nGs, p.vTries ); }\n\n    nVars = Vec_IntSize(p.vFanins);\n    *puTruth0 = Abc_Tt6Stretch( uTruthRes,                 nVars );\n    *puTruth1 = Abc_Tt6Stretch( uTruthRes \u003e\u003e (1 \u003c\u003c nVars), nVars );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rsb_ManPerformResub6Test() {\n    var p *Rsb_Man_t;\n    var vDivTruths *Vec_Wrd_t;\n    var RetValue int32;\n    var a word  = s_Truths6[0];\n    var b word  = s_Truths6[1];\n    var c word  = s_Truths6[2];\n    var d word  = s_Truths6[3];\n    var e word  = s_Truths6[4];\n    var f word  = s_Truths6[5];\n    var ab word  = a \u0026 b;\n    var cd word  = c \u0026 d;\n    var ef word  = e \u0026 f;\n    var F word  = ab | cd | ef;\n    var uTruth0, uTruth1 word;\n\n    vDivTruths = Vec_WrdAlloc( 100 );\n    Vec_WrdPush( vDivTruths, a );\n    Vec_WrdPush( vDivTruths, b );\n    Vec_WrdPush( vDivTruths, c );\n    Vec_WrdPush( vDivTruths, d );\n    Vec_WrdPush( vDivTruths, e );\n    Vec_WrdPush( vDivTruths, f );\n    Vec_WrdPush( vDivTruths, ab );\n    Vec_WrdPush( vDivTruths, cd );\n    Vec_WrdPush( vDivTruths, ef );\n\n    p = Rsb_ManAlloc( 6, 64, 4, 1 );\n\n    RetValue = Rsb_ManPerformResub6( p, 6, F, vDivTruths, \u0026uTruth0, \u0026uTruth1, 1 );\n\n    Rsb_ManFree( p );\n    Vec_WrdFree( vDivTruths );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

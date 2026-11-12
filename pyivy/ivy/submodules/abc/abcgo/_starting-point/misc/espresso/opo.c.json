@@ -1,0 +1,267 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c",
+  "SHA256": "8ebf8ea303fb844f9b0da4dbec9496513e209c7e2b588f762dab9dd13d950280",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 9,
+        "ByteOffset": 4115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"\\nOPO loop for output #%d\\n\", i);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 9,
+        "ByteOffset": 4165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"PLA-\u003ephase is %s\\n\", pc1(PLA.phase));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 9,
+        "ByteOffset": 4219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"phase      is %s\\n\", pc1(phase));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 9,
+        "ByteOffset": 10473
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"# OPO[%d]: %4d = %4d x %4d, time = %s\\n\", level - 1,"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 270,
+        "Column": 16,
+        "ByteOffset": 10611
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fflush(stdout);"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 270,
+        "Column": 23,
+        "ByteOffset": 10618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        (void) fflush(stdout);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 585,
+        "Column": 5,
+        "ByteOffset": 24231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"# phase is %s\\n\", pc1(PLA.phase));"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::mechanical::static::9882",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 6999,
+      "End": 7005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro::POW2",
+      "Category": "macro-review",
+      "Symbol": "POW2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 14892,
+      "End": 14925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::2716",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 2716,
+      "End": 2738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::4028",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4028,
+      "End": 4050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::4286",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4286,
+      "End": 4302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::5302",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 5302,
+      "End": 5320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::6177",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6177,
+      "End": 6187
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::6199",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 6199,
+      "End": 6209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::7696",
+      "Category": "macro-inline-review",
+      "Symbol": "print_time",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 7696,
+      "End": 7715
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::12054",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12054,
+      "End": 12076
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::12159",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12159,
+      "End": 12173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::12520",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_and",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12520,
+      "End": 12546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::12552",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_and",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12552,
+      "End": 12579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::12983",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_and",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 12983,
+      "End": 13010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::13016",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_and",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13016,
+      "End": 13042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::13402",
+      "Category": "macro-inline-review",
+      "Symbol": "INLINEset_and",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 13402,
+      "End": 13428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::15246",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15246,
+      "End": 15268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/opo.c::macro-inline::15609",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 15609,
+      "End": 15631
+    }
+  ],
+  "Draft": "package espresso\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*\n *   Phase assignment technique (T. Sasao):\n *\n *      1. create a function with 2*m outputs which implements the\n *      original function and its complement for each output\n *\n *      2. minimize this function\n *\n *      3. choose the minimum number of prime implicants from the\n *      result of step 2 which are needed to realize either a function\n *      or its complement for each output\n *\n *  Step 3 is performed in a rather crude way -- by simply multiplying\n *  out a large expression of the form:\n *\n *      I = (ab + cdef)(acd + bgh) ...\n *\n *  which is a product of m expressions where each expression has two\n *  product terms -- one representing which primes are needed for the\n *  function, and one representing which primes are needed for the\n *  complement.  The largest product term resulting shows which primes\n *  to keep to implement one function or the other for each output.\n *  For problems with many outputs, this may grind to a\n *  halt.\n *\n *  Untried: form complement of I and use unate_complement ...\n *\n *  I have unsuccessfully tried several modifications to the basic\n *  algorithm.  The first is quite simple: use Sasao's technique, but\n *  only commit to a single output at a time (rather than all\n *  outputs).  The goal would be that the later minimizations can \"take\n *  into account\" the partial assignment at each step.  This is\n *  expensive (m+1 minimizations rather than 2), and the results are\n *  discouraging.\n *\n *  The second modification is rather complicated.  The result from the\n *  minimization in step 2 is guaranteed to be minimal.  Hence, for\n *  each output, the set of primes with a 1 in that output are both\n *  necessary and sufficient to implement the function.  Espresso\n *  achieves the minimality using the routine MAKE_SPARSE.  The\n *  modification is to prevent MAKE_SPARSE from running.  Hence, there\n *  are potentially many subsets of the set of primes with a 1 in a\n *  column which can be used to implement that output.  We use\n *  IRREDUNDANT to enumerate all possible subsets and then proceed as\n *  before.\n */\n\f\nvar opo_no_make_sparse int32;\nvar opo_repeated int32;\nvar opo_exact int32;\n// static void minimize();\n\n\nvoid phase_assignment(PLA, opo_strategy)\nvar PLA pPLA;\nvar opo_strategy int32;\n{\n    opo_no_make_sparse = opo_strategy % 2;\n    skip_make_sparse = opo_no_make_sparse;\n    opo_repeated = (opo_strategy / 2) % 2;\n    opo_exact = (opo_strategy / 4) % 2;\n\n    /* Determine a phase assignment */\n    if PLA.phase != NULL {\n    FREE(PLA.phase);\n    }\n\n    if opo_repeated != 0 {\n    // inlining of macro set_save\n    PLA.phase = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(cube.fullset))), cube.fullset);\n    repeated_phase_assignment(PLA);\n    } else {\n    PLA.phase = find_phase(PLA, 0, (pcube) NULL);\n    }\n\n    /* Now minimize with this assignment */\n    skip_make_sparse = FALSE;\n    (void) set_phase(PLA);\n    minimize(PLA);\n}\n\f\n/*\n *  repeated_phase_assignment -- an alternate strategy which commits\n *  to a single phase assignment a step at a time.  Performs m + 1\n *  minimizations !\n */\nvoid repeated_phase_assignment(PLA)\nvar PLA pPLA;\n{\n    int i;\n    pcube phase;\n\n    for i = 0; i \u003c cube.part_size[cube.output]; i++ {\n\n    /* Find best assignment for all undecided outputs */\n    phase = find_phase(PLA, i, PLA.phase);\n\n    /* Commit for only a single output ... */\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if ! (phase[(((cube.first_part[cube.output] + i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((cube.first_part[cube.output] + i) \u0026 (BPI-1)))) {\n        // inlining of macro set_remove\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (PLA.phase[(((cube.first_part[cube.output] + i) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((cube.first_part[cube.output] + i) \u0026 (BPI-1))));\n    }\n\n    if trace || summary {\n        fmt.Printf(\"\\nOPO loop for output #%d\\n\", i);\n        fmt.Printf(\"PLA-\u003ephase is %s\\n\", pc1(PLA.phase));\n        fmt.Printf(\"phase      is %s\\n\", pc1(phase));\n    }\n    // inlining of macro set_free\n    FREE(phase);\n    }\n}\n\n\n/*\n *  find_phase -- find a phase assignment for the PLA for all outputs starting\n *  with output number first_output.\n */\npcube find_phase(PLA, first_output, phase1)\nvar PLA pPLA;\nvar first_output int32;\npcube phase1;\n{\n    pcube phase;\n    pPLA PLA1;\n\n    // inlining of macro set_save\n    phase = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(cube.fullset))), cube.fullset);\n\n    /* setup the double-phase characteristic function, resize the cube */\n    PLA1 = new_PLA();\n    PLA1.F = sf_save(PLA.F);\n    PLA1.R = sf_save(PLA.R);\n    PLA1.D = sf_save(PLA.D);\n    if phase1 != NULL {\n    // inlining of macro set_save\n    PLA1.phase = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(phase1))), phase1);\n    (void) set_phase(PLA1);\n    }\n    // inlining of macro EXEC_S\n    {long t=ptime();output_phase_setup(PLA1, first_output);if(summary)print_trace(PLA1.F,\"OPO-SETUP \",ptime()-t);};\n\n    /* minimize the double-phase function */\n    minimize(PLA1);\n\n    /* set the proper phases according to what gives a minimum solution */\n    // inlining of macro EXEC_S\n    {long t=ptime();PLA1.F = opo(phase, PLA1.F, PLA1.D, PLA1.R, first_output);if(summary)print_trace(PLA1.F,\"OPO       \",ptime()-t);};\n    free_PLA(PLA1);\n\n    /* set the cube structure to reflect the old size */\n    setdown_cube();\n    cube.part_size[cube.output] -=\n    (cube.part_size[cube.output] - first_output) / 2;\n    cube_setup();\n\n    return phase;\n}\n\f\n/*\n *  opo -- multiply the expression out to determine a minimum subset of\n *  primes.\n */\n\n/*ARGSUSED*/\npcover opo(phase, T, D, R, first_output)\npcube phase;\npcover T, D, R;\nvar first_output int32;\n{\n    int offset, output, i, last_output, ind;\n    pset pdest, select, p, p1, last, last1, not_covered, tmp;\n    pset_family temp, T1, T2;\n\n    /* must select all primes for outputs [0 .. first_output-1] */\n    // inlining of macro set_full\n    select = set_fill(ALLOC(unsigned int, SET_SIZE(T.count)), T.count);\n    for output = 0; output \u003c first_output; output++ {\n    ind = cube.first_part[cube.output] + output;\n    // inlining of macro foreachi_set\n    for p, i = T.data, 0;i\u003cT.count;p+=T.wsize,i++ {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if p[(((ind) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((ind) \u0026 (BPI-1))) {\n        // inlining of macro set_remove\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (select[(((i) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((i) \u0026 (BPI-1))));\n        }\n    }\n    }\n\n    /* Recursively perform the intersections */\n    offset = (cube.part_size[cube.output] - first_output) / 2;\n    last_output = first_output + offset - 1;\n    temp = opo_recur(T, D, select, offset, first_output, last_output);\n\n    /* largest set is on top -- select primes which are inferred from it */\n    pdest = temp.data;\n    // inlining of macro new_cover\n    T1 = sf_new(T.count, cube.size);\n    // inlining of macro foreachi_set\n    for p, i = T.data, 0;i\u003cT.count;p+=T.wsize,i++ {\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if ! (pdest[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))) {\n        T1 = sf_addset(T1, p);\n    }\n    }\n\n    // inlining of macro set_free\n    FREE(select);\n    sf_free(temp);\n\n    /* finding phases is difficult -- see which functions are not covered */\n    T2 = complement(cube1list(T1));\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    not_covered = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro new_cube\n    // inlining of macro set_new\n    tmp = set_clear(ALLOC(unsigned int, SET_SIZE(cube.size)), cube.size);\n    // inlining of macro foreach_set\n    for p=T.data,last=p+T.count*T.wsize;p\u003clast;p+=T.wsize {\n    // inlining of macro foreach_set\n    for p1=T2.data,last1=p1+T2.count*T2.wsize;p1\u003clast1;p1+=T2.wsize {\n        if cdist0(p, p1) {\n        (void) set_or(not_covered, not_covered, set_and(tmp, p, p1));\n        }\n    }\n    }\n    // inlining of macro free_cover\n    sf_free(T);\n    // inlining of macro free_cover\n    sf_free(T2);\n    // inlining of macro set_free\n    FREE(tmp);\n\n    /* Now reflect the phase choice in a single cube */\n    for output = first_output; output \u003c= last_output; output++ {\n    ind = cube.first_part[cube.output] + output;\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if not_covered[(((ind) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((ind) \u0026 (BPI-1))) {\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if not_covered[(((ind + offset) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((ind + offset) \u0026 (BPI-1))) {\n        fatal(\"error in output phase assignment\");\n        } else {\n        // inlining of macro set_remove\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (phase[(((ind) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((ind) \u0026 (BPI-1))));\n        }\n    }\n    }\n    // inlining of macro set_free\n    FREE(not_covered);\n    return T1;\n}\n\f\npset_family opo_recur(T, D, select, offset, first, last)\npcover T, D;\npcube select;\nvar offset, first, last int32;\n{\n    static int level = 0;\n    int middle;\n    pset_family sl, sr, temp;\n\n    level++;\n    if first == last {\n     \n                             \n                                                                     \n            \n                                                          \n     \n     \n    temp = opo_leaf(T, select, first, first + offset);\n      \n    } else {\n    middle = (first + last) / 2;\n    sl = opo_recur(T, D, select, offset, first, middle);\n    sr = opo_recur(T, D, select, offset, middle+1, last);\n    temp = unate_intersect(sl, sr, level == 1);\n    if trace {\n        fmt.Printf(\"# OPO[%d]: %4d = %4d x %4d, time = %s\\n\", level - 1, temp.count, sl.count, sr.count, print_time(ptime()));\n        (void) fflush(os.Stdout);\n    }\n    // inlining of macro free_cover\n    sf_free(sl);\n    // inlining of macro free_cover\n    sf_free(sr);\n    }\n    level--;\n    return temp;\n}\n\n\npset_family opo_leaf(T, select, out1, out2)\nregister pcover T;\nvar select pset;\nvar out1, out2 int32;\n{\n    register pset_family temp;\n    register pset p, pdest;\n    register int i;\n\n    out1 += cube.first_part[cube.output];\n    out2 += cube.first_part[cube.output];\n\n    /* Allocate space for the result */\n    temp = sf_new(2, T.count);\n\n    /* Find which primes are needed for the ON-set of this fct */\n    // inlining of macro GETSET\n    pdest = ((temp).data + (temp).wsize * (temp.count++));\n    (void) set_copy(pdest, select);\n    // inlining of macro foreachi_set\n    for p, i = T.data, 0;i\u003cT.count;p+=T.wsize,i++ {\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if p[(((out1) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((out1) \u0026 (BPI-1))) {\n        // inlining of macro set_remove\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (pdest[(((i) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((i) \u0026 (BPI-1))));\n    }\n    }\n\n    /* Find which primes are needed for the OFF-set of this fct */\n    // inlining of macro GETSET\n    pdest = ((temp).data + (temp).wsize * (temp.count++));\n    (void) set_copy(pdest, select);\n    // inlining of macro foreachi_set\n    for p, i = T.data, 0;i\u003cT.count;p+=T.wsize,i++ {\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if p[(((out2) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((out2) \u0026 (BPI-1))) {\n        // inlining of macro set_remove\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (pdest[(((i) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((i) \u0026 (BPI-1))));\n    }\n    }\n\n    return temp;\n}\n\n     \n                                                   \n            \n            \n                                                                  \n \n                   \n                     \n                                    \n\n                                             \n                       \n                                \n                           \n                  \n     \n                           \n                     \n     \n\n                                           \n                                                 \n                                             \n\n                       \n                   \n \n\n\n                                        \n            \n                     \n      \n \n                               \n              \n                 \n                               \n          \n\n                                      \n\n                                                                   \n                             \n                           \n                          \n                                      \n                                                   \n                              \n                         \n     \n\n                                                                   \n                             \n                                \n                              \n                                \n                                  \n                                                         \n                     \n     \n                                \n                                 \n                             \n     \n\n                                                                    \n                                  \n                                 \n                             \n                         \n                                    \n                    \n     \n     \n                                 \n\n                                                             \n                                \n                                   \n                             \n     \n\n                         \n                \n                   \n \n      \n\f\n/*\n *  Take a PLA (ON-set, OFF-set and DC-set) and create the\n *  \"double-phase characteristic function\" which is merely a new\n *  function which has twice as many outputs and realizes both the\n *  function and the complement.\n *\n *  The cube structure is assumed to represent the PLA upon entering.\n *  It will be modified to represent the double-phase function upon\n *  exit.\n *\n *  Only the outputs numbered starting with \"first_output\" are\n *  duplicated in the output part\n */\n\nvoid output_phase_setup(PLA, first_output)\nINOUT pPLA PLA;\nvar first_output int32;\n{\n    pcover F, R, D;\n    pcube mask, mask1, last;\n    int first_part, offset;\n    bool save;\n    register pcube p, pr, pf;\n    register int i, last_part;\n\n    if (cube.output == -1)\n    fatal(\"output_phase_setup: must have an output\");\n\n    F = PLA.F;\n    D = PLA.D;\n    R = PLA.R;\n    first_part = cube.first_part[cube.output] + first_output;\n    last_part = cube.last_part[cube.output];\n    offset = cube.part_size[cube.output] - first_output;\n\n    /* Change the output size, setup the cube structure */\n    setdown_cube();\n    cube.part_size[cube.output] += offset;\n    cube_setup();\n\n    /* Create a mask to select that part of the cube which isn't changing */\n    // inlining of macro set_save\n    mask = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(cube.fullset))), cube.fullset);\n    for(i = first_part; i \u003c cube.size; i++)\n    // inlining of macro set_remove\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    (mask[(((i) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((i) \u0026 (BPI-1))));\n    // inlining of macro set_save\n    mask1 = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(mask))), mask);\n    for i = cube.first_part[cube.output]; i \u003c first_part; i++ {\n    // inlining of macro set_remove\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    (mask1[(((i) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((i) \u0026 (BPI-1))));\n    }\n\n    // inlining of macro new_cover\n    PLA.F = sf_new(F.count + R.count, cube.size);\n    // inlining of macro new_cover\n    PLA.R = sf_new(F.count + R.count, cube.size);\n    // inlining of macro new_cover\n    PLA.D = sf_new(D.count, cube.size);\n\n    // inlining of macro foreach_set\n    for p=F.data,last=p+F.count*F.wsize;p\u003clast;p+=F.wsize {\n    // inlining of macro GETSET\n    pf = ((PLA.F).data + (PLA.F).wsize * ((PLA.F).count++));\n    // inlining of macro GETSET\n    pr = ((PLA.R).data + (PLA.R).wsize * ((PLA.R).count++));\n    INLINEset_and(pf, mask, p);\n    INLINEset_and(pr, mask1, p);\n    for(i = first_part; i \u003c= last_part; i++)\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if ((p[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))))\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (pf[(((i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i) \u0026 (BPI-1)));\n    save = FALSE;\n    for(i = first_part; i \u003c= last_part; i++)\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if ((p[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))))\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        save = TRUE, (pr[(((i+offset) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i+offset) \u0026 (BPI-1)));\n    if (! save) PLA.R.count--;\n    }\n\n    // inlining of macro foreach_set\n    for p=R.data,last=p+R.count*R.wsize;p\u003clast;p+=R.wsize {\n    // inlining of macro GETSET\n    pf = ((PLA.F).data + (PLA.F).wsize * ((PLA.F).count++));\n    // inlining of macro GETSET\n    pr = ((PLA.R).data + (PLA.R).wsize * ((PLA.R).count++));\n    INLINEset_and(pf, mask1, p);\n    INLINEset_and(pr, mask, p);\n    save = FALSE;\n    for(i = first_part; i \u003c= last_part; i++)\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if ((p[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))))\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        save = TRUE, (pf[(((i+offset) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i+offset) \u0026 (BPI-1)));\n    if (! save) PLA.F.count--;\n    for(i = first_part; i \u003c= last_part; i++)\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if ((p[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1)))))\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (pr[(((i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i) \u0026 (BPI-1)));\n    }\n\n    // inlining of macro foreach_set\n    for p=D.data,last=p+D.count*D.wsize;p\u003clast;p+=D.wsize {\n    // inlining of macro GETSET\n    pf = ((PLA.D).data + (PLA.D).wsize * ((PLA.D).count++));\n    INLINEset_and(pf, mask, p);\n    for(i = first_part; i \u003c= last_part; i++)\n        // inlining of macro is_in_set\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        if p[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1))) {\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (pf[(((i) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i) \u0026 (BPI-1)));\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (pf[(((i+offset) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((i+offset) \u0026 (BPI-1)));\n        }\n    }\n\n    // inlining of macro free_cover\n    sf_free(F);\n    // inlining of macro free_cover\n    sf_free(D);\n    // inlining of macro free_cover\n    sf_free(R);\n    // inlining of macro set_free\n    FREE(mask);\n    // inlining of macro set_free\n    FREE(mask1);\n}\n\f\n/*\n *  set_phase -- given a \"cube\" which describes which phases of the output\n *  are to be implemented, compute the appropriate on-set and off-set\n */\npPLA set_phase(PLA)\nINOUT pPLA PLA;\n{\n    pcover F1, R1;\n    register pcube last, p, outmask;\n    register pcube temp=cube.temp[0], phase=PLA.phase, phase1=cube.temp[1];\n\n    outmask = cube.var_mask[cube.num_vars - 1];\n    set_diff(phase1, outmask, phase);\n    set_or(phase1, set_diff(temp, cube.fullset, outmask), phase1);\n    // inlining of macro new_cover\n    F1 = sf_new((PLA.F).count + (PLA.R).count, cube.size);\n    // inlining of macro new_cover\n    R1 = sf_new((PLA.F).count + (PLA.R).count, cube.size);\n\n    // inlining of macro foreach_set\n    for p=PLA.F.data,last=p+PLA.F.count*PLA.F.wsize;p\u003clast;p+=PLA.F.wsize {\n    if (! setp_disjoint(set_and(temp, p, phase), outmask))\n        // inlining of macro GETSET\n        set_copy(((F1).data + (F1).wsize * (F1.count++)), temp);\n    if (! setp_disjoint(set_and(temp, p, phase1), outmask))\n        // inlining of macro GETSET\n        set_copy(((R1).data + (R1).wsize * (R1.count++)), temp);\n    }\n    // inlining of macro foreach_set\n    for p=PLA.R.data,last=p+PLA.R.count*PLA.R.wsize;p\u003clast;p+=PLA.R.wsize {\n    if (! setp_disjoint(set_and(temp, p, phase), outmask))\n        // inlining of macro GETSET\n        set_copy(((R1).data + (R1).wsize * (R1.count++)), temp);\n    if (! setp_disjoint(set_and(temp, p, phase1), outmask))\n        // inlining of macro GETSET\n        set_copy(((F1).data + (F1).wsize * (F1.count++)), temp);\n    }\n    // inlining of macro free_cover\n    sf_free(PLA.F);\n    // inlining of macro free_cover\n    sf_free(PLA.R);\n    PLA.F = F1;\n    PLA.R = R1;\n    return PLA;\n}\n\f\n// Original macro:\n// #define POW2(x)        (1 \u003c\u003c (x))\n\n\nvoid opoall(PLA, first_output, last_output, opo_strategy)\nvar PLA pPLA;\nvar first_output, last_output int32;\nvar opo_strategy int32;\n{\n    pcover F, D, R, best_F, best_D, best_R;\n    int i, j, ind, num;\n    pcube bestphase;\n\n    opo_exact = opo_strategy;\n\n    if PLA.phase != NULL {\n    // inlining of macro set_free\n    FREE(PLA.phase);\n    }\n\n    // inlining of macro set_save\n    bestphase = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(cube.fullset))), cube.fullset);\n    best_F = sf_save(PLA.F);\n    best_D = sf_save(PLA.D);\n    best_R = sf_save(PLA.R);\n\n    // inlining of macro POW2\n    for i = 0; i \u003c (1 \u003c\u003c (last_output - first_output + 1)); i++ {\n\n    /* save the initial PLA covers */\n    F = sf_save(PLA.F);\n    D = sf_save(PLA.D);\n    R = sf_save(PLA.R);\n\n    /* compute the phase cube for this iteration */\n    // inlining of macro set_save\n    PLA.phase = set_copy(ALLOC(unsigned int, SET_SIZE(NELEM(cube.fullset))), cube.fullset);\n    num = i;\n    for j = last_output; j \u003e= first_output; j-- {\n        if num % 2 == 0 {\n        ind = cube.first_part[cube.output] + j;\n        // inlining of macro set_remove\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (PLA.phase[(((ind) \u003e\u003e LOGBPI) + 1)] \u0026= ~ (1 \u003c\u003c ((ind) \u0026 (BPI-1))));\n        }\n        num /= 2;\n    }\n\n    /* set the phase and minimize */\n    (void) set_phase(PLA);\n    fmt.Printf(\"# phase is %s\\n\", pc1(PLA.phase));\n    summary = TRUE;\n    minimize(PLA);\n\n    /* see if this is the best so far */\n    if PLA.F.count \u003c best_F.count {\n        /* save new best solution */\n        set_copy(bestphase, PLA.phase);\n        sf_free(best_F);\n        sf_free(best_D);\n        sf_free(best_R);\n        best_F = PLA.F;\n        best_D = PLA.D;\n        best_R = PLA.R;\n    } else {\n        /* throw away the solution */\n        // inlining of macro free_cover\n        sf_free(PLA.F);\n        // inlining of macro free_cover\n        sf_free(PLA.D);\n        // inlining of macro free_cover\n        sf_free(PLA.R);\n    }\n    // inlining of macro set_free\n    FREE(PLA.phase);\n\n    /* restore the initial PLA covers */\n    PLA.F = F;\n    PLA.D = D;\n    PLA.R = R;\n    }\n\n    /* one more minimization to restore the best answer */\n    PLA.phase = bestphase;\n    sf_free(PLA.F);\n    sf_free(PLA.D);\n    sf_free(PLA.R);\n    PLA.F = best_F;\n    PLA.D = best_D;\n    PLA.R = best_R;\n}\n\f\nstatic void minimize(PLA)\nvar PLA pPLA;\n{\n    if opo_exact != 0 {\n    // inlining of macro EXEC_S\n    {long t=ptime();PLA.F = minimize_exact(PLA.F,PLA.D,PLA.R,1);if(summary)print_trace(PLA.F,\"EXACT\",ptime()-t);};\n    } else {\n    // inlining of macro EXEC_S\n    {long t=ptime();PLA.F = espresso(PLA.F, PLA.D, PLA.R);if(summary)print_trace(PLA.F,\"ESPRESSO  \",ptime()-t);};\n    }\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

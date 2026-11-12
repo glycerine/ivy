@@ -1,0 +1,396 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCore.c",
+  "SHA256": "4d6b9678a043e60fff17d701c6881ce244ae9461b0c97155ff202ccac7610913",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1389
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Inter_ManParams_t) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 92,
+        "Column": 41,
+        "ByteOffset": 3475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nTimeNewOut = pPars.nSecLimit * CLOCKS_PER_SEC + Abc_Clock();"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 3734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 3774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManPiNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3813
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) == 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 9,
+        "ByteOffset": 3932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Performing interpolation with %d constraints...\\n\", Saig_ManConstrNum(pAig) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 110,
+        "Column": 9,
+        "ByteOffset": 4096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Property trivially fails in the initial state.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 9,
+        "ByteOffset": 4819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"AIG: PI/PO/Reg = %d/%d/%d. And = %d. Lev = %d.  CNF: Var/Cla = %d/%d.\\n\","
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 150,
+        "Column": 9,
+        "ByteOffset": 5453
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Aig_ManCoNum(p.pInter) == 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 174,
+        "Column": 13,
+        "ByteOffset": 6462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Step = %2d. Frames = 1 + %d. And = %5d. Lev = %5d.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 177,
+        "Column": 74,
+        "ByteOffset": 6776
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk2)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 21,
+        "ByteOffset": 7789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Reached limit (%d) on the number of timeframes.\\n\", pPars.nFramesMax ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 216,
+        "Column": 17,
+        "ByteOffset": 8348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"   I = %2d. Bmc =%3d. IntAnd =%6d. IntLev =%5d. Conf =%6d.  \", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 219,
+        "Column": 73,
+        "ByteOffset": 8695
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 228,
+        "Column": 25,
+        "ByteOffset": 9052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"Found a real counterexample in frame %d.\\n\", p.nFrames ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 29,
+        "ByteOffset": 9908
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            printf( \"Error: The problem should be SAT but it is UNSAT.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 244,
+        "Column": 29,
+        "ByteOffset": 10052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                            printf( \"Error: The problem timed out.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 25,
+        "ByteOffset": 10615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"Reached timeout (%d seconds).\\n\",  pPars.nSecLimit ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 262,
+        "Column": 21,
+        "ByteOffset": 10742
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( p.nConfCur \u003e= p.nConfLimit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 264,
+        "Column": 25,
+        "ByteOffset": 10844
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                        printf( \"Reached limit (%d) on the number of conflicts.\\n\", p.nConfLimit ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 13,
+        "ByteOffset": 11129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( RetValue == 1 ); // found new interpolant"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 282,
+        "Column": 21,
+        "ByteOffset": 11691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Reached timeout (%d seconds) during rewriting.\\n\",  pPars.nSecLimit );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 295,
+        "Column": 21,
+        "ByteOffset": 12287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"The problem is trivially true for all states.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 338,
+        "Column": 21,
+        "ByteOffset": 14097
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"Proved containment of interpolants.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 345,
+        "Column": 17,
+        "ByteOffset": 14404
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Reached timeout (%d seconds).\\n\",  pPars.nSecLimit );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 383,
+        "Column": 5,
+        "ByteOffset": 15815
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 211,
+        "Column": 1,
+        "ByteOffset": 7981
+      },
+      "Directive": "#ifdef ABC_USE_LIBRARIES"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Inter_ManSetDefaultParams",
+      "Start": 1310,
+      "End": 2536,
+      "BodyStart": 1366,
+      "Original": "void Inter_ManSetDefaultParams( Inter_ManParams_t * p )\n{ \n    memset( p, 0, sizeof(Inter_ManParams_t) );\n    p-\u003enBTLimit      = 0;     // limit on the number of conflicts\n    p-\u003enFramesMax    = 0;     // the max number timeframes to unroll\n    p-\u003enSecLimit     = 0;     // time limit in seconds\n    p-\u003enFramesK      = 1;     // the number of timeframes to use in induction\n    p-\u003efRewrite      = 0;     // use additional rewriting to simplify timeframes\n    p-\u003efTransLoop    = 0;     // add transition into the init state under new PI var\n    p-\u003efUsePudlak    = 0;     // use Pudluk interpolation procedure\n    p-\u003efUseOther     = 0;     // use other undisclosed option\n    p-\u003efUseMiniSat   = 0;     // use MiniSat-1.14p instead of internal proof engine\n    p-\u003efCheckKstep   = 1;     // check using K-step induction\n    p-\u003efUseBias      = 0;     // bias decisions to global variables\n    p-\u003efUseBackward  = 0;     // perform backward interpolation\n    p-\u003efUseSeparate  = 0;     // solve each output separately\n    p-\u003efUseTwoFrames = 0;     // create OR of two last timeframes\n    p-\u003efDropSatOuts  = 0;     // replace by 1 the solved outputs\n    p-\u003efVerbose      = 0;     // print verbose statistics\n    p-\u003eiFrameMax     =-1;\n}",
+      "Draft": "func Inter_ManSetDefaultParams(p *Inter_ManParams_t) { \n    memset( p, 0, sizeof(Inter_ManParams_t) );\n    p.nBTLimit      = 0;     // limit on the number of conflicts\n    p.nFramesMax    = 0;     // the max number timeframes to unroll\n    p.nSecLimit     = 0;     // time limit in seconds\n    p.nFramesK      = 1;     // the number of timeframes to use in induction\n    p.fRewrite      = 0;     // use additional rewriting to simplify timeframes\n    p.fTransLoop    = 0;     // add transition into the init state under new PI var\n    p.fUsePudlak    = 0;     // use Pudluk interpolation procedure\n    p.fUseOther     = 0;     // use other undisclosed option\n    p.fUseMiniSat   = 0;     // use MiniSat-1.14p instead of internal proof engine\n    p.fCheckKstep   = 1;     // check using K-step induction\n    p.fUseBias      = 0;     // bias decisions to global variables\n    p.fUseBackward  = 0;     // perform backward interpolation\n    p.fUseSeparate  = 0;     // solve each output separately\n    p.fUseTwoFrames = 0;     // create OR of two last timeframes\n    p.fDropSatOuts  = 0;     // replace by 1 the solved outputs\n    p.fVerbose      = 0;     // print verbose statistics\n    p.iFrameMax     =-1;\n}"
+    },
+    {
+      "Name": "Inter_ManPerformInterpolation",
+      "Start": 2922,
+      "End": 16037,
+      "BodyStart": 3018,
+      "Original": "int Inter_ManPerformInterpolation( Aig_Man_t * pAig, Inter_ManParams_t * pPars, int * piFrame )\n{\n    extern int Inter_ManCheckInductiveContainment( Aig_Man_t * pTrans, Aig_Man_t * pInter, int nSteps, int fBackward );\n    Inter_Man_t * p;\n    Inter_Check_t * pCheck = NULL;\n    Aig_Man_t * pAigTemp;\n    int s, i, RetValue, Status;\n    abctime clk, clk2, clkTotal = Abc_Clock(), timeTemp = 0;\n    abctime nTimeNewOut = pPars-\u003enSecLimit ? pPars-\u003enSecLimit * CLOCKS_PER_SEC + Abc_Clock() : 0;\n\n    // enable ORing of the interpolants, if containment check is performed inductively with K \u003e 1\n    if ( pPars-\u003enFramesK \u003e 1 )\n        pPars-\u003efTransLoop = 1;\n\n    // sanity checks\n    assert( Saig_ManRegNum(pAig) \u003e 0 );\n    assert( Saig_ManPiNum(pAig) \u003e 0 );\n    assert( Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) == 1 );\n    if ( pPars-\u003efVerbose \u0026\u0026 Saig_ManConstrNum(pAig) )\n        printf( \"Performing interpolation with %d constraints...\\n\", Saig_ManConstrNum(pAig) );\n\n    if ( Inter_ManCheckInitialState(pAig) )\n    {\n        *piFrame = -1;\n        printf( \"Property trivially fails in the initial state.\\n\" );\n        return 0;\n    }\n/*\n    if ( Inter_ManCheckAllStates(pAig) )\n    {\n        printf( \"Property trivially holds in all states.\\n\" );\n        return 1;\n    }\n*/\n    // create interpolation manager\n    // can perform SAT sweeping and/or rewriting of this AIG...\n    p = Inter_ManCreate( pAig, pPars );\n    if ( pPars-\u003efTransLoop )\n        p-\u003epAigTrans = Inter_ManStartOneOutput( pAig, 0 );\n    else\n        p-\u003epAigTrans = Inter_ManStartDuplicated( pAig );\n    // derive CNF for the transformed AIG\nclk = Abc_Clock();\n    p-\u003epCnfAig = Cnf_Derive( p-\u003epAigTrans, Aig_ManRegNum(p-\u003epAigTrans) ); \np-\u003etimeCnf += Abc_Clock() - clk;    \n    if ( pPars-\u003efVerbose )\n    { \n        printf( \"AIG: PI/PO/Reg = %d/%d/%d. And = %d. Lev = %d.  CNF: Var/Cla = %d/%d.\\n\",\n            Saig_ManPiNum(pAig), Saig_ManPoNum(pAig), Saig_ManRegNum(pAig), \n            Aig_ManAndNum(pAig), Aig_ManLevelNum(pAig),\n            p-\u003epCnfAig-\u003enVars, p-\u003epCnfAig-\u003enClauses );\n    }\n \n    // derive interpolant\n    *piFrame = -1;\n    p-\u003enFrames = 1;\n    for ( s = 0; ; s++ )\n    {\n        Cnf_Dat_t * pCnfInter2;\n\nclk2 = Abc_Clock();\n        // initial state\n        if ( pPars-\u003efUseBackward )\n            p-\u003epInter = Inter_ManStartOneOutput( pAig, 1 );\n        else\n            p-\u003epInter = Inter_ManStartInitState( Aig_ManRegNum(pAig) );\n        assert( Aig_ManCoNum(p-\u003epInter) == 1 );\nclk = Abc_Clock();\n        p-\u003epCnfInter = Cnf_Derive( p-\u003epInter, 0 );  \np-\u003etimeCnf += Abc_Clock() - clk;    \n        // timeframes\n        p-\u003epFrames = Inter_ManFramesInter( pAig, p-\u003enFrames, pPars-\u003efUseBackward, pPars-\u003efUseTwoFrames );\nclk = Abc_Clock();\n        if ( pPars-\u003efRewrite )\n        {\n            p-\u003epFrames = Dar_ManRwsat( pAigTemp = p-\u003epFrames, 1, 0 );\n            Aig_ManStop( pAigTemp );\n//        p-\u003epFrames = Fra_FraigEquivence( pAigTemp = p-\u003epFrames, 100, 0 );\n//        Aig_ManStop( pAigTemp );\n        }\np-\u003etimeRwr += Abc_Clock() - clk;\n        // can also do SAT sweeping on the timeframes...\nclk = Abc_Clock();\n        if ( pPars-\u003efUseBackward )\n            p-\u003epCnfFrames = Cnf_Derive( p-\u003epFrames, Aig_ManCoNum(p-\u003epFrames) );  \n        else\n//            p-\u003epCnfFrames = Cnf_Derive( p-\u003epFrames, 0 );  \n            p-\u003epCnfFrames = Cnf_DeriveSimple( p-\u003epFrames, 0 );  \np-\u003etimeCnf += Abc_Clock() - clk;    \n        // report statistics\n        if ( pPars-\u003efVerbose )\n        {\n            printf( \"Step = %2d. Frames = 1 + %d. And = %5d. Lev = %5d.  \", \n                s+1, p-\u003enFrames, Aig_ManNodeNum(p-\u003epFrames), Aig_ManLevelNum(p-\u003epFrames) );\n            ABC_PRT( \"Time\", Abc_Clock() - clk2 );\n        }\n\n\n        //////////////////////////////////////////\n        // start containment checking\n        if ( !(pPars-\u003efTransLoop || pPars-\u003efUseBackward || pPars-\u003enFramesK \u003e 1) )\n        {\n            pCheck = Inter_CheckStart( p-\u003epAigTrans, pPars-\u003enFramesK );\n            // try new containment check for the initial state\nclk = Abc_Clock();\n            pCnfInter2 = Cnf_Derive( p-\u003epInter, 1 );  \np-\u003etimeCnf += Abc_Clock() - clk;    \nclk = Abc_Clock();\n            RetValue = Inter_CheckPerform( pCheck, pCnfInter2, nTimeNewOut );\np-\u003etimeEqu += Abc_Clock() - clk;\n//            assert( RetValue == 0 );\n            Cnf_DataFree( pCnfInter2 );\n            if ( p-\u003evInters )\n                Vec_PtrPush( p-\u003evInters, Aig_ManDupSimple(p-\u003epInter) );\n        }\n        //////////////////////////////////////////\n\n        // iterate the interpolation procedure\n        for ( i = 0; ; i++ )\n        {\n            if ( pPars-\u003enFramesMax \u0026\u0026 p-\u003enFrames + i \u003e= pPars-\u003enFramesMax )\n            { \n                if ( pPars-\u003efVerbose )\n                    printf( \"Reached limit (%d) on the number of timeframes.\\n\", pPars-\u003enFramesMax );\n                p-\u003etimeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 0 );\n                Inter_CheckStop( pCheck );\n                return -1;\n            }\n\n            // perform interpolation\n            clk = Abc_Clock();\n#ifdef ABC_USE_LIBRARIES\n            if ( pPars-\u003efUseMiniSat )\n            {\n                assert( !pPars-\u003efUseBackward );\n                RetValue = Inter_ManPerformOneStepM114p( p, pPars-\u003efUsePudlak, pPars-\u003efUseOther );\n            }\n            else \n#endif\n                RetValue = Inter_ManPerformOneStep( p, pPars-\u003efUseBias, pPars-\u003efUseBackward, nTimeNewOut );\n\n            if ( pPars-\u003efVerbose )\n            {\n                printf( \"   I = %2d. Bmc =%3d. IntAnd =%6d. IntLev =%5d. Conf =%6d.  \", \n                    i+1, i + 1 + p-\u003enFrames, Aig_ManNodeNum(p-\u003epInter), Aig_ManLevelNum(p-\u003epInter), p-\u003enConfCur );\n                ABC_PRT( \"Time\", Abc_Clock() - clk );\n            }\n            // remember the number of timeframes completed\n            pPars-\u003eiFrameMax = i - 1 + p-\u003enFrames;\n            if ( RetValue == 0 ) // found a (spurious?) counter-example\n            {\n                if ( i == 0 ) // real counterexample\n                {\n                    if ( pPars-\u003efVerbose )\n                        printf( \"Found a real counterexample in frame %d.\\n\", p-\u003enFrames );\n                    p-\u003etimeTotal = Abc_Clock() - clkTotal;\n                    *piFrame = p-\u003enFrames;\n//                    pAig-\u003epSeqModel = (Abc_Cex_t *)Inter_ManGetCounterExample( pAig, p-\u003enFrames+1, pPars-\u003efVerbose );\n                    {\n                        int RetValue;\n                        Saig_ParBmc_t ParsBmc, * pParsBmc = \u0026ParsBmc;\n                        Saig_ParBmcSetDefaultParams( pParsBmc );\n                        pParsBmc-\u003enConfLimit = 100000000;\n                        pParsBmc-\u003enStart     = p-\u003enFrames;\n                        pParsBmc-\u003efVerbose   = pPars-\u003efVerbose;\n                        RetValue = Saig_ManBmcScalable( pAig, pParsBmc );\n                        if ( RetValue == 1 )\n                            printf( \"Error: The problem should be SAT but it is UNSAT.\\n\" );\n                        else if ( RetValue == -1 )\n                            printf( \"Error: The problem timed out.\\n\" );\n                    }\n                    Inter_ManStop( p, 0 );\n                    Inter_CheckStop( pCheck );\n                    return 0;\n                }\n                // likely spurious counter-example\n                p-\u003enFrames += i;\n                Inter_ManClean( p ); \n                break;\n            }\n            else if ( RetValue == -1 ) \n            {\n                if ( pPars-\u003enSecLimit \u0026\u0026 Abc_Clock() \u003e nTimeNewOut ) // timed out\n                {\n                    if ( pPars-\u003efVerbose )\n                        printf( \"Reached timeout (%d seconds).\\n\",  pPars-\u003enSecLimit );\n                }\n                else\n                {\n                    assert( p-\u003enConfCur \u003e= p-\u003enConfLimit );\n                    if ( pPars-\u003efVerbose )\n                        printf( \"Reached limit (%d) on the number of conflicts.\\n\", p-\u003enConfLimit );\n                }\n                p-\u003etimeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 0 );\n                Inter_CheckStop( pCheck );\n                return -1;\n            }\n            assert( RetValue == 1 ); // found new interpolant\n            // compress the interpolant\nclk = Abc_Clock();\n            if ( p-\u003epInterNew )\n            {\n                // save the timeout value\n                p-\u003epInterNew-\u003eTime2Quit = nTimeNewOut;\n//                Ioa_WriteAiger( p-\u003epInterNew, \"interpol.aig\", 0, 0 );\n                p-\u003epInterNew = Dar_ManRwsat( pAigTemp = p-\u003epInterNew, 1, 0 );\n//                p-\u003epInterNew = Dar_ManRwsat( pAigTemp = p-\u003epInterNew, 0, 0 );\n                Aig_ManStop( pAigTemp );\n                if ( p-\u003epInterNew == NULL )\n                {\n                    printf( \"Reached timeout (%d seconds) during rewriting.\\n\",  pPars-\u003enSecLimit );\n                    p-\u003etimeTotal = Abc_Clock() - clkTotal;\n                    Inter_ManStop( p, 1 );\n                    Inter_CheckStop( pCheck );\n                    return -1;\n                }\n            }\np-\u003etimeRwr += Abc_Clock() - clk;\n\n            // check if interpolant is trivial\n            if ( p-\u003epInterNew == NULL || Aig_ObjChild0(Aig_ManCo(p-\u003epInterNew,0)) == Aig_ManConst0(p-\u003epInterNew) )\n            { \n//                printf( \"interpolant is constant 0\\n\" );\n                if ( pPars-\u003efVerbose )\n                    printf( \"The problem is trivially true for all states.\\n\" );\n                p-\u003etimeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 1 );\n                Inter_CheckStop( pCheck );\n                return 1;\n            }\n\n            // check containment of interpolants\nclk = Abc_Clock();\n            if ( pPars-\u003efCheckKstep ) // k-step unique-state induction\n            {\n                if ( Aig_ManCiNum(p-\u003epInterNew) == Aig_ManCiNum(p-\u003epInter) )\n                {\n                    if ( pPars-\u003efTransLoop || pPars-\u003efUseBackward || pPars-\u003enFramesK \u003e 1 )\n                    {\nclk2 = Abc_Clock();\n                        Status = Inter_ManCheckInductiveContainment( p-\u003epAigTrans, p-\u003epInterNew, Abc_MinInt(i + 1, pPars-\u003enFramesK), pPars-\u003efUseBackward );\ntimeTemp = Abc_Clock() - clk2;\n                    }\n                    else\n                    {   // new containment check\nclk2 = Abc_Clock();\n                        pCnfInter2 = Cnf_Derive( p-\u003epInterNew, 1 );  \np-\u003etimeCnf += Abc_Clock() - clk2;\ntimeTemp = Abc_Clock() - clk2;\n            \n                        Status = Inter_CheckPerform( pCheck, pCnfInter2, nTimeNewOut );\n                        Cnf_DataFree( pCnfInter2 );\n                        if ( p-\u003evInters )\n                            Vec_PtrPush( p-\u003evInters, Aig_ManDupSimple(p-\u003epInterNew) );\n                    }\n                }\n                else\n                    Status = 0;\n            }\n            else // combinational containment\n            {\n                if ( Aig_ManCiNum(p-\u003epInterNew) == Aig_ManCiNum(p-\u003epInter) )\n                    Status = Inter_ManCheckContainment( p-\u003epInterNew, p-\u003epInter );\n                else\n                    Status = 0;\n            }\np-\u003etimeEqu += Abc_Clock() - clk - timeTemp;\n            if ( Status ) // contained\n            {\n                if ( pPars-\u003efVerbose )\n                    printf( \"Proved containment of interpolants.\\n\" );\n                p-\u003etimeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 1 );\n                Inter_CheckStop( pCheck );\n                return 1;\n            }\n            if ( pPars-\u003enSecLimit \u0026\u0026 Abc_Clock() \u003e nTimeNewOut )\n            {\n                printf( \"Reached timeout (%d seconds).\\n\",  pPars-\u003enSecLimit );\n                p-\u003etimeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 1 );\n                Inter_CheckStop( pCheck );\n                return -1;\n            }\n            // save interpolant and convert it into CNF\n            if ( pPars-\u003efTransLoop )\n            {\n                Aig_ManStop( p-\u003epInter );\n                p-\u003epInter = p-\u003epInterNew; \n            }\n            else\n            {\n                if ( pPars-\u003efUseBackward )\n                {\n                    p-\u003epInter = Aig_ManCreateMiter( pAigTemp = p-\u003epInter, p-\u003epInterNew, 2 );\n                    Aig_ManStop( pAigTemp );\n                    Aig_ManStop( p-\u003epInterNew );\n                    // compress the interpolant\nclk = Abc_Clock();\n                    p-\u003epInter = Dar_ManRwsat( pAigTemp = p-\u003epInter, 1, 0 );\n                    Aig_ManStop( pAigTemp );\np-\u003etimeRwr += Abc_Clock() - clk;\n                }\n                else // forward with the new containment checking (using only the frontier)\n                {\n                    Aig_ManStop( p-\u003epInter );\n                    p-\u003epInter = p-\u003epInterNew; \n                }\n            }\n            p-\u003epInterNew = NULL;\n            Cnf_DataFree( p-\u003epCnfInter );\nclk = Abc_Clock();\n            p-\u003epCnfInter = Cnf_Derive( p-\u003epInter, 0 );  \np-\u003etimeCnf += Abc_Clock() - clk;\n        }\n\n        // start containment checking\n        Inter_CheckStop( pCheck );\n    }\n    assert( 0 );\n    return RetValue;\n}",
+      "Draft": "func Inter_ManPerformInterpolation(pAig *Aig_Man_t, pPars *Inter_ManParams_t, piFrame *int32) int32 {\n    extern int Inter_ManCheckInductiveContainment( Aig_Man_t * pTrans, Aig_Man_t * pInter, int nSteps, int fBackward );\n    var p *Inter_Man_t;\n    var pCheck *Inter_Check_t  = nil;\n    var pAigTemp *Aig_Man_t;\n    var s, i, RetValue, Status int32;\n    var clk abctime;\n    var clk2 abctime;\n    var clkTotal abctime = Abc_Clock();\n    var timeTemp abctime;\n    var nTimeNewOut abctime;\n    if pPars.nSecLimit {\n        nTimeNewOut = pPars.nSecLimit * int64(time.Second) + Abc_Clock();\n    } else {\n        nTimeNewOut = 0;\n    }\n\n    // enable ORing of the interpolants, if containment check is performed inductively with K \u003e 1\n    if pPars.nFramesK \u003e 1 {\n        pPars.fTransLoop = 1; }\n\n    // sanity checks\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    assert(Saig_ManPiNum(pAig) \u003e 0, \"Saig_ManPiNum(pAig) \u003e 0\");\n    assert(Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) == 1, \"Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) == 1\");\n    if pPars.fVerbose \u0026\u0026 Saig_ManConstrNum(pAig) {\n        fmt.Printf(\"Performing interpolation with %d constraints...\\n\", Saig_ManConstrNum(pAig)); }\n\n    if Inter_ManCheckInitialState(pAig) {\n        *piFrame = -1;\n        fmt.Printf(\"Property trivially fails in the initial state.\\n\");\n        return 0;\n    }\n/*\n    if ( Inter_ManCheckAllStates(pAig) )\n    {\n        printf( \"Property trivially holds in all states.\\n\" );\n        return 1;\n    }\n*/\n    // create interpolation manager\n    // can perform SAT sweeping and/or rewriting of this AIG...\n    p = Inter_ManCreate( pAig, pPars );\n    if pPars.fTransLoop {\n        p.pAigTrans = Inter_ManStartOneOutput( pAig, 0 );\n    } else {\n        p.pAigTrans = Inter_ManStartDuplicated( pAig ); }\n    // derive CNF for the transformed AIG\nclk = Abc_Clock();\n    p.pCnfAig = Cnf_Derive( p.pAigTrans, Aig_ManRegNum(p.pAigTrans) ); \np.timeCnf += Abc_Clock() - clk;    \n    if pPars.fVerbose { \n        fmt.Printf(\"AIG: PI/PO/Reg = %d/%d/%d. And = %d. Lev = %d.  CNF: Var/Cla = %d/%d.\\n\", Saig_ManPiNum(pAig), Saig_ManPoNum(pAig), Saig_ManRegNum(pAig), Aig_ManAndNum(pAig), Aig_ManLevelNum(pAig), p.pCnfAig.nVars, p.pCnfAig.nClauses);\n    }\n \n    // derive interpolant\n    *piFrame = -1;\n    p.nFrames = 1;\n    for  s = 0; ; s++  {\n        var pCnfInter2 *Cnf_Dat_t;\n\nclk2 = Abc_Clock();\n        // initial state\n        if pPars.fUseBackward {\n            p.pInter = Inter_ManStartOneOutput( pAig, 1 );\n        } else {\n            p.pInter = Inter_ManStartInitState( Aig_ManRegNum(pAig) ); }\n        assert(Aig_ManCoNum(p.pInter) == 1, \"Aig_ManCoNum(p.pInter) == 1\");\nclk = Abc_Clock();\n        p.pCnfInter = Cnf_Derive( p.pInter, 0 );  \np.timeCnf += Abc_Clock() - clk;    \n        // timeframes\n        p.pFrames = Inter_ManFramesInter( pAig, p.nFrames, pPars.fUseBackward, pPars.fUseTwoFrames );\nclk = Abc_Clock();\n        if pPars.fRewrite {\n            p.pFrames = Dar_ManRwsat( pAigTemp = p.pFrames, 1, 0 );\n            Aig_ManStop( pAigTemp );\n//        p-\u003epFrames = Fra_FraigEquivence( pAigTemp = p-\u003epFrames, 100, 0 );\n//        Aig_ManStop( pAigTemp );\n        }\np.timeRwr += Abc_Clock() - clk;\n        // can also do SAT sweeping on the timeframes...\nclk = Abc_Clock();\n        if pPars.fUseBackward {\n            p.pCnfFrames = Cnf_Derive( p.pFrames, Aig_ManCoNum(p.pFrames) );  \n        } else {\n//            p-\u003epCnfFrames = Cnf_Derive( p-\u003epFrames, 0 );  \n            p.pCnfFrames = Cnf_DeriveSimple( p.pFrames, 0 ); }  \np.timeCnf += Abc_Clock() - clk;    \n        // report statistics\n        if pPars.fVerbose {\n            fmt.Printf(\"Step = %2d. Frames = 1 + %d. And = %5d. Lev = %5d.  \", s+1, p.nFrames, Aig_ManNodeNum(p.pFrames), Aig_ManLevelNum(p.pFrames));\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk2)))/(float64(int64(time.Second))));;\n        }\n\n\n        //////////////////////////////////////////\n        // start containment checking\n        if !(pPars.fTransLoop || pPars.fUseBackward || pPars.nFramesK \u003e 1) {\n            pCheck = Inter_CheckStart( p.pAigTrans, pPars.nFramesK );\n            // try new containment check for the initial state\nclk = Abc_Clock();\n            pCnfInter2 = Cnf_Derive( p.pInter, 1 );  \np.timeCnf += Abc_Clock() - clk;    \nclk = Abc_Clock();\n            RetValue = Inter_CheckPerform( pCheck, pCnfInter2, nTimeNewOut );\np.timeEqu += Abc_Clock() - clk;\n//            assert( RetValue == 0 );\n            Cnf_DataFree( pCnfInter2 );\n            if p.vInters {\n                Vec_PtrPush( p.vInters, Aig_ManDupSimple(p.pInter) ); }\n        }\n        //////////////////////////////////////////\n\n        // iterate the interpolation procedure\n        for  i = 0; ; i++  {\n            if pPars.nFramesMax \u0026\u0026 p.nFrames + i \u003e= pPars.nFramesMax { \n                if pPars.fVerbose {\n                    fmt.Printf(\"Reached limit (%d) on the number of timeframes.\\n\", pPars.nFramesMax); }\n                p.timeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 0 );\n                Inter_CheckStop( pCheck );\n                return -1;\n            }\n\n            // perform interpolation\n            clk = Abc_Clock();\n#ifdef ABC_USE_LIBRARIES\n            if ( pPars-\u003efUseMiniSat )\n            {\n                assert( !pPars-\u003efUseBackward );\n                RetValue = Inter_ManPerformOneStepM114p( p, pPars-\u003efUsePudlak, pPars-\u003efUseOther );\n            }\n            else \n#endif\n                RetValue = Inter_ManPerformOneStep( p, pPars.fUseBias, pPars.fUseBackward, nTimeNewOut );\n\n            if pPars.fVerbose {\n                fmt.Printf(\"   I = %2d. Bmc =%3d. IntAnd =%6d. IntLev =%5d. Conf =%6d.  \", i+1, i + 1 + p.nFrames, Aig_ManNodeNum(p.pInter), Aig_ManLevelNum(p.pInter), p.nConfCur);\n                // inlining of macro ABC_PRT\n                Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n            }\n            // remember the number of timeframes completed\n            pPars.iFrameMax = i - 1 + p.nFrames;\n            if RetValue == 0 { // found a (spurious?) counter-example\n            \n                if i == 0 { // real counterexample\n                \n                    if pPars.fVerbose {\n                        fmt.Printf(\"Found a real counterexample in frame %d.\\n\", p.nFrames); }\n                    p.timeTotal = Abc_Clock() - clkTotal;\n                    *piFrame = p.nFrames;\n//                    pAig-\u003epSeqModel = (Abc_Cex_t *)Inter_ManGetCounterExample( pAig, p-\u003enFrames+1, pPars-\u003efVerbose );\n                    {\n                        var RetValue int32;\n                        var ParsBmc Saig_ParBmc_t;\n                        var pParsBmc *Saig_ParBmc_t = \u0026ParsBmc;\n                        Saig_ParBmcSetDefaultParams( pParsBmc );\n                        pParsBmc.nConfLimit = 100000000;\n                        pParsBmc.nStart     = p.nFrames;\n                        pParsBmc.fVerbose   = pPars.fVerbose;\n                        RetValue = Saig_ManBmcScalable( pAig, pParsBmc );\n                        if RetValue == 1 {\n                            fmt.Printf(\"Error: The problem should be SAT but it is UNSAT.\\n\");\n                        } else if RetValue == -1 {\n                            fmt.Printf(\"Error: The problem timed out.\\n\"); }\n                    }\n                    Inter_ManStop( p, 0 );\n                    Inter_CheckStop( pCheck );\n                    return 0;\n                }\n                // likely spurious counter-example\n                p.nFrames += i;\n                Inter_ManClean( p ); \n                break;\n            \n            } else if RetValue == -1 {\n                if pPars.nSecLimit \u0026\u0026 Abc_Clock() \u003e nTimeNewOut { // timed out\n                \n                    if pPars.fVerbose {\n                        fmt.Printf(\"Reached timeout (%d seconds).\\n\", pPars.nSecLimit); }\n                \n                } else {\n                    assert(p.nConfCur \u003e= p.nConfLimit, \"p.nConfCur \u003e= p.nConfLimit\");\n                    if pPars.fVerbose {\n                        fmt.Printf(\"Reached limit (%d) on the number of conflicts.\\n\", p.nConfLimit); }\n                }\n                p.timeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 0 );\n                Inter_CheckStop( pCheck );\n                return -1;\n            }\n            assert(RetValue == 1, \"RetValue == 1\"); // found new interpolant\n            // compress the interpolant\nclk = Abc_Clock();\n            if p.pInterNew {\n                // save the timeout value\n                p.pInterNew.Time2Quit = nTimeNewOut;\n//                Ioa_WriteAiger( p-\u003epInterNew, \"interpol.aig\", 0, 0 );\n                p.pInterNew = Dar_ManRwsat( pAigTemp = p.pInterNew, 1, 0 );\n//                p-\u003epInterNew = Dar_ManRwsat( pAigTemp = p-\u003epInterNew, 0, 0 );\n                Aig_ManStop( pAigTemp );\n                if p.pInterNew == nil {\n                    fmt.Printf(\"Reached timeout (%d seconds) during rewriting.\\n\", pPars.nSecLimit);\n                    p.timeTotal = Abc_Clock() - clkTotal;\n                    Inter_ManStop( p, 1 );\n                    Inter_CheckStop( pCheck );\n                    return -1;\n                }\n            }\np.timeRwr += Abc_Clock() - clk;\n\n            // check if interpolant is trivial\n            if p.pInterNew == nil || Aig_ObjChild0(Aig_ManCo(p.pInterNew,0)) == Aig_ManConst0(p.pInterNew) { \n//                printf( \"interpolant is constant 0\\n\" );\n                if pPars.fVerbose {\n                    fmt.Printf(\"The problem is trivially true for all states.\\n\"); }\n                p.timeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 1 );\n                Inter_CheckStop( pCheck );\n                return 1;\n            }\n\n            // check containment of interpolants\nclk = Abc_Clock();\n            if pPars.fCheckKstep { // k-step unique-state induction\n            \n                if Aig_ManCiNum(p.pInterNew) == Aig_ManCiNum(p.pInter) {\n                    if pPars.fTransLoop || pPars.fUseBackward || pPars.nFramesK \u003e 1 {\nclk2 = Abc_Clock();\n                        Status = Inter_ManCheckInductiveContainment( p.pAigTrans, p.pInterNew, Abc_MinInt(i + 1, pPars.nFramesK), pPars.fUseBackward );\ntimeTemp = Abc_Clock() - clk2;\n                    \n                    } else {   // new containment check\nclk2 = Abc_Clock();\n                        pCnfInter2 = Cnf_Derive( p.pInterNew, 1 );  \np.timeCnf += Abc_Clock() - clk2;\ntimeTemp = Abc_Clock() - clk2;\n            \n                        Status = Inter_CheckPerform( pCheck, pCnfInter2, nTimeNewOut );\n                        Cnf_DataFree( pCnfInter2 );\n                        if p.vInters {\n                            Vec_PtrPush( p.vInters, Aig_ManDupSimple(p.pInterNew) ); }\n                    }\n                \n                } else {\n                    Status = 0; }\n            \n            } else { // combinational containment\n            \n                if Aig_ManCiNum(p.pInterNew) == Aig_ManCiNum(p.pInter) {\n                    Status = Inter_ManCheckContainment( p.pInterNew, p.pInter );\n                } else {\n                    Status = 0; }\n            }\np.timeEqu += Abc_Clock() - clk - timeTemp;\n            if Status != 0 { // contained\n            \n                if pPars.fVerbose {\n                    fmt.Printf(\"Proved containment of interpolants.\\n\"); }\n                p.timeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 1 );\n                Inter_CheckStop( pCheck );\n                return 1;\n            }\n            if pPars.nSecLimit \u0026\u0026 Abc_Clock() \u003e nTimeNewOut {\n                fmt.Printf(\"Reached timeout (%d seconds).\\n\", pPars.nSecLimit);\n                p.timeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 1 );\n                Inter_CheckStop( pCheck );\n                return -1;\n            }\n            // save interpolant and convert it into CNF\n            if pPars.fTransLoop {\n                Aig_ManStop( p.pInter );\n                p.pInter = p.pInterNew; \n            \n            } else {\n                if pPars.fUseBackward {\n                    p.pInter = Aig_ManCreateMiter( pAigTemp = p.pInter, p.pInterNew, 2 );\n                    Aig_ManStop( pAigTemp );\n                    Aig_ManStop( p.pInterNew );\n                    // compress the interpolant\nclk = Abc_Clock();\n                    p.pInter = Dar_ManRwsat( pAigTemp = p.pInter, 1, 0 );\n                    Aig_ManStop( pAigTemp );\np.timeRwr += Abc_Clock() - clk;\n                \n                } else { // forward with the new containment checking (using only the frontier)\n                \n                    Aig_ManStop( p.pInter );\n                    p.pInter = p.pInterNew; \n                }\n            }\n            p.pInterNew = nil;\n            Cnf_DataFree( p.pCnfInter );\nclk = Abc_Clock();\n            p.pCnfInter = Cnf_Derive( p.pInter, 0 );  \np.timeCnf += Abc_Clock() - clk;\n        }\n\n        // start containment checking\n        Inter_CheckStop( pCheck );\n    }\n    assert(false, \"0\");\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCore.c::mechanical::sizeof::1387",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1387,
+      "End": 1393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCore.c::Inter_ManSetDefaultParams",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManSetDefaultParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1310,
+      "End": 2536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCore.c::Inter_ManPerformInterpolation",
+      "Category": "semantic-review",
+      "Symbol": "Inter_ManPerformInterpolation",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2922,
+      "End": 16037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCore.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/int/intCore.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7981,
+      "End": 8243
+    }
+  ],
+  "Draft": "package int\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [intCore.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Interpolation engine.]\n\n  Synopsis    [Core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 24, 2008.]\n\n  Revision    [$Id: intCore.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"intInt.h\"\n//#include \"sat/bmc/bmc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////`\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure sets default values of interpolation parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManSetDefaultParams(p *Inter_ManParams_t) { \n    memset( p, 0, sizeof(Inter_ManParams_t) );\n    p.nBTLimit      = 0;     // limit on the number of conflicts\n    p.nFramesMax    = 0;     // the max number timeframes to unroll\n    p.nSecLimit     = 0;     // time limit in seconds\n    p.nFramesK      = 1;     // the number of timeframes to use in induction\n    p.fRewrite      = 0;     // use additional rewriting to simplify timeframes\n    p.fTransLoop    = 0;     // add transition into the init state under new PI var\n    p.fUsePudlak    = 0;     // use Pudluk interpolation procedure\n    p.fUseOther     = 0;     // use other undisclosed option\n    p.fUseMiniSat   = 0;     // use MiniSat-1.14p instead of internal proof engine\n    p.fCheckKstep   = 1;     // check using K-step induction\n    p.fUseBias      = 0;     // bias decisions to global variables\n    p.fUseBackward  = 0;     // perform backward interpolation\n    p.fUseSeparate  = 0;     // solve each output separately\n    p.fUseTwoFrames = 0;     // create OR of two last timeframes\n    p.fDropSatOuts  = 0;     // replace by 1 the solved outputs\n    p.fVerbose      = 0;     // print verbose statistics\n    p.iFrameMax     =-1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Interplates while the number of conflicts is not exceeded.]\n\n  Description [Returns 1 if proven. 0 if failed. -1 if undecided.]\n               \n  SideEffects [Does not check the property in 0-th frame.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Inter_ManPerformInterpolation(pAig *Aig_Man_t, pPars *Inter_ManParams_t, piFrame *int32) int32 {\n    extern int Inter_ManCheckInductiveContainment( Aig_Man_t * pTrans, Aig_Man_t * pInter, int nSteps, int fBackward );\n    var p *Inter_Man_t;\n    var pCheck *Inter_Check_t  = nil;\n    var pAigTemp *Aig_Man_t;\n    var s, i, RetValue, Status int32;\n    var clk abctime;\n    var clk2 abctime;\n    var clkTotal abctime = Abc_Clock();\n    var timeTemp abctime;\n    var nTimeNewOut abctime;\n    if pPars.nSecLimit {\n        nTimeNewOut = pPars.nSecLimit * int64(time.Second) + Abc_Clock();\n    } else {\n        nTimeNewOut = 0;\n    }\n\n    // enable ORing of the interpolants, if containment check is performed inductively with K \u003e 1\n    if pPars.nFramesK \u003e 1 {\n        pPars.fTransLoop = 1; }\n\n    // sanity checks\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    assert(Saig_ManPiNum(pAig) \u003e 0, \"Saig_ManPiNum(pAig) \u003e 0\");\n    assert(Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) == 1, \"Saig_ManPoNum(pAig)-Saig_ManConstrNum(pAig) == 1\");\n    if pPars.fVerbose \u0026\u0026 Saig_ManConstrNum(pAig) {\n        fmt.Printf(\"Performing interpolation with %d constraints...\\n\", Saig_ManConstrNum(pAig)); }\n\n    if Inter_ManCheckInitialState(pAig) {\n        *piFrame = -1;\n        fmt.Printf(\"Property trivially fails in the initial state.\\n\");\n        return 0;\n    }\n/*\n    if ( Inter_ManCheckAllStates(pAig) )\n    {\n        printf( \"Property trivially holds in all states.\\n\" );\n        return 1;\n    }\n*/\n    // create interpolation manager\n    // can perform SAT sweeping and/or rewriting of this AIG...\n    p = Inter_ManCreate( pAig, pPars );\n    if pPars.fTransLoop {\n        p.pAigTrans = Inter_ManStartOneOutput( pAig, 0 );\n    } else {\n        p.pAigTrans = Inter_ManStartDuplicated( pAig ); }\n    // derive CNF for the transformed AIG\nclk = Abc_Clock();\n    p.pCnfAig = Cnf_Derive( p.pAigTrans, Aig_ManRegNum(p.pAigTrans) ); \np.timeCnf += Abc_Clock() - clk;    \n    if pPars.fVerbose { \n        fmt.Printf(\"AIG: PI/PO/Reg = %d/%d/%d. And = %d. Lev = %d.  CNF: Var/Cla = %d/%d.\\n\", Saig_ManPiNum(pAig), Saig_ManPoNum(pAig), Saig_ManRegNum(pAig), Aig_ManAndNum(pAig), Aig_ManLevelNum(pAig), p.pCnfAig.nVars, p.pCnfAig.nClauses);\n    }\n \n    // derive interpolant\n    *piFrame = -1;\n    p.nFrames = 1;\n    for  s = 0; ; s++  {\n        var pCnfInter2 *Cnf_Dat_t;\n\nclk2 = Abc_Clock();\n        // initial state\n        if pPars.fUseBackward {\n            p.pInter = Inter_ManStartOneOutput( pAig, 1 );\n        } else {\n            p.pInter = Inter_ManStartInitState( Aig_ManRegNum(pAig) ); }\n        assert(Aig_ManCoNum(p.pInter) == 1, \"Aig_ManCoNum(p.pInter) == 1\");\nclk = Abc_Clock();\n        p.pCnfInter = Cnf_Derive( p.pInter, 0 );  \np.timeCnf += Abc_Clock() - clk;    \n        // timeframes\n        p.pFrames = Inter_ManFramesInter( pAig, p.nFrames, pPars.fUseBackward, pPars.fUseTwoFrames );\nclk = Abc_Clock();\n        if pPars.fRewrite {\n            p.pFrames = Dar_ManRwsat( pAigTemp = p.pFrames, 1, 0 );\n            Aig_ManStop( pAigTemp );\n//        p-\u003epFrames = Fra_FraigEquivence( pAigTemp = p-\u003epFrames, 100, 0 );\n//        Aig_ManStop( pAigTemp );\n        }\np.timeRwr += Abc_Clock() - clk;\n        // can also do SAT sweeping on the timeframes...\nclk = Abc_Clock();\n        if pPars.fUseBackward {\n            p.pCnfFrames = Cnf_Derive( p.pFrames, Aig_ManCoNum(p.pFrames) );  \n        } else {\n//            p-\u003epCnfFrames = Cnf_Derive( p-\u003epFrames, 0 );  \n            p.pCnfFrames = Cnf_DeriveSimple( p.pFrames, 0 ); }  \np.timeCnf += Abc_Clock() - clk;    \n        // report statistics\n        if pPars.fVerbose {\n            fmt.Printf(\"Step = %2d. Frames = 1 + %d. And = %5d. Lev = %5d.  \", s+1, p.nFrames, Aig_ManNodeNum(p.pFrames), Aig_ManLevelNum(p.pFrames));\n            // inlining of macro ABC_PRT\n            Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk2)))/(float64(int64(time.Second))));;\n        }\n\n\n        //////////////////////////////////////////\n        // start containment checking\n        if !(pPars.fTransLoop || pPars.fUseBackward || pPars.nFramesK \u003e 1) {\n            pCheck = Inter_CheckStart( p.pAigTrans, pPars.nFramesK );\n            // try new containment check for the initial state\nclk = Abc_Clock();\n            pCnfInter2 = Cnf_Derive( p.pInter, 1 );  \np.timeCnf += Abc_Clock() - clk;    \nclk = Abc_Clock();\n            RetValue = Inter_CheckPerform( pCheck, pCnfInter2, nTimeNewOut );\np.timeEqu += Abc_Clock() - clk;\n//            assert( RetValue == 0 );\n            Cnf_DataFree( pCnfInter2 );\n            if p.vInters {\n                Vec_PtrPush( p.vInters, Aig_ManDupSimple(p.pInter) ); }\n        }\n        //////////////////////////////////////////\n\n        // iterate the interpolation procedure\n        for  i = 0; ; i++  {\n            if pPars.nFramesMax \u0026\u0026 p.nFrames + i \u003e= pPars.nFramesMax { \n                if pPars.fVerbose {\n                    fmt.Printf(\"Reached limit (%d) on the number of timeframes.\\n\", pPars.nFramesMax); }\n                p.timeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 0 );\n                Inter_CheckStop( pCheck );\n                return -1;\n            }\n\n            // perform interpolation\n            clk = Abc_Clock();\n#ifdef ABC_USE_LIBRARIES\n            if ( pPars-\u003efUseMiniSat )\n            {\n                assert( !pPars-\u003efUseBackward );\n                RetValue = Inter_ManPerformOneStepM114p( p, pPars-\u003efUsePudlak, pPars-\u003efUseOther );\n            }\n            else \n#endif\n                RetValue = Inter_ManPerformOneStep( p, pPars.fUseBias, pPars.fUseBackward, nTimeNewOut );\n\n            if pPars.fVerbose {\n                fmt.Printf(\"   I = %2d. Bmc =%3d. IntAnd =%6d. IntLev =%5d. Conf =%6d.  \", i+1, i + 1 + p.nFrames, Aig_ManNodeNum(p.pInter), Aig_ManLevelNum(p.pInter), p.nConfCur);\n                // inlining of macro ABC_PRT\n                Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n            }\n            // remember the number of timeframes completed\n            pPars.iFrameMax = i - 1 + p.nFrames;\n            if RetValue == 0 { // found a (spurious?) counter-example\n            \n                if i == 0 { // real counterexample\n                \n                    if pPars.fVerbose {\n                        fmt.Printf(\"Found a real counterexample in frame %d.\\n\", p.nFrames); }\n                    p.timeTotal = Abc_Clock() - clkTotal;\n                    *piFrame = p.nFrames;\n//                    pAig-\u003epSeqModel = (Abc_Cex_t *)Inter_ManGetCounterExample( pAig, p-\u003enFrames+1, pPars-\u003efVerbose );\n                    {\n                        var RetValue int32;\n                        var ParsBmc Saig_ParBmc_t;\n                        var pParsBmc *Saig_ParBmc_t = \u0026ParsBmc;\n                        Saig_ParBmcSetDefaultParams( pParsBmc );\n                        pParsBmc.nConfLimit = 100000000;\n                        pParsBmc.nStart     = p.nFrames;\n                        pParsBmc.fVerbose   = pPars.fVerbose;\n                        RetValue = Saig_ManBmcScalable( pAig, pParsBmc );\n                        if RetValue == 1 {\n                            fmt.Printf(\"Error: The problem should be SAT but it is UNSAT.\\n\");\n                        } else if RetValue == -1 {\n                            fmt.Printf(\"Error: The problem timed out.\\n\"); }\n                    }\n                    Inter_ManStop( p, 0 );\n                    Inter_CheckStop( pCheck );\n                    return 0;\n                }\n                // likely spurious counter-example\n                p.nFrames += i;\n                Inter_ManClean( p ); \n                break;\n            \n            } else if RetValue == -1 {\n                if pPars.nSecLimit \u0026\u0026 Abc_Clock() \u003e nTimeNewOut { // timed out\n                \n                    if pPars.fVerbose {\n                        fmt.Printf(\"Reached timeout (%d seconds).\\n\", pPars.nSecLimit); }\n                \n                } else {\n                    assert(p.nConfCur \u003e= p.nConfLimit, \"p.nConfCur \u003e= p.nConfLimit\");\n                    if pPars.fVerbose {\n                        fmt.Printf(\"Reached limit (%d) on the number of conflicts.\\n\", p.nConfLimit); }\n                }\n                p.timeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 0 );\n                Inter_CheckStop( pCheck );\n                return -1;\n            }\n            assert(RetValue == 1, \"RetValue == 1\"); // found new interpolant\n            // compress the interpolant\nclk = Abc_Clock();\n            if p.pInterNew {\n                // save the timeout value\n                p.pInterNew.Time2Quit = nTimeNewOut;\n//                Ioa_WriteAiger( p-\u003epInterNew, \"interpol.aig\", 0, 0 );\n                p.pInterNew = Dar_ManRwsat( pAigTemp = p.pInterNew, 1, 0 );\n//                p-\u003epInterNew = Dar_ManRwsat( pAigTemp = p-\u003epInterNew, 0, 0 );\n                Aig_ManStop( pAigTemp );\n                if p.pInterNew == nil {\n                    fmt.Printf(\"Reached timeout (%d seconds) during rewriting.\\n\", pPars.nSecLimit);\n                    p.timeTotal = Abc_Clock() - clkTotal;\n                    Inter_ManStop( p, 1 );\n                    Inter_CheckStop( pCheck );\n                    return -1;\n                }\n            }\np.timeRwr += Abc_Clock() - clk;\n\n            // check if interpolant is trivial\n            if p.pInterNew == nil || Aig_ObjChild0(Aig_ManCo(p.pInterNew,0)) == Aig_ManConst0(p.pInterNew) { \n//                printf( \"interpolant is constant 0\\n\" );\n                if pPars.fVerbose {\n                    fmt.Printf(\"The problem is trivially true for all states.\\n\"); }\n                p.timeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 1 );\n                Inter_CheckStop( pCheck );\n                return 1;\n            }\n\n            // check containment of interpolants\nclk = Abc_Clock();\n            if pPars.fCheckKstep { // k-step unique-state induction\n            \n                if Aig_ManCiNum(p.pInterNew) == Aig_ManCiNum(p.pInter) {\n                    if pPars.fTransLoop || pPars.fUseBackward || pPars.nFramesK \u003e 1 {\nclk2 = Abc_Clock();\n                        Status = Inter_ManCheckInductiveContainment( p.pAigTrans, p.pInterNew, Abc_MinInt(i + 1, pPars.nFramesK), pPars.fUseBackward );\ntimeTemp = Abc_Clock() - clk2;\n                    \n                    } else {   // new containment check\nclk2 = Abc_Clock();\n                        pCnfInter2 = Cnf_Derive( p.pInterNew, 1 );  \np.timeCnf += Abc_Clock() - clk2;\ntimeTemp = Abc_Clock() - clk2;\n            \n                        Status = Inter_CheckPerform( pCheck, pCnfInter2, nTimeNewOut );\n                        Cnf_DataFree( pCnfInter2 );\n                        if p.vInters {\n                            Vec_PtrPush( p.vInters, Aig_ManDupSimple(p.pInterNew) ); }\n                    }\n                \n                } else {\n                    Status = 0; }\n            \n            } else { // combinational containment\n            \n                if Aig_ManCiNum(p.pInterNew) == Aig_ManCiNum(p.pInter) {\n                    Status = Inter_ManCheckContainment( p.pInterNew, p.pInter );\n                } else {\n                    Status = 0; }\n            }\np.timeEqu += Abc_Clock() - clk - timeTemp;\n            if Status != 0 { // contained\n            \n                if pPars.fVerbose {\n                    fmt.Printf(\"Proved containment of interpolants.\\n\"); }\n                p.timeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 1 );\n                Inter_CheckStop( pCheck );\n                return 1;\n            }\n            if pPars.nSecLimit \u0026\u0026 Abc_Clock() \u003e nTimeNewOut {\n                fmt.Printf(\"Reached timeout (%d seconds).\\n\", pPars.nSecLimit);\n                p.timeTotal = Abc_Clock() - clkTotal;\n                Inter_ManStop( p, 1 );\n                Inter_CheckStop( pCheck );\n                return -1;\n            }\n            // save interpolant and convert it into CNF\n            if pPars.fTransLoop {\n                Aig_ManStop( p.pInter );\n                p.pInter = p.pInterNew; \n            \n            } else {\n                if pPars.fUseBackward {\n                    p.pInter = Aig_ManCreateMiter( pAigTemp = p.pInter, p.pInterNew, 2 );\n                    Aig_ManStop( pAigTemp );\n                    Aig_ManStop( p.pInterNew );\n                    // compress the interpolant\nclk = Abc_Clock();\n                    p.pInter = Dar_ManRwsat( pAigTemp = p.pInter, 1, 0 );\n                    Aig_ManStop( pAigTemp );\np.timeRwr += Abc_Clock() - clk;\n                \n                } else { // forward with the new containment checking (using only the frontier)\n                \n                    Aig_ManStop( p.pInter );\n                    p.pInter = p.pInterNew; \n                }\n            }\n            p.pInterNew = nil;\n            Cnf_DataFree( p.pCnfInter );\nclk = Abc_Clock();\n            p.pCnfInter = Cnf_Derive( p.pInter, 0 );  \np.timeCnf += Abc_Clock() - clk;\n        }\n\n        // start containment checking\n        Inter_CheckStop( pCheck );\n    }\n    assert(false, \"0\");\n    return RetValue;\n}\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

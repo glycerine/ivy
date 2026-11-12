@@ -1,0 +1,914 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c",
+  "SHA256": "d37b07750f7c1f57cf987d8d8417de5e7cef18e95171262f47cde6bfb061a8d8",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 2033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSize \u003e 0 \u0026\u0026 nWords \u003e 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 64,
+        "Column": 82,
+        "ByteOffset": 2184
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    vInfo.pArray[0] = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(nSize * nWords)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 66,
+        "Column": 9,
+        "ByteOffset": 2262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( vInfo.pArray[0], 0, sizeof(unsigned) * nSize * nWords ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 86,
+        "Column": 67,
+        "ByteOffset": 2868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pArray[0]) ? (free((char *) (p.pArray[0])), (p.pArray[0]) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 275,
+        "Column": 9,
+        "ByteOffset": 8743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjFaninNum(pNode) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 313,
+        "Column": 5,
+        "ByteOffset": 9934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 355,
+        "Column": 5,
+        "ByteOffset": 11395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsCo(pNode) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 629,
+        "Column": 13,
+        "ByteOffset": 20209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"(%d,%d) \", i, k ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 651,
+        "Column": 9,
+        "ByteOffset": 20708
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Output %2d :\", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 653,
+        "Column": 9,
+        "ByteOffset": 20865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 679,
+        "Column": 9,
+        "ByteOffset": 21612
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nPairsTotal \u003e= nPairsSym + nPairsNonSym ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 687,
+        "Column": 9,
+        "ByteOffset": 22108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nPairsTotal \u003e= nPairsSym + nPairsNonSym ); "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sim_UtilInfoAlloc",
+      "Start": 1880,
+      "End": 2360,
+      "BodyStart": 1947,
+      "Original": "Vec_Ptr_t * Sim_UtilInfoAlloc( int nSize, int nWords, int fClean )\n{\n    Vec_Ptr_t * vInfo;\n    int i;\n    assert( nSize \u003e 0 \u0026\u0026 nWords \u003e 0 );\n    vInfo = Vec_PtrAlloc( nSize );\n    vInfo-\u003epArray[0] = ABC_ALLOC( unsigned, nSize * nWords );\n    if ( fClean )\n        memset( vInfo-\u003epArray[0], 0, sizeof(unsigned) * nSize * nWords );\n    for ( i = 1; i \u003c nSize; i++ )\n        vInfo-\u003epArray[i] = ((unsigned *)vInfo-\u003epArray[i-1]) + nWords;\n    vInfo-\u003enSize = nSize;\n    return vInfo;\n}",
+      "Draft": "func Sim_UtilInfoAlloc(nSize int32, nWords int32, fClean int32) *Vec_Ptr_t {\n    var vInfo *Vec_Ptr_t;\n    var i int32;\n    assert(nSize \u003e 0 \u0026\u0026 nWords \u003e 0, \"nSize \u003e 0 \u0026\u0026 nWords \u003e 0\");\n    vInfo = Vec_PtrAlloc( nSize );\n    // inlining of macro ABC_ALLOC\n    vInfo.pArray[0] = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(nSize * nWords)));\n    if fClean != 0 {\n        memset( vInfo.pArray[0], 0, sizeof(unsigned) * nSize * nWords ); }\n    for  i = 1; i \u003c nSize; i++  {\n        vInfo.pArray[i] = ((unsigned *)vInfo.pArray[i-1]) + nWords;\n    }\n    vInfo.nSize = nSize;\n    return vInfo;\n}"
+    },
+    {
+      "Name": "Sim_UtilInfoFree",
+      "Start": 2643,
+      "End": 2737,
+      "BodyStart": 2682,
+      "Original": "void Sim_UtilInfoFree( Vec_Ptr_t * p )\n{\n    ABC_FREE( p-\u003epArray[0] );\n    Vec_PtrFree( p );\n}",
+      "Draft": "func Sim_UtilInfoFree(p *Vec_Ptr_t) {\n    // inlining of macro ABC_FREE\n    ((p.pArray[0]) ? (free((char *) (p.pArray[0])), (p.pArray[0]) = 0) : 0);\n    Vec_PtrFree( p );\n}"
+    },
+    {
+      "Name": "Sim_UtilInfoAdd",
+      "Start": 3009,
+      "End": 3163,
+      "BodyStart": 3082,
+      "Original": "void Sim_UtilInfoAdd( unsigned * pInfo1, unsigned * pInfo2, int nWords )\n{\n    int w;\n    for ( w = 0; w \u003c nWords; w++ )\n        pInfo1[w] |= pInfo2[w];\n}",
+      "Draft": "func Sim_UtilInfoAdd(pInfo1 *uint32, pInfo2 *uint32, nWords int32) {\n    var w int32;\n    for  w = 0; w \u003c nWords; w++  {\n        pInfo1[w] |= pInfo2[w];\n    }\n}"
+    },
+    {
+      "Name": "Sim_UtilInfoDetectDiffs",
+      "Start": 3457,
+      "End": 3834,
+      "BodyStart": 3558,
+      "Original": "void Sim_UtilInfoDetectDiffs( unsigned * pInfo1, unsigned * pInfo2, int nWords, Vec_Int_t * vDiffs )\n{\n    int w, b;\n    unsigned uMask;\n    vDiffs-\u003enSize = 0;\n    for ( w = 0; w \u003c nWords; w++ )\n        if ( (uMask = (pInfo2[w] ^ pInfo1[w])) )\n            for ( b = 0; b \u003c 32; b++ )\n                if ( uMask \u0026 (1 \u003c\u003c b) )\n                    Vec_IntPush( vDiffs, 32*w + b );\n}",
+      "Draft": "func Sim_UtilInfoDetectDiffs(pInfo1 *uint32, pInfo2 *uint32, nWords int32, vDiffs *Vec_Int_t) {\n    var w, b int32;\n    var uMask uint32;\n    vDiffs.nSize = 0;\n    for  w = 0; w \u003c nWords; w++  {\n        if uMask = (pInfo2[w] ^ pInfo1[w]) {\n            for  b = 0; b \u003c 32; b++  {\n                if uMask \u0026 (1 \u003c\u003c b) {\n                    Vec_IntPush( vDiffs, 32*w + b ); }\n            } }\n    }\n}"
+    },
+    {
+      "Name": "Sim_UtilInfoDetectNews",
+      "Start": 4128,
+      "End": 4505,
+      "BodyStart": 4228,
+      "Original": "void Sim_UtilInfoDetectNews( unsigned * pInfo1, unsigned * pInfo2, int nWords, Vec_Int_t * vDiffs )\n{\n    int w, b;\n    unsigned uMask;\n    vDiffs-\u003enSize = 0;\n    for ( w = 0; w \u003c nWords; w++ )\n        if ( (uMask = (pInfo2[w] \u0026 ~pInfo1[w])) )\n            for ( b = 0; b \u003c 32; b++ )\n                if ( uMask \u0026 (1 \u003c\u003c b) )\n                    Vec_IntPush( vDiffs, 32*w + b );\n}",
+      "Draft": "func Sim_UtilInfoDetectNews(pInfo1 *uint32, pInfo2 *uint32, nWords int32, vDiffs *Vec_Int_t) {\n    var w, b int32;\n    var uMask uint32;\n    vDiffs.nSize = 0;\n    for  w = 0; w \u003c nWords; w++  {\n        if uMask = (pInfo2[w] \u0026 ~pInfo1[w]) {\n            for  b = 0; b \u003c 32; b++  {\n                if uMask \u0026 (1 \u003c\u003c b) {\n                    Vec_IntPush( vDiffs, 32*w + b ); }\n            } }\n    }\n}"
+    },
+    {
+      "Name": "Sim_UtilInfoFlip",
+      "Start": 4779,
+      "End": 5083,
+      "BodyStart": 4837,
+      "Original": "void Sim_UtilInfoFlip( Sim_Man_t * p, Abc_Obj_t * pNode )\n{\n    unsigned * pSimInfo1, * pSimInfo2;\n    int k;\n    pSimInfo1 = (unsigned *)p-\u003evSim0-\u003epArray[pNode-\u003eId];\n    pSimInfo2 = (unsigned *)p-\u003evSim1-\u003epArray[pNode-\u003eId];\n    for ( k = 0; k \u003c p-\u003enSimWords; k++ )\n        pSimInfo2[k] = ~pSimInfo1[k];\n}",
+      "Draft": "func Sim_UtilInfoFlip(p *Sim_Man_t, pNode *Abc_Obj_t) {\n    var pSimInfo1, pSimInfo2 *uint32;\n    var k int32;\n    pSimInfo1 = (unsigned *)p.vSim0.pArray[pNode.Id];\n    pSimInfo2 = (unsigned *)p.vSim1.pArray[pNode.Id];\n    for  k = 0; k \u003c p.nSimWords; k++  {\n        pSimInfo2[k] = ~pSimInfo1[k];\n    }\n}"
+    },
+    {
+      "Name": "Sim_UtilInfoCompare",
+      "Start": 5363,
+      "End": 5711,
+      "BodyStart": 5423,
+      "Original": "int Sim_UtilInfoCompare( Sim_Man_t * p, Abc_Obj_t * pNode )\n{\n    unsigned * pSimInfo1, * pSimInfo2;\n    int k;\n    pSimInfo1 = (unsigned *)p-\u003evSim0-\u003epArray[pNode-\u003eId];\n    pSimInfo2 = (unsigned *)p-\u003evSim1-\u003epArray[pNode-\u003eId];\n    for ( k = 0; k \u003c p-\u003enSimWords; k++ )\n        if ( pSimInfo2[k] != pSimInfo1[k] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Sim_UtilInfoCompare(p *Sim_Man_t, pNode *Abc_Obj_t) int32 {\n    var pSimInfo1, pSimInfo2 *uint32;\n    var k int32;\n    pSimInfo1 = (unsigned *)p.vSim0.pArray[pNode.Id];\n    pSimInfo2 = (unsigned *)p.vSim1.pArray[pNode.Id];\n    for  k = 0; k \u003c p.nSimWords; k++  {\n        if pSimInfo2[k] != pSimInfo1[k] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Sim_UtilSimulate",
+      "Start": 5976,
+      "End": 6356,
+      "BodyStart": 6026,
+      "Original": "void Sim_UtilSimulate( Sim_Man_t * p, int fType )\n{\n    Abc_Obj_t * pNode;\n    int i;\n    // simulate the internal nodes\n    Abc_NtkForEachNode( p-\u003epNtk, pNode, i )\n        Sim_UtilSimulateNode( p, pNode, fType, fType, fType );\n    // assign simulation info of the CO nodes\n    Abc_NtkForEachCo( p-\u003epNtk, pNode, i )\n        Sim_UtilSimulateNode( p, pNode, fType, fType, fType );\n}",
+      "Draft": "func Sim_UtilSimulate(p *Sim_Man_t, fType int32) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // simulate the internal nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p.pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(p.pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Sim_UtilSimulateNode( p, pNode, fType, fType, fType ); }\n    }\n    // assign simulation info of the CO nodes\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n        Sim_UtilSimulateNode( p, pNode, fType, fType, fType );\n    }\n}"
+    },
+    {
+      "Name": "Sim_UtilSimulateNode",
+      "Start": 6611,
+      "End": 8824,
+      "BodyStart": 6708,
+      "Original": "void Sim_UtilSimulateNode( Sim_Man_t * p, Abc_Obj_t * pNode, int fType, int fType1, int fType2 )\n{\n    unsigned * pSimmNode, * pSimmNode1, * pSimmNode2;\n    int k, fComp1, fComp2;\n    // simulate the internal nodes\n    if ( Abc_ObjIsNode(pNode) )\n    {\n        if ( fType )\n            pSimmNode  = (unsigned *)p-\u003evSim1-\u003epArray[ pNode-\u003eId ];\n        else\n            pSimmNode  = (unsigned *)p-\u003evSim0-\u003epArray[ pNode-\u003eId ];\n\n        if ( fType1 )\n            pSimmNode1 = (unsigned *)p-\u003evSim1-\u003epArray[ Abc_ObjFaninId0(pNode) ];\n        else\n            pSimmNode1 = (unsigned *)p-\u003evSim0-\u003epArray[ Abc_ObjFaninId0(pNode) ];\n\n        if ( fType2 )\n            pSimmNode2 = (unsigned *)p-\u003evSim1-\u003epArray[ Abc_ObjFaninId1(pNode) ];\n        else\n            pSimmNode2 = (unsigned *)p-\u003evSim0-\u003epArray[ Abc_ObjFaninId1(pNode) ];\n\n        fComp1 = Abc_ObjFaninC0(pNode);\n        fComp2 = Abc_ObjFaninC1(pNode);\n        if ( fComp1 \u0026\u0026 fComp2 )\n            for ( k = 0; k \u003c p-\u003enSimWords; k++ )\n                pSimmNode[k] = ~pSimmNode1[k] \u0026 ~pSimmNode2[k];\n        else if ( fComp1 \u0026\u0026 !fComp2 )\n            for ( k = 0; k \u003c p-\u003enSimWords; k++ )\n                pSimmNode[k] = ~pSimmNode1[k] \u0026  pSimmNode2[k];\n        else if ( !fComp1 \u0026\u0026 fComp2 )\n            for ( k = 0; k \u003c p-\u003enSimWords; k++ )\n                pSimmNode[k] =  pSimmNode1[k] \u0026 ~pSimmNode2[k];\n        else // if ( fComp1 \u0026\u0026 fComp2 )\n            for ( k = 0; k \u003c p-\u003enSimWords; k++ )\n                pSimmNode[k] =  pSimmNode1[k] \u0026  pSimmNode2[k];\n    }\n    else \n    {\n        assert( Abc_ObjFaninNum(pNode) == 1 );\n        if ( fType )\n            pSimmNode  = (unsigned *)p-\u003evSim1-\u003epArray[ pNode-\u003eId ];\n        else\n            pSimmNode  = (unsigned *)p-\u003evSim0-\u003epArray[ pNode-\u003eId ];\n\n        if ( fType1 )\n            pSimmNode1 = (unsigned *)p-\u003evSim1-\u003epArray[ Abc_ObjFaninId0(pNode) ];\n        else\n            pSimmNode1 = (unsigned *)p-\u003evSim0-\u003epArray[ Abc_ObjFaninId0(pNode) ];\n\n        fComp1 = Abc_ObjFaninC0(pNode);\n        if ( fComp1 )\n            for ( k = 0; k \u003c p-\u003enSimWords; k++ )\n                pSimmNode[k] = ~pSimmNode1[k];\n        else \n            for ( k = 0; k \u003c p-\u003enSimWords; k++ )\n                pSimmNode[k] =  pSimmNode1[k];\n    }\n}",
+      "Draft": "func Sim_UtilSimulateNode(p *Sim_Man_t, pNode *Abc_Obj_t, fType int32, fType1 int32, fType2 int32) {\n    var pSimmNode, pSimmNode1, pSimmNode2 *uint32;\n    var k, fComp1, fComp2 int32;\n    // simulate the internal nodes\n    if Abc_ObjIsNode(pNode) {\n        if fType != 0 {\n            pSimmNode  = (unsigned *)p.vSim1.pArray[ pNode.Id ];\n        } else {\n            pSimmNode  = (unsigned *)p.vSim0.pArray[ pNode.Id ]; }\n\n        if fType1 != 0 {\n            pSimmNode1 = (unsigned *)p.vSim1.pArray[ Abc_ObjFaninId0(pNode) ];\n        } else {\n            pSimmNode1 = (unsigned *)p.vSim0.pArray[ Abc_ObjFaninId0(pNode) ]; }\n\n        if fType2 != 0 {\n            pSimmNode2 = (unsigned *)p.vSim1.pArray[ Abc_ObjFaninId1(pNode) ];\n        } else {\n            pSimmNode2 = (unsigned *)p.vSim0.pArray[ Abc_ObjFaninId1(pNode) ]; }\n\n        fComp1 = Abc_ObjFaninC0(pNode);\n        fComp2 = Abc_ObjFaninC1(pNode);\n        if (fComp1 != 0) \u0026\u0026 (fComp2 != 0) {\n            for  k = 0; k \u003c p.nSimWords; k++  {\n                pSimmNode[k] = ~pSimmNode1[k] \u0026 ~pSimmNode2[k];\n            }\n        } else if (fComp1 != 0) \u0026\u0026 !(fComp2 != 0) {\n            for  k = 0; k \u003c p.nSimWords; k++  {\n                pSimmNode[k] = ~pSimmNode1[k] \u0026  pSimmNode2[k];\n            }\n        } else if !(fComp1 != 0) \u0026\u0026 (fComp2 != 0) {\n            for  k = 0; k \u003c p.nSimWords; k++  {\n                pSimmNode[k] =  pSimmNode1[k] \u0026 ~pSimmNode2[k];\n            }\n        } else { // if ( fComp1 \u0026\u0026 fComp2 )\n            for  k = 0; k \u003c p.nSimWords; k++  {\n                pSimmNode[k] =  pSimmNode1[k] \u0026  pSimmNode2[k];\n            } }\n    \n    } else {\n        assert(Abc_ObjFaninNum(pNode) == 1, \"Abc_ObjFaninNum(pNode) == 1\");\n        if fType != 0 {\n            pSimmNode  = (unsigned *)p.vSim1.pArray[ pNode.Id ];\n        } else {\n            pSimmNode  = (unsigned *)p.vSim0.pArray[ pNode.Id ]; }\n\n        if fType1 != 0 {\n            pSimmNode1 = (unsigned *)p.vSim1.pArray[ Abc_ObjFaninId0(pNode) ];\n        } else {\n            pSimmNode1 = (unsigned *)p.vSim0.pArray[ Abc_ObjFaninId0(pNode) ]; }\n\n        fComp1 = Abc_ObjFaninC0(pNode);\n        if fComp1 != 0 {\n            for  k = 0; k \u003c p.nSimWords; k++  {\n                pSimmNode[k] = ~pSimmNode1[k];\n            }\n        } else { \n            for  k = 0; k \u003c p.nSimWords; k++  {\n                pSimmNode[k] =  pSimmNode1[k];\n            } }\n    }\n}"
+    },
+    {
+      "Name": "Sim_UtilSimulateNodeOne",
+      "Start": 9079,
+      "End": 10245,
+      "BodyStart": 9179,
+      "Original": "void Sim_UtilSimulateNodeOne( Abc_Obj_t * pNode, Vec_Ptr_t * vSimInfo, int nSimWords, int nOffset )\n{\n    unsigned * pSimmNode, * pSimmNode1, * pSimmNode2;\n    int k, fComp1, fComp2;\n    // simulate the internal nodes\n    assert( Abc_ObjIsNode(pNode) );\n    pSimmNode  = (unsigned *)Vec_PtrEntry(vSimInfo, pNode-\u003eId);\n    pSimmNode1 = (unsigned *)Vec_PtrEntry(vSimInfo, Abc_ObjFaninId0(pNode));\n    pSimmNode2 = (unsigned *)Vec_PtrEntry(vSimInfo, Abc_ObjFaninId1(pNode));\n    pSimmNode  += nOffset;\n    pSimmNode1 += nOffset;\n    pSimmNode2 += nOffset;\n    fComp1 = Abc_ObjFaninC0(pNode);\n    fComp2 = Abc_ObjFaninC1(pNode);\n    if ( fComp1 \u0026\u0026 fComp2 )\n        for ( k = 0; k \u003c nSimWords; k++ )\n            pSimmNode[k] = ~pSimmNode1[k] \u0026 ~pSimmNode2[k];\n    else if ( fComp1 \u0026\u0026 !fComp2 )\n        for ( k = 0; k \u003c nSimWords; k++ )\n            pSimmNode[k] = ~pSimmNode1[k] \u0026  pSimmNode2[k];\n    else if ( !fComp1 \u0026\u0026 fComp2 )\n        for ( k = 0; k \u003c nSimWords; k++ )\n            pSimmNode[k] =  pSimmNode1[k] \u0026 ~pSimmNode2[k];\n    else // if ( fComp1 \u0026\u0026 fComp2 )\n        for ( k = 0; k \u003c nSimWords; k++ )\n            pSimmNode[k] =  pSimmNode1[k] \u0026  pSimmNode2[k];\n}",
+      "Draft": "func Sim_UtilSimulateNodeOne(pNode *Abc_Obj_t, vSimInfo *Vec_Ptr_t, nSimWords int32, nOffset int32) {\n    var pSimmNode, pSimmNode1, pSimmNode2 *uint32;\n    var k, fComp1, fComp2 int32;\n    // simulate the internal nodes\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    pSimmNode  = (unsigned *)Vec_PtrEntry(vSimInfo, pNode.Id);\n    pSimmNode1 = (unsigned *)Vec_PtrEntry(vSimInfo, Abc_ObjFaninId0(pNode));\n    pSimmNode2 = (unsigned *)Vec_PtrEntry(vSimInfo, Abc_ObjFaninId1(pNode));\n    pSimmNode  += nOffset;\n    pSimmNode1 += nOffset;\n    pSimmNode2 += nOffset;\n    fComp1 = Abc_ObjFaninC0(pNode);\n    fComp2 = Abc_ObjFaninC1(pNode);\n    if (fComp1 != 0) \u0026\u0026 (fComp2 != 0) {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pSimmNode[k] = ~pSimmNode1[k] \u0026 ~pSimmNode2[k];\n        }\n    } else if (fComp1 != 0) \u0026\u0026 !(fComp2 != 0) {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pSimmNode[k] = ~pSimmNode1[k] \u0026  pSimmNode2[k];\n        }\n    } else if !(fComp1 != 0) \u0026\u0026 (fComp2 != 0) {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pSimmNode[k] =  pSimmNode1[k] \u0026 ~pSimmNode2[k];\n        }\n    } else { // if ( fComp1 \u0026\u0026 fComp2 )\n        for  k = 0; k \u003c nSimWords; k++  {\n            pSimmNode[k] =  pSimmNode1[k] \u0026  pSimmNode2[k];\n        } }\n}"
+    },
+    {
+      "Name": "Sim_UtilTransferNodeOne",
+      "Start": 10500,
+      "End": 11197,
+      "BodyStart": 10612,
+      "Original": "void Sim_UtilTransferNodeOne( Abc_Obj_t * pNode, Vec_Ptr_t * vSimInfo, int nSimWords, int nOffset, int fShift )\n{\n    unsigned * pSimmNode, * pSimmNode1;\n    int k, fComp1;\n    // simulate the internal nodes\n    assert( Abc_ObjIsCo(pNode) );\n    pSimmNode  = (unsigned *)Vec_PtrEntry(vSimInfo, pNode-\u003eId);\n    pSimmNode1 = (unsigned *)Vec_PtrEntry(vSimInfo, Abc_ObjFaninId0(pNode));\n    pSimmNode  += nOffset + (fShift \u003e 0)*nSimWords;\n    pSimmNode1 += nOffset;\n    fComp1 = Abc_ObjFaninC0(pNode);\n    if ( fComp1 )\n        for ( k = 0; k \u003c nSimWords; k++ )\n            pSimmNode[k] = ~pSimmNode1[k];\n    else \n        for ( k = 0; k \u003c nSimWords; k++ )\n            pSimmNode[k] =  pSimmNode1[k];\n}",
+      "Draft": "func Sim_UtilTransferNodeOne(pNode *Abc_Obj_t, vSimInfo *Vec_Ptr_t, nSimWords int32, nOffset int32, fShift int32) {\n    var pSimmNode, pSimmNode1 *uint32;\n    var k, fComp1 int32;\n    // simulate the internal nodes\n    assert(Abc_ObjIsCo(pNode), \"Abc_ObjIsCo(pNode)\");\n    pSimmNode  = (unsigned *)Vec_PtrEntry(vSimInfo, pNode.Id);\n    pSimmNode1 = (unsigned *)Vec_PtrEntry(vSimInfo, Abc_ObjFaninId0(pNode));\n    pSimmNode  += nOffset + (fShift \u003e 0)*nSimWords;\n    pSimmNode1 += nOffset;\n    fComp1 = Abc_ObjFaninC0(pNode);\n    if fComp1 != 0 {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pSimmNode[k] = ~pSimmNode1[k];\n        }\n    } else { \n        for  k = 0; k \u003c nSimWords; k++  {\n            pSimmNode[k] =  pSimmNode1[k];\n        } }\n}"
+    },
+    {
+      "Name": "Sim_UtilCountSuppSizes",
+      "Start": 11477,
+      "End": 12017,
+      "BodyStart": 11534,
+      "Original": "int Sim_UtilCountSuppSizes( Sim_Man_t * p, int fStruct )\n{\n    Abc_Obj_t * pNode, * pNodeCi;\n    int i, v, Counter;\n    Counter = 0;\n    if ( fStruct )\n    {\n        Abc_NtkForEachCo( p-\u003epNtk, pNode, i )\n            Abc_NtkForEachCi( p-\u003epNtk, pNodeCi, v )\n                Counter += Sim_SuppStrHasVar( p-\u003evSuppStr, pNode, v );\n    }\n    else\n    {\n        Abc_NtkForEachCo( p-\u003epNtk, pNode, i )\n            Abc_NtkForEachCi( p-\u003epNtk, pNodeCi, v )\n                Counter += Sim_SuppFunHasVar( p-\u003evSuppFun, i, v );\n    }\n    return Counter;\n}",
+      "Draft": "func Sim_UtilCountSuppSizes(p *Sim_Man_t, fStruct int32) int32 {\n    var pNode, pNodeCi *Abc_Obj_t;\n    var i, v, Counter int32;\n    Counter = 0;\n    if fStruct != 0 {\n        // inlining of macro Abc_NtkForEachCo\n        for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n            // inlining of macro Abc_NtkForEachCi\n            for  v = 0; (v \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNodeCi) = Abc_NtkCi(p.pNtk, v)), 1); v++  {\n                // inlining of macro Sim_SuppStrHasVar\n                // inlining of macro Sim_HasBit\n                Counter += ((((unsigned*)(p.vSuppStr).pArray[(pNode).Id])[((v))\u003e\u003e5]  \u0026 (1\u003c\u003c(((v)) \u0026 31))) \u003e 0);\n            }\n        }\n    \n    } else {\n        // inlining of macro Abc_NtkForEachCo\n        for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n            // inlining of macro Abc_NtkForEachCi\n            for  v = 0; (v \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNodeCi) = Abc_NtkCi(p.pNtk, v)), 1); v++  {\n                // inlining of macro Sim_SuppFunHasVar\n                // inlining of macro Sim_HasBit\n                Counter += ((((unsigned*)(p.vSuppFun).pArray[i])[((v))\u003e\u003e5]  \u0026 (1\u003c\u003c(((v)) \u0026 31))) \u003e 0);\n            }\n        }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Sim_UtilCountOnes",
+      "Start": 12295,
+      "End": 12594,
+      "BodyStart": 12355,
+      "Original": "int Sim_UtilCountOnes( unsigned * pSimInfo, int nSimWords )\n{\n    unsigned char * pBytes;\n    int nOnes, nBytes, i;\n    pBytes = (unsigned char *)pSimInfo;\n    nBytes = 4 * nSimWords;\n    nOnes  = 0;\n    for ( i = 0; i \u003c nBytes; i++ )\n        nOnes += bit_count[ pBytes[i] ];\n    return nOnes;    \n}",
+      "Draft": "func Sim_UtilCountOnes(pSimInfo *uint32, nSimWords int32) int32 {\n    unsigned char * pBytes;\n    var nOnes, nBytes, i int32;\n    pBytes = (unsigned char *)pSimInfo;\n    nBytes = 4 * nSimWords;\n    nOnes  = 0;\n    for  i = 0; i \u003c nBytes; i++  {\n        nOnes += bit_count[ pBytes[i] ];\n    }\n    return nOnes;    \n}"
+    },
+    {
+      "Name": "Sim_UtilCountOnesArray",
+      "Start": 12872,
+      "End": 13224,
+      "BodyStart": 12943,
+      "Original": "Vec_Int_t * Sim_UtilCountOnesArray( Vec_Ptr_t * vInfo, int nSimWords )\n{\n    Vec_Int_t * vCounters;\n    unsigned * pSimInfo;\n    int i;\n    vCounters = Vec_IntStart( Vec_PtrSize(vInfo) );\n    Vec_PtrForEachEntry( unsigned *, vInfo, pSimInfo, i )\n        Vec_IntWriteEntry( vCounters, i, Sim_UtilCountOnes(pSimInfo, nSimWords) );\n    return vCounters;\n}",
+      "Draft": "func Sim_UtilCountOnesArray(vInfo *Vec_Ptr_t, nSimWords int32) *Vec_Int_t {\n    var vCounters *Vec_Int_t;\n    var pSimInfo *uint32;\n    var i int32;\n    vCounters = Vec_IntStart( Vec_PtrSize(vInfo) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vInfo)) \u0026\u0026 (((pSimInfo) = (unsigned *)Vec_PtrEntry(vInfo, i)), 1); i++  {\n        Vec_IntWriteEntry( vCounters, i, Sim_UtilCountOnes(pSimInfo, nSimWords) );\n    }\n    return vCounters;\n}"
+    },
+    {
+      "Name": "Sim_UtilSetRandom",
+      "Start": 13484,
+      "End": 13640,
+      "BodyStart": 13545,
+      "Original": "void Sim_UtilSetRandom( unsigned * pPatRand, int nSimWords )\n{\n    int k;\n    for ( k = 0; k \u003c nSimWords; k++ )\n        pPatRand[k] = SIM_RANDOM_UNSIGNED;\n}",
+      "Draft": "func Sim_UtilSetRandom(pPatRand *uint32, nSimWords int32) {\n    var k int32;\n    for  k = 0; k \u003c nSimWords; k++  {\n        pPatRand[k] = SIM_RANDOM_UNSIGNED;\n    }\n}"
+    },
+    {
+      "Name": "Sim_UtilSetCompl",
+      "Start": 13906,
+      "End": 14054,
+      "BodyStart": 13966,
+      "Original": "void Sim_UtilSetCompl( unsigned * pPatRand, int nSimWords )\n{\n    int k;\n    for ( k = 0; k \u003c nSimWords; k++ )\n        pPatRand[k] = ~pPatRand[k];\n}",
+      "Draft": "func Sim_UtilSetCompl(pPatRand *uint32, nSimWords int32) {\n    var k int32;\n    for  k = 0; k \u003c nSimWords; k++  {\n        pPatRand[k] = ~pPatRand[k];\n    }\n}"
+    },
+    {
+      "Name": "Sim_UtilSetConst",
+      "Start": 14316,
+      "End": 14534,
+      "BodyStart": 14389,
+      "Original": "void Sim_UtilSetConst( unsigned * pPatRand, int nSimWords, int fConst1 )\n{\n    int k;\n    for ( k = 0; k \u003c nSimWords; k++ )\n        pPatRand[k] = 0;\n    if ( fConst1 )\n        Sim_UtilSetCompl( pPatRand, nSimWords );\n}",
+      "Draft": "func Sim_UtilSetConst(pPatRand *uint32, nSimWords int32, fConst1 int32) {\n    var k int32;\n    for  k = 0; k \u003c nSimWords; k++  {\n        pPatRand[k] = 0;\n    }\n    if fConst1 != 0 {\n        Sim_UtilSetCompl( pPatRand, nSimWords ); }\n}"
+    },
+    {
+      "Name": "Sim_UtilInfoIsEqual",
+      "Start": 14789,
+      "End": 14994,
+      "BodyStart": 14868,
+      "Original": "int Sim_UtilInfoIsEqual( unsigned * pPats1, unsigned * pPats2, int nSimWords )\n{\n    int k;\n    for ( k = 0; k \u003c nSimWords; k++ )\n        if ( pPats1[k] != pPats2[k] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Sim_UtilInfoIsEqual(pPats1 *uint32, pPats2 *uint32, nSimWords int32) int32 {\n    var k int32;\n    for  k = 0; k \u003c nSimWords; k++  {\n        if pPats1[k] != pPats2[k] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Sim_UtilInfoIsImp",
+      "Start": 15263,
+      "End": 15466,
+      "BodyStart": 15340,
+      "Original": "int Sim_UtilInfoIsImp( unsigned * pPats1, unsigned * pPats2, int nSimWords )\n{\n    int k;\n    for ( k = 0; k \u003c nSimWords; k++ )\n        if ( pPats1[k] \u0026 ~pPats2[k] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Sim_UtilInfoIsImp(pPats1 *uint32, pPats2 *uint32, nSimWords int32) int32 {\n    var k int32;\n    for  k = 0; k \u003c nSimWords; k++  {\n        if pPats1[k] \u0026 ~pPats2[k] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Sim_UtilInfoIsClause",
+      "Start": 15744,
+      "End": 15951,
+      "BodyStart": 15824,
+      "Original": "int Sim_UtilInfoIsClause( unsigned * pPats1, unsigned * pPats2, int nSimWords )\n{\n    int k;\n    for ( k = 0; k \u003c nSimWords; k++ )\n        if ( ~pPats1[k] \u0026 ~pPats2[k] )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Sim_UtilInfoIsClause(pPats1 *uint32, pPats2 *uint32, nSimWords int32) int32 {\n    var k int32;\n    for  k = 0; k \u003c nSimWords; k++  {\n        if ~pPats1[k] \u0026 ~pPats2[k] {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Sim_UtilCountAllPairs",
+      "Start": 16220,
+      "End": 16651,
+      "BodyStart": 16308,
+      "Original": "int Sim_UtilCountAllPairs( Vec_Ptr_t * vSuppFun, int nSimWords, Vec_Int_t * vCounters )\n{\n    unsigned * pSupp;\n    int Counter, nOnes, nPairs, i;\n    Counter = 0;\n    Vec_PtrForEachEntry( unsigned *, vSuppFun, pSupp, i )\n    {\n        nOnes  = Sim_UtilCountOnes( pSupp, nSimWords );\n        nPairs = nOnes * (nOnes - 1) / 2;\n        Vec_IntWriteEntry( vCounters, i, nPairs );\n        Counter += nPairs;\n    }\n    return Counter;\n}",
+      "Draft": "func Sim_UtilCountAllPairs(vSuppFun *Vec_Ptr_t, nSimWords int32, vCounters *Vec_Int_t) int32 {\n    var pSupp *uint32;\n    var Counter, nOnes, nPairs, i int32;\n    Counter = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuppFun)) \u0026\u0026 (((pSupp) = (unsigned *)Vec_PtrEntry(vSuppFun, i)), 1); i++  {\n        nOnes  = Sim_UtilCountOnes( pSupp, nSimWords );\n        nPairs = nOnes * (nOnes - 1) / 2;\n        Vec_IntWriteEntry( vCounters, i, nPairs );\n        Counter += nPairs;\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Sim_UtilCountPairsOne",
+      "Start": 16941,
+      "End": 17365,
+      "BodyStart": 17014,
+      "Original": "int Sim_UtilCountPairsOne( Extra_BitMat_t * pMat, Vec_Int_t * vSupport )\n{\n    int i, k, Index1, Index2;\n    int Counter = 0;\n//    int Counter2;\n    Vec_IntForEachEntry( vSupport, i, Index1 )\n    Vec_IntForEachEntryStart( vSupport, k, Index2, Index1+1 )\n        Counter += Extra_BitMatrixLookup1( pMat, i, k );\n//    Counter2 = Extra_BitMatrixCountOnesUpper(pMat);\n//    assert( Counter == Counter2 );\n    return Counter;\n}",
+      "Draft": "func Sim_UtilCountPairsOne(pMat *Extra_BitMat_t, vSupport *Vec_Int_t) int32 {\n    var i, k, Index1, Index2 int32;\n    var Counter int32;\n//    int Counter2;\n    // inlining of macro Vec_IntForEachEntry\n    for  Index1 = 0; (Index1 \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((i) = Vec_IntEntry(vSupport, Index1)), 1); Index1++  {\n    // inlining of macro Vec_IntForEachEntryStart\n    for  Index2 = Index1+1; (Index2 \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((k) = Vec_IntEntry(vSupport, Index2)), 1); Index2++  {\n        Counter += Extra_BitMatrixLookup1( pMat, i, k );\n    }\n    }\n//    Counter2 = Extra_BitMatrixCountOnesUpper(pMat);\n//    assert( Counter == Counter2 );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Sim_UtilCountPairsOnePrint",
+      "Start": 17655,
+      "End": 17981,
+      "BodyStart": 17733,
+      "Original": "int Sim_UtilCountPairsOnePrint( Extra_BitMat_t * pMat, Vec_Int_t * vSupport )\n{\n    int i, k, Index1, Index2;\n    Vec_IntForEachEntry( vSupport, i, Index1 )\n    Vec_IntForEachEntryStart( vSupport, k, Index2, Index1+1 )\n        if ( Extra_BitMatrixLookup1( pMat, i, k ) )\n            printf( \"(%d,%d) \", i, k );\n    return 0;\n}",
+      "Draft": "func Sim_UtilCountPairsOnePrint(pMat *Extra_BitMat_t, vSupport *Vec_Int_t) int32 {\n    var i, k, Index1, Index2 int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  Index1 = 0; (Index1 \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((i) = Vec_IntEntry(vSupport, Index1)), 1); Index1++  {\n    // inlining of macro Vec_IntForEachEntryStart\n    for  Index2 = Index1+1; (Index2 \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((k) = Vec_IntEntry(vSupport, Index2)), 1); Index2++  {\n        if Extra_BitMatrixLookup1( pMat, i, k ) {\n            fmt.Printf(\"(%d,%d) \", i, k); }\n    }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Sim_UtilCountPairsAllPrint",
+      "Start": 18271,
+      "End": 18640,
+      "BodyStart": 18320,
+      "Original": "void Sim_UtilCountPairsAllPrint( Sym_Man_t * p )\n{\n    int i;\n    abctime clk;\nclk = Abc_Clock();\n    for ( i = 0; i \u003c p-\u003enOutputs; i++ )\n    {\n        printf( \"Output %2d :\", i );\n        Sim_UtilCountPairsOnePrint( (Extra_BitMat_t *)Vec_PtrEntry(p-\u003evMatrSymms, i), Vec_VecEntryInt(p-\u003evSupports, i) );\n        printf( \"\\n\" );\n    }\np-\u003etimeCount += Abc_Clock() - clk;\n}",
+      "Draft": "func Sim_UtilCountPairsAllPrint(p *Sym_Man_t) {\n    var i int32;\n    var clk abctime;\nclk = Abc_Clock();\n    for  i = 0; i \u003c p.nOutputs; i++  {\n        fmt.Printf(\"Output %2d :\", i);\n        Sim_UtilCountPairsOnePrint( (Extra_BitMat_t *)Vec_PtrEntry(p.vMatrSymms, i), Vec_VecEntryInt(p.vSupports, i) );\n        fmt.Printf(\"\\n\");\n    }\np.timeCount += Abc_Clock() - clk;\n}"
+    },
+    {
+      "Name": "Sim_UtilCountPairsAll",
+      "Start": 18930,
+      "End": 20298,
+      "BodyStart": 18974,
+      "Original": "void Sim_UtilCountPairsAll( Sym_Man_t * p )\n{\n    int nPairsTotal, nPairsSym, nPairsNonSym, i;\n    abctime clk;\nclk = Abc_Clock();\n    p-\u003enPairsSymm    = 0;\n    p-\u003enPairsNonSymm = 0;\n    for ( i = 0; i \u003c p-\u003enOutputs; i++ )\n    {\n        nPairsTotal  = Vec_IntEntry(p-\u003evPairsTotal, i);\n        nPairsSym    = Vec_IntEntry(p-\u003evPairsSym,   i);\n        nPairsNonSym = Vec_IntEntry(p-\u003evPairsNonSym,i);\n        assert( nPairsTotal \u003e= nPairsSym + nPairsNonSym ); \n        if ( nPairsTotal == nPairsSym + nPairsNonSym )\n        {\n            p-\u003enPairsSymm    += nPairsSym;\n            p-\u003enPairsNonSymm += nPairsNonSym;\n            continue;\n        }\n        nPairsSym    = Sim_UtilCountPairsOne( (Extra_BitMat_t *)Vec_PtrEntry(p-\u003evMatrSymms,   i), Vec_VecEntryInt(p-\u003evSupports, i) );\n        nPairsNonSym = Sim_UtilCountPairsOne( (Extra_BitMat_t *)Vec_PtrEntry(p-\u003evMatrNonSymms,i), Vec_VecEntryInt(p-\u003evSupports, i) );\n        assert( nPairsTotal \u003e= nPairsSym + nPairsNonSym ); \n        Vec_IntWriteEntry( p-\u003evPairsSym,    i, nPairsSym );\n        Vec_IntWriteEntry( p-\u003evPairsNonSym, i, nPairsNonSym );\n        p-\u003enPairsSymm    += nPairsSym;\n        p-\u003enPairsNonSymm += nPairsNonSym;\n//        printf( \"%d \", nPairsTotal - nPairsSym - nPairsNonSym );\n    }\n//printf( \"\\n\" );\n    p-\u003enPairsRem = p-\u003enPairsTotal-p-\u003enPairsSymm-p-\u003enPairsNonSymm;\np-\u003etimeCount += Abc_Clock() - clk;\n}",
+      "Draft": "func Sim_UtilCountPairsAll(p *Sym_Man_t) {\n    var nPairsTotal, nPairsSym, nPairsNonSym, i int32;\n    var clk abctime;\nclk = Abc_Clock();\n    p.nPairsSymm    = 0;\n    p.nPairsNonSymm = 0;\n    for  i = 0; i \u003c p.nOutputs; i++  {\n        nPairsTotal  = Vec_IntEntry(p.vPairsTotal, i);\n        nPairsSym    = Vec_IntEntry(p.vPairsSym,   i);\n        nPairsNonSym = Vec_IntEntry(p.vPairsNonSym,i);\n        assert(nPairsTotal \u003e= nPairsSym + nPairsNonSym, \"nPairsTotal \u003e= nPairsSym + nPairsNonSym\"); \n        if nPairsTotal == nPairsSym + nPairsNonSym {\n            p.nPairsSymm    += nPairsSym;\n            p.nPairsNonSymm += nPairsNonSym;\n            continue;\n        }\n        nPairsSym    = Sim_UtilCountPairsOne( (Extra_BitMat_t *)Vec_PtrEntry(p.vMatrSymms,   i), Vec_VecEntryInt(p.vSupports, i) );\n        nPairsNonSym = Sim_UtilCountPairsOne( (Extra_BitMat_t *)Vec_PtrEntry(p.vMatrNonSymms,i), Vec_VecEntryInt(p.vSupports, i) );\n        assert(nPairsTotal \u003e= nPairsSym + nPairsNonSym, \"nPairsTotal \u003e= nPairsSym + nPairsNonSym\"); \n        Vec_IntWriteEntry( p.vPairsSym,    i, nPairsSym );\n        Vec_IntWriteEntry( p.vPairsNonSym, i, nPairsNonSym );\n        p.nPairsSymm    += nPairsSym;\n        p.nPairsNonSymm += nPairsNonSym;\n//        printf( \"%d \", nPairsTotal - nPairsSym - nPairsNonSym );\n    }\n//printf( \"\\n\" );\n    p.nPairsRem = p.nPairsTotal-p.nPairsSymm-p.nPairsNonSymm;\np.timeCount += Abc_Clock() - clk;\n}"
+    },
+    {
+      "Name": "Sim_UtilMatrsAreDisjoint",
+      "Start": 20534,
+      "End": 20815,
+      "BodyStart": 20580,
+      "Original": "int Sim_UtilMatrsAreDisjoint( Sym_Man_t * p )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enOutputs; i++ )\n        if ( !Extra_BitMatrixIsDisjoint( (Extra_BitMat_t *)Vec_PtrEntry(p-\u003evMatrSymms,i), (Extra_BitMat_t *)Vec_PtrEntry(p-\u003evMatrNonSymms,i) ) )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Sim_UtilMatrsAreDisjoint(p *Sym_Man_t) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nOutputs; i++  {\n        if !Extra_BitMatrixIsDisjoint( (Extra_BitMat_t *)Vec_PtrEntry(p.vMatrSymms,i), (Extra_BitMat_t *)Vec_PtrEntry(p.vMatrNonSymms,i) ) {\n            return 0; }\n    }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::mechanical::sizeof::2146",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2080,
+      "End": 2080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::mechanical::sizeof::2248",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2174,
+      "End": 2180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::2126",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2080,
+      "End": 2080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::2347",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2273,
+      "End": 2285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::2830",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2688,
+      "End": 2688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::5073",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4905,
+      "End": 4917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::5130",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4962,
+      "End": 4974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::5659",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5491,
+      "End": 5503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::5716",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5548,
+      "End": 5560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::7361",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6910,
+      "End": 6922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::7442",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6991,
+      "End": 7003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::7533",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7082,
+      "End": 7094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::7627",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7176,
+      "End": 7188
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::7731",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7280,
+      "End": 7292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::7825",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7374,
+      "End": 7386
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::8677",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8226,
+      "End": 8238
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::8758",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8307,
+      "End": 8319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::8849",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8398,
+      "End": 8410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::8943",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8492,
+      "End": 8504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::9801",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9350,
+      "End": 9362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::9865",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9414,
+      "End": 9426
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::9942",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9491,
+      "End": 9503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::11210",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10759,
+      "End": 10771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::11274",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10823,
+      "End": 10835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::12521",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11760,
+      "End": 11760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::13062",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11950,
+      "End": 11950
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::14322",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13064,
+      "End": 13064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::17750",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16388,
+      "End": 16388
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::20328",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18488,
+      "End": 18506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::21459",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19619,
+      "End": 19637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::21593",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19753,
+      "End": 19771
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::22514",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20674,
+      "End": 20692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::pointer-cast::22563",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20723,
+      "End": 20741
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilInfoAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilInfoAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1880,
+      "End": 2360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::ternary::Sim_UtilInfoFree",
+      "Category": "ternary-review",
+      "Symbol": "Sim_UtilInfoFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2643,
+      "End": 2737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilInfoFree",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilInfoFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2643,
+      "End": 2737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilInfoAdd",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilInfoAdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3009,
+      "End": 3163
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilInfoDetectDiffs",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilInfoDetectDiffs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3457,
+      "End": 3834
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilInfoDetectNews",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilInfoDetectNews",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4128,
+      "End": 4505
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilInfoFlip",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilInfoFlip",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4779,
+      "End": 5083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilInfoCompare",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilInfoCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5363,
+      "End": 5711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5976,
+      "End": 6356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilSimulateNode",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilSimulateNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6611,
+      "End": 8824
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilSimulateNodeOne",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilSimulateNodeOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9079,
+      "End": 10245
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilTransferNodeOne",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilTransferNodeOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10500,
+      "End": 11197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilCountSuppSizes",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilCountSuppSizes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11477,
+      "End": 12017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilCountOnes",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilCountOnes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12295,
+      "End": 12594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilCountOnesArray",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilCountOnesArray",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12872,
+      "End": 13224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilSetRandom",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilSetRandom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13484,
+      "End": 13640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilSetCompl",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilSetCompl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13906,
+      "End": 14054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilSetConst",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilSetConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14316,
+      "End": 14534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilInfoIsEqual",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilInfoIsEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14789,
+      "End": 14994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilInfoIsImp",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilInfoIsImp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15263,
+      "End": 15466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilInfoIsClause",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilInfoIsClause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15744,
+      "End": 15951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilCountAllPairs",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilCountAllPairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16220,
+      "End": 16651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilCountPairsOne",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilCountPairsOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16941,
+      "End": 17365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilCountPairsOnePrint",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilCountPairsOnePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17655,
+      "End": 17981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilCountPairsAllPrint",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilCountPairsAllPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18271,
+      "End": 18640
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilCountPairsAll",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilCountPairsAll",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18930,
+      "End": 20298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::Sim_UtilMatrsAreDisjoint",
+      "Category": "semantic-review",
+      "Symbol": "Sim_UtilMatrsAreDisjoint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20534,
+      "End": 20815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sim/simUtils.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21062
+    }
+  ],
+  "Draft": "package sim\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [simUtils.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Various simulation utilities.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: simUtils.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"sim.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n \nvar bit_count [256]int32 = [256]int32{\n  0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,\n  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n  1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n  2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n  3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,4,5,5,6,5,6,6,7,5,6,6,7,6,7,7,8,\n};\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates simulation information for all nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilInfoAlloc(nSize int32, nWords int32, fClean int32) *Vec_Ptr_t {\n    var vInfo *Vec_Ptr_t;\n    var i int32;\n    assert(nSize \u003e 0 \u0026\u0026 nWords \u003e 0, \"nSize \u003e 0 \u0026\u0026 nWords \u003e 0\");\n    vInfo = Vec_PtrAlloc( nSize );\n    // inlining of macro ABC_ALLOC\n    vInfo.pArray[0] = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(nSize * nWords)));\n    if fClean != 0 {\n        memset( vInfo.pArray[0], 0, sizeof(unsigned) * nSize * nWords ); }\n    for  i = 1; i \u003c nSize; i++  {\n        vInfo.pArray[i] = ((unsigned *)vInfo.pArray[i-1]) + nWords;\n    }\n    vInfo.nSize = nSize;\n    return vInfo;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates simulation information for all nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilInfoFree(p *Vec_Ptr_t) {\n    // inlining of macro ABC_FREE\n    ((p.pArray[0]) ? (free((char *) (p.pArray[0])), (p.pArray[0]) = 0) : 0);\n    Vec_PtrFree( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the second supp-info the first.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilInfoAdd(pInfo1 *uint32, pInfo2 *uint32, nWords int32) {\n    var w int32;\n    for  w = 0; w \u003c nWords; w++  {\n        pInfo1[w] |= pInfo2[w];\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the positions where pInfo2 is 1 while pInfo1 is 0.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilInfoDetectDiffs(pInfo1 *uint32, pInfo2 *uint32, nWords int32, vDiffs *Vec_Int_t) {\n    var w, b int32;\n    var uMask uint32;\n    vDiffs.nSize = 0;\n    for  w = 0; w \u003c nWords; w++  {\n        if uMask = (pInfo2[w] ^ pInfo1[w]) {\n            for  b = 0; b \u003c 32; b++  {\n                if uMask \u0026 (1 \u003c\u003c b) {\n                    Vec_IntPush( vDiffs, 32*w + b ); }\n            } }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the positions where pInfo2 is 1 while pInfo1 is 0.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilInfoDetectNews(pInfo1 *uint32, pInfo2 *uint32, nWords int32, vDiffs *Vec_Int_t) {\n    var w, b int32;\n    var uMask uint32;\n    vDiffs.nSize = 0;\n    for  w = 0; w \u003c nWords; w++  {\n        if uMask = (pInfo2[w] \u0026 ~pInfo1[w]) {\n            for  b = 0; b \u003c 32; b++  {\n                if uMask \u0026 (1 \u003c\u003c b) {\n                    Vec_IntPush( vDiffs, 32*w + b ); }\n            } }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Flips the simulation info of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilInfoFlip(p *Sim_Man_t, pNode *Abc_Obj_t) {\n    var pSimInfo1, pSimInfo2 *uint32;\n    var k int32;\n    pSimInfo1 = (unsigned *)p.vSim0.pArray[pNode.Id];\n    pSimInfo2 = (unsigned *)p.vSim1.pArray[pNode.Id];\n    for  k = 0; k \u003c p.nSimWords; k++  {\n        pSimInfo2[k] = ~pSimInfo1[k];\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the simulation infos are equal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilInfoCompare(p *Sim_Man_t, pNode *Abc_Obj_t) int32 {\n    var pSimInfo1, pSimInfo2 *uint32;\n    var k int32;\n    pSimInfo1 = (unsigned *)p.vSim0.pArray[pNode.Id];\n    pSimInfo2 = (unsigned *)p.vSim1.pArray[pNode.Id];\n    for  k = 0; k \u003c p.nSimWords; k++  {\n        if pSimInfo2[k] != pSimInfo1[k] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates the internal nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilSimulate(p *Sim_Man_t, fType int32) {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    // simulate the internal nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((p.pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(p.pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Sim_UtilSimulateNode( p, pNode, fType, fType, fType ); }\n    }\n    // assign simulation info of the CO nodes\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n        Sim_UtilSimulateNode( p, pNode, fType, fType, fType );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilSimulateNode(p *Sim_Man_t, pNode *Abc_Obj_t, fType int32, fType1 int32, fType2 int32) {\n    var pSimmNode, pSimmNode1, pSimmNode2 *uint32;\n    var k, fComp1, fComp2 int32;\n    // simulate the internal nodes\n    if Abc_ObjIsNode(pNode) {\n        if fType != 0 {\n            pSimmNode  = (unsigned *)p.vSim1.pArray[ pNode.Id ];\n        } else {\n            pSimmNode  = (unsigned *)p.vSim0.pArray[ pNode.Id ]; }\n\n        if fType1 != 0 {\n            pSimmNode1 = (unsigned *)p.vSim1.pArray[ Abc_ObjFaninId0(pNode) ];\n        } else {\n            pSimmNode1 = (unsigned *)p.vSim0.pArray[ Abc_ObjFaninId0(pNode) ]; }\n\n        if fType2 != 0 {\n            pSimmNode2 = (unsigned *)p.vSim1.pArray[ Abc_ObjFaninId1(pNode) ];\n        } else {\n            pSimmNode2 = (unsigned *)p.vSim0.pArray[ Abc_ObjFaninId1(pNode) ]; }\n\n        fComp1 = Abc_ObjFaninC0(pNode);\n        fComp2 = Abc_ObjFaninC1(pNode);\n        if (fComp1 != 0) \u0026\u0026 (fComp2 != 0) {\n            for  k = 0; k \u003c p.nSimWords; k++  {\n                pSimmNode[k] = ~pSimmNode1[k] \u0026 ~pSimmNode2[k];\n            }\n        } else if (fComp1 != 0) \u0026\u0026 !(fComp2 != 0) {\n            for  k = 0; k \u003c p.nSimWords; k++  {\n                pSimmNode[k] = ~pSimmNode1[k] \u0026  pSimmNode2[k];\n            }\n        } else if !(fComp1 != 0) \u0026\u0026 (fComp2 != 0) {\n            for  k = 0; k \u003c p.nSimWords; k++  {\n                pSimmNode[k] =  pSimmNode1[k] \u0026 ~pSimmNode2[k];\n            }\n        } else { // if ( fComp1 \u0026\u0026 fComp2 )\n            for  k = 0; k \u003c p.nSimWords; k++  {\n                pSimmNode[k] =  pSimmNode1[k] \u0026  pSimmNode2[k];\n            } }\n    \n    } else {\n        assert(Abc_ObjFaninNum(pNode) == 1, \"Abc_ObjFaninNum(pNode) == 1\");\n        if fType != 0 {\n            pSimmNode  = (unsigned *)p.vSim1.pArray[ pNode.Id ];\n        } else {\n            pSimmNode  = (unsigned *)p.vSim0.pArray[ pNode.Id ]; }\n\n        if fType1 != 0 {\n            pSimmNode1 = (unsigned *)p.vSim1.pArray[ Abc_ObjFaninId0(pNode) ];\n        } else {\n            pSimmNode1 = (unsigned *)p.vSim0.pArray[ Abc_ObjFaninId0(pNode) ]; }\n\n        fComp1 = Abc_ObjFaninC0(pNode);\n        if fComp1 != 0 {\n            for  k = 0; k \u003c p.nSimWords; k++  {\n                pSimmNode[k] = ~pSimmNode1[k];\n            }\n        } else { \n            for  k = 0; k \u003c p.nSimWords; k++  {\n                pSimmNode[k] =  pSimmNode1[k];\n            } }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilSimulateNodeOne(pNode *Abc_Obj_t, vSimInfo *Vec_Ptr_t, nSimWords int32, nOffset int32) {\n    var pSimmNode, pSimmNode1, pSimmNode2 *uint32;\n    var k, fComp1, fComp2 int32;\n    // simulate the internal nodes\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n    pSimmNode  = (unsigned *)Vec_PtrEntry(vSimInfo, pNode.Id);\n    pSimmNode1 = (unsigned *)Vec_PtrEntry(vSimInfo, Abc_ObjFaninId0(pNode));\n    pSimmNode2 = (unsigned *)Vec_PtrEntry(vSimInfo, Abc_ObjFaninId1(pNode));\n    pSimmNode  += nOffset;\n    pSimmNode1 += nOffset;\n    pSimmNode2 += nOffset;\n    fComp1 = Abc_ObjFaninC0(pNode);\n    fComp2 = Abc_ObjFaninC1(pNode);\n    if (fComp1 != 0) \u0026\u0026 (fComp2 != 0) {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pSimmNode[k] = ~pSimmNode1[k] \u0026 ~pSimmNode2[k];\n        }\n    } else if (fComp1 != 0) \u0026\u0026 !(fComp2 != 0) {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pSimmNode[k] = ~pSimmNode1[k] \u0026  pSimmNode2[k];\n        }\n    } else if !(fComp1 != 0) \u0026\u0026 (fComp2 != 0) {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pSimmNode[k] =  pSimmNode1[k] \u0026 ~pSimmNode2[k];\n        }\n    } else { // if ( fComp1 \u0026\u0026 fComp2 )\n        for  k = 0; k \u003c nSimWords; k++  {\n            pSimmNode[k] =  pSimmNode1[k] \u0026  pSimmNode2[k];\n        } }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilTransferNodeOne(pNode *Abc_Obj_t, vSimInfo *Vec_Ptr_t, nSimWords int32, nOffset int32, fShift int32) {\n    var pSimmNode, pSimmNode1 *uint32;\n    var k, fComp1 int32;\n    // simulate the internal nodes\n    assert(Abc_ObjIsCo(pNode), \"Abc_ObjIsCo(pNode)\");\n    pSimmNode  = (unsigned *)Vec_PtrEntry(vSimInfo, pNode.Id);\n    pSimmNode1 = (unsigned *)Vec_PtrEntry(vSimInfo, Abc_ObjFaninId0(pNode));\n    pSimmNode  += nOffset + (fShift \u003e 0)*nSimWords;\n    pSimmNode1 += nOffset;\n    fComp1 = Abc_ObjFaninC0(pNode);\n    if fComp1 != 0 {\n        for  k = 0; k \u003c nSimWords; k++  {\n            pSimmNode[k] = ~pSimmNode1[k];\n        }\n    } else { \n        for  k = 0; k \u003c nSimWords; k++  {\n            pSimmNode[k] =  pSimmNode1[k];\n        } }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the simulation infos are equal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilCountSuppSizes(p *Sim_Man_t, fStruct int32) int32 {\n    var pNode, pNodeCi *Abc_Obj_t;\n    var i, v, Counter int32;\n    Counter = 0;\n    if fStruct != 0 {\n        // inlining of macro Abc_NtkForEachCo\n        for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n            // inlining of macro Abc_NtkForEachCi\n            for  v = 0; (v \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNodeCi) = Abc_NtkCi(p.pNtk, v)), 1); v++  {\n                // inlining of macro Sim_SuppStrHasVar\n                // inlining of macro Sim_HasBit\n                Counter += ((((unsigned*)(p.vSuppStr).pArray[(pNode).Id])[((v))\u003e\u003e5]  \u0026 (1\u003c\u003c(((v)) \u0026 31))) \u003e 0);\n            }\n        }\n    \n    } else {\n        // inlining of macro Abc_NtkForEachCo\n        for  i = 0; (i \u003c Abc_NtkCoNum(p.pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(p.pNtk, i)), 1); i++  {\n            // inlining of macro Abc_NtkForEachCi\n            for  v = 0; (v \u003c Abc_NtkCiNum(p.pNtk)) \u0026\u0026 (((pNodeCi) = Abc_NtkCi(p.pNtk, v)), 1); v++  {\n                // inlining of macro Sim_SuppFunHasVar\n                // inlining of macro Sim_HasBit\n                Counter += ((((unsigned*)(p.vSuppFun).pArray[i])[((v))\u003e\u003e5]  \u0026 (1\u003c\u003c(((v)) \u0026 31))) \u003e 0);\n            }\n        }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of 1's in the bitstring.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilCountOnes(pSimInfo *uint32, nSimWords int32) int32 {\n    unsigned char * pBytes;\n    var nOnes, nBytes, i int32;\n    pBytes = (unsigned char *)pSimInfo;\n    nBytes = 4 * nSimWords;\n    nOnes  = 0;\n    for  i = 0; i \u003c nBytes; i++  {\n        nOnes += bit_count[ pBytes[i] ];\n    }\n    return nOnes;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of 1's in the bitstring.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilCountOnesArray(vInfo *Vec_Ptr_t, nSimWords int32) *Vec_Int_t {\n    var vCounters *Vec_Int_t;\n    var pSimInfo *uint32;\n    var i int32;\n    vCounters = Vec_IntStart( Vec_PtrSize(vInfo) );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vInfo)) \u0026\u0026 (((pSimInfo) = (unsigned *)Vec_PtrEntry(vInfo, i)), 1); i++  {\n        Vec_IntWriteEntry( vCounters, i, Sim_UtilCountOnes(pSimInfo, nSimWords) );\n    }\n    return vCounters;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns random patterns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilSetRandom(pPatRand *uint32, nSimWords int32) {\n    var k int32;\n    for  k = 0; k \u003c nSimWords; k++  {\n        pPatRand[k] = SIM_RANDOM_UNSIGNED;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns complemented patterns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilSetCompl(pPatRand *uint32, nSimWords int32) {\n    var k int32;\n    for  k = 0; k \u003c nSimWords; k++  {\n        pPatRand[k] = ~pPatRand[k];\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns constant patterns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilSetConst(pPatRand *uint32, nSimWords int32, fConst1 int32) {\n    var k int32;\n    for  k = 0; k \u003c nSimWords; k++  {\n        pPatRand[k] = 0;\n    }\n    if fConst1 != 0 {\n        Sim_UtilSetCompl( pPatRand, nSimWords ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if equal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilInfoIsEqual(pPats1 *uint32, pPats2 *uint32, nSimWords int32) int32 {\n    var k int32;\n    for  k = 0; k \u003c nSimWords; k++  {\n        if pPats1[k] != pPats2[k] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if Node1 implies Node2.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilInfoIsImp(pPats1 *uint32, pPats2 *uint32, nSimWords int32) int32 {\n    var k int32;\n    for  k = 0; k \u003c nSimWords; k++  {\n        if pPats1[k] \u0026 ~pPats2[k] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if Node1 v Node2 is always true.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilInfoIsClause(pPats1 *uint32, pPats2 *uint32, nSimWords int32) int32 {\n    var k int32;\n    for  k = 0; k \u003c nSimWords; k++  {\n        if ~pPats1[k] \u0026 ~pPats2[k] {\n            return 0; }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the total number of pairs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilCountAllPairs(vSuppFun *Vec_Ptr_t, nSimWords int32, vCounters *Vec_Int_t) int32 {\n    var pSupp *uint32;\n    var Counter, nOnes, nPairs, i int32;\n    Counter = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vSuppFun)) \u0026\u0026 (((pSupp) = (unsigned *)Vec_PtrEntry(vSuppFun, i)), 1); i++  {\n        nOnes  = Sim_UtilCountOnes( pSupp, nSimWords );\n        nPairs = nOnes * (nOnes - 1) / 2;\n        Vec_IntWriteEntry( vCounters, i, nPairs );\n        Counter += nPairs;\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of entries in the array of matrices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilCountPairsOne(pMat *Extra_BitMat_t, vSupport *Vec_Int_t) int32 {\n    var i, k, Index1, Index2 int32;\n    var Counter int32;\n//    int Counter2;\n    // inlining of macro Vec_IntForEachEntry\n    for  Index1 = 0; (Index1 \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((i) = Vec_IntEntry(vSupport, Index1)), 1); Index1++  {\n    // inlining of macro Vec_IntForEachEntryStart\n    for  Index2 = Index1+1; (Index2 \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((k) = Vec_IntEntry(vSupport, Index2)), 1); Index2++  {\n        Counter += Extra_BitMatrixLookup1( pMat, i, k );\n    }\n    }\n//    Counter2 = Extra_BitMatrixCountOnesUpper(pMat);\n//    assert( Counter == Counter2 );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of entries in the array of matrices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilCountPairsOnePrint(pMat *Extra_BitMat_t, vSupport *Vec_Int_t) int32 {\n    var i, k, Index1, Index2 int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  Index1 = 0; (Index1 \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((i) = Vec_IntEntry(vSupport, Index1)), 1); Index1++  {\n    // inlining of macro Vec_IntForEachEntryStart\n    for  Index2 = Index1+1; (Index2 \u003c Vec_IntSize(vSupport)) \u0026\u0026 (((k) = Vec_IntEntry(vSupport, Index2)), 1); Index2++  {\n        if Extra_BitMatrixLookup1( pMat, i, k ) {\n            fmt.Printf(\"(%d,%d) \", i, k); }\n    }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of entries in the array of matrices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilCountPairsAllPrint(p *Sym_Man_t) {\n    var i int32;\n    var clk abctime;\nclk = Abc_Clock();\n    for  i = 0; i \u003c p.nOutputs; i++  {\n        fmt.Printf(\"Output %2d :\", i);\n        Sim_UtilCountPairsOnePrint( (Extra_BitMat_t *)Vec_PtrEntry(p.vMatrSymms, i), Vec_VecEntryInt(p.vSupports, i) );\n        fmt.Printf(\"\\n\");\n    }\np.timeCount += Abc_Clock() - clk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of entries in the array of matrices.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilCountPairsAll(p *Sym_Man_t) {\n    var nPairsTotal, nPairsSym, nPairsNonSym, i int32;\n    var clk abctime;\nclk = Abc_Clock();\n    p.nPairsSymm    = 0;\n    p.nPairsNonSymm = 0;\n    for  i = 0; i \u003c p.nOutputs; i++  {\n        nPairsTotal  = Vec_IntEntry(p.vPairsTotal, i);\n        nPairsSym    = Vec_IntEntry(p.vPairsSym,   i);\n        nPairsNonSym = Vec_IntEntry(p.vPairsNonSym,i);\n        assert(nPairsTotal \u003e= nPairsSym + nPairsNonSym, \"nPairsTotal \u003e= nPairsSym + nPairsNonSym\"); \n        if nPairsTotal == nPairsSym + nPairsNonSym {\n            p.nPairsSymm    += nPairsSym;\n            p.nPairsNonSymm += nPairsNonSym;\n            continue;\n        }\n        nPairsSym    = Sim_UtilCountPairsOne( (Extra_BitMat_t *)Vec_PtrEntry(p.vMatrSymms,   i), Vec_VecEntryInt(p.vSupports, i) );\n        nPairsNonSym = Sim_UtilCountPairsOne( (Extra_BitMat_t *)Vec_PtrEntry(p.vMatrNonSymms,i), Vec_VecEntryInt(p.vSupports, i) );\n        assert(nPairsTotal \u003e= nPairsSym + nPairsNonSym, \"nPairsTotal \u003e= nPairsSym + nPairsNonSym\"); \n        Vec_IntWriteEntry( p.vPairsSym,    i, nPairsSym );\n        Vec_IntWriteEntry( p.vPairsNonSym, i, nPairsNonSym );\n        p.nPairsSymm    += nPairsSym;\n        p.nPairsNonSymm += nPairsNonSym;\n//        printf( \"%d \", nPairsTotal - nPairsSym - nPairsNonSym );\n    }\n//printf( \"\\n\" );\n    p.nPairsRem = p.nPairsTotal-p.nPairsSymm-p.nPairsNonSymm;\np.timeCount += Abc_Clock() - clk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sim_UtilMatrsAreDisjoint(p *Sym_Man_t) int32 {\n    var i int32;\n    for  i = 0; i \u003c p.nOutputs; i++  {\n        if !Extra_BitMatrixIsDisjoint( (Extra_BitMat_t *)Vec_PtrEntry(p.vMatrSymms,i), (Extra_BitMat_t *)Vec_PtrEntry(p.vMatrNonSymms,i) ) {\n            return 0; }\n    }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,401 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c",
+  "SHA256": "996c03472df00c75581ee8cbed2c1af9319c6935289f5749bedde5553af4f29b",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 4846
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 167,
+        "Column": 78,
+        "ByteOffset": 6036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ppCopies = /*__starting_point_inline_macro:ABC_ALLOC__*/((Nwk_Obj_t * *) malloc(sizeof(Nwk_Obj_t *) * (size_t)(Gia_ManObjNum(p))));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 9,
+        "ByteOffset": 6713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 186,
+        "Column": 9,
+        "ByteOffset": 7423
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 190,
+        "Column": 9,
+        "ByteOffset": 7714
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( ppCopies[Gia_ObjId(p,pObj)] != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 5,
+        "ByteOffset": 7984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vMaps) == Vec_IntSize(vNodes) + Abc_MaxInt(Vec_IntSize(vPPis), Vec_IntSize(vLeaves)) + 1 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 197,
+        "Column": 64,
+        "ByteOffset": 8159
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((ppCopies) ? (free((char *) (ppCopies)), (ppCopies) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 233,
+        "Column": 5,
+        "ByteOffset": 9372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Nwk_ManPiNum(pNtk) == Nwk_ManPoNum(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 250,
+        "Column": 9,
+        "ByteOffset": 10167
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Min-cut: %d -\u003e %d.  Nodes %d -\u003e %d.  \", Vec_IntSize(vPPis)+1, Vec_PtrSize(vMinCut), Vec_IntSize(vNodes), Vec_IntSize(vNodes2) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 264,
+        "Column": 9,
+        "ByteOffset": 10710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Common = %d.  Diff0 = %d. Diff1 = %d.\\n\", Vec_IntSize(vCommon), Vec_IntSize(vDiff0), Vec_IntSize(vDiff1) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 284,
+        "Column": 9,
+        "ByteOffset": 11485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsConst0(pObj) || Gia_ObjIsRo(p, pObj) || Gia_ObjIsAnd(pObj) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Nwk_ManDeriveFromAig",
+      "Start": 1268,
+      "End": 2273,
+      "BodyStart": 1318,
+      "Original": "Nwk_Man_t * Nwk_ManDeriveFromAig( Aig_Man_t * p )\n{\n    Nwk_Man_t * pNtk;\n    Aig_Obj_t * pObj;\n    int i;\n    pNtk = Nwk_ManAlloc();\n    pNtk-\u003enFanioPlus = 0;\n    Hop_ManStop( pNtk-\u003epManHop );\n    pNtk-\u003epManHop = NULL;\n    pNtk-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNtk-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    pObj = Aig_ManConst1(p);\n    pObj-\u003epData = Nwk_ManCreateNode( pNtk, 0, pObj-\u003enRefs );\n    Aig_ManForEachCi( p, pObj, i )\n        pObj-\u003epData = Nwk_ManCreateCi( pNtk, pObj-\u003enRefs );\n    Aig_ManForEachNode( p, pObj, i )\n    {\n        pObj-\u003epData = Nwk_ManCreateNode( pNtk, 2, pObj-\u003enRefs );\n        Nwk_ObjAddFanin( (Nwk_Obj_t *)pObj-\u003epData, (Nwk_Obj_t *)Aig_ObjFanin0(pObj)-\u003epData );\n        Nwk_ObjAddFanin( (Nwk_Obj_t *)pObj-\u003epData, (Nwk_Obj_t *)Aig_ObjFanin1(pObj)-\u003epData );\n    }\n    Aig_ManForEachCo( p, pObj, i )\n    {\n        pObj-\u003epData = Nwk_ManCreateCo( pNtk );\n        Nwk_ObjAddFanin( (Nwk_Obj_t *)pObj-\u003epData, (Nwk_Obj_t *)Aig_ObjFanin0(pObj)-\u003epData );\n    }\n    return pNtk;\n}",
+      "Draft": "func Nwk_ManDeriveFromAig(p *Aig_Man_t) *Nwk_Man_t {\n    var pNtk *Nwk_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    pNtk = Nwk_ManAlloc();\n    pNtk.nFanioPlus = 0;\n    Hop_ManStop( pNtk.pManHop );\n    pNtk.pManHop = nil;\n    pNtk.pName = Abc_UtilStrsav( p.pName );\n    pNtk.pSpec = Abc_UtilStrsav( p.pSpec );\n    pObj = Aig_ManConst1(p);\n    pObj.pData = Nwk_ManCreateNode( pNtk, 0, pObj.nRefs );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        pObj.pData = Nwk_ManCreateCi( pNtk, pObj.nRefs );\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Nwk_ManCreateNode( pNtk, 2, pObj.nRefs );\n        Nwk_ObjAddFanin( (Nwk_Obj_t *)pObj.pData, (Nwk_Obj_t *)Aig_ObjFanin0(pObj).pData );\n        Nwk_ObjAddFanin( (Nwk_Obj_t *)pObj.pData, (Nwk_Obj_t *)Aig_ObjFanin1(pObj).pData );\n    }\n    }\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pObj.pData = Nwk_ManCreateCo( pNtk );\n        Nwk_ObjAddFanin( (Nwk_Obj_t *)pObj.pData, (Nwk_Obj_t *)Aig_ObjFanin0(pObj).pData );\n    }\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Nwk_ManDeriveRetimingCut",
+      "Start": 2539,
+      "End": 3249,
+      "BodyStart": 2621,
+      "Original": "Vec_Ptr_t * Nwk_ManDeriveRetimingCut( Aig_Man_t * p, int fForward, int fVerbose )\n{ \n    Vec_Ptr_t * vNodes;\n    Nwk_Man_t * pNtk;\n    Nwk_Obj_t * pNode;\n    Aig_Obj_t * pObj;\n    int i;\n    pNtk = Nwk_ManDeriveFromAig( p );\n    if ( fForward )\n        vNodes = Nwk_ManRetimeCutForward( pNtk, Aig_ManRegNum(p), fVerbose );\n    else\n        vNodes = Nwk_ManRetimeCutBackward( pNtk, Aig_ManRegNum(p), fVerbose );\n    Aig_ManForEachObj( p, pObj, i )\n        ((Nwk_Obj_t *)pObj-\u003epData)-\u003epCopy = pObj;\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vNodes, pNode, i )\n        Vec_PtrWriteEntry( vNodes, i, pNode-\u003epCopy );\n    Nwk_ManFree( pNtk );\n//    assert( Vec_PtrSize(vNodes) \u003c= Aig_ManRegNum(p) );\n    return vNodes;\n}",
+      "Draft": "func Nwk_ManDeriveRetimingCut(p *Aig_Man_t, fForward int32, fVerbose int32) *Vec_Ptr_t { \n    var vNodes *Vec_Ptr_t;\n    var pNtk *Nwk_Man_t;\n    var pNode *Nwk_Obj_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    pNtk = Nwk_ManDeriveFromAig( p );\n    if fForward != 0 {\n        vNodes = Nwk_ManRetimeCutForward( pNtk, Aig_ManRegNum(p), fVerbose );\n    } else {\n        vNodes = Nwk_ManRetimeCutBackward( pNtk, Aig_ManRegNum(p), fVerbose ); }\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        ((Nwk_Obj_t *)pObj.pData).pCopy = pObj; }\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Nwk_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Vec_PtrWriteEntry( vNodes, i, pNode.pCopy );\n    }\n    Nwk_ManFree( pNtk );\n//    assert( Vec_PtrSize(vNodes) \u003c= Aig_ManRegNum(p) );\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Nwk_ManColleacReached_rec",
+      "Start": 3589,
+      "End": 4134,
+      "BodyStart": 3696,
+      "Original": "void Nwk_ManColleacReached_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vNodes, Vec_Int_t * vLeaves )\n{\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if ( Gia_ObjIsCi(pObj) )\n    {\n        Vec_IntPush( vLeaves, Gia_ObjId(p, pObj) );\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Nwk_ManColleacReached_rec( p, Gia_ObjFanin0(pObj), vNodes, vLeaves );\n    Nwk_ManColleacReached_rec( p, Gia_ObjFanin1(pObj), vNodes, vLeaves );\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n}",
+      "Draft": "func Nwk_ManColleacReached_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t, vLeaves *Vec_Int_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vLeaves, Gia_ObjId(p, pObj) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Nwk_ManColleacReached_rec( p, Gia_ObjFanin0(pObj), vNodes, vLeaves );\n    Nwk_ManColleacReached_rec( p, Gia_ObjFanin1(pObj), vNodes, vLeaves );\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n}"
+    },
+    {
+      "Name": "Nwk_ManCreateFromGia",
+      "Start": 4401,
+      "End": 6825,
+      "BodyStart": 4534,
+      "Original": "Nwk_Man_t * Nwk_ManCreateFromGia( Gia_Man_t * p, Vec_Int_t * vPPis, Vec_Int_t * vNodes, Vec_Int_t * vLeaves, Vec_Int_t ** pvMapInv )\n{\n    Nwk_Man_t * pNtk;\n    Nwk_Obj_t ** ppCopies;\n    Gia_Obj_t * pObj;\n    Vec_Int_t * vMaps;\n    int i;\n//    assert( Vec_IntSize(vLeaves) \u003e= Vec_IntSize(vPPis) );\n    Gia_ManCreateRefs( p );\n    pNtk = Nwk_ManAlloc();\n    pNtk-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNtk-\u003enFanioPlus = 0;\n    Hop_ManStop( pNtk-\u003epManHop );\n    pNtk-\u003epManHop = NULL;\n    // allocate\n    vMaps = Vec_IntAlloc( Vec_IntSize(vNodes) + Abc_MaxInt(Vec_IntSize(vPPis), Vec_IntSize(vLeaves)) + 1 );\n    ppCopies = ABC_ALLOC( Nwk_Obj_t *, Gia_ManObjNum(p) );\n    // copy objects\n    pObj = Gia_ManConst0(p);\n//    ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateNode( pNtk, 0, Gia_ObjRefNum(p,pObj) );\n    ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateNode( pNtk, 0, Gia_ObjRefNum(p,pObj) + (Vec_IntSize(vLeaves) \u003e Vec_IntSize(vPPis) ? Vec_IntSize(vLeaves) - Vec_IntSize(vPPis) : 0) );\n    Vec_IntPush( vMaps, Gia_ObjId(p,pObj) );\n    Gia_ManForEachObjVec( vLeaves, p, pObj, i )\n    {\n        ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateCi( pNtk, Gia_ObjRefNum(p,pObj) );\n        assert( Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)]) );\n        Vec_IntPush( vMaps, Gia_ObjId(p,pObj) );\n    }\n    for ( i = Vec_IntSize(vLeaves); i \u003c Vec_IntSize(vPPis); i++ )\n    {\n        Nwk_ManCreateCi( pNtk, 0 );\n        Vec_IntPush( vMaps, -1 );\n    }\n    Gia_ManForEachObjVec( vNodes, p, pObj, i )\n    {\n        ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateNode( pNtk, 2, Gia_ObjRefNum(p,pObj) );\n        Nwk_ObjAddFanin( ppCopies[Gia_ObjId(p,pObj)], ppCopies[Gia_ObjFaninId0p(p,pObj)] );\n        Nwk_ObjAddFanin( ppCopies[Gia_ObjId(p,pObj)], ppCopies[Gia_ObjFaninId1p(p,pObj)] );\n        assert( Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)]) );\n        Vec_IntPush( vMaps, Gia_ObjId(p,pObj) );\n    }\n    Gia_ManForEachObjVec( vPPis, p, pObj, i )\n    {\n        assert( ppCopies[Gia_ObjId(p,pObj)] != NULL );\n        Nwk_ObjAddFanin( Nwk_ManCreateCo(pNtk), ppCopies[Gia_ObjId(p,pObj)] );\n    }\n    for ( i = Vec_IntSize(vPPis); i \u003c Vec_IntSize(vLeaves); i++ )\n        Nwk_ObjAddFanin( Nwk_ManCreateCo(pNtk), ppCopies[0] );\n    assert( Vec_IntSize(vMaps) == Vec_IntSize(vNodes) + Abc_MaxInt(Vec_IntSize(vPPis), Vec_IntSize(vLeaves)) + 1 );\n    ABC_FREE( ppCopies );\n    *pvMapInv = vMaps;\n    return pNtk;\n}",
+      "Draft": "func Nwk_ManCreateFromGia(p *Gia_Man_t, vPPis *Vec_Int_t, vNodes *Vec_Int_t, vLeaves *Vec_Int_t, pvMapInv **Vec_Int_t) *Nwk_Man_t {\n    var pNtk *Nwk_Man_t;\n    var ppCopies **Nwk_Obj_t;\n    var pObj *Gia_Obj_t;\n    var vMaps *Vec_Int_t;\n    var i int32;\n//    assert( Vec_IntSize(vLeaves) \u003e= Vec_IntSize(vPPis) );\n    Gia_ManCreateRefs( p );\n    pNtk = Nwk_ManAlloc();\n    pNtk.pName = Abc_UtilStrsav( p.pName );\n    pNtk.nFanioPlus = 0;\n    Hop_ManStop( pNtk.pManHop );\n    pNtk.pManHop = nil;\n    // allocate\n    vMaps = Vec_IntAlloc( Vec_IntSize(vNodes) + Abc_MaxInt(Vec_IntSize(vPPis), Vec_IntSize(vLeaves)) + 1 );\n    // inlining of macro ABC_ALLOC\n    ppCopies = ((Nwk_Obj_t * *) malloc(sizeof(Nwk_Obj_t *) * (size_t)(Gia_ManObjNum(p))));\n    // copy objects\n    pObj = Gia_ManConst0(p);\n//    ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateNode( pNtk, 0, Gia_ObjRefNum(p,pObj) );\n    ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateNode( pNtk, 0, Gia_ObjRefNum(p,pObj) + (Vec_IntSize(vLeaves) \u003e Vec_IntSize(vPPis) ? Vec_IntSize(vLeaves) - Vec_IntSize(vPPis) : 0) );\n    Vec_IntPush( vMaps, Gia_ObjId(p,pObj) );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vLeaves)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vLeaves,i))); i++  {\n        ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateCi( pNtk, Gia_ObjRefNum(p,pObj) );\n        assert(Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)]), \"Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)])\");\n        Vec_IntPush( vMaps, Gia_ObjId(p,pObj) );\n    }\n    for  i = Vec_IntSize(vLeaves); i \u003c Vec_IntSize(vPPis); i++  {\n        Nwk_ManCreateCi( pNtk, 0 );\n        Vec_IntPush( vMaps, -1 );\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,i))); i++  {\n        ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateNode( pNtk, 2, Gia_ObjRefNum(p,pObj) );\n        Nwk_ObjAddFanin( ppCopies[Gia_ObjId(p,pObj)], ppCopies[Gia_ObjFaninId0p(p,pObj)] );\n        Nwk_ObjAddFanin( ppCopies[Gia_ObjId(p,pObj)], ppCopies[Gia_ObjFaninId1p(p,pObj)] );\n        assert(Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)]), \"Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)])\");\n        Vec_IntPush( vMaps, Gia_ObjId(p,pObj) );\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vPPis,i))); i++  {\n        assert(ppCopies[Gia_ObjId(p,pObj)] != nil, \"ppCopies[Gia_ObjId(p,pObj)] != nil\");\n        Nwk_ObjAddFanin( Nwk_ManCreateCo(pNtk), ppCopies[Gia_ObjId(p,pObj)] );\n    }\n    for  i = Vec_IntSize(vPPis); i \u003c Vec_IntSize(vLeaves); i++  {\n        Nwk_ObjAddFanin( Nwk_ManCreateCo(pNtk), ppCopies[0] );\n    }\n    assert(Vec_IntSize(vMaps) == Vec_IntSize(vNodes) + Abc_MaxInt(Vec_IntSize(vPPis), Vec_IntSize(vLeaves)) + 1, \"Vec_IntSize(vMaps) == Vec_IntSize(vNodes) + Abc_MaxInt(Vec_IntSize(vPPis), Vec_IntSize(vLeaves)) + 1\");\n    // inlining of macro ABC_FREE\n    ((ppCopies) ? (free((char *) (ppCopies)), (ppCopies) = 0) : 0);\n    *pvMapInv = vMaps;\n    return pNtk;\n}"
+    },
+    {
+      "Name": "Nwk_ManDeriveMinCut",
+      "Start": 7089,
+      "End": 9737,
+      "BodyStart": 7145,
+      "Original": "void Nwk_ManDeriveMinCut( Gia_Man_t * p, int fVerbose )\n{\n    Nwk_Man_t * pNtk;\n    Nwk_Obj_t * pNode;\n    Vec_Ptr_t * vMinCut;\n    Vec_Int_t * vPPis, * vNodes, * vLeaves, * vNodes2, * vLeaves2, * vMapInv;\n    Vec_Int_t * vCommon, * vDiff0, * vDiff1;\n    Gia_Obj_t * pObj;\n    int i, iObjId;\n    // get inputs\n    Gia_ManGlaCollect( p, p-\u003evGateClasses, NULL, \u0026vPPis, NULL, NULL );\n    // collect nodes rechable from PPIs\n    vNodes = Vec_IntAlloc( 100 );\n    vLeaves = Vec_IntAlloc( 100 );\n    Gia_ManIncrementTravId( p );\n    Gia_ManForEachObjVec( vPPis, p, pObj, i )\n        Nwk_ManColleacReached_rec( p, pObj, vNodes, vLeaves );\n    // derive the new network\n    pNtk = Nwk_ManCreateFromGia( p, vPPis, vNodes, vLeaves, \u0026vMapInv );\n    assert( Nwk_ManPiNum(pNtk) == Nwk_ManPoNum(pNtk) );\n    // create min-cut\n    vMinCut = Nwk_ManRetimeCutBackward( pNtk, Nwk_ManPiNum(pNtk), fVerbose );\n    // copy from the GIA back\n//    Aig_ManForEachObj( p, pObj, i )\n//        ((Nwk_Obj_t *)pObj-\u003epData)-\u003epCopy = pObj;\n    // mark min-cut nodes\n    vNodes2 = Vec_IntAlloc( 100 );\n    vLeaves2 = Vec_IntAlloc( 100 );\n    Gia_ManIncrementTravId( p );\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vMinCut, pNode, i )\n    {\n        pObj = Gia_ManObj( p, Vec_IntEntry(vMapInv, Nwk_ObjId(pNode)) );\n        if ( Gia_ObjIsConst0(pObj) )\n            continue;\n        Nwk_ManColleacReached_rec( p, pObj, vNodes2, vLeaves2 );\n    }\n    if ( fVerbose )\n        printf( \"Min-cut: %d -\u003e %d.  Nodes %d -\u003e %d.  \", Vec_IntSize(vPPis)+1, Vec_PtrSize(vMinCut), Vec_IntSize(vNodes), Vec_IntSize(vNodes2) );\n    Vec_IntFree( vPPis );\n    Vec_PtrFree( vMinCut );\n    Vec_IntFree( vMapInv );\n    Nwk_ManFree( pNtk );\n\n    // sort the results\n    Vec_IntSort( vNodes, 0 );\n    Vec_IntSort( vNodes2, 0 );\n    vCommon = Vec_IntAlloc( Vec_IntSize(vNodes) );\n    vDiff0 = Vec_IntAlloc( 100 );\n    vDiff1 = Vec_IntAlloc( 100 );\n    Vec_IntTwoSplit( vNodes, vNodes2, vCommon, vDiff0, vDiff1 );\n    if ( fVerbose )\n        printf( \"Common = %d.  Diff0 = %d. Diff1 = %d.\\n\", Vec_IntSize(vCommon), Vec_IntSize(vDiff0), Vec_IntSize(vDiff1) );\n\n    // fill in\n    Vec_IntForEachEntry( vDiff0, iObjId, i )\n        Vec_IntWriteEntry( p-\u003evGateClasses, iObjId, 1 );\n\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vNodes );\n    Vec_IntFree( vLeaves2 );\n    Vec_IntFree( vNodes2 );\n\n    Vec_IntFree( vCommon );\n    Vec_IntFree( vDiff0 );\n    Vec_IntFree( vDiff1 );\n\n    // check abstraction\n    Gia_ManForEachObj( p, pObj, i )\n    {\n        if ( Vec_IntEntry( p-\u003evGateClasses, i ) == 0 )\n            continue;\n        assert( Gia_ObjIsConst0(pObj) || Gia_ObjIsRo(p, pObj) || Gia_ObjIsAnd(pObj) );\n    }\n}",
+      "Draft": "func Nwk_ManDeriveMinCut(p *Gia_Man_t, fVerbose int32) {\n    var pNtk *Nwk_Man_t;\n    var pNode *Nwk_Obj_t;\n    var vMinCut *Vec_Ptr_t;\n    var vPPis, vNodes, vLeaves, vNodes2, vLeaves2, vMapInv *Vec_Int_t;\n    var vCommon, vDiff0, vDiff1 *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, iObjId int32;\n    // get inputs\n    Gia_ManGlaCollect( p, p.vGateClasses, nil, \u0026vPPis, nil, nil );\n    // collect nodes rechable from PPIs\n    vNodes = Vec_IntAlloc( 100 );\n    vLeaves = Vec_IntAlloc( 100 );\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vPPis,i))); i++  {\n        Nwk_ManColleacReached_rec( p, pObj, vNodes, vLeaves );\n    }\n    // derive the new network\n    pNtk = Nwk_ManCreateFromGia( p, vPPis, vNodes, vLeaves, \u0026vMapInv );\n    assert(Nwk_ManPiNum(pNtk) == Nwk_ManPoNum(pNtk), \"Nwk_ManPiNum(pNtk) == Nwk_ManPoNum(pNtk)\");\n    // create min-cut\n    vMinCut = Nwk_ManRetimeCutBackward( pNtk, Nwk_ManPiNum(pNtk), fVerbose );\n    // copy from the GIA back\n//    Aig_ManForEachObj( p, pObj, i )\n//        ((Nwk_Obj_t *)pObj-\u003epData)-\u003epCopy = pObj;\n    // mark min-cut nodes\n    vNodes2 = Vec_IntAlloc( 100 );\n    vLeaves2 = Vec_IntAlloc( 100 );\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMinCut)) \u0026\u0026 (((pNode) = (Nwk_Obj_t *)Vec_PtrEntry(vMinCut, i)), 1); i++  {\n        pObj = Gia_ManObj( p, Vec_IntEntry(vMapInv, Nwk_ObjId(pNode)) );\n        if Gia_ObjIsConst0(pObj) {\n            continue; }\n        Nwk_ManColleacReached_rec( p, pObj, vNodes2, vLeaves2 );\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Min-cut: %d -\u003e %d.  Nodes %d -\u003e %d.  \", Vec_IntSize(vPPis)+1, Vec_PtrSize(vMinCut), Vec_IntSize(vNodes), Vec_IntSize(vNodes2)); }\n    Vec_IntFree( vPPis );\n    Vec_PtrFree( vMinCut );\n    Vec_IntFree( vMapInv );\n    Nwk_ManFree( pNtk );\n\n    // sort the results\n    Vec_IntSort( vNodes, 0 );\n    Vec_IntSort( vNodes2, 0 );\n    vCommon = Vec_IntAlloc( Vec_IntSize(vNodes) );\n    vDiff0 = Vec_IntAlloc( 100 );\n    vDiff1 = Vec_IntAlloc( 100 );\n    Vec_IntTwoSplit( vNodes, vNodes2, vCommon, vDiff0, vDiff1 );\n    if fVerbose != 0 {\n        fmt.Printf(\"Common = %d.  Diff0 = %d. Diff1 = %d.\\n\", Vec_IntSize(vCommon), Vec_IntSize(vDiff0), Vec_IntSize(vDiff1)); }\n\n    // fill in\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDiff0)) \u0026\u0026 (((iObjId) = Vec_IntEntry(vDiff0, i)), 1); i++  {\n        Vec_IntWriteEntry( p.vGateClasses, iObjId, 1 );\n    }\n\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vNodes );\n    Vec_IntFree( vLeaves2 );\n    Vec_IntFree( vNodes2 );\n\n    Vec_IntFree( vCommon );\n    Vec_IntFree( vDiff0 );\n    Vec_IntFree( vDiff1 );\n\n    // check abstraction\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Vec_IntEntry( p.vGateClasses, i ) == 0 {\n            continue; }\n        assert(Gia_ObjIsConst0(pObj) || Gia_ObjIsRo(p, pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsConst0(pObj) || Gia_ObjIsRo(p, pObj) || Gia_ObjIsAnd(pObj)\");\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::mechanical::sizeof::6009",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5027,
+      "End": 5027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::1835",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1674,
+      "End": 1674
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::2113",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1769,
+      "End": 1769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::2314",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1898,
+      "End": 1911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::2340",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1924,
+      "End": 1937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::2408",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1992,
+      "End": 2005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::2434",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2018,
+      "End": 2031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::2648",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2071,
+      "End": 2071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::2776",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2180,
+      "End": 2193
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::2802",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2206,
+      "End": 2219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::3713",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2954,
+      "End": 2954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::3803",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2995,
+      "End": 3008
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::3957",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3040,
+      "End": 3040
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::5986",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5027,
+      "End": 5027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::6015",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5027,
+      "End": 5027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::8149",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6762,
+      "End": 6762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::pointer-cast::9862",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8233,
+      "End": 8233
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::Nwk_ManDeriveFromAig",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManDeriveFromAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1268,
+      "End": 2273
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::Nwk_ManDeriveRetimingCut",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManDeriveRetimingCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2539,
+      "End": 3249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::Nwk_ManColleacReached_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManColleacReached_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3589,
+      "End": 4134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::ternary::Nwk_ManCreateFromGia",
+      "Category": "ternary-review",
+      "Symbol": "Nwk_ManCreateFromGia",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4401,
+      "End": 6825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::Nwk_ManCreateFromGia",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCreateFromGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4401,
+      "End": 6825
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::Nwk_ManDeriveMinCut",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManDeriveMinCut",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7089,
+      "End": 9737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkAig.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9984
+    }
+  ],
+  "Draft": "package nwk\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [nwkAig.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Netlist representation.]\n\n  Synopsis    [Translating of AIG into the network.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nwkAig.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"nwk.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Converts AIG into the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManDeriveFromAig(p *Aig_Man_t) *Nwk_Man_t {\n    var pNtk *Nwk_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    pNtk = Nwk_ManAlloc();\n    pNtk.nFanioPlus = 0;\n    Hop_ManStop( pNtk.pManHop );\n    pNtk.pManHop = nil;\n    pNtk.pName = Abc_UtilStrsav( p.pName );\n    pNtk.pSpec = Abc_UtilStrsav( p.pSpec );\n    pObj = Aig_ManConst1(p);\n    pObj.pData = Nwk_ManCreateNode( pNtk, 0, pObj.nRefs );\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        pObj.pData = Nwk_ManCreateCi( pNtk, pObj.nRefs );\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Nwk_ManCreateNode( pNtk, 2, pObj.nRefs );\n        Nwk_ObjAddFanin( (Nwk_Obj_t *)pObj.pData, (Nwk_Obj_t *)Aig_ObjFanin0(pObj).pData );\n        Nwk_ObjAddFanin( (Nwk_Obj_t *)pObj.pData, (Nwk_Obj_t *)Aig_ObjFanin1(pObj).pData );\n    }\n    }\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pObj.pData = Nwk_ManCreateCo( pNtk );\n        Nwk_ObjAddFanin( (Nwk_Obj_t *)pObj.pData, (Nwk_Obj_t *)Aig_ObjFanin0(pObj).pData );\n    }\n    return pNtk;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts AIG into the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManDeriveRetimingCut(p *Aig_Man_t, fForward int32, fVerbose int32) *Vec_Ptr_t { \n    var vNodes *Vec_Ptr_t;\n    var pNtk *Nwk_Man_t;\n    var pNode *Nwk_Obj_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    pNtk = Nwk_ManDeriveFromAig( p );\n    if fForward != 0 {\n        vNodes = Nwk_ManRetimeCutForward( pNtk, Aig_ManRegNum(p), fVerbose );\n    } else {\n        vNodes = Nwk_ManRetimeCutBackward( pNtk, Aig_ManRegNum(p), fVerbose ); }\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        ((Nwk_Obj_t *)pObj.pData).pCopy = pObj; }\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Nwk_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Vec_PtrWriteEntry( vNodes, i, pNode.pCopy );\n    }\n    Nwk_ManFree( pNtk );\n//    assert( Vec_PtrSize(vNodes) \u003c= Aig_ManRegNum(p) );\n    return vNodes;\n}\n\n\n//ABC_NAMESPACE_IMPL_END\n\n//#include \"proof/abs/abs.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/**Function*************************************************************\n\n  Synopsis    [Collects reachable nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManColleacReached_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vNodes *Vec_Int_t, vLeaves *Vec_Int_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if Gia_ObjIsCi(pObj) {\n        Vec_IntPush( vLeaves, Gia_ObjId(p, pObj) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Nwk_ManColleacReached_rec( p, Gia_ObjFanin0(pObj), vNodes, vLeaves );\n    Nwk_ManColleacReached_rec( p, Gia_ObjFanin1(pObj), vNodes, vLeaves );\n    Vec_IntPush( vNodes, Gia_ObjId(p, pObj) );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Converts AIG into the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManCreateFromGia(p *Gia_Man_t, vPPis *Vec_Int_t, vNodes *Vec_Int_t, vLeaves *Vec_Int_t, pvMapInv **Vec_Int_t) *Nwk_Man_t {\n    var pNtk *Nwk_Man_t;\n    var ppCopies **Nwk_Obj_t;\n    var pObj *Gia_Obj_t;\n    var vMaps *Vec_Int_t;\n    var i int32;\n//    assert( Vec_IntSize(vLeaves) \u003e= Vec_IntSize(vPPis) );\n    Gia_ManCreateRefs( p );\n    pNtk = Nwk_ManAlloc();\n    pNtk.pName = Abc_UtilStrsav( p.pName );\n    pNtk.nFanioPlus = 0;\n    Hop_ManStop( pNtk.pManHop );\n    pNtk.pManHop = nil;\n    // allocate\n    vMaps = Vec_IntAlloc( Vec_IntSize(vNodes) + Abc_MaxInt(Vec_IntSize(vPPis), Vec_IntSize(vLeaves)) + 1 );\n    // inlining of macro ABC_ALLOC\n    ppCopies = ((Nwk_Obj_t * *) malloc(sizeof(Nwk_Obj_t *) * (size_t)(Gia_ManObjNum(p))));\n    // copy objects\n    pObj = Gia_ManConst0(p);\n//    ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateNode( pNtk, 0, Gia_ObjRefNum(p,pObj) );\n    ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateNode( pNtk, 0, Gia_ObjRefNum(p,pObj) + (Vec_IntSize(vLeaves) \u003e Vec_IntSize(vPPis) ? Vec_IntSize(vLeaves) - Vec_IntSize(vPPis) : 0) );\n    Vec_IntPush( vMaps, Gia_ObjId(p,pObj) );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vLeaves)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vLeaves,i))); i++  {\n        ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateCi( pNtk, Gia_ObjRefNum(p,pObj) );\n        assert(Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)]), \"Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)])\");\n        Vec_IntPush( vMaps, Gia_ObjId(p,pObj) );\n    }\n    for  i = Vec_IntSize(vLeaves); i \u003c Vec_IntSize(vPPis); i++  {\n        Nwk_ManCreateCi( pNtk, 0 );\n        Vec_IntPush( vMaps, -1 );\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vNodes)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vNodes,i))); i++  {\n        ppCopies[Gia_ObjId(p,pObj)] = Nwk_ManCreateNode( pNtk, 2, Gia_ObjRefNum(p,pObj) );\n        Nwk_ObjAddFanin( ppCopies[Gia_ObjId(p,pObj)], ppCopies[Gia_ObjFaninId0p(p,pObj)] );\n        Nwk_ObjAddFanin( ppCopies[Gia_ObjId(p,pObj)], ppCopies[Gia_ObjFaninId1p(p,pObj)] );\n        assert(Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)]), \"Vec_IntSize(vMaps) == Nwk_ObjId(ppCopies[Gia_ObjId(p,pObj)])\");\n        Vec_IntPush( vMaps, Gia_ObjId(p,pObj) );\n    }\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vPPis,i))); i++  {\n        assert(ppCopies[Gia_ObjId(p,pObj)] != nil, \"ppCopies[Gia_ObjId(p,pObj)] != nil\");\n        Nwk_ObjAddFanin( Nwk_ManCreateCo(pNtk), ppCopies[Gia_ObjId(p,pObj)] );\n    }\n    for  i = Vec_IntSize(vPPis); i \u003c Vec_IntSize(vLeaves); i++  {\n        Nwk_ObjAddFanin( Nwk_ManCreateCo(pNtk), ppCopies[0] );\n    }\n    assert(Vec_IntSize(vMaps) == Vec_IntSize(vNodes) + Abc_MaxInt(Vec_IntSize(vPPis), Vec_IntSize(vLeaves)) + 1, \"Vec_IntSize(vMaps) == Vec_IntSize(vNodes) + Abc_MaxInt(Vec_IntSize(vPPis), Vec_IntSize(vLeaves)) + 1\");\n    // inlining of macro ABC_FREE\n    ((ppCopies) ? (free((char *) (ppCopies)), (ppCopies) = 0) : 0);\n    *pvMapInv = vMaps;\n    return pNtk;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns min-cut in the AIG.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManDeriveMinCut(p *Gia_Man_t, fVerbose int32) {\n    var pNtk *Nwk_Man_t;\n    var pNode *Nwk_Obj_t;\n    var vMinCut *Vec_Ptr_t;\n    var vPPis, vNodes, vLeaves, vNodes2, vLeaves2, vMapInv *Vec_Int_t;\n    var vCommon, vDiff0, vDiff1 *Vec_Int_t;\n    var pObj *Gia_Obj_t;\n    var i, iObjId int32;\n    // get inputs\n    Gia_ManGlaCollect( p, p.vGateClasses, nil, \u0026vPPis, nil, nil );\n    // collect nodes rechable from PPIs\n    vNodes = Vec_IntAlloc( 100 );\n    vLeaves = Vec_IntAlloc( 100 );\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Gia_ManForEachObjVec\n    for  i = 0; (i \u003c Vec_IntSize(vPPis)) \u0026\u0026 ((pObj) = Gia_ManObj(p, Vec_IntEntry(vPPis,i))); i++  {\n        Nwk_ManColleacReached_rec( p, pObj, vNodes, vLeaves );\n    }\n    // derive the new network\n    pNtk = Nwk_ManCreateFromGia( p, vPPis, vNodes, vLeaves, \u0026vMapInv );\n    assert(Nwk_ManPiNum(pNtk) == Nwk_ManPoNum(pNtk), \"Nwk_ManPiNum(pNtk) == Nwk_ManPoNum(pNtk)\");\n    // create min-cut\n    vMinCut = Nwk_ManRetimeCutBackward( pNtk, Nwk_ManPiNum(pNtk), fVerbose );\n    // copy from the GIA back\n//    Aig_ManForEachObj( p, pObj, i )\n//        ((Nwk_Obj_t *)pObj-\u003epData)-\u003epCopy = pObj;\n    // mark min-cut nodes\n    vNodes2 = Vec_IntAlloc( 100 );\n    vLeaves2 = Vec_IntAlloc( 100 );\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vMinCut)) \u0026\u0026 (((pNode) = (Nwk_Obj_t *)Vec_PtrEntry(vMinCut, i)), 1); i++  {\n        pObj = Gia_ManObj( p, Vec_IntEntry(vMapInv, Nwk_ObjId(pNode)) );\n        if Gia_ObjIsConst0(pObj) {\n            continue; }\n        Nwk_ManColleacReached_rec( p, pObj, vNodes2, vLeaves2 );\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Min-cut: %d -\u003e %d.  Nodes %d -\u003e %d.  \", Vec_IntSize(vPPis)+1, Vec_PtrSize(vMinCut), Vec_IntSize(vNodes), Vec_IntSize(vNodes2)); }\n    Vec_IntFree( vPPis );\n    Vec_PtrFree( vMinCut );\n    Vec_IntFree( vMapInv );\n    Nwk_ManFree( pNtk );\n\n    // sort the results\n    Vec_IntSort( vNodes, 0 );\n    Vec_IntSort( vNodes2, 0 );\n    vCommon = Vec_IntAlloc( Vec_IntSize(vNodes) );\n    vDiff0 = Vec_IntAlloc( 100 );\n    vDiff1 = Vec_IntAlloc( 100 );\n    Vec_IntTwoSplit( vNodes, vNodes2, vCommon, vDiff0, vDiff1 );\n    if fVerbose != 0 {\n        fmt.Printf(\"Common = %d.  Diff0 = %d. Diff1 = %d.\\n\", Vec_IntSize(vCommon), Vec_IntSize(vDiff0), Vec_IntSize(vDiff1)); }\n\n    // fill in\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vDiff0)) \u0026\u0026 (((iObjId) = Vec_IntEntry(vDiff0, i)), 1); i++  {\n        Vec_IntWriteEntry( p.vGateClasses, iObjId, 1 );\n    }\n\n    Vec_IntFree( vLeaves );\n    Vec_IntFree( vNodes );\n    Vec_IntFree( vLeaves2 );\n    Vec_IntFree( vNodes2 );\n\n    Vec_IntFree( vCommon );\n    Vec_IntFree( vDiff0 );\n    Vec_IntFree( vDiff1 );\n\n    // check abstraction\n    // inlining of macro Gia_ManForEachObj\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {\n        if Vec_IntEntry( p.vGateClasses, i ) == 0 {\n            continue; }\n        assert(Gia_ObjIsConst0(pObj) || Gia_ObjIsRo(p, pObj) || Gia_ObjIsAnd(pObj), \"Gia_ObjIsConst0(pObj) || Gia_ObjIsRo(p, pObj) || Gia_ObjIsAnd(pObj)\");\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

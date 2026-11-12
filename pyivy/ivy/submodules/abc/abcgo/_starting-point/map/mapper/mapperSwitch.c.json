@@ -1,0 +1,155 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSwitch.c",
+  "SHA256": "0a33f0da8ec50cc009102d5f86662ebf305d1738422f89c9fc383915b24f24b2",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 112,
+        "Column": 5,
+        "ByteOffset": 3430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.M[fPhase].pSuperBest );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 13,
+        "ByteOffset": 5553
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pNodeChild.nRefAct[fPhaseChild] \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 191,
+        "Column": 9,
+        "ByteOffset": 6710
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 9,
+        "ByteOffset": 6835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode.nRefAct[0] \u003e 0 || pNode.nRefAct[1] \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Map_SwitchCutGetDerefed",
+      "Start": 1367,
+      "End": 1732,
+      "BodyStart": 1449,
+      "Original": "float Map_SwitchCutGetDerefed( Map_Node_t * pNode, Map_Cut_t * pCut, int fPhase )\n{\n    float aResult, aResult2;\n//    assert( pNode-\u003eSwitching \u003e 0 );\n    aResult2 = Map_SwitchCutRefDeref( pNode, pCut, fPhase, 1 ); // reference\n    aResult  = Map_SwitchCutRefDeref( pNode, pCut, fPhase, 0 ); // dereference\n//    assert( aResult == aResult2 );\n    return aResult;\n}",
+      "Draft": "func Map_SwitchCutGetDerefed(pNode *Map_Node_t, pCut *Map_Cut_t, fPhase int32) float32 {\n    var aResult, aResult2 float32;\n//    assert( pNode-\u003eSwitching \u003e 0 );\n    aResult2 = Map_SwitchCutRefDeref( pNode, pCut, fPhase, 1 ); // reference\n    aResult  = Map_SwitchCutRefDeref( pNode, pCut, fPhase, 0 ); // dereference\n//    assert( aResult == aResult2 );\n    return aResult;\n}"
+    },
+    {
+      "Name": "Map_SwitchCutRef",
+      "Start": 1987,
+      "End": 2138,
+      "BodyStart": 2062,
+      "Original": "float Map_SwitchCutRef( Map_Node_t * pNode, Map_Cut_t * pCut, int fPhase )\n{\n    return Map_SwitchCutRefDeref( pNode, pCut, fPhase, 1 ); // reference\n}",
+      "Draft": "func Map_SwitchCutRef(pNode *Map_Node_t, pCut *Map_Cut_t, fPhase int32) float32 {\n    return Map_SwitchCutRefDeref( pNode, pCut, fPhase, 1 ); // reference\n}"
+    },
+    {
+      "Name": "Map_SwitchCutDeref",
+      "Start": 2393,
+      "End": 2548,
+      "BodyStart": 2470,
+      "Original": "float Map_SwitchCutDeref( Map_Node_t * pNode, Map_Cut_t * pCut, int fPhase )\n{\n    return Map_SwitchCutRefDeref( pNode, pCut, fPhase, 0 ); // dereference\n}",
+      "Draft": "func Map_SwitchCutDeref(pNode *Map_Node_t, pCut *Map_Cut_t, fPhase int32) float32 {\n    return Map_SwitchCutRefDeref( pNode, pCut, fPhase, 0 ); // dereference\n}"
+    },
+    {
+      "Name": "Map_SwitchCutRefDeref",
+      "Start": 2933,
+      "End": 6097,
+      "BodyStart": 3029,
+      "Original": "float Map_SwitchCutRefDeref( Map_Node_t * pNode, Map_Cut_t * pCut, int fPhase, int fReference )\n{\n    Map_Node_t * pNodeChild;\n    Map_Cut_t * pCutChild;\n    float aSwitchActivity;\n    int i, fPhaseChild;\n\n    // start switching activity for the node\n    aSwitchActivity = pNode-\u003eSwitching;\n    // consider the elementary variable\n    if ( pCut-\u003enLeaves == 1 )\n        return aSwitchActivity;\n\n    // go through the children\n    assert( pCut-\u003eM[fPhase].pSuperBest );\n    for ( i = 0; i \u003c pCut-\u003enLeaves; i++ )\n    {\n        pNodeChild  = pCut-\u003eppLeaves[i];\n        fPhaseChild = Map_CutGetLeafPhase( pCut, fPhase, i );\n        // get the reference counter of the child\n\n        if ( fReference )\n        {\n            if ( pNodeChild-\u003epCutBest[0] \u0026\u0026 pNodeChild-\u003epCutBest[1] ) // both phases are present\n            {\n                // if this phase of the node is referenced, there is no recursive call\n                pNodeChild-\u003enRefAct[2]++;\n                if ( pNodeChild-\u003enRefAct[fPhaseChild]++ \u003e 0 )\n                    continue;\n            }\n            else // only one phase is present\n            {\n                // inverter should be added if the phase\n                // (a) has no reference and (b) is implemented using other phase\n                if ( pNodeChild-\u003enRefAct[fPhaseChild]++ == 0 \u0026\u0026 pNodeChild-\u003epCutBest[fPhaseChild] == NULL )\n                    aSwitchActivity += pNodeChild-\u003eSwitching; // inverter switches the same as the node\n                // if the node is referenced, there is no recursive call\n                if ( pNodeChild-\u003enRefAct[2]++ \u003e 0 )\n                    continue;\n            }\n        }\n        else\n        {\n            if ( pNodeChild-\u003epCutBest[0] \u0026\u0026 pNodeChild-\u003epCutBest[1] ) // both phases are present\n            {\n                // if this phase of the node is referenced, there is no recursive call\n                --pNodeChild-\u003enRefAct[2];\n                if ( --pNodeChild-\u003enRefAct[fPhaseChild] \u003e 0 )\n                    continue;\n            }\n            else // only one phase is present\n            {\n                // inverter should be added if the phase\n                // (a) has no reference and (b) is implemented using other phase\n                if ( --pNodeChild-\u003enRefAct[fPhaseChild] == 0 \u0026\u0026 pNodeChild-\u003epCutBest[fPhaseChild] == NULL )\n                    aSwitchActivity += pNodeChild-\u003eSwitching; // inverter switches the same as the node\n                // if the node is referenced, there is no recursive call\n                if ( --pNodeChild-\u003enRefAct[2] \u003e 0 )\n                    continue;\n            }\n            assert( pNodeChild-\u003enRefAct[fPhaseChild] \u003e= 0 );\n        }\n\n        // get the child cut\n        pCutChild = pNodeChild-\u003epCutBest[fPhaseChild];\n        // if the child does not have this phase mapped, take the opposite phase\n        if ( pCutChild == NULL )\n        {\n            fPhaseChild = !fPhaseChild;\n            pCutChild   = pNodeChild-\u003epCutBest[fPhaseChild];\n        }\n        // reference and compute area recursively\n        aSwitchActivity += Map_SwitchCutRefDeref( pNodeChild, pCutChild, fPhaseChild, fReference );\n    }\n    return aSwitchActivity;\n}",
+      "Draft": "func Map_SwitchCutRefDeref(pNode *Map_Node_t, pCut *Map_Cut_t, fPhase int32, fReference int32) float32 {\n    var pNodeChild *Map_Node_t;\n    var pCutChild *Map_Cut_t;\n    var aSwitchActivity float32;\n    var i, fPhaseChild int32;\n\n    // start switching activity for the node\n    aSwitchActivity = pNode.Switching;\n    // consider the elementary variable\n    if pCut.nLeaves == 1 {\n        return aSwitchActivity; }\n\n    // go through the children\n    assert(pCut.M[fPhase].pSuperBest, \"pCut.M[fPhase].pSuperBest\");\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pNodeChild  = pCut.ppLeaves[i];\n        fPhaseChild = Map_CutGetLeafPhase( pCut, fPhase, i );\n        // get the reference counter of the child\n\n        if fReference != 0 {\n            if pNodeChild.pCutBest[0] \u0026\u0026 pNodeChild.pCutBest[1] { // both phases are present\n            \n                // if this phase of the node is referenced, there is no recursive call\n                pNodeChild.nRefAct[2]++;\n                if pNodeChild.nRefAct[fPhaseChild]++ \u003e 0 {\n                    continue; }\n            \n            } else { // only one phase is present\n            \n                // inverter should be added if the phase\n                // (a) has no reference and (b) is implemented using other phase\n                if pNodeChild.nRefAct[fPhaseChild]++ == 0 \u0026\u0026 pNodeChild.pCutBest[fPhaseChild] == nil {\n                    aSwitchActivity += pNodeChild.Switching; } // inverter switches the same as the node\n                // if the node is referenced, there is no recursive call\n                if pNodeChild.nRefAct[2]++ \u003e 0 {\n                    continue; }\n            }\n        \n        } else {\n            if pNodeChild.pCutBest[0] \u0026\u0026 pNodeChild.pCutBest[1] { // both phases are present\n            \n                // if this phase of the node is referenced, there is no recursive call\n                --pNodeChild.nRefAct[2];\n                if --pNodeChild.nRefAct[fPhaseChild] \u003e 0 {\n                    continue; }\n            \n            } else { // only one phase is present\n            \n                // inverter should be added if the phase\n                // (a) has no reference and (b) is implemented using other phase\n                if --pNodeChild.nRefAct[fPhaseChild] == 0 \u0026\u0026 pNodeChild.pCutBest[fPhaseChild] == nil {\n                    aSwitchActivity += pNodeChild.Switching; } // inverter switches the same as the node\n                // if the node is referenced, there is no recursive call\n                if --pNodeChild.nRefAct[2] \u003e 0 {\n                    continue; }\n            }\n            assert(pNodeChild.nRefAct[fPhaseChild] \u003e= 0, \"pNodeChild.nRefAct[fPhaseChild] \u003e= 0\");\n        }\n\n        // get the child cut\n        pCutChild = pNodeChild.pCutBest[fPhaseChild];\n        // if the child does not have this phase mapped, take the opposite phase\n        if pCutChild == nil {\n            fPhaseChild = !fPhaseChild;\n            pCutChild   = pNodeChild.pCutBest[fPhaseChild];\n        }\n        // reference and compute area recursively\n        aSwitchActivity += Map_SwitchCutRefDeref( pNodeChild, pCutChild, fPhaseChild, fReference );\n    }\n    return aSwitchActivity;\n}"
+    },
+    {
+      "Name": "Map_MappingGetSwitching",
+      "Start": 6363,
+      "End": 7947,
+      "BodyStart": 6413,
+      "Original": "float Map_MappingGetSwitching( Map_Man_t * pMan )\n{\n    Map_Node_t * pNode;\n    float Switch = 0.0;\n    int i;\n    for ( i = 0; i \u003c pMan-\u003evMapObjs-\u003enSize; i++ )\n    {\n        pNode = pMan-\u003evMapObjs-\u003epArray[i];\n        if ( pNode-\u003enRefAct[2] == 0 )\n            continue;\n        // at least one phase has the best cut assigned\n        assert( pNode-\u003epCutBest[0] != NULL || pNode-\u003epCutBest[1] != NULL );\n        // at least one phase is used in the mapping\n        assert( pNode-\u003enRefAct[0] \u003e 0 || pNode-\u003enRefAct[1] \u003e 0 );\n        // compute the array due to the supergate\n        if ( Map_NodeIsAnd(pNode) )\n        {\n            // count switching of the negative phase\n            if ( pNode-\u003epCutBest[0] \u0026\u0026 (pNode-\u003enRefAct[0] \u003e 0 || pNode-\u003epCutBest[1] == NULL) )\n                Switch += pNode-\u003eSwitching;\n            // count switching of the positive phase\n            if ( pNode-\u003epCutBest[1] \u0026\u0026 (pNode-\u003enRefAct[1] \u003e 0 || pNode-\u003epCutBest[0] == NULL) )\n                Switch += pNode-\u003eSwitching;\n        }\n        // count switching of the interver if we need to implement one phase with another phase\n        if ( (pNode-\u003epCutBest[0] == NULL \u0026\u0026 pNode-\u003enRefAct[0] \u003e 0) || \n             (pNode-\u003epCutBest[1] == NULL \u0026\u0026 pNode-\u003enRefAct[1] \u003e 0) )\n            Switch += pNode-\u003eSwitching; // inverter switches the same as the node\n    }\n    // add buffers for each CO driven by a CI\n    for ( i = 0; i \u003c pMan-\u003enOutputs; i++ )\n        if ( Map_NodeIsVar(pMan-\u003epOutputs[i]) \u0026\u0026 !Map_IsComplement(pMan-\u003epOutputs[i]) )\n            Switch += pMan-\u003epOutputs[i]-\u003eSwitching;\n    return Switch;\n}",
+      "Draft": "func Map_MappingGetSwitching(pMan *Map_Man_t) float32 {\n    var pNode *Map_Node_t;\n    var Switch float32  = 0.0;\n    var i int32;\n    for  i = 0; i \u003c pMan.vMapObjs.nSize; i++  {\n        pNode = pMan.vMapObjs.pArray[i];\n        if pNode.nRefAct[2] == 0 {\n            continue; }\n        // at least one phase has the best cut assigned\n        assert(pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil, \"pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil\");\n        // at least one phase is used in the mapping\n        assert(pNode.nRefAct[0] \u003e 0 || pNode.nRefAct[1] \u003e 0, \"pNode.nRefAct[0] \u003e 0 || pNode.nRefAct[1] \u003e 0\");\n        // compute the array due to the supergate\n        if Map_NodeIsAnd(pNode) {\n            // count switching of the negative phase\n            if pNode.pCutBest[0] \u0026\u0026 (pNode.nRefAct[0] \u003e 0 || pNode.pCutBest[1] == nil) {\n                Switch += pNode.Switching; }\n            // count switching of the positive phase\n            if pNode.pCutBest[1] \u0026\u0026 (pNode.nRefAct[1] \u003e 0 || pNode.pCutBest[0] == nil) {\n                Switch += pNode.Switching; }\n        }\n        // count switching of the interver if we need to implement one phase with another phase\n        if (pNode.pCutBest[0] == nil \u0026\u0026 pNode.nRefAct[0] \u003e 0) || \n             (pNode.pCutBest[1] == nil \u0026\u0026 pNode.nRefAct[1] \u003e 0) {\n            Switch += pNode.Switching; } // inverter switches the same as the node\n    }\n    // add buffers for each CO driven by a CI\n    for  i = 0; i \u003c pMan.nOutputs; i++  {\n        // inlining of macro Map_IsComplement\n        if Map_NodeIsVar(pMan.pOutputs[i]) \u0026\u0026 !(((int32(((ABC_PTRUINT_T) (pMan.pOutputs[i]) \u0026 01)) != 0))) {\n            Switch += pMan.pOutputs[i].Switching; }\n    }\n    return Switch;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSwitch.c::Map_SwitchCutGetDerefed",
+      "Category": "semantic-review",
+      "Symbol": "Map_SwitchCutGetDerefed",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1367,
+      "End": 1732
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSwitch.c::Map_SwitchCutRef",
+      "Category": "semantic-review",
+      "Symbol": "Map_SwitchCutRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1987,
+      "End": 2138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSwitch.c::Map_SwitchCutDeref",
+      "Category": "semantic-review",
+      "Symbol": "Map_SwitchCutDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2393,
+      "End": 2548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSwitch.c::Map_SwitchCutRefDeref",
+      "Category": "semantic-review",
+      "Symbol": "Map_SwitchCutRefDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2933,
+      "End": 6097
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSwitch.c::Map_MappingGetSwitching",
+      "Category": "semantic-review",
+      "Symbol": "Map_MappingGetSwitching",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6363,
+      "End": 7947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mapper/mapperSwitch.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8194
+    }
+  ],
+  "Draft": "package mapper\n\n/**CFile****************************************************************\n\n  FileName    [mapperSwitch.c]\n\n  PackageName [MVSIS 1.3: Multi-valued logic synthesis system.]\n\n  Synopsis    [Generic technology mapping engine.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 8, 2003.]\n\n  Revision    [$Id: mapperSwitch.h,v 1.0 2003/09/08 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mapperInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static float Map_SwitchCutRefDeref( Map_Node_t * pNode, Map_Cut_t * pCut, int fPhase, int fReference );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**function*************************************************************\n\n  synopsis    [Computes the exact area associated with the cut.]\n\n  description []\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Map_SwitchCutGetDerefed(pNode *Map_Node_t, pCut *Map_Cut_t, fPhase int32) float32 {\n    var aResult, aResult2 float32;\n//    assert( pNode-\u003eSwitching \u003e 0 );\n    aResult2 = Map_SwitchCutRefDeref( pNode, pCut, fPhase, 1 ); // reference\n    aResult  = Map_SwitchCutRefDeref( pNode, pCut, fPhase, 0 ); // dereference\n//    assert( aResult == aResult2 );\n    return aResult;\n}\n\n/**function*************************************************************\n\n  synopsis    [References the cut.]\n\n  description []\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Map_SwitchCutRef(pNode *Map_Node_t, pCut *Map_Cut_t, fPhase int32) float32 {\n    return Map_SwitchCutRefDeref( pNode, pCut, fPhase, 1 ); // reference\n}\n\n/**function*************************************************************\n\n  synopsis    [References the cut.]\n\n  description []\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Map_SwitchCutDeref(pNode *Map_Node_t, pCut *Map_Cut_t, fPhase int32) float32 {\n    return Map_SwitchCutRefDeref( pNode, pCut, fPhase, 0 ); // dereference\n}\n\n/**function*************************************************************\n\n  synopsis    [References or dereferences the cut.]\n\n  description [This reference part is similar to Cudd_NodeReclaim(). \n  The dereference part is similar to Cudd_RecursiveDeref().]\n               \n  sideeffects []\n\n  seealso     []\n\n***********************************************************************/\nfunc Map_SwitchCutRefDeref(pNode *Map_Node_t, pCut *Map_Cut_t, fPhase int32, fReference int32) float32 {\n    var pNodeChild *Map_Node_t;\n    var pCutChild *Map_Cut_t;\n    var aSwitchActivity float32;\n    var i, fPhaseChild int32;\n\n    // start switching activity for the node\n    aSwitchActivity = pNode.Switching;\n    // consider the elementary variable\n    if pCut.nLeaves == 1 {\n        return aSwitchActivity; }\n\n    // go through the children\n    assert(pCut.M[fPhase].pSuperBest, \"pCut.M[fPhase].pSuperBest\");\n    for  i = 0; i \u003c pCut.nLeaves; i++  {\n        pNodeChild  = pCut.ppLeaves[i];\n        fPhaseChild = Map_CutGetLeafPhase( pCut, fPhase, i );\n        // get the reference counter of the child\n\n        if fReference != 0 {\n            if pNodeChild.pCutBest[0] \u0026\u0026 pNodeChild.pCutBest[1] { // both phases are present\n            \n                // if this phase of the node is referenced, there is no recursive call\n                pNodeChild.nRefAct[2]++;\n                if pNodeChild.nRefAct[fPhaseChild]++ \u003e 0 {\n                    continue; }\n            \n            } else { // only one phase is present\n            \n                // inverter should be added if the phase\n                // (a) has no reference and (b) is implemented using other phase\n                if pNodeChild.nRefAct[fPhaseChild]++ == 0 \u0026\u0026 pNodeChild.pCutBest[fPhaseChild] == nil {\n                    aSwitchActivity += pNodeChild.Switching; } // inverter switches the same as the node\n                // if the node is referenced, there is no recursive call\n                if pNodeChild.nRefAct[2]++ \u003e 0 {\n                    continue; }\n            }\n        \n        } else {\n            if pNodeChild.pCutBest[0] \u0026\u0026 pNodeChild.pCutBest[1] { // both phases are present\n            \n                // if this phase of the node is referenced, there is no recursive call\n                --pNodeChild.nRefAct[2];\n                if --pNodeChild.nRefAct[fPhaseChild] \u003e 0 {\n                    continue; }\n            \n            } else { // only one phase is present\n            \n                // inverter should be added if the phase\n                // (a) has no reference and (b) is implemented using other phase\n                if --pNodeChild.nRefAct[fPhaseChild] == 0 \u0026\u0026 pNodeChild.pCutBest[fPhaseChild] == nil {\n                    aSwitchActivity += pNodeChild.Switching; } // inverter switches the same as the node\n                // if the node is referenced, there is no recursive call\n                if --pNodeChild.nRefAct[2] \u003e 0 {\n                    continue; }\n            }\n            assert(pNodeChild.nRefAct[fPhaseChild] \u003e= 0, \"pNodeChild.nRefAct[fPhaseChild] \u003e= 0\");\n        }\n\n        // get the child cut\n        pCutChild = pNodeChild.pCutBest[fPhaseChild];\n        // if the child does not have this phase mapped, take the opposite phase\n        if pCutChild == nil {\n            fPhaseChild = !fPhaseChild;\n            pCutChild   = pNodeChild.pCutBest[fPhaseChild];\n        }\n        // reference and compute area recursively\n        aSwitchActivity += Map_SwitchCutRefDeref( pNodeChild, pCutChild, fPhaseChild, fReference );\n    }\n    return aSwitchActivity;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the array of mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Map_MappingGetSwitching(pMan *Map_Man_t) float32 {\n    var pNode *Map_Node_t;\n    var Switch float32  = 0.0;\n    var i int32;\n    for  i = 0; i \u003c pMan.vMapObjs.nSize; i++  {\n        pNode = pMan.vMapObjs.pArray[i];\n        if pNode.nRefAct[2] == 0 {\n            continue; }\n        // at least one phase has the best cut assigned\n        assert(pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil, \"pNode.pCutBest[0] != nil || pNode.pCutBest[1] != nil\");\n        // at least one phase is used in the mapping\n        assert(pNode.nRefAct[0] \u003e 0 || pNode.nRefAct[1] \u003e 0, \"pNode.nRefAct[0] \u003e 0 || pNode.nRefAct[1] \u003e 0\");\n        // compute the array due to the supergate\n        if Map_NodeIsAnd(pNode) {\n            // count switching of the negative phase\n            if pNode.pCutBest[0] \u0026\u0026 (pNode.nRefAct[0] \u003e 0 || pNode.pCutBest[1] == nil) {\n                Switch += pNode.Switching; }\n            // count switching of the positive phase\n            if pNode.pCutBest[1] \u0026\u0026 (pNode.nRefAct[1] \u003e 0 || pNode.pCutBest[0] == nil) {\n                Switch += pNode.Switching; }\n        }\n        // count switching of the interver if we need to implement one phase with another phase\n        if (pNode.pCutBest[0] == nil \u0026\u0026 pNode.nRefAct[0] \u003e 0) || \n             (pNode.pCutBest[1] == nil \u0026\u0026 pNode.nRefAct[1] \u003e 0) {\n            Switch += pNode.Switching; } // inverter switches the same as the node\n    }\n    // add buffers for each CO driven by a CI\n    for  i = 0; i \u003c pMan.nOutputs; i++  {\n        // inlining of macro Map_IsComplement\n        if Map_NodeIsVar(pMan.pOutputs[i]) \u0026\u0026 !(((int32(((ABC_PTRUINT_T) (pMan.pOutputs[i]) \u0026 01)) != 0))) {\n            Switch += pMan.pOutputs[i].Switching; }\n    }\n    return Switch;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,275 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h",
+  "SHA256": "e7000b9cd4bb5ea2af68257f9d4611e9505f5cb323ae456256c288371038e4d6",
+  "Functions": [
+    {
+      "Name": "Tru_ManEqual",
+      "Start": 1886,
+      "End": 2042,
+      "BodyStart": 1960,
+      "Original": "static inline int    Tru_ManEqual( word * pOut, word * pIn, int nWords )  { int w; for ( w = 0; w \u003c nWords; w++ ) if(pOut[w]!=pIn[w])  return 0; return 1; }",
+      "Draft": "func Tru_ManEqual(pOut *word, pIn *word, nWords int32) int32 { var w int32; for  w = 0; w \u003c nWords; w++  { if pOut[w]!=pIn[w] {  return 0; } }\n return 1; }"
+    },
+    {
+      "Name": "Tru_ManEqual0",
+      "Start": 2043,
+      "End": 2199,
+      "BodyStart": 2117,
+      "Original": "static inline int    Tru_ManEqual0( word * pOut, int nWords )             { int w; for ( w = 0; w \u003c nWords; w++ ) if(pOut[w]!=0)       return 0; return 1; }",
+      "Draft": "func Tru_ManEqual0(pOut *word, nWords int32) int32 { var w int32; for  w = 0; w \u003c nWords; w++  { if pOut[w]!=0 {       return 0; } }\n return 1; }"
+    },
+    {
+      "Name": "Tru_ManEqual1",
+      "Start": 2200,
+      "End": 2356,
+      "BodyStart": 2274,
+      "Original": "static inline int    Tru_ManEqual1( word * pOut, int nWords )             { int w; for ( w = 0; w \u003c nWords; w++ ) if(pOut[w]!=~(word)0)return 0; return 1; }",
+      "Draft": "func Tru_ManEqual1(pOut *word, nWords int32) int32 { var w int32; for  w = 0; w \u003c nWords; w++  { if pOut[w]!=~(word)0 {return 0; } }\n return 1; }"
+    },
+    {
+      "Name": "Tru_ManCopy",
+      "Start": 2357,
+      "End": 2513,
+      "BodyStart": 2431,
+      "Original": "static inline word * Tru_ManCopy( word * pOut, word * pIn, int nWords )   { int w; for ( w = 0; w \u003c nWords; w++ ) pOut[w] =   pIn[w];  return pOut;        }",
+      "Draft": "func Tru_ManCopy(pOut *word, pIn *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] =   pIn[w]; }\n  return pOut;        }"
+    },
+    {
+      "Name": "Tru_ManClear",
+      "Start": 2514,
+      "End": 2670,
+      "BodyStart": 2588,
+      "Original": "static inline word * Tru_ManClear( word * pOut, int nWords )              { int w; for ( w = 0; w \u003c nWords; w++ ) pOut[w] = 0;         return pOut;        }",
+      "Draft": "func Tru_ManClear(pOut *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] = 0; }\n         return pOut;        }"
+    },
+    {
+      "Name": "Tru_ManFill",
+      "Start": 2671,
+      "End": 2827,
+      "BodyStart": 2745,
+      "Original": "static inline word * Tru_ManFill( word * pOut, int nWords )               { int w; for ( w = 0; w \u003c nWords; w++ ) pOut[w] = ~(word)0;  return pOut;        }",
+      "Draft": "func Tru_ManFill(pOut *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] = ~(word)0; }\n  return pOut;        }"
+    },
+    {
+      "Name": "Tru_ManNot",
+      "Start": 2828,
+      "End": 2984,
+      "BodyStart": 2902,
+      "Original": "static inline word * Tru_ManNot( word * pOut, int nWords )                { int w; for ( w = 0; w \u003c nWords; w++ ) pOut[w] = ~pOut[w];  return pOut;        }",
+      "Draft": "func Tru_ManNot(pOut *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] = ~pOut[w]; }\n  return pOut;        }"
+    },
+    {
+      "Name": "Tru_ManAnd",
+      "Start": 2985,
+      "End": 3141,
+      "BodyStart": 3059,
+      "Original": "static inline word * Tru_ManAnd( word * pOut, word * pIn, int nWords )    { int w; for ( w = 0; w \u003c nWords; w++ ) pOut[w] \u0026=  pIn[w];  return pOut;        }",
+      "Draft": "func Tru_ManAnd(pOut *word, pIn *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] \u0026=  pIn[w]; }\n  return pOut;        }"
+    },
+    {
+      "Name": "Tru_ManOr",
+      "Start": 3142,
+      "End": 3298,
+      "BodyStart": 3216,
+      "Original": "static inline word * Tru_ManOr( word * pOut, word * pIn, int nWords )     { int w; for ( w = 0; w \u003c nWords; w++ ) pOut[w] |=  pIn[w];  return pOut;        }",
+      "Draft": "func Tru_ManOr(pOut *word, pIn *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] |=  pIn[w]; }\n  return pOut;        }"
+    },
+    {
+      "Name": "Tru_ManCopyNot",
+      "Start": 3299,
+      "End": 3455,
+      "BodyStart": 3373,
+      "Original": "static inline word * Tru_ManCopyNot( word * pOut, word * pIn, int nWords ){ int w; for ( w = 0; w \u003c nWords; w++ ) pOut[w] =  ~pIn[w];  return pOut;        }",
+      "Draft": "func Tru_ManCopyNot(pOut *word, pIn *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] =  ~pIn[w]; }\n  return pOut;        }"
+    },
+    {
+      "Name": "Tru_ManAndNot",
+      "Start": 3456,
+      "End": 3612,
+      "BodyStart": 3530,
+      "Original": "static inline word * Tru_ManAndNot( word * pOut, word * pIn, int nWords ) { int w; for ( w = 0; w \u003c nWords; w++ ) pOut[w] \u0026= ~pIn[w];  return pOut;        }",
+      "Draft": "func Tru_ManAndNot(pOut *word, pIn *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] \u0026= ~pIn[w]; }\n  return pOut;        }"
+    },
+    {
+      "Name": "Tru_ManOrNot",
+      "Start": 3613,
+      "End": 3769,
+      "BodyStart": 3687,
+      "Original": "static inline word * Tru_ManOrNot( word * pOut, word * pIn, int nWords )  { int w; for ( w = 0; w \u003c nWords; w++ ) pOut[w] |= ~pIn[w];  return pOut;        }",
+      "Draft": "func Tru_ManOrNot(pOut *word, pIn *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] |= ~pIn[w]; }\n  return pOut;        }"
+    },
+    {
+      "Name": "Tru_ManCopyNotCond",
+      "Start": 3770,
+      "End": 3947,
+      "BodyStart": 3860,
+      "Original": "static inline word * Tru_ManCopyNotCond( word * pOut, word * pIn, int nWords, int fCompl ){ return fCompl ? Tru_ManCopyNot(pOut, pIn, nWords) : Tru_ManCopy(pOut, pIn, nWords); }",
+      "Draft": "func Tru_ManCopyNotCond(pOut *word, pIn *word, nWords int32, fCompl int32) *word { if fCompl != 0 {\n    return Tru_ManCopyNot(pOut, pIn, nWords);\n} else {\n    return Tru_ManCopy(pOut, pIn, nWords);\n} }"
+    },
+    {
+      "Name": "Tru_ManAndNotCond",
+      "Start": 3948,
+      "End": 4125,
+      "BodyStart": 4038,
+      "Original": "static inline word * Tru_ManAndNotCond( word * pOut, word * pIn, int nWords, int fCompl ) { return fCompl ? Tru_ManAndNot(pOut, pIn, nWords)  : Tru_ManAnd(pOut, pIn, nWords);  }",
+      "Draft": "func Tru_ManAndNotCond(pOut *word, pIn *word, nWords int32, fCompl int32) *word { if fCompl != 0 {\n    return Tru_ManAndNot(pOut, pIn, nWords);\n} else {\n    return Tru_ManAnd(pOut, pIn, nWords);\n}  }"
+    },
+    {
+      "Name": "Tru_ManOrNotCond",
+      "Start": 4126,
+      "End": 4303,
+      "BodyStart": 4216,
+      "Original": "static inline word * Tru_ManOrNotCond( word * pOut, word * pIn, int nWords, int fCompl )  { return fCompl ? Tru_ManOrNot(pOut, pIn, nWords)   : Tru_ManOr(pOut, pIn, nWords);   }",
+      "Draft": "func Tru_ManOrNotCond(pOut *word, pIn *word, nWords int32, fCompl int32) *word { if fCompl != 0 {\n    return Tru_ManOrNot(pOut, pIn, nWords);\n} else {\n    return Tru_ManOr(pOut, pIn, nWords);\n}   }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManEqual",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1886,
+      "End": 2042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManEqual0",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManEqual0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2043,
+      "End": 2199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManEqual1",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManEqual1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2200,
+      "End": 2356
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManCopy",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2357,
+      "End": 2513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManClear",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2514,
+      "End": 2670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManFill",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManFill",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2671,
+      "End": 2827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManNot",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2828,
+      "End": 2984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManAnd",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2985,
+      "End": 3141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManOr",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3142,
+      "End": 3298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManCopyNot",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManCopyNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3299,
+      "End": 3455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManAndNot",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManAndNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3456,
+      "End": 3612
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManOrNot",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManOrNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3613,
+      "End": 3769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManCopyNotCond",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManCopyNotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3770,
+      "End": 3947
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManAndNotCond",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManAndNotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3948,
+      "End": 4125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::Tru_ManOrNotCond",
+      "Category": "semantic-review",
+      "Symbol": "Tru_ManOrNotCond",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4126,
+      "End": 4303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTruth.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5121
+    }
+  ],
+  "Draft": "package bsat\n\n/**CFile****************************************************************\n\n  FileName    [satTruth.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT solver.]\n\n  Synopsis    [Truth table computation package.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2004.]\n\n  Revision    [$Id: satTruth.h,v 1.0 2004/01/01 1:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \"misc/util/abc_global.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\ntype Tru_Man_t = Tru_Man_t_;\n\n////////////////////////////////////////////////////////////////////////\n///                       GLOBAL VARIABLES                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Tru_ManEqual(pOut *word, pIn *word, nWords int32) int32 { var w int32; for  w = 0; w \u003c nWords; w++  { if pOut[w]!=pIn[w] {  return 0; } }\n return 1; }\nfunc Tru_ManEqual0(pOut *word, nWords int32) int32 { var w int32; for  w = 0; w \u003c nWords; w++  { if pOut[w]!=0 {       return 0; } }\n return 1; }\nfunc Tru_ManEqual1(pOut *word, nWords int32) int32 { var w int32; for  w = 0; w \u003c nWords; w++  { if pOut[w]!=~(word)0 {return 0; } }\n return 1; }\nfunc Tru_ManCopy(pOut *word, pIn *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] =   pIn[w]; }\n  return pOut;        }\nfunc Tru_ManClear(pOut *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] = 0; }\n         return pOut;        }\nfunc Tru_ManFill(pOut *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] = ~(word)0; }\n  return pOut;        }\nfunc Tru_ManNot(pOut *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] = ~pOut[w]; }\n  return pOut;        }\nfunc Tru_ManAnd(pOut *word, pIn *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] \u0026=  pIn[w]; }\n  return pOut;        }\nfunc Tru_ManOr(pOut *word, pIn *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] |=  pIn[w]; }\n  return pOut;        }\nfunc Tru_ManCopyNot(pOut *word, pIn *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] =  ~pIn[w]; }\n  return pOut;        }\nfunc Tru_ManAndNot(pOut *word, pIn *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] \u0026= ~pIn[w]; }\n  return pOut;        }\nfunc Tru_ManOrNot(pOut *word, pIn *word, nWords int32) *word { var w int32; for  w = 0; w \u003c nWords; w++  { pOut[w] |= ~pIn[w]; }\n  return pOut;        }\nfunc Tru_ManCopyNotCond(pOut *word, pIn *word, nWords int32, fCompl int32) *word { if fCompl != 0 {\n    return Tru_ManCopyNot(pOut, pIn, nWords);\n} else {\n    return Tru_ManCopy(pOut, pIn, nWords);\n} }\nfunc Tru_ManAndNotCond(pOut *word, pIn *word, nWords int32, fCompl int32) *word { if fCompl != 0 {\n    return Tru_ManAndNot(pOut, pIn, nWords);\n} else {\n    return Tru_ManAnd(pOut, pIn, nWords);\n}  }\nfunc Tru_ManOrNotCond(pOut *word, pIn *word, nWords int32, fCompl int32) *word { if fCompl != 0 {\n    return Tru_ManOrNot(pOut, pIn, nWords);\n} else {\n    return Tru_ManOr(pOut, pIn, nWords);\n}   }\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DECLARATIONS                        ///\n////////////////////////////////////////////////////////////////////////\n\n// extern Tru_Man_t *   Tru_ManAlloc( int nVars );\n\n// extern void          Tru_ManFree( Tru_Man_t * p );\n\n// extern word *        Tru_ManVar( Tru_Man_t * p, int v );\n\n// extern word *        Tru_ManFunc( Tru_Man_t * p, int h );\n\n// extern int           Tru_ManInsert( Tru_Man_t * p, word * pTruth );\n\n//extern int           Tru_ManHandleMax( Tru_Man_t * p );\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

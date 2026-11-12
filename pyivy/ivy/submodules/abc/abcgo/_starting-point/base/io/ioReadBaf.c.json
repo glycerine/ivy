@@ -1,0 +1,312 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c",
+  "SHA256": "0827bdf52ee9ee16158b04c84b62c53a33ed485b0c168b5e246a143634a77f15",
+  "Library": [
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 62,
+        "Column": 13,
+        "ByteOffset": 1778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"rb\" );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 63,
+        "Column": 72,
+        "ByteOffset": 1875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pContents = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(nFileSize)));"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 64,
+        "Column": 16,
+        "ByteOffset": 1935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( pContents, nFileSize, 1, pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 1980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 75,
+        "Column": 15,
+        "ByteOffset": 2275
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nInputs = atoi( pCur );   for  *pCur++  {; }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 77,
+        "Column": 16,
+        "ByteOffset": 2359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nOutputs = atoi( pCur );  for  *pCur++  {; }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 79,
+        "Column": 16,
+        "ByteOffset": 2442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nLatches = atoi( pCur );  for  *pCur++  {; }"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 81,
+        "Column": 13,
+        "ByteOffset": 2520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nAnds = atoi( pCur );     for  *pCur++  {; }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 123,
+        "Column": 69,
+        "ByteOffset": 4148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pContents) ? (free((char *) (pContents)), (pContents) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 126,
+        "Column": 9,
+        "ByteOffset": 4272
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Warning: Internal reader error.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 131,
+        "Column": 41,
+        "ByteOffset": 4414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, nAnds );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 150,
+        "Column": 65,
+        "ByteOffset": 5495
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pContents) ? (free((char *) (pContents)), (pContents) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 9,
+        "ByteOffset": 5741
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Io_ReadBaf: The network check has failed.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Io_ReadBaf",
+      "Start": 1280,
+      "End": 5533,
+      "BodyStart": 1335,
+      "Original": "Abc_Ntk_t * Io_ReadBaf( char * pFileName, int fCheck )\n{\n    ProgressBar * pProgress;\n    FILE * pFile;\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj, * pNode0, * pNode1;\n    Abc_Ntk_t * pNtkNew;\n    int nInputs, nOutputs, nLatches, nAnds, nFileSize, Num, i;\n    char * pContents, * pName, * pCur;\n    unsigned * pBufferNode;\n    int RetValue;\n\n    // read the file into the buffer\n    nFileSize = Extra_FileSize( pFileName );\n    pFile = fopen( pFileName, \"rb\" );\n    pContents = ABC_ALLOC( char, nFileSize );\n    RetValue = fread( pContents, nFileSize, 1, pFile );\n    fclose( pFile );\n\n    // skip the comments (comment lines begin with '#' and end with '\\n')\n    for ( pCur = pContents; *pCur == '#'; )\n        while ( *pCur++ != '\\n' );\n\n    // read the name\n    pName = pCur;             while ( *pCur++ );\n    // read the number of inputs\n    nInputs = atoi( pCur );   while ( *pCur++ );\n    // read the number of outputs\n    nOutputs = atoi( pCur );  while ( *pCur++ );\n    // read the number of latches\n    nLatches = atoi( pCur );  while ( *pCur++ );\n    // read the number of nodes\n    nAnds = atoi( pCur );     while ( *pCur++ );\n\n    // allocate the empty AIG\n    pNtkNew = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pNtkNew-\u003epName = Extra_UtilStrsav( pName );\n    pNtkNew-\u003epSpec = Extra_UtilStrsav( pFileName );\n\n    // prepare the array of nodes\n    vNodes = Vec_PtrAlloc( 1 + nInputs + nLatches + nAnds );\n    Vec_PtrPush( vNodes, Abc_AigConst1(pNtkNew) );\n\n    // create the PIs\n    for ( i = 0; i \u003c nInputs; i++ )\n    {\n        pObj = Abc_NtkCreatePi(pNtkNew);    \n        Abc_ObjAssignName( pObj, pCur, NULL );  while ( *pCur++ );\n        Vec_PtrPush( vNodes, pObj );\n    }\n    // create the POs\n    for ( i = 0; i \u003c nOutputs; i++ )\n    {\n        pObj = Abc_NtkCreatePo(pNtkNew);   \n        Abc_ObjAssignName( pObj, pCur, NULL );  while ( *pCur++ ); \n    }\n    // create the latches\n    for ( i = 0; i \u003c nLatches; i++ )\n    {\n        pObj = Abc_NtkCreateLatch(pNtkNew);\n        Abc_ObjAssignName( pObj, pCur, NULL );  while ( *pCur++ ); \n\n        pNode0 = Abc_NtkCreateBi(pNtkNew);\n        Abc_ObjAssignName( pNode0, pCur, NULL );  while ( *pCur++ ); \n\n        pNode1 = Abc_NtkCreateBo(pNtkNew);\n        Abc_ObjAssignName( pNode1, pCur, NULL );  while ( *pCur++ ); \n        Vec_PtrPush( vNodes, pNode1 );\n\n        Abc_ObjAddFanin( pObj, pNode0 );\n        Abc_ObjAddFanin( pNode1, pObj );\n    }\n\n    // get the pointer to the beginning of the node array\n    pBufferNode = (unsigned *)(pContents + (nFileSize - (2 * nAnds + nOutputs + nLatches) * sizeof(int)) );\n    // make sure we are at the place where the nodes begin\n    if ( pBufferNode != (unsigned *)pCur )\n    {\n        ABC_FREE( pContents );\n        Vec_PtrFree( vNodes );\n        Abc_NtkDelete( pNtkNew );\n        printf( \"Warning: Internal reader error.\\n\" );\n        return NULL;\n    }\n\n    // create the AND gates\n    pProgress = Extra_ProgressBarStart( stdout, nAnds );\n    for ( i = 0; i \u003c nAnds; i++ )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        pNode0 = Abc_ObjNotCond( (Abc_Obj_t *)Vec_PtrEntry(vNodes, pBufferNode[2*i+0] \u003e\u003e 1), pBufferNode[2*i+0] \u0026 1 );\n        pNode1 = Abc_ObjNotCond( (Abc_Obj_t *)Vec_PtrEntry(vNodes, pBufferNode[2*i+1] \u003e\u003e 1), pBufferNode[2*i+1] \u0026 1 );\n        Vec_PtrPush( vNodes, Abc_AigAnd((Abc_Aig_t *)pNtkNew-\u003epManFunc, pNode0, pNode1) );\n    }\n    Extra_ProgressBarStop( pProgress );\n\n    // read the POs\n    Abc_NtkForEachCo( pNtkNew, pObj, i )\n    {\n        Num = pBufferNode[2*nAnds+i];\n        if ( Abc_ObjFanoutNum(pObj) \u003e 0 \u0026\u0026 Abc_ObjIsLatch(Abc_ObjFanout0(pObj)) )\n        {\n            Abc_ObjSetData( Abc_ObjFanout0(pObj), (void *)(ABC_PTRINT_T)(Num \u0026 3) );\n            Num \u003e\u003e= 2;\n        }\n        pNode0 = Abc_ObjNotCond( (Abc_Obj_t *)Vec_PtrEntry(vNodes, Num \u003e\u003e 1), Num \u0026 1 );\n        Abc_ObjAddFanin( pObj, pNode0 );\n    }\n    ABC_FREE( pContents );\n    Vec_PtrFree( vNodes );\n\n    // remove the extra nodes\n//    Abc_AigCleanup( (Abc_Aig_t *)pNtkNew-\u003epManFunc );\n\n    // check the result\n    if ( fCheck \u0026\u0026 !Abc_NtkCheckRead( pNtkNew ) )\n    {\n        printf( \"Io_ReadBaf: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n\n}",
+      "Draft": "func Io_ReadBaf(pFileName string, fCheck int32) *Abc_Ntk_t {\n    var pProgress *ProgressBar;\n    var pFile *os.File;\n    var vNodes *Vec_Ptr_t;\n    var pObj, pNode0, pNode1 *Abc_Obj_t;\n    var pNtkNew *Abc_Ntk_t;\n    var nInputs, nOutputs, nLatches, nAnds, nFileSize, Num, i int32;\n    var pContents, pName, pCur string;\n    var pBufferNode *uint32;\n    var RetValue int32;\n\n    // read the file into the buffer\n    nFileSize = Extra_FileSize( pFileName );\n    pFile = os.Open(pFileName);\n    // inlining of macro ABC_ALLOC\n    pContents = ((char *) malloc(sizeof(char) * (size_t)(nFileSize)));\n    RetValue = fread( pContents, nFileSize, 1, pFile );\n    _ = (pFile).Close();\n\n    // skip the comments (comment lines begin with '#' and end with '\\n')\n    for  pCur = pContents; *pCur == '#';  {\n        for  *pCur++ != '\\n'  {; }\n    }\n\n    // read the name\n    pName = pCur;             for  *pCur++  {; }\n    // read the number of inputs\n    nInputs = strconv.Atoi(pCur);   for  *pCur++  {; }\n    // read the number of outputs\n    nOutputs = strconv.Atoi(pCur);  for  *pCur++  {; }\n    // read the number of latches\n    nLatches = strconv.Atoi(pCur);  for  *pCur++  {; }\n    // read the number of nodes\n    nAnds = strconv.Atoi(pCur);     for  *pCur++  {; }\n\n    // allocate the empty AIG\n    pNtkNew = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pNtkNew.pName = Extra_UtilStrsav( pName );\n    pNtkNew.pSpec = Extra_UtilStrsav( pFileName );\n\n    // prepare the array of nodes\n    vNodes = Vec_PtrAlloc( 1 + nInputs + nLatches + nAnds );\n    Vec_PtrPush( vNodes, Abc_AigConst1(pNtkNew) );\n\n    // create the PIs\n    for  i = 0; i \u003c nInputs; i++  {\n        pObj = Abc_NtkCreatePi(pNtkNew);    \n        Abc_ObjAssignName( pObj, pCur, nil );  for  *pCur++  {; }\n        Vec_PtrPush( vNodes, pObj );\n    }\n    // create the POs\n    for  i = 0; i \u003c nOutputs; i++  {\n        pObj = Abc_NtkCreatePo(pNtkNew);   \n        Abc_ObjAssignName( pObj, pCur, nil );  for  *pCur++  {; } \n    }\n    // create the latches\n    for  i = 0; i \u003c nLatches; i++  {\n        pObj = Abc_NtkCreateLatch(pNtkNew);\n        Abc_ObjAssignName( pObj, pCur, nil );  for  *pCur++  {; } \n\n        pNode0 = Abc_NtkCreateBi(pNtkNew);\n        Abc_ObjAssignName( pNode0, pCur, nil );  for  *pCur++  {; } \n\n        pNode1 = Abc_NtkCreateBo(pNtkNew);\n        Abc_ObjAssignName( pNode1, pCur, nil );  for  *pCur++  {; } \n        Vec_PtrPush( vNodes, pNode1 );\n\n        Abc_ObjAddFanin( pObj, pNode0 );\n        Abc_ObjAddFanin( pNode1, pObj );\n    }\n\n    // get the pointer to the beginning of the node array\n    pBufferNode = (unsigned *)(pContents + (nFileSize - (2 * nAnds + nOutputs + nLatches) * sizeof(int)) );\n    // make sure we are at the place where the nodes begin\n    if pBufferNode != (unsigned *)pCur {\n        // inlining of macro ABC_FREE\n        ((pContents) ? (free((char *) (pContents)), (pContents) = 0) : 0);\n        Vec_PtrFree( vNodes );\n        Abc_NtkDelete( pNtkNew );\n        fmt.Printf(\"Warning: Internal reader error.\\n\");\n        return nil;\n    }\n\n    // create the AND gates\n    pProgress = Extra_ProgressBarStart( os.Stdout, nAnds );\n    for  i = 0; i \u003c nAnds; i++  {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        pNode0 = Abc_ObjNotCond( (Abc_Obj_t *)Vec_PtrEntry(vNodes, pBufferNode[2*i+0] \u003e\u003e 1), pBufferNode[2*i+0] \u0026 1 );\n        pNode1 = Abc_ObjNotCond( (Abc_Obj_t *)Vec_PtrEntry(vNodes, pBufferNode[2*i+1] \u003e\u003e 1), pBufferNode[2*i+1] \u0026 1 );\n        Vec_PtrPush( vNodes, Abc_AigAnd((Abc_Aig_t *)pNtkNew.pManFunc, pNode0, pNode1) );\n    }\n    Extra_ProgressBarStop( pProgress );\n\n    // read the POs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtkNew)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtkNew, i)), 1); i++  {\n        Num = pBufferNode[2*nAnds+i];\n        if Abc_ObjFanoutNum(pObj) \u003e 0 \u0026\u0026 Abc_ObjIsLatch(Abc_ObjFanout0(pObj)) {\n            Abc_ObjSetData( Abc_ObjFanout0(pObj), (void *)(ABC_PTRINT_T)(Num \u0026 3) );\n            Num \u003e\u003e= 2;\n        }\n        pNode0 = Abc_ObjNotCond( (Abc_Obj_t *)Vec_PtrEntry(vNodes, Num \u003e\u003e 1), Num \u0026 1 );\n        Abc_ObjAddFanin( pObj, pNode0 );\n    }\n    // inlining of macro ABC_FREE\n    ((pContents) ? (free((char *) (pContents)), (pContents) = 0) : 0);\n    Vec_PtrFree( vNodes );\n\n    // remove the extra nodes\n//    Abc_AigCleanup( (Abc_Aig_t *)pNtkNew-\u003epManFunc );\n\n    // check the result\n    if (fCheck != 0) \u0026\u0026 !Abc_NtkCheckRead( pNtkNew ) {\n        fmt.Printf(\"Io_ReadBaf: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::mechanical::sizeof::1822",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1760,
+      "End": 1760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::mechanical::sizeof::3923",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3853,
+      "End": 3859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::pointer-cast::1806",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1760,
+      "End": 1760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::pointer-cast::3849",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3779,
+      "End": 3791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::pointer-cast::4022",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3952,
+      "End": 3964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::pointer-cast::4120",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3985,
+      "End": 3985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::pointer-cast::4527",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4369,
+      "End": 4382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::pointer-cast::4646",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4488,
+      "End": 4501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::pointer-cast::4772",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4614,
+      "End": 4627
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::pointer-cast::5221",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4959,
+      "End": 4967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::pointer-cast::5322",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5060,
+      "End": 5073
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::pointer-cast::5494",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5167,
+      "End": 5167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::ternary::Io_ReadBaf",
+      "Category": "ternary-review",
+      "Symbol": "Io_ReadBaf",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1280,
+      "End": 5533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::Io_ReadBaf",
+      "Category": "semantic-review",
+      "Symbol": "Io_ReadBaf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1280,
+      "End": 5533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/io/ioReadBaf.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5781
+    }
+  ],
+  "Draft": "package io\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [ioReadBaf.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Command processing package.]\n\n  Synopsis    [Procedures to read AIG in the binary format.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: ioReadBaf.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ioAbc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the AIG in the binary format.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Io_ReadBaf(pFileName string, fCheck int32) *Abc_Ntk_t {\n    var pProgress *ProgressBar;\n    var pFile *os.File;\n    var vNodes *Vec_Ptr_t;\n    var pObj, pNode0, pNode1 *Abc_Obj_t;\n    var pNtkNew *Abc_Ntk_t;\n    var nInputs, nOutputs, nLatches, nAnds, nFileSize, Num, i int32;\n    var pContents, pName, pCur string;\n    var pBufferNode *uint32;\n    var RetValue int32;\n\n    // read the file into the buffer\n    nFileSize = Extra_FileSize( pFileName );\n    pFile = os.Open(pFileName);\n    // inlining of macro ABC_ALLOC\n    pContents = ((char *) malloc(sizeof(char) * (size_t)(nFileSize)));\n    RetValue = fread( pContents, nFileSize, 1, pFile );\n    _ = (pFile).Close();\n\n    // skip the comments (comment lines begin with '#' and end with '\\n')\n    for  pCur = pContents; *pCur == '#';  {\n        for  *pCur++ != '\\n'  {; }\n    }\n\n    // read the name\n    pName = pCur;             for  *pCur++  {; }\n    // read the number of inputs\n    nInputs = strconv.Atoi(pCur);   for  *pCur++  {; }\n    // read the number of outputs\n    nOutputs = strconv.Atoi(pCur);  for  *pCur++  {; }\n    // read the number of latches\n    nLatches = strconv.Atoi(pCur);  for  *pCur++  {; }\n    // read the number of nodes\n    nAnds = strconv.Atoi(pCur);     for  *pCur++  {; }\n\n    // allocate the empty AIG\n    pNtkNew = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pNtkNew.pName = Extra_UtilStrsav( pName );\n    pNtkNew.pSpec = Extra_UtilStrsav( pFileName );\n\n    // prepare the array of nodes\n    vNodes = Vec_PtrAlloc( 1 + nInputs + nLatches + nAnds );\n    Vec_PtrPush( vNodes, Abc_AigConst1(pNtkNew) );\n\n    // create the PIs\n    for  i = 0; i \u003c nInputs; i++  {\n        pObj = Abc_NtkCreatePi(pNtkNew);    \n        Abc_ObjAssignName( pObj, pCur, nil );  for  *pCur++  {; }\n        Vec_PtrPush( vNodes, pObj );\n    }\n    // create the POs\n    for  i = 0; i \u003c nOutputs; i++  {\n        pObj = Abc_NtkCreatePo(pNtkNew);   \n        Abc_ObjAssignName( pObj, pCur, nil );  for  *pCur++  {; } \n    }\n    // create the latches\n    for  i = 0; i \u003c nLatches; i++  {\n        pObj = Abc_NtkCreateLatch(pNtkNew);\n        Abc_ObjAssignName( pObj, pCur, nil );  for  *pCur++  {; } \n\n        pNode0 = Abc_NtkCreateBi(pNtkNew);\n        Abc_ObjAssignName( pNode0, pCur, nil );  for  *pCur++  {; } \n\n        pNode1 = Abc_NtkCreateBo(pNtkNew);\n        Abc_ObjAssignName( pNode1, pCur, nil );  for  *pCur++  {; } \n        Vec_PtrPush( vNodes, pNode1 );\n\n        Abc_ObjAddFanin( pObj, pNode0 );\n        Abc_ObjAddFanin( pNode1, pObj );\n    }\n\n    // get the pointer to the beginning of the node array\n    pBufferNode = (unsigned *)(pContents + (nFileSize - (2 * nAnds + nOutputs + nLatches) * sizeof(int)) );\n    // make sure we are at the place where the nodes begin\n    if pBufferNode != (unsigned *)pCur {\n        // inlining of macro ABC_FREE\n        ((pContents) ? (free((char *) (pContents)), (pContents) = 0) : 0);\n        Vec_PtrFree( vNodes );\n        Abc_NtkDelete( pNtkNew );\n        fmt.Printf(\"Warning: Internal reader error.\\n\");\n        return nil;\n    }\n\n    // create the AND gates\n    pProgress = Extra_ProgressBarStart( os.Stdout, nAnds );\n    for  i = 0; i \u003c nAnds; i++  {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        pNode0 = Abc_ObjNotCond( (Abc_Obj_t *)Vec_PtrEntry(vNodes, pBufferNode[2*i+0] \u003e\u003e 1), pBufferNode[2*i+0] \u0026 1 );\n        pNode1 = Abc_ObjNotCond( (Abc_Obj_t *)Vec_PtrEntry(vNodes, pBufferNode[2*i+1] \u003e\u003e 1), pBufferNode[2*i+1] \u0026 1 );\n        Vec_PtrPush( vNodes, Abc_AigAnd((Abc_Aig_t *)pNtkNew.pManFunc, pNode0, pNode1) );\n    }\n    Extra_ProgressBarStop( pProgress );\n\n    // read the POs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtkNew)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtkNew, i)), 1); i++  {\n        Num = pBufferNode[2*nAnds+i];\n        if Abc_ObjFanoutNum(pObj) \u003e 0 \u0026\u0026 Abc_ObjIsLatch(Abc_ObjFanout0(pObj)) {\n            Abc_ObjSetData( Abc_ObjFanout0(pObj), (void *)(ABC_PTRINT_T)(Num \u0026 3) );\n            Num \u003e\u003e= 2;\n        }\n        pNode0 = Abc_ObjNotCond( (Abc_Obj_t *)Vec_PtrEntry(vNodes, Num \u003e\u003e 1), Num \u0026 1 );\n        Abc_ObjAddFanin( pObj, pNode0 );\n    }\n    // inlining of macro ABC_FREE\n    ((pContents) ? (free((char *) (pContents)), (pContents) = 0) : 0);\n    Vec_PtrFree( vNodes );\n\n    // remove the extra nodes\n//    Abc_AigCleanup( (Abc_Aig_t *)pNtkNew-\u003epManFunc );\n\n    // check the result\n    if (fCheck != 0) \u0026\u0026 !Abc_NtkCheckRead( pNtkNew ) {\n        fmt.Printf(\"Io_ReadBaf: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

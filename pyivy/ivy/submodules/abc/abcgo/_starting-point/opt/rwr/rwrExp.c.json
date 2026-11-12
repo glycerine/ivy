@@ -1,0 +1,1102 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c",
+  "SHA256": "f1b4ef0b66ab2494eeafa40a79a7057ab49c0af47a4a76f36e3bdd5b6fc23ecf",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 71,
+        "Column": 70,
+        "ByteOffset": 2176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Rwr_Man4_t *) malloc(sizeof(Rwr_Man4_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 2223
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Rwr_Man4_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 78,
+        "Column": 73,
+        "ByteOffset": 2489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pnCounts  = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(p.nFuncs)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pnCounts, 0, sizeof(int) * p.nFuncs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 2951
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( uTruth \u003c (1\u003c\u003c16) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 3860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Number of cuts considered       = %8d.\\n\", nCuts );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 3925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Classes occurring at least once = %8d.\\n\", nClasses );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 128,
+        "Column": 70,
+        "ByteOffset": 4099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pDistrib = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(CountMax + 1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 129,
+        "Column": 70,
+        "ByteOffset": 4215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pReprs   = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(CountMax + 1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 4266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pDistrib, 0, sizeof(int)*(CountMax + 1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 4475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Occurence = %6d.  Num classes = %4d.  \\n\", 0, 2288-nClasses );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 139,
+        "Column": 13,
+        "ByteOffset": 4622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Occurence = %6d.  Num classes = %4d.  Repr = \", i, pDistrib[i] );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 140,
+        "Column": 32,
+        "ByteOffset": 4728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Extra_PrintBinary( stdout, (unsigned*)\u0026(pReprs[i]), 16 ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 141,
+        "Column": 13,
+        "ByteOffset": 4780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 144,
+        "Column": 64,
+        "ByteOffset": 4875
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pDistrib) ? (free((char *) (pDistrib)), (pDistrib) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 145,
+        "Column": 62,
+        "ByteOffset": 4985
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 148,
+        "Column": 13,
+        "ByteOffset": 5115
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( \"npnclass_stats4.txt\", \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 152,
+        "Column": 13,
+        "ByteOffset": 5312
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fprintf( pFile, \" %10d\\n\", s_pManRwrExp4.pnCounts[i] );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 5456
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 5477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d classes written into file \\\"%s\\\".\\n\", CountWrite, \"npnclass_stats4.txt\" );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 177,
+        "Column": 70,
+        "ByteOffset": 5985
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Rwr_Man5_t *) malloc(sizeof(Rwr_Man5_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 178,
+        "Column": 5,
+        "ByteOffset": 6032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Rwr_Man5_t) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 5,
+        "ByteOffset": 7757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Number of cuts considered       = %8d.\\n\", nCuts );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 235,
+        "Column": 5,
+        "ByteOffset": 7822
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Classes occurring at least once = %8d.\\n\", /*__starting_point_inline_macro:stmm_count__*/((s_pManRwrExp5.tTableNN).num_entries) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 236,
+        "Column": 5,
+        "ByteOffset": 7966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The largest number of occurence = %8d.\\n\", CountMax );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 239,
+        "Column": 70,
+        "ByteOffset": 8141
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pDistrib = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(CountMax + 1)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 240,
+        "Column": 75,
+        "ByteOffset": 8262
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pReprs   = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned *) malloc(sizeof(unsigned) * (size_t)(CountMax + 1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 241,
+        "Column": 5,
+        "ByteOffset": 8318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pDistrib, 0, sizeof(int)*(CountMax + 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 243,
+        "Column": 9,
+        "ByteOffset": 8559
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Counter \u003c= CountMax );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 250,
+        "Column": 13,
+        "ByteOffset": 8739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Occurence = %6d.  Num classes = %4d.  Repr = \", i, pDistrib[i] );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 251,
+        "Column": 32,
+        "ByteOffset": 8845
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Extra_PrintBinary( stdout, pReprs + i, 32 ); "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 13,
+        "ByteOffset": 8884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 255,
+        "Column": 64,
+        "ByteOffset": 8979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pDistrib) ? (free((char *) (pDistrib)), (pDistrib) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 256,
+        "Column": 62,
+        "ByteOffset": 9089
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 267,
+        "Column": 13,
+        "ByteOffset": 9598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( \"nnclass_stats5.txt\", \"w\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 270,
+        "Column": 13,
+        "ByteOffset": 9906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 273,
+        "Column": 9,
+        "ByteOffset": 9982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %10d\\n\", Counter );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 275,
+        "Column": 5,
+        "ByteOffset": 10030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 276,
+        "Column": 5,
+        "ByteOffset": 10051
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d classes written into file \\\"%s\\\".\\n\", vClassesNN.nSize, \"nnclass_stats5.txt\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 287,
+        "Column": 13,
+        "ByteOffset": 10691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 291,
+        "Column": 5,
+        "ByteOffset": 10756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The numbe of NPN classes = %d.\\n\", /*__starting_point_inline_macro:stmm_count__*/((s_pManRwrExp5.tTableNPN).num_entries) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 293,
+        "Column": 73,
+        "ByteOffset": 11053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 303,
+        "Column": 13,
+        "ByteOffset": 11541
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( \"npnclass_stats5.txt\", \"w\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 306,
+        "Column": 13,
+        "ByteOffset": 11853
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( 0 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 309,
+        "Column": 9,
+        "ByteOffset": 11929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \" %10d\\n\", Counter );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 311,
+        "Column": 5,
+        "ByteOffset": 11977
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 312,
+        "Column": 5,
+        "ByteOffset": 11998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d classes written into file \\\"%s\\\".\\n\", vClassesNPN.nSize, \"npnclass_stats5.txt\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Rwt_Man4ExploreStart",
+      "Start": 2090,
+      "End": 2506,
+      "BodyStart": 2118,
+      "Original": "void Rwt_Man4ExploreStart()\n{\n    Rwr_Man4_t * p;\n    p = ABC_ALLOC( Rwr_Man4_t, 1 );\n    memset( p, 0, sizeof(Rwr_Man4_t) );\n    // canonical forms\n    p-\u003enFuncs    = (1\u003c\u003c16);\n    // canonical forms, phases, perms\n    Extra_Truth4VarNPN( \u0026p-\u003epuCanons, NULL, NULL, NULL );\n    // counters\n    p-\u003epnCounts  = ABC_ALLOC( int, p-\u003enFuncs );\n    memset( p-\u003epnCounts, 0, sizeof(int) * p-\u003enFuncs );\n    s_pManRwrExp4 = p;\n}",
+      "Draft": "func Rwt_Man4ExploreStart() {\n    var p *Rwr_Man4_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Rwr_Man4_t *) malloc(sizeof(Rwr_Man4_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Rwr_Man4_t) );\n    // canonical forms\n    p.nFuncs    = (1\u003c\u003c16);\n    // canonical forms, phases, perms\n    Extra_Truth4VarNPN( \u0026p.puCanons, nil, nil, nil );\n    // counters\n    // inlining of macro ABC_ALLOC\n    p.pnCounts  = ((int *) malloc(sizeof(int) * (size_t)(p.nFuncs)));\n    memset( p.pnCounts, 0, sizeof(int) * p.nFuncs );\n    s_pManRwrExp4 = p;\n}"
+    },
+    {
+      "Name": "Rwt_Man4ExploreCount",
+      "Start": 2801,
+      "End": 2951,
+      "BodyStart": 2846,
+      "Original": "void Rwt_Man4ExploreCount( unsigned uTruth )\n{\n    assert( uTruth \u003c (1\u003c\u003c16) );\n    s_pManRwrExp4-\u003epnCounts[ s_pManRwrExp4-\u003epuCanons[uTruth] ]++;    \n}",
+      "Draft": "func Rwt_Man4ExploreCount(uTruth uint32) {\n    assert(uTruth \u003c (1\u003c\u003c16), \"uTruth \u003c (1\u003c\u003c16)\");\n    s_pManRwrExp4.pnCounts[ s_pManRwrExp4.puCanons[uTruth] ]++;    \n}"
+    },
+    {
+      "Name": "Rwt_Man4ExplorePrint",
+      "Start": 3246,
+      "End": 5175,
+      "BodyStart": 3274,
+      "Original": "void Rwt_Man4ExplorePrint()\n{\n    FILE * pFile;\n    int i, CountMax, CountWrite, nCuts, nClasses;\n    int * pDistrib;\n    int * pReprs;\n    // find the max number of occurences\n    nCuts = nClasses = 0;\n    CountMax = 0;\n    for ( i = 0; i \u003c s_pManRwrExp4-\u003enFuncs; i++ )\n    {\n        if ( CountMax \u003c s_pManRwrExp4-\u003epnCounts[i] )\n            CountMax = s_pManRwrExp4-\u003epnCounts[i];\n        nCuts += s_pManRwrExp4-\u003epnCounts[i];\n        if ( s_pManRwrExp4-\u003epnCounts[i] \u003e 0 )\n            nClasses++;\n    }\n    printf( \"Number of cuts considered       = %8d.\\n\", nCuts );\n    printf( \"Classes occurring at least once = %8d.\\n\", nClasses );\n    // print the distribution of classes\n    pDistrib = ABC_ALLOC( int, CountMax + 1 );\n    pReprs   = ABC_ALLOC( int, CountMax + 1 );\n    memset( pDistrib, 0, sizeof(int)*(CountMax + 1) );\n    for ( i = 0; i \u003c s_pManRwrExp4-\u003enFuncs; i++ )\n    {\n        pDistrib[ s_pManRwrExp4-\u003epnCounts[i] ]++;\n        pReprs[ s_pManRwrExp4-\u003epnCounts[i] ] = i;\n    }\n\n    printf( \"Occurence = %6d.  Num classes = %4d.  \\n\", 0, 2288-nClasses );\n    for ( i = 1; i \u003c= CountMax; i++ )\n        if ( pDistrib[i] )\n        {\n            printf( \"Occurence = %6d.  Num classes = %4d.  Repr = \", i, pDistrib[i] );\n            Extra_PrintBinary( stdout, (unsigned*)\u0026(pReprs[i]), 16 ); \n            printf( \"\\n\" );\n        }\n    ABC_FREE( pDistrib );\n    ABC_FREE( pReprs );\n    // write into a file all classes above limit (5)\n    CountWrite = 0;\n    pFile = fopen( \"npnclass_stats4.txt\", \"w\" );\n    for ( i = 0; i \u003c s_pManRwrExp4-\u003enFuncs; i++ )\n        if ( s_pManRwrExp4-\u003epnCounts[i] \u003e 0 )\n        {\n            Extra_PrintHex( pFile, (unsigned *)\u0026i, 4 );\n            fprintf( pFile, \" %10d\\n\", s_pManRwrExp4-\u003epnCounts[i] );\n//            fprintf( pFile, \"%d \", i );\n            CountWrite++;\n        }\n    fclose( pFile );\n    printf( \"%d classes written into file \\\"%s\\\".\\n\", CountWrite, \"npnclass_stats4.txt\" );\n}",
+      "Draft": "func Rwt_Man4ExplorePrint() {\n    var pFile *os.File;\n    var i, CountMax, CountWrite, nCuts, nClasses int32;\n    var pDistrib *int32;\n    var pReprs *int32;\n    // find the max number of occurences\n    nCuts = nClasses = 0;\n    CountMax = 0;\n    for  i = 0; i \u003c s_pManRwrExp4.nFuncs; i++  {\n        if CountMax \u003c s_pManRwrExp4.pnCounts[i] {\n            CountMax = s_pManRwrExp4.pnCounts[i]; }\n        nCuts += s_pManRwrExp4.pnCounts[i];\n        if s_pManRwrExp4.pnCounts[i] \u003e 0 {\n            nClasses++; }\n    }\n    fmt.Printf(\"Number of cuts considered       = %8d.\\n\", nCuts);\n    fmt.Printf(\"Classes occurring at least once = %8d.\\n\", nClasses);\n    // print the distribution of classes\n    // inlining of macro ABC_ALLOC\n    pDistrib = ((int *) malloc(sizeof(int) * (size_t)(CountMax + 1)));\n    // inlining of macro ABC_ALLOC\n    pReprs   = ((int *) malloc(sizeof(int) * (size_t)(CountMax + 1)));\n    memset( pDistrib, 0, sizeof(int)*(CountMax + 1) );\n    for  i = 0; i \u003c s_pManRwrExp4.nFuncs; i++  {\n        pDistrib[ s_pManRwrExp4.pnCounts[i] ]++;\n        pReprs[ s_pManRwrExp4.pnCounts[i] ] = i;\n    }\n\n    fmt.Printf(\"Occurence = %6d.  Num classes = %4d.  \\n\", 0, 2288-nClasses);\n    for  i = 1; i \u003c= CountMax; i++  {\n        if pDistrib[i] {\n            fmt.Printf(\"Occurence = %6d.  Num classes = %4d.  Repr = \", i, pDistrib[i]);\n            Extra_PrintBinary( os.Stdout, (unsigned*)\u0026(pReprs[i]), 16 ); \n            fmt.Printf(\"\\n\");\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pDistrib) ? (free((char *) (pDistrib)), (pDistrib) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);\n    // write into a file all classes above limit (5)\n    CountWrite = 0;\n    pFile = os.OpenFile(\"npnclass_stats4.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    for  i = 0; i \u003c s_pManRwrExp4.nFuncs; i++  {\n        if s_pManRwrExp4.pnCounts[i] \u003e 0 {\n            Extra_PrintHex( pFile, (unsigned *)\u0026i, 4 );\n            fmt.Fprintf(pFile, \" %10d\\n\", s_pManRwrExp4.pnCounts[i]);\n//            fprintf( pFile, \"%d \", i );\n            CountWrite++;\n        }\n    }\n    _ = (pFile).Close();\n    fmt.Printf(\"%d classes written into file \\\"%s\\\".\\n\", CountWrite, \"npnclass_stats4.txt\");\n}"
+    },
+    {
+      "Name": "Rwt_Man5ExploreStart",
+      "Start": 5473,
+      "End": 5837,
+      "BodyStart": 5501,
+      "Original": "void Rwt_Man5ExploreStart()\n{\n    Rwr_Man5_t * p;\n    p = ABC_ALLOC( Rwr_Man5_t, 1 );\n    memset( p, 0, sizeof(Rwr_Man5_t) );\n    p-\u003etTableNN  = stmm_init_table( st__numcmp, st__numhash );\n    p-\u003etTableNPN = stmm_init_table( st__numcmp, st__numhash );\n    s_pManRwrExp5 = p;\n\n//Extra_PrintHex( stdout, Extra_TruthCanonNPN( 0x0000FFFF, 5 ), 5 );\n//printf( \"\\n\" );\n}",
+      "Draft": "func Rwt_Man5ExploreStart() {\n    var p *Rwr_Man5_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Rwr_Man5_t *) malloc(sizeof(Rwr_Man5_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Rwr_Man5_t) );\n    p.tTableNN  = stmm_init_table( st__numcmp, st__numhash );\n    p.tTableNPN = stmm_init_table( st__numcmp, st__numhash );\n    s_pManRwrExp5 = p;\n\n//Extra_PrintHex( stdout, Extra_TruthCanonNPN( 0x0000FFFF, 5 ), 5 );\n//printf( \"\\n\" );\n}"
+    },
+    {
+      "Name": "Rwt_Man5ExploreCount",
+      "Start": 6132,
+      "End": 6349,
+      "BodyStart": 6177,
+      "Original": "void Rwt_Man5ExploreCount( unsigned uTruth )\n{\n    int * pCounter;\n    if ( !stmm_find_or_add( s_pManRwrExp5-\u003etTableNN, (char *)(ABC_PTRUINT_T)uTruth, (char***)\u0026pCounter ) )\n        *pCounter = 0;\n    (*pCounter)++;\n}",
+      "Draft": "func Rwt_Man5ExploreCount(uTruth uint32) {\n    var pCounter *int32;\n    if !stmm_find_or_add( s_pManRwrExp5.tTableNN, (char *)(ABC_PTRUINT_T)uTruth, (char***)\u0026pCounter ) {\n        *pCounter = 0; }\n    (*pCounter)++;\n}"
+    },
+    {
+      "Name": "Rwt_Man5ExplorePrint",
+      "Start": 6644,
+      "End": 10374,
+      "BodyStart": 6672,
+      "Original": "void Rwt_Man5ExplorePrint()\n{\n    FILE * pFile;\n    stmm_generator * gen;\n    int i, CountMax, nCuts, Counter;\n    int * pDistrib;\n    unsigned * pReprs;\n    unsigned uTruth, uTruthC;\n    abctime clk = Abc_Clock();\n    Vec_Int_t * vClassesNN, * vClassesNPN;\n\n    // find the max number of occurences\n    nCuts = 0;\n    CountMax = 0;\n    stmm_foreach_item( s_pManRwrExp5-\u003etTableNN, gen, (char **)\u0026uTruth, (char **)\u0026Counter )\n    {\n        nCuts += Counter;\n        if ( CountMax \u003c Counter )\n            CountMax = Counter;\n    }\n    printf( \"Number of cuts considered       = %8d.\\n\", nCuts );\n    printf( \"Classes occurring at least once = %8d.\\n\", stmm_count(s_pManRwrExp5-\u003etTableNN) );\n    printf( \"The largest number of occurence = %8d.\\n\", CountMax );\n\n    // print the distribution of classes\n    pDistrib = ABC_ALLOC( int, CountMax + 1 );\n    pReprs   = ABC_ALLOC( unsigned, CountMax + 1 );\n    memset( pDistrib, 0, sizeof(int)*(CountMax + 1) );\n    stmm_foreach_item( s_pManRwrExp5-\u003etTableNN, gen, (char **)\u0026uTruth, (char **)\u0026Counter )\n    {\n        assert( Counter \u003c= CountMax );\n        pDistrib[ Counter ]++;\n        pReprs[ Counter ] = uTruth;\n    }\n\n    for ( i = 1; i \u003c= CountMax; i++ )\n        if ( pDistrib[i] )\n        {\n            printf( \"Occurence = %6d.  Num classes = %4d.  Repr = \", i, pDistrib[i] );\n            Extra_PrintBinary( stdout, pReprs + i, 32 ); \n            printf( \"\\n\" );\n        }\n    ABC_FREE( pDistrib );\n    ABC_FREE( pReprs );\n\n\n    // put them into an array\n    vClassesNN = Vec_IntAlloc( stmm_count(s_pManRwrExp5-\u003etTableNN) );\n    stmm_foreach_item( s_pManRwrExp5-\u003etTableNN, gen, (char **)\u0026uTruth, NULL )\n        Vec_IntPush( vClassesNN, (int)uTruth );\n    Vec_IntSortUnsigned( vClassesNN );\n\n    // write into a file all classes\n    pFile = fopen( \"nnclass_stats5.txt\", \"w\" );\n    Vec_IntForEachEntry( vClassesNN, uTruth, i )\n    {\n        if ( !stmm_lookup( s_pManRwrExp5-\u003etTableNN, (char *)(ABC_PTRUINT_T)uTruth, (char **)\u0026Counter ) )\n        {\n            assert( 0 );\n        }\n        Extra_PrintHex( pFile, \u0026uTruth, 5 );\n        fprintf( pFile, \" %10d\\n\", Counter );\n    }\n    fclose( pFile );\n    printf( \"%d classes written into file \\\"%s\\\".\\n\", vClassesNN-\u003enSize, \"nnclass_stats5.txt\" );\n\n\nclk = Abc_Clock();\n    // how many NPN classes exist?\n    Vec_IntForEachEntry( vClassesNN, uTruth, i )\n    {\n        int * pCounter;\n        uTruthC = Extra_TruthCanonNPN( uTruth, 5 );\n        if ( !stmm_find_or_add( s_pManRwrExp5-\u003etTableNPN, (char *)(ABC_PTRUINT_T)uTruthC, (char***)\u0026pCounter ) )\n            *pCounter = 0;\n        if ( !stmm_lookup( s_pManRwrExp5-\u003etTableNN, (char *)(ABC_PTRUINT_T)uTruth, (char **)\u0026Counter ) )\n        {\n            assert( 0 );\n        }\n        (*pCounter) += Counter;\n    }\n    printf( \"The numbe of NPN classes = %d.\\n\", stmm_count(s_pManRwrExp5-\u003etTableNPN) );\nABC_PRT( \"Computing NPN classes\", Abc_Clock() - clk );\n\n    // put them into an array\n    vClassesNPN = Vec_IntAlloc( stmm_count(s_pManRwrExp5-\u003etTableNPN) );\n    stmm_foreach_item( s_pManRwrExp5-\u003etTableNPN, gen, (char **)\u0026uTruth, NULL )\n        Vec_IntPush( vClassesNPN, (int)uTruth );\n    Vec_IntSortUnsigned( vClassesNPN );\n\n    // write into a file all classes\n    pFile = fopen( \"npnclass_stats5.txt\", \"w\" );\n    Vec_IntForEachEntry( vClassesNPN, uTruth, i )\n    {\n        if ( !stmm_lookup( s_pManRwrExp5-\u003etTableNPN, (char *)(ABC_PTRUINT_T)uTruth, (char **)\u0026Counter ) )\n        {\n            assert( 0 );\n        }\n        Extra_PrintHex( pFile, \u0026uTruth, 5 );\n        fprintf( pFile, \" %10d\\n\", Counter );\n    }\n    fclose( pFile );\n    printf( \"%d classes written into file \\\"%s\\\".\\n\", vClassesNPN-\u003enSize, \"npnclass_stats5.txt\" );\n\n\n    // can they be uniquely characterized?\n\n}",
+      "Draft": "func Rwt_Man5ExplorePrint() {\n    var pFile *os.File;\n    var gen *stmm_generator;\n    var i, CountMax, nCuts, Counter int32;\n    var pDistrib *int32;\n    var pReprs *uint32;\n    var uTruth, uTruthC uint32;\n    var clk abctime  = Abc_Clock();\n    var vClassesNN, vClassesNPN *Vec_Int_t;\n\n    // find the max number of occurences\n    nCuts = 0;\n    CountMax = 0;\n    // inlining of macro stmm_foreach_item\n    for gen=stmm_init_gen(s_pManRwrExp5.tTableNN); stmm_gen(gen,(char **)\u0026uTruth,(char **)\u0026Counter) || (stmm_free_gen(gen),0); {\n        nCuts += Counter;\n        if CountMax \u003c Counter {\n            CountMax = Counter; }\n    }\n    fmt.Printf(\"Number of cuts considered       = %8d.\\n\", nCuts);\n    // inlining of macro stmm_count\n    fmt.Printf(\"Classes occurring at least once = %8d.\\n\", ((s_pManRwrExp5.tTableNN).num_entries));\n    fmt.Printf(\"The largest number of occurence = %8d.\\n\", CountMax);\n\n    // print the distribution of classes\n    // inlining of macro ABC_ALLOC\n    pDistrib = ((int *) malloc(sizeof(int) * (size_t)(CountMax + 1)));\n    // inlining of macro ABC_ALLOC\n    pReprs   = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(CountMax + 1)));\n    memset( pDistrib, 0, sizeof(int)*(CountMax + 1) );\n    // inlining of macro stmm_foreach_item\n    for gen=stmm_init_gen(s_pManRwrExp5.tTableNN); stmm_gen(gen,(char **)\u0026uTruth,(char **)\u0026Counter) || (stmm_free_gen(gen),0); {\n        assert(Counter \u003c= CountMax, \"Counter \u003c= CountMax\");\n        pDistrib[ Counter ]++;\n        pReprs[ Counter ] = uTruth;\n    }\n\n    for  i = 1; i \u003c= CountMax; i++  {\n        if pDistrib[i] {\n            fmt.Printf(\"Occurence = %6d.  Num classes = %4d.  Repr = \", i, pDistrib[i]);\n            Extra_PrintBinary( os.Stdout, pReprs + i, 32 ); \n            fmt.Printf(\"\\n\");\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pDistrib) ? (free((char *) (pDistrib)), (pDistrib) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);\n\n\n    // put them into an array\n    // inlining of macro stmm_count\n    vClassesNN = Vec_IntAlloc( ((s_pManRwrExp5.tTableNN).num_entries) );\n    // inlining of macro stmm_foreach_item\n    for gen=stmm_init_gen(s_pManRwrExp5.tTableNN); stmm_gen(gen,(char **)\u0026uTruth,nil) || (stmm_free_gen(gen),0); {\n        Vec_IntPush( vClassesNN, int32(uTruth) );\n    }\n    Vec_IntSortUnsigned( vClassesNN );\n\n    // write into a file all classes\n    pFile = os.OpenFile(\"nnclass_stats5.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClassesNN)) \u0026\u0026 (((uTruth) = Vec_IntEntry(vClassesNN, i)), 1); i++  {\n        if !stmm_lookup( s_pManRwrExp5.tTableNN, (char *)(ABC_PTRUINT_T)uTruth, (char **)\u0026Counter ) {\n            assert(false, \"0\");\n        }\n        Extra_PrintHex( pFile, \u0026uTruth, 5 );\n        fmt.Fprintf(pFile, \" %10d\\n\", Counter);\n    }\n    _ = (pFile).Close();\n    fmt.Printf(\"%d classes written into file \\\"%s\\\".\\n\", vClassesNN.nSize, \"nnclass_stats5.txt\");\n\n\nclk = Abc_Clock();\n    // how many NPN classes exist?\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClassesNN)) \u0026\u0026 (((uTruth) = Vec_IntEntry(vClassesNN, i)), 1); i++  {\n        var pCounter *int32;\n        uTruthC = Extra_TruthCanonNPN( uTruth, 5 );\n        if !stmm_find_or_add( s_pManRwrExp5.tTableNPN, (char *)(ABC_PTRUINT_T)uTruthC, (char***)\u0026pCounter ) {\n            *pCounter = 0; }\n        if !stmm_lookup( s_pManRwrExp5.tTableNN, (char *)(ABC_PTRUINT_T)uTruth, (char **)\u0026Counter ) {\n            assert(false, \"0\");\n        }\n        (*pCounter) += Counter;\n    }\n    // inlining of macro stmm_count\n    fmt.Printf(\"The numbe of NPN classes = %d.\\n\", ((s_pManRwrExp5.tTableNPN).num_entries));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Computing NPN classes\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\n    // put them into an array\n    // inlining of macro stmm_count\n    vClassesNPN = Vec_IntAlloc( ((s_pManRwrExp5.tTableNPN).num_entries) );\n    // inlining of macro stmm_foreach_item\n    for gen=stmm_init_gen(s_pManRwrExp5.tTableNPN); stmm_gen(gen,(char **)\u0026uTruth,nil) || (stmm_free_gen(gen),0); {\n        Vec_IntPush( vClassesNPN, int32(uTruth) );\n    }\n    Vec_IntSortUnsigned( vClassesNPN );\n\n    // write into a file all classes\n    pFile = os.OpenFile(\"npnclass_stats5.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClassesNPN)) \u0026\u0026 (((uTruth) = Vec_IntEntry(vClassesNPN, i)), 1); i++  {\n        if !stmm_lookup( s_pManRwrExp5.tTableNPN, (char *)(ABC_PTRUINT_T)uTruth, (char **)\u0026Counter ) {\n            assert(false, \"0\");\n        }\n        Extra_PrintHex( pFile, \u0026uTruth, 5 );\n        fmt.Fprintf(pFile, \" %10d\\n\", Counter);\n    }\n    _ = (pFile).Close();\n    fmt.Printf(\"%d classes written into file \\\"%s\\\".\\n\", vClassesNPN.nSize, \"npnclass_stats5.txt\");\n\n\n    // can they be uniquely characterized?\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::struct::Rwr_Man4_t::// the number of four-var functions\n    unsigned short *   puCanons;",
+      "Category": "struct-field-review",
+      "Symbol": "Rwr_Man4_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 930,
+      "End": 1009
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::struct::Rwr_Man4_t",
+      "Category": "struct-review",
+      "Symbol": "Rwr_Man4_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 816,
+      "End": 1267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::struct::Rwr_Man5_t",
+      "Category": "struct-review",
+      "Symbol": "Rwr_Man5_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1269,
+      "End": 1490
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::mechanical::sizeof::2216",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2148,
+      "End": 2148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::mechanical::sizeof::2270",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2194,
+      "End": 2200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::mechanical::sizeof::2535",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2398,
+      "End": 2398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::mechanical::sizeof::2600",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2455,
+      "End": 2461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::mechanical::sizeof::4143",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3937,
+      "End": 3937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::mechanical::sizeof::4259",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3984,
+      "End": 3984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::mechanical::sizeof::4324",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4041,
+      "End": 4047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::mechanical::sizeof::6050",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5531,
+      "End": 5531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::mechanical::sizeof::6104",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5577,
+      "End": 5583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::mechanical::sizeof::8187",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7457,
+      "End": 7457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::mechanical::sizeof::8308",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7504,
+      "End": 7504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::mechanical::sizeof::8378",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7566,
+      "End": 7572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::2194",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2148,
+      "End": 2148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::2520",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2398,
+      "End": 2398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::4128",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3937,
+      "End": 3937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::4244",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3984,
+      "End": 3984
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::4794",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4511,
+      "End": 4522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::4932",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4585,
+      "End": 4585
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::5042",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4611,
+      "End": 4611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::5345",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4894,
+      "End": 4906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::6028",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5531,
+      "End": 5531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::6779",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6252,
+      "End": 6260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::6810",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6283,
+      "End": 6292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::7622",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6981,
+      "End": 6981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::7639",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6981,
+      "End": 6981
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::8172",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7457,
+      "End": 7457
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::8288",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7504,
+      "End": 7504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::8526",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7600,
+      "End": 7600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::8543",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7600,
+      "End": 7600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::9035",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8068,
+      "End": 8068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::9145",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8094,
+      "End": 8094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::9456",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8220,
+      "End": 8220
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::9896",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8574,
+      "End": 8582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::9927",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8605,
+      "End": 8614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::10563",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9132,
+      "End": 9140
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::10595",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9164,
+      "End": 9173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::10697",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9266,
+      "End": 9274
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::10728",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9297,
+      "End": 9306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::11428",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9652,
+      "End": 9652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::11874",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10012,
+      "End": 10020
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::pointer-cast::11905",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10043,
+      "End": 10052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::Rwt_Man4ExploreStart",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_Man4ExploreStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2090,
+      "End": 2506
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::Rwt_Man4ExploreCount",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_Man4ExploreCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2801,
+      "End": 2951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::ternary::Rwt_Man4ExplorePrint",
+      "Category": "ternary-review",
+      "Symbol": "Rwt_Man4ExplorePrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3246,
+      "End": 5175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::Rwt_Man4ExplorePrint",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_Man4ExplorePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3246,
+      "End": 5175
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::Rwt_Man5ExploreStart",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_Man5ExploreStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5473,
+      "End": 5837
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::Rwt_Man5ExploreCount",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_Man5ExploreCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6132,
+      "End": 6349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::ternary::Rwt_Man5ExplorePrint",
+      "Category": "ternary-review",
+      "Symbol": "Rwt_Man5ExplorePrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6644,
+      "End": 10374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::Rwt_Man5ExplorePrint",
+      "Category": "semantic-review",
+      "Symbol": "Rwt_Man5ExplorePrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6644,
+      "End": 10374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/rwr/rwrExp.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10621
+    }
+  ],
+  "Draft": "package rwr\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [rwrExp.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware AIG rewriting package.]\n\n  Synopsis    [Computation of practically used NN-classes of 4-input cuts.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: rwrExp.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"rwr.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Rwr_Man4_t struct {\n    // internal lookups\n    nFuncs                int32;           // the number of four-var functions\n    unsigned short *   puCanons;         // canonical forms\n    pnCounts               *int32;         // the counters of functions in each class\n    nConsidered                int32;      // the number of nodes considered\n    nClasses                int32;         // the number of NN classes\n}\n\n   \ntype Rwr_Man5_t struct {\n    // internal lookups\n    tTableNN        *stmm_table;         // the NN canonical forms\n    tTableNPN        *stmm_table;        // the NPN canonical forms\n}\n\nvar s_pManRwrExp4 *Rwr_Man4_t = nil;\nvar s_pManRwrExp5 *Rwr_Man5_t = nil;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Collects stats about 4-var functions appearing in netlists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_Man4ExploreStart() {\n    var p *Rwr_Man4_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Rwr_Man4_t *) malloc(sizeof(Rwr_Man4_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Rwr_Man4_t) );\n    // canonical forms\n    p.nFuncs    = (1\u003c\u003c16);\n    // canonical forms, phases, perms\n    Extra_Truth4VarNPN( \u0026p.puCanons, nil, nil, nil );\n    // counters\n    // inlining of macro ABC_ALLOC\n    p.pnCounts  = ((int *) malloc(sizeof(int) * (size_t)(p.nFuncs)));\n    memset( p.pnCounts, 0, sizeof(int) * p.nFuncs );\n    s_pManRwrExp4 = p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects stats about 4-var functions appearing in netlists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_Man4ExploreCount(uTruth uint32) {\n    assert(uTruth \u003c (1\u003c\u003c16), \"uTruth \u003c (1\u003c\u003c16)\");\n    s_pManRwrExp4.pnCounts[ s_pManRwrExp4.puCanons[uTruth] ]++;    \n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects stats about 4-var functions appearing in netlists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_Man4ExplorePrint() {\n    var pFile *os.File;\n    var i, CountMax, CountWrite, nCuts, nClasses int32;\n    var pDistrib *int32;\n    var pReprs *int32;\n    // find the max number of occurences\n    nCuts = nClasses = 0;\n    CountMax = 0;\n    for  i = 0; i \u003c s_pManRwrExp4.nFuncs; i++  {\n        if CountMax \u003c s_pManRwrExp4.pnCounts[i] {\n            CountMax = s_pManRwrExp4.pnCounts[i]; }\n        nCuts += s_pManRwrExp4.pnCounts[i];\n        if s_pManRwrExp4.pnCounts[i] \u003e 0 {\n            nClasses++; }\n    }\n    fmt.Printf(\"Number of cuts considered       = %8d.\\n\", nCuts);\n    fmt.Printf(\"Classes occurring at least once = %8d.\\n\", nClasses);\n    // print the distribution of classes\n    // inlining of macro ABC_ALLOC\n    pDistrib = ((int *) malloc(sizeof(int) * (size_t)(CountMax + 1)));\n    // inlining of macro ABC_ALLOC\n    pReprs   = ((int *) malloc(sizeof(int) * (size_t)(CountMax + 1)));\n    memset( pDistrib, 0, sizeof(int)*(CountMax + 1) );\n    for  i = 0; i \u003c s_pManRwrExp4.nFuncs; i++  {\n        pDistrib[ s_pManRwrExp4.pnCounts[i] ]++;\n        pReprs[ s_pManRwrExp4.pnCounts[i] ] = i;\n    }\n\n    fmt.Printf(\"Occurence = %6d.  Num classes = %4d.  \\n\", 0, 2288-nClasses);\n    for  i = 1; i \u003c= CountMax; i++  {\n        if pDistrib[i] {\n            fmt.Printf(\"Occurence = %6d.  Num classes = %4d.  Repr = \", i, pDistrib[i]);\n            Extra_PrintBinary( os.Stdout, (unsigned*)\u0026(pReprs[i]), 16 ); \n            fmt.Printf(\"\\n\");\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pDistrib) ? (free((char *) (pDistrib)), (pDistrib) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);\n    // write into a file all classes above limit (5)\n    CountWrite = 0;\n    pFile = os.OpenFile(\"npnclass_stats4.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    for  i = 0; i \u003c s_pManRwrExp4.nFuncs; i++  {\n        if s_pManRwrExp4.pnCounts[i] \u003e 0 {\n            Extra_PrintHex( pFile, (unsigned *)\u0026i, 4 );\n            fmt.Fprintf(pFile, \" %10d\\n\", s_pManRwrExp4.pnCounts[i]);\n//            fprintf( pFile, \"%d \", i );\n            CountWrite++;\n        }\n    }\n    _ = (pFile).Close();\n    fmt.Printf(\"%d classes written into file \\\"%s\\\".\\n\", CountWrite, \"npnclass_stats4.txt\");\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Collects stats about 4-var functions appearing in netlists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_Man5ExploreStart() {\n    var p *Rwr_Man5_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Rwr_Man5_t *) malloc(sizeof(Rwr_Man5_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Rwr_Man5_t) );\n    p.tTableNN  = stmm_init_table( st__numcmp, st__numhash );\n    p.tTableNPN = stmm_init_table( st__numcmp, st__numhash );\n    s_pManRwrExp5 = p;\n\n//Extra_PrintHex( stdout, Extra_TruthCanonNPN( 0x0000FFFF, 5 ), 5 );\n//printf( \"\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects stats about 4-var functions appearing in netlists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_Man5ExploreCount(uTruth uint32) {\n    var pCounter *int32;\n    if !stmm_find_or_add( s_pManRwrExp5.tTableNN, (char *)(ABC_PTRUINT_T)uTruth, (char***)\u0026pCounter ) {\n        *pCounter = 0; }\n    (*pCounter)++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects stats about 4-var functions appearing in netlists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Rwt_Man5ExplorePrint() {\n    var pFile *os.File;\n    var gen *stmm_generator;\n    var i, CountMax, nCuts, Counter int32;\n    var pDistrib *int32;\n    var pReprs *uint32;\n    var uTruth, uTruthC uint32;\n    var clk abctime  = Abc_Clock();\n    var vClassesNN, vClassesNPN *Vec_Int_t;\n\n    // find the max number of occurences\n    nCuts = 0;\n    CountMax = 0;\n    // inlining of macro stmm_foreach_item\n    for gen=stmm_init_gen(s_pManRwrExp5.tTableNN); stmm_gen(gen,(char **)\u0026uTruth,(char **)\u0026Counter) || (stmm_free_gen(gen),0); {\n        nCuts += Counter;\n        if CountMax \u003c Counter {\n            CountMax = Counter; }\n    }\n    fmt.Printf(\"Number of cuts considered       = %8d.\\n\", nCuts);\n    // inlining of macro stmm_count\n    fmt.Printf(\"Classes occurring at least once = %8d.\\n\", ((s_pManRwrExp5.tTableNN).num_entries));\n    fmt.Printf(\"The largest number of occurence = %8d.\\n\", CountMax);\n\n    // print the distribution of classes\n    // inlining of macro ABC_ALLOC\n    pDistrib = ((int *) malloc(sizeof(int) * (size_t)(CountMax + 1)));\n    // inlining of macro ABC_ALLOC\n    pReprs   = ((unsigned *) malloc(sizeof(unsigned) * (size_t)(CountMax + 1)));\n    memset( pDistrib, 0, sizeof(int)*(CountMax + 1) );\n    // inlining of macro stmm_foreach_item\n    for gen=stmm_init_gen(s_pManRwrExp5.tTableNN); stmm_gen(gen,(char **)\u0026uTruth,(char **)\u0026Counter) || (stmm_free_gen(gen),0); {\n        assert(Counter \u003c= CountMax, \"Counter \u003c= CountMax\");\n        pDistrib[ Counter ]++;\n        pReprs[ Counter ] = uTruth;\n    }\n\n    for  i = 1; i \u003c= CountMax; i++  {\n        if pDistrib[i] {\n            fmt.Printf(\"Occurence = %6d.  Num classes = %4d.  Repr = \", i, pDistrib[i]);\n            Extra_PrintBinary( os.Stdout, pReprs + i, 32 ); \n            fmt.Printf(\"\\n\");\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pDistrib) ? (free((char *) (pDistrib)), (pDistrib) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);\n\n\n    // put them into an array\n    // inlining of macro stmm_count\n    vClassesNN = Vec_IntAlloc( ((s_pManRwrExp5.tTableNN).num_entries) );\n    // inlining of macro stmm_foreach_item\n    for gen=stmm_init_gen(s_pManRwrExp5.tTableNN); stmm_gen(gen,(char **)\u0026uTruth,nil) || (stmm_free_gen(gen),0); {\n        Vec_IntPush( vClassesNN, int32(uTruth) );\n    }\n    Vec_IntSortUnsigned( vClassesNN );\n\n    // write into a file all classes\n    pFile = os.OpenFile(\"nnclass_stats5.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClassesNN)) \u0026\u0026 (((uTruth) = Vec_IntEntry(vClassesNN, i)), 1); i++  {\n        if !stmm_lookup( s_pManRwrExp5.tTableNN, (char *)(ABC_PTRUINT_T)uTruth, (char **)\u0026Counter ) {\n            assert(false, \"0\");\n        }\n        Extra_PrintHex( pFile, \u0026uTruth, 5 );\n        fmt.Fprintf(pFile, \" %10d\\n\", Counter);\n    }\n    _ = (pFile).Close();\n    fmt.Printf(\"%d classes written into file \\\"%s\\\".\\n\", vClassesNN.nSize, \"nnclass_stats5.txt\");\n\n\nclk = Abc_Clock();\n    // how many NPN classes exist?\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClassesNN)) \u0026\u0026 (((uTruth) = Vec_IntEntry(vClassesNN, i)), 1); i++  {\n        var pCounter *int32;\n        uTruthC = Extra_TruthCanonNPN( uTruth, 5 );\n        if !stmm_find_or_add( s_pManRwrExp5.tTableNPN, (char *)(ABC_PTRUINT_T)uTruthC, (char***)\u0026pCounter ) {\n            *pCounter = 0; }\n        if !stmm_lookup( s_pManRwrExp5.tTableNN, (char *)(ABC_PTRUINT_T)uTruth, (char **)\u0026Counter ) {\n            assert(false, \"0\");\n        }\n        (*pCounter) += Counter;\n    }\n    // inlining of macro stmm_count\n    fmt.Printf(\"The numbe of NPN classes = %d.\\n\", ((s_pManRwrExp5.tTableNPN).num_entries));\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Computing NPN classes\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n\n    // put them into an array\n    // inlining of macro stmm_count\n    vClassesNPN = Vec_IntAlloc( ((s_pManRwrExp5.tTableNPN).num_entries) );\n    // inlining of macro stmm_foreach_item\n    for gen=stmm_init_gen(s_pManRwrExp5.tTableNPN); stmm_gen(gen,(char **)\u0026uTruth,nil) || (stmm_free_gen(gen),0); {\n        Vec_IntPush( vClassesNPN, int32(uTruth) );\n    }\n    Vec_IntSortUnsigned( vClassesNPN );\n\n    // write into a file all classes\n    pFile = os.OpenFile(\"npnclass_stats5.txt\", os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vClassesNPN)) \u0026\u0026 (((uTruth) = Vec_IntEntry(vClassesNPN, i)), 1); i++  {\n        if !stmm_lookup( s_pManRwrExp5.tTableNPN, (char *)(ABC_PTRUINT_T)uTruth, (char **)\u0026Counter ) {\n            assert(false, \"0\");\n        }\n        Extra_PrintHex( pFile, \u0026uTruth, 5 );\n        fmt.Fprintf(pFile, \" %10d\\n\", Counter);\n    }\n    _ = (pFile).Close();\n    fmt.Printf(\"%d classes written into file \\\"%s\\\".\\n\", vClassesNPN.nSize, \"npnclass_stats5.txt\");\n\n\n    // can they be uniquely characterized?\n\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

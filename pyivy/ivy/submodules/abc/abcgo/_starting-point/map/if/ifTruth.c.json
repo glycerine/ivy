@@ -1,0 +1,568 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c",
+  "SHA256": "40b6d5d87c260badfe02e70f477b8e136c8532cf8b684907e784de1404b97354",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 70,
+        "Column": 5,
+        "ByteOffset": 2075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !p.pPars.fUseTtPerm );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2764
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (p.puTempW[0] \u0026 1) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 4888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (pTruth[0] \u0026 1) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 132,
+        "Column": 9,
+        "ByteOffset": 5501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_WecSize(p.vTtIsops[pCut.nLeaves]) == Vec_MemEntryNum(p.vTtMem[pCut.nLeaves]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 158,
+        "Column": 5,
+        "ByteOffset": 6498
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut0.uMaskFunc \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 6534
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut1.uMaskFunc \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 227,
+        "Column": 9,
+        "ByteOffset": 9304
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut.uSign == If_ObjCutSignCompute( pCut ) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 5,
+        "ByteOffset": 9365
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vTtOccurs[pCut.nLeaves]) == Vec_MemEntryNum(p.vTtMem[pCut.nLeaves]) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 260,
+        "Column": 5,
+        "ByteOffset": 10662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut0.nLeaves + pCut1.nLeaves == pCut.nLeaves );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 263,
+        "Column": 5,
+        "ByteOffset": 10888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Num \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 297,
+        "Column": 5,
+        "ByteOffset": 12430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 12619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Num == Vec_IntSize(p.vPairRes) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 303,
+        "Column": 5,
+        "ByteOffset": 12739
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Num * int32(pCut.nLimit) == Vec_StrSize(p.vPairPerms) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 351,
+        "Column": 13,
+        "ByteOffset": 14381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( tTemp2 == tCur );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 354,
+        "Column": 9,
+        "ByteOffset": 14483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( tTemp1 == tCur );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 356,
+        "Column": 5,
+        "ByteOffset": 14519
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pComp );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 357,
+        "Column": 5,
+        "ByteOffset": 14542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( pPerm );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 369,
+        "Column": 25,
+        "ByteOffset": 14858
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintHex( stdout, (unsigned*)\u0026uTruth, nVars );  printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 369,
+        "Column": 63,
+        "ByteOffset": 14896
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintHex( stdout, (unsigned*)\u0026uTruth, nVars );  printf( \"\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 370,
+        "Column": 25,
+        "ByteOffset": 14936
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintHex( stdout, (unsigned*)\u0026Canon,  nVars );  printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 370,
+        "Column": 63,
+        "ByteOffset": 14974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        Extra_PrintHex( stdout, (unsigned*)\u0026Canon,  nVars );  printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 371,
+        "Column": 9,
+        "ByteOffset": 14998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Members = %d.\\n\", Vec_MemEntryNum(vTtMem6) );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 128,
+        "Column": 1,
+        "ByteOffset": 4978
+      },
+      "Directive": "#ifdef IF_TRY_NEW"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_CutTruthPermute",
+      "Start": 1357,
+      "End": 1919,
+      "BodyStart": 1464,
+      "Original": "void If_CutTruthPermute( word * pTruth, int nLeaves, int nVars, int nWords, float * pDelays, int * pVars )\n{\n    while ( 1 )\n    {\n        int i, fChange = 0;\n        for ( i = 0; i \u003c nLeaves - 1; i++ )\n        {\n            if ( pDelays[i] \u003e= pDelays[i+1] )\n                continue;\n            ABC_SWAP( float, pDelays[i], pDelays[i+1] );\n            ABC_SWAP( int, pVars[i], pVars[i+1] );\n            if ( pTruth )\n                Abc_TtSwapAdjacent( pTruth, nWords, i );\n            fChange = 1;\n        }\n        if ( !fChange )\n            return;\n    }\n}",
+      "Draft": "func If_CutTruthPermute(pTruth *word, nLeaves int32, nVars int32, nWords int32, pDelays *float32, pVars *int32) {\n    for {\n        var i, fChange int32;\n        for  i = 0; i \u003c nLeaves - 1; i++  {\n            if pDelays[i] \u003e= pDelays[i+1] {\n                continue; }\n            ABC_SWAP( float, pDelays[i], pDelays[i+1] );\n            ABC_SWAP( int, pVars[i], pVars[i+1] );\n            if pTruth != nil {\n                Abc_TtSwapAdjacent( pTruth, nWords, i ); }\n            fChange = 1;\n        }\n        if !(fChange != 0) {\n            return; }\n    }\n}"
+    },
+    {
+      "Name": "If_CutRotatePins",
+      "Start": 1920,
+      "End": 2815,
+      "BodyStart": 1975,
+      "Original": "void If_CutRotatePins( If_Man_t * p, If_Cut_t * pCut )\n{\n    If_Obj_t * pLeaf;\n    float PinDelays[IF_MAX_LUTSIZE];\n    int i, truthId;\n    assert( !p-\u003epPars-\u003efUseTtPerm );\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n        PinDelays[i] = If_ObjCutBest(pLeaf)-\u003eDelay;\n    if ( p-\u003evTtMem[pCut-\u003enLeaves] == NULL )\n    {\n        If_CutTruthPermute( NULL, If_CutLeaveNum(pCut), pCut-\u003enLeaves, p-\u003enTruth6Words[pCut-\u003enLeaves], PinDelays, If_CutLeaves(pCut) );\n        return;\n    }\n    Abc_TtCopy( p-\u003epuTempW, If_CutTruthWR(p, pCut), p-\u003enTruth6Words[pCut-\u003enLeaves], 0 );\n    If_CutTruthPermute( p-\u003epuTempW, If_CutLeaveNum(pCut), pCut-\u003enLeaves, p-\u003enTruth6Words[pCut-\u003enLeaves], PinDelays, If_CutLeaves(pCut) );\n    truthId        = Vec_MemHashInsert( p-\u003evTtMem[pCut-\u003enLeaves], p-\u003epuTempW );\n    pCut-\u003eiCutFunc = Abc_Var2Lit( truthId, If_CutTruthIsCompl(pCut) );\n    assert( (p-\u003epuTempW[0] \u0026 1) == 0 );\n}",
+      "Draft": "func If_CutRotatePins(p *If_Man_t, pCut *If_Cut_t) {\n    var pLeaf *If_Obj_t;\n    var PinDelays [IF_MAX_LUTSIZE]float32;\n    var i, truthId int32;\n    assert(!p.pPars.fUseTtPerm, \"!p.pPars.fUseTtPerm\");\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n        PinDelays[i] = If_ObjCutBest(pLeaf).Delay;\n    if p.vTtMem[pCut.nLeaves] == nil {\n        If_CutTruthPermute( nil, If_CutLeaveNum(pCut), pCut.nLeaves, p.nTruth6Words[pCut.nLeaves], PinDelays, If_CutLeaves(pCut) );\n        return;\n    }\n    Abc_TtCopy( p.puTempW, If_CutTruthWR(p, pCut), p.nTruth6Words[pCut.nLeaves], 0 );\n    If_CutTruthPermute( p.puTempW, If_CutLeaveNum(pCut), pCut.nLeaves, p.nTruth6Words[pCut.nLeaves], PinDelays, If_CutLeaves(pCut) );\n    truthId        = Vec_MemHashInsert( p.vTtMem[pCut.nLeaves], p.puTempW );\n    pCut.iCutFunc = Abc_Var2Lit( truthId, If_CutTruthIsCompl(pCut) );\n    assert((p.puTempW[0] \u0026 1) == 0, \"(p.puTempW[0] \u0026 1) == 0\");\n}"
+    },
+    {
+      "Name": "If_CutComputeTruth",
+      "Start": 3075,
+      "End": 5881,
+      "BodyStart": 3193,
+      "Original": "int If_CutComputeTruth( If_Man_t * p, If_Cut_t * pCut, If_Cut_t * pCut0, If_Cut_t * pCut1, int fCompl0, int fCompl1 )\n{\n    int fCompl, truthId, nLeavesNew, PrevSize, RetValue = 0;\n    word * pTruth0s = Vec_MemReadEntry( p-\u003evTtMem[pCut0-\u003enLeaves], Abc_Lit2Var(pCut0-\u003eiCutFunc) );\n    word * pTruth1s = Vec_MemReadEntry( p-\u003evTtMem[pCut1-\u003enLeaves], Abc_Lit2Var(pCut1-\u003eiCutFunc) );\n    word * pTruth0  = (word *)p-\u003epuTemp[0];\n    word * pTruth1  = (word *)p-\u003epuTemp[1];\n    word * pTruth   = (word *)p-\u003epuTemp[2];\n    Abc_TtCopy( pTruth0, pTruth0s, p-\u003enTruth6Words[pCut0-\u003enLeaves], fCompl0 ^ pCut0-\u003efCompl ^ Abc_LitIsCompl(pCut0-\u003eiCutFunc) );\n    Abc_TtCopy( pTruth1, pTruth1s, p-\u003enTruth6Words[pCut1-\u003enLeaves], fCompl1 ^ pCut1-\u003efCompl ^ Abc_LitIsCompl(pCut1-\u003eiCutFunc) );\n    Abc_TtStretch6( pTruth0, pCut0-\u003enLeaves, pCut-\u003enLeaves );\n    Abc_TtStretch6( pTruth1, pCut1-\u003enLeaves, pCut-\u003enLeaves );\n    Abc_TtExpand( pTruth0, pCut-\u003enLeaves, pCut0-\u003epLeaves, pCut0-\u003enLeaves, pCut-\u003epLeaves, pCut-\u003enLeaves );\n    Abc_TtExpand( pTruth1, pCut-\u003enLeaves, pCut1-\u003epLeaves, pCut1-\u003enLeaves, pCut-\u003epLeaves, pCut-\u003enLeaves );\n    fCompl         = (pTruth0[0] \u0026 pTruth1[0] \u0026 1);\n    Abc_TtAnd( pTruth, pTruth0, pTruth1, p-\u003enTruth6Words[pCut-\u003enLeaves], fCompl );\n    if ( p-\u003epPars-\u003efCutMin \u0026\u0026 (pCut0-\u003enLeaves + pCut1-\u003enLeaves \u003e pCut-\u003enLeaves || pCut0-\u003enLeaves == 0 || pCut1-\u003enLeaves == 0) )\n    {\n        nLeavesNew = Abc_TtMinBase( pTruth, pCut-\u003epLeaves, pCut-\u003enLeaves, pCut-\u003enLeaves );\n        if ( nLeavesNew \u003c If_CutLeaveNum(pCut) )\n        {\n            pCut-\u003enLeaves = nLeavesNew;\n            pCut-\u003euSign   = If_ObjCutSignCompute( pCut );\n            RetValue      = 1;\n        }\n    }\n    PrevSize       = Vec_MemEntryNum( p-\u003evTtMem[pCut-\u003enLeaves] );   \n    truthId        = Vec_MemHashInsert( p-\u003evTtMem[pCut-\u003enLeaves], pTruth );\n    pCut-\u003eiCutFunc = Abc_Var2Lit( truthId, fCompl );\n    assert( (pTruth[0] \u0026 1) == 0 );\n#ifdef IF_TRY_NEW\n    {\n        word pCopy[1024];\n        char pCanonPerm[16];\n        memcpy( pCopy, If_CutTruthW(pCut), sizeof(word) * p-\u003enTruth6Words[pCut-\u003enLeaves] );\n        Abc_TtCanonicize( pCopy, pCut-\u003enLeaves, pCanonPerm );\n    }\n#endif\n    if ( p-\u003evTtIsops[pCut-\u003enLeaves] \u0026\u0026 PrevSize != Vec_MemEntryNum(p-\u003evTtMem[pCut-\u003enLeaves]) )\n    {\n        Vec_Int_t * vLevel = Vec_WecPushLevel( p-\u003evTtIsops[pCut-\u003enLeaves] );\n        fCompl = Kit_TruthIsop( (unsigned *)pTruth, pCut-\u003enLeaves, p-\u003evCover, 1 );\n        if ( fCompl \u003e= 0 )\n        {\n            Vec_IntGrow( vLevel, Vec_IntSize(p-\u003evCover) );\n            Vec_IntAppend( vLevel, p-\u003evCover );\n            if ( fCompl )\n                vLevel-\u003enCap ^= (1\u003c\u003c16); // hack to remember complemented attribute\n        }\n        assert( Vec_WecSize(p-\u003evTtIsops[pCut-\u003enLeaves]) == Vec_MemEntryNum(p-\u003evTtMem[pCut-\u003enLeaves]) );\n    }\n    return RetValue;\n}",
+      "Draft": "func If_CutComputeTruth(p *If_Man_t, pCut *If_Cut_t, pCut0 *If_Cut_t, pCut1 *If_Cut_t, fCompl0 int32, fCompl1 int32) int32 {\n    var fCompl, truthId, nLeavesNew, PrevSize, RetValue int32;\n    var pTruth0s *word  = Vec_MemReadEntry( p.vTtMem[pCut0.nLeaves], Abc_Lit2Var(pCut0.iCutFunc) );\n    var pTruth1s *word  = Vec_MemReadEntry( p.vTtMem[pCut1.nLeaves], Abc_Lit2Var(pCut1.iCutFunc) );\n    var pTruth0 *word   = (word *)p.puTemp[0];\n    var pTruth1 *word   = (word *)p.puTemp[1];\n    var pTruth *word    = (word *)p.puTemp[2];\n    Abc_TtCopy( pTruth0, pTruth0s, p.nTruth6Words[pCut0.nLeaves], fCompl0 ^ pCut0.fCompl ^ Abc_LitIsCompl(pCut0.iCutFunc) );\n    Abc_TtCopy( pTruth1, pTruth1s, p.nTruth6Words[pCut1.nLeaves], fCompl1 ^ pCut1.fCompl ^ Abc_LitIsCompl(pCut1.iCutFunc) );\n    Abc_TtStretch6( pTruth0, pCut0.nLeaves, pCut.nLeaves );\n    Abc_TtStretch6( pTruth1, pCut1.nLeaves, pCut.nLeaves );\n    Abc_TtExpand( pTruth0, pCut.nLeaves, pCut0.pLeaves, pCut0.nLeaves, pCut.pLeaves, pCut.nLeaves );\n    Abc_TtExpand( pTruth1, pCut.nLeaves, pCut1.pLeaves, pCut1.nLeaves, pCut.pLeaves, pCut.nLeaves );\n    fCompl         = (pTruth0[0] \u0026 pTruth1[0] \u0026 1);\n    Abc_TtAnd( pTruth, pTruth0, pTruth1, p.nTruth6Words[pCut.nLeaves], fCompl );\n    if p.pPars.fCutMin \u0026\u0026 (pCut0.nLeaves + pCut1.nLeaves \u003e pCut.nLeaves || pCut0.nLeaves == 0 || pCut1.nLeaves == 0) {\n        nLeavesNew = Abc_TtMinBase( pTruth, pCut.pLeaves, pCut.nLeaves, pCut.nLeaves );\n        if nLeavesNew \u003c If_CutLeaveNum(pCut) {\n            pCut.nLeaves = nLeavesNew;\n            pCut.uSign   = If_ObjCutSignCompute( pCut );\n            RetValue      = 1;\n        }\n    }\n    PrevSize       = Vec_MemEntryNum( p.vTtMem[pCut.nLeaves] );   \n    truthId        = Vec_MemHashInsert( p.vTtMem[pCut.nLeaves], pTruth );\n    pCut.iCutFunc = Abc_Var2Lit( truthId, fCompl );\n    assert((pTruth[0] \u0026 1) == 0, \"(pTruth[0] \u0026 1) == 0\");\n#ifdef IF_TRY_NEW\n    {\n        word pCopy[1024];\n        char pCanonPerm[16];\n        memcpy( pCopy, If_CutTruthW(pCut), sizeof(word) * p-\u003enTruth6Words[pCut-\u003enLeaves] );\n        Abc_TtCanonicize( pCopy, pCut-\u003enLeaves, pCanonPerm );\n    }\n#endif\n    if p.vTtIsops[pCut.nLeaves] \u0026\u0026 PrevSize != Vec_MemEntryNum(p.vTtMem[pCut.nLeaves]) {\n        var vLevel *Vec_Int_t  = Vec_WecPushLevel( p.vTtIsops[pCut.nLeaves] );\n        fCompl = Kit_TruthIsop( (unsigned *)pTruth, pCut.nLeaves, p.vCover, 1 );\n        if fCompl \u003e= 0 {\n            Vec_IntGrow( vLevel, Vec_IntSize(p.vCover) );\n            Vec_IntAppend( vLevel, p.vCover );\n            if fCompl {\n                vLevel.nCap ^= (1\u003c\u003c16); } // hack to remember complemented attribute\n        }\n        assert(Vec_WecSize(p.vTtIsops[pCut.nLeaves]) == Vec_MemEntryNum(p.vTtMem[pCut.nLeaves]), \"Vec_WecSize(p.vTtIsops[pCut.nLeaves]) == Vec_MemEntryNum(p.vTtMem[pCut.nLeaves])\");\n    }\n    return RetValue;\n}"
+    },
+    {
+      "Name": "If_CutComputeTruthPerm_int",
+      "Start": 6141,
+      "End": 10450,
+      "BodyStart": 6271,
+      "Original": "int If_CutComputeTruthPerm_int( If_Man_t * p, If_Cut_t * pCut, If_Cut_t * pCut0, If_Cut_t * pCut1, int iCutFunc0, int iCutFunc1 )\n{\n    int fVerbose = 0;\n    abctime clk = 0;\n    int pPerm[IF_MAX_LUTSIZE];\n    int v, Place, fCompl, truthId, nLeavesNew, RetValue = 0;\n    word * pTruth0s = Vec_MemReadEntry( p-\u003evTtMem[pCut0-\u003enLeaves], Abc_Lit2Var(iCutFunc0) );\n    word * pTruth1s = Vec_MemReadEntry( p-\u003evTtMem[pCut1-\u003enLeaves], Abc_Lit2Var(iCutFunc1) );\n    word * pTruth0  = (word *)p-\u003epuTemp[0];\n    word * pTruth1  = (word *)p-\u003epuTemp[1];\n    word * pTruth   = (word *)p-\u003epuTemp[2];\n    assert( pCut0-\u003euMaskFunc \u003e= 0 );\n    assert( pCut1-\u003euMaskFunc \u003e= 0 );\n    Abc_TtCopy( pTruth0, pTruth0s, p-\u003enTruth6Words[pCut0-\u003enLeaves], Abc_LitIsCompl(iCutFunc0) );\n    Abc_TtCopy( pTruth1, pTruth1s, p-\u003enTruth6Words[pCut1-\u003enLeaves], Abc_LitIsCompl(iCutFunc1) );\n    Abc_TtStretch6( pTruth0, pCut0-\u003enLeaves, pCut-\u003enLeaves );\n    Abc_TtStretch6( pTruth1, pCut1-\u003enLeaves, pCut-\u003enLeaves );\n\nif ( fVerbose )\n{\n//Kit_DsdPrintFromTruth( pTruth0, pCut0-\u003enLeaves ); printf( \"\\n\" );\n//Kit_DsdPrintFromTruth( pTruth1, pCut1-\u003enLeaves ); printf( \"\\n\" );\n}\n    // create literals\n    for ( v = 0; v \u003c (int)pCut0-\u003enLeaves; v++ )\n        pCut-\u003epLeaves[v] = Abc_Var2Lit( pCut0-\u003epLeaves[v], If_CutLeafBit(pCut0, v) );\n    for ( v = 0; v \u003c (int)pCut1-\u003enLeaves; v++ )\n        if ( p-\u003epPerm[1][v] \u003e= (int)pCut0-\u003enLeaves )\n            pCut-\u003epLeaves[p-\u003epPerm[1][v]] = Abc_Var2Lit( pCut1-\u003epLeaves[v], If_CutLeafBit(pCut1, v) );\n        else if ( If_CutLeafBit(pCut0, p-\u003epPerm[1][v]) != If_CutLeafBit(pCut1, v) )\n            Abc_TtFlip( pTruth1, p-\u003enTruth6Words[pCut1-\u003enLeaves], v );  \n    // permute variables\n    for ( v = (int)pCut1-\u003enLeaves; v \u003c (int)pCut-\u003enLeaves; v++ )\n        p-\u003epPerm[1][v] = -1;\n    for ( v = 0; v \u003c (int)pCut1-\u003enLeaves; v++ )\n    {\n        Place = p-\u003epPerm[1][v];\n        if ( Place == v || Place == -1 )\n            continue;\n        Abc_TtSwapVars( pTruth1, pCut-\u003enLeaves, v, Place );\n        p-\u003epPerm[1][v] = p-\u003epPerm[1][Place];\n        p-\u003epPerm[1][Place] = Place;\n        v--;\n    }\n\nif ( fVerbose )\n{\n//Kit_DsdPrintFromTruth( pTruth0, pCut0-\u003enLeaves ); printf( \"\\n\" );\n//Kit_DsdPrintFromTruth( pTruth1, pCut-\u003enLeaves ); printf( \"\\n\" );\n}\n\n    // perform operation\n    Abc_TtAnd( pTruth, pTruth0, pTruth1, p-\u003enTruth6Words[pCut-\u003enLeaves], 0 );\n    // minimize support\n    if ( p-\u003epPars-\u003efCutMin \u0026\u0026 (pCut0-\u003enLeaves + pCut1-\u003enLeaves \u003e pCut-\u003enLeaves || pCut0-\u003enLeaves == 0 || pCut1-\u003enLeaves == 0) )\n    {\n        nLeavesNew = Abc_TtMinBase( pTruth, pCut-\u003epLeaves, pCut-\u003enLeaves, pCut-\u003enLeaves );\n        if ( nLeavesNew \u003c If_CutLeaveNum(pCut) )\n        {\n            pCut-\u003enLeaves = nLeavesNew;\n            RetValue      = 1;\n        }\n    }\n    // compute canonical form\nif ( p-\u003epPars-\u003efVerbose )\nclk = Abc_Clock();\n    p-\u003euCanonPhase = Abc_TtCanonicize( pTruth, pCut-\u003enLeaves, p-\u003epCanonPerm );\nif ( p-\u003epPars-\u003efVerbose )\np-\u003etimeCache[3] += Abc_Clock() - clk;\n    for ( v = 0; v \u003c (int)pCut-\u003enLeaves; v++ )\n        pPerm[v] = Abc_LitNotCond( pCut-\u003epLeaves[(int)p-\u003epCanonPerm[v]], ((p-\u003euCanonPhase\u003e\u003ev)\u00261) );\n    pCut-\u003euMaskFunc = 0;\n    for ( v = 0; v \u003c (int)pCut-\u003enLeaves; v++ )\n    {\n        pCut-\u003epLeaves[v] = Abc_Lit2Var(pPerm[v]);\n        if ( Abc_LitIsCompl(pPerm[v]) )\n            pCut-\u003euMaskFunc |= (1 \u003c\u003c v);\n    }\n    // create signature after lowering literals\n    if ( RetValue )\n        pCut-\u003euSign = If_ObjCutSignCompute( pCut );\n    else\n        assert( pCut-\u003euSign == If_ObjCutSignCompute( pCut ) );\n\n    assert( Vec_IntSize(p-\u003evTtOccurs[pCut-\u003enLeaves]) == Vec_MemEntryNum(p-\u003evTtMem[pCut-\u003enLeaves]) );\n    // hash function\n    fCompl         = ((p-\u003euCanonPhase \u003e\u003e pCut-\u003enLeaves) \u0026 1);\n    truthId        = Vec_MemHashInsert( p-\u003evTtMem[pCut-\u003enLeaves], pTruth );\n    pCut-\u003eiCutFunc = Abc_Var2Lit( truthId, fCompl );\n    // count how many time this truth table is used\n    if ( Vec_IntSize(p-\u003evTtOccurs[pCut-\u003enLeaves]) \u003c Vec_MemEntryNum(p-\u003evTtMem[pCut-\u003enLeaves]) )\n        Vec_IntPush( p-\u003evTtOccurs[pCut-\u003enLeaves], 0 );\n    Vec_IntAddToEntry( p-\u003evTtOccurs[pCut-\u003enLeaves], truthId, 1 );\n\nif ( fVerbose )\n{\n//Kit_DsdPrintFromTruth( pTruth, pCut-\u003enLeaves ); printf( \"\\n\" );\n//If_CutPrint( pCut0 );\n//If_CutPrint( pCut1 );\n//If_CutPrint( pCut );\n//printf( \"%d\\n\\n\", pCut-\u003eiCutFunc );\n}\n\n    return RetValue;\n}",
+      "Draft": "func If_CutComputeTruthPerm_int(p *If_Man_t, pCut *If_Cut_t, pCut0 *If_Cut_t, pCut1 *If_Cut_t, iCutFunc0 int32, iCutFunc1 int32) int32 {\n    var fVerbose int32;\n    var clk abctime;\n    var pPerm [IF_MAX_LUTSIZE]int32;\n    var v, Place, fCompl, truthId, nLeavesNew, RetValue int32;\n    var pTruth0s *word  = Vec_MemReadEntry( p.vTtMem[pCut0.nLeaves], Abc_Lit2Var(iCutFunc0) );\n    var pTruth1s *word  = Vec_MemReadEntry( p.vTtMem[pCut1.nLeaves], Abc_Lit2Var(iCutFunc1) );\n    var pTruth0 *word   = (word *)p.puTemp[0];\n    var pTruth1 *word   = (word *)p.puTemp[1];\n    var pTruth *word    = (word *)p.puTemp[2];\n    assert(pCut0.uMaskFunc \u003e= 0, \"pCut0.uMaskFunc \u003e= 0\");\n    assert(pCut1.uMaskFunc \u003e= 0, \"pCut1.uMaskFunc \u003e= 0\");\n    Abc_TtCopy( pTruth0, pTruth0s, p.nTruth6Words[pCut0.nLeaves], Abc_LitIsCompl(iCutFunc0) );\n    Abc_TtCopy( pTruth1, pTruth1s, p.nTruth6Words[pCut1.nLeaves], Abc_LitIsCompl(iCutFunc1) );\n    Abc_TtStretch6( pTruth0, pCut0.nLeaves, pCut.nLeaves );\n    Abc_TtStretch6( pTruth1, pCut1.nLeaves, pCut.nLeaves );\n\nif fVerbose != 0 {\n//Kit_DsdPrintFromTruth( pTruth0, pCut0-\u003enLeaves ); printf( \"\\n\" );\n//Kit_DsdPrintFromTruth( pTruth1, pCut1-\u003enLeaves ); printf( \"\\n\" );\n}\n    // create literals\n    for  v = 0; v \u003c int32(pCut0.nLeaves); v++  {\n        pCut.pLeaves[v] = Abc_Var2Lit( pCut0.pLeaves[v], If_CutLeafBit(pCut0, v) );\n    }\n    for  v = 0; v \u003c int32(pCut1.nLeaves); v++  {\n        if p.pPerm[1][v] \u003e= int32(pCut0.nLeaves) {\n            pCut.pLeaves[p.pPerm[1][v]] = Abc_Var2Lit( pCut1.pLeaves[v], If_CutLeafBit(pCut1, v) );\n        } else if If_CutLeafBit(pCut0, p.pPerm[1][v]) != If_CutLeafBit(pCut1, v) {\n            Abc_TtFlip( pTruth1, p.nTruth6Words[pCut1.nLeaves], v ); }\n    }  \n    // permute variables\n    for  v = int32(pCut1.nLeaves); v \u003c int32(pCut.nLeaves); v++  {\n        p.pPerm[1][v] = -1;\n    }\n    for  v = 0; v \u003c int32(pCut1.nLeaves); v++  {\n        Place = p.pPerm[1][v];\n        if Place == v || Place == -1 {\n            continue; }\n        Abc_TtSwapVars( pTruth1, pCut.nLeaves, v, Place );\n        p.pPerm[1][v] = p.pPerm[1][Place];\n        p.pPerm[1][Place] = Place;\n        v--;\n    }\n\nif fVerbose != 0 {\n//Kit_DsdPrintFromTruth( pTruth0, pCut0-\u003enLeaves ); printf( \"\\n\" );\n//Kit_DsdPrintFromTruth( pTruth1, pCut-\u003enLeaves ); printf( \"\\n\" );\n}\n\n    // perform operation\n    Abc_TtAnd( pTruth, pTruth0, pTruth1, p.nTruth6Words[pCut.nLeaves], 0 );\n    // minimize support\n    if p.pPars.fCutMin \u0026\u0026 (pCut0.nLeaves + pCut1.nLeaves \u003e pCut.nLeaves || pCut0.nLeaves == 0 || pCut1.nLeaves == 0) {\n        nLeavesNew = Abc_TtMinBase( pTruth, pCut.pLeaves, pCut.nLeaves, pCut.nLeaves );\n        if nLeavesNew \u003c If_CutLeaveNum(pCut) {\n            pCut.nLeaves = nLeavesNew;\n            RetValue      = 1;\n        }\n    }\n    // compute canonical form\nif p.pPars.fVerbose {\nclk = Abc_Clock(); }\n    p.uCanonPhase = Abc_TtCanonicize( pTruth, pCut.nLeaves, p.pCanonPerm );\nif p.pPars.fVerbose {\np.timeCache[3] += Abc_Clock() - clk; }\n    for  v = 0; v \u003c int32(pCut.nLeaves); v++  {\n        pPerm[v] = Abc_LitNotCond( pCut.pLeaves[int32(p.pCanonPerm[v])], ((p.uCanonPhase\u003e\u003ev)\u00261) );\n    }\n    pCut.uMaskFunc = 0;\n    for  v = 0; v \u003c int32(pCut.nLeaves); v++  {\n        pCut.pLeaves[v] = Abc_Lit2Var(pPerm[v]);\n        if Abc_LitIsCompl(pPerm[v]) {\n            pCut.uMaskFunc |= (1 \u003c\u003c v); }\n    }\n    // create signature after lowering literals\n    if RetValue != 0 {\n        pCut.uSign = If_ObjCutSignCompute( pCut );\n    } else {\n        assert(pCut.uSign == If_ObjCutSignCompute( pCut ), \"pCut.uSign == If_ObjCutSignCompute( pCut )\"); }\n\n    assert(Vec_IntSize(p.vTtOccurs[pCut.nLeaves]) == Vec_MemEntryNum(p.vTtMem[pCut.nLeaves]), \"Vec_IntSize(p.vTtOccurs[pCut.nLeaves]) == Vec_MemEntryNum(p.vTtMem[pCut.nLeaves])\");\n    // hash function\n    fCompl         = ((p.uCanonPhase \u003e\u003e pCut.nLeaves) \u0026 1);\n    truthId        = Vec_MemHashInsert( p.vTtMem[pCut.nLeaves], pTruth );\n    pCut.iCutFunc = Abc_Var2Lit( truthId, fCompl );\n    // count how many time this truth table is used\n    if Vec_IntSize(p.vTtOccurs[pCut.nLeaves]) \u003c Vec_MemEntryNum(p.vTtMem[pCut.nLeaves]) {\n        Vec_IntPush( p.vTtOccurs[pCut.nLeaves], 0 ); }\n    Vec_IntAddToEntry( p.vTtOccurs[pCut.nLeaves], truthId, 1 );\n\nif fVerbose != 0 {\n//Kit_DsdPrintFromTruth( pTruth, pCut-\u003enLeaves ); printf( \"\\n\" );\n//If_CutPrint( pCut0 );\n//If_CutPrint( pCut1 );\n//If_CutPrint( pCut );\n//printf( \"%d\\n\\n\", pCut-\u003eiCutFunc );\n}\n\n    return RetValue;\n}"
+    },
+    {
+      "Name": "If_CutComputeTruthPerm",
+      "Start": 10451,
+      "End": 13467,
+      "BodyStart": 10577,
+      "Original": "int If_CutComputeTruthPerm( If_Man_t * p, If_Cut_t * pCut, If_Cut_t * pCut0, If_Cut_t * pCut1, int iCutFunc0, int iCutFunc1 )\n{\n    abctime clk = 0;\n    int i, Num, nEntriesOld, RetValue;\n    if ( pCut0-\u003enLeaves + pCut1-\u003enLeaves \u003e pCut-\u003enLeaves || iCutFunc0 \u003c 2 || iCutFunc1 \u003c 2 )\n    {\nif ( p-\u003epPars-\u003efVerbose )\nclk = Abc_Clock();\n        RetValue = If_CutComputeTruthPerm_int( p, pCut, pCut0, pCut1, iCutFunc0, iCutFunc1 );\nif ( p-\u003epPars-\u003efVerbose )\np-\u003etimeCache[0] += Abc_Clock() - clk;\n        return RetValue;\n    }\n    assert( pCut0-\u003enLeaves + pCut1-\u003enLeaves == pCut-\u003enLeaves );\n    nEntriesOld = Hash_IntManEntryNum(p-\u003evPairHash);\n    Num = Hash_Int2ManInsert( p-\u003evPairHash, (iCutFunc0 \u003c\u003c 5)|pCut0-\u003enLeaves, (iCutFunc1 \u003c\u003c 5)|pCut1-\u003enLeaves, -1 );\n    assert( Num \u003e 0 );\n    if ( nEntriesOld == Hash_IntManEntryNum(p-\u003evPairHash) )\n    {\n        char * pCanonPerm;\n        int v, pPerm[IF_MAX_LUTSIZE];\n        pCut-\u003eiCutFunc = Vec_IntEntry( p-\u003evPairRes, Num );\n        // move complements from the fanin cuts\n        for ( v = 0; v \u003c (int)pCut-\u003enLeaves; v++ )\n            if ( v \u003c (int)pCut0-\u003enLeaves )\n                pCut-\u003epLeaves[v] = Abc_Var2Lit( pCut-\u003epLeaves[v], If_CutLeafBit(pCut0, v) );\n            else\n                pCut-\u003epLeaves[v] = Abc_Var2Lit( pCut-\u003epLeaves[v], If_CutLeafBit(pCut1, v-(int)pCut0-\u003enLeaves) );\n        // reorder the cut\n        pCanonPerm = Vec_StrEntryP( p-\u003evPairPerms, Num * pCut-\u003enLimit );\n        for ( v = 0; v \u003c (int)pCut-\u003enLeaves; v++ )\n            pPerm[v] = Abc_LitNotCond( pCut-\u003epLeaves[Abc_Lit2Var((int)pCanonPerm[v])], Abc_LitIsCompl((int)pCanonPerm[v]) );\n        // generate the result\n        pCut-\u003euMaskFunc = 0;\n        for ( v = 0; v \u003c (int)pCut-\u003enLeaves; v++ )\n        {\n            pCut-\u003epLeaves[v] = Abc_Lit2Var(pPerm[v]);\n            if ( Abc_LitIsCompl(pPerm[v]) )\n                pCut-\u003euMaskFunc |= (1 \u003c\u003c v);\n        }\n//        printf( \"Found: %d(%d) %d(%d) -\u003e %d(%d)\\n\", iCutFunc0, pCut0-\u003enLeaves, iCutFunc1, pCut0-\u003enLeaves, pCut-\u003eiCutFunc, pCut-\u003enLeaves );\n        p-\u003enCacheHits++;\n//p-\u003etimeCache[1] += Abc_Clock() - clk;\n        return 0;\n    }\nif ( p-\u003epPars-\u003efVerbose )\nclk = Abc_Clock();\n    p-\u003enCacheMisses++;\n    RetValue = If_CutComputeTruthPerm_int( p, pCut, pCut0, pCut1, iCutFunc0, iCutFunc1 );\n    assert( RetValue == 0 );\n//    printf( \"Added: %d(%d) %d(%d) -\u003e %d(%d)\\n\", iCutFunc0, pCut0-\u003enLeaves, iCutFunc1, pCut0-\u003enLeaves, pCut-\u003eiCutFunc, pCut-\u003enLeaves );\n    // save the result\n    assert( Num == Vec_IntSize(p-\u003evPairRes) );\n    Vec_IntPush( p-\u003evPairRes, pCut-\u003eiCutFunc );\n    // save the permutation\n    assert( Num * (int)pCut-\u003enLimit == Vec_StrSize(p-\u003evPairPerms) );\n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n        Vec_StrPush( p-\u003evPairPerms, (char)Abc_Var2Lit((int)p-\u003epCanonPerm[i], ((p-\u003euCanonPhase\u003e\u003ei)\u00261)) );\n    for ( i = (int)pCut0-\u003enLeaves + (int)pCut1-\u003enLeaves; i \u003c (int)pCut-\u003enLimit; i++ )\n        Vec_StrPush( p-\u003evPairPerms, (char)-1 );\nif ( p-\u003epPars-\u003efVerbose )\np-\u003etimeCache[2] += Abc_Clock() - clk;\n    return 0;\n}",
+      "Draft": "func If_CutComputeTruthPerm(p *If_Man_t, pCut *If_Cut_t, pCut0 *If_Cut_t, pCut1 *If_Cut_t, iCutFunc0 int32, iCutFunc1 int32) int32 {\n    var clk abctime;\n    var i, Num, nEntriesOld, RetValue int32;\n    if pCut0.nLeaves + pCut1.nLeaves \u003e pCut.nLeaves || iCutFunc0 \u003c 2 || iCutFunc1 \u003c 2 {\nif p.pPars.fVerbose {\nclk = Abc_Clock(); }\n        RetValue = If_CutComputeTruthPerm_int( p, pCut, pCut0, pCut1, iCutFunc0, iCutFunc1 );\nif p.pPars.fVerbose {\np.timeCache[0] += Abc_Clock() - clk; }\n        return RetValue;\n    }\n    assert(pCut0.nLeaves + pCut1.nLeaves == pCut.nLeaves, \"pCut0.nLeaves + pCut1.nLeaves == pCut.nLeaves\");\n    nEntriesOld = Hash_IntManEntryNum(p.vPairHash);\n    Num = Hash_Int2ManInsert( p.vPairHash, (iCutFunc0 \u003c\u003c 5)|pCut0.nLeaves, (iCutFunc1 \u003c\u003c 5)|pCut1.nLeaves, -1 );\n    assert(Num \u003e 0, \"Num \u003e 0\");\n    if nEntriesOld == Hash_IntManEntryNum(p.vPairHash) {\n        var pCanonPerm string;\n        var v int32;\n        var pPerm [IF_MAX_LUTSIZE]int32;\n        pCut.iCutFunc = Vec_IntEntry( p.vPairRes, Num );\n        // move complements from the fanin cuts\n        for  v = 0; v \u003c int32(pCut.nLeaves); v++  {\n            if v \u003c int32(pCut0.nLeaves) {\n                pCut.pLeaves[v] = Abc_Var2Lit( pCut.pLeaves[v], If_CutLeafBit(pCut0, v) );\n            } else {\n                pCut.pLeaves[v] = Abc_Var2Lit( pCut.pLeaves[v], If_CutLeafBit(pCut1, v-int32(pCut0.nLeaves)) ); }\n        }\n        // reorder the cut\n        pCanonPerm = Vec_StrEntryP( p.vPairPerms, Num * pCut.nLimit );\n        for  v = 0; v \u003c int32(pCut.nLeaves); v++  {\n            pPerm[v] = Abc_LitNotCond( pCut.pLeaves[Abc_Lit2Var(int32(pCanonPerm[v]))], Abc_LitIsCompl(int32(pCanonPerm[v])) );\n        }\n        // generate the result\n        pCut.uMaskFunc = 0;\n        for  v = 0; v \u003c int32(pCut.nLeaves); v++  {\n            pCut.pLeaves[v] = Abc_Lit2Var(pPerm[v]);\n            if Abc_LitIsCompl(pPerm[v]) {\n                pCut.uMaskFunc |= (1 \u003c\u003c v); }\n        }\n//        printf( \"Found: %d(%d) %d(%d) -\u003e %d(%d)\\n\", iCutFunc0, pCut0-\u003enLeaves, iCutFunc1, pCut0-\u003enLeaves, pCut-\u003eiCutFunc, pCut-\u003enLeaves );\n        p.nCacheHits++;\n//p-\u003etimeCache[1] += Abc_Clock() - clk;\n        return 0;\n    }\nif p.pPars.fVerbose {\nclk = Abc_Clock(); }\n    p.nCacheMisses++;\n    RetValue = If_CutComputeTruthPerm_int( p, pCut, pCut0, pCut1, iCutFunc0, iCutFunc1 );\n    assert(RetValue == 0, \"RetValue == 0\");\n//    printf( \"Added: %d(%d) %d(%d) -\u003e %d(%d)\\n\", iCutFunc0, pCut0-\u003enLeaves, iCutFunc1, pCut0-\u003enLeaves, pCut-\u003eiCutFunc, pCut-\u003enLeaves );\n    // save the result\n    assert(Num == Vec_IntSize(p.vPairRes), \"Num == Vec_IntSize(p.vPairRes)\");\n    Vec_IntPush( p.vPairRes, pCut.iCutFunc );\n    // save the permutation\n    assert(Num * int32(pCut.nLimit) == Vec_StrSize(p.vPairPerms), \"Num * int32(pCut.nLimit) == Vec_StrSize(p.vPairPerms)\");\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Vec_StrPush( p.vPairPerms, byte(Abc_Var2Lit(int32(p.pCanonPerm[i]), ((p.uCanonPhase\u003e\u003ei)\u00261))) );\n    }\n    for  i = int32(pCut0.nLeaves) + int32(pCut1.nLeaves); i \u003c int32(pCut.nLimit); i++  {\n        Vec_StrPush( p.vPairPerms, byte(-1) );\n    }\nif p.pPars.fVerbose {\np.timeCache[2] += Abc_Clock() - clk; }\n    return 0;\n}"
+    },
+    {
+      "Name": "If_DeriveHashTable6",
+      "Start": 13737,
+      "End": 15294,
+      "BodyStart": 13795,
+      "Original": "Vec_Mem_t * If_DeriveHashTable6( int nVars, word uTruth )\n{\n    int fVerbose = 0;\n    int nMints   = (1 \u003c\u003c nVars);\n    int nPerms   = Extra_Factorial( nVars );\n    int * pComp  = Extra_GreyCodeSchedule( nVars );\n    int * pPerm  = Extra_PermSchedule( nVars );\n    word Canon   = ABC_CONST(0xFFFFFFFFFFFFFFFF);\n    word tCur, tTemp1, tTemp2;\n    Vec_Mem_t * vTtMem6 = Vec_MemAllocForTTSimple( nVars );\n    int i, p, c;\n    for ( i = 0; i \u003c 2; i++ )\n    {\n        tCur = i ? ~uTruth : uTruth;\n        tTemp1 = tCur;\n        for ( p = 0; p \u003c nPerms; p++ )\n        {\n            tTemp2 = tCur;\n            for ( c = 0; c \u003c nMints; c++ )\n            {\n                if ( Canon \u003e tCur )\n                    Canon = tCur;\n                Vec_MemHashInsert( vTtMem6, \u0026tCur );\n                tCur = Abc_Tt6Flip( tCur, pComp[c] );\n            }\n            assert( tTemp2 == tCur );\n            tCur = Abc_Tt6SwapAdjacent( tCur, pPerm[p] );\n        }\n        assert( tTemp1 == tCur );\n    }\n    ABC_FREE( pComp );\n    ABC_FREE( pPerm );\n    if ( fVerbose )\n    {\n/*\n        word * pEntry;\n        Vec_MemForEachEntry( vTtMem6, pEntry, i )\n        {\n            Extra_PrintHex( stdout, (unsigned*)pEntry, nVars );  \n            printf( \", \" );\n            if ( i % 4 == 3 )\n                printf( \"\\n\" );\n        }\n*/\n        Extra_PrintHex( stdout, (unsigned*)\u0026uTruth, nVars );  printf( \"\\n\" );\n        Extra_PrintHex( stdout, (unsigned*)\u0026Canon,  nVars );  printf( \"\\n\" );\n        printf( \"Members = %d.\\n\", Vec_MemEntryNum(vTtMem6) );\n    }\n    return vTtMem6;\n}",
+      "Draft": "func If_DeriveHashTable6(nVars int32, uTruth word) *Vec_Mem_t {\n    var fVerbose int32;\n    var nMints int32    = (1 \u003c\u003c nVars);\n    var nPerms int32    = Extra_Factorial( nVars );\n    var pComp *int32   = Extra_GreyCodeSchedule( nVars );\n    var pPerm *int32   = Extra_PermSchedule( nVars );\n    var Canon word    = ABC_CONST(0xFFFFFFFFFFFFFFFF);\n    var tCur, tTemp1, tTemp2 word;\n    var vTtMem6 *Vec_Mem_t  = Vec_MemAllocForTTSimple( nVars );\n    var i, p, c int32;\n    for  i = 0; i \u003c 2; i++  {\n        if i {\n            tCur = ~uTruth;\n        } else {\n            tCur = uTruth;\n        }\n        tTemp1 = tCur;\n        for  p = 0; p \u003c nPerms; p++  {\n            tTemp2 = tCur;\n            for  c = 0; c \u003c nMints; c++  {\n                if Canon \u003e tCur {\n                    Canon = tCur; }\n                Vec_MemHashInsert( vTtMem6, \u0026tCur );\n                tCur = Abc_Tt6Flip( tCur, pComp[c] );\n            }\n            assert(tTemp2 == tCur, \"tTemp2 == tCur\");\n            tCur = Abc_Tt6SwapAdjacent( tCur, pPerm[p] );\n        }\n        assert(tTemp1 == tCur, \"tTemp1 == tCur\");\n    }\n    ABC_FREE( pComp );\n    ABC_FREE( pPerm );\n    if fVerbose != 0 {\n/*\n        word * pEntry;\n        Vec_MemForEachEntry( vTtMem6, pEntry, i )\n        {\n            Extra_PrintHex( stdout, (unsigned*)pEntry, nVars );  \n            printf( \", \" );\n            if ( i % 4 == 3 )\n                printf( \"\\n\" );\n        }\n*/\n        Extra_PrintHex( os.Stdout, (unsigned*)\u0026uTruth, nVars );  fmt.Printf(\"\\n\");\n        Extra_PrintHex( os.Stdout, (unsigned*)\u0026Canon,  nVars );  fmt.Printf(\"\\n\");\n        fmt.Printf(\"Members = %d.\\n\", Vec_MemEntryNum(vTtMem6));\n    }\n    return vTtMem6;\n}"
+    },
+    {
+      "Name": "If_CutCheckTruth6",
+      "Start": 15296,
+      "End": 15616,
+      "BodyStart": 15351,
+      "Original": "int If_CutCheckTruth6( If_Man_t * p, If_Cut_t * pCut )\n{\n    if ( pCut-\u003enLeaves != 6 )\n        return 0;\n    if ( p-\u003evTtMem6 == NULL )\n        p-\u003evTtMem6 = If_DeriveHashTable6( 6, ABC_CONST(0xfedcba9876543210) );\n    if ( *Vec_MemHashLookup( p-\u003evTtMem6, If_CutTruthWR(p, pCut) ) == -1 )\n        return 0;\n    return 1;\n}",
+      "Draft": "func If_CutCheckTruth6(p *If_Man_t, pCut *If_Cut_t) int32 {\n    if pCut.nLeaves != 6 {\n        return 0; }\n    if p.vTtMem6 == nil {\n        p.vTtMem6 = If_DeriveHashTable6( 6, ABC_CONST(0xfedcba9876543210) ); }\n    if *Vec_MemHashLookup( p.vTtMem6, If_CutTruthWR(p, pCut) ) == -1 {\n        return 0; }\n    return 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::pointer-cast::3476",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3476,
+      "End": 3484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::pointer-cast::3520",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3520,
+      "End": 3528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::pointer-cast::3564",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3564,
+      "End": 3572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::pointer-cast::5263",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5434,
+      "End": 5446
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::pointer-cast::6445",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6616,
+      "End": 6624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::pointer-cast::6489",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6660,
+      "End": 6668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::pointer-cast::6533",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6704,
+      "End": 6712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::pointer-cast::14909",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15080,
+      "End": 15091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::pointer-cast::14987",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15158,
+      "End": 15169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::If_CutTruthPermute",
+      "Category": "semantic-review",
+      "Symbol": "If_CutTruthPermute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1357,
+      "End": 1919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::If_CutRotatePins",
+      "Category": "semantic-review",
+      "Symbol": "If_CutRotatePins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1920,
+      "End": 2815
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::If_CutComputeTruth",
+      "Category": "semantic-review",
+      "Symbol": "If_CutComputeTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3075,
+      "End": 5881
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::If_CutComputeTruthPerm_int",
+      "Category": "semantic-review",
+      "Symbol": "If_CutComputeTruthPerm_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6141,
+      "End": 10450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::If_CutComputeTruthPerm",
+      "Category": "semantic-review",
+      "Symbol": "If_CutComputeTruthPerm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10451,
+      "End": 13467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::If_DeriveHashTable6",
+      "Category": "semantic-review",
+      "Symbol": "If_DeriveHashTable6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13737,
+      "End": 15294
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::If_CutCheckTruth6",
+      "Category": "semantic-review",
+      "Symbol": "If_CutCheckTruth6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15296,
+      "End": 15616
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4978,
+      "End": 5223
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::macro-inline::1654",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_SWAP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1654,
+      "End": 1697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::macro-inline::1711",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_SWAP",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1711,
+      "End": 1748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::macro-inline::2097",
+      "Category": "macro-inline-review",
+      "Symbol": "If_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2097,
+      "End": 2135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::macro-inline::14016",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14016,
+      "End": 14045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::macro-inline::14725",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14725,
+      "End": 14742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::macro-inline::14748",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 14748,
+      "End": 14765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifTruth.c::macro-inline::15476",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15476,
+      "End": 15505
+    }
+  ],
+  "Draft": "package if_\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [ifTruth.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [Computation of truth tables of the cuts.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifTruth.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n//#define IF_TRY_NEW\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Sorts the pins in the decreasing order of delays.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutTruthPermute(pTruth *word, nLeaves int32, nVars int32, nWords int32, pDelays *float32, pVars *int32) {\n    for {\n        var i, fChange int32;\n        for  i = 0; i \u003c nLeaves - 1; i++  {\n            if pDelays[i] \u003e= pDelays[i+1] {\n                continue; }\n            ABC_SWAP( float, pDelays[i], pDelays[i+1] );\n            ABC_SWAP( int, pVars[i], pVars[i+1] );\n            if pTruth != nil {\n                Abc_TtSwapAdjacent( pTruth, nWords, i ); }\n            fChange = 1;\n        }\n        if !(fChange != 0) {\n            return; }\n    }\n}\nfunc If_CutRotatePins(p *If_Man_t, pCut *If_Cut_t) {\n    var pLeaf *If_Obj_t;\n    var PinDelays [IF_MAX_LUTSIZE]float32;\n    var i, truthId int32;\n    assert(!p.pPars.fUseTtPerm, \"!p.pPars.fUseTtPerm\");\n    If_CutForEachLeaf( p, pCut, pLeaf, i )\n        PinDelays[i] = If_ObjCutBest(pLeaf).Delay;\n    if p.vTtMem[pCut.nLeaves] == nil {\n        If_CutTruthPermute( nil, If_CutLeaveNum(pCut), pCut.nLeaves, p.nTruth6Words[pCut.nLeaves], PinDelays, If_CutLeaves(pCut) );\n        return;\n    }\n    Abc_TtCopy( p.puTempW, If_CutTruthWR(p, pCut), p.nTruth6Words[pCut.nLeaves], 0 );\n    If_CutTruthPermute( p.puTempW, If_CutLeaveNum(pCut), pCut.nLeaves, p.nTruth6Words[pCut.nLeaves], PinDelays, If_CutLeaves(pCut) );\n    truthId        = Vec_MemHashInsert( p.vTtMem[pCut.nLeaves], p.puTempW );\n    pCut.iCutFunc = Abc_Var2Lit( truthId, If_CutTruthIsCompl(pCut) );\n    assert((p.puTempW[0] \u0026 1) == 0, \"(p.puTempW[0] \u0026 1) == 0\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Truth table computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutComputeTruth(p *If_Man_t, pCut *If_Cut_t, pCut0 *If_Cut_t, pCut1 *If_Cut_t, fCompl0 int32, fCompl1 int32) int32 {\n    var fCompl, truthId, nLeavesNew, PrevSize, RetValue int32;\n    var pTruth0s *word  = Vec_MemReadEntry( p.vTtMem[pCut0.nLeaves], Abc_Lit2Var(pCut0.iCutFunc) );\n    var pTruth1s *word  = Vec_MemReadEntry( p.vTtMem[pCut1.nLeaves], Abc_Lit2Var(pCut1.iCutFunc) );\n    var pTruth0 *word   = (word *)p.puTemp[0];\n    var pTruth1 *word   = (word *)p.puTemp[1];\n    var pTruth *word    = (word *)p.puTemp[2];\n    Abc_TtCopy( pTruth0, pTruth0s, p.nTruth6Words[pCut0.nLeaves], fCompl0 ^ pCut0.fCompl ^ Abc_LitIsCompl(pCut0.iCutFunc) );\n    Abc_TtCopy( pTruth1, pTruth1s, p.nTruth6Words[pCut1.nLeaves], fCompl1 ^ pCut1.fCompl ^ Abc_LitIsCompl(pCut1.iCutFunc) );\n    Abc_TtStretch6( pTruth0, pCut0.nLeaves, pCut.nLeaves );\n    Abc_TtStretch6( pTruth1, pCut1.nLeaves, pCut.nLeaves );\n    Abc_TtExpand( pTruth0, pCut.nLeaves, pCut0.pLeaves, pCut0.nLeaves, pCut.pLeaves, pCut.nLeaves );\n    Abc_TtExpand( pTruth1, pCut.nLeaves, pCut1.pLeaves, pCut1.nLeaves, pCut.pLeaves, pCut.nLeaves );\n    fCompl         = (pTruth0[0] \u0026 pTruth1[0] \u0026 1);\n    Abc_TtAnd( pTruth, pTruth0, pTruth1, p.nTruth6Words[pCut.nLeaves], fCompl );\n    if p.pPars.fCutMin \u0026\u0026 (pCut0.nLeaves + pCut1.nLeaves \u003e pCut.nLeaves || pCut0.nLeaves == 0 || pCut1.nLeaves == 0) {\n        nLeavesNew = Abc_TtMinBase( pTruth, pCut.pLeaves, pCut.nLeaves, pCut.nLeaves );\n        if nLeavesNew \u003c If_CutLeaveNum(pCut) {\n            pCut.nLeaves = nLeavesNew;\n            pCut.uSign   = If_ObjCutSignCompute( pCut );\n            RetValue      = 1;\n        }\n    }\n    PrevSize       = Vec_MemEntryNum( p.vTtMem[pCut.nLeaves] );   \n    truthId        = Vec_MemHashInsert( p.vTtMem[pCut.nLeaves], pTruth );\n    pCut.iCutFunc = Abc_Var2Lit( truthId, fCompl );\n    assert((pTruth[0] \u0026 1) == 0, \"(pTruth[0] \u0026 1) == 0\");\n#ifdef IF_TRY_NEW\n    {\n        word pCopy[1024];\n        char pCanonPerm[16];\n        memcpy( pCopy, If_CutTruthW(pCut), sizeof(word) * p-\u003enTruth6Words[pCut-\u003enLeaves] );\n        Abc_TtCanonicize( pCopy, pCut-\u003enLeaves, pCanonPerm );\n    }\n#endif\n    if p.vTtIsops[pCut.nLeaves] \u0026\u0026 PrevSize != Vec_MemEntryNum(p.vTtMem[pCut.nLeaves]) {\n        var vLevel *Vec_Int_t  = Vec_WecPushLevel( p.vTtIsops[pCut.nLeaves] );\n        fCompl = Kit_TruthIsop( (unsigned *)pTruth, pCut.nLeaves, p.vCover, 1 );\n        if fCompl \u003e= 0 {\n            Vec_IntGrow( vLevel, Vec_IntSize(p.vCover) );\n            Vec_IntAppend( vLevel, p.vCover );\n            if fCompl {\n                vLevel.nCap ^= (1\u003c\u003c16); } // hack to remember complemented attribute\n        }\n        assert(Vec_WecSize(p.vTtIsops[pCut.nLeaves]) == Vec_MemEntryNum(p.vTtMem[pCut.nLeaves]), \"Vec_WecSize(p.vTtIsops[pCut.nLeaves]) == Vec_MemEntryNum(p.vTtMem[pCut.nLeaves])\");\n    }\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Truth table computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutComputeTruthPerm_int(p *If_Man_t, pCut *If_Cut_t, pCut0 *If_Cut_t, pCut1 *If_Cut_t, iCutFunc0 int32, iCutFunc1 int32) int32 {\n    var fVerbose int32;\n    var clk abctime;\n    var pPerm [IF_MAX_LUTSIZE]int32;\n    var v, Place, fCompl, truthId, nLeavesNew, RetValue int32;\n    var pTruth0s *word  = Vec_MemReadEntry( p.vTtMem[pCut0.nLeaves], Abc_Lit2Var(iCutFunc0) );\n    var pTruth1s *word  = Vec_MemReadEntry( p.vTtMem[pCut1.nLeaves], Abc_Lit2Var(iCutFunc1) );\n    var pTruth0 *word   = (word *)p.puTemp[0];\n    var pTruth1 *word   = (word *)p.puTemp[1];\n    var pTruth *word    = (word *)p.puTemp[2];\n    assert(pCut0.uMaskFunc \u003e= 0, \"pCut0.uMaskFunc \u003e= 0\");\n    assert(pCut1.uMaskFunc \u003e= 0, \"pCut1.uMaskFunc \u003e= 0\");\n    Abc_TtCopy( pTruth0, pTruth0s, p.nTruth6Words[pCut0.nLeaves], Abc_LitIsCompl(iCutFunc0) );\n    Abc_TtCopy( pTruth1, pTruth1s, p.nTruth6Words[pCut1.nLeaves], Abc_LitIsCompl(iCutFunc1) );\n    Abc_TtStretch6( pTruth0, pCut0.nLeaves, pCut.nLeaves );\n    Abc_TtStretch6( pTruth1, pCut1.nLeaves, pCut.nLeaves );\n\nif fVerbose != 0 {\n//Kit_DsdPrintFromTruth( pTruth0, pCut0-\u003enLeaves ); printf( \"\\n\" );\n//Kit_DsdPrintFromTruth( pTruth1, pCut1-\u003enLeaves ); printf( \"\\n\" );\n}\n    // create literals\n    for  v = 0; v \u003c int32(pCut0.nLeaves); v++  {\n        pCut.pLeaves[v] = Abc_Var2Lit( pCut0.pLeaves[v], If_CutLeafBit(pCut0, v) );\n    }\n    for  v = 0; v \u003c int32(pCut1.nLeaves); v++  {\n        if p.pPerm[1][v] \u003e= int32(pCut0.nLeaves) {\n            pCut.pLeaves[p.pPerm[1][v]] = Abc_Var2Lit( pCut1.pLeaves[v], If_CutLeafBit(pCut1, v) );\n        } else if If_CutLeafBit(pCut0, p.pPerm[1][v]) != If_CutLeafBit(pCut1, v) {\n            Abc_TtFlip( pTruth1, p.nTruth6Words[pCut1.nLeaves], v ); }\n    }  \n    // permute variables\n    for  v = int32(pCut1.nLeaves); v \u003c int32(pCut.nLeaves); v++  {\n        p.pPerm[1][v] = -1;\n    }\n    for  v = 0; v \u003c int32(pCut1.nLeaves); v++  {\n        Place = p.pPerm[1][v];\n        if Place == v || Place == -1 {\n            continue; }\n        Abc_TtSwapVars( pTruth1, pCut.nLeaves, v, Place );\n        p.pPerm[1][v] = p.pPerm[1][Place];\n        p.pPerm[1][Place] = Place;\n        v--;\n    }\n\nif fVerbose != 0 {\n//Kit_DsdPrintFromTruth( pTruth0, pCut0-\u003enLeaves ); printf( \"\\n\" );\n//Kit_DsdPrintFromTruth( pTruth1, pCut-\u003enLeaves ); printf( \"\\n\" );\n}\n\n    // perform operation\n    Abc_TtAnd( pTruth, pTruth0, pTruth1, p.nTruth6Words[pCut.nLeaves], 0 );\n    // minimize support\n    if p.pPars.fCutMin \u0026\u0026 (pCut0.nLeaves + pCut1.nLeaves \u003e pCut.nLeaves || pCut0.nLeaves == 0 || pCut1.nLeaves == 0) {\n        nLeavesNew = Abc_TtMinBase( pTruth, pCut.pLeaves, pCut.nLeaves, pCut.nLeaves );\n        if nLeavesNew \u003c If_CutLeaveNum(pCut) {\n            pCut.nLeaves = nLeavesNew;\n            RetValue      = 1;\n        }\n    }\n    // compute canonical form\nif p.pPars.fVerbose {\nclk = Abc_Clock(); }\n    p.uCanonPhase = Abc_TtCanonicize( pTruth, pCut.nLeaves, p.pCanonPerm );\nif p.pPars.fVerbose {\np.timeCache[3] += Abc_Clock() - clk; }\n    for  v = 0; v \u003c int32(pCut.nLeaves); v++  {\n        pPerm[v] = Abc_LitNotCond( pCut.pLeaves[int32(p.pCanonPerm[v])], ((p.uCanonPhase\u003e\u003ev)\u00261) );\n    }\n    pCut.uMaskFunc = 0;\n    for  v = 0; v \u003c int32(pCut.nLeaves); v++  {\n        pCut.pLeaves[v] = Abc_Lit2Var(pPerm[v]);\n        if Abc_LitIsCompl(pPerm[v]) {\n            pCut.uMaskFunc |= (1 \u003c\u003c v); }\n    }\n    // create signature after lowering literals\n    if RetValue != 0 {\n        pCut.uSign = If_ObjCutSignCompute( pCut );\n    } else {\n        assert(pCut.uSign == If_ObjCutSignCompute( pCut ), \"pCut.uSign == If_ObjCutSignCompute( pCut )\"); }\n\n    assert(Vec_IntSize(p.vTtOccurs[pCut.nLeaves]) == Vec_MemEntryNum(p.vTtMem[pCut.nLeaves]), \"Vec_IntSize(p.vTtOccurs[pCut.nLeaves]) == Vec_MemEntryNum(p.vTtMem[pCut.nLeaves])\");\n    // hash function\n    fCompl         = ((p.uCanonPhase \u003e\u003e pCut.nLeaves) \u0026 1);\n    truthId        = Vec_MemHashInsert( p.vTtMem[pCut.nLeaves], pTruth );\n    pCut.iCutFunc = Abc_Var2Lit( truthId, fCompl );\n    // count how many time this truth table is used\n    if Vec_IntSize(p.vTtOccurs[pCut.nLeaves]) \u003c Vec_MemEntryNum(p.vTtMem[pCut.nLeaves]) {\n        Vec_IntPush( p.vTtOccurs[pCut.nLeaves], 0 ); }\n    Vec_IntAddToEntry( p.vTtOccurs[pCut.nLeaves], truthId, 1 );\n\nif fVerbose != 0 {\n//Kit_DsdPrintFromTruth( pTruth, pCut-\u003enLeaves ); printf( \"\\n\" );\n//If_CutPrint( pCut0 );\n//If_CutPrint( pCut1 );\n//If_CutPrint( pCut );\n//printf( \"%d\\n\\n\", pCut-\u003eiCutFunc );\n}\n\n    return RetValue;\n}\nfunc If_CutComputeTruthPerm(p *If_Man_t, pCut *If_Cut_t, pCut0 *If_Cut_t, pCut1 *If_Cut_t, iCutFunc0 int32, iCutFunc1 int32) int32 {\n    var clk abctime;\n    var i, Num, nEntriesOld, RetValue int32;\n    if pCut0.nLeaves + pCut1.nLeaves \u003e pCut.nLeaves || iCutFunc0 \u003c 2 || iCutFunc1 \u003c 2 {\nif p.pPars.fVerbose {\nclk = Abc_Clock(); }\n        RetValue = If_CutComputeTruthPerm_int( p, pCut, pCut0, pCut1, iCutFunc0, iCutFunc1 );\nif p.pPars.fVerbose {\np.timeCache[0] += Abc_Clock() - clk; }\n        return RetValue;\n    }\n    assert(pCut0.nLeaves + pCut1.nLeaves == pCut.nLeaves, \"pCut0.nLeaves + pCut1.nLeaves == pCut.nLeaves\");\n    nEntriesOld = Hash_IntManEntryNum(p.vPairHash);\n    Num = Hash_Int2ManInsert( p.vPairHash, (iCutFunc0 \u003c\u003c 5)|pCut0.nLeaves, (iCutFunc1 \u003c\u003c 5)|pCut1.nLeaves, -1 );\n    assert(Num \u003e 0, \"Num \u003e 0\");\n    if nEntriesOld == Hash_IntManEntryNum(p.vPairHash) {\n        var pCanonPerm string;\n        var v int32;\n        var pPerm [IF_MAX_LUTSIZE]int32;\n        pCut.iCutFunc = Vec_IntEntry( p.vPairRes, Num );\n        // move complements from the fanin cuts\n        for  v = 0; v \u003c int32(pCut.nLeaves); v++  {\n            if v \u003c int32(pCut0.nLeaves) {\n                pCut.pLeaves[v] = Abc_Var2Lit( pCut.pLeaves[v], If_CutLeafBit(pCut0, v) );\n            } else {\n                pCut.pLeaves[v] = Abc_Var2Lit( pCut.pLeaves[v], If_CutLeafBit(pCut1, v-int32(pCut0.nLeaves)) ); }\n        }\n        // reorder the cut\n        pCanonPerm = Vec_StrEntryP( p.vPairPerms, Num * pCut.nLimit );\n        for  v = 0; v \u003c int32(pCut.nLeaves); v++  {\n            pPerm[v] = Abc_LitNotCond( pCut.pLeaves[Abc_Lit2Var(int32(pCanonPerm[v]))], Abc_LitIsCompl(int32(pCanonPerm[v])) );\n        }\n        // generate the result\n        pCut.uMaskFunc = 0;\n        for  v = 0; v \u003c int32(pCut.nLeaves); v++  {\n            pCut.pLeaves[v] = Abc_Lit2Var(pPerm[v]);\n            if Abc_LitIsCompl(pPerm[v]) {\n                pCut.uMaskFunc |= (1 \u003c\u003c v); }\n        }\n//        printf( \"Found: %d(%d) %d(%d) -\u003e %d(%d)\\n\", iCutFunc0, pCut0-\u003enLeaves, iCutFunc1, pCut0-\u003enLeaves, pCut-\u003eiCutFunc, pCut-\u003enLeaves );\n        p.nCacheHits++;\n//p-\u003etimeCache[1] += Abc_Clock() - clk;\n        return 0;\n    }\nif p.pPars.fVerbose {\nclk = Abc_Clock(); }\n    p.nCacheMisses++;\n    RetValue = If_CutComputeTruthPerm_int( p, pCut, pCut0, pCut1, iCutFunc0, iCutFunc1 );\n    assert(RetValue == 0, \"RetValue == 0\");\n//    printf( \"Added: %d(%d) %d(%d) -\u003e %d(%d)\\n\", iCutFunc0, pCut0-\u003enLeaves, iCutFunc1, pCut0-\u003enLeaves, pCut-\u003eiCutFunc, pCut-\u003enLeaves );\n    // save the result\n    assert(Num == Vec_IntSize(p.vPairRes), \"Num == Vec_IntSize(p.vPairRes)\");\n    Vec_IntPush( p.vPairRes, pCut.iCutFunc );\n    // save the permutation\n    assert(Num * int32(pCut.nLimit) == Vec_StrSize(p.vPairPerms), \"Num * int32(pCut.nLimit) == Vec_StrSize(p.vPairPerms)\");\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        Vec_StrPush( p.vPairPerms, byte(Abc_Var2Lit(int32(p.pCanonPerm[i]), ((p.uCanonPhase\u003e\u003ei)\u00261))) );\n    }\n    for  i = int32(pCut0.nLeaves) + int32(pCut1.nLeaves); i \u003c int32(pCut.nLimit); i++  {\n        Vec_StrPush( p.vPairPerms, byte(-1) );\n    }\nif p.pPars.fVerbose {\np.timeCache[2] += Abc_Clock() - clk; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Check the function of 6-input LUT.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_DeriveHashTable6(nVars int32, uTruth word) *Vec_Mem_t {\n    var fVerbose int32;\n    var nMints int32    = (1 \u003c\u003c nVars);\n    var nPerms int32    = Extra_Factorial( nVars );\n    var pComp *int32   = Extra_GreyCodeSchedule( nVars );\n    var pPerm *int32   = Extra_PermSchedule( nVars );\n    var Canon word    = ABC_CONST(0xFFFFFFFFFFFFFFFF);\n    var tCur, tTemp1, tTemp2 word;\n    var vTtMem6 *Vec_Mem_t  = Vec_MemAllocForTTSimple( nVars );\n    var i, p, c int32;\n    for  i = 0; i \u003c 2; i++  {\n        if i {\n            tCur = ~uTruth;\n        } else {\n            tCur = uTruth;\n        }\n        tTemp1 = tCur;\n        for  p = 0; p \u003c nPerms; p++  {\n            tTemp2 = tCur;\n            for  c = 0; c \u003c nMints; c++  {\n                if Canon \u003e tCur {\n                    Canon = tCur; }\n                Vec_MemHashInsert( vTtMem6, \u0026tCur );\n                tCur = Abc_Tt6Flip( tCur, pComp[c] );\n            }\n            assert(tTemp2 == tCur, \"tTemp2 == tCur\");\n            tCur = Abc_Tt6SwapAdjacent( tCur, pPerm[p] );\n        }\n        assert(tTemp1 == tCur, \"tTemp1 == tCur\");\n    }\n    ABC_FREE( pComp );\n    ABC_FREE( pPerm );\n    if fVerbose != 0 {\n/*\n        word * pEntry;\n        Vec_MemForEachEntry( vTtMem6, pEntry, i )\n        {\n            Extra_PrintHex( stdout, (unsigned*)pEntry, nVars );  \n            printf( \", \" );\n            if ( i % 4 == 3 )\n                printf( \"\\n\" );\n        }\n*/\n        Extra_PrintHex( os.Stdout, (unsigned*)\u0026uTruth, nVars );  fmt.Printf(\"\\n\");\n        Extra_PrintHex( os.Stdout, (unsigned*)\u0026Canon,  nVars );  fmt.Printf(\"\\n\");\n        fmt.Printf(\"Members = %d.\\n\", Vec_MemEntryNum(vTtMem6));\n    }\n    return vTtMem6;\n}\n\nfunc If_CutCheckTruth6(p *If_Man_t, pCut *If_Cut_t) int32 {\n    if pCut.nLeaves != 6 {\n        return 0; }\n    if p.vTtMem6 == nil {\n        p.vTtMem6 = If_DeriveHashTable6( 6, ABC_CONST(0xfedcba9876543210) ); }\n    if *Vec_MemHashLookup( p.vTtMem6, If_CutTruthWR(p, pCut) ) == -1 {\n        return 0; }\n    return 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

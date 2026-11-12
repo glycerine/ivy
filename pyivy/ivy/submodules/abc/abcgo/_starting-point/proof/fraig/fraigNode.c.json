@@ -1,0 +1,466 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c",
+  "SHA256": "0daf20a2321e7cdeb9cccf66a8828845ef3ece9297680565560dc9c4720812b3",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pNode, 0, sizeof(Fraig_Node_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 2222
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pNode.puSimR, 0, sizeof(unsigned) * p.nWordsRand );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 69,
+        "Column": 5,
+        "ByteOffset": 2286
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pNode.puSimD, 0, sizeof(unsigned) * p.nWordsDyna );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 97,
+        "Column": 5,
+        "ByteOffset": 3050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pNode, 0, sizeof(Fraig_Node_t) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 100,
+        "Column": 5,
+        "ByteOffset": 3213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pNode.puSimD, 0, sizeof(unsigned) * p.nWordsDyna );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 143,
+        "Column": 5,
+        "ByteOffset": 4934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNodeRes == nil );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 166,
+        "Column": 5,
+        "ByteOffset": 5595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pNode, 0, sizeof(Fraig_Node_t) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 226,
+        "Column": 5,
+        "ByteOffset": 8893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)))) );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 203,
+        "Column": 1,
+        "ByteOffset": 7025
+      },
+      "Directive": "#ifdef FRAIG_ENABLE_FANOUTS"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fraig_NodeCreateConst",
+      "Start": 1409,
+      "End": 2531,
+      "BodyStart": 1465,
+      "Original": "Fraig_Node_t * Fraig_NodeCreateConst( Fraig_Man_t * p )\n{\n    Fraig_Node_t * pNode;\n\n    // create the node\n    pNode = (Fraig_Node_t *)Fraig_MemFixedEntryFetch( p-\u003emmNodes );\n    memset( pNode, 0, sizeof(Fraig_Node_t) );\n\n    // assign the number and add to the array of nodes\n    pNode-\u003eNum   = p-\u003evNodes-\u003enSize;\n    Fraig_NodeVecPush( p-\u003evNodes,  pNode );\n    pNode-\u003eNumPi = -1;  // this is not a PI, so its number is -1\n    pNode-\u003eLevel =  0;  // just like a PI, it has 0 level\n    pNode-\u003enRefs =  1;  // it is a persistent node, which comes referenced\n    pNode-\u003efInv  =  1;  // the simulation info is complemented\n\n    // create the simulation info\n    pNode-\u003epuSimR = (unsigned *)Fraig_MemFixedEntryFetch( p-\u003emmSims );\n    pNode-\u003epuSimD = pNode-\u003epuSimR + p-\u003enWordsRand;\n    memset( pNode-\u003epuSimR, 0, sizeof(unsigned) * p-\u003enWordsRand );\n    memset( pNode-\u003epuSimD, 0, sizeof(unsigned) * p-\u003enWordsDyna );\n\n    // count the number of ones in the simulation vector\n    pNode-\u003enOnes = p-\u003enWordsRand * sizeof(unsigned) * 8;\n\n    // insert it into the hash table\n    Fraig_HashTableLookupF0( p, pNode );\n    return pNode;\n}",
+      "Draft": "func Fraig_NodeCreateConst(p *Fraig_Man_t) *Fraig_Node_t {\n    var pNode *Fraig_Node_t;\n\n    // create the node\n    pNode = (Fraig_Node_t *)Fraig_MemFixedEntryFetch( p.mmNodes );\n    memset( pNode, 0, sizeof(Fraig_Node_t) );\n\n    // assign the number and add to the array of nodes\n    pNode.Num   = p.vNodes.nSize;\n    Fraig_NodeVecPush( p.vNodes,  pNode );\n    pNode.NumPi = -1;  // this is not a PI, so its number is -1\n    pNode.Level =  0;  // just like a PI, it has 0 level\n    pNode.nRefs =  1;  // it is a persistent node, which comes referenced\n    pNode.fInv  =  1;  // the simulation info is complemented\n\n    // create the simulation info\n    pNode.puSimR = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n    pNode.puSimD = pNode.puSimR + p.nWordsRand;\n    memset( pNode.puSimR, 0, sizeof(unsigned) * p.nWordsRand );\n    memset( pNode.puSimD, 0, sizeof(unsigned) * p.nWordsDyna );\n\n    // count the number of ones in the simulation vector\n    pNode.nOnes = p.nWordsRand * sizeof(unsigned) * 8;\n\n    // insert it into the hash table\n    Fraig_HashTableLookupF0( p, pNode );\n    return pNode;\n}"
+    },
+    {
+      "Name": "Fraig_NodeCreatePi",
+      "Start": 2796,
+      "End": 5029,
+      "BodyStart": 2849,
+      "Original": "Fraig_Node_t * Fraig_NodeCreatePi( Fraig_Man_t * p )\n{\n    Fraig_Node_t * pNode, * pNodeRes;\n    int i;\n    abctime clk;\n\n    // create the node\n    pNode = (Fraig_Node_t *)Fraig_MemFixedEntryFetch( p-\u003emmNodes );\n    memset( pNode, 0, sizeof(Fraig_Node_t) );\n    pNode-\u003epuSimR = (unsigned *)Fraig_MemFixedEntryFetch( p-\u003emmSims );\n    pNode-\u003epuSimD = pNode-\u003epuSimR + p-\u003enWordsRand;\n    memset( pNode-\u003epuSimD, 0, sizeof(unsigned) * p-\u003enWordsDyna );\n\n    // assign the number and add to the array of nodes\n    pNode-\u003eNum   = p-\u003evNodes-\u003enSize;\n    Fraig_NodeVecPush( p-\u003evNodes,  pNode );\n\n    // assign the PI number and add to the array of primary inputs\n    pNode-\u003eNumPi = p-\u003evInputs-\u003enSize;   \n    Fraig_NodeVecPush( p-\u003evInputs, pNode );\n\n    pNode-\u003eLevel =  0;  // PI has 0 level\n    pNode-\u003enRefs =  1;  // it is a persistent node, which comes referenced\n    pNode-\u003efInv  =  0;  // the simulation info of the PI is not complemented\n\n    // derive the simulation info for the new node\nclk = Abc_Clock();\n    // set the random simulation info for the primary input\n    pNode-\u003euHashR = 0;\n    for ( i = 0; i \u003c p-\u003enWordsRand; i++ )\n    {\n        // generate the simulation info\n        pNode-\u003epuSimR[i] = FRAIG_RANDOM_UNSIGNED;\n        // for reasons that take very long to explain, it makes sense to have (0000000...) \n        // pattern in the set (this helps if we need to return the counter-examples)\n        if ( i == 0 )\n            pNode-\u003epuSimR[i] \u003c\u003c= 1;\n        // compute the hash key\n        pNode-\u003euHashR ^= pNode-\u003epuSimR[i] * s_FraigPrimes[i];\n    }\n    // count the number of ones in the simulation vector\n    pNode-\u003enOnes = Fraig_BitStringCountOnes( pNode-\u003epuSimR, p-\u003enWordsRand );\n\n    // set the systematic simulation info for the primary input\n    pNode-\u003euHashD = 0;\n    for ( i = 0; i \u003c p-\u003eiWordStart; i++ )\n    {\n        // generate the simulation info\n        pNode-\u003epuSimD[i] = FRAIG_RANDOM_UNSIGNED;\n        // compute the hash key\n        pNode-\u003euHashD ^= pNode-\u003epuSimD[i] * s_FraigPrimes[i];\n    }\np-\u003etimeSims += Abc_Clock() - clk;\n\n    // insert it into the hash table\n    pNodeRes = Fraig_HashTableLookupF( p, pNode );\n    assert( pNodeRes == NULL );\n    // add to the runtime of simulation\n    return pNode;\n}",
+      "Draft": "func Fraig_NodeCreatePi(p *Fraig_Man_t) *Fraig_Node_t {\n    var pNode, pNodeRes *Fraig_Node_t;\n    var i int32;\n    var clk abctime;\n\n    // create the node\n    pNode = (Fraig_Node_t *)Fraig_MemFixedEntryFetch( p.mmNodes );\n    memset( pNode, 0, sizeof(Fraig_Node_t) );\n    pNode.puSimR = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n    pNode.puSimD = pNode.puSimR + p.nWordsRand;\n    memset( pNode.puSimD, 0, sizeof(unsigned) * p.nWordsDyna );\n\n    // assign the number and add to the array of nodes\n    pNode.Num   = p.vNodes.nSize;\n    Fraig_NodeVecPush( p.vNodes,  pNode );\n\n    // assign the PI number and add to the array of primary inputs\n    pNode.NumPi = p.vInputs.nSize;   \n    Fraig_NodeVecPush( p.vInputs, pNode );\n\n    pNode.Level =  0;  // PI has 0 level\n    pNode.nRefs =  1;  // it is a persistent node, which comes referenced\n    pNode.fInv  =  0;  // the simulation info of the PI is not complemented\n\n    // derive the simulation info for the new node\nclk = Abc_Clock();\n    // set the random simulation info for the primary input\n    pNode.uHashR = 0;\n    for  i = 0; i \u003c p.nWordsRand; i++  {\n        // generate the simulation info\n        pNode.puSimR[i] = FRAIG_RANDOM_UNSIGNED;\n        // for reasons that take very long to explain, it makes sense to have (0000000...) \n        // pattern in the set (this helps if we need to return the counter-examples)\n        if i == 0 {\n            pNode.puSimR[i] \u003c\u003c= 1; }\n        // compute the hash key\n        pNode.uHashR ^= pNode.puSimR[i] * s_FraigPrimes[i];\n    }\n    // count the number of ones in the simulation vector\n    pNode.nOnes = Fraig_BitStringCountOnes( pNode.puSimR, p.nWordsRand );\n\n    // set the systematic simulation info for the primary input\n    pNode.uHashD = 0;\n    for  i = 0; i \u003c p.iWordStart; i++  {\n        // generate the simulation info\n        pNode.puSimD[i] = FRAIG_RANDOM_UNSIGNED;\n        // compute the hash key\n        pNode.uHashD ^= pNode.puSimD[i] * s_FraigPrimes[i];\n    }\np.timeSims += Abc_Clock() - clk;\n\n    // insert it into the hash table\n    pNodeRes = Fraig_HashTableLookupF( p, pNode );\n    assert(pNodeRes == nil, \"pNodeRes == nil\");\n    // add to the runtime of simulation\n    return pNode;\n}"
+    },
+    {
+      "Name": "Fraig_NodeCreate",
+      "Start": 5369,
+      "End": 7225,
+      "BodyStart": 5458,
+      "Original": "Fraig_Node_t * Fraig_NodeCreate( Fraig_Man_t * p, Fraig_Node_t * p1, Fraig_Node_t * p2 )\n{\n    Fraig_Node_t * pNode;\n    abctime clk;\n\n    // create the node\n    pNode = (Fraig_Node_t *)Fraig_MemFixedEntryFetch( p-\u003emmNodes );\n    memset( pNode, 0, sizeof(Fraig_Node_t) );\n\n    // assign the children\n    pNode-\u003ep1  = p1;  Fraig_Ref(p1);  Fraig_Regular(p1)-\u003enRefs++;\n    pNode-\u003ep2  = p2;  Fraig_Ref(p2);  Fraig_Regular(p2)-\u003enRefs++;\n\n    // assign the number and add to the array of nodes\n    pNode-\u003eNum = p-\u003evNodes-\u003enSize;\n    Fraig_NodeVecPush( p-\u003evNodes,  pNode );\n\n    // assign the PI number\n    pNode-\u003eNumPi = -1;\n\n    // compute the level of this node\n    pNode-\u003eLevel = 1 + Abc_MaxInt(Fraig_Regular(p1)-\u003eLevel, Fraig_Regular(p2)-\u003eLevel);\n    pNode-\u003efInv  = Fraig_NodeIsSimComplement(p1) \u0026 Fraig_NodeIsSimComplement(p2);\n    pNode-\u003efFailTfo = Fraig_Regular(p1)-\u003efFailTfo | Fraig_Regular(p2)-\u003efFailTfo;\n\n    // derive the simulation info \nclk = Abc_Clock();\n    // allocate memory for the simulation info\n    pNode-\u003epuSimR = (unsigned *)Fraig_MemFixedEntryFetch( p-\u003emmSims );\n    pNode-\u003epuSimD = pNode-\u003epuSimR + p-\u003enWordsRand;\n    // derive random simulation info\n    pNode-\u003euHashR = 0;\n    Fraig_NodeSimulate( pNode, 0, p-\u003enWordsRand, 1 );\n    // derive dynamic simulation info\n    pNode-\u003euHashD = 0;\n    Fraig_NodeSimulate( pNode, 0, p-\u003eiWordStart, 0 );\n    // count the number of ones in the random simulation info\n    pNode-\u003enOnes = Fraig_BitStringCountOnes( pNode-\u003epuSimR, p-\u003enWordsRand );\n    if ( pNode-\u003efInv )\n        pNode-\u003enOnes = p-\u003enWordsRand * 32 - pNode-\u003enOnes;\n    // add to the runtime of simulation\np-\u003etimeSims += Abc_Clock() - clk;\n\n#ifdef FRAIG_ENABLE_FANOUTS\n    // create the fanout info\n    Fraig_NodeAddFaninFanout( Fraig_Regular(p1), pNode );\n    Fraig_NodeAddFaninFanout( Fraig_Regular(p2), pNode );\n#endif\n    return pNode;\n}",
+      "Draft": "func Fraig_NodeCreate(p *Fraig_Man_t, p1 *Fraig_Node_t, p2 *Fraig_Node_t) *Fraig_Node_t {\n    var pNode *Fraig_Node_t;\n    var clk abctime;\n\n    // create the node\n    pNode = (Fraig_Node_t *)Fraig_MemFixedEntryFetch( p.mmNodes );\n    memset( pNode, 0, sizeof(Fraig_Node_t) );\n\n    // assign the children\n    // inlining of macro Fraig_Ref\n    // inlining of macro Fraig_Regular\n    pNode.p1  = p1;  ;  ((Fraig_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .nRefs++;\n    // inlining of macro Fraig_Ref\n    // inlining of macro Fraig_Regular\n    pNode.p2  = p2;  ;  ((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .nRefs++;\n\n    // assign the number and add to the array of nodes\n    pNode.Num = p.vNodes.nSize;\n    Fraig_NodeVecPush( p.vNodes,  pNode );\n\n    // assign the PI number\n    pNode.NumPi = -1;\n\n    // compute the level of this node\n    // inlining of macro Fraig_Regular\n    pNode.Level = 1 + Abc_MaxInt(((Fraig_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .Level, ((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .Level);\n    // inlining of macro Fraig_NodeIsSimComplement\n    // inlining of macro Fraig_IsComplement\n    // inlining of macro Fraig_Regular\n    pNode.fInv  = (((int32(((ABC_PTRUINT_T) (p1) \u0026 01))))? !(((Fraig_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .fInv) : (p1).fInv) \u0026 (((int32(((ABC_PTRUINT_T) (p2) \u0026 01))))? !(((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .fInv) : (p2).fInv);\n    // inlining of macro Fraig_Regular\n    pNode.fFailTfo = ((Fraig_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .fFailTfo | ((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .fFailTfo;\n\n    // derive the simulation info \nclk = Abc_Clock();\n    // allocate memory for the simulation info\n    pNode.puSimR = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n    pNode.puSimD = pNode.puSimR + p.nWordsRand;\n    // derive random simulation info\n    pNode.uHashR = 0;\n    Fraig_NodeSimulate( pNode, 0, p.nWordsRand, 1 );\n    // derive dynamic simulation info\n    pNode.uHashD = 0;\n    Fraig_NodeSimulate( pNode, 0, p.iWordStart, 0 );\n    // count the number of ones in the random simulation info\n    pNode.nOnes = Fraig_BitStringCountOnes( pNode.puSimR, p.nWordsRand );\n    if pNode.fInv {\n        pNode.nOnes = p.nWordsRand * 32 - pNode.nOnes; }\n    // add to the runtime of simulation\np.timeSims += Abc_Clock() - clk;\n\n#ifdef FRAIG_ENABLE_FANOUTS\n    // create the fanout info\n    Fraig_NodeAddFaninFanout( Fraig_Regular(p1), pNode );\n    Fraig_NodeAddFaninFanout( Fraig_Regular(p2), pNode );\n#endif\n    return pNode;\n}"
+    },
+    {
+      "Name": "Fraig_NodeSimulate",
+      "Start": 7811,
+      "End": 10534,
+      "BodyStart": 7904,
+      "Original": "void Fraig_NodeSimulate( Fraig_Node_t * pNode, int iWordStart, int iWordStop, int fUseRand )\n{\n    unsigned * pSims, * pSims1, * pSims2;\n    unsigned uHash;\n    int fCompl, fCompl1, fCompl2, i;\n\n    assert( !Fraig_IsComplement(pNode) );\n\n    // get hold of the simulation information\n    pSims  = fUseRand? pNode-\u003epuSimR                    : pNode-\u003epuSimD;\n    pSims1 = fUseRand? Fraig_Regular(pNode-\u003ep1)-\u003epuSimR : Fraig_Regular(pNode-\u003ep1)-\u003epuSimD;\n    pSims2 = fUseRand? Fraig_Regular(pNode-\u003ep2)-\u003epuSimR : Fraig_Regular(pNode-\u003ep2)-\u003epuSimD;\n\n    // get complemented attributes of the children using their random info\n    fCompl  = pNode-\u003efInv;\n    fCompl1 = Fraig_NodeIsSimComplement(pNode-\u003ep1);\n    fCompl2 = Fraig_NodeIsSimComplement(pNode-\u003ep2);\n\n    // simulate\n    uHash = 0;\n    if ( fCompl1 \u0026\u0026 fCompl2 )\n    {\n        if ( fCompl )\n            for ( i = iWordStart; i \u003c iWordStop; i++ )\n            {\n                pSims[i] = (pSims1[i] | pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n        else\n            for ( i = iWordStart; i \u003c iWordStop; i++ )\n            {\n                pSims[i] = ~(pSims1[i] | pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n    }\n    else if ( fCompl1 \u0026\u0026 !fCompl2 )\n    {\n        if ( fCompl )\n            for ( i = iWordStart; i \u003c iWordStop; i++ )\n            {\n                pSims[i] = (pSims1[i] | ~pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n        else\n            for ( i = iWordStart; i \u003c iWordStop; i++ )\n            {\n                pSims[i] = (~pSims1[i] \u0026 pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n    }\n    else if ( !fCompl1 \u0026\u0026 fCompl2 )\n    {\n        if ( fCompl )\n            for ( i = iWordStart; i \u003c iWordStop; i++ )\n            {\n                pSims[i] = (~pSims1[i] | pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n        else\n            for ( i = iWordStart; i \u003c iWordStop; i++ )\n            {\n                pSims[i] = (pSims1[i] \u0026 ~pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n    }\n    else // if ( !fCompl1 \u0026\u0026 !fCompl2 )\n    {\n        if ( fCompl )\n            for ( i = iWordStart; i \u003c iWordStop; i++ )\n            {\n                pSims[i] = ~(pSims1[i] \u0026 pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n        else\n            for ( i = iWordStart; i \u003c iWordStop; i++ )\n            {\n                pSims[i] = (pSims1[i] \u0026 pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n    }\n\n    if ( fUseRand )\n        pNode-\u003euHashR ^= uHash;\n    else\n        pNode-\u003euHashD ^= uHash;\n}",
+      "Draft": "func Fraig_NodeSimulate(pNode *Fraig_Node_t, iWordStart int32, iWordStop int32, fUseRand int32) {\n    var pSims, pSims1, pSims2 *uint32;\n    var uHash uint32;\n    var fCompl, fCompl1, fCompl2, i int32;\n\n    // inlining of macro Fraig_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n\n    // get hold of the simulation information\n    if fUseRand != 0 {\n        pSims = pNode.puSimR;\n    } else {\n        pSims = pNode.puSimD;\n    }\n    if fUseRand != 0 {\n        // inlining of macro Fraig_Regular\n        pSims1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .puSimR;\n    } else {\n        // inlining of macro Fraig_Regular\n        pSims1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .puSimD;\n    }\n    if fUseRand != 0 {\n        // inlining of macro Fraig_Regular\n        pSims2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .puSimR;\n    } else {\n        // inlining of macro Fraig_Regular\n        pSims2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .puSimD;\n    }\n\n    // get complemented attributes of the children using their random info\n    fCompl  = pNode.fInv;\n    // inlining of macro Fraig_NodeIsSimComplement\n    \n    // inlining of macro Fraig_IsComplement\n    if (int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01)) != 0) {\n        // inlining of macro Fraig_Regular\n        fCompl1 = !(((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .fInv);\n    } else {\n        fCompl1 = (pNode.p1).fInv;\n    }\n    // inlining of macro Fraig_NodeIsSimComplement\n    \n    // inlining of macro Fraig_IsComplement\n    if (int32(((ABC_PTRUINT_T) (pNode.p2) \u0026 01)) != 0) {\n        // inlining of macro Fraig_Regular\n        fCompl2 = !(((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .fInv);\n    } else {\n        fCompl2 = (pNode.p2).fInv;\n    }\n\n    // simulate\n    uHash = 0;\n    if fCompl1 \u0026\u0026 fCompl2 {\n        if fCompl {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = (pSims1[i] | pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n        } else {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = ~(pSims1[i] | pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            } }\n    \n    } else if fCompl1 \u0026\u0026 !fCompl2 {\n        if fCompl {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = (pSims1[i] | ~pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n        } else {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = (~pSims1[i] \u0026 pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            } }\n    \n    } else if !fCompl1 \u0026\u0026 fCompl2 {\n        if fCompl {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = (~pSims1[i] | pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n        } else {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = (pSims1[i] \u0026 ~pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            } }\n    \n    } else { // if ( !fCompl1 \u0026\u0026 !fCompl2 )\n    \n        if fCompl {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = ~(pSims1[i] \u0026 pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n        } else {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = (pSims1[i] \u0026 pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            } }\n    }\n\n    if fUseRand != 0 {\n        pNode.uHashR ^= uHash;\n    } else {\n        pNode.uHashD ^= uHash; }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::mechanical::sizeof::1607",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1607,
+      "End": 1613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::mechanical::sizeof::2216",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2216,
+      "End": 2222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::mechanical::sizeof::2282",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2282,
+      "End": 2288
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::mechanical::sizeof::2411",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2411,
+      "End": 2417
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::mechanical::sizeof::3031",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3031,
+      "End": 3037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::mechanical::sizeof::3207",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3207,
+      "End": 3213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::mechanical::sizeof::5617",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5617,
+      "End": 5623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::1529",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1529,
+      "End": 1545
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::2084",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2084,
+      "End": 2096
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::2953",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2953,
+      "End": 2969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::3075",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3075,
+      "End": 3087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::5539",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5539,
+      "End": 5555
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::5789",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5707,
+      "End": 5707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::5965",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5773,
+      "End": 5773
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::6331",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6061,
+      "End": 6061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::6435",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6087,
+      "End": 6087
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::6715",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6133,
+      "End": 6133
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::6990",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6165,
+      "End": 6165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::7130",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6218,
+      "End": 6218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::7238",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6248,
+      "End": 6248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::7417",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6399,
+      "End": 6411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::9221",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8191,
+      "End": 8191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::9334",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8226,
+      "End": 8226
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::9469",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8283,
+      "End": 8283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::9582",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8318,
+      "End": 8318
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::9974",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8469,
+      "End": 8469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::pointer-cast::10283",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8521,
+      "End": 8521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::macro::Fraig_NodeIsSimComplement",
+      "Category": "macro-review",
+      "Symbol": "Fraig_NodeIsSimComplement",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 826,
+      "End": 925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::Fraig_NodeCreateConst",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeCreateConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1409,
+      "End": 2531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::Fraig_NodeCreatePi",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeCreatePi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2796,
+      "End": 5029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::ternary::Fraig_NodeCreate",
+      "Category": "ternary-review",
+      "Symbol": "Fraig_NodeCreate",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5369,
+      "End": 7225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::Fraig_NodeCreate",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5369,
+      "End": 7225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::Fraig_NodeSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Fraig_NodeSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7811,
+      "End": 10534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10781
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/fraig/fraigNode.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7025,
+      "End": 7205
+    }
+  ],
+  "Draft": "package fraig\n\n/**CFile****************************************************************\n\n  FileName    [fraigNode.c]\n\n  PackageName [FRAIG: Functionally reduced AND-INV graphs.]\n\n  Synopsis    [Implementation of the FRAIG node.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 2.0. Started - October 1, 2004]\n\n  Revision    [$Id: fraigNode.c,v 1.3 2005/07/08 01:01:32 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fraigInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// returns the complemented attribute of the node\n// Original macro:\n// #define Fraig_NodeIsSimComplement(p) (Fraig_IsComplement(p)? !(Fraig_Regular(p)-\u003efInv) : (p)-\u003efInv)\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the constant 1 node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeCreateConst(p *Fraig_Man_t) *Fraig_Node_t {\n    var pNode *Fraig_Node_t;\n\n    // create the node\n    pNode = (Fraig_Node_t *)Fraig_MemFixedEntryFetch( p.mmNodes );\n    memset( pNode, 0, sizeof(Fraig_Node_t) );\n\n    // assign the number and add to the array of nodes\n    pNode.Num   = p.vNodes.nSize;\n    Fraig_NodeVecPush( p.vNodes,  pNode );\n    pNode.NumPi = -1;  // this is not a PI, so its number is -1\n    pNode.Level =  0;  // just like a PI, it has 0 level\n    pNode.nRefs =  1;  // it is a persistent node, which comes referenced\n    pNode.fInv  =  1;  // the simulation info is complemented\n\n    // create the simulation info\n    pNode.puSimR = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n    pNode.puSimD = pNode.puSimR + p.nWordsRand;\n    memset( pNode.puSimR, 0, sizeof(unsigned) * p.nWordsRand );\n    memset( pNode.puSimD, 0, sizeof(unsigned) * p.nWordsDyna );\n\n    // count the number of ones in the simulation vector\n    pNode.nOnes = p.nWordsRand * sizeof(unsigned) * 8;\n\n    // insert it into the hash table\n    Fraig_HashTableLookupF0( p, pNode );\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a primary input node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeCreatePi(p *Fraig_Man_t) *Fraig_Node_t {\n    var pNode, pNodeRes *Fraig_Node_t;\n    var i int32;\n    var clk abctime;\n\n    // create the node\n    pNode = (Fraig_Node_t *)Fraig_MemFixedEntryFetch( p.mmNodes );\n    memset( pNode, 0, sizeof(Fraig_Node_t) );\n    pNode.puSimR = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n    pNode.puSimD = pNode.puSimR + p.nWordsRand;\n    memset( pNode.puSimD, 0, sizeof(unsigned) * p.nWordsDyna );\n\n    // assign the number and add to the array of nodes\n    pNode.Num   = p.vNodes.nSize;\n    Fraig_NodeVecPush( p.vNodes,  pNode );\n\n    // assign the PI number and add to the array of primary inputs\n    pNode.NumPi = p.vInputs.nSize;   \n    Fraig_NodeVecPush( p.vInputs, pNode );\n\n    pNode.Level =  0;  // PI has 0 level\n    pNode.nRefs =  1;  // it is a persistent node, which comes referenced\n    pNode.fInv  =  0;  // the simulation info of the PI is not complemented\n\n    // derive the simulation info for the new node\nclk = Abc_Clock();\n    // set the random simulation info for the primary input\n    pNode.uHashR = 0;\n    for  i = 0; i \u003c p.nWordsRand; i++  {\n        // generate the simulation info\n        pNode.puSimR[i] = FRAIG_RANDOM_UNSIGNED;\n        // for reasons that take very long to explain, it makes sense to have (0000000...) \n        // pattern in the set (this helps if we need to return the counter-examples)\n        if i == 0 {\n            pNode.puSimR[i] \u003c\u003c= 1; }\n        // compute the hash key\n        pNode.uHashR ^= pNode.puSimR[i] * s_FraigPrimes[i];\n    }\n    // count the number of ones in the simulation vector\n    pNode.nOnes = Fraig_BitStringCountOnes( pNode.puSimR, p.nWordsRand );\n\n    // set the systematic simulation info for the primary input\n    pNode.uHashD = 0;\n    for  i = 0; i \u003c p.iWordStart; i++  {\n        // generate the simulation info\n        pNode.puSimD[i] = FRAIG_RANDOM_UNSIGNED;\n        // compute the hash key\n        pNode.uHashD ^= pNode.puSimD[i] * s_FraigPrimes[i];\n    }\np.timeSims += Abc_Clock() - clk;\n\n    // insert it into the hash table\n    pNodeRes = Fraig_HashTableLookupF( p, pNode );\n    assert(pNodeRes == nil, \"pNodeRes == nil\");\n    // add to the runtime of simulation\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new node.]\n\n  Description [This procedure should be called to create the constant\n  node and the PI nodes first.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeCreate(p *Fraig_Man_t, p1 *Fraig_Node_t, p2 *Fraig_Node_t) *Fraig_Node_t {\n    var pNode *Fraig_Node_t;\n    var clk abctime;\n\n    // create the node\n    pNode = (Fraig_Node_t *)Fraig_MemFixedEntryFetch( p.mmNodes );\n    memset( pNode, 0, sizeof(Fraig_Node_t) );\n\n    // assign the children\n    // inlining of macro Fraig_Ref\n    // inlining of macro Fraig_Regular\n    pNode.p1  = p1;  ;  ((Fraig_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .nRefs++;\n    // inlining of macro Fraig_Ref\n    // inlining of macro Fraig_Regular\n    pNode.p2  = p2;  ;  ((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .nRefs++;\n\n    // assign the number and add to the array of nodes\n    pNode.Num = p.vNodes.nSize;\n    Fraig_NodeVecPush( p.vNodes,  pNode );\n\n    // assign the PI number\n    pNode.NumPi = -1;\n\n    // compute the level of this node\n    // inlining of macro Fraig_Regular\n    pNode.Level = 1 + Abc_MaxInt(((Fraig_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .Level, ((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .Level);\n    // inlining of macro Fraig_NodeIsSimComplement\n    // inlining of macro Fraig_IsComplement\n    // inlining of macro Fraig_Regular\n    pNode.fInv  = (((int32(((ABC_PTRUINT_T) (p1) \u0026 01))))? !(((Fraig_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .fInv) : (p1).fInv) \u0026 (((int32(((ABC_PTRUINT_T) (p2) \u0026 01))))? !(((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .fInv) : (p2).fInv);\n    // inlining of macro Fraig_Regular\n    pNode.fFailTfo = ((Fraig_Node_t *)((ABC_PTRUINT_T)(p1) \u0026 ~01)) .fFailTfo | ((Fraig_Node_t *)((ABC_PTRUINT_T)(p2) \u0026 ~01)) .fFailTfo;\n\n    // derive the simulation info \nclk = Abc_Clock();\n    // allocate memory for the simulation info\n    pNode.puSimR = (unsigned *)Fraig_MemFixedEntryFetch( p.mmSims );\n    pNode.puSimD = pNode.puSimR + p.nWordsRand;\n    // derive random simulation info\n    pNode.uHashR = 0;\n    Fraig_NodeSimulate( pNode, 0, p.nWordsRand, 1 );\n    // derive dynamic simulation info\n    pNode.uHashD = 0;\n    Fraig_NodeSimulate( pNode, 0, p.iWordStart, 0 );\n    // count the number of ones in the random simulation info\n    pNode.nOnes = Fraig_BitStringCountOnes( pNode.puSimR, p.nWordsRand );\n    if pNode.fInv {\n        pNode.nOnes = p.nWordsRand * 32 - pNode.nOnes; }\n    // add to the runtime of simulation\np.timeSims += Abc_Clock() - clk;\n\n#ifdef FRAIG_ENABLE_FANOUTS\n    // create the fanout info\n    Fraig_NodeAddFaninFanout( Fraig_Regular(p1), pNode );\n    Fraig_NodeAddFaninFanout( Fraig_Regular(p2), pNode );\n#endif\n    return pNode;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Simulates the node.]\n\n  Description [Simulates the random or dynamic simulation info through \n  the node. Uses phases of the children to determine their real simulation\n  info. Uses phase of the node to determine the way its simulation info \n  is stored. The resulting info is guaranteed to be 0 for the first pattern.]\n  \n  SideEffects [This procedure modified the hash value of the simulation info.]\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fraig_NodeSimulate(pNode *Fraig_Node_t, iWordStart int32, iWordStop int32, fUseRand int32) {\n    var pSims, pSims1, pSims2 *uint32;\n    var uHash uint32;\n    var fCompl, fCompl1, fCompl2, i int32;\n\n    // inlining of macro Fraig_IsComplement\n    assert(!(((int32(((ABC_PTRUINT_T) (pNode) \u0026 01)) != 0))), \"!/*__starting_point_inline_macro:Fraig_IsComplement__*/((int32(((ABC_PTRUINT_T) (pNode) \u0026 01))))\");\n\n    // get hold of the simulation information\n    if fUseRand != 0 {\n        pSims = pNode.puSimR;\n    } else {\n        pSims = pNode.puSimD;\n    }\n    if fUseRand != 0 {\n        // inlining of macro Fraig_Regular\n        pSims1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .puSimR;\n    } else {\n        // inlining of macro Fraig_Regular\n        pSims1 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .puSimD;\n    }\n    if fUseRand != 0 {\n        // inlining of macro Fraig_Regular\n        pSims2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .puSimR;\n    } else {\n        // inlining of macro Fraig_Regular\n        pSims2 = ((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .puSimD;\n    }\n\n    // get complemented attributes of the children using their random info\n    fCompl  = pNode.fInv;\n    // inlining of macro Fraig_NodeIsSimComplement\n    \n    // inlining of macro Fraig_IsComplement\n    if (int32(((ABC_PTRUINT_T) (pNode.p1) \u0026 01)) != 0) {\n        // inlining of macro Fraig_Regular\n        fCompl1 = !(((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p1) \u0026 ~01)) .fInv);\n    } else {\n        fCompl1 = (pNode.p1).fInv;\n    }\n    // inlining of macro Fraig_NodeIsSimComplement\n    \n    // inlining of macro Fraig_IsComplement\n    if (int32(((ABC_PTRUINT_T) (pNode.p2) \u0026 01)) != 0) {\n        // inlining of macro Fraig_Regular\n        fCompl2 = !(((Fraig_Node_t *)((ABC_PTRUINT_T)(pNode.p2) \u0026 ~01)) .fInv);\n    } else {\n        fCompl2 = (pNode.p2).fInv;\n    }\n\n    // simulate\n    uHash = 0;\n    if fCompl1 \u0026\u0026 fCompl2 {\n        if fCompl {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = (pSims1[i] | pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n        } else {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = ~(pSims1[i] | pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            } }\n    \n    } else if fCompl1 \u0026\u0026 !fCompl2 {\n        if fCompl {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = (pSims1[i] | ~pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n        } else {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = (~pSims1[i] \u0026 pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            } }\n    \n    } else if !fCompl1 \u0026\u0026 fCompl2 {\n        if fCompl {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = (~pSims1[i] | pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n        } else {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = (pSims1[i] \u0026 ~pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            } }\n    \n    } else { // if ( !fCompl1 \u0026\u0026 !fCompl2 )\n    \n        if fCompl {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = ~(pSims1[i] \u0026 pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            }\n        } else {\n            for  i = iWordStart; i \u003c iWordStop; i++  {\n                pSims[i] = (pSims1[i] \u0026 pSims2[i]);\n                uHash ^= pSims[i] * s_FraigPrimes[i];\n            } }\n    }\n\n    if fUseRand != 0 {\n        pNode.uHashR ^= uHash;\n    } else {\n        pNode.uHashD ^= uHash; }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

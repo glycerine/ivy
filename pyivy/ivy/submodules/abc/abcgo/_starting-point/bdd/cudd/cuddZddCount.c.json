@@ -1,0 +1,359 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c",
+  "SHA256": "bd8a89639c1f57e85b8ae6cf73621613a59446fd473cacf14700b0d39857ab2f",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 227,
+        "Column": 13,
+        "ByteOffset": 8451
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    dummy = ABC_ALLOC(int, 1);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 233,
+        "Column": 9,
+        "ByteOffset": 8628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(dummy);"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 271,
+        "Column": 13,
+        "ByteOffset": 9635
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    dummy = ABC_ALLOC(double, 1);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 9,
+        "ByteOffset": 9824
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE(dummy);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 302,
+        "Column": 5,
+        "ByteOffset": 10372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(d);"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 324,
+        "Column": 5,
+        "ByteOffset": 10888
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE(d);"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 90,
+        "Column": 1,
+        "ByteOffset": 3604
+      },
+      "Directive": "#ifndef lint"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_zddCount",
+      "Start": 5310,
+      "End": 5829,
+      "BodyStart": 5362,
+      "Original": "int\nCudd_zddCount(\n  DdManager * zdd,\n  DdNode * P)\n{\n    st__table    *table;\n    int         res;\n    DdNode      *base, *empty;\n\n    base  = DD_ONE(zdd);\n    empty = DD_ZERO(zdd);\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if (table == NULL) return(CUDD_OUT_OF_MEM);\n    res = cuddZddCountStep(P, table, base, empty);\n    if (res == CUDD_OUT_OF_MEM) {\n        zdd-\u003eerrorCode = CUDD_MEMORY_OUT;\n    }\n    st__foreach(table, st__zdd_countfree, NIL(char));\n    st__free_table(table);\n\n    return(res);\n\n}",
+      "Draft": "func Cudd_zddCount(zdd *DdManager, P *DdNode) int32 {\n    var table *st__table;\n    var res int32;\n    var base, empty *DdNode;\n\n    // inlining of macro DD_ONE\n    base  = ((zdd).one);\n    // inlining of macro DD_ZERO\n    empty = ((zdd).zero);\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if table == nil { return(CUDD_OUT_OF_MEM); }\n    res = cuddZddCountStep(P, table, base, empty);\n    if res == CUDD_OUT_OF_MEM {\n        zdd.errorCode = CUDD_MEMORY_OUT;\n    }\n    st__foreach(table, st__zdd_countfree, NIL(char));\n    st__free_table(table);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "Cudd_zddCountDouble",
+      "Start": 6369,
+      "End": 6924,
+      "BodyStart": 6430,
+      "Original": "double\nCudd_zddCountDouble(\n  DdManager * zdd,\n  DdNode * P)\n{\n    st__table    *table;\n    double      res;\n    DdNode      *base, *empty;\n\n    base  = DD_ONE(zdd);\n    empty = DD_ZERO(zdd);\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if (table == NULL) return((double)CUDD_OUT_OF_MEM);\n    res = cuddZddCountDoubleStep(P, table, base, empty);\n    if (res == (double)CUDD_OUT_OF_MEM) {\n        zdd-\u003eerrorCode = CUDD_MEMORY_OUT;\n    }\n    st__foreach(table, st__zdd_count_dbl_free, NIL(char));\n    st__free_table(table);\n\n    return(res);\n\n}",
+      "Draft": "func Cudd_zddCountDouble(zdd *DdManager, P *DdNode) float64 {\n    var table *st__table;\n    var res float64;\n    var base, empty *DdNode;\n\n    // inlining of macro DD_ONE\n    base  = ((zdd).one);\n    // inlining of macro DD_ZERO\n    empty = ((zdd).zero);\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if table == nil { return(float64(CUDD_OUT_OF_MEM)); }\n    res = cuddZddCountDoubleStep(P, table, base, empty);\n    if res == float64(CUDD_OUT_OF_MEM) {\n        zdd.errorCode = CUDD_MEMORY_OUT;\n    }\n    st__foreach(table, st__zdd_count_dbl_free, NIL(char));\n    st__free_table(table);\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddZddCountStep",
+      "Start": 7723,
+      "End": 8472,
+      "BodyStart": 7822,
+      "Original": "static int\ncuddZddCountStep(\n  DdNode * P,\n  st__table * table,\n  DdNode * base,\n  DdNode * empty)\n{\n    int         res;\n    int         *dummy;\n\n    if (P == empty)\n        return(0);\n    if (P == base)\n        return(1);\n\n    /* Check cache. */\n    if ( st__lookup(table, (const char *)P, (char **)\u0026dummy)) {\n        res = *dummy;\n        return(res);\n    }\n\n    res = cuddZddCountStep(cuddE(P), table, base, empty) +\n        cuddZddCountStep(cuddT(P), table, base, empty);\n\n    dummy = ABC_ALLOC(int, 1);\n    if (dummy == NULL) {\n        return(CUDD_OUT_OF_MEM);\n    }\n    *dummy = res;\n    if ( st__insert(table, (char *)P, (char *)dummy) == st__OUT_OF_MEM) {\n        ABC_FREE(dummy);\n        return(CUDD_OUT_OF_MEM);\n    }\n\n    return(res);\n\n}",
+      "Draft": "func cuddZddCountStep(P *DdNode, table *st__table, base *DdNode, empty *DdNode) int32 {\n    var res int32;\n    var dummy *int32;\n\n    if P == empty {\n        return(0); }\n    if P == base {\n        return(1); }\n\n    /* Check cache. */\n    if st__lookup(table, (char *)P, (char **)\u0026dummy) {\n        res = *dummy;\n        return(res);\n    }\n\n    // inlining of macro cuddE\n    res = cuddZddCountStep(((P).type.kids.E), table, base, empty) +\n        // inlining of macro cuddT\n        cuddZddCountStep(((P).type.kids.T), table, base, empty);\n\n    dummy = new(int32);\n    if dummy == nil {\n        return(CUDD_OUT_OF_MEM);\n    }\n    *dummy = res;\n    if st__insert(table, (char *)P, (char *)dummy) == st__OUT_OF_MEM {\n        ABC_FREE(dummy);\n        return(CUDD_OUT_OF_MEM);\n    }\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "cuddZddCountDoubleStep",
+      "Start": 8790,
+      "End": 9598,
+      "BodyStart": 8898,
+      "Original": "static double\ncuddZddCountDoubleStep(\n  DdNode * P,\n  st__table * table,\n  DdNode * base,\n  DdNode * empty)\n{\n    double      res;\n    double      *dummy;\n\n    if (P == empty)\n        return((double)0.0);\n    if (P == base)\n        return((double)1.0);\n\n    /* Check cache */\n    if ( st__lookup(table, (const char *)P, (char **)\u0026dummy)) {\n        res = *dummy;\n        return(res);\n    }\n\n    res = cuddZddCountDoubleStep(cuddE(P), table, base, empty) +\n        cuddZddCountDoubleStep(cuddT(P), table, base, empty);\n\n    dummy = ABC_ALLOC(double, 1);\n    if (dummy == NULL) {\n        return((double)CUDD_OUT_OF_MEM);\n    }\n    *dummy = res;\n    if ( st__insert(table, (char *)P, (char *)dummy) == st__OUT_OF_MEM) {\n        ABC_FREE(dummy);\n        return((double)CUDD_OUT_OF_MEM);\n    }\n\n    return(res);\n\n}",
+      "Draft": "func cuddZddCountDoubleStep(P *DdNode, table *st__table, base *DdNode, empty *DdNode) float64 {\n    var res float64;\n    var dummy *float64;\n\n    if P == empty {\n        return(float64(0.0)); }\n    if P == base {\n        return(float64(1.0)); }\n\n    /* Check cache */\n    if st__lookup(table, (char *)P, (char **)\u0026dummy) {\n        res = *dummy;\n        return(res);\n    }\n\n    // inlining of macro cuddE\n    res = cuddZddCountDoubleStep(((P).type.kids.E), table, base, empty) +\n        // inlining of macro cuddT\n        cuddZddCountDoubleStep(((P).type.kids.T), table, base, empty);\n\n    dummy = new(float64);\n    if dummy == nil {\n        return(float64(CUDD_OUT_OF_MEM));\n    }\n    *dummy = res;\n    if st__insert(table, (char *)P, (char *)dummy) == st__OUT_OF_MEM {\n        ABC_FREE(dummy);\n        return(float64(CUDD_OUT_OF_MEM));\n    }\n\n    return(res);\n\n}"
+    },
+    {
+      "Name": "st__zdd_countfree",
+      "Start": 9942,
+      "End": 10112,
+      "BodyStart": 10029,
+      "Original": "static enum st__retval\n st__zdd_countfree(\n  char * key,\n  char * value,\n  char * arg)\n{\n    int *d;\n\n    d = (int *)value;\n    ABC_FREE(d);\n    return( st__CONTINUE);\n\n}",
+      "Draft": "func st__zdd_countfree(key string, value string, arg string) st__retval {\n    var d *int32;\n\n    d = (int *)value;\n    ABC_FREE(d);\n    return( st__CONTINUE);\n\n}"
+    },
+    {
+      "Name": "st__zdd_count_dbl_free",
+      "Start": 10457,
+      "End": 10643,
+      "BodyStart": 10549,
+      "Original": "static enum st__retval\n st__zdd_count_dbl_free(\n  char * key,\n  char * value,\n  char * arg)\n{\n    double      *d;\n\n    d = (double *)value;\n    ABC_FREE(d);\n    return( st__CONTINUE);\n\n}",
+      "Draft": "func st__zdd_count_dbl_free(key string, value string, arg string) st__retval {\n    var d *float64;\n\n    d = (double *)value;\n    ABC_FREE(d);\n    return( st__CONTINUE);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::pointer-cast::8150",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8015,
+      "End": 8024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::pointer-cast::8578",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8341,
+      "End": 8349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::pointer-cast::8589",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8352,
+      "End": 8360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::pointer-cast::9347",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9110,
+      "End": 9119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::pointer-cast::9798",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9459,
+      "End": 9467
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::pointer-cast::9809",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9470,
+      "End": 9478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::pointer-cast::10391",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10052,
+      "End": 10059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::pointer-cast::10919",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10580,
+      "End": 10590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::Cudd_zddCount",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5310,
+      "End": 5829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::Cudd_zddCountDouble",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_zddCountDouble",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6369,
+      "End": 6924
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::cuddZddCountStep",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddCountStep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7723,
+      "End": 8472
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::cuddZddCountDoubleStep",
+      "Category": "semantic-review",
+      "Symbol": "cuddZddCountDoubleStep",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8790,
+      "End": 9598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::st__zdd_countfree",
+      "Category": "semantic-review",
+      "Symbol": "st__zdd_countfree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9942,
+      "End": 10112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::st__zdd_count_dbl_free",
+      "Category": "semantic-review",
+      "Symbol": "st__zdd_count_dbl_free",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10457,
+      "End": 10643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3604,
+      "End": 3717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::macro-inline::5770",
+      "Category": "macro-inline-review",
+      "Symbol": "NIL",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5770,
+      "End": 5779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::macro-inline::6865",
+      "Category": "macro-inline-review",
+      "Symbol": "NIL",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6865,
+      "End": 6874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::macro-inline::8213",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8213,
+      "End": 8230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::macro-inline::8396",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8396,
+      "End": 8411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::macro-inline::9320",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9320,
+      "End": 9340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::macro-inline::9514",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9514,
+      "End": 9529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::macro-inline::10070",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10070,
+      "End": 10081
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddZddCount.c::macro-inline::10601",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10601,
+      "End": 10612
+    }
+  ],
+  "Draft": "package cudd\n\n/**CFile***********************************************************************\n\n  FileName    [cuddZddCount.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Procedures to count the number of minterms of a ZDD.]\n\n  Description [External procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e Cudd_zddCount();\n                    \u003cli\u003e Cudd_zddCountDouble();\n                    \u003c/ul\u003e\n               Internal procedures included in this module:\n                    \u003cul\u003e\n                    \u003c/ul\u003e\n               Static procedures included in this module:\n                    \u003cul\u003e\n                    \u003cli\u003e cuddZddCountStep();\n                    \u003cli\u003e cuddZddCountDoubleStep();\n                    \u003cli\u003e st__zdd_count_dbl_free()\n                    \u003cli\u003e st__zdd_countfree()\n                    \u003c/ul\u003e\n              ]\n\n  SeeAlso     []\n\n  Author      [Hyong-Kyoon Shin, In-Ho Moon]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddZddCount.c,v 1.14 2004/08/13 18:04:53 fabio Exp $\";\n#endif\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static int cuddZddCountStep (DdNode *P, st__table *table, DdNode *base, DdNode *empty);\n\n// static double cuddZddCountDoubleStep (DdNode *P, st__table *table, DdNode *base, DdNode *empty);\n\n// static      st__retval st__zdd_countfree (char *key, char *value, char *arg);\n\n// static      st__retval st__zdd_count_dbl_free (char *key, char *value, char *arg);\n\n\n/**AutomaticEnd***************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis [Counts the number of minterms in a ZDD.]\n\n  Description [Returns an integer representing the number of minterms\n  in a ZDD.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddCountDouble]\n\n******************************************************************************/\nfunc Cudd_zddCount(zdd *DdManager, P *DdNode) int32 {\n    var table *st__table;\n    var res int32;\n    var base, empty *DdNode;\n\n    // inlining of macro DD_ONE\n    base  = ((zdd).one);\n    // inlining of macro DD_ZERO\n    empty = ((zdd).zero);\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if table == nil { return(CUDD_OUT_OF_MEM); }\n    res = cuddZddCountStep(P, table, base, empty);\n    if res == CUDD_OUT_OF_MEM {\n        zdd.errorCode = CUDD_MEMORY_OUT;\n    }\n    st__foreach(table, st__zdd_countfree, NIL(char));\n    st__free_table(table);\n\n    return(res);\n\n} /* end of Cudd_zddCount */\n\n\n/**Function********************************************************************\n\n  Synopsis [Counts the number of minterms of a ZDD.]\n\n  Description [Counts the number of minterms of a ZDD. The result is\n  returned as a double. If the procedure runs out of memory, it\n  returns (double) CUDD_OUT_OF_MEM. This procedure is used in\n  Cudd_zddCountMinterm.]\n\n  SideEffects [None]\n\n  SeeAlso     [Cudd_zddCountMinterm Cudd_zddCount]\n\n******************************************************************************/\nfunc Cudd_zddCountDouble(zdd *DdManager, P *DdNode) float64 {\n    var table *st__table;\n    var res float64;\n    var base, empty *DdNode;\n\n    // inlining of macro DD_ONE\n    base  = ((zdd).one);\n    // inlining of macro DD_ZERO\n    empty = ((zdd).zero);\n    table = st__init_table( st__ptrcmp, st__ptrhash);\n    if table == nil { return(float64(CUDD_OUT_OF_MEM)); }\n    res = cuddZddCountDoubleStep(P, table, base, empty);\n    if res == float64(CUDD_OUT_OF_MEM) {\n        zdd.errorCode = CUDD_MEMORY_OUT;\n    }\n    st__foreach(table, st__zdd_count_dbl_free, NIL(char));\n    st__free_table(table);\n\n    return(res);\n\n} /* end of Cudd_zddCountDouble */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Cudd_zddCount.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddZddCountStep(P *DdNode, table *st__table, base *DdNode, empty *DdNode) int32 {\n    var res int32;\n    var dummy *int32;\n\n    if P == empty {\n        return(0); }\n    if P == base {\n        return(1); }\n\n    /* Check cache. */\n    if st__lookup(table, (char *)P, (char **)\u0026dummy) {\n        res = *dummy;\n        return(res);\n    }\n\n    // inlining of macro cuddE\n    res = cuddZddCountStep(((P).type.kids.E), table, base, empty) +\n        // inlining of macro cuddT\n        cuddZddCountStep(((P).type.kids.T), table, base, empty);\n\n    dummy = new(int32);\n    if dummy == nil {\n        return(CUDD_OUT_OF_MEM);\n    }\n    *dummy = res;\n    if st__insert(table, (char *)P, (char *)dummy) == st__OUT_OF_MEM {\n        ABC_FREE(dummy);\n        return(CUDD_OUT_OF_MEM);\n    }\n\n    return(res);\n\n} /* end of cuddZddCountStep */\n\n\n/**Function********************************************************************\n\n  Synopsis [Performs the recursive step of Cudd_zddCountDouble.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc cuddZddCountDoubleStep(P *DdNode, table *st__table, base *DdNode, empty *DdNode) float64 {\n    var res float64;\n    var dummy *float64;\n\n    if P == empty {\n        return(float64(0.0)); }\n    if P == base {\n        return(float64(1.0)); }\n\n    /* Check cache */\n    if st__lookup(table, (char *)P, (char **)\u0026dummy) {\n        res = *dummy;\n        return(res);\n    }\n\n    // inlining of macro cuddE\n    res = cuddZddCountDoubleStep(((P).type.kids.E), table, base, empty) +\n        // inlining of macro cuddT\n        cuddZddCountDoubleStep(((P).type.kids.T), table, base, empty);\n\n    dummy = new(float64);\n    if dummy == nil {\n        return(float64(CUDD_OUT_OF_MEM));\n    }\n    *dummy = res;\n    if st__insert(table, (char *)P, (char *)dummy) == st__OUT_OF_MEM {\n        ABC_FREE(dummy);\n        return(float64(CUDD_OUT_OF_MEM));\n    }\n\n    return(res);\n\n} /* end of cuddZddCountDoubleStep */\n\n\n/**Function********************************************************************\n\n  Synopsis [Frees the memory associated with the computed table of\n  Cudd_zddCount.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc st__zdd_countfree(key string, value string, arg string) st__retval {\n    var d *int32;\n\n    d = (int *)value;\n    ABC_FREE(d);\n    return( st__CONTINUE);\n\n} /* end of st__zdd_countfree */\n\n\n/**Function********************************************************************\n\n  Synopsis [Frees the memory associated with the computed table of\n  Cudd_zddCountDouble.]\n\n  Description []\n\n  SideEffects [None]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc st__zdd_count_dbl_free(key string, value string, arg string) st__retval {\n    var d *float64;\n\n    d = (double *)value;\n    ABC_FREE(d);\n    return( st__CONTINUE);\n\n} /* end of st__zdd_count_dbl_free */\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,271 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c",
+  "SHA256": "dc18b6eedcaa415c186b0aedf9e8bcdba1dc8b01fa009f207c2163d1c5568206",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 1851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Node \u003c p.vCutsOld.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2297
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Node \u003c p.vCutsTemp.nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 142,
+        "Column": 5,
+        "ByteOffset": 3936
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Cut_NodeReadCutsNew(p, Node) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 159,
+        "Column": 5,
+        "ByteOffset": 4420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vFanCounts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 4499
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nFanouts \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cut_NodeReadCutsNew",
+      "Start": 1304,
+      "End": 1484,
+      "BodyStart": 1363,
+      "Original": "Cut_Cut_t * Cut_NodeReadCutsNew( Cut_Man_t * p, int Node )\n{\n    if ( Node \u003e= p-\u003evCutsNew-\u003enSize )\n        return NULL;\n    return (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCutsNew, Node );\n}",
+      "Draft": "func Cut_NodeReadCutsNew(p *Cut_Man_t, Node int32) *Cut_Cut_t {\n    if Node \u003e= p.vCutsNew.nSize {\n        return nil; }\n    return (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node );\n}"
+    },
+    {
+      "Name": "Cut_NodeReadCutsOld",
+      "Start": 1767,
+      "End": 1929,
+      "BodyStart": 1826,
+      "Original": "Cut_Cut_t * Cut_NodeReadCutsOld( Cut_Man_t * p, int Node )\n{\n    assert( Node \u003c p-\u003evCutsOld-\u003enSize );\n    return (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCutsOld, Node );\n}",
+      "Draft": "func Cut_NodeReadCutsOld(p *Cut_Man_t, Node int32) *Cut_Cut_t {\n    assert(Node \u003c p.vCutsOld.nSize, \"Node \u003c p.vCutsOld.nSize\");\n    return (Cut_Cut_t *)Vec_PtrEntry( p.vCutsOld, Node );\n}"
+    },
+    {
+      "Name": "Cut_NodeReadCutsTemp",
+      "Start": 2212,
+      "End": 2377,
+      "BodyStart": 2272,
+      "Original": "Cut_Cut_t * Cut_NodeReadCutsTemp( Cut_Man_t * p, int Node )\n{\n    assert( Node \u003c p-\u003evCutsTemp-\u003enSize );\n    return (Cut_Cut_t *)Vec_PtrEntry( p-\u003evCutsTemp, Node );\n}",
+      "Draft": "func Cut_NodeReadCutsTemp(p *Cut_Man_t, Node int32) *Cut_Cut_t {\n    assert(Node \u003c p.vCutsTemp.nSize, \"Node \u003c p.vCutsTemp.nSize\");\n    return (Cut_Cut_t *)Vec_PtrEntry( p.vCutsTemp, Node );\n}"
+    },
+    {
+      "Name": "Cut_NodeWriteCutsNew",
+      "Start": 2660,
+      "End": 2786,
+      "BodyStart": 2732,
+      "Original": "void Cut_NodeWriteCutsNew( Cut_Man_t * p, int Node, Cut_Cut_t * pList )\n{\n    Vec_PtrWriteEntry( p-\u003evCutsNew, Node, pList );\n}",
+      "Draft": "func Cut_NodeWriteCutsNew(p *Cut_Man_t, Node int32, pList *Cut_Cut_t) {\n    Vec_PtrWriteEntry( p.vCutsNew, Node, pList );\n}"
+    },
+    {
+      "Name": "Cut_NodeWriteCutsOld",
+      "Start": 3069,
+      "End": 3195,
+      "BodyStart": 3141,
+      "Original": "void Cut_NodeWriteCutsOld( Cut_Man_t * p, int Node, Cut_Cut_t * pList )\n{\n    Vec_PtrWriteEntry( p-\u003evCutsOld, Node, pList );\n}",
+      "Draft": "func Cut_NodeWriteCutsOld(p *Cut_Man_t, Node int32, pList *Cut_Cut_t) {\n    Vec_PtrWriteEntry( p.vCutsOld, Node, pList );\n}"
+    },
+    {
+      "Name": "Cut_NodeWriteCutsTemp",
+      "Start": 3478,
+      "End": 3606,
+      "BodyStart": 3551,
+      "Original": "void Cut_NodeWriteCutsTemp( Cut_Man_t * p, int Node, Cut_Cut_t * pList )\n{\n    Vec_PtrWriteEntry( p-\u003evCutsTemp, Node, pList );\n}",
+      "Draft": "func Cut_NodeWriteCutsTemp(p *Cut_Man_t, Node int32, pList *Cut_Cut_t) {\n    Vec_PtrWriteEntry( p.vCutsTemp, Node, pList );\n}"
+    },
+    {
+      "Name": "Cut_NodeSetTriv",
+      "Start": 3876,
+      "End": 4044,
+      "BodyStart": 3924,
+      "Original": "void Cut_NodeSetTriv( Cut_Man_t * p, int Node )\n{\n    assert( Cut_NodeReadCutsNew(p, Node) == NULL );\n    Cut_NodeWriteCutsNew( p, Node, Cut_CutCreateTriv(p, Node) );\n}",
+      "Draft": "func Cut_NodeSetTriv(p *Cut_Man_t, Node int32) {\n    assert(Cut_NodeReadCutsNew(p, Node) == nil, \"Cut_NodeReadCutsNew(p, Node) == nil\");\n    Cut_NodeWriteCutsNew( p, Node, Cut_CutCreateTriv(p, Node) );\n}"
+    },
+    {
+      "Name": "Cut_NodeTryDroppingCuts",
+      "Start": 4330,
+      "End": 4636,
+      "BodyStart": 4386,
+      "Original": "void Cut_NodeTryDroppingCuts( Cut_Man_t * p, int Node )\n{\n    int nFanouts;\n    assert( p-\u003evFanCounts );\n    nFanouts = Vec_IntEntry( p-\u003evFanCounts, Node );\n    assert( nFanouts \u003e 0 );\n    if ( --nFanouts == 0 )\n        Cut_NodeFreeCuts( p, Node );\n    Vec_IntWriteEntry( p-\u003evFanCounts, Node, nFanouts );\n}",
+      "Draft": "func Cut_NodeTryDroppingCuts(p *Cut_Man_t, Node int32) {\n    var nFanouts int32;\n    assert(p.vFanCounts, \"p.vFanCounts\");\n    nFanouts = Vec_IntEntry( p.vFanCounts, Node );\n    assert(nFanouts \u003e 0, \"nFanouts \u003e 0\");\n    if nFanouts--; nFanouts == 0 {\n        Cut_NodeFreeCuts( p, Node ); }\n    Vec_IntWriteEntry( p.vFanCounts, Node, nFanouts );\n}"
+    },
+    {
+      "Name": "Cut_NodeFreeCuts",
+      "Start": 4905,
+      "End": 5209,
+      "BodyStart": 4954,
+      "Original": "void Cut_NodeFreeCuts( Cut_Man_t * p, int Node )\n{\n    Cut_Cut_t * pList, * pCut, * pCut2;\n    pList = Cut_NodeReadCutsNew( p, Node );\n    if ( pList == NULL )\n        return;\n    Cut_ListForEachCutSafe( pList, pCut, pCut2 )\n        Cut_CutRecycle( p, pCut );\n    Cut_NodeWriteCutsNew( p, Node, NULL );\n}",
+      "Draft": "func Cut_NodeFreeCuts(p *Cut_Man_t, Node int32) {\n    var pList, pCut, pCut2 *Cut_Cut_t;\n    pList = Cut_NodeReadCutsNew( p, Node );\n    if pList == nil {\n        return; }\n    // inlining of macro Cut_ListForEachCutSafe\n    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          pCut;                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n        Cut_CutRecycle( p, pCut );\n    }\n    Cut_NodeWriteCutsNew( p, Node, nil );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c::pointer-cast::1435",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1435,
+      "End": 1448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c::pointer-cast::1880",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1880,
+      "End": 1893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c::pointer-cast::2327",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2327,
+      "End": 2340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c::Cut_NodeReadCutsNew",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeReadCutsNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1304,
+      "End": 1484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c::Cut_NodeReadCutsOld",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeReadCutsOld",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1767,
+      "End": 1929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c::Cut_NodeReadCutsTemp",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeReadCutsTemp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2212,
+      "End": 2377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c::Cut_NodeWriteCutsNew",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeWriteCutsNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2660,
+      "End": 2786
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c::Cut_NodeWriteCutsOld",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeWriteCutsOld",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3069,
+      "End": 3195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c::Cut_NodeWriteCutsTemp",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeWriteCutsTemp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3478,
+      "End": 3606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c::Cut_NodeSetTriv",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeSetTriv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3876,
+      "End": 4044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c::Cut_NodeTryDroppingCuts",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeTryDroppingCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4330,
+      "End": 4636
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c::ternary::Cut_NodeFreeCuts",
+      "Category": "ternary-review",
+      "Symbol": "Cut_NodeFreeCuts",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4905,
+      "End": 5209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c::Cut_NodeFreeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Cut_NodeFreeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4905,
+      "End": 5209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutApi.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5457
+    }
+  ],
+  "Draft": "package cut\n\n/**CFile****************************************************************\n\n  FileName    [cutNode.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [K-feasible cut computation package.]\n\n  Synopsis    [Procedures to compute cuts for a node.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cutNode.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cutInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the pointer to the linked list of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeReadCutsNew(p *Cut_Man_t, Node int32) *Cut_Cut_t {\n    if Node \u003e= p.vCutsNew.nSize {\n        return nil; }\n    return (Cut_Cut_t *)Vec_PtrEntry( p.vCutsNew, Node );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the pointer to the linked list of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeReadCutsOld(p *Cut_Man_t, Node int32) *Cut_Cut_t {\n    assert(Node \u003c p.vCutsOld.nSize, \"Node \u003c p.vCutsOld.nSize\");\n    return (Cut_Cut_t *)Vec_PtrEntry( p.vCutsOld, Node );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the pointer to the linked list of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeReadCutsTemp(p *Cut_Man_t, Node int32) *Cut_Cut_t {\n    assert(Node \u003c p.vCutsTemp.nSize, \"Node \u003c p.vCutsTemp.nSize\");\n    return (Cut_Cut_t *)Vec_PtrEntry( p.vCutsTemp, Node );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the pointer to the linked list of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeWriteCutsNew(p *Cut_Man_t, Node int32, pList *Cut_Cut_t) {\n    Vec_PtrWriteEntry( p.vCutsNew, Node, pList );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the pointer to the linked list of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeWriteCutsOld(p *Cut_Man_t, Node int32, pList *Cut_Cut_t) {\n    Vec_PtrWriteEntry( p.vCutsOld, Node, pList );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the pointer to the linked list of cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeWriteCutsTemp(p *Cut_Man_t, Node int32, pList *Cut_Cut_t) {\n    Vec_PtrWriteEntry( p.vCutsTemp, Node, pList );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the trivial cut for the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeSetTriv(p *Cut_Man_t, Node int32) {\n    assert(Cut_NodeReadCutsNew(p, Node) == nil, \"Cut_NodeReadCutsNew(p, Node) == nil\");\n    Cut_NodeWriteCutsNew( p, Node, Cut_CutCreateTriv(p, Node) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Consider dropping cuts if they are useless by now.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeTryDroppingCuts(p *Cut_Man_t, Node int32) {\n    var nFanouts int32;\n    assert(p.vFanCounts, \"p.vFanCounts\");\n    nFanouts = Vec_IntEntry( p.vFanCounts, Node );\n    assert(nFanouts \u003e 0, \"nFanouts \u003e 0\");\n    if nFanouts--; nFanouts == 0 {\n        Cut_NodeFreeCuts( p, Node ); }\n    Vec_IntWriteEntry( p.vFanCounts, Node, nFanouts );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates the cuts at the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_NodeFreeCuts(p *Cut_Man_t, Node int32) {\n    var pList, pCut, pCut2 *Cut_Cut_t;\n    pList = Cut_NodeReadCutsNew( p, Node );\n    if pList == nil {\n        return; }\n    // inlining of macro Cut_ListForEachCutSafe\n    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          pCut;                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n        Cut_CutRecycle( p, pCut );\n    }\n    Cut_NodeWriteCutsNew( p, Node, nil );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

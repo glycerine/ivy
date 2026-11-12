@@ -1,0 +1,187 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h",
+  "SHA256": "e726035a943f228d019083fb447448303c6acbebf15cf36595a42e23e7ca62b8",
+  "Functions": [
+    {
+      "Name": "Cut_CutReadLeaveNum",
+      "Start": 4128,
+      "End": 4216,
+      "BodyStart": 4191,
+      "Original": "static inline int        Cut_CutReadLeaveNum( Cut_Cut_t * p )  {  return p-\u003enLeaves;   }",
+      "Draft": "func Cut_CutReadLeaveNum(p *Cut_Cut_t) int32 {  return p.nLeaves;   }"
+    },
+    {
+      "Name": "Cut_CutReadLeaves",
+      "Start": 4217,
+      "End": 4305,
+      "BodyStart": 4280,
+      "Original": "static inline int *      Cut_CutReadLeaves( Cut_Cut_t * p )    {  return p-\u003epLeaves;   }",
+      "Draft": "func Cut_CutReadLeaves(p *Cut_Cut_t) *int32 {  return p.pLeaves;   }"
+    },
+    {
+      "Name": "Cut_CutReadTruth",
+      "Start": 4306,
+      "End": 4420,
+      "BodyStart": 4369,
+      "Original": "static inline unsigned * Cut_CutReadTruth( Cut_Cut_t * p )     {  return (unsigned *)(p-\u003epLeaves + p-\u003enVarsMax); }",
+      "Draft": "func Cut_CutReadTruth(p *Cut_Cut_t) *uint32 {  return (unsigned *)(p.pLeaves + p.nVarsMax); }"
+    },
+    {
+      "Name": "Cut_CutWriteTruth",
+      "Start": 4421,
+      "End": 4657,
+      "BodyStart": 4502,
+      "Original": "static inline void       Cut_CutWriteTruth( Cut_Cut_t * p, unsigned * puTruth )  { \n    int i;\n    for ( i = (p-\u003enVarsMax \u003c= 5) ? 0 : ((1 \u003c\u003c (p-\u003enVarsMax - 5)) - 1); i \u003e= 0; i-- )\n        p-\u003epLeaves[p-\u003enVarsMax + i] = (int)puTruth[i];\n}",
+      "Draft": "func Cut_CutWriteTruth(p *Cut_Cut_t, puTruth *uint32) { \n    var i int32;\n    for  i = (p.nVarsMax \u003c= 5) ? 0 : ((1 \u003c\u003c (p.nVarsMax - 5)) - 1); i \u003e= 0; i--  {\n        p.pLeaves[p.nVarsMax + i] = int32(puTruth[i]);\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::struct::Cut_Params_t",
+      "Category": "struct-review",
+      "Symbol": "Cut_Params_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1743,
+      "End": 3345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::struct::Cut_CutStruct_t_::unsigned           Num0       : 11;",
+      "Category": "struct-field-review",
+      "Symbol": "Cut_CutStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3372,
+      "End": 3412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::struct::Cut_CutStruct_t_::// temporary number\n    unsigned           Num1       : 11;",
+      "Category": "struct-field-review",
+      "Symbol": "Cut_CutStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3412,
+      "End": 3474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::struct::Cut_CutStruct_t_::// temporary number\n    unsigned           fSimul     :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Cut_CutStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3474,
+      "End": 3536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::struct::Cut_CutStruct_t_::// the value of cut's output at 000.. pattern\n    unsigned           fCompl     :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Cut_CutStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3536,
+      "End": 3624
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::struct::Cut_CutStruct_t_::// the cut is complemented\n    unsigned           nVarsMax   :  4;",
+      "Category": "struct-field-review",
+      "Symbol": "Cut_CutStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3624,
+      "End": 3693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::struct::Cut_CutStruct_t_::// the max number of vars [4-6]\n    unsigned           nLeaves    :  4;",
+      "Category": "struct-field-review",
+      "Symbol": "Cut_CutStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3693,
+      "End": 3767
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::struct::Cut_CutStruct_t_::// the next cut in the list\n    int                pLeaves[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Cut_CutStruct_t_",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4018,
+      "End": 4093
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::struct::Cut_CutStruct_t_",
+      "Category": "struct-review",
+      "Symbol": "Cut_CutStruct_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 3347,
+      "End": 4126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::pointer-cast::4379",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4379,
+      "End": 4391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::Cut_CutReadLeaveNum",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutReadLeaveNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4128,
+      "End": 4216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::Cut_CutReadLeaves",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutReadLeaves",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4217,
+      "End": 4305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::Cut_CutReadTruth",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutReadTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4306,
+      "End": 4420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::ternary::Cut_CutWriteTruth",
+      "Category": "ternary-review",
+      "Symbol": "Cut_CutWriteTruth",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4421,
+      "End": 4657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::Cut_CutWriteTruth",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutWriteTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4421,
+      "End": 4657
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cut.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9303
+    }
+  ],
+  "Draft": "package cut\n\n/**CFile****************************************************************\n\n  FileName    [cut.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [K-feasible cut computation package.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: .h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\nconst CUT_SIZE_MIN =    3      // the min K of the K-feasible cut computation\nconst CUT_SIZE_MAX =   12      // the max K of the K-feasible cut computation\n\nconst CUT_SHIFT =       8      // the number of bits for storing latch number in the cut leaves\nconst CUT_MASK =        0xFF   // the mask to get the stored latch number\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Cut_Man_t =         Cut_ManStruct_t_;\ntype Cut_Oracle_t =      Cut_OracleStruct_t_;\ntype Cut_Cut_t =         Cut_CutStruct_t_;\n        \n\ntype Cut_Params_t struct {\n    nVarsMax                int32;          // the max cut size (\"k\" of the k-feasible cuts)\n    nKeepMax                int32;          // the max number of cuts kept at a node\n    nIdsMax                int32;           // the max number of IDs of cut objects\n    nBitShift                int32;         // the number of bits used for the latch counter of an edge\n    nCutSet                int32;           // the number of nodes in the cut set\n    fTruth                int32;            // compute truth tables\n    fFilter                int32;           // filter dominated cuts\n    fSeq                int32;              // compute sequential cuts\n    fDrop                int32;             // drop cuts on the fly\n    fDag                int32;              // compute only DAG cuts\n    fTree                int32;             // compute only tree cuts\n    fGlobal                int32;           // compute only global cuts\n    fLocal                int32;            // compute only local cuts\n    fRecord                int32;           // record the cut computation flow\n    fRecordAig                int32;        // record the cut functions\n    fFancy                int32;            // perform fancy computations\n    fMap                int32;              // computes delay of FPGA mapping with cuts\n    fAdjust                int32;           // removed useless fanouts of XORs/MUXes\n    fNpnSave                int32;          // enables dumping 6-input truth tables\n    fVerbose                int32;          // the verbosiness flag\n}\n\ntype Cut_CutStruct_t_ struct {\n    Num0 uint32; /* C bitfield: 11 bits; review packing and truncation */   // temporary number\n    Num1 uint32; /* C bitfield: 11 bits; review packing and truncation */   // temporary number\n    fSimul uint32; /* C bitfield: 1 bits; review packing and truncation */   // the value of cut's output at 000.. pattern\n    fCompl uint32; /* C bitfield: 1 bits; review packing and truncation */   // the cut is complemented\n    nVarsMax uint32; /* C bitfield: 4 bits; review packing and truncation */   // the max number of vars [4-6]\n    nLeaves uint32; /* C bitfield: 4 bits; review packing and truncation */   // the number of leaves [4-6]\n    uSign           uint32;             // the signature\n    uCanon0           uint32;           // the canonical form \n    uCanon1           uint32;           // the canonical form \n    pNext         *Cut_Cut_t;             // the next cut in the list\n    pLeaves [0]int32;        // the array of leaves\n}\n\nfunc Cut_CutReadLeaveNum(p *Cut_Cut_t) int32 {  return p.nLeaves;   }\nfunc Cut_CutReadLeaves(p *Cut_Cut_t) *int32 {  return p.pLeaves;   }\nfunc Cut_CutReadTruth(p *Cut_Cut_t) *uint32 {  return (unsigned *)(p.pLeaves + p.nVarsMax); }\nfunc Cut_CutWriteTruth(p *Cut_Cut_t, puTruth *uint32) { \n    var i int32;\n    for  i = (p.nVarsMax \u003c= 5) ? 0 : ((1 \u003c\u003c (p.nVarsMax - 5)) - 1); i \u003e= 0; i--  {\n        p.pLeaves[p.nVarsMax + i] = int32(puTruth[i]);\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== cutApi.c ==========================================================*/\n// extern Cut_Cut_t *      Cut_NodeReadCutsNew( Cut_Man_t * p, int Node );\n\n// extern Cut_Cut_t *      Cut_NodeReadCutsOld( Cut_Man_t * p, int Node );\n\n// extern Cut_Cut_t *      Cut_NodeReadCutsTemp( Cut_Man_t * p, int Node );\n\n// extern void             Cut_NodeWriteCutsNew( Cut_Man_t * p, int Node, Cut_Cut_t * pList );\n\n// extern void             Cut_NodeWriteCutsOld( Cut_Man_t * p, int Node, Cut_Cut_t * pList );\n\n// extern void             Cut_NodeWriteCutsTemp( Cut_Man_t * p, int Node, Cut_Cut_t * pList );\n\n// extern void             Cut_NodeSetTriv( Cut_Man_t * p, int Node );\n\n// extern void             Cut_NodeTryDroppingCuts( Cut_Man_t * p, int Node );\n\n// extern void             Cut_NodeFreeCuts( Cut_Man_t * p, int Node );\n\n/*=== cutCut.c ==========================================================*/\n// extern void             Cut_CutPrint( Cut_Cut_t * pCut, int fSeq );\n\n// extern void             Cut_CutPrintList( Cut_Cut_t * pList, int fSeq );\n\n// extern int              Cut_CutCountList( Cut_Cut_t * pList );\n\n/*=== cutMan.c ==========================================================*/\n// extern Cut_Man_t *      Cut_ManStart( Cut_Params_t * pParams );\n\n// extern void             Cut_ManStop( Cut_Man_t * p );\n\n// extern void             Cut_ManPrintStats( Cut_Man_t * p );\n\n// extern void             Cut_ManPrintStatsToFile( Cut_Man_t * p, char * pFileName, abctime TimeTotal );\n\n// extern void             Cut_ManSetFanoutCounts( Cut_Man_t * p, Vec_Int_t * vFanCounts );\n\n// extern void             Cut_ManSetNodeAttrs( Cut_Man_t * p, Vec_Int_t * vFanCounts );\n\n// extern int              Cut_ManReadVarsMax( Cut_Man_t * p );\n\n// extern Cut_Params_t *   Cut_ManReadParams( Cut_Man_t * p );\n\n// extern Vec_Int_t *      Cut_ManReadNodeAttrs( Cut_Man_t * p );\n\n// extern void             Cut_ManIncrementDagNodes( Cut_Man_t * p );\n\n/*=== cutNode.c ==========================================================*/\n// extern Cut_Cut_t *      Cut_NodeComputeCuts( Cut_Man_t * p, int Node, int Node0, int Node1, int fCompl0, int fCompl1, int fTriv, int TreeCode );\n \n// extern Cut_Cut_t *      Cut_NodeUnionCuts( Cut_Man_t * p, Vec_Int_t * vNodes );\n\n// extern Cut_Cut_t *      Cut_NodeUnionCutsSeq( Cut_Man_t * p, Vec_Int_t * vNodes, int CutSetNum, int fFirst );\n\n// extern int              Cut_ManMappingArea_rec( Cut_Man_t * p, int Node );\n\n/*=== cutSeq.c ==========================================================*/\n// extern void             Cut_NodeComputeCutsSeq( Cut_Man_t * p, int Node, int Node0, int Node1, int fCompl0, int fCompl1, int nLat0, int nLat1, int fTriv, int CutSetNum );\n\n// extern void             Cut_NodeNewMergeWithOld( Cut_Man_t * p, int Node );\n\n// extern int              Cut_NodeTempTransferToNew( Cut_Man_t * p, int Node, int CutSetNum );\n\n// extern void             Cut_NodeOldTransferToNew( Cut_Man_t * p, int Node );\n\n/*=== cutOracle.c ==========================================================*/\n// extern Cut_Oracle_t *   Cut_OracleStart( Cut_Man_t * pMan );\n\n// extern void             Cut_OracleStop( Cut_Oracle_t * p );\n\n// extern void             Cut_OracleSetFanoutCounts( Cut_Oracle_t * p, Vec_Int_t * vFanCounts );\n\n// extern int              Cut_OracleReadDrop( Cut_Oracle_t * p );\n\n// extern void             Cut_OracleNodeSetTriv( Cut_Oracle_t * p, int Node );\n\n// extern Cut_Cut_t *      Cut_OracleComputeCuts( Cut_Oracle_t * p, int Node, int Node0, int Node1, int fCompl0, int fCompl1 );\n\n// extern void             Cut_OracleTryDroppingCuts( Cut_Oracle_t * p, int Node );\n\n/*=== cutTruth.c ==========================================================*/\n// extern void             Cut_TruthNCanonicize( Cut_Cut_t * pCut );\n\n/*=== cutPre22.c ==========================================================*/\n// extern void             Cut_CellPrecompute();\n\n// extern void             Cut_CellLoad();\n\n// extern int              Cut_CellIsRunning();\n\n// extern void             Cut_CellDumpToFile();\n\n// extern int              Cut_CellTruthLookup( unsigned * pTruth, int nVars );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

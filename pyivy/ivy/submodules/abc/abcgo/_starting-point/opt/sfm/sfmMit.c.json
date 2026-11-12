@@ -1,0 +1,250 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c",
+  "SHA256": "c5a751cb4f0d228927dcaa7e5d42ac02799f4cbe563d1e32e9659566c51ef909",
+  "Functions": [
+    {
+      "Name": "Sfm_MitStart",
+      "Start": 1378,
+      "End": 1510,
+      "BodyStart": 1494,
+      "Original": "Sfm_Mit_t *  Sfm_MitStart( Mio_Library_t * pLib, SC_Lib * pScl, Scl_Con_t * pExt, Abc_Ntk_t * pNtk, int DeltaCrit ) { return NULL; }",
+      "Draft": "func Sfm_MitStart(pLib *Mio_Library_t, pScl *SC_Lib, pExt *Scl_Con_t, pNtk *Abc_Ntk_t, DeltaCrit int32) *Sfm_Mit_t { return nil; }"
+    },
+    {
+      "Name": "Sfm_MitStop",
+      "Start": 1511,
+      "End": 1613,
+      "BodyStart": 1611,
+      "Original": "void         Sfm_MitStop( Sfm_Mit_t * p )                                                           {}",
+      "Draft": "func Sfm_MitStop(p *Sfm_Mit_t) {}"
+    },
+    {
+      "Name": "Sfm_MitReadNtkDelay",
+      "Start": 1614,
+      "End": 1726,
+      "BodyStart": 1714,
+      "Original": "int          Sfm_MitReadNtkDelay( Sfm_Mit_t * p )                                                   { return 0;}",
+      "Draft": "func Sfm_MitReadNtkDelay(p *Sfm_Mit_t) int32 { return 0;}"
+    },
+    {
+      "Name": "Sfm_MitReadNtkMinSlack",
+      "Start": 1727,
+      "End": 1839,
+      "BodyStart": 1827,
+      "Original": "int          Sfm_MitReadNtkMinSlack( Sfm_Mit_t * p )                                                { return 0;}",
+      "Draft": "func Sfm_MitReadNtkMinSlack(p *Sfm_Mit_t) int32 { return 0;}"
+    },
+    {
+      "Name": "Sfm_MitReadObjDelay",
+      "Start": 1840,
+      "End": 1952,
+      "BodyStart": 1940,
+      "Original": "int          Sfm_MitReadObjDelay( Sfm_Mit_t * p, int iObj )                                         { return 0;}",
+      "Draft": "func Sfm_MitReadObjDelay(p *Sfm_Mit_t, iObj int32) int32 { return 0;}"
+    },
+    {
+      "Name": "Sfm_MitTransferLoad",
+      "Start": 1953,
+      "End": 2055,
+      "BodyStart": 2053,
+      "Original": "void         Sfm_MitTransferLoad( Sfm_Mit_t * p, Abc_Obj_t * pNew, Abc_Obj_t * pOld )               {}",
+      "Draft": "func Sfm_MitTransferLoad(p *Sfm_Mit_t, pNew *Abc_Obj_t, pOld *Abc_Obj_t) {}"
+    },
+    {
+      "Name": "Sfm_MitTimingGrow",
+      "Start": 2057,
+      "End": 2159,
+      "BodyStart": 2157,
+      "Original": "void         Sfm_MitTimingGrow( Sfm_Mit_t * p )                                                     {}",
+      "Draft": "func Sfm_MitTimingGrow(p *Sfm_Mit_t) {}"
+    },
+    {
+      "Name": "Sfm_MitUpdateLoad",
+      "Start": 2161,
+      "End": 2263,
+      "BodyStart": 2261,
+      "Original": "void         Sfm_MitUpdateLoad( Sfm_Mit_t * p, Vec_Int_t * vTimeNodes, int fAdd )                   {}",
+      "Draft": "func Sfm_MitUpdateLoad(p *Sfm_Mit_t, vTimeNodes *Vec_Int_t, fAdd int32) {}"
+    },
+    {
+      "Name": "Sfm_MitUpdateTiming",
+      "Start": 2264,
+      "End": 2366,
+      "BodyStart": 2364,
+      "Original": "void         Sfm_MitUpdateTiming( Sfm_Mit_t * p, Vec_Int_t * vTimeNodes )                           {}",
+      "Draft": "func Sfm_MitUpdateTiming(p *Sfm_Mit_t, vTimeNodes *Vec_Int_t) {}"
+    },
+    {
+      "Name": "Sfm_MitSortArrayByArrival",
+      "Start": 2367,
+      "End": 2479,
+      "BodyStart": 2467,
+      "Original": "int          Sfm_MitSortArrayByArrival( Sfm_Mit_t * p, Vec_Int_t * vNodes, int iPivot )             { return 0;}",
+      "Draft": "func Sfm_MitSortArrayByArrival(p *Sfm_Mit_t, vNodes *Vec_Int_t, iPivot int32) int32 { return 0;}"
+    },
+    {
+      "Name": "Sfm_MitPriorityNodes",
+      "Start": 2480,
+      "End": 2592,
+      "BodyStart": 2580,
+      "Original": "int          Sfm_MitPriorityNodes( Sfm_Mit_t * p, Vec_Int_t * vCands, int Window )                  { return 0;}",
+      "Draft": "func Sfm_MitPriorityNodes(p *Sfm_Mit_t, vCands *Vec_Int_t, Window int32) int32 { return 0;}"
+    },
+    {
+      "Name": "Sfm_MitNodeIsNonCritical",
+      "Start": 2593,
+      "End": 2705,
+      "BodyStart": 2693,
+      "Original": "int          Sfm_MitNodeIsNonCritical( Sfm_Mit_t * p, Abc_Obj_t * pPivot, Abc_Obj_t * pNode )       { return 0;}",
+      "Draft": "func Sfm_MitNodeIsNonCritical(p *Sfm_Mit_t, pPivot *Abc_Obj_t, pNode *Abc_Obj_t) int32 { return 0;}"
+    },
+    {
+      "Name": "Sfm_MitEvalRemapping",
+      "Start": 2706,
+      "End": 2917,
+      "BodyStart": 2905,
+      "Original": "int          Sfm_MitEvalRemapping( Sfm_Mit_t * p, Vec_Int_t * vMffc, Abc_Obj_t * pObj, Vec_Int_t * vFanins, Vec_Int_t * vMap, Mio_Gate_t * pGate1, char * pFans1, Mio_Gate_t * pGate2, char * pFans2 ) { return 0;}",
+      "Draft": "func Sfm_MitEvalRemapping(p *Sfm_Mit_t, vMffc *Vec_Int_t, pObj *Abc_Obj_t, vFanins *Vec_Int_t, vMap *Vec_Int_t, pGate1 *Mio_Gate_t, pFans1 string, pGate2 *Mio_Gate_t, pFans2 string) int32 { return 0;}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::struct::Sfm_Mit_t_",
+      "Category": "struct-review",
+      "Symbol": "Sfm_Mit_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 792,
+      "End": 898
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::Sfm_MitStart",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_MitStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1378,
+      "End": 1510
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::Sfm_MitStop",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_MitStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1511,
+      "End": 1613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::Sfm_MitReadNtkDelay",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_MitReadNtkDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1614,
+      "End": 1726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::Sfm_MitReadNtkMinSlack",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_MitReadNtkMinSlack",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1727,
+      "End": 1839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::Sfm_MitReadObjDelay",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_MitReadObjDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1840,
+      "End": 1952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::Sfm_MitTransferLoad",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_MitTransferLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1953,
+      "End": 2055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::Sfm_MitTimingGrow",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_MitTimingGrow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2057,
+      "End": 2159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::Sfm_MitUpdateLoad",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_MitUpdateLoad",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2161,
+      "End": 2263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::Sfm_MitUpdateTiming",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_MitUpdateTiming",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2264,
+      "End": 2366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::Sfm_MitSortArrayByArrival",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_MitSortArrayByArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2367,
+      "End": 2479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::Sfm_MitPriorityNodes",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_MitPriorityNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2480,
+      "End": 2592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::Sfm_MitNodeIsNonCritical",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_MitNodeIsNonCritical",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2593,
+      "End": 2705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::Sfm_MitEvalRemapping",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_MitEvalRemapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2706,
+      "End": 2917
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmMit.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3165
+    }
+  ],
+  "Draft": "package sfm\n\n/**CFile****************************************************************\n\n  FileName    [sfmMit.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [Timing manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sfmMit.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sfmInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Sfm_Mit_t_ struct {\n    Value1      int32;\n    Value2      int32;\n    Value3      int32;\n    Value4      int32;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Temporary place holders.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_MitStart(pLib *Mio_Library_t, pScl *SC_Lib, pExt *Scl_Con_t, pNtk *Abc_Ntk_t, DeltaCrit int32) *Sfm_Mit_t { return nil; }\nfunc Sfm_MitStop(p *Sfm_Mit_t) {}\nfunc Sfm_MitReadNtkDelay(p *Sfm_Mit_t) int32 { return 0;}\nfunc Sfm_MitReadNtkMinSlack(p *Sfm_Mit_t) int32 { return 0;}\nfunc Sfm_MitReadObjDelay(p *Sfm_Mit_t, iObj int32) int32 { return 0;}\nfunc Sfm_MitTransferLoad(p *Sfm_Mit_t, pNew *Abc_Obj_t, pOld *Abc_Obj_t) {};\nfunc Sfm_MitTimingGrow(p *Sfm_Mit_t) {};\nfunc Sfm_MitUpdateLoad(p *Sfm_Mit_t, vTimeNodes *Vec_Int_t, fAdd int32) {}\nfunc Sfm_MitUpdateTiming(p *Sfm_Mit_t, vTimeNodes *Vec_Int_t) {}\nfunc Sfm_MitSortArrayByArrival(p *Sfm_Mit_t, vNodes *Vec_Int_t, iPivot int32) int32 { return 0;}\nfunc Sfm_MitPriorityNodes(p *Sfm_Mit_t, vCands *Vec_Int_t, Window int32) int32 { return 0;}\nfunc Sfm_MitNodeIsNonCritical(p *Sfm_Mit_t, pPivot *Abc_Obj_t, pNode *Abc_Obj_t) int32 { return 0;}\nfunc Sfm_MitEvalRemapping(p *Sfm_Mit_t, vMffc *Vec_Int_t, pObj *Abc_Obj_t, vFanins *Vec_Int_t, vMap *Vec_Int_t, pGate1 *Mio_Gate_t, pFans1 string, pGate2 *Mio_Gate_t, pFans2 string) int32 { return 0;}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

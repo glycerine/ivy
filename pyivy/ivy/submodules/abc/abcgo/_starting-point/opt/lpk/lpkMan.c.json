@@ -1,0 +1,206 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMan.c",
+  "SHA256": "c330c32014e7becc2d6122c86a000cca972b36b50e9b1bbb284199f4790f6523",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPars.nLutsMax \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1377
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPars.nVarsMax \u003e 0 \u0026\u0026 pPars.nVarsMax \u003c= 16 );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 52,
+        "Column": 9,
+        "ByteOffset": 1439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = ABC_ALLOC( Lpk_Man_t, 1 );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 53,
+        "Column": 5,
+        "ByteOffset": 1470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Lpk_Man_t) );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 70,
+        "Column": 24,
+        "ByteOffset": 2182
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.ppTruths[0][0] = ABC_ALLOC( unsigned, 32 * nWords );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 3118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p.ppTruths[0][0] );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 114,
+        "Column": 9,
+        "ByteOffset": 3439
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pPars );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 3729
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    ABC_FREE( p );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Lpk_ManStart",
+      "Start": 1224,
+      "End": 2807,
+      "BodyStart": 1270,
+      "Original": "Lpk_Man_t * Lpk_ManStart( Lpk_Par_t * pPars )\n{\n    Lpk_Man_t * p;\n    int i, nWords;\n    assert( pPars-\u003enLutsMax \u003c= 16 );\n    assert( pPars-\u003enVarsMax \u003e 0 \u0026\u0026 pPars-\u003enVarsMax \u003c= 16 );\n    p = ABC_ALLOC( Lpk_Man_t, 1 );\n    memset( p, 0, sizeof(Lpk_Man_t) );\n    p-\u003epPars = pPars;\n    p-\u003enCutsMax = LPK_CUTS_MAX;\n    p-\u003evTtElems = Vec_PtrAllocTruthTables( pPars-\u003enVarsMax );\n    p-\u003evTtNodes = Vec_PtrAllocSimInfo( 1024, Abc_TruthWordNum(pPars-\u003enVarsMax) );\n    p-\u003evCover   = Vec_IntAlloc( 1 \u003c\u003c 12 );\n    p-\u003evLeaves  = Vec_PtrAlloc( 32 );\n    p-\u003evTemp    = Vec_PtrAlloc( 32 );\n    for ( i = 0; i \u003c 8; i++ )\n        p-\u003evSets[i] = Vec_IntAlloc(100);\n    p-\u003epDsdMan = Kit_DsdManAlloc( pPars-\u003enVarsMax, 64 );\n    p-\u003evMemory = Vec_IntAlloc( 1024 * 32 );\n    p-\u003evBddDir = Vec_IntAlloc( 256 );\n    p-\u003evBddInv = Vec_IntAlloc( 256 );\n    // allocate temporary storage for truth tables\n    nWords = Kit_TruthWordNum(pPars-\u003enVarsMax);\n    p-\u003eppTruths[0][0] = ABC_ALLOC( unsigned, 32 * nWords );\n    p-\u003eppTruths[1][0] = p-\u003eppTruths[0][0] + 1 * nWords;\n    for ( i = 1; i \u003c 2; i++ )\n        p-\u003eppTruths[1][i] = p-\u003eppTruths[1][0] + i * nWords;\n    p-\u003eppTruths[2][0] = p-\u003eppTruths[1][0] + 2 * nWords;\n    for ( i = 1; i \u003c 4; i++ )\n        p-\u003eppTruths[2][i] = p-\u003eppTruths[2][0] + i * nWords;\n    p-\u003eppTruths[3][0] = p-\u003eppTruths[2][0] + 4 * nWords; \n    for ( i = 1; i \u003c 8; i++ )\n        p-\u003eppTruths[3][i] = p-\u003eppTruths[3][0] + i * nWords;\n    p-\u003eppTruths[4][0] = p-\u003eppTruths[3][0] + 8 * nWords; \n    for ( i = 1; i \u003c 16; i++ )\n        p-\u003eppTruths[4][i] = p-\u003eppTruths[4][0] + i * nWords;\n    return p;\n}",
+      "Draft": "func Lpk_ManStart(pPars *Lpk_Par_t) *Lpk_Man_t {\n    var p *Lpk_Man_t;\n    var i, nWords int32;\n    assert(pPars.nLutsMax \u003c= 16, \"pPars.nLutsMax \u003c= 16\");\n    assert(pPars.nVarsMax \u003e 0 \u0026\u0026 pPars.nVarsMax \u003c= 16, \"pPars.nVarsMax \u003e 0 \u0026\u0026 pPars.nVarsMax \u003c= 16\");\n    p = new(Lpk_Man_t);\n    memset( p, 0, sizeof(Lpk_Man_t) );\n    p.pPars = pPars;\n    p.nCutsMax = LPK_CUTS_MAX;\n    p.vTtElems = Vec_PtrAllocTruthTables( pPars.nVarsMax );\n    p.vTtNodes = Vec_PtrAllocSimInfo( 1024, Abc_TruthWordNum(pPars.nVarsMax) );\n    p.vCover   = Vec_IntAlloc( 1 \u003c\u003c 12 );\n    p.vLeaves  = Vec_PtrAlloc( 32 );\n    p.vTemp    = Vec_PtrAlloc( 32 );\n    for  i = 0; i \u003c 8; i++  {\n        p.vSets[i] = Vec_IntAlloc(100);\n    }\n    p.pDsdMan = Kit_DsdManAlloc( pPars.nVarsMax, 64 );\n    p.vMemory = Vec_IntAlloc( 1024 * 32 );\n    p.vBddDir = Vec_IntAlloc( 256 );\n    p.vBddInv = Vec_IntAlloc( 256 );\n    // allocate temporary storage for truth tables\n    nWords = Kit_TruthWordNum(pPars.nVarsMax);\n    p.ppTruths[0][0] = ABC_ALLOC( unsigned, 32 * nWords );\n    p.ppTruths[1][0] = p.ppTruths[0][0] + 1 * nWords;\n    for  i = 1; i \u003c 2; i++  {\n        p.ppTruths[1][i] = p.ppTruths[1][0] + i * nWords;\n    }\n    p.ppTruths[2][0] = p.ppTruths[1][0] + 2 * nWords;\n    for  i = 1; i \u003c 4; i++  {\n        p.ppTruths[2][i] = p.ppTruths[2][0] + i * nWords;\n    }\n    p.ppTruths[3][0] = p.ppTruths[2][0] + 4 * nWords; \n    for  i = 1; i \u003c 8; i++  {\n        p.ppTruths[3][i] = p.ppTruths[3][0] + i * nWords;\n    }\n    p.ppTruths[4][0] = p.ppTruths[3][0] + 8 * nWords; \n    for  i = 1; i \u003c 16; i++  {\n        p.ppTruths[4][i] = p.ppTruths[4][0] + i * nWords;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Lpk_ManStop",
+      "Start": 3043,
+      "End": 3740,
+      "BodyStart": 3077,
+      "Original": "void Lpk_ManStop( Lpk_Man_t * p )\n{\n    int i;\n    ABC_FREE( p-\u003eppTruths[0][0] );\n    Vec_IntFree( p-\u003evBddDir );\n    Vec_IntFree( p-\u003evBddInv );\n    Vec_IntFree( p-\u003evMemory );\n    Kit_DsdManFree( p-\u003epDsdMan );\n    for ( i = 0; i \u003c 8; i++ )\n        Vec_IntFree(p-\u003evSets[i]);\n    if ( p-\u003epIfMan )\n    {\n        void * pPars = p-\u003epIfMan-\u003epPars;\n        If_ManStop( p-\u003epIfMan );\n        ABC_FREE( pPars );\n    }\n    if ( p-\u003evLevels )\n        Vec_VecFree( p-\u003evLevels );\n    if ( p-\u003evVisited )\n        Vec_VecFree( p-\u003evVisited );\n    Vec_PtrFree( p-\u003evLeaves );\n    Vec_PtrFree( p-\u003evTemp );\n    Vec_IntFree( p-\u003evCover );\n    Vec_PtrFree( p-\u003evTtElems );\n    Vec_PtrFree( p-\u003evTtNodes );\n    ABC_FREE( p );\n}",
+      "Draft": "func Lpk_ManStop(p *Lpk_Man_t) {\n    var i int32;\n    ABC_FREE( p.ppTruths[0][0] );\n    Vec_IntFree( p.vBddDir );\n    Vec_IntFree( p.vBddInv );\n    Vec_IntFree( p.vMemory );\n    Kit_DsdManFree( p.pDsdMan );\n    for  i = 0; i \u003c 8; i++  {\n        Vec_IntFree(p.vSets[i]);\n    }\n    if p.pIfMan {\n        var pPars any  = p.pIfMan.pPars;\n        If_ManStop( p.pIfMan );\n        ABC_FREE( pPars );\n    }\n    if p.vLevels {\n        Vec_VecFree( p.vLevels ); }\n    if p.vVisited {\n        Vec_VecFree( p.vVisited ); }\n    Vec_PtrFree( p.vLeaves );\n    Vec_PtrFree( p.vTemp );\n    Vec_IntFree( p.vCover );\n    Vec_PtrFree( p.vTtElems );\n    Vec_PtrFree( p.vTtNodes );\n    ABC_FREE( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMan.c::mechanical::sizeof::1460",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1460,
+      "End": 1466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMan.c::Lpk_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1224,
+      "End": 2807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMan.c::Lpk_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Lpk_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3043,
+      "End": 3740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMan.c::macro-inline::1415",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1415,
+      "End": 1440
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMan.c::macro-inline::2169",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2169,
+      "End": 2203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMan.c::macro-inline::3094",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3094,
+      "End": 3123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMan.c::macro-inline::3425",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3425,
+      "End": 3442
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/lpk/lpkMan.c::macro-inline::3724",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3724,
+      "End": 3737
+    }
+  ],
+  "Draft": "package lpk\n\n/**CFile****************************************************************\n\n  FileName    [lpkMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Fast Boolean matching for LUT structures.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: lpkMan.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"lpkInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_ManStart(pPars *Lpk_Par_t) *Lpk_Man_t {\n    var p *Lpk_Man_t;\n    var i, nWords int32;\n    assert(pPars.nLutsMax \u003c= 16, \"pPars.nLutsMax \u003c= 16\");\n    assert(pPars.nVarsMax \u003e 0 \u0026\u0026 pPars.nVarsMax \u003c= 16, \"pPars.nVarsMax \u003e 0 \u0026\u0026 pPars.nVarsMax \u003c= 16\");\n    p = new(Lpk_Man_t);\n    memset( p, 0, sizeof(Lpk_Man_t) );\n    p.pPars = pPars;\n    p.nCutsMax = LPK_CUTS_MAX;\n    p.vTtElems = Vec_PtrAllocTruthTables( pPars.nVarsMax );\n    p.vTtNodes = Vec_PtrAllocSimInfo( 1024, Abc_TruthWordNum(pPars.nVarsMax) );\n    p.vCover   = Vec_IntAlloc( 1 \u003c\u003c 12 );\n    p.vLeaves  = Vec_PtrAlloc( 32 );\n    p.vTemp    = Vec_PtrAlloc( 32 );\n    for  i = 0; i \u003c 8; i++  {\n        p.vSets[i] = Vec_IntAlloc(100);\n    }\n    p.pDsdMan = Kit_DsdManAlloc( pPars.nVarsMax, 64 );\n    p.vMemory = Vec_IntAlloc( 1024 * 32 );\n    p.vBddDir = Vec_IntAlloc( 256 );\n    p.vBddInv = Vec_IntAlloc( 256 );\n    // allocate temporary storage for truth tables\n    nWords = Kit_TruthWordNum(pPars.nVarsMax);\n    p.ppTruths[0][0] = ABC_ALLOC( unsigned, 32 * nWords );\n    p.ppTruths[1][0] = p.ppTruths[0][0] + 1 * nWords;\n    for  i = 1; i \u003c 2; i++  {\n        p.ppTruths[1][i] = p.ppTruths[1][0] + i * nWords;\n    }\n    p.ppTruths[2][0] = p.ppTruths[1][0] + 2 * nWords;\n    for  i = 1; i \u003c 4; i++  {\n        p.ppTruths[2][i] = p.ppTruths[2][0] + i * nWords;\n    }\n    p.ppTruths[3][0] = p.ppTruths[2][0] + 4 * nWords; \n    for  i = 1; i \u003c 8; i++  {\n        p.ppTruths[3][i] = p.ppTruths[3][0] + i * nWords;\n    }\n    p.ppTruths[4][0] = p.ppTruths[3][0] + 8 * nWords; \n    for  i = 1; i \u003c 16; i++  {\n        p.ppTruths[4][i] = p.ppTruths[4][0] + i * nWords;\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Lpk_ManStop(p *Lpk_Man_t) {\n    var i int32;\n    ABC_FREE( p.ppTruths[0][0] );\n    Vec_IntFree( p.vBddDir );\n    Vec_IntFree( p.vBddInv );\n    Vec_IntFree( p.vMemory );\n    Kit_DsdManFree( p.pDsdMan );\n    for  i = 0; i \u003c 8; i++  {\n        Vec_IntFree(p.vSets[i]);\n    }\n    if p.pIfMan {\n        var pPars any  = p.pIfMan.pPars;\n        If_ManStop( p.pIfMan );\n        ABC_FREE( pPars );\n    }\n    if p.vLevels {\n        Vec_VecFree( p.vLevels ); }\n    if p.vVisited {\n        Vec_VecFree( p.vVisited ); }\n    Vec_PtrFree( p.vLeaves );\n    Vec_PtrFree( p.vTemp );\n    Vec_IntFree( p.vCover );\n    Vec_PtrFree( p.vTtElems );\n    Vec_PtrFree( p.vTtNodes );\n    ABC_FREE( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

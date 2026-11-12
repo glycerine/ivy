@@ -1,0 +1,1912 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c",
+  "SHA256": "a08c0ce8b76787b462027b510f88df2e4438c154f01e579ed5406de28c44f08c",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 51,
+        "Column": 69,
+        "ByteOffset": 1501
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Tim_Man_t *) malloc(sizeof(Tim_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1547
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Tim_Man_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 56,
+        "Column": 74,
+        "ByteOffset": 1726
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCis = /*__starting_point_inline_macro:ABC_ALLOC__*/((Tim_Obj_t *) malloc(sizeof(Tim_Obj_t) * (size_t)(nCis)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1775
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pCis, 0, sizeof(Tim_Obj_t) * nCis );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 58,
+        "Column": 74,
+        "ByteOffset": 1895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pCos = /*__starting_point_inline_macro:ABC_ALLOC__*/((Tim_Obj_t *) malloc(sizeof(Tim_Obj_t) * (size_t)(nCos)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1944
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pCos, 0, sizeof(Tim_Obj_t) * nCos );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 3428
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pNew.pCis, p.pCis, sizeof(Tim_Obj_t) * p.nCis ); "
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 102,
+        "Column": 5,
+        "ByteOffset": 3490
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pNew.pCos, p.pCos, sizeof(Tim_Obj_t) * p.nCos ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 120,
+        "Column": 13,
+        "ByteOffset": 4445
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( i == int32(pDelayTable[0]) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 123,
+        "Column": 86,
+        "ByteOffset": 4662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pDelayTableNew = /*__starting_point_inline_macro:ABC_ALLOC__*/((float *) malloc(sizeof(float) * (size_t)(3 + nInputs * nOutputs)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 134,
+        "Column": 13,
+        "ByteOffset": 5284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_PtrEntry(pNew.vDelayTables, i) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 6564
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vBoxPres) == Tim_ManBoxNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 181,
+        "Column": 5,
+        "ByteOffset": 7248
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNewCis \u003c Tim_ManCiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 182,
+        "Column": 5,
+        "ByteOffset": 7289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNewCos \u003c Tim_ManCoNum(p) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 7789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pNew.pCis, p.pCis, sizeof(Tim_Obj_t) * Tim_ManPiNum(p) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 194,
+        "Column": 5,
+        "ByteOffset": 7859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pNew.pCos + nNewCos - Tim_ManPoNum(p), "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 203,
+        "Column": 13,
+        "ByteOffset": 8470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( i == int32(pDelayTable[0]) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 206,
+        "Column": 86,
+        "ByteOffset": 8687
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pDelayTableNew = /*__starting_point_inline_macro:ABC_ALLOC__*/((float *) malloc(sizeof(float) * (size_t)(3 + nInputs * nOutputs)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 214,
+        "Column": 13,
+        "ByteOffset": 9131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_PtrEntry(pNew.vDelayTables, i) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 232,
+        "Column": 9,
+        "ByteOffset": 10098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( curPi == Tim_ManCiNum(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 233,
+        "Column": 9,
+        "ByteOffset": 10145
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( curPo == Tim_ManCoNum(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 257,
+        "Column": 5,
+        "ByteOffset": 10860
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 266,
+        "Column": 5,
+        "ByteOffset": 11298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNewCis \u003c= Tim_ManCiNum(p) - nTermsDiff );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 267,
+        "Column": 5,
+        "ByteOffset": 11353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nNewCos \u003c= Tim_ManCoNum(p) - nTermsDiff );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 278,
+        "Column": 5,
+        "ByteOffset": 11867
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pNew.pCis, p.pCis, sizeof(Tim_Obj_t) * nNewPiNum );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 279,
+        "Column": 5,
+        "ByteOffset": 11931
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pNew.pCos + nNewCos - nNewPoNum, "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 290,
+        "Column": 17,
+        "ByteOffset": 12623
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Warning: Mismatch in delay-table number between the manager and the box.\\n\" );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 296,
+        "Column": 86,
+        "ByteOffset": 12984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pDelayTableNew = /*__starting_point_inline_macro:ABC_ALLOC__*/((float *) malloc(sizeof(float) * (size_t)(3 + nInputs * nOutputs)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 304,
+        "Column": 13,
+        "ByteOffset": 13430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Vec_PtrEntry(pNew.vDelayTables, i) == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 321,
+        "Column": 9,
+        "ByteOffset": 14301
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( curPi == Tim_ManCiNum(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 322,
+        "Column": 9,
+        "ByteOffset": 14348
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( curPo == Tim_ManCoNum(pNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 342,
+        "Column": 5,
+        "ByteOffset": 14838
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Tim_ManBoxNum(pSpec) \u003e Tim_ManBoxNum(pImpl) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 351,
+        "Column": 9,
+        "ByteOffset": 15598
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Vec_IntEntry(vBoxPres, pBox.iCopy) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 372,
+        "Column": 62,
+        "ByteOffset": 16186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCis) ? (free((char *) (p.pCis)), (p.pCis) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 373,
+        "Column": 62,
+        "ByteOffset": 16292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pCos) ? (free((char *) (p.pCos)), (p.pCos) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 374,
+        "Column": 57,
+        "ByteOffset": 16393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 401,
+        "Column": 5,
+        "ByteOffset": 17099
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vDelayTables == nil );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 411,
+        "Column": 78,
+        "ByteOffset": 17694
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pTable = /*__starting_point_inline_macro:ABC_ALLOC__*/((float *) malloc(sizeof(float) * (size_t)(3 + pBox.nInputs * pBox.nOutputs)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 423,
+        "Column": 9,
+        "ByteOffset": 18175
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pBox.iDelayTable \u003e= 0 \u0026\u0026 pBox.iDelayTable \u003c Vec_PtrSize(pLibBox.vBoxes) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 425,
+        "Column": 9,
+        "ByteOffset": 18345
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pIfBox != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 426,
+        "Column": 9,
+        "ByteOffset": 18378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pIfBox.nPis == pBox.nInputs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 427,
+        "Column": 9,
+        "ByteOffset": 18425
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pIfBox.nPos == pBox.nOutputs );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 432,
+        "Column": 74,
+        "ByteOffset": 18701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pTable = /*__starting_point_inline_macro:ABC_ALLOC__*/((float *) malloc(sizeof(float) * (size_t)(3 + pBox.nInputs * pBox.nOutputs)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 444,
+        "Column": 9,
+        "ByteOffset": 19149
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_FltSize(vInArrs) == Tim_ManPiNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 453,
+        "Column": 9,
+        "ByteOffset": 19549
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_FltSize(vOutReqs) == Tim_ManPoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 457,
+        "Column": 9,
+        "ByteOffset": 19884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( k == Tim_ManPoNum(p) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 483,
+        "Column": 72,
+        "ByteOffset": 20715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTimes  = /*__starting_point_inline_macro:ABC_FALLOC__*/((float *) memset(malloc(sizeof(float) * (size_t)(Tim_ManCiNum(p))), 0xff, sizeof(float) * (size_t)(Tim_ManCiNum(p))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 483,
+        "Column": 79,
+        "ByteOffset": 20722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTimes  = /*__starting_point_inline_macro:ABC_FALLOC__*/((float *) memset(malloc(sizeof(float) * (size_t)(Tim_ManCiNum(p))), 0xff, sizeof(float) * (size_t)(Tim_ManCiNum(p))));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 499,
+        "Column": 72,
+        "ByteOffset": 21602
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTimes  = /*__starting_point_inline_macro:ABC_FALLOC__*/((float *) memset(malloc(sizeof(float) * (size_t)(Tim_ManCoNum(p))), 0xff, sizeof(float) * (size_t)(Tim_ManCoNum(p))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 499,
+        "Column": 79,
+        "ByteOffset": 21609
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pTimes  = /*__starting_point_inline_macro:ABC_FALLOC__*/((float *) memset(malloc(sizeof(float) * (size_t)(Tim_ManCoNum(p))), 0xff, sizeof(float) * (size_t)(Tim_ManCoNum(p))));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 503,
+        "Column": 5,
+        "ByteOffset": 21962
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == Tim_ManPoNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 526,
+        "Column": 5,
+        "ByteOffset": 22472
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"TIMING MANAGER:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 527,
+        "Column": 5,
+        "ByteOffset": 22507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PI = %d. CI = %d. PO = %d. CO = %d. Box = %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 537,
+        "Column": 9,
+        "ByteOffset": 23047
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"All PIs     :  arrival = %5.3f  required = %5.3f\\n\", pPrev.timeArr, pPrev.timeReq );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 540,
+        "Column": 13,
+        "ByteOffset": 23373
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"PI%5d     :  arrival = %5.3f  required = %5.3f\\n\", i, pObj.timeArr, pObj.timeReq ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 550,
+        "Column": 9,
+        "ByteOffset": 23864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"All POs     :  arrival = %5.3f  required = %5.3f\\n\", pPrev.timeArr, pPrev.timeReq );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 554,
+        "Column": 13,
+        "ByteOffset": 24211
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"PO%5d     :  arrival = %5.3f  required = %5.3f\\n\", k++, pObj.timeArr, pObj.timeReq ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 561,
+        "Column": 9,
+        "ByteOffset": 24603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"*** Box %5d :  I =%4d. O =%4d. I1 =%6d. O1 =%6d. Table =%4d\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 573,
+        "Column": 13,
+        "ByteOffset": 25227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Box inputs  :  arrival = %5.3f  required = %5.3f\\n\", pPrev.timeArr, pPrev.timeReq );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 576,
+        "Column": 17,
+        "ByteOffset": 25507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"box-in%4d :  arrival = %5.3f  required = %5.3f\\n\", k, pObj.timeArr, pObj.timeReq );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 586,
+        "Column": 13,
+        "ByteOffset": 26025
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Box outputs :  arrival = %5.3f  required = %5.3f\\n\", pPrev.timeArr, pPrev.timeReq );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 589,
+        "Column": 17,
+        "ByteOffset": 26308
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"box-out%3d :  arrival = %5.3f  required = %5.3f\\n\", k, pObj.timeArr, pObj.timeReq );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 601,
+        "Column": 9,
+        "ByteOffset": 26820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Delay table %d:\\n\", i );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 602,
+        "Column": 9,
+        "ByteOffset": 26862
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( i == int32(pTable[0]) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 608,
+        "Column": 21,
+        "ByteOffset": 27142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%5s\", \"-\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 610,
+        "Column": 21,
+        "ByteOffset": 27209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%5.0f\", pTable[3+j*TableX+k] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 614,
+        "Column": 5,
+        "ByteOffset": 27288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 621,
+        "Column": 5,
+        "ByteOffset": 27429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"TIMING MANAGER:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 622,
+        "Column": 5,
+        "ByteOffset": 27464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PI = %d. CI = %d. PO = %d. CO = %d. Box = %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 627,
+        "Column": 9,
+        "ByteOffset": 27877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d \", pBox.iCopy );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 629,
+        "Column": 5,
+        "ByteOffset": 27918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 651,
+        "Column": 5,
+        "ByteOffset": 28461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PI/CI = %d/%d   PO/CO = %d/%d   Box = %d   \", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 656,
+        "Column": 9,
+        "ByteOffset": 28659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"delay(AND2) = %d\", nAnd2Delay ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 657,
+        "Column": 5,
+        "ByteOffset": 28707
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 674,
+        "Column": 9,
+        "ByteOffset": 29774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"    Box %4d      \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 675,
+        "Column": 9,
+        "ByteOffset": 29816
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Num = %4d   \", Count );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 676,
+        "Column": 9,
+        "ByteOffset": 29857
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Ins = %4d   \", pBox.nInputs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 677,
+        "Column": 9,
+        "ByteOffset": 29905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Outs = %4d\",   pBox.nOutputs );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 678,
+        "Column": 9,
+        "ByteOffset": 29954
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 761,
+        "Column": 5,
+        "ByteOffset": 32502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.vDelayTables == nil );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Tim_ManStart",
+      "Start": 1295,
+      "End": 2080,
+      "BodyStart": 1342,
+      "Original": "Tim_Man_t * Tim_ManStart( int nCis, int nCos )\n{\n    Tim_Man_t * p;\n    Tim_Obj_t * pObj;\n    int i;\n    p = ABC_ALLOC( Tim_Man_t, 1 );\n    memset( p, 0, sizeof(Tim_Man_t) );\n    p-\u003epMemObj = Mem_FlexStart();\n    p-\u003enCis = nCis;\n    p-\u003enCos = nCos;\n    p-\u003epCis = ABC_ALLOC( Tim_Obj_t, nCis );\n    memset( p-\u003epCis, 0, sizeof(Tim_Obj_t) * nCis );\n    p-\u003epCos = ABC_ALLOC( Tim_Obj_t, nCos );\n    memset( p-\u003epCos, 0, sizeof(Tim_Obj_t) * nCos );\n    Tim_ManForEachCi( p, pObj, i )\n    {\n        pObj-\u003eId = i;\n        pObj-\u003eiObj2Box = pObj-\u003eiObj2Num = -1;\n        pObj-\u003etimeReq = TIM_ETERNITY;\n    }\n    Tim_ManForEachCo( p, pObj, i )\n    {\n        pObj-\u003eId = i;\n        pObj-\u003eiObj2Box = pObj-\u003eiObj2Num = -1;\n        pObj-\u003etimeReq = TIM_ETERNITY;\n    }\n    p-\u003efUseTravId = 1;\n    return p;\n}",
+      "Draft": "func Tim_ManStart(nCis int32, nCos int32) *Tim_Man_t {\n    var p *Tim_Man_t;\n    var pObj *Tim_Obj_t;\n    var i int32;\n    // inlining of macro ABC_ALLOC\n    p = ((Tim_Man_t *) malloc(sizeof(Tim_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Tim_Man_t) );\n    p.pMemObj = Mem_FlexStart();\n    p.nCis = nCis;\n    p.nCos = nCos;\n    // inlining of macro ABC_ALLOC\n    p.pCis = ((Tim_Obj_t *) malloc(sizeof(Tim_Obj_t) * (size_t)(nCis)));\n    memset( p.pCis, 0, sizeof(Tim_Obj_t) * nCis );\n    // inlining of macro ABC_ALLOC\n    p.pCos = ((Tim_Obj_t *) malloc(sizeof(Tim_Obj_t) * (size_t)(nCos)));\n    memset( p.pCos, 0, sizeof(Tim_Obj_t) * nCos );\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  {\n        pObj.Id = i;\n        pObj.iObj2Box = pObj.iObj2Num = -1;\n        pObj.timeReq = TIM_ETERNITY;\n    }\n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  {\n        pObj.Id = i;\n        pObj.iObj2Box = pObj.iObj2Num = -1;\n        pObj.timeReq = TIM_ETERNITY;\n    }\n    p.fUseTravId = 1;\n    return p;\n}"
+    },
+    {
+      "Name": "Tim_ManDup",
+      "Start": 2346,
+      "End": 5049,
+      "BodyStart": 2402,
+      "Original": "Tim_Man_t * Tim_ManDup( Tim_Man_t * p, int fUnitDelay )\n{\n    Tim_Man_t * pNew;\n    Tim_Box_t * pBox;\n    Tim_Obj_t * pObj;\n    float * pDelayTable, * pDelayTableNew;\n    int i, k, nInputs, nOutputs;\n    // clear traversal IDs\n    Tim_ManForEachCi( p, pObj, i ) \n        pObj-\u003eTravId = 0;          \n    Tim_ManForEachCo( p, pObj, i ) \n        pObj-\u003eTravId = 0;          \n    // create new manager\n    pNew = Tim_ManStart( p-\u003enCis, p-\u003enCos );\n    // copy box connectivity information\n    memcpy( pNew-\u003epCis, p-\u003epCis, sizeof(Tim_Obj_t) * p-\u003enCis ); \n    memcpy( pNew-\u003epCos, p-\u003epCos, sizeof(Tim_Obj_t) * p-\u003enCos ); \n    if ( fUnitDelay )\n    {\n        // discretize PI arrival times\n//        Tim_ManForEachPi( pNew, pObj, k )\n//          pObj-\u003etimeArr = (int)pObj-\u003etimeArr;\n        // discretize PO required times\n//        Tim_ManForEachPo( pNew, pObj, k )\n//          pObj-\u003etimeReq = 1 + (int)pObj-\u003etimeReq;\n        // clear PI arrival and PO required\n        Tim_ManInitPiArrivalAll( p, 0.0 );\n        Tim_ManInitPoRequiredAll( p, (float)TIM_ETERNITY );\n    }\n    // duplicate delay tables\n    if ( Tim_ManDelayTableNum(p) \u003e 0 )\n    {\n        pNew-\u003evDelayTables = Vec_PtrStart( Vec_PtrSize(p-\u003evDelayTables) );\n        Tim_ManForEachTable( p, pDelayTable, i )\n        {\n            if ( pDelayTable == NULL )\n                continue;\n            assert( i == (int)pDelayTable[0] );\n            nInputs   = (int)pDelayTable[1];\n            nOutputs  = (int)pDelayTable[2];\n            pDelayTableNew = ABC_ALLOC( float, 3 + nInputs * nOutputs );\n            pDelayTableNew[0] = (int)pDelayTable[0];\n            pDelayTableNew[1] = (int)pDelayTable[1];\n            pDelayTableNew[2] = (int)pDelayTable[2];\n            for ( k = 0; k \u003c nInputs * nOutputs; k++ )\n                if ( pDelayTable[3+k] == -ABC_INFINITY )\n                    pDelayTableNew[3+k] = -ABC_INFINITY;\n                else\n                    pDelayTableNew[3+k] = fUnitDelay ? (float)fUnitDelay : pDelayTable[3+k];\n//            assert( (int)pDelayTableNew[0] == Vec_PtrSize(pNew-\u003evDelayTables) );\n            assert( Vec_PtrEntry(pNew-\u003evDelayTables, i) == NULL );\n            Vec_PtrWriteEntry( pNew-\u003evDelayTables, i, pDelayTableNew );\n//printf( \"Finished duplicating delay table %d.\\n\", i );\n        }\n    }\n    // duplicate boxes\n    if ( Tim_ManBoxNum(p) \u003e 0 )\n    {\n        pNew-\u003evBoxes = Vec_PtrAlloc( Tim_ManBoxNum(p) );\n        Tim_ManForEachBox( p, pBox, i )\n        {\n           Tim_ManCreateBox( pNew, pBox-\u003eInouts[0], pBox-\u003enInputs, \n                pBox-\u003eInouts[pBox-\u003enInputs], pBox-\u003enOutputs, pBox-\u003eiDelayTable, pBox-\u003efBlack );\n           Tim_ManBoxSetCopy( pNew, i, pBox-\u003eiCopy );\n        }\n    }\n    return pNew;\n}",
+      "Draft": "func Tim_ManDup(p *Tim_Man_t, fUnitDelay int32) *Tim_Man_t {\n    var pNew *Tim_Man_t;\n    var pBox *Tim_Box_t;\n    var pObj *Tim_Obj_t;\n    var pDelayTable, pDelayTableNew *float32;\n    var i, k, nInputs, nOutputs int32;\n    // clear traversal IDs\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { \n        pObj.TravId = 0;\n    }          \n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { \n        pObj.TravId = 0;\n    }          \n    // create new manager\n    pNew = Tim_ManStart( p.nCis, p.nCos );\n    // copy box connectivity information\n    memcpy( pNew.pCis, p.pCis, sizeof(Tim_Obj_t) * p.nCis ); \n    memcpy( pNew.pCos, p.pCos, sizeof(Tim_Obj_t) * p.nCos ); \n    if fUnitDelay != 0 {\n        // discretize PI arrival times\n//        Tim_ManForEachPi( pNew, pObj, k )\n//          pObj-\u003etimeArr = (int)pObj-\u003etimeArr;\n        // discretize PO required times\n//        Tim_ManForEachPo( pNew, pObj, k )\n//          pObj-\u003etimeReq = 1 + (int)pObj-\u003etimeReq;\n        // clear PI arrival and PO required\n        Tim_ManInitPiArrivalAll( p, 0.0 );\n        Tim_ManInitPoRequiredAll( p, float32(TIM_ETERNITY) );\n    }\n    // duplicate delay tables\n    if Tim_ManDelayTableNum(p) \u003e 0 {\n        pNew.vDelayTables = Vec_PtrStart( Vec_PtrSize(p.vDelayTables) );\n        // inlining of macro Tim_ManForEachTable\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vDelayTables)) \u0026\u0026 (((pDelayTable) = (float *)Vec_PtrEntry(p.vDelayTables, i)), 1); i++  {\n            if pDelayTable == nil {\n                continue; }\n            assert(i == int32(pDelayTable[0]), \"i == int32(pDelayTable[0])\");\n            nInputs   = int32(pDelayTable[1]);\n            nOutputs  = int32(pDelayTable[2]);\n            // inlining of macro ABC_ALLOC\n            pDelayTableNew = ((float *) malloc(sizeof(float) * (size_t)(3 + nInputs * nOutputs)));\n            pDelayTableNew[0] = int32(pDelayTable[0]);\n            pDelayTableNew[1] = int32(pDelayTable[1]);\n            pDelayTableNew[2] = int32(pDelayTable[2]);\n            for  k = 0; k \u003c nInputs * nOutputs; k++  {\n                if pDelayTable[3+k] == -ABC_INFINITY {\n                    pDelayTableNew[3+k] = -ABC_INFINITY;\n                } else {\n                    pDelayTableNew[3+k] = fUnitDelay ? float32(fUnitDelay) : pDelayTable[3+k]; }\n            }\n//            assert( (int)pDelayTableNew[0] == Vec_PtrSize(pNew-\u003evDelayTables) );\n            assert(Vec_PtrEntry(pNew.vDelayTables, i) == nil, \"Vec_PtrEntry(pNew.vDelayTables, i) == nil\");\n            Vec_PtrWriteEntry( pNew.vDelayTables, i, pDelayTableNew );\n//printf( \"Finished duplicating delay table %d.\\n\", i );\n        }\n    }\n    // duplicate boxes\n    if Tim_ManBoxNum(p) \u003e 0 {\n        pNew.vBoxes = Vec_PtrAlloc( Tim_ManBoxNum(p) );\n        // inlining of macro Tim_ManForEachBox\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n           Tim_ManCreateBox( pNew, pBox.Inouts[0], pBox.nInputs, \n                pBox.Inouts[pBox.nInputs], pBox.nOutputs, pBox.iDelayTable, pBox.fBlack );\n           Tim_ManBoxSetCopy( pNew, i, pBox.iCopy );\n        }\n    }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Tim_ManTrim",
+      "Start": 5310,
+      "End": 8404,
+      "BodyStart": 5373,
+      "Original": "Tim_Man_t * Tim_ManTrim( Tim_Man_t * p, Vec_Int_t * vBoxPres )\n{\n    Tim_Man_t * pNew;\n    Tim_Box_t * pBox;\n    Tim_Obj_t * pObj;\n    float * pDelayTable, * pDelayTableNew;\n    int i, k, nNewCis, nNewCos, nInputs, nOutputs;\n    assert( Vec_IntSize(vBoxPres) == Tim_ManBoxNum(p) );\n    // count the number of CIs and COs in the trimmed manager\n    nNewCis = Tim_ManPiNum(p);\n    nNewCos = Tim_ManPoNum(p);\n    if ( Tim_ManBoxNum(p) )\n        Tim_ManForEachBox( p, pBox, i )\n            if ( Vec_IntEntry(vBoxPres, i) )\n            {\n                nNewCis += pBox-\u003enOutputs;\n                nNewCos += pBox-\u003enInputs;\n            }\n    if ( nNewCis == Tim_ManCiNum(p) \u0026\u0026 nNewCos == Tim_ManCoNum(p) )\n        return Tim_ManDup( p, 0 );\n    assert( nNewCis \u003c Tim_ManCiNum(p) );\n    assert( nNewCos \u003c Tim_ManCoNum(p) );\n    // clear traversal IDs\n    Tim_ManForEachCi( p, pObj, i ) \n        pObj-\u003eTravId = 0;          \n    Tim_ManForEachCo( p, pObj, i ) \n        pObj-\u003eTravId = 0;          \n    // create new manager\n    pNew = Tim_ManStart( nNewCis, nNewCos );\n    // copy box connectivity information\n    memcpy( pNew-\u003epCis, p-\u003epCis, sizeof(Tim_Obj_t) * Tim_ManPiNum(p) );\n    memcpy( pNew-\u003epCos + nNewCos - Tim_ManPoNum(p), \n            p-\u003epCos + Tim_ManCoNum(p) - Tim_ManPoNum(p), \n            sizeof(Tim_Obj_t) * Tim_ManPoNum(p) );\n    // duplicate delay tables\n    if ( Tim_ManDelayTableNum(p) \u003e 0 )\n    {\n        pNew-\u003evDelayTables = Vec_PtrStart( Vec_PtrSize(p-\u003evDelayTables) );\n        Tim_ManForEachTable( p, pDelayTable, i )\n        {\n            if ( pDelayTable == NULL )\n                continue;\n            assert( i == (int)pDelayTable[0] );\n            nInputs   = (int)pDelayTable[1];\n            nOutputs  = (int)pDelayTable[2];\n            pDelayTableNew = ABC_ALLOC( float, 3 + nInputs * nOutputs );\n            pDelayTableNew[0] = (int)pDelayTable[0];\n            pDelayTableNew[1] = (int)pDelayTable[1];\n            pDelayTableNew[2] = (int)pDelayTable[2];\n            for ( k = 0; k \u003c nInputs * nOutputs; k++ )\n                pDelayTableNew[3+k] = pDelayTable[3+k];\n//            assert( (int)pDelayTableNew[0] == Vec_PtrSize(pNew-\u003evDelayTables) );\n            assert( Vec_PtrEntry(pNew-\u003evDelayTables, i) == NULL );\n            Vec_PtrWriteEntry( pNew-\u003evDelayTables, i, pDelayTableNew );\n        }\n    }\n    // duplicate boxes\n    if ( Tim_ManBoxNum(p) \u003e 0 )\n    {\n        int curPi = Tim_ManPiNum(p);\n        int curPo = 0;\n        pNew-\u003evBoxes = Vec_PtrAlloc( Tim_ManBoxNum(p) );\n        Tim_ManForEachBox( p, pBox, i )\n            if ( Vec_IntEntry(vBoxPres, i) )\n            {\n                Tim_ManCreateBox( pNew, curPo, pBox-\u003enInputs, curPi, pBox-\u003enOutputs, pBox-\u003eiDelayTable, pBox-\u003efBlack );\n                Tim_ManBoxSetCopy( pNew, Tim_ManBoxNum(pNew) - 1, Tim_ManBoxCopy(p, i) == -1 ? i : Tim_ManBoxCopy(p, i) );\n                curPi += pBox-\u003enOutputs;\n                curPo += pBox-\u003enInputs;\n            }\n        curPo += Tim_ManPoNum(p);\n        assert( curPi == Tim_ManCiNum(pNew) );\n        assert( curPo == Tim_ManCoNum(pNew) );\n    }\n    return pNew;\n}",
+      "Draft": "func Tim_ManTrim(p *Tim_Man_t, vBoxPres *Vec_Int_t) *Tim_Man_t {\n    var pNew *Tim_Man_t;\n    var pBox *Tim_Box_t;\n    var pObj *Tim_Obj_t;\n    var pDelayTable, pDelayTableNew *float32;\n    var i, k, nNewCis, nNewCos, nInputs, nOutputs int32;\n    assert(Vec_IntSize(vBoxPres) == Tim_ManBoxNum(p), \"Vec_IntSize(vBoxPres) == Tim_ManBoxNum(p)\");\n    // count the number of CIs and COs in the trimmed manager\n    nNewCis = Tim_ManPiNum(p);\n    nNewCos = Tim_ManPoNum(p);\n    if Tim_ManBoxNum(p) != 0 {\n        // inlining of macro Tim_ManForEachBox\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n            if Vec_IntEntry(vBoxPres, i) {\n                nNewCis += pBox.nOutputs;\n                nNewCos += pBox.nInputs;\n            }\n        } }\n    if nNewCis == Tim_ManCiNum(p) \u0026\u0026 nNewCos == Tim_ManCoNum(p) {\n        return Tim_ManDup( p, 0 ); }\n    assert(nNewCis \u003c Tim_ManCiNum(p), \"nNewCis \u003c Tim_ManCiNum(p)\");\n    assert(nNewCos \u003c Tim_ManCoNum(p), \"nNewCos \u003c Tim_ManCoNum(p)\");\n    // clear traversal IDs\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { \n        pObj.TravId = 0;\n    }          \n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { \n        pObj.TravId = 0;\n    }          \n    // create new manager\n    pNew = Tim_ManStart( nNewCis, nNewCos );\n    // copy box connectivity information\n    memcpy( pNew.pCis, p.pCis, sizeof(Tim_Obj_t) * Tim_ManPiNum(p) );\n    memcpy( pNew.pCos + nNewCos - Tim_ManPoNum(p), \n                p.pCos + Tim_ManCoNum(p) - Tim_ManPoNum(p), \n                sizeof(Tim_Obj_t) * Tim_ManPoNum(p) );\n    // duplicate delay tables\n    if Tim_ManDelayTableNum(p) \u003e 0 {\n        pNew.vDelayTables = Vec_PtrStart( Vec_PtrSize(p.vDelayTables) );\n        // inlining of macro Tim_ManForEachTable\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vDelayTables)) \u0026\u0026 (((pDelayTable) = (float *)Vec_PtrEntry(p.vDelayTables, i)), 1); i++  {\n            if pDelayTable == nil {\n                continue; }\n            assert(i == int32(pDelayTable[0]), \"i == int32(pDelayTable[0])\");\n            nInputs   = int32(pDelayTable[1]);\n            nOutputs  = int32(pDelayTable[2]);\n            // inlining of macro ABC_ALLOC\n            pDelayTableNew = ((float *) malloc(sizeof(float) * (size_t)(3 + nInputs * nOutputs)));\n            pDelayTableNew[0] = int32(pDelayTable[0]);\n            pDelayTableNew[1] = int32(pDelayTable[1]);\n            pDelayTableNew[2] = int32(pDelayTable[2]);\n            for  k = 0; k \u003c nInputs * nOutputs; k++  {\n                pDelayTableNew[3+k] = pDelayTable[3+k];\n            }\n//            assert( (int)pDelayTableNew[0] == Vec_PtrSize(pNew-\u003evDelayTables) );\n            assert(Vec_PtrEntry(pNew.vDelayTables, i) == nil, \"Vec_PtrEntry(pNew.vDelayTables, i) == nil\");\n            Vec_PtrWriteEntry( pNew.vDelayTables, i, pDelayTableNew );\n        }\n    }\n    // duplicate boxes\n    if Tim_ManBoxNum(p) \u003e 0 {\n        var curPi int32  = Tim_ManPiNum(p);\n        var curPo int32;\n        pNew.vBoxes = Vec_PtrAlloc( Tim_ManBoxNum(p) );\n        // inlining of macro Tim_ManForEachBox\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n            if Vec_IntEntry(vBoxPres, i) {\n                Tim_ManCreateBox( pNew, curPo, pBox.nInputs, curPi, pBox.nOutputs, pBox.iDelayTable, pBox.fBlack );\n                Tim_ManBoxSetCopy( pNew, Tim_ManBoxNum(pNew) - 1, Tim_ManBoxCopy(p, i) == -1 ? i : Tim_ManBoxCopy(p, i) );\n                curPi += pBox.nOutputs;\n                curPo += pBox.nInputs;\n            }\n        }\n        curPo += Tim_ManPoNum(p);\n        assert(curPi == Tim_ManCiNum(pNew), \"curPi == Tim_ManCiNum(pNew)\");\n        assert(curPo == Tim_ManCoNum(pNew), \"curPo == Tim_ManCoNum(pNew)\");\n    }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Tim_ManReduce",
+      "Start": 8667,
+      "End": 11960,
+      "BodyStart": 8750,
+      "Original": "Tim_Man_t * Tim_ManReduce( Tim_Man_t * p, Vec_Int_t * vBoxesLeft, int nTermsDiff )\n{\n    Tim_Man_t * pNew;\n    Tim_Box_t * pBox;\n    Tim_Obj_t * pObj;\n    float * pDelayTable, * pDelayTableNew;\n    int i, k, iBox, nNewCis, nNewCos, nInputs, nOutputs;\n    int nNewPiNum = Tim_ManPiNum(p) - nTermsDiff;\n    int nNewPoNum = Tim_ManPoNum(p) - nTermsDiff;\n    assert( Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(p) );\n    // count the number of CIs and COs in the trimmed manager\n    nNewCis = nNewPiNum;\n    nNewCos = nNewPoNum;\n    Vec_IntForEachEntry( vBoxesLeft, iBox, i )\n    {\n        pBox = Tim_ManBox( p, iBox );\n        nNewCis += pBox-\u003enOutputs;\n        nNewCos += pBox-\u003enInputs;\n    }\n    assert( nNewCis \u003c= Tim_ManCiNum(p) - nTermsDiff );\n    assert( nNewCos \u003c= Tim_ManCoNum(p) - nTermsDiff );\n    // clear traversal IDs\n    Tim_ManForEachCi( p, pObj, i ) \n        pObj-\u003eTravId = 0;          \n    Tim_ManForEachCo( p, pObj, i ) \n        pObj-\u003eTravId = 0;          \n    // create new manager\n    pNew = Tim_ManStart( nNewCis, nNewCos );\n    // copy box connectivity information\n    memcpy( pNew-\u003epCis, p-\u003epCis, sizeof(Tim_Obj_t) * nNewPiNum );\n    memcpy( pNew-\u003epCos + nNewCos - nNewPoNum, \n            p-\u003epCos + Tim_ManCoNum(p) - Tim_ManPoNum(p), \n            sizeof(Tim_Obj_t) * nNewPoNum );\n    // duplicate delay tables\n    if ( Tim_ManDelayTableNum(p) \u003e 0 )\n    {\n        int fWarning = 0;\n        pNew-\u003evDelayTables = Vec_PtrStart( Vec_PtrSize(p-\u003evDelayTables) );\n        Tim_ManForEachTable( p, pDelayTable, i )\n        {\n            if ( pDelayTable == NULL )\n                continue;\n            if ( i != (int)pDelayTable[0] \u0026\u0026 fWarning == 0 )\n            {\n                printf( \"Warning: Mismatch in delay-table number between the manager and the box.\\n\" );\n                fWarning = 1;\n            }\n            //assert( i == (int)pDelayTable[0] );\n            nInputs   = (int)pDelayTable[1];\n            nOutputs  = (int)pDelayTable[2];\n            pDelayTableNew = ABC_ALLOC( float, 3 + nInputs * nOutputs );\n            pDelayTableNew[0] = i;//(int)pDelayTable[0];\n            pDelayTableNew[1] = (int)pDelayTable[1];\n            pDelayTableNew[2] = (int)pDelayTable[2];\n            for ( k = 0; k \u003c nInputs * nOutputs; k++ )\n                pDelayTableNew[3+k] = pDelayTable[3+k];\n//            assert( (int)pDelayTableNew[0] == Vec_PtrSize(pNew-\u003evDelayTables) );\n            assert( Vec_PtrEntry(pNew-\u003evDelayTables, i) == NULL );\n            Vec_PtrWriteEntry( pNew-\u003evDelayTables, i, pDelayTableNew );\n        }\n    }\n    // duplicate boxes\n    if ( Tim_ManBoxNum(p) \u003e 0 )\n    {\n        int curPi = nNewPiNum;\n        int curPo = 0;\n        pNew-\u003evBoxes = Vec_PtrAlloc( Tim_ManBoxNum(p) );\n        Vec_IntForEachEntry( vBoxesLeft, iBox, i )\n        {\n            pBox = Tim_ManBox( p, iBox );\n            Tim_ManCreateBox( pNew, curPo, pBox-\u003enInputs, curPi, pBox-\u003enOutputs, pBox-\u003eiDelayTable, pBox-\u003efBlack );\n            Tim_ManBoxSetCopy( pNew, Tim_ManBoxNum(pNew) - 1, Tim_ManBoxCopy(p, iBox) == -1 ? iBox : Tim_ManBoxCopy(p, iBox) );\n            curPi += pBox-\u003enOutputs;\n            curPo += pBox-\u003enInputs;\n        }\n        curPo += nNewPoNum;\n        assert( curPi == Tim_ManCiNum(pNew) );\n        assert( curPo == Tim_ManCoNum(pNew) );\n    }\n    return pNew;\n}",
+      "Draft": "func Tim_ManReduce(p *Tim_Man_t, vBoxesLeft *Vec_Int_t, nTermsDiff int32) *Tim_Man_t {\n    var pNew *Tim_Man_t;\n    var pBox *Tim_Box_t;\n    var pObj *Tim_Obj_t;\n    var pDelayTable, pDelayTableNew *float32;\n    var i, k, iBox, nNewCis, nNewCos, nInputs, nOutputs int32;\n    var nNewPiNum int32  = Tim_ManPiNum(p) - nTermsDiff;\n    var nNewPoNum int32  = Tim_ManPoNum(p) - nTermsDiff;\n    assert(Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(p), \"Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(p)\");\n    // count the number of CIs and COs in the trimmed manager\n    nNewCis = nNewPiNum;\n    nNewCos = nNewPoNum;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vBoxesLeft)) \u0026\u0026 (((iBox) = Vec_IntEntry(vBoxesLeft, i)), 1); i++  {\n        pBox = Tim_ManBox( p, iBox );\n        nNewCis += pBox.nOutputs;\n        nNewCos += pBox.nInputs;\n    }\n    assert(nNewCis \u003c= Tim_ManCiNum(p) - nTermsDiff, \"nNewCis \u003c= Tim_ManCiNum(p) - nTermsDiff\");\n    assert(nNewCos \u003c= Tim_ManCoNum(p) - nTermsDiff, \"nNewCos \u003c= Tim_ManCoNum(p) - nTermsDiff\");\n    // clear traversal IDs\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { \n        pObj.TravId = 0;\n    }          \n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { \n        pObj.TravId = 0;\n    }          \n    // create new manager\n    pNew = Tim_ManStart( nNewCis, nNewCos );\n    // copy box connectivity information\n    memcpy( pNew.pCis, p.pCis, sizeof(Tim_Obj_t) * nNewPiNum );\n    memcpy( pNew.pCos + nNewCos - nNewPoNum, \n                p.pCos + Tim_ManCoNum(p) - Tim_ManPoNum(p), \n                sizeof(Tim_Obj_t) * nNewPoNum );\n    // duplicate delay tables\n    if Tim_ManDelayTableNum(p) \u003e 0 {\n        var fWarning int32;\n        pNew.vDelayTables = Vec_PtrStart( Vec_PtrSize(p.vDelayTables) );\n        // inlining of macro Tim_ManForEachTable\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vDelayTables)) \u0026\u0026 (((pDelayTable) = (float *)Vec_PtrEntry(p.vDelayTables, i)), 1); i++  {\n            if pDelayTable == nil {\n                continue; }\n            if i != int32(pDelayTable[0]) \u0026\u0026 fWarning == 0 {\n                fmt.Printf(\"Warning: Mismatch in delay-table number between the manager and the box.\\n\");\n                fWarning = 1;\n            }\n            //assert( i == (int)pDelayTable[0] );\n            nInputs   = int32(pDelayTable[1]);\n            nOutputs  = int32(pDelayTable[2]);\n            // inlining of macro ABC_ALLOC\n            pDelayTableNew = ((float *) malloc(sizeof(float) * (size_t)(3 + nInputs * nOutputs)));\n            pDelayTableNew[0] = i;//(int)pDelayTable[0];\n            pDelayTableNew[1] = int32(pDelayTable[1]);\n            pDelayTableNew[2] = int32(pDelayTable[2]);\n            for  k = 0; k \u003c nInputs * nOutputs; k++  {\n                pDelayTableNew[3+k] = pDelayTable[3+k];\n            }\n//            assert( (int)pDelayTableNew[0] == Vec_PtrSize(pNew-\u003evDelayTables) );\n            assert(Vec_PtrEntry(pNew.vDelayTables, i) == nil, \"Vec_PtrEntry(pNew.vDelayTables, i) == nil\");\n            Vec_PtrWriteEntry( pNew.vDelayTables, i, pDelayTableNew );\n        }\n    }\n    // duplicate boxes\n    if Tim_ManBoxNum(p) \u003e 0 {\n        var curPi int32  = nNewPiNum;\n        var curPo int32;\n        pNew.vBoxes = Vec_PtrAlloc( Tim_ManBoxNum(p) );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vBoxesLeft)) \u0026\u0026 (((iBox) = Vec_IntEntry(vBoxesLeft, i)), 1); i++  {\n            pBox = Tim_ManBox( p, iBox );\n            Tim_ManCreateBox( pNew, curPo, pBox.nInputs, curPi, pBox.nOutputs, pBox.iDelayTable, pBox.fBlack );\n            Tim_ManBoxSetCopy( pNew, Tim_ManBoxNum(pNew) - 1, Tim_ManBoxCopy(p, iBox) == -1 ? iBox : Tim_ManBoxCopy(p, iBox) );\n            curPi += pBox.nOutputs;\n            curPo += pBox.nInputs;\n        }\n        curPo += nNewPoNum;\n        assert(curPi == Tim_ManCiNum(pNew), \"curPi == Tim_ManCiNum(pNew)\");\n        assert(curPo == Tim_ManCoNum(pNew), \"curPo == Tim_ManCoNum(pNew)\");\n    }\n    return pNew;\n}"
+    },
+    {
+      "Name": "Tim_ManAlignTwo",
+      "Start": 12242,
+      "End": 12897,
+      "BodyStart": 12310,
+      "Original": "Vec_Int_t * Tim_ManAlignTwo( Tim_Man_t * pSpec, Tim_Man_t * pImpl )\n{\n    Vec_Int_t * vBoxPres;\n    Tim_Box_t * pBox;\n    int i;\n    assert( Tim_ManBoxNum(pSpec) \u003e Tim_ManBoxNum(pImpl) );\n    // check if boxes of pImpl can be aligned\n    Tim_ManForEachBox( pImpl, pBox, i )\n        if ( pBox-\u003eiCopy \u003c 0 || pBox-\u003eiCopy \u003e= Tim_ManBoxNum(pSpec) ) \n            return NULL;\n    // map dropped boxes into 1, others into 0\n    vBoxPres = Vec_IntStart( Tim_ManBoxNum(pSpec) );\n    Tim_ManForEachBox( pImpl, pBox, i )\n    {\n        assert( !Vec_IntEntry(vBoxPres, pBox-\u003eiCopy) );\n        Vec_IntWriteEntry( vBoxPres, pBox-\u003eiCopy, 1 );\n    }\n    return vBoxPres;\n}",
+      "Draft": "func Tim_ManAlignTwo(pSpec *Tim_Man_t, pImpl *Tim_Man_t) *Vec_Int_t {\n    var vBoxPres *Vec_Int_t;\n    var pBox *Tim_Box_t;\n    var i int32;\n    assert(Tim_ManBoxNum(pSpec) \u003e Tim_ManBoxNum(pImpl), \"Tim_ManBoxNum(pSpec) \u003e Tim_ManBoxNum(pImpl)\");\n    // check if boxes of pImpl can be aligned\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pImpl.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(pImpl.vBoxes, i)), 1); i++  {\n        if pBox.iCopy \u003c 0 || pBox.iCopy \u003e= Tim_ManBoxNum(pSpec) { \n            return nil; }\n    }\n    // map dropped boxes into 1, others into 0\n    vBoxPres = Vec_IntStart( Tim_ManBoxNum(pSpec) );\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pImpl.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(pImpl.vBoxes, i)), 1); i++  {\n        assert(!Vec_IntEntry(vBoxPres, pBox.iCopy), \"!Vec_IntEntry(vBoxPres, pBox.iCopy)\");\n        Vec_IntWriteEntry( vBoxPres, pBox.iCopy, 1 );\n    }\n    return vBoxPres;\n}"
+    },
+    {
+      "Name": "Tim_ManStop",
+      "Start": 13158,
+      "End": 13371,
+      "BodyStart": 13192,
+      "Original": "void Tim_ManStop( Tim_Man_t * p )\n{\n    Vec_PtrFreeFree( p-\u003evDelayTables );\n    Vec_PtrFreeP( \u0026p-\u003evBoxes );\n    Mem_FlexStop( p-\u003epMemObj, 0 );\n    ABC_FREE( p-\u003epCis );\n    ABC_FREE( p-\u003epCos );\n    ABC_FREE( p );\n}",
+      "Draft": "func Tim_ManStop(p *Tim_Man_t) {\n    Vec_PtrFreeFree( p.vDelayTables );\n    Vec_PtrFreeP( \u0026p.vBoxes );\n    Mem_FlexStop( p.pMemObj, 0 );\n    // inlining of macro ABC_FREE\n    ((p.pCis) ? (free((char *) (p.pCis)), (p.pCis) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCos) ? (free((char *) (p.pCos)), (p.pCos) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Tim_ManStopP",
+      "Start": 13372,
+      "End": 13487,
+      "BodyStart": 13408,
+      "Original": "void Tim_ManStopP( Tim_Man_t ** p )\n{\n    if ( *p == NULL )\n        return;\n    Tim_ManStop( *p );\n    *p = NULL;\n}",
+      "Draft": "func Tim_ManStopP(p **Tim_Man_t) {\n    if *p == nil {\n        return; }\n    Tim_ManStop( *p );\n    *p = nil;\n}"
+    },
+    {
+      "Name": "Tim_ManCreate",
+      "Start": 13782,
+      "End": 16170,
+      "BodyStart": 13874,
+      "Original": "void Tim_ManCreate( Tim_Man_t * p, void * pLib, Vec_Flt_t * vInArrs, Vec_Flt_t * vOutReqs )\n{\n    If_LibBox_t * pLibBox = (If_LibBox_t *)pLib;\n    If_Box_t * pIfBox;\n    Tim_Box_t * pBox;\n    Tim_Obj_t * pObj;\n    float * pTable;\n    int i, k;\n    assert( p-\u003evDelayTables == NULL );\n    p-\u003evDelayTables = pLibBox ? Vec_PtrStart( Vec_PtrSize(pLibBox-\u003evBoxes) ) : Vec_PtrAlloc( 100 );\n    if ( p-\u003evBoxes )\n    Tim_ManForEachBox( p, pBox, i )\n    {\n        if ( pBox-\u003eiDelayTable == -1 || pLibBox == NULL )\n        {\n            // create table with constants\n            pTable = ABC_ALLOC( float, 3 + pBox-\u003enInputs * pBox-\u003enOutputs );\n            pTable[0] = pBox-\u003eiDelayTable;\n            pTable[1] = pBox-\u003enInputs;\n            pTable[2] = pBox-\u003enOutputs;\n            for ( k = 0; k \u003c pBox-\u003enInputs * pBox-\u003enOutputs; k++ )\n                pTable[3 + k] = 1.0;\n            // save table\n            pBox-\u003eiDelayTable = Vec_PtrSize(p-\u003evDelayTables);\n            Vec_PtrPush( p-\u003evDelayTables, pTable );\n            continue;\n        }\n        assert( pBox-\u003eiDelayTable \u003e= 0 \u0026\u0026 pBox-\u003eiDelayTable \u003c Vec_PtrSize(pLibBox-\u003evBoxes) );\n        pIfBox = (If_Box_t *)Vec_PtrEntry( pLibBox-\u003evBoxes, pBox-\u003eiDelayTable );\n        assert( pIfBox != NULL );\n        assert( pIfBox-\u003enPis == pBox-\u003enInputs );\n        assert( pIfBox-\u003enPos == pBox-\u003enOutputs );\n        pBox-\u003efBlack = pIfBox-\u003efBlack;\n        if ( Vec_PtrEntry( p-\u003evDelayTables, pBox-\u003eiDelayTable ) != NULL )\n            continue;\n        // create table of boxes\n        pTable = ABC_ALLOC( float, 3 + pBox-\u003enInputs * pBox-\u003enOutputs );\n        pTable[0] = pBox-\u003eiDelayTable;\n        pTable[1] = pBox-\u003enInputs;\n        pTable[2] = pBox-\u003enOutputs;\n        for ( k = 0; k \u003c pBox-\u003enInputs * pBox-\u003enOutputs; k++ )\n            pTable[3 + k] = pIfBox-\u003epDelays[k];\n        // save table\n        Vec_PtrWriteEntry( p-\u003evDelayTables, pBox-\u003eiDelayTable, pTable );\n    }\n    // create arrival times\n    if ( vInArrs )\n    {\n        assert( Vec_FltSize(vInArrs) == Tim_ManPiNum(p) );\n        Tim_ManForEachPi( p, pObj, i )\n            pObj-\u003etimeArr = Vec_FltEntry(vInArrs, i);\n\n    }\n    // create required times\n    if ( vOutReqs )\n    {\n        k = 0;\n        assert( Vec_FltSize(vOutReqs) == Tim_ManPoNum(p) );\n        Tim_ManForEachPo( p, pObj, i )\n            pObj-\u003etimeReq = Vec_FltEntry(vOutReqs, k++);\n        assert( k == Tim_ManPoNum(p) );\n    }\n}",
+      "Draft": "func Tim_ManCreate(p *Tim_Man_t, pLib any, vInArrs *Vec_Flt_t, vOutReqs *Vec_Flt_t) {\n    var pLibBox *If_LibBox_t  = (If_LibBox_t *)pLib;\n    var pIfBox *If_Box_t;\n    var pBox *Tim_Box_t;\n    var pObj *Tim_Obj_t;\n    var pTable *float32;\n    var i, k int32;\n    assert(p.vDelayTables == nil, \"p.vDelayTables == nil\");\n    if pLibBox != nil {\n        p.vDelayTables = Vec_PtrStart( Vec_PtrSize(pLibBox.vBoxes) );\n    } else {\n        p.vDelayTables = Vec_PtrAlloc( 100 );\n    }\n    if p.vBoxes {\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n        if pBox.iDelayTable == -1 || pLibBox == nil {\n            // create table with constants\n            // inlining of macro ABC_ALLOC\n            pTable = ((float *) malloc(sizeof(float) * (size_t)(3 + pBox.nInputs * pBox.nOutputs)));\n            pTable[0] = pBox.iDelayTable;\n            pTable[1] = pBox.nInputs;\n            pTable[2] = pBox.nOutputs;\n            for  k = 0; k \u003c pBox.nInputs * pBox.nOutputs; k++  {\n                pTable[3 + k] = 1.0;\n            }\n            // save table\n            pBox.iDelayTable = Vec_PtrSize(p.vDelayTables);\n            Vec_PtrPush( p.vDelayTables, pTable );\n            continue;\n        }\n        assert(pBox.iDelayTable \u003e= 0 \u0026\u0026 pBox.iDelayTable \u003c Vec_PtrSize(pLibBox.vBoxes), \"pBox.iDelayTable \u003e= 0 \u0026\u0026 pBox.iDelayTable \u003c Vec_PtrSize(pLibBox.vBoxes)\");\n        pIfBox = (If_Box_t *)Vec_PtrEntry( pLibBox.vBoxes, pBox.iDelayTable );\n        assert(pIfBox != nil, \"pIfBox != nil\");\n        assert(pIfBox.nPis == pBox.nInputs, \"pIfBox.nPis == pBox.nInputs\");\n        assert(pIfBox.nPos == pBox.nOutputs, \"pIfBox.nPos == pBox.nOutputs\");\n        pBox.fBlack = pIfBox.fBlack;\n        if Vec_PtrEntry( p.vDelayTables, pBox.iDelayTable ) != nil {\n            continue; }\n        // create table of boxes\n        // inlining of macro ABC_ALLOC\n        pTable = ((float *) malloc(sizeof(float) * (size_t)(3 + pBox.nInputs * pBox.nOutputs)));\n        pTable[0] = pBox.iDelayTable;\n        pTable[1] = pBox.nInputs;\n        pTable[2] = pBox.nOutputs;\n        for  k = 0; k \u003c pBox.nInputs * pBox.nOutputs; k++  {\n            pTable[3 + k] = pIfBox.pDelays[k];\n        }\n        // save table\n        Vec_PtrWriteEntry( p.vDelayTables, pBox.iDelayTable, pTable );\n    } }\n    // create arrival times\n    if vInArrs != nil {\n        assert(Vec_FltSize(vInArrs) == Tim_ManPiNum(p), \"Vec_FltSize(vInArrs) == Tim_ManPiNum(p)\");\n        // inlining of macro Tim_ManForEachPi\n        // inlining of macro Tim_ManForEachCi\n        for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n            pObj.timeArr = Vec_FltEntry(vInArrs, i); }\n        }\n\n    }\n    // create required times\n    if vOutReqs != nil {\n        k = 0;\n        assert(Vec_FltSize(vOutReqs) == Tim_ManPoNum(p), \"Vec_FltSize(vOutReqs) == Tim_ManPoNum(p)\");\n        // inlining of macro Tim_ManForEachPo\n        // inlining of macro Tim_ManForEachCo\n        for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n            pObj.timeReq = Vec_FltEntry(vOutReqs, k++); }\n        }\n        assert(k == Tim_ManPoNum(p), \"k == Tim_ManPoNum(p)\");\n    }\n}"
+    },
+    {
+      "Name": "Tim_ManGetArrTimes",
+      "Start": 16462,
+      "End": 16846,
+      "BodyStart": 16506,
+      "Original": "float * Tim_ManGetArrTimes( Tim_Man_t * p )\n{\n    float * pTimes;\n    Tim_Obj_t * pObj;\n    int i;\n    Tim_ManForEachPi( p, pObj, i )\n        if ( pObj-\u003etimeArr != 0.0 )\n            break;\n    if ( i == Tim_ManPiNum(p) )\n        return NULL;\n    pTimes  = ABC_FALLOC( float, Tim_ManCiNum(p) );\n    Tim_ManForEachPi( p, pObj, i )\n        pTimes[i] = pObj-\u003etimeArr;\n    return pTimes;\n}",
+      "Draft": "func Tim_ManGetArrTimes(p *Tim_Man_t) *float32 {\n    var pTimes *float32;\n    var pObj *Tim_Obj_t;\n    var i int32;\n    // inlining of macro Tim_ManForEachPi\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { if pObj.iObj2Box \u003e= 0 {} else \n        if pObj.timeArr != 0.0 {\n            break; }\n    }\n    if i == Tim_ManPiNum(p) {\n        return nil; }\n    // inlining of macro ABC_FALLOC\n    pTimes  = ((float *) memset(malloc(sizeof(float) * (size_t)(Tim_ManCiNum(p))), 0xff, sizeof(float) * (size_t)(Tim_ManCiNum(p))));\n    // inlining of macro Tim_ManForEachPi\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n        pTimes[i] = pObj.timeArr; }\n    }\n    return pTimes;\n}"
+    },
+    {
+      "Name": "Tim_ManGetReqTimes",
+      "Start": 16847,
+      "End": 17285,
+      "BodyStart": 16891,
+      "Original": "float * Tim_ManGetReqTimes( Tim_Man_t * p )\n{\n    float * pTimes;\n    Tim_Obj_t * pObj;\n    int i, k = 0;\n    Tim_ManForEachPo( p, pObj, i )\n        if ( pObj-\u003etimeReq != TIM_ETERNITY )\n            break;\n    if ( i == Tim_ManPoNum(p) )\n        return NULL;\n    pTimes  = ABC_FALLOC( float, Tim_ManCoNum(p) );\n    Tim_ManForEachPo( p, pObj, i )\n        pTimes[k++] = pObj-\u003etimeArr;\n    assert( k == Tim_ManPoNum(p) );\n    return pTimes;\n}",
+      "Draft": "func Tim_ManGetReqTimes(p *Tim_Man_t) *float32 {\n    var pTimes *float32;\n    var pObj *Tim_Obj_t;\n    var i, k int32;\n    // inlining of macro Tim_ManForEachPo\n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { if pObj.iObj2Box \u003e= 0 {} else \n        if pObj.timeReq != TIM_ETERNITY {\n            break; }\n    }\n    if i == Tim_ManPoNum(p) {\n        return nil; }\n    // inlining of macro ABC_FALLOC\n    pTimes  = ((float *) memset(malloc(sizeof(float) * (size_t)(Tim_ManCoNum(p))), 0xff, sizeof(float) * (size_t)(Tim_ManCoNum(p))));\n    // inlining of macro Tim_ManForEachPo\n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n        pTimes[k++] = pObj.timeArr; }\n    }\n    assert(k == Tim_ManPoNum(p), \"k == Tim_ManPoNum(p)\");\n    return pTimes;\n}"
+    },
+    {
+      "Name": "Tim_ManPrint",
+      "Start": 17548,
+      "End": 21053,
+      "BodyStart": 17583,
+      "Original": "void Tim_ManPrint( Tim_Man_t * p )\n{\n    Tim_Box_t * pBox;\n    Tim_Obj_t * pObj, * pPrev;\n    float * pTable;\n    int i, j, k, TableX, TableY;\n    if ( p == NULL )\n        return;\n    printf( \"TIMING MANAGER:\\n\" );\n    printf( \"PI = %d. CI = %d. PO = %d. CO = %d. Box = %d.\\n\", \n        Tim_ManPiNum(p), Tim_ManCiNum(p), Tim_ManPoNum(p), Tim_ManCoNum(p), Tim_ManBoxNum(p) );\n\n    // print CI info\n    pPrev = p-\u003epCis;\n    Tim_ManForEachPi( p, pObj, i )\n        if ( pPrev-\u003etimeArr != pObj-\u003etimeArr || pPrev-\u003etimeReq != pObj-\u003etimeReq )\n            break;\n    if ( i == Tim_ManCiNum(p) )\n        printf( \"All PIs     :  arrival = %5.3f  required = %5.3f\\n\", pPrev-\u003etimeArr, pPrev-\u003etimeReq );\n    else\n        Tim_ManForEachPi( p, pObj, i )\n            printf( \"PI%5d     :  arrival = %5.3f  required = %5.3f\\n\", i, pObj-\u003etimeArr, pObj-\u003etimeReq );\n\n    // print CO info\n    pPrev = p-\u003epCos;\n    Tim_ManForEachPo( p, pObj, i )\n        if ( pPrev-\u003etimeArr != pObj-\u003etimeArr || pPrev-\u003etimeReq != pObj-\u003etimeReq )\n            break;\n    if ( i == Tim_ManCoNum(p) )\n        printf( \"All POs     :  arrival = %5.3f  required = %5.3f\\n\", pPrev-\u003etimeArr, pPrev-\u003etimeReq );\n    else\n    {\n        int k = 0;\n        Tim_ManForEachPo( p, pObj, i )\n            printf( \"PO%5d     :  arrival = %5.3f  required = %5.3f\\n\", k++, pObj-\u003etimeArr, pObj-\u003etimeReq );\n    }\n\n    // print box info\n    if ( Tim_ManBoxNum(p) \u003e 0 )\n    Tim_ManForEachBox( p, pBox, i )\n    {\n        printf( \"*** Box %5d :  I =%4d. O =%4d. I1 =%6d. O1 =%6d. Table =%4d\\n\", \n            i, pBox-\u003enInputs, pBox-\u003enOutputs, \n            Tim_ManBoxInputFirst(p, i), Tim_ManBoxOutputFirst(p, i), \n            pBox-\u003eiDelayTable );\n\n        // print box inputs\n        pPrev = Tim_ManBoxInput( p, pBox, 0 );\n        Tim_ManBoxForEachInput( p, pBox, pObj, k )\n            if ( pPrev-\u003etimeArr != pObj-\u003etimeArr || pPrev-\u003etimeReq != pObj-\u003etimeReq )\n                break;\n        if ( k == Tim_ManBoxInputNum(p, pBox-\u003eiBox) )\n            printf( \"Box inputs  :  arrival = %5.3f  required = %5.3f\\n\", pPrev-\u003etimeArr, pPrev-\u003etimeReq );\n        else\n            Tim_ManBoxForEachInput( p, pBox, pObj, k )\n                printf( \"box-in%4d :  arrival = %5.3f  required = %5.3f\\n\", k, pObj-\u003etimeArr, pObj-\u003etimeReq );\n\n        // print box outputs\n        pPrev = Tim_ManBoxOutput( p, pBox, 0 );\n        Tim_ManBoxForEachOutput( p, pBox, pObj, k )\n            if ( pPrev-\u003etimeArr != pObj-\u003etimeArr || pPrev-\u003etimeReq != pObj-\u003etimeReq )\n                break;\n        if ( k == Tim_ManBoxOutputNum(p, pBox-\u003eiBox) )\n            printf( \"Box outputs :  arrival = %5.3f  required = %5.3f\\n\", pPrev-\u003etimeArr, pPrev-\u003etimeReq );\n        else\n            Tim_ManBoxForEachOutput( p, pBox, pObj, k )\n                printf( \"box-out%3d :  arrival = %5.3f  required = %5.3f\\n\", k, pObj-\u003etimeArr, pObj-\u003etimeReq );\n\n        if ( i \u003e 2 )\n            break;\n    }\n\n    // print delay tables\n    if ( Tim_ManDelayTableNum(p) \u003e 0 )\n    Tim_ManForEachTable( p, pTable, i )\n    {\n        if ( pTable == NULL )\n            continue;\n        printf( \"Delay table %d:\\n\", i );\n        assert( i == (int)pTable[0] );\n        TableX = (int)pTable[1];\n        TableY = (int)pTable[2];\n        for ( j = 0; j \u003c TableY; j++, printf( \"\\n\" ) )\n            for ( k = 0; k \u003c TableX; k++ )\n                if ( pTable[3+j*TableX+k] == -ABC_INFINITY )\n                    printf( \"%5s\", \"-\" );\n                else\n                    printf( \"%5.0f\", pTable[3+j*TableX+k] );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Tim_ManPrint(p *Tim_Man_t) {\n    var pBox *Tim_Box_t;\n    var pObj, pPrev *Tim_Obj_t;\n    var pTable *float32;\n    var i, j, k, TableX, TableY int32;\n    if p == nil {\n        return; }\n    fmt.Printf(\"TIMING MANAGER:\\n\");\n    fmt.Printf(\"PI = %d. CI = %d. PO = %d. CO = %d. Box = %d.\\n\", Tim_ManPiNum(p), Tim_ManCiNum(p), Tim_ManPoNum(p), Tim_ManCoNum(p), Tim_ManBoxNum(p));\n\n    // print CI info\n    pPrev = p.pCis;\n    // inlining of macro Tim_ManForEachPi\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { if pObj.iObj2Box \u003e= 0 {} else \n        if pPrev.timeArr != pObj.timeArr || pPrev.timeReq != pObj.timeReq {\n            break; }\n    }\n    if i == Tim_ManCiNum(p) {\n        fmt.Printf(\"All PIs     :  arrival = %5.3f  required = %5.3f\\n\", pPrev.timeArr, pPrev.timeReq);\n    } else {\n        // inlining of macro Tim_ManForEachPi\n        // inlining of macro Tim_ManForEachCi\n        for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n            fmt.Printf(\"PI%5d     :  arrival = %5.3f  required = %5.3f\\n\", i, pObj.timeArr, pObj.timeReq); }\n        } }\n\n    // print CO info\n    pPrev = p.pCos;\n    // inlining of macro Tim_ManForEachPo\n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { if pObj.iObj2Box \u003e= 0 {} else \n        if pPrev.timeArr != pObj.timeArr || pPrev.timeReq != pObj.timeReq {\n            break; }\n    }\n    if i == Tim_ManCoNum(p) {\n        fmt.Printf(\"All POs     :  arrival = %5.3f  required = %5.3f\\n\", pPrev.timeArr, pPrev.timeReq);\n    } else {\n        var k int32;\n        // inlining of macro Tim_ManForEachPo\n        // inlining of macro Tim_ManForEachCo\n        for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n            fmt.Printf(\"PO%5d     :  arrival = %5.3f  required = %5.3f\\n\", k++, pObj.timeArr, pObj.timeReq); }\n        }\n    }\n\n    // print box info\n    if Tim_ManBoxNum(p) \u003e 0 {\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n        fmt.Printf(\"*** Box %5d :  I =%4d. O =%4d. I1 =%6d. O1 =%6d. Table =%4d\\n\", i, pBox.nInputs, pBox.nOutputs, Tim_ManBoxInputFirst(p, i), Tim_ManBoxOutputFirst(p, i), pBox.iDelayTable);\n\n        // print box inputs\n        pPrev = Tim_ManBoxInput( p, pBox, 0 );\n        // inlining of macro Tim_ManBoxForEachInput\n        for  k = 0; (k \u003c (pBox).nInputs) \u0026\u0026 ((pObj) = Tim_ManBoxInput(p, pBox, k)); k++  {\n            if pPrev.timeArr != pObj.timeArr || pPrev.timeReq != pObj.timeReq {\n                break; }\n        }\n        if k == Tim_ManBoxInputNum(p, pBox.iBox) {\n            fmt.Printf(\"Box inputs  :  arrival = %5.3f  required = %5.3f\\n\", pPrev.timeArr, pPrev.timeReq);\n        } else {\n            // inlining of macro Tim_ManBoxForEachInput\n            for  k = 0; (k \u003c (pBox).nInputs) \u0026\u0026 ((pObj) = Tim_ManBoxInput(p, pBox, k)); k++  {\n                fmt.Printf(\"box-in%4d :  arrival = %5.3f  required = %5.3f\\n\", k, pObj.timeArr, pObj.timeReq);\n            } }\n\n        // print box outputs\n        pPrev = Tim_ManBoxOutput( p, pBox, 0 );\n        // inlining of macro Tim_ManBoxForEachOutput\n        for  k = 0; (k \u003c (pBox).nOutputs) \u0026\u0026 ((pObj) = Tim_ManBoxOutput(p, pBox, k)); k++  {\n            if pPrev.timeArr != pObj.timeArr || pPrev.timeReq != pObj.timeReq {\n                break; }\n        }\n        if k == Tim_ManBoxOutputNum(p, pBox.iBox) {\n            fmt.Printf(\"Box outputs :  arrival = %5.3f  required = %5.3f\\n\", pPrev.timeArr, pPrev.timeReq);\n        } else {\n            // inlining of macro Tim_ManBoxForEachOutput\n            for  k = 0; (k \u003c (pBox).nOutputs) \u0026\u0026 ((pObj) = Tim_ManBoxOutput(p, pBox, k)); k++  {\n                fmt.Printf(\"box-out%3d :  arrival = %5.3f  required = %5.3f\\n\", k, pObj.timeArr, pObj.timeReq);\n            } }\n\n        if i \u003e 2 {\n            break; }\n    } }\n\n    // print delay tables\n    if Tim_ManDelayTableNum(p) \u003e 0 {\n    // inlining of macro Tim_ManForEachTable\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vDelayTables)) \u0026\u0026 (((pTable) = (float *)Vec_PtrEntry(p.vDelayTables, i)), 1); i++  {\n        if pTable == nil {\n            continue; }\n        fmt.Printf(\"Delay table %d:\\n\", i);\n        assert(i == int32(pTable[0]), \"i == int32(pTable[0])\");\n        TableX = int32(pTable[1]);\n        TableY = int32(pTable[2]);\n        for  j = 0; j \u003c TableY; j++, printf( \"\\n\" )  {\n            for  k = 0; k \u003c TableX; k++  {\n                if pTable[3+j*TableX+k] == -ABC_INFINITY {\n                    fmt.Printf(\"%5s\", \"-\");\n                } else {\n                    fmt.Printf(\"%5.0f\", pTable[3+j*TableX+k]); }\n            }\n        }\n    } }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Tim_ManPrintBoxCopy",
+      "Start": 21054,
+      "End": 21491,
+      "BodyStart": 21096,
+      "Original": "void Tim_ManPrintBoxCopy( Tim_Man_t * p )\n{\n    Tim_Box_t * pBox;\n    int i;\n    if ( p == NULL )\n        return;\n    printf( \"TIMING MANAGER:\\n\" );\n    printf( \"PI = %d. CI = %d. PO = %d. CO = %d. Box = %d.\\n\", \n        Tim_ManPiNum(p), Tim_ManCiNum(p), Tim_ManPoNum(p), Tim_ManCoNum(p), Tim_ManBoxNum(p) );\n\n    if ( Tim_ManBoxNum(p) \u003e 0 )\n    Tim_ManForEachBox( p, pBox, i )\n        printf( \"%d \", pBox-\u003eiCopy );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Tim_ManPrintBoxCopy(p *Tim_Man_t) {\n    var pBox *Tim_Box_t;\n    var i int32;\n    if p == nil {\n        return; }\n    fmt.Printf(\"TIMING MANAGER:\\n\");\n    fmt.Printf(\"PI = %d. CI = %d. PO = %d. CO = %d. Box = %d.\\n\", Tim_ManPiNum(p), Tim_ManCiNum(p), Tim_ManPoNum(p), Tim_ManCoNum(p), Tim_ManBoxNum(p));\n\n    if Tim_ManBoxNum(p) \u003e 0 {\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n        fmt.Printf(\"%d \", pBox.iCopy);\n    } }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Tim_ManPrintStats",
+      "Start": 21767,
+      "End": 23116,
+      "BodyStart": 21823,
+      "Original": "void Tim_ManPrintStats( Tim_Man_t * p, int nAnd2Delay )\n{\n    Tim_Box_t * pBox;\n    Vec_Int_t * vCounts;\n    Vec_Ptr_t * vBoxes;\n    int i, Count, IdMax;\n    if ( p == NULL )\n        return;\n    Abc_Print( 1, \"Hierarchy      :  \" );\n    printf( \"PI/CI = %d/%d   PO/CO = %d/%d   Box = %d   \", \n        Tim_ManPiNum(p), Tim_ManCiNum(p), \n        Tim_ManPoNum(p), Tim_ManCoNum(p), \n        Tim_ManBoxNum(p) );\n    if ( nAnd2Delay )\n        printf( \"delay(AND2) = %d\", nAnd2Delay );\n    printf( \"\\n\" );\n    if ( Tim_ManBoxNum(p) == 0 )\n        return;\n    IdMax = 0;\n    Tim_ManForEachBox( p, pBox, i )\n        IdMax = Abc_MaxInt( IdMax, pBox-\u003eiDelayTable );\n    vCounts = Vec_IntStart( IdMax+1 );\n    vBoxes  = Vec_PtrStart( IdMax+1 );\n    Tim_ManForEachBox( p, pBox, i )\n    {\n        Vec_IntAddToEntry( vCounts, pBox-\u003eiDelayTable, 1 );\n        Vec_PtrWriteEntry( vBoxes, pBox-\u003eiDelayTable, pBox );\n    }\n    // print statistics about boxes\n    Vec_IntForEachEntry( vCounts, Count, i )\n    {\n        if ( Count == 0 ) continue;\n        pBox = (Tim_Box_t *)Vec_PtrEntry( vBoxes, i );\n        printf( \"    Box %4d      \", i );\n        printf( \"Num = %4d   \", Count );\n        printf( \"Ins = %4d   \", pBox-\u003enInputs );\n        printf( \"Outs = %4d\",   pBox-\u003enOutputs );\n        printf( \"\\n\" );\n    }\n    Vec_IntFree( vCounts );\n    Vec_PtrFree( vBoxes );\n}",
+      "Draft": "func Tim_ManPrintStats(p *Tim_Man_t, nAnd2Delay int32) {\n    var pBox *Tim_Box_t;\n    var vCounts *Vec_Int_t;\n    var vBoxes *Vec_Ptr_t;\n    var i, Count, IdMax int32;\n    if p == nil {\n        return; }\n    Abc_Print( 1, \"Hierarchy      :  \" );\n    fmt.Printf(\"PI/CI = %d/%d   PO/CO = %d/%d   Box = %d   \", Tim_ManPiNum(p), Tim_ManCiNum(p), Tim_ManPoNum(p), Tim_ManCoNum(p), Tim_ManBoxNum(p));\n    if nAnd2Delay != 0 {\n        fmt.Printf(\"delay(AND2) = %d\", nAnd2Delay); }\n    fmt.Printf(\"\\n\");\n    if Tim_ManBoxNum(p) == 0 {\n        return; }\n    IdMax = 0;\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n        IdMax = Abc_MaxInt( IdMax, pBox.iDelayTable );\n    }\n    vCounts = Vec_IntStart( IdMax+1 );\n    vBoxes  = Vec_PtrStart( IdMax+1 );\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n        Vec_IntAddToEntry( vCounts, pBox.iDelayTable, 1 );\n        Vec_PtrWriteEntry( vBoxes, pBox.iDelayTable, pBox );\n    }\n    // print statistics about boxes\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCounts)) \u0026\u0026 (((Count) = Vec_IntEntry(vCounts, i)), 1); i++  {\n        if Count == 0 { continue; }\n        pBox = (Tim_Box_t *)Vec_PtrEntry( vBoxes, i );\n        fmt.Printf(\"    Box %4d      \", i);\n        fmt.Printf(\"Num = %4d   \", Count);\n        fmt.Printf(\"Ins = %4d   \", pBox.nInputs);\n        fmt.Printf(\"Outs = %4d\", pBox.nOutputs);\n        fmt.Printf(\"\\n\");\n    }\n    Vec_IntFree( vCounts );\n    Vec_PtrFree( vBoxes );\n}"
+    },
+    {
+      "Name": "Tim_ManCiNum",
+      "Start": 23368,
+      "End": 23425,
+      "BodyStart": 23402,
+      "Original": "int Tim_ManCiNum( Tim_Man_t * p )\n{\n    return p-\u003enCis;\n}",
+      "Draft": "func Tim_ManCiNum(p *Tim_Man_t) int32 {\n    return p.nCis;\n}"
+    },
+    {
+      "Name": "Tim_ManCoNum",
+      "Start": 23426,
+      "End": 23483,
+      "BodyStart": 23460,
+      "Original": "int Tim_ManCoNum( Tim_Man_t * p )\n{\n    return p-\u003enCos;\n}",
+      "Draft": "func Tim_ManCoNum(p *Tim_Man_t) int32 {\n    return p.nCos;\n}"
+    },
+    {
+      "Name": "Tim_ManPiNum",
+      "Start": 23484,
+      "End": 23626,
+      "BodyStart": 23518,
+      "Original": "int Tim_ManPiNum( Tim_Man_t * p )\n{\n    if ( Tim_ManBoxNum(p) == 0 )\n        return Tim_ManCiNum(p);\n    return Tim_ManBoxOutputFirst(p, 0);\n}",
+      "Draft": "func Tim_ManPiNum(p *Tim_Man_t) int32 {\n    if Tim_ManBoxNum(p) == 0 {\n        return Tim_ManCiNum(p); }\n    return Tim_ManBoxOutputFirst(p, 0);\n}"
+    },
+    {
+      "Name": "Tim_ManPoNum",
+      "Start": 23627,
+      "End": 23892,
+      "BodyStart": 23661,
+      "Original": "int Tim_ManPoNum( Tim_Man_t * p )\n{\n    int iLastBoxId;\n    if ( Tim_ManBoxNum(p) == 0 )\n        return Tim_ManCoNum(p);\n    iLastBoxId = Tim_ManBoxNum(p) - 1;\n    return Tim_ManCoNum(p) - (Tim_ManBoxInputFirst(p, iLastBoxId) + Tim_ManBoxInputNum(p, iLastBoxId));\n}",
+      "Draft": "func Tim_ManPoNum(p *Tim_Man_t) int32 {\n    var iLastBoxId int32;\n    if Tim_ManBoxNum(p) == 0 {\n        return Tim_ManCoNum(p); }\n    iLastBoxId = Tim_ManBoxNum(p) - 1;\n    return Tim_ManCoNum(p) - (Tim_ManBoxInputFirst(p, iLastBoxId) + Tim_ManBoxInputNum(p, iLastBoxId));\n}"
+    },
+    {
+      "Name": "Tim_ManBoxNum",
+      "Start": 23893,
+      "End": 23982,
+      "BodyStart": 23928,
+      "Original": "int Tim_ManBoxNum( Tim_Man_t * p )\n{\n    return p-\u003evBoxes ? Vec_PtrSize(p-\u003evBoxes) : 0;\n}",
+      "Draft": "func Tim_ManBoxNum(p *Tim_Man_t) int32 {\n    if p.vBoxes {\n        return Vec_PtrSize(p.vBoxes);\n    } else {\n        return 0;\n    }\n}"
+    },
+    {
+      "Name": "Tim_ManBlackBoxNum",
+      "Start": 23983,
+      "End": 24197,
+      "BodyStart": 24023,
+      "Original": "int Tim_ManBlackBoxNum( Tim_Man_t * p )\n{\n    Tim_Box_t * pBox;\n    int i, Counter = 0;\n    if ( Tim_ManBoxNum(p) )\n        Tim_ManForEachBox( p, pBox, i )\n            Counter += pBox-\u003efBlack;\n    return Counter;\n}",
+      "Draft": "func Tim_ManBlackBoxNum(p *Tim_Man_t) int32 {\n    var pBox *Tim_Box_t;\n    var i, Counter int32;\n    if Tim_ManBoxNum(p) != 0 {\n        // inlining of macro Tim_ManForEachBox\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n            Counter += pBox.fBlack;\n        } }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Tim_ManBlackBoxIoNum",
+      "Start": 24198,
+      "End": 24617,
+      "BodyStart": 24272,
+      "Original": "void Tim_ManBlackBoxIoNum( Tim_Man_t * p, int * pnBbIns, int * pnBbOuts )\n{\n    Tim_Box_t * pBox;\n    int i;\n    *pnBbIns = *pnBbOuts = 0;\n    if ( Tim_ManBoxNum(p) )\n        Tim_ManForEachBox( p, pBox, i )\n        {\n            if ( !pBox-\u003efBlack )//\u0026\u0026 pBox-\u003enInputs \u003c= 6 )\n                continue;\n            *pnBbIns  += Tim_ManBoxInputNum( p, i );\n            *pnBbOuts += Tim_ManBoxOutputNum( p, i );\n        }\n}",
+      "Draft": "func Tim_ManBlackBoxIoNum(p *Tim_Man_t, pnBbIns *int32, pnBbOuts *int32) {\n    var pBox *Tim_Box_t;\n    var i int32;\n    *pnBbIns = *pnBbOuts = 0;\n    if Tim_ManBoxNum(p) != 0 {\n        // inlining of macro Tim_ManForEachBox\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n            if !pBox.fBlack {//\u0026\u0026 pBox-\u003enInputs \u003c= 6 )\n                continue; }\n            *pnBbIns  += Tim_ManBoxInputNum( p, i );\n            *pnBbOuts += Tim_ManBoxOutputNum( p, i );\n        } }\n}"
+    },
+    {
+      "Name": "Tim_ManDelayTableNum",
+      "Start": 24618,
+      "End": 24726,
+      "BodyStart": 24660,
+      "Original": "int Tim_ManDelayTableNum( Tim_Man_t * p )\n{\n    return p-\u003evDelayTables ? Vec_PtrSize(p-\u003evDelayTables) : 0;\n}",
+      "Draft": "func Tim_ManDelayTableNum(p *Tim_Man_t) int32 {\n    if p.vDelayTables {\n        return Vec_PtrSize(p.vDelayTables);\n    } else {\n        return 0;\n    }\n}"
+    },
+    {
+      "Name": "Tim_ManSetDelayTables",
+      "Start": 25023,
+      "End": 25171,
+      "BodyStart": 25093,
+      "Original": "void Tim_ManSetDelayTables( Tim_Man_t * p, Vec_Ptr_t * vDelayTables )\n{\n    assert( p-\u003evDelayTables == NULL );\n    p-\u003evDelayTables = vDelayTables;\n}",
+      "Draft": "func Tim_ManSetDelayTables(p *Tim_Man_t, vDelayTables *Vec_Ptr_t) {\n    assert(p.vDelayTables == nil, \"p.vDelayTables == nil\");\n    p.vDelayTables = vDelayTables;\n}"
+    },
+    {
+      "Name": "Tim_ManTravIdDisable",
+      "Start": 25444,
+      "End": 25513,
+      "BodyStart": 25487,
+      "Original": "void Tim_ManTravIdDisable( Tim_Man_t * p )\n{\n    p-\u003efUseTravId = 0;\n}",
+      "Draft": "func Tim_ManTravIdDisable(p *Tim_Man_t) {\n    p.fUseTravId = 0;\n}"
+    },
+    {
+      "Name": "Tim_ManTravIdEnable",
+      "Start": 25785,
+      "End": 25853,
+      "BodyStart": 25827,
+      "Original": "void Tim_ManTravIdEnable( Tim_Man_t * p )\n{\n    p-\u003efUseTravId = 1;\n}",
+      "Draft": "func Tim_ManTravIdEnable(p *Tim_Man_t) {\n    p.fUseTravId = 1;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::1471",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1404,
+      "End": 1404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::1524",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1449,
+      "End": 1455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::1700",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1558,
+      "End": 1558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::1762",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1612,
+      "End": 1618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::1871",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1654,
+      "End": 1654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::1933",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1708,
+      "End": 1714
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::3427",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2862,
+      "End": 2868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::3492",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2927,
+      "End": 2933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::4668",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3848,
+      "End": 3848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::7809",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6443,
+      "End": 6449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::7971",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6605,
+      "End": 6611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::8706",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7085,
+      "End": 7085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::11873",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9781,
+      "End": 9787
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::12023",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9931,
+      "End": 9937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::13003",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10656,
+      "End": 10656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::17687",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 14360,
+      "End": 14360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::18705",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15307,
+      "End": 15307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::20714",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16718,
+      "End": 16718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::20764",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16718,
+      "End": 16718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::21589",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17119,
+      "End": 17119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::mechanical::sizeof::21639",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 17119,
+      "End": 17119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::1450",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1404,
+      "End": 1404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::1679",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1558,
+      "End": 1558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::1850",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1654,
+      "End": 1654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::4309",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3565,
+      "End": 3565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::4651",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3848,
+      "End": 3848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::5747",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4755,
+      "End": 4755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::6928",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5752,
+      "End": 5752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::8347",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6802,
+      "End": 6802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::8689",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7085,
+      "End": 7085
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::9616",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7823,
+      "End": 7823
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::12419",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10148,
+      "End": 10148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::12986",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10656,
+      "End": 10656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::15112",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12480,
+      "End": 12480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::15536",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12716,
+      "End": 12716
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::16208",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13305,
+      "End": 13305
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::16317",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13330,
+      "End": 13330
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::16420",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13355,
+      "End": 13355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::16984",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13904,
+      "End": 13919
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::17434",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14190,
+      "End": 14190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::17670",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14360,
+      "End": 14360
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::18260",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14925,
+      "End": 14937
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::18688",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15307,
+      "End": 15307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::20690",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16718,
+      "End": 16718
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::21565",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17119,
+      "End": 17119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::24511",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18955,
+      "End": 18955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::26652",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20502,
+      "End": 20502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::27732",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21400,
+      "End": 21400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::28850",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22334,
+      "End": 22334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::29204",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22504,
+      "End": 22504
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::29634",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22808,
+      "End": 22821
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::31097",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24107,
+      "End": 24107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::pointer-cast::31547",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24373,
+      "End": 24373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManStart",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1295,
+      "End": 2080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::ternary::Tim_ManDup",
+      "Category": "ternary-review",
+      "Symbol": "Tim_ManDup",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2346,
+      "End": 5049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManDup",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2346,
+      "End": 5049
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::ternary::Tim_ManTrim",
+      "Category": "ternary-review",
+      "Symbol": "Tim_ManTrim",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5310,
+      "End": 8404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManTrim",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManTrim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5310,
+      "End": 8404
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::ternary::Tim_ManReduce",
+      "Category": "ternary-review",
+      "Symbol": "Tim_ManReduce",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8667,
+      "End": 11960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManReduce",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManReduce",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8667,
+      "End": 11960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManAlignTwo",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManAlignTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12242,
+      "End": 12897
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::ternary::Tim_ManStop",
+      "Category": "ternary-review",
+      "Symbol": "Tim_ManStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 13158,
+      "End": 13371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManStop",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13158,
+      "End": 13371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManStopP",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManStopP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13372,
+      "End": 13487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::void-pointer::Tim_ManCreate",
+      "Category": "void-pointer-review",
+      "Symbol": "Tim_ManCreate",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 13782,
+      "End": 16170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManCreate",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13782,
+      "End": 16170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManGetArrTimes",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManGetArrTimes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16462,
+      "End": 16846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManGetReqTimes",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManGetReqTimes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16847,
+      "End": 17285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManPrint",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17548,
+      "End": 21053
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManPrintBoxCopy",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManPrintBoxCopy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21054,
+      "End": 21491
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21767,
+      "End": 23116
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManCiNum",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManCiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23368,
+      "End": 23425
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManCoNum",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManCoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23426,
+      "End": 23483
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManPiNum",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManPiNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23484,
+      "End": 23626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManPoNum",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManPoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23627,
+      "End": 23892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManBoxNum",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBoxNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23893,
+      "End": 23982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManBlackBoxNum",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBlackBoxNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23983,
+      "End": 24197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManBlackBoxIoNum",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManBlackBoxIoNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24198,
+      "End": 24617
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManDelayTableNum",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManDelayTableNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24618,
+      "End": 24726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManSetDelayTables",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManSetDelayTables",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25023,
+      "End": 25171
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManTravIdDisable",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManTravIdDisable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25444,
+      "End": 25513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::Tim_ManTravIdEnable",
+      "Category": "semantic-review",
+      "Symbol": "Tim_ManTravIdEnable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25785,
+      "End": 25853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/tim/timMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 26100
+    }
+  ],
+  "Draft": "package tim\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [timMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Hierarchy/timing manager.]\n\n  Synopsis    [Manipulation of manager data-structure.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: timMan.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"timInt.h\"\n//#include \"map/if/if.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the timing manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManStart(nCis int32, nCos int32) *Tim_Man_t {\n    var p *Tim_Man_t;\n    var pObj *Tim_Obj_t;\n    var i int32;\n    // inlining of macro ABC_ALLOC\n    p = ((Tim_Man_t *) malloc(sizeof(Tim_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Tim_Man_t) );\n    p.pMemObj = Mem_FlexStart();\n    p.nCis = nCis;\n    p.nCos = nCos;\n    // inlining of macro ABC_ALLOC\n    p.pCis = ((Tim_Obj_t *) malloc(sizeof(Tim_Obj_t) * (size_t)(nCis)));\n    memset( p.pCis, 0, sizeof(Tim_Obj_t) * nCis );\n    // inlining of macro ABC_ALLOC\n    p.pCos = ((Tim_Obj_t *) malloc(sizeof(Tim_Obj_t) * (size_t)(nCos)));\n    memset( p.pCos, 0, sizeof(Tim_Obj_t) * nCos );\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  {\n        pObj.Id = i;\n        pObj.iObj2Box = pObj.iObj2Num = -1;\n        pObj.timeReq = TIM_ETERNITY;\n    }\n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  {\n        pObj.Id = i;\n        pObj.iObj2Box = pObj.iObj2Num = -1;\n        pObj.timeReq = TIM_ETERNITY;\n    }\n    p.fUseTravId = 1;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the timing manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManDup(p *Tim_Man_t, fUnitDelay int32) *Tim_Man_t {\n    var pNew *Tim_Man_t;\n    var pBox *Tim_Box_t;\n    var pObj *Tim_Obj_t;\n    var pDelayTable, pDelayTableNew *float32;\n    var i, k, nInputs, nOutputs int32;\n    // clear traversal IDs\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { \n        pObj.TravId = 0;\n    }          \n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { \n        pObj.TravId = 0;\n    }          \n    // create new manager\n    pNew = Tim_ManStart( p.nCis, p.nCos );\n    // copy box connectivity information\n    memcpy( pNew.pCis, p.pCis, sizeof(Tim_Obj_t) * p.nCis ); \n    memcpy( pNew.pCos, p.pCos, sizeof(Tim_Obj_t) * p.nCos ); \n    if fUnitDelay != 0 {\n        // discretize PI arrival times\n//        Tim_ManForEachPi( pNew, pObj, k )\n//          pObj-\u003etimeArr = (int)pObj-\u003etimeArr;\n        // discretize PO required times\n//        Tim_ManForEachPo( pNew, pObj, k )\n//          pObj-\u003etimeReq = 1 + (int)pObj-\u003etimeReq;\n        // clear PI arrival and PO required\n        Tim_ManInitPiArrivalAll( p, 0.0 );\n        Tim_ManInitPoRequiredAll( p, float32(TIM_ETERNITY) );\n    }\n    // duplicate delay tables\n    if Tim_ManDelayTableNum(p) \u003e 0 {\n        pNew.vDelayTables = Vec_PtrStart( Vec_PtrSize(p.vDelayTables) );\n        // inlining of macro Tim_ManForEachTable\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vDelayTables)) \u0026\u0026 (((pDelayTable) = (float *)Vec_PtrEntry(p.vDelayTables, i)), 1); i++  {\n            if pDelayTable == nil {\n                continue; }\n            assert(i == int32(pDelayTable[0]), \"i == int32(pDelayTable[0])\");\n            nInputs   = int32(pDelayTable[1]);\n            nOutputs  = int32(pDelayTable[2]);\n            // inlining of macro ABC_ALLOC\n            pDelayTableNew = ((float *) malloc(sizeof(float) * (size_t)(3 + nInputs * nOutputs)));\n            pDelayTableNew[0] = int32(pDelayTable[0]);\n            pDelayTableNew[1] = int32(pDelayTable[1]);\n            pDelayTableNew[2] = int32(pDelayTable[2]);\n            for  k = 0; k \u003c nInputs * nOutputs; k++  {\n                if pDelayTable[3+k] == -ABC_INFINITY {\n                    pDelayTableNew[3+k] = -ABC_INFINITY;\n                } else {\n                    pDelayTableNew[3+k] = fUnitDelay ? float32(fUnitDelay) : pDelayTable[3+k]; }\n            }\n//            assert( (int)pDelayTableNew[0] == Vec_PtrSize(pNew-\u003evDelayTables) );\n            assert(Vec_PtrEntry(pNew.vDelayTables, i) == nil, \"Vec_PtrEntry(pNew.vDelayTables, i) == nil\");\n            Vec_PtrWriteEntry( pNew.vDelayTables, i, pDelayTableNew );\n//printf( \"Finished duplicating delay table %d.\\n\", i );\n        }\n    }\n    // duplicate boxes\n    if Tim_ManBoxNum(p) \u003e 0 {\n        pNew.vBoxes = Vec_PtrAlloc( Tim_ManBoxNum(p) );\n        // inlining of macro Tim_ManForEachBox\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n           Tim_ManCreateBox( pNew, pBox.Inouts[0], pBox.nInputs, \n                pBox.Inouts[pBox.nInputs], pBox.nOutputs, pBox.iDelayTable, pBox.fBlack );\n           Tim_ManBoxSetCopy( pNew, i, pBox.iCopy );\n        }\n    }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Trims the timing manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManTrim(p *Tim_Man_t, vBoxPres *Vec_Int_t) *Tim_Man_t {\n    var pNew *Tim_Man_t;\n    var pBox *Tim_Box_t;\n    var pObj *Tim_Obj_t;\n    var pDelayTable, pDelayTableNew *float32;\n    var i, k, nNewCis, nNewCos, nInputs, nOutputs int32;\n    assert(Vec_IntSize(vBoxPres) == Tim_ManBoxNum(p), \"Vec_IntSize(vBoxPres) == Tim_ManBoxNum(p)\");\n    // count the number of CIs and COs in the trimmed manager\n    nNewCis = Tim_ManPiNum(p);\n    nNewCos = Tim_ManPoNum(p);\n    if Tim_ManBoxNum(p) != 0 {\n        // inlining of macro Tim_ManForEachBox\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n            if Vec_IntEntry(vBoxPres, i) {\n                nNewCis += pBox.nOutputs;\n                nNewCos += pBox.nInputs;\n            }\n        } }\n    if nNewCis == Tim_ManCiNum(p) \u0026\u0026 nNewCos == Tim_ManCoNum(p) {\n        return Tim_ManDup( p, 0 ); }\n    assert(nNewCis \u003c Tim_ManCiNum(p), \"nNewCis \u003c Tim_ManCiNum(p)\");\n    assert(nNewCos \u003c Tim_ManCoNum(p), \"nNewCos \u003c Tim_ManCoNum(p)\");\n    // clear traversal IDs\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { \n        pObj.TravId = 0;\n    }          \n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { \n        pObj.TravId = 0;\n    }          \n    // create new manager\n    pNew = Tim_ManStart( nNewCis, nNewCos );\n    // copy box connectivity information\n    memcpy( pNew.pCis, p.pCis, sizeof(Tim_Obj_t) * Tim_ManPiNum(p) );\n    memcpy( pNew.pCos + nNewCos - Tim_ManPoNum(p), \n                p.pCos + Tim_ManCoNum(p) - Tim_ManPoNum(p), \n                sizeof(Tim_Obj_t) * Tim_ManPoNum(p) );\n    // duplicate delay tables\n    if Tim_ManDelayTableNum(p) \u003e 0 {\n        pNew.vDelayTables = Vec_PtrStart( Vec_PtrSize(p.vDelayTables) );\n        // inlining of macro Tim_ManForEachTable\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vDelayTables)) \u0026\u0026 (((pDelayTable) = (float *)Vec_PtrEntry(p.vDelayTables, i)), 1); i++  {\n            if pDelayTable == nil {\n                continue; }\n            assert(i == int32(pDelayTable[0]), \"i == int32(pDelayTable[0])\");\n            nInputs   = int32(pDelayTable[1]);\n            nOutputs  = int32(pDelayTable[2]);\n            // inlining of macro ABC_ALLOC\n            pDelayTableNew = ((float *) malloc(sizeof(float) * (size_t)(3 + nInputs * nOutputs)));\n            pDelayTableNew[0] = int32(pDelayTable[0]);\n            pDelayTableNew[1] = int32(pDelayTable[1]);\n            pDelayTableNew[2] = int32(pDelayTable[2]);\n            for  k = 0; k \u003c nInputs * nOutputs; k++  {\n                pDelayTableNew[3+k] = pDelayTable[3+k];\n            }\n//            assert( (int)pDelayTableNew[0] == Vec_PtrSize(pNew-\u003evDelayTables) );\n            assert(Vec_PtrEntry(pNew.vDelayTables, i) == nil, \"Vec_PtrEntry(pNew.vDelayTables, i) == nil\");\n            Vec_PtrWriteEntry( pNew.vDelayTables, i, pDelayTableNew );\n        }\n    }\n    // duplicate boxes\n    if Tim_ManBoxNum(p) \u003e 0 {\n        var curPi int32  = Tim_ManPiNum(p);\n        var curPo int32;\n        pNew.vBoxes = Vec_PtrAlloc( Tim_ManBoxNum(p) );\n        // inlining of macro Tim_ManForEachBox\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n            if Vec_IntEntry(vBoxPres, i) {\n                Tim_ManCreateBox( pNew, curPo, pBox.nInputs, curPi, pBox.nOutputs, pBox.iDelayTable, pBox.fBlack );\n                Tim_ManBoxSetCopy( pNew, Tim_ManBoxNum(pNew) - 1, Tim_ManBoxCopy(p, i) == -1 ? i : Tim_ManBoxCopy(p, i) );\n                curPi += pBox.nOutputs;\n                curPo += pBox.nInputs;\n            }\n        }\n        curPo += Tim_ManPoNum(p);\n        assert(curPi == Tim_ManCiNum(pNew), \"curPi == Tim_ManCiNum(pNew)\");\n        assert(curPo == Tim_ManCoNum(pNew), \"curPo == Tim_ManCoNum(pNew)\");\n    }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reduces the timing manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManReduce(p *Tim_Man_t, vBoxesLeft *Vec_Int_t, nTermsDiff int32) *Tim_Man_t {\n    var pNew *Tim_Man_t;\n    var pBox *Tim_Box_t;\n    var pObj *Tim_Obj_t;\n    var pDelayTable, pDelayTableNew *float32;\n    var i, k, iBox, nNewCis, nNewCos, nInputs, nOutputs int32;\n    var nNewPiNum int32  = Tim_ManPiNum(p) - nTermsDiff;\n    var nNewPoNum int32  = Tim_ManPoNum(p) - nTermsDiff;\n    assert(Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(p), \"Vec_IntSize(vBoxesLeft) \u003c= Tim_ManBoxNum(p)\");\n    // count the number of CIs and COs in the trimmed manager\n    nNewCis = nNewPiNum;\n    nNewCos = nNewPoNum;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vBoxesLeft)) \u0026\u0026 (((iBox) = Vec_IntEntry(vBoxesLeft, i)), 1); i++  {\n        pBox = Tim_ManBox( p, iBox );\n        nNewCis += pBox.nOutputs;\n        nNewCos += pBox.nInputs;\n    }\n    assert(nNewCis \u003c= Tim_ManCiNum(p) - nTermsDiff, \"nNewCis \u003c= Tim_ManCiNum(p) - nTermsDiff\");\n    assert(nNewCos \u003c= Tim_ManCoNum(p) - nTermsDiff, \"nNewCos \u003c= Tim_ManCoNum(p) - nTermsDiff\");\n    // clear traversal IDs\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { \n        pObj.TravId = 0;\n    }          \n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { \n        pObj.TravId = 0;\n    }          \n    // create new manager\n    pNew = Tim_ManStart( nNewCis, nNewCos );\n    // copy box connectivity information\n    memcpy( pNew.pCis, p.pCis, sizeof(Tim_Obj_t) * nNewPiNum );\n    memcpy( pNew.pCos + nNewCos - nNewPoNum, \n                p.pCos + Tim_ManCoNum(p) - Tim_ManPoNum(p), \n                sizeof(Tim_Obj_t) * nNewPoNum );\n    // duplicate delay tables\n    if Tim_ManDelayTableNum(p) \u003e 0 {\n        var fWarning int32;\n        pNew.vDelayTables = Vec_PtrStart( Vec_PtrSize(p.vDelayTables) );\n        // inlining of macro Tim_ManForEachTable\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vDelayTables)) \u0026\u0026 (((pDelayTable) = (float *)Vec_PtrEntry(p.vDelayTables, i)), 1); i++  {\n            if pDelayTable == nil {\n                continue; }\n            if i != int32(pDelayTable[0]) \u0026\u0026 fWarning == 0 {\n                fmt.Printf(\"Warning: Mismatch in delay-table number between the manager and the box.\\n\");\n                fWarning = 1;\n            }\n            //assert( i == (int)pDelayTable[0] );\n            nInputs   = int32(pDelayTable[1]);\n            nOutputs  = int32(pDelayTable[2]);\n            // inlining of macro ABC_ALLOC\n            pDelayTableNew = ((float *) malloc(sizeof(float) * (size_t)(3 + nInputs * nOutputs)));\n            pDelayTableNew[0] = i;//(int)pDelayTable[0];\n            pDelayTableNew[1] = int32(pDelayTable[1]);\n            pDelayTableNew[2] = int32(pDelayTable[2]);\n            for  k = 0; k \u003c nInputs * nOutputs; k++  {\n                pDelayTableNew[3+k] = pDelayTable[3+k];\n            }\n//            assert( (int)pDelayTableNew[0] == Vec_PtrSize(pNew-\u003evDelayTables) );\n            assert(Vec_PtrEntry(pNew.vDelayTables, i) == nil, \"Vec_PtrEntry(pNew.vDelayTables, i) == nil\");\n            Vec_PtrWriteEntry( pNew.vDelayTables, i, pDelayTableNew );\n        }\n    }\n    // duplicate boxes\n    if Tim_ManBoxNum(p) \u003e 0 {\n        var curPi int32  = nNewPiNum;\n        var curPo int32;\n        pNew.vBoxes = Vec_PtrAlloc( Tim_ManBoxNum(p) );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vBoxesLeft)) \u0026\u0026 (((iBox) = Vec_IntEntry(vBoxesLeft, i)), 1); i++  {\n            pBox = Tim_ManBox( p, iBox );\n            Tim_ManCreateBox( pNew, curPo, pBox.nInputs, curPi, pBox.nOutputs, pBox.iDelayTable, pBox.fBlack );\n            Tim_ManBoxSetCopy( pNew, Tim_ManBoxNum(pNew) - 1, Tim_ManBoxCopy(p, iBox) == -1 ? iBox : Tim_ManBoxCopy(p, iBox) );\n            curPi += pBox.nOutputs;\n            curPo += pBox.nInputs;\n        }\n        curPo += nNewPoNum;\n        assert(curPi == Tim_ManCiNum(pNew), \"curPi == Tim_ManCiNum(pNew)\");\n        assert(curPo == Tim_ManCoNum(pNew), \"curPo == Tim_ManCoNum(pNew)\");\n    }\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Aligns two sets of boxes using the copy field.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManAlignTwo(pSpec *Tim_Man_t, pImpl *Tim_Man_t) *Vec_Int_t {\n    var vBoxPres *Vec_Int_t;\n    var pBox *Tim_Box_t;\n    var i int32;\n    assert(Tim_ManBoxNum(pSpec) \u003e Tim_ManBoxNum(pImpl), \"Tim_ManBoxNum(pSpec) \u003e Tim_ManBoxNum(pImpl)\");\n    // check if boxes of pImpl can be aligned\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pImpl.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(pImpl.vBoxes, i)), 1); i++  {\n        if pBox.iCopy \u003c 0 || pBox.iCopy \u003e= Tim_ManBoxNum(pSpec) { \n            return nil; }\n    }\n    // map dropped boxes into 1, others into 0\n    vBoxPres = Vec_IntStart( Tim_ManBoxNum(pSpec) );\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pImpl.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(pImpl.vBoxes, i)), 1); i++  {\n        assert(!Vec_IntEntry(vBoxPres, pBox.iCopy), \"!Vec_IntEntry(vBoxPres, pBox.iCopy)\");\n        Vec_IntWriteEntry( vBoxPres, pBox.iCopy, 1 );\n    }\n    return vBoxPres;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the timing manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManStop(p *Tim_Man_t) {\n    Vec_PtrFreeFree( p.vDelayTables );\n    Vec_PtrFreeP( \u0026p.vBoxes );\n    Mem_FlexStop( p.pMemObj, 0 );\n    // inlining of macro ABC_FREE\n    ((p.pCis) ? (free((char *) (p.pCis)), (p.pCis) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.pCos) ? (free((char *) (p.pCos)), (p.pCos) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\nfunc Tim_ManStopP(p **Tim_Man_t) {\n    if *p == nil {\n        return; }\n    Tim_ManStop( *p );\n    *p = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates manager using hierarchy / box library / delay info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManCreate(p *Tim_Man_t, pLib any, vInArrs *Vec_Flt_t, vOutReqs *Vec_Flt_t) {\n    var pLibBox *If_LibBox_t  = (If_LibBox_t *)pLib;\n    var pIfBox *If_Box_t;\n    var pBox *Tim_Box_t;\n    var pObj *Tim_Obj_t;\n    var pTable *float32;\n    var i, k int32;\n    assert(p.vDelayTables == nil, \"p.vDelayTables == nil\");\n    if pLibBox != nil {\n        p.vDelayTables = Vec_PtrStart( Vec_PtrSize(pLibBox.vBoxes) );\n    } else {\n        p.vDelayTables = Vec_PtrAlloc( 100 );\n    }\n    if p.vBoxes {\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n        if pBox.iDelayTable == -1 || pLibBox == nil {\n            // create table with constants\n            // inlining of macro ABC_ALLOC\n            pTable = ((float *) malloc(sizeof(float) * (size_t)(3 + pBox.nInputs * pBox.nOutputs)));\n            pTable[0] = pBox.iDelayTable;\n            pTable[1] = pBox.nInputs;\n            pTable[2] = pBox.nOutputs;\n            for  k = 0; k \u003c pBox.nInputs * pBox.nOutputs; k++  {\n                pTable[3 + k] = 1.0;\n            }\n            // save table\n            pBox.iDelayTable = Vec_PtrSize(p.vDelayTables);\n            Vec_PtrPush( p.vDelayTables, pTable );\n            continue;\n        }\n        assert(pBox.iDelayTable \u003e= 0 \u0026\u0026 pBox.iDelayTable \u003c Vec_PtrSize(pLibBox.vBoxes), \"pBox.iDelayTable \u003e= 0 \u0026\u0026 pBox.iDelayTable \u003c Vec_PtrSize(pLibBox.vBoxes)\");\n        pIfBox = (If_Box_t *)Vec_PtrEntry( pLibBox.vBoxes, pBox.iDelayTable );\n        assert(pIfBox != nil, \"pIfBox != nil\");\n        assert(pIfBox.nPis == pBox.nInputs, \"pIfBox.nPis == pBox.nInputs\");\n        assert(pIfBox.nPos == pBox.nOutputs, \"pIfBox.nPos == pBox.nOutputs\");\n        pBox.fBlack = pIfBox.fBlack;\n        if Vec_PtrEntry( p.vDelayTables, pBox.iDelayTable ) != nil {\n            continue; }\n        // create table of boxes\n        // inlining of macro ABC_ALLOC\n        pTable = ((float *) malloc(sizeof(float) * (size_t)(3 + pBox.nInputs * pBox.nOutputs)));\n        pTable[0] = pBox.iDelayTable;\n        pTable[1] = pBox.nInputs;\n        pTable[2] = pBox.nOutputs;\n        for  k = 0; k \u003c pBox.nInputs * pBox.nOutputs; k++  {\n            pTable[3 + k] = pIfBox.pDelays[k];\n        }\n        // save table\n        Vec_PtrWriteEntry( p.vDelayTables, pBox.iDelayTable, pTable );\n    } }\n    // create arrival times\n    if vInArrs != nil {\n        assert(Vec_FltSize(vInArrs) == Tim_ManPiNum(p), \"Vec_FltSize(vInArrs) == Tim_ManPiNum(p)\");\n        // inlining of macro Tim_ManForEachPi\n        // inlining of macro Tim_ManForEachCi\n        for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n            pObj.timeArr = Vec_FltEntry(vInArrs, i); }\n        }\n\n    }\n    // create required times\n    if vOutReqs != nil {\n        k = 0;\n        assert(Vec_FltSize(vOutReqs) == Tim_ManPoNum(p), \"Vec_FltSize(vOutReqs) == Tim_ManPoNum(p)\");\n        // inlining of macro Tim_ManForEachPo\n        // inlining of macro Tim_ManForEachCo\n        for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n            pObj.timeReq = Vec_FltEntry(vOutReqs, k++); }\n        }\n        assert(k == Tim_ManPoNum(p), \"k == Tim_ManPoNum(p)\");\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Get arrival and required times if they are non-trivial.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManGetArrTimes(p *Tim_Man_t) *float32 {\n    var pTimes *float32;\n    var pObj *Tim_Obj_t;\n    var i int32;\n    // inlining of macro Tim_ManForEachPi\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { if pObj.iObj2Box \u003e= 0 {} else \n        if pObj.timeArr != 0.0 {\n            break; }\n    }\n    if i == Tim_ManPiNum(p) {\n        return nil; }\n    // inlining of macro ABC_FALLOC\n    pTimes  = ((float *) memset(malloc(sizeof(float) * (size_t)(Tim_ManCiNum(p))), 0xff, sizeof(float) * (size_t)(Tim_ManCiNum(p))));\n    // inlining of macro Tim_ManForEachPi\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n        pTimes[i] = pObj.timeArr; }\n    }\n    return pTimes;\n}\nfunc Tim_ManGetReqTimes(p *Tim_Man_t) *float32 {\n    var pTimes *float32;\n    var pObj *Tim_Obj_t;\n    var i, k int32;\n    // inlining of macro Tim_ManForEachPo\n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { if pObj.iObj2Box \u003e= 0 {} else \n        if pObj.timeReq != TIM_ETERNITY {\n            break; }\n    }\n    if i == Tim_ManPoNum(p) {\n        return nil; }\n    // inlining of macro ABC_FALLOC\n    pTimes  = ((float *) memset(malloc(sizeof(float) * (size_t)(Tim_ManCoNum(p))), 0xff, sizeof(float) * (size_t)(Tim_ManCoNum(p))));\n    // inlining of macro Tim_ManForEachPo\n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n        pTimes[k++] = pObj.timeArr; }\n    }\n    assert(k == Tim_ManPoNum(p), \"k == Tim_ManPoNum(p)\");\n    return pTimes;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Prints the timing manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManPrint(p *Tim_Man_t) {\n    var pBox *Tim_Box_t;\n    var pObj, pPrev *Tim_Obj_t;\n    var pTable *float32;\n    var i, j, k, TableX, TableY int32;\n    if p == nil {\n        return; }\n    fmt.Printf(\"TIMING MANAGER:\\n\");\n    fmt.Printf(\"PI = %d. CI = %d. PO = %d. CO = %d. Box = %d.\\n\", Tim_ManPiNum(p), Tim_ManCiNum(p), Tim_ManPoNum(p), Tim_ManCoNum(p), Tim_ManBoxNum(p));\n\n    // print CI info\n    pPrev = p.pCis;\n    // inlining of macro Tim_ManForEachPi\n    // inlining of macro Tim_ManForEachCi\n    for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { if pObj.iObj2Box \u003e= 0 {} else \n        if pPrev.timeArr != pObj.timeArr || pPrev.timeReq != pObj.timeReq {\n            break; }\n    }\n    if i == Tim_ManCiNum(p) {\n        fmt.Printf(\"All PIs     :  arrival = %5.3f  required = %5.3f\\n\", pPrev.timeArr, pPrev.timeReq);\n    } else {\n        // inlining of macro Tim_ManForEachPi\n        // inlining of macro Tim_ManForEachCi\n        for  i = 0; (i \u003c (p).nCis) \u0026\u0026 ((pObj) = (p).pCis + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n            fmt.Printf(\"PI%5d     :  arrival = %5.3f  required = %5.3f\\n\", i, pObj.timeArr, pObj.timeReq); }\n        } }\n\n    // print CO info\n    pPrev = p.pCos;\n    // inlining of macro Tim_ManForEachPo\n    // inlining of macro Tim_ManForEachCo\n    for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { if pObj.iObj2Box \u003e= 0 {} else \n        if pPrev.timeArr != pObj.timeArr || pPrev.timeReq != pObj.timeReq {\n            break; }\n    }\n    if i == Tim_ManCoNum(p) {\n        fmt.Printf(\"All POs     :  arrival = %5.3f  required = %5.3f\\n\", pPrev.timeArr, pPrev.timeReq);\n    } else {\n        var k int32;\n        // inlining of macro Tim_ManForEachPo\n        // inlining of macro Tim_ManForEachCo\n        for  i = 0; (i \u003c (p).nCos) \u0026\u0026 ((pObj) = (p).pCos + i); i++  { if pObj.iObj2Box \u003e= 0 {} else { \n            fmt.Printf(\"PO%5d     :  arrival = %5.3f  required = %5.3f\\n\", k++, pObj.timeArr, pObj.timeReq); }\n        }\n    }\n\n    // print box info\n    if Tim_ManBoxNum(p) \u003e 0 {\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n        fmt.Printf(\"*** Box %5d :  I =%4d. O =%4d. I1 =%6d. O1 =%6d. Table =%4d\\n\", i, pBox.nInputs, pBox.nOutputs, Tim_ManBoxInputFirst(p, i), Tim_ManBoxOutputFirst(p, i), pBox.iDelayTable);\n\n        // print box inputs\n        pPrev = Tim_ManBoxInput( p, pBox, 0 );\n        // inlining of macro Tim_ManBoxForEachInput\n        for  k = 0; (k \u003c (pBox).nInputs) \u0026\u0026 ((pObj) = Tim_ManBoxInput(p, pBox, k)); k++  {\n            if pPrev.timeArr != pObj.timeArr || pPrev.timeReq != pObj.timeReq {\n                break; }\n        }\n        if k == Tim_ManBoxInputNum(p, pBox.iBox) {\n            fmt.Printf(\"Box inputs  :  arrival = %5.3f  required = %5.3f\\n\", pPrev.timeArr, pPrev.timeReq);\n        } else {\n            // inlining of macro Tim_ManBoxForEachInput\n            for  k = 0; (k \u003c (pBox).nInputs) \u0026\u0026 ((pObj) = Tim_ManBoxInput(p, pBox, k)); k++  {\n                fmt.Printf(\"box-in%4d :  arrival = %5.3f  required = %5.3f\\n\", k, pObj.timeArr, pObj.timeReq);\n            } }\n\n        // print box outputs\n        pPrev = Tim_ManBoxOutput( p, pBox, 0 );\n        // inlining of macro Tim_ManBoxForEachOutput\n        for  k = 0; (k \u003c (pBox).nOutputs) \u0026\u0026 ((pObj) = Tim_ManBoxOutput(p, pBox, k)); k++  {\n            if pPrev.timeArr != pObj.timeArr || pPrev.timeReq != pObj.timeReq {\n                break; }\n        }\n        if k == Tim_ManBoxOutputNum(p, pBox.iBox) {\n            fmt.Printf(\"Box outputs :  arrival = %5.3f  required = %5.3f\\n\", pPrev.timeArr, pPrev.timeReq);\n        } else {\n            // inlining of macro Tim_ManBoxForEachOutput\n            for  k = 0; (k \u003c (pBox).nOutputs) \u0026\u0026 ((pObj) = Tim_ManBoxOutput(p, pBox, k)); k++  {\n                fmt.Printf(\"box-out%3d :  arrival = %5.3f  required = %5.3f\\n\", k, pObj.timeArr, pObj.timeReq);\n            } }\n\n        if i \u003e 2 {\n            break; }\n    } }\n\n    // print delay tables\n    if Tim_ManDelayTableNum(p) \u003e 0 {\n    // inlining of macro Tim_ManForEachTable\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vDelayTables)) \u0026\u0026 (((pTable) = (float *)Vec_PtrEntry(p.vDelayTables, i)), 1); i++  {\n        if pTable == nil {\n            continue; }\n        fmt.Printf(\"Delay table %d:\\n\", i);\n        assert(i == int32(pTable[0]), \"i == int32(pTable[0])\");\n        TableX = int32(pTable[1]);\n        TableY = int32(pTable[2]);\n        for  j = 0; j \u003c TableY; j++, printf( \"\\n\" )  {\n            for  k = 0; k \u003c TableX; k++  {\n                if pTable[3+j*TableX+k] == -ABC_INFINITY {\n                    fmt.Printf(\"%5s\", \"-\");\n                } else {\n                    fmt.Printf(\"%5.0f\", pTable[3+j*TableX+k]); }\n            }\n        }\n    } }\n    fmt.Printf(\"\\n\");\n}\nfunc Tim_ManPrintBoxCopy(p *Tim_Man_t) {\n    var pBox *Tim_Box_t;\n    var i int32;\n    if p == nil {\n        return; }\n    fmt.Printf(\"TIMING MANAGER:\\n\");\n    fmt.Printf(\"PI = %d. CI = %d. PO = %d. CO = %d. Box = %d.\\n\", Tim_ManPiNum(p), Tim_ManCiNum(p), Tim_ManPoNum(p), Tim_ManCoNum(p), Tim_ManBoxNum(p));\n\n    if Tim_ManBoxNum(p) \u003e 0 {\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n        fmt.Printf(\"%d \", pBox.iCopy);\n    } }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints statistics of the timing manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManPrintStats(p *Tim_Man_t, nAnd2Delay int32) {\n    var pBox *Tim_Box_t;\n    var vCounts *Vec_Int_t;\n    var vBoxes *Vec_Ptr_t;\n    var i, Count, IdMax int32;\n    if p == nil {\n        return; }\n    Abc_Print( 1, \"Hierarchy      :  \" );\n    fmt.Printf(\"PI/CI = %d/%d   PO/CO = %d/%d   Box = %d   \", Tim_ManPiNum(p), Tim_ManCiNum(p), Tim_ManPoNum(p), Tim_ManCoNum(p), Tim_ManBoxNum(p));\n    if nAnd2Delay != 0 {\n        fmt.Printf(\"delay(AND2) = %d\", nAnd2Delay); }\n    fmt.Printf(\"\\n\");\n    if Tim_ManBoxNum(p) == 0 {\n        return; }\n    IdMax = 0;\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n        IdMax = Abc_MaxInt( IdMax, pBox.iDelayTable );\n    }\n    vCounts = Vec_IntStart( IdMax+1 );\n    vBoxes  = Vec_PtrStart( IdMax+1 );\n    // inlining of macro Tim_ManForEachBox\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n        Vec_IntAddToEntry( vCounts, pBox.iDelayTable, 1 );\n        Vec_PtrWriteEntry( vBoxes, pBox.iDelayTable, pBox );\n    }\n    // print statistics about boxes\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vCounts)) \u0026\u0026 (((Count) = Vec_IntEntry(vCounts, i)), 1); i++  {\n        if Count == 0 { continue; }\n        pBox = (Tim_Box_t *)Vec_PtrEntry( vBoxes, i );\n        fmt.Printf(\"    Box %4d      \", i);\n        fmt.Printf(\"Num = %4d   \", Count);\n        fmt.Printf(\"Ins = %4d   \", pBox.nInputs);\n        fmt.Printf(\"Outs = %4d\", pBox.nOutputs);\n        fmt.Printf(\"\\n\");\n    }\n    Vec_IntFree( vCounts );\n    Vec_PtrFree( vBoxes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManCiNum(p *Tim_Man_t) int32 {\n    return p.nCis;\n}\nfunc Tim_ManCoNum(p *Tim_Man_t) int32 {\n    return p.nCos;\n}\nfunc Tim_ManPiNum(p *Tim_Man_t) int32 {\n    if Tim_ManBoxNum(p) == 0 {\n        return Tim_ManCiNum(p); }\n    return Tim_ManBoxOutputFirst(p, 0);\n}\nfunc Tim_ManPoNum(p *Tim_Man_t) int32 {\n    var iLastBoxId int32;\n    if Tim_ManBoxNum(p) == 0 {\n        return Tim_ManCoNum(p); }\n    iLastBoxId = Tim_ManBoxNum(p) - 1;\n    return Tim_ManCoNum(p) - (Tim_ManBoxInputFirst(p, iLastBoxId) + Tim_ManBoxInputNum(p, iLastBoxId));\n}\nfunc Tim_ManBoxNum(p *Tim_Man_t) int32 {\n    if p.vBoxes {\n        return Vec_PtrSize(p.vBoxes);\n    } else {\n        return 0;\n    }\n}\nfunc Tim_ManBlackBoxNum(p *Tim_Man_t) int32 {\n    var pBox *Tim_Box_t;\n    var i, Counter int32;\n    if Tim_ManBoxNum(p) != 0 {\n        // inlining of macro Tim_ManForEachBox\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n            Counter += pBox.fBlack;\n        } }\n    return Counter;\n}\nfunc Tim_ManBlackBoxIoNum(p *Tim_Man_t, pnBbIns *int32, pnBbOuts *int32) {\n    var pBox *Tim_Box_t;\n    var i int32;\n    *pnBbIns = *pnBbOuts = 0;\n    if Tim_ManBoxNum(p) != 0 {\n        // inlining of macro Tim_ManForEachBox\n        // inlining of macro Vec_PtrForEachEntry\n        for  i = 0; (i \u003c Vec_PtrSize(p.vBoxes)) \u0026\u0026 (((pBox) = (Tim_Box_t *)Vec_PtrEntry(p.vBoxes, i)), 1); i++  {\n            if !pBox.fBlack {//\u0026\u0026 pBox-\u003enInputs \u003c= 6 )\n                continue; }\n            *pnBbIns  += Tim_ManBoxInputNum( p, i );\n            *pnBbOuts += Tim_ManBoxOutputNum( p, i );\n        } }\n}\nfunc Tim_ManDelayTableNum(p *Tim_Man_t) int32 {\n    if p.vDelayTables {\n        return Vec_PtrSize(p.vDelayTables);\n    } else {\n        return 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the vector of timing tables associated with the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManSetDelayTables(p *Tim_Man_t, vDelayTables *Vec_Ptr_t) {\n    assert(p.vDelayTables == nil, \"p.vDelayTables == nil\");\n    p.vDelayTables = vDelayTables;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Disables the use of the traversal ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManTravIdDisable(p *Tim_Man_t) {\n    p.fUseTravId = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Enables the use of the traversal ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Tim_ManTravIdEnable(p *Tim_Man_t) {\n    p.fUseTravId = 1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

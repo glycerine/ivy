@@ -1,0 +1,239 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmTruth.c",
+  "SHA256": "d1ec82c13a0d51d4a1d3bb6b1a43cda2eb768c93d4f7ea59c1c674831c4c5848",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 9,
+        "ByteOffset": 1584
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pCut0.pLeaves[k] == pCut.pLeaves[i] );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 2722
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == nSuppSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 2782
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSuppSize == Abc_TtSupportSize(\u0026t, 6) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 3748
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == nSuppSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSuppSize == Abc_TtSupportSize(p.Truth, Mpm_CutLeafNum(pCut)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 165,
+        "Column": 5,
+        "ByteOffset": 5344
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nLutSize \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 172,
+        "Column": 14,
+        "ByteOffset": 5533
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 203,
+        "Column": 14,
+        "ByteOffset": 7078
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 222,
+        "Column": 1,
+        "ByteOffset": 7889
+      },
+      "Directive": "#ifdef MPM_TRY_NEW"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mpm_TruthStretch",
+      "Start": 1287,
+      "End": 1726,
+      "BodyStart": 1389,
+      "Original": "static inline void Mpm_TruthStretch( word * pTruth, Mpm_Cut_t * pCut, Mpm_Cut_t * pCut0, int nLimit )\n{\n    int i, k;\n    for ( i = (int)pCut-\u003enLeaves - 1, k = (int)pCut0-\u003enLeaves - 1; i \u003e= 0 \u0026\u0026 k \u003e= 0; i-- )\n    {\n        if ( pCut0-\u003epLeaves[k] \u003c pCut-\u003epLeaves[i] )\n            continue;\n        assert( pCut0-\u003epLeaves[k] == pCut-\u003epLeaves[i] );\n        if ( k \u003c i )\n            Abc_TtSwapVars( pTruth, nLimit, k, i );\n        k--;\n    }\n}",
+      "Draft": "func Mpm_TruthStretch(pTruth *word, pCut *Mpm_Cut_t, pCut0 *Mpm_Cut_t, nLimit int32) {\n    var i, k int32;\n    for  i = int32(pCut.nLeaves) - 1, k = int32(pCut0.nLeaves) - 1; i \u003e= 0 \u0026\u0026 k \u003e= 0; i--  {\n        if pCut0.pLeaves[k] \u003c pCut.pLeaves[i] {\n            continue; }\n        assert(pCut0.pLeaves[k] == pCut.pLeaves[i], \"pCut0.pLeaves[k] == pCut.pLeaves[i]\");\n        if k \u003c i {\n            Abc_TtSwapVars( pTruth, nLimit, k, i ); }\n        k--;\n    }\n}"
+    },
+    {
+      "Name": "Mpm_CutTruthMinimize6",
+      "Start": 2004,
+      "End": 3005,
+      "BodyStart": 2079,
+      "Original": "static inline int Mpm_CutTruthMinimize6( Mpm_Man_t * p, Mpm_Cut_t * pCut )\n{\n    unsigned uSupport;\n    int i, k, nSuppSize;\n    // compute the support of the cut's function\n    word t = *Mpm_CutTruth( p, Abc_Lit2Var(pCut-\u003eiFunc) );\n    uSupport = Abc_Tt6SupportAndSize( t, Mpm_CutLeafNum(pCut), \u0026nSuppSize );\n    if ( nSuppSize == Mpm_CutLeafNum(pCut) )\n        return 0;\n    p-\u003enSmallSupp += (int)(nSuppSize \u003c 2);\n    // update leaves and signature\n    for ( i = k = 0; i \u003c Mpm_CutLeafNum(pCut); i++ )\n    {\n        if ( ((uSupport \u003e\u003e i) \u0026 1) )\n        {\n            if ( k \u003c i )\n            {\n                pCut-\u003epLeaves[k] = pCut-\u003epLeaves[i];\n                Abc_TtSwapVars( \u0026t, p-\u003enLutSize, k, i );\n            }\n            k++;\n        }\n    }\n    assert( k == nSuppSize );\n    pCut-\u003enLeaves = nSuppSize;\n    assert( nSuppSize == Abc_TtSupportSize(\u0026t, 6) );\n    // save the result\n    pCut-\u003eiFunc = Abc_Var2Lit( Vec_MemHashInsert(p-\u003evTtMem, \u0026t), Abc_LitIsCompl(pCut-\u003eiFunc) );\n    return 1;\n}",
+      "Draft": "func Mpm_CutTruthMinimize6(p *Mpm_Man_t, pCut *Mpm_Cut_t) int32 {\n    var uSupport uint32;\n    var i, k, nSuppSize int32;\n    // compute the support of the cut's function\n    var t word  = *Mpm_CutTruth( p, Abc_Lit2Var(pCut.iFunc) );\n    uSupport = Abc_Tt6SupportAndSize( t, Mpm_CutLeafNum(pCut), \u0026nSuppSize );\n    if nSuppSize == Mpm_CutLeafNum(pCut) {\n        return 0; }\n    p.nSmallSupp += int32((nSuppSize \u003c 2));\n    // update leaves and signature\n    for  i = k = 0; i \u003c Mpm_CutLeafNum(pCut); i++  {\n        if (uSupport \u003e\u003e i) \u0026 1 {\n            if k \u003c i {\n                pCut.pLeaves[k] = pCut.pLeaves[i];\n                Abc_TtSwapVars( \u0026t, p.nLutSize, k, i );\n            }\n            k++;\n        }\n    }\n    assert(k == nSuppSize, \"k == nSuppSize\");\n    pCut.nLeaves = nSuppSize;\n    assert(nSuppSize == Abc_TtSupportSize(\u0026t, 6), \"nSuppSize == Abc_TtSupportSize(\u0026t, 6)\");\n    // save the result\n    pCut.iFunc = Abc_Var2Lit( Vec_MemHashInsert(p.vTtMem, \u0026t), Abc_LitIsCompl(pCut.iFunc) );\n    return 1;\n}"
+    },
+    {
+      "Name": "Mpm_CutTruthMinimize7",
+      "Start": 3006,
+      "End": 4107,
+      "BodyStart": 3081,
+      "Original": "static inline int Mpm_CutTruthMinimize7( Mpm_Man_t * p, Mpm_Cut_t * pCut )\n{\n    unsigned uSupport;\n    int i, k, nSuppSize;\n    // compute the support of the cut's function\n    word * pTruth = Mpm_CutTruth( p, Abc_Lit2Var(pCut-\u003eiFunc) );\n    uSupport = Abc_TtSupportAndSize( pTruth, Mpm_CutLeafNum(pCut), \u0026nSuppSize );\n    if ( nSuppSize == Mpm_CutLeafNum(pCut) )\n        return 0;\n    p-\u003enSmallSupp += (int)(nSuppSize \u003c 2);\n    // update leaves and signature\n    Abc_TtCopy( p-\u003eTruth, pTruth, p-\u003enTruWords, 0 );\n    for ( i = k = 0; i \u003c Mpm_CutLeafNum(pCut); i++ )\n    {\n        if ( ((uSupport \u003e\u003e i) \u0026 1) )\n        {\n            if ( k \u003c i )\n            {\n                pCut-\u003epLeaves[k] = pCut-\u003epLeaves[i];\n                Abc_TtSwapVars( p-\u003eTruth, p-\u003enLutSize, k, i );\n            }\n            k++;\n        }\n    }\n    assert( k == nSuppSize );\n    assert( nSuppSize == Abc_TtSupportSize(p-\u003eTruth, Mpm_CutLeafNum(pCut)) );\n    pCut-\u003enLeaves = nSuppSize;\n    // save the result\n    pCut-\u003eiFunc = Abc_Var2Lit( Vec_MemHashInsert(p-\u003evTtMem, p-\u003eTruth), Abc_LitIsCompl(pCut-\u003eiFunc) );\n    return 1;\n}",
+      "Draft": "func Mpm_CutTruthMinimize7(p *Mpm_Man_t, pCut *Mpm_Cut_t) int32 {\n    var uSupport uint32;\n    var i, k, nSuppSize int32;\n    // compute the support of the cut's function\n    var pTruth *word  = Mpm_CutTruth( p, Abc_Lit2Var(pCut.iFunc) );\n    uSupport = Abc_TtSupportAndSize( pTruth, Mpm_CutLeafNum(pCut), \u0026nSuppSize );\n    if nSuppSize == Mpm_CutLeafNum(pCut) {\n        return 0; }\n    p.nSmallSupp += int32((nSuppSize \u003c 2));\n    // update leaves and signature\n    Abc_TtCopy( p.Truth, pTruth, p.nTruWords, 0 );\n    for  i = k = 0; i \u003c Mpm_CutLeafNum(pCut); i++  {\n        if (uSupport \u003e\u003e i) \u0026 1 {\n            if k \u003c i {\n                pCut.pLeaves[k] = pCut.pLeaves[i];\n                Abc_TtSwapVars( p.Truth, p.nLutSize, k, i );\n            }\n            k++;\n        }\n    }\n    assert(k == nSuppSize, \"k == nSuppSize\");\n    assert(nSuppSize == Abc_TtSupportSize(p.Truth, Mpm_CutLeafNum(pCut)), \"nSuppSize == Abc_TtSupportSize(p.Truth, Mpm_CutLeafNum(pCut))\");\n    pCut.nLeaves = nSuppSize;\n    // save the result\n    pCut.iFunc = Abc_Var2Lit( Vec_MemHashInsert(p.vTtMem, p.Truth), Abc_LitIsCompl(pCut.iFunc) );\n    return 1;\n}"
+    },
+    {
+      "Name": "Mpm_CutComputeTruth6",
+      "Start": 4376,
+      "End": 5816,
+      "BodyStart": 4556,
+      "Original": "static inline int Mpm_CutComputeTruth6( Mpm_Man_t * p, Mpm_Cut_t * pCut, Mpm_Cut_t * pCut0, Mpm_Cut_t * pCut1, Mpm_Cut_t * pCutC, int fCompl0, int fCompl1, int fComplC, int Type )\n{\n    word * pTruth0 = Mpm_CutTruth( p, Abc_Lit2Var(pCut0-\u003eiFunc) );\n    word * pTruth1 = Mpm_CutTruth( p, Abc_Lit2Var(pCut1-\u003eiFunc) );\n    word * pTruthC = NULL;\n    word t0 = (fCompl0 ^ pCut0-\u003efCompl ^ Abc_LitIsCompl(pCut0-\u003eiFunc)) ? ~*pTruth0 : *pTruth0;\n    word t1 = (fCompl1 ^ pCut1-\u003efCompl ^ Abc_LitIsCompl(pCut1-\u003eiFunc)) ? ~*pTruth1 : *pTruth1;\n    word tC = 0, t = 0;\n    Mpm_TruthStretch( \u0026t0, pCut, pCut0, p-\u003enLutSize );\n    Mpm_TruthStretch( \u0026t1, pCut, pCut1, p-\u003enLutSize );\n    if ( pCutC )\n    {\n        pTruthC = Mpm_CutTruth( p, Abc_Lit2Var(pCutC-\u003eiFunc) );\n        tC = (fComplC ^ pCutC-\u003efCompl ^ Abc_LitIsCompl(pCutC-\u003eiFunc)) ? ~*pTruthC : *pTruthC;\n        Mpm_TruthStretch( \u0026tC, pCut, pCutC, p-\u003enLutSize );\n    }\n    assert( p-\u003enLutSize \u003c= 6 );\n    if ( Type == 1 )\n        t = t0 \u0026 t1;\n    else if ( Type == 2 )\n        t = t0 ^ t1;\n    else if ( Type == 3 )\n        t = (tC \u0026 t1) | (~tC \u0026 t0);\n    else assert( 0 );\n    // save the result\n    if ( t \u0026 1 )\n    {\n        t = ~t;\n        pCut-\u003eiFunc = Abc_Var2Lit( Vec_MemHashInsert( p-\u003evTtMem, \u0026t ), 1 );\n    }\n    else\n        pCut-\u003eiFunc = Abc_Var2Lit( Vec_MemHashInsert( p-\u003evTtMem, \u0026t ), 0 );\n    if ( p-\u003epPars-\u003efCutMin )\n        return Mpm_CutTruthMinimize6( p, pCut );\n    return 1;\n}",
+      "Draft": "func Mpm_CutComputeTruth6(p *Mpm_Man_t, pCut *Mpm_Cut_t, pCut0 *Mpm_Cut_t, pCut1 *Mpm_Cut_t, pCutC *Mpm_Cut_t, fCompl0 int32, fCompl1 int32, fComplC int32, Type int32) int32 {\n    var pTruth0 *word  = Mpm_CutTruth( p, Abc_Lit2Var(pCut0.iFunc) );\n    var pTruth1 *word  = Mpm_CutTruth( p, Abc_Lit2Var(pCut1.iFunc) );\n    var pTruthC *word  = nil;\n    var t0 word;\n    if fCompl0 ^ pCut0.fCompl ^ Abc_LitIsCompl(pCut0.iFunc) {\n        t0 = ~*pTruth0;\n    } else {\n        t0 = *pTruth0;\n    }\n    var t1 word;\n    if fCompl1 ^ pCut1.fCompl ^ Abc_LitIsCompl(pCut1.iFunc) {\n        t1 = ~*pTruth1;\n    } else {\n        t1 = *pTruth1;\n    }\n    var tC, t word;\n    Mpm_TruthStretch( \u0026t0, pCut, pCut0, p.nLutSize );\n    Mpm_TruthStretch( \u0026t1, pCut, pCut1, p.nLutSize );\n    if pCutC != nil {\n        pTruthC = Mpm_CutTruth( p, Abc_Lit2Var(pCutC.iFunc) );\n        if fComplC ^ pCutC.fCompl ^ Abc_LitIsCompl(pCutC.iFunc) {\n            tC = ~*pTruthC;\n        } else {\n            tC = *pTruthC;\n        }\n        Mpm_TruthStretch( \u0026tC, pCut, pCutC, p.nLutSize );\n    }\n    assert(p.nLutSize \u003c= 6, \"p.nLutSize \u003c= 6\");\n    if Type == 1 {\n        t = t0 \u0026 t1;\n    } else if Type == 2 {\n        t = t0 ^ t1;\n    } else if Type == 3 {\n        t = (tC \u0026 t1) | (~tC \u0026 t0);\n    } else { assert(false, \"0\"); }\n    // save the result\n    if t \u0026 1 {\n        t = ~t;\n        pCut.iFunc = Abc_Var2Lit( Vec_MemHashInsert( p.vTtMem, \u0026t ), 1 );\n    \n    } else {\n        pCut.iFunc = Abc_Var2Lit( Vec_MemHashInsert( p.vTtMem, \u0026t ), 0 ); }\n    if p.pPars.fCutMin {\n        return Mpm_CutTruthMinimize6( p, pCut ); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Mpm_CutComputeTruth7",
+      "Start": 5817,
+      "End": 7454,
+      "BodyStart": 5997,
+      "Original": "static inline int Mpm_CutComputeTruth7( Mpm_Man_t * p, Mpm_Cut_t * pCut, Mpm_Cut_t * pCut0, Mpm_Cut_t * pCut1, Mpm_Cut_t * pCutC, int fCompl0, int fCompl1, int fComplC, int Type )\n{\n    word * pTruth0 = Mpm_CutTruth( p, Abc_Lit2Var(pCut0-\u003eiFunc) );\n    word * pTruth1 = Mpm_CutTruth( p, Abc_Lit2Var(pCut1-\u003eiFunc) );\n    word * pTruthC = NULL;\n    Abc_TtCopy( p-\u003eTruth0, pTruth0, p-\u003enTruWords, fCompl0 ^ pCut0-\u003efCompl ^ Abc_LitIsCompl(pCut0-\u003eiFunc) );\n    Abc_TtCopy( p-\u003eTruth1, pTruth1, p-\u003enTruWords, fCompl1 ^ pCut1-\u003efCompl ^ Abc_LitIsCompl(pCut1-\u003eiFunc) );\n    Mpm_TruthStretch( p-\u003eTruth0, pCut, pCut0, p-\u003enLutSize );\n    Mpm_TruthStretch( p-\u003eTruth1, pCut, pCut1, p-\u003enLutSize );\n    if ( pCutC )\n    {\n        pTruthC = Mpm_CutTruth( p, Abc_Lit2Var(pCutC-\u003eiFunc) );\n        Abc_TtCopy( p-\u003eTruthC, pTruthC, p-\u003enTruWords, fComplC ^ pCutC-\u003efCompl ^ Abc_LitIsCompl(pCutC-\u003eiFunc) );\n        Mpm_TruthStretch( p-\u003eTruthC, pCut, pCutC, p-\u003enLutSize );\n    }\n    if ( Type == 1 )\n        Abc_TtAnd( p-\u003eTruth, p-\u003eTruth0, p-\u003eTruth1, p-\u003enTruWords, 0 );\n    else if ( Type == 2 )\n        Abc_TtXor( p-\u003eTruth, p-\u003eTruth0, p-\u003eTruth1, p-\u003enTruWords, 0 );\n    else if ( Type == 3 )\n        Abc_TtMux( p-\u003eTruth, p-\u003eTruthC, p-\u003eTruth1, p-\u003eTruth0, p-\u003enTruWords );\n    else assert( 0 );\n    // save the result\n    if ( p-\u003eTruth[0] \u0026 1 )\n    {\n        Abc_TtNot( p-\u003eTruth, p-\u003enTruWords );\n        pCut-\u003eiFunc = Abc_Var2Lit( Vec_MemHashInsert( p-\u003evTtMem, p-\u003eTruth ), 1 );\n    }\n    else\n        pCut-\u003eiFunc = Abc_Var2Lit( Vec_MemHashInsert( p-\u003evTtMem, p-\u003eTruth ), 0 );\n    if ( p-\u003epPars-\u003efCutMin )\n        return Mpm_CutTruthMinimize7( p, pCut );\n    return 1;\n}",
+      "Draft": "func Mpm_CutComputeTruth7(p *Mpm_Man_t, pCut *Mpm_Cut_t, pCut0 *Mpm_Cut_t, pCut1 *Mpm_Cut_t, pCutC *Mpm_Cut_t, fCompl0 int32, fCompl1 int32, fComplC int32, Type int32) int32 {\n    var pTruth0 *word  = Mpm_CutTruth( p, Abc_Lit2Var(pCut0.iFunc) );\n    var pTruth1 *word  = Mpm_CutTruth( p, Abc_Lit2Var(pCut1.iFunc) );\n    var pTruthC *word  = nil;\n    Abc_TtCopy( p.Truth0, pTruth0, p.nTruWords, fCompl0 ^ pCut0.fCompl ^ Abc_LitIsCompl(pCut0.iFunc) );\n    Abc_TtCopy( p.Truth1, pTruth1, p.nTruWords, fCompl1 ^ pCut1.fCompl ^ Abc_LitIsCompl(pCut1.iFunc) );\n    Mpm_TruthStretch( p.Truth0, pCut, pCut0, p.nLutSize );\n    Mpm_TruthStretch( p.Truth1, pCut, pCut1, p.nLutSize );\n    if pCutC != nil {\n        pTruthC = Mpm_CutTruth( p, Abc_Lit2Var(pCutC.iFunc) );\n        Abc_TtCopy( p.TruthC, pTruthC, p.nTruWords, fComplC ^ pCutC.fCompl ^ Abc_LitIsCompl(pCutC.iFunc) );\n        Mpm_TruthStretch( p.TruthC, pCut, pCutC, p.nLutSize );\n    }\n    if Type == 1 {\n        Abc_TtAnd( p.Truth, p.Truth0, p.Truth1, p.nTruWords, 0 );\n    } else if Type == 2 {\n        Abc_TtXor( p.Truth, p.Truth0, p.Truth1, p.nTruWords, 0 );\n    } else if Type == 3 {\n        Abc_TtMux( p.Truth, p.TruthC, p.Truth1, p.Truth0, p.nTruWords );\n    } else { assert(false, \"0\"); }\n    // save the result\n    if p.Truth[0] \u0026 1 {\n        Abc_TtNot( p.Truth, p.nTruWords );\n        pCut.iFunc = Abc_Var2Lit( Vec_MemHashInsert( p.vTtMem, p.Truth ), 1 );\n    \n    } else {\n        pCut.iFunc = Abc_Var2Lit( Vec_MemHashInsert( p.vTtMem, p.Truth ), 0 ); }\n    if p.pPars.fCutMin {\n        return Mpm_CutTruthMinimize7( p, pCut ); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Mpm_CutComputeTruth",
+      "Start": 7455,
+      "End": 8200,
+      "BodyStart": 7620,
+      "Original": "int Mpm_CutComputeTruth( Mpm_Man_t * p, Mpm_Cut_t * pCut, Mpm_Cut_t * pCut0, Mpm_Cut_t * pCut1, Mpm_Cut_t * pCutC, int fCompl0, int fCompl1, int fComplC, int Type )\n{\n    int RetValue;\n    if ( p-\u003enLutSize \u003c= 6 )\n        RetValue = Mpm_CutComputeTruth6( p, pCut, pCut0, pCut1, pCutC, fCompl0, fCompl1, fComplC, Type );\n    else\n        RetValue = Mpm_CutComputeTruth7( p, pCut, pCut0, pCut1, pCutC, fCompl0, fCompl1, fComplC, Type );\n#ifdef MPM_TRY_NEW\n    {\n        extern unsigned Abc_TtCanonicize( word * pTruth, int nVars, char * pCanonPerm );\n        char pCanonPerm[16];\n        memcpy( p-\u003eTruth0, p-\u003eTruth, sizeof(word) * p-\u003enTruWords );\n        Abc_TtCanonicize( p-\u003eTruth0, pCut-\u003enLimit, pCanonPerm );\n    }\n#endif\n    return RetValue;\n}",
+      "Draft": "func Mpm_CutComputeTruth(p *Mpm_Man_t, pCut *Mpm_Cut_t, pCut0 *Mpm_Cut_t, pCut1 *Mpm_Cut_t, pCutC *Mpm_Cut_t, fCompl0 int32, fCompl1 int32, fComplC int32, Type int32) int32 {\n    var RetValue int32;\n    if p.nLutSize \u003c= 6 {\n        RetValue = Mpm_CutComputeTruth6( p, pCut, pCut0, pCut1, pCutC, fCompl0, fCompl1, fComplC, Type );\n    } else {\n        RetValue = Mpm_CutComputeTruth7( p, pCut, pCut0, pCut1, pCutC, fCompl0, fCompl1, fComplC, Type ); }\n#ifdef MPM_TRY_NEW\n    {\n        extern unsigned Abc_TtCanonicize( word * pTruth, int nVars, char * pCanonPerm );\n        char pCanonPerm[16];\n        memcpy( p-\u003eTruth0, p-\u003eTruth, sizeof(word) * p-\u003enTruWords );\n        Abc_TtCanonicize( p-\u003eTruth0, pCut-\u003enLimit, pCanonPerm );\n    }\n#endif\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmTruth.c::Mpm_TruthStretch",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_TruthStretch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1287,
+      "End": 1726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmTruth.c::Mpm_CutTruthMinimize6",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_CutTruthMinimize6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2004,
+      "End": 3005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmTruth.c::Mpm_CutTruthMinimize7",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_CutTruthMinimize7",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3006,
+      "End": 4107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmTruth.c::Mpm_CutComputeTruth6",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_CutComputeTruth6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4376,
+      "End": 5816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmTruth.c::Mpm_CutComputeTruth7",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_CutComputeTruth7",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5817,
+      "End": 7454
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmTruth.c::Mpm_CutComputeTruth",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_CutComputeTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7455,
+      "End": 8200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmTruth.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 8447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmTruth.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 7889,
+      "End": 8177
+    }
+  ],
+  "Draft": "package mpm\n\n/**CFile****************************************************************\n\n  FileName    [mpmTruth.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Configurable technology mapper.]\n\n  Synopsis    [Truth table manipulation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 1, 2013.]\n\n  Revision    [$Id: mpmTruth.c,v 1.00 2013/06/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mpmInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n//#define MPM_TRY_NEW\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Unifies variable order.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mpm_TruthStretch(pTruth *word, pCut *Mpm_Cut_t, pCut0 *Mpm_Cut_t, nLimit int32) {\n    var i, k int32;\n    for  i = int32(pCut.nLeaves) - 1, k = int32(pCut0.nLeaves) - 1; i \u003e= 0 \u0026\u0026 k \u003e= 0; i--  {\n        if pCut0.pLeaves[k] \u003c pCut.pLeaves[i] {\n            continue; }\n        assert(pCut0.pLeaves[k] == pCut.pLeaves[i], \"pCut0.pLeaves[k] == pCut.pLeaves[i]\");\n        if k \u003c i {\n            Abc_TtSwapVars( pTruth, nLimit, k, i ); }\n        k--;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs truth table support minimization.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mpm_CutTruthMinimize6(p *Mpm_Man_t, pCut *Mpm_Cut_t) int32 {\n    var uSupport uint32;\n    var i, k, nSuppSize int32;\n    // compute the support of the cut's function\n    var t word  = *Mpm_CutTruth( p, Abc_Lit2Var(pCut.iFunc) );\n    uSupport = Abc_Tt6SupportAndSize( t, Mpm_CutLeafNum(pCut), \u0026nSuppSize );\n    if nSuppSize == Mpm_CutLeafNum(pCut) {\n        return 0; }\n    p.nSmallSupp += int32((nSuppSize \u003c 2));\n    // update leaves and signature\n    for  i = k = 0; i \u003c Mpm_CutLeafNum(pCut); i++  {\n        if (uSupport \u003e\u003e i) \u0026 1 {\n            if k \u003c i {\n                pCut.pLeaves[k] = pCut.pLeaves[i];\n                Abc_TtSwapVars( \u0026t, p.nLutSize, k, i );\n            }\n            k++;\n        }\n    }\n    assert(k == nSuppSize, \"k == nSuppSize\");\n    pCut.nLeaves = nSuppSize;\n    assert(nSuppSize == Abc_TtSupportSize(\u0026t, 6), \"nSuppSize == Abc_TtSupportSize(\u0026t, 6)\");\n    // save the result\n    pCut.iFunc = Abc_Var2Lit( Vec_MemHashInsert(p.vTtMem, \u0026t), Abc_LitIsCompl(pCut.iFunc) );\n    return 1;\n}\nfunc Mpm_CutTruthMinimize7(p *Mpm_Man_t, pCut *Mpm_Cut_t) int32 {\n    var uSupport uint32;\n    var i, k, nSuppSize int32;\n    // compute the support of the cut's function\n    var pTruth *word  = Mpm_CutTruth( p, Abc_Lit2Var(pCut.iFunc) );\n    uSupport = Abc_TtSupportAndSize( pTruth, Mpm_CutLeafNum(pCut), \u0026nSuppSize );\n    if nSuppSize == Mpm_CutLeafNum(pCut) {\n        return 0; }\n    p.nSmallSupp += int32((nSuppSize \u003c 2));\n    // update leaves and signature\n    Abc_TtCopy( p.Truth, pTruth, p.nTruWords, 0 );\n    for  i = k = 0; i \u003c Mpm_CutLeafNum(pCut); i++  {\n        if (uSupport \u003e\u003e i) \u0026 1 {\n            if k \u003c i {\n                pCut.pLeaves[k] = pCut.pLeaves[i];\n                Abc_TtSwapVars( p.Truth, p.nLutSize, k, i );\n            }\n            k++;\n        }\n    }\n    assert(k == nSuppSize, \"k == nSuppSize\");\n    assert(nSuppSize == Abc_TtSupportSize(p.Truth, Mpm_CutLeafNum(pCut)), \"nSuppSize == Abc_TtSupportSize(p.Truth, Mpm_CutLeafNum(pCut))\");\n    pCut.nLeaves = nSuppSize;\n    // save the result\n    pCut.iFunc = Abc_Var2Lit( Vec_MemHashInsert(p.vTtMem, p.Truth), Abc_LitIsCompl(pCut.iFunc) );\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs truth table computation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mpm_CutComputeTruth6(p *Mpm_Man_t, pCut *Mpm_Cut_t, pCut0 *Mpm_Cut_t, pCut1 *Mpm_Cut_t, pCutC *Mpm_Cut_t, fCompl0 int32, fCompl1 int32, fComplC int32, Type int32) int32 {\n    var pTruth0 *word  = Mpm_CutTruth( p, Abc_Lit2Var(pCut0.iFunc) );\n    var pTruth1 *word  = Mpm_CutTruth( p, Abc_Lit2Var(pCut1.iFunc) );\n    var pTruthC *word  = nil;\n    var t0 word;\n    if fCompl0 ^ pCut0.fCompl ^ Abc_LitIsCompl(pCut0.iFunc) {\n        t0 = ~*pTruth0;\n    } else {\n        t0 = *pTruth0;\n    }\n    var t1 word;\n    if fCompl1 ^ pCut1.fCompl ^ Abc_LitIsCompl(pCut1.iFunc) {\n        t1 = ~*pTruth1;\n    } else {\n        t1 = *pTruth1;\n    }\n    var tC, t word;\n    Mpm_TruthStretch( \u0026t0, pCut, pCut0, p.nLutSize );\n    Mpm_TruthStretch( \u0026t1, pCut, pCut1, p.nLutSize );\n    if pCutC != nil {\n        pTruthC = Mpm_CutTruth( p, Abc_Lit2Var(pCutC.iFunc) );\n        if fComplC ^ pCutC.fCompl ^ Abc_LitIsCompl(pCutC.iFunc) {\n            tC = ~*pTruthC;\n        } else {\n            tC = *pTruthC;\n        }\n        Mpm_TruthStretch( \u0026tC, pCut, pCutC, p.nLutSize );\n    }\n    assert(p.nLutSize \u003c= 6, \"p.nLutSize \u003c= 6\");\n    if Type == 1 {\n        t = t0 \u0026 t1;\n    } else if Type == 2 {\n        t = t0 ^ t1;\n    } else if Type == 3 {\n        t = (tC \u0026 t1) | (~tC \u0026 t0);\n    } else { assert(false, \"0\"); }\n    // save the result\n    if t \u0026 1 {\n        t = ~t;\n        pCut.iFunc = Abc_Var2Lit( Vec_MemHashInsert( p.vTtMem, \u0026t ), 1 );\n    \n    } else {\n        pCut.iFunc = Abc_Var2Lit( Vec_MemHashInsert( p.vTtMem, \u0026t ), 0 ); }\n    if p.pPars.fCutMin {\n        return Mpm_CutTruthMinimize6( p, pCut ); }\n    return 1;\n}\nfunc Mpm_CutComputeTruth7(p *Mpm_Man_t, pCut *Mpm_Cut_t, pCut0 *Mpm_Cut_t, pCut1 *Mpm_Cut_t, pCutC *Mpm_Cut_t, fCompl0 int32, fCompl1 int32, fComplC int32, Type int32) int32 {\n    var pTruth0 *word  = Mpm_CutTruth( p, Abc_Lit2Var(pCut0.iFunc) );\n    var pTruth1 *word  = Mpm_CutTruth( p, Abc_Lit2Var(pCut1.iFunc) );\n    var pTruthC *word  = nil;\n    Abc_TtCopy( p.Truth0, pTruth0, p.nTruWords, fCompl0 ^ pCut0.fCompl ^ Abc_LitIsCompl(pCut0.iFunc) );\n    Abc_TtCopy( p.Truth1, pTruth1, p.nTruWords, fCompl1 ^ pCut1.fCompl ^ Abc_LitIsCompl(pCut1.iFunc) );\n    Mpm_TruthStretch( p.Truth0, pCut, pCut0, p.nLutSize );\n    Mpm_TruthStretch( p.Truth1, pCut, pCut1, p.nLutSize );\n    if pCutC != nil {\n        pTruthC = Mpm_CutTruth( p, Abc_Lit2Var(pCutC.iFunc) );\n        Abc_TtCopy( p.TruthC, pTruthC, p.nTruWords, fComplC ^ pCutC.fCompl ^ Abc_LitIsCompl(pCutC.iFunc) );\n        Mpm_TruthStretch( p.TruthC, pCut, pCutC, p.nLutSize );\n    }\n    if Type == 1 {\n        Abc_TtAnd( p.Truth, p.Truth0, p.Truth1, p.nTruWords, 0 );\n    } else if Type == 2 {\n        Abc_TtXor( p.Truth, p.Truth0, p.Truth1, p.nTruWords, 0 );\n    } else if Type == 3 {\n        Abc_TtMux( p.Truth, p.TruthC, p.Truth1, p.Truth0, p.nTruWords );\n    } else { assert(false, \"0\"); }\n    // save the result\n    if p.Truth[0] \u0026 1 {\n        Abc_TtNot( p.Truth, p.nTruWords );\n        pCut.iFunc = Abc_Var2Lit( Vec_MemHashInsert( p.vTtMem, p.Truth ), 1 );\n    \n    } else {\n        pCut.iFunc = Abc_Var2Lit( Vec_MemHashInsert( p.vTtMem, p.Truth ), 0 ); }\n    if p.pPars.fCutMin {\n        return Mpm_CutTruthMinimize7( p, pCut ); }\n    return 1;\n}\nfunc Mpm_CutComputeTruth(p *Mpm_Man_t, pCut *Mpm_Cut_t, pCut0 *Mpm_Cut_t, pCut1 *Mpm_Cut_t, pCutC *Mpm_Cut_t, fCompl0 int32, fCompl1 int32, fComplC int32, Type int32) int32 {\n    var RetValue int32;\n    if p.nLutSize \u003c= 6 {\n        RetValue = Mpm_CutComputeTruth6( p, pCut, pCut0, pCut1, pCutC, fCompl0, fCompl1, fComplC, Type );\n    } else {\n        RetValue = Mpm_CutComputeTruth7( p, pCut, pCut0, pCut1, pCutC, fCompl0, fCompl1, fComplC, Type ); }\n#ifdef MPM_TRY_NEW\n    {\n        extern unsigned Abc_TtCanonicize( word * pTruth, int nVars, char * pCanonPerm );\n        char pCanonPerm[16];\n        memcpy( p-\u003eTruth0, p-\u003eTruth, sizeof(word) * p-\u003enTruWords );\n        Abc_TtCanonicize( p-\u003eTruth0, pCut-\u003enLimit, pCanonPerm );\n    }\n#endif\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

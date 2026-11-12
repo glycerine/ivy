@@ -1,0 +1,399 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMulti.c",
+  "SHA256": "2b7093063a7869fcdb2554c27a7ea8392fb832452c4daba0d24d1cd380ffe493",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vCexesIn) == Vec_IntSize(vOutMap) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 9,
+        "ByteOffset": 2015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrEntry(vCexesOut, iOut) == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 3878
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%3s : \", pStr );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 5,
+        "ByteOffset": 3908
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PI =%6d  \", Saig_ManPiNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 118,
+        "Column": 5,
+        "ByteOffset": 3953
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"PO =%6d  \", Saig_ManPoNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 5,
+        "ByteOffset": 3998
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"FF =%7d  \", Saig_ManRegNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 5,
+        "ByteOffset": 4044
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"ND =%7d  \", Aig_ManNodeNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 5,
+        "ByteOffset": 4090
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Solved =%7d (%5.1f %%)  \", nTotalPo-Saig_ManPoNum(p), 100.0*(nTotalPo-Saig_ManPoNum(p))/Abc_MaxInt(1, nTotalPo) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 5,
+        "ByteOffset": 4218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Size   =%7d (%5.1f %%)  \", Aig_ManObjNum(p),          100.0*Aig_ManObjNum(p)/Abc_MaxInt(1, nTotalSize) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 170,
+        "Column": 56,
+        "ByteOffset": 5676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        nTimeToStop = Abc_Clock() + pPars.TimeOutGlo * CLOCKS_PER_SEC;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 180,
+        "Column": 9,
+        "ByteOffset": 5958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"MultiProve parameters: Global timeout = %d sec.  Local timeout = %d sec.  Time increase = %d %%.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 183,
+        "Column": 9,
+        "ByteOffset": 6171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Gap timout = %d sec. Per-output timeout = %d msec. Use synthesis = %d. Dump final = %d. Verbose = %d.\\n\", "
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 213,
+        "Column": 54,
+        "ByteOffset": 7664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if nTimeToStop \u0026\u0026 Abc_Clock() + TimeOutLoc * CLOCKS_PER_SEC \u003e nTimeToStop {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 214,
+        "Column": 13,
+        "ByteOffset": 7707
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Global timeout (%d sec) is reached.\\n\", pPars.TimeOutGlo );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 243,
+        "Column": 54,
+        "ByteOffset": 8966
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if nTimeToStop \u0026\u0026 Abc_Clock() + TimeOutLoc * CLOCKS_PER_SEC \u003e nTimeToStop {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 244,
+        "Column": 13,
+        "ByteOffset": 9009
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Global timeout (%d sec) is reached.\\n\", pPars.TimeOutGlo );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 250,
+        "Column": 13,
+        "ByteOffset": 9252
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Gap timeout (%d sec) is reached.\\n\", pPars.TimeOutGap );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 267,
+        "Column": 9,
+        "ByteOffset": 9796
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The number of POs proved UNSAT by synthesis = %d.\\n\", Gia_ManCountConst0Pos(p) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 271,
+        "Column": 9,
+        "ByteOffset": 10053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Final AIG was dumped into file \\\"%s\\\".\\n\", pFileName );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 10460
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(p.vSeqModelVec) == Gia_ManPoNum(p) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_ManProcessOutputs",
+      "Start": 1534,
+      "End": 2411,
+      "BodyStart": 1636,
+      "Original": "Vec_Int_t * Gia_ManProcessOutputs( Vec_Ptr_t * vCexesIn, Vec_Ptr_t * vCexesOut, Vec_Int_t * vOutMap )\n{\n    Abc_Cex_t * pCex; \n    Vec_Int_t * vLeftOver;\n    int i, iOut;\n    assert( Vec_PtrSize(vCexesIn) == Vec_IntSize(vOutMap) );\n    vLeftOver = Vec_IntAlloc( Vec_PtrSize(vCexesIn) );\n    Vec_IntForEachEntry( vOutMap, iOut, i )\n    {\n        assert( Vec_PtrEntry(vCexesOut, iOut) == NULL );\n        pCex = (Abc_Cex_t *)Vec_PtrEntry( vCexesIn, i );\n        if ( pCex ) // found a CEX for output iOut\n        {\n            Vec_PtrWriteEntry( vCexesIn, i, NULL );\n            Vec_PtrWriteEntry( vCexesOut, iOut, pCex );\n        }\n        else // still unsolved\n        {\n            Vec_IntWriteEntry( vOutMap, Vec_IntSize(vLeftOver), iOut );\n            Vec_IntPush( vLeftOver, i );\n        }\n    }\n    Vec_IntShrink( vOutMap, Vec_IntSize(vLeftOver) );\n    return vLeftOver;\n}",
+      "Draft": "func Gia_ManProcessOutputs(vCexesIn *Vec_Ptr_t, vCexesOut *Vec_Ptr_t, vOutMap *Vec_Int_t) *Vec_Int_t {\n    var pCex *Abc_Cex_t; \n    var vLeftOver *Vec_Int_t;\n    var i, iOut int32;\n    assert(Vec_PtrSize(vCexesIn) == Vec_IntSize(vOutMap), \"Vec_PtrSize(vCexesIn) == Vec_IntSize(vOutMap)\");\n    vLeftOver = Vec_IntAlloc( Vec_PtrSize(vCexesIn) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOutMap)) \u0026\u0026 (((iOut) = Vec_IntEntry(vOutMap, i)), 1); i++  {\n        assert(Vec_PtrEntry(vCexesOut, iOut) == nil, \"Vec_PtrEntry(vCexesOut, iOut) == nil\");\n        pCex = (Abc_Cex_t *)Vec_PtrEntry( vCexesIn, i );\n        if pCex != nil { // found a CEX for output iOut\n        \n            Vec_PtrWriteEntry( vCexesIn, i, nil );\n            Vec_PtrWriteEntry( vCexesOut, iOut, pCex );\n        \n        } else { // still unsolved\n        \n            Vec_IntWriteEntry( vOutMap, Vec_IntSize(vLeftOver), iOut );\n            Vec_IntPush( vLeftOver, i );\n        }\n    }\n    Vec_IntShrink( vOutMap, Vec_IntSize(vLeftOver) );\n    return vLeftOver;\n}"
+    },
+    {
+      "Name": "Gia_ManCountConst0PosGia",
+      "Start": 2683,
+      "End": 2887,
+      "BodyStart": 2729,
+      "Original": "int Gia_ManCountConst0PosGia( Gia_Man_t * p )\n{\n    Gia_Obj_t * pObj;\n    int i, Counter = 0;\n    Gia_ManForEachPo( p, pObj, i )\n        Counter += (Gia_ObjFaninLit0p(p, pObj) == 0);\n    return Counter;\n}",
+      "Draft": "func Gia_ManCountConst0PosGia(p *Gia_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Counter += (Gia_ObjFaninLit0p(p, pObj) == 0);\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Gia_ManCountConst0Pos",
+      "Start": 2888,
+      "End": 3098,
+      "BodyStart": 2931,
+      "Original": "int Gia_ManCountConst0Pos( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n    Saig_ManForEachPo( p, pObj, i )\n        Counter += (Aig_ObjChild0(pObj) == Aig_ManConst0(p));\n    return Counter;\n}",
+      "Draft": "func Gia_ManCountConst0Pos(p *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Counter += (Aig_ObjChild0(pObj) == Aig_ManConst0(p));\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Gia_ManMultiReport",
+      "Start": 3334,
+      "End": 3954,
+      "BodyStart": 3436,
+      "Original": "void Gia_ManMultiReport( Aig_Man_t * p, char * pStr, int nTotalPo, int nTotalSize, abctime clkStart )\n{\n    printf( \"%3s : \", pStr );\n    printf( \"PI =%6d  \", Saig_ManPiNum(p) );\n    printf( \"PO =%6d  \", Saig_ManPoNum(p) );\n    printf( \"FF =%7d  \", Saig_ManRegNum(p) );\n    printf( \"ND =%7d  \", Aig_ManNodeNum(p) );\n    printf( \"Solved =%7d (%5.1f %%)  \", nTotalPo-Saig_ManPoNum(p), 100.0*(nTotalPo-Saig_ManPoNum(p))/Abc_MaxInt(1, nTotalPo) );\n    printf( \"Size   =%7d (%5.1f %%)  \", Aig_ManObjNum(p),          100.0*Aig_ManObjNum(p)/Abc_MaxInt(1, nTotalSize) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n}",
+      "Draft": "func Gia_ManMultiReport(p *Aig_Man_t, pStr string, nTotalPo int32, nTotalSize int32, clkStart abctime) {\n    fmt.Printf(\"%3s : \", pStr);\n    fmt.Printf(\"PI =%6d  \", Saig_ManPiNum(p));\n    fmt.Printf(\"PO =%6d  \", Saig_ManPoNum(p));\n    fmt.Printf(\"FF =%7d  \", Saig_ManRegNum(p));\n    fmt.Printf(\"ND =%7d  \", Aig_ManNodeNum(p));\n    fmt.Printf(\"Solved =%7d (%5.1f %%)  \", nTotalPo-Saig_ManPoNum(p), 100.0*(nTotalPo-Saig_ManPoNum(p))/Abc_MaxInt(1, nTotalPo));\n    fmt.Printf(\"Size   =%7d (%5.1f %%)  \", Aig_ManObjNum(p), 100.0*Aig_ManObjNum(p)/Abc_MaxInt(1, nTotalSize));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n}"
+    },
+    {
+      "Name": "Gia_ManMultiProveSyn",
+      "Start": 4190,
+      "End": 4528,
+      "BodyStart": 4272,
+      "Original": "Aig_Man_t * Gia_ManMultiProveSyn( Aig_Man_t * p, int fVerbose, int fVeryVerbose )\n{\n    Aig_Man_t * pAig;\n    Gia_Man_t * pGia, * pTemp;\n    pGia = Gia_ManFromAig( p );\n    pGia = Gia_ManAigSyn2( pTemp = pGia, 1, 0, 0, 0, 0, 0, 0 );\n    Gia_ManStop( pTemp );\n    pAig = Gia_ManToAig( pGia, 0 );\n    Gia_ManStop( pGia );\n    return pAig;\n}",
+      "Draft": "func Gia_ManMultiProveSyn(p *Aig_Man_t, fVerbose int32, fVeryVerbose int32) *Aig_Man_t {\n    var pAig *Aig_Man_t;\n    var pGia, pTemp *Gia_Man_t;\n    pGia = Gia_ManFromAig( p );\n    pGia = Gia_ManAigSyn2( pTemp = pGia, 1, 0, 0, 0, 0, 0, 0 );\n    Gia_ManStop( pTemp );\n    pAig = Gia_ManToAig( pGia, 0 );\n    Gia_ManStop( pGia );\n    return pAig;\n}"
+    },
+    {
+      "Name": "Gia_ManMultiProveAig",
+      "Start": 4764,
+      "End": 9670,
+      "BodyStart": 4836,
+      "Original": "Vec_Ptr_t * Gia_ManMultiProveAig( Aig_Man_t * p, Bmc_MulPar_t * pPars )\n{\n    Ssw_RarPars_t ParsSim, * pParsSim = \u0026ParsSim;\n    Saig_ParBmc_t ParsBmc, * pParsBmc = \u0026ParsBmc;\n    Vec_Int_t * vOutMap, * vLeftOver;\n    Vec_Ptr_t * vCexes;\n    Aig_Man_t * pTemp;\n    abctime clkStart = Abc_Clock();\n    abctime nTimeToStop = pPars-\u003eTimeOutGlo ? Abc_Clock() + pPars-\u003eTimeOutGlo * CLOCKS_PER_SEC : 0;\n    int nTotalPo     = Saig_ManPoNum(p);\n    int nTotalSize   = Aig_ManObjNum(p);\n    int TimeOutLoc   = pPars-\u003eTimeOutLoc;\n    int i, RetValue  = -1;\n    if ( pPars-\u003efVerbose )\n        printf( \"MultiProve parameters: Global timeout = %d sec.  Local timeout = %d sec.  Time increase = %d %%.\\n\", \n            pPars-\u003eTimeOutGlo, pPars-\u003eTimeOutLoc, pPars-\u003eTimeOutInc );\n    if ( pPars-\u003efVerbose )\n        printf( \"Gap timout = %d sec. Per-output timeout = %d msec. Use synthesis = %d. Dump final = %d. Verbose = %d.\\n\", \n            pPars-\u003eTimeOutGap, pPars-\u003eTimePerOut, pPars-\u003efUseSyn, pPars-\u003efDumpFinal, pPars-\u003efVerbose );\n    // create output map\n    vOutMap = Vec_IntStartNatural( Saig_ManPoNum(p) ); // maps current outputs into their original IDs\n    vCexes  = Vec_PtrStart( Saig_ManPoNum(p) );        // maps solved outputs into their CEXes (or markers)\n    for ( i = 0; i \u003c 1000; i++ )\n    {\n        int nSolved = Vec_PtrCountZero(vCexes);\n        // perform SIM3\n        Ssw_RarSetDefaultParams( pParsSim );\n        pParsSim-\u003efSolveAll = 1;\n        pParsSim-\u003efNotVerbose = 1;\n        pParsSim-\u003efSilent = !pPars-\u003efVeryVerbose;\n        pParsSim-\u003eTimeOut = TimeOutLoc;\n        pParsSim-\u003enRandSeed = (i * 17) % 500;\n        pParsSim-\u003enWords = 5;\n        RetValue *= Ssw_RarSimulate( p, pParsSim );\n        // sort outputs\n        if ( p-\u003evSeqModelVec )\n        {\n            vLeftOver = Gia_ManProcessOutputs( p-\u003evSeqModelVec, vCexes, vOutMap );\n            if ( Vec_IntSize(vLeftOver) == 0 )\n                break;\n            // remove solved        \n            p = Saig_ManDupCones( pTemp = p, Vec_IntArray(vLeftOver), Vec_IntSize(vLeftOver) );\n            Vec_IntFree( vLeftOver );\n            Aig_ManStop( pTemp );\n        }\n        if ( pPars-\u003efVerbose )\n            Gia_ManMultiReport( p, \"SIM\", nTotalPo, nTotalSize, clkStart );\n\n        // check timeout\n        if ( nTimeToStop \u0026\u0026 Abc_Clock() + TimeOutLoc * CLOCKS_PER_SEC \u003e nTimeToStop )\n        {\n            printf( \"Global timeout (%d sec) is reached.\\n\", pPars-\u003eTimeOutGlo );\n            break;\n        }\n\n        // perform BMC\n        Saig_ParBmcSetDefaultParams( pParsBmc );\n        pParsBmc-\u003efSolveAll = 1;\n        pParsBmc-\u003efNotVerbose = 1;\n        pParsBmc-\u003efSilent = !pPars-\u003efVeryVerbose;\n        pParsBmc-\u003enTimeOut = TimeOutLoc;\n        pParsBmc-\u003enTimeOutOne = pPars-\u003eTimePerOut;\n        RetValue *= Saig_ManBmcScalable( p, pParsBmc );\n        if ( pPars-\u003efVeryVerbose )\n            Abc_Print( 1, \"Some outputs are SAT (%d out of %d) after %d frames.\\n\", \n                Saig_ManPoNum(p) - Vec_PtrCountZero(p-\u003evSeqModelVec), Saig_ManPoNum(p), pParsBmc-\u003eiFrame );\n        // sort outputs\n        if ( p-\u003evSeqModelVec )\n        {\n            vLeftOver = Gia_ManProcessOutputs( p-\u003evSeqModelVec, vCexes, vOutMap );\n            if ( Vec_IntSize(vLeftOver) == 0 )\n                break;\n            // remove solved        \n            p = Saig_ManDupCones( pTemp = p, Vec_IntArray(vLeftOver), Vec_IntSize(vLeftOver) );\n            Vec_IntFree( vLeftOver );\n            Aig_ManStop( pTemp );\n        }\n        if ( pPars-\u003efVerbose )\n            Gia_ManMultiReport( p, \"BMC\", nTotalPo, nTotalSize, clkStart );\n\n        // check timeout\n        if ( nTimeToStop \u0026\u0026 Abc_Clock() + TimeOutLoc * CLOCKS_PER_SEC \u003e nTimeToStop )\n        {\n            printf( \"Global timeout (%d sec) is reached.\\n\", pPars-\u003eTimeOutGlo );\n            break;\n        }\n\n        // check gap timeout\n        if ( pPars-\u003eTimeOutGap \u0026\u0026 pPars-\u003eTimeOutGap \u003c= TimeOutLoc \u0026\u0026 nSolved == Vec_PtrCountZero(vCexes) )\n        {\n            printf( \"Gap timeout (%d sec) is reached.\\n\", pPars-\u003eTimeOutGap );\n            break;\n        }\n\n        // synthesize\n        if ( pPars-\u003efUseSyn )\n        {\n            p = Gia_ManMultiProveSyn( pTemp = p, pPars-\u003efVerbose, pPars-\u003efVeryVerbose );\n            Aig_ManStop( pTemp );\n            if ( pPars-\u003efVerbose )\n                Gia_ManMultiReport( p, \"SYN\", nTotalPo, nTotalSize, clkStart );\n        }\n\n        // increase timeout\n        TimeOutLoc += TimeOutLoc * pPars-\u003eTimeOutInc / 100;\n    }\n    Vec_IntFree( vOutMap );\n    if ( pPars-\u003efVerbose )\n        printf( \"The number of POs proved UNSAT by synthesis = %d.\\n\", Gia_ManCountConst0Pos(p) );\n    if ( pPars-\u003efDumpFinal )\n    {\n        char * pFileName = Extra_FileNameGenericAppend( p-\u003epName, \"_out.aig\" );\n        Ioa_WriteAiger( p, pFileName, 0, 0 );\n        printf( \"Final AIG was dumped into file \\\"%s\\\".\\n\", pFileName );\n    }\n    Aig_ManStop( p );\n    return vCexes;\n}",
+      "Draft": "func Gia_ManMultiProveAig(p *Aig_Man_t, pPars *Bmc_MulPar_t) *Vec_Ptr_t {\n    var ParsSim Ssw_RarPars_t;\n    var pParsSim *Ssw_RarPars_t = \u0026ParsSim;\n    var ParsBmc Saig_ParBmc_t;\n    var pParsBmc *Saig_ParBmc_t = \u0026ParsBmc;\n    var vOutMap, vLeftOver *Vec_Int_t;\n    var vCexes *Vec_Ptr_t;\n    var pTemp *Aig_Man_t;\n    var clkStart abctime  = Abc_Clock();\n    var nTimeToStop abctime;\n    if pPars.TimeOutGlo {\n        nTimeToStop = Abc_Clock() + pPars.TimeOutGlo * int64(time.Second);\n    } else {\n        nTimeToStop = 0;\n    }\n    var nTotalPo int32      = Saig_ManPoNum(p);\n    var nTotalSize int32    = Aig_ManObjNum(p);\n    var TimeOutLoc int32    = pPars.TimeOutLoc;\n    var i int32;\n    var RetValue int32 = -1;\n    if pPars.fVerbose {\n        fmt.Printf(\"MultiProve parameters: Global timeout = %d sec.  Local timeout = %d sec.  Time increase = %d %%.\\n\", pPars.TimeOutGlo, pPars.TimeOutLoc, pPars.TimeOutInc); }\n    if pPars.fVerbose {\n        fmt.Printf(\"Gap timout = %d sec. Per-output timeout = %d msec. Use synthesis = %d. Dump final = %d. Verbose = %d.\\n\", pPars.TimeOutGap, pPars.TimePerOut, pPars.fUseSyn, pPars.fDumpFinal, pPars.fVerbose); }\n    // create output map\n    vOutMap = Vec_IntStartNatural( Saig_ManPoNum(p) ); // maps current outputs into their original IDs\n    vCexes  = Vec_PtrStart( Saig_ManPoNum(p) );        // maps solved outputs into their CEXes (or markers)\n    for  i = 0; i \u003c 1000; i++  {\n        var nSolved int32  = Vec_PtrCountZero(vCexes);\n        // perform SIM3\n        Ssw_RarSetDefaultParams( pParsSim );\n        pParsSim.fSolveAll = 1;\n        pParsSim.fNotVerbose = 1;\n        pParsSim.fSilent = !pPars.fVeryVerbose;\n        pParsSim.TimeOut = TimeOutLoc;\n        pParsSim.nRandSeed = (i * 17) % 500;\n        pParsSim.nWords = 5;\n        RetValue *= Ssw_RarSimulate( p, pParsSim );\n        // sort outputs\n        if p.vSeqModelVec {\n            vLeftOver = Gia_ManProcessOutputs( p.vSeqModelVec, vCexes, vOutMap );\n            if Vec_IntSize(vLeftOver) == 0 {\n                break; }\n            // remove solved        \n            p = Saig_ManDupCones( pTemp = p, Vec_IntArray(vLeftOver), Vec_IntSize(vLeftOver) );\n            Vec_IntFree( vLeftOver );\n            Aig_ManStop( pTemp );\n        }\n        if pPars.fVerbose {\n            Gia_ManMultiReport( p, \"SIM\", nTotalPo, nTotalSize, clkStart ); }\n\n        // check timeout\n        if nTimeToStop \u0026\u0026 Abc_Clock() + TimeOutLoc * int64(time.Second) \u003e nTimeToStop {\n            fmt.Printf(\"Global timeout (%d sec) is reached.\\n\", pPars.TimeOutGlo);\n            break;\n        }\n\n        // perform BMC\n        Saig_ParBmcSetDefaultParams( pParsBmc );\n        pParsBmc.fSolveAll = 1;\n        pParsBmc.fNotVerbose = 1;\n        pParsBmc.fSilent = !pPars.fVeryVerbose;\n        pParsBmc.nTimeOut = TimeOutLoc;\n        pParsBmc.nTimeOutOne = pPars.TimePerOut;\n        RetValue *= Saig_ManBmcScalable( p, pParsBmc );\n        if pPars.fVeryVerbose {\n            Abc_Print( 1, \"Some outputs are SAT (%d out of %d) after %d frames.\\n\", \n                Saig_ManPoNum(p) - Vec_PtrCountZero(p.vSeqModelVec), Saig_ManPoNum(p), pParsBmc.iFrame ); }\n        // sort outputs\n        if p.vSeqModelVec {\n            vLeftOver = Gia_ManProcessOutputs( p.vSeqModelVec, vCexes, vOutMap );\n            if Vec_IntSize(vLeftOver) == 0 {\n                break; }\n            // remove solved        \n            p = Saig_ManDupCones( pTemp = p, Vec_IntArray(vLeftOver), Vec_IntSize(vLeftOver) );\n            Vec_IntFree( vLeftOver );\n            Aig_ManStop( pTemp );\n        }\n        if pPars.fVerbose {\n            Gia_ManMultiReport( p, \"BMC\", nTotalPo, nTotalSize, clkStart ); }\n\n        // check timeout\n        if nTimeToStop \u0026\u0026 Abc_Clock() + TimeOutLoc * int64(time.Second) \u003e nTimeToStop {\n            fmt.Printf(\"Global timeout (%d sec) is reached.\\n\", pPars.TimeOutGlo);\n            break;\n        }\n\n        // check gap timeout\n        if pPars.TimeOutGap \u0026\u0026 pPars.TimeOutGap \u003c= TimeOutLoc \u0026\u0026 nSolved == Vec_PtrCountZero(vCexes) {\n            fmt.Printf(\"Gap timeout (%d sec) is reached.\\n\", pPars.TimeOutGap);\n            break;\n        }\n\n        // synthesize\n        if pPars.fUseSyn {\n            p = Gia_ManMultiProveSyn( pTemp = p, pPars.fVerbose, pPars.fVeryVerbose );\n            Aig_ManStop( pTemp );\n            if pPars.fVerbose {\n                Gia_ManMultiReport( p, \"SYN\", nTotalPo, nTotalSize, clkStart ); }\n        }\n\n        // increase timeout\n        TimeOutLoc += TimeOutLoc * pPars.TimeOutInc / 100;\n    }\n    Vec_IntFree( vOutMap );\n    if pPars.fVerbose {\n        fmt.Printf(\"The number of POs proved UNSAT by synthesis = %d.\\n\", Gia_ManCountConst0Pos(p)); }\n    if pPars.fDumpFinal {\n        var pFileName string  = Extra_FileNameGenericAppend( p.pName, \"_out.aig\" );\n        Ioa_WriteAiger( p, pFileName, 0, 0 );\n        fmt.Printf(\"Final AIG was dumped into file \\\"%s\\\".\\n\", pFileName);\n    }\n    Aig_ManStop( p );\n    return vCexes;\n}"
+    },
+    {
+      "Name": "Gia_ManMultiProve",
+      "Start": 9671,
+      "End": 10110,
+      "BodyStart": 9732,
+      "Original": "int Gia_ManMultiProve( Gia_Man_t * p, Bmc_MulPar_t * pPars )\n{\n    Aig_Man_t * pAig;\n    if ( p-\u003evSeqModelVec )\n        Vec_PtrFreeFree( p-\u003evSeqModelVec ), p-\u003evSeqModelVec = NULL;\n    pAig = Gia_ManToAig( p, 0 );\n    p-\u003evSeqModelVec = Gia_ManMultiProveAig( pAig, pPars ); // deletes pAig\n    assert( Vec_PtrSize(p-\u003evSeqModelVec) == Gia_ManPoNum(p) );\n    return Vec_PtrCountZero(p-\u003evSeqModelVec) == Vec_PtrSize(p-\u003evSeqModelVec) ? -1 : 0;\n}",
+      "Draft": "func Gia_ManMultiProve(p *Gia_Man_t, pPars *Bmc_MulPar_t) int32 {\n    var pAig *Aig_Man_t;\n    if p.vSeqModelVec {\n        Vec_PtrFreeFree( p.vSeqModelVec );\np.vSeqModelVec = nil; }\n    pAig = Gia_ManToAig( p, 0 );\n    p.vSeqModelVec = Gia_ManMultiProveAig( pAig, pPars ); // deletes pAig\n    assert(Vec_PtrSize(p.vSeqModelVec) == Gia_ManPoNum(p), \"Vec_PtrSize(p.vSeqModelVec) == Gia_ManPoNum(p)\");\n    if Vec_PtrCountZero(p.vSeqModelVec) == Vec_PtrSize(p.vSeqModelVec) {\n        return -1;\n    } else {\n        return 0;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMulti.c::pointer-cast::2049",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1943,
+      "End": 1956
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMulti.c::pointer-cast::3344",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2983,
+      "End": 2983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMulti.c::Gia_ManProcessOutputs",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManProcessOutputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1534,
+      "End": 2411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMulti.c::Gia_ManCountConst0PosGia",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCountConst0PosGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2683,
+      "End": 2887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMulti.c::Gia_ManCountConst0Pos",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManCountConst0Pos",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2888,
+      "End": 3098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMulti.c::Gia_ManMultiReport",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMultiReport",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3334,
+      "End": 3954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMulti.c::Gia_ManMultiProveSyn",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMultiProveSyn",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4190,
+      "End": 4528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMulti.c::Gia_ManMultiProveAig",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMultiProveAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4764,
+      "End": 9670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMulti.c::Gia_ManMultiProve",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManMultiProve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9671,
+      "End": 10110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bmc/bmcMulti.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10357
+    }
+  ],
+  "Draft": "package bmc\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [bmcMulti.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based bounded model checking.]\n\n  Synopsis    [Proving multi-output properties.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: bmcMulti.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"bmc.h\"\n//#include \"proof/ssw/ssw.h\"\n//#include \"misc/extra/extra.h\"\n//#include \"aig/gia/giaAig.h\"\n//#include \"aig/ioa/ioa.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Divides outputs into solved and unsolved.]\n\n  Description [Return array of unsolved outputs to extract into a new AIG.\n  Updates the resulting CEXes (vCexesOut) and current output map (vOutMap).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManProcessOutputs(vCexesIn *Vec_Ptr_t, vCexesOut *Vec_Ptr_t, vOutMap *Vec_Int_t) *Vec_Int_t {\n    var pCex *Abc_Cex_t; \n    var vLeftOver *Vec_Int_t;\n    var i, iOut int32;\n    assert(Vec_PtrSize(vCexesIn) == Vec_IntSize(vOutMap), \"Vec_PtrSize(vCexesIn) == Vec_IntSize(vOutMap)\");\n    vLeftOver = Vec_IntAlloc( Vec_PtrSize(vCexesIn) );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vOutMap)) \u0026\u0026 (((iOut) = Vec_IntEntry(vOutMap, i)), 1); i++  {\n        assert(Vec_PtrEntry(vCexesOut, iOut) == nil, \"Vec_PtrEntry(vCexesOut, iOut) == nil\");\n        pCex = (Abc_Cex_t *)Vec_PtrEntry( vCexesIn, i );\n        if pCex != nil { // found a CEX for output iOut\n        \n            Vec_PtrWriteEntry( vCexesIn, i, nil );\n            Vec_PtrWriteEntry( vCexesOut, iOut, pCex );\n        \n        } else { // still unsolved\n        \n            Vec_IntWriteEntry( vOutMap, Vec_IntSize(vLeftOver), iOut );\n            Vec_IntPush( vLeftOver, i );\n        }\n    }\n    Vec_IntShrink( vOutMap, Vec_IntSize(vLeftOver) );\n    return vLeftOver;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of constant 0 POs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManCountConst0PosGia(p *Gia_Man_t) int32 {\n    var pObj *Gia_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Gia_ManForEachPo\n    for  i = 0; (i \u003c Gia_ManPoNum(p)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Counter += (Gia_ObjFaninLit0p(p, pObj) == 0);\n    }\n    return Counter;\n}\nfunc Gia_ManCountConst0Pos(p *Aig_Man_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        Counter += (Aig_ObjChild0(pObj) == Aig_ManConst0(p));\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManMultiReport(p *Aig_Man_t, pStr string, nTotalPo int32, nTotalSize int32, clkStart abctime) {\n    fmt.Printf(\"%3s : \", pStr);\n    fmt.Printf(\"PI =%6d  \", Saig_ManPiNum(p));\n    fmt.Printf(\"PO =%6d  \", Saig_ManPoNum(p));\n    fmt.Printf(\"FF =%7d  \", Saig_ManRegNum(p));\n    fmt.Printf(\"ND =%7d  \", Aig_ManNodeNum(p));\n    fmt.Printf(\"Solved =%7d (%5.1f %%)  \", nTotalPo-Saig_ManPoNum(p), 100.0*(nTotalPo-Saig_ManPoNum(p))/Abc_MaxInt(1, nTotalPo));\n    fmt.Printf(\"Size   =%7d (%5.1f %%)  \", Aig_ManObjNum(p), 100.0*Aig_ManObjNum(p)/Abc_MaxInt(1, nTotalSize));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clkStart );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManMultiProveSyn(p *Aig_Man_t, fVerbose int32, fVeryVerbose int32) *Aig_Man_t {\n    var pAig *Aig_Man_t;\n    var pGia, pTemp *Gia_Man_t;\n    pGia = Gia_ManFromAig( p );\n    pGia = Gia_ManAigSyn2( pTemp = pGia, 1, 0, 0, 0, 0, 0, 0 );\n    Gia_ManStop( pTemp );\n    pAig = Gia_ManToAig( pGia, 0 );\n    Gia_ManStop( pGia );\n    return pAig;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManMultiProveAig(p *Aig_Man_t, pPars *Bmc_MulPar_t) *Vec_Ptr_t {\n    var ParsSim Ssw_RarPars_t;\n    var pParsSim *Ssw_RarPars_t = \u0026ParsSim;\n    var ParsBmc Saig_ParBmc_t;\n    var pParsBmc *Saig_ParBmc_t = \u0026ParsBmc;\n    var vOutMap, vLeftOver *Vec_Int_t;\n    var vCexes *Vec_Ptr_t;\n    var pTemp *Aig_Man_t;\n    var clkStart abctime  = Abc_Clock();\n    var nTimeToStop abctime;\n    if pPars.TimeOutGlo {\n        nTimeToStop = Abc_Clock() + pPars.TimeOutGlo * int64(time.Second);\n    } else {\n        nTimeToStop = 0;\n    }\n    var nTotalPo int32      = Saig_ManPoNum(p);\n    var nTotalSize int32    = Aig_ManObjNum(p);\n    var TimeOutLoc int32    = pPars.TimeOutLoc;\n    var i int32;\n    var RetValue int32 = -1;\n    if pPars.fVerbose {\n        fmt.Printf(\"MultiProve parameters: Global timeout = %d sec.  Local timeout = %d sec.  Time increase = %d %%.\\n\", pPars.TimeOutGlo, pPars.TimeOutLoc, pPars.TimeOutInc); }\n    if pPars.fVerbose {\n        fmt.Printf(\"Gap timout = %d sec. Per-output timeout = %d msec. Use synthesis = %d. Dump final = %d. Verbose = %d.\\n\", pPars.TimeOutGap, pPars.TimePerOut, pPars.fUseSyn, pPars.fDumpFinal, pPars.fVerbose); }\n    // create output map\n    vOutMap = Vec_IntStartNatural( Saig_ManPoNum(p) ); // maps current outputs into their original IDs\n    vCexes  = Vec_PtrStart( Saig_ManPoNum(p) );        // maps solved outputs into their CEXes (or markers)\n    for  i = 0; i \u003c 1000; i++  {\n        var nSolved int32  = Vec_PtrCountZero(vCexes);\n        // perform SIM3\n        Ssw_RarSetDefaultParams( pParsSim );\n        pParsSim.fSolveAll = 1;\n        pParsSim.fNotVerbose = 1;\n        pParsSim.fSilent = !pPars.fVeryVerbose;\n        pParsSim.TimeOut = TimeOutLoc;\n        pParsSim.nRandSeed = (i * 17) % 500;\n        pParsSim.nWords = 5;\n        RetValue *= Ssw_RarSimulate( p, pParsSim );\n        // sort outputs\n        if p.vSeqModelVec {\n            vLeftOver = Gia_ManProcessOutputs( p.vSeqModelVec, vCexes, vOutMap );\n            if Vec_IntSize(vLeftOver) == 0 {\n                break; }\n            // remove solved        \n            p = Saig_ManDupCones( pTemp = p, Vec_IntArray(vLeftOver), Vec_IntSize(vLeftOver) );\n            Vec_IntFree( vLeftOver );\n            Aig_ManStop( pTemp );\n        }\n        if pPars.fVerbose {\n            Gia_ManMultiReport( p, \"SIM\", nTotalPo, nTotalSize, clkStart ); }\n\n        // check timeout\n        if nTimeToStop \u0026\u0026 Abc_Clock() + TimeOutLoc * int64(time.Second) \u003e nTimeToStop {\n            fmt.Printf(\"Global timeout (%d sec) is reached.\\n\", pPars.TimeOutGlo);\n            break;\n        }\n\n        // perform BMC\n        Saig_ParBmcSetDefaultParams( pParsBmc );\n        pParsBmc.fSolveAll = 1;\n        pParsBmc.fNotVerbose = 1;\n        pParsBmc.fSilent = !pPars.fVeryVerbose;\n        pParsBmc.nTimeOut = TimeOutLoc;\n        pParsBmc.nTimeOutOne = pPars.TimePerOut;\n        RetValue *= Saig_ManBmcScalable( p, pParsBmc );\n        if pPars.fVeryVerbose {\n            Abc_Print( 1, \"Some outputs are SAT (%d out of %d) after %d frames.\\n\", \n                Saig_ManPoNum(p) - Vec_PtrCountZero(p.vSeqModelVec), Saig_ManPoNum(p), pParsBmc.iFrame ); }\n        // sort outputs\n        if p.vSeqModelVec {\n            vLeftOver = Gia_ManProcessOutputs( p.vSeqModelVec, vCexes, vOutMap );\n            if Vec_IntSize(vLeftOver) == 0 {\n                break; }\n            // remove solved        \n            p = Saig_ManDupCones( pTemp = p, Vec_IntArray(vLeftOver), Vec_IntSize(vLeftOver) );\n            Vec_IntFree( vLeftOver );\n            Aig_ManStop( pTemp );\n        }\n        if pPars.fVerbose {\n            Gia_ManMultiReport( p, \"BMC\", nTotalPo, nTotalSize, clkStart ); }\n\n        // check timeout\n        if nTimeToStop \u0026\u0026 Abc_Clock() + TimeOutLoc * int64(time.Second) \u003e nTimeToStop {\n            fmt.Printf(\"Global timeout (%d sec) is reached.\\n\", pPars.TimeOutGlo);\n            break;\n        }\n\n        // check gap timeout\n        if pPars.TimeOutGap \u0026\u0026 pPars.TimeOutGap \u003c= TimeOutLoc \u0026\u0026 nSolved == Vec_PtrCountZero(vCexes) {\n            fmt.Printf(\"Gap timeout (%d sec) is reached.\\n\", pPars.TimeOutGap);\n            break;\n        }\n\n        // synthesize\n        if pPars.fUseSyn {\n            p = Gia_ManMultiProveSyn( pTemp = p, pPars.fVerbose, pPars.fVeryVerbose );\n            Aig_ManStop( pTemp );\n            if pPars.fVerbose {\n                Gia_ManMultiReport( p, \"SYN\", nTotalPo, nTotalSize, clkStart ); }\n        }\n\n        // increase timeout\n        TimeOutLoc += TimeOutLoc * pPars.TimeOutInc / 100;\n    }\n    Vec_IntFree( vOutMap );\n    if pPars.fVerbose {\n        fmt.Printf(\"The number of POs proved UNSAT by synthesis = %d.\\n\", Gia_ManCountConst0Pos(p)); }\n    if pPars.fDumpFinal {\n        var pFileName string  = Extra_FileNameGenericAppend( p.pName, \"_out.aig\" );\n        Ioa_WriteAiger( p, pFileName, 0, 0 );\n        fmt.Printf(\"Final AIG was dumped into file \\\"%s\\\".\\n\", pFileName);\n    }\n    Aig_ManStop( p );\n    return vCexes;\n}\nfunc Gia_ManMultiProve(p *Gia_Man_t, pPars *Bmc_MulPar_t) int32 {\n    var pAig *Aig_Man_t;\n    if p.vSeqModelVec {\n        Vec_PtrFreeFree( p.vSeqModelVec );\np.vSeqModelVec = nil; }\n    pAig = Gia_ManToAig( p, 0 );\n    p.vSeqModelVec = Gia_ManMultiProveAig( pAig, pPars ); // deletes pAig\n    assert(Vec_PtrSize(p.vSeqModelVec) == Gia_ManPoNum(p), \"Vec_PtrSize(p.vSeqModelVec) == Gia_ManPoNum(p)\");\n    if Vec_PtrCountZero(p.vSeqModelVec) == Vec_PtrSize(p.vSeqModelVec) {\n        return -1;\n    } else {\n        return 0;\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,162 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCube.c",
+  "SHA256": "8b7f0cb419963901e9711c48539b830a63eeda001c962911378aa157c4e87adb",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 48,
+        "Column": 5,
+        "ByteOffset": 1291
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCover.nWords \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 97,
+        "Column": 5,
+        "ByteOffset": 3144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCube.iLast == 0 || (int32(pCube.iLast)) == pCover.nWords - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 98,
+        "Column": 5,
+        "ByteOffset": 3221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( (int32(pCube.nUnused)) == pCover.nUnused );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 49,
+        "Column": 1,
+        "ByteOffset": 1326
+      },
+      "Directive": "#ifdef USE_SYSTEM_MEMORY_MANAGEMENT"
+    },
+    {
+      "Location": {
+        "Line": 124,
+        "Column": 1,
+        "ByteOffset": 3357
+      },
+      "Directive": "#ifdef USE_SYSTEM_MEMORY_MANAGEMENT"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mvc_CubeAlloc",
+      "Start": 1188,
+      "End": 2359,
+      "BodyStart": 1239,
+      "Original": "Mvc_Cube_t * Mvc_CubeAlloc( Mvc_Cover_t * pCover )\n{\n    Mvc_Cube_t * pCube;\n\n    assert( pCover-\u003enWords \u003e= 0 );\n    // allocate the cube\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    if ( pCover-\u003enWords == 0 )\n        pCube = (Mvc_Cube_t *)ABC_ALLOC( char, sizeof(Mvc_Cube_t) );\n    else\n        pCube = (Mvc_Cube_t *)ABC_ALLOC( char,  sizeof(Mvc_Cube_t) + sizeof(Mvc_CubeWord_t) * (pCover-\u003enWords - 1) );\n#else\n    switch( pCover-\u003enWords )\n    {\n    case 0:\n    case 1:\n        pCube = (Mvc_Cube_t *)Extra_MmFixedEntryFetch( pCover-\u003epMem-\u003epMan1 );\n        break;\n    case 2:\n        pCube = (Mvc_Cube_t *)Extra_MmFixedEntryFetch( pCover-\u003epMem-\u003epMan2 );\n        break;\n    case 3:\n    case 4:\n        pCube = (Mvc_Cube_t *)Extra_MmFixedEntryFetch( pCover-\u003epMem-\u003epMan4 );\n        break;\n    default:\n        pCube = (Mvc_Cube_t *)ABC_ALLOC( char, sizeof(Mvc_Cube_t) + sizeof(Mvc_CubeWord_t) * (pCover-\u003enWords - 1) );\n        break;\n    }\n#endif\n    // set the parameters charactering this cube\n    if ( pCover-\u003enWords == 0 )\n        pCube-\u003eiLast   = pCover-\u003enWords;\n    else\n        pCube-\u003eiLast   = pCover-\u003enWords - 1;\n    pCube-\u003enUnused = pCover-\u003enUnused;\n    return pCube;\n}",
+      "Draft": "func Mvc_CubeAlloc(pCover *Mvc_Cover_t) *Mvc_Cube_t {\n    var pCube *Mvc_Cube_t;\n\n    assert(pCover.nWords \u003e= 0, \"pCover.nWords \u003e= 0\");\n    // allocate the cube\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    if ( pCover-\u003enWords == 0 )\n        pCube = (Mvc_Cube_t *)ABC_ALLOC( char, sizeof(Mvc_Cube_t) );\n    else\n        pCube = (Mvc_Cube_t *)ABC_ALLOC( char,  sizeof(Mvc_Cube_t) + sizeof(Mvc_CubeWord_t) * (pCover-\u003enWords - 1) );\n#else\n    switch( pCover-\u003enWords )\n    {\n    case 0:\n    case 1:\n        pCube = (Mvc_Cube_t *)Extra_MmFixedEntryFetch( pCover-\u003epMem-\u003epMan1 );\n        break;\n    case 2:\n        pCube = (Mvc_Cube_t *)Extra_MmFixedEntryFetch( pCover-\u003epMem-\u003epMan2 );\n        break;\n    case 3:\n    case 4:\n        pCube = (Mvc_Cube_t *)Extra_MmFixedEntryFetch( pCover-\u003epMem-\u003epMan4 );\n        break;\n    default:\n        pCube = (Mvc_Cube_t *)ABC_ALLOC( char, sizeof(Mvc_Cube_t) + sizeof(Mvc_CubeWord_t) * (pCover-\u003enWords - 1) );\n        break;\n    }\n#endif\n    // set the parameters charactering this cube\n    if pCover.nWords == 0 {\n        pCube.iLast   = pCover.nWords;\n    } else {\n        pCube.iLast   = pCover.nWords - 1; }\n    pCube.nUnused = pCover.nUnused;\n    return pCube;\n}"
+    },
+    {
+      "Name": "Mvc_CubeDup",
+      "Start": 2596,
+      "End": 2800,
+      "BodyStart": 2665,
+      "Original": "Mvc_Cube_t * Mvc_CubeDup( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube )\n{\n    Mvc_Cube_t * pCubeCopy;\n    pCubeCopy = Mvc_CubeAlloc( pCover );\n    Mvc_CubeBitCopy( pCubeCopy, pCube );\n    return pCubeCopy;\n}",
+      "Draft": "func Mvc_CubeDup(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) *Mvc_Cube_t {\n    var pCubeCopy *Mvc_Cube_t;\n    pCubeCopy = Mvc_CubeAlloc( pCover );\n    // inlining of macro Mvc_CubeBitCopy\n    // inlining of macro Mvc_Cube1Words\n    // inlining of macro Mvc_Cube1BitCopy\n    // inlining of macro Mvc_Cube2Words\n    // inlining of macro Mvc_Cube2BitCopy\n    if  (pCubeCopy).iLast == 0     { (((pCubeCopy).pData[0]) = ((pCube).pData[0])); }    else if  (pCubeCopy).iLast == 1{ (((pCubeCopy).pData[0]) = ((pCube).pData[0]));\n// inlining of macro Mvc_CubeNBitCopy\n(((pCubeCopy).pData[1])=  ((pCube).pData[1]));; }    else                             { {    var _i_ int32;    for _i_ = (pCubeCopy).iLast; _i_ \u003e= 0; _i_-- {        ((pCubeCopy).pData[_i_]) = ((pCube).pData[_i_]); }}; };\n    return pCubeCopy;\n}"
+    },
+    {
+      "Name": "Mvc_CubeFree",
+      "Start": 3037,
+      "End": 3850,
+      "BodyStart": 3099,
+      "Original": "void Mvc_CubeFree( Mvc_Cover_t * pCover, Mvc_Cube_t * pCube )\n{\n    if ( pCube == NULL )\n        return;\n\n    // verify the parameters charactering this cube\n    assert( pCube-\u003eiLast == 0 || ((int)pCube-\u003eiLast) == pCover-\u003enWords - 1 );\n    assert( ((int)pCube-\u003enUnused) == pCover-\u003enUnused );\n\n    // deallocate the cube\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    ABC_FREE( pCube );\n#else\n    switch( pCover-\u003enWords )\n    {\n    case 0:\n    case 1:\n        Extra_MmFixedEntryRecycle( pCover-\u003epMem-\u003epMan1, (char *)pCube );\n        break;\n    case 2:\n        Extra_MmFixedEntryRecycle( pCover-\u003epMem-\u003epMan2, (char *)pCube );\n        break;\n    case 3:\n    case 4:\n        Extra_MmFixedEntryRecycle( pCover-\u003epMem-\u003epMan4, (char *)pCube );\n        break;\n    default:\n        ABC_FREE( pCube );\n        break;\n    }\n#endif\n}",
+      "Draft": "func Mvc_CubeFree(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n    if pCube == nil {\n        return; }\n\n    // verify the parameters charactering this cube\n    assert(pCube.iLast == 0 || (int32(pCube.iLast)) == pCover.nWords - 1, \"pCube.iLast == 0 || (int32(pCube.iLast)) == pCover.nWords - 1\");\n    assert((int32(pCube.nUnused)) == pCover.nUnused, \"(int32(pCube.nUnused)) == pCover.nUnused\");\n\n    // deallocate the cube\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    ABC_FREE( pCube );\n#else\n    switch( pCover-\u003enWords )\n    {\n    case 0:\n    case 1:\n        Extra_MmFixedEntryRecycle( pCover-\u003epMem-\u003epMan1, (char *)pCube );\n        break;\n    case 2:\n        Extra_MmFixedEntryRecycle( pCover-\u003epMem-\u003epMan2, (char *)pCube );\n        break;\n    case 3:\n    case 4:\n        Extra_MmFixedEntryRecycle( pCover-\u003epMem-\u003epMan4, (char *)pCube );\n        break;\n    default:\n        ABC_FREE( pCube );\n        break;\n    }\n#endif\n}"
+    },
+    {
+      "Name": "Mvc_CubeBitRemoveDcs",
+      "Start": 4133,
+      "End": 4575,
+      "BodyStart": 4181,
+      "Original": "void Mvc_CubeBitRemoveDcs( Mvc_Cube_t * pCube )\n{\n    unsigned Mask;\n    int i;\n    for ( i = Mvc_CubeReadLast(pCube); i \u003e= 0; i-- )\n    {\n        // detect those variables that are different (not DCs)\n        Mask = (pCube-\u003epData[i] ^ (pCube-\u003epData[i] \u003e\u003e 1)) \u0026 BITS_DISJOINT; \n        // create the mask of all that are different\n        Mask |= (Mask \u003c\u003c 1);\n        // remove other bits from the set\n        pCube-\u003epData[i] \u0026= Mask;\n    }\n}",
+      "Draft": "func Mvc_CubeBitRemoveDcs(pCube *Mvc_Cube_t) {\n    var Mask uint32;\n    var i int32;\n    // inlining of macro Mvc_CubeReadLast\n    for  i = ((pCube).iLast); i \u003e= 0; i--  {\n        // detect those variables that are different (not DCs)\n        Mask = (pCube.pData[i] ^ (pCube.pData[i] \u003e\u003e 1)) \u0026 BITS_DISJOINT; \n        // create the mask of all that are different\n        Mask |= (Mask \u003c\u003c 1);\n        // remove other bits from the set\n        pCube.pData[i] \u0026= Mask;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCube.c::Mvc_CubeAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CubeAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1188,
+      "End": 2359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCube.c::Mvc_CubeDup",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CubeDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2596,
+      "End": 2800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCube.c::Mvc_CubeFree",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CubeFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3037,
+      "End": 3850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCube.c::Mvc_CubeBitRemoveDcs",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CubeBitRemoveDcs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4133,
+      "End": 4575
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCube.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4822
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCube.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1326,
+      "End": 2126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcCube.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 3357,
+      "End": 3848
+    }
+  ],
+  "Draft": "package mvc\n\n/**CFile****************************************************************\n\n  FileName    [mvcCube.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Manipulating unate cubes.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: mvcCube.c,v 1.4 2003/04/03 06:31:49 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"mvc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CubeAlloc(pCover *Mvc_Cover_t) *Mvc_Cube_t {\n    var pCube *Mvc_Cube_t;\n\n    assert(pCover.nWords \u003e= 0, \"pCover.nWords \u003e= 0\");\n    // allocate the cube\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    if ( pCover-\u003enWords == 0 )\n        pCube = (Mvc_Cube_t *)ABC_ALLOC( char, sizeof(Mvc_Cube_t) );\n    else\n        pCube = (Mvc_Cube_t *)ABC_ALLOC( char,  sizeof(Mvc_Cube_t) + sizeof(Mvc_CubeWord_t) * (pCover-\u003enWords - 1) );\n#else\n    switch( pCover-\u003enWords )\n    {\n    case 0:\n    case 1:\n        pCube = (Mvc_Cube_t *)Extra_MmFixedEntryFetch( pCover-\u003epMem-\u003epMan1 );\n        break;\n    case 2:\n        pCube = (Mvc_Cube_t *)Extra_MmFixedEntryFetch( pCover-\u003epMem-\u003epMan2 );\n        break;\n    case 3:\n    case 4:\n        pCube = (Mvc_Cube_t *)Extra_MmFixedEntryFetch( pCover-\u003epMem-\u003epMan4 );\n        break;\n    default:\n        pCube = (Mvc_Cube_t *)ABC_ALLOC( char, sizeof(Mvc_Cube_t) + sizeof(Mvc_CubeWord_t) * (pCover-\u003enWords - 1) );\n        break;\n    }\n#endif\n    // set the parameters charactering this cube\n    if pCover.nWords == 0 {\n        pCube.iLast   = pCover.nWords;\n    } else {\n        pCube.iLast   = pCover.nWords - 1; }\n    pCube.nUnused = pCover.nUnused;\n    return pCube;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CubeDup(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) *Mvc_Cube_t {\n    var pCubeCopy *Mvc_Cube_t;\n    pCubeCopy = Mvc_CubeAlloc( pCover );\n    // inlining of macro Mvc_CubeBitCopy\n    // inlining of macro Mvc_Cube1Words\n    // inlining of macro Mvc_Cube1BitCopy\n    // inlining of macro Mvc_Cube2Words\n    // inlining of macro Mvc_Cube2BitCopy\n    if  (pCubeCopy).iLast == 0     { (((pCubeCopy).pData[0]) = ((pCube).pData[0])); }    else if  (pCubeCopy).iLast == 1{ (((pCubeCopy).pData[0]) = ((pCube).pData[0]));\n// inlining of macro Mvc_CubeNBitCopy\n(((pCubeCopy).pData[1])=  ((pCube).pData[1]));; }    else                             { {    var _i_ int32;    for _i_ = (pCubeCopy).iLast; _i_ \u003e= 0; _i_-- {        ((pCubeCopy).pData[_i_]) = ((pCube).pData[_i_]); }}; };\n    return pCubeCopy;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CubeFree(pCover *Mvc_Cover_t, pCube *Mvc_Cube_t) {\n    if pCube == nil {\n        return; }\n\n    // verify the parameters charactering this cube\n    assert(pCube.iLast == 0 || (int32(pCube.iLast)) == pCover.nWords - 1, \"pCube.iLast == 0 || (int32(pCube.iLast)) == pCover.nWords - 1\");\n    assert((int32(pCube.nUnused)) == pCover.nUnused, \"(int32(pCube.nUnused)) == pCover.nUnused\");\n\n    // deallocate the cube\n#ifdef USE_SYSTEM_MEMORY_MANAGEMENT\n    ABC_FREE( pCube );\n#else\n    switch( pCover-\u003enWords )\n    {\n    case 0:\n    case 1:\n        Extra_MmFixedEntryRecycle( pCover-\u003epMem-\u003epMan1, (char *)pCube );\n        break;\n    case 2:\n        Extra_MmFixedEntryRecycle( pCover-\u003epMem-\u003epMan2, (char *)pCube );\n        break;\n    case 3:\n    case 4:\n        Extra_MmFixedEntryRecycle( pCover-\u003epMem-\u003epMan4, (char *)pCube );\n        break;\n    default:\n        ABC_FREE( pCube );\n        break;\n    }\n#endif\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Removes the don't-care variable from the cube.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CubeBitRemoveDcs(pCube *Mvc_Cube_t) {\n    var Mask uint32;\n    var i int32;\n    // inlining of macro Mvc_CubeReadLast\n    for  i = ((pCube).iLast); i \u003e= 0; i--  {\n        // detect those variables that are different (not DCs)\n        Mask = (pCube.pData[i] ^ (pCube.pData[i] \u003e\u003e 1)) \u0026 BITS_DISJOINT; \n        // create the mask of all that are different\n        Mask |= (Mask \u003c\u003c 1);\n        // remove other bits from the set\n        pCube.pData[i] \u0026= Mask;\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

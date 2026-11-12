@@ -1,0 +1,1125 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c",
+  "SHA256": "da404fd05bb632658f28624ae1a9058730abaa8acf58cadbbb819ce5d92c50ec",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 56,
+        "Column": 80,
+        "ByteOffset": 1652
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCex = (Abc_Cex_t *)/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 57,
+        "Column": 5,
+        "ByteOffset": 1737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCex, 0, sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 66,
+        "Column": 80,
+        "ByteOffset": 2174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCex = (Abc_Cex_t *)/*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 2259
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCex, 0xFF, sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 88,
+        "Column": 5,
+        "ByteOffset": 2900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nRegs \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 200,
+        "Column": 21,
+        "ByteOffset": 5932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if iFrBeg \u003c 0 { printf( \"Starting frame is less than 0.\\n\" ); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 201,
+        "Column": 21,
+        "ByteOffset": 6012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if iFrEnd \u003c 0 { printf( \"Stopping frame is less than 0.\\n\" ); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 202,
+        "Column": 31,
+        "ByteOffset": 6102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if iFrBeg \u003e pCex.iFrame { printf( \"Starting frame is more than the last frame of CEX (%d).\\n\", pCex.iFrame ); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 203,
+        "Column": 31,
+        "ByteOffset": 6230
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if iFrEnd \u003e pCex.iFrame { printf( \"Stopping frame is more than the last frame of CEX (%d).\\n\", pCex.iFrame ); return nil; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 204,
+        "Column": 26,
+        "ByteOffset": 6353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if iFrBeg \u003e iFrEnd { printf( \"Starting frame (%d) should be less than stopping frame (%d).\\n\", iFrBeg, iFrEnd ); return nil; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 205,
+        "Column": 5,
+        "ByteOffset": 6463
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrBeg \u003e= 0 \u0026\u0026 iFrBeg \u003c= pCex.iFrame );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 6515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrEnd \u003e= 0 \u0026\u0026 iFrEnd \u003c= pCex.iFrame );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 207,
+        "Column": 5,
+        "ByteOffset": 6567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrBeg \u003c= iFrEnd );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 209,
+        "Column": 5,
+        "ByteOffset": 6600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCex.nPis == pPart.nPis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 210,
+        "Column": 5,
+        "ByteOffset": 6639
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iFrEnd - iFrBeg + pPart.iPo \u003e= pPart.iFrame );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 239,
+        "Column": 5,
+        "ByteOffset": 7808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == pNew.nBits );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 258,
+        "Column": 9,
+        "ByteOffset": 8215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The counter example is NULL.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 262,
+        "Column": 9,
+        "ByteOffset": 8332
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The counter example is present but not available (pointer has value \\\"1\\\").\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 5,
+        "ByteOffset": 8538
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"CEX: Po =%4d  Frame =%4d  FF = %d  PI = %d  Bit =%8d  1s =%8d (%5.2f %%)\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 275,
+        "Column": 9,
+        "ByteOffset": 8873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The counter example is NULL.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 279,
+        "Column": 9,
+        "ByteOffset": 8990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The counter example is present but not available (pointer has value \\\"1\\\").\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 282,
+        "Column": 5,
+        "ByteOffset": 9107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nRealPis \u003c= p.nPis );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 292,
+        "Column": 5,
+        "ByteOffset": 9459
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"CEX: Po =%4d  Fr =%4d  FF = %d  PI = %d  Bit =%7d  1 =%8d (%5.2f %%)\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 296,
+        "Column": 9,
+        "ByteOffset": 9696
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" 1pi =%8d (%5.2f %%) 1ppi =%8d (%5.2f %%)\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 9923
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 317,
+        "Column": 9,
+        "ByteOffset": 10290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The counter example is NULL.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 321,
+        "Column": 9,
+        "ByteOffset": 10407
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The counter example is present but not available (pointer has value \\\"1\\\").\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 325,
+        "Column": 5,
+        "ByteOffset": 10552
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"State    : \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 327,
+        "Column": 9,
+        "ByteOffset": 10621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d\", Abc_InfoHasBit(p.pData, k) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 329,
+        "Column": 5,
+        "ByteOffset": 10675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 331,
+        "Column": 9,
+        "ByteOffset": 10737
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Frame %3d : \", f );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 13,
+        "ByteOffset": 10817
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d\", Abc_InfoHasBit(p.pData, k++) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 335,
+        "Column": 9,
+        "ByteOffset": 10881
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 337,
+        "Column": 5,
+        "ByteOffset": 10907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( k == p.nBits );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 357,
+        "Column": 62,
+        "ByteOffset": 11402
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((*p) ? (free((char *) (*p)), (*p) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 374,
+        "Column": 57,
+        "ByteOffset": 11854
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 393,
+        "Column": 5,
+        "ByteOffset": 12401
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nPis % nPisOld == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 394,
+        "Column": 5,
+        "ByteOffset": 12438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iPo \u003c nPosNew );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 420,
+        "Column": 5,
+        "ByteOffset": 13191
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.iFrame \u003e 0 ); // otherwise tempor did not properly check for failures in the prefix"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 421,
+        "Column": 5,
+        "ByteOffset": 13289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nPis % nPisOld == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 437,
+        "Column": 5,
+        "ByteOffset": 13924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == pCex.nBits );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 454,
+        "Column": 25,
+        "ByteOffset": 14368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var nFlops int32  = strlen(pInit);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 469,
+        "Column": 5,
+        "ByteOffset": 15031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iAddPi == nAddPis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 477,
+        "Column": 5,
+        "ByteOffset": 15321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iBit == pCex.nBits );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 495,
+        "Column": 5,
+        "ByteOffset": 15781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vMapOld2New) == p.nPis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 523,
+        "Column": 5,
+        "ByteOffset": 16684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vPermOld) == p.nPis );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 524,
+        "Column": 5,
+        "ByteOffset": 16731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vPermNew) == p.nPis );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_CexAlloc",
+      "Start": 1375,
+      "End": 1807,
+      "BodyStart": 1440,
+      "Original": "Abc_Cex_t * Abc_CexAlloc( int nRegs, int nRealPis, int nFrames )\n{\n    Abc_Cex_t * pCex;\n    int nWords = Abc_BitWordNum( nRegs + nRealPis * nFrames );\n    pCex = (Abc_Cex_t *)ABC_ALLOC( char, sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords );\n    memset( pCex, 0, sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords );\n    pCex-\u003enRegs  = nRegs;\n    pCex-\u003enPis   = nRealPis;\n    pCex-\u003enBits  = nRegs + nRealPis * nFrames;\n    return pCex;\n}",
+      "Draft": "func Abc_CexAlloc(nRegs int32, nRealPis int32, nFrames int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var nWords int32  = Abc_BitWordNum( nRegs + nRealPis * nFrames );\n    // inlining of macro ABC_ALLOC\n    pCex = (Abc_Cex_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords)));\n    memset( pCex, 0, sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords );\n    pCex.nRegs  = nRegs;\n    pCex.nPis   = nRealPis;\n    pCex.nBits  = nRegs + nRealPis * nFrames;\n    return pCex;\n}"
+    },
+    {
+      "Name": "Abc_CexAllocFull",
+      "Start": 1808,
+      "End": 2247,
+      "BodyStart": 1877,
+      "Original": "Abc_Cex_t * Abc_CexAllocFull( int nRegs, int nRealPis, int nFrames )\n{\n    Abc_Cex_t * pCex;\n    int nWords = Abc_BitWordNum( nRegs + nRealPis * nFrames );\n    pCex = (Abc_Cex_t *)ABC_ALLOC( char, sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords );\n    memset( pCex, 0xFF, sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords );\n    pCex-\u003enRegs  = nRegs;\n    pCex-\u003enPis   = nRealPis;\n    pCex-\u003enBits  = nRegs + nRealPis * nFrames;\n    return pCex;\n}",
+      "Draft": "func Abc_CexAllocFull(nRegs int32, nRealPis int32, nFrames int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var nWords int32  = Abc_BitWordNum( nRegs + nRealPis * nFrames );\n    // inlining of macro ABC_ALLOC\n    pCex = (Abc_Cex_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords)));\n    memset( pCex, 0xFF, sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords );\n    pCex.nRegs  = nRegs;\n    pCex.nPis   = nRealPis;\n    pCex.nBits  = nRegs + nRealPis * nFrames;\n    return pCex;\n}"
+    },
+    {
+      "Name": "Abc_CexMakeTriv",
+      "Start": 2550,
+      "End": 2935,
+      "BodyStart": 2634,
+      "Original": "Abc_Cex_t * Abc_CexMakeTriv( int nRegs, int nTruePis, int nTruePos, int iFrameOut )\n{\n    Abc_Cex_t * pCex;\n    int iPo, iFrame;\n    assert( nRegs \u003e 0 );\n    iPo    = iFrameOut % nTruePos;\n    iFrame = iFrameOut / nTruePos;\n    // allocate the counter example\n    pCex = Abc_CexAlloc( nRegs, nTruePis, iFrame + 1 );\n    pCex-\u003eiPo    = iPo;\n    pCex-\u003eiFrame = iFrame;\n    return pCex;\n}",
+      "Draft": "func Abc_CexMakeTriv(nRegs int32, nTruePis int32, nTruePos int32, iFrameOut int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var iPo, iFrame int32;\n    assert(nRegs \u003e 0, \"nRegs \u003e 0\");\n    iPo    = iFrameOut % nTruePos;\n    iFrame = iFrameOut / nTruePos;\n    // allocate the counter example\n    pCex = Abc_CexAlloc( nRegs, nTruePis, iFrame + 1 );\n    pCex.iPo    = iPo;\n    pCex.iFrame = iFrame;\n    return pCex;\n}"
+    },
+    {
+      "Name": "Abc_CexCreate",
+      "Start": 3199,
+      "End": 3809,
+      "BodyStart": 3298,
+      "Original": "Abc_Cex_t * Abc_CexCreate( int nRegs, int nPis, int * pArray, int iFrame, int iPo, int fSkipRegs )\n{\n    Abc_Cex_t * pCex;\n    int i;\n    pCex = Abc_CexAlloc( nRegs, nPis, iFrame+1 );\n    pCex-\u003eiPo    = iPo;\n    pCex-\u003eiFrame = iFrame;\n    if ( pArray == NULL )\n        return pCex;\n    if ( fSkipRegs )\n    {\n        for ( i = nRegs; i \u003c pCex-\u003enBits; i++ )\n            if ( pArray[i-nRegs] )\n                Abc_InfoSetBit( pCex-\u003epData, i );\n    }\n    else\n    {\n        for ( i = 0; i \u003c pCex-\u003enBits; i++ )\n            if ( pArray[i] )\n                Abc_InfoSetBit( pCex-\u003epData, i );\n    }\n    return pCex;\n}",
+      "Draft": "func Abc_CexCreate(nRegs int32, nPis int32, pArray *int32, iFrame int32, iPo int32, fSkipRegs int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var i int32;\n    pCex = Abc_CexAlloc( nRegs, nPis, iFrame+1 );\n    pCex.iPo    = iPo;\n    pCex.iFrame = iFrame;\n    if pArray == nil {\n        return pCex; }\n    if fSkipRegs != 0 {\n        for  i = nRegs; i \u003c pCex.nBits; i++  {\n            if pArray[i-nRegs] {\n                Abc_InfoSetBit( pCex.pData, i ); }\n        }\n    \n    } else {\n        for  i = 0; i \u003c pCex.nBits; i++  {\n            if pArray[i] {\n                Abc_InfoSetBit( pCex.pData, i ); }\n        }\n    }\n    return pCex;\n}"
+    },
+    {
+      "Name": "Abc_CexDup",
+      "Start": 4112,
+      "End": 4611,
+      "BodyStart": 4166,
+      "Original": "Abc_Cex_t * Abc_CexDup( Abc_Cex_t * p, int nRegsNew )\n{\n    Abc_Cex_t * pCex;\n    int i;\n    if ( p == (Abc_Cex_t *)(ABC_PTRINT_T)1 )\n        return p;\n    if ( nRegsNew == -1 )\n        nRegsNew = p-\u003enRegs;\n    pCex = Abc_CexAlloc( nRegsNew, p-\u003enPis, p-\u003eiFrame+1 );\n    pCex-\u003eiPo    = p-\u003eiPo;\n    pCex-\u003eiFrame = p-\u003eiFrame;\n    for ( i = p-\u003enRegs; i \u003c p-\u003enBits; i++ )\n        if ( Abc_InfoHasBit(p-\u003epData, i) )\n            Abc_InfoSetBit( pCex-\u003epData, pCex-\u003enRegs + i - p-\u003enRegs );\n    return pCex;\n}",
+      "Draft": "func Abc_CexDup(p *Abc_Cex_t, nRegsNew int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var i int32;\n    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {\n        return p; }\n    if nRegsNew == -1 {\n        nRegsNew = p.nRegs; }\n    pCex = Abc_CexAlloc( nRegsNew, p.nPis, p.iFrame+1 );\n    pCex.iPo    = p.iPo;\n    pCex.iFrame = p.iFrame;\n    for  i = p.nRegs; i \u003c p.nBits; i++  {\n        if Abc_InfoHasBit(p.pData, i) {\n            Abc_InfoSetBit( pCex.pData, pCex.nRegs + i - p.nRegs ); }\n    }\n    return pCex;\n}"
+    },
+    {
+      "Name": "Abc_CexDeriveFromCombModel",
+      "Start": 4875,
+      "End": 5210,
+      "BodyStart": 4960,
+      "Original": "Abc_Cex_t * Abc_CexDeriveFromCombModel( int * pModel, int nPis, int nRegs, int iPo )\n{\n    Abc_Cex_t * pCex;\n    int i;\n    pCex = Abc_CexAlloc( nRegs, nPis, 1 );\n    pCex-\u003eiPo = iPo;\n    pCex-\u003eiFrame = 0;\n    for ( i = 0; i \u003c nPis; i++ )\n        if ( pModel[i] )\n            pCex-\u003epData[i\u003e\u003e5] |= (1\u003c\u003c(i \u0026 31));     \n    return pCex;\n}",
+      "Draft": "func Abc_CexDeriveFromCombModel(pModel *int32, nPis int32, nRegs int32, iPo int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var i int32;\n    pCex = Abc_CexAlloc( nRegs, nPis, 1 );\n    pCex.iPo = iPo;\n    pCex.iFrame = 0;\n    for  i = 0; i \u003c nPis; i++  {\n        if pModel[i] {\n            pCex.pData[i\u003e\u003e5] |= (1\u003c\u003c(i \u0026 31)); }\n    }     \n    return pCex;\n}"
+    },
+    {
+      "Name": "Abc_CexMerge",
+      "Start": 5474,
+      "End": 7594,
+      "BodyStart": 5562,
+      "Original": "Abc_Cex_t * Abc_CexMerge( Abc_Cex_t * pCex, Abc_Cex_t * pPart, int iFrBeg, int iFrEnd )\n{\n    Abc_Cex_t * pNew;\n    int nFramesGain;\n    int i, f, iBit;\n\n    if ( iFrBeg \u003c 0 )\n        { printf( \"Starting frame is less than 0.\\n\" ); return NULL; }\n    if ( iFrEnd \u003c 0 )\n        { printf( \"Stopping frame is less than 0.\\n\" ); return NULL; }\n    if ( iFrBeg \u003e pCex-\u003eiFrame )\n        { printf( \"Starting frame is more than the last frame of CEX (%d).\\n\", pCex-\u003eiFrame ); return NULL; }\n    if ( iFrEnd \u003e pCex-\u003eiFrame )\n        { printf( \"Stopping frame is more than the last frame of CEX (%d).\\n\", pCex-\u003eiFrame ); return NULL; }\n    if ( iFrBeg \u003e iFrEnd )\n        { printf( \"Starting frame (%d) should be less than stopping frame (%d).\\n\", iFrBeg, iFrEnd ); return NULL; }\n    assert( iFrBeg \u003e= 0 \u0026\u0026 iFrBeg \u003c= pCex-\u003eiFrame );\n    assert( iFrEnd \u003e= 0 \u0026\u0026 iFrEnd \u003c= pCex-\u003eiFrame );\n    assert( iFrBeg \u003c= iFrEnd );\n\n    assert( pCex-\u003enPis == pPart-\u003enPis );\n    assert( iFrEnd - iFrBeg + pPart-\u003eiPo \u003e= pPart-\u003eiFrame );\n\n    nFramesGain = iFrEnd - iFrBeg + pPart-\u003eiPo - pPart-\u003eiFrame;\n    pNew = Abc_CexAlloc( pCex-\u003enRegs, pCex-\u003enPis, pCex-\u003eiFrame + 1 - nFramesGain );\n    pNew-\u003eiPo    = pCex-\u003eiPo;\n    pNew-\u003eiFrame = pCex-\u003eiFrame - nFramesGain;\n\n    for ( iBit = 0; iBit \u003c pCex-\u003enRegs; iBit++ )\n        if ( Abc_InfoHasBit(pCex-\u003epData, iBit) )\n            Abc_InfoSetBit( pNew-\u003epData, iBit );\n    for ( f = 0; f \u003c iFrBeg; f++ )\n        for ( i = 0; i \u003c pCex-\u003enPis; i++, iBit++ )\n            if ( Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i) )\n                Abc_InfoSetBit( pNew-\u003epData, iBit );\n    for ( f = 0; f \u003c pPart-\u003eiFrame; f++ )\n        for ( i = 0; i \u003c pCex-\u003enPis; i++, iBit++ )\n            if ( Abc_InfoHasBit(pPart-\u003epData, pPart-\u003enRegs + pCex-\u003enPis * f + i) )\n                Abc_InfoSetBit( pNew-\u003epData, iBit );\n    for ( f = iFrEnd; f \u003c= pCex-\u003eiFrame; f++ )\n        for ( i = 0; i \u003c pCex-\u003enPis; i++, iBit++ )\n            if ( Abc_InfoHasBit(pCex-\u003epData, pCex-\u003enRegs + pCex-\u003enPis * f + i) )\n                Abc_InfoSetBit( pNew-\u003epData, iBit );\n    assert( iBit == pNew-\u003enBits );\n\n    return pNew;\n}",
+      "Draft": "func Abc_CexMerge(pCex *Abc_Cex_t, pPart *Abc_Cex_t, iFrBeg int32, iFrEnd int32) *Abc_Cex_t {\n    var pNew *Abc_Cex_t;\n    var nFramesGain int32;\n    var i, f, iBit int32;\n\n    if iFrBeg \u003c 0 { fmt.Printf(\"Starting frame is less than 0.\\n\"); return nil; }\n    if iFrEnd \u003c 0 { fmt.Printf(\"Stopping frame is less than 0.\\n\"); return nil; }\n    if iFrBeg \u003e pCex.iFrame { fmt.Printf(\"Starting frame is more than the last frame of CEX (%d).\\n\", pCex.iFrame); return nil; }\n    if iFrEnd \u003e pCex.iFrame { fmt.Printf(\"Stopping frame is more than the last frame of CEX (%d).\\n\", pCex.iFrame); return nil; }\n    if iFrBeg \u003e iFrEnd { fmt.Printf(\"Starting frame (%d) should be less than stopping frame (%d).\\n\", iFrBeg, iFrEnd); return nil; }\n    assert(iFrBeg \u003e= 0 \u0026\u0026 iFrBeg \u003c= pCex.iFrame, \"iFrBeg \u003e= 0 \u0026\u0026 iFrBeg \u003c= pCex.iFrame\");\n    assert(iFrEnd \u003e= 0 \u0026\u0026 iFrEnd \u003c= pCex.iFrame, \"iFrEnd \u003e= 0 \u0026\u0026 iFrEnd \u003c= pCex.iFrame\");\n    assert(iFrBeg \u003c= iFrEnd, \"iFrBeg \u003c= iFrEnd\");\n\n    assert(pCex.nPis == pPart.nPis, \"pCex.nPis == pPart.nPis\");\n    assert(iFrEnd - iFrBeg + pPart.iPo \u003e= pPart.iFrame, \"iFrEnd - iFrBeg + pPart.iPo \u003e= pPart.iFrame\");\n\n    nFramesGain = iFrEnd - iFrBeg + pPart.iPo - pPart.iFrame;\n    pNew = Abc_CexAlloc( pCex.nRegs, pCex.nPis, pCex.iFrame + 1 - nFramesGain );\n    pNew.iPo    = pCex.iPo;\n    pNew.iFrame = pCex.iFrame - nFramesGain;\n\n    for  iBit = 0; iBit \u003c pCex.nRegs; iBit++  {\n        if Abc_InfoHasBit(pCex.pData, iBit) {\n            Abc_InfoSetBit( pNew.pData, iBit ); }\n    }\n    for  f = 0; f \u003c iFrBeg; f++  {\n        for  i = 0; i \u003c pCex.nPis; i, iBit = i+1, iBit+1  {\n            if Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i) {\n                Abc_InfoSetBit( pNew.pData, iBit ); }\n        }\n    }\n    for  f = 0; f \u003c pPart.iFrame; f++  {\n        for  i = 0; i \u003c pCex.nPis; i, iBit = i+1, iBit+1  {\n            if Abc_InfoHasBit(pPart.pData, pPart.nRegs + pCex.nPis * f + i) {\n                Abc_InfoSetBit( pNew.pData, iBit ); }\n        }\n    }\n    for  f = iFrEnd; f \u003c= pCex.iFrame; f++  {\n        for  i = 0; i \u003c pCex.nPis; i, iBit = i+1, iBit+1  {\n            if Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i) {\n                Abc_InfoSetBit( pNew.pData, iBit ); }\n        }\n    }\n    assert(iBit == pNew.nBits, \"iBit == pNew.nBits\");\n\n    return pNew;\n}"
+    },
+    {
+      "Name": "Abc_CexPrintStats",
+      "Start": 7861,
+      "End": 8494,
+      "BodyStart": 7901,
+      "Original": "void Abc_CexPrintStats( Abc_Cex_t * p )\n{\n    int k, Counter = 0;\n    if ( p == NULL )\n    {\n        printf( \"The counter example is NULL.\\n\" );\n        return;\n    }\n    if ( p == (Abc_Cex_t *)(ABC_PTRINT_T)1 )\n    {\n        printf( \"The counter example is present but not available (pointer has value \\\"1\\\").\\n\" );\n        return;\n    }\n    for ( k = 0; k \u003c p-\u003enBits; k++ )\n        Counter += Abc_InfoHasBit(p-\u003epData, k);\n    printf( \"CEX: Po =%4d  Frame =%4d  FF = %d  PI = %d  Bit =%8d  1s =%8d (%5.2f %%)\\n\", \n        p-\u003eiPo, p-\u003eiFrame, p-\u003enRegs, p-\u003enPis, p-\u003enBits, \n        Counter, 100.0 * Counter / (p-\u003enBits - p-\u003enRegs) );\n}",
+      "Draft": "func Abc_CexPrintStats(p *Abc_Cex_t) {\n    var k, Counter int32;\n    if p == nil {\n        fmt.Printf(\"The counter example is NULL.\\n\");\n        return;\n    }\n    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {\n        fmt.Printf(\"The counter example is present but not available (pointer has value \\\"1\\\").\\n\");\n        return;\n    }\n    for  k = 0; k \u003c p.nBits; k++  {\n        Counter += Abc_InfoHasBit(p.pData, k);\n    }\n    fmt.Printf(\"CEX: Po =%4d  Frame =%4d  FF = %d  PI = %d  Bit =%8d  1s =%8d (%5.2f %%)\\n\", p.iPo, p.iFrame, p.nRegs, p.nPis, p.nBits, Counter, 100.0 * Counter / (p.nBits - p.nRegs));\n}"
+    },
+    {
+      "Name": "Abc_CexPrintStatsInputs",
+      "Start": 8495,
+      "End": 9751,
+      "BodyStart": 8555,
+      "Original": "void Abc_CexPrintStatsInputs( Abc_Cex_t * p, int nRealPis )\n{\n    int k, Counter = 0, CounterPi = 0, CounterPpi = 0;\n    if ( p == NULL )\n    {\n        printf( \"The counter example is NULL.\\n\" );\n        return;\n    }\n    if ( p == (Abc_Cex_t *)(ABC_PTRINT_T)1 )\n    {\n        printf( \"The counter example is present but not available (pointer has value \\\"1\\\").\\n\" );\n        return;\n    }\n    assert( nRealPis \u003c= p-\u003enPis );\n    for ( k = 0; k \u003c p-\u003enBits; k++ )\n    {\n        Counter += Abc_InfoHasBit(p-\u003epData, k);\n        if ( nRealPis == p-\u003enPis )\n            continue;\n        if ( (k - p-\u003enRegs) % p-\u003enPis \u003c nRealPis )\n            CounterPi += Abc_InfoHasBit(p-\u003epData, k);\n        else\n            CounterPpi += Abc_InfoHasBit(p-\u003epData, k);\n    }\n    printf( \"CEX: Po =%4d  Fr =%4d  FF = %d  PI = %d  Bit =%7d  1 =%8d (%5.2f %%)\", \n        p-\u003eiPo, p-\u003eiFrame, p-\u003enRegs, p-\u003enPis, p-\u003enBits, \n        Counter,  100.0 * Counter    / ((p-\u003eiFrame + 1) * p-\u003enPis ) );\n    if ( nRealPis \u003c p-\u003enPis )\n    {\n        printf( \" 1pi =%8d (%5.2f %%) 1ppi =%8d (%5.2f %%)\", \n            CounterPi,  100.0 * CounterPi  / ((p-\u003eiFrame + 1) * nRealPis ), \n            CounterPpi, 100.0 * CounterPpi / ((p-\u003eiFrame + 1) * (p-\u003enPis - nRealPis)) );\n    }\n    printf( \"\\n\" );\n}",
+      "Draft": "func Abc_CexPrintStatsInputs(p *Abc_Cex_t, nRealPis int32) {\n    var k, Counter, CounterPi, CounterPpi int32;\n    if p == nil {\n        fmt.Printf(\"The counter example is NULL.\\n\");\n        return;\n    }\n    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {\n        fmt.Printf(\"The counter example is present but not available (pointer has value \\\"1\\\").\\n\");\n        return;\n    }\n    assert(nRealPis \u003c= p.nPis, \"nRealPis \u003c= p.nPis\");\n    for  k = 0; k \u003c p.nBits; k++  {\n        Counter += Abc_InfoHasBit(p.pData, k);\n        if nRealPis == p.nPis {\n            continue; }\n        if (k - p.nRegs) % p.nPis \u003c nRealPis {\n            CounterPi += Abc_InfoHasBit(p.pData, k);\n        } else {\n            CounterPpi += Abc_InfoHasBit(p.pData, k); }\n    }\n    fmt.Printf(\"CEX: Po =%4d  Fr =%4d  FF = %d  PI = %d  Bit =%7d  1 =%8d (%5.2f %%)\", p.iPo, p.iFrame, p.nRegs, p.nPis, p.nBits, Counter, 100.0 * Counter    / ((p.iFrame + 1) * p.nPis ));\n    if nRealPis \u003c p.nPis {\n        fmt.Printf(\" 1pi =%8d (%5.2f %%) 1ppi =%8d (%5.2f %%)\", CounterPi, 100.0 * CounterPi  / ((p.iFrame + 1) * nRealPis ), CounterPpi, 100.0 * CounterPpi / ((p.iFrame + 1) * (p.nPis - nRealPis)));\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Abc_CexPrint",
+      "Start": 10018,
+      "End": 10753,
+      "BodyStart": 10053,
+      "Original": "void Abc_CexPrint( Abc_Cex_t * p )\n{\n    int i, f, k;\n    if ( p == NULL )\n    {\n        printf( \"The counter example is NULL.\\n\" );\n        return;\n    }\n    if ( p == (Abc_Cex_t *)(ABC_PTRINT_T)1 )\n    {\n        printf( \"The counter example is present but not available (pointer has value \\\"1\\\").\\n\" );\n        return;\n    }\n    Abc_CexPrintStats( p );\n    printf( \"State    : \" );\n    for ( k = 0; k \u003c p-\u003enRegs; k++ )\n        printf( \"%d\", Abc_InfoHasBit(p-\u003epData, k) );\n    printf( \"\\n\" );\n    for ( f = 0; f \u003c= p-\u003eiFrame; f++ )\n    {\n        printf( \"Frame %3d : \", f );\n        for ( i = 0; i \u003c p-\u003enPis; i++ )\n            printf( \"%d\", Abc_InfoHasBit(p-\u003epData, k++) );\n        printf( \"\\n\" );\n    }\n    assert( k == p-\u003enBits );\n}",
+      "Draft": "func Abc_CexPrint(p *Abc_Cex_t) {\n    var i, f, k int32;\n    if p == nil {\n        fmt.Printf(\"The counter example is NULL.\\n\");\n        return;\n    }\n    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {\n        fmt.Printf(\"The counter example is present but not available (pointer has value \\\"1\\\").\\n\");\n        return;\n    }\n    Abc_CexPrintStats( p );\n    fmt.Printf(\"State    : \");\n    for  k = 0; k \u003c p.nRegs; k++  {\n        fmt.Printf(\"%d\", Abc_InfoHasBit(p.pData, k));\n    }\n    fmt.Printf(\"\\n\");\n    for  f = 0; f \u003c= p.iFrame; f++  {\n        fmt.Printf(\"Frame %3d : \", f);\n        for  i = 0; i \u003c p.nPis; i++  {\n            fmt.Printf(\"%d\", Abc_InfoHasBit(p.pData, k++));\n        }\n        fmt.Printf(\"\\n\");\n    }\n    assert(k == p.nBits, \"k == p.nBits\");\n}"
+    },
+    {
+      "Name": "Abc_CexFreeP",
+      "Start": 11015,
+      "End": 11190,
+      "BodyStart": 11051,
+      "Original": "void Abc_CexFreeP( Abc_Cex_t ** p )\n{\n    if ( *p == NULL )\n        return;\n    if ( *p == (Abc_Cex_t *)(ABC_PTRINT_T)1 )\n        *p = NULL;\n    else\n        ABC_FREE( *p );\n}",
+      "Draft": "func Abc_CexFreeP(p **Abc_Cex_t) {\n    if *p == nil {\n        return; }\n    if *p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {\n        *p = nil;\n    } else {\n        // inlining of macro ABC_FREE\n        ((*p) ? (free((char *) (*p)), (*p) = 0) : 0); }\n}"
+    },
+    {
+      "Name": "Abc_CexFree",
+      "Start": 11452,
+      "End": 11569,
+      "BodyStart": 11486,
+      "Original": "void Abc_CexFree( Abc_Cex_t * p )\n{\n    if ( p == (Abc_Cex_t *)(ABC_PTRINT_T)1 )\n        return;\n    ABC_FREE( p );\n}",
+      "Draft": "func Abc_CexFree(p *Abc_Cex_t) {\n    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {\n        return; }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Abc_CexTransformPhase",
+      "Start": 11864,
+      "End": 12309,
+      "BodyStart": 11955,
+      "Original": "Abc_Cex_t * Abc_CexTransformPhase( Abc_Cex_t * p, int nPisOld, int nPosOld, int nRegsOld )\n{\n    Abc_Cex_t * pCex;\n    int nFrames = p-\u003enPis / nPisOld;\n    int nPosNew = nPosOld * nFrames;\n    assert( p-\u003enPis % nPisOld == 0 );\n    assert( p-\u003eiPo \u003c nPosNew );\n    pCex = Abc_CexDup( p, nRegsOld );\n    pCex-\u003enPis   = nPisOld;\n    pCex-\u003eiPo    = -1;\n    pCex-\u003eiFrame = (p-\u003eiFrame + 1) * nFrames - 1;\n    pCex-\u003enBits  = p-\u003enBits;\n    return pCex;\n}",
+      "Draft": "func Abc_CexTransformPhase(p *Abc_Cex_t, nPisOld int32, nPosOld int32, nRegsOld int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var nFrames int32  = p.nPis / nPisOld;\n    var nPosNew int32  = nPosOld * nFrames;\n    assert(p.nPis % nPisOld == 0, \"p.nPis % nPisOld == 0\");\n    assert(p.iPo \u003c nPosNew, \"p.iPo \u003c nPosNew\");\n    pCex = Abc_CexDup( p, nRegsOld );\n    pCex.nPis   = nPisOld;\n    pCex.iPo    = -1;\n    pCex.iFrame = (p.iFrame + 1) * nFrames - 1;\n    pCex.nBits  = p.nBits;\n    return pCex;\n}"
+    },
+    {
+      "Name": "Abc_CexTransformTempor",
+      "Start": 12614,
+      "End": 13543,
+      "BodyStart": 12706,
+      "Original": "Abc_Cex_t * Abc_CexTransformTempor( Abc_Cex_t * p, int nPisOld, int nPosOld, int nRegsOld )\n{\n    Abc_Cex_t * pCex;\n    int i, k, iBit = nRegsOld, nFrames = p-\u003enPis / nPisOld - 1;\n    assert( p-\u003eiFrame \u003e 0 ); // otherwise tempor did not properly check for failures in the prefix\n    assert( p-\u003enPis % nPisOld == 0 );\n    pCex = Abc_CexAlloc( nRegsOld, nPisOld, nFrames + p-\u003eiFrame + 1 );\n    pCex-\u003eiPo    = p-\u003eiPo;\n    pCex-\u003eiFrame = nFrames + p-\u003eiFrame;\n    for ( i = 0; i \u003c nFrames; i++ )\n        for ( k = 0; k \u003c nPisOld; k++, iBit++ )\n            if ( Abc_InfoHasBit(p-\u003epData, p-\u003enRegs + (i+1)*nPisOld + k) )\n                Abc_InfoSetBit( pCex-\u003epData, iBit );\n    for ( i = 0; i \u003c= p-\u003eiFrame; i++ )\n        for ( k = 0; k \u003c nPisOld; k++, iBit++ )\n            if ( Abc_InfoHasBit(p-\u003epData, p-\u003enRegs + i*p-\u003enPis + k) )\n                Abc_InfoSetBit( pCex-\u003epData, iBit );\n    assert( iBit == pCex-\u003enBits );\n    return pCex;\n}",
+      "Draft": "func Abc_CexTransformTempor(p *Abc_Cex_t, nPisOld int32, nPosOld int32, nRegsOld int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var i int32;\n    var k int32;\n    var iBit int32 = nRegsOld;\n    var nFrames int32 = p.nPis / nPisOld - 1;\n    assert(p.iFrame \u003e 0, \"p.iFrame \u003e 0\"); // otherwise tempor did not properly check for failures in the prefix\n    assert(p.nPis % nPisOld == 0, \"p.nPis % nPisOld == 0\");\n    pCex = Abc_CexAlloc( nRegsOld, nPisOld, nFrames + p.iFrame + 1 );\n    pCex.iPo    = p.iPo;\n    pCex.iFrame = nFrames + p.iFrame;\n    for  i = 0; i \u003c nFrames; i++  {\n        for  k = 0; k \u003c nPisOld; k, iBit = k+1, iBit+1  {\n            if Abc_InfoHasBit(p.pData, p.nRegs + (i+1)*nPisOld + k) {\n                Abc_InfoSetBit( pCex.pData, iBit ); }\n        }\n    }\n    for  i = 0; i \u003c= p.iFrame; i++  {\n        for  k = 0; k \u003c nPisOld; k, iBit = k+1, iBit+1  {\n            if Abc_InfoHasBit(p.pData, p.nRegs + i*p.nPis + k) {\n                Abc_InfoSetBit( pCex.pData, iBit ); }\n        }\n    }\n    assert(iBit == pCex.nBits, \"iBit == pCex.nBits\");\n    return pCex;\n}"
+    },
+    {
+      "Name": "Abc_CexTransformUndc",
+      "Start": 13823,
+      "End": 14918,
+      "BodyStart": 13887,
+      "Original": "Abc_Cex_t * Abc_CexTransformUndc( Abc_Cex_t * p, char * pInit )\n{\n    Abc_Cex_t * pCex;\n    int nFlops = strlen(pInit);\n    int i, f, iBit, iAddPi = 0, nAddPis = 0;\n    // count how many flops got a new PI\n    for ( i = 0; i \u003c nFlops; i++ )\n        nAddPis += (int)(pInit[i] == 'x' || pInit[i] == 'X');\n    // create new CEX\n    pCex = Abc_CexAlloc( nFlops, p-\u003enPis - nAddPis, p-\u003eiFrame + 1 );\n    pCex-\u003eiPo    = p-\u003eiPo;\n    pCex-\u003eiFrame = p-\u003eiFrame;\n    for ( iBit = 0; iBit \u003c nFlops; iBit++ )\n    {\n        if ( pInit[iBit] == '1' || ((pInit[iBit] == 'x' || pInit[iBit] == 'X') \u0026\u0026 Abc_InfoHasBit(p-\u003epData, p-\u003enRegs + p-\u003enPis - nAddPis + iAddPi)) )\n            Abc_InfoSetBit( pCex-\u003epData, iBit );\n        iAddPi += (int)(pInit[iBit] == 'x' || pInit[iBit] == 'X');\n    }\n    assert( iAddPi == nAddPis );\n    // add timeframes\n    for ( f = 0; f \u003c= p-\u003eiFrame; f++ )\n        for ( i = 0; i \u003c pCex-\u003enPis; i++, iBit++ )\n            if ( Abc_InfoHasBit(p-\u003epData, p-\u003enRegs + p-\u003enPis * f + i) )\n                Abc_InfoSetBit( pCex-\u003epData, iBit );\n    assert( iBit == pCex-\u003enBits );\n    return pCex;\n}",
+      "Draft": "func Abc_CexTransformUndc(p *Abc_Cex_t, pInit string) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var nFlops int32  = len(pInit);\n    var i, f, iBit, iAddPi, nAddPis int32;\n    // count how many flops got a new PI\n    for  i = 0; i \u003c nFlops; i++  {\n        nAddPis += int32((pInit[i] == 'x' || pInit[i] == 'X'));\n    }\n    // create new CEX\n    pCex = Abc_CexAlloc( nFlops, p.nPis - nAddPis, p.iFrame + 1 );\n    pCex.iPo    = p.iPo;\n    pCex.iFrame = p.iFrame;\n    for  iBit = 0; iBit \u003c nFlops; iBit++  {\n        if pInit[iBit] == '1' || ((pInit[iBit] == 'x' || pInit[iBit] == 'X') \u0026\u0026 Abc_InfoHasBit(p.pData, p.nRegs + p.nPis - nAddPis + iAddPi)) {\n            Abc_InfoSetBit( pCex.pData, iBit ); }\n        iAddPi += int32((pInit[iBit] == 'x' || pInit[iBit] == 'X'));\n    }\n    assert(iAddPi == nAddPis, \"iAddPi == nAddPis\");\n    // add timeframes\n    for  f = 0; f \u003c= p.iFrame; f++  {\n        for  i = 0; i \u003c pCex.nPis; i, iBit = i+1, iBit+1  {\n            if Abc_InfoHasBit(p.pData, p.nRegs + p.nPis * f + i) {\n                Abc_InfoSetBit( pCex.pData, iBit ); }\n        }\n    }\n    assert(iBit == pCex.nBits, \"iBit == pCex.nBits\");\n    return pCex;\n}"
+    },
+    {
+      "Name": "Abc_CexPermute",
+      "Start": 15207,
+      "End": 15782,
+      "BodyStart": 15276,
+      "Original": "Abc_Cex_t * Abc_CexPermute( Abc_Cex_t * p, Vec_Int_t * vMapOld2New )\n{\n    Abc_Cex_t * pCex;\n    int i, iNew;\n    assert( Vec_IntSize(vMapOld2New) == p-\u003enPis );\n    pCex = Abc_CexAlloc( p-\u003enRegs, p-\u003enPis, p-\u003eiFrame+1 );\n    pCex-\u003eiPo    = p-\u003eiPo;\n    pCex-\u003eiFrame = p-\u003eiFrame;\n    for ( i = p-\u003enRegs; i \u003c p-\u003enBits; i++ )\n        if ( Abc_InfoHasBit(p-\u003epData, i) )\n        {\n            iNew = p-\u003enRegs + p-\u003enPis * ((i - p-\u003enRegs) / p-\u003enPis) + Vec_IntEntry( vMapOld2New, (i - p-\u003enRegs) % p-\u003enPis );\n            Abc_InfoSetBit( pCex-\u003epData, iNew );\n        }\n    return pCex;\n}",
+      "Draft": "func Abc_CexPermute(p *Abc_Cex_t, vMapOld2New *Vec_Int_t) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var i, iNew int32;\n    assert(Vec_IntSize(vMapOld2New) == p.nPis, \"Vec_IntSize(vMapOld2New) == p.nPis\");\n    pCex = Abc_CexAlloc( p.nRegs, p.nPis, p.iFrame+1 );\n    pCex.iPo    = p.iPo;\n    pCex.iFrame = p.iFrame;\n    for  i = p.nRegs; i \u003c p.nBits; i++  {\n        if Abc_InfoHasBit(p.pData, i) {\n            iNew = p.nRegs + p.nPis * ((i - p.nRegs) / p.nPis) + Vec_IntEntry( vMapOld2New, (i - p.nRegs) % p.nPis );\n            Abc_InfoSetBit( pCex.pData, iNew );\n        }\n    }\n    return pCex;\n}"
+    },
+    {
+      "Name": "Abc_CexPermuteTwo",
+      "Start": 16072,
+      "End": 16565,
+      "BodyStart": 16163,
+      "Original": "Abc_Cex_t * Abc_CexPermuteTwo( Abc_Cex_t * p, Vec_Int_t * vPermOld, Vec_Int_t * vPermNew )\n{\n    Abc_Cex_t * pCex;\n    Vec_Int_t * vPerm;\n    int i, eOld, eNew;\n    assert( Vec_IntSize(vPermOld) == p-\u003enPis );\n    assert( Vec_IntSize(vPermNew) == p-\u003enPis );\n    vPerm = Vec_IntStartFull( p-\u003enPis );\n    Vec_IntForEachEntryTwo( vPermOld, vPermNew, eOld, eNew, i )\n        Vec_IntWriteEntry( vPerm, eOld, eNew );\n    pCex = Abc_CexPermute( p, vPerm );\n    Vec_IntFree( vPerm );\n    return pCex;\n}",
+      "Draft": "func Abc_CexPermuteTwo(p *Abc_Cex_t, vPermOld *Vec_Int_t, vPermNew *Vec_Int_t) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var vPerm *Vec_Int_t;\n    var i, eOld, eNew int32;\n    assert(Vec_IntSize(vPermOld) == p.nPis, \"Vec_IntSize(vPermOld) == p.nPis\");\n    assert(Vec_IntSize(vPermNew) == p.nPis, \"Vec_IntSize(vPermNew) == p.nPis\");\n    vPerm = Vec_IntStartFull( p.nPis );\n    // inlining of macro Vec_IntForEachEntryTwo\n    for  i = 0; (i \u003c Vec_IntSize(vPermOld)) \u0026\u0026 (((eOld) = Vec_IntEntry(vPermOld, i)), 1) \u0026\u0026 (((eNew) = Vec_IntEntry(vPermNew, i)), 1); i++  {\n        Vec_IntWriteEntry( vPerm, eOld, eNew );\n    }\n    pCex = Abc_CexPermute( p, vPerm );\n    Vec_IntFree( vPerm );\n    return pCex;\n}"
+    },
+    {
+      "Name": "Abc_CexOnes32",
+      "Start": 16835,
+      "End": 17045,
+      "BodyStart": 16881,
+      "Original": "static inline int Abc_CexOnes32( unsigned i )\n{\n    i = i - ((i \u003e\u003e 1) \u0026 0x55555555);\n    i = (i \u0026 0x33333333) + ((i \u003e\u003e 2) \u0026 0x33333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F);\n    return (i*(0x01010101))\u003e\u003e24;\n}",
+      "Draft": "func Abc_CexOnes32(i uint32) int32 {\n    i = i - ((i \u003e\u003e 1) \u0026 0x55555555);\n    i = (i \u0026 0x33333333) + ((i \u003e\u003e 2) \u0026 0x33333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F);\n    return (i*(0x01010101))\u003e\u003e24;\n}"
+    },
+    {
+      "Name": "Abc_CexCountOnes",
+      "Start": 17046,
+      "End": 17254,
+      "BodyStart": 17084,
+      "Original": "int Abc_CexCountOnes( Abc_Cex_t * p )\n{\n    int nWords = Abc_BitWordNum( p-\u003enBits );\n    int i, Count = 0;\n    for ( i = 0; i \u003c nWords; i++ )\n        Count += Abc_CexOnes32( p-\u003epData[i] );\n    return Count;\n}",
+      "Draft": "func Abc_CexCountOnes(p *Abc_Cex_t) int32 {\n    var nWords int32  = Abc_BitWordNum( p.nBits );\n    var i, Count int32;\n    for  i = 0; i \u003c nWords; i++  {\n        Count += Abc_CexOnes32( p.pData[i] );\n    }\n    return Count;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::mechanical::sizeof::1613",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1551,
+      "End": 1551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::mechanical::sizeof::1637",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1551,
+      "End": 1551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::mechanical::sizeof::1657",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1551,
+      "End": 1551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::mechanical::sizeof::1708",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1638,
+      "End": 1644
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::mechanical::sizeof::1728",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1658,
+      "End": 1664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::mechanical::sizeof::2120",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1988,
+      "End": 1988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::mechanical::sizeof::2144",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1988,
+      "End": 1988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::mechanical::sizeof::2164",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1988,
+      "End": 1988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::mechanical::sizeof::2218",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2078,
+      "End": 2084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::mechanical::sizeof::2238",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2098,
+      "End": 2104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::pointer-cast::1538",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1538,
+      "End": 1551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::pointer-cast::1597",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1551,
+      "End": 1551
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::pointer-cast::2045",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1975,
+      "End": 1988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::pointer-cast::2104",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1988,
+      "End": 1988
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::pointer-cast::4355",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4215,
+      "End": 4228
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::pointer-cast::8182",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8042,
+      "End": 8055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::pointer-cast::8867",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8727,
+      "End": 8740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::pointer-cast::10327",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10187,
+      "End": 10200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::pointer-cast::11246",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11106,
+      "End": 11119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::pointer-cast::11371",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11173,
+      "End": 11173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::pointer-cast::11716",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11502,
+      "End": 11515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::pointer-cast::11824",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11553,
+      "End": 11553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1375,
+      "End": 1807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexAllocFull",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexAllocFull",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1808,
+      "End": 2247
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexMakeTriv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexMakeTriv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2550,
+      "End": 2935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexCreate",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3199,
+      "End": 3809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexDup",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexDup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4112,
+      "End": 4611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexDeriveFromCombModel",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexDeriveFromCombModel",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4875,
+      "End": 5210
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexMerge",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5474,
+      "End": 7594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7861,
+      "End": 8494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexPrintStatsInputs",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexPrintStatsInputs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8495,
+      "End": 9751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexPrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10018,
+      "End": 10753
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::ternary::Abc_CexFreeP",
+      "Category": "ternary-review",
+      "Symbol": "Abc_CexFreeP",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11015,
+      "End": 11190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexFreeP",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexFreeP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11015,
+      "End": 11190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::ternary::Abc_CexFree",
+      "Category": "ternary-review",
+      "Symbol": "Abc_CexFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 11452,
+      "End": 11569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexFree",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11452,
+      "End": 11569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexTransformPhase",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexTransformPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11864,
+      "End": 12309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexTransformTempor",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexTransformTempor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12614,
+      "End": 13543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexTransformUndc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexTransformUndc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13823,
+      "End": 14918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexPermute",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexPermute",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15207,
+      "End": 15782
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexPermuteTwo",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexPermuteTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16072,
+      "End": 16565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexOnes32",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexOnes32",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16835,
+      "End": 17045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::Abc_CexCountOnes",
+      "Category": "semantic-review",
+      "Symbol": "Abc_CexCountOnes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17046,
+      "End": 17254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 17501
+    }
+  ],
+  "Draft": "package util\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [utilCex.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Handling counter-examples.]\n\n  Synopsis    [Handling counter-examples.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Feburary 13, 2011.]\n\n  Revision    [$Id: utilCex.c,v 1.00 2011/02/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/vec/vec.h\"\n//#include \"utilCex.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates a counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexAlloc(nRegs int32, nRealPis int32, nFrames int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var nWords int32  = Abc_BitWordNum( nRegs + nRealPis * nFrames );\n    // inlining of macro ABC_ALLOC\n    pCex = (Abc_Cex_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords)));\n    memset( pCex, 0, sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords );\n    pCex.nRegs  = nRegs;\n    pCex.nPis   = nRealPis;\n    pCex.nBits  = nRegs + nRealPis * nFrames;\n    return pCex;\n}\nfunc Abc_CexAllocFull(nRegs int32, nRealPis int32, nFrames int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var nWords int32  = Abc_BitWordNum( nRegs + nRealPis * nFrames );\n    // inlining of macro ABC_ALLOC\n    pCex = (Abc_Cex_t *)((char *) malloc(sizeof(char) * (size_t)(sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords)));\n    memset( pCex, 0xFF, sizeof(Abc_Cex_t) + sizeof(unsigned) * nWords );\n    pCex.nRegs  = nRegs;\n    pCex.nPis   = nRealPis;\n    pCex.nBits  = nRegs + nRealPis * nFrames;\n    return pCex;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Make the trivial counter-example for the trivially asserted output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexMakeTriv(nRegs int32, nTruePis int32, nTruePos int32, iFrameOut int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var iPo, iFrame int32;\n    assert(nRegs \u003e 0, \"nRegs \u003e 0\");\n    iPo    = iFrameOut % nTruePos;\n    iFrame = iFrameOut / nTruePos;\n    // allocate the counter example\n    pCex = Abc_CexAlloc( nRegs, nTruePis, iFrame + 1 );\n    pCex.iPo    = iPo;\n    pCex.iFrame = iFrame;\n    return pCex;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexCreate(nRegs int32, nPis int32, pArray *int32, iFrame int32, iPo int32, fSkipRegs int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var i int32;\n    pCex = Abc_CexAlloc( nRegs, nPis, iFrame+1 );\n    pCex.iPo    = iPo;\n    pCex.iFrame = iFrame;\n    if pArray == nil {\n        return pCex; }\n    if fSkipRegs != 0 {\n        for  i = nRegs; i \u003c pCex.nBits; i++  {\n            if pArray[i-nRegs] {\n                Abc_InfoSetBit( pCex.pData, i ); }\n        }\n    \n    } else {\n        for  i = 0; i \u003c pCex.nBits; i++  {\n            if pArray[i] {\n                Abc_InfoSetBit( pCex.pData, i ); }\n        }\n    }\n    return pCex;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Make the trivial counter-example for the trivially asserted output.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexDup(p *Abc_Cex_t, nRegsNew int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var i int32;\n    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {\n        return p; }\n    if nRegsNew == -1 {\n        nRegsNew = p.nRegs; }\n    pCex = Abc_CexAlloc( nRegsNew, p.nPis, p.iFrame+1 );\n    pCex.iPo    = p.iPo;\n    pCex.iFrame = p.iFrame;\n    for  i = p.nRegs; i \u003c p.nBits; i++  {\n        if Abc_InfoHasBit(p.pData, i) {\n            Abc_InfoSetBit( pCex.pData, pCex.nRegs + i - p.nRegs ); }\n    }\n    return pCex;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives CEX from comb model.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexDeriveFromCombModel(pModel *int32, nPis int32, nRegs int32, iPo int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var i int32;\n    pCex = Abc_CexAlloc( nRegs, nPis, 1 );\n    pCex.iPo = iPo;\n    pCex.iFrame = 0;\n    for  i = 0; i \u003c nPis; i++  {\n        if pModel[i] {\n            pCex.pData[i\u003e\u003e5] |= (1\u003c\u003c(i \u0026 31)); }\n    }     \n    return pCex;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives CEX from comb model.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexMerge(pCex *Abc_Cex_t, pPart *Abc_Cex_t, iFrBeg int32, iFrEnd int32) *Abc_Cex_t {\n    var pNew *Abc_Cex_t;\n    var nFramesGain int32;\n    var i, f, iBit int32;\n\n    if iFrBeg \u003c 0 { fmt.Printf(\"Starting frame is less than 0.\\n\"); return nil; }\n    if iFrEnd \u003c 0 { fmt.Printf(\"Stopping frame is less than 0.\\n\"); return nil; }\n    if iFrBeg \u003e pCex.iFrame { fmt.Printf(\"Starting frame is more than the last frame of CEX (%d).\\n\", pCex.iFrame); return nil; }\n    if iFrEnd \u003e pCex.iFrame { fmt.Printf(\"Stopping frame is more than the last frame of CEX (%d).\\n\", pCex.iFrame); return nil; }\n    if iFrBeg \u003e iFrEnd { fmt.Printf(\"Starting frame (%d) should be less than stopping frame (%d).\\n\", iFrBeg, iFrEnd); return nil; }\n    assert(iFrBeg \u003e= 0 \u0026\u0026 iFrBeg \u003c= pCex.iFrame, \"iFrBeg \u003e= 0 \u0026\u0026 iFrBeg \u003c= pCex.iFrame\");\n    assert(iFrEnd \u003e= 0 \u0026\u0026 iFrEnd \u003c= pCex.iFrame, \"iFrEnd \u003e= 0 \u0026\u0026 iFrEnd \u003c= pCex.iFrame\");\n    assert(iFrBeg \u003c= iFrEnd, \"iFrBeg \u003c= iFrEnd\");\n\n    assert(pCex.nPis == pPart.nPis, \"pCex.nPis == pPart.nPis\");\n    assert(iFrEnd - iFrBeg + pPart.iPo \u003e= pPart.iFrame, \"iFrEnd - iFrBeg + pPart.iPo \u003e= pPart.iFrame\");\n\n    nFramesGain = iFrEnd - iFrBeg + pPart.iPo - pPart.iFrame;\n    pNew = Abc_CexAlloc( pCex.nRegs, pCex.nPis, pCex.iFrame + 1 - nFramesGain );\n    pNew.iPo    = pCex.iPo;\n    pNew.iFrame = pCex.iFrame - nFramesGain;\n\n    for  iBit = 0; iBit \u003c pCex.nRegs; iBit++  {\n        if Abc_InfoHasBit(pCex.pData, iBit) {\n            Abc_InfoSetBit( pNew.pData, iBit ); }\n    }\n    for  f = 0; f \u003c iFrBeg; f++  {\n        for  i = 0; i \u003c pCex.nPis; i, iBit = i+1, iBit+1  {\n            if Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i) {\n                Abc_InfoSetBit( pNew.pData, iBit ); }\n        }\n    }\n    for  f = 0; f \u003c pPart.iFrame; f++  {\n        for  i = 0; i \u003c pCex.nPis; i, iBit = i+1, iBit+1  {\n            if Abc_InfoHasBit(pPart.pData, pPart.nRegs + pCex.nPis * f + i) {\n                Abc_InfoSetBit( pNew.pData, iBit ); }\n        }\n    }\n    for  f = iFrEnd; f \u003c= pCex.iFrame; f++  {\n        for  i = 0; i \u003c pCex.nPis; i, iBit = i+1, iBit+1  {\n            if Abc_InfoHasBit(pCex.pData, pCex.nRegs + pCex.nPis * f + i) {\n                Abc_InfoSetBit( pNew.pData, iBit ); }\n        }\n    }\n    assert(iBit == pNew.nBits, \"iBit == pNew.nBits\");\n\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints out the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexPrintStats(p *Abc_Cex_t) {\n    var k, Counter int32;\n    if p == nil {\n        fmt.Printf(\"The counter example is NULL.\\n\");\n        return;\n    }\n    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {\n        fmt.Printf(\"The counter example is present but not available (pointer has value \\\"1\\\").\\n\");\n        return;\n    }\n    for  k = 0; k \u003c p.nBits; k++  {\n        Counter += Abc_InfoHasBit(p.pData, k);\n    }\n    fmt.Printf(\"CEX: Po =%4d  Frame =%4d  FF = %d  PI = %d  Bit =%8d  1s =%8d (%5.2f %%)\\n\", p.iPo, p.iFrame, p.nRegs, p.nPis, p.nBits, Counter, 100.0 * Counter / (p.nBits - p.nRegs));\n}\nfunc Abc_CexPrintStatsInputs(p *Abc_Cex_t, nRealPis int32) {\n    var k, Counter, CounterPi, CounterPpi int32;\n    if p == nil {\n        fmt.Printf(\"The counter example is NULL.\\n\");\n        return;\n    }\n    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {\n        fmt.Printf(\"The counter example is present but not available (pointer has value \\\"1\\\").\\n\");\n        return;\n    }\n    assert(nRealPis \u003c= p.nPis, \"nRealPis \u003c= p.nPis\");\n    for  k = 0; k \u003c p.nBits; k++  {\n        Counter += Abc_InfoHasBit(p.pData, k);\n        if nRealPis == p.nPis {\n            continue; }\n        if (k - p.nRegs) % p.nPis \u003c nRealPis {\n            CounterPi += Abc_InfoHasBit(p.pData, k);\n        } else {\n            CounterPpi += Abc_InfoHasBit(p.pData, k); }\n    }\n    fmt.Printf(\"CEX: Po =%4d  Fr =%4d  FF = %d  PI = %d  Bit =%7d  1 =%8d (%5.2f %%)\", p.iPo, p.iFrame, p.nRegs, p.nPis, p.nBits, Counter, 100.0 * Counter    / ((p.iFrame + 1) * p.nPis ));\n    if nRealPis \u003c p.nPis {\n        fmt.Printf(\" 1pi =%8d (%5.2f %%) 1ppi =%8d (%5.2f %%)\", CounterPi, 100.0 * CounterPi  / ((p.iFrame + 1) * nRealPis ), CounterPpi, 100.0 * CounterPpi / ((p.iFrame + 1) * (p.nPis - nRealPis)));\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints out the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexPrint(p *Abc_Cex_t) {\n    var i, f, k int32;\n    if p == nil {\n        fmt.Printf(\"The counter example is NULL.\\n\");\n        return;\n    }\n    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {\n        fmt.Printf(\"The counter example is present but not available (pointer has value \\\"1\\\").\\n\");\n        return;\n    }\n    Abc_CexPrintStats( p );\n    fmt.Printf(\"State    : \");\n    for  k = 0; k \u003c p.nRegs; k++  {\n        fmt.Printf(\"%d\", Abc_InfoHasBit(p.pData, k));\n    }\n    fmt.Printf(\"\\n\");\n    for  f = 0; f \u003c= p.iFrame; f++  {\n        fmt.Printf(\"Frame %3d : \", f);\n        for  i = 0; i \u003c p.nPis; i++  {\n            fmt.Printf(\"%d\", Abc_InfoHasBit(p.pData, k++));\n        }\n        fmt.Printf(\"\\n\");\n    }\n    assert(k == p.nBits, \"k == p.nBits\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexFreeP(p **Abc_Cex_t) {\n    if *p == nil {\n        return; }\n    if *p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {\n        *p = nil;\n    } else {\n        // inlining of macro ABC_FREE\n        ((*p) ? (free((char *) (*p)), (*p) = 0) : 0); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Frees the counter-example.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexFree(p *Abc_Cex_t) {\n    if p == (Abc_Cex_t *)(ABC_PTRINT_T)1 {\n        return; }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Transform CEX after phase abstraction with nFrames frames.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexTransformPhase(p *Abc_Cex_t, nPisOld int32, nPosOld int32, nRegsOld int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var nFrames int32  = p.nPis / nPisOld;\n    var nPosNew int32  = nPosOld * nFrames;\n    assert(p.nPis % nPisOld == 0, \"p.nPis % nPisOld == 0\");\n    assert(p.iPo \u003c nPosNew, \"p.iPo \u003c nPosNew\");\n    pCex = Abc_CexDup( p, nRegsOld );\n    pCex.nPis   = nPisOld;\n    pCex.iPo    = -1;\n    pCex.iFrame = (p.iFrame + 1) * nFrames - 1;\n    pCex.nBits  = p.nBits;\n    return pCex;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transform CEX after phase temporal decomposition with nFrames frames.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexTransformTempor(p *Abc_Cex_t, nPisOld int32, nPosOld int32, nRegsOld int32) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var i int32;\n    var k int32;\n    var iBit int32 = nRegsOld;\n    var nFrames int32 = p.nPis / nPisOld - 1;\n    assert(p.iFrame \u003e 0, \"p.iFrame \u003e 0\"); // otherwise tempor did not properly check for failures in the prefix\n    assert(p.nPis % nPisOld == 0, \"p.nPis % nPisOld == 0\");\n    pCex = Abc_CexAlloc( nRegsOld, nPisOld, nFrames + p.iFrame + 1 );\n    pCex.iPo    = p.iPo;\n    pCex.iFrame = nFrames + p.iFrame;\n    for  i = 0; i \u003c nFrames; i++  {\n        for  k = 0; k \u003c nPisOld; k, iBit = k+1, iBit+1  {\n            if Abc_InfoHasBit(p.pData, p.nRegs + (i+1)*nPisOld + k) {\n                Abc_InfoSetBit( pCex.pData, iBit ); }\n        }\n    }\n    for  i = 0; i \u003c= p.iFrame; i++  {\n        for  k = 0; k \u003c nPisOld; k, iBit = k+1, iBit+1  {\n            if Abc_InfoHasBit(p.pData, p.nRegs + i*p.nPis + k) {\n                Abc_InfoSetBit( pCex.pData, iBit ); }\n        }\n    }\n    assert(iBit == pCex.nBits, \"iBit == pCex.nBits\");\n    return pCex;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transform CEX after \"logic; undc; st; zero\".]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexTransformUndc(p *Abc_Cex_t, pInit string) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var nFlops int32  = len(pInit);\n    var i, f, iBit, iAddPi, nAddPis int32;\n    // count how many flops got a new PI\n    for  i = 0; i \u003c nFlops; i++  {\n        nAddPis += int32((pInit[i] == 'x' || pInit[i] == 'X'));\n    }\n    // create new CEX\n    pCex = Abc_CexAlloc( nFlops, p.nPis - nAddPis, p.iFrame + 1 );\n    pCex.iPo    = p.iPo;\n    pCex.iFrame = p.iFrame;\n    for  iBit = 0; iBit \u003c nFlops; iBit++  {\n        if pInit[iBit] == '1' || ((pInit[iBit] == 'x' || pInit[iBit] == 'X') \u0026\u0026 Abc_InfoHasBit(p.pData, p.nRegs + p.nPis - nAddPis + iAddPi)) {\n            Abc_InfoSetBit( pCex.pData, iBit ); }\n        iAddPi += int32((pInit[iBit] == 'x' || pInit[iBit] == 'X'));\n    }\n    assert(iAddPi == nAddPis, \"iAddPi == nAddPis\");\n    // add timeframes\n    for  f = 0; f \u003c= p.iFrame; f++  {\n        for  i = 0; i \u003c pCex.nPis; i, iBit = i+1, iBit+1  {\n            if Abc_InfoHasBit(p.pData, p.nRegs + p.nPis * f + i) {\n                Abc_InfoSetBit( pCex.pData, iBit ); }\n        }\n    }\n    assert(iBit == pCex.nBits, \"iBit == pCex.nBits\");\n    return pCex;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives permuted CEX using permutation of its inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexPermute(p *Abc_Cex_t, vMapOld2New *Vec_Int_t) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var i, iNew int32;\n    assert(Vec_IntSize(vMapOld2New) == p.nPis, \"Vec_IntSize(vMapOld2New) == p.nPis\");\n    pCex = Abc_CexAlloc( p.nRegs, p.nPis, p.iFrame+1 );\n    pCex.iPo    = p.iPo;\n    pCex.iFrame = p.iFrame;\n    for  i = p.nRegs; i \u003c p.nBits; i++  {\n        if Abc_InfoHasBit(p.pData, i) {\n            iNew = p.nRegs + p.nPis * ((i - p.nRegs) / p.nPis) + Vec_IntEntry( vMapOld2New, (i - p.nRegs) % p.nPis );\n            Abc_InfoSetBit( pCex.pData, iNew );\n        }\n    }\n    return pCex;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives permuted CEX using two canonical permutations.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexPermuteTwo(p *Abc_Cex_t, vPermOld *Vec_Int_t, vPermNew *Vec_Int_t) *Abc_Cex_t {\n    var pCex *Abc_Cex_t;\n    var vPerm *Vec_Int_t;\n    var i, eOld, eNew int32;\n    assert(Vec_IntSize(vPermOld) == p.nPis, \"Vec_IntSize(vPermOld) == p.nPis\");\n    assert(Vec_IntSize(vPermNew) == p.nPis, \"Vec_IntSize(vPermNew) == p.nPis\");\n    vPerm = Vec_IntStartFull( p.nPis );\n    // inlining of macro Vec_IntForEachEntryTwo\n    for  i = 0; (i \u003c Vec_IntSize(vPermOld)) \u0026\u0026 (((eOld) = Vec_IntEntry(vPermOld, i)), 1) \u0026\u0026 (((eNew) = Vec_IntEntry(vPermNew, i)), 1); i++  {\n        Vec_IntWriteEntry( vPerm, eOld, eNew );\n    }\n    pCex = Abc_CexPermute( p, vPerm );\n    Vec_IntFree( vPerm );\n    return pCex;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Count the number of 1s in the CEX.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_CexOnes32(i uint32) int32 {\n    i = i - ((i \u003e\u003e 1) \u0026 0x55555555);\n    i = (i \u0026 0x33333333) + ((i \u003e\u003e 2) \u0026 0x33333333);\n    i = ((i + (i \u003e\u003e 4)) \u0026 0x0F0F0F0F);\n    return (i*(0x01010101))\u003e\u003e24;\n}\nfunc Abc_CexCountOnes(p *Abc_Cex_t) int32 {\n    var nWords int32  = Abc_BitWordNum( p.nBits );\n    var i, Count int32;\n    for  i = 0; i \u003c nWords; i++  {\n        Count += Abc_CexOnes32( p.pData[i] );\n    }\n    return Count;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

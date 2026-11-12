@@ -1,0 +1,38 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_gordian.h",
+  "SHA256": "2d2f97375738b2ed340389ae1f59f9c11e5ad3d30e149341a515c6730e443c4a",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 10,
+        "Column": 1,
+        "ByteOffset": 256
+      },
+      "Directive": "#if !defined(PLACE_GORDIAN_H_)"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_gordian.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1967
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/phys/place/place_gordian.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 256,
+      "End": 1966
+    }
+  ],
+  "Draft": "package place\n\n/*===================================================================*/\n//  \n//     place_gordian.h\n//\n//        Aaron P. Hurst, 2003-2007\n//              ahurst@eecs.berkeley.edu\n//\n/*===================================================================*/\n\n#if !defined(PLACE_GORDIAN_H_)\n#define ABC__phys__place__place_gordian_h\n\n\n#include \"place_base.h\"\n#include \"place_qpsolver.h\"\n\nABC_NAMESPACE_HEADER_START\n\n\n// Parameters for analytic placement\n#define CLIQUE_PENALTY 1.0\n#define IGNORE_NETSIZE 20\n\n// Parameters for partitioning\n#define LARGEST_FINAL_SIZE 20\n#define PARTITION_AREA_ONLY true\n#define REALLOCATE_PARTITIONS false\n#define FINAL_REALLOCATE_PARTITIONS false\n#define IGNORE_COG false\n#define MAX_PARTITION_NONSYMMETRY 0.30\n\n// Parameters for re-partitioning\n#define REPARTITION_LEVEL_DEPTH 4\n#define REPARTITION_TARGET_FRACTION 0.15\n#define REPARTITION_FM false\n#define REPARTITION_HMETIS true\n\n// Parameters for F-M re-partitioning\n#define FM_MAX_BIN 10\n#define FM_MAX_PASSES 10\n\nextern int g_place_numPartitions;\n\nextern qps_problem_t *g_place_qpProb;\n\ntypedef struct Partition {\n\n  int               m_numMembers;\n  ConcreteCell    **m_members;\n  Rect              m_bounds;\n  bool              m_done, \n                    m_leaf, \n                    m_vertical;\n  float             m_area;\n  int               m_level;\n  struct Partition *m_sub1, *m_sub2;\n} Partition;\n\nextern Partition *g_place_rootPartition;\n\nvoid initPartitioning();\n\nvoid incrementalPartition();\n\nbool refinePartitions();\nvoid reallocPartitions();\nbool refinePartition(Partition *p);\nvoid resizePartition(Partition *p);\nvoid reallocPartition(Partition *p);\n\nvoid repartitionHMetis(Partition *parent);\nvoid repartitionFM(Partition *parent);\n\nvoid partitionScanlineMincut(Partition *parent);\nvoid partitionEqualArea(Partition *parent);\n\nvoid sanitizePlacement();\n\nvoid constructQuadraticProblem();\nvoid solveQuadraticProblem(bool useCOG);\n\n\n\nABC_NAMESPACE_HEADER_END\n\n#endif\n"
+}

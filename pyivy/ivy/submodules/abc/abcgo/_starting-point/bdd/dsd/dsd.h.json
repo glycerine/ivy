@@ -1,0 +1,82 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsd.h",
+  "SHA256": "44574f93eb969c91d1a403401b56fcd926439dee14ed908ab47a977f8737e939",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsd.h::mechanical::enum::1561",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1561,
+      "End": 1565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsd.h::mechanical::enum::2054",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 2054,
+      "End": 2058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsd.h::macro::Dsd_IsComplement",
+      "Category": "macro-review",
+      "Symbol": "Dsd_IsComplement",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2381,
+      "End": 2445
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsd.h::macro::Dsd_Regular",
+      "Category": "macro-review",
+      "Symbol": "Dsd_Regular",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2446,
+      "End": 2518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsd.h::macro::Dsd_Not",
+      "Category": "macro-review",
+      "Symbol": "Dsd_Not",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2519,
+      "End": 2590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsd.h::macro::Dsd_NotCond",
+      "Category": "macro-review",
+      "Symbol": "Dsd_NotCond",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2591,
+      "End": 2662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsd.h::macro::Dsd_NodeForEachChild",
+      "Category": "macro-review",
+      "Symbol": "Dsd_NodeForEachChild",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2920,
+      "End": 3179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/dsd/dsd.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6451
+    }
+  ],
+  "Draft": "package dsd\n\n/**CFile****************************************************************\n\n  FileName    [dsd.h]\n\n  PackageName [DSD: Disjoint-support decomposition package.]\n\n  Synopsis    [External declarations of the package.\n  This fast BDD-based recursive algorithm for simple \n  (single-output) DSD is based on the following papers:\n  (1) V. Bertacco and M. Damiani, \"Disjunctive decomposition of \n  logic functions,\" Proc. ICCAD '97, pp. 78-82.\n  (2) Y. Matsunaga, \"An exact and efficient algorithm for disjunctive \n  decomposition\", Proc. SASIMI '98, pp. 44-50.\n  The scope of detected decompositions is the same as in the paper:\n  T. Sasao and M. Matsuura, \"DECOMPOS: An integrated system for \n  functional decomposition,\" Proc. IWLS '98, pp. 471-477.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 8.0. Started - September 22, 2003.]\n\n  Revision    [$Id: dsd.h,v 1.0 2002/22/09 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n// types of DSD nodes\ntype Dsd_Type_t_ int32\nconst  ( \n    DSD_NODE_NONE Dsd_Type_t_   = 0\n\n    DSD_NODE_CONST1 Dsd_Type_t_ = 1\n\n    DSD_NODE_BUF Dsd_Type_t_    = 2\n\n    DSD_NODE_OR Dsd_Type_t_     = 3\n\n    DSD_NODE_EXOR Dsd_Type_t_   = 4\n\n    DSD_NODE_PRIME Dsd_Type_t_  = 5\n\n\n)\n\n\n////////////////////////////////////////////////////////////////////////\n///                      TYPEDEF DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\ntype Dsd_Manager_t =   Dsd_Manager_t_;\ntype Dsd_Node_t =      Dsd_Node_t_;\ntype Dsd_Type_t =   Dsd_Type_t_      ;\n\n////////////////////////////////////////////////////////////////////////\n///                       MACRO DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n// complementation and testing for pointers for decomposition entries\n// Original macro:\n// #define Dsd_IsComplement(p)  (((int)((ABC_PTRUINT_T) (p) \u0026 01)))\n\n// Original macro:\n// #define Dsd_Regular(p)       ((Dsd_Node_t *)((ABC_PTRUINT_T)(p) \u0026 ~01)) \n\n// Original macro:\n// #define Dsd_Not(p)           ((Dsd_Node_t *)((ABC_PTRUINT_T)(p) ^ 01)) \n\n// Original macro:\n// #define Dsd_NotCond(p,c)     ((Dsd_Node_t *)((ABC_PTRUINT_T)(p) ^ (c)))\n\n\n////////////////////////////////////////////////////////////////////////\n///                         ITERATORS                                ///\n////////////////////////////////////////////////////////////////////////\n\n// iterator through the transitions\n// Original macro:\n// #define Dsd_NodeForEachChild( Node, Index, Child )        \\\n//     for ( Index = 0;                                      \\\n//           Index \u003c Dsd_NodeReadDecsNum(Node) \u0026\u0026            \\\n//              ((Child = Dsd_NodeReadDec(Node,Index))!=0);  \\\n//           Index++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== dsdApi.c =======================================================*/\n// extern Dsd_Type_t      Dsd_NodeReadType( Dsd_Node_t * p );\n \n// extern DdNode *        Dsd_NodeReadFunc( Dsd_Node_t * p );\n\n// extern DdNode *        Dsd_NodeReadSupp( Dsd_Node_t * p );\n\n// extern Dsd_Node_t **   Dsd_NodeReadDecs( Dsd_Node_t * p );\n\n// extern Dsd_Node_t *    Dsd_NodeReadDec ( Dsd_Node_t * p, int i );\n\n// extern int             Dsd_NodeReadDecsNum( Dsd_Node_t * p );\n\n// extern int             Dsd_NodeReadMark( Dsd_Node_t * p );\n\n// extern void            Dsd_NodeSetMark( Dsd_Node_t * p, int Mark );\n \n// extern DdManager *     Dsd_ManagerReadDd( Dsd_Manager_t * pMan );\n\n// extern Dsd_Node_t *    Dsd_ManagerReadRoot( Dsd_Manager_t * pMan, int i );\n\n// extern Dsd_Node_t *    Dsd_ManagerReadInput( Dsd_Manager_t * pMan, int i );\n\n// extern Dsd_Node_t *    Dsd_ManagerReadConst1( Dsd_Manager_t * pMan );\n\n/*=== dsdMan.c =======================================================*/\n// extern Dsd_Manager_t * Dsd_ManagerStart( DdManager * dd, int nSuppMax, int fVerbose );\n\n// extern void            Dsd_ManagerStop( Dsd_Manager_t * dMan );\n\n/*=== dsdProc.c =======================================================*/\n// extern void            Dsd_Decompose( Dsd_Manager_t * dMan, DdNode ** pbFuncs, int nFuncs );\n\n// extern Dsd_Node_t *    Dsd_DecomposeOne( Dsd_Manager_t * pDsdMan, DdNode * bFunc );\n\n/*=== dsdTree.c =======================================================*/\n// extern void            Dsd_TreeNodeGetInfo( Dsd_Manager_t * dMan, int * DepthMax, int * GateSizeMax );\n\n// extern void            Dsd_TreeNodeGetInfoOne( Dsd_Node_t * pNode, int * DepthMax, int * GateSizeMax );\n\n// extern int             Dsd_TreeGetAigCost( Dsd_Node_t * pNode );\n\n// extern int             Dsd_TreeCountNonTerminalNodes( Dsd_Manager_t * dMan );\n\n// extern int             Dsd_TreeCountNonTerminalNodesOne( Dsd_Node_t * pRoot );\n\n// extern int             Dsd_TreeCountPrimeNodes( Dsd_Manager_t * pDsdMan );\n\n// extern int             Dsd_TreeCountPrimeNodesOne( Dsd_Node_t * pRoot );\n\n// extern int             Dsd_TreeCollectDecomposableVars( Dsd_Manager_t * dMan, int * pVars );\n\n// extern Dsd_Node_t **   Dsd_TreeCollectNodesDfs( Dsd_Manager_t * dMan, int * pnNodes );\n\n// extern Dsd_Node_t **   Dsd_TreeCollectNodesDfsOne( Dsd_Manager_t * pDsdMan, Dsd_Node_t * pNode, int * pnNodes );\n\n// extern void            Dsd_TreePrint( FILE * pFile, Dsd_Manager_t * dMan, char * pInputNames[], char * pOutputNames[], int fShortNames, int Output );\n\n// extern void            Dsd_TreePrint2( FILE * pFile, Dsd_Manager_t * dMan, char * pInputNames[], char * pOutputNames[], int Output );\n\n// extern void            Dsd_NodePrint( FILE * pFile, Dsd_Node_t * pNode );\n\n/*=== dsdLocal.c =======================================================*/\n// extern DdNode *        Dsd_TreeGetPrimeFunction( DdManager * dd, Dsd_Node_t * pNode );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                           END OF FILE                            ///\n////////////////////////////////////////////////////////////////////////\n"
+}

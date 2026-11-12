@@ -1,0 +1,179 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Dump.c",
+  "SHA256": "26c1e9200d04ce08e6d4f82280a9b7f69b6a4889f73efd27e851b5926441a33f",
+  "Library": [
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1441
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    sprintf( spStatic_Llb_ManGetDummyName_Buffer, \"%s%0*d\", pPrefix, nDigits, Num );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 87,
+        "Column": 13,
+        "ByteOffset": 2585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 89,
+        "Column": 5,
+        "ByteOffset": 2740
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 93,
+        "Column": 9,
+        "ByteOffset": 2835
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pName );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 95,
+        "Column": 9,
+        "ByteOffset": 2917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pName );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_ManGetDummyName",
+      "Start": 1274,
+      "End": 1449,
+      "BodyStart": 1341,
+      "Original": "char * Llb_ManGetDummyName( char * pPrefix, int Num, int nDigits )\n{\n    static char Buffer[2000];\n    sprintf( Buffer, \"%s%0*d\", pPrefix, nDigits, Num );\n    return Buffer;\n}",
+      "Draft": "func Llb_ManGetDummyName(pPrefix string, Num int32, nDigits int32) string {\n    \n    spStatic_Llb_ManGetDummyName_Buffer = fmt.Sprintf(\"%s%0*d\", pPrefix, nDigits, Num);\n    return spStatic_Llb_ManGetDummyName_Buffer;\n}"
+    },
+    {
+      "Name": "Llb_ManDumpReached",
+      "Start": 1727,
+      "End": 2867,
+      "BodyStart": 1822,
+      "Original": "void Llb_ManDumpReached( DdManager * ddG, DdNode * bReached, char * pModel, char * pFileName )\n{\n    FILE * pFile;\n    Vec_Ptr_t * vNamesIn, * vNamesOut;\n    char * pName;\n    int i, nDigits;\n    // reorder the BDD\n    Cudd_ReduceHeap( ddG, CUDD_REORDER_SYMM_SIFT, 1 );\n\n    // create input names\n    nDigits = Abc_Base10Log( Cudd_ReadSize(ddG) );\n    vNamesIn = Vec_PtrAlloc( Cudd_ReadSize(ddG) );\n    for ( i = 0; i \u003c Cudd_ReadSize(ddG); i++ )\n    {\n        pName = Llb_ManGetDummyName( \"ff\", i, nDigits );\n        Vec_PtrPush( vNamesIn, Extra_UtilStrsav(pName) );\n    }\n    // create output names\n    vNamesOut = Vec_PtrAlloc( 1 );\n    Vec_PtrPush( vNamesOut, Extra_UtilStrsav(\"Reached\") );\n\n    // write the file\n    pFile = fopen( pFileName, \"wb\" );\n    Cudd_DumpBlif( ddG, 1, \u0026bReached, (char **)Vec_PtrArray(vNamesIn), (char **)Vec_PtrArray(vNamesOut), pModel, pFile, 0 );\n    fclose( pFile );\n\n    // cleanup\n    Vec_PtrForEachEntry( char *, vNamesIn, pName, i )\n        ABC_FREE( pName );\n    Vec_PtrForEachEntry( char *, vNamesOut, pName, i )\n        ABC_FREE( pName );\n    Vec_PtrFree( vNamesIn );\n    Vec_PtrFree( vNamesOut );\n}",
+      "Draft": "func Llb_ManDumpReached(ddG *DdManager, bReached *DdNode, pModel string, pFileName string) {\n    var pFile *os.File;\n    var vNamesIn, vNamesOut *Vec_Ptr_t;\n    var pName string;\n    var i, nDigits int32;\n    // reorder the BDD\n    Cudd_ReduceHeap( ddG, CUDD_REORDER_SYMM_SIFT, 1 );\n\n    // create input names\n    nDigits = Abc_Base10Log( Cudd_ReadSize(ddG) );\n    vNamesIn = Vec_PtrAlloc( Cudd_ReadSize(ddG) );\n    for  i = 0; i \u003c Cudd_ReadSize(ddG); i++  {\n        pName = Llb_ManGetDummyName( \"ff\", i, nDigits );\n        Vec_PtrPush( vNamesIn, Extra_UtilStrsav(pName) );\n    }\n    // create output names\n    vNamesOut = Vec_PtrAlloc( 1 );\n    Vec_PtrPush( vNamesOut, Extra_UtilStrsav(\"Reached\") );\n\n    // write the file\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    Cudd_DumpBlif( ddG, 1, \u0026bReached, (char **)Vec_PtrArray(vNamesIn), (char **)Vec_PtrArray(vNamesOut), pModel, pFile, 0 );\n    _ = (pFile).Close();\n\n    // cleanup\n    Vec_PtrForEachEntry( char *, vNamesIn, pName, i )\n        ABC_FREE( pName );\n    Vec_PtrForEachEntry( char *, vNamesOut, pName, i )\n        ABC_FREE( pName );\n    Vec_PtrFree( vNamesIn );\n    Vec_PtrFree( vNamesOut );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Dump.c::mechanical::static::1347",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1347,
+      "End": 1353
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Dump.c::pointer-cast::2520",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2520,
+      "End": 2529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Dump.c::pointer-cast::2553",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2553,
+      "End": 2562
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Dump.c::Llb_ManGetDummyName",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManGetDummyName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1274,
+      "End": 1449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Dump.c::Llb_ManDumpReached",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManDumpReached",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1727,
+      "End": 2867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Dump.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3114
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Dump.c::macro-inline::2648",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2648,
+      "End": 2697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Dump.c::macro-inline::2706",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2706,
+      "End": 2723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Dump.c::macro-inline::2729",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2729,
+      "End": 2779
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb2Dump.c::macro-inline::2788",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2788,
+      "End": 2805
+    }
+  ],
+  "Draft": "package llb\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [llb2Dump.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Dumps the BDD of reached states into a file.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb2Dump.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns a dummy name.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Llb_ManGetDummyName_Buffer string // was [2000]byte in C\n\nfunc Llb_ManGetDummyName(pPrefix string, Num int32, nDigits int32) string {\n    \n    spStatic_Llb_ManGetDummyName_Buffer = fmt.Sprintf(\"%s%0*d\", pPrefix, nDigits, Num);\n    return spStatic_Llb_ManGetDummyName_Buffer;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Writes reached state BDD into a BLIF file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManDumpReached(ddG *DdManager, bReached *DdNode, pModel string, pFileName string) {\n    var pFile *os.File;\n    var vNamesIn, vNamesOut *Vec_Ptr_t;\n    var pName string;\n    var i, nDigits int32;\n    // reorder the BDD\n    Cudd_ReduceHeap( ddG, CUDD_REORDER_SYMM_SIFT, 1 );\n\n    // create input names\n    nDigits = Abc_Base10Log( Cudd_ReadSize(ddG) );\n    vNamesIn = Vec_PtrAlloc( Cudd_ReadSize(ddG) );\n    for  i = 0; i \u003c Cudd_ReadSize(ddG); i++  {\n        pName = Llb_ManGetDummyName( \"ff\", i, nDigits );\n        Vec_PtrPush( vNamesIn, Extra_UtilStrsav(pName) );\n    }\n    // create output names\n    vNamesOut = Vec_PtrAlloc( 1 );\n    Vec_PtrPush( vNamesOut, Extra_UtilStrsav(\"Reached\") );\n\n    // write the file\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    Cudd_DumpBlif( ddG, 1, \u0026bReached, (char **)Vec_PtrArray(vNamesIn), (char **)Vec_PtrArray(vNamesOut), pModel, pFile, 0 );\n    _ = (pFile).Close();\n\n    // cleanup\n    Vec_PtrForEachEntry( char *, vNamesIn, pName, i )\n        ABC_FREE( pName );\n    Vec_PtrForEachEntry( char *, vNamesOut, pName, i )\n        ABC_FREE( pName );\n    Vec_PtrFree( vNamesIn );\n    Vec_PtrFree( vNamesOut );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,186 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Alloc.h",
+  "SHA256": "14b45cfae4f5af67695eedd7397a9206fa0a5c7585e4834d881ba2c0fb1e3074",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 72,
+        "Column": 40,
+        "ByteOffset": 2457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    T\u0026       operator[](Ref r)       { assert(r \u003e= 0 \u0026\u0026 r \u003c sz); return memory[r]; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 73,
+        "Column": 28,
+        "ByteOffset": 2530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    T\u0026 operator[](Ref r) { assert(r \u003e= 0 \u0026\u0026 r \u003c sz); return memory[r]; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 75,
+        "Column": 40,
+        "ByteOffset": 2616
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    T*       lea       (Ref r)       { assert(r \u003e= 0 \u0026\u0026 r \u003c sz); return \u0026memory[r]; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 76,
+        "Column": 28,
+        "ByteOffset": 2690
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    T* lea       (Ref r) { assert(r \u003e= 0 \u0026\u0026 r \u003c sz); return \u0026memory[r]; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 77,
+        "Column": 34,
+        "ByteOffset": 2770
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Ref      ael       (T* t)  { assert((void*)t \u003e= (void*)\u0026memory[0] \u0026\u0026 (void*)t \u003c (void*)\u0026memory[sz-1]);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 113,
+        "Column": 5,
+        "ByteOffset": 3908
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(cap \u003e 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 4156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(size \u003e 0);"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Alloc.h::mechanical::enum::1831",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1831,
+      "End": 1835
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Alloc.h::mechanical::enum::1868",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Ordinary enum definitions and references are lowered. Retained C++ scoped enums and trailing object declarators require type and name decisions.",
+      "Start": 1868,
+      "End": 1872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Alloc.h::mechanical::sizeof::1887",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1887,
+      "End": 1893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Alloc.h::mechanical::sizeof::4030",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4030,
+      "End": 4036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Alloc.h::pointer-cast::2848",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2848,
+      "End": 2855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Alloc.h::pointer-cast::2860",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2860,
+      "End": 2867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Alloc.h::pointer-cast::2881",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2881,
+      "End": 2888
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Alloc.h::pointer-cast::2892",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2892,
+      "End": 2899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Alloc.h::pointer-cast::4009",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4009,
+      "End": 4013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/Alloc.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4568
+    }
+  ],
+  "Draft": "package glucose\n\n/*****************************************************************************************[Alloc.h]\nCopyright (c) 2008-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n\n\n\n\n//#include \"sat/glucose/XAlloc.h\"\n//#include \"sat/glucose/Vec.h\"\n\n//ABC_NAMESPACE_CXX_HEADER_START\n\nnamespace Gluco {\n\n//=================================================================================================\n// Simple Region-based memory allocator:\n\ntemplate\u003cclass T\u003e\nclass RegionAllocator\n{\n    T*        memory;\n    uint32_t  sz;\n    uint32_t  cap;\n    uint32_t  wasted_;\n\n    void capacity(uint32_t min_cap);\n\n public:\n    // TODO: make this a class for better type-checking?\n    typedef uint32_t Ref;\n    const ( Ref_Undef = UINT32_MAX \n)\n\n    const ( Unit_Size = sizeof(uint32_t) \n)\n\n\n    explicit RegionAllocator(uint32_t start_cap = 1024*1024) : memory(NULL), sz(0), cap(0), wasted_(0){ capacity(start_cap); }\n    ~RegionAllocator()\n    {\n        if (memory != NULL)\n            ::free(memory);\n    }\n\n\n    uint32_t size      () { return sz; }\n    uint32_t wasted    () { return wasted_; }\n\n    Ref      alloc     (int size); \n    void     free_     (int size)    { wasted_ += size; }\n    void     clear     ()            { sz = 0; wasted_=0; }\n\n    // Deref, Load Effective Address (LEA), Inverse of LEA (AEL):\n    T\u0026       operator[](Ref r)       { assert(r \u003e= 0 \u0026\u0026 r \u003c sz, \"r \u003e= 0 \u0026\u0026 r \u003c sz\"); return memory[r]; }\n    T\u0026 operator[](Ref r) { assert(r \u003e= 0 \u0026\u0026 r \u003c sz, \"r \u003e= 0 \u0026\u0026 r \u003c sz\"); return memory[r]; }\n\n    T*       lea       (Ref r)       { assert(r \u003e= 0 \u0026\u0026 r \u003c sz, \"r \u003e= 0 \u0026\u0026 r \u003c sz\"); return \u0026memory[r]; }\n    T* lea       (Ref r) { assert(r \u003e= 0 \u0026\u0026 r \u003c sz, \"r \u003e= 0 \u0026\u0026 r \u003c sz\"); return \u0026memory[r]; }\n    Ref      ael       (T* t)  { assert((void*)t \u003e= (void*)\u0026memory[0] \u0026\u0026 (void*)t \u003c (void*)\u0026memory[sz-1], \"(void*)t \u003e= (void*)\u0026memory[0] \u0026\u0026 (void*)t \u003c (void*)\u0026memory[sz-1]\");\n        return  (Ref)(t - \u0026memory[0]); }\n\n    void     moveTo(RegionAllocator\u0026 to) {\n        if (to.memory != NULL) ::free(to.memory);\n        to.memory = memory;\n        to.sz = sz;\n        to.cap = cap;\n        to.wasted_ = wasted_;\n\n        memory = NULL;\n        sz = cap = wasted_ = 0;\n    }\n\n\n};\n\ntemplate\u003cclass T\u003e\nvoid RegionAllocator\u003cT\u003e::capacity(uint32_t min_cap)\n{\n    if (cap \u003e= min_cap) return;\n\n    uint32_t prev_cap = cap;\n    while (cap \u003c min_cap){\n        // NOTE: Multiply by a factor (13/8) without causing overflow, then add 2 and make the\n        // result even by clearing the least significant bit. The resulting sequence of capacities\n        // is carefully chosen to hit a maximum capacity that is close to the '2^32-1' limit when\n        // using 'uint32_t' as indices so that as much as possible of this space can be used.\n        uint32_t delta = ((cap \u003e\u003e 1) + (cap \u003e\u003e 3) + 2) \u0026 ~1;\n        cap += delta;\n\n        if (cap \u003c= prev_cap)\n            throw OutOfMemoryException();\n    }\n    //printf(\" .. (%p) cap = %u\\n\", this, cap);\n\n    assert(cap \u003e 0, \"cap \u003e 0\");\n    memory = (T*)xrealloc(memory, sizeof(T)*cap);\n}\n\n\ntemplate\u003cclass T\u003e\ntypename RegionAllocator\u003cT\u003e::Ref\nRegionAllocator\u003cT\u003e::alloc(int size)\n{ \n    //printf(\"ALLOC called (this = %p, size = %d)\\n\", this, size); fflush(stdout);\n    assert(size \u003e 0, \"size \u003e 0\");\n    capacity(sz + size);\n\n    uint32_t prev_sz = sz;\n    sz += size;\n    \n    // Handle overflow:\n    if (sz \u003c prev_sz)\n        throw OutOfMemoryException();\n\n    return prev_sz;\n}\n\n\n//=================================================================================================\n}\n\n//ABC_NAMESPACE_CXX_HEADER_END\n\n\n"
+}

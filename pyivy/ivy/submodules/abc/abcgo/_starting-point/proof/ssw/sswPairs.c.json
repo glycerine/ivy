@@ -1,0 +1,481 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c",
+  "SHA256": "e9d778d50a754b259a6129dd6f5737d3357db19a0cb88bb823d4ec38b39dafd3",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 9,
+        "ByteOffset": 3697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj1m \u0026\u0026 pObj2m );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 145,
+        "Column": 80,
+        "ByteOffset": 4709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pvClasses = /*__starting_point_inline_macro:ABC_CALLOC__*/((Vec_Int_t * *) calloc((size_t)(nObjNumMax), sizeof(Vec_Int_t *)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 146,
+        "Column": 71,
+        "ByteOffset": 4831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pReprs    = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nObjNumMax)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 155,
+        "Column": 9,
+        "ByteOffset": 5146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( idObj \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 156,
+        "Column": 9,
+        "ByteOffset": 5175
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (pReprs[idRepr] == -1) || (pvClasses[pReprs[idRepr]] != nil) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 9,
+        "ByteOffset": 5255
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (pReprs[idObj]  == -1) || (pvClasses[pReprs[idObj] ] != nil) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 176,
+        "Column": 13,
+        "ByteOffset": 6178
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( idReprObj != idRepr );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 219,
+        "Column": 62,
+        "ByteOffset": 8468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 240,
+        "Column": 65,
+        "ByteOffset": 9020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pvClasses) ? (free((char *) (pvClasses)), (pvClasses) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 260,
+        "Column": 5,
+        "ByteOffset": 9662
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vIds1) == Vec_IntSize(vIds2) );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 345,
+        "Column": 73,
+        "ByteOffset": 13450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 366,
+        "Column": 5,
+        "ByteOffset": 14052
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vIds1 != nil \u0026\u0026 vIds2 != nil );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 380,
+        "Column": 73,
+        "ByteOffset": 14880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 417,
+        "Column": 73,
+        "ByteOffset": 16293
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 451,
+        "Column": 73,
+        "ByteOffset": 17556
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ssw_MiterStatus",
+      "Start": 1280,
+      "End": 2708,
+      "BodyStart": 1331,
+      "Original": "int Ssw_MiterStatus( Aig_Man_t * p, int fVerbose )\n{\n    Aig_Obj_t * pObj, * pChild;\n    int i, CountConst0 = 0, CountNonConst0 = 0, CountUndecided = 0;\n//    if ( p-\u003epData )\n//        return 0;\n    Saig_ManForEachPo( p, pObj, i )\n    {\n        pChild = Aig_ObjChild0(pObj);\n        // check if the output is constant 0\n        if ( pChild == Aig_ManConst0(p) )\n        {\n            CountConst0++;\n            continue;\n        }\n        // check if the output is constant 1\n        if ( pChild == Aig_ManConst1(p) )\n        {\n            CountNonConst0++;\n            continue;\n        }\n        // check if the output is a primary input\n        if ( p-\u003enRegs == 0 \u0026\u0026 Aig_ObjIsCi(Aig_Regular(pChild)) )\n        {\n            CountNonConst0++;\n            continue;\n        }\n        // check if the output can be not constant 0\n        if ( Aig_Regular(pChild)-\u003efPhase != (unsigned)Aig_IsComplement(pChild) )\n        {\n            CountNonConst0++;\n            continue;\n        }\n        CountUndecided++;\n    }\n\n    if ( fVerbose )\n    {\n        Abc_Print( 1, \"Miter has %d outputs. \", Saig_ManPoNum(p) );\n        Abc_Print( 1, \"Const0 = %d.  \", CountConst0 );\n        Abc_Print( 1, \"NonConst0 = %d.  \", CountNonConst0 );\n        Abc_Print( 1, \"Undecided = %d.  \", CountUndecided );\n        Abc_Print( 1, \"\\n\" );\n    }\n\n    if ( CountNonConst0 )\n        return 0;\n    if ( CountUndecided )\n        return -1;\n    return 1;\n}",
+      "Draft": "func Ssw_MiterStatus(p *Aig_Man_t, fVerbose int32) int32 {\n    var pObj, pChild *Aig_Obj_t;\n    var i, CountConst0, CountNonConst0, CountUndecided int32;\n//    if ( p-\u003epData )\n//        return 0;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pChild = Aig_ObjChild0(pObj);\n        // check if the output is constant 0\n        if pChild == Aig_ManConst0(p) {\n            CountConst0++;\n            continue;\n        }\n        // check if the output is constant 1\n        if pChild == Aig_ManConst1(p) {\n            CountNonConst0++;\n            continue;\n        }\n        // check if the output is a primary input\n        if p.nRegs == 0 \u0026\u0026 Aig_ObjIsCi(Aig_Regular(pChild)) {\n            CountNonConst0++;\n            continue;\n        }\n        // check if the output can be not constant 0\n        if Aig_Regular(pChild).fPhase != uint32(Aig_IsComplement(pChild)) {\n            CountNonConst0++;\n            continue;\n        }\n        CountUndecided++;\n    }\n\n    if fVerbose != 0 {\n        Abc_Print( 1, \"Miter has %d outputs. \", Saig_ManPoNum(p) );\n        Abc_Print( 1, \"Const0 = %d.  \", CountConst0 );\n        Abc_Print( 1, \"NonConst0 = %d.  \", CountNonConst0 );\n        Abc_Print( 1, \"Undecided = %d.  \", CountUndecided );\n        Abc_Print( 1, \"\\n\" );\n    }\n\n    if CountNonConst0 {\n        return 0; }\n    if CountUndecided != 0 {\n        return -1; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Ssw_TransferSignalPairs",
+      "Start": 2983,
+      "End": 3944,
+      "BodyStart": 3117,
+      "Original": "Vec_Int_t * Ssw_TransferSignalPairs( Aig_Man_t * pMiter, Aig_Man_t * pAig1, Aig_Man_t * pAig2, Vec_Int_t * vIds1, Vec_Int_t * vIds2 )\n{\n    Vec_Int_t * vIds;\n    Aig_Obj_t * pObj1, * pObj2;\n    Aig_Obj_t * pObj1m, * pObj2m;\n    int i;\n    vIds = Vec_IntAlloc( 2 * Vec_IntSize(vIds1) );\n    for ( i = 0; i \u003c Vec_IntSize(vIds1); i++ )\n    {\n        pObj1 = Aig_ManObj( pAig1, Vec_IntEntry(vIds1, i) );\n        pObj2 = Aig_ManObj( pAig2, Vec_IntEntry(vIds2, i) );\n        pObj1m = Aig_Regular((Aig_Obj_t *)pObj1-\u003epData);\n        pObj2m = Aig_Regular((Aig_Obj_t *)pObj2-\u003epData);\n        assert( pObj1m \u0026\u0026 pObj2m );\n        if ( pObj1m == pObj2m )\n            continue;\n        if ( pObj1m-\u003eId \u003c pObj2m-\u003eId )\n        {\n            Vec_IntPush( vIds, pObj1m-\u003eId );\n            Vec_IntPush( vIds, pObj2m-\u003eId );\n        }\n        else\n        {\n            Vec_IntPush( vIds, pObj2m-\u003eId );\n            Vec_IntPush( vIds, pObj1m-\u003eId );\n        }\n    }\n    return vIds;\n}",
+      "Draft": "func Ssw_TransferSignalPairs(pMiter *Aig_Man_t, pAig1 *Aig_Man_t, pAig2 *Aig_Man_t, vIds1 *Vec_Int_t, vIds2 *Vec_Int_t) *Vec_Int_t {\n    var vIds *Vec_Int_t;\n    var pObj1, pObj2 *Aig_Obj_t;\n    var pObj1m, pObj2m *Aig_Obj_t;\n    var i int32;\n    vIds = Vec_IntAlloc( 2 * Vec_IntSize(vIds1) );\n    for  i = 0; i \u003c Vec_IntSize(vIds1); i++  {\n        pObj1 = Aig_ManObj( pAig1, Vec_IntEntry(vIds1, i) );\n        pObj2 = Aig_ManObj( pAig2, Vec_IntEntry(vIds2, i) );\n        pObj1m = Aig_Regular((Aig_Obj_t *)pObj1.pData);\n        pObj2m = Aig_Regular((Aig_Obj_t *)pObj2.pData);\n        assert(pObj1m \u0026\u0026 (pObj2m != nil), \"pObj1m \u0026\u0026 pObj2m\");\n        if pObj1m == pObj2m {\n            continue; }\n        if pObj1m.Id \u003c pObj2m.Id {\n            Vec_IntPush( vIds, pObj1m.Id );\n            Vec_IntPush( vIds, pObj2m.Id );\n        \n        } else {\n            Vec_IntPush( vIds, pObj2m.Id );\n            Vec_IntPush( vIds, pObj1m.Id );\n        }\n    }\n    return vIds;\n}"
+    },
+    {
+      "Name": "Ssw_TransformPairsIntoTempClasses",
+      "Start": 4207,
+      "End": 7953,
+      "BodyStart": 4292,
+      "Original": "Vec_Int_t ** Ssw_TransformPairsIntoTempClasses( Vec_Int_t * vPairs, int nObjNumMax )\n{\n    Vec_Int_t ** pvClasses;   // vector of classes\n    int * pReprs;             // mapping nodes into their representatives\n    int Entry, idObj, idRepr, idReprObj, idReprRepr, i;\n    // allocate data-structures\n    pvClasses = ABC_CALLOC( Vec_Int_t *, nObjNumMax );\n    pReprs    = ABC_ALLOC( int, nObjNumMax );\n    for ( i = 0; i \u003c nObjNumMax; i++ )\n        pReprs[i] = -1;\n    // consider pairs\n    for ( i = 0; i \u003c Vec_IntSize(vPairs); i += 2 )\n    {\n        // get both objects\n        idRepr = Vec_IntEntry( vPairs, i   );\n        idObj  = Vec_IntEntry( vPairs, i+1 );\n        assert( idObj \u003e 0 );\n        assert( (pReprs[idRepr] == -1) || (pvClasses[pReprs[idRepr]] != NULL) );\n        assert( (pReprs[idObj]  == -1) || (pvClasses[pReprs[idObj] ] != NULL) );\n        // get representatives of both objects\n        idReprRepr = pReprs[idRepr];\n        idReprObj  = pReprs[idObj];\n        // check different situations\n        if ( idReprRepr == -1 \u0026\u0026 idReprObj == -1 )\n        {   // they do not have classes\n            // create a class\n            pvClasses[idRepr] = Vec_IntAlloc( 4 );\n            Vec_IntPush( pvClasses[idRepr], idRepr );\n            Vec_IntPush( pvClasses[idRepr], idObj );\n            pReprs[ idRepr ] = idRepr;\n            pReprs[ idObj  ] = idRepr;\n        }\n        else if ( idReprRepr \u003e= 0 \u0026\u0026 idReprObj == -1 )\n        {   // representative has a class\n            // add iObj to the same class\n            Vec_IntPushUniqueOrder( pvClasses[idReprRepr], idObj );\n            pReprs[ idObj ] = idReprRepr;\n        }\n        else if ( idReprRepr == -1 \u0026\u0026 idReprObj \u003e= 0 )\n        {   // object has a class\n            assert( idReprObj != idRepr );\n            if ( idReprObj \u003c idRepr )\n            { // add idRepr to the same class\n                Vec_IntPushUniqueOrder( pvClasses[idReprObj], idRepr );\n                pReprs[ idRepr ] = idReprObj;\n            }\n            else // if ( idReprObj \u003e idRepr )\n            { // make idRepr new representative\n                Vec_IntPushFirst( pvClasses[idReprObj], idRepr );\n                pvClasses[idRepr] = pvClasses[idReprObj];\n                pvClasses[idReprObj] = NULL;\n                // set correct representatives of each node\n                Vec_IntForEachEntry( pvClasses[idRepr], Entry, i )\n                    pReprs[ Entry ] = idRepr;\n            }\n        }\n        else // if ( idReprRepr \u003e= 0 \u0026\u0026 idReprObj \u003e= 0 )\n        {   // both have classes\n            if ( idReprRepr == idReprObj )\n            {  // the classes are the same\n                // nothing to do\n            }\n            else\n            {  // the classes are different\n                // find the repr of the new class\n                if ( idReprRepr \u003c idReprObj )\n                {\n                    Vec_IntForEachEntry( pvClasses[idReprObj], Entry, i )\n                    {\n                        Vec_IntPushUniqueOrder( pvClasses[idReprRepr], Entry );\n                        pReprs[ Entry ] = idReprRepr;\n                    }\n                    Vec_IntFree( pvClasses[idReprObj] );\n                    pvClasses[idReprObj] = NULL;\n                }\n                else // if ( idReprRepr \u003e idReprObj )\n                {\n                    Vec_IntForEachEntry( pvClasses[idReprRepr], Entry, i )\n                    {\n                        Vec_IntPushUniqueOrder( pvClasses[idReprObj], Entry );\n                        pReprs[ Entry ] = idReprObj;\n                    }\n                    Vec_IntFree( pvClasses[idReprRepr] );\n                    pvClasses[idReprRepr] = NULL;\n                }\n            }\n        }\n    }\n    ABC_FREE( pReprs );\n    return pvClasses;\n}",
+      "Draft": "func Ssw_TransformPairsIntoTempClasses(vPairs *Vec_Int_t, nObjNumMax int32) **Vec_Int_t {\n    var pvClasses **Vec_Int_t;   // vector of classes\n    var pReprs *int32;             // mapping nodes into their representatives\n    var Entry, idObj, idRepr, idReprObj, idReprRepr, i int32;\n    // allocate data-structures\n    // inlining of macro ABC_CALLOC\n    pvClasses = ((Vec_Int_t * *) calloc((size_t)(nObjNumMax), sizeof(Vec_Int_t *)));\n    // inlining of macro ABC_ALLOC\n    pReprs    = ((int *) malloc(sizeof(int) * (size_t)(nObjNumMax)));\n    for  i = 0; i \u003c nObjNumMax; i++  {\n        pReprs[i] = -1;\n    }\n    // consider pairs\n    for  i = 0; i \u003c Vec_IntSize(vPairs); i += 2  {\n        // get both objects\n        idRepr = Vec_IntEntry( vPairs, i   );\n        idObj  = Vec_IntEntry( vPairs, i+1 );\n        assert(idObj \u003e 0, \"idObj \u003e 0\");\n        assert((pReprs[idRepr] == -1) || (pvClasses[pReprs[idRepr]] != nil), \"(pReprs[idRepr] == -1) || (pvClasses[pReprs[idRepr]] != nil)\");\n        assert((pReprs[idObj]  == -1) || (pvClasses[pReprs[idObj] ] != nil), \"(pReprs[idObj]  == -1) || (pvClasses[pReprs[idObj] ] != nil)\");\n        // get representatives of both objects\n        idReprRepr = pReprs[idRepr];\n        idReprObj  = pReprs[idObj];\n        // check different situations\n        if idReprRepr == -1 \u0026\u0026 idReprObj == -1 {   // they do not have classes\n            // create a class\n            pvClasses[idRepr] = Vec_IntAlloc( 4 );\n            Vec_IntPush( pvClasses[idRepr], idRepr );\n            Vec_IntPush( pvClasses[idRepr], idObj );\n            pReprs[ idRepr ] = idRepr;\n            pReprs[ idObj  ] = idRepr;\n        \n        } else if idReprRepr \u003e= 0 \u0026\u0026 idReprObj == -1 {   // representative has a class\n            // add iObj to the same class\n            Vec_IntPushUniqueOrder( pvClasses[idReprRepr], idObj );\n            pReprs[ idObj ] = idReprRepr;\n        \n        } else if idReprRepr == -1 \u0026\u0026 idReprObj \u003e= 0 {   // object has a class\n            assert(idReprObj != idRepr, \"idReprObj != idRepr\");\n            if idReprObj \u003c idRepr { // add idRepr to the same class\n                Vec_IntPushUniqueOrder( pvClasses[idReprObj], idRepr );\n                pReprs[ idRepr ] = idReprObj;\n            \n            } else { // if ( idReprObj \u003e idRepr )\n             // make idRepr new representative\n                Vec_IntPushFirst( pvClasses[idReprObj], idRepr );\n                pvClasses[idRepr] = pvClasses[idReprObj];\n                pvClasses[idReprObj] = nil;\n                // set correct representatives of each node\n                // inlining of macro Vec_IntForEachEntry\n                for  i = 0; (i \u003c Vec_IntSize(pvClasses[idRepr])) \u0026\u0026 (((Entry) = Vec_IntEntry(pvClasses[idRepr], i)), 1); i++  {\n                    pReprs[ Entry ] = idRepr;\n                }\n            }\n        \n        } else { // if ( idReprRepr \u003e= 0 \u0026\u0026 idReprObj \u003e= 0 )\n           // both have classes\n            if idReprRepr == idReprObj {  // the classes are the same\n                // nothing to do\n            \n            } else {  // the classes are different\n                // find the repr of the new class\n                if idReprRepr \u003c idReprObj {\n                    // inlining of macro Vec_IntForEachEntry\n                    for  i = 0; (i \u003c Vec_IntSize(pvClasses[idReprObj])) \u0026\u0026 (((Entry) = Vec_IntEntry(pvClasses[idReprObj], i)), 1); i++  {\n                        Vec_IntPushUniqueOrder( pvClasses[idReprRepr], Entry );\n                        pReprs[ Entry ] = idReprRepr;\n                    }\n                    Vec_IntFree( pvClasses[idReprObj] );\n                    pvClasses[idReprObj] = nil;\n                \n                } else { // if ( idReprRepr \u003e idReprObj )\n                \n                    // inlining of macro Vec_IntForEachEntry\n                    for  i = 0; (i \u003c Vec_IntSize(pvClasses[idReprRepr])) \u0026\u0026 (((Entry) = Vec_IntEntry(pvClasses[idReprRepr], i)), 1); i++  {\n                        Vec_IntPushUniqueOrder( pvClasses[idReprObj], Entry );\n                        pReprs[ Entry ] = idReprObj;\n                    }\n                    Vec_IntFree( pvClasses[idReprRepr] );\n                    pvClasses[idReprRepr] = nil;\n                }\n            }\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);\n    return pvClasses;\n}"
+    },
+    {
+      "Name": "Ssw_FreeTempClasses",
+      "Start": 8174,
+      "End": 8390,
+      "BodyStart": 8241,
+      "Original": "void Ssw_FreeTempClasses( Vec_Int_t ** pvClasses, int nObjNumMax )\n{\n    int i;\n    for ( i = 0; i \u003c nObjNumMax; i++ )\n        if ( pvClasses[i] )\n            Vec_IntFree( pvClasses[i] );\n    ABC_FREE( pvClasses );\n}",
+      "Draft": "func Ssw_FreeTempClasses(pvClasses **Vec_Int_t, nObjNumMax int32) {\n    var i int32;\n    for  i = 0; i \u003c nObjNumMax; i++  {\n        if pvClasses[i] {\n            Vec_IntFree( pvClasses[i] ); }\n    }\n    // inlining of macro ABC_FREE\n    ((pvClasses) ? (free((char *) (pvClasses)), (pvClasses) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Ssw_SignalCorrespondenceWithPairs",
+      "Start": 8692,
+      "End": 10260,
+      "BodyStart": 8836,
+      "Original": "Aig_Man_t * Ssw_SignalCorrespondenceWithPairs( Aig_Man_t * pAig1, Aig_Man_t * pAig2, Vec_Int_t * vIds1, Vec_Int_t * vIds2, Ssw_Pars_t * pPars )\n{\n    Ssw_Man_t * p;\n    Aig_Man_t * pAigNew, * pMiter;\n    Ssw_Pars_t Pars;\n    Vec_Int_t * vPairs;\n    Vec_Int_t ** pvClasses;\n    assert( Vec_IntSize(vIds1) == Vec_IntSize(vIds2) );\n    // create sequential miter\n    pMiter = Saig_ManCreateMiter( pAig1, pAig2, 0 );\n    Aig_ManCleanup( pMiter );\n    // transfer information to the miter\n    vPairs = Ssw_TransferSignalPairs( pMiter, pAig1, pAig2, vIds1, vIds2 );\n    // create representation of the classes\n    pvClasses = Ssw_TransformPairsIntoTempClasses( vPairs, Aig_ManObjNumMax(pMiter) );\n    Vec_IntFree( vPairs );\n    // if parameters are not given, create them\n    if ( pPars == NULL )\n        Ssw_ManSetDefaultParams( pPars = \u0026Pars );\n    // start the induction manager\n    p = Ssw_ManCreate( pMiter, pPars );\n    // create equivalence classes using these IDs\n    p-\u003eppClasses = Ssw_ClassesPreparePairs( pMiter, pvClasses );\n    p-\u003epSml = Ssw_SmlStart( pMiter, 0, p-\u003enFrames + p-\u003epPars-\u003enFramesAddSim, 1 );\n    Ssw_ClassesSetData( p-\u003eppClasses, p-\u003epSml, (unsigned(*)(void *,Aig_Obj_t *))Ssw_SmlObjHashWord, (int(*)(void *,Aig_Obj_t *))Ssw_SmlObjIsConstWord, (int(*)(void *,Aig_Obj_t *,Aig_Obj_t *))Ssw_SmlObjsAreEqualWord );\n    // perform refinement of classes\n    pAigNew = Ssw_SignalCorrespondenceRefine( p );\n    // cleanup\n    Ssw_FreeTempClasses( pvClasses, Aig_ManObjNumMax(pMiter) );\n    Ssw_ManStop( p );\n    Aig_ManStop( pMiter );\n    return pAigNew;\n}",
+      "Draft": "func Ssw_SignalCorrespondenceWithPairs(pAig1 *Aig_Man_t, pAig2 *Aig_Man_t, vIds1 *Vec_Int_t, vIds2 *Vec_Int_t, pPars *Ssw_Pars_t) *Aig_Man_t {\n    var p *Ssw_Man_t;\n    var pAigNew, pMiter *Aig_Man_t;\n    var Pars Ssw_Pars_t;\n    var vPairs *Vec_Int_t;\n    var pvClasses **Vec_Int_t;\n    assert(Vec_IntSize(vIds1) == Vec_IntSize(vIds2), \"Vec_IntSize(vIds1) == Vec_IntSize(vIds2)\");\n    // create sequential miter\n    pMiter = Saig_ManCreateMiter( pAig1, pAig2, 0 );\n    Aig_ManCleanup( pMiter );\n    // transfer information to the miter\n    vPairs = Ssw_TransferSignalPairs( pMiter, pAig1, pAig2, vIds1, vIds2 );\n    // create representation of the classes\n    pvClasses = Ssw_TransformPairsIntoTempClasses( vPairs, Aig_ManObjNumMax(pMiter) );\n    Vec_IntFree( vPairs );\n    // if parameters are not given, create them\n    if pPars == nil {\n        Ssw_ManSetDefaultParams( pPars = \u0026Pars ); }\n    // start the induction manager\n    p = Ssw_ManCreate( pMiter, pPars );\n    // create equivalence classes using these IDs\n    p.ppClasses = Ssw_ClassesPreparePairs( pMiter, pvClasses );\n    p.pSml = Ssw_SmlStart( pMiter, 0, p.nFrames + p.pPars.nFramesAddSim, 1 );\n    Ssw_ClassesSetData( p.ppClasses, p.pSml, (unsigned(*)(void *,Aig_Obj_t *))Ssw_SmlObjHashWord, (int(*)(void *,Aig_Obj_t *))Ssw_SmlObjIsConstWord, (int(*)(void *,Aig_Obj_t *,Aig_Obj_t *))Ssw_SmlObjsAreEqualWord );\n    // perform refinement of classes\n    pAigNew = Ssw_SignalCorrespondenceRefine( p );\n    // cleanup\n    Ssw_FreeTempClasses( pvClasses, Aig_ManObjNumMax(pMiter) );\n    Ssw_ManStop( p );\n    Aig_ManStop( pMiter );\n    return pAigNew;\n}"
+    },
+    {
+      "Name": "Ssw_SignalCorrespondeceTestPairs",
+      "Start": 10550,
+      "End": 12474,
+      "BodyStart": 10615,
+      "Original": "Aig_Man_t * Ssw_SignalCorrespondeceTestPairs( Aig_Man_t * pAig )\n{\n    Aig_Man_t * pAigNew, * pAigRes;\n    Ssw_Pars_t Pars, * pPars = \u0026Pars;\n    Vec_Int_t * vIds1, * vIds2;\n    Aig_Obj_t * pObj, * pRepr;\n    int RetValue, i;\n    abctime clk = Abc_Clock();\n    Ssw_ManSetDefaultParams( pPars );\n    pPars-\u003efVerbose = 1;\n    pAigNew = Ssw_SignalCorrespondence( pAig, pPars );\n    // record pairs of equivalent nodes\n    vIds1 = Vec_IntAlloc( Aig_ManObjNumMax(pAig) );\n    vIds2 = Vec_IntAlloc( Aig_ManObjNumMax(pAig) );\n    Aig_ManForEachObj( pAig, pObj, i )\n    {\n        pRepr = Aig_Regular((Aig_Obj_t *)pObj-\u003epData);\n        if ( pRepr == NULL )\n            continue;\n        if ( Aig_ManObj(pAigNew, pRepr-\u003eId) == NULL )\n            continue;\n/*\n        if ( Aig_ObjIsNode(pObj) )\n            Abc_Print( 1, \"n \" );\n        else if ( Saig_ObjIsPi(pAig, pObj) )\n            Abc_Print( 1, \"pi \" );\n        else if ( Saig_ObjIsLo(pAig, pObj) )\n            Abc_Print( 1, \"lo \" );\n*/\n        Vec_IntPush( vIds1, Aig_ObjId(pObj) );\n        Vec_IntPush( vIds2, Aig_ObjId(pRepr) );\n    }\n    Abc_Print( 1, \"Recorded %d pairs (before: %d  after: %d).\\n\", Vec_IntSize(vIds1), Aig_ManObjNumMax(pAig), Aig_ManObjNumMax(pAigNew) );\n    // try the new AIGs\n    pAigRes = Ssw_SignalCorrespondenceWithPairs( pAig, pAigNew, vIds1, vIds2, pPars );\n    Vec_IntFree( vIds1 );\n    Vec_IntFree( vIds2 );\n    // report the results\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if ( RetValue == 1 )\n        Abc_Print( 1, \"Verification successful.  \" );\n    else if ( RetValue == 0 )\n        Abc_Print( 1, \"Verification failed with the counter-example.  \" );\n    else\n        Abc_Print( 1, \"Verification UNDECIDED. Remaining registers %d (total %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pAig) + Aig_ManRegNum(pAigNew) );\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    // cleanup\n    Aig_ManStop( pAigNew );\n    return pAigRes;\n}",
+      "Draft": "func Ssw_SignalCorrespondeceTestPairs(pAig *Aig_Man_t) *Aig_Man_t {\n    var pAigNew, pAigRes *Aig_Man_t;\n    var Pars Ssw_Pars_t;\n    var pPars *Ssw_Pars_t = \u0026Pars;\n    var vIds1, vIds2 *Vec_Int_t;\n    var pObj, pRepr *Aig_Obj_t;\n    var RetValue, i int32;\n    var clk abctime  = Abc_Clock();\n    Ssw_ManSetDefaultParams( pPars );\n    pPars.fVerbose = 1;\n    pAigNew = Ssw_SignalCorrespondence( pAig, pPars );\n    // record pairs of equivalent nodes\n    vIds1 = Vec_IntAlloc( Aig_ManObjNumMax(pAig) );\n    vIds2 = Vec_IntAlloc( Aig_ManObjNumMax(pAig) );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pRepr = Aig_Regular((Aig_Obj_t *)pObj.pData);\n        if pRepr == nil {\n            continue; }\n        if Aig_ManObj(pAigNew, pRepr.Id) == nil {\n            continue; }\n/*\n        if ( Aig_ObjIsNode(pObj) )\n            Abc_Print( 1, \"n \" );\n        else if ( Saig_ObjIsPi(pAig, pObj) )\n            Abc_Print( 1, \"pi \" );\n        else if ( Saig_ObjIsLo(pAig, pObj) )\n            Abc_Print( 1, \"lo \" );\n*/\n        Vec_IntPush( vIds1, Aig_ObjId(pObj) );\n        Vec_IntPush( vIds2, Aig_ObjId(pRepr) );\n    }\n    }\n    Abc_Print( 1, \"Recorded %d pairs (before: %d  after: %d).\\n\", Vec_IntSize(vIds1), Aig_ManObjNumMax(pAig), Aig_ManObjNumMax(pAigNew) );\n    // try the new AIGs\n    pAigRes = Ssw_SignalCorrespondenceWithPairs( pAig, pAigNew, vIds1, vIds2, pPars );\n    Vec_IntFree( vIds1 );\n    Vec_IntFree( vIds2 );\n    // report the results\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if RetValue == 1 {\n        Abc_Print( 1, \"Verification successful.  \" );\n    } else if RetValue == 0 {\n        Abc_Print( 1, \"Verification failed with the counter-example.  \" );\n    } else {\n        Abc_Print( 1, \"Verification UNDECIDED. Remaining registers %d (total %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pAig) + Aig_ManRegNum(pAigNew) ); }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    // cleanup\n    Aig_ManStop( pAigNew );\n    return pAigRes;\n}"
+    },
+    {
+      "Name": "Ssw_SecWithPairs",
+      "Start": 12779,
+      "End": 13760,
+      "BodyStart": 12898,
+      "Original": "int Ssw_SecWithPairs( Aig_Man_t * pAig1, Aig_Man_t * pAig2, Vec_Int_t * vIds1, Vec_Int_t * vIds2, Ssw_Pars_t * pPars )\n{\n    Aig_Man_t * pAigRes;\n    int RetValue;\n    abctime clk = Abc_Clock();\n    assert( vIds1 != NULL \u0026\u0026 vIds2 != NULL );\n    // try the new AIGs\n    Abc_Print( 1, \"Performing specialized verification with node pairs.\\n\" );\n    pAigRes = Ssw_SignalCorrespondenceWithPairs( pAig1, pAig2, vIds1, vIds2, pPars );\n    // report the results\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if ( RetValue == 1 )\n        Abc_Print( 1, \"Verification successful.  \" );\n    else if ( RetValue == 0 )\n        Abc_Print( 1, \"Verification failed with a counter-example.  \" );\n    else\n        Abc_Print( 1, \"Verification UNDECIDED. The number of remaining regs = %d (total = %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pAig1) + Aig_ManRegNum(pAig2) );\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    // cleanup\n    Aig_ManStop( pAigRes );\n    return RetValue;\n}",
+      "Draft": "func Ssw_SecWithPairs(pAig1 *Aig_Man_t, pAig2 *Aig_Man_t, vIds1 *Vec_Int_t, vIds2 *Vec_Int_t, pPars *Ssw_Pars_t) int32 {\n    var pAigRes *Aig_Man_t;\n    var RetValue int32;\n    var clk abctime  = Abc_Clock();\n    assert(vIds1 != nil \u0026\u0026 vIds2 != nil, \"vIds1 != nil \u0026\u0026 vIds2 != nil\");\n    // try the new AIGs\n    Abc_Print( 1, \"Performing specialized verification with node pairs.\\n\" );\n    pAigRes = Ssw_SignalCorrespondenceWithPairs( pAig1, pAig2, vIds1, vIds2, pPars );\n    // report the results\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if RetValue == 1 {\n        Abc_Print( 1, \"Verification successful.  \" );\n    } else if RetValue == 0 {\n        Abc_Print( 1, \"Verification failed with a counter-example.  \" );\n    } else {\n        Abc_Print( 1, \"Verification UNDECIDED. The number of remaining regs = %d (total = %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pAig1) + Aig_ManRegNum(pAig2) ); }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    // cleanup\n    Aig_ManStop( pAigRes );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Ssw_SecGeneral",
+      "Start": 14041,
+      "End": 15026,
+      "BodyStart": 14120,
+      "Original": "int Ssw_SecGeneral( Aig_Man_t * pAig1, Aig_Man_t * pAig2, Ssw_Pars_t * pPars )\n{\n    Aig_Man_t * pAigRes, * pMiter;\n    int RetValue;\n    abctime clk = Abc_Clock();\n    // try the new AIGs\n    Abc_Print( 1, \"Performing general verification without node pairs.\\n\" );\n    pMiter = Saig_ManCreateMiter( pAig1, pAig2, 0 );\n    Aig_ManCleanup( pMiter );\n    pAigRes = Ssw_SignalCorrespondence( pMiter, pPars );\n    Aig_ManStop( pMiter );\n    // report the results\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if ( RetValue == 1 )\n        Abc_Print( 1, \"Verification successful.  \" );\n    else if ( RetValue == 0 )\n        Abc_Print( 1, \"Verification failed with a counter-example.  \" );\n    else\n        Abc_Print( 1, \"Verification UNDECIDED. The number of remaining regs = %d (total = %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pAig1) + Aig_ManRegNum(pAig2) );\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    // cleanup\n    Aig_ManStop( pAigRes );\n    return RetValue;\n}",
+      "Draft": "func Ssw_SecGeneral(pAig1 *Aig_Man_t, pAig2 *Aig_Man_t, pPars *Ssw_Pars_t) int32 {\n    var pAigRes, pMiter *Aig_Man_t;\n    var RetValue int32;\n    var clk abctime  = Abc_Clock();\n    // try the new AIGs\n    Abc_Print( 1, \"Performing general verification without node pairs.\\n\" );\n    pMiter = Saig_ManCreateMiter( pAig1, pAig2, 0 );\n    Aig_ManCleanup( pMiter );\n    pAigRes = Ssw_SignalCorrespondence( pMiter, pPars );\n    Aig_ManStop( pMiter );\n    // report the results\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if RetValue == 1 {\n        Abc_Print( 1, \"Verification successful.  \" );\n    } else if RetValue == 0 {\n        Abc_Print( 1, \"Verification failed with a counter-example.  \" );\n    } else {\n        Abc_Print( 1, \"Verification UNDECIDED. The number of remaining regs = %d (total = %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pAig1) + Aig_ManRegNum(pAig2) ); }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    // cleanup\n    Aig_ManStop( pAigRes );\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Ssw_SecGeneralMiter",
+      "Start": 15307,
+      "End": 16139,
+      "BodyStart": 15373,
+      "Original": "int Ssw_SecGeneralMiter( Aig_Man_t * pMiter, Ssw_Pars_t * pPars )\n{\n    Aig_Man_t * pAigRes;\n    int RetValue;\n    abctime clk = Abc_Clock();\n    // try the new AIGs\n//    Abc_Print( 1, \"Performing general verification without node pairs.\\n\" );\n    pAigRes = Ssw_SignalCorrespondence( pMiter, pPars );\n    // report the results\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if ( RetValue == 1 )\n        Abc_Print( 1, \"Verification successful.  \" );\n    else if ( RetValue == 0 )\n        Abc_Print( 1, \"Verification failed with a counter-example.  \" );\n    else\n        Abc_Print( 1, \"Verification UNDECIDED. The number of remaining regs = %d (total = %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pMiter) );\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    // cleanup\n    Aig_ManStop( pAigRes );\n    return RetValue;\n}",
+      "Draft": "func Ssw_SecGeneralMiter(pMiter *Aig_Man_t, pPars *Ssw_Pars_t) int32 {\n    var pAigRes *Aig_Man_t;\n    var RetValue int32;\n    var clk abctime  = Abc_Clock();\n    // try the new AIGs\n//    Abc_Print( 1, \"Performing general verification without node pairs.\\n\" );\n    pAigRes = Ssw_SignalCorrespondence( pMiter, pPars );\n    // report the results\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if RetValue == 1 {\n        Abc_Print( 1, \"Verification successful.  \" );\n    } else if RetValue == 0 {\n        Abc_Print( 1, \"Verification failed with a counter-example.  \" );\n    } else {\n        Abc_Print( 1, \"Verification UNDECIDED. The number of remaining regs = %d (total = %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pMiter) ); }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    // cleanup\n    Aig_ManStop( pAigRes );\n    return RetValue;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::mechanical::sizeof::4795",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4523,
+      "End": 4523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::mechanical::sizeof::4895",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4578,
+      "End": 4578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::pointer-cast::1641",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1479,
+      "End": 1479
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::pointer-cast::3653",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3473,
+      "End": 3486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::pointer-cast::3710",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3530,
+      "End": 3543
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::pointer-cast::4750",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4523,
+      "End": 4523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::pointer-cast::4801",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4523,
+      "End": 4523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::pointer-cast::4880",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4578,
+      "End": 4578
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::pointer-cast::8652",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7910,
+      "End": 7910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::pointer-cast::9193",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8366,
+      "End": 8366
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::pointer-cast::12088",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11072,
+      "End": 11072
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::pointer-cast::12206",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11141,
+      "End": 11154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::Ssw_MiterStatus",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_MiterStatus",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1280,
+      "End": 2708
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::Ssw_TransferSignalPairs",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_TransferSignalPairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2983,
+      "End": 3944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::ternary::Ssw_TransformPairsIntoTempClasses",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_TransformPairsIntoTempClasses",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4207,
+      "End": 7953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::Ssw_TransformPairsIntoTempClasses",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_TransformPairsIntoTempClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4207,
+      "End": 7953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::ternary::Ssw_FreeTempClasses",
+      "Category": "ternary-review",
+      "Symbol": "Ssw_FreeTempClasses",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8174,
+      "End": 8390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::Ssw_FreeTempClasses",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_FreeTempClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8174,
+      "End": 8390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::Ssw_SignalCorrespondenceWithPairs",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SignalCorrespondenceWithPairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8692,
+      "End": 10260
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::Ssw_SignalCorrespondeceTestPairs",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SignalCorrespondeceTestPairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10550,
+      "End": 12474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::Ssw_SecWithPairs",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SecWithPairs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12779,
+      "End": 13760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::Ssw_SecGeneral",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SecGeneral",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14041,
+      "End": 15026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::Ssw_SecGeneralMiter",
+      "Category": "semantic-review",
+      "Symbol": "Ssw_SecGeneralMiter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15307,
+      "End": 16139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/ssw/sswPairs.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16385
+    }
+  ],
+  "Draft": "package ssw\n\nimport \"time\"\n\n/**CFile****************************************************************\n\n  FileName    [sswPairs.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Inductive prover with constraints.]\n\n  Synopsis    [Calls to the SAT solver.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - September 1, 2008.]\n\n  Revision    [$Id: sswPairs.c,v 1.00 2008/09/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sswInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Reports the status of the miter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_MiterStatus(p *Aig_Man_t, fVerbose int32) int32 {\n    var pObj, pChild *Aig_Obj_t;\n    var i, CountConst0, CountNonConst0, CountUndecided int32;\n//    if ( p-\u003epData )\n//        return 0;\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pChild = Aig_ObjChild0(pObj);\n        // check if the output is constant 0\n        if pChild == Aig_ManConst0(p) {\n            CountConst0++;\n            continue;\n        }\n        // check if the output is constant 1\n        if pChild == Aig_ManConst1(p) {\n            CountNonConst0++;\n            continue;\n        }\n        // check if the output is a primary input\n        if p.nRegs == 0 \u0026\u0026 Aig_ObjIsCi(Aig_Regular(pChild)) {\n            CountNonConst0++;\n            continue;\n        }\n        // check if the output can be not constant 0\n        if Aig_Regular(pChild).fPhase != uint32(Aig_IsComplement(pChild)) {\n            CountNonConst0++;\n            continue;\n        }\n        CountUndecided++;\n    }\n\n    if fVerbose != 0 {\n        Abc_Print( 1, \"Miter has %d outputs. \", Saig_ManPoNum(p) );\n        Abc_Print( 1, \"Const0 = %d.  \", CountConst0 );\n        Abc_Print( 1, \"NonConst0 = %d.  \", CountNonConst0 );\n        Abc_Print( 1, \"Undecided = %d.  \", CountUndecided );\n        Abc_Print( 1, \"\\n\" );\n    }\n\n    if CountNonConst0 {\n        return 0; }\n    if CountUndecided != 0 {\n        return -1; }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transfer equivalent pairs to the miter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_TransferSignalPairs(pMiter *Aig_Man_t, pAig1 *Aig_Man_t, pAig2 *Aig_Man_t, vIds1 *Vec_Int_t, vIds2 *Vec_Int_t) *Vec_Int_t {\n    var vIds *Vec_Int_t;\n    var pObj1, pObj2 *Aig_Obj_t;\n    var pObj1m, pObj2m *Aig_Obj_t;\n    var i int32;\n    vIds = Vec_IntAlloc( 2 * Vec_IntSize(vIds1) );\n    for  i = 0; i \u003c Vec_IntSize(vIds1); i++  {\n        pObj1 = Aig_ManObj( pAig1, Vec_IntEntry(vIds1, i) );\n        pObj2 = Aig_ManObj( pAig2, Vec_IntEntry(vIds2, i) );\n        pObj1m = Aig_Regular((Aig_Obj_t *)pObj1.pData);\n        pObj2m = Aig_Regular((Aig_Obj_t *)pObj2.pData);\n        assert(pObj1m \u0026\u0026 (pObj2m != nil), \"pObj1m \u0026\u0026 pObj2m\");\n        if pObj1m == pObj2m {\n            continue; }\n        if pObj1m.Id \u003c pObj2m.Id {\n            Vec_IntPush( vIds, pObj1m.Id );\n            Vec_IntPush( vIds, pObj2m.Id );\n        \n        } else {\n            Vec_IntPush( vIds, pObj2m.Id );\n            Vec_IntPush( vIds, pObj1m.Id );\n        }\n    }\n    return vIds;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transform pairs into class representation.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_TransformPairsIntoTempClasses(vPairs *Vec_Int_t, nObjNumMax int32) **Vec_Int_t {\n    var pvClasses **Vec_Int_t;   // vector of classes\n    var pReprs *int32;             // mapping nodes into their representatives\n    var Entry, idObj, idRepr, idReprObj, idReprRepr, i int32;\n    // allocate data-structures\n    // inlining of macro ABC_CALLOC\n    pvClasses = ((Vec_Int_t * *) calloc((size_t)(nObjNumMax), sizeof(Vec_Int_t *)));\n    // inlining of macro ABC_ALLOC\n    pReprs    = ((int *) malloc(sizeof(int) * (size_t)(nObjNumMax)));\n    for  i = 0; i \u003c nObjNumMax; i++  {\n        pReprs[i] = -1;\n    }\n    // consider pairs\n    for  i = 0; i \u003c Vec_IntSize(vPairs); i += 2  {\n        // get both objects\n        idRepr = Vec_IntEntry( vPairs, i   );\n        idObj  = Vec_IntEntry( vPairs, i+1 );\n        assert(idObj \u003e 0, \"idObj \u003e 0\");\n        assert((pReprs[idRepr] == -1) || (pvClasses[pReprs[idRepr]] != nil), \"(pReprs[idRepr] == -1) || (pvClasses[pReprs[idRepr]] != nil)\");\n        assert((pReprs[idObj]  == -1) || (pvClasses[pReprs[idObj] ] != nil), \"(pReprs[idObj]  == -1) || (pvClasses[pReprs[idObj] ] != nil)\");\n        // get representatives of both objects\n        idReprRepr = pReprs[idRepr];\n        idReprObj  = pReprs[idObj];\n        // check different situations\n        if idReprRepr == -1 \u0026\u0026 idReprObj == -1 {   // they do not have classes\n            // create a class\n            pvClasses[idRepr] = Vec_IntAlloc( 4 );\n            Vec_IntPush( pvClasses[idRepr], idRepr );\n            Vec_IntPush( pvClasses[idRepr], idObj );\n            pReprs[ idRepr ] = idRepr;\n            pReprs[ idObj  ] = idRepr;\n        \n        } else if idReprRepr \u003e= 0 \u0026\u0026 idReprObj == -1 {   // representative has a class\n            // add iObj to the same class\n            Vec_IntPushUniqueOrder( pvClasses[idReprRepr], idObj );\n            pReprs[ idObj ] = idReprRepr;\n        \n        } else if idReprRepr == -1 \u0026\u0026 idReprObj \u003e= 0 {   // object has a class\n            assert(idReprObj != idRepr, \"idReprObj != idRepr\");\n            if idReprObj \u003c idRepr { // add idRepr to the same class\n                Vec_IntPushUniqueOrder( pvClasses[idReprObj], idRepr );\n                pReprs[ idRepr ] = idReprObj;\n            \n            } else { // if ( idReprObj \u003e idRepr )\n             // make idRepr new representative\n                Vec_IntPushFirst( pvClasses[idReprObj], idRepr );\n                pvClasses[idRepr] = pvClasses[idReprObj];\n                pvClasses[idReprObj] = nil;\n                // set correct representatives of each node\n                // inlining of macro Vec_IntForEachEntry\n                for  i = 0; (i \u003c Vec_IntSize(pvClasses[idRepr])) \u0026\u0026 (((Entry) = Vec_IntEntry(pvClasses[idRepr], i)), 1); i++  {\n                    pReprs[ Entry ] = idRepr;\n                }\n            }\n        \n        } else { // if ( idReprRepr \u003e= 0 \u0026\u0026 idReprObj \u003e= 0 )\n           // both have classes\n            if idReprRepr == idReprObj {  // the classes are the same\n                // nothing to do\n            \n            } else {  // the classes are different\n                // find the repr of the new class\n                if idReprRepr \u003c idReprObj {\n                    // inlining of macro Vec_IntForEachEntry\n                    for  i = 0; (i \u003c Vec_IntSize(pvClasses[idReprObj])) \u0026\u0026 (((Entry) = Vec_IntEntry(pvClasses[idReprObj], i)), 1); i++  {\n                        Vec_IntPushUniqueOrder( pvClasses[idReprRepr], Entry );\n                        pReprs[ Entry ] = idReprRepr;\n                    }\n                    Vec_IntFree( pvClasses[idReprObj] );\n                    pvClasses[idReprObj] = nil;\n                \n                } else { // if ( idReprRepr \u003e idReprObj )\n                \n                    // inlining of macro Vec_IntForEachEntry\n                    for  i = 0; (i \u003c Vec_IntSize(pvClasses[idReprRepr])) \u0026\u0026 (((Entry) = Vec_IntEntry(pvClasses[idReprRepr], i)), 1); i++  {\n                        Vec_IntPushUniqueOrder( pvClasses[idReprObj], Entry );\n                        pReprs[ Entry ] = idReprObj;\n                    }\n                    Vec_IntFree( pvClasses[idReprRepr] );\n                    pvClasses[idReprRepr] = nil;\n                }\n            }\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pReprs) ? (free((char *) (pReprs)), (pReprs) = 0) : 0);\n    return pvClasses;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_FreeTempClasses(pvClasses **Vec_Int_t, nObjNumMax int32) {\n    var i int32;\n    for  i = 0; i \u003c nObjNumMax; i++  {\n        if pvClasses[i] {\n            Vec_IntFree( pvClasses[i] ); }\n    }\n    // inlining of macro ABC_FREE\n    ((pvClasses) ? (free((char *) (pvClasses)), (pvClasses) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs signal correspondence for the miter of two AIGs with node pairs defined.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SignalCorrespondenceWithPairs(pAig1 *Aig_Man_t, pAig2 *Aig_Man_t, vIds1 *Vec_Int_t, vIds2 *Vec_Int_t, pPars *Ssw_Pars_t) *Aig_Man_t {\n    var p *Ssw_Man_t;\n    var pAigNew, pMiter *Aig_Man_t;\n    var Pars Ssw_Pars_t;\n    var vPairs *Vec_Int_t;\n    var pvClasses **Vec_Int_t;\n    assert(Vec_IntSize(vIds1) == Vec_IntSize(vIds2), \"Vec_IntSize(vIds1) == Vec_IntSize(vIds2)\");\n    // create sequential miter\n    pMiter = Saig_ManCreateMiter( pAig1, pAig2, 0 );\n    Aig_ManCleanup( pMiter );\n    // transfer information to the miter\n    vPairs = Ssw_TransferSignalPairs( pMiter, pAig1, pAig2, vIds1, vIds2 );\n    // create representation of the classes\n    pvClasses = Ssw_TransformPairsIntoTempClasses( vPairs, Aig_ManObjNumMax(pMiter) );\n    Vec_IntFree( vPairs );\n    // if parameters are not given, create them\n    if pPars == nil {\n        Ssw_ManSetDefaultParams( pPars = \u0026Pars ); }\n    // start the induction manager\n    p = Ssw_ManCreate( pMiter, pPars );\n    // create equivalence classes using these IDs\n    p.ppClasses = Ssw_ClassesPreparePairs( pMiter, pvClasses );\n    p.pSml = Ssw_SmlStart( pMiter, 0, p.nFrames + p.pPars.nFramesAddSim, 1 );\n    Ssw_ClassesSetData( p.ppClasses, p.pSml, (unsigned(*)(void *,Aig_Obj_t *))Ssw_SmlObjHashWord, (int(*)(void *,Aig_Obj_t *))Ssw_SmlObjIsConstWord, (int(*)(void *,Aig_Obj_t *,Aig_Obj_t *))Ssw_SmlObjsAreEqualWord );\n    // perform refinement of classes\n    pAigNew = Ssw_SignalCorrespondenceRefine( p );\n    // cleanup\n    Ssw_FreeTempClasses( pvClasses, Aig_ManObjNumMax(pMiter) );\n    Ssw_ManStop( p );\n    Aig_ManStop( pMiter );\n    return pAigNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Runs inductive SEC for the miter of two AIGs with node pairs defined.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SignalCorrespondeceTestPairs(pAig *Aig_Man_t) *Aig_Man_t {\n    var pAigNew, pAigRes *Aig_Man_t;\n    var Pars Ssw_Pars_t;\n    var pPars *Ssw_Pars_t = \u0026Pars;\n    var vIds1, vIds2 *Vec_Int_t;\n    var pObj, pRepr *Aig_Obj_t;\n    var RetValue, i int32;\n    var clk abctime  = Abc_Clock();\n    Ssw_ManSetDefaultParams( pPars );\n    pPars.fVerbose = 1;\n    pAigNew = Ssw_SignalCorrespondence( pAig, pPars );\n    // record pairs of equivalent nodes\n    vIds1 = Vec_IntAlloc( Aig_ManObjNumMax(pAig) );\n    vIds2 = Vec_IntAlloc( Aig_ManObjNumMax(pAig) );\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        pRepr = Aig_Regular((Aig_Obj_t *)pObj.pData);\n        if pRepr == nil {\n            continue; }\n        if Aig_ManObj(pAigNew, pRepr.Id) == nil {\n            continue; }\n/*\n        if ( Aig_ObjIsNode(pObj) )\n            Abc_Print( 1, \"n \" );\n        else if ( Saig_ObjIsPi(pAig, pObj) )\n            Abc_Print( 1, \"pi \" );\n        else if ( Saig_ObjIsLo(pAig, pObj) )\n            Abc_Print( 1, \"lo \" );\n*/\n        Vec_IntPush( vIds1, Aig_ObjId(pObj) );\n        Vec_IntPush( vIds2, Aig_ObjId(pRepr) );\n    }\n    }\n    Abc_Print( 1, \"Recorded %d pairs (before: %d  after: %d).\\n\", Vec_IntSize(vIds1), Aig_ManObjNumMax(pAig), Aig_ManObjNumMax(pAigNew) );\n    // try the new AIGs\n    pAigRes = Ssw_SignalCorrespondenceWithPairs( pAig, pAigNew, vIds1, vIds2, pPars );\n    Vec_IntFree( vIds1 );\n    Vec_IntFree( vIds2 );\n    // report the results\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if RetValue == 1 {\n        Abc_Print( 1, \"Verification successful.  \" );\n    } else if RetValue == 0 {\n        Abc_Print( 1, \"Verification failed with the counter-example.  \" );\n    } else {\n        Abc_Print( 1, \"Verification UNDECIDED. Remaining registers %d (total %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pAig) + Aig_ManRegNum(pAigNew) ); }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    // cleanup\n    Aig_ManStop( pAigNew );\n    return pAigRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Runs inductive SEC for the miter of two AIGs with node pairs defined.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SecWithPairs(pAig1 *Aig_Man_t, pAig2 *Aig_Man_t, vIds1 *Vec_Int_t, vIds2 *Vec_Int_t, pPars *Ssw_Pars_t) int32 {\n    var pAigRes *Aig_Man_t;\n    var RetValue int32;\n    var clk abctime  = Abc_Clock();\n    assert(vIds1 != nil \u0026\u0026 vIds2 != nil, \"vIds1 != nil \u0026\u0026 vIds2 != nil\");\n    // try the new AIGs\n    Abc_Print( 1, \"Performing specialized verification with node pairs.\\n\" );\n    pAigRes = Ssw_SignalCorrespondenceWithPairs( pAig1, pAig2, vIds1, vIds2, pPars );\n    // report the results\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if RetValue == 1 {\n        Abc_Print( 1, \"Verification successful.  \" );\n    } else if RetValue == 0 {\n        Abc_Print( 1, \"Verification failed with a counter-example.  \" );\n    } else {\n        Abc_Print( 1, \"Verification UNDECIDED. The number of remaining regs = %d (total = %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pAig1) + Aig_ManRegNum(pAig2) ); }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    // cleanup\n    Aig_ManStop( pAigRes );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Runs inductive SEC for the miter of two AIGs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SecGeneral(pAig1 *Aig_Man_t, pAig2 *Aig_Man_t, pPars *Ssw_Pars_t) int32 {\n    var pAigRes, pMiter *Aig_Man_t;\n    var RetValue int32;\n    var clk abctime  = Abc_Clock();\n    // try the new AIGs\n    Abc_Print( 1, \"Performing general verification without node pairs.\\n\" );\n    pMiter = Saig_ManCreateMiter( pAig1, pAig2, 0 );\n    Aig_ManCleanup( pMiter );\n    pAigRes = Ssw_SignalCorrespondence( pMiter, pPars );\n    Aig_ManStop( pMiter );\n    // report the results\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if RetValue == 1 {\n        Abc_Print( 1, \"Verification successful.  \" );\n    } else if RetValue == 0 {\n        Abc_Print( 1, \"Verification failed with a counter-example.  \" );\n    } else {\n        Abc_Print( 1, \"Verification UNDECIDED. The number of remaining regs = %d (total = %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pAig1) + Aig_ManRegNum(pAig2) ); }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    // cleanup\n    Aig_ManStop( pAigRes );\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Runs inductive SEC for the miter of two AIGs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ssw_SecGeneralMiter(pMiter *Aig_Man_t, pPars *Ssw_Pars_t) int32 {\n    var pAigRes *Aig_Man_t;\n    var RetValue int32;\n    var clk abctime  = Abc_Clock();\n    // try the new AIGs\n//    Abc_Print( 1, \"Performing general verification without node pairs.\\n\" );\n    pAigRes = Ssw_SignalCorrespondence( pMiter, pPars );\n    // report the results\n    RetValue = Ssw_MiterStatus( pAigRes, 1 );\n    if RetValue == 1 {\n        Abc_Print( 1, \"Verification successful.  \" );\n    } else if RetValue == 0 {\n        Abc_Print( 1, \"Verification failed with a counter-example.  \" );\n    } else {\n        Abc_Print( 1, \"Verification UNDECIDED. The number of remaining regs = %d (total = %d).  \",\n            Aig_ManRegNum(pAigRes), Aig_ManRegNum(pMiter) ); }\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    // cleanup\n    Aig_ManStop( pAigRes );\n    return RetValue;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

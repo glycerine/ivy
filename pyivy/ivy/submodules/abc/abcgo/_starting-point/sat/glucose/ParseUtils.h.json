@@ -1,0 +1,276 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/ParseUtils.h",
+  "SHA256": "60687ca6542475355e28d63d227ca69ae34d8e6894eafdf4724d82b16c2b4637",
+  "Library": [
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 56,
+        "Column": 50,
+        "ByteOffset": 2070
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    int  operator *  () { return (pos \u003e= size) ? EOF : buf[pos]; }"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 66,
+        "Column": 60,
+        "ByteOffset": 2417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "static inline bool isEof(StreamBuffer\u0026 in) { return *in == EOF;  }"
+    },
+    {
+      "Name": "EOF",
+      "Status": "converted",
+      "Message": "Conventional C status constant mapped; check platform-specific overrides.",
+      "Location": {
+        "Line": 94,
+        "Column": 15,
+        "ByteOffset": 3152
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if(*in == EOF) return 0;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 97,
+        "Column": 33,
+        "ByteOffset": 3273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (*in \u003c '1' || *in \u003e '9') printf(\"PARSE ERROR! Unexpected char: %c\\n\", *in), exit(3);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 97,
+        "Column": 84,
+        "ByteOffset": 3324
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (*in \u003c '1' || *in \u003e '9') printf(\"PARSE ERROR! Unexpected char: %c\\n\", *in), exit(3);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 100,
+        "Column": 21,
+        "ByteOffset": 3396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (*in != '.') printf(\"PARSE ERROR! Unexpected char: %c\\n\", *in),exit(3);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 100,
+        "Column": 71,
+        "ByteOffset": 3446
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (*in != '.') printf(\"PARSE ERROR! Unexpected char: %c\\n\", *in),exit(3);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 107,
+        "Column": 21,
+        "ByteOffset": 3670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (*in != 'e') printf(\"PARSE ERROR! Unexpected char: %c\\n\", *in),exit(3);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 107,
+        "Column": 71,
+        "ByteOffset": 3720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (*in != 'e') printf(\"PARSE ERROR! Unexpected char: %c\\n\", *in),exit(3);"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 110,
+        "Column": 13,
+        "ByteOffset": 3809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    accu *= pow(10,exponent);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 33,
+        "ByteOffset": 4083
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (*in \u003c '0' || *in \u003e '9') fprintf(stderr, \"PARSE ERROR! Unexpected char: %c\\n\", *in), exit(3);"
+    },
+    {
+      "Name": "stderr",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 122,
+        "Column": 41,
+        "ByteOffset": 4091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (*in \u003c '0' || *in \u003e '9') fprintf(stderr, \"PARSE ERROR! Unexpected char: %c\\n\", *in), exit(3);"
+    },
+    {
+      "Name": "exit",
+      "Status": "converted",
+      "Message": "os.Exit does not run Go defers or C atexit handlers; review cleanup/buffering.",
+      "Location": {
+        "Line": 122,
+        "Column": 93,
+        "ByteOffset": 4143
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if (*in \u003c '0' || *in \u003e '9') fprintf(stderr, \"PARSE ERROR! Unexpected char: %c\\n\", *in), exit(3);"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/ParseUtils.h::mechanical::static::1664",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1664,
+      "End": 1670
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/ParseUtils.h::mechanical::sizeof::1946",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1946,
+      "End": 1952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/ParseUtils.h::mechanical::static::2407",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2407,
+      "End": 2413
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/ParseUtils.h::mechanical::static::2474",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2474,
+      "End": 2480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/ParseUtils.h::mechanical::static::2730",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2730,
+      "End": 2736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/ParseUtils.h::mechanical::static::2851",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2851,
+      "End": 2857
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/ParseUtils.h::mechanical::static::3006",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3006,
+      "End": 3012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/ParseUtils.h::mechanical::static::3937",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3937,
+      "End": 3943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/ParseUtils.h::mechanical::static::4467",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4467,
+      "End": 4473
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/ParseUtils.h::mechanical::static::4762",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 4762,
+      "End": 4768
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/ParseUtils.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose/ParseUtils.h::macro-inline::1930",
+      "Category": "macro-inline-review",
+      "Symbol": "gzread",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1930,
+      "End": 1958
+    }
+  ],
+  "Draft": "package glucose\n\nimport (\n\t\"fmt\"\n\t\"math\"\n\t\"os\"\n)\n\n/************************************************************************************[ParseUtils.h]\nCopyright (c) 2003-2006, Niklas Een, Niklas Sorensson\nCopyright (c) 2007-2010, Niklas Sorensson\n\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and\nassociated documentation files (the \"Software\"), to deal in the Software without restriction,\nincluding without limitation the rights to use, copy, modify, merge, publish, distribute,\nsublicense, and/or sell copies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all copies or\nsubstantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT\nNOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND\nNONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,\nDAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT\nOF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n**************************************************************************************************/\n\n\n\n\n//#include \u003cstdlib.h\u003e\n//#include \u003cstdio.h\u003e\n//#include \u003cmath.h\u003e\n\n//#include \"misc/zlib/zlib.h\"\n\n//ABC_NAMESPACE_CXX_HEADER_START\n\nnamespace Gluco {\n\n//-------------------------------------------------------------------------------------------------\n// A simple buffered character stream class:\n\nstatic int buffer_size = 1048576;\n\n\nclass StreamBuffer {\n    gzFile        in;\n    unsigned char buf[buffer_size];\n    int           pos;\n    int           size;\n\n    void assureLookahead() {\n        if pos \u003e= size {\n            pos  = 0;\n            size = gzread(in, buf, sizeof(buf)); } }\n\npublic:\n    explicit StreamBuffer(gzFile i) : in(i), pos(0), size(0) { assureLookahead(); }\n\n    int  operator *  () { return (pos \u003e= size) ? -1 : buf[pos]; }\n    void operator ++ ()       { pos++; assureLookahead(); }\n    int  position    () { return pos; }\n};\n\n\n//-------------------------------------------------------------------------------------------------\n// End-of-file detection functions for StreamBuffer and char*:\n\n\nstatic inline bool isEof(StreamBuffer\u0026 in) { return *in == -1;  }\nstatic inline bool isEof(char*   in) { return *in == '\\0'; }\n\n//-------------------------------------------------------------------------------------------------\n// Generic parse functions parametrized over the input-stream type.\n\n\ntemplate\u003cclass B\u003e\nstatic void skipWhitespace(B\u0026 in) {\n    while ((*in \u003e= 9 \u0026\u0026 *in \u003c= 13) || *in == 32)\n        ++in; }\n\n\ntemplate\u003cclass B\u003e\nstatic void skipLine(B\u0026 in) {\n    for {\n        if (isEof(in)) return;\n        if *in == '\\n' { ++in; return; }\n        ++in; } }\n\ntemplate\u003cclass B\u003e\nstatic double parseDouble(B\u0026 in) { // only in the form X.XXXXXe-XX\n    bool    neg= false;\n    double accu = 0.0;\n    double currentExponent = 1;\n    int exponent;\n    \n    skipWhitespace(in);\n    if(*in == -1) return 0;\n    if      (*in == '-') neg = true, ++in;\n    else if (*in == '+') ++in;\n    if (*in \u003c '1' || *in \u003e '9') fmt.Printf(\"PARSE ERROR! Unexpected char: %c\\n\", *in), os.Exit(int(3));\n    accu = float64((*in - '0'));\n    ++in;\n    if (*in != '.') fmt.Printf(\"PARSE ERROR! Unexpected char: %c\\n\", *in),os.Exit(int(3));\n    ++in; // skip dot\n    currentExponent = 0.1;\n    while (*in \u003e= '0' \u0026\u0026 *in \u003c= '9')\n        accu = accu + currentExponent * (float64((*in - '0'))),\n        currentExponent /= 10,\n        ++in;\n    if (*in != 'e') fmt.Printf(\"PARSE ERROR! Unexpected char: %c\\n\", *in),os.Exit(int(3));\n    ++in; // skip dot\n    exponent = parseInt(in); // read exponent\n    accu *= math.Pow(float64(10), float64(exponent));\n    return neg ? -accu:accu;\n}\n\n\ntemplate\u003cclass B\u003e\nstatic int parseInt(B\u0026 in) {\n    int     val = 0;\n    bool    neg = false;\n    skipWhitespace(in);\n    if      (*in == '-') neg = true, ++in;\n    else if (*in == '+') ++in;\n    if (*in \u003c '0' || *in \u003e '9') fmt.Fprintf(os.Stderr, \"PARSE ERROR! Unexpected char: %c\\n\", *in), os.Exit(int(3));\n    while (*in \u003e= '0' \u0026\u0026 *in \u003c= '9')\n        val = val*10 + (*in - '0'),\n        ++in;\n    return neg ? -val : val; }\n\n\n// String matching: in case of a match the input iterator will be advanced the corresponding\n// number of characters.\ntemplate\u003cclass B\u003e\nstatic bool match(B\u0026 in, char* str) {\n    int i;\n    for (i = 0; str[i] != '\\0'; i++)\n        if (in[i] != str[i])\n            return false;\n\n    in += i;\n\n    return true; \n}\n\n// String matching: consumes characters eagerly, but does not require random access iterator.\ntemplate\u003cclass B\u003e\nstatic bool eagerMatch(B\u0026 in, char* str) {\n    for (; *str != '\\0'; ++str, ++in)\n        if (*str != *in)\n            return false;\n    return true; }\n\n\n//=================================================================================================\n}\n\n//ABC_NAMESPACE_CXX_HEADER_END\n\n\n"
+}

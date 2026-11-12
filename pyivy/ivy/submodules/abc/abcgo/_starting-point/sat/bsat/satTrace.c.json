@@ -1,0 +1,169 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTrace.c",
+  "SHA256": "04e18b5fd6cd5007b5ca05f931b55d692a0d1fbe57fdd2ddf02efb3015959bca",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 56,
+        "Column": 5,
+        "ByteOffset": 1631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pSat.pFile == nil );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 57,
+        "Column": 18,
+        "ByteOffset": 1677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pSat.pFile = fopen( pName, \"w\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pSat.pFile, \"                                        \\n\" );"
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 77,
+        "Column": 5,
+        "ByteOffset": 2175
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pSat.pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 78,
+        "Column": 5,
+        "ByteOffset": 2201
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pSat.pFile, \"p %d %d %d\", sat_solver_nvars(pSat), pSat.nClauses, pSat.nRoots );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pSat.pFile );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 9,
+        "ByteOffset": 2834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pSat.pFile, \" %d\", lit_print(*pBeg) );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 103,
+        "Column": 5,
+        "ByteOffset": 2892
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pSat.pFile, \" 0\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sat_SolverTraceStart",
+      "Start": 1549,
+      "End": 1807,
+      "BodyStart": 1610,
+      "Original": "void Sat_SolverTraceStart( sat_solver * pSat, char * pName )\n{\n    assert( pSat-\u003epFile == NULL );\n    pSat-\u003epFile = fopen( pName, \"w\" );\n    fprintf( pSat-\u003epFile, \"                                        \\n\" );\n    pSat-\u003enClauses = 0;\n    pSat-\u003enRoots = 0;\n}",
+      "Draft": "func Sat_SolverTraceStart(pSat *sat_solver, pName string) {\n    assert(pSat.pFile == nil, \"pSat.pFile == nil\");\n    pSat.pFile = os.OpenFile(pName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fmt.Fprintf(pSat.pFile, \"                                        \\n\");\n    pSat.nClauses = 0;\n    pSat.nRoots = 0;\n}"
+    },
+    {
+      "Name": "Sat_SolverTraceStop",
+      "Start": 2072,
+      "End": 2342,
+      "BodyStart": 2118,
+      "Original": "void Sat_SolverTraceStop( sat_solver * pSat )\n{\n    if ( pSat-\u003epFile == NULL )\n        return;\n    rewind( pSat-\u003epFile );\n    fprintf( pSat-\u003epFile, \"p %d %d %d\", sat_solver_nvars(pSat), pSat-\u003enClauses, pSat-\u003enRoots );\n    fclose( pSat-\u003epFile );\n    pSat-\u003epFile = NULL;\n}",
+      "Draft": "func Sat_SolverTraceStop(pSat *sat_solver) {\n    if pSat.pFile == nil {\n        return; }\n    rewind( pSat.pFile );\n    fmt.Fprintf(pSat.pFile, \"p %d %d %d\", sat_solver_nvars(pSat), pSat.nClauses, pSat.nRoots);\n    _ = (pSat.pFile).Close();\n    pSat.pFile = nil;\n}"
+    },
+    {
+      "Name": "Sat_SolverTraceWrite",
+      "Start": 2617,
+      "End": 2926,
+      "BodyStart": 2699,
+      "Original": "void Sat_SolverTraceWrite( sat_solver * pSat, int * pBeg, int * pEnd, int fRoot )\n{\n    if ( pSat-\u003epFile == NULL )\n        return;\n    pSat-\u003enClauses++;\n    pSat-\u003enRoots += fRoot;\n    for ( ; pBeg \u003c pEnd ; pBeg++ )\n        fprintf( pSat-\u003epFile, \" %d\", lit_print(*pBeg) );\n    fprintf( pSat-\u003epFile, \" 0\\n\" );\n}",
+      "Draft": "func Sat_SolverTraceWrite(pSat *sat_solver, pBeg *int32, pEnd *int32, fRoot int32) {\n    if pSat.pFile == nil {\n        return; }\n    pSat.nClauses++;\n    pSat.nRoots += fRoot;\n    for  ; pBeg \u003c pEnd ; pBeg++  {\n        fmt.Fprintf(pSat.pFile, \" %d\", lit_print(*pBeg));\n    }\n    fmt.Fprintf(pSat.pFile, \" 0\\n\");\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTrace.c::Sat_SolverTraceStart",
+      "Category": "semantic-review",
+      "Symbol": "Sat_SolverTraceStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1549,
+      "End": 1807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTrace.c::Sat_SolverTraceStop",
+      "Category": "semantic-review",
+      "Symbol": "Sat_SolverTraceStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2072,
+      "End": 2342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTrace.c::Sat_SolverTraceWrite",
+      "Category": "semantic-review",
+      "Symbol": "Sat_SolverTraceWrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2617,
+      "End": 2926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/bsat/satTrace.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3173
+    }
+  ],
+  "Draft": "package bsat\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [satTrace.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT sat_solver.]\n\n  Synopsis    [Records the trace of SAT solving in the CNF form.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: satTrace.c,v 1.4 2005/09/16 22:55:03 casem Exp $]\n\n***********************************************************************/\n\n//#include \"satSolver.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*\n    The trace of SAT solving contains the original clause of the problem\n    along with the learned clauses derived during SAT solving.\n    The first line of the resulting file contains 3 numbers instead of 2:\n    c \u003cnum_vars\u003e \u003cnum_all_clauses\u003e \u003cnum_root_clauses\u003e\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Start the trace recording.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_SolverTraceStart(pSat *sat_solver, pName string) {\n    assert(pSat.pFile == nil, \"pSat.pFile == nil\");\n    pSat.pFile = os.OpenFile(pName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    fmt.Fprintf(pSat.pFile, \"                                        \\n\");\n    pSat.nClauses = 0;\n    pSat.nRoots = 0;\n}   \n\n/**Function*************************************************************\n\n  Synopsis    [Stops the trace recording.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_SolverTraceStop(pSat *sat_solver) {\n    if pSat.pFile == nil {\n        return; }\n    rewind( pSat.pFile );\n    fmt.Fprintf(pSat.pFile, \"p %d %d %d\", sat_solver_nvars(pSat), pSat.nClauses, pSat.nRoots);\n    _ = (pSat.pFile).Close();\n    pSat.pFile = nil;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Writes one clause into the trace file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sat_SolverTraceWrite(pSat *sat_solver, pBeg *int32, pEnd *int32, fRoot int32) {\n    if pSat.pFile == nil {\n        return; }\n    pSat.nClauses++;\n    pSat.nRoots += fRoot;\n    for  ; pBeg \u003c pEnd ; pBeg++  {\n        fmt.Fprintf(pSat.pFile, \" %d\", lit_print(*pBeg));\n    }\n    fmt.Fprintf(pSat.pFile, \" 0\\n\");\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

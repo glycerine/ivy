@@ -1,0 +1,296 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h",
+  "SHA256": "ef9cf6bd295ec3ac08720dd135105c59f8073327fd6a97c6d853795ebd9d513d",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 46,
+        "Column": 5,
+        "ByteOffset": 1470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(sdbl_exp(a) \u003c 1023);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(value \u003e= 1.0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 1999
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(a \u003e= b);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 90,
+        "Column": 5,
+        "ByteOffset": 2518
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( a \u003e= b );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 5,
+        "ByteOffset": 3340
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"%f\\n\", sdbl2double(ten100_));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 5,
+        "ByteOffset": 3469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"%f\\n\", sdbl2double(SDBL_CONST1));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 5,
+        "ByteOffset": 3515
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"%f\\n\", sdbl2double(ABC_CONST(0x000086BCA1AF286B)));"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "sdbl_exp",
+      "Start": 1334,
+      "End": 1399,
+      "BodyStart": 1372,
+      "Original": "static inline word sdbl_exp(sdbl_t a) { return a \u003e\u003e 48;         }",
+      "Draft": "func sdbl_exp(a uint64) word { return a \u003e\u003e 48;         }"
+    },
+    {
+      "Name": "sdbl_mnt",
+      "Start": 1400,
+      "End": 1465,
+      "BodyStart": 1438,
+      "Original": "static inline word sdbl_mnt(sdbl_t a) { return (a \u003c\u003c 16) \u003e\u003e 16; }",
+      "Draft": "func sdbl_mnt(a uint64) word { return (a \u003c\u003c 16) \u003e\u003e 16; }"
+    },
+    {
+      "Name": "sdbl2double",
+      "Start": 1467,
+      "End": 1664,
+      "BodyStart": 1510,
+      "Original": "static inline double sdbl2double(sdbl_t a) {\n    union ui64_dbl temp;\n    assert(sdbl_exp(a) \u003c 1023);\n    temp.ui64 = ((sdbl_exp(a) + 1023) \u003c\u003c 52) | (((a \u003c\u003c 17) \u003e\u003e 17) \u003c\u003c 5);\n    return temp.dbl;\n}",
+      "Draft": "func sdbl2double(a uint64) float64 {\n    union ui64_dbl temp;\n    assert(sdbl_exp(a) \u003c 1023, \"sdbl_exp(a) \u003c 1023\");\n    temp.ui64 = ((sdbl_exp(a) + 1023) \u003c\u003c 52) | (((a \u003c\u003c 17) \u003e\u003e 17) \u003c\u003c 5);\n    return temp.dbl;\n}"
+    },
+    {
+      "Name": "double2sdbl",
+      "Start": 1666,
+      "End": 1930,
+      "BodyStart": 1713,
+      "Original": "static inline sdbl_t double2sdbl(double value)\n{\n    union ui64_dbl temp;\n    sdbl_t expt, mnt;\n    assert(value \u003e= 1.0);\n    temp.dbl = value;\n    expt = (temp.ui64 \u003e\u003e 52) - 1023;\n    mnt = SDBL_CONST1 | ((temp.ui64 \u003c\u003c 12) \u003e\u003e 17);\n    return (expt \u003c\u003c 48) + mnt;\n}",
+      "Draft": "func double2sdbl(value float64) uint64 {\n    union ui64_dbl temp;\n    var expt, mnt uint64;\n    assert(value \u003e= 1.0, \"value \u003e= 1.0\");\n    temp.dbl = value;\n    expt = (temp.ui64 \u003e\u003e 52) - 1023;\n    mnt = SDBL_CONST1 | ((temp.ui64 \u003c\u003c 12) \u003e\u003e 17);\n    return (expt \u003c\u003c 48) + mnt;\n}"
+    },
+    {
+      "Name": "sdbl_add",
+      "Start": 1932,
+      "End": 2371,
+      "BodyStart": 1982,
+      "Original": "static inline sdbl_t sdbl_add(sdbl_t a, sdbl_t b)\n{\n    sdbl_t expt, mnt;\n    if (a \u003c b) {\n        a ^= b;\n        b ^= a;\n        a ^= b;\n    }\n    assert(a \u003e= b);\n    expt = sdbl_exp(a);\n    mnt = sdbl_mnt(a) + (sdbl_mnt(b) \u003e\u003e (sdbl_exp(a) - sdbl_exp(b)));\n    /* Check for carry */\n    if (mnt \u003e\u003e 48) {\n        expt++;\n        mnt \u003e\u003e= 1;\n    }\n    if (expt \u003e\u003e 16) /* overflow */\n        return SDBL_MAX;\n    return (expt \u003c\u003c 48) + mnt;\n}",
+      "Draft": "func sdbl_add(a uint64, b uint64) uint64 {\n    var expt, mnt uint64;\n    if a \u003c b {\n        a ^= b;\n        b ^= a;\n        a ^= b;\n    }\n    assert(a \u003e= b, \"a \u003e= b\");\n    expt = sdbl_exp(a);\n    mnt = sdbl_mnt(a) + (sdbl_mnt(b) \u003e\u003e (sdbl_exp(a) - sdbl_exp(b)));\n    /* Check for carry */\n    if mnt \u003e\u003e 48 {\n        expt++;\n        mnt \u003e\u003e= 1;\n    }\n    if expt \u003e\u003e 16 { /* overflow */\n        return SDBL_MAX; }\n    return (expt \u003c\u003c 48) + mnt;\n}"
+    },
+    {
+      "Name": "sdbl_mult",
+      "Start": 2373,
+      "End": 3170,
+      "BodyStart": 2424,
+      "Original": "static inline sdbl_t sdbl_mult(sdbl_t a, sdbl_t b)\n{\n    sdbl_t expt, mnt;\n    sdbl_t a_mnt, a_mnt_hi, a_mnt_lo;\n    sdbl_t b_mnt, b_mnt_hi, b_mnt_lo;\n    if (a \u003c b) {\n        a ^= b;\n        b ^= a;\n        a ^= b;\n    }\n    assert( a \u003e= b );\n    a_mnt  = sdbl_mnt(a);\n    b_mnt  = sdbl_mnt(b);\n    a_mnt_hi = a_mnt\u003e\u003e32;\n    b_mnt_hi = b_mnt\u003e\u003e32;\n    a_mnt_lo = (a_mnt\u003c\u003c32)\u003e\u003e32;\n    b_mnt_lo = (b_mnt\u003c\u003c32)\u003e\u003e32;\n    mnt = ((a_mnt_hi * b_mnt_hi) \u003c\u003c 17) +\n          ((a_mnt_lo * b_mnt_lo) \u003e\u003e 47) +\n          ((a_mnt_lo * b_mnt_hi) \u003e\u003e 15) +\n          ((a_mnt_hi * b_mnt_lo) \u003e\u003e 15);\n    expt = sdbl_exp(a) + sdbl_exp(b);\n    /* Check for carry */\n    if (mnt \u003e\u003e 48) {\n        expt++;\n        mnt \u003e\u003e= 1;\n    }\n    if (expt \u003e\u003e 16) /* overflow */\n        return SDBL_MAX;\n    return (expt \u003c\u003c 48) + mnt;\n}",
+      "Draft": "func sdbl_mult(a uint64, b uint64) uint64 {\n    var expt, mnt uint64;\n    var a_mnt, a_mnt_hi, a_mnt_lo uint64;\n    var b_mnt, b_mnt_hi, b_mnt_lo uint64;\n    if a \u003c b {\n        a ^= b;\n        b ^= a;\n        a ^= b;\n    }\n    assert(a \u003e= b, \"a \u003e= b\");\n    a_mnt  = sdbl_mnt(a);\n    b_mnt  = sdbl_mnt(b);\n    a_mnt_hi = a_mnt\u003e\u003e32;\n    b_mnt_hi = b_mnt\u003e\u003e32;\n    a_mnt_lo = (a_mnt\u003c\u003c32)\u003e\u003e32;\n    b_mnt_lo = (b_mnt\u003c\u003c32)\u003e\u003e32;\n    mnt = ((a_mnt_hi * b_mnt_hi) \u003c\u003c 17) +\n          ((a_mnt_lo * b_mnt_lo) \u003e\u003e 47) +\n          ((a_mnt_lo * b_mnt_hi) \u003e\u003e 15) +\n          ((a_mnt_hi * b_mnt_lo) \u003e\u003e 15);\n    expt = sdbl_exp(a) + sdbl_exp(b);\n    /* Check for carry */\n    if mnt \u003e\u003e 48 {\n        expt++;\n        mnt \u003e\u003e= 1;\n    }\n    if expt \u003e\u003e 16 { /* overflow */\n        return SDBL_MAX; }\n    return (expt \u003c\u003c 48) + mnt;\n}"
+    },
+    {
+      "Name": "sdbl_div",
+      "Start": 3172,
+      "End": 3348,
+      "BodyStart": 3227,
+      "Original": "static inline sdbl_t sdbl_div(sdbl_t a, unsigned deg2)\n{\n    if (sdbl_exp(a) \u003e= (word)deg2)\n        return ((sdbl_exp(a) - deg2) \u003c\u003c 48) + sdbl_mnt(a);\n    return SDBL_CONST1;\n}",
+      "Draft": "func sdbl_div(a uint64, deg2 uint32) uint64 {\n    if sdbl_exp(a) \u003e= (word)deg2 {\n        return ((sdbl_exp(a) - deg2) \u003c\u003c 48) + sdbl_mnt(a); }\n    return SDBL_CONST1;\n}"
+    },
+    {
+      "Name": "sdbl_test",
+      "Start": 3350,
+      "End": 3676,
+      "BodyStart": 3381,
+      "Original": "static inline void sdbl_test()\n{\n    sdbl_t ten100_ = ABC_CONST(0x014c924d692ca61b);\n    printf(\"%f\\n\", sdbl2double(ten100_));\n    //printf(\"%016lX\\n\", double2sdbl(1 /0.95));\n    //printf(\"%016lX\\n\", SDBL_CONST1);\n    printf(\"%f\\n\", sdbl2double(SDBL_CONST1));\n    printf(\"%f\\n\", sdbl2double(ABC_CONST(0x000086BCA1AF286B)));\n\n}",
+      "Draft": "func sdbl_test() {\n    var ten100_ uint64  = ABC_CONST(0x014c924d692ca61b);\n    fmt.Printf(\"%f\\n\", sdbl2double(ten100_));\n    //printf(\"%016lX\\n\", double2sdbl(1 /0.95));\n    //printf(\"%016lX\\n\", SDBL_CONST1);\n    fmt.Printf(\"%f\\n\", sdbl2double(SDBL_CONST1));\n    fmt.Printf(\"%f\\n\", sdbl2double(ABC_CONST(0x000086BCA1AF286B)));\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::mechanical::union::1290",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1290,
+      "End": 1295
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::mechanical::union::1516",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1516,
+      "End": 1521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::mechanical::union::1719",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Union members share storage in C. Choose a tagged representation or an explicit shared-storage model; independent Go fields are not equivalent.",
+      "Start": 1719,
+      "End": 1724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::sdbl_exp",
+      "Category": "semantic-review",
+      "Symbol": "sdbl_exp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1334,
+      "End": 1399
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::sdbl_mnt",
+      "Category": "semantic-review",
+      "Symbol": "sdbl_mnt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1400,
+      "End": 1465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::sdbl2double",
+      "Category": "semantic-review",
+      "Symbol": "sdbl2double",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1467,
+      "End": 1664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::double2sdbl",
+      "Category": "semantic-review",
+      "Symbol": "double2sdbl",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1666,
+      "End": 1930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::sdbl_add",
+      "Category": "semantic-review",
+      "Symbol": "sdbl_add",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1932,
+      "End": 2371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::sdbl_mult",
+      "Category": "semantic-review",
+      "Symbol": "sdbl_mult",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2373,
+      "End": 3170
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::sdbl_div",
+      "Category": "semantic-review",
+      "Symbol": "sdbl_div",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3172,
+      "End": 3348
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::sdbl_test",
+      "Category": "semantic-review",
+      "Symbol": "sdbl_test",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3350,
+      "End": 3676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::macro-inline::1219",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1219,
+      "End": 1248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::macro-inline::3404",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3404,
+      "End": 3433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/utils/sdbl.h::macro-inline::3641",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3641,
+      "End": 3670
+    }
+  ],
+  "Draft": "package utils\n\nimport \"fmt\"\n\n//===--- sdbl.h -------------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n// by Alan Mishchenko\n\n\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_HEADER_START\n/*\n    The sdbl_t floating-point number is represented as a 64-bit unsigned int.\n    The number is (2^expt)*mnt, where expt is a 16-bit exponent and mnt is a\n    48-bit mantissa.  The decimal point is located between the MSB of mnt,\n    which is always 1, and the remaining 15 digits of mnt.\n\n    Currently, only positive numbers are represented.\n\n    The range of possible values is [1.0; 2^(2^16-1)*1.111111111111111]\n    that is, the smallest possible number is 1.0 and the largest possible\n    number is 2^(---16 ones---).(1.---47 ones---)\n\n    Comparison of numbers can be done by comparing the underlying unsigned ints.\n\n    Only addition, multiplication, and division by 2^n are currently implemented.\n*/\n\ntypedef word sdbl_t;\n\nvar SDBL_CONST1 uint64 = ABC_CONST(0x0000800000000000);\nvar SDBL_MAX uint64 = ~(sdbl_t)(0);\n\nunion ui64_dbl { word ui64; double dbl; };\n\nfunc sdbl_exp(a uint64) word { return a \u003e\u003e 48;         }\nfunc sdbl_mnt(a uint64) word { return (a \u003c\u003c 16) \u003e\u003e 16; }\n\nfunc sdbl2double(a uint64) float64 {\n    union ui64_dbl temp;\n    assert(sdbl_exp(a) \u003c 1023, \"sdbl_exp(a) \u003c 1023\");\n    temp.ui64 = ((sdbl_exp(a) + 1023) \u003c\u003c 52) | (((a \u003c\u003c 17) \u003e\u003e 17) \u003c\u003c 5);\n    return temp.dbl;\n}\n\nfunc double2sdbl(value float64) uint64 {\n    union ui64_dbl temp;\n    var expt, mnt uint64;\n    assert(value \u003e= 1.0, \"value \u003e= 1.0\");\n    temp.dbl = value;\n    expt = (temp.ui64 \u003e\u003e 52) - 1023;\n    mnt = SDBL_CONST1 | ((temp.ui64 \u003c\u003c 12) \u003e\u003e 17);\n    return (expt \u003c\u003c 48) + mnt;\n}\n\nfunc sdbl_add(a uint64, b uint64) uint64 {\n    var expt, mnt uint64;\n    if a \u003c b {\n        a ^= b;\n        b ^= a;\n        a ^= b;\n    }\n    assert(a \u003e= b, \"a \u003e= b\");\n    expt = sdbl_exp(a);\n    mnt = sdbl_mnt(a) + (sdbl_mnt(b) \u003e\u003e (sdbl_exp(a) - sdbl_exp(b)));\n    /* Check for carry */\n    if mnt \u003e\u003e 48 {\n        expt++;\n        mnt \u003e\u003e= 1;\n    }\n    if expt \u003e\u003e 16 { /* overflow */\n        return SDBL_MAX; }\n    return (expt \u003c\u003c 48) + mnt;\n}\n\nfunc sdbl_mult(a uint64, b uint64) uint64 {\n    var expt, mnt uint64;\n    var a_mnt, a_mnt_hi, a_mnt_lo uint64;\n    var b_mnt, b_mnt_hi, b_mnt_lo uint64;\n    if a \u003c b {\n        a ^= b;\n        b ^= a;\n        a ^= b;\n    }\n    assert(a \u003e= b, \"a \u003e= b\");\n    a_mnt  = sdbl_mnt(a);\n    b_mnt  = sdbl_mnt(b);\n    a_mnt_hi = a_mnt\u003e\u003e32;\n    b_mnt_hi = b_mnt\u003e\u003e32;\n    a_mnt_lo = (a_mnt\u003c\u003c32)\u003e\u003e32;\n    b_mnt_lo = (b_mnt\u003c\u003c32)\u003e\u003e32;\n    mnt = ((a_mnt_hi * b_mnt_hi) \u003c\u003c 17) +\n          ((a_mnt_lo * b_mnt_lo) \u003e\u003e 47) +\n          ((a_mnt_lo * b_mnt_hi) \u003e\u003e 15) +\n          ((a_mnt_hi * b_mnt_lo) \u003e\u003e 15);\n    expt = sdbl_exp(a) + sdbl_exp(b);\n    /* Check for carry */\n    if mnt \u003e\u003e 48 {\n        expt++;\n        mnt \u003e\u003e= 1;\n    }\n    if expt \u003e\u003e 16 { /* overflow */\n        return SDBL_MAX; }\n    return (expt \u003c\u003c 48) + mnt;\n}\n\nfunc sdbl_div(a uint64, deg2 uint32) uint64 {\n    if sdbl_exp(a) \u003e= (word)deg2 {\n        return ((sdbl_exp(a) - deg2) \u003c\u003c 48) + sdbl_mnt(a); }\n    return SDBL_CONST1;\n}\n\nfunc sdbl_test() {\n    var ten100_ uint64  = ABC_CONST(0x014c924d692ca61b);\n    fmt.Printf(\"%f\\n\", sdbl2double(ten100_));\n    //printf(\"%016lX\\n\", double2sdbl(1 /0.95));\n    //printf(\"%016lX\\n\", SDBL_CONST1);\n    fmt.Printf(\"%f\\n\", sdbl2double(SDBL_CONST1));\n    fmt.Printf(\"%f\\n\", sdbl2double(ABC_CONST(0x000086BCA1AF286B)));\n\n}\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

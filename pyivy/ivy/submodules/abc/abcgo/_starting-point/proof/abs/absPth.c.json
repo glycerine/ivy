@@ -1,0 +1,63 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absPth.c",
+  "SHA256": "9d8307e4988cd7a9c0f5a25fd29184168b1b689d7d1bdc13ca7fd5e092984805",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 26,
+        "Column": 1,
+        "ByteOffset": 576
+      },
+      "Directive": "#ifdef ABC_USE_PTHREADS"
+    },
+    {
+      "Location": {
+        "Line": 28,
+        "Column": 1,
+        "ByteOffset": 601
+      },
+      "Directive": "#ifdef _WIN32"
+    },
+    {
+      "Location": {
+        "Line": 43,
+        "Column": 1,
+        "ByteOffset": 953
+      },
+      "Directive": "#ifndef ABC_USE_PTHREADS"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absPth.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absPth.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 576,
+      "End": 704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/abs/absPth.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 953,
+      "End": 6031
+    }
+  ],
+  "Draft": "package abs\n\n/**CFile****************************************************************\n\n  FileName    [absPth.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Abstraction package.]\n\n  Synopsis    [Interface to pthreads.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: absPth.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n//#include \"abs.h\"\n//#include \"proof/pdr/pdr.h\"\n//#include \"proof/ssw/ssw.h\"\n\n\n#ifdef ABC_USE_PTHREADS\n\n#ifdef _WIN32\n#include \"../lib/pthread.h\"\n#else\n//#include \u003cpthread.h\u003e\n#include \u003cunistd.h\u003e\n#endif\n\n#endif\n\n//ABC_NAMESPACE_IMPL_START \n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n#ifndef ABC_USE_PTHREADS\n\nvoid Gia_GlaProveAbsracted( Gia_Man_t * p, int fSimpProver, int fVerbose ) {}\nvoid Gia_GlaProveCancel( int fVerbose )                                    {}\nint  Gia_GlaProveCheck( int fVerbose )                                     { return 0; }\n\n#else // pthreads are used\n\n// information given to the thread\ntypedef struct Abs_ThData_t_\n{\n    Aig_Man_t * pAig;\n    int         fVerbose;\n    int         RunId;\n} Abs_ThData_t;\n\n// mutext to control access to shared variables\npthread_mutex_t g_mutex = PTHREAD_MUTEX_INITIALIZER;\nstatic volatile int g_nRunIds = 0;             // the number of the last prover instance\nstatic volatile int g_fAbstractionProved = 0;  // set to 1 when prover successed to prove\n\n// call back procedure for PDR\nint Abs_CallBackToStop( int RunId ) { assert( RunId \u003c= g_nRunIds ); return RunId \u003c g_nRunIds; }\n\n// test procedure to replace PDR\nint Pdr_ManSolve_test( Aig_Man_t * pAig, Pdr_Par_t * pPars, Abc_Cex_t ** ppCex )\n{\n    char * p = ABC_ALLOC( char, 111 );\n    while ( 1 )\n    {\n        if ( pPars-\u003epFuncStop \u0026\u0026 pPars-\u003epFuncStop(pPars-\u003eRunId) )\n            break;\n    }\n    ABC_FREE( p );\n    return -1;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Create one thread]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid * Abs_ProverThread( void * pArg )\n{\n    Abs_ThData_t * pThData = (Abs_ThData_t *)pArg;\n    Pdr_Par_t Pars, * pPars = \u0026Pars;\n    int RetValue, status;\n    // call PDR\n    Pdr_ManSetDefaultParams( pPars );\n    pPars-\u003efSilent   = 1;\n    pPars-\u003eRunId     = pThData-\u003eRunId;\n    pPars-\u003epFuncStop = Abs_CallBackToStop;\n    RetValue = Pdr_ManSolve( pThData-\u003epAig, pPars );\n    // update the result\n    if ( RetValue == 1 )\n    {\n        status = pthread_mutex_lock(\u0026g_mutex);  assert( status == 0 );\n        g_fAbstractionProved = 1;\n        status = pthread_mutex_unlock(\u0026g_mutex);  assert( status == 0 );\n    }\n    // quit this thread\n    if ( pThData-\u003efVerbose )\n    {\n        if ( RetValue == 1 )\n            Abc_Print( 1, \"Proved abstraction %d.\\n\", pThData-\u003eRunId );\n        else if ( RetValue == 0 )\n            Abc_Print( 1, \"Disproved abstraction %d.\\n\", pThData-\u003eRunId );\n        else if ( RetValue == -1 )\n            Abc_Print( 1, \"Cancelled abstraction %d.\\n\", pThData-\u003eRunId );\n        else assert( 0 );\n    }\n    // free memory\n    Aig_ManStop( pThData-\u003epAig );\n    ABC_FREE( pThData );\n    // quit this thread\n    pthread_exit( NULL );\n    assert(0);\n    return NULL;\n}\nvoid Gia_GlaProveAbsracted( Gia_Man_t * pGia, int fSimpProver, int fVerbose )\n{\n    extern Aig_Man_t * Dar_ManRwsat( Aig_Man_t * pAig, int fBalance, int fVerbose );\n    Abs_ThData_t * pThData;\n    Ssw_Pars_t Pars, * pPars = \u0026Pars;\n    Aig_Man_t * pAig, * pTemp;\n    Gia_Man_t * pAbs;\n    pthread_t ProverThread;\n    int status;\n    // disable verbosity\n//    fVerbose = 0;\n    // create abstraction \n    assert( pGia-\u003evGateClasses != NULL );\n    pAbs = Gia_ManDupAbsGates( pGia, pGia-\u003evGateClasses );\n    Gia_ManCleanValue( pGia );\n    pAig = Gia_ManToAigSimple( pAbs );\n    Gia_ManStop( pAbs );\n    // simplify abstraction\n    if ( fSimpProver )\n    {\n        Ssw_ManSetDefaultParams( pPars );\n        pPars-\u003enFramesK = 4;\n        pAig = Ssw_SignalCorrespondence( pTemp = pAig, pPars );\n//printf( \"\\n\" );\n//Aig_ManPrintStats( pTemp );\n//Aig_ManPrintStats( pAig );\n        Aig_ManStop( pTemp );\n    }\n    // synthesize abstraction\n//    pAig = Dar_ManRwsat( pTemp = pAig, 0, 0 ); \n//    Aig_ManStop( pTemp );\n    // reset the proof \n    status = pthread_mutex_lock(\u0026g_mutex);  assert( status == 0 );\n    g_fAbstractionProved = 0;\n    status = pthread_mutex_unlock(\u0026g_mutex);  assert( status == 0 );\n    // collect thread data\n    pThData = ABC_CALLOC( Abs_ThData_t, 1 );\n    pThData-\u003epAig = pAig;\n    pThData-\u003efVerbose = fVerbose;\n    status = pthread_mutex_lock(\u0026g_mutex);  assert( status == 0 );\n    pThData-\u003eRunId = ++g_nRunIds;\n    status = pthread_mutex_unlock(\u0026g_mutex);  assert( status == 0 );\n    // create thread\n    if ( fVerbose )  Abc_Print( 1, \"\\nTrying to prove abstraction %d.\\n\", pThData-\u003eRunId );\n    status = pthread_create( \u0026ProverThread, NULL, Abs_ProverThread, pThData );\n    assert( status == 0 );\n}\nvoid Gia_GlaProveCancel( int fVerbose )\n{\n    int status;\n    status = pthread_mutex_lock(\u0026g_mutex);  assert( status == 0 );\n    g_nRunIds++;\n    status = pthread_mutex_unlock(\u0026g_mutex);  assert( status == 0 );\n}\nint Gia_GlaProveCheck( int fVerbose )\n{\n    int status;\n    if ( g_fAbstractionProved == 0 )\n        return 0;\n    status = pthread_mutex_lock(\u0026g_mutex);  assert( status == 0 );\n    g_fAbstractionProved = 0;\n    status = pthread_mutex_unlock(\u0026g_mutex);  assert( status == 0 );\n    return 1;\n}\n\n#endif // pthreads are used\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

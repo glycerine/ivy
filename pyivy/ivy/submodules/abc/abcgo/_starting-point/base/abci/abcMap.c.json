@@ -1,0 +1,1700 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c",
+  "SHA256": "d8fd517a2bbbb055d36e1ba137ba63dd18333fc0f007580bfb6ba0432ee560c4",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 83,
+        "Column": 5,
+        "ByteOffset": 2927
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 101,
+        "Column": 9,
+        "ByteOffset": 3885
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The current library is not available.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 1,
+        "ByteOffset": 4031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"The cell areas are multiplied by the factor: \u003cnum_fanins\u003e ^ (%.2f).\\n\", AreaMulti ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 109,
+        "Column": 1,
+        "ByteOffset": 4197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"The cell delays are multiplied by the factor: \u003cnum_fanins\u003e ^ (%.2f).\\n\", DelayMulti ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 120,
+        "Column": 13,
+        "ByteOffset": 4650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Converting \\\"%s\\\" into supergate library \\\"%s\\\".\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 124,
+        "Column": 13,
+        "ByteOffset": 4939
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Abc_NtkMap(): Genlib library has profile.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 5424
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Performing mapping with choices.\\n\" ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 176,
+        "Column": 78,
+        "ByteOffset": 7058
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 181,
+        "Column": 9,
+        "ByteOffset": 7164
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkMap: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 202,
+        "Column": 71,
+        "ByteOffset": 7759
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_CALLOC__*/((Map_Time_t *) calloc((size_t)(Abc_NtkCiNum(pNtk)), sizeof(Map_Time_t)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 208,
+        "Column": 63,
+        "ByteOffset": 8066
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((ppTimes) ? (free((char *) (ppTimes)), (ppTimes) = 0) : 0);"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 214,
+        "Column": 71,
+        "ByteOffset": 8321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_CALLOC__*/((Map_Time_t *) calloc((size_t)(Abc_NtkCoNum(pNtk)), sizeof(Map_Time_t)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 220,
+        "Column": 63,
+        "ByteOffset": 8628
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((ppTimes) ? (free((char *) (ppTimes)), (ppTimes) = 0) : 0);"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 237,
+        "Column": 71,
+        "ByteOffset": 9125
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_CALLOC__*/((Map_Time_t *) calloc((size_t)(Abc_NtkCiNum(pNtk)), sizeof(Map_Time_t)));"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 245,
+        "Column": 71,
+        "ByteOffset": 9503
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_CALLOC__*/((Map_Time_t *) calloc((size_t)(Abc_NtkCoNum(pNtk)), sizeof(Map_Time_t)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 270,
+        "Column": 5,
+        "ByteOffset": 10245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 311,
+        "Column": 9,
+        "ByteOffset": 12405
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_ObjIsNode(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 316,
+        "Column": 9,
+        "ByteOffset": 12834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode.pCopy == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 328,
+        "Column": 5,
+        "ByteOffset": 13444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Map_ManReadBufNum(pMan) == pNtk.nBarBufs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 400,
+        "Column": 5,
+        "ByteOffset": 16355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Map_NodeReadCutBest(pNodeMap, fPhase) != nil || Map_NodeIsConst(pNodeMap) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 417,
+        "Column": 9,
+        "ByteOffset": 17122
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNodePIs[i] != nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 436,
+        "Column": 13,
+        "ByteOffset": 17781
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Error creating mapped network: Library does not have a constant %d gate.\\n\", fPhase ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 450,
+        "Column": 5,
+        "ByteOffset": 18311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Map_NodeReadCutBest(pNodeMap, !fPhase) != nil || Map_NodeIsConst(pNodeMap) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 467,
+        "Column": 5,
+        "ByteOffset": 18979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Map_ManReadBufNum(pMan) == pNtk.nBarBufs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 488,
+        "Column": 9,
+        "ByteOffset": 20468
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Abc_ObjIsComplement(pNodeNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 496,
+        "Column": 9,
+        "ByteOffset": 21085
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( !Abc_ObjIsComplement(pNodeNew) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 522,
+        "Column": 5,
+        "ByteOffset": 21856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 526,
+        "Column": 9,
+        "ByteOffset": 21979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The current library is not available.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 539,
+        "Column": 9,
+        "ByteOffset": 22500
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Performing mapping with choices.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 558,
+        "Column": 9,
+        "ByteOffset": 23010
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkMap: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 599,
+        "Column": 9,
+        "ByteOffset": 24587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkFromMapSuperChoice(): Converting to SOPs has failed.\\n\" );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 629,
+        "Column": 41,
+        "ByteOffset": 26378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 696,
+        "Column": 9,
+        "ByteOffset": 28543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNodePIs[i] != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 769,
+        "Column": 5,
+        "ByteOffset": 31144
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasMapping(pNode.pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 806,
+        "Column": 5,
+        "ByteOffset": 32279
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasMapping(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 845,
+        "Column": 5,
+        "ByteOffset": 34386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_StrSize(vGates) % 4 == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 879,
+        "Column": 5,
+        "ByteOffset": 35280
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Mapped network has %d CIs, %d COs, %d gates, and %d flops.\\n\", nCis, nCos, nNodes, nFlops );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 880,
+        "Column": 5,
+        "ByteOffset": 35386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The first %d object IDs (from 0 to %d) are reserved for the CIs.\\n\", nCis, nCis - 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 882,
+        "Column": 9,
+        "ByteOffset": 35525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %d has fanins {\", nCis + i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 885,
+        "Column": 13,
+        "ByteOffset": 35659
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %d\", pArray[Pos++] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 887,
+        "Column": 9,
+        "ByteOffset": 35709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" }\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 890,
+        "Column": 9,
+        "ByteOffset": 35774
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"CO %d is driven by node %d\\n\", i, pArray[Pos++] );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 895,
+        "Column": 20,
+        "ByteOffset": 35957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pBuffer += strlen(pName) + 1;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 896,
+        "Column": 9,
+        "ByteOffset": 35984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %d has gate \\\"%s\\\"\\n\", nCis + i, pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 917,
+        "Column": 9,
+        "ByteOffset": 36561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 920,
+        "Column": 9,
+        "ByteOffset": 36700
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Current network in ABC framework is not defined.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 922,
+        "Column": 9,
+        "ByteOffset": 36808
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Current network in ABC framework is not mapped.\\n\" ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 926,
+        "Column": 64,
+        "ByteOffset": 37050
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((vMapping) ? (free((char *) (vMapping)), (vMapping) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 948,
+        "Column": 5,
+        "ByteOffset": 37693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Array has size %d ints.\\n\", Vec_IntSize(vMapping) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 968,
+        "Column": 9,
+        "ByteOffset": 38288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 973,
+        "Column": 9,
+        "ByteOffset": 38447
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Current network in ABC framework is not defined.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 977,
+        "Column": 9,
+        "ByteOffset": 38587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"CI index is not valid.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 989,
+        "Column": 9,
+        "ByteOffset": 38978
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 994,
+        "Column": 9,
+        "ByteOffset": 39137
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Current network in ABC framework is not defined.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 998,
+        "Column": 9,
+        "ByteOffset": 39277
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"CO index is not valid.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1020,
+        "Column": 9,
+        "ByteOffset": 39872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 1025,
+        "Column": 9,
+        "ByteOffset": 40031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Current network in ABC framework is not defined.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkMap",
+      "Start": 2249,
+      "End": 7041,
+      "BodyStart": 2496,
+      "Original": "Abc_Ntk_t * Abc_NtkMap( Abc_Ntk_t * pNtk, double DelayTarget, double AreaMulti, double DelayMulti, float LogFan, float Slew, float Gain, int nGatesMin, int fRecovery, int fSwitching, int fSkipFanout, int fUseProfile, int fUseBuffs, int fVerbose )\n{\n    static int fUseMulti = 0;\n    int fShowSwitching = 1;\n    Abc_Ntk_t * pNtkNew;\n    Map_Man_t * pMan;\n    Vec_Int_t * vSwitching = NULL;\n    float * pSwitching = NULL;\n    abctime clk, clkTotal = Abc_Clock();\n    Mio_Library_t * pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n\n    assert( Abc_NtkIsStrash(pNtk) );\n    // derive library from SCL\n    // if the library is created here, it will be deleted when pSuperLib is deleted in Map_SuperLibFree()\n    if ( Abc_FrameReadLibScl() \u0026\u0026 Abc_SclHasDelayInfo( Abc_FrameReadLibScl() ) )\n    {\n        if ( pLib \u0026\u0026 Mio_LibraryHasProfile(pLib) )\n            pLib = Abc_SclDeriveGenlib( Abc_FrameReadLibScl(), pLib, Slew, Gain, nGatesMin, fVerbose );\n        else\n            pLib = Abc_SclDeriveGenlib( Abc_FrameReadLibScl(), NULL, Slew, Gain, nGatesMin, fVerbose );\n        if ( Abc_FrameReadLibGen() )\n        {\n            Mio_LibraryTransferDelays( (Mio_Library_t *)Abc_FrameReadLibGen(), pLib );\n            Mio_LibraryTransferProfile( pLib, (Mio_Library_t *)Abc_FrameReadLibGen() );\n        }\n        // remove supergate library\n        Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n        Abc_FrameSetLibSuper( NULL );\n    }\n    // quit if there is no library\n    if ( pLib == NULL )\n    {\n        printf( \"The current library is not available.\\n\" );\n        return 0;\n    }\n    if ( AreaMulti != 0.0 )\n        fUseMulti = 1, printf( \"The cell areas are multiplied by the factor: \u003cnum_fanins\u003e ^ (%.2f).\\n\", AreaMulti );\n    if ( DelayMulti != 0.0 )\n        fUseMulti = 1, printf( \"The cell delays are multiplied by the factor: \u003cnum_fanins\u003e ^ (%.2f).\\n\", DelayMulti );\n\n    // penalize large gates by increasing their area\n    if ( AreaMulti != 0.0 )\n        Mio_LibraryMultiArea( pLib, AreaMulti );\n    if ( DelayMulti != 0.0 )\n        Mio_LibraryMultiDelay( pLib, DelayMulti );\n\n    // derive the supergate library\n    if ( fUseMulti || Abc_FrameReadLibSuper() == NULL )\n    {\n        if ( fVerbose )\n            printf( \"Converting \\\"%s\\\" into supergate library \\\"%s\\\".\\n\", \n                Mio_LibraryReadName(pLib), Extra_FileNameGenericAppend(Mio_LibraryReadName(pLib), \".super\") );\n        // compute supergate library to be used for mapping\n        if ( Mio_LibraryHasProfile(pLib) )\n            printf( \"Abc_NtkMap(): Genlib library has profile.\\n\" );\n        Map_SuperLibDeriveFromGenlib( pLib, fVerbose );\n    }\n\n    // return the library to normal\n    if ( AreaMulti != 0.0 )\n        Mio_LibraryMultiArea( (Mio_Library_t *)Abc_FrameReadLibGen(), -AreaMulti );\n    if ( DelayMulti != 0.0 )\n        Mio_LibraryMultiDelay( (Mio_Library_t *)Abc_FrameReadLibGen(), -DelayMulti );\n\n    // print a warning about choice nodes\n    if ( fVerbose \u0026\u0026 Abc_NtkGetChoiceNum( pNtk ) )\n        printf( \"Performing mapping with choices.\\n\" );\n\n    // compute switching activity\n    fShowSwitching |= fSwitching;\n    if ( fShowSwitching )\n    {\n        extern Vec_Int_t * Sim_NtkComputeSwitching( Abc_Ntk_t * pNtk, int nPatterns );\n        vSwitching = Sim_NtkComputeSwitching( pNtk, 4096 );\n        pSwitching = (float *)vSwitching-\u003epArray;\n    }\n\n    // perform the mapping\n    pMan = Abc_NtkToMap( pNtk, DelayTarget, fRecovery, pSwitching, fVerbose );\n    if ( pSwitching ) Vec_IntFree( vSwitching );\n    if ( pMan == NULL )\n        return NULL;\nclk = Abc_Clock();\n    Map_ManSetSwitching( pMan, fSwitching );\n    Map_ManSetSkipFanout( pMan, fSkipFanout );\n    if ( fUseProfile )\n        Map_ManSetUseProfile( pMan );\n    if ( LogFan != 0 )\n        Map_ManCreateNodeDelays( pMan, LogFan );\n    if ( !Map_Mapping( pMan ) )\n    {\n        Map_ManFree( pMan );\n        return NULL;\n    }\n//    Map_ManPrintStatsToFile( pNtk-\u003epSpec, Map_ManReadAreaFinal(pMan), Map_ManReadRequiredGlo(pMan), Abc_Clock()-clk );\n\n    // reconstruct the network after mapping (use buffers when user requested or in the area mode)\n    pNtkNew = Abc_NtkFromMap( pMan, pNtk, fUseBuffs || (DelayTarget == (double)ABC_INFINITY) );\n    if ( Mio_LibraryHasProfile(pLib) )\n        Mio_LibraryTransferProfile2( (Mio_Library_t *)Abc_FrameReadLibGen(), pLib );\n    Map_ManFree( pMan );\n    if ( pNtkNew == NULL )\n        return NULL;\n\n    if ( pNtk-\u003epExdc )\n        pNtkNew-\u003epExdc = Abc_NtkDup( pNtk-\u003epExdc );\nif ( fVerbose )\n{\nABC_PRT( \"Total runtime\", Abc_Clock() - clkTotal );\n}\n\n    // make sure that everything is okay\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Abc_NtkMap: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkMap(pNtk *Abc_Ntk_t, DelayTarget float64, AreaMulti float64, DelayMulti float64, LogFan float32, Slew float32, Gain float32, nGatesMin int32, fRecovery int32, fSwitching int32, fSkipFanout int32, fUseProfile int32, fUseBuffs int32, fVerbose int32) *Abc_Ntk_t {\n    \n    var fShowSwitching int32  = 1;\n    var pNtkNew *Abc_Ntk_t;\n    var pMan *Map_Man_t;\n    var vSwitching *Vec_Int_t  = nil;\n    var pSwitching *float32  = nil;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // derive library from SCL\n    // if the library is created here, it will be deleted when pSuperLib is deleted in Map_SuperLibFree()\n    if Abc_FrameReadLibScl() \u0026\u0026 Abc_SclHasDelayInfo( Abc_FrameReadLibScl() ) {\n        if (pLib != nil) \u0026\u0026 Mio_LibraryHasProfile(pLib) {\n            pLib = Abc_SclDeriveGenlib( Abc_FrameReadLibScl(), pLib, Slew, Gain, nGatesMin, fVerbose );\n        } else {\n            pLib = Abc_SclDeriveGenlib( Abc_FrameReadLibScl(), nil, Slew, Gain, nGatesMin, fVerbose ); }\n        if Abc_FrameReadLibGen() {\n            Mio_LibraryTransferDelays( (Mio_Library_t *)Abc_FrameReadLibGen(), pLib );\n            Mio_LibraryTransferProfile( pLib, (Mio_Library_t *)Abc_FrameReadLibGen() );\n        }\n        // remove supergate library\n        Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n        Abc_FrameSetLibSuper( nil );\n    }\n    // quit if there is no library\n    if pLib == nil {\n        fmt.Printf(\"The current library is not available.\\n\");\n        return 0;\n    }\n    if AreaMulti != 0.0 {\n        spStatic_Abc_NtkMap_fUseMulti = 1;\nfmt.Printf(\"The cell areas are multiplied by the factor: \u003cnum_fanins\u003e ^ (%.2f).\\n\", AreaMulti); }\n    if DelayMulti != 0.0 {\n        spStatic_Abc_NtkMap_fUseMulti = 1;\nfmt.Printf(\"The cell delays are multiplied by the factor: \u003cnum_fanins\u003e ^ (%.2f).\\n\", DelayMulti); }\n\n    // penalize large gates by increasing their area\n    if AreaMulti != 0.0 {\n        Mio_LibraryMultiArea( pLib, AreaMulti ); }\n    if DelayMulti != 0.0 {\n        Mio_LibraryMultiDelay( pLib, DelayMulti ); }\n\n    // derive the supergate library\n    if (spStatic_Abc_NtkMap_fUseMulti != 0) || Abc_FrameReadLibSuper() == nil {\n        if fVerbose != 0 {\n            fmt.Printf(\"Converting \\\"%s\\\" into supergate library \\\"%s\\\".\\n\", Mio_LibraryReadName(pLib), Extra_FileNameGenericAppend(Mio_LibraryReadName(pLib), \".super\")); }\n        // compute supergate library to be used for mapping\n        if Mio_LibraryHasProfile(pLib) {\n            fmt.Printf(\"Abc_NtkMap(): Genlib library has profile.\\n\"); }\n        Map_SuperLibDeriveFromGenlib( pLib, fVerbose );\n    }\n\n    // return the library to normal\n    if AreaMulti != 0.0 {\n        Mio_LibraryMultiArea( (Mio_Library_t *)Abc_FrameReadLibGen(), -AreaMulti ); }\n    if DelayMulti != 0.0 {\n        Mio_LibraryMultiDelay( (Mio_Library_t *)Abc_FrameReadLibGen(), -DelayMulti ); }\n\n    // print a warning about choice nodes\n    if (fVerbose != 0) \u0026\u0026 Abc_NtkGetChoiceNum( pNtk ) {\n        fmt.Printf(\"Performing mapping with choices.\\n\"); }\n\n    // compute switching activity\n    fShowSwitching |= fSwitching;\n    if fShowSwitching != 0 {\n        extern Vec_Int_t * Sim_NtkComputeSwitching( Abc_Ntk_t * pNtk, int nPatterns );\n        vSwitching = Sim_NtkComputeSwitching( pNtk, 4096 );\n        pSwitching = (float *)vSwitching.pArray;\n    }\n\n    // perform the mapping\n    pMan = Abc_NtkToMap( pNtk, DelayTarget, fRecovery, pSwitching, fVerbose );\n    if pSwitching != nil { Vec_IntFree( vSwitching ); }\n    if pMan == nil {\n        return nil; }\nclk = Abc_Clock();\n    Map_ManSetSwitching( pMan, fSwitching );\n    Map_ManSetSkipFanout( pMan, fSkipFanout );\n    if fUseProfile != 0 {\n        Map_ManSetUseProfile( pMan ); }\n    if LogFan != 0 {\n        Map_ManCreateNodeDelays( pMan, LogFan ); }\n    if !Map_Mapping( pMan ) {\n        Map_ManFree( pMan );\n        return nil;\n    }\n//    Map_ManPrintStatsToFile( pNtk-\u003epSpec, Map_ManReadAreaFinal(pMan), Map_ManReadRequiredGlo(pMan), Abc_Clock()-clk );\n\n    // reconstruct the network after mapping (use buffers when user requested or in the area mode)\n    pNtkNew = Abc_NtkFromMap( pMan, pNtk, fUseBuffs || (DelayTarget == float64(ABC_INFINITY)) );\n    if Mio_LibraryHasProfile(pLib) {\n        Mio_LibraryTransferProfile2( (Mio_Library_t *)Abc_FrameReadLibGen(), pLib ); }\n    Map_ManFree( pMan );\n    if pNtkNew == nil {\n        return nil; }\n\n    if pNtk.pExdc {\n        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Total runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n}\n\n    // make sure that everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkMap: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkMapCopyCiArrival",
+      "Start": 7307,
+      "End": 7705,
+      "BodyStart": 7386,
+      "Original": "Map_Time_t * Abc_NtkMapCopyCiArrival( Abc_Ntk_t * pNtk, Abc_Time_t * ppTimes )\n{\n    Map_Time_t * p;\n    int i;\n    p = ABC_CALLOC( Map_Time_t, Abc_NtkCiNum(pNtk) );\n    for ( i = 0; i \u003c Abc_NtkCiNum(pNtk); i++ )\n    {\n        p[i].Fall = ppTimes[i].Fall;\n        p[i].Rise = ppTimes[i].Rise;\n        p[i].Worst = Abc_MaxFloat( p[i].Fall, p[i].Rise );\n    }\n    ABC_FREE( ppTimes );\n    return p;\n}",
+      "Draft": "func Abc_NtkMapCopyCiArrival(pNtk *Abc_Ntk_t, ppTimes *Abc_Time_t) *Map_Time_t {\n    var p *Map_Time_t;\n    var i int32;\n    // inlining of macro ABC_CALLOC\n    p = ((Map_Time_t *) calloc((size_t)(Abc_NtkCiNum(pNtk)), sizeof(Map_Time_t)));\n    for  i = 0; i \u003c Abc_NtkCiNum(pNtk); i++  {\n        p[i].Fall = ppTimes[i].Fall;\n        p[i].Rise = ppTimes[i].Rise;\n        p[i].Worst = Abc_MaxFloat( p[i].Fall, p[i].Rise );\n    }\n    // inlining of macro ABC_FREE\n    ((ppTimes) ? (free((char *) (ppTimes)), (ppTimes) = 0) : 0);\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_NtkMapCopyCoRequired",
+      "Start": 7706,
+      "End": 8105,
+      "BodyStart": 7786,
+      "Original": "Map_Time_t * Abc_NtkMapCopyCoRequired( Abc_Ntk_t * pNtk, Abc_Time_t * ppTimes )\n{\n    Map_Time_t * p;\n    int i;\n    p = ABC_CALLOC( Map_Time_t, Abc_NtkCoNum(pNtk) );\n    for ( i = 0; i \u003c Abc_NtkCoNum(pNtk); i++ )\n    {\n        p[i].Fall = ppTimes[i].Fall;\n        p[i].Rise = ppTimes[i].Rise;\n        p[i].Worst = Abc_MaxFloat( p[i].Fall, p[i].Rise );\n    }\n    ABC_FREE( ppTimes );\n    return p;\n}",
+      "Draft": "func Abc_NtkMapCopyCoRequired(pNtk *Abc_Ntk_t, ppTimes *Abc_Time_t) *Map_Time_t {\n    var p *Map_Time_t;\n    var i int32;\n    // inlining of macro ABC_CALLOC\n    p = ((Map_Time_t *) calloc((size_t)(Abc_NtkCoNum(pNtk)), sizeof(Map_Time_t)));\n    for  i = 0; i \u003c Abc_NtkCoNum(pNtk); i++  {\n        p[i].Fall = ppTimes[i].Fall;\n        p[i].Rise = ppTimes[i].Rise;\n        p[i].Worst = Abc_MaxFloat( p[i].Fall, p[i].Rise );\n    }\n    // inlining of macro ABC_FREE\n    ((ppTimes) ? (free((char *) (ppTimes)), (ppTimes) = 0) : 0);\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_NtkMapCopyCiArrivalCon",
+      "Start": 8371,
+      "End": 8656,
+      "BodyStart": 8431,
+      "Original": "Map_Time_t * Abc_NtkMapCopyCiArrivalCon( Abc_Ntk_t * pNtk )\n{\n    Map_Time_t * p; int i;\n    p = ABC_CALLOC( Map_Time_t, Abc_NtkCiNum(pNtk) );\n    for ( i = 0; i \u003c Abc_NtkCiNum(pNtk); i++ )\n        p[i].Fall = p[i].Rise = p[i].Worst = Scl_Int2Flt( Scl_ConGetInArr(i) );\n    return p;\n}",
+      "Draft": "func Abc_NtkMapCopyCiArrivalCon(pNtk *Abc_Ntk_t) *Map_Time_t {\n    var p *Map_Time_t; var i int32;\n    // inlining of macro ABC_CALLOC\n    p = ((Map_Time_t *) calloc((size_t)(Abc_NtkCiNum(pNtk)), sizeof(Map_Time_t)));\n    for  i = 0; i \u003c Abc_NtkCiNum(pNtk); i++  {\n        p[i].Fall = p[i].Rise = p[i].Worst = Scl_Int2Flt( Scl_ConGetInArr(i) );\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_NtkMapCopyCoRequiredCon",
+      "Start": 8657,
+      "End": 8944,
+      "BodyStart": 8718,
+      "Original": "Map_Time_t * Abc_NtkMapCopyCoRequiredCon( Abc_Ntk_t * pNtk )\n{\n    Map_Time_t * p; int i;\n    p = ABC_CALLOC( Map_Time_t, Abc_NtkCoNum(pNtk) );\n    for ( i = 0; i \u003c Abc_NtkCoNum(pNtk); i++ )\n        p[i].Fall = p[i].Rise = p[i].Worst = Scl_Int2Flt( Scl_ConGetOutReq(i) );\n    return p;\n}",
+      "Draft": "func Abc_NtkMapCopyCoRequiredCon(pNtk *Abc_Ntk_t) *Map_Time_t {\n    var p *Map_Time_t; var i int32;\n    // inlining of macro ABC_CALLOC\n    p = ((Map_Time_t *) calloc((size_t)(Abc_NtkCoNum(pNtk)), sizeof(Map_Time_t)));\n    for  i = 0; i \u003c Abc_NtkCoNum(pNtk); i++  {\n        p[i].Fall = p[i].Rise = p[i].Worst = Scl_Int2Flt( Scl_ConGetOutReq(i) );\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_NtkToMap",
+      "Start": 9210,
+      "End": 12686,
+      "BodyStart": 9324,
+      "Original": "Map_Man_t * Abc_NtkToMap( Abc_Ntk_t * pNtk, double DelayTarget, int fRecovery, float * pSwitching, int fVerbose )\n{\n    Map_Man_t * pMan;\n    Map_Node_t * pNodeMap;\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pNode, * pFanin, * pPrev;\n    int i;\n\n    assert( Abc_NtkIsStrash(pNtk) );\n\n    // start the mapping manager and set its parameters\n    pMan = Map_ManCreate( Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) - pNtk-\u003enBarBufs, Abc_NtkPoNum(pNtk) + Abc_NtkLatchNum(pNtk) - pNtk-\u003enBarBufs, fVerbose );\n    if ( pMan == NULL )\n        return NULL;\n    Map_ManSetAreaRecovery( pMan, fRecovery );\n    Map_ManSetOutputNames( pMan, Abc_NtkCollectCioNames(pNtk, 1) );\n    Map_ManSetDelayTarget( pMan, (float)DelayTarget );\n\n    // set arrival and requireds\n    if ( Scl_ConIsRunning() \u0026\u0026 Scl_ConHasInArrs() )\n        Map_ManSetInputArrivals( pMan, Abc_NtkMapCopyCiArrivalCon(pNtk) );\n    else\n        Map_ManSetInputArrivals( pMan, Abc_NtkMapCopyCiArrival(pNtk, Abc_NtkGetCiArrivalTimes(pNtk)) );\n    if ( Scl_ConIsRunning() \u0026\u0026 Scl_ConHasOutReqs() )\n        Map_ManSetOutputRequireds( pMan, Abc_NtkMapCopyCoRequiredCon(pNtk) );\n    else\n        Map_ManSetOutputRequireds( pMan, Abc_NtkMapCopyCoRequired(pNtk, Abc_NtkGetCoRequiredTimes(pNtk)) );\n\n    // create PIs and remember them in the old nodes\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk)-\u003epCopy = (Abc_Obj_t *)Map_ManReadConst1(pMan);\n    Abc_NtkForEachCi( pNtk, pNode, i )\n    {\n        if ( i == Abc_NtkCiNum(pNtk) - pNtk-\u003enBarBufs )\n            break;\n        pNodeMap = Map_ManReadInputs(pMan)[i];\n        pNode-\u003epCopy = (Abc_Obj_t *)pNodeMap;\n        if ( pSwitching )\n            Map_NodeSetSwitching( pNodeMap, pSwitching[pNode-\u003eId] );\n    }\n\n    // load the AIG into the mapper\n    vNodes = Abc_AigDfsMap( pNtk );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        if ( Abc_ObjIsLatch(pNode) )\n        {\n            pFanin = Abc_ObjFanin0(pNode);\n            pNodeMap = Map_NodeBuf( pMan, Map_NotCond( Abc_ObjFanin0(pFanin)-\u003epCopy, (int)Abc_ObjFaninC0(pFanin) ) );\n            Abc_ObjFanout0(pNode)-\u003epCopy = (Abc_Obj_t *)pNodeMap;\n            continue;\n        }\n        assert( Abc_ObjIsNode(pNode) );\n        // add the node to the mapper\n        pNodeMap = Map_NodeAnd( pMan, \n            Map_NotCond( Abc_ObjFanin0(pNode)-\u003epCopy, (int)Abc_ObjFaninC0(pNode) ),\n            Map_NotCond( Abc_ObjFanin1(pNode)-\u003epCopy, (int)Abc_ObjFaninC1(pNode) ) );\n        assert( pNode-\u003epCopy == NULL );\n        // remember the node\n        pNode-\u003epCopy = (Abc_Obj_t *)pNodeMap;\n        if ( pSwitching )\n            Map_NodeSetSwitching( pNodeMap, pSwitching[pNode-\u003eId] );\n        // set up the choice node\n        if ( Abc_AigNodeIsChoice( pNode ) )\n            for ( pPrev = pNode, pFanin = (Abc_Obj_t *)pNode-\u003epData; pFanin; pPrev = pFanin, pFanin = (Abc_Obj_t *)pFanin-\u003epData )\n            {\n                Map_NodeSetNextE( (Map_Node_t *)pPrev-\u003epCopy, (Map_Node_t *)pFanin-\u003epCopy );\n                Map_NodeSetRepr( (Map_Node_t *)pFanin-\u003epCopy, (Map_Node_t *)pNode-\u003epCopy );\n            }\n    }\n    assert( Map_ManReadBufNum(pMan) == pNtk-\u003enBarBufs );\n    Vec_PtrFree( vNodes );\n\n    // set the primary outputs in the required phase\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        if ( i == Abc_NtkCoNum(pNtk) - pNtk-\u003enBarBufs )\n            break;\n        Map_ManReadOutputs(pMan)[i] = Map_NotCond( (Map_Node_t *)Abc_ObjFanin0(pNode)-\u003epCopy, (int)Abc_ObjFaninC0(pNode) );\n    }\n    return pMan;\n}",
+      "Draft": "func Abc_NtkToMap(pNtk *Abc_Ntk_t, DelayTarget float64, fRecovery int32, pSwitching *float32, fVerbose int32) *Map_Man_t {\n    var pMan *Map_Man_t;\n    var pNodeMap *Map_Node_t;\n    var vNodes *Vec_Ptr_t;\n    var pNode, pFanin, pPrev *Abc_Obj_t;\n    var i int32;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // start the mapping manager and set its parameters\n    pMan = Map_ManCreate( Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) - pNtk.nBarBufs, Abc_NtkPoNum(pNtk) + Abc_NtkLatchNum(pNtk) - pNtk.nBarBufs, fVerbose );\n    if pMan == nil {\n        return nil; }\n    Map_ManSetAreaRecovery( pMan, fRecovery );\n    Map_ManSetOutputNames( pMan, Abc_NtkCollectCioNames(pNtk, 1) );\n    Map_ManSetDelayTarget( pMan, float32(DelayTarget) );\n\n    // set arrival and requireds\n    if Scl_ConIsRunning() \u0026\u0026 Scl_ConHasInArrs() {\n        Map_ManSetInputArrivals( pMan, Abc_NtkMapCopyCiArrivalCon(pNtk) );\n    } else {\n        Map_ManSetInputArrivals( pMan, Abc_NtkMapCopyCiArrival(pNtk, Abc_NtkGetCiArrivalTimes(pNtk)) ); }\n    if Scl_ConIsRunning() \u0026\u0026 Scl_ConHasOutReqs() {\n        Map_ManSetOutputRequireds( pMan, Abc_NtkMapCopyCoRequiredCon(pNtk) );\n    } else {\n        Map_ManSetOutputRequireds( pMan, Abc_NtkMapCopyCoRequired(pNtk, Abc_NtkGetCoRequiredTimes(pNtk)) ); }\n\n    // create PIs and remember them in the old nodes\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk).pCopy = (Abc_Obj_t *)Map_ManReadConst1(pMan);\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if i == Abc_NtkCiNum(pNtk) - pNtk.nBarBufs {\n            break; }\n        pNodeMap = Map_ManReadInputs(pMan)[i];\n        pNode.pCopy = (Abc_Obj_t *)pNodeMap;\n        if pSwitching != nil {\n            Map_NodeSetSwitching( pNodeMap, pSwitching[pNode.Id] ); }\n    }\n\n    // load the AIG into the mapper\n    vNodes = Abc_AigDfsMap( pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Abc_ObjIsLatch(pNode) {\n            pFanin = Abc_ObjFanin0(pNode);\n            // inlining of macro Map_NotCond\n            pNodeMap = Map_NodeBuf( pMan, ((Map_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pFanin).pCopy) ^ (int32(Abc_ObjFaninC0(pFanin))))) );\n            Abc_ObjFanout0(pNode).pCopy = (Abc_Obj_t *)pNodeMap;\n            continue;\n        }\n        assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n        // add the node to the mapper\n        pNodeMap = Map_NodeAnd( pMan, \n            // inlining of macro Map_NotCond\n            ((Map_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pNode).pCopy) ^ (int32(Abc_ObjFaninC0(pNode))))),\n            // inlining of macro Map_NotCond\n            ((Map_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin1(pNode).pCopy) ^ (int32(Abc_ObjFaninC1(pNode))))) );\n        assert(pNode.pCopy == nil, \"pNode.pCopy == nil\");\n        // remember the node\n        pNode.pCopy = (Abc_Obj_t *)pNodeMap;\n        if pSwitching != nil {\n            Map_NodeSetSwitching( pNodeMap, pSwitching[pNode.Id] ); }\n        // set up the choice node\n        if Abc_AigNodeIsChoice( pNode ) {\n            for  pPrev = pNode, pFanin = (Abc_Obj_t *)pNode.pData; (pFanin != nil); pPrev = pFanin, pFanin = (Abc_Obj_t *)pFanin.pData  {\n                Map_NodeSetNextE( (Map_Node_t *)pPrev.pCopy, (Map_Node_t *)pFanin.pCopy );\n                Map_NodeSetRepr( (Map_Node_t *)pFanin.pCopy, (Map_Node_t *)pNode.pCopy );\n            } }\n    }\n    assert(Map_ManReadBufNum(pMan) == pNtk.nBarBufs, \"Map_ManReadBufNum(pMan) == pNtk.nBarBufs\");\n    Vec_PtrFree( vNodes );\n\n    // set the primary outputs in the required phase\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if i == Abc_NtkCoNum(pNtk) - pNtk.nBarBufs {\n            break; }\n        // inlining of macro Map_NotCond\n        Map_ManReadOutputs(pMan)[i] = ((Map_Node_t *)((ABC_PTRUINT_T)((Map_Node_t *)Abc_ObjFanin0(pNode).pCopy) ^ (int32(Abc_ObjFaninC0(pNode)))));\n    }\n    return pMan;\n}"
+    },
+    {
+      "Name": "Abc_NodeFromMapSuper_rec",
+      "Start": 12949,
+      "End": 14671,
+      "BodyStart": 13092,
+      "Original": "Abc_Obj_t * Abc_NodeFromMapSuper_rec( Abc_Ntk_t * pNtkNew, Map_Node_t * pNodeMap, Map_Super_t * pSuper, Abc_Obj_t * pNodePis[], int nNodePis )\n{\n    Mio_Library_t * pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n    Mio_Gate_t * pRoot;\n    Map_Super_t ** ppFanins;\n    Abc_Obj_t * pNodeNew, * pNodeFanin;\n    int nFanins, Number, i;\n\n    // get the parameters of the supergate\n    pRoot = Map_SuperReadRoot(pSuper);\n    if ( pRoot == NULL )\n    {\n        Number = Map_SuperReadNum(pSuper);\n        if ( Number \u003c nNodePis )  \n        {\n            return pNodePis[Number];\n        }\n        else\n        {  \n//            assert( 0 );\n            /* It might happen that a super gate with 5 inputs is constructed that\n             * actually depends only on the first four variables; i.e the fifth is a\n             * don't care -- in that case we connect constant node for the fifth\n             * (since the cut only has 4 variables). An interesting question is what\n             * if the first variable (and not the fifth one is the redundant one;\n             * can that happen?) */\n            return Abc_NtkCreateNodeConst0(pNtkNew);\n        }\n    }\n    pRoot = Mio_LibraryReadGateByName( pLib, Mio_GateReadName(pRoot), NULL );\n\n    // get information about the fanins of the supergate\n    nFanins  = Map_SuperReadFaninNum( pSuper );\n    ppFanins = Map_SuperReadFanins( pSuper );\n    // create a new node with these fanins\n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n    for ( i = 0; i \u003c nFanins; i++ )\n    {\n        pNodeFanin = Abc_NodeFromMapSuper_rec( pNtkNew, pNodeMap, ppFanins[i], pNodePis, nNodePis );\n        Abc_ObjAddFanin( pNodeNew, pNodeFanin );\n    }\n    pNodeNew-\u003epData = pRoot;\n    return pNodeNew;\n}",
+      "Draft": "func Abc_NodeFromMapSuper_rec(pNtkNew *Abc_Ntk_t, pNodeMap *Map_Node_t, pSuper *Map_Super_t, pNodePis []*Abc_Obj_t, nNodePis int32) *Abc_Obj_t {\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    var pRoot *Mio_Gate_t;\n    var ppFanins **Map_Super_t;\n    var pNodeNew, pNodeFanin *Abc_Obj_t;\n    var nFanins, Number, i int32;\n\n    // get the parameters of the supergate\n    pRoot = Map_SuperReadRoot(pSuper);\n    if pRoot == nil {\n        Number = Map_SuperReadNum(pSuper);\n        if Number \u003c nNodePis {\n            return pNodePis[Number];\n        \n        } else {  \n//            assert( 0 );\n            /* It might happen that a super gate with 5 inputs is constructed that\n             * actually depends only on the first four variables; i.e the fifth is a\n             * don't care -- in that case we connect constant node for the fifth\n             * (since the cut only has 4 variables). An interesting question is what\n             * if the first variable (and not the fifth one is the redundant one;\n             * can that happen?) */\n            return Abc_NtkCreateNodeConst0(pNtkNew);\n        }\n    }\n    pRoot = Mio_LibraryReadGateByName( pLib, Mio_GateReadName(pRoot), nil );\n\n    // get information about the fanins of the supergate\n    nFanins  = Map_SuperReadFaninNum( pSuper );\n    ppFanins = Map_SuperReadFanins( pSuper );\n    // create a new node with these fanins\n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n    for  i = 0; i \u003c nFanins; i++  {\n        pNodeFanin = Abc_NodeFromMapSuper_rec( pNtkNew, pNodeMap, ppFanins[i], pNodePis, nNodePis );\n        Abc_ObjAddFanin( pNodeNew, pNodeFanin );\n    }\n    pNodeNew.pData = pRoot;\n    return pNodeNew;\n}"
+    },
+    {
+      "Name": "Abc_NodeFromMapPhase_rec",
+      "Start": 14672,
+      "End": 16044,
+      "BodyStart": 14767,
+      "Original": "Abc_Obj_t * Abc_NodeFromMapPhase_rec( Abc_Ntk_t * pNtkNew, Map_Node_t * pNodeMap, int fPhase )\n{\n    Abc_Obj_t * pNodePIs[10];\n    Abc_Obj_t * pNodeNew;\n    Map_Node_t ** ppLeaves;\n    Map_Cut_t * pCutBest;\n    Map_Super_t * pSuperBest;\n    unsigned uPhaseBest;\n    int i, fInvPin, nLeaves;\n\n    // make sure the node can be implemented in this phase\n    assert( Map_NodeReadCutBest(pNodeMap, fPhase) != NULL || Map_NodeIsConst(pNodeMap) );\n    // check if the phase is already implemented\n    pNodeNew = (Abc_Obj_t *)Map_NodeReadData( pNodeMap, fPhase );\n    if ( pNodeNew )\n        return pNodeNew;\n\n    // get the information about the best cut \n    pCutBest   = Map_NodeReadCutBest( pNodeMap, fPhase );\n    pSuperBest = Map_CutReadSuperBest( pCutBest, fPhase );\n    uPhaseBest = Map_CutReadPhaseBest( pCutBest, fPhase );\n    nLeaves    = Map_CutReadLeavesNum( pCutBest );\n    ppLeaves   = Map_CutReadLeaves( pCutBest );\n\n    // collect the PI nodes\n    for ( i = 0; i \u003c nLeaves; i++ )\n    {\n        fInvPin = ((uPhaseBest \u0026 (1 \u003c\u003c i)) \u003e 0);\n        pNodePIs[i] = Abc_NodeFromMap_rec( pNtkNew, ppLeaves[i], !fInvPin );\n        assert( pNodePIs[i] != NULL );\n    }\n\n    // implement the supergate\n    pNodeNew = Abc_NodeFromMapSuper_rec( pNtkNew, pNodeMap, pSuperBest, pNodePIs, nLeaves );\n    Map_NodeSetData( pNodeMap, fPhase, (char *)pNodeNew );\n    return pNodeNew;\n}",
+      "Draft": "func Abc_NodeFromMapPhase_rec(pNtkNew *Abc_Ntk_t, pNodeMap *Map_Node_t, fPhase int32) *Abc_Obj_t {\n    var pNodePIs [10]*Abc_Obj_t;\n    var pNodeNew *Abc_Obj_t;\n    var ppLeaves **Map_Node_t;\n    var pCutBest *Map_Cut_t;\n    var pSuperBest *Map_Super_t;\n    var uPhaseBest uint32;\n    var i, fInvPin, nLeaves int32;\n\n    // make sure the node can be implemented in this phase\n    assert(Map_NodeReadCutBest(pNodeMap, fPhase) != nil || Map_NodeIsConst(pNodeMap), \"Map_NodeReadCutBest(pNodeMap, fPhase) != nil || Map_NodeIsConst(pNodeMap)\");\n    // check if the phase is already implemented\n    pNodeNew = (Abc_Obj_t *)Map_NodeReadData( pNodeMap, fPhase );\n    if pNodeNew != nil {\n        return pNodeNew; }\n\n    // get the information about the best cut \n    pCutBest   = Map_NodeReadCutBest( pNodeMap, fPhase );\n    pSuperBest = Map_CutReadSuperBest( pCutBest, fPhase );\n    uPhaseBest = Map_CutReadPhaseBest( pCutBest, fPhase );\n    nLeaves    = Map_CutReadLeavesNum( pCutBest );\n    ppLeaves   = Map_CutReadLeaves( pCutBest );\n\n    // collect the PI nodes\n    for  i = 0; i \u003c nLeaves; i++  {\n        fInvPin = ((uPhaseBest \u0026 (1 \u003c\u003c i)) \u003e 0);\n        pNodePIs[i] = Abc_NodeFromMap_rec( pNtkNew, ppLeaves[i], !fInvPin );\n        assert(pNodePIs[i] != nil, \"pNodePIs[i] != nil\");\n    }\n\n    // implement the supergate\n    pNodeNew = Abc_NodeFromMapSuper_rec( pNtkNew, pNodeMap, pSuperBest, pNodePIs, nLeaves );\n    Map_NodeSetData( pNodeMap, fPhase, (char *)pNodeNew );\n    return pNodeNew;\n}"
+    },
+    {
+      "Name": "Abc_NodeFromMap_rec",
+      "Start": 16045,
+      "End": 17393,
+      "BodyStart": 16135,
+      "Original": "Abc_Obj_t * Abc_NodeFromMap_rec( Abc_Ntk_t * pNtkNew, Map_Node_t * pNodeMap, int fPhase )\n{\n    Abc_Obj_t * pNodeNew, * pNodeInv;\n\n    // check the case of constant node\n    if ( Map_NodeIsConst(pNodeMap) )\n    {\n        pNodeNew = fPhase? Abc_NtkCreateNodeConst1(pNtkNew) : Abc_NtkCreateNodeConst0(pNtkNew);\n        if ( pNodeNew-\u003epData == NULL )\n            printf( \"Error creating mapped network: Library does not have a constant %d gate.\\n\", fPhase );\n        return pNodeNew;\n    }\n\n    // check if the phase is already implemented\n    pNodeNew = (Abc_Obj_t *)Map_NodeReadData( pNodeMap, fPhase );\n    if ( pNodeNew )\n        return pNodeNew;\n\n    // implement the node if the best cut is assigned\n    if ( Map_NodeReadCutBest(pNodeMap, fPhase) != NULL )\n        return Abc_NodeFromMapPhase_rec( pNtkNew, pNodeMap, fPhase );\n\n    // if the cut is not assigned, implement the node\n    assert( Map_NodeReadCutBest(pNodeMap, !fPhase) != NULL || Map_NodeIsConst(pNodeMap) );\n    pNodeNew = Abc_NodeFromMapPhase_rec( pNtkNew, pNodeMap, !fPhase );\n\n    // add the inverter\n    pNodeInv = Abc_NtkCreateNode( pNtkNew );\n    Abc_ObjAddFanin( pNodeInv, pNodeNew );\n    pNodeInv-\u003epData = Mio_LibraryReadInv((Mio_Library_t *)Abc_FrameReadLibGen());\n\n    // set the inverter\n    Map_NodeSetData( pNodeMap, fPhase, (char *)pNodeInv );\n    return pNodeInv;\n}",
+      "Draft": "func Abc_NodeFromMap_rec(pNtkNew *Abc_Ntk_t, pNodeMap *Map_Node_t, fPhase int32) *Abc_Obj_t {\n    var pNodeNew, pNodeInv *Abc_Obj_t;\n\n    // check the case of constant node\n    if Map_NodeIsConst(pNodeMap) {\n        if fPhase != 0 {\n            pNodeNew = Abc_NtkCreateNodeConst1(pNtkNew);\n        } else {\n            pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);\n        }\n        if pNodeNew.pData == nil {\n            fmt.Printf(\"Error creating mapped network: Library does not have a constant %d gate.\\n\", fPhase); }\n        return pNodeNew;\n    }\n\n    // check if the phase is already implemented\n    pNodeNew = (Abc_Obj_t *)Map_NodeReadData( pNodeMap, fPhase );\n    if pNodeNew != nil {\n        return pNodeNew; }\n\n    // implement the node if the best cut is assigned\n    if Map_NodeReadCutBest(pNodeMap, fPhase) != nil {\n        return Abc_NodeFromMapPhase_rec( pNtkNew, pNodeMap, fPhase ); }\n\n    // if the cut is not assigned, implement the node\n    assert(Map_NodeReadCutBest(pNodeMap, !fPhase) != nil || Map_NodeIsConst(pNodeMap), \"Map_NodeReadCutBest(pNodeMap, !fPhase) != nil || Map_NodeIsConst(pNodeMap)\");\n    pNodeNew = Abc_NodeFromMapPhase_rec( pNtkNew, pNodeMap, !fPhase );\n\n    // add the inverter\n    pNodeInv = Abc_NtkCreateNode( pNtkNew );\n    Abc_ObjAddFanin( pNodeInv, pNodeNew );\n    pNodeInv.pData = Mio_LibraryReadInv((Mio_Library_t *)Abc_FrameReadLibGen());\n\n    // set the inverter\n    Map_NodeSetData( pNodeMap, fPhase, (char *)pNodeInv );\n    return pNodeInv;\n}"
+    },
+    {
+      "Name": "Abc_NtkFromMap",
+      "Start": 17394,
+      "End": 19421,
+      "BodyStart": 17474,
+      "Original": "Abc_Ntk_t * Abc_NtkFromMap( Map_Man_t * pMan, Abc_Ntk_t * pNtk, int fUseBuffs )\n{\n    Abc_Ntk_t * pNtkNew;\n    Map_Node_t * pNodeMap;\n    Abc_Obj_t * pNode, * pNodeNew;\n    int i, nDupGates;\n    assert( Map_ManReadBufNum(pMan) == pNtk-\u003enBarBufs );\n    // create the new network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_MAP );\n    // make the mapper point to the new network\n    Map_ManCleanData( pMan );\n    Abc_NtkForEachCi( pNtk, pNode, i )\n    {\n        if ( i \u003e= Abc_NtkCiNum(pNtk) - pNtk-\u003enBarBufs )\n            break;\n        Map_NodeSetData( Map_ManReadInputs(pMan)[i], 1, (char *)pNode-\u003epCopy );\n    }\n    Abc_NtkForEachCi( pNtk, pNode, i )\n    {\n        if ( i \u003c Abc_NtkCiNum(pNtk) - pNtk-\u003enBarBufs )\n            continue;\n        Map_NodeSetData( Map_ManReadBufs(pMan)[i - (Abc_NtkCiNum(pNtk) - pNtk-\u003enBarBufs)], 1, (char *)pNode-\u003epCopy );\n    }\n    // assign the mapping of the required phase to the POs\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        if ( i \u003c Abc_NtkCoNum(pNtk) - pNtk-\u003enBarBufs )\n            continue;\n        pNodeMap = Map_ManReadBufDriver( pMan, i - (Abc_NtkCoNum(pNtk) - pNtk-\u003enBarBufs) );\n        pNodeNew = Abc_NodeFromMap_rec( pNtkNew, Map_Regular(pNodeMap), !Map_IsComplement(pNodeMap) );\n        assert( !Abc_ObjIsComplement(pNodeNew) );\n        Abc_ObjAddFanin( pNode-\u003epCopy, pNodeNew );\n    }\n    Abc_NtkForEachCo( pNtk, pNode, i )\n    {\n        if ( i \u003e= Abc_NtkCoNum(pNtk) - pNtk-\u003enBarBufs )\n            break;\n        pNodeMap = Map_ManReadOutputs(pMan)[i];\n        pNodeNew = Abc_NodeFromMap_rec( pNtkNew, Map_Regular(pNodeMap), !Map_IsComplement(pNodeMap) );\n        assert( !Abc_ObjIsComplement(pNodeNew) );\n        Abc_ObjAddFanin( pNode-\u003epCopy, pNodeNew );\n    }\n    // decouple the PO driver nodes to reduce the number of levels\n    nDupGates = Abc_NtkLogicMakeSimpleCos( pNtkNew, !fUseBuffs );\n//    if ( nDupGates \u0026\u0026 Map_ManReadVerbose(pMan) )\n//        printf( \"Duplicated %d gates to decouple the CO drivers.\\n\", nDupGates );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkFromMap(pMan *Map_Man_t, pNtk *Abc_Ntk_t, fUseBuffs int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pNodeMap *Map_Node_t;\n    var pNode, pNodeNew *Abc_Obj_t;\n    var i, nDupGates int32;\n    assert(Map_ManReadBufNum(pMan) == pNtk.nBarBufs, \"Map_ManReadBufNum(pMan) == pNtk.nBarBufs\");\n    // create the new network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_MAP );\n    // make the mapper point to the new network\n    Map_ManCleanData( pMan );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if i \u003e= Abc_NtkCiNum(pNtk) - pNtk.nBarBufs {\n            break; }\n        Map_NodeSetData( Map_ManReadInputs(pMan)[i], 1, (char *)pNode.pCopy );\n    }\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if i \u003c Abc_NtkCiNum(pNtk) - pNtk.nBarBufs {\n            continue; }\n        Map_NodeSetData( Map_ManReadBufs(pMan)[i - (Abc_NtkCiNum(pNtk) - pNtk.nBarBufs)], 1, (char *)pNode.pCopy );\n    }\n    // assign the mapping of the required phase to the POs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if i \u003c Abc_NtkCoNum(pNtk) - pNtk.nBarBufs {\n            continue; }\n        pNodeMap = Map_ManReadBufDriver( pMan, i - (Abc_NtkCoNum(pNtk) - pNtk.nBarBufs) );\n        // inlining of macro Map_Regular\n        // inlining of macro Map_IsComplement\n        pNodeNew = Abc_NodeFromMap_rec( pNtkNew, ((Map_Node_t *)((ABC_PTRUINT_T)(pNodeMap) \u0026 ~01)) , !((int32(((ABC_PTRUINT_T) (pNodeMap) \u0026 01)))) );\n        assert(!Abc_ObjIsComplement(pNodeNew), \"!Abc_ObjIsComplement(pNodeNew)\");\n        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if i \u003e= Abc_NtkCoNum(pNtk) - pNtk.nBarBufs {\n            break; }\n        pNodeMap = Map_ManReadOutputs(pMan)[i];\n        // inlining of macro Map_Regular\n        // inlining of macro Map_IsComplement\n        pNodeNew = Abc_NodeFromMap_rec( pNtkNew, ((Map_Node_t *)((ABC_PTRUINT_T)(pNodeMap) \u0026 ~01)) , !((int32(((ABC_PTRUINT_T) (pNodeMap) \u0026 01)))) );\n        assert(!Abc_ObjIsComplement(pNodeNew), \"!Abc_ObjIsComplement(pNodeNew)\");\n        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );\n    }\n    // decouple the PO driver nodes to reduce the number of levels\n    nDupGates = Abc_NtkLogicMakeSimpleCos( pNtkNew, !fUseBuffs );\n//    if ( nDupGates \u0026\u0026 Map_ManReadVerbose(pMan) )\n//        printf( \"Duplicated %d gates to decouple the CO drivers.\\n\", nDupGates );\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkSuperChoice",
+      "Start": 19692,
+      "End": 21131,
+      "BodyStart": 19743,
+      "Original": "Abc_Ntk_t * Abc_NtkSuperChoice( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkNew;\n\n    Map_Man_t * pMan;\n\n    assert( Abc_NtkIsStrash(pNtk) );\n\n    // check that the library is available\n    if ( Abc_FrameReadLibGen() == NULL )\n    {\n        printf( \"The current library is not available.\\n\" );\n        return 0;\n    }\n\n    // derive the supergate library\n    if ( Abc_FrameReadLibSuper() == NULL \u0026\u0026 Abc_FrameReadLibGen() )\n    {\n//        printf( \"A simple supergate library is derived from gate library \\\"%s\\\".\\n\", \n//            Mio_LibraryReadName((Mio_Library_t *)Abc_FrameReadLibGen()) );\n        Map_SuperLibDeriveFromGenlib( (Mio_Library_t *)Abc_FrameReadLibGen(), 0 );\n    }\n\n    // print a warning about choice nodes\n    if ( Abc_NtkGetChoiceNum( pNtk ) )\n        printf( \"Performing mapping with choices.\\n\" );\n\n    // perform the mapping\n    pMan = Abc_NtkToMap( pNtk, -1, 1, NULL, 0 );\n    if ( pMan == NULL )\n        return NULL;\n    if ( !Map_Mapping( pMan ) )\n    {\n        Map_ManFree( pMan );\n        return NULL;\n    }\n\n    // reconstruct the network after mapping\n    pNtkNew = Abc_NtkFromMapSuperChoice( pMan, pNtk );\n    if ( pNtkNew == NULL )\n        return NULL;\n    Map_ManFree( pMan );\n\n    // make sure that everything is okay\n    if ( !Abc_NtkCheck( pNtkNew ) )\n    {\n        printf( \"Abc_NtkMap: The network check has failed.\\n\" );\n        Abc_NtkDelete( pNtkNew );\n        return NULL;\n    }\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkSuperChoice(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n\n    var pMan *Map_Man_t;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // check that the library is available\n    if Abc_FrameReadLibGen() == nil {\n        fmt.Printf(\"The current library is not available.\\n\");\n        return 0;\n    }\n\n    // derive the supergate library\n    if Abc_FrameReadLibSuper() == nil \u0026\u0026 Abc_FrameReadLibGen() {\n//        printf( \"A simple supergate library is derived from gate library \\\"%s\\\".\\n\", \n//            Mio_LibraryReadName((Mio_Library_t *)Abc_FrameReadLibGen()) );\n        Map_SuperLibDeriveFromGenlib( (Mio_Library_t *)Abc_FrameReadLibGen(), 0 );\n    }\n\n    // print a warning about choice nodes\n    if Abc_NtkGetChoiceNum( pNtk ) {\n        fmt.Printf(\"Performing mapping with choices.\\n\"); }\n\n    // perform the mapping\n    pMan = Abc_NtkToMap( pNtk, -1, 1, nil, 0 );\n    if pMan == nil {\n        return nil; }\n    if !Map_Mapping( pMan ) {\n        Map_ManFree( pMan );\n        return nil;\n    }\n\n    // reconstruct the network after mapping\n    pNtkNew = Abc_NtkFromMapSuperChoice( pMan, pNtk );\n    if pNtkNew == nil {\n        return nil; }\n    Map_ManFree( pMan );\n\n    // make sure that everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkMap: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkFromMapSuperChoice",
+      "Start": 21395,
+      "End": 23637,
+      "BodyStart": 21471,
+      "Original": "Abc_Ntk_t * Abc_NtkFromMapSuperChoice( Map_Man_t * pMan, Abc_Ntk_t * pNtk )\n{\n    extern Abc_Ntk_t * Abc_NtkMulti( Abc_Ntk_t * pNtk, int nThresh, int nFaninMax, int fCnf, int fMulti, int fSimple, int fFactor );\n    ProgressBar * pProgress;\n    Abc_Ntk_t * pNtkNew, * pNtkNew2;\n    Abc_Obj_t * pNode;\n    int i;\n\n    // save the pointer to the mapped nodes\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode-\u003epNext = pNode-\u003epCopy;\n    Abc_NtkForEachPo( pNtk, pNode, i )\n        pNode-\u003epNext = pNode-\u003epCopy;\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        pNode-\u003epNext = pNode-\u003epCopy;\n\n    // duplicate the network\n    pNtkNew2 = Abc_NtkDup( pNtk );\n    pNtkNew  = Abc_NtkMulti( pNtkNew2, 0, 20, 0, 0, 1, 0 );\n    if ( !Abc_NtkBddToSop( pNtkNew, -1, ABC_INFINITY ) )\n    {\n        printf( \"Abc_NtkFromMapSuperChoice(): Converting to SOPs has failed.\\n\" );\n        return NULL;\n    }\n\n    // set the old network to point to the new network\n    Abc_NtkForEachCi( pNtk, pNode, i )\n        pNode-\u003epCopy = pNode-\u003epCopy-\u003epCopy;\n    Abc_NtkForEachPo( pNtk, pNode, i )\n        pNode-\u003epCopy = pNode-\u003epCopy-\u003epCopy;\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        pNode-\u003epCopy = pNode-\u003epCopy-\u003epCopy;\n    Abc_NtkDelete( pNtkNew2 );\n\n    // set the pointers from the mapper to the new nodes\n    Abc_NtkForEachCi( pNtk, pNode, i )\n    {\n        Map_NodeSetData( Map_ManReadInputs(pMan)[i], 0, (char *)Abc_NtkCreateNodeInv(pNtkNew,pNode-\u003epCopy) );\n        Map_NodeSetData( Map_ManReadInputs(pMan)[i], 1, (char *)pNode-\u003epCopy );\n    }\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        Map_NodeSetData( (Map_Node_t *)pNode-\u003epNext, 0, (char *)Abc_NtkCreateNodeInv(pNtkNew,pNode-\u003epCopy) );\n        Map_NodeSetData( (Map_Node_t *)pNode-\u003epNext, 1, (char *)pNode-\u003epCopy );\n    }\n\n    // assign the mapping of the required phase to the POs\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkObjNumMax(pNtk) );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        Abc_NodeSuperChoice( pNtkNew, pNode );\n    }\n    Extra_ProgressBarStop( pProgress );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkFromMapSuperChoice(pMan *Map_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    extern Abc_Ntk_t * Abc_NtkMulti( Abc_Ntk_t * pNtk, int nThresh, int nFaninMax, int fCnf, int fMulti, int fSimple, int fFactor );\n    var pProgress *ProgressBar;\n    var pNtkNew, pNtkNew2 *Abc_Ntk_t;\n    var pNode *Abc_Obj_t;\n    var i int32;\n\n    // save the pointer to the mapped nodes\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pNode.pNext = pNode.pCopy;\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pNode.pNext = pNode.pCopy;\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pNode.pNext = pNode.pCopy; }\n    }\n\n    // duplicate the network\n    pNtkNew2 = Abc_NtkDup( pNtk );\n    pNtkNew  = Abc_NtkMulti( pNtkNew2, 0, 20, 0, 0, 1, 0 );\n    if !Abc_NtkBddToSop( pNtkNew, -1, ABC_INFINITY ) {\n        fmt.Printf(\"Abc_NtkFromMapSuperChoice(): Converting to SOPs has failed.\\n\");\n        return nil;\n    }\n\n    // set the old network to point to the new network\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pNode.pCopy = pNode.pCopy.pCopy;\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pNode.pCopy = pNode.pCopy.pCopy;\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pNode.pCopy = pNode.pCopy.pCopy; }\n    }\n    Abc_NtkDelete( pNtkNew2 );\n\n    // set the pointers from the mapper to the new nodes\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Map_NodeSetData( Map_ManReadInputs(pMan)[i], 0, (char *)Abc_NtkCreateNodeInv(pNtkNew,pNode.pCopy) );\n        Map_NodeSetData( Map_ManReadInputs(pMan)[i], 1, (char *)pNode.pCopy );\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        Map_NodeSetData( (Map_Node_t *)pNode.pNext, 0, (char *)Abc_NtkCreateNodeInv(pNtkNew,pNode.pCopy) );\n        Map_NodeSetData( (Map_Node_t *)pNode.pNext, 1, (char *)pNode.pCopy );\n    }\n    }\n\n    // assign the mapping of the required phase to the POs\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        Abc_NodeSuperChoice( pNtkNew, pNode );\n    }\n    }\n    Extra_ProgressBarStop( pProgress );\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NodeSuperChoice",
+      "Start": 23901,
+      "End": 24302,
+      "BodyStart": 23968,
+      "Original": "void Abc_NodeSuperChoice( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode )\n{\n    Map_Node_t * pMapNode = (Map_Node_t *)pNode-\u003epNext;\n    Map_Cut_t * pCuts, * pTemp;\n\n    pCuts = Map_NodeReadCuts(pMapNode);\n    for ( pTemp = Map_CutReadNext(pCuts); pTemp; pTemp = Map_CutReadNext(pTemp) )\n    {\n        Abc_NodeFromMapCutPhase( pNtkNew, pTemp, 0 );\n        Abc_NodeFromMapCutPhase( pNtkNew, pTemp, 1 );\n    }\n}",
+      "Draft": "func Abc_NodeSuperChoice(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t) {\n    var pMapNode *Map_Node_t  = (Map_Node_t *)pNode.pNext;\n    var pCuts, pTemp *Map_Cut_t;\n\n    pCuts = Map_NodeReadCuts(pMapNode);\n    for  pTemp = Map_CutReadNext(pCuts); (pTemp != nil); pTemp = Map_CutReadNext(pTemp)  {\n        Abc_NodeFromMapCutPhase( pNtkNew, pTemp, 0 );\n        Abc_NodeFromMapCutPhase( pNtkNew, pTemp, 1 );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NodeFromMapCutPhase",
+      "Start": 24587,
+      "End": 25463,
+      "BodyStart": 24669,
+      "Original": "void Abc_NodeFromMapCutPhase( Abc_Ntk_t * pNtkNew, Map_Cut_t * pCut, int fPhase )\n{\n    Abc_Obj_t * pNodePIs[10];\n    Map_Node_t ** ppLeaves;\n    Map_Super_t * pSuperBest;\n    unsigned uPhaseBest;\n    int i, fInvPin, nLeaves;\n\n    pSuperBest = Map_CutReadSuperBest( pCut, fPhase );\n    if ( pSuperBest == NULL )\n        return;\n\n    // get the information about the best cut \n    uPhaseBest = Map_CutReadPhaseBest( pCut, fPhase );\n    nLeaves    = Map_CutReadLeavesNum( pCut );\n    ppLeaves   = Map_CutReadLeaves( pCut );\n\n    // collect the PI nodes\n    for ( i = 0; i \u003c nLeaves; i++ )\n    {\n        fInvPin = ((uPhaseBest \u0026 (1 \u003c\u003c i)) \u003e 0);\n        pNodePIs[i] = (Abc_Obj_t *)Map_NodeReadData( ppLeaves[i], !fInvPin );\n        assert( pNodePIs[i] != NULL );\n    }\n\n    // implement the supergate\n    Abc_NodeFromMapSuperChoice_rec( pNtkNew, pSuperBest, pNodePIs, nLeaves );\n}",
+      "Draft": "func Abc_NodeFromMapCutPhase(pNtkNew *Abc_Ntk_t, pCut *Map_Cut_t, fPhase int32) {\n    var pNodePIs [10]*Abc_Obj_t;\n    var ppLeaves **Map_Node_t;\n    var pSuperBest *Map_Super_t;\n    var uPhaseBest uint32;\n    var i, fInvPin, nLeaves int32;\n\n    pSuperBest = Map_CutReadSuperBest( pCut, fPhase );\n    if pSuperBest == nil {\n        return; }\n\n    // get the information about the best cut \n    uPhaseBest = Map_CutReadPhaseBest( pCut, fPhase );\n    nLeaves    = Map_CutReadLeavesNum( pCut );\n    ppLeaves   = Map_CutReadLeaves( pCut );\n\n    // collect the PI nodes\n    for  i = 0; i \u003c nLeaves; i++  {\n        fInvPin = ((uPhaseBest \u0026 (1 \u003c\u003c i)) \u003e 0);\n        pNodePIs[i] = (Abc_Obj_t *)Map_NodeReadData( ppLeaves[i], !fInvPin );\n        assert(pNodePIs[i] != nil, \"pNodePIs[i] != nil\");\n    }\n\n    // implement the supergate\n    Abc_NodeFromMapSuperChoice_rec( pNtkNew, pSuperBest, pNodePIs, nLeaves );\n}"
+    },
+    {
+      "Name": "Abc_NodeFromMapSuperChoice_rec",
+      "Start": 25753,
+      "End": 27523,
+      "BodyStart": 25879,
+      "Original": "Abc_Obj_t * Abc_NodeFromMapSuperChoice_rec( Abc_Ntk_t * pNtkNew, Map_Super_t * pSuper, Abc_Obj_t * pNodePis[], int nNodePis )\n{\n    Mio_Library_t * pLib = (Mio_Library_t *)Abc_FrameReadLibGen();\n    Mio_Gate_t * pRoot;\n    Map_Super_t ** ppFanins;\n    Abc_Obj_t * pNodeNew, * pNodeFanin;\n    int nFanins, Number, i;\n\n    // get the parameters of the supergate\n    pRoot = Map_SuperReadRoot(pSuper);\n    if ( pRoot == NULL )\n    {\n        Number = Map_SuperReadNum(pSuper);\n        if ( Number \u003c nNodePis )  \n        {\n            return pNodePis[Number];\n        }\n        else\n        {  \n//            assert( 0 );\n            /* It might happen that a super gate with 5 inputs is constructed that\n             * actually depends only on the first four variables; i.e the fifth is a\n             * don't care -- in that case we connect constant node for the fifth\n             * (since the cut only has 4 variables). An interesting question is what\n             * if the first variable (and not the fifth one is the redundant one;\n             * can that happen?) */\n            return Abc_NtkCreateNodeConst0(pNtkNew);\n        }\n    }\n    pRoot = Mio_LibraryReadGateByName( pLib, Mio_GateReadName(pRoot), NULL );\n\n    // get information about the fanins of the supergate\n    nFanins  = Map_SuperReadFaninNum( pSuper );\n    ppFanins = Map_SuperReadFanins( pSuper );\n    // create a new node with these fanins\n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n    for ( i = 0; i \u003c nFanins; i++ )\n    {\n        pNodeFanin = Abc_NodeFromMapSuperChoice_rec( pNtkNew, ppFanins[i], pNodePis, nNodePis );\n        Abc_ObjAddFanin( pNodeNew, pNodeFanin );\n    }\n    pNodeNew-\u003epData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew-\u003epManFunc, Mio_GateReadSop(pRoot) );\n    return pNodeNew;\n}",
+      "Draft": "func Abc_NodeFromMapSuperChoice_rec(pNtkNew *Abc_Ntk_t, pSuper *Map_Super_t, pNodePis []*Abc_Obj_t, nNodePis int32) *Abc_Obj_t {\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    var pRoot *Mio_Gate_t;\n    var ppFanins **Map_Super_t;\n    var pNodeNew, pNodeFanin *Abc_Obj_t;\n    var nFanins, Number, i int32;\n\n    // get the parameters of the supergate\n    pRoot = Map_SuperReadRoot(pSuper);\n    if pRoot == nil {\n        Number = Map_SuperReadNum(pSuper);\n        if Number \u003c nNodePis {\n            return pNodePis[Number];\n        \n        } else {  \n//            assert( 0 );\n            /* It might happen that a super gate with 5 inputs is constructed that\n             * actually depends only on the first four variables; i.e the fifth is a\n             * don't care -- in that case we connect constant node for the fifth\n             * (since the cut only has 4 variables). An interesting question is what\n             * if the first variable (and not the fifth one is the redundant one;\n             * can that happen?) */\n            return Abc_NtkCreateNodeConst0(pNtkNew);\n        }\n    }\n    pRoot = Mio_LibraryReadGateByName( pLib, Mio_GateReadName(pRoot), nil );\n\n    // get information about the fanins of the supergate\n    nFanins  = Map_SuperReadFaninNum( pSuper );\n    ppFanins = Map_SuperReadFanins( pSuper );\n    // create a new node with these fanins\n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n    for  i = 0; i \u003c nFanins; i++  {\n        pNodeFanin = Abc_NodeFromMapSuperChoice_rec( pNtkNew, ppFanins[i], pNodePis, nNodePis );\n        Abc_ObjAddFanin( pNodeNew, pNodeFanin );\n    }\n    pNodeNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, Mio_GateReadSop(pRoot) );\n    return pNodeNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkFetchTwinNode",
+      "Start": 27794,
+      "End": 28488,
+      "BodyStart": 27848,
+      "Original": "Abc_Obj_t * Abc_NtkFetchTwinNode( Abc_Obj_t * pNode )\n{\n    Abc_Obj_t * pNode2;\n    Mio_Gate_t * pGate = (Mio_Gate_t *)pNode-\u003epData;\n    assert( Abc_NtkHasMapping(pNode-\u003epNtk) );\n    if ( pGate == NULL || Mio_GateReadTwin(pGate) == NULL )\n        return NULL;\n    // assuming the twin node is following next\n    if ( (int)Abc_ObjId(pNode) == Abc_NtkObjNumMax(pNode-\u003epNtk) - 1 )\n        return NULL;\n    pNode2 = Abc_NtkObj( pNode-\u003epNtk, Abc_ObjId(pNode) + 1 );\n    if ( pNode2 == NULL || !Abc_ObjIsNode(pNode2) || Abc_ObjFaninNum(pNode) != Abc_ObjFaninNum(pNode2) )\n        return NULL;\n    if ( Mio_GateReadTwin(pGate) != (Mio_Gate_t *)pNode2-\u003epData )\n        return NULL;\n    return pNode2;\n}",
+      "Draft": "func Abc_NtkFetchTwinNode(pNode *Abc_Obj_t) *Abc_Obj_t {\n    var pNode2 *Abc_Obj_t;\n    var pGate *Mio_Gate_t  = (Mio_Gate_t *)pNode.pData;\n    assert(Abc_NtkHasMapping(pNode.pNtk), \"Abc_NtkHasMapping(pNode.pNtk)\");\n    if pGate == nil || Mio_GateReadTwin(pGate) == nil {\n        return nil; }\n    // assuming the twin node is following next\n    if int32(Abc_ObjId(pNode)) == Abc_NtkObjNumMax(pNode.pNtk) - 1 {\n        return nil; }\n    pNode2 = Abc_NtkObj( pNode.pNtk, Abc_ObjId(pNode) + 1 );\n    if pNode2 == nil || !Abc_ObjIsNode(pNode2) || Abc_ObjFaninNum(pNode) != Abc_ObjFaninNum(pNode2) {\n        return nil; }\n    if Mio_GateReadTwin(pGate) != (Mio_Gate_t *)pNode2.pData {\n        return nil; }\n    return pNode2;\n}"
+    },
+    {
+      "Name": "Abc_NtkWriteMiniMapping",
+      "Start": 28772,
+      "End": 30855,
+      "BodyStart": 28828,
+      "Original": "Vec_Int_t * Abc_NtkWriteMiniMapping( Abc_Ntk_t * pNtk )\n{\n    Vec_Ptr_t * vNodes;\n    Vec_Int_t * vMapping;\n    Vec_Str_t * vGates;\n    Abc_Obj_t * pObj, * pFanin;\n    int i, k, nNodes, nFanins, nExtra, * pArray;\n    assert( Abc_NtkHasMapping(pNtk) );\n    // collect nodes in the DFS order\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    // assign unique numbers\n    nNodes = nFanins = 0;\n    Abc_NtkForEachCi( pNtk, pObj, i )\n        pObj-\u003eiTemp = nNodes++;\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        pObj-\u003eiTemp = nNodes++, nFanins += Abc_ObjFaninNum(pObj);\n    // allocate attay to store mapping (4 counters + fanins for each node + PO drivers + gate names)\n    vMapping = Vec_IntAlloc( 4 + Abc_NtkNodeNum(pNtk) + nFanins + Abc_NtkCoNum(pNtk) + 10000 );\n    // write the numbers of CI/CO/Node/FF\n    Vec_IntPush( vMapping, Abc_NtkCiNum(pNtk) );\n    Vec_IntPush( vMapping, Abc_NtkCoNum(pNtk) );\n    Vec_IntPush( vMapping, Abc_NtkNodeNum(pNtk) );\n    Vec_IntPush( vMapping, Abc_NtkLatchNum(pNtk) );\n    // write the nodes\n    vGates = Vec_StrAlloc( 10000 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        Vec_IntPush( vMapping, Abc_ObjFaninNum(pObj) );\n        Abc_ObjForEachFanin( pObj, pFanin, k )\n            Vec_IntPush( vMapping, pFanin-\u003eiTemp );\n        // remember this gate (to be added to the mapping later)\n        Vec_StrPrintStr( vGates, Mio_GateReadName((Mio_Gate_t *)pObj-\u003epData) );\n        Vec_StrPush( vGates, '\\0' );\n    }\n    // write the COs literals\n    Abc_NtkForEachCo( pNtk, pObj, i )\n        Vec_IntPush( vMapping, Abc_ObjFanin0(pObj)-\u003eiTemp );\n    // finish off the array\n    nExtra = 4 - Vec_StrSize(vGates) % 4;\n    for ( i = 0; i \u003c nExtra; i++ )\n        Vec_StrPush( vGates, '\\0' );\n    // add gates to the array\n    assert( Vec_StrSize(vGates) % 4 == 0 );\n    nExtra = Vec_StrSize(vGates) / 4;\n    pArray = (int *)Vec_StrArray(vGates);\n    for ( i = 0; i \u003c nExtra; i++ )\n        Vec_IntPush( vMapping, pArray[i] );\n    // cleanup and return\n    Vec_PtrFree( vNodes );\n    Vec_StrFree( vGates );\n    return vMapping;\n}",
+      "Draft": "func Abc_NtkWriteMiniMapping(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vNodes *Vec_Ptr_t;\n    var vMapping *Vec_Int_t;\n    var vGates *Vec_Str_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i int32;\n    var k int32;\n    var nNodes int32;\n    var nFanins int32;\n    var nExtra int32;\n    var pArray *int32;\n    assert(Abc_NtkHasMapping(pNtk), \"Abc_NtkHasMapping(pNtk)\");\n    // collect nodes in the DFS order\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    // assign unique numbers\n    nNodes = nFanins = 0;\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.iTemp = nNodes++;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.iTemp = nNodes++, nFanins += Abc_ObjFaninNum(pObj);\n    }\n    // allocate attay to store mapping (4 counters + fanins for each node + PO drivers + gate names)\n    vMapping = Vec_IntAlloc( 4 + Abc_NtkNodeNum(pNtk) + nFanins + Abc_NtkCoNum(pNtk) + 10000 );\n    // write the numbers of CI/CO/Node/FF\n    Vec_IntPush( vMapping, Abc_NtkCiNum(pNtk) );\n    Vec_IntPush( vMapping, Abc_NtkCoNum(pNtk) );\n    Vec_IntPush( vMapping, Abc_NtkNodeNum(pNtk) );\n    Vec_IntPush( vMapping, Abc_NtkLatchNum(pNtk) );\n    // write the nodes\n    vGates = Vec_StrAlloc( 10000 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Vec_IntPush( vMapping, Abc_ObjFaninNum(pObj) );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Vec_IntPush( vMapping, pFanin.iTemp );\n        }\n        // remember this gate (to be added to the mapping later)\n        Vec_StrPrintStr( vGates, Mio_GateReadName((Mio_Gate_t *)pObj.pData) );\n        Vec_StrPush( vGates, '\\0' );\n    }\n    // write the COs literals\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Vec_IntPush( vMapping, Abc_ObjFanin0(pObj).iTemp );\n    }\n    // finish off the array\n    nExtra = 4 - Vec_StrSize(vGates) % 4;\n    for  i = 0; i \u003c nExtra; i++  {\n        Vec_StrPush( vGates, '\\0' );\n    }\n    // add gates to the array\n    assert(Vec_StrSize(vGates) % 4 == 0, \"Vec_StrSize(vGates) % 4 == 0\");\n    nExtra = Vec_StrSize(vGates) / 4;\n    pArray = (int *)Vec_StrArray(vGates);\n    for  i = 0; i \u003c nExtra; i++  {\n        Vec_IntPush( vMapping, pArray[i] );\n    }\n    // cleanup and return\n    Vec_PtrFree( vNodes );\n    Vec_StrFree( vGates );\n    return vMapping;\n}"
+    },
+    {
+      "Name": "Abc_NtkPrintMiniMapping",
+      "Start": 31147,
+      "End": 32145,
+      "BodyStart": 31192,
+      "Original": "void Abc_NtkPrintMiniMapping( int * pArray )\n{\n    int nCis, nCos, nNodes, nFlops;\n    int i, k, nLeaves, Pos = 4;\n    char * pBuffer, * pName;\n    nCis = pArray[0];\n    nCos = pArray[1];\n    nNodes = pArray[2];\n    nFlops = pArray[3];\n    printf( \"Mapped network has %d CIs, %d COs, %d gates, and %d flops.\\n\", nCis, nCos, nNodes, nFlops );\n    printf( \"The first %d object IDs (from 0 to %d) are reserved for the CIs.\\n\", nCis, nCis - 1 );\n    for ( i = 0; i \u003c nNodes; i++ )\n    {\n        printf( \"Node %d has fanins {\", nCis + i );\n        nLeaves = pArray[Pos++];\n        for ( k = 0; k \u003c nLeaves; k++ )\n            printf( \" %d\", pArray[Pos++] );\n        printf( \" }\\n\" );\n    }\n    for ( i = 0; i \u003c nCos; i++ )\n        printf( \"CO %d is driven by node %d\\n\", i, pArray[Pos++] );\n    pBuffer = (char *)(pArray + Pos);\n    for ( i = 0; i \u003c nNodes; i++ )\n    {\n        pName = pBuffer;\n        pBuffer += strlen(pName) + 1;\n        printf( \"Node %d has gate \\\"%s\\\"\\n\", nCis + i, pName );\n    }\n}",
+      "Draft": "func Abc_NtkPrintMiniMapping(pArray *int32) {\n    var nCis, nCos, nNodes, nFlops int32;\n    var i int32;\n    var k int32;\n    var nLeaves int32;\n    var Pos int32 = 4;\n    var pBuffer, pName string;\n    nCis = pArray[0];\n    nCos = pArray[1];\n    nNodes = pArray[2];\n    nFlops = pArray[3];\n    fmt.Printf(\"Mapped network has %d CIs, %d COs, %d gates, and %d flops.\\n\", nCis, nCos, nNodes, nFlops);\n    fmt.Printf(\"The first %d object IDs (from 0 to %d) are reserved for the CIs.\\n\", nCis, nCis - 1);\n    for  i = 0; i \u003c nNodes; i++  {\n        fmt.Printf(\"Node %d has fanins {\", nCis + i);\n        nLeaves = pArray[Pos]; Pos++;\n        for  k = 0; k \u003c nLeaves; k++  {\n            fmt.Printf(\" %d\", pArray[Pos++]);\n        }\n        fmt.Printf(\" }\\n\");\n    }\n    for  i = 0; i \u003c nCos; i++  {\n        fmt.Printf(\"CO %d is driven by node %d\\n\", i, pArray[Pos++]);\n    }\n    pBuffer = (char *)(pArray + Pos);\n    for  i = 0; i \u003c nNodes; i++  {\n        pName = pBuffer;\n        pBuffer += len(pName) + 1;\n        fmt.Printf(\"Node %d has gate \\\"%s\\\"\\n\", nCis + i, pName);\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkOutputMiniMapping",
+      "Start": 32446,
+      "End": 33252,
+      "BodyStart": 32499,
+      "Original": "int * Abc_NtkOutputMiniMapping( Abc_Frame_t * pAbc )\n{\n    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;\n    Abc_Ntk_t * pNtk;\n    Vec_Int_t * vMapping;\n    int * pArray;\n    if ( pAbc == NULL )\n        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if ( pNtk == NULL )\n        printf( \"Current network in ABC framework is not defined.\\n\" );\n    if ( !Abc_NtkHasMapping(pNtk) )\n        printf( \"Current network in ABC framework is not mapped.\\n\" );\n    // derive mini-mapping\n    vMapping = Abc_NtkWriteMiniMapping( pNtk );\n    pArray = Vec_IntArray( vMapping );\n    ABC_FREE( vMapping );\n    // print mini-mapping (optional)\n//    Abc_NtkPrintMiniMapping( pArray );\n    // return the array representation of mini-mapping\n    return pArray;\n}",
+      "Draft": "func Abc_NtkOutputMiniMapping(pAbc *Abc_Frame_t) *int32 {\n    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;\n    var pNtk *Abc_Ntk_t;\n    var vMapping *Vec_Int_t;\n    var pArray *int32;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if pNtk == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\"); }\n    if !Abc_NtkHasMapping(pNtk) {\n        fmt.Printf(\"Current network in ABC framework is not mapped.\\n\"); }\n    // derive mini-mapping\n    vMapping = Abc_NtkWriteMiniMapping( pNtk );\n    pArray = Vec_IntArray( vMapping );\n    // inlining of macro ABC_FREE\n    ((vMapping) ? (free((char *) (vMapping)), (vMapping) = 0) : 0);\n    // print mini-mapping (optional)\n//    Abc_NtkPrintMiniMapping( pArray );\n    // return the array representation of mini-mapping\n    return pArray;\n}"
+    },
+    {
+      "Name": "Abc_NtkTestMiniMapping",
+      "Start": 33516,
+      "End": 33785,
+      "BodyStart": 33561,
+      "Original": "void Abc_NtkTestMiniMapping( Abc_Ntk_t * p )\n{\n    Vec_Int_t * vMapping;\n    vMapping = Abc_NtkWriteMiniMapping( p );\n    Abc_NtkPrintMiniMapping( Vec_IntArray(vMapping) );\n    printf( \"Array has size %d ints.\\n\", Vec_IntSize(vMapping) );\n    Vec_IntFree( vMapping );\n}",
+      "Draft": "func Abc_NtkTestMiniMapping(p *Abc_Ntk_t) {\n    var vMapping *Vec_Int_t;\n    vMapping = Abc_NtkWriteMiniMapping( p );\n    Abc_NtkPrintMiniMapping( Vec_IntArray(vMapping) );\n    fmt.Printf(\"Array has size %d ints.\\n\", Vec_IntSize(vMapping));\n    Vec_IntFree( vMapping );\n}"
+    },
+    {
+      "Name": "Abc_NtkSetCiArrivalTime",
+      "Start": 34070,
+      "End": 34766,
+      "BodyStart": 34154,
+      "Original": "void Abc_NtkSetCiArrivalTime( Abc_Frame_t * pAbc, int iCi, float Rise, float Fall )\n{\n    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;\n    Abc_Ntk_t * pNtk;\n    Abc_Obj_t * pNode;\n    if ( pAbc == NULL )\n    {\n        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );\n        return;\n    }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if ( pNtk == NULL )\n    {\n        printf( \"Current network in ABC framework is not defined.\\n\" );\n        return;\n    }\n    if ( iCi \u003c 0 || iCi \u003e= Abc_NtkCiNum(pNtk) )\n    {\n        printf( \"CI index is not valid.\\n\" );\n        return;\n    }\n    pNode = Abc_NtkCi( pNtk, iCi );\n    Abc_NtkTimeSetArrival( pNtk, Abc_ObjId(pNode), Rise, Fall );\n}",
+      "Draft": "func Abc_NtkSetCiArrivalTime(pAbc *Abc_Frame_t, iCi int32, Rise float32, Fall float32) {\n    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;\n    var pNtk *Abc_Ntk_t;\n    var pNode *Abc_Obj_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\");\n        return;\n    }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if pNtk == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\");\n        return;\n    }\n    if iCi \u003c 0 || iCi \u003e= Abc_NtkCiNum(pNtk) {\n        fmt.Printf(\"CI index is not valid.\\n\");\n        return;\n    }\n    pNode = Abc_NtkCi( pNtk, iCi );\n    Abc_NtkTimeSetArrival( pNtk, Abc_ObjId(pNode), Rise, Fall );\n}"
+    },
+    {
+      "Name": "Abc_NtkSetCoRequiredTime",
+      "Start": 34767,
+      "End": 35466,
+      "BodyStart": 34852,
+      "Original": "void Abc_NtkSetCoRequiredTime( Abc_Frame_t * pAbc, int iCo, float Rise, float Fall )\n{\n    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;\n    Abc_Ntk_t * pNtk;\n    Abc_Obj_t * pNode;\n    if ( pAbc == NULL )\\\n    {\n        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );\n        return;\n    }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if ( pNtk == NULL )\n    {\n        printf( \"Current network in ABC framework is not defined.\\n\" );\n        return;\n    }\n    if ( iCo \u003c 0 || iCo \u003e= Abc_NtkCoNum(pNtk) )\n    {\n        printf( \"CO index is not valid.\\n\" );\n        return;\n    }\n    pNode = Abc_NtkCo( pNtk, iCo );\n    Abc_NtkTimeSetRequired( pNtk, Abc_ObjId(pNode), Rise, Fall );\n}",
+      "Draft": "func Abc_NtkSetCoRequiredTime(pAbc *Abc_Frame_t, iCo int32, Rise float32, Fall float32) {\n    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;\n    var pNtk *Abc_Ntk_t;\n    var pNode *Abc_Obj_t;\n    if ( pAbc == nil )\\\n    {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\");\n        return;\n    }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if pNtk == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\");\n        return;\n    }\n    if iCo \u003c 0 || iCo \u003e= Abc_NtkCoNum(pNtk) {\n        fmt.Printf(\"CO index is not valid.\\n\");\n        return;\n    }\n    pNode = Abc_NtkCo( pNtk, iCo );\n    Abc_NtkTimeSetRequired( pNtk, Abc_ObjId(pNode), Rise, Fall );\n}"
+    },
+    {
+      "Name": "Abc_NtkSetAndGateDelay",
+      "Start": 35731,
+      "End": 36192,
+      "BodyStart": 35794,
+      "Original": "void Abc_NtkSetAndGateDelay( Abc_Frame_t * pAbc, float Delay )\n{\n    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;\n    Abc_Ntk_t * pNtk;\n    if ( pAbc == NULL )\n    {\n        printf( \"ABC framework is not initialized by calling Abc_Start()\\n\" );\n        return;\n    }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if ( pNtk == NULL )\n    {\n        printf( \"Current network in ABC framework is not defined.\\n\" );\n        return;\n    }\n    pNtk-\u003eAndGateDelay = Delay;\n}",
+      "Draft": "func Abc_NtkSetAndGateDelay(pAbc *Abc_Frame_t, Delay float32) {\n    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;\n    var pNtk *Abc_Ntk_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\");\n        return;\n    }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if pNtk == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\");\n        return;\n    }\n    pNtk.AndGateDelay = Delay;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::mechanical::static::2502",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2502,
+      "End": 2508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::mechanical::sizeof::7654",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7427,
+      "End": 7427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::mechanical::sizeof::8213",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7827,
+      "End": 7827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::mechanical::sizeof::9013",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8468,
+      "End": 8468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::mechanical::sizeof::9375",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8755,
+      "End": 8755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::2737",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2737,
+      "End": 2754
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::3397",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3397,
+      "End": 3414
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::3491",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3491,
+      "End": 3508
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::3605",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3605,
+      "End": 3623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::4986",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4986,
+      "End": 5003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::5100",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5100,
+      "End": 5117
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::5574",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5574,
+      "End": 5583
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::6541",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6541,
+      "End": 6558
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::7602",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7427,
+      "End": 7427
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::7935",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7669,
+      "End": 7669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::8161",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7827,
+      "End": 7827
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::8494",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8069,
+      "End": 8069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::8961",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8468,
+      "End": 8468
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::9323",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8755,
+      "End": 8755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::11157",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10561,
+      "End": 10574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::11486",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10789,
+      "End": 10802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::11796",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10990,
+      "End": 10990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::12031",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11181,
+      "End": 11181
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::12172",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11300,
+      "End": 11313
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::12404",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11484,
+      "End": 11484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::12558",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11568,
+      "End": 11568
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::12746",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11734,
+      "End": 11747
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::12984",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11972,
+      "End": 11985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::13044",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12032,
+      "End": 12045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::13121",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12109,
+      "End": 12123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::13149",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12137,
+      "End": 12151
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::13213",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12201,
+      "End": 12215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::13242",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12230,
+      "End": 12244
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::13737",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12576,
+      "End": 12576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::13768",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12576,
+      "End": 12576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::14304",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13121,
+      "End": 13138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::16360",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15177,
+      "End": 15190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::17185",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16002,
+      "End": 16010
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::17780",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16597,
+      "End": 16610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::18429",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17246,
+      "End": 17263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::18534",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17351,
+      "End": 17359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::19279",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17995,
+      "End": 18003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::19626",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18241,
+      "End": 18249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::20127",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18593,
+      "End": 18593
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::20750",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18971,
+      "End": 18971
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::22196",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20321,
+      "End": 20338
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::25508",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22776,
+      "End": 22784
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::25618",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22886,
+      "End": 22894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::25960",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23052,
+      "End": 23066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::25991",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23083,
+      "End": 23091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::26070",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23162,
+      "End": 23176
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::26101",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23193,
+      "End": 23201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::27082",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23998,
+      "End": 24012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::28335",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25251,
+      "End": 25264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::28992",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25908,
+      "End": 25925
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::30526",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27442,
+      "End": 27456
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::30983",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27899,
+      "End": 27913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::31501",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28417,
+      "End": 28431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::32520",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29227,
+      "End": 29227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::33246",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29848,
+      "End": 29848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::33678",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30176,
+      "End": 30190
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::34248",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30645,
+      "End": 30652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::35549",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31946,
+      "End": 31954
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::pointer-cast::36744",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33077,
+      "End": 33077
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkMap",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2249,
+      "End": 7041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::ternary::Abc_NtkMapCopyCiArrival",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkMapCopyCiArrival",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7307,
+      "End": 7705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkMapCopyCiArrival",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMapCopyCiArrival",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7307,
+      "End": 7705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::ternary::Abc_NtkMapCopyCoRequired",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkMapCopyCoRequired",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7706,
+      "End": 8105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkMapCopyCoRequired",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMapCopyCoRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7706,
+      "End": 8105
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkMapCopyCiArrivalCon",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMapCopyCiArrivalCon",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8371,
+      "End": 8656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkMapCopyCoRequiredCon",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMapCopyCoRequiredCon",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8657,
+      "End": 8944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkToMap",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkToMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9210,
+      "End": 12686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NodeFromMapSuper_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFromMapSuper_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12949,
+      "End": 14671
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NodeFromMapPhase_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFromMapPhase_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14672,
+      "End": 16044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NodeFromMap_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFromMap_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16045,
+      "End": 17393
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkFromMap",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFromMap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17394,
+      "End": 19421
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkSuperChoice",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSuperChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19692,
+      "End": 21131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkFromMapSuperChoice",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFromMapSuperChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21395,
+      "End": 23637
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NodeSuperChoice",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeSuperChoice",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23901,
+      "End": 24302
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NodeFromMapCutPhase",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFromMapCutPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24587,
+      "End": 25463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NodeFromMapSuperChoice_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeFromMapSuperChoice_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25753,
+      "End": 27523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkFetchTwinNode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFetchTwinNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27794,
+      "End": 28488
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkWriteMiniMapping",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkWriteMiniMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28772,
+      "End": 30855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkPrintMiniMapping",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkPrintMiniMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31147,
+      "End": 32145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::ternary::Abc_NtkOutputMiniMapping",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkOutputMiniMapping",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 32446,
+      "End": 33252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkOutputMiniMapping",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkOutputMiniMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32446,
+      "End": 33252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkTestMiniMapping",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkTestMiniMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 33516,
+      "End": 33785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkSetCiArrivalTime",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSetCiArrivalTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34070,
+      "End": 34766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkSetCoRequiredTime",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSetCoRequiredTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34767,
+      "End": 35466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::Abc_NtkSetAndGateDelay",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSetAndGateDelay",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35731,
+      "End": 36192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcMap.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 36439
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcMap.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Interface with the SC mapping package.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcMap.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"base/main/main.h\"\n//#include \"map/mio/mio.h\"\n//#include \"map/mapper/mapper.h\"\n//#include \"misc/util/utilNam.h\"\n//#include \"map/scl/sclCon.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static Map_Man_t *  Abc_NtkToMap( Abc_Ntk_t * pNtk, double DelayTarget, int fRecovery, float * pSwitching, int fVerbose );\n\n// static Abc_Ntk_t *  Abc_NtkFromMap( Map_Man_t * pMan, Abc_Ntk_t * pNtk, int fUseBuffs );\n\n// static Abc_Obj_t *  Abc_NodeFromMap_rec( Abc_Ntk_t * pNtkNew, Map_Node_t * pNodeMap, int fPhase );\n\n// static Abc_Obj_t *  Abc_NodeFromMapPhase_rec( Abc_Ntk_t * pNtkNew, Map_Node_t * pNodeMap, int fPhase );\n\n\n// static Abc_Ntk_t *  Abc_NtkFromMapSuperChoice( Map_Man_t * pMan, Abc_Ntk_t * pNtk );\n\n// static void         Abc_NodeSuperChoice( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode );\n\n// static void         Abc_NodeFromMapCutPhase( Abc_Ntk_t * pNtkNew, Map_Cut_t * pCut, int fPhase );\n\n// static Abc_Obj_t *  Abc_NodeFromMapSuperChoice_rec( Abc_Ntk_t * pNtkNew, Map_Super_t * pSuper, Abc_Obj_t * pNodePis[], int nNodePis );\n\n\n \n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Interface with the mapping package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Abc_NtkMap_fUseMulti int32;\nfunc Abc_NtkMap(pNtk *Abc_Ntk_t, DelayTarget float64, AreaMulti float64, DelayMulti float64, LogFan float32, Slew float32, Gain float32, nGatesMin int32, fRecovery int32, fSwitching int32, fSkipFanout int32, fUseProfile int32, fUseBuffs int32, fVerbose int32) *Abc_Ntk_t {\n    \n    var fShowSwitching int32  = 1;\n    var pNtkNew *Abc_Ntk_t;\n    var pMan *Map_Man_t;\n    var vSwitching *Vec_Int_t  = nil;\n    var pSwitching *float32  = nil;\n    var clk abctime;\n    var clkTotal abctime = Abc_Clock();\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    // derive library from SCL\n    // if the library is created here, it will be deleted when pSuperLib is deleted in Map_SuperLibFree()\n    if Abc_FrameReadLibScl() \u0026\u0026 Abc_SclHasDelayInfo( Abc_FrameReadLibScl() ) {\n        if (pLib != nil) \u0026\u0026 Mio_LibraryHasProfile(pLib) {\n            pLib = Abc_SclDeriveGenlib( Abc_FrameReadLibScl(), pLib, Slew, Gain, nGatesMin, fVerbose );\n        } else {\n            pLib = Abc_SclDeriveGenlib( Abc_FrameReadLibScl(), nil, Slew, Gain, nGatesMin, fVerbose ); }\n        if Abc_FrameReadLibGen() {\n            Mio_LibraryTransferDelays( (Mio_Library_t *)Abc_FrameReadLibGen(), pLib );\n            Mio_LibraryTransferProfile( pLib, (Mio_Library_t *)Abc_FrameReadLibGen() );\n        }\n        // remove supergate library\n        Map_SuperLibFree( (Map_SuperLib_t *)Abc_FrameReadLibSuper() );\n        Abc_FrameSetLibSuper( nil );\n    }\n    // quit if there is no library\n    if pLib == nil {\n        fmt.Printf(\"The current library is not available.\\n\");\n        return 0;\n    }\n    if AreaMulti != 0.0 {\n        spStatic_Abc_NtkMap_fUseMulti = 1;\nfmt.Printf(\"The cell areas are multiplied by the factor: \u003cnum_fanins\u003e ^ (%.2f).\\n\", AreaMulti); }\n    if DelayMulti != 0.0 {\n        spStatic_Abc_NtkMap_fUseMulti = 1;\nfmt.Printf(\"The cell delays are multiplied by the factor: \u003cnum_fanins\u003e ^ (%.2f).\\n\", DelayMulti); }\n\n    // penalize large gates by increasing their area\n    if AreaMulti != 0.0 {\n        Mio_LibraryMultiArea( pLib, AreaMulti ); }\n    if DelayMulti != 0.0 {\n        Mio_LibraryMultiDelay( pLib, DelayMulti ); }\n\n    // derive the supergate library\n    if (spStatic_Abc_NtkMap_fUseMulti != 0) || Abc_FrameReadLibSuper() == nil {\n        if fVerbose != 0 {\n            fmt.Printf(\"Converting \\\"%s\\\" into supergate library \\\"%s\\\".\\n\", Mio_LibraryReadName(pLib), Extra_FileNameGenericAppend(Mio_LibraryReadName(pLib), \".super\")); }\n        // compute supergate library to be used for mapping\n        if Mio_LibraryHasProfile(pLib) {\n            fmt.Printf(\"Abc_NtkMap(): Genlib library has profile.\\n\"); }\n        Map_SuperLibDeriveFromGenlib( pLib, fVerbose );\n    }\n\n    // return the library to normal\n    if AreaMulti != 0.0 {\n        Mio_LibraryMultiArea( (Mio_Library_t *)Abc_FrameReadLibGen(), -AreaMulti ); }\n    if DelayMulti != 0.0 {\n        Mio_LibraryMultiDelay( (Mio_Library_t *)Abc_FrameReadLibGen(), -DelayMulti ); }\n\n    // print a warning about choice nodes\n    if (fVerbose != 0) \u0026\u0026 Abc_NtkGetChoiceNum( pNtk ) {\n        fmt.Printf(\"Performing mapping with choices.\\n\"); }\n\n    // compute switching activity\n    fShowSwitching |= fSwitching;\n    if fShowSwitching != 0 {\n        extern Vec_Int_t * Sim_NtkComputeSwitching( Abc_Ntk_t * pNtk, int nPatterns );\n        vSwitching = Sim_NtkComputeSwitching( pNtk, 4096 );\n        pSwitching = (float *)vSwitching.pArray;\n    }\n\n    // perform the mapping\n    pMan = Abc_NtkToMap( pNtk, DelayTarget, fRecovery, pSwitching, fVerbose );\n    if pSwitching != nil { Vec_IntFree( vSwitching ); }\n    if pMan == nil {\n        return nil; }\nclk = Abc_Clock();\n    Map_ManSetSwitching( pMan, fSwitching );\n    Map_ManSetSkipFanout( pMan, fSkipFanout );\n    if fUseProfile != 0 {\n        Map_ManSetUseProfile( pMan ); }\n    if LogFan != 0 {\n        Map_ManCreateNodeDelays( pMan, LogFan ); }\n    if !Map_Mapping( pMan ) {\n        Map_ManFree( pMan );\n        return nil;\n    }\n//    Map_ManPrintStatsToFile( pNtk-\u003epSpec, Map_ManReadAreaFinal(pMan), Map_ManReadRequiredGlo(pMan), Abc_Clock()-clk );\n\n    // reconstruct the network after mapping (use buffers when user requested or in the area mode)\n    pNtkNew = Abc_NtkFromMap( pMan, pNtk, fUseBuffs || (DelayTarget == float64(ABC_INFINITY)) );\n    if Mio_LibraryHasProfile(pLib) {\n        Mio_LibraryTransferProfile2( (Mio_Library_t *)Abc_FrameReadLibGen(), pLib ); }\n    Map_ManFree( pMan );\n    if pNtkNew == nil {\n        return nil; }\n\n    if pNtk.pExdc {\n        pNtkNew.pExdc = Abc_NtkDup( pNtk.pExdc ); }\nif fVerbose != 0 {\n// inlining of macro ABC_PRT\nAbc_Print(1, \"%s =\", (\"Total runtime\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clkTotal)))/(float64(int64(time.Second))));;\n}\n\n    // make sure that everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkMap: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Load the network into manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMapCopyCiArrival(pNtk *Abc_Ntk_t, ppTimes *Abc_Time_t) *Map_Time_t {\n    var p *Map_Time_t;\n    var i int32;\n    // inlining of macro ABC_CALLOC\n    p = ((Map_Time_t *) calloc((size_t)(Abc_NtkCiNum(pNtk)), sizeof(Map_Time_t)));\n    for  i = 0; i \u003c Abc_NtkCiNum(pNtk); i++  {\n        p[i].Fall = ppTimes[i].Fall;\n        p[i].Rise = ppTimes[i].Rise;\n        p[i].Worst = Abc_MaxFloat( p[i].Fall, p[i].Rise );\n    }\n    // inlining of macro ABC_FREE\n    ((ppTimes) ? (free((char *) (ppTimes)), (ppTimes) = 0) : 0);\n    return p;\n}\nfunc Abc_NtkMapCopyCoRequired(pNtk *Abc_Ntk_t, ppTimes *Abc_Time_t) *Map_Time_t {\n    var p *Map_Time_t;\n    var i int32;\n    // inlining of macro ABC_CALLOC\n    p = ((Map_Time_t *) calloc((size_t)(Abc_NtkCoNum(pNtk)), sizeof(Map_Time_t)));\n    for  i = 0; i \u003c Abc_NtkCoNum(pNtk); i++  {\n        p[i].Fall = ppTimes[i].Fall;\n        p[i].Rise = ppTimes[i].Rise;\n        p[i].Worst = Abc_MaxFloat( p[i].Fall, p[i].Rise );\n    }\n    // inlining of macro ABC_FREE\n    ((ppTimes) ? (free((char *) (ppTimes)), (ppTimes) = 0) : 0);\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Load the network into manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMapCopyCiArrivalCon(pNtk *Abc_Ntk_t) *Map_Time_t {\n    var p *Map_Time_t; var i int32;\n    // inlining of macro ABC_CALLOC\n    p = ((Map_Time_t *) calloc((size_t)(Abc_NtkCiNum(pNtk)), sizeof(Map_Time_t)));\n    for  i = 0; i \u003c Abc_NtkCiNum(pNtk); i++  {\n        p[i].Fall = p[i].Rise = p[i].Worst = Scl_Int2Flt( Scl_ConGetInArr(i) );\n    }\n    return p;\n}\nfunc Abc_NtkMapCopyCoRequiredCon(pNtk *Abc_Ntk_t) *Map_Time_t {\n    var p *Map_Time_t; var i int32;\n    // inlining of macro ABC_CALLOC\n    p = ((Map_Time_t *) calloc((size_t)(Abc_NtkCoNum(pNtk)), sizeof(Map_Time_t)));\n    for  i = 0; i \u003c Abc_NtkCoNum(pNtk); i++  {\n        p[i].Fall = p[i].Rise = p[i].Worst = Scl_Int2Flt( Scl_ConGetOutReq(i) );\n    }\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Load the network into manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkToMap(pNtk *Abc_Ntk_t, DelayTarget float64, fRecovery int32, pSwitching *float32, fVerbose int32) *Map_Man_t {\n    var pMan *Map_Man_t;\n    var pNodeMap *Map_Node_t;\n    var vNodes *Vec_Ptr_t;\n    var pNode, pFanin, pPrev *Abc_Obj_t;\n    var i int32;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // start the mapping manager and set its parameters\n    pMan = Map_ManCreate( Abc_NtkPiNum(pNtk) + Abc_NtkLatchNum(pNtk) - pNtk.nBarBufs, Abc_NtkPoNum(pNtk) + Abc_NtkLatchNum(pNtk) - pNtk.nBarBufs, fVerbose );\n    if pMan == nil {\n        return nil; }\n    Map_ManSetAreaRecovery( pMan, fRecovery );\n    Map_ManSetOutputNames( pMan, Abc_NtkCollectCioNames(pNtk, 1) );\n    Map_ManSetDelayTarget( pMan, float32(DelayTarget) );\n\n    // set arrival and requireds\n    if Scl_ConIsRunning() \u0026\u0026 Scl_ConHasInArrs() {\n        Map_ManSetInputArrivals( pMan, Abc_NtkMapCopyCiArrivalCon(pNtk) );\n    } else {\n        Map_ManSetInputArrivals( pMan, Abc_NtkMapCopyCiArrival(pNtk, Abc_NtkGetCiArrivalTimes(pNtk)) ); }\n    if Scl_ConIsRunning() \u0026\u0026 Scl_ConHasOutReqs() {\n        Map_ManSetOutputRequireds( pMan, Abc_NtkMapCopyCoRequiredCon(pNtk) );\n    } else {\n        Map_ManSetOutputRequireds( pMan, Abc_NtkMapCopyCoRequired(pNtk, Abc_NtkGetCoRequiredTimes(pNtk)) ); }\n\n    // create PIs and remember them in the old nodes\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk).pCopy = (Abc_Obj_t *)Map_ManReadConst1(pMan);\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if i == Abc_NtkCiNum(pNtk) - pNtk.nBarBufs {\n            break; }\n        pNodeMap = Map_ManReadInputs(pMan)[i];\n        pNode.pCopy = (Abc_Obj_t *)pNodeMap;\n        if pSwitching != nil {\n            Map_NodeSetSwitching( pNodeMap, pSwitching[pNode.Id] ); }\n    }\n\n    // load the AIG into the mapper\n    vNodes = Abc_AigDfsMap( pNtk );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pNode) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        if Abc_ObjIsLatch(pNode) {\n            pFanin = Abc_ObjFanin0(pNode);\n            // inlining of macro Map_NotCond\n            pNodeMap = Map_NodeBuf( pMan, ((Map_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pFanin).pCopy) ^ (int32(Abc_ObjFaninC0(pFanin))))) );\n            Abc_ObjFanout0(pNode).pCopy = (Abc_Obj_t *)pNodeMap;\n            continue;\n        }\n        assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");\n        // add the node to the mapper\n        pNodeMap = Map_NodeAnd( pMan, \n            // inlining of macro Map_NotCond\n            ((Map_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin0(pNode).pCopy) ^ (int32(Abc_ObjFaninC0(pNode))))),\n            // inlining of macro Map_NotCond\n            ((Map_Node_t *)((ABC_PTRUINT_T)(Abc_ObjFanin1(pNode).pCopy) ^ (int32(Abc_ObjFaninC1(pNode))))) );\n        assert(pNode.pCopy == nil, \"pNode.pCopy == nil\");\n        // remember the node\n        pNode.pCopy = (Abc_Obj_t *)pNodeMap;\n        if pSwitching != nil {\n            Map_NodeSetSwitching( pNodeMap, pSwitching[pNode.Id] ); }\n        // set up the choice node\n        if Abc_AigNodeIsChoice( pNode ) {\n            for  pPrev = pNode, pFanin = (Abc_Obj_t *)pNode.pData; (pFanin != nil); pPrev = pFanin, pFanin = (Abc_Obj_t *)pFanin.pData  {\n                Map_NodeSetNextE( (Map_Node_t *)pPrev.pCopy, (Map_Node_t *)pFanin.pCopy );\n                Map_NodeSetRepr( (Map_Node_t *)pFanin.pCopy, (Map_Node_t *)pNode.pCopy );\n            } }\n    }\n    assert(Map_ManReadBufNum(pMan) == pNtk.nBarBufs, \"Map_ManReadBufNum(pMan) == pNtk.nBarBufs\");\n    Vec_PtrFree( vNodes );\n\n    // set the primary outputs in the required phase\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if i == Abc_NtkCoNum(pNtk) - pNtk.nBarBufs {\n            break; }\n        // inlining of macro Map_NotCond\n        Map_ManReadOutputs(pMan)[i] = ((Map_Node_t *)((ABC_PTRUINT_T)((Map_Node_t *)Abc_ObjFanin0(pNode).pCopy) ^ (int32(Abc_ObjFaninC0(pNode)))));\n    }\n    return pMan;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the mapped network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeFromMapSuper_rec(pNtkNew *Abc_Ntk_t, pNodeMap *Map_Node_t, pSuper *Map_Super_t, pNodePis []*Abc_Obj_t, nNodePis int32) *Abc_Obj_t {\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    var pRoot *Mio_Gate_t;\n    var ppFanins **Map_Super_t;\n    var pNodeNew, pNodeFanin *Abc_Obj_t;\n    var nFanins, Number, i int32;\n\n    // get the parameters of the supergate\n    pRoot = Map_SuperReadRoot(pSuper);\n    if pRoot == nil {\n        Number = Map_SuperReadNum(pSuper);\n        if Number \u003c nNodePis {\n            return pNodePis[Number];\n        \n        } else {  \n//            assert( 0 );\n            /* It might happen that a super gate with 5 inputs is constructed that\n             * actually depends only on the first four variables; i.e the fifth is a\n             * don't care -- in that case we connect constant node for the fifth\n             * (since the cut only has 4 variables). An interesting question is what\n             * if the first variable (and not the fifth one is the redundant one;\n             * can that happen?) */\n            return Abc_NtkCreateNodeConst0(pNtkNew);\n        }\n    }\n    pRoot = Mio_LibraryReadGateByName( pLib, Mio_GateReadName(pRoot), nil );\n\n    // get information about the fanins of the supergate\n    nFanins  = Map_SuperReadFaninNum( pSuper );\n    ppFanins = Map_SuperReadFanins( pSuper );\n    // create a new node with these fanins\n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n    for  i = 0; i \u003c nFanins; i++  {\n        pNodeFanin = Abc_NodeFromMapSuper_rec( pNtkNew, pNodeMap, ppFanins[i], pNodePis, nNodePis );\n        Abc_ObjAddFanin( pNodeNew, pNodeFanin );\n    }\n    pNodeNew.pData = pRoot;\n    return pNodeNew;\n}\nfunc Abc_NodeFromMapPhase_rec(pNtkNew *Abc_Ntk_t, pNodeMap *Map_Node_t, fPhase int32) *Abc_Obj_t {\n    var pNodePIs [10]*Abc_Obj_t;\n    var pNodeNew *Abc_Obj_t;\n    var ppLeaves **Map_Node_t;\n    var pCutBest *Map_Cut_t;\n    var pSuperBest *Map_Super_t;\n    var uPhaseBest uint32;\n    var i, fInvPin, nLeaves int32;\n\n    // make sure the node can be implemented in this phase\n    assert(Map_NodeReadCutBest(pNodeMap, fPhase) != nil || Map_NodeIsConst(pNodeMap), \"Map_NodeReadCutBest(pNodeMap, fPhase) != nil || Map_NodeIsConst(pNodeMap)\");\n    // check if the phase is already implemented\n    pNodeNew = (Abc_Obj_t *)Map_NodeReadData( pNodeMap, fPhase );\n    if pNodeNew != nil {\n        return pNodeNew; }\n\n    // get the information about the best cut \n    pCutBest   = Map_NodeReadCutBest( pNodeMap, fPhase );\n    pSuperBest = Map_CutReadSuperBest( pCutBest, fPhase );\n    uPhaseBest = Map_CutReadPhaseBest( pCutBest, fPhase );\n    nLeaves    = Map_CutReadLeavesNum( pCutBest );\n    ppLeaves   = Map_CutReadLeaves( pCutBest );\n\n    // collect the PI nodes\n    for  i = 0; i \u003c nLeaves; i++  {\n        fInvPin = ((uPhaseBest \u0026 (1 \u003c\u003c i)) \u003e 0);\n        pNodePIs[i] = Abc_NodeFromMap_rec( pNtkNew, ppLeaves[i], !fInvPin );\n        assert(pNodePIs[i] != nil, \"pNodePIs[i] != nil\");\n    }\n\n    // implement the supergate\n    pNodeNew = Abc_NodeFromMapSuper_rec( pNtkNew, pNodeMap, pSuperBest, pNodePIs, nLeaves );\n    Map_NodeSetData( pNodeMap, fPhase, (char *)pNodeNew );\n    return pNodeNew;\n}\nfunc Abc_NodeFromMap_rec(pNtkNew *Abc_Ntk_t, pNodeMap *Map_Node_t, fPhase int32) *Abc_Obj_t {\n    var pNodeNew, pNodeInv *Abc_Obj_t;\n\n    // check the case of constant node\n    if Map_NodeIsConst(pNodeMap) {\n        if fPhase != 0 {\n            pNodeNew = Abc_NtkCreateNodeConst1(pNtkNew);\n        } else {\n            pNodeNew = Abc_NtkCreateNodeConst0(pNtkNew);\n        }\n        if pNodeNew.pData == nil {\n            fmt.Printf(\"Error creating mapped network: Library does not have a constant %d gate.\\n\", fPhase); }\n        return pNodeNew;\n    }\n\n    // check if the phase is already implemented\n    pNodeNew = (Abc_Obj_t *)Map_NodeReadData( pNodeMap, fPhase );\n    if pNodeNew != nil {\n        return pNodeNew; }\n\n    // implement the node if the best cut is assigned\n    if Map_NodeReadCutBest(pNodeMap, fPhase) != nil {\n        return Abc_NodeFromMapPhase_rec( pNtkNew, pNodeMap, fPhase ); }\n\n    // if the cut is not assigned, implement the node\n    assert(Map_NodeReadCutBest(pNodeMap, !fPhase) != nil || Map_NodeIsConst(pNodeMap), \"Map_NodeReadCutBest(pNodeMap, !fPhase) != nil || Map_NodeIsConst(pNodeMap)\");\n    pNodeNew = Abc_NodeFromMapPhase_rec( pNtkNew, pNodeMap, !fPhase );\n\n    // add the inverter\n    pNodeInv = Abc_NtkCreateNode( pNtkNew );\n    Abc_ObjAddFanin( pNodeInv, pNodeNew );\n    pNodeInv.pData = Mio_LibraryReadInv((Mio_Library_t *)Abc_FrameReadLibGen());\n\n    // set the inverter\n    Map_NodeSetData( pNodeMap, fPhase, (char *)pNodeInv );\n    return pNodeInv;\n}\nfunc Abc_NtkFromMap(pMan *Map_Man_t, pNtk *Abc_Ntk_t, fUseBuffs int32) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var pNodeMap *Map_Node_t;\n    var pNode, pNodeNew *Abc_Obj_t;\n    var i, nDupGates int32;\n    assert(Map_ManReadBufNum(pMan) == pNtk.nBarBufs, \"Map_ManReadBufNum(pMan) == pNtk.nBarBufs\");\n    // create the new network\n    pNtkNew = Abc_NtkStartFrom( pNtk, ABC_NTK_LOGIC, ABC_FUNC_MAP );\n    // make the mapper point to the new network\n    Map_ManCleanData( pMan );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if i \u003e= Abc_NtkCiNum(pNtk) - pNtk.nBarBufs {\n            break; }\n        Map_NodeSetData( Map_ManReadInputs(pMan)[i], 1, (char *)pNode.pCopy );\n    }\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        if i \u003c Abc_NtkCiNum(pNtk) - pNtk.nBarBufs {\n            continue; }\n        Map_NodeSetData( Map_ManReadBufs(pMan)[i - (Abc_NtkCiNum(pNtk) - pNtk.nBarBufs)], 1, (char *)pNode.pCopy );\n    }\n    // assign the mapping of the required phase to the POs\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if i \u003c Abc_NtkCoNum(pNtk) - pNtk.nBarBufs {\n            continue; }\n        pNodeMap = Map_ManReadBufDriver( pMan, i - (Abc_NtkCoNum(pNtk) - pNtk.nBarBufs) );\n        // inlining of macro Map_Regular\n        // inlining of macro Map_IsComplement\n        pNodeNew = Abc_NodeFromMap_rec( pNtkNew, ((Map_Node_t *)((ABC_PTRUINT_T)(pNodeMap) \u0026 ~01)) , !((int32(((ABC_PTRUINT_T) (pNodeMap) \u0026 01)))) );\n        assert(!Abc_ObjIsComplement(pNodeNew), \"!Abc_ObjIsComplement(pNodeNew)\");\n        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );\n    }\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if i \u003e= Abc_NtkCoNum(pNtk) - pNtk.nBarBufs {\n            break; }\n        pNodeMap = Map_ManReadOutputs(pMan)[i];\n        // inlining of macro Map_Regular\n        // inlining of macro Map_IsComplement\n        pNodeNew = Abc_NodeFromMap_rec( pNtkNew, ((Map_Node_t *)((ABC_PTRUINT_T)(pNodeMap) \u0026 ~01)) , !((int32(((ABC_PTRUINT_T) (pNodeMap) \u0026 01)))) );\n        assert(!Abc_ObjIsComplement(pNodeNew), \"!Abc_ObjIsComplement(pNodeNew)\");\n        Abc_ObjAddFanin( pNode.pCopy, pNodeNew );\n    }\n    // decouple the PO driver nodes to reduce the number of levels\n    nDupGates = Abc_NtkLogicMakeSimpleCos( pNtkNew, !fUseBuffs );\n//    if ( nDupGates \u0026\u0026 Map_ManReadVerbose(pMan) )\n//        printf( \"Duplicated %d gates to decouple the CO drivers.\\n\", nDupGates );\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Interface with the mapping package.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSuperChoice(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n\n    var pMan *Map_Man_t;\n\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n\n    // check that the library is available\n    if Abc_FrameReadLibGen() == nil {\n        fmt.Printf(\"The current library is not available.\\n\");\n        return 0;\n    }\n\n    // derive the supergate library\n    if Abc_FrameReadLibSuper() == nil \u0026\u0026 Abc_FrameReadLibGen() {\n//        printf( \"A simple supergate library is derived from gate library \\\"%s\\\".\\n\", \n//            Mio_LibraryReadName((Mio_Library_t *)Abc_FrameReadLibGen()) );\n        Map_SuperLibDeriveFromGenlib( (Mio_Library_t *)Abc_FrameReadLibGen(), 0 );\n    }\n\n    // print a warning about choice nodes\n    if Abc_NtkGetChoiceNum( pNtk ) {\n        fmt.Printf(\"Performing mapping with choices.\\n\"); }\n\n    // perform the mapping\n    pMan = Abc_NtkToMap( pNtk, -1, 1, nil, 0 );\n    if pMan == nil {\n        return nil; }\n    if !Map_Mapping( pMan ) {\n        Map_ManFree( pMan );\n        return nil;\n    }\n\n    // reconstruct the network after mapping\n    pNtkNew = Abc_NtkFromMapSuperChoice( pMan, pNtk );\n    if pNtkNew == nil {\n        return nil; }\n    Map_ManFree( pMan );\n\n    // make sure that everything is okay\n    if !Abc_NtkCheck( pNtkNew ) {\n        fmt.Printf(\"Abc_NtkMap: The network check has failed.\\n\");\n        Abc_NtkDelete( pNtkNew );\n        return nil;\n    }\n    return pNtkNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the mapped network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFromMapSuperChoice(pMan *Map_Man_t, pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    extern Abc_Ntk_t * Abc_NtkMulti( Abc_Ntk_t * pNtk, int nThresh, int nFaninMax, int fCnf, int fMulti, int fSimple, int fFactor );\n    var pProgress *ProgressBar;\n    var pNtkNew, pNtkNew2 *Abc_Ntk_t;\n    var pNode *Abc_Obj_t;\n    var i int32;\n\n    // save the pointer to the mapped nodes\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pNode.pNext = pNode.pCopy;\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pNode.pNext = pNode.pCopy;\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pNode.pNext = pNode.pCopy; }\n    }\n\n    // duplicate the network\n    pNtkNew2 = Abc_NtkDup( pNtk );\n    pNtkNew  = Abc_NtkMulti( pNtkNew2, 0, 20, 0, 0, 1, 0 );\n    if !Abc_NtkBddToSop( pNtkNew, -1, ABC_INFINITY ) {\n        fmt.Printf(\"Abc_NtkFromMapSuperChoice(): Converting to SOPs has failed.\\n\");\n        return nil;\n    }\n\n    // set the old network to point to the new network\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pNode.pCopy = pNode.pCopy.pCopy;\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        pNode.pCopy = pNode.pCopy.pCopy;\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        pNode.pCopy = pNode.pCopy.pCopy; }\n    }\n    Abc_NtkDelete( pNtkNew2 );\n\n    // set the pointers from the mapper to the new nodes\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pNode) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Map_NodeSetData( Map_ManReadInputs(pMan)[i], 0, (char *)Abc_NtkCreateNodeInv(pNtkNew,pNode.pCopy) );\n        Map_NodeSetData( Map_ManReadInputs(pMan)[i], 1, (char *)pNode.pCopy );\n    }\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        Map_NodeSetData( (Map_Node_t *)pNode.pNext, 0, (char *)Abc_NtkCreateNodeInv(pNtkNew,pNode.pCopy) );\n        Map_NodeSetData( (Map_Node_t *)pNode.pNext, 1, (char *)pNode.pCopy );\n    }\n    }\n\n    // assign the mapping of the required phase to the POs\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkObjNumMax(pNtk) );\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pNode) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pNode) == nil || !Abc_ObjIsNode(pNode) {} else {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n//        if ( Abc_NodeIsConst(pNode) )\n//            continue;\n        Abc_NodeSuperChoice( pNtkNew, pNode );\n    }\n    }\n    Extra_ProgressBarStop( pProgress );\n    return pNtkNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the mapped network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeSuperChoice(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t) {\n    var pMapNode *Map_Node_t  = (Map_Node_t *)pNode.pNext;\n    var pCuts, pTemp *Map_Cut_t;\n\n    pCuts = Map_NodeReadCuts(pMapNode);\n    for  pTemp = Map_CutReadNext(pCuts); (pTemp != nil); pTemp = Map_CutReadNext(pTemp)  {\n        Abc_NodeFromMapCutPhase( pNtkNew, pTemp, 0 );\n        Abc_NodeFromMapCutPhase( pNtkNew, pTemp, 1 );\n    }\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs the nodes corrresponding to one node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeFromMapCutPhase(pNtkNew *Abc_Ntk_t, pCut *Map_Cut_t, fPhase int32) {\n    var pNodePIs [10]*Abc_Obj_t;\n    var ppLeaves **Map_Node_t;\n    var pSuperBest *Map_Super_t;\n    var uPhaseBest uint32;\n    var i, fInvPin, nLeaves int32;\n\n    pSuperBest = Map_CutReadSuperBest( pCut, fPhase );\n    if pSuperBest == nil {\n        return; }\n\n    // get the information about the best cut \n    uPhaseBest = Map_CutReadPhaseBest( pCut, fPhase );\n    nLeaves    = Map_CutReadLeavesNum( pCut );\n    ppLeaves   = Map_CutReadLeaves( pCut );\n\n    // collect the PI nodes\n    for  i = 0; i \u003c nLeaves; i++  {\n        fInvPin = ((uPhaseBest \u0026 (1 \u003c\u003c i)) \u003e 0);\n        pNodePIs[i] = (Abc_Obj_t *)Map_NodeReadData( ppLeaves[i], !fInvPin );\n        assert(pNodePIs[i] != nil, \"pNodePIs[i] != nil\");\n    }\n\n    // implement the supergate\n    Abc_NodeFromMapSuperChoice_rec( pNtkNew, pSuperBest, pNodePIs, nLeaves );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Constructs the nodes corrresponding to one supergate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeFromMapSuperChoice_rec(pNtkNew *Abc_Ntk_t, pSuper *Map_Super_t, pNodePis []*Abc_Obj_t, nNodePis int32) *Abc_Obj_t {\n    var pLib *Mio_Library_t  = (Mio_Library_t *)Abc_FrameReadLibGen();\n    var pRoot *Mio_Gate_t;\n    var ppFanins **Map_Super_t;\n    var pNodeNew, pNodeFanin *Abc_Obj_t;\n    var nFanins, Number, i int32;\n\n    // get the parameters of the supergate\n    pRoot = Map_SuperReadRoot(pSuper);\n    if pRoot == nil {\n        Number = Map_SuperReadNum(pSuper);\n        if Number \u003c nNodePis {\n            return pNodePis[Number];\n        \n        } else {  \n//            assert( 0 );\n            /* It might happen that a super gate with 5 inputs is constructed that\n             * actually depends only on the first four variables; i.e the fifth is a\n             * don't care -- in that case we connect constant node for the fifth\n             * (since the cut only has 4 variables). An interesting question is what\n             * if the first variable (and not the fifth one is the redundant one;\n             * can that happen?) */\n            return Abc_NtkCreateNodeConst0(pNtkNew);\n        }\n    }\n    pRoot = Mio_LibraryReadGateByName( pLib, Mio_GateReadName(pRoot), nil );\n\n    // get information about the fanins of the supergate\n    nFanins  = Map_SuperReadFaninNum( pSuper );\n    ppFanins = Map_SuperReadFanins( pSuper );\n    // create a new node with these fanins\n    pNodeNew = Abc_NtkCreateNode( pNtkNew );\n    for  i = 0; i \u003c nFanins; i++  {\n        pNodeFanin = Abc_NodeFromMapSuperChoice_rec( pNtkNew, ppFanins[i], pNodePis, nNodePis );\n        Abc_ObjAddFanin( pNodeNew, pNodeFanin );\n    }\n    pNodeNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, Mio_GateReadSop(pRoot) );\n    return pNodeNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the twin node if it exists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFetchTwinNode(pNode *Abc_Obj_t) *Abc_Obj_t {\n    var pNode2 *Abc_Obj_t;\n    var pGate *Mio_Gate_t  = (Mio_Gate_t *)pNode.pData;\n    assert(Abc_NtkHasMapping(pNode.pNtk), \"Abc_NtkHasMapping(pNode.pNtk)\");\n    if pGate == nil || Mio_GateReadTwin(pGate) == nil {\n        return nil; }\n    // assuming the twin node is following next\n    if int32(Abc_ObjId(pNode)) == Abc_NtkObjNumMax(pNode.pNtk) - 1 {\n        return nil; }\n    pNode2 = Abc_NtkObj( pNode.pNtk, Abc_ObjId(pNode) + 1 );\n    if pNode2 == nil || !Abc_ObjIsNode(pNode2) || Abc_ObjFaninNum(pNode) != Abc_ObjFaninNum(pNode2) {\n        return nil; }\n    if Mio_GateReadTwin(pGate) != (Mio_Gate_t *)pNode2.pData {\n        return nil; }\n    return pNode2;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Dumps mapped network in the mini-mapped format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkWriteMiniMapping(pNtk *Abc_Ntk_t) *Vec_Int_t {\n    var vNodes *Vec_Ptr_t;\n    var vMapping *Vec_Int_t;\n    var vGates *Vec_Str_t;\n    var pObj, pFanin *Abc_Obj_t;\n    var i int32;\n    var k int32;\n    var nNodes int32;\n    var nFanins int32;\n    var nExtra int32;\n    var pArray *int32;\n    assert(Abc_NtkHasMapping(pNtk), \"Abc_NtkHasMapping(pNtk)\");\n    // collect nodes in the DFS order\n    vNodes = Abc_NtkDfs( pNtk, 0 );\n    // assign unique numbers\n    nNodes = nFanins = 0;\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.iTemp = nNodes++;\n    }\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.iTemp = nNodes++, nFanins += Abc_ObjFaninNum(pObj);\n    }\n    // allocate attay to store mapping (4 counters + fanins for each node + PO drivers + gate names)\n    vMapping = Vec_IntAlloc( 4 + Abc_NtkNodeNum(pNtk) + nFanins + Abc_NtkCoNum(pNtk) + 10000 );\n    // write the numbers of CI/CO/Node/FF\n    Vec_IntPush( vMapping, Abc_NtkCiNum(pNtk) );\n    Vec_IntPush( vMapping, Abc_NtkCoNum(pNtk) );\n    Vec_IntPush( vMapping, Abc_NtkNodeNum(pNtk) );\n    Vec_IntPush( vMapping, Abc_NtkLatchNum(pNtk) );\n    // write the nodes\n    vGates = Vec_StrAlloc( 10000 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        Vec_IntPush( vMapping, Abc_ObjFaninNum(pObj) );\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            Vec_IntPush( vMapping, pFanin.iTemp );\n        }\n        // remember this gate (to be added to the mapping later)\n        Vec_StrPrintStr( vGates, Mio_GateReadName((Mio_Gate_t *)pObj.pData) );\n        Vec_StrPush( vGates, '\\0' );\n    }\n    // write the COs literals\n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        Vec_IntPush( vMapping, Abc_ObjFanin0(pObj).iTemp );\n    }\n    // finish off the array\n    nExtra = 4 - Vec_StrSize(vGates) % 4;\n    for  i = 0; i \u003c nExtra; i++  {\n        Vec_StrPush( vGates, '\\0' );\n    }\n    // add gates to the array\n    assert(Vec_StrSize(vGates) % 4 == 0, \"Vec_StrSize(vGates) % 4 == 0\");\n    nExtra = Vec_StrSize(vGates) / 4;\n    pArray = (int *)Vec_StrArray(vGates);\n    for  i = 0; i \u003c nExtra; i++  {\n        Vec_IntPush( vMapping, pArray[i] );\n    }\n    // cleanup and return\n    Vec_PtrFree( vNodes );\n    Vec_StrFree( vGates );\n    return vMapping;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints mapped network represented in mini-mapped format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkPrintMiniMapping(pArray *int32) {\n    var nCis, nCos, nNodes, nFlops int32;\n    var i int32;\n    var k int32;\n    var nLeaves int32;\n    var Pos int32 = 4;\n    var pBuffer, pName string;\n    nCis = pArray[0];\n    nCos = pArray[1];\n    nNodes = pArray[2];\n    nFlops = pArray[3];\n    fmt.Printf(\"Mapped network has %d CIs, %d COs, %d gates, and %d flops.\\n\", nCis, nCos, nNodes, nFlops);\n    fmt.Printf(\"The first %d object IDs (from 0 to %d) are reserved for the CIs.\\n\", nCis, nCis - 1);\n    for  i = 0; i \u003c nNodes; i++  {\n        fmt.Printf(\"Node %d has fanins {\", nCis + i);\n        nLeaves = pArray[Pos]; Pos++;\n        for  k = 0; k \u003c nLeaves; k++  {\n            fmt.Printf(\" %d\", pArray[Pos++]);\n        }\n        fmt.Printf(\" }\\n\");\n    }\n    for  i = 0; i \u003c nCos; i++  {\n        fmt.Printf(\"CO %d is driven by node %d\\n\", i, pArray[Pos++]);\n    }\n    pBuffer = (char *)(pArray + Pos);\n    for  i = 0; i \u003c nNodes; i++  {\n        pName = pBuffer;\n        pBuffer += len(pName) + 1;\n        fmt.Printf(\"Node %d has gate \\\"%s\\\"\\n\", nCis + i, pName);\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure outputs an array representing mini-mapped network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkOutputMiniMapping(pAbc *Abc_Frame_t) *int32 {\n    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;\n    var pNtk *Abc_Ntk_t;\n    var vMapping *Vec_Int_t;\n    var pArray *int32;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\"); }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if pNtk == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\"); }\n    if !Abc_NtkHasMapping(pNtk) {\n        fmt.Printf(\"Current network in ABC framework is not mapped.\\n\"); }\n    // derive mini-mapping\n    vMapping = Abc_NtkWriteMiniMapping( pNtk );\n    pArray = Vec_IntArray( vMapping );\n    // inlining of macro ABC_FREE\n    ((vMapping) ? (free((char *) (vMapping)), (vMapping) = 0) : 0);\n    // print mini-mapping (optional)\n//    Abc_NtkPrintMiniMapping( pArray );\n    // return the array representation of mini-mapping\n    return pArray;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Test for mini-mapped format.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkTestMiniMapping(p *Abc_Ntk_t) {\n    var vMapping *Vec_Int_t;\n    vMapping = Abc_NtkWriteMiniMapping( p );\n    Abc_NtkPrintMiniMapping( Vec_IntArray(vMapping) );\n    fmt.Printf(\"Array has size %d ints.\\n\", Vec_IntSize(vMapping));\n    Vec_IntFree( vMapping );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [These APIs set arrival/required times of CIs/COs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSetCiArrivalTime(pAbc *Abc_Frame_t, iCi int32, Rise float32, Fall float32) {\n    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;\n    var pNtk *Abc_Ntk_t;\n    var pNode *Abc_Obj_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\");\n        return;\n    }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if pNtk == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\");\n        return;\n    }\n    if iCi \u003c 0 || iCi \u003e= Abc_NtkCiNum(pNtk) {\n        fmt.Printf(\"CI index is not valid.\\n\");\n        return;\n    }\n    pNode = Abc_NtkCi( pNtk, iCi );\n    Abc_NtkTimeSetArrival( pNtk, Abc_ObjId(pNode), Rise, Fall );\n}\nfunc Abc_NtkSetCoRequiredTime(pAbc *Abc_Frame_t, iCo int32, Rise float32, Fall float32) {\n    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;\n    var pNtk *Abc_Ntk_t;\n    var pNode *Abc_Obj_t;\n    if ( pAbc == nil )\\\n    {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\");\n        return;\n    }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if pNtk == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\");\n        return;\n    }\n    if iCo \u003c 0 || iCo \u003e= Abc_NtkCoNum(pNtk) {\n        fmt.Printf(\"CO index is not valid.\\n\");\n        return;\n    }\n    pNode = Abc_NtkCo( pNtk, iCo );\n    Abc_NtkTimeSetRequired( pNtk, Abc_ObjId(pNode), Rise, Fall );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [This APIs set AND gate delay.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSetAndGateDelay(pAbc *Abc_Frame_t, Delay float32) {\n    //Abc_Frame_t * pAbc = (Abc_Frame_t *)pAbc0;\n    var pNtk *Abc_Ntk_t;\n    if pAbc == nil {\n        fmt.Printf(\"ABC framework is not initialized by calling Abc_Start()\\n\");\n        return;\n    }\n    pNtk = Abc_FrameReadNtk( pAbc );\n    if pNtk == nil {\n        fmt.Printf(\"Current network in ABC framework is not defined.\\n\");\n        return;\n    }\n    pNtk.AndGateDelay = Delay;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

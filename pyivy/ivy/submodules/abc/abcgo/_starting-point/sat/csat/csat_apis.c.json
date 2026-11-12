@@ -1,0 +1,1412 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c",
+  "SHA256": "bbba3cb725722a43c33fe3a815c3db98d9a064b138d2d986e3e2e1582e784a0c",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 90,
+        "Column": 75,
+        "ByteOffset": 3139
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    mng = /*__starting_point_inline_macro:ABC_ALLOC__*/((ABC_Manager_t *) malloc(sizeof(ABC_Manager_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 3189
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( mng, 0, sizeof(ABC_Manager_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 128,
+        "Column": 73,
+        "ByteOffset": 4752
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((mng.pDumpFileName) ? (free((char *) (mng.pDumpFileName)), (mng.pDumpFileName) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 129,
+        "Column": 59,
+        "ByteOffset": 4877
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((mng) ? (free((char *) (mng)), (mng) = 0) : 0);"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 185,
+        "Column": 50,
+        "ByteOffset": 6621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pNewName = Mem_FlexEntryFetch( mng.pMmNames, strlen(name) + 1 );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "converted",
+      "Message": "String-value representation replaces mutable C storage; verify aliasing, capacity and NULL assumptions.",
+      "Location": {
+        "Line": 186,
+        "Column": 5,
+        "ByteOffset": 6645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( pNewName, name );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 193,
+        "Column": 24,
+        "ByteOffset": 6852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if nofi != 0 { printf( \"ABC_AddGate: The PI/PPI gate \\\"%s\\\" has fanins.\\n\", name ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 211,
+        "Column": 78,
+        "ByteOffset": 7442
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            if !stmm_lookup( mng.tName2Node, fanins[i], (char **)\u0026pFanin ) { printf( \"ABC_AddGate: The fanin gate \\\"%s\\\" is not in the network.\\n\", fanins[i] ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 217,
+        "Column": 32,
+        "ByteOffset": 7713
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if nofi != 0 { printf( \"ABC_AddGate: The constant gate \\\"%s\\\" has fanins.\\n\", name ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 221,
+        "Column": 31,
+        "ByteOffset": 7956
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if nofi \u003c 1 { printf( \"ABC_AddGate: The AND gate \\\"%s\\\" no fanins.\\n\", name ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 225,
+        "Column": 31,
+        "ByteOffset": 8202
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if nofi \u003c 1 { printf( \"ABC_AddGate: The NAND gate \\\"%s\\\" no fanins.\\n\", name ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 229,
+        "Column": 31,
+        "ByteOffset": 8443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if nofi \u003c 1 { printf( \"ABC_AddGate: The OR gate \\\"%s\\\" no fanins.\\n\", name ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 233,
+        "Column": 31,
+        "ByteOffset": 8686
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if nofi \u003c 1 { printf( \"ABC_AddGate: The NOR gate \\\"%s\\\" no fanins.\\n\", name ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 237,
+        "Column": 31,
+        "ByteOffset": 8926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if nofi \u003c 1 { printf( \"ABC_AddGate: The XOR gate \\\"%s\\\" no fanins.\\n\", name ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 238,
+        "Column": 31,
+        "ByteOffset": 9033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if nofi \u003e 2 { printf( \"ABC_AddGate: The XOR gate \\\"%s\\\" has more than two fanins.\\n\", name ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 242,
+        "Column": 31,
+        "ByteOffset": 9289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if nofi \u003c 1 { printf( \"ABC_AddGate: The XNOR gate \\\"%s\\\" no fanins.\\n\", name ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 31,
+        "ByteOffset": 9397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if nofi \u003e 2 { printf( \"ABC_AddGate: The XNOR gate \\\"%s\\\" has more than two fanins.\\n\", name ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 32,
+        "ByteOffset": 9655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if nofi != 1 { printf( \"ABC_AddGate: The inverter gate \\\"%s\\\" does not have exactly one fanin.\\n\", name ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 32,
+        "ByteOffset": 9917
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                if nofi != 1 { printf( \"ABC_AddGate: The buffer gate \\\"%s\\\" does not have exactly one fanin.\\n\", name ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 24,
+        "ByteOffset": 10284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if nofi != 1 { printf( \"ABC_AddGate: The PO/PPO gate \\\"%s\\\" does not have exactly one fanin.\\n\", name ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 266,
+        "Column": 74,
+        "ByteOffset": 10622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !stmm_lookup( mng.tName2Node, fanins[0], (char **)\u0026pFanin ) { printf( \"ABC_AddGate: The fanin gate \\\"%s\\\" is not in the network.\\n\", fanins[0] ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 270,
+        "Column": 9,
+        "ByteOffset": 10795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC_AddGate: Unknown gate type.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 275,
+        "Column": 60,
+        "ByteOffset": 10957
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if stmm_insert( mng.tName2Node, name, (char *)pObj ) { printf( \"ABC_AddGate: The same gate \\\"%s\\\" is added twice.\\n\", name ); return 0; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 300,
+        "Column": 5,
+        "ByteOffset": 11907
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkLatchNum(pNtk) == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 333,
+        "Column": 9,
+        "ByteOffset": 13033
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"ABC_Check_Integrity: The internal network check has failed.\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 485,
+        "Column": 73,
+        "ByteOffset": 16934
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((mng.pDumpFileName) ? (free((char *) (mng.pDumpFileName)), (mng.pDumpFileName) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 507,
+        "Column": 18,
+        "ByteOffset": 17702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if nog \u003c 1 { printf( \"ABC_AddTarget: The target has no gates.\\n\" ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 514,
+        "Column": 71,
+        "ByteOffset": 18012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !stmm_lookup( mng.tName2Node, names[i], (char **)\u0026pObj ) { printf( \"ABC_AddTarget: The target gate \\\"%s\\\" is not in the network.\\n\", names[i] ); return 0; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 516,
+        "Column": 45,
+        "ByteOffset": 18195
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if values[i] \u003c 0 || values[i] \u003e 1 { printf( \"ABC_AddTarget: The value of gate \\\"%s\\\" is not 0 or 1.\\n\", names[i] ); return 0; }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 537,
+        "Column": 5,
+        "ByteOffset": 18827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( mng.nog == Vec_PtrSize(mng.vNodes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 538,
+        "Column": 23,
+        "ByteOffset": 18895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if mng.nog == 0 { printf( \"ABC_SolveInit: Target is not specified by ABC_AddTarget().\\n\" ); return; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 578,
+        "Column": 29,
+        "ByteOffset": 20046
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if mng.pTarget == nil { printf( \"ABC_Solve: Target network is not derived by ABC_SolveInit().\\n\" ); return UNDETERMINED; }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 600,
+        "Column": 78,
+        "ByteOffset": 21180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((mng.pTarget.pModel) ? (free((char *) (mng.pTarget.pModel)), (mng.pTarget.pModel) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 602,
+        "Column": 14,
+        "ByteOffset": 21267
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 645,
+        "Column": 26,
+        "ByteOffset": 22475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if pNtkTemp == nil { printf( \"ABC_Dump_Bench_File: Dumping BENCH has failed.\\n\" ); return; }"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 670,
+        "Column": 79,
+        "ByteOffset": 23180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((CSAT_Target_ResultT *) malloc(sizeof(CSAT_Target_ResultT) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 671,
+        "Column": 5,
+        "ByteOffset": 23236
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(CSAT_Target_ResultT) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 673,
+        "Column": 72,
+        "ByteOffset": 23374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.names = /*__starting_point_inline_macro:ABC_ALLOC__*/((char * *) malloc(sizeof(char *) * (size_t)(nVars)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 674,
+        "Column": 70,
+        "ByteOffset": 23486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.values = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(nVars)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 675,
+        "Column": 5,
+        "ByteOffset": 23530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.names, 0, sizeof(char *) * nVars );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 676,
+        "Column": 5,
+        "ByteOffset": 23580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.values, 0, sizeof(int) * nVars );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 697,
+        "Column": 74,
+        "ByteOffset": 24142
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:ABC_FREE__*/((p.names[i]) ? (free((char *) (p.names[i])), (p.names[i]) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 700,
+        "Column": 63,
+        "ByteOffset": 24273
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.names) ? (free((char *) (p.names)), (p.names) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 701,
+        "Column": 64,
+        "ByteOffset": 24383
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.values) ? (free((char *) (p.values)), (p.values) = 0) : 0);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 702,
+        "Column": 57,
+        "ByteOffset": 24488
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 719,
+        "Column": 9,
+        "ByteOffset": 24975
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "ABC_InitManager",
+      "Start": 2928,
+      "End": 3752,
+      "BodyStart": 2958,
+      "Original": "ABC_Manager ABC_InitManager()\n{\n    ABC_Manager_t * mng;\n    Abc_Start();\n    mng = ABC_ALLOC( ABC_Manager_t, 1 );\n    memset( mng, 0, sizeof(ABC_Manager_t) );\n    mng-\u003epNtk = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );\n    mng-\u003epNtk-\u003epName = Extra_UtilStrsav(\"csat_network\");\n    mng-\u003etName2Node = stmm_init_table(strcmp, stmm_strhash);\n    mng-\u003etNode2Name = stmm_init_table(stmm_ptrcmp, stmm_ptrhash);\n    mng-\u003epMmNames   = Mem_FlexStart();\n    mng-\u003evNodes     = Vec_PtrAlloc( 100 );\n    mng-\u003evValues    = Vec_IntAlloc( 100 );\n    mng-\u003emode       = 0; // set \"resource-aware integration\" as the default mode\n    // set default parameters for CEC\n    Prove_ParamsSetDefault( \u0026mng-\u003eParams );\n    // set infinite resource limit for the final mitering\n//    mng-\u003eParams.nMiteringLimitLast = ABC_INFINITY;\n    return mng;\n}",
+      "Draft": "func ABC_InitManager() ABC_Manager {\n    var mng *ABC_Manager_t;\n    Abc_Start();\n    // inlining of macro ABC_ALLOC\n    mng = ((ABC_Manager_t *) malloc(sizeof(ABC_Manager_t) * (size_t)(1)));\n    memset( mng, 0, sizeof(ABC_Manager_t) );\n    mng.pNtk = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );\n    mng.pNtk.pName = Extra_UtilStrsav(\"csat_network\");\n    mng.tName2Node = stmm_init_table(strcmp, stmm_strhash);\n    mng.tNode2Name = stmm_init_table(stmm_ptrcmp, stmm_ptrhash);\n    mng.pMmNames   = Mem_FlexStart();\n    mng.vNodes     = Vec_PtrAlloc( 100 );\n    mng.vValues    = Vec_IntAlloc( 100 );\n    mng.mode       = 0; // set \"resource-aware integration\" as the default mode\n    // set default parameters for CEC\n    Prove_ParamsSetDefault( \u0026mng.Params );\n    // set infinite resource limit for the final mitering\n//    mng-\u003eParams.nMiteringLimitLast = ABC_INFINITY;\n    return mng;\n}"
+    },
+    {
+      "Name": "ABC_ReleaseManager",
+      "Start": 4008,
+      "End": 4634,
+      "BodyStart": 4051,
+      "Original": "void ABC_ReleaseManager( ABC_Manager mng )\n{\n    CSAT_Target_ResultT * p_res = ABC_Get_Target_Result( mng,0 );\n    ABC_TargetResFree(p_res);\n    if ( mng-\u003etNode2Name ) stmm_free_table( mng-\u003etNode2Name );\n    if ( mng-\u003etName2Node ) stmm_free_table( mng-\u003etName2Node );\n    if ( mng-\u003epMmNames )   Mem_FlexStop( mng-\u003epMmNames, 0 );\n    if ( mng-\u003epNtk )       Abc_NtkDelete( mng-\u003epNtk );\n    if ( mng-\u003epTarget )    Abc_NtkDelete( mng-\u003epTarget );\n    if ( mng-\u003evNodes )     Vec_PtrFree( mng-\u003evNodes );\n    if ( mng-\u003evValues )    Vec_IntFree( mng-\u003evValues );\n    ABC_FREE( mng-\u003epDumpFileName );\n    ABC_FREE( mng );\n    Abc_Stop();\n}",
+      "Draft": "func ABC_ReleaseManager(mng ABC_Manager) {\n    var p_res *CSAT_Target_ResultT  = ABC_Get_Target_Result( mng,0 );\n    ABC_TargetResFree(p_res);\n    if mng.tNode2Name { stmm_free_table( mng.tNode2Name ); }\n    if mng.tName2Node { stmm_free_table( mng.tName2Node ); }\n    if mng.pMmNames {   Mem_FlexStop( mng.pMmNames, 0 ); }\n    if mng.pNtk {       Abc_NtkDelete( mng.pNtk ); }\n    if mng.pTarget {    Abc_NtkDelete( mng.pTarget ); }\n    if mng.vNodes {     Vec_PtrFree( mng.vNodes ); }\n    if mng.vValues {    Vec_IntFree( mng.vValues ); }\n    // inlining of macro ABC_FREE\n    ((mng.pDumpFileName) ? (free((char *) (mng.pDumpFileName)), (mng.pDumpFileName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((mng) ? (free((char *) (mng)), (mng) = 0) : 0);\n    Abc_Stop();\n}"
+    },
+    {
+      "Name": "ABC_SetSolveOption",
+      "Start": 4903,
+      "End": 4975,
+      "BodyStart": 4972,
+      "Original": "void ABC_SetSolveOption( ABC_Manager mng, enum CSAT_OptionT option )\n{\n}",
+      "Draft": "func ABC_SetSolveOption(mng ABC_Manager, option CSAT_OptionT) {\n}"
+    },
+    {
+      "Name": "ABC_UseOnlyCoreSatSolver",
+      "Start": 5248,
+      "End": 5373,
+      "BodyStart": 5297,
+      "Original": "void ABC_UseOnlyCoreSatSolver( ABC_Manager mng )\n{\n    mng-\u003emode = 1;  // switch to \"brute-force SAT\" as the solving option\n}",
+      "Draft": "func ABC_UseOnlyCoreSatSolver(mng ABC_Manager) {\n    mng.mode = 1;  // switch to \"brute-force SAT\" as the solving option\n}"
+    },
+    {
+      "Name": "ABC_AddGate",
+      "Start": 5907,
+      "End": 11179,
+      "BodyStart": 6014,
+      "Original": "int ABC_AddGate( ABC_Manager mng, enum GateType type, char * name, int nofi, char ** fanins, int dc_attr )\n{\n    Abc_Obj_t * pObj = NULL; // Suppress \"might be used uninitialized\"\n    Abc_Obj_t * pFanin;\n    char * pSop = NULL; // Suppress \"might be used uninitialized\"\n    char * pNewName;\n    int i;\n\n    // save the name in the local memory manager\n    pNewName = Mem_FlexEntryFetch( mng-\u003epMmNames, strlen(name) + 1 );\n    strcpy( pNewName, name );\n    name = pNewName;\n\n    // consider different cases, create the node, and map the node into the name\n    switch( type )\n    {\n    case CSAT_BPI:\n    case CSAT_BPPI:\n        if ( nofi != 0 )\n            { printf( \"ABC_AddGate: The PI/PPI gate \\\"%s\\\" has fanins.\\n\", name ); return 0; }\n        // create the PI\n        pObj = Abc_NtkCreatePi( mng-\u003epNtk );\n        stmm_insert( mng-\u003etNode2Name, (char *)pObj, name );\n        break;\n    case CSAT_CONST:\n    case CSAT_BAND:\n    case CSAT_BNAND:\n    case CSAT_BOR:\n    case CSAT_BNOR:\n    case CSAT_BXOR:\n    case CSAT_BXNOR:\n    case CSAT_BINV:\n    case CSAT_BBUF:\n        // create the node\n        pObj = Abc_NtkCreateNode( mng-\u003epNtk );\n        // create the fanins\n        for ( i = 0; i \u003c nofi; i++ )\n        {\n            if ( !stmm_lookup( mng-\u003etName2Node, fanins[i], (char **)\u0026pFanin ) )\n                { printf( \"ABC_AddGate: The fanin gate \\\"%s\\\" is not in the network.\\n\", fanins[i] ); return 0; }\n            Abc_ObjAddFanin( pObj, pFanin );\n        }\n        // create the node function\n        switch( type )\n        {\n            case CSAT_CONST:\n                if ( nofi != 0 )\n                    { printf( \"ABC_AddGate: The constant gate \\\"%s\\\" has fanins.\\n\", name ); return 0; }\n                pSop = Abc_SopCreateConst1( (Mem_Flex_t *)mng-\u003epNtk-\u003epManFunc );\n                break;\n            case CSAT_BAND:\n                if ( nofi \u003c 1 )\n                    { printf( \"ABC_AddGate: The AND gate \\\"%s\\\" no fanins.\\n\", name ); return 0; }\n                pSop = Abc_SopCreateAnd( (Mem_Flex_t *)mng-\u003epNtk-\u003epManFunc, nofi, NULL );\n                break;\n            case CSAT_BNAND:\n                if ( nofi \u003c 1 )\n                    { printf( \"ABC_AddGate: The NAND gate \\\"%s\\\" no fanins.\\n\", name ); return 0; }\n                pSop = Abc_SopCreateNand( (Mem_Flex_t *)mng-\u003epNtk-\u003epManFunc, nofi );\n                break;\n            case CSAT_BOR:\n                if ( nofi \u003c 1 )\n                    { printf( \"ABC_AddGate: The OR gate \\\"%s\\\" no fanins.\\n\", name ); return 0; }\n                pSop = Abc_SopCreateOr( (Mem_Flex_t *)mng-\u003epNtk-\u003epManFunc, nofi, NULL );\n                break;\n            case CSAT_BNOR:\n                if ( nofi \u003c 1 )\n                    { printf( \"ABC_AddGate: The NOR gate \\\"%s\\\" no fanins.\\n\", name ); return 0; }\n                pSop = Abc_SopCreateNor( (Mem_Flex_t *)mng-\u003epNtk-\u003epManFunc, nofi );\n                break;\n            case CSAT_BXOR:\n                if ( nofi \u003c 1 )\n                    { printf( \"ABC_AddGate: The XOR gate \\\"%s\\\" no fanins.\\n\", name ); return 0; }\n                if ( nofi \u003e 2 )\n                    { printf( \"ABC_AddGate: The XOR gate \\\"%s\\\" has more than two fanins.\\n\", name ); return 0; }\n                pSop = Abc_SopCreateXor( (Mem_Flex_t *)mng-\u003epNtk-\u003epManFunc, nofi );\n                break;\n            case CSAT_BXNOR:\n                if ( nofi \u003c 1 )\n                    { printf( \"ABC_AddGate: The XNOR gate \\\"%s\\\" no fanins.\\n\", name ); return 0; }\n                if ( nofi \u003e 2 )\n                    { printf( \"ABC_AddGate: The XNOR gate \\\"%s\\\" has more than two fanins.\\n\", name ); return 0; }\n                pSop = Abc_SopCreateNxor( (Mem_Flex_t *)mng-\u003epNtk-\u003epManFunc, nofi );\n                break;\n            case CSAT_BINV:\n                if ( nofi != 1 )\n                    { printf( \"ABC_AddGate: The inverter gate \\\"%s\\\" does not have exactly one fanin.\\n\", name ); return 0; }\n                pSop = Abc_SopCreateInv( (Mem_Flex_t *)mng-\u003epNtk-\u003epManFunc );\n                break;\n            case CSAT_BBUF:\n                if ( nofi != 1 )\n                    { printf( \"ABC_AddGate: The buffer gate \\\"%s\\\" does not have exactly one fanin.\\n\", name ); return 0; }\n                pSop = Abc_SopCreateBuf( (Mem_Flex_t *)mng-\u003epNtk-\u003epManFunc );\n                break;\n            default :\n                break;\n        }\n        Abc_ObjSetData( pObj, pSop );\n        break;\n    case CSAT_BPPO:\n    case CSAT_BPO:\n        if ( nofi != 1 )\n            { printf( \"ABC_AddGate: The PO/PPO gate \\\"%s\\\" does not have exactly one fanin.\\n\", name ); return 0; }\n        // create the PO\n        pObj = Abc_NtkCreatePo( mng-\u003epNtk );\n        stmm_insert( mng-\u003etNode2Name, (char *)pObj, name );\n        // connect to the PO fanin\n        if ( !stmm_lookup( mng-\u003etName2Node, fanins[0], (char **)\u0026pFanin ) )\n            { printf( \"ABC_AddGate: The fanin gate \\\"%s\\\" is not in the network.\\n\", fanins[0] ); return 0; }\n        Abc_ObjAddFanin( pObj, pFanin );\n        break;\n    default:\n        printf( \"ABC_AddGate: Unknown gate type.\\n\" );\n        break;\n    }\n\n    // map the name into the node\n    if ( stmm_insert( mng-\u003etName2Node, name, (char *)pObj ) )\n        { printf( \"ABC_AddGate: The same gate \\\"%s\\\" is added twice.\\n\", name ); return 0; }\n    return 1;\n}",
+      "Draft": "func ABC_AddGate(mng ABC_Manager, type GateType, name string, nofi int32, fanins *string, dc_attr int32) int32 {\n    var pObj *Abc_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var pFanin *Abc_Obj_t;\n    var pSop string  = nil; // Suppress \"might be used uninitialized\"\n    var pNewName string;\n    var i int32;\n\n    // save the name in the local memory manager\n    pNewName = Mem_FlexEntryFetch( mng.pMmNames, len(name) + 1 );\n    pNewName = name;\n    name = pNewName;\n\n    // consider different cases, create the node, and map the node into the name\n    switch  type  {\n    case CSAT_BPI,\n     CSAT_BPPI:\n        if nofi != 0 { fmt.Printf(\"ABC_AddGate: The PI/PPI gate \\\"%s\\\" has fanins.\\n\", name); return 0; }\n        // create the PI\n        pObj = Abc_NtkCreatePi( mng.pNtk );\n        stmm_insert( mng.tNode2Name, (char *)pObj, name );\n        break;\n    case CSAT_CONST,\n     CSAT_BAND,\n     CSAT_BNAND,\n     CSAT_BOR,\n     CSAT_BNOR,\n     CSAT_BXOR,\n     CSAT_BXNOR,\n     CSAT_BINV,\n     CSAT_BBUF:\n        // create the node\n        pObj = Abc_NtkCreateNode( mng.pNtk );\n        // create the fanins\n        for  i = 0; i \u003c nofi; i++  {\n            if !stmm_lookup( mng.tName2Node, fanins[i], (char **)\u0026pFanin ) { fmt.Printf(\"ABC_AddGate: The fanin gate \\\"%s\\\" is not in the network.\\n\", fanins[i]); return 0; }\n            Abc_ObjAddFanin( pObj, pFanin );\n        }\n        // create the node function\n        switch  type  {\n            case CSAT_CONST:\n                if nofi != 0 { fmt.Printf(\"ABC_AddGate: The constant gate \\\"%s\\\" has fanins.\\n\", name); return 0; }\n                pSop = Abc_SopCreateConst1( (Mem_Flex_t *)mng.pNtk.pManFunc );\n                break;\n            case CSAT_BAND:\n                if nofi \u003c 1 { fmt.Printf(\"ABC_AddGate: The AND gate \\\"%s\\\" no fanins.\\n\", name); return 0; }\n                pSop = Abc_SopCreateAnd( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi, nil );\n                break;\n            case CSAT_BNAND:\n                if nofi \u003c 1 { fmt.Printf(\"ABC_AddGate: The NAND gate \\\"%s\\\" no fanins.\\n\", name); return 0; }\n                pSop = Abc_SopCreateNand( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi );\n                break;\n            case CSAT_BOR:\n                if nofi \u003c 1 { fmt.Printf(\"ABC_AddGate: The OR gate \\\"%s\\\" no fanins.\\n\", name); return 0; }\n                pSop = Abc_SopCreateOr( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi, nil );\n                break;\n            case CSAT_BNOR:\n                if nofi \u003c 1 { fmt.Printf(\"ABC_AddGate: The NOR gate \\\"%s\\\" no fanins.\\n\", name); return 0; }\n                pSop = Abc_SopCreateNor( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi );\n                break;\n            case CSAT_BXOR:\n                if nofi \u003c 1 { fmt.Printf(\"ABC_AddGate: The XOR gate \\\"%s\\\" no fanins.\\n\", name); return 0; }\n                if nofi \u003e 2 { fmt.Printf(\"ABC_AddGate: The XOR gate \\\"%s\\\" has more than two fanins.\\n\", name); return 0; }\n                pSop = Abc_SopCreateXor( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi );\n                break;\n            case CSAT_BXNOR:\n                if nofi \u003c 1 { fmt.Printf(\"ABC_AddGate: The XNOR gate \\\"%s\\\" no fanins.\\n\", name); return 0; }\n                if nofi \u003e 2 { fmt.Printf(\"ABC_AddGate: The XNOR gate \\\"%s\\\" has more than two fanins.\\n\", name); return 0; }\n                pSop = Abc_SopCreateNxor( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi );\n                break;\n            case CSAT_BINV:\n                if nofi != 1 { fmt.Printf(\"ABC_AddGate: The inverter gate \\\"%s\\\" does not have exactly one fanin.\\n\", name); return 0; }\n                pSop = Abc_SopCreateInv( (Mem_Flex_t *)mng.pNtk.pManFunc );\n                break;\n            case CSAT_BBUF:\n                if nofi != 1 { fmt.Printf(\"ABC_AddGate: The buffer gate \\\"%s\\\" does not have exactly one fanin.\\n\", name); return 0; }\n                pSop = Abc_SopCreateBuf( (Mem_Flex_t *)mng.pNtk.pManFunc );\n                break;\n            default :\n                break;\n        }\n        Abc_ObjSetData( pObj, pSop );\n        break;\n    case CSAT_BPPO,\n     CSAT_BPO:\n        if nofi != 1 { fmt.Printf(\"ABC_AddGate: The PO/PPO gate \\\"%s\\\" does not have exactly one fanin.\\n\", name); return 0; }\n        // create the PO\n        pObj = Abc_NtkCreatePo( mng.pNtk );\n        stmm_insert( mng.tNode2Name, (char *)pObj, name );\n        // connect to the PO fanin\n        if !stmm_lookup( mng.tName2Node, fanins[0], (char **)\u0026pFanin ) { fmt.Printf(\"ABC_AddGate: The fanin gate \\\"%s\\\" is not in the network.\\n\", fanins[0]); return 0; }\n        Abc_ObjAddFanin( pObj, pFanin );\n        break;\n    default:\n        fmt.Printf(\"ABC_AddGate: Unknown gate type.\\n\");\n        break;\n    }\n\n    // map the name into the node\n    if stmm_insert( mng.tName2Node, name, (char *)pObj ) { fmt.Printf(\"ABC_AddGate: The same gate \\\"%s\\\" is added twice.\\n\", name); return 0; }\n    return 1;\n}"
+    },
+    {
+      "Name": "ABC_Network_Finalize",
+      "Start": 11477,
+      "End": 11848,
+      "BodyStart": 11522,
+      "Original": "void ABC_Network_Finalize( ABC_Manager mng )\n{\n    Abc_Ntk_t * pNtk = mng-\u003epNtk;\n    Abc_Obj_t * pObj;\n    int i;\n    Abc_NtkForEachPi( pNtk, pObj, i )\n        Abc_ObjAssignName( pObj, ABC_GetNodeName(mng, pObj), NULL );\n    Abc_NtkForEachPo( pNtk, pObj, i )\n        Abc_ObjAssignName( pObj, ABC_GetNodeName(mng, pObj), NULL );\n    assert( Abc_NtkLatchNum(pNtk) == 0 );\n}",
+      "Draft": "func ABC_Network_Finalize(mng ABC_Manager) {\n    var pNtk *Abc_Ntk_t  = mng.pNtk;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_ObjAssignName( pObj, ABC_GetNodeName(mng, pObj), nil );\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Abc_ObjAssignName( pObj, ABC_GetNodeName(mng, pObj), nil );\n    }\n    assert(Abc_NtkLatchNum(pNtk) == 0, \"Abc_NtkLatchNum(pNtk) == 0\");\n}"
+    },
+    {
+      "Name": "ABC_Check_Integrity",
+      "Start": 12232,
+      "End": 12882,
+      "BodyStart": 12275,
+      "Original": "int ABC_Check_Integrity( ABC_Manager mng )\n{\n    Abc_Ntk_t * pNtk = mng-\u003epNtk;\n    Abc_Obj_t * pObj;\n    int i;\n\n    // check that there are no dangling nodes\n    Abc_NtkForEachNode( pNtk, pObj, i )\n    {\n        if ( i == 0 ) \n            continue;\n        if ( Abc_ObjFanoutNum(pObj) == 0 )\n        {\n//            printf( \"ABC_Check_Integrity: The network has dangling nodes.\\n\" );\n            return 0;\n        }\n    }\n\n    // make sure everything is okay with the network structure\n    if ( !Abc_NtkDoCheck( pNtk ) )\n    {\n        printf( \"ABC_Check_Integrity: The internal network check has failed.\\n\" );\n        return 0;\n    }\n    return 1;\n}",
+      "Draft": "func ABC_Check_Integrity(mng ABC_Manager) int32 {\n    var pNtk *Abc_Ntk_t  = mng.pNtk;\n    var pObj *Abc_Obj_t;\n    var i int32;\n\n    // check that there are no dangling nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if i == 0 { \n            continue; }\n        if Abc_ObjFanoutNum(pObj) == 0 {\n//            printf( \"ABC_Check_Integrity: The network has dangling nodes.\\n\" );\n            return 0;\n        }\n    }\n    }\n\n    // make sure everything is okay with the network structure\n    if !Abc_NtkDoCheck( pNtk ) {\n        fmt.Printf(\"ABC_Check_Integrity: The internal network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "ABC_SetTimeLimit",
+      "Start": 13187,
+      "End": 13332,
+      "BodyStart": 13241,
+      "Original": "void ABC_SetTimeLimit( ABC_Manager mng, int runtime )\n{\n//    printf( \"ABC_SetTimeLimit: The resource limit is not implemented (warning).\\n\" );\n}",
+      "Draft": "func ABC_SetTimeLimit(mng ABC_Manager, runtime int32) {\n//    printf( \"ABC_SetTimeLimit: The resource limit is not implemented (warning).\\n\" );\n}"
+    },
+    {
+      "Name": "ABC_SetLearnLimit",
+      "Start": 13568,
+      "End": 13711,
+      "BodyStart": 13619,
+      "Original": "void ABC_SetLearnLimit( ABC_Manager mng, int num )\n{\n//    printf( \"ABC_SetLearnLimit: The resource limit is not implemented (warning).\\n\" );\n}",
+      "Draft": "func ABC_SetLearnLimit(mng ABC_Manager, num int32) {\n//    printf( \"ABC_SetLearnLimit: The resource limit is not implemented (warning).\\n\" );\n}"
+    },
+    {
+      "Name": "ABC_SetLearnBacktrackLimit",
+      "Start": 13947,
+      "End": 14108,
+      "BodyStart": 14007,
+      "Original": "void ABC_SetLearnBacktrackLimit( ABC_Manager mng, int num )\n{\n//    printf( \"ABC_SetLearnBacktrackLimit: The resource limit is not implemented (warning).\\n\" );\n}",
+      "Draft": "func ABC_SetLearnBacktrackLimit(mng ABC_Manager, num int32) {\n//    printf( \"ABC_SetLearnBacktrackLimit: The resource limit is not implemented (warning).\\n\" );\n}"
+    },
+    {
+      "Name": "ABC_SetSolveBacktrackLimit",
+      "Start": 14344,
+      "End": 14449,
+      "BodyStart": 14404,
+      "Original": "void ABC_SetSolveBacktrackLimit( ABC_Manager mng, int num )\n{\n    mng-\u003eParams.nMiteringLimitLast = num;\n}",
+      "Draft": "func ABC_SetSolveBacktrackLimit(mng ABC_Manager, num int32) {\n    mng.Params.nMiteringLimitLast = num;\n}"
+    },
+    {
+      "Name": "ABC_SetSolveImplicationLimit",
+      "Start": 14685,
+      "End": 14850,
+      "BodyStart": 14747,
+      "Original": "void ABC_SetSolveImplicationLimit( ABC_Manager mng, int num )\n{\n//    printf( \"ABC_SetSolveImplicationLimit: The resource limit is not implemented (warning).\\n\" );\n}",
+      "Draft": "func ABC_SetSolveImplicationLimit(mng ABC_Manager, num int32) {\n//    printf( \"ABC_SetSolveImplicationLimit: The resource limit is not implemented (warning).\\n\" );\n}"
+    },
+    {
+      "Name": "ABC_SetTotalBacktrackLimit",
+      "Start": 15086,
+      "End": 15202,
+      "BodyStart": 15155,
+      "Original": "void ABC_SetTotalBacktrackLimit( ABC_Manager mng, ABC_UINT64_T num )\n{\n    mng-\u003eParams.nTotalBacktrackLimit = num;\n}",
+      "Draft": "func ABC_SetTotalBacktrackLimit(mng ABC_Manager, num ABC_UINT64_T) {\n    mng.Params.nTotalBacktrackLimit = num;\n}"
+    },
+    {
+      "Name": "ABC_SetTotalInspectLimit",
+      "Start": 15438,
+      "End": 15550,
+      "BodyStart": 15505,
+      "Original": "void ABC_SetTotalInspectLimit( ABC_Manager mng, ABC_UINT64_T num )\n{\n    mng-\u003eParams.nTotalInspectLimit = num;\n}",
+      "Draft": "func ABC_SetTotalInspectLimit(mng ABC_Manager, num ABC_UINT64_T) {\n    mng.Params.nTotalInspectLimit = num;\n}"
+    },
+    {
+      "Name": "ABC_GetTotalBacktracksMade",
+      "Start": 15785,
+      "End": 15892,
+      "BodyStart": 15844,
+      "Original": "ABC_UINT64_T ABC_GetTotalBacktracksMade( ABC_Manager mng )\n{\n    return mng-\u003eParams.nTotalBacktracksMade;\n}",
+      "Draft": "func ABC_GetTotalBacktracksMade(mng ABC_Manager) ABC_UINT64_T {\n    return mng.Params.nTotalBacktracksMade;\n}"
+    },
+    {
+      "Name": "ABC_GetTotalInspectsMade",
+      "Start": 16128,
+      "End": 16231,
+      "BodyStart": 16185,
+      "Original": "ABC_UINT64_T ABC_GetTotalInspectsMade( ABC_Manager mng )\n{\n    return mng-\u003eParams.nTotalInspectsMade;\n}",
+      "Draft": "func ABC_GetTotalInspectsMade(mng ABC_Manager) ABC_UINT64_T {\n    return mng.Params.nTotalInspectsMade;\n}"
+    },
+    {
+      "Name": "ABC_EnableDump",
+      "Start": 16543,
+      "End": 16695,
+      "BodyStart": 16600,
+      "Original": "void ABC_EnableDump( ABC_Manager mng, char * dump_file )\n{\n    ABC_FREE( mng-\u003epDumpFileName );\n    mng-\u003epDumpFileName = Extra_UtilStrsav( dump_file );\n}",
+      "Draft": "func ABC_EnableDump(mng ABC_Manager, dump_file string) {\n    // inlining of macro ABC_FREE\n    ((mng.pDumpFileName) ? (free((char *) (mng.pDumpFileName)), (mng.pDumpFileName) = 0) : 0);\n    mng.pDumpFileName = Extra_UtilStrsav( dump_file );\n}"
+    },
+    {
+      "Name": "ABC_AddTarget",
+      "Start": 17196,
+      "End": 18052,
+      "BodyStart": 17271,
+      "Original": "int ABC_AddTarget( ABC_Manager mng, int nog, char ** names, int * values )\n{\n    Abc_Obj_t * pObj;\n    int i;\n    if ( nog \u003c 1 )\n        { printf( \"ABC_AddTarget: The target has no gates.\\n\" ); return 0; }\n    // clear storage for the target\n    mng-\u003enog = 0;\n    Vec_PtrClear( mng-\u003evNodes );\n    Vec_IntClear( mng-\u003evValues );\n    // save the target\n    for ( i = 0; i \u003c nog; i++ )\n    {\n        if ( !stmm_lookup( mng-\u003etName2Node, names[i], (char **)\u0026pObj ) )\n            { printf( \"ABC_AddTarget: The target gate \\\"%s\\\" is not in the network.\\n\", names[i] ); return 0; }\n        Vec_PtrPush( mng-\u003evNodes, pObj );\n        if ( values[i] \u003c 0 || values[i] \u003e 1 )\n            { printf( \"ABC_AddTarget: The value of gate \\\"%s\\\" is not 0 or 1.\\n\", names[i] ); return 0; }\n        Vec_IntPush( mng-\u003evValues, values[i] );\n    }\n    mng-\u003enog = nog;\n    return 1;\n}",
+      "Draft": "func ABC_AddTarget(mng ABC_Manager, nog int32, names *string, values *int32) int32 {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    if nog \u003c 1 { fmt.Printf(\"ABC_AddTarget: The target has no gates.\\n\"); return 0; }\n    // clear storage for the target\n    mng.nog = 0;\n    Vec_PtrClear( mng.vNodes );\n    Vec_IntClear( mng.vValues );\n    // save the target\n    for  i = 0; i \u003c nog; i++  {\n        if !stmm_lookup( mng.tName2Node, names[i], (char **)\u0026pObj ) { fmt.Printf(\"ABC_AddTarget: The target gate \\\"%s\\\" is not in the network.\\n\", names[i]); return 0; }\n        Vec_PtrPush( mng.vNodes, pObj );\n        if values[i] \u003c 0 || values[i] \u003e 1 { fmt.Printf(\"ABC_AddTarget: The value of gate \\\"%s\\\" is not 0 or 1.\\n\", names[i]); return 0; }\n        Vec_IntPush( mng.vValues, values[i] );\n    }\n    mng.nog = nog;\n    return 1;\n}"
+    },
+    {
+      "Name": "ABC_SolveInit",
+      "Start": 18423,
+      "End": 18955,
+      "BodyStart": 18461,
+      "Original": "void ABC_SolveInit( ABC_Manager mng )\n{\n    // check if the target is available\n    assert( mng-\u003enog == Vec_PtrSize(mng-\u003evNodes) );\n    if ( mng-\u003enog == 0 )\n        { printf( \"ABC_SolveInit: Target is not specified by ABC_AddTarget().\\n\" ); return; }\n\n    // free the previous target network if present\n    if ( mng-\u003epTarget ) Abc_NtkDelete( mng-\u003epTarget );\n\n    // set the new target network\n//    mng-\u003epTarget = Abc_NtkCreateTarget( mng-\u003epNtk, mng-\u003evNodes, mng-\u003evValues );\n    mng-\u003epTarget = Abc_NtkStrash( mng-\u003epNtk, 0, 1, 0 );\n}",
+      "Draft": "func ABC_SolveInit(mng ABC_Manager) {\n    // check if the target is available\n    assert(mng.nog == Vec_PtrSize(mng.vNodes), \"mng.nog == Vec_PtrSize(mng.vNodes)\");\n    if mng.nog == 0 { fmt.Printf(\"ABC_SolveInit: Target is not specified by ABC_AddTarget().\\n\"); return; }\n\n    // free the previous target network if present\n    if mng.pTarget { Abc_NtkDelete( mng.pTarget ); }\n\n    // set the new target network\n//    mng-\u003epTarget = Abc_NtkCreateTarget( mng-\u003epNtk, mng-\u003evNodes, mng-\u003evValues );\n    mng.pTarget = Abc_NtkStrash( mng.pNtk, 0, 1, 0 );\n}"
+    },
+    {
+      "Name": "ABC_AnalyzeTargets",
+      "Start": 19217,
+      "End": 19263,
+      "BodyStart": 19260,
+      "Original": "void ABC_AnalyzeTargets( ABC_Manager mng )\n{\n}",
+      "Draft": "func ABC_AnalyzeTargets(mng ABC_Manager) {\n}"
+    },
+    {
+      "Name": "ABC_Solve",
+      "Start": 19548,
+      "End": 21058,
+      "BodyStart": 19590,
+      "Original": "CSAT_StatusT ABC_Solve( ABC_Manager mng )\n{\n    Prove_Params_t * pParams = \u0026mng-\u003eParams;\n    int RetValue, i;\n\n    // check if the target network is available\n    if ( mng-\u003epTarget == NULL )\n        { printf( \"ABC_Solve: Target network is not derived by ABC_SolveInit().\\n\" ); return UNDETERMINED; }\n\n    // try to prove the miter using a number of techniques\n    if ( mng-\u003emode )\n        RetValue = Abc_NtkMiterSat( mng-\u003epTarget, (ABC_INT64_T)pParams-\u003enMiteringLimitLast, (ABC_INT64_T)0, 0, NULL, NULL );\n    else\n//        RetValue = Abc_NtkMiterProve( \u0026mng-\u003epTarget, pParams ); // old CEC engine\n        RetValue = Abc_NtkIvyProve( \u0026mng-\u003epTarget, pParams ); // new CEC engine\n\n    // analyze the result\n    mng-\u003epResult = ABC_TargetResAlloc( Abc_NtkCiNum(mng-\u003epTarget) );\n    if ( RetValue == -1 )\n        mng-\u003epResult-\u003estatus = UNDETERMINED;\n    else if ( RetValue == 1 )\n        mng-\u003epResult-\u003estatus = UNSATISFIABLE;\n    else if ( RetValue == 0 )\n    {\n        mng-\u003epResult-\u003estatus = SATISFIABLE;\n        // create the array of PI names and values\n        for ( i = 0; i \u003c mng-\u003epResult-\u003eno_sig; i++ )\n        {\n            mng-\u003epResult-\u003enames[i]  = Extra_UtilStrsav( ABC_GetNodeName(mng, Abc_NtkCi(mng-\u003epNtk, i)) ); \n            mng-\u003epResult-\u003evalues[i] = mng-\u003epTarget-\u003epModel[i];\n        }\n        ABC_FREE( mng-\u003epTarget-\u003epModel );\n    }\n    else assert( 0 );\n\n    // delete the target\n    Abc_NtkDelete( mng-\u003epTarget );\n    mng-\u003epTarget = NULL;\n    // return the status\n    return mng-\u003epResult-\u003estatus;\n}",
+      "Draft": "func ABC_Solve(mng ABC_Manager) CSAT_StatusT {\n    var pParams *Prove_Params_t  = \u0026mng.Params;\n    var RetValue, i int32;\n\n    // check if the target network is available\n    if mng.pTarget == nil { fmt.Printf(\"ABC_Solve: Target network is not derived by ABC_SolveInit().\\n\"); return UNDETERMINED; }\n\n    // try to prove the miter using a number of techniques\n    if mng.mode {\n        RetValue = Abc_NtkMiterSat( mng.pTarget, (ABC_INT64_T)pParams.nMiteringLimitLast, (ABC_INT64_T)0, 0, nil, nil );\n    } else {\n//        RetValue = Abc_NtkMiterProve( \u0026mng-\u003epTarget, pParams ); // old CEC engine\n        RetValue = Abc_NtkIvyProve( \u0026mng.pTarget, pParams ); } // new CEC engine\n\n    // analyze the result\n    mng.pResult = ABC_TargetResAlloc( Abc_NtkCiNum(mng.pTarget) );\n    if RetValue == -1 {\n        mng.pResult.status = UNDETERMINED;\n    } else if RetValue == 1 {\n        mng.pResult.status = UNSATISFIABLE;\n    } else if RetValue == 0 {\n        mng.pResult.status = SATISFIABLE;\n        // create the array of PI names and values\n        for  i = 0; i \u003c mng.pResult.no_sig; i++  {\n            mng.pResult.names[i]  = Extra_UtilStrsav( ABC_GetNodeName(mng, Abc_NtkCi(mng.pNtk, i)) ); \n            mng.pResult.values[i] = mng.pTarget.pModel[i];\n        }\n        // inlining of macro ABC_FREE\n        ((mng.pTarget.pModel) ? (free((char *) (mng.pTarget.pModel)), (mng.pTarget.pModel) = 0) : 0);\n    \n    } else { assert(false, \"0\"); }\n\n    // delete the target\n    Abc_NtkDelete( mng.pTarget );\n    mng.pTarget = nil;\n    // return the status\n    return mng.pResult.status;\n}"
+    },
+    {
+      "Name": "ABC_Get_Target_Result",
+      "Start": 21380,
+      "End": 21485,
+      "BodyStart": 21457,
+      "Original": "CSAT_Target_ResultT * ABC_Get_Target_Result( ABC_Manager mng, int TargetID )\n{\n    return mng-\u003epResult;\n}",
+      "Draft": "func ABC_Get_Target_Result(mng ABC_Manager, TargetID int32) *CSAT_Target_ResultT {\n    return mng.pResult;\n}"
+    },
+    {
+      "Name": "ABC_Dump_Bench_File",
+      "Start": 21822,
+      "End": 22350,
+      "BodyStart": 21866,
+      "Original": "void ABC_Dump_Bench_File( ABC_Manager mng )\n{\n    Abc_Ntk_t * pNtkTemp, * pNtkAig;\n    const char * pFileName;\n \n    // derive the netlist\n    pNtkAig = Abc_NtkStrash( mng-\u003epNtk, 0, 0, 0 );\n    pNtkTemp = Abc_NtkToNetlistBench( pNtkAig );\n    Abc_NtkDelete( pNtkAig );\n    if ( pNtkTemp == NULL ) \n        { printf( \"ABC_Dump_Bench_File: Dumping BENCH has failed.\\n\" ); return; }\n    pFileName = mng-\u003epDumpFileName? mng-\u003epDumpFileName: \"abc_test.bench\";\n    Io_WriteBench( pNtkTemp, pFileName );\n    Abc_NtkDelete( pNtkTemp );\n}",
+      "Draft": "func ABC_Dump_Bench_File(mng ABC_Manager) {\n    var pNtkTemp, pNtkAig *Abc_Ntk_t;\n    char * pFileName;\n \n    // derive the netlist\n    pNtkAig = Abc_NtkStrash( mng.pNtk, 0, 0, 0 );\n    pNtkTemp = Abc_NtkToNetlistBench( pNtkAig );\n    Abc_NtkDelete( pNtkAig );\n    if pNtkTemp == nil { fmt.Printf(\"ABC_Dump_Bench_File: Dumping BENCH has failed.\\n\"); return; }\n    if mng.pDumpFileName {\n        pFileName = mng.pDumpFileName;\n    } else {\n        pFileName = \"abc_test.bench\";\n    }\n    Io_WriteBench( pNtkTemp, pFileName );\n    Abc_NtkDelete( pNtkTemp );\n}"
+    },
+    {
+      "Name": "ABC_TargetResAlloc",
+      "Start": 22616,
+      "End": 23017,
+      "BodyStart": 22670,
+      "Original": "CSAT_Target_ResultT * ABC_TargetResAlloc( int nVars )\n{\n    CSAT_Target_ResultT * p;\n    p = ABC_ALLOC( CSAT_Target_ResultT, 1 );\n    memset( p, 0, sizeof(CSAT_Target_ResultT) );\n    p-\u003eno_sig = nVars;\n    p-\u003enames = ABC_ALLOC( char *, nVars );\n    p-\u003evalues = ABC_ALLOC( int, nVars );\n    memset( p-\u003enames, 0, sizeof(char *) * nVars );\n    memset( p-\u003evalues, 0, sizeof(int) * nVars );\n    return p;\n}",
+      "Draft": "func ABC_TargetResAlloc(nVars int32) *CSAT_Target_ResultT {\n    var p *CSAT_Target_ResultT;\n    // inlining of macro ABC_ALLOC\n    p = ((CSAT_Target_ResultT *) malloc(sizeof(CSAT_Target_ResultT) * (size_t)(1)));\n    memset( p, 0, sizeof(CSAT_Target_ResultT) );\n    p.no_sig = nVars;\n    // inlining of macro ABC_ALLOC\n    p.names = ((char * *) malloc(sizeof(char *) * (size_t)(nVars)));\n    // inlining of macro ABC_ALLOC\n    p.values = ((int *) malloc(sizeof(int) * (size_t)(nVars)));\n    memset( p.names, 0, sizeof(char *) * nVars );\n    memset( p.values, 0, sizeof(int) * nVars );\n    return p;\n}"
+    },
+    {
+      "Name": "ABC_TargetResFree",
+      "Start": 23283,
+      "End": 23592,
+      "BodyStart": 23333,
+      "Original": "void ABC_TargetResFree( CSAT_Target_ResultT * p )\n{\n    if ( p == NULL )\n        return;\n    if( p-\u003enames )\n    {\n        int i = 0;\n        for ( i = 0; i \u003c p-\u003eno_sig; i++ )\n        {\n            ABC_FREE(p-\u003enames[i]);\n        }\n    }\n    ABC_FREE( p-\u003enames );\n    ABC_FREE( p-\u003evalues );\n    ABC_FREE( p );\n}",
+      "Draft": "func ABC_TargetResFree(p *CSAT_Target_ResultT) {\n    if p == nil {\n        return; }\n    if p.names {\n        var i int32;\n        for  i = 0; i \u003c p.no_sig; i++  {\n            // inlining of macro ABC_FREE\n            ((p.names[i]) ? (free((char *) (p.names[i])), (p.names[i]) = 0) : 0);\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((p.names) ? (free((char *) (p.names)), (p.names) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.values) ? (free((char *) (p.values)), (p.values) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "ABC_GetNodeName",
+      "Start": 23869,
+      "End": 24084,
+      "BodyStart": 23930,
+      "Original": "char * ABC_GetNodeName( ABC_Manager mng, Abc_Obj_t * pNode )\n{\n    char * pName = NULL;\n    if ( !stmm_lookup( mng-\u003etNode2Name, (char *)pNode, (char **)\u0026pName ) )\n    {\n        assert( 0 );\n    }\n    return pName;\n}",
+      "Draft": "func ABC_GetNodeName(mng ABC_Manager, pNode *Abc_Obj_t) string {\n    var pName string  = nil;\n    if !stmm_lookup( mng.tNode2Name, (char *)pNode, (char **)\u0026pName ) {\n        assert(false, \"0\");\n    }\n    return pName;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::struct::ABC_ManagerStruct_t",
+      "Category": "struct-review",
+      "Symbol": "ABC_ManagerStruct_t",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1021,
+      "End": 2118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::mechanical::sizeof::3083",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3012,
+      "End": 3012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::mechanical::sizeof::3142",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3063,
+      "End": 3069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::mechanical::sizeof::23639",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22709,
+      "End": 22709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::mechanical::sizeof::23702",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22764,
+      "End": 22770
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::mechanical::sizeof::23835",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22833,
+      "End": 22833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::mechanical::sizeof::23948",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22877,
+      "End": 22877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::mechanical::sizeof::24006",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22927,
+      "End": 22933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::mechanical::sizeof::24058",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 22979,
+      "End": 22985
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::3058",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3012,
+      "End": 3012
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::4717",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4564,
+      "End": 4564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::4844",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4600,
+      "End": 4600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::7015",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6754,
+      "End": 6762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::7443",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7182,
+      "End": 7191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::7913",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7652,
+      "End": 7666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::8173",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7912,
+      "End": 7926
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::8448",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8187,
+      "End": 8201
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::8711",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8450,
+      "End": 8464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::8983",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8722,
+      "End": 8736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::9395",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9134,
+      "End": 9148
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::9811",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9550,
+      "End": 9564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::10105",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9844,
+      "End": 9858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::10391",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10130,
+      "End": 10144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::10847",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10586,
+      "End": 10594
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::10959",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10698,
+      "End": 10707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::11315",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11054,
+      "End": 11062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::17317",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16606,
+      "End": 16606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::18381",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17638,
+      "End": 17647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::21670",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20851,
+      "End": 20851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::23608",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22709,
+      "End": 22709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::23817",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22833,
+      "End": 22833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::23841",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22833,
+      "End": 22833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::23933",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22877,
+      "End": 22877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::24012",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22933,
+      "End": 22941
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::24626",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23480,
+      "End": 23480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::24760",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23523,
+      "End": 23523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::24873",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23549,
+      "End": 23549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::24980",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23576,
+      "End": 23576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::25416",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23997,
+      "End": 24005
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::pointer-cast::25431",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24012,
+      "End": 24021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_InitManager",
+      "Category": "semantic-review",
+      "Symbol": "ABC_InitManager",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2928,
+      "End": 3752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ternary::ABC_ReleaseManager",
+      "Category": "ternary-review",
+      "Symbol": "ABC_ReleaseManager",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4008,
+      "End": 4634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_ReleaseManager",
+      "Category": "semantic-review",
+      "Symbol": "ABC_ReleaseManager",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4008,
+      "End": 4634
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_SetSolveOption",
+      "Category": "semantic-review",
+      "Symbol": "ABC_SetSolveOption",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4903,
+      "End": 4975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_UseOnlyCoreSatSolver",
+      "Category": "semantic-review",
+      "Symbol": "ABC_UseOnlyCoreSatSolver",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5248,
+      "End": 5373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_AddGate",
+      "Category": "semantic-review",
+      "Symbol": "ABC_AddGate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5907,
+      "End": 11179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_Network_Finalize",
+      "Category": "semantic-review",
+      "Symbol": "ABC_Network_Finalize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11477,
+      "End": 11848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_Check_Integrity",
+      "Category": "semantic-review",
+      "Symbol": "ABC_Check_Integrity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12232,
+      "End": 12882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_SetTimeLimit",
+      "Category": "semantic-review",
+      "Symbol": "ABC_SetTimeLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13187,
+      "End": 13332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_SetLearnLimit",
+      "Category": "semantic-review",
+      "Symbol": "ABC_SetLearnLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13568,
+      "End": 13711
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_SetLearnBacktrackLimit",
+      "Category": "semantic-review",
+      "Symbol": "ABC_SetLearnBacktrackLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13947,
+      "End": 14108
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_SetSolveBacktrackLimit",
+      "Category": "semantic-review",
+      "Symbol": "ABC_SetSolveBacktrackLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14344,
+      "End": 14449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_SetSolveImplicationLimit",
+      "Category": "semantic-review",
+      "Symbol": "ABC_SetSolveImplicationLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14685,
+      "End": 14850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_SetTotalBacktrackLimit",
+      "Category": "semantic-review",
+      "Symbol": "ABC_SetTotalBacktrackLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15086,
+      "End": 15202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_SetTotalInspectLimit",
+      "Category": "semantic-review",
+      "Symbol": "ABC_SetTotalInspectLimit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15438,
+      "End": 15550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_GetTotalBacktracksMade",
+      "Category": "semantic-review",
+      "Symbol": "ABC_GetTotalBacktracksMade",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15785,
+      "End": 15892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_GetTotalInspectsMade",
+      "Category": "semantic-review",
+      "Symbol": "ABC_GetTotalInspectsMade",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16128,
+      "End": 16231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ternary::ABC_EnableDump",
+      "Category": "ternary-review",
+      "Symbol": "ABC_EnableDump",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 16543,
+      "End": 16695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_EnableDump",
+      "Category": "semantic-review",
+      "Symbol": "ABC_EnableDump",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16543,
+      "End": 16695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_AddTarget",
+      "Category": "semantic-review",
+      "Symbol": "ABC_AddTarget",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17196,
+      "End": 18052
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_SolveInit",
+      "Category": "semantic-review",
+      "Symbol": "ABC_SolveInit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18423,
+      "End": 18955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_AnalyzeTargets",
+      "Category": "semantic-review",
+      "Symbol": "ABC_AnalyzeTargets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19217,
+      "End": 19263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ternary::ABC_Solve",
+      "Category": "ternary-review",
+      "Symbol": "ABC_Solve",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 19548,
+      "End": 21058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_Solve",
+      "Category": "semantic-review",
+      "Symbol": "ABC_Solve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19548,
+      "End": 21058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_Get_Target_Result",
+      "Category": "semantic-review",
+      "Symbol": "ABC_Get_Target_Result",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21380,
+      "End": 21485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_Dump_Bench_File",
+      "Category": "semantic-review",
+      "Symbol": "ABC_Dump_Bench_File",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21822,
+      "End": 22350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_TargetResAlloc",
+      "Category": "semantic-review",
+      "Symbol": "ABC_TargetResAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22616,
+      "End": 23017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ternary::ABC_TargetResFree",
+      "Category": "ternary-review",
+      "Symbol": "ABC_TargetResFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 23283,
+      "End": 23592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_TargetResFree",
+      "Category": "semantic-review",
+      "Symbol": "ABC_TargetResFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23283,
+      "End": 23592
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::ABC_GetNodeName",
+      "Category": "semantic-review",
+      "Symbol": "ABC_GetNodeName",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23869,
+      "End": 24084
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/csat/csat_apis.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 24332
+    }
+  ],
+  "Draft": "package csat\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [csat_apis.h]\n\n  PackageName [Interface to CSAT.]\n\n  Synopsis    [APIs, enums, and data structures expected from the use of CSAT.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - August 28, 2005]\n\n  Revision    [$Id: csat_apis.h,v 1.00 2005/08/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"proof/fraig/fraig.h\"\n//#include \"csat_apis.h\"\n//#include \"misc/st/stmm.h\"\n//#include \"base/main/main.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst ABC_DEFAULT_CONF_LIMIT =     0   // limit on conflicts\nconst ABC_DEFAULT_IMP_LIMIT =      0   // limit on implications\n\n\ntype ABC_ManagerStruct_t struct {\n    // information about the problem\n    tName2Node           *stmm_table;    // the hash table mapping names to nodes\n    tNode2Name           *stmm_table;    // the hash table mapping nodes to names\n    pNtk            *Abc_Ntk_t;          // the starting ABC network\n    pTarget            *Abc_Ntk_t;       // the AIG representing the target\n    pDumpFileName                 string; // the name of the file to dump the target network\n    pMmNames       *Mem_Flex_t;      // memory manager for signal names\n    // solving parameters\n    mode                   int32;          // 0 = resource-aware integration; 1 = brute-force SAT\n    Params        Prove_Params_t;        // integrated CEC parameters\n    // information about the target \n    nog                   int32;           // the numbers of gates in the target\n    vNodes            *Vec_Ptr_t;        // the gates in the target\n    vValues            *Vec_Int_t;       // the values of gate's outputs in the target\n    // solution\n    pResult  *CSAT_Target_ResultT;       // the result of solving the target\n}\n\n// static CSAT_Target_ResultT * ABC_TargetResAlloc( int nVars );\n\n// static char * ABC_GetNodeName( ABC_Manager mng, Abc_Obj_t * pNode );\n\n\n// procedures to start and stop the ABC framework\n// extern void  Abc_Start();\n\n// extern void  Abc_Stop();\n\n\n// some external procedures\n// extern int Io_WriteBench( Abc_Ntk_t * pNtk, const char * FileName );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_InitManager() ABC_Manager {\n    var mng *ABC_Manager_t;\n    Abc_Start();\n    // inlining of macro ABC_ALLOC\n    mng = ((ABC_Manager_t *) malloc(sizeof(ABC_Manager_t) * (size_t)(1)));\n    memset( mng, 0, sizeof(ABC_Manager_t) );\n    mng.pNtk = Abc_NtkAlloc( ABC_NTK_LOGIC, ABC_FUNC_SOP, 1 );\n    mng.pNtk.pName = Extra_UtilStrsav(\"csat_network\");\n    mng.tName2Node = stmm_init_table(strcmp, stmm_strhash);\n    mng.tNode2Name = stmm_init_table(stmm_ptrcmp, stmm_ptrhash);\n    mng.pMmNames   = Mem_FlexStart();\n    mng.vNodes     = Vec_PtrAlloc( 100 );\n    mng.vValues    = Vec_IntAlloc( 100 );\n    mng.mode       = 0; // set \"resource-aware integration\" as the default mode\n    // set default parameters for CEC\n    Prove_ParamsSetDefault( \u0026mng.Params );\n    // set infinite resource limit for the final mitering\n//    mng-\u003eParams.nMiteringLimitLast = ABC_INFINITY;\n    return mng;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_ReleaseManager(mng ABC_Manager) {\n    var p_res *CSAT_Target_ResultT  = ABC_Get_Target_Result( mng,0 );\n    ABC_TargetResFree(p_res);\n    if mng.tNode2Name { stmm_free_table( mng.tNode2Name ); }\n    if mng.tName2Node { stmm_free_table( mng.tName2Node ); }\n    if mng.pMmNames {   Mem_FlexStop( mng.pMmNames, 0 ); }\n    if mng.pNtk {       Abc_NtkDelete( mng.pNtk ); }\n    if mng.pTarget {    Abc_NtkDelete( mng.pTarget ); }\n    if mng.vNodes {     Vec_PtrFree( mng.vNodes ); }\n    if mng.vValues {    Vec_IntFree( mng.vValues ); }\n    // inlining of macro ABC_FREE\n    ((mng.pDumpFileName) ? (free((char *) (mng.pDumpFileName)), (mng.pDumpFileName) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((mng) ? (free((char *) (mng)), (mng) = 0) : 0);\n    Abc_Stop();\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets solver options for learning.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_SetSolveOption(mng ABC_Manager, option CSAT_OptionT) {\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets solving mode by brute-force SAT.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_UseOnlyCoreSatSolver(mng ABC_Manager) {\n    mng.mode = 1;  // switch to \"brute-force SAT\" as the solving option\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds a gate to the circuit.]\n\n  Description [The meaning of the parameters are:\n    type: the type of the gate to be added\n    name: the name of the gate to be added, name should be unique in a circuit.\n    nofi: number of fanins of the gate to be added;\n    fanins: the name array of fanins of the gate to be added.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_AddGate(mng ABC_Manager, type GateType, name string, nofi int32, fanins *string, dc_attr int32) int32 {\n    var pObj *Abc_Obj_t  = nil; // Suppress \"might be used uninitialized\"\n    var pFanin *Abc_Obj_t;\n    var pSop string  = nil; // Suppress \"might be used uninitialized\"\n    var pNewName string;\n    var i int32;\n\n    // save the name in the local memory manager\n    pNewName = Mem_FlexEntryFetch( mng.pMmNames, len(name) + 1 );\n    pNewName = name;\n    name = pNewName;\n\n    // consider different cases, create the node, and map the node into the name\n    switch  type  {\n    case CSAT_BPI,\n     CSAT_BPPI:\n        if nofi != 0 { fmt.Printf(\"ABC_AddGate: The PI/PPI gate \\\"%s\\\" has fanins.\\n\", name); return 0; }\n        // create the PI\n        pObj = Abc_NtkCreatePi( mng.pNtk );\n        stmm_insert( mng.tNode2Name, (char *)pObj, name );\n        break;\n    case CSAT_CONST,\n     CSAT_BAND,\n     CSAT_BNAND,\n     CSAT_BOR,\n     CSAT_BNOR,\n     CSAT_BXOR,\n     CSAT_BXNOR,\n     CSAT_BINV,\n     CSAT_BBUF:\n        // create the node\n        pObj = Abc_NtkCreateNode( mng.pNtk );\n        // create the fanins\n        for  i = 0; i \u003c nofi; i++  {\n            if !stmm_lookup( mng.tName2Node, fanins[i], (char **)\u0026pFanin ) { fmt.Printf(\"ABC_AddGate: The fanin gate \\\"%s\\\" is not in the network.\\n\", fanins[i]); return 0; }\n            Abc_ObjAddFanin( pObj, pFanin );\n        }\n        // create the node function\n        switch  type  {\n            case CSAT_CONST:\n                if nofi != 0 { fmt.Printf(\"ABC_AddGate: The constant gate \\\"%s\\\" has fanins.\\n\", name); return 0; }\n                pSop = Abc_SopCreateConst1( (Mem_Flex_t *)mng.pNtk.pManFunc );\n                break;\n            case CSAT_BAND:\n                if nofi \u003c 1 { fmt.Printf(\"ABC_AddGate: The AND gate \\\"%s\\\" no fanins.\\n\", name); return 0; }\n                pSop = Abc_SopCreateAnd( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi, nil );\n                break;\n            case CSAT_BNAND:\n                if nofi \u003c 1 { fmt.Printf(\"ABC_AddGate: The NAND gate \\\"%s\\\" no fanins.\\n\", name); return 0; }\n                pSop = Abc_SopCreateNand( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi );\n                break;\n            case CSAT_BOR:\n                if nofi \u003c 1 { fmt.Printf(\"ABC_AddGate: The OR gate \\\"%s\\\" no fanins.\\n\", name); return 0; }\n                pSop = Abc_SopCreateOr( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi, nil );\n                break;\n            case CSAT_BNOR:\n                if nofi \u003c 1 { fmt.Printf(\"ABC_AddGate: The NOR gate \\\"%s\\\" no fanins.\\n\", name); return 0; }\n                pSop = Abc_SopCreateNor( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi );\n                break;\n            case CSAT_BXOR:\n                if nofi \u003c 1 { fmt.Printf(\"ABC_AddGate: The XOR gate \\\"%s\\\" no fanins.\\n\", name); return 0; }\n                if nofi \u003e 2 { fmt.Printf(\"ABC_AddGate: The XOR gate \\\"%s\\\" has more than two fanins.\\n\", name); return 0; }\n                pSop = Abc_SopCreateXor( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi );\n                break;\n            case CSAT_BXNOR:\n                if nofi \u003c 1 { fmt.Printf(\"ABC_AddGate: The XNOR gate \\\"%s\\\" no fanins.\\n\", name); return 0; }\n                if nofi \u003e 2 { fmt.Printf(\"ABC_AddGate: The XNOR gate \\\"%s\\\" has more than two fanins.\\n\", name); return 0; }\n                pSop = Abc_SopCreateNxor( (Mem_Flex_t *)mng.pNtk.pManFunc, nofi );\n                break;\n            case CSAT_BINV:\n                if nofi != 1 { fmt.Printf(\"ABC_AddGate: The inverter gate \\\"%s\\\" does not have exactly one fanin.\\n\", name); return 0; }\n                pSop = Abc_SopCreateInv( (Mem_Flex_t *)mng.pNtk.pManFunc );\n                break;\n            case CSAT_BBUF:\n                if nofi != 1 { fmt.Printf(\"ABC_AddGate: The buffer gate \\\"%s\\\" does not have exactly one fanin.\\n\", name); return 0; }\n                pSop = Abc_SopCreateBuf( (Mem_Flex_t *)mng.pNtk.pManFunc );\n                break;\n            default :\n                break;\n        }\n        Abc_ObjSetData( pObj, pSop );\n        break;\n    case CSAT_BPPO,\n     CSAT_BPO:\n        if nofi != 1 { fmt.Printf(\"ABC_AddGate: The PO/PPO gate \\\"%s\\\" does not have exactly one fanin.\\n\", name); return 0; }\n        // create the PO\n        pObj = Abc_NtkCreatePo( mng.pNtk );\n        stmm_insert( mng.tNode2Name, (char *)pObj, name );\n        // connect to the PO fanin\n        if !stmm_lookup( mng.tName2Node, fanins[0], (char **)\u0026pFanin ) { fmt.Printf(\"ABC_AddGate: The fanin gate \\\"%s\\\" is not in the network.\\n\", fanins[0]); return 0; }\n        Abc_ObjAddFanin( pObj, pFanin );\n        break;\n    default:\n        fmt.Printf(\"ABC_AddGate: Unknown gate type.\\n\");\n        break;\n    }\n\n    // map the name into the node\n    if stmm_insert( mng.tName2Node, name, (char *)pObj ) { fmt.Printf(\"ABC_AddGate: The same gate \\\"%s\\\" is added twice.\\n\", name); return 0; }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [This procedure also finalizes construction of the ABC network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_Network_Finalize(mng ABC_Manager) {\n    var pNtk *Abc_Ntk_t  = mng.pNtk;\n    var pObj *Abc_Obj_t;\n    var i int32;\n    // inlining of macro Abc_NtkForEachPi\n    for  i = 0; (i \u003c Abc_NtkPiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPi(pNtk, i)), 1); i++  {\n        Abc_ObjAssignName( pObj, ABC_GetNodeName(mng, pObj), nil );\n    }\n    // inlining of macro Abc_NtkForEachPo\n    for  i = 0; (i \u003c Abc_NtkPoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkPo(pNtk, i)), 1); i++  {\n        Abc_ObjAssignName( pObj, ABC_GetNodeName(mng, pObj), nil );\n    }\n    assert(Abc_NtkLatchNum(pNtk) == 0, \"Abc_NtkLatchNum(pNtk) == 0\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks integraty of the manager.]\n\n  Description [Checks if there are gates that are not used by any primary output.\n  If no such gates exist, return 1 else return 0.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_Check_Integrity(mng ABC_Manager) int32 {\n    var pNtk *Abc_Ntk_t  = mng.pNtk;\n    var pObj *Abc_Obj_t;\n    var i int32;\n\n    // check that there are no dangling nodes\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pObj) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pObj) == nil || !Abc_ObjIsNode(pObj) {} else {\n        if i == 0 { \n            continue; }\n        if Abc_ObjFanoutNum(pObj) == 0 {\n//            printf( \"ABC_Check_Integrity: The network has dangling nodes.\\n\" );\n            return 0;\n        }\n    }\n    }\n\n    // make sure everything is okay with the network structure\n    if !Abc_NtkDoCheck( pNtk ) {\n        fmt.Printf(\"ABC_Check_Integrity: The internal network check has failed.\\n\");\n        return 0;\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets time limit for solving a target.]\n\n  Description [Runtime: time limit (in second).]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_SetTimeLimit(mng ABC_Manager, runtime int32) {\n//    printf( \"ABC_SetTimeLimit: The resource limit is not implemented (warning).\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_SetLearnLimit(mng ABC_Manager, num int32) {\n//    printf( \"ABC_SetLearnLimit: The resource limit is not implemented (warning).\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_SetLearnBacktrackLimit(mng ABC_Manager, num int32) {\n//    printf( \"ABC_SetLearnBacktrackLimit: The resource limit is not implemented (warning).\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_SetSolveBacktrackLimit(mng ABC_Manager, num int32) {\n    mng.Params.nMiteringLimitLast = num;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_SetSolveImplicationLimit(mng ABC_Manager, num int32) {\n//    printf( \"ABC_SetSolveImplicationLimit: The resource limit is not implemented (warning).\\n\" );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_SetTotalBacktrackLimit(mng ABC_Manager, num ABC_UINT64_T) {\n    mng.Params.nTotalBacktrackLimit = num;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_SetTotalInspectLimit(mng ABC_Manager, num ABC_UINT64_T) {\n    mng.Params.nTotalInspectLimit = num;\n}\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_GetTotalBacktracksMade(mng ABC_Manager) ABC_UINT64_T {\n    return mng.Params.nTotalBacktracksMade;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_GetTotalInspectsMade(mng ABC_Manager) ABC_UINT64_T {\n    return mng.Params.nTotalInspectsMade;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the file name to dump the structurally hashed network used for solving.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_EnableDump(mng ABC_Manager, dump_file string) {\n    // inlining of macro ABC_FREE\n    ((mng.pDumpFileName) ? (free((char *) (mng.pDumpFileName)), (mng.pDumpFileName) = 0) : 0);\n    mng.pDumpFileName = Extra_UtilStrsav( dump_file );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds a new target to the manager.]\n\n  Description [The meaning of the parameters are:\n    nog: number of gates that are in the targets,\n    names: name array of gates,\n    values: value array of the corresponding gates given in \"names\" to be solved. \n    The relation of them is AND.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_AddTarget(mng ABC_Manager, nog int32, names *string, values *int32) int32 {\n    var pObj *Abc_Obj_t;\n    var i int32;\n    if nog \u003c 1 { fmt.Printf(\"ABC_AddTarget: The target has no gates.\\n\"); return 0; }\n    // clear storage for the target\n    mng.nog = 0;\n    Vec_PtrClear( mng.vNodes );\n    Vec_IntClear( mng.vValues );\n    // save the target\n    for  i = 0; i \u003c nog; i++  {\n        if !stmm_lookup( mng.tName2Node, names[i], (char **)\u0026pObj ) { fmt.Printf(\"ABC_AddTarget: The target gate \\\"%s\\\" is not in the network.\\n\", names[i]); return 0; }\n        Vec_PtrPush( mng.vNodes, pObj );\n        if values[i] \u003c 0 || values[i] \u003e 1 { fmt.Printf(\"ABC_AddTarget: The value of gate \\\"%s\\\" is not 0 or 1.\\n\", names[i]); return 0; }\n        Vec_IntPush( mng.vValues, values[i] );\n    }\n    mng.nog = nog;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Initialize the solver internal data structure.]\n\n  Description [Prepares the solver to work on one specific target\n  set by calling ABC_AddTarget before.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_SolveInit(mng ABC_Manager) {\n    // check if the target is available\n    assert(mng.nog == Vec_PtrSize(mng.vNodes), \"mng.nog == Vec_PtrSize(mng.vNodes)\");\n    if mng.nog == 0 { fmt.Printf(\"ABC_SolveInit: Target is not specified by ABC_AddTarget().\\n\"); return; }\n\n    // free the previous target network if present\n    if mng.pTarget { Abc_NtkDelete( mng.pTarget ); }\n\n    // set the new target network\n//    mng-\u003epTarget = Abc_NtkCreateTarget( mng-\u003epNtk, mng-\u003evNodes, mng-\u003evValues );\n    mng.pTarget = Abc_NtkStrash( mng.pNtk, 0, 1, 0 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Currently not implemented.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_AnalyzeTargets(mng ABC_Manager) {\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Solves the targets added by ABC_AddTarget().]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\n     func ABC_Solve(mng ABC_Manager) CSAT_StatusT {\n    var pParams *Prove_Params_t  = \u0026mng.Params;\n    var RetValue, i int32;\n\n    // check if the target network is available\n    if mng.pTarget == nil { fmt.Printf(\"ABC_Solve: Target network is not derived by ABC_SolveInit().\\n\"); return UNDETERMINED; }\n\n    // try to prove the miter using a number of techniques\n    if mng.mode {\n        RetValue = Abc_NtkMiterSat( mng.pTarget, (ABC_INT64_T)pParams.nMiteringLimitLast, (ABC_INT64_T)0, 0, nil, nil );\n    } else {\n//        RetValue = Abc_NtkMiterProve( \u0026mng-\u003epTarget, pParams ); // old CEC engine\n        RetValue = Abc_NtkIvyProve( \u0026mng.pTarget, pParams ); } // new CEC engine\n\n    // analyze the result\n    mng.pResult = ABC_TargetResAlloc( Abc_NtkCiNum(mng.pTarget) );\n    if RetValue == -1 {\n        mng.pResult.status = UNDETERMINED;\n    } else if RetValue == 1 {\n        mng.pResult.status = UNSATISFIABLE;\n    } else if RetValue == 0 {\n        mng.pResult.status = SATISFIABLE;\n        // create the array of PI names and values\n        for  i = 0; i \u003c mng.pResult.no_sig; i++  {\n            mng.pResult.names[i]  = Extra_UtilStrsav( ABC_GetNodeName(mng, Abc_NtkCi(mng.pNtk, i)) ); \n            mng.pResult.values[i] = mng.pTarget.pModel[i];\n        }\n        // inlining of macro ABC_FREE\n        ((mng.pTarget.pModel) ? (free((char *) (mng.pTarget.pModel)), (mng.pTarget.pModel) = 0) : 0);\n    \n    } else { assert(false, \"0\"); }\n\n    // delete the target\n    Abc_NtkDelete( mng.pTarget );\n    mng.pTarget = nil;\n    // return the status\n    return mng.pResult.status;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Gets the solve status of a target.]\n\n  Description [TargetID: the target id returned by ABC_AddTarget().]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_Get_Target_Result(mng ABC_Manager, TargetID int32) *CSAT_Target_ResultT {\n    return mng.pResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dumps the original network into the BENCH file.]\n\n  Description [This procedure should be modified to dump the target.]\n               \n  SideEffects []\n\n  SeeAlso     [] \n\n***********************************************************************/\nfunc ABC_Dump_Bench_File(mng ABC_Manager) {\n    var pNtkTemp, pNtkAig *Abc_Ntk_t;\n    char * pFileName;\n \n    // derive the netlist\n    pNtkAig = Abc_NtkStrash( mng.pNtk, 0, 0, 0 );\n    pNtkTemp = Abc_NtkToNetlistBench( pNtkAig );\n    Abc_NtkDelete( pNtkAig );\n    if pNtkTemp == nil { fmt.Printf(\"ABC_Dump_Bench_File: Dumping BENCH has failed.\\n\"); return; }\n    if mng.pDumpFileName {\n        pFileName = mng.pDumpFileName;\n    } else {\n        pFileName = \"abc_test.bench\";\n    }\n    Io_WriteBench( pNtkTemp, pFileName );\n    Abc_NtkDelete( pNtkTemp );\n}\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the target result.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_TargetResAlloc(nVars int32) *CSAT_Target_ResultT {\n    var p *CSAT_Target_ResultT;\n    // inlining of macro ABC_ALLOC\n    p = ((CSAT_Target_ResultT *) malloc(sizeof(CSAT_Target_ResultT) * (size_t)(1)));\n    memset( p, 0, sizeof(CSAT_Target_ResultT) );\n    p.no_sig = nVars;\n    // inlining of macro ABC_ALLOC\n    p.names = ((char * *) malloc(sizeof(char *) * (size_t)(nVars)));\n    // inlining of macro ABC_ALLOC\n    p.values = ((int *) malloc(sizeof(int) * (size_t)(nVars)));\n    memset( p.names, 0, sizeof(char *) * nVars );\n    memset( p.values, 0, sizeof(int) * nVars );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates the target result.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_TargetResFree(p *CSAT_Target_ResultT) {\n    if p == nil {\n        return; }\n    if p.names {\n        var i int32;\n        for  i = 0; i \u003c p.no_sig; i++  {\n            // inlining of macro ABC_FREE\n            ((p.names[i]) ? (free((char *) (p.names[i])), (p.names[i]) = 0) : 0);\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((p.names) ? (free((char *) (p.names)), (p.names) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p.values) ? (free((char *) (p.values)), (p.values) = 0) : 0);\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dumps the target AIG into the BENCH file.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc ABC_GetNodeName(mng ABC_Manager, pNode *Abc_Obj_t) string {\n    var pName string  = nil;\n    if !stmm_lookup( mng.tNode2Name, (char *)pNode, (char **)\u0026pName ) {\n        assert(false, \"0\");\n    }\n    return pName;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

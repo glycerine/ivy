@@ -1,0 +1,316 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c",
+  "SHA256": "c51d793595e56bb19f73c8e25e836f488ed778de19b335d10cbb83e0193fd2c1",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 49,
+        "Column": 5,
+        "ByteOffset": 1393
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 73,
+        "Column": 5,
+        "ByteOffset": 2221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 5,
+        "ByteOffset": 2258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iVar \u003c Abc_NtkCiNum(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 9,
+        "ByteOffset": 5133
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Abc_NtkSensitivityMiter: The network check has failed.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 161,
+        "Column": 5,
+        "ByteOffset": 6077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 162,
+        "Column": 5,
+        "ByteOffset": 6114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkLatchNum(pNtk) == 0 );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 169,
+        "Column": 41,
+        "ByteOffset": 6400
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkCiNum(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 181,
+        "Column": 17,
+        "ByteOffset": 7072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"ERROR in Abc_NtkMiterProve(): Generated counter-example is invalid.\\n\" ); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 184,
+        "Column": 72,
+        "ByteOffset": 7309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            /*__starting_point_inline_macro:ABC_FREE__*/((pSimInfo) ? (free((char *) (pSimInfo)), (pSimInfo) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 191,
+        "Column": 9,
+        "ByteOffset": 7512
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The outputs are sensitive to %d (out of %d) inputs:\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 194,
+        "Column": 13,
+        "ByteOffset": 7804
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d \", RetValue );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 196,
+        "Column": 9,
+        "ByteOffset": 7849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkSensitivityMiter_rec",
+      "Start": 1285,
+      "End": 1722,
+      "BodyStart": 1367,
+      "Original": "Abc_Obj_t * Abc_NtkSensitivityMiter_rec( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pNode )\n{\n    assert( !Abc_ObjIsComplement(pNode) );\n    if ( pNode-\u003epCopy )\n        return pNode-\u003epCopy;\n    Abc_NtkSensitivityMiter_rec( pNtkNew, Abc_ObjFanin0(pNode) );\n    Abc_NtkSensitivityMiter_rec( pNtkNew, Abc_ObjFanin1(pNode) );\n    return pNode-\u003epCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew-\u003epManFunc, Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode) );\n}",
+      "Draft": "func Abc_NtkSensitivityMiter_rec(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t) *Abc_Obj_t {\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    if pNode.pCopy {\n        return pNode.pCopy; }\n    Abc_NtkSensitivityMiter_rec( pNtkNew, Abc_ObjFanin0(pNode) );\n    Abc_NtkSensitivityMiter_rec( pNtkNew, Abc_ObjFanin1(pNode) );\n    return pNode.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode) );\n}"
+    },
+    {
+      "Name": "Abc_NtkSensitivityMiter",
+      "Start": 2001,
+      "End": 5029,
+      "BodyStart": 2067,
+      "Original": "Abc_Ntk_t * Abc_NtkSensitivityMiter( Abc_Ntk_t * pNtk, int iVar )\n{\n    Abc_Ntk_t * pMiter;\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pObj, * pNext, * pFanin, * pOutput, * pObjNew;\n    int i;\n    assert( Abc_NtkIsStrash(pNtk) );\n    assert( iVar \u003c Abc_NtkCiNum(pNtk) );\n\n    // duplicate the network\n    pMiter = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pMiter-\u003epName = Extra_UtilStrsav(pNtk-\u003epName);\n    pMiter-\u003epSpec = Extra_UtilStrsav(pNtk-\u003epSpec);\n\n    // assign the PIs\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk)-\u003epCopy = Abc_AigConst1(pMiter);\n    Abc_AigConst1(pNtk)-\u003epData = Abc_AigConst1(pMiter);\n    Abc_NtkForEachCi( pNtk, pObj, i )\n    {\n        pObj-\u003epCopy = Abc_NtkCreatePi( pMiter );\n        pObj-\u003epData = pObj-\u003epCopy;\n    }\n    Abc_NtkAddDummyPiNames( pMiter );\n\n    // assign the cofactors of the CI node to be constants\n    pObj = Abc_NtkCi( pNtk, iVar );\n    pObj-\u003epCopy = Abc_ObjNot( Abc_AigConst1(pMiter) ); \n    pObj-\u003epData = Abc_AigConst1(pMiter); \n\n    // collect the internal nodes\n    vNodes = Abc_NtkDfsReverseNodes( pNtk, \u0026pObj, 1 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n    {\n        for ( pNext = pObj? pObj-\u003epCopy : pObj; pObj; pObj = pNext, pNext = pObj? pObj-\u003epCopy : pObj )\n        {\n            pFanin = Abc_ObjFanin0(pObj);\n            if ( !Abc_NodeIsTravIdCurrent(pFanin) )\n                pFanin-\u003epData = Abc_NtkSensitivityMiter_rec( pMiter, pFanin );\n            pFanin = Abc_ObjFanin1(pObj);\n            if ( !Abc_NodeIsTravIdCurrent(pFanin) )\n                pFanin-\u003epData = Abc_NtkSensitivityMiter_rec( pMiter, pFanin );\n            pObj-\u003epCopy = Abc_AigAnd( (Abc_Aig_t *)pMiter-\u003epManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );\n            pObj-\u003epData = Abc_AigAnd( (Abc_Aig_t *)pMiter-\u003epManFunc, Abc_ObjChild0Data(pObj), Abc_ObjChild1Data(pObj) );\n        }\n    }\n    Vec_PtrFree( vNodes );\n\n    // update the affected COs\n    pOutput = Abc_ObjNot( Abc_AigConst1(pMiter) ); \n    Abc_NtkForEachCo( pNtk, pObj, i )\n    {\n        if ( !Abc_NodeIsTravIdCurrent(pObj) )\n            continue;\n        // get the result of quantification\n        if ( i == Abc_NtkCoNum(pNtk) - 1 )\n        {\n            pOutput = Abc_AigAnd( (Abc_Aig_t *)pMiter-\u003epManFunc, pOutput, Abc_ObjChild0Data(pObj) );\n            pOutput = Abc_AigAnd( (Abc_Aig_t *)pMiter-\u003epManFunc, pOutput, Abc_ObjChild0Copy(pObj) );\n        }\n        else\n        {\n            pNext   = Abc_AigXor( (Abc_Aig_t *)pMiter-\u003epManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild0Data(pObj) );\n            pOutput = Abc_AigOr( (Abc_Aig_t *)pMiter-\u003epManFunc, pOutput, pNext );\n        }\n    }\n    // add the PO node and name\n    pObjNew = Abc_NtkCreatePo(pMiter);\n    Abc_ObjAddFanin( pObjNew, pOutput );\n    Abc_ObjAssignName( pObjNew, \"miter\", NULL );\n    // make sure everything is okay\n    if ( !Abc_NtkCheck( pMiter ) )\n    {\n        printf( \"Abc_NtkSensitivityMiter: The network check has failed.\\n\" );\n        Abc_NtkDelete( pMiter );\n        return NULL;\n    }\n    return pMiter;\n}",
+      "Draft": "func Abc_NtkSensitivityMiter(pNtk *Abc_Ntk_t, iVar int32) *Abc_Ntk_t {\n    var pMiter *Abc_Ntk_t;\n    var vNodes *Vec_Ptr_t;\n    var pObj, pNext, pFanin, pOutput, pObjNew *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    assert(iVar \u003c Abc_NtkCiNum(pNtk), \"iVar \u003c Abc_NtkCiNum(pNtk)\");\n\n    // duplicate the network\n    pMiter = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pMiter.pName = Extra_UtilStrsav(pNtk.pName);\n    pMiter.pSpec = Extra_UtilStrsav(pNtk.pSpec);\n\n    // assign the PIs\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk).pCopy = Abc_AigConst1(pMiter);\n    Abc_AigConst1(pNtk).pData = Abc_AigConst1(pMiter);\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.pCopy = Abc_NtkCreatePi( pMiter );\n        pObj.pData = pObj.pCopy;\n    }\n    Abc_NtkAddDummyPiNames( pMiter );\n\n    // assign the cofactors of the CI node to be constants\n    pObj = Abc_NtkCi( pNtk, iVar );\n    pObj.pCopy = Abc_ObjNot( Abc_AigConst1(pMiter) ); \n    pObj.pData = Abc_AigConst1(pMiter); \n\n    // collect the internal nodes\n    vNodes = Abc_NtkDfsReverseNodes( pNtk, \u0026pObj, 1 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        for  pNext = pObj? pObj.pCopy : pObj; (pObj != nil); pObj = pNext, pNext = pObj? pObj.pCopy : pObj  {\n            pFanin = Abc_ObjFanin0(pObj);\n            if !Abc_NodeIsTravIdCurrent(pFanin) {\n                pFanin.pData = Abc_NtkSensitivityMiter_rec( pMiter, pFanin ); }\n            pFanin = Abc_ObjFanin1(pObj);\n            if !Abc_NodeIsTravIdCurrent(pFanin) {\n                pFanin.pData = Abc_NtkSensitivityMiter_rec( pMiter, pFanin ); }\n            pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pMiter.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );\n            pObj.pData = Abc_AigAnd( (Abc_Aig_t *)pMiter.pManFunc, Abc_ObjChild0Data(pObj), Abc_ObjChild1Data(pObj) );\n        }\n    }\n    Vec_PtrFree( vNodes );\n\n    // update the affected COs\n    pOutput = Abc_ObjNot( Abc_AigConst1(pMiter) ); \n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if !Abc_NodeIsTravIdCurrent(pObj) {\n            continue; }\n        // get the result of quantification\n        if i == Abc_NtkCoNum(pNtk) - 1 {\n            pOutput = Abc_AigAnd( (Abc_Aig_t *)pMiter.pManFunc, pOutput, Abc_ObjChild0Data(pObj) );\n            pOutput = Abc_AigAnd( (Abc_Aig_t *)pMiter.pManFunc, pOutput, Abc_ObjChild0Copy(pObj) );\n        \n        } else {\n            pNext   = Abc_AigXor( (Abc_Aig_t *)pMiter.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild0Data(pObj) );\n            pOutput = Abc_AigOr( (Abc_Aig_t *)pMiter.pManFunc, pOutput, pNext );\n        }\n    }\n    // add the PO node and name\n    pObjNew = Abc_NtkCreatePo(pMiter);\n    Abc_ObjAddFanin( pObjNew, pOutput );\n    Abc_ObjAssignName( pObjNew, \"miter\", nil );\n    // make sure everything is okay\n    if !Abc_NtkCheck( pMiter ) {\n        fmt.Printf(\"Abc_NtkSensitivityMiter: The network check has failed.\\n\");\n        Abc_NtkDelete( pMiter );\n        return nil;\n    }\n    return pMiter;\n}"
+    },
+    {
+      "Name": "Abc_NtkSensitivity",
+      "Start": 5514,
+      "End": 7311,
+      "BodyStart": 5593,
+      "Original": "Vec_Int_t * Abc_NtkSensitivity( Abc_Ntk_t * pNtk, int nConfLim, int fVerbose )\n{\n    ProgressBar * pProgress;\n    Prove_Params_t Params, * pParams = \u0026Params;\n    Vec_Int_t * vResult = NULL;\n    Abc_Ntk_t * pMiter;\n    Abc_Obj_t * pObj;\n    int RetValue, i;\n    assert( Abc_NtkIsStrash(pNtk) );\n    assert( Abc_NtkLatchNum(pNtk) == 0 );\n    // set up solving parameters\n    Prove_ParamsSetDefault( pParams );\n    pParams-\u003enItersMax = 3;\n    pParams-\u003enMiteringLimitLast = nConfLim;\n    // iterate through the PIs\n    vResult = Vec_IntAlloc( 100 );\n    pProgress = Extra_ProgressBarStart( stdout, Abc_NtkCiNum(pNtk) );\n    Abc_NtkForEachCi( pNtk, pObj, i )\n    {\n        Extra_ProgressBarUpdate( pProgress, i, NULL );\n        // generate the sensitivity miter\n        pMiter = Abc_NtkSensitivityMiter( pNtk, i );\n        // solve the miter using CEC engine\n        RetValue = Abc_NtkIvyProve( \u0026pMiter, pParams );\n        if ( RetValue == -1 ) // undecided\n            Vec_IntPush( vResult, i );\n        else if ( RetValue == 0 )\n        {\n            int * pSimInfo = Abc_NtkVerifySimulatePattern( pMiter, pMiter-\u003epModel );\n            if ( pSimInfo[0] != 1 )\n                printf( \"ERROR in Abc_NtkMiterProve(): Generated counter-example is invalid.\\n\" );\n//            else\n//                printf( \"Networks are NOT EQUIVALENT.\\n\" );\n            ABC_FREE( pSimInfo );\n            Vec_IntPush( vResult, i );\n        }\n        Abc_NtkDelete( pMiter );\n    }\n    Extra_ProgressBarStop( pProgress );\n    if ( fVerbose )\n    {\n        printf( \"The outputs are sensitive to %d (out of %d) inputs:\\n\", \n            Vec_IntSize(vResult), Abc_NtkCiNum(pNtk) );\n        Vec_IntForEachEntry( vResult, RetValue, i )\n            printf( \"%d \", RetValue );\n        printf( \"\\n\" );\n    }\n    return vResult;\n}",
+      "Draft": "func Abc_NtkSensitivity(pNtk *Abc_Ntk_t, nConfLim int32, fVerbose int32) *Vec_Int_t {\n    var pProgress *ProgressBar;\n    var Params Prove_Params_t;\n    var pParams *Prove_Params_t = \u0026Params;\n    var vResult *Vec_Int_t  = nil;\n    var pMiter *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var RetValue, i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    assert(Abc_NtkLatchNum(pNtk) == 0, \"Abc_NtkLatchNum(pNtk) == 0\");\n    // set up solving parameters\n    Prove_ParamsSetDefault( pParams );\n    pParams.nItersMax = 3;\n    pParams.nMiteringLimitLast = nConfLim;\n    // iterate through the PIs\n    vResult = Vec_IntAlloc( 100 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCiNum(pNtk) );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        // generate the sensitivity miter\n        pMiter = Abc_NtkSensitivityMiter( pNtk, i );\n        // solve the miter using CEC engine\n        RetValue = Abc_NtkIvyProve( \u0026pMiter, pParams );\n        if RetValue == -1 { // undecided\n            Vec_IntPush( vResult, i );\n        } else if RetValue == 0 {\n            var pSimInfo *int32  = Abc_NtkVerifySimulatePattern( pMiter, pMiter.pModel );\n            if pSimInfo[0] != 1 {\n                fmt.Printf(\"ERROR in Abc_NtkMiterProve(): Generated counter-example is invalid.\\n\"); }\n//            else\n//                printf( \"Networks are NOT EQUIVALENT.\\n\" );\n            // inlining of macro ABC_FREE\n            ((pSimInfo) ? (free((char *) (pSimInfo)), (pSimInfo) = 0) : 0);\n            Vec_IntPush( vResult, i );\n        }\n        Abc_NtkDelete( pMiter );\n    }\n    Extra_ProgressBarStop( pProgress );\n    if fVerbose != 0 {\n        fmt.Printf(\"The outputs are sensitive to %d (out of %d) inputs:\\n\", Vec_IntSize(vResult), Abc_NtkCiNum(pNtk));\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vResult)) \u0026\u0026 (((RetValue) = Vec_IntEntry(vResult, i)), 1); i++  {\n            fmt.Printf(\"%d \", RetValue);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    return vResult;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::pointer-cast::1635",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1635,
+      "End": 1648
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::pointer-cast::3297",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3088,
+      "End": 3088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::pointer-cast::3849",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3643,
+      "End": 3656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::pointer-cast::3970",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3764,
+      "End": 3777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::pointer-cast::4524",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4217,
+      "End": 4230
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::pointer-cast::4625",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4318,
+      "End": 4331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::pointer-cast::4759",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4452,
+      "End": 4465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::pointer-cast::4875",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4568,
+      "End": 4581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::pointer-cast::7335",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6863,
+      "End": 6863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::Abc_NtkSensitivityMiter_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSensitivityMiter_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1285,
+      "End": 1722
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::ternary::Abc_NtkSensitivityMiter",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkSensitivityMiter",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2001,
+      "End": 5029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::Abc_NtkSensitivityMiter",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSensitivityMiter",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2001,
+      "End": 5029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::ternary::Abc_NtkSensitivity",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkSensitivity",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 5514,
+      "End": 7311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::Abc_NtkSensitivity",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSensitivity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5514,
+      "End": 7311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcSense.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 7558
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcSense.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abc_.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"proof/fraig/fraig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Copies the topmost levels of the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSensitivityMiter_rec(pNtkNew *Abc_Ntk_t, pNode *Abc_Obj_t) *Abc_Obj_t {\n    assert(!Abc_ObjIsComplement(pNode), \"!Abc_ObjIsComplement(pNode)\");\n    if pNode.pCopy {\n        return pNode.pCopy; }\n    Abc_NtkSensitivityMiter_rec( pNtkNew, Abc_ObjFanin0(pNode) );\n    Abc_NtkSensitivityMiter_rec( pNtkNew, Abc_ObjFanin1(pNode) );\n    return pNode.pCopy = Abc_AigAnd( (Abc_Aig_t *)pNtkNew.pManFunc, Abc_ObjChild0Copy(pNode), Abc_ObjChild1Copy(pNode) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates miter for the sensitivity analysis.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSensitivityMiter(pNtk *Abc_Ntk_t, iVar int32) *Abc_Ntk_t {\n    var pMiter *Abc_Ntk_t;\n    var vNodes *Vec_Ptr_t;\n    var pObj, pNext, pFanin, pOutput, pObjNew *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    assert(iVar \u003c Abc_NtkCiNum(pNtk), \"iVar \u003c Abc_NtkCiNum(pNtk)\");\n\n    // duplicate the network\n    pMiter = Abc_NtkAlloc( ABC_NTK_STRASH, ABC_FUNC_AIG, 1 );\n    pMiter.pName = Extra_UtilStrsav(pNtk.pName);\n    pMiter.pSpec = Extra_UtilStrsav(pNtk.pSpec);\n\n    // assign the PIs\n    Abc_NtkCleanCopy( pNtk );\n    Abc_AigConst1(pNtk).pCopy = Abc_AigConst1(pMiter);\n    Abc_AigConst1(pNtk).pData = Abc_AigConst1(pMiter);\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        pObj.pCopy = Abc_NtkCreatePi( pMiter );\n        pObj.pData = pObj.pCopy;\n    }\n    Abc_NtkAddDummyPiNames( pMiter );\n\n    // assign the cofactors of the CI node to be constants\n    pObj = Abc_NtkCi( pNtk, iVar );\n    pObj.pCopy = Abc_ObjNot( Abc_AigConst1(pMiter) ); \n    pObj.pData = Abc_AigConst1(pMiter); \n\n    // collect the internal nodes\n    vNodes = Abc_NtkDfsReverseNodes( pNtk, \u0026pObj, 1 );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Abc_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        for  pNext = pObj? pObj.pCopy : pObj; (pObj != nil); pObj = pNext, pNext = pObj? pObj.pCopy : pObj  {\n            pFanin = Abc_ObjFanin0(pObj);\n            if !Abc_NodeIsTravIdCurrent(pFanin) {\n                pFanin.pData = Abc_NtkSensitivityMiter_rec( pMiter, pFanin ); }\n            pFanin = Abc_ObjFanin1(pObj);\n            if !Abc_NodeIsTravIdCurrent(pFanin) {\n                pFanin.pData = Abc_NtkSensitivityMiter_rec( pMiter, pFanin ); }\n            pObj.pCopy = Abc_AigAnd( (Abc_Aig_t *)pMiter.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild1Copy(pObj) );\n            pObj.pData = Abc_AigAnd( (Abc_Aig_t *)pMiter.pManFunc, Abc_ObjChild0Data(pObj), Abc_ObjChild1Data(pObj) );\n        }\n    }\n    Vec_PtrFree( vNodes );\n\n    // update the affected COs\n    pOutput = Abc_ObjNot( Abc_AigConst1(pMiter) ); \n    // inlining of macro Abc_NtkForEachCo\n    for  i = 0; (i \u003c Abc_NtkCoNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCo(pNtk, i)), 1); i++  {\n        if !Abc_NodeIsTravIdCurrent(pObj) {\n            continue; }\n        // get the result of quantification\n        if i == Abc_NtkCoNum(pNtk) - 1 {\n            pOutput = Abc_AigAnd( (Abc_Aig_t *)pMiter.pManFunc, pOutput, Abc_ObjChild0Data(pObj) );\n            pOutput = Abc_AigAnd( (Abc_Aig_t *)pMiter.pManFunc, pOutput, Abc_ObjChild0Copy(pObj) );\n        \n        } else {\n            pNext   = Abc_AigXor( (Abc_Aig_t *)pMiter.pManFunc, Abc_ObjChild0Copy(pObj), Abc_ObjChild0Data(pObj) );\n            pOutput = Abc_AigOr( (Abc_Aig_t *)pMiter.pManFunc, pOutput, pNext );\n        }\n    }\n    // add the PO node and name\n    pObjNew = Abc_NtkCreatePo(pMiter);\n    Abc_ObjAddFanin( pObjNew, pOutput );\n    Abc_ObjAssignName( pObjNew, \"miter\", nil );\n    // make sure everything is okay\n    if !Abc_NtkCheck( pMiter ) {\n        fmt.Printf(\"Abc_NtkSensitivityMiter: The network check has failed.\\n\");\n        Abc_NtkDelete( pMiter );\n        return nil;\n    }\n    return pMiter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computing sensitivity of POs to POs under constraints.]\n\n  Description [The input network is a combinatonal AIG. The last output\n  is a constraint. The procedure returns the list of number of PIs, \n  such that at least one PO depends on this PI, under the constraint.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSensitivity(pNtk *Abc_Ntk_t, nConfLim int32, fVerbose int32) *Vec_Int_t {\n    var pProgress *ProgressBar;\n    var Params Prove_Params_t;\n    var pParams *Prove_Params_t = \u0026Params;\n    var vResult *Vec_Int_t  = nil;\n    var pMiter *Abc_Ntk_t;\n    var pObj *Abc_Obj_t;\n    var RetValue, i int32;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    assert(Abc_NtkLatchNum(pNtk) == 0, \"Abc_NtkLatchNum(pNtk) == 0\");\n    // set up solving parameters\n    Prove_ParamsSetDefault( pParams );\n    pParams.nItersMax = 3;\n    pParams.nMiteringLimitLast = nConfLim;\n    // iterate through the PIs\n    vResult = Vec_IntAlloc( 100 );\n    pProgress = Extra_ProgressBarStart( os.Stdout, Abc_NtkCiNum(pNtk) );\n    // inlining of macro Abc_NtkForEachCi\n    for  i = 0; (i \u003c Abc_NtkCiNum(pNtk)) \u0026\u0026 (((pObj) = Abc_NtkCi(pNtk, i)), 1); i++  {\n        Extra_ProgressBarUpdate( pProgress, i, nil );\n        // generate the sensitivity miter\n        pMiter = Abc_NtkSensitivityMiter( pNtk, i );\n        // solve the miter using CEC engine\n        RetValue = Abc_NtkIvyProve( \u0026pMiter, pParams );\n        if RetValue == -1 { // undecided\n            Vec_IntPush( vResult, i );\n        } else if RetValue == 0 {\n            var pSimInfo *int32  = Abc_NtkVerifySimulatePattern( pMiter, pMiter.pModel );\n            if pSimInfo[0] != 1 {\n                fmt.Printf(\"ERROR in Abc_NtkMiterProve(): Generated counter-example is invalid.\\n\"); }\n//            else\n//                printf( \"Networks are NOT EQUIVALENT.\\n\" );\n            // inlining of macro ABC_FREE\n            ((pSimInfo) ? (free((char *) (pSimInfo)), (pSimInfo) = 0) : 0);\n            Vec_IntPush( vResult, i );\n        }\n        Abc_NtkDelete( pMiter );\n    }\n    Extra_ProgressBarStop( pProgress );\n    if fVerbose != 0 {\n        fmt.Printf(\"The outputs are sensitive to %d (out of %d) inputs:\\n\", Vec_IntSize(vResult), Abc_NtkCiNum(pNtk));\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vResult)) \u0026\u0026 (((RetValue) = Vec_IntEntry(vResult, i)), 1); i++  {\n            fmt.Printf(\"%d \", RetValue);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    return vResult;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

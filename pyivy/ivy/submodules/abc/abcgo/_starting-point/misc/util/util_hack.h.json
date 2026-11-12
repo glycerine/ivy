@@ -1,0 +1,28 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/util_hack.h",
+  "SHA256": "fd351348aae09103ba2abf3506cff31fc0f526583f846fdddf7df614c061a673",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/util_hack.h::macro::NIL",
+      "Category": "macro-review",
+      "Symbol": "NIL",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 769,
+      "End": 809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/util_hack.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 1178
+    }
+  ],
+  "Draft": "package util\n\n/**CFile****************************************************************\n\n  FileName    [util_hack.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [This file is used to simulate the presence of \"util.h\".]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: util_hack.h,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n//#include \u003cmath.h\u003e\n\n//#include \"abc_global.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n// Original macro:\n// #define NIL(type)           ((type *) 0)\n\n\n#define util_cpu_time       Extra_CpuTime            \n#define getSoftDataLimit    Extra_GetSoftDataLimit   \n#define MMoutOfMemory       Extra_UtilMMoutOfMemory      \n\n// extern abctime              Extra_CpuTime();\n\n// extern int                  Extra_GetSoftDataLimit();\n\nextern void               (*Extra_UtilMMoutOfMemory)( long size );\n\n//ABC_NAMESPACE_HEADER_END\n\n\n"
+}

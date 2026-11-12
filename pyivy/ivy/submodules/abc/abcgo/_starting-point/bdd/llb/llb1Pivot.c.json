@@ -1,0 +1,276 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c",
+  "SHA256": "4528defc584cb31174bc5631a6df9bb13bdb5a6ab452e1acf32754c2e6f67f50",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 1684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsCand(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 9,
+        "ByteOffset": 3092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Obj =%5d.  Lev =%3d.  Fanout =%5d.  Count = %3d.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 133,
+        "Column": 5,
+        "ByteOffset": 3615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ObjIsNode(pObj) );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Llb_ManTracePaths_rec",
+      "Start": 1239,
+      "End": 1929,
+      "BodyStart": 1320,
+      "Original": "int Llb_ManTracePaths_rec( Aig_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pPivot )\n{\n    Aig_Obj_t * pFanout;\n    int k, iFan = -1;\n    if ( Aig_ObjIsTravIdPrevious(p, pObj) )\n        return 0;\n    if ( Aig_ObjIsTravIdCurrent(p, pObj) )\n        return 1;\n    if ( Saig_ObjIsLi(p, pObj) )\n        return 0;\n    if ( Saig_ObjIsPo(p, pObj) )\n        return 0;\n    if ( pObj == pPivot )\n        return 1;\n    assert( Aig_ObjIsCand(pObj) );\n    Aig_ObjForEachFanout( p, pObj, pFanout, iFan, k )\n        if ( !Llb_ManTracePaths_rec( p, pFanout, pPivot ) )\n        {\n            Aig_ObjSetTravIdPrevious(p, pObj);\n            return 0;\n        }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    return 1;\n}",
+      "Draft": "func Llb_ManTracePaths_rec(p *Aig_Man_t, pObj *Aig_Obj_t, pPivot *Aig_Obj_t) int32 {\n    var pFanout *Aig_Obj_t;\n    var k int32;\n    var iFan int32 = -1;\n    if Aig_ObjIsTravIdPrevious(p, pObj) {\n        return 0; }\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return 1; }\n    if Saig_ObjIsLi(p, pObj) {\n        return 0; }\n    if Saig_ObjIsPo(p, pObj) {\n        return 0; }\n    if pObj == pPivot {\n        return 1; }\n    assert(Aig_ObjIsCand(pObj), \"Aig_ObjIsCand(pObj)\");\n    Aig_ObjForEachFanout( p, pObj, pFanout, iFan, k )\n        if !(Llb_ManTracePaths_rec( p, pFanout, pPivot ) != 0) {\n            Aig_ObjSetTravIdPrevious(p, pObj);\n            return 0;\n        }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    return 1;\n}"
+    },
+    {
+      "Name": "Llb_ManTracePaths",
+      "Start": 2165,
+      "End": 2546,
+      "BodyStart": 2224,
+      "Original": "int Llb_ManTracePaths( Aig_Man_t * p, Aig_Obj_t * pPivot )\n{\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n    Aig_ManIncrementTravId( p ); // prev = visited with path to LI  (value 0)\n    Aig_ManIncrementTravId( p ); // cur  = visited w/o  path to LI  (value 1)\n    Saig_ManForEachLo( p, pObj, i )\n        Counter += Llb_ManTracePaths_rec( p, pObj, pPivot );\n    return Counter;\n}",
+      "Draft": "func Llb_ManTracePaths(p *Aig_Man_t, pPivot *Aig_Obj_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    Aig_ManIncrementTravId( p ); // prev = visited with path to LI  (value 0)\n    Aig_ManIncrementTravId( p ); // cur  = visited w/o  path to LI  (value 1)\n    Saig_ManForEachLo( p, pObj, i )\n        Counter += Llb_ManTracePaths_rec( p, pObj, pPivot );\n    return Counter;\n}"
+    },
+    {
+      "Name": "Llb_ManTestCuts",
+      "Start": 2782,
+      "End": 3209,
+      "BodyStart": 2820,
+      "Original": "void Llb_ManTestCuts( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i, Count;\n    Aig_ManFanoutStart( p );\n    Aig_ManForEachNode( p, pObj, i )\n    {\n        if ( Aig_ObjRefs(pObj) \u003c= 1 )\n            continue;\n        Count = Llb_ManTracePaths( p, pObj );\n        printf( \"Obj =%5d.  Lev =%3d.  Fanout =%5d.  Count = %3d.\\n\", \n            i, Aig_ObjLevel(pObj), Aig_ObjRefs(pObj), Count );\n    }\n    Aig_ManFanoutStop( p );\n}",
+      "Draft": "func Llb_ManTestCuts(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i, Count int32;\n    Aig_ManFanoutStart( p );\n    Aig_ManForEachNode( p, pObj, i )\n    {\n        if Aig_ObjRefs(pObj) \u003c= 1 {\n            continue; }\n        Count = Llb_ManTracePaths( p, pObj );\n        fmt.Printf(\"Obj =%5d.  Lev =%3d.  Fanout =%5d.  Count = %3d.\\n\", i, Aig_ObjLevel(pObj), Aig_ObjRefs(pObj), Count);\n    }\n    Aig_ManFanoutStop( p );\n}"
+    },
+    {
+      "Name": "Llb_ManLabelLiCones_rec",
+      "Start": 3445,
+      "End": 3719,
+      "BodyStart": 3509,
+      "Original": "void Llb_ManLabelLiCones_rec( Aig_Man_t * p, Aig_Obj_t * pObj )\n{\n    if ( pObj-\u003efMarkB )\n        return;\n    pObj-\u003efMarkB = 1;\n    assert( Aig_ObjIsNode(pObj) );\n    Llb_ManLabelLiCones_rec( p, Aig_ObjFanin0(pObj) );\n    Llb_ManLabelLiCones_rec( p, Aig_ObjFanin1(pObj) );\n}",
+      "Draft": "func Llb_ManLabelLiCones_rec(p *Aig_Man_t, pObj *Aig_Obj_t) {\n    if pObj.fMarkB {\n        return; }\n    pObj.fMarkB = 1;\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Llb_ManLabelLiCones_rec( p, Aig_ObjFanin0(pObj) );\n    Llb_ManLabelLiCones_rec( p, Aig_ObjFanin1(pObj) );\n}"
+    },
+    {
+      "Name": "Llb_ManLabelLiCones",
+      "Start": 3985,
+      "End": 4297,
+      "BodyStart": 4027,
+      "Original": "void Llb_ManLabelLiCones( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    // mark const and PIs\n    Aig_ManConst1(p)-\u003efMarkB = 1;\n    Aig_ManForEachCi( p, pObj, i )\n        pObj-\u003efMarkB = 1;\n    // mark cones\n    Saig_ManForEachLi( p, pObj, i )\n        Llb_ManLabelLiCones_rec( p, Aig_ObjFanin0(pObj) );\n}",
+      "Draft": "func Llb_ManLabelLiCones(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // mark const and PIs\n    Aig_ManConst1(p).fMarkB = 1;\n    Aig_ManForEachCi( p, pObj, i )\n        pObj.fMarkB = 1;\n    // mark cones\n    Saig_ManForEachLi( p, pObj, i )\n        Llb_ManLabelLiCones_rec( p, Aig_ObjFanin0(pObj) );\n}"
+    },
+    {
+      "Name": "Llb_ManMarkInternalPivots",
+      "Start": 4563,
+      "End": 5389,
+      "BodyStart": 4611,
+      "Original": "void Llb_ManMarkInternalPivots( Aig_Man_t * p )\n{\n    Vec_Ptr_t * vMuxes;\n    Aig_Obj_t * pObj;\n    int i, Counter = 0;\n\n    // remove refs due to MUXes\n    vMuxes = Aig_ManMuxesCollect( p );\n    Aig_ManMuxesDeref( p, vMuxes );\n\n    // mark nodes feeding into LIs\n    Aig_ManCleanMarkB( p );\n    Llb_ManLabelLiCones( p );\n\n    // mark internal nodes\n    Aig_ManFanoutStart( p );\n    Aig_ManForEachNode( p, pObj, i )\n        if ( pObj-\u003efMarkB \u0026\u0026 pObj-\u003enRefs \u003e 1 )\n        {\n            if ( Llb_ManTracePaths(p, pObj) \u003e 0 )\n                pObj-\u003efMarkA = 1;\n            Counter++;\n        }\n    Aig_ManFanoutStop( p );\n//    printf( \"TracePath tried = %d.\\n\", Counter );\n\n    // mark nodes feeding into LIs\n    Aig_ManCleanMarkB( p );\n\n    // add refs due to MUXes\n    Aig_ManMuxesRef( p, vMuxes );\n    Vec_PtrFree( vMuxes );\n}",
+      "Draft": "func Llb_ManMarkInternalPivots(p *Aig_Man_t) {\n    var vMuxes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n\n    // remove refs due to MUXes\n    vMuxes = Aig_ManMuxesCollect( p );\n    Aig_ManMuxesDeref( p, vMuxes );\n\n    // mark nodes feeding into LIs\n    Aig_ManCleanMarkB( p );\n    Llb_ManLabelLiCones( p );\n\n    // mark internal nodes\n    Aig_ManFanoutStart( p );\n    Aig_ManForEachNode( p, pObj, i )\n        if pObj.fMarkB \u0026\u0026 pObj.nRefs \u003e 1 {\n            if Llb_ManTracePaths(p, pObj) \u003e 0 {\n                pObj.fMarkA = 1; }\n            Counter++;\n        }\n    Aig_ManFanoutStop( p );\n//    printf( \"TracePath tried = %d.\\n\", Counter );\n\n    // mark nodes feeding into LIs\n    Aig_ManCleanMarkB( p );\n\n    // add refs due to MUXes\n    Aig_ManMuxesRef( p, vMuxes );\n    Vec_PtrFree( vMuxes );\n}"
+    },
+    {
+      "Name": "Llb_ManMarkPivotNodes",
+      "Start": 5655,
+      "End": 6447,
+      "BodyStart": 5724,
+      "Original": "Vec_Int_t * Llb_ManMarkPivotNodes( Aig_Man_t * p, int fUseInternal )\n{\n    Vec_Int_t * vVar2Obj;\n    Aig_Obj_t * pObj;\n    int i;\n    // mark inputs/outputs\n    Aig_ManForEachCi( p, pObj, i )\n        pObj-\u003efMarkA = 1;\n    Saig_ManForEachLi( p, pObj, i )\n        pObj-\u003efMarkA = 1;\n\n    // mark internal pivot nodes\n    if ( fUseInternal )\n        Llb_ManMarkInternalPivots( p );\n\n    // assign variable numbers\n    Aig_ManConst1(p)-\u003efMarkA = 0;\n    vVar2Obj = Vec_IntAlloc( 100 );\n    Aig_ManForEachCi( p, pObj, i )\n        Vec_IntPush( vVar2Obj, Aig_ObjId(pObj) );\n    Aig_ManForEachNode( p, pObj, i )\n        if ( pObj-\u003efMarkA )\n            Vec_IntPush( vVar2Obj, Aig_ObjId(pObj) );\n    Saig_ManForEachLi( p, pObj, i )\n        Vec_IntPush( vVar2Obj, Aig_ObjId(pObj) );\n    return vVar2Obj;\n}",
+      "Draft": "func Llb_ManMarkPivotNodes(p *Aig_Man_t, fUseInternal int32) *Vec_Int_t {\n    var vVar2Obj *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // mark inputs/outputs\n    Aig_ManForEachCi( p, pObj, i )\n        pObj.fMarkA = 1;\n    Saig_ManForEachLi( p, pObj, i )\n        pObj.fMarkA = 1;\n\n    // mark internal pivot nodes\n    if fUseInternal != 0 {\n        Llb_ManMarkInternalPivots( p ); }\n\n    // assign variable numbers\n    Aig_ManConst1(p).fMarkA = 0;\n    vVar2Obj = Vec_IntAlloc( 100 );\n    Aig_ManForEachCi( p, pObj, i )\n        Vec_IntPush( vVar2Obj, Aig_ObjId(pObj) );\n    Aig_ManForEachNode( p, pObj, i )\n        if ( pObj.fMarkA )\n            Vec_IntPush( vVar2Obj, Aig_ObjId(pObj) );\n    Saig_ManForEachLi( p, pObj, i )\n        Vec_IntPush( vVar2Obj, Aig_ObjId(pObj) );\n    return vVar2Obj;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::Llb_ManTracePaths_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManTracePaths_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1239,
+      "End": 1929
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::Llb_ManTracePaths",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManTracePaths",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2165,
+      "End": 2546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::Llb_ManTestCuts",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManTestCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2782,
+      "End": 3209
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::Llb_ManLabelLiCones_rec",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManLabelLiCones_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3445,
+      "End": 3719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::Llb_ManLabelLiCones",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManLabelLiCones",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3985,
+      "End": 4297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::Llb_ManMarkInternalPivots",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManMarkInternalPivots",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4563,
+      "End": 5389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::Llb_ManMarkPivotNodes",
+      "Category": "semantic-review",
+      "Symbol": "Llb_ManMarkPivotNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5655,
+      "End": 6447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6694
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::macro-inline::1677",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1677,
+      "End": 1726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::macro-inline::2432",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2432,
+      "End": 2463
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::macro-inline::2895",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2895,
+      "End": 2927
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::macro-inline::4126",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4126,
+      "End": 4156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::macro-inline::4205",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4205,
+      "End": 4236
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::macro-inline::4946",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4946,
+      "End": 4978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::macro-inline::5816",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5816,
+      "End": 5846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::macro-inline::5877",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5877,
+      "End": 5908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::macro-inline::6139",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6139,
+      "End": 6169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::macro-inline::6224",
+      "Category": "macro-inline-review",
+      "Symbol": "Aig_ManForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6224,
+      "End": 6256
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/llb/llb1Pivot.c::macro-inline::6343",
+      "Category": "macro-inline-review",
+      "Symbol": "Saig_ManForEachLi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6343,
+      "End": 6374
+    }
+  ],
+  "Draft": "package llb\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [llb1Pivot.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [BDD based reachability.]\n\n  Synopsis    [Determining pivot variables.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: llb1Pivot.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"llbInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManTracePaths_rec(p *Aig_Man_t, pObj *Aig_Obj_t, pPivot *Aig_Obj_t) int32 {\n    var pFanout *Aig_Obj_t;\n    var k int32;\n    var iFan int32 = -1;\n    if Aig_ObjIsTravIdPrevious(p, pObj) {\n        return 0; }\n    if Aig_ObjIsTravIdCurrent(p, pObj) {\n        return 1; }\n    if Saig_ObjIsLi(p, pObj) {\n        return 0; }\n    if Saig_ObjIsPo(p, pObj) {\n        return 0; }\n    if pObj == pPivot {\n        return 1; }\n    assert(Aig_ObjIsCand(pObj), \"Aig_ObjIsCand(pObj)\");\n    Aig_ObjForEachFanout( p, pObj, pFanout, iFan, k )\n        if !(Llb_ManTracePaths_rec( p, pFanout, pPivot ) != 0) {\n            Aig_ObjSetTravIdPrevious(p, pObj);\n            return 0;\n        }\n    Aig_ObjSetTravIdCurrent(p, pObj);\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManTracePaths(p *Aig_Man_t, pPivot *Aig_Obj_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n    Aig_ManIncrementTravId( p ); // prev = visited with path to LI  (value 0)\n    Aig_ManIncrementTravId( p ); // cur  = visited w/o  path to LI  (value 1)\n    Saig_ManForEachLo( p, pObj, i )\n        Counter += Llb_ManTracePaths_rec( p, pObj, pPivot );\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManTestCuts(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i, Count int32;\n    Aig_ManFanoutStart( p );\n    Aig_ManForEachNode( p, pObj, i )\n    {\n        if Aig_ObjRefs(pObj) \u003c= 1 {\n            continue; }\n        Count = Llb_ManTracePaths( p, pObj );\n        fmt.Printf(\"Obj =%5d.  Lev =%3d.  Fanout =%5d.  Count = %3d.\\n\", i, Aig_ObjLevel(pObj), Aig_ObjRefs(pObj), Count);\n    }\n    Aig_ManFanoutStop( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManLabelLiCones_rec(p *Aig_Man_t, pObj *Aig_Obj_t) {\n    if pObj.fMarkB {\n        return; }\n    pObj.fMarkB = 1;\n    assert(Aig_ObjIsNode(pObj), \"Aig_ObjIsNode(pObj)\");\n    Llb_ManLabelLiCones_rec( p, Aig_ObjFanin0(pObj) );\n    Llb_ManLabelLiCones_rec( p, Aig_ObjFanin1(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Determine starting cut-points.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManLabelLiCones(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // mark const and PIs\n    Aig_ManConst1(p).fMarkB = 1;\n    Aig_ManForEachCi( p, pObj, i )\n        pObj.fMarkB = 1;\n    // mark cones\n    Saig_ManForEachLi( p, pObj, i )\n        Llb_ManLabelLiCones_rec( p, Aig_ObjFanin0(pObj) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Determine starting cut-points.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManMarkInternalPivots(p *Aig_Man_t) {\n    var vMuxes *Vec_Ptr_t;\n    var pObj *Aig_Obj_t;\n    var i, Counter int32;\n\n    // remove refs due to MUXes\n    vMuxes = Aig_ManMuxesCollect( p );\n    Aig_ManMuxesDeref( p, vMuxes );\n\n    // mark nodes feeding into LIs\n    Aig_ManCleanMarkB( p );\n    Llb_ManLabelLiCones( p );\n\n    // mark internal nodes\n    Aig_ManFanoutStart( p );\n    Aig_ManForEachNode( p, pObj, i )\n        if pObj.fMarkB \u0026\u0026 pObj.nRefs \u003e 1 {\n            if Llb_ManTracePaths(p, pObj) \u003e 0 {\n                pObj.fMarkA = 1; }\n            Counter++;\n        }\n    Aig_ManFanoutStop( p );\n//    printf( \"TracePath tried = %d.\\n\", Counter );\n\n    // mark nodes feeding into LIs\n    Aig_ManCleanMarkB( p );\n\n    // add refs due to MUXes\n    Aig_ManMuxesRef( p, vMuxes );\n    Vec_PtrFree( vMuxes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Determine starting cut-points.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Llb_ManMarkPivotNodes(p *Aig_Man_t, fUseInternal int32) *Vec_Int_t {\n    var vVar2Obj *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    // mark inputs/outputs\n    Aig_ManForEachCi( p, pObj, i )\n        pObj.fMarkA = 1;\n    Saig_ManForEachLi( p, pObj, i )\n        pObj.fMarkA = 1;\n\n    // mark internal pivot nodes\n    if fUseInternal != 0 {\n        Llb_ManMarkInternalPivots( p ); }\n\n    // assign variable numbers\n    Aig_ManConst1(p).fMarkA = 0;\n    vVar2Obj = Vec_IntAlloc( 100 );\n    Aig_ManForEachCi( p, pObj, i )\n        Vec_IntPush( vVar2Obj, Aig_ObjId(pObj) );\n    Aig_ManForEachNode( p, pObj, i )\n        if ( pObj.fMarkA )\n            Vec_IntPush( vVar2Obj, Aig_ObjId(pObj) );\n    Saig_ManForEachLi( p, pObj, i )\n        Vec_IntPush( vVar2Obj, Aig_ObjId(pObj) );\n    return vVar2Obj;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

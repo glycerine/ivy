@@ -1,0 +1,789 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h",
+  "SHA256": "a1949dbb70e4108072152ab457175387ec051033552ba80847382025bb51a408",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 173,
+        "Column": 124,
+        "ByteOffset": 7408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Mpm_CutFetch(p *Mpm_Man_t, h int32) *Mpm_Cut_t { var pCut *Mpm_Cut_t  = (Mpm_Cut_t *)Mmr_StepEntry( p.pManCuts, h );  assert( Mpm_CutWordNum(pCut.nLeaves) == (h \u0026 p.pManCuts.uMask) ); return pCut; }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mpm_ObjCutBest",
+      "Start": 6951,
+      "End": 7107,
+      "BodyStart": 7040,
+      "Original": "static inline int         Mpm_ObjCutBest( Mpm_Man_t * p, Mig_Obj_t * pObj )              { return Vec_IntEntry(\u0026p-\u003evCutBests, Mig_ObjId(pObj));            }",
+      "Draft": "func Mpm_ObjCutBest(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vCutBests, Mig_ObjId(pObj));            }"
+    },
+    {
+      "Name": "Mpm_ObjSetCutBest",
+      "Start": 7108,
+      "End": 7264,
+      "BodyStart": 7197,
+      "Original": "static inline void        Mpm_ObjSetCutBest( Mpm_Man_t * p, Mig_Obj_t * pObj, int i )    { Vec_IntWriteEntry(\u0026p-\u003evCutBests, Mig_ObjId(pObj), i);           }",
+      "Draft": "func Mpm_ObjSetCutBest(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vCutBests, Mig_ObjId(pObj), i);           }"
+    },
+    {
+      "Name": "Mpm_CutWordNum",
+      "Start": 7266,
+      "End": 7422,
+      "BodyStart": 7355,
+      "Original": "static inline int         Mpm_CutWordNum( int nLeaves )                                  { return ((sizeof(Mpm_Cut_t) + (nLeaves \u003c\u003c 2)) \u003e\u003e 3);             }",
+      "Draft": "func Mpm_CutWordNum(nLeaves int32) int32 { return ((sizeof(Mpm_Cut_t) + (nLeaves \u003c\u003c 2)) \u003e\u003e 3);             }"
+    },
+    {
+      "Name": "Mpm_CutFetch",
+      "Start": 7423,
+      "End": 7663,
+      "BodyStart": 7512,
+      "Original": "static inline Mpm_Cut_t * Mpm_CutFetch( Mpm_Man_t * p, int h )                           { Mpm_Cut_t * pCut = (Mpm_Cut_t *)Mmr_StepEntry( p-\u003epManCuts, h );  assert( Mpm_CutWordNum(pCut-\u003enLeaves) == (h \u0026 p-\u003epManCuts-\u003euMask) ); return pCut; }",
+      "Draft": "func Mpm_CutFetch(p *Mpm_Man_t, h int32) *Mpm_Cut_t { var pCut *Mpm_Cut_t  = (Mpm_Cut_t *)Mmr_StepEntry( p.pManCuts, h );  assert(Mpm_CutWordNum(pCut.nLeaves) == (h \u0026 p.pManCuts.uMask), \"Mpm_CutWordNum(pCut.nLeaves) == (h \u0026 p.pManCuts.uMask)\"); return pCut; }"
+    },
+    {
+      "Name": "Mpm_ObjCutBestP",
+      "Start": 7664,
+      "End": 7820,
+      "BodyStart": 7753,
+      "Original": "static inline Mpm_Cut_t * Mpm_ObjCutBestP( Mpm_Man_t * p, Mig_Obj_t * pObj )             { return Mpm_CutFetch( p, Mpm_ObjCutBest(p, pObj) );              }",
+      "Draft": "func Mpm_ObjCutBestP(p *Mpm_Man_t, pObj *Mig_Obj_t) *Mpm_Cut_t { return Mpm_CutFetch( p, Mpm_ObjCutBest(p, pObj) );              }"
+    },
+    {
+      "Name": "Mpm_ObjCutList",
+      "Start": 7822,
+      "End": 7978,
+      "BodyStart": 7911,
+      "Original": "static inline int         Mpm_ObjCutList( Mpm_Man_t * p, Mig_Obj_t * pObj )              { return Vec_IntEntry(\u0026p-\u003evCutLists, Mig_ObjId(pObj));            }",
+      "Draft": "func Mpm_ObjCutList(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vCutLists, Mig_ObjId(pObj));            }"
+    },
+    {
+      "Name": "Mpm_ObjCutListP",
+      "Start": 7979,
+      "End": 8135,
+      "BodyStart": 8068,
+      "Original": "static inline int *       Mpm_ObjCutListP( Mpm_Man_t * p, Mig_Obj_t * pObj )             { return Vec_IntEntryP(\u0026p-\u003evCutLists, Mig_ObjId(pObj));           }",
+      "Draft": "func Mpm_ObjCutListP(p *Mpm_Man_t, pObj *Mig_Obj_t) *int32 { return Vec_IntEntryP(\u0026p.vCutLists, Mig_ObjId(pObj));           }"
+    },
+    {
+      "Name": "Mpm_ObjSetCutList",
+      "Start": 8136,
+      "End": 8292,
+      "BodyStart": 8225,
+      "Original": "static inline void        Mpm_ObjSetCutList( Mpm_Man_t * p, Mig_Obj_t * pObj, int i )    { Vec_IntWriteEntry(\u0026p-\u003evCutLists, Mig_ObjId(pObj), i);           }",
+      "Draft": "func Mpm_ObjSetCutList(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vCutLists, Mig_ObjId(pObj), i);           }"
+    },
+    {
+      "Name": "Mpm_CutLeafNum",
+      "Start": 8294,
+      "End": 8450,
+      "BodyStart": 8383,
+      "Original": "static inline int         Mpm_CutLeafNum( Mpm_Cut_t * pCut )                             { return pCut-\u003enLeaves;                                           }",
+      "Draft": "func Mpm_CutLeafNum(pCut *Mpm_Cut_t) int32 { return pCut.nLeaves;                                           }"
+    },
+    {
+      "Name": "Mpm_CutTruth",
+      "Start": 8451,
+      "End": 8607,
+      "BodyStart": 8540,
+      "Original": "static inline word *      Mpm_CutTruth( Mpm_Man_t * p, int iFunc )                       { return Vec_MemReadEntry(p-\u003evTtMem, iFunc);                      }",
+      "Draft": "func Mpm_CutTruth(p *Mpm_Man_t, iFunc int32) *word { return Vec_MemReadEntry(p.vTtMem, iFunc);                      }"
+    },
+    {
+      "Name": "Mig_ObjMigRefNum",
+      "Start": 8609,
+      "End": 8765,
+      "BodyStart": 8698,
+      "Original": "static inline int         Mig_ObjMigRefNum( Mpm_Man_t * p, Mig_Obj_t * pObj )            { return Vec_IntEntry(\u0026p-\u003evMigRefs, Mig_ObjId(pObj));             }",
+      "Draft": "func Mig_ObjMigRefNum(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vMigRefs, Mig_ObjId(pObj));             }"
+    },
+    {
+      "Name": "Mig_ObjMigRefDec",
+      "Start": 8766,
+      "End": 8922,
+      "BodyStart": 8855,
+      "Original": "static inline int         Mig_ObjMigRefDec( Mpm_Man_t * p, Mig_Obj_t * pObj )            { return Vec_IntAddToEntry(\u0026p-\u003evMigRefs, Mig_ObjId(pObj), -1);    }",
+      "Draft": "func Mig_ObjMigRefDec(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntAddToEntry(\u0026p.vMigRefs, Mig_ObjId(pObj), -1);    }"
+    },
+    {
+      "Name": "Mpm_ManCleanMapRefs",
+      "Start": 8924,
+      "End": 9080,
+      "BodyStart": 9013,
+      "Original": "static inline void        Mpm_ManCleanMapRefs( Mpm_Man_t * p )                           { Vec_IntFill( \u0026p-\u003evMapRefs, Mig_ManObjNum(p-\u003epMig), 0 );         }",
+      "Draft": "func Mpm_ManCleanMapRefs(p *Mpm_Man_t) { Vec_IntFill( \u0026p.vMapRefs, Mig_ManObjNum(p.pMig), 0 );         }"
+    },
+    {
+      "Name": "Mpm_ObjMapRef",
+      "Start": 9081,
+      "End": 9237,
+      "BodyStart": 9170,
+      "Original": "static inline int         Mpm_ObjMapRef( Mpm_Man_t * p, Mig_Obj_t * pObj )               { return Vec_IntEntry(\u0026p-\u003evMapRefs, Mig_ObjId(pObj));             }",
+      "Draft": "func Mpm_ObjMapRef(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vMapRefs, Mig_ObjId(pObj));             }"
+    },
+    {
+      "Name": "Mpm_ObjSetMapRef",
+      "Start": 9238,
+      "End": 9394,
+      "BodyStart": 9327,
+      "Original": "static inline void        Mpm_ObjSetMapRef( Mpm_Man_t * p, Mig_Obj_t * pObj, int i )     { Vec_IntWriteEntry(\u0026p-\u003evMapRefs, Mig_ObjId(pObj), i);            }",
+      "Draft": "func Mpm_ObjSetMapRef(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vMapRefs, Mig_ObjId(pObj), i);            }"
+    },
+    {
+      "Name": "Mpm_ObjEstRef",
+      "Start": 9397,
+      "End": 9553,
+      "BodyStart": 9486,
+      "Original": "static inline int         Mpm_ObjEstRef( Mpm_Man_t * p, Mig_Obj_t * pObj )               { return Vec_IntEntry(\u0026p-\u003evEstRefs, Mig_ObjId(pObj));             }",
+      "Draft": "func Mpm_ObjEstRef(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vEstRefs, Mig_ObjId(pObj));             }"
+    },
+    {
+      "Name": "Mpm_ObjSetEstRef",
+      "Start": 9554,
+      "End": 9710,
+      "BodyStart": 9643,
+      "Original": "static inline void        Mpm_ObjSetEstRef( Mpm_Man_t * p, Mig_Obj_t * pObj, int i )     { Vec_IntWriteEntry(\u0026p-\u003evEstRefs, Mig_ObjId(pObj), i);            }",
+      "Draft": "func Mpm_ObjSetEstRef(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vEstRefs, Mig_ObjId(pObj), i);            }"
+    },
+    {
+      "Name": "Mpm_ManCleanRequired",
+      "Start": 9712,
+      "End": 9868,
+      "BodyStart": 9801,
+      "Original": "static inline void        Mpm_ManCleanRequired( Mpm_Man_t * p )                          { Vec_IntFill(\u0026p-\u003evRequireds,Mig_ManObjNum(p-\u003epMig),ABC_INFINITY);}",
+      "Draft": "func Mpm_ManCleanRequired(p *Mpm_Man_t) { Vec_IntFill(\u0026p.vRequireds,Mig_ManObjNum(p.pMig),ABC_INFINITY);}"
+    },
+    {
+      "Name": "Mpm_ObjRequired",
+      "Start": 9869,
+      "End": 10025,
+      "BodyStart": 9958,
+      "Original": "static inline int         Mpm_ObjRequired( Mpm_Man_t * p, Mig_Obj_t * pObj )             { return Vec_IntEntry(\u0026p-\u003evRequireds, Mig_ObjId(pObj));           }",
+      "Draft": "func Mpm_ObjRequired(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vRequireds, Mig_ObjId(pObj));           }"
+    },
+    {
+      "Name": "Mpm_ObjSetRequired",
+      "Start": 10026,
+      "End": 10182,
+      "BodyStart": 10115,
+      "Original": "static inline void        Mpm_ObjSetRequired( Mpm_Man_t * p, Mig_Obj_t * pObj, int i )   { Vec_IntWriteEntry(\u0026p-\u003evRequireds, Mig_ObjId(pObj), i);          }",
+      "Draft": "func Mpm_ObjSetRequired(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vRequireds, Mig_ObjId(pObj), i);          }"
+    },
+    {
+      "Name": "Mpm_ObjTime",
+      "Start": 10184,
+      "End": 10340,
+      "BodyStart": 10273,
+      "Original": "static inline int         Mpm_ObjTime( Mpm_Man_t * p, Mig_Obj_t * pObj )                 { return Vec_IntEntry(\u0026p-\u003evTimes, Mig_ObjId(pObj));               }",
+      "Draft": "func Mpm_ObjTime(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vTimes, Mig_ObjId(pObj));               }"
+    },
+    {
+      "Name": "Mpm_ObjSetTime",
+      "Start": 10341,
+      "End": 10497,
+      "BodyStart": 10430,
+      "Original": "static inline void        Mpm_ObjSetTime( Mpm_Man_t * p, Mig_Obj_t * pObj, int i )       { Vec_IntWriteEntry(\u0026p-\u003evTimes, Mig_ObjId(pObj), i);              }",
+      "Draft": "func Mpm_ObjSetTime(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vTimes, Mig_ObjId(pObj), i);              }"
+    },
+    {
+      "Name": "Mpm_ObjArea",
+      "Start": 10499,
+      "End": 10655,
+      "BodyStart": 10588,
+      "Original": "static inline int         Mpm_ObjArea( Mpm_Man_t * p, Mig_Obj_t * pObj )                 { return Vec_IntEntry(\u0026p-\u003evAreas, Mig_ObjId(pObj));               }",
+      "Draft": "func Mpm_ObjArea(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vAreas, Mig_ObjId(pObj));               }"
+    },
+    {
+      "Name": "Mpm_ObjSetArea",
+      "Start": 10656,
+      "End": 10812,
+      "BodyStart": 10745,
+      "Original": "static inline void        Mpm_ObjSetArea( Mpm_Man_t * p, Mig_Obj_t * pObj, int i )       { Vec_IntWriteEntry(\u0026p-\u003evAreas, Mig_ObjId(pObj), i);              }",
+      "Draft": "func Mpm_ObjSetArea(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vAreas, Mig_ObjId(pObj), i);              }"
+    },
+    {
+      "Name": "Mpm_ObjEdge",
+      "Start": 10814,
+      "End": 10970,
+      "BodyStart": 10903,
+      "Original": "static inline int         Mpm_ObjEdge( Mpm_Man_t * p, Mig_Obj_t * pObj )                 { return Vec_IntEntry(\u0026p-\u003evEdges, Mig_ObjId(pObj));               }",
+      "Draft": "func Mpm_ObjEdge(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vEdges, Mig_ObjId(pObj));               }"
+    },
+    {
+      "Name": "Mpm_ObjSetEdge",
+      "Start": 10971,
+      "End": 11127,
+      "BodyStart": 11060,
+      "Original": "static inline void        Mpm_ObjSetEdge( Mpm_Man_t * p, Mig_Obj_t * pObj, int i )       { Vec_IntWriteEntry(\u0026p-\u003evEdges, Mig_ObjId(pObj), i);              }",
+      "Draft": "func Mpm_ObjSetEdge(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vEdges, Mig_ObjId(pObj), i);              }"
+    },
+    {
+      "Name": "Mpm_VarsClear",
+      "Start": 11129,
+      "End": 11285,
+      "BodyStart": 11218,
+      "Original": "static inline void        Mpm_VarsClear( int * V2P, int * P2V, int nVars )               { int i; for ( i = 0; i \u003c nVars; i++ ) V2P[i] = P2V[i] = i;       }",
+      "Draft": "func Mpm_VarsClear(V2P *int32, P2V *int32, nVars int32) { var i int32; for  i = 0; i \u003c nVars; i++  { V2P[i] = P2V[i] = i; }       }"
+    },
+    {
+      "Name": "Mpm_VarsSwap",
+      "Start": 11286,
+      "End": 11497,
+      "BodyStart": 11375,
+      "Original": "static inline void        Mpm_VarsSwap( int * V2P, int * P2V, int iVar, int jVar )       { V2P[P2V[iVar]] = jVar; V2P[P2V[jVar]] = iVar; P2V[iVar] ^= P2V[jVar]; P2V[jVar] ^= P2V[iVar]; P2V[iVar] ^= P2V[jVar];  }",
+      "Draft": "func Mpm_VarsSwap(V2P *int32, P2V *int32, iVar int32, jVar int32) { V2P[P2V[iVar]] = jVar; V2P[P2V[jVar]] = iVar; P2V[iVar] ^= P2V[jVar]; P2V[jVar] ^= P2V[iVar]; P2V[iVar] ^= P2V[jVar];  }"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Cut_t::// next cut\n    unsigned         iFunc     : 25;",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1837,
+      "End": 1905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Cut_t::// function\n    unsigned         fCompl    :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1905,
+      "End": 1964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Cut_t::unsigned         fUseless  :  1;",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1964,
+      "End": 2001
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Cut_t::// internal flag\n    unsigned         nLeaves   :  5;",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2001,
+      "End": 2065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Cut_t::// leaves\n    int              pLeaves[1];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Cut_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2065,
+      "End": 2118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Cut_t",
+      "Category": "struct-review",
+      "Symbol": "Mpm_Cut_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1721,
+      "End": 2145
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Uni_t::// new cut\n    int              Data[MPM_VAR_MAX-1];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Uni_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 2620,
+      "End": 2693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Uni_t",
+      "Category": "struct-review",
+      "Symbol": "Mpm_Uni_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2146,
+      "End": 2712
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Dsd_t",
+      "Category": "struct-review",
+      "Symbol": "Mpm_Dsd_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 2714,
+      "End": 3111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t::// number of cuts in storage\n    Mpm_Uni_t *      pCutStore[MPM_CUT_MAX+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4028,
+      "End": 4119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t::// storage for cuts\n    Mpm_Uni_t        pCutUnits[MPM_CUT_MAX+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4119,
+      "End": 4186
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t::// storage for cuts\n    // cut comparison\n    int (* pCutCmp) (Mpm_Uni_t *, Mpm_Uni_t *);",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4302,
+      "End": 4411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t::// procedure to compare cuts\n    // fanin cuts/signatures\n    int              nCuts[3];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4411,
+      "End": 4499
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t::// fanin cut counts\n    Mpm_Cut_t *      pCuts[3][MPM_CUT_MAX+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4499,
+      "End": 4581
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t::// fanin cuts\n    word             pSigns[3][MPM_CUT_MAX+1];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4581,
+      "End": 4643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t::// variable 0\n    word             Truth0[(1 \u003c\u003c ((MPM_VAR_MAX)-6))];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4863,
+      "End": 4948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t::word             Truth1[(1 \u003c\u003c ((MPM_VAR_MAX)-6))];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 4948,
+      "End": 5003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t::word             TruthC[(1 \u003c\u003c ((MPM_VAR_MAX)-6))];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5003,
+      "End": 5058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t::word             Truth[(1 \u003c\u003c ((MPM_VAR_MAX)-6))];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5058,
+      "End": 5112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t::// permutations of DSD classes\n    char             Perm6[720][6];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5375,
+      "End": 5460
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t::// maps number into its permutation\n    unsigned         uPermMask[3];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5519,
+      "End": 5605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t::unsigned         uComplMask[3];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 5605,
+      "End": 5641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t::// edge\n    int              nCountDsd[600];",
+      "Category": "struct-field-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 6254,
+      "End": 6317
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::struct::Mpm_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Mpm_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 3113,
+      "End": 6729
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::mechanical::sizeof::7366",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7366,
+      "End": 7372
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::pointer-cast::7533",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7533,
+      "End": 7546
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::macro::Mpm_ObjForEachCut",
+      "Category": "macro-review",
+      "Symbol": "Mpm_ObjForEachCut",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11529,
+      "End": 11706
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::macro::Mpm_ObjForEachCutSafe",
+      "Category": "macro-review",
+      "Symbol": "Mpm_ObjForEachCutSafe",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11707,
+      "End": 11908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::macro::Mpm_CutForEachLeafId",
+      "Category": "macro-review",
+      "Symbol": "Mpm_CutForEachLeafId",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 11939,
+      "End": 12110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::macro::Mpm_CutForEachLeafLit",
+      "Category": "macro-review",
+      "Symbol": "Mpm_CutForEachLeafLit",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12111,
+      "End": 12272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::macro::Mpm_CutForEachLeaf",
+      "Category": "macro-review",
+      "Symbol": "Mpm_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 12273,
+      "End": 12452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjCutBest",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjCutBest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6951,
+      "End": 7107
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjSetCutBest",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjSetCutBest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7108,
+      "End": 7264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_CutWordNum",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_CutWordNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7266,
+      "End": 7422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_CutFetch",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_CutFetch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7423,
+      "End": 7663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjCutBestP",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjCutBestP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7664,
+      "End": 7820
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjCutList",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjCutList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7822,
+      "End": 7978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjCutListP",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjCutListP",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7979,
+      "End": 8135
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjSetCutList",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjSetCutList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8136,
+      "End": 8292
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_CutLeafNum",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_CutLeafNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8294,
+      "End": 8450
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_CutTruth",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_CutTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8451,
+      "End": 8607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mig_ObjMigRefNum",
+      "Category": "semantic-review",
+      "Symbol": "Mig_ObjMigRefNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8609,
+      "End": 8765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mig_ObjMigRefDec",
+      "Category": "semantic-review",
+      "Symbol": "Mig_ObjMigRefDec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8766,
+      "End": 8922
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ManCleanMapRefs",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManCleanMapRefs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8924,
+      "End": 9080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjMapRef",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjMapRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9081,
+      "End": 9237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjSetMapRef",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjSetMapRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9238,
+      "End": 9394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjEstRef",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjEstRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9397,
+      "End": 9553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjSetEstRef",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjSetEstRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9554,
+      "End": 9710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ManCleanRequired",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ManCleanRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9712,
+      "End": 9868
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjRequired",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9869,
+      "End": 10025
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjSetRequired",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjSetRequired",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10026,
+      "End": 10182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjTime",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10184,
+      "End": 10340
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjSetTime",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjSetTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10341,
+      "End": 10497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjArea",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10499,
+      "End": 10655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjSetArea",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjSetArea",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10656,
+      "End": 10812
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjEdge",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjEdge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10814,
+      "End": 10970
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_ObjSetEdge",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_ObjSetEdge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10971,
+      "End": 11127
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_VarsClear",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_VarsClear",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11129,
+      "End": 11285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::Mpm_VarsSwap",
+      "Category": "semantic-review",
+      "Symbol": "Mpm_VarsSwap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11286,
+      "End": 11497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/mpm/mpmInt.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15116
+    }
+  ],
+  "Draft": "package mpm\n\n/**CFile****************************************************************\n\n  FileName    [mpmInt.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Configurable technology mapper.]\n\n  Synopsis    [Interal declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 1, 2013.]\n\n  Revision    [$Id: mpmInt.h,v 1.00 2013/06/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n \n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cassert.h\u003e\n\n//#include \"misc/tim/tim.h\"\n//#include \"misc/mem/mem2.h\"\n//#include \"misc/vec/vec.h\"\n//#include \"misc/vec/vecMem.h\"\n//#include \"misc/vec/vecHsh.h\"\n//#include \"misc/vec/vecWec.h\"\n//#include \"misc/util/utilTruth.h\"\n//#include \"mpmMig.h\"\n//#include \"mpm.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n \nconst MPM_CUT_MAX =      32\n\nconst MPM_UNIT_TIME =     1\nconst MPM_UNIT_AREA =    20\nconst MPM_UNIT_EDGE =    50\nconst MPM_UNIT_REFS =   100\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n     // 8 bytes + NLeaves * 4 bytes\ntype Mpm_Cut_t struct {\n    hNext              int32;                    // next cut\n    iFunc uint32; /* C bitfield: 25 bits; review packing and truncation */           // function\n    fCompl uint32; /* C bitfield: 1 bits; review packing and truncation */\n    fUseless uint32; /* C bitfield: 1 bits; review packing and truncation */           // internal flag\n    nLeaves uint32; /* C bitfield: 5 bits; review packing and truncation */           // leaves\n    pLeaves [1]int32;               // leaves\n}\n     // 48 bytes\ntype Mpm_Uni_t struct { \n    mTime              int32;                    // arrival time\n    mArea              int32;                    // area (flow)\n    mEdge              int32;                    // edge (flow)\n    mAveRefs              int32;                 // area references\n    uSign             word;                    // cut signature\n    Cost              int32;                     // user cost\n    pCut        Mpm_Cut_t;                     // new cut\n    Data [MPM_VAR_MAX-1]int32;      // padding\n}\n\n   \ntype Mpm_Dsd_t struct {\n    nVars              int32;                    // support size\n    nAnds              int32;                    // the number of AND gates\n    nClauses              int32;                 // the number of CNF clauses\n    uTruth             word;                   // truth table\n    pStr            string;                     // description \n}\n\n   \ntype Mpm_Man_t struct {\n    pMig       *Mig_Man_t;                     // AIG manager\n    pPars       *Mpm_Par_t;                    // mapping parameters\n    // mapping parameters\n    nLutSize              int32;                 // LUT size\n    nNumCuts              int32;                 // cut count\n    nTruWords              int32;                // words in the truth table\n    pLibLut    *Mpm_LibLut_t;                  // LUT library\n    // mapping attributes  \n    fMainRun              int32;                 // after preprocessing is finished\n    GloRequired              int32;              // global arrival time\n    GloArea             word;                  // total area\n    GloEdge             word;                  // total edge\n    // cut management\n    pManCuts      *Mmr_Step_t;                 // cut memory\n    // temporary cut storage\n    nCutStore              int32;                // number of cuts in storage\n    pCutStore [MPM_CUT_MAX+1]*Mpm_Uni_t; // storage for cuts\n    pCutUnits [MPM_CUT_MAX+1]Mpm_Uni_t; // cut info units\n    vFreeUnits        Vec_Ptr_t;               // free cut info units\n    vTemp       *Vec_Ptr_t;                    // storage for cuts\n    // cut comparison\n    int (* pCutCmp) (Mpm_Uni_t *, Mpm_Uni_t *);// procedure to compare cuts\n    // fanin cuts/signatures\n    nCuts [3]int32;                 // fanin cut counts\n    pCuts [3][MPM_CUT_MAX+1]*Mpm_Cut_t;  // fanin cuts\n    word             pSigns[3][MPM_CUT_MAX+1]; // fanin cut signatures\n    // truth tables\n    vTtMem       *Vec_Mem_t;                   // truth table memory and hash table\n    funcCst0              int32;                 // constant 0\n    funcVar0              int32;                 // variable 0\n    word             Truth0[(1 \u003c\u003c ((MPM_VAR_MAX)-6))];\n    word             Truth1[(1 \u003c\u003c ((MPM_VAR_MAX)-6))];\n    word             TruthC[(1 \u003c\u003c ((MPM_VAR_MAX)-6))];\n    word             Truth[(1 \u003c\u003c ((MPM_VAR_MAX)-6))];\n    // DSD\n    pDsd6       *Mpm_Dsd_t;                    // NPN class information\n    pHash    *Hsh_IntMan_t;                    // maps DSD functions into NPN classes\n    vConfgRes       *Vec_Int_t;                // configurations\n    vPerm6       *Vec_Wrd_t;                   // permutations of DSD classes\n    Perm6 [720][6]byte;            // permutations\n    vMap2Perm       *Vec_Int_t;                // maps number into its permutation\n    uPermMask [3]uint32;\n    uComplMask [3]uint32;\n    vNpnConfigs       *Vec_Wec_t;\n    // mapping attributes\n    vCutBests        Vec_Int_t;                // cut best\n    vCutLists        Vec_Int_t;                // cut list\n    vMigRefs        Vec_Int_t;                 // original references\n    vMapRefs        Vec_Int_t;                 // exact mapping references\n    vEstRefs        Vec_Int_t;                 // estimated mapping references\n    vRequireds        Vec_Int_t;               // required time\n    vTimes        Vec_Int_t;                   // arrival time\n    vAreas        Vec_Int_t;                   // area\n    vEdges        Vec_Int_t;                   // edge\n    nCountDsd [600]int32;\n    nNonDsd              int32;\n    nNoMatch              int32;\n    // statistics\n    nCutsMerged              int32;\n    nCutsMergedAll              int32;\n    nSmallSupp              int32;\n    timeDerive          abctime;\n    timeMerge          abctime;\n    timeEval          abctime;\n    timeCompare          abctime;\n    timeStore          abctime;\n    timeOther          abctime;\n    timeTotal          abctime;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Mpm_ObjCutBest(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vCutBests, Mig_ObjId(pObj));            }\nfunc Mpm_ObjSetCutBest(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vCutBests, Mig_ObjId(pObj), i);           }\n\nfunc Mpm_CutWordNum(nLeaves int32) int32 { return ((sizeof(Mpm_Cut_t) + (nLeaves \u003c\u003c 2)) \u003e\u003e 3);             }\nfunc Mpm_CutFetch(p *Mpm_Man_t, h int32) *Mpm_Cut_t { var pCut *Mpm_Cut_t  = (Mpm_Cut_t *)Mmr_StepEntry( p.pManCuts, h );  assert(Mpm_CutWordNum(pCut.nLeaves) == (h \u0026 p.pManCuts.uMask), \"Mpm_CutWordNum(pCut.nLeaves) == (h \u0026 p.pManCuts.uMask)\"); return pCut; }\nfunc Mpm_ObjCutBestP(p *Mpm_Man_t, pObj *Mig_Obj_t) *Mpm_Cut_t { return Mpm_CutFetch( p, Mpm_ObjCutBest(p, pObj) );              }\n\nfunc Mpm_ObjCutList(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vCutLists, Mig_ObjId(pObj));            }\nfunc Mpm_ObjCutListP(p *Mpm_Man_t, pObj *Mig_Obj_t) *int32 { return Vec_IntEntryP(\u0026p.vCutLists, Mig_ObjId(pObj));           }\nfunc Mpm_ObjSetCutList(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vCutLists, Mig_ObjId(pObj), i);           }\n\nfunc Mpm_CutLeafNum(pCut *Mpm_Cut_t) int32 { return pCut.nLeaves;                                           }\nfunc Mpm_CutTruth(p *Mpm_Man_t, iFunc int32) *word { return Vec_MemReadEntry(p.vTtMem, iFunc);                      }\n\nfunc Mig_ObjMigRefNum(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vMigRefs, Mig_ObjId(pObj));             }\nfunc Mig_ObjMigRefDec(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntAddToEntry(\u0026p.vMigRefs, Mig_ObjId(pObj), -1);    }\n\nfunc Mpm_ManCleanMapRefs(p *Mpm_Man_t) { Vec_IntFill( \u0026p.vMapRefs, Mig_ManObjNum(p.pMig), 0 );         }\nfunc Mpm_ObjMapRef(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vMapRefs, Mig_ObjId(pObj));             }\nfunc Mpm_ObjSetMapRef(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vMapRefs, Mig_ObjId(pObj), i);            }\n \nfunc Mpm_ObjEstRef(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vEstRefs, Mig_ObjId(pObj));             }\nfunc Mpm_ObjSetEstRef(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vEstRefs, Mig_ObjId(pObj), i);            }\n\nfunc Mpm_ManCleanRequired(p *Mpm_Man_t) { Vec_IntFill(\u0026p.vRequireds,Mig_ManObjNum(p.pMig),ABC_INFINITY);}\nfunc Mpm_ObjRequired(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vRequireds, Mig_ObjId(pObj));           }\nfunc Mpm_ObjSetRequired(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vRequireds, Mig_ObjId(pObj), i);          }\n\nfunc Mpm_ObjTime(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vTimes, Mig_ObjId(pObj));               }\nfunc Mpm_ObjSetTime(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vTimes, Mig_ObjId(pObj), i);              }\n\nfunc Mpm_ObjArea(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vAreas, Mig_ObjId(pObj));               }\nfunc Mpm_ObjSetArea(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vAreas, Mig_ObjId(pObj), i);              }\n\nfunc Mpm_ObjEdge(p *Mpm_Man_t, pObj *Mig_Obj_t) int32 { return Vec_IntEntry(\u0026p.vEdges, Mig_ObjId(pObj));               }\nfunc Mpm_ObjSetEdge(p *Mpm_Man_t, pObj *Mig_Obj_t, i int32) { Vec_IntWriteEntry(\u0026p.vEdges, Mig_ObjId(pObj), i);              }\n\nfunc Mpm_VarsClear(V2P *int32, P2V *int32, nVars int32) { var i int32; for  i = 0; i \u003c nVars; i++  { V2P[i] = P2V[i] = i; }       }\nfunc Mpm_VarsSwap(V2P *int32, P2V *int32, iVar int32, jVar int32) { V2P[P2V[iVar]] = jVar; V2P[P2V[jVar]] = iVar; P2V[iVar] ^= P2V[jVar]; P2V[jVar] ^= P2V[iVar]; P2V[iVar] ^= P2V[jVar];  }\n\n// iterators over object cuts\n// Original macro:\n// #define Mpm_ObjForEachCut( p, pObj, hCut, pCut )                         \\\n//     for ( hCut = Mpm_ObjCutList(p, pObj); hCut \u0026\u0026 (pCut = Mpm_CutFetch(p, hCut)); hCut = pCut-\u003ehNext )\n\n// Original macro:\n// #define Mpm_ObjForEachCutSafe( p, pObj, hCut, pCut, hNext )              \\\n//     for ( hCut = Mpm_ObjCutList(p, pObj); hCut \u0026\u0026 (pCut = Mpm_CutFetch(p, hCut)) \u0026\u0026 ((hNext = pCut-\u003ehNext), 1); hCut = hNext )\n\n\n// iterators over cut leaves\n// Original macro:\n// #define Mpm_CutForEachLeafId( pCut, iLeafId, i )                         \\\n//     for ( i = 0; i \u003c (int)pCut-\u003enLeaves \u0026\u0026 ((iLeafId = Abc_Lit2Var(pCut-\u003epLeaves[i])), 1); i++ )\n\n// Original macro:\n// #define Mpm_CutForEachLeafLit( pCut, iLeafLit, i )                         \\\n//     for ( i = 0; i \u003c (int)pCut-\u003enLeaves \u0026\u0026 ((iLeafLit = pCut-\u003epLeaves[i]), 1); i++ )\n\n// Original macro:\n// #define Mpm_CutForEachLeaf( p, pCut, pLeaf, i )                          \\\n//     for ( i = 0; i \u003c (int)pCut-\u003enLeaves \u0026\u0026 (pLeaf = Mig_ManObj(p, Abc_Lit2Var(pCut-\u003epLeaves[i]))); i++ )\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== mpmAbc.c ===========================================================*/\n// extern Mig_Man_t *           Mig_ManCreate( void * pGia );\n\n// extern void *                Mpm_ManFromIfLogic( Mpm_Man_t * pMan );\n\n/*=== mpmMan.c ===========================================================*/\n// extern Mpm_Man_t *           Mpm_ManStart( Mig_Man_t * pMig, Mpm_Par_t * pPars );\n\n// extern void                  Mpm_ManStop( Mpm_Man_t * p );\n\n// extern void                  Mpm_ManPrintStatsInit( Mpm_Man_t * p );\n\n// extern void                  Mpm_ManPrintStats( Mpm_Man_t * p );\n\n/*=== mpmDsd.c ===========================================================*/\n// extern void                  Mpm_ManPrintDsdStats( Mpm_Man_t * p );\n\n// extern void                  Mpm_ManPrintPerm( unsigned s );\n\n// extern void                  Mpm_ManPrecomputePerms( Mpm_Man_t * p );\n\n// extern word                  Mpm_CutTruthFromDsd( Mpm_Man_t * pMan, Mpm_Cut_t * pCut, int iDsdLit );\n\n// extern int                   Mpm_CutCheckDsd6( Mpm_Man_t * p, word t );\n\n// extern int                   Mpm_CutComputeDsd6( Mpm_Man_t * p, Mpm_Cut_t * pCut, Mpm_Cut_t * pCut0, Mpm_Cut_t * pCut1, Mpm_Cut_t * pCutC, int fCompl0, int fCompl1, int fComplC, int Type );\n\n/*=== mpmGates.c ===========================================================*/\n// extern Vec_Wec_t *           Mpm_ManFindDsdMatches( Mpm_Man_t * p, void * pScl );\n\n/*=== mpmLib.c ===========================================================*/\n// extern Mpm_LibLut_t *        Mpm_LibLutSetSimple( int nLutSize );\n\n// extern void                  Mpm_LibLutFree( Mpm_LibLut_t * pLib );\n\n/*=== mpmMap.c ===========================================================*/\n// extern void                  Mpm_CutPrint( Mpm_Cut_t * pCut );\n\n// extern void                  Mpm_ManPrepare( Mpm_Man_t * p );\n\n// extern void                  Mpm_ManPerform( Mpm_Man_t * p );\n\n/*=== mpmTruth.c ===========================================================*/\n// extern int                   Mpm_CutComputeTruth( Mpm_Man_t * p, Mpm_Cut_t * pCut, Mpm_Cut_t * pCut0, Mpm_Cut_t * pCut1, Mpm_Cut_t * pCutC, int fCompl0, int fCompl1, int fComplC, int Type );\n\n\n// extern void                  Kit_DsdPrintFromTruth( unsigned * pTruth, int nVars );\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

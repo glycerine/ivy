@@ -1,0 +1,235 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoUnits.c",
+  "SHA256": "cac33ed01e70af430e1f57f09bc0ca2717fee5e8e2849f9f8fb4dbcae47fb430",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 2746
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pPlane, 0, sizeof(reo_plane) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 119,
+        "Column": 9,
+        "ByteOffset": 3168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( p.pMemChunks[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 164,
+        "Column": 9,
+        "ByteOffset": 4267
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"reoUnitsAddToFreeUnitList(): Memory manager ran out of memory!\\n\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 165,
+        "Column": 9,
+        "ByteOffset": 4353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 165,
+        "Column": 17,
+        "ByteOffset": 4361
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fflush( stdout );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 169,
+        "Column": 5,
+        "ByteOffset": 4428
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pUnitFreeList == nil );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 170,
+        "Column": 23,
+        "ByteOffset": 4484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pUnitFreeList = ABC_ALLOC( reo_unit, REO_CHUNK_SIZE );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "reoUnitsGetNextUnit",
+      "Start": 1298,
+      "End": 1655,
+      "BodyStart": 1343,
+      "Original": "reo_unit * reoUnitsGetNextUnit(reo_man * p )\n{\n    reo_unit * pUnit;\n    // check there are stil units to extract\n    if ( p-\u003epUnitFreeList == NULL )\n        reoUnitsAddToFreeUnitList( p );\n    // extract the next unit from the linked list\n    pUnit            = p-\u003epUnitFreeList;\n    p-\u003epUnitFreeList = pUnit-\u003eNext;\n    p-\u003enUnitsUsed++;\n    return pUnit;\n}",
+      "Draft": "func reoUnitsGetNextUnit(p *reo_man) *reo_unit {\n    var pUnit *reo_unit;\n    // check there are stil units to extract\n    if p.pUnitFreeList == nil {\n        reoUnitsAddToFreeUnitList( p ); }\n    // extract the next unit from the linked list\n    pUnit            = p.pUnitFreeList;\n    p.pUnitFreeList = pUnit.Next;\n    p.nUnitsUsed++;\n    return pUnit;\n}"
+    },
+    {
+      "Name": "reoUnitsRecycleUnit",
+      "Start": 1915,
+      "End": 2068,
+      "BodyStart": 1973,
+      "Original": "void reoUnitsRecycleUnit( reo_man * p, reo_unit * pUnit )\n{\n    pUnit-\u003eNext      = p-\u003epUnitFreeList;\n    p-\u003epUnitFreeList = pUnit;\n    p-\u003enUnitsUsed--;\n}",
+      "Draft": "func reoUnitsRecycleUnit(p *reo_man, pUnit *reo_unit) {\n    pUnit.Next      = p.pUnitFreeList;\n    p.pUnitFreeList = pUnit;\n    p.nUnitsUsed--;\n}"
+    },
+    {
+      "Name": "reoUnitsRecycleUnitList",
+      "Start": 2337,
+      "End": 2803,
+      "BodyStart": 2401,
+      "Original": "void reoUnitsRecycleUnitList( reo_man * p, reo_plane * pPlane )\n{\n    reo_unit * pUnit;\n    reo_unit * pTail = NULL; // Suppress \"might be used uninitialized\"\n\n    if ( pPlane-\u003epHead == NULL )\n        return;\n\n    // find the tail\n    for ( pUnit = pPlane-\u003epHead; pUnit; pUnit = pUnit-\u003eNext )\n        pTail = pUnit;\n    pTail-\u003eNext = p-\u003epUnitFreeList;\n    p-\u003epUnitFreeList    = pPlane-\u003epHead;\n    memset( pPlane, 0, sizeof(reo_plane) );\n//    pPlane-\u003epHead = NULL;\n}",
+      "Draft": "func reoUnitsRecycleUnitList(p *reo_man, pPlane *reo_plane) {\n    var pUnit *reo_unit;\n    var pTail *reo_unit  = nil; // Suppress \"might be used uninitialized\"\n\n    if pPlane.pHead == nil {\n        return; }\n\n    // find the tail\n    for  pUnit = pPlane.pHead; (pUnit != nil); pUnit = pUnit.Next  {\n        pTail = pUnit;\n    }\n    pTail.Next = p.pUnitFreeList;\n    p.pUnitFreeList    = pPlane.pHead;\n    memset( pPlane, 0, sizeof(reo_plane) );\n//    pPlane-\u003epHead = NULL;\n}"
+    },
+    {
+      "Name": "reoUnitsStopDispenser",
+      "Start": 3049,
+      "End": 3316,
+      "BodyStart": 3091,
+      "Original": "void reoUnitsStopDispenser( reo_man * p )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enMemChunks; i++ )\n        ABC_FREE( p-\u003epMemChunks[i] );\n//    printf(\"\\nThe number of chunks used is %d, each of them %d units\\n\", p-\u003enMemChunks, REO_CHUNK_SIZE );\n    p-\u003enMemChunks = 0;\n}",
+      "Draft": "func reoUnitsStopDispenser(p *reo_man) {\n    var i int32;\n    for  i = 0; i \u003c p.nMemChunks; i++  {\n        ABC_FREE( p.pMemChunks[i] );\n    }\n//    printf(\"\\nThe number of chunks used is %d, each of them %d units\\n\", p-\u003enMemChunks, REO_CHUNK_SIZE );\n    p.nMemChunks = 0;\n}"
+    },
+    {
+      "Name": "reoUnitsAddUnitToPlane",
+      "Start": 3600,
+      "End": 3894,
+      "BodyStart": 3668,
+      "Original": "void reoUnitsAddUnitToPlane( reo_plane * pPlane, reo_unit * pUnit )\n{\n    if ( pPlane-\u003epHead == NULL )\n    {\n        pPlane-\u003epHead = pUnit;\n        pUnit-\u003eNext   = NULL;\n    }\n    else\n    {\n        pUnit-\u003eNext   = pPlane-\u003epHead;\n        pPlane-\u003epHead = pUnit;\n    }\n    pPlane-\u003estatsNodes++;\n}",
+      "Draft": "func reoUnitsAddUnitToPlane(pPlane *reo_plane, pUnit *reo_unit) {\n    if pPlane.pHead == nil {\n        pPlane.pHead = pUnit;\n        pUnit.Next   = nil;\n    \n    } else {\n        pUnit.Next   = pPlane.pHead;\n        pPlane.pHead = pUnit;\n    }\n    pPlane.statsNodes++;\n}"
+    },
+    {
+      "Name": "reoUnitsAddToFreeUnitList",
+      "Start": 4116,
+      "End": 4887,
+      "BodyStart": 4162,
+      "Original": "void reoUnitsAddToFreeUnitList( reo_man * p )\n{\n    int c;\n    // check that we still have chunks left\n    if ( p-\u003enMemChunks == p-\u003enMemChunksAlloc )\n    {\n        printf( \"reoUnitsAddToFreeUnitList(): Memory manager ran out of memory!\\n\" );\n        fflush( stdout );\n        return;\n    }\n    // allocate the next chunk\n    assert( p-\u003epUnitFreeList == NULL );\n    p-\u003epUnitFreeList = ABC_ALLOC( reo_unit, REO_CHUNK_SIZE );\n    // split chunks into list-connected units\n    for ( c = 0; c \u003c REO_CHUNK_SIZE-1; c++ )\n        (p-\u003epUnitFreeList + c)-\u003eNext = p-\u003epUnitFreeList + c + 1;\n    // set the last pointer to NULL\n    (p-\u003epUnitFreeList + REO_CHUNK_SIZE-1)-\u003eNext = NULL;\n    // add the chunk to the array of chunks\n    p-\u003epMemChunks[p-\u003enMemChunks++] = p-\u003epUnitFreeList;\n}",
+      "Draft": "func reoUnitsAddToFreeUnitList(p *reo_man) {\n    var c int32;\n    // check that we still have chunks left\n    if p.nMemChunks == p.nMemChunksAlloc {\n        fmt.Printf(\"reoUnitsAddToFreeUnitList(): Memory manager ran out of memory!\\n\");\n        fflush( os.Stdout );\n        return;\n    }\n    // allocate the next chunk\n    assert(p.pUnitFreeList == nil, \"p.pUnitFreeList == nil\");\n    p.pUnitFreeList = ABC_ALLOC( reo_unit, REO_CHUNK_SIZE );\n    // split chunks into list-connected units\n    for  c = 0; c \u003c REO_CHUNK_SIZE-1; c++  {\n        (p.pUnitFreeList + c).Next = p.pUnitFreeList + c + 1;\n    }\n    // set the last pointer to NULL\n    (p.pUnitFreeList + REO_CHUNK_SIZE-1).Next = nil;\n    // add the chunk to the array of chunks\n    p.pMemChunks[p.nMemChunks++] = p.pUnitFreeList;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoUnits.c::mechanical::sizeof::2753",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2753,
+      "End": 2759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoUnits.c::reoUnitsGetNextUnit",
+      "Category": "semantic-review",
+      "Symbol": "reoUnitsGetNextUnit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1298,
+      "End": 1655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoUnits.c::reoUnitsRecycleUnit",
+      "Category": "semantic-review",
+      "Symbol": "reoUnitsRecycleUnit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1915,
+      "End": 2068
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoUnits.c::reoUnitsRecycleUnitList",
+      "Category": "semantic-review",
+      "Symbol": "reoUnitsRecycleUnitList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2337,
+      "End": 2803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoUnits.c::reoUnitsStopDispenser",
+      "Category": "semantic-review",
+      "Symbol": "reoUnitsStopDispenser",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3049,
+      "End": 3316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoUnits.c::reoUnitsAddUnitToPlane",
+      "Category": "semantic-review",
+      "Symbol": "reoUnitsAddUnitToPlane",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3600,
+      "End": 3894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoUnits.c::reoUnitsAddToFreeUnitList",
+      "Category": "semantic-review",
+      "Symbol": "reoUnitsAddToFreeUnitList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4116,
+      "End": 4887
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoUnits.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5134
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoUnits.c::macro-inline::3154",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3154,
+      "End": 3182
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/reo/reoUnits.c::macro-inline::4500",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4500,
+      "End": 4537
+    }
+  ],
+  "Draft": "package reo\n\nimport (\n\t\"fmt\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [reoUnits.c]\n\n  PackageName [REO: A specialized DD reordering engine.]\n\n  Synopsis    [Procedures which support internal data structures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - October 15, 2002.]\n\n  Revision    [$Id: reoUnits.c,v 1.0 2002/15/10 03:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"reo.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void reoUnitsAddToFreeUnitList( reo_man * p );\n\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DEFINITIONS                          ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Extract the next unit from the free unit list.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc reoUnitsGetNextUnit(p *reo_man) *reo_unit {\n    var pUnit *reo_unit;\n    // check there are stil units to extract\n    if p.pUnitFreeList == nil {\n        reoUnitsAddToFreeUnitList( p ); }\n    // extract the next unit from the linked list\n    pUnit            = p.pUnitFreeList;\n    p.pUnitFreeList = pUnit.Next;\n    p.nUnitsUsed++;\n    return pUnit;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the unit to the free unit list.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc reoUnitsRecycleUnit(p *reo_man, pUnit *reo_unit) {\n    pUnit.Next      = p.pUnitFreeList;\n    p.pUnitFreeList = pUnit;\n    p.nUnitsUsed--;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the list of units to the free unit list.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc reoUnitsRecycleUnitList(p *reo_man, pPlane *reo_plane) {\n    var pUnit *reo_unit;\n    var pTail *reo_unit  = nil; // Suppress \"might be used uninitialized\"\n\n    if pPlane.pHead == nil {\n        return; }\n\n    // find the tail\n    for  pUnit = pPlane.pHead; (pUnit != nil); pUnit = pUnit.Next  {\n        pTail = pUnit;\n    }\n    pTail.Next = p.pUnitFreeList;\n    p.pUnitFreeList    = pPlane.pHead;\n    memset( pPlane, 0, sizeof(reo_plane) );\n//    pPlane-\u003epHead = NULL;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the unit dispenser.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc reoUnitsStopDispenser(p *reo_man) {\n    var i int32;\n    for  i = 0; i \u003c p.nMemChunks; i++  {\n        ABC_FREE( p.pMemChunks[i] );\n    }\n//    printf(\"\\nThe number of chunks used is %d, each of them %d units\\n\", p-\u003enMemChunks, REO_CHUNK_SIZE );\n    p.nMemChunks = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds one unit to the list of units which constitutes the plane.]\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc reoUnitsAddUnitToPlane(pPlane *reo_plane, pUnit *reo_unit) {\n    if pPlane.pHead == nil {\n        pPlane.pHead = pUnit;\n        pUnit.Next   = nil;\n    \n    } else {\n        pUnit.Next   = pPlane.pHead;\n        pPlane.pHead = pUnit;\n    }\n    pPlane.statsNodes++;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc reoUnitsAddToFreeUnitList(p *reo_man) {\n    var c int32;\n    // check that we still have chunks left\n    if p.nMemChunks == p.nMemChunksAlloc {\n        fmt.Printf(\"reoUnitsAddToFreeUnitList(): Memory manager ran out of memory!\\n\");\n        fflush( os.Stdout );\n        return;\n    }\n    // allocate the next chunk\n    assert(p.pUnitFreeList == nil, \"p.pUnitFreeList == nil\");\n    p.pUnitFreeList = ABC_ALLOC( reo_unit, REO_CHUNK_SIZE );\n    // split chunks into list-connected units\n    for  c = 0; c \u003c REO_CHUNK_SIZE-1; c++  {\n        (p.pUnitFreeList + c).Next = p.pUnitFreeList + c + 1;\n    }\n    // set the last pointer to NULL\n    (p.pUnitFreeList + REO_CHUNK_SIZE-1).Next = nil;\n    // add the chunk to the array of chunks\n    p.pMemChunks[p.nMemChunks++] = p.pUnitFreeList;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                         END OF FILE                              ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

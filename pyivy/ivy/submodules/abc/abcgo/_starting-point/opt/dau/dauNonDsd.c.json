@@ -1,0 +1,1753 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c",
+  "SHA256": "a6962ae49193871d512bb0dc721f46e21113e66a5716a5dab019fc0bedbc92e0",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1880
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars == nVarsB + nVarsF );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 1947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsS \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1974
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 70,
+        "Column": 5,
+        "ByteOffset": 2243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s == nVarsS );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 71,
+        "Column": 5,
+        "ByteOffset": 2270
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( b == nVarsB-nVarsS );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 124,
+        "Column": 5,
+        "ByteOffset": 4368
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars == nVarsB + nVarsF );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 125,
+        "Column": 5,
+        "ByteOffset": 4408
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 126,
+        "Column": 5,
+        "ByteOffset": 4435
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsS \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 127,
+        "Column": 5,
+        "ByteOffset": 4462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsF \u003e= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 4716
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( s == nVarsS );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 4743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( b == nVarsB-nVarsS );"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 144,
+        "Column": 31,
+        "ByteOffset": 5057
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if !Cof[0][MintS] || !memcmp(Cof[0][MintS], p + Mint * nWordsF, sizeof(word) * nWordsF) {"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 146,
+        "Column": 38,
+        "ByteOffset": 5210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else if !Cof[1][MintS] || !memcmp(Cof[1][MintS], p + Mint * nWordsF, sizeof(word) * nWordsF) {"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 166,
+        "Column": 13,
+        "ByteOffset": 5886
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy( pComp + s * nWordsF, Cof[0][s], sizeof(word) * nWordsF );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 168,
+        "Column": 17,
+        "ByteOffset": 5996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                memcpy( pComp + (s+nMintsS) * nWordsF, Cof[1][s], sizeof(word) * nWordsF );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 170,
+        "Column": 17,
+        "ByteOffset": 6109
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                memcpy( pComp + (s+nMintsS) * nWordsF, Cof[0][s], sizeof(word) * nWordsF ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 205,
+        "Column": 5,
+        "ByteOffset": 7290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( c \u003e= 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 216,
+        "Column": 5,
+        "ByteOffset": 7777
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= 5 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 241,
+        "Column": 9,
+        "ByteOffset": 8615
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( fFound0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 9188
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsF \u003e= 6 \u0026\u0026 nVarsF \u003c= nVars - 2 );"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 266,
+        "Column": 24,
+        "ByteOffset": 9437
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else if !memcmp(Cof0, p + g * nWords, sizeof(word) * nWords) {"
+    },
+    {
+      "Name": "memcmp",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 273,
+        "Column": 24,
+        "ByteOffset": 9720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else if !memcmp(Cof1, p + g * nWords, sizeof(word) * nWords) {"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 282,
+        "Column": 9,
+        "ByteOffset": 9995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( fFound0 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 288,
+        "Column": 9,
+        "ByteOffset": 10120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pCof0, Cof0, sizeof(word) * nWords );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 289,
+        "Column": 9,
+        "ByteOffset": 10174
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pCof1, Cof1, sizeof(word) * nWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 294,
+        "Column": 5,
+        "ByteOffset": 10386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= nVars - 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 307,
+        "Column": 5,
+        "ByteOffset": 10955
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e= 3 \u0026\u0026 nVars \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 308,
+        "Column": 5,
+        "ByteOffset": 10996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars == nVarsF + nVarsB );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 309,
+        "Column": 5,
+        "ByteOffset": 11036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= nVars - 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 310,
+        "Column": 5,
+        "ByteOffset": 11086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsB \u003e= 2 \u0026\u0026 nVarsB \u003c= nVars - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 311,
+        "Column": 5,
+        "ByteOffset": 11136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsS \u003e= 0 \u0026\u0026 nVarsS \u003c= nVarsB - 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 315,
+        "Column": 5,
+        "ByteOffset": 11364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( maskS \u003e 0 \u0026\u0026 maskS \u003c (1 \u003c\u003c nVarsB) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 320,
+        "Column": 5,
+        "ByteOffset": 11522
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i == nVarsS );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 329,
+        "Column": 9,
+        "ByteOffset": 11812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (maskS \u0026 uMaskValue) == uMaskValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 385,
+        "Column": 18,
+        "ByteOffset": 13570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 395,
+        "Column": 5,
+        "ByteOffset": 13861
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"S =%2d  D =%2d  C =%2d   \", nShared, nUnique+nShared, nShared+nFree+1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 397,
+        "Column": 5,
+        "ByteOffset": 13948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"x=\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 401,
+        "Column": 13,
+        "ByteOffset": 14086
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", 'a' + v );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 404,
+        "Column": 13,
+        "ByteOffset": 14165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", 'A' + v );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 406,
+        "Column": 18,
+        "ByteOffset": 14218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( Value == 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 408,
+        "Column": 5,
+        "ByteOffset": 14252
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" y=x\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 412,
+        "Column": 13,
+        "ByteOffset": 14392
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", 'a' + v );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 415,
+        "Column": 13,
+        "ByteOffset": 14471
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%c\", 'A' + v );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 419,
+        "Column": 9,
+        "ByteOffset": 14561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 422,
+        "Column": 9,
+        "ByteOffset": 14608
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 437,
+        "Column": 5,
+        "ByteOffset": 15107
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"The %d-variable set family contains %d sets:\\n\", nVars, Vec_IntSize(vSets) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 441,
+        "Column": 5,
+        "ByteOffset": 15403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 461,
+        "Column": 5,
+        "ByteOffset": 15963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( c == nVars - sizeB );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 470,
+        "Column": 5,
+        "ByteOffset": 16298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( p, pInit, sizeof(word) * Abc_TtWordNum(nVars) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 472,
+        "Column": 9,
+        "ByteOffset": 16397
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_TtHasVar( p, nVars, v ) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 529,
+        "Column": 69,
+        "ByteOffset": 18783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pSched[v]) ? (free((char *) (pSched[v])), (pSched[v]) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 566,
+        "Column": 13,
+        "ByteOffset": 20062
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( pStr[v] - 'a' \u003c nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 598,
+        "Column": 5,
+        "ByteOffset": 21016
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 16 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 602,
+        "Column": 5,
+        "ByteOffset": 21112
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( p, pInit, sizeof(word) * nWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 612,
+        "Column": 18,
+        "ByteOffset": 21465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert(0); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 614,
+        "Column": 5,
+        "ByteOffset": 21488
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsS \u003e= 0 \u0026\u0026 nVarsS \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 615,
+        "Column": 5,
+        "ByteOffset": 21530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsF + nVarsS + 1 \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 616,
+        "Column": 5,
+        "ByteOffset": 21570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsU + nVarsS \u003c= 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 635,
+        "Column": 5,
+        "ByteOffset": 22145
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( c == nVars );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 641,
+        "Column": 5,
+        "ByteOffset": 22382
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsF + nVarsS \u003c 6 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 703,
+        "Column": 5,
+        "ByteOffset": 24284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c 16 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 704,
+        "Column": 5,
+        "ByteOffset": 24310
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pC, Dau_DsdToTruth(pDsdC, nVars+1), sizeof(word) * nWordsC );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 705,
+        "Column": 5,
+        "ByteOffset": 24384
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pD, Dau_DsdToTruth(pDsdD, nVars), sizeof(word) * nWordsD );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 707,
+        "Column": 9,
+        "ByteOffset": 24480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nWordsD \u003e= 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 708,
+        "Column": 9,
+        "ByteOffset": 24512
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nWordsC \u003e 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 717,
+        "Column": 9,
+        "ByteOffset": 24851
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"      Verification failed\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 720,
+        "Column": 5,
+        "ByteOffset": 24960
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 731,
+        "Column": 9,
+        "ByteOffset": 25436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  Decomposition does not exist\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 767,
+        "Column": 9,
+        "ByteOffset": 26906
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%3d : \", Counter++ );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 768,
+        "Column": 9,
+        "ByteOffset": 26945
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%24s  \", pDsdD );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 769,
+        "Column": 9,
+        "ByteOffset": 26980
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%24s  \", pDsdC );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 786,
+        "Column": 5,
+        "ByteOffset": 27530
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 16 );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 788,
+        "Column": 5,
+        "ByteOffset": 27584
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( p, pInit, sizeof(word) * nWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 814,
+        "Column": 5,
+        "ByteOffset": 28482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsD == nVarsU + nVarsS );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 815,
+        "Column": 5,
+        "ByteOffset": 28523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVarsC == nVarsF + nVarsS + 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 816,
+        "Column": 5,
+        "ByteOffset": 28568
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i == nVars );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 819,
+        "Column": 5,
+        "ByteOffset": 28667
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pDec, 0, sizeof(word) * Abc_TtWordNum(nVarsD) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 820,
+        "Column": 5,
+        "ByteOffset": 28728
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pComp, 0, sizeof(word) * Abc_TtWordNum(nVarsC) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 822,
+        "Column": 62,
+        "ByteOffset": 28981
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pSched) ? (free((char *) (pSched)), (pSched) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 824,
+        "Column": 9,
+        "ByteOffset": 29051
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"  Decomposition does not exist\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 838,
+        "Column": 5,
+        "ByteOffset": 29670
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"     \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 839,
+        "Column": 5,
+        "ByteOffset": 29693
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%3d : \", 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 840,
+        "Column": 5,
+        "ByteOffset": 29720
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%24s  \", pDsdD );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 841,
+        "Column": 5,
+        "ByteOffset": 29751
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%24s  \", pDsdC );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 848,
+        "Column": 5,
+        "ByteOffset": 29961
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c= 16 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 855,
+        "Column": 5,
+        "ByteOffset": 30148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"This %d-variable function has %d decomposable variable sets:\\n\", nVars, Vec_IntSize(vSets) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 858,
+        "Column": 9,
+        "ByteOffset": 30448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Set %4d : \", i );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dau_DecCheckSetTop5",
+      "Start": 1318,
+      "End": 3841,
+      "BodyStart": 1454,
+      "Original": "int Dau_DecCheckSetTop5( word * p, int nVars, int nVarsF, int nVarsB, int nVarsS, int uMaskS, int * pSched, word * pDec, word * pComp )\n{\n    word Cof[2][64], Value;\n    word MaskFF = (((word)1) \u003c\u003c (1 \u003c\u003c nVarsF)) - 1;\n    int ShiftF = 6 - nVarsF, MaskF = (1 \u003c\u003c ShiftF) - 1;\n    int pVarsS[16], pVarsB[16];\n    int nMints  = (1 \u003c\u003c nVarsB);\n    int nMintsB = (1 \u003c\u003c(nVarsB-nVarsS));\n    int nMintsS = (1 \u003c\u003c nVarsS);\n    int s, b, v, m, Mint, MintB, MintS;\n    assert( nVars == nVarsB + nVarsF );\n    assert( nVars \u003c= 16 );\n    assert( nVarsS \u003c= 6 );\n    assert( nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= 5 );\n    // collect bound/shared variables\n    for ( s = b = v = 0; v \u003c nVarsB; v++ )\n        if ( (uMaskS \u003e\u003e v) \u0026 1 )\n            pVarsB[v] = -1, pVarsS[v] = s++;\n        else\n            pVarsS[v] = -1, pVarsB[v] = b++;\n    assert( s == nVarsS );\n    assert( b == nVarsB-nVarsS );\n    // clean minterm storage\n    for ( s = 0; s \u003c nMintsS; s++ )\n        Cof[0][s] = Cof[1][s] = ~(word)0;\n    // iterate through bound set minters\n    for ( MintS = MintB = Mint = m = 0; m \u003c nMints; m++ )\n    {\n        // find minterm value\n        Value = (p[Mint\u003e\u003eShiftF] \u003e\u003e ((Mint\u0026MaskF)\u003c\u003cnVarsF)) \u0026 MaskFF;\n        // check if this cof already appeared \n        if ( !~Cof[0][MintS] || Cof[0][MintS] == Value )\n            Cof[0][MintS] = Value;\n        else if ( !~Cof[1][MintS] || Cof[1][MintS] == Value )\n        {\n            Cof[1][MintS] = Value;\n            if ( pDec ) \n            {\n                int iMintB = MintS * nMintsB + MintB;\n                pDec[iMintB\u003e\u003e6] |= (((word)1)\u003c\u003c(iMintB \u0026 63));     \n            }\n        }\n        else\n            return 0;            \n        // find next minterm\n        v = pSched[m];\n        Mint ^= (1 \u003c\u003c v);\n        if ( (uMaskS \u003e\u003e v) \u0026 1 ) // shared variable\n            MintS ^= (1 \u003c\u003c pVarsS[v]);\n        else\n            MintB ^= (1 \u003c\u003c pVarsB[v]);\n    }\n    // create composition function\n    if ( pComp )\n    {\n        for ( s = 0; s \u003c nMintsS; s++ )\n        {\n            pComp[s\u003e\u003eShiftF] |= (Cof[0][s] \u003c\u003c ((s\u0026MaskF) \u003c\u003c nVarsF));\n            if ( ~Cof[1][s] ) \n                pComp[(s+nMintsS)\u003e\u003eShiftF] |= (Cof[1][s] \u003c\u003c (((s+nMintsS)\u0026MaskF) \u003c\u003c nVarsF));\n            else\n                pComp[(s+nMintsS)\u003e\u003eShiftF] |= (Cof[0][s] \u003c\u003c (((s+nMintsS)\u0026MaskF) \u003c\u003c nVarsF));\n        }\n        if ( nVarsF + nVarsS + 1 \u003c 6 )\n            pComp[0] = Abc_Tt6Stretch( pComp[0], nVarsF + nVarsS + 1 );\n    }\n    if ( pDec \u0026\u0026 nVarsB \u003c 6 )\n        pDec[0] = Abc_Tt6Stretch( pDec[0], nVarsB );\n    return 1;\n}",
+      "Draft": "func Dau_DecCheckSetTop5(p *word, nVars int32, nVarsF int32, nVarsB int32, nVarsS int32, uMaskS int32, pSched *int32, pDec *word, pComp *word) int32 {\n    var Cof [2][64]word;\n    var Value word;\n    var MaskFF word  = (((word)1) \u003c\u003c (1 \u003c\u003c nVarsF)) - 1;\n    var ShiftF int32 = 6 - nVarsF;\n    var MaskF int32 = (1 \u003c\u003c ShiftF) - 1;\n    var pVarsS, pVarsB [16]int32;\n    var nMints int32   = (1 \u003c\u003c nVarsB);\n    var nMintsB int32  = (1 \u003c\u003c(nVarsB-nVarsS));\n    var nMintsS int32  = (1 \u003c\u003c nVarsS);\n    var s, b, v, m, Mint, MintB, MintS int32;\n    assert(nVars == nVarsB + nVarsF, \"nVars == nVarsB + nVarsF\");\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    assert(nVarsS \u003c= 6, \"nVarsS \u003c= 6\");\n    assert(nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= 5, \"nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= 5\");\n    // collect bound/shared variables\n    for  s = b = v = 0; v \u003c nVarsB; v++  {\n        if (uMaskS \u003e\u003e v) \u0026 1 {\n            pVarsB[v] = -1, pVarsS[v] = s++;\n        } else {\n            pVarsS[v] = -1, pVarsB[v] = b++; }\n    }\n    assert(s == nVarsS, \"s == nVarsS\");\n    assert(b == nVarsB-nVarsS, \"b == nVarsB-nVarsS\");\n    // clean minterm storage\n    for  s = 0; s \u003c nMintsS; s++  {\n        Cof[0][s] = Cof[1][s] = ~(word)0;\n    }\n    // iterate through bound set minters\n    for  MintS = MintB = Mint = m = 0; m \u003c nMints; m++  {\n        // find minterm value\n        Value = (p[Mint\u003e\u003eShiftF] \u003e\u003e ((Mint\u0026MaskF)\u003c\u003cnVarsF)) \u0026 MaskFF;\n        // check if this cof already appeared \n        if !~Cof[0][MintS] || Cof[0][MintS] == Value {\n            Cof[0][MintS] = Value;\n        } else if !~Cof[1][MintS] || Cof[1][MintS] == Value {\n            Cof[1][MintS] = Value;\n            if pDec != nil {\n                var iMintB int32  = MintS * nMintsB + MintB;\n                pDec[iMintB\u003e\u003e6] |= (((word)1)\u003c\u003c(iMintB \u0026 63));     \n            }\n        \n        } else {\n            return 0; }            \n        // find next minterm\n        v = pSched[m];\n        Mint ^= (1 \u003c\u003c v);\n        if (uMaskS \u003e\u003e v) \u0026 1 { // shared variable\n            MintS ^= (1 \u003c\u003c pVarsS[v]);\n        } else {\n            MintB ^= (1 \u003c\u003c pVarsB[v]); }\n    }\n    // create composition function\n    if pComp != nil {\n        for  s = 0; s \u003c nMintsS; s++  {\n            pComp[s\u003e\u003eShiftF] |= (Cof[0][s] \u003c\u003c ((s\u0026MaskF) \u003c\u003c nVarsF));\n            if ~Cof[1][s] { \n                pComp[(s+nMintsS)\u003e\u003eShiftF] |= (Cof[1][s] \u003c\u003c (((s+nMintsS)\u0026MaskF) \u003c\u003c nVarsF));\n            } else {\n                pComp[(s+nMintsS)\u003e\u003eShiftF] |= (Cof[0][s] \u003c\u003c (((s+nMintsS)\u0026MaskF) \u003c\u003c nVarsF)); }\n        }\n        if nVarsF + nVarsS + 1 \u003c 6 {\n            pComp[0] = Abc_Tt6Stretch( pComp[0], nVarsF + nVarsS + 1 ); }\n    }\n    if (pDec != nil) \u0026\u0026 nVarsB \u003c 6 {\n        pDec[0] = Abc_Tt6Stretch( pDec[0], nVarsB ); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Dau_DecCheckSetTop6",
+      "Start": 3842,
+      "End": 6179,
+      "BodyStart": 3978,
+      "Original": "int Dau_DecCheckSetTop6( word * p, int nVars, int nVarsF, int nVarsB, int nVarsS, int uMaskS, int * pSched, word * pDec, word * pComp )\n{\n    word * Cof[2][64];\n    int nWordsF = Abc_TtWordNum(nVarsF); \n    int pVarsS[16], pVarsB[16];\n    int nMints  = (1 \u003c\u003c nVarsB);\n    int nMintsB = (1 \u003c\u003c(nVarsB-nVarsS));\n    int nMintsS = (1 \u003c\u003c nVarsS);\n    int s, b, v, m, Mint, MintB, MintS;\n    assert( nVars == nVarsB + nVarsF );\n    assert( nVars \u003c= 16 );\n    assert( nVarsS \u003c= 6 );\n    assert( nVarsF \u003e= 6 );\n    // collect bound/shared variables\n    for ( s = b = v = 0; v \u003c nVarsB; v++ )\n        if ( (uMaskS \u003e\u003e v) \u0026 1 )\n            pVarsB[v] = -1, pVarsS[v] = s++;\n        else\n            pVarsS[v] = -1, pVarsB[v] = b++;\n    assert( s == nVarsS );\n    assert( b == nVarsB-nVarsS );\n    // clean minterm storage\n    for ( s = 0; s \u003c nMintsS; s++ )\n        Cof[0][s] = Cof[1][s] = NULL;\n    // iterate through bound set minters\n    for ( MintS = MintB = Mint = m = 0; m \u003c nMints; m++ )\n    {\n        // check if this cof already appeared \n        if ( !Cof[0][MintS] || !memcmp(Cof[0][MintS], p + Mint * nWordsF, sizeof(word) * nWordsF) )\n            Cof[0][MintS] = p + Mint * nWordsF;\n        else if ( !Cof[1][MintS] || !memcmp(Cof[1][MintS], p + Mint * nWordsF, sizeof(word) * nWordsF) )\n        {\n            Cof[1][MintS] = p + Mint * nWordsF;\n            if ( pDec ) \n            {\n                int iMintB = MintS * nMintsB + MintB;\n                pDec[iMintB\u003e\u003e6] |= (((word)1)\u003c\u003c(iMintB \u0026 63));     \n            }\n        }\n        else\n            return 0;            \n        // find next minterm\n        v = pSched[m];\n        Mint ^= (1 \u003c\u003c v);\n        if ( (uMaskS \u003e\u003e v) \u0026 1 ) // shared variable\n            MintS ^= (1 \u003c\u003c pVarsS[v]);\n        else\n            MintB ^= (1 \u003c\u003c pVarsB[v]);\n    }\n    // create composition function\n    if ( pComp )\n    {\n        for ( s = 0; s \u003c nMintsS; s++ )\n        {\n            memcpy( pComp + s * nWordsF, Cof[0][s], sizeof(word) * nWordsF );\n            if ( Cof[1][s] ) \n                memcpy( pComp + (s+nMintsS) * nWordsF, Cof[1][s], sizeof(word) * nWordsF );\n            else\n                memcpy( pComp + (s+nMintsS) * nWordsF, Cof[0][s], sizeof(word) * nWordsF );\n        }\n    }\n    if ( pDec \u0026\u0026 nVarsB \u003c 6 )\n        pDec[0] = Abc_Tt6Stretch( pDec[0], nVarsB );\n    return 1;\n}",
+      "Draft": "func Dau_DecCheckSetTop6(p *word, nVars int32, nVarsF int32, nVarsB int32, nVarsS int32, uMaskS int32, pSched *int32, pDec *word, pComp *word) int32 {\n    var Cof [2][64]*word;\n    var nWordsF int32  = Abc_TtWordNum(nVarsF); \n    var pVarsS, pVarsB [16]int32;\n    var nMints int32   = (1 \u003c\u003c nVarsB);\n    var nMintsB int32  = (1 \u003c\u003c(nVarsB-nVarsS));\n    var nMintsS int32  = (1 \u003c\u003c nVarsS);\n    var s, b, v, m, Mint, MintB, MintS int32;\n    assert(nVars == nVarsB + nVarsF, \"nVars == nVarsB + nVarsF\");\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    assert(nVarsS \u003c= 6, \"nVarsS \u003c= 6\");\n    assert(nVarsF \u003e= 6, \"nVarsF \u003e= 6\");\n    // collect bound/shared variables\n    for  s = b = v = 0; v \u003c nVarsB; v++  {\n        if (uMaskS \u003e\u003e v) \u0026 1 {\n            pVarsB[v] = -1, pVarsS[v] = s++;\n        } else {\n            pVarsS[v] = -1, pVarsB[v] = b++; }\n    }\n    assert(s == nVarsS, \"s == nVarsS\");\n    assert(b == nVarsB-nVarsS, \"b == nVarsB-nVarsS\");\n    // clean minterm storage\n    for  s = 0; s \u003c nMintsS; s++  {\n        Cof[0][s] = Cof[1][s] = nil;\n    }\n    // iterate through bound set minters\n    for  MintS = MintB = Mint = m = 0; m \u003c nMints; m++  {\n        // check if this cof already appeared \n        if !Cof[0][MintS] || !memcmp(Cof[0][MintS], p + Mint * nWordsF, sizeof(word) * nWordsF) {\n            Cof[0][MintS] = p + Mint * nWordsF;\n        } else if !Cof[1][MintS] || !memcmp(Cof[1][MintS], p + Mint * nWordsF, sizeof(word) * nWordsF) {\n            Cof[1][MintS] = p + Mint * nWordsF;\n            if pDec != nil {\n                var iMintB int32  = MintS * nMintsB + MintB;\n                pDec[iMintB\u003e\u003e6] |= (((word)1)\u003c\u003c(iMintB \u0026 63));     \n            }\n        \n        } else {\n            return 0; }            \n        // find next minterm\n        v = pSched[m];\n        Mint ^= (1 \u003c\u003c v);\n        if (uMaskS \u003e\u003e v) \u0026 1 { // shared variable\n            MintS ^= (1 \u003c\u003c pVarsS[v]);\n        } else {\n            MintB ^= (1 \u003c\u003c pVarsB[v]); }\n    }\n    // create composition function\n    if pComp != nil {\n        for  s = 0; s \u003c nMintsS; s++  {\n            memcpy( pComp + s * nWordsF, Cof[0][s], sizeof(word) * nWordsF );\n            if Cof[1][s] { \n                memcpy( pComp + (s+nMintsS) * nWordsF, Cof[1][s], sizeof(word) * nWordsF );\n            } else {\n                memcpy( pComp + (s+nMintsS) * nWordsF, Cof[0][s], sizeof(word) * nWordsF ); }\n        }\n    }\n    if (pDec != nil) \u0026\u0026 nVarsB \u003c 6 {\n        pDec[0] = Abc_Tt6Stretch( pDec[0], nVarsB ); }\n    return 1;\n}"
+    },
+    {
+      "Name": "Dau_DecCheckSetTop",
+      "Start": 6180,
+      "End": 6565,
+      "BodyStart": 6329,
+      "Original": "static inline int Dau_DecCheckSetTop( word * p, int nVars, int nVarsF, int nVarsB, int nVarsS, int uMaskS, int * pSched, word * pDec, word * pComp )\n{\n    if ( nVarsF \u003c 6 )\n        return Dau_DecCheckSetTop5( p, nVars, nVarsF, nVarsB, nVarsS, uMaskS, pSched, pDec, pComp );\n    else\n        return Dau_DecCheckSetTop6( p, nVars, nVarsF, nVarsB, nVarsS, uMaskS, pSched, pDec, pComp );\n}",
+      "Draft": "func Dau_DecCheckSetTop(p *word, nVars int32, nVarsF int32, nVarsB int32, nVarsS int32, uMaskS int32, pSched *int32, pDec *word, pComp *word) int32 {\n    if nVarsF \u003c 6 {\n        return Dau_DecCheckSetTop5( p, nVars, nVarsF, nVarsB, nVarsS, uMaskS, pSched, pDec, pComp );\n    } else {\n        return Dau_DecCheckSetTop6( p, nVars, nVarsF, nVarsB, nVarsS, uMaskS, pSched, pDec, pComp ); }\n}"
+    },
+    {
+      "Name": "Dau_DecGetMinterm",
+      "Start": 6848,
+      "End": 7255,
+      "BodyStart": 6930,
+      "Original": "static inline void Dau_DecGetMinterm( word * p, int g, int nVarsS, int uMaskAll )\n{\n    int m, c, v;\n    for ( m = c = v = 0; v \u003c nVarsS; v++ )\n        if ( !((uMaskAll \u003e\u003e v) \u0026 1) ) // not shared bound set variable\n        {\n            if ( (g \u003e\u003e v) \u0026 1 )\n                m |= (1 \u003c\u003c c);\n            c++;\n        }\n    assert( c \u003e= 2 );\n    p[m\u003e\u003e6] |= (((word)1)\u003c\u003c(m \u0026 63));                               \n}",
+      "Draft": "func Dau_DecGetMinterm(p *word, g int32, nVarsS int32, uMaskAll int32) {\n    var m, c, v int32;\n    for  m = c = v = 0; v \u003c nVarsS; v++  {\n        if !((uMaskAll \u003e\u003e v) \u0026 1) { // not shared bound set variable\n        \n            if (g \u003e\u003e v) \u0026 1 {\n                m |= (1 \u003c\u003c c); }\n            c++;\n        }\n    }\n    assert(c \u003e= 2, \"c \u003e= 2\");\n    p[m\u003e\u003e6] |= (((word)1)\u003c\u003c(m \u0026 63));                               \n}"
+    },
+    {
+      "Name": "Dau_DecCheckSet5",
+      "Start": 7256,
+      "End": 8665,
+      "BodyStart": 7397,
+      "Original": "static inline int Dau_DecCheckSet5( word * p, int nVars, int nVarsF, int uMaskAll, int uMaskValue, word * pCof0, word * pCof1, word * pDec )\n{\n    int fFound0 = 0, fFound1 = 0;\n    int g, gMax = (1 \u003c\u003c (nVars - nVarsF));\n    int Shift = 6 - nVarsF, Mask = (1 \u003c\u003c Shift) - 1;\n    word Mask2 = (((word)1) \u003c\u003c (1 \u003c\u003c nVarsF)) - 1;\n    word Cof0 = 0, Cof1 = 0, Value;\n    assert( nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= 5 );\n    if ( pDec ) *pDec = 0;\n    for ( g = 0; g \u003c gMax; g++ )\n        if ( (g \u0026 uMaskAll) == uMaskValue ) // this minterm g matches shared variable minterm uMaskValue\n        {\n            Value = (p[g\u003e\u003eShift] \u003e\u003e ((g\u0026Mask)\u003c\u003cnVarsF)) \u0026 Mask2;\n            if ( !fFound0 )\n                Cof0 = Value, fFound0 = 1;\n            else if ( Cof0 == Value )\n                continue;\n            else if ( !fFound1 )\n            {\n                Cof1 = Value, fFound1 = 1;\n                if ( pDec ) Dau_DecGetMinterm( pDec, g, nVars-nVarsF, uMaskAll );\n            }\n            else if ( Cof1 == Value )\n            {\n                if ( pDec ) Dau_DecGetMinterm( pDec, g, nVars-nVarsF, uMaskAll );\n                continue;\n            }\n            else\n                return 0;            \n        }\n    if ( pCof0 )\n    {\n        assert( fFound0 );\n        Cof1 = fFound1 ? Cof1 : Cof0;\n        *pCof0 = Abc_Tt6Stretch( Cof0, nVarsF );\n        *pCof1 = Abc_Tt6Stretch( Cof1, nVarsF );\n    }\n    return 1;\n}",
+      "Draft": "func Dau_DecCheckSet5(p *word, nVars int32, nVarsF int32, uMaskAll int32, uMaskValue int32, pCof0 *word, pCof1 *word, pDec *word) int32 {\n    var fFound0, fFound1 int32;\n    var g int32;\n    var gMax int32 = (1 \u003c\u003c (nVars - nVarsF));\n    var Shift int32 = 6 - nVarsF;\n    var Mask int32 = (1 \u003c\u003c Shift) - 1;\n    var Mask2 word  = (((word)1) \u003c\u003c (1 \u003c\u003c nVarsF)) - 1;\n    var Cof0, Cof1, Value word;\n    assert(nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= 5, \"nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= 5\");\n    if pDec != nil { *pDec = 0; }\n    for  g = 0; g \u003c gMax; g++  {\n        if (g \u0026 uMaskAll) == uMaskValue { // this minterm g matches shared variable minterm uMaskValue\n        \n            Value = (p[g\u003e\u003eShift] \u003e\u003e ((g\u0026Mask)\u003c\u003cnVarsF)) \u0026 Mask2;\n            if !fFound0 {\n                Cof0 = Value;\nfFound0 = 1;\n            } else if Cof0 == Value {\n                continue;\n            } else if !(fFound1 != 0) {\n                Cof1 = Value;\nfFound1 = 1;\n                if pDec != nil { Dau_DecGetMinterm( pDec, g, nVars-nVarsF, uMaskAll ); }\n            \n            } else if Cof1 == Value {\n                if pDec != nil { Dau_DecGetMinterm( pDec, g, nVars-nVarsF, uMaskAll ); }\n                continue;\n            \n            } else {\n                return 0; }            \n        }\n    }\n    if pCof0 != nil {\n        assert(fFound0, \"fFound0\");\n        if fFound1 != 0 {\n            Cof1 = Cof1;\n        } else {\n            Cof1 = Cof0;\n        }\n        *pCof0 = Abc_Tt6Stretch( Cof0, nVarsF );\n        *pCof1 = Abc_Tt6Stretch( Cof1, nVarsF );\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Dau_DecCheckSet6",
+      "Start": 8666,
+      "End": 10002,
+      "BodyStart": 8807,
+      "Original": "static inline int Dau_DecCheckSet6( word * p, int nVars, int nVarsF, int uMaskAll, int uMaskValue, word * pCof0, word * pCof1, word * pDec )\n{\n    int fFound0 = 0, fFound1 = 0;\n    int g, gMax = (1 \u003c\u003c (nVars - nVarsF));\n    int nWords = Abc_TtWordNum(nVarsF);\n    word * Cof0 = NULL, * Cof1 = NULL;\n    assert( nVarsF \u003e= 6 \u0026\u0026 nVarsF \u003c= nVars - 2 );\n    if ( pDec ) *pDec = 0;\n    for ( g = 0; g \u003c gMax; g++ )\n        if ( (g \u0026 uMaskAll) == uMaskValue )\n        {\n            if ( !fFound0 )\n                Cof0 = p + g * nWords, fFound0 = 1;\n            else if ( !memcmp(Cof0, p + g * nWords, sizeof(word) * nWords) )\n                continue;\n            else if ( !fFound1 )\n            {\n                Cof1 = p + g * nWords, fFound1 = 1;\n                if ( pDec ) Dau_DecGetMinterm( pDec, g, nVars-nVarsF, uMaskAll );\n            }\n            else if ( !memcmp(Cof1, p + g * nWords, sizeof(word) * nWords) )\n            {\n                if ( pDec ) Dau_DecGetMinterm( pDec, g, nVars-nVarsF, uMaskAll );\n                continue;\n            }\n            else\n                return 0;            \n        }\n    if ( pCof0 )\n    {\n        assert( fFound0 );\n        Cof1 = fFound1 ? Cof1 : Cof0;\n        memcpy( pCof0, Cof0, sizeof(word) * nWords );\n        memcpy( pCof1, Cof1, sizeof(word) * nWords );\n    }\n    return 1;\n}",
+      "Draft": "func Dau_DecCheckSet6(p *word, nVars int32, nVarsF int32, uMaskAll int32, uMaskValue int32, pCof0 *word, pCof1 *word, pDec *word) int32 {\n    var fFound0, fFound1 int32;\n    var g int32;\n    var gMax int32 = (1 \u003c\u003c (nVars - nVarsF));\n    var nWords int32  = Abc_TtWordNum(nVarsF);\n    var Cof0 *word = nil;\n    var Cof1 *word = nil;\n    assert(nVarsF \u003e= 6 \u0026\u0026 nVarsF \u003c= nVars - 2, \"nVarsF \u003e= 6 \u0026\u0026 nVarsF \u003c= nVars - 2\");\n    if pDec != nil { *pDec = 0; }\n    for  g = 0; g \u003c gMax; g++  {\n        if (g \u0026 uMaskAll) == uMaskValue {\n            if !fFound0 {\n                Cof0 = p + g * nWords;\nfFound0 = 1;\n            } else if !memcmp(Cof0, p + g * nWords, sizeof(word) * nWords) {\n                continue;\n            } else if !(fFound1 != 0) {\n                Cof1 = p + g * nWords;\nfFound1 = 1;\n                if pDec != nil { Dau_DecGetMinterm( pDec, g, nVars-nVarsF, uMaskAll ); }\n            \n            } else if !memcmp(Cof1, p + g * nWords, sizeof(word) * nWords) {\n                if pDec != nil { Dau_DecGetMinterm( pDec, g, nVars-nVarsF, uMaskAll ); }\n                continue;\n            \n            } else {\n                return 0; }            \n        }\n    }\n    if pCof0 != nil {\n        assert(fFound0, \"fFound0\");\n        if fFound1 != 0 {\n            Cof1 = Cof1;\n        } else {\n            Cof1 = Cof0;\n        }\n        memcpy( pCof0, Cof0, sizeof(word) * nWords );\n        memcpy( pCof1, Cof1, sizeof(word) * nWords );\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Dau_DecCheckSetAny",
+      "Start": 10003,
+      "End": 10420,
+      "BodyStart": 10146,
+      "Original": "static inline int Dau_DecCheckSetAny( word * p, int nVars, int nVarsF, int uMaskAll, int uMaskValue, word * pCof0, word * pCof1, word * pDec )\n{\n    assert( nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= nVars - 2 );\n    if ( nVarsF \u003c 6 )\n        return Dau_DecCheckSet5( p, nVars, nVarsF, uMaskAll, uMaskValue, pCof0, pCof1, pDec );\n    else\n        return Dau_DecCheckSet6( p, nVars, nVarsF, uMaskAll, uMaskValue, pCof0, pCof1, pDec );\n}",
+      "Draft": "func Dau_DecCheckSetAny(p *word, nVars int32, nVarsF int32, uMaskAll int32, uMaskValue int32, pCof0 *word, pCof1 *word, pDec *word) int32 {\n    assert(nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= nVars - 2, \"nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= nVars - 2\");\n    if nVarsF \u003c 6 {\n        return Dau_DecCheckSet5( p, nVars, nVarsF, uMaskAll, uMaskValue, pCof0, pCof1, pDec );\n    } else {\n        return Dau_DecCheckSet6( p, nVars, nVarsF, uMaskAll, uMaskValue, pCof0, pCof1, pDec ); }\n}"
+    },
+    {
+      "Name": "Dau_DecCheckSetTopOld",
+      "Start": 10421,
+      "End": 11740,
+      "BodyStart": 10561,
+      "Original": "int Dau_DecCheckSetTopOld( word * p, int nVars, int nVarsF, int nVarsB, int nVarsS, int maskS, word ** pCof0, word ** pCof1, word ** pDec )\n{\n    int i, pVarsS[16];\n    int v, m, mMax = (1 \u003c\u003c nVarsS), uMaskValue;\n    assert( nVars \u003e= 3 \u0026\u0026 nVars \u003c= 16 );\n    assert( nVars == nVarsF + nVarsB );\n    assert( nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= nVars - 2 );\n    assert( nVarsB \u003e= 2 \u0026\u0026 nVarsB \u003c= nVars - 1 );\n    assert( nVarsS \u003e= 0 \u0026\u0026 nVarsS \u003c= nVarsB - 2 );\n    if ( nVarsS == 0 )\n        return Dau_DecCheckSetAny( p, nVars, nVarsF, 0, 0, pCof0? pCof0[0] : 0, pCof1? pCof1[0] : 0, pDec? pDec[0] : 0 );\n    // collect shared variables\n    assert( maskS \u003e 0 \u0026\u0026 maskS \u003c (1 \u003c\u003c nVarsB) );\n    for ( i = 0, v = 0; v \u003c nVarsB; v++ )\n        if ( (maskS \u003e\u003e v) \u0026 1 )\n            pVarsS[i++] = v;\n    assert( i == nVarsS );\n    // go through shared set minterms\n    for ( m = 0; m \u003c mMax; m++ )\n    {\n        // generate share set mask\n        uMaskValue = 0;\n        for ( v = 0; v \u003c nVarsS; v++ )\n            if ( (m \u003e\u003e v) \u0026 1 )\n                uMaskValue |= (1 \u003c\u003c pVarsS[v]);\n        assert( (maskS \u0026 uMaskValue) == uMaskValue );\n        // check decomposition\n        if ( !Dau_DecCheckSetAny( p, nVars, nVarsF, maskS, uMaskValue, pCof0? pCof0[m] : 0, pCof1? pCof1[m] : 0, pDec? pDec[m] : 0 ) )\n            return 0;\n    }\n   return 1;\n}",
+      "Draft": "func Dau_DecCheckSetTopOld(p *word, nVars int32, nVarsF int32, nVarsB int32, nVarsS int32, maskS int32, pCof0 **word, pCof1 **word, pDec **word) int32 {\n    var i int32;\n    var pVarsS [16]int32;\n    var v int32;\n    var m int32;\n    var mMax int32 = (1 \u003c\u003c nVarsS);\n    var uMaskValue int32;\n    assert(nVars \u003e= 3 \u0026\u0026 nVars \u003c= 16, \"nVars \u003e= 3 \u0026\u0026 nVars \u003c= 16\");\n    assert(nVars == nVarsF + nVarsB, \"nVars == nVarsF + nVarsB\");\n    assert(nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= nVars - 2, \"nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= nVars - 2\");\n    assert(nVarsB \u003e= 2 \u0026\u0026 nVarsB \u003c= nVars - 1, \"nVarsB \u003e= 2 \u0026\u0026 nVarsB \u003c= nVars - 1\");\n    assert(nVarsS \u003e= 0 \u0026\u0026 nVarsS \u003c= nVarsB - 2, \"nVarsS \u003e= 0 \u0026\u0026 nVarsS \u003c= nVarsB - 2\");\n    if nVarsS == 0 {\n        return Dau_DecCheckSetAny( p, nVars, nVarsF, 0, 0, pCof0? pCof0[0] : 0, pCof1? pCof1[0] : 0, pDec? pDec[0] : 0 ); }\n    // collect shared variables\n    assert(maskS \u003e 0 \u0026\u0026 maskS \u003c (1 \u003c\u003c nVarsB), \"maskS \u003e 0 \u0026\u0026 maskS \u003c (1 \u003c\u003c nVarsB)\");\n    for  i, v = 0, 0; v \u003c nVarsB; v++  {\n        if (maskS \u003e\u003e v) \u0026 1 {\n            pVarsS[i++] = v; }\n    }\n    assert(i == nVarsS, \"i == nVarsS\");\n    // go through shared set minterms\n    for  m = 0; m \u003c mMax; m++  {\n        // generate share set mask\n        uMaskValue = 0;\n        for  v = 0; v \u003c nVarsS; v++  {\n            if (m \u003e\u003e v) \u0026 1 {\n                uMaskValue |= (1 \u003c\u003c pVarsS[v]); }\n        }\n        assert((maskS \u0026 uMaskValue) == uMaskValue, \"(maskS \u0026 uMaskValue) == uMaskValue\");\n        // check decomposition\n        if !Dau_DecCheckSetAny( p, nVars, nVarsF, maskS, uMaskValue, pCof0? pCof0[m] : 0, pCof1? pCof1[m] : 0, pDec? pDec[m] : 0 ) {\n            return 0; }\n    }\n   return 1;\n}"
+    },
+    {
+      "Name": "Dau_DecCreateSet",
+      "Start": 11992,
+      "End": 12285,
+      "BodyStart": 12070,
+      "Original": "static inline unsigned Dau_DecCreateSet( int * pVarsB, int sizeB, int maskS )\n{\n    unsigned uSet = 0; int v;\n    for ( v = 0; v \u003c sizeB; v++ )\n    {\n        uSet |= (1 \u003c\u003c  (pVarsB[v] \u003c\u003c 1));\n        if ( (maskS \u003e\u003e v) \u0026 1 )\n        uSet |= (1 \u003c\u003c ((pVarsB[v] \u003c\u003c 1)+1));\n    }\n    return uSet;\n}",
+      "Draft": "func Dau_DecCreateSet(pVarsB *int32, sizeB int32, maskS int32) uint32 {\n    var uSet uint32; var v int32;\n    for  v = 0; v \u003c sizeB; v++  {\n        uSet |= (1 \u003c\u003c  (pVarsB[v] \u003c\u003c 1));\n        if (maskS \u003e\u003e v) \u0026 1 {\n        uSet |= (1 \u003c\u003c ((pVarsB[v] \u003c\u003c 1)+1)); }\n    }\n    return uSet;\n}"
+    },
+    {
+      "Name": "Dau_DecSetHas01",
+      "Start": 12286,
+      "End": 12389,
+      "BodyStart": 12337,
+      "Original": "static inline int Dau_DecSetHas01( unsigned Mask )\n{\n    return (Mask \u0026 ((~Mask) \u003e\u003e 1) \u0026 0x55555555);\n}",
+      "Draft": "func Dau_DecSetHas01(Mask uint32) int32 {\n    return (Mask \u0026 ((~Mask) \u003e\u003e 1) \u0026 0x55555555);\n}"
+    },
+    {
+      "Name": "Dau_DecSetIsContained",
+      "Start": 12390,
+      "End": 12751,
+      "BodyStart": 12526,
+      "Original": "static inline int Dau_DecSetIsContained( Vec_Int_t * vSets, unsigned New )\n// Old=abcD contains New=abcDE\n// Old=abcD contains New=abCD\n{\n    unsigned Old;\n    int i, Entry;\n    Vec_IntForEachEntry( vSets, Entry, i )\n    {\n        Old = (unsigned)Entry;\n        if ( (Old \u0026 ~New) == 0 \u0026\u0026 !Dau_DecSetHas01(~Old \u0026 New))\n            return 1;\n    }\n    return 0;\n}",
+      "Draft": "static inline int Dau_DecSetIsContained( Vec_Int_t * vSets, unsigned New )\n// Old=abcD contains New=abcDE\n// Old=abcD contains New=abCD\n{\n    var Old uint32;\n    var i, Entry int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSets)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSets, i)), 1); i++  {\n        Old = uint32(Entry);\n        if (Old \u0026 ~New) == 0 \u0026\u0026 !(Dau_DecSetHas01(~Old \u0026 New) != 0) {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Dau_DecSortSet",
+      "Start": 12752,
+      "End": 13249,
+      "BodyStart": 12845,
+      "Original": "void Dau_DecSortSet( unsigned set, int nVars, int * pnUnique, int * pnShared, int * pnFree )\n{\n    int v;\n    int nUnique = 0, nShared = 0, nFree = 0;\n    for ( v = 0; v \u003c nVars; v++ )\n    {\n        int Value = ((set \u003e\u003e (v \u003c\u003c 1)) \u0026 3);\n        if ( Value == 1 )\n            nUnique++;\n        else if ( Value == 3 )\n            nShared++;\n        else if ( Value == 0 )\n            nFree++;\n        else assert( 0 );\n    }\n    *pnUnique = nUnique;\n    *pnShared = nShared;\n    *pnFree   = nFree;\n}",
+      "Draft": "func Dau_DecSortSet(set uint32, nVars int32, pnUnique *int32, pnShared *int32, pnFree *int32) {\n    var v int32;\n    var nUnique, nShared, nFree int32;\n    for  v = 0; v \u003c nVars; v++  {\n        var Value int32  = ((set \u003e\u003e (v \u003c\u003c 1)) \u0026 3);\n        if Value == 1 {\n            nUnique++;\n        } else if Value == 3 {\n            nShared++;\n        } else if Value == 0 {\n            nFree++;\n        } else { assert(false, \"0\"); }\n    }\n    *pnUnique = nUnique;\n    *pnShared = nShared;\n    *pnFree   = nFree;\n}"
+    },
+    {
+      "Name": "Dau_DecPrintSet",
+      "Start": 13250,
+      "End": 14203,
+      "BodyStart": 13312,
+      "Original": "void Dau_DecPrintSet( unsigned set, int nVars, int fNewLine )\n{\n    int v, Counter = 0;\n    int nUnique = 0, nShared = 0, nFree = 0;\n    Dau_DecSortSet( set, nVars, \u0026nUnique, \u0026nShared, \u0026nFree );\n    printf( \"S =%2d  D =%2d  C =%2d   \", nShared, nUnique+nShared, nShared+nFree+1 );\n\n    printf( \"x=\" );\n    for ( v = 0; v \u003c nVars; v++ )\n    {\n        int Value = ((set \u003e\u003e (v \u003c\u003c 1)) \u0026 3);\n        if ( Value == 1 )\n            printf( \"%c\", 'a' + v ), Counter++;\n        else if ( Value == 3 )\n            printf( \"%c\", 'A' + v ), Counter++;\n        else assert( Value == 0 );\n    }\n    printf( \" y=x\" );\n    for ( v = 0; v \u003c nVars; v++ )\n    {\n        int Value = ((set \u003e\u003e (v \u003c\u003c 1)) \u0026 3);\n        if ( Value == 0 )\n            printf( \"%c\", 'a' + v ), Counter++;\n        else if ( Value == 3 )\n            printf( \"%c\", 'A' + v ), Counter++;\n    }\n    for ( ; Counter \u003c 15; Counter++ )\n        printf( \" \" );\n    if ( fNewLine )\n        printf( \"\\n\" );\n}",
+      "Draft": "func Dau_DecPrintSet(set uint32, nVars int32, fNewLine int32) {\n    var v, Counter int32;\n    var nUnique, nShared, nFree int32;\n    Dau_DecSortSet( set, nVars, \u0026nUnique, \u0026nShared, \u0026nFree );\n    fmt.Printf(\"S =%2d  D =%2d  C =%2d   \", nShared, nUnique+nShared, nShared+nFree+1);\n\n    fmt.Printf(\"x=\");\n    for  v = 0; v \u003c nVars; v++  {\n        var Value int32  = ((set \u003e\u003e (v \u003c\u003c 1)) \u0026 3);\n        if Value == 1 {\n            fmt.Printf(\"%c\", 'a' + v);\nCounter++;\n        } else if Value == 3 {\n            fmt.Printf(\"%c\", 'A' + v);\nCounter++;\n        } else { assert(Value == 0, \"Value == 0\"); }\n    }\n    fmt.Printf(\" y=x\");\n    for  v = 0; v \u003c nVars; v++  {\n        var Value int32  = ((set \u003e\u003e (v \u003c\u003c 1)) \u0026 3);\n        if Value == 0 {\n            fmt.Printf(\"%c\", 'a' + v);\nCounter++;\n        } else if Value == 3 {\n            fmt.Printf(\"%c\", 'A' + v);\nCounter++; }\n    }\n    for  ; Counter \u003c 15; Counter++  {\n        fmt.Printf(\" \");\n    }\n    if fNewLine != 0 {\n        fmt.Printf(\"\\n\"); }\n}"
+    },
+    {
+      "Name": "Dau_DecReadSet",
+      "Start": 14204,
+      "End": 14596,
+      "BodyStart": 14243,
+      "Original": "unsigned Dau_DecReadSet( char * pStr )\n{\n    unsigned uSet = 0; int v;\n    for ( v = 0; pStr[v]; v++ )\n    {\n        if ( pStr[v] \u003e= 'a' \u0026\u0026 pStr[v] \u003c= 'z' )\n            uSet |= (1 \u003c\u003c ((pStr[v] - 'a') \u003c\u003c 1));\n        else if ( pStr[v] \u003e= 'A' \u0026\u0026 pStr[v] \u003c= 'Z' )\n            uSet |= (1 \u003c\u003c ((pStr[v] - 'a') \u003c\u003c 1)) | (1 \u003c\u003c (((pStr[v] - 'a') \u003c\u003c 1)+1));\n        else break;\n    }\n    return uSet;\n}",
+      "Draft": "func Dau_DecReadSet(pStr string) uint32 {\n    var uSet uint32; var v int32;\n    for  v = 0; pStr[v]; v++  {\n        if pStr[v] \u003e= 'a' \u0026\u0026 pStr[v] \u003c= 'z' {\n            uSet |= (1 \u003c\u003c ((pStr[v] - 'a') \u003c\u003c 1));\n        } else if pStr[v] \u003e= 'A' \u0026\u0026 pStr[v] \u003c= 'Z' {\n            uSet |= (1 \u003c\u003c ((pStr[v] - 'a') \u003c\u003c 1)) | (1 \u003c\u003c (((pStr[v] - 'a') \u003c\u003c 1)+1));\n        } else { break; }\n    }\n    return uSet;\n}"
+    },
+    {
+      "Name": "Dau_DecPrintSets",
+      "Start": 14597,
+      "End": 14880,
+      "BodyStart": 14651,
+      "Original": "void Dau_DecPrintSets( Vec_Int_t * vSets, int nVars )\n{\n    int i, Entry;\n    printf( \"The %d-variable set family contains %d sets:\\n\", nVars, Vec_IntSize(vSets) );\n    Vec_IntForEachEntry( vSets, Entry, i )\n        Dau_DecPrintSet( (unsigned)Entry, nVars, 1 );\n    printf( \"\\n\" );\n}",
+      "Draft": "func Dau_DecPrintSets(vSets *Vec_Int_t, nVars int32) {\n    var i, Entry int32;\n    fmt.Printf(\"The %d-variable set family contains %d sets:\\n\", nVars, Vec_IntSize(vSets));\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSets)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSets, i)), 1); i++  {\n        Dau_DecPrintSet( uint32(Entry), nVars, 1 );\n    }\n    fmt.Printf(\"\\n\");\n}"
+    },
+    {
+      "Name": "Dau_DecMoveFreeToLSB",
+      "Start": 15167,
+      "End": 15441,
+      "BodyStart": 15260,
+      "Original": "void Dau_DecMoveFreeToLSB( word * p, int nVars, int * V2P, int * P2V, int maskB, int sizeB )\n{\n    int v, c = 0;\n    for ( v = 0; v \u003c nVars; v++ )\n        if ( !((maskB \u003e\u003e v) \u0026 1) )\n            Abc_TtMoveVar( p, nVars, V2P, P2V, v, c++ );\n    assert( c == nVars - sizeB );\n}",
+      "Draft": "func Dau_DecMoveFreeToLSB(p *word, nVars int32, V2P *int32, P2V *int32, maskB int32, sizeB int32) {\n    var v, c int32;\n    for  v = 0; v \u003c nVars; v++  {\n        if !((maskB \u003e\u003e v) \u0026 1) {\n            Abc_TtMoveVar( p, nVars, V2P, P2V, v, c++ ); }\n    }\n    assert(c == nVars - sizeB, \"c == nVars - sizeB\");\n}"
+    },
+    {
+      "Name": "Dau_DecFindSets_int",
+      "Start": 15442,
+      "End": 17792,
+      "BodyStart": 15519,
+      "Original": "Vec_Int_t * Dau_DecFindSets_int( word * pInit, int nVars, int * pSched[16] )\n{\n    Vec_Int_t * vSets = Vec_IntAlloc( 32 );\n    int V2P[16], P2V[16], pVarsB[16];\n    int Limit = (1 \u003c\u003c nVars);\n    int c, v, sizeB, sizeS, maskB, maskS;\n    unsigned setMixed;\n    word p[1\u003c\u003c10]; \n    memcpy( p, pInit, sizeof(word) * Abc_TtWordNum(nVars) );\n    for ( v = 0; v \u003c nVars; v++ )\n        assert( Abc_TtHasVar( p, nVars, v ) );\n    // initialize permutation\n    for ( v = 0; v \u003c nVars; v++ )\n        V2P[v] = P2V[v] = v;\n    // iterate through bound sets of each size in increasing order\n    for ( sizeB = 2; sizeB \u003c nVars; sizeB++ ) // bound set size\n    for ( maskB = 0; maskB \u003c Limit; maskB++ ) // bound set\n    if ( Abc_TtBitCount16(maskB) == sizeB )\n    {\n        // permute variables to have bound set on top\n        Dau_DecMoveFreeToLSB( p, nVars, V2P, P2V, maskB, sizeB );\n        // collect bound set vars on levels nVars-sizeB to nVars-1\n        for ( c = 0; c \u003c sizeB; c++ )\n            pVarsB[c] = P2V[nVars-sizeB+c];\n        // check disjoint\n//        if ( Dau_DecCheckSetTopOld(p, nVars, nVars-sizeB, sizeB, 0, 0, NULL, NULL, NULL) )\n        if ( Dau_DecCheckSetTop(p, nVars, nVars-sizeB, sizeB, 0, 0, pSched[sizeB], NULL, NULL) )\n        {\n            Vec_IntPush( vSets, Dau_DecCreateSet(pVarsB, sizeB, 0) );\n            continue;\n        }\n        if ( sizeB == 2 )\n            continue;\n        // iterate through shared sets of each size in the increasing order\n        for ( sizeS = 1; sizeS \u003c= sizeB - 2; sizeS++ )   // shared set size\n        if ( sizeS \u003c= 3 )\n//        sizeS = 1; \n        for ( maskS = 0; maskS \u003c (1 \u003c\u003c sizeB); maskS++ ) // shared set\n        if ( Abc_TtBitCount16(maskS) == sizeS )\n        {\n            setMixed = Dau_DecCreateSet( pVarsB, sizeB, maskS );\n//            printf( \"Considering %10d \", setMixed );\n//            Dau_DecPrintSet( setMixed, nVars );\n            // check if it exists\n            if ( Dau_DecSetIsContained(vSets, setMixed) )\n                continue;\n            // check if it can be added\n//            if ( Dau_DecCheckSetTopOld(p, nVars, nVars-sizeB, sizeB, sizeS, maskS, NULL, NULL, NULL) )\n            if ( Dau_DecCheckSetTop(p, nVars, nVars-sizeB, sizeB, sizeS, maskS, pSched[sizeB], NULL, NULL) )\n                Vec_IntPush( vSets, setMixed );\n        }\n    }\n    return vSets;\n}",
+      "Draft": "func Dau_DecFindSets_int(pInit *word, nVars int32, pSched []*int32) *Vec_Int_t {\n    var vSets *Vec_Int_t  = Vec_IntAlloc( 32 );\n    var V2P, P2V, pVarsB [16]int32;\n    var Limit int32  = (1 \u003c\u003c nVars);\n    var c, v, sizeB, sizeS, maskB, maskS int32;\n    var setMixed uint32;\n    var p [1\u003c\u003c10]word; \n    memcpy( p, pInit, sizeof(word) * Abc_TtWordNum(nVars) );\n    for  v = 0; v \u003c nVars; v++  {\n        assert(Abc_TtHasVar( p, nVars, v ), \"Abc_TtHasVar( p, nVars, v )\");\n    }\n    // initialize permutation\n    for  v = 0; v \u003c nVars; v++  {\n        V2P[v] = P2V[v] = v;\n    }\n    // iterate through bound sets of each size in increasing order\n    for  sizeB = 2; sizeB \u003c nVars; sizeB++  { // bound set size\n    for  maskB = 0; maskB \u003c Limit; maskB++  { // bound set\n    if Abc_TtBitCount16(maskB) == sizeB {\n        // permute variables to have bound set on top\n        Dau_DecMoveFreeToLSB( p, nVars, V2P, P2V, maskB, sizeB );\n        // collect bound set vars on levels nVars-sizeB to nVars-1\n        for  c = 0; c \u003c sizeB; c++  {\n            pVarsB[c] = P2V[nVars-sizeB+c];\n        }\n        // check disjoint\n//        if ( Dau_DecCheckSetTopOld(p, nVars, nVars-sizeB, sizeB, 0, 0, NULL, NULL, NULL) )\n        if Dau_DecCheckSetTop(p, nVars, nVars-sizeB, sizeB, 0, 0, pSched[sizeB], nil, nil) != 0 {\n            Vec_IntPush( vSets, Dau_DecCreateSet(pVarsB, sizeB, 0) );\n            continue;\n        }\n        if sizeB == 2 {\n            continue; }\n        // iterate through shared sets of each size in the increasing order\n        for  sizeS = 1; sizeS \u003c= sizeB - 2; sizeS++  {   // shared set size\n        if sizeS \u003c= 3 {\n//        sizeS = 1; \n        for  maskS = 0; maskS \u003c (1 \u003c\u003c sizeB); maskS++  { // shared set\n        if Abc_TtBitCount16(maskS) == sizeS {\n            setMixed = Dau_DecCreateSet( pVarsB, sizeB, maskS );\n//            printf( \"Considering %10d \", setMixed );\n//            Dau_DecPrintSet( setMixed, nVars );\n            // check if it exists\n            if Dau_DecSetIsContained(vSets, setMixed) {\n                continue; }\n            // check if it can be added\n//            if ( Dau_DecCheckSetTopOld(p, nVars, nVars-sizeB, sizeB, sizeS, maskS, NULL, NULL, NULL) )\n            if Dau_DecCheckSetTop(p, nVars, nVars-sizeB, sizeB, sizeS, maskS, pSched[sizeB], nil, nil) != 0 {\n                Vec_IntPush( vSets, setMixed ); }\n        }\n        } }\n        }\n    }\n    }\n    }\n    return vSets;\n}"
+    },
+    {
+      "Name": "Dau_DecFindSets",
+      "Start": 17793,
+      "End": 18131,
+      "BodyStart": 17848,
+      "Original": "Vec_Int_t * Dau_DecFindSets( word * pInit, int nVars )\n{\n    Vec_Int_t * vSets;\n    int v, * pSched[16] = {NULL};\n    for ( v = 2; v \u003c nVars; v++ )\n        pSched[v] = Extra_GreyCodeSchedule( v );\n    vSets = Dau_DecFindSets_int( pInit, nVars, pSched );\n    for ( v = 2; v \u003c nVars; v++ )\n        ABC_FREE( pSched[v] );\n    return vSets;\n}",
+      "Draft": "func Dau_DecFindSets(pInit *word, nVars int32) *Vec_Int_t {\n    var vSets *Vec_Int_t;\n    var v int32;\n    var pSched [16]*int32 = [16]*int32{nil};\n    for  v = 2; v \u003c nVars; v++  {\n        pSched[v] = Extra_GreyCodeSchedule( v );\n    }\n    vSets = Dau_DecFindSets_int( pInit, nVars, pSched );\n    for  v = 2; v \u003c nVars; v++  {\n        // inlining of macro ABC_FREE\n        ((pSched[v]) ? (free((char *) (pSched[v])), (pSched[v]) = 0) : 0);\n    }\n    return vSets;\n}"
+    },
+    {
+      "Name": "Dau_DecFindSetsTest2",
+      "Start": 18132,
+      "End": 18867,
+      "BodyStart": 18160,
+      "Original": "void Dau_DecFindSetsTest2()\n{\n    Vec_Int_t * vSets;\n    word a0 = (~s_Truths6[1] \u0026 s_Truths6[2]) | (s_Truths6[1] \u0026 s_Truths6[3]);\n    word a1 = (~s_Truths6[1] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[5]);\n    word t  = (~s_Truths6[0] \u0026 a0)           | (s_Truths6[0] \u0026 a1); \n//    word t = ABC_CONST(0x7EFFFFFFFFFFFF7E); // and(gam1,gam2)\n//    word t = ABC_CONST(0xB0F0BBFFB0F0BAFE); // some funct\n//    word t = ABC_CONST(0x2B0228022B022802); // 5-var non-dec0x0F7700000F770000\n//    word t = ABC_CONST(0x0F7700000F770000); // (!\u003c(ab)cd\u003ee)\n//    word t = ABC_CONST(0x7F00000000000000); // (!(abc)def)\n    int nVars = 5;\n\n    vSets   = Dau_DecFindSets( \u0026t, nVars );\n    Dau_DecPrintSets( vSets, nVars );\n    Vec_IntFree( vSets );\n}",
+      "Draft": "func Dau_DecFindSetsTest2() {\n    var vSets *Vec_Int_t;\n    var a0 word  = (~s_Truths6[1] \u0026 s_Truths6[2]) | (s_Truths6[1] \u0026 s_Truths6[3]);\n    var a1 word  = (~s_Truths6[1] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[5]);\n    var t word   = (~s_Truths6[0] \u0026 a0)           | (s_Truths6[0] \u0026 a1); \n//    word t = ABC_CONST(0x7EFFFFFFFFFFFF7E); // and(gam1,gam2)\n//    word t = ABC_CONST(0xB0F0BBFFB0F0BAFE); // some funct\n//    word t = ABC_CONST(0x2B0228022B022802); // 5-var non-dec0x0F7700000F770000\n//    word t = ABC_CONST(0x0F7700000F770000); // (!\u003c(ab)cd\u003ee)\n//    word t = ABC_CONST(0x7F00000000000000); // (!(abc)def)\n    var nVars int32  = 5;\n\n    vSets   = Dau_DecFindSets( \u0026t, nVars );\n    Dau_DecPrintSets( vSets, nVars );\n    Vec_IntFree( vSets );\n}"
+    },
+    {
+      "Name": "Dau_DecVarReplace",
+      "Start": 19137,
+      "End": 19408,
+      "BodyStart": 19199,
+      "Original": "void Dau_DecVarReplace( char * pStr, int * pPerm, int nVars )\n{\n    int v;\n    for ( v = 0; pStr[v]; v++ )\n        if ( pStr[v] \u003e= 'a' \u0026\u0026 pStr[v] \u003c= 'z' )\n        {\n            assert( pStr[v] - 'a' \u003c nVars );\n            pStr[v] = 'a' + pPerm[pStr[v] - 'a'];\n        }\n}",
+      "Draft": "func Dau_DecVarReplace(pStr string, pPerm *int32, nVars int32) {\n    var v int32;\n    for  v = 0; pStr[v]; v++  {\n        if pStr[v] \u003e= 'a' \u0026\u0026 pStr[v] \u003c= 'z' {\n            assert(pStr[v] - 'a' \u003c nVars, \"pStr[v] - 'a' \u003c nVars\");\n            pStr[v] = 'a' + pPerm[pStr[v] - 'a'];\n        }\n    }\n}"
+    },
+    {
+      "Name": "Dau_DecDecomposeSet",
+      "Start": 19680,
+      "End": 22909,
+      "BodyStart": 19846,
+      "Original": "int Dau_DecDecomposeSet( word * pInit, int nVars, unsigned uSet, word * pComp, word * pDec, int * pPermC, int * pPermD, int * pnVarsC, int * pnVarsD, int * pnVarsS )\n{\n    word p[1\u003c\u003c13], Cof[64], Cof0[64], Cof1[64], Decs[64];\n    word * pCof0[64], * pCof1[64], * pDecs[64], MintC, MintD;\n    int V2P[16], P2V[16], pVarsU[16], pVarsS[16], pVarsF[16];\n    int nVarsU = 0, nVarsS = 0, nVarsF = 0;\n    int nWords = Abc_TtWordNum(nVars);\n    int v, d, c, Status, nDecs;\n    assert( nVars \u003c= 16 );\n    for ( v = 0; v \u003c nVars; v++ )\n        V2P[v] = P2V[v] = v;\n    memcpy( p, pInit, sizeof(word) * nWords );\n    // sort variables\n    for ( v = 0; v \u003c nVars; v++ )\n    {\n        int Value = (uSet \u003e\u003e (v\u003c\u003c1)) \u0026 3;\n        if ( Value == 0 )\n            pVarsF[nVarsF++] = v;\n        else if ( Value == 1 )\n            pVarsU[nVarsU++] = v;\n        else if ( Value == 3 )\n            pVarsS[nVarsS++] = v;\n        else assert(0);\n    }\n    assert( nVarsS \u003e= 0 \u0026\u0026 nVarsS \u003c= 6 );\n    assert( nVarsF + nVarsS + 1 \u003c= 6 );\n    assert( nVarsU + nVarsS \u003c= 6 );\n    // init space for decomposition functions\n    nDecs = (1 \u003c\u003c nVarsS);\n    for ( d = 0; d \u003c nDecs; d++ )\n    {\n        pCof0[d] = Cof0 + d;\n        pCof1[d] = Cof1 + d;\n        pDecs[d] = Decs + d;\n    }\n    // permute variables\n    c = 0;\n    for ( v = 0; v \u003c nVarsF; v++ )\n       Abc_TtMoveVar( p, nVars, V2P, P2V, pVarsF[v], c++ );\n    for ( v = 0; v \u003c nVarsS; v++ )\n       Abc_TtMoveVar( p, nVars, V2P, P2V, pVarsS[v], c++ );\n    for ( v = 0; v \u003c nVarsU; v++ )\n       Abc_TtMoveVar( p, nVars, V2P, P2V, pVarsU[v], c++ );\n    assert( c == nVars );\n    // check decomposition\n    Status = Dau_DecCheckSetTopOld( p, nVars, nVarsF, nVarsS+nVarsU, nVarsS, Abc_InfoMask(nVarsS), pCof0, pCof1, pDecs );\n    if ( !Status )\n        return 0;\n    // compute cofactors\n    assert( nVarsF + nVarsS \u003c 6 );\n    for ( d = 0; d \u003c nDecs; d++ )\n    {\n        Cof[d] = (pCof1[d][0] \u0026 s_Truths6[nVarsF + nVarsS]) | (pCof0[d][0] \u0026 ~s_Truths6[nVarsF + nVarsS]);\n        pDecs[d][0] = Abc_Tt6Stretch( pDecs[d][0], nVarsU );\n    }\n    // compute the resulting functions\n    pComp[0] = 0;\n    pDec[0] = 0;\n    for ( d = 0; d \u003c nDecs; d++ )\n    {\n        // compute minterms for composition/decomposition function\n        MintC = MintD = ~((word)0);\n        for ( v = 0; v \u003c nVarsS; v++ )\n        {\n            MintC \u0026= ((d \u003e\u003e v) \u0026 1) ? s_Truths6[nVarsF+v] : ~s_Truths6[nVarsF+v];\n            MintD \u0026= ((d \u003e\u003e v) \u0026 1) ? s_Truths6[nVarsU+v] : ~s_Truths6[nVarsU+v];\n        }\n        // derive functions\n        pComp[0] |= MintC \u0026 Cof[d];\n        pDec[0] |= MintD \u0026 pDecs[d][0];\n    }\n    // derive variable permutations\n    if ( pPermC )\n    {\n        for ( v = 0; v \u003c nVarsF; v++ )\n            pPermC[v] = pVarsF[v];\n        for ( v = 0; v \u003c nVarsS; v++ )\n            pPermC[nVarsF+v] = pVarsS[v];\n        pPermC[nVarsF + nVarsS] = nVars;\n    }\n    if ( pPermD )\n    {\n        for ( v = 0; v \u003c nVarsU; v++ )\n            pPermD[v] = pVarsU[v];\n        for ( v = 0; v \u003c nVarsS; v++ )\n            pPermD[nVarsU+v] = pVarsS[v];\n    }\n    if ( pnVarsC )\n        *pnVarsC = nVarsF + nVarsS + 1;\n    if ( pnVarsD )\n        *pnVarsD = nVarsU + nVarsS;\n    if ( pnVarsS )\n        *pnVarsS = nVarsS;\n    return 1;\n}",
+      "Draft": "func Dau_DecDecomposeSet(pInit *word, nVars int32, uSet uint32, pComp *word, pDec *word, pPermC *int32, pPermD *int32, pnVarsC *int32, pnVarsD *int32, pnVarsS *int32) int32 {\n    var p [1\u003c\u003c13]word;\n    var Cof [64]word;\n    var Cof0 [64]word;\n    var Cof1 [64]word;\n    var Decs [64]word;\n    var pCof0 [64]*word;\n    var pCof1 [64]*word;\n    var pDecs [64]*word;\n    var MintC word;\n    var MintD word;\n    var V2P, P2V, pVarsU, pVarsS, pVarsF [16]int32;\n    var nVarsU, nVarsS, nVarsF int32;\n    var nWords int32  = Abc_TtWordNum(nVars);\n    var v, d, c, Status, nDecs int32;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    for  v = 0; v \u003c nVars; v++  {\n        V2P[v] = P2V[v] = v;\n    }\n    memcpy( p, pInit, sizeof(word) * nWords );\n    // sort variables\n    for  v = 0; v \u003c nVars; v++  {\n        var Value int32  = (uSet \u003e\u003e (v\u003c\u003c1)) \u0026 3;\n        if Value == 0 {\n            pVarsF[nVarsF++] = v;\n        } else if Value == 1 {\n            pVarsU[nVarsU++] = v;\n        } else if Value == 3 {\n            pVarsS[nVarsS++] = v;\n        } else { assert(false, \"0\"); }\n    }\n    assert(nVarsS \u003e= 0 \u0026\u0026 nVarsS \u003c= 6, \"nVarsS \u003e= 0 \u0026\u0026 nVarsS \u003c= 6\");\n    assert(nVarsF + nVarsS + 1 \u003c= 6, \"nVarsF + nVarsS + 1 \u003c= 6\");\n    assert(nVarsU + nVarsS \u003c= 6, \"nVarsU + nVarsS \u003c= 6\");\n    // init space for decomposition functions\n    nDecs = (1 \u003c\u003c nVarsS);\n    for  d = 0; d \u003c nDecs; d++  {\n        pCof0[d] = Cof0 + d;\n        pCof1[d] = Cof1 + d;\n        pDecs[d] = Decs + d;\n    }\n    // permute variables\n    c = 0;\n    for  v = 0; v \u003c nVarsF; v++  {\n       Abc_TtMoveVar( p, nVars, V2P, P2V, pVarsF[v], c++ );\n    }\n    for  v = 0; v \u003c nVarsS; v++  {\n       Abc_TtMoveVar( p, nVars, V2P, P2V, pVarsS[v], c++ );\n    }\n    for  v = 0; v \u003c nVarsU; v++  {\n       Abc_TtMoveVar( p, nVars, V2P, P2V, pVarsU[v], c++ );\n    }\n    assert(c == nVars, \"c == nVars\");\n    // check decomposition\n    Status = Dau_DecCheckSetTopOld( p, nVars, nVarsF, nVarsS+nVarsU, nVarsS, Abc_InfoMask(nVarsS), pCof0, pCof1, pDecs );\n    if !Status {\n        return 0; }\n    // compute cofactors\n    assert(nVarsF + nVarsS \u003c 6, \"nVarsF + nVarsS \u003c 6\");\n    for  d = 0; d \u003c nDecs; d++  {\n        Cof[d] = (pCof1[d][0] \u0026 s_Truths6[nVarsF + nVarsS]) | (pCof0[d][0] \u0026 ~s_Truths6[nVarsF + nVarsS]);\n        pDecs[d][0] = Abc_Tt6Stretch( pDecs[d][0], nVarsU );\n    }\n    // compute the resulting functions\n    pComp[0] = 0;\n    pDec[0] = 0;\n    for  d = 0; d \u003c nDecs; d++  {\n        // compute minterms for composition/decomposition function\n        MintC = MintD = ~((word)0);\n        for  v = 0; v \u003c nVarsS; v++  {\n            MintC \u0026= ((d \u003e\u003e v) \u0026 1) ? s_Truths6[nVarsF+v] : ~s_Truths6[nVarsF+v];\n            MintD \u0026= ((d \u003e\u003e v) \u0026 1) ? s_Truths6[nVarsU+v] : ~s_Truths6[nVarsU+v];\n        }\n        // derive functions\n        pComp[0] |= MintC \u0026 Cof[d];\n        pDec[0] |= MintD \u0026 pDecs[d][0];\n    }\n    // derive variable permutations\n    if pPermC != nil {\n        for  v = 0; v \u003c nVarsF; v++  {\n            pPermC[v] = pVarsF[v];\n        }\n        for  v = 0; v \u003c nVarsS; v++  {\n            pPermC[nVarsF+v] = pVarsS[v];\n        }\n        pPermC[nVarsF + nVarsS] = nVars;\n    }\n    if pPermD != nil {\n        for  v = 0; v \u003c nVarsU; v++  {\n            pPermD[v] = pVarsU[v];\n        }\n        for  v = 0; v \u003c nVarsS; v++  {\n            pPermD[nVarsU+v] = pVarsS[v];\n        }\n    }\n    if pnVarsC != nil {\n        *pnVarsC = nVarsF + nVarsS + 1; }\n    if pnVarsD != nil {\n        *pnVarsD = nVarsU + nVarsS; }\n    if pnVarsS != nil {\n        *pnVarsS = nVarsS; }\n    return 1;\n}"
+    },
+    {
+      "Name": "Dau_DecVerify",
+      "Start": 23165,
+      "End": 24090,
+      "BodyStart": 23238,
+      "Original": "int Dau_DecVerify( word * pInit, int nVars, char * pDsdC, char * pDsdD )\n{\n    word pC[1\u003c\u003c13], pD[1\u003c\u003c13], pRes[1\u003c\u003c13]; // max = 16\n    int nWordsC = Abc_TtWordNum(nVars+1);\n    int nWordsD = Abc_TtWordNum(nVars);\n    assert( nVars \u003c 16 );\n    memcpy( pC, Dau_DsdToTruth(pDsdC, nVars+1), sizeof(word) * nWordsC );\n    memcpy( pD, Dau_DsdToTruth(pDsdD, nVars), sizeof(word) * nWordsD );\n    if ( nVars \u003e= 6 )\n    {\n        assert( nWordsD \u003e= 1 );\n        assert( nWordsC \u003e 1 );\n        Abc_TtMux( pRes, pD, pC + nWordsD, pC, nWordsD );\n    }\n    else\n    {\n        word pC0 = Abc_Tt6Stretch( pC[0], nVars );\n        word pC1 = Abc_Tt6Stretch( (pC[0] \u003e\u003e (1 \u003c\u003c nVars)), nVars );\n        Abc_TtMux( pRes, pD, \u0026pC1, \u0026pC0, nWordsD );\n    }\n    if ( !Abc_TtEqual(pInit, pRes, nWordsD) )\n        printf( \"      Verification failed\" );\n//    else\n//        printf( \"      Verification successful\" );\n    printf( \"\\n\" );\n    return 1;\n}",
+      "Draft": "func Dau_DecVerify(pInit *word, nVars int32, pDsdC string, pDsdD string) int32 {\n    var pC, pD, pRes [1\u003c\u003c13]word; // max = 16\n    var nWordsC int32  = Abc_TtWordNum(nVars+1);\n    var nWordsD int32  = Abc_TtWordNum(nVars);\n    assert(nVars \u003c 16, \"nVars \u003c 16\");\n    memcpy( pC, Dau_DsdToTruth(pDsdC, nVars+1), sizeof(word) * nWordsC );\n    memcpy( pD, Dau_DsdToTruth(pDsdD, nVars), sizeof(word) * nWordsD );\n    if nVars \u003e= 6 {\n        assert(nWordsD \u003e= 1, \"nWordsD \u003e= 1\");\n        assert(nWordsC \u003e 1, \"nWordsC \u003e 1\");\n        Abc_TtMux( pRes, pD, pC + nWordsD, pC, nWordsD );\n    \n    } else {\n        var pC0 word  = Abc_Tt6Stretch( pC[0], nVars );\n        var pC1 word  = Abc_Tt6Stretch( (pC[0] \u003e\u003e (1 \u003c\u003c nVars)), nVars );\n        Abc_TtMux( pRes, pD, \u0026pC1, \u0026pC0, nWordsD );\n    }\n    if !Abc_TtEqual(pInit, pRes, nWordsD) {\n        fmt.Printf(\"      Verification failed\"); }\n//    else\n//        printf( \"      Verification successful\" );\n    fmt.Printf(\"\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Dau_DecPerform6",
+      "Start": 24091,
+      "End": 26202,
+      "BodyStart": 24149,
+      "Original": "int Dau_DecPerform6( word * p, int nVars, unsigned uSet )\n{\n    word tComp = 0, tDec = 0, tDec0, tComp0, tComp1, FuncC, FuncD;\n    char pDsdC[1000], pDsdD[1000];\n    int pPermC[16], pPermD[16];\n    int nVarsC, nVarsD, nVarsS, nVarsU, nVarsF, nPairs;\n    int i, m, v, status, ResC, ResD, Counter = 0;\n    status = Dau_DecDecomposeSet( p, nVars, uSet, \u0026tComp, \u0026tDec0, pPermC, pPermD, \u0026nVarsC, \u0026nVarsD, \u0026nVarsS );\n    if ( !status )\n    {\n        printf( \"  Decomposition does not exist\\n\" );\n        return 0;\n    }\n    nVarsU = nVarsD - nVarsS;\n    nVarsF = nVarsC - nVarsS - 1;\n    tComp0 = Abc_Tt6Cofactor0( tComp, nVarsF + nVarsS );\n    tComp1 = Abc_Tt6Cofactor1( tComp, nVarsF + nVarsS );\n    nPairs = 1 \u003c\u003c (1 \u003c\u003c nVarsS); \n    for ( i = 0; i \u003c nPairs; i++ )\n    {\n        if ( i \u0026 1 )\n            continue;\n        // create miterms with this polarity\n        FuncC = FuncD = 0;\n        for ( m = 0; m \u003c (1 \u003c\u003c nVarsS); m++ )\n        {\n            word MintC, MintD;\n            if ( !((i \u003e\u003e m) \u0026 1) )\n                continue;\n            MintC = MintD = ~(word)0;\n            for ( v = 0; v \u003c nVarsS; v++ )\n            {\n                MintC \u0026= ((m \u003e\u003e v) \u0026 1) ? s_Truths6[nVarsF+v] : ~s_Truths6[nVarsF+v];\n                MintD \u0026= ((m \u003e\u003e v) \u0026 1) ? s_Truths6[nVarsU+v] : ~s_Truths6[nVarsU+v];\n            }\n            FuncC |= MintC;\n            FuncD |= MintD;\n        }\n        // uncomplement given variables\n        tComp = (~s_Truths6[nVarsF + nVarsS] \u0026 ((tComp0 \u0026 ~FuncC) | (tComp1 \u0026 FuncC))) | (s_Truths6[nVarsF + nVarsS] \u0026 ((tComp1 \u0026 ~FuncC) | (tComp0 \u0026 FuncC)));\n        tDec = tDec0 ^ FuncD;\n        // decompose\n        ResC = Dau_DsdDecompose( \u0026tComp, nVarsC, 0, 1, pDsdC );\n        ResD = Dau_DsdDecompose( \u0026tDec, nVarsD, 0, 1, pDsdD );\n        // replace variables\n        Dau_DecVarReplace( pDsdD, pPermD, nVarsD );\n        Dau_DecVarReplace( pDsdC, pPermC, nVarsC );\n        // report\n//        printf( \"  \" );\n        printf( \"%3d : \", Counter++ );\n        printf( \"%24s  \", pDsdD );\n        printf( \"%24s  \", pDsdC );\n        Dau_DecVerify( p, nVars, pDsdC, pDsdD );\n    }\n    return 1;\n}",
+      "Draft": "func Dau_DecPerform6(p *word, nVars int32, uSet uint32) int32 {\n    var tComp, tDec, tDec0, tComp0, tComp1, FuncC, FuncD word;\n    var pDsdC, pDsdD [1000]byte;\n    var pPermC, pPermD [16]int32;\n    var nVarsC, nVarsD, nVarsS, nVarsU, nVarsF, nPairs int32;\n    var i, m, v, status, ResC, ResD, Counter int32;\n    status = Dau_DecDecomposeSet( p, nVars, uSet, \u0026tComp, \u0026tDec0, pPermC, pPermD, \u0026nVarsC, \u0026nVarsD, \u0026nVarsS );\n    if !status {\n        fmt.Printf(\"  Decomposition does not exist\\n\");\n        return 0;\n    }\n    nVarsU = nVarsD - nVarsS;\n    nVarsF = nVarsC - nVarsS - 1;\n    tComp0 = Abc_Tt6Cofactor0( tComp, nVarsF + nVarsS );\n    tComp1 = Abc_Tt6Cofactor1( tComp, nVarsF + nVarsS );\n    nPairs = 1 \u003c\u003c (1 \u003c\u003c nVarsS); \n    for  i = 0; i \u003c nPairs; i++  {\n        if i \u0026 1 {\n            continue; }\n        // create miterms with this polarity\n        FuncC = FuncD = 0;\n        for  m = 0; m \u003c (1 \u003c\u003c nVarsS); m++  {\n            var MintC, MintD word;\n            if !((i \u003e\u003e m) \u0026 1) {\n                continue; }\n            MintC = MintD = ~(word)0;\n            for  v = 0; v \u003c nVarsS; v++  {\n                MintC \u0026= ((m \u003e\u003e v) \u0026 1) ? s_Truths6[nVarsF+v] : ~s_Truths6[nVarsF+v];\n                MintD \u0026= ((m \u003e\u003e v) \u0026 1) ? s_Truths6[nVarsU+v] : ~s_Truths6[nVarsU+v];\n            }\n            FuncC |= MintC;\n            FuncD |= MintD;\n        }\n        // uncomplement given variables\n        tComp = (~s_Truths6[nVarsF + nVarsS] \u0026 ((tComp0 \u0026 ~FuncC) | (tComp1 \u0026 FuncC))) | (s_Truths6[nVarsF + nVarsS] \u0026 ((tComp1 \u0026 ~FuncC) | (tComp0 \u0026 FuncC)));\n        tDec = tDec0 ^ FuncD;\n        // decompose\n        ResC = Dau_DsdDecompose( \u0026tComp, nVarsC, 0, 1, pDsdC );\n        ResD = Dau_DsdDecompose( \u0026tDec, nVarsD, 0, 1, pDsdD );\n        // replace variables\n        Dau_DecVarReplace( pDsdD, pPermD, nVarsD );\n        Dau_DecVarReplace( pDsdC, pPermC, nVarsC );\n        // report\n//        printf( \"  \" );\n        fmt.Printf(\"%3d : \", Counter++);\n        fmt.Printf(\"%24s  \", pDsdD);\n        fmt.Printf(\"%24s  \", pDsdC);\n        Dau_DecVerify( p, nVars, pDsdC, pDsdD );\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Dau_DecPerform",
+      "Start": 26204,
+      "End": 28799,
+      "BodyStart": 26265,
+      "Original": "int Dau_DecPerform( word * pInit, int nVars, unsigned uSet )\n{\n    word p[1\u003c\u003c10], pDec[1\u003c\u003c10], pComp[1\u003c\u003c10]; // at most 2^10 words\n    char pDsdC[5000], pDsdD[5000];  // at most 2^12 hex digits\n    int nVarsU, nVarsS, nVarsF, nVarsC = 0, nVarsD = 0;\n    int V2P[16], P2V[16], pPermC[16], pPermD[16], * pSched;\n    int v, i, status, ResC, ResD;\n    int nWords = Abc_TtWordNum(nVars);\n    assert( nVars \u003c= 16 );\n    // backup the function\n    memcpy( p, pInit, sizeof(word) * nWords );\n    // get variable numbers\n    Dau_DecSortSet( uSet, nVars, \u0026nVarsU, \u0026nVarsS, \u0026nVarsF );\n    // permute function and order variables\n    for ( v = 0; v \u003c nVars; v++ )\n        V2P[v] = P2V[v] = v;\n    for ( i = v = 0; v \u003c nVars; v++ )\n        if ( ((uSet \u003e\u003e (v\u003c\u003c1)) \u0026 3) == 0 ) // free first\n           Abc_TtMoveVar( p, nVars, V2P, P2V, v, i++ ), pPermC[nVarsC++] = v;\n    for ( v = 0; v \u003c nVars; v++ )\n        if ( ((uSet \u003e\u003e (v\u003c\u003c1)) \u0026 3) == 3 ) // share second\n           Abc_TtMoveVar( p, nVars, V2P, P2V, v, i++ ), pPermC[nVarsC++] = v;\n    pPermC[nVarsC++] = nVars;\n    for ( v = 0; v \u003c nVars; v++ )\n        if ( ((uSet \u003e\u003e (v\u003c\u003c1)) \u0026 3) == 1 ) // unique last\n           Abc_TtMoveVar( p, nVars, V2P, P2V, v, i++ ), pPermD[nVarsD++] = v;\n    for ( v = 0; v \u003c nVarsS; v++ )\n        pPermD[nVarsD++] = pPermC[nVarsF+v];\n    assert( nVarsD == nVarsU + nVarsS );\n    assert( nVarsC == nVarsF + nVarsS + 1 );\n    assert( i == nVars );\n    // decompose\n    pSched = Extra_GreyCodeSchedule( nVarsU + nVarsS );\n    memset( pDec, 0, sizeof(word) * Abc_TtWordNum(nVarsD) );\n    memset( pComp, 0, sizeof(word) * Abc_TtWordNum(nVarsC) );\n    status = Dau_DecCheckSetTop( p, nVars, nVarsF, nVarsU + nVarsS, nVarsS, nVarsS ? Abc_InfoMask(nVarsS) : 0, pSched, pDec, pComp );\n    ABC_FREE( pSched );\n    if ( !status )\n    {\n        printf( \"  Decomposition does not exist\\n\" );\n        return 0;\n    }\n//    Dau_DsdPrintFromTruth( stdout, pC, nVars+1 ); //printf( \"\\n\" );\n//    Dau_DsdPrintFromTruth( stdout, pD, nVars ); //printf( \"\\n\" );\n//    Kit_DsdPrintFromTruth( (unsigned *)pComp, 6 ); printf( \"\\n\" );\n//    Kit_DsdPrintFromTruth( (unsigned *)pDec, 6 );  printf( \"\\n\" );\n    // decompose\n    ResC = Dau_DsdDecompose( pComp, nVarsC, 0, 1, pDsdC );\n    ResD = Dau_DsdDecompose( pDec, nVarsD, 0, 1, pDsdD );\n    // replace variables\n    Dau_DecVarReplace( pDsdD, pPermD, nVarsD );\n    Dau_DecVarReplace( pDsdC, pPermC, nVarsC );\n    // report\n    printf( \"     \" );\n    printf( \"%3d : \", 0 );\n    printf( \"%24s  \", pDsdD );\n    printf( \"%24s  \", pDsdC );\n    Dau_DecVerify( pInit, nVars, pDsdC, pDsdD );\n    return 1;\n}",
+      "Draft": "func Dau_DecPerform(pInit *word, nVars int32, uSet uint32) int32 {\n    var p, pDec, pComp [1\u003c\u003c10]word; // at most 2^10 words\n    var pDsdC, pDsdD [5000]byte;  // at most 2^12 hex digits\n    var nVarsU, nVarsS, nVarsF, nVarsC, nVarsD int32;\n    var V2P [16]int32;\n    var P2V [16]int32;\n    var pPermC [16]int32;\n    var pPermD [16]int32;\n    var pSched *int32;\n    var v, i, status, ResC, ResD int32;\n    var nWords int32  = Abc_TtWordNum(nVars);\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    // backup the function\n    memcpy( p, pInit, sizeof(word) * nWords );\n    // get variable numbers\n    Dau_DecSortSet( uSet, nVars, \u0026nVarsU, \u0026nVarsS, \u0026nVarsF );\n    // permute function and order variables\n    for  v = 0; v \u003c nVars; v++  {\n        V2P[v] = P2V[v] = v;\n    }\n    for  i = v = 0; v \u003c nVars; v++  {\n        if ((uSet \u003e\u003e (v\u003c\u003c1)) \u0026 3) == 0 { // free first\n           Abc_TtMoveVar( p, nVars, V2P, P2V, v, i++ );\npPermC[nVarsC++] = v; }\n    }\n    for  v = 0; v \u003c nVars; v++  {\n        if ((uSet \u003e\u003e (v\u003c\u003c1)) \u0026 3) == 3 { // share second\n           Abc_TtMoveVar( p, nVars, V2P, P2V, v, i++ );\npPermC[nVarsC++] = v; }\n    }\n    pPermC[nVarsC++] = nVars;\n    for  v = 0; v \u003c nVars; v++  {\n        if ((uSet \u003e\u003e (v\u003c\u003c1)) \u0026 3) == 1 { // unique last\n           Abc_TtMoveVar( p, nVars, V2P, P2V, v, i++ );\npPermD[nVarsD++] = v; }\n    }\n    for  v = 0; v \u003c nVarsS; v++  {\n        pPermD[nVarsD++] = pPermC[nVarsF+v];\n    }\n    assert(nVarsD == nVarsU + nVarsS, \"nVarsD == nVarsU + nVarsS\");\n    assert(nVarsC == nVarsF + nVarsS + 1, \"nVarsC == nVarsF + nVarsS + 1\");\n    assert(i == nVars, \"i == nVars\");\n    // decompose\n    pSched = Extra_GreyCodeSchedule( nVarsU + nVarsS );\n    memset( pDec, 0, sizeof(word) * Abc_TtWordNum(nVarsD) );\n    memset( pComp, 0, sizeof(word) * Abc_TtWordNum(nVarsC) );\n    status = Dau_DecCheckSetTop( p, nVars, nVarsF, nVarsU + nVarsS, nVarsS, nVarsS ? Abc_InfoMask(nVarsS) : 0, pSched, pDec, pComp );\n    // inlining of macro ABC_FREE\n    ((pSched) ? (free((char *) (pSched)), (pSched) = 0) : 0);\n    if !status {\n        fmt.Printf(\"  Decomposition does not exist\\n\");\n        return 0;\n    }\n//    Dau_DsdPrintFromTruth( stdout, pC, nVars+1 ); //printf( \"\\n\" );\n//    Dau_DsdPrintFromTruth( stdout, pD, nVars ); //printf( \"\\n\" );\n//    Kit_DsdPrintFromTruth( (unsigned *)pComp, 6 ); printf( \"\\n\" );\n//    Kit_DsdPrintFromTruth( (unsigned *)pDec, 6 );  printf( \"\\n\" );\n    // decompose\n    ResC = Dau_DsdDecompose( pComp, nVarsC, 0, 1, pDsdC );\n    ResD = Dau_DsdDecompose( pDec, nVarsD, 0, 1, pDsdD );\n    // replace variables\n    Dau_DecVarReplace( pDsdD, pPermD, nVarsD );\n    Dau_DecVarReplace( pDsdC, pPermC, nVarsC );\n    // report\n    fmt.Printf(\"     \");\n    fmt.Printf(\"%3d : \", 0);\n    fmt.Printf(\"%24s  \", pDsdD);\n    fmt.Printf(\"%24s  \", pDsdC);\n    Dau_DecVerify( pInit, nVars, pDsdC, pDsdD );\n    return 1;\n}"
+    },
+    {
+      "Name": "Dau_DecTrySets",
+      "Start": 28800,
+      "End": 29659,
+      "BodyStart": 28861,
+      "Original": "void Dau_DecTrySets( word * pInit, int nVars, int fVerbose )\n{\n    Vec_Int_t * vSets;\n    int i, Entry;\n    assert( nVars \u003c= 16 );\n    vSets = Dau_DecFindSets( pInit, nVars );\n    if ( !fVerbose )\n    {\n        Vec_IntFree( vSets );\n        return;\n    }\n    Dau_DsdPrintFromTruth( pInit, nVars ); \n    printf( \"This %d-variable function has %d decomposable variable sets:\\n\", nVars, Vec_IntSize(vSets) );\n    Vec_IntForEachEntry( vSets, Entry, i )\n    {\n        unsigned uSet = (unsigned)Entry;\n        printf( \"Set %4d : \", i );\n        if ( nVars \u003e 6 )\n        {\n            Dau_DecPrintSet( uSet, nVars, 0 );\n            Dau_DecPerform( pInit, nVars, uSet );\n        }\n        else\n        {\n            Dau_DecPrintSet( uSet, nVars, 1 );\n            Dau_DecPerform6( pInit, nVars, uSet );\n        }\n    }\n    Vec_IntFree( vSets );\n//    printf( \"\\n\" );\n}",
+      "Draft": "func Dau_DecTrySets(pInit *word, nVars int32, fVerbose int32) {\n    var vSets *Vec_Int_t;\n    var i, Entry int32;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    vSets = Dau_DecFindSets( pInit, nVars );\n    if !(fVerbose != 0) {\n        Vec_IntFree( vSets );\n        return;\n    }\n    Dau_DsdPrintFromTruth( pInit, nVars ); \n    fmt.Printf(\"This %d-variable function has %d decomposable variable sets:\\n\", nVars, Vec_IntSize(vSets));\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSets)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSets, i)), 1); i++  {\n        var uSet uint32  = uint32(Entry);\n        fmt.Printf(\"Set %4d : \", i);\n        if nVars \u003e 6 {\n            Dau_DecPrintSet( uSet, nVars, 0 );\n            Dau_DecPerform( pInit, nVars, uSet );\n        \n        } else {\n            Dau_DecPrintSet( uSet, nVars, 1 );\n            Dau_DecPerform6( pInit, nVars, uSet );\n        }\n    }\n    Vec_IntFree( vSets );\n//    printf( \"\\n\" );\n}"
+    },
+    {
+      "Name": "Dau_DecFindSetsTest3",
+      "Start": 29661,
+      "End": 30161,
+      "BodyStart": 29689,
+      "Original": "void Dau_DecFindSetsTest3()\n{\n    word a0 = (~s_Truths6[1] \u0026 s_Truths6[2]) | (s_Truths6[1] \u0026 s_Truths6[3]);\n    word a1 = (~s_Truths6[1] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[5]);\n    word t  = (~s_Truths6[0] \u0026 a0)           | (s_Truths6[0] \u0026 a1); \n//    word t = ABC_CONST(0x0F7700000F770000); // (!\u003c(ab)cd\u003ee)\n    int nVars = 6;\n    char * pStr = \"Bcd\";\n//    char * pStr = \"Abcd\";\n//    char * pStr = \"ab\";\n    unsigned uSet = Dau_DecReadSet( pStr );\n    Dau_DecPerform6( \u0026t, nVars, uSet );\n}",
+      "Draft": "func Dau_DecFindSetsTest3() {\n    var a0 word  = (~s_Truths6[1] \u0026 s_Truths6[2]) | (s_Truths6[1] \u0026 s_Truths6[3]);\n    var a1 word  = (~s_Truths6[1] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[5]);\n    var t word   = (~s_Truths6[0] \u0026 a0)           | (s_Truths6[0] \u0026 a1); \n//    word t = ABC_CONST(0x0F7700000F770000); // (!\u003c(ab)cd\u003ee)\n    var nVars int32  = 6;\n    var pStr string  = \"Bcd\";\n//    char * pStr = \"Abcd\";\n//    char * pStr = \"ab\";\n    var uSet uint32  = Dau_DecReadSet( pStr );\n    Dau_DecPerform6( \u0026t, nVars, uSet );\n}"
+    },
+    {
+      "Name": "Dau_DecFindSetsTest",
+      "Start": 30163,
+      "End": 31111,
+      "BodyStart": 30190,
+      "Original": "void Dau_DecFindSetsTest()\n{\n    int nVars = 6;\n//    word a0 = (~s_Truths6[1] \u0026 s_Truths6[2]) | (s_Truths6[1] \u0026 s_Truths6[3]);\n//    word a1 = (~s_Truths6[1] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[5]);\n//    word t  = (~s_Truths6[0] \u0026 a0)           | (s_Truths6[0] \u0026 a1); \n//    word t = ABC_CONST(0x7EFFFFFFFFFFFF7E); // and(gam1,gam2)\n//    word t = ABC_CONST(0xB0F0BBFFB0F0BAFE); // some funct\n//    word t = ABC_CONST(0x00000000901FFFFF); // some funct\n    word t = ABC_CONST(0x000030F00D0D3FFF); // some funct\n//    word t = ABC_CONST(0x00000000690006FF); // some funct\n//    word t = ABC_CONST(0x7000F80007FF0FFF); // some funct\n//    word t = ABC_CONST(0x4133CB334133CB33); // some funct 5 var\n//    word t = ABC_CONST(0x2B0228022B022802); // 5-var non-dec0x0F7700000F770000\n//    word t = ABC_CONST(0x0F7700000F770000); // (!\u003c(ab)cd\u003ee)\n//    word t = ABC_CONST(0x7F00000000000000); // (!(abc)def)\n    Dau_DecTrySets( \u0026t, nVars, 1 );\n}",
+      "Draft": "func Dau_DecFindSetsTest() {\n    var nVars int32  = 6;\n//    word a0 = (~s_Truths6[1] \u0026 s_Truths6[2]) | (s_Truths6[1] \u0026 s_Truths6[3]);\n//    word a1 = (~s_Truths6[1] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[5]);\n//    word t  = (~s_Truths6[0] \u0026 a0)           | (s_Truths6[0] \u0026 a1); \n//    word t = ABC_CONST(0x7EFFFFFFFFFFFF7E); // and(gam1,gam2)\n//    word t = ABC_CONST(0xB0F0BBFFB0F0BAFE); // some funct\n//    word t = ABC_CONST(0x00000000901FFFFF); // some funct\n    var t word  = ABC_CONST(0x000030F00D0D3FFF); // some funct\n//    word t = ABC_CONST(0x00000000690006FF); // some funct\n//    word t = ABC_CONST(0x7000F80007FF0FFF); // some funct\n//    word t = ABC_CONST(0x4133CB334133CB33); // some funct 5 var\n//    word t = ABC_CONST(0x2B0228022B022802); // 5-var non-dec0x0F7700000F770000\n//    word t = ABC_CONST(0x0F7700000F770000); // (!\u003c(ab)cd\u003ee)\n//    word t = ABC_CONST(0x7F00000000000000); // (!(abc)def)\n    Dau_DecTrySets( \u0026t, nVars, 1 );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::4952",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4952,
+      "End": 4958
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::5105",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5105,
+      "End": 5111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::5808",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5808,
+      "End": 5814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::5930",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5930,
+      "End": 5936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::6039",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6039,
+      "End": 6045
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::9261",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9261,
+      "End": 9267
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::9559",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9559,
+      "End": 9565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::9902",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9902,
+      "End": 9908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::9956",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9956,
+      "End": 9962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::15948",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 15740,
+      "End": 15746
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::20553",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 20257,
+      "End": 20263
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::23748",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23452,
+      "End": 23458
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::23820",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 23524,
+      "End": 23530
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::26959",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 26663,
+      "End": 26669
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::28011",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 27715,
+      "End": 27721
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::mechanical::sizeof::28073",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 27777,
+      "End": 27783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::pointer-cast::18362",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18089,
+      "End": 18089
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::pointer-cast::28313",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27955,
+      "End": 27955
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecCheckSetTop5",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecCheckSetTop5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1318,
+      "End": 3841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecCheckSetTop6",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecCheckSetTop6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3842,
+      "End": 6179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecCheckSetTop",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecCheckSetTop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6180,
+      "End": 6565
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecGetMinterm",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecGetMinterm",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6848,
+      "End": 7255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecCheckSet5",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecCheckSet5",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7256,
+      "End": 8665
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecCheckSet6",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecCheckSet6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8666,
+      "End": 10002
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecCheckSetAny",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecCheckSetAny",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10003,
+      "End": 10420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::ternary::Dau_DecCheckSetTopOld",
+      "Category": "ternary-review",
+      "Symbol": "Dau_DecCheckSetTopOld",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10421,
+      "End": 11740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecCheckSetTopOld",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecCheckSetTopOld",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10421,
+      "End": 11740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecCreateSet",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecCreateSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11992,
+      "End": 12285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecSetHas01",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecSetHas01",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12286,
+      "End": 12389
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecSetIsContained",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecSetIsContained",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 12390,
+      "End": 12751
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecSortSet",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecSortSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12752,
+      "End": 13249
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecPrintSet",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecPrintSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13250,
+      "End": 14203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecReadSet",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecReadSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14204,
+      "End": 14596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecPrintSets",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecPrintSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14597,
+      "End": 14880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecMoveFreeToLSB",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecMoveFreeToLSB",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15167,
+      "End": 15441
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecFindSets_int",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecFindSets_int",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15442,
+      "End": 17792
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::ternary::Dau_DecFindSets",
+      "Category": "ternary-review",
+      "Symbol": "Dau_DecFindSets",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 17793,
+      "End": 18131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecFindSets",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecFindSets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17793,
+      "End": 18131
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecFindSetsTest2",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecFindSetsTest2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18132,
+      "End": 18867
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecVarReplace",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecVarReplace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19137,
+      "End": 19408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::ternary::Dau_DecDecomposeSet",
+      "Category": "ternary-review",
+      "Symbol": "Dau_DecDecomposeSet",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 19680,
+      "End": 22909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecDecomposeSet",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecDecomposeSet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19680,
+      "End": 22909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecVerify",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecVerify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23165,
+      "End": 24090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::ternary::Dau_DecPerform6",
+      "Category": "ternary-review",
+      "Symbol": "Dau_DecPerform6",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 24091,
+      "End": 26202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecPerform6",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecPerform6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24091,
+      "End": 26202
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::ternary::Dau_DecPerform",
+      "Category": "ternary-review",
+      "Symbol": "Dau_DecPerform",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 26204,
+      "End": 28799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecPerform",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26204,
+      "End": 28799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecTrySets",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecTrySets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28800,
+      "End": 29659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecFindSetsTest3",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecFindSetsTest3",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29661,
+      "End": 30161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::Dau_DecFindSetsTest",
+      "Category": "semantic-review",
+      "Symbol": "Dau_DecFindSetsTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30163,
+      "End": 31111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 31359
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dau/dauNonDsd.c::macro-inline::30639",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 30639,
+      "End": 30668
+    }
+  ],
+  "Draft": "package dau\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [dauNonDsd.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware unmapping.]\n\n  Synopsis    []\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: dauNonDsd.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dauInt.h\"\n//#include \"misc/util/utilTruth.h\"\n//#include \"misc/extra/extra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    [Checks decomposability with given variable set.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DecCheckSetTop5(p *word, nVars int32, nVarsF int32, nVarsB int32, nVarsS int32, uMaskS int32, pSched *int32, pDec *word, pComp *word) int32 {\n    var Cof [2][64]word;\n    var Value word;\n    var MaskFF word  = (((word)1) \u003c\u003c (1 \u003c\u003c nVarsF)) - 1;\n    var ShiftF int32 = 6 - nVarsF;\n    var MaskF int32 = (1 \u003c\u003c ShiftF) - 1;\n    var pVarsS, pVarsB [16]int32;\n    var nMints int32   = (1 \u003c\u003c nVarsB);\n    var nMintsB int32  = (1 \u003c\u003c(nVarsB-nVarsS));\n    var nMintsS int32  = (1 \u003c\u003c nVarsS);\n    var s, b, v, m, Mint, MintB, MintS int32;\n    assert(nVars == nVarsB + nVarsF, \"nVars == nVarsB + nVarsF\");\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    assert(nVarsS \u003c= 6, \"nVarsS \u003c= 6\");\n    assert(nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= 5, \"nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= 5\");\n    // collect bound/shared variables\n    for  s = b = v = 0; v \u003c nVarsB; v++  {\n        if (uMaskS \u003e\u003e v) \u0026 1 {\n            pVarsB[v] = -1, pVarsS[v] = s++;\n        } else {\n            pVarsS[v] = -1, pVarsB[v] = b++; }\n    }\n    assert(s == nVarsS, \"s == nVarsS\");\n    assert(b == nVarsB-nVarsS, \"b == nVarsB-nVarsS\");\n    // clean minterm storage\n    for  s = 0; s \u003c nMintsS; s++  {\n        Cof[0][s] = Cof[1][s] = ~(word)0;\n    }\n    // iterate through bound set minters\n    for  MintS = MintB = Mint = m = 0; m \u003c nMints; m++  {\n        // find minterm value\n        Value = (p[Mint\u003e\u003eShiftF] \u003e\u003e ((Mint\u0026MaskF)\u003c\u003cnVarsF)) \u0026 MaskFF;\n        // check if this cof already appeared \n        if !~Cof[0][MintS] || Cof[0][MintS] == Value {\n            Cof[0][MintS] = Value;\n        } else if !~Cof[1][MintS] || Cof[1][MintS] == Value {\n            Cof[1][MintS] = Value;\n            if pDec != nil {\n                var iMintB int32  = MintS * nMintsB + MintB;\n                pDec[iMintB\u003e\u003e6] |= (((word)1)\u003c\u003c(iMintB \u0026 63));     \n            }\n        \n        } else {\n            return 0; }            \n        // find next minterm\n        v = pSched[m];\n        Mint ^= (1 \u003c\u003c v);\n        if (uMaskS \u003e\u003e v) \u0026 1 { // shared variable\n            MintS ^= (1 \u003c\u003c pVarsS[v]);\n        } else {\n            MintB ^= (1 \u003c\u003c pVarsB[v]); }\n    }\n    // create composition function\n    if pComp != nil {\n        for  s = 0; s \u003c nMintsS; s++  {\n            pComp[s\u003e\u003eShiftF] |= (Cof[0][s] \u003c\u003c ((s\u0026MaskF) \u003c\u003c nVarsF));\n            if ~Cof[1][s] { \n                pComp[(s+nMintsS)\u003e\u003eShiftF] |= (Cof[1][s] \u003c\u003c (((s+nMintsS)\u0026MaskF) \u003c\u003c nVarsF));\n            } else {\n                pComp[(s+nMintsS)\u003e\u003eShiftF] |= (Cof[0][s] \u003c\u003c (((s+nMintsS)\u0026MaskF) \u003c\u003c nVarsF)); }\n        }\n        if nVarsF + nVarsS + 1 \u003c 6 {\n            pComp[0] = Abc_Tt6Stretch( pComp[0], nVarsF + nVarsS + 1 ); }\n    }\n    if (pDec != nil) \u0026\u0026 nVarsB \u003c 6 {\n        pDec[0] = Abc_Tt6Stretch( pDec[0], nVarsB ); }\n    return 1;\n}\nfunc Dau_DecCheckSetTop6(p *word, nVars int32, nVarsF int32, nVarsB int32, nVarsS int32, uMaskS int32, pSched *int32, pDec *word, pComp *word) int32 {\n    var Cof [2][64]*word;\n    var nWordsF int32  = Abc_TtWordNum(nVarsF); \n    var pVarsS, pVarsB [16]int32;\n    var nMints int32   = (1 \u003c\u003c nVarsB);\n    var nMintsB int32  = (1 \u003c\u003c(nVarsB-nVarsS));\n    var nMintsS int32  = (1 \u003c\u003c nVarsS);\n    var s, b, v, m, Mint, MintB, MintS int32;\n    assert(nVars == nVarsB + nVarsF, \"nVars == nVarsB + nVarsF\");\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    assert(nVarsS \u003c= 6, \"nVarsS \u003c= 6\");\n    assert(nVarsF \u003e= 6, \"nVarsF \u003e= 6\");\n    // collect bound/shared variables\n    for  s = b = v = 0; v \u003c nVarsB; v++  {\n        if (uMaskS \u003e\u003e v) \u0026 1 {\n            pVarsB[v] = -1, pVarsS[v] = s++;\n        } else {\n            pVarsS[v] = -1, pVarsB[v] = b++; }\n    }\n    assert(s == nVarsS, \"s == nVarsS\");\n    assert(b == nVarsB-nVarsS, \"b == nVarsB-nVarsS\");\n    // clean minterm storage\n    for  s = 0; s \u003c nMintsS; s++  {\n        Cof[0][s] = Cof[1][s] = nil;\n    }\n    // iterate through bound set minters\n    for  MintS = MintB = Mint = m = 0; m \u003c nMints; m++  {\n        // check if this cof already appeared \n        if !Cof[0][MintS] || !memcmp(Cof[0][MintS], p + Mint * nWordsF, sizeof(word) * nWordsF) {\n            Cof[0][MintS] = p + Mint * nWordsF;\n        } else if !Cof[1][MintS] || !memcmp(Cof[1][MintS], p + Mint * nWordsF, sizeof(word) * nWordsF) {\n            Cof[1][MintS] = p + Mint * nWordsF;\n            if pDec != nil {\n                var iMintB int32  = MintS * nMintsB + MintB;\n                pDec[iMintB\u003e\u003e6] |= (((word)1)\u003c\u003c(iMintB \u0026 63));     \n            }\n        \n        } else {\n            return 0; }            \n        // find next minterm\n        v = pSched[m];\n        Mint ^= (1 \u003c\u003c v);\n        if (uMaskS \u003e\u003e v) \u0026 1 { // shared variable\n            MintS ^= (1 \u003c\u003c pVarsS[v]);\n        } else {\n            MintB ^= (1 \u003c\u003c pVarsB[v]); }\n    }\n    // create composition function\n    if pComp != nil {\n        for  s = 0; s \u003c nMintsS; s++  {\n            memcpy( pComp + s * nWordsF, Cof[0][s], sizeof(word) * nWordsF );\n            if Cof[1][s] { \n                memcpy( pComp + (s+nMintsS) * nWordsF, Cof[1][s], sizeof(word) * nWordsF );\n            } else {\n                memcpy( pComp + (s+nMintsS) * nWordsF, Cof[0][s], sizeof(word) * nWordsF ); }\n        }\n    }\n    if (pDec != nil) \u0026\u0026 nVarsB \u003c 6 {\n        pDec[0] = Abc_Tt6Stretch( pDec[0], nVarsB ); }\n    return 1;\n}\nfunc Dau_DecCheckSetTop(p *word, nVars int32, nVarsF int32, nVarsB int32, nVarsS int32, uMaskS int32, pSched *int32, pDec *word, pComp *word) int32 {\n    if nVarsF \u003c 6 {\n        return Dau_DecCheckSetTop5( p, nVars, nVarsF, nVarsB, nVarsS, uMaskS, pSched, pDec, pComp );\n    } else {\n        return Dau_DecCheckSetTop6( p, nVars, nVarsF, nVarsB, nVarsS, uMaskS, pSched, pDec, pComp ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks decomposability with given BS variables.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DecGetMinterm(p *word, g int32, nVarsS int32, uMaskAll int32) {\n    var m, c, v int32;\n    for  m = c = v = 0; v \u003c nVarsS; v++  {\n        if !((uMaskAll \u003e\u003e v) \u0026 1) { // not shared bound set variable\n        \n            if (g \u003e\u003e v) \u0026 1 {\n                m |= (1 \u003c\u003c c); }\n            c++;\n        }\n    }\n    assert(c \u003e= 2, \"c \u003e= 2\");\n    p[m\u003e\u003e6] |= (((word)1)\u003c\u003c(m \u0026 63));                               \n}\nfunc Dau_DecCheckSet5(p *word, nVars int32, nVarsF int32, uMaskAll int32, uMaskValue int32, pCof0 *word, pCof1 *word, pDec *word) int32 {\n    var fFound0, fFound1 int32;\n    var g int32;\n    var gMax int32 = (1 \u003c\u003c (nVars - nVarsF));\n    var Shift int32 = 6 - nVarsF;\n    var Mask int32 = (1 \u003c\u003c Shift) - 1;\n    var Mask2 word  = (((word)1) \u003c\u003c (1 \u003c\u003c nVarsF)) - 1;\n    var Cof0, Cof1, Value word;\n    assert(nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= 5, \"nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= 5\");\n    if pDec != nil { *pDec = 0; }\n    for  g = 0; g \u003c gMax; g++  {\n        if (g \u0026 uMaskAll) == uMaskValue { // this minterm g matches shared variable minterm uMaskValue\n        \n            Value = (p[g\u003e\u003eShift] \u003e\u003e ((g\u0026Mask)\u003c\u003cnVarsF)) \u0026 Mask2;\n            if !fFound0 {\n                Cof0 = Value;\nfFound0 = 1;\n            } else if Cof0 == Value {\n                continue;\n            } else if !(fFound1 != 0) {\n                Cof1 = Value;\nfFound1 = 1;\n                if pDec != nil { Dau_DecGetMinterm( pDec, g, nVars-nVarsF, uMaskAll ); }\n            \n            } else if Cof1 == Value {\n                if pDec != nil { Dau_DecGetMinterm( pDec, g, nVars-nVarsF, uMaskAll ); }\n                continue;\n            \n            } else {\n                return 0; }            \n        }\n    }\n    if pCof0 != nil {\n        assert(fFound0, \"fFound0\");\n        if fFound1 != 0 {\n            Cof1 = Cof1;\n        } else {\n            Cof1 = Cof0;\n        }\n        *pCof0 = Abc_Tt6Stretch( Cof0, nVarsF );\n        *pCof1 = Abc_Tt6Stretch( Cof1, nVarsF );\n    }\n    return 1;\n}\nfunc Dau_DecCheckSet6(p *word, nVars int32, nVarsF int32, uMaskAll int32, uMaskValue int32, pCof0 *word, pCof1 *word, pDec *word) int32 {\n    var fFound0, fFound1 int32;\n    var g int32;\n    var gMax int32 = (1 \u003c\u003c (nVars - nVarsF));\n    var nWords int32  = Abc_TtWordNum(nVarsF);\n    var Cof0 *word = nil;\n    var Cof1 *word = nil;\n    assert(nVarsF \u003e= 6 \u0026\u0026 nVarsF \u003c= nVars - 2, \"nVarsF \u003e= 6 \u0026\u0026 nVarsF \u003c= nVars - 2\");\n    if pDec != nil { *pDec = 0; }\n    for  g = 0; g \u003c gMax; g++  {\n        if (g \u0026 uMaskAll) == uMaskValue {\n            if !fFound0 {\n                Cof0 = p + g * nWords;\nfFound0 = 1;\n            } else if !memcmp(Cof0, p + g * nWords, sizeof(word) * nWords) {\n                continue;\n            } else if !(fFound1 != 0) {\n                Cof1 = p + g * nWords;\nfFound1 = 1;\n                if pDec != nil { Dau_DecGetMinterm( pDec, g, nVars-nVarsF, uMaskAll ); }\n            \n            } else if !memcmp(Cof1, p + g * nWords, sizeof(word) * nWords) {\n                if pDec != nil { Dau_DecGetMinterm( pDec, g, nVars-nVarsF, uMaskAll ); }\n                continue;\n            \n            } else {\n                return 0; }            \n        }\n    }\n    if pCof0 != nil {\n        assert(fFound0, \"fFound0\");\n        if fFound1 != 0 {\n            Cof1 = Cof1;\n        } else {\n            Cof1 = Cof0;\n        }\n        memcpy( pCof0, Cof0, sizeof(word) * nWords );\n        memcpy( pCof1, Cof1, sizeof(word) * nWords );\n    }\n    return 1;\n}\nfunc Dau_DecCheckSetAny(p *word, nVars int32, nVarsF int32, uMaskAll int32, uMaskValue int32, pCof0 *word, pCof1 *word, pDec *word) int32 {\n    assert(nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= nVars - 2, \"nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= nVars - 2\");\n    if nVarsF \u003c 6 {\n        return Dau_DecCheckSet5( p, nVars, nVarsF, uMaskAll, uMaskValue, pCof0, pCof1, pDec );\n    } else {\n        return Dau_DecCheckSet6( p, nVars, nVarsF, uMaskAll, uMaskValue, pCof0, pCof1, pDec ); }\n}\nfunc Dau_DecCheckSetTopOld(p *word, nVars int32, nVarsF int32, nVarsB int32, nVarsS int32, maskS int32, pCof0 **word, pCof1 **word, pDec **word) int32 {\n    var i int32;\n    var pVarsS [16]int32;\n    var v int32;\n    var m int32;\n    var mMax int32 = (1 \u003c\u003c nVarsS);\n    var uMaskValue int32;\n    assert(nVars \u003e= 3 \u0026\u0026 nVars \u003c= 16, \"nVars \u003e= 3 \u0026\u0026 nVars \u003c= 16\");\n    assert(nVars == nVarsF + nVarsB, \"nVars == nVarsF + nVarsB\");\n    assert(nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= nVars - 2, \"nVarsF \u003e= 1 \u0026\u0026 nVarsF \u003c= nVars - 2\");\n    assert(nVarsB \u003e= 2 \u0026\u0026 nVarsB \u003c= nVars - 1, \"nVarsB \u003e= 2 \u0026\u0026 nVarsB \u003c= nVars - 1\");\n    assert(nVarsS \u003e= 0 \u0026\u0026 nVarsS \u003c= nVarsB - 2, \"nVarsS \u003e= 0 \u0026\u0026 nVarsS \u003c= nVarsB - 2\");\n    if nVarsS == 0 {\n        return Dau_DecCheckSetAny( p, nVars, nVarsF, 0, 0, pCof0? pCof0[0] : 0, pCof1? pCof1[0] : 0, pDec? pDec[0] : 0 ); }\n    // collect shared variables\n    assert(maskS \u003e 0 \u0026\u0026 maskS \u003c (1 \u003c\u003c nVarsB), \"maskS \u003e 0 \u0026\u0026 maskS \u003c (1 \u003c\u003c nVarsB)\");\n    for  i, v = 0, 0; v \u003c nVarsB; v++  {\n        if (maskS \u003e\u003e v) \u0026 1 {\n            pVarsS[i++] = v; }\n    }\n    assert(i == nVarsS, \"i == nVarsS\");\n    // go through shared set minterms\n    for  m = 0; m \u003c mMax; m++  {\n        // generate share set mask\n        uMaskValue = 0;\n        for  v = 0; v \u003c nVarsS; v++  {\n            if (m \u003e\u003e v) \u0026 1 {\n                uMaskValue |= (1 \u003c\u003c pVarsS[v]); }\n        }\n        assert((maskS \u0026 uMaskValue) == uMaskValue, \"(maskS \u0026 uMaskValue) == uMaskValue\");\n        // check decomposition\n        if !Dau_DecCheckSetAny( p, nVars, nVarsF, maskS, uMaskValue, pCof0? pCof0[m] : 0, pCof1? pCof1[m] : 0, pDec? pDec[m] : 0 ) {\n            return 0; }\n    }\n   return 1;\n}\n \n\n/**Function*************************************************************\n\n  Synopsis    [Variable sets.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DecCreateSet(pVarsB *int32, sizeB int32, maskS int32) uint32 {\n    var uSet uint32; var v int32;\n    for  v = 0; v \u003c sizeB; v++  {\n        uSet |= (1 \u003c\u003c  (pVarsB[v] \u003c\u003c 1));\n        if (maskS \u003e\u003e v) \u0026 1 {\n        uSet |= (1 \u003c\u003c ((pVarsB[v] \u003c\u003c 1)+1)); }\n    }\n    return uSet;\n}\nfunc Dau_DecSetHas01(Mask uint32) int32 {\n    return (Mask \u0026 ((~Mask) \u003e\u003e 1) \u0026 0x55555555);\n}\nstatic inline int Dau_DecSetIsContained( Vec_Int_t * vSets, unsigned New )\n// Old=abcD contains New=abcDE\n// Old=abcD contains New=abCD\n{\n    var Old uint32;\n    var i, Entry int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSets)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSets, i)), 1); i++  {\n        Old = uint32(Entry);\n        if (Old \u0026 ~New) == 0 \u0026\u0026 !(Dau_DecSetHas01(~Old \u0026 New) != 0) {\n            return 1; }\n    }\n    return 0;\n}\nfunc Dau_DecSortSet(set uint32, nVars int32, pnUnique *int32, pnShared *int32, pnFree *int32) {\n    var v int32;\n    var nUnique, nShared, nFree int32;\n    for  v = 0; v \u003c nVars; v++  {\n        var Value int32  = ((set \u003e\u003e (v \u003c\u003c 1)) \u0026 3);\n        if Value == 1 {\n            nUnique++;\n        } else if Value == 3 {\n            nShared++;\n        } else if Value == 0 {\n            nFree++;\n        } else { assert(false, \"0\"); }\n    }\n    *pnUnique = nUnique;\n    *pnShared = nShared;\n    *pnFree   = nFree;\n}\nfunc Dau_DecPrintSet(set uint32, nVars int32, fNewLine int32) {\n    var v, Counter int32;\n    var nUnique, nShared, nFree int32;\n    Dau_DecSortSet( set, nVars, \u0026nUnique, \u0026nShared, \u0026nFree );\n    fmt.Printf(\"S =%2d  D =%2d  C =%2d   \", nShared, nUnique+nShared, nShared+nFree+1);\n\n    fmt.Printf(\"x=\");\n    for  v = 0; v \u003c nVars; v++  {\n        var Value int32  = ((set \u003e\u003e (v \u003c\u003c 1)) \u0026 3);\n        if Value == 1 {\n            fmt.Printf(\"%c\", 'a' + v);\nCounter++;\n        } else if Value == 3 {\n            fmt.Printf(\"%c\", 'A' + v);\nCounter++;\n        } else { assert(Value == 0, \"Value == 0\"); }\n    }\n    fmt.Printf(\" y=x\");\n    for  v = 0; v \u003c nVars; v++  {\n        var Value int32  = ((set \u003e\u003e (v \u003c\u003c 1)) \u0026 3);\n        if Value == 0 {\n            fmt.Printf(\"%c\", 'a' + v);\nCounter++;\n        } else if Value == 3 {\n            fmt.Printf(\"%c\", 'A' + v);\nCounter++; }\n    }\n    for  ; Counter \u003c 15; Counter++  {\n        fmt.Printf(\" \");\n    }\n    if fNewLine != 0 {\n        fmt.Printf(\"\\n\"); }\n}\nfunc Dau_DecReadSet(pStr string) uint32 {\n    var uSet uint32; var v int32;\n    for  v = 0; pStr[v]; v++  {\n        if pStr[v] \u003e= 'a' \u0026\u0026 pStr[v] \u003c= 'z' {\n            uSet |= (1 \u003c\u003c ((pStr[v] - 'a') \u003c\u003c 1));\n        } else if pStr[v] \u003e= 'A' \u0026\u0026 pStr[v] \u003c= 'Z' {\n            uSet |= (1 \u003c\u003c ((pStr[v] - 'a') \u003c\u003c 1)) | (1 \u003c\u003c (((pStr[v] - 'a') \u003c\u003c 1)+1));\n        } else { break; }\n    }\n    return uSet;\n}\nfunc Dau_DecPrintSets(vSets *Vec_Int_t, nVars int32) {\n    var i, Entry int32;\n    fmt.Printf(\"The %d-variable set family contains %d sets:\\n\", nVars, Vec_IntSize(vSets));\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSets)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSets, i)), 1); i++  {\n        Dau_DecPrintSet( uint32(Entry), nVars, 1 );\n    }\n    fmt.Printf(\"\\n\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Find decomposable bound-sets of the given function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DecMoveFreeToLSB(p *word, nVars int32, V2P *int32, P2V *int32, maskB int32, sizeB int32) {\n    var v, c int32;\n    for  v = 0; v \u003c nVars; v++  {\n        if !((maskB \u003e\u003e v) \u0026 1) {\n            Abc_TtMoveVar( p, nVars, V2P, P2V, v, c++ ); }\n    }\n    assert(c == nVars - sizeB, \"c == nVars - sizeB\");\n}\nfunc Dau_DecFindSets_int(pInit *word, nVars int32, pSched []*int32) *Vec_Int_t {\n    var vSets *Vec_Int_t  = Vec_IntAlloc( 32 );\n    var V2P, P2V, pVarsB [16]int32;\n    var Limit int32  = (1 \u003c\u003c nVars);\n    var c, v, sizeB, sizeS, maskB, maskS int32;\n    var setMixed uint32;\n    var p [1\u003c\u003c10]word; \n    memcpy( p, pInit, sizeof(word) * Abc_TtWordNum(nVars) );\n    for  v = 0; v \u003c nVars; v++  {\n        assert(Abc_TtHasVar( p, nVars, v ), \"Abc_TtHasVar( p, nVars, v )\");\n    }\n    // initialize permutation\n    for  v = 0; v \u003c nVars; v++  {\n        V2P[v] = P2V[v] = v;\n    }\n    // iterate through bound sets of each size in increasing order\n    for  sizeB = 2; sizeB \u003c nVars; sizeB++  { // bound set size\n    for  maskB = 0; maskB \u003c Limit; maskB++  { // bound set\n    if Abc_TtBitCount16(maskB) == sizeB {\n        // permute variables to have bound set on top\n        Dau_DecMoveFreeToLSB( p, nVars, V2P, P2V, maskB, sizeB );\n        // collect bound set vars on levels nVars-sizeB to nVars-1\n        for  c = 0; c \u003c sizeB; c++  {\n            pVarsB[c] = P2V[nVars-sizeB+c];\n        }\n        // check disjoint\n//        if ( Dau_DecCheckSetTopOld(p, nVars, nVars-sizeB, sizeB, 0, 0, NULL, NULL, NULL) )\n        if Dau_DecCheckSetTop(p, nVars, nVars-sizeB, sizeB, 0, 0, pSched[sizeB], nil, nil) != 0 {\n            Vec_IntPush( vSets, Dau_DecCreateSet(pVarsB, sizeB, 0) );\n            continue;\n        }\n        if sizeB == 2 {\n            continue; }\n        // iterate through shared sets of each size in the increasing order\n        for  sizeS = 1; sizeS \u003c= sizeB - 2; sizeS++  {   // shared set size\n        if sizeS \u003c= 3 {\n//        sizeS = 1; \n        for  maskS = 0; maskS \u003c (1 \u003c\u003c sizeB); maskS++  { // shared set\n        if Abc_TtBitCount16(maskS) == sizeS {\n            setMixed = Dau_DecCreateSet( pVarsB, sizeB, maskS );\n//            printf( \"Considering %10d \", setMixed );\n//            Dau_DecPrintSet( setMixed, nVars );\n            // check if it exists\n            if Dau_DecSetIsContained(vSets, setMixed) {\n                continue; }\n            // check if it can be added\n//            if ( Dau_DecCheckSetTopOld(p, nVars, nVars-sizeB, sizeB, sizeS, maskS, NULL, NULL, NULL) )\n            if Dau_DecCheckSetTop(p, nVars, nVars-sizeB, sizeB, sizeS, maskS, pSched[sizeB], nil, nil) != 0 {\n                Vec_IntPush( vSets, setMixed ); }\n        }\n        } }\n        }\n    }\n    }\n    }\n    return vSets;\n}\nfunc Dau_DecFindSets(pInit *word, nVars int32) *Vec_Int_t {\n    var vSets *Vec_Int_t;\n    var v int32;\n    var pSched [16]*int32 = [16]*int32{nil};\n    for  v = 2; v \u003c nVars; v++  {\n        pSched[v] = Extra_GreyCodeSchedule( v );\n    }\n    vSets = Dau_DecFindSets_int( pInit, nVars, pSched );\n    for  v = 2; v \u003c nVars; v++  {\n        // inlining of macro ABC_FREE\n        ((pSched[v]) ? (free((char *) (pSched[v])), (pSched[v]) = 0) : 0);\n    }\n    return vSets;\n}\nfunc Dau_DecFindSetsTest2() {\n    var vSets *Vec_Int_t;\n    var a0 word  = (~s_Truths6[1] \u0026 s_Truths6[2]) | (s_Truths6[1] \u0026 s_Truths6[3]);\n    var a1 word  = (~s_Truths6[1] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[5]);\n    var t word   = (~s_Truths6[0] \u0026 a0)           | (s_Truths6[0] \u0026 a1); \n//    word t = ABC_CONST(0x7EFFFFFFFFFFFF7E); // and(gam1,gam2)\n//    word t = ABC_CONST(0xB0F0BBFFB0F0BAFE); // some funct\n//    word t = ABC_CONST(0x2B0228022B022802); // 5-var non-dec0x0F7700000F770000\n//    word t = ABC_CONST(0x0F7700000F770000); // (!\u003c(ab)cd\u003ee)\n//    word t = ABC_CONST(0x7F00000000000000); // (!(abc)def)\n    var nVars int32  = 5;\n\n    vSets   = Dau_DecFindSets( \u0026t, nVars );\n    Dau_DecPrintSets( vSets, nVars );\n    Vec_IntFree( vSets );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Replaces variables in the string.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DecVarReplace(pStr string, pPerm *int32, nVars int32) {\n    var v int32;\n    for  v = 0; pStr[v]; v++  {\n        if pStr[v] \u003e= 'a' \u0026\u0026 pStr[v] \u003c= 'z' {\n            assert(pStr[v] - 'a' \u003c nVars, \"pStr[v] - 'a' \u003c nVars\");\n            pStr[v] = 'a' + pPerm[pStr[v] - 'a'];\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Decomposes with the given bound-set.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DecDecomposeSet(pInit *word, nVars int32, uSet uint32, pComp *word, pDec *word, pPermC *int32, pPermD *int32, pnVarsC *int32, pnVarsD *int32, pnVarsS *int32) int32 {\n    var p [1\u003c\u003c13]word;\n    var Cof [64]word;\n    var Cof0 [64]word;\n    var Cof1 [64]word;\n    var Decs [64]word;\n    var pCof0 [64]*word;\n    var pCof1 [64]*word;\n    var pDecs [64]*word;\n    var MintC word;\n    var MintD word;\n    var V2P, P2V, pVarsU, pVarsS, pVarsF [16]int32;\n    var nVarsU, nVarsS, nVarsF int32;\n    var nWords int32  = Abc_TtWordNum(nVars);\n    var v, d, c, Status, nDecs int32;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    for  v = 0; v \u003c nVars; v++  {\n        V2P[v] = P2V[v] = v;\n    }\n    memcpy( p, pInit, sizeof(word) * nWords );\n    // sort variables\n    for  v = 0; v \u003c nVars; v++  {\n        var Value int32  = (uSet \u003e\u003e (v\u003c\u003c1)) \u0026 3;\n        if Value == 0 {\n            pVarsF[nVarsF++] = v;\n        } else if Value == 1 {\n            pVarsU[nVarsU++] = v;\n        } else if Value == 3 {\n            pVarsS[nVarsS++] = v;\n        } else { assert(false, \"0\"); }\n    }\n    assert(nVarsS \u003e= 0 \u0026\u0026 nVarsS \u003c= 6, \"nVarsS \u003e= 0 \u0026\u0026 nVarsS \u003c= 6\");\n    assert(nVarsF + nVarsS + 1 \u003c= 6, \"nVarsF + nVarsS + 1 \u003c= 6\");\n    assert(nVarsU + nVarsS \u003c= 6, \"nVarsU + nVarsS \u003c= 6\");\n    // init space for decomposition functions\n    nDecs = (1 \u003c\u003c nVarsS);\n    for  d = 0; d \u003c nDecs; d++  {\n        pCof0[d] = Cof0 + d;\n        pCof1[d] = Cof1 + d;\n        pDecs[d] = Decs + d;\n    }\n    // permute variables\n    c = 0;\n    for  v = 0; v \u003c nVarsF; v++  {\n       Abc_TtMoveVar( p, nVars, V2P, P2V, pVarsF[v], c++ );\n    }\n    for  v = 0; v \u003c nVarsS; v++  {\n       Abc_TtMoveVar( p, nVars, V2P, P2V, pVarsS[v], c++ );\n    }\n    for  v = 0; v \u003c nVarsU; v++  {\n       Abc_TtMoveVar( p, nVars, V2P, P2V, pVarsU[v], c++ );\n    }\n    assert(c == nVars, \"c == nVars\");\n    // check decomposition\n    Status = Dau_DecCheckSetTopOld( p, nVars, nVarsF, nVarsS+nVarsU, nVarsS, Abc_InfoMask(nVarsS), pCof0, pCof1, pDecs );\n    if !Status {\n        return 0; }\n    // compute cofactors\n    assert(nVarsF + nVarsS \u003c 6, \"nVarsF + nVarsS \u003c 6\");\n    for  d = 0; d \u003c nDecs; d++  {\n        Cof[d] = (pCof1[d][0] \u0026 s_Truths6[nVarsF + nVarsS]) | (pCof0[d][0] \u0026 ~s_Truths6[nVarsF + nVarsS]);\n        pDecs[d][0] = Abc_Tt6Stretch( pDecs[d][0], nVarsU );\n    }\n    // compute the resulting functions\n    pComp[0] = 0;\n    pDec[0] = 0;\n    for  d = 0; d \u003c nDecs; d++  {\n        // compute minterms for composition/decomposition function\n        MintC = MintD = ~((word)0);\n        for  v = 0; v \u003c nVarsS; v++  {\n            MintC \u0026= ((d \u003e\u003e v) \u0026 1) ? s_Truths6[nVarsF+v] : ~s_Truths6[nVarsF+v];\n            MintD \u0026= ((d \u003e\u003e v) \u0026 1) ? s_Truths6[nVarsU+v] : ~s_Truths6[nVarsU+v];\n        }\n        // derive functions\n        pComp[0] |= MintC \u0026 Cof[d];\n        pDec[0] |= MintD \u0026 pDecs[d][0];\n    }\n    // derive variable permutations\n    if pPermC != nil {\n        for  v = 0; v \u003c nVarsF; v++  {\n            pPermC[v] = pVarsF[v];\n        }\n        for  v = 0; v \u003c nVarsS; v++  {\n            pPermC[nVarsF+v] = pVarsS[v];\n        }\n        pPermC[nVarsF + nVarsS] = nVars;\n    }\n    if pPermD != nil {\n        for  v = 0; v \u003c nVarsU; v++  {\n            pPermD[v] = pVarsU[v];\n        }\n        for  v = 0; v \u003c nVarsS; v++  {\n            pPermD[nVarsU+v] = pVarsS[v];\n        }\n    }\n    if pnVarsC != nil {\n        *pnVarsC = nVarsF + nVarsS + 1; }\n    if pnVarsD != nil {\n        *pnVarsD = nVarsU + nVarsS; }\n    if pnVarsS != nil {\n        *pnVarsS = nVarsS; }\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Testing procedures.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dau_DecVerify(pInit *word, nVars int32, pDsdC string, pDsdD string) int32 {\n    var pC, pD, pRes [1\u003c\u003c13]word; // max = 16\n    var nWordsC int32  = Abc_TtWordNum(nVars+1);\n    var nWordsD int32  = Abc_TtWordNum(nVars);\n    assert(nVars \u003c 16, \"nVars \u003c 16\");\n    memcpy( pC, Dau_DsdToTruth(pDsdC, nVars+1), sizeof(word) * nWordsC );\n    memcpy( pD, Dau_DsdToTruth(pDsdD, nVars), sizeof(word) * nWordsD );\n    if nVars \u003e= 6 {\n        assert(nWordsD \u003e= 1, \"nWordsD \u003e= 1\");\n        assert(nWordsC \u003e 1, \"nWordsC \u003e 1\");\n        Abc_TtMux( pRes, pD, pC + nWordsD, pC, nWordsD );\n    \n    } else {\n        var pC0 word  = Abc_Tt6Stretch( pC[0], nVars );\n        var pC1 word  = Abc_Tt6Stretch( (pC[0] \u003e\u003e (1 \u003c\u003c nVars)), nVars );\n        Abc_TtMux( pRes, pD, \u0026pC1, \u0026pC0, nWordsD );\n    }\n    if !Abc_TtEqual(pInit, pRes, nWordsD) {\n        fmt.Printf(\"      Verification failed\"); }\n//    else\n//        printf( \"      Verification successful\" );\n    fmt.Printf(\"\\n\");\n    return 1;\n}\nfunc Dau_DecPerform6(p *word, nVars int32, uSet uint32) int32 {\n    var tComp, tDec, tDec0, tComp0, tComp1, FuncC, FuncD word;\n    var pDsdC, pDsdD [1000]byte;\n    var pPermC, pPermD [16]int32;\n    var nVarsC, nVarsD, nVarsS, nVarsU, nVarsF, nPairs int32;\n    var i, m, v, status, ResC, ResD, Counter int32;\n    status = Dau_DecDecomposeSet( p, nVars, uSet, \u0026tComp, \u0026tDec0, pPermC, pPermD, \u0026nVarsC, \u0026nVarsD, \u0026nVarsS );\n    if !status {\n        fmt.Printf(\"  Decomposition does not exist\\n\");\n        return 0;\n    }\n    nVarsU = nVarsD - nVarsS;\n    nVarsF = nVarsC - nVarsS - 1;\n    tComp0 = Abc_Tt6Cofactor0( tComp, nVarsF + nVarsS );\n    tComp1 = Abc_Tt6Cofactor1( tComp, nVarsF + nVarsS );\n    nPairs = 1 \u003c\u003c (1 \u003c\u003c nVarsS); \n    for  i = 0; i \u003c nPairs; i++  {\n        if i \u0026 1 {\n            continue; }\n        // create miterms with this polarity\n        FuncC = FuncD = 0;\n        for  m = 0; m \u003c (1 \u003c\u003c nVarsS); m++  {\n            var MintC, MintD word;\n            if !((i \u003e\u003e m) \u0026 1) {\n                continue; }\n            MintC = MintD = ~(word)0;\n            for  v = 0; v \u003c nVarsS; v++  {\n                MintC \u0026= ((m \u003e\u003e v) \u0026 1) ? s_Truths6[nVarsF+v] : ~s_Truths6[nVarsF+v];\n                MintD \u0026= ((m \u003e\u003e v) \u0026 1) ? s_Truths6[nVarsU+v] : ~s_Truths6[nVarsU+v];\n            }\n            FuncC |= MintC;\n            FuncD |= MintD;\n        }\n        // uncomplement given variables\n        tComp = (~s_Truths6[nVarsF + nVarsS] \u0026 ((tComp0 \u0026 ~FuncC) | (tComp1 \u0026 FuncC))) | (s_Truths6[nVarsF + nVarsS] \u0026 ((tComp1 \u0026 ~FuncC) | (tComp0 \u0026 FuncC)));\n        tDec = tDec0 ^ FuncD;\n        // decompose\n        ResC = Dau_DsdDecompose( \u0026tComp, nVarsC, 0, 1, pDsdC );\n        ResD = Dau_DsdDecompose( \u0026tDec, nVarsD, 0, 1, pDsdD );\n        // replace variables\n        Dau_DecVarReplace( pDsdD, pPermD, nVarsD );\n        Dau_DecVarReplace( pDsdC, pPermC, nVarsC );\n        // report\n//        printf( \"  \" );\n        fmt.Printf(\"%3d : \", Counter++);\n        fmt.Printf(\"%24s  \", pDsdD);\n        fmt.Printf(\"%24s  \", pDsdC);\n        Dau_DecVerify( p, nVars, pDsdC, pDsdD );\n    }\n    return 1;\n}\n\nfunc Dau_DecPerform(pInit *word, nVars int32, uSet uint32) int32 {\n    var p, pDec, pComp [1\u003c\u003c10]word; // at most 2^10 words\n    var pDsdC, pDsdD [5000]byte;  // at most 2^12 hex digits\n    var nVarsU, nVarsS, nVarsF, nVarsC, nVarsD int32;\n    var V2P [16]int32;\n    var P2V [16]int32;\n    var pPermC [16]int32;\n    var pPermD [16]int32;\n    var pSched *int32;\n    var v, i, status, ResC, ResD int32;\n    var nWords int32  = Abc_TtWordNum(nVars);\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    // backup the function\n    memcpy( p, pInit, sizeof(word) * nWords );\n    // get variable numbers\n    Dau_DecSortSet( uSet, nVars, \u0026nVarsU, \u0026nVarsS, \u0026nVarsF );\n    // permute function and order variables\n    for  v = 0; v \u003c nVars; v++  {\n        V2P[v] = P2V[v] = v;\n    }\n    for  i = v = 0; v \u003c nVars; v++  {\n        if ((uSet \u003e\u003e (v\u003c\u003c1)) \u0026 3) == 0 { // free first\n           Abc_TtMoveVar( p, nVars, V2P, P2V, v, i++ );\npPermC[nVarsC++] = v; }\n    }\n    for  v = 0; v \u003c nVars; v++  {\n        if ((uSet \u003e\u003e (v\u003c\u003c1)) \u0026 3) == 3 { // share second\n           Abc_TtMoveVar( p, nVars, V2P, P2V, v, i++ );\npPermC[nVarsC++] = v; }\n    }\n    pPermC[nVarsC++] = nVars;\n    for  v = 0; v \u003c nVars; v++  {\n        if ((uSet \u003e\u003e (v\u003c\u003c1)) \u0026 3) == 1 { // unique last\n           Abc_TtMoveVar( p, nVars, V2P, P2V, v, i++ );\npPermD[nVarsD++] = v; }\n    }\n    for  v = 0; v \u003c nVarsS; v++  {\n        pPermD[nVarsD++] = pPermC[nVarsF+v];\n    }\n    assert(nVarsD == nVarsU + nVarsS, \"nVarsD == nVarsU + nVarsS\");\n    assert(nVarsC == nVarsF + nVarsS + 1, \"nVarsC == nVarsF + nVarsS + 1\");\n    assert(i == nVars, \"i == nVars\");\n    // decompose\n    pSched = Extra_GreyCodeSchedule( nVarsU + nVarsS );\n    memset( pDec, 0, sizeof(word) * Abc_TtWordNum(nVarsD) );\n    memset( pComp, 0, sizeof(word) * Abc_TtWordNum(nVarsC) );\n    status = Dau_DecCheckSetTop( p, nVars, nVarsF, nVarsU + nVarsS, nVarsS, nVarsS ? Abc_InfoMask(nVarsS) : 0, pSched, pDec, pComp );\n    // inlining of macro ABC_FREE\n    ((pSched) ? (free((char *) (pSched)), (pSched) = 0) : 0);\n    if !status {\n        fmt.Printf(\"  Decomposition does not exist\\n\");\n        return 0;\n    }\n//    Dau_DsdPrintFromTruth( stdout, pC, nVars+1 ); //printf( \"\\n\" );\n//    Dau_DsdPrintFromTruth( stdout, pD, nVars ); //printf( \"\\n\" );\n//    Kit_DsdPrintFromTruth( (unsigned *)pComp, 6 ); printf( \"\\n\" );\n//    Kit_DsdPrintFromTruth( (unsigned *)pDec, 6 );  printf( \"\\n\" );\n    // decompose\n    ResC = Dau_DsdDecompose( pComp, nVarsC, 0, 1, pDsdC );\n    ResD = Dau_DsdDecompose( pDec, nVarsD, 0, 1, pDsdD );\n    // replace variables\n    Dau_DecVarReplace( pDsdD, pPermD, nVarsD );\n    Dau_DecVarReplace( pDsdC, pPermC, nVarsC );\n    // report\n    fmt.Printf(\"     \");\n    fmt.Printf(\"%3d : \", 0);\n    fmt.Printf(\"%24s  \", pDsdD);\n    fmt.Printf(\"%24s  \", pDsdC);\n    Dau_DecVerify( pInit, nVars, pDsdC, pDsdD );\n    return 1;\n}\nfunc Dau_DecTrySets(pInit *word, nVars int32, fVerbose int32) {\n    var vSets *Vec_Int_t;\n    var i, Entry int32;\n    assert(nVars \u003c= 16, \"nVars \u003c= 16\");\n    vSets = Dau_DecFindSets( pInit, nVars );\n    if !(fVerbose != 0) {\n        Vec_IntFree( vSets );\n        return;\n    }\n    Dau_DsdPrintFromTruth( pInit, nVars ); \n    fmt.Printf(\"This %d-variable function has %d decomposable variable sets:\\n\", nVars, Vec_IntSize(vSets));\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vSets)) \u0026\u0026 (((Entry) = Vec_IntEntry(vSets, i)), 1); i++  {\n        var uSet uint32  = uint32(Entry);\n        fmt.Printf(\"Set %4d : \", i);\n        if nVars \u003e 6 {\n            Dau_DecPrintSet( uSet, nVars, 0 );\n            Dau_DecPerform( pInit, nVars, uSet );\n        \n        } else {\n            Dau_DecPrintSet( uSet, nVars, 1 );\n            Dau_DecPerform6( pInit, nVars, uSet );\n        }\n    }\n    Vec_IntFree( vSets );\n//    printf( \"\\n\" );\n}\n\nfunc Dau_DecFindSetsTest3() {\n    var a0 word  = (~s_Truths6[1] \u0026 s_Truths6[2]) | (s_Truths6[1] \u0026 s_Truths6[3]);\n    var a1 word  = (~s_Truths6[1] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[5]);\n    var t word   = (~s_Truths6[0] \u0026 a0)           | (s_Truths6[0] \u0026 a1); \n//    word t = ABC_CONST(0x0F7700000F770000); // (!\u003c(ab)cd\u003ee)\n    var nVars int32  = 6;\n    var pStr string  = \"Bcd\";\n//    char * pStr = \"Abcd\";\n//    char * pStr = \"ab\";\n    var uSet uint32  = Dau_DecReadSet( pStr );\n    Dau_DecPerform6( \u0026t, nVars, uSet );\n}\n\nfunc Dau_DecFindSetsTest() {\n    var nVars int32  = 6;\n//    word a0 = (~s_Truths6[1] \u0026 s_Truths6[2]) | (s_Truths6[1] \u0026 s_Truths6[3]);\n//    word a1 = (~s_Truths6[1] \u0026 s_Truths6[4]) | (s_Truths6[1] \u0026 s_Truths6[5]);\n//    word t  = (~s_Truths6[0] \u0026 a0)           | (s_Truths6[0] \u0026 a1); \n//    word t = ABC_CONST(0x7EFFFFFFFFFFFF7E); // and(gam1,gam2)\n//    word t = ABC_CONST(0xB0F0BBFFB0F0BAFE); // some funct\n//    word t = ABC_CONST(0x00000000901FFFFF); // some funct\n    var t word  = ABC_CONST(0x000030F00D0D3FFF); // some funct\n//    word t = ABC_CONST(0x00000000690006FF); // some funct\n//    word t = ABC_CONST(0x7000F80007FF0FFF); // some funct\n//    word t = ABC_CONST(0x4133CB334133CB33); // some funct 5 var\n//    word t = ABC_CONST(0x2B0228022B022802); // 5-var non-dec0x0F7700000F770000\n//    word t = ABC_CONST(0x0F7700000F770000); // (!\u003c(ab)cd\u003ee)\n//    word t = ABC_CONST(0x7F00000000000000); // (!(abc)def)\n    Dau_DecTrySets( \u0026t, nVars, 1 );\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

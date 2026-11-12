@@ -1,0 +1,282 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c",
+  "SHA256": "2b175f8252ea99fb2cde4fa8ce0930841b8dceea527ee5c26aa65e8f8e97c133",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 69,
+        "Column": 9,
+        "ByteOffset": 2367
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_PtrSize(vSingles) % 3 == 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 71,
+        "Column": 78,
+        "ByteOffset": 2543
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pWeigtCounts = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(1000)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 72,
+        "Column": 9,
+        "ByteOffset": 2590
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( pWeigtCounts, 0, sizeof(int) * 1000 );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 87,
+        "Column": 72,
+        "ByteOffset": 3241
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pWeigtCounts) ? (free((char *) (pWeigtCounts)), (pWeigtCounts) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 105,
+        "Column": 5,
+        "ByteOffset": 3991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_PtrSize(vSingles) % 3 == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 160,
+        "Column": 9,
+        "ByteOffset": 6220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Coin \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 220,
+        "Column": 9,
+        "ByteOffset": 8492
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Coin \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Fxu_MatrixComputeSingles",
+      "Start": 1533,
+      "End": 3978,
+      "BodyStart": 1608,
+      "Original": "void Fxu_MatrixComputeSingles( Fxu_Matrix * p, int fUse0, int nSingleMax )\n{\n    Fxu_Var * pVar;\n    Vec_Ptr_t * vSingles;\n    int i, k;\n    // set the weight limit\n    p-\u003enWeightLimit = 1 - fUse0;\n    // iterate through columns in the matrix and collect single-cube divisors\n    vSingles = Vec_PtrAlloc( 10000 );\n    Fxu_MatrixForEachVariable( p, pVar )\n        Fxu_MatrixComputeSinglesOneCollect( p, pVar, vSingles );\n    p-\u003enSingleTotal = Vec_PtrSize(vSingles) / 3;\n    // check if divisors should be filtered\n    if ( Vec_PtrSize(vSingles) \u003e nSingleMax )\n    {\n        int * pWeigtCounts, nDivCount, Weight, i, c;;\n        assert( Vec_PtrSize(vSingles) % 3 == 0 );\n        // count how many divisors have the given weight\n        pWeigtCounts = ABC_ALLOC( int, 1000 );\n        memset( pWeigtCounts, 0, sizeof(int) * 1000 );\n        for ( i = 2; i \u003c Vec_PtrSize(vSingles); i += 3 )\n        {\n            Weight = (int)(ABC_PTRUINT_T)Vec_PtrEntry(vSingles, i);\n            if ( Weight \u003e= 999 )\n                pWeigtCounts[999]++;\n            else\n                pWeigtCounts[Weight]++;\n        }\n        // select the bound on the weight (above this bound, singles will be included)\n        nDivCount = 0;\n        for ( c = 999; c \u003e= 0; c-- )\n        {\n            nDivCount += pWeigtCounts[c];\n            if ( nDivCount \u003e= nSingleMax )\n                break;\n        }\n        ABC_FREE( pWeigtCounts );\n        // collect singles with the given costs\n        k = 0;\n        for ( i = 2; i \u003c Vec_PtrSize(vSingles); i += 3 )\n        {\n            Weight = (int)(ABC_PTRUINT_T)Vec_PtrEntry(vSingles, i);\n            if ( Weight \u003c c )\n                continue;\n            Vec_PtrWriteEntry( vSingles, k++, Vec_PtrEntry(vSingles, i-2) );\n            Vec_PtrWriteEntry( vSingles, k++, Vec_PtrEntry(vSingles, i-1) );\n            Vec_PtrWriteEntry( vSingles, k++, Vec_PtrEntry(vSingles, i) );\n            if ( k/3 == nSingleMax )\n                break;\n        }\n        Vec_PtrShrink( vSingles, k );\n        // adjust the weight limit\n        p-\u003enWeightLimit = c;\n    }\n    // collect the selected divisors\n    assert( Vec_PtrSize(vSingles) % 3 == 0 );\n    for ( i = 0; i \u003c Vec_PtrSize(vSingles); i += 3 )\n    {\n        Fxu_MatrixAddSingle( p, \n            (Fxu_Var *)Vec_PtrEntry(vSingles,i), \n            (Fxu_Var *)Vec_PtrEntry(vSingles,i+1), \n            (int)(ABC_PTRUINT_T)Vec_PtrEntry(vSingles,i+2) );\n    }\n    Vec_PtrFree( vSingles );\n}",
+      "Draft": "func Fxu_MatrixComputeSingles(p *Fxu_Matrix, fUse0 int32, nSingleMax int32) {\n    var pVar *Fxu_Var;\n    var vSingles *Vec_Ptr_t;\n    var i, k int32;\n    // set the weight limit\n    p.nWeightLimit = 1 - fUse0;\n    // iterate through columns in the matrix and collect single-cube divisors\n    vSingles = Vec_PtrAlloc( 10000 );\n    // inlining of macro Fxu_MatrixForEachVariable\n    for  pVar = (p).lVars.pHead;          (pVar != nil);          pVar = pVar.pNext  {\n        Fxu_MatrixComputeSinglesOneCollect( p, pVar, vSingles );\n    }\n    p.nSingleTotal = Vec_PtrSize(vSingles) / 3;\n    // check if divisors should be filtered\n    if Vec_PtrSize(vSingles) \u003e nSingleMax {\n        var pWeigtCounts *int32;\n        var nDivCount int32;\n        var Weight int32;\n        var i int32;\n        var c int32;;\n        assert(Vec_PtrSize(vSingles) % 3 == 0, \"Vec_PtrSize(vSingles) % 3 == 0\");\n        // count how many divisors have the given weight\n        // inlining of macro ABC_ALLOC\n        pWeigtCounts = ((int *) malloc(sizeof(int) * (size_t)(1000)));\n        memset( pWeigtCounts, 0, sizeof(int) * 1000 );\n        for  i = 2; i \u003c Vec_PtrSize(vSingles); i += 3  {\n            Weight = int32((ABC_PTRUINT_T))Vec_PtrEntry(vSingles, i);\n            if Weight \u003e= 999 {\n                pWeigtCounts[999]++;\n            } else {\n                pWeigtCounts[Weight]++; }\n        }\n        // select the bound on the weight (above this bound, singles will be included)\n        nDivCount = 0;\n        for  c = 999; c \u003e= 0; c--  {\n            nDivCount += pWeigtCounts[c];\n            if nDivCount \u003e= nSingleMax {\n                break; }\n        }\n        // inlining of macro ABC_FREE\n        ((pWeigtCounts) ? (free((char *) (pWeigtCounts)), (pWeigtCounts) = 0) : 0);\n        // collect singles with the given costs\n        k = 0;\n        for  i = 2; i \u003c Vec_PtrSize(vSingles); i += 3  {\n            Weight = int32((ABC_PTRUINT_T))Vec_PtrEntry(vSingles, i);\n            if Weight \u003c c {\n                continue; }\n            Vec_PtrWriteEntry( vSingles, k++, Vec_PtrEntry(vSingles, i-2) );\n            Vec_PtrWriteEntry( vSingles, k++, Vec_PtrEntry(vSingles, i-1) );\n            Vec_PtrWriteEntry( vSingles, k++, Vec_PtrEntry(vSingles, i) );\n            if k/3 == nSingleMax {\n                break; }\n        }\n        Vec_PtrShrink( vSingles, k );\n        // adjust the weight limit\n        p.nWeightLimit = c;\n    }\n    // collect the selected divisors\n    assert(Vec_PtrSize(vSingles) % 3 == 0, \"Vec_PtrSize(vSingles) % 3 == 0\");\n    for  i = 0; i \u003c Vec_PtrSize(vSingles); i += 3  {\n        Fxu_MatrixAddSingle( p, \n            (Fxu_Var *)Vec_PtrEntry(vSingles,i), \n            (Fxu_Var *)Vec_PtrEntry(vSingles,i+1), \n            int32((ABC_PTRUINT_T))Vec_PtrEntry(vSingles,i+2) );\n    }\n    Vec_PtrFree( vSingles );\n}"
+    },
+    {
+      "Name": "Fxu_MatrixComputeSinglesOneCollect",
+      "Start": 4273,
+      "End": 5903,
+      "BodyStart": 4369,
+      "Original": "void Fxu_MatrixComputeSinglesOneCollect( Fxu_Matrix * p, Fxu_Var * pVar, Vec_Ptr_t * vSingles )\n{\n    Fxu_Lit * pLitV, * pLitH;\n    Fxu_Var * pVar2;\n    int Coin;\n    int WeightCur;\n\n    // start collecting the affected vars\n    Fxu_MatrixRingVarsStart( p );\n    // go through all the literals of this variable\n    for ( pLitV = pVar-\u003elLits.pHead; pLitV; pLitV = pLitV-\u003epVNext )\n        // for this literal, go through all the horizontal literals\n        for ( pLitH = pLitV-\u003epHPrev; pLitH; pLitH = pLitH-\u003epHPrev )\n        {\n            // get another variable\n            pVar2 = pLitH-\u003epVar;\n            // skip the var if it is already used\n            if ( pVar2-\u003epOrder )\n                continue;\n            // skip the var if it belongs to the same node\n//            if ( pValue2Node[pVar-\u003eiVar] == pValue2Node[pVar2-\u003eiVar] )\n//                continue;\n            // collect the var\n            Fxu_MatrixRingVarsAdd( p, pVar2 );\n        }\n    // stop collecting the selected vars\n    Fxu_MatrixRingVarsStop( p );\n\n    // iterate through the selected vars\n    Fxu_MatrixForEachVarInRing( p, pVar2 )\n    {\n        // count the coincidence\n        Coin = Fxu_SingleCountCoincidence( p, pVar2, pVar );\n        assert( Coin \u003e 0 );\n        // get the new weight\n        WeightCur = Coin - 2;\n        // peformance fix (August 24, 2007)\n        if ( WeightCur \u003e= p-\u003enWeightLimit )\n        {\n            Vec_PtrPush( vSingles, pVar2 );\n            Vec_PtrPush( vSingles, pVar );\n            Vec_PtrPush( vSingles, (void *)(ABC_PTRUINT_T)WeightCur );\n        }\n    }\n\n    // unmark the vars\n    Fxu_MatrixRingVarsUnmark( p );\n}",
+      "Draft": "func Fxu_MatrixComputeSinglesOneCollect(p *Fxu_Matrix, pVar *Fxu_Var, vSingles *Vec_Ptr_t) {\n    var pLitV, pLitH *Fxu_Lit;\n    var pVar2 *Fxu_Var;\n    var Coin int32;\n    var WeightCur int32;\n\n    // start collecting the affected vars\n    // inlining of macro Fxu_MatrixRingVarsStart\n    ((p).ppTailVars  = \u0026((p).pOrderVars));\n((p).pOrderVars  = nil);;\n    // go through all the literals of this variable\n    for  pLitV = pVar.lLits.pHead; pLitV; pLitV = pLitV.pVNext  {\n        // for this literal, go through all the horizontal literals\n        for  pLitH = pLitV.pHPrev; (pLitH != nil); pLitH = pLitH.pHPrev  {\n            // get another variable\n            pVar2 = pLitH.pVar;\n            // skip the var if it is already used\n            if pVar2.pOrder {\n                continue; }\n            // skip the var if it belongs to the same node\n//            if ( pValue2Node[pVar-\u003eiVar] == pValue2Node[pVar2-\u003eiVar] )\n//                continue;\n            // collect the var\n            // inlining of macro Fxu_MatrixRingVarsAdd\n            (*((p).ppTailVars ) = pVar2 );\n((p).ppTailVars  = \u0026(pVar2).pOrder );\n((pVar2).pOrder  = (Fxu_Var *)1);;\n        }\n    }\n    // stop collecting the selected vars\n    // inlining of macro Fxu_MatrixRingVarsStop\n    ;\n\n    // iterate through the selected vars\n    // inlining of macro Fxu_MatrixForEachVarInRing\n    if (p).pOrderVars {    for  pVar2 = (p).pOrderVars;          pVar2 != (Fxu_Var *)1;          pVar2 = pVar2.pOrder  {\n        // count the coincidence\n        Coin = Fxu_SingleCountCoincidence( p, pVar2, pVar );\n        assert(Coin \u003e 0, \"Coin \u003e 0\");\n        // get the new weight\n        WeightCur = Coin - 2;\n        // peformance fix (August 24, 2007)\n        if WeightCur \u003e= p.nWeightLimit {\n            Vec_PtrPush( vSingles, pVar2 );\n            Vec_PtrPush( vSingles, pVar );\n            Vec_PtrPush( vSingles, (void *)(ABC_PTRUINT_T)WeightCur );\n        }\n    } }\n\n    // unmark the vars\n    Fxu_MatrixRingVarsUnmark( p );\n}"
+    },
+    {
+      "Name": "Fxu_MatrixComputeSinglesOne",
+      "Start": 6198,
+      "End": 7774,
+      "BodyStart": 6265,
+      "Original": "void Fxu_MatrixComputeSinglesOne( Fxu_Matrix * p, Fxu_Var * pVar )\n{\n    Fxu_Lit * pLitV, * pLitH;\n    Fxu_Var * pVar2;\n    int Coin;\n    int WeightCur;\n\n    // start collecting the affected vars\n    Fxu_MatrixRingVarsStart( p );\n    // go through all the literals of this variable\n    for ( pLitV = pVar-\u003elLits.pHead; pLitV; pLitV = pLitV-\u003epVNext )\n        // for this literal, go through all the horizontal literals\n        for ( pLitH = pLitV-\u003epHPrev; pLitH; pLitH = pLitH-\u003epHPrev )\n        {\n            // get another variable\n            pVar2 = pLitH-\u003epVar;\n            // skip the var if it is already used\n            if ( pVar2-\u003epOrder )\n                continue;\n            // skip the var if it belongs to the same node\n//            if ( pValue2Node[pVar-\u003eiVar] == pValue2Node[pVar2-\u003eiVar] )\n//                continue;\n            // collect the var\n            Fxu_MatrixRingVarsAdd( p, pVar2 );\n        }\n    // stop collecting the selected vars\n    Fxu_MatrixRingVarsStop( p );\n\n    // iterate through the selected vars\n    Fxu_MatrixForEachVarInRing( p, pVar2 )\n    {\n        // count the coincidence\n        Coin = Fxu_SingleCountCoincidence( p, pVar2, pVar );\n        assert( Coin \u003e 0 );\n        // get the new weight\n        WeightCur = Coin - 2;\n        // peformance fix (August 24, 2007)\n//        if ( WeightCur \u003e= 0 )\n//        Fxu_MatrixAddSingle( p, pVar2, pVar, WeightCur );\n        if ( WeightCur \u003e= p-\u003enWeightLimit )\n            Fxu_MatrixAddSingle( p, pVar2, pVar, WeightCur );\n    }\n    // unmark the vars\n    Fxu_MatrixRingVarsUnmark( p );\n}",
+      "Draft": "func Fxu_MatrixComputeSinglesOne(p *Fxu_Matrix, pVar *Fxu_Var) {\n    var pLitV, pLitH *Fxu_Lit;\n    var pVar2 *Fxu_Var;\n    var Coin int32;\n    var WeightCur int32;\n\n    // start collecting the affected vars\n    // inlining of macro Fxu_MatrixRingVarsStart\n    ((p).ppTailVars  = \u0026((p).pOrderVars));\n((p).pOrderVars  = nil);;\n    // go through all the literals of this variable\n    for  pLitV = pVar.lLits.pHead; pLitV; pLitV = pLitV.pVNext  {\n        // for this literal, go through all the horizontal literals\n        for  pLitH = pLitV.pHPrev; (pLitH != nil); pLitH = pLitH.pHPrev  {\n            // get another variable\n            pVar2 = pLitH.pVar;\n            // skip the var if it is already used\n            if pVar2.pOrder {\n                continue; }\n            // skip the var if it belongs to the same node\n//            if ( pValue2Node[pVar-\u003eiVar] == pValue2Node[pVar2-\u003eiVar] )\n//                continue;\n            // collect the var\n            // inlining of macro Fxu_MatrixRingVarsAdd\n            (*((p).ppTailVars ) = pVar2 );\n((p).ppTailVars  = \u0026(pVar2).pOrder );\n((pVar2).pOrder  = (Fxu_Var *)1);;\n        }\n    }\n    // stop collecting the selected vars\n    // inlining of macro Fxu_MatrixRingVarsStop\n    ;\n\n    // iterate through the selected vars\n    // inlining of macro Fxu_MatrixForEachVarInRing\n    if (p).pOrderVars {    for  pVar2 = (p).pOrderVars;          pVar2 != (Fxu_Var *)1;          pVar2 = pVar2.pOrder  {\n        // count the coincidence\n        Coin = Fxu_SingleCountCoincidence( p, pVar2, pVar );\n        assert(Coin \u003e 0, \"Coin \u003e 0\");\n        // get the new weight\n        WeightCur = Coin - 2;\n        // peformance fix (August 24, 2007)\n//        if ( WeightCur \u003e= 0 )\n//        Fxu_MatrixAddSingle( p, pVar2, pVar, WeightCur );\n        if WeightCur \u003e= p.nWeightLimit {\n            Fxu_MatrixAddSingle( p, pVar2, pVar, WeightCur ); }\n    } }\n    // unmark the vars\n    Fxu_MatrixRingVarsUnmark( p );\n}"
+    },
+    {
+      "Name": "Fxu_SingleCountCoincidence",
+      "Start": 8056,
+      "End": 9335,
+      "BodyStart": 8139,
+      "Original": "int Fxu_SingleCountCoincidence( Fxu_Matrix * p, Fxu_Var * pVar1, Fxu_Var * pVar2 )\n{\n    Fxu_Lit * pLit1, * pLit2;\n    int Result;\n\n    // compute the coincidence count\n    Result = 0;\n    pLit1  = pVar1-\u003elLits.pHead;\n    pLit2  = pVar2-\u003elLits.pHead;\n    while ( 1 )\n    {\n        if ( pLit1 \u0026\u0026 pLit2 )\n        {\n            if ( pLit1-\u003epCube-\u003epVar-\u003eiVar == pLit2-\u003epCube-\u003epVar-\u003eiVar )\n            { // the variables are the same\n                if ( pLit1-\u003eiCube == pLit2-\u003eiCube )\n                { // the literals are the same\n                    pLit1 = pLit1-\u003epVNext;\n                    pLit2 = pLit2-\u003epVNext;\n                    // add this literal to the coincidence\n                    Result++;\n                }\n                else if ( pLit1-\u003eiCube \u003c pLit2-\u003eiCube )\n                    pLit1 = pLit1-\u003epVNext;\n                else\n                    pLit2 = pLit2-\u003epVNext;\n            }\n            else if ( pLit1-\u003epCube-\u003epVar-\u003eiVar \u003c pLit2-\u003epCube-\u003epVar-\u003eiVar )\n                pLit1 = pLit1-\u003epVNext;\n            else\n                pLit2 = pLit2-\u003epVNext;\n        }\n        else if ( pLit1 \u0026\u0026 !pLit2 )\n            pLit1 = pLit1-\u003epVNext;\n        else if ( !pLit1 \u0026\u0026 pLit2 )\n            pLit2 = pLit2-\u003epVNext;\n        else\n            break;\n    }\n    return Result;\n}",
+      "Draft": "func Fxu_SingleCountCoincidence(p *Fxu_Matrix, pVar1 *Fxu_Var, pVar2 *Fxu_Var) int32 {\n    var pLit1, pLit2 *Fxu_Lit;\n    var Result int32;\n\n    // compute the coincidence count\n    Result = 0;\n    pLit1  = pVar1.lLits.pHead;\n    pLit2  = pVar2.lLits.pHead;\n    for {\n        if pLit1 \u0026\u0026 (pLit2 != nil) {\n            if pLit1.pCube.pVar.iVar == pLit2.pCube.pVar.iVar { // the variables are the same\n                if pLit1.iCube == pLit2.iCube { // the literals are the same\n                    pLit1 = pLit1.pVNext;\n                    pLit2 = pLit2.pVNext;\n                    // add this literal to the coincidence\n                    Result++;\n                \n                } else if pLit1.iCube \u003c pLit2.iCube {\n                    pLit1 = pLit1.pVNext;\n                } else {\n                    pLit2 = pLit2.pVNext; }\n            \n            } else if pLit1.pCube.pVar.iVar \u003c pLit2.pCube.pVar.iVar {\n                pLit1 = pLit1.pVNext;\n            } else {\n                pLit2 = pLit2.pVNext; }\n        \n        } else if pLit1 \u0026\u0026 !(pLit2 != nil) {\n            pLit1 = pLit1.pVNext;\n        } else if !pLit1 \u0026\u0026 (pLit2 != nil) {\n            pLit2 = pLit2.pVNext;\n        } else {\n            break; }\n    }\n    return Result;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::mechanical::sizeof::2443",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2282,
+      "End": 2282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::mechanical::sizeof::2508",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2339,
+      "End": 2345
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::pointer-cast::2428",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2282,
+      "End": 2282
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::pointer-cast::3153",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2916,
+      "End": 2916
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::pointer-cast::4053",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3790,
+      "End": 3801
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::pointer-cast::4103",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3840,
+      "End": 3851
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::pointer-cast::5692",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5179,
+      "End": 5179
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::pointer-cast::6006",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5344,
+      "End": 5344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::pointer-cast::6461",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5791,
+      "End": 5799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::pointer-cast::7995",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7075,
+      "End": 7075
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::pointer-cast::8309",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7240,
+      "End": 7240
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::ternary::Fxu_MatrixComputeSingles",
+      "Category": "ternary-review",
+      "Symbol": "Fxu_MatrixComputeSingles",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1533,
+      "End": 3978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::Fxu_MatrixComputeSingles",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MatrixComputeSingles",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1533,
+      "End": 3978
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::Fxu_MatrixComputeSinglesOneCollect",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MatrixComputeSinglesOneCollect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4273,
+      "End": 5903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::Fxu_MatrixComputeSinglesOne",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_MatrixComputeSinglesOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6198,
+      "End": 7774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::Fxu_SingleCountCoincidence",
+      "Category": "semantic-review",
+      "Symbol": "Fxu_SingleCountCoincidence",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8056,
+      "End": 9335
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/fxu/fxuSingle.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9582
+    }
+  ],
+  "Draft": "package fxu\n\n/**CFile****************************************************************\n\n  FileName    [fxuSingle.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Procedures to compute the set of single-cube divisors.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: fxuSingle.c,v 1.0 2003/02/01 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"fxuInt.h\"\n//#include \"misc/vec/vec.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// static void Fxu_MatrixComputeSinglesOneCollect( Fxu_Matrix * p, Fxu_Var * pVar, Vec_Ptr_t * vSingles );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Computes and adds all single-cube divisors to storage.]\n\n  Description [This procedure should be called once when the matrix is\n  already contructed before the process of logic extraction begins..]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MatrixComputeSingles(p *Fxu_Matrix, fUse0 int32, nSingleMax int32) {\n    var pVar *Fxu_Var;\n    var vSingles *Vec_Ptr_t;\n    var i, k int32;\n    // set the weight limit\n    p.nWeightLimit = 1 - fUse0;\n    // iterate through columns in the matrix and collect single-cube divisors\n    vSingles = Vec_PtrAlloc( 10000 );\n    // inlining of macro Fxu_MatrixForEachVariable\n    for  pVar = (p).lVars.pHead;          (pVar != nil);          pVar = pVar.pNext  {\n        Fxu_MatrixComputeSinglesOneCollect( p, pVar, vSingles );\n    }\n    p.nSingleTotal = Vec_PtrSize(vSingles) / 3;\n    // check if divisors should be filtered\n    if Vec_PtrSize(vSingles) \u003e nSingleMax {\n        var pWeigtCounts *int32;\n        var nDivCount int32;\n        var Weight int32;\n        var i int32;\n        var c int32;;\n        assert(Vec_PtrSize(vSingles) % 3 == 0, \"Vec_PtrSize(vSingles) % 3 == 0\");\n        // count how many divisors have the given weight\n        // inlining of macro ABC_ALLOC\n        pWeigtCounts = ((int *) malloc(sizeof(int) * (size_t)(1000)));\n        memset( pWeigtCounts, 0, sizeof(int) * 1000 );\n        for  i = 2; i \u003c Vec_PtrSize(vSingles); i += 3  {\n            Weight = int32((ABC_PTRUINT_T))Vec_PtrEntry(vSingles, i);\n            if Weight \u003e= 999 {\n                pWeigtCounts[999]++;\n            } else {\n                pWeigtCounts[Weight]++; }\n        }\n        // select the bound on the weight (above this bound, singles will be included)\n        nDivCount = 0;\n        for  c = 999; c \u003e= 0; c--  {\n            nDivCount += pWeigtCounts[c];\n            if nDivCount \u003e= nSingleMax {\n                break; }\n        }\n        // inlining of macro ABC_FREE\n        ((pWeigtCounts) ? (free((char *) (pWeigtCounts)), (pWeigtCounts) = 0) : 0);\n        // collect singles with the given costs\n        k = 0;\n        for  i = 2; i \u003c Vec_PtrSize(vSingles); i += 3  {\n            Weight = int32((ABC_PTRUINT_T))Vec_PtrEntry(vSingles, i);\n            if Weight \u003c c {\n                continue; }\n            Vec_PtrWriteEntry( vSingles, k++, Vec_PtrEntry(vSingles, i-2) );\n            Vec_PtrWriteEntry( vSingles, k++, Vec_PtrEntry(vSingles, i-1) );\n            Vec_PtrWriteEntry( vSingles, k++, Vec_PtrEntry(vSingles, i) );\n            if k/3 == nSingleMax {\n                break; }\n        }\n        Vec_PtrShrink( vSingles, k );\n        // adjust the weight limit\n        p.nWeightLimit = c;\n    }\n    // collect the selected divisors\n    assert(Vec_PtrSize(vSingles) % 3 == 0, \"Vec_PtrSize(vSingles) % 3 == 0\");\n    for  i = 0; i \u003c Vec_PtrSize(vSingles); i += 3  {\n        Fxu_MatrixAddSingle( p, \n            (Fxu_Var *)Vec_PtrEntry(vSingles,i), \n            (Fxu_Var *)Vec_PtrEntry(vSingles,i+1), \n            int32((ABC_PTRUINT_T))Vec_PtrEntry(vSingles,i+2) );\n    }\n    Vec_PtrFree( vSingles );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the single-cube divisors associated with a new column.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MatrixComputeSinglesOneCollect(p *Fxu_Matrix, pVar *Fxu_Var, vSingles *Vec_Ptr_t) {\n    var pLitV, pLitH *Fxu_Lit;\n    var pVar2 *Fxu_Var;\n    var Coin int32;\n    var WeightCur int32;\n\n    // start collecting the affected vars\n    // inlining of macro Fxu_MatrixRingVarsStart\n    ((p).ppTailVars  = \u0026((p).pOrderVars));\n((p).pOrderVars  = nil);;\n    // go through all the literals of this variable\n    for  pLitV = pVar.lLits.pHead; pLitV; pLitV = pLitV.pVNext  {\n        // for this literal, go through all the horizontal literals\n        for  pLitH = pLitV.pHPrev; (pLitH != nil); pLitH = pLitH.pHPrev  {\n            // get another variable\n            pVar2 = pLitH.pVar;\n            // skip the var if it is already used\n            if pVar2.pOrder {\n                continue; }\n            // skip the var if it belongs to the same node\n//            if ( pValue2Node[pVar-\u003eiVar] == pValue2Node[pVar2-\u003eiVar] )\n//                continue;\n            // collect the var\n            // inlining of macro Fxu_MatrixRingVarsAdd\n            (*((p).ppTailVars ) = pVar2 );\n((p).ppTailVars  = \u0026(pVar2).pOrder );\n((pVar2).pOrder  = (Fxu_Var *)1);;\n        }\n    }\n    // stop collecting the selected vars\n    // inlining of macro Fxu_MatrixRingVarsStop\n    ;\n\n    // iterate through the selected vars\n    // inlining of macro Fxu_MatrixForEachVarInRing\n    if (p).pOrderVars {    for  pVar2 = (p).pOrderVars;          pVar2 != (Fxu_Var *)1;          pVar2 = pVar2.pOrder  {\n        // count the coincidence\n        Coin = Fxu_SingleCountCoincidence( p, pVar2, pVar );\n        assert(Coin \u003e 0, \"Coin \u003e 0\");\n        // get the new weight\n        WeightCur = Coin - 2;\n        // peformance fix (August 24, 2007)\n        if WeightCur \u003e= p.nWeightLimit {\n            Vec_PtrPush( vSingles, pVar2 );\n            Vec_PtrPush( vSingles, pVar );\n            Vec_PtrPush( vSingles, (void *)(ABC_PTRUINT_T)WeightCur );\n        }\n    } }\n\n    // unmark the vars\n    Fxu_MatrixRingVarsUnmark( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the single-cube divisors associated with a new column.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_MatrixComputeSinglesOne(p *Fxu_Matrix, pVar *Fxu_Var) {\n    var pLitV, pLitH *Fxu_Lit;\n    var pVar2 *Fxu_Var;\n    var Coin int32;\n    var WeightCur int32;\n\n    // start collecting the affected vars\n    // inlining of macro Fxu_MatrixRingVarsStart\n    ((p).ppTailVars  = \u0026((p).pOrderVars));\n((p).pOrderVars  = nil);;\n    // go through all the literals of this variable\n    for  pLitV = pVar.lLits.pHead; pLitV; pLitV = pLitV.pVNext  {\n        // for this literal, go through all the horizontal literals\n        for  pLitH = pLitV.pHPrev; (pLitH != nil); pLitH = pLitH.pHPrev  {\n            // get another variable\n            pVar2 = pLitH.pVar;\n            // skip the var if it is already used\n            if pVar2.pOrder {\n                continue; }\n            // skip the var if it belongs to the same node\n//            if ( pValue2Node[pVar-\u003eiVar] == pValue2Node[pVar2-\u003eiVar] )\n//                continue;\n            // collect the var\n            // inlining of macro Fxu_MatrixRingVarsAdd\n            (*((p).ppTailVars ) = pVar2 );\n((p).ppTailVars  = \u0026(pVar2).pOrder );\n((pVar2).pOrder  = (Fxu_Var *)1);;\n        }\n    }\n    // stop collecting the selected vars\n    // inlining of macro Fxu_MatrixRingVarsStop\n    ;\n\n    // iterate through the selected vars\n    // inlining of macro Fxu_MatrixForEachVarInRing\n    if (p).pOrderVars {    for  pVar2 = (p).pOrderVars;          pVar2 != (Fxu_Var *)1;          pVar2 = pVar2.pOrder  {\n        // count the coincidence\n        Coin = Fxu_SingleCountCoincidence( p, pVar2, pVar );\n        assert(Coin \u003e 0, \"Coin \u003e 0\");\n        // get the new weight\n        WeightCur = Coin - 2;\n        // peformance fix (August 24, 2007)\n//        if ( WeightCur \u003e= 0 )\n//        Fxu_MatrixAddSingle( p, pVar2, pVar, WeightCur );\n        if WeightCur \u003e= p.nWeightLimit {\n            Fxu_MatrixAddSingle( p, pVar2, pVar, WeightCur ); }\n    } }\n    // unmark the vars\n    Fxu_MatrixRingVarsUnmark( p );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the coincidence count of two columns.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Fxu_SingleCountCoincidence(p *Fxu_Matrix, pVar1 *Fxu_Var, pVar2 *Fxu_Var) int32 {\n    var pLit1, pLit2 *Fxu_Lit;\n    var Result int32;\n\n    // compute the coincidence count\n    Result = 0;\n    pLit1  = pVar1.lLits.pHead;\n    pLit2  = pVar2.lLits.pHead;\n    for {\n        if pLit1 \u0026\u0026 (pLit2 != nil) {\n            if pLit1.pCube.pVar.iVar == pLit2.pCube.pVar.iVar { // the variables are the same\n                if pLit1.iCube == pLit2.iCube { // the literals are the same\n                    pLit1 = pLit1.pVNext;\n                    pLit2 = pLit2.pVNext;\n                    // add this literal to the coincidence\n                    Result++;\n                \n                } else if pLit1.iCube \u003c pLit2.iCube {\n                    pLit1 = pLit1.pVNext;\n                } else {\n                    pLit2 = pLit2.pVNext; }\n            \n            } else if pLit1.pCube.pVar.iVar \u003c pLit2.pCube.pVar.iVar {\n                pLit1 = pLit1.pVNext;\n            } else {\n                pLit2 = pLit2.pVNext; }\n        \n        } else if pLit1 \u0026\u0026 !(pLit2 != nil) {\n            pLit1 = pLit1.pVNext;\n        } else if !pLit1 \u0026\u0026 (pLit2 != nil) {\n            pLit2 = pLit2.pVNext;\n        } else {\n            break; }\n    }\n    return Result;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

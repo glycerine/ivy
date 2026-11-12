@@ -1,0 +1,1056 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c",
+  "SHA256": "b4f9a57c56150023dc5571bdca27ca223b360322bbd917f8c32435b867feaab6",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 52,
+        "Column": 5,
+        "ByteOffset": 1385
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( v == 0 || v == 1 || v == 3 );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 287,
+        "Column": 72,
+        "ByteOffset": 9682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pCounters = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(nWords * 16), sizeof(int)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 308,
+        "Column": 65,
+        "ByteOffset": 10545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 328,
+        "Column": 5,
+        "ByteOffset": 11160
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iPat \u003c 16 * nWords );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 365,
+        "Column": 5,
+        "ByteOffset": 12715
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_StrSize(vSequence) % Saig_ManPiNum(pAig) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 382,
+        "Column": 9,
+        "ByteOffset": 13640
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Value != 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 408,
+        "Column": 5,
+        "ByteOffset": 14480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Saig_ManRegNum(pAig) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 430,
+        "Column": 9,
+        "ByteOffset": 15466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nTerCur == nTerCur2 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 434,
+        "Column": 9,
+        "ByteOffset": 15561
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Count not initialize %d registers.\\n\", nTerPrev );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 442,
+        "Column": 9,
+        "ByteOffset": 15856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 483,
+        "Column": 5,
+        "ByteOffset": 18032
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManNodeNum(pNew) == Aig_ManNodeNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 509,
+        "Column": 9,
+        "ByteOffset": 18765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Design 1: Synchronizing sequence is not found. \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 511,
+        "Column": 9,
+        "ByteOffset": 18859
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Design 1: Synchronizing sequence of length %4d is found. \", Vec_StrSize(vSequence) / Saig_ManPiNum(pAig) ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 514,
+        "Column": 73,
+        "ByteOffset": 19151
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 517,
+        "Column": 9,
+        "ByteOffset": 19197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 519,
+        "Column": 9,
+        "ByteOffset": 19249
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Quitting synchronization.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 526,
+        "Column": 5,
+        "ByteOffset": 19494
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 573,
+        "Column": 9,
+        "ByteOffset": 21177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Design 1: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 575,
+        "Column": 9,
+        "ByteOffset": 21245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Design 2: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 583,
+        "Column": 9,
+        "ByteOffset": 21450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Design 1: Synchronizing sequence is not found. \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 585,
+        "Column": 9,
+        "ByteOffset": 21544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Design 1: Synchronizing sequence of length %4d is found. \", Vec_StrSize(vSeq1) / Saig_ManPiNum(pAig1) ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 588,
+        "Column": 73,
+        "ByteOffset": 21833
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 591,
+        "Column": 9,
+        "ByteOffset": 21879
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 597,
+        "Column": 9,
+        "ByteOffset": 22036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Design 2: Synchronizing sequence is not found. \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 599,
+        "Column": 9,
+        "ByteOffset": 22130
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Design 2: Synchronizing sequence of length %4d is found. \", Vec_StrSize(vSeq2) / Saig_ManPiNum(pAig2) ); }"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 602,
+        "Column": 73,
+        "ByteOffset": 22419
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 605,
+        "Column": 9,
+        "ByteOffset": 22465
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 609,
+        "Column": 9,
+        "ByteOffset": 22587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Quitting synchronization.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 619,
+        "Column": 5,
+        "ByteOffset": 22964
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 621,
+        "Column": 5,
+        "ByteOffset": 23060
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 625,
+        "Column": 5,
+        "ByteOffset": 23181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 643,
+        "Column": 9,
+        "ByteOffset": 23645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Miter of the synchronized designs is constructed.         \" );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 645,
+        "Column": 73,
+        "ByteOffset": 23872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Saig_SynchNot",
+      "Start": 884,
+      "End": 979,
+      "BodyStart": 935,
+      "Original": "static inline unsigned Saig_SynchNot( unsigned w )\n{\n    return w^((~(w\u0026(w\u003e\u003e1)))\u00260x55555555);\n}",
+      "Draft": "func Saig_SynchNot(w uint32) uint32 {\n    return w^((~(w\u0026(w\u003e\u003e1)))\u00260x55555555);\n}"
+    },
+    {
+      "Name": "Saig_SynchAnd",
+      "Start": 980,
+      "End": 1126,
+      "BodyStart": 1043,
+      "Original": "static inline unsigned Saig_SynchAnd( unsigned u, unsigned w )\n{\n    return (u\u0026w)|((((u\u0026(u\u003e\u003e1)\u0026w\u0026~(w\u003e\u003e1))|(w\u0026(w\u003e\u003e1)\u0026u\u0026~(u\u003e\u003e1)))\u00260x55555555)\u003c\u003c1);\n}",
+      "Draft": "func Saig_SynchAnd(u uint32, w uint32) uint32 {\n    return (u\u0026w)|((((u\u0026(u\u003e\u003e1)\u0026w\u0026~(w\u003e\u003e1))|(w\u0026(w\u003e\u003e1)\u0026u\u0026~(u\u003e\u003e1)))\u00260x55555555)\u003c\u003c1);\n}"
+    },
+    {
+      "Name": "Saig_SynchRandomBinary",
+      "Start": 1127,
+      "End": 1237,
+      "BodyStart": 1176,
+      "Original": "static inline unsigned Saig_SynchRandomBinary() \n{ \n    return Aig_ManRandom(0) \u0026 0x55555555;               \n}",
+      "Draft": "func Saig_SynchRandomBinary() uint32 { \n    return Aig_ManRandom(0) \u0026 0x55555555;               \n}"
+    },
+    {
+      "Name": "Saig_SynchRandomTernary",
+      "Start": 1238,
+      "End": 1374,
+      "BodyStart": 1288,
+      "Original": "static inline unsigned Saig_SynchRandomTernary() \n{ \n    unsigned w = Aig_ManRandom(0);\n    return w^((~w)\u0026(w\u003e\u003e1)\u00260x55555555);        \n}",
+      "Draft": "func Saig_SynchRandomTernary() uint32 { \n    var w uint32  = Aig_ManRandom(0);\n    return w^((~w)\u0026(w\u003e\u003e1)\u00260x55555555);        \n}"
+    },
+    {
+      "Name": "Saig_SynchTernary",
+      "Start": 1375,
+      "End": 1524,
+      "BodyStart": 1426,
+      "Original": "static inline unsigned Saig_SynchTernary( int v ) \n{\n    assert( v == 0 || v == 1 || v == 3 );\n    return v? ((v==1)? 0x55555555 : 0xffffffff) : 0;\n}",
+      "Draft": "func Saig_SynchTernary(v int32) uint32 {\n    assert(v == 0 || v == 1 || v == 3, \"v == 0 || v == 1 || v == 3\");\n    if v != 0 {\n        if v==1 {\n            return 0x55555555;\n        } else {\n            return 0xffffffff;\n        }\n    } else {\n        return 0;\n    }\n}"
+    },
+    {
+      "Name": "Saig_SynchSetConstant1",
+      "Start": 2024,
+      "End": 2321,
+      "BodyStart": 2106,
+      "Original": "void Saig_SynchSetConstant1( Aig_Man_t * pAig, Vec_Ptr_t * vSimInfo, int nWords )\n{\n    Aig_Obj_t * pObj;\n    unsigned * pSim;\n    int w;\n    pObj = Aig_ManConst1( pAig );\n    pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj-\u003eId );\n    for ( w = 0; w \u003c nWords; w++ )\n        pSim[w] = 0x55555555;\n}",
+      "Draft": "func Saig_SynchSetConstant1(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32) {\n    var pObj *Aig_Obj_t;\n    var pSim *uint32;\n    var w int32;\n    pObj = Aig_ManConst1( pAig );\n    pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n    for  w = 0; w \u003c nWords; w++  {\n        pSim[w] = 0x55555555;\n    }\n}"
+    },
+    {
+      "Name": "Saig_SynchInitRegsTernary",
+      "Start": 2600,
+      "End": 2932,
+      "BodyStart": 2685,
+      "Original": "void Saig_SynchInitRegsTernary( Aig_Man_t * pAig, Vec_Ptr_t * vSimInfo, int nWords )\n{\n    Aig_Obj_t * pObj;\n    unsigned * pSim;\n    int i, w;\n    Saig_ManForEachLo( pAig, pObj, i )\n    {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj-\u003eId );\n        for ( w = 0; w \u003c nWords; w++ )\n            pSim[w] = 0xffffffff;\n    }\n}",
+      "Draft": "func Saig_SynchInitRegsTernary(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32) {\n    var pObj *Aig_Obj_t;\n    var pSim *uint32;\n    var i, w int32;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        for  w = 0; w \u003c nWords; w++  {\n            pSim[w] = 0xffffffff;\n        }\n    }\n}"
+    },
+    {
+      "Name": "Saig_SynchInitRegsBinary",
+      "Start": 3259,
+      "End": 3613,
+      "BodyStart": 3343,
+      "Original": "void Saig_SynchInitRegsBinary( Aig_Man_t * pAig, Vec_Ptr_t * vSimInfo, int nWords )\n{\n    Aig_Obj_t * pObj;\n    unsigned * pSim;\n    int i, w;\n    Saig_ManForEachLo( pAig, pObj, i )\n    {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj-\u003eId );\n        for ( w = 0; w \u003c nWords; w++ )\n            pSim[w] = Saig_SynchTernary( pObj-\u003efMarkA );\n    }\n}",
+      "Draft": "func Saig_SynchInitRegsBinary(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32) {\n    var pObj *Aig_Obj_t;\n    var pSim *uint32;\n    var i, w int32;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        for  w = 0; w \u003c nWords; w++  {\n            pSim[w] = Saig_SynchTernary( pObj.fMarkA );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Saig_SynchInitPisRandom",
+      "Start": 3890,
+      "End": 4234,
+      "BodyStart": 3973,
+      "Original": "void Saig_SynchInitPisRandom( Aig_Man_t * pAig, Vec_Ptr_t * vSimInfo, int nWords )\n{\n    Aig_Obj_t * pObj;\n    unsigned * pSim;\n    int i, w;\n    Saig_ManForEachPi( pAig, pObj, i )\n    {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj-\u003eId );\n        for ( w = 0; w \u003c nWords; w++ )\n            pSim[w] = Saig_SynchRandomBinary();\n    }\n}",
+      "Draft": "func Saig_SynchInitPisRandom(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32) {\n    var pObj *Aig_Obj_t;\n    var pSim *uint32;\n    var i, w int32;\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        for  w = 0; w \u003c nWords; w++  {\n            pSim[w] = Saig_SynchRandomBinary();\n        }\n    }\n}"
+    },
+    {
+      "Name": "Saig_SynchInitPisGiven",
+      "Start": 4511,
+      "End": 4877,
+      "BodyStart": 4609,
+      "Original": "void Saig_SynchInitPisGiven( Aig_Man_t * pAig, Vec_Ptr_t * vSimInfo, int nWords, char * pValues )\n{\n    Aig_Obj_t * pObj;\n    unsigned * pSim;\n    int i, w;\n    Saig_ManForEachPi( pAig, pObj, i )\n    {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj-\u003eId );\n        for ( w = 0; w \u003c nWords; w++ )\n            pSim[w] = Saig_SynchTernary( pValues[i] );\n    }\n}",
+      "Draft": "func Saig_SynchInitPisGiven(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32, pValues string) {\n    var pObj *Aig_Obj_t;\n    var pSim *uint32;\n    var i, w int32;\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        for  w = 0; w \u003c nWords; w++  {\n            pSim[w] = Saig_SynchTernary( pValues[i] );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Saig_SynchTernarySimulate",
+      "Start": 5154,
+      "End": 6933,
+      "BodyStart": 5239,
+      "Original": "void Saig_SynchTernarySimulate( Aig_Man_t * pAig, Vec_Ptr_t * vSimInfo, int nWords )\n{\n    Aig_Obj_t * pObj;\n    unsigned * pSim0, * pSim1, * pSim;\n    int i, w;\n    // simulate nodes\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pSim  = (unsigned *)Vec_PtrEntry( vSimInfo, pObj-\u003eId );\n        pSim0 = (unsigned *)Vec_PtrEntry( vSimInfo, Aig_ObjFaninId0(pObj) );\n        pSim1 = (unsigned *)Vec_PtrEntry( vSimInfo, Aig_ObjFaninId1(pObj) );\n        if ( Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) )\n        {\n            for ( w = 0; w \u003c nWords; w++ )\n                pSim[w] = Saig_SynchAnd( Saig_SynchNot(pSim0[w]), Saig_SynchNot(pSim1[w]) );\n        }\n        else if ( !Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) )\n        {\n            for ( w = 0; w \u003c nWords; w++ )\n                pSim[w] = Saig_SynchAnd( pSim0[w], Saig_SynchNot(pSim1[w]) );\n        }\n        else if ( Aig_ObjFaninC0(pObj) \u0026\u0026 !Aig_ObjFaninC1(pObj) )\n        {\n            for ( w = 0; w \u003c nWords; w++ )\n                pSim[w] = Saig_SynchAnd( Saig_SynchNot(pSim0[w]), pSim1[w] );\n        }\n        else // if ( !Aig_ObjFaninC0(pObj) \u0026\u0026 !Aig_ObjFaninC1(pObj) )\n        {\n            for ( w = 0; w \u003c nWords; w++ )\n                pSim[w] = Saig_SynchAnd( pSim0[w], pSim1[w] );\n        }\n    }\n    // transfer values to register inputs\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        pSim  = (unsigned *)Vec_PtrEntry( vSimInfo, pObj-\u003eId );\n        pSim0 = (unsigned *)Vec_PtrEntry( vSimInfo, Aig_ObjFaninId0(pObj) );\n        if ( Aig_ObjFaninC0(pObj) )\n        {\n            for ( w = 0; w \u003c nWords; w++ )\n                pSim[w] = Saig_SynchNot( pSim0[w] );\n        }\n        else\n        {\n            for ( w = 0; w \u003c nWords; w++ )\n                pSim[w] = pSim0[w];\n        }\n    }\n}",
+      "Draft": "func Saig_SynchTernarySimulate(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32) {\n    var pObj *Aig_Obj_t;\n    var pSim0, pSim1, pSim *uint32;\n    var i, w int32;\n    // simulate nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pSim  = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        pSim0 = (unsigned *)Vec_PtrEntry( vSimInfo, Aig_ObjFaninId0(pObj) );\n        pSim1 = (unsigned *)Vec_PtrEntry( vSimInfo, Aig_ObjFaninId1(pObj) );\n        if Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) {\n            for  w = 0; w \u003c nWords; w++  {\n                pSim[w] = Saig_SynchAnd( Saig_SynchNot(pSim0[w]), Saig_SynchNot(pSim1[w]) );\n            }\n        \n        } else if !Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) {\n            for  w = 0; w \u003c nWords; w++  {\n                pSim[w] = Saig_SynchAnd( pSim0[w], Saig_SynchNot(pSim1[w]) );\n            }\n        \n        } else if Aig_ObjFaninC0(pObj) \u0026\u0026 !Aig_ObjFaninC1(pObj) {\n            for  w = 0; w \u003c nWords; w++  {\n                pSim[w] = Saig_SynchAnd( Saig_SynchNot(pSim0[w]), pSim1[w] );\n            }\n        \n        } else { // if ( !Aig_ObjFaninC0(pObj) \u0026\u0026 !Aig_ObjFaninC1(pObj) )\n        \n            for  w = 0; w \u003c nWords; w++  {\n                pSim[w] = Saig_SynchAnd( pSim0[w], pSim1[w] );\n            }\n        }\n    }\n    }\n    // transfer values to register inputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        pSim  = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        pSim0 = (unsigned *)Vec_PtrEntry( vSimInfo, Aig_ObjFaninId0(pObj) );\n        if Aig_ObjFaninC0(pObj) {\n            for  w = 0; w \u003c nWords; w++  {\n                pSim[w] = Saig_SynchNot( pSim0[w] );\n            }\n        \n        } else {\n            for  w = 0; w \u003c nWords; w++  {\n                pSim[w] = pSim0[w];\n            }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Saig_SynchTernaryTransferState",
+      "Start": 7210,
+      "End": 7649,
+      "BodyStart": 7300,
+      "Original": "void Saig_SynchTernaryTransferState( Aig_Man_t * pAig, Vec_Ptr_t * vSimInfo, int nWords )\n{\n    Aig_Obj_t * pObjLi, * pObjLo;\n    unsigned * pSim0, * pSim1;\n    int i, w;\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n    {\n        pSim0 = (unsigned *)Vec_PtrEntry( vSimInfo, pObjLi-\u003eId );\n        pSim1 = (unsigned *)Vec_PtrEntry( vSimInfo, pObjLo-\u003eId );\n        for ( w = 0; w \u003c nWords; w++ )\n            pSim1[w] = pSim0[w];\n    }\n}",
+      "Draft": "func Saig_SynchTernaryTransferState(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32) {\n    var pObjLi, pObjLo *Aig_Obj_t;\n    var pSim0, pSim1 *uint32;\n    var i, w int32;\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n        pSim0 = (unsigned *)Vec_PtrEntry( vSimInfo, pObjLi.Id );\n        pSim1 = (unsigned *)Vec_PtrEntry( vSimInfo, pObjLo.Id );\n        for  w = 0; w \u003c nWords; w++  {\n            pSim1[w] = pSim0[w];\n        }\n    }\n}"
+    },
+    {
+      "Name": "Saig_SynchCountX",
+      "Start": 7977,
+      "End": 8945,
+      "BodyStart": 8065,
+      "Original": "int Saig_SynchCountX( Aig_Man_t * pAig, Vec_Ptr_t * vSimInfo, int nWords, int * piPat )\n{\n    Aig_Obj_t * pObj;\n    unsigned * pSim;\n    int * pCounters, i, w, b;\n    int iPatBest, iTernMin;\n    // count the number of ternary values in each pattern\n    pCounters = ABC_CALLOC( int, nWords * 16 );\n    Saig_ManForEachLi( pAig, pObj, i )\n    {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj-\u003eId );\n        for ( w = 0; w \u003c nWords; w++ )\n            for ( b = 0; b \u003c 16; b++ )\n                if ( ((pSim[w] \u003e\u003e (b \u003c\u003c 1)) \u0026 3) == 3 )\n                    pCounters[16 * w + b]++;\n    }\n    // get the best pattern\n    iPatBest = -1;\n    iTernMin = 1 + Saig_ManRegNum(pAig);\n    for ( b = 0; b \u003c 16 * nWords; b++ )\n        if ( iTernMin \u003e pCounters[b] )\n        {\n            iTernMin = pCounters[b];\n            iPatBest = b;\n            if ( iTernMin == 0 )\n                break;\n        }\n    ABC_FREE( pCounters );\n    *piPat = iPatBest;\n    return iTernMin;\n}",
+      "Draft": "func Saig_SynchCountX(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32, piPat *int32) int32 {\n    var pObj *Aig_Obj_t;\n    var pSim *uint32;\n    var pCounters *int32;\n    var i int32;\n    var w int32;\n    var b int32;\n    var iPatBest, iTernMin int32;\n    // count the number of ternary values in each pattern\n    // inlining of macro ABC_CALLOC\n    pCounters = ((int *) calloc((size_t)(nWords * 16), sizeof(int)));\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        for  w = 0; w \u003c nWords; w++  {\n            for  b = 0; b \u003c 16; b++  {\n                if ((pSim[w] \u003e\u003e (b \u003c\u003c 1)) \u0026 3) == 3 {\n                    pCounters[16 * w + b]++; }\n            }\n        }\n    }\n    // get the best pattern\n    iPatBest = -1;\n    iTernMin = 1 + Saig_ManRegNum(pAig);\n    for  b = 0; b \u003c 16 * nWords; b++  {\n        if iTernMin \u003e pCounters[b] {\n            iTernMin = pCounters[b];\n            iPatBest = b;\n            if iTernMin == 0 {\n                break; }\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);\n    *piPat = iPatBest;\n    return iTernMin;\n}"
+    },
+    {
+      "Name": "Saig_SynchSavePattern",
+      "Start": 9240,
+      "End": 10212,
+      "BodyStart": 9353,
+      "Original": "int Saig_SynchSavePattern( Aig_Man_t * pAig, Vec_Ptr_t * vSimInfo, int nWords, int iPat, Vec_Str_t * vSequence )\n{\n    Aig_Obj_t * pObj, * pObjLi, * pObjLo;\n    unsigned * pSim;\n    int Counter, Value, i, w;\n    assert( iPat \u003c 16 * nWords );\n    Saig_ManForEachPi( pAig, pObj, i )\n    {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj-\u003eId );\n        Value = (pSim[iPat\u003e\u003e4] \u003e\u003e ((iPat\u00260xf) \u003c\u003c 1)) \u0026 3;\n        Vec_StrPush( vSequence, (char)Value );\n//        printf( \"%d \", Value );\n    }\n//    printf( \"\\n\" );\n    Counter = 0;\n    Saig_ManForEachLiLo( pAig, pObjLi, pObjLo, i )\n    {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObjLi-\u003eId );\n        Value = (pSim[iPat\u003e\u003e4] \u003e\u003e ((iPat\u00260xf) \u003c\u003c 1)) \u0026 3;\n        Counter += (Value == 3);\n        // save patern in the same register\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObjLo-\u003eId );\n        for ( w = 0; w \u003c nWords; w++ )\n            pSim[w] = Saig_SynchTernary( Value );\n    }\n    return Counter;\n}",
+      "Draft": "func Saig_SynchSavePattern(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32, iPat int32, vSequence *Vec_Str_t) int32 {\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var pSim *uint32;\n    var Counter, Value, i, w int32;\n    assert(iPat \u003c 16 * nWords, \"iPat \u003c 16 * nWords\");\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        Value = (pSim[iPat\u003e\u003e4] \u003e\u003e ((iPat\u00260xf) \u003c\u003c 1)) \u0026 3;\n        Vec_StrPush( vSequence, byte(Value) );\n//        printf( \"%d \", Value );\n    }\n//    printf( \"\\n\" );\n    Counter = 0;\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObjLi.Id );\n        Value = (pSim[iPat\u003e\u003e4] \u003e\u003e ((iPat\u00260xf) \u003c\u003c 1)) \u0026 3;\n        Counter += (Value == 3);\n        // save patern in the same register\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObjLo.Id );\n        for  w = 0; w \u003c nWords; w++  {\n            pSim[w] = Saig_SynchTernary( Value );\n        }\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Saig_SynchSequenceRun",
+      "Start": 10481,
+      "End": 11572,
+      "BodyStart": 10586,
+      "Original": "int Saig_SynchSequenceRun( Aig_Man_t * pAig, Vec_Ptr_t * vSimInfo, Vec_Str_t * vSequence, int fTernary )\n{\n    unsigned * pSim;\n    Aig_Obj_t * pObj;\n    int Counter, nIters, Value, i;\n    assert( Vec_StrSize(vSequence) % Saig_ManPiNum(pAig) == 0 );\n    nIters = Vec_StrSize(vSequence) / Saig_ManPiNum(pAig);\n    Saig_SynchSetConstant1( pAig, vSimInfo, 1 );\n    if ( fTernary )\n        Saig_SynchInitRegsTernary( pAig, vSimInfo, 1 ); \n    else\n        Saig_SynchInitRegsBinary( pAig, vSimInfo, 1 ); \n    for ( i = 0; i \u003c nIters; i++ )\n    {\n        Saig_SynchInitPisGiven( pAig, vSimInfo, 1, Vec_StrArray(vSequence) + i * Saig_ManPiNum(pAig) );\n        Saig_SynchTernarySimulate( pAig, vSimInfo, 1 );\n        Saig_SynchTernaryTransferState( pAig, vSimInfo, 1 );\n    }\n    // save the resulting state in the registers\n    Counter = 0;\n    Saig_ManForEachLo( pAig, pObj, i )\n    {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj-\u003eId );\n        Value = pSim[0] \u0026 3;\n        assert( Value != 2 );\n        Counter += (Value == 3);\n        pObj-\u003efMarkA = Value;\n    }\n    return Counter;\n}",
+      "Draft": "func Saig_SynchSequenceRun(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, vSequence *Vec_Str_t, fTernary int32) int32 {\n    var pSim *uint32;\n    var pObj *Aig_Obj_t;\n    var Counter, nIters, Value, i int32;\n    assert(Vec_StrSize(vSequence) % Saig_ManPiNum(pAig) == 0, \"Vec_StrSize(vSequence) % Saig_ManPiNum(pAig) == 0\");\n    nIters = Vec_StrSize(vSequence) / Saig_ManPiNum(pAig);\n    Saig_SynchSetConstant1( pAig, vSimInfo, 1 );\n    if fTernary != 0 {\n        Saig_SynchInitRegsTernary( pAig, vSimInfo, 1 ); \n    } else {\n        Saig_SynchInitRegsBinary( pAig, vSimInfo, 1 ); } \n    for  i = 0; i \u003c nIters; i++  {\n        Saig_SynchInitPisGiven( pAig, vSimInfo, 1, Vec_StrArray(vSequence) + i * Saig_ManPiNum(pAig) );\n        Saig_SynchTernarySimulate( pAig, vSimInfo, 1 );\n        Saig_SynchTernaryTransferState( pAig, vSimInfo, 1 );\n    }\n    // save the resulting state in the registers\n    Counter = 0;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        Value = pSim[0] \u0026 3;\n        assert(Value != 2, \"Value != 2\");\n        Counter += (Value == 3);\n        pObj.fMarkA = Value;\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Saig_SynchSequence",
+      "Start": 11867,
+      "End": 13790,
+      "BodyStart": 11930,
+      "Original": "Vec_Str_t * Saig_SynchSequence( Aig_Man_t * pAig, int nWords )\n{\n    int nStepsMax = 100;  // the maximum number of simulation steps\n    int nTriesMax = 100;  // the maximum number of attempts at each step\n    int fVerify   =   1;  // verify the resulting pattern\n    Vec_Str_t * vSequence;\n    Vec_Ptr_t * vSimInfo;\n    int nTerPrev, nTerCur = 0, nTerCur2;\n    int iPatBest, RetValue, s, t;\n    assert( Saig_ManRegNum(pAig) \u003e 0 );\n    // reset random numbers\n    Aig_ManRandom( 1 );\n    // start the sequence\n    vSequence = Vec_StrAlloc( 20 * Saig_ManRegNum(pAig) );\n    // create sim info and init registers\n    vSimInfo = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(pAig), nWords );\n    Saig_SynchSetConstant1( pAig, vSimInfo, nWords );\n    // iterate over the timeframes\n    nTerPrev = Saig_ManRegNum(pAig);\n    Saig_SynchInitRegsTernary( pAig, vSimInfo, nWords );\n    for ( s = 0; s \u003c nStepsMax \u0026\u0026 nTerPrev \u003e 0; s++ )\n    {\n        for ( t = 0; t \u003c nTriesMax; t++ )\n        {\n            Saig_SynchInitPisRandom( pAig, vSimInfo, nWords );\n            Saig_SynchTernarySimulate( pAig, vSimInfo, nWords );\n            nTerCur = Saig_SynchCountX( pAig, vSimInfo, nWords, \u0026iPatBest );\n            if ( nTerCur \u003c nTerPrev )\n                break;\n        }\n        if ( t == nTriesMax )\n            break;\n        nTerCur2 = Saig_SynchSavePattern( pAig, vSimInfo, nWords, iPatBest, vSequence );\n        assert( nTerCur == nTerCur2 );\n        nTerPrev = nTerCur;\n    }\n    if ( nTerPrev \u003e 0 )\n    {\n        printf( \"Count not initialize %d registers.\\n\", nTerPrev );\n        Vec_PtrFree( vSimInfo );\n        Vec_StrFree( vSequence );\n        return NULL;\n    }\n    // verify that the sequence is correct\n    if ( fVerify )\n    {\n        RetValue = Saig_SynchSequenceRun( pAig, vSimInfo, vSequence, 1 );\n        assert( RetValue == 0 );\n        Aig_ManCleanMarkA( pAig );\n    }\n    Vec_PtrFree( vSimInfo );\n    return vSequence;\n}",
+      "Draft": "func Saig_SynchSequence(pAig *Aig_Man_t, nWords int32) *Vec_Str_t {\n    var nStepsMax int32  = 100;  // the maximum number of simulation steps\n    var nTriesMax int32  = 100;  // the maximum number of attempts at each step\n    var fVerify int32    =   1;  // verify the resulting pattern\n    var vSequence *Vec_Str_t;\n    var vSimInfo *Vec_Ptr_t;\n    var nTerPrev, nTerCur, nTerCur2 int32;\n    var iPatBest, RetValue, s, t int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    // reset random numbers\n    Aig_ManRandom( 1 );\n    // start the sequence\n    vSequence = Vec_StrAlloc( 20 * Saig_ManRegNum(pAig) );\n    // create sim info and init registers\n    vSimInfo = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(pAig), nWords );\n    Saig_SynchSetConstant1( pAig, vSimInfo, nWords );\n    // iterate over the timeframes\n    nTerPrev = Saig_ManRegNum(pAig);\n    Saig_SynchInitRegsTernary( pAig, vSimInfo, nWords );\n    for  s = 0; s \u003c nStepsMax \u0026\u0026 nTerPrev \u003e 0; s++  {\n        for  t = 0; t \u003c nTriesMax; t++  {\n            Saig_SynchInitPisRandom( pAig, vSimInfo, nWords );\n            Saig_SynchTernarySimulate( pAig, vSimInfo, nWords );\n            nTerCur = Saig_SynchCountX( pAig, vSimInfo, nWords, \u0026iPatBest );\n            if nTerCur \u003c nTerPrev {\n                break; }\n        }\n        if t == nTriesMax {\n            break; }\n        nTerCur2 = Saig_SynchSavePattern( pAig, vSimInfo, nWords, iPatBest, vSequence );\n        assert(nTerCur == nTerCur2, \"nTerCur == nTerCur2\");\n        nTerPrev = nTerCur;\n    }\n    if nTerPrev \u003e 0 {\n        fmt.Printf(\"Count not initialize %d registers.\\n\", nTerPrev);\n        Vec_PtrFree( vSimInfo );\n        Vec_StrFree( vSequence );\n        return nil;\n    }\n    // verify that the sequence is correct\n    if fVerify != 0 {\n        RetValue = Saig_SynchSequenceRun( pAig, vSimInfo, vSequence, 1 );\n        assert(RetValue == 0, \"RetValue == 0\");\n        Aig_ManCleanMarkA( pAig );\n    }\n    Vec_PtrFree( vSimInfo );\n    return vSequence;\n}"
+    },
+    {
+      "Name": "Saig_ManDupInitZero",
+      "Start": 14078,
+      "End": 15019,
+      "BodyStart": 14127,
+      "Original": "Aig_Man_t * Saig_ManDupInitZero( Aig_Man_t * p )\n{\n    Aig_Man_t * pNew;\n    Aig_Obj_t * pObj;\n    int i;\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    Aig_ManConst1(p)-\u003epData = Aig_ManConst1(pNew);\n    Saig_ManForEachPi( p, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCi( pNew );\n    Saig_ManForEachLo( p, pObj, i )\n        pObj-\u003epData = Aig_NotCond( Aig_ObjCreateCi( pNew ), pObj-\u003efMarkA );\n    Aig_ManForEachNode( p, pObj, i )\n        pObj-\u003epData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) );\n    Saig_ManForEachPo( p, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    Saig_ManForEachLi( p, pObj, i )\n        pObj-\u003epData = Aig_ObjCreateCo( pNew, Aig_NotCond( Aig_ObjChild0Copy(pObj), pObj-\u003efMarkA ) );\n    Aig_ManSetRegNum( pNew, Saig_ManRegNum(p) );\n    assert( Aig_ManNodeNum(pNew) == Aig_ManNodeNum(p) );\n    return pNew;\n}",
+      "Draft": "func Saig_ManDupInitZero(p *Aig_Man_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pNew );\n    }\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        pObj.pData = Aig_NotCond( Aig_ObjCreateCi( pNew ), pObj.fMarkA );\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {\n        pObj.pData = Aig_ObjCreateCo( pNew, Aig_NotCond( Aig_ObjChild0Copy(pObj), pObj.fMarkA ) );\n    }\n    Aig_ManSetRegNum( pNew, Saig_ManRegNum(p) );\n    assert(Aig_ManNodeNum(pNew) == Aig_ManNodeNum(p), \"Aig_ManNodeNum(pNew) == Aig_ManNodeNum(p)\");\n    return pNew;\n}"
+    },
+    {
+      "Name": "Saig_SynchSequenceApply",
+      "Start": 15314,
+      "End": 16485,
+      "BodyStart": 15396,
+      "Original": "Aig_Man_t * Saig_SynchSequenceApply( Aig_Man_t * pAig, int nWords, int fVerbose )\n{\n    Aig_Man_t * pAigZero;\n    Vec_Str_t * vSequence;\n    Vec_Ptr_t * vSimInfo;\n    int RetValue;\n    abctime clk;\n\nclk = Abc_Clock();\n    // derive synchronization sequence\n    vSequence = Saig_SynchSequence( pAig, nWords );\n    if ( vSequence == NULL )\n        printf( \"Design 1: Synchronizing sequence is not found. \" );\n    else if ( fVerbose )\n        printf( \"Design 1: Synchronizing sequence of length %4d is found. \", Vec_StrSize(vSequence) / Saig_ManPiNum(pAig) );\n    if ( fVerbose )\n    {\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    else\n        printf( \"\\n\" );\n    if ( vSequence == NULL )\n    {\n        printf( \"Quitting synchronization.\\n\" );\n        return NULL;\n    }\n\n    // apply synchronization sequence\n    vSimInfo = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(pAig), 1 );\n    RetValue = Saig_SynchSequenceRun( pAig, vSimInfo, vSequence, 1 );\n    assert( RetValue == 0 );\n    // duplicate \n    pAigZero = Saig_ManDupInitZero( pAig );\n    // cleanup\n    Vec_PtrFree( vSimInfo );\n    Vec_StrFree( vSequence );\n    Aig_ManCleanMarkA( pAig );\n    return pAigZero;\n}",
+      "Draft": "func Saig_SynchSequenceApply(pAig *Aig_Man_t, nWords int32, fVerbose int32) *Aig_Man_t {\n    var pAigZero *Aig_Man_t;\n    var vSequence *Vec_Str_t;\n    var vSimInfo *Vec_Ptr_t;\n    var RetValue int32;\n    var clk abctime;\n\nclk = Abc_Clock();\n    // derive synchronization sequence\n    vSequence = Saig_SynchSequence( pAig, nWords );\n    if vSequence == nil {\n        fmt.Printf(\"Design 1: Synchronizing sequence is not found. \");\n    } else if fVerbose != 0 {\n        fmt.Printf(\"Design 1: Synchronizing sequence of length %4d is found. \", Vec_StrSize(vSequence) / Saig_ManPiNum(pAig)); }\n    if fVerbose != 0 {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    \n    } else {\n        fmt.Printf(\"\\n\"); }\n    if vSequence == nil {\n        fmt.Printf(\"Quitting synchronization.\\n\");\n        return nil;\n    }\n\n    // apply synchronization sequence\n    vSimInfo = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(pAig), 1 );\n    RetValue = Saig_SynchSequenceRun( pAig, vSimInfo, vSequence, 1 );\n    assert(RetValue == 0, \"RetValue == 0\");\n    // duplicate \n    pAigZero = Saig_ManDupInitZero( pAig );\n    // cleanup\n    Vec_PtrFree( vSimInfo );\n    Vec_StrFree( vSequence );\n    Aig_ManCleanMarkA( pAig );\n    return pAigZero;\n}"
+    },
+    {
+      "Name": "Saig_Synchronize",
+      "Start": 17067,
+      "End": 20326,
+      "BodyStart": 17162,
+      "Original": "Aig_Man_t * Saig_Synchronize( Aig_Man_t * pAig1, Aig_Man_t * pAig2, int nWords, int fVerbose )\n{\n    Aig_Man_t * pAig1z, * pAig2z, * pMiter;\n    Vec_Str_t * vSeq1, * vSeq2;\n    Vec_Ptr_t * vSimInfo;\n    int RetValue;\n    abctime clk;\n/*\n    {\n        unsigned u = Saig_SynchRandomTernary();\n        unsigned w = Saig_SynchRandomTernary();\n        unsigned x = Saig_SynchNot( u );\n        unsigned y = Saig_SynchNot( w );\n        unsigned z = Saig_SynchAnd( x, y );\n\n        Extra_PrintBinary( stdout, \u0026u, 32 );  printf( \"\\n\" );\n        Extra_PrintBinary( stdout, \u0026w, 32 );  printf( \"\\n\" );  printf( \"\\n\" );\n        Extra_PrintBinary( stdout, \u0026x, 32 );  printf( \"\\n\" );\n        Extra_PrintBinary( stdout, \u0026y, 32 );  printf( \"\\n\" );  printf( \"\\n\" );\n        Extra_PrintBinary( stdout, \u0026z, 32 );  printf( \"\\n\" );\n    }\n*/\n    // report statistics\n    if ( fVerbose )\n    {\n        printf( \"Design 1: \" );\n        Aig_ManPrintStats( pAig1 );\n        printf( \"Design 2: \" );\n        Aig_ManPrintStats( pAig2 );\n    }\n\n    // synchronize the first design\n    clk = Abc_Clock();\n    vSeq1 = Saig_SynchSequence( pAig1, nWords );\n    if ( vSeq1 == NULL )\n        printf( \"Design 1: Synchronizing sequence is not found. \" );\n    else if ( fVerbose )\n        printf( \"Design 1: Synchronizing sequence of length %4d is found. \", Vec_StrSize(vSeq1) / Saig_ManPiNum(pAig1) );\n    if ( fVerbose )\n    {\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    else\n        printf( \"\\n\" );\n\n    // synchronize the first design\n    clk = Abc_Clock();\n    vSeq2 = Saig_SynchSequence( pAig2, nWords );\n    if ( vSeq2 == NULL )\n        printf( \"Design 2: Synchronizing sequence is not found. \" );\n    else if ( fVerbose )\n        printf( \"Design 2: Synchronizing sequence of length %4d is found. \", Vec_StrSize(vSeq2) / Saig_ManPiNum(pAig2) );\n    if ( fVerbose )\n    {\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    else\n        printf( \"\\n\" );\n\n    // quit if one of the designs cannot be synchronized\n    if ( vSeq1 == NULL || vSeq2 == NULL )\n    {\n        printf( \"Quitting synchronization.\\n\" );\n        if ( vSeq1 ) Vec_StrFree( vSeq1 );\n        if ( vSeq2 ) Vec_StrFree( vSeq2 );\n        return NULL;\n    }\n    clk = Abc_Clock();\n    vSimInfo = Vec_PtrAllocSimInfo( Abc_MaxInt( Aig_ManObjNumMax(pAig1), Aig_ManObjNumMax(pAig2) ), 1 );\n\n    // process Design 1\n    RetValue = Saig_SynchSequenceRun( pAig1, vSimInfo, vSeq1, 1 );\n    assert( RetValue == 0 );\n    RetValue = Saig_SynchSequenceRun( pAig1, vSimInfo, vSeq2, 0 );\n    assert( RetValue == 0 );\n\n    // process Design 2\n    RetValue = Saig_SynchSequenceRun( pAig2, vSimInfo, vSeq2, 1 );\n    assert( RetValue == 0 );\n\n    // duplicate designs\n    pAig1z = Saig_ManDupInitZero( pAig1 );\n    pAig2z = Saig_ManDupInitZero( pAig2 );\n    pMiter = Saig_ManCreateMiter( pAig1z, pAig2z, 0 );\n    Aig_ManCleanup( pMiter );\n    Aig_ManStop( pAig1z );\n    Aig_ManStop( pAig2z );\n\n    // cleanup\n    Vec_PtrFree( vSimInfo );\n    Vec_StrFree( vSeq1 );\n    Vec_StrFree( vSeq2 );\n    Aig_ManCleanMarkA( pAig1 );\n    Aig_ManCleanMarkA( pAig2 );\n\n    if ( fVerbose )\n    {\n        printf( \"Miter of the synchronized designs is constructed.         \" );\n        ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    return pMiter;\n}",
+      "Draft": "func Saig_Synchronize(pAig1 *Aig_Man_t, pAig2 *Aig_Man_t, nWords int32, fVerbose int32) *Aig_Man_t {\n    var pAig1z, pAig2z, pMiter *Aig_Man_t;\n    var vSeq1, vSeq2 *Vec_Str_t;\n    var vSimInfo *Vec_Ptr_t;\n    var RetValue int32;\n    var clk abctime;\n/*\n    {\n        unsigned u = Saig_SynchRandomTernary();\n        unsigned w = Saig_SynchRandomTernary();\n        unsigned x = Saig_SynchNot( u );\n        unsigned y = Saig_SynchNot( w );\n        unsigned z = Saig_SynchAnd( x, y );\n\n        Extra_PrintBinary( stdout, \u0026u, 32 );  printf( \"\\n\" );\n        Extra_PrintBinary( stdout, \u0026w, 32 );  printf( \"\\n\" );  printf( \"\\n\" );\n        Extra_PrintBinary( stdout, \u0026x, 32 );  printf( \"\\n\" );\n        Extra_PrintBinary( stdout, \u0026y, 32 );  printf( \"\\n\" );  printf( \"\\n\" );\n        Extra_PrintBinary( stdout, \u0026z, 32 );  printf( \"\\n\" );\n    }\n*/\n    // report statistics\n    if fVerbose != 0 {\n        fmt.Printf(\"Design 1: \");\n        Aig_ManPrintStats( pAig1 );\n        fmt.Printf(\"Design 2: \");\n        Aig_ManPrintStats( pAig2 );\n    }\n\n    // synchronize the first design\n    clk = Abc_Clock();\n    vSeq1 = Saig_SynchSequence( pAig1, nWords );\n    if vSeq1 == nil {\n        fmt.Printf(\"Design 1: Synchronizing sequence is not found. \");\n    } else if fVerbose != 0 {\n        fmt.Printf(\"Design 1: Synchronizing sequence of length %4d is found. \", Vec_StrSize(vSeq1) / Saig_ManPiNum(pAig1)); }\n    if fVerbose != 0 {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    \n    } else {\n        fmt.Printf(\"\\n\"); }\n\n    // synchronize the first design\n    clk = Abc_Clock();\n    vSeq2 = Saig_SynchSequence( pAig2, nWords );\n    if vSeq2 == nil {\n        fmt.Printf(\"Design 2: Synchronizing sequence is not found. \");\n    } else if fVerbose != 0 {\n        fmt.Printf(\"Design 2: Synchronizing sequence of length %4d is found. \", Vec_StrSize(vSeq2) / Saig_ManPiNum(pAig2)); }\n    if fVerbose != 0 {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    \n    } else {\n        fmt.Printf(\"\\n\"); }\n\n    // quit if one of the designs cannot be synchronized\n    if vSeq1 == nil || vSeq2 == nil {\n        fmt.Printf(\"Quitting synchronization.\\n\");\n        if vSeq1 { Vec_StrFree( vSeq1 ); }\n        if vSeq2 != nil { Vec_StrFree( vSeq2 ); }\n        return nil;\n    }\n    clk = Abc_Clock();\n    vSimInfo = Vec_PtrAllocSimInfo( Abc_MaxInt( Aig_ManObjNumMax(pAig1), Aig_ManObjNumMax(pAig2) ), 1 );\n\n    // process Design 1\n    RetValue = Saig_SynchSequenceRun( pAig1, vSimInfo, vSeq1, 1 );\n    assert(RetValue == 0, \"RetValue == 0\");\n    RetValue = Saig_SynchSequenceRun( pAig1, vSimInfo, vSeq2, 0 );\n    assert(RetValue == 0, \"RetValue == 0\");\n\n    // process Design 2\n    RetValue = Saig_SynchSequenceRun( pAig2, vSimInfo, vSeq2, 1 );\n    assert(RetValue == 0, \"RetValue == 0\");\n\n    // duplicate designs\n    pAig1z = Saig_ManDupInitZero( pAig1 );\n    pAig2z = Saig_ManDupInitZero( pAig2 );\n    pMiter = Saig_ManCreateMiter( pAig1z, pAig2z, 0 );\n    Aig_ManCleanup( pMiter );\n    Aig_ManStop( pAig1z );\n    Aig_ManStop( pAig2z );\n\n    // cleanup\n    Vec_PtrFree( vSimInfo );\n    Vec_StrFree( vSeq1 );\n    Vec_StrFree( vSeq2 );\n    Aig_ManCleanMarkA( pAig1 );\n    Aig_ManCleanMarkA( pAig2 );\n\n    if fVerbose != 0 {\n        fmt.Printf(\"Miter of the synchronized designs is constructed.         \");\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    return pMiter;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::mechanical::sizeof::9513",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8242,
+      "End": 8242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::2207",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2207,
+      "End": 2219
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::2855",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2748,
+      "End": 2748
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::2949",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2804,
+      "End": 2816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::3658",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3406,
+      "End": 3406
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::3752",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3462,
+      "End": 3474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::4491",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4036,
+      "End": 4036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::4565",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4092,
+      "End": 4104
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::5310",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4672,
+      "End": 4672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::5384",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4728,
+      "End": 4740
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::6165",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5342,
+      "End": 5342
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::6295",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5400,
+      "End": 5412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::6359",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5464,
+      "End": 5476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::6436",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5541,
+      "End": 5553
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::7482",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6480,
+      "End": 6480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::7577",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6537,
+      "End": 6549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::7641",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6601,
+      "End": 6613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::8640",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7454,
+      "End": 7466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::8706",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7520,
+      "End": 7532
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::9475",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8242,
+      "End": 8242
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::9639",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8278,
+      "End": 8278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::9733",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8334,
+      "End": 8346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::10341",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8877,
+      "End": 8877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::11138",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9486,
+      "End": 9486
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::11212",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9542,
+      "End": 9554
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::11662",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9846,
+      "End": 9858
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::11862",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10046,
+      "End": 10058
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::13242",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11319,
+      "End": 11319
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::13336",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11375,
+      "End": 11387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::16456",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14333,
+      "End": 14333
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::16661",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14416,
+      "End": 14416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::16972",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14528,
+      "End": 14528
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::17332",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14654,
+      "End": 14654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::pointer-cast::17562",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14762,
+      "End": 14762
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchNot",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchNot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 884,
+      "End": 979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchAnd",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 980,
+      "End": 1126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchRandomBinary",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchRandomBinary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1127,
+      "End": 1237
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchRandomTernary",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchRandomTernary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1238,
+      "End": 1374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchTernary",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchTernary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1375,
+      "End": 1524
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchSetConstant1",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchSetConstant1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2024,
+      "End": 2321
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchInitRegsTernary",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchInitRegsTernary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2600,
+      "End": 2932
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchInitRegsBinary",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchInitRegsBinary",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3259,
+      "End": 3613
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchInitPisRandom",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchInitPisRandom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3890,
+      "End": 4234
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchInitPisGiven",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchInitPisGiven",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4511,
+      "End": 4877
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchTernarySimulate",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchTernarySimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5154,
+      "End": 6933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchTernaryTransferState",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchTernaryTransferState",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7210,
+      "End": 7649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::ternary::Saig_SynchCountX",
+      "Category": "ternary-review",
+      "Symbol": "Saig_SynchCountX",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7977,
+      "End": 8945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchCountX",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchCountX",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7977,
+      "End": 8945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchSavePattern",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchSavePattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9240,
+      "End": 10212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchSequenceRun",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchSequenceRun",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10481,
+      "End": 11572
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchSequence",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchSequence",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11867,
+      "End": 13790
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_ManDupInitZero",
+      "Category": "semantic-review",
+      "Symbol": "Saig_ManDupInitZero",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14078,
+      "End": 15019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_SynchSequenceApply",
+      "Category": "semantic-review",
+      "Symbol": "Saig_SynchSequenceApply",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15314,
+      "End": 16485
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::Saig_Synchronize",
+      "Category": "semantic-review",
+      "Symbol": "Saig_Synchronize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17067,
+      "End": 20326
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/saig/saigSynch.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20573
+    }
+  ],
+  "Draft": "package saig\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [saigSynch.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Sequential AIG package.]\n\n  Synopsis    [Computation of synchronizing sequence.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: saigSynch.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"saig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n//        0  1  x\n//       00 01 11\n// 0  00 00 00 00\n// 1  01 00 01 11\n// x  11 00 11 11\n\nfunc Saig_SynchNot(w uint32) uint32 {\n    return w^((~(w\u0026(w\u003e\u003e1)))\u00260x55555555);\n}\nfunc Saig_SynchAnd(u uint32, w uint32) uint32 {\n    return (u\u0026w)|((((u\u0026(u\u003e\u003e1)\u0026w\u0026~(w\u003e\u003e1))|(w\u0026(w\u003e\u003e1)\u0026u\u0026~(u\u003e\u003e1)))\u00260x55555555)\u003c\u003c1);\n}\nfunc Saig_SynchRandomBinary() uint32 { \n    return Aig_ManRandom(0) \u0026 0x55555555;               \n}\nfunc Saig_SynchRandomTernary() uint32 { \n    var w uint32  = Aig_ManRandom(0);\n    return w^((~w)\u0026(w\u003e\u003e1)\u00260x55555555);        \n}\nfunc Saig_SynchTernary(v int32) uint32 {\n    assert(v == 0 || v == 1 || v == 3, \"v == 0 || v == 1 || v == 3\");\n    if v != 0 {\n        if v==1 {\n            return 0x55555555;\n        } else {\n            return 0xffffffff;\n        }\n    } else {\n        return 0;\n    }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Initializes registers to the ternary state.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_SynchSetConstant1(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32) {\n    var pObj *Aig_Obj_t;\n    var pSim *uint32;\n    var w int32;\n    pObj = Aig_ManConst1( pAig );\n    pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n    for  w = 0; w \u003c nWords; w++  {\n        pSim[w] = 0x55555555;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Initializes registers to the ternary state.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_SynchInitRegsTernary(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32) {\n    var pObj *Aig_Obj_t;\n    var pSim *uint32;\n    var i, w int32;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        for  w = 0; w \u003c nWords; w++  {\n            pSim[w] = 0xffffffff;\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Initializes registers to the given binary state.]\n\n  Description [The binary state is stored in pObj-\u003efMarkA.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_SynchInitRegsBinary(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32) {\n    var pObj *Aig_Obj_t;\n    var pSim *uint32;\n    var i, w int32;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        for  w = 0; w \u003c nWords; w++  {\n            pSim[w] = Saig_SynchTernary( pObj.fMarkA );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Initializes random binary primary inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_SynchInitPisRandom(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32) {\n    var pObj *Aig_Obj_t;\n    var pSim *uint32;\n    var i, w int32;\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        for  w = 0; w \u003c nWords; w++  {\n            pSim[w] = Saig_SynchRandomBinary();\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Initializes random binary primary inputs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_SynchInitPisGiven(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32, pValues string) {\n    var pObj *Aig_Obj_t;\n    var pSim *uint32;\n    var i, w int32;\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        for  w = 0; w \u003c nWords; w++  {\n            pSim[w] = Saig_SynchTernary( pValues[i] );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs ternary simulation of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_SynchTernarySimulate(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32) {\n    var pObj *Aig_Obj_t;\n    var pSim0, pSim1, pSim *uint32;\n    var i, w int32;\n    // simulate nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pSim  = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        pSim0 = (unsigned *)Vec_PtrEntry( vSimInfo, Aig_ObjFaninId0(pObj) );\n        pSim1 = (unsigned *)Vec_PtrEntry( vSimInfo, Aig_ObjFaninId1(pObj) );\n        if Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) {\n            for  w = 0; w \u003c nWords; w++  {\n                pSim[w] = Saig_SynchAnd( Saig_SynchNot(pSim0[w]), Saig_SynchNot(pSim1[w]) );\n            }\n        \n        } else if !Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) {\n            for  w = 0; w \u003c nWords; w++  {\n                pSim[w] = Saig_SynchAnd( pSim0[w], Saig_SynchNot(pSim1[w]) );\n            }\n        \n        } else if Aig_ObjFaninC0(pObj) \u0026\u0026 !Aig_ObjFaninC1(pObj) {\n            for  w = 0; w \u003c nWords; w++  {\n                pSim[w] = Saig_SynchAnd( Saig_SynchNot(pSim0[w]), pSim1[w] );\n            }\n        \n        } else { // if ( !Aig_ObjFaninC0(pObj) \u0026\u0026 !Aig_ObjFaninC1(pObj) )\n        \n            for  w = 0; w \u003c nWords; w++  {\n                pSim[w] = Saig_SynchAnd( pSim0[w], pSim1[w] );\n            }\n        }\n    }\n    }\n    // transfer values to register inputs\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        pSim  = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        pSim0 = (unsigned *)Vec_PtrEntry( vSimInfo, Aig_ObjFaninId0(pObj) );\n        if Aig_ObjFaninC0(pObj) {\n            for  w = 0; w \u003c nWords; w++  {\n                pSim[w] = Saig_SynchNot( pSim0[w] );\n            }\n        \n        } else {\n            for  w = 0; w \u003c nWords; w++  {\n                pSim[w] = pSim0[w];\n            }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs ternary simulation of the nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_SynchTernaryTransferState(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32) {\n    var pObjLi, pObjLo *Aig_Obj_t;\n    var pSim0, pSim1 *uint32;\n    var i, w int32;\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n        pSim0 = (unsigned *)Vec_PtrEntry( vSimInfo, pObjLi.Id );\n        pSim1 = (unsigned *)Vec_PtrEntry( vSimInfo, pObjLo.Id );\n        for  w = 0; w \u003c nWords; w++  {\n            pSim1[w] = pSim0[w];\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the number of Xs in the smallest ternary pattern.]\n\n  Description [Returns the number of this pattern.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_SynchCountX(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32, piPat *int32) int32 {\n    var pObj *Aig_Obj_t;\n    var pSim *uint32;\n    var pCounters *int32;\n    var i int32;\n    var w int32;\n    var b int32;\n    var iPatBest, iTernMin int32;\n    // count the number of ternary values in each pattern\n    // inlining of macro ABC_CALLOC\n    pCounters = ((int *) calloc((size_t)(nWords * 16), sizeof(int)));\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCos, i+Saig_ManPoNum(pAig))), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        for  w = 0; w \u003c nWords; w++  {\n            for  b = 0; b \u003c 16; b++  {\n                if ((pSim[w] \u003e\u003e (b \u003c\u003c 1)) \u0026 3) == 3 {\n                    pCounters[16 * w + b]++; }\n            }\n        }\n    }\n    // get the best pattern\n    iPatBest = -1;\n    iTernMin = 1 + Saig_ManRegNum(pAig);\n    for  b = 0; b \u003c 16 * nWords; b++  {\n        if iTernMin \u003e pCounters[b] {\n            iTernMin = pCounters[b];\n            iPatBest = b;\n            if iTernMin == 0 {\n                break; }\n        }\n    }\n    // inlining of macro ABC_FREE\n    ((pCounters) ? (free((char *) (pCounters)), (pCounters) = 0) : 0);\n    *piPat = iPatBest;\n    return iTernMin;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Saves the best pattern found and initializes the registers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_SynchSavePattern(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, nWords int32, iPat int32, vSequence *Vec_Str_t) int32 {\n    var pObj, pObjLi, pObjLo *Aig_Obj_t;\n    var pSim *uint32;\n    var Counter, Value, i, w int32;\n    assert(iPat \u003c 16 * nWords, \"iPat \u003c 16 * nWords\");\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        Value = (pSim[iPat\u003e\u003e4] \u003e\u003e ((iPat\u00260xf) \u003c\u003c 1)) \u0026 3;\n        Vec_StrPush( vSequence, byte(Value) );\n//        printf( \"%d \", Value );\n    }\n//    printf( \"\\n\" );\n    Counter = 0;\n    // inlining of macro Saig_ManForEachLiLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObjLi) = Saig_ManLi(pAig, i)), 1)            \u0026\u0026 (((pObjLo)=Saig_ManLo(pAig, i)), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObjLi.Id );\n        Value = (pSim[iPat\u003e\u003e4] \u003e\u003e ((iPat\u00260xf) \u003c\u003c 1)) \u0026 3;\n        Counter += (Value == 3);\n        // save patern in the same register\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObjLo.Id );\n        for  w = 0; w \u003c nWords; w++  {\n            pSim[w] = Saig_SynchTernary( Value );\n        }\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Implement synchronizing sequence.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_SynchSequenceRun(pAig *Aig_Man_t, vSimInfo *Vec_Ptr_t, vSequence *Vec_Str_t, fTernary int32) int32 {\n    var pSim *uint32;\n    var pObj *Aig_Obj_t;\n    var Counter, nIters, Value, i int32;\n    assert(Vec_StrSize(vSequence) % Saig_ManPiNum(pAig) == 0, \"Vec_StrSize(vSequence) % Saig_ManPiNum(pAig) == 0\");\n    nIters = Vec_StrSize(vSequence) / Saig_ManPiNum(pAig);\n    Saig_SynchSetConstant1( pAig, vSimInfo, 1 );\n    if fTernary != 0 {\n        Saig_SynchInitRegsTernary( pAig, vSimInfo, 1 ); \n    } else {\n        Saig_SynchInitRegsBinary( pAig, vSimInfo, 1 ); } \n    for  i = 0; i \u003c nIters; i++  {\n        Saig_SynchInitPisGiven( pAig, vSimInfo, 1, Vec_StrArray(vSequence) + i * Saig_ManPiNum(pAig) );\n        Saig_SynchTernarySimulate( pAig, vSimInfo, 1 );\n        Saig_SynchTernaryTransferState( pAig, vSimInfo, 1 );\n    }\n    // save the resulting state in the registers\n    Counter = 0;\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(pAig)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i+Saig_ManPiNum(pAig))), 1); i++  {\n        pSim = (unsigned *)Vec_PtrEntry( vSimInfo, pObj.Id );\n        Value = pSim[0] \u0026 3;\n        assert(Value != 2, \"Value != 2\");\n        Counter += (Value == 3);\n        pObj.fMarkA = Value;\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Determines synchronizing sequence using ternary simulation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_SynchSequence(pAig *Aig_Man_t, nWords int32) *Vec_Str_t {\n    var nStepsMax int32  = 100;  // the maximum number of simulation steps\n    var nTriesMax int32  = 100;  // the maximum number of attempts at each step\n    var fVerify int32    =   1;  // verify the resulting pattern\n    var vSequence *Vec_Str_t;\n    var vSimInfo *Vec_Ptr_t;\n    var nTerPrev, nTerCur, nTerCur2 int32;\n    var iPatBest, RetValue, s, t int32;\n    assert(Saig_ManRegNum(pAig) \u003e 0, \"Saig_ManRegNum(pAig) \u003e 0\");\n    // reset random numbers\n    Aig_ManRandom( 1 );\n    // start the sequence\n    vSequence = Vec_StrAlloc( 20 * Saig_ManRegNum(pAig) );\n    // create sim info and init registers\n    vSimInfo = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(pAig), nWords );\n    Saig_SynchSetConstant1( pAig, vSimInfo, nWords );\n    // iterate over the timeframes\n    nTerPrev = Saig_ManRegNum(pAig);\n    Saig_SynchInitRegsTernary( pAig, vSimInfo, nWords );\n    for  s = 0; s \u003c nStepsMax \u0026\u0026 nTerPrev \u003e 0; s++  {\n        for  t = 0; t \u003c nTriesMax; t++  {\n            Saig_SynchInitPisRandom( pAig, vSimInfo, nWords );\n            Saig_SynchTernarySimulate( pAig, vSimInfo, nWords );\n            nTerCur = Saig_SynchCountX( pAig, vSimInfo, nWords, \u0026iPatBest );\n            if nTerCur \u003c nTerPrev {\n                break; }\n        }\n        if t == nTriesMax {\n            break; }\n        nTerCur2 = Saig_SynchSavePattern( pAig, vSimInfo, nWords, iPatBest, vSequence );\n        assert(nTerCur == nTerCur2, \"nTerCur == nTerCur2\");\n        nTerPrev = nTerCur;\n    }\n    if nTerPrev \u003e 0 {\n        fmt.Printf(\"Count not initialize %d registers.\\n\", nTerPrev);\n        Vec_PtrFree( vSimInfo );\n        Vec_StrFree( vSequence );\n        return nil;\n    }\n    // verify that the sequence is correct\n    if fVerify != 0 {\n        RetValue = Saig_SynchSequenceRun( pAig, vSimInfo, vSequence, 1 );\n        assert(RetValue == 0, \"RetValue == 0\");\n        Aig_ManCleanMarkA( pAig );\n    }\n    Vec_PtrFree( vSimInfo );\n    return vSequence;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the AIG to have constant-0 initial state.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_ManDupInitZero(p *Aig_Man_t) *Aig_Man_t {\n    var pNew *Aig_Man_t;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    pNew = Aig_ManStart( Aig_ManObjNumMax(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    Aig_ManConst1(p).pData = Aig_ManConst1(pNew);\n    // inlining of macro Saig_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPiNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCi( pNew );\n    }\n    // inlining of macro Saig_ManForEachLo\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCis, i+Saig_ManPiNum(p))), 1); i++  {\n        pObj.pData = Aig_NotCond( Aig_ObjCreateCi( pNew ), pObj.fMarkA );\n    }\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pObj.pData = Aig_And( pNew, Aig_ObjChild0Copy(pObj), Aig_ObjChild1Copy(pObj) ); }\n    }\n    // inlining of macro Saig_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c Saig_ManPoNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i)), 1); i++  {\n        pObj.pData = Aig_ObjCreateCo( pNew, Aig_ObjChild0Copy(pObj) );\n    }\n    // inlining of macro Saig_ManForEachLi\n    for  i = 0; (i \u003c Saig_ManRegNum(p)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vCos, i+Saig_ManPoNum(p))), 1); i++  {\n        pObj.pData = Aig_ObjCreateCo( pNew, Aig_NotCond( Aig_ObjChild0Copy(pObj), pObj.fMarkA ) );\n    }\n    Aig_ManSetRegNum( pNew, Saig_ManRegNum(p) );\n    assert(Aig_ManNodeNum(pNew) == Aig_ManNodeNum(p), \"Aig_ManNodeNum(pNew) == Aig_ManNodeNum(p)\");\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Determines synchronizing sequence using ternary simulation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_SynchSequenceApply(pAig *Aig_Man_t, nWords int32, fVerbose int32) *Aig_Man_t {\n    var pAigZero *Aig_Man_t;\n    var vSequence *Vec_Str_t;\n    var vSimInfo *Vec_Ptr_t;\n    var RetValue int32;\n    var clk abctime;\n\nclk = Abc_Clock();\n    // derive synchronization sequence\n    vSequence = Saig_SynchSequence( pAig, nWords );\n    if vSequence == nil {\n        fmt.Printf(\"Design 1: Synchronizing sequence is not found. \");\n    } else if fVerbose != 0 {\n        fmt.Printf(\"Design 1: Synchronizing sequence of length %4d is found. \", Vec_StrSize(vSequence) / Saig_ManPiNum(pAig)); }\n    if fVerbose != 0 {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    \n    } else {\n        fmt.Printf(\"\\n\"); }\n    if vSequence == nil {\n        fmt.Printf(\"Quitting synchronization.\\n\");\n        return nil;\n    }\n\n    // apply synchronization sequence\n    vSimInfo = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(pAig), 1 );\n    RetValue = Saig_SynchSequenceRun( pAig, vSimInfo, vSequence, 1 );\n    assert(RetValue == 0, \"RetValue == 0\");\n    // duplicate \n    pAigZero = Saig_ManDupInitZero( pAig );\n    // cleanup\n    Vec_PtrFree( vSimInfo );\n    Vec_StrFree( vSequence );\n    Aig_ManCleanMarkA( pAig );\n    return pAigZero;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates SEC miter for two designs without initial state.]\n\n  Description [The designs (pAig1 and pAig2) are assumed to have ternary \n  initial state. Determines synchronizing sequences using ternary simulation.\n  Simulates the sequences on both designs to come up with equivalent binary \n  initial states. Create seq miter for the designs starting in these states.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Saig_Synchronize(pAig1 *Aig_Man_t, pAig2 *Aig_Man_t, nWords int32, fVerbose int32) *Aig_Man_t {\n    var pAig1z, pAig2z, pMiter *Aig_Man_t;\n    var vSeq1, vSeq2 *Vec_Str_t;\n    var vSimInfo *Vec_Ptr_t;\n    var RetValue int32;\n    var clk abctime;\n/*\n    {\n        unsigned u = Saig_SynchRandomTernary();\n        unsigned w = Saig_SynchRandomTernary();\n        unsigned x = Saig_SynchNot( u );\n        unsigned y = Saig_SynchNot( w );\n        unsigned z = Saig_SynchAnd( x, y );\n\n        Extra_PrintBinary( stdout, \u0026u, 32 );  printf( \"\\n\" );\n        Extra_PrintBinary( stdout, \u0026w, 32 );  printf( \"\\n\" );  printf( \"\\n\" );\n        Extra_PrintBinary( stdout, \u0026x, 32 );  printf( \"\\n\" );\n        Extra_PrintBinary( stdout, \u0026y, 32 );  printf( \"\\n\" );  printf( \"\\n\" );\n        Extra_PrintBinary( stdout, \u0026z, 32 );  printf( \"\\n\" );\n    }\n*/\n    // report statistics\n    if fVerbose != 0 {\n        fmt.Printf(\"Design 1: \");\n        Aig_ManPrintStats( pAig1 );\n        fmt.Printf(\"Design 2: \");\n        Aig_ManPrintStats( pAig2 );\n    }\n\n    // synchronize the first design\n    clk = Abc_Clock();\n    vSeq1 = Saig_SynchSequence( pAig1, nWords );\n    if vSeq1 == nil {\n        fmt.Printf(\"Design 1: Synchronizing sequence is not found. \");\n    } else if fVerbose != 0 {\n        fmt.Printf(\"Design 1: Synchronizing sequence of length %4d is found. \", Vec_StrSize(vSeq1) / Saig_ManPiNum(pAig1)); }\n    if fVerbose != 0 {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    \n    } else {\n        fmt.Printf(\"\\n\"); }\n\n    // synchronize the first design\n    clk = Abc_Clock();\n    vSeq2 = Saig_SynchSequence( pAig2, nWords );\n    if vSeq2 == nil {\n        fmt.Printf(\"Design 2: Synchronizing sequence is not found. \");\n    } else if fVerbose != 0 {\n        fmt.Printf(\"Design 2: Synchronizing sequence of length %4d is found. \", Vec_StrSize(vSeq2) / Saig_ManPiNum(pAig2)); }\n    if fVerbose != 0 {\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    \n    } else {\n        fmt.Printf(\"\\n\"); }\n\n    // quit if one of the designs cannot be synchronized\n    if vSeq1 == nil || vSeq2 == nil {\n        fmt.Printf(\"Quitting synchronization.\\n\");\n        if vSeq1 { Vec_StrFree( vSeq1 ); }\n        if vSeq2 != nil { Vec_StrFree( vSeq2 ); }\n        return nil;\n    }\n    clk = Abc_Clock();\n    vSimInfo = Vec_PtrAllocSimInfo( Abc_MaxInt( Aig_ManObjNumMax(pAig1), Aig_ManObjNumMax(pAig2) ), 1 );\n\n    // process Design 1\n    RetValue = Saig_SynchSequenceRun( pAig1, vSimInfo, vSeq1, 1 );\n    assert(RetValue == 0, \"RetValue == 0\");\n    RetValue = Saig_SynchSequenceRun( pAig1, vSimInfo, vSeq2, 0 );\n    assert(RetValue == 0, \"RetValue == 0\");\n\n    // process Design 2\n    RetValue = Saig_SynchSequenceRun( pAig2, vSimInfo, vSeq2, 1 );\n    assert(RetValue == 0, \"RetValue == 0\");\n\n    // duplicate designs\n    pAig1z = Saig_ManDupInitZero( pAig1 );\n    pAig2z = Saig_ManDupInitZero( pAig2 );\n    pMiter = Saig_ManCreateMiter( pAig1z, pAig2z, 0 );\n    Aig_ManCleanup( pMiter );\n    Aig_ManStop( pAig1z );\n    Aig_ManStop( pAig2z );\n\n    // cleanup\n    Vec_PtrFree( vSimInfo );\n    Vec_StrFree( vSeq1 );\n    Vec_StrFree( vSeq2 );\n    Aig_ManCleanMarkA( pAig1 );\n    Aig_ManCleanMarkA( pAig2 );\n\n    if fVerbose != 0 {\n        fmt.Printf(\"Miter of the synchronized designs is constructed.         \");\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    return pMiter;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

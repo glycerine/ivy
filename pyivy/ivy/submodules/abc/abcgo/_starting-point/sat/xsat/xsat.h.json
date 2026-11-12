@@ -1,0 +1,55 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsat.h",
+  "SHA256": "00f7972d88d21a91d3eb81c4078d5f81fa8f529ad49d4e36b44d21df9d94d363",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsat.h::pointer-cast::1723",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1723,
+      "End": 1742
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsat.h::pointer-cast::1840",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1840,
+      "End": 1859
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsat.h::pointer-cast::1888",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1888,
+      "End": 1907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsat.h::pointer-cast::1943",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1943,
+      "End": 1962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/xsat/xsat.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 2217
+    }
+  ],
+  "Draft": "package xsat\n\n/**CFile****************************************************************\n\n  FileName    [xsat.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [xSAT - A SAT solver written in C. \n               Read the license file for more info.]\n\n  Synopsis    [External definitions of the solver.]\n\n  Author      [Bruno Schmitt \u003cboschmitt@inf.ufrgs.br\u003e]\n\n  Affiliation [UC Berkeley / UFRGS]\n\n  Date        [Ver. 1.0. Started - November 10, 2016.]\n\n  Revision    []\n\n***********************************************************************/\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n//#include \"misc/util/abc_global.h\"\n//#include \"misc/vec/vecInt.h\"\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                    STRUCTURE DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\nstruct xSAT_Solver_t_;\ntype xSAT_Solver_t = xSAT_Solver_t_;\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DECLARATIONS                        ///\n////////////////////////////////////////////////////////////////////////\n/*=== xsatCnfReader.c ================================================*/\n// extern int xSAT_SolverParseDimacs( FILE *, xSAT_Solver_t ** );\n\n\n/*=== xsatSolverAPI.c ================================================*/\n// extern xSAT_Solver_t * xSAT_SolverCreate();\n\n// extern void xSAT_SolverDestroy( xSAT_Solver_t * );\n\n\n// extern int xSAT_SolverAddClause( xSAT_Solver_t *, Vec_Int_t * );\n\n// extern int xSAT_SolverSimplify( xSAT_Solver_t * );\n\n// extern int xSAT_SolverSolve( xSAT_Solver_t * );\n\n\n// extern void xSAT_SolverPrintStats( xSAT_Solver_t * );\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

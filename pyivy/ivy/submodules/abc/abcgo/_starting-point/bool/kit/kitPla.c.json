@@ -1,0 +1,827 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c",
+  "SHA256": "ef04960c4efe0b3e014ed9d9ddf45e17037749131fd11fb03ca05367872a73db",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 4123
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 192,
+        "Column": 17,
+        "ByteOffset": 4854
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 215,
+        "Column": 5,
+        "ByteOffset": 5462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pSopCover, '-', (size_t)Length );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 242,
+        "Column": 5,
+        "ByteOffset": 6215
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vCover) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 258,
+        "Column": 17,
+        "ByteOffset": 6769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 5,
+        "ByteOffset": 7251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 292,
+        "Column": 17,
+        "ByteOffset": 7708
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 312,
+        "Column": 42,
+        "ByteOffset": 8221
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pStore = Aig_MmFlexEntryFetch( pMan, strlen(pSop) + 1 );"
+    },
+    {
+      "Name": "strcpy",
+      "Status": "converted",
+      "Message": "String-value representation replaces mutable C storage; verify aliasing, capacity and NULL assumptions.",
+      "Location": {
+        "Line": 313,
+        "Column": 5,
+        "ByteOffset": 8245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    strcpy( pStore, pSop );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 337,
+        "Column": 5,
+        "ByteOffset": 8995
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 0 || RetValue == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 358,
+        "Column": 5,
+        "ByteOffset": 9572
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vCover) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 373,
+        "Column": 17,
+        "ByteOffset": 10091
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 398,
+        "Column": 5,
+        "ByteOffset": 10788
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( RetValue == 0 || RetValue == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 401,
+        "Column": 9,
+        "ByteOffset": 10973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( RetValue == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 411,
+        "Column": 9,
+        "ByteOffset": 11322
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pTruth[0] == uint32(Kit_PlaToTruth6(pResult, nVars)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 413,
+        "Column": 9,
+        "ByteOffset": 11421
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *((ABC_UINT64_T*)pTruth) == Kit_PlaToTruth6(pResult, nVars) ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 442,
+        "Column": 5,
+        "ByteOffset": 12298
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003c 7 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 451,
+        "Column": 17,
+        "ByteOffset": 12622
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 454,
+        "Column": 9,
+        "ByteOffset": 12684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pSop[lit] == ' ' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 457,
+        "Column": 9,
+        "ByteOffset": 12750
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pSop[lit] == '\\n' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 485,
+        "Column": 5,
+        "ByteOffset": 13704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pSop != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 486,
+        "Column": 5,
+        "ByteOffset": 13731
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nVars \u003e= 0 );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 487,
+        "Column": 8,
+        "ByteOffset": 13760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if strlen(pSop) % (nVars + 3) != 0 {"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 488,
+        "Column": 9,
+        "ByteOffset": 13802
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Kit_PlaToTruth(): SOP is represented incorrectly.\\n\" );"
+    },
+    {
+      "Name": "strlen",
+      "Status": "converted",
+      "Message": "Byte length; known byte arrays/slices are truncated at NUL. String defaults assume no embedded terminator.",
+      "Location": {
+        "Line": 493,
+        "Column": 15,
+        "ByteOffset": 13973
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nCubes =  strlen(pSop) / (nVars + 3);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Kit_PlaIsConst0",
+      "Start": 1295,
+      "End": 1378,
+      "BodyStart": 1330,
+      "Original": "int Kit_PlaIsConst0( char * pSop )\n{\n    return pSop[0] == ' ' \u0026\u0026 pSop[1] == '0';\n}",
+      "Draft": "func Kit_PlaIsConst0(pSop string) int32 {\n    return pSop[0] == ' ' \u0026\u0026 pSop[1] == '0';\n}"
+    },
+    {
+      "Name": "Kit_PlaIsConst1",
+      "Start": 1648,
+      "End": 1731,
+      "BodyStart": 1683,
+      "Original": "int Kit_PlaIsConst1( char * pSop )\n{\n    return pSop[0] == ' ' \u0026\u0026 pSop[1] == '1';\n}",
+      "Draft": "func Kit_PlaIsConst1(pSop string) int32 {\n    return pSop[0] == ' ' \u0026\u0026 pSop[1] == '1';\n}"
+    },
+    {
+      "Name": "Kit_PlaIsBuf",
+      "Start": 1999,
+      "End": 2192,
+      "BodyStart": 2031,
+      "Original": "int Kit_PlaIsBuf( char * pSop )\n{\n    if ( pSop[4] != 0 )\n        return 0;\n    if ( (pSop[0] == '1' \u0026\u0026 pSop[2] == '1') || (pSop[0] == '0' \u0026\u0026 pSop[2] == '0') )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Kit_PlaIsBuf(pSop string) int32 {\n    if pSop[4] != 0 {\n        return 0; }\n    if (pSop[0] == '1' \u0026\u0026 pSop[2] == '1') || (pSop[0] == '0' \u0026\u0026 pSop[2] == '0') {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Kit_PlaIsInv",
+      "Start": 2463,
+      "End": 2656,
+      "BodyStart": 2495,
+      "Original": "int Kit_PlaIsInv( char * pSop )\n{\n    if ( pSop[4] != 0 )\n        return 0;\n    if ( (pSop[0] == '0' \u0026\u0026 pSop[2] == '1') || (pSop[0] == '1' \u0026\u0026 pSop[2] == '0') )\n        return 1;\n    return 0;\n}",
+      "Draft": "func Kit_PlaIsInv(pSop string) int32 {\n    if pSop[4] != 0 {\n        return 0; }\n    if (pSop[0] == '0' \u0026\u0026 pSop[2] == '1') || (pSop[0] == '1' \u0026\u0026 pSop[2] == '0') {\n        return 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "Kit_PlaGetVarNum",
+      "Start": 2935,
+      "End": 3115,
+      "BodyStart": 2971,
+      "Original": "int Kit_PlaGetVarNum( char * pSop )\n{\n    char * pCur;\n    for ( pCur = pSop; *pCur != '\\n'; pCur++ )\n        if ( *pCur == 0 )\n            return -1;\n    return pCur - pSop - 2;\n}",
+      "Draft": "func Kit_PlaGetVarNum(pSop string) int32 {\n    var pCur string;\n    for  pCur = pSop; *pCur != '\\n'; pCur++  {\n        if *pCur == 0 {\n            return -1; }\n    }\n    return pCur - pSop - 2;\n}"
+    },
+    {
+      "Name": "Kit_PlaGetCubeNum",
+      "Start": 3390,
+      "End": 3602,
+      "BodyStart": 3427,
+      "Original": "int Kit_PlaGetCubeNum( char * pSop )\n{\n    char * pCur;\n    int nCubes = 0;\n    if ( pSop == NULL )\n        return 0;\n    for ( pCur = pSop; *pCur; pCur++ )\n        nCubes += (*pCur == '\\n');\n    return nCubes;\n}",
+      "Draft": "func Kit_PlaGetCubeNum(pSop string) int32 {\n    var pCur string;\n    var nCubes int32;\n    if pSop == nil {\n        return 0; }\n    for  pCur = pSop; *pCur; pCur++  {\n        nCubes += (*pCur == '\\n');\n    }\n    return nCubes;\n}"
+    },
+    {
+      "Name": "Kit_PlaIsComplement",
+      "Start": 3838,
+      "End": 4064,
+      "BodyStart": 3877,
+      "Original": "int Kit_PlaIsComplement( char * pSop )\n{\n    char * pCur;\n    for ( pCur = pSop; *pCur; pCur++ )\n        if ( *pCur == '\\n' )\n            return (int)(*(pCur - 1) == '0' || *(pCur - 1) == 'n');\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Kit_PlaIsComplement(pSop string) int32 {\n    var pCur string;\n    for  pCur = pSop; *pCur; pCur++  {\n        if *pCur == '\\n' {\n            return int32((*(pCur - 1) == '0' || *(pCur - 1) == 'n')); }\n    }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Kit_PlaComplement",
+      "Start": 4300,
+      "End": 4799,
+      "BodyStart": 4338,
+      "Original": "void Kit_PlaComplement( char * pSop )\n{\n    char * pCur;\n    for ( pCur = pSop; *pCur; pCur++ )\n        if ( *pCur == '\\n' )\n        {\n            if ( *(pCur - 1) == '0' )\n                *(pCur - 1) = '1';\n            else if ( *(pCur - 1) == '1' )\n                *(pCur - 1) = '0';\n            else if ( *(pCur - 1) == 'x' )\n                *(pCur - 1) = 'n';\n            else if ( *(pCur - 1) == 'n' )\n                *(pCur - 1) = 'x';\n            else\n                assert( 0 );\n        }\n}",
+      "Draft": "func Kit_PlaComplement(pSop string) {\n    var pCur string;\n    for  pCur = pSop; *pCur; pCur++  {\n        if *pCur == '\\n' {\n            if *(pCur - 1) == '0' {\n                *(pCur - 1) = '1';\n            } else if *(pCur - 1) == '1' {\n                *(pCur - 1) = '0';\n            } else if *(pCur - 1) == 'x' {\n                *(pCur - 1) = 'n';\n            } else if *(pCur - 1) == 'n' {\n                *(pCur - 1) = 'x';\n            } else {\n                assert(false, \"0\"); }\n        }\n    }\n}"
+    },
+    {
+      "Name": "Kit_PlaStart",
+      "Start": 5109,
+      "End": 5641,
+      "BodyStart": 5164,
+      "Original": "char * Kit_PlaStart( void * p, int nCubes, int nVars )\n{\n    Aig_MmFlex_t * pMan = (Aig_MmFlex_t *)p;\n    char * pSopCover, * pCube;\n    int i, Length;\n\n    Length = nCubes * (nVars + 3);\n    pSopCover = Aig_MmFlexEntryFetch( pMan, Length + 1 );\n    memset( pSopCover, '-', (size_t)Length );\n    pSopCover[Length] = 0;\n\n    for ( i = 0; i \u003c nCubes; i++ )\n    {\n        pCube = pSopCover + i * (nVars + 3);\n        pCube[nVars + 0] = ' ';\n        pCube[nVars + 1] = '1';\n        pCube[nVars + 2] = '\\n';\n    }\n    return pSopCover;\n}",
+      "Draft": "func Kit_PlaStart(p any, nCubes int32, nVars int32) string {\n    var pMan *Aig_MmFlex_t  = (Aig_MmFlex_t *)p;\n    var pSopCover, pCube string;\n    var i, Length int32;\n\n    Length = nCubes * (nVars + 3);\n    pSopCover = Aig_MmFlexEntryFetch( pMan, Length + 1 );\n    memset( pSopCover, '-', (size_t)Length );\n    pSopCover[Length] = 0;\n\n    for  i = 0; i \u003c nCubes; i++  {\n        pCube = pSopCover + i * (nVars + 3);\n        pCube[nVars + 0] = ' ';\n        pCube[nVars + 1] = '1';\n        pCube[nVars + 2] = '\\n';\n    }\n    return pSopCover;\n}"
+    },
+    {
+      "Name": "Kit_PlaCreateFromIsop",
+      "Start": 5926,
+      "End": 6719,
+      "BodyStart": 5998,
+      "Original": "char * Kit_PlaCreateFromIsop( void * p, int nVars, Vec_Int_t * vCover )\n{\n    Aig_MmFlex_t * pMan = (Aig_MmFlex_t *)p;\n    char * pSop, * pCube;\n    int i, k, Entry, Literal;\n    assert( Vec_IntSize(vCover) \u003e 0 );\n    if ( Vec_IntSize(vCover) == 0 )\n        return NULL;\n    // start the cover\n    pSop = Kit_PlaStart( pMan, Vec_IntSize(vCover), nVars );\n    // create cubes\n    Vec_IntForEachEntry( vCover, Entry, i )\n    {\n        pCube = pSop + i * (nVars + 3);\n        for ( k = 0; k \u003c nVars; k++ )\n        {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if ( Literal == 1 )\n                pCube[k] = '0';\n            else if ( Literal == 2 )\n                pCube[k] = '1';\n            else if ( Literal != 0 )\n                assert( 0 );\n        }\n    }\n    return pSop;\n}",
+      "Draft": "func Kit_PlaCreateFromIsop(p any, nVars int32, vCover *Vec_Int_t) string {\n    var pMan *Aig_MmFlex_t  = (Aig_MmFlex_t *)p;\n    var pSop, pCube string;\n    var i, k, Entry, Literal int32;\n    assert(Vec_IntSize(vCover) \u003e 0, \"Vec_IntSize(vCover) \u003e 0\");\n    if Vec_IntSize(vCover) == 0 {\n        return nil; }\n    // start the cover\n    pSop = Kit_PlaStart( pMan, Vec_IntSize(vCover), nVars );\n    // create cubes\n    Vec_IntForEachEntry( vCover, Entry, i )\n    {\n        pCube = pSop + i * (nVars + 3);\n        for  k = 0; k \u003c nVars; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 {\n                pCube[k] = '0';\n            } else if Literal == 2 {\n                pCube[k] = '1';\n            } else if Literal != 0 {\n                assert(false, \"0\"); }\n        }\n    }\n    return pSop;\n}"
+    },
+    {
+      "Name": "Kit_PlaToIsop",
+      "Start": 7004,
+      "End": 7664,
+      "BodyStart": 7058,
+      "Original": "void Kit_PlaToIsop( char * pSop, Vec_Int_t * vCover )\n{\n    char * pCube;\n    int k, nVars, Entry;\n    nVars = Kit_PlaGetVarNum( pSop );\n    assert( nVars \u003e 0 );\n    // create cubes\n    Vec_IntClear( vCover );\n    for ( pCube = pSop; *pCube; pCube += nVars + 3 )\n    {\n        Entry = 0;\n        for ( k = nVars - 1; k \u003e= 0; k-- )\n            if ( pCube[k] == '0' )\n                Entry = (Entry \u003c\u003c 2) | 1;\n            else if ( pCube[k] == '1' )\n                Entry = (Entry \u003c\u003c 2) | 2;\n            else if ( pCube[k] == '-' )\n                Entry = (Entry \u003c\u003c 2);\n            else \n                assert( 0 );\n        Vec_IntPush( vCover, Entry );\n    }\n}",
+      "Draft": "func Kit_PlaToIsop(pSop string, vCover *Vec_Int_t) {\n    var pCube string;\n    var k, nVars, Entry int32;\n    nVars = Kit_PlaGetVarNum( pSop );\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    // create cubes\n    Vec_IntClear( vCover );\n    for  pCube = pSop; *pCube; pCube += nVars + 3  {\n        Entry = 0;\n        for  k = nVars - 1; k \u003e= 0; k--  {\n            if pCube[k] == '0' {\n                Entry = (Entry \u003c\u003c 2) | 1;\n            } else if pCube[k] == '1' {\n                Entry = (Entry \u003c\u003c 2) | 2;\n            } else if pCube[k] == '-' {\n                Entry = (Entry \u003c\u003c 2);\n            } else { \n                assert(false, \"0\"); }\n        }\n        Vec_IntPush( vCover, Entry );\n    }\n}"
+    },
+    {
+      "Name": "Kit_PlaStoreSop",
+      "Start": 7944,
+      "End": 8167,
+      "BodyStart": 7992,
+      "Original": "char * Kit_PlaStoreSop( void * p, char * pSop )\n{\n    Aig_MmFlex_t * pMan = (Aig_MmFlex_t *)p;\n    char * pStore;\n    pStore = Aig_MmFlexEntryFetch( pMan, strlen(pSop) + 1 );\n    strcpy( pStore, pSop );\n    return pStore;\n}",
+      "Draft": "func Kit_PlaStoreSop(p any, pSop string) string {\n    var pMan *Aig_MmFlex_t  = (Aig_MmFlex_t *)p;\n    var pStore string;\n    pStore = Aig_MmFlexEntryFetch( pMan, len(pSop) + 1 );\n    pStore = pSop;\n    return pStore;\n}"
+    },
+    {
+      "Name": "Kit_PlaFromTruth",
+      "Start": 8439,
+      "End": 9033,
+      "BodyStart": 8525,
+      "Original": "char * Kit_PlaFromTruth( void * p, unsigned * pTruth, int nVars, Vec_Int_t * vCover )\n{\n    Aig_MmFlex_t * pMan = (Aig_MmFlex_t *)p;\n    char * pSop;\n    int RetValue;\n    if ( Kit_TruthIsConst0(pTruth, nVars) )\n        return Kit_PlaStoreSop( pMan, \" 0\\n\" );\n    if ( Kit_TruthIsConst1(pTruth, nVars) )\n        return Kit_PlaStoreSop( pMan, \" 1\\n\" );\n    RetValue = Kit_TruthIsop( pTruth, nVars, vCover, 0 ); // 1 );\n    assert( RetValue == 0 || RetValue == 1 );\n    pSop = Kit_PlaCreateFromIsop( pMan, nVars, vCover );\n    if ( RetValue )\n        Kit_PlaComplement( pSop );\n    return pSop;\n}",
+      "Draft": "func Kit_PlaFromTruth(p any, pTruth *uint32, nVars int32, vCover *Vec_Int_t) string {\n    var pMan *Aig_MmFlex_t  = (Aig_MmFlex_t *)p;\n    var pSop string;\n    var RetValue int32;\n    if Kit_TruthIsConst0(pTruth, nVars) {\n        return Kit_PlaStoreSop( pMan, \" 0\\n\" ); }\n    if Kit_TruthIsConst1(pTruth, nVars) {\n        return Kit_PlaStoreSop( pMan, \" 1\\n\" ); }\n    RetValue = Kit_TruthIsop( pTruth, nVars, vCover, 0 ); // 1 );\n    assert(RetValue == 0 || RetValue == 1, \"RetValue == 0 || RetValue == 1\");\n    pSop = Kit_PlaCreateFromIsop( pMan, nVars, vCover );\n    if RetValue != 0 {\n        Kit_PlaComplement( pSop ); }\n    return pSop;\n}"
+    },
+    {
+      "Name": "Kit_PlaFromIsop",
+      "Start": 9319,
+      "End": 10154,
+      "BodyStart": 9393,
+      "Original": "char * Kit_PlaFromIsop( Vec_Str_t * vStr, int nVars, Vec_Int_t * vCover )\n{\n    int i, k, Entry, Literal;\n    assert( Vec_IntSize(vCover) \u003e 0 );\n    if ( Vec_IntSize(vCover) == 0 )\n        return NULL;\n    Vec_StrClear( vStr );\n    Vec_IntForEachEntry( vCover, Entry, i )\n    {\n        for ( k = 0; k \u003c nVars; k++ )\n        {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if ( Literal == 1 )\n                Vec_StrPush( vStr, '0' );\n            else if ( Literal == 2 )\n                Vec_StrPush( vStr, '1' );\n            else if ( Literal == 0 )\n                Vec_StrPush( vStr, '-' );\n            else\n                assert( 0 );\n        }\n        Vec_StrPush( vStr, ' ' );\n        Vec_StrPush( vStr, '1' );\n        Vec_StrPush( vStr, '\\n' );\n    }\n    Vec_StrPush( vStr, '\\0' );\n    return Vec_StrArray( vStr );\n}",
+      "Draft": "func Kit_PlaFromIsop(vStr *Vec_Str_t, nVars int32, vCover *Vec_Int_t) string {\n    var i, k, Entry, Literal int32;\n    assert(Vec_IntSize(vCover) \u003e 0, \"Vec_IntSize(vCover) \u003e 0\");\n    if Vec_IntSize(vCover) == 0 {\n        return nil; }\n    Vec_StrClear( vStr );\n    Vec_IntForEachEntry( vCover, Entry, i )\n    {\n        for  k = 0; k \u003c nVars; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 {\n                Vec_StrPush( vStr, '0' );\n            } else if Literal == 2 {\n                Vec_StrPush( vStr, '1' );\n            } else if Literal == 0 {\n                Vec_StrPush( vStr, '-' );\n            } else {\n                assert(false, \"0\"); }\n        }\n        Vec_StrPush( vStr, ' ' );\n        Vec_StrPush( vStr, '1' );\n        Vec_StrPush( vStr, '\\n' );\n    }\n    Vec_StrPush( vStr, '\\0' );\n    return Vec_StrArray( vStr );\n}"
+    },
+    {
+      "Name": "Kit_PlaFromTruthNew",
+      "Start": 10414,
+      "End": 11378,
+      "BodyStart": 10511,
+      "Original": "char * Kit_PlaFromTruthNew( unsigned * pTruth, int nVars, Vec_Int_t * vCover, Vec_Str_t * vStr )\n{\n    char * pResult;\n    // transform truth table into the SOP\n    int RetValue = Kit_TruthIsop( pTruth, nVars, vCover, 1 );\n    assert( RetValue == 0 || RetValue == 1 );\n    // check the case of constant cover\n    if ( Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover,0) == 0) )\n    {\n        assert( RetValue == 0 );\n        Vec_StrClear( vStr );\n        Vec_StrAppend( vStr, (Vec_IntSize(vCover) == 0) ? \" 0\\n\" : \" 1\\n\" );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    pResult = Kit_PlaFromIsop( vStr, nVars, vCover );\n    if ( RetValue )\n        Kit_PlaComplement( pResult );\n    if ( nVars \u003c 6 )\n        assert( pTruth[0] == (unsigned)Kit_PlaToTruth6(pResult, nVars) );\n    else if ( nVars == 6 )\n        assert( *((ABC_UINT64_T*)pTruth) == Kit_PlaToTruth6(pResult, nVars) );\n    return pResult;\n}",
+      "Draft": "func Kit_PlaFromTruthNew(pTruth *uint32, nVars int32, vCover *Vec_Int_t, vStr *Vec_Str_t) string {\n    var pResult string;\n    // transform truth table into the SOP\n    var RetValue int32  = Kit_TruthIsop( pTruth, nVars, vCover, 1 );\n    assert(RetValue == 0 || RetValue == 1, \"RetValue == 0 || RetValue == 1\");\n    // check the case of constant cover\n    if Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover,0) == 0) {\n        assert(RetValue == 0, \"RetValue == 0\");\n        Vec_StrClear( vStr );\n        Vec_StrAppend( vStr, (Vec_IntSize(vCover) == 0) ? \" 0\\n\" : \" 1\\n\" );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    pResult = Kit_PlaFromIsop( vStr, nVars, vCover );\n    if RetValue != 0 {\n        Kit_PlaComplement( pResult ); }\n    if nVars \u003c 6 {\n        assert(pTruth[0] == uint32(Kit_PlaToTruth6(pResult, nVars)), \"pTruth[0] == uint32(Kit_PlaToTruth6(pResult, nVars))\");\n    } else if nVars == 6 {\n        assert(*((ABC_UINT64_T*)pTruth) == Kit_PlaToTruth6(pResult, nVars), \"*((ABC_UINT64_T*)pTruth) == Kit_PlaToTruth6(pResult, nVars)\"); }\n    return pResult;\n}"
+    },
+    {
+      "Name": "Kit_PlaToTruth6",
+      "Start": 11646,
+      "End": 12738,
+      "BodyStart": 11701,
+      "Original": "ABC_UINT64_T Kit_PlaToTruth6( char * pSop, int nVars )\n{\n    static ABC_UINT64_T Truth[8] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000),\n        ABC_CONST(0x0000000000000000),\n        ABC_CONST(0xFFFFFFFFFFFFFFFF)\n    };\n    ABC_UINT64_T valueAnd, valueOr = Truth[6];\n    int v, lit = 0;\n    assert( nVars \u003c 7 );\n    do {\n        valueAnd = Truth[7];\n        for ( v = 0; v \u003c nVars; v++, lit++ )\n        {\n            if ( pSop[lit] == '1' )\n                valueAnd \u0026=  Truth[v];\n            else if ( pSop[lit] == '0' )\n                valueAnd \u0026= ~Truth[v];\n            else if ( pSop[lit] != '-' )\n                assert( 0 );\n        }\n        valueOr |= valueAnd;\n        assert( pSop[lit] == ' ' );\n        lit++;\n        lit++;\n        assert( pSop[lit] == '\\n' );\n        lit++;\n    } while ( pSop[lit] );\n    if ( Kit_PlaIsComplement(pSop) )\n        valueOr = ~valueOr;\n    return valueOr;\n}",
+      "Draft": "func Kit_PlaToTruth6(pSop string, nVars int32) ABC_UINT64_T {\n    static ABC_UINT64_T Truth[8] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000),\n        ABC_CONST(0x0000000000000000),\n        ABC_CONST(0xFFFFFFFFFFFFFFFF)\n    };\n    var valueAnd ABC_UINT64_T;\n    var valueOr ABC_UINT64_T = Truth[6];\n    var v, lit int32;\n    assert(nVars \u003c 7, \"nVars \u003c 7\");\n    for {\n        valueAnd = Truth[7];\n        for  v = 0; v \u003c nVars; v, lit = v+1, lit+1  {\n            if pSop[lit] == '1' {\n                valueAnd \u0026=  Truth[v];\n            } else if pSop[lit] == '0' {\n                valueAnd \u0026= ~Truth[v];\n            } else if pSop[lit] != '-' {\n                assert(false, \"0\"); }\n        }\n        valueOr |= valueAnd;\n        assert(pSop[lit] == ' ', \"pSop[lit] == ' '\");\n        lit++;\n        lit++;\n        assert(pSop[lit] == '\\n', \"pSop[lit] == '\\\\n'\");\n        lit++;\n    \nif !( pSop[lit] ) { break }\n} \n    if Kit_PlaIsComplement(pSop) != 0 {\n        valueOr = ~valueOr; }\n    return valueOr;\n}"
+    },
+    {
+      "Name": "Kit_PlaToTruth",
+      "Start": 13389,
+      "End": 14517,
+      "BodyStart": 13491,
+      "Original": "void Kit_PlaToTruth( char * pSop, int nVars, Vec_Ptr_t * vVars, unsigned * pTemp, unsigned * pTruth )\n{\n    int v, c, nCubes, fCompl = 0;\n    assert( pSop != NULL );\n    assert( nVars \u003e= 0 );\n    if ( strlen(pSop) % (nVars + 3) != 0 )\n    {\n        printf( \"Kit_PlaToTruth(): SOP is represented incorrectly.\\n\" );\n        return;\n    }\n    // iterate through the cubes\n    Kit_TruthClear( pTruth, nVars );\n    nCubes =  strlen(pSop) / (nVars + 3);\n    for ( c = 0; c \u003c nCubes; c++ )\n    {\n        fCompl = (pSop[nVars+1] == '0');\n        Kit_TruthFill( pTemp, nVars );\n        // iterate through the literals of the cube\n        for ( v = 0; v \u003c nVars; v++ )\n            if ( pSop[v] == '1' )\n                Kit_TruthAnd( pTemp, pTemp, (unsigned *)Vec_PtrEntry(vVars, v), nVars );\n            else if ( pSop[v] == '0' )\n                Kit_TruthSharp( pTemp, pTemp, (unsigned *)Vec_PtrEntry(vVars, v), nVars );\n        // add cube to storage\n        Kit_TruthOr( pTruth, pTruth, pTemp, nVars );\n        // go to the next cube\n        pSop += (nVars + 3);\n    }\n    if ( fCompl )\n        Kit_TruthNot( pTruth, pTruth, nVars );\n}",
+      "Draft": "func Kit_PlaToTruth(pSop string, nVars int32, vVars *Vec_Ptr_t, pTemp *uint32, pTruth *uint32) {\n    var v, c, nCubes, fCompl int32;\n    assert(pSop != nil, \"pSop != nil\");\n    assert(nVars \u003e= 0, \"nVars \u003e= 0\");\n    if len(pSop) % (nVars + 3) != 0 {\n        fmt.Printf(\"Kit_PlaToTruth(): SOP is represented incorrectly.\\n\");\n        return;\n    }\n    // iterate through the cubes\n    Kit_TruthClear( pTruth, nVars );\n    nCubes =  len(pSop) / (nVars + 3);\n    for  c = 0; c \u003c nCubes; c++  {\n        fCompl = (pSop[nVars+1] == '0');\n        Kit_TruthFill( pTemp, nVars );\n        // iterate through the literals of the cube\n        for  v = 0; v \u003c nVars; v++  {\n            if pSop[v] == '1' {\n                Kit_TruthAnd( pTemp, pTemp, (unsigned *)Vec_PtrEntry(vVars, v), nVars );\n            } else if pSop[v] == '0' {\n                Kit_TruthSharp( pTemp, pTemp, (unsigned *)Vec_PtrEntry(vVars, v), nVars ); }\n        }\n        // add cube to storage\n        Kit_TruthOr( pTruth, pTruth, pTemp, nVars );\n        // go to the next cube\n        pSop += (nVars + 3);\n    }\n    if fCompl != 0 {\n        Kit_TruthNot( pTruth, pTruth, nVars ); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::mechanical::static::11707",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 11707,
+      "End": 11713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::mechanical::do::12154",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 12154,
+      "End": 12156
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::pointer-cast::5192",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5192,
+      "End": 5208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::pointer-cast::6026",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6026,
+      "End": 6042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::pointer-cast::8020",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8020,
+      "End": 8036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::pointer-cast::8553",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8553,
+      "End": 8569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::pointer-cast::11296",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11296,
+      "End": 11311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::pointer-cast::14126",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14126,
+      "End": 14138
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::pointer-cast::14256",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14256,
+      "End": 14268
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaIsConst0",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaIsConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1295,
+      "End": 1378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaIsConst1",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaIsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1648,
+      "End": 1731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaIsBuf",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaIsBuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1999,
+      "End": 2192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaIsInv",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaIsInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2463,
+      "End": 2656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaGetVarNum",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaGetVarNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2935,
+      "End": 3115
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaGetCubeNum",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaGetCubeNum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3390,
+      "End": 3602
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaIsComplement",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaIsComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3838,
+      "End": 4064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaComplement",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4300,
+      "End": 4799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::void-pointer::Kit_PlaStart",
+      "Category": "void-pointer-review",
+      "Symbol": "Kit_PlaStart",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5109,
+      "End": 5641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaStart",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5109,
+      "End": 5641
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::void-pointer::Kit_PlaCreateFromIsop",
+      "Category": "void-pointer-review",
+      "Symbol": "Kit_PlaCreateFromIsop",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 5926,
+      "End": 6719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaCreateFromIsop",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaCreateFromIsop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5926,
+      "End": 6719
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaToIsop",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaToIsop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7004,
+      "End": 7664
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::void-pointer::Kit_PlaStoreSop",
+      "Category": "void-pointer-review",
+      "Symbol": "Kit_PlaStoreSop",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 7944,
+      "End": 8167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaStoreSop",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaStoreSop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7944,
+      "End": 8167
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::void-pointer::Kit_PlaFromTruth",
+      "Category": "void-pointer-review",
+      "Symbol": "Kit_PlaFromTruth",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 8439,
+      "End": 9033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaFromTruth",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaFromTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8439,
+      "End": 9033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaFromIsop",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaFromIsop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9319,
+      "End": 10154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::ternary::Kit_PlaFromTruthNew",
+      "Category": "ternary-review",
+      "Symbol": "Kit_PlaFromTruthNew",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 10414,
+      "End": 11378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaFromTruthNew",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaFromTruthNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10414,
+      "End": 11378
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaToTruth6",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaToTruth6",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11646,
+      "End": 12738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::Kit_PlaToTruth",
+      "Category": "semantic-review",
+      "Symbol": "Kit_PlaToTruth",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13389,
+      "End": 14517
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::macro-inline::6305",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6305,
+      "End": 6344
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::macro-inline::9551",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9551,
+      "End": 9590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::macro-inline::11748",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11748,
+      "End": 11777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::macro-inline::11787",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11787,
+      "End": 11816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::macro-inline::11826",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11826,
+      "End": 11855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::macro-inline::11865",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11865,
+      "End": 11894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::macro-inline::11904",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11904,
+      "End": 11933
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::macro-inline::11943",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11943,
+      "End": 11972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::macro-inline::11982",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11982,
+      "End": 12011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/kit/kitPla.c::macro-inline::12021",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_CONST",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12021,
+      "End": 12050
+    }
+  ],
+  "Draft": "package kit\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [kitPla.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Computation kit.]\n\n  Synopsis    [Manipulating SOP in the form of a C-string.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Dec 6, 2006.]\n\n  Revision    [$Id: kitPla.c,v 1.00 2006/12/06 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"kit.h\"\n//#include \"aig/aig/aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the cover is constant 0.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaIsConst0(pSop string) int32 {\n    return pSop[0] == ' ' \u0026\u0026 pSop[1] == '0';\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the cover is constant 1.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaIsConst1(pSop string) int32 {\n    return pSop[0] == ' ' \u0026\u0026 pSop[1] == '1';\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the cover is a buffer.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaIsBuf(pSop string) int32 {\n    if pSop[4] != 0 {\n        return 0; }\n    if (pSop[0] == '1' \u0026\u0026 pSop[2] == '1') || (pSop[0] == '0' \u0026\u0026 pSop[2] == '0') {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Checks if the cover is an inverter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaIsInv(pSop string) int32 {\n    if pSop[4] != 0 {\n        return 0; }\n    if (pSop[0] == '0' \u0026\u0026 pSop[2] == '1') || (pSop[0] == '1' \u0026\u0026 pSop[2] == '0') {\n        return 1; }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the number of variables in the cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaGetVarNum(pSop string) int32 {\n    var pCur string;\n    for  pCur = pSop; *pCur != '\\n'; pCur++  {\n        if *pCur == 0 {\n            return -1; }\n    }\n    return pCur - pSop - 2;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Reads the number of cubes in the cover.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaGetCubeNum(pSop string) int32 {\n    var pCur string;\n    var nCubes int32;\n    if pSop == nil {\n        return 0; }\n    for  pCur = pSop; *pCur; pCur++  {\n        nCubes += (*pCur == '\\n');\n    }\n    return nCubes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaIsComplement(pSop string) int32 {\n    var pCur string;\n    for  pCur = pSop; *pCur; pCur++  {\n        if *pCur == '\\n' {\n            return int32((*(pCur - 1) == '0' || *(pCur - 1) == 'n')); }\n    }\n    assert(false, \"0\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaComplement(pSop string) {\n    var pCur string;\n    for  pCur = pSop; *pCur; pCur++  {\n        if *pCur == '\\n' {\n            if *(pCur - 1) == '0' {\n                *(pCur - 1) = '1';\n            } else if *(pCur - 1) == '1' {\n                *(pCur - 1) = '0';\n            } else if *(pCur - 1) == 'x' {\n                *(pCur - 1) = 'n';\n            } else if *(pCur - 1) == 'n' {\n                *(pCur - 1) = 'x';\n            } else {\n                assert(false, \"0\"); }\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the constant 1 cover with the given number of variables and cubes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaStart(p any, nCubes int32, nVars int32) string {\n    var pMan *Aig_MmFlex_t  = (Aig_MmFlex_t *)p;\n    var pSopCover, pCube string;\n    var i, Length int32;\n\n    Length = nCubes * (nVars + 3);\n    pSopCover = Aig_MmFlexEntryFetch( pMan, Length + 1 );\n    memset( pSopCover, '-', (size_t)Length );\n    pSopCover[Length] = 0;\n\n    for  i = 0; i \u003c nCubes; i++  {\n        pCube = pSopCover + i * (nVars + 3);\n        pCube[nVars + 0] = ' ';\n        pCube[nVars + 1] = '1';\n        pCube[nVars + 2] = '\\n';\n    }\n    return pSopCover;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the cover from the ISOP computed from TT.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaCreateFromIsop(p any, nVars int32, vCover *Vec_Int_t) string {\n    var pMan *Aig_MmFlex_t  = (Aig_MmFlex_t *)p;\n    var pSop, pCube string;\n    var i, k, Entry, Literal int32;\n    assert(Vec_IntSize(vCover) \u003e 0, \"Vec_IntSize(vCover) \u003e 0\");\n    if Vec_IntSize(vCover) == 0 {\n        return nil; }\n    // start the cover\n    pSop = Kit_PlaStart( pMan, Vec_IntSize(vCover), nVars );\n    // create cubes\n    Vec_IntForEachEntry( vCover, Entry, i )\n    {\n        pCube = pSop + i * (nVars + 3);\n        for  k = 0; k \u003c nVars; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 {\n                pCube[k] = '0';\n            } else if Literal == 2 {\n                pCube[k] = '1';\n            } else if Literal != 0 {\n                assert(false, \"0\"); }\n        }\n    }\n    return pSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the cover from the ISOP computed from TT.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaToIsop(pSop string, vCover *Vec_Int_t) {\n    var pCube string;\n    var k, nVars, Entry int32;\n    nVars = Kit_PlaGetVarNum( pSop );\n    assert(nVars \u003e 0, \"nVars \u003e 0\");\n    // create cubes\n    Vec_IntClear( vCover );\n    for  pCube = pSop; *pCube; pCube += nVars + 3  {\n        Entry = 0;\n        for  k = nVars - 1; k \u003e= 0; k--  {\n            if pCube[k] == '0' {\n                Entry = (Entry \u003c\u003c 2) | 1;\n            } else if pCube[k] == '1' {\n                Entry = (Entry \u003c\u003c 2) | 2;\n            } else if pCube[k] == '-' {\n                Entry = (Entry \u003c\u003c 2);\n            } else { \n                assert(false, \"0\"); }\n        }\n        Vec_IntPush( vCover, Entry );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates memory and copies the SOP into it.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaStoreSop(p any, pSop string) string {\n    var pMan *Aig_MmFlex_t  = (Aig_MmFlex_t *)p;\n    var pStore string;\n    pStore = Aig_MmFlexEntryFetch( pMan, len(pSop) + 1 );\n    pStore = pSop;\n    return pStore;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Transforms truth table into the SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaFromTruth(p any, pTruth *uint32, nVars int32, vCover *Vec_Int_t) string {\n    var pMan *Aig_MmFlex_t  = (Aig_MmFlex_t *)p;\n    var pSop string;\n    var RetValue int32;\n    if Kit_TruthIsConst0(pTruth, nVars) {\n        return Kit_PlaStoreSop( pMan, \" 0\\n\" ); }\n    if Kit_TruthIsConst1(pTruth, nVars) {\n        return Kit_PlaStoreSop( pMan, \" 1\\n\" ); }\n    RetValue = Kit_TruthIsop( pTruth, nVars, vCover, 0 ); // 1 );\n    assert(RetValue == 0 || RetValue == 1, \"RetValue == 0 || RetValue == 1\");\n    pSop = Kit_PlaCreateFromIsop( pMan, nVars, vCover );\n    if RetValue != 0 {\n        Kit_PlaComplement( pSop ); }\n    return pSop;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the cover from the ISOP computed from TT.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaFromIsop(vStr *Vec_Str_t, nVars int32, vCover *Vec_Int_t) string {\n    var i, k, Entry, Literal int32;\n    assert(Vec_IntSize(vCover) \u003e 0, \"Vec_IntSize(vCover) \u003e 0\");\n    if Vec_IntSize(vCover) == 0 {\n        return nil; }\n    Vec_StrClear( vStr );\n    Vec_IntForEachEntry( vCover, Entry, i )\n    {\n        for  k = 0; k \u003c nVars; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 {\n                Vec_StrPush( vStr, '0' );\n            } else if Literal == 2 {\n                Vec_StrPush( vStr, '1' );\n            } else if Literal == 0 {\n                Vec_StrPush( vStr, '-' );\n            } else {\n                assert(false, \"0\"); }\n        }\n        Vec_StrPush( vStr, ' ' );\n        Vec_StrPush( vStr, '1' );\n        Vec_StrPush( vStr, '\\n' );\n    }\n    Vec_StrPush( vStr, '\\0' );\n    return Vec_StrArray( vStr );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the SOP from TT.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaFromTruthNew(pTruth *uint32, nVars int32, vCover *Vec_Int_t, vStr *Vec_Str_t) string {\n    var pResult string;\n    // transform truth table into the SOP\n    var RetValue int32  = Kit_TruthIsop( pTruth, nVars, vCover, 1 );\n    assert(RetValue == 0 || RetValue == 1, \"RetValue == 0 || RetValue == 1\");\n    // check the case of constant cover\n    if Vec_IntSize(vCover) == 0 || (Vec_IntSize(vCover) == 1 \u0026\u0026 Vec_IntEntry(vCover,0) == 0) {\n        assert(RetValue == 0, \"RetValue == 0\");\n        Vec_StrClear( vStr );\n        Vec_StrAppend( vStr, (Vec_IntSize(vCover) == 0) ? \" 0\\n\" : \" 1\\n\" );\n        Vec_StrPush( vStr, '\\0' );\n        return Vec_StrArray( vStr );\n    }\n    pResult = Kit_PlaFromIsop( vStr, nVars, vCover );\n    if RetValue != 0 {\n        Kit_PlaComplement( pResult ); }\n    if nVars \u003c 6 {\n        assert(pTruth[0] == uint32(Kit_PlaToTruth6(pResult, nVars)), \"pTruth[0] == uint32(Kit_PlaToTruth6(pResult, nVars))\");\n    } else if nVars == 6 {\n        assert(*((ABC_UINT64_T*)pTruth) == Kit_PlaToTruth6(pResult, nVars), \"*((ABC_UINT64_T*)pTruth) == Kit_PlaToTruth6(pResult, nVars)\"); }\n    return pResult;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts SOP into a truth table.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaToTruth6(pSop string, nVars int32) ABC_UINT64_T {\n    static ABC_UINT64_T Truth[8] = {\n        ABC_CONST(0xAAAAAAAAAAAAAAAA),\n        ABC_CONST(0xCCCCCCCCCCCCCCCC),\n        ABC_CONST(0xF0F0F0F0F0F0F0F0),\n        ABC_CONST(0xFF00FF00FF00FF00),\n        ABC_CONST(0xFFFF0000FFFF0000),\n        ABC_CONST(0xFFFFFFFF00000000),\n        ABC_CONST(0x0000000000000000),\n        ABC_CONST(0xFFFFFFFFFFFFFFFF)\n    };\n    var valueAnd ABC_UINT64_T;\n    var valueOr ABC_UINT64_T = Truth[6];\n    var v, lit int32;\n    assert(nVars \u003c 7, \"nVars \u003c 7\");\n    for {\n        valueAnd = Truth[7];\n        for  v = 0; v \u003c nVars; v, lit = v+1, lit+1  {\n            if pSop[lit] == '1' {\n                valueAnd \u0026=  Truth[v];\n            } else if pSop[lit] == '0' {\n                valueAnd \u0026= ~Truth[v];\n            } else if pSop[lit] != '-' {\n                assert(false, \"0\"); }\n        }\n        valueOr |= valueAnd;\n        assert(pSop[lit] == ' ', \"pSop[lit] == ' '\");\n        lit++;\n        lit++;\n        assert(pSop[lit] == '\\n', \"pSop[lit] == '\\\\n'\");\n        lit++;\n    \nif !( pSop[lit] ) { break }\n} \n    if Kit_PlaIsComplement(pSop) != 0 {\n        valueOr = ~valueOr; }\n    return valueOr;\n}\n\n/**Fnction*************************************************************\n\n  Synopsis    [Converting SOP into a truth table.]\n\n  Description [The SOP is represented as a C-string, as documented in \n  file \"bblif.h\". The truth table is returned as a bit-string composed \n  of 2^nVars bits. For functions of less than 6 variables, the full\n  machine word is returned. (The truth table looks as if the function\n  had 5 variables.) The use of this procedure should be limited to \n  Boolean functions with no more than 16 inputs.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Kit_PlaToTruth(pSop string, nVars int32, vVars *Vec_Ptr_t, pTemp *uint32, pTruth *uint32) {\n    var v, c, nCubes, fCompl int32;\n    assert(pSop != nil, \"pSop != nil\");\n    assert(nVars \u003e= 0, \"nVars \u003e= 0\");\n    if len(pSop) % (nVars + 3) != 0 {\n        fmt.Printf(\"Kit_PlaToTruth(): SOP is represented incorrectly.\\n\");\n        return;\n    }\n    // iterate through the cubes\n    Kit_TruthClear( pTruth, nVars );\n    nCubes =  len(pSop) / (nVars + 3);\n    for  c = 0; c \u003c nCubes; c++  {\n        fCompl = (pSop[nVars+1] == '0');\n        Kit_TruthFill( pTemp, nVars );\n        // iterate through the literals of the cube\n        for  v = 0; v \u003c nVars; v++  {\n            if pSop[v] == '1' {\n                Kit_TruthAnd( pTemp, pTemp, (unsigned *)Vec_PtrEntry(vVars, v), nVars );\n            } else if pSop[v] == '0' {\n                Kit_TruthSharp( pTemp, pTemp, (unsigned *)Vec_PtrEntry(vVars, v), nVars ); }\n        }\n        // add cube to storage\n        Kit_TruthOr( pTruth, pTruth, pTemp, nVars );\n        // go to the next cube\n        pSop += (nVars + 3);\n    }\n    if fCompl != 0 {\n        Kit_TruthNot( pTruth, pTruth, nVars ); }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

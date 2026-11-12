@@ -1,0 +1,1153 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/pstdint.h",
+  "SHA256": "f4d3ac2dbfb115da395c8bca847f059207c6f71fc2f1aa6626d61f052b6162f7",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 200,
+        "Column": 1,
+        "ByteOffset": 8565
+      },
+      "Directive": "#if ((defined(__SUNPRO_C) \u0026\u0026 __SUNPRO_C \u003e= 0x570) || (defined(_MSC_VER) \u0026\u0026 _MSC_VER \u003e= 1600) || (defined(__STDC__) \u0026\u0026 __STDC__ \u0026\u0026 defined(__STDC_VERSION__) \u0026\u0026 __STDC_VERSION__ \u003e= 199901L) || (defined (__WATCOMC__) \u0026\u0026 (defined (_STDINT_H_INCLUDED) || __WATCOMC__ \u003e= 1250)) || (defined(__GNUC__) \u0026\u0026 (__GNUC__ \u003e 3 || defined(_STDINT_H) || defined(_STDINT_H_) || defined (__UINT_FAST64_TYPE__)) )) \u0026\u0026 !defined (_PSTDINT_H_INCLUDED)"
+    },
+    {
+      "Location": {
+        "Line": 203,
+        "Column": 1,
+        "ByteOffset": 9041
+      },
+      "Directive": "# if defined(__GNUC__) \u0026\u0026 (defined(__x86_64__) || defined(__ppc64__)) \u0026\u0026 !(defined(__APPLE__) \u0026\u0026 defined(__MACH__))"
+    },
+    {
+      "Location": {
+        "Line": 204,
+        "Column": 1,
+        "ByteOffset": 9157
+      },
+      "Directive": "#  ifndef PRINTF_INT64_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 207,
+        "Column": 1,
+        "ByteOffset": 9235
+      },
+      "Directive": "#  ifndef PRINTF_INT32_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 211,
+        "Column": 1,
+        "ByteOffset": 9319
+      },
+      "Directive": "#  ifndef PRINTF_INT64_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 214,
+        "Column": 1,
+        "ByteOffset": 9398
+      },
+      "Directive": "#  ifndef PRINTF_INT32_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 215,
+        "Column": 1,
+        "ByteOffset": 9430
+      },
+      "Directive": "#   if (UINT_MAX == UINT32_MAX)"
+    },
+    {
+      "Location": {
+        "Line": 222,
+        "Column": 1,
+        "ByteOffset": 9573
+      },
+      "Directive": "# ifndef PRINTF_INT16_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 225,
+        "Column": 1,
+        "ByteOffset": 9648
+      },
+      "Directive": "# ifndef PRINTF_INTMAX_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 228,
+        "Column": 1,
+        "ByteOffset": 9743
+      },
+      "Directive": "# ifndef PRINTF_INT64_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 231,
+        "Column": 1,
+        "ByteOffset": 9821
+      },
+      "Directive": "# ifndef PRINTF_UINT64_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 234,
+        "Column": 1,
+        "ByteOffset": 9901
+      },
+      "Directive": "# ifndef PRINTF_INT32_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 237,
+        "Column": 1,
+        "ByteOffset": 9978
+      },
+      "Directive": "# ifndef PRINTF_UINT32_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 240,
+        "Column": 1,
+        "ByteOffset": 10057
+      },
+      "Directive": "# ifndef PRINTF_INT16_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 243,
+        "Column": 1,
+        "ByteOffset": 10134
+      },
+      "Directive": "# ifndef PRINTF_UINT16_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 246,
+        "Column": 1,
+        "ByteOffset": 10213
+      },
+      "Directive": "# ifndef PRINTF_INT8_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 249,
+        "Column": 1,
+        "ByteOffset": 10288
+      },
+      "Directive": "# ifndef PRINTF_UINT8_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 252,
+        "Column": 1,
+        "ByteOffset": 10365
+      },
+      "Directive": "# ifndef PRINTF_INT64_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 255,
+        "Column": 1,
+        "ByteOffset": 10443
+      },
+      "Directive": "# ifndef PRINTF_UINT64_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 258,
+        "Column": 1,
+        "ByteOffset": 10523
+      },
+      "Directive": "# ifndef PRINTF_INT32_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 261,
+        "Column": 1,
+        "ByteOffset": 10601
+      },
+      "Directive": "# ifndef PRINTF_UINT32_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 264,
+        "Column": 1,
+        "ByteOffset": 10681
+      },
+      "Directive": "# ifndef PRINTF_INT16_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 267,
+        "Column": 1,
+        "ByteOffset": 10758
+      },
+      "Directive": "# ifndef PRINTF_UINT16_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 270,
+        "Column": 1,
+        "ByteOffset": 10837
+      },
+      "Directive": "# ifndef PRINTF_INT8_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 273,
+        "Column": 1,
+        "ByteOffset": 10912
+      },
+      "Directive": "# ifndef PRINTF_UINT8_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 276,
+        "Column": 1,
+        "ByteOffset": 10989
+      },
+      "Directive": "# ifndef PRINTF_INTMAX_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 279,
+        "Column": 1,
+        "ByteOffset": 11088
+      },
+      "Directive": "# ifndef PRINTF_UINTMAX_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 282,
+        "Column": 1,
+        "ByteOffset": 11189
+      },
+      "Directive": "# ifndef PRINTF_INTMAX_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 285,
+        "Column": 1,
+        "ByteOffset": 11288
+      },
+      "Directive": "# ifndef PRINTF_UINTMAX_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 294,
+        "Column": 1,
+        "ByteOffset": 11549
+      },
+      "Directive": "# if defined (__WATCOMC__) \u0026\u0026 __WATCOMC__ \u003e= 1250"
+    },
+    {
+      "Location": {
+        "Line": 295,
+        "Column": 1,
+        "ByteOffset": 11599
+      },
+      "Directive": "#  if !defined (INT64_C)"
+    },
+    {
+      "Location": {
+        "Line": 298,
+        "Column": 1,
+        "ByteOffset": 11687
+      },
+      "Directive": "#  if !defined (UINT64_C)"
+    },
+    {
+      "Location": {
+        "Line": 301,
+        "Column": 1,
+        "ByteOffset": 11778
+      },
+      "Directive": "#  if !defined (INT32_C)"
+    },
+    {
+      "Location": {
+        "Line": 304,
+        "Column": 1,
+        "ByteOffset": 11866
+      },
+      "Directive": "#  if !defined (UINT32_C)"
+    },
+    {
+      "Location": {
+        "Line": 307,
+        "Column": 1,
+        "ByteOffset": 11957
+      },
+      "Directive": "#  if !defined (INT16_C)"
+    },
+    {
+      "Location": {
+        "Line": 310,
+        "Column": 1,
+        "ByteOffset": 12019
+      },
+      "Directive": "#  if !defined (UINT16_C)"
+    },
+    {
+      "Location": {
+        "Line": 313,
+        "Column": 1,
+        "ByteOffset": 12082
+      },
+      "Directive": "#  if !defined (INT8_C)"
+    },
+    {
+      "Location": {
+        "Line": 316,
+        "Column": 1,
+        "ByteOffset": 12142
+      },
+      "Directive": "#  if !defined (UINT8_C)"
+    },
+    {
+      "Location": {
+        "Line": 319,
+        "Column": 1,
+        "ByteOffset": 12203
+      },
+      "Directive": "#  if !defined (UINT64_MAX)"
+    },
+    {
+      "Location": {
+        "Line": 322,
+        "Column": 1,
+        "ByteOffset": 12287
+      },
+      "Directive": "#  if !defined (INT64_MAX)"
+    },
+    {
+      "Location": {
+        "Line": 325,
+        "Column": 1,
+        "ByteOffset": 12367
+      },
+      "Directive": "#  if !defined (UINT32_MAX)"
+    },
+    {
+      "Location": {
+        "Line": 328,
+        "Column": 1,
+        "ByteOffset": 12440
+      },
+      "Directive": "#  if !defined (INT32_MAX)"
+    },
+    {
+      "Location": {
+        "Line": 331,
+        "Column": 1,
+        "ByteOffset": 12510
+      },
+      "Directive": "#  if !defined (INTMAX_MAX)"
+    },
+    {
+      "Location": {
+        "Line": 334,
+        "Column": 1,
+        "ByteOffset": 12579
+      },
+      "Directive": "#  if !defined (INTMAX_MIN)"
+    },
+    {
+      "Location": {
+        "Line": 349,
+        "Column": 1,
+        "ByteOffset": 13052
+      },
+      "Directive": "#if (defined(__SUNPRO_C) \u0026\u0026 __SUNPRO_C \u003e= 0x420) \u0026\u0026 !defined(_PSTDINT_H_INCLUDED)"
+    },
+    {
+      "Location": {
+        "Line": 354,
+        "Column": 1,
+        "ByteOffset": 13196
+      },
+      "Directive": "#ifndef _PSTDINT_H_INCLUDED"
+    },
+    {
+      "Location": {
+        "Line": 357,
+        "Column": 1,
+        "ByteOffset": 13253
+      },
+      "Directive": "#ifndef SIZE_MAX"
+    },
+    {
+      "Location": {
+        "Line": 367,
+        "Column": 1,
+        "ByteOffset": 13469
+      },
+      "Directive": "#ifndef UINT8_MAX"
+    },
+    {
+      "Location": {
+        "Line": 370,
+        "Column": 1,
+        "ByteOffset": 13518
+      },
+      "Directive": "#if !defined(uint8_t) \u0026\u0026 !defined(_UINT8_T) \u0026\u0026 !defined(vxWorks)"
+    },
+    {
+      "Location": {
+        "Line": 371,
+        "Column": 1,
+        "ByteOffset": 13583
+      },
+      "Directive": "# if (UCHAR_MAX == UINT8_MAX) || defined (S_SPLINT_S)"
+    },
+    {
+      "Location": {
+        "Line": 379,
+        "Column": 1,
+        "ByteOffset": 13766
+      },
+      "Directive": "#ifndef INT8_MAX"
+    },
+    {
+      "Location": {
+        "Line": 382,
+        "Column": 1,
+        "ByteOffset": 13813
+      },
+      "Directive": "#ifndef INT8_MIN"
+    },
+    {
+      "Location": {
+        "Line": 385,
+        "Column": 1,
+        "ByteOffset": 13868
+      },
+      "Directive": "#if !defined(int8_t) \u0026\u0026 !defined(_INT8_T) \u0026\u0026 !defined(vxWorks)"
+    },
+    {
+      "Location": {
+        "Line": 386,
+        "Column": 1,
+        "ByteOffset": 13931
+      },
+      "Directive": "# if (SCHAR_MAX == INT8_MAX) || defined (S_SPLINT_S)"
+    },
+    {
+      "Location": {
+        "Line": 394,
+        "Column": 1,
+        "ByteOffset": 14108
+      },
+      "Directive": "#ifndef UINT16_MAX"
+    },
+    {
+      "Location": {
+        "Line": 397,
+        "Column": 1,
+        "ByteOffset": 14161
+      },
+      "Directive": "#if !defined(uint16_t) \u0026\u0026 !defined(_UINT16_T) \u0026\u0026 !defined(vxWorks)"
+    },
+    {
+      "Location": {
+        "Line": 398,
+        "Column": 1,
+        "ByteOffset": 14228
+      },
+      "Directive": "#if (UINT_MAX == UINT16_MAX) || defined (S_SPLINT_S)"
+    },
+    {
+      "Location": {
+        "Line": 400,
+        "Column": 1,
+        "ByteOffset": 14314
+      },
+      "Directive": "# ifndef PRINTF_INT16_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 407,
+        "Column": 1,
+        "ByteOffset": 14531
+      },
+      "Directive": "# ifndef PRINTF_INT16_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 415,
+        "Column": 1,
+        "ByteOffset": 14659
+      },
+      "Directive": "#ifndef INT16_MAX"
+    },
+    {
+      "Location": {
+        "Line": 418,
+        "Column": 1,
+        "ByteOffset": 14710
+      },
+      "Directive": "#ifndef INT16_MIN"
+    },
+    {
+      "Location": {
+        "Line": 421,
+        "Column": 1,
+        "ByteOffset": 14770
+      },
+      "Directive": "#if !defined(int16_t) \u0026\u0026 !defined(_INT16_T) \u0026\u0026 !defined(vxWorks)"
+    },
+    {
+      "Location": {
+        "Line": 422,
+        "Column": 1,
+        "ByteOffset": 14835
+      },
+      "Directive": "#if (INT_MAX == INT16_MAX) || defined (S_SPLINT_S)"
+    },
+    {
+      "Location": {
+        "Line": 425,
+        "Column": 1,
+        "ByteOffset": 14952
+      },
+      "Directive": "# ifndef PRINTF_INT16_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 431,
+        "Column": 1,
+        "ByteOffset": 15124
+      },
+      "Directive": "# ifndef PRINTF_INT16_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 439,
+        "Column": 1,
+        "ByteOffset": 15252
+      },
+      "Directive": "#ifndef UINT32_MAX"
+    },
+    {
+      "Location": {
+        "Line": 442,
+        "Column": 1,
+        "ByteOffset": 15313
+      },
+      "Directive": "#if !defined(uint32_t) \u0026\u0026 !defined(_UINT32_T) \u0026\u0026 !defined(vxWorks)"
+    },
+    {
+      "Location": {
+        "Line": 443,
+        "Column": 1,
+        "ByteOffset": 15380
+      },
+      "Directive": "#if (ULONG_MAX == UINT32_MAX) || defined (S_SPLINT_S)"
+    },
+    {
+      "Location": {
+        "Line": 446,
+        "Column": 1,
+        "ByteOffset": 15497
+      },
+      "Directive": "# ifndef PRINTF_INT32_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 451,
+        "Column": 1,
+        "ByteOffset": 15636
+      },
+      "Directive": "# ifndef PRINTF_INT32_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 458,
+        "Column": 1,
+        "ByteOffset": 15849
+      },
+      "Directive": "# ifndef PRINTF_INT32_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 466,
+        "Column": 1,
+        "ByteOffset": 15976
+      },
+      "Directive": "#ifndef INT32_MAX"
+    },
+    {
+      "Location": {
+        "Line": 469,
+        "Column": 1,
+        "ByteOffset": 16034
+      },
+      "Directive": "#ifndef INT32_MIN"
+    },
+    {
+      "Location": {
+        "Line": 472,
+        "Column": 1,
+        "ByteOffset": 16098
+      },
+      "Directive": "#if !defined(int32_t) \u0026\u0026 !defined(_INT32_T) \u0026\u0026 !defined(vxWorks)"
+    },
+    {
+      "Location": {
+        "Line": 473,
+        "Column": 1,
+        "ByteOffset": 16163
+      },
+      "Directive": "#if (LONG_MAX == INT32_MAX) || defined (S_SPLINT_S)"
+    },
+    {
+      "Location": {
+        "Line": 476,
+        "Column": 1,
+        "ByteOffset": 16273
+      },
+      "Directive": "# ifndef PRINTF_INT32_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 482,
+        "Column": 1,
+        "ByteOffset": 16429
+      },
+      "Directive": "# ifndef PRINTF_INT32_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 488,
+        "Column": 1,
+        "ByteOffset": 16599
+      },
+      "Directive": "# ifndef PRINTF_INT32_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 504,
+        "Column": 1,
+        "ByteOffset": 16971
+      },
+      "Directive": "#if (defined(__STDC__) \u0026\u0026 defined(__STDC_VERSION__)) || defined (S_SPLINT_S)"
+    },
+    {
+      "Location": {
+        "Line": 505,
+        "Column": 1,
+        "ByteOffset": 17048
+      },
+      "Directive": "# if (__STDC__ \u0026\u0026 __STDC_VERSION__ \u003e= 199901L) || defined (S_SPLINT_S)"
+    },
+    {
+      "Location": {
+        "Line": 511,
+        "Column": 1,
+        "ByteOffset": 17281
+      },
+      "Directive": "#  ifndef PRINTF_INT64_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 517,
+        "Column": 1,
+        "ByteOffset": 17376
+      },
+      "Directive": "#if !defined (stdint_int64_defined)"
+    },
+    {
+      "Location": {
+        "Line": 518,
+        "Column": 1,
+        "ByteOffset": 17412
+      },
+      "Directive": "# if defined(__GNUC__) \u0026\u0026 !defined(vxWorks)"
+    },
+    {
+      "Location": {
+        "Line": 524,
+        "Column": 1,
+        "ByteOffset": 17646
+      },
+      "Directive": "#  ifndef PRINTF_INT64_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 533,
+        "Column": 1,
+        "ByteOffset": 18057
+      },
+      "Directive": "#  ifndef PRINTF_INT64_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 542,
+        "Column": 1,
+        "ByteOffset": 18499
+      },
+      "Directive": "#  ifndef PRINTF_INT64_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 548,
+        "Column": 1,
+        "ByteOffset": 18595
+      },
+      "Directive": "#if !defined (LONG_LONG_MAX) \u0026\u0026 defined (INT64_C)"
+    },
+    {
+      "Location": {
+        "Line": 551,
+        "Column": 1,
+        "ByteOffset": 18705
+      },
+      "Directive": "#ifndef ULONG_LONG_MAX"
+    },
+    {
+      "Location": {
+        "Line": 555,
+        "Column": 1,
+        "ByteOffset": 18792
+      },
+      "Directive": "#if !defined (INT64_MAX) \u0026\u0026 defined (INT64_C)"
+    },
+    {
+      "Location": {
+        "Line": 558,
+        "Column": 1,
+        "ByteOffset": 18894
+      },
+      "Directive": "#if !defined (INT64_MIN) \u0026\u0026 defined (INT64_C)"
+    },
+    {
+      "Location": {
+        "Line": 561,
+        "Column": 1,
+        "ByteOffset": 18997
+      },
+      "Directive": "#if !defined (UINT64_MAX) \u0026\u0026 defined (INT64_C)"
+    },
+    {
+      "Location": {
+        "Line": 569,
+        "Column": 1,
+        "ByteOffset": 19155
+      },
+      "Directive": "#ifndef PRINTF_INT64_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 572,
+        "Column": 1,
+        "ByteOffset": 19230
+      },
+      "Directive": "#ifndef PRINTF_INT32_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 575,
+        "Column": 1,
+        "ByteOffset": 19304
+      },
+      "Directive": "#ifndef PRINTF_INT16_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 578,
+        "Column": 1,
+        "ByteOffset": 19378
+      },
+      "Directive": "#ifndef PRINTF_INT8_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 581,
+        "Column": 1,
+        "ByteOffset": 19450
+      },
+      "Directive": "#ifndef PRINTF_INT64_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 584,
+        "Column": 1,
+        "ByteOffset": 19525
+      },
+      "Directive": "#ifndef PRINTF_INT32_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 587,
+        "Column": 1,
+        "ByteOffset": 19600
+      },
+      "Directive": "#ifndef PRINTF_INT16_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 590,
+        "Column": 1,
+        "ByteOffset": 19674
+      },
+      "Directive": "#ifndef PRINTF_INT8_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 593,
+        "Column": 1,
+        "ByteOffset": 19746
+      },
+      "Directive": "#ifndef PRINTF_UINT64_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 596,
+        "Column": 1,
+        "ByteOffset": 19823
+      },
+      "Directive": "#ifndef PRINTF_UINT32_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 599,
+        "Column": 1,
+        "ByteOffset": 19900
+      },
+      "Directive": "#ifndef PRINTF_UINT16_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 602,
+        "Column": 1,
+        "ByteOffset": 19976
+      },
+      "Directive": "#ifndef PRINTF_UINT8_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 612,
+        "Column": 1,
+        "ByteOffset": 20247
+      },
+      "Directive": "#ifdef stdint_int64_defined"
+    },
+    {
+      "Location": {
+        "Line": 620,
+        "Column": 1,
+        "ByteOffset": 20500
+      },
+      "Directive": "# ifndef PRINTF_INTMAX_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 623,
+        "Column": 1,
+        "ByteOffset": 20596
+      },
+      "Directive": "# ifndef PRINTF_INTMAX_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 626,
+        "Column": 1,
+        "ByteOffset": 20694
+      },
+      "Directive": "# ifndef PRINTF_INTMAX_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 636,
+        "Column": 1,
+        "ByteOffset": 20990
+      },
+      "Directive": "# ifndef PRINTF_INTMAX_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 639,
+        "Column": 1,
+        "ByteOffset": 21086
+      },
+      "Directive": "# ifndef PRINTF_INTMAX_HEX_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 642,
+        "Column": 1,
+        "ByteOffset": 21184
+      },
+      "Directive": "# ifndef PRINTF_INTMAX_DEC_WIDTH"
+    },
+    {
+      "Location": {
+        "Line": 654,
+        "Column": 1,
+        "ByteOffset": 21558
+      },
+      "Directive": "#ifndef stdint_least_defined"
+    },
+    {
+      "Location": {
+        "Line": 672,
+        "Column": 1,
+        "ByteOffset": 22240
+      },
+      "Directive": "# ifdef stdint_int64_defined"
+    },
+    {
+      "Location": {
+        "Line": 707,
+        "Column": 1,
+        "ByteOffset": 23552
+      },
+      "Directive": "#ifdef stdint_int64_defined"
+    },
+    {
+      "Location": {
+        "Line": 722,
+        "Column": 1,
+        "ByteOffset": 23919
+      },
+      "Directive": "#if defined(__WATCOMC__) || defined(_MSC_VER) || defined (__GNUC__) \u0026\u0026 !defined(vxWorks)"
+    },
+    {
+      "Location": {
+        "Line": 724,
+        "Column": 1,
+        "ByteOffset": 24028
+      },
+      "Directive": "# ifndef WCHAR_MIN"
+    },
+    {
+      "Location": {
+        "Line": 727,
+        "Column": 1,
+        "ByteOffset": 24077
+      },
+      "Directive": "# ifndef WCHAR_MAX"
+    },
+    {
+      "Location": {
+        "Line": 737,
+        "Column": 1,
+        "ByteOffset": 24260
+      },
+      "Directive": "#if (defined (_MSC_VER) \u0026\u0026 defined (_UINTPTR_T_DEFINED)) || defined (_UINTPTR_T)"
+    },
+    {
+      "Location": {
+        "Line": 741,
+        "Column": 1,
+        "ByteOffset": 24385
+      },
+      "Directive": "#ifndef STDINT_H_UINTPTR_T_DEFINED"
+    },
+    {
+      "Location": {
+        "Line": 742,
+        "Column": 1,
+        "ByteOffset": 24420
+      },
+      "Directive": "# if defined (__alpha__) || defined (__ia64__) || defined (__x86_64__) || defined (_WIN64) || defined (__ppc64__)"
+    },
+    {
+      "Location": {
+        "Line": 745,
+        "Column": 1,
+        "ByteOffset": 24619
+      },
+      "Directive": "#  if defined(__TINY__) || defined(__SMALL__) || defined(__MEDIUM__)"
+    },
+    {
+      "Location": {
+        "Line": 758,
+        "Column": 1,
+        "ByteOffset": 25045
+      },
+      "Directive": "# ifdef stdint_intptr_bits"
+    },
+    {
+      "Location": {
+        "Line": 761,
+        "Column": 1,
+        "ByteOffset": 25189
+      },
+      "Directive": "#  ifndef PRINTF_INTPTR_MODIFIER"
+    },
+    {
+      "Location": {
+        "Line": 764,
+        "Column": 1,
+        "ByteOffset": 25332
+      },
+      "Directive": "#  ifndef PTRDIFF_MAX"
+    },
+    {
+      "Location": {
+        "Line": 767,
+        "Column": 1,
+        "ByteOffset": 25452
+      },
+      "Directive": "#  ifndef PTRDIFF_MIN"
+    },
+    {
+      "Location": {
+        "Line": 770,
+        "Column": 1,
+        "ByteOffset": 25572
+      },
+      "Directive": "#  ifndef UINTPTR_MAX"
+    },
+    {
+      "Location": {
+        "Line": 773,
+        "Column": 1,
+        "ByteOffset": 25693
+      },
+      "Directive": "#  ifndef INTPTR_MAX"
+    },
+    {
+      "Location": {
+        "Line": 776,
+        "Column": 1,
+        "ByteOffset": 25812
+      },
+      "Directive": "#  ifndef INTPTR_MIN"
+    },
+    {
+      "Location": {
+        "Line": 779,
+        "Column": 1,
+        "ByteOffset": 25931
+      },
+      "Directive": "#  ifndef INTPTR_C"
+    },
+    {
+      "Location": {
+        "Line": 782,
+        "Column": 1,
+        "ByteOffset": 26049
+      },
+      "Directive": "#  ifndef UINTPTR_C"
+    },
+    {
+      "Location": {
+        "Line": 799,
+        "Column": 1,
+        "ByteOffset": 26594
+      },
+      "Directive": "#ifndef SIG_ATOMIC_MAX"
+    },
+    {
+      "Location": {
+        "Line": 805,
+        "Column": 1,
+        "ByteOffset": 26722
+      },
+      "Directive": "#if defined (__TEST_PSTDINT_FOR_CORRECTNESS)"
+    },
+    {
+      "Location": {
+        "Line": 839,
+        "Column": 1,
+        "ByteOffset": 27654
+      },
+      "Directive": "#ifdef INT64_MAX"
+    },
+    {
+      "Location": {
+        "Line": 853,
+        "Column": 1,
+        "ByteOffset": 28498
+      },
+      "Directive": "#ifdef INT64_MAX"
+    },
+    {
+      "Location": {
+        "Line": 876,
+        "Column": 1,
+        "ByteOffset": 30176
+      },
+      "Directive": "#ifdef INT64_MAX"
+    },
+    {
+      "Location": {
+        "Line": 888,
+        "Column": 1,
+        "ByteOffset": 30731
+      },
+      "Directive": "#ifdef INT64_MAX"
+    },
+    {
+      "Location": {
+        "Line": 905,
+        "Column": 1,
+        "ByteOffset": 31080
+      },
+      "Directive": "#ifdef INT64_MAX"
+    },
+    {
+      "Location": {
+        "Line": 909,
+        "Column": 1,
+        "ByteOffset": 31120
+      },
+      "Directive": "#if UINT_MAX \u003c X_SIZE_MAX"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/pstdint.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 31375
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/pstdint.h::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8565,
+      "End": 12662
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/pstdint.h::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13052,
+      "End": 13194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/pstdint.h::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13196,
+      "End": 26720
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/glucose2/pstdint.h::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 26722,
+      "End": 31374
+    }
+  ],
+  "Draft": "package glucose2\n\n/*  A portable stdint.h\n ****************************************************************************\n *  BSD License:\n ****************************************************************************\n *\n *  Copyright (c) 2005-2016 Paul Hsieh\n *  All rights reserved.\n *\n *  Redistribution and use in source and binary forms, with or without\n *  modification, are permitted provided that the following conditions\n *  are met:\n *\n *  1. Redistributions of source code must retain the above copyright\n *     notice, this list of conditions and the following disclaimer.\n *  2. Redistributions in binary form must reproduce the above copyright\n *     notice, this list of conditions and the following disclaimer in the\n *     documentation and/or other materials provided with the distribution.\n *  3. The name of the author may not be used to endorse or promote products\n *     derived from this software without specific prior written permission.\n *\n *  THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR\n *  IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES\n *  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.\n *  IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,\n *  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT\n *  NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,\n *  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY\n *  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT\n *  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF\n *  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.\n *\n ****************************************************************************\n *\n *  Version 0.1.16.0\n *\n *  The ANSI C standard committee, for the C99 standard, specified the\n *  inclusion of a new standard include file called stdint.h.  This is\n *  a very useful and long desired include file which contains several\n *  very precise definitions for integer scalar types that is critically\n *  important for making several classes of applications portable\n *  including cryptography, hashing, variable length integer libraries\n *  and so on.  But for most developers its likely useful just for\n *  programming sanity.\n *\n *  The problem is that some compiler vendors chose to ignore the C99\n *  standard and some older compilers have no opportunity to be updated.\n *  Because of this situation, simply including stdint.h in your code\n *  makes it unportable.\n *\n *  So that's what this file is all about.  It's an attempt to build a\n *  single universal include file that works on as many platforms as\n *  possible to deliver what stdint.h is supposed to.  Even compilers\n *  that already come with stdint.h can use this file instead without\n *  any loss of functionality.  A few things that should be noted about\n *  this file:\n *\n *    1) It is not guaranteed to be portable and/or present an identical\n *       interface on all platforms.  The extreme variability of the\n *       ANSI C standard makes this an impossibility right from the\n *       very get go. Its really only meant to be useful for the vast\n *       majority of platforms that possess the capability of\n *       implementing usefully and precisely defined, standard sized\n *       integer scalars.  Systems which are not intrinsically 2s\n *       complement may produce invalid constants.\n *\n *    2) There is an unavoidable use of non-reserved symbols.\n *\n *    3) Other standard include files are invoked.\n *\n *    4) This file may come in conflict with future platforms that do\n *       include stdint.h.  The hope is that one or the other can be\n *       used with no real difference.\n *\n *    5) In the current version, if your platform can't represent\n *       int32_t, int16_t and int8_t, it just dumps out with a compiler\n *       error.\n *\n *    6) 64 bit integers may or may not be defined.  Test for their\n *       presence with the test: #ifdef INT64_MAX or #ifdef UINT64_MAX.\n *       Note that this is different from the C99 specification which\n *       requires the existence of 64 bit support in the compiler.  If\n *       this is not defined for your platform, yet it is capable of\n *       dealing with 64 bits then it is because this file has not yet\n *       been extended to cover all of your system's capabilities.\n *\n *    7) (u)intptr_t may or may not be defined.  Test for its presence\n *       with the test: #ifdef PTRDIFF_MAX.  If this is not defined\n *       for your platform, then it is because this file has not yet\n *       been extended to cover all of your system's capabilities, not\n *       because its optional.\n *\n *    8) The following might not been defined even if your platform is\n *       capable of defining it:\n *\n *       WCHAR_MIN\n *       WCHAR_MAX\n *       (u)int64_t\n *       PTRDIFF_MIN\n *       PTRDIFF_MAX\n *       (u)intptr_t\n *\n *    9) The following have not been defined:\n *\n *       WINT_MIN\n *       WINT_MAX\n *\n *   10) The criteria for defining (u)int_least(*)_t isn't clear,\n *       except for systems which don't have a type that precisely\n *       defined 8, 16, or 32 bit types (which this include file does\n *       not support anyways). Default definitions have been given.\n *\n *   11) The criteria for defining (u)int_fast(*)_t isn't something I\n *       would trust to any particular compiler vendor or the ANSI C\n *       committee.  It is well known that \"compatible systems\" are\n *       commonly created that have very different performance\n *       characteristics from the systems they are compatible with,\n *       especially those whose vendors make both the compiler and the\n *       system.  Default definitions have been given, but its strongly\n *       recommended that users never use these definitions for any\n *       reason (they do *NOT* deliver any serious guarantee of\n *       improved performance -- not in this file, nor any vendor's\n *       stdint.h).\n *\n *   12) The following macros:\n *\n *       PRINTF_INTMAX_MODIFIER\n *       PRINTF_INT64_MODIFIER\n *       PRINTF_INT32_MODIFIER\n *       PRINTF_INT16_MODIFIER\n *       PRINTF_LEAST64_MODIFIER\n *       PRINTF_LEAST32_MODIFIER\n *       PRINTF_LEAST16_MODIFIER\n *       PRINTF_INTPTR_MODIFIER\n *\n *       are strings which have been defined as the modifiers required\n *       for the \"d\", \"u\" and \"x\" printf formats to correctly output\n *       (u)intmax_t, (u)int64_t, (u)int32_t, (u)int16_t, (u)least64_t,\n *       (u)least32_t, (u)least16_t and (u)intptr_t types respectively.\n *       PRINTF_INTPTR_MODIFIER is not defined for some systems which\n *       provide their own stdint.h.  PRINTF_INT64_MODIFIER is not\n *       defined if INT64_MAX is not defined.  These are an extension\n *       beyond what C99 specifies must be in stdint.h.\n *\n *       In addition, the following macros are defined:\n *\n *       PRINTF_INTMAX_HEX_WIDTH\n *       PRINTF_INT64_HEX_WIDTH\n *       PRINTF_INT32_HEX_WIDTH\n *       PRINTF_INT16_HEX_WIDTH\n *       PRINTF_INT8_HEX_WIDTH\n *       PRINTF_INTMAX_DEC_WIDTH\n *       PRINTF_INT64_DEC_WIDTH\n *       PRINTF_INT32_DEC_WIDTH\n *       PRINTF_INT16_DEC_WIDTH\n *       PRINTF_UINT8_DEC_WIDTH\n *       PRINTF_UINTMAX_DEC_WIDTH\n *       PRINTF_UINT64_DEC_WIDTH\n *       PRINTF_UINT32_DEC_WIDTH\n *       PRINTF_UINT16_DEC_WIDTH\n *       PRINTF_UINT8_DEC_WIDTH\n *\n *       Which specifies the maximum number of characters required to\n *       print the number of that type in either hexadecimal or decimal.\n *       These are an extension beyond what C99 specifies must be in\n *       stdint.h.\n *\n *  Compilers tested (all with 0 warnings at their highest respective\n *  settings): Borland Turbo C 2.0, WATCOM C/C++ 11.0 (16 bits and 32\n *  bits), Microsoft Visual C++ 6.0 (32 bit), Microsoft Visual Studio\n *  .net (VC7), Intel C++ 4.0, GNU gcc v3.3.3\n *\n *  This file should be considered a work in progress.  Suggestions for\n *  improvements, especially those which increase coverage are strongly\n *  encouraged.\n *\n *  Acknowledgements\n *\n *  The following people have made significant contributions to the\n *  development and testing of this file:\n *\n *  Chris Howie\n *  John Steele Scott\n *  Dave Thorup\n *  John Dill\n *  Florian Wobbe\n *  Christopher Sean Morrison\n *  Mikkel Fahnoe Jorgensen\n *\n */\n\n//#include \u003cstddef.h\u003e\n//#include \u003climits.h\u003e\n//#include \u003csignal.h\u003e\n\n/*\n *  For gcc with _STDINT_H, fill in the PRINTF_INT*_MODIFIER macros, and\n *  do nothing else.  On the Mac OS X version of gcc this is _STDINT_H_.\n */\n\n#if ((defined(__SUNPRO_C) \u0026\u0026 __SUNPRO_C \u003e= 0x570) || (defined(_MSC_VER) \u0026\u0026 _MSC_VER \u003e= 1600) || (defined(__STDC__) \u0026\u0026 __STDC__ \u0026\u0026 defined(__STDC_VERSION__) \u0026\u0026 __STDC_VERSION__ \u003e= 199901L) || (defined (__WATCOMC__) \u0026\u0026 (defined (_STDINT_H_INCLUDED) || __WATCOMC__ \u003e= 1250)) || (defined(__GNUC__) \u0026\u0026 (__GNUC__ \u003e 3 || defined(_STDINT_H) || defined(_STDINT_H_) || defined (__UINT_FAST64_TYPE__)) )) \u0026\u0026 !defined (_PSTDINT_H_INCLUDED)\n#include \u003cstdint.h\u003e\n#define _PSTDINT_H_INCLUDED\n# if defined(__GNUC__) \u0026\u0026 (defined(__x86_64__) || defined(__ppc64__)) \u0026\u0026 !(defined(__APPLE__) \u0026\u0026 defined(__MACH__))\n#  ifndef PRINTF_INT64_MODIFIER\n#   define PRINTF_INT64_MODIFIER \"l\"\n#  endif\n#  ifndef PRINTF_INT32_MODIFIER\n#   define PRINTF_INT32_MODIFIER \"\"\n#  endif\n# else\n#  ifndef PRINTF_INT64_MODIFIER\n#   define PRINTF_INT64_MODIFIER \"ll\"\n#  endif\n#  ifndef PRINTF_INT32_MODIFIER\n#   if (UINT_MAX == UINT32_MAX)\n#    define PRINTF_INT32_MODIFIER \"\"\n#   else\n#    define PRINTF_INT32_MODIFIER \"l\"\n#   endif\n#  endif\n# endif\n# ifndef PRINTF_INT16_MODIFIER\n#  define PRINTF_INT16_MODIFIER \"h\"\n# endif\n# ifndef PRINTF_INTMAX_MODIFIER\n#  define PRINTF_INTMAX_MODIFIER PRINTF_INT64_MODIFIER\n# endif\n# ifndef PRINTF_INT64_HEX_WIDTH\n#  define PRINTF_INT64_HEX_WIDTH \"16\"\n# endif\n# ifndef PRINTF_UINT64_HEX_WIDTH\n#  define PRINTF_UINT64_HEX_WIDTH \"16\"\n# endif\n# ifndef PRINTF_INT32_HEX_WIDTH\n#  define PRINTF_INT32_HEX_WIDTH \"8\"\n# endif\n# ifndef PRINTF_UINT32_HEX_WIDTH\n#  define PRINTF_UINT32_HEX_WIDTH \"8\"\n# endif\n# ifndef PRINTF_INT16_HEX_WIDTH\n#  define PRINTF_INT16_HEX_WIDTH \"4\"\n# endif\n# ifndef PRINTF_UINT16_HEX_WIDTH\n#  define PRINTF_UINT16_HEX_WIDTH \"4\"\n# endif\n# ifndef PRINTF_INT8_HEX_WIDTH\n#  define PRINTF_INT8_HEX_WIDTH \"2\"\n# endif\n# ifndef PRINTF_UINT8_HEX_WIDTH\n#  define PRINTF_UINT8_HEX_WIDTH \"2\"\n# endif\n# ifndef PRINTF_INT64_DEC_WIDTH\n#  define PRINTF_INT64_DEC_WIDTH \"19\"\n# endif\n# ifndef PRINTF_UINT64_DEC_WIDTH\n#  define PRINTF_UINT64_DEC_WIDTH \"20\"\n# endif\n# ifndef PRINTF_INT32_DEC_WIDTH\n#  define PRINTF_INT32_DEC_WIDTH \"10\"\n# endif\n# ifndef PRINTF_UINT32_DEC_WIDTH\n#  define PRINTF_UINT32_DEC_WIDTH \"10\"\n# endif\n# ifndef PRINTF_INT16_DEC_WIDTH\n#  define PRINTF_INT16_DEC_WIDTH \"5\"\n# endif\n# ifndef PRINTF_UINT16_DEC_WIDTH\n#  define PRINTF_UINT16_DEC_WIDTH \"5\"\n# endif\n# ifndef PRINTF_INT8_DEC_WIDTH\n#  define PRINTF_INT8_DEC_WIDTH \"3\"\n# endif\n# ifndef PRINTF_UINT8_DEC_WIDTH\n#  define PRINTF_UINT8_DEC_WIDTH \"3\"\n# endif\n# ifndef PRINTF_INTMAX_HEX_WIDTH\n#  define PRINTF_INTMAX_HEX_WIDTH PRINTF_UINT64_HEX_WIDTH\n# endif\n# ifndef PRINTF_UINTMAX_HEX_WIDTH\n#  define PRINTF_UINTMAX_HEX_WIDTH PRINTF_UINT64_HEX_WIDTH\n# endif\n# ifndef PRINTF_INTMAX_DEC_WIDTH\n#  define PRINTF_INTMAX_DEC_WIDTH PRINTF_UINT64_DEC_WIDTH\n# endif\n# ifndef PRINTF_UINTMAX_DEC_WIDTH\n#  define PRINTF_UINTMAX_DEC_WIDTH PRINTF_UINT64_DEC_WIDTH\n# endif\n\n/*\n *  Something really weird is going on with Open Watcom.  Just pull some of\n *  these duplicated definitions from Open Watcom's stdint.h file for now.\n */\n\n# if defined (__WATCOMC__) \u0026\u0026 __WATCOMC__ \u003e= 1250\n#  if !defined (INT64_C)\n#   define INT64_C(x)   (x + (INT64_MAX - INT64_MAX))\n#  endif\n#  if !defined (UINT64_C)\n#   define UINT64_C(x)  (x + (UINT64_MAX - UINT64_MAX))\n#  endif\n#  if !defined (INT32_C)\n#   define INT32_C(x)   (x + (INT32_MAX - INT32_MAX))\n#  endif\n#  if !defined (UINT32_C)\n#   define UINT32_C(x)  (x + (UINT32_MAX - UINT32_MAX))\n#  endif\n#  if !defined (INT16_C)\n#   define INT16_C(x)   (x)\n#  endif\n#  if !defined (UINT16_C)\n#   define UINT16_C(x)  (x)\n#  endif\n#  if !defined (INT8_C)\n#   define INT8_C(x)   (x)\n#  endif\n#  if !defined (UINT8_C)\n#   define UINT8_C(x)  (x)\n#  endif\n#  if !defined (UINT64_MAX)\n#   define UINT64_MAX  18446744073709551615ULL\n#  endif\n#  if !defined (INT64_MAX)\n#   define INT64_MAX  9223372036854775807LL\n#  endif\n#  if !defined (UINT32_MAX)\n#   define UINT32_MAX  4294967295UL\n#  endif\n#  if !defined (INT32_MAX)\n#   define INT32_MAX  2147483647L\n#  endif\n#  if !defined (INTMAX_MAX)\n#   define INTMAX_MAX INT64_MAX\n#  endif\n#  if !defined (INTMAX_MIN)\n#   define INTMAX_MIN INT64_MIN\n#  endif\n# endif\n#endif\n\n/*\n *  I have no idea what is the truly correct thing to do on older Solaris.\n *  From some online discussions, this seems to be what is being\n *  recommended.  For people who actually are developing on older Solaris,\n *  what I would like to know is, does this define all of the relevant\n *  macros of a complete stdint.h?  Remember, in pstdint.h 64 bit is\n *  considered optional.\n */\n\n#if (defined(__SUNPRO_C) \u0026\u0026 __SUNPRO_C \u003e= 0x420) \u0026\u0026 !defined(_PSTDINT_H_INCLUDED)\n#include \u003csys/inttypes.h\u003e\n#define _PSTDINT_H_INCLUDED\n#endif\n\n#ifndef _PSTDINT_H_INCLUDED\n#define _PSTDINT_H_INCLUDED\n\n#ifndef SIZE_MAX\n# define SIZE_MAX ((size_t)-1)\n#endif\n\n/*\n *  Deduce the type assignments from limits.h under the assumption that\n *  integer sizes in bits are powers of 2, and follow the ANSI\n *  definitions.\n */\n\n#ifndef UINT8_MAX\n# define UINT8_MAX 0xff\n#endif\n#if !defined(uint8_t) \u0026\u0026 !defined(_UINT8_T) \u0026\u0026 !defined(vxWorks)\n# if (UCHAR_MAX == UINT8_MAX) || defined (S_SPLINT_S)\n    typedef unsigned char uint8_t;\n#   define UINT8_C(v) ((uint8_t) v)\n# else\n#   error \"Platform not supported\"\n# endif\n#endif\n\n#ifndef INT8_MAX\n# define INT8_MAX 0x7f\n#endif\n#ifndef INT8_MIN\n# define INT8_MIN INT8_C(0x80)\n#endif\n#if !defined(int8_t) \u0026\u0026 !defined(_INT8_T) \u0026\u0026 !defined(vxWorks)\n# if (SCHAR_MAX == INT8_MAX) || defined (S_SPLINT_S)\n    typedef signed char int8_t;\n#   define INT8_C(v) ((int8_t) v)\n# else\n#   error \"Platform not supported\"\n# endif\n#endif\n\n#ifndef UINT16_MAX\n# define UINT16_MAX 0xffff\n#endif\n#if !defined(uint16_t) \u0026\u0026 !defined(_UINT16_T) \u0026\u0026 !defined(vxWorks)\n#if (UINT_MAX == UINT16_MAX) || defined (S_SPLINT_S)\n  typedef unsigned int uint16_t;\n# ifndef PRINTF_INT16_MODIFIER\n#  define PRINTF_INT16_MODIFIER \"\"\n# endif\n# define UINT16_C(v) ((uint16_t) (v))\n#elif (USHRT_MAX == UINT16_MAX)\n  typedef unsigned short uint16_t;\n# define UINT16_C(v) ((uint16_t) (v))\n# ifndef PRINTF_INT16_MODIFIER\n#  define PRINTF_INT16_MODIFIER \"h\"\n# endif\n#else\n#error \"Platform not supported\"\n#endif\n#endif\n\n#ifndef INT16_MAX\n# define INT16_MAX 0x7fff\n#endif\n#ifndef INT16_MIN\n# define INT16_MIN INT16_C(0x8000)\n#endif\n#if !defined(int16_t) \u0026\u0026 !defined(_INT16_T) \u0026\u0026 !defined(vxWorks)\n#if (INT_MAX == INT16_MAX) || defined (S_SPLINT_S)\n  typedef signed int int16_t;\n# define INT16_C(v) ((int16_t) (v))\n# ifndef PRINTF_INT16_MODIFIER\n#  define PRINTF_INT16_MODIFIER \"\"\n# endif\n#elif (SHRT_MAX == INT16_MAX)\n  typedef signed short int16_t;\n# define INT16_C(v) ((int16_t) (v))\n# ifndef PRINTF_INT16_MODIFIER\n#  define PRINTF_INT16_MODIFIER \"h\"\n# endif\n#else\n#error \"Platform not supported\"\n#endif\n#endif\n\n#ifndef UINT32_MAX\n# define UINT32_MAX (0xffffffffUL)\n#endif\n#if !defined(uint32_t) \u0026\u0026 !defined(_UINT32_T) \u0026\u0026 !defined(vxWorks)\n#if (ULONG_MAX == UINT32_MAX) || defined (S_SPLINT_S)\n  typedef unsigned long uint32_t;\n# define UINT32_C(v) v ## UL\n# ifndef PRINTF_INT32_MODIFIER\n#  define PRINTF_INT32_MODIFIER \"l\"\n# endif\n#elif (UINT_MAX == UINT32_MAX)\n  typedef unsigned int uint32_t;\n# ifndef PRINTF_INT32_MODIFIER\n#  define PRINTF_INT32_MODIFIER \"\"\n# endif\n# define UINT32_C(v) v ## U\n#elif (USHRT_MAX == UINT32_MAX)\n  typedef unsigned short uint32_t;\n# define UINT32_C(v) ((unsigned short) (v))\n# ifndef PRINTF_INT32_MODIFIER\n#  define PRINTF_INT32_MODIFIER \"\"\n# endif\n#else\n#error \"Platform not supported\"\n#endif\n#endif\n\n#ifndef INT32_MAX\n# define INT32_MAX (0x7fffffffL)\n#endif\n#ifndef INT32_MIN\n# define INT32_MIN INT32_C(0x80000000)\n#endif\n#if !defined(int32_t) \u0026\u0026 !defined(_INT32_T) \u0026\u0026 !defined(vxWorks)\n#if (LONG_MAX == INT32_MAX) || defined (S_SPLINT_S)\n  typedef signed long int32_t;\n# define INT32_C(v) v ## L\n# ifndef PRINTF_INT32_MODIFIER\n#  define PRINTF_INT32_MODIFIER \"l\"\n# endif\n#elif (INT_MAX == INT32_MAX)\n  typedef signed int int32_t;\n# define INT32_C(v) v\n# ifndef PRINTF_INT32_MODIFIER\n#  define PRINTF_INT32_MODIFIER \"\"\n# endif\n#elif (SHRT_MAX == INT32_MAX)\n  typedef signed short int32_t;\n# define INT32_C(v) ((short) (v))\n# ifndef PRINTF_INT32_MODIFIER\n#  define PRINTF_INT32_MODIFIER \"\"\n# endif\n#else\n#error \"Platform not supported\"\n#endif\n#endif\n\n/*\n *  The macro stdint_int64_defined is temporarily used to record\n *  whether or not 64 integer support is available.  It must be\n *  defined for any 64 integer extensions for new platforms that are\n *  added.\n */\n\n#undef stdint_int64_defined\n#if (defined(__STDC__) \u0026\u0026 defined(__STDC_VERSION__)) || defined (S_SPLINT_S)\n# if (__STDC__ \u0026\u0026 __STDC_VERSION__ \u003e= 199901L) || defined (S_SPLINT_S)\n#  define stdint_int64_defined\n   typedef long long int64_t;\n   typedef unsigned long long uint64_t;\n#  define UINT64_C(v) v ## ULL\n#  define  INT64_C(v) v ## LL\n#  ifndef PRINTF_INT64_MODIFIER\n#   define PRINTF_INT64_MODIFIER \"ll\"\n#  endif\n# endif\n#endif\n\n#if !defined (stdint_int64_defined)\n# if defined(__GNUC__) \u0026\u0026 !defined(vxWorks)\n#  define stdint_int64_defined\n   __extension__ typedef long long int64_t;\n   __extension__ typedef unsigned long long uint64_t;\n#  define UINT64_C(v) v ## ULL\n#  define  INT64_C(v) v ## LL\n#  ifndef PRINTF_INT64_MODIFIER\n#   define PRINTF_INT64_MODIFIER \"ll\"\n#  endif\n# elif defined(__MWERKS__) || defined (__SUNPRO_C) || defined (__SUNPRO_CC) || defined (__APPLE_CC__) || defined (_LONG_LONG) || defined (_CRAYC) || defined (S_SPLINT_S)\n#  define stdint_int64_defined\n   typedef long long int64_t;\n   typedef unsigned long long uint64_t;\n#  define UINT64_C(v) v ## ULL\n#  define  INT64_C(v) v ## LL\n#  ifndef PRINTF_INT64_MODIFIER\n#   define PRINTF_INT64_MODIFIER \"ll\"\n#  endif\n# elif (defined(__WATCOMC__) \u0026\u0026 defined(__WATCOM_INT64__)) || (defined(_MSC_VER) \u0026\u0026 _INTEGRAL_MAX_BITS \u003e= 64) || (defined (__BORLANDC__) \u0026\u0026 __BORLANDC__ \u003e 0x460) || defined (__alpha) || defined (__DECC)\n#  define stdint_int64_defined\n   typedef __int64 int64_t;\n   typedef unsigned __int64 uint64_t;\n#  define UINT64_C(v) v ## UI64\n#  define  INT64_C(v) v ## I64\n#  ifndef PRINTF_INT64_MODIFIER\n#   define PRINTF_INT64_MODIFIER \"I64\"\n#  endif\n# endif\n#endif\n\n#if !defined (LONG_LONG_MAX) \u0026\u0026 defined (INT64_C)\n# define LONG_LONG_MAX INT64_C (9223372036854775807)\n#endif\n#ifndef ULONG_LONG_MAX\n# define ULONG_LONG_MAX UINT64_C (18446744073709551615)\n#endif\n\n#if !defined (INT64_MAX) \u0026\u0026 defined (INT64_C)\n# define INT64_MAX INT64_C (9223372036854775807)\n#endif\n#if !defined (INT64_MIN) \u0026\u0026 defined (INT64_C)\n# define INT64_MIN INT64_C (-9223372036854775808)\n#endif\n#if !defined (UINT64_MAX) \u0026\u0026 defined (INT64_C)\n# define UINT64_MAX UINT64_C (18446744073709551615)\n#endif\n\n/*\n *  Width of hexadecimal for number field.\n */\n\n#ifndef PRINTF_INT64_HEX_WIDTH\n# define PRINTF_INT64_HEX_WIDTH \"16\"\n#endif\n#ifndef PRINTF_INT32_HEX_WIDTH\n# define PRINTF_INT32_HEX_WIDTH \"8\"\n#endif\n#ifndef PRINTF_INT16_HEX_WIDTH\n# define PRINTF_INT16_HEX_WIDTH \"4\"\n#endif\n#ifndef PRINTF_INT8_HEX_WIDTH\n# define PRINTF_INT8_HEX_WIDTH \"2\"\n#endif\n#ifndef PRINTF_INT64_DEC_WIDTH\n# define PRINTF_INT64_DEC_WIDTH \"19\"\n#endif\n#ifndef PRINTF_INT32_DEC_WIDTH\n# define PRINTF_INT32_DEC_WIDTH \"10\"\n#endif\n#ifndef PRINTF_INT16_DEC_WIDTH\n# define PRINTF_INT16_DEC_WIDTH \"5\"\n#endif\n#ifndef PRINTF_INT8_DEC_WIDTH\n# define PRINTF_INT8_DEC_WIDTH \"3\"\n#endif\n#ifndef PRINTF_UINT64_DEC_WIDTH\n# define PRINTF_UINT64_DEC_WIDTH \"20\"\n#endif\n#ifndef PRINTF_UINT32_DEC_WIDTH\n# define PRINTF_UINT32_DEC_WIDTH \"10\"\n#endif\n#ifndef PRINTF_UINT16_DEC_WIDTH\n# define PRINTF_UINT16_DEC_WIDTH \"5\"\n#endif\n#ifndef PRINTF_UINT8_DEC_WIDTH\n# define PRINTF_UINT8_DEC_WIDTH \"3\"\n#endif\n\n/*\n *  Ok, lets not worry about 128 bit integers for now.  Moore's law says\n *  we don't need to worry about that until about 2040 at which point\n *  we'll have bigger things to worry about.\n */\n\n#ifdef stdint_int64_defined\n  typedef int64_t intmax_t;\n  typedef uint64_t uintmax_t;\n# define  INTMAX_MAX   INT64_MAX\n# define  INTMAX_MIN   INT64_MIN\n# define UINTMAX_MAX  UINT64_MAX\n# define UINTMAX_C(v) UINT64_C(v)\n# define  INTMAX_C(v)  INT64_C(v)\n# ifndef PRINTF_INTMAX_MODIFIER\n#   define PRINTF_INTMAX_MODIFIER PRINTF_INT64_MODIFIER\n# endif\n# ifndef PRINTF_INTMAX_HEX_WIDTH\n#  define PRINTF_INTMAX_HEX_WIDTH PRINTF_INT64_HEX_WIDTH\n# endif\n# ifndef PRINTF_INTMAX_DEC_WIDTH\n#  define PRINTF_INTMAX_DEC_WIDTH PRINTF_INT64_DEC_WIDTH\n# endif\n#else\n  typedef int32_t intmax_t;\n  typedef uint32_t uintmax_t;\n# define  INTMAX_MAX   INT32_MAX\n# define UINTMAX_MAX  UINT32_MAX\n# define UINTMAX_C(v) UINT32_C(v)\n# define  INTMAX_C(v)  INT32_C(v)\n# ifndef PRINTF_INTMAX_MODIFIER\n#   define PRINTF_INTMAX_MODIFIER PRINTF_INT32_MODIFIER\n# endif\n# ifndef PRINTF_INTMAX_HEX_WIDTH\n#  define PRINTF_INTMAX_HEX_WIDTH PRINTF_INT32_HEX_WIDTH\n# endif\n# ifndef PRINTF_INTMAX_DEC_WIDTH\n#  define PRINTF_INTMAX_DEC_WIDTH PRINTF_INT32_DEC_WIDTH\n# endif\n#endif\n\n/*\n *  Because this file currently only supports platforms which have\n *  precise powers of 2 as bit sizes for the default integers, the\n *  least definitions are all trivial.  Its possible that a future\n *  version of this file could have different definitions.\n */\n\n#ifndef stdint_least_defined\n  typedef   int8_t   int_least8_t;\n  typedef  uint8_t  uint_least8_t;\n  typedef  int16_t  int_least16_t;\n  typedef uint16_t uint_least16_t;\n  typedef  int32_t  int_least32_t;\n  typedef uint32_t uint_least32_t;\n# define PRINTF_LEAST32_MODIFIER PRINTF_INT32_MODIFIER\n# define PRINTF_LEAST16_MODIFIER PRINTF_INT16_MODIFIER\n# define  UINT_LEAST8_MAX  UINT8_MAX\n# define   INT_LEAST8_MAX   INT8_MAX\n# define UINT_LEAST16_MAX UINT16_MAX\n# define  INT_LEAST16_MAX  INT16_MAX\n# define UINT_LEAST32_MAX UINT32_MAX\n# define  INT_LEAST32_MAX  INT32_MAX\n# define   INT_LEAST8_MIN   INT8_MIN\n# define  INT_LEAST16_MIN  INT16_MIN\n# define  INT_LEAST32_MIN  INT32_MIN\n# ifdef stdint_int64_defined\n    typedef  int64_t  int_least64_t;\n    typedef uint64_t uint_least64_t;\n#   define PRINTF_LEAST64_MODIFIER PRINTF_INT64_MODIFIER\n#   define UINT_LEAST64_MAX UINT64_MAX\n#   define  INT_LEAST64_MAX  INT64_MAX\n#   define  INT_LEAST64_MIN  INT64_MIN\n# endif\n#endif\n#undef stdint_least_defined\n\n/*\n *  The ANSI C committee has defined *int*_fast*_t types as well.  This,\n *  of course, defies rationality -- you can't know what will be fast\n *  just from the type itself.  Even for a given architecture, compatible\n *  implementations might have different performance characteristics.\n *  Developers are warned to stay away from these types when using this\n *  or any other stdint.h.\n */\n\ntypedef   int_least8_t   int_fast8_t;\ntypedef  uint_least8_t  uint_fast8_t;\ntypedef  int_least16_t  int_fast16_t;\ntypedef uint_least16_t uint_fast16_t;\ntypedef  int_least32_t  int_fast32_t;\ntypedef uint_least32_t uint_fast32_t;\n#define  UINT_FAST8_MAX  UINT_LEAST8_MAX\n#define   INT_FAST8_MAX   INT_LEAST8_MAX\n#define UINT_FAST16_MAX UINT_LEAST16_MAX\n#define  INT_FAST16_MAX  INT_LEAST16_MAX\n#define UINT_FAST32_MAX UINT_LEAST32_MAX\n#define  INT_FAST32_MAX  INT_LEAST32_MAX\n#define   INT_FAST8_MIN   INT_LEAST8_MIN\n#define  INT_FAST16_MIN  INT_LEAST16_MIN\n#define  INT_FAST32_MIN  INT_LEAST32_MIN\n#ifdef stdint_int64_defined\n  typedef  int_least64_t  int_fast64_t;\n  typedef uint_least64_t uint_fast64_t;\n# define UINT_FAST64_MAX UINT_LEAST64_MAX\n# define  INT_FAST64_MAX  INT_LEAST64_MAX\n# define  INT_FAST64_MIN  INT_LEAST64_MIN\n#endif\n\n#undef stdint_int64_defined\n\n/*\n *  Whatever piecemeal, per compiler thing we can do about the wchar_t\n *  type limits.\n */\n\n#if defined(__WATCOMC__) || defined(_MSC_VER) || defined (__GNUC__) \u0026\u0026 !defined(vxWorks)\n# include \u003cwchar.h\u003e\n# ifndef WCHAR_MIN\n#  define WCHAR_MIN 0\n# endif\n# ifndef WCHAR_MAX\n#  define WCHAR_MAX ((wchar_t)-1)\n# endif\n#endif\n\n/*\n *  Whatever piecemeal, per compiler/platform thing we can do about the\n *  (u)intptr_t types and limits.\n */\n\n#if (defined (_MSC_VER) \u0026\u0026 defined (_UINTPTR_T_DEFINED)) || defined (_UINTPTR_T)\n# define STDINT_H_UINTPTR_T_DEFINED\n#endif\n\n#ifndef STDINT_H_UINTPTR_T_DEFINED\n# if defined (__alpha__) || defined (__ia64__) || defined (__x86_64__) || defined (_WIN64) || defined (__ppc64__)\n#  define stdint_intptr_bits 64\n# elif defined (__WATCOMC__) || defined (__TURBOC__)\n#  if defined(__TINY__) || defined(__SMALL__) || defined(__MEDIUM__)\n#    define stdint_intptr_bits 16\n#  else\n#    define stdint_intptr_bits 32\n#  endif\n# elif defined (__i386__) || defined (_WIN32) || defined (WIN32) || defined (__ppc64__)\n#  define stdint_intptr_bits 32\n# elif defined (__INTEL_COMPILER)\n/* TODO -- what did Intel do about x86-64? */\n# else\n/* #error \"This platform might not be supported yet\" */\n# endif\n\n# ifdef stdint_intptr_bits\n#  define stdint_intptr_glue3_i(a,b,c)  a##b##c\n#  define stdint_intptr_glue3(a,b,c)    stdint_intptr_glue3_i(a,b,c)\n#  ifndef PRINTF_INTPTR_MODIFIER\n#    define PRINTF_INTPTR_MODIFIER      stdint_intptr_glue3(PRINTF_INT,stdint_intptr_bits,_MODIFIER)\n#  endif\n#  ifndef PTRDIFF_MAX\n#    define PTRDIFF_MAX                 stdint_intptr_glue3(INT,stdint_intptr_bits,_MAX)\n#  endif\n#  ifndef PTRDIFF_MIN\n#    define PTRDIFF_MIN                 stdint_intptr_glue3(INT,stdint_intptr_bits,_MIN)\n#  endif\n#  ifndef UINTPTR_MAX\n#    define UINTPTR_MAX                 stdint_intptr_glue3(UINT,stdint_intptr_bits,_MAX)\n#  endif\n#  ifndef INTPTR_MAX\n#    define INTPTR_MAX                  stdint_intptr_glue3(INT,stdint_intptr_bits,_MAX)\n#  endif\n#  ifndef INTPTR_MIN\n#    define INTPTR_MIN                  stdint_intptr_glue3(INT,stdint_intptr_bits,_MIN)\n#  endif\n#  ifndef INTPTR_C\n#    define INTPTR_C(x)                 stdint_intptr_glue3(INT,stdint_intptr_bits,_C)(x)\n#  endif\n#  ifndef UINTPTR_C\n#    define UINTPTR_C(x)                stdint_intptr_glue3(UINT,stdint_intptr_bits,_C)(x)\n#  endif\n  typedef stdint_intptr_glue3(uint,stdint_intptr_bits,_t) uintptr_t;\n  typedef stdint_intptr_glue3( int,stdint_intptr_bits,_t)  intptr_t;\n# else\n/* TODO -- This following is likely wrong for some platforms, and does\n   nothing for the definition of uintptr_t. */\n  typedef ptrdiff_t intptr_t;\n# endif\n# define STDINT_H_UINTPTR_T_DEFINED\n#endif\n\n/*\n *  Assumes sig_atomic_t is signed and we have a 2s complement machine.\n */\n\n#ifndef SIG_ATOMIC_MAX\n# define SIG_ATOMIC_MAX ((((sig_atomic_t) 1) \u003c\u003c (sizeof (sig_atomic_t)*CHAR_BIT-1)) - 1)\n#endif\n\n#endif\n\n#if defined (__TEST_PSTDINT_FOR_CORRECTNESS)\n\n/*\n *  Please compile with the maximum warning settings to make sure macros are\n *  not defined more than once.\n */\n\n#include \u003cstdlib.h\u003e\n#include \u003cstdio.h\u003e\n#include \u003cstring.h\u003e\n\n#define glue3_aux(x,y,z) x ## y ## z\n#define glue3(x,y,z) glue3_aux(x,y,z)\n\n#define DECLU(bits) glue3(uint,bits,_t) glue3(u,bits,) = glue3(UINT,bits,_C) (0);\n#define DECLI(bits) glue3(int,bits,_t) glue3(i,bits,) = glue3(INT,bits,_C) (0);\n\n#define DECL(us,bits) glue3(DECL,us,) (bits)\n\n#define TESTUMAX(bits) glue3(u,bits,) = ~glue3(u,bits,); if (glue3(UINT,bits,_MAX) != glue3(u,bits,)) printf (\"Something wrong with UINT%d_MAX\\n\", bits)\n\n#define REPORTERROR(msg) { err_n++; if (err_first \u003c= 0) err_first = __LINE__; printf msg; }\n\n#define X_SIZE_MAX ((size_t)-1)\n\nint main () {\n    int err_n = 0;\n    int err_first = 0;\n    DECL(I,8)\n    DECL(U,8)\n    DECL(I,16)\n    DECL(U,16)\n    DECL(I,32)\n    DECL(U,32)\n#ifdef INT64_MAX\n    DECL(I,64)\n    DECL(U,64)\n#endif\n    intmax_t imax = INTMAX_C(0);\n    uintmax_t umax = UINTMAX_C(0);\n    char str0[256], str1[256];\n\n    sprintf (str0, \"%\" PRINTF_INT32_MODIFIER \"d\", INT32_C(2147483647));\n    if (0 != strcmp (str0, \"2147483647\")) REPORTERROR ((\"Something wrong with PRINTF_INT32_MODIFIER : %s\\n\", str0));\n    if (atoi(PRINTF_INT32_DEC_WIDTH) != (int) strlen(str0)) REPORTERROR ((\"Something wrong with PRINTF_INT32_DEC_WIDTH : %s\\n\", PRINTF_INT32_DEC_WIDTH));\n    sprintf (str0, \"%\" PRINTF_INT32_MODIFIER \"u\", UINT32_C(4294967295));\n    if (0 != strcmp (str0, \"4294967295\")) REPORTERROR ((\"Something wrong with PRINTF_INT32_MODIFIER : %s\\n\", str0));\n    if (atoi(PRINTF_UINT32_DEC_WIDTH) != (int) strlen(str0)) REPORTERROR ((\"Something wrong with PRINTF_UINT32_DEC_WIDTH : %s\\n\", PRINTF_UINT32_DEC_WIDTH));\n#ifdef INT64_MAX\n    sprintf (str1, \"%\" PRINTF_INT64_MODIFIER \"d\", INT64_C(9223372036854775807));\n    if (0 != strcmp (str1, \"9223372036854775807\")) REPORTERROR ((\"Something wrong with PRINTF_INT32_MODIFIER : %s\\n\", str1));\n    if (atoi(PRINTF_INT64_DEC_WIDTH) != (int) strlen(str1)) REPORTERROR ((\"Something wrong with PRINTF_INT64_DEC_WIDTH : %s, %d\\n\", PRINTF_INT64_DEC_WIDTH, (int) strlen(str1)));\n    sprintf (str1, \"%\" PRINTF_INT64_MODIFIER \"u\", UINT64_C(18446744073709550591));\n    if (0 != strcmp (str1, \"18446744073709550591\")) REPORTERROR ((\"Something wrong with PRINTF_INT32_MODIFIER : %s\\n\", str1));\n    if (atoi(PRINTF_UINT64_DEC_WIDTH) != (int) strlen(str1)) REPORTERROR ((\"Something wrong with PRINTF_UINT64_DEC_WIDTH : %s, %d\\n\", PRINTF_UINT64_DEC_WIDTH, (int) strlen(str1)));\n#endif\n\n    sprintf (str0, \"%d %x\\n\", 0, ~0);\n\n    sprintf (str1, \"%d %x\\n\",  i8, ~0);\n    if (0 != strcmp (str0, str1)) REPORTERROR ((\"Something wrong with i8 : %s\\n\", str1));\n    sprintf (str1, \"%u %x\\n\",  u8, ~0);\n    if (0 != strcmp (str0, str1)) REPORTERROR ((\"Something wrong with u8 : %s\\n\", str1));\n    sprintf (str1, \"%d %x\\n\",  i16, ~0);\n    if (0 != strcmp (str0, str1)) REPORTERROR ((\"Something wrong with i16 : %s\\n\", str1));\n    sprintf (str1, \"%u %x\\n\",  u16, ~0);\n    if (0 != strcmp (str0, str1)) REPORTERROR ((\"Something wrong with u16 : %s\\n\", str1));\n    sprintf (str1, \"%\" PRINTF_INT32_MODIFIER \"d %x\\n\",  i32, ~0);\n    if (0 != strcmp (str0, str1)) REPORTERROR ((\"Something wrong with i32 : %s\\n\", str1));\n    sprintf (str1, \"%\" PRINTF_INT32_MODIFIER \"u %x\\n\",  u32, ~0);\n    if (0 != strcmp (str0, str1)) REPORTERROR ((\"Something wrong with u32 : %s\\n\", str1));\n#ifdef INT64_MAX\n    sprintf (str1, \"%\" PRINTF_INT64_MODIFIER \"d %x\\n\",  i64, ~0);\n    if (0 != strcmp (str0, str1)) REPORTERROR ((\"Something wrong with i64 : %s\\n\", str1));\n#endif\n    sprintf (str1, \"%\" PRINTF_INTMAX_MODIFIER \"d %x\\n\",  imax, ~0);\n    if (0 != strcmp (str0, str1)) REPORTERROR ((\"Something wrong with imax : %s\\n\", str1));\n    sprintf (str1, \"%\" PRINTF_INTMAX_MODIFIER \"u %x\\n\",  umax, ~0);\n    if (0 != strcmp (str0, str1)) REPORTERROR ((\"Something wrong with umax : %s\\n\", str1));\n\n    TESTUMAX(8);\n    TESTUMAX(16);\n    TESTUMAX(32);\n#ifdef INT64_MAX\n    TESTUMAX(64);\n#endif\n\n#define STR(v) #v\n#define Q(v) printf (\"sizeof \" STR(v) \" = %u\\n\", (unsigned) sizeof (v));\n    if (err_n) {\n        printf (\"pstdint.h is not correct.  Please use sizes below to correct it:\\n\");\n    }\n\n    Q(int)\n    Q(unsigned)\n    Q(long int)\n    Q(short int)\n    Q(int8_t)\n    Q(int16_t)\n    Q(int32_t)\n#ifdef INT64_MAX\n    Q(int64_t)\n#endif\n\n#if UINT_MAX \u003c X_SIZE_MAX\n    printf (\"UINT_MAX \u003c X_SIZE_MAX\\n\");\n#else\n    printf (\"UINT_MAX \u003e= X_SIZE_MAX\\n\");\n#endif\n    printf (\"%\" PRINTF_INT64_MODIFIER \"u vs %\" PRINTF_INT64_MODIFIER \"u\\n\", UINT_MAX, X_SIZE_MAX);\n\n    return EXIT_SUCCESS;\n}\n\n#endif\n"
+}

@@ -1,0 +1,123 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/map.c",
+  "SHA256": "75dfbfec17d1eda2d65d0d9e1117545b3f7cf491b14a984d43686b9621e7c124",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 93,
+        "Column": 5,
+        "ByteOffset": 3116
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"\\n\\nOutput space # %d\\n\", outnum);"
+    },
+    {
+      "Name": "putchar",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 102,
+        "Column": 13,
+        "ByteOffset": 3709
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            putchar(c);"
+    },
+    {
+      "Name": "putchar",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 106,
+        "Column": 13,
+        "ByteOffset": 3809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            putchar(' ');"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 108,
+        "Column": 13,
+        "ByteOffset": 3865
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf(\"  \");"
+    },
+    {
+      "Name": "putchar",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 111,
+        "Column": 13,
+        "ByteOffset": 3926
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            putchar('\\n');"
+    },
+    {
+      "Name": "putchar",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 115,
+        "Column": 13,
+        "ByteOffset": 4064
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            putchar('\\n');"
+    },
+    {
+      "Name": "putchar",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 118,
+        "Column": 13,
+        "ByteOffset": 4127
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            putchar('\\n');"
+    }
+  ],
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/map.c::macro::POWER2",
+      "Category": "macro-review",
+      "Symbol": "POWER2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2084,
+      "End": 2110
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/map.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/espresso/map.c::macro-inline::367",
+      "Category": "macro-inline-review",
+      "Symbol": "SET_SIZE",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 367,
+      "End": 380
+    }
+  ],
+  "Draft": "package espresso\n\nimport \"fmt\"\n\n/*\n * Revision Control Information\n *\n * $Source$\n * $Author$\n * $Revision$\n * $Date$\n *\n */\n//#include \"espresso.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\nstatic pcube Gcube;\nvar Gminterm pset;\n\npset minterms(T)\npcover T;\n{\n    int size, var;\n    register pcube last;\n\n    size = 1;\n    for(var = 0; var \u003c cube.num_vars; var++)\n    size *= cube.part_size[var];\n    // inlining of macro set_new\n    Gminterm = set_clear(ALLOC(unsigned int, SET_SIZE(size)), size);\n\n    // inlining of macro foreach_set\n    for(Gcube=T.data,last=Gcube+T.count*T.wsize;Gcube\u003clast;Gcube+=T.wsize)\n    explode(cube.num_vars-1, 0);\n\n    return Gminterm;\n}\n\n\nvoid explode(var, z)\nvar var, z int32;\n{\n    int i, last = cube.last_part[var];\n    for(i=cube.first_part[var], z *= cube.part_size[var]; i\u003c=last; i++, z++)\n    // inlining of macro is_in_set\n    // inlining of macro WHICH_WORD\n    // inlining of macro WHICH_BIT\n    if Gcube[(((i) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((i) \u0026 (BPI-1))) {\n        if (var == 0)\n        // inlining of macro set_insert\n        // inlining of macro WHICH_WORD\n        // inlining of macro WHICH_BIT\n        (Gminterm[(((z) \u003e\u003e LOGBPI) + 1)] |= 1 \u003c\u003c ((z) \u0026 (BPI-1)));\n        else\n        explode(var-1, z);\n    }\n}\n\n\nvar mapindex [16][16]int32 = [16][16]int32{\n    {  0,  1,  3,  2,   16, 17, 19, 18,      80, 81, 83, 82,   64, 65, 67, 66},\n    {  4,  5,  7,  6,   20, 21, 23, 22,      84, 85, 87, 86,   68, 69, 71, 70},\n    { 12, 13, 15, 14,   28, 29, 31, 30,      92, 93, 95, 94,   76, 77, 79, 78},\n    {  8,  9, 11, 10,   24, 25, 27, 26,      88, 89, 91, 90,   72, 73, 75, 74},\n\n    { 32, 33, 35, 34,   48, 49, 51, 50,     112,113,115,114,   96, 97, 99, 98},\n    { 36, 37, 39, 38,   52, 53, 55, 54,     116,117,119,118,  100,101,103,102},\n    { 44, 45, 47, 46,   60, 61, 63, 62,     124,125,127,126,  108,109,111,110},\n    { 40, 41, 43, 42,   56, 57, 59, 58,     120,121,123,122,  104,105,107,106},\n\n\n    {160,161,163,162,  176,177,179,178,     240,241,243,242,  224,225,227,226},\n    {164,165,167,166,  180,181,183,182,     244,245,247,246,  228,229,231,230},\n    {172,173,175,174,  188,189,191,190,     252,253,255,254,  236,237,239,238},\n    {168,169,171,170,  184,185,187,186,     248,249,251,250,  232,233,235,234},\n\n    {128,129,131,130,  144,145,147,146,     208,209,211,210,  192,193,195,194},\n    {132,133,135,134,  148,149,151,150,     212,213,215,214,  196,197,199,198},\n    {140,141,143,142,  156,157,159,158,     220,221,223,222,  204,205,207,206},\n    {136,137,139,138,  152,153,155,154,     216,217,219,218,  200,201,203,202},\n};\n\n// Original macro:\n// #define POWER2(n) (1 \u003c\u003c n)\n\nvoid map(T)\npcover T;\n{\n    int j, k, l, other_input_offset, output_offset, outnum, ind;\n    int largest_input_ind,  numout;\n    char c;\n    pset m;\n    bool some_output;\n\n    m = minterms(T);\n    // inlining of macro POWER2\n    largest_input_ind = (1 \u003c\u003c cube.num_binary_vars);\n    numout = cube.part_size[cube.num_vars-1];\n\n    for outnum = 0; outnum \u003c numout; outnum++ {\n    output_offset = outnum * largest_input_ind;\n    fmt.Printf(\"\\n\\nOutput space # %d\\n\", outnum);\n    for l = 0; l \u003c= MAX(cube.num_binary_vars - 8, 0); l++ {\n        other_input_offset = l * 256;\n        for k = 0; k \u003c 16; k++ {\n        some_output = FALSE;\n        for j = 0; j \u003c 16; j++ {\n            ind = mapindex[k][j] + other_input_offset;\n            if ind \u003c largest_input_ind {\n            // inlining of macro is_in_set\n            // inlining of macro WHICH_WORD\n            // inlining of macro WHICH_BIT\n            c = (m[(((ind+output_offset) \u003e\u003e LOGBPI) + 1)] \u0026 (1 \u003c\u003c ((ind+output_offset) \u0026 (BPI-1)))) ? '1' : '.';\n            putchar(c);\n            some_output = TRUE;\n            }\n            if ((j+1)%4 == 0)\n            putchar(' ');\n            if ((j+1)%8 == 0)\n            fmt.Printf(\"  \");\n        }\n        if (some_output)\n            putchar('\\n');\n        if (k+1)%4 == 0 {\n            if (k != 15 \u0026\u0026 mapindex[k+1][0] \u003e= largest_input_ind)\n            break;\n            putchar('\\n');\n        }\n        if ((k+1)%8 == 0)\n            putchar('\\n');\n        }\n    }\n    }\n    // inlining of macro set_free\n    FREE(m);\n}\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

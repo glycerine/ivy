@@ -1,0 +1,122 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatActivity.c",
+  "SHA256": "5148b4e06f36ff05104afdb342476dd04ab3526188b1a391c45921972fedfcb1",
+  "Functions": [
+    {
+      "Name": "Msat_SolverVarBumpActivity",
+      "Start": 1402,
+      "End": 1848,
+      "BodyStart": 1471,
+      "Original": "void Msat_SolverVarBumpActivity( Msat_Solver_t * p, Msat_Lit_t Lit )\n{\n    Msat_Var_t Var;\n    if ( p-\u003edVarDecay \u003c 0 ) // (negative decay means static variable order -- don't bump)\n        return;\n    Var = MSAT_LIT2VAR(Lit);\n    p-\u003epdActivity[Var] += p-\u003edVarInc;\n//    p-\u003epdActivity[Var] += p-\u003edVarInc * p-\u003epFactors[Var];\n    if ( p-\u003epdActivity[Var] \u003e 1e100 )\n        Msat_SolverVarRescaleActivity( p );\n    Msat_OrderUpdate( p-\u003epOrder, Var );\n}",
+      "Draft": "func Msat_SolverVarBumpActivity(p *Msat_Solver_t, Lit Msat_Lit_t) {\n    var Var Msat_Var_t;\n    if p.dVarDecay \u003c 0 { // (negative decay means static variable order -- don't bump)\n        return; }\n    // inlining of macro MSAT_LIT2VAR\n    Var = ((Lit)\u003e\u003e1);\n    p.pdActivity[Var] += p.dVarInc;\n//    p-\u003epdActivity[Var] += p-\u003edVarInc * p-\u003epFactors[Var];\n    if p.pdActivity[Var] \u003e 1e100 {\n        Msat_SolverVarRescaleActivity( p ); }\n    Msat_OrderUpdate( p.pOrder, Var );\n}"
+    },
+    {
+      "Name": "Msat_SolverVarDecayActivity",
+      "Start": 2084,
+      "End": 2206,
+      "BodyStart": 2138,
+      "Original": "void Msat_SolverVarDecayActivity( Msat_Solver_t * p )\n{\n    if ( p-\u003edVarDecay \u003e= 0 )\n        p-\u003edVarInc *= p-\u003edVarDecay;\n}",
+      "Draft": "func Msat_SolverVarDecayActivity(p *Msat_Solver_t) {\n    if p.dVarDecay \u003e= 0 {\n        p.dVarInc *= p.dVarDecay; }\n}"
+    },
+    {
+      "Name": "Msat_SolverVarRescaleActivity",
+      "Start": 2482,
+      "End": 2651,
+      "BodyStart": 2538,
+      "Original": "void Msat_SolverVarRescaleActivity( Msat_Solver_t * p )\n{\n    int i;\n    for ( i = 0; i \u003c p-\u003enVars; i++ )\n        p-\u003epdActivity[i] *= 1e-100;\n    p-\u003edVarInc *= 1e-100;\n}",
+      "Draft": "func Msat_SolverVarRescaleActivity(p *Msat_Solver_t) {\n    var i int32;\n    for  i = 0; i \u003c p.nVars; i++  {\n        p.pdActivity[i] *= 1e-100;\n    }\n    p.dVarInc *= 1e-100;\n}"
+    },
+    {
+      "Name": "Msat_SolverClaBumpActivity",
+      "Start": 2887,
+      "End": 3224,
+      "BodyStart": 2960,
+      "Original": "void Msat_SolverClaBumpActivity( Msat_Solver_t * p, Msat_Clause_t * pC )\n{\n    float Activ;\n    Activ = Msat_ClauseReadActivity(pC);\n    if ( Activ + p-\u003edClaInc \u003e 1e20 )\n    {\n        Msat_SolverClaRescaleActivity( p );\n        Activ = Msat_ClauseReadActivity( pC );\n    }\n    Msat_ClauseWriteActivity( pC, Activ + (float)p-\u003edClaInc );\n}",
+      "Draft": "func Msat_SolverClaBumpActivity(p *Msat_Solver_t, pC *Msat_Clause_t) {\n    var Activ float32;\n    Activ = Msat_ClauseReadActivity(pC);\n    if Activ + p.dClaInc \u003e 1e20 {\n        Msat_SolverClaRescaleActivity( p );\n        Activ = Msat_ClauseReadActivity( pC );\n    }\n    Msat_ClauseWriteActivity( pC, Activ + float32(p.dClaInc) );\n}"
+    },
+    {
+      "Name": "Msat_SolverClaDecayActivity",
+      "Start": 3460,
+      "End": 3549,
+      "BodyStart": 3514,
+      "Original": "void Msat_SolverClaDecayActivity( Msat_Solver_t * p )\n{\n    p-\u003edClaInc *= p-\u003edClaDecay;\n}",
+      "Draft": "func Msat_SolverClaDecayActivity(p *Msat_Solver_t) {\n    p.dClaInc *= p.dClaDecay;\n}"
+    },
+    {
+      "Name": "Msat_SolverClaRescaleActivity",
+      "Start": 3826,
+      "End": 4264,
+      "BodyStart": 3882,
+      "Original": "void Msat_SolverClaRescaleActivity( Msat_Solver_t * p )\n{\n    Msat_Clause_t ** pLearned;\n    int nLearned, i;\n    float Activ;\n    nLearned = Msat_ClauseVecReadSize( p-\u003evLearned );\n    pLearned = Msat_ClauseVecReadArray( p-\u003evLearned );\n    for ( i = 0; i \u003c nLearned; i++ )\n    {\n        Activ = Msat_ClauseReadActivity( pLearned[i] );\n        Msat_ClauseWriteActivity( pLearned[i], Activ * (float)1e-20 );\n    }\n    p-\u003edClaInc *= 1e-20;\n}",
+      "Draft": "func Msat_SolverClaRescaleActivity(p *Msat_Solver_t) {\n    var pLearned **Msat_Clause_t;\n    var nLearned, i int32;\n    var Activ float32;\n    nLearned = Msat_ClauseVecReadSize( p.vLearned );\n    pLearned = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = 0; i \u003c nLearned; i++  {\n        Activ = Msat_ClauseReadActivity( pLearned[i] );\n        Msat_ClauseWriteActivity( pLearned[i], Activ * float32(1e-20) );\n    }\n    p.dClaInc *= 1e-20;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatActivity.c::Msat_SolverVarBumpActivity",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverVarBumpActivity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1402,
+      "End": 1848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatActivity.c::Msat_SolverVarDecayActivity",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverVarDecayActivity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2084,
+      "End": 2206
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatActivity.c::Msat_SolverVarRescaleActivity",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverVarRescaleActivity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2482,
+      "End": 2651
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatActivity.c::Msat_SolverClaBumpActivity",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverClaBumpActivity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2887,
+      "End": 3224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatActivity.c::Msat_SolverClaDecayActivity",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverClaDecayActivity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3460,
+      "End": 3549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatActivity.c::Msat_SolverClaRescaleActivity",
+      "Category": "semantic-review",
+      "Symbol": "Msat_SolverClaRescaleActivity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3826,
+      "End": 4264
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/msat/msatActivity.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4511
+    }
+  ],
+  "Draft": "package msat\n\n/**CFile****************************************************************\n\n  FileName    [msatActivity.c]\n\n  PackageName [A C version of SAT solver MINISAT, originally developed \n  in C++ by Niklas Een and Niklas Sorensson, Chalmers University of \n  Technology, Sweden: http://www.cs.chalmers.se/~een/Satzoo.]\n\n  Synopsis    [Procedures controlling activity of variables and clauses.]\n\n  Author      [Alan Mishchenko \u003calanmi@eecs.berkeley.edu\u003e]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - January 1, 2004.]\n\n  Revision    [$Id: msatActivity.c,v 1.0 2004/01/01 1:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"msatInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverVarBumpActivity(p *Msat_Solver_t, Lit Msat_Lit_t) {\n    var Var Msat_Var_t;\n    if p.dVarDecay \u003c 0 { // (negative decay means static variable order -- don't bump)\n        return; }\n    // inlining of macro MSAT_LIT2VAR\n    Var = ((Lit)\u003e\u003e1);\n    p.pdActivity[Var] += p.dVarInc;\n//    p-\u003epdActivity[Var] += p-\u003edVarInc * p-\u003epFactors[Var];\n    if p.pdActivity[Var] \u003e 1e100 {\n        Msat_SolverVarRescaleActivity( p ); }\n    Msat_OrderUpdate( p.pOrder, Var );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverVarDecayActivity(p *Msat_Solver_t) {\n    if p.dVarDecay \u003e= 0 {\n        p.dVarInc *= p.dVarDecay; }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Divide all variable activities by 1e100.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverVarRescaleActivity(p *Msat_Solver_t) {\n    var i int32;\n    for  i = 0; i \u003c p.nVars; i++  {\n        p.pdActivity[i] *= 1e-100;\n    }\n    p.dVarInc *= 1e-100;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverClaBumpActivity(p *Msat_Solver_t, pC *Msat_Clause_t) {\n    var Activ float32;\n    Activ = Msat_ClauseReadActivity(pC);\n    if Activ + p.dClaInc \u003e 1e20 {\n        Msat_SolverClaRescaleActivity( p );\n        Activ = Msat_ClauseReadActivity( pC );\n    }\n    Msat_ClauseWriteActivity( pC, Activ + float32(p.dClaInc) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverClaDecayActivity(p *Msat_Solver_t) {\n    p.dClaInc *= p.dClaDecay;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Divide all constraint activities by 1e20.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Msat_SolverClaRescaleActivity(p *Msat_Solver_t) {\n    var pLearned **Msat_Clause_t;\n    var nLearned, i int32;\n    var Activ float32;\n    nLearned = Msat_ClauseVecReadSize( p.vLearned );\n    pLearned = Msat_ClauseVecReadArray( p.vLearned );\n    for  i = 0; i \u003c nLearned; i++  {\n        Activ = Msat_ClauseReadActivity( pLearned[i] );\n        Msat_ClauseWriteActivity( pLearned[i], Activ * float32(1e-20) );\n    }\n    p.dClaInc *= 1e-20;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

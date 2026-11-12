@@ -1,0 +1,333 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPa.c",
+  "SHA256": "ec92ee3de381c9749c2b2dee135e988c24a9204bdc920bd9f46c5469289d6a29",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1554
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Gia_ObjIsXor(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 115,
+        "Column": 13,
+        "ByteOffset": 3263
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fadd %d sum is wrong.\\n\", iBox ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 117,
+        "Column": 13,
+        "ByteOffset": 3350
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Fadd %d carry is wrong.\\n\", iBox ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 121,
+        "Column": 13,
+        "ByteOffset": 3457
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Hadd %d sum is wrong.\\n\", iBox ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 123,
+        "Column": 13,
+        "ByteOffset": 3544
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Hadd %d carry is wrong.\\n\", iBox ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 146,
+        "Column": 5,
+        "ByteOffset": 4363
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj != Gia_ManConst0(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 208,
+        "Column": 13,
+        "ByteOffset": 6967
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Carry %d participates more than once.\\n\", Carry ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 232,
+        "Column": 9,
+        "ByteOffset": 7848
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Outputs: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 13,
+        "ByteOffset": 8034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d(%d) \", Entry, Vec_BitEntry(vPhase, Entry) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 236,
+        "Column": 9,
+        "ByteOffset": 8109
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 238,
+        "Column": 9,
+        "ByteOffset": 8134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Inputs: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 240,
+        "Column": 13,
+        "ByteOffset": 8317
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d(%d) \", Entry, Vec_BitEntry(vPhase, Entry) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 243,
+        "Column": 9,
+        "ByteOffset": 8444
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"   Compl = %d\\n\", nCompls );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 275,
+        "Column": 5,
+        "ByteOffset": 9292
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Detected %d FAs and %d HAs.  Collected %d adders.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds, Vec_IntSize(vOrder) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 285,
+        "Column": 5,
+        "ByteOffset": 9684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Detected %d adder trees. \", nTrees );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Pas_ManVerifyPhaseOne_rec",
+      "Start": 1286,
+      "End": 1854,
+      "BodyStart": 1351,
+      "Original": "int Pas_ManVerifyPhaseOne_rec( Gia_Man_t * p, Gia_Obj_t * pObj )\n{\n    int Truth0, Truth1;\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return pObj-\u003eValue;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    assert( Gia_ObjIsAnd(pObj) );\n    assert( !Gia_ObjIsXor(pObj) );\n    Truth0 = Pas_ManVerifyPhaseOne_rec( p, Gia_ObjFanin0(pObj) );\n    Truth1 = Pas_ManVerifyPhaseOne_rec( p, Gia_ObjFanin1(pObj) );\n    Truth0 = Gia_ObjFaninC0(pObj) ? 0xFF \u0026 ~Truth0 : Truth0;\n    Truth1 = Gia_ObjFaninC1(pObj) ? 0xFF \u0026 ~Truth1 : Truth1;\n    return (pObj-\u003eValue = Truth0 \u0026 Truth1);\n}",
+      "Draft": "func Pas_ManVerifyPhaseOne_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    var Truth0, Truth1 int32;\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return pObj.Value; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    assert(!Gia_ObjIsXor(pObj), \"!Gia_ObjIsXor(pObj)\");\n    Truth0 = Pas_ManVerifyPhaseOne_rec( p, Gia_ObjFanin0(pObj) );\n    Truth1 = Pas_ManVerifyPhaseOne_rec( p, Gia_ObjFanin1(pObj) );\n    if Gia_ObjFaninC0(pObj) {\n        Truth0 = 0xFF \u0026 ~Truth0;\n    } else {\n        Truth0 = Truth0;\n    }\n    if Gia_ObjFaninC1(pObj) {\n        Truth1 = 0xFF \u0026 ~Truth1;\n    } else {\n        Truth1 = Truth1;\n    }\n    return (pObj.Value = Truth0 \u0026 Truth1);\n}"
+    },
+    {
+      "Name": "Pas_ManVerifyPhaseOne",
+      "Start": 1855,
+      "End": 3253,
+      "BodyStart": 1948,
+      "Original": "void Pas_ManVerifyPhaseOne( Gia_Man_t * p, Vec_Int_t * vAdds, int iBox, Vec_Bit_t * vPhase )\n{\n    Gia_Obj_t * pObj;\n    unsigned TruthXor, TruthMaj, Truths[3] = { 0xAA, 0xCC, 0xF0 };\n    int k, iObj, fFadd = Vec_IntEntry(vAdds, 6*iBox+2) \u003e 0;\n\n    if ( !fFadd )\n        return;\n\n    Gia_ManIncrementTravId( p );\n    for ( k = 0; k \u003c 3; k++ )\n    {\n        iObj = Vec_IntEntry( vAdds, 6*iBox+k );\n        if ( iObj == 0 )\n            continue;\n        pObj = Gia_ManObj( p, iObj );\n        pObj-\u003eValue = Vec_BitEntry(vPhase, iObj) ? 0xFF \u0026 ~Truths[k] : Truths[k];\n        Gia_ObjSetTravIdCurrent( p, pObj );\n    }\n\n    iObj = Vec_IntEntry( vAdds, 6*iBox+3 );\n    TruthXor = Pas_ManVerifyPhaseOne_rec( p, Gia_ManObj(p, iObj) );\n    TruthXor = Vec_BitEntry(vPhase, iObj) ? 0xFF \u0026 ~TruthXor : TruthXor;\n\n    iObj = Vec_IntEntry( vAdds, 6*iBox+4 );\n    TruthMaj = Pas_ManVerifyPhaseOne_rec( p, Gia_ManObj(p, iObj) );\n    TruthMaj = Vec_BitEntry(vPhase, iObj) ? 0xFF \u0026 ~TruthMaj : TruthMaj;\n\n    if ( fFadd ) // FADD\n    {\n        if ( TruthXor != 0x96 )\n            printf( \"Fadd %d sum is wrong.\\n\", iBox );\n        if ( TruthMaj != 0xE8 )\n            printf( \"Fadd %d carry is wrong.\\n\", iBox );\n    }\n    else\n    {\n        if ( TruthXor != 0x66 )\n            printf( \"Hadd %d sum is wrong.\\n\", iBox );\n        if ( TruthMaj != 0x88 )\n            printf( \"Hadd %d carry is wrong.\\n\", iBox );\n    }\n}",
+      "Draft": "func Pas_ManVerifyPhaseOne(p *Gia_Man_t, vAdds *Vec_Int_t, iBox int32, vPhase *Vec_Bit_t) {\n    var pObj *Gia_Obj_t;\n    var TruthXor uint32;\n    var TruthMaj uint32;\n    var Truths [3]uint32 = [3]uint32{ 0xAA, 0xCC, 0xF0 };\n    var k int32;\n    var iObj int32;\n    var fFadd int32 = Vec_IntEntry(vAdds, 6*iBox+2) \u003e 0;\n\n    if !(fFadd != 0) {\n        return; }\n\n    Gia_ManIncrementTravId( p );\n    for  k = 0; k \u003c 3; k++  {\n        iObj = Vec_IntEntry( vAdds, 6*iBox+k );\n        if iObj == 0 {\n            continue; }\n        pObj = Gia_ManObj( p, iObj );\n        if Vec_BitEntry(vPhase, iObj) {\n            pObj.Value = 0xFF \u0026 ~Truths[k];\n        } else {\n            pObj.Value = Truths[k];\n        }\n        Gia_ObjSetTravIdCurrent( p, pObj );\n    }\n\n    iObj = Vec_IntEntry( vAdds, 6*iBox+3 );\n    TruthXor = Pas_ManVerifyPhaseOne_rec( p, Gia_ManObj(p, iObj) );\n    if Vec_BitEntry(vPhase, iObj) {\n        TruthXor = 0xFF \u0026 ~TruthXor;\n    } else {\n        TruthXor = TruthXor;\n    }\n\n    iObj = Vec_IntEntry( vAdds, 6*iBox+4 );\n    TruthMaj = Pas_ManVerifyPhaseOne_rec( p, Gia_ManObj(p, iObj) );\n    if Vec_BitEntry(vPhase, iObj) {\n        TruthMaj = 0xFF \u0026 ~TruthMaj;\n    } else {\n        TruthMaj = TruthMaj;\n    }\n\n    if fFadd != 0 { // FADD\n    \n        if TruthXor != 0x96 {\n            fmt.Printf(\"Fadd %d sum is wrong.\\n\", iBox); }\n        if TruthMaj != 0xE8 {\n            fmt.Printf(\"Fadd %d carry is wrong.\\n\", iBox); }\n    \n    } else {\n        if TruthXor != 0x66 {\n            fmt.Printf(\"Hadd %d sum is wrong.\\n\", iBox); }\n        if TruthMaj != 0x88 {\n            fmt.Printf(\"Hadd %d carry is wrong.\\n\", iBox); }\n    }\n}"
+    },
+    {
+      "Name": "Pas_ManVerifyPhase",
+      "Start": 3254,
+      "End": 3474,
+      "BodyStart": 3354,
+      "Original": "void Pas_ManVerifyPhase( Gia_Man_t * p, Vec_Int_t * vAdds, Vec_Int_t * vOrder, Vec_Bit_t * vPhase )\n{\n    int k, iBox;\n    Vec_IntForEachEntry( vOrder, iBox, k )\n        Pas_ManVerifyPhaseOne( p, vAdds, iBox, vPhase );\n}",
+      "Draft": "func Pas_ManVerifyPhase(p *Gia_Man_t, vAdds *Vec_Int_t, vOrder *Vec_Int_t, vPhase *Vec_Bit_t) {\n    var k, iBox int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vOrder)) \u0026\u0026 (((iBox) = Vec_IntEntry(vOrder, k)), 1); k++  {\n        Pas_ManVerifyPhaseOne( p, vAdds, iBox, vPhase );\n    }\n}"
+    },
+    {
+      "Name": "Pas_ManPhase_rec",
+      "Start": 3710,
+      "End": 4901,
+      "BodyStart": 3861,
+      "Original": "void Pas_ManPhase_rec( Gia_Man_t * p, Vec_Int_t * vAdds, Vec_Int_t * vMap, Gia_Obj_t * pObj, int fPhase, Vec_Bit_t * vPhase, Vec_Bit_t * vConstPhase )\n{\n    int k, iBox, iXor, Sign, fXorPhase;\n    assert( pObj != Gia_ManConst0(p) );\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if ( fPhase )\n        Vec_BitWriteEntry( vPhase, Gia_ObjId(p, pObj), fPhase );\n    if ( !Gia_ObjIsAnd(pObj) )\n        return;\n    iBox = Vec_IntEntry( vMap, Gia_ObjId(p, pObj) );\n    if ( iBox == -1 )\n        return;\n    iXor = Vec_IntEntry( vAdds, 6*iBox+3 );\n    Sign = Vec_IntEntry( vAdds, 6*iBox+5 );\n    fXorPhase = ((Sign \u003e\u003e 3) \u0026 1);\n    // remember complemented HADD\n    if ( Vec_IntEntry(vAdds, 6*iBox+2) == 0 \u0026\u0026 fPhase )\n        Vec_BitWriteEntry( vConstPhase, iBox, 1 );\n    for ( k = 0; k \u003c 3; k++ )\n    {\n        int iObj = Vec_IntEntry( vAdds, 6*iBox+k );\n        int fPhaseThis = ((Sign \u003e\u003e k) \u0026 1) ^ fPhase;\n        fXorPhase ^= fPhaseThis;\n        if ( iObj == 0 )\n            continue;\n        Pas_ManPhase_rec( p, vAdds, vMap, Gia_ManObj(p, iObj), fPhaseThis, vPhase, vConstPhase );\n    }\n    Vec_BitWriteEntry( vPhase, iXor, fXorPhase );\n}",
+      "Draft": "func Pas_ManPhase_rec(p *Gia_Man_t, vAdds *Vec_Int_t, vMap *Vec_Int_t, pObj *Gia_Obj_t, fPhase int32, vPhase *Vec_Bit_t, vConstPhase *Vec_Bit_t) {\n    var k, iBox, iXor, Sign, fXorPhase int32;\n    assert(pObj != Gia_ManConst0(p), \"pObj != Gia_ManConst0(p)\");\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if fPhase != 0 {\n        Vec_BitWriteEntry( vPhase, Gia_ObjId(p, pObj), fPhase ); }\n    if !Gia_ObjIsAnd(pObj) {\n        return; }\n    iBox = Vec_IntEntry( vMap, Gia_ObjId(p, pObj) );\n    if iBox == -1 {\n        return; }\n    iXor = Vec_IntEntry( vAdds, 6*iBox+3 );\n    Sign = Vec_IntEntry( vAdds, 6*iBox+5 );\n    fXorPhase = ((Sign \u003e\u003e 3) \u0026 1);\n    // remember complemented HADD\n    if Vec_IntEntry(vAdds, 6*iBox+2) == 0 \u0026\u0026 (fPhase != 0) {\n        Vec_BitWriteEntry( vConstPhase, iBox, 1 ); }\n    for  k = 0; k \u003c 3; k++  {\n        var iObj int32  = Vec_IntEntry( vAdds, 6*iBox+k );\n        var fPhaseThis int32  = ((Sign \u003e\u003e k) \u0026 1) ^ fPhase;\n        fXorPhase ^= fPhaseThis;\n        if iObj == 0 {\n            continue; }\n        Pas_ManPhase_rec( p, vAdds, vMap, Gia_ManObj(p, iObj), fPhaseThis, vPhase, vConstPhase );\n    }\n    Vec_BitWriteEntry( vPhase, iXor, fXorPhase );\n}"
+    },
+    {
+      "Name": "Pas_ManPhase",
+      "Start": 4902,
+      "End": 5396,
+      "BodyStart": 5028,
+      "Original": "Vec_Bit_t * Pas_ManPhase( Gia_Man_t * p, Vec_Int_t * vAdds, Vec_Int_t * vMap, Vec_Int_t * vRoots, Vec_Bit_t ** pvConstPhase )\n{\n    Vec_Bit_t * vPhase = Vec_BitStart( Vec_IntSize(vMap) );\n    Vec_Bit_t * vConstPhase = Vec_BitStart( Vec_IntSize(vAdds)/6 );\n    int i, iRoot;\n    Gia_ManIncrementTravId( p );\n    Vec_IntForEachEntry( vRoots, iRoot, i )\n        Pas_ManPhase_rec( p, vAdds, vMap, Gia_ManObj(p, iRoot), 1, vPhase, vConstPhase );\n    *pvConstPhase = vConstPhase;\n    return vPhase;\n}",
+      "Draft": "func Pas_ManPhase(p *Gia_Man_t, vAdds *Vec_Int_t, vMap *Vec_Int_t, vRoots *Vec_Int_t, pvConstPhase **Vec_Bit_t) *Vec_Bit_t {\n    var vPhase *Vec_Bit_t  = Vec_BitStart( Vec_IntSize(vMap) );\n    var vConstPhase *Vec_Bit_t  = Vec_BitStart( Vec_IntSize(vAdds)/6 );\n    var i, iRoot int32;\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 (((iRoot) = Vec_IntEntry(vRoots, i)), 1); i++  {\n        Pas_ManPhase_rec( p, vAdds, vMap, Gia_ManObj(p, iRoot), 1, vPhase, vConstPhase );\n    }\n    *pvConstPhase = vConstPhase;\n    return vPhase;\n}"
+    },
+    {
+      "Name": "Pas_ManComputeCuts",
+      "Start": 5632,
+      "End": 7765,
+      "BodyStart": 5748,
+      "Original": "int Pas_ManComputeCuts( Gia_Man_t * p, Vec_Int_t * vAdds, Vec_Int_t * vOrder, Vec_Int_t * vIns, Vec_Int_t * vOuts )\n{\n    Vec_Bit_t * vUnique = Vec_BitStart( Gia_ManObjNum(p) );\n    Vec_Bit_t * vUsed = Vec_BitStart( Gia_ManObjNum(p) );\n    Vec_Int_t * vMap = Vec_IntStartFull( Gia_ManObjNum(p) );\n    Vec_Int_t * vRoots = Vec_IntAlloc( 100 );\n    Vec_Bit_t * vPhase, * vConstPhase;\n    int i, k, Entry, nTrees;\n\n    // map carries into adder indexes and mark driven nodes\n    Vec_IntForEachEntry( vOrder, i, k )\n    {\n        int Carry = Vec_IntEntry(vAdds, 6*i+4);\n        if ( Vec_BitEntry(vUnique, Carry) )\n            printf( \"Carry %d participates more than once.\\n\", Carry );\n        Vec_BitWriteEntry( vUnique, Carry, 1 );\n        Vec_IntWriteEntry( vMap, Carry, i );\n        // mark driven \n        Vec_BitWriteEntry( vUsed, Vec_IntEntry(vAdds, 6*i+0), 1 );\n        Vec_BitWriteEntry( vUsed, Vec_IntEntry(vAdds, 6*i+1), 1 );\n        Vec_BitWriteEntry( vUsed, Vec_IntEntry(vAdds, 6*i+2), 1 );\n    }\n    // collect carries that do not drive other adders\n    for ( i = 0; i \u003c Gia_ManObjNum(p); i++ )\n        if ( Vec_BitEntry(vUnique, i) \u0026\u0026 !Vec_BitEntry(vUsed, i) )\n            Vec_IntPush( vRoots, i );\n    nTrees = Vec_IntSize( vRoots );\n\n    Vec_IntPrint( vRoots );\n\n    // compute phases\n    if ( Vec_IntSize(vRoots) \u003e 0 )\n    {\n        int nCompls = 0;\n\n        vPhase = Pas_ManPhase( p, vAdds, vMap, vRoots, \u0026vConstPhase );\n        Pas_ManVerifyPhase( p, vAdds, vOrder, vPhase );\n\n        printf( \"Outputs: \" );\n        Vec_IntForEachEntry( vOuts, Entry, i )\n            printf( \"%d(%d) \", Entry, Vec_BitEntry(vPhase, Entry) );\n        printf( \"\\n\" );\n\n        printf( \"Inputs: \" );\n        Vec_IntForEachEntry( vIns, Entry, i )\n        {\n            printf( \"%d(%d) \", Entry, Vec_BitEntry(vPhase, Entry) );\n            nCompls += Vec_BitEntry(vPhase, Entry);\n        }\n        printf( \"   Compl = %d\\n\", nCompls );\n\n        Vec_BitFreeP( \u0026vPhase );\n        Vec_BitFreeP( \u0026vConstPhase );\n    }\n\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vMap );\n    Vec_BitFree( vUnique );\n    Vec_BitFree( vUsed );\n    return nTrees;\n}",
+      "Draft": "func Pas_ManComputeCuts(p *Gia_Man_t, vAdds *Vec_Int_t, vOrder *Vec_Int_t, vIns *Vec_Int_t, vOuts *Vec_Int_t) int32 {\n    var vUnique *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n    var vUsed *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n    var vMap *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );\n    var vRoots *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vPhase, vConstPhase *Vec_Bit_t;\n    var i, k, Entry, nTrees int32;\n\n    // map carries into adder indexes and mark driven nodes\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vOrder)) \u0026\u0026 (((i) = Vec_IntEntry(vOrder, k)), 1); k++  {\n        var Carry int32  = Vec_IntEntry(vAdds, 6*i+4);\n        if Vec_BitEntry(vUnique, Carry) {\n            fmt.Printf(\"Carry %d participates more than once.\\n\", Carry); }\n        Vec_BitWriteEntry( vUnique, Carry, 1 );\n        Vec_IntWriteEntry( vMap, Carry, i );\n        // mark driven \n        Vec_BitWriteEntry( vUsed, Vec_IntEntry(vAdds, 6*i+0), 1 );\n        Vec_BitWriteEntry( vUsed, Vec_IntEntry(vAdds, 6*i+1), 1 );\n        Vec_BitWriteEntry( vUsed, Vec_IntEntry(vAdds, 6*i+2), 1 );\n    }\n    // collect carries that do not drive other adders\n    for  i = 0; i \u003c Gia_ManObjNum(p); i++  {\n        if Vec_BitEntry(vUnique, i) \u0026\u0026 !Vec_BitEntry(vUsed, i) {\n            Vec_IntPush( vRoots, i ); }\n    }\n    nTrees = Vec_IntSize( vRoots );\n\n    Vec_IntPrint( vRoots );\n\n    // compute phases\n    if Vec_IntSize(vRoots) \u003e 0 {\n        var nCompls int32;\n\n        vPhase = Pas_ManPhase( p, vAdds, vMap, vRoots, \u0026vConstPhase );\n        Pas_ManVerifyPhase( p, vAdds, vOrder, vPhase );\n\n        fmt.Printf(\"Outputs: \");\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vOuts)) \u0026\u0026 (((Entry) = Vec_IntEntry(vOuts, i)), 1); i++  {\n            fmt.Printf(\"%d(%d) \", Entry, Vec_BitEntry(vPhase, Entry));\n        }\n        fmt.Printf(\"\\n\");\n\n        fmt.Printf(\"Inputs: \");\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vIns)) \u0026\u0026 (((Entry) = Vec_IntEntry(vIns, i)), 1); i++  {\n            fmt.Printf(\"%d(%d) \", Entry, Vec_BitEntry(vPhase, Entry));\n            nCompls += Vec_BitEntry(vPhase, Entry);\n        }\n        fmt.Printf(\"   Compl = %d\\n\", nCompls);\n\n        Vec_BitFreeP( \u0026vPhase );\n        Vec_BitFreeP( \u0026vConstPhase );\n    }\n\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vMap );\n    Vec_BitFree( vUnique );\n    Vec_BitFree( vUsed );\n    return nTrees;\n}"
+    },
+    {
+      "Name": "Pas_ManComputeCutsTest",
+      "Start": 8001,
+      "End": 8832,
+      "BodyStart": 8046,
+      "Original": "void Pas_ManComputeCutsTest( Gia_Man_t * p )\n{\n    abctime clk = Abc_Clock();\n    Vec_Int_t * vAdds = Ree_ManComputeCuts( p, NULL, 1 );\n    Vec_Int_t * vIns, * vOuts;\n    Vec_Int_t * vOrder = Gia_PolynCoreOrder( p, vAdds, NULL, \u0026vIns, \u0026vOuts );\n    int nTrees, nFadds = Ree_ManCountFadds( vAdds );\n    //Ree_ManPrintAdders( vAdds, 1 );\n    printf( \"Detected %d FAs and %d HAs.  Collected %d adders.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds, Vec_IntSize(vOrder) );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // detect trees\n    clk = Abc_Clock();\n    nTrees = Pas_ManComputeCuts( p, vAdds, vOrder, vIns, vOuts );\n    Vec_IntFree( vAdds );\n    Vec_IntFree( vOrder );\n    Vec_IntFree( vIns );\n    Vec_IntFree( vOuts );\n\n    printf( \"Detected %d adder trees. \", nTrees );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}",
+      "Draft": "func Pas_ManComputeCutsTest(p *Gia_Man_t) {\n    var clk abctime  = Abc_Clock();\n    var vAdds *Vec_Int_t  = Ree_ManComputeCuts( p, nil, 1 );\n    var vIns, vOuts *Vec_Int_t;\n    var vOrder *Vec_Int_t  = Gia_PolynCoreOrder( p, vAdds, nil, \u0026vIns, \u0026vOuts );\n    var nTrees int32;\n    var nFadds int32 = Ree_ManCountFadds( vAdds );\n    //Ree_ManPrintAdders( vAdds, 1 );\n    fmt.Printf(\"Detected %d FAs and %d HAs.  Collected %d adders.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds, Vec_IntSize(vOrder));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // detect trees\n    clk = Abc_Clock();\n    nTrees = Pas_ManComputeCuts( p, vAdds, vOrder, vIns, vOuts );\n    Vec_IntFree( vAdds );\n    Vec_IntFree( vOrder );\n    Vec_IntFree( vIns );\n    Vec_IntFree( vOuts );\n\n    fmt.Printf(\"Detected %d adder trees. \", nTrees);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPa.c::Pas_ManVerifyPhaseOne_rec",
+      "Category": "semantic-review",
+      "Symbol": "Pas_ManVerifyPhaseOne_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1286,
+      "End": 1854
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPa.c::Pas_ManVerifyPhaseOne",
+      "Category": "semantic-review",
+      "Symbol": "Pas_ManVerifyPhaseOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1855,
+      "End": 3253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPa.c::Pas_ManVerifyPhase",
+      "Category": "semantic-review",
+      "Symbol": "Pas_ManVerifyPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3254,
+      "End": 3474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPa.c::Pas_ManPhase_rec",
+      "Category": "semantic-review",
+      "Symbol": "Pas_ManPhase_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3710,
+      "End": 4901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPa.c::Pas_ManPhase",
+      "Category": "semantic-review",
+      "Symbol": "Pas_ManPhase",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4902,
+      "End": 5396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPa.c::Pas_ManComputeCuts",
+      "Category": "semantic-review",
+      "Symbol": "Pas_ManComputeCuts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5632,
+      "End": 7765
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPa.c::Pas_ManComputeCutsTest",
+      "Category": "semantic-review",
+      "Symbol": "Pas_ManComputeCutsTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8001,
+      "End": 8832
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecPa.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9079
+    }
+  ],
+  "Draft": "package acec\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [acecPa.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CEC for arithmetic circuits.]\n\n  Synopsis    [Core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: acecPa.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"acecInt.h\"\n//#include \"misc/vec/vecWec.h\"\n//#include \"misc/extra/extra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pas_ManVerifyPhaseOne_rec(p *Gia_Man_t, pObj *Gia_Obj_t) int32 {\n    var Truth0, Truth1 int32;\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return pObj.Value; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    assert(!Gia_ObjIsXor(pObj), \"!Gia_ObjIsXor(pObj)\");\n    Truth0 = Pas_ManVerifyPhaseOne_rec( p, Gia_ObjFanin0(pObj) );\n    Truth1 = Pas_ManVerifyPhaseOne_rec( p, Gia_ObjFanin1(pObj) );\n    if Gia_ObjFaninC0(pObj) {\n        Truth0 = 0xFF \u0026 ~Truth0;\n    } else {\n        Truth0 = Truth0;\n    }\n    if Gia_ObjFaninC1(pObj) {\n        Truth1 = 0xFF \u0026 ~Truth1;\n    } else {\n        Truth1 = Truth1;\n    }\n    return (pObj.Value = Truth0 \u0026 Truth1);\n}\nfunc Pas_ManVerifyPhaseOne(p *Gia_Man_t, vAdds *Vec_Int_t, iBox int32, vPhase *Vec_Bit_t) {\n    var pObj *Gia_Obj_t;\n    var TruthXor uint32;\n    var TruthMaj uint32;\n    var Truths [3]uint32 = [3]uint32{ 0xAA, 0xCC, 0xF0 };\n    var k int32;\n    var iObj int32;\n    var fFadd int32 = Vec_IntEntry(vAdds, 6*iBox+2) \u003e 0;\n\n    if !(fFadd != 0) {\n        return; }\n\n    Gia_ManIncrementTravId( p );\n    for  k = 0; k \u003c 3; k++  {\n        iObj = Vec_IntEntry( vAdds, 6*iBox+k );\n        if iObj == 0 {\n            continue; }\n        pObj = Gia_ManObj( p, iObj );\n        if Vec_BitEntry(vPhase, iObj) {\n            pObj.Value = 0xFF \u0026 ~Truths[k];\n        } else {\n            pObj.Value = Truths[k];\n        }\n        Gia_ObjSetTravIdCurrent( p, pObj );\n    }\n\n    iObj = Vec_IntEntry( vAdds, 6*iBox+3 );\n    TruthXor = Pas_ManVerifyPhaseOne_rec( p, Gia_ManObj(p, iObj) );\n    if Vec_BitEntry(vPhase, iObj) {\n        TruthXor = 0xFF \u0026 ~TruthXor;\n    } else {\n        TruthXor = TruthXor;\n    }\n\n    iObj = Vec_IntEntry( vAdds, 6*iBox+4 );\n    TruthMaj = Pas_ManVerifyPhaseOne_rec( p, Gia_ManObj(p, iObj) );\n    if Vec_BitEntry(vPhase, iObj) {\n        TruthMaj = 0xFF \u0026 ~TruthMaj;\n    } else {\n        TruthMaj = TruthMaj;\n    }\n\n    if fFadd != 0 { // FADD\n    \n        if TruthXor != 0x96 {\n            fmt.Printf(\"Fadd %d sum is wrong.\\n\", iBox); }\n        if TruthMaj != 0xE8 {\n            fmt.Printf(\"Fadd %d carry is wrong.\\n\", iBox); }\n    \n    } else {\n        if TruthXor != 0x66 {\n            fmt.Printf(\"Hadd %d sum is wrong.\\n\", iBox); }\n        if TruthMaj != 0x88 {\n            fmt.Printf(\"Hadd %d carry is wrong.\\n\", iBox); }\n    }\n}\nfunc Pas_ManVerifyPhase(p *Gia_Man_t, vAdds *Vec_Int_t, vOrder *Vec_Int_t, vPhase *Vec_Bit_t) {\n    var k, iBox int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vOrder)) \u0026\u0026 (((iBox) = Vec_IntEntry(vOrder, k)), 1); k++  {\n        Pas_ManVerifyPhaseOne( p, vAdds, iBox, vPhase );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pas_ManPhase_rec(p *Gia_Man_t, vAdds *Vec_Int_t, vMap *Vec_Int_t, pObj *Gia_Obj_t, fPhase int32, vPhase *Vec_Bit_t, vConstPhase *Vec_Bit_t) {\n    var k, iBox, iXor, Sign, fXorPhase int32;\n    assert(pObj != Gia_ManConst0(p), \"pObj != Gia_ManConst0(p)\");\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if fPhase != 0 {\n        Vec_BitWriteEntry( vPhase, Gia_ObjId(p, pObj), fPhase ); }\n    if !Gia_ObjIsAnd(pObj) {\n        return; }\n    iBox = Vec_IntEntry( vMap, Gia_ObjId(p, pObj) );\n    if iBox == -1 {\n        return; }\n    iXor = Vec_IntEntry( vAdds, 6*iBox+3 );\n    Sign = Vec_IntEntry( vAdds, 6*iBox+5 );\n    fXorPhase = ((Sign \u003e\u003e 3) \u0026 1);\n    // remember complemented HADD\n    if Vec_IntEntry(vAdds, 6*iBox+2) == 0 \u0026\u0026 (fPhase != 0) {\n        Vec_BitWriteEntry( vConstPhase, iBox, 1 ); }\n    for  k = 0; k \u003c 3; k++  {\n        var iObj int32  = Vec_IntEntry( vAdds, 6*iBox+k );\n        var fPhaseThis int32  = ((Sign \u003e\u003e k) \u0026 1) ^ fPhase;\n        fXorPhase ^= fPhaseThis;\n        if iObj == 0 {\n            continue; }\n        Pas_ManPhase_rec( p, vAdds, vMap, Gia_ManObj(p, iObj), fPhaseThis, vPhase, vConstPhase );\n    }\n    Vec_BitWriteEntry( vPhase, iXor, fXorPhase );\n}\nfunc Pas_ManPhase(p *Gia_Man_t, vAdds *Vec_Int_t, vMap *Vec_Int_t, vRoots *Vec_Int_t, pvConstPhase **Vec_Bit_t) *Vec_Bit_t {\n    var vPhase *Vec_Bit_t  = Vec_BitStart( Vec_IntSize(vMap) );\n    var vConstPhase *Vec_Bit_t  = Vec_BitStart( Vec_IntSize(vAdds)/6 );\n    var i, iRoot int32;\n    Gia_ManIncrementTravId( p );\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vRoots)) \u0026\u0026 (((iRoot) = Vec_IntEntry(vRoots, i)), 1); i++  {\n        Pas_ManPhase_rec( p, vAdds, vMap, Gia_ManObj(p, iRoot), 1, vPhase, vConstPhase );\n    }\n    *pvConstPhase = vConstPhase;\n    return vPhase;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pas_ManComputeCuts(p *Gia_Man_t, vAdds *Vec_Int_t, vOrder *Vec_Int_t, vIns *Vec_Int_t, vOuts *Vec_Int_t) int32 {\n    var vUnique *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n    var vUsed *Vec_Bit_t  = Vec_BitStart( Gia_ManObjNum(p) );\n    var vMap *Vec_Int_t  = Vec_IntStartFull( Gia_ManObjNum(p) );\n    var vRoots *Vec_Int_t  = Vec_IntAlloc( 100 );\n    var vPhase, vConstPhase *Vec_Bit_t;\n    var i, k, Entry, nTrees int32;\n\n    // map carries into adder indexes and mark driven nodes\n    // inlining of macro Vec_IntForEachEntry\n    for  k = 0; (k \u003c Vec_IntSize(vOrder)) \u0026\u0026 (((i) = Vec_IntEntry(vOrder, k)), 1); k++  {\n        var Carry int32  = Vec_IntEntry(vAdds, 6*i+4);\n        if Vec_BitEntry(vUnique, Carry) {\n            fmt.Printf(\"Carry %d participates more than once.\\n\", Carry); }\n        Vec_BitWriteEntry( vUnique, Carry, 1 );\n        Vec_IntWriteEntry( vMap, Carry, i );\n        // mark driven \n        Vec_BitWriteEntry( vUsed, Vec_IntEntry(vAdds, 6*i+0), 1 );\n        Vec_BitWriteEntry( vUsed, Vec_IntEntry(vAdds, 6*i+1), 1 );\n        Vec_BitWriteEntry( vUsed, Vec_IntEntry(vAdds, 6*i+2), 1 );\n    }\n    // collect carries that do not drive other adders\n    for  i = 0; i \u003c Gia_ManObjNum(p); i++  {\n        if Vec_BitEntry(vUnique, i) \u0026\u0026 !Vec_BitEntry(vUsed, i) {\n            Vec_IntPush( vRoots, i ); }\n    }\n    nTrees = Vec_IntSize( vRoots );\n\n    Vec_IntPrint( vRoots );\n\n    // compute phases\n    if Vec_IntSize(vRoots) \u003e 0 {\n        var nCompls int32;\n\n        vPhase = Pas_ManPhase( p, vAdds, vMap, vRoots, \u0026vConstPhase );\n        Pas_ManVerifyPhase( p, vAdds, vOrder, vPhase );\n\n        fmt.Printf(\"Outputs: \");\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vOuts)) \u0026\u0026 (((Entry) = Vec_IntEntry(vOuts, i)), 1); i++  {\n            fmt.Printf(\"%d(%d) \", Entry, Vec_BitEntry(vPhase, Entry));\n        }\n        fmt.Printf(\"\\n\");\n\n        fmt.Printf(\"Inputs: \");\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vIns)) \u0026\u0026 (((Entry) = Vec_IntEntry(vIns, i)), 1); i++  {\n            fmt.Printf(\"%d(%d) \", Entry, Vec_BitEntry(vPhase, Entry));\n            nCompls += Vec_BitEntry(vPhase, Entry);\n        }\n        fmt.Printf(\"   Compl = %d\\n\", nCompls);\n\n        Vec_BitFreeP( \u0026vPhase );\n        Vec_BitFreeP( \u0026vConstPhase );\n    }\n\n    Vec_IntFree( vRoots );\n    Vec_IntFree( vMap );\n    Vec_BitFree( vUnique );\n    Vec_BitFree( vUsed );\n    return nTrees;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Pas_ManComputeCutsTest(p *Gia_Man_t) {\n    var clk abctime  = Abc_Clock();\n    var vAdds *Vec_Int_t  = Ree_ManComputeCuts( p, nil, 1 );\n    var vIns, vOuts *Vec_Int_t;\n    var vOrder *Vec_Int_t  = Gia_PolynCoreOrder( p, vAdds, nil, \u0026vIns, \u0026vOuts );\n    var nTrees int32;\n    var nFadds int32 = Ree_ManCountFadds( vAdds );\n    //Ree_ManPrintAdders( vAdds, 1 );\n    fmt.Printf(\"Detected %d FAs and %d HAs.  Collected %d adders.  \", nFadds, Vec_IntSize(vAdds)/6-nFadds, Vec_IntSize(vOrder));\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    // detect trees\n    clk = Abc_Clock();\n    nTrees = Pas_ManComputeCuts( p, vAdds, vOrder, vIns, vOuts );\n    Vec_IntFree( vAdds );\n    Vec_IntFree( vOrder );\n    Vec_IntFree( vIns );\n    Vec_IntFree( vOuts );\n\n    fmt.Printf(\"Detected %d adder trees. \", nTrees);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

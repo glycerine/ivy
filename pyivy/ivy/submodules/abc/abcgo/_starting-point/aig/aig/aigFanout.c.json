@@ -1,0 +1,518 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c",
+  "SHA256": "d4b4f448b0f4cb8e3d6b7ef9a52379c3873030400d784b516be78994cb70b3da",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 38,
+        "Column": 55,
+        "ByteOffset": 921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "func Aig_FanoutCreate(FanId int32, Num int32) int32 { assert( Num \u003c 2 ); return (FanId \u003c\u003c 1) | Num;   } "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 1873
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Aig_ManBufNum(p) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 63,
+        "Column": 5,
+        "ByteOffset": 1947
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFanData == nil );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 67,
+        "Column": 72,
+        "ByteOffset": 2157
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pFanData = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)(5 * p.nFansAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 2212
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p.pFanData, 0, sizeof(int) * 5 * p.nFansAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 91,
+        "Column": 5,
+        "ByteOffset": 3079
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFanData != nil );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 92,
+        "Column": 66,
+        "ByteOffset": 3173
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p.pFanData) ? (free((char *) (p.pFanData)), (p.pFanData) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 114,
+        "Column": 5,
+        "ByteOffset": 3734
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFanData );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 115,
+        "Column": 5,
+        "ByteOffset": 3760
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) \u0026\u0026 !Aig_IsComplement(pFanout) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 116,
+        "Column": 5,
+        "ByteOffset": 3829
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFanout.Id \u003e 0 );"
+    },
+    {
+      "Name": "realloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 121,
+        "Column": 35,
+        "ByteOffset": 4104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pFanData = ((int *) realloc((char *)(p.pFanData), sizeof(int) * (size_t)(5 * nFansAlloc)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 123,
+        "Column": 35,
+        "ByteOffset": 4227
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            p.pFanData = ((int *) malloc(sizeof(int) * (size_t)(5 * nFansAlloc)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 125,
+        "Column": 9,
+        "ByteOffset": 4294
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( p.pFanData + 5 * p.nFansAlloc, 0, sizeof(int) * 5 * (nFansAlloc - p.nFansAlloc) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 128,
+        "Column": 5,
+        "ByteOffset": 4430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pObj.Id \u003c p.nFansAlloc \u0026\u0026 pFanout.Id \u003c p.nFansAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 141,
+        "Column": 9,
+        "ByteOffset": 4949
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( *pNext == *pFirst );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 167,
+        "Column": 5,
+        "ByteOffset": 5577
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pFanData \u0026\u0026 pObj.Id \u003c p.nFansAlloc \u0026\u0026 pFanout.Id \u003c p.nFansAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 168,
+        "Column": 5,
+        "ByteOffset": 5658
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Aig_IsComplement(pObj) \u0026\u0026 !Aig_IsComplement(pFanout) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 169,
+        "Column": 5,
+        "ByteOffset": 5727
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pFanout.Id \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 5,
+        "ByteOffset": 6037
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pPrev == iFan );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 176,
+        "Column": 5,
+        "ByteOffset": 6067
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pNext == iFan );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 178,
+        "Column": 5,
+        "ByteOffset": 6148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( *pFirst \u003e 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_FanoutCreate",
+      "Start": 850,
+      "End": 963,
+      "BodyStart": 912,
+      "Original": "static inline int   Aig_FanoutCreate( int FanId, int Num )    { assert( Num \u003c 2 ); return (FanId \u003c\u003c 1) | Num;   }",
+      "Draft": "func Aig_FanoutCreate(FanId int32, Num int32) int32 { assert(Num \u003c 2, \"Num \u003c 2\"); return (FanId \u003c\u003c 1) | Num;   }"
+    },
+    {
+      "Name": "Aig_FanoutObj",
+      "Start": 965,
+      "End": 1078,
+      "BodyStart": 1027,
+      "Original": "static inline int * Aig_FanoutObj( int * pData, int ObjId )   { return pData + 5*ObjId;                         }",
+      "Draft": "func Aig_FanoutObj(pData *int32, ObjId int32) *int32 { return pData + 5*ObjId;                         }"
+    },
+    {
+      "Name": "Aig_FanoutPrev",
+      "Start": 1079,
+      "End": 1192,
+      "BodyStart": 1141,
+      "Original": "static inline int * Aig_FanoutPrev( int * pData, int iFan )   { return pData + 5*(iFan \u003e\u003e 1) + 1 + (iFan \u0026 1);  }",
+      "Draft": "func Aig_FanoutPrev(pData *int32, iFan int32) *int32 { return pData + 5*(iFan \u003e\u003e 1) + 1 + (iFan \u0026 1);  }"
+    },
+    {
+      "Name": "Aig_FanoutNext",
+      "Start": 1193,
+      "End": 1306,
+      "BodyStart": 1255,
+      "Original": "static inline int * Aig_FanoutNext( int * pData, int iFan )   { return pData + 5*(iFan \u003e\u003e 1) + 3 + (iFan \u0026 1);  }",
+      "Draft": "func Aig_FanoutNext(pData *int32, iFan int32) *int32 { return pData + 5*(iFan \u003e\u003e 1) + 3 + (iFan \u0026 1);  }"
+    },
+    {
+      "Name": "Aig_ManFanoutStart",
+      "Start": 1807,
+      "End": 2501,
+      "BodyStart": 1848,
+      "Original": "void Aig_ManFanoutStart( Aig_Man_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i;\n    assert( Aig_ManBufNum(p) == 0 );\n    // allocate fanout datastructure\n    assert( p-\u003epFanData == NULL );\n    p-\u003enFansAlloc = 2 * Aig_ManObjNumMax(p);\n    if ( p-\u003enFansAlloc \u003c (1\u003c\u003c12) )\n        p-\u003enFansAlloc = (1\u003c\u003c12);\n    p-\u003epFanData = ABC_ALLOC( int, 5 * p-\u003enFansAlloc );\n    memset( p-\u003epFanData, 0, sizeof(int) * 5 * p-\u003enFansAlloc );\n    // add fanouts for all objects\n    Aig_ManForEachObj( p, pObj, i )\n    {\n        if ( Aig_ObjChild0(pObj) )\n            Aig_ObjAddFanout( p, Aig_ObjFanin0(pObj), pObj );\n        if ( Aig_ObjChild1(pObj) )\n            Aig_ObjAddFanout( p, Aig_ObjFanin1(pObj), pObj );\n    }\n}",
+      "Draft": "func Aig_ManFanoutStart(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManBufNum(p) == 0, \"Aig_ManBufNum(p) == 0\");\n    // allocate fanout datastructure\n    assert(p.pFanData == nil, \"p.pFanData == nil\");\n    p.nFansAlloc = 2 * Aig_ManObjNumMax(p);\n    if p.nFansAlloc \u003c (1\u003c\u003c12) {\n        p.nFansAlloc = (1\u003c\u003c12); }\n    // inlining of macro ABC_ALLOC\n    p.pFanData = ((int *) malloc(sizeof(int) * (size_t)(5 * p.nFansAlloc)));\n    memset( p.pFanData, 0, sizeof(int) * 5 * p.nFansAlloc );\n    // add fanouts for all objects\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjChild0(pObj) {\n            Aig_ObjAddFanout( p, Aig_ObjFanin0(pObj), pObj ); }\n        if Aig_ObjChild1(pObj) {\n            Aig_ObjAddFanout( p, Aig_ObjFanin1(pObj), pObj ); }\n    }\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManFanoutStop",
+      "Start": 2783,
+      "End": 2913,
+      "BodyStart": 2823,
+      "Original": "void Aig_ManFanoutStop( Aig_Man_t * p )\n{\n    assert( p-\u003epFanData != NULL );\n    ABC_FREE( p-\u003epFanData );\n    p-\u003enFansAlloc = 0;\n}",
+      "Draft": "func Aig_ManFanoutStop(p *Aig_Man_t) {\n    assert(p.pFanData != nil, \"p.pFanData != nil\");\n    // inlining of macro ABC_FREE\n    ((p.pFanData) ? (free((char *) (p.pFanData)), (p.pFanData) = 0) : 0);\n    p.nFansAlloc = 0;\n}"
+    },
+    {
+      "Name": "Aig_ObjAddFanout",
+      "Start": 3186,
+      "End": 4494,
+      "BodyStart": 3264,
+      "Original": "void Aig_ObjAddFanout( Aig_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pFanout )\n{\n    int iFan, * pFirst, * pPrevC, * pNextC, * pPrev, * pNext;\n    assert( p-\u003epFanData );\n    assert( !Aig_IsComplement(pObj) \u0026\u0026 !Aig_IsComplement(pFanout) );\n    assert( pFanout-\u003eId \u003e 0 );\n    if ( pObj-\u003eId \u003e= p-\u003enFansAlloc || pFanout-\u003eId \u003e= p-\u003enFansAlloc )\n    {\n        int nFansAlloc = 2 * Abc_MaxInt( pObj-\u003eId, pFanout-\u003eId ); \n        p-\u003epFanData = ABC_REALLOC( int, p-\u003epFanData, 5 * nFansAlloc );\n        memset( p-\u003epFanData + 5 * p-\u003enFansAlloc, 0, sizeof(int) * 5 * (nFansAlloc - p-\u003enFansAlloc) );\n        p-\u003enFansAlloc = nFansAlloc;\n    }\n    assert( pObj-\u003eId \u003c p-\u003enFansAlloc \u0026\u0026 pFanout-\u003eId \u003c p-\u003enFansAlloc );\n    iFan   = Aig_FanoutCreate( pFanout-\u003eId, Aig_ObjWhatFanin(pFanout, pObj) );\n    pPrevC = Aig_FanoutPrev( p-\u003epFanData, iFan );\n    pNextC = Aig_FanoutNext( p-\u003epFanData, iFan );\n    pFirst = Aig_FanoutObj( p-\u003epFanData, pObj-\u003eId );\n    if ( *pFirst == 0 )\n    {\n        *pFirst = iFan;\n        *pPrevC = iFan;\n        *pNextC = iFan;\n    }\n    else\n    {\n        pPrev = Aig_FanoutPrev( p-\u003epFanData, *pFirst );\n        pNext = Aig_FanoutNext( p-\u003epFanData, *pPrev );\n        assert( *pNext == *pFirst );\n        *pPrevC = *pPrev;\n        *pNextC = *pFirst;\n        *pPrev  = iFan;\n        *pNext  = iFan;\n    }\n}",
+      "Draft": "func Aig_ObjAddFanout(p *Aig_Man_t, pObj *Aig_Obj_t, pFanout *Aig_Obj_t) {\n    var iFan int32;\n    var pFirst *int32;\n    var pPrevC *int32;\n    var pNextC *int32;\n    var pPrev *int32;\n    var pNext *int32;\n    assert(p.pFanData, \"p.pFanData\");\n    assert(!Aig_IsComplement(pObj) \u0026\u0026 !Aig_IsComplement(pFanout), \"!Aig_IsComplement(pObj) \u0026\u0026 !Aig_IsComplement(pFanout)\");\n    assert(pFanout.Id \u003e 0, \"pFanout.Id \u003e 0\");\n    if pObj.Id \u003e= p.nFansAlloc || pFanout.Id \u003e= p.nFansAlloc {\n        var nFansAlloc int32  = 2 * Abc_MaxInt( pObj.Id, pFanout.Id ); \n        // inlining of macro ABC_REALLOC\n        \n        if p.pFanData {\n            p.pFanData = ((int *) realloc((char *)(p.pFanData), sizeof(int) * (size_t)(5 * nFansAlloc)));\n        } else {\n            p.pFanData = ((int *) malloc(sizeof(int) * (size_t)(5 * nFansAlloc)));\n        }\n        memset( p.pFanData + 5 * p.nFansAlloc, 0, sizeof(int) * 5 * (nFansAlloc - p.nFansAlloc) );\n        p.nFansAlloc = nFansAlloc;\n    }\n    assert(pObj.Id \u003c p.nFansAlloc \u0026\u0026 pFanout.Id \u003c p.nFansAlloc, \"pObj.Id \u003c p.nFansAlloc \u0026\u0026 pFanout.Id \u003c p.nFansAlloc\");\n    iFan   = Aig_FanoutCreate( pFanout.Id, Aig_ObjWhatFanin(pFanout, pObj) );\n    pPrevC = Aig_FanoutPrev( p.pFanData, iFan );\n    pNextC = Aig_FanoutNext( p.pFanData, iFan );\n    pFirst = Aig_FanoutObj( p.pFanData, pObj.Id );\n    if *pFirst == 0 {\n        *pFirst = iFan;\n        *pPrevC = iFan;\n        *pNextC = iFan;\n    \n    } else {\n        pPrev = Aig_FanoutPrev( p.pFanData, *pFirst );\n        pNext = Aig_FanoutNext( p.pFanData, *pPrev );\n        assert(*pNext == *pFirst, \"*pNext == *pFirst\");\n        *pPrevC = *pPrev;\n        *pNextC = *pFirst;\n        *pPrev  = iFan;\n        *pNext  = iFan;\n    }\n}"
+    },
+    {
+      "Name": "Aig_ObjRemoveFanout",
+      "Start": 4770,
+      "End": 5869,
+      "BodyStart": 4851,
+      "Original": "void Aig_ObjRemoveFanout( Aig_Man_t * p, Aig_Obj_t * pObj, Aig_Obj_t * pFanout )\n{\n    int iFan, * pFirst, * pPrevC, * pNextC, * pPrev, * pNext;\n    assert( p-\u003epFanData \u0026\u0026 pObj-\u003eId \u003c p-\u003enFansAlloc \u0026\u0026 pFanout-\u003eId \u003c p-\u003enFansAlloc );\n    assert( !Aig_IsComplement(pObj) \u0026\u0026 !Aig_IsComplement(pFanout) );\n    assert( pFanout-\u003eId \u003e 0 );\n    iFan   = Aig_FanoutCreate( pFanout-\u003eId, Aig_ObjWhatFanin(pFanout, pObj) );\n    pPrevC = Aig_FanoutPrev( p-\u003epFanData, iFan );\n    pNextC = Aig_FanoutNext( p-\u003epFanData, iFan );\n    pPrev  = Aig_FanoutPrev( p-\u003epFanData, *pNextC );\n    pNext  = Aig_FanoutNext( p-\u003epFanData, *pPrevC );\n    assert( *pPrev == iFan );\n    assert( *pNext == iFan );\n    pFirst = Aig_FanoutObj( p-\u003epFanData, pObj-\u003eId );\n    assert( *pFirst \u003e 0 );\n    if ( *pFirst == iFan )\n    {\n        if ( *pNextC == iFan )\n        {\n            *pFirst = 0;\n            *pPrev  = 0;\n            *pNext  = 0;\n            *pPrevC = 0;\n            *pNextC = 0;\n            return;\n        }\n        *pFirst = *pNextC;\n    }\n    *pPrev  = *pPrevC;\n    *pNext  = *pNextC;\n    *pPrevC = 0;\n    *pNextC = 0;\n}",
+      "Draft": "func Aig_ObjRemoveFanout(p *Aig_Man_t, pObj *Aig_Obj_t, pFanout *Aig_Obj_t) {\n    var iFan int32;\n    var pFirst *int32;\n    var pPrevC *int32;\n    var pNextC *int32;\n    var pPrev *int32;\n    var pNext *int32;\n    assert(p.pFanData \u0026\u0026 pObj.Id \u003c p.nFansAlloc \u0026\u0026 pFanout.Id \u003c p.nFansAlloc, \"p.pFanData \u0026\u0026 pObj.Id \u003c p.nFansAlloc \u0026\u0026 pFanout.Id \u003c p.nFansAlloc\");\n    assert(!Aig_IsComplement(pObj) \u0026\u0026 !Aig_IsComplement(pFanout), \"!Aig_IsComplement(pObj) \u0026\u0026 !Aig_IsComplement(pFanout)\");\n    assert(pFanout.Id \u003e 0, \"pFanout.Id \u003e 0\");\n    iFan   = Aig_FanoutCreate( pFanout.Id, Aig_ObjWhatFanin(pFanout, pObj) );\n    pPrevC = Aig_FanoutPrev( p.pFanData, iFan );\n    pNextC = Aig_FanoutNext( p.pFanData, iFan );\n    pPrev  = Aig_FanoutPrev( p.pFanData, *pNextC );\n    pNext  = Aig_FanoutNext( p.pFanData, *pPrevC );\n    assert(*pPrev == iFan, \"*pPrev == iFan\");\n    assert(*pNext == iFan, \"*pNext == iFan\");\n    pFirst = Aig_FanoutObj( p.pFanData, pObj.Id );\n    assert(*pFirst \u003e 0, \"*pFirst \u003e 0\");\n    if *pFirst == iFan {\n        if *pNextC == iFan {\n            *pFirst = 0;\n            *pPrev  = 0;\n            *pNext  = 0;\n            *pPrevC = 0;\n            *pNextC = 0;\n            return;\n        }\n        *pFirst = *pNextC;\n    }\n    *pPrev  = *pPrevC;\n    *pNext  = *pNextC;\n    *pPrevC = 0;\n    *pNextC = 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::mechanical::sizeof::2184",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2123,
+      "End": 2123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::mechanical::sizeof::2257",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2188,
+      "End": 2194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::mechanical::sizeof::4096",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3619,
+      "End": 3619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::mechanical::sizeof::4164",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3619,
+      "End": 3619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::mechanical::sizeof::4259",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3720,
+      "End": 3726
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::pointer-cast::2169",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2123,
+      "End": 2123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::pointer-cast::2494",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2262,
+      "End": 2262
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::pointer-cast::3212",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2864,
+      "End": 2864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::pointer-cast::4057",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3619,
+      "End": 3619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::pointer-cast::4073",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3619,
+      "End": 3619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::pointer-cast::4149",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3619,
+      "End": 3619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::Aig_FanoutCreate",
+      "Category": "semantic-review",
+      "Symbol": "Aig_FanoutCreate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 850,
+      "End": 963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::Aig_FanoutObj",
+      "Category": "semantic-review",
+      "Symbol": "Aig_FanoutObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 965,
+      "End": 1078
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::Aig_FanoutPrev",
+      "Category": "semantic-review",
+      "Symbol": "Aig_FanoutPrev",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1079,
+      "End": 1192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::Aig_FanoutNext",
+      "Category": "semantic-review",
+      "Symbol": "Aig_FanoutNext",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1193,
+      "End": 1306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::Aig_ManFanoutStart",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManFanoutStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1807,
+      "End": 2501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::ternary::Aig_ManFanoutStop",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ManFanoutStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2783,
+      "End": 2913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::Aig_ManFanoutStop",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManFanoutStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2783,
+      "End": 2913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::Aig_ObjAddFanout",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjAddFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3186,
+      "End": 4494
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::Aig_ObjRemoveFanout",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ObjRemoveFanout",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4770,
+      "End": 5869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigFanout.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 6116
+    }
+  ],
+  "Draft": "package aig\n\n/**CFile****************************************************************\n\n  FileName    [aigFanout.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Fanout manipulation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigFanout.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n// 0: first iFan\n// 1: prev iFan0\n// 2: prev iFan1\n// 3: next iFan0\n// 4: next iFan1\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Aig_FanoutCreate(FanId int32, Num int32) int32 { assert(Num \u003c 2, \"Num \u003c 2\"); return (FanId \u003c\u003c 1) | Num;   } \nfunc Aig_FanoutObj(pData *int32, ObjId int32) *int32 { return pData + 5*ObjId;                         }\nfunc Aig_FanoutPrev(pData *int32, iFan int32) *int32 { return pData + 5*(iFan \u003e\u003e 1) + 1 + (iFan \u0026 1);  }\nfunc Aig_FanoutNext(pData *int32, iFan int32) *int32 { return pData + 5*(iFan \u003e\u003e 1) + 3 + (iFan \u0026 1);  }\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Create fanout for all objects in the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManFanoutStart(p *Aig_Man_t) {\n    var pObj *Aig_Obj_t;\n    var i int32;\n    assert(Aig_ManBufNum(p) == 0, \"Aig_ManBufNum(p) == 0\");\n    // allocate fanout datastructure\n    assert(p.pFanData == nil, \"p.pFanData == nil\");\n    p.nFansAlloc = 2 * Aig_ManObjNumMax(p);\n    if p.nFansAlloc \u003c (1\u003c\u003c12) {\n        p.nFansAlloc = (1\u003c\u003c12); }\n    // inlining of macro ABC_ALLOC\n    p.pFanData = ((int *) malloc(sizeof(int) * (size_t)(5 * p.nFansAlloc)));\n    memset( p.pFanData, 0, sizeof(int) * 5 * p.nFansAlloc );\n    // add fanouts for all objects\n    // inlining of macro Aig_ManForEachObj\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  { if (pObj) == nil {} else {\n        if Aig_ObjChild0(pObj) {\n            Aig_ObjAddFanout( p, Aig_ObjFanin0(pObj), pObj ); }\n        if Aig_ObjChild1(pObj) {\n            Aig_ObjAddFanout( p, Aig_ObjFanin1(pObj), pObj ); }\n    }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes fanout for all objects in the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManFanoutStop(p *Aig_Man_t) {\n    assert(p.pFanData != nil, \"p.pFanData != nil\");\n    // inlining of macro ABC_FREE\n    ((p.pFanData) ? (free((char *) (p.pFanData)), (p.pFanData) = 0) : 0);\n    p.nFansAlloc = 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds fanout (pFanout) of node (pObj).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjAddFanout(p *Aig_Man_t, pObj *Aig_Obj_t, pFanout *Aig_Obj_t) {\n    var iFan int32;\n    var pFirst *int32;\n    var pPrevC *int32;\n    var pNextC *int32;\n    var pPrev *int32;\n    var pNext *int32;\n    assert(p.pFanData, \"p.pFanData\");\n    assert(!Aig_IsComplement(pObj) \u0026\u0026 !Aig_IsComplement(pFanout), \"!Aig_IsComplement(pObj) \u0026\u0026 !Aig_IsComplement(pFanout)\");\n    assert(pFanout.Id \u003e 0, \"pFanout.Id \u003e 0\");\n    if pObj.Id \u003e= p.nFansAlloc || pFanout.Id \u003e= p.nFansAlloc {\n        var nFansAlloc int32  = 2 * Abc_MaxInt( pObj.Id, pFanout.Id ); \n        // inlining of macro ABC_REALLOC\n        \n        if p.pFanData {\n            p.pFanData = ((int *) realloc((char *)(p.pFanData), sizeof(int) * (size_t)(5 * nFansAlloc)));\n        } else {\n            p.pFanData = ((int *) malloc(sizeof(int) * (size_t)(5 * nFansAlloc)));\n        }\n        memset( p.pFanData + 5 * p.nFansAlloc, 0, sizeof(int) * 5 * (nFansAlloc - p.nFansAlloc) );\n        p.nFansAlloc = nFansAlloc;\n    }\n    assert(pObj.Id \u003c p.nFansAlloc \u0026\u0026 pFanout.Id \u003c p.nFansAlloc, \"pObj.Id \u003c p.nFansAlloc \u0026\u0026 pFanout.Id \u003c p.nFansAlloc\");\n    iFan   = Aig_FanoutCreate( pFanout.Id, Aig_ObjWhatFanin(pFanout, pObj) );\n    pPrevC = Aig_FanoutPrev( p.pFanData, iFan );\n    pNextC = Aig_FanoutNext( p.pFanData, iFan );\n    pFirst = Aig_FanoutObj( p.pFanData, pObj.Id );\n    if *pFirst == 0 {\n        *pFirst = iFan;\n        *pPrevC = iFan;\n        *pNextC = iFan;\n    \n    } else {\n        pPrev = Aig_FanoutPrev( p.pFanData, *pFirst );\n        pNext = Aig_FanoutNext( p.pFanData, *pPrev );\n        assert(*pNext == *pFirst, \"*pNext == *pFirst\");\n        *pPrevC = *pPrev;\n        *pNextC = *pFirst;\n        *pPrev  = iFan;\n        *pNext  = iFan;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Removes fanout (pFanout) of node (pObj).]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ObjRemoveFanout(p *Aig_Man_t, pObj *Aig_Obj_t, pFanout *Aig_Obj_t) {\n    var iFan int32;\n    var pFirst *int32;\n    var pPrevC *int32;\n    var pNextC *int32;\n    var pPrev *int32;\n    var pNext *int32;\n    assert(p.pFanData \u0026\u0026 pObj.Id \u003c p.nFansAlloc \u0026\u0026 pFanout.Id \u003c p.nFansAlloc, \"p.pFanData \u0026\u0026 pObj.Id \u003c p.nFansAlloc \u0026\u0026 pFanout.Id \u003c p.nFansAlloc\");\n    assert(!Aig_IsComplement(pObj) \u0026\u0026 !Aig_IsComplement(pFanout), \"!Aig_IsComplement(pObj) \u0026\u0026 !Aig_IsComplement(pFanout)\");\n    assert(pFanout.Id \u003e 0, \"pFanout.Id \u003e 0\");\n    iFan   = Aig_FanoutCreate( pFanout.Id, Aig_ObjWhatFanin(pFanout, pObj) );\n    pPrevC = Aig_FanoutPrev( p.pFanData, iFan );\n    pNextC = Aig_FanoutNext( p.pFanData, iFan );\n    pPrev  = Aig_FanoutPrev( p.pFanData, *pNextC );\n    pNext  = Aig_FanoutNext( p.pFanData, *pPrevC );\n    assert(*pPrev == iFan, \"*pPrev == iFan\");\n    assert(*pNext == iFan, \"*pNext == iFan\");\n    pFirst = Aig_FanoutObj( p.pFanData, pObj.Id );\n    assert(*pFirst \u003e 0, \"*pFirst \u003e 0\");\n    if *pFirst == iFan {\n        if *pNextC == iFan {\n            *pFirst = 0;\n            *pPrev  = 0;\n            *pNext  = 0;\n            *pPrevC = 0;\n            *pNextC = 0;\n            return;\n        }\n        *pFirst = *pNextC;\n    }\n    *pPrev  = *pPrevC;\n    *pNext  = *pNextC;\n    *pPrevC = 0;\n    *pNextC = 0;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

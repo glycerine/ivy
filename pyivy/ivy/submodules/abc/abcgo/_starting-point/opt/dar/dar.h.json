@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/dar.h",
+  "SHA256": "c0b193aaf167adf6fe4009c4b3c29f582a51383d9473ea7c9761f9d0a216ba7b",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/dar.h::struct::Dar_RwrPar_t_",
+      "Category": "struct-review",
+      "Symbol": "Dar_RwrPar_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 1362,
+      "End": 2000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/dar.h::struct::Dar_RefPar_t_",
+      "Category": "struct-review",
+      "Symbol": "Dar_RefPar_t_",
+      "Status": "open",
+      "Message": "Standalone struct translated using its tag; typedef aliases may be defined in another file. Review pointer representation and retained complex fields.",
+      "Start": 2002,
+      "End": 2604
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/dar/dar.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5308
+    }
+  ],
+  "Draft": "package dar\n\n/**CFile****************************************************************\n\n  FileName    [dar.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [DAG-aware AIG rewriting.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: dar.h,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n//ABC_NAMESPACE_HEADER_START\n \n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\ntype Dar_RwrPar_t =            Dar_RwrPar_t_;\ntype Dar_RefPar_t =            Dar_RefPar_t_;\n\ntype Dar_RwrPar_t_ struct {\n    nCutsMax              int32;       // the maximum number of cuts to try\n    nSubgMax              int32;       // the maximum number of subgraphs to try\n    fFanout              int32;        // support fanout representation\n    fUpdateLevel              int32;   // update level \n    fUseZeros              int32;      // performs zero-cost replacement\n    fPower              int32;         // enables power-aware rewriting\n    fRecycle              int32;       // enables cut recycling\n    fVerbose              int32;       // enables verbose output\n    fVeryVerbose              int32;   // enables very verbose output\n}\n\ntype Dar_RefPar_t_ struct {\n    nMffcMin              int32;       // the min MFFC size for which refactoring is used\n    nLeafMax              int32;       // the max number of leaves of a cut\n    nCutsMax              int32;       // the max number of cuts to consider  \n    fExtend              int32;        // extends the cut below MFFC\n    fUpdateLevel              int32;   // updates the level after each move\n    fUseZeros              int32;      // perform zero-cost replacements\n    fVerbose              int32;       // verbosity level\n    fVeryVerbose              int32;   // enables very verbose output\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                             ITERATORS                            ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== darLib.c ========================================================*/\n// extern void            Dar_LibStart();\n\n// extern void            Dar_LibStop();\n\n// extern void            Dar_LibPrepare( int nSubgraphs );\n\n// extern int             Dar_LibReturnClass( unsigned uTruth );\n\n/*=== darBalance.c ========================================================*/\n// extern Aig_Man_t *     Dar_ManBalance( Aig_Man_t * p, int fUpdateLevel );\n\n// extern Aig_Man_t *     Dar_ManBalanceXor( Aig_Man_t * pAig, int fExor, int fUpdateLevel, int fVerbose );\n\n// extern void            Dar_BalancePrintStats( Aig_Man_t * p );\n\n/*=== darCore.c ========================================================*/\n// extern void            Dar_ManDefaultRwrParams( Dar_RwrPar_t * pPars );\n\n// extern int             Dar_ManRewrite( Aig_Man_t * pAig, Dar_RwrPar_t * pPars );\n\n// extern Aig_MmFixed_t * Dar_ManComputeCuts( Aig_Man_t * pAig, int nCutsMax, int fSkipTtMin, int fVerbose );\n\n/*=== darRefact.c ========================================================*/\n// extern void            Dar_ManDefaultRefParams( Dar_RefPar_t * pPars );\n\n// extern int             Dar_ManRefactor( Aig_Man_t * pAig, Dar_RefPar_t * pPars );\n\n/*=== darScript.c ========================================================*/\n// extern Aig_Man_t *     Dar_ManRewriteDefault( Aig_Man_t * pAig );\n\n// extern Aig_Man_t *     Dar_ManRwsat( Aig_Man_t * pAig, int fBalance, int fVerbose );\n\n// extern Aig_Man_t *     Dar_ManCompress( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fPower, int fVerbose );\n\n// extern Aig_Man_t *     Dar_ManCompress2( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fFanout, int fPower, int fVerbose );\n\n// extern Aig_Man_t *     Dar_ManChoice( Aig_Man_t * pAig, int fBalance, int fUpdateLevel, int fConstruct, int nConfMax, int nLevelMax, int fVerbose );\n\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

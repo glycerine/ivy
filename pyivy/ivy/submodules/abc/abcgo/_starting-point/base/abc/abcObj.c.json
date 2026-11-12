@@ -1,0 +1,2209 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c",
+  "SHA256": "7dfb685db3220540dbda846fb735494d428a570e969342d10d70a6971527278e",
+  "Library": [
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "converted",
+      "Message": "Single Go object allocation; Go zero-initializes it and allocation failure does not return C NULL.",
+      "Location": {
+        "Line": 57,
+        "Column": 29,
+        "ByteOffset": 1664
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pObj = (Abc_Obj_t *)ABC_ALLOC( Abc_Obj_t, 1 ); }"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 58,
+        "Column": 5,
+        "ByteOffset": 1697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pObj, 0, sizeof(Abc_Obj_t) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 83,
+        "Column": 9,
+        "ByteOffset": 2372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pObj.vFanouts.pArray );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 9,
+        "ByteOffset": 2414
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pObj.vFanins.pArray );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 87,
+        "Column": 5,
+        "ByteOffset": 2531
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pObj, 0, sizeof(Abc_Obj_t) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 9,
+        "ByteOffset": 2697
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pObj ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 117,
+        "Column": 13,
+        "ByteOffset": 3420
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(0); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 120,
+        "Column": 13,
+        "ByteOffset": 3493
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(0); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 13,
+        "ByteOffset": 4464
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(0); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 170,
+        "Column": 5,
+        "ByteOffset": 4918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 13,
+        "ByteOffset": 5818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(0); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 196,
+        "Column": 13,
+        "ByteOffset": 5891
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(0); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 224,
+        "Column": 13,
+        "ByteOffset": 6839
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert(0); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 243,
+        "Column": 5,
+        "ByteOffset": 7253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsPo(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 273,
+        "Column": 5,
+        "ByteOffset": 8140
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 8182
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsPi(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 275,
+        "Column": 5,
+        "ByteOffset": 8216
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjFanoutNum(pObj) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 307,
+        "Column": 5,
+        "ByteOffset": 9209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_ObjIsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 308,
+        "Column": 5,
+        "ByteOffset": 9251
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjFanoutNum(pObj) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 345,
+        "Column": 21,
+        "ByteOffset": 10587
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( Abc_ObjIsLatch(Abc_ObjFanout0(pObj)) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 365,
+        "Column": 22,
+        "ByteOffset": 11704
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 394,
+        "Column": 5,
+        "ByteOffset": 12477
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsBox(pBox) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 453,
+        "Column": 9,
+        "ByteOffset": 14424
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Name \\\"%s\\\" is not found among CO or node names (internal names often look as \\\"n\u003cnum\u003e\\\").\\n\", pName );"
+    },
+    {
+      "Name": "atoi",
+      "Status": "converted",
+      "Message": "Handle Go value/error results, C integer width, whitespace and trailing-text semantics downstream.",
+      "Location": {
+        "Line": 456,
+        "Column": 11,
+        "ByteOffset": 14573
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    Num = atoi( pName + 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 458,
+        "Column": 9,
+        "ByteOffset": 14650
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The node \\\"%s\\\" with ID %d is not in the current network.\\n\", pName, Num );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 463,
+        "Column": 9,
+        "ByteOffset": 14826
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The node \\\"%s\\\" with ID %d has been removed from the current network.\\n\", pName, Num );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 467,
+        "Column": 9,
+        "ByteOffset": 14987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Object with ID %d is not a node.\\n\", Num );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 487,
+        "Column": 5,
+        "ByteOffset": 15470
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 508,
+        "Column": 5,
+        "ByteOffset": 16020
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 531,
+        "Column": 5,
+        "ByteOffset": 16672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 555,
+        "Column": 5,
+        "ByteOffset": 17339
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 579,
+        "Column": 5,
+        "ByteOffset": 18015
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 589,
+        "Column": 9,
+        "ByteOffset": 18599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 606,
+        "Column": 5,
+        "ByteOffset": 18982
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 616,
+        "Column": 9,
+        "ByteOffset": 19566
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 633,
+        "Column": 5,
+        "ByteOffset": 19958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 644,
+        "Column": 9,
+        "ByteOffset": 20545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 661,
+        "Column": 5,
+        "ByteOffset": 20935
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 672,
+        "Column": 9,
+        "ByteOffset": 21511
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 690,
+        "Column": 5,
+        "ByteOffset": 21916
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 701,
+        "Column": 9,
+        "ByteOffset": 22479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 719,
+        "Column": 5,
+        "ByteOffset": 22882
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 730,
+        "Column": 9,
+        "ByteOffset": 23443
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 748,
+        "Column": 5,
+        "ByteOffset": 23850
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 759,
+        "Column": 9,
+        "ByteOffset": 24416
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 776,
+        "Column": 5,
+        "ByteOffset": 24841
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 787,
+        "Column": 9,
+        "ByteOffset": 25462
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 804,
+        "Column": 5,
+        "ByteOffset": 25828
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNode.pNtk) || Abc_NtkIsNetlist(pNode.pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 821,
+        "Column": 5,
+        "ByteOffset": 26334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 822,
+        "Column": 5,
+        "ByteOffset": 26396
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );      "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 836,
+        "Column": 5,
+        "ByteOffset": 26938
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 853,
+        "Column": 5,
+        "ByteOffset": 27337
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 854,
+        "Column": 5,
+        "ByteOffset": 27399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) );      "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 864,
+        "Column": 5,
+        "ByteOffset": 27874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 881,
+        "Column": 5,
+        "ByteOffset": 28261
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 882,
+        "Column": 5,
+        "ByteOffset": 28323
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 892,
+        "Column": 5,
+        "ByteOffset": 28791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 909,
+        "Column": 5,
+        "ByteOffset": 29181
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 910,
+        "Column": 5,
+        "ByteOffset": 29243
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 924,
+        "Column": 5,
+        "ByteOffset": 29778
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 940,
+        "Column": 5,
+        "ByteOffset": 30134
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsLogic(pNode.pNtk) || Abc_NtkIsNetlist(pNode.pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 941,
+        "Column": 5,
+        "ByteOffset": 30208
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_ObjIsNode(pNode) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 948,
+        "Column": 9,
+        "ByteOffset": 30525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 965,
+        "Column": 9,
+        "ByteOffset": 30976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %s should be among\", Abc_ObjName(pFanin) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 966,
+        "Column": 9,
+        "ByteOffset": 31042
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \" the fanins of node %s...\\n\", Abc_ObjName(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 975,
+        "Column": 9,
+        "ByteOffset": 31469
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 26,
+        "Column": 1,
+        "ByteOffset": 624
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 219,
+        "Column": 1,
+        "ByteOffset": 6498
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 380,
+        "Column": 1,
+        "ByteOffset": 11481
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 618,
+        "Column": 1,
+        "ByteOffset": 18637
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 649,
+        "Column": 1,
+        "ByteOffset": 19701
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 681,
+        "Column": 1,
+        "ByteOffset": 20796
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 713,
+        "Column": 1,
+        "ByteOffset": 21873
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 747,
+        "Column": 1,
+        "ByteOffset": 23020
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 779,
+        "Column": 1,
+        "ByteOffset": 24092
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 811,
+        "Column": 1,
+        "ByteOffset": 25168
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 843,
+        "Column": 1,
+        "ByteOffset": 26240
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 892,
+        "Column": 1,
+        "ByteOffset": 27889
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 924,
+        "Column": 1,
+        "ByteOffset": 28858
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 956,
+        "Column": 1,
+        "ByteOffset": 29808
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 988,
+        "Column": 1,
+        "ByteOffset": 30758
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 1019,
+        "Column": 1,
+        "ByteOffset": 31751
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 1051,
+        "Column": 1,
+        "ByteOffset": 32748
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_ObjAlloc",
+      "Start": 1407,
+      "End": 1776,
+      "BodyStart": 1472,
+      "Original": "Abc_Obj_t * Abc_ObjAlloc( Abc_Ntk_t * pNtk, Abc_ObjType_t Type )\n{\n    Abc_Obj_t * pObj;\n    if ( pNtk-\u003epMmObj )\n        pObj = (Abc_Obj_t *)Mem_FixedEntryFetch( pNtk-\u003epMmObj );\n    else\n        pObj = (Abc_Obj_t *)ABC_ALLOC( Abc_Obj_t, 1 );\n    memset( pObj, 0, sizeof(Abc_Obj_t) );\n    pObj-\u003epNtk = pNtk;\n    pObj-\u003eType = Type;\n    pObj-\u003eId   = -1;\n    return pObj;\n}",
+      "Draft": "func Abc_ObjAlloc(pNtk *Abc_Ntk_t, Type Abc_ObjType_t) *Abc_Obj_t {\n    var pObj *Abc_Obj_t;\n    if pNtk.pMmObj {\n        pObj = (Abc_Obj_t *)Mem_FixedEntryFetch( pNtk.pMmObj );\n    } else {\n        pObj = (Abc_Obj_t *)new(Abc_Obj_t); }\n    memset( pObj, 0, sizeof(Abc_Obj_t) );\n    pObj.pNtk = pNtk;\n    pObj.Type = Type;\n    pObj.Id   = -1;\n    return pObj;\n}"
+    },
+    {
+      "Name": "Abc_ObjRecycle",
+      "Start": 2032,
+      "End": 2687,
+      "BodyStart": 2072,
+      "Original": "void Abc_ObjRecycle( Abc_Obj_t * pObj )\n{\n    Abc_Ntk_t * pNtk = pObj-\u003epNtk;\n//    int LargePiece = (4 \u003c\u003c ABC_NUM_STEPS);\n    // free large fanout arrays\n//    if ( pNtk-\u003epMmStep \u0026\u0026 pObj-\u003evFanouts.nCap * 4 \u003e LargePiece )\n//        free( pObj-\u003evFanouts.pArray );\n    if ( pNtk-\u003epMmStep == NULL )\n    {\n        ABC_FREE( pObj-\u003evFanouts.pArray );\n        ABC_FREE( pObj-\u003evFanins.pArray );\n    }\n    // clean the memory to make deleted object distinct from the live one\n    memset( pObj, 0, sizeof(Abc_Obj_t) );\n    // recycle the object\n    if ( pNtk-\u003epMmObj )\n        Mem_FixedEntryRecycle( pNtk-\u003epMmObj, (char *)pObj );\n    else\n        ABC_FREE( pObj );\n}",
+      "Draft": "func Abc_ObjRecycle(pObj *Abc_Obj_t) {\n    var pNtk *Abc_Ntk_t  = pObj.pNtk;\n//    int LargePiece = (4 \u003c\u003c ABC_NUM_STEPS);\n    // free large fanout arrays\n//    if ( pNtk-\u003epMmStep \u0026\u0026 pObj-\u003evFanouts.nCap * 4 \u003e LargePiece )\n//        free( pObj-\u003evFanouts.pArray );\n    if pNtk.pMmStep == nil {\n        ABC_FREE( pObj.vFanouts.pArray );\n        ABC_FREE( pObj.vFanins.pArray );\n    }\n    // clean the memory to make deleted object distinct from the live one\n    memset( pObj, 0, sizeof(Abc_Obj_t) );\n    // recycle the object\n    if pNtk.pMmObj {\n        Mem_FixedEntryRecycle( pNtk.pMmObj, (char *)pObj );\n    } else {\n        ABC_FREE( pObj ); }\n}"
+    },
+    {
+      "Name": "Abc_NtkCreateObj",
+      "Start": 2952,
+      "End": 4503,
+      "BodyStart": 3021,
+      "Original": "Abc_Obj_t * Abc_NtkCreateObj( Abc_Ntk_t * pNtk, Abc_ObjType_t Type )\n{\n    Abc_Obj_t * pObj;\n    // create new object, assign ID, and add to the array\n    pObj = Abc_ObjAlloc( pNtk, Type );\n    pObj-\u003eId = pNtk-\u003evObjs-\u003enSize;\n    Vec_PtrPush( pNtk-\u003evObjs, pObj );\n    pNtk-\u003enObjCounts[Type]++;\n    pNtk-\u003enObjs++;\n    // perform specialized operations depending on the object type\n    switch (Type)\n    {\n        case ABC_OBJ_NONE:   \n            assert(0); \n            break;\n        case ABC_OBJ_CONST1: \n            assert(0); \n            break;\n        case ABC_OBJ_PI:\n//            pObj-\u003eiTemp = Vec_PtrSize(pNtk-\u003evCis);\n            Vec_PtrPush( pNtk-\u003evPis, pObj );\n            Vec_PtrPush( pNtk-\u003evCis, pObj );\n            break;\n        case ABC_OBJ_PO:     \n//            pObj-\u003eiTemp = Vec_PtrSize(pNtk-\u003evCos);\n            Vec_PtrPush( pNtk-\u003evPos, pObj );\n            Vec_PtrPush( pNtk-\u003evCos, pObj );\n            break;\n        case ABC_OBJ_BI:     \n            if ( pNtk-\u003evCos ) Vec_PtrPush( pNtk-\u003evCos, pObj );\n            break;\n        case ABC_OBJ_BO:     \n            if ( pNtk-\u003evCis ) Vec_PtrPush( pNtk-\u003evCis, pObj );\n            break;\n        case ABC_OBJ_NET:  \n        case ABC_OBJ_NODE: \n            break;\n        case ABC_OBJ_LATCH:     \n            pObj-\u003epData = (void *)ABC_INIT_NONE;\n        case ABC_OBJ_WHITEBOX:     \n        case ABC_OBJ_BLACKBOX:     \n            if ( pNtk-\u003evBoxes ) Vec_PtrPush( pNtk-\u003evBoxes, pObj );\n            break;\n        default:\n            assert(0); \n            break;\n    }\n    return pObj;\n}",
+      "Draft": "func Abc_NtkCreateObj(pNtk *Abc_Ntk_t, Type Abc_ObjType_t) *Abc_Obj_t {\n    var pObj *Abc_Obj_t;\n    // create new object, assign ID, and add to the array\n    pObj = Abc_ObjAlloc( pNtk, Type );\n    pObj.Id = pNtk.vObjs.nSize;\n    Vec_PtrPush( pNtk.vObjs, pObj );\n    pNtk.nObjCounts[Type]++;\n    pNtk.nObjs++;\n    // perform specialized operations depending on the object type\n    switch Type {\n        case ABC_OBJ_NONE:   \n            assert(false, \"0\"); \n            break;\n        case ABC_OBJ_CONST1: \n            assert(false, \"0\"); \n            break;\n        case ABC_OBJ_PI:\n//            pObj-\u003eiTemp = Vec_PtrSize(pNtk-\u003evCis);\n            Vec_PtrPush( pNtk.vPis, pObj );\n            Vec_PtrPush( pNtk.vCis, pObj );\n            break;\n        case ABC_OBJ_PO:     \n//            pObj-\u003eiTemp = Vec_PtrSize(pNtk-\u003evCos);\n            Vec_PtrPush( pNtk.vPos, pObj );\n            Vec_PtrPush( pNtk.vCos, pObj );\n            break;\n        case ABC_OBJ_BI:     \n            if ( pNtk.vCos ) Vec_PtrPush( pNtk.vCos, pObj );\n            break;\n        case ABC_OBJ_BO:     \n            if ( pNtk.vCis ) Vec_PtrPush( pNtk.vCis, pObj );\n            break;\n        case ABC_OBJ_NET,  \n         ABC_OBJ_NODE: \n            break;\n        case ABC_OBJ_LATCH:     \n            pObj.pData = (void *)ABC_INIT_NONE;\n        fallthrough\ncase ABC_OBJ_WHITEBOX,     \n         ABC_OBJ_BLACKBOX:     \n            if ( pNtk.vBoxes ) Vec_PtrPush( pNtk.vBoxes, pObj );\n            break;\n        default:\n            assert(false, \"0\"); \n            break;\n    }\n    return pObj;\n}"
+    },
+    {
+      "Name": "Abc_NtkDeleteObj",
+      "Start": 4775,
+      "End": 7027,
+      "BodyStart": 4817,
+      "Original": "void Abc_NtkDeleteObj( Abc_Obj_t * pObj )\n{\n    Abc_Ntk_t * pNtk = pObj-\u003epNtk;\n    Vec_Ptr_t * vNodes;\n    int i;\n    assert( !Abc_ObjIsComplement(pObj) );\n    // remove from the table of names\n    if ( Nm_ManFindNameById(pObj-\u003epNtk-\u003epManName, pObj-\u003eId) )\n        Nm_ManDeleteIdName(pObj-\u003epNtk-\u003epManName, pObj-\u003eId);\n    // delete fanins and fanouts\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NodeCollectFanouts( pObj, vNodes );\n    for ( i = 0; i \u003c vNodes-\u003enSize; i++ )\n        Abc_ObjDeleteFanin( (Abc_Obj_t *)vNodes-\u003epArray[i], pObj );\n    Abc_NodeCollectFanins( pObj, vNodes );\n    for ( i = 0; i \u003c vNodes-\u003enSize; i++ )\n        Abc_ObjDeleteFanin( pObj, (Abc_Obj_t *)vNodes-\u003epArray[i] );\n    Vec_PtrFree( vNodes );\n    // remove from the list of objects\n    Vec_PtrWriteEntry( pNtk-\u003evObjs, pObj-\u003eId, NULL );\n    pObj-\u003eId = (1\u003c\u003c26)-1;\n    pNtk-\u003enObjCounts[pObj-\u003eType]--;\n    pNtk-\u003enObjs--;\n    // perform specialized operations depending on the object type\n    switch (pObj-\u003eType)\n    {\n        case ABC_OBJ_NONE:   \n            assert(0); \n            break;\n        case ABC_OBJ_CONST1: \n            assert(0); \n            break;\n        case ABC_OBJ_PI:     \n            Vec_PtrRemove( pNtk-\u003evPis, pObj );\n            Vec_PtrRemove( pNtk-\u003evCis, pObj );\n            break;\n        case ABC_OBJ_PO:     \n            Vec_PtrRemove( pNtk-\u003evPos, pObj );\n            Vec_PtrRemove( pNtk-\u003evCos, pObj );\n            break;\n        case ABC_OBJ_BI:     \n            if ( pNtk-\u003evCos ) Vec_PtrRemove( pNtk-\u003evCos, pObj );\n            break;\n        case ABC_OBJ_BO:     \n            if ( pNtk-\u003evCis ) Vec_PtrRemove( pNtk-\u003evCis, pObj );\n            break;\n        case ABC_OBJ_NET:  \n            break;\n        case ABC_OBJ_NODE: \n#ifdef ABC_USE_CUDD\n            if ( Abc_NtkHasBdd(pNtk) )\n                Cudd_RecursiveDeref( (DdManager *)pNtk-\u003epManFunc, (DdNode *)pObj-\u003epData );\n#endif\n            pObj-\u003epData = NULL;\n            break;\n        case ABC_OBJ_LATCH:     \n        case ABC_OBJ_WHITEBOX:     \n        case ABC_OBJ_BLACKBOX:     \n            if ( pNtk-\u003evBoxes ) Vec_PtrRemove( pNtk-\u003evBoxes, pObj );\n            break;\n        default:\n            assert(0); \n            break;\n    }\n    // recycle the object memory\n    Abc_ObjRecycle( pObj );\n}",
+      "Draft": "func Abc_NtkDeleteObj(pObj *Abc_Obj_t) {\n    var pNtk *Abc_Ntk_t  = pObj.pNtk;\n    var vNodes *Vec_Ptr_t;\n    var i int32;\n    assert(!Abc_ObjIsComplement(pObj), \"!Abc_ObjIsComplement(pObj)\");\n    // remove from the table of names\n    if Nm_ManFindNameById(pObj.pNtk.pManName, pObj.Id) {\n        Nm_ManDeleteIdName(pObj.pNtk.pManName, pObj.Id); }\n    // delete fanins and fanouts\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NodeCollectFanouts( pObj, vNodes );\n    for  i = 0; i \u003c vNodes.nSize; i++  {\n        Abc_ObjDeleteFanin( (Abc_Obj_t *)vNodes.pArray[i], pObj );\n    }\n    Abc_NodeCollectFanins( pObj, vNodes );\n    for  i = 0; i \u003c vNodes.nSize; i++  {\n        Abc_ObjDeleteFanin( pObj, (Abc_Obj_t *)vNodes.pArray[i] );\n    }\n    Vec_PtrFree( vNodes );\n    // remove from the list of objects\n    Vec_PtrWriteEntry( pNtk.vObjs, pObj.Id, nil );\n    pObj.Id = (1\u003c\u003c26)-1;\n    pNtk.nObjCounts[pObj.Type]--;\n    pNtk.nObjs--;\n    // perform specialized operations depending on the object type\n    switch pObj.Type {\n        case ABC_OBJ_NONE:   \n            assert(false, \"0\"); \n            break;\n        case ABC_OBJ_CONST1: \n            assert(false, \"0\"); \n            break;\n        case ABC_OBJ_PI:     \n            Vec_PtrRemove( pNtk.vPis, pObj );\n            Vec_PtrRemove( pNtk.vCis, pObj );\n            break;\n        case ABC_OBJ_PO:     \n            Vec_PtrRemove( pNtk.vPos, pObj );\n            Vec_PtrRemove( pNtk.vCos, pObj );\n            break;\n        case ABC_OBJ_BI:     \n            if ( pNtk.vCos ) Vec_PtrRemove( pNtk.vCos, pObj );\n            break;\n        case ABC_OBJ_BO:     \n            if ( pNtk.vCis ) Vec_PtrRemove( pNtk.vCis, pObj );\n            break;\n        case ABC_OBJ_NET:  \n            break;\n        case ABC_OBJ_NODE: \n#ifdef ABC_USE_CUDD\n            if ( Abc_NtkHasBdd(pNtk) )\n                Cudd_RecursiveDeref( (DdManager *)pNtk-\u003epManFunc, (DdNode *)pObj-\u003epData );\n#endif\n            pObj.pData = nil;\n            break;\n        case ABC_OBJ_LATCH,     \n         ABC_OBJ_WHITEBOX,     \n         ABC_OBJ_BLACKBOX:     \n            if ( pNtk.vBoxes ) Vec_PtrRemove( pNtk.vBoxes, pObj );\n            break;\n        default:\n            assert(false, \"0\"); \n            break;\n    }\n    // recycle the object memory\n    Abc_ObjRecycle( pObj );\n}"
+    },
+    {
+      "Name": "Abc_NtkDeleteObjPo",
+      "Start": 7295,
+      "End": 7862,
+      "BodyStart": 7339,
+      "Original": "void Abc_NtkDeleteObjPo( Abc_Obj_t * pObj )\n{\n    assert( Abc_ObjIsPo(pObj) );\n    // remove from the table of names\n    if ( Nm_ManFindNameById(pObj-\u003epNtk-\u003epManName, pObj-\u003eId) )\n        Nm_ManDeleteIdName(pObj-\u003epNtk-\u003epManName, pObj-\u003eId);\n    // delete fanins\n    Abc_ObjDeleteFanin( pObj, Abc_ObjFanin0(pObj) );\n    // remove from the list of objects\n    Vec_PtrWriteEntry( pObj-\u003epNtk-\u003evObjs, pObj-\u003eId, NULL );\n    pObj-\u003eId = (1\u003c\u003c26)-1;\n    pObj-\u003epNtk-\u003enObjCounts[pObj-\u003eType]--;\n    pObj-\u003epNtk-\u003enObjs--;\n    // recycle the object memory\n    Abc_ObjRecycle( pObj );\n}",
+      "Draft": "func Abc_NtkDeleteObjPo(pObj *Abc_Obj_t) {\n    assert(Abc_ObjIsPo(pObj), \"Abc_ObjIsPo(pObj)\");\n    // remove from the table of names\n    if Nm_ManFindNameById(pObj.pNtk.pManName, pObj.Id) {\n        Nm_ManDeleteIdName(pObj.pNtk.pManName, pObj.Id); }\n    // delete fanins\n    Abc_ObjDeleteFanin( pObj, Abc_ObjFanin0(pObj) );\n    // remove from the list of objects\n    Vec_PtrWriteEntry( pObj.pNtk.vObjs, pObj.Id, nil );\n    pObj.Id = (1\u003c\u003c26)-1;\n    pObj.pNtk.nObjCounts[pObj.Type]--;\n    pObj.pNtk.nObjs--;\n    // recycle the object memory\n    Abc_ObjRecycle( pObj );\n}"
+    },
+    {
+      "Name": "Abc_NtkDeleteObj_rec",
+      "Start": 8137,
+      "End": 8953,
+      "BodyStart": 8199,
+      "Original": "void Abc_NtkDeleteObj_rec( Abc_Obj_t * pObj, int fOnlyNodes )\n{\n    Vec_Ptr_t * vNodes;\n    int i;\n    assert( !Abc_ObjIsComplement(pObj) );\n    assert( !Abc_ObjIsPi(pObj) );\n    assert( Abc_ObjFanoutNum(pObj) == 0 );\n    // delete fanins and fanouts\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NodeCollectFanins( pObj, vNodes );\n    Abc_NtkDeleteObj( pObj );\n    if ( fOnlyNodes )\n    {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n            if ( Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) == 0 )\n                Abc_NtkDeleteObj_rec( pObj, fOnlyNodes );\n    }\n    else\n    {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n            if ( !Abc_ObjIsPi(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) == 0 )\n                Abc_NtkDeleteObj_rec( pObj, fOnlyNodes );\n    }\n    Vec_PtrFree( vNodes );\n}",
+      "Draft": "func Abc_NtkDeleteObj_rec(pObj *Abc_Obj_t, fOnlyNodes int32) {\n    var vNodes *Vec_Ptr_t;\n    var i int32;\n    assert(!Abc_ObjIsComplement(pObj), \"!Abc_ObjIsComplement(pObj)\");\n    assert(!Abc_ObjIsPi(pObj), \"!Abc_ObjIsPi(pObj)\");\n    assert(Abc_ObjFanoutNum(pObj) == 0, \"Abc_ObjFanoutNum(pObj) == 0\");\n    // delete fanins and fanouts\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NodeCollectFanins( pObj, vNodes );\n    Abc_NtkDeleteObj( pObj );\n    if fOnlyNodes != 0 {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n            if ( Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) == 0 )\n                Abc_NtkDeleteObj_rec( pObj, fOnlyNodes );\n    \n    } else {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n            if ( !Abc_ObjIsPi(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) == 0 )\n                Abc_NtkDeleteObj_rec( pObj, fOnlyNodes );\n    }\n    Vec_PtrFree( vNodes );\n}"
+    },
+    {
+      "Name": "Abc_NtkDeleteAll_rec",
+      "Start": 9227,
+      "End": 9728,
+      "BodyStart": 9273,
+      "Original": "void Abc_NtkDeleteAll_rec( Abc_Obj_t * pObj )\n{\n    Vec_Ptr_t * vNodes;\n    int i;\n    assert( !Abc_ObjIsComplement(pObj) );\n    assert( Abc_ObjFanoutNum(pObj) == 0 );\n    // delete fanins and fanouts\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NodeCollectFanins( pObj, vNodes );\n    Abc_NtkDeleteObj( pObj );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        if ( !Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) == 0 )\n            Abc_NtkDeleteAll_rec( pObj );\n    Vec_PtrFree( vNodes );\n}",
+      "Draft": "func Abc_NtkDeleteAll_rec(pObj *Abc_Obj_t) {\n    var vNodes *Vec_Ptr_t;\n    var i int32;\n    assert(!Abc_ObjIsComplement(pObj), \"!Abc_ObjIsComplement(pObj)\");\n    assert(Abc_ObjFanoutNum(pObj) == 0, \"Abc_ObjFanoutNum(pObj) == 0\");\n    // delete fanins and fanouts\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NodeCollectFanins( pObj, vNodes );\n    Abc_NtkDeleteObj( pObj );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        if ( !Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) == 0 )\n            Abc_NtkDeleteAll_rec( pObj );\n    Vec_PtrFree( vNodes );\n}"
+    },
+    {
+      "Name": "Abc_NtkDupObj",
+      "Start": 9982,
+      "End": 12436,
+      "BodyStart": 10064,
+      "Original": "Abc_Obj_t * Abc_NtkDupObj( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pObj, int fCopyName )\n{\n    Abc_Obj_t * pObjNew;\n    // create the new object\n    pObjNew = Abc_NtkCreateObj( pNtkNew, (Abc_ObjType_t)pObj-\u003eType );\n    // transfer names of the terminal objects\n    if ( fCopyName )\n    {\n        if ( Abc_ObjIsCi(pObj) )\n        {\n            if ( !Abc_NtkIsNetlist(pNtkNew) )\n                Abc_ObjAssignName( pObjNew, Abc_ObjName(Abc_ObjFanout0Ntk(pObj)), NULL );\n        }\n        else if ( Abc_ObjIsCo(pObj) )\n        {\n            if ( !Abc_NtkIsNetlist(pNtkNew) )\n            {\n                if ( Abc_ObjIsPo(pObj) )\n                    Abc_ObjAssignName( pObjNew, Abc_ObjName(Abc_ObjFanin0Ntk(pObj)), NULL );\n                else\n                {\n                    assert( Abc_ObjIsLatch(Abc_ObjFanout0(pObj)) );\n                    Abc_ObjAssignName( pObjNew, Abc_ObjName(pObj), NULL );\n                }\n            }\n        }\n        else if ( Abc_ObjIsBox(pObj) || Abc_ObjIsNet(pObj) )\n            Abc_ObjAssignName( pObjNew, Abc_ObjName(pObj), NULL );\n    }\n    // copy functionality/names\n    if ( Abc_ObjIsNode(pObj) ) // copy the function if functionality is compatible\n    {\n        if ( pNtkNew-\u003entkFunc == pObj-\u003epNtk-\u003entkFunc ) \n        {\n            if ( Abc_NtkIsStrash(pNtkNew) ) \n            {}\n            else if ( Abc_NtkHasSop(pNtkNew) || Abc_NtkHasBlifMv(pNtkNew) )\n                pObjNew-\u003epData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew-\u003epManFunc, (char *)pObj-\u003epData );\n#ifdef ABC_USE_CUDD\n            else if ( Abc_NtkHasBdd(pNtkNew) )\n                pObjNew-\u003epData = Cudd_bddTransfer((DdManager *)pObj-\u003epNtk-\u003epManFunc, (DdManager *)pNtkNew-\u003epManFunc, (DdNode *)pObj-\u003epData), Cudd_Ref((DdNode *)pObjNew-\u003epData);\n#endif\n            else if ( Abc_NtkHasAig(pNtkNew) )\n                pObjNew-\u003epData = Hop_Transfer((Hop_Man_t *)pObj-\u003epNtk-\u003epManFunc, (Hop_Man_t *)pNtkNew-\u003epManFunc, (Hop_Obj_t *)pObj-\u003epData, Abc_ObjFaninNum(pObj));\n            else if ( Abc_NtkHasMapping(pNtkNew) )\n                pObjNew-\u003epData = pObj-\u003epData, pNtkNew-\u003enBarBufs2 += !pObj-\u003epData;\n            else assert( 0 );\n        }\n    }\n    else if ( Abc_ObjIsNet(pObj) ) // copy the name\n    {\n    }\n    else if ( Abc_ObjIsLatch(pObj) ) // copy the reset value\n        pObjNew-\u003epData = pObj-\u003epData;\n    // transfer HAIG\n//    pObjNew-\u003epEquiv = pObj-\u003epEquiv;\n    // remember the new node in the old node\n    pObj-\u003epCopy = pObjNew;\n    return pObjNew;\n}",
+      "Draft": "func Abc_NtkDupObj(pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t, fCopyName int32) *Abc_Obj_t {\n    var pObjNew *Abc_Obj_t;\n    // create the new object\n    pObjNew = Abc_NtkCreateObj( pNtkNew, (Abc_ObjType_t)pObj.Type );\n    // transfer names of the terminal objects\n    if fCopyName != 0 {\n        if Abc_ObjIsCi(pObj) {\n            if !Abc_NtkIsNetlist(pNtkNew) {\n                Abc_ObjAssignName( pObjNew, Abc_ObjName(Abc_ObjFanout0Ntk(pObj)), nil ); }\n        \n        } else if Abc_ObjIsCo(pObj) {\n            if !Abc_NtkIsNetlist(pNtkNew) {\n                if Abc_ObjIsPo(pObj) {\n                    Abc_ObjAssignName( pObjNew, Abc_ObjName(Abc_ObjFanin0Ntk(pObj)), nil );\n                } else {\n                    assert(Abc_ObjIsLatch(Abc_ObjFanout0(pObj)), \"Abc_ObjIsLatch(Abc_ObjFanout0(pObj))\");\n                    Abc_ObjAssignName( pObjNew, Abc_ObjName(pObj), nil );\n                }\n            }\n        \n        } else if Abc_ObjIsBox(pObj) || Abc_ObjIsNet(pObj) {\n            Abc_ObjAssignName( pObjNew, Abc_ObjName(pObj), nil ); }\n    }\n    // copy functionality/names\n    if Abc_ObjIsNode(pObj) { // copy the function if functionality is compatible\n    \n        if pNtkNew.ntkFunc == pObj.pNtk.ntkFunc {\n            if Abc_NtkIsStrash(pNtkNew) {\n            } else if Abc_NtkHasSop(pNtkNew) || Abc_NtkHasBlifMv(pNtkNew) {\n                pObjNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, (char *)pObj.pData );\n#ifdef ABC_USE_CUDD\n            else if ( Abc_NtkHasBdd(pNtkNew) )\n                pObjNew-\u003epData = Cudd_bddTransfer((DdManager *)pObj-\u003epNtk-\u003epManFunc, (DdManager *)pNtkNew-\u003epManFunc, (DdNode *)pObj-\u003epData), Cudd_Ref((DdNode *)pObjNew-\u003epData);\n#endif\n            } else if Abc_NtkHasAig(pNtkNew) {\n                pObjNew.pData = Hop_Transfer((Hop_Man_t *)pObj.pNtk.pManFunc, (Hop_Man_t *)pNtkNew.pManFunc, (Hop_Obj_t *)pObj.pData, Abc_ObjFaninNum(pObj));\n            } else if Abc_NtkHasMapping(pNtkNew) {\n                pObjNew.pData = pObj.pData, pNtkNew.nBarBufs2 += !pObj.pData;\n            } else { assert(false, \"0\"); }\n        }\n    \n    } else if Abc_ObjIsNet(pObj) { // copy the name\n    \n    \n    } else if Abc_ObjIsLatch(pObj) { // copy the reset value\n        pObjNew.pData = pObj.pData; }\n    // transfer HAIG\n//    pObjNew-\u003epEquiv = pObj-\u003epEquiv;\n    // remember the new node in the old node\n    pObj.pCopy = pObjNew;\n    return pObjNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkDupBox",
+      "Start": 12725,
+      "End": 13324,
+      "BodyStart": 12807,
+      "Original": "Abc_Obj_t * Abc_NtkDupBox( Abc_Ntk_t * pNtkNew, Abc_Obj_t * pBox, int fCopyName )\n{\n    Abc_Obj_t * pTerm, * pBoxNew;\n    int i;\n    assert( Abc_ObjIsBox(pBox) );\n    // duplicate the box \n    pBoxNew = Abc_NtkDupObj( pNtkNew, pBox, fCopyName );\n    // duplicate the fanins and connect them\n    Abc_ObjForEachFanin( pBox, pTerm, i )\n        Abc_ObjAddFanin( pBoxNew, Abc_NtkDupObj(pNtkNew, pTerm, fCopyName) );\n    // duplicate the fanouts and connect them\n    Abc_ObjForEachFanout( pBox, pTerm, i )\n        Abc_ObjAddFanin( Abc_NtkDupObj(pNtkNew, pTerm, fCopyName), pBoxNew );\n    return pBoxNew;\n}",
+      "Draft": "func Abc_NtkDupBox(pNtkNew *Abc_Ntk_t, pBox *Abc_Obj_t, fCopyName int32) *Abc_Obj_t {\n    var pTerm, pBoxNew *Abc_Obj_t;\n    var i int32;\n    assert(Abc_ObjIsBox(pBox), \"Abc_ObjIsBox(pBox)\");\n    // duplicate the box \n    pBoxNew = Abc_NtkDupObj( pNtkNew, pBox, fCopyName );\n    // duplicate the fanins and connect them\n    Abc_ObjForEachFanin( pBox, pTerm, i )\n        Abc_ObjAddFanin( pBoxNew, Abc_NtkDupObj(pNtkNew, pTerm, fCopyName) );\n    // duplicate the fanouts and connect them\n    Abc_ObjForEachFanout( pBox, pTerm, i )\n        Abc_ObjAddFanin( Abc_NtkDupObj(pNtkNew, pTerm, fCopyName), pBoxNew );\n    return pBoxNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkCloneObj",
+      "Start": 13632,
+      "End": 13908,
+      "BodyStart": 13680,
+      "Original": "Abc_Obj_t * Abc_NtkCloneObj( Abc_Obj_t * pObj )\n{\n    Abc_Obj_t * pClone, * pFanin;\n    int i;\n    pClone = Abc_NtkCreateObj( pObj-\u003epNtk, (Abc_ObjType_t)pObj-\u003eType );   \n    Abc_ObjForEachFanin( pObj, pFanin, i )\n        Abc_ObjAddFanin( pClone, pFanin );\n    return pClone;\n}",
+      "Draft": "func Abc_NtkCloneObj(pObj *Abc_Obj_t) *Abc_Obj_t {\n    var pClone, pFanin *Abc_Obj_t;\n    var i int32;\n    pClone = Abc_NtkCreateObj( pObj.pNtk, (Abc_ObjType_t)pObj.Type );   \n    Abc_ObjForEachFanin( pObj, pFanin, i )\n        Abc_ObjAddFanin( pClone, pFanin );\n    return pClone;\n}"
+    },
+    {
+      "Name": "Abc_NtkFindNode",
+      "Start": 14181,
+      "End": 15489,
+      "BodyStart": 14243,
+      "Original": "Abc_Obj_t * Abc_NtkFindNode( Abc_Ntk_t * pNtk, char * pName )\n{\n    Abc_Obj_t * pObj;\n    int Num;\n    // try to find the terminal\n    Num = Nm_ManFindIdByName( pNtk-\u003epManName, pName, ABC_OBJ_PO );\n    if ( Num \u003e= 0 )\n        return Abc_ObjFanin0( Abc_NtkObj( pNtk, Num ) );\n    Num = Nm_ManFindIdByName( pNtk-\u003epManName, pName, ABC_OBJ_BI );\n    if ( Num \u003e= 0 )\n        return Abc_ObjFanin0( Abc_NtkObj( pNtk, Num ) );\n    Num = Nm_ManFindIdByName( pNtk-\u003epManName, pName, ABC_OBJ_NODE );\n    if ( Num \u003e= 0 )\n        return Abc_NtkObj( pNtk, Num );\n    // find the internal node\n    if ( pName[0] != 'n' )\n    {\n        printf( \"Name \\\"%s\\\" is not found among CO or node names (internal names often look as \\\"n\u003cnum\u003e\\\").\\n\", pName );\n        return NULL;\n    }\n    Num = atoi( pName + 1 );\n    if ( Num \u003c 0 || Num \u003e= Abc_NtkObjNumMax(pNtk) )\n    {\n        printf( \"The node \\\"%s\\\" with ID %d is not in the current network.\\n\", pName, Num );\n        return NULL;\n    }\n    pObj = Abc_NtkObj( pNtk, Num );\n    if ( pObj == NULL )\n    {\n        printf( \"The node \\\"%s\\\" with ID %d has been removed from the current network.\\n\", pName, Num );\n        return NULL;\n    }\n    if ( !Abc_ObjIsNode(pObj) )\n    {\n        printf( \"Object with ID %d is not a node.\\n\", Num );\n        return NULL;\n    }\n    return pObj;\n}",
+      "Draft": "func Abc_NtkFindNode(pNtk *Abc_Ntk_t, pName string) *Abc_Obj_t {\n    var pObj *Abc_Obj_t;\n    var Num int32;\n    // try to find the terminal\n    Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_PO );\n    if Num \u003e= 0 {\n        return Abc_ObjFanin0( Abc_NtkObj( pNtk, Num ) ); }\n    Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_BI );\n    if Num \u003e= 0 {\n        return Abc_ObjFanin0( Abc_NtkObj( pNtk, Num ) ); }\n    Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_NODE );\n    if Num \u003e= 0 {\n        return Abc_NtkObj( pNtk, Num ); }\n    // find the internal node\n    if pName[0] != 'n' {\n        fmt.Printf(\"Name \\\"%s\\\" is not found among CO or node names (internal names often look as \\\"n\u003cnum\u003e\\\").\\n\", pName);\n        return nil;\n    }\n    Num = strconv.Atoi(pName + 1);\n    if Num \u003c 0 || Num \u003e= Abc_NtkObjNumMax(pNtk) {\n        fmt.Printf(\"The node \\\"%s\\\" with ID %d is not in the current network.\\n\", pName, Num);\n        return nil;\n    }\n    pObj = Abc_NtkObj( pNtk, Num );\n    if pObj == nil {\n        fmt.Printf(\"The node \\\"%s\\\" with ID %d has been removed from the current network.\\n\", pName, Num);\n        return nil;\n    }\n    if !Abc_ObjIsNode(pObj) {\n        fmt.Printf(\"Object with ID %d is not a node.\\n\", Num);\n        return nil;\n    }\n    return pObj;\n}"
+    },
+    {
+      "Name": "Abc_NtkFindNet",
+      "Start": 15761,
+      "End": 16069,
+      "BodyStart": 15822,
+      "Original": "Abc_Obj_t * Abc_NtkFindNet( Abc_Ntk_t * pNtk, char * pName )\n{\n    Abc_Obj_t * pNet;\n    int ObjId;\n    assert( Abc_NtkIsNetlist(pNtk) );\n    ObjId = Nm_ManFindIdByName( pNtk-\u003epManName, pName, ABC_OBJ_NET );\n    if ( ObjId == -1 )\n        return NULL;\n    pNet = Abc_NtkObj( pNtk, ObjId );\n    return pNet;\n}",
+      "Draft": "func Abc_NtkFindNet(pNtk *Abc_Ntk_t, pName string) *Abc_Obj_t {\n    var pNet *Abc_Obj_t;\n    var ObjId int32;\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    ObjId = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_NET );\n    if ObjId == -1 {\n        return nil; }\n    pNet = Abc_NtkObj( pNtk, ObjId );\n    return pNet;\n}"
+    },
+    {
+      "Name": "Abc_NtkFindCi",
+      "Start": 16331,
+      "End": 16717,
+      "BodyStart": 16391,
+      "Original": "Abc_Obj_t * Abc_NtkFindCi( Abc_Ntk_t * pNtk, char * pName )\n{\n    int Num;\n    assert( !Abc_NtkIsNetlist(pNtk) );\n    Num = Nm_ManFindIdByName( pNtk-\u003epManName, pName, ABC_OBJ_PI );\n    if ( Num \u003e= 0 )\n        return Abc_NtkObj( pNtk, Num );\n    Num = Nm_ManFindIdByName( pNtk-\u003epManName, pName, ABC_OBJ_BO );\n    if ( Num \u003e= 0 )\n        return Abc_NtkObj( pNtk, Num );\n    return NULL;\n}",
+      "Draft": "func Abc_NtkFindCi(pNtk *Abc_Ntk_t, pName string) *Abc_Obj_t {\n    var Num int32;\n    assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n    Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_PI );\n    if Num \u003e= 0 {\n        return Abc_NtkObj( pNtk, Num ); }\n    Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_BO );\n    if Num \u003e= 0 {\n        return Abc_NtkObj( pNtk, Num ); }\n    return nil;\n}"
+    },
+    {
+      "Name": "Abc_NtkFindCo",
+      "Start": 16979,
+      "End": 17365,
+      "BodyStart": 17039,
+      "Original": "Abc_Obj_t * Abc_NtkFindCo( Abc_Ntk_t * pNtk, char * pName )\n{\n    int Num;\n    assert( !Abc_NtkIsNetlist(pNtk) );\n    Num = Nm_ManFindIdByName( pNtk-\u003epManName, pName, ABC_OBJ_PO );\n    if ( Num \u003e= 0 )\n        return Abc_NtkObj( pNtk, Num );\n    Num = Nm_ManFindIdByName( pNtk-\u003epManName, pName, ABC_OBJ_BI );\n    if ( Num \u003e= 0 )\n        return Abc_NtkObj( pNtk, Num );\n    return NULL;\n}",
+      "Draft": "func Abc_NtkFindCo(pNtk *Abc_Ntk_t, pName string) *Abc_Obj_t {\n    var Num int32;\n    assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n    Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_PO );\n    if Num \u003e= 0 {\n        return Abc_NtkObj( pNtk, Num ); }\n    Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_BI );\n    if Num \u003e= 0 {\n        return Abc_NtkObj( pNtk, Num ); }\n    return nil;\n}"
+    },
+    {
+      "Name": "Abc_NtkFindOrCreateNet",
+      "Start": 17627,
+      "End": 18055,
+      "BodyStart": 17696,
+      "Original": "Abc_Obj_t * Abc_NtkFindOrCreateNet( Abc_Ntk_t * pNtk, char * pName )\n{\n    Abc_Obj_t * pNet;\n    assert( Abc_NtkIsNetlist(pNtk) );\n    if ( pName \u0026\u0026 (pNet = Abc_NtkFindNet( pNtk, pName )) )\n        return pNet;\n//printf( \"Creating net %s.\\n\", pName );\n    // create a new net\n    pNet = Abc_NtkCreateNet( pNtk );\n    if ( pName )\n        Nm_ManStoreIdName( pNtk-\u003epManName, pNet-\u003eId, pNet-\u003eType, pName, NULL );\n    return pNet;\n}",
+      "Draft": "func Abc_NtkFindOrCreateNet(pNtk *Abc_Ntk_t, pName string) *Abc_Obj_t {\n    var pNet *Abc_Obj_t;\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    if pName \u0026\u0026 (pNet = Abc_NtkFindNet( pNtk, pName )) {\n        return pNet; }\n//printf( \"Creating net %s.\\n\", pName );\n    // create a new net\n    pNet = Abc_NtkCreateNet( pNtk );\n    if pName {\n        Nm_ManStoreIdName( pNtk.pManName, pNet.Id, pNet.Type, pName, nil ); }\n    return pNet;\n}"
+    },
+    {
+      "Name": "Abc_NtkCreateNodeConst0",
+      "Start": 18315,
+      "End": 19119,
+      "BodyStart": 18371,
+      "Original": "Abc_Obj_t * Abc_NtkCreateNodeConst0( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode;\n    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );\n    pNode = Abc_NtkCreateNode( pNtk );   \n    if ( Abc_NtkHasSop(pNtk) || Abc_NtkHasBlifMv(pNtk) )\n        pNode-\u003epData = Abc_SopRegister( (Mem_Flex_t *)pNtk-\u003epManFunc, \" 0\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_ReadLogicZero((DdManager *)pNtk-\u003epManFunc), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    else if ( Abc_NtkHasAig(pNtk) )\n        pNode-\u003epData = Hop_ManConst0((Hop_Man_t *)pNtk-\u003epManFunc);\n    else if ( Abc_NtkHasMapping(pNtk) )\n        pNode-\u003epData = Mio_LibraryReadConst0((Mio_Library_t *)Abc_FrameReadLibGen());\n    else if ( !Abc_NtkHasBlackbox(pNtk) )\n        assert( 0 );\n    return pNode;\n}",
+      "Draft": "func Abc_NtkCreateNodeConst0(pNtk *Abc_Ntk_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk );   \n    if Abc_NtkHasSop(pNtk) || Abc_NtkHasBlifMv(pNtk) {\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \" 0\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_ReadLogicZero((DdManager *)pNtk-\u003epManFunc), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_ManConst0((Hop_Man_t *)pNtk.pManFunc);\n    } else if Abc_NtkHasMapping(pNtk) {\n        pNode.pData = Mio_LibraryReadConst0((Mio_Library_t *)Abc_FrameReadLibGen());\n    } else if !Abc_NtkHasBlackbox(pNtk) {\n        assert(false, \"0\"); }\n    return pNode;\n}"
+    },
+    {
+      "Name": "Abc_NtkCreateNodeConst1",
+      "Start": 19379,
+      "End": 20177,
+      "BodyStart": 19435,
+      "Original": "Abc_Obj_t * Abc_NtkCreateNodeConst1( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode;\n    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );\n    pNode = Abc_NtkCreateNode( pNtk );   \n    if ( Abc_NtkHasSop(pNtk) || Abc_NtkHasBlifMv(pNtk) )\n        pNode-\u003epData = Abc_SopRegister( (Mem_Flex_t *)pNtk-\u003epManFunc, \" 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_ReadOne((DdManager *)pNtk-\u003epManFunc), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    else if ( Abc_NtkHasAig(pNtk) )\n        pNode-\u003epData = Hop_ManConst1((Hop_Man_t *)pNtk-\u003epManFunc);\n    else if ( Abc_NtkHasMapping(pNtk) )\n        pNode-\u003epData = Mio_LibraryReadConst1((Mio_Library_t *)Abc_FrameReadLibGen());\n    else if ( !Abc_NtkHasBlackbox(pNtk) )\n        assert( 0 );\n    return pNode;\n}",
+      "Draft": "func Abc_NtkCreateNodeConst1(pNtk *Abc_Ntk_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk );   \n    if Abc_NtkHasSop(pNtk) || Abc_NtkHasBlifMv(pNtk) {\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \" 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_ReadOne((DdManager *)pNtk-\u003epManFunc), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_ManConst1((Hop_Man_t *)pNtk.pManFunc);\n    } else if Abc_NtkHasMapping(pNtk) {\n        pNode.pData = Mio_LibraryReadConst1((Mio_Library_t *)Abc_FrameReadLibGen());\n    } else if !Abc_NtkHasBlackbox(pNtk) {\n        assert(false, \"0\"); }\n    return pNode;\n}"
+    },
+    {
+      "Name": "Abc_NtkCreateNodeInv",
+      "Start": 20430,
+      "End": 21258,
+      "BodyStart": 20503,
+      "Original": "Abc_Obj_t * Abc_NtkCreateNodeInv( Abc_Ntk_t * pNtk, Abc_Obj_t * pFanin )\n{\n    Abc_Obj_t * pNode;\n    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );\n    pNode = Abc_NtkCreateNode( pNtk );   \n    if ( pFanin ) Abc_ObjAddFanin( pNode, pFanin );\n    if ( Abc_NtkHasSop(pNtk) )\n        pNode-\u003epData = Abc_SopRegister( (Mem_Flex_t *)pNtk-\u003epManFunc, \"0 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_Not(Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,0)), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    else if ( Abc_NtkHasAig(pNtk) )\n        pNode-\u003epData = Hop_Not(Hop_IthVar((Hop_Man_t *)pNtk-\u003epManFunc,0));\n    else if ( Abc_NtkHasMapping(pNtk) )\n        pNode-\u003epData = Mio_LibraryReadInv((Mio_Library_t *)Abc_FrameReadLibGen());\n    else\n        assert( 0 );\n    return pNode;\n}",
+      "Draft": "func Abc_NtkCreateNodeInv(pNtk *Abc_Ntk_t, pFanin *Abc_Obj_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk );   \n    if pFanin != nil { Abc_ObjAddFanin( pNode, pFanin ); }\n    if Abc_NtkHasSop(pNtk) {\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \"0 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_Not(Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,0)), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_Not(Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,0));\n    } else if Abc_NtkHasMapping(pNtk) {\n        pNode.pData = Mio_LibraryReadInv((Mio_Library_t *)Abc_FrameReadLibGen());\n    } else {\n        assert(false, \"0\"); }\n    return pNode;\n}"
+    },
+    {
+      "Name": "Abc_NtkCreateNodeBuf",
+      "Start": 21509,
+      "End": 22316,
+      "BodyStart": 21582,
+      "Original": "Abc_Obj_t * Abc_NtkCreateNodeBuf( Abc_Ntk_t * pNtk, Abc_Obj_t * pFanin )\n{\n    Abc_Obj_t * pNode;\n    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );\n    pNode = Abc_NtkCreateNode( pNtk ); \n    if ( pFanin ) Abc_ObjAddFanin( pNode, pFanin );\n    if ( Abc_NtkHasSop(pNtk) )\n        pNode-\u003epData = Abc_SopRegister( (Mem_Flex_t *)pNtk-\u003epManFunc, \"1 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,0), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    else if ( Abc_NtkHasAig(pNtk) )\n        pNode-\u003epData = Hop_IthVar((Hop_Man_t *)pNtk-\u003epManFunc,0);\n    else if ( Abc_NtkHasMapping(pNtk) )\n        pNode-\u003epData = Mio_LibraryReadBuf((Mio_Library_t *)Abc_FrameReadLibGen());\n    else\n        assert( 0 );\n    return pNode;\n}",
+      "Draft": "func Abc_NtkCreateNodeBuf(pNtk *Abc_Ntk_t, pFanin *Abc_Obj_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk ); \n    if pFanin != nil { Abc_ObjAddFanin( pNode, pFanin ); }\n    if Abc_NtkHasSop(pNtk) {\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \"1 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,0), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,0);\n    } else if Abc_NtkHasMapping(pNtk) {\n        pNode.pData = Mio_LibraryReadBuf((Mio_Library_t *)Abc_FrameReadLibGen());\n    } else {\n        assert(false, \"0\"); }\n    return pNode;\n}"
+    },
+    {
+      "Name": "Abc_NtkCreateNodeAnd",
+      "Start": 22564,
+      "End": 23391,
+      "BodyStart": 22638,
+      "Original": "Abc_Obj_t * Abc_NtkCreateNodeAnd( Abc_Ntk_t * pNtk, Vec_Ptr_t * vFanins )\n{\n    Abc_Obj_t * pNode;\n    int i;\n    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );\n    pNode = Abc_NtkCreateNode( pNtk );   \n    for ( i = 0; i \u003c vFanins-\u003enSize; i++ )\n        Abc_ObjAddFanin( pNode, (Abc_Obj_t *)vFanins-\u003epArray[i] );\n    if ( Abc_NtkHasSop(pNtk) )\n        pNode-\u003epData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins), NULL );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Extra_bddCreateAnd( (DdManager *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins) ), Cudd_Ref((DdNode *)pNode-\u003epData); \n#endif\n    else if ( Abc_NtkHasAig(pNtk) )\n        pNode-\u003epData = Hop_CreateAnd( (Hop_Man_t *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins) ); \n    else\n        assert( 0 );\n    return pNode;\n}",
+      "Draft": "func Abc_NtkCreateNodeAnd(pNtk *Abc_Ntk_t, vFanins *Vec_Ptr_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk );   \n    for  i = 0; i \u003c vFanins.nSize; i++  {\n        Abc_ObjAddFanin( pNode, (Abc_Obj_t *)vFanins.pArray[i] );\n    }\n    if Abc_NtkHasSop(pNtk) {\n        pNode.pData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtk.pManFunc, Vec_PtrSize(vFanins), nil );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Extra_bddCreateAnd( (DdManager *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins) ), Cudd_Ref((DdNode *)pNode-\u003epData); \n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_CreateAnd( (Hop_Man_t *)pNtk.pManFunc, Vec_PtrSize(vFanins) ); \n    } else {\n        assert(false, \"0\"); }\n    return pNode;\n}"
+    },
+    {
+      "Name": "Abc_NtkCreateNodeOr",
+      "Start": 23638,
+      "End": 24461,
+      "BodyStart": 23711,
+      "Original": "Abc_Obj_t * Abc_NtkCreateNodeOr( Abc_Ntk_t * pNtk, Vec_Ptr_t * vFanins )\n{\n    Abc_Obj_t * pNode;\n    int i;\n    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );\n    pNode = Abc_NtkCreateNode( pNtk );   \n    for ( i = 0; i \u003c vFanins-\u003enSize; i++ )\n        Abc_ObjAddFanin( pNode, (Abc_Obj_t *)vFanins-\u003epArray[i] );\n    if ( Abc_NtkHasSop(pNtk) )\n        pNode-\u003epData = Abc_SopCreateOr( (Mem_Flex_t *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins), NULL );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Extra_bddCreateOr( (DdManager *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins) ), Cudd_Ref((DdNode *)pNode-\u003epData); \n#endif\n    else if ( Abc_NtkHasAig(pNtk) )\n        pNode-\u003epData = Hop_CreateOr( (Hop_Man_t *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins) ); \n    else\n        assert( 0 );\n    return pNode;\n}",
+      "Draft": "func Abc_NtkCreateNodeOr(pNtk *Abc_Ntk_t, vFanins *Vec_Ptr_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk );   \n    for  i = 0; i \u003c vFanins.nSize; i++  {\n        Abc_ObjAddFanin( pNode, (Abc_Obj_t *)vFanins.pArray[i] );\n    }\n    if Abc_NtkHasSop(pNtk) {\n        pNode.pData = Abc_SopCreateOr( (Mem_Flex_t *)pNtk.pManFunc, Vec_PtrSize(vFanins), nil );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Extra_bddCreateOr( (DdManager *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins) ), Cudd_Ref((DdNode *)pNode-\u003epData); \n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_CreateOr( (Hop_Man_t *)pNtk.pManFunc, Vec_PtrSize(vFanins) ); \n    } else {\n        assert(false, \"0\"); }\n    return pNode;\n}"
+    },
+    {
+      "Name": "Abc_NtkCreateNodeExor",
+      "Start": 24710,
+      "End": 25541,
+      "BodyStart": 24785,
+      "Original": "Abc_Obj_t * Abc_NtkCreateNodeExor( Abc_Ntk_t * pNtk, Vec_Ptr_t * vFanins )\n{\n    Abc_Obj_t * pNode;\n    int i;\n    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );\n    pNode = Abc_NtkCreateNode( pNtk );   \n    for ( i = 0; i \u003c vFanins-\u003enSize; i++ )\n        Abc_ObjAddFanin( pNode, (Abc_Obj_t *)vFanins-\u003epArray[i] );\n    if ( Abc_NtkHasSop(pNtk) )\n        pNode-\u003epData = Abc_SopCreateXorSpecial( (Mem_Flex_t *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins) );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Extra_bddCreateExor( (DdManager *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins) ), Cudd_Ref((DdNode *)pNode-\u003epData); \n#endif\n    else if ( Abc_NtkHasAig(pNtk) )\n        pNode-\u003epData = Hop_CreateExor( (Hop_Man_t *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins) ); \n    else\n        assert( 0 );\n    return pNode;\n}",
+      "Draft": "func Abc_NtkCreateNodeExor(pNtk *Abc_Ntk_t, vFanins *Vec_Ptr_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk );   \n    for  i = 0; i \u003c vFanins.nSize; i++  {\n        Abc_ObjAddFanin( pNode, (Abc_Obj_t *)vFanins.pArray[i] );\n    }\n    if Abc_NtkHasSop(pNtk) {\n        pNode.pData = Abc_SopCreateXorSpecial( (Mem_Flex_t *)pNtk.pManFunc, Vec_PtrSize(vFanins) );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Extra_bddCreateExor( (DdManager *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins) ), Cudd_Ref((DdNode *)pNode-\u003epData); \n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_CreateExor( (Hop_Man_t *)pNtk.pManFunc, Vec_PtrSize(vFanins) ); \n    } else {\n        assert(false, \"0\"); }\n    return pNode;\n}"
+    },
+    {
+      "Name": "Abc_NtkCreateNodeMux",
+      "Start": 25789,
+      "End": 26814,
+      "BodyStart": 25902,
+      "Original": "Abc_Obj_t * Abc_NtkCreateNodeMux( Abc_Ntk_t * pNtk, Abc_Obj_t * pNodeC, Abc_Obj_t * pNode1, Abc_Obj_t * pNode0 )\n{\n    Abc_Obj_t * pNode;\n    assert( Abc_NtkIsLogic(pNtk) );\n    pNode = Abc_NtkCreateNode( pNtk );   \n    Abc_ObjAddFanin( pNode, pNodeC );\n    Abc_ObjAddFanin( pNode, pNode1 );\n    Abc_ObjAddFanin( pNode, pNode0 );\n    if ( Abc_NtkHasSop(pNtk) )\n        pNode-\u003epData = Abc_SopRegister( (Mem_Flex_t *)pNtk-\u003epManFunc, \"11- 1\\n0-1 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_bddIte((DdManager *)pNtk-\u003epManFunc,Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,0),Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,1),Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,2)), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    else if ( Abc_NtkHasAig(pNtk) )\n        pNode-\u003epData = Hop_Mux((Hop_Man_t *)pNtk-\u003epManFunc,Hop_IthVar((Hop_Man_t *)pNtk-\u003epManFunc,0),Hop_IthVar((Hop_Man_t *)pNtk-\u003epManFunc,1),Hop_IthVar((Hop_Man_t *)pNtk-\u003epManFunc,2));\n    else\n        assert( 0 );\n    return pNode;\n}",
+      "Draft": "func Abc_NtkCreateNodeMux(pNtk *Abc_Ntk_t, pNodeC *Abc_Obj_t, pNode1 *Abc_Obj_t, pNode0 *Abc_Obj_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk );   \n    Abc_ObjAddFanin( pNode, pNodeC );\n    Abc_ObjAddFanin( pNode, pNode1 );\n    Abc_ObjAddFanin( pNode, pNode0 );\n    if Abc_NtkHasSop(pNtk) {\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \"11- 1\\n0-1 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_bddIte((DdManager *)pNtk-\u003epManFunc,Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,0),Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,1),Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,2)), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_Mux((Hop_Man_t *)pNtk.pManFunc,Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,0),Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,1),Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,2));\n    } else {\n        assert(false, \"0\"); }\n    return pNode;\n}"
+    },
+    {
+      "Name": "Abc_NodeIsConst",
+      "Start": 27094,
+      "End": 27283,
+      "BodyStart": 27139,
+      "Original": "int Abc_NodeIsConst( Abc_Obj_t * pNode )    \n{ \n    assert( Abc_NtkIsLogic(pNode-\u003epNtk) || Abc_NtkIsNetlist(pNode-\u003epNtk) );\n    return Abc_ObjIsNode(pNode) \u0026\u0026 Abc_ObjFaninNum(pNode) == 0;\n}",
+      "Draft": "func Abc_NodeIsConst(pNode *Abc_Obj_t) int32 { \n    assert(Abc_NtkIsLogic(pNode.pNtk) || Abc_NtkIsNetlist(pNode.pNtk), \"Abc_NtkIsLogic(pNode.pNtk) || Abc_NtkIsNetlist(pNode.pNtk)\");\n    return Abc_ObjIsNode(pNode) \u0026\u0026 Abc_ObjFaninNum(pNode) == 0;\n}"
+    },
+    {
+      "Name": "Abc_NodeIsConst0",
+      "Start": 27562,
+      "End": 28252,
+      "BodyStart": 27608,
+      "Original": "int Abc_NodeIsConst0( Abc_Obj_t * pNode )    \n{ \n    Abc_Ntk_t * pNtk = pNode-\u003epNtk;\n    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );\n    assert( Abc_ObjIsNode(pNode) );      \n    if ( !Abc_NodeIsConst(pNode) )\n        return 0;\n    if ( Abc_NtkHasSop(pNtk) )\n        return Abc_SopIsConst0((char *)pNode-\u003epData);\n#ifdef ABC_USE_CUDD\n    if ( Abc_NtkHasBdd(pNtk) )\n        return Cudd_IsComplement(pNode-\u003epData);\n#endif\n    if ( Abc_NtkHasAig(pNtk) )\n        return Hop_IsComplement((Hop_Obj_t *)pNode-\u003epData)? 1:0;\n    if ( Abc_NtkHasMapping(pNtk) )\n        return pNode-\u003epData == Mio_LibraryReadConst0((Mio_Library_t *)Abc_FrameReadLibGen());\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Abc_NodeIsConst0(pNode *Abc_Obj_t) int32 { \n    var pNtk *Abc_Ntk_t  = pNode.pNtk;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");      \n    if !(Abc_NodeIsConst(pNode) != 0) {\n        return 0; }\n    if Abc_NtkHasSop(pNtk) {\n        return Abc_SopIsConst0((char *)pNode.pData); }\n#ifdef ABC_USE_CUDD\n    if ( Abc_NtkHasBdd(pNtk) )\n        return Cudd_IsComplement(pNode-\u003epData);\n#endif\n    if Abc_NtkHasAig(pNtk) {\n        if Hop_IsComplement((Hop_Obj_t *)pNode.pData) {\n            return 1;\n        } else {\n            return 0;\n        } }\n    if Abc_NtkHasMapping(pNtk) {\n        return pNode.pData == Mio_LibraryReadConst0((Mio_Library_t *)Abc_FrameReadLibGen()); }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NodeIsConst1",
+      "Start": 28531,
+      "End": 29218,
+      "BodyStart": 28577,
+      "Original": "int Abc_NodeIsConst1( Abc_Obj_t * pNode )    \n{ \n    Abc_Ntk_t * pNtk = pNode-\u003epNtk;\n    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );\n    assert( Abc_ObjIsNode(pNode) );      \n    if ( !Abc_NodeIsConst(pNode) )\n        return 0;\n    if ( Abc_NtkHasSop(pNtk) )\n        return Abc_SopIsConst1((char *)pNode-\u003epData);\n#ifdef ABC_USE_CUDD\n    if ( Abc_NtkHasBdd(pNtk) )\n        return !Cudd_IsComplement(pNode-\u003epData);\n#endif\n    if ( Abc_NtkHasAig(pNtk) )\n        return !Hop_IsComplement((Hop_Obj_t *)pNode-\u003epData);\n    if ( Abc_NtkHasMapping(pNtk) )\n        return pNode-\u003epData == Mio_LibraryReadConst1((Mio_Library_t *)Abc_FrameReadLibGen());\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Abc_NodeIsConst1(pNode *Abc_Obj_t) int32 { \n    var pNtk *Abc_Ntk_t  = pNode.pNtk;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");      \n    if !(Abc_NodeIsConst(pNode) != 0) {\n        return 0; }\n    if Abc_NtkHasSop(pNtk) {\n        return Abc_SopIsConst1((char *)pNode.pData); }\n#ifdef ABC_USE_CUDD\n    if ( Abc_NtkHasBdd(pNtk) )\n        return !Cudd_IsComplement(pNode-\u003epData);\n#endif\n    if Abc_NtkHasAig(pNtk) {\n        return !Hop_IsComplement((Hop_Obj_t *)pNode.pData); }\n    if Abc_NtkHasMapping(pNtk) {\n        return pNode.pData == Mio_LibraryReadConst1((Mio_Library_t *)Abc_FrameReadLibGen()); }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NodeIsBuf",
+      "Start": 29488,
+      "End": 30165,
+      "BodyStart": 29531,
+      "Original": "int Abc_NodeIsBuf( Abc_Obj_t * pNode )    \n{ \n    Abc_Ntk_t * pNtk = pNode-\u003epNtk;\n    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );\n    assert( Abc_ObjIsNode(pNode) ); \n    if ( Abc_ObjFaninNum(pNode) != 1 )\n        return 0;\n    if ( Abc_NtkHasSop(pNtk) )\n        return Abc_SopIsBuf((char *)pNode-\u003epData);\n#ifdef ABC_USE_CUDD\n    if ( Abc_NtkHasBdd(pNtk) )\n        return !Cudd_IsComplement(pNode-\u003epData);\n#endif\n    if ( Abc_NtkHasAig(pNtk) )\n        return !Hop_IsComplement((Hop_Obj_t *)pNode-\u003epData);\n    if ( Abc_NtkHasMapping(pNtk) )\n        return pNode-\u003epData == Mio_LibraryReadBuf((Mio_Library_t *)Abc_FrameReadLibGen());\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Abc_NodeIsBuf(pNode *Abc_Obj_t) int32 { \n    var pNtk *Abc_Ntk_t  = pNode.pNtk;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\"); \n    if Abc_ObjFaninNum(pNode) != 1 {\n        return 0; }\n    if Abc_NtkHasSop(pNtk) {\n        return Abc_SopIsBuf((char *)pNode.pData); }\n#ifdef ABC_USE_CUDD\n    if ( Abc_NtkHasBdd(pNtk) )\n        return !Cudd_IsComplement(pNode-\u003epData);\n#endif\n    if Abc_NtkHasAig(pNtk) {\n        return !Hop_IsComplement((Hop_Obj_t *)pNode.pData); }\n    if Abc_NtkHasMapping(pNtk) {\n        return pNode.pData == Mio_LibraryReadBuf((Mio_Library_t *)Abc_FrameReadLibGen()); }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NodeIsInv",
+      "Start": 30438,
+      "End": 31118,
+      "BodyStart": 30481,
+      "Original": "int Abc_NodeIsInv( Abc_Obj_t * pNode )    \n{ \n    Abc_Ntk_t * pNtk = pNode-\u003epNtk;\n    assert( Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk) );\n    assert( Abc_ObjIsNode(pNode) ); \n    if ( Abc_ObjFaninNum(pNode) != 1 )\n        return 0;\n    if ( Abc_NtkHasSop(pNtk) )\n        return Abc_SopIsInv((char *)pNode-\u003epData);\n#ifdef ABC_USE_CUDD\n    if ( Abc_NtkHasBdd(pNtk) )\n        return Cudd_IsComplement(pNode-\u003epData);\n#endif\n    if ( Abc_NtkHasAig(pNtk) )\n        return Hop_IsComplement((Hop_Obj_t *)pNode-\u003epData)? 1:0;\n    if ( Abc_NtkHasMapping(pNtk) )\n        return pNode-\u003epData == Mio_LibraryReadInv((Mio_Library_t *)Abc_FrameReadLibGen());\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Abc_NodeIsInv(pNode *Abc_Obj_t) int32 { \n    var pNtk *Abc_Ntk_t  = pNode.pNtk;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\"); \n    if Abc_ObjFaninNum(pNode) != 1 {\n        return 0; }\n    if Abc_NtkHasSop(pNtk) {\n        return Abc_SopIsInv((char *)pNode.pData); }\n#ifdef ABC_USE_CUDD\n    if ( Abc_NtkHasBdd(pNtk) )\n        return Cudd_IsComplement(pNode-\u003epData);\n#endif\n    if Abc_NtkHasAig(pNtk) {\n        if Hop_IsComplement((Hop_Obj_t *)pNode.pData) {\n            return 1;\n        } else {\n            return 0;\n        } }\n    if Abc_NtkHasMapping(pNtk) {\n        return pNode.pData == Mio_LibraryReadInv((Mio_Library_t *)Abc_FrameReadLibGen()); }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NodeComplement",
+      "Start": 31398,
+      "End": 31901,
+      "BodyStart": 31443,
+      "Original": "void Abc_NodeComplement( Abc_Obj_t * pNode )\n{\n    assert( Abc_NtkIsLogic(pNode-\u003epNtk) || Abc_NtkIsNetlist(pNode-\u003epNtk) );\n    assert( Abc_ObjIsNode(pNode) ); \n    if ( Abc_NtkHasSop(pNode-\u003epNtk) )\n        Abc_SopComplement( (char *)pNode-\u003epData );\n    else if ( Abc_NtkHasAig(pNode-\u003epNtk) )\n        pNode-\u003epData = Hop_Not( (Hop_Obj_t *)pNode-\u003epData );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNode-\u003epNtk) )\n        pNode-\u003epData = Cudd_Not( pNode-\u003epData );\n#endif\n    else\n        assert( 0 );\n}",
+      "Draft": "func Abc_NodeComplement(pNode *Abc_Obj_t) {\n    assert(Abc_NtkIsLogic(pNode.pNtk) || Abc_NtkIsNetlist(pNode.pNtk), \"Abc_NtkIsLogic(pNode.pNtk) || Abc_NtkIsNetlist(pNode.pNtk)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\"); \n    if Abc_NtkHasSop(pNode.pNtk) {\n        Abc_SopComplement( (char *)pNode.pData );\n    } else if Abc_NtkHasAig(pNode.pNtk) {\n        pNode.pData = Hop_Not( (Hop_Obj_t *)pNode.pData );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNode-\u003epNtk) )\n        pNode-\u003epData = Cudd_Not( pNode-\u003epData );\n#endif\n    } else {\n        assert(false, \"0\"); }\n}"
+    },
+    {
+      "Name": "Abc_NodeComplementInput",
+      "Start": 32171,
+      "End": 33452,
+      "BodyStart": 32241,
+      "Original": "void Abc_NodeComplementInput( Abc_Obj_t * pNode, Abc_Obj_t * pFanin )\n{\n    int iFanin;\n    if ( (iFanin = Vec_IntFind( \u0026pNode-\u003evFanins, pFanin-\u003eId )) == -1 )\n    {\n        printf( \"Node %s should be among\", Abc_ObjName(pFanin) );\n        printf( \" the fanins of node %s...\\n\", Abc_ObjName(pNode) );\n        return;\n    }\n    if ( Abc_NtkHasSop(pNode-\u003epNtk) )\n        Abc_SopComplementVar( (char *)pNode-\u003epData, iFanin );\n    else if ( Abc_NtkHasAig(pNode-\u003epNtk) )\n        pNode-\u003epData = Hop_Complement( (Hop_Man_t *)pNode-\u003epNtk-\u003epManFunc, (Hop_Obj_t *)pNode-\u003epData, iFanin );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNode-\u003epNtk) )\n    {\n        DdManager * dd = (DdManager *)pNode-\u003epNtk-\u003epManFunc;\n        DdNode * bVar, * bCof0, * bCof1;\n        bVar = Cudd_bddIthVar( dd, iFanin );\n        bCof0 = Cudd_Cofactor( dd, (DdNode *)pNode-\u003epData, Cudd_Not(bVar) );   Cudd_Ref( bCof0 );\n        bCof1 = Cudd_Cofactor( dd, (DdNode *)pNode-\u003epData, bVar );             Cudd_Ref( bCof1 );\n        Cudd_RecursiveDeref( dd, (DdNode *)pNode-\u003epData );\n        pNode-\u003epData = Cudd_bddIte( dd, bVar, bCof0, bCof1 );        Cudd_Ref( (DdNode *)pNode-\u003epData );\n        Cudd_RecursiveDeref( dd, bCof0 );\n        Cudd_RecursiveDeref( dd, bCof1 );\n    }\n#endif\n    else\n        assert( 0 );\n}",
+      "Draft": "func Abc_NodeComplementInput(pNode *Abc_Obj_t, pFanin *Abc_Obj_t) {\n    var iFanin int32;\n    if (iFanin = Vec_IntFind( \u0026pNode.vFanins, pFanin.Id )) == -1 {\n        fmt.Printf(\"Node %s should be among\", Abc_ObjName(pFanin));\n        fmt.Printf(\" the fanins of node %s...\\n\", Abc_ObjName(pNode));\n        return;\n    }\n    if Abc_NtkHasSop(pNode.pNtk) {\n        Abc_SopComplementVar( (char *)pNode.pData, iFanin );\n    } else if Abc_NtkHasAig(pNode.pNtk) {\n        pNode.pData = Hop_Complement( (Hop_Man_t *)pNode.pNtk.pManFunc, (Hop_Obj_t *)pNode.pData, iFanin );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNode-\u003epNtk) )\n    {\n        DdManager * dd = (DdManager *)pNode-\u003epNtk-\u003epManFunc;\n        DdNode * bVar, * bCof0, * bCof1;\n        bVar = Cudd_bddIthVar( dd, iFanin );\n        bCof0 = Cudd_Cofactor( dd, (DdNode *)pNode-\u003epData, Cudd_Not(bVar) );   Cudd_Ref( bCof0 );\n        bCof1 = Cudd_Cofactor( dd, (DdNode *)pNode-\u003epData, bVar );             Cudd_Ref( bCof1 );\n        Cudd_RecursiveDeref( dd, (DdNode *)pNode-\u003epData );\n        pNode-\u003epData = Cudd_bddIte( dd, bVar, bCof0, bCof1 );        Cudd_Ref( (DdNode *)pNode-\u003epData );\n        Cudd_RecursiveDeref( dd, bCof0 );\n        Cudd_RecursiveDeref( dd, bCof1 );\n    }\n#endif\n    } else {\n        assert(false, \"0\"); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::mechanical::sizeof::1685",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1670,
+      "End": 1676
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::mechanical::sizeof::2534",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2519,
+      "End": 2525
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::1550",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1535,
+      "End": 1548
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::1624",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1609,
+      "End": 1622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::2650",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2635,
+      "End": 2643
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::4253",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4238,
+      "End": 4246
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::5287",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5272,
+      "End": 5285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::5446",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5431,
+      "End": 5444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::11358",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11425,
+      "End": 11439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::11391",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11458,
+      "End": 11466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::11582",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11825,
+      "End": 11838
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::11617",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11860,
+      "End": 11873
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::11649",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11892,
+      "End": 11905
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::18354",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18597,
+      "End": 18611
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::18542",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18881,
+      "End": 18894
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::18657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 18996,
+      "End": 19013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::19322",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19661,
+      "End": 19675
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::19510",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 19939,
+      "End": 19952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::19625",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20054,
+      "End": 20071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::20326",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 20755,
+      "End": 20769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::20520",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21053,
+      "End": 21066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::20635",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21168,
+      "End": 21185
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::21299",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 21832,
+      "End": 21846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::21485",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22112,
+      "End": 22125
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::21599",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22226,
+      "End": 22243
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::22226",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22853,
+      "End": 22866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::22333",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 22960,
+      "End": 22974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::22542",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23288,
+      "End": 23301
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::23180",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 23926,
+      "End": 23939
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::23286",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24032,
+      "End": 24046
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::23494",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 24358,
+      "End": 24371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::24136",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25000,
+      "End": 25013
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::24250",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25114,
+      "End": 25128
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::24454",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 25438,
+      "End": 25451
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::25206",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26190,
+      "End": 26204
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::25400",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26609,
+      "End": 26622
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::25439",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26648,
+      "End": 26661
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::25481",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26690,
+      "End": 26703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::25523",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26732,
+      "End": 26745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::26657",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 27866,
+      "End": 27874
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::26820",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28058,
+      "End": 28071
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::26941",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28179,
+      "End": 28196
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::27597",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 28835,
+      "End": 28843
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::27761",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29029,
+      "End": 29042
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::27877",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29145,
+      "End": 29162
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::28517",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29785,
+      "End": 29793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::28681",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 29979,
+      "End": 29992
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::28794",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30092,
+      "End": 30109
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::29437",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30735,
+      "End": 30743
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::29600",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 30927,
+      "End": 30940
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::29718",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31045,
+      "End": 31062
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::30296",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31623,
+      "End": 31631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::30395",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31722,
+      "End": 31735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::31192",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32561,
+      "End": 32569
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::31306",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32675,
+      "End": 32688
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::pointer-cast::31342",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32711,
+      "End": 32724
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_ObjAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1407,
+      "End": 1776
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_ObjRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ObjRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2032,
+      "End": 2687
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkCreateObj",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCreateObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2952,
+      "End": 4503
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkDeleteObj",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDeleteObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4775,
+      "End": 7027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkDeleteObjPo",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDeleteObjPo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7295,
+      "End": 7862
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkDeleteObj_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDeleteObj_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8137,
+      "End": 8953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkDeleteAll_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDeleteAll_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9227,
+      "End": 9728
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkDupObj",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDupObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9982,
+      "End": 12436
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkDupBox",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkDupBox",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12725,
+      "End": 13324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkCloneObj",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCloneObj",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13632,
+      "End": 13908
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkFindNode",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFindNode",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14181,
+      "End": 15489
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkFindNet",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFindNet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15761,
+      "End": 16069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkFindCi",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFindCi",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16331,
+      "End": 16717
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkFindCo",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFindCo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16979,
+      "End": 17365
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkFindOrCreateNet",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkFindOrCreateNet",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17627,
+      "End": 18055
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkCreateNodeConst0",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCreateNodeConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18315,
+      "End": 19119
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkCreateNodeConst1",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCreateNodeConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19379,
+      "End": 20177
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkCreateNodeInv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCreateNodeInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20430,
+      "End": 21258
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkCreateNodeBuf",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCreateNodeBuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21509,
+      "End": 22316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkCreateNodeAnd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCreateNodeAnd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 22564,
+      "End": 23391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkCreateNodeOr",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCreateNodeOr",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 23638,
+      "End": 24461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkCreateNodeExor",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCreateNodeExor",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24710,
+      "End": 25541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NtkCreateNodeMux",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCreateNodeMux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 25789,
+      "End": 26814
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NodeIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27094,
+      "End": 27283
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NodeIsConst0",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeIsConst0",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27562,
+      "End": 28252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NodeIsConst1",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeIsConst1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28531,
+      "End": 29218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NodeIsBuf",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeIsBuf",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29488,
+      "End": 30165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NodeIsInv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeIsInv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30438,
+      "End": 31118
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NodeComplement",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeComplement",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31398,
+      "End": 31901
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::Abc_NodeComplementInput",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NodeComplementInput",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 32171,
+      "End": 33452
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 33699
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 624,
+      "End": 683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 6498,
+      "End": 6654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11481,
+      "End": 11731
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 18637,
+      "End": 18807
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 19701,
+      "End": 19865
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 20796,
+      "End": 20974
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 21873,
+      "End": 22041
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 23020,
+      "End": 23213
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 24092,
+      "End": 24284
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 25168,
+      "End": 25362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 26240,
+      "End": 26541
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 27889,
+      "End": 27994
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 28858,
+      "End": 28964
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::13",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 29808,
+      "End": 29914
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::14",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 30758,
+      "End": 30863
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::15",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 31751,
+      "End": 31869
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::conditional::16",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 32748,
+      "End": 33420
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::macro-inline::1622",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1622,
+      "End": 1647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::macro-inline::2341",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2341,
+      "End": 2374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::macro-inline::2384",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2384,
+      "End": 2416
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::macro-inline::2668",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2668,
+      "End": 2684
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::macro-inline::8531",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8531,
+      "End": 8582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::macro-inline::8740",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8740,
+      "End": 8791
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::macro-inline::9539",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9539,
+      "End": 9590
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::macro-inline::13020",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13020,
+      "End": 13057
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::macro-inline::13186",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanout",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13186,
+      "End": 13224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcObj.c::macro-inline::13806",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13806,
+      "End": 13844
+    }
+  ],
+  "Draft": "package abc\n\nimport (\n\t\"fmt\"\n\t\"strconv\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcObj.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Object creation/duplication/deletion procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcObj.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"abc.h\"\n//#include \"abcInt.h\"\n//#include \"base/main/main.h\"\n//#include \"map/mio/mio.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Creates a new object.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ObjAlloc(pNtk *Abc_Ntk_t, Type Abc_ObjType_t) *Abc_Obj_t {\n    var pObj *Abc_Obj_t;\n    if pNtk.pMmObj {\n        pObj = (Abc_Obj_t *)Mem_FixedEntryFetch( pNtk.pMmObj );\n    } else {\n        pObj = (Abc_Obj_t *)new(Abc_Obj_t); }\n    memset( pObj, 0, sizeof(Abc_Obj_t) );\n    pObj.pNtk = pNtk;\n    pObj.Type = Type;\n    pObj.Id   = -1;\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recycles the object.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ObjRecycle(pObj *Abc_Obj_t) {\n    var pNtk *Abc_Ntk_t  = pObj.pNtk;\n//    int LargePiece = (4 \u003c\u003c ABC_NUM_STEPS);\n    // free large fanout arrays\n//    if ( pNtk-\u003epMmStep \u0026\u0026 pObj-\u003evFanouts.nCap * 4 \u003e LargePiece )\n//        free( pObj-\u003evFanouts.pArray );\n    if pNtk.pMmStep == nil {\n        ABC_FREE( pObj.vFanouts.pArray );\n        ABC_FREE( pObj.vFanins.pArray );\n    }\n    // clean the memory to make deleted object distinct from the live one\n    memset( pObj, 0, sizeof(Abc_Obj_t) );\n    // recycle the object\n    if pNtk.pMmObj {\n        Mem_FixedEntryRecycle( pNtk.pMmObj, (char *)pObj );\n    } else {\n        ABC_FREE( pObj ); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Adds the node to the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCreateObj(pNtk *Abc_Ntk_t, Type Abc_ObjType_t) *Abc_Obj_t {\n    var pObj *Abc_Obj_t;\n    // create new object, assign ID, and add to the array\n    pObj = Abc_ObjAlloc( pNtk, Type );\n    pObj.Id = pNtk.vObjs.nSize;\n    Vec_PtrPush( pNtk.vObjs, pObj );\n    pNtk.nObjCounts[Type]++;\n    pNtk.nObjs++;\n    // perform specialized operations depending on the object type\n    switch Type {\n        case ABC_OBJ_NONE:   \n            assert(false, \"0\"); \n            break;\n        case ABC_OBJ_CONST1: \n            assert(false, \"0\"); \n            break;\n        case ABC_OBJ_PI:\n//            pObj-\u003eiTemp = Vec_PtrSize(pNtk-\u003evCis);\n            Vec_PtrPush( pNtk.vPis, pObj );\n            Vec_PtrPush( pNtk.vCis, pObj );\n            break;\n        case ABC_OBJ_PO:     \n//            pObj-\u003eiTemp = Vec_PtrSize(pNtk-\u003evCos);\n            Vec_PtrPush( pNtk.vPos, pObj );\n            Vec_PtrPush( pNtk.vCos, pObj );\n            break;\n        case ABC_OBJ_BI:     \n            if ( pNtk.vCos ) Vec_PtrPush( pNtk.vCos, pObj );\n            break;\n        case ABC_OBJ_BO:     \n            if ( pNtk.vCis ) Vec_PtrPush( pNtk.vCis, pObj );\n            break;\n        case ABC_OBJ_NET,  \n         ABC_OBJ_NODE: \n            break;\n        case ABC_OBJ_LATCH:     \n            pObj.pData = (void *)ABC_INIT_NONE;\n        fallthrough\ncase ABC_OBJ_WHITEBOX,     \n         ABC_OBJ_BLACKBOX:     \n            if ( pNtk.vBoxes ) Vec_PtrPush( pNtk.vBoxes, pObj );\n            break;\n        default:\n            assert(false, \"0\"); \n            break;\n    }\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the object from the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDeleteObj(pObj *Abc_Obj_t) {\n    var pNtk *Abc_Ntk_t  = pObj.pNtk;\n    var vNodes *Vec_Ptr_t;\n    var i int32;\n    assert(!Abc_ObjIsComplement(pObj), \"!Abc_ObjIsComplement(pObj)\");\n    // remove from the table of names\n    if Nm_ManFindNameById(pObj.pNtk.pManName, pObj.Id) {\n        Nm_ManDeleteIdName(pObj.pNtk.pManName, pObj.Id); }\n    // delete fanins and fanouts\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NodeCollectFanouts( pObj, vNodes );\n    for  i = 0; i \u003c vNodes.nSize; i++  {\n        Abc_ObjDeleteFanin( (Abc_Obj_t *)vNodes.pArray[i], pObj );\n    }\n    Abc_NodeCollectFanins( pObj, vNodes );\n    for  i = 0; i \u003c vNodes.nSize; i++  {\n        Abc_ObjDeleteFanin( pObj, (Abc_Obj_t *)vNodes.pArray[i] );\n    }\n    Vec_PtrFree( vNodes );\n    // remove from the list of objects\n    Vec_PtrWriteEntry( pNtk.vObjs, pObj.Id, nil );\n    pObj.Id = (1\u003c\u003c26)-1;\n    pNtk.nObjCounts[pObj.Type]--;\n    pNtk.nObjs--;\n    // perform specialized operations depending on the object type\n    switch pObj.Type {\n        case ABC_OBJ_NONE:   \n            assert(false, \"0\"); \n            break;\n        case ABC_OBJ_CONST1: \n            assert(false, \"0\"); \n            break;\n        case ABC_OBJ_PI:     \n            Vec_PtrRemove( pNtk.vPis, pObj );\n            Vec_PtrRemove( pNtk.vCis, pObj );\n            break;\n        case ABC_OBJ_PO:     \n            Vec_PtrRemove( pNtk.vPos, pObj );\n            Vec_PtrRemove( pNtk.vCos, pObj );\n            break;\n        case ABC_OBJ_BI:     \n            if ( pNtk.vCos ) Vec_PtrRemove( pNtk.vCos, pObj );\n            break;\n        case ABC_OBJ_BO:     \n            if ( pNtk.vCis ) Vec_PtrRemove( pNtk.vCis, pObj );\n            break;\n        case ABC_OBJ_NET:  \n            break;\n        case ABC_OBJ_NODE: \n#ifdef ABC_USE_CUDD\n            if ( Abc_NtkHasBdd(pNtk) )\n                Cudd_RecursiveDeref( (DdManager *)pNtk-\u003epManFunc, (DdNode *)pObj-\u003epData );\n#endif\n            pObj.pData = nil;\n            break;\n        case ABC_OBJ_LATCH,     \n         ABC_OBJ_WHITEBOX,     \n         ABC_OBJ_BLACKBOX:     \n            if ( pNtk.vBoxes ) Vec_PtrRemove( pNtk.vBoxes, pObj );\n            break;\n        default:\n            assert(false, \"0\"); \n            break;\n    }\n    // recycle the object memory\n    Abc_ObjRecycle( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the PO from the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDeleteObjPo(pObj *Abc_Obj_t) {\n    assert(Abc_ObjIsPo(pObj), \"Abc_ObjIsPo(pObj)\");\n    // remove from the table of names\n    if Nm_ManFindNameById(pObj.pNtk.pManName, pObj.Id) {\n        Nm_ManDeleteIdName(pObj.pNtk.pManName, pObj.Id); }\n    // delete fanins\n    Abc_ObjDeleteFanin( pObj, Abc_ObjFanin0(pObj) );\n    // remove from the list of objects\n    Vec_PtrWriteEntry( pObj.pNtk.vObjs, pObj.Id, nil );\n    pObj.Id = (1\u003c\u003c26)-1;\n    pObj.pNtk.nObjCounts[pObj.Type]--;\n    pObj.pNtk.nObjs--;\n    // recycle the object memory\n    Abc_ObjRecycle( pObj );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the node and MFFC of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDeleteObj_rec(pObj *Abc_Obj_t, fOnlyNodes int32) {\n    var vNodes *Vec_Ptr_t;\n    var i int32;\n    assert(!Abc_ObjIsComplement(pObj), \"!Abc_ObjIsComplement(pObj)\");\n    assert(!Abc_ObjIsPi(pObj), \"!Abc_ObjIsPi(pObj)\");\n    assert(Abc_ObjFanoutNum(pObj) == 0, \"Abc_ObjFanoutNum(pObj) == 0\");\n    // delete fanins and fanouts\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NodeCollectFanins( pObj, vNodes );\n    Abc_NtkDeleteObj( pObj );\n    if fOnlyNodes != 0 {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n            if ( Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) == 0 )\n                Abc_NtkDeleteObj_rec( pObj, fOnlyNodes );\n    \n    } else {\n        Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n            if ( !Abc_ObjIsPi(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) == 0 )\n                Abc_NtkDeleteObj_rec( pObj, fOnlyNodes );\n    }\n    Vec_PtrFree( vNodes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deletes the node and MFFC of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDeleteAll_rec(pObj *Abc_Obj_t) {\n    var vNodes *Vec_Ptr_t;\n    var i int32;\n    assert(!Abc_ObjIsComplement(pObj), \"!Abc_ObjIsComplement(pObj)\");\n    assert(Abc_ObjFanoutNum(pObj) == 0, \"Abc_ObjFanoutNum(pObj) == 0\");\n    // delete fanins and fanouts\n    vNodes = Vec_PtrAlloc( 100 );\n    Abc_NodeCollectFanins( pObj, vNodes );\n    Abc_NtkDeleteObj( pObj );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pObj, i )\n        if ( !Abc_ObjIsNode(pObj) \u0026\u0026 Abc_ObjFanoutNum(pObj) == 0 )\n            Abc_NtkDeleteAll_rec( pObj );\n    Vec_PtrFree( vNodes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicate the Obj.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDupObj(pNtkNew *Abc_Ntk_t, pObj *Abc_Obj_t, fCopyName int32) *Abc_Obj_t {\n    var pObjNew *Abc_Obj_t;\n    // create the new object\n    pObjNew = Abc_NtkCreateObj( pNtkNew, (Abc_ObjType_t)pObj.Type );\n    // transfer names of the terminal objects\n    if fCopyName != 0 {\n        if Abc_ObjIsCi(pObj) {\n            if !Abc_NtkIsNetlist(pNtkNew) {\n                Abc_ObjAssignName( pObjNew, Abc_ObjName(Abc_ObjFanout0Ntk(pObj)), nil ); }\n        \n        } else if Abc_ObjIsCo(pObj) {\n            if !Abc_NtkIsNetlist(pNtkNew) {\n                if Abc_ObjIsPo(pObj) {\n                    Abc_ObjAssignName( pObjNew, Abc_ObjName(Abc_ObjFanin0Ntk(pObj)), nil );\n                } else {\n                    assert(Abc_ObjIsLatch(Abc_ObjFanout0(pObj)), \"Abc_ObjIsLatch(Abc_ObjFanout0(pObj))\");\n                    Abc_ObjAssignName( pObjNew, Abc_ObjName(pObj), nil );\n                }\n            }\n        \n        } else if Abc_ObjIsBox(pObj) || Abc_ObjIsNet(pObj) {\n            Abc_ObjAssignName( pObjNew, Abc_ObjName(pObj), nil ); }\n    }\n    // copy functionality/names\n    if Abc_ObjIsNode(pObj) { // copy the function if functionality is compatible\n    \n        if pNtkNew.ntkFunc == pObj.pNtk.ntkFunc {\n            if Abc_NtkIsStrash(pNtkNew) {\n            } else if Abc_NtkHasSop(pNtkNew) || Abc_NtkHasBlifMv(pNtkNew) {\n                pObjNew.pData = Abc_SopRegister( (Mem_Flex_t *)pNtkNew.pManFunc, (char *)pObj.pData );\n#ifdef ABC_USE_CUDD\n            else if ( Abc_NtkHasBdd(pNtkNew) )\n                pObjNew-\u003epData = Cudd_bddTransfer((DdManager *)pObj-\u003epNtk-\u003epManFunc, (DdManager *)pNtkNew-\u003epManFunc, (DdNode *)pObj-\u003epData), Cudd_Ref((DdNode *)pObjNew-\u003epData);\n#endif\n            } else if Abc_NtkHasAig(pNtkNew) {\n                pObjNew.pData = Hop_Transfer((Hop_Man_t *)pObj.pNtk.pManFunc, (Hop_Man_t *)pNtkNew.pManFunc, (Hop_Obj_t *)pObj.pData, Abc_ObjFaninNum(pObj));\n            } else if Abc_NtkHasMapping(pNtkNew) {\n                pObjNew.pData = pObj.pData, pNtkNew.nBarBufs2 += !pObj.pData;\n            } else { assert(false, \"0\"); }\n        }\n    \n    } else if Abc_ObjIsNet(pObj) { // copy the name\n    \n    \n    } else if Abc_ObjIsLatch(pObj) { // copy the reset value\n        pObjNew.pData = pObj.pData; }\n    // transfer HAIG\n//    pObjNew-\u003epEquiv = pObj-\u003epEquiv;\n    // remember the new node in the old node\n    pObj.pCopy = pObjNew;\n    return pObjNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the latch with its input/output terminals.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkDupBox(pNtkNew *Abc_Ntk_t, pBox *Abc_Obj_t, fCopyName int32) *Abc_Obj_t {\n    var pTerm, pBoxNew *Abc_Obj_t;\n    var i int32;\n    assert(Abc_ObjIsBox(pBox), \"Abc_ObjIsBox(pBox)\");\n    // duplicate the box \n    pBoxNew = Abc_NtkDupObj( pNtkNew, pBox, fCopyName );\n    // duplicate the fanins and connect them\n    Abc_ObjForEachFanin( pBox, pTerm, i )\n        Abc_ObjAddFanin( pBoxNew, Abc_NtkDupObj(pNtkNew, pTerm, fCopyName) );\n    // duplicate the fanouts and connect them\n    Abc_ObjForEachFanout( pBox, pTerm, i )\n        Abc_ObjAddFanin( Abc_NtkDupObj(pNtkNew, pTerm, fCopyName), pBoxNew );\n    return pBoxNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Clones the objects in the same network but does not assign its function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCloneObj(pObj *Abc_Obj_t) *Abc_Obj_t {\n    var pClone, pFanin *Abc_Obj_t;\n    var i int32;\n    pClone = Abc_NtkCreateObj( pObj.pNtk, (Abc_ObjType_t)pObj.Type );   \n    Abc_ObjForEachFanin( pObj, pFanin, i )\n        Abc_ObjAddFanin( pClone, pFanin );\n    return pClone;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the net with the given name.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFindNode(pNtk *Abc_Ntk_t, pName string) *Abc_Obj_t {\n    var pObj *Abc_Obj_t;\n    var Num int32;\n    // try to find the terminal\n    Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_PO );\n    if Num \u003e= 0 {\n        return Abc_ObjFanin0( Abc_NtkObj( pNtk, Num ) ); }\n    Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_BI );\n    if Num \u003e= 0 {\n        return Abc_ObjFanin0( Abc_NtkObj( pNtk, Num ) ); }\n    Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_NODE );\n    if Num \u003e= 0 {\n        return Abc_NtkObj( pNtk, Num ); }\n    // find the internal node\n    if pName[0] != 'n' {\n        fmt.Printf(\"Name \\\"%s\\\" is not found among CO or node names (internal names often look as \\\"n\u003cnum\u003e\\\").\\n\", pName);\n        return nil;\n    }\n    Num = strconv.Atoi(pName + 1);\n    if Num \u003c 0 || Num \u003e= Abc_NtkObjNumMax(pNtk) {\n        fmt.Printf(\"The node \\\"%s\\\" with ID %d is not in the current network.\\n\", pName, Num);\n        return nil;\n    }\n    pObj = Abc_NtkObj( pNtk, Num );\n    if pObj == nil {\n        fmt.Printf(\"The node \\\"%s\\\" with ID %d has been removed from the current network.\\n\", pName, Num);\n        return nil;\n    }\n    if !Abc_ObjIsNode(pObj) {\n        fmt.Printf(\"Object with ID %d is not a node.\\n\", Num);\n        return nil;\n    }\n    return pObj;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the net with the given name.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFindNet(pNtk *Abc_Ntk_t, pName string) *Abc_Obj_t {\n    var pNet *Abc_Obj_t;\n    var ObjId int32;\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    ObjId = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_NET );\n    if ObjId == -1 {\n        return nil; }\n    pNet = Abc_NtkObj( pNtk, ObjId );\n    return pNet;\n}\n\n/**Function*************************************************************\n\n Synopsis    [Returns CI with the given name.]\n\n Description []\n              \n SideEffects []\n\n SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFindCi(pNtk *Abc_Ntk_t, pName string) *Abc_Obj_t {\n    var Num int32;\n    assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n    Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_PI );\n    if Num \u003e= 0 {\n        return Abc_NtkObj( pNtk, Num ); }\n    Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_BO );\n    if Num \u003e= 0 {\n        return Abc_NtkObj( pNtk, Num ); }\n    return nil;\n}\n\n/**Function*************************************************************\n\n Synopsis    [Returns CO with the given name.]\n\n Description []\n              \n SideEffects []\n\n SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFindCo(pNtk *Abc_Ntk_t, pName string) *Abc_Obj_t {\n    var Num int32;\n    assert(!Abc_NtkIsNetlist(pNtk), \"!Abc_NtkIsNetlist(pNtk)\");\n    Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_PO );\n    if Num \u003e= 0 {\n        return Abc_NtkObj( pNtk, Num ); }\n    Num = Nm_ManFindIdByName( pNtk.pManName, pName, ABC_OBJ_BI );\n    if Num \u003e= 0 {\n        return Abc_NtkObj( pNtk, Num ); }\n    return nil;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Finds or creates the net.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkFindOrCreateNet(pNtk *Abc_Ntk_t, pName string) *Abc_Obj_t {\n    var pNet *Abc_Obj_t;\n    assert(Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsNetlist(pNtk)\");\n    if pName \u0026\u0026 (pNet = Abc_NtkFindNet( pNtk, pName )) {\n        return pNet; }\n//printf( \"Creating net %s.\\n\", pName );\n    // create a new net\n    pNet = Abc_NtkCreateNet( pNtk );\n    if pName {\n        Nm_ManStoreIdName( pNtk.pManName, pNet.Id, pNet.Type, pName, nil ); }\n    return pNet;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates constant 0 node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCreateNodeConst0(pNtk *Abc_Ntk_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk );   \n    if Abc_NtkHasSop(pNtk) || Abc_NtkHasBlifMv(pNtk) {\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \" 0\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_ReadLogicZero((DdManager *)pNtk-\u003epManFunc), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_ManConst0((Hop_Man_t *)pNtk.pManFunc);\n    } else if Abc_NtkHasMapping(pNtk) {\n        pNode.pData = Mio_LibraryReadConst0((Mio_Library_t *)Abc_FrameReadLibGen());\n    } else if !Abc_NtkHasBlackbox(pNtk) {\n        assert(false, \"0\"); }\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates constant 1 node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCreateNodeConst1(pNtk *Abc_Ntk_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk );   \n    if Abc_NtkHasSop(pNtk) || Abc_NtkHasBlifMv(pNtk) {\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \" 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_ReadOne((DdManager *)pNtk-\u003epManFunc), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_ManConst1((Hop_Man_t *)pNtk.pManFunc);\n    } else if Abc_NtkHasMapping(pNtk) {\n        pNode.pData = Mio_LibraryReadConst1((Mio_Library_t *)Abc_FrameReadLibGen());\n    } else if !Abc_NtkHasBlackbox(pNtk) {\n        assert(false, \"0\"); }\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates inverter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCreateNodeInv(pNtk *Abc_Ntk_t, pFanin *Abc_Obj_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk );   \n    if pFanin != nil { Abc_ObjAddFanin( pNode, pFanin ); }\n    if Abc_NtkHasSop(pNtk) {\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \"0 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_Not(Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,0)), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_Not(Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,0));\n    } else if Abc_NtkHasMapping(pNtk) {\n        pNode.pData = Mio_LibraryReadInv((Mio_Library_t *)Abc_FrameReadLibGen());\n    } else {\n        assert(false, \"0\"); }\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates buffer.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCreateNodeBuf(pNtk *Abc_Ntk_t, pFanin *Abc_Obj_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk ); \n    if pFanin != nil { Abc_ObjAddFanin( pNode, pFanin ); }\n    if Abc_NtkHasSop(pNtk) {\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \"1 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,0), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,0);\n    } else if Abc_NtkHasMapping(pNtk) {\n        pNode.pData = Mio_LibraryReadBuf((Mio_Library_t *)Abc_FrameReadLibGen());\n    } else {\n        assert(false, \"0\"); }\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates AND.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCreateNodeAnd(pNtk *Abc_Ntk_t, vFanins *Vec_Ptr_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk );   \n    for  i = 0; i \u003c vFanins.nSize; i++  {\n        Abc_ObjAddFanin( pNode, (Abc_Obj_t *)vFanins.pArray[i] );\n    }\n    if Abc_NtkHasSop(pNtk) {\n        pNode.pData = Abc_SopCreateAnd( (Mem_Flex_t *)pNtk.pManFunc, Vec_PtrSize(vFanins), nil );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Extra_bddCreateAnd( (DdManager *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins) ), Cudd_Ref((DdNode *)pNode-\u003epData); \n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_CreateAnd( (Hop_Man_t *)pNtk.pManFunc, Vec_PtrSize(vFanins) ); \n    } else {\n        assert(false, \"0\"); }\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates OR.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCreateNodeOr(pNtk *Abc_Ntk_t, vFanins *Vec_Ptr_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk );   \n    for  i = 0; i \u003c vFanins.nSize; i++  {\n        Abc_ObjAddFanin( pNode, (Abc_Obj_t *)vFanins.pArray[i] );\n    }\n    if Abc_NtkHasSop(pNtk) {\n        pNode.pData = Abc_SopCreateOr( (Mem_Flex_t *)pNtk.pManFunc, Vec_PtrSize(vFanins), nil );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Extra_bddCreateOr( (DdManager *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins) ), Cudd_Ref((DdNode *)pNode-\u003epData); \n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_CreateOr( (Hop_Man_t *)pNtk.pManFunc, Vec_PtrSize(vFanins) ); \n    } else {\n        assert(false, \"0\"); }\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates EXOR.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCreateNodeExor(pNtk *Abc_Ntk_t, vFanins *Vec_Ptr_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    var i int32;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk );   \n    for  i = 0; i \u003c vFanins.nSize; i++  {\n        Abc_ObjAddFanin( pNode, (Abc_Obj_t *)vFanins.pArray[i] );\n    }\n    if Abc_NtkHasSop(pNtk) {\n        pNode.pData = Abc_SopCreateXorSpecial( (Mem_Flex_t *)pNtk.pManFunc, Vec_PtrSize(vFanins) );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Extra_bddCreateExor( (DdManager *)pNtk-\u003epManFunc, Vec_PtrSize(vFanins) ), Cudd_Ref((DdNode *)pNode-\u003epData); \n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_CreateExor( (Hop_Man_t *)pNtk.pManFunc, Vec_PtrSize(vFanins) ); \n    } else {\n        assert(false, \"0\"); }\n    return pNode;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates MUX.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCreateNodeMux(pNtk *Abc_Ntk_t, pNodeC *Abc_Obj_t, pNode1 *Abc_Obj_t, pNode0 *Abc_Obj_t) *Abc_Obj_t {\n    var pNode *Abc_Obj_t;\n    assert(Abc_NtkIsLogic(pNtk), \"Abc_NtkIsLogic(pNtk)\");\n    pNode = Abc_NtkCreateNode( pNtk );   \n    Abc_ObjAddFanin( pNode, pNodeC );\n    Abc_ObjAddFanin( pNode, pNode1 );\n    Abc_ObjAddFanin( pNode, pNode0 );\n    if Abc_NtkHasSop(pNtk) {\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, \"11- 1\\n0-1 1\\n\" );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNtk) )\n        pNode-\u003epData = Cudd_bddIte((DdManager *)pNtk-\u003epManFunc,Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,0),Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,1),Cudd_bddIthVar((DdManager *)pNtk-\u003epManFunc,2)), Cudd_Ref( (DdNode *)pNode-\u003epData );\n#endif\n    } else if Abc_NtkHasAig(pNtk) {\n        pNode.pData = Hop_Mux((Hop_Man_t *)pNtk.pManFunc,Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,0),Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,1),Hop_IthVar((Hop_Man_t *)pNtk.pManFunc,2));\n    } else {\n        assert(false, \"0\"); }\n    return pNode;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node is a constant 0 node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeIsConst(pNode *Abc_Obj_t) int32 { \n    assert(Abc_NtkIsLogic(pNode.pNtk) || Abc_NtkIsNetlist(pNode.pNtk), \"Abc_NtkIsLogic(pNode.pNtk) || Abc_NtkIsNetlist(pNode.pNtk)\");\n    return Abc_ObjIsNode(pNode) \u0026\u0026 Abc_ObjFaninNum(pNode) == 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node is a constant 0 node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeIsConst0(pNode *Abc_Obj_t) int32 { \n    var pNtk *Abc_Ntk_t  = pNode.pNtk;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");      \n    if !(Abc_NodeIsConst(pNode) != 0) {\n        return 0; }\n    if Abc_NtkHasSop(pNtk) {\n        return Abc_SopIsConst0((char *)pNode.pData); }\n#ifdef ABC_USE_CUDD\n    if ( Abc_NtkHasBdd(pNtk) )\n        return Cudd_IsComplement(pNode-\u003epData);\n#endif\n    if Abc_NtkHasAig(pNtk) {\n        if Hop_IsComplement((Hop_Obj_t *)pNode.pData) {\n            return 1;\n        } else {\n            return 0;\n        } }\n    if Abc_NtkHasMapping(pNtk) {\n        return pNode.pData == Mio_LibraryReadConst0((Mio_Library_t *)Abc_FrameReadLibGen()); }\n    assert(false, \"0\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node is a constant 1 node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeIsConst1(pNode *Abc_Obj_t) int32 { \n    var pNtk *Abc_Ntk_t  = pNode.pNtk;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\");      \n    if !(Abc_NodeIsConst(pNode) != 0) {\n        return 0; }\n    if Abc_NtkHasSop(pNtk) {\n        return Abc_SopIsConst1((char *)pNode.pData); }\n#ifdef ABC_USE_CUDD\n    if ( Abc_NtkHasBdd(pNtk) )\n        return !Cudd_IsComplement(pNode-\u003epData);\n#endif\n    if Abc_NtkHasAig(pNtk) {\n        return !Hop_IsComplement((Hop_Obj_t *)pNode.pData); }\n    if Abc_NtkHasMapping(pNtk) {\n        return pNode.pData == Mio_LibraryReadConst1((Mio_Library_t *)Abc_FrameReadLibGen()); }\n    assert(false, \"0\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node is a buffer.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeIsBuf(pNode *Abc_Obj_t) int32 { \n    var pNtk *Abc_Ntk_t  = pNode.pNtk;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\"); \n    if Abc_ObjFaninNum(pNode) != 1 {\n        return 0; }\n    if Abc_NtkHasSop(pNtk) {\n        return Abc_SopIsBuf((char *)pNode.pData); }\n#ifdef ABC_USE_CUDD\n    if ( Abc_NtkHasBdd(pNtk) )\n        return !Cudd_IsComplement(pNode-\u003epData);\n#endif\n    if Abc_NtkHasAig(pNtk) {\n        return !Hop_IsComplement((Hop_Obj_t *)pNode.pData); }\n    if Abc_NtkHasMapping(pNtk) {\n        return pNode.pData == Mio_LibraryReadBuf((Mio_Library_t *)Abc_FrameReadLibGen()); }\n    assert(false, \"0\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node is an inverter.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeIsInv(pNode *Abc_Obj_t) int32 { \n    var pNtk *Abc_Ntk_t  = pNode.pNtk;\n    assert(Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk), \"Abc_NtkIsLogic(pNtk) || Abc_NtkIsNetlist(pNtk)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\"); \n    if Abc_ObjFaninNum(pNode) != 1 {\n        return 0; }\n    if Abc_NtkHasSop(pNtk) {\n        return Abc_SopIsInv((char *)pNode.pData); }\n#ifdef ABC_USE_CUDD\n    if ( Abc_NtkHasBdd(pNtk) )\n        return Cudd_IsComplement(pNode-\u003epData);\n#endif\n    if Abc_NtkHasAig(pNtk) {\n        if Hop_IsComplement((Hop_Obj_t *)pNode.pData) {\n            return 1;\n        } else {\n            return 0;\n        } }\n    if Abc_NtkHasMapping(pNtk) {\n        return pNode.pData == Mio_LibraryReadInv((Mio_Library_t *)Abc_FrameReadLibGen()); }\n    assert(false, \"0\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Complements the local functions of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeComplement(pNode *Abc_Obj_t) {\n    assert(Abc_NtkIsLogic(pNode.pNtk) || Abc_NtkIsNetlist(pNode.pNtk), \"Abc_NtkIsLogic(pNode.pNtk) || Abc_NtkIsNetlist(pNode.pNtk)\");\n    assert(Abc_ObjIsNode(pNode), \"Abc_ObjIsNode(pNode)\"); \n    if Abc_NtkHasSop(pNode.pNtk) {\n        Abc_SopComplement( (char *)pNode.pData );\n    } else if Abc_NtkHasAig(pNode.pNtk) {\n        pNode.pData = Hop_Not( (Hop_Obj_t *)pNode.pData );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNode-\u003epNtk) )\n        pNode-\u003epData = Cudd_Not( pNode-\u003epData );\n#endif\n    } else {\n        assert(false, \"0\"); }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Changes the polarity of one fanin.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NodeComplementInput(pNode *Abc_Obj_t, pFanin *Abc_Obj_t) {\n    var iFanin int32;\n    if (iFanin = Vec_IntFind( \u0026pNode.vFanins, pFanin.Id )) == -1 {\n        fmt.Printf(\"Node %s should be among\", Abc_ObjName(pFanin));\n        fmt.Printf(\" the fanins of node %s...\\n\", Abc_ObjName(pNode));\n        return;\n    }\n    if Abc_NtkHasSop(pNode.pNtk) {\n        Abc_SopComplementVar( (char *)pNode.pData, iFanin );\n    } else if Abc_NtkHasAig(pNode.pNtk) {\n        pNode.pData = Hop_Complement( (Hop_Man_t *)pNode.pNtk.pManFunc, (Hop_Obj_t *)pNode.pData, iFanin );\n#ifdef ABC_USE_CUDD\n    else if ( Abc_NtkHasBdd(pNode-\u003epNtk) )\n    {\n        DdManager * dd = (DdManager *)pNode-\u003epNtk-\u003epManFunc;\n        DdNode * bVar, * bCof0, * bCof1;\n        bVar = Cudd_bddIthVar( dd, iFanin );\n        bCof0 = Cudd_Cofactor( dd, (DdNode *)pNode-\u003epData, Cudd_Not(bVar) );   Cudd_Ref( bCof0 );\n        bCof1 = Cudd_Cofactor( dd, (DdNode *)pNode-\u003epData, bVar );             Cudd_Ref( bCof1 );\n        Cudd_RecursiveDeref( dd, (DdNode *)pNode-\u003epData );\n        pNode-\u003epData = Cudd_bddIte( dd, bVar, bCof0, bCof1 );        Cudd_Ref( (DdNode *)pNode-\u003epData );\n        Cudd_RecursiveDeref( dd, bCof0 );\n        Cudd_RecursiveDeref( dd, bCof1 );\n    }\n#endif\n    } else {\n        assert(false, \"0\"); }\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

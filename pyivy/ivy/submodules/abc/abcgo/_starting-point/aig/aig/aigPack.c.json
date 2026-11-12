@@ -1,0 +1,554 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c",
+  "SHA256": "74cd08defc1f6053d21b05dcbfd70a67415e69af44763956d90bb52ecb804e98",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 5,
+        "ByteOffset": 4094
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Patterns: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 5,
+        "ByteOffset": 4122
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Total = %6d. \",   p.nPatTotal );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 5,
+        "ByteOffset": 4168
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Skipped = %6d. \", p.nPatSkip );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 5,
+        "ByteOffset": 4213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Cares = %6.2f %%  \", 100.0*Aig_ManPackCountCares(p)/Aig_ManCiNum(p.pAig)/64 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 138,
+        "Column": 5,
+        "ByteOffset": 4305
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 142,
+        "Column": 57,
+        "ByteOffset": 4466
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 244,
+        "Column": 9,
+        "ByteOffset": 8341
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 245,
+        "Column": 9,
+        "ByteOffset": 8372
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6d  \", Counts[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 246,
+        "Column": 9,
+        "ByteOffset": 8410
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6.1f %%\", 100.0*Counts[i]/Aig_ManNodeNum(p.pAig) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 247,
+        "Column": 9,
+        "ByteOffset": 8480
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%6.1f %%\", 100.0*Total/Aig_ManNodeNum(p.pAig) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 248,
+        "Column": 9,
+        "ByteOffset": 8546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Aig_Word6CountOnes",
+      "Start": 1399,
+      "End": 1549,
+      "BodyStart": 1447,
+      "Original": "static inline int Aig_Word6CountOnes( word t )  { return Aig_WordCountOnes( (unsigned)(t \u003e\u003e 32) ) + Aig_WordCountOnes( (unsigned)(t \u0026 0xFFFFFFFF) ); }",
+      "Draft": "func Aig_Word6CountOnes(t word) int32 { return Aig_WordCountOnes( uint32((t \u003e\u003e 32)) ) + Aig_WordCountOnes( uint32((t \u0026 0xFFFFFFFF)) ); }"
+    },
+    {
+      "Name": "Aig_Word6HasOneBit",
+      "Start": 1550,
+      "End": 1626,
+      "BodyStart": 1598,
+      "Original": "static inline int Aig_Word6HasOneBit( word t )  { return (t \u0026 (t-1)) == 0; }",
+      "Draft": "func Aig_Word6HasOneBit(t word) int32 { return (t \u0026 (t-1)) == 0; }"
+    },
+    {
+      "Name": "Aig_ManPackAlloc",
+      "Start": 2083,
+      "End": 2422,
+      "BodyStart": 2136,
+      "Original": "Aig_ManPack_t * Aig_ManPackAlloc( Aig_Man_t * pAig )\n{\n    Aig_ManPack_t * p;\n    p = ABC_CALLOC( Aig_ManPack_t, 1 );\n    p-\u003epAig    = pAig;\n    p-\u003evSigns  = Vec_WrdStart( Aig_ManObjNumMax(pAig) );\n    p-\u003evPiPats = Vec_WrdStart( Aig_ManCiNum(pAig) );\n    p-\u003evPiCare = Vec_WrdStart( Aig_ManCiNum(pAig) );\n    p-\u003eiPatCur = 1;\n    return p;\n}",
+      "Draft": "func Aig_ManPackAlloc(pAig *Aig_Man_t) *Aig_ManPack_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Aig_ManPack_t{};\n    p.pAig    = pAig;\n    p.vSigns  = Vec_WrdStart( Aig_ManObjNumMax(pAig) );\n    p.vPiPats = Vec_WrdStart( Aig_ManCiNum(pAig) );\n    p.vPiCare = Vec_WrdStart( Aig_ManCiNum(pAig) );\n    p.iPatCur = 1;\n    return p;\n}"
+    },
+    {
+      "Name": "Aig_ManPackCountCares",
+      "Start": 2658,
+      "End": 2879,
+      "BodyStart": 2705,
+      "Original": "int Aig_ManPackCountCares( Aig_ManPack_t * p )\n{\n    Aig_Obj_t * pObj;\n    int i, Total = 0;\n    Aig_ManForEachCi( p-\u003epAig, pObj, i )\n        Total += Aig_Word6CountOnes( Vec_WrdEntry(p-\u003evPiCare, i) );\n    return Total;\n}",
+      "Draft": "func Aig_ManPackCountCares(p *Aig_ManPack_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Total int32;\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Total += Aig_Word6CountOnes( Vec_WrdEntry(p.vPiCare, i) );\n    }\n    return Total;\n}"
+    },
+    {
+      "Name": "Aig_ManPackPrintCare",
+      "Start": 3115,
+      "End": 3422,
+      "BodyStart": 3162,
+      "Original": "void Aig_ManPackPrintCare( Aig_ManPack_t * p )\n{\n    Aig_Obj_t * pObj;\n    word Sign;\n    int i;\n    Aig_ManForEachCi( p-\u003epAig, pObj, i )\n    {\n        Sign = Vec_WrdEntry( p-\u003evPiCare, i );\n//        Extra_PrintBinary( stdout, (unsigned *)\u0026Sign, 64 );\n//        printf( \"\\n\" );\n    }\n//    printf( \"\\n\" );\n}",
+      "Draft": "func Aig_ManPackPrintCare(p *Aig_ManPack_t) {\n    var pObj *Aig_Obj_t;\n    var Sign word;\n    var i int32;\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Sign = Vec_WrdEntry( p.vPiCare, i );\n//        Extra_PrintBinary( stdout, (unsigned *)\u0026Sign, 64 );\n//        printf( \"\\n\" );\n    }\n//    printf( \"\\n\" );\n}"
+    },
+    {
+      "Name": "Aig_ManPackFree",
+      "Start": 3659,
+      "End": 4082,
+      "BodyStart": 3701,
+      "Original": "void Aig_ManPackFree( Aig_ManPack_t * p )\n{\n//    Aig_ManPackPrintCare( p );\n    printf( \"Patterns: \" );\n    printf( \"Total = %6d. \",   p-\u003enPatTotal );\n    printf( \"Skipped = %6d. \", p-\u003enPatSkip );\n    printf( \"Cares = %6.2f %%  \", 100.0*Aig_ManPackCountCares(p)/Aig_ManCiNum(p-\u003epAig)/64 );\n    printf( \"\\n\" );\n    Vec_WrdFree( p-\u003evSigns );\n    Vec_WrdFree( p-\u003evPiPats );\n    Vec_WrdFree( p-\u003evPiCare );\n    ABC_FREE( p );\n}",
+      "Draft": "func Aig_ManPackFree(p *Aig_ManPack_t) {\n//    Aig_ManPackPrintCare( p );\n    fmt.Printf(\"Patterns: \");\n    fmt.Printf(\"Total = %6d. \", p.nPatTotal);\n    fmt.Printf(\"Skipped = %6d. \", p.nPatSkip);\n    fmt.Printf(\"Cares = %6.2f %%  \", 100.0*Aig_ManPackCountCares(p)/Aig_ManCiNum(p.pAig)/64);\n    fmt.Printf(\"\\n\");\n    Vec_WrdFree( p.vSigns );\n    Vec_WrdFree( p.vPiPats );\n    Vec_WrdFree( p.vPiCare );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Aig_ManPackSetRandom",
+      "Start": 4318,
+      "End": 4600,
+      "BodyStart": 4365,
+      "Original": "void Aig_ManPackSetRandom( Aig_ManPack_t * p )\n{\n    Aig_Obj_t * pObj;\n    word Sign;\n    int i;\n    Aig_ManForEachCi( p-\u003epAig, pObj, i )\n    {\n        Sign = (((word)Aig_ManRandom(0)) \u003c\u003c 32) | ((word)Aig_ManRandom(0));\n        Vec_WrdWriteEntry( p-\u003evPiPats, i, Sign \u003c\u003c 1 );\n    }\n}",
+      "Draft": "func Aig_ManPackSetRandom(p *Aig_ManPack_t) {\n    var pObj *Aig_Obj_t;\n    var Sign word;\n    var i int32;\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Sign = (((word)Aig_ManRandom(0)) \u003c\u003c 32) | ((word)Aig_ManRandom(0));\n        Vec_WrdWriteEntry( p.vPiPats, i, Sign \u003c\u003c 1 );\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManPackSimulate",
+      "Start": 4836,
+      "End": 6019,
+      "BodyStart": 4882,
+      "Original": "void Aig_ManPackSimulate( Aig_ManPack_t * p )\n{\n    Aig_Obj_t * pObj;\n    word Sign, Sign0, Sign1;\n    int i;\n    // set the constant\n    Vec_WrdWriteEntry( p-\u003evSigns, 0, ~(word)0 );\n    // transfer into the array\n    Aig_ManForEachCi( p-\u003epAig, pObj, i )\n        Vec_WrdWriteEntry( p-\u003evSigns, Aig_ObjId(pObj), Vec_WrdEntry(p-\u003evPiPats, i) );\n    // simulate internal nodes\n    Aig_ManForEachNode( p-\u003epAig, pObj, i )\n    {\n        Sign0 = Vec_WrdEntry( p-\u003evSigns, Aig_ObjFaninId0(pObj) );\n        Sign1 = Vec_WrdEntry( p-\u003evSigns, Aig_ObjFaninId1(pObj) );\n        if ( Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) )\n            Sign = ~(Sign0 | Sign1);\n        else if ( Aig_ObjFaninC0(pObj) )\n            Sign = ~Sign0 \u0026  Sign1;\n        else if ( Aig_ObjFaninC1(pObj) )\n            Sign =  Sign0 \u0026 ~Sign1;\n        else\n            Sign =  Sign0 \u0026  Sign1;\n        Vec_WrdWriteEntry( p-\u003evSigns, Aig_ObjId(pObj), Sign );\n    }\n    // set the outputs\n    Aig_ManForEachCo( p-\u003epAig, pObj, i )\n    {\n        Sign0 = Vec_WrdEntry( p-\u003evSigns, Aig_ObjFaninId0(pObj) );\n        Sign  = Aig_ObjFaninC0(pObj) ? ~Sign0 : Sign0;\n        Vec_WrdWriteEntry( p-\u003evSigns, Aig_ObjId(pObj), Sign );\n    }\n}",
+      "Draft": "func Aig_ManPackSimulate(p *Aig_ManPack_t) {\n    var pObj *Aig_Obj_t;\n    var Sign, Sign0, Sign1 word;\n    var i int32;\n    // set the constant\n    Vec_WrdWriteEntry( p.vSigns, 0, ~(word)0 );\n    // transfer into the array\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Vec_WrdWriteEntry( p.vSigns, Aig_ObjId(pObj), Vec_WrdEntry(p.vPiPats, i) );\n    }\n    // simulate internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Sign0 = Vec_WrdEntry( p.vSigns, Aig_ObjFaninId0(pObj) );\n        Sign1 = Vec_WrdEntry( p.vSigns, Aig_ObjFaninId1(pObj) );\n        if Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) {\n            Sign = ~(Sign0 | Sign1);\n        } else if Aig_ObjFaninC0(pObj) {\n            Sign = ~Sign0 \u0026  Sign1;\n        } else if Aig_ObjFaninC1(pObj) {\n            Sign =  Sign0 \u0026 ~Sign1;\n        } else {\n            Sign =  Sign0 \u0026  Sign1; }\n        Vec_WrdWriteEntry( p.vSigns, Aig_ObjId(pObj), Sign );\n    }\n    }\n    // set the outputs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n        Sign0 = Vec_WrdEntry( p.vSigns, Aig_ObjFaninId0(pObj) );\n        if Aig_ObjFaninC0(pObj) {\n            Sign = ~Sign0;\n        } else {\n            Sign = Sign0;\n        }\n        Vec_WrdWriteEntry( p.vSigns, Aig_ObjId(pObj), Sign );\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManPackPrintStats",
+      "Start": 6255,
+      "End": 7027,
+      "BodyStart": 6303,
+      "Original": "void Aig_ManPackPrintStats( Aig_ManPack_t * p )\n{\n    word Sign;\n    Aig_Obj_t * pObj;\n    int i, Total, Count, Counts[33] = {0}; // the number of nodes having that many patterns\n    Aig_ManForEachNode( p-\u003epAig, pObj, i )\n    {\n        Sign  = Vec_WrdEntry( p-\u003evSigns, Aig_ObjId(pObj) );\n        Count = Aig_Word6CountOnes( Sign );\n        if ( Count \u003e 32 )\n            Count = 64 - Count;\n        Counts[Count]++;        \n    }\n    // print statistics\n    Total = 0;\n    for ( i = 0; i \u003c= 32; i++ )\n    {\n        Total += Counts[i];\n        printf( \"%2d : \", i );\n        printf( \"%6d  \", Counts[i] );\n        printf( \"%6.1f %%\", 100.0*Counts[i]/Aig_ManNodeNum(p-\u003epAig) );\n        printf( \"%6.1f %%\", 100.0*Total/Aig_ManNodeNum(p-\u003epAig) );\n        printf( \"\\n\" );\n    }\n}",
+      "Draft": "func Aig_ManPackPrintStats(p *Aig_ManPack_t) {\n    var Sign word;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var Total int32;\n    var Count int32;\n    var Counts [33]int32 ; // the number of nodes having that many patterns\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Sign  = Vec_WrdEntry( p.vSigns, Aig_ObjId(pObj) );\n        Count = Aig_Word6CountOnes( Sign );\n        if Count \u003e 32 {\n            Count = 64 - Count; }\n        Counts[Count]++;        \n    }\n    }\n    // print statistics\n    Total = 0;\n    for  i = 0; i \u003c= 32; i++  {\n        Total += Counts[i];\n        fmt.Printf(\"%2d : \", i);\n        fmt.Printf(\"%6d  \", Counts[i]);\n        fmt.Printf(\"%6.1f %%\", 100.0*Counts[i]/Aig_ManNodeNum(p.pAig));\n        fmt.Printf(\"%6.1f %%\", 100.0*Total/Aig_ManNodeNum(p.pAig));\n        fmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Aig_ManPackConstNodes",
+      "Start": 7263,
+      "End": 7710,
+      "BodyStart": 7318,
+      "Original": "Vec_Int_t * Aig_ManPackConstNodes( Aig_ManPack_t * p )\n{\n    Vec_Int_t * vNodes;\n    Aig_Obj_t * pObj;\n    word Sign;\n    int i;\n    vNodes = Vec_IntAlloc( 1000 );\n    Aig_ManForEachNode( p-\u003epAig, pObj, i )\n    {\n        Sign  = Vec_WrdEntry( p-\u003evSigns, Aig_ObjId(pObj) );\n        if ( Sign == 0 || ~Sign == 0 || Aig_Word6HasOneBit(Sign) || Aig_Word6HasOneBit(~Sign) )\n            Vec_IntPush( vNodes, Aig_ObjId(pObj) );\n    }\n    return vNodes;\n}",
+      "Draft": "func Aig_ManPackConstNodes(p *Aig_ManPack_t) *Vec_Int_t {\n    var vNodes *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var Sign word;\n    var i int32;\n    vNodes = Vec_IntAlloc( 1000 );\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Sign  = Vec_WrdEntry( p.vSigns, Aig_ObjId(pObj) );\n        if Sign == 0 || ~Sign == 0 || (Aig_Word6HasOneBit(Sign) != 0) || (Aig_Word6HasOneBit(~Sign) != 0) {\n            Vec_IntPush( vNodes, Aig_ObjId(pObj) ); }\n    }\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Aig_ManPackAddPatternTry",
+      "Start": 7993,
+      "End": 8839,
+      "BodyStart": 8072,
+      "Original": "int Aig_ManPackAddPatternTry( Aig_ManPack_t * p, int iBit, Vec_Int_t * vLits )\n{\n    word * pInfo, * pPres;\n    int i, Lit;\n    Vec_IntForEachEntry( vLits, Lit, i )\n    {\n        pInfo = Vec_WrdEntryP( p-\u003evPiPats, Abc_Lit2Var(Lit) );\n        pPres = Vec_WrdEntryP( p-\u003evPiCare, Abc_Lit2Var(Lit) );\n        if ( Abc_InfoHasBit( (unsigned *)pPres, iBit ) \u0026\u0026 \n             Abc_InfoHasBit( (unsigned *)pInfo, iBit ) == Abc_LitIsCompl(Lit) )\n             return 0;\n    }\n    Vec_IntForEachEntry( vLits, Lit, i )\n    {\n        pInfo = Vec_WrdEntryP( p-\u003evPiPats, Abc_Lit2Var(Lit) );\n        pPres = Vec_WrdEntryP( p-\u003evPiCare, Abc_Lit2Var(Lit) );\n        Abc_InfoSetBit( (unsigned *)pPres, iBit );\n        if ( Abc_InfoHasBit( (unsigned *)pInfo, iBit ) == Abc_LitIsCompl(Lit) )\n             Abc_InfoXorBit( (unsigned *)pInfo, iBit );\n    }\n    return 1;\n}",
+      "Draft": "func Aig_ManPackAddPatternTry(p *Aig_ManPack_t, iBit int32, vLits *Vec_Int_t) int32 {\n    var pInfo, pPres *word;\n    var i, Lit int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLits)) \u0026\u0026 (((Lit) = Vec_IntEntry(vLits, i)), 1); i++  {\n        pInfo = Vec_WrdEntryP( p.vPiPats, Abc_Lit2Var(Lit) );\n        pPres = Vec_WrdEntryP( p.vPiCare, Abc_Lit2Var(Lit) );\n        if Abc_InfoHasBit( (unsigned *)pPres, iBit ) \u0026\u0026 \n             Abc_InfoHasBit( (unsigned *)pInfo, iBit ) == Abc_LitIsCompl(Lit) {\n             return 0; }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLits)) \u0026\u0026 (((Lit) = Vec_IntEntry(vLits, i)), 1); i++  {\n        pInfo = Vec_WrdEntryP( p.vPiPats, Abc_Lit2Var(Lit) );\n        pPres = Vec_WrdEntryP( p.vPiCare, Abc_Lit2Var(Lit) );\n        Abc_InfoSetBit( (unsigned *)pPres, iBit );\n        if Abc_InfoHasBit( (unsigned *)pInfo, iBit ) == Abc_LitIsCompl(Lit) {\n             Abc_InfoXorBit( (unsigned *)pInfo, iBit ); }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Aig_ManPackAddPattern",
+      "Start": 9075,
+      "End": 10008,
+      "BodyStart": 9142,
+      "Original": "void Aig_ManPackAddPattern( Aig_ManPack_t * p, Vec_Int_t * vLits )\n{\n    int k;\n    for ( k = 1; k \u003c 64; k++ )\n        if ( Aig_ManPackAddPatternTry( p, k, vLits ) )\n            break;\n    if ( k == 64 )\n    {\n/*\n        word * pInfo, * pPres;\n        int i, Lit;\n        Vec_IntForEachEntry( vLits, Lit, i )\n            printf( \"%d\", Abc_LitIsCompl(Lit) );\n        printf( \"\\n\\n\" );\n        for ( k = 1; k \u003c 64; k++ )\n        {\n            Vec_IntForEachEntry( vLits, Lit, i )\n            {\n                pInfo = Vec_WrdEntryP( p-\u003evPiPats, Abc_Lit2Var(Lit) );\n                pPres = Vec_WrdEntryP( p-\u003evPiCare, Abc_Lit2Var(Lit) );\n                if ( Abc_InfoHasBit( (unsigned *)pPres, k ) )\n                    printf( \"%d\", Abc_InfoHasBit( (unsigned *)pInfo, k ) );\n                else\n                    printf( \"-\" );\n            }\n            printf( \"\\n\" );\n        }\n*/\n        p-\u003enPatSkip++;\n    }\n    p-\u003enPatTotal++;\n}",
+      "Draft": "func Aig_ManPackAddPattern(p *Aig_ManPack_t, vLits *Vec_Int_t) {\n    var k int32;\n    for  k = 1; k \u003c 64; k++  {\n        if Aig_ManPackAddPatternTry( p, k, vLits ) != 0 {\n            break; }\n    }\n    if k == 64 {\n/*\n        word * pInfo, * pPres;\n        int i, Lit;\n        Vec_IntForEachEntry( vLits, Lit, i )\n            printf( \"%d\", Abc_LitIsCompl(Lit) );\n        printf( \"\\n\\n\" );\n        for ( k = 1; k \u003c 64; k++ )\n        {\n            Vec_IntForEachEntry( vLits, Lit, i )\n            {\n                pInfo = Vec_WrdEntryP( p-\u003evPiPats, Abc_Lit2Var(Lit) );\n                pPres = Vec_WrdEntryP( p-\u003evPiCare, Abc_Lit2Var(Lit) );\n                if ( Abc_InfoHasBit( (unsigned *)pPres, k ) )\n                    printf( \"%d\", Abc_InfoHasBit( (unsigned *)pInfo, k ) );\n                else\n                    printf( \"-\" );\n            }\n            printf( \"\\n\" );\n        }\n*/\n        p.nPatSkip++;\n    }\n    p.nPatTotal++;\n}"
+    },
+    {
+      "Name": "Aig_ManPackStart",
+      "Start": 10244,
+      "End": 10464,
+      "BodyStart": 10297,
+      "Original": "Aig_ManPack_t * Aig_ManPackStart( Aig_Man_t * pAig )\n{\n    Aig_ManPack_t * p;\n    p = Aig_ManPackAlloc( pAig );\n    Aig_ManPackSetRandom( p );\n    Aig_ManPackSimulate( p );\n    Aig_ManPackPrintStats( p );\n    return p;\n}",
+      "Draft": "func Aig_ManPackStart(pAig *Aig_Man_t) *Aig_ManPack_t {\n    var p *Aig_ManPack_t;\n    p = Aig_ManPackAlloc( pAig );\n    Aig_ManPackSetRandom( p );\n    Aig_ManPackSimulate( p );\n    Aig_ManPackPrintStats( p );\n    return p;\n}"
+    },
+    {
+      "Name": "Aig_ManPackStop",
+      "Start": 10700,
+      "End": 10833,
+      "BodyStart": 10742,
+      "Original": "void Aig_ManPackStop( Aig_ManPack_t * p )\n{\n    Aig_ManPackSimulate( p );\n    Aig_ManPackPrintStats( p );\n    Aig_ManPackFree( p );\n}",
+      "Draft": "func Aig_ManPackStop(p *Aig_ManPack_t) {\n    Aig_ManPackSimulate( p );\n    Aig_ManPackPrintStats( p );\n    Aig_ManPackFree( p );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::struct::Aig_ManPack_t",
+      "Category": "struct-review",
+      "Symbol": "Aig_ManPack_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 784,
+      "End": 1397
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::mechanical::sizeof::2254",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2169,
+      "End": 2169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::2216",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2169,
+      "End": 2169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::3000",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2755,
+      "End": 2755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::3647",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3216,
+      "End": 3216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::4573",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4066,
+      "End": 4066
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::5108",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4419,
+      "End": 4419
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::5929",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5054,
+      "End": 5054
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::6276",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5212,
+      "End": 5212
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::7088",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5785,
+      "End": 5785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::7930",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6438,
+      "End": 6438
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::9165",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7431,
+      "End": 7431
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::10229",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8319,
+      "End": 8331
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::10288",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8378,
+      "End": 8390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::10669",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8655,
+      "End": 8667
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::10725",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8711,
+      "End": 8723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::pointer-cast::10805",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8791,
+      "End": 8803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::Aig_Word6CountOnes",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Word6CountOnes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1399,
+      "End": 1549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::Aig_Word6HasOneBit",
+      "Category": "semantic-review",
+      "Symbol": "Aig_Word6HasOneBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1550,
+      "End": 1626
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::Aig_ManPackAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPackAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2083,
+      "End": 2422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::Aig_ManPackCountCares",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPackCountCares",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2658,
+      "End": 2879
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::Aig_ManPackPrintCare",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPackPrintCare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3115,
+      "End": 3422
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::ternary::Aig_ManPackFree",
+      "Category": "ternary-review",
+      "Symbol": "Aig_ManPackFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3659,
+      "End": 4082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::Aig_ManPackFree",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPackFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3659,
+      "End": 4082
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::Aig_ManPackSetRandom",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPackSetRandom",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4318,
+      "End": 4600
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::Aig_ManPackSimulate",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPackSimulate",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4836,
+      "End": 6019
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::Aig_ManPackPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPackPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6255,
+      "End": 7027
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::Aig_ManPackConstNodes",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPackConstNodes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7263,
+      "End": 7710
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::Aig_ManPackAddPatternTry",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPackAddPatternTry",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7993,
+      "End": 8839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::Aig_ManPackAddPattern",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPackAddPattern",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9075,
+      "End": 10008
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::Aig_ManPackStart",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPackStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10244,
+      "End": 10464
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::Aig_ManPackStop",
+      "Category": "semantic-review",
+      "Symbol": "Aig_ManPackStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10700,
+      "End": 10833
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/aig/aigPack.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11080
+    }
+  ],
+  "Draft": "package aig\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n \n  FileName    [aigPack.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [AIG package.]\n\n  Synopsis    [Bit-packing code.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - April 28, 2007.]\n\n  Revision    [$Id: aigPack.c,v 1.00 2007/04/28 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"aig.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// resubstitution manager\n   \ntype Aig_ManPack_t struct {\n    pAig         *Aig_Man_t;        // working manager \n    vSigns         *Vec_Wrd_t;      // object signatures\n    vPiPats         *Vec_Wrd_t;     // PI assignments\n    vPiCare         *Vec_Wrd_t;     // PI care set\n    iPatCur                int32;     // current pattern\n    fVerbose                int32;    // verbosiness flag\n    // statistics\n    nPatTotal                int32;   // number of all patterns\n    nPatSkip                int32;    // number of skipped patterns\n    nPatRepeat                int32;  // number of repeated patterns\n}\n\nfunc Aig_Word6CountOnes(t word) int32 { return Aig_WordCountOnes( uint32((t \u003e\u003e 32)) ) + Aig_WordCountOnes( uint32((t \u0026 0xFFFFFFFF)) ); }\nfunc Aig_Word6HasOneBit(t word) int32 { return (t \u0026 (t-1)) == 0; }\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPackAlloc(pAig *Aig_Man_t) *Aig_ManPack_t {\n    \n    // inlining of macro ABC_CALLOC\n    p := \u0026Aig_ManPack_t{};\n    p.pAig    = pAig;\n    p.vSigns  = Vec_WrdStart( Aig_ManObjNumMax(pAig) );\n    p.vPiPats = Vec_WrdStart( Aig_ManCiNum(pAig) );\n    p.vPiCare = Vec_WrdStart( Aig_ManCiNum(pAig) );\n    p.iPatCur = 1;\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPackCountCares(p *Aig_ManPack_t) int32 {\n    var pObj *Aig_Obj_t;\n    var i, Total int32;\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Total += Aig_Word6CountOnes( Vec_WrdEntry(p.vPiCare, i) );\n    }\n    return Total;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPackPrintCare(p *Aig_ManPack_t) {\n    var pObj *Aig_Obj_t;\n    var Sign word;\n    var i int32;\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Sign = Vec_WrdEntry( p.vPiCare, i );\n//        Extra_PrintBinary( stdout, (unsigned *)\u0026Sign, 64 );\n//        printf( \"\\n\" );\n    }\n//    printf( \"\\n\" );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPackFree(p *Aig_ManPack_t) {\n//    Aig_ManPackPrintCare( p );\n    fmt.Printf(\"Patterns: \");\n    fmt.Printf(\"Total = %6d. \", p.nPatTotal);\n    fmt.Printf(\"Skipped = %6d. \", p.nPatSkip);\n    fmt.Printf(\"Cares = %6.2f %%  \", 100.0*Aig_ManPackCountCares(p)/Aig_ManCiNum(p.pAig)/64);\n    fmt.Printf(\"\\n\");\n    Vec_WrdFree( p.vSigns );\n    Vec_WrdFree( p.vPiPats );\n    Vec_WrdFree( p.vPiCare );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPackSetRandom(p *Aig_ManPack_t) {\n    var pObj *Aig_Obj_t;\n    var Sign word;\n    var i int32;\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Sign = (((word)Aig_ManRandom(0)) \u003c\u003c 32) | ((word)Aig_ManRandom(0));\n        Vec_WrdWriteEntry( p.vPiPats, i, Sign \u003c\u003c 1 );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPackSimulate(p *Aig_ManPack_t) {\n    var pObj *Aig_Obj_t;\n    var Sign, Sign0, Sign1 word;\n    var i int32;\n    // set the constant\n    Vec_WrdWriteEntry( p.vSigns, 0, ~(word)0 );\n    // transfer into the array\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCis, i)), 1); i++  {\n        Vec_WrdWriteEntry( p.vSigns, Aig_ObjId(pObj), Vec_WrdEntry(p.vPiPats, i) );\n    }\n    // simulate internal nodes\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Sign0 = Vec_WrdEntry( p.vSigns, Aig_ObjFaninId0(pObj) );\n        Sign1 = Vec_WrdEntry( p.vSigns, Aig_ObjFaninId1(pObj) );\n        if Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) {\n            Sign = ~(Sign0 | Sign1);\n        } else if Aig_ObjFaninC0(pObj) {\n            Sign = ~Sign0 \u0026  Sign1;\n        } else if Aig_ObjFaninC1(pObj) {\n            Sign =  Sign0 \u0026 ~Sign1;\n        } else {\n            Sign =  Sign0 \u0026  Sign1; }\n        Vec_WrdWriteEntry( p.vSigns, Aig_ObjId(pObj), Sign );\n    }\n    }\n    // set the outputs\n    // inlining of macro Aig_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vCos)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vCos, i)), 1); i++  {\n        Sign0 = Vec_WrdEntry( p.vSigns, Aig_ObjFaninId0(pObj) );\n        if Aig_ObjFaninC0(pObj) {\n            Sign = ~Sign0;\n        } else {\n            Sign = Sign0;\n        }\n        Vec_WrdWriteEntry( p.vSigns, Aig_ObjId(pObj), Sign );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPackPrintStats(p *Aig_ManPack_t) {\n    var Sign word;\n    var pObj *Aig_Obj_t;\n    var i int32;\n    var Total int32;\n    var Count int32;\n    var Counts [33]int32 ; // the number of nodes having that many patterns\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Sign  = Vec_WrdEntry( p.vSigns, Aig_ObjId(pObj) );\n        Count = Aig_Word6CountOnes( Sign );\n        if Count \u003e 32 {\n            Count = 64 - Count; }\n        Counts[Count]++;        \n    }\n    }\n    // print statistics\n    Total = 0;\n    for  i = 0; i \u003c= 32; i++  {\n        Total += Counts[i];\n        fmt.Printf(\"%2d : \", i);\n        fmt.Printf(\"%6d  \", Counts[i]);\n        fmt.Printf(\"%6.1f %%\", 100.0*Counts[i]/Aig_ManNodeNum(p.pAig));\n        fmt.Printf(\"%6.1f %%\", 100.0*Total/Aig_ManNodeNum(p.pAig));\n        fmt.Printf(\"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPackConstNodes(p *Aig_ManPack_t) *Vec_Int_t {\n    var vNodes *Vec_Int_t;\n    var pObj *Aig_Obj_t;\n    var Sign word;\n    var i int32;\n    vNodes = Vec_IntAlloc( 1000 );\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(p.pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        Sign  = Vec_WrdEntry( p.vSigns, Aig_ObjId(pObj) );\n        if Sign == 0 || ~Sign == 0 || (Aig_Word6HasOneBit(Sign) != 0) || (Aig_Word6HasOneBit(~Sign) != 0) {\n            Vec_IntPush( vNodes, Aig_ObjId(pObj) ); }\n    }\n    }\n    return vNodes;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Packs patterns into array of simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n*************************************`**********************************/\nfunc Aig_ManPackAddPatternTry(p *Aig_ManPack_t, iBit int32, vLits *Vec_Int_t) int32 {\n    var pInfo, pPres *word;\n    var i, Lit int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLits)) \u0026\u0026 (((Lit) = Vec_IntEntry(vLits, i)), 1); i++  {\n        pInfo = Vec_WrdEntryP( p.vPiPats, Abc_Lit2Var(Lit) );\n        pPres = Vec_WrdEntryP( p.vPiCare, Abc_Lit2Var(Lit) );\n        if Abc_InfoHasBit( (unsigned *)pPres, iBit ) \u0026\u0026 \n             Abc_InfoHasBit( (unsigned *)pInfo, iBit ) == Abc_LitIsCompl(Lit) {\n             return 0; }\n    }\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vLits)) \u0026\u0026 (((Lit) = Vec_IntEntry(vLits, i)), 1); i++  {\n        pInfo = Vec_WrdEntryP( p.vPiPats, Abc_Lit2Var(Lit) );\n        pPres = Vec_WrdEntryP( p.vPiCare, Abc_Lit2Var(Lit) );\n        Abc_InfoSetBit( (unsigned *)pPres, iBit );\n        if Abc_InfoHasBit( (unsigned *)pInfo, iBit ) == Abc_LitIsCompl(Lit) {\n             Abc_InfoXorBit( (unsigned *)pInfo, iBit ); }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPackAddPattern(p *Aig_ManPack_t, vLits *Vec_Int_t) {\n    var k int32;\n    for  k = 1; k \u003c 64; k++  {\n        if Aig_ManPackAddPatternTry( p, k, vLits ) != 0 {\n            break; }\n    }\n    if k == 64 {\n/*\n        word * pInfo, * pPres;\n        int i, Lit;\n        Vec_IntForEachEntry( vLits, Lit, i )\n            printf( \"%d\", Abc_LitIsCompl(Lit) );\n        printf( \"\\n\\n\" );\n        for ( k = 1; k \u003c 64; k++ )\n        {\n            Vec_IntForEachEntry( vLits, Lit, i )\n            {\n                pInfo = Vec_WrdEntryP( p-\u003evPiPats, Abc_Lit2Var(Lit) );\n                pPres = Vec_WrdEntryP( p-\u003evPiCare, Abc_Lit2Var(Lit) );\n                if ( Abc_InfoHasBit( (unsigned *)pPres, k ) )\n                    printf( \"%d\", Abc_InfoHasBit( (unsigned *)pInfo, k ) );\n                else\n                    printf( \"-\" );\n            }\n            printf( \"\\n\" );\n        }\n*/\n        p.nPatSkip++;\n    }\n    p.nPatTotal++;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPackStart(pAig *Aig_Man_t) *Aig_ManPack_t {\n    var p *Aig_ManPack_t;\n    p = Aig_ManPackAlloc( pAig );\n    Aig_ManPackSetRandom( p );\n    Aig_ManPackSimulate( p );\n    Aig_ManPackPrintStats( p );\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Aig_ManPackStop(p *Aig_ManPack_t) {\n    Aig_ManPackSimulate( p );\n    Aig_ManPackPrintStats( p );\n    Aig_ManPackFree( p );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

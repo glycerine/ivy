@@ -1,0 +1,787 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c",
+  "SHA256": "75a6f5c1a1f48e8261076ad2ff34ac5cee88bb0aceba910d7a8bb369a4e7af98",
+  "Library": [
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 440,
+        "Column": 24,
+        "ByteOffset": 16589
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                (void) fprintf(table.err,"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 458,
+        "Column": 28,
+        "ByteOffset": 17507
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    (void) fprintf(table.err,"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 112,
+        "Column": 1,
+        "ByteOffset": 4403
+      },
+      "Directive": "#ifndef lint"
+    },
+    {
+      "Location": {
+        "Line": 118,
+        "Column": 1,
+        "ByteOffset": 4578
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 126,
+        "Column": 1,
+        "ByteOffset": 4775
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 143,
+        "Column": 1,
+        "ByteOffset": 5617
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 280,
+        "Column": 1,
+        "ByteOffset": 11271
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 285,
+        "Column": 1,
+        "ByteOffset": 11413
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 309,
+        "Column": 1,
+        "ByteOffset": 12069
+      },
+      "Directive": "#ifdef DD_STATS         /* print stats */"
+    },
+    {
+      "Location": {
+        "Line": 356,
+        "Column": 1,
+        "ByteOffset": 13645
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 387,
+        "Column": 1,
+        "ByteOffset": 14530
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 457,
+        "Column": 1,
+        "ByteOffset": 16414
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 474,
+        "Column": 1,
+        "ByteOffset": 17030
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 519,
+        "Column": 1,
+        "ByteOffset": 19140
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 526,
+        "Column": 1,
+        "ByteOffset": 19433
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 555,
+        "Column": 1,
+        "ByteOffset": 20502
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 579,
+        "Column": 1,
+        "ByteOffset": 21221
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 655,
+        "Column": 1,
+        "ByteOffset": 23798
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 721,
+        "Column": 1,
+        "ByteOffset": 25560
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 778,
+        "Column": 1,
+        "ByteOffset": 27179
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 781,
+        "Column": 1,
+        "ByteOffset": 27256
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 824,
+        "Column": 1,
+        "ByteOffset": 29050
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 865,
+        "Column": 1,
+        "ByteOffset": 30440
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 908,
+        "Column": 1,
+        "ByteOffset": 31413
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 957,
+        "Column": 1,
+        "ByteOffset": 32718
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1008,
+        "Column": 1,
+        "ByteOffset": 34652
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1021,
+        "Column": 1,
+        "ByteOffset": 35189
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1027,
+        "Column": 1,
+        "ByteOffset": 35401
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1041,
+        "Column": 1,
+        "ByteOffset": 35941
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1058,
+        "Column": 1,
+        "ByteOffset": 36561
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1069,
+        "Column": 1,
+        "ByteOffset": 36980
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1087,
+        "Column": 1,
+        "ByteOffset": 37573
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1098,
+        "Column": 1,
+        "ByteOffset": 37989
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1158,
+        "Column": 1,
+        "ByteOffset": 39520
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1187,
+        "Column": 1,
+        "ByteOffset": 40588
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1226,
+        "Column": 1,
+        "ByteOffset": 42241
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1245,
+        "Column": 1,
+        "ByteOffset": 42973
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1315,
+        "Column": 1,
+        "ByteOffset": 45083
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1351,
+        "Column": 1,
+        "ByteOffset": 46252
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1391,
+        "Column": 1,
+        "ByteOffset": 47923
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1407,
+        "Column": 1,
+        "ByteOffset": 48463
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1484,
+        "Column": 1,
+        "ByteOffset": 50925
+      },
+      "Directive": "#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)"
+    },
+    {
+      "Location": {
+        "Line": 1488,
+        "Column": 1,
+        "ByteOffset": 51009
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1502,
+        "Column": 1,
+        "ByteOffset": 51379
+      },
+      "Directive": "#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)"
+    },
+    {
+      "Location": {
+        "Line": 1510,
+        "Column": 1,
+        "ByteOffset": 51741
+      },
+      "Directive": "#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)"
+    },
+    {
+      "Location": {
+        "Line": 1521,
+        "Column": 1,
+        "ByteOffset": 52022
+      },
+      "Directive": "#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)"
+    },
+    {
+      "Location": {
+        "Line": 1542,
+        "Column": 1,
+        "ByteOffset": 52938
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1589,
+        "Column": 1,
+        "ByteOffset": 54015
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1633,
+        "Column": 1,
+        "ByteOffset": 55381
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1729,
+        "Column": 1,
+        "ByteOffset": 58474
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1879,
+        "Column": 1,
+        "ByteOffset": 62396
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 1891,
+        "Column": 1,
+        "ByteOffset": 62774
+      },
+      "Directive": "#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)"
+    },
+    {
+      "Location": {
+        "Line": 1896,
+        "Column": 1,
+        "ByteOffset": 62987
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 1901,
+        "Column": 1,
+        "ByteOffset": 63073
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 1954,
+        "Column": 1,
+        "ByteOffset": 64577
+      },
+      "Directive": "#ifdef DD_DEBUG"
+    },
+    {
+      "Location": {
+        "Line": 1968,
+        "Column": 1,
+        "ByteOffset": 65032
+      },
+      "Directive": "#ifdef DD_STATS"
+    },
+    {
+      "Location": {
+        "Line": 2046,
+        "Column": 1,
+        "ByteOffset": 67528
+      },
+      "Directive": "#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)"
+    },
+    {
+      "Location": {
+        "Line": 2054,
+        "Column": 1,
+        "ByteOffset": 67760
+      },
+      "Directive": "#ifdef DD_STATS"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cudd_MakeTreeNode",
+      "Start": 8316,
+      "End": 9934,
+      "BodyStart": 8552,
+      "Original": "MtrNode *\nCudd_MakeTreeNode(\n  DdManager * dd /* manager */,\n  unsigned int  low /* index of the first group variable */,\n  unsigned int  size /* number of variables in the group */,\n  unsigned int  type /* MTR_DEFAULT or MTR_FIXED */)\n{\n    MtrNode *group;\n    MtrNode *tree;\n    unsigned int level;\n\n    /* If the variable does not exist yet, the position is assumed to be\n    ** the same as the index. Therefore, applications that rely on\n    ** Cudd_bddNewVarAtLevel or Cudd_addNewVarAtLevel to create new\n    ** variables have to create the variables before they group them.\n    */\n    level = (low \u003c (unsigned int) dd-\u003esize) ? dd-\u003eperm[low] : low;\n\n    if (level + size - 1\u003e (int) MTR_MAXHIGH)\n        return(NULL);\n\n    /* If the tree does not exist yet, create it. */\n    tree = dd-\u003etree;\n    if (tree == NULL) {\n        dd-\u003etree = tree = Mtr_InitGroupTree(0, dd-\u003esize);\n        if (tree == NULL)\n            return(NULL);\n        tree-\u003eindex = dd-\u003einvperm[0];\n    }\n\n    /* Extend the upper bound of the tree if necessary. This allows the\n    ** application to create groups even before the variables are created.\n    */\n    tree-\u003esize = ddMax(tree-\u003esize, ddMax(level + size, (unsigned) dd-\u003esize));\n\n    /* Create the group. */\n    group = Mtr_MakeGroup(tree, level, size, type);\n    if (group == NULL)\n        return(NULL);\n\n    /* Initialize the index field to the index of the variable currently\n    ** in position low. This field will be updated by the reordering\n    ** procedure to provide a handle to the group once it has been moved.\n    */\n    group-\u003eindex = (MtrHalfWord) low;\n\n    return(group);\n\n}",
+      "Draft": "MtrNode *\nCudd_MakeTreeNode(\n  DdManager * dd /* manager */,\n  unsigned int  low /* index of the first group variable */,\n  unsigned int  size /* number of variables in the group */,\n  unsigned int  type /* MTR_DEFAULT or MTR_FIXED */)\n{\n    var group *MtrNode;\n    var tree *MtrNode;\n    unsigned int level;\n\n    /* If the variable does not exist yet, the position is assumed to be\n    ** the same as the index. Therefore, applications that rely on\n    ** Cudd_bddNewVarAtLevel or Cudd_addNewVarAtLevel to create new\n    ** variables have to create the variables before they group them.\n    */\n    if low \u003c (unsigned int) dd.size {\n        level = dd.perm[low];\n    } else {\n        level = low;\n    }\n\n    if level + size - 1\u003e int32( MTR_MAXHIGH) {\n        return(nil); }\n\n    /* If the tree does not exist yet, create it. */\n    tree = dd.tree;\n    if tree == nil {\n        dd.tree = tree = Mtr_InitGroupTree(0, dd.size);\n        if tree == nil {\n            return(nil); }\n        tree.index = dd.invperm[0];\n    }\n\n    /* Extend the upper bound of the tree if necessary. This allows the\n    ** application to create groups even before the variables are created.\n    */\n    // inlining of macro ddMax\n    \n    // inlining of macro ddMax\n    if ((((uint32( dd.size)) \u003e (level + size)) ? (uint32( dd.size)) : (level + size))) \u003e (tree.size) {\n        // inlining of macro ddMax\n        tree.size = ((((uint32( dd.size)) \u003e (level + size)) ? (uint32( dd.size)) : (level + size)));\n    } else {\n        tree.size = (tree.size);\n    }\n\n    /* Create the group. */\n    group = Mtr_MakeGroup(tree, level, size, type);\n    if group == nil {\n        return(nil); }\n\n    /* Initialize the index field to the index of the variable currently\n    ** in position low. This field will be updated by the reordering\n    ** procedure to provide a handle to the group once it has been moved.\n    */\n    group.index = (MtrHalfWord) low;\n\n    return(group);\n\n}"
+    },
+    {
+      "Name": "cuddTreeSifting",
+      "Start": 10716,
+      "End": 12809,
+      "BodyStart": 10852,
+      "Original": "int\ncuddTreeSifting(\n  DdManager * table /* DD table */,\n  Cudd_ReorderingType method /* reordering method for the groups of leaves */)\n{\n    int i;\n    int nvars;\n    int result;\n    int tempTree;\n\n    /* If no tree is provided we create a temporary one in which all\n    ** variables are in a single group. After reordering this tree is\n    ** destroyed.\n    */\n    tempTree = table-\u003etree == NULL;\n    if (tempTree) {\n        table-\u003etree = Mtr_InitGroupTree(0,table-\u003esize);\n        table-\u003etree-\u003eindex = table-\u003einvperm[0];\n    }\n    nvars = table-\u003esize;\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0 \u0026\u0026 !tempTree) (void) fprintf(table-\u003eout,\"cuddTreeSifting:\");\n    Mtr_PrintGroups(table-\u003etree,pr \u003c= 0);\n#endif\n\n#ifdef DD_STATS\n    extsymmcalls = 0;\n    extsymm = 0;\n    secdiffcalls = 0;\n    secdiff = 0;\n    secdiffmisfire = 0;\n\n    (void) fprintf(table-\u003eout,\"\\n\");\n    if (!tempTree)\n        (void) fprintf(table-\u003eout,\"#:IM_NODES  %8d: group tree nodes\\n\",\n                       ddCountInternalMtrNodes(table,table-\u003etree));\n#endif\n\n    /* Initialize the group of each subtable to itself. Initially\n    ** there are no groups. Groups are created according to the tree\n    ** structure in postorder fashion.\n    */\n    for (i = 0; i \u003c nvars; i++)\n        table-\u003esubtables[i].next = i;\n\n\n    /* Reorder. */\n    result = ddTreeSiftingAux(table, table-\u003etree, method);\n\n#ifdef DD_STATS         /* print stats */\n    if (!tempTree \u0026\u0026 method == CUDD_REORDER_GROUP_SIFT \u0026\u0026\n        (table-\u003egroupcheck == CUDD_GROUP_CHECK7 ||\n         table-\u003egroupcheck == CUDD_GROUP_CHECK5)) {\n        (void) fprintf(table-\u003eout,\"\\nextsymmcalls = %d\\n\",extsymmcalls);\n        (void) fprintf(table-\u003eout,\"extsymm = %d\",extsymm);\n    }\n    if (!tempTree \u0026\u0026 method == CUDD_REORDER_GROUP_SIFT \u0026\u0026\n        table-\u003egroupcheck == CUDD_GROUP_CHECK7) {\n        (void) fprintf(table-\u003eout,\"\\nsecdiffcalls = %d\\n\",secdiffcalls);\n        (void) fprintf(table-\u003eout,\"secdiff = %d\\n\",secdiff);\n        (void) fprintf(table-\u003eout,\"secdiffmisfire = %d\",secdiffmisfire);\n    }\n#endif\n\n    if (tempTree)\n        Cudd_FreeTree(table);\n    return(result);\n\n}",
+      "Draft": "int\ncuddTreeSifting(\n  DdManager * table /* DD table */,\n  Cudd_ReorderingType method /* reordering method for the groups of leaves */)\n{\n    var i int32;\n    var nvars int32;\n    var result int32;\n    var tempTree int32;\n\n    /* If no tree is provided we create a temporary one in which all\n    ** variables are in a single group. After reordering this tree is\n    ** destroyed.\n    */\n    tempTree = table.tree == nil;\n    if tempTree != 0 {\n        table.tree = Mtr_InitGroupTree(0,table.size);\n        table.tree.index = table.invperm[0];\n    }\n    nvars = table.size;\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0 \u0026\u0026 !tempTree) (void) fprintf(table-\u003eout,\"cuddTreeSifting:\");\n    Mtr_PrintGroups(table-\u003etree,pr \u003c= 0);\n#endif\n\n#ifdef DD_STATS\n    extsymmcalls = 0;\n    extsymm = 0;\n    secdiffcalls = 0;\n    secdiff = 0;\n    secdiffmisfire = 0;\n\n    (void) fprintf(table-\u003eout,\"\\n\");\n    if (!tempTree)\n        (void) fprintf(table-\u003eout,\"#:IM_NODES  %8d: group tree nodes\\n\",\n                       ddCountInternalMtrNodes(table,table-\u003etree));\n#endif\n\n    /* Initialize the group of each subtable to itself. Initially\n    ** there are no groups. Groups are created according to the tree\n    ** structure in postorder fashion.\n    */\n    for i = 0; i \u003c nvars; i++ {\n        table.subtables[i].next = i;\n    }\n\n\n    /* Reorder. */\n    result = ddTreeSiftingAux(table, table.tree, method);\n\n#ifdef DD_STATS         /* print stats */\n    if (!tempTree \u0026\u0026 method == CUDD_REORDER_GROUP_SIFT \u0026\u0026\n        (table-\u003egroupcheck == CUDD_GROUP_CHECK7 ||\n         table-\u003egroupcheck == CUDD_GROUP_CHECK5)) {\n        (void) fprintf(table-\u003eout,\"\\nextsymmcalls = %d\\n\",extsymmcalls);\n        (void) fprintf(table-\u003eout,\"extsymm = %d\",extsymm);\n    }\n    if (!tempTree \u0026\u0026 method == CUDD_REORDER_GROUP_SIFT \u0026\u0026\n        table-\u003egroupcheck == CUDD_GROUP_CHECK7) {\n        (void) fprintf(table-\u003eout,\"\\nsecdiffcalls = %d\\n\",secdiffcalls);\n        (void) fprintf(table-\u003eout,\"secdiff = %d\\n\",secdiff);\n        (void) fprintf(table-\u003eout,\"secdiffmisfire = %d\",secdiffmisfire);\n    }\n#endif\n\n    if tempTree != 0 {\n        Cudd_FreeTree(table); }\n    return(result);\n\n}"
+    },
+    {
+      "Name": "ddTreeSiftingAux",
+      "Start": 13468,
+      "End": 14497,
+      "BodyStart": 13570,
+      "Original": "static int\nddTreeSiftingAux(\n  DdManager * table,\n  MtrNode * treenode,\n  Cudd_ReorderingType method)\n{\n    MtrNode  *auxnode;\n    int res;\n    Cudd_AggregationType saveCheck;\n\n#ifdef DD_DEBUG\n    Mtr_PrintGroups(treenode,1);\n#endif\n\n    auxnode = treenode;\n    while (auxnode != NULL) {\n        if (auxnode-\u003echild != NULL) {\n            if (!ddTreeSiftingAux(table, auxnode-\u003echild, method))\n                return(0);\n            saveCheck = table-\u003egroupcheck;\n            table-\u003egroupcheck = CUDD_NO_CHECK;\n            if (method != CUDD_REORDER_LAZY_SIFT)\n              res = ddReorderChildren(table, auxnode, CUDD_REORDER_GROUP_SIFT);\n            else\n              res = ddReorderChildren(table, auxnode, CUDD_REORDER_LAZY_SIFT);\n            table-\u003egroupcheck = saveCheck;\n\n            if (res == 0)\n                return(0);\n        } else if (auxnode-\u003esize \u003e 1) {\n            if (!ddReorderChildren(table, auxnode, method))\n                return(0);\n        }\n        auxnode = auxnode-\u003eyounger;\n    }\n\n    return(1);\n\n}",
+      "Draft": "func ddTreeSiftingAux(table *DdManager, treenode *MtrNode, method Cudd_ReorderingType) int32 {\n    var auxnode *MtrNode;\n    var res int32;\n    var saveCheck Cudd_AggregationType;\n\n#ifdef DD_DEBUG\n    Mtr_PrintGroups(treenode,1);\n#endif\n\n    auxnode = treenode;\n    for auxnode != nil {\n        if auxnode.child != nil {\n            if !(ddTreeSiftingAux(table, auxnode.child, method) != 0) {\n                return(0); }\n            saveCheck = table.groupcheck;\n            table.groupcheck = CUDD_NO_CHECK;\n            if method != CUDD_REORDER_LAZY_SIFT {\n              res = ddReorderChildren(table, auxnode, CUDD_REORDER_GROUP_SIFT);\n            } else {\n              res = ddReorderChildren(table, auxnode, CUDD_REORDER_LAZY_SIFT); }\n            table.groupcheck = saveCheck;\n\n            if res == 0 {\n                return(0); }\n        } else if auxnode.size \u003e 1 {\n            if !(ddReorderChildren(table, auxnode, method) != 0) {\n                return(0); }\n        }\n        auxnode = auxnode.younger;\n    }\n\n    return(1);\n\n}"
+    },
+    {
+      "Name": "ddReorderChildren",
+      "Start": 16004,
+      "End": 21332,
+      "BodyStart": 16107,
+      "Original": "static int\nddReorderChildren(\n  DdManager * table,\n  MtrNode * treenode,\n  Cudd_ReorderingType method)\n{\n    int lower;\n    int upper = -1;\n    int result;\n    unsigned int initialSize;\n\n    ddFindNodeHiLo(table,treenode,\u0026lower,\u0026upper);\n    /* If upper == -1 these variables do not exist yet. */\n    if (upper == -1)\n        return(1);\n\n    if (treenode-\u003eflags == MTR_FIXED) {\n        result = 1;\n    } else {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\" \");\n#endif\n        switch (method) {\n        case CUDD_REORDER_RANDOM:\n        case CUDD_REORDER_RANDOM_PIVOT:\n            result = cuddSwapping(table,lower,upper,method);\n            break;\n        case CUDD_REORDER_SIFT:\n            result = cuddSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_SIFT_CONVERGE:\n            do {\n                initialSize = table-\u003ekeys - table-\u003eisolated;\n                result = cuddSifting(table,lower,upper);\n                if (initialSize \u003c= table-\u003ekeys - table-\u003eisolated)\n                    break;\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            } while (result != 0);\n            break;\n        case CUDD_REORDER_SYMM_SIFT:\n            result = cuddSymmSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_SYMM_SIFT_CONV:\n            result = cuddSymmSiftingConv(table,lower,upper);\n            break;\n        case CUDD_REORDER_GROUP_SIFT:\n            if (table-\u003egroupcheck == CUDD_NO_CHECK) {\n                result = ddGroupSifting(table,lower,upper,ddNoCheck,\n                                        DD_NORMAL_SIFT);\n            } else if (table-\u003egroupcheck == CUDD_GROUP_CHECK5) {\n                result = ddGroupSifting(table,lower,upper,ddExtSymmCheck,\n                                        DD_NORMAL_SIFT);\n            } else if (table-\u003egroupcheck == CUDD_GROUP_CHECK7) {\n                result = ddGroupSifting(table,lower,upper,ddExtSymmCheck,\n                                        DD_NORMAL_SIFT);\n            } else {\n                (void) fprintf(table-\u003eerr,\n                               \"Unknown group ckecking method\\n\");\n                result = 0;\n            }\n            break;\n        case CUDD_REORDER_GROUP_SIFT_CONV:\n            do {\n                initialSize = table-\u003ekeys - table-\u003eisolated;\n                if (table-\u003egroupcheck == CUDD_NO_CHECK) {\n                    result = ddGroupSifting(table,lower,upper,ddNoCheck,\n                                            DD_NORMAL_SIFT);\n                } else if (table-\u003egroupcheck == CUDD_GROUP_CHECK5) {\n                    result = ddGroupSifting(table,lower,upper,ddExtSymmCheck,\n                                            DD_NORMAL_SIFT);\n                } else if (table-\u003egroupcheck == CUDD_GROUP_CHECK7) {\n                    result = ddGroupSifting(table,lower,upper,ddExtSymmCheck,\n                                            DD_NORMAL_SIFT);\n                } else {\n                    (void) fprintf(table-\u003eerr,\n                                   \"Unknown group ckecking method\\n\");\n                    result = 0;\n                }\n#ifdef DD_STATS\n                (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n                result = cuddWindowReorder(table,lower,upper,\n                                           CUDD_REORDER_WINDOW4);\n                if (initialSize \u003c= table-\u003ekeys - table-\u003eisolated)\n                    break;\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            } while (result != 0);\n            break;\n        case CUDD_REORDER_WINDOW2:\n        case CUDD_REORDER_WINDOW3:\n        case CUDD_REORDER_WINDOW4:\n        case CUDD_REORDER_WINDOW2_CONV:\n        case CUDD_REORDER_WINDOW3_CONV:\n        case CUDD_REORDER_WINDOW4_CONV:\n            result = cuddWindowReorder(table,lower,upper,method);\n            break;\n        case CUDD_REORDER_ANNEALING:\n            result = cuddAnnealing(table,lower,upper);\n            break;\n        case CUDD_REORDER_GENETIC:\n            result = cuddGa(table,lower,upper);\n            break;\n        case CUDD_REORDER_LINEAR:\n            result = cuddLinearAndSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_LINEAR_CONVERGE:\n            do {\n                initialSize = table-\u003ekeys - table-\u003eisolated;\n                result = cuddLinearAndSifting(table,lower,upper);\n                if (initialSize \u003c= table-\u003ekeys - table-\u003eisolated)\n                    break;\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            } while (result != 0);\n            break;\n        case CUDD_REORDER_EXACT:\n            result = cuddExact(table,lower,upper);\n            break;\n        case CUDD_REORDER_LAZY_SIFT:\n            result = ddGroupSifting(table,lower,upper,ddVarGroupCheck,\n                                    DD_LAZY_SIFT);\n            break;\n        default:\n            return(0);\n        }\n    }\n\n    /* Create a single group for all the variables that were sifted,\n    ** so that they will be treated as a single block by successive\n    ** invocations of ddGroupSifting.\n    */\n    ddMergeGroups(table,treenode,lower,upper);\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"ddReorderChildren:\");\n#endif\n\n    return(result);\n\n}",
+      "Draft": "func ddReorderChildren(table *DdManager, treenode *MtrNode, method Cudd_ReorderingType) int32 {\n    var lower int32;\n    var upper int32  = -1;\n    var result int32;\n    unsigned int initialSize;\n\n    ddFindNodeHiLo(table,treenode,\u0026lower,\u0026upper);\n    /* If upper == -1 these variables do not exist yet. */\n    if upper == -1 {\n        return(1); }\n\n    if treenode.flags == MTR_FIXED {\n        result = 1;\n    } else {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\" \");\n#endif\n        switch method {\n        case CUDD_REORDER_RANDOM,\n         CUDD_REORDER_RANDOM_PIVOT:\n            result = cuddSwapping(table,lower,upper,method);\n            break;\n        case CUDD_REORDER_SIFT:\n            result = cuddSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_SIFT_CONVERGE:\n            for {\n                initialSize = table.keys - table.isolated;\n                result = cuddSifting(table,lower,upper);\n                if initialSize \u003c= table.keys - table.isolated {\n                    break; }\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            \nif !(result != 0) { break }\n} \n            break;\n        case CUDD_REORDER_SYMM_SIFT:\n            result = cuddSymmSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_SYMM_SIFT_CONV:\n            result = cuddSymmSiftingConv(table,lower,upper);\n            break;\n        case CUDD_REORDER_GROUP_SIFT:\n            if table.groupcheck == CUDD_NO_CHECK {\n                result = ddGroupSifting(table,lower,upper,ddNoCheck,\n                                        DD_NORMAL_SIFT);\n            } else if table.groupcheck == CUDD_GROUP_CHECK5 {\n                result = ddGroupSifting(table,lower,upper,ddExtSymmCheck,\n                                        DD_NORMAL_SIFT);\n            } else if table.groupcheck == CUDD_GROUP_CHECK7 {\n                result = ddGroupSifting(table,lower,upper,ddExtSymmCheck,\n                                        DD_NORMAL_SIFT);\n            } else {\n                (void) fmt.Fprintf(table.err, \"Unknown group ckecking method\\n\");\n                result = 0;\n            }\n            break;\n        case CUDD_REORDER_GROUP_SIFT_CONV:\n            for {\n                initialSize = table.keys - table.isolated;\n                if table.groupcheck == CUDD_NO_CHECK {\n                    result = ddGroupSifting(table,lower,upper,ddNoCheck,\n                                            DD_NORMAL_SIFT);\n                } else if table.groupcheck == CUDD_GROUP_CHECK5 {\n                    result = ddGroupSifting(table,lower,upper,ddExtSymmCheck,\n                                            DD_NORMAL_SIFT);\n                } else if table.groupcheck == CUDD_GROUP_CHECK7 {\n                    result = ddGroupSifting(table,lower,upper,ddExtSymmCheck,\n                                            DD_NORMAL_SIFT);\n                } else {\n                    (void) fmt.Fprintf(table.err, \"Unknown group ckecking method\\n\");\n                    result = 0;\n                }\n#ifdef DD_STATS\n                (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n                result = cuddWindowReorder(table,lower,upper,\n                                           CUDD_REORDER_WINDOW4);\n                if initialSize \u003c= table.keys - table.isolated {\n                    break; }\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            \nif !(result != 0) { break }\n} \n            break;\n        case CUDD_REORDER_WINDOW2,\n         CUDD_REORDER_WINDOW3,\n         CUDD_REORDER_WINDOW4,\n         CUDD_REORDER_WINDOW2_CONV,\n         CUDD_REORDER_WINDOW3_CONV,\n         CUDD_REORDER_WINDOW4_CONV:\n            result = cuddWindowReorder(table,lower,upper,method);\n            break;\n        case CUDD_REORDER_ANNEALING:\n            result = cuddAnnealing(table,lower,upper);\n            break;\n        case CUDD_REORDER_GENETIC:\n            result = cuddGa(table,lower,upper);\n            break;\n        case CUDD_REORDER_LINEAR:\n            result = cuddLinearAndSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_LINEAR_CONVERGE:\n            for {\n                initialSize = table.keys - table.isolated;\n                result = cuddLinearAndSifting(table,lower,upper);\n                if initialSize \u003c= table.keys - table.isolated {\n                    break; }\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            \nif !(result != 0) { break }\n} \n            break;\n        case CUDD_REORDER_EXACT:\n            result = cuddExact(table,lower,upper);\n            break;\n        case CUDD_REORDER_LAZY_SIFT:\n            result = ddGroupSifting(table,lower,upper,ddVarGroupCheck,\n                                    DD_LAZY_SIFT);\n            break;\n        default:\n            return(0);\n        }\n    }\n\n    /* Create a single group for all the variables that were sifted,\n    ** so that they will be treated as a single block by successive\n    ** invocations of ddGroupSifting.\n    */\n    ddMergeGroups(table,treenode,lower,upper);\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"ddReorderChildren:\");\n#endif\n\n    return(result);\n\n}"
+    },
+    {
+      "Name": "ddFindNodeHiLo",
+      "Start": 21888,
+      "End": 23951,
+      "BodyStart": 21989,
+      "Original": "static void\nddFindNodeHiLo(\n  DdManager * table,\n  MtrNode * treenode,\n  int * lower,\n  int * upper)\n{\n    int low;\n    int high;\n\n    /* Check whether no variables in this group already exist.\n    ** If so, return immediately. The calling procedure will know from\n    ** the values of upper that no reordering is needed.\n    */\n    if ((int) treenode-\u003elow \u003e= table-\u003esize) {\n        *lower = table-\u003esize;\n        *upper = -1;\n        return;\n    }\n\n    *lower = low = (unsigned int) table-\u003eperm[treenode-\u003eindex];\n    high = (int) (low + treenode-\u003esize - 1);\n\n    if (high \u003e= table-\u003esize) {\n        /* This is the case of a partially existing group. The aim is to\n        ** reorder as many variables as safely possible.  If the tree\n        ** node is terminal, we just reorder the subset of the group\n        ** that is currently in existence.  If the group has\n        ** subgroups, then we only reorder those subgroups that are\n        ** fully instantiated.  This way we avoid breaking up a group.\n        */\n        MtrNode *auxnode = treenode-\u003echild;\n        if (auxnode == NULL) {\n            *upper = (unsigned int) table-\u003esize - 1;\n        } else {\n            /* Search the subgroup that strands the table-\u003esize line.\n            ** If the first group starts at 0 and goes past table-\u003esize\n            ** upper will get -1, thus correctly signaling that no reordering\n            ** should take place.\n            */\n            while (auxnode != NULL) {\n                int thisLower = table-\u003eperm[auxnode-\u003elow];\n                int thisUpper = thisLower + auxnode-\u003esize - 1;\n                if (thisUpper \u003e= table-\u003esize \u0026\u0026 thisLower \u003c table-\u003esize)\n                    *upper = (unsigned int) thisLower - 1;\n                auxnode = auxnode-\u003eyounger;\n            }\n        }\n    } else {\n        /* Normal case: All the variables of the group exist. */\n        *upper = (unsigned int) high;\n    }\n\n#ifdef DD_DEBUG\n    /* Make sure that all variables in group are contiguous. */\n    assert(treenode-\u003esize \u003e= *upper - *lower + 1);\n#endif\n\n    return;\n\n}",
+      "Draft": "func ddFindNodeHiLo(table *DdManager, treenode *MtrNode, lower *int32, upper *int32) {\n    var low int32;\n    var high int32;\n\n    /* Check whether no variables in this group already exist.\n    ** If so, return immediately. The calling procedure will know from\n    ** the values of upper that no reordering is needed.\n    */\n    if int32( treenode.low) \u003e= table.size {\n        *lower = table.size;\n        *upper = -1;\n        return;\n    }\n\n    *lower = low = (unsigned int) table.perm[treenode.index];\n    high = int32( (low + treenode.size - 1));\n\n    if high \u003e= table.size {\n        /* This is the case of a partially existing group. The aim is to\n        ** reorder as many variables as safely possible.  If the tree\n        ** node is terminal, we just reorder the subset of the group\n        ** that is currently in existence.  If the group has\n        ** subgroups, then we only reorder those subgroups that are\n        ** fully instantiated.  This way we avoid breaking up a group.\n        */\n        var auxnode *MtrNode  = treenode.child;\n        if auxnode == nil {\n            *upper = (unsigned int) table.size - 1;\n        } else {\n            /* Search the subgroup that strands the table-\u003esize line.\n            ** If the first group starts at 0 and goes past table-\u003esize\n            ** upper will get -1, thus correctly signaling that no reordering\n            ** should take place.\n            */\n            for auxnode != nil {\n                var thisLower int32  = table.perm[auxnode.low];\n                var thisUpper int32  = thisLower + auxnode.size - 1;\n                if thisUpper \u003e= table.size \u0026\u0026 thisLower \u003c table.size {\n                    *upper = (unsigned int) thisLower - 1; }\n                auxnode = auxnode.younger;\n            }\n        }\n    } else {\n        /* Normal case: All the variables of the group exist. */\n        *upper = (unsigned int) high;\n    }\n\n#ifdef DD_DEBUG\n    /* Make sure that all variables in group are contiguous. */\n    assert(treenode-\u003esize \u003e= *upper - *lower + 1);\n#endif\n\n    return;\n\n}"
+    },
+    {
+      "Name": "ddUniqueCompareGroup",
+      "Start": 24431,
+      "End": 24631,
+      "BodyStart": 24492,
+      "Original": "static int\nddUniqueCompareGroup(\n  int * ptrX,\n  int * ptrY)\n{\n#if 0\n    if (entry[*ptrY] == entry[*ptrX]) {\n        return((*ptrX) - (*ptrY));\n    }\n#endif\n    return(entry[*ptrY] - entry[*ptrX]);\n\n}",
+      "Draft": "func ddUniqueCompareGroup(ptrX *int32, ptrY *int32) int32 {\n     \n                                       \n                                  \n     \n      \n    return(entry[*ptrY] - entry[*ptrX]);\n\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::mechanical::do::15162",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 16814,
+      "End": 16816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::mechanical::do::16601",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 18273,
+      "End": 18275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::mechanical::do::18590",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 20277,
+      "End": 20279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::ternary::Cudd_MakeTreeNode",
+      "Category": "ternary-review",
+      "Symbol": "Cudd_MakeTreeNode",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8316,
+      "End": 9934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::Cudd_MakeTreeNode",
+      "Category": "semantic-review",
+      "Symbol": "Cudd_MakeTreeNode",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 8316,
+      "End": 9934
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::cuddTreeSifting",
+      "Category": "semantic-review",
+      "Symbol": "cuddTreeSifting",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 10716,
+      "End": 12809
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::ddTreeSiftingAux",
+      "Category": "semantic-review",
+      "Symbol": "ddTreeSiftingAux",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13468,
+      "End": 14497
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::ddReorderChildren",
+      "Category": "semantic-review",
+      "Symbol": "ddReorderChildren",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16004,
+      "End": 21332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::ddFindNodeHiLo",
+      "Category": "semantic-review",
+      "Symbol": "ddFindNodeHiLo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21888,
+      "End": 23951
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::ddUniqueCompareGroup",
+      "Category": "semantic-review",
+      "Symbol": "ddUniqueCompareGroup",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 24431,
+      "End": 24631
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 70614
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4403,
+      "End": 4513
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4578,
+      "End": 4774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::2",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 4775,
+      "End": 4923
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::3",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 5617,
+      "End": 5713
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::4",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11271,
+      "End": 11411
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::5",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 11413,
+      "End": 11735
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::6",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 12069,
+      "End": 12737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::7",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 13645,
+      "End": 13700
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::8",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 14530,
+      "End": 15396
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::9",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 16414,
+      "End": 16476
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::10",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 17030,
+      "End": 17126
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::11",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 19140,
+      "End": 19211
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::12",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 19433,
+      "End": 19529
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::13",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 20502,
+      "End": 20598
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::14",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 21221,
+      "End": 21308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::15",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 23798,
+      "End": 23935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bdd/cudd/cuddGroup.c::conditional::16",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 24631,
+      "End": 70614
+    }
+  ],
+  "Draft": "package cudd\n\nimport \"fmt\"\n\n/**CFile***********************************************************************\n\n  FileName    [cuddGroup.c]\n\n  PackageName [cudd]\n\n  Synopsis    [Functions for group sifting.]\n\n  Description [External procedures included in this file:\n                \u003cul\u003e\n                \u003cli\u003e Cudd_MakeTreeNode()\n                \u003c/ul\u003e\n        Internal procedures included in this file:\n                \u003cul\u003e\n                \u003cli\u003e cuddTreeSifting()\n                \u003c/ul\u003e\n        Static procedures included in this module:\n                \u003cul\u003e\n                \u003cli\u003e ddTreeSiftingAux()\n                \u003cli\u003e ddCountInternalMtrNodes()\n                \u003cli\u003e ddReorderChildren()\n                \u003cli\u003e ddFindNodeHiLo()\n                \u003cli\u003e ddUniqueCompareGroup()\n                \u003cli\u003e ddGroupSifting()\n                \u003cli\u003e ddCreateGroup()\n                \u003cli\u003e ddGroupSiftingAux()\n                \u003cli\u003e ddGroupSiftingUp()\n                \u003cli\u003e ddGroupSiftingDown()\n                \u003cli\u003e ddGroupMove()\n                \u003cli\u003e ddGroupMoveBackward()\n                \u003cli\u003e ddGroupSiftingBackward()\n                \u003cli\u003e ddMergeGroups()\n                \u003cli\u003e ddDissolveGroup()\n                \u003cli\u003e ddNoCheck()\n                \u003cli\u003e ddSecDiffCheck()\n                \u003cli\u003e ddExtSymmCheck()\n                \u003cli\u003e ddVarGroupCheck()\n                \u003cli\u003e ddSetVarHandled()\n                \u003cli\u003e ddResetVarHandled()\n                \u003cli\u003e ddIsVarHandled()\n                \u003c/ul\u003e]\n\n  Author      [Shipra Panda, Fabio Somenzi]\n\n  Copyright   [Copyright (c) 1995-2004, Regents of the University of Colorado\n\n  All rights reserved.\n\n  Redistribution and use in source and binary forms, with or without\n  modification, are permitted provided that the following conditions\n  are met:\n\n  Redistributions of source code must retain the above copyright\n  notice, this list of conditions and the following disclaimer.\n\n  Redistributions in binary form must reproduce the above copyright\n  notice, this list of conditions and the following disclaimer in the\n  documentation and/or other materials provided with the distribution.\n\n  Neither the name of the University of Colorado nor the names of its\n  contributors may be used to endorse or promote products derived from\n  this software without specific prior written permission.\n\n  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS\n  \"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT\n  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS\n  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE\n  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,\n  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,\n  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;\n  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT\n  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN\n  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE\n  POSSIBILITY OF SUCH DAMAGE.]\n\n******************************************************************************/\n\n//#include \"misc/util/util_hack.h\"\n//#include \"cuddInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n\n/*---------------------------------------------------------------------------*/\n/* Constant declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/* Constants for lazy sifting */\nconst DD_NORMAL_SIFT =  0\nconst DD_LAZY_SIFT =    1\n\n/* Constants for sifting up and down */\nconst DD_SIFT_DOWN =    0\nconst DD_SIFT_UP =      1\n\n/*---------------------------------------------------------------------------*/\n/* Stucture declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n/*---------------------------------------------------------------------------*/\n/* Type declarations                                                         */\n/*---------------------------------------------------------------------------*/\n\n    typedef int (*DD_CHKFP)(DdManager *, int, int);\n\n/*---------------------------------------------------------------------------*/\n/* Variable declarations                                                     */\n/*---------------------------------------------------------------------------*/\n\n#ifndef lint\nstatic char rcsid[] DD_UNUSED = \"$Id: cuddGroup.c,v 1.44 2009/02/21 18:24:10 fabio Exp $\";\n#endif\n\nvar entry *int32;\nvar ddTotalNumberSwapping int32;\n#ifdef DD_STATS\nextern  int     ddTotalNISwaps;\nstatic  int     extsymmcalls;\nstatic  int     extsymm;\nstatic  int     secdiffcalls;\nstatic  int     secdiff;\nstatic  int     secdiffmisfire;\n#endif\n#ifdef DD_DEBUG\nstatic  int     pr = 0; /* flag to enable printing while debugging */\n                        /* by depositing a 1 into it */\n#endif\nstatic unsigned int originalSize;\n\n/*---------------------------------------------------------------------------*/\n/* Macro declarations                                                        */\n/*---------------------------------------------------------------------------*/\n\n/**AutomaticStart*************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Static function prototypes                                                */\n/*---------------------------------------------------------------------------*/\n\n// static int ddTreeSiftingAux (DdManager *table, MtrNode *treenode, Cudd_ReorderingType method);\n\n#ifdef DD_STATS\nstatic int ddCountInternalMtrNodes (DdManager *table, MtrNode *treenode);\n#endif\n// static int ddReorderChildren (DdManager *table, MtrNode *treenode, Cudd_ReorderingType method);\n\n// static void ddFindNodeHiLo (DdManager *table, MtrNode *treenode, int *lower, int *upper);\n\n// static int ddUniqueCompareGroup (int *ptrX, int *ptrY);\n\n// static int ddGroupSifting (DdManager *table, int lower, int upper, DD_CHKFP checkFunction, int lazyFlag);\n\n// static void ddCreateGroup (DdManager *table, int x, int y);\n\n// static int ddGroupSiftingAux (DdManager *table, int x, int xLow, int xHigh, DD_CHKFP checkFunction, int lazyFlag);\n\n// static int ddGroupSiftingUp (DdManager *table, int y, int xLow, DD_CHKFP checkFunction, Move **moves);\n\n// static int ddGroupSiftingDown (DdManager *table, int x, int xHigh, DD_CHKFP checkFunction, Move **moves);\n\n// static int ddGroupMove (DdManager *table, int x, int y, Move **moves);\n\n// static int ddGroupMoveBackward (DdManager *table, int x, int y);\n\n// static int ddGroupSiftingBackward (DdManager *table, Move *moves, int size, int upFlag, int lazyFlag);\n\n// static void ddMergeGroups (DdManager *table, MtrNode *treenode, int low, int high);\n\n// static void ddDissolveGroup (DdManager *table, int x, int y);\n\n// static int ddNoCheck (DdManager *table, int x, int y);\n\n// static int ddSecDiffCheck (DdManager *table, int x, int y);\n\n// static int ddExtSymmCheck (DdManager *table, int x, int y);\n\n// static int ddVarGroupCheck (DdManager * table, int x, int y);\n\n// static int ddSetVarHandled (DdManager *dd, int index);\n\n// static int ddResetVarHandled (DdManager *dd, int index);\n\n// static int ddIsVarHandled (DdManager *dd, int index);\n\n\n/**AutomaticEnd***************************************************************/\n\n/*---------------------------------------------------------------------------*/\n/* Definition of exported functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Creates a new variable group.]\n\n  Description [Creates a new variable group. The group starts at\n  variable and contains size variables. The parameter low is the index\n  of the first variable. If the variable already exists, its current\n  position in the order is known to the manager. If the variable does\n  not exist yet, the position is assumed to be the same as the index.\n  The group tree is created if it does not exist yet.\n  Returns a pointer to the group if successful; NULL otherwise.]\n\n  SideEffects [The variable tree is changed.]\n\n  SeeAlso     [Cudd_MakeZddTreeNode]\n\n******************************************************************************/\nMtrNode *\nCudd_MakeTreeNode(\n  DdManager * dd /* manager */,\n  unsigned int  low /* index of the first group variable */,\n  unsigned int  size /* number of variables in the group */,\n  unsigned int  type /* MTR_DEFAULT or MTR_FIXED */)\n{\n    var group *MtrNode;\n    var tree *MtrNode;\n    unsigned int level;\n\n    /* If the variable does not exist yet, the position is assumed to be\n    ** the same as the index. Therefore, applications that rely on\n    ** Cudd_bddNewVarAtLevel or Cudd_addNewVarAtLevel to create new\n    ** variables have to create the variables before they group them.\n    */\n    if low \u003c (unsigned int) dd.size {\n        level = dd.perm[low];\n    } else {\n        level = low;\n    }\n\n    if level + size - 1\u003e int32( MTR_MAXHIGH) {\n        return(nil); }\n\n    /* If the tree does not exist yet, create it. */\n    tree = dd.tree;\n    if tree == nil {\n        dd.tree = tree = Mtr_InitGroupTree(0, dd.size);\n        if tree == nil {\n            return(nil); }\n        tree.index = dd.invperm[0];\n    }\n\n    /* Extend the upper bound of the tree if necessary. This allows the\n    ** application to create groups even before the variables are created.\n    */\n    // inlining of macro ddMax\n    \n    // inlining of macro ddMax\n    if ((((uint32( dd.size)) \u003e (level + size)) ? (uint32( dd.size)) : (level + size))) \u003e (tree.size) {\n        // inlining of macro ddMax\n        tree.size = ((((uint32( dd.size)) \u003e (level + size)) ? (uint32( dd.size)) : (level + size)));\n    } else {\n        tree.size = (tree.size);\n    }\n\n    /* Create the group. */\n    group = Mtr_MakeGroup(tree, level, size, type);\n    if group == nil {\n        return(nil); }\n\n    /* Initialize the index field to the index of the variable currently\n    ** in position low. This field will be updated by the reordering\n    ** procedure to provide a handle to the group once it has been moved.\n    */\n    group.index = (MtrHalfWord) low;\n\n    return(group);\n\n} /* end of Cudd_MakeTreeNode */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of internal functions                                          */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Tree sifting algorithm.]\n\n  Description [Tree sifting algorithm. Assumes that a tree representing\n  a group hierarchy is passed as a parameter. It then reorders each\n  group in postorder fashion by calling ddTreeSiftingAux.  Assumes that\n  no dead nodes are present.  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nint\ncuddTreeSifting(\n  DdManager * table /* DD table */,\n  Cudd_ReorderingType method /* reordering method for the groups of leaves */)\n{\n    var i int32;\n    var nvars int32;\n    var result int32;\n    var tempTree int32;\n\n    /* If no tree is provided we create a temporary one in which all\n    ** variables are in a single group. After reordering this tree is\n    ** destroyed.\n    */\n    tempTree = table.tree == nil;\n    if tempTree != 0 {\n        table.tree = Mtr_InitGroupTree(0,table.size);\n        table.tree.index = table.invperm[0];\n    }\n    nvars = table.size;\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0 \u0026\u0026 !tempTree) (void) fprintf(table-\u003eout,\"cuddTreeSifting:\");\n    Mtr_PrintGroups(table-\u003etree,pr \u003c= 0);\n#endif\n\n#ifdef DD_STATS\n    extsymmcalls = 0;\n    extsymm = 0;\n    secdiffcalls = 0;\n    secdiff = 0;\n    secdiffmisfire = 0;\n\n    (void) fprintf(table-\u003eout,\"\\n\");\n    if (!tempTree)\n        (void) fprintf(table-\u003eout,\"#:IM_NODES  %8d: group tree nodes\\n\",\n                       ddCountInternalMtrNodes(table,table-\u003etree));\n#endif\n\n    /* Initialize the group of each subtable to itself. Initially\n    ** there are no groups. Groups are created according to the tree\n    ** structure in postorder fashion.\n    */\n    for i = 0; i \u003c nvars; i++ {\n        table.subtables[i].next = i;\n    }\n\n\n    /* Reorder. */\n    result = ddTreeSiftingAux(table, table.tree, method);\n\n#ifdef DD_STATS         /* print stats */\n    if (!tempTree \u0026\u0026 method == CUDD_REORDER_GROUP_SIFT \u0026\u0026\n        (table-\u003egroupcheck == CUDD_GROUP_CHECK7 ||\n         table-\u003egroupcheck == CUDD_GROUP_CHECK5)) {\n        (void) fprintf(table-\u003eout,\"\\nextsymmcalls = %d\\n\",extsymmcalls);\n        (void) fprintf(table-\u003eout,\"extsymm = %d\",extsymm);\n    }\n    if (!tempTree \u0026\u0026 method == CUDD_REORDER_GROUP_SIFT \u0026\u0026\n        table-\u003egroupcheck == CUDD_GROUP_CHECK7) {\n        (void) fprintf(table-\u003eout,\"\\nsecdiffcalls = %d\\n\",secdiffcalls);\n        (void) fprintf(table-\u003eout,\"secdiff = %d\\n\",secdiff);\n        (void) fprintf(table-\u003eout,\"secdiffmisfire = %d\",secdiffmisfire);\n    }\n#endif\n\n    if tempTree != 0 {\n        Cudd_FreeTree(table); }\n    return(result);\n\n} /* end of cuddTreeSifting */\n\n\n/*---------------------------------------------------------------------------*/\n/* Definition of static functions                                            */\n/*---------------------------------------------------------------------------*/\n\n\n/**Function********************************************************************\n\n  Synopsis    [Visits the group tree and reorders each group.]\n\n  Description [Recursively visits the group tree and reorders each\n  group in postorder fashion.  Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc ddTreeSiftingAux(table *DdManager, treenode *MtrNode, method Cudd_ReorderingType) int32 {\n    var auxnode *MtrNode;\n    var res int32;\n    var saveCheck Cudd_AggregationType;\n\n#ifdef DD_DEBUG\n    Mtr_PrintGroups(treenode,1);\n#endif\n\n    auxnode = treenode;\n    for auxnode != nil {\n        if auxnode.child != nil {\n            if !(ddTreeSiftingAux(table, auxnode.child, method) != 0) {\n                return(0); }\n            saveCheck = table.groupcheck;\n            table.groupcheck = CUDD_NO_CHECK;\n            if method != CUDD_REORDER_LAZY_SIFT {\n              res = ddReorderChildren(table, auxnode, CUDD_REORDER_GROUP_SIFT);\n            } else {\n              res = ddReorderChildren(table, auxnode, CUDD_REORDER_LAZY_SIFT); }\n            table.groupcheck = saveCheck;\n\n            if res == 0 {\n                return(0); }\n        } else if auxnode.size \u003e 1 {\n            if !(ddReorderChildren(table, auxnode, method) != 0) {\n                return(0); }\n        }\n        auxnode = auxnode.younger;\n    }\n\n    return(1);\n\n} /* end of ddTreeSiftingAux */\n\n\n#ifdef DD_STATS\n/**Function********************************************************************\n\n  Synopsis    [Counts the number of internal nodes of the group tree.]\n\n  Description [Counts the number of internal nodes of the group tree.\n  Returns the count.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic int\nddCountInternalMtrNodes(\n  DdManager * table,\n  MtrNode * treenode)\n{\n    MtrNode *auxnode;\n    int     count,nodeCount;\n\n\n    nodeCount = 0;\n    auxnode = treenode;\n    while (auxnode != NULL) {\n        if (!(MTR_TEST(auxnode,MTR_TERMINAL))) {\n            nodeCount++;\n            count = ddCountInternalMtrNodes(table,auxnode-\u003echild);\n            nodeCount += count;\n        }\n        auxnode = auxnode-\u003eyounger;\n    }\n\n    return(nodeCount);\n\n} /* end of ddCountInternalMtrNodes */\n#endif\n\n\n/**Function********************************************************************\n\n  Synopsis    [Reorders the children of a group tree node according to\n  the options.]\n\n  Description [Reorders the children of a group tree node according to\n  the options. After reordering puts all the variables in the group\n  and/or its descendents in a single group. This allows hierarchical\n  reordering.  If the variables in the group do not exist yet, simply\n  does nothing. Returns 1 if successful; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc ddReorderChildren(table *DdManager, treenode *MtrNode, method Cudd_ReorderingType) int32 {\n    var lower int32;\n    var upper int32  = -1;\n    var result int32;\n    unsigned int initialSize;\n\n    ddFindNodeHiLo(table,treenode,\u0026lower,\u0026upper);\n    /* If upper == -1 these variables do not exist yet. */\n    if upper == -1 {\n        return(1); }\n\n    if treenode.flags == MTR_FIXED {\n        result = 1;\n    } else {\n#ifdef DD_STATS\n        (void) fprintf(table-\u003eout,\" \");\n#endif\n        switch method {\n        case CUDD_REORDER_RANDOM,\n         CUDD_REORDER_RANDOM_PIVOT:\n            result = cuddSwapping(table,lower,upper,method);\n            break;\n        case CUDD_REORDER_SIFT:\n            result = cuddSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_SIFT_CONVERGE:\n            for {\n                initialSize = table.keys - table.isolated;\n                result = cuddSifting(table,lower,upper);\n                if initialSize \u003c= table.keys - table.isolated {\n                    break; }\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            \nif !(result != 0) { break }\n} \n            break;\n        case CUDD_REORDER_SYMM_SIFT:\n            result = cuddSymmSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_SYMM_SIFT_CONV:\n            result = cuddSymmSiftingConv(table,lower,upper);\n            break;\n        case CUDD_REORDER_GROUP_SIFT:\n            if table.groupcheck == CUDD_NO_CHECK {\n                result = ddGroupSifting(table,lower,upper,ddNoCheck,\n                                        DD_NORMAL_SIFT);\n            } else if table.groupcheck == CUDD_GROUP_CHECK5 {\n                result = ddGroupSifting(table,lower,upper,ddExtSymmCheck,\n                                        DD_NORMAL_SIFT);\n            } else if table.groupcheck == CUDD_GROUP_CHECK7 {\n                result = ddGroupSifting(table,lower,upper,ddExtSymmCheck,\n                                        DD_NORMAL_SIFT);\n            } else {\n                (void) fmt.Fprintf(table.err, \"Unknown group ckecking method\\n\");\n                result = 0;\n            }\n            break;\n        case CUDD_REORDER_GROUP_SIFT_CONV:\n            for {\n                initialSize = table.keys - table.isolated;\n                if table.groupcheck == CUDD_NO_CHECK {\n                    result = ddGroupSifting(table,lower,upper,ddNoCheck,\n                                            DD_NORMAL_SIFT);\n                } else if table.groupcheck == CUDD_GROUP_CHECK5 {\n                    result = ddGroupSifting(table,lower,upper,ddExtSymmCheck,\n                                            DD_NORMAL_SIFT);\n                } else if table.groupcheck == CUDD_GROUP_CHECK7 {\n                    result = ddGroupSifting(table,lower,upper,ddExtSymmCheck,\n                                            DD_NORMAL_SIFT);\n                } else {\n                    (void) fmt.Fprintf(table.err, \"Unknown group ckecking method\\n\");\n                    result = 0;\n                }\n#ifdef DD_STATS\n                (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n                result = cuddWindowReorder(table,lower,upper,\n                                           CUDD_REORDER_WINDOW4);\n                if initialSize \u003c= table.keys - table.isolated {\n                    break; }\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            \nif !(result != 0) { break }\n} \n            break;\n        case CUDD_REORDER_WINDOW2,\n         CUDD_REORDER_WINDOW3,\n         CUDD_REORDER_WINDOW4,\n         CUDD_REORDER_WINDOW2_CONV,\n         CUDD_REORDER_WINDOW3_CONV,\n         CUDD_REORDER_WINDOW4_CONV:\n            result = cuddWindowReorder(table,lower,upper,method);\n            break;\n        case CUDD_REORDER_ANNEALING:\n            result = cuddAnnealing(table,lower,upper);\n            break;\n        case CUDD_REORDER_GENETIC:\n            result = cuddGa(table,lower,upper);\n            break;\n        case CUDD_REORDER_LINEAR:\n            result = cuddLinearAndSifting(table,lower,upper);\n            break;\n        case CUDD_REORDER_LINEAR_CONVERGE:\n            for {\n                initialSize = table.keys - table.isolated;\n                result = cuddLinearAndSifting(table,lower,upper);\n                if initialSize \u003c= table.keys - table.isolated {\n                    break; }\n#ifdef DD_STATS\n                else\n                    (void) fprintf(table-\u003eout,\"\\n\");\n#endif\n            \nif !(result != 0) { break }\n} \n            break;\n        case CUDD_REORDER_EXACT:\n            result = cuddExact(table,lower,upper);\n            break;\n        case CUDD_REORDER_LAZY_SIFT:\n            result = ddGroupSifting(table,lower,upper,ddVarGroupCheck,\n                                    DD_LAZY_SIFT);\n            break;\n        default:\n            return(0);\n        }\n    }\n\n    /* Create a single group for all the variables that were sifted,\n    ** so that they will be treated as a single block by successive\n    ** invocations of ddGroupSifting.\n    */\n    ddMergeGroups(table,treenode,lower,upper);\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"ddReorderChildren:\");\n#endif\n\n    return(result);\n\n} /* end of ddReorderChildren */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Finds the lower and upper bounds of the group represented\n  by treenode.]\n\n  Description [Finds the lower and upper bounds of the group\n  represented by treenode.  From the index and size fields we need to\n  derive the current positions, and find maximum and minimum.]\n\n  SideEffects [The bounds are returned as side effects.]\n\n  SeeAlso     []\n\n******************************************************************************/\nfunc ddFindNodeHiLo(table *DdManager, treenode *MtrNode, lower *int32, upper *int32) {\n    var low int32;\n    var high int32;\n\n    /* Check whether no variables in this group already exist.\n    ** If so, return immediately. The calling procedure will know from\n    ** the values of upper that no reordering is needed.\n    */\n    if int32( treenode.low) \u003e= table.size {\n        *lower = table.size;\n        *upper = -1;\n        return;\n    }\n\n    *lower = low = (unsigned int) table.perm[treenode.index];\n    high = int32( (low + treenode.size - 1));\n\n    if high \u003e= table.size {\n        /* This is the case of a partially existing group. The aim is to\n        ** reorder as many variables as safely possible.  If the tree\n        ** node is terminal, we just reorder the subset of the group\n        ** that is currently in existence.  If the group has\n        ** subgroups, then we only reorder those subgroups that are\n        ** fully instantiated.  This way we avoid breaking up a group.\n        */\n        var auxnode *MtrNode  = treenode.child;\n        if auxnode == nil {\n            *upper = (unsigned int) table.size - 1;\n        } else {\n            /* Search the subgroup that strands the table-\u003esize line.\n            ** If the first group starts at 0 and goes past table-\u003esize\n            ** upper will get -1, thus correctly signaling that no reordering\n            ** should take place.\n            */\n            for auxnode != nil {\n                var thisLower int32  = table.perm[auxnode.low];\n                var thisUpper int32  = thisLower + auxnode.size - 1;\n                if thisUpper \u003e= table.size \u0026\u0026 thisLower \u003c table.size {\n                    *upper = (unsigned int) thisLower - 1; }\n                auxnode = auxnode.younger;\n            }\n        }\n    } else {\n        /* Normal case: All the variables of the group exist. */\n        *upper = (unsigned int) high;\n    }\n\n#ifdef DD_DEBUG\n    /* Make sure that all variables in group are contiguous. */\n    assert(treenode-\u003esize \u003e= *upper - *lower + 1);\n#endif\n\n    return;\n\n} /* end of ddFindNodeHiLo */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Comparison function used by qsort.]\n\n  Description [Comparison function used by qsort to order the variables\n  according to the number of keys in the subtables.  Returns the\n  difference in number of keys between the two variables being\n  compared.]\n\n  SideEffects [None]\n\n******************************************************************************/\nfunc ddUniqueCompareGroup(ptrX *int32, ptrY *int32) int32 {\n     \n                                       \n                                  \n     \n      \n    return(entry[*ptrY] - entry[*ptrX]);\n\n} /* end of ddUniqueCompareGroup */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Sifts from treenode-\u003elow to treenode-\u003ehigh.]\n\n  Description [Sifts from treenode-\u003elow to treenode-\u003ehigh. If\n  croupcheck == CUDD_GROUP_CHECK7, it checks for group creation at the\n  end of the initial sifting. If a group is created, it is then sifted\n  again. After sifting one variable, the group that contains it is\n  dissolved.  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic int\nddGroupSifting(\n  DdManager * table,\n  int  lower,\n  int  upper,\n  DD_CHKFP checkFunction,\n  int lazyFlag)\n{\n    int         *var;\n    int         i,j,x,xInit;\n    int         nvars;\n    int         classes;\n    int         result;\n    int         *sifted;\n    int         merged;\n    int         dissolve;\n#ifdef DD_STATS\n    unsigned    previousSize;\n#endif\n    int         xindex;\n\n    nvars = table-\u003esize;\n\n    /* Order variables to sift. */\n    entry = NULL;\n    sifted = NULL;\n    var = ABC_ALLOC(int,nvars);\n    if (var == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        goto ddGroupSiftingOutOfMem;\n    }\n    entry = ABC_ALLOC(int,nvars);\n    if (entry == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        goto ddGroupSiftingOutOfMem;\n    }\n    sifted = ABC_ALLOC(int,nvars);\n    if (sifted == NULL) {\n        table-\u003eerrorCode = CUDD_MEMORY_OUT;\n        goto ddGroupSiftingOutOfMem;\n    }\n\n    /* Here we consider only one representative for each group. */\n    for (i = 0, classes = 0; i \u003c nvars; i++) {\n        sifted[i] = 0;\n        x = table-\u003eperm[i];\n        if ((unsigned) x \u003e= table-\u003esubtables[x].next) {\n            entry[i] = table-\u003esubtables[x].keys;\n            var[classes] = i;\n            classes++;\n        }\n    }\n\n    qsort((void *)var,(size_t)classes,sizeof(int),\n          (DD_QSFP) ddUniqueCompareGroup);\n\n    if (lazyFlag) {\n        for (i = 0; i \u003c nvars; i ++) {\n            ddResetVarHandled(table, i);\n        }\n    }\n\n    /* Now sift. */\n    for (i = 0; i \u003c ddMin(table-\u003esiftMaxVar,classes); i++) {\n        if (ddTotalNumberSwapping \u003e= table-\u003esiftMaxSwap)\n            break;\n        xindex = var[i];\n        if (sifted[xindex] == 1) /* variable already sifted as part of group */\n            continue;\n        x = table-\u003eperm[xindex]; /* find current level of this variable */\n\n        if (x \u003c lower || x \u003e upper || table-\u003esubtables[x].bindVar == 1)\n            continue;\n#ifdef DD_STATS\n        previousSize = table-\u003ekeys - table-\u003eisolated;\n#endif\n#ifdef DD_DEBUG\n        /* x is bottom of group */\n        assert((unsigned) x \u003e= table-\u003esubtables[x].next);\n#endif\n        if ((unsigned) x == table-\u003esubtables[x].next) {\n            dissolve = 1;\n            result = ddGroupSiftingAux(table,x,lower,upper,checkFunction,\n                                        lazyFlag);\n        } else {\n            dissolve = 0;\n            result = ddGroupSiftingAux(table,x,lower,upper,ddNoCheck,lazyFlag);\n        }\n        if (!result) goto ddGroupSiftingOutOfMem;\n\n        /* check for aggregation */\n        merged = 0;\n        if (lazyFlag == 0 \u0026\u0026 table-\u003egroupcheck == CUDD_GROUP_CHECK7) {\n            x = table-\u003eperm[xindex]; /* find current level */\n            if ((unsigned) x == table-\u003esubtables[x].next) { /* not part of a group */\n                if (x != upper \u0026\u0026 sifted[table-\u003einvperm[x+1]] == 0 \u0026\u0026\n                (unsigned) x+1 == table-\u003esubtables[x+1].next) {\n                    if (ddSecDiffCheck(table,x,x+1)) {\n                        merged =1;\n                        ddCreateGroup(table,x,x+1);\n                    }\n                }\n                if (x != lower \u0026\u0026 sifted[table-\u003einvperm[x-1]] == 0 \u0026\u0026\n                (unsigned) x-1 == table-\u003esubtables[x-1].next) {\n                    if (ddSecDiffCheck(table,x-1,x)) {\n                        merged =1;\n                        ddCreateGroup(table,x-1,x);\n                    }\n                }\n            }\n        }\n\n        if (merged) { /* a group was created */\n            /* move x to bottom of group */\n            while ((unsigned) x \u003c table-\u003esubtables[x].next)\n                x = table-\u003esubtables[x].next;\n            /* sift */\n            result = ddGroupSiftingAux(table,x,lower,upper,ddNoCheck,lazyFlag);\n            if (!result) goto ddGroupSiftingOutOfMem;\n#ifdef DD_STATS\n            if (table-\u003ekeys \u003c previousSize + table-\u003eisolated) {\n                (void) fprintf(table-\u003eout,\"_\");\n            } else if (table-\u003ekeys \u003e previousSize + table-\u003eisolated) {\n                (void) fprintf(table-\u003eout,\"^\");\n            } else {\n                (void) fprintf(table-\u003eout,\"*\");\n            }\n            fflush(table-\u003eout);\n        } else {\n            if (table-\u003ekeys \u003c previousSize + table-\u003eisolated) {\n                (void) fprintf(table-\u003eout,\"-\");\n            } else if (table-\u003ekeys \u003e previousSize + table-\u003eisolated) {\n                (void) fprintf(table-\u003eout,\"+\");\n            } else {\n                (void) fprintf(table-\u003eout,\"=\");\n            }\n            fflush(table-\u003eout);\n#endif\n        }\n\n        /* Mark variables in the group just sifted. */\n        x = table-\u003eperm[xindex];\n        if ((unsigned) x != table-\u003esubtables[x].next) {\n            xInit = x;\n            do {\n                j = table-\u003einvperm[x];\n                sifted[j] = 1;\n                x = table-\u003esubtables[x].next;\n            } while (x != xInit);\n\n            /* Dissolve the group if it was created. */\n            if (lazyFlag == 0 \u0026\u0026 dissolve) {\n                do {\n                    j = table-\u003esubtables[x].next;\n                    table-\u003esubtables[x].next = x;\n                    x = j;\n                } while (x != xInit);\n            }\n        }\n\n#ifdef DD_DEBUG\n        if (pr \u003e 0) (void) fprintf(table-\u003eout,\"ddGroupSifting:\");\n#endif\n\n      if (lazyFlag) ddSetVarHandled(table, xindex);\n    } /* for */\n\n    ABC_FREE(sifted);\n    ABC_FREE(var);\n    ABC_FREE(entry);\n\n    return(1);\n\nddGroupSiftingOutOfMem:\n    if (entry != NULL)  ABC_FREE(entry);\n    if (var != NULL)    ABC_FREE(var);\n    if (sifted != NULL) ABC_FREE(sifted);\n\n    return(0);\n\n} /* end of ddGroupSifting */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Creates a group encompassing variables from x to y in the\n  DD table.]\n\n  Description [Creates a group encompassing variables from x to y in the\n  DD table. In the current implementation it must be y == x+1.\n  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic void\nddCreateGroup(\n  DdManager * table,\n  int  x,\n  int  y)\n{\n    int  gybot;\n\n#ifdef DD_DEBUG\n    assert(y == x+1);\n#endif\n\n    /* Find bottom of second group. */\n    gybot = y;\n    while ((unsigned) gybot \u003c table-\u003esubtables[gybot].next)\n        gybot = table-\u003esubtables[gybot].next;\n\n    /* Link groups. */\n    table-\u003esubtables[x].next = y;\n    table-\u003esubtables[gybot].next = x;\n\n    return;\n\n} /* ddCreateGroup */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Sifts one variable up and down until it has taken all\n  positions. Checks for aggregation.]\n\n  Description [Sifts one variable up and down until it has taken all\n  positions. Checks for aggregation. There may be at most two sweeps,\n  even if the group grows.  Assumes that x is either an isolated\n  variable, or it is the bottom of a group. All groups may not have\n  been found. The variable being moved is returned to the best position\n  seen during sifting.  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic int\nddGroupSiftingAux(\n  DdManager * table,\n  int  x,\n  int  xLow,\n  int  xHigh,\n  DD_CHKFP checkFunction,\n  int lazyFlag)\n{\n    Move *move;\n    Move *moves;        /* list of moves */\n    int  initialSize;\n    int  result;\n    int  y;\n    int  topbot;\n\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\n                               \"ddGroupSiftingAux from %d to %d\\n\",xLow,xHigh);\n    assert((unsigned) x \u003e= table-\u003esubtables[x].next); /* x is bottom of group */\n#endif\n\n    initialSize = table-\u003ekeys - table-\u003eisolated;\n    moves = NULL;\n\n    originalSize = initialSize;         /* for lazy sifting */\n\n    /* If we have a singleton, we check for aggregation in both\n    ** directions before we sift.\n    */\n    if ((unsigned) x == table-\u003esubtables[x].next) {\n        /* Will go down first, unless x == xHigh:\n        ** Look for aggregation above x.\n        */\n        for (y = x; y \u003e xLow; y--) {\n            if (!checkFunction(table,y-1,y))\n                break;\n            topbot = table-\u003esubtables[y-1].next; /* find top of y-1's group */\n            table-\u003esubtables[y-1].next = y;\n            table-\u003esubtables[x].next = topbot; /* x is bottom of group so its */\n                                               /* next is top of y-1's group */\n            y = topbot + 1; /* add 1 for y--; new y is top of group */\n        }\n        /* Will go up first unless x == xlow:\n        ** Look for aggregation below x.\n        */\n        for (y = x; y \u003c xHigh; y++) {\n            if (!checkFunction(table,y,y+1))\n                break;\n            /* find bottom of y+1's group */\n            topbot = y + 1;\n            while ((unsigned) topbot \u003c table-\u003esubtables[topbot].next) {\n                topbot = table-\u003esubtables[topbot].next;\n            }\n            table-\u003esubtables[topbot].next = table-\u003esubtables[y].next;\n            table-\u003esubtables[y].next = y + 1;\n            y = topbot - 1; /* subtract 1 for y++; new y is bottom of group */\n        }\n    }\n\n    /* Now x may be in the middle of a group.\n    ** Find bottom of x's group.\n    */\n    while ((unsigned) x \u003c table-\u003esubtables[x].next)\n        x = table-\u003esubtables[x].next;\n\n    if (x == xLow) { /* Sift down */\n#ifdef DD_DEBUG\n        /* x must be a singleton */\n        assert((unsigned) x == table-\u003esubtables[x].next);\n#endif\n        if (x == xHigh) return(1);      /* just one variable */\n\n        if (!ddGroupSiftingDown(table,x,xHigh,checkFunction,\u0026moves))\n            goto ddGroupSiftingAuxOutOfMem;\n        /* at this point x == xHigh, unless early term */\n\n        /* move backward and stop at best position */\n        result = ddGroupSiftingBackward(table,moves,initialSize,\n                                        DD_SIFT_DOWN,lazyFlag);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeys - table-\u003eisolated \u003c= (unsigned) initialSize);\n#endif\n        if (!result) goto ddGroupSiftingAuxOutOfMem;\n\n    } else if (cuddNextHigh(table,x) \u003e xHigh) { /* Sift up */\n#ifdef DD_DEBUG\n        /* x is bottom of group */\n        assert((unsigned) x \u003e= table-\u003esubtables[x].next);\n#endif\n        /* Find top of x's group */\n        x = table-\u003esubtables[x].next;\n\n        if (!ddGroupSiftingUp(table,x,xLow,checkFunction,\u0026moves))\n            goto ddGroupSiftingAuxOutOfMem;\n        /* at this point x == xLow, unless early term */\n\n        /* move backward and stop at best position */\n        result = ddGroupSiftingBackward(table,moves,initialSize,\n                                        DD_SIFT_UP,lazyFlag);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeys - table-\u003eisolated \u003c= (unsigned) initialSize);\n#endif\n        if (!result) goto ddGroupSiftingAuxOutOfMem;\n\n    } else if (x - xLow \u003e xHigh - x) { /* must go down first: shorter */\n        if (!ddGroupSiftingDown(table,x,xHigh,checkFunction,\u0026moves))\n            goto ddGroupSiftingAuxOutOfMem;\n        /* at this point x == xHigh, unless early term */\n\n        /* Find top of group */\n        if (moves) {\n            x = moves-\u003ey;\n        }\n        while ((unsigned) x \u003c table-\u003esubtables[x].next)\n            x = table-\u003esubtables[x].next;\n        x = table-\u003esubtables[x].next;\n#ifdef DD_DEBUG\n        /* x should be the top of a group */\n        assert((unsigned) x \u003c= table-\u003esubtables[x].next);\n#endif\n\n        if (!ddGroupSiftingUp(table,x,xLow,checkFunction,\u0026moves))\n            goto ddGroupSiftingAuxOutOfMem;\n\n        /* move backward and stop at best position */\n        result = ddGroupSiftingBackward(table,moves,initialSize,\n                                        DD_SIFT_UP,lazyFlag);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeys - table-\u003eisolated \u003c= (unsigned) initialSize);\n#endif\n        if (!result) goto ddGroupSiftingAuxOutOfMem;\n\n    } else { /* moving up first: shorter */\n        /* Find top of x's group */\n        x = table-\u003esubtables[x].next;\n\n        if (!ddGroupSiftingUp(table,x,xLow,checkFunction,\u0026moves))\n            goto ddGroupSiftingAuxOutOfMem;\n        /* at this point x == xHigh, unless early term */\n\n        if (moves) {\n            x = moves-\u003ex;\n        }\n        while ((unsigned) x \u003c table-\u003esubtables[x].next)\n            x = table-\u003esubtables[x].next;\n#ifdef DD_DEBUG\n        /* x is bottom of a group */\n        assert((unsigned) x \u003e= table-\u003esubtables[x].next);\n#endif\n\n        if (!ddGroupSiftingDown(table,x,xHigh,checkFunction,\u0026moves))\n            goto ddGroupSiftingAuxOutOfMem;\n\n        /* move backward and stop at best position */\n        result = ddGroupSiftingBackward(table,moves,initialSize,\n                                        DD_SIFT_DOWN,lazyFlag);\n#ifdef DD_DEBUG\n        assert(table-\u003ekeys - table-\u003eisolated \u003c= (unsigned) initialSize);\n#endif\n        if (!result) goto ddGroupSiftingAuxOutOfMem;\n    }\n\n    while (moves != NULL) {\n        move = moves-\u003enext;\n        cuddDeallocMove(table, moves);\n        moves = move;\n    }\n\n    return(1);\n\nddGroupSiftingAuxOutOfMem:\n    while (moves != NULL) {\n        move = moves-\u003enext;\n        cuddDeallocMove(table, moves);\n        moves = move;\n    }\n\n    return(0);\n\n} /* end of ddGroupSiftingAux */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Sifts up a variable until either it reaches position xLow\n  or the size of the DD heap increases too much.]\n\n  Description [Sifts up a variable until either it reaches position\n  xLow or the size of the DD heap increases too much. Assumes that y is\n  the top of a group (or a singleton).  Checks y for aggregation to the\n  adjacent variables. Records all the moves that are appended to the\n  list of moves received as input and returned as a side effect.\n  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic int\nddGroupSiftingUp(\n  DdManager * table,\n  int  y,\n  int  xLow,\n  DD_CHKFP checkFunction,\n  Move ** moves)\n{\n    Move *move;\n    int  x;\n    int  size;\n    int  i;\n    int  gxtop,gybot;\n    int  limitSize;\n    int  xindex, yindex;\n    int  zindex;\n    int  z;\n    int  isolated;\n    int  L;     /* lower bound on DD size */\n#ifdef DD_DEBUG\n    int  checkL;\n#endif\n\n    yindex = table-\u003einvperm[y];\n\n    /* Initialize the lower bound.\n    ** The part of the DD below the bottom of y's group will not change.\n    ** The part of the DD above y that does not interact with any\n    ** variable of y's group will not change.\n    ** The rest may vanish in the best case, except for\n    ** the nodes at level xLow, which will not vanish, regardless.\n    ** What we use here is not really a lower bound, because we ignore\n    ** the interactions with all variables except y.\n    */\n    limitSize = L = table-\u003ekeys - table-\u003eisolated;\n    gybot = y;\n    while ((unsigned) gybot \u003c table-\u003esubtables[gybot].next)\n        gybot = table-\u003esubtables[gybot].next;\n    for (z = xLow + 1; z \u003c= gybot; z++) {\n        zindex = table-\u003einvperm[z];\n        if (zindex == yindex || cuddTestInteract(table,zindex,yindex)) {\n            isolated = table-\u003evars[zindex]-\u003eref == 1;\n            L -= table-\u003esubtables[z].keys - isolated;\n        }\n    }\n\n    x = cuddNextLow(table,y);\n    while (x \u003e= xLow \u0026\u0026 L \u003c= limitSize) {\n#ifdef DD_DEBUG\n        gybot = y;\n        while ((unsigned) gybot \u003c table-\u003esubtables[gybot].next)\n            gybot = table-\u003esubtables[gybot].next;\n        checkL = table-\u003ekeys - table-\u003eisolated;\n        for (z = xLow + 1; z \u003c= gybot; z++) {\n            zindex = table-\u003einvperm[z];\n            if (zindex == yindex || cuddTestInteract(table,zindex,yindex)) {\n                isolated = table-\u003evars[zindex]-\u003eref == 1;\n                checkL -= table-\u003esubtables[z].keys - isolated;\n            }\n        }\n        if (pr \u003e 0 \u0026\u0026 L != checkL) {\n            (void) fprintf(table-\u003eout,\n                           \"Inaccurate lower bound: L = %d checkL = %d\\n\",\n                           L, checkL);\n        }\n#endif\n        gxtop = table-\u003esubtables[x].next;\n        if (checkFunction(table,x,y)) {\n            /* Group found, attach groups */\n            table-\u003esubtables[x].next = y;\n            i = table-\u003esubtables[y].next;\n            while (table-\u003esubtables[i].next != (unsigned) y)\n                i = table-\u003esubtables[i].next;\n            table-\u003esubtables[i].next = gxtop;\n            move = (Move *)cuddDynamicAllocNode(table);\n            if (move == NULL) goto ddGroupSiftingUpOutOfMem;\n            move-\u003ex = x;\n            move-\u003ey = y;\n            move-\u003eflags = MTR_NEWNODE;\n            move-\u003esize = table-\u003ekeys - table-\u003eisolated;\n            move-\u003enext = *moves;\n            *moves = move;\n        } else if (table-\u003esubtables[x].next == (unsigned) x \u0026\u0026\n                   table-\u003esubtables[y].next == (unsigned) y) {\n            /* x and y are self groups */\n            xindex = table-\u003einvperm[x];\n            size = cuddSwapInPlace(table,x,y);\n#ifdef DD_DEBUG\n            assert(table-\u003esubtables[x].next == (unsigned) x);\n            assert(table-\u003esubtables[y].next == (unsigned) y);\n#endif\n            if (size == 0) goto ddGroupSiftingUpOutOfMem;\n            /* Update the lower bound. */\n            if (cuddTestInteract(table,xindex,yindex)) {\n                isolated = table-\u003evars[xindex]-\u003eref == 1;\n                L += table-\u003esubtables[y].keys - isolated;\n            }\n            move = (Move *)cuddDynamicAllocNode(table);\n            if (move == NULL) goto ddGroupSiftingUpOutOfMem;\n            move-\u003ex = x;\n            move-\u003ey = y;\n            move-\u003eflags = MTR_DEFAULT;\n            move-\u003esize = size;\n            move-\u003enext = *moves;\n            *moves = move;\n\n#ifdef DD_DEBUG\n            if (pr \u003e 0) (void) fprintf(table-\u003eout,\n                                       \"ddGroupSiftingUp (2 single groups):\\n\");\n#endif\n            if ((double) size \u003e (double) limitSize * table-\u003emaxGrowth)\n                return(1);\n            if (size \u003c limitSize) limitSize = size;\n        } else { /* Group move */\n            size = ddGroupMove(table,x,y,moves);\n            if (size == 0) goto ddGroupSiftingUpOutOfMem;\n            /* Update the lower bound. */\n            z = (*moves)-\u003ey;\n            do {\n                zindex = table-\u003einvperm[z];\n                if (cuddTestInteract(table,zindex,yindex)) {\n                    isolated = table-\u003evars[zindex]-\u003eref == 1;\n                    L += table-\u003esubtables[z].keys - isolated;\n                }\n                z = table-\u003esubtables[z].next;\n            } while (z != (int) (*moves)-\u003ey);\n            if ((double) size \u003e (double) limitSize * table-\u003emaxGrowth)\n                return(1);\n            if (size \u003c limitSize) limitSize = size;\n        }\n        y = gxtop;\n        x = cuddNextLow(table,y);\n    }\n\n    return(1);\n\nddGroupSiftingUpOutOfMem:\n    while (*moves != NULL) {\n        move = (*moves)-\u003enext;\n        cuddDeallocMove(table, *moves);\n        *moves = move;\n    }\n    return(0);\n\n} /* end of ddGroupSiftingUp */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Sifts down a variable until it reaches position xHigh.]\n\n  Description [Sifts down a variable until it reaches position xHigh.\n  Assumes that x is the bottom of a group (or a singleton).  Records\n  all the moves.  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic int\nddGroupSiftingDown(\n  DdManager * table,\n  int  x,\n  int  xHigh,\n  DD_CHKFP checkFunction,\n  Move ** moves)\n{\n    Move *move;\n    int  y;\n    int  size;\n    int  limitSize;\n    int  gxtop,gybot;\n    int  R;     /* upper bound on node decrease */\n    int  xindex, yindex;\n    int  isolated, allVars;\n    int  z;\n    int  zindex;\n#ifdef DD_DEBUG\n    int  checkR;\n#endif\n\n    /* If the group consists of simple variables, there is no point in\n    ** sifting it down. This check is redundant if the projection functions\n    ** do not have external references, because the computation of the\n    ** lower bound takes care of the problem.  It is necessary otherwise to\n    ** prevent the sifting down of simple variables. */\n    y = x;\n    allVars = 1;\n    do {\n        if (table-\u003esubtables[y].keys != 1) {\n            allVars = 0;\n            break;\n        }\n        y = table-\u003esubtables[y].next;\n    } while (table-\u003esubtables[y].next != (unsigned) x);\n    if (allVars)\n        return(1);\n\n    /* Initialize R. */\n    xindex = table-\u003einvperm[x];\n    gxtop = table-\u003esubtables[x].next;\n    limitSize = size = table-\u003ekeys - table-\u003eisolated;\n    R = 0;\n    for (z = xHigh; z \u003e gxtop; z--) {\n        zindex = table-\u003einvperm[z];\n        if (zindex == xindex || cuddTestInteract(table,xindex,zindex)) {\n            isolated = table-\u003evars[zindex]-\u003eref == 1;\n            R += table-\u003esubtables[z].keys - isolated;\n        }\n    }\n\n    y = cuddNextHigh(table,x);\n    while (y \u003c= xHigh \u0026\u0026 size - R \u003c limitSize) {\n#ifdef DD_DEBUG\n        gxtop = table-\u003esubtables[x].next;\n        checkR = 0;\n        for (z = xHigh; z \u003e gxtop; z--) {\n            zindex = table-\u003einvperm[z];\n            if (zindex == xindex || cuddTestInteract(table,xindex,zindex)) {\n                isolated = table-\u003evars[zindex]-\u003eref == 1;\n                checkR += table-\u003esubtables[z].keys - isolated;\n            }\n        }\n        assert(R \u003e= checkR);\n#endif\n        /* Find bottom of y group. */\n        gybot = table-\u003esubtables[y].next;\n        while (table-\u003esubtables[gybot].next != (unsigned) y)\n            gybot = table-\u003esubtables[gybot].next;\n\n        if (checkFunction(table,x,y)) {\n            /* Group found: attach groups and record move. */\n            gxtop = table-\u003esubtables[x].next;\n            table-\u003esubtables[x].next = y;\n            table-\u003esubtables[gybot].next = gxtop;\n            move = (Move *)cuddDynamicAllocNode(table);\n            if (move == NULL) goto ddGroupSiftingDownOutOfMem;\n            move-\u003ex = x;\n            move-\u003ey = y;\n            move-\u003eflags = MTR_NEWNODE;\n            move-\u003esize = table-\u003ekeys - table-\u003eisolated;\n            move-\u003enext = *moves;\n            *moves = move;\n        } else if (table-\u003esubtables[x].next == (unsigned) x \u0026\u0026\n                   table-\u003esubtables[y].next == (unsigned) y) {\n            /* x and y are self groups */\n            /* Update upper bound on node decrease. */\n            yindex = table-\u003einvperm[y];\n            if (cuddTestInteract(table,xindex,yindex)) {\n                isolated = table-\u003evars[yindex]-\u003eref == 1;\n                R -= table-\u003esubtables[y].keys - isolated;\n            }\n            size = cuddSwapInPlace(table,x,y);\n#ifdef DD_DEBUG\n            assert(table-\u003esubtables[x].next == (unsigned) x);\n            assert(table-\u003esubtables[y].next == (unsigned) y);\n#endif\n            if (size == 0) goto ddGroupSiftingDownOutOfMem;\n\n            /* Record move. */\n            move = (Move *) cuddDynamicAllocNode(table);\n            if (move == NULL) goto ddGroupSiftingDownOutOfMem;\n            move-\u003ex = x;\n            move-\u003ey = y;\n            move-\u003eflags = MTR_DEFAULT;\n            move-\u003esize = size;\n            move-\u003enext = *moves;\n            *moves = move;\n\n#ifdef DD_DEBUG\n            if (pr \u003e 0) (void) fprintf(table-\u003eout,\n                                       \"ddGroupSiftingDown (2 single groups):\\n\");\n#endif\n            if ((double) size \u003e (double) limitSize * table-\u003emaxGrowth)\n                return(1);\n            if (size \u003c limitSize) limitSize = size;\n\n            x = y;\n            y = cuddNextHigh(table,x);\n        } else { /* Group move */\n            /* Update upper bound on node decrease: first phase. */\n            gxtop = table-\u003esubtables[x].next;\n            z = gxtop + 1;\n            do {\n                zindex = table-\u003einvperm[z];\n                if (zindex == xindex || cuddTestInteract(table,xindex,zindex)) {\n                    isolated = table-\u003evars[zindex]-\u003eref == 1;\n                    R -= table-\u003esubtables[z].keys - isolated;\n                }\n                z++;\n            } while (z \u003c= gybot);\n            size = ddGroupMove(table,x,y,moves);\n            if (size == 0) goto ddGroupSiftingDownOutOfMem;\n            if ((double) size \u003e (double) limitSize * table-\u003emaxGrowth)\n                return(1);\n            if (size \u003c limitSize) limitSize = size;\n\n            /* Update upper bound on node decrease: second phase. */\n            gxtop = table-\u003esubtables[gybot].next;\n            for (z = gxtop + 1; z \u003c= gybot; z++) {\n                zindex = table-\u003einvperm[z];\n                if (zindex == xindex || cuddTestInteract(table,xindex,zindex)) {\n                    isolated = table-\u003evars[zindex]-\u003eref == 1;\n                    R += table-\u003esubtables[z].keys - isolated;\n                }\n            }\n        }\n        x = gybot;\n        y = cuddNextHigh(table,x);\n    }\n\n    return(1);\n\nddGroupSiftingDownOutOfMem:\n    while (*moves != NULL) {\n        move = (*moves)-\u003enext;\n        cuddDeallocMove(table, *moves);\n        *moves = move;\n    }\n\n    return(0);\n\n} /* end of ddGroupSiftingDown */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Swaps two groups and records the move.]\n\n  Description [Swaps two groups and records the move. Returns the\n  number of keys in the DD table in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic int\nddGroupMove(\n  DdManager * table,\n  int  x,\n  int  y,\n  Move ** moves)\n{\n    Move *move;\n    int  size;\n    int  i,j,xtop,xbot,xsize,ytop,ybot,ysize,newxtop;\n    int  swapx = -1,swapy = -1;\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n    int  initialSize,bestSize;\n#endif\n\n#ifdef DD_DEBUG\n    /* We assume that x \u003c y */\n    assert(x \u003c y);\n#endif\n    /* Find top, bottom, and size for the two groups. */\n    xbot = x;\n    xtop = table-\u003esubtables[x].next;\n    xsize = xbot - xtop + 1;\n    ybot = y;\n    while ((unsigned) ybot \u003c table-\u003esubtables[ybot].next)\n        ybot = table-\u003esubtables[ybot].next;\n    ytop = y;\n    ysize = ybot - ytop + 1;\n\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n    initialSize = bestSize = table-\u003ekeys - table-\u003eisolated;\n#endif\n    /* Sift the variables of the second group up through the first group */\n    for (i = 1; i \u003c= ysize; i++) {\n        for (j = 1; j \u003c= xsize; j++) {\n            size = cuddSwapInPlace(table,x,y);\n            if (size == 0) goto ddGroupMoveOutOfMem;\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n            if (size \u003c bestSize)\n                bestSize = size;\n#endif\n            swapx = x; swapy = y;\n            y = x;\n            x = cuddNextLow(table,y);\n        }\n        y = ytop + i;\n        x = cuddNextLow(table,y);\n    }\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n    if ((bestSize \u003c initialSize) \u0026\u0026 (bestSize \u003c size))\n        (void) fprintf(table-\u003eout,\"Missed local minimum: initialSize:%d  bestSize:%d  finalSize:%d\\n\",initialSize,bestSize,size);\n#endif\n\n    /* fix groups */\n    y = xtop; /* ytop is now where xtop used to be */\n    for (i = 0; i \u003c ysize - 1; i++) {\n        table-\u003esubtables[y].next = cuddNextHigh(table,y);\n        y = cuddNextHigh(table,y);\n    }\n    table-\u003esubtables[y].next = xtop; /* y is bottom of its group, join */\n                                    /* it to top of its group */\n    x = cuddNextHigh(table,y);\n    newxtop = x;\n    for (i = 0; i \u003c xsize - 1; i++) {\n        table-\u003esubtables[x].next = cuddNextHigh(table,x);\n        x = cuddNextHigh(table,x);\n    }\n    table-\u003esubtables[x].next = newxtop; /* x is bottom of its group, join */\n                                    /* it to top of its group */\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"ddGroupMove:\\n\");\n#endif\n\n    /* Store group move */\n    move = (Move *) cuddDynamicAllocNode(table);\n    if (move == NULL) goto ddGroupMoveOutOfMem;\n    move-\u003ex = swapx;\n    move-\u003ey = swapy;\n    move-\u003eflags = MTR_DEFAULT;\n    move-\u003esize = table-\u003ekeys - table-\u003eisolated;\n    move-\u003enext = *moves;\n    *moves = move;\n\n    return(table-\u003ekeys - table-\u003eisolated);\n\nddGroupMoveOutOfMem:\n    while (*moves != NULL) {\n        move = (*moves)-\u003enext;\n        cuddDeallocMove(table, *moves);\n        *moves = move;\n    }\n    return(0);\n\n} /* end of ddGroupMove */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Undoes the swap two groups.]\n\n  Description [Undoes the swap two groups.  Returns 1 in case of\n  success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic int\nddGroupMoveBackward(\n  DdManager * table,\n  int  x,\n  int  y)\n{\n    int size;\n    int i,j,xtop,xbot,xsize,ytop,ybot,ysize,newxtop;\n\n\n#ifdef DD_DEBUG\n    /* We assume that x \u003c y */\n    assert(x \u003c y);\n#endif\n\n    /* Find top, bottom, and size for the two groups. */\n    xbot = x;\n    xtop = table-\u003esubtables[x].next;\n    xsize = xbot - xtop + 1;\n    ybot = y;\n    while ((unsigned) ybot \u003c table-\u003esubtables[ybot].next)\n        ybot = table-\u003esubtables[ybot].next;\n    ytop = y;\n    ysize = ybot - ytop + 1;\n\n    /* Sift the variables of the second group up through the first group */\n    for (i = 1; i \u003c= ysize; i++) {\n        for (j = 1; j \u003c= xsize; j++) {\n            size = cuddSwapInPlace(table,x,y);\n            if (size == 0)\n                return(0);\n            y = x;\n            x = cuddNextLow(table,y);\n        }\n        y = ytop + i;\n        x = cuddNextLow(table,y);\n    }\n\n    /* fix groups */\n    y = xtop;\n    for (i = 0; i \u003c ysize - 1; i++) {\n        table-\u003esubtables[y].next = cuddNextHigh(table,y);\n        y = cuddNextHigh(table,y);\n    }\n    table-\u003esubtables[y].next = xtop; /* y is bottom of its group, join */\n                                    /* to its top */\n    x = cuddNextHigh(table,y);\n    newxtop = x;\n    for (i = 0; i \u003c xsize - 1; i++) {\n        table-\u003esubtables[x].next = cuddNextHigh(table,x);\n        x = cuddNextHigh(table,x);\n    }\n    table-\u003esubtables[x].next = newxtop; /* x is bottom of its group, join */\n                                    /* to its top */\n#ifdef DD_DEBUG\n    if (pr \u003e 0) (void) fprintf(table-\u003eout,\"ddGroupMoveBackward:\\n\");\n#endif\n\n    return(1);\n\n} /* end of ddGroupMoveBackward */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Determines the best position for a variables and returns\n  it there.]\n\n  Description [Determines the best position for a variables and returns\n  it there.  Returns 1 in case of success; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic int\nddGroupSiftingBackward(\n  DdManager * table,\n  Move * moves,\n  int  size,\n  int  upFlag,\n  int  lazyFlag)\n{\n    Move *move;\n    int  res;\n    Move *end_move = NULL;\n    int diff, tmp_diff;\n    int index;\n    unsigned int pairlev;\n\n    if (lazyFlag) {\n        end_move = NULL;\n\n        /* Find the minimum size, and the earliest position at which it\n        ** was achieved. */\n        for (move = moves; move != NULL; move = move-\u003enext) {\n            if (move-\u003esize \u003c size) {\n                size = move-\u003esize;\n                end_move = move;\n            } else if (move-\u003esize == size) {\n                if (end_move == NULL) end_move = move;\n            }\n        }\n\n        /* Find among the moves that give minimum size the one that\n        ** minimizes the distance from the corresponding variable. */\n        if (moves != NULL) {\n            diff = Cudd_ReadSize(table) + 1;\n            index = (upFlag == 1) ?\n                    table-\u003einvperm[moves-\u003ex] : table-\u003einvperm[moves-\u003ey];\n            pairlev =\n                (unsigned) table-\u003eperm[Cudd_bddReadPairIndex(table, index)];\n\n            for (move = moves; move != NULL; move = move-\u003enext) {\n                if (move-\u003esize == size) {\n                    if (upFlag == 1) {\n                        tmp_diff = (move-\u003ex \u003e pairlev) ?\n                                    move-\u003ex - pairlev : pairlev - move-\u003ex;\n                    } else {\n                        tmp_diff = (move-\u003ey \u003e pairlev) ?\n                                    move-\u003ey - pairlev : pairlev - move-\u003ey;\n                    }\n                    if (tmp_diff \u003c diff) {\n                        diff = tmp_diff;\n                        end_move = move;\n                    }\n                }\n            }\n        }\n    } else {\n        /* Find the minimum size. */\n        for (move = moves; move != NULL; move = move-\u003enext) {\n            if (move-\u003esize \u003c size) {\n                size = move-\u003esize;\n            }\n        }\n    }\n\n    /* In case of lazy sifting, end_move identifies the position at\n    ** which we want to stop.  Otherwise, we stop as soon as we meet\n    ** the minimum size. */\n    for (move = moves; move != NULL; move = move-\u003enext) {\n        if (lazyFlag) {\n            if (move == end_move) return(1);\n        } else {\n            if (move-\u003esize == size) return(1);\n        }\n        if ((table-\u003esubtables[move-\u003ex].next == move-\u003ex) \u0026\u0026\n        (table-\u003esubtables[move-\u003ey].next == move-\u003ey)) {\n            res = cuddSwapInPlace(table,(int)move-\u003ex,(int)move-\u003ey);\n            if (!res) return(0);\n#ifdef DD_DEBUG\n            if (pr \u003e 0) (void) fprintf(table-\u003eout,\"ddGroupSiftingBackward:\\n\");\n            assert(table-\u003esubtables[move-\u003ex].next == move-\u003ex);\n            assert(table-\u003esubtables[move-\u003ey].next == move-\u003ey);\n#endif\n        } else { /* Group move necessary */\n            if (move-\u003eflags == MTR_NEWNODE) {\n                ddDissolveGroup(table,(int)move-\u003ex,(int)move-\u003ey);\n            } else {\n                res = ddGroupMoveBackward(table,(int)move-\u003ex,(int)move-\u003ey);\n                if (!res) return(0);\n            }\n        }\n\n    }\n\n    return(1);\n\n} /* end of ddGroupSiftingBackward */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Merges groups in the DD table.]\n\n  Description [Creates a single group from low to high and adjusts the\n  index field of the tree node.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic void\nddMergeGroups(\n  DdManager * table,\n  MtrNode * treenode,\n  int  low,\n  int  high)\n{\n    int i;\n    MtrNode *auxnode;\n    int saveindex;\n    int newindex;\n\n    /* Merge all variables from low to high in one group, unless\n    ** this is the topmost group. In such a case we do not merge lest\n    ** we lose the symmetry information. */\n    if (treenode != table-\u003etree) {\n        for (i = low; i \u003c high; i++)\n            table-\u003esubtables[i].next = i+1;\n        table-\u003esubtables[high].next = low;\n    }\n\n    /* Adjust the index fields of the tree nodes. If a node is the\n    ** first child of its parent, then the parent may also need adjustment. */\n    saveindex = treenode-\u003eindex;\n    newindex = table-\u003einvperm[low];\n    auxnode = treenode;\n    do {\n        auxnode-\u003eindex = newindex;\n        if (auxnode-\u003eparent == NULL ||\n                (int) auxnode-\u003eparent-\u003eindex != saveindex)\n            break;\n        auxnode = auxnode-\u003eparent;\n    } while (1);\n    return;\n\n} /* end of ddMergeGroups */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Dissolves a group in the DD table.]\n\n  Description [x and y are variables in a group to be cut in two. The cut\n  is to pass between x and y.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic void\nddDissolveGroup(\n  DdManager * table,\n  int  x,\n  int  y)\n{\n    int topx;\n    int boty;\n\n    /* find top and bottom of the two groups */\n    boty = y;\n    while ((unsigned) boty \u003c table-\u003esubtables[boty].next)\n        boty = table-\u003esubtables[boty].next;\n\n    topx = table-\u003esubtables[boty].next;\n\n    table-\u003esubtables[boty].next = y;\n    table-\u003esubtables[x].next = topx;\n\n    return;\n\n} /* end of ddDissolveGroup */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Pretends to check two variables for aggregation.]\n\n  Description [Pretends to check two variables for aggregation. Always\n  returns 0.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic int\nddNoCheck(\n  DdManager * table,\n  int  x,\n  int  y)\n{\n    return(0);\n\n} /* end of ddNoCheck */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks two variables for aggregation.]\n\n  Description [Checks two variables for aggregation. The check is based\n  on the second difference of the number of nodes as a function of the\n  layer. If the second difference is lower than a given threshold\n  (typically negative) then the two variables should be aggregated.\n  Returns 1 if the two variables pass the test; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic int\nddSecDiffCheck(\n  DdManager * table,\n  int  x,\n  int  y)\n{\n    double Nx,Nx_1;\n    double Sx;\n    double threshold;\n    int    xindex,yindex;\n\n    if (x==0) return(0);\n\n#ifdef DD_STATS\n    secdiffcalls++;\n#endif\n    Nx = (double) table-\u003esubtables[x].keys;\n    Nx_1 = (double) table-\u003esubtables[x-1].keys;\n    Sx = (table-\u003esubtables[y].keys/Nx) - (Nx/Nx_1);\n\n    threshold = table-\u003erecomb / 100.0;\n    if (Sx \u003c threshold) {\n        xindex = table-\u003einvperm[x];\n        yindex = table-\u003einvperm[y];\n        if (cuddTestInteract(table,xindex,yindex)) {\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n            (void) fprintf(table-\u003eout,\n                           \"Second difference for %d = %g Pos(%d)\\n\",\n                           table-\u003einvperm[x],Sx,x);\n#endif\n#ifdef DD_STATS\n            secdiff++;\n#endif\n            return(1);\n        } else {\n#ifdef DD_STATS\n            secdiffmisfire++;\n#endif\n            return(0);\n        }\n\n    }\n    return(0);\n\n} /* end of ddSecDiffCheck */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks for extended symmetry of x and y.]\n\n  Description [Checks for extended symmetry of x and y. Returns 1 in\n  case of extended symmetry; 0 otherwise.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic int\nddExtSymmCheck(\n  DdManager * table,\n  int  x,\n  int  y)\n{\n    DdNode *f,*f0,*f1,*f01,*f00,*f11,*f10;\n    DdNode *one;\n    unsigned comple;    /* f0 is complemented */\n    int notproj;        /* f is not a projection function */\n    int arccount;       /* number of arcs from layer x to layer y */\n    int TotalRefCount;  /* total reference count of layer y minus 1 */\n    int counter;        /* number of nodes of layer x that are allowed */\n                        /* to violate extended symmetry conditions */\n    int arccounter;     /* number of arcs into layer y that are allowed */\n                        /* to come from layers other than x */\n    int i;\n    int xindex;\n    int yindex;\n    int res;\n    int slots;\n    DdNodePtr *list;\n    DdNode *sentinel = \u0026(table-\u003esentinel);\n\n    xindex = table-\u003einvperm[x];\n    yindex = table-\u003einvperm[y];\n\n    /* If the two variables do not interact, we do not want to merge them. */\n    if (!cuddTestInteract(table,xindex,yindex))\n        return(0);\n\n#ifdef DD_DEBUG\n    /* Checks that x and y do not contain just the projection functions.\n    ** With the test on interaction, these test become redundant,\n    ** because an isolated projection function does not interact with\n    ** any other variable.\n    */\n    if (table-\u003esubtables[x].keys == 1) {\n        assert(table-\u003evars[xindex]-\u003eref != 1);\n    }\n    if (table-\u003esubtables[y].keys == 1) {\n        assert(table-\u003evars[yindex]-\u003eref != 1);\n    }\n#endif\n\n#ifdef DD_STATS\n    extsymmcalls++;\n#endif\n\n    arccount = 0;\n    counter = (int) (table-\u003esubtables[x].keys *\n              (table-\u003esymmviolation/100.0) + 0.5);\n    one = DD_ONE(table);\n\n    slots = table-\u003esubtables[x].slots;\n    list = table-\u003esubtables[x].nodelist;\n    for (i = 0; i \u003c slots; i++) {\n        f = list[i];\n        while (f != sentinel) {\n            /* Find f1, f0, f11, f10, f01, f00. */\n            f1 = cuddT(f);\n            f0 = Cudd_Regular(cuddE(f));\n            comple = Cudd_IsComplement(cuddE(f));\n            notproj = f1 != one || f0 != one || f-\u003eref != (DdHalfWord) 1;\n            if (f1-\u003eindex == (unsigned) yindex) {\n                arccount++;\n                f11 = cuddT(f1); f10 = cuddE(f1);\n            } else {\n                if ((int) f0-\u003eindex != yindex) {\n                    /* If f is an isolated projection function it is\n                    ** allowed to bypass layer y.\n                    */\n                    if (notproj) {\n                        if (counter == 0)\n                            return(0);\n                        counter--; /* f bypasses layer y */\n                    }\n                }\n                f11 = f10 = f1;\n            }\n            if ((int) f0-\u003eindex == yindex) {\n                arccount++;\n                f01 = cuddT(f0); f00 = cuddE(f0);\n            } else {\n                f01 = f00 = f0;\n            }\n            if (comple) {\n                f01 = Cudd_Not(f01);\n                f00 = Cudd_Not(f00);\n            }\n\n            /* Unless we are looking at a projection function\n            ** without external references except the one from the\n            ** table, we insist that f01 == f10 or f11 == f00\n            */\n            if (notproj) {\n                if (f01 != f10 \u0026\u0026 f11 != f00) {\n                    if (counter == 0)\n                        return(0);\n                    counter--;\n                }\n            }\n\n            f = f-\u003enext;\n        } /* while */\n    } /* for */\n\n    /* Calculate the total reference counts of y */\n    TotalRefCount = -1; /* -1 for projection function */\n    slots = table-\u003esubtables[y].slots;\n    list = table-\u003esubtables[y].nodelist;\n    for (i = 0; i \u003c slots; i++) {\n        f = list[i];\n        while (f != sentinel) {\n            TotalRefCount += f-\u003eref;\n            f = f-\u003enext;\n        }\n    }\n\n    arccounter = (int) (table-\u003esubtables[y].keys *\n                 (table-\u003earcviolation/100.0) + 0.5);\n    res = arccount \u003e= TotalRefCount - arccounter;\n\n#if defined(DD_DEBUG) \u0026\u0026 defined(DD_VERBOSE)\n    if (res) {\n        (void) fprintf(table-\u003eout,\n                       \"Found extended symmetry! x = %d\\ty = %d\\tPos(%d,%d)\\n\",\n                       xindex,yindex,x,y);\n    }\n#endif\n\n#ifdef DD_STATS\n    if (res)\n        extsymm++;\n#endif\n    return(res);\n\n} /* end ddExtSymmCheck */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks for grouping of x and y.]\n\n  Description [Checks for grouping of x and y. Returns 1 in\n  case of grouping; 0 otherwise. This function is used for lazy sifting.]\n\n  SideEffects [None]\n\n******************************************************************************/\nstatic int\nddVarGroupCheck(\n  DdManager * table,\n  int x,\n  int y)\n{\n    int xindex = table-\u003einvperm[x];\n    int yindex = table-\u003einvperm[y];\n\n    if (Cudd_bddIsVarToBeUngrouped(table, xindex)) return(0);\n\n    if (Cudd_bddReadPairIndex(table, xindex) == yindex) {\n        if (ddIsVarHandled(table, xindex) ||\n            ddIsVarHandled(table, yindex)) {\n            if (Cudd_bddIsVarToBeGrouped(table, xindex) ||\n                Cudd_bddIsVarToBeGrouped(table, yindex) ) {\n                if (table-\u003ekeys - table-\u003eisolated \u003c= originalSize) {\n                    return(1);\n                }\n            }\n        }\n    }\n\n    return(0);\n\n} /* end of ddVarGroupCheck */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Sets a variable to already handled.]\n\n  Description [Sets a variable to already handled. This function is used\n  for lazy sifting.]\n\n  SideEffects [none]\n\n  SeeAlso     []\n\n******************************************************************************/\nstatic int\nddSetVarHandled(\n  DdManager *dd,\n  int index)\n{\n    if (index \u003e= dd-\u003esize || index \u003c 0) return(0);\n    dd-\u003esubtables[dd-\u003eperm[index]].varHandled = 1;\n    return(1);\n\n} /* end of ddSetVarHandled */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Resets a variable to be processed.]\n\n  Description [Resets a variable to be processed. This function is used\n  for lazy sifting.]\n\n  SideEffects [none]\n\n  SeeAlso     []\n\n******************************************************************************/\nstatic int\nddResetVarHandled(\n  DdManager *dd,\n  int index)\n{\n    if (index \u003e= dd-\u003esize || index \u003c 0) return(0);\n    dd-\u003esubtables[dd-\u003eperm[index]].varHandled = 0;\n    return(1);\n\n} /* end of ddResetVarHandled */\n\n\n/**Function********************************************************************\n\n  Synopsis    [Checks whether a variables is already handled.]\n\n  Description [Checks whether a variables is already handled. This\n  function is used for lazy sifting.]\n\n  SideEffects [none]\n\n  SeeAlso     []\n\n******************************************************************************/\nstatic int\nddIsVarHandled(\n  DdManager *dd,\n  int index)\n{\n    if (index \u003e= dd-\u003esize || index \u003c 0) return(-1);\n    return dd-\u003esubtables[dd-\u003eperm[index]].varHandled;\n\n} /* end of ddIsVarHandled */\n\n\nABC_NAMESPACE_IMPL_END\n\n"
+}

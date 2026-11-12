@@ -1,0 +1,37 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.h",
+  "SHA256": "eaa281e5454a02069451596708195994b219edf4d18a3a95d546a7d6f6970e2b",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.h::struct::Abc_Cex_t::// the number of words of bit data used\n    unsigned         pData[0];",
+      "Category": "struct-field-review",
+      "Symbol": "Abc_Cex_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1764,
+      "End": 1839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.h::struct::Abc_Cex_t",
+      "Category": "struct-review",
+      "Symbol": "Abc_Cex_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1330,
+      "End": 1911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/util/utilCex.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4105
+    }
+  ],
+  "Draft": "package util\n\n/**CFile****************************************************************\n\n  FileName    [utilCex.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Handling sequential counter-examples.]\n\n  Synopsis    [Handling sequential counter-examples.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - Feburary 13, 2011.]\n\n  Revision    [$Id: utilCex.h,v 1.00 2011/02/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n//ABC_NAMESPACE_HEADER_START\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n// sequential counter-example\n   \ntype Abc_Cex_t struct {\n    iPo              int32;       // the zero-based number of PO, for which verification failed\n    iFrame              int32;    // the zero-based number of the time-frame, for which verificaiton failed\n    nRegs              int32;     // the number of registers in the miter \n    nPis              int32;      // the number of primary inputs in the miter\n    nBits              int32;     // the number of words of bit data used\n    pData [0]uint32;  // the cex bit data (the number of bits: nRegs + (iFrame+1) * nPis)\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== utilCex.c ===========================================================*/\n// extern Abc_Cex_t *   Abc_CexAlloc( int nRegs, int nTruePis, int nFrames );\n\n// extern Abc_Cex_t *   Abc_CexAllocFull( int nRegs, int nTruePis, int nFrames );\n\n// extern Abc_Cex_t *   Abc_CexMakeTriv( int nRegs, int nTruePis, int nTruePos, int iFrameOut );\n\n// extern Abc_Cex_t *   Abc_CexCreate( int nRegs, int nTruePis, int * pArray, int iFrame, int iPo, int fSkipRegs );\n\n// extern Abc_Cex_t *   Abc_CexDup( Abc_Cex_t * p, int nRegsNew );\n\n// extern Abc_Cex_t *   Abc_CexDeriveFromCombModel( int * pModel, int nPis, int nRegs, int iPo );\n\n// extern Abc_Cex_t *   Abc_CexMerge( Abc_Cex_t * pCex, Abc_Cex_t * pPart, int iFrBeg, int iFrEnd );\n\n// extern void          Abc_CexPrintStats( Abc_Cex_t * p );\n\n// extern void          Abc_CexPrintStatsInputs( Abc_Cex_t * p, int nInputs );\n\n// extern void          Abc_CexPrint( Abc_Cex_t * p );\n\n// extern void          Abc_CexFreeP( Abc_Cex_t ** p );\n\n// extern void          Abc_CexFree( Abc_Cex_t * p );\n\n// extern Abc_Cex_t *   Abc_CexTransformPhase( Abc_Cex_t * p, int nPisOld, int nPosOld, int nRegsOld );\n\n// extern Abc_Cex_t *   Abc_CexTransformTempor( Abc_Cex_t * p, int nPisOld, int nPosOld, int nRegsOld );\n\n// extern Abc_Cex_t *   Abc_CexTransformUndc( Abc_Cex_t * p, char * pInit );\n\n// extern Abc_Cex_t *   Abc_CexPermute( Abc_Cex_t * p, Vec_Int_t * vMapOld2New );\n\n// extern Abc_Cex_t *   Abc_CexPermuteTwo( Abc_Cex_t * p, Vec_Int_t * vPermOld, Vec_Int_t * vPermNew );\n\n// extern int           Abc_CexCountOnes( Abc_Cex_t * p );\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n"
+}

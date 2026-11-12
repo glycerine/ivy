@@ -1,0 +1,1003 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c",
+  "SHA256": "fb80759fa20681f0cc5616e0f7a5dddad49b7a9b5c44ada8f81a05d3d58ae3fc",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 44,
+        "Column": 5,
+        "ByteOffset": 1474
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 ); // not a hexadecimal symbol"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1663
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16 );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 52,
+        "Column": 9,
+        "ByteOffset": 1736
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%d\", HexDigit );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 54,
+        "Column": 9,
+        "ByteOffset": 1791
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"%c\", 'A' + HexDigit-10 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 82,
+        "Column": 5,
+        "ByteOffset": 2668
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( EndSymbol == ' ' || EndSymbol == '\\n' || EndSymbol == '\\r' || EndSymbol == '\\0' );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 2992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Digit \u003e= 0 \u0026\u0026 Digit \u003c 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 100,
+        "Column": 9,
+        "ByteOffset": 3508
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Digit \u003e= 0 \u0026\u0026 Digit \u003c 16 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 109,
+        "Column": 26,
+        "ByteOffset": 3820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = (Abc_TtStore_t *)malloc( sizeof(Abc_TtStore_t) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 118,
+        "Column": 25,
+        "ByteOffset": 4077
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pFuncs = (word **)malloc( sizeof(word *) * p.nFuncs );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 120,
+        "Column": 27,
+        "ByteOffset": 4210
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p.pFuncs[0] = (word *)calloc( sizeof(word), p.nFuncs * p.nWords );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 130,
+        "Column": 5,
+        "ByteOffset": 4520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free( p.pFuncs[0] );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 131,
+        "Column": 5,
+        "ByteOffset": 4545
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free( p.pFuncs );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 132,
+        "Column": 5,
+        "ByteOffset": 4567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free( p );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 141,
+        "Column": 13,
+        "ByteOffset": 4757
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"r\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 143,
+        "Column": 9,
+        "ByteOffset": 4812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName );"
+    },
+    {
+      "Name": "fseek",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 147,
+        "Column": 5,
+        "ByteOffset": 4940
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fseek( pFile, 0, SEEK_END );  "
+    },
+    {
+      "Name": "ftell",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 148,
+        "Column": 17,
+        "ByteOffset": 4987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    nFileSize = ftell( pFile );  "
+    },
+    {
+      "Name": "rewind",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 150,
+        "Column": 5,
+        "ByteOffset": 5072
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    rewind( pFile ); "
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 152,
+        "Column": 23,
+        "ByteOffset": 5161
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = (char *)malloc( nFileSize + 3 );"
+    },
+    {
+      "Name": "fread",
+      "Status": "review",
+      "Message": "Binary I/O requires a known byte buffer; raw structures and element representations remain for review.",
+      "Location": {
+        "Line": 153,
+        "Column": 16,
+        "ByteOffset": 5201
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    RetValue = fread( pBuffer, nFileSize, 1, pFile );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 160,
+        "Column": 5,
+        "ByteOffset": 5489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 185,
+        "Column": 9,
+        "ByteOffset": 6334
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Strange, the input file does not have spaces and new-lines...\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 197,
+        "Column": 9,
+        "ByteOffset": 6820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Does not look like the input file contains truth tables...\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 241,
+        "Column": 5,
+        "ByteOffset": 8391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.nFuncs \u003e= nLines );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 251,
+        "Column": 13,
+        "ByteOffset": 8743
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"wb\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 253,
+        "Column": 9,
+        "ByteOffset": 8799
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 258,
+        "Column": 9,
+        "ByteOffset": 8987
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 260,
+        "Column": 5,
+        "ByteOffset": 9021
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 266,
+        "Column": 13,
+        "ByteOffset": 9158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 268,
+        "Column": 9,
+        "ByteOffset": 9213
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 273,
+        "Column": 9,
+        "ByteOffset": 9395
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 275,
+        "Column": 5,
+        "ByteOffset": 9429
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 281,
+        "Column": 13,
+        "ByteOffset": 9571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 9,
+        "ByteOffset": 9626
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 287,
+        "Column": 9,
+        "ByteOffset": 9756
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"0\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 288,
+        "Column": 9,
+        "ByteOffset": 9787
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"x\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 292,
+        "Column": 9,
+        "ByteOffset": 9929
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 294,
+        "Column": 5,
+        "ByteOffset": 9963
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 295,
+        "Column": 5,
+        "ByteOffset": 9991
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 300,
+        "Column": 13,
+        "ByteOffset": 10131
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pFile = fopen( pFileName, \"w\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 302,
+        "Column": 9,
+        "ByteOffset": 10186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 306,
+        "Column": 9,
+        "ByteOffset": 10316
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"0\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 307,
+        "Column": 9,
+        "ByteOffset": 10347
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"x\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 311,
+        "Column": 9,
+        "ByteOffset": 10484
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 313,
+        "Column": 5,
+        "ByteOffset": 10518
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf( pFile, \"\\n\" );"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 314,
+        "Column": 5,
+        "ByteOffset": 10546
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose( pFile );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_TruthGetBit",
+      "Start": 509,
+      "End": 623,
+      "BodyStart": 574,
+      "Original": "static inline int     Abc_TruthGetBit( word * p, int i )         { return (int)(p[i\u003e\u003e6] \u003e\u003e (i \u0026 63)) \u0026 1;        }",
+      "Draft": "func Abc_TruthGetBit(p *word, i int32) int32 { return int32((p[i\u003e\u003e6] \u003e\u003e (i \u0026 63))) \u0026 1;        }"
+    },
+    {
+      "Name": "Abc_TruthSetBit",
+      "Start": 624,
+      "End": 738,
+      "BodyStart": 689,
+      "Original": "static inline void    Abc_TruthSetBit( word * p, int i )         { p[i\u003e\u003e6] |= (((word)1)\u003c\u003c(i \u0026 63));             }",
+      "Draft": "func Abc_TruthSetBit(p *word, i int32) { p[i\u003e\u003e6] |= (((word)1)\u003c\u003c(i \u0026 63));             }"
+    },
+    {
+      "Name": "Abc_TruthXorBit",
+      "Start": 739,
+      "End": 853,
+      "BodyStart": 804,
+      "Original": "static inline void    Abc_TruthXorBit( word * p, int i )         { p[i\u003e\u003e6] ^= (((word)1)\u003c\u003c(i \u0026 63));             }",
+      "Draft": "func Abc_TruthXorBit(p *word, i int32) { p[i\u003e\u003e6] ^= (((word)1)\u003c\u003c(i \u0026 63));             }"
+    },
+    {
+      "Name": "Abc_TruthGetHex",
+      "Start": 907,
+      "End": 1021,
+      "BodyStart": 972,
+      "Original": "static inline int     Abc_TruthGetHex( word * p, int k )         { return (int)(p[k\u003e\u003e4] \u003e\u003e ((k\u003c\u003c2) \u0026 63)) \u0026 15;  }",
+      "Draft": "func Abc_TruthGetHex(p *word, k int32) int32 { return int32((p[k\u003e\u003e4] \u003e\u003e ((k\u003c\u003c2) \u0026 63))) \u0026 15;  }"
+    },
+    {
+      "Name": "Abc_TruthSetHex",
+      "Start": 1022,
+      "End": 1136,
+      "BodyStart": 1087,
+      "Original": "static inline void    Abc_TruthSetHex( word * p, int k, int d )  { p[k\u003e\u003e4] |= (((word)d)\u003c\u003c((k\u003c\u003c2) \u0026 63));        }",
+      "Draft": "func Abc_TruthSetHex(p *word, k int32, d int32) { p[k\u003e\u003e4] |= (((word)d)\u003c\u003c((k\u003c\u003c2) \u0026 63));        }"
+    },
+    {
+      "Name": "Abc_TruthXorHex",
+      "Start": 1137,
+      "End": 1251,
+      "BodyStart": 1202,
+      "Original": "static inline void    Abc_TruthXorHex( word * p, int k, int d )  { p[k\u003e\u003e4] ^= (((word)d)\u003c\u003c((k\u003c\u003c2) \u0026 63));        }",
+      "Draft": "func Abc_TruthXorHex(p *word, k int32, d int32) { p[k\u003e\u003e4] ^= (((word)d)\u003c\u003c((k\u003c\u003c2) \u0026 63));        }"
+    },
+    {
+      "Name": "Abc_TruthReadHexDigit",
+      "Start": 1279,
+      "End": 1668,
+      "BodyStart": 1336,
+      "Original": "static inline int  Abc_TruthReadHexDigit( char HexChar )\n{\n    if ( HexChar \u003e= '0' \u0026\u0026 HexChar \u003c= '9' )\n        return HexChar - '0';\n    if ( HexChar \u003e= 'A' \u0026\u0026 HexChar \u003c= 'F' )\n        return HexChar - 'A' + 10;\n    if ( HexChar \u003e= 'a' \u0026\u0026 HexChar \u003c= 'f' )\n        return HexChar - 'a' + 10;\n    assert( 0 ); // not a hexadecimal symbol\n    return -1; // return value which makes no sense\n}",
+      "Draft": "func Abc_TruthReadHexDigit(HexChar byte) int32 {\n    if HexChar \u003e= '0' \u0026\u0026 HexChar \u003c= '9' {\n        return HexChar - '0'; }\n    if HexChar \u003e= 'A' \u0026\u0026 HexChar \u003c= 'F' {\n        return HexChar - 'A' + 10; }\n    if HexChar \u003e= 'a' \u0026\u0026 HexChar \u003c= 'f' {\n        return HexChar - 'a' + 10; }\n    assert(false, \"0\"); // not a hexadecimal symbol\n    return -1; // return value which makes no sense\n}"
+    },
+    {
+      "Name": "Abc_TruthWriteHexDigit",
+      "Start": 1697,
+      "End": 1945,
+      "BodyStart": 1769,
+      "Original": "static inline void Abc_TruthWriteHexDigit( FILE * pFile, int HexDigit )\n{\n    assert( HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16 );\n    if ( HexDigit \u003c 10 )\n        fprintf( pFile, \"%d\", HexDigit );\n    else\n        fprintf( pFile, \"%c\", 'A' + HexDigit-10 );\n}",
+      "Draft": "func Abc_TruthWriteHexDigit(pFile *os.File, HexDigit int32) {\n    assert(HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16, \"HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16\");\n    if HexDigit \u003c 10 {\n        fmt.Fprintf(pFile, \"%d\", HexDigit);\n    } else {\n        fmt.Fprintf(pFile, \"%c\", 'A' + HexDigit-10); }\n}"
+    },
+    {
+      "Name": "Abc_TruthReadHex",
+      "Start": 1986,
+      "End": 3050,
+      "BodyStart": 2066,
+      "Original": "static inline void Abc_TruthReadHex( word * pTruth, char * pString, int nVars )\n{\n    int nWords = (nVars \u003c 7)? 1 : (1 \u003c\u003c (nVars-6));\n    int k, Digit, nDigits = (nVars \u003c 7) ? (1 \u003c\u003c (nVars-2)) : (nWords \u003c\u003c 4);\n    char EndSymbol;\n    // skip the first 2 symbols if they are \"0x\"\n    if ( pString[0] == '0' \u0026\u0026 pString[1] == 'x' )\n        pString += 2;\n    // get the last symbol\n    EndSymbol = pString[nDigits];\n    // the end symbol of the TT (the one immediately following hex digits)\n    // should be one of the following: space, a new-line, or a zero-terminator\n    // (note that on Windows symbols '\\r' can be inserted before each '\\n')\n    assert( EndSymbol == ' ' || EndSymbol == '\\n' || EndSymbol == '\\r' || EndSymbol == '\\0' );\n    // read hexadecimal digits in the reverse order\n    // (the last symbol in the string is the least significant digit)\n    for ( k = 0; k \u003c nDigits; k++ )\n    {\n        Digit = Abc_TruthReadHexDigit( pString[nDigits - 1 - k] );\n        assert( Digit \u003e= 0 \u0026\u0026 Digit \u003c 16 );\n        Abc_TruthSetHex( pTruth, k, Digit );\n    }\n}",
+      "Draft": "func Abc_TruthReadHex(pTruth *word, pString string, nVars int32) {\n    var nWords int32;\n    if nVars \u003c 7 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars-6));\n    }\n    var k int32;\n    var Digit int32;\n    var nDigits int32;\n    if nVars \u003c 7 {\n        nDigits = (1 \u003c\u003c (nVars-2));\n    } else {\n        nDigits = (nWords \u003c\u003c 4);\n    }\n    var EndSymbol byte;\n    // skip the first 2 symbols if they are \"0x\"\n    if pString[0] == '0' \u0026\u0026 pString[1] == 'x' {\n        pString += 2; }\n    // get the last symbol\n    EndSymbol = pString[nDigits];\n    // the end symbol of the TT (the one immediately following hex digits)\n    // should be one of the following: space, a new-line, or a zero-terminator\n    // (note that on Windows symbols '\\r' can be inserted before each '\\n')\n    assert(EndSymbol == ' ' || EndSymbol == '\\n' || EndSymbol == '\\r' || EndSymbol == '\\0', \"EndSymbol == ' ' || EndSymbol == '\\\\n' || EndSymbol == '\\\\r' || EndSymbol == '\\\\0'\");\n    // read hexadecimal digits in the reverse order\n    // (the last symbol in the string is the least significant digit)\n    for  k = 0; k \u003c nDigits; k++  {\n        Digit = Abc_TruthReadHexDigit( pString[nDigits - 1 - k] );\n        assert(Digit \u003e= 0 \u0026\u0026 Digit \u003c 16, \"Digit \u003e= 0 \u0026\u0026 Digit \u003c 16\");\n        Abc_TruthSetHex( pTruth, k, Digit );\n    }\n}"
+    },
+    {
+      "Name": "Abc_TruthWriteHex",
+      "Start": 3118,
+      "End": 3582,
+      "BodyStart": 3197,
+      "Original": "static inline void Abc_TruthWriteHex( FILE * pFile, word * pTruth, int nVars )\n{\n    int nDigits, Digit, k;\n    // write hexadecimal digits in the reverse order\n    // (the last symbol in the string is the least significant digit)\n    nDigits = (1 \u003c\u003c (nVars-2));\n    for ( k = 0; k \u003c nDigits; k++ )\n    {\n        Digit = Abc_TruthGetHex( pTruth, nDigits - 1 - k );\n        assert( Digit \u003e= 0 \u0026\u0026 Digit \u003c 16 );\n        Abc_TruthWriteHexDigit( pFile, Digit );\n    }\n}",
+      "Draft": "func Abc_TruthWriteHex(pFile *os.File, pTruth *word, nVars int32) {\n    var nDigits, Digit, k int32;\n    // write hexadecimal digits in the reverse order\n    // (the last symbol in the string is the least significant digit)\n    nDigits = (1 \u003c\u003c (nVars-2));\n    for  k = 0; k \u003c nDigits; k++  {\n        Digit = Abc_TruthGetHex( pTruth, nDigits - 1 - k );\n        assert(Digit \u003e= 0 \u0026\u0026 Digit \u003c 16, \"Digit \u003e= 0 \u0026\u0026 Digit \u003c 16\");\n        Abc_TruthWriteHexDigit( pFile, Digit );\n    }\n}"
+    },
+    {
+      "Name": "Abc_TruthStoreAlloc",
+      "Start": 3666,
+      "End": 4351,
+      "BodyStart": 3741,
+      "Original": "static inline Abc_TtStore_t * Abc_TruthStoreAlloc( int nVars, int nFuncs )\n{\n    Abc_TtStore_t * p;\n    int i;\n    p = (Abc_TtStore_t *)malloc( sizeof(Abc_TtStore_t) );\n    p-\u003enVars  =  nVars;\n    p-\u003enWords = (nVars \u003c 7) ? 1 : (1 \u003c\u003c (nVars-6));\n    p-\u003enFuncs =  nFuncs;\n    // alloc array of 'nFuncs' pointers to truth tables\n    p-\u003epFuncs = (word **)malloc( sizeof(word *) * p-\u003enFuncs );\n    // alloc storage for 'nFuncs' truth tables as one chunk of memory\n    p-\u003epFuncs[0] = (word *)calloc( sizeof(word), p-\u003enFuncs * p-\u003enWords );\n    // split it up into individual truth tables\n    for ( i = 1; i \u003c p-\u003enFuncs; i++ )\n        p-\u003epFuncs[i] = p-\u003epFuncs[i-1] + p-\u003enWords;\n    return p;\n}",
+      "Draft": "func Abc_TruthStoreAlloc(nVars int32, nFuncs int32) *Abc_TtStore_t {\n    var p *Abc_TtStore_t;\n    var i int32;\n    p = (Abc_TtStore_t *)malloc( sizeof(Abc_TtStore_t) );\n    p.nVars  =  nVars;\n    if nVars \u003c 7 {\n        p.nWords = 1;\n    } else {\n        p.nWords = (1 \u003c\u003c (nVars-6));\n    }\n    p.nFuncs =  nFuncs;\n    // alloc array of 'nFuncs' pointers to truth tables\n    p.pFuncs = (word **)malloc( sizeof(word *) * p.nFuncs );\n    // alloc storage for 'nFuncs' truth tables as one chunk of memory\n    p.pFuncs[0] = (word *)calloc( sizeof(word), p.nFuncs * p.nWords );\n    // split it up into individual truth tables\n    for  i = 1; i \u003c p.nFuncs; i++  {\n        p.pFuncs[i] = p.pFuncs[i-1] + p.nWords;\n    }\n    return p;\n}"
+    },
+    {
+      "Name": "Abc_TruthStoreFree",
+      "Start": 4414,
+      "End": 4526,
+      "BodyStart": 4459,
+      "Original": "void Abc_TruthStoreFree( Abc_TtStore_t * p )\n{\n    free( p-\u003epFuncs[0] );\n    free( p-\u003epFuncs );\n    free( p );\n}",
+      "Draft": "func Abc_TruthStoreFree(p *Abc_TtStore_t) {\n    free( p.pFuncs[0] );\n    free( p.pFuncs );\n    free( p );\n}"
+    },
+    {
+      "Name": "Abc_FileRead",
+      "Start": 4550,
+      "End": 5466,
+      "BodyStart": 4597,
+      "Original": "static char * Abc_FileRead( char * pFileName )\n{\n    FILE * pFile;\n    char * pBuffer;\n    int nFileSize;\n    int RetValue;\n    pFile = fopen( pFileName, \"r\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName );\n        return NULL;\n    }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    // move the file current reading position to the beginning\n    rewind( pFile ); \n    // load the contents of the file into memory\n    pBuffer = (char *)malloc( nFileSize + 3 );\n    RetValue = fread( pBuffer, nFileSize, 1, pFile );\n    // add several empty lines at the end\n    // (these will be used to signal the end of parsing)\n    pBuffer[ nFileSize + 0] = '\\n';\n    pBuffer[ nFileSize + 1] = '\\n';\n    // terminate the string with '\\0'\n    pBuffer[ nFileSize + 2] = '\\0';\n    fclose( pFile );\n    return pBuffer;\n}",
+      "Draft": "func Abc_FileRead(pFileName string) string {\n    var pFile *os.File;\n    var pBuffer string;\n    var nFileSize int32;\n    var RetValue int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName);\n        return nil;\n    }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    // move the file current reading position to the beginning\n    rewind( pFile ); \n    // load the contents of the file into memory\n    pBuffer = (char *)malloc( nFileSize + 3 );\n    RetValue = fread( pBuffer, nFileSize, 1, pFile );\n    // add several empty lines at the end\n    // (these will be used to signal the end of parsing)\n    pBuffer[ nFileSize + 0] = '\\n';\n    pBuffer[ nFileSize + 1] = '\\n';\n    // terminate the string with '\\0'\n    pBuffer[ nFileSize + 2] = '\\0';\n    _ = (pFile).Close();\n    return pBuffer;\n}"
+    },
+    {
+      "Name": "Abc_TruthGetParams",
+      "Start": 5590,
+      "End": 7100,
+      "BodyStart": 5671,
+      "Original": "static void Abc_TruthGetParams( char * pFileName, int * pnVars, int * pnTruths )\n{\n    char * pContents;\n    int i, nVars, nLines;\n    // prepare the output \n    if ( pnVars )\n        *pnVars = 0;\n    if ( pnTruths )\n        *pnTruths = 0;\n    // read data from file\n    pContents = Abc_FileRead( pFileName );\n    if ( pContents == NULL )\n        return;\n    // count the number of symbols before the first space or new-line\n    // (note that on Windows symbols '\\r' can be inserted before each '\\n')\n    for ( i = 0; pContents[i]; i++ )\n        if ( pContents[i] == ' ' || pContents[i] == '\\n' || pContents[i] == '\\r' )\n            break;\n    if ( pContents[i] == 0 )\n        printf( \"Strange, the input file does not have spaces and new-lines...\\n\" );\n\n    // account for the fact that truth tables may have \"0x\" at the beginning of each line\n    if ( pContents[0] == '0' \u0026\u0026 pContents[1] == 'x' )\n        i = i - 2;\n\n    // determine the number of variables\n    for ( nVars = 0; nVars \u003c 32; nVars++ )\n        if ( 4 * i == (1 \u003c\u003c nVars) ) // the number of bits equal to the size of truth table\n            break;\n    if ( nVars \u003c 2 || nVars \u003e 16 )\n    {\n        printf( \"Does not look like the input file contains truth tables...\\n\" );\n        return;\n    }\n    if ( pnVars )\n        *pnVars = nVars;\n\n    // determine the number of functions by counting the lines\n    nLines = 0;\n    for ( i = 0; pContents[i]; i++ )\n        nLines += (pContents[i] == '\\n');\n    if ( pnTruths )\n        *pnTruths = nLines;\n}",
+      "Draft": "func Abc_TruthGetParams(pFileName string, pnVars *int32, pnTruths *int32) {\n    var pContents string;\n    var i, nVars, nLines int32;\n    // prepare the output \n    if pnVars != nil {\n        *pnVars = 0; }\n    if pnTruths != nil {\n        *pnTruths = 0; }\n    // read data from file\n    pContents = Abc_FileRead( pFileName );\n    if pContents == nil {\n        return; }\n    // count the number of symbols before the first space or new-line\n    // (note that on Windows symbols '\\r' can be inserted before each '\\n')\n    for  i = 0; pContents[i]; i++  {\n        if pContents[i] == ' ' || pContents[i] == '\\n' || pContents[i] == '\\r' {\n            break; }\n    }\n    if pContents[i] == 0 {\n        fmt.Printf(\"Strange, the input file does not have spaces and new-lines...\\n\"); }\n\n    // account for the fact that truth tables may have \"0x\" at the beginning of each line\n    if pContents[0] == '0' \u0026\u0026 pContents[1] == 'x' {\n        i = i - 2; }\n\n    // determine the number of variables\n    for  nVars = 0; nVars \u003c 32; nVars++  {\n        if 4 * i == (1 \u003c\u003c nVars) { // the number of bits equal to the size of truth table\n            break; }\n    }\n    if nVars \u003c 2 || nVars \u003e 16 {\n        fmt.Printf(\"Does not look like the input file contains truth tables...\\n\");\n        return;\n    }\n    if pnVars != nil {\n        *pnVars = nVars; }\n\n    // determine the number of functions by counting the lines\n    nLines = 0;\n    for  i = 0; pContents[i]; i++  {\n        nLines += (pContents[i] == '\\n');\n    }\n    if pnTruths != nil {\n        *pnTruths = nLines; }\n}"
+    },
+    {
+      "Name": "Abc_Create_TtSpore",
+      "Start": 7102,
+      "End": 7332,
+      "BodyStart": 7164,
+      "Original": "static Abc_TtStore_t * Abc_Create_TtSpore (char * pFileInput)\n{\n    int nVars, nTruths;\n    Abc_TtStore_t * p;\n    Abc_TruthGetParams( pFileInput, \u0026nVars, \u0026nTruths );\n    p = Abc_TruthStoreAlloc( nVars, nTruths );\n    return p;\n\n}",
+      "Draft": "func Abc_Create_TtSpore(pFileInput string) *Abc_TtStore_t {\n    var nVars, nTruths int32;\n    var p *Abc_TtStore_t;\n    Abc_TruthGetParams( pFileInput, \u0026nVars, \u0026nTruths );\n    p = Abc_TruthStoreAlloc( nVars, nTruths );\n    return p;\n\n}"
+    },
+    {
+      "Name": "Abc_TruthStoreRead",
+      "Start": 7364,
+      "End": 8377,
+      "BodyStart": 7433,
+      "Original": "static void Abc_TruthStoreRead( char * pFileName, Abc_TtStore_t* p )\n{\n    char * pContents;\n    int i, nLines;\n    pContents = Abc_FileRead( pFileName );\n    if ( pContents == NULL )\n        return;\n    // here it is assumed (without checking!) that each line of the file \n    // begins with a string of hexadecimal chars followed by space\n\n    // the file will be read till the first empty line (pContents[i] == '\\n')\n    // (note that Abc_FileRead() added several empty lines at the end of the file contents)\n    for ( nLines = i = 0; pContents[i] != '\\n'; )\n    {\n        // read one line\n        Abc_TruthReadHex( p-\u003epFuncs[nLines++], \u0026pContents[i], p-\u003enVars );\n        // skip till after the end-of-line symbol\n        // (note that end-of-line symbol is also skipped)\n        while ( pContents[i++] != '\\n' );\n    }\n    // adjust the number of functions read \n    // (we may have allocated more storage because some lines in the file were empty)\n    assert( p-\u003enFuncs \u003e= nLines );\n    p-\u003enFuncs = nLines;\n}",
+      "Draft": "func Abc_TruthStoreRead(pFileName string, p *Abc_TtStore_t) {\n    var pContents string;\n    var i, nLines int32;\n    pContents = Abc_FileRead( pFileName );\n    if pContents == nil {\n        return; }\n    // here it is assumed (without checking!) that each line of the file \n    // begins with a string of hexadecimal chars followed by space\n\n    // the file will be read till the first empty line (pContents[i] == '\\n')\n    // (note that Abc_FileRead() added several empty lines at the end of the file contents)\n    for  nLines = i = 0; pContents[i] != '\\n';  {\n        // read one line\n        Abc_TruthReadHex( p.pFuncs[nLines++], \u0026pContents[i], p.nVars );\n        // skip till after the end-of-line symbol\n        // (note that end-of-line symbol is also skipped)\n        for  pContents[i++] != '\\n'  {; }\n    }\n    // adjust the number of functions read \n    // (we may have allocated more storage because some lines in the file were empty)\n    assert(p.nFuncs \u003e= nLines, \"p.nFuncs \u003e= nLines\");\n    p.nFuncs = nLines;\n}"
+    },
+    {
+      "Name": "Abc_TruthStoreWrite",
+      "Start": 8559,
+      "End": 8987,
+      "BodyStart": 8630,
+      "Original": "static void Abc_TruthStoreWrite( char * pFileName, Abc_TtStore_t * p )\n{\n    FILE * pFile;\n    int i;\n    pFile = fopen( pFileName, \"wb\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );\n        return;\n    }\n    for ( i = 0; i \u003c p-\u003enFuncs; i++ )\n    {\n        Abc_TruthWriteHex( pFile, p-\u003epFuncs[i], p-\u003enVars );\n        fprintf( pFile, \"\\n\" );\n    }\n    fclose( pFile );\n}",
+      "Draft": "func Abc_TruthStoreWrite(pFileName string, p *Abc_TtStore_t) {\n    var pFile *os.File;\n    var i int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        return;\n    }\n    for  i = 0; i \u003c p.nFuncs; i++  {\n        Abc_TruthWriteHex( pFile, p.pFuncs[i], p.nVars );\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "WriteToFile",
+      "Start": 8989,
+      "End": 9408,
+      "BodyStart": 9059,
+      "Original": "static void WriteToFile(char * pFileName, Abc_TtStore_t * p, word* a)\n{\n    FILE * pFile;\n    int i;\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );\n        return;\n    }\n    for ( i = 0; i \u003c p-\u003enFuncs; i++ )\n    {\n        Abc_TruthWriteHex( pFile, \u0026a[i], p-\u003enVars );\n        fprintf( pFile, \"\\n\" );\n    }\n    fclose( pFile );\n}",
+      "Draft": "func WriteToFile(pFileName string, p *Abc_TtStore_t, a *word) {\n    var pFile *os.File;\n    var i int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        return;\n    }\n    for  i = 0; i \u003c p.nFuncs; i++  {\n        Abc_TruthWriteHex( pFile, \u0026a[i], p.nVars );\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "WriteToFile1",
+      "Start": 9410,
+      "End": 9973,
+      "BodyStart": 9482,
+      "Original": "static void WriteToFile1(char * pFileName, Abc_TtStore_t * p, word** a)\n{\n    FILE * pFile;\n    int i,j;\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );\n        return;\n    }\n    for ( i = 0; i \u003c p-\u003enFuncs; i++ )\n    {\n        fprintf( pFile, \"0\" );\n        fprintf( pFile, \"x\" );\n        for ( j=p-\u003enWords-1; j \u003e= 0; j-- )\n            Abc_TruthWriteHex( pFile, \u0026a[i][j], p-\u003enVars );\n        fprintf( pFile, \"\\n\" );\n    }\n    fprintf( pFile, \"\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func WriteToFile1(pFileName string, p *Abc_TtStore_t, a **word) {\n    var pFile *os.File;\n    var i, j int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        return;\n    }\n    for  i = 0; i \u003c p.nFuncs; i++  {\n        fmt.Fprintf(pFile, \"0\");\n        fmt.Fprintf(pFile, \"x\");\n        for  j=p.nWords-1; j \u003e= 0; j--  {\n            Abc_TruthWriteHex( pFile, \u0026a[i][j], p.nVars );\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "WriteToFile2",
+      "Start": 9974,
+      "End": 10531,
+      "BodyStart": 10045,
+      "Original": "static void WriteToFile2(char * pFileName, Abc_TtStore_t * p, word* a)\n{\n    FILE * pFile;\n    int i,j;\n    pFile = fopen( pFileName, \"w\" );\n    if ( pFile == NULL )\n    {\n        printf( \"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName );\n        return;\n    }\n    for ( i = 0; i \u003c p-\u003enFuncs; i++ )\n    {\n        fprintf( pFile, \"0\" );\n        fprintf( pFile, \"x\" );\n        for ( j=p-\u003enWords-1; j \u003e= 0; j-- )\n            Abc_TruthWriteHex( pFile, a+i, p-\u003enVars );\n        fprintf( pFile, \"\\n\" );\n    }\n    fprintf( pFile, \"\\n\" );\n    fclose( pFile );\n}",
+      "Draft": "func WriteToFile2(pFileName string, p *Abc_TtStore_t, a *word) {\n    var pFile *os.File;\n    var i, j int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        return;\n    }\n    for  i = 0; i \u003c p.nFuncs; i++  {\n        fmt.Fprintf(pFile, \"0\");\n        fmt.Fprintf(pFile, \"x\");\n        for  j=p.nWords-1; j \u003e= 0; j--  {\n            Abc_TruthWriteHex( pFile, a+i, p.nVars );\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}"
+    },
+    {
+      "Name": "setTtStore",
+      "Start": 10534,
+      "End": 10882,
+      "BodyStart": 10580,
+      "Original": "Abc_TtStore_t * setTtStore(char * pFileInput)\n{\n    int nVars, nTruths;\n    Abc_TtStore_t * p;\n    // figure out how many truth table and how many variables\n    Abc_TruthGetParams( pFileInput, \u0026nVars, \u0026nTruths );\n    // allocate data-structure\n    p = Abc_TruthStoreAlloc( nVars, nTruths );\n\n    Abc_TruthStoreRead( pFileInput, p );\n    return p;\n}",
+      "Draft": "func setTtStore(pFileInput string) *Abc_TtStore_t {\n    var nVars, nTruths int32;\n    var p *Abc_TtStore_t;\n    // figure out how many truth table and how many variables\n    Abc_TruthGetParams( pFileInput, \u0026nVars, \u0026nTruths );\n    // allocate data-structure\n    p = Abc_TruthStoreAlloc( nVars, nTruths );\n\n    Abc_TruthStoreRead( pFileInput, p );\n    return p;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::mechanical::sizeof::3810",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3810,
+      "End": 3816
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::mechanical::sizeof::4025",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4025,
+      "End": 4031
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::mechanical::sizeof::4160",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4160,
+      "End": 4166
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::pointer-cast::3785",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3785,
+      "End": 3802
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::pointer-cast::4008",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4008,
+      "End": 4017
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::pointer-cast::4031",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4031,
+      "End": 4039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::pointer-cast::4144",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4144,
+      "End": 4152
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::pointer-cast::5092",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5092,
+      "End": 5100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthGetBit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthGetBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 509,
+      "End": 623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthSetBit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthSetBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 624,
+      "End": 738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthXorBit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthXorBit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 739,
+      "End": 853
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthGetHex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthGetHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 907,
+      "End": 1021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthSetHex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthSetHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1022,
+      "End": 1136
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthXorHex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthXorHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1137,
+      "End": 1251
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthReadHexDigit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthReadHexDigit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1279,
+      "End": 1668
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthWriteHexDigit",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthWriteHexDigit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1697,
+      "End": 1945
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthReadHex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthReadHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1986,
+      "End": 3050
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthWriteHex",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthWriteHex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3118,
+      "End": 3582
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthStoreAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthStoreAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3666,
+      "End": 4351
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthStoreFree",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthStoreFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4414,
+      "End": 4526
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_FileRead",
+      "Category": "semantic-review",
+      "Symbol": "Abc_FileRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4550,
+      "End": 5466
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthGetParams",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthGetParams",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5590,
+      "End": 7100
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_Create_TtSpore",
+      "Category": "semantic-review",
+      "Symbol": "Abc_Create_TtSpore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7102,
+      "End": 7332
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthStoreRead",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthStoreRead",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7364,
+      "End": 8377
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::Abc_TruthStoreWrite",
+      "Category": "semantic-review",
+      "Symbol": "Abc_TruthStoreWrite",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8559,
+      "End": 8987
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::WriteToFile",
+      "Category": "semantic-review",
+      "Symbol": "WriteToFile",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8989,
+      "End": 9408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::WriteToFile1",
+      "Category": "semantic-review",
+      "Symbol": "WriteToFile1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9410,
+      "End": 9973
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::WriteToFile2",
+      "Category": "semantic-review",
+      "Symbol": "WriteToFile2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9974,
+      "End": 10531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::setTtStore",
+      "Category": "semantic-review",
+      "Symbol": "setTtStore",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10534,
+      "End": 10882
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/bool/lucky/luckyRead.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10908
+    }
+  ],
+  "Draft": "package lucky\n\nimport \"fmt\"\n\nimport \"os\"\n\n/**CFile****************************************************************\n\n  FileName    [luckyRead.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Semi-canonical form computation package.]\n\n  Synopsis    [Reading truth tables from file.]\n\n  Author      [Jake]\n\n  Date        [Started - August 2012]\n\n***********************************************************************/\n\n//#include \"luckyInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n// read/write/flip i-th bit of a bit string table:\nfunc Abc_TruthGetBit(p *word, i int32) int32 { return int32((p[i\u003e\u003e6] \u003e\u003e (i \u0026 63))) \u0026 1;        }\nfunc Abc_TruthSetBit(p *word, i int32) { p[i\u003e\u003e6] |= (((word)1)\u003c\u003c(i \u0026 63));             }\nfunc Abc_TruthXorBit(p *word, i int32) { p[i\u003e\u003e6] ^= (((word)1)\u003c\u003c(i \u0026 63));             }\n\n// read/write k-th digit d of a hexadecimal number:\nfunc Abc_TruthGetHex(p *word, k int32) int32 { return int32((p[k\u003e\u003e4] \u003e\u003e ((k\u003c\u003c2) \u0026 63))) \u0026 15;  }\nfunc Abc_TruthSetHex(p *word, k int32, d int32) { p[k\u003e\u003e4] |= (((word)d)\u003c\u003c((k\u003c\u003c2) \u0026 63));        }\nfunc Abc_TruthXorHex(p *word, k int32, d int32) { p[k\u003e\u003e4] ^= (((word)d)\u003c\u003c((k\u003c\u003c2) \u0026 63));        }\n\n// read one hex character\nfunc Abc_TruthReadHexDigit(HexChar byte) int32 {\n    if HexChar \u003e= '0' \u0026\u0026 HexChar \u003c= '9' {\n        return HexChar - '0'; }\n    if HexChar \u003e= 'A' \u0026\u0026 HexChar \u003c= 'F' {\n        return HexChar - 'A' + 10; }\n    if HexChar \u003e= 'a' \u0026\u0026 HexChar \u003c= 'f' {\n        return HexChar - 'a' + 10; }\n    assert(false, \"0\"); // not a hexadecimal symbol\n    return -1; // return value which makes no sense\n}\n\n// write one hex character\nfunc Abc_TruthWriteHexDigit(pFile *os.File, HexDigit int32) {\n    assert(HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16, \"HexDigit \u003e= 0 \u0026\u0026 HexDigit \u003c 16\");\n    if HexDigit \u003c 10 {\n        fmt.Fprintf(pFile, \"%d\", HexDigit);\n    } else {\n        fmt.Fprintf(pFile, \"%c\", 'A' + HexDigit-10); }\n}\n\n// read one truth table in hexadecimal\nfunc Abc_TruthReadHex(pTruth *word, pString string, nVars int32) {\n    var nWords int32;\n    if nVars \u003c 7 {\n        nWords = 1;\n    } else {\n        nWords = (1 \u003c\u003c (nVars-6));\n    }\n    var k int32;\n    var Digit int32;\n    var nDigits int32;\n    if nVars \u003c 7 {\n        nDigits = (1 \u003c\u003c (nVars-2));\n    } else {\n        nDigits = (nWords \u003c\u003c 4);\n    }\n    var EndSymbol byte;\n    // skip the first 2 symbols if they are \"0x\"\n    if pString[0] == '0' \u0026\u0026 pString[1] == 'x' {\n        pString += 2; }\n    // get the last symbol\n    EndSymbol = pString[nDigits];\n    // the end symbol of the TT (the one immediately following hex digits)\n    // should be one of the following: space, a new-line, or a zero-terminator\n    // (note that on Windows symbols '\\r' can be inserted before each '\\n')\n    assert(EndSymbol == ' ' || EndSymbol == '\\n' || EndSymbol == '\\r' || EndSymbol == '\\0', \"EndSymbol == ' ' || EndSymbol == '\\\\n' || EndSymbol == '\\\\r' || EndSymbol == '\\\\0'\");\n    // read hexadecimal digits in the reverse order\n    // (the last symbol in the string is the least significant digit)\n    for  k = 0; k \u003c nDigits; k++  {\n        Digit = Abc_TruthReadHexDigit( pString[nDigits - 1 - k] );\n        assert(Digit \u003e= 0 \u0026\u0026 Digit \u003c 16, \"Digit \u003e= 0 \u0026\u0026 Digit \u003c 16\");\n        Abc_TruthSetHex( pTruth, k, Digit );\n    }\n}\n\n// write one truth table in hexadecimal (do not add end-of-line!)\nfunc Abc_TruthWriteHex(pFile *os.File, pTruth *word, nVars int32) {\n    var nDigits, Digit, k int32;\n    // write hexadecimal digits in the reverse order\n    // (the last symbol in the string is the least significant digit)\n    nDigits = (1 \u003c\u003c (nVars-2));\n    for  k = 0; k \u003c nDigits; k++  {\n        Digit = Abc_TruthGetHex( pTruth, nDigits - 1 - k );\n        assert(Digit \u003e= 0 \u0026\u0026 Digit \u003c 16, \"Digit \u003e= 0 \u0026\u0026 Digit \u003c 16\");\n        Abc_TruthWriteHexDigit( pFile, Digit );\n    }\n}\n\n// allocate and clear memory to store 'nTruths' truth tables of 'nVars' variables\nfunc Abc_TruthStoreAlloc(nVars int32, nFuncs int32) *Abc_TtStore_t {\n    var p *Abc_TtStore_t;\n    var i int32;\n    p = (Abc_TtStore_t *)malloc( sizeof(Abc_TtStore_t) );\n    p.nVars  =  nVars;\n    if nVars \u003c 7 {\n        p.nWords = 1;\n    } else {\n        p.nWords = (1 \u003c\u003c (nVars-6));\n    }\n    p.nFuncs =  nFuncs;\n    // alloc array of 'nFuncs' pointers to truth tables\n    p.pFuncs = (word **)malloc( sizeof(word *) * p.nFuncs );\n    // alloc storage for 'nFuncs' truth tables as one chunk of memory\n    p.pFuncs[0] = (word *)calloc( sizeof(word), p.nFuncs * p.nWords );\n    // split it up into individual truth tables\n    for  i = 1; i \u003c p.nFuncs; i++  {\n        p.pFuncs[i] = p.pFuncs[i-1] + p.nWords;\n    }\n    return p;\n}\n\n// free memory previously allocated for storing truth tables\nfunc Abc_TruthStoreFree(p *Abc_TtStore_t) {\n    free( p.pFuncs[0] );\n    free( p.pFuncs );\n    free( p );\n}\n\n// read file contents\nfunc Abc_FileRead(pFileName string) string {\n    var pFile *os.File;\n    var pBuffer string;\n    var nFileSize int32;\n    var RetValue int32;\n    pFile = os.Open(pFileName);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for reading.\\n\", pFileName);\n        return nil;\n    }\n    // get the file size, in bytes\n    fseek( pFile, 0, SEEK_END );  \n    nFileSize = ftell( pFile );  \n    // move the file current reading position to the beginning\n    rewind( pFile ); \n    // load the contents of the file into memory\n    pBuffer = (char *)malloc( nFileSize + 3 );\n    RetValue = fread( pBuffer, nFileSize, 1, pFile );\n    // add several empty lines at the end\n    // (these will be used to signal the end of parsing)\n    pBuffer[ nFileSize + 0] = '\\n';\n    pBuffer[ nFileSize + 1] = '\\n';\n    // terminate the string with '\\0'\n    pBuffer[ nFileSize + 2] = '\\0';\n    _ = (pFile).Close();\n    return pBuffer;\n}\n\n// determine the number of variables by reading the first line\n// determine the number of functions by counting the lines\nfunc Abc_TruthGetParams(pFileName string, pnVars *int32, pnTruths *int32) {\n    var pContents string;\n    var i, nVars, nLines int32;\n    // prepare the output \n    if pnVars != nil {\n        *pnVars = 0; }\n    if pnTruths != nil {\n        *pnTruths = 0; }\n    // read data from file\n    pContents = Abc_FileRead( pFileName );\n    if pContents == nil {\n        return; }\n    // count the number of symbols before the first space or new-line\n    // (note that on Windows symbols '\\r' can be inserted before each '\\n')\n    for  i = 0; pContents[i]; i++  {\n        if pContents[i] == ' ' || pContents[i] == '\\n' || pContents[i] == '\\r' {\n            break; }\n    }\n    if pContents[i] == 0 {\n        fmt.Printf(\"Strange, the input file does not have spaces and new-lines...\\n\"); }\n\n    // account for the fact that truth tables may have \"0x\" at the beginning of each line\n    if pContents[0] == '0' \u0026\u0026 pContents[1] == 'x' {\n        i = i - 2; }\n\n    // determine the number of variables\n    for  nVars = 0; nVars \u003c 32; nVars++  {\n        if 4 * i == (1 \u003c\u003c nVars) { // the number of bits equal to the size of truth table\n            break; }\n    }\n    if nVars \u003c 2 || nVars \u003e 16 {\n        fmt.Printf(\"Does not look like the input file contains truth tables...\\n\");\n        return;\n    }\n    if pnVars != nil {\n        *pnVars = nVars; }\n\n    // determine the number of functions by counting the lines\n    nLines = 0;\n    for  i = 0; pContents[i]; i++  {\n        nLines += (pContents[i] == '\\n');\n    }\n    if pnTruths != nil {\n        *pnTruths = nLines; }\n}\n\nfunc Abc_Create_TtSpore(pFileInput string) *Abc_TtStore_t {\n    var nVars, nTruths int32;\n    var p *Abc_TtStore_t;\n    Abc_TruthGetParams( pFileInput, \u0026nVars, \u0026nTruths );\n    p = Abc_TruthStoreAlloc( nVars, nTruths );\n    return p;\n\n}\n// read truth tables from file\nfunc Abc_TruthStoreRead(pFileName string, p *Abc_TtStore_t) {\n    var pContents string;\n    var i, nLines int32;\n    pContents = Abc_FileRead( pFileName );\n    if pContents == nil {\n        return; }\n    // here it is assumed (without checking!) that each line of the file \n    // begins with a string of hexadecimal chars followed by space\n\n    // the file will be read till the first empty line (pContents[i] == '\\n')\n    // (note that Abc_FileRead() added several empty lines at the end of the file contents)\n    for  nLines = i = 0; pContents[i] != '\\n';  {\n        // read one line\n        Abc_TruthReadHex( p.pFuncs[nLines++], \u0026pContents[i], p.nVars );\n        // skip till after the end-of-line symbol\n        // (note that end-of-line symbol is also skipped)\n        for  pContents[i++] != '\\n'  {; }\n    }\n    // adjust the number of functions read \n    // (we may have allocated more storage because some lines in the file were empty)\n    assert(p.nFuncs \u003e= nLines, \"p.nFuncs \u003e= nLines\");\n    p.nFuncs = nLines;\n}\n\n// write truth tables into file\n// (here we write one symbol at a time - it can be optimized by writing \n// each truth table into a string and then writing the string into a file)\nfunc Abc_TruthStoreWrite(pFileName string, p *Abc_TtStore_t) {\n    var pFile *os.File;\n    var i int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        return;\n    }\n    for  i = 0; i \u003c p.nFuncs; i++  {\n        Abc_TruthWriteHex( pFile, p.pFuncs[i], p.nVars );\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    _ = (pFile).Close();\n}\n\nfunc WriteToFile(pFileName string, p *Abc_TtStore_t, a *word) {\n    var pFile *os.File;\n    var i int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        return;\n    }\n    for  i = 0; i \u003c p.nFuncs; i++  {\n        Abc_TruthWriteHex( pFile, \u0026a[i], p.nVars );\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    _ = (pFile).Close();\n}\n\nfunc WriteToFile1(pFileName string, p *Abc_TtStore_t, a **word) {\n    var pFile *os.File;\n    var i, j int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        return;\n    }\n    for  i = 0; i \u003c p.nFuncs; i++  {\n        fmt.Fprintf(pFile, \"0\");\n        fmt.Fprintf(pFile, \"x\");\n        for  j=p.nWords-1; j \u003e= 0; j--  {\n            Abc_TruthWriteHex( pFile, \u0026a[i][j], p.nVars );\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}\nfunc WriteToFile2(pFileName string, p *Abc_TtStore_t, a *word) {\n    var pFile *os.File;\n    var i, j int32;\n    pFile = os.OpenFile(pFileName, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    if pFile == nil {\n        fmt.Printf(\"Cannot open file \\\"%s\\\" for writing.\\n\", pFileName);\n        return;\n    }\n    for  i = 0; i \u003c p.nFuncs; i++  {\n        fmt.Fprintf(pFile, \"0\");\n        fmt.Fprintf(pFile, \"x\");\n        for  j=p.nWords-1; j \u003e= 0; j--  {\n            Abc_TruthWriteHex( pFile, a+i, p.nVars );\n        }\n        fmt.Fprintf(pFile, \"\\n\");\n    }\n    fmt.Fprintf(pFile, \"\\n\");\n    _ = (pFile).Close();\n}\n\n\nfunc setTtStore(pFileInput string) *Abc_TtStore_t {\n    var nVars, nTruths int32;\n    var p *Abc_TtStore_t;\n    // figure out how many truth table and how many variables\n    Abc_TruthGetParams( pFileInput, \u0026nVars, \u0026nTruths );\n    // allocate data-structure\n    p = Abc_TruthStoreAlloc( nVars, nTruths );\n\n    Abc_TruthStoreRead( pFileInput, p );\n    return p;\n}\n\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

@@ -1,0 +1,229 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c",
+  "SHA256": "adc1064ac49e8955444e14142c8c8711552b3a34c300f5555edd915b538fa3fb",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 71,
+        "Column": 67,
+        "ByteOffset": 2163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((pMemory) ? (free((char *) (pMemory)), (pMemory) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 94,
+        "Column": 5,
+        "ByteOffset": 2819
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( sizeof(Ivy_Obj_t) \u003c= EntrySizeMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 95,
+        "Column": 5,
+        "ByteOffset": 2868
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pListFree == nil );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 99,
+        "Column": 70,
+        "ByteOffset": 3124
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMemory = /*__starting_point_inline_macro:ABC_ALLOC__*/((char *) malloc(sizeof(char) * (size_t)(nBytes)));"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Ivy_ManStartMemory",
+      "Start": 1454,
+      "End": 1573,
+      "BodyStart": 1495,
+      "Original": "void Ivy_ManStartMemory( Ivy_Man_t * p )\n{\n    p-\u003evChunks = Vec_PtrAlloc( 128 );\n    p-\u003evPages = Vec_PtrAlloc( 128 );\n}",
+      "Draft": "func Ivy_ManStartMemory(p *Ivy_Man_t) {\n    p.vChunks = Vec_PtrAlloc( 128 );\n    p.vPages = Vec_PtrAlloc( 128 );\n}"
+    },
+    {
+      "Name": "Ivy_ManStopMemory",
+      "Start": 1843,
+      "End": 2090,
+      "BodyStart": 1883,
+      "Original": "void Ivy_ManStopMemory( Ivy_Man_t * p )\n{\n    void * pMemory;\n    int i;\n    Vec_PtrForEachEntry( void *, p-\u003evChunks, pMemory, i )\n        ABC_FREE( pMemory );\n    Vec_PtrFree( p-\u003evChunks );\n    Vec_PtrFree( p-\u003evPages );\n    p-\u003epListFree = NULL;\n}",
+      "Draft": "func Ivy_ManStopMemory(p *Ivy_Man_t) {\n    var pMemory any;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vChunks)) \u0026\u0026 (((pMemory) = (void *)Vec_PtrEntry(p.vChunks, i)), 1); i++  {\n        // inlining of macro ABC_FREE\n        ((pMemory) ? (free((char *) (pMemory)), (pMemory) = 0) : 0);\n    }\n    Vec_PtrFree( p.vChunks );\n    Vec_PtrFree( p.vPages );\n    p.pListFree = nil;\n}"
+    },
+    {
+      "Name": "Ivy_ManAddMemory",
+      "Start": 2484,
+      "End": 3402,
+      "BodyStart": 2523,
+      "Original": "void Ivy_ManAddMemory( Ivy_Man_t * p )\n{\n    char * pMemory;\n    int i, nBytes;\n    int EntrySizeMax = 128;\n    assert( sizeof(Ivy_Obj_t) \u003c= EntrySizeMax );\n    assert( p-\u003epListFree == NULL );\n//    assert( (Ivy_ManObjNum(p) \u0026 IVY_PAGE_MASK) == 0 );\n    // allocate new memory page\n    nBytes = sizeof(Ivy_Obj_t) * (1\u003c\u003cIVY_PAGE_SIZE) + EntrySizeMax;\n    pMemory = ABC_ALLOC( char, nBytes );\n    Vec_PtrPush( p-\u003evChunks, pMemory );\n    // align memory at the 32-byte boundary\n    pMemory = pMemory + EntrySizeMax - (((int)(ABC_PTRUINT_T)pMemory) \u0026 (EntrySizeMax-1));\n    // remember the manager in the first entry\n    Vec_PtrPush( p-\u003evPages, pMemory );\n    // break the memory down into nodes\n    p-\u003epListFree = (Ivy_Obj_t *)pMemory;\n    for ( i = 1; i \u003c= IVY_PAGE_MASK; i++ )\n    {\n        *((char **)pMemory) = pMemory + sizeof(Ivy_Obj_t);\n        pMemory += sizeof(Ivy_Obj_t);\n    }\n    *((char **)pMemory) = NULL;\n}",
+      "Draft": "func Ivy_ManAddMemory(p *Ivy_Man_t) {\n    var pMemory string;\n    var i, nBytes int32;\n    var EntrySizeMax int32  = 128;\n    assert(sizeof(Ivy_Obj_t) \u003c= EntrySizeMax, \"sizeof(Ivy_Obj_t) \u003c= EntrySizeMax\");\n    assert(p.pListFree == nil, \"p.pListFree == nil\");\n//    assert( (Ivy_ManObjNum(p) \u0026 IVY_PAGE_MASK) == 0 );\n    // allocate new memory page\n    nBytes = sizeof(Ivy_Obj_t) * (1\u003c\u003cIVY_PAGE_SIZE) + EntrySizeMax;\n    // inlining of macro ABC_ALLOC\n    pMemory = ((char *) malloc(sizeof(char) * (size_t)(nBytes)));\n    Vec_PtrPush( p.vChunks, pMemory );\n    // align memory at the 32-byte boundary\n    pMemory = pMemory + EntrySizeMax - ((int32((ABC_PTRUINT_T))pMemory) \u0026 (EntrySizeMax-1));\n    // remember the manager in the first entry\n    Vec_PtrPush( p.vPages, pMemory );\n    // break the memory down into nodes\n    p.pListFree = (Ivy_Obj_t *)pMemory;\n    for  i = 1; i \u003c= IVY_PAGE_MASK; i++  {\n        *((char **)pMemory) = pMemory + sizeof(Ivy_Obj_t);\n        pMemory += sizeof(Ivy_Obj_t);\n    }\n    *((char **)pMemory) = nil;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::mechanical::sizeof::2797",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2604,
+      "End": 2610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::mechanical::sizeof::2972",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2779,
+      "End": 2785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::mechanical::sizeof::3103",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2848,
+      "End": 2848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::mechanical::sizeof::3569",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3306,
+      "End": 3312
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::mechanical::sizeof::3607",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3344,
+      "End": 3350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::pointer-cast::2035",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1920,
+      "End": 1920
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::pointer-cast::2154",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1982,
+      "End": 1982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::pointer-cast::3087",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2848,
+      "End": 2848
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::pointer-cast::3458",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3195,
+      "End": 3208
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::pointer-cast::3539",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3276,
+      "End": 3285
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::pointer-cast::3638",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3375,
+      "End": 3384
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::Ivy_ManStartMemory",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManStartMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1454,
+      "End": 1573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::ternary::Ivy_ManStopMemory",
+      "Category": "ternary-review",
+      "Symbol": "Ivy_ManStopMemory",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1843,
+      "End": 2090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::Ivy_ManStopMemory",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManStopMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1843,
+      "End": 2090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::Ivy_ManAddMemory",
+      "Category": "semantic-review",
+      "Symbol": "Ivy_ManAddMemory",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2484,
+      "End": 3402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/ivy/ivyMem.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3649
+    }
+  ],
+  "Draft": "package ivy\n\n/**CFile****************************************************************\n\n  FileName    [ivyMem.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [And-Inverter Graph package.]\n\n  Synopsis    [Memory management for the AIG nodes.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: ivyMem.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"ivy.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// memory management\nconst IVY_PAGE_SIZE =      12        // page size containing 2^IVY_PAGE_SIZE nodes\nconst IVY_PAGE_MASK =    4095        // page bitmask (2^IVY_PAGE_SIZE)-1\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Starts the internal memory manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManStartMemory(p *Ivy_Man_t) {\n    p.vChunks = Vec_PtrAlloc( 128 );\n    p.vPages = Vec_PtrAlloc( 128 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Stops the internal memory manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManStopMemory(p *Ivy_Man_t) {\n    var pMemory any;\n    var i int32;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vChunks)) \u0026\u0026 (((pMemory) = (void *)Vec_PtrEntry(p.vChunks, i)), 1); i++  {\n        // inlining of macro ABC_FREE\n        ((pMemory) ? (free((char *) (pMemory)), (pMemory) = 0) : 0);\n    }\n    Vec_PtrFree( p.vChunks );\n    Vec_PtrFree( p.vPages );\n    p.pListFree = nil;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates additional memory for the nodes.]\n\n  Description [Allocates IVY_PAGE_SIZE nodes. Aligns memory by 32 bytes. \n  Records the pointer to the AIG manager in the -1 entry.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Ivy_ManAddMemory(p *Ivy_Man_t) {\n    var pMemory string;\n    var i, nBytes int32;\n    var EntrySizeMax int32  = 128;\n    assert(sizeof(Ivy_Obj_t) \u003c= EntrySizeMax, \"sizeof(Ivy_Obj_t) \u003c= EntrySizeMax\");\n    assert(p.pListFree == nil, \"p.pListFree == nil\");\n//    assert( (Ivy_ManObjNum(p) \u0026 IVY_PAGE_MASK) == 0 );\n    // allocate new memory page\n    nBytes = sizeof(Ivy_Obj_t) * (1\u003c\u003cIVY_PAGE_SIZE) + EntrySizeMax;\n    // inlining of macro ABC_ALLOC\n    pMemory = ((char *) malloc(sizeof(char) * (size_t)(nBytes)));\n    Vec_PtrPush( p.vChunks, pMemory );\n    // align memory at the 32-byte boundary\n    pMemory = pMemory + EntrySizeMax - ((int32((ABC_PTRUINT_T))pMemory) \u0026 (EntrySizeMax-1));\n    // remember the manager in the first entry\n    Vec_PtrPush( p.vPages, pMemory );\n    // break the memory down into nodes\n    p.pListFree = (Ivy_Obj_t *)pMemory;\n    for  i = 1; i \u003c= IVY_PAGE_MASK; i++  {\n        *((char **)pMemory) = pMemory + sizeof(Ivy_Obj_t);\n        pMemory += sizeof(Ivy_Obj_t);\n    }\n    *((char **)pMemory) = nil;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

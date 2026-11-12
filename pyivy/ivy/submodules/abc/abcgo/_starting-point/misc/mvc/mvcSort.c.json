@@ -1,0 +1,94 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcSort.c",
+  "SHA256": "776184816f7662852e636e670f58963341537a05608c4ca6ff59e2cf0ea7d3bb",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 2220
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCompareFunc( Mvc_CoverReadCubeHead(pCover), Mvc_CoverReadCubeTail(pCover), pMask ) \u003c= 0 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Mvc_CoverSort",
+      "Start": 1559,
+      "End": 2291,
+      "BodyStart": 1686,
+      "Original": "void Mvc_CoverSort( Mvc_Cover_t * pCover, Mvc_Cube_t * pMask, int (* pCompareFunc)(Mvc_Cube_t *, Mvc_Cube_t *, Mvc_Cube_t *) )\n{\n    Mvc_Cube_t * pHead;\n    int nCubes;\n    // one cube does not need sorting\n    nCubes = Mvc_CoverReadCubeNum(pCover);\n    if ( nCubes \u003c= 1 )\n        return;\n    // sort the cubes \n    pHead = Mvc_CoverSort_rec( Mvc_CoverReadCubeHead(pCover), nCubes, pMask, pCompareFunc ); \n    // insert the sorted list into the cover\n    Mvc_CoverSetCubeHead( pCover, pHead );\n    Mvc_CoverSetCubeTail( pCover, Mvc_ListGetTailFromHead(pHead) );\n    // make sure that the list is sorted in the increasing order\n    assert( pCompareFunc( Mvc_CoverReadCubeHead(pCover), Mvc_CoverReadCubeTail(pCover), pMask ) \u003c= 0 );\n}",
+      "Draft": "func Mvc_CoverSort(pCover *Mvc_Cover_t, pMask *Mvc_Cube_t, pCompareFunc func(*Mvc_Cube_t, *Mvc_Cube_t, *Mvc_Cube_t) int32) {\n    var pHead *Mvc_Cube_t;\n    var nCubes int32;\n    // one cube does not need sorting\n    nCubes = Mvc_CoverReadCubeNum(pCover);\n    if nCubes \u003c= 1 {\n        return; }\n    // sort the cubes \n    pHead = Mvc_CoverSort_rec( Mvc_CoverReadCubeHead(pCover), nCubes, pMask, pCompareFunc ); \n    // insert the sorted list into the cover\n    Mvc_CoverSetCubeHead( pCover, pHead );\n    Mvc_CoverSetCubeTail( pCover, Mvc_ListGetTailFromHead(pHead) );\n    // make sure that the list is sorted in the increasing order\n    assert(pCompareFunc( Mvc_CoverReadCubeHead(pCover), Mvc_CoverReadCubeTail(pCover), pMask ) \u003c= 0, \"pCompareFunc( Mvc_CoverReadCubeHead(pCover), Mvc_CoverReadCubeTail(pCover), pMask ) \u003c= 0\");\n}"
+    },
+    {
+      "Name": "Mvc_CoverSort_rec",
+      "Start": 2560,
+      "End": 3374,
+      "BodyStart": 2709,
+      "Original": "Mvc_Cube_t * Mvc_CoverSort_rec( Mvc_Cube_t * pList, int nItems, Mvc_Cube_t * pMask, int (* pCompareFunc)(Mvc_Cube_t *, Mvc_Cube_t *, Mvc_Cube_t *) )\n{\n    Mvc_Cube_t * pList1, * pList2;\n    int nItems1, nItems2, i;\n\n    // trivial case\n    if ( nItems == 1 )\n    {\n        Mvc_CubeSetNext( pList, NULL );\n        return pList;\n    }\n\n    // select the new sizes\n    nItems1 = nItems/2;\n    nItems2 = nItems - nItems1;\n\n    // set the new beginnings\n    pList1 = pList2 = pList;\n    for ( i = 0; i \u003c nItems1; i++ )\n        pList2 = Mvc_CubeReadNext( pList2 );\n\n    // solve recursively\n    pList1 = Mvc_CoverSort_rec( pList1, nItems1, pMask, pCompareFunc );\n    pList2 = Mvc_CoverSort_rec( pList2, nItems2, pMask, pCompareFunc );\n\n    // merge\n    return Mvc_CoverSortMerge( pList1, pList2, pMask, pCompareFunc );\n}",
+      "Draft": "func Mvc_CoverSort_rec(pList *Mvc_Cube_t, nItems int32, pMask *Mvc_Cube_t, pCompareFunc func(*Mvc_Cube_t, *Mvc_Cube_t, *Mvc_Cube_t) int32) *Mvc_Cube_t {\n    var pList1, pList2 *Mvc_Cube_t;\n    var nItems1, nItems2, i int32;\n\n    // trivial case\n    if nItems == 1 {\n        // inlining of macro Mvc_CubeSetNext\n        ((pList).pNext = (nil));\n        return pList;\n    }\n\n    // select the new sizes\n    nItems1 = nItems/2;\n    nItems2 = nItems - nItems1;\n\n    // set the new beginnings\n    pList1 = pList2 = pList;\n    for  i = 0; i \u003c nItems1; i++  {\n        // inlining of macro Mvc_CubeReadNext\n        pList2 = ((pList2).pNext);\n    }\n\n    // solve recursively\n    pList1 = Mvc_CoverSort_rec( pList1, nItems1, pMask, pCompareFunc );\n    pList2 = Mvc_CoverSort_rec( pList2, nItems2, pMask, pCompareFunc );\n\n    // merge\n    return Mvc_CoverSortMerge( pList1, pList2, pMask, pCompareFunc );\n}"
+    },
+    {
+      "Name": "Mvc_CoverSortMerge",
+      "Start": 3651,
+      "End": 4316,
+      "BodyStart": 3811,
+      "Original": "Mvc_Cube_t * Mvc_CoverSortMerge( Mvc_Cube_t * pList1, Mvc_Cube_t * pList2, Mvc_Cube_t * pMask, int (* pCompareFunc)(Mvc_Cube_t *, Mvc_Cube_t *, Mvc_Cube_t *) )\n{\n    Mvc_Cube_t * pList = NULL, ** ppTail = \u0026pList;\n    Mvc_Cube_t * pCube;\n    while ( pList1 \u0026\u0026 pList2 )\n    {\n        if ( pCompareFunc( pList1, pList2, pMask ) \u003c 0 )\n        {\n            pCube = pList1;\n            pList1 = Mvc_CubeReadNext(pList1);\n        }\n        else\n        {\n            pCube = pList2;\n            pList2 = Mvc_CubeReadNext(pList2);\n        }\n        *ppTail = pCube;\n        ppTail = Mvc_CubeReadNextP(pCube);\n    }\n    *ppTail = pList1? pList1: pList2;\n    return pList;\n}",
+      "Draft": "func Mvc_CoverSortMerge(pList1 *Mvc_Cube_t, pList2 *Mvc_Cube_t, pMask *Mvc_Cube_t, pCompareFunc func(*Mvc_Cube_t, *Mvc_Cube_t, *Mvc_Cube_t) int32) *Mvc_Cube_t {\n    var pList *Mvc_Cube_t = nil;\n    var ppTail **Mvc_Cube_t = \u0026pList;\n    var pCube *Mvc_Cube_t;\n    for  (pList1 != nil) \u0026\u0026 (pList2 != nil)  {\n        if pCompareFunc( pList1, pList2, pMask ) \u003c 0 {\n            pCube = pList1;\n            // inlining of macro Mvc_CubeReadNext\n            pList1 = ((pList1).pNext);\n        \n        } else {\n            pCube = pList2;\n            // inlining of macro Mvc_CubeReadNext\n            pList2 = ((pList2).pNext);\n        }\n        *ppTail = pCube;\n        // inlining of macro Mvc_CubeReadNextP\n        ppTail = (\u0026(pCube).pNext);\n    }\n    *ppTail = pList1? pList1: pList2;\n    return pList;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcSort.c::Mvc_CoverSort",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverSort",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1559,
+      "End": 2291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcSort.c::Mvc_CoverSort_rec",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverSort_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2560,
+      "End": 3374
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcSort.c::ternary::Mvc_CoverSortMerge",
+      "Category": "ternary-review",
+      "Symbol": "Mvc_CoverSortMerge",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3651,
+      "End": 4316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcSort.c::Mvc_CoverSortMerge",
+      "Category": "semantic-review",
+      "Symbol": "Mvc_CoverSortMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3651,
+      "End": 4316
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/mvc/mvcSort.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4564
+    }
+  ],
+  "Draft": "package mvc\n\n/**CFile****************************************************************\n\n  FileName    [mvcSort.c]\n\n  PackageName [MVSIS 2.0: Multi-valued logic synthesis system.]\n\n  Synopsis    [Sorting cubes in the cover with the mask.]\n\n  Author      [MVSIS Group]\n  \n  Affiliation [uC Berkeley]\n\n  Date        [Ver. 1.0. Started - February 1, 2003.]\n\n  Revision    [$Id: mvcSort.c,v 1.5 2003/04/27 01:03:45 wjiang Exp $]\n\n***********************************************************************/\n\n//#include \"mvc.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n// Mvc_Cube_t * Mvc_CoverSort_rec( Mvc_Cube_t * pList, int nItems, Mvc_Cube_t * pMask, int (* pCompareFunc)(Mvc_Cube_t *, Mvc_Cube_t *, Mvc_Cube_t *) );\n\n// Mvc_Cube_t * Mvc_CoverSortMerge( Mvc_Cube_t * pList1, Mvc_Cube_t * pList2, Mvc_Cube_t * pMask, int (* pCompareFunc)(Mvc_Cube_t *, Mvc_Cube_t *, Mvc_Cube_t *) );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FuNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Sorts cubes using the given cost function.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverSort(pCover *Mvc_Cover_t, pMask *Mvc_Cube_t, pCompareFunc func(*Mvc_Cube_t, *Mvc_Cube_t, *Mvc_Cube_t) int32) {\n    var pHead *Mvc_Cube_t;\n    var nCubes int32;\n    // one cube does not need sorting\n    nCubes = Mvc_CoverReadCubeNum(pCover);\n    if nCubes \u003c= 1 {\n        return; }\n    // sort the cubes \n    pHead = Mvc_CoverSort_rec( Mvc_CoverReadCubeHead(pCover), nCubes, pMask, pCompareFunc ); \n    // insert the sorted list into the cover\n    Mvc_CoverSetCubeHead( pCover, pHead );\n    Mvc_CoverSetCubeTail( pCover, Mvc_ListGetTailFromHead(pHead) );\n    // make sure that the list is sorted in the increasing order\n    assert(pCompareFunc( Mvc_CoverReadCubeHead(pCover), Mvc_CoverReadCubeTail(pCover), pMask ) \u003c= 0, \"pCompareFunc( Mvc_CoverReadCubeHead(pCover), Mvc_CoverReadCubeTail(pCover), pMask ) \u003c= 0\");\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursive part of Mvc_CoverSort()]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverSort_rec(pList *Mvc_Cube_t, nItems int32, pMask *Mvc_Cube_t, pCompareFunc func(*Mvc_Cube_t, *Mvc_Cube_t, *Mvc_Cube_t) int32) *Mvc_Cube_t {\n    var pList1, pList2 *Mvc_Cube_t;\n    var nItems1, nItems2, i int32;\n\n    // trivial case\n    if nItems == 1 {\n        // inlining of macro Mvc_CubeSetNext\n        ((pList).pNext = (nil));\n        return pList;\n    }\n\n    // select the new sizes\n    nItems1 = nItems/2;\n    nItems2 = nItems - nItems1;\n\n    // set the new beginnings\n    pList1 = pList2 = pList;\n    for  i = 0; i \u003c nItems1; i++  {\n        // inlining of macro Mvc_CubeReadNext\n        pList2 = ((pList2).pNext);\n    }\n\n    // solve recursively\n    pList1 = Mvc_CoverSort_rec( pList1, nItems1, pMask, pCompareFunc );\n    pList2 = Mvc_CoverSort_rec( pList2, nItems2, pMask, pCompareFunc );\n\n    // merge\n    return Mvc_CoverSortMerge( pList1, pList2, pMask, pCompareFunc );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two NULL-terminated linked lists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Mvc_CoverSortMerge(pList1 *Mvc_Cube_t, pList2 *Mvc_Cube_t, pMask *Mvc_Cube_t, pCompareFunc func(*Mvc_Cube_t, *Mvc_Cube_t, *Mvc_Cube_t) int32) *Mvc_Cube_t {\n    var pList *Mvc_Cube_t = nil;\n    var ppTail **Mvc_Cube_t = \u0026pList;\n    var pCube *Mvc_Cube_t;\n    for  (pList1 != nil) \u0026\u0026 (pList2 != nil)  {\n        if pCompareFunc( pList1, pList2, pMask ) \u003c 0 {\n            pCube = pList1;\n            // inlining of macro Mvc_CubeReadNext\n            pList1 = ((pList1).pNext);\n        \n        } else {\n            pCube = pList2;\n            // inlining of macro Mvc_CubeReadNext\n            pList2 = ((pList2).pNext);\n        }\n        *ppTail = pCube;\n        // inlining of macro Mvc_CubeReadNextP\n        ppTail = (\u0026(pCube).pNext);\n    }\n    *ppTail = pList1? pList1: pList2;\n    return pList;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

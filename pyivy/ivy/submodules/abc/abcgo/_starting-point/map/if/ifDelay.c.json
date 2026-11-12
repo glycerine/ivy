@@ -1,0 +1,507 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c",
+  "SHA256": "71cf730b62f9df3d2394a06e9c4128b9c1791ad395d8d341ab167685bf1ef7c8",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 5,
+        "ByteOffset": 2831
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( If_CutLeaveNum(pCut) \u003e= 0 \u0026\u0026 If_CutLeaveNum(pCut) \u003c= 16 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 138,
+        "Column": 17,
+        "ByteOffset": 4891
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 140,
+        "Column": 9,
+        "ByteOffset": 4924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nCounterAnd \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 144,
+        "Column": 5,
+        "ByteOffset": 5148
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCounterOr \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 213,
+        "Column": 17,
+        "ByteOffset": 7943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 215,
+        "Column": 9,
+        "ByteOffset": 7976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nCounterAnd \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 216,
+        "Column": 9,
+        "ByteOffset": 8011
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nLits \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 223,
+        "Column": 5,
+        "ByteOffset": 8359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nCounterOr \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 243,
+        "Column": 5,
+        "ByteOffset": 9209
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vAig == nil || Abc_Lit2Var(iRes) == nLeaves + Abc_Lit2Var(Vec_IntSize(vAig)) - 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 246,
+        "Column": 5,
+        "ByteOffset": 9381
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( vAig == nil || (Vec_IntSize(vAig) \u0026 1) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 255,
+        "Column": 9,
+        "ByteOffset": 9644
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_Lit2Var(If_CutTruthLit(pCut)) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 263,
+        "Column": 9,
+        "ByteOffset": 9884
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_Lit2Var(If_CutTruthLit(pCut)) == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 279,
+        "Column": 9,
+        "ByteOffset": 10486
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vCover) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 296,
+        "Column": 21,
+        "ByteOffset": 11311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"%3d \", pTimes[i] );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 299,
+        "Column": 21,
+        "ByteOffset": 11430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"    \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 301,
+        "Column": 17,
+        "ByteOffset": 11482
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"-\u003e %3d   \", Delay );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 309,
+        "Column": 21,
+        "ByteOffset": 11992
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    printf( \"ESOP (%d -\u003e %d)\\n\", Vec_IntSize(vCover), vIsop.nSize );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 312,
+        "Column": 17,
+        "ByteOffset": 12171
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 344,
+        "Column": 9,
+        "ByteOffset": 13002
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( (If_CutLeaveNum(pCut) \u003e LutSize) == (pCut.uMaskFunc \u003e 0) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 380,
+        "Column": 9,
+        "ByteOffset": 14119
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_Lit2Var(If_CutTruthLit(pCut)) == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 385,
+        "Column": 9,
+        "ByteOffset": 14245
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_Lit2Var(If_CutTruthLit(pCut)) == 1 );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "If_CutMaxCubeSize",
+      "Start": 1382,
+      "End": 1831,
+      "BodyStart": 1451,
+      "Original": "static inline int If_CutMaxCubeSize( Vec_Int_t * vCover, int nVars )\n{\n    int i, k, Entry, Literal, Count, CountMax = 0;\n    Vec_IntForEachEntry( vCover, Entry, i )\n    {\n        Count = 0;\n        for ( k = 0; k \u003c nVars; k++ )\n        {\n            Literal = (3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1)));\n            if ( Literal == 1 || Literal == 2 )\n                Count++;\n        }\n        CountMax = Abc_MaxInt( CountMax, Count );\n    }\n    return CountMax;\n}",
+      "Draft": "func If_CutMaxCubeSize(vCover *Vec_Int_t, nVars int32) int32 {\n    var i, k, Entry, Literal, Count, CountMax int32;\n    Vec_IntForEachEntry( vCover, Entry, i )\n    {\n        Count = 0;\n        for  k = 0; k \u003c nVars; k++  {\n            Literal = (3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1)));\n            if Literal == 1 || Literal == 2 {\n                Count++; }\n        }\n        CountMax = Abc_MaxInt( CountMax, Count );\n    }\n    return CountMax;\n}"
+    },
+    {
+      "Name": "If_CutDelaySop",
+      "Start": 1832,
+      "End": 3610,
+      "BodyStart": 1884,
+      "Original": "int If_CutDelaySop( If_Man_t * p, If_Cut_t * pCut )\n{\n    char * pPerm = If_CutPerm( pCut );\n    // delay is calculated using 1+log2(NumFanins)\n    static double GateDelays[20] = { 1.00, 1.00, 2.00, 2.58, 3.00, 3.32, 3.58, 3.81, 4.00, 4.17, 4.32, 4.46, 4.58, 4.70, 4.81, 4.91, 5.00, 5.09, 5.17, 5.25 };\n    Vec_Int_t * vCover;\n    If_Obj_t * pLeaf;\n    int i, nLitMax, Delay, DelayMax;\n    // mark cut as a user cut\n    pCut-\u003efUser = 1;\n    if ( pCut-\u003enLeaves == 0 )\n        return 0;\n    if ( pCut-\u003enLeaves == 1 )\n        return (int)If_ObjCutBest(If_CutLeaf(p, pCut, 0))-\u003eDelay;\n    vCover = Vec_WecEntry( p-\u003evTtIsops[pCut-\u003enLeaves], Abc_Lit2Var(If_CutTruthLit(pCut)) );\n    if ( Vec_IntSize(vCover) == 0 )\n        return -1;\n    // mark the output as complemented\n//    vAnds = If_CutDelaySopAnds( p, pCut, vCover, RetValue ^ pCut-\u003efCompl );\n    if ( Vec_IntSize(vCover) \u003e p-\u003epPars-\u003enGateSize )\n        return -1;\n    // set the area cost\n    assert( If_CutLeaveNum(pCut) \u003e= 0 \u0026\u0026 If_CutLeaveNum(pCut) \u003c= 16 );\n    // compute the gate delay\n    nLitMax = If_CutMaxCubeSize( vCover, If_CutLeaveNum(pCut) );\n    if ( Vec_IntSize(vCover) \u003c 2 )\n    {\n        pCut-\u003eCost = Vec_IntSize(vCover);\n        Delay = (int)(GateDelays[If_CutLeaveNum(pCut)] + 0.5);\n        DelayMax = 0;\n        If_CutForEachLeaf( p, pCut, pLeaf, i )\n            DelayMax = Abc_MaxInt( DelayMax, If_ObjCutBest(pLeaf)-\u003eDelay + (pPerm[i] = (char)Delay) );\n    }\n    else\n    {\n        pCut-\u003eCost = Vec_IntSize(vCover) + 1;\n        Delay = (int)(GateDelays[If_CutLeaveNum(pCut)] + GateDelays[nLitMax] + 0.5);\n        DelayMax = 0;\n        If_CutForEachLeaf( p, pCut, pLeaf, i )\n            DelayMax = Abc_MaxInt( DelayMax, If_ObjCutBest(pLeaf)-\u003eDelay + (pPerm[i] = (char)Delay) );\n    }\n    return DelayMax;\n}",
+      "Draft": "func If_CutDelaySop(p *If_Man_t, pCut *If_Cut_t) int32 {\n    var pPerm string  = If_CutPerm( pCut );\n    // delay is calculated using 1+log2(NumFanins)\n    \n    var vCover *Vec_Int_t;\n    var pLeaf *If_Obj_t;\n    var i, nLitMax, Delay, DelayMax int32;\n    // mark cut as a user cut\n    pCut.fUser = 1;\n    if pCut.nLeaves == 0 {\n        return 0; }\n    if pCut.nLeaves == 1 {\n        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay); }\n    vCover = Vec_WecEntry( p.vTtIsops[pCut.nLeaves], Abc_Lit2Var(If_CutTruthLit(pCut)) );\n    if Vec_IntSize(vCover) == 0 {\n        return -1; }\n    // mark the output as complemented\n//    vAnds = If_CutDelaySopAnds( p, pCut, vCover, RetValue ^ pCut-\u003efCompl );\n    if Vec_IntSize(vCover) \u003e p.pPars.nGateSize {\n        return -1; }\n    // set the area cost\n    assert(If_CutLeaveNum(pCut) \u003e= 0 \u0026\u0026 If_CutLeaveNum(pCut) \u003c= 16, \"If_CutLeaveNum(pCut) \u003e= 0 \u0026\u0026 If_CutLeaveNum(pCut) \u003c= 16\");\n    // compute the gate delay\n    nLitMax = If_CutMaxCubeSize( vCover, If_CutLeaveNum(pCut) );\n    if Vec_IntSize(vCover) \u003c 2 {\n        pCut.Cost = Vec_IntSize(vCover);\n        Delay = int32((spStatic_If_CutDelaySop_GateDelays[If_CutLeaveNum(pCut)] + 0.5));\n        DelayMax = 0;\n        If_CutForEachLeaf( p, pCut, pLeaf, i )\n            DelayMax = Abc_MaxInt( DelayMax, If_ObjCutBest(pLeaf).Delay + (pPerm[i] = byte(Delay)) );\n    \n    } else {\n        pCut.Cost = Vec_IntSize(vCover) + 1;\n        Delay = int32((spStatic_If_CutDelaySop_GateDelays[If_CutLeaveNum(pCut)] + spStatic_If_CutDelaySop_GateDelays[nLitMax] + 0.5));\n        DelayMax = 0;\n        If_CutForEachLeaf( p, pCut, pLeaf, i )\n            DelayMax = Abc_MaxInt( DelayMax, If_ObjCutBest(pLeaf).Delay + (pPerm[i] = byte(Delay)) );\n    }\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "If_CutSopBalancePinDelaysInt",
+      "Start": 3866,
+      "End": 5095,
+      "BodyStart": 3980,
+      "Original": "int If_CutSopBalancePinDelaysInt( Vec_Int_t * vCover, int * pTimes, word * pFaninRes, int nSuppAll, word * pRes )\n{\n    word pPinDelsAnd[IF_MAX_FUNC_LUTSIZE], pPinDelsOr[IF_MAX_CUBES];\n    int nCounterAnd, pCounterAnd[IF_MAX_FUNC_LUTSIZE];\n    int nCounterOr,  pCounterOr[IF_MAX_CUBES];\n    int i, k, Entry, Literal, Delay = 0;\n    word ResAnd;\n    if ( Vec_IntSize(vCover) \u003e IF_MAX_CUBES )\n        return -1;\n    nCounterOr = 0;\n    Vec_IntForEachEntry( vCover, Entry, i )\n    { \n        nCounterAnd = 0;\n        for ( k = 0; k \u003c nSuppAll; k++ )\n        {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if ( Literal == 1 || Literal == 2 ) // neg or pos literal\n                Delay = If_LogCounterPinDelays( pCounterAnd, \u0026nCounterAnd, pPinDelsAnd, pTimes[k], pFaninRes[k], nSuppAll, 0 );\n            else if ( Literal != 0 ) \n                assert( 0 );\n        }\n        assert( nCounterAnd \u003e 0 );\n        ResAnd = If_LogPinDelaysMulti( pPinDelsAnd, nCounterAnd, nSuppAll, 0 );\n        Delay = If_LogCounterPinDelays( pCounterOr, \u0026nCounterOr, pPinDelsOr, Delay, ResAnd, nSuppAll, 0 );\n    }\n    assert( nCounterOr \u003e 0 );\n    *pRes = If_LogPinDelaysMulti( pPinDelsOr, nCounterOr, nSuppAll, 0 );\n    return Delay;\n}",
+      "Draft": "func If_CutSopBalancePinDelaysInt(vCover *Vec_Int_t, pTimes *int32, pFaninRes *word, nSuppAll int32, pRes *word) int32 {\n    var pPinDelsAnd [IF_MAX_FUNC_LUTSIZE]word;\n    var pPinDelsOr [IF_MAX_CUBES]word;\n    var nCounterAnd int32;\n    var pCounterAnd [IF_MAX_FUNC_LUTSIZE]int32;\n    var nCounterOr int32;\n    var pCounterOr [IF_MAX_CUBES]int32;\n    var i, k, Entry, Literal, Delay int32;\n    var ResAnd word;\n    if Vec_IntSize(vCover) \u003e IF_MAX_CUBES {\n        return -1; }\n    nCounterOr = 0;\n    Vec_IntForEachEntry( vCover, Entry, i )\n    { \n        nCounterAnd = 0;\n        for  k = 0; k \u003c nSuppAll; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 || Literal == 2 { // neg or pos literal\n                Delay = If_LogCounterPinDelays( pCounterAnd, \u0026nCounterAnd, pPinDelsAnd, pTimes[k], pFaninRes[k], nSuppAll, 0 );\n            } else if Literal != 0 { \n                assert(false, \"0\"); }\n        }\n        assert(nCounterAnd \u003e 0, \"nCounterAnd \u003e 0\");\n        ResAnd = If_LogPinDelaysMulti( pPinDelsAnd, nCounterAnd, nSuppAll, 0 );\n        Delay = If_LogCounterPinDelays( pCounterOr, \u0026nCounterOr, pPinDelsOr, Delay, ResAnd, nSuppAll, 0 );\n    }\n    assert(nCounterOr \u003e 0, \"nCounterOr \u003e 0\");\n    *pRes = If_LogPinDelaysMulti( pPinDelsOr, nCounterOr, nSuppAll, 0 );\n    return Delay;\n}"
+    },
+    {
+      "Name": "If_CutSopBalancePinDelaysIntInt",
+      "Start": 5096,
+      "End": 5501,
+      "BodyStart": 5196,
+      "Original": "int If_CutSopBalancePinDelaysIntInt( Vec_Int_t * vCover, int * pTimes, int nSuppAll, char * pPerm )\n{\n    int i, Delay;\n    word Res, FaninRes[IF_MAX_FUNC_LUTSIZE];\n    for ( i = 0; i \u003c nSuppAll; i++ )\n        FaninRes[i] = If_CutPinDelayInit(i);\n    Delay = If_CutSopBalancePinDelaysInt( vCover, pTimes, FaninRes, nSuppAll, \u0026Res );\n    If_CutPinDelayTranslate( Res, nSuppAll, pPerm );\n    return Delay;\n}",
+      "Draft": "func If_CutSopBalancePinDelaysIntInt(vCover *Vec_Int_t, pTimes *int32, nSuppAll int32, pPerm string) int32 {\n    var i, Delay int32;\n    var Res word;\n    var FaninRes [IF_MAX_FUNC_LUTSIZE]word;\n    for  i = 0; i \u003c nSuppAll; i++  {\n        FaninRes[i] = If_CutPinDelayInit(i);\n    }\n    Delay = If_CutSopBalancePinDelaysInt( vCover, pTimes, FaninRes, nSuppAll, \u0026Res );\n    If_CutPinDelayTranslate( Res, nSuppAll, pPerm );\n    return Delay;\n}"
+    },
+    {
+      "Name": "If_CutSopBalancePinDelays",
+      "Start": 5502,
+      "End": 6257,
+      "BodyStart": 5579,
+      "Original": "int If_CutSopBalancePinDelays( If_Man_t * p, If_Cut_t * pCut, char * pPerm )\n{\n    if ( pCut-\u003enLeaves == 0 ) // const\n        return 0;\n    if ( pCut-\u003enLeaves == 1 ) // variable\n    {\n        pPerm[0] = 0;\n        return (int)If_ObjCutBest(If_CutLeaf(p, pCut, 0))-\u003eDelay;\n    }\n    else\n    {\n        Vec_Int_t * vCover;\n        int i, pTimes[IF_MAX_FUNC_LUTSIZE];\n        vCover = Vec_WecEntry( p-\u003evTtIsops[pCut-\u003enLeaves], Abc_Lit2Var(If_CutTruthLit(pCut)) );\n        if ( Vec_IntSize(vCover) == 0 )\n            return -1;\n        for ( i = 0; i \u003c If_CutLeaveNum(pCut); i++ )\n            pTimes[i] = (int)If_ObjCutBest(If_CutLeaf(p, pCut, i))-\u003eDelay; \n        return If_CutSopBalancePinDelaysIntInt( vCover, pTimes, If_CutLeaveNum(pCut), pPerm );\n    }\n}",
+      "Draft": "func If_CutSopBalancePinDelays(p *If_Man_t, pCut *If_Cut_t, pPerm string) int32 {\n    if pCut.nLeaves == 0 { // const\n        return 0; }\n    if pCut.nLeaves == 1 { // variable\n    \n        pPerm[0] = 0;\n        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay);\n    \n    } else {\n        var vCover *Vec_Int_t;\n        var i int32;\n        var pTimes [IF_MAX_FUNC_LUTSIZE]int32;\n        vCover = Vec_WecEntry( p.vTtIsops[pCut.nLeaves], Abc_Lit2Var(If_CutTruthLit(pCut)) );\n        if Vec_IntSize(vCover) == 0 {\n            return -1; }\n        for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n            pTimes[i] = int32(If_ObjCutBest(If_CutLeaf(p, pCut, i)).Delay);\n        } \n        return If_CutSopBalancePinDelaysIntInt( vCover, pTimes, If_CutLeaveNum(pCut), pPerm );\n    }\n}"
+    },
+    {
+      "Name": "If_CutSopBalanceEvalInt",
+      "Start": 6528,
+      "End": 8448,
+      "BodyStart": 6668,
+      "Original": "int If_CutSopBalanceEvalInt( Vec_Int_t * vCover, int * pTimes, int * pFaninLits, Vec_Int_t * vAig, int * piRes, int nSuppAll, int * pArea )\n{\n    int nCounterAnd, pCounterAnd[IF_MAX_FUNC_LUTSIZE], pFaninLitsAnd[IF_MAX_FUNC_LUTSIZE];\n    int nCounterOr,  pCounterOr[IF_MAX_CUBES],  pFaninLitsOr[IF_MAX_CUBES];\n    int i, k, Entry, Literal, nLits, Delay = 0, iRes = 0;\n    if ( Vec_IntSize(vCover) \u003e IF_MAX_CUBES )\n        return -1;\n    nCounterOr = 0;\n    Vec_IntForEachEntry( vCover, Entry, i )\n    { \n        nCounterAnd = nLits = 0;\n        for ( k = 0; k \u003c nSuppAll; k++ )\n        {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if ( Literal == 1 ) // neg literal\n                nLits++, Delay = If_LogCounterAddAig( pCounterAnd, \u0026nCounterAnd, pFaninLitsAnd, pTimes[k], vAig ? Abc_LitNot(pFaninLits[k]) : -1, vAig, nSuppAll, 0, 0 );\n            else if ( Literal == 2 ) // pos literal\n                nLits++, Delay = If_LogCounterAddAig( pCounterAnd, \u0026nCounterAnd, pFaninLitsAnd, pTimes[k], vAig ? pFaninLits[k] : -1, vAig, nSuppAll, 0, 0 );\n            else if ( Literal != 0 ) \n                assert( 0 );\n        }\n        assert( nCounterAnd \u003e 0 );\n        assert( nLits \u003e 0 );\n        if ( vAig )\n            iRes = If_LogCreateAndXorMulti( vAig, pFaninLitsAnd, nCounterAnd, nSuppAll, 0 );\n        else\n            *pArea += nLits == 1 ? 0 : nLits - 1;\n        Delay = If_LogCounterAddAig( pCounterOr, \u0026nCounterOr, pFaninLitsOr, Delay, vAig ? Abc_LitNot(iRes) : -1, vAig, nSuppAll, 0, 0 );\n    }\n    assert( nCounterOr \u003e 0 );\n    if ( vAig )\n    {\n        *piRes = Abc_LitNot( If_LogCreateAndXorMulti( vAig, pFaninLitsOr, nCounterOr, nSuppAll, 0 ) );\n        if ( ((vCover-\u003enCap \u003e\u003e 16) \u0026 1) )  // hack to remember complemented attribute\n            *piRes = Abc_LitNot( *piRes );\n    }\n    else       \n        *pArea += Vec_IntSize(vCover) == 1 ? 0 : Vec_IntSize(vCover) - 1;\n    return Delay;\n}",
+      "Draft": "func If_CutSopBalanceEvalInt(vCover *Vec_Int_t, pTimes *int32, pFaninLits *int32, vAig *Vec_Int_t, piRes *int32, nSuppAll int32, pArea *int32) int32 {\n    var nCounterAnd int32;\n    var pCounterAnd [IF_MAX_FUNC_LUTSIZE]int32;\n    var pFaninLitsAnd [IF_MAX_FUNC_LUTSIZE]int32;\n    var nCounterOr int32;\n    var pCounterOr [IF_MAX_CUBES]int32;\n    var pFaninLitsOr [IF_MAX_CUBES]int32;\n    var i, k, Entry, Literal, nLits, Delay, iRes int32;\n    if Vec_IntSize(vCover) \u003e IF_MAX_CUBES {\n        return -1; }\n    nCounterOr = 0;\n    Vec_IntForEachEntry( vCover, Entry, i )\n    { \n        nCounterAnd = nLits = 0;\n        for  k = 0; k \u003c nSuppAll; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 { // neg literal\n                nLits++, Delay = If_LogCounterAddAig( pCounterAnd, \u0026nCounterAnd, pFaninLitsAnd, pTimes[k], vAig ? Abc_LitNot(pFaninLits[k]) : -1, vAig, nSuppAll, 0, 0 );\n            } else if Literal == 2 { // pos literal\n                nLits++, Delay = If_LogCounterAddAig( pCounterAnd, \u0026nCounterAnd, pFaninLitsAnd, pTimes[k], vAig ? pFaninLits[k] : -1, vAig, nSuppAll, 0, 0 );\n            } else if Literal != 0 { \n                assert(false, \"0\"); }\n        }\n        assert(nCounterAnd \u003e 0, \"nCounterAnd \u003e 0\");\n        assert(nLits \u003e 0, \"nLits \u003e 0\");\n        if vAig != nil {\n            iRes = If_LogCreateAndXorMulti( vAig, pFaninLitsAnd, nCounterAnd, nSuppAll, 0 );\n        } else {\n            *pArea += nLits == 1 ? 0 : nLits - 1; }\n        Delay = If_LogCounterAddAig( pCounterOr, \u0026nCounterOr, pFaninLitsOr, Delay, vAig ? Abc_LitNot(iRes) : -1, vAig, nSuppAll, 0, 0 );\n    }\n    assert(nCounterOr \u003e 0, \"nCounterOr \u003e 0\");\n    if vAig != nil {\n        *piRes = Abc_LitNot( If_LogCreateAndXorMulti( vAig, pFaninLitsOr, nCounterOr, nSuppAll, 0 ) );\n        if (vCover.nCap \u003e\u003e 16) \u0026 1 {  // hack to remember complemented attribute\n            *piRes = Abc_LitNot( *piRes ); }\n    \n    } else {       \n        *pArea += Vec_IntSize(vCover) == 1 ? 0 : Vec_IntSize(vCover) - 1; }\n    return Delay;\n}"
+    },
+    {
+      "Name": "If_CutSopBalanceEvalIntInt",
+      "Start": 8449,
+      "End": 9124,
+      "BodyStart": 8573,
+      "Original": "int If_CutSopBalanceEvalIntInt( Vec_Int_t * vCover, int nLeaves, int * pTimes, Vec_Int_t * vAig, int fCompl, int * pArea ) \n{\n    int pFaninLits[IF_MAX_FUNC_LUTSIZE];\n    int iRes = 0, Res, k;\n    if ( vAig )\n        for ( k = 0; k \u003c nLeaves; k++ )\n            pFaninLits[k] = Abc_Var2Lit(k, 0);\n    Res = If_CutSopBalanceEvalInt( vCover, pTimes, pFaninLits, vAig, \u0026iRes, nLeaves, pArea );\n    if ( Res == -1 )\n        return -1;\n    assert( vAig == NULL || Abc_Lit2Var(iRes) == nLeaves + Abc_Lit2Var(Vec_IntSize(vAig)) - 1 );\n    if ( vAig )\n        Vec_IntPush( vAig, Abc_LitIsCompl(iRes) ^ fCompl );\n    assert( vAig == NULL || (Vec_IntSize(vAig) \u0026 1) );\n    return Res;\n}",
+      "Draft": "func If_CutSopBalanceEvalIntInt(vCover *Vec_Int_t, nLeaves int32, pTimes *int32, vAig *Vec_Int_t, fCompl int32, pArea *int32) int32 {\n    var pFaninLits [IF_MAX_FUNC_LUTSIZE]int32;\n    var iRes, Res, k int32;\n    if vAig != nil {\n        for  k = 0; k \u003c nLeaves; k++  {\n            pFaninLits[k] = Abc_Var2Lit(k, 0);\n        } }\n    Res = If_CutSopBalanceEvalInt( vCover, pTimes, pFaninLits, vAig, \u0026iRes, nLeaves, pArea );\n    if Res == -1 {\n        return -1; }\n    assert(vAig == nil || Abc_Lit2Var(iRes) == nLeaves + Abc_Lit2Var(Vec_IntSize(vAig)) - 1, \"vAig == nil || Abc_Lit2Var(iRes) == nLeaves + Abc_Lit2Var(Vec_IntSize(vAig)) - 1\");\n    if vAig != nil {\n        Vec_IntPush( vAig, Abc_LitIsCompl(iRes) ^ fCompl ); }\n    assert(vAig == nil || (Vec_IntSize(vAig) \u0026 1), \"vAig == nil || (Vec_IntSize(vAig) \u0026 1)\");\n    return Res;\n}"
+    },
+    {
+      "Name": "If_CutSopBalanceEval",
+      "Start": 9125,
+      "End": 11849,
+      "BodyStart": 9201,
+      "Original": "int If_CutSopBalanceEval( If_Man_t * p, If_Cut_t * pCut, Vec_Int_t * vAig )\n{\n    pCut-\u003efUser = 1;\n    if ( vAig )\n        Vec_IntClear( vAig );\n    if ( pCut-\u003enLeaves == 0 ) // const\n    {\n        assert( Abc_Lit2Var(If_CutTruthLit(pCut)) == 0 );\n        if ( vAig )\n            Vec_IntPush( vAig, Abc_LitIsCompl(If_CutTruthLit(pCut)) );\n        pCut-\u003eCost = 0;\n        return 0;\n    }\n    if ( pCut-\u003enLeaves == 1 ) // variable\n    {\n        assert( Abc_Lit2Var(If_CutTruthLit(pCut)) == 1 );\n        if ( vAig )\n            Vec_IntPush( vAig, 0 );\n        if ( vAig )\n            Vec_IntPush( vAig, Abc_LitIsCompl(If_CutTruthLit(pCut)) );\n        pCut-\u003eCost = 0;\n        return (int)If_ObjCutBest(If_CutLeaf(p, pCut, 0))-\u003eDelay;\n    }\n    else\n    {\n        int fVerbose = 0;\n        Vec_Int_t * vCover = Vec_WecEntry( p-\u003evTtIsops[pCut-\u003enLeaves], Abc_Lit2Var(If_CutTruthLit(pCut)) );\n        int Delay, Area = 0;\n        int i, pTimes[IF_MAX_FUNC_LUTSIZE];\n        if ( vCover == NULL )\n            return -1;\n        assert( Vec_IntSize(vCover) \u003e 0 );\n        for ( i = 0; i \u003c If_CutLeaveNum(pCut); i++ )\n            pTimes[i] = (int)If_ObjCutBest(If_CutLeaf(p, pCut, i))-\u003eDelay; \n        Delay = If_CutSopBalanceEvalIntInt( vCover, If_CutLeaveNum(pCut), pTimes, vAig, Abc_LitIsCompl(If_CutTruthLit(pCut)) ^ pCut-\u003efCompl, \u0026Area );\n        pCut-\u003eCost = Area;\n        if ( fVerbose )\n        {\n            int Max = 0, Two = 0;\n            for ( i = 0; i \u003c If_CutLeaveNum(pCut); i++ )\n                Max = Abc_MaxInt( Max, pTimes[i] );\n            for ( i = 0; i \u003c If_CutLeaveNum(pCut); i++ )\n                if ( pTimes[i] != Max )\n                    Two = Abc_MaxInt( Two, pTimes[i] );\n            if ( Two + 2 \u003c Max \u0026\u0026 Max + 3 \u003c Delay )\n            {\n                for ( i = 0; i \u003c If_CutLeaveNum(pCut); i++ )\n                    printf( \"%3d \", pTimes[i] );\n                for ( ; i \u003c p-\u003epPars-\u003enLutSize; i++ )\n                    printf( \"    \" );\n                printf( \"-\u003e %3d   \", Delay );\n                Dau_DsdPrintFromTruth( If_CutTruthW(p, pCut), If_CutLeaveNum(pCut) );\n                Kit_TruthIsopPrintCover( vCover, If_CutLeaveNum(pCut), Abc_LitIsCompl(If_CutTruthLit(pCut)) ^ pCut-\u003efCompl );\n                {\n                    Vec_Int_t vIsop;\n                    int pIsop[64];\n                    vIsop.nCap = vIsop.nSize = Abc_Tt6Esop( *If_CutTruthW(p, pCut), pCut-\u003enLeaves, pIsop );\n                    vIsop.pArray = pIsop;\n                    printf( \"ESOP (%d -\u003e %d)\\n\", Vec_IntSize(vCover), vIsop.nSize );\n                    Kit_TruthIsopPrintCover( \u0026vIsop, If_CutLeaveNum(pCut), 0 );\n                }\n                printf( \"\\n\" );\n            }\n        }\n        return Delay;\n    }\n}",
+      "Draft": "func If_CutSopBalanceEval(p *If_Man_t, pCut *If_Cut_t, vAig *Vec_Int_t) int32 {\n    pCut.fUser = 1;\n    if vAig != nil {\n        Vec_IntClear( vAig ); }\n    if pCut.nLeaves == 0 { // const\n    \n        assert(Abc_Lit2Var(If_CutTruthLit(pCut)) == 0, \"Abc_Lit2Var(If_CutTruthLit(pCut)) == 0\");\n        if vAig != nil {\n            Vec_IntPush( vAig, Abc_LitIsCompl(If_CutTruthLit(pCut)) ); }\n        pCut.Cost = 0;\n        return 0;\n    }\n    if pCut.nLeaves == 1 { // variable\n    \n        assert(Abc_Lit2Var(If_CutTruthLit(pCut)) == 1, \"Abc_Lit2Var(If_CutTruthLit(pCut)) == 1\");\n        if vAig != nil {\n            Vec_IntPush( vAig, 0 ); }\n        if vAig != nil {\n            Vec_IntPush( vAig, Abc_LitIsCompl(If_CutTruthLit(pCut)) ); }\n        pCut.Cost = 0;\n        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay);\n    \n    } else {\n        var fVerbose int32;\n        var vCover *Vec_Int_t  = Vec_WecEntry( p.vTtIsops[pCut.nLeaves], Abc_Lit2Var(If_CutTruthLit(pCut)) );\n        var Delay, Area int32;\n        var i int32;\n        var pTimes [IF_MAX_FUNC_LUTSIZE]int32;\n        if vCover == nil {\n            return -1; }\n        assert(Vec_IntSize(vCover) \u003e 0, \"Vec_IntSize(vCover) \u003e 0\");\n        for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n            pTimes[i] = int32(If_ObjCutBest(If_CutLeaf(p, pCut, i)).Delay);\n        } \n        Delay = If_CutSopBalanceEvalIntInt( vCover, If_CutLeaveNum(pCut), pTimes, vAig, Abc_LitIsCompl(If_CutTruthLit(pCut)) ^ pCut.fCompl, \u0026Area );\n        pCut.Cost = Area;\n        if fVerbose != 0 {\n            var Max, Two int32;\n            for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n                Max = Abc_MaxInt( Max, pTimes[i] );\n            }\n            for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n                if pTimes[i] != Max {\n                    Two = Abc_MaxInt( Two, pTimes[i] ); }\n            }\n            if Two + 2 \u003c Max \u0026\u0026 Max + 3 \u003c Delay {\n                for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n                    fmt.Printf(\"%3d \", pTimes[i]);\n                }\n                for  ; i \u003c p.pPars.nLutSize; i++  {\n                    fmt.Printf(\"    \");\n                }\n                fmt.Printf(\"-\u003e %3d   \", Delay);\n                Dau_DsdPrintFromTruth( If_CutTruthW(p, pCut), If_CutLeaveNum(pCut) );\n                Kit_TruthIsopPrintCover( vCover, If_CutLeaveNum(pCut), Abc_LitIsCompl(If_CutTruthLit(pCut)) ^ pCut.fCompl );\n                {\n                    var vIsop Vec_Int_t;\n                    var pIsop [64]int32;\n                    vIsop.nCap = vIsop.nSize = Abc_Tt6Esop( *If_CutTruthW(p, pCut), pCut.nLeaves, pIsop );\n                    vIsop.pArray = pIsop;\n                    fmt.Printf(\"ESOP (%d -\u003e %d)\\n\", Vec_IntSize(vCover), vIsop.nSize);\n                    Kit_TruthIsopPrintCover( \u0026vIsop, If_CutLeaveNum(pCut), 0 );\n                }\n                fmt.Printf(\"\\n\");\n            }\n        }\n        return Delay;\n    }\n}"
+    },
+    {
+      "Name": "If_CutLutBalancePinDelays",
+      "Start": 12120,
+      "End": 13173,
+      "BodyStart": 12197,
+      "Original": "int If_CutLutBalancePinDelays( If_Man_t * p, If_Cut_t * pCut, char * pPerm )\n{\n    if ( pCut-\u003enLeaves == 0 ) // const\n        return 0;\n    if ( pCut-\u003enLeaves == 1 ) // variable\n    {\n        pPerm[0] = 0;\n        return (int)If_ObjCutBest(If_CutLeaf(p, pCut, 0))-\u003eDelay;\n    }\n    else\n    {\n        char * pCutPerm = If_CutDsdPerm( p, pCut );\n        int LutSize = p-\u003epPars-\u003epLutStruct[0] - '0';\n        int i, Delay, DelayMax = -1;\n        assert( (If_CutLeaveNum(pCut) \u003e LutSize) == (pCut-\u003euMaskFunc \u003e 0) );\n        for ( i = 0; i \u003c If_CutLeaveNum(pCut); i++ )\n        {\n            if ( If_CutLeaveNum(pCut) \u003e LutSize \u0026\u0026 ((pCut-\u003euMaskFunc \u003e\u003e (i \u003c\u003c 1)) \u0026 1) )\n                pPerm[Abc_Lit2Var((int)pCutPerm[i])] = 2;\n            else\n                pPerm[Abc_Lit2Var((int)pCutPerm[i])] = 1;\n        }\n        for ( i = 0; i \u003c If_CutLeaveNum(pCut); i++ )\n        {\n            Delay = (int)If_ObjCutBest(If_CutLeaf(p, pCut, i))-\u003eDelay;\n            DelayMax = Abc_MaxInt( DelayMax, Delay + (int)pPerm[i] );\n        }\n        return DelayMax;\n    }\n}",
+      "Draft": "func If_CutLutBalancePinDelays(p *If_Man_t, pCut *If_Cut_t, pPerm string) int32 {\n    if pCut.nLeaves == 0 { // const\n        return 0; }\n    if pCut.nLeaves == 1 { // variable\n    \n        pPerm[0] = 0;\n        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay);\n    \n    } else {\n        var pCutPerm string  = If_CutDsdPerm( p, pCut );\n        var LutSize int32  = p.pPars.pLutStruct[0] - '0';\n        var i int32;\n        var Delay int32;\n        var DelayMax int32 = -1;\n        assert((If_CutLeaveNum(pCut) \u003e LutSize) == (pCut.uMaskFunc \u003e 0), \"(If_CutLeaveNum(pCut) \u003e LutSize) == (pCut.uMaskFunc \u003e 0)\");\n        for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n            if If_CutLeaveNum(pCut) \u003e LutSize \u0026\u0026 ((pCut.uMaskFunc \u003e\u003e (i \u003c\u003c 1)) \u0026 1) {\n                pPerm[Abc_Lit2Var(int32(pCutPerm[i]))] = 2;\n            } else {\n                pPerm[Abc_Lit2Var(int32(pCutPerm[i]))] = 1; }\n        }\n        for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n            Delay = int32(If_ObjCutBest(If_CutLeaf(p, pCut, i)).Delay);\n            DelayMax = Abc_MaxInt( DelayMax, Delay + int32(pPerm[i]) );\n        }\n        return DelayMax;\n    }\n}"
+    },
+    {
+      "Name": "If_CutLutBalanceEval",
+      "Start": 13444,
+      "End": 15092,
+      "BodyStart": 13502,
+      "Original": "int If_CutLutBalanceEval( If_Man_t * p, If_Cut_t * pCut )\n{\n    pCut-\u003efUser = 1;\n    pCut-\u003eCost = pCut-\u003enLeaves \u003e 1 ? 1 : 0;\n    pCut-\u003euMaskFunc = 0;\n    if ( pCut-\u003enLeaves == 0 ) // const\n    {\n        assert( Abc_Lit2Var(If_CutTruthLit(pCut)) == 0 );\n        return 0;\n    }\n    if ( pCut-\u003enLeaves == 1 ) // variable\n    {\n        assert( Abc_Lit2Var(If_CutTruthLit(pCut)) == 1 );\n        return (int)If_ObjCutBest(If_CutLeaf(p, pCut, 0))-\u003eDelay;\n    }\n    else\n    {\n        char * pCutPerm = If_CutDsdPerm( p, pCut );\n        int LutSize = p-\u003epPars-\u003epLutStruct[0] - '0';\n        int i, pTimes[IF_MAX_FUNC_LUTSIZE];\n        int DelayMax = -1, nLeafMax = 0;\n        unsigned uLeafMask = 0;\n        for ( i = 0; i \u003c If_CutLeaveNum(pCut); i++ )\n        {\n            pTimes[i] = (int)If_ObjCutBest(If_CutLeaf(p, pCut, Abc_Lit2Var((int)pCutPerm[i])))-\u003eDelay; \n            if ( DelayMax \u003c pTimes[i] )\n                DelayMax = pTimes[i], nLeafMax = 1, uLeafMask = (1 \u003c\u003c (i \u003c\u003c 1));\n            else if ( DelayMax == pTimes[i] )\n                nLeafMax++, uLeafMask |= (1 \u003c\u003c (i \u003c\u003c 1));\n        }\n        if ( If_CutLeaveNum(pCut) \u003c= LutSize )\n            return DelayMax + 1;\n        pCut-\u003eCost = 2;\n        if ( nLeafMax \u003c= LutSize - 1 )\n        {\n            pCut-\u003euMaskFunc = If_DsdManCheckXY( p-\u003epIfDsdMan, If_CutDsdLit(p, pCut), LutSize, 1, uLeafMask, 0, 0 );\n            if ( pCut-\u003euMaskFunc \u003e 0 )\n                return DelayMax + 1;\n        }\n        pCut-\u003euMaskFunc = If_DsdManCheckXY( p-\u003epIfDsdMan, If_CutDsdLit(p, pCut), LutSize, 1, 0, 0, 0 );\n        if ( pCut-\u003euMaskFunc == 0 )\n            return -1;\n        return DelayMax + 2;\n    }\n}",
+      "Draft": "func If_CutLutBalanceEval(p *If_Man_t, pCut *If_Cut_t) int32 {\n    pCut.fUser = 1;\n    if pCut.nLeaves \u003e 1 {\n        pCut.Cost = 1;\n    } else {\n        pCut.Cost = 0;\n    }\n    pCut.uMaskFunc = 0;\n    if pCut.nLeaves == 0 { // const\n    \n        assert(Abc_Lit2Var(If_CutTruthLit(pCut)) == 0, \"Abc_Lit2Var(If_CutTruthLit(pCut)) == 0\");\n        return 0;\n    }\n    if pCut.nLeaves == 1 { // variable\n    \n        assert(Abc_Lit2Var(If_CutTruthLit(pCut)) == 1, \"Abc_Lit2Var(If_CutTruthLit(pCut)) == 1\");\n        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay);\n    \n    } else {\n        var pCutPerm string  = If_CutDsdPerm( p, pCut );\n        var LutSize int32  = p.pPars.pLutStruct[0] - '0';\n        var i int32;\n        var pTimes [IF_MAX_FUNC_LUTSIZE]int32;\n        var DelayMax int32 = -1;\n        var nLeafMax int32;\n        var uLeafMask uint32;\n        for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n            pTimes[i] = int32(If_ObjCutBest(If_CutLeaf(p, pCut, Abc_Lit2Var(int32(pCutPerm[i])))).Delay); \n            if DelayMax \u003c pTimes[i] {\n                DelayMax = pTimes[i];\nnLeafMax = 1;\nuLeafMask = (1 \u003c\u003c (i \u003c\u003c 1));\n            } else if DelayMax == pTimes[i] {\n                nLeafMax++, uLeafMask |= (1 \u003c\u003c (i \u003c\u003c 1)); }\n        }\n        if If_CutLeaveNum(pCut) \u003c= LutSize {\n            return DelayMax + 1; }\n        pCut.Cost = 2;\n        if nLeafMax \u003c= LutSize - 1 {\n            pCut.uMaskFunc = If_DsdManCheckXY( p.pIfDsdMan, If_CutDsdLit(p, pCut), LutSize, 1, uLeafMask, 0, 0 );\n            if pCut.uMaskFunc \u003e 0 {\n                return DelayMax + 1; }\n        }\n        pCut.uMaskFunc = If_DsdManCheckXY( p.pIfDsdMan, If_CutDsdLit(p, pCut), LutSize, 1, 0, 0, 0 );\n        if pCut.uMaskFunc == 0 {\n            return -1; }\n        return DelayMax + 2;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::mechanical::static::1980",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 1980,
+      "End": 1986
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::If_CutMaxCubeSize",
+      "Category": "semantic-review",
+      "Symbol": "If_CutMaxCubeSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1382,
+      "End": 1831
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::If_CutDelaySop",
+      "Category": "semantic-review",
+      "Symbol": "If_CutDelaySop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1832,
+      "End": 3610
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::If_CutSopBalancePinDelaysInt",
+      "Category": "semantic-review",
+      "Symbol": "If_CutSopBalancePinDelaysInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3866,
+      "End": 5095
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::If_CutSopBalancePinDelaysIntInt",
+      "Category": "semantic-review",
+      "Symbol": "If_CutSopBalancePinDelaysIntInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5096,
+      "End": 5501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::If_CutSopBalancePinDelays",
+      "Category": "semantic-review",
+      "Symbol": "If_CutSopBalancePinDelays",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5502,
+      "End": 6257
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::ternary::If_CutSopBalanceEvalInt",
+      "Category": "ternary-review",
+      "Symbol": "If_CutSopBalanceEvalInt",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 6528,
+      "End": 8448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::If_CutSopBalanceEvalInt",
+      "Category": "semantic-review",
+      "Symbol": "If_CutSopBalanceEvalInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6528,
+      "End": 8448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::If_CutSopBalanceEvalIntInt",
+      "Category": "semantic-review",
+      "Symbol": "If_CutSopBalanceEvalIntInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8449,
+      "End": 9124
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::If_CutSopBalanceEval",
+      "Category": "semantic-review",
+      "Symbol": "If_CutSopBalanceEval",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9125,
+      "End": 11849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::If_CutLutBalancePinDelays",
+      "Category": "semantic-review",
+      "Symbol": "If_CutLutBalancePinDelays",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12120,
+      "End": 13173
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::If_CutLutBalanceEval",
+      "Category": "semantic-review",
+      "Symbol": "If_CutLutBalanceEval",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13444,
+      "End": 15092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16308
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::macro-inline::1508",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1508,
+      "End": 1547
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::macro-inline::3116",
+      "Category": "macro-inline-review",
+      "Symbol": "If_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3116,
+      "End": 3154
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::macro-inline::3440",
+      "Category": "macro-inline-review",
+      "Symbol": "If_CutForEachLeaf",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 3440,
+      "End": 3478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::macro-inline::4300",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4300,
+      "End": 4339
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/map/if/ifDelay.c::macro-inline::6984",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_IntForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6984,
+      "End": 7023
+    }
+  ],
+  "Draft": "package if_\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [ifDelay.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [FPGA mapping based on priority cuts.]\n\n  Synopsis    [Delay balancing for cut functions.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 21, 2006.]\n\n  Revision    [$Id: ifDelay.c,v 1.00 2006/11/21 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"if.h\"\n//#include \"ifCount.h\"\n//#include \"bool/kit/kit.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst IF_MAX_CUBES = 70\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n \n/**Function*************************************************************\n\n  Synopsis    [Computes the SOP delay using balanced AND decomposition.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutMaxCubeSize(vCover *Vec_Int_t, nVars int32) int32 {\n    var i, k, Entry, Literal, Count, CountMax int32;\n    Vec_IntForEachEntry( vCover, Entry, i )\n    {\n        Count = 0;\n        for  k = 0; k \u003c nVars; k++  {\n            Literal = (3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1)));\n            if Literal == 1 || Literal == 2 {\n                Count++; }\n        }\n        CountMax = Abc_MaxInt( CountMax, Count );\n    }\n    return CountMax;\n}\nvar spStatic_If_CutDelaySop_GateDelays [20]float64 = [20]float64{ 1.00, 1.00, 2.00, 2.58, 3.00, 3.32, 3.58, 3.81, 4.00, 4.17, 4.32, 4.46, 4.58, 4.70, 4.81, 4.91, 5.00, 5.09, 5.17, 5.25 };\nfunc If_CutDelaySop(p *If_Man_t, pCut *If_Cut_t) int32 {\n    var pPerm string  = If_CutPerm( pCut );\n    // delay is calculated using 1+log2(NumFanins)\n    \n    var vCover *Vec_Int_t;\n    var pLeaf *If_Obj_t;\n    var i, nLitMax, Delay, DelayMax int32;\n    // mark cut as a user cut\n    pCut.fUser = 1;\n    if pCut.nLeaves == 0 {\n        return 0; }\n    if pCut.nLeaves == 1 {\n        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay); }\n    vCover = Vec_WecEntry( p.vTtIsops[pCut.nLeaves], Abc_Lit2Var(If_CutTruthLit(pCut)) );\n    if Vec_IntSize(vCover) == 0 {\n        return -1; }\n    // mark the output as complemented\n//    vAnds = If_CutDelaySopAnds( p, pCut, vCover, RetValue ^ pCut-\u003efCompl );\n    if Vec_IntSize(vCover) \u003e p.pPars.nGateSize {\n        return -1; }\n    // set the area cost\n    assert(If_CutLeaveNum(pCut) \u003e= 0 \u0026\u0026 If_CutLeaveNum(pCut) \u003c= 16, \"If_CutLeaveNum(pCut) \u003e= 0 \u0026\u0026 If_CutLeaveNum(pCut) \u003c= 16\");\n    // compute the gate delay\n    nLitMax = If_CutMaxCubeSize( vCover, If_CutLeaveNum(pCut) );\n    if Vec_IntSize(vCover) \u003c 2 {\n        pCut.Cost = Vec_IntSize(vCover);\n        Delay = int32((spStatic_If_CutDelaySop_GateDelays[If_CutLeaveNum(pCut)] + 0.5));\n        DelayMax = 0;\n        If_CutForEachLeaf( p, pCut, pLeaf, i )\n            DelayMax = Abc_MaxInt( DelayMax, If_ObjCutBest(pLeaf).Delay + (pPerm[i] = byte(Delay)) );\n    \n    } else {\n        pCut.Cost = Vec_IntSize(vCover) + 1;\n        Delay = int32((spStatic_If_CutDelaySop_GateDelays[If_CutLeaveNum(pCut)] + spStatic_If_CutDelaySop_GateDelays[nLitMax] + 0.5));\n        DelayMax = 0;\n        If_CutForEachLeaf( p, pCut, pLeaf, i )\n            DelayMax = Abc_MaxInt( DelayMax, If_ObjCutBest(pLeaf).Delay + (pPerm[i] = byte(Delay)) );\n    }\n    return DelayMax;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Compute pin delays.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutSopBalancePinDelaysInt(vCover *Vec_Int_t, pTimes *int32, pFaninRes *word, nSuppAll int32, pRes *word) int32 {\n    var pPinDelsAnd [IF_MAX_FUNC_LUTSIZE]word;\n    var pPinDelsOr [IF_MAX_CUBES]word;\n    var nCounterAnd int32;\n    var pCounterAnd [IF_MAX_FUNC_LUTSIZE]int32;\n    var nCounterOr int32;\n    var pCounterOr [IF_MAX_CUBES]int32;\n    var i, k, Entry, Literal, Delay int32;\n    var ResAnd word;\n    if Vec_IntSize(vCover) \u003e IF_MAX_CUBES {\n        return -1; }\n    nCounterOr = 0;\n    Vec_IntForEachEntry( vCover, Entry, i )\n    { \n        nCounterAnd = 0;\n        for  k = 0; k \u003c nSuppAll; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 || Literal == 2 { // neg or pos literal\n                Delay = If_LogCounterPinDelays( pCounterAnd, \u0026nCounterAnd, pPinDelsAnd, pTimes[k], pFaninRes[k], nSuppAll, 0 );\n            } else if Literal != 0 { \n                assert(false, \"0\"); }\n        }\n        assert(nCounterAnd \u003e 0, \"nCounterAnd \u003e 0\");\n        ResAnd = If_LogPinDelaysMulti( pPinDelsAnd, nCounterAnd, nSuppAll, 0 );\n        Delay = If_LogCounterPinDelays( pCounterOr, \u0026nCounterOr, pPinDelsOr, Delay, ResAnd, nSuppAll, 0 );\n    }\n    assert(nCounterOr \u003e 0, \"nCounterOr \u003e 0\");\n    *pRes = If_LogPinDelaysMulti( pPinDelsOr, nCounterOr, nSuppAll, 0 );\n    return Delay;\n}\nfunc If_CutSopBalancePinDelaysIntInt(vCover *Vec_Int_t, pTimes *int32, nSuppAll int32, pPerm string) int32 {\n    var i, Delay int32;\n    var Res word;\n    var FaninRes [IF_MAX_FUNC_LUTSIZE]word;\n    for  i = 0; i \u003c nSuppAll; i++  {\n        FaninRes[i] = If_CutPinDelayInit(i);\n    }\n    Delay = If_CutSopBalancePinDelaysInt( vCover, pTimes, FaninRes, nSuppAll, \u0026Res );\n    If_CutPinDelayTranslate( Res, nSuppAll, pPerm );\n    return Delay;\n}\nfunc If_CutSopBalancePinDelays(p *If_Man_t, pCut *If_Cut_t, pPerm string) int32 {\n    if pCut.nLeaves == 0 { // const\n        return 0; }\n    if pCut.nLeaves == 1 { // variable\n    \n        pPerm[0] = 0;\n        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay);\n    \n    } else {\n        var vCover *Vec_Int_t;\n        var i int32;\n        var pTimes [IF_MAX_FUNC_LUTSIZE]int32;\n        vCover = Vec_WecEntry( p.vTtIsops[pCut.nLeaves], Abc_Lit2Var(If_CutTruthLit(pCut)) );\n        if Vec_IntSize(vCover) == 0 {\n            return -1; }\n        for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n            pTimes[i] = int32(If_ObjCutBest(If_CutLeaf(p, pCut, i)).Delay);\n        } \n        return If_CutSopBalancePinDelaysIntInt( vCover, pTimes, If_CutLeaveNum(pCut), pPerm );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Evaluate delay using SOP balancing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutSopBalanceEvalInt(vCover *Vec_Int_t, pTimes *int32, pFaninLits *int32, vAig *Vec_Int_t, piRes *int32, nSuppAll int32, pArea *int32) int32 {\n    var nCounterAnd int32;\n    var pCounterAnd [IF_MAX_FUNC_LUTSIZE]int32;\n    var pFaninLitsAnd [IF_MAX_FUNC_LUTSIZE]int32;\n    var nCounterOr int32;\n    var pCounterOr [IF_MAX_CUBES]int32;\n    var pFaninLitsOr [IF_MAX_CUBES]int32;\n    var i, k, Entry, Literal, nLits, Delay, iRes int32;\n    if Vec_IntSize(vCover) \u003e IF_MAX_CUBES {\n        return -1; }\n    nCounterOr = 0;\n    Vec_IntForEachEntry( vCover, Entry, i )\n    { \n        nCounterAnd = nLits = 0;\n        for  k = 0; k \u003c nSuppAll; k++  {\n            Literal = 3 \u0026 (Entry \u003e\u003e (k \u003c\u003c 1));\n            if Literal == 1 { // neg literal\n                nLits++, Delay = If_LogCounterAddAig( pCounterAnd, \u0026nCounterAnd, pFaninLitsAnd, pTimes[k], vAig ? Abc_LitNot(pFaninLits[k]) : -1, vAig, nSuppAll, 0, 0 );\n            } else if Literal == 2 { // pos literal\n                nLits++, Delay = If_LogCounterAddAig( pCounterAnd, \u0026nCounterAnd, pFaninLitsAnd, pTimes[k], vAig ? pFaninLits[k] : -1, vAig, nSuppAll, 0, 0 );\n            } else if Literal != 0 { \n                assert(false, \"0\"); }\n        }\n        assert(nCounterAnd \u003e 0, \"nCounterAnd \u003e 0\");\n        assert(nLits \u003e 0, \"nLits \u003e 0\");\n        if vAig != nil {\n            iRes = If_LogCreateAndXorMulti( vAig, pFaninLitsAnd, nCounterAnd, nSuppAll, 0 );\n        } else {\n            *pArea += nLits == 1 ? 0 : nLits - 1; }\n        Delay = If_LogCounterAddAig( pCounterOr, \u0026nCounterOr, pFaninLitsOr, Delay, vAig ? Abc_LitNot(iRes) : -1, vAig, nSuppAll, 0, 0 );\n    }\n    assert(nCounterOr \u003e 0, \"nCounterOr \u003e 0\");\n    if vAig != nil {\n        *piRes = Abc_LitNot( If_LogCreateAndXorMulti( vAig, pFaninLitsOr, nCounterOr, nSuppAll, 0 ) );\n        if (vCover.nCap \u003e\u003e 16) \u0026 1 {  // hack to remember complemented attribute\n            *piRes = Abc_LitNot( *piRes ); }\n    \n    } else {       \n        *pArea += Vec_IntSize(vCover) == 1 ? 0 : Vec_IntSize(vCover) - 1; }\n    return Delay;\n}\nfunc If_CutSopBalanceEvalIntInt(vCover *Vec_Int_t, nLeaves int32, pTimes *int32, vAig *Vec_Int_t, fCompl int32, pArea *int32) int32 {\n    var pFaninLits [IF_MAX_FUNC_LUTSIZE]int32;\n    var iRes, Res, k int32;\n    if vAig != nil {\n        for  k = 0; k \u003c nLeaves; k++  {\n            pFaninLits[k] = Abc_Var2Lit(k, 0);\n        } }\n    Res = If_CutSopBalanceEvalInt( vCover, pTimes, pFaninLits, vAig, \u0026iRes, nLeaves, pArea );\n    if Res == -1 {\n        return -1; }\n    assert(vAig == nil || Abc_Lit2Var(iRes) == nLeaves + Abc_Lit2Var(Vec_IntSize(vAig)) - 1, \"vAig == nil || Abc_Lit2Var(iRes) == nLeaves + Abc_Lit2Var(Vec_IntSize(vAig)) - 1\");\n    if vAig != nil {\n        Vec_IntPush( vAig, Abc_LitIsCompl(iRes) ^ fCompl ); }\n    assert(vAig == nil || (Vec_IntSize(vAig) \u0026 1), \"vAig == nil || (Vec_IntSize(vAig) \u0026 1)\");\n    return Res;\n}\nfunc If_CutSopBalanceEval(p *If_Man_t, pCut *If_Cut_t, vAig *Vec_Int_t) int32 {\n    pCut.fUser = 1;\n    if vAig != nil {\n        Vec_IntClear( vAig ); }\n    if pCut.nLeaves == 0 { // const\n    \n        assert(Abc_Lit2Var(If_CutTruthLit(pCut)) == 0, \"Abc_Lit2Var(If_CutTruthLit(pCut)) == 0\");\n        if vAig != nil {\n            Vec_IntPush( vAig, Abc_LitIsCompl(If_CutTruthLit(pCut)) ); }\n        pCut.Cost = 0;\n        return 0;\n    }\n    if pCut.nLeaves == 1 { // variable\n    \n        assert(Abc_Lit2Var(If_CutTruthLit(pCut)) == 1, \"Abc_Lit2Var(If_CutTruthLit(pCut)) == 1\");\n        if vAig != nil {\n            Vec_IntPush( vAig, 0 ); }\n        if vAig != nil {\n            Vec_IntPush( vAig, Abc_LitIsCompl(If_CutTruthLit(pCut)) ); }\n        pCut.Cost = 0;\n        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay);\n    \n    } else {\n        var fVerbose int32;\n        var vCover *Vec_Int_t  = Vec_WecEntry( p.vTtIsops[pCut.nLeaves], Abc_Lit2Var(If_CutTruthLit(pCut)) );\n        var Delay, Area int32;\n        var i int32;\n        var pTimes [IF_MAX_FUNC_LUTSIZE]int32;\n        if vCover == nil {\n            return -1; }\n        assert(Vec_IntSize(vCover) \u003e 0, \"Vec_IntSize(vCover) \u003e 0\");\n        for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n            pTimes[i] = int32(If_ObjCutBest(If_CutLeaf(p, pCut, i)).Delay);\n        } \n        Delay = If_CutSopBalanceEvalIntInt( vCover, If_CutLeaveNum(pCut), pTimes, vAig, Abc_LitIsCompl(If_CutTruthLit(pCut)) ^ pCut.fCompl, \u0026Area );\n        pCut.Cost = Area;\n        if fVerbose != 0 {\n            var Max, Two int32;\n            for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n                Max = Abc_MaxInt( Max, pTimes[i] );\n            }\n            for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n                if pTimes[i] != Max {\n                    Two = Abc_MaxInt( Two, pTimes[i] ); }\n            }\n            if Two + 2 \u003c Max \u0026\u0026 Max + 3 \u003c Delay {\n                for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n                    fmt.Printf(\"%3d \", pTimes[i]);\n                }\n                for  ; i \u003c p.pPars.nLutSize; i++  {\n                    fmt.Printf(\"    \");\n                }\n                fmt.Printf(\"-\u003e %3d   \", Delay);\n                Dau_DsdPrintFromTruth( If_CutTruthW(p, pCut), If_CutLeaveNum(pCut) );\n                Kit_TruthIsopPrintCover( vCover, If_CutLeaveNum(pCut), Abc_LitIsCompl(If_CutTruthLit(pCut)) ^ pCut.fCompl );\n                {\n                    var vIsop Vec_Int_t;\n                    var pIsop [64]int32;\n                    vIsop.nCap = vIsop.nSize = Abc_Tt6Esop( *If_CutTruthW(p, pCut), pCut.nLeaves, pIsop );\n                    vIsop.pArray = pIsop;\n                    fmt.Printf(\"ESOP (%d -\u003e %d)\\n\", Vec_IntSize(vCover), vIsop.nSize);\n                    Kit_TruthIsopPrintCover( \u0026vIsop, If_CutLeaveNum(pCut), 0 );\n                }\n                fmt.Printf(\"\\n\");\n            }\n        }\n        return Delay;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Evaluate delay using SOP balancing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutLutBalancePinDelays(p *If_Man_t, pCut *If_Cut_t, pPerm string) int32 {\n    if pCut.nLeaves == 0 { // const\n        return 0; }\n    if pCut.nLeaves == 1 { // variable\n    \n        pPerm[0] = 0;\n        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay);\n    \n    } else {\n        var pCutPerm string  = If_CutDsdPerm( p, pCut );\n        var LutSize int32  = p.pPars.pLutStruct[0] - '0';\n        var i int32;\n        var Delay int32;\n        var DelayMax int32 = -1;\n        assert((If_CutLeaveNum(pCut) \u003e LutSize) == (pCut.uMaskFunc \u003e 0), \"(If_CutLeaveNum(pCut) \u003e LutSize) == (pCut.uMaskFunc \u003e 0)\");\n        for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n            if If_CutLeaveNum(pCut) \u003e LutSize \u0026\u0026 ((pCut.uMaskFunc \u003e\u003e (i \u003c\u003c 1)) \u0026 1) {\n                pPerm[Abc_Lit2Var(int32(pCutPerm[i]))] = 2;\n            } else {\n                pPerm[Abc_Lit2Var(int32(pCutPerm[i]))] = 1; }\n        }\n        for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n            Delay = int32(If_ObjCutBest(If_CutLeaf(p, pCut, i)).Delay);\n            DelayMax = Abc_MaxInt( DelayMax, Delay + int32(pPerm[i]) );\n        }\n        return DelayMax;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Evaluate delay using SOP balancing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc If_CutLutBalanceEval(p *If_Man_t, pCut *If_Cut_t) int32 {\n    pCut.fUser = 1;\n    if pCut.nLeaves \u003e 1 {\n        pCut.Cost = 1;\n    } else {\n        pCut.Cost = 0;\n    }\n    pCut.uMaskFunc = 0;\n    if pCut.nLeaves == 0 { // const\n    \n        assert(Abc_Lit2Var(If_CutTruthLit(pCut)) == 0, \"Abc_Lit2Var(If_CutTruthLit(pCut)) == 0\");\n        return 0;\n    }\n    if pCut.nLeaves == 1 { // variable\n    \n        assert(Abc_Lit2Var(If_CutTruthLit(pCut)) == 1, \"Abc_Lit2Var(If_CutTruthLit(pCut)) == 1\");\n        return int32(If_ObjCutBest(If_CutLeaf(p, pCut, 0)).Delay);\n    \n    } else {\n        var pCutPerm string  = If_CutDsdPerm( p, pCut );\n        var LutSize int32  = p.pPars.pLutStruct[0] - '0';\n        var i int32;\n        var pTimes [IF_MAX_FUNC_LUTSIZE]int32;\n        var DelayMax int32 = -1;\n        var nLeafMax int32;\n        var uLeafMask uint32;\n        for  i = 0; i \u003c If_CutLeaveNum(pCut); i++  {\n            pTimes[i] = int32(If_ObjCutBest(If_CutLeaf(p, pCut, Abc_Lit2Var(int32(pCutPerm[i])))).Delay); \n            if DelayMax \u003c pTimes[i] {\n                DelayMax = pTimes[i];\nnLeafMax = 1;\nuLeafMask = (1 \u003c\u003c (i \u003c\u003c 1));\n            } else if DelayMax == pTimes[i] {\n                nLeafMax++, uLeafMask |= (1 \u003c\u003c (i \u003c\u003c 1)); }\n        }\n        if If_CutLeaveNum(pCut) \u003c= LutSize {\n            return DelayMax + 1; }\n        pCut.Cost = 2;\n        if nLeafMax \u003c= LutSize - 1 {\n            pCut.uMaskFunc = If_DsdManCheckXY( p.pIfDsdMan, If_CutDsdLit(p, pCut), LutSize, 1, uLeafMask, 0, 0 );\n            if pCut.uMaskFunc \u003e 0 {\n                return DelayMax + 1; }\n        }\n        pCut.uMaskFunc = If_DsdManCheckXY( p.pIfDsdMan, If_CutDsdLit(p, pCut), LutSize, 1, 0, 0, 0 );\n        if pCut.uMaskFunc == 0 {\n            return -1; }\n        return DelayMax + 2;\n    }\n}\n/*\nint If_CutLutBalanceEval( If_Man_t * p, If_Cut_t * pCut )\n{\n    char pPerm[16];\n    int Delay2, Delay = If_CutLutBalanceEvalInt( p, pCut );\n    if ( Delay == -1 )\n        return -1;\n    Delay2 = If_CutLutBalancePinDelays( p, pCut, pPerm );\n    if ( Delay2 != Delay )\n    {\n        int s = 0;\n        char * pCutPerm = If_CutDsdPerm( p, pCut );\n        If_DsdManPrintNode( p-\u003epIfDsdMan, If_CutDsdLit(p, pCut) );        Dau_DecPrintSet( pCut-\u003euMaskFunc, pCut-\u003enLeaves, 1 );\n        Kit_DsdPrintFromTruth( If_CutTruthUR(p, pCut), pCut-\u003enLeaves ); printf( \"\\n\" );\n        for ( s = 0; s \u003c pCut-\u003enLeaves; s++ )\n//            printf( \"%d \", (int)If_ObjCutBest(If_CutLeaf(p, pCut, Abc_Lit2Var((int)pCutPerm[s])))-\u003eDelay );\n            printf( \"%d \", (int)If_ObjCutBest(If_CutLeaf(p, pCut, s))-\u003eDelay );\n        printf( \"\\n\" );\n\n        Delay  = If_CutLutBalanceEvalInt( p, pCut );\n        Delay2 = If_CutLutBalancePinDelays( p, pCut, pPerm );\n    }\n\n    return Delay;\n}\n*/\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

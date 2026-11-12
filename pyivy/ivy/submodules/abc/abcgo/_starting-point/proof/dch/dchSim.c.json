@@ -1,0 +1,376 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c",
+  "SHA256": "ce92150a85ada7580966455633724925afed49d8f8a03e206731c9a35f593dea",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 6287
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pSim, 0xff, sizeof(unsigned) * nWords );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Dch_ObjSim",
+      "Start": 808,
+      "End": 944,
+      "BodyStart": 883,
+      "Original": "static inline unsigned * Dch_ObjSim( Vec_Ptr_t * vSims, Aig_Obj_t * pObj )\n{ \n    return (unsigned *)Vec_PtrEntry( vSims, pObj-\u003eId ); \n}",
+      "Draft": "func Dch_ObjSim(vSims *Vec_Ptr_t, pObj *Aig_Obj_t) *uint32 { \n    return (unsigned *)Vec_PtrEntry( vSims, pObj.Id ); \n}"
+    },
+    {
+      "Name": "Dch_ObjRandomSim",
+      "Start": 945,
+      "End": 1039,
+      "BodyStart": 991,
+      "Original": "static inline unsigned Dch_ObjRandomSim()    \n{ \n    return Aig_ManRandom(0);               \n}",
+      "Draft": "func Dch_ObjRandomSim() uint32 { \n    return Aig_ManRandom(0);               \n}"
+    },
+    {
+      "Name": "Dch_NodeIsConstCex",
+      "Start": 1552,
+      "End": 1649,
+      "BodyStart": 1605,
+      "Original": "int Dch_NodeIsConstCex( void * p, Aig_Obj_t * pObj )\n{\n    return pObj-\u003efPhase == pObj-\u003efMarkB;\n}",
+      "Draft": "func Dch_NodeIsConstCex(p any, pObj *Aig_Obj_t) int32 {\n    return pObj.fPhase == pObj.fMarkB;\n}"
+    },
+    {
+      "Name": "Dch_NodesAreEqualCex",
+      "Start": 1921,
+      "End": 2080,
+      "BodyStart": 1996,
+      "Original": "int Dch_NodesAreEqualCex( void * p, Aig_Obj_t * pObj0, Aig_Obj_t * pObj1 )\n{\n    return (pObj0-\u003efPhase == pObj1-\u003efPhase) == (pObj0-\u003efMarkB == pObj1-\u003efMarkB);\n}",
+      "Draft": "func Dch_NodesAreEqualCex(p any, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {\n    return (pObj0.fPhase == pObj1.fPhase) == (pObj0.fMarkB == pObj1.fMarkB);\n}"
+    },
+    {
+      "Name": "Dch_NodeHash",
+      "Start": 2374,
+      "End": 3852,
+      "BodyStart": 2426,
+      "Original": "unsigned Dch_NodeHash( void * p, Aig_Obj_t * pObj )\n{\n    Vec_Ptr_t * vSims = (Vec_Ptr_t *)p;\n    static int s_FPrimes[128] = { \n        1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459, \n        1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997, \n        2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543, \n        2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089, \n        3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671, \n        3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243, \n        4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871, \n        4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471, \n        5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073, \n        6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689, \n        6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309, \n        7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933, \n        8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147\n    };\n    unsigned * pSim;\n    unsigned uHash;\n    int k, nWords;\n    nWords = (unsigned *)Vec_PtrEntry(vSims, 1) - (unsigned *)Vec_PtrEntry(vSims, 0);\n    uHash = 0;\n    pSim  = Dch_ObjSim( vSims, pObj );\n    if ( pObj-\u003efPhase )\n    {\n        for ( k = 0; k \u003c nWords; k++ )\n            uHash ^= ~pSim[k] * s_FPrimes[k \u0026 0x7F];\n    }\n    else\n    {\n        for ( k = 0; k \u003c nWords; k++ )\n            uHash ^= pSim[k] * s_FPrimes[k \u0026 0x7F];\n    }\n    return uHash;\n}",
+      "Draft": "func Dch_NodeHash(p any, pObj *Aig_Obj_t) uint32 {\n    var vSims *Vec_Ptr_t  = (Vec_Ptr_t *)p;\n    \n    var pSim *uint32;\n    var uHash uint32;\n    var k, nWords int32;\n    nWords = (unsigned *)Vec_PtrEntry(vSims, 1) - (unsigned *)Vec_PtrEntry(vSims, 0);\n    uHash = 0;\n    pSim  = Dch_ObjSim( vSims, pObj );\n    if pObj.fPhase {\n        for  k = 0; k \u003c nWords; k++  {\n            uHash ^= ~pSim[k] * spStatic_Dch_NodeHash_s_FPrimes[k \u0026 0x7F];\n        }\n    \n    } else {\n        for  k = 0; k \u003c nWords; k++  {\n            uHash ^= pSim[k] * spStatic_Dch_NodeHash_s_FPrimes[k \u0026 0x7F];\n        }\n    }\n    return uHash;\n}"
+    },
+    {
+      "Name": "Dch_NodeIsConst",
+      "Start": 4142,
+      "End": 4656,
+      "BodyStart": 4192,
+      "Original": "int Dch_NodeIsConst( void * p, Aig_Obj_t * pObj )\n{\n    Vec_Ptr_t * vSims = (Vec_Ptr_t *)p;\n    unsigned * pSim;\n    int k, nWords;\n    nWords = (unsigned *)Vec_PtrEntry(vSims, 1) - (unsigned *)Vec_PtrEntry(vSims, 0);\n    pSim  = Dch_ObjSim( vSims, pObj );\n    if ( pObj-\u003efPhase )\n    {\n        for ( k = 0; k \u003c nWords; k++ )\n            if ( ~pSim[k] )\n                return 0;\n    }\n    else\n    {\n        for ( k = 0; k \u003c nWords; k++ )\n            if ( pSim[k] )\n                return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Dch_NodeIsConst(p any, pObj *Aig_Obj_t) int32 {\n    var vSims *Vec_Ptr_t  = (Vec_Ptr_t *)p;\n    var pSim *uint32;\n    var k, nWords int32;\n    nWords = (unsigned *)Vec_PtrEntry(vSims, 1) - (unsigned *)Vec_PtrEntry(vSims, 0);\n    pSim  = Dch_ObjSim( vSims, pObj );\n    if pObj.fPhase {\n        for  k = 0; k \u003c nWords; k++  {\n            if ~pSim[k] {\n                return 0; }\n        }\n    \n    } else {\n        for  k = 0; k \u003c nWords; k++  {\n            if pSim[k] {\n                return 0; }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Dch_NodesAreEqual",
+      "Start": 4932,
+      "End": 5563,
+      "BodyStart": 5004,
+      "Original": "int Dch_NodesAreEqual( void * p, Aig_Obj_t * pObj0, Aig_Obj_t * pObj1 )\n{\n    Vec_Ptr_t * vSims = (Vec_Ptr_t *)p;\n    unsigned * pSim0, * pSim1;\n    int k, nWords;\n    nWords = (unsigned *)Vec_PtrEntry(vSims, 1) - (unsigned *)Vec_PtrEntry(vSims, 0);\n    pSim0 = Dch_ObjSim( vSims, pObj0 );\n    pSim1 = Dch_ObjSim( vSims, pObj1 );\n    if ( pObj0-\u003efPhase != pObj1-\u003efPhase )\n    {\n        for ( k = 0; k \u003c nWords; k++ )\n            if ( pSim0[k] != ~pSim1[k] )\n                return 0;\n    }\n    else\n    {\n        for ( k = 0; k \u003c nWords; k++ )\n            if ( pSim0[k] != pSim1[k] )\n                return 0;\n    }\n    return 1;\n}",
+      "Draft": "func Dch_NodesAreEqual(p any, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {\n    var vSims *Vec_Ptr_t  = (Vec_Ptr_t *)p;\n    var pSim0, pSim1 *uint32;\n    var k, nWords int32;\n    nWords = (unsigned *)Vec_PtrEntry(vSims, 1) - (unsigned *)Vec_PtrEntry(vSims, 0);\n    pSim0 = Dch_ObjSim( vSims, pObj0 );\n    pSim1 = Dch_ObjSim( vSims, pObj1 );\n    if pObj0.fPhase != pObj1.fPhase {\n        for  k = 0; k \u003c nWords; k++  {\n            if pSim0[k] != ~pSim1[k] {\n                return 0; }\n        }\n    \n    } else {\n        for  k = 0; k \u003c nWords; k++  {\n            if pSim0[k] != pSim1[k] {\n                return 0; }\n        }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Dch_PerformRandomSimulation",
+      "Start": 5825,
+      "End": 7564,
+      "BodyStart": 5897,
+      "Original": "void Dch_PerformRandomSimulation( Aig_Man_t * pAig, Vec_Ptr_t * vSims )\n{\n    unsigned * pSim, * pSim0, * pSim1;\n    Aig_Obj_t * pObj;\n    int i, k, nWords;\n    nWords = (unsigned *)Vec_PtrEntry(vSims, 1) - (unsigned *)Vec_PtrEntry(vSims, 0);\n\n    // assign const 1 sim info\n    pObj = Aig_ManConst1(pAig);\n    pSim = Dch_ObjSim( vSims, pObj );\n    memset( pSim, 0xff, sizeof(unsigned) * nWords );\n\n    // assign primary input random sim info\n    Aig_ManForEachCi( pAig, pObj, i )\n    {\n        pSim = Dch_ObjSim( vSims, pObj );\n        for ( k = 0; k \u003c nWords; k++ )\n            pSim[k] = Dch_ObjRandomSim();\n        pSim[0] \u003c\u003c= 1;\n    }\n\n    // simulate AIG in the topological order\n    Aig_ManForEachNode( pAig, pObj, i )\n    {\n        pSim0 = Dch_ObjSim( vSims, Aig_ObjFanin0(pObj) ); \n        pSim1 = Dch_ObjSim( vSims, Aig_ObjFanin1(pObj) ); \n        pSim  = Dch_ObjSim( vSims, pObj );\n\n        if ( Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) ) // both are compls\n        {\n            for ( k = 0; k \u003c nWords; k++ )\n                pSim[k] = ~pSim0[k] \u0026 ~pSim1[k];\n        }\n        else if ( Aig_ObjFaninC0(pObj) \u0026\u0026 !Aig_ObjFaninC1(pObj) ) // first one is compl\n        {\n            for ( k = 0; k \u003c nWords; k++ )\n                pSim[k] = ~pSim0[k] \u0026 pSim1[k];\n        }\n        else if ( !Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) ) // second one is compl\n        {\n            for ( k = 0; k \u003c nWords; k++ )\n                pSim[k] = pSim0[k] \u0026 ~pSim1[k];\n        }\n        else // if ( Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) ) // none is compl\n        {\n            for ( k = 0; k \u003c nWords; k++ )\n                pSim[k] = pSim0[k] \u0026 pSim1[k];\n        }\n    }\n    // get simulation information for primary outputs\n}",
+      "Draft": "func Dch_PerformRandomSimulation(pAig *Aig_Man_t, vSims *Vec_Ptr_t) {\n    var pSim, pSim0, pSim1 *uint32;\n    var pObj *Aig_Obj_t;\n    var i, k, nWords int32;\n    nWords = (unsigned *)Vec_PtrEntry(vSims, 1) - (unsigned *)Vec_PtrEntry(vSims, 0);\n\n    // assign const 1 sim info\n    pObj = Aig_ManConst1(pAig);\n    pSim = Dch_ObjSim( vSims, pObj );\n    memset( pSim, 0xff, sizeof(unsigned) * nWords );\n\n    // assign primary input random sim info\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pSim = Dch_ObjSim( vSims, pObj );\n        for  k = 0; k \u003c nWords; k++  {\n            pSim[k] = Dch_ObjRandomSim();\n        }\n        pSim[0] \u003c\u003c= 1;\n    }\n\n    // simulate AIG in the topological order\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pSim0 = Dch_ObjSim( vSims, Aig_ObjFanin0(pObj) ); \n        pSim1 = Dch_ObjSim( vSims, Aig_ObjFanin1(pObj) ); \n        pSim  = Dch_ObjSim( vSims, pObj );\n\n        if Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) { // both are compls\n        \n            for  k = 0; k \u003c nWords; k++  {\n                pSim[k] = ~pSim0[k] \u0026 ~pSim1[k];\n            }\n        \n        } else if Aig_ObjFaninC0(pObj) \u0026\u0026 !Aig_ObjFaninC1(pObj) { // first one is compl\n        \n            for  k = 0; k \u003c nWords; k++  {\n                pSim[k] = ~pSim0[k] \u0026 pSim1[k];\n            }\n        \n        } else if !Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) { // second one is compl\n        \n            for  k = 0; k \u003c nWords; k++  {\n                pSim[k] = pSim0[k] \u0026 ~pSim1[k];\n            }\n        \n        } else { // if ( Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) ) // none is compl\n        \n            for  k = 0; k \u003c nWords; k++  {\n                pSim[k] = pSim0[k] \u0026 pSim1[k];\n            }\n        }\n    }\n    }\n    // get simulation information for primary outputs\n}"
+    },
+    {
+      "Name": "Dch_CreateCandEquivClasses",
+      "Start": 7851,
+      "End": 8830,
+      "BodyStart": 7936,
+      "Original": "Dch_Cla_t * Dch_CreateCandEquivClasses( Aig_Man_t * pAig, int nWords, int fVerbose )\n{\n    Dch_Cla_t * pClasses;\n    Vec_Ptr_t * vSims;\n    int i;\n    // allocate simulation information\n    vSims = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(pAig), nWords );\n    // run random simulation from the primary inputs\n    Dch_PerformRandomSimulation( pAig, vSims );\n    // start storage for equivalence classes\n    pClasses = Dch_ClassesStart( pAig );\n    Dch_ClassesSetData( pClasses, vSims, Dch_NodeHash, Dch_NodeIsConst, Dch_NodesAreEqual );\n    // hash nodes by sim info\n    Dch_ClassesPrepare( pClasses, 0, 0 );\n    // iterate random simulation\n    for ( i = 0; i \u003c 7; i++ )\n    {\n        Dch_PerformRandomSimulation( pAig, vSims );\n        Dch_ClassesRefine( pClasses );\n    }\n    // clean up and return\n    Vec_PtrFree( vSims );\n    // prepare class refinement procedures\n    Dch_ClassesSetData( pClasses, NULL, NULL, Dch_NodeIsConstCex, Dch_NodesAreEqualCex );\n    return pClasses;\n}",
+      "Draft": "func Dch_CreateCandEquivClasses(pAig *Aig_Man_t, nWords int32, fVerbose int32) *Dch_Cla_t {\n    var pClasses *Dch_Cla_t;\n    var vSims *Vec_Ptr_t;\n    var i int32;\n    // allocate simulation information\n    vSims = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(pAig), nWords );\n    // run random simulation from the primary inputs\n    Dch_PerformRandomSimulation( pAig, vSims );\n    // start storage for equivalence classes\n    pClasses = Dch_ClassesStart( pAig );\n    Dch_ClassesSetData( pClasses, vSims, Dch_NodeHash, Dch_NodeIsConst, Dch_NodesAreEqual );\n    // hash nodes by sim info\n    Dch_ClassesPrepare( pClasses, 0, 0 );\n    // iterate random simulation\n    for  i = 0; i \u003c 7; i++  {\n        Dch_PerformRandomSimulation( pAig, vSims );\n        Dch_ClassesRefine( pClasses );\n    }\n    // clean up and return\n    Vec_PtrFree( vSims );\n    // prepare class refinement procedures\n    Dch_ClassesSetData( pClasses, nil, nil, Dch_NodeIsConstCex, Dch_NodesAreEqualCex );\n    return pClasses;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::mechanical::static::2472",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 2472,
+      "End": 2478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::mechanical::sizeof::6194",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6194,
+      "End": 6200
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::pointer-cast::897",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 897,
+      "End": 909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::pointer-cast::2452",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2452,
+      "End": 2465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::pointer-cast::3466",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3466,
+      "End": 3478
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::pointer-cast::3503",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3503,
+      "End": 3515
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::pointer-cast::4218",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4218,
+      "End": 4231
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::pointer-cast::4287",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4287,
+      "End": 4299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::pointer-cast::4324",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4324,
+      "End": 4336
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::pointer-cast::5030",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5030,
+      "End": 5043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::pointer-cast::5109",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5109,
+      "End": 5121
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::pointer-cast::5146",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5146,
+      "End": 5158
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::pointer-cast::5995",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5995,
+      "End": 6007
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::pointer-cast::6032",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6032,
+      "End": 6044
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::pointer-cast::6436",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6272,
+      "End": 6272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::pointer-cast::6864",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6514,
+      "End": 6514
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::Dch_ObjSim",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ObjSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 808,
+      "End": 944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::Dch_ObjRandomSim",
+      "Category": "semantic-review",
+      "Symbol": "Dch_ObjRandomSim",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 945,
+      "End": 1039
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::void-pointer::Dch_NodeIsConstCex",
+      "Category": "void-pointer-review",
+      "Symbol": "Dch_NodeIsConstCex",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 1552,
+      "End": 1649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::Dch_NodeIsConstCex",
+      "Category": "semantic-review",
+      "Symbol": "Dch_NodeIsConstCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1552,
+      "End": 1649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::void-pointer::Dch_NodesAreEqualCex",
+      "Category": "void-pointer-review",
+      "Symbol": "Dch_NodesAreEqualCex",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 1921,
+      "End": 2080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::Dch_NodesAreEqualCex",
+      "Category": "semantic-review",
+      "Symbol": "Dch_NodesAreEqualCex",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1921,
+      "End": 2080
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::void-pointer::Dch_NodeHash",
+      "Category": "void-pointer-review",
+      "Symbol": "Dch_NodeHash",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2374,
+      "End": 3852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::Dch_NodeHash",
+      "Category": "semantic-review",
+      "Symbol": "Dch_NodeHash",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2374,
+      "End": 3852
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::void-pointer::Dch_NodeIsConst",
+      "Category": "void-pointer-review",
+      "Symbol": "Dch_NodeIsConst",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4142,
+      "End": 4656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::Dch_NodeIsConst",
+      "Category": "semantic-review",
+      "Symbol": "Dch_NodeIsConst",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4142,
+      "End": 4656
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::void-pointer::Dch_NodesAreEqual",
+      "Category": "void-pointer-review",
+      "Symbol": "Dch_NodesAreEqual",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 4932,
+      "End": 5563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::Dch_NodesAreEqual",
+      "Category": "semantic-review",
+      "Symbol": "Dch_NodesAreEqual",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4932,
+      "End": 5563
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::Dch_PerformRandomSimulation",
+      "Category": "semantic-review",
+      "Symbol": "Dch_PerformRandomSimulation",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5825,
+      "End": 7564
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::Dch_CreateCandEquivClasses",
+      "Category": "semantic-review",
+      "Symbol": "Dch_CreateCandEquivClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7851,
+      "End": 8830
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/dch/dchSim.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9077
+    }
+  ],
+  "Draft": "package dch\n\n/**CFile****************************************************************\n\n  FileName    [dchSim.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Choice computation for tech-mapping.]\n\n  Synopsis    [Performs random simulation at the beginning.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 29, 2008.]\n\n  Revision    [$Id: dchSim.c,v 1.00 2008/07/29 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"dchInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nfunc Dch_ObjSim(vSims *Vec_Ptr_t, pObj *Aig_Obj_t) *uint32 { \n    return (unsigned *)Vec_PtrEntry( vSims, pObj.Id ); \n}\nfunc Dch_ObjRandomSim() uint32 { \n    return Aig_ManRandom(0);               \n}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the node appears to be constant 1 candidate.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dch_NodeIsConstCex(p any, pObj *Aig_Obj_t) int32 {\n    return pObj.fPhase == pObj.fMarkB;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if the nodes appear equal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dch_NodesAreEqualCex(p any, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {\n    return (pObj0.fPhase == pObj1.fPhase) == (pObj0.fMarkB == pObj1.fMarkB);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes hash value of the node using its simulation info.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvar spStatic_Dch_NodeHash_s_FPrimes [128]int32 = [128]int32{ \n        1009, 1049, 1093, 1151, 1201, 1249, 1297, 1361, 1427, 1459, \n        1499, 1559, 1607, 1657, 1709, 1759, 1823, 1877, 1933, 1997, \n        2039, 2089, 2141, 2213, 2269, 2311, 2371, 2411, 2467, 2543, \n        2609, 2663, 2699, 2741, 2797, 2851, 2909, 2969, 3037, 3089, \n        3169, 3221, 3299, 3331, 3389, 3461, 3517, 3557, 3613, 3671, \n        3719, 3779, 3847, 3907, 3943, 4013, 4073, 4129, 4201, 4243, \n        4289, 4363, 4441, 4493, 4549, 4621, 4663, 4729, 4793, 4871, \n        4933, 4973, 5021, 5087, 5153, 5227, 5281, 5351, 5417, 5471, \n        5519, 5573, 5651, 5693, 5749, 5821, 5861, 5923, 6011, 6073, \n        6131, 6199, 6257, 6301, 6353, 6397, 6481, 6563, 6619, 6689, \n        6737, 6803, 6863, 6917, 6977, 7027, 7109, 7187, 7237, 7309, \n        7393, 7477, 7523, 7561, 7607, 7681, 7727, 7817, 7877, 7933, \n        8011, 8039, 8059, 8081, 8093, 8111, 8123, 8147,\n    };\nfunc Dch_NodeHash(p any, pObj *Aig_Obj_t) uint32 {\n    var vSims *Vec_Ptr_t  = (Vec_Ptr_t *)p;\n    \n    var pSim *uint32;\n    var uHash uint32;\n    var k, nWords int32;\n    nWords = (unsigned *)Vec_PtrEntry(vSims, 1) - (unsigned *)Vec_PtrEntry(vSims, 0);\n    uHash = 0;\n    pSim  = Dch_ObjSim( vSims, pObj );\n    if pObj.fPhase {\n        for  k = 0; k \u003c nWords; k++  {\n            uHash ^= ~pSim[k] * spStatic_Dch_NodeHash_s_FPrimes[k \u0026 0x7F];\n        }\n    \n    } else {\n        for  k = 0; k \u003c nWords; k++  {\n            uHash ^= pSim[k] * spStatic_Dch_NodeHash_s_FPrimes[k \u0026 0x7F];\n        }\n    }\n    return uHash;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if simulation info is composed of all zeros.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dch_NodeIsConst(p any, pObj *Aig_Obj_t) int32 {\n    var vSims *Vec_Ptr_t  = (Vec_Ptr_t *)p;\n    var pSim *uint32;\n    var k, nWords int32;\n    nWords = (unsigned *)Vec_PtrEntry(vSims, 1) - (unsigned *)Vec_PtrEntry(vSims, 0);\n    pSim  = Dch_ObjSim( vSims, pObj );\n    if pObj.fPhase {\n        for  k = 0; k \u003c nWords; k++  {\n            if ~pSim[k] {\n                return 0; }\n        }\n    \n    } else {\n        for  k = 0; k \u003c nWords; k++  {\n            if pSim[k] {\n                return 0; }\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 1 if simulation infos are equal.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dch_NodesAreEqual(p any, pObj0 *Aig_Obj_t, pObj1 *Aig_Obj_t) int32 {\n    var vSims *Vec_Ptr_t  = (Vec_Ptr_t *)p;\n    var pSim0, pSim1 *uint32;\n    var k, nWords int32;\n    nWords = (unsigned *)Vec_PtrEntry(vSims, 1) - (unsigned *)Vec_PtrEntry(vSims, 0);\n    pSim0 = Dch_ObjSim( vSims, pObj0 );\n    pSim1 = Dch_ObjSim( vSims, pObj1 );\n    if pObj0.fPhase != pObj1.fPhase {\n        for  k = 0; k \u003c nWords; k++  {\n            if pSim0[k] != ~pSim1[k] {\n                return 0; }\n        }\n    \n    } else {\n        for  k = 0; k \u003c nWords; k++  {\n            if pSim0[k] != pSim1[k] {\n                return 0; }\n        }\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Perform random simulation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dch_PerformRandomSimulation(pAig *Aig_Man_t, vSims *Vec_Ptr_t) {\n    var pSim, pSim0, pSim1 *uint32;\n    var pObj *Aig_Obj_t;\n    var i, k, nWords int32;\n    nWords = (unsigned *)Vec_PtrEntry(vSims, 1) - (unsigned *)Vec_PtrEntry(vSims, 0);\n\n    // assign const 1 sim info\n    pObj = Aig_ManConst1(pAig);\n    pSim = Dch_ObjSim( vSims, pObj );\n    memset( pSim, 0xff, sizeof(unsigned) * nWords );\n\n    // assign primary input random sim info\n    // inlining of macro Aig_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vCis)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vCis, i)), 1); i++  {\n        pSim = Dch_ObjSim( vSims, pObj );\n        for  k = 0; k \u003c nWords; k++  {\n            pSim[k] = Dch_ObjRandomSim();\n        }\n        pSim[0] \u003c\u003c= 1;\n    }\n\n    // simulate AIG in the topological order\n    // inlining of macro Aig_ManForEachNode\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pAig.vObjs)) \u0026\u0026 (((pObj) = (Aig_Obj_t *)Vec_PtrEntry(pAig.vObjs, i)), 1); i++  { if (pObj) == nil || !Aig_ObjIsNode(pObj) {} else {\n        pSim0 = Dch_ObjSim( vSims, Aig_ObjFanin0(pObj) ); \n        pSim1 = Dch_ObjSim( vSims, Aig_ObjFanin1(pObj) ); \n        pSim  = Dch_ObjSim( vSims, pObj );\n\n        if Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) { // both are compls\n        \n            for  k = 0; k \u003c nWords; k++  {\n                pSim[k] = ~pSim0[k] \u0026 ~pSim1[k];\n            }\n        \n        } else if Aig_ObjFaninC0(pObj) \u0026\u0026 !Aig_ObjFaninC1(pObj) { // first one is compl\n        \n            for  k = 0; k \u003c nWords; k++  {\n                pSim[k] = ~pSim0[k] \u0026 pSim1[k];\n            }\n        \n        } else if !Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) { // second one is compl\n        \n            for  k = 0; k \u003c nWords; k++  {\n                pSim[k] = pSim0[k] \u0026 ~pSim1[k];\n            }\n        \n        } else { // if ( Aig_ObjFaninC0(pObj) \u0026\u0026 Aig_ObjFaninC1(pObj) ) // none is compl\n        \n            for  k = 0; k \u003c nWords; k++  {\n                pSim[k] = pSim0[k] \u0026 pSim1[k];\n            }\n        }\n    }\n    }\n    // get simulation information for primary outputs\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derives candidate equivalence classes of AIG nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Dch_CreateCandEquivClasses(pAig *Aig_Man_t, nWords int32, fVerbose int32) *Dch_Cla_t {\n    var pClasses *Dch_Cla_t;\n    var vSims *Vec_Ptr_t;\n    var i int32;\n    // allocate simulation information\n    vSims = Vec_PtrAllocSimInfo( Aig_ManObjNumMax(pAig), nWords );\n    // run random simulation from the primary inputs\n    Dch_PerformRandomSimulation( pAig, vSims );\n    // start storage for equivalence classes\n    pClasses = Dch_ClassesStart( pAig );\n    Dch_ClassesSetData( pClasses, vSims, Dch_NodeHash, Dch_NodeIsConst, Dch_NodesAreEqual );\n    // hash nodes by sim info\n    Dch_ClassesPrepare( pClasses, 0, 0 );\n    // iterate random simulation\n    for  i = 0; i \u003c 7; i++  {\n        Dch_PerformRandomSimulation( pAig, vSims );\n        Dch_ClassesRefine( pClasses );\n    }\n    // clean up and return\n    Vec_PtrFree( vSims );\n    // prepare class refinement procedures\n    Dch_ClassesSetData( pClasses, nil, nil, Dch_NodeIsConstCex, Dch_NodesAreEqualCex );\n    return pClasses;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

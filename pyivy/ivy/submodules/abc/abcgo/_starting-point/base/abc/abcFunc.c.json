@@ -1,0 +1,839 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c",
+  "SHA256": "6bda2e81e9f4bc4c82073983f6c885331e90c44df2ac30157f0c3357e933af1a",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 59,
+        "Column": 5,
+        "ByteOffset": 1562
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasSop(pNtk) ); "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 74,
+        "Column": 9,
+        "ByteOffset": 1965
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pNode.pData );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 78,
+        "Column": 13,
+        "ByteOffset": 2137
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Abc_NtkSopToAig: Error while converting SOP into AIG.\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 174,
+        "Column": 5,
+        "ByteOffset": 5098
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 180,
+        "Column": 5,
+        "ByteOffset": 5415
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 184,
+        "Column": 5,
+        "ByteOffset": 5550
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 189,
+        "Column": 5,
+        "ByteOffset": 5769
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 5,
+        "ByteOffset": 5921
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pRoot) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 220,
+        "Column": 5,
+        "ByteOffset": 6689
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsAigLogic(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 243,
+        "Column": 13,
+        "ByteOffset": 7599
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Abc_ObjFaninC0(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 251,
+        "Column": 13,
+        "ByteOffset": 7958
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Abc_ObjFaninNum(pNode) \u003c= Hop_ManPiNum(pHopMan) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 274,
+        "Column": 5,
+        "ByteOffset": 9136
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManObjNum(pNew) \u003c= nObjs );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 275,
+        "Column": 5,
+        "ByteOffset": 9180
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNew.vMapping == nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 293,
+        "Column": 5,
+        "ByteOffset": 9603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_IsComplement(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 299,
+        "Column": 5,
+        "ByteOffset": 9976
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 328,
+        "Column": 9,
+        "ByteOffset": 10893
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pFanin.pCopy != nil );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 356,
+        "Column": 5,
+        "ByteOffset": 11666
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkHasMapping(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 358,
+        "Column": 5,
+        "ByteOffset": 11745
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pNtk.pManFunc == Abc_FrameReadLibGen() );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 366,
+        "Column": 9,
+        "ByteOffset": 12030
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Abc_SopGetVarNum(pSop) == Abc_ObjFaninNum(pNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 400,
+        "Column": 5,
+        "ByteOffset": 12919
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 419,
+        "Column": 5,
+        "ByteOffset": 13525
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 435,
+        "Column": 5,
+        "ByteOffset": 13874
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 450,
+        "Column": 5,
+        "ByteOffset": 14296
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 466,
+        "Column": 5,
+        "ByteOffset": 14645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( !Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 482,
+        "Column": 5,
+        "ByteOffset": 15114
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( 0 );"
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 25,
+        "Column": 1,
+        "ByteOffset": 622
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 40,
+        "Column": 1,
+        "ByteOffset": 1036
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkSopToAig",
+      "Start": 26143,
+      "End": 27111,
+      "BodyStart": 26183,
+      "Original": "int Abc_NtkSopToAig( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode;\n    Hop_Man_t * pMan;\n    int i, Max;\n\n    assert( Abc_NtkHasSop(pNtk) ); \n\n    // make dist1-free and SCC-free\n//    Abc_NtkMakeLegit( pNtk );\n\n    // start the functionality manager\n    pMan = Hop_ManStart();\n    Max = Abc_NtkGetFaninMax(pNtk);\n    if ( Max ) Hop_IthVar( pMan, Max-1 );\n\n    // convert each node from SOP to BDD\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if ( Abc_ObjIsBarBuf(pNode) )\n            continue;\n        assert( pNode-\u003epData );\n        pNode-\u003epData = Abc_ConvertSopToAig( pMan, (char *)pNode-\u003epData );\n        if ( pNode-\u003epData == NULL )\n        {\n            Hop_ManStop( pMan );\n            printf( \"Abc_NtkSopToAig: Error while converting SOP into AIG.\\n\" );\n            return 0;\n        }\n    }\n    Mem_FlexStop( (Mem_Flex_t *)pNtk-\u003epManFunc, 0 );\n    pNtk-\u003epManFunc = pMan;\n\n    // update the network type\n    pNtk-\u003entkFunc = ABC_FUNC_AIG;\n    return 1;\n}",
+      "Draft": "func Abc_NtkSopToAig(pNtk *Abc_Ntk_t) int32 {\n    var pNode *Abc_Obj_t;\n    var pMan *Hop_Man_t;\n    var i, Max int32;\n\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\"); \n\n    // make dist1-free and SCC-free\n//    Abc_NtkMakeLegit( pNtk );\n\n    // start the functionality manager\n    pMan = Hop_ManStart();\n    Max = Abc_NtkGetFaninMax(pNtk);\n    if Max != 0 { Hop_IthVar( pMan, Max-1 ); }\n\n    // convert each node from SOP to BDD\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if Abc_ObjIsBarBuf(pNode) {\n            continue; }\n        assert(pNode.pData, \"pNode.pData\");\n        pNode.pData = Abc_ConvertSopToAig( pMan, (char *)pNode.pData );\n        if pNode.pData == nil {\n            Hop_ManStop( pMan );\n            fmt.Printf(\"Abc_NtkSopToAig: Error while converting SOP into AIG.\\n\");\n            return 0;\n        }\n    }\n    Mem_FlexStop( (Mem_Flex_t *)pNtk.pManFunc, 0 );\n    pNtk.pManFunc = pMan;\n\n    // update the network type\n    pNtk.ntkFunc = ABC_FUNC_AIG;\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_ConvertSopToAigInternal",
+      "Start": 27386,
+      "End": 28579,
+      "BodyStart": 27459,
+      "Original": "Hop_Obj_t * Abc_ConvertSopToAigInternal( Hop_Man_t * pMan, char * pSop )\n{\n    Hop_Obj_t * pAnd, * pSum;\n    int i, Value, nFanins;\n    char * pCube;\n    // get the number of variables\n    nFanins = Abc_SopGetVarNum(pSop);\n    if ( Abc_SopIsExorType(pSop) )\n    {\n        pSum = Hop_ManConst0(pMan); \n        for ( i = 0; i \u003c nFanins; i++ )\n            pSum = Hop_Exor( pMan, pSum, Hop_IthVar(pMan,i) );\n    }\n    else\n    {\n        // go through the cubes of the node's SOP\n        pSum = Hop_ManConst0(pMan); \n        Abc_SopForEachCube( pSop, nFanins, pCube )\n        {\n            // create the AND of literals\n            pAnd = Hop_ManConst1(pMan);\n            Abc_CubeForEachVar( pCube, Value, i )\n            {\n                if ( Value == '1' )\n                    pAnd = Hop_And( pMan, pAnd, Hop_IthVar(pMan,i) );\n                else if ( Value == '0' )\n                    pAnd = Hop_And( pMan, pAnd, Hop_Not(Hop_IthVar(pMan,i)) );\n            }\n            // add to the sum of cubes\n            pSum = Hop_Or( pMan, pSum, pAnd );\n        }\n    }\n    // decide whether to complement the result\n    if ( Abc_SopIsComplement(pSop) )\n        pSum = Hop_Not(pSum);\n    return pSum;\n}",
+      "Draft": "func Abc_ConvertSopToAigInternal(pMan *Hop_Man_t, pSop string) *Hop_Obj_t {\n    var pAnd, pSum *Hop_Obj_t;\n    var i, Value, nFanins int32;\n    var pCube string;\n    // get the number of variables\n    nFanins = Abc_SopGetVarNum(pSop);\n    if Abc_SopIsExorType(pSop) {\n        pSum = Hop_ManConst0(pMan); \n        for  i = 0; i \u003c nFanins; i++  {\n            pSum = Hop_Exor( pMan, pSum, Hop_IthVar(pMan,i) );\n        }\n    \n    } else {\n        // go through the cubes of the node's SOP\n        pSum = Hop_ManConst0(pMan); \n        Abc_SopForEachCube( pSop, nFanins, pCube )\n        {\n            // create the AND of literals\n            pAnd = Hop_ManConst1(pMan);\n            Abc_CubeForEachVar( pCube, Value, i )\n            {\n                if Value == '1' {\n                    pAnd = Hop_And( pMan, pAnd, Hop_IthVar(pMan,i) );\n                } else if Value == '0' {\n                    pAnd = Hop_And( pMan, pAnd, Hop_Not(Hop_IthVar(pMan,i)) ); }\n            }\n            // add to the sum of cubes\n            pSum = Hop_Or( pMan, pSum, pAnd );\n        }\n    }\n    // decide whether to complement the result\n    if Abc_SopIsComplement(pSop) {\n        pSum = Hop_Not(pSum); }\n    return pSum;\n}"
+    },
+    {
+      "Name": "Abc_ConvertSopToAig",
+      "Start": 28867,
+      "End": 29432,
+      "BodyStart": 28932,
+      "Original": "Hop_Obj_t * Abc_ConvertSopToAig( Hop_Man_t * pMan, char * pSop )\n{\n    extern Hop_Obj_t * Dec_GraphFactorSop( Hop_Man_t * pMan, char * pSop );\n    int fUseFactor = 1;\n    // consider the constant node\n    if ( Abc_SopGetVarNum(pSop) == 0 )\n        return Hop_NotCond( Hop_ManConst1(pMan), Abc_SopIsConst0(pSop) );\n    // decide when to use factoring\n    if ( fUseFactor \u0026\u0026 Abc_SopGetVarNum(pSop) \u003e 2 \u0026\u0026 Abc_SopGetCubeNum(pSop) \u003e 1 \u0026\u0026 !Abc_SopIsExorType(pSop) )\n        return Dec_GraphFactorSop( pMan, pSop );\n    return Abc_ConvertSopToAigInternal( pMan, pSop );\n}",
+      "Draft": "func Abc_ConvertSopToAig(pMan *Hop_Man_t, pSop string) *Hop_Obj_t {\n    extern Hop_Obj_t * Dec_GraphFactorSop( Hop_Man_t * pMan, char * pSop );\n    var fUseFactor int32  = 1;\n    // consider the constant node\n    if Abc_SopGetVarNum(pSop) == 0 {\n        return Hop_NotCond( Hop_ManConst1(pMan), Abc_SopIsConst0(pSop) ); }\n    // decide when to use factoring\n    if (fUseFactor != 0) \u0026\u0026 Abc_SopGetVarNum(pSop) \u003e 2 \u0026\u0026 Abc_SopGetCubeNum(pSop) \u003e 1 \u0026\u0026 !Abc_SopIsExorType(pSop) {\n        return Dec_GraphFactorSop( pMan, pSop ); }\n    return Abc_ConvertSopToAigInternal( pMan, pSop );\n}"
+    },
+    {
+      "Name": "Abc_ConvertAigToGia_rec1",
+      "Start": 29721,
+      "End": 30191,
+      "BodyStart": 29786,
+      "Original": "void Abc_ConvertAigToGia_rec1( Gia_Man_t * p, Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return;\n    Abc_ConvertAigToGia_rec1( p, Hop_ObjFanin0(pObj) ); \n    Abc_ConvertAigToGia_rec1( p, Hop_ObjFanin1(pObj) );\n    pObj-\u003eiData = Gia_ManAppendAnd2( p, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Abc_ConvertAigToGia_rec1(p *Gia_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_ConvertAigToGia_rec1( p, Hop_ObjFanin0(pObj) ); \n    Abc_ConvertAigToGia_rec1( p, Hop_ObjFanin1(pObj) );\n    pObj.iData = Gia_ManAppendAnd2( p, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Abc_ConvertAigToGia_rec2",
+      "Start": 30192,
+      "End": 30549,
+      "BodyStart": 30242,
+      "Original": "void Abc_ConvertAigToGia_rec2( Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) )\n        return;\n    Abc_ConvertAigToGia_rec2( Hop_ObjFanin0(pObj) ); \n    Abc_ConvertAigToGia_rec2( Hop_ObjFanin1(pObj) );\n    assert( Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjClearMarkA( pObj );\n}",
+      "Draft": "func Abc_ConvertAigToGia_rec2(pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_ConvertAigToGia_rec2( Hop_ObjFanin0(pObj) ); \n    Abc_ConvertAigToGia_rec2( Hop_ObjFanin1(pObj) );\n    assert(Hop_ObjIsMarkA(pObj), \"Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjClearMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Abc_ConvertAigToGia",
+      "Start": 30550,
+      "End": 30813,
+      "BodyStart": 30610,
+      "Original": "int Abc_ConvertAigToGia( Gia_Man_t * p, Hop_Obj_t * pRoot )\n{\n    assert( !Hop_IsComplement(pRoot) );\n    if ( Hop_ObjIsConst1( pRoot ) )\n        return 1;\n    Abc_ConvertAigToGia_rec1( p, pRoot );\n    Abc_ConvertAigToGia_rec2( pRoot );\n    return pRoot-\u003eiData;\n}",
+      "Draft": "func Abc_ConvertAigToGia(p *Gia_Man_t, pRoot *Hop_Obj_t) int32 {\n    assert(!Hop_IsComplement(pRoot), \"!Hop_IsComplement(pRoot)\");\n    if Hop_ObjIsConst1( pRoot ) {\n        return 1; }\n    Abc_ConvertAigToGia_rec1( p, pRoot );\n    Abc_ConvertAigToGia_rec2( pRoot );\n    return pRoot.iData;\n}"
+    },
+    {
+      "Name": "Abc_NtkAigToGia",
+      "Start": 31101,
+      "End": 33995,
+      "BodyStart": 31162,
+      "Original": "Gia_Man_t * Abc_NtkAigToGia( Abc_Ntk_t * p, int fGiaSimple )\n{\n    Gia_Man_t * pNew;\n    Hop_Man_t * pHopMan;\n    Hop_Obj_t * pHopObj;\n    Vec_Int_t * vMapping = NULL;\n    Vec_Ptr_t * vNodes;\n    Abc_Obj_t * pNode, * pFanin;\n    int i, k, nObjs, iGiaObj;\n    assert( Abc_NtkIsAigLogic(p) );\n    pHopMan = (Hop_Man_t *)p-\u003epManFunc;\n    // create new manager\n    pNew = Gia_ManStart( 10000 );\n    pNew-\u003epName = Abc_UtilStrsav( Abc_NtkName(p) );\n    pNew-\u003epSpec = Abc_UtilStrsav( Abc_NtkSpec(p) );\n    pNew-\u003efGiaSimple = fGiaSimple;\n    Abc_NtkCleanCopy( p );\n    Hop_ManConst1(pHopMan)-\u003eiData = 1;\n    // create primary inputs\n    Abc_NtkForEachCi( p, pNode, i )\n        pNode-\u003eiTemp = Gia_ManAppendCi(pNew);\n    // find the number of objects\n    nObjs = 1 + Abc_NtkCiNum(p) + Abc_NtkCoNum(p);\n    Abc_NtkForEachNode( p, pNode, i )\n        nObjs += Abc_ObjIsBarBuf(pNode) ? 1 : Hop_DagSize( (Hop_Obj_t *)pNode-\u003epData );\n    if ( !fGiaSimple )\n        vMapping = Vec_IntStart( nObjs );\n    // iterate through nodes used in the mapping\n    vNodes = Abc_NtkDfs( p, 0 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        if ( Abc_ObjIsBarBuf(pNode) )\n        {\n            assert( !Abc_ObjFaninC0(pNode) );\n            pNode-\u003eiTemp = Gia_ManAppendBuf( pNew, Abc_ObjFanin0(pNode)-\u003eiTemp );\n            continue;\n        }\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n            Hop_ManPi(pHopMan, k)-\u003eiData = pFanin-\u003eiTemp;\n        pHopObj = Hop_Regular( (Hop_Obj_t *)pNode-\u003epData );\n        if ( Hop_DagSize(pHopObj) \u003e 0 )\n        {\n            assert( Abc_ObjFaninNum(pNode) \u003c= Hop_ManPiNum(pHopMan) );\n            Abc_ConvertAigToGia( pNew, pHopObj );\n            iGiaObj = Abc_Lit2Var( pHopObj-\u003eiData );\n            if ( vMapping \u0026\u0026 Gia_ObjIsAnd(Gia_ManObj(pNew, iGiaObj)) \u0026\u0026 !Vec_IntEntry(vMapping, iGiaObj) )\n            {\n                Vec_IntWriteEntry( vMapping, iGiaObj, Vec_IntSize(vMapping) );\n                Vec_IntPush( vMapping, Abc_ObjFaninNum(pNode) );\n                Abc_ObjForEachFanin( pNode, pFanin, k )\n                    Vec_IntPush( vMapping, Abc_Lit2Var(pFanin-\u003eiTemp)  );\n                Vec_IntPush( vMapping, iGiaObj );\n            }\n        }\n        pNode-\u003eiTemp = Abc_LitNotCond( pHopObj-\u003eiData, Hop_IsComplement( (Hop_Obj_t *)pNode-\u003epData ) );\n    }\n    // create primary outputs\n    Abc_NtkForEachCo( p, pNode, i )\n        Gia_ManAppendCo( pNew, Abc_ObjFanin0(pNode)-\u003eiTemp );\n    Gia_ManSetRegNum( pNew, Abc_NtkLatchNum(p) );\n    // copy original IDs\n    pNew-\u003evIdsOrig = Vec_IntStart( Gia_ManObjNum(pNew) );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        Vec_IntWriteEntry( pNew-\u003evIdsOrig, Abc_Lit2Var(pNode-\u003eiTemp), Abc_ObjId(pNode) );\n    Vec_PtrFree( vNodes );\n    // finish mapping \n    assert( Gia_ManObjNum(pNew) \u003c= nObjs );\n    assert( pNew-\u003evMapping == NULL );\n    pNew-\u003evMapping = vMapping;\n    return pNew;\n}",
+      "Draft": "func Abc_NtkAigToGia(p *Abc_Ntk_t, fGiaSimple int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pHopMan *Hop_Man_t;\n    var pHopObj *Hop_Obj_t;\n    var vMapping *Vec_Int_t  = nil;\n    var vNodes *Vec_Ptr_t;\n    var pNode, pFanin *Abc_Obj_t;\n    var i, k, nObjs, iGiaObj int32;\n    assert(Abc_NtkIsAigLogic(p), \"Abc_NtkIsAigLogic(p)\");\n    pHopMan = (Hop_Man_t *)p.pManFunc;\n    // create new manager\n    pNew = Gia_ManStart( 10000 );\n    pNew.pName = Abc_UtilStrsav( Abc_NtkName(p) );\n    pNew.pSpec = Abc_UtilStrsav( Abc_NtkSpec(p) );\n    pNew.fGiaSimple = fGiaSimple;\n    Abc_NtkCleanCopy( p );\n    Hop_ManConst1(pHopMan).iData = 1;\n    // create primary inputs\n    Abc_NtkForEachCi( p, pNode, i )\n        pNode.iTemp = Gia_ManAppendCi(pNew);\n    // find the number of objects\n    nObjs = 1 + Abc_NtkCiNum(p) + Abc_NtkCoNum(p);\n    Abc_NtkForEachNode( p, pNode, i )\n        nObjs += Abc_ObjIsBarBuf(pNode) ? 1 : Hop_DagSize( (Hop_Obj_t *)pNode.pData );\n    if !(fGiaSimple != 0) {\n        vMapping = Vec_IntStart( nObjs ); }\n    // iterate through nodes used in the mapping\n    vNodes = Abc_NtkDfs( p, 0 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        if Abc_ObjIsBarBuf(pNode) {\n            assert(!Abc_ObjFaninC0(pNode), \"!Abc_ObjFaninC0(pNode)\");\n            pNode.iTemp = Gia_ManAppendBuf( pNew, Abc_ObjFanin0(pNode).iTemp );\n            continue;\n        }\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n            Hop_ManPi(pHopMan, k).iData = pFanin.iTemp;\n        pHopObj = Hop_Regular( (Hop_Obj_t *)pNode.pData );\n        if Hop_DagSize(pHopObj) \u003e 0 {\n            assert(Abc_ObjFaninNum(pNode) \u003c= Hop_ManPiNum(pHopMan), \"Abc_ObjFaninNum(pNode) \u003c= Hop_ManPiNum(pHopMan)\");\n            Abc_ConvertAigToGia( pNew, pHopObj );\n            iGiaObj = Abc_Lit2Var( pHopObj.iData );\n            if (vMapping != nil) \u0026\u0026 Gia_ObjIsAnd(Gia_ManObj(pNew, iGiaObj)) \u0026\u0026 !Vec_IntEntry(vMapping, iGiaObj) {\n                Vec_IntWriteEntry( vMapping, iGiaObj, Vec_IntSize(vMapping) );\n                Vec_IntPush( vMapping, Abc_ObjFaninNum(pNode) );\n                Abc_ObjForEachFanin( pNode, pFanin, k )\n                    Vec_IntPush( vMapping, Abc_Lit2Var(pFanin.iTemp)  );\n                Vec_IntPush( vMapping, iGiaObj );\n            }\n        }\n        pNode.iTemp = Abc_LitNotCond( pHopObj.iData, Hop_IsComplement( (Hop_Obj_t *)pNode.pData ) );\n    }\n    // create primary outputs\n    Abc_NtkForEachCo( p, pNode, i )\n        Gia_ManAppendCo( pNew, Abc_ObjFanin0(pNode).iTemp );\n    Gia_ManSetRegNum( pNew, Abc_NtkLatchNum(p) );\n    // copy original IDs\n    pNew.vIdsOrig = Vec_IntStart( Gia_ManObjNum(pNew) );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        Vec_IntWriteEntry( pNew.vIdsOrig, Abc_Lit2Var(pNode.iTemp), Abc_ObjId(pNode) );\n    Vec_PtrFree( vNodes );\n    // finish mapping \n    assert(Gia_ManObjNum(pNew) \u003c= nObjs, \"Gia_ManObjNum(pNew) \u003c= nObjs\");\n    assert(pNew.vMapping == nil, \"pNew.vMapping == nil\");\n    pNew.vMapping = vMapping;\n    return pNew;\n}"
+    },
+    {
+      "Name": "Abc_ConvertAigToAig_rec",
+      "Start": 34266,
+      "End": 34798,
+      "BodyStart": 34336,
+      "Original": "void Abc_ConvertAigToAig_rec( Abc_Ntk_t * pNtkAig, Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return;\n    Abc_ConvertAigToAig_rec( pNtkAig, Hop_ObjFanin0(pObj) ); \n    Abc_ConvertAigToAig_rec( pNtkAig, Hop_ObjFanin1(pObj) );\n    pObj-\u003epData = Abc_AigAnd( (Abc_Aig_t *)pNtkAig-\u003epManFunc, (Abc_Obj_t *)Hop_ObjChild0Copy(pObj), (Abc_Obj_t *)Hop_ObjChild1Copy(pObj) ); \n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}",
+      "Draft": "func Abc_ConvertAigToAig_rec(pNtkAig *Abc_Ntk_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_ConvertAigToAig_rec( pNtkAig, Hop_ObjFanin0(pObj) ); \n    Abc_ConvertAigToAig_rec( pNtkAig, Hop_ObjFanin1(pObj) );\n    pObj.pData = Abc_AigAnd( (Abc_Aig_t *)pNtkAig.pManFunc, (Abc_Obj_t *)Hop_ObjChild0Copy(pObj), (Abc_Obj_t *)Hop_ObjChild1Copy(pObj) ); \n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}"
+    },
+    {
+      "Name": "Abc_ConvertAigToAig",
+      "Start": 35086,
+      "End": 35968,
+      "BodyStart": 35162,
+      "Original": "Abc_Obj_t * Abc_ConvertAigToAig( Abc_Ntk_t * pNtkAig, Abc_Obj_t * pObjOld )\n{\n    Hop_Man_t * pHopMan;\n    Hop_Obj_t * pRoot;\n    Abc_Obj_t * pFanin;\n    int i;\n    // get the local AIG\n    pHopMan = (Hop_Man_t *)pObjOld-\u003epNtk-\u003epManFunc;\n    pRoot = (Hop_Obj_t *)pObjOld-\u003epData;\n    // check the case of a constant\n    if ( Hop_ObjIsConst1( Hop_Regular(pRoot) ) )\n        return Abc_ObjNotCond( Abc_AigConst1(pNtkAig), Hop_IsComplement(pRoot) );\n    // assign the fanin nodes\n    Abc_ObjForEachFanin( pObjOld, pFanin, i )\n    {\n        assert( pFanin-\u003epCopy != NULL );\n        Hop_ManPi(pHopMan, i)-\u003epData = pFanin-\u003epCopy;\n    }\n    // construct the AIG\n    Abc_ConvertAigToAig_rec( pNtkAig, Hop_Regular(pRoot) );\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    // return the result\n    return Abc_ObjNotCond( (Abc_Obj_t *)Hop_Regular(pRoot)-\u003epData, Hop_IsComplement(pRoot) );  \n}",
+      "Draft": "func Abc_ConvertAigToAig(pNtkAig *Abc_Ntk_t, pObjOld *Abc_Obj_t) *Abc_Obj_t {\n    var pHopMan *Hop_Man_t;\n    var pRoot *Hop_Obj_t;\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    // get the local AIG\n    pHopMan = (Hop_Man_t *)pObjOld.pNtk.pManFunc;\n    pRoot = (Hop_Obj_t *)pObjOld.pData;\n    // check the case of a constant\n    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {\n        return Abc_ObjNotCond( Abc_AigConst1(pNtkAig), Hop_IsComplement(pRoot) ); }\n    // assign the fanin nodes\n    Abc_ObjForEachFanin( pObjOld, pFanin, i )\n    {\n        assert(pFanin.pCopy != nil, \"pFanin.pCopy != nil\");\n        Hop_ManPi(pHopMan, i).pData = pFanin.pCopy;\n    }\n    // construct the AIG\n    Abc_ConvertAigToAig_rec( pNtkAig, Hop_Regular(pRoot) );\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    // return the result\n    return Abc_ObjNotCond( (Abc_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );  \n}"
+    },
+    {
+      "Name": "Abc_NtkMapToSop",
+      "Start": 36224,
+      "End": 36944,
+      "BodyStart": 36264,
+      "Original": "int Abc_NtkMapToSop( Abc_Ntk_t * pNtk )\n{\n    extern void * Abc_FrameReadLibGen();                    \n    Abc_Obj_t * pNode;\n    char * pSop;\n    int i;\n\n    assert( Abc_NtkHasMapping(pNtk) );\n    // update the functionality manager\n    assert( pNtk-\u003epManFunc == Abc_FrameReadLibGen() );\n    pNtk-\u003epManFunc = Mem_FlexStart();\n    // update the nodes\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if ( Abc_ObjIsBarBuf(pNode) )\n            continue;\n        pSop = Mio_GateReadSop((Mio_Gate_t *)pNode-\u003epData);\n        assert( Abc_SopGetVarNum(pSop) == Abc_ObjFaninNum(pNode) );\n        pNode-\u003epData = Abc_SopRegister( (Mem_Flex_t *)pNtk-\u003epManFunc, pSop );\n    }\n    pNtk-\u003entkFunc  = ABC_FUNC_SOP;\n    return 1;\n}",
+      "Draft": "func Abc_NtkMapToSop(pNtk *Abc_Ntk_t) int32 {\n    extern void * Abc_FrameReadLibGen();                    \n    var pNode *Abc_Obj_t;\n    var pSop string;\n    var i int32;\n\n    assert(Abc_NtkHasMapping(pNtk), \"Abc_NtkHasMapping(pNtk)\");\n    // update the functionality manager\n    assert(pNtk.pManFunc == Abc_FrameReadLibGen(), \"pNtk.pManFunc == Abc_FrameReadLibGen()\");\n    pNtk.pManFunc = Mem_FlexStart();\n    // update the nodes\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if Abc_ObjIsBarBuf(pNode) {\n            continue; }\n        pSop = Mio_GateReadSop((Mio_Gate_t *)pNode.pData);\n        assert(Abc_SopGetVarNum(pSop) == Abc_ObjFaninNum(pNode), \"Abc_SopGetVarNum(pSop) == Abc_ObjFaninNum(pNode)\");\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, pSop );\n    }\n    pNtk.ntkFunc  = ABC_FUNC_SOP;\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkSopToBlifMv",
+      "Start": 37226,
+      "End": 37286,
+      "BodyStart": 37269,
+      "Original": "int Abc_NtkSopToBlifMv( Abc_Ntk_t * pNtk )\n{\n    return 1;\n}",
+      "Draft": "func Abc_NtkSopToBlifMv(pNtk *Abc_Ntk_t) int32 {\n    return 1;\n}"
+    },
+    {
+      "Name": "Abc_NtkToSop",
+      "Start": 37560,
+      "End": 38280,
+      "BodyStart": 37624,
+      "Original": "int Abc_NtkToSop( Abc_Ntk_t * pNtk, int fMode, int nCubeLimit )\n{\n    assert( !Abc_NtkIsStrash(pNtk) );\n    if ( Abc_NtkHasBlackbox(pNtk) )\n        return 1;\n    if ( Abc_NtkHasSop(pNtk) )\n    {\n        if ( fMode == -1 )\n            return 1;\n        if ( !Abc_NtkSopToBdd(pNtk) )\n            return 0;\n        return Abc_NtkBddToSop(pNtk, fMode, nCubeLimit);\n    }\n    if ( Abc_NtkHasMapping(pNtk) )\n        return Abc_NtkMapToSop(pNtk);\n    if ( Abc_NtkHasBdd(pNtk) )\n        return Abc_NtkBddToSop(pNtk, fMode, nCubeLimit);\n    if ( Abc_NtkHasAig(pNtk) )\n    {\n        if ( !Abc_NtkAigToBdd(pNtk) )\n            return 0;\n        return Abc_NtkBddToSop(pNtk, fMode, nCubeLimit);\n    }\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Abc_NtkToSop(pNtk *Abc_Ntk_t, fMode int32, nCubeLimit int32) int32 {\n    assert(!Abc_NtkIsStrash(pNtk), \"!Abc_NtkIsStrash(pNtk)\");\n    if Abc_NtkHasBlackbox(pNtk) {\n        return 1; }\n    if Abc_NtkHasSop(pNtk) {\n        if fMode == -1 {\n            return 1; }\n        if !Abc_NtkSopToBdd(pNtk) {\n            return 0; }\n        return Abc_NtkBddToSop(pNtk, fMode, nCubeLimit);\n    }\n    if Abc_NtkHasMapping(pNtk) {\n        return Abc_NtkMapToSop(pNtk); }\n    if Abc_NtkHasBdd(pNtk) {\n        return Abc_NtkBddToSop(pNtk, fMode, nCubeLimit); }\n    if Abc_NtkHasAig(pNtk) {\n        if !Abc_NtkAigToBdd(pNtk) {\n            return 0; }\n        return Abc_NtkBddToSop(pNtk, fMode, nCubeLimit);\n    }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkToBdd",
+      "Start": 38554,
+      "End": 39063,
+      "BodyStart": 38591,
+      "Original": "int Abc_NtkToBdd( Abc_Ntk_t * pNtk )\n{\n    assert( !Abc_NtkIsStrash(pNtk) );\n    if ( Abc_NtkHasBlackbox(pNtk) )\n        return 1;\n    if ( Abc_NtkHasBdd(pNtk) )\n        return 1;\n    if ( Abc_NtkHasMapping(pNtk) )\n    {\n        Abc_NtkMapToSop(pNtk);\n        return Abc_NtkSopToBdd(pNtk);\n    }\n    if ( Abc_NtkHasSop(pNtk) )\n    {\n        Abc_NtkSopToAig(pNtk);\n        return Abc_NtkAigToBdd(pNtk);\n    }\n    if ( Abc_NtkHasAig(pNtk) )\n        return Abc_NtkAigToBdd(pNtk);\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Abc_NtkToBdd(pNtk *Abc_Ntk_t) int32 {\n    assert(!Abc_NtkIsStrash(pNtk), \"!Abc_NtkIsStrash(pNtk)\");\n    if Abc_NtkHasBlackbox(pNtk) {\n        return 1; }\n    if Abc_NtkHasBdd(pNtk) {\n        return 1; }\n    if Abc_NtkHasMapping(pNtk) {\n        Abc_NtkMapToSop(pNtk);\n        return Abc_NtkSopToBdd(pNtk);\n    }\n    if Abc_NtkHasSop(pNtk) {\n        Abc_NtkSopToAig(pNtk);\n        return Abc_NtkAigToBdd(pNtk);\n    }\n    if Abc_NtkHasAig(pNtk) {\n        return Abc_NtkAigToBdd(pNtk); }\n    assert(false, \"0\");\n    return 0;\n}"
+    },
+    {
+      "Name": "Abc_NtkToAig",
+      "Start": 39337,
+      "End": 39893,
+      "BodyStart": 39374,
+      "Original": "int Abc_NtkToAig( Abc_Ntk_t * pNtk )\n{\n    assert( !Abc_NtkIsStrash(pNtk) );\n    if ( Abc_NtkHasBlackbox(pNtk) )\n        return 1;\n    if ( Abc_NtkHasAig(pNtk) )\n        return 1;\n    if ( Abc_NtkHasMapping(pNtk) )\n    {\n        Abc_NtkMapToSop(pNtk);\n        return Abc_NtkSopToAig(pNtk);\n    }\n    if ( Abc_NtkHasBdd(pNtk) )\n    {\n        if ( !Abc_NtkBddToSop(pNtk, -1, ABC_INFINITY) )\n            return 0;\n        return Abc_NtkSopToAig(pNtk);\n    }\n    if ( Abc_NtkHasSop(pNtk) )\n        return Abc_NtkSopToAig(pNtk);\n    assert( 0 );\n    return 0;\n}",
+      "Draft": "func Abc_NtkToAig(pNtk *Abc_Ntk_t) int32 {\n    assert(!Abc_NtkIsStrash(pNtk), \"!Abc_NtkIsStrash(pNtk)\");\n    if Abc_NtkHasBlackbox(pNtk) {\n        return 1; }\n    if Abc_NtkHasAig(pNtk) {\n        return 1; }\n    if Abc_NtkHasMapping(pNtk) {\n        Abc_NtkMapToSop(pNtk);\n        return Abc_NtkSopToAig(pNtk);\n    }\n    if Abc_NtkHasBdd(pNtk) {\n        if !Abc_NtkBddToSop(pNtk, -1, ABC_INFINITY) {\n            return 0; }\n        return Abc_NtkSopToAig(pNtk);\n    }\n    if Abc_NtkHasSop(pNtk) {\n        return Abc_NtkSopToAig(pNtk); }\n    assert(false, \"0\");\n    return 0;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::pointer-cast::1998",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26728,
+      "End": 26736
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::pointer-cast::2238",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 26968,
+      "End": 26982
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::pointer-cast::6676",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31406,
+      "End": 31419
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::pointer-cast::7260",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 31990,
+      "End": 32003
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::pointer-cast::7844",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 32574,
+      "End": 32587
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::pointer-cast::8639",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 33369,
+      "End": 33382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::pointer-cast::9872",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34602,
+      "End": 34615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::pointer-cast::9904",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34634,
+      "End": 34647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::pointer-cast::9942",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 34672,
+      "End": 34685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::pointer-cast::10556",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35286,
+      "End": 35299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::pointer-cast::10606",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35336,
+      "End": 35349
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::pointer-cast::11168",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 35898,
+      "End": 35911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::pointer-cast::11983",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36713,
+      "End": 36727
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::pointer-cast::12120",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 36850,
+      "End": 36864
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::Abc_NtkSopToAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSopToAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 26143,
+      "End": 27111
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::Abc_ConvertSopToAigInternal",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ConvertSopToAigInternal",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 27386,
+      "End": 28579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::Abc_ConvertSopToAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ConvertSopToAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 28867,
+      "End": 29432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::Abc_ConvertAigToGia_rec1",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ConvertAigToGia_rec1",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 29721,
+      "End": 30191
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::Abc_ConvertAigToGia_rec2",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ConvertAigToGia_rec2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30192,
+      "End": 30549
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::Abc_ConvertAigToGia",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ConvertAigToGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 30550,
+      "End": 30813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::ternary::Abc_NtkAigToGia",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkAigToGia",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 31101,
+      "End": 33995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::Abc_NtkAigToGia",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkAigToGia",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 31101,
+      "End": 33995
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::Abc_ConvertAigToAig_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ConvertAigToAig_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 34266,
+      "End": 34798
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::Abc_ConvertAigToAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_ConvertAigToAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 35086,
+      "End": 35968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::Abc_NtkMapToSop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMapToSop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 36224,
+      "End": 36944
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::Abc_NtkSopToBlifMv",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkSopToBlifMv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 37226,
+      "End": 37286
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::Abc_NtkToSop",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkToSop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 37560,
+      "End": 38280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::Abc_NtkToBdd",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkToBdd",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 38554,
+      "End": 39063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::Abc_NtkToAig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkToAig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 39337,
+      "End": 39893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 40141
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 622,
+      "End": 681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 1036,
+      "End": 25855
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::macro-inline::26543",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 26543,
+      "End": 26579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::macro-inline::27906",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_SopForEachCube",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 27906,
+      "End": 27948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::macro-inline::28053",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_CubeForEachVar",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 28053,
+      "End": 28090
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::macro-inline::31730",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCi",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31730,
+      "End": 31761
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::macro-inline::31897",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 31897,
+      "End": 31930
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::macro-inline::32170",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32170,
+      "End": 32222
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::macro-inline::32445",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 32445,
+      "End": 32484
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::macro-inline::33108",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33108,
+      "End": 33147
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::macro-inline::33440",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachCo",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33440,
+      "End": 33471
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::macro-inline::33671",
+      "Category": "macro-inline-review",
+      "Symbol": "Vec_PtrForEachEntry",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 33671,
+      "End": 33723
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::macro-inline::35566",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_ObjForEachFanin",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 35566,
+      "End": 35607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abc/abcFunc.c::macro-inline::36579",
+      "Category": "macro-inline-review",
+      "Symbol": "Abc_NtkForEachNode",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 36579,
+      "End": 36615
+    }
+  ],
+  "Draft": "package abc\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [abcFunc.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Transformations between different functionality representations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcFunc.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"abc.h\"\n//#include \"base/main/main.h\"\n//#include \"map/mio/mio.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\nconst ABC_MAX_CUBES =   100000\n\n// static Hop_Obj_t * Abc_ConvertSopToAig( Hop_Man_t * pMan, char * pSop );\n\n\n#ifdef ABC_USE_CUDD\n\nint Abc_ConvertZddToSop( DdManager * dd, DdNode * zCover, char * pSop, int nFanins, Vec_Str_t * vCube, int fPhase );\nstatic DdNode * Abc_ConvertAigToBdd( DdManager * dd, Hop_Obj_t * pRoot);\nextern int Abc_CountZddCubes( DdManager * dd, DdNode * zCover );\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the node from SOP to BDD representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nDdNode * Abc_ConvertSopToBdd( DdManager * dd, char * pSop, DdNode ** pbVars )\n{\n    DdNode * bSum, * bCube, * bTemp, * bVar;\n    char * pCube;\n    int nVars, Value, v;\n\n    // start the cover\n    nVars = Abc_SopGetVarNum(pSop);\n    bSum = Cudd_ReadLogicZero(dd);   Cudd_Ref( bSum );\n    if ( Abc_SopIsExorType(pSop) )\n    {\n        for ( v = 0; v \u003c nVars; v++ )\n        {\n            bSum  = Cudd_bddXor( dd, bTemp = bSum, pbVars? pbVars[v] : Cudd_bddIthVar(dd, v) );   Cudd_Ref( bSum );\n            Cudd_RecursiveDeref( dd, bTemp );\n        }\n    }\n    else\n    {\n        // check the logic function of the node\n        Abc_SopForEachCube( pSop, nVars, pCube )\n        {\n            bCube = Cudd_ReadOne(dd);   Cudd_Ref( bCube );\n            Abc_CubeForEachVar( pCube, Value, v )\n            {\n                if ( Value == '0' )\n                    bVar = Cudd_Not( pbVars? pbVars[v] : Cudd_bddIthVar( dd, v ) );\n                else if ( Value == '1' )\n                    bVar = pbVars? pbVars[v] : Cudd_bddIthVar( dd, v );\n                else\n                    continue;\n                bCube  = Cudd_bddAnd( dd, bTemp = bCube, bVar );   Cudd_Ref( bCube );\n                Cudd_RecursiveDeref( dd, bTemp );\n            }\n            bSum = Cudd_bddOr( dd, bTemp = bSum, bCube );   \n            Cudd_Ref( bSum );\n            Cudd_RecursiveDeref( dd, bTemp );\n            Cudd_RecursiveDeref( dd, bCube );\n        }\n    }\n    // complement the result if necessary\n    bSum = Cudd_NotCond( bSum, !Abc_SopGetPhase(pSop) );\n    Cudd_Deref( bSum );\n    return bSum;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from SOP to BDD representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Abc_NtkSopToBdd( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode;\n    DdManager * dd, * ddTemp = NULL;\n    Vec_Int_t * vFanins = NULL;\n    int nFaninsMax, i, k, iVar;\n \n    assert( Abc_NtkHasSop(pNtk) ); \n\n    // start the functionality manager\n    nFaninsMax = Abc_NtkGetFaninMax( pNtk );\n    if ( nFaninsMax == 0 )\n        printf( \"Warning: The network has only constant nodes.\\n\" );\n    dd = Cudd_Init( nFaninsMax, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n\n    // start temporary manager for reordered local functions\n    if ( nFaninsMax \u003e 10 )\n    {\n        ddTemp = Cudd_Init( nFaninsMax, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n        Cudd_AutodynEnable( ddTemp,  CUDD_REORDER_SYMM_SIFT );\n        vFanins = Vec_IntAlloc( nFaninsMax );\n    }\n\n    // convert each node from SOP to BDD\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if ( Abc_ObjIsBarBuf(pNode) )\n            continue;\n        assert( pNode-\u003epData );\n        if ( Abc_ObjFaninNum(pNode) \u003e 10 )\n        {\n            DdNode * pFunc = Abc_ConvertSopToBdd( ddTemp, (char *)pNode-\u003epData, NULL );\n            if ( pFunc == NULL )\n            {\n                printf( \"Abc_NtkSopToBdd: Error while converting SOP into BDD.\\n\" );\n                return 0;\n            }\n            Cudd_Ref( pFunc );\n            // find variable mapping\n            Vec_IntFill( vFanins, Abc_ObjFaninNum(pNode), -1 );\n            for ( k = iVar = 0; k \u003c nFaninsMax; k++ )\n                if ( ddTemp-\u003einvperm[k] \u003c Abc_ObjFaninNum(pNode) )\n                    Vec_IntWriteEntry( vFanins, ddTemp-\u003einvperm[k], iVar++ );\n            assert( iVar == Abc_ObjFaninNum(pNode) );\n            // transfer to the main manager\n            pNode-\u003epData = Extra_TransferPermute( ddTemp, dd, pFunc, Vec_IntArray(vFanins) );\n            Cudd_Ref( (DdNode *)pNode-\u003epData );\n            Cudd_RecursiveDeref( ddTemp, pFunc );\n            // update variable order\n            Vec_IntClear( vFanins );\n            for ( k = 0; k \u003c nFaninsMax; k++ )\n                if ( ddTemp-\u003einvperm[k] \u003c Abc_ObjFaninNum(pNode) )\n                    Vec_IntPush( vFanins, Vec_IntEntry(\u0026pNode-\u003evFanins, ddTemp-\u003einvperm[k]) );\n            for ( k = 0; k \u003c Abc_ObjFaninNum(pNode); k++ )\n                Vec_IntWriteEntry( \u0026pNode-\u003evFanins, k, Vec_IntEntry(vFanins, k) );\n        }\n        else\n        {\n            pNode-\u003epData = Abc_ConvertSopToBdd( dd, (char *)pNode-\u003epData, NULL );\n            if ( pNode-\u003epData == NULL )\n            {\n                printf( \"Abc_NtkSopToBdd: Error while converting SOP into BDD.\\n\" );\n                return 0;\n            }\n            Cudd_Ref( (DdNode *)pNode-\u003epData );\n        }\n    }\n\n    if ( ddTemp )\n    {\n//        printf( \"Reorderings performed = %d.\\n\", Cudd_ReadReorderings(ddTemp) );\n        Extra_StopManager( ddTemp );\n    }\n    Vec_IntFreeP( \u0026vFanins );\n    Mem_FlexStop( (Mem_Flex_t *)pNtk-\u003epManFunc, 0 );\n    pNtk-\u003epManFunc = dd;\n\n    // update the network type\n    pNtk-\u003entkFunc = ABC_FUNC_BDD;\n    return 1;\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the node from BDD to SOP representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nchar * Abc_ConvertBddToSop( Mem_Flex_t * pMan, DdManager * dd, DdNode * bFuncOn, DdNode * bFuncOnDc, int nFanins, int fAllPrimes, Vec_Str_t * vCube, int fMode )\n{\n    int fVerify = 0;\n    char * pSop;\n    DdNode * bFuncNew, * bCover, * zCover, * zCover0, * zCover1;\n    int nCubes = 0, nCubes0, nCubes1, fPhase = 0;\n\n    assert( bFuncOn == bFuncOnDc || Cudd_bddLeq( dd, bFuncOn, bFuncOnDc ) );\n    if ( Cudd_IsConstant(bFuncOn) || Cudd_IsConstant(bFuncOnDc) )\n    {\n        if ( pMan )\n            pSop = Mem_FlexEntryFetch( pMan, nFanins + 4 );\n        else\n            pSop = ABC_ALLOC( char, nFanins + 4 );\n        pSop[0] = ' ';\n        pSop[1] = '0' + (int)(bFuncOn == Cudd_ReadOne(dd));\n        pSop[2] = '\\n';\n        pSop[3] = '\\0';\n        return pSop;\n    }\n\n    if ( fMode == -1 )\n    { // try both phases\n        assert( fAllPrimes == 0 );\n\n        // get the ZDD of the negative polarity\n        bCover = Cudd_zddIsop( dd, Cudd_Not(bFuncOnDc), Cudd_Not(bFuncOn), \u0026zCover0 );\n        Cudd_Ref( zCover0 );\n        Cudd_Ref( bCover );\n        Cudd_RecursiveDeref( dd, bCover );\n        nCubes0 = Abc_CountZddCubes( dd, zCover0 );\n\n        // get the ZDD of the positive polarity\n        bCover = Cudd_zddIsop( dd, bFuncOn, bFuncOnDc, \u0026zCover1 );\n        Cudd_Ref( zCover1 );\n        Cudd_Ref( bCover );\n        Cudd_RecursiveDeref( dd, bCover );\n        nCubes1 = Abc_CountZddCubes( dd, zCover1 );\n\n        // compare the number of cubes\n        if ( nCubes1 \u003c= nCubes0 )\n        { // use positive polarity\n            nCubes = nCubes1;\n            zCover = zCover1;\n            Cudd_RecursiveDerefZdd( dd, zCover0 );\n            fPhase = 1;\n        }\n        else\n        { // use negative polarity\n            nCubes = nCubes0;\n            zCover = zCover0;\n            Cudd_RecursiveDerefZdd( dd, zCover1 );\n            fPhase = 0;\n        }\n    }\n    else if ( fMode == 0 )\n    {\n        // get the ZDD of the negative polarity\n        if ( fAllPrimes )\n        {\n            zCover = Extra_zddPrimes( dd, Cudd_Not(bFuncOnDc) ); \n            Cudd_Ref( zCover );\n        }\n        else\n        {\n            bCover = Cudd_zddIsop( dd, Cudd_Not(bFuncOnDc), Cudd_Not(bFuncOn), \u0026zCover );\n            Cudd_Ref( zCover );\n            Cudd_Ref( bCover );\n            Cudd_RecursiveDeref( dd, bCover );\n        }\n        nCubes = Abc_CountZddCubes( dd, zCover );\n        fPhase = 0;\n    }\n    else if ( fMode == 1 )\n    {\n        // get the ZDD of the positive polarity\n        if ( fAllPrimes )\n        {\n            zCover = Extra_zddPrimes( dd, bFuncOnDc ); \n            Cudd_Ref( zCover );\n        }\n        else\n        {\n            bCover = Cudd_zddIsop( dd, bFuncOn, bFuncOnDc, \u0026zCover );\n            Cudd_Ref( zCover );\n            Cudd_Ref( bCover );\n            Cudd_RecursiveDeref( dd, bCover );\n        }\n        nCubes = Abc_CountZddCubes( dd, zCover );\n        fPhase = 1;\n    }\n    else\n    {\n        assert( 0 );\n    }\n\n    if ( nCubes \u003e ABC_MAX_CUBES )\n    {\n        Cudd_RecursiveDerefZdd( dd, zCover );\n        printf( \"The number of cubes exceeded the predefined limit (%d).\\n\", ABC_MAX_CUBES );\n        return NULL;\n    }\n\n    // allocate memory for the cover\n    if ( pMan )\n        pSop = Mem_FlexEntryFetch( pMan, (nFanins + 3) * nCubes + 1 );\n    else \n        pSop = ABC_ALLOC( char, (nFanins + 3) * nCubes + 1 );\n    pSop[(nFanins + 3) * nCubes] = 0;\n    // create the SOP\n    Vec_StrFill( vCube, nFanins, '-' );\n    Vec_StrPush( vCube, '\\0' );\n    Abc_ConvertZddToSop( dd, zCover, pSop, nFanins, vCube, fPhase );\n    Cudd_RecursiveDerefZdd( dd, zCover );\n\n    // verify\n    if ( fVerify )\n    {\n        bFuncNew = Abc_ConvertSopToBdd( dd, pSop, NULL );  Cudd_Ref( bFuncNew );\n        if ( bFuncOn == bFuncOnDc )\n        {\n            if ( bFuncNew != bFuncOn )\n                printf( \"Verification failed.\\n\" );\n        }\n        else\n        {\n            if ( !Cudd_bddLeq(dd, bFuncOn, bFuncNew) || !Cudd_bddLeq(dd, bFuncNew, bFuncOnDc) )\n                printf( \"Verification failed.\\n\" );\n        }\n        Cudd_RecursiveDeref( dd, bFuncNew );\n    }\n    return pSop;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from BDD to SOP representation.]\n\n  Description [If the flag is set to 1, forces the direct phase of all covers.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Abc_NtkBddToSop( Abc_Ntk_t * pNtk, int fMode, int nCubeLimit )\n{\n    Vec_Int_t * vGuide;\n    Vec_Str_t * vCube;\n    Abc_Obj_t * pNode;\n    Mem_Flex_t * pManNew;\n    DdManager * dd = (DdManager *)pNtk-\u003epManFunc;\n    DdNode * bFunc;\n    int i, nCubes;\n\n    // compute SOP size\n    vGuide = Vec_IntAlloc( Abc_NtkObjNumMax(pNtk) );\n    Vec_IntFill( vGuide, Abc_NtkObjNumMax(pNtk), fMode );\n    if ( nCubeLimit \u003c ABC_INFINITY )\n    {\n        // collect all BDDs into one array\n        Vec_Ptr_t * vFuncs = Vec_PtrStart( Abc_NtkObjNumMax(pNtk) );\n        assert( !Cudd_ReorderingStatus(dd, (Cudd_ReorderingType *)\u0026nCubes) );\n        Abc_NtkForEachNode( pNtk, pNode, i )\n            if ( !Abc_ObjIsBarBuf(pNode) )\n                Vec_PtrWriteEntry( vFuncs, i, pNode-\u003epData );\n        // compute the number of cubes in the ISOPs and detemine polarity\n        nCubes = Extra_bddCountCubes( dd, (DdNode **)Vec_PtrArray(vFuncs), Vec_PtrSize(vFuncs), fMode, nCubeLimit, Vec_IntArray(vGuide) );\n        Vec_PtrFree( vFuncs );\n        if ( nCubes == -1 )\n        {\n            Vec_IntFree( vGuide );\n            return 0;\n        }\n        //printf( \"The total number of cubes = %d.\\n\", nCubes );\n    }\n\n    assert( Abc_NtkHasBdd(pNtk) );\n    if ( dd-\u003esize \u003e 0 )\n    Cudd_zddVarsFromBddVars( dd, 2 );\n    // create the new manager\n    pManNew = Mem_FlexStart();\n\n    // go through the objects\n    vCube = Vec_StrAlloc( 100 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if ( Abc_ObjIsBarBuf(pNode) )\n            continue;\n        assert( pNode-\u003epData );\n        bFunc = (DdNode *)pNode-\u003epData;\n        pNode-\u003epNext = (Abc_Obj_t *)Abc_ConvertBddToSop( pManNew, dd, bFunc, bFunc, Abc_ObjFaninNum(pNode), 0, vCube, Vec_IntEntry(vGuide, i) );\n        if ( pNode-\u003epNext == NULL )\n        {\n            Mem_FlexStop( pManNew, 0 );\n            Abc_NtkCleanNext( pNtk );\n//            printf( \"Converting from BDDs to SOPs has failed.\\n\" );\n            Vec_IntFree( vGuide );\n            Vec_StrFree( vCube );\n            return 0;\n        }\n        // it may happen that a constant node was created after structural mapping\n        if ( Abc_SopGetVarNum((char *)pNode-\u003epNext) == 0 )\n            pNode-\u003evFanins.nSize = 0;\n        // check the support\n        if ( Abc_ObjFaninNum(pNode) != Abc_SopGetVarNum((char *)pNode-\u003epNext) )\n        {\n            printf( \"Node %d with level %d has %d fanins but its SOP has support size %d.\\n\", \n                pNode-\u003eId, pNode-\u003eLevel, Abc_ObjFaninNum(pNode), Abc_SopGetVarNum((char *)pNode-\u003epNext) );\n            fflush( stdout );\n        }\n        assert( Abc_ObjFaninNum(pNode) == Abc_SopGetVarNum((char *)pNode-\u003epNext) );\n    }\n    Vec_IntFree( vGuide );\n    Vec_StrFree( vCube );\n\n    // update the network type\n    pNtk-\u003entkFunc = ABC_FUNC_SOP;\n    // set the new manager\n    pNtk-\u003epManFunc = pManNew;\n    // transfer from next to data\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if ( Abc_ObjIsBarBuf(pNode) )\n            continue;\n        Cudd_RecursiveDeref( dd, (DdNode *)pNode-\u003epData );\n        pNode-\u003epData = pNode-\u003epNext;\n        pNode-\u003epNext = NULL;\n    }\n\n    // check for remaining references in the package\n    Extra_StopManager( dd );\n\n    // reorder fanins and cubes to make SOPs more human-readable\n    Abc_NtkSortSops( pNtk );\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Derive the SOP from the ZDD representation of the cubes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_ConvertZddToSop_rec( DdManager * dd, DdNode * zCover, char * pSop, int nFanins, Vec_Str_t * vCube, int fPhase, int * pnCubes )\n{\n    DdNode * zC0, * zC1, * zC2;\n    int Index;\n\n    if ( zCover == dd-\u003ezero )\n        return;\n    if ( zCover == dd-\u003eone )\n    {\n        char * pCube;\n        pCube = pSop + (*pnCubes) * (nFanins + 3);\n        sprintf( pCube, \"%s %d\\n\", vCube-\u003epArray, fPhase );\n        (*pnCubes)++;\n        return;\n    }\n    Index = zCover-\u003eindex/2;\n    assert( Index \u003c nFanins );\n    extraDecomposeCover( dd, zCover, \u0026zC0, \u0026zC1, \u0026zC2 );\n    vCube-\u003epArray[Index] = '0';\n    Abc_ConvertZddToSop_rec( dd, zC0, pSop, nFanins, vCube, fPhase, pnCubes );\n    vCube-\u003epArray[Index] = '1';\n    Abc_ConvertZddToSop_rec( dd, zC1, pSop, nFanins, vCube, fPhase, pnCubes );\n    vCube-\u003epArray[Index] = '-';\n    Abc_ConvertZddToSop_rec( dd, zC2, pSop, nFanins, vCube, fPhase, pnCubes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Derive the BDD for the function in the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Abc_ConvertZddToSop( DdManager * dd, DdNode * zCover, char * pSop, int nFanins, Vec_Str_t * vCube, int fPhase )\n{\n    int nCubes = 0;\n    Abc_ConvertZddToSop_rec( dd, zCover, pSop, nFanins, vCube, fPhase, \u0026nCubes );\n    return nCubes;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Computes the SOPs of the negative and positive phase of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_NodeBddToCnf( Abc_Obj_t * pNode, Mem_Flex_t * pMmMan, Vec_Str_t * vCube, int fAllPrimes, char ** ppSop0, char ** ppSop1 )\n{\n    assert( Abc_NtkHasBdd(pNode-\u003epNtk) ); \n    *ppSop0 = Abc_ConvertBddToSop( pMmMan, (DdManager *)pNode-\u003epNtk-\u003epManFunc, (DdNode *)pNode-\u003epData, (DdNode *)pNode-\u003epData, Abc_ObjFaninNum(pNode), fAllPrimes, vCube, 0 );\n    *ppSop1 = Abc_ConvertBddToSop( pMmMan, (DdManager *)pNode-\u003epNtk-\u003epManFunc, (DdNode *)pNode-\u003epData, (DdNode *)pNode-\u003epData, Abc_ObjFaninNum(pNode), fAllPrimes, vCube, 1 );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Removes complemented SOP covers.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_NtkLogicMakeDirectSops( Abc_Ntk_t * pNtk )\n{\n    DdManager * dd;\n    DdNode * bFunc;\n    Vec_Str_t * vCube;\n    Abc_Obj_t * pNode;\n    int nFaninsMax, fFound, i;\n\n    assert( Abc_NtkHasSop(pNtk) );\n\n    // check if there are nodes with complemented SOPs\n    fFound = 0;\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( !Abc_ObjIsBarBuf(pNode) \u0026\u0026 Abc_SopIsComplement((char *)pNode-\u003epData) )\n        {\n            fFound = 1;\n            break;\n        }\n    if ( !fFound )\n        return;\n\n    // start the BDD package\n    nFaninsMax = Abc_NtkGetFaninMax( pNtk );\n    if ( nFaninsMax == 0 )\n        printf( \"Warning: The network has only constant nodes.\\n\" );\n    dd = Cudd_Init( nFaninsMax, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n\n    // change the cover of negated nodes\n    vCube = Vec_StrAlloc( 100 );\n    Abc_NtkForEachNode( pNtk, pNode, i )\n        if ( !Abc_ObjIsBarBuf(pNode) \u0026\u0026 Abc_SopIsComplement((char *)pNode-\u003epData) )\n        {\n            bFunc = Abc_ConvertSopToBdd( dd, (char *)pNode-\u003epData, NULL );  Cudd_Ref( bFunc );\n            pNode-\u003epData = Abc_ConvertBddToSop( (Mem_Flex_t *)pNtk-\u003epManFunc, dd, bFunc, bFunc, Abc_ObjFaninNum(pNode), 0, vCube, 1 );\n            Cudd_RecursiveDeref( dd, bFunc );\n            assert( !Abc_SopIsComplement((char *)pNode-\u003epData) );\n        }\n    Vec_StrFree( vCube );\n    Extra_StopManager( dd );\n}\n\n\n\n\n/**Function*************************************************************\n\n  Synopsis    [Count the number of paths in the ZDD.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_CountZddCubes_rec( DdManager * dd, DdNode * zCover, int * pnCubes )\n{\n    DdNode * zC0, * zC1, * zC2;\n    if ( zCover == dd-\u003ezero )\n        return;\n    if ( zCover == dd-\u003eone )\n    {\n        (*pnCubes)++;\n        return;\n    }\n    if ( (*pnCubes) \u003e ABC_MAX_CUBES )\n        return;\n    extraDecomposeCover( dd, zCover, \u0026zC0, \u0026zC1, \u0026zC2 );\n    Abc_CountZddCubes_rec( dd, zC0, pnCubes );\n    Abc_CountZddCubes_rec( dd, zC1, pnCubes );\n    Abc_CountZddCubes_rec( dd, zC2, pnCubes );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Count the number of paths in the ZDD.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Abc_CountZddCubes( DdManager * dd, DdNode * zCover )\n{\n    int nCubes = 0;\n    Abc_CountZddCubes_rec( dd, zCover, \u0026nCubes );\n    return nCubes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from AIG to BDD representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint Abc_NtkAigToBdd( Abc_Ntk_t * pNtk )\n{\n    Abc_Obj_t * pNode;\n    Hop_Man_t * pMan;\n    DdNode * pFunc;\n    DdManager * dd, * ddTemp = NULL;\n    Vec_Int_t * vFanins = NULL;\n    int nFaninsMax, i, k, iVar;\n\n    assert( Abc_NtkHasAig(pNtk) ); \n\n    // start the functionality manager\n    nFaninsMax = Abc_NtkGetFaninMax( pNtk );\n    if ( nFaninsMax == 0 )\n        printf( \"Warning: The network has only constant nodes.\\n\" );\n\n    dd = Cudd_Init( nFaninsMax, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n\n    // start temporary manager for reordered local functions\n    ddTemp = Cudd_Init( nFaninsMax, 0, CUDD_UNIQUE_SLOTS, CUDD_CACHE_SLOTS, 0 );\n    Cudd_AutodynEnable( ddTemp,  CUDD_REORDER_SYMM_SIFT );\n    vFanins = Vec_IntAlloc( nFaninsMax );\n\n    // set the mapping of elementary AIG nodes into the elementary BDD nodes\n    pMan = (Hop_Man_t *)pNtk-\u003epManFunc;\n    assert( Hop_ManPiNum(pMan) \u003e= nFaninsMax ); \n    for ( i = 0; i \u003c nFaninsMax; i++ )\n        Hop_ManPi(pMan, i)-\u003epData = Cudd_bddIthVar(ddTemp, i);\n\n    // convert each node from SOP to BDD\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if ( Abc_ObjIsBarBuf(pNode) )\n            continue;\n        pFunc = Abc_ConvertAigToBdd( ddTemp, (Hop_Obj_t *)pNode-\u003epData );\n        if ( pFunc == NULL )\n        {\n            printf( \"Abc_NtkAigToBdd: Error while converting AIG into BDD.\\n\" );\n            return 0;\n        }\n        Cudd_Ref( pFunc );\n        // find variable mapping\n        Vec_IntFill( vFanins, Abc_ObjFaninNum(pNode), -1 );\n        for ( k = iVar = 0; k \u003c nFaninsMax; k++ )\n            if ( ddTemp-\u003einvperm[k] \u003c Abc_ObjFaninNum(pNode) )\n                Vec_IntWriteEntry( vFanins, ddTemp-\u003einvperm[k], iVar++ );\n        assert( iVar == Abc_ObjFaninNum(pNode) );\n        // transfer to the main manager\n        pNode-\u003epData = Extra_TransferPermute( ddTemp, dd, pFunc, Vec_IntArray(vFanins) );\n        Cudd_Ref( (DdNode *)pNode-\u003epData );\n        Cudd_RecursiveDeref( ddTemp, pFunc );\n        // update variable order\n        Vec_IntClear( vFanins );\n        for ( k = 0; k \u003c nFaninsMax; k++ )\n            if ( ddTemp-\u003einvperm[k] \u003c Abc_ObjFaninNum(pNode) )\n                Vec_IntPush( vFanins, Vec_IntEntry(\u0026pNode-\u003evFanins, ddTemp-\u003einvperm[k]) );\n        for ( k = 0; k \u003c Abc_ObjFaninNum(pNode); k++ )\n            Vec_IntWriteEntry( \u0026pNode-\u003evFanins, k, Vec_IntEntry(vFanins, k) );\n    }\n\n//    printf( \"Reorderings performed = %d.\\n\", Cudd_ReadReorderings(ddTemp) );\n    Extra_StopManager( ddTemp );\n    Vec_IntFreeP( \u0026vFanins );\n    Hop_ManStop( (Hop_Man_t *)pNtk-\u003epManFunc );\n    pNtk-\u003epManFunc = dd;\n\n    // update the network type\n    pNtk-\u003entkFunc = ABC_FUNC_BDD;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Construct BDDs and mark AIG nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_ConvertAigToBdd_rec1( DdManager * dd, Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) )\n        return;\n    Abc_ConvertAigToBdd_rec1( dd, Hop_ObjFanin0(pObj) ); \n    Abc_ConvertAigToBdd_rec1( dd, Hop_ObjFanin1(pObj) );\n    pObj-\u003epData = Cudd_bddAnd( dd, (DdNode *)Hop_ObjChild0Copy(pObj), (DdNode *)Hop_ObjChild1Copy(pObj) ); \n    Cudd_Ref( (DdNode *)pObj-\u003epData );\n    assert( !Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Dereference BDDs and unmark AIG nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nvoid Abc_ConvertAigToBdd_rec2( DdManager * dd, Hop_Obj_t * pObj )\n{\n    assert( !Hop_IsComplement(pObj) );\n    if ( !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) )\n        return;\n    Abc_ConvertAigToBdd_rec2( dd, Hop_ObjFanin0(pObj) ); \n    Abc_ConvertAigToBdd_rec2( dd, Hop_ObjFanin1(pObj) );\n    Cudd_RecursiveDeref( dd, (DdNode *)pObj-\u003epData );\n    pObj-\u003epData = NULL;\n    assert( Hop_ObjIsMarkA(pObj) ); // loop detection\n    Hop_ObjClearMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from AIG to BDD representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nDdNode * Abc_ConvertAigToBdd( DdManager * dd, Hop_Obj_t * pRoot )\n{\n    DdNode * bFunc;\n    // check the case of a constant\n    if ( Hop_ObjIsConst1( Hop_Regular(pRoot) ) )\n        return Cudd_NotCond( Cudd_ReadOne(dd), Hop_IsComplement(pRoot) );\n    // construct BDD\n    Abc_ConvertAigToBdd_rec1( dd, Hop_Regular(pRoot) );\n    // hold on to the result\n    bFunc = Cudd_NotCond( Hop_Regular(pRoot)-\u003epData, Hop_IsComplement(pRoot) );  Cudd_Ref( bFunc );\n    // dereference BDD\n    Abc_ConvertAigToBdd_rec2( dd, Hop_Regular(pRoot) );\n    // return the result\n    Cudd_Deref( bFunc );\n    return bFunc;\n}\n\n#else\n\nint  Abc_NtkSopToBdd( Abc_Ntk_t * pNtk ) { return 1; }\nint  Abc_NtkBddToSop( Abc_Ntk_t * pNtk, int fMode, int nCubeLimit ) { return 1; }\nvoid Abc_NodeBddToCnf( Abc_Obj_t * pNode, Mem_Flex_t * pMmMan, Vec_Str_t * vCube, int fAllPrimes, char ** ppSop0, char ** ppSop1 ) {}\nvoid Abc_NtkLogicMakeDirectSops( Abc_Ntk_t * pNtk ) {}\nint  Abc_NtkAigToBdd( Abc_Ntk_t * pNtk ) { return 1; }\n\n#endif\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from SOP to AIG representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSopToAig(pNtk *Abc_Ntk_t) int32 {\n    var pNode *Abc_Obj_t;\n    var pMan *Hop_Man_t;\n    var i, Max int32;\n\n    assert(Abc_NtkHasSop(pNtk), \"Abc_NtkHasSop(pNtk)\"); \n\n    // make dist1-free and SCC-free\n//    Abc_NtkMakeLegit( pNtk );\n\n    // start the functionality manager\n    pMan = Hop_ManStart();\n    Max = Abc_NtkGetFaninMax(pNtk);\n    if Max != 0 { Hop_IthVar( pMan, Max-1 ); }\n\n    // convert each node from SOP to BDD\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if Abc_ObjIsBarBuf(pNode) {\n            continue; }\n        assert(pNode.pData, \"pNode.pData\");\n        pNode.pData = Abc_ConvertSopToAig( pMan, (char *)pNode.pData );\n        if pNode.pData == nil {\n            Hop_ManStop( pMan );\n            fmt.Printf(\"Abc_NtkSopToAig: Error while converting SOP into AIG.\\n\");\n            return 0;\n        }\n    }\n    Mem_FlexStop( (Mem_Flex_t *)pNtk.pManFunc, 0 );\n    pNtk.pManFunc = pMan;\n\n    // update the network type\n    pNtk.ntkFunc = ABC_FUNC_AIG;\n    return 1;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Strashes one logic node using its SOP.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ConvertSopToAigInternal(pMan *Hop_Man_t, pSop string) *Hop_Obj_t {\n    var pAnd, pSum *Hop_Obj_t;\n    var i, Value, nFanins int32;\n    var pCube string;\n    // get the number of variables\n    nFanins = Abc_SopGetVarNum(pSop);\n    if Abc_SopIsExorType(pSop) {\n        pSum = Hop_ManConst0(pMan); \n        for  i = 0; i \u003c nFanins; i++  {\n            pSum = Hop_Exor( pMan, pSum, Hop_IthVar(pMan,i) );\n        }\n    \n    } else {\n        // go through the cubes of the node's SOP\n        pSum = Hop_ManConst0(pMan); \n        Abc_SopForEachCube( pSop, nFanins, pCube )\n        {\n            // create the AND of literals\n            pAnd = Hop_ManConst1(pMan);\n            Abc_CubeForEachVar( pCube, Value, i )\n            {\n                if Value == '1' {\n                    pAnd = Hop_And( pMan, pAnd, Hop_IthVar(pMan,i) );\n                } else if Value == '0' {\n                    pAnd = Hop_And( pMan, pAnd, Hop_Not(Hop_IthVar(pMan,i)) ); }\n            }\n            // add to the sum of cubes\n            pSum = Hop_Or( pMan, pSum, pAnd );\n        }\n    }\n    // decide whether to complement the result\n    if Abc_SopIsComplement(pSop) {\n        pSum = Hop_Not(pSum); }\n    return pSum;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from AIG to BDD representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ConvertSopToAig(pMan *Hop_Man_t, pSop string) *Hop_Obj_t {\n    extern Hop_Obj_t * Dec_GraphFactorSop( Hop_Man_t * pMan, char * pSop );\n    var fUseFactor int32  = 1;\n    // consider the constant node\n    if Abc_SopGetVarNum(pSop) == 0 {\n        return Hop_NotCond( Hop_ManConst1(pMan), Abc_SopIsConst0(pSop) ); }\n    // decide when to use factoring\n    if (fUseFactor != 0) \u0026\u0026 Abc_SopGetVarNum(pSop) \u003e 2 \u0026\u0026 Abc_SopGetCubeNum(pSop) \u003e 1 \u0026\u0026 !Abc_SopIsExorType(pSop) {\n        return Dec_GraphFactorSop( pMan, pSop ); }\n    return Abc_ConvertSopToAigInternal( pMan, pSop );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from AIG to GIA representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ConvertAigToGia_rec1(p *Gia_Man_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_ConvertAigToGia_rec1( p, Hop_ObjFanin0(pObj) ); \n    Abc_ConvertAigToGia_rec1( p, Hop_ObjFanin1(pObj) );\n    pObj.iData = Gia_ManAppendAnd2( p, Hop_ObjChild0CopyI(pObj), Hop_ObjChild1CopyI(pObj) );\n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}\nfunc Abc_ConvertAigToGia_rec2(pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || !Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_ConvertAigToGia_rec2( Hop_ObjFanin0(pObj) ); \n    Abc_ConvertAigToGia_rec2( Hop_ObjFanin1(pObj) );\n    assert(Hop_ObjIsMarkA(pObj), \"Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjClearMarkA( pObj );\n}\nfunc Abc_ConvertAigToGia(p *Gia_Man_t, pRoot *Hop_Obj_t) int32 {\n    assert(!Hop_IsComplement(pRoot), \"!Hop_IsComplement(pRoot)\");\n    if Hop_ObjIsConst1( pRoot ) {\n        return 1; }\n    Abc_ConvertAigToGia_rec1( p, pRoot );\n    Abc_ConvertAigToGia_rec2( pRoot );\n    return pRoot.iData;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from AIG to BDD representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkAigToGia(p *Abc_Ntk_t, fGiaSimple int32) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pHopMan *Hop_Man_t;\n    var pHopObj *Hop_Obj_t;\n    var vMapping *Vec_Int_t  = nil;\n    var vNodes *Vec_Ptr_t;\n    var pNode, pFanin *Abc_Obj_t;\n    var i, k, nObjs, iGiaObj int32;\n    assert(Abc_NtkIsAigLogic(p), \"Abc_NtkIsAigLogic(p)\");\n    pHopMan = (Hop_Man_t *)p.pManFunc;\n    // create new manager\n    pNew = Gia_ManStart( 10000 );\n    pNew.pName = Abc_UtilStrsav( Abc_NtkName(p) );\n    pNew.pSpec = Abc_UtilStrsav( Abc_NtkSpec(p) );\n    pNew.fGiaSimple = fGiaSimple;\n    Abc_NtkCleanCopy( p );\n    Hop_ManConst1(pHopMan).iData = 1;\n    // create primary inputs\n    Abc_NtkForEachCi( p, pNode, i )\n        pNode.iTemp = Gia_ManAppendCi(pNew);\n    // find the number of objects\n    nObjs = 1 + Abc_NtkCiNum(p) + Abc_NtkCoNum(p);\n    Abc_NtkForEachNode( p, pNode, i )\n        nObjs += Abc_ObjIsBarBuf(pNode) ? 1 : Hop_DagSize( (Hop_Obj_t *)pNode.pData );\n    if !(fGiaSimple != 0) {\n        vMapping = Vec_IntStart( nObjs ); }\n    // iterate through nodes used in the mapping\n    vNodes = Abc_NtkDfs( p, 0 );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n    {\n        if Abc_ObjIsBarBuf(pNode) {\n            assert(!Abc_ObjFaninC0(pNode), \"!Abc_ObjFaninC0(pNode)\");\n            pNode.iTemp = Gia_ManAppendBuf( pNew, Abc_ObjFanin0(pNode).iTemp );\n            continue;\n        }\n        Abc_ObjForEachFanin( pNode, pFanin, k )\n            Hop_ManPi(pHopMan, k).iData = pFanin.iTemp;\n        pHopObj = Hop_Regular( (Hop_Obj_t *)pNode.pData );\n        if Hop_DagSize(pHopObj) \u003e 0 {\n            assert(Abc_ObjFaninNum(pNode) \u003c= Hop_ManPiNum(pHopMan), \"Abc_ObjFaninNum(pNode) \u003c= Hop_ManPiNum(pHopMan)\");\n            Abc_ConvertAigToGia( pNew, pHopObj );\n            iGiaObj = Abc_Lit2Var( pHopObj.iData );\n            if (vMapping != nil) \u0026\u0026 Gia_ObjIsAnd(Gia_ManObj(pNew, iGiaObj)) \u0026\u0026 !Vec_IntEntry(vMapping, iGiaObj) {\n                Vec_IntWriteEntry( vMapping, iGiaObj, Vec_IntSize(vMapping) );\n                Vec_IntPush( vMapping, Abc_ObjFaninNum(pNode) );\n                Abc_ObjForEachFanin( pNode, pFanin, k )\n                    Vec_IntPush( vMapping, Abc_Lit2Var(pFanin.iTemp)  );\n                Vec_IntPush( vMapping, iGiaObj );\n            }\n        }\n        pNode.iTemp = Abc_LitNotCond( pHopObj.iData, Hop_IsComplement( (Hop_Obj_t *)pNode.pData ) );\n    }\n    // create primary outputs\n    Abc_NtkForEachCo( p, pNode, i )\n        Gia_ManAppendCo( pNew, Abc_ObjFanin0(pNode).iTemp );\n    Gia_ManSetRegNum( pNew, Abc_NtkLatchNum(p) );\n    // copy original IDs\n    pNew.vIdsOrig = Vec_IntStart( Gia_ManObjNum(pNew) );\n    Vec_PtrForEachEntry( Abc_Obj_t *, vNodes, pNode, i )\n        Vec_IntWriteEntry( pNew.vIdsOrig, Abc_Lit2Var(pNode.iTemp), Abc_ObjId(pNode) );\n    Vec_PtrFree( vNodes );\n    // finish mapping \n    assert(Gia_ManObjNum(pNew) \u003c= nObjs, \"Gia_ManObjNum(pNew) \u003c= nObjs\");\n    assert(pNew.vMapping == nil, \"pNew.vMapping == nil\");\n    pNew.vMapping = vMapping;\n    return pNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Construct BDDs and mark AIG nodes.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ConvertAigToAig_rec(pNtkAig *Abc_Ntk_t, pObj *Hop_Obj_t) {\n    assert(!Hop_IsComplement(pObj), \"!Hop_IsComplement(pObj)\");\n    if !Hop_ObjIsNode(pObj) || Hop_ObjIsMarkA(pObj) {\n        return; }\n    Abc_ConvertAigToAig_rec( pNtkAig, Hop_ObjFanin0(pObj) ); \n    Abc_ConvertAigToAig_rec( pNtkAig, Hop_ObjFanin1(pObj) );\n    pObj.pData = Abc_AigAnd( (Abc_Aig_t *)pNtkAig.pManFunc, (Abc_Obj_t *)Hop_ObjChild0Copy(pObj), (Abc_Obj_t *)Hop_ObjChild1Copy(pObj) ); \n    assert(!Hop_ObjIsMarkA(pObj), \"!Hop_ObjIsMarkA(pObj)\"); // loop detection\n    Hop_ObjSetMarkA( pObj );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts the network from AIG to BDD representation.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_ConvertAigToAig(pNtkAig *Abc_Ntk_t, pObjOld *Abc_Obj_t) *Abc_Obj_t {\n    var pHopMan *Hop_Man_t;\n    var pRoot *Hop_Obj_t;\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    // get the local AIG\n    pHopMan = (Hop_Man_t *)pObjOld.pNtk.pManFunc;\n    pRoot = (Hop_Obj_t *)pObjOld.pData;\n    // check the case of a constant\n    if Hop_ObjIsConst1( Hop_Regular(pRoot) ) {\n        return Abc_ObjNotCond( Abc_AigConst1(pNtkAig), Hop_IsComplement(pRoot) ); }\n    // assign the fanin nodes\n    Abc_ObjForEachFanin( pObjOld, pFanin, i )\n    {\n        assert(pFanin.pCopy != nil, \"pFanin.pCopy != nil\");\n        Hop_ManPi(pHopMan, i).pData = pFanin.pCopy;\n    }\n    // construct the AIG\n    Abc_ConvertAigToAig_rec( pNtkAig, Hop_Regular(pRoot) );\n    Hop_ConeUnmark_rec( Hop_Regular(pRoot) );\n    // return the result\n    return Abc_ObjNotCond( (Abc_Obj_t *)Hop_Regular(pRoot).pData, Hop_IsComplement(pRoot) );  \n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Unmaps the network.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMapToSop(pNtk *Abc_Ntk_t) int32 {\n    extern void * Abc_FrameReadLibGen();                    \n    var pNode *Abc_Obj_t;\n    var pSop string;\n    var i int32;\n\n    assert(Abc_NtkHasMapping(pNtk), \"Abc_NtkHasMapping(pNtk)\");\n    // update the functionality manager\n    assert(pNtk.pManFunc == Abc_FrameReadLibGen(), \"pNtk.pManFunc == Abc_FrameReadLibGen()\");\n    pNtk.pManFunc = Mem_FlexStart();\n    // update the nodes\n    Abc_NtkForEachNode( pNtk, pNode, i )\n    {\n        if Abc_ObjIsBarBuf(pNode) {\n            continue; }\n        pSop = Mio_GateReadSop((Mio_Gate_t *)pNode.pData);\n        assert(Abc_SopGetVarNum(pSop) == Abc_ObjFaninNum(pNode), \"Abc_SopGetVarNum(pSop) == Abc_ObjFaninNum(pNode)\");\n        pNode.pData = Abc_SopRegister( (Mem_Flex_t *)pNtk.pManFunc, pSop );\n    }\n    pNtk.ntkFunc  = ABC_FUNC_SOP;\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Converts SOP functions into BLIF-MV functions.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkSopToBlifMv(pNtk *Abc_Ntk_t) int32 {\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Convers logic network to the SOP form.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkToSop(pNtk *Abc_Ntk_t, fMode int32, nCubeLimit int32) int32 {\n    assert(!Abc_NtkIsStrash(pNtk), \"!Abc_NtkIsStrash(pNtk)\");\n    if Abc_NtkHasBlackbox(pNtk) {\n        return 1; }\n    if Abc_NtkHasSop(pNtk) {\n        if fMode == -1 {\n            return 1; }\n        if !Abc_NtkSopToBdd(pNtk) {\n            return 0; }\n        return Abc_NtkBddToSop(pNtk, fMode, nCubeLimit);\n    }\n    if Abc_NtkHasMapping(pNtk) {\n        return Abc_NtkMapToSop(pNtk); }\n    if Abc_NtkHasBdd(pNtk) {\n        return Abc_NtkBddToSop(pNtk, fMode, nCubeLimit); }\n    if Abc_NtkHasAig(pNtk) {\n        if !Abc_NtkAigToBdd(pNtk) {\n            return 0; }\n        return Abc_NtkBddToSop(pNtk, fMode, nCubeLimit);\n    }\n    assert(false, \"0\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Convers logic network to the SOP form.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkToBdd(pNtk *Abc_Ntk_t) int32 {\n    assert(!Abc_NtkIsStrash(pNtk), \"!Abc_NtkIsStrash(pNtk)\");\n    if Abc_NtkHasBlackbox(pNtk) {\n        return 1; }\n    if Abc_NtkHasBdd(pNtk) {\n        return 1; }\n    if Abc_NtkHasMapping(pNtk) {\n        Abc_NtkMapToSop(pNtk);\n        return Abc_NtkSopToBdd(pNtk);\n    }\n    if Abc_NtkHasSop(pNtk) {\n        Abc_NtkSopToAig(pNtk);\n        return Abc_NtkAigToBdd(pNtk);\n    }\n    if Abc_NtkHasAig(pNtk) {\n        return Abc_NtkAigToBdd(pNtk); }\n    assert(false, \"0\");\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Convers logic network to the SOP form.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkToAig(pNtk *Abc_Ntk_t) int32 {\n    assert(!Abc_NtkIsStrash(pNtk), \"!Abc_NtkIsStrash(pNtk)\");\n    if Abc_NtkHasBlackbox(pNtk) {\n        return 1; }\n    if Abc_NtkHasAig(pNtk) {\n        return 1; }\n    if Abc_NtkHasMapping(pNtk) {\n        Abc_NtkMapToSop(pNtk);\n        return Abc_NtkSopToAig(pNtk);\n    }\n    if Abc_NtkHasBdd(pNtk) {\n        if !Abc_NtkBddToSop(pNtk, -1, ABC_INFINITY) {\n            return 0; }\n        return Abc_NtkSopToAig(pNtk);\n    }\n    if Abc_NtkHasSop(pNtk) {\n        return Abc_NtkSopToAig(pNtk); }\n    assert(false, \"0\");\n    return 0;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

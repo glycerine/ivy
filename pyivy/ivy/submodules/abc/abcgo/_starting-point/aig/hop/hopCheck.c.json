@@ -1,0 +1,153 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopCheck.c",
+  "SHA256": "6ccabe27cd85fefffd82f4b25de853ea47ee1b847c416ef74994ecf0969bee56",
+  "Library": [
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 53,
+        "Column": 13,
+        "ByteOffset": 1703
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Hop_ManCheck: The PI node \\\"%p\\\" has fanins.\\n\", pObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 60,
+        "Column": 13,
+        "ByteOffset": 2095
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Hop_ManCheck: The PO node \\\"%p\\\" has NULL fanin.\\n\", pObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 13,
+        "ByteOffset": 2242
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Hop_ManCheck: The PO node \\\"%p\\\" has second fanin.\\n\", pObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 71,
+        "Column": 13,
+        "ByteOffset": 2634
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Hop_ManCheck: The AIG has internal node \\\"%p\\\" with a NULL fanin.\\n\", pObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 75,
+        "Column": 13,
+        "ByteOffset": 2827
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Hop_ManCheck: The AIG has node \\\"%p\\\" with a wrong ordering of fanins.\\n\", pObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 80,
+        "Column": 13,
+        "ByteOffset": 3034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Hop_ManCheck: Node \\\"%p\\\" is not in the structural hashing table.\\n\", pObj );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 87,
+        "Column": 9,
+        "ByteOffset": 3318
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Hop_ManCheck: The number of created nodes is wrong.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 92,
+        "Column": 9,
+        "ByteOffset": 3537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Hop_ManCheck: The number of nodes in the structural hashing table is wrong.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Hop_ManCheck",
+      "Start": 1288,
+      "End": 3293,
+      "BodyStart": 1322,
+      "Original": "int Hop_ManCheck( Hop_Man_t * p )\n{\n    Hop_Obj_t * pObj, * pObj2;\n    int i;\n    // check primary inputs\n    Hop_ManForEachPi( p, pObj, i )\n    {\n        if ( Hop_ObjFanin0(pObj) || Hop_ObjFanin1(pObj) )\n        {\n            printf( \"Hop_ManCheck: The PI node \\\"%p\\\" has fanins.\\n\", pObj );\n            return 0;\n        }\n    }\n    // check primary outputs\n    Hop_ManForEachPo( p, pObj, i )\n    {\n        if ( !Hop_ObjFanin0(pObj) )\n        {\n            printf( \"Hop_ManCheck: The PO node \\\"%p\\\" has NULL fanin.\\n\", pObj );\n            return 0;\n        }\n        if ( Hop_ObjFanin1(pObj) )\n        {\n            printf( \"Hop_ManCheck: The PO node \\\"%p\\\" has second fanin.\\n\", pObj );\n            return 0;\n        }\n    }\n    // check internal nodes\n    Hop_ManForEachNode( p, pObj, i )\n    {\n        if ( !Hop_ObjFanin0(pObj) || !Hop_ObjFanin1(pObj) )\n        {\n            printf( \"Hop_ManCheck: The AIG has internal node \\\"%p\\\" with a NULL fanin.\\n\", pObj );\n            return 0;\n        }\n        if ( Hop_ObjFanin0(pObj)-\u003eId \u003e= Hop_ObjFanin1(pObj)-\u003eId )\n        {\n            printf( \"Hop_ManCheck: The AIG has node \\\"%p\\\" with a wrong ordering of fanins.\\n\", pObj );\n            return 0;\n        }\n        pObj2 = Hop_TableLookup( p, pObj );\n        if ( pObj2 != pObj )\n        {\n            printf( \"Hop_ManCheck: Node \\\"%p\\\" is not in the structural hashing table.\\n\", pObj );\n            return 0;\n        }\n    }\n    // count the total number of nodes\n    if ( Hop_ManObjNum(p) != 1 + Hop_ManPiNum(p) + Hop_ManPoNum(p) + Hop_ManAndNum(p) + Hop_ManExorNum(p) )\n    {\n        printf( \"Hop_ManCheck: The number of created nodes is wrong.\\n\" );\n        return 0;\n    }\n    // count the number of nodes in the table\n    if ( Hop_TableCountEntries(p) != Hop_ManAndNum(p) + Hop_ManExorNum(p) )\n    {\n        printf( \"Hop_ManCheck: The number of nodes in the structural hashing table is wrong.\\n\" );\n        return 0;\n    }\n//    if ( !Hop_ManIsAcyclic(p) )\n//        return 0;\n    return 1; \n}",
+      "Draft": "func Hop_ManCheck(p *Hop_Man_t) int32 {\n    var pObj, pObj2 *Hop_Obj_t;\n    var i int32;\n    // check primary inputs\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        if Hop_ObjFanin0(pObj) || Hop_ObjFanin1(pObj) {\n            fmt.Printf(\"Hop_ManCheck: The PI node \\\"%p\\\" has fanins.\\n\", pObj);\n            return 0;\n        }\n    }\n    // check primary outputs\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        if !Hop_ObjFanin0(pObj) {\n            fmt.Printf(\"Hop_ManCheck: The PO node \\\"%p\\\" has NULL fanin.\\n\", pObj);\n            return 0;\n        }\n        if Hop_ObjFanin1(pObj) {\n            fmt.Printf(\"Hop_ManCheck: The PO node \\\"%p\\\" has second fanin.\\n\", pObj);\n            return 0;\n        }\n    }\n    // check internal nodes\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pObj) = p.pTable[i]) == nil {} else {\n        if !Hop_ObjFanin0(pObj) || !Hop_ObjFanin1(pObj) {\n            fmt.Printf(\"Hop_ManCheck: The AIG has internal node \\\"%p\\\" with a NULL fanin.\\n\", pObj);\n            return 0;\n        }\n        if Hop_ObjFanin0(pObj).Id \u003e= Hop_ObjFanin1(pObj).Id {\n            fmt.Printf(\"Hop_ManCheck: The AIG has node \\\"%p\\\" with a wrong ordering of fanins.\\n\", pObj);\n            return 0;\n        }\n        pObj2 = Hop_TableLookup( p, pObj );\n        if pObj2 != pObj {\n            fmt.Printf(\"Hop_ManCheck: Node \\\"%p\\\" is not in the structural hashing table.\\n\", pObj);\n            return 0;\n        }\n    }\n    }\n    // count the total number of nodes\n    if Hop_ManObjNum(p) != 1 + Hop_ManPiNum(p) + Hop_ManPoNum(p) + Hop_ManAndNum(p) + Hop_ManExorNum(p) {\n        fmt.Printf(\"Hop_ManCheck: The number of created nodes is wrong.\\n\");\n        return 0;\n    }\n    // count the number of nodes in the table\n    if Hop_TableCountEntries(p) != Hop_ManAndNum(p) + Hop_ManExorNum(p) {\n        fmt.Printf(\"Hop_ManCheck: The number of nodes in the structural hashing table is wrong.\\n\");\n        return 0;\n    }\n//    if ( !Hop_ManIsAcyclic(p) )\n//        return 0;\n    return 1; \n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopCheck.c::pointer-cast::1559",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1398,
+      "End": 1398
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopCheck.c::pointer-cast::1993",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1652,
+      "End": 1652
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopCheck.c::Hop_ManCheck",
+      "Category": "semantic-review",
+      "Symbol": "Hop_ManCheck",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1288,
+      "End": 3293
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/hop/hopCheck.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 3540
+    }
+  ],
+  "Draft": "package hop\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [hopCheck.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Minimalistic And-Inverter Graph package.]\n\n  Synopsis    [AIG checking procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - May 11, 2006.]\n\n  Revision    [$Id: hopCheck.c,v 1.00 2006/05/11 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"hop.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Checks the consistency of the AIG manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Hop_ManCheck(p *Hop_Man_t) int32 {\n    var pObj, pObj2 *Hop_Obj_t;\n    var i int32;\n    // check primary inputs\n    // inlining of macro Hop_ManForEachPi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPis)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPis, i)), 1); i++  {\n        if Hop_ObjFanin0(pObj) || Hop_ObjFanin1(pObj) {\n            fmt.Printf(\"Hop_ManCheck: The PI node \\\"%p\\\" has fanins.\\n\", pObj);\n            return 0;\n        }\n    }\n    // check primary outputs\n    // inlining of macro Hop_ManForEachPo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(p.vPos)) \u0026\u0026 (((pObj) = (Hop_Obj_t *)Vec_PtrEntry(p.vPos, i)), 1); i++  {\n        if !Hop_ObjFanin0(pObj) {\n            fmt.Printf(\"Hop_ManCheck: The PO node \\\"%p\\\" has NULL fanin.\\n\", pObj);\n            return 0;\n        }\n        if Hop_ObjFanin1(pObj) {\n            fmt.Printf(\"Hop_ManCheck: The PO node \\\"%p\\\" has second fanin.\\n\", pObj);\n            return 0;\n        }\n    }\n    // check internal nodes\n    // inlining of macro Hop_ManForEachNode\n    for  i = 0; i \u003c p.nTableSize; i++  {                                               if ((pObj) = p.pTable[i]) == nil {} else {\n        if !Hop_ObjFanin0(pObj) || !Hop_ObjFanin1(pObj) {\n            fmt.Printf(\"Hop_ManCheck: The AIG has internal node \\\"%p\\\" with a NULL fanin.\\n\", pObj);\n            return 0;\n        }\n        if Hop_ObjFanin0(pObj).Id \u003e= Hop_ObjFanin1(pObj).Id {\n            fmt.Printf(\"Hop_ManCheck: The AIG has node \\\"%p\\\" with a wrong ordering of fanins.\\n\", pObj);\n            return 0;\n        }\n        pObj2 = Hop_TableLookup( p, pObj );\n        if pObj2 != pObj {\n            fmt.Printf(\"Hop_ManCheck: Node \\\"%p\\\" is not in the structural hashing table.\\n\", pObj);\n            return 0;\n        }\n    }\n    }\n    // count the total number of nodes\n    if Hop_ManObjNum(p) != 1 + Hop_ManPiNum(p) + Hop_ManPoNum(p) + Hop_ManAndNum(p) + Hop_ManExorNum(p) {\n        fmt.Printf(\"Hop_ManCheck: The number of created nodes is wrong.\\n\");\n        return 0;\n    }\n    // count the number of nodes in the table\n    if Hop_TableCountEntries(p) != Hop_ManAndNum(p) + Hop_ManExorNum(p) {\n        fmt.Printf(\"Hop_ManCheck: The number of nodes in the structural hashing table is wrong.\\n\");\n        return 0;\n    }\n//    if ( !Hop_ManIsAcyclic(p) )\n//        return 0;\n    return 1; \n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

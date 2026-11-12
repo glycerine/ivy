@@ -1,0 +1,843 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c",
+  "SHA256": "715350b556adf30a12bce62e15ea7d6dd126c143337c3d87273fc951c161117f",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 142,
+        "Column": 37,
+        "ByteOffset": 4948
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        state.in = (unsigned char *)malloc(state.want);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 143,
+        "Column": 38,
+        "ByteOffset": 5005
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        state.out = (unsigned char *)malloc(state.want \u003c\u003c 1);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 146,
+        "Column": 17,
+        "ByteOffset": 5129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                free(state.out); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 148,
+        "Column": 17,
+        "ByteOffset": 5197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                free(state.in); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 161,
+        "Column": 13,
+        "ByteOffset": 5643
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            free(state.out);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 162,
+        "Column": 13,
+        "ByteOffset": 5672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            free(state.in);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 256,
+        "Column": 9,
+        "ByteOffset": 11450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(state.next + state.have, strm.next_in, strm.avail_in);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 444,
+        "Column": 13,
+        "ByteOffset": 17852
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            memcpy(buf, state.next, n);"
+    },
+    {
+      "Name": "memchr",
+      "Status": "review",
+      "Message": "Pointer results, NULL checks, padding, shared token state and locale require surrounding-code repair.",
+      "Location": {
+        "Line": 623,
+        "Column": 32,
+        "ByteOffset": 23075
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        eol = (unsigned char *)memchr(state.next, '\\n', n);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 628,
+        "Column": 9,
+        "ByteOffset": 23253
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy(buf, state.next, n);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 682,
+        "Column": 9,
+        "ByteOffset": 24570
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        free(state.out);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 683,
+        "Column": 9,
+        "ByteOffset": 24595
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        free(state.in);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 686,
+        "Column": 5,
+        "ByteOffset": 24653
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(state.path);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 688,
+        "Column": 5,
+        "ByteOffset": 24702
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    free(state);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "gz_load",
+      "Start": 970,
+      "End": 1390,
+      "BodyStart": 1055,
+      "Original": "local int gz_load(gz_statep state, unsigned char *buf, unsigned len, unsigned *have)\n{\n    int ret;\n\n    *have = 0;\n    do {\n        ret = read(state-\u003efd, buf + *have, len - *have);\n        if (ret \u003c= 0)\n            break;\n        *have += ret;\n    } while (*have \u003c len);\n    if (ret \u003c 0) {\n        gz_error(state, Z_ERRNO, zstrerror());\n        return -1;\n    }\n    if (ret == 0)\n        state-\u003eeof = 1;\n    return 0;\n}",
+      "Draft": "local int gz_load(gz_statep state, unsigned char *buf, unsigned len, unsigned *have)\n{\n    var ret int32;\n\n    *have = 0;\n    for {\n        ret = read(state.fd, buf + *have, len - *have);\n        if ret \u003c= 0 {\n            break; }\n        *have += ret;\n    \nif !(*have \u003c len) { break }\n} \n    if ret \u003c 0 {\n        gz_error(state, Z_ERRNO, zstrerror());\n        return -1;\n    }\n    if ret == 0 {\n        state.eof = 1; }\n    return 0;\n}"
+    },
+    {
+      "Name": "gz_avail",
+      "Start": 1754,
+      "End": 2088,
+      "BodyStart": 1790,
+      "Original": "local int gz_avail(gz_statep state)\n{\n    z_streamp strm = \u0026(state-\u003estrm);\n\n    if (state-\u003eerr != Z_OK)\n        return -1;\n    if (state-\u003eeof == 0) {\n        if (gz_load(state, state-\u003ein, state-\u003esize,\n                (unsigned *)\u0026(strm-\u003eavail_in)) == -1)\n            return -1;\n        strm-\u003enext_in = state-\u003ein;\n    }\n    return 0;\n}",
+      "Draft": "func gz_avail(state gz_statep) local int {\n    var strm z_streamp  = \u0026(state.strm);\n\n    if state.err != Z_OK {\n        return -1; }\n    if state.eof == 0 {\n        if gz_load(state, state.in, state.size,\n                (unsigned *)\u0026(strm.avail_in)) == -1 {\n            return -1; }\n        strm.next_in = state.in;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "gz_next4",
+      "Start": 2468,
+      "End": 2812,
+      "BodyStart": 2524,
+      "Original": "local int gz_next4(gz_statep state, unsigned long *ret)\n{\n    int ch;\n    unsigned long val;\n    z_streamp strm = \u0026(state-\u003estrm);\n\n    val = NEXT();\n    val += (unsigned)NEXT() \u003c\u003c 8;\n    val += (unsigned long)NEXT() \u003c\u003c 16;\n    ch = NEXT();\n    if (ch == -1)\n        return -1;\n    val += (unsigned long)ch \u003c\u003c 24;\n    *ret = val;\n    return 0;\n}",
+      "Draft": "local int gz_next4(gz_statep state, unsigned long *ret)\n{\n    var ch int32;\n    unsigned long val;\n    var strm z_streamp  = \u0026(state.strm);\n\n    // inlining of macro NEXT\n    \n    if strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1 {\n        val = -1;\n    } else {\n        if strm.avail_in == 0 {\n            val = -1;\n        } else {\n            val = (strm.avail_in--, *(strm.next_in)++);\n        }\n    }\n    // inlining of macro NEXT\n    val += uint32(((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)))) \u003c\u003c 8;\n    // inlining of macro NEXT\n    val += (unsigned long)((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++))) \u003c\u003c 16;\n    // inlining of macro NEXT\n    \n    if strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1 {\n        ch = -1;\n    } else {\n        if strm.avail_in == 0 {\n            ch = -1;\n        } else {\n            ch = (strm.avail_in--, *(strm.next_in)++);\n        }\n    }\n    if ch == -1 {\n        return -1; }\n    val += (unsigned long)ch \u003c\u003c 24;\n    *ret = val;\n    return 0;\n}"
+    },
+    {
+      "Name": "gz_head",
+      "Start": 3689,
+      "End": 7709,
+      "BodyStart": 3724,
+      "Original": "local int gz_head(gz_statep state)\n{\n    z_streamp strm = \u0026(state-\u003estrm);\n    int flags;\n    unsigned len;\n\n    /* allocate read buffers and inflate memory */\n    if (state-\u003esize == 0) {\n        /* allocate buffers */\n        state-\u003ein = (unsigned char *)malloc(state-\u003ewant);\n        state-\u003eout = (unsigned char *)malloc(state-\u003ewant \u003c\u003c 1);\n        if (state-\u003ein == NULL || state-\u003eout == NULL) {\n            if (state-\u003eout != NULL)\n                free(state-\u003eout);\n            if (state-\u003ein != NULL)\n                free(state-\u003ein);\n            gz_error(state, Z_MEM_ERROR, \"out of memory\");\n            return -1;\n        }\n        state-\u003esize = state-\u003ewant;\n\n        /* allocate inflate memory */\n        state-\u003estrm.zalloc = Z_NULL;\n        state-\u003estrm.zfree = Z_NULL;\n        state-\u003estrm.opaque = Z_NULL;\n        state-\u003estrm.avail_in = 0;\n        state-\u003estrm.next_in = Z_NULL;\n        if (inflateInit2(\u0026(state-\u003estrm), -15) != Z_OK) {    /* raw inflate */\n            free(state-\u003eout);\n            free(state-\u003ein);\n            state-\u003esize = 0;\n            gz_error(state, Z_MEM_ERROR, \"out of memory\");\n            return -1;\n        }\n    }\n\n    /* get some data in the input buffer */\n    if (strm-\u003eavail_in == 0) {\n        if (gz_avail(state) == -1)\n            return -1;\n        if (strm-\u003eavail_in == 0)\n            return 0;\n    }\n\n    /* look for the gzip magic header bytes 31 and 139 */\n    if (strm-\u003enext_in[0] == 31) {\n        strm-\u003eavail_in--;\n        strm-\u003enext_in++;\n        if (strm-\u003eavail_in == 0 \u0026\u0026 gz_avail(state) == -1)\n            return -1;\n        if (strm-\u003eavail_in \u0026\u0026 strm-\u003enext_in[0] == 139) {\n            /* we have a gzip header, woo hoo! */\n            strm-\u003eavail_in--;\n            strm-\u003enext_in++;\n\n            /* skip rest of header */\n            if (NEXT() != 8) {      /* compression method */\n                gz_error(state, Z_DATA_ERROR, \"unknown compression method\");\n                return -1;\n            }\n            flags = NEXT();\n            if (flags \u0026 0xe0) {     /* reserved flag bits */\n                gz_error(state, Z_DATA_ERROR, \"unknown header flags set\");\n                return -1;\n            }\n            NEXT();                 /* modification time */\n            NEXT();\n            NEXT();\n            NEXT();\n            NEXT();                 /* extra flags */\n            NEXT();                 /* operating system */\n            if (flags \u0026 4) {        /* extra field */\n                len = (unsigned)NEXT();\n                len += (unsigned)NEXT() \u003c\u003c 8;\n                while (len--)\n                    if (NEXT() \u003c 0)\n                        break;\n            }\n            if (flags \u0026 8)          /* file name */\n                while (NEXT() \u003e 0)\n                    ;\n            if (flags \u0026 16)         /* comment */\n                while (NEXT() \u003e 0)\n                    ;\n            if (flags \u0026 2) {        /* header crc */\n                NEXT();\n                NEXT();\n            }\n            /* an unexpected end of file is not checked for here -- it will be\n               noticed on the first request for uncompressed data */\n\n            /* set up for decompression */\n            inflateReset(strm);\n            strm-\u003eadler = crc32(0L, Z_NULL, 0);\n            state-\u003ehow = GZIP;\n            state-\u003edirect = 0;\n            return 0;\n        }\n        else {\n            /* not a gzip file -- save first byte (31) and fall to raw i/o */\n            state-\u003eout[0] = 31;\n            state-\u003ehave = 1;\n        }\n    }\n\n    /* doing raw i/o, save start of raw data for seeking, copy any leftover\n       input to output -- this assumes that the output buffer is larger than\n       the input buffer, which also assures space for gzungetc() */\n    state-\u003eraw = state-\u003epos;\n    state-\u003enext = state-\u003eout;\n    if (strm-\u003eavail_in) {\n        memcpy(state-\u003enext + state-\u003ehave, strm-\u003enext_in, strm-\u003eavail_in);\n        state-\u003ehave += strm-\u003eavail_in;\n        strm-\u003eavail_in = 0;\n    }\n    state-\u003ehow = COPY;\n    state-\u003edirect = 1;\n    return 0;\n}",
+      "Draft": "func gz_head(state gz_statep) local int {\n    var strm z_streamp  = \u0026(state.strm);\n    var flags int32;\n    var len uint32;\n\n    /* allocate read buffers and inflate memory */\n    if state.size == 0 {\n        /* allocate buffers */\n        state.in = (unsigned char *)malloc(state.want);\n        state.out = (unsigned char *)malloc(state.want \u003c\u003c 1);\n        if state.in == nil || state.out == nil {\n            if state.out != nil {\n                free(state.out); }\n            if state.in != nil {\n                free(state.in); }\n            gz_error(state, Z_MEM_ERROR, \"out of memory\");\n            return -1;\n        }\n        state.size = state.want;\n\n        /* allocate inflate memory */\n        state.strm.zalloc = Z_NULL;\n        state.strm.zfree = Z_NULL;\n        state.strm.opaque = Z_NULL;\n        state.strm.avail_in = 0;\n        state.strm.next_in = Z_NULL;\n        if inflateInit2(\u0026(state.strm), -15) != Z_OK {    /* raw inflate */\n            free(state.out);\n            free(state.in);\n            state.size = 0;\n            gz_error(state, Z_MEM_ERROR, \"out of memory\");\n            return -1;\n        }\n    }\n\n    /* get some data in the input buffer */\n    if strm.avail_in == 0 {\n        if gz_avail(state) == -1 {\n            return -1; }\n        if strm.avail_in == 0 {\n            return 0; }\n    }\n\n    /* look for the gzip magic header bytes 31 and 139 */\n    if strm.next_in[0] == 31 {\n        strm.avail_in--;\n        strm.next_in++;\n        if strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1 {\n            return -1; }\n        if strm.avail_in \u0026\u0026 strm.next_in[0] == 139 {\n            /* we have a gzip header, woo hoo! */\n            strm.avail_in--;\n            strm.next_in++;\n\n            /* skip rest of header */\n            // inlining of macro NEXT\n            if ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++))) != 8 {      /* compression method */\n                gz_error(state, Z_DATA_ERROR, \"unknown compression method\");\n                return -1;\n            }\n            // inlining of macro NEXT\n            \n            if strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1 {\n                flags = -1;\n            } else {\n                if strm.avail_in == 0 {\n                    flags = -1;\n                } else {\n                    flags = (strm.avail_in--, *(strm.next_in)++);\n                }\n            }\n            if flags \u0026 0xe0 {     /* reserved flag bits */\n                gz_error(state, Z_DATA_ERROR, \"unknown header flags set\");\n                return -1;\n            }\n            // inlining of macro NEXT\n            ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));                 /* modification time */\n            // inlining of macro NEXT\n            ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));\n            // inlining of macro NEXT\n            ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));\n            // inlining of macro NEXT\n            ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));\n            // inlining of macro NEXT\n            ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));                 /* extra flags */\n            // inlining of macro NEXT\n            ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));                 /* operating system */\n            if flags \u0026 4 {        /* extra field */\n                // inlining of macro NEXT\n                len = uint32(((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++))));\n                // inlining of macro NEXT\n                len += uint32(((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)))) \u003c\u003c 8;\n                for len-- {\n                    // inlining of macro NEXT\n                    if ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++))) \u003c 0 {\n                        break; }\n                }\n            }\n            if flags \u0026 8 {          /* file name */\n                // inlining of macro NEXT\n                for ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++))) \u003e 0 {\n                    ;\n                } }\n            if flags \u0026 16 {         /* comment */\n                // inlining of macro NEXT\n                for ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++))) \u003e 0 {\n                    ;\n                } }\n            if flags \u0026 2 {        /* header crc */\n                // inlining of macro NEXT\n                ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));\n                // inlining of macro NEXT\n                ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));\n            }\n            /* an unexpected end of file is not checked for here -- it will be\n               noticed on the first request for uncompressed data */\n\n            /* set up for decompression */\n            inflateReset(strm);\n            strm.adler = crc32(int64(0), Z_NULL, 0);\n            state.how = GZIP;\n            state.direct = 0;\n            return 0;\n        \n        } else {\n            /* not a gzip file -- save first byte (31) and fall to raw i/o */\n            state.out[0] = 31;\n            state.have = 1;\n        }\n    }\n\n    /* doing raw i/o, save start of raw data for seeking, copy any leftover\n       input to output -- this assumes that the output buffer is larger than\n       the input buffer, which also assures space for gzungetc() */\n    state.raw = state.pos;\n    state.next = state.out;\n    if strm.avail_in {\n        memcpy(state.next + state.have, strm.next_in, strm.avail_in);\n        state.have += strm.avail_in;\n        strm.avail_in = 0;\n    }\n    state.how = COPY;\n    state.direct = 1;\n    return 0;\n}"
+    },
+    {
+      "Name": "gz_decomp",
+      "Start": 8283,
+      "End": 10444,
+      "BodyStart": 8320,
+      "Original": "local int gz_decomp(gz_statep state)\n{\n    int ret;\n    unsigned had;\n    unsigned long crc, len;\n    z_streamp strm = \u0026(state-\u003estrm);\n\n    /* fill output buffer up to end of deflate stream */\n    had = strm-\u003eavail_out;\n    do {\n        /* get more input for inflate() */\n        if (strm-\u003eavail_in == 0 \u0026\u0026 gz_avail(state) == -1)\n            return -1;\n        if (strm-\u003eavail_in == 0) {\n            gz_error(state, Z_DATA_ERROR, \"unexpected end of file\");\n            return -1;\n        }\n\n        /* decompress and handle errors */\n        ret = inflate(strm, Z_NO_FLUSH);\n        if (ret == Z_STREAM_ERROR || ret == Z_NEED_DICT) {\n            gz_error(state, Z_STREAM_ERROR,\n                      \"internal error: inflate stream corrupt\");\n            return -1;\n        }\n        if (ret == Z_MEM_ERROR) {\n            gz_error(state, Z_MEM_ERROR, \"out of memory\");\n            return -1;\n        }\n        if (ret == Z_DATA_ERROR) {              /* deflate stream invalid */\n            gz_error(state, Z_DATA_ERROR,\n                      strm-\u003emsg == NULL ? \"compressed data error\" : strm-\u003emsg);\n            return -1;\n        }\n    } while (strm-\u003eavail_out \u0026\u0026 ret != Z_STREAM_END);\n\n    /* update available output and crc check value */\n    state-\u003ehave = had - strm-\u003eavail_out;\n    state-\u003enext = strm-\u003enext_out - state-\u003ehave;\n    strm-\u003eadler = crc32(strm-\u003eadler, state-\u003enext, state-\u003ehave);\n\n    /* check gzip trailer if at end of deflate stream */\n    if (ret == Z_STREAM_END) {\n        if (gz_next4(state, \u0026crc) == -1 || gz_next4(state, \u0026len) == -1) {\n            gz_error(state, Z_DATA_ERROR, \"unexpected end of file\");\n            return -1;\n        }\n        if (crc != strm-\u003eadler) {\n            gz_error(state, Z_DATA_ERROR, \"incorrect data check\");\n            return -1;\n        }\n        if (len != (strm-\u003etotal_out \u0026 0xffffffffL)) {\n            gz_error(state, Z_DATA_ERROR, \"incorrect length check\");\n            return -1;\n        }\n        state-\u003ehow = LOOK;      /* ready for next stream, once have is 0 (leave\n                                   state-\u003edirect unchanged to remember how) */\n    }\n\n    /* good decompression */\n    return 0;\n}",
+      "Draft": "func gz_decomp(state gz_statep) local int {\n    var ret int32;\n    var had uint32;\n    unsigned long crc, len;\n    var strm z_streamp  = \u0026(state.strm);\n\n    /* fill output buffer up to end of deflate stream */\n    had = strm.avail_out;\n    for {\n        /* get more input for inflate() */\n        if strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1 {\n            return -1; }\n        if strm.avail_in == 0 {\n            gz_error(state, Z_DATA_ERROR, \"unexpected end of file\");\n            return -1;\n        }\n\n        /* decompress and handle errors */\n        ret = inflate(strm, Z_NO_FLUSH);\n        if ret == Z_STREAM_ERROR || ret == Z_NEED_DICT {\n            gz_error(state, Z_STREAM_ERROR,\n                      \"internal error: inflate stream corrupt\");\n            return -1;\n        }\n        if ret == Z_MEM_ERROR {\n            gz_error(state, Z_MEM_ERROR, \"out of memory\");\n            return -1;\n        }\n        if ret == Z_DATA_ERROR {              /* deflate stream invalid */\n            gz_error(state, Z_DATA_ERROR,\n                      strm.msg == nil ? \"compressed data error\" : strm.msg);\n            return -1;\n        }\n    \nif !(strm.avail_out \u0026\u0026 ret != Z_STREAM_END) { break }\n} \n\n    /* update available output and crc check value */\n    state.have = had - strm.avail_out;\n    state.next = strm.next_out - state.have;\n    strm.adler = crc32(strm.adler, state.next, state.have);\n\n    /* check gzip trailer if at end of deflate stream */\n    if ret == Z_STREAM_END {\n        if gz_next4(state, \u0026crc) == -1 || gz_next4(state, \u0026len) == -1 {\n            gz_error(state, Z_DATA_ERROR, \"unexpected end of file\");\n            return -1;\n        }\n        if crc != strm.adler {\n            gz_error(state, Z_DATA_ERROR, \"incorrect data check\");\n            return -1;\n        }\n        if len != (strm.total_out \u0026 int64(0xffffffff)) {\n            gz_error(state, Z_DATA_ERROR, \"incorrect length check\");\n            return -1;\n        }\n        state.how = LOOK;      /* ready for next stream, once have is 0 (leave\n                                   state-\u003edirect unchanged to remember how) */\n    }\n\n    /* good decompression */\n    return 0;\n}"
+    },
+    {
+      "Name": "gz_make",
+      "Start": 10936,
+      "End": 11659,
+      "BodyStart": 10971,
+      "Original": "local int gz_make(gz_statep state)\n{\n    z_streamp strm = \u0026(state-\u003estrm);\n\n    if (state-\u003ehow == LOOK) {           /* look for gzip header */\n        if (gz_head(state) == -1)\n            return -1;\n        if (state-\u003ehave)                /* got some data from gz_head() */\n            return 0;\n    }\n    if (state-\u003ehow == COPY) {           /* straight copy */\n        if (gz_load(state, state-\u003eout, state-\u003esize \u003c\u003c 1, \u0026(state-\u003ehave)) == -1)\n            return -1;\n        state-\u003enext = state-\u003eout;\n    }\n    else if (state-\u003ehow == GZIP) {      /* decompress */\n        strm-\u003eavail_out = state-\u003esize \u003c\u003c 1;\n        strm-\u003enext_out = state-\u003eout;\n        if (gz_decomp(state) == -1)\n            return -1;\n    }\n    return 0;\n}",
+      "Draft": "func gz_make(state gz_statep) local int {\n    var strm z_streamp  = \u0026(state.strm);\n\n    if state.how == LOOK {           /* look for gzip header */\n        if gz_head(state) == -1 {\n            return -1; }\n        if state.have {                /* got some data from gz_head() */\n            return 0; }\n    }\n    if state.how == COPY {           /* straight copy */\n        if gz_load(state, state.out, state.size \u003c\u003c 1, \u0026(state.have)) == -1 {\n            return -1; }\n        state.next = state.out;\n    \n    } else if state.how == GZIP {      /* decompress */\n        strm.avail_out = state.size \u003c\u003c 1;\n        strm.next_out = state.out;\n        if gz_decomp(state) == -1 {\n            return -1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "gz_skip",
+      "Start": 11741,
+      "End": 12605,
+      "BodyStart": 11791,
+      "Original": "local int gz_skip(gz_statep state, z_off64_t len)\n{\n    unsigned n;\n\n    /* skip over len bytes or reach end-of-file, whichever comes first */\n    while (len)\n        /* skip over whatever is in output buffer */\n        if (state-\u003ehave) {\n            n = GT_OFF(state-\u003ehave) || (z_off64_t)state-\u003ehave \u003e len ?\n                (unsigned)len : state-\u003ehave;\n            state-\u003ehave -= n;\n            state-\u003enext += n;\n            state-\u003epos += n;\n            len -= n;\n        }\n\n        /* output buffer empty -- return if we're at the end of the input */\n        else if (state-\u003eeof \u0026\u0026 state-\u003estrm.avail_in == 0)\n            break;\n\n        /* need more data to skip -- load up output buffer */\n        else {\n            /* get more output, looking for header if required */\n            if (gz_make(state) == -1)\n                return -1;\n        }\n    return 0;\n}",
+      "Draft": "func gz_skip(state gz_statep, len z_off64_t) local int {\n    var n uint32;\n\n    /* skip over len bytes or reach end-of-file, whichever comes first */\n    for len {\n        /* skip over whatever is in output buffer */\n        if state.have {\n            if GT_OFF(state.have) || (z_off64_t)state.have \u003e len {\n                n = uint32(len);\n            } else {\n                n = state.have;\n            }\n            state.have -= n;\n            state.next += n;\n            state.pos += n;\n            len -= n;\n        \n\n        /* output buffer empty -- return if we're at the end of the input */\n        } else if state.eof \u0026\u0026 state.strm.avail_in == 0 {\n            break;\n\n        /* need more data to skip -- load up output buffer */\n        } else {\n            /* get more output, looking for header if required */\n            if gz_make(state) == -1 {\n                return -1; }\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "gzread",
+      "Start": 12630,
+      "End": 15362,
+      "BodyStart": 12687,
+      "Original": "int ZEXPORT gzread(gzFile file, voidp buf, unsigned len)\n{\n    unsigned got, n;\n    gz_statep state;\n    z_streamp strm;\n\n    /* get internal structure */\n    if (file == NULL)\n        return -1;\n    state = (gz_statep)file;\n    strm = \u0026(state-\u003estrm);\n\n    /* check that we're reading and that there's no error */\n    if (state-\u003emode != GZ_READ || state-\u003eerr != Z_OK)\n        return -1;\n\n    /* since an int is returned, make sure len fits in one, otherwise return\n       with an error (this avoids the flaw in the interface) */\n    if ((int)len \u003c 0) {\n        gz_error(state, Z_BUF_ERROR, \"requested length does not fit in int\");\n        return -1;\n    }\n\n    /* if len is zero, avoid unnecessary operations */\n    if (len == 0)\n        return 0;\n\n    /* process a skip request */\n    if (state-\u003eseek) {\n        state-\u003eseek = 0;\n        if (gz_skip(state, state-\u003eskip) == -1)\n            return -1;\n    }\n\n    /* get len bytes to buf, or less than len if at the end */\n    got = 0;\n    do {\n        /* first just try copying data from the output buffer */\n        if (state-\u003ehave) {\n            n = state-\u003ehave \u003e len ? len : state-\u003ehave;\n            memcpy(buf, state-\u003enext, n);\n            state-\u003enext += n;\n            state-\u003ehave -= n;\n        }\n\n        /* output buffer empty -- return if we're at the end of the input */\n        else if (state-\u003eeof \u0026\u0026 strm-\u003eavail_in == 0)\n            break;\n\n        /* need output data -- for small len or new stream load up our output\n           buffer */\n        else if (state-\u003ehow == LOOK || len \u003c (state-\u003esize \u003c\u003c 1)) {\n            /* get more output, looking for header if required */\n            if (gz_make(state) == -1)\n                return -1;\n            continue;       /* no progress yet -- go back to memcpy() above */\n            /* the copy above assures that we will leave with space in the\n               output buffer, allowing at least one gzungetc() to succeed */\n        }\n\n        /* large len -- read directly into user buffer */\n        else if (state-\u003ehow == COPY) {      /* read directly */\n            if (gz_load(state, (unsigned char *)buf, len, \u0026n) == -1)\n                return -1;\n        }\n\n        /* large len -- decompress directly into user buffer */\n        else {  /* state-\u003ehow == GZIP */\n            strm-\u003eavail_out = len;\n            strm-\u003enext_out = (unsigned char *)buf;\n            if (gz_decomp(state) == -1)\n                return -1;\n            n = state-\u003ehave;\n            state-\u003ehave = 0;\n        }\n\n        /* update progress */\n        len -= n;\n        buf = (char *)buf + n;\n        got += n;\n        state-\u003epos += n;\n    } while (len);\n\n    /* return number of bytes read into user buffer (will fit in int) */\n    return (int)got;\n}",
+      "Draft": "func gzread(file gzFile, buf voidp, len uint32) int ZEXPORT {\n    var got, n uint32;\n    var state gz_statep;\n    var strm z_streamp;\n\n    /* get internal structure */\n    if file == nil {\n        return -1; }\n    state = (gz_statep)file;\n    strm = \u0026(state.strm);\n\n    /* check that we're reading and that there's no error */\n    if state.mode != GZ_READ || state.err != Z_OK {\n        return -1; }\n\n    /* since an int is returned, make sure len fits in one, otherwise return\n       with an error (this avoids the flaw in the interface) */\n    if int32(len) \u003c 0 {\n        gz_error(state, Z_BUF_ERROR, \"requested length does not fit in int\");\n        return -1;\n    }\n\n    /* if len is zero, avoid unnecessary operations */\n    if len == 0 {\n        return 0; }\n\n    /* process a skip request */\n    if state.seek {\n        state.seek = 0;\n        if gz_skip(state, state.skip) == -1 {\n            return -1; }\n    }\n\n    /* get len bytes to buf, or less than len if at the end */\n    got = 0;\n    do {\n        /* first just try copying data from the output buffer */\n        if state.have {\n            if state.have \u003e len {\n                n = len;\n            } else {\n                n = state.have;\n            }\n            memcpy(buf, state.next, n);\n            state.next += n;\n            state.have -= n;\n        \n\n        /* output buffer empty -- return if we're at the end of the input */\n        } else if state.eof \u0026\u0026 strm.avail_in == 0 {\n            break;\n\n        /* need output data -- for small len or new stream load up our output\n           buffer */\n        } else if state.how == LOOK || len \u003c (state.size \u003c\u003c 1) {\n            /* get more output, looking for header if required */\n            if gz_make(state) == -1 {\n                return -1; }\n            continue;       /* no progress yet -- go back to memcpy() above */\n            /* the copy above assures that we will leave with space in the\n               output buffer, allowing at least one gzungetc() to succeed */\n        \n\n        /* large len -- read directly into user buffer */\n        } else if state.how == COPY {      /* read directly */\n            if gz_load(state, (unsigned char *)buf, len, \u0026n) == -1 {\n                return -1; }\n        \n\n        /* large len -- decompress directly into user buffer */\n        } else {  /* state-\u003ehow == GZIP */\n            strm.avail_out = len;\n            strm.next_out = (unsigned char *)buf;\n            if gz_decomp(state) == -1 {\n                return -1; }\n            n = state.have;\n            state.have = 0;\n        }\n\n        /* update progress */\n        len -= n;\n        buf = (char *)buf + n;\n        got += n;\n        state.pos += n;\n    } while (len);\n\n    /* return number of bytes read into user buffer (will fit in int) */\n    return int32(got);\n}"
+    },
+    {
+      "Name": "gzgetc",
+      "Start": 15387,
+      "End": 16000,
+      "BodyStart": 15419,
+      "Original": "int ZEXPORT gzgetc(gzFile file)\n{\n    int ret;\n    unsigned char buf[1];\n    gz_statep state;\n\n    /* get internal structure */\n    if (file == NULL)\n        return -1;\n    state = (gz_statep)file;\n\n    /* check that we're reading and that there's no error */\n    if (state-\u003emode != GZ_READ || state-\u003eerr != Z_OK)\n        return -1;\n\n    /* try output buffer (no need to check for skip request) */\n    if (state-\u003ehave) {\n        state-\u003ehave--;\n        state-\u003epos++;\n        return *(state-\u003enext)++;\n    }\n\n    /* nothing there -- try gzread() */\n    ret = gzread(file, buf, 1);\n    return ret \u003c 1 ? -1 : buf[0];\n}",
+      "Draft": "func gzgetc(file gzFile) int ZEXPORT {\n    var ret int32;\n    unsigned char buf[1];\n    var state gz_statep;\n\n    /* get internal structure */\n    if file == nil {\n        return -1; }\n    state = (gz_statep)file;\n\n    /* check that we're reading and that there's no error */\n    if state.mode != GZ_READ || state.err != Z_OK {\n        return -1; }\n\n    /* try output buffer (no need to check for skip request) */\n    if state.have {\n        state.have--;\n        state.pos++;\n        return *(state.next)++;\n    }\n\n    /* nothing there -- try gzread() */\n    ret = gzread(file, buf, 1);\n    if ret \u003c 1 {\n        return -1;\n    } else {\n        return buf[0];\n    }\n}"
+    },
+    {
+      "Name": "gzungetc",
+      "Start": 16025,
+      "End": 17439,
+      "BodyStart": 16066,
+      "Original": "int ZEXPORT gzungetc(int c, gzFile file)\n{\n    gz_statep state;\n\n    /* get internal structure */\n    if (file == NULL)\n        return -1;\n    state = (gz_statep)file;\n\n    /* check that we're reading and that there's no error */\n    if (state-\u003emode != GZ_READ || state-\u003eerr != Z_OK)\n        return -1;\n\n    /* process a skip request */\n    if (state-\u003eseek) {\n        state-\u003eseek = 0;\n        if (gz_skip(state, state-\u003eskip) == -1)\n            return -1;\n    }\n\n    /* can't push EOF */\n    if (c \u003c 0)\n        return -1;\n\n    /* if output buffer empty, put byte at end (allows more pushing) */\n    if (state-\u003ehave == 0) {\n        state-\u003ehave = 1;\n        state-\u003enext = state-\u003eout + (state-\u003esize \u003c\u003c 1) - 1;\n        state-\u003enext[0] = c;\n        state-\u003epos--;\n        return c;\n    }\n\n    /* if no room, give up (must have already done a gzungetc()) */\n    if (state-\u003ehave == (state-\u003esize \u003c\u003c 1)) {\n        gz_error(state, Z_BUF_ERROR, \"out of room to push characters\");\n        return -1;\n    }\n\n    /* slide output data if needed and insert byte before existing data */\n    if (state-\u003enext == state-\u003eout) {\n        unsigned char *src = state-\u003eout + state-\u003ehave;\n        unsigned char *dest = state-\u003eout + (state-\u003esize \u003c\u003c 1);\n        while (src \u003e state-\u003eout)\n            *--dest = *--src;\n        state-\u003enext = dest;\n    }\n    state-\u003ehave++;\n    state-\u003enext--;\n    state-\u003enext[0] = c;\n    state-\u003epos--;\n    return c;\n}",
+      "Draft": "func gzungetc(c int32, file gzFile) int ZEXPORT {\n    var state gz_statep;\n\n    /* get internal structure */\n    if file == nil {\n        return -1; }\n    state = (gz_statep)file;\n\n    /* check that we're reading and that there's no error */\n    if state.mode != GZ_READ || state.err != Z_OK {\n        return -1; }\n\n    /* process a skip request */\n    if state.seek {\n        state.seek = 0;\n        if gz_skip(state, state.skip) == -1 {\n            return -1; }\n    }\n\n    /* can't push EOF */\n    if c \u003c 0 {\n        return -1; }\n\n    /* if output buffer empty, put byte at end (allows more pushing) */\n    if state.have == 0 {\n        state.have = 1;\n        state.next = state.out + (state.size \u003c\u003c 1) - 1;\n        state.next[0] = c;\n        state.pos--;\n        return c;\n    }\n\n    /* if no room, give up (must have already done a gzungetc()) */\n    if state.have == (state.size \u003c\u003c 1) {\n        gz_error(state, Z_BUF_ERROR, \"out of room to push characters\");\n        return -1;\n    }\n\n    /* slide output data if needed and insert byte before existing data */\n    if state.next == state.out {\n        unsigned char *src = state.out + state.have;\n        unsigned char *dest = state.out + (state.size \u003c\u003c 1);\n        for src \u003e state.out {\n            *--dest = *--src;\n        }\n        state.next = dest;\n    }\n    state.have++;\n    state.next--;\n    state.next[0] = c;\n    state.pos--;\n    return c;\n}"
+    },
+    {
+      "Name": "gzgets",
+      "Start": 17464,
+      "End": 19370,
+      "BodyStart": 17519,
+      "Original": "char * ZEXPORT gzgets(gzFile file, char *buf, int len)\n{\n    unsigned left, n;\n    char *str;\n    unsigned char *eol;\n    gz_statep state;\n\n    /* check parameters and get internal structure */\n    if (file == NULL || buf == NULL || len \u003c 1)\n        return NULL;\n    state = (gz_statep)file;\n\n    /* check that we're reading and that there's no error */\n    if (state-\u003emode != GZ_READ || state-\u003eerr != Z_OK)\n        return NULL;\n\n    /* process a skip request */\n    if (state-\u003eseek) {\n        state-\u003eseek = 0;\n        if (gz_skip(state, state-\u003eskip) == -1)\n            return NULL;\n    }\n\n    /* copy output bytes up to new line or len - 1, whichever comes first --\n       append a terminating zero to the string (we don't check for a zero in\n       the contents, let the user worry about that) */\n    str = buf;\n    left = (unsigned)len - 1;\n    if (left) do {\n        /* assure that something is in the output buffer */\n        if (state-\u003ehave == 0) {\n            if (gz_make(state) == -1)\n                return NULL;            /* error */\n            if (state-\u003ehave == 0) {     /* end of file */\n                if (buf == str)         /* got bupkus */\n                    return NULL;\n                break;                  /* got something -- return it */\n            }\n        }\n\n        /* look for end-of-line in current output buffer */\n        n = state-\u003ehave \u003e left ? left : state-\u003ehave;\n        eol = (unsigned char *)memchr(state-\u003enext, '\\n', n);\n        if (eol != NULL)\n            n = (unsigned)(eol - state-\u003enext) + 1;\n\n        /* copy through end-of-line, or remainder if not found */\n        memcpy(buf, state-\u003enext, n);\n        state-\u003ehave -= n;\n        state-\u003enext += n;\n        state-\u003epos += n;\n        left -= n;\n        buf += n;\n    } while (left \u0026\u0026 eol == NULL);\n\n    /* found end-of-line or out of space -- terminate string and return it */\n    buf[0] = 0;\n    return str;\n}",
+      "Draft": "func gzgets(file gzFile, buf string, len int32) char * ZEXPORT {\n    var left, n uint32;\n    var str string;\n    unsigned char *eol;\n    var state gz_statep;\n\n    /* check parameters and get internal structure */\n    if file == nil || buf == nil || len \u003c 1 {\n        return nil; }\n    state = (gz_statep)file;\n\n    /* check that we're reading and that there's no error */\n    if state.mode != GZ_READ || state.err != Z_OK {\n        return nil; }\n\n    /* process a skip request */\n    if state.seek {\n        state.seek = 0;\n        if gz_skip(state, state.skip) == -1 {\n            return nil; }\n    }\n\n    /* copy output bytes up to new line or len - 1, whichever comes first --\n       append a terminating zero to the string (we don't check for a zero in\n       the contents, let the user worry about that) */\n    str = buf;\n    left = uint32(len) - 1;\n    if left { for {\n        /* assure that something is in the output buffer */\n        if state.have == 0 {\n            if gz_make(state) == -1 {\n                return nil; }            /* error */\n            if state.have == 0 {     /* end of file */\n                if buf == str {         /* got bupkus */\n                    return nil; }\n                break;                  /* got something -- return it */\n            }\n        }\n\n        /* look for end-of-line in current output buffer */\n        if state.have \u003e left {\n            n = left;\n        } else {\n            n = state.have;\n        }\n        eol = (unsigned char *)memchr(state.next, '\\n', n);\n        if eol != nil {\n            n = uint32((eol - state.next)) + 1; }\n\n        /* copy through end-of-line, or remainder if not found */\n        memcpy(buf, state.next, n);\n        state.have -= n;\n        state.next += n;\n        state.pos += n;\n        left -= n;\n        buf += n;\n    \nif !(left \u0026\u0026 eol == nil) { break }\n}  }\n\n    /* found end-of-line or out of space -- terminate string and return it */\n    buf[0] = 0;\n    return str;\n}"
+    },
+    {
+      "Name": "gzdirect",
+      "Start": 19395,
+      "End": 19952,
+      "BodyStart": 19429,
+      "Original": "int ZEXPORT gzdirect(gzFile file)\n{\n    gz_statep state;\n\n    /* get internal structure */\n    if (file == NULL)\n        return 0;\n    state = (gz_statep)file;\n\n    /* check that we're reading */\n    if (state-\u003emode != GZ_READ)\n        return 0;\n\n    /* if the state is not known, but we can find out, then do so (this is\n       mainly for right after a gzopen() or gzdopen()) */\n    if (state-\u003ehow == LOOK \u0026\u0026 state-\u003ehave == 0)\n        (void)gz_head(state);\n\n    /* return 1 if reading direct, 0 if decompressing a gzip stream */\n    return state-\u003edirect;\n}",
+      "Draft": "func gzdirect(file gzFile) int ZEXPORT {\n    var state gz_statep;\n\n    /* get internal structure */\n    if file == nil {\n        return 0; }\n    state = (gz_statep)file;\n\n    /* check that we're reading */\n    if state.mode != GZ_READ {\n        return 0; }\n\n    /* if the state is not known, but we can find out, then do so (this is\n       mainly for right after a gzopen() or gzdopen()) */\n    if state.how == LOOK \u0026\u0026 state.have == 0 {\n        (void)gz_head(state); }\n\n    /* return 1 if reading direct, 0 if decompressing a gzip stream */\n    return state.direct;\n}"
+    },
+    {
+      "Name": "gzclose_r",
+      "Start": 19977,
+      "End": 20552,
+      "BodyStart": 20012,
+      "Original": "int ZEXPORT gzclose_r(gzFile file)\n{\n    int ret;\n    gz_statep state;\n\n    /* get internal structure */\n    if (file == NULL)\n        return Z_STREAM_ERROR;\n    state = (gz_statep)file;\n\n    /* check that we're reading */\n    if (state-\u003emode != GZ_READ)\n        return Z_STREAM_ERROR;\n\n    /* free memory and close file */\n    if (state-\u003esize) {\n        inflateEnd(\u0026(state-\u003estrm));\n        free(state-\u003eout);\n        free(state-\u003ein);\n    }\n    gz_error(state, Z_OK, NULL);\n    free(state-\u003epath);\n    ret = close(state-\u003efd);\n    free(state);\n    return ret ? Z_ERRNO : Z_OK;\n}",
+      "Draft": "func gzclose_r(file gzFile) int ZEXPORT {\n    var ret int32;\n    var state gz_statep;\n\n    /* get internal structure */\n    if file == nil {\n        return Z_STREAM_ERROR; }\n    state = (gz_statep)file;\n\n    /* check that we're reading */\n    if state.mode != GZ_READ {\n        return Z_STREAM_ERROR; }\n\n    /* free memory and close file */\n    if state.size {\n        inflateEnd(\u0026(state.strm));\n        free(state.out);\n        free(state.in);\n    }\n    gz_error(state, Z_OK, nil);\n    free(state.path);\n    ret = close(state.fd);\n    free(state);\n    if ret != 0 {\n        return Z_ERRNO;\n    } else {\n        return Z_OK;\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::mechanical::do::1090",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 1090,
+      "End": 1092
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::mechanical::do::12117",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 8507,
+      "End": 8509
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::mechanical::do::17227",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 13617,
+      "End": 13619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::mechanical::do::21932",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 18322,
+      "End": 18324
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::pointer-cast::1971",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1971,
+      "End": 1983
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::pointer-cast::18797",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15187,
+      "End": 15195
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro::NEXT",
+      "Category": "macro-review",
+      "Symbol": "NEXT",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 2145,
+      "End": 2320
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::gz_load",
+      "Category": "semantic-review",
+      "Symbol": "gz_load",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 970,
+      "End": 1390
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::gz_avail",
+      "Category": "semantic-review",
+      "Symbol": "gz_avail",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1754,
+      "End": 2088
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::ternary::gz_next4",
+      "Category": "ternary-review",
+      "Symbol": "gz_next4",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2468,
+      "End": 2812
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::gz_next4",
+      "Category": "semantic-review",
+      "Symbol": "gz_next4",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 2468,
+      "End": 2812
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::ternary::gz_head",
+      "Category": "ternary-review",
+      "Symbol": "gz_head",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3689,
+      "End": 7709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::gz_head",
+      "Category": "semantic-review",
+      "Symbol": "gz_head",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3689,
+      "End": 7709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::ternary::gz_decomp",
+      "Category": "ternary-review",
+      "Symbol": "gz_decomp",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8283,
+      "End": 10444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::gz_decomp",
+      "Category": "semantic-review",
+      "Symbol": "gz_decomp",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8283,
+      "End": 10444
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::gz_make",
+      "Category": "semantic-review",
+      "Symbol": "gz_make",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10936,
+      "End": 11659
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::gz_skip",
+      "Category": "semantic-review",
+      "Symbol": "gz_skip",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11741,
+      "End": 12605
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::gzread",
+      "Category": "semantic-review",
+      "Symbol": "gzread",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12630,
+      "End": 15362
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::gzgetc",
+      "Category": "semantic-review",
+      "Symbol": "gzgetc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15387,
+      "End": 16000
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::gzungetc",
+      "Category": "semantic-review",
+      "Symbol": "gzungetc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16025,
+      "End": 17439
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::gzgets",
+      "Category": "semantic-review",
+      "Symbol": "gzgets",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 17464,
+      "End": 19370
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::gzdirect",
+      "Category": "semantic-review",
+      "Symbol": "gzdirect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19395,
+      "End": 19952
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::gzclose_r",
+      "Category": "semantic-review",
+      "Symbol": "gzclose_r",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 19977,
+      "End": 20552
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 20579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::358",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 358,
+      "End": 412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::433",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 433,
+      "End": 448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::469",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 469,
+      "End": 501
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::521",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 521,
+      "End": 536
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::558",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 558,
+      "End": 573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::593",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 593,
+      "End": 608
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::628",
+      "Category": "macro-inline-review",
+      "Symbol": "OF",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 628,
+      "End": 654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::1109",
+      "Category": "macro-inline-review",
+      "Symbol": "read",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 1109,
+      "End": 1150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::1269",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 1269,
+      "End": 1306
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::4234",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4234,
+      "End": 4279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::4582",
+      "Category": "macro-inline-review",
+      "Symbol": "inflateInit2",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4582,
+      "End": 4615
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::4748",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4748,
+      "End": 4793
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::5536",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5536,
+      "End": 5595
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::5743",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 5743,
+      "End": 5800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::6862",
+      "Category": "macro-inline-review",
+      "Symbol": "inflateReset",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6862,
+      "End": 6880
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::6908",
+      "Category": "macro-inline-review",
+      "Symbol": "crc32",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 6908,
+      "End": 6928
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::8683",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8683,
+      "End": 8738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::8831",
+      "Category": "macro-inline-review",
+      "Symbol": "inflate",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8831,
+      "End": 8856
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::8929",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 8929,
+      "End": 9024
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::9105",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9105,
+      "End": 9150
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::9274",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9274,
+      "End": 9382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::9633",
+      "Category": "macro-inline-review",
+      "Symbol": "crc32",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9633,
+      "End": 9677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::9854",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9854,
+      "End": 9909
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::9990",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9990,
+      "End": 10043
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::10144",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 10144,
+      "End": 10199
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::11996",
+      "Category": "macro-inline-review",
+      "Symbol": "GT_OFF",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 11996,
+      "End": 12015
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::12642",
+      "Category": "macro-inline-review",
+      "Symbol": "gzread",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12642,
+      "End": 12686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::13191",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 13191,
+      "End": 13259
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::15399",
+      "Category": "macro-inline-review",
+      "Symbol": "gzgetc",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15399,
+      "End": 15418
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::15943",
+      "Category": "macro-inline-review",
+      "Symbol": "gzread",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 15943,
+      "End": 15963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::16037",
+      "Category": "macro-inline-review",
+      "Symbol": "gzungetc",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16037,
+      "End": 16065
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::16927",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 16927,
+      "End": 16989
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::17479",
+      "Category": "macro-inline-review",
+      "Symbol": "gzgets",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 17479,
+      "End": 17518
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::19407",
+      "Category": "macro-inline-review",
+      "Symbol": "gzdirect",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19407,
+      "End": 19428
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::19989",
+      "Category": "macro-inline-review",
+      "Symbol": "gzclose_r",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 19989,
+      "End": 20011
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::20332",
+      "Category": "macro-inline-review",
+      "Symbol": "inflateEnd",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20332,
+      "End": 20358
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::20421",
+      "Category": "macro-inline-review",
+      "Symbol": "gz_error",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 20421,
+      "End": 20448
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/gzread.c::macro-inline::20483",
+      "Category": "macro-inline-review",
+      "Symbol": "close",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 20483,
+      "End": 20499
+    }
+  ],
+  "Draft": "package zlib\n\n/* gzread.c -- zlib functions for reading gzip files\n * Copyright (C) 2004, 2005, 2010 Mark Adler\n * For conditions of distribution and use, see copyright notice in zlib.h\n */\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \"misc/util/abc_global.h\"\n\n//#include \"gzguts.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n/* Local functions */\n// local int gz_load OF((gz_statep, unsigned char *, unsigned, unsigned *));\n\n// local int gz_avail OF((gz_statep));\n\n// local int gz_next4 OF((gz_statep, unsigned long *));\n\n// local int gz_head OF((gz_statep));\n\n// local int gz_decomp OF((gz_statep));\n\n// local int gz_make OF((gz_statep));\n\n// local int gz_skip OF((gz_statep, z_off64_t));\n\n\n/* Use read() to load a buffer -- return -1 on error, otherwise 0.  Read from\n   state-\u003efd, and update state-\u003eeof, state-\u003eerr, and state-\u003emsg as appropriate.\n   This function needs to loop on read(), since read() is not guaranteed to\n   read the number of bytes requested, depending on the type of descriptor. */\nlocal int gz_load(gz_statep state, unsigned char *buf, unsigned len, unsigned *have)\n{\n    var ret int32;\n\n    *have = 0;\n    for {\n        ret = read(state.fd, buf + *have, len - *have);\n        if ret \u003c= 0 {\n            break; }\n        *have += ret;\n    \nif !(*have \u003c len) { break }\n} \n    if ret \u003c 0 {\n        gz_error(state, Z_ERRNO, zstrerror());\n        return -1;\n    }\n    if ret == 0 {\n        state.eof = 1; }\n    return 0;\n}\n\n/* Load up input buffer and set eof flag if last data loaded -- return -1 on\n   error, 0 otherwise.  Note that the eof flag is set when the end of the input\n   file is reached, even though there may be unused data in the buffer.  Once\n   that data has been used, no more attempts will be made to read the file.\n   gz_avail() assumes that strm-\u003eavail_in == 0. */\nfunc gz_avail(state gz_statep) local int {\n    var strm z_streamp  = \u0026(state.strm);\n\n    if state.err != Z_OK {\n        return -1; }\n    if state.eof == 0 {\n        if gz_load(state, state.in, state.size,\n                (unsigned *)\u0026(strm.avail_in)) == -1 {\n            return -1; }\n        strm.next_in = state.in;\n    }\n    return 0;\n}\n\n/* Get next byte from input, or -1 if end or error. */\n// Original macro:\n// #define NEXT() ((strm-\u003eavail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 : \\\n//                 (strm-\u003eavail_in == 0 ? -1 : \\\n//                  (strm-\u003eavail_in--, *(strm-\u003enext_in)++)))\n\n\n/* Get a four-byte little-endian integer and return 0 on success and the value\n   in *ret.  Otherwise -1 is returned and *ret is not modified. */\nlocal int gz_next4(gz_statep state, unsigned long *ret)\n{\n    var ch int32;\n    unsigned long val;\n    var strm z_streamp  = \u0026(state.strm);\n\n    // inlining of macro NEXT\n    \n    if strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1 {\n        val = -1;\n    } else {\n        if strm.avail_in == 0 {\n            val = -1;\n        } else {\n            val = (strm.avail_in--, *(strm.next_in)++);\n        }\n    }\n    // inlining of macro NEXT\n    val += uint32(((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)))) \u003c\u003c 8;\n    // inlining of macro NEXT\n    val += (unsigned long)((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++))) \u003c\u003c 16;\n    // inlining of macro NEXT\n    \n    if strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1 {\n        ch = -1;\n    } else {\n        if strm.avail_in == 0 {\n            ch = -1;\n        } else {\n            ch = (strm.avail_in--, *(strm.next_in)++);\n        }\n    }\n    if ch == -1 {\n        return -1; }\n    val += (unsigned long)ch \u003c\u003c 24;\n    *ret = val;\n    return 0;\n}\n\n/* Look for gzip header, set up for inflate or copy.  state-\u003ehave must be zero.\n   If this is the first time in, allocate required memory.  state-\u003ehow will be\n   left unchanged if there is no more input data available, will be set to COPY\n   if there is no gzip header and direct copying will be performed, or it will\n   be set to GZIP for decompression, and the gzip header will be skipped so\n   that the next available input data is the raw deflate stream.  If direct\n   copying, then leftover input data from the input buffer will be copied to\n   the output buffer.  In that case, all further file reads will be directly to\n   either the output buffer or a user buffer.  If decompressing, the inflate\n   state and the check value will be initialized.  gz_head() will return 0 on\n   success or -1 on failure.  Failures may include read errors or gzip header\n   errors.  */\nfunc gz_head(state gz_statep) local int {\n    var strm z_streamp  = \u0026(state.strm);\n    var flags int32;\n    var len uint32;\n\n    /* allocate read buffers and inflate memory */\n    if state.size == 0 {\n        /* allocate buffers */\n        state.in = (unsigned char *)malloc(state.want);\n        state.out = (unsigned char *)malloc(state.want \u003c\u003c 1);\n        if state.in == nil || state.out == nil {\n            if state.out != nil {\n                free(state.out); }\n            if state.in != nil {\n                free(state.in); }\n            gz_error(state, Z_MEM_ERROR, \"out of memory\");\n            return -1;\n        }\n        state.size = state.want;\n\n        /* allocate inflate memory */\n        state.strm.zalloc = Z_NULL;\n        state.strm.zfree = Z_NULL;\n        state.strm.opaque = Z_NULL;\n        state.strm.avail_in = 0;\n        state.strm.next_in = Z_NULL;\n        if inflateInit2(\u0026(state.strm), -15) != Z_OK {    /* raw inflate */\n            free(state.out);\n            free(state.in);\n            state.size = 0;\n            gz_error(state, Z_MEM_ERROR, \"out of memory\");\n            return -1;\n        }\n    }\n\n    /* get some data in the input buffer */\n    if strm.avail_in == 0 {\n        if gz_avail(state) == -1 {\n            return -1; }\n        if strm.avail_in == 0 {\n            return 0; }\n    }\n\n    /* look for the gzip magic header bytes 31 and 139 */\n    if strm.next_in[0] == 31 {\n        strm.avail_in--;\n        strm.next_in++;\n        if strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1 {\n            return -1; }\n        if strm.avail_in \u0026\u0026 strm.next_in[0] == 139 {\n            /* we have a gzip header, woo hoo! */\n            strm.avail_in--;\n            strm.next_in++;\n\n            /* skip rest of header */\n            // inlining of macro NEXT\n            if ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++))) != 8 {      /* compression method */\n                gz_error(state, Z_DATA_ERROR, \"unknown compression method\");\n                return -1;\n            }\n            // inlining of macro NEXT\n            \n            if strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1 {\n                flags = -1;\n            } else {\n                if strm.avail_in == 0 {\n                    flags = -1;\n                } else {\n                    flags = (strm.avail_in--, *(strm.next_in)++);\n                }\n            }\n            if flags \u0026 0xe0 {     /* reserved flag bits */\n                gz_error(state, Z_DATA_ERROR, \"unknown header flags set\");\n                return -1;\n            }\n            // inlining of macro NEXT\n            ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));                 /* modification time */\n            // inlining of macro NEXT\n            ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));\n            // inlining of macro NEXT\n            ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));\n            // inlining of macro NEXT\n            ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));\n            // inlining of macro NEXT\n            ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));                 /* extra flags */\n            // inlining of macro NEXT\n            ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));                 /* operating system */\n            if flags \u0026 4 {        /* extra field */\n                // inlining of macro NEXT\n                len = uint32(((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++))));\n                // inlining of macro NEXT\n                len += uint32(((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)))) \u003c\u003c 8;\n                for len-- {\n                    // inlining of macro NEXT\n                    if ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++))) \u003c 0 {\n                        break; }\n                }\n            }\n            if flags \u0026 8 {          /* file name */\n                // inlining of macro NEXT\n                for ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++))) \u003e 0 {\n                    ;\n                } }\n            if flags \u0026 16 {         /* comment */\n                // inlining of macro NEXT\n                for ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++))) \u003e 0 {\n                    ;\n                } }\n            if flags \u0026 2 {        /* header crc */\n                // inlining of macro NEXT\n                ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));\n                // inlining of macro NEXT\n                ((strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1) ? -1 :                 (strm.avail_in == 0 ? -1 :                  (strm.avail_in--, *(strm.next_in)++)));\n            }\n            /* an unexpected end of file is not checked for here -- it will be\n               noticed on the first request for uncompressed data */\n\n            /* set up for decompression */\n            inflateReset(strm);\n            strm.adler = crc32(int64(0), Z_NULL, 0);\n            state.how = GZIP;\n            state.direct = 0;\n            return 0;\n        \n        } else {\n            /* not a gzip file -- save first byte (31) and fall to raw i/o */\n            state.out[0] = 31;\n            state.have = 1;\n        }\n    }\n\n    /* doing raw i/o, save start of raw data for seeking, copy any leftover\n       input to output -- this assumes that the output buffer is larger than\n       the input buffer, which also assures space for gzungetc() */\n    state.raw = state.pos;\n    state.next = state.out;\n    if strm.avail_in {\n        memcpy(state.next + state.have, strm.next_in, strm.avail_in);\n        state.have += strm.avail_in;\n        strm.avail_in = 0;\n    }\n    state.how = COPY;\n    state.direct = 1;\n    return 0;\n}\n\n/* Decompress from input to the provided next_out and avail_out in the state.\n   If the end of the compressed data is reached, then verify the gzip trailer\n   check value and length (modulo 2^32).  state-\u003ehave and state-\u003enext are set\n   to point to the just decompressed data, and the crc is updated.  If the\n   trailer is verified, state-\u003ehow is reset to LOOK to look for the next gzip\n   stream or raw data, once state-\u003ehave is depleted.  Returns 0 on success, -1\n   on failure.  Failures may include invalid compressed data or a failed gzip\n   trailer verification. */\nfunc gz_decomp(state gz_statep) local int {\n    var ret int32;\n    var had uint32;\n    unsigned long crc, len;\n    var strm z_streamp  = \u0026(state.strm);\n\n    /* fill output buffer up to end of deflate stream */\n    had = strm.avail_out;\n    for {\n        /* get more input for inflate() */\n        if strm.avail_in == 0 \u0026\u0026 gz_avail(state) == -1 {\n            return -1; }\n        if strm.avail_in == 0 {\n            gz_error(state, Z_DATA_ERROR, \"unexpected end of file\");\n            return -1;\n        }\n\n        /* decompress and handle errors */\n        ret = inflate(strm, Z_NO_FLUSH);\n        if ret == Z_STREAM_ERROR || ret == Z_NEED_DICT {\n            gz_error(state, Z_STREAM_ERROR,\n                      \"internal error: inflate stream corrupt\");\n            return -1;\n        }\n        if ret == Z_MEM_ERROR {\n            gz_error(state, Z_MEM_ERROR, \"out of memory\");\n            return -1;\n        }\n        if ret == Z_DATA_ERROR {              /* deflate stream invalid */\n            gz_error(state, Z_DATA_ERROR,\n                      strm.msg == nil ? \"compressed data error\" : strm.msg);\n            return -1;\n        }\n    \nif !(strm.avail_out \u0026\u0026 ret != Z_STREAM_END) { break }\n} \n\n    /* update available output and crc check value */\n    state.have = had - strm.avail_out;\n    state.next = strm.next_out - state.have;\n    strm.adler = crc32(strm.adler, state.next, state.have);\n\n    /* check gzip trailer if at end of deflate stream */\n    if ret == Z_STREAM_END {\n        if gz_next4(state, \u0026crc) == -1 || gz_next4(state, \u0026len) == -1 {\n            gz_error(state, Z_DATA_ERROR, \"unexpected end of file\");\n            return -1;\n        }\n        if crc != strm.adler {\n            gz_error(state, Z_DATA_ERROR, \"incorrect data check\");\n            return -1;\n        }\n        if len != (strm.total_out \u0026 int64(0xffffffff)) {\n            gz_error(state, Z_DATA_ERROR, \"incorrect length check\");\n            return -1;\n        }\n        state.how = LOOK;      /* ready for next stream, once have is 0 (leave\n                                   state-\u003edirect unchanged to remember how) */\n    }\n\n    /* good decompression */\n    return 0;\n}\n\n/* Make data and put in the output buffer.  Assumes that state-\u003ehave == 0.\n   Data is either copied from the input file or decompressed from the input\n   file depending on state-\u003ehow.  If state-\u003ehow is LOOK, then a gzip header is\n   looked for (and skipped if found) to determine wither to copy or decompress.\n   Returns -1 on error, otherwise 0.  gz_make() will leave state-\u003ehave as COPY\n   or GZIP unless the end of the input file has been reached and all data has\n   been processed.  */\nfunc gz_make(state gz_statep) local int {\n    var strm z_streamp  = \u0026(state.strm);\n\n    if state.how == LOOK {           /* look for gzip header */\n        if gz_head(state) == -1 {\n            return -1; }\n        if state.have {                /* got some data from gz_head() */\n            return 0; }\n    }\n    if state.how == COPY {           /* straight copy */\n        if gz_load(state, state.out, state.size \u003c\u003c 1, \u0026(state.have)) == -1 {\n            return -1; }\n        state.next = state.out;\n    \n    } else if state.how == GZIP {      /* decompress */\n        strm.avail_out = state.size \u003c\u003c 1;\n        strm.next_out = state.out;\n        if gz_decomp(state) == -1 {\n            return -1; }\n    }\n    return 0;\n}\n\n/* Skip len uncompressed bytes of output.  Return -1 on error, 0 on success. */\nfunc gz_skip(state gz_statep, len z_off64_t) local int {\n    var n uint32;\n\n    /* skip over len bytes or reach end-of-file, whichever comes first */\n    for len {\n        /* skip over whatever is in output buffer */\n        if state.have {\n            if GT_OFF(state.have) || (z_off64_t)state.have \u003e len {\n                n = uint32(len);\n            } else {\n                n = state.have;\n            }\n            state.have -= n;\n            state.next += n;\n            state.pos += n;\n            len -= n;\n        \n\n        /* output buffer empty -- return if we're at the end of the input */\n        } else if state.eof \u0026\u0026 state.strm.avail_in == 0 {\n            break;\n\n        /* need more data to skip -- load up output buffer */\n        } else {\n            /* get more output, looking for header if required */\n            if gz_make(state) == -1 {\n                return -1; }\n        }\n    }\n    return 0;\n}\n\n/* -- see zlib.h -- */\nfunc gzread(file gzFile, buf voidp, len uint32) int ZEXPORT {\n    var got, n uint32;\n    var state gz_statep;\n    var strm z_streamp;\n\n    /* get internal structure */\n    if file == nil {\n        return -1; }\n    state = (gz_statep)file;\n    strm = \u0026(state.strm);\n\n    /* check that we're reading and that there's no error */\n    if state.mode != GZ_READ || state.err != Z_OK {\n        return -1; }\n\n    /* since an int is returned, make sure len fits in one, otherwise return\n       with an error (this avoids the flaw in the interface) */\n    if int32(len) \u003c 0 {\n        gz_error(state, Z_BUF_ERROR, \"requested length does not fit in int\");\n        return -1;\n    }\n\n    /* if len is zero, avoid unnecessary operations */\n    if len == 0 {\n        return 0; }\n\n    /* process a skip request */\n    if state.seek {\n        state.seek = 0;\n        if gz_skip(state, state.skip) == -1 {\n            return -1; }\n    }\n\n    /* get len bytes to buf, or less than len if at the end */\n    got = 0;\n    do {\n        /* first just try copying data from the output buffer */\n        if state.have {\n            if state.have \u003e len {\n                n = len;\n            } else {\n                n = state.have;\n            }\n            memcpy(buf, state.next, n);\n            state.next += n;\n            state.have -= n;\n        \n\n        /* output buffer empty -- return if we're at the end of the input */\n        } else if state.eof \u0026\u0026 strm.avail_in == 0 {\n            break;\n\n        /* need output data -- for small len or new stream load up our output\n           buffer */\n        } else if state.how == LOOK || len \u003c (state.size \u003c\u003c 1) {\n            /* get more output, looking for header if required */\n            if gz_make(state) == -1 {\n                return -1; }\n            continue;       /* no progress yet -- go back to memcpy() above */\n            /* the copy above assures that we will leave with space in the\n               output buffer, allowing at least one gzungetc() to succeed */\n        \n\n        /* large len -- read directly into user buffer */\n        } else if state.how == COPY {      /* read directly */\n            if gz_load(state, (unsigned char *)buf, len, \u0026n) == -1 {\n                return -1; }\n        \n\n        /* large len -- decompress directly into user buffer */\n        } else {  /* state-\u003ehow == GZIP */\n            strm.avail_out = len;\n            strm.next_out = (unsigned char *)buf;\n            if gz_decomp(state) == -1 {\n                return -1; }\n            n = state.have;\n            state.have = 0;\n        }\n\n        /* update progress */\n        len -= n;\n        buf = (char *)buf + n;\n        got += n;\n        state.pos += n;\n    } while (len);\n\n    /* return number of bytes read into user buffer (will fit in int) */\n    return int32(got);\n}\n\n/* -- see zlib.h -- */\nfunc gzgetc(file gzFile) int ZEXPORT {\n    var ret int32;\n    unsigned char buf[1];\n    var state gz_statep;\n\n    /* get internal structure */\n    if file == nil {\n        return -1; }\n    state = (gz_statep)file;\n\n    /* check that we're reading and that there's no error */\n    if state.mode != GZ_READ || state.err != Z_OK {\n        return -1; }\n\n    /* try output buffer (no need to check for skip request) */\n    if state.have {\n        state.have--;\n        state.pos++;\n        return *(state.next)++;\n    }\n\n    /* nothing there -- try gzread() */\n    ret = gzread(file, buf, 1);\n    if ret \u003c 1 {\n        return -1;\n    } else {\n        return buf[0];\n    }\n}\n\n/* -- see zlib.h -- */\nfunc gzungetc(c int32, file gzFile) int ZEXPORT {\n    var state gz_statep;\n\n    /* get internal structure */\n    if file == nil {\n        return -1; }\n    state = (gz_statep)file;\n\n    /* check that we're reading and that there's no error */\n    if state.mode != GZ_READ || state.err != Z_OK {\n        return -1; }\n\n    /* process a skip request */\n    if state.seek {\n        state.seek = 0;\n        if gz_skip(state, state.skip) == -1 {\n            return -1; }\n    }\n\n    /* can't push EOF */\n    if c \u003c 0 {\n        return -1; }\n\n    /* if output buffer empty, put byte at end (allows more pushing) */\n    if state.have == 0 {\n        state.have = 1;\n        state.next = state.out + (state.size \u003c\u003c 1) - 1;\n        state.next[0] = c;\n        state.pos--;\n        return c;\n    }\n\n    /* if no room, give up (must have already done a gzungetc()) */\n    if state.have == (state.size \u003c\u003c 1) {\n        gz_error(state, Z_BUF_ERROR, \"out of room to push characters\");\n        return -1;\n    }\n\n    /* slide output data if needed and insert byte before existing data */\n    if state.next == state.out {\n        unsigned char *src = state.out + state.have;\n        unsigned char *dest = state.out + (state.size \u003c\u003c 1);\n        for src \u003e state.out {\n            *--dest = *--src;\n        }\n        state.next = dest;\n    }\n    state.have++;\n    state.next--;\n    state.next[0] = c;\n    state.pos--;\n    return c;\n}\n\n/* -- see zlib.h -- */\nfunc gzgets(file gzFile, buf string, len int32) char * ZEXPORT {\n    var left, n uint32;\n    var str string;\n    unsigned char *eol;\n    var state gz_statep;\n\n    /* check parameters and get internal structure */\n    if file == nil || buf == nil || len \u003c 1 {\n        return nil; }\n    state = (gz_statep)file;\n\n    /* check that we're reading and that there's no error */\n    if state.mode != GZ_READ || state.err != Z_OK {\n        return nil; }\n\n    /* process a skip request */\n    if state.seek {\n        state.seek = 0;\n        if gz_skip(state, state.skip) == -1 {\n            return nil; }\n    }\n\n    /* copy output bytes up to new line or len - 1, whichever comes first --\n       append a terminating zero to the string (we don't check for a zero in\n       the contents, let the user worry about that) */\n    str = buf;\n    left = uint32(len) - 1;\n    if left { for {\n        /* assure that something is in the output buffer */\n        if state.have == 0 {\n            if gz_make(state) == -1 {\n                return nil; }            /* error */\n            if state.have == 0 {     /* end of file */\n                if buf == str {         /* got bupkus */\n                    return nil; }\n                break;                  /* got something -- return it */\n            }\n        }\n\n        /* look for end-of-line in current output buffer */\n        if state.have \u003e left {\n            n = left;\n        } else {\n            n = state.have;\n        }\n        eol = (unsigned char *)memchr(state.next, '\\n', n);\n        if eol != nil {\n            n = uint32((eol - state.next)) + 1; }\n\n        /* copy through end-of-line, or remainder if not found */\n        memcpy(buf, state.next, n);\n        state.have -= n;\n        state.next += n;\n        state.pos += n;\n        left -= n;\n        buf += n;\n    \nif !(left \u0026\u0026 eol == nil) { break }\n}  }\n\n    /* found end-of-line or out of space -- terminate string and return it */\n    buf[0] = 0;\n    return str;\n}\n\n/* -- see zlib.h -- */\nfunc gzdirect(file gzFile) int ZEXPORT {\n    var state gz_statep;\n\n    /* get internal structure */\n    if file == nil {\n        return 0; }\n    state = (gz_statep)file;\n\n    /* check that we're reading */\n    if state.mode != GZ_READ {\n        return 0; }\n\n    /* if the state is not known, but we can find out, then do so (this is\n       mainly for right after a gzopen() or gzdopen()) */\n    if state.how == LOOK \u0026\u0026 state.have == 0 {\n        (void)gz_head(state); }\n\n    /* return 1 if reading direct, 0 if decompressing a gzip stream */\n    return state.direct;\n}\n\n/* -- see zlib.h -- */\nfunc gzclose_r(file gzFile) int ZEXPORT {\n    var ret int32;\n    var state gz_statep;\n\n    /* get internal structure */\n    if file == nil {\n        return Z_STREAM_ERROR; }\n    state = (gz_statep)file;\n\n    /* check that we're reading */\n    if state.mode != GZ_READ {\n        return Z_STREAM_ERROR; }\n\n    /* free memory and close file */\n    if state.size {\n        inflateEnd(\u0026(state.strm));\n        free(state.out);\n        free(state.in);\n    }\n    gz_error(state, Z_OK, nil);\n    free(state.path);\n    ret = close(state.fd);\n    free(state);\n    if ret != 0 {\n        return Z_ERRNO;\n    } else {\n        return Z_OK;\n    }\n}\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

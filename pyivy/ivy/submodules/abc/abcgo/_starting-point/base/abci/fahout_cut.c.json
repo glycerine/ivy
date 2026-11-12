@@ -1,0 +1,315 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c",
+  "SHA256": "7cce4b425f0ac92cd2521525b1c42f9f6eebb876e9edd8f6bd063ea9a38f0ec8",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 149,
+        "Column": 5,
+        "ByteOffset": 4905
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pPars.nMaxDistance \u003e 0 );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 283,
+        "Column": 22,
+        "ByteOffset": 10120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var clk int64  = clock();"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 314,
+        "Column": 9,
+        "ByteOffset": 11932
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Node %6d : Fanins = %d. Fanouts = %3d.  Cand1 = %3d. Cand2 = %3d.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 324,
+        "Column": 9,
+        "ByteOffset": 12300
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Mergable LUTs = %6d. Total cands = %6d. \", p.nVertsMax, nCands );"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 326,
+        "Column": 43,
+        "ByteOffset": 12510
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 326,
+        "Column": 69,
+        "ByteOffset": 12536
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 329,
+        "Column": 11,
+        "ByteOffset": 12603
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    clk = clock();"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 332,
+        "Column": 9,
+        "ByteOffset": 12672
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"GRAPH: Nodes = %6d. Edges = %6d.  Pairs = %6d.  \", "
+    },
+    {
+      "Name": "clock",
+      "Status": "converted",
+      "Message": "Draft policy changes CPU time to wall-clock nanoseconds. CLOCKS_PER_SEC becomes time.Second; clock adjustments can affect differences. Use time.Now/time.Since for monotonic elapsed timing when repairing the surrounding code.",
+      "Location": {
+        "Line": 335,
+        "Column": 43,
+        "ByteOffset": 12920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 335,
+        "Column": 69,
+        "ByteOffset": 12946
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkMarkFanins_rec",
+      "Start": 1348,
+      "End": 1737,
+      "BodyStart": 1408,
+      "Original": "void Abc_NtkMarkFanins_rec( Abc_Obj_t * pLut, int nLevMin )\n{\n    Abc_Obj_t * pNext;\n    int i;\n    if ( !Abc_ObjIsNode(pLut) )\n        return;\n    if ( Abc_NodeIsTravIdCurrent( pLut ) )\n        return;\n    Abc_NodeSetTravIdCurrent( pLut );\n    if ( Abc_ObjLevel(pLut) \u003c nLevMin )\n        return;\n    Abc_ObjForEachFanin( pLut, pNext, i )\n        Abc_NtkMarkFanins_rec( pNext, nLevMin );\n}",
+      "Draft": "func Abc_NtkMarkFanins_rec(pLut *Abc_Obj_t, nLevMin int32) {\n    var pNext *Abc_Obj_t;\n    var i int32;\n    if !Abc_ObjIsNode(pLut) {\n        return; }\n    if Abc_NodeIsTravIdCurrent( pLut ) {\n        return; }\n    Abc_NodeSetTravIdCurrent( pLut );\n    if Abc_ObjLevel(pLut) \u003c nLevMin {\n        return; }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pLut)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pLut, i)), 1); i++  {\n        Abc_NtkMarkFanins_rec( pNext, nLevMin );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkMarkFanouts_rec",
+      "Start": 2028,
+      "End": 2502,
+      "BodyStart": 2102,
+      "Original": "void Abc_NtkMarkFanouts_rec( Abc_Obj_t * pLut, int nLevMax, int nFanMax )\n{\n    Abc_Obj_t * pNext;\n    int i;\n    if ( !Abc_ObjIsNode(pLut) )\n        return;\n    if ( Abc_NodeIsTravIdCurrent( pLut ) )\n        return;\n    Abc_NodeSetTravIdCurrent( pLut );\n    if ( Abc_ObjLevel(pLut) \u003e nLevMax )\n        return;\n    if ( Abc_ObjFanoutNum(pLut) \u003e nFanMax )\n        return;\n    Abc_ObjForEachFanout( pLut, pNext, i )\n        Abc_NtkMarkFanouts_rec( pNext, nLevMax, nFanMax );\n}",
+      "Draft": "func Abc_NtkMarkFanouts_rec(pLut *Abc_Obj_t, nLevMax int32, nFanMax int32) {\n    var pNext *Abc_Obj_t;\n    var i int32;\n    if !Abc_ObjIsNode(pLut) {\n        return; }\n    if Abc_NodeIsTravIdCurrent( pLut ) {\n        return; }\n    Abc_NodeSetTravIdCurrent( pLut );\n    if Abc_ObjLevel(pLut) \u003e nLevMax {\n        return; }\n    if Abc_ObjFanoutNum(pLut) \u003e nFanMax {\n        return; }\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pLut)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pLut, i)), 1); i++  {\n        Abc_NtkMarkFanouts_rec( pNext, nLevMax, nFanMax );\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkCollectCircle",
+      "Start": 2788,
+      "End": 3689,
+      "BodyStart": 2868,
+      "Original": "void Abc_NtkCollectCircle( Vec_Ptr_t * vStart, Vec_Ptr_t * vNext, int nFanMax )\n{\n    Abc_Obj_t * pObj, * pNext;\n    int i, k;\n    Vec_PtrClear( vNext );\n    Vec_PtrForEachEntry( Vec_Int_t *, vStart, pObj, i )\n    {\n        Abc_ObjForEachFanin( pObj, pNext, k )\n        {\n            if ( !Abc_ObjIsNode(pNext) )\n                continue;\n            if ( Abc_NodeIsTravIdCurrent( pNext ) )\n                continue;\n            Abc_NodeSetTravIdCurrent( pNext );\n            Vec_PtrPush( vNext, pNext );\n        }\n        Abc_ObjForEachFanout( pObj, pNext, k )\n        {\n            if ( !Abc_ObjIsNode(pNext) )\n                continue;\n            if ( Abc_NodeIsTravIdCurrent( pNext ) )\n                continue;\n            Abc_NodeSetTravIdCurrent( pNext );\n            if ( Abc_ObjFanoutNum(pNext) \u003e nFanMax )\n                continue;\n            Vec_PtrPush( vNext, pNext );\n        }\n    }\n}",
+      "Draft": "func Abc_NtkCollectCircle(vStart *Vec_Ptr_t, vNext *Vec_Ptr_t, nFanMax int32) {\n    var pObj, pNext *Abc_Obj_t;\n    var i, k int32;\n    Vec_PtrClear( vNext );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vStart)) \u0026\u0026 (((pObj) = (Vec_Int_t *)Vec_PtrEntry(vStart, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if !Abc_ObjIsNode(pNext) {\n                continue; }\n            if Abc_NodeIsTravIdCurrent( pNext ) {\n                continue; }\n            Abc_NodeSetTravIdCurrent( pNext );\n            Vec_PtrPush( vNext, pNext );\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            if !Abc_ObjIsNode(pNext) {\n                continue; }\n            if Abc_NodeIsTravIdCurrent( pNext ) {\n                continue; }\n            Abc_NodeSetTravIdCurrent( pNext );\n            if Abc_ObjFanoutNum(pNext) \u003e nFanMax {\n                continue; }\n            Vec_PtrPush( vNext, pNext );\n        }\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkCollectNonOverlapCands",
+      "Start": 3981,
+      "End": 6069,
+      "BodyStart": 4117,
+      "Original": "void Abc_NtkCollectNonOverlapCands( Abc_Obj_t * pLut, Vec_Ptr_t * vStart, Vec_Ptr_t * vNext, Vec_Ptr_t * vCands, Nwk_LMPars_t * pPars )\n{\n    Vec_Ptr_t * vTemp;\n    Abc_Obj_t * pObj;\n    int i, k;\n    Vec_PtrClear( vCands );\n    if ( pPars-\u003enMaxSuppSize - Abc_ObjFaninNum(pLut) \u003c= 1 )\n        return;\n\n    // collect nodes removed by this distance\n    assert( pPars-\u003enMaxDistance \u003e 0 );\n    Vec_PtrClear( vStart );\n    Vec_PtrPush( vStart, pLut );\n    Abc_NtkIncrementTravId( pLut-\u003epNtk );\n    Abc_NodeSetTravIdCurrent( pLut );\n    for ( i = 1; i \u003c= pPars-\u003enMaxDistance; i++ )\n    {\n        Abc_NtkCollectCircle( vStart, vNext, pPars-\u003enMaxFanout );\n        vTemp  = vStart;\n        vStart = vNext;\n        vNext  = vTemp;\n        // collect the nodes in vStart\n        Vec_PtrForEachEntry( Vec_Int_t *, vStart, pObj, k )\n            Vec_PtrPush( vCands, pObj );\n    }\n\n    // mark the TFI/TFO nodes\n    Abc_NtkIncrementTravId( pLut-\u003epNtk );\n    if ( pPars-\u003efUseTfiTfo )\n        Abc_NodeSetTravIdCurrent( pLut );\n    else\n    {\n        Abc_NodeSetTravIdPrevious( pLut );\n        Abc_NtkMarkFanins_rec( pLut, Abc_ObjLevel(pLut) - pPars-\u003enMaxDistance );\n        Abc_NodeSetTravIdPrevious( pLut );\n        Abc_NtkMarkFanouts_rec( pLut, Abc_ObjLevel(pLut) + pPars-\u003enMaxDistance, pPars-\u003enMaxFanout );\n    }\n\n    // collect nodes satisfying the following conditions:\n    // - they are close enough in terms of distance\n    // - they are not in the TFI/TFO of the LUT\n    // - they have no more than the given number of fanins\n    // - they have no more than the given diff in delay\n    k = 0;\n    Vec_PtrForEachEntry( Vec_Int_t *, vCands, pObj, i )\n    {\n        if ( Abc_NodeIsTravIdCurrent(pObj) )\n            continue;\n        if ( Abc_ObjFaninNum(pLut) + Abc_ObjFaninNum(pObj) \u003e pPars-\u003enMaxSuppSize )\n            continue;\n        if ( Abc_ObjLevel(pLut) - Abc_ObjLevel(pObj) \u003e pPars-\u003enMaxLevelDiff || \n             Abc_ObjLevel(pObj) - Abc_ObjLevel(pLut) \u003e pPars-\u003enMaxLevelDiff )\n             continue;\n        Vec_PtrWriteEntry( vCands, k++, pObj );\n    }\n    Vec_PtrShrink( vCands, k );\n}",
+      "Draft": "func Abc_NtkCollectNonOverlapCands(pLut *Abc_Obj_t, vStart *Vec_Ptr_t, vNext *Vec_Ptr_t, vCands *Vec_Ptr_t, pPars *Nwk_LMPars_t) {\n    var vTemp *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, k int32;\n    Vec_PtrClear( vCands );\n    if pPars.nMaxSuppSize - Abc_ObjFaninNum(pLut) \u003c= 1 {\n        return; }\n\n    // collect nodes removed by this distance\n    assert(pPars.nMaxDistance \u003e 0, \"pPars.nMaxDistance \u003e 0\");\n    Vec_PtrClear( vStart );\n    Vec_PtrPush( vStart, pLut );\n    Abc_NtkIncrementTravId( pLut.pNtk );\n    Abc_NodeSetTravIdCurrent( pLut );\n    for  i = 1; i \u003c= pPars.nMaxDistance; i++  {\n        Abc_NtkCollectCircle( vStart, vNext, pPars.nMaxFanout );\n        vTemp  = vStart;\n        vStart = vNext;\n        vNext  = vTemp;\n        // collect the nodes in vStart\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vStart)) \u0026\u0026 (((pObj) = (Vec_Int_t *)Vec_PtrEntry(vStart, k)), 1); k++  {\n            Vec_PtrPush( vCands, pObj );\n        }\n    }\n\n    // mark the TFI/TFO nodes\n    Abc_NtkIncrementTravId( pLut.pNtk );\n    if pPars.fUseTfiTfo {\n        Abc_NodeSetTravIdCurrent( pLut );\n    } else {\n        Abc_NodeSetTravIdPrevious( pLut );\n        Abc_NtkMarkFanins_rec( pLut, Abc_ObjLevel(pLut) - pPars.nMaxDistance );\n        Abc_NodeSetTravIdPrevious( pLut );\n        Abc_NtkMarkFanouts_rec( pLut, Abc_ObjLevel(pLut) + pPars.nMaxDistance, pPars.nMaxFanout );\n    }\n\n    // collect nodes satisfying the following conditions:\n    // - they are close enough in terms of distance\n    // - they are not in the TFI/TFO of the LUT\n    // - they have no more than the given number of fanins\n    // - they have no more than the given diff in delay\n    k = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCands)) \u0026\u0026 (((pObj) = (Vec_Int_t *)Vec_PtrEntry(vCands, i)), 1); i++  {\n        if Abc_NodeIsTravIdCurrent(pObj) {\n            continue; }\n        if Abc_ObjFaninNum(pLut) + Abc_ObjFaninNum(pObj) \u003e pPars.nMaxSuppSize {\n            continue; }\n        if Abc_ObjLevel(pLut) - Abc_ObjLevel(pObj) \u003e pPars.nMaxLevelDiff || \n             Abc_ObjLevel(pObj) - Abc_ObjLevel(pLut) \u003e pPars.nMaxLevelDiff {\n             continue; }\n        Vec_PtrWriteEntry( vCands, k++, pObj );\n    }\n    Vec_PtrShrink( vCands, k );\n}"
+    },
+    {
+      "Name": "Abc_NtkCountTotalFanins",
+      "Start": 6339,
+      "End": 6580,
+      "BodyStart": 6406,
+      "Original": "int Abc_NtkCountTotalFanins( Abc_Obj_t * pLut, Abc_Obj_t * pCand )\n{\n    Abc_Obj_t * pFanin;\n    int i, nCounter = Abc_ObjFaninNum(pLut);\n    Abc_ObjForEachFanin( pCand, pFanin, i )\n        nCounter += !pFanin-\u003efMarkC;\n    return nCounter;\n}",
+      "Draft": "func Abc_NtkCountTotalFanins(pLut *Abc_Obj_t, pCand *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    var nCounter int32 = Abc_ObjFaninNum(pLut);\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pCand)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pCand, i)), 1); i++  {\n        nCounter += !pFanin.fMarkC;\n    }\n    return nCounter;\n}"
+    },
+    {
+      "Name": "Abc_NtkCollectOverlapCands",
+      "Start": 6848,
+      "End": 8255,
+      "BodyStart": 6942,
+      "Original": "void Abc_NtkCollectOverlapCands( Abc_Obj_t * pLut, Vec_Ptr_t * vCands, Nwk_LMPars_t * pPars )\n{\n    Abc_Obj_t * pFanin, * pObj;\n    int i, k;\n    // mark fanins of pLut\n    Abc_ObjForEachFanin( pLut, pFanin, i )\n        pFanin-\u003efMarkC = 1;\n    // collect the matching fanouts of each fanin of the node\n    Vec_PtrClear( vCands );\n    Abc_NtkIncrementTravId( pLut-\u003epNtk );\n    Abc_NodeSetTravIdCurrent( pLut );\n    Abc_ObjForEachFanin( pLut, pFanin, i )\n    {\n        if ( !Abc_ObjIsNode(pFanin) )\n            continue;\n        if ( Abc_ObjFanoutNum(pFanin) \u003e pPars-\u003enMaxFanout )\n            continue;\n        Abc_ObjForEachFanout( pFanin, pObj, k )\n        {\n            if ( !Abc_ObjIsNode(pObj) )\n                continue;\n            if ( Abc_NodeIsTravIdCurrent( pObj ) )\n                continue;\n            Abc_NodeSetTravIdCurrent( pObj );\n            // check the difference in delay\n            if ( Abc_ObjLevel(pLut) - Abc_ObjLevel(pObj) \u003e pPars-\u003enMaxLevelDiff || \n                 Abc_ObjLevel(pObj) - Abc_ObjLevel(pLut) \u003e pPars-\u003enMaxLevelDiff )\n                 continue;\n            // check the total number of fanins of the node\n            if ( Abc_NtkCountTotalFanins(pLut, pObj) \u003e pPars-\u003enMaxSuppSize )\n                continue;\n            Vec_PtrPush( vCands, pObj );\n        }\n    }\n    // unmark fanins of pLut\n    Abc_ObjForEachFanin( pLut, pFanin, i )\n        pFanin-\u003efMarkC = 0;\n}",
+      "Draft": "func Abc_NtkCollectOverlapCands(pLut *Abc_Obj_t, vCands *Vec_Ptr_t, pPars *Nwk_LMPars_t) {\n    var pFanin, pObj *Abc_Obj_t;\n    var i, k int32;\n    // mark fanins of pLut\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pLut)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pLut, i)), 1); i++  {\n        pFanin.fMarkC = 1;\n    }\n    // collect the matching fanouts of each fanin of the node\n    Vec_PtrClear( vCands );\n    Abc_NtkIncrementTravId( pLut.pNtk );\n    Abc_NodeSetTravIdCurrent( pLut );\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pLut)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pLut, i)), 1); i++  {\n        if !Abc_ObjIsNode(pFanin) {\n            continue; }\n        if Abc_ObjFanoutNum(pFanin) \u003e pPars.nMaxFanout {\n            continue; }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pFanin)) \u0026\u0026 (((pObj) = Abc_ObjFanout(pFanin, k)), 1); k++  {\n            if !Abc_ObjIsNode(pObj) {\n                continue; }\n            if Abc_NodeIsTravIdCurrent( pObj ) {\n                continue; }\n            Abc_NodeSetTravIdCurrent( pObj );\n            // check the difference in delay\n            if Abc_ObjLevel(pLut) - Abc_ObjLevel(pObj) \u003e pPars.nMaxLevelDiff || \n                 Abc_ObjLevel(pObj) - Abc_ObjLevel(pLut) \u003e pPars.nMaxLevelDiff {\n                 continue; }\n            // check the total number of fanins of the node\n            if Abc_NtkCountTotalFanins(pLut, pObj) \u003e pPars.nMaxSuppSize {\n                continue; }\n            Vec_PtrPush( vCands, pObj );\n        }\n    }\n    // unmark fanins of pLut\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pLut)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pLut, i)), 1); i++  {\n        pFanin.fMarkC = 0;\n    }\n}"
+    },
+    {
+      "Name": "Abc_NtkLutMerge",
+      "Start": 8528,
+      "End": 11098,
+      "BodyStart": 8598,
+      "Original": "Vec_Int_t * Abc_NtkLutMerge( Abc_Ntk_t * pNtk, Nwk_LMPars_t * pPars )\n{\n    Nwk_Grf_t * p;\n    Vec_Int_t * vResult;\n    Vec_Ptr_t * vStart, * vNext, * vCands1, * vCands2;\n    Abc_Obj_t * pLut, * pCand;\n    int i, k, nVertsMax, nCands;\n    clock_t clk = clock();\n    // count the number of vertices\n    nVertsMax = 0;\n    Abc_NtkForEachNode( pNtk, pLut, i )\n        nVertsMax += (int)(Abc_ObjFaninNum(pLut) \u003c= pPars-\u003enMaxLutSize);\n    p = Nwk_ManGraphAlloc( nVertsMax );\n    // create graph\n    vStart  = Vec_PtrAlloc( 1000 );\n    vNext   = Vec_PtrAlloc( 1000 );\n    vCands1 = Vec_PtrAlloc( 1000 );\n    vCands2 = Vec_PtrAlloc( 1000 );\n    nCands  = 0;\n    Abc_NtkForEachNode( pNtk, pLut, i )\n    {\n        if ( Abc_ObjFaninNum(pLut) \u003e pPars-\u003enMaxLutSize )\n            continue;\n        Abc_NtkCollectOverlapCands( pLut, vCands1, pPars );\n        if ( pPars-\u003efUseDiffSupp )\n            Abc_NtkCollectNonOverlapCands( pLut, vStart, vNext, vCands2, pPars );\n        if ( Vec_PtrSize(vCands1) == 0 \u0026\u0026 Vec_PtrSize(vCands2) == 0 )\n            continue;\n        nCands += Vec_PtrSize(vCands1) + Vec_PtrSize(vCands2);\n        // save candidates\n        Vec_PtrForEachEntry( Vec_Int_t *, vCands1, pCand, k )\n            Nwk_ManGraphHashEdge( p, Abc_ObjId(pLut), Abc_ObjId(pCand) );\n        Vec_PtrForEachEntry( Vec_Int_t *, vCands2, pCand, k )\n            Nwk_ManGraphHashEdge( p, Abc_ObjId(pLut), Abc_ObjId(pCand) );\n        // print statistics about this node\n        if ( pPars-\u003efVeryVerbose )\n        printf( \"Node %6d : Fanins = %d. Fanouts = %3d.  Cand1 = %3d. Cand2 = %3d.\\n\",\n            Abc_ObjId(pLut), Abc_ObjFaninNum(pLut), Abc_ObjFaninNum(pLut), \n            Vec_PtrSize(vCands1), Vec_PtrSize(vCands2) );\n    }\n    Vec_PtrFree( vStart );\n    Vec_PtrFree( vNext );\n    Vec_PtrFree( vCands1 );\n    Vec_PtrFree( vCands2 );\n    if ( pPars-\u003efVerbose )\n    {\n        printf( \"Mergable LUTs = %6d. Total cands = %6d. \", p-\u003enVertsMax, nCands );\n        ABC_PRT( \"Deriving graph\", clock() - clk );\n    }\n    // solve the graph problem\n    clk = clock();\n    Nwk_ManGraphSolve( p );\n    if ( pPars-\u003efVerbose )\n    {\n        printf( \"GRAPH: Nodes = %6d. Edges = %6d.  Pairs = %6d.  \", \n            p-\u003enVerts, p-\u003enEdges, Vec_IntSize(p-\u003evPairs)/2 );\n        ABC_PRT( \"Solving\", clock() - clk );\n        Nwk_ManGraphReportMemoryUsage( p );\n    }\n    vResult = p-\u003evPairs; p-\u003evPairs = NULL;\n/*\n    for ( i = 0; i \u003c vResult-\u003enSize; i += 2 )\n        printf( \"(%d,%d) \", vResult-\u003epArray[i], vResult-\u003epArray[i+1] );\n    printf( \"\\n\" );\n*/\n    Nwk_ManGraphFree( p );\n    return vResult;\n}",
+      "Draft": "func Abc_NtkLutMerge(pNtk *Abc_Ntk_t, pPars *Nwk_LMPars_t) *Vec_Int_t {\n    var p *Nwk_Grf_t;\n    var vResult *Vec_Int_t;\n    var vStart, vNext, vCands1, vCands2 *Vec_Ptr_t;\n    var pLut, pCand *Abc_Obj_t;\n    var i, k, nVertsMax, nCands int32;\n    var clk int64  = time.Now().UnixNano();\n    // count the number of vertices\n    nVertsMax = 0;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pLut) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pLut) == nil || !Abc_ObjIsNode(pLut) {} else {\n        nVertsMax += int32((Abc_ObjFaninNum(pLut) \u003c= pPars.nMaxLutSize)); }\n    }\n    p = Nwk_ManGraphAlloc( nVertsMax );\n    // create graph\n    vStart  = Vec_PtrAlloc( 1000 );\n    vNext   = Vec_PtrAlloc( 1000 );\n    vCands1 = Vec_PtrAlloc( 1000 );\n    vCands2 = Vec_PtrAlloc( 1000 );\n    nCands  = 0;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pLut) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pLut) == nil || !Abc_ObjIsNode(pLut) {} else {\n        if Abc_ObjFaninNum(pLut) \u003e pPars.nMaxLutSize {\n            continue; }\n        Abc_NtkCollectOverlapCands( pLut, vCands1, pPars );\n        if pPars.fUseDiffSupp {\n            Abc_NtkCollectNonOverlapCands( pLut, vStart, vNext, vCands2, pPars ); }\n        if Vec_PtrSize(vCands1) == 0 \u0026\u0026 Vec_PtrSize(vCands2) == 0 {\n            continue; }\n        nCands += Vec_PtrSize(vCands1) + Vec_PtrSize(vCands2);\n        // save candidates\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vCands1)) \u0026\u0026 (((pCand) = (Vec_Int_t *)Vec_PtrEntry(vCands1, k)), 1); k++  {\n            Nwk_ManGraphHashEdge( p, Abc_ObjId(pLut), Abc_ObjId(pCand) );\n        }\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vCands2)) \u0026\u0026 (((pCand) = (Vec_Int_t *)Vec_PtrEntry(vCands2, k)), 1); k++  {\n            Nwk_ManGraphHashEdge( p, Abc_ObjId(pLut), Abc_ObjId(pCand) );\n        }\n        // print statistics about this node\n        if pPars.fVeryVerbose {\n        fmt.Printf(\"Node %6d : Fanins = %d. Fanouts = %3d.  Cand1 = %3d. Cand2 = %3d.\\n\", Abc_ObjId(pLut), Abc_ObjFaninNum(pLut), Abc_ObjFaninNum(pLut), Vec_PtrSize(vCands1), Vec_PtrSize(vCands2)); }\n    }\n    }\n    Vec_PtrFree( vStart );\n    Vec_PtrFree( vNext );\n    Vec_PtrFree( vCands1 );\n    Vec_PtrFree( vCands2 );\n    if pPars.fVerbose {\n        fmt.Printf(\"Mergable LUTs = %6d. Total cands = %6d. \", p.nVertsMax, nCands);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Deriving graph\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;\n    }\n    // solve the graph problem\n    clk = time.Now().UnixNano();\n    Nwk_ManGraphSolve( p );\n    if pPars.fVerbose {\n        fmt.Printf(\"GRAPH: Nodes = %6d. Edges = %6d.  Pairs = %6d.  \", p.nVerts, p.nEdges, Vec_IntSize(p.vPairs)/2);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Solving\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;\n        Nwk_ManGraphReportMemoryUsage( p );\n    }\n    vResult = p.vPairs; p.vPairs = nil;\n/*\n    for ( i = 0; i \u003c vResult-\u003enSize; i += 2 )\n        printf( \"(%d,%d) \", vResult-\u003epArray[i], vResult-\u003epArray[i+1] );\n    printf( \"\\n\" );\n*/\n    Nwk_ManGraphFree( p );\n    return vResult;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c::pointer-cast::3270",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2946,
+      "End": 2946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c::pointer-cast::5395",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4750,
+      "End": 4750
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c::pointer-cast::6321",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 5571,
+      "End": 5571
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c::pointer-cast::11417",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9672,
+      "End": 9672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c::pointer-cast::11659",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9808,
+      "End": 9808
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c::Abc_NtkMarkFanins_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMarkFanins_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1348,
+      "End": 1737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c::Abc_NtkMarkFanouts_rec",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMarkFanouts_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2028,
+      "End": 2502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c::Abc_NtkCollectCircle",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCollectCircle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2788,
+      "End": 3689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c::Abc_NtkCollectNonOverlapCands",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCollectNonOverlapCands",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3981,
+      "End": 6069
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c::Abc_NtkCountTotalFanins",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCountTotalFanins",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6339,
+      "End": 6580
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c::Abc_NtkCollectOverlapCands",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkCollectOverlapCands",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6848,
+      "End": 8255
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c::Abc_NtkLutMerge",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkLutMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8528,
+      "End": 11098
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 11346
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/fahout_cut.c::macro-inline::562",
+      "Category": "macro-inline-review",
+      "Symbol": "include",
+      "Status": "open",
+      "Message": "Local include not resolved for macro expansion; supply Options.IncludePaths when using the library.",
+      "Start": 562,
+      "End": 591
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcMerge.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [LUT merging algorithm.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcMerge.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"base/abc/abc.h\"\n//#include \"aig/aig/aig.h\"\n//#include \"aig/nwk/nwkMerge.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the fanins of the node with the current trav ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMarkFanins_rec(pLut *Abc_Obj_t, nLevMin int32) {\n    var pNext *Abc_Obj_t;\n    var i int32;\n    if !Abc_ObjIsNode(pLut) {\n        return; }\n    if Abc_NodeIsTravIdCurrent( pLut ) {\n        return; }\n    Abc_NodeSetTravIdCurrent( pLut );\n    if Abc_ObjLevel(pLut) \u003c nLevMin {\n        return; }\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pLut)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pLut, i)), 1); i++  {\n        Abc_NtkMarkFanins_rec( pNext, nLevMin );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks the fanouts of the node with the current trav ID.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMarkFanouts_rec(pLut *Abc_Obj_t, nLevMax int32, nFanMax int32) {\n    var pNext *Abc_Obj_t;\n    var i int32;\n    if !Abc_ObjIsNode(pLut) {\n        return; }\n    if Abc_NodeIsTravIdCurrent( pLut ) {\n        return; }\n    Abc_NodeSetTravIdCurrent( pLut );\n    if Abc_ObjLevel(pLut) \u003e nLevMax {\n        return; }\n    if Abc_ObjFanoutNum(pLut) \u003e nFanMax {\n        return; }\n    // inlining of macro Abc_ObjForEachFanout\n    for  i = 0; (i \u003c Abc_ObjFanoutNum(pLut)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pLut, i)), 1); i++  {\n        Abc_NtkMarkFanouts_rec( pNext, nLevMax, nFanMax );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the circle of nodes around the given set.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCollectCircle(vStart *Vec_Ptr_t, vNext *Vec_Ptr_t, nFanMax int32) {\n    var pObj, pNext *Abc_Obj_t;\n    var i, k int32;\n    Vec_PtrClear( vNext );\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vStart)) \u0026\u0026 (((pObj) = (Vec_Int_t *)Vec_PtrEntry(vStart, i)), 1); i++  {\n        // inlining of macro Abc_ObjForEachFanin\n        for  k = 0; (k \u003c Abc_ObjFaninNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanin(pObj, k)), 1); k++  {\n            if !Abc_ObjIsNode(pNext) {\n                continue; }\n            if Abc_NodeIsTravIdCurrent( pNext ) {\n                continue; }\n            Abc_NodeSetTravIdCurrent( pNext );\n            Vec_PtrPush( vNext, pNext );\n        }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pObj)) \u0026\u0026 (((pNext) = Abc_ObjFanout(pObj, k)), 1); k++  {\n            if !Abc_ObjIsNode(pNext) {\n                continue; }\n            if Abc_NodeIsTravIdCurrent( pNext ) {\n                continue; }\n            Abc_NodeSetTravIdCurrent( pNext );\n            if Abc_ObjFanoutNum(pNext) \u003e nFanMax {\n                continue; }\n            Vec_PtrPush( vNext, pNext );\n        }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects the circle of nodes removes from the given one.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCollectNonOverlapCands(pLut *Abc_Obj_t, vStart *Vec_Ptr_t, vNext *Vec_Ptr_t, vCands *Vec_Ptr_t, pPars *Nwk_LMPars_t) {\n    var vTemp *Vec_Ptr_t;\n    var pObj *Abc_Obj_t;\n    var i, k int32;\n    Vec_PtrClear( vCands );\n    if pPars.nMaxSuppSize - Abc_ObjFaninNum(pLut) \u003c= 1 {\n        return; }\n\n    // collect nodes removed by this distance\n    assert(pPars.nMaxDistance \u003e 0, \"pPars.nMaxDistance \u003e 0\");\n    Vec_PtrClear( vStart );\n    Vec_PtrPush( vStart, pLut );\n    Abc_NtkIncrementTravId( pLut.pNtk );\n    Abc_NodeSetTravIdCurrent( pLut );\n    for  i = 1; i \u003c= pPars.nMaxDistance; i++  {\n        Abc_NtkCollectCircle( vStart, vNext, pPars.nMaxFanout );\n        vTemp  = vStart;\n        vStart = vNext;\n        vNext  = vTemp;\n        // collect the nodes in vStart\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vStart)) \u0026\u0026 (((pObj) = (Vec_Int_t *)Vec_PtrEntry(vStart, k)), 1); k++  {\n            Vec_PtrPush( vCands, pObj );\n        }\n    }\n\n    // mark the TFI/TFO nodes\n    Abc_NtkIncrementTravId( pLut.pNtk );\n    if pPars.fUseTfiTfo {\n        Abc_NodeSetTravIdCurrent( pLut );\n    } else {\n        Abc_NodeSetTravIdPrevious( pLut );\n        Abc_NtkMarkFanins_rec( pLut, Abc_ObjLevel(pLut) - pPars.nMaxDistance );\n        Abc_NodeSetTravIdPrevious( pLut );\n        Abc_NtkMarkFanouts_rec( pLut, Abc_ObjLevel(pLut) + pPars.nMaxDistance, pPars.nMaxFanout );\n    }\n\n    // collect nodes satisfying the following conditions:\n    // - they are close enough in terms of distance\n    // - they are not in the TFI/TFO of the LUT\n    // - they have no more than the given number of fanins\n    // - they have no more than the given diff in delay\n    k = 0;\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vCands)) \u0026\u0026 (((pObj) = (Vec_Int_t *)Vec_PtrEntry(vCands, i)), 1); i++  {\n        if Abc_NodeIsTravIdCurrent(pObj) {\n            continue; }\n        if Abc_ObjFaninNum(pLut) + Abc_ObjFaninNum(pObj) \u003e pPars.nMaxSuppSize {\n            continue; }\n        if Abc_ObjLevel(pLut) - Abc_ObjLevel(pObj) \u003e pPars.nMaxLevelDiff || \n             Abc_ObjLevel(pObj) - Abc_ObjLevel(pLut) \u003e pPars.nMaxLevelDiff {\n             continue; }\n        Vec_PtrWriteEntry( vCands, k++, pObj );\n    }\n    Vec_PtrShrink( vCands, k );\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    [Count the total number of fanins.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCountTotalFanins(pLut *Abc_Obj_t, pCand *Abc_Obj_t) int32 {\n    var pFanin *Abc_Obj_t;\n    var i int32;\n    var nCounter int32 = Abc_ObjFaninNum(pLut);\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pCand)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pCand, i)), 1); i++  {\n        nCounter += !pFanin.fMarkC;\n    }\n    return nCounter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects overlapping candidates.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkCollectOverlapCands(pLut *Abc_Obj_t, vCands *Vec_Ptr_t, pPars *Nwk_LMPars_t) {\n    var pFanin, pObj *Abc_Obj_t;\n    var i, k int32;\n    // mark fanins of pLut\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pLut)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pLut, i)), 1); i++  {\n        pFanin.fMarkC = 1;\n    }\n    // collect the matching fanouts of each fanin of the node\n    Vec_PtrClear( vCands );\n    Abc_NtkIncrementTravId( pLut.pNtk );\n    Abc_NodeSetTravIdCurrent( pLut );\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pLut)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pLut, i)), 1); i++  {\n        if !Abc_ObjIsNode(pFanin) {\n            continue; }\n        if Abc_ObjFanoutNum(pFanin) \u003e pPars.nMaxFanout {\n            continue; }\n        // inlining of macro Abc_ObjForEachFanout\n        for  k = 0; (k \u003c Abc_ObjFanoutNum(pFanin)) \u0026\u0026 (((pObj) = Abc_ObjFanout(pFanin, k)), 1); k++  {\n            if !Abc_ObjIsNode(pObj) {\n                continue; }\n            if Abc_NodeIsTravIdCurrent( pObj ) {\n                continue; }\n            Abc_NodeSetTravIdCurrent( pObj );\n            // check the difference in delay\n            if Abc_ObjLevel(pLut) - Abc_ObjLevel(pObj) \u003e pPars.nMaxLevelDiff || \n                 Abc_ObjLevel(pObj) - Abc_ObjLevel(pLut) \u003e pPars.nMaxLevelDiff {\n                 continue; }\n            // check the total number of fanins of the node\n            if Abc_NtkCountTotalFanins(pLut, pObj) \u003e pPars.nMaxSuppSize {\n                continue; }\n            Vec_PtrPush( vCands, pObj );\n        }\n    }\n    // unmark fanins of pLut\n    // inlining of macro Abc_ObjForEachFanin\n    for  i = 0; (i \u003c Abc_ObjFaninNum(pLut)) \u0026\u0026 (((pFanin) = Abc_ObjFanin(pLut, i)), 1); i++  {\n        pFanin.fMarkC = 0;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Performs LUT merging with parameters.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkLutMerge(pNtk *Abc_Ntk_t, pPars *Nwk_LMPars_t) *Vec_Int_t {\n    var p *Nwk_Grf_t;\n    var vResult *Vec_Int_t;\n    var vStart, vNext, vCands1, vCands2 *Vec_Ptr_t;\n    var pLut, pCand *Abc_Obj_t;\n    var i, k, nVertsMax, nCands int32;\n    var clk int64  = time.Now().UnixNano();\n    // count the number of vertices\n    nVertsMax = 0;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pLut) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pLut) == nil || !Abc_ObjIsNode(pLut) {} else {\n        nVertsMax += int32((Abc_ObjFaninNum(pLut) \u003c= pPars.nMaxLutSize)); }\n    }\n    p = Nwk_ManGraphAlloc( nVertsMax );\n    // create graph\n    vStart  = Vec_PtrAlloc( 1000 );\n    vNext   = Vec_PtrAlloc( 1000 );\n    vCands1 = Vec_PtrAlloc( 1000 );\n    vCands2 = Vec_PtrAlloc( 1000 );\n    nCands  = 0;\n    // inlining of macro Abc_NtkForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize((pNtk).vObjs)) \u0026\u0026 (((pLut) = Abc_NtkObj(pNtk, i)), 1); i++  {           if (pLut) == nil || !Abc_ObjIsNode(pLut) {} else {\n        if Abc_ObjFaninNum(pLut) \u003e pPars.nMaxLutSize {\n            continue; }\n        Abc_NtkCollectOverlapCands( pLut, vCands1, pPars );\n        if pPars.fUseDiffSupp {\n            Abc_NtkCollectNonOverlapCands( pLut, vStart, vNext, vCands2, pPars ); }\n        if Vec_PtrSize(vCands1) == 0 \u0026\u0026 Vec_PtrSize(vCands2) == 0 {\n            continue; }\n        nCands += Vec_PtrSize(vCands1) + Vec_PtrSize(vCands2);\n        // save candidates\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vCands1)) \u0026\u0026 (((pCand) = (Vec_Int_t *)Vec_PtrEntry(vCands1, k)), 1); k++  {\n            Nwk_ManGraphHashEdge( p, Abc_ObjId(pLut), Abc_ObjId(pCand) );\n        }\n        // inlining of macro Vec_PtrForEachEntry\n        for  k = 0; (k \u003c Vec_PtrSize(vCands2)) \u0026\u0026 (((pCand) = (Vec_Int_t *)Vec_PtrEntry(vCands2, k)), 1); k++  {\n            Nwk_ManGraphHashEdge( p, Abc_ObjId(pLut), Abc_ObjId(pCand) );\n        }\n        // print statistics about this node\n        if pPars.fVeryVerbose {\n        fmt.Printf(\"Node %6d : Fanins = %d. Fanouts = %3d.  Cand1 = %3d. Cand2 = %3d.\\n\", Abc_ObjId(pLut), Abc_ObjFaninNum(pLut), Abc_ObjFaninNum(pLut), Vec_PtrSize(vCands1), Vec_PtrSize(vCands2)); }\n    }\n    }\n    Vec_PtrFree( vStart );\n    Vec_PtrFree( vNext );\n    Vec_PtrFree( vCands1 );\n    Vec_PtrFree( vCands2 );\n    if pPars.fVerbose {\n        fmt.Printf(\"Mergable LUTs = %6d. Total cands = %6d. \", p.nVertsMax, nCands);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Deriving graph\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;\n    }\n    // solve the graph problem\n    clk = time.Now().UnixNano();\n    Nwk_ManGraphSolve( p );\n    if pPars.fVerbose {\n        fmt.Printf(\"GRAPH: Nodes = %6d. Edges = %6d.  Pairs = %6d.  \", p.nVerts, p.nEdges, Vec_IntSize(p.vPairs)/2);\n        // inlining of macro ABC_PRT\n        Abc_Print(1, \"%s =\", (\"Solving\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((time.Now().UnixNano() - clk)))/(float64(int64(time.Second))));;\n        Nwk_ManGraphReportMemoryUsage( p );\n    }\n    vResult = p.vPairs; p.vPairs = nil;\n/*\n    for ( i = 0; i \u003c vResult-\u003enSize; i += 2 )\n        printf( \"(%d,%d) \", vResult-\u003epArray[i], vResult-\u003epArray[i+1] );\n    printf( \"\\n\" );\n*/\n    Nwk_ManGraphFree( p );\n    return vResult;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

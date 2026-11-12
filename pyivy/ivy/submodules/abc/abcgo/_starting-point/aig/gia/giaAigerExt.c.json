@@ -1,0 +1,692 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c",
+  "SHA256": "7065c5f79121257465fdefdbafc47b8db23820a1c05c17a291296eec7765f8df",
+  "Library": [
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 54,
+        "Column": 75,
+        "ByteOffset": 1606
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pReprs = /*__starting_point_inline_macro:ABC_CALLOC__*/((Gia_Rpr_t *) calloc((size_t)(nSize), sizeof(Gia_Rpr_t)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 72,
+        "Column": 9,
+        "ByteOffset": 2118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iRepr \u003c iNode );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2353
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pReprs \u0026\u0026 p.pNexts );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 86,
+        "Column": 69,
+        "ByteOffset": 2683
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:Gia_ClassForEachObj__*/for  assert(Gia_ObjIsHead(p, iRepr) \u0026\u0026 iRepr), iNode = iRepr; iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 90,
+        "Column": 79,
+        "ByteOffset": 2900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(sizeof(int) * (nItems + 10))));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 106,
+        "Column": 70,
+        "ByteOffset": 3809
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:Gia_ClassForEachObj1__*/for  assert(Gia_ObjIsHead(p, iRepr)), iNode = Gia_ObjNext(p, iRepr); iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 154,
+        "Column": 71,
+        "ByteOffset": 5351
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMapping = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(nAlloc), sizeof(int)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 5698
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iOffset \u003c= nAlloc );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 181,
+        "Column": 5,
+        "ByteOffset": 6285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManHasMapping(p) );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 187,
+        "Column": 79,
+        "ByteOffset": 6645
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(sizeof(int) * (nItems + 1))));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 227,
+        "Column": 82,
+        "ByteOffset": 8165
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    var pMapping *int32  = /*__starting_point_inline_macro:ABC_ALLOC__*/((int *) malloc(sizeof(int) * (size_t)((size_t)nSize/4)));"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 228,
+        "Column": 5,
+        "ByteOffset": 8219
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pMapping, *ppPos, nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 229,
+        "Column": 5,
+        "ByteOffset": 8258
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSize % 4 == 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 233,
+        "Column": 95,
+        "ByteOffset": 8461
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    unsigned char * pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(4*Vec_IntSize(p.vMapping))));"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 234,
+        "Column": 5,
+        "ByteOffset": 8535
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy( pBuffer, Vec_IntArray(p.vMapping), (size_t)4*Vec_IntSize(p.vMapping) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 235,
+        "Column": 5,
+        "ByteOffset": 8619
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vMapping) \u003e= Gia_ManObjNum(p) );"
+    },
+    {
+      "Name": "calloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 262,
+        "Column": 71,
+        "ByteOffset": 9432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pMapping = /*__starting_point_inline_macro:ABC_CALLOC__*/((int *) calloc((size_t)(nObjs + (LutSize + 2) * nLuts), sizeof(int)));"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 292,
+        "Column": 79,
+        "ByteOffset": 10567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(4 * nSize)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 303,
+        "Column": 5,
+        "ByteOffset": 11236
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSize2 == nSize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 322,
+        "Column": 5,
+        "ByteOffset": 11725
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nSize % 4 == 0 );"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 329,
+        "Column": 95,
+        "ByteOffset": 12040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    unsigned char * pBuffer = /*__starting_point_inline_macro:ABC_ALLOC__*/((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(4*Vec_IntSize(vPacking))));"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Gia_AigerReadEquivClasses",
+      "Start": 1264,
+      "End": 2083,
+      "BodyStart": 1339,
+      "Original": "Gia_Rpr_t * Gia_AigerReadEquivClasses( unsigned char ** ppPos, int nSize )\n{\n    Gia_Rpr_t * pReprs;\n    unsigned char * pStop;\n    int i, Item, fProved, iRepr, iNode;\n    pStop = *ppPos;\n    pStop += Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n    pReprs = ABC_CALLOC( Gia_Rpr_t, nSize );\n    for ( i = 0; i \u003c nSize; i++ )\n        pReprs[i].iRepr = GIA_VOID;\n    iRepr = iNode = 0;\n    while ( *ppPos \u003c pStop )\n    {\n        Item = Gia_AigerReadUnsigned( ppPos );\n        if ( Item \u0026 1 )\n        {\n            iRepr += (Item \u003e\u003e 1);\n            iNode = iRepr;\n            continue;\n        }\n        Item \u003e\u003e= 1;\n        fProved = (Item \u0026 1);\n        Item \u003e\u003e= 1;\n        iNode += Item;\n        pReprs[iNode].fProved = fProved;\n        pReprs[iNode].iRepr = iRepr;\n        assert( iRepr \u003c iNode );\n    }\n    return pReprs;\n}",
+      "Draft": "Gia_Rpr_t * Gia_AigerReadEquivClasses( unsigned char ** ppPos, int nSize )\n{\n    var pReprs *Gia_Rpr_t;\n    unsigned char * pStop;\n    var i, Item, fProved, iRepr, iNode int32;\n    pStop = *ppPos;\n    pStop += Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n    // inlining of macro ABC_CALLOC\n    pReprs = ((Gia_Rpr_t *) calloc((size_t)(nSize), sizeof(Gia_Rpr_t)));\n    for  i = 0; i \u003c nSize; i++  {\n        pReprs[i].iRepr = GIA_VOID;\n    }\n    iRepr = iNode = 0;\n    for  *ppPos \u003c pStop  {\n        Item = Gia_AigerReadUnsigned( ppPos );\n        if Item \u0026 1 {\n            iRepr += (Item \u003e\u003e 1);\n            iNode = iRepr;\n            continue;\n        }\n        Item \u003e\u003e= 1;\n        fProved = (Item \u0026 1);\n        Item \u003e\u003e= 1;\n        iNode += Item;\n        pReprs[iNode].fProved = fProved;\n        pReprs[iNode].iRepr = iRepr;\n        assert(iRepr \u003c iNode, \"iRepr \u003c iNode\");\n    }\n    return pReprs;\n}"
+    },
+    {
+      "Name": "Gia_WriteEquivClassesInt",
+      "Start": 2084,
+      "End": 3697,
+      "BodyStart": 2160,
+      "Original": "unsigned char * Gia_WriteEquivClassesInt( Gia_Man_t * p, int * pEquivSize )\n{\n    unsigned char * pBuffer;\n    int iRepr, iNode, iPrevRepr, iPrevNode, iLit, nItems, iPos;\n    assert( p-\u003epReprs \u0026\u0026 p-\u003epNexts );\n    // count the number of entries to be written\n    nItems = 0;\n    for ( iRepr = 1; iRepr \u003c Gia_ManObjNum(p); iRepr++ )\n    {\n        nItems += Gia_ObjIsConst( p, iRepr );\n        if ( !Gia_ObjIsHead(p, iRepr) )\n            continue;\n        Gia_ClassForEachObj( p, iRepr, iNode )\n            nItems++;\n    }\n    pBuffer = ABC_ALLOC( unsigned char, sizeof(int) * (nItems + 10) );\n    // write constant class\n    iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, 4, Abc_Var2Lit(0, 1) );\n    iPrevNode = 0;\n    for ( iNode = 1; iNode \u003c Gia_ManObjNum(p); iNode++ )\n        if ( Gia_ObjIsConst(p, iNode) )\n        {\n            iLit = Abc_Var2Lit( iNode - iPrevNode, Gia_ObjProved(p, iNode) );\n            iPrevNode = iNode;\n            iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, iPos, Abc_Var2Lit(iLit, 0) );\n        }\n    // write non-constant classes\n    iPrevRepr = 0;\n    Gia_ManForEachClass( p, iRepr )\n    {\n        iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, iPos, Abc_Var2Lit(iRepr - iPrevRepr, 1) );\n        iPrevRepr = iPrevNode = iRepr;\n        Gia_ClassForEachObj1( p, iRepr, iNode )\n        {\n            iLit = Abc_Var2Lit( iNode - iPrevNode, Gia_ObjProved(p, iNode) );\n            iPrevNode = iNode;\n            iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, iPos, Abc_Var2Lit(iLit, 0) );\n        }\n    }\n    Gia_AigerWriteInt( pBuffer, iPos );\n    *pEquivSize = iPos;\n    return pBuffer;\n}",
+      "Draft": "func Gia_WriteEquivClassesInt(p *Gia_Man_t, pEquivSize *int32) *unsigned char {\n    unsigned char * pBuffer;\n    var iRepr, iNode, iPrevRepr, iPrevNode, iLit, nItems, iPos int32;\n    assert(p.pReprs \u0026\u0026 p.pNexts, \"p.pReprs \u0026\u0026 p.pNexts\");\n    // count the number of entries to be written\n    nItems = 0;\n    for  iRepr = 1; iRepr \u003c Gia_ManObjNum(p); iRepr++  {\n        nItems += Gia_ObjIsConst( p, iRepr );\n        if !Gia_ObjIsHead(p, iRepr) {\n            continue; }\n        // inlining of macro Gia_ClassForEachObj\n        for  assert(Gia_ObjIsHead(p, iRepr) \u0026\u0026 iRepr, \"Gia_ObjIsHead(p, iRepr) \u0026\u0026 iRepr\"), iNode = iRepr; iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {\n            nItems++;\n        }\n    }\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(sizeof(int) * (nItems + 10))));\n    // write constant class\n    iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, 4, Abc_Var2Lit(0, 1) );\n    iPrevNode = 0;\n    for  iNode = 1; iNode \u003c Gia_ManObjNum(p); iNode++  {\n        if Gia_ObjIsConst(p, iNode) {\n            iLit = Abc_Var2Lit( iNode - iPrevNode, Gia_ObjProved(p, iNode) );\n            iPrevNode = iNode;\n            iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, iPos, Abc_Var2Lit(iLit, 0) );\n        }\n    }\n    // write non-constant classes\n    iPrevRepr = 0;\n    // inlining of macro Gia_ManForEachClass\n    for  iRepr = 1; iRepr \u003c Gia_ManObjNum(p); iRepr++  { if !Gia_ObjIsHead(p, iRepr) {} else {\n        iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, iPos, Abc_Var2Lit(iRepr - iPrevRepr, 1) );\n        iPrevRepr = iPrevNode = iRepr;\n        // inlining of macro Gia_ClassForEachObj1\n        for  assert(Gia_ObjIsHead(p, iRepr), \"Gia_ObjIsHead(p, iRepr)\"), iNode = Gia_ObjNext(p, iRepr); iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {\n            iLit = Abc_Var2Lit( iNode - iPrevNode, Gia_ObjProved(p, iNode) );\n            iPrevNode = iNode;\n            iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, iPos, Abc_Var2Lit(iLit, 0) );\n        }\n    }\n    }\n    Gia_AigerWriteInt( pBuffer, iPos );\n    *pEquivSize = iPos;\n    return pBuffer;\n}"
+    },
+    {
+      "Name": "Gia_WriteEquivClasses",
+      "Start": 3698,
+      "End": 3907,
+      "BodyStart": 3749,
+      "Original": "Vec_Str_t * Gia_WriteEquivClasses( Gia_Man_t * p )\n{\n    int nEquivSize;\n    unsigned char * pBuffer = Gia_WriteEquivClassesInt( p, \u0026nEquivSize );\n    return Vec_StrAllocArray( (char *)pBuffer, nEquivSize );\n}",
+      "Draft": "func Gia_WriteEquivClasses(p *Gia_Man_t) *Vec_Str_t {\n    var nEquivSize int32;\n    unsigned char * pBuffer = Gia_WriteEquivClassesInt( p, \u0026nEquivSize );\n    return Vec_StrAllocArray( (char *)pBuffer, nEquivSize );\n}"
+    },
+    {
+      "Name": "Gia_AigerReadDiffValue",
+      "Start": 4161,
+      "End": 4382,
+      "BodyStart": 4244,
+      "Original": "static inline unsigned Gia_AigerReadDiffValue( unsigned char ** ppPos, int iPrev )\n{\n    int Item = Gia_AigerReadUnsigned( ppPos );\n    if ( Item \u0026 1 )\n        return iPrev + (Item \u003e\u003e 1);\n    return iPrev - (Item \u003e\u003e 1);\n}",
+      "Draft": "static inline unsigned Gia_AigerReadDiffValue( unsigned char ** ppPos, int iPrev )\n{\n    var Item int32  = Gia_AigerReadUnsigned( ppPos );\n    if Item \u0026 1 {\n        return iPrev + (Item \u003e\u003e 1); }\n    return iPrev - (Item \u003e\u003e 1);\n}"
+    },
+    {
+      "Name": "Gia_AigerReadMapping",
+      "Start": 4383,
+      "End": 5064,
+      "BodyStart": 4447,
+      "Original": "int * Gia_AigerReadMapping( unsigned char ** ppPos, int nSize )\n{\n    int * pMapping;\n    unsigned char * pStop;\n    int k, j, nFanins, nAlloc, iNode = 0, iOffset = nSize;\n    pStop = *ppPos;\n    pStop += Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n    nAlloc = nSize + pStop - *ppPos;\n    pMapping = ABC_CALLOC( int, nAlloc );\n    while ( *ppPos \u003c pStop )\n    {\n        k = iOffset;\n        pMapping[k++] = nFanins = Gia_AigerReadUnsigned( ppPos );\n        for ( j = 0; j \u003c= nFanins; j++ )\n            pMapping[k++] = iNode = Gia_AigerReadDiffValue( ppPos, iNode );\n        pMapping[iNode] = iOffset;\n        iOffset = k;\n    }\n    assert( iOffset \u003c= nAlloc );\n    return pMapping;\n}",
+      "Draft": "int * Gia_AigerReadMapping( unsigned char ** ppPos, int nSize )\n{\n    var pMapping *int32;\n    unsigned char * pStop;\n    var k int32;\n    var j int32;\n    var nFanins int32;\n    var nAlloc int32;\n    var iNode int32;\n    var iOffset int32 = nSize;\n    pStop = *ppPos;\n    pStop += Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n    nAlloc = nSize + pStop - *ppPos;\n    // inlining of macro ABC_CALLOC\n    pMapping = ((int *) calloc((size_t)(nAlloc), sizeof(int)));\n    for  *ppPos \u003c pStop  {\n        k = iOffset;\n        pMapping[k++] = nFanins = Gia_AigerReadUnsigned( ppPos );\n        for  j = 0; j \u003c= nFanins; j++  {\n            pMapping[k++] = iNode = Gia_AigerReadDiffValue( ppPos, iNode );\n        }\n        pMapping[iNode] = iOffset;\n        iOffset = k;\n    }\n    assert(iOffset \u003c= nAlloc, \"iOffset \u003c= nAlloc\");\n    return pMapping;\n}"
+    },
+    {
+      "Name": "Gia_AigerWriteDiffValue",
+      "Start": 5065,
+      "End": 5367,
+      "BodyStart": 5163,
+      "Original": "static inline int Gia_AigerWriteDiffValue( unsigned char * pPos, int iPos, int iPrev, int iThis )\n{\n    if ( iPrev \u003c iThis )\n        return Gia_AigerWriteUnsignedBuffer( pPos, iPos, Abc_Var2Lit(iThis - iPrev, 1) );\n    return Gia_AigerWriteUnsignedBuffer( pPos, iPos, Abc_Var2Lit(iPrev - iThis, 0) );\n}",
+      "Draft": "static inline int Gia_AigerWriteDiffValue( unsigned char * pPos, int iPos, int iPrev, int iThis )\n{\n    if iPrev \u003c iThis {\n        return Gia_AigerWriteUnsignedBuffer( pPos, iPos, Abc_Var2Lit(iThis - iPrev, 1) ); }\n    return Gia_AigerWriteUnsignedBuffer( pPos, iPos, Abc_Var2Lit(iPrev - iThis, 0) );\n}"
+    },
+    {
+      "Name": "Gia_AigerWriteMappingInt",
+      "Start": 5368,
+      "End": 6402,
+      "BodyStart": 5442,
+      "Original": "unsigned char * Gia_AigerWriteMappingInt( Gia_Man_t * p, int * pMapSize )\n{\n    unsigned char * pBuffer;\n    int i, k, iPrev, iFan, nItems, iPos = 4;\n    assert( Gia_ManHasMapping(p) );\n    // count the number of entries to be written\n    nItems = 0;\n    Gia_ManForEachLut( p, i )\n        nItems += 2 + Gia_ObjLutSize( p, i );\n    pBuffer = ABC_ALLOC( unsigned char, sizeof(int) * (nItems + 1) );\n    // write non-constant classes\n    iPrev = 0;\n    Gia_ManForEachLut( p, i )\n    {\n//printf( \"\\nSize = %d \", Gia_ObjLutSize(p, i) );\n        iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, iPos, Gia_ObjLutSize(p, i) );\n        Gia_LutForEachFanin( p, i, iFan, k )\n        {\n//printf( \"Fan = %d \", iFan );\n            iPos = Gia_AigerWriteDiffValue( pBuffer, iPos, iPrev, iFan );\n            iPrev = iFan;\n        }\n        iPos = Gia_AigerWriteDiffValue( pBuffer, iPos, iPrev, i );\n        iPrev = i;\n//printf( \"Node = %d \", i );\n    }\n//printf( \"\\n\" );\n    Gia_AigerWriteInt( pBuffer, iPos );\n    *pMapSize = iPos;\n    return pBuffer;\n}",
+      "Draft": "func Gia_AigerWriteMappingInt(p *Gia_Man_t, pMapSize *int32) *unsigned char {\n    unsigned char * pBuffer;\n    var i int32;\n    var k int32;\n    var iPrev int32;\n    var iFan int32;\n    var nItems int32;\n    var iPos int32 = 4;\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");\n    // count the number of entries to be written\n    nItems = 0;\n    // inlining of macro Gia_ManForEachLut\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {\n        nItems += 2 + Gia_ObjLutSize( p, i ); }\n    }\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(sizeof(int) * (nItems + 1))));\n    // write non-constant classes\n    iPrev = 0;\n    // inlining of macro Gia_ManForEachLut\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {\n//printf( \"\\nSize = %d \", Gia_ObjLutSize(p, i) );\n        iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, iPos, Gia_ObjLutSize(p, i) );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n//printf( \"Fan = %d \", iFan );\n            iPos = Gia_AigerWriteDiffValue( pBuffer, iPos, iPrev, iFan );\n            iPrev = iFan;\n        }\n        iPos = Gia_AigerWriteDiffValue( pBuffer, iPos, iPrev, i );\n        iPrev = i;\n//printf( \"Node = %d \", i );\n    }\n    }\n//printf( \"\\n\" );\n    Gia_AigerWriteInt( pBuffer, iPos );\n    *pMapSize = iPos;\n    return pBuffer;\n}"
+    },
+    {
+      "Name": "Gia_AigerWriteMapping",
+      "Start": 6403,
+      "End": 6606,
+      "BodyStart": 6454,
+      "Original": "Vec_Str_t * Gia_AigerWriteMapping( Gia_Man_t * p )\n{\n    int nMapSize;\n    unsigned char * pBuffer = Gia_AigerWriteMappingInt( p, \u0026nMapSize );\n    return Vec_StrAllocArray( (char *)pBuffer, nMapSize );\n}",
+      "Draft": "func Gia_AigerWriteMapping(p *Gia_Man_t) *Vec_Str_t {\n    var nMapSize int32;\n    unsigned char * pBuffer = Gia_AigerWriteMappingInt( p, \u0026nMapSize );\n    return Vec_StrAllocArray( (char *)pBuffer, nMapSize );\n}"
+    },
+    {
+      "Name": "Gia_AigerReadMappingSimple",
+      "Start": 6860,
+      "End": 7079,
+      "BodyStart": 6930,
+      "Original": "int * Gia_AigerReadMappingSimple( unsigned char ** ppPos, int nSize )\n{\n    int * pMapping = ABC_ALLOC( int, (size_t)nSize/4 );\n    memcpy( pMapping, *ppPos, nSize );\n    assert( nSize % 4 == 0 );\n    return pMapping;\n}",
+      "Draft": "int * Gia_AigerReadMappingSimple( unsigned char ** ppPos, int nSize )\n{\n    // inlining of macro ABC_ALLOC\n    var pMapping *int32  = ((int *) malloc(sizeof(int) * (size_t)((size_t)nSize/4)));\n    memcpy( pMapping, *ppPos, nSize );\n    assert(nSize % 4 == 0, \"nSize % 4 == 0\");\n    return pMapping;\n}"
+    },
+    {
+      "Name": "Gia_AigerWriteMappingSimple",
+      "Start": 7080,
+      "End": 7449,
+      "BodyStart": 7137,
+      "Original": "Vec_Str_t * Gia_AigerWriteMappingSimple( Gia_Man_t * p )\n{\n    unsigned char * pBuffer = ABC_ALLOC( unsigned char, 4*Vec_IntSize(p-\u003evMapping) );\n    memcpy( pBuffer, Vec_IntArray(p-\u003evMapping), (size_t)4*Vec_IntSize(p-\u003evMapping) );\n    assert( Vec_IntSize(p-\u003evMapping) \u003e= Gia_ManObjNum(p) );\n    return Vec_StrAllocArray( (char *)pBuffer, 4*Vec_IntSize(p-\u003evMapping) );\n}",
+      "Draft": "func Gia_AigerWriteMappingSimple(p *Gia_Man_t) *Vec_Str_t {\n    // inlining of macro ABC_ALLOC\n    unsigned char * pBuffer = ((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(4*Vec_IntSize(p.vMapping))));\n    memcpy( pBuffer, Vec_IntArray(p.vMapping), (size_t)4*Vec_IntSize(p.vMapping) );\n    assert(Vec_IntSize(p.vMapping) \u003e= Gia_ManObjNum(p), \"Vec_IntSize(p.vMapping) \u003e= Gia_ManObjNum(p)\");\n    return Vec_StrAllocArray( (char *)pBuffer, 4*Vec_IntSize(p.vMapping) );\n}"
+    },
+    {
+      "Name": "Gia_AigerReadMappingDoc",
+      "Start": 7703,
+      "End": 8534,
+      "BodyStart": 7776,
+      "Original": "Vec_Int_t * Gia_AigerReadMappingDoc( unsigned char ** ppPos, int nObjs )\n{\n    int * pMapping, nLuts, LutSize, iRoot, nFanins, i, k, nOffset;\n    nLuts    = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n    LutSize  = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n    pMapping = ABC_CALLOC( int, nObjs + (LutSize + 2) * nLuts );\n    nOffset = nObjs;\n    for ( i = 0; i \u003c nLuts; i++ )\n    {\n        iRoot   = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n        nFanins = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n        pMapping[iRoot] = nOffset;\n        // write one\n        pMapping[ nOffset++ ] = nFanins; \n        for ( k = 0; k \u003c nFanins; k++ )\n        {\n            pMapping[ nOffset++ ] = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n        }\n        pMapping[ nOffset++ ] = iRoot; \n    }\n    return Vec_IntAllocArray( pMapping, nOffset );\n}",
+      "Draft": "Vec_Int_t * Gia_AigerReadMappingDoc( unsigned char ** ppPos, int nObjs )\n{\n    var pMapping *int32;\n    var nLuts int32;\n    var LutSize int32;\n    var iRoot int32;\n    var nFanins int32;\n    var i int32;\n    var k int32;\n    var nOffset int32;\n    nLuts    = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n    LutSize  = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n    // inlining of macro ABC_CALLOC\n    pMapping = ((int *) calloc((size_t)(nObjs + (LutSize + 2) * nLuts), sizeof(int)));\n    nOffset = nObjs;\n    for  i = 0; i \u003c nLuts; i++  {\n        iRoot   = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n        nFanins = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n        pMapping[iRoot] = nOffset;\n        // write one\n        pMapping[ nOffset++ ] = nFanins; \n        for  k = 0; k \u003c nFanins; k++  {\n            pMapping[ nOffset++ ] = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n        }\n        pMapping[ nOffset++ ] = iRoot; \n    }\n    return Vec_IntAllocArray( pMapping, nOffset );\n}"
+    },
+    {
+      "Name": "Gia_AigerWriteMappingDoc",
+      "Start": 8535,
+      "End": 9392,
+      "BodyStart": 8589,
+      "Original": "Vec_Str_t * Gia_AigerWriteMappingDoc( Gia_Man_t * p )\n{\n    unsigned char * pBuffer;\n    int i, k, iFan, nLuts = 0, LutSize = 0, nSize = 2, nSize2 = 0;\n    Gia_ManForEachLut( p, i )\n    {\n        nLuts++;\n        nSize += Gia_ObjLutSize(p, i) + 2;\n        LutSize = Abc_MaxInt( LutSize, Gia_ObjLutSize(p, i) );\n    }\n    pBuffer = ABC_ALLOC( unsigned char, 4 * nSize );\n    Gia_AigerWriteInt( pBuffer + 4 * nSize2++, nLuts );  \n    Gia_AigerWriteInt( pBuffer + 4 * nSize2++, LutSize );\n    Gia_ManForEachLut( p, i )\n    {\n        Gia_AigerWriteInt( pBuffer + 4 * nSize2++, i );\n        Gia_AigerWriteInt( pBuffer + 4 * nSize2++, Gia_ObjLutSize(p, i) );\n        Gia_LutForEachFanin( p, i, iFan, k )\n            Gia_AigerWriteInt( pBuffer + 4 * nSize2++, iFan );\n    }\n    assert( nSize2 == nSize );\n    return Vec_StrAllocArray( (char *)pBuffer, 4*nSize );\n}",
+      "Draft": "func Gia_AigerWriteMappingDoc(p *Gia_Man_t) *Vec_Str_t {\n    unsigned char * pBuffer;\n    var i int32;\n    var k int32;\n    var iFan int32;\n    var nLuts int32;\n    var LutSize int32;\n    var nSize int32 = 2;\n    var nSize2 int32;\n    // inlining of macro Gia_ManForEachLut\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {\n        nLuts++;\n        nSize += Gia_ObjLutSize(p, i) + 2;\n        LutSize = Abc_MaxInt( LutSize, Gia_ObjLutSize(p, i) );\n    }\n    }\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(4 * nSize)));\n    Gia_AigerWriteInt( pBuffer + 4 * nSize2++, nLuts );  \n    Gia_AigerWriteInt( pBuffer + 4 * nSize2++, LutSize );\n    // inlining of macro Gia_ManForEachLut\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {\n        Gia_AigerWriteInt( pBuffer + 4 * nSize2++, i );\n        Gia_AigerWriteInt( pBuffer + 4 * nSize2++, Gia_ObjLutSize(p, i) );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n            Gia_AigerWriteInt( pBuffer + 4 * nSize2++, iFan );\n        }\n    }\n    }\n    assert(nSize2 == nSize, \"nSize2 == nSize\");\n    return Vec_StrAllocArray( (char *)pBuffer, 4*nSize );\n}"
+    },
+    {
+      "Name": "Gia_AigerReadPacking",
+      "Start": 9646,
+      "End": 9943,
+      "BodyStart": 9716,
+      "Original": "Vec_Int_t * Gia_AigerReadPacking( unsigned char ** ppPos, int nSize )\n{\n    Vec_Int_t * vPacking = Vec_IntAlloc( nSize/4 );\n    int i;\n    assert( nSize % 4 == 0 );\n    for ( i = 0; i \u003c nSize/4; i++, *ppPos += 4 )\n        Vec_IntPush( vPacking, Gia_AigerReadInt( *ppPos ) );\n    return vPacking;\n}",
+      "Draft": "Vec_Int_t * Gia_AigerReadPacking( unsigned char ** ppPos, int nSize )\n{\n    var vPacking *Vec_Int_t  = Vec_IntAlloc( nSize/4 );\n    var i int32;\n    assert(nSize % 4 == 0, \"nSize % 4 == 0\");\n    for  i = 0; i \u003c nSize/4; i++, *ppPos += 4  {\n        Vec_IntPush( vPacking, Gia_AigerReadInt( *ppPos ) );\n    }\n    return vPacking;\n}"
+    },
+    {
+      "Name": "Gia_WritePacking",
+      "Start": 9944,
+      "End": 10291,
+      "BodyStart": 9997,
+      "Original": "Vec_Str_t * Gia_WritePacking( Vec_Int_t * vPacking )\n{\n    unsigned char * pBuffer = ABC_ALLOC( unsigned char, 4*Vec_IntSize(vPacking) );\n    int i, Entry, nSize = 0;\n    Vec_IntForEachEntry( vPacking, Entry, i )\n        Gia_AigerWriteInt( pBuffer + 4 * nSize++, Entry );\n    return Vec_StrAllocArray( (char *)pBuffer, 4*Vec_IntSize(vPacking) );\n}",
+      "Draft": "func Gia_WritePacking(vPacking *Vec_Int_t) *Vec_Str_t {\n    // inlining of macro ABC_ALLOC\n    unsigned char * pBuffer = ((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(4*Vec_IntSize(vPacking))));\n    var i, Entry, nSize int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vPacking)) \u0026\u0026 (((Entry) = Vec_IntEntry(vPacking, i)), 1); i++  {\n        Gia_AigerWriteInt( pBuffer + 4 * nSize++, Entry );\n    }\n    return Vec_StrAllocArray( (char *)pBuffer, 4*Vec_IntSize(vPacking) );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::mechanical::sizeof::1604",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1519,
+      "End": 1519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::mechanical::sizeof::2885",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2618,
+      "End": 2618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::mechanical::sizeof::2918",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2618,
+      "End": 2618
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::mechanical::sizeof::5281",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 4681,
+      "End": 4681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::mechanical::sizeof::6471",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5709,
+      "End": 5709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::mechanical::sizeof::6504",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5709,
+      "End": 5709
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::mechanical::sizeof::7990",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6953,
+      "End": 6953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::mechanical::sizeof::8285",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7169,
+      "End": 7169
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::mechanical::sizeof::9199",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 7972,
+      "End": 7972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::mechanical::sizeof::10232",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8866,
+      "End": 8866
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::mechanical::sizeof::11680",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 10029,
+      "End": 10029
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::pointer-cast::1566",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1519,
+      "End": 1519
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::pointer-cast::4395",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3875,
+      "End": 3883
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::pointer-cast::5248",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4681,
+      "End": 4681
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::pointer-cast::7552",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6576,
+      "End": 6584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::pointer-cast::7975",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6953,
+      "End": 6953
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::pointer-cast::8525",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7401,
+      "End": 7409
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::pointer-cast::9143",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7972,
+      "End": 7972
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::pointer-cast::10943",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 9363,
+      "End": 9371
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::pointer-cast::12012",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 10246,
+      "End": 10254
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::Gia_AigerReadEquivClasses",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AigerReadEquivClasses",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1264,
+      "End": 2083
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::Gia_WriteEquivClassesInt",
+      "Category": "semantic-review",
+      "Symbol": "Gia_WriteEquivClassesInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2084,
+      "End": 3697
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::Gia_WriteEquivClasses",
+      "Category": "semantic-review",
+      "Symbol": "Gia_WriteEquivClasses",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3698,
+      "End": 3907
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::Gia_AigerReadDiffValue",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AigerReadDiffValue",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 4161,
+      "End": 4382
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::Gia_AigerReadMapping",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AigerReadMapping",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 4383,
+      "End": 5064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::Gia_AigerWriteDiffValue",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AigerWriteDiffValue",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 5065,
+      "End": 5367
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::Gia_AigerWriteMappingInt",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AigerWriteMappingInt",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5368,
+      "End": 6402
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::Gia_AigerWriteMapping",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AigerWriteMapping",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6403,
+      "End": 6606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::Gia_AigerReadMappingSimple",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AigerReadMappingSimple",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 6860,
+      "End": 7079
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::Gia_AigerWriteMappingSimple",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AigerWriteMappingSimple",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7080,
+      "End": 7449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::Gia_AigerReadMappingDoc",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AigerReadMappingDoc",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 7703,
+      "End": 8534
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::Gia_AigerWriteMappingDoc",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AigerWriteMappingDoc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8535,
+      "End": 9392
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::Gia_AigerReadPacking",
+      "Category": "semantic-review",
+      "Symbol": "Gia_AigerReadPacking",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 9646,
+      "End": 9943
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::Gia_WritePacking",
+      "Category": "semantic-review",
+      "Symbol": "Gia_WritePacking",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9944,
+      "End": 10291
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaAigerExt.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 10538
+    }
+  ],
+  "Draft": "package gia\n\n/**CFile****************************************************************\n\n  FileName    [giaAigerExt.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Custom AIGER extensions.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaAigerExt.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Read/write equivalence classes information.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nGia_Rpr_t * Gia_AigerReadEquivClasses( unsigned char ** ppPos, int nSize )\n{\n    var pReprs *Gia_Rpr_t;\n    unsigned char * pStop;\n    var i, Item, fProved, iRepr, iNode int32;\n    pStop = *ppPos;\n    pStop += Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n    // inlining of macro ABC_CALLOC\n    pReprs = ((Gia_Rpr_t *) calloc((size_t)(nSize), sizeof(Gia_Rpr_t)));\n    for  i = 0; i \u003c nSize; i++  {\n        pReprs[i].iRepr = GIA_VOID;\n    }\n    iRepr = iNode = 0;\n    for  *ppPos \u003c pStop  {\n        Item = Gia_AigerReadUnsigned( ppPos );\n        if Item \u0026 1 {\n            iRepr += (Item \u003e\u003e 1);\n            iNode = iRepr;\n            continue;\n        }\n        Item \u003e\u003e= 1;\n        fProved = (Item \u0026 1);\n        Item \u003e\u003e= 1;\n        iNode += Item;\n        pReprs[iNode].fProved = fProved;\n        pReprs[iNode].iRepr = iRepr;\n        assert(iRepr \u003c iNode, \"iRepr \u003c iNode\");\n    }\n    return pReprs;\n}\nfunc Gia_WriteEquivClassesInt(p *Gia_Man_t, pEquivSize *int32) *unsigned char {\n    unsigned char * pBuffer;\n    var iRepr, iNode, iPrevRepr, iPrevNode, iLit, nItems, iPos int32;\n    assert(p.pReprs \u0026\u0026 p.pNexts, \"p.pReprs \u0026\u0026 p.pNexts\");\n    // count the number of entries to be written\n    nItems = 0;\n    for  iRepr = 1; iRepr \u003c Gia_ManObjNum(p); iRepr++  {\n        nItems += Gia_ObjIsConst( p, iRepr );\n        if !Gia_ObjIsHead(p, iRepr) {\n            continue; }\n        // inlining of macro Gia_ClassForEachObj\n        for  assert(Gia_ObjIsHead(p, iRepr) \u0026\u0026 iRepr, \"Gia_ObjIsHead(p, iRepr) \u0026\u0026 iRepr\"), iNode = iRepr; iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {\n            nItems++;\n        }\n    }\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(sizeof(int) * (nItems + 10))));\n    // write constant class\n    iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, 4, Abc_Var2Lit(0, 1) );\n    iPrevNode = 0;\n    for  iNode = 1; iNode \u003c Gia_ManObjNum(p); iNode++  {\n        if Gia_ObjIsConst(p, iNode) {\n            iLit = Abc_Var2Lit( iNode - iPrevNode, Gia_ObjProved(p, iNode) );\n            iPrevNode = iNode;\n            iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, iPos, Abc_Var2Lit(iLit, 0) );\n        }\n    }\n    // write non-constant classes\n    iPrevRepr = 0;\n    // inlining of macro Gia_ManForEachClass\n    for  iRepr = 1; iRepr \u003c Gia_ManObjNum(p); iRepr++  { if !Gia_ObjIsHead(p, iRepr) {} else {\n        iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, iPos, Abc_Var2Lit(iRepr - iPrevRepr, 1) );\n        iPrevRepr = iPrevNode = iRepr;\n        // inlining of macro Gia_ClassForEachObj1\n        for  assert(Gia_ObjIsHead(p, iRepr), \"Gia_ObjIsHead(p, iRepr)\"), iNode = Gia_ObjNext(p, iRepr); iNode \u003e 0; iNode = Gia_ObjNext(p, iNode)  {\n            iLit = Abc_Var2Lit( iNode - iPrevNode, Gia_ObjProved(p, iNode) );\n            iPrevNode = iNode;\n            iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, iPos, Abc_Var2Lit(iLit, 0) );\n        }\n    }\n    }\n    Gia_AigerWriteInt( pBuffer, iPos );\n    *pEquivSize = iPos;\n    return pBuffer;\n}\nfunc Gia_WriteEquivClasses(p *Gia_Man_t) *Vec_Str_t {\n    var nEquivSize int32;\n    unsigned char * pBuffer = Gia_WriteEquivClassesInt( p, \u0026nEquivSize );\n    return Vec_StrAllocArray( (char *)pBuffer, nEquivSize );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read/write mapping information.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nstatic inline unsigned Gia_AigerReadDiffValue( unsigned char ** ppPos, int iPrev )\n{\n    var Item int32  = Gia_AigerReadUnsigned( ppPos );\n    if Item \u0026 1 {\n        return iPrev + (Item \u003e\u003e 1); }\n    return iPrev - (Item \u003e\u003e 1);\n}\nint * Gia_AigerReadMapping( unsigned char ** ppPos, int nSize )\n{\n    var pMapping *int32;\n    unsigned char * pStop;\n    var k int32;\n    var j int32;\n    var nFanins int32;\n    var nAlloc int32;\n    var iNode int32;\n    var iOffset int32 = nSize;\n    pStop = *ppPos;\n    pStop += Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n    nAlloc = nSize + pStop - *ppPos;\n    // inlining of macro ABC_CALLOC\n    pMapping = ((int *) calloc((size_t)(nAlloc), sizeof(int)));\n    for  *ppPos \u003c pStop  {\n        k = iOffset;\n        pMapping[k++] = nFanins = Gia_AigerReadUnsigned( ppPos );\n        for  j = 0; j \u003c= nFanins; j++  {\n            pMapping[k++] = iNode = Gia_AigerReadDiffValue( ppPos, iNode );\n        }\n        pMapping[iNode] = iOffset;\n        iOffset = k;\n    }\n    assert(iOffset \u003c= nAlloc, \"iOffset \u003c= nAlloc\");\n    return pMapping;\n}\nstatic inline int Gia_AigerWriteDiffValue( unsigned char * pPos, int iPos, int iPrev, int iThis )\n{\n    if iPrev \u003c iThis {\n        return Gia_AigerWriteUnsignedBuffer( pPos, iPos, Abc_Var2Lit(iThis - iPrev, 1) ); }\n    return Gia_AigerWriteUnsignedBuffer( pPos, iPos, Abc_Var2Lit(iPrev - iThis, 0) );\n}\nfunc Gia_AigerWriteMappingInt(p *Gia_Man_t, pMapSize *int32) *unsigned char {\n    unsigned char * pBuffer;\n    var i int32;\n    var k int32;\n    var iPrev int32;\n    var iFan int32;\n    var nItems int32;\n    var iPos int32 = 4;\n    assert(Gia_ManHasMapping(p), \"Gia_ManHasMapping(p)\");\n    // count the number of entries to be written\n    nItems = 0;\n    // inlining of macro Gia_ManForEachLut\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {\n        nItems += 2 + Gia_ObjLutSize( p, i ); }\n    }\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(sizeof(int) * (nItems + 1))));\n    // write non-constant classes\n    iPrev = 0;\n    // inlining of macro Gia_ManForEachLut\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {\n//printf( \"\\nSize = %d \", Gia_ObjLutSize(p, i) );\n        iPos = Gia_AigerWriteUnsignedBuffer( pBuffer, iPos, Gia_ObjLutSize(p, i) );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n//printf( \"Fan = %d \", iFan );\n            iPos = Gia_AigerWriteDiffValue( pBuffer, iPos, iPrev, iFan );\n            iPrev = iFan;\n        }\n        iPos = Gia_AigerWriteDiffValue( pBuffer, iPos, iPrev, i );\n        iPrev = i;\n//printf( \"Node = %d \", i );\n    }\n    }\n//printf( \"\\n\" );\n    Gia_AigerWriteInt( pBuffer, iPos );\n    *pMapSize = iPos;\n    return pBuffer;\n}\nfunc Gia_AigerWriteMapping(p *Gia_Man_t) *Vec_Str_t {\n    var nMapSize int32;\n    unsigned char * pBuffer = Gia_AigerWriteMappingInt( p, \u0026nMapSize );\n    return Vec_StrAllocArray( (char *)pBuffer, nMapSize );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read/write mapping information.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nint * Gia_AigerReadMappingSimple( unsigned char ** ppPos, int nSize )\n{\n    // inlining of macro ABC_ALLOC\n    var pMapping *int32  = ((int *) malloc(sizeof(int) * (size_t)((size_t)nSize/4)));\n    memcpy( pMapping, *ppPos, nSize );\n    assert(nSize % 4 == 0, \"nSize % 4 == 0\");\n    return pMapping;\n}\nfunc Gia_AigerWriteMappingSimple(p *Gia_Man_t) *Vec_Str_t {\n    // inlining of macro ABC_ALLOC\n    unsigned char * pBuffer = ((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(4*Vec_IntSize(p.vMapping))));\n    memcpy( pBuffer, Vec_IntArray(p.vMapping), (size_t)4*Vec_IntSize(p.vMapping) );\n    assert(Vec_IntSize(p.vMapping) \u003e= Gia_ManObjNum(p), \"Vec_IntSize(p.vMapping) \u003e= Gia_ManObjNum(p)\");\n    return Vec_StrAllocArray( (char *)pBuffer, 4*Vec_IntSize(p.vMapping) );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read/write mapping information.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nVec_Int_t * Gia_AigerReadMappingDoc( unsigned char ** ppPos, int nObjs )\n{\n    var pMapping *int32;\n    var nLuts int32;\n    var LutSize int32;\n    var iRoot int32;\n    var nFanins int32;\n    var i int32;\n    var k int32;\n    var nOffset int32;\n    nLuts    = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n    LutSize  = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n    // inlining of macro ABC_CALLOC\n    pMapping = ((int *) calloc((size_t)(nObjs + (LutSize + 2) * nLuts), sizeof(int)));\n    nOffset = nObjs;\n    for  i = 0; i \u003c nLuts; i++  {\n        iRoot   = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n        nFanins = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n        pMapping[iRoot] = nOffset;\n        // write one\n        pMapping[ nOffset++ ] = nFanins; \n        for  k = 0; k \u003c nFanins; k++  {\n            pMapping[ nOffset++ ] = Gia_AigerReadInt( *ppPos ); *ppPos += 4;\n        }\n        pMapping[ nOffset++ ] = iRoot; \n    }\n    return Vec_IntAllocArray( pMapping, nOffset );\n}\nfunc Gia_AigerWriteMappingDoc(p *Gia_Man_t) *Vec_Str_t {\n    unsigned char * pBuffer;\n    var i int32;\n    var k int32;\n    var iFan int32;\n    var nLuts int32;\n    var LutSize int32;\n    var nSize int32 = 2;\n    var nSize2 int32;\n    // inlining of macro Gia_ManForEachLut\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {\n        nLuts++;\n        nSize += Gia_ObjLutSize(p, i) + 2;\n        LutSize = Abc_MaxInt( LutSize, Gia_ObjLutSize(p, i) );\n    }\n    }\n    // inlining of macro ABC_ALLOC\n    pBuffer = ((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(4 * nSize)));\n    Gia_AigerWriteInt( pBuffer + 4 * nSize2++, nLuts );  \n    Gia_AigerWriteInt( pBuffer + 4 * nSize2++, LutSize );\n    // inlining of macro Gia_ManForEachLut\n    for  i = 1; i \u003c Gia_ManObjNum(p); i++  { if !Gia_ObjIsLut(p, i) {} else {\n        Gia_AigerWriteInt( pBuffer + 4 * nSize2++, i );\n        Gia_AigerWriteInt( pBuffer + 4 * nSize2++, Gia_ObjLutSize(p, i) );\n        // inlining of macro Gia_LutForEachFanin\n        for  k = 0; k \u003c Gia_ObjLutSize(p,i) \u0026\u0026 ((iFan = Gia_ObjLutFanins(p,i)[k]),1); k++  {\n            Gia_AigerWriteInt( pBuffer + 4 * nSize2++, iFan );\n        }\n    }\n    }\n    assert(nSize2 == nSize, \"nSize2 == nSize\");\n    return Vec_StrAllocArray( (char *)pBuffer, 4*nSize );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Read/write packing information.]\n\n  Description []\n  \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nVec_Int_t * Gia_AigerReadPacking( unsigned char ** ppPos, int nSize )\n{\n    var vPacking *Vec_Int_t  = Vec_IntAlloc( nSize/4 );\n    var i int32;\n    assert(nSize % 4 == 0, \"nSize % 4 == 0\");\n    for  i = 0; i \u003c nSize/4; i++, *ppPos += 4  {\n        Vec_IntPush( vPacking, Gia_AigerReadInt( *ppPos ) );\n    }\n    return vPacking;\n}\nfunc Gia_WritePacking(vPacking *Vec_Int_t) *Vec_Str_t {\n    // inlining of macro ABC_ALLOC\n    unsigned char * pBuffer = ((unsigned char *) malloc(sizeof(unsigned char) * (size_t)(4*Vec_IntSize(vPacking))));\n    var i, Entry, nSize int32;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(vPacking)) \u0026\u0026 (((Entry) = Vec_IntEntry(vPacking, i)), 1); i++  {\n        Gia_AigerWriteInt( pBuffer + 4 * nSize++, Entry );\n    }\n    return Vec_StrAllocArray( (char *)pBuffer, 4*Vec_IntSize(vPacking) );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

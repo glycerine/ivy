@@ -1,0 +1,1447 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c",
+  "SHA256": "c04b19392ff5b40368568882b90e3ae4b85dc745cb5d430d20aa0ccf292d30a2",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 54,
+        "Column": 5,
+        "ByteOffset": 1571
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(\u0026(s.stats), 0, sizeof(struct satoko_stats));"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 60,
+        "Column": 5,
+        "ByteOffset": 1761
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"+-[ BLACK MAGIC - PARAMETERS ]-+\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 61,
+        "Column": 5,
+        "ByteOffset": 1812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|                              |\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 62,
+        "Column": 5,
+        "ByteOffset": 1863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|--\u003e Restarts heuristic        |\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 63,
+        "Column": 5,
+        "ByteOffset": 1914
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|    * LBD Queue   = %6d    |\\n\", s.opts.sz_lbd_bqueue);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 64,
+        "Column": 5,
+        "ByteOffset": 1984
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|    * Trail Queue = %6d    |\\n\", s.opts.sz_trail_bqueue);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 65,
+        "Column": 5,
+        "ByteOffset": 2056
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|    * f_rst       = %6.2f    |\\n\", s.opts.f_rst);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 66,
+        "Column": 5,
+        "ByteOffset": 2120
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|    * b_rst       = %6.2f    |\\n\", s.opts.b_rst);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 67,
+        "Column": 5,
+        "ByteOffset": 2184
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|                              |\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 68,
+        "Column": 5,
+        "ByteOffset": 2235
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|--\u003e Clause DB reduction:      |\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 69,
+        "Column": 5,
+        "ByteOffset": 2286
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|    * First       = %6d    |\\n\", s.opts.n_conf_fst_reduce);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 70,
+        "Column": 5,
+        "ByteOffset": 2360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|    * Inc         = %6d    |\\n\", s.opts.inc_reduce);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 71,
+        "Column": 5,
+        "ByteOffset": 2427
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|    * Special Inc = %6d    |\\n\", s.opts.inc_special_reduce);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 72,
+        "Column": 5,
+        "ByteOffset": 2502
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|    * Protected (LBD) \u003c %2d    |\\n\", s.opts.lbd_freeze_clause);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 73,
+        "Column": 5,
+        "ByteOffset": 2580
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|                              |\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 74,
+        "Column": 5,
+        "ByteOffset": 2631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|--\u003e Binary resolution:        |\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 75,
+        "Column": 5,
+        "ByteOffset": 2682
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|    * Clause size \u003c %3d       |\\n\", s.opts.clause_max_sz_bin_resol);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 76,
+        "Column": 5,
+        "ByteOffset": 2765
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"|    * Clause lbd  \u003c %3d       |\\n\", s.opts.clause_min_lbd_bin_resol);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 77,
+        "Column": 5,
+        "ByteOffset": 2849
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"+------------------------------+\\n\\n\");"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 81,
+        "Column": 5,
+        "ByteOffset": 2937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"starts        : %10d\\n\", s.stats.n_starts);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 5,
+        "ByteOffset": 2993
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"conflicts     : %10ld\\n\", s.stats.n_conflicts);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 83,
+        "Column": 5,
+        "ByteOffset": 3053
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"decisions     : %10ld\\n\", s.stats.n_decisions);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 5,
+        "ByteOffset": 3113
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf(\"propagations  : %10ld\\n\", s.stats.n_propagations);"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 158,
+        "Column": 58,
+        "ByteOffset": 5723
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:satoko_free__*/for { free(s); s = nil; "
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 164,
+        "Column": 5,
+        "ByteOffset": 5818
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset(opts, 0, sizeof(satoko_opts_t));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 198,
+        "Column": 5,
+        "ByteOffset": 6847
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(user_opts);"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 199,
+        "Column": 5,
+        "ByteOffset": 6870
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memcpy(\u0026s.opts, user_opts, sizeof(satoko_opts_t));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 206,
+        "Column": 5,
+        "ByteOffset": 7013
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(solver_dlevel(s) == 0);"
+    },
+    {
+      "Name": "qsort",
+      "Status": "review",
+      "Message": "Algorithms, ordering, shell semantics, signals, cleanup and locale are not interchangeable by name.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 8872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    qsort((void *) lits, (size_t)size, sizeof(unsigned), stk_uint_compare);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 288,
+        "Column": 13,
+        "ByteOffset": 9990
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%s%d \", lit\u00261 ? \"!\":\"\", lit\u003e\u003e1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 290,
+        "Column": 9,
+        "ByteOffset": 10051
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 298,
+        "Column": 5,
+        "ByteOffset": 10231
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(lit2var(lit) \u003c uint32(satoko_varnum(s)));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 305,
+        "Column": 5,
+        "ByteOffset": 10489
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(vec_uint_size(s.assumptions) \u003e 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 314,
+        "Column": 5,
+        "ByteOffset": 10795
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(s);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 319,
+        "Column": 9,
+        "ByteOffset": 10925
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf(\"Satoko in inconsistent state\\n\");"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 381,
+        "Column": 5,
+        "ByteOffset": 13184
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nlits \u003e= 2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 458,
+        "Column": 5,
+        "ByteOffset": 15321
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(s.status == SATOKO_OK);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 459,
+        "Column": 5,
+        "ByteOffset": 15356
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(solver_dlevel(s) == 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 470,
+        "Column": 5,
+        "ByteOffset": 15719
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(s.status == SATOKO_OK);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 525,
+        "Column": 5,
+        "ByteOffset": 17355
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(s.status == SATOKO_OK);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 526,
+        "Column": 5,
+        "ByteOffset": 17390
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(solver_dlevel(s) == 0);"
+    },
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 531,
+        "Column": 89,
+        "ByteOffset": 17578
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    cl_to_remove = /*__starting_point_inline_macro:satoko_alloc__*/((struct clause * *) malloc((n_originals + n_learnts) * sizeof(struct clause *)));"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 543,
+        "Column": 58,
+        "ByteOffset": 18359
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:satoko_free__*/for { free(cl_to_remove); cl_to_remove = nil; "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 589,
+        "Column": 5,
+        "ByteOffset": 19986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(solver_has_marks(s));"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 603,
+        "Column": 5,
+        "ByteOffset": 20479
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(wrt_lrnt == 0 || wrt_lrnt == 1);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 604,
+        "Column": 5,
+        "ByteOffset": 20523
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert(zero_var == 0 || zero_var == 1);"
+    },
+    {
+      "Name": "fopen",
+      "Status": "converted",
+      "Message": "Literal mode mapped; handle Go file/error results downstream.",
+      "Location": {
+        "Line": 606,
+        "Column": 16,
+        "ByteOffset": 20600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        file = fopen(fname, \"w\");"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 608,
+        "Column": 16,
+        "ByteOffset": 20647
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        file = stdout; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 611,
+        "Column": 9,
+        "ByteOffset": 20691
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Error: Cannot open output file.\\n\");"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 614,
+        "Column": 5,
+        "ByteOffset": 20763
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fprintf(file, \"p cnf %d %d\\n\", n_vars, wrt_lrnt ? n_orig + n_lrnts : n_orig);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 618,
+        "Column": 17,
+        "ByteOffset": 20986
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf(file, \"%d\\n\", var_value(s, i) == SATOKO_LIT_FALSE ? -int32((i)) : i);"
+    },
+    {
+      "Name": "fprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 620,
+        "Column": 17,
+        "ByteOffset": 21101
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                fprintf(file, \"%d 0\\n\", var_value(s, i) == SATOKO_LIT_FALSE ? -int32((i + 1)) : i + 1); }"
+    },
+    {
+      "Name": "fclose",
+      "Status": "converted",
+      "Message": "C ignored close status retained; consider handling the Go error.",
+      "Location": {
+        "Line": 634,
+        "Column": 5,
+        "ByteOffset": 21563
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fclose(file);"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "solver_rebuild_order",
+      "Start": 707,
+      "End": 1064,
+      "BodyStart": 760,
+      "Original": "static inline void solver_rebuild_order(solver_t *s)\n{\n    unsigned var;\n    vec_uint_t *vars = vec_uint_alloc(vec_char_size(s-\u003eassigns));\n\n    for (var = 0; var \u003c vec_char_size(s-\u003eassigns); var++)\n        if (var_value(s, var) == SATOKO_VAR_UNASSING)\n            vec_uint_push_back(vars, var);\n    heap_build(s-\u003evar_order, vars);\n    vec_uint_free(vars);\n}",
+      "Draft": "func solver_rebuild_order(s *solver_t) {\n    var var uint32;\n    var vars *vec_uint_t  = vec_uint_alloc(vec_char_size(s.assigns));\n\n    for var = 0; var \u003c vec_char_size(s.assigns); var++ {\n        if var_value(s, var) == SATOKO_VAR_UNASSING {\n            vec_uint_push_back(vars, var); }\n    }\n    heap_build(s.var_order, vars);\n    vec_uint_free(vars);\n}"
+    },
+    {
+      "Name": "clause_is_satisfied",
+      "Start": 1066,
+      "End": 1350,
+      "BodyStart": 1140,
+      "Original": "static inline int clause_is_satisfied(solver_t *s, struct clause *clause)\n{\n    unsigned i;\n    unsigned *lits = \u0026(clause-\u003edata[0].lit);\n    for (i = 0; i \u003c clause-\u003esize; i++)\n        if (lit_value(s, lits[i]) == SATOKO_LIT_TRUE)\n            return SATOKO_OK;\n    return SATOKO_ERR;\n}",
+      "Draft": "static inline int clause_is_satisfied(solver_t *s, struct clause *clause)\n{\n    var i uint32;\n    var lits *uint32  = \u0026(clause.data[0].lit);\n    for i = 0; i \u003c clause.size; i++ {\n        if lit_value(s, lits[i]) == SATOKO_LIT_TRUE {\n            return SATOKO_OK; }\n    }\n    return SATOKO_ERR;\n}"
+    },
+    {
+      "Name": "solver_clean_stats",
+      "Start": 1352,
+      "End": 1677,
+      "BodyStart": 1403,
+      "Original": "static inline void solver_clean_stats(solver_t *s)\n{\n    long n_conflicts_all = s-\u003estats.n_conflicts_all;\n    long n_propagations_all = s-\u003estats.n_propagations_all;\n    memset(\u0026(s-\u003estats), 0, sizeof(struct satoko_stats));\n    s-\u003estats.n_conflicts_all = n_conflicts_all;\n    s-\u003estats.n_propagations_all = n_propagations_all;\n}",
+      "Draft": "func solver_clean_stats(s *solver_t) {\n    var n_conflicts_all long  = s.stats.n_conflicts_all;\n    var n_propagations_all long  = s.stats.n_propagations_all;\n    memset(\u0026(s.stats), 0, sizeof(struct satoko_stats));\n    s.stats.n_conflicts_all = n_conflicts_all;\n    s.stats.n_propagations_all = n_propagations_all;\n}"
+    },
+    {
+      "Name": "print_opts",
+      "Start": 1679,
+      "End": 2876,
+      "BodyStart": 1722,
+      "Original": "static inline void print_opts(solver_t *s)\n{\n    printf( \"+-[ BLACK MAGIC - PARAMETERS ]-+\\n\");\n    printf( \"|                              |\\n\");\n    printf( \"|--\u003e Restarts heuristic        |\\n\");\n    printf( \"|    * LBD Queue   = %6d    |\\n\", s-\u003eopts.sz_lbd_bqueue);\n    printf( \"|    * Trail Queue = %6d    |\\n\", s-\u003eopts.sz_trail_bqueue);\n    printf( \"|    * f_rst       = %6.2f    |\\n\", s-\u003eopts.f_rst);\n    printf( \"|    * b_rst       = %6.2f    |\\n\", s-\u003eopts.b_rst);\n    printf( \"|                              |\\n\");\n    printf( \"|--\u003e Clause DB reduction:      |\\n\");\n    printf( \"|    * First       = %6d    |\\n\", s-\u003eopts.n_conf_fst_reduce);\n    printf( \"|    * Inc         = %6d    |\\n\", s-\u003eopts.inc_reduce);\n    printf( \"|    * Special Inc = %6d    |\\n\", s-\u003eopts.inc_special_reduce);\n    printf( \"|    * Protected (LBD) \u003c %2d    |\\n\", s-\u003eopts.lbd_freeze_clause);\n    printf( \"|                              |\\n\");\n    printf( \"|--\u003e Binary resolution:        |\\n\");\n    printf( \"|    * Clause size \u003c %3d       |\\n\", s-\u003eopts.clause_max_sz_bin_resol);\n    printf( \"|    * Clause lbd  \u003c %3d       |\\n\", s-\u003eopts.clause_min_lbd_bin_resol);\n    printf( \"+------------------------------+\\n\\n\");\n}",
+      "Draft": "func print_opts(s *solver_t) {\n    fmt.Printf(\"+-[ BLACK MAGIC - PARAMETERS ]-+\\n\");\n    fmt.Printf(\"|                              |\\n\");\n    fmt.Printf(\"|--\u003e Restarts heuristic        |\\n\");\n    fmt.Printf(\"|    * LBD Queue   = %6d    |\\n\", s.opts.sz_lbd_bqueue);\n    fmt.Printf(\"|    * Trail Queue = %6d    |\\n\", s.opts.sz_trail_bqueue);\n    fmt.Printf(\"|    * f_rst       = %6.2f    |\\n\", s.opts.f_rst);\n    fmt.Printf(\"|    * b_rst       = %6.2f    |\\n\", s.opts.b_rst);\n    fmt.Printf(\"|                              |\\n\");\n    fmt.Printf(\"|--\u003e Clause DB reduction:      |\\n\");\n    fmt.Printf(\"|    * First       = %6d    |\\n\", s.opts.n_conf_fst_reduce);\n    fmt.Printf(\"|    * Inc         = %6d    |\\n\", s.opts.inc_reduce);\n    fmt.Printf(\"|    * Special Inc = %6d    |\\n\", s.opts.inc_special_reduce);\n    fmt.Printf(\"|    * Protected (LBD) \u003c %2d    |\\n\", s.opts.lbd_freeze_clause);\n    fmt.Printf(\"|                              |\\n\");\n    fmt.Printf(\"|--\u003e Binary resolution:        |\\n\");\n    fmt.Printf(\"|    * Clause size \u003c %3d       |\\n\", s.opts.clause_max_sz_bin_resol);\n    fmt.Printf(\"|    * Clause lbd  \u003c %3d       |\\n\", s.opts.clause_min_lbd_bin_resol);\n    fmt.Printf(\"+------------------------------+\\n\\n\");\n}"
+    },
+    {
+      "Name": "print_stats",
+      "Start": 2878,
+      "End": 3168,
+      "BodyStart": 2922,
+      "Original": "static inline void print_stats(solver_t *s)\n{\n    printf(\"starts        : %10d\\n\", s-\u003estats.n_starts);\n    printf(\"conflicts     : %10ld\\n\", s-\u003estats.n_conflicts);\n    printf(\"decisions     : %10ld\\n\", s-\u003estats.n_decisions);\n    printf(\"propagations  : %10ld\\n\", s-\u003estats.n_propagations);\n}",
+      "Draft": "func print_stats(s *solver_t) {\n    fmt.Printf(\"starts        : %10d\\n\", s.stats.n_starts);\n    fmt.Printf(\"conflicts     : %10d\\n\", s.stats.n_conflicts);\n    fmt.Printf(\"decisions     : %10d\\n\", s.stats.n_decisions);\n    fmt.Printf(\"propagations  : %10d\\n\", s.stats.n_propagations);\n}"
+    },
+    {
+      "Name": "satoko_create",
+      "Start": 3361,
+      "End": 4800,
+      "BodyStart": 3388,
+      "Original": "solver_t * satoko_create()\n{\n    solver_t *s = satoko_calloc(solver_t, 1);\n\n    satoko_default_opts(\u0026s-\u003eopts);\n    s-\u003estatus = SATOKO_OK;\n    /* User data */\n    s-\u003eassumptions = vec_uint_alloc(0);\n    s-\u003efinal_conflict = vec_uint_alloc(0);\n    /* Clauses Database */\n    s-\u003eall_clauses = cdb_alloc(0);\n    s-\u003eoriginals = vec_uint_alloc(0);\n    s-\u003elearnts = vec_uint_alloc(0);\n    s-\u003ewatches = vec_wl_alloc(0);\n    /* Activity heuristic */\n    s-\u003evar_act_inc = VAR_ACT_INIT_INC;\n    s-\u003eclause_act_inc = CLAUSE_ACT_INIT_INC;\n    /* Variable Information */\n    s-\u003eactivity = vec_act_alloc(0);\n    s-\u003evar_order = heap_alloc(s-\u003eactivity);\n    s-\u003elevels = vec_uint_alloc(0);\n    s-\u003ereasons = vec_uint_alloc(0);\n    s-\u003eassigns = vec_char_alloc(0);\n    s-\u003epolarity = vec_char_alloc(0);\n    /* Assignments */\n    s-\u003etrail = vec_uint_alloc(0);\n    s-\u003etrail_lim = vec_uint_alloc(0);\n    /* Temporary data used by Search method */\n    s-\u003ebq_trail = b_queue_alloc(s-\u003eopts.sz_trail_bqueue);\n    s-\u003ebq_lbd = b_queue_alloc(s-\u003eopts.sz_lbd_bqueue);\n    s-\u003en_confl_bfr_reduce = s-\u003eopts.n_conf_fst_reduce;\n    s-\u003eRC1 = 1;\n    s-\u003eRC2 = s-\u003eopts.n_conf_fst_reduce;\n    /* Temporary data used by Analyze */\n    s-\u003etemp_lits = vec_uint_alloc(0);\n    s-\u003eseen = vec_char_alloc(0);\n    s-\u003etagged = vec_uint_alloc(0);\n    s-\u003estack = vec_uint_alloc(0);\n    s-\u003elast_dlevel = vec_uint_alloc(0);\n    /* Misc temporary */\n    s-\u003estamps = vec_uint_alloc(0);\n    return s;\n}",
+      "Draft": "func satoko_create() *solver_t {\n    // inlining of macro satoko_calloc\n    var s *solver_t  = \u0026solver_t{};\n\n    satoko_default_opts(\u0026s.opts);\n    s.status = SATOKO_OK;\n    /* User data */\n    s.assumptions = vec_uint_alloc(0);\n    s.final_conflict = vec_uint_alloc(0);\n    /* Clauses Database */\n    s.all_clauses = cdb_alloc(0);\n    s.originals = vec_uint_alloc(0);\n    s.learnts = vec_uint_alloc(0);\n    s.watches = vec_wl_alloc(0);\n    /* Activity heuristic */\n    s.var_act_inc = VAR_ACT_INIT_INC;\n    s.clause_act_inc = CLAUSE_ACT_INIT_INC;\n    /* Variable Information */\n    // inlining of macro vec_act_alloc\n    s.activity = vec_sdbl_alloc(0);\n    s.var_order = heap_alloc(s.activity);\n    s.levels = vec_uint_alloc(0);\n    s.reasons = vec_uint_alloc(0);\n    s.assigns = vec_char_alloc(0);\n    s.polarity = vec_char_alloc(0);\n    /* Assignments */\n    s.trail = vec_uint_alloc(0);\n    s.trail_lim = vec_uint_alloc(0);\n    /* Temporary data used by Search method */\n    s.bq_trail = b_queue_alloc(s.opts.sz_trail_bqueue);\n    s.bq_lbd = b_queue_alloc(s.opts.sz_lbd_bqueue);\n    s.n_confl_bfr_reduce = s.opts.n_conf_fst_reduce;\n    s.RC1 = 1;\n    s.RC2 = s.opts.n_conf_fst_reduce;\n    /* Temporary data used by Analyze */\n    s.temp_lits = vec_uint_alloc(0);\n    s.seen = vec_char_alloc(0);\n    s.tagged = vec_uint_alloc(0);\n    s.stack = vec_uint_alloc(0);\n    s.last_dlevel = vec_uint_alloc(0);\n    /* Misc temporary */\n    s.stamps = vec_uint_alloc(0);\n    return s;\n}"
+    },
+    {
+      "Name": "satoko_destroy",
+      "Start": 4802,
+      "End": 5596,
+      "BodyStart": 4835,
+      "Original": "void satoko_destroy(solver_t *s)\n{\n    vec_uint_free(s-\u003eassumptions);\n    vec_uint_free(s-\u003efinal_conflict);\n    cdb_free(s-\u003eall_clauses);\n    vec_uint_free(s-\u003eoriginals);\n    vec_uint_free(s-\u003elearnts);\n    vec_wl_free(s-\u003ewatches);\n    vec_act_free(s-\u003eactivity);\n    heap_free(s-\u003evar_order);\n    vec_uint_free(s-\u003elevels);\n    vec_uint_free(s-\u003ereasons);\n    vec_char_free(s-\u003eassigns);\n    vec_char_free(s-\u003epolarity);\n    vec_uint_free(s-\u003etrail);\n    vec_uint_free(s-\u003etrail_lim);\n    b_queue_free(s-\u003ebq_lbd);\n    b_queue_free(s-\u003ebq_trail);\n    vec_uint_free(s-\u003etemp_lits);\n    vec_char_free(s-\u003eseen);\n    vec_uint_free(s-\u003etagged);\n    vec_uint_free(s-\u003estack);\n    vec_uint_free(s-\u003elast_dlevel);\n    vec_uint_free(s-\u003estamps);\n    if (s-\u003emarks)\n        vec_char_free(s-\u003emarks);\n    satoko_free(s);\n}",
+      "Draft": "func satoko_destroy(s *solver_t) {\n    vec_uint_free(s.assumptions);\n    vec_uint_free(s.final_conflict);\n    cdb_free(s.all_clauses);\n    vec_uint_free(s.originals);\n    vec_uint_free(s.learnts);\n    vec_wl_free(s.watches);\n    // inlining of macro vec_act_free\n    vec_sdbl_free(s.activity);\n    heap_free(s.var_order);\n    vec_uint_free(s.levels);\n    vec_uint_free(s.reasons);\n    vec_char_free(s.assigns);\n    vec_char_free(s.polarity);\n    vec_uint_free(s.trail);\n    vec_uint_free(s.trail_lim);\n    b_queue_free(s.bq_lbd);\n    b_queue_free(s.bq_trail);\n    vec_uint_free(s.temp_lits);\n    vec_char_free(s.seen);\n    vec_uint_free(s.tagged);\n    vec_uint_free(s.stack);\n    vec_uint_free(s.last_dlevel);\n    vec_uint_free(s.stamps);\n    if s.marks {\n        vec_char_free(s.marks); }\n    // inlining of macro satoko_free\n    for { free(s); s = nil; \nif !(false) { break }\n} \n}"
+    },
+    {
+      "Name": "satoko_default_opts",
+      "Start": 5598,
+      "End": 6574,
+      "BodyStart": 5644,
+      "Original": "void satoko_default_opts(satoko_opts_t *opts)\n{\n    memset(opts, 0, sizeof(satoko_opts_t));\n    opts-\u003everbose = 0;\n    opts-\u003eno_simplify = 0;\n    /* Limits */\n    opts-\u003econf_limit = 0;\n    opts-\u003eprop_limit  = 0;\n    /* Constants used for restart heuristic */\n    opts-\u003ef_rst = 0.8;\n    opts-\u003eb_rst = 1.4;\n    opts-\u003efst_block_rst   = 10000;\n    opts-\u003esz_lbd_bqueue   = 50;\n    opts-\u003esz_trail_bqueue = 5000;\n    /* Constants used for clause database reduction heuristic */\n    opts-\u003en_conf_fst_reduce = 2000;\n    opts-\u003einc_reduce = 300;\n    opts-\u003einc_special_reduce = 1000;\n    opts-\u003elbd_freeze_clause = 30;\n    opts-\u003elearnt_ratio = 0.5;\n    /* VSIDS heuristic */\n    opts-\u003evar_act_limit = VAR_ACT_LIMIT;\n    opts-\u003evar_act_rescale = VAR_ACT_RESCALE;\n    opts-\u003evar_decay = 0.95;\n    opts-\u003eclause_decay = (clause_act_t) 0.995;\n    /* Binary resolution */\n    opts-\u003eclause_max_sz_bin_resol = 30;\n    opts-\u003eclause_min_lbd_bin_resol = 6;\n\n    opts-\u003egarbage_max_ratio = (float) 0.3;\n}",
+      "Draft": "func satoko_default_opts(opts *satoko_opts_t) {\n    memset(opts, 0, sizeof(satoko_opts_t));\n    opts.verbose = 0;\n    opts.no_simplify = 0;\n    /* Limits */\n    opts.conf_limit = 0;\n    opts.prop_limit  = 0;\n    /* Constants used for restart heuristic */\n    opts.f_rst = 0.8;\n    opts.b_rst = 1.4;\n    opts.fst_block_rst   = 10000;\n    opts.sz_lbd_bqueue   = 50;\n    opts.sz_trail_bqueue = 5000;\n    /* Constants used for clause database reduction heuristic */\n    opts.n_conf_fst_reduce = 2000;\n    opts.inc_reduce = 300;\n    opts.inc_special_reduce = 1000;\n    opts.lbd_freeze_clause = 30;\n    opts.learnt_ratio = 0.5;\n    /* VSIDS heuristic */\n    opts.var_act_limit = VAR_ACT_LIMIT;\n    opts.var_act_rescale = VAR_ACT_RESCALE;\n    opts.var_decay = 0.95;\n    opts.clause_decay = (clause_act_t) 0.995;\n    /* Binary resolution */\n    opts.clause_max_sz_bin_resol = 30;\n    opts.clause_min_lbd_bin_resol = 6;\n\n    opts.garbage_max_ratio = float32( 0.3);\n}"
+    },
+    {
+      "Name": "satoko_configure",
+      "Start": 6631,
+      "End": 6774,
+      "BodyStart": 6692,
+      "Original": "void satoko_configure(satoko_t *s, satoko_opts_t *user_opts)\n{\n    assert(user_opts);\n    memcpy(\u0026s-\u003eopts, user_opts, sizeof(satoko_opts_t));\n}",
+      "Draft": "func satoko_configure(s *satoko_t, user_opts *satoko_opts_t) {\n    assert((user_opts != nil), \"user_opts\");\n    memcpy(\u0026s.opts, user_opts, sizeof(satoko_opts_t));\n}"
+    },
+    {
+      "Name": "satoko_simplify",
+      "Start": 6776,
+      "End": 7629,
+      "BodyStart": 6810,
+      "Original": "int satoko_simplify(solver_t * s)\n{\n    unsigned i, j = 0;\n    unsigned cref;\n\n    assert(solver_dlevel(s) == 0);\n    if (solver_propagate(s) != UNDEF)\n        return SATOKO_ERR;\n    if (s-\u003en_assigns_simplify == vec_uint_size(s-\u003etrail) || s-\u003en_props_simplify \u003e 0)\n        return SATOKO_OK;\n\n    vec_uint_foreach(s-\u003eoriginals, cref, i) {\n        struct clause *clause = clause_fetch(s, cref);\n\n    if (clause_is_satisfied(s, clause)) {\n            clause-\u003ef_mark = 1;\n            s-\u003estats.n_original_lits -= clause-\u003esize;\n            clause_unwatch(s, cref);\n        } else\n            vec_uint_assign(s-\u003eoriginals, j++, cref);\n    }\n    vec_uint_shrink(s-\u003eoriginals, j);\n    solver_rebuild_order(s);\n    s-\u003en_assigns_simplify = vec_uint_size(s-\u003etrail);\n    s-\u003en_props_simplify = s-\u003estats.n_original_lits + s-\u003estats.n_learnt_lits;\n    return SATOKO_OK;\n}",
+      "Draft": "func satoko_simplify(s *solver_t) int32 {\n    var i, j uint32;\n    var cref uint32;\n\n    assert(solver_dlevel(s) == 0, \"solver_dlevel(s) == 0\");\n    if solver_propagate(s) != UNDEF {\n        return SATOKO_ERR; }\n    if s.n_assigns_simplify == vec_uint_size(s.trail) || s.n_props_simplify \u003e 0 {\n        return SATOKO_OK; }\n\n    // inlining of macro vec_uint_foreach\n    for i = 0; (i \u003c vec_uint_size(s.originals)) \u0026\u0026 (((cref) = vec_uint_at(s.originals, i)), 1); i++ {\n        struct clause *clause = clause_fetch(s, cref);\n\n    if clause_is_satisfied(s, clause) {\n            clause.f_mark = 1;\n            s.stats.n_original_lits -= clause.size;\n            clause_unwatch(s, cref);\n        } else {\n            vec_uint_assign(s.originals, j++, cref); }\n    }\n    vec_uint_shrink(s.originals, j);\n    solver_rebuild_order(s);\n    s.n_assigns_simplify = vec_uint_size(s.trail);\n    s.n_props_simplify = s.stats.n_original_lits + s.stats.n_learnt_lits;\n    return SATOKO_OK;\n}"
+    },
+    {
+      "Name": "satoko_setnvars",
+      "Start": 7631,
+      "End": 7772,
+      "BodyStart": 7676,
+      "Original": "void satoko_setnvars(solver_t *s, int nvars)\n{\n    int i;\n    for (i = satoko_varnum(s); i \u003c nvars; i++)\n        satoko_add_variable(s, 0);\n}",
+      "Draft": "func satoko_setnvars(s *solver_t, nvars int32) {\n    var i int32;\n    for i = satoko_varnum(s); i \u003c nvars; i++ {\n        satoko_add_variable(s, 0);\n    }\n}"
+    },
+    {
+      "Name": "satoko_add_variable",
+      "Start": 7774,
+      "End": 8334,
+      "BodyStart": 7822,
+      "Original": "int satoko_add_variable(solver_t *s, char sign)\n{\n    unsigned var = vec_act_size(s-\u003eactivity);\n    vec_wl_push(s-\u003ewatches);\n    vec_wl_push(s-\u003ewatches);\n    vec_act_push_back(s-\u003eactivity, 0);\n    vec_uint_push_back(s-\u003elevels, 0);\n    vec_char_push_back(s-\u003eassigns, SATOKO_VAR_UNASSING);\n    vec_char_push_back(s-\u003epolarity, sign);\n    vec_uint_push_back(s-\u003ereasons, UNDEF);\n    vec_uint_push_back(s-\u003estamps, 0);\n    vec_char_push_back(s-\u003eseen, 0);\n    heap_insert(s-\u003evar_order, var);\n    if (s-\u003emarks)\n        vec_char_push_back(s-\u003emarks, 0);\n    return var;\n}",
+      "Draft": "func satoko_add_variable(s *solver_t, sign byte) int32 {\n    // inlining of macro vec_act_size\n    var var uint32  = vec_sdbl_size(s.activity);\n    vec_wl_push(s.watches);\n    vec_wl_push(s.watches);\n    // inlining of macro vec_act_push_back\n    vec_sdbl_push_back(s.activity, 0);\n    vec_uint_push_back(s.levels, 0);\n    vec_char_push_back(s.assigns, SATOKO_VAR_UNASSING);\n    vec_char_push_back(s.polarity, sign);\n    vec_uint_push_back(s.reasons, UNDEF);\n    vec_uint_push_back(s.stamps, 0);\n    vec_char_push_back(s.seen, 0);\n    heap_insert(s.var_order, var);\n    if s.marks {\n        vec_char_push_back(s.marks, 0); }\n    return var;\n}"
+    },
+    {
+      "Name": "satoko_add_clause",
+      "Start": 8336,
+      "End": 9749,
+      "BodyStart": 8392,
+      "Original": "int satoko_add_clause(solver_t *s, int *lits, int size)\n{\n    unsigned i, j;\n    unsigned prev_lit;\n    unsigned max_var;\n    unsigned cref;\n\n    qsort((void *) lits, (size_t)size, sizeof(unsigned), stk_uint_compare);\n    max_var = lit2var(lits[size - 1]);\n    while (max_var \u003e= vec_act_size(s-\u003eactivity))\n        satoko_add_variable(s, SATOKO_LIT_FALSE);\n\n    vec_uint_clear(s-\u003etemp_lits);\n    j = 0;\n    prev_lit = UNDEF;\n    for (i = 0; i \u003c (unsigned)size; i++) {\n        if ((unsigned)lits[i] == lit_compl(prev_lit) || lit_value(s, lits[i]) == SATOKO_LIT_TRUE)\n            return SATOKO_OK;\n        else if ((unsigned)lits[i] != prev_lit \u0026\u0026 var_value(s, lit2var(lits[i])) == SATOKO_VAR_UNASSING) {\n            prev_lit = lits[i];\n            vec_uint_push_back(s-\u003etemp_lits, lits[i]);\n        }\n    }\n\n    if (vec_uint_size(s-\u003etemp_lits) == 0) {\n        s-\u003estatus = SATOKO_ERR;\n        return SATOKO_ERR;\n    } if (vec_uint_size(s-\u003etemp_lits) == 1) {\n        solver_enqueue(s, vec_uint_at(s-\u003etemp_lits, 0), UNDEF);\n        return (s-\u003estatus = (solver_propagate(s) == UNDEF));\n    }\n    if ( 0 ) {\n        for ( i = 0; i \u003c vec_uint_size(s-\u003etemp_lits); i++ ) {\n            int lit = vec_uint_at(s-\u003etemp_lits, i);\n            printf( \"%s%d \", lit\u00261 ? \"!\":\"\", lit\u003e\u003e1 );\n        }\n        printf( \"\\n\" );\n    }\n    cref = solver_clause_create(s, s-\u003etemp_lits, 0);\n    clause_watch(s, cref);\n    return SATOKO_OK;\n}",
+      "Draft": "func satoko_add_clause(s *solver_t, lits *int32, size int32) int32 {\n    var i, j uint32;\n    var prev_lit uint32;\n    var max_var uint32;\n    var cref uint32;\n\n    qsort((void *) lits, (size_t)size, sizeof(unsigned), stk_uint_compare);\n    max_var = lit2var(lits[size - 1]);\n    // inlining of macro vec_act_size\n    for max_var \u003e= vec_sdbl_size(s.activity) {\n        satoko_add_variable(s, SATOKO_LIT_FALSE);\n    }\n\n    vec_uint_clear(s.temp_lits);\n    j = 0;\n    prev_lit = UNDEF;\n    for i = 0; i \u003c uint32(size); i++ {\n        if uint32(lits[i]) == lit_compl(prev_lit) || lit_value(s, lits[i]) == SATOKO_LIT_TRUE {\n            return SATOKO_OK;\n        } else if uint32(lits[i]) != prev_lit \u0026\u0026 var_value(s, lit2var(lits[i])) == SATOKO_VAR_UNASSING {\n            prev_lit = lits[i];\n            vec_uint_push_back(s.temp_lits, lits[i]);\n        }\n    }\n\n    if vec_uint_size(s.temp_lits) == 0 {\n        s.status = SATOKO_ERR;\n        return SATOKO_ERR;\n    }\n if vec_uint_size(s.temp_lits) == 1 {\n        solver_enqueue(s, vec_uint_at(s.temp_lits, 0), UNDEF);\n        return (s.status = (solver_propagate(s) == UNDEF));\n    }\n    if false {\n        for  i = 0; i \u003c vec_uint_size(s.temp_lits); i++  {\n            var lit int32  = vec_uint_at(s.temp_lits, i);\n            fmt.Printf(\"%s%d \", lit\u00261 ? \"!\":\"\", lit\u003e\u003e1);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    cref = solver_clause_create(s, s.temp_lits, 0);\n    clause_watch(s, cref);\n    return SATOKO_OK;\n}"
+    },
+    {
+      "Name": "satoko_assump_push",
+      "Start": 9751,
+      "End": 10021,
+      "BodyStart": 9797,
+      "Original": "void satoko_assump_push(solver_t *s, int lit)\n{\n    assert(lit2var(lit) \u003c (unsigned)satoko_varnum(s));\n    // printf(\"[Satoko] Push assumption: %d\\n\", lit);\n    vec_uint_push_back(s-\u003eassumptions, lit);\n    vec_char_assign(s-\u003epolarity, lit2var(lit), lit_polarity(lit));\n}",
+      "Draft": "func satoko_assump_push(s *solver_t, lit int32) {\n    assert(lit2var(lit) \u003c uint32(satoko_varnum(s)), \"lit2var(lit) \u003c uint32(satoko_varnum(s))\");\n    // printf(\"[Satoko] Push assumption: %d\\n\", lit);\n    vec_uint_push_back(s.assumptions, lit);\n    vec_char_assign(s.polarity, lit2var(lit), lit_polarity(lit));\n}"
+    },
+    {
+      "Name": "satoko_assump_pop",
+      "Start": 10023,
+      "End": 10290,
+      "BodyStart": 10059,
+      "Original": "void satoko_assump_pop(solver_t *s)\n{\n    assert(vec_uint_size(s-\u003eassumptions) \u003e 0);\n    // printf(\"[Satoko] Pop assumption: %d\\n\", vec_uint_pop_back(s-\u003eassumptions));\n    vec_uint_pop_back(s-\u003eassumptions);\n    solver_cancel_until(s, vec_uint_size(s-\u003eassumptions));\n}",
+      "Draft": "func satoko_assump_pop(s *solver_t) {\n    assert(vec_uint_size(s.assumptions) \u003e 0, \"vec_uint_size(s.assumptions) \u003e 0\");\n    // printf(\"[Satoko] Pop assumption: %d\\n\", vec_uint_pop_back(s-\u003eassumptions));\n    vec_uint_pop_back(s.assumptions);\n    solver_cancel_until(s, vec_uint_size(s.assumptions));\n}"
+    },
+    {
+      "Name": "satoko_solve",
+      "Start": 10292,
+      "End": 11123,
+      "BodyStart": 10322,
+      "Original": "int satoko_solve(solver_t *s)\n{\n    int status = SATOKO_UNDEC;\n\n    assert(s);\n    solver_clean_stats(s);\n    //if (s-\u003eopts.verbose)\n    //    print_opts(s);\n    if (s-\u003estatus == SATOKO_ERR) {\n        printf(\"Satoko in inconsistent state\\n\");\n        return SATOKO_UNDEC;\n    }\n\n    if (!s-\u003eopts.no_simplify)\n        if (satoko_simplify(s) != SATOKO_OK)\n            return SATOKO_UNDEC;\n\n    while (status == SATOKO_UNDEC) {\n        status = solver_search(s);\n        if (solver_check_limits(s) == 0 || solver_stop(s))\n            break;\n        if (s-\u003enRuntimeLimit \u0026\u0026 Abc_Clock() \u003e s-\u003enRuntimeLimit)\n            break;\n        if (s-\u003epFuncStop \u0026\u0026 s-\u003epFuncStop(s-\u003eRunId))\n            break;\n    }\n    if (s-\u003eopts.verbose)\n        print_stats(s);\n    \n    solver_cancel_until(s, vec_uint_size(s-\u003eassumptions));\n    return status;\n}",
+      "Draft": "func satoko_solve(s *solver_t) int32 {\n    var status int32  = SATOKO_UNDEC;\n\n    assert(s, \"s\");\n    solver_clean_stats(s);\n    //if (s-\u003eopts.verbose)\n    //    print_opts(s);\n    if s.status == SATOKO_ERR {\n        fmt.Printf(\"Satoko in inconsistent state\\n\");\n        return SATOKO_UNDEC;\n    }\n\n    if !s.opts.no_simplify {\n        if satoko_simplify(s) != SATOKO_OK {\n            return SATOKO_UNDEC; } }\n\n    for status == SATOKO_UNDEC {\n        status = solver_search(s);\n        if solver_check_limits(s) == 0 || solver_stop(s) {\n            break; }\n        if s.nRuntimeLimit \u0026\u0026 Abc_Clock() \u003e s.nRuntimeLimit {\n            break; }\n        if s.pFuncStop \u0026\u0026 s.pFuncStop(s.RunId) {\n            break; }\n    }\n    if s.opts.verbose {\n        print_stats(s); }\n    \n    solver_cancel_until(s, vec_uint_size(s.assumptions));\n    return status;\n}"
+    },
+    {
+      "Name": "satoko_solve_assumptions",
+      "Start": 11125,
+      "End": 11799,
+      "BodyStart": 11191,
+      "Original": "int satoko_solve_assumptions(solver_t *s, int * plits, int nlits)\n{\n    int i, status;\n    // printf(\"\\n[Satoko] Solve with assumptions.. (%d)\\n\", vec_uint_size(s-\u003eassumptions));\n    // printf(\"[Satoko]   + Variables: %d\\n\", satoko_varnum(s));\n    // printf(\"[Satoko]   + Clauses: %d\\n\", satoko_clausenum(s));\n    // printf(\"[Satoko]   + Trail size: %d\\n\", vec_uint_size(s-\u003etrail));\n    // printf(\"[Satoko]   + Queue head: %d\\n\", s-\u003ei_qhead);\n    // solver_debug_check_trail(s);\n    for ( i = 0; i \u003c nlits; i++ )\n        satoko_assump_push( s, plits[i] );\n    status = satoko_solve( s );\n    for ( i = 0; i \u003c nlits; i++ )\n        satoko_assump_pop( s );\n    return status;\n}",
+      "Draft": "func satoko_solve_assumptions(s *solver_t, plits *int32, nlits int32) int32 {\n    var i, status int32;\n    // printf(\"\\n[Satoko] Solve with assumptions.. (%d)\\n\", vec_uint_size(s-\u003eassumptions));\n    // printf(\"[Satoko]   + Variables: %d\\n\", satoko_varnum(s));\n    // printf(\"[Satoko]   + Clauses: %d\\n\", satoko_clausenum(s));\n    // printf(\"[Satoko]   + Trail size: %d\\n\", vec_uint_size(s-\u003etrail));\n    // printf(\"[Satoko]   + Queue head: %d\\n\", s-\u003ei_qhead);\n    // solver_debug_check_trail(s);\n    for  i = 0; i \u003c nlits; i++  {\n        satoko_assump_push( s, plits[i] );\n    }\n    status = satoko_solve( s );\n    for  i = 0; i \u003c nlits; i++  {\n        satoko_assump_pop( s );\n    }\n    return status;\n}"
+    },
+    {
+      "Name": "satoko_solve_assumptions_limit",
+      "Start": 11801,
+      "End": 12112,
+      "BodyStart": 11887,
+      "Original": "int satoko_solve_assumptions_limit(satoko_t *s, int * plits, int nlits, int nconflim)\n{\n    int temp = s-\u003eopts.conf_limit, status;\n    s-\u003eopts.conf_limit = nconflim ? s-\u003estats.n_conflicts + nconflim : 0;\n    status = satoko_solve_assumptions(s, plits, nlits);\n    s-\u003eopts.conf_limit = temp;\n    return status;\n}",
+      "Draft": "func satoko_solve_assumptions_limit(s *satoko_t, plits *int32, nlits int32, nconflim int32) int32 {\n    var temp int32 = s.opts.conf_limit;\n    var status int32;\n    if nconflim != 0 {\n        s.opts.conf_limit = s.stats.n_conflicts + nconflim;\n    } else {\n        s.opts.conf_limit = 0;\n    }\n    status = satoko_solve_assumptions(s, plits, nlits);\n    s.opts.conf_limit = temp;\n    return status;\n}"
+    },
+    {
+      "Name": "satoko_minimize_assumptions",
+      "Start": 12113,
+      "End": 14239,
+      "BodyStart": 12197,
+      "Original": "int satoko_minimize_assumptions(satoko_t * s, int * plits, int nlits, int nconflim)\n{\n    int i, nlitsL, nlitsR, nresL, nresR, status;\n    if ( nlits == 1 )\n    {\n        // since the problem is UNSAT, we try to solve it without assuming the last literal\n        // if the result is UNSAT, the last literal can be dropped; otherwise, it is needed\n        status = satoko_solve_assumptions_limit( s, NULL, 0, nconflim );\n        return (int)(status != SATOKO_UNSAT); // return 1 if the problem is not UNSAT\n    }\n    assert( nlits \u003e= 2 );\n    nlitsL = nlits / 2;\n    nlitsR = nlits - nlitsL;\n    // assume the left lits\n    for ( i = 0; i \u003c nlitsL; i++ )\n        satoko_assump_push(s, plits[i]);\n    // solve with these assumptions\n    status = satoko_solve_assumptions_limit( s, NULL, 0, nconflim );\n    if ( status == SATOKO_UNSAT ) // these are enough\n    {\n        for ( i = 0; i \u003c nlitsL; i++ )\n            satoko_assump_pop(s);\n        return satoko_minimize_assumptions( s, plits, nlitsL, nconflim );\n    }\n    // these are not enoguh\n    // solve for the right lits\n    nresL = nlitsR == 1 ? 1 : satoko_minimize_assumptions( s, plits + nlitsL, nlitsR, nconflim );\n    for ( i = 0; i \u003c nlitsL; i++ )\n        satoko_assump_pop(s);\n    // swap literals\n    vec_uint_clear(s-\u003etemp_lits);\n    for ( i = 0; i \u003c nlitsL; i++ )\n        vec_uint_push_back(s-\u003etemp_lits, plits[i]);\n    for ( i = 0; i \u003c nresL; i++ )\n        plits[i] = plits[nlitsL+i];\n    for ( i = 0; i \u003c nlitsL; i++ )\n        plits[nresL+i] = vec_uint_at(s-\u003etemp_lits, i);\n    // assume the right lits\n    for ( i = 0; i \u003c nresL; i++ )\n        satoko_assump_push(s, plits[i]);\n    // solve with these assumptions\n    status = satoko_solve_assumptions_limit( s, NULL, 0, nconflim );\n    if ( status == SATOKO_UNSAT ) // these are enough\n    {\n        for ( i = 0; i \u003c nresL; i++ )\n            satoko_assump_pop(s);\n        return nresL;\n    }\n    // solve for the left lits\n    nresR = nlitsL == 1 ? 1 : satoko_minimize_assumptions( s, plits + nresL, nlitsL, nconflim );\n    for ( i = 0; i \u003c nresL; i++ )\n        satoko_assump_pop(s);\n    return nresL + nresR;\n}",
+      "Draft": "func satoko_minimize_assumptions(s *satoko_t, plits *int32, nlits int32, nconflim int32) int32 {\n    var i, nlitsL, nlitsR, nresL, nresR, status int32;\n    if nlits == 1 {\n        // since the problem is UNSAT, we try to solve it without assuming the last literal\n        // if the result is UNSAT, the last literal can be dropped; otherwise, it is needed\n        status = satoko_solve_assumptions_limit( s, nil, 0, nconflim );\n        return int32((status != SATOKO_UNSAT)); // return 1 if the problem is not UNSAT\n    }\n    assert(nlits \u003e= 2, \"nlits \u003e= 2\");\n    nlitsL = nlits / 2;\n    nlitsR = nlits - nlitsL;\n    // assume the left lits\n    for  i = 0; i \u003c nlitsL; i++  {\n        satoko_assump_push(s, plits[i]);\n    }\n    // solve with these assumptions\n    status = satoko_solve_assumptions_limit( s, nil, 0, nconflim );\n    if status == SATOKO_UNSAT { // these are enough\n    \n        for  i = 0; i \u003c nlitsL; i++  {\n            satoko_assump_pop(s);\n        }\n        return satoko_minimize_assumptions( s, plits, nlitsL, nconflim );\n    }\n    // these are not enoguh\n    // solve for the right lits\n    if nlitsR == 1 {\n        nresL = 1;\n    } else {\n        nresL = satoko_minimize_assumptions( s, plits + nlitsL, nlitsR, nconflim );\n    }\n    for  i = 0; i \u003c nlitsL; i++  {\n        satoko_assump_pop(s);\n    }\n    // swap literals\n    vec_uint_clear(s.temp_lits);\n    for  i = 0; i \u003c nlitsL; i++  {\n        vec_uint_push_back(s.temp_lits, plits[i]);\n    }\n    for  i = 0; i \u003c nresL; i++  {\n        plits[i] = plits[nlitsL+i];\n    }\n    for  i = 0; i \u003c nlitsL; i++  {\n        plits[nresL+i] = vec_uint_at(s.temp_lits, i);\n    }\n    // assume the right lits\n    for  i = 0; i \u003c nresL; i++  {\n        satoko_assump_push(s, plits[i]);\n    }\n    // solve with these assumptions\n    status = satoko_solve_assumptions_limit( s, nil, 0, nconflim );\n    if status == SATOKO_UNSAT { // these are enough\n    \n        for  i = 0; i \u003c nresL; i++  {\n            satoko_assump_pop(s);\n        }\n        return nresL;\n    }\n    // solve for the left lits\n    if nlitsL == 1 {\n        nresR = 1;\n    } else {\n        nresR = satoko_minimize_assumptions( s, plits + nresL, nlitsL, nconflim );\n    }\n    for  i = 0; i \u003c nresL; i++  {\n        satoko_assump_pop(s);\n    }\n    return nresL + nresR;\n}"
+    },
+    {
+      "Name": "satoko_final_conflict",
+      "Start": 14241,
+      "End": 14391,
+      "BodyStart": 14291,
+      "Original": "int satoko_final_conflict(solver_t *s, int **out)\n{\n    *out = (int *)vec_uint_data(s-\u003efinal_conflict);\n    return vec_uint_size(s-\u003efinal_conflict);\n}",
+      "Draft": "func satoko_final_conflict(s *solver_t, out **int32) int32 {\n    *out = (int *)vec_uint_data(s.final_conflict);\n    return vec_uint_size(s.final_conflict);\n}"
+    },
+    {
+      "Name": "satoko_stats",
+      "Start": 14393,
+      "End": 14461,
+      "BodyStart": 14436,
+      "Original": "satoko_stats_t * satoko_stats(satoko_t *s)\n{\n    return \u0026s-\u003estats;\n}",
+      "Draft": "func satoko_stats(s *satoko_t) *satoko_stats_t {\n    return \u0026s.stats;\n}"
+    },
+    {
+      "Name": "satoko_options",
+      "Start": 14463,
+      "End": 14531,
+      "BodyStart": 14507,
+      "Original": "satoko_opts_t * satoko_options(satoko_t *s)\n{\n    return \u0026s-\u003eopts;\n}",
+      "Draft": "func satoko_options(s *satoko_t) *satoko_opts_t {\n    return \u0026s.opts;\n}"
+    },
+    {
+      "Name": "satoko_bookmark",
+      "Start": 14533,
+      "End": 14935,
+      "BodyStart": 14567,
+      "Original": "void satoko_bookmark(satoko_t *s)\n{\n    // printf(\"[Satoko] Bookmark.\\n\");\n    assert(s-\u003estatus == SATOKO_OK);\n    assert(solver_dlevel(s) == 0);\n    s-\u003ebook_cl_orig = vec_uint_size(s-\u003eoriginals);\n    s-\u003ebook_cl_lrnt = vec_uint_size(s-\u003elearnts);\n    s-\u003ebook_vars = vec_char_size(s-\u003eassigns);\n    s-\u003ebook_trail = vec_uint_size(s-\u003etrail);\n    // s-\u003ebook_qhead = s-\u003ei_qhead;\n    s-\u003eopts.no_simplify = 1;\n}",
+      "Draft": "func satoko_bookmark(s *satoko_t) {\n    // printf(\"[Satoko] Bookmark.\\n\");\n    assert(s.status == SATOKO_OK, \"s.status == SATOKO_OK\");\n    assert(solver_dlevel(s) == 0, \"solver_dlevel(s) == 0\");\n    s.book_cl_orig = vec_uint_size(s.originals);\n    s.book_cl_lrnt = vec_uint_size(s.learnts);\n    s.book_vars = vec_char_size(s.assigns);\n    s.book_trail = vec_uint_size(s.trail);\n    // s-\u003ebook_qhead = s-\u003ei_qhead;\n    s.opts.no_simplify = 1;\n}"
+    },
+    {
+      "Name": "satoko_unbookmark",
+      "Start": 14937,
+      "End": 15224,
+      "BodyStart": 14973,
+      "Original": "void satoko_unbookmark(satoko_t *s)\n{\n    // printf(\"[Satoko] Unbookmark.\\n\");\n    assert(s-\u003estatus == SATOKO_OK);\n    s-\u003ebook_cl_orig = 0;\n    s-\u003ebook_cl_lrnt = 0;\n    s-\u003ebook_cdb = 0;\n    s-\u003ebook_vars = 0;\n    s-\u003ebook_trail = 0;\n    // s-\u003ebook_qhead = 0;\n    s-\u003eopts.no_simplify = 0;\n}",
+      "Draft": "func satoko_unbookmark(s *satoko_t) {\n    // printf(\"[Satoko] Unbookmark.\\n\");\n    assert(s.status == SATOKO_OK, \"s.status == SATOKO_OK\");\n    s.book_cl_orig = 0;\n    s.book_cl_lrnt = 0;\n    s.book_cdb = 0;\n    s.book_vars = 0;\n    s.book_trail = 0;\n    // s-\u003ebook_qhead = 0;\n    s.opts.no_simplify = 0;\n}"
+    },
+    {
+      "Name": "satoko_reset",
+      "Start": 15226,
+      "End": 16363,
+      "BodyStart": 15257,
+      "Original": "void satoko_reset(satoko_t *s)\n{\n    // printf(\"[Satoko] Reset.\\n\");\n    vec_uint_clear(s-\u003eassumptions);\n    vec_uint_clear(s-\u003efinal_conflict);\n    cdb_clear(s-\u003eall_clauses);\n    vec_uint_clear(s-\u003eoriginals);\n    vec_uint_clear(s-\u003elearnts);\n    vec_wl_clean(s-\u003ewatches);\n    vec_act_clear(s-\u003eactivity);\n    heap_clear(s-\u003evar_order);\n    vec_uint_clear(s-\u003elevels);\n    vec_uint_clear(s-\u003ereasons);\n    vec_char_clear(s-\u003eassigns);\n    vec_char_clear(s-\u003epolarity);\n    vec_uint_clear(s-\u003etrail);\n    vec_uint_clear(s-\u003etrail_lim);\n    b_queue_clean(s-\u003ebq_lbd);\n    b_queue_clean(s-\u003ebq_trail);\n    vec_uint_clear(s-\u003etemp_lits);\n    vec_char_clear(s-\u003eseen);\n    vec_uint_clear(s-\u003etagged);\n    vec_uint_clear(s-\u003estack);\n    vec_uint_clear(s-\u003elast_dlevel);\n    vec_uint_clear(s-\u003estamps);\n    s-\u003estatus = SATOKO_OK;\n    s-\u003evar_act_inc = VAR_ACT_INIT_INC;\n    s-\u003eclause_act_inc = CLAUSE_ACT_INIT_INC;\n    s-\u003en_confl_bfr_reduce = s-\u003eopts.n_conf_fst_reduce;\n    s-\u003eRC1 = 1;\n    s-\u003eRC2 = s-\u003eopts.n_conf_fst_reduce;\n    s-\u003ebook_cl_orig = 0;\n    s-\u003ebook_cl_lrnt = 0;\n    s-\u003ebook_cdb = 0;\n    s-\u003ebook_vars = 0;\n    s-\u003ebook_trail = 0;\n    s-\u003ei_qhead = 0;\n}",
+      "Draft": "func satoko_reset(s *satoko_t) {\n    // printf(\"[Satoko] Reset.\\n\");\n    vec_uint_clear(s.assumptions);\n    vec_uint_clear(s.final_conflict);\n    cdb_clear(s.all_clauses);\n    vec_uint_clear(s.originals);\n    vec_uint_clear(s.learnts);\n    vec_wl_clean(s.watches);\n    // inlining of macro vec_act_clear\n    vec_sdbl_clear(s.activity);\n    heap_clear(s.var_order);\n    vec_uint_clear(s.levels);\n    vec_uint_clear(s.reasons);\n    vec_char_clear(s.assigns);\n    vec_char_clear(s.polarity);\n    vec_uint_clear(s.trail);\n    vec_uint_clear(s.trail_lim);\n    b_queue_clean(s.bq_lbd);\n    b_queue_clean(s.bq_trail);\n    vec_uint_clear(s.temp_lits);\n    vec_char_clear(s.seen);\n    vec_uint_clear(s.tagged);\n    vec_uint_clear(s.stack);\n    vec_uint_clear(s.last_dlevel);\n    vec_uint_clear(s.stamps);\n    s.status = SATOKO_OK;\n    s.var_act_inc = VAR_ACT_INIT_INC;\n    s.clause_act_inc = CLAUSE_ACT_INIT_INC;\n    s.n_confl_bfr_reduce = s.opts.n_conf_fst_reduce;\n    s.RC1 = 1;\n    s.RC2 = s.opts.n_conf_fst_reduce;\n    s.book_cl_orig = 0;\n    s.book_cl_lrnt = 0;\n    s.book_cdb = 0;\n    s.book_vars = 0;\n    s.book_trail = 0;\n    s.i_qhead = 0;\n}"
+    },
+    {
+      "Name": "satoko_rollback",
+      "Start": 16365,
+      "End": 18400,
+      "BodyStart": 16399,
+      "Original": "void satoko_rollback(satoko_t *s)\n{\n    unsigned i, cref;\n    unsigned n_originals = vec_uint_size(s-\u003eoriginals) - s-\u003ebook_cl_orig;\n    unsigned n_learnts = vec_uint_size(s-\u003elearnts) - s-\u003ebook_cl_lrnt;\n    struct clause **cl_to_remove;\n\n    // printf(\"[Satoko] rollback.\\n\");\n    assert(s-\u003estatus == SATOKO_OK);\n    assert(solver_dlevel(s) == 0);\n    if (!s-\u003ebook_vars) {\n        satoko_reset(s);\n        return;\n    }\n    cl_to_remove = satoko_alloc(struct clause *, n_originals + n_learnts);\n    /* Mark clauses */\n    vec_uint_foreach_start(s-\u003eoriginals, cref, i, s-\u003ebook_cl_orig)\n        cl_to_remove[i] = clause_fetch(s, cref);\n    vec_uint_foreach_start(s-\u003elearnts, cref, i, s-\u003ebook_cl_lrnt)\n        cl_to_remove[n_originals + i] = clause_fetch(s, cref);\n    for (i = 0; i \u003c n_originals + n_learnts; i++) {\n        clause_unwatch(s, cdb_cref(s-\u003eall_clauses, (unsigned *)cl_to_remove[i]));\n        cl_to_remove[i]-\u003ef_mark = 1;\n    }\n    satoko_free(cl_to_remove);\n    vec_uint_shrink(s-\u003eoriginals, s-\u003ebook_cl_orig);\n    vec_uint_shrink(s-\u003elearnts, s-\u003ebook_cl_lrnt);\n    /* Shrink variable related vectors */\n    for (i = s-\u003ebook_vars; i \u003c 2 * vec_char_size(s-\u003eassigns); i++) {\n        vec_wl_at(s-\u003ewatches, i)-\u003esize = 0;\n        vec_wl_at(s-\u003ewatches, i)-\u003en_bin = 0;\n    }\n    // s-\u003ei_qhead = s-\u003ebook_qhead;\n    s-\u003ewatches-\u003esize = s-\u003ebook_vars;\n    vec_act_shrink(s-\u003eactivity, s-\u003ebook_vars);\n    vec_uint_shrink(s-\u003elevels, s-\u003ebook_vars);\n    vec_uint_shrink(s-\u003ereasons, s-\u003ebook_vars);\n    vec_uint_shrink(s-\u003estamps, s-\u003ebook_vars);\n    vec_char_shrink(s-\u003eassigns, s-\u003ebook_vars);\n    vec_char_shrink(s-\u003eseen, s-\u003ebook_vars);\n    vec_char_shrink(s-\u003epolarity, s-\u003ebook_vars);\n    solver_rebuild_order(s);\n    /* Rewind solver and cancel level 0 assignments to the trail */\n    solver_cancel_until(s, 0);\n    vec_uint_shrink(s-\u003etrail, s-\u003ebook_trail);\n    if (s-\u003ebook_cdb)\n        s-\u003eall_clauses-\u003esize = s-\u003ebook_cdb;\n    s-\u003ebook_cl_orig = 0;\n    s-\u003ebook_cl_lrnt = 0;\n    s-\u003ebook_vars = 0;\n    s-\u003ebook_trail = 0;\n    // s-\u003ebook_qhead = 0;\n}",
+      "Draft": "func satoko_rollback(s *satoko_t) {\n    var i, cref uint32;\n    var n_originals uint32  = vec_uint_size(s.originals) - s.book_cl_orig;\n    var n_learnts uint32  = vec_uint_size(s.learnts) - s.book_cl_lrnt;\n    struct clause **cl_to_remove;\n\n    // printf(\"[Satoko] rollback.\\n\");\n    assert(s.status == SATOKO_OK, \"s.status == SATOKO_OK\");\n    assert(solver_dlevel(s) == 0, \"solver_dlevel(s) == 0\");\n    if !s.book_vars {\n        satoko_reset(s);\n        return;\n    }\n    // inlining of macro satoko_alloc\n    cl_to_remove = ((struct clause * *) malloc((n_originals + n_learnts) * sizeof(struct clause *)));\n    /* Mark clauses */\n    // inlining of macro vec_uint_foreach_start\n    for i = s.book_cl_orig; (i \u003c vec_uint_size(s.originals)) \u0026\u0026 (((cref) = vec_uint_at(s.originals, i)), 1); i++ {\n        cl_to_remove[i] = clause_fetch(s, cref);\n    }\n    // inlining of macro vec_uint_foreach_start\n    for i = s.book_cl_lrnt; (i \u003c vec_uint_size(s.learnts)) \u0026\u0026 (((cref) = vec_uint_at(s.learnts, i)), 1); i++ {\n        cl_to_remove[n_originals + i] = clause_fetch(s, cref);\n    }\n    for i = 0; i \u003c n_originals + n_learnts; i++ {\n        clause_unwatch(s, cdb_cref(s.all_clauses, (unsigned *)cl_to_remove[i]));\n        cl_to_remove[i].f_mark = 1;\n    }\n    // inlining of macro satoko_free\n    for { free(cl_to_remove); cl_to_remove = nil; \nif !(false) { break }\n} \n    vec_uint_shrink(s.originals, s.book_cl_orig);\n    vec_uint_shrink(s.learnts, s.book_cl_lrnt);\n    /* Shrink variable related vectors */\n    for i = s.book_vars; i \u003c 2 * vec_char_size(s.assigns); i++ {\n        vec_wl_at(s.watches, i).size = 0;\n        vec_wl_at(s.watches, i).n_bin = 0;\n    }\n    // s-\u003ei_qhead = s-\u003ebook_qhead;\n    s.watches.size = s.book_vars;\n    // inlining of macro vec_act_shrink\n    vec_sdbl_shrink(s.activity, s.book_vars);\n    vec_uint_shrink(s.levels, s.book_vars);\n    vec_uint_shrink(s.reasons, s.book_vars);\n    vec_uint_shrink(s.stamps, s.book_vars);\n    vec_char_shrink(s.assigns, s.book_vars);\n    vec_char_shrink(s.seen, s.book_vars);\n    vec_char_shrink(s.polarity, s.book_vars);\n    solver_rebuild_order(s);\n    /* Rewind solver and cancel level 0 assignments to the trail */\n    solver_cancel_until(s, 0);\n    vec_uint_shrink(s.trail, s.book_trail);\n    if s.book_cdb {\n        s.all_clauses.size = s.book_cdb; }\n    s.book_cl_orig = 0;\n    s.book_cl_lrnt = 0;\n    s.book_vars = 0;\n    s.book_trail = 0;\n    // s-\u003ebook_qhead = 0;\n}"
+    },
+    {
+      "Name": "satoko_mark_cone",
+      "Start": 18402,
+      "End": 18788,
+      "BodyStart": 18462,
+      "Original": "void satoko_mark_cone(satoko_t *s, int * pvars, int n_vars)\n{\n    int i;\n    if (!solver_has_marks(s))\n        s-\u003emarks = vec_char_init(satoko_varnum(s), 0);\n    for (i = 0; i \u003c n_vars; i++) {\n        var_set_mark(s, pvars[i]);\n        vec_sdbl_assign(s-\u003eactivity, pvars[i], 0);\n        if (!heap_in_heap(s-\u003evar_order, pvars[i]))\n            heap_insert(s-\u003evar_order, pvars[i]);\n    }\n}",
+      "Draft": "func satoko_mark_cone(s *satoko_t, pvars *int32, n_vars int32) {\n    var i int32;\n    if !solver_has_marks(s) {\n        s.marks = vec_char_init(satoko_varnum(s), 0); }\n    for i = 0; i \u003c n_vars; i++ {\n        var_set_mark(s, pvars[i]);\n        vec_sdbl_assign(s.activity, pvars[i], 0);\n        if !heap_in_heap(s.var_order, pvars[i]) {\n            heap_insert(s.var_order, pvars[i]); }\n    }\n}"
+    },
+    {
+      "Name": "satoko_unmark_cone",
+      "Start": 18790,
+      "End": 18968,
+      "BodyStart": 18851,
+      "Original": "void satoko_unmark_cone(satoko_t *s, int *pvars, int n_vars)\n{\n    int i;\n    assert(solver_has_marks(s));\n    for (i = 0; i \u003c n_vars; i++)\n        var_clean_mark(s, pvars[i]);\n}",
+      "Draft": "func satoko_unmark_cone(s *satoko_t, pvars *int32, n_vars int32) {\n    var i int32;\n    assert(solver_has_marks(s), \"solver_has_marks(s)\");\n    for i = 0; i \u003c n_vars; i++ {\n        var_clean_mark(s, pvars[i]);\n    }\n}"
+    },
+    {
+      "Name": "satoko_write_dimacs",
+      "Start": 18970,
+      "End": 20369,
+      "BodyStart": 19049,
+      "Original": "void satoko_write_dimacs(satoko_t *s, char *fname, int wrt_lrnt, int zero_var)\n{\n    FILE *file;\n    unsigned i;\n    unsigned n_vars = vec_act_size(s-\u003eactivity);\n    unsigned n_orig = vec_uint_size(s-\u003eoriginals) + vec_uint_size(s-\u003etrail);\n    unsigned n_lrnts = vec_uint_size(s-\u003elearnts);\n    unsigned *array;\n\n    assert(wrt_lrnt == 0 || wrt_lrnt == 1);\n    assert(zero_var == 0 || zero_var == 1);\n    if (fname != NULL)\n        file = fopen(fname, \"w\");\n    else\n        file = stdout;\n    \n    if (file == NULL) {\n        printf( \"Error: Cannot open output file.\\n\");\n        return;\n    }\n    fprintf(file, \"p cnf %d %d\\n\", n_vars, wrt_lrnt ? n_orig + n_lrnts : n_orig);\n    for (i = 0; i \u003c vec_char_size(s-\u003eassigns); i++) {\n        if ( var_value(s, i) != SATOKO_VAR_UNASSING ) {\n            if (zero_var)\n                fprintf(file, \"%d\\n\", var_value(s, i) == SATOKO_LIT_FALSE ? -(int)(i) : i);\n            else\n                fprintf(file, \"%d 0\\n\", var_value(s, i) == SATOKO_LIT_FALSE ? -(int)(i + 1) : i + 1);\n        }\n    }\n    array = vec_uint_data(s-\u003eoriginals);\n    for (i = 0; i \u003c vec_uint_size(s-\u003eoriginals); i++)\n        clause_dump(file, clause_fetch(s, array[i]), !zero_var);\n    \n    if (wrt_lrnt) {\n        array = vec_uint_data(s-\u003elearnts);\n        for (i = 0; i \u003c n_lrnts; i++)\n            clause_dump(file, clause_fetch(s, array[i]), !zero_var);\n    }\n    fclose(file);\n\n}",
+      "Draft": "func satoko_write_dimacs(s *satoko_t, fname string, wrt_lrnt int32, zero_var int32) {\n    var file *os.File;\n    var i uint32;\n    // inlining of macro vec_act_size\n    var n_vars uint32  = vec_sdbl_size(s.activity);\n    var n_orig uint32  = vec_uint_size(s.originals) + vec_uint_size(s.trail);\n    var n_lrnts uint32  = vec_uint_size(s.learnts);\n    var array *uint32;\n\n    assert(wrt_lrnt == 0 || wrt_lrnt == 1, \"wrt_lrnt == 0 || wrt_lrnt == 1\");\n    assert(zero_var == 0 || zero_var == 1, \"zero_var == 0 || zero_var == 1\");\n    if fname != nil {\n        file = os.OpenFile(fname, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    } else {\n        file = os.Stdout; }\n    \n    if file == nil {\n        fmt.Printf(\"Error: Cannot open output file.\\n\");\n        return;\n    }\n    fmt.Fprintf(file, \"p cnf %d %d\\n\", n_vars, wrt_lrnt ? n_orig + n_lrnts : n_orig);\n    for i = 0; i \u003c vec_char_size(s.assigns); i++ {\n        if var_value(s, i) != SATOKO_VAR_UNASSING {\n            if zero_var != 0 {\n                fmt.Fprintf(file, \"%d\\n\", var_value(s, i) == SATOKO_LIT_FALSE ? -int32((i)) : i);\n            } else {\n                fmt.Fprintf(file, \"%d 0\\n\", var_value(s, i) == SATOKO_LIT_FALSE ? -int32((i + 1)) : i + 1); }\n        }\n    }\n    array = vec_uint_data(s.originals);\n    for i = 0; i \u003c vec_uint_size(s.originals); i++ {\n        clause_dump(file, clause_fetch(s, array[i]), !zero_var);\n    }\n    \n    if wrt_lrnt != 0 {\n        array = vec_uint_data(s.learnts);\n        for i = 0; i \u003c n_lrnts; i++ {\n            clause_dump(file, clause_fetch(s, array[i]), !zero_var);\n        }\n    }\n    _ = (file).Close();\n\n}"
+    },
+    {
+      "Name": "satoko_varnum",
+      "Start": 20371,
+      "End": 20443,
+      "BodyStart": 20402,
+      "Original": "int satoko_varnum(satoko_t *s)\n{\n    return vec_char_size(s-\u003eassigns);\n}",
+      "Draft": "func satoko_varnum(s *satoko_t) int32 {\n    return vec_char_size(s.assigns);\n}"
+    },
+    {
+      "Name": "satoko_clausenum",
+      "Start": 20445,
+      "End": 20522,
+      "BodyStart": 20479,
+      "Original": "int satoko_clausenum(satoko_t *s)\n{\n    return vec_uint_size(s-\u003eoriginals);\n}",
+      "Draft": "func satoko_clausenum(s *satoko_t) int32 {\n    return vec_uint_size(s.originals);\n}"
+    },
+    {
+      "Name": "satoko_learntnum",
+      "Start": 20524,
+      "End": 20599,
+      "BodyStart": 20558,
+      "Original": "int satoko_learntnum(satoko_t *s)\n{\n    return vec_uint_size(s-\u003elearnts);\n}",
+      "Draft": "func satoko_learntnum(s *satoko_t) int32 {\n    return vec_uint_size(s.learnts);\n}"
+    },
+    {
+      "Name": "satoko_conflictnum",
+      "Start": 20601,
+      "End": 20685,
+      "BodyStart": 20637,
+      "Original": "int satoko_conflictnum(satoko_t *s)\n{\n    return satoko_stats(s)-\u003en_conflicts_all;\n}",
+      "Draft": "func satoko_conflictnum(s *satoko_t) int32 {\n    return satoko_stats(s).n_conflicts_all;\n}"
+    },
+    {
+      "Name": "satoko_set_stop",
+      "Start": 20687,
+      "End": 20759,
+      "BodyStart": 20734,
+      "Original": "void satoko_set_stop(satoko_t *s, int * pstop)\n{\n    s-\u003epstop = pstop;\n}",
+      "Draft": "func satoko_set_stop(s *satoko_t, pstop *int32) {\n    s.pstop = pstop;\n}"
+    },
+    {
+      "Name": "satoko_set_stop_func",
+      "Start": 20761,
+      "End": 20846,
+      "BodyStart": 20818,
+      "Original": "void satoko_set_stop_func(satoko_t *s, int (*fnct)(int))\n{\n    s-\u003epFuncStop = fnct;\n}",
+      "Draft": "func satoko_set_stop_func(s *satoko_t, fnct func(int32) int32) {\n    s.pFuncStop = fnct;\n}"
+    },
+    {
+      "Name": "satoko_set_runid",
+      "Start": 20848,
+      "End": 20913,
+      "BodyStart": 20891,
+      "Original": "void satoko_set_runid(satoko_t *s, int id)\n{\n    s-\u003eRunId = id;\n}",
+      "Draft": "func satoko_set_runid(s *satoko_t, id int32) {\n    s.RunId = id;\n}"
+    },
+    {
+      "Name": "satoko_read_cex_varvalue",
+      "Start": 20915,
+      "End": 21030,
+      "BodyStart": 20967,
+      "Original": "int satoko_read_cex_varvalue(satoko_t *s, int ivar)\n{\n    return satoko_var_polarity(s, ivar) == SATOKO_LIT_TRUE;\n}",
+      "Draft": "func satoko_read_cex_varvalue(s *satoko_t, ivar int32) int32 {\n    return satoko_var_polarity(s, ivar) == SATOKO_LIT_TRUE;\n}"
+    },
+    {
+      "Name": "satoko_set_runtime_limit",
+      "Start": 21032,
+      "End": 21198,
+      "BodyStart": 21093,
+      "Original": "abctime satoko_set_runtime_limit(satoko_t* s, abctime Limit)\n{\n    abctime nRuntimeLimit = s-\u003enRuntimeLimit;\n    s-\u003enRuntimeLimit = Limit;\n    return nRuntimeLimit;\n}",
+      "Draft": "func satoko_set_runtime_limit(s *satoko_t, Limit abctime) abctime {\n    var nRuntimeLimit abctime  = s.nRuntimeLimit;\n    s.nRuntimeLimit = Limit;\n    return nRuntimeLimit;\n}"
+    },
+    {
+      "Name": "satoko_var_polarity",
+      "Start": 21200,
+      "End": 21297,
+      "BodyStart": 21252,
+      "Original": "char satoko_var_polarity(satoko_t *s, unsigned var)\n{\n    return vec_char_at(s-\u003epolarity, var);\n}",
+      "Draft": "func satoko_var_polarity(s *satoko_t, var uint32) byte {\n    return vec_char_at(s.polarity, var);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::mechanical::sizeof::1544",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1544,
+      "End": 1550
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::mechanical::sizeof::3483",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 3408,
+      "End": 3408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::mechanical::do::5792",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 5579,
+      "End": 5579
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::mechanical::sizeof::5899",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 5666,
+      "End": 5672
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::mechanical::sizeof::6982",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 6749,
+      "End": 6755
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::mechanical::sizeof::8965",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 8517,
+      "End": 8523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::mechanical::sizeof::17454",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 16803,
+      "End": 16803
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::mechanical::do::18192",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 17307,
+      "End": 17307
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::pointer-cast::3458",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3408,
+      "End": 3408
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::pointer-cast::8936",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 8488,
+      "End": 8496
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::pointer-cast::14801",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14304,
+      "End": 14311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::pointer-cast::18067",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17229,
+      "End": 17241
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::solver_rebuild_order",
+      "Category": "semantic-review",
+      "Symbol": "solver_rebuild_order",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 707,
+      "End": 1064
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::clause_is_satisfied",
+      "Category": "semantic-review",
+      "Symbol": "clause_is_satisfied",
+      "Status": "open",
+      "Message": "Unsupported parameter declarator or signature comment; signature retained verbatim, with mechanical body transformations preserved.",
+      "Start": 1066,
+      "End": 1350
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::solver_clean_stats",
+      "Category": "semantic-review",
+      "Symbol": "solver_clean_stats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1352,
+      "End": 1677
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::print_opts",
+      "Category": "semantic-review",
+      "Symbol": "print_opts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1679,
+      "End": 2876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::print_stats",
+      "Category": "semantic-review",
+      "Symbol": "print_stats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2878,
+      "End": 3168
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_create",
+      "Category": "semantic-review",
+      "Symbol": "satoko_create",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3361,
+      "End": 4800
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_destroy",
+      "Category": "semantic-review",
+      "Symbol": "satoko_destroy",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4802,
+      "End": 5596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_default_opts",
+      "Category": "semantic-review",
+      "Symbol": "satoko_default_opts",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5598,
+      "End": 6574
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_configure",
+      "Category": "semantic-review",
+      "Symbol": "satoko_configure",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6631,
+      "End": 6774
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_simplify",
+      "Category": "semantic-review",
+      "Symbol": "satoko_simplify",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6776,
+      "End": 7629
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_setnvars",
+      "Category": "semantic-review",
+      "Symbol": "satoko_setnvars",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7631,
+      "End": 7772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_add_variable",
+      "Category": "semantic-review",
+      "Symbol": "satoko_add_variable",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7774,
+      "End": 8334
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::ternary::satoko_add_clause",
+      "Category": "ternary-review",
+      "Symbol": "satoko_add_clause",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8336,
+      "End": 9749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_add_clause",
+      "Category": "semantic-review",
+      "Symbol": "satoko_add_clause",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8336,
+      "End": 9749
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_assump_push",
+      "Category": "semantic-review",
+      "Symbol": "satoko_assump_push",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9751,
+      "End": 10021
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_assump_pop",
+      "Category": "semantic-review",
+      "Symbol": "satoko_assump_pop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10023,
+      "End": 10290
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_solve",
+      "Category": "semantic-review",
+      "Symbol": "satoko_solve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10292,
+      "End": 11123
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_solve_assumptions",
+      "Category": "semantic-review",
+      "Symbol": "satoko_solve_assumptions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11125,
+      "End": 11799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_solve_assumptions_limit",
+      "Category": "semantic-review",
+      "Symbol": "satoko_solve_assumptions_limit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11801,
+      "End": 12112
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_minimize_assumptions",
+      "Category": "semantic-review",
+      "Symbol": "satoko_minimize_assumptions",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12113,
+      "End": 14239
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_final_conflict",
+      "Category": "semantic-review",
+      "Symbol": "satoko_final_conflict",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14241,
+      "End": 14391
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_stats",
+      "Category": "semantic-review",
+      "Symbol": "satoko_stats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14393,
+      "End": 14461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_options",
+      "Category": "semantic-review",
+      "Symbol": "satoko_options",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14463,
+      "End": 14531
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_bookmark",
+      "Category": "semantic-review",
+      "Symbol": "satoko_bookmark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14533,
+      "End": 14935
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_unbookmark",
+      "Category": "semantic-review",
+      "Symbol": "satoko_unbookmark",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14937,
+      "End": 15224
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_reset",
+      "Category": "semantic-review",
+      "Symbol": "satoko_reset",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15226,
+      "End": 16363
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_rollback",
+      "Category": "semantic-review",
+      "Symbol": "satoko_rollback",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 16365,
+      "End": 18400
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_mark_cone",
+      "Category": "semantic-review",
+      "Symbol": "satoko_mark_cone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18402,
+      "End": 18788
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_unmark_cone",
+      "Category": "semantic-review",
+      "Symbol": "satoko_unmark_cone",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18790,
+      "End": 18968
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::ternary::satoko_write_dimacs",
+      "Category": "ternary-review",
+      "Symbol": "satoko_write_dimacs",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 18970,
+      "End": 20369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_write_dimacs",
+      "Category": "semantic-review",
+      "Symbol": "satoko_write_dimacs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 18970,
+      "End": 20369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_varnum",
+      "Category": "semantic-review",
+      "Symbol": "satoko_varnum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20371,
+      "End": 20443
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_clausenum",
+      "Category": "semantic-review",
+      "Symbol": "satoko_clausenum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20445,
+      "End": 20522
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_learntnum",
+      "Category": "semantic-review",
+      "Symbol": "satoko_learntnum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20524,
+      "End": 20599
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_conflictnum",
+      "Category": "semantic-review",
+      "Symbol": "satoko_conflictnum",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20601,
+      "End": 20685
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_set_stop",
+      "Category": "semantic-review",
+      "Symbol": "satoko_set_stop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20687,
+      "End": 20759
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_set_stop_func",
+      "Category": "semantic-review",
+      "Symbol": "satoko_set_stop_func",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20761,
+      "End": 20846
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_set_runid",
+      "Category": "semantic-review",
+      "Symbol": "satoko_set_runid",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20848,
+      "End": 20913
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_read_cex_varvalue",
+      "Category": "semantic-review",
+      "Symbol": "satoko_read_cex_varvalue",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 20915,
+      "End": 21030
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_set_runtime_limit",
+      "Category": "semantic-review",
+      "Symbol": "satoko_set_runtime_limit",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21032,
+      "End": 21198
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::satoko_var_polarity",
+      "Category": "semantic-review",
+      "Symbol": "satoko_var_polarity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 21200,
+      "End": 21297
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/sat/satoko/solver_api.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 21322
+    }
+  ],
+  "Draft": "package satoko\n\nimport \"fmt\"\n\nimport \"os\"\n\n//===--- solver_api.h -------------------------------------------------------===\n//\n//                     satoko: Satisfiability solver\n//\n// This file is distributed under the BSD 2-Clause License.\n// See LICENSE for details.\n//\n//===------------------------------------------------------------------------===\n//#include \u003cstdio.h\u003e\n//#include \u003cassert.h\u003e\n//#include \u003cstring.h\u003e\n//#include \u003cmath.h\u003e\n\n//#include \"act_var.h\"\n//#include \"solver.h\"\n//#include \"utils/misc.h\"\n\n//#include \"misc/util/abc_global.h\"\n//ABC_NAMESPACE_IMPL_START\n\n//===------------------------------------------------------------------------===\n// Satoko internal functions\n//===------------------------------------------------------------------------===\nfunc solver_rebuild_order(s *solver_t) {\n    var var uint32;\n    var vars *vec_uint_t  = vec_uint_alloc(vec_char_size(s.assigns));\n\n    for var = 0; var \u003c vec_char_size(s.assigns); var++ {\n        if var_value(s, var) == SATOKO_VAR_UNASSING {\n            vec_uint_push_back(vars, var); }\n    }\n    heap_build(s.var_order, vars);\n    vec_uint_free(vars);\n}\n\nstatic inline int clause_is_satisfied(solver_t *s, struct clause *clause)\n{\n    var i uint32;\n    var lits *uint32  = \u0026(clause.data[0].lit);\n    for i = 0; i \u003c clause.size; i++ {\n        if lit_value(s, lits[i]) == SATOKO_LIT_TRUE {\n            return SATOKO_OK; }\n    }\n    return SATOKO_ERR;\n}\n\nfunc solver_clean_stats(s *solver_t) {\n    var n_conflicts_all long  = s.stats.n_conflicts_all;\n    var n_propagations_all long  = s.stats.n_propagations_all;\n    memset(\u0026(s.stats), 0, sizeof(struct satoko_stats));\n    s.stats.n_conflicts_all = n_conflicts_all;\n    s.stats.n_propagations_all = n_propagations_all;\n}\n\nfunc print_opts(s *solver_t) {\n    fmt.Printf(\"+-[ BLACK MAGIC - PARAMETERS ]-+\\n\");\n    fmt.Printf(\"|                              |\\n\");\n    fmt.Printf(\"|--\u003e Restarts heuristic        |\\n\");\n    fmt.Printf(\"|    * LBD Queue   = %6d    |\\n\", s.opts.sz_lbd_bqueue);\n    fmt.Printf(\"|    * Trail Queue = %6d    |\\n\", s.opts.sz_trail_bqueue);\n    fmt.Printf(\"|    * f_rst       = %6.2f    |\\n\", s.opts.f_rst);\n    fmt.Printf(\"|    * b_rst       = %6.2f    |\\n\", s.opts.b_rst);\n    fmt.Printf(\"|                              |\\n\");\n    fmt.Printf(\"|--\u003e Clause DB reduction:      |\\n\");\n    fmt.Printf(\"|    * First       = %6d    |\\n\", s.opts.n_conf_fst_reduce);\n    fmt.Printf(\"|    * Inc         = %6d    |\\n\", s.opts.inc_reduce);\n    fmt.Printf(\"|    * Special Inc = %6d    |\\n\", s.opts.inc_special_reduce);\n    fmt.Printf(\"|    * Protected (LBD) \u003c %2d    |\\n\", s.opts.lbd_freeze_clause);\n    fmt.Printf(\"|                              |\\n\");\n    fmt.Printf(\"|--\u003e Binary resolution:        |\\n\");\n    fmt.Printf(\"|    * Clause size \u003c %3d       |\\n\", s.opts.clause_max_sz_bin_resol);\n    fmt.Printf(\"|    * Clause lbd  \u003c %3d       |\\n\", s.opts.clause_min_lbd_bin_resol);\n    fmt.Printf(\"+------------------------------+\\n\\n\");\n}\n\nfunc print_stats(s *solver_t) {\n    fmt.Printf(\"starts        : %10d\\n\", s.stats.n_starts);\n    fmt.Printf(\"conflicts     : %10d\\n\", s.stats.n_conflicts);\n    fmt.Printf(\"decisions     : %10d\\n\", s.stats.n_decisions);\n    fmt.Printf(\"propagations  : %10d\\n\", s.stats.n_propagations);\n}\n\n//===------------------------------------------------------------------------===\n// Satoko external functions\n//===------------------------------------------------------------------------===\nfunc satoko_create() *solver_t {\n    // inlining of macro satoko_calloc\n    var s *solver_t  = \u0026solver_t{};\n\n    satoko_default_opts(\u0026s.opts);\n    s.status = SATOKO_OK;\n    /* User data */\n    s.assumptions = vec_uint_alloc(0);\n    s.final_conflict = vec_uint_alloc(0);\n    /* Clauses Database */\n    s.all_clauses = cdb_alloc(0);\n    s.originals = vec_uint_alloc(0);\n    s.learnts = vec_uint_alloc(0);\n    s.watches = vec_wl_alloc(0);\n    /* Activity heuristic */\n    s.var_act_inc = VAR_ACT_INIT_INC;\n    s.clause_act_inc = CLAUSE_ACT_INIT_INC;\n    /* Variable Information */\n    // inlining of macro vec_act_alloc\n    s.activity = vec_sdbl_alloc(0);\n    s.var_order = heap_alloc(s.activity);\n    s.levels = vec_uint_alloc(0);\n    s.reasons = vec_uint_alloc(0);\n    s.assigns = vec_char_alloc(0);\n    s.polarity = vec_char_alloc(0);\n    /* Assignments */\n    s.trail = vec_uint_alloc(0);\n    s.trail_lim = vec_uint_alloc(0);\n    /* Temporary data used by Search method */\n    s.bq_trail = b_queue_alloc(s.opts.sz_trail_bqueue);\n    s.bq_lbd = b_queue_alloc(s.opts.sz_lbd_bqueue);\n    s.n_confl_bfr_reduce = s.opts.n_conf_fst_reduce;\n    s.RC1 = 1;\n    s.RC2 = s.opts.n_conf_fst_reduce;\n    /* Temporary data used by Analyze */\n    s.temp_lits = vec_uint_alloc(0);\n    s.seen = vec_char_alloc(0);\n    s.tagged = vec_uint_alloc(0);\n    s.stack = vec_uint_alloc(0);\n    s.last_dlevel = vec_uint_alloc(0);\n    /* Misc temporary */\n    s.stamps = vec_uint_alloc(0);\n    return s;\n}\n\nfunc satoko_destroy(s *solver_t) {\n    vec_uint_free(s.assumptions);\n    vec_uint_free(s.final_conflict);\n    cdb_free(s.all_clauses);\n    vec_uint_free(s.originals);\n    vec_uint_free(s.learnts);\n    vec_wl_free(s.watches);\n    // inlining of macro vec_act_free\n    vec_sdbl_free(s.activity);\n    heap_free(s.var_order);\n    vec_uint_free(s.levels);\n    vec_uint_free(s.reasons);\n    vec_char_free(s.assigns);\n    vec_char_free(s.polarity);\n    vec_uint_free(s.trail);\n    vec_uint_free(s.trail_lim);\n    b_queue_free(s.bq_lbd);\n    b_queue_free(s.bq_trail);\n    vec_uint_free(s.temp_lits);\n    vec_char_free(s.seen);\n    vec_uint_free(s.tagged);\n    vec_uint_free(s.stack);\n    vec_uint_free(s.last_dlevel);\n    vec_uint_free(s.stamps);\n    if s.marks {\n        vec_char_free(s.marks); }\n    // inlining of macro satoko_free\n    for { free(s); s = nil; \nif !(false) { break }\n} \n}\n\nfunc satoko_default_opts(opts *satoko_opts_t) {\n    memset(opts, 0, sizeof(satoko_opts_t));\n    opts.verbose = 0;\n    opts.no_simplify = 0;\n    /* Limits */\n    opts.conf_limit = 0;\n    opts.prop_limit  = 0;\n    /* Constants used for restart heuristic */\n    opts.f_rst = 0.8;\n    opts.b_rst = 1.4;\n    opts.fst_block_rst   = 10000;\n    opts.sz_lbd_bqueue   = 50;\n    opts.sz_trail_bqueue = 5000;\n    /* Constants used for clause database reduction heuristic */\n    opts.n_conf_fst_reduce = 2000;\n    opts.inc_reduce = 300;\n    opts.inc_special_reduce = 1000;\n    opts.lbd_freeze_clause = 30;\n    opts.learnt_ratio = 0.5;\n    /* VSIDS heuristic */\n    opts.var_act_limit = VAR_ACT_LIMIT;\n    opts.var_act_rescale = VAR_ACT_RESCALE;\n    opts.var_decay = 0.95;\n    opts.clause_decay = (clause_act_t) 0.995;\n    /* Binary resolution */\n    opts.clause_max_sz_bin_resol = 30;\n    opts.clause_min_lbd_bin_resol = 6;\n\n    opts.garbage_max_ratio = float32( 0.3);\n}\n\n/**\n * TODO: sanity check on configuration options\n */\nfunc satoko_configure(s *satoko_t, user_opts *satoko_opts_t) {\n    assert((user_opts != nil), \"user_opts\");\n    memcpy(\u0026s.opts, user_opts, sizeof(satoko_opts_t));\n}\n\nfunc satoko_simplify(s *solver_t) int32 {\n    var i, j uint32;\n    var cref uint32;\n\n    assert(solver_dlevel(s) == 0, \"solver_dlevel(s) == 0\");\n    if solver_propagate(s) != UNDEF {\n        return SATOKO_ERR; }\n    if s.n_assigns_simplify == vec_uint_size(s.trail) || s.n_props_simplify \u003e 0 {\n        return SATOKO_OK; }\n\n    // inlining of macro vec_uint_foreach\n    for i = 0; (i \u003c vec_uint_size(s.originals)) \u0026\u0026 (((cref) = vec_uint_at(s.originals, i)), 1); i++ {\n        struct clause *clause = clause_fetch(s, cref);\n\n    if clause_is_satisfied(s, clause) {\n            clause.f_mark = 1;\n            s.stats.n_original_lits -= clause.size;\n            clause_unwatch(s, cref);\n        } else {\n            vec_uint_assign(s.originals, j++, cref); }\n    }\n    vec_uint_shrink(s.originals, j);\n    solver_rebuild_order(s);\n    s.n_assigns_simplify = vec_uint_size(s.trail);\n    s.n_props_simplify = s.stats.n_original_lits + s.stats.n_learnt_lits;\n    return SATOKO_OK;\n}\n\nfunc satoko_setnvars(s *solver_t, nvars int32) {\n    var i int32;\n    for i = satoko_varnum(s); i \u003c nvars; i++ {\n        satoko_add_variable(s, 0);\n    }\n}\n\nfunc satoko_add_variable(s *solver_t, sign byte) int32 {\n    // inlining of macro vec_act_size\n    var var uint32  = vec_sdbl_size(s.activity);\n    vec_wl_push(s.watches);\n    vec_wl_push(s.watches);\n    // inlining of macro vec_act_push_back\n    vec_sdbl_push_back(s.activity, 0);\n    vec_uint_push_back(s.levels, 0);\n    vec_char_push_back(s.assigns, SATOKO_VAR_UNASSING);\n    vec_char_push_back(s.polarity, sign);\n    vec_uint_push_back(s.reasons, UNDEF);\n    vec_uint_push_back(s.stamps, 0);\n    vec_char_push_back(s.seen, 0);\n    heap_insert(s.var_order, var);\n    if s.marks {\n        vec_char_push_back(s.marks, 0); }\n    return var;\n}\n\nfunc satoko_add_clause(s *solver_t, lits *int32, size int32) int32 {\n    var i, j uint32;\n    var prev_lit uint32;\n    var max_var uint32;\n    var cref uint32;\n\n    qsort((void *) lits, (size_t)size, sizeof(unsigned), stk_uint_compare);\n    max_var = lit2var(lits[size - 1]);\n    // inlining of macro vec_act_size\n    for max_var \u003e= vec_sdbl_size(s.activity) {\n        satoko_add_variable(s, SATOKO_LIT_FALSE);\n    }\n\n    vec_uint_clear(s.temp_lits);\n    j = 0;\n    prev_lit = UNDEF;\n    for i = 0; i \u003c uint32(size); i++ {\n        if uint32(lits[i]) == lit_compl(prev_lit) || lit_value(s, lits[i]) == SATOKO_LIT_TRUE {\n            return SATOKO_OK;\n        } else if uint32(lits[i]) != prev_lit \u0026\u0026 var_value(s, lit2var(lits[i])) == SATOKO_VAR_UNASSING {\n            prev_lit = lits[i];\n            vec_uint_push_back(s.temp_lits, lits[i]);\n        }\n    }\n\n    if vec_uint_size(s.temp_lits) == 0 {\n        s.status = SATOKO_ERR;\n        return SATOKO_ERR;\n    }\n if vec_uint_size(s.temp_lits) == 1 {\n        solver_enqueue(s, vec_uint_at(s.temp_lits, 0), UNDEF);\n        return (s.status = (solver_propagate(s) == UNDEF));\n    }\n    if false {\n        for  i = 0; i \u003c vec_uint_size(s.temp_lits); i++  {\n            var lit int32  = vec_uint_at(s.temp_lits, i);\n            fmt.Printf(\"%s%d \", lit\u00261 ? \"!\":\"\", lit\u003e\u003e1);\n        }\n        fmt.Printf(\"\\n\");\n    }\n    cref = solver_clause_create(s, s.temp_lits, 0);\n    clause_watch(s, cref);\n    return SATOKO_OK;\n}\n\nfunc satoko_assump_push(s *solver_t, lit int32) {\n    assert(lit2var(lit) \u003c uint32(satoko_varnum(s)), \"lit2var(lit) \u003c uint32(satoko_varnum(s))\");\n    // printf(\"[Satoko] Push assumption: %d\\n\", lit);\n    vec_uint_push_back(s.assumptions, lit);\n    vec_char_assign(s.polarity, lit2var(lit), lit_polarity(lit));\n}\n\nfunc satoko_assump_pop(s *solver_t) {\n    assert(vec_uint_size(s.assumptions) \u003e 0, \"vec_uint_size(s.assumptions) \u003e 0\");\n    // printf(\"[Satoko] Pop assumption: %d\\n\", vec_uint_pop_back(s-\u003eassumptions));\n    vec_uint_pop_back(s.assumptions);\n    solver_cancel_until(s, vec_uint_size(s.assumptions));\n}\n\nfunc satoko_solve(s *solver_t) int32 {\n    var status int32  = SATOKO_UNDEC;\n\n    assert(s, \"s\");\n    solver_clean_stats(s);\n    //if (s-\u003eopts.verbose)\n    //    print_opts(s);\n    if s.status == SATOKO_ERR {\n        fmt.Printf(\"Satoko in inconsistent state\\n\");\n        return SATOKO_UNDEC;\n    }\n\n    if !s.opts.no_simplify {\n        if satoko_simplify(s) != SATOKO_OK {\n            return SATOKO_UNDEC; } }\n\n    for status == SATOKO_UNDEC {\n        status = solver_search(s);\n        if solver_check_limits(s) == 0 || solver_stop(s) {\n            break; }\n        if s.nRuntimeLimit \u0026\u0026 Abc_Clock() \u003e s.nRuntimeLimit {\n            break; }\n        if s.pFuncStop \u0026\u0026 s.pFuncStop(s.RunId) {\n            break; }\n    }\n    if s.opts.verbose {\n        print_stats(s); }\n    \n    solver_cancel_until(s, vec_uint_size(s.assumptions));\n    return status;\n}\n\nfunc satoko_solve_assumptions(s *solver_t, plits *int32, nlits int32) int32 {\n    var i, status int32;\n    // printf(\"\\n[Satoko] Solve with assumptions.. (%d)\\n\", vec_uint_size(s-\u003eassumptions));\n    // printf(\"[Satoko]   + Variables: %d\\n\", satoko_varnum(s));\n    // printf(\"[Satoko]   + Clauses: %d\\n\", satoko_clausenum(s));\n    // printf(\"[Satoko]   + Trail size: %d\\n\", vec_uint_size(s-\u003etrail));\n    // printf(\"[Satoko]   + Queue head: %d\\n\", s-\u003ei_qhead);\n    // solver_debug_check_trail(s);\n    for  i = 0; i \u003c nlits; i++  {\n        satoko_assump_push( s, plits[i] );\n    }\n    status = satoko_solve( s );\n    for  i = 0; i \u003c nlits; i++  {\n        satoko_assump_pop( s );\n    }\n    return status;\n}\n\nfunc satoko_solve_assumptions_limit(s *satoko_t, plits *int32, nlits int32, nconflim int32) int32 {\n    var temp int32 = s.opts.conf_limit;\n    var status int32;\n    if nconflim != 0 {\n        s.opts.conf_limit = s.stats.n_conflicts + nconflim;\n    } else {\n        s.opts.conf_limit = 0;\n    }\n    status = satoko_solve_assumptions(s, plits, nlits);\n    s.opts.conf_limit = temp;\n    return status;\n}\nfunc satoko_minimize_assumptions(s *satoko_t, plits *int32, nlits int32, nconflim int32) int32 {\n    var i, nlitsL, nlitsR, nresL, nresR, status int32;\n    if nlits == 1 {\n        // since the problem is UNSAT, we try to solve it without assuming the last literal\n        // if the result is UNSAT, the last literal can be dropped; otherwise, it is needed\n        status = satoko_solve_assumptions_limit( s, nil, 0, nconflim );\n        return int32((status != SATOKO_UNSAT)); // return 1 if the problem is not UNSAT\n    }\n    assert(nlits \u003e= 2, \"nlits \u003e= 2\");\n    nlitsL = nlits / 2;\n    nlitsR = nlits - nlitsL;\n    // assume the left lits\n    for  i = 0; i \u003c nlitsL; i++  {\n        satoko_assump_push(s, plits[i]);\n    }\n    // solve with these assumptions\n    status = satoko_solve_assumptions_limit( s, nil, 0, nconflim );\n    if status == SATOKO_UNSAT { // these are enough\n    \n        for  i = 0; i \u003c nlitsL; i++  {\n            satoko_assump_pop(s);\n        }\n        return satoko_minimize_assumptions( s, plits, nlitsL, nconflim );\n    }\n    // these are not enoguh\n    // solve for the right lits\n    if nlitsR == 1 {\n        nresL = 1;\n    } else {\n        nresL = satoko_minimize_assumptions( s, plits + nlitsL, nlitsR, nconflim );\n    }\n    for  i = 0; i \u003c nlitsL; i++  {\n        satoko_assump_pop(s);\n    }\n    // swap literals\n    vec_uint_clear(s.temp_lits);\n    for  i = 0; i \u003c nlitsL; i++  {\n        vec_uint_push_back(s.temp_lits, plits[i]);\n    }\n    for  i = 0; i \u003c nresL; i++  {\n        plits[i] = plits[nlitsL+i];\n    }\n    for  i = 0; i \u003c nlitsL; i++  {\n        plits[nresL+i] = vec_uint_at(s.temp_lits, i);\n    }\n    // assume the right lits\n    for  i = 0; i \u003c nresL; i++  {\n        satoko_assump_push(s, plits[i]);\n    }\n    // solve with these assumptions\n    status = satoko_solve_assumptions_limit( s, nil, 0, nconflim );\n    if status == SATOKO_UNSAT { // these are enough\n    \n        for  i = 0; i \u003c nresL; i++  {\n            satoko_assump_pop(s);\n        }\n        return nresL;\n    }\n    // solve for the left lits\n    if nlitsL == 1 {\n        nresR = 1;\n    } else {\n        nresR = satoko_minimize_assumptions( s, plits + nresL, nlitsL, nconflim );\n    }\n    for  i = 0; i \u003c nresL; i++  {\n        satoko_assump_pop(s);\n    }\n    return nresL + nresR;\n}\n\nfunc satoko_final_conflict(s *solver_t, out **int32) int32 {\n    *out = (int *)vec_uint_data(s.final_conflict);\n    return vec_uint_size(s.final_conflict);\n}\n\nfunc satoko_stats(s *satoko_t) *satoko_stats_t {\n    return \u0026s.stats;\n}\n\nfunc satoko_options(s *satoko_t) *satoko_opts_t {\n    return \u0026s.opts;\n}\n\nfunc satoko_bookmark(s *satoko_t) {\n    // printf(\"[Satoko] Bookmark.\\n\");\n    assert(s.status == SATOKO_OK, \"s.status == SATOKO_OK\");\n    assert(solver_dlevel(s) == 0, \"solver_dlevel(s) == 0\");\n    s.book_cl_orig = vec_uint_size(s.originals);\n    s.book_cl_lrnt = vec_uint_size(s.learnts);\n    s.book_vars = vec_char_size(s.assigns);\n    s.book_trail = vec_uint_size(s.trail);\n    // s-\u003ebook_qhead = s-\u003ei_qhead;\n    s.opts.no_simplify = 1;\n}\n\nfunc satoko_unbookmark(s *satoko_t) {\n    // printf(\"[Satoko] Unbookmark.\\n\");\n    assert(s.status == SATOKO_OK, \"s.status == SATOKO_OK\");\n    s.book_cl_orig = 0;\n    s.book_cl_lrnt = 0;\n    s.book_cdb = 0;\n    s.book_vars = 0;\n    s.book_trail = 0;\n    // s-\u003ebook_qhead = 0;\n    s.opts.no_simplify = 0;\n}\n\nfunc satoko_reset(s *satoko_t) {\n    // printf(\"[Satoko] Reset.\\n\");\n    vec_uint_clear(s.assumptions);\n    vec_uint_clear(s.final_conflict);\n    cdb_clear(s.all_clauses);\n    vec_uint_clear(s.originals);\n    vec_uint_clear(s.learnts);\n    vec_wl_clean(s.watches);\n    // inlining of macro vec_act_clear\n    vec_sdbl_clear(s.activity);\n    heap_clear(s.var_order);\n    vec_uint_clear(s.levels);\n    vec_uint_clear(s.reasons);\n    vec_char_clear(s.assigns);\n    vec_char_clear(s.polarity);\n    vec_uint_clear(s.trail);\n    vec_uint_clear(s.trail_lim);\n    b_queue_clean(s.bq_lbd);\n    b_queue_clean(s.bq_trail);\n    vec_uint_clear(s.temp_lits);\n    vec_char_clear(s.seen);\n    vec_uint_clear(s.tagged);\n    vec_uint_clear(s.stack);\n    vec_uint_clear(s.last_dlevel);\n    vec_uint_clear(s.stamps);\n    s.status = SATOKO_OK;\n    s.var_act_inc = VAR_ACT_INIT_INC;\n    s.clause_act_inc = CLAUSE_ACT_INIT_INC;\n    s.n_confl_bfr_reduce = s.opts.n_conf_fst_reduce;\n    s.RC1 = 1;\n    s.RC2 = s.opts.n_conf_fst_reduce;\n    s.book_cl_orig = 0;\n    s.book_cl_lrnt = 0;\n    s.book_cdb = 0;\n    s.book_vars = 0;\n    s.book_trail = 0;\n    s.i_qhead = 0;\n}\n\nfunc satoko_rollback(s *satoko_t) {\n    var i, cref uint32;\n    var n_originals uint32  = vec_uint_size(s.originals) - s.book_cl_orig;\n    var n_learnts uint32  = vec_uint_size(s.learnts) - s.book_cl_lrnt;\n    struct clause **cl_to_remove;\n\n    // printf(\"[Satoko] rollback.\\n\");\n    assert(s.status == SATOKO_OK, \"s.status == SATOKO_OK\");\n    assert(solver_dlevel(s) == 0, \"solver_dlevel(s) == 0\");\n    if !s.book_vars {\n        satoko_reset(s);\n        return;\n    }\n    // inlining of macro satoko_alloc\n    cl_to_remove = ((struct clause * *) malloc((n_originals + n_learnts) * sizeof(struct clause *)));\n    /* Mark clauses */\n    // inlining of macro vec_uint_foreach_start\n    for i = s.book_cl_orig; (i \u003c vec_uint_size(s.originals)) \u0026\u0026 (((cref) = vec_uint_at(s.originals, i)), 1); i++ {\n        cl_to_remove[i] = clause_fetch(s, cref);\n    }\n    // inlining of macro vec_uint_foreach_start\n    for i = s.book_cl_lrnt; (i \u003c vec_uint_size(s.learnts)) \u0026\u0026 (((cref) = vec_uint_at(s.learnts, i)), 1); i++ {\n        cl_to_remove[n_originals + i] = clause_fetch(s, cref);\n    }\n    for i = 0; i \u003c n_originals + n_learnts; i++ {\n        clause_unwatch(s, cdb_cref(s.all_clauses, (unsigned *)cl_to_remove[i]));\n        cl_to_remove[i].f_mark = 1;\n    }\n    // inlining of macro satoko_free\n    for { free(cl_to_remove); cl_to_remove = nil; \nif !(false) { break }\n} \n    vec_uint_shrink(s.originals, s.book_cl_orig);\n    vec_uint_shrink(s.learnts, s.book_cl_lrnt);\n    /* Shrink variable related vectors */\n    for i = s.book_vars; i \u003c 2 * vec_char_size(s.assigns); i++ {\n        vec_wl_at(s.watches, i).size = 0;\n        vec_wl_at(s.watches, i).n_bin = 0;\n    }\n    // s-\u003ei_qhead = s-\u003ebook_qhead;\n    s.watches.size = s.book_vars;\n    // inlining of macro vec_act_shrink\n    vec_sdbl_shrink(s.activity, s.book_vars);\n    vec_uint_shrink(s.levels, s.book_vars);\n    vec_uint_shrink(s.reasons, s.book_vars);\n    vec_uint_shrink(s.stamps, s.book_vars);\n    vec_char_shrink(s.assigns, s.book_vars);\n    vec_char_shrink(s.seen, s.book_vars);\n    vec_char_shrink(s.polarity, s.book_vars);\n    solver_rebuild_order(s);\n    /* Rewind solver and cancel level 0 assignments to the trail */\n    solver_cancel_until(s, 0);\n    vec_uint_shrink(s.trail, s.book_trail);\n    if s.book_cdb {\n        s.all_clauses.size = s.book_cdb; }\n    s.book_cl_orig = 0;\n    s.book_cl_lrnt = 0;\n    s.book_vars = 0;\n    s.book_trail = 0;\n    // s-\u003ebook_qhead = 0;\n}\n\nfunc satoko_mark_cone(s *satoko_t, pvars *int32, n_vars int32) {\n    var i int32;\n    if !solver_has_marks(s) {\n        s.marks = vec_char_init(satoko_varnum(s), 0); }\n    for i = 0; i \u003c n_vars; i++ {\n        var_set_mark(s, pvars[i]);\n        vec_sdbl_assign(s.activity, pvars[i], 0);\n        if !heap_in_heap(s.var_order, pvars[i]) {\n            heap_insert(s.var_order, pvars[i]); }\n    }\n}\n\nfunc satoko_unmark_cone(s *satoko_t, pvars *int32, n_vars int32) {\n    var i int32;\n    assert(solver_has_marks(s), \"solver_has_marks(s)\");\n    for i = 0; i \u003c n_vars; i++ {\n        var_clean_mark(s, pvars[i]);\n    }\n}\n\nfunc satoko_write_dimacs(s *satoko_t, fname string, wrt_lrnt int32, zero_var int32) {\n    var file *os.File;\n    var i uint32;\n    // inlining of macro vec_act_size\n    var n_vars uint32  = vec_sdbl_size(s.activity);\n    var n_orig uint32  = vec_uint_size(s.originals) + vec_uint_size(s.trail);\n    var n_lrnts uint32  = vec_uint_size(s.learnts);\n    var array *uint32;\n\n    assert(wrt_lrnt == 0 || wrt_lrnt == 1, \"wrt_lrnt == 0 || wrt_lrnt == 1\");\n    assert(zero_var == 0 || zero_var == 1, \"zero_var == 0 || zero_var == 1\");\n    if fname != nil {\n        file = os.OpenFile(fname, os.O_WRONLY | os.O_CREATE | os.O_TRUNC, 0666);\n    } else {\n        file = os.Stdout; }\n    \n    if file == nil {\n        fmt.Printf(\"Error: Cannot open output file.\\n\");\n        return;\n    }\n    fmt.Fprintf(file, \"p cnf %d %d\\n\", n_vars, wrt_lrnt ? n_orig + n_lrnts : n_orig);\n    for i = 0; i \u003c vec_char_size(s.assigns); i++ {\n        if var_value(s, i) != SATOKO_VAR_UNASSING {\n            if zero_var != 0 {\n                fmt.Fprintf(file, \"%d\\n\", var_value(s, i) == SATOKO_LIT_FALSE ? -int32((i)) : i);\n            } else {\n                fmt.Fprintf(file, \"%d 0\\n\", var_value(s, i) == SATOKO_LIT_FALSE ? -int32((i + 1)) : i + 1); }\n        }\n    }\n    array = vec_uint_data(s.originals);\n    for i = 0; i \u003c vec_uint_size(s.originals); i++ {\n        clause_dump(file, clause_fetch(s, array[i]), !zero_var);\n    }\n    \n    if wrt_lrnt != 0 {\n        array = vec_uint_data(s.learnts);\n        for i = 0; i \u003c n_lrnts; i++ {\n            clause_dump(file, clause_fetch(s, array[i]), !zero_var);\n        }\n    }\n    _ = (file).Close();\n\n}\n\nfunc satoko_varnum(s *satoko_t) int32 {\n    return vec_char_size(s.assigns);\n}\n\nfunc satoko_clausenum(s *satoko_t) int32 {\n    return vec_uint_size(s.originals);\n}\n\nfunc satoko_learntnum(s *satoko_t) int32 {\n    return vec_uint_size(s.learnts);\n}\n\nfunc satoko_conflictnum(s *satoko_t) int32 {\n    return satoko_stats(s).n_conflicts_all;\n}\n\nfunc satoko_set_stop(s *satoko_t, pstop *int32) {\n    s.pstop = pstop;\n}\n\nfunc satoko_set_stop_func(s *satoko_t, fnct func(int32) int32) {\n    s.pFuncStop = fnct;\n}\n\nfunc satoko_set_runid(s *satoko_t, id int32) {\n    s.RunId = id;\n}\n\nfunc satoko_read_cex_varvalue(s *satoko_t, ivar int32) int32 {\n    return satoko_var_polarity(s, ivar) == SATOKO_LIT_TRUE;\n}\n\nfunc satoko_set_runtime_limit(s *satoko_t, Limit abctime) abctime {\n    var nRuntimeLimit abctime  = s.nRuntimeLimit;\n    s.nRuntimeLimit = Limit;\n    return nRuntimeLimit;\n}\n\nfunc satoko_var_polarity(s *satoko_t, var uint32) byte {\n    return vec_char_at(s.polarity, var);\n}\n\n//ABC_NAMESPACE_IMPL_END\n"
+}

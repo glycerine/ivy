@@ -1,0 +1,615 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c",
+  "SHA256": "b41f2eb4d4657e736f3e274332316d93de6b09a045f80398073f92f0f8528d8b",
+  "Library": [
+    {
+      "Name": "malloc",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 49,
+        "Column": 69,
+        "ByteOffset": 1387
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    p = /*__starting_point_inline_macro:ABC_ALLOC__*/((Nwk_Man_t *) malloc(sizeof(Nwk_Man_t) * (size_t)(1)));"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 50,
+        "Column": 5,
+        "ByteOffset": 1433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( p, 0, sizeof(Nwk_Man_t) );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 74,
+        "Column": 79,
+        "ByteOffset": 2158
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.pName {    /*__starting_point_inline_macro:ABC_FREE__*/((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 75,
+        "Column": 79,
+        "ByteOffset": 2285
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    if p.pSpec {    /*__starting_point_inline_macro:ABC_FREE__*/((p.pSpec) ? (free((char *) (p.pSpec)), (p.pSpec) = 0) : 0); }"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 83,
+        "Column": 57,
+        "ByteOffset": 2724
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3436
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"LUTs by size: \" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 106,
+        "Column": 9,
+        "ByteOffset": 3516
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d:%d \", i, Counters[i] );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 137,
+        "Column": 74,
+        "ByteOffset": 4895
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((ParsBest.pName) ? (free((char *) (ParsBest.pName)), (ParsBest.pName) = 0) : 0);"
+    },
+    {
+      "Name": "strcmp",
+      "Status": "converted",
+      "Message": "Comparison sign retained; strings use the selected C-string representation.",
+      "Location": {
+        "Line": 148,
+        "Column": 11,
+        "ByteOffset": 5324
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "          strcmp(ParsBest.pName, pNtk.pName) ||"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 152,
+        "Column": 74,
+        "ByteOffset": 5676
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        /*__starting_point_inline_macro:ABC_FREE__*/((ParsBest.pName) ? (free((char *) (ParsBest.pName)), (ParsBest.pName) = 0) : 0);"
+    },
+    {
+      "Name": "sprintf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Destination assigned a Go string; matching uninitialized byte-array declarations are promoted to string.",
+      "Location": {
+        "Line": 240,
+        "Column": 9,
+        "ByteOffset": 8621
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        sprintf( Buffer, \"%s_dump.blif\", pNameGen );"
+    },
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 244,
+        "Column": 84,
+        "ByteOffset": 8918
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        if pNtk.pSpec { /*__starting_point_inline_macro:ABC_FREE__*/((pNameGen) ? (free((char *) (pNameGen)), (pNameGen) = 0) : 0); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 248,
+        "Column": 5,
+        "ByteOffset": 9008
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%-15s : \",      pNtk.pName );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 5,
+        "ByteOffset": 9051
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"pi = %5d  \",    Nwk_ManPiNum(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 9102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"po = %5d  \",    Nwk_ManPoNum(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 251,
+        "Column": 5,
+        "ByteOffset": 9153
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"ci = %5d  \",    Nwk_ManCiNum(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 252,
+        "Column": 5,
+        "ByteOffset": 9204
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"co = %5d  \",    Nwk_ManCoNum(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 254,
+        "Column": 5,
+        "ByteOffset": 9311
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"node = %5d  \",  Nwk_ManNodeNum(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 255,
+        "Column": 5,
+        "ByteOffset": 9364
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"edge = %5d  \",  Nwk_ManGetTotalFanins(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 256,
+        "Column": 5,
+        "ByteOffset": 9424
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"aig = %6d  \",   Nwk_ManGetAigNodeNum(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 257,
+        "Column": 5,
+        "ByteOffset": 9483
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"lev = %3d  \",   Nwk_ManLevel(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 259,
+        "Column": 5,
+        "ByteOffset": 9593
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"delay = %5.2f  \", Nwk_ManDelayTraceLut(pNtk) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 261,
+        "Column": 9,
+        "ByteOffset": 9674
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"power = %7.2f   \", Nwl_ManComputeTotalSwitching(pNtk) ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 263,
+        "Column": 5,
+        "ByteOffset": 9789
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 265,
+        "Column": 5,
+        "ByteOffset": 9856
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 265,
+        "Column": 13,
+        "ByteOffset": 9864
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    fflush( stdout );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Nwk_ManAlloc",
+      "Start": 1247,
+      "End": 1623,
+      "BodyStart": 1274,
+      "Original": "Nwk_Man_t * Nwk_ManAlloc()\n{\n    Nwk_Man_t * p;\n    p = ABC_ALLOC( Nwk_Man_t, 1 );\n    memset( p, 0, sizeof(Nwk_Man_t) );\n    p-\u003evCis = Vec_PtrAlloc( 1000 );\n    p-\u003evCos = Vec_PtrAlloc( 1000 );\n    p-\u003evObjs = Vec_PtrAlloc( 1000 );\n    p-\u003evTemp = Vec_PtrAlloc( 1000 );\n    p-\u003enFanioPlus = 2;\n    p-\u003epMemObjs = Aig_MmFlexStart();\n    p-\u003epManHop = Hop_ManStart();\n    return p;\n}",
+      "Draft": "func Nwk_ManAlloc() *Nwk_Man_t {\n    var p *Nwk_Man_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Nwk_Man_t *) malloc(sizeof(Nwk_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Nwk_Man_t) );\n    p.vCis = Vec_PtrAlloc( 1000 );\n    p.vCos = Vec_PtrAlloc( 1000 );\n    p.vObjs = Vec_PtrAlloc( 1000 );\n    p.vTemp = Vec_PtrAlloc( 1000 );\n    p.nFanioPlus = 2;\n    p.pMemObjs = Aig_MmFlexStart();\n    p.pManHop = Hop_ManStart();\n    return p;\n}"
+    },
+    {
+      "Name": "Nwk_ManFree",
+      "Start": 1883,
+      "End": 2449,
+      "BodyStart": 1917,
+      "Original": "void Nwk_ManFree( Nwk_Man_t * p )\n{\n//    printf( \"The number of realloced nodes = %d.\\n\", p-\u003enRealloced );\n    if ( p-\u003epName )    ABC_FREE( p-\u003epName );\n    if ( p-\u003epSpec )    ABC_FREE( p-\u003epSpec );\n    if ( p-\u003evCis )     Vec_PtrFree( p-\u003evCis );\n    if ( p-\u003evCos )     Vec_PtrFree( p-\u003evCos );\n    if ( p-\u003evObjs )    Vec_PtrFree( p-\u003evObjs );\n    if ( p-\u003evTemp )    Vec_PtrFree( p-\u003evTemp );\n    if ( p-\u003epManTime ) Tim_ManStop( p-\u003epManTime );\n    if ( p-\u003epMemObjs ) Aig_MmFlexStop( p-\u003epMemObjs, 0 );\n    if ( p-\u003epManHop )  Hop_ManStop( p-\u003epManHop );\n    ABC_FREE( p );\n}",
+      "Draft": "func Nwk_ManFree(p *Nwk_Man_t) {\n//    printf( \"The number of realloced nodes = %d.\\n\", p-\u003enRealloced );\n    // inlining of macro ABC_FREE\n    if p.pName {    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0); }\n    // inlining of macro ABC_FREE\n    if p.pSpec {    ((p.pSpec) ? (free((char *) (p.pSpec)), (p.pSpec) = 0) : 0); }\n    if p.vCis {     Vec_PtrFree( p.vCis ); }\n    if p.vCos {     Vec_PtrFree( p.vCos ); }\n    if p.vObjs {    Vec_PtrFree( p.vObjs ); }\n    if p.vTemp {    Vec_PtrFree( p.vTemp ); }\n    if p.pManTime { Tim_ManStop( p.pManTime ); }\n    if p.pMemObjs { Aig_MmFlexStop( p.pMemObjs, 0 ); }\n    if p.pManHop {  Hop_ManStop( p.pManHop ); }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Nwk_ManPrintLutSizes",
+      "Start": 2713,
+      "End": 3037,
+      "BodyStart": 2779,
+      "Original": "void Nwk_ManPrintLutSizes( Nwk_Man_t * p, If_LibLut_t * pLutLib )\n{\n    Nwk_Obj_t * pObj;\n    int i, Counters[256] = {0};\n    Nwk_ManForEachNode( p, pObj, i )\n        Counters[Nwk_ObjFaninNum(pObj)]++;\n    printf( \"LUTs by size: \" );\n    for ( i = 0; i \u003c= pLutLib-\u003eLutMax; i++ )\n        printf( \"%d:%d \", i, Counters[i] );\n}",
+      "Draft": "func Nwk_ManPrintLutSizes(p *Nwk_Man_t, pLutLib *If_LibLut_t) {\n    var pObj *Nwk_Obj_t;\n    var i int32;\n    var Counters [256]int32 ;\n    // inlining of macro Nwk_ManForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {         if (pObj) == nil || !Nwk_ObjIsNode(pObj) {} else {\n        Counters[Nwk_ObjFaninNum(pObj)]++; }\n    }\n    fmt.Printf(\"LUTs by size: \");\n    for  i = 0; i \u003c= pLutLib.LutMax; i++  {\n        fmt.Printf(\"%d:%d \", i, Counters[i]);\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ManCompareAndSaveBest",
+      "Start": 3550,
+      "End": 5465,
+      "BodyStart": 3613,
+      "Original": "int Nwk_ManCompareAndSaveBest( Nwk_Man_t * pNtk, void * pNtl )\n{\n//    extern void Ntl_WriteBlifLogic( Nwk_Man_t * pNtk, void * pNtl, char * pFileName );\n    extern void Nwk_ManDumpBlif( Nwk_Man_t * pNtk, char * pFileName, Vec_Ptr_t * vPiNames, Vec_Ptr_t * vPoNames );\n    static struct ParStruct {\n        char * pName;  // name of the best saved network\n        int    Depth;  // depth of the best saved network\n        int    Flops;  // flops in the best saved network \n        int    Nodes;  // nodes in the best saved network\n        int    nPis;   // the number of primary inputs\n        int    nPos;   // the number of primary outputs\n    } ParsNew, ParsBest = { 0 };\n    // free storage for the name\n    if ( pNtk == NULL )\n    {\n        ABC_FREE( ParsBest.pName );\n        return 0;\n    }\n    // get the parameters\n    ParsNew.Depth = Nwk_ManLevel( pNtk );\n    ParsNew.Flops = Nwk_ManLatchNum( pNtk );\n    ParsNew.Nodes = Nwk_ManNodeNum( pNtk );\n    ParsNew.nPis  = Nwk_ManPiNum( pNtk );\n    ParsNew.nPos  = Nwk_ManPoNum( pNtk );\n    // reset the parameters if the network has the same name\n    if (  ParsBest.pName == NULL ||\n          strcmp(ParsBest.pName, pNtk-\u003epName) ||\n          ParsBest.Depth \u003e  ParsNew.Depth ||\n         (ParsBest.Depth == ParsNew.Depth \u0026\u0026 ParsBest.Flops \u003e  ParsNew.Flops) ||\n         (ParsBest.Depth == ParsNew.Depth \u0026\u0026 ParsBest.Flops == ParsNew.Flops \u0026\u0026 ParsBest.Nodes \u003e  ParsNew.Nodes) )\n    {\n        ABC_FREE( ParsBest.pName );\n        ParsBest.pName = Abc_UtilStrsav( pNtk-\u003epName );\n        ParsBest.Depth = ParsNew.Depth; \n        ParsBest.Flops = ParsNew.Flops; \n        ParsBest.Nodes = ParsNew.Nodes; \n        ParsBest.nPis  = ParsNew.nPis; \n        ParsBest.nPos  = ParsNew.nPos;\n        // write the network\n//        Ntl_WriteBlifLogic( pNtk, pNtl, \"best.blif\" );\n//        Nwk_ManDumpBlif( pNtk, \"best_map.blif\", NULL, NULL );\n        return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Nwk_ManCompareAndSaveBest(pNtk *Nwk_Man_t, pNtl any) int32 {\n//    extern void Ntl_WriteBlifLogic( Nwk_Man_t * pNtk, void * pNtl, char * pFileName );\n    extern void Nwk_ManDumpBlif( Nwk_Man_t * pNtk, char * pFileName, Vec_Ptr_t * vPiNames, Vec_Ptr_t * vPoNames );\n    static struct ParStruct {\n        var pName string;  // name of the best saved network\n        var Depth int32;  // depth of the best saved network\n        var Flops int32;  // flops in the best saved network \n        var Nodes int32;  // nodes in the best saved network\n        var nPis int32;   // the number of primary inputs\n        var nPos int32;   // the number of primary outputs\n    }\n ParsNew, ParsBest = { 0 };\n    // free storage for the name\n    if pNtk == nil {\n        // inlining of macro ABC_FREE\n        ((ParsBest.pName) ? (free((char *) (ParsBest.pName)), (ParsBest.pName) = 0) : 0);\n        return 0;\n    }\n    // get the parameters\n    ParsNew.Depth = Nwk_ManLevel( pNtk );\n    ParsNew.Flops = Nwk_ManLatchNum( pNtk );\n    ParsNew.Nodes = Nwk_ManNodeNum( pNtk );\n    ParsNew.nPis  = Nwk_ManPiNum( pNtk );\n    ParsNew.nPos  = Nwk_ManPoNum( pNtk );\n    // reset the parameters if the network has the same name\n    if ParsBest.pName == nil ||\n          (int32(strings.Compare(ParsBest.pName, pNtk.pName)) != 0) ||\n          ParsBest.Depth \u003e  ParsNew.Depth ||\n         (ParsBest.Depth == ParsNew.Depth \u0026\u0026 ParsBest.Flops \u003e  ParsNew.Flops) ||\n         (ParsBest.Depth == ParsNew.Depth \u0026\u0026 ParsBest.Flops == ParsNew.Flops \u0026\u0026 ParsBest.Nodes \u003e  ParsNew.Nodes) {\n        // inlining of macro ABC_FREE\n        ((ParsBest.pName) ? (free((char *) (ParsBest.pName)), (ParsBest.pName) = 0) : 0);\n        ParsBest.pName = Abc_UtilStrsav( pNtk.pName );\n        ParsBest.Depth = ParsNew.Depth; \n        ParsBest.Flops = ParsNew.Flops; \n        ParsBest.Nodes = ParsNew.Nodes; \n        ParsBest.nPis  = ParsNew.nPis; \n        ParsBest.nPos  = ParsNew.nPos;\n        // write the network\n//        Ntl_WriteBlifLogic( pNtk, pNtl, \"best.blif\" );\n//        Nwk_ManDumpBlif( pNtk, \"best_map.blif\", NULL, NULL );\n        return 1;\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Nwk_FileNameGeneric",
+      "Start": 5686,
+      "End": 5876,
+      "BodyStart": 5732,
+      "Original": "char * Nwk_FileNameGeneric( char * FileName )\n{\n    char * pDot, * pRes;\n    pRes = Abc_UtilStrsav( FileName );\n    if ( (pDot = strrchr( pRes, '.' )) )\n        *pDot = 0;\n    return pRes;\n}",
+      "Draft": "func Nwk_FileNameGeneric(FileName string) string {\n    var pDot, pRes string;\n    pRes = Abc_UtilStrsav( FileName );\n    if pDot = strrchr( pRes, '.' ) {\n        *pDot = 0; }\n    return pRes;\n}"
+    },
+    {
+      "Name": "Nwl_ManComputeTotalSwitching",
+      "Start": 6147,
+      "End": 6948,
+      "BodyStart": 6202,
+      "Original": "float Nwl_ManComputeTotalSwitching( Nwk_Man_t * pNtk )\n{\n    extern Vec_Int_t * Saig_ManComputeSwitchProbs( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );\n    Vec_Int_t * vSwitching;\n    float * pSwitching;\n    Aig_Man_t * pAig;\n    Aig_Obj_t * pObjAig;\n    Nwk_Obj_t * pObjAbc;\n    float Result = (float)0;\n    int i;\n    // strash the network\n    // map network into an AIG\n    pAig = Nwk_ManStrash( pNtk );\n    vSwitching = Saig_ManComputeSwitchProbs( pAig, 48, 16, 0 );\n    pSwitching = (float *)vSwitching-\u003epArray;\n    Nwk_ManForEachObj( pNtk, pObjAbc, i )\n    {\n        if ( (pObjAig = Aig_Regular((Aig_Obj_t *)pObjAbc-\u003epCopy)) )\n            Result += Nwk_ObjFanoutNum(pObjAbc) * pSwitching[pObjAig-\u003eId];\n    }\n    Vec_IntFree( vSwitching );\n    Aig_ManStop( pAig );\n    return Result;\n}",
+      "Draft": "func Nwl_ManComputeTotalSwitching(pNtk *Nwk_Man_t) float32 {\n    extern Vec_Int_t * Saig_ManComputeSwitchProbs( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );\n    var vSwitching *Vec_Int_t;\n    var pSwitching *float32;\n    var pAig *Aig_Man_t;\n    var pObjAig *Aig_Obj_t;\n    var pObjAbc *Nwk_Obj_t;\n    var Result float32  = float32(0);\n    var i int32;\n    // strash the network\n    // map network into an AIG\n    pAig = Nwk_ManStrash( pNtk );\n    vSwitching = Saig_ManComputeSwitchProbs( pAig, 48, 16, 0 );\n    pSwitching = (float *)vSwitching.pArray;\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pObjAbc) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if pObjAbc == nil {} else {\n        if pObjAig = Aig_Regular((Aig_Obj_t *)pObjAbc.pCopy) {\n            Result += Nwk_ObjFanoutNum(pObjAbc) * pSwitching[pObjAig.Id]; }\n    }\n    }\n    Vec_IntFree( vSwitching );\n    Aig_ManStop( pAig );\n    return Result;\n}"
+    },
+    {
+      "Name": "Nwk_ManPrintStats",
+      "Start": 7213,
+      "End": 8892,
+      "BodyStart": 7341,
+      "Original": "void Nwk_ManPrintStats( Nwk_Man_t * pNtk, If_LibLut_t * pLutLib, int fSaveBest, int fDumpResult, int fPower, Ntl_Man_t * pNtl )\n{\n//    extern int Ntl_ManLatchNum( Ntl_Man_t * p );\n//    extern void Ntl_ManWriteBlifLogic( Nwk_Man_t * pNtk, void * pNtl, char * pFileName );\n    if ( fSaveBest )\n        Nwk_ManCompareAndSaveBest( pNtk, pNtl );\n    if ( fDumpResult )\n    {\n        char Buffer[1000] = {0};\n        const char * pNameGen = pNtk-\u003epSpec? Nwk_FileNameGeneric( pNtk-\u003epSpec ) : \"nameless_\";\n        sprintf( Buffer, \"%s_dump.blif\", pNameGen );\n//        Ntl_ManWriteBlifLogic( pNtk, pNtl, Buffer );\n//        sprintf( Buffer, \"%s_dump_map.blif\", pNameGen );\n//        Nwk_ManDumpBlif( pNtk, Buffer, NULL, NULL );\n        if ( pNtk-\u003epSpec ) ABC_FREE( pNameGen );\n    }\n\n    pNtk-\u003epLutLib = pLutLib;\n    printf( \"%-15s : \",      pNtk-\u003epName );\n    printf( \"pi = %5d  \",    Nwk_ManPiNum(pNtk) );\n    printf( \"po = %5d  \",    Nwk_ManPoNum(pNtk) );\n    printf( \"ci = %5d  \",    Nwk_ManCiNum(pNtk) );\n    printf( \"co = %5d  \",    Nwk_ManCoNum(pNtk) );\n//    printf( \"lat = %5d  \",   Ntl_ManLatchNum(pNtl) );\n    printf( \"node = %5d  \",  Nwk_ManNodeNum(pNtk) );\n    printf( \"edge = %5d  \",  Nwk_ManGetTotalFanins(pNtk) );\n    printf( \"aig = %6d  \",   Nwk_ManGetAigNodeNum(pNtk) );\n    printf( \"lev = %3d  \",   Nwk_ManLevel(pNtk) );\n//    printf( \"lev2 = %3d  \",  Nwk_ManLevelBackup(pNtk) );\n    printf( \"delay = %5.2f  \", Nwk_ManDelayTraceLut(pNtk) );\n    if ( fPower )\n        printf( \"power = %7.2f   \", Nwl_ManComputeTotalSwitching(pNtk) );\n    Nwk_ManPrintLutSizes( pNtk, pLutLib );\n    printf( \"\\n\" );\n//    Nwk_ManDelayTracePrint( pNtk, pLutLib );\n    fflush( stdout );\n}",
+      "Draft": "func Nwk_ManPrintStats(pNtk *Nwk_Man_t, pLutLib *If_LibLut_t, fSaveBest int32, fDumpResult int32, fPower int32, pNtl *Ntl_Man_t) {\n//    extern int Ntl_ManLatchNum( Ntl_Man_t * p );\n//    extern void Ntl_ManWriteBlifLogic( Nwk_Man_t * pNtk, void * pNtl, char * pFileName );\n    if fSaveBest != 0 {\n        Nwk_ManCompareAndSaveBest( pNtk, pNtl ); }\n    if fDumpResult != 0 {\n        var Buffer string // was [1000]byte in C\n\n        char * pNameGen = pNtk.pSpec? Nwk_FileNameGeneric( pNtk.pSpec ) : \"nameless_\";\n        Buffer = fmt.Sprintf(\"%s_dump.blif\", pNameGen);\n//        Ntl_ManWriteBlifLogic( pNtk, pNtl, Buffer );\n//        sprintf( Buffer, \"%s_dump_map.blif\", pNameGen );\n//        Nwk_ManDumpBlif( pNtk, Buffer, NULL, NULL );\n        // inlining of macro ABC_FREE\n        if pNtk.pSpec { ((pNameGen) ? (free((char *) (pNameGen)), (pNameGen) = 0) : 0); }\n    }\n\n    pNtk.pLutLib = pLutLib;\n    fmt.Printf(\"%-15s : \", pNtk.pName);\n    fmt.Printf(\"pi = %5d  \", Nwk_ManPiNum(pNtk));\n    fmt.Printf(\"po = %5d  \", Nwk_ManPoNum(pNtk));\n    fmt.Printf(\"ci = %5d  \", Nwk_ManCiNum(pNtk));\n    fmt.Printf(\"co = %5d  \", Nwk_ManCoNum(pNtk));\n//    printf( \"lat = %5d  \",   Ntl_ManLatchNum(pNtl) );\n    fmt.Printf(\"node = %5d  \", Nwk_ManNodeNum(pNtk));\n    fmt.Printf(\"edge = %5d  \", Nwk_ManGetTotalFanins(pNtk));\n    fmt.Printf(\"aig = %6d  \", Nwk_ManGetAigNodeNum(pNtk));\n    fmt.Printf(\"lev = %3d  \", Nwk_ManLevel(pNtk));\n//    printf( \"lev2 = %3d  \",  Nwk_ManLevelBackup(pNtk) );\n    fmt.Printf(\"delay = %5.2f  \", Nwk_ManDelayTraceLut(pNtk));\n    if fPower != 0 {\n        fmt.Printf(\"power = %7.2f   \", Nwl_ManComputeTotalSwitching(pNtk)); }\n    Nwk_ManPrintLutSizes( pNtk, pLutLib );\n    fmt.Printf(\"\\n\");\n//    Nwk_ManDelayTracePrint( pNtk, pLutLib );\n    fflush( os.Stdout );\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::mechanical::sizeof::1370",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1303,
+      "End": 1303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::mechanical::sizeof::1423",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1348,
+      "End": 1354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::mechanical::static::4331",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Local-static storage may be lifted when declarations and names are unambiguous. Review retained complex static initializers and shadowed names; deleting static changes lifetime.",
+      "Start": 3823,
+      "End": 3829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::pointer-cast::1349",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1303,
+      "End": 1303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::pointer-cast::2153",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2014,
+      "End": 2014
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::pointer-cast::2284",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2059,
+      "End": 2059
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::pointer-cast::2737",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2433,
+      "End": 2433
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::pointer-cast::3267",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2839,
+      "End": 2839
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::pointer-cast::4874",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4296,
+      "End": 4296
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::pointer-cast::5666",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4990,
+      "End": 4990
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::pointer-cast::7350",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6646,
+      "End": 6655
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::pointer-cast::7497",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6679,
+      "End": 6679
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::pointer-cast::7632",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 6759,
+      "End": 6772
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::pointer-cast::8899",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 7962,
+      "End": 7962
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::Nwk_ManAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1247,
+      "End": 1623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::ternary::Nwk_ManFree",
+      "Category": "ternary-review",
+      "Symbol": "Nwk_ManFree",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 1883,
+      "End": 2449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::Nwk_ManFree",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManFree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1883,
+      "End": 2449
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::Nwk_ManPrintLutSizes",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManPrintLutSizes",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2713,
+      "End": 3037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::void-pointer::Nwk_ManCompareAndSaveBest",
+      "Category": "void-pointer-review",
+      "Symbol": "Nwk_ManCompareAndSaveBest",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 3550,
+      "End": 5465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::ternary::Nwk_ManCompareAndSaveBest",
+      "Category": "ternary-review",
+      "Symbol": "Nwk_ManCompareAndSaveBest",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3550,
+      "End": 5465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::Nwk_ManCompareAndSaveBest",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManCompareAndSaveBest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3550,
+      "End": 5465
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::Nwk_FileNameGeneric",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_FileNameGeneric",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5686,
+      "End": 5876
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::Nwl_ManComputeTotalSwitching",
+      "Category": "semantic-review",
+      "Symbol": "Nwl_ManComputeTotalSwitching",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6147,
+      "End": 6948
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::ternary::Nwk_ManPrintStats",
+      "Category": "ternary-review",
+      "Symbol": "Nwk_ManPrintStats",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 7213,
+      "End": 8892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::Nwk_ManPrintStats",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManPrintStats",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7213,
+      "End": 8892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkMan.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9139
+    }
+  ],
+  "Draft": "package nwk\n\nimport (\n\t\"fmt\"\n\t\"os\"\n\t\"strings\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [nwkMan.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Logic network representation.]\n \n  Synopsis    [Network manager.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nwkMan.c,v 1.1 2008/10/10 14:09:30 mjarvin Exp $]\n\n***********************************************************************/\n\n//#include \"nwk.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManAlloc() *Nwk_Man_t {\n    var p *Nwk_Man_t;\n    // inlining of macro ABC_ALLOC\n    p = ((Nwk_Man_t *) malloc(sizeof(Nwk_Man_t) * (size_t)(1)));\n    memset( p, 0, sizeof(Nwk_Man_t) );\n    p.vCis = Vec_PtrAlloc( 1000 );\n    p.vCos = Vec_PtrAlloc( 1000 );\n    p.vObjs = Vec_PtrAlloc( 1000 );\n    p.vTemp = Vec_PtrAlloc( 1000 );\n    p.nFanioPlus = 2;\n    p.pMemObjs = Aig_MmFlexStart();\n    p.pManHop = Hop_ManStart();\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Deallocates the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManFree(p *Nwk_Man_t) {\n//    printf( \"The number of realloced nodes = %d.\\n\", p-\u003enRealloced );\n    // inlining of macro ABC_FREE\n    if p.pName {    ((p.pName) ? (free((char *) (p.pName)), (p.pName) = 0) : 0); }\n    // inlining of macro ABC_FREE\n    if p.pSpec {    ((p.pSpec) ? (free((char *) (p.pSpec)), (p.pSpec) = 0) : 0); }\n    if p.vCis {     Vec_PtrFree( p.vCis ); }\n    if p.vCos {     Vec_PtrFree( p.vCos ); }\n    if p.vObjs {    Vec_PtrFree( p.vObjs ); }\n    if p.vTemp {    Vec_PtrFree( p.vTemp ); }\n    if p.pManTime { Tim_ManStop( p.pManTime ); }\n    if p.pMemObjs { Aig_MmFlexStop( p.pMemObjs, 0 ); }\n    if p.pManHop {  Hop_ManStop( p.pManHop ); }\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Prints stats of the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManPrintLutSizes(p *Nwk_Man_t, pLutLib *If_LibLut_t) {\n    var pObj *Nwk_Obj_t;\n    var i int32;\n    var Counters [256]int32 ;\n    // inlining of macro Nwk_ManForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize(p.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(p.vObjs, i)), 1); i++  {         if (pObj) == nil || !Nwk_ObjIsNode(pObj) {} else {\n        Counters[Nwk_ObjFaninNum(pObj)]++; }\n    }\n    fmt.Printf(\"LUTs by size: \");\n    for  i = 0; i \u003c= pLutLib.LutMax; i++  {\n        fmt.Printf(\"%d:%d \", i, Counters[i]);\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [If the network is best, saves it in \"best.blif\" and returns 1.]\n\n  Description [If the networks are incomparable, saves the new network, \n  returns its parameters in the internal parameter structure, and returns 1.\n  If the new network is not a logic network, quits without saving and returns 0.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManCompareAndSaveBest(pNtk *Nwk_Man_t, pNtl any) int32 {\n//    extern void Ntl_WriteBlifLogic( Nwk_Man_t * pNtk, void * pNtl, char * pFileName );\n    extern void Nwk_ManDumpBlif( Nwk_Man_t * pNtk, char * pFileName, Vec_Ptr_t * vPiNames, Vec_Ptr_t * vPoNames );\n    static struct ParStruct {\n        var pName string;  // name of the best saved network\n        var Depth int32;  // depth of the best saved network\n        var Flops int32;  // flops in the best saved network \n        var Nodes int32;  // nodes in the best saved network\n        var nPis int32;   // the number of primary inputs\n        var nPos int32;   // the number of primary outputs\n    }\n ParsNew, ParsBest = { 0 };\n    // free storage for the name\n    if pNtk == nil {\n        // inlining of macro ABC_FREE\n        ((ParsBest.pName) ? (free((char *) (ParsBest.pName)), (ParsBest.pName) = 0) : 0);\n        return 0;\n    }\n    // get the parameters\n    ParsNew.Depth = Nwk_ManLevel( pNtk );\n    ParsNew.Flops = Nwk_ManLatchNum( pNtk );\n    ParsNew.Nodes = Nwk_ManNodeNum( pNtk );\n    ParsNew.nPis  = Nwk_ManPiNum( pNtk );\n    ParsNew.nPos  = Nwk_ManPoNum( pNtk );\n    // reset the parameters if the network has the same name\n    if ParsBest.pName == nil ||\n          (int32(strings.Compare(ParsBest.pName, pNtk.pName)) != 0) ||\n          ParsBest.Depth \u003e  ParsNew.Depth ||\n         (ParsBest.Depth == ParsNew.Depth \u0026\u0026 ParsBest.Flops \u003e  ParsNew.Flops) ||\n         (ParsBest.Depth == ParsNew.Depth \u0026\u0026 ParsBest.Flops == ParsNew.Flops \u0026\u0026 ParsBest.Nodes \u003e  ParsNew.Nodes) {\n        // inlining of macro ABC_FREE\n        ((ParsBest.pName) ? (free((char *) (ParsBest.pName)), (ParsBest.pName) = 0) : 0);\n        ParsBest.pName = Abc_UtilStrsav( pNtk.pName );\n        ParsBest.Depth = ParsNew.Depth; \n        ParsBest.Flops = ParsNew.Flops; \n        ParsBest.Nodes = ParsNew.Nodes; \n        ParsBest.nPis  = ParsNew.nPis; \n        ParsBest.nPos  = ParsNew.nPos;\n        // write the network\n//        Ntl_WriteBlifLogic( pNtk, pNtl, \"best.blif\" );\n//        Nwk_ManDumpBlif( pNtk, \"best_map.blif\", NULL, NULL );\n        return 1;\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n\n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_FileNameGeneric(FileName string) string {\n    var pDot, pRes string;\n    pRes = Abc_UtilStrsav( FileName );\n    if pDot = strrchr( pRes, '.' ) {\n        *pDot = 0; }\n    return pRes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks nodes for power-optimization.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwl_ManComputeTotalSwitching(pNtk *Nwk_Man_t) float32 {\n    extern Vec_Int_t * Saig_ManComputeSwitchProbs( Aig_Man_t * p, int nFrames, int nPref, int fProbOne );\n    var vSwitching *Vec_Int_t;\n    var pSwitching *float32;\n    var pAig *Aig_Man_t;\n    var pObjAig *Aig_Obj_t;\n    var pObjAbc *Nwk_Obj_t;\n    var Result float32  = float32(0);\n    var i int32;\n    // strash the network\n    // map network into an AIG\n    pAig = Nwk_ManStrash( pNtk );\n    vSwitching = Saig_ManComputeSwitchProbs( pAig, 48, 16, 0 );\n    pSwitching = (float *)vSwitching.pArray;\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(pNtk.vObjs)) \u0026\u0026 (((pObjAbc) = (Nwk_Obj_t *)Vec_PtrEntry(pNtk.vObjs, i)), 1); i++  {         if pObjAbc == nil {} else {\n        if pObjAig = Aig_Regular((Aig_Obj_t *)pObjAbc.pCopy) {\n            Result += Nwk_ObjFanoutNum(pObjAbc) * pSwitching[pObjAig.Id]; }\n    }\n    }\n    Vec_IntFree( vSwitching );\n    Aig_ManStop( pAig );\n    return Result;\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Prints stats of the manager.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManPrintStats(pNtk *Nwk_Man_t, pLutLib *If_LibLut_t, fSaveBest int32, fDumpResult int32, fPower int32, pNtl *Ntl_Man_t) {\n//    extern int Ntl_ManLatchNum( Ntl_Man_t * p );\n//    extern void Ntl_ManWriteBlifLogic( Nwk_Man_t * pNtk, void * pNtl, char * pFileName );\n    if fSaveBest != 0 {\n        Nwk_ManCompareAndSaveBest( pNtk, pNtl ); }\n    if fDumpResult != 0 {\n        var Buffer string // was [1000]byte in C\n\n        char * pNameGen = pNtk.pSpec? Nwk_FileNameGeneric( pNtk.pSpec ) : \"nameless_\";\n        Buffer = fmt.Sprintf(\"%s_dump.blif\", pNameGen);\n//        Ntl_ManWriteBlifLogic( pNtk, pNtl, Buffer );\n//        sprintf( Buffer, \"%s_dump_map.blif\", pNameGen );\n//        Nwk_ManDumpBlif( pNtk, Buffer, NULL, NULL );\n        // inlining of macro ABC_FREE\n        if pNtk.pSpec { ((pNameGen) ? (free((char *) (pNameGen)), (pNameGen) = 0) : 0); }\n    }\n\n    pNtk.pLutLib = pLutLib;\n    fmt.Printf(\"%-15s : \", pNtk.pName);\n    fmt.Printf(\"pi = %5d  \", Nwk_ManPiNum(pNtk));\n    fmt.Printf(\"po = %5d  \", Nwk_ManPoNum(pNtk));\n    fmt.Printf(\"ci = %5d  \", Nwk_ManCiNum(pNtk));\n    fmt.Printf(\"co = %5d  \", Nwk_ManCoNum(pNtk));\n//    printf( \"lat = %5d  \",   Ntl_ManLatchNum(pNtl) );\n    fmt.Printf(\"node = %5d  \", Nwk_ManNodeNum(pNtk));\n    fmt.Printf(\"edge = %5d  \", Nwk_ManGetTotalFanins(pNtk));\n    fmt.Printf(\"aig = %6d  \", Nwk_ManGetAigNodeNum(pNtk));\n    fmt.Printf(\"lev = %3d  \", Nwk_ManLevel(pNtk));\n//    printf( \"lev2 = %3d  \",  Nwk_ManLevelBackup(pNtk) );\n    fmt.Printf(\"delay = %5.2f  \", Nwk_ManDelayTraceLut(pNtk));\n    if fPower != 0 {\n        fmt.Printf(\"power = %7.2f   \", Nwl_ManComputeTotalSwitching(pNtk)); }\n    Nwk_ManPrintLutSizes( pNtk, pLutLib );\n    fmt.Printf(\"\\n\");\n//    Nwk_ManDelayTracePrint( pNtk, pLutLib );\n    fflush( os.Stdout );\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

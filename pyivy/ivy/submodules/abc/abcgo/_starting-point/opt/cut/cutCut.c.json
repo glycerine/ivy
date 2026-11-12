@@ -1,0 +1,466 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c",
+  "SHA256": "c87289369bdcbd80f2278fd82cbf126807672672fe1948f43708af417f7dde1e",
+  "Library": [
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1450
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    memset( pCut, 0, sizeof(Cut_Cut_t) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 126,
+        "Column": 9,
+        "ByteOffset": 3618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pCopy, pTemp, (size_t)p.EntrySize );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 271,
+        "Column": 5,
+        "ByteOffset": 7780
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( pCut.nLeaves \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 272,
+        "Column": 5,
+        "ByteOffset": 7812
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d : {\", pCut.nLeaves );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 275,
+        "Column": 13,
+        "ByteOffset": 7924
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %d\", pCut.pLeaves[i] \u003e\u003e CUT_SHIFT );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 277,
+        "Column": 17,
+        "ByteOffset": 8031
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"(%d)\", pCut.pLeaves[i] \u0026 CUT_MASK ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 280,
+        "Column": 13,
+        "ByteOffset": 8117
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \" %d\", pCut.pLeaves[i] ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 282,
+        "Column": 5,
+        "ByteOffset": 8163
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \" }\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 302,
+        "Column": 1,
+        "ByteOffset": 8677
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 318,
+        "Column": 5,
+        "ByteOffset": 9068
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 319,
+        "Column": 5,
+        "ByteOffset": 9088
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d : %5d %5d %5d %5d %5d\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 327,
+        "Column": 5,
+        "ByteOffset": 9424
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%d : %5d %5d %5d %5d %5d\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 336,
+        "Column": 9,
+        "ByteOffset": 9785
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot merge\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 338,
+        "Column": 9,
+        "ByteOffset": 9834
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%d : %5d %5d %5d %5d %5d\\n\", "
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Cut_CutAlloc",
+      "Start": 1275,
+      "End": 1737,
+      "BodyStart": 1317,
+      "Original": "Cut_Cut_t * Cut_CutAlloc( Cut_Man_t * p )\n{\n    Cut_Cut_t * pCut;\n    // cut allocation\n    pCut = (Cut_Cut_t *)Extra_MmFixedEntryFetch( p-\u003epMmCuts );\n    memset( pCut, 0, sizeof(Cut_Cut_t) );\n    pCut-\u003enVarsMax   = p-\u003epParams-\u003enVarsMax;\n    pCut-\u003efSimul     = p-\u003efSimul;\n    // statistics\n    p-\u003enCutsAlloc++;\n    p-\u003enCutsCur++;\n    if ( p-\u003enCutsPeak \u003c p-\u003enCutsAlloc - p-\u003enCutsDealloc )\n        p-\u003enCutsPeak = p-\u003enCutsAlloc - p-\u003enCutsDealloc;\n    return pCut;\n}",
+      "Draft": "func Cut_CutAlloc(p *Cut_Man_t) *Cut_Cut_t {\n    var pCut *Cut_Cut_t;\n    // cut allocation\n    pCut = (Cut_Cut_t *)Extra_MmFixedEntryFetch( p.pMmCuts );\n    memset( pCut, 0, sizeof(Cut_Cut_t) );\n    pCut.nVarsMax   = p.pParams.nVarsMax;\n    pCut.fSimul     = p.fSimul;\n    // statistics\n    p.nCutsAlloc++;\n    p.nCutsCur++;\n    if p.nCutsPeak \u003c p.nCutsAlloc - p.nCutsDealloc {\n        p.nCutsPeak = p.nCutsAlloc - p.nCutsDealloc; }\n    return pCut;\n}"
+    },
+    {
+      "Name": "Cut_CutRecycle",
+      "Start": 1990,
+      "End": 2203,
+      "BodyStart": 2045,
+      "Original": "void Cut_CutRecycle( Cut_Man_t * p, Cut_Cut_t * pCut )\n{\n    p-\u003enCutsDealloc++;\n    p-\u003enCutsCur--;\n    if ( pCut-\u003enLeaves == 1 )\n        p-\u003enCutsTriv--;\n    Extra_MmFixedEntryRecycle( p-\u003epMmCuts, (char *)pCut );\n}",
+      "Draft": "func Cut_CutRecycle(p *Cut_Man_t, pCut *Cut_Cut_t) {\n    p.nCutsDealloc++;\n    p.nCutsCur--;\n    if pCut.nLeaves == 1 {\n        p.nCutsTriv--; }\n    Extra_MmFixedEntryRecycle( p.pMmCuts, (char *)pCut );\n}"
+    },
+    {
+      "Name": "Cut_CutCompare",
+      "Start": 2457,
+      "End": 2878,
+      "BodyStart": 2516,
+      "Original": "int Cut_CutCompare( Cut_Cut_t * pCut1, Cut_Cut_t * pCut2 )\n{\n    int i;\n    if ( pCut1-\u003enLeaves \u003c pCut2-\u003enLeaves )\n        return -1;\n    if ( pCut1-\u003enLeaves \u003e pCut2-\u003enLeaves )\n        return 1;\n    for ( i = 0; i \u003c (int)pCut1-\u003enLeaves; i++ )\n    {\n        if ( pCut1-\u003epLeaves[i] \u003c pCut2-\u003epLeaves[i] )\n            return -1;\n        if ( pCut1-\u003epLeaves[i] \u003e pCut2-\u003epLeaves[i] )\n            return 1;\n    }\n    return 0;\n}",
+      "Draft": "func Cut_CutCompare(pCut1 *Cut_Cut_t, pCut2 *Cut_Cut_t) int32 {\n    var i int32;\n    if pCut1.nLeaves \u003c pCut2.nLeaves {\n        return -1; }\n    if pCut1.nLeaves \u003e pCut2.nLeaves {\n        return 1; }\n    for  i = 0; i \u003c int32(pCut1.nLeaves); i++  {\n        if pCut1.pLeaves[i] \u003c pCut2.pLeaves[i] {\n            return -1; }\n        if pCut1.pLeaves[i] \u003e pCut2.pLeaves[i] {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Cut_CutDupList",
+      "Start": 3134,
+      "End": 3596,
+      "BodyStart": 3197,
+      "Original": "Cut_Cut_t * Cut_CutDupList( Cut_Man_t * p, Cut_Cut_t * pList )\n{\n    Cut_Cut_t * pHead = NULL, ** ppTail = \u0026pHead;\n    Cut_Cut_t * pTemp, * pCopy;\n    if ( pList == NULL )\n        return NULL;\n    Cut_ListForEachCut( pList, pTemp )\n    {\n        pCopy = (Cut_Cut_t *)Extra_MmFixedEntryFetch( p-\u003epMmCuts );\n        memcpy( pCopy, pTemp, (size_t)p-\u003eEntrySize );\n        *ppTail = pCopy;\n        ppTail = \u0026pCopy-\u003epNext;\n    }\n    *ppTail = NULL;\n    return pHead;\n}",
+      "Draft": "func Cut_CutDupList(p *Cut_Man_t, pList *Cut_Cut_t) *Cut_Cut_t {\n    var pHead *Cut_Cut_t = nil;\n    var ppTail **Cut_Cut_t = \u0026pHead;\n    var pTemp, pCopy *Cut_Cut_t;\n    if pList == nil {\n        return nil; }\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp = pList;                                             pTemp;                                                     pTemp = pTemp.pNext  {\n        pCopy = (Cut_Cut_t *)Extra_MmFixedEntryFetch( p.pMmCuts );\n        memcpy( pCopy, pTemp, (size_t)p.EntrySize );\n        *ppTail = pCopy;\n        ppTail = \u0026pCopy.pNext;\n    }\n    *ppTail = nil;\n    return pHead;\n}"
+    },
+    {
+      "Name": "Cut_CutRecycleList",
+      "Start": 3850,
+      "End": 4056,
+      "BodyStart": 3910,
+      "Original": "void Cut_CutRecycleList( Cut_Man_t * p, Cut_Cut_t * pList )\n{\n    Cut_Cut_t * pCut, * pCut2;\n    Cut_ListForEachCutSafe( pList, pCut, pCut2 )\n        Extra_MmFixedEntryRecycle( p-\u003epMmCuts, (char *)pCut );\n}",
+      "Draft": "func Cut_CutRecycleList(p *Cut_Man_t, pList *Cut_Cut_t) {\n    var pCut, pCut2 *Cut_Cut_t;\n    // inlining of macro Cut_ListForEachCutSafe\n    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n        Extra_MmFixedEntryRecycle( p.pMmCuts, (char *)pCut );\n    }\n}"
+    },
+    {
+      "Name": "Cut_CutCountList",
+      "Start": 4330,
+      "End": 4474,
+      "BodyStart": 4372,
+      "Original": "int Cut_CutCountList( Cut_Cut_t * pList )\n{\n    int Counter = 0;\n    Cut_ListForEachCut( pList, pList )\n        Counter++;\n    return Counter;\n}",
+      "Draft": "func Cut_CutCountList(pList *Cut_Cut_t) int32 {\n    var Counter int32;\n    // inlining of macro Cut_ListForEachCut\n    for  pList = pList;                                             (pList != nil);                                                     pList = pList.pNext  {\n        Counter++;\n    }\n    return Counter;\n}"
+    },
+    {
+      "Name": "Cut_CutMergeLists",
+      "Start": 4750,
+      "End": 5280,
+      "BodyStart": 4822,
+      "Original": "Cut_Cut_t * Cut_CutMergeLists( Cut_Cut_t * pList1, Cut_Cut_t * pList2 )\n{\n    Cut_Cut_t * pList = NULL, ** ppTail = \u0026pList;\n    Cut_Cut_t * pCut;\n    while ( pList1 \u0026\u0026 pList2 )\n    {\n        if ( Cut_CutCompare(pList1, pList2) \u003c 0 )\n        {\n            pCut = pList1;\n            pList1 = pList1-\u003epNext;\n        }\n        else\n        {\n            pCut = pList2;\n            pList2 = pList2-\u003epNext;\n        }\n        *ppTail = pCut;\n        ppTail = \u0026pCut-\u003epNext;\n    }\n    *ppTail = pList1? pList1: pList2;\n    return pList;\n}",
+      "Draft": "func Cut_CutMergeLists(pList1 *Cut_Cut_t, pList2 *Cut_Cut_t) *Cut_Cut_t {\n    var pList *Cut_Cut_t = nil;\n    var ppTail **Cut_Cut_t = \u0026pList;\n    var pCut *Cut_Cut_t;\n    for  (pList1 != nil) \u0026\u0026 (pList2 != nil)  {\n        if Cut_CutCompare(pList1, pList2) \u003c 0 {\n            pCut = pList1;\n            pList1 = pList1.pNext;\n        \n        } else {\n            pCut = pList2;\n            pList2 = pList2.pNext;\n        }\n        *ppTail = pCut;\n        ppTail = \u0026pCut.pNext;\n    }\n    *ppTail = pList1? pList1: pList2;\n    return pList;\n}"
+    },
+    {
+      "Name": "Cut_CutNumberList",
+      "Start": 5556,
+      "End": 5704,
+      "BodyStart": 5600,
+      "Original": "void Cut_CutNumberList( Cut_Cut_t * pList )\n{\n    Cut_Cut_t * pCut;\n    int i = 0;\n    Cut_ListForEachCut( pList, pCut )\n        pCut-\u003eNum0 = i++;\n}",
+      "Draft": "func Cut_CutNumberList(pList *Cut_Cut_t) {\n    var pCut *Cut_Cut_t;\n    var i int32;\n    // inlining of macro Cut_ListForEachCut\n    for  pCut = pList;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n        pCut.Num0 = i++;\n    }\n}"
+    },
+    {
+      "Name": "Cut_CutCreateTriv",
+      "Start": 5964,
+      "End": 6663,
+      "BodyStart": 6021,
+      "Original": "Cut_Cut_t * Cut_CutCreateTriv( Cut_Man_t * p, int Node )\n{\n    Cut_Cut_t * pCut;\n    if ( p-\u003epParams-\u003efSeq )\n        Node \u003c\u003c= CUT_SHIFT;\n    pCut = Cut_CutAlloc( p );\n    pCut-\u003enLeaves    = 1;\n    pCut-\u003epLeaves[0] = Node;\n    pCut-\u003euSign      = Cut_NodeSign( Node );\n    if ( p-\u003epParams-\u003efTruth )\n    {\n/*\n        if ( pCut-\u003enVarsMax == 4 )\n            Cut_CutWriteTruth( pCut, p-\u003euTruthVars[0] );\n        else\n            Extra_BitCopy( pCut-\u003enLeaves, p-\u003euTruths[0], (uint8*)Cut_CutReadTruth(pCut) );\n*/\n        unsigned * pTruth = Cut_CutReadTruth(pCut);\n        int i;\n        for ( i = 0; i \u003c p-\u003enTruthWords; i++ )\n            pTruth[i] = 0xAAAAAAAA;\n    }\n    p-\u003enCutsTriv++;\n    return pCut;\n}",
+      "Draft": "func Cut_CutCreateTriv(p *Cut_Man_t, Node int32) *Cut_Cut_t {\n    var pCut *Cut_Cut_t;\n    if p.pParams.fSeq {\n        Node \u003c\u003c= CUT_SHIFT; }\n    pCut = Cut_CutAlloc( p );\n    pCut.nLeaves    = 1;\n    pCut.pLeaves[0] = Node;\n    pCut.uSign      = Cut_NodeSign( Node );\n    if p.pParams.fTruth {\n/*\n        if ( pCut-\u003enVarsMax == 4 )\n            Cut_CutWriteTruth( pCut, p-\u003euTruthVars[0] );\n        else\n            Extra_BitCopy( pCut-\u003enLeaves, p-\u003euTruths[0], (uint8*)Cut_CutReadTruth(pCut) );\n*/\n        var pTruth *uint32  = Cut_CutReadTruth(pCut);\n        var i int32;\n        for  i = 0; i \u003c p.nTruthWords; i++  {\n            pTruth[i] = 0xAAAAAAAA;\n        }\n    }\n    p.nCutsTriv++;\n    return pCut;\n}"
+    },
+    {
+      "Name": "Cut_CutPrint",
+      "Start": 6915,
+      "End": 7480,
+      "BodyStart": 6963,
+      "Original": "void Cut_CutPrint( Cut_Cut_t * pCut, int fSeq )\n{\n    int i;\n    assert( pCut-\u003enLeaves \u003e 0 );\n    printf( \"%d : {\", pCut-\u003enLeaves );\n    for ( i = 0; i \u003c (int)pCut-\u003enLeaves; i++ )\n    {\n        if ( fSeq )\n        {\n            printf( \" %d\", pCut-\u003epLeaves[i] \u003e\u003e CUT_SHIFT );\n            if ( pCut-\u003epLeaves[i] \u0026 CUT_MASK )\n                printf( \"(%d)\", pCut-\u003epLeaves[i] \u0026 CUT_MASK );\n        }\n        else\n            printf( \" %d\", pCut-\u003epLeaves[i] );\n    }\n    printf( \" }\" );\n//    printf( \"\\nSign = \" );\n//    Extra_PrintBinary( stdout, \u0026pCut-\u003euSign, 32 );\n}",
+      "Draft": "func Cut_CutPrint(pCut *Cut_Cut_t, fSeq int32) {\n    var i int32;\n    assert(pCut.nLeaves \u003e 0, \"pCut.nLeaves \u003e 0\");\n    fmt.Printf(\"%d : {\", pCut.nLeaves);\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        if fSeq != 0 {\n            fmt.Printf(\" %d\", pCut.pLeaves[i] \u003e\u003e CUT_SHIFT);\n            if pCut.pLeaves[i] \u0026 CUT_MASK {\n                fmt.Printf(\"(%d)\", pCut.pLeaves[i] \u0026 CUT_MASK); }\n        \n        } else {\n            fmt.Printf(\" %d\", pCut.pLeaves[i]); }\n    }\n    fmt.Printf(\" }\");\n//    printf( \"\\nSign = \" );\n//    Extra_PrintBinary( stdout, \u0026pCut-\u003euSign, 32 );\n}"
+    },
+    {
+      "Name": "Cut_CutPrintList",
+      "Start": 7730,
+      "End": 7911,
+      "BodyStart": 7783,
+      "Original": "void Cut_CutPrintList( Cut_Cut_t * pList, int fSeq )\n{\n    Cut_Cut_t * pCut;\n    for ( pCut = pList; pCut; pCut = pCut-\u003epNext )\n        Cut_CutPrint( pCut, fSeq ), printf( \"\\n\" );\n}",
+      "Draft": "func Cut_CutPrintList(pList *Cut_Cut_t, fSeq int32) {\n    var pCut *Cut_Cut_t;\n    for  pCut = pList; (pCut != nil); pCut = pCut.pNext  {\n        Cut_CutPrint( pCut, fSeq );\nfmt.Printf(\"\\n\");\n    }\n}"
+    },
+    {
+      "Name": "Cut_CutPrintMerge",
+      "Start": 8197,
+      "End": 9432,
+      "BodyStart": 8278,
+      "Original": "void Cut_CutPrintMerge( Cut_Cut_t * pCut, Cut_Cut_t * pCut0, Cut_Cut_t * pCut1 )\n{\n    printf( \"\\n\" );\n    printf( \"%d : %5d %5d %5d %5d %5d\\n\", \n        pCut0-\u003enLeaves, \n        pCut0-\u003enLeaves \u003e 0 ? pCut0-\u003epLeaves[0] : -1, \n        pCut0-\u003enLeaves \u003e 1 ? pCut0-\u003epLeaves[1] : -1, \n        pCut0-\u003enLeaves \u003e 2 ? pCut0-\u003epLeaves[2] : -1, \n        pCut0-\u003enLeaves \u003e 3 ? pCut0-\u003epLeaves[3] : -1, \n        pCut0-\u003enLeaves \u003e 4 ? pCut0-\u003epLeaves[4] : -1\n        );\n    printf( \"%d : %5d %5d %5d %5d %5d\\n\", \n        pCut1-\u003enLeaves, \n        pCut1-\u003enLeaves \u003e 0 ? pCut1-\u003epLeaves[0] : -1, \n        pCut1-\u003enLeaves \u003e 1 ? pCut1-\u003epLeaves[1] : -1, \n        pCut1-\u003enLeaves \u003e 2 ? pCut1-\u003epLeaves[2] : -1, \n        pCut1-\u003enLeaves \u003e 3 ? pCut1-\u003epLeaves[3] : -1, \n        pCut1-\u003enLeaves \u003e 4 ? pCut1-\u003epLeaves[4] : -1\n        );\n    if ( pCut == NULL )\n        printf( \"Cannot merge\\n\" );\n    else\n        printf( \"%d : %5d %5d %5d %5d %5d\\n\", \n            pCut-\u003enLeaves, \n            pCut-\u003enLeaves \u003e 0 ? pCut-\u003epLeaves[0] : -1, \n            pCut-\u003enLeaves \u003e 1 ? pCut-\u003epLeaves[1] : -1, \n            pCut-\u003enLeaves \u003e 2 ? pCut-\u003epLeaves[2] : -1, \n            pCut-\u003enLeaves \u003e 3 ? pCut-\u003epLeaves[3] : -1, \n            pCut-\u003enLeaves \u003e 4 ? pCut-\u003epLeaves[4] : -1\n            );\n}",
+      "Draft": "func Cut_CutPrintMerge(pCut *Cut_Cut_t, pCut0 *Cut_Cut_t, pCut1 *Cut_Cut_t) {\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"%d : %5d %5d %5d %5d %5d\\n\", pCut0.nLeaves, pCut0.nLeaves \u003e 0 ? pCut0.pLeaves[0] : -1, pCut0.nLeaves \u003e 1 ? pCut0.pLeaves[1] : -1, pCut0.nLeaves \u003e 2 ? pCut0.pLeaves[2] : -1, pCut0.nLeaves \u003e 3 ? pCut0.pLeaves[3] : -1, pCut0.nLeaves \u003e 4 ? pCut0.pLeaves[4] : -1);\n    fmt.Printf(\"%d : %5d %5d %5d %5d %5d\\n\", pCut1.nLeaves, pCut1.nLeaves \u003e 0 ? pCut1.pLeaves[0] : -1, pCut1.nLeaves \u003e 1 ? pCut1.pLeaves[1] : -1, pCut1.nLeaves \u003e 2 ? pCut1.pLeaves[2] : -1, pCut1.nLeaves \u003e 3 ? pCut1.pLeaves[3] : -1, pCut1.nLeaves \u003e 4 ? pCut1.pLeaves[4] : -1);\n    if pCut == nil {\n        fmt.Printf(\"Cannot merge\\n\");\n    } else {\n        fmt.Printf(\"%d : %5d %5d %5d %5d %5d\\n\", pCut.nLeaves, pCut.nLeaves \u003e 0 ? pCut.pLeaves[0] : -1, pCut.nLeaves \u003e 1 ? pCut.pLeaves[1] : -1, pCut.nLeaves \u003e 2 ? pCut.pLeaves[2] : -1, pCut.nLeaves \u003e 3 ? pCut.pLeaves[3] : -1, pCut.nLeaves \u003e 4 ? pCut.pLeaves[4] : -1); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::mechanical::sizeof::1447",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 1447,
+      "End": 1453
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::pointer-cast::1374",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1374,
+      "End": 1387
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::pointer-cast::2186",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2186,
+      "End": 2194
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::pointer-cast::3554",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3388,
+      "End": 3401
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::pointer-cast::4490",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 4039,
+      "End": 4047
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::Cut_CutAlloc",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutAlloc",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1275,
+      "End": 1737
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::Cut_CutRecycle",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutRecycle",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1990,
+      "End": 2203
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::Cut_CutCompare",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutCompare",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2457,
+      "End": 2878
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::Cut_CutDupList",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutDupList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3134,
+      "End": 3596
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::ternary::Cut_CutRecycleList",
+      "Category": "ternary-review",
+      "Symbol": "Cut_CutRecycleList",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3850,
+      "End": 4056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::Cut_CutRecycleList",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutRecycleList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3850,
+      "End": 4056
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::Cut_CutCountList",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutCountList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4330,
+      "End": 4474
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::ternary::Cut_CutMergeLists",
+      "Category": "ternary-review",
+      "Symbol": "Cut_CutMergeLists",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 4750,
+      "End": 5280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::Cut_CutMergeLists",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutMergeLists",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4750,
+      "End": 5280
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::Cut_CutNumberList",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutNumberList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5556,
+      "End": 5704
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::Cut_CutCreateTriv",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutCreateTriv",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5964,
+      "End": 6663
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::Cut_CutPrint",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6915,
+      "End": 7480
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::Cut_CutPrintList",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutPrintList",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7730,
+      "End": 7911
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::ternary::Cut_CutPrintMerge",
+      "Category": "ternary-review",
+      "Symbol": "Cut_CutPrintMerge",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 8197,
+      "End": 9432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::Cut_CutPrintMerge",
+      "Category": "semantic-review",
+      "Symbol": "Cut_CutPrintMerge",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8197,
+      "End": 9432
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/cut/cutCut.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 9679
+    }
+  ],
+  "Draft": "package cut\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [cutNode.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [K-feasible cut computation package.]\n\n  Synopsis    [Procedures to compute cuts for a node.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: cutNode.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"cutInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Allocates the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutAlloc(p *Cut_Man_t) *Cut_Cut_t {\n    var pCut *Cut_Cut_t;\n    // cut allocation\n    pCut = (Cut_Cut_t *)Extra_MmFixedEntryFetch( p.pMmCuts );\n    memset( pCut, 0, sizeof(Cut_Cut_t) );\n    pCut.nVarsMax   = p.pParams.nVarsMax;\n    pCut.fSimul     = p.fSimul;\n    // statistics\n    p.nCutsAlloc++;\n    p.nCutsCur++;\n    if p.nCutsPeak \u003c p.nCutsAlloc - p.nCutsDealloc {\n        p.nCutsPeak = p.nCutsAlloc - p.nCutsDealloc; }\n    return pCut;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recybles the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutRecycle(p *Cut_Man_t, pCut *Cut_Cut_t) {\n    p.nCutsDealloc++;\n    p.nCutsCur--;\n    if pCut.nLeaves == 1 {\n        p.nCutsTriv--; }\n    Extra_MmFixedEntryRecycle( p.pMmCuts, (char *)pCut );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Compares two cuts.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutCompare(pCut1 *Cut_Cut_t, pCut2 *Cut_Cut_t) int32 {\n    var i int32;\n    if pCut1.nLeaves \u003c pCut2.nLeaves {\n        return -1; }\n    if pCut1.nLeaves \u003e pCut2.nLeaves {\n        return 1; }\n    for  i = 0; i \u003c int32(pCut1.nLeaves); i++  {\n        if pCut1.pLeaves[i] \u003c pCut2.pLeaves[i] {\n            return -1; }\n        if pCut1.pLeaves[i] \u003e pCut2.pLeaves[i] {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Duplicates the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutDupList(p *Cut_Man_t, pList *Cut_Cut_t) *Cut_Cut_t {\n    var pHead *Cut_Cut_t = nil;\n    var ppTail **Cut_Cut_t = \u0026pHead;\n    var pTemp, pCopy *Cut_Cut_t;\n    if pList == nil {\n        return nil; }\n    // inlining of macro Cut_ListForEachCut\n    for  pTemp = pList;                                             pTemp;                                                     pTemp = pTemp.pNext  {\n        pCopy = (Cut_Cut_t *)Extra_MmFixedEntryFetch( p.pMmCuts );\n        memcpy( pCopy, pTemp, (size_t)p.EntrySize );\n        *ppTail = pCopy;\n        ppTail = \u0026pCopy.pNext;\n    }\n    *ppTail = nil;\n    return pHead;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recycles the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutRecycleList(p *Cut_Man_t, pList *Cut_Cut_t) {\n    var pCut, pCut2 *Cut_Cut_t;\n    // inlining of macro Cut_ListForEachCutSafe\n    for  pCut = pList,                                             pCut2 = pCut? pCut.pNext: nil;                          (pCut != nil);                                                     pCut = pCut2,                                             pCut2 = pCut? pCut.pNext: nil  {\n        Extra_MmFixedEntryRecycle( p.pMmCuts, (char *)pCut );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Counts the number of cuts in the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutCountList(pList *Cut_Cut_t) int32 {\n    var Counter int32;\n    // inlining of macro Cut_ListForEachCut\n    for  pList = pList;                                             (pList != nil);                                                     pList = pList.pNext  {\n        Counter++;\n    }\n    return Counter;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Merges two NULL-terminated linked lists.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutMergeLists(pList1 *Cut_Cut_t, pList2 *Cut_Cut_t) *Cut_Cut_t {\n    var pList *Cut_Cut_t = nil;\n    var ppTail **Cut_Cut_t = \u0026pList;\n    var pCut *Cut_Cut_t;\n    for  (pList1 != nil) \u0026\u0026 (pList2 != nil)  {\n        if Cut_CutCompare(pList1, pList2) \u003c 0 {\n            pCut = pList1;\n            pList1 = pList1.pNext;\n        \n        } else {\n            pCut = pList2;\n            pList2 = pList2.pNext;\n        }\n        *ppTail = pCut;\n        ppTail = \u0026pCut.pNext;\n    }\n    *ppTail = pList1? pList1: pList2;\n    return pList;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Sets the number of the cuts in the list.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutNumberList(pList *Cut_Cut_t) {\n    var pCut *Cut_Cut_t;\n    var i int32;\n    // inlining of macro Cut_ListForEachCut\n    for  pCut = pList;                                             (pCut != nil);                                                     pCut = pCut.pNext  {\n        pCut.Num0 = i++;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Creates the trivial cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutCreateTriv(p *Cut_Man_t, Node int32) *Cut_Cut_t {\n    var pCut *Cut_Cut_t;\n    if p.pParams.fSeq {\n        Node \u003c\u003c= CUT_SHIFT; }\n    pCut = Cut_CutAlloc( p );\n    pCut.nLeaves    = 1;\n    pCut.pLeaves[0] = Node;\n    pCut.uSign      = Cut_NodeSign( Node );\n    if p.pParams.fTruth {\n/*\n        if ( pCut-\u003enVarsMax == 4 )\n            Cut_CutWriteTruth( pCut, p-\u003euTruthVars[0] );\n        else\n            Extra_BitCopy( pCut-\u003enLeaves, p-\u003euTruths[0], (uint8*)Cut_CutReadTruth(pCut) );\n*/\n        var pTruth *uint32  = Cut_CutReadTruth(pCut);\n        var i int32;\n        for  i = 0; i \u003c p.nTruthWords; i++  {\n            pTruth[i] = 0xAAAAAAAA;\n        }\n    }\n    p.nCutsTriv++;\n    return pCut;\n} \n\n\n/**Function*************************************************************\n\n  Synopsis    [Print the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutPrint(pCut *Cut_Cut_t, fSeq int32) {\n    var i int32;\n    assert(pCut.nLeaves \u003e 0, \"pCut.nLeaves \u003e 0\");\n    fmt.Printf(\"%d : {\", pCut.nLeaves);\n    for  i = 0; i \u003c int32(pCut.nLeaves); i++  {\n        if fSeq != 0 {\n            fmt.Printf(\" %d\", pCut.pLeaves[i] \u003e\u003e CUT_SHIFT);\n            if pCut.pLeaves[i] \u0026 CUT_MASK {\n                fmt.Printf(\"(%d)\", pCut.pLeaves[i] \u0026 CUT_MASK); }\n        \n        } else {\n            fmt.Printf(\" %d\", pCut.pLeaves[i]); }\n    }\n    fmt.Printf(\" }\");\n//    printf( \"\\nSign = \" );\n//    Extra_PrintBinary( stdout, \u0026pCut-\u003euSign, 32 );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Print the cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutPrintList(pList *Cut_Cut_t, fSeq int32) {\n    var pCut *Cut_Cut_t;\n    for  pCut = pList; (pCut != nil); pCut = pCut.pNext  {\n        Cut_CutPrint( pCut, fSeq );\nfmt.Printf(\"\\n\");\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Consider dropping cuts if they are useless by now.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Cut_CutPrintMerge(pCut *Cut_Cut_t, pCut0 *Cut_Cut_t, pCut1 *Cut_Cut_t) {\n    fmt.Printf(\"\\n\");\n    fmt.Printf(\"%d : %5d %5d %5d %5d %5d\\n\", pCut0.nLeaves, pCut0.nLeaves \u003e 0 ? pCut0.pLeaves[0] : -1, pCut0.nLeaves \u003e 1 ? pCut0.pLeaves[1] : -1, pCut0.nLeaves \u003e 2 ? pCut0.pLeaves[2] : -1, pCut0.nLeaves \u003e 3 ? pCut0.pLeaves[3] : -1, pCut0.nLeaves \u003e 4 ? pCut0.pLeaves[4] : -1);\n    fmt.Printf(\"%d : %5d %5d %5d %5d %5d\\n\", pCut1.nLeaves, pCut1.nLeaves \u003e 0 ? pCut1.pLeaves[0] : -1, pCut1.nLeaves \u003e 1 ? pCut1.pLeaves[1] : -1, pCut1.nLeaves \u003e 2 ? pCut1.pLeaves[2] : -1, pCut1.nLeaves \u003e 3 ? pCut1.pLeaves[3] : -1, pCut1.nLeaves \u003e 4 ? pCut1.pLeaves[4] : -1);\n    if pCut == nil {\n        fmt.Printf(\"Cannot merge\\n\");\n    } else {\n        fmt.Printf(\"%d : %5d %5d %5d %5d %5d\\n\", pCut.nLeaves, pCut.nLeaves \u003e 0 ? pCut.pLeaves[0] : -1, pCut.nLeaves \u003e 1 ? pCut.pLeaves[1] : -1, pCut.nLeaves \u003e 2 ? pCut.pLeaves[2] : -1, pCut.nLeaves \u003e 3 ? pCut.pLeaves[3] : -1, pCut.nLeaves \u003e 4 ? pCut.pLeaves[4] : -1); }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

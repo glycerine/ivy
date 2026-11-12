@@ -1,0 +1,530 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCl.c",
+  "SHA256": "9320cf1316642ede14826797607a5dad4e0b2bb68def8c4dcc67a6a29ad49ade",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 57,
+        "Column": 9,
+        "ByteOffset": 1618
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 73,
+        "Column": 5,
+        "ByteOffset": 2379
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( p.pMuxes == nil );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 112,
+        "Column": 17,
+        "ByteOffset": 4049
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"XORs do not form a continuous sequence\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 122,
+        "Column": 13,
+        "ByteOffset": 4433
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Both inputs of top level XOR have XOR/non-XOR\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 132,
+        "Column": 9,
+        "ByteOffset": 5034
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%2d : \", i );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 133,
+        "Column": 9,
+        "ByteOffset": 5065
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%4d \u003c- \", Vec_IntEntry(vRootXorSet, 4*i) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 134,
+        "Column": 9,
+        "ByteOffset": 5126
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%4d \", Vec_IntEntry(vRootXorSet, 4*i+1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 135,
+        "Column": 9,
+        "ByteOffset": 5186
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%4d \", Vec_IntEntry(vRootXorSet, 4*i+2) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 136,
+        "Column": 9,
+        "ByteOffset": 5246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"%4d \", Vec_IntEntry(vRootXorSet, 4*i+3) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 137,
+        "Column": 9,
+        "ByteOffset": 5306
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 175,
+        "Column": 5,
+        "ByteOffset": 6308
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Lit0 != -1 || Lit1 != -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 177,
+        "Column": 9,
+        "ByteOffset": 6386
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Lit0 == Lit1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 178,
+        "Column": 9,
+        "ByteOffset": 6418
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Problem for leaf %d\\n\", Leaf );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 207,
+        "Column": 5,
+        "ByteOffset": 7102
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsAnd(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 231,
+        "Column": 9,
+        "ByteOffset": 8266
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Out %4d : %4d  \\n\", i, Vec_IntEntry(vRootXorSet, 4*i+1) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 234,
+        "Column": 9,
+        "ByteOffset": 8374
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cone:\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 246,
+        "Column": 13,
+        "ByteOffset": 9108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"%d(%d)  \", Node, Abc_LitIsCompl(Pol) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 249,
+        "Column": 9,
+        "ByteOffset": 9176
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 335,
+        "Column": 5,
+        "ByteOffset": 11997
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Detected %d top XORs.  \", Vec_IntSize(vRootXorSet)/4 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 364,
+        "Column": 5,
+        "ByteOffset": 12994
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( iStart \u003c Gia_ManCoNum(p) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 369,
+        "Column": 9,
+        "ByteOffset": 13309
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vLevel) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 370,
+        "Column": 9,
+        "ByteOffset": 13352
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(vLevel) \u003c= 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 386,
+        "Column": 5,
+        "ByteOffset": 14012
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(vRes) \u003e= Gia_ManCoNum(p) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 388,
+        "Column": 5,
+        "ByteOffset": 14108
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Added %d adders for replace CLAs.  \", Count );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 394,
+        "Column": 5,
+        "ByteOffset": 14327
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ManCoNum(p) == Vec_IntSize(vRes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 438,
+        "Column": 9,
+        "ByteOffset": 16265
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Cannot find arithmetic boxes.\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Acec_ManDerive_rec",
+      "Start": 1287,
+      "End": 2218,
+      "BodyStart": 1378,
+      "Original": "void Acec_ManDerive_rec( Gia_Man_t * pNew, Gia_Man_t * p, int Node, Vec_Int_t * vMirrors )\n{\n    Gia_Obj_t * pObj;\n    int Obj = Node;\n    if ( Vec_IntEntry(vMirrors, Node) \u003e= 0 )\n        Obj = Abc_Lit2Var( Vec_IntEntry(vMirrors, Node) );\n    pObj = Gia_ManObj( p, Obj );\n    if ( !~pObj-\u003eValue )\n    {\n        assert( Gia_ObjIsAnd(pObj) );\n        Acec_ManDerive_rec( pNew, p, Gia_ObjFaninId0(pObj, Obj), vMirrors );\n        Acec_ManDerive_rec( pNew, p, Gia_ObjFaninId1(pObj, Obj), vMirrors );\n        if ( Gia_ObjIsXor(pObj) )\n            pObj-\u003eValue = Gia_ManAppendXorReal( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        else\n            pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    }\n    // set the original node as well\n    if ( Obj != Node )\n        Gia_ManObj(p, Node)-\u003eValue = Abc_LitNotCond( pObj-\u003eValue, Abc_LitIsCompl(Vec_IntEntry(vMirrors, Node)) );\n}",
+      "Draft": "func Acec_ManDerive_rec(pNew *Gia_Man_t, p *Gia_Man_t, Node int32, vMirrors *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var Obj int32  = Node;\n    if Vec_IntEntry(vMirrors, Node) \u003e= 0 {\n        Obj = Abc_Lit2Var( Vec_IntEntry(vMirrors, Node) ); }\n    pObj = Gia_ManObj( p, Obj );\n    if !~pObj.Value {\n        assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n        Acec_ManDerive_rec( pNew, p, Gia_ObjFaninId0(pObj, Obj), vMirrors );\n        Acec_ManDerive_rec( pNew, p, Gia_ObjFaninId1(pObj, Obj), vMirrors );\n        if Gia_ObjIsXor(pObj) {\n            pObj.Value = Gia_ManAppendXorReal( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else {\n            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // set the original node as well\n    if Obj != Node {\n        Gia_ManObj(p, Node).Value = Abc_LitNotCond( pObj.Value, Abc_LitIsCompl(Vec_IntEntry(vMirrors, Node)) ); }\n}"
+    },
+    {
+      "Name": "Acec_ManDerive",
+      "Start": 2220,
+      "End": 2996,
+      "BodyStart": 2286,
+      "Original": "Gia_Man_t * Acec_ManDerive( Gia_Man_t * p, Vec_Int_t * vMirrors )\n{\n    Gia_Man_t * pNew;\n    Gia_Obj_t * pObj;\n    int i;\n    assert( p-\u003epMuxes == NULL );\n    Gia_ManFillValue( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManHashAlloc( pNew );\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi(pNew);\n    Gia_ManForEachCo( p, pObj, i )\n        Acec_ManDerive_rec( pNew, p, Gia_ObjFaninId0p(p, pObj), vMirrors );\n    Gia_ManForEachCo( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}",
+      "Draft": "func Acec_ManDerive(p *Gia_Man_t, vMirrors *Vec_Int_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(p.pMuxes == nil, \"p.pMuxes == nil\");\n    Gia_ManFillValue( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi(pNew);\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Acec_ManDerive_rec( pNew, p, Gia_ObjFaninId0p(p, pObj), vMirrors );\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Acec_CollectXorTops",
+      "Start": 3232,
+      "End": 4963,
+      "BodyStart": 3281,
+      "Original": "Vec_Int_t * Acec_CollectXorTops( Gia_Man_t * p )\n{\n    Vec_Int_t * vRootXorSet = Vec_IntAlloc( Gia_ManCoNum(p) );\n    Gia_Obj_t * pObj, * pFan0, * pFan1, * pFan00, * pFan01, * pFan10, * pFan11;\n    int i, fXor0, fXor1, fFirstXor = 0;\n    Gia_ManForEachCoDriver( p, pObj, i )\n    {\n        if ( !Gia_ObjRecognizeExor(pObj, \u0026pFan0, \u0026pFan1) )\n        {\n            if ( fFirstXor )\n            {\n                printf( \"XORs do not form a continuous sequence\\n\" );\n                Vec_IntFreeP( \u0026vRootXorSet );\n                break;\n            }\n            continue;\n        }\n        fFirstXor = 1;\n        fXor0 = Gia_ObjRecognizeExor(Gia_Regular(pFan0), \u0026pFan00, \u0026pFan01);\n        fXor1 = Gia_ObjRecognizeExor(Gia_Regular(pFan1), \u0026pFan10, \u0026pFan11);\n        if ( fXor0 == fXor1 )\n        {\n            printf( \"Both inputs of top level XOR have XOR/non-XOR\\n\" );\n            Vec_IntFreeP( \u0026vRootXorSet );\n            break;\n        }\n        Vec_IntPush( vRootXorSet, Gia_ObjId(p, pObj) );\n        Vec_IntPush( vRootXorSet, fXor1 ? Gia_ObjId(p, Gia_Regular(pFan0))  : Gia_ObjId(p, Gia_Regular(pFan1)) );\n        Vec_IntPush( vRootXorSet, fXor1 ? Gia_ObjId(p, Gia_Regular(pFan10)) : Gia_ObjId(p, Gia_Regular(pFan00)) );\n        Vec_IntPush( vRootXorSet, fXor1 ? Gia_ObjId(p, Gia_Regular(pFan11)) : Gia_ObjId(p, Gia_Regular(pFan01)) );\n    }\n    for ( i = 0; 4*i \u003c Vec_IntSize(vRootXorSet); i++ )\n    {\n        printf( \"%2d : \", i );\n        printf( \"%4d \u003c- \", Vec_IntEntry(vRootXorSet, 4*i) );\n        printf( \"%4d \", Vec_IntEntry(vRootXorSet, 4*i+1) );\n        printf( \"%4d \", Vec_IntEntry(vRootXorSet, 4*i+2) );\n        printf( \"%4d \", Vec_IntEntry(vRootXorSet, 4*i+3) );\n        printf( \"\\n\" );\n    }\n    return vRootXorSet;\n}",
+      "Draft": "func Acec_CollectXorTops(p *Gia_Man_t) *Vec_Int_t {\n    var vRootXorSet *Vec_Int_t  = Vec_IntAlloc( Gia_ManCoNum(p) );\n    var pObj, pFan0, pFan1, pFan00, pFan01, pFan10, pFan11 *Gia_Obj_t;\n    var i, fXor0, fXor1, fFirstXor int32;\n    // inlining of macro Gia_ManForEachCoDriver\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ObjFanin0(Gia_ManCo(p, i))); i++  {\n        if !Gia_ObjRecognizeExor(pObj, \u0026pFan0, \u0026pFan1) {\n            if fFirstXor != 0 {\n                fmt.Printf(\"XORs do not form a continuous sequence\\n\");\n                Vec_IntFreeP( \u0026vRootXorSet );\n                break;\n            }\n            continue;\n        }\n        fFirstXor = 1;\n        fXor0 = Gia_ObjRecognizeExor(Gia_Regular(pFan0), \u0026pFan00, \u0026pFan01);\n        fXor1 = Gia_ObjRecognizeExor(Gia_Regular(pFan1), \u0026pFan10, \u0026pFan11);\n        if fXor0 == fXor1 {\n            fmt.Printf(\"Both inputs of top level XOR have XOR/non-XOR\\n\");\n            Vec_IntFreeP( \u0026vRootXorSet );\n            break;\n        }\n        Vec_IntPush( vRootXorSet, Gia_ObjId(p, pObj) );\n        Vec_IntPush( vRootXorSet, fXor1 ? Gia_ObjId(p, Gia_Regular(pFan0))  : Gia_ObjId(p, Gia_Regular(pFan1)) );\n        Vec_IntPush( vRootXorSet, fXor1 ? Gia_ObjId(p, Gia_Regular(pFan10)) : Gia_ObjId(p, Gia_Regular(pFan00)) );\n        Vec_IntPush( vRootXorSet, fXor1 ? Gia_ObjId(p, Gia_Regular(pFan11)) : Gia_ObjId(p, Gia_Regular(pFan01)) );\n    }\n    for  i = 0; 4*i \u003c Vec_IntSize(vRootXorSet); i++  {\n        fmt.Printf(\"%2d : \", i);\n        fmt.Printf(\"%4d \u003c- \", Vec_IntEntry(vRootXorSet, 4*i));\n        fmt.Printf(\"%4d \", Vec_IntEntry(vRootXorSet, 4*i+1));\n        fmt.Printf(\"%4d \", Vec_IntEntry(vRootXorSet, 4*i+2));\n        fmt.Printf(\"%4d \", Vec_IntEntry(vRootXorSet, 4*i+3));\n        fmt.Printf(\"\\n\");\n    }\n    return vRootXorSet;\n}"
+    },
+    {
+      "Name": "Acec_DetectLitPolarity",
+      "Start": 5199,
+      "End": 6037,
+      "BodyStart": 5263,
+      "Original": "int Acec_DetectLitPolarity( Gia_Man_t * p, int Node, int Leaf )\n{\n    Gia_Obj_t * pNode;\n    int Lit0, Lit1;\n    if ( Node \u003c Leaf )\n        return -1;\n    if ( Node == Leaf )\n        return Abc_Var2Lit(Node, 0);\n    pNode = Gia_ManObj( p, Node );\n    Lit0 = Acec_DetectLitPolarity( p, Gia_ObjFaninId0(pNode, Node), Leaf );\n    Lit1 = Acec_DetectLitPolarity( p, Gia_ObjFaninId1(pNode, Node), Leaf );\n    Lit0 = Lit0 == -1 ? Lit0 : Abc_LitNotCond( Lit0, Gia_ObjFaninC0(pNode) );\n    Lit1 = Lit1 == -1 ? Lit1 : Abc_LitNotCond( Lit1, Gia_ObjFaninC1(pNode) );\n    if ( Lit0 == -1 \u0026\u0026 Lit1 == -1 )\n        return -1;\n    assert( Lit0 != -1 || Lit1 != -1 );\n    if ( Lit0 != -1 \u0026\u0026 Lit1 != -1 )\n    {\n        assert( Lit0 == Lit1 );\n        printf( \"Problem for leaf %d\\n\", Leaf );\n        return Lit0;\n    }\n    return Lit0 != -1 ? Lit0 : Lit1;\n}",
+      "Draft": "func Acec_DetectLitPolarity(p *Gia_Man_t, Node int32, Leaf int32) int32 {\n    var pNode *Gia_Obj_t;\n    var Lit0, Lit1 int32;\n    if Node \u003c Leaf {\n        return -1; }\n    if Node == Leaf {\n        return Abc_Var2Lit(Node, 0); }\n    pNode = Gia_ManObj( p, Node );\n    Lit0 = Acec_DetectLitPolarity( p, Gia_ObjFaninId0(pNode, Node), Leaf );\n    Lit1 = Acec_DetectLitPolarity( p, Gia_ObjFaninId1(pNode, Node), Leaf );\n    if Lit0 == -1 {\n        Lit0 = Lit0;\n    } else {\n        Lit0 = Abc_LitNotCond( Lit0, Gia_ObjFaninC0(pNode) );\n    }\n    if Lit1 == -1 {\n        Lit1 = Lit1;\n    } else {\n        Lit1 = Abc_LitNotCond( Lit1, Gia_ObjFaninC1(pNode) );\n    }\n    if Lit0 == -1 \u0026\u0026 Lit1 == -1 {\n        return -1; }\n    assert(Lit0 != -1 || Lit1 != -1, \"Lit0 != -1 || Lit1 != -1\");\n    if Lit0 != -1 \u0026\u0026 Lit1 != -1 {\n        assert(Lit0 == Lit1, \"Lit0 == Lit1\");\n        fmt.Printf(\"Problem for leaf %d\\n\", Leaf);\n        return Lit0;\n    }\n    if Lit0 != -1 {\n        return Lit0;\n    } else {\n        return Lit1;\n    }\n}"
+    },
+    {
+      "Name": "Acec_DetectComputeSuppOne_rec",
+      "Start": 6273,
+      "End": 6813,
+      "BodyStart": 6381,
+      "Original": "void Acec_DetectComputeSuppOne_rec( Gia_Man_t * p, Gia_Obj_t * pObj, Vec_Int_t * vSupp, Vec_Int_t * vNods )\n{\n    if ( Gia_ObjIsTravIdCurrent(p, pObj) )\n        return;\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if ( pObj-\u003efMark0 )\n    {\n        Vec_IntPush( vSupp, Gia_ObjId(p, pObj) );\n        return;\n    }\n    assert( Gia_ObjIsAnd(pObj) );\n    Acec_DetectComputeSuppOne_rec( p, Gia_ObjFanin0(pObj), vSupp, vNods );\n    Acec_DetectComputeSuppOne_rec( p, Gia_ObjFanin1(pObj), vSupp, vNods );\n    Vec_IntPush( vNods, Gia_ObjId(p, pObj) );\n}",
+      "Draft": "func Acec_DetectComputeSuppOne_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSupp *Vec_Int_t, vNods *Vec_Int_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if pObj.fMark0 {\n        Vec_IntPush( vSupp, Gia_ObjId(p, pObj) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Acec_DetectComputeSuppOne_rec( p, Gia_ObjFanin0(pObj), vSupp, vNods );\n    Acec_DetectComputeSuppOne_rec( p, Gia_ObjFanin1(pObj), vSupp, vNods );\n    Vec_IntPush( vNods, Gia_ObjId(p, pObj) );\n}"
+    },
+    {
+      "Name": "Acec_DetectComputeSupports",
+      "Start": 6814,
+      "End": 8705,
+      "BodyStart": 6888,
+      "Original": "void Acec_DetectComputeSupports( Gia_Man_t * p, Vec_Int_t * vRootXorSet )\n{\n    Vec_Int_t * vNods = Vec_IntAlloc( 100 ); \n    Vec_Int_t * vPols = Vec_IntAlloc( 100 ); \n    Vec_Int_t * vSupp = Vec_IntAlloc( 100 );  int i, k, Node, Pol;\n    for ( i = 0; 4*i \u003c Vec_IntSize(vRootXorSet); i++ )\n    {\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) )-\u003efMark0 = 1;\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+2) )-\u003efMark0 = 1;\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+3) )-\u003efMark0 = 1;\n    }\n    for ( i = 1; 4*i \u003c Vec_IntSize(vRootXorSet); i++ )\n    {\n        Vec_IntClear( vSupp );\n        Gia_ManIncrementTravId( p );\n\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) )-\u003efMark0 = 0;\n        Acec_DetectComputeSuppOne_rec( p, Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) ), vSupp, vNods );\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) )-\u003efMark0 = 1;\n\n        Vec_IntSort( vSupp, 0 );\n\n        printf( \"Out %4d : %4d  \\n\", i, Vec_IntEntry(vRootXorSet, 4*i+1) );\n        Vec_IntPrint( vSupp );\n\n        printf( \"Cone:\\n\" );\n        Vec_IntForEachEntry( vNods, Node, k )\n            Gia_ObjPrint( p, Gia_ManObj(p, Node) );\n\n\n        Vec_IntClear( vPols );\n        Vec_IntForEachEntry( vSupp, Node, k )\n            Vec_IntPush( vPols, Acec_DetectLitPolarity(p, Vec_IntEntry(vRootXorSet, 4*i+1), Node) );\n\n        Vec_IntForEachEntryTwo( vSupp, vPols, Node, Pol, k )\n            printf( \"%d(%d)  \", Node, Abc_LitIsCompl(Pol) );\n\n        printf( \"\\n\" );\n\n        Vec_IntPrint( vSupp );\n    }\n    for ( i = 0; 4*i \u003c Vec_IntSize(vRootXorSet); i++ )\n    {\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) )-\u003efMark0 = 0;\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+2) )-\u003efMark0 = 0;\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+3) )-\u003efMark0 = 0;\n    }\n    Vec_IntFree( vSupp );\n    Vec_IntFree( vPols );\n    Vec_IntFree( vNods );\n}",
+      "Draft": "func Acec_DetectComputeSupports(p *Gia_Man_t, vRootXorSet *Vec_Int_t) {\n    var vNods *Vec_Int_t  = Vec_IntAlloc( 100 ); \n    var vPols *Vec_Int_t  = Vec_IntAlloc( 100 ); \n    var vSupp *Vec_Int_t  = Vec_IntAlloc( 100 );  var i, k, Node, Pol int32;\n    for  i = 0; 4*i \u003c Vec_IntSize(vRootXorSet); i++  {\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) ).fMark0 = 1;\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+2) ).fMark0 = 1;\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+3) ).fMark0 = 1;\n    }\n    for  i = 1; 4*i \u003c Vec_IntSize(vRootXorSet); i++  {\n        Vec_IntClear( vSupp );\n        Gia_ManIncrementTravId( p );\n\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) ).fMark0 = 0;\n        Acec_DetectComputeSuppOne_rec( p, Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) ), vSupp, vNods );\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) ).fMark0 = 1;\n\n        Vec_IntSort( vSupp, 0 );\n\n        fmt.Printf(\"Out %4d : %4d  \\n\", i, Vec_IntEntry(vRootXorSet, 4*i+1));\n        Vec_IntPrint( vSupp );\n\n        fmt.Printf(\"Cone:\\n\");\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vNods)) \u0026\u0026 (((Node) = Vec_IntEntry(vNods, k)), 1); k++  {\n            Gia_ObjPrint( p, Gia_ManObj(p, Node) );\n        }\n\n\n        Vec_IntClear( vPols );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Node) = Vec_IntEntry(vSupp, k)), 1); k++  {\n            Vec_IntPush( vPols, Acec_DetectLitPolarity(p, Vec_IntEntry(vRootXorSet, 4*i+1), Node) );\n        }\n\n        // inlining of macro Vec_IntForEachEntryTwo\n        for  k = 0; (k \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Node) = Vec_IntEntry(vSupp, k)), 1) \u0026\u0026 (((Pol) = Vec_IntEntry(vPols, k)), 1); k++  {\n            fmt.Printf(\"%d(%d)  \", Node, Abc_LitIsCompl(Pol));\n        }\n\n        fmt.Printf(\"\\n\");\n\n        Vec_IntPrint( vSupp );\n    }\n    for  i = 0; 4*i \u003c Vec_IntSize(vRootXorSet); i++  {\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) ).fMark0 = 0;\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+2) ).fMark0 = 0;\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+3) ).fMark0 = 0;\n    }\n    Vec_IntFree( vSupp );\n    Vec_IntFree( vPols );\n    Vec_IntFree( vNods );\n}"
+    },
+    {
+      "Name": "Acec_DetectXorBuildNew",
+      "Start": 8941,
+      "End": 9998,
+      "BodyStart": 9018,
+      "Original": "Gia_Man_t * Acec_DetectXorBuildNew( Gia_Man_t * p, Vec_Int_t * vRootXorSet )\n{\n    Gia_Man_t * pNew;\n    int i, k, iOr1, iAnd1, iAnd2, pLits[3]; // carry, in1, in2\n    Vec_Int_t * vMirrors = Vec_IntStart( Gia_ManObjNum(p) );\n    for ( i = 0; 4*i \u003c Vec_IntSize(vRootXorSet); i++ )\n    {\n        pLits[0] = Acec_DetectLitPolarity( p, Vec_IntEntry(vRootXorSet, 4*i), Vec_IntEntry(vRootXorSet, 4*i+1) );\n        // get polarity of two new ones\n        for ( k = 1; k \u003c 3; k++ )\n            pLits[k] = Acec_DetectLitPolarity( p, Vec_IntEntry(vRootXorSet, 4*i), Vec_IntEntry(vRootXorSet, 4*i+k+1) );\n        // create the gate\n        iOr1  = Gia_ManAppendOr( p, pLits[1], pLits[2] );\n        iAnd1 = Gia_ManAppendAnd( p, pLits[0], iOr1 );\n        iAnd2 = Gia_ManAppendAnd( p, pLits[1], pLits[2] );\n        pLits[0] = Gia_ManAppendOr( p, iAnd1, iAnd2 );\n        Vec_IntWriteEntry( vMirrors, Vec_IntEntry(vRootXorSet, 4*i+1), pLits[0] );\n    }\n    // remap the AIG using map\n    pNew = Acec_ManDerive( p, vMirrors );\n    Vec_IntFree( vMirrors );\n    return pNew;\n}",
+      "Draft": "func Acec_DetectXorBuildNew(p *Gia_Man_t, vRootXorSet *Vec_Int_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var i int32;\n    var k int32;\n    var iOr1 int32;\n    var iAnd1 int32;\n    var iAnd2 int32;\n    var pLits [3]int32; // carry, in1, in2\n    var vMirrors *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    for  i = 0; 4*i \u003c Vec_IntSize(vRootXorSet); i++  {\n        pLits[0] = Acec_DetectLitPolarity( p, Vec_IntEntry(vRootXorSet, 4*i), Vec_IntEntry(vRootXorSet, 4*i+1) );\n        // get polarity of two new ones\n        for  k = 1; k \u003c 3; k++  {\n            pLits[k] = Acec_DetectLitPolarity( p, Vec_IntEntry(vRootXorSet, 4*i), Vec_IntEntry(vRootXorSet, 4*i+k+1) );\n        }\n        // create the gate\n        iOr1  = Gia_ManAppendOr( p, pLits[1], pLits[2] );\n        iAnd1 = Gia_ManAppendAnd( p, pLits[0], iOr1 );\n        iAnd2 = Gia_ManAppendAnd( p, pLits[1], pLits[2] );\n        pLits[0] = Gia_ManAppendOr( p, iAnd1, iAnd2 );\n        Vec_IntWriteEntry( vMirrors, Vec_IntEntry(vRootXorSet, 4*i+1), pLits[0] );\n    }\n    // remap the AIG using map\n    pNew = Acec_ManDerive( p, vMirrors );\n    Vec_IntFree( vMirrors );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Acec_DetectAdditional",
+      "Start": 10235,
+      "End": 11215,
+      "BodyStart": 10300,
+      "Original": "Gia_Man_t * Acec_DetectAdditional( Gia_Man_t * p, int fVerbose )\n{\n    abctime clk = Abc_Clock();\n    Gia_Man_t * pNew;\n    Vec_Int_t * vRootXorSet;\n//    Vec_Int_t * vXors, * vAdds = Ree_ManComputeCuts( p, \u0026vXors, 0 );\n\n    //Ree_ManPrintAdders( vAdds, 1 );\n//    printf( \"Detected %d full-adders and %d half-adders.  Found %d XOR-cuts.  \", Ree_ManCountFadds(vAdds), Vec_IntSize(vAdds)/6-Ree_ManCountFadds(vAdds), Vec_IntSize(vXors)/4 );\n//    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    clk = Abc_Clock();\n    vRootXorSet = Acec_CollectXorTops( p );\n    if ( vRootXorSet )\n    {\n        Acec_DetectComputeSupports( p, vRootXorSet );\n\n        pNew = Acec_DetectXorBuildNew( p, vRootXorSet );\n        Vec_IntFree( vRootXorSet );\n    }\n    else\n        pNew = Gia_ManDup( p );\n\n    printf( \"Detected %d top XORs.  \", Vec_IntSize(vRootXorSet)/4 );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n//    Vec_IntFree( vXors );\n//    Vec_IntFree( vAdds );\n    return pNew;\n}",
+      "Draft": "func Acec_DetectAdditional(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {\n    var clk abctime  = Abc_Clock();\n    var pNew *Gia_Man_t;\n    var vRootXorSet *Vec_Int_t;\n//    Vec_Int_t * vXors, * vAdds = Ree_ManComputeCuts( p, \u0026vXors, 0 );\n\n    //Ree_ManPrintAdders( vAdds, 1 );\n//    printf( \"Detected %d full-adders and %d half-adders.  Found %d XOR-cuts.  \", Ree_ManCountFadds(vAdds), Vec_IntSize(vAdds)/6-Ree_ManCountFadds(vAdds), Vec_IntSize(vXors)/4 );\n//    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    clk = Abc_Clock();\n    vRootXorSet = Acec_CollectXorTops( p );\n    if vRootXorSet != nil {\n        Acec_DetectComputeSupports( p, vRootXorSet );\n\n        pNew = Acec_DetectXorBuildNew( p, vRootXorSet );\n        Vec_IntFree( vRootXorSet );\n    \n    } else {\n        pNew = Gia_ManDup( p ); }\n\n    fmt.Printf(\"Detected %d top XORs.  \", Vec_IntSize(vRootXorSet)/4);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n//    Vec_IntFree( vXors );\n//    Vec_IntFree( vAdds );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Acec_RewriteTop",
+      "Start": 11451,
+      "End": 12841,
+      "BodyStart": 11515,
+      "Original": "Vec_Int_t * Acec_RewriteTop( Gia_Man_t * p, Acec_Box_t * pBox )\n{\n    Vec_Int_t * vRes = Vec_IntAlloc( Gia_ManCoNum(p) + 1 );\n    Vec_Int_t * vLevel;\n    int i, k, iStart, iLit, Driver, Count = 0;\n    // determine how much to shift\n    Driver = Gia_ObjFaninId0p( p, Gia_ManCo(p, 0) );\n    Vec_WecForEachLevel( pBox-\u003evRootLits, vLevel, iStart )\n        if ( Abc_Lit2Var(Vec_IntEntry(vLevel,0)) == Driver )\n            break;\n    assert( iStart \u003c Gia_ManCoNum(p) );\n    //Vec_WecPrintLits( pBox-\u003evRootLits );\n    Vec_WecForEachLevelStart( pBox-\u003evRootLits, vLevel, i, iStart )\n    {\n        int In[3] = {0}, Out[2];\n        assert( Vec_IntSize(vLevel) \u003e 0 );\n        assert( Vec_IntSize(vLevel) \u003c= 3 );\n        if ( Vec_IntSize(vLevel) == 1 )\n        {\n            Vec_IntPush( vRes, Vec_IntEntry(vLevel, 0) );\n            continue;\n        }\n        Vec_IntForEachEntry( vLevel, iLit, k )\n            In[k] = iLit;\n        Acec_InsertFadd( p, In, Out );\n        Vec_IntPush( vRes, Out[0] );\n        if ( i+1 \u003c Vec_WecSize(pBox-\u003evRootLits) )\n            Vec_IntPush( Vec_WecEntry(pBox-\u003evRootLits, i+1), Out[1] );\n        else\n            Vec_IntPush( Vec_WecPushLevel(pBox-\u003evRootLits), Out[1] );\n        Count++;\n    }\n    assert( Vec_IntSize(vRes) \u003e= Gia_ManCoNum(p) );\n    Vec_IntShrink( vRes, Gia_ManCoNum(p) );\n    printf( \"Added %d adders for replace CLAs.  \", Count );\n    return vRes;\n}",
+      "Draft": "func Acec_RewriteTop(p *Gia_Man_t, pBox *Acec_Box_t) *Vec_Int_t {\n    var vRes *Vec_Int_t  = Vec_IntAlloc( Gia_ManCoNum(p) + 1 );\n    var vLevel *Vec_Int_t;\n    var i, k, iStart, iLit, Driver, Count int32;\n    // determine how much to shift\n    Driver = Gia_ObjFaninId0p( p, Gia_ManCo(p, 0) );\n    // inlining of macro Vec_WecForEachLevel\n    for  iStart = 0; (iStart \u003c Vec_WecSize(pBox.vRootLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(pBox.vRootLits, iStart)), 1); iStart++  {\n        if Abc_Lit2Var(Vec_IntEntry(vLevel,0)) == Driver {\n            break; }\n    }\n    assert(iStart \u003c Gia_ManCoNum(p), \"iStart \u003c Gia_ManCoNum(p)\");\n    //Vec_WecPrintLits( pBox-\u003evRootLits );\n    // inlining of macro Vec_WecForEachLevelStart\n    for  i = iStart; (i \u003c Vec_WecSize(pBox.vRootLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(pBox.vRootLits, i)), 1); i++  {\n        var In [3]int32 ;\n        var Out [2]int32;\n        assert(Vec_IntSize(vLevel) \u003e 0, \"Vec_IntSize(vLevel) \u003e 0\");\n        assert(Vec_IntSize(vLevel) \u003c= 3, \"Vec_IntSize(vLevel) \u003c= 3\");\n        if Vec_IntSize(vLevel) == 1 {\n            Vec_IntPush( vRes, Vec_IntEntry(vLevel, 0) );\n            continue;\n        }\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            In[k] = iLit;\n        }\n        Acec_InsertFadd( p, In, Out );\n        Vec_IntPush( vRes, Out[0] );\n        if i+1 \u003c Vec_WecSize(pBox.vRootLits) {\n            Vec_IntPush( Vec_WecEntry(pBox.vRootLits, i+1), Out[1] );\n        } else {\n            Vec_IntPush( Vec_WecPushLevel(pBox.vRootLits), Out[1] ); }\n        Count++;\n    }\n    assert(Vec_IntSize(vRes) \u003e= Gia_ManCoNum(p), \"Vec_IntSize(vRes) \u003e= Gia_ManCoNum(p)\");\n    Vec_IntShrink( vRes, Gia_ManCoNum(p) );\n    fmt.Printf(\"Added %d adders for replace CLAs.  \", Count);\n    return vRes;\n}"
+    },
+    {
+      "Name": "Acec_RewriteReplace",
+      "Start": 12842,
+      "End": 14018,
+      "BodyStart": 12909,
+      "Original": "Gia_Man_t * Acec_RewriteReplace( Gia_Man_t * p, Vec_Int_t * vRes )\n{\n    Gia_Man_t * pNew, * pTemp;\n    Gia_Obj_t * pObj;  int i;\n    assert( Gia_ManCoNum(p) == Vec_IntSize(vRes) );\n    // create new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew-\u003epName = Abc_UtilStrsav( p-\u003epName );\n    pNew-\u003epSpec = Abc_UtilStrsav( p-\u003epSpec );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p)-\u003eValue = 0;\n    Gia_ManForEachCi( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendCi(pNew);\n    Gia_ManForEachAnd( p, pObj, i )\n        pObj-\u003eValue = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n    Gia_ManForEachCo( p, pObj, i )\n    {\n        int iLit = Vec_IntEntry( vRes, i );\n        Gia_Obj_t * pRepr = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n        pObj-\u003eValue = Gia_ManAppendCo( pNew, pRepr-\u003eValue );\n    }\n    // set correct phase\n    Gia_ManSetPhase( p );\n    Gia_ManSetPhase( pNew );\n    Gia_ManForEachCo( pNew, pObj, i )\n        if ( Gia_ObjPhase(pObj) != Gia_ObjPhase(Gia_ManCo(p, i)) )\n            Gia_ObjFlipFaninC0( pObj );\n    // remove dangling nodes\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}",
+      "Draft": "func Acec_RewriteReplace(p *Gia_Man_t, vRes *Vec_Int_t) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;  var i int32;\n    assert(Gia_ManCoNum(p) == Vec_IntSize(vRes), \"Gia_ManCoNum(p) == Vec_IntSize(vRes)\");\n    // create new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi(pNew);\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        var iLit int32  = Vec_IntEntry( vRes, i );\n        var pRepr *Gia_Obj_t  = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n        pObj.Value = Gia_ManAppendCo( pNew, pRepr.Value );\n    }\n    // set correct phase\n    Gia_ManSetPhase( p );\n    Gia_ManSetPhase( pNew );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pNew.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pNew, i)); i++  {\n        if Gia_ObjPhase(pObj) != Gia_ObjPhase(Gia_ManCo(p, i)) {\n            Gia_ObjFlipFaninC0( pObj ); }\n    }\n    // remove dangling nodes\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}"
+    },
+    {
+      "Name": "Acec_ManDecla",
+      "Start": 14019,
+      "End": 14707,
+      "BodyStart": 14091,
+      "Original": "Gia_Man_t * Acec_ManDecla( Gia_Man_t * pGia, int fBooth, int fVerbose )\n{\n    abctime clk = Abc_Clock();\n    Gia_Man_t * pNew = NULL;\n    Vec_Bit_t * vIgnore = fBooth ? Acec_BoothFindPPG(pGia) : NULL;\n    Acec_Box_t * pBox = Acec_DeriveBox( pGia, vIgnore, 0, 0, fVerbose );\n    Vec_Int_t * vResult;\n    Vec_BitFreeP( \u0026vIgnore );\n    if ( pBox == NULL ) // cannot match\n    {\n        printf( \"Cannot find arithmetic boxes.\\n\" );\n        return Gia_ManDup( pGia );\n    }\n    vResult = Acec_RewriteTop( pGia, pBox );\n    Acec_BoxFreeP( \u0026pBox );\n    pNew = Acec_RewriteReplace( pGia, vResult );\n    Vec_IntFree( vResult );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return pNew;\n}",
+      "Draft": "func Acec_ManDecla(pGia *Gia_Man_t, fBooth int32, fVerbose int32) *Gia_Man_t {\n    var clk abctime  = Abc_Clock();\n    var pNew *Gia_Man_t  = nil;\n    var vIgnore *Vec_Bit_t;\n    if fBooth != 0 {\n        vIgnore = Acec_BoothFindPPG(pGia);\n    } else {\n        vIgnore = nil;\n    }\n    var pBox *Acec_Box_t  = Acec_DeriveBox( pGia, vIgnore, 0, 0, fVerbose );\n    var vResult *Vec_Int_t;\n    Vec_BitFreeP( \u0026vIgnore );\n    if pBox == nil { // cannot match\n    \n        fmt.Printf(\"Cannot find arithmetic boxes.\\n\");\n        return Gia_ManDup( pGia );\n    }\n    vResult = Acec_RewriteTop( pGia, pBox );\n    Acec_BoxFreeP( \u0026pBox );\n    pNew = Acec_RewriteReplace( pGia, vResult );\n    Vec_IntFree( vResult );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return pNew;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCl.c::Acec_ManDerive_rec",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManDerive_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1287,
+      "End": 2218
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCl.c::Acec_ManDerive",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManDerive",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2220,
+      "End": 2996
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCl.c::ternary::Acec_CollectXorTops",
+      "Category": "ternary-review",
+      "Symbol": "Acec_CollectXorTops",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3232,
+      "End": 4963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCl.c::Acec_CollectXorTops",
+      "Category": "semantic-review",
+      "Symbol": "Acec_CollectXorTops",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3232,
+      "End": 4963
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCl.c::Acec_DetectLitPolarity",
+      "Category": "semantic-review",
+      "Symbol": "Acec_DetectLitPolarity",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5199,
+      "End": 6037
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCl.c::Acec_DetectComputeSuppOne_rec",
+      "Category": "semantic-review",
+      "Symbol": "Acec_DetectComputeSuppOne_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6273,
+      "End": 6813
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCl.c::Acec_DetectComputeSupports",
+      "Category": "semantic-review",
+      "Symbol": "Acec_DetectComputeSupports",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6814,
+      "End": 8705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCl.c::Acec_DetectXorBuildNew",
+      "Category": "semantic-review",
+      "Symbol": "Acec_DetectXorBuildNew",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8941,
+      "End": 9998
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCl.c::Acec_DetectAdditional",
+      "Category": "semantic-review",
+      "Symbol": "Acec_DetectAdditional",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10235,
+      "End": 11215
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCl.c::Acec_RewriteTop",
+      "Category": "semantic-review",
+      "Symbol": "Acec_RewriteTop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11451,
+      "End": 12841
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCl.c::Acec_RewriteReplace",
+      "Category": "semantic-review",
+      "Symbol": "Acec_RewriteReplace",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12842,
+      "End": 14018
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCl.c::Acec_ManDecla",
+      "Category": "semantic-review",
+      "Symbol": "Acec_ManDecla",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 14019,
+      "End": 14707
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/acec/acecCl.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 14954
+    }
+  ],
+  "Draft": "package acec\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [acecCl.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [CEC for arithmetic circuits.]\n\n  Synopsis    [Core procedures.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: acecCl.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"acecInt.h\"\n//#include \"misc/vec/vecWec.h\"\n//#include \"misc/extra/extra.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_ManDerive_rec(pNew *Gia_Man_t, p *Gia_Man_t, Node int32, vMirrors *Vec_Int_t) {\n    var pObj *Gia_Obj_t;\n    var Obj int32  = Node;\n    if Vec_IntEntry(vMirrors, Node) \u003e= 0 {\n        Obj = Abc_Lit2Var( Vec_IntEntry(vMirrors, Node) ); }\n    pObj = Gia_ManObj( p, Obj );\n    if !~pObj.Value {\n        assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n        Acec_ManDerive_rec( pNew, p, Gia_ObjFaninId0(pObj, Obj), vMirrors );\n        Acec_ManDerive_rec( pNew, p, Gia_ObjFaninId1(pObj, Obj), vMirrors );\n        if Gia_ObjIsXor(pObj) {\n            pObj.Value = Gia_ManAppendXorReal( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) );\n        } else {\n            pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // set the original node as well\n    if Obj != Node {\n        Gia_ManObj(p, Node).Value = Abc_LitNotCond( pObj.Value, Abc_LitIsCompl(Vec_IntEntry(vMirrors, Node)) ); }\n} \nfunc Acec_ManDerive(p *Gia_Man_t, vMirrors *Vec_Int_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var pObj *Gia_Obj_t;\n    var i int32;\n    assert(p.pMuxes == nil, \"p.pMuxes == nil\");\n    Gia_ManFillValue( p );\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManConst0(p).Value = 0;\n    Gia_ManHashAlloc( pNew );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi(pNew);\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        Acec_ManDerive_rec( pNew, p, Gia_ObjFaninId0p(p, pObj), vMirrors );\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCo( pNew, Gia_ObjFanin0Copy(pObj) );\n    }\n    Gia_ManHashStop( pNew );\n    Gia_ManSetRegNum( pNew, Gia_ManRegNum(p) );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_CollectXorTops(p *Gia_Man_t) *Vec_Int_t {\n    var vRootXorSet *Vec_Int_t  = Vec_IntAlloc( Gia_ManCoNum(p) );\n    var pObj, pFan0, pFan1, pFan00, pFan01, pFan10, pFan11 *Gia_Obj_t;\n    var i, fXor0, fXor1, fFirstXor int32;\n    // inlining of macro Gia_ManForEachCoDriver\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ObjFanin0(Gia_ManCo(p, i))); i++  {\n        if !Gia_ObjRecognizeExor(pObj, \u0026pFan0, \u0026pFan1) {\n            if fFirstXor != 0 {\n                fmt.Printf(\"XORs do not form a continuous sequence\\n\");\n                Vec_IntFreeP( \u0026vRootXorSet );\n                break;\n            }\n            continue;\n        }\n        fFirstXor = 1;\n        fXor0 = Gia_ObjRecognizeExor(Gia_Regular(pFan0), \u0026pFan00, \u0026pFan01);\n        fXor1 = Gia_ObjRecognizeExor(Gia_Regular(pFan1), \u0026pFan10, \u0026pFan11);\n        if fXor0 == fXor1 {\n            fmt.Printf(\"Both inputs of top level XOR have XOR/non-XOR\\n\");\n            Vec_IntFreeP( \u0026vRootXorSet );\n            break;\n        }\n        Vec_IntPush( vRootXorSet, Gia_ObjId(p, pObj) );\n        Vec_IntPush( vRootXorSet, fXor1 ? Gia_ObjId(p, Gia_Regular(pFan0))  : Gia_ObjId(p, Gia_Regular(pFan1)) );\n        Vec_IntPush( vRootXorSet, fXor1 ? Gia_ObjId(p, Gia_Regular(pFan10)) : Gia_ObjId(p, Gia_Regular(pFan00)) );\n        Vec_IntPush( vRootXorSet, fXor1 ? Gia_ObjId(p, Gia_Regular(pFan11)) : Gia_ObjId(p, Gia_Regular(pFan01)) );\n    }\n    for  i = 0; 4*i \u003c Vec_IntSize(vRootXorSet); i++  {\n        fmt.Printf(\"%2d : \", i);\n        fmt.Printf(\"%4d \u003c- \", Vec_IntEntry(vRootXorSet, 4*i));\n        fmt.Printf(\"%4d \", Vec_IntEntry(vRootXorSet, 4*i+1));\n        fmt.Printf(\"%4d \", Vec_IntEntry(vRootXorSet, 4*i+2));\n        fmt.Printf(\"%4d \", Vec_IntEntry(vRootXorSet, 4*i+3));\n        fmt.Printf(\"\\n\");\n    }\n    return vRootXorSet;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_DetectLitPolarity(p *Gia_Man_t, Node int32, Leaf int32) int32 {\n    var pNode *Gia_Obj_t;\n    var Lit0, Lit1 int32;\n    if Node \u003c Leaf {\n        return -1; }\n    if Node == Leaf {\n        return Abc_Var2Lit(Node, 0); }\n    pNode = Gia_ManObj( p, Node );\n    Lit0 = Acec_DetectLitPolarity( p, Gia_ObjFaninId0(pNode, Node), Leaf );\n    Lit1 = Acec_DetectLitPolarity( p, Gia_ObjFaninId1(pNode, Node), Leaf );\n    if Lit0 == -1 {\n        Lit0 = Lit0;\n    } else {\n        Lit0 = Abc_LitNotCond( Lit0, Gia_ObjFaninC0(pNode) );\n    }\n    if Lit1 == -1 {\n        Lit1 = Lit1;\n    } else {\n        Lit1 = Abc_LitNotCond( Lit1, Gia_ObjFaninC1(pNode) );\n    }\n    if Lit0 == -1 \u0026\u0026 Lit1 == -1 {\n        return -1; }\n    assert(Lit0 != -1 || Lit1 != -1, \"Lit0 != -1 || Lit1 != -1\");\n    if Lit0 != -1 \u0026\u0026 Lit1 != -1 {\n        assert(Lit0 == Lit1, \"Lit0 == Lit1\");\n        fmt.Printf(\"Problem for leaf %d\\n\", Leaf);\n        return Lit0;\n    }\n    if Lit0 != -1 {\n        return Lit0;\n    } else {\n        return Lit1;\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_DetectComputeSuppOne_rec(p *Gia_Man_t, pObj *Gia_Obj_t, vSupp *Vec_Int_t, vNods *Vec_Int_t) {\n    if Gia_ObjIsTravIdCurrent(p, pObj) {\n        return; }\n    Gia_ObjSetTravIdCurrent(p, pObj);\n    if pObj.fMark0 {\n        Vec_IntPush( vSupp, Gia_ObjId(p, pObj) );\n        return;\n    }\n    assert(Gia_ObjIsAnd(pObj), \"Gia_ObjIsAnd(pObj)\");\n    Acec_DetectComputeSuppOne_rec( p, Gia_ObjFanin0(pObj), vSupp, vNods );\n    Acec_DetectComputeSuppOne_rec( p, Gia_ObjFanin1(pObj), vSupp, vNods );\n    Vec_IntPush( vNods, Gia_ObjId(p, pObj) );\n}\nfunc Acec_DetectComputeSupports(p *Gia_Man_t, vRootXorSet *Vec_Int_t) {\n    var vNods *Vec_Int_t  = Vec_IntAlloc( 100 ); \n    var vPols *Vec_Int_t  = Vec_IntAlloc( 100 ); \n    var vSupp *Vec_Int_t  = Vec_IntAlloc( 100 );  var i, k, Node, Pol int32;\n    for  i = 0; 4*i \u003c Vec_IntSize(vRootXorSet); i++  {\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) ).fMark0 = 1;\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+2) ).fMark0 = 1;\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+3) ).fMark0 = 1;\n    }\n    for  i = 1; 4*i \u003c Vec_IntSize(vRootXorSet); i++  {\n        Vec_IntClear( vSupp );\n        Gia_ManIncrementTravId( p );\n\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) ).fMark0 = 0;\n        Acec_DetectComputeSuppOne_rec( p, Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) ), vSupp, vNods );\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) ).fMark0 = 1;\n\n        Vec_IntSort( vSupp, 0 );\n\n        fmt.Printf(\"Out %4d : %4d  \\n\", i, Vec_IntEntry(vRootXorSet, 4*i+1));\n        Vec_IntPrint( vSupp );\n\n        fmt.Printf(\"Cone:\\n\");\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vNods)) \u0026\u0026 (((Node) = Vec_IntEntry(vNods, k)), 1); k++  {\n            Gia_ObjPrint( p, Gia_ManObj(p, Node) );\n        }\n\n\n        Vec_IntClear( vPols );\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Node) = Vec_IntEntry(vSupp, k)), 1); k++  {\n            Vec_IntPush( vPols, Acec_DetectLitPolarity(p, Vec_IntEntry(vRootXorSet, 4*i+1), Node) );\n        }\n\n        // inlining of macro Vec_IntForEachEntryTwo\n        for  k = 0; (k \u003c Vec_IntSize(vSupp)) \u0026\u0026 (((Node) = Vec_IntEntry(vSupp, k)), 1) \u0026\u0026 (((Pol) = Vec_IntEntry(vPols, k)), 1); k++  {\n            fmt.Printf(\"%d(%d)  \", Node, Abc_LitIsCompl(Pol));\n        }\n\n        fmt.Printf(\"\\n\");\n\n        Vec_IntPrint( vSupp );\n    }\n    for  i = 0; 4*i \u003c Vec_IntSize(vRootXorSet); i++  {\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+1) ).fMark0 = 0;\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+2) ).fMark0 = 0;\n        Gia_ManObj( p, Vec_IntEntry(vRootXorSet, 4*i+3) ).fMark0 = 0;\n    }\n    Vec_IntFree( vSupp );\n    Vec_IntFree( vPols );\n    Vec_IntFree( vNods );\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_DetectXorBuildNew(p *Gia_Man_t, vRootXorSet *Vec_Int_t) *Gia_Man_t {\n    var pNew *Gia_Man_t;\n    var i int32;\n    var k int32;\n    var iOr1 int32;\n    var iAnd1 int32;\n    var iAnd2 int32;\n    var pLits [3]int32; // carry, in1, in2\n    var vMirrors *Vec_Int_t  = Vec_IntStart( Gia_ManObjNum(p) );\n    for  i = 0; 4*i \u003c Vec_IntSize(vRootXorSet); i++  {\n        pLits[0] = Acec_DetectLitPolarity( p, Vec_IntEntry(vRootXorSet, 4*i), Vec_IntEntry(vRootXorSet, 4*i+1) );\n        // get polarity of two new ones\n        for  k = 1; k \u003c 3; k++  {\n            pLits[k] = Acec_DetectLitPolarity( p, Vec_IntEntry(vRootXorSet, 4*i), Vec_IntEntry(vRootXorSet, 4*i+k+1) );\n        }\n        // create the gate\n        iOr1  = Gia_ManAppendOr( p, pLits[1], pLits[2] );\n        iAnd1 = Gia_ManAppendAnd( p, pLits[0], iOr1 );\n        iAnd2 = Gia_ManAppendAnd( p, pLits[1], pLits[2] );\n        pLits[0] = Gia_ManAppendOr( p, iAnd1, iAnd2 );\n        Vec_IntWriteEntry( vMirrors, Vec_IntEntry(vRootXorSet, 4*i+1), pLits[0] );\n    }\n    // remap the AIG using map\n    pNew = Acec_ManDerive( p, vMirrors );\n    Vec_IntFree( vMirrors );\n    return pNew;\n}\n\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_DetectAdditional(p *Gia_Man_t, fVerbose int32) *Gia_Man_t {\n    var clk abctime  = Abc_Clock();\n    var pNew *Gia_Man_t;\n    var vRootXorSet *Vec_Int_t;\n//    Vec_Int_t * vXors, * vAdds = Ree_ManComputeCuts( p, \u0026vXors, 0 );\n\n    //Ree_ManPrintAdders( vAdds, 1 );\n//    printf( \"Detected %d full-adders and %d half-adders.  Found %d XOR-cuts.  \", Ree_ManCountFadds(vAdds), Vec_IntSize(vAdds)/6-Ree_ManCountFadds(vAdds), Vec_IntSize(vXors)/4 );\n//    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n    clk = Abc_Clock();\n    vRootXorSet = Acec_CollectXorTops( p );\n    if vRootXorSet != nil {\n        Acec_DetectComputeSupports( p, vRootXorSet );\n\n        pNew = Acec_DetectXorBuildNew( p, vRootXorSet );\n        Vec_IntFree( vRootXorSet );\n    \n    } else {\n        pNew = Gia_ManDup( p ); }\n\n    fmt.Printf(\"Detected %d top XORs.  \", Vec_IntSize(vRootXorSet)/4);\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n\n//    Vec_IntFree( vXors );\n//    Vec_IntFree( vAdds );\n    return pNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Acec_RewriteTop(p *Gia_Man_t, pBox *Acec_Box_t) *Vec_Int_t {\n    var vRes *Vec_Int_t  = Vec_IntAlloc( Gia_ManCoNum(p) + 1 );\n    var vLevel *Vec_Int_t;\n    var i, k, iStart, iLit, Driver, Count int32;\n    // determine how much to shift\n    Driver = Gia_ObjFaninId0p( p, Gia_ManCo(p, 0) );\n    // inlining of macro Vec_WecForEachLevel\n    for  iStart = 0; (iStart \u003c Vec_WecSize(pBox.vRootLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(pBox.vRootLits, iStart)), 1); iStart++  {\n        if Abc_Lit2Var(Vec_IntEntry(vLevel,0)) == Driver {\n            break; }\n    }\n    assert(iStart \u003c Gia_ManCoNum(p), \"iStart \u003c Gia_ManCoNum(p)\");\n    //Vec_WecPrintLits( pBox-\u003evRootLits );\n    // inlining of macro Vec_WecForEachLevelStart\n    for  i = iStart; (i \u003c Vec_WecSize(pBox.vRootLits)) \u0026\u0026 (((vLevel) = Vec_WecEntry(pBox.vRootLits, i)), 1); i++  {\n        var In [3]int32 ;\n        var Out [2]int32;\n        assert(Vec_IntSize(vLevel) \u003e 0, \"Vec_IntSize(vLevel) \u003e 0\");\n        assert(Vec_IntSize(vLevel) \u003c= 3, \"Vec_IntSize(vLevel) \u003c= 3\");\n        if Vec_IntSize(vLevel) == 1 {\n            Vec_IntPush( vRes, Vec_IntEntry(vLevel, 0) );\n            continue;\n        }\n        // inlining of macro Vec_IntForEachEntry\n        for  k = 0; (k \u003c Vec_IntSize(vLevel)) \u0026\u0026 (((iLit) = Vec_IntEntry(vLevel, k)), 1); k++  {\n            In[k] = iLit;\n        }\n        Acec_InsertFadd( p, In, Out );\n        Vec_IntPush( vRes, Out[0] );\n        if i+1 \u003c Vec_WecSize(pBox.vRootLits) {\n            Vec_IntPush( Vec_WecEntry(pBox.vRootLits, i+1), Out[1] );\n        } else {\n            Vec_IntPush( Vec_WecPushLevel(pBox.vRootLits), Out[1] ); }\n        Count++;\n    }\n    assert(Vec_IntSize(vRes) \u003e= Gia_ManCoNum(p), \"Vec_IntSize(vRes) \u003e= Gia_ManCoNum(p)\");\n    Vec_IntShrink( vRes, Gia_ManCoNum(p) );\n    fmt.Printf(\"Added %d adders for replace CLAs.  \", Count);\n    return vRes;\n}\nfunc Acec_RewriteReplace(p *Gia_Man_t, vRes *Vec_Int_t) *Gia_Man_t {\n    var pNew, pTemp *Gia_Man_t;\n    var pObj *Gia_Obj_t;  var i int32;\n    assert(Gia_ManCoNum(p) == Vec_IntSize(vRes), \"Gia_ManCoNum(p) == Vec_IntSize(vRes)\");\n    // create new manager\n    pNew = Gia_ManStart( Gia_ManObjNum(p) );\n    pNew.pName = Abc_UtilStrsav( p.pName );\n    pNew.pSpec = Abc_UtilStrsav( p.pSpec );\n    Gia_ManFillValue( p );\n    Gia_ManConst0(p).Value = 0;\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p, i)); i++  {\n        pObj.Value = Gia_ManAppendCi(pNew);\n    }\n    // inlining of macro Gia_ManForEachAnd\n    for  i = 0; (i \u003c p.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(p, i)); i++  {      if !Gia_ObjIsAnd(pObj) {} else {\n        pObj.Value = Gia_ManAppendAnd( pNew, Gia_ObjFanin0Copy(pObj), Gia_ObjFanin1Copy(pObj) ); }\n    }\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p, i)); i++  {\n        var iLit int32  = Vec_IntEntry( vRes, i );\n        var pRepr *Gia_Obj_t  = Gia_ManObj( p, Abc_Lit2Var(iLit) );\n        pObj.Value = Gia_ManAppendCo( pNew, pRepr.Value );\n    }\n    // set correct phase\n    Gia_ManSetPhase( p );\n    Gia_ManSetPhase( pNew );\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(pNew.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(pNew, i)); i++  {\n        if Gia_ObjPhase(pObj) != Gia_ObjPhase(Gia_ManCo(p, i)) {\n            Gia_ObjFlipFaninC0( pObj ); }\n    }\n    // remove dangling nodes\n    pNew = Gia_ManCleanup( pTemp = pNew );\n    Gia_ManStop( pTemp );\n    return pNew;\n}\nfunc Acec_ManDecla(pGia *Gia_Man_t, fBooth int32, fVerbose int32) *Gia_Man_t {\n    var clk abctime  = Abc_Clock();\n    var pNew *Gia_Man_t  = nil;\n    var vIgnore *Vec_Bit_t;\n    if fBooth != 0 {\n        vIgnore = Acec_BoothFindPPG(pGia);\n    } else {\n        vIgnore = nil;\n    }\n    var pBox *Acec_Box_t  = Acec_DeriveBox( pGia, vIgnore, 0, 0, fVerbose );\n    var vResult *Vec_Int_t;\n    Vec_BitFreeP( \u0026vIgnore );\n    if pBox == nil { // cannot match\n    \n        fmt.Printf(\"Cannot find arithmetic boxes.\\n\");\n        return Gia_ManDup( pGia );\n    }\n    vResult = Acec_RewriteTop( pGia, pBox );\n    Acec_BoxFreeP( \u0026pBox );\n    pNew = Acec_RewriteReplace( pGia, vResult );\n    Vec_IntFree( vResult );\n    Abc_PrintTime( 1, \"Time\", Abc_Clock() - clk );\n    return pNew;\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

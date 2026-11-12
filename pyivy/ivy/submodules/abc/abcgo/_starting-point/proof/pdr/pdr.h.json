@@ -1,0 +1,46 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdr.h",
+  "SHA256": "d840c2cd633b75f428518d89ac9f6c2c10123cdec9a0664843e1f394d2c849fc",
+  "Functions": null,
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdr.h::struct::Pdr_Par_t::// PDR id in this run \n    int(*pFuncStop)(int);",
+      "Category": "struct-field-review",
+      "Symbol": "Pdr_Par_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3645,
+      "End": 3705
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdr.h::struct::Pdr_Par_t::// callback to terminate\n    int(*pFuncOnFail)(int,Abc_Cex_t*);",
+      "Category": "struct-field-review",
+      "Symbol": "Pdr_Par_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 3705,
+      "End": 3769
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdr.h::struct::Pdr_Par_t",
+      "Category": "struct-review",
+      "Symbol": "Pdr_Par_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 1259,
+      "End": 4061
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/proof/pdr/pdr.h::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 4985
+    }
+  ],
+  "Draft": "package pdr\n\n/**CFile****************************************************************\n\n  FileName    [pdr.h]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Property driven reachability.]\n\n  Synopsis    [External declarations.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - November 20, 2010.]\n\n  Revision    [$Id: pdr.h,v 1.00 2010/11/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n \n\n\n\n\n//ABC_NAMESPACE_HEADER_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                          INCLUDES                                ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         PARAMETERS                               ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                         BASIC TYPES                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Pdr_Par_t struct {\n//    int iOutput;          // zero-based number of primary output to solve\n    nRecycle int32;         // limit on vars for recycling\n    nFrameMax int32;        // limit on frame count\n    nConfLimit int32;       // limit on SAT solver conflicts\n    nConfGenLimit int32;    // limit on SAT solver conflicts during generalization\n    nRestLimit int32;       // limit on the number of proof-obligations\n    nTimeOut int32;         // timeout in seconds\n    nTimeOutGap int32;      // approximate timeout in seconds since the last change\n    nTimeOutOne int32;      // approximate timeout in seconds per one output\n    nRandomSeed int32;      // value to seed the SAT solver with\n    fTwoRounds int32;       // use two rounds for generalization\n    fMonoCnf int32;         // monolythic CNF\n    fNewXSim int32;         // updated X-valued simulation\n    fFlopPrio int32;        // use structural flop priorities\n    fFlopOrder int32;       // order flops for 'analyze_final' during generalization\n    fDumpInv int32;         // dump inductive invariant\n    fUseSupp int32;         // use support in the invariant\n    fShortest int32;        // forces bug traces to be shortest\n    fShiftStart int32;      // allows clause pushing to start from an intermediate frame\n    fReuseProofOblig int32; // reuses proof-obligationgs in the last timeframe\n    fSimpleGeneral int32;   // simplified generalization\n    fSkipGeneral int32;     // skips expensive generalization step\n    fSkipDown int32;        // skips the application of down\n    fCtgs int32;            // handle CTGs in down\n    fUseAbs int32;          // use abstraction \n    fUseSimpleRef int32;    // simplified CEX refinement\n    fVerbose int32;         // verbose output`\n    fVeryVerbose int32;     // very verbose output\n    fNotVerbose int32;      // not printing line by line progress\n    fSilent int32;          // totally silent execution\n    fSolveAll int32;        // do not stop when found a SAT output\n    fStoreCex int32;        // enable storing counter-examples in MO mode\n    fUseBridge int32;       // use bridge interface\n    fUsePropOut int32;      // use property output\n    nFailOuts int32;        // the number of failed outputs\n    nDropOuts int32;        // the number of timed out outputs\n    nProveOuts int32;       // the number of proved outputs\n    iFrame int32;           // explored up to this frame\n    RunId int32;            // PDR id in this run \n    int(*pFuncStop)(int); // callback to terminate\n    int(*pFuncOnFail)(int,Abc_Cex_t*); // called for a failed output in MO mode\n    timeLastSolved abctime; // the time when the last output was solved\n    vOutMap  *Vec_Int_t;  // in the multi-output mode, contains status for each PO (0 = sat; 1 = unsat; negative = undecided)\n    pInvFileName  string;  // invariable file name\n}\n\n////////////////////////////////////////////////////////////////////////\n///                      MACRO DEFINITIONS                           ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                    FUNCTION DECLARATIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/*=== pdrCore.c ==========================================================*/\n// extern void               Pdr_ManSetDefaultParams( Pdr_Par_t * pPars );\n\n// extern int                Pdr_ManSolve( Aig_Man_t * p, Pdr_Par_t * pPars );\n\n\n\n//ABC_NAMESPACE_HEADER_END\n\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n"
+}

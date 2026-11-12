@@ -1,0 +1,501 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c",
+  "SHA256": "2dcddf3c8a7bde21fb6d4390fcfe90395f027c738d7ebfc74add2ac1ef6b0ed4",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 78,
+        "Column": 5,
+        "ByteOffset": 2675
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkIsStrash(pNtk) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2712
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Abc_NtkPoNum(pNtk) == 1 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 82,
+        "Column": 9,
+        "ByteOffset": 2783
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"RESOURCE LIMITS: Iterations = %d. Rewriting = %s. Fraiging = %s.\\n\","
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 84,
+        "Column": 9,
+        "ByteOffset": 2971
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Miter = %d (%3.1f).  Rwr = %d (%3.1f).  Fraig = %d (%3.1f).  Last = %d.\\n\", "
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 102,
+        "Column": 13,
+        "ByteOffset": 3820
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"ITERATION %2d : Confs = %6d. FraigBTL = %3d. \\n\", nIter+1, "
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 103,
+        "Column": 55,
+        "ByteOffset": 3943
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                 int32((pParams.nMiteringLimitStart * pow(pParams.nMiteringLimitMulti,nIter))), "
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 104,
+        "Column": 55,
+        "ByteOffset": 4040
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                 int32((pParams.nFraigingLimitStart * pow(pParams.nFraigingLimitMulti,nIter))) );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 105,
+        "Column": 13,
+        "ByteOffset": 4096
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 105,
+        "Column": 21,
+        "ByteOffset": 4104
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 115,
+        "Column": 87,
+        "ByteOffset": 4452
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        RetValue = Abc_NtkMiterSat( pNtk, (ABC_INT64_T)(pParams.nMiteringLimitStart * pow(pParams.nMiteringLimitMulti,nIter)), (ABC_INT64_T)nInspectLimit, 0, \u0026nSatConfs, \u0026nSatInspects );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 126,
+        "Column": 13,
+        "ByteOffset": 5118
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Reached global limit on conflicts/inspects. Quitting.\\n\" );"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 134,
+        "Column": 61,
+        "ByteOffset": 5399
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            Counter = int32((pParams.nRewritingLimitStart * pow(pParams.nRewritingLimitMulti,nIter)));"
+    },
+    {
+      "Name": "pow",
+      "Status": "converted",
+      "Message": "Double-precision math mapping; C errno/fenv and domain handling remain review obligations.",
+      "Location": {
+        "Line": 179,
+        "Column": 93,
+        "ByteOffset": 7290
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            pNtk = Abc_NtkMiterFraig( pNtkTemp = pNtk, int32((pParams.nFraigingLimitStart * pow(pParams.nFraigingLimitMulti,nIter))), nInspectLimit, \u0026RetValue, \u0026nSatFails, \u0026nSatConfs, \u0026nSatInspects );  Abc_NtkDelete( pNtkTemp );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 191,
+        "Column": 17,
+        "ByteOffset": 8084
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                printf( \"Reached global limit on conflicts/inspects. Quitting.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 204,
+        "Column": 13,
+        "ByteOffset": 8432
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Attempting SAT with conflict limit %d ...\\n\", pParams.nMiteringLimitLast );"
+    },
+    {
+      "Name": "fflush",
+      "Status": "review",
+      "Message": "Retained for downstream repair: conversion would require an anonymous function.",
+      "Location": {
+        "Line": 205,
+        "Column": 13,
+        "ByteOffset": 8529
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "stdout",
+      "Status": "converted",
+      "Message": "Standard stream object mapped to os.",
+      "Location": {
+        "Line": 205,
+        "Column": 21,
+        "ByteOffset": 8537
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            fflush( stdout );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 219,
+        "Column": 23,
+        "ByteOffset": 9110
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pNtk.pModel = ABC_ALLOC( int, Abc_NtkCiNum(pNtk) );"
+    },
+    {
+      "Name": "memset",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 220,
+        "Column": 9,
+        "ByteOffset": 9156
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memset( pNtk.pModel, 0, sizeof(int) * Abc_NtkCiNum(pNtk) );"
+    },
+    {
+      "Name": "ABC_FREE",
+      "Status": "review",
+      "Message": "Pointer versus slice representation, aliases and lifetime require coordinated repair.",
+      "Location": {
+        "Line": 275,
+        "Column": 9,
+        "ByteOffset": 11289
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        ABC_FREE( pNtkNew.pModel );"
+    },
+    {
+      "Name": "ABC_ALLOC",
+      "Status": "review",
+      "Message": "Allocation count/type requires representation repair.",
+      "Location": {
+        "Line": 276,
+        "Column": 26,
+        "ByteOffset": 11342
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        pNtkNew.pModel = ABC_ALLOC( int, Abc_NtkCiNum(pNtkNew) );"
+    },
+    {
+      "Name": "memcpy",
+      "Status": "review",
+      "Message": "Raw memory operation retained: destination must be a known byte array/slice.",
+      "Location": {
+        "Line": 277,
+        "Column": 9,
+        "ByteOffset": 11391
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        memcpy( pNtkNew.pModel, pModel, sizeof(int) * Abc_NtkCiNum(pNtkNew) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 305,
+        "Column": 5,
+        "ByteOffset": 12218
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes = %7d.  Levels = %4d.  \", Abc_NtkNodeNum(pNtk), "
+    }
+  ],
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 26,
+        "Column": 1,
+        "ByteOffset": 630
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    },
+    {
+      "Location": {
+        "Line": 195,
+        "Column": 1,
+        "ByteOffset": 8148
+      },
+      "Directive": "#ifdef ABC_USE_CUDD"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Abc_NtkMiterProve",
+      "Start": 2202,
+      "End": 9760,
+      "BodyStart": 2260,
+      "Original": "int Abc_NtkMiterProve( Abc_Ntk_t ** ppNtk, void * pPars )\n{\n    Prove_Params_t * pParams = (Prove_Params_t *)pPars;\n    Abc_Ntk_t * pNtk, * pNtkTemp;\n    int RetValue = -1, nIter, nSatFails, Counter;\n    abctime clk; //, timeStart = Abc_Clock();\n    ABC_INT64_T nSatConfs, nSatInspects, nInspectLimit;\n\n    // get the starting network\n    pNtk = *ppNtk;\n    assert( Abc_NtkIsStrash(pNtk) );\n    assert( Abc_NtkPoNum(pNtk) == 1 );\n \n    if ( pParams-\u003efVerbose )\n    {\n        printf( \"RESOURCE LIMITS: Iterations = %d. Rewriting = %s. Fraiging = %s.\\n\",\n            pParams-\u003enItersMax, pParams-\u003efUseRewriting? \"yes\":\"no\", pParams-\u003efUseFraiging? \"yes\":\"no\" );\n        printf( \"Miter = %d (%3.1f).  Rwr = %d (%3.1f).  Fraig = %d (%3.1f).  Last = %d.\\n\", \n            pParams-\u003enMiteringLimitStart,  pParams-\u003enMiteringLimitMulti, \n            pParams-\u003enRewritingLimitStart, pParams-\u003enRewritingLimitMulti,\n            pParams-\u003enFraigingLimitStart,  pParams-\u003enFraigingLimitMulti, pParams-\u003enMiteringLimitLast );\n    }\n\n    // if SAT only, solve without iteration\n    if ( !pParams-\u003efUseRewriting \u0026\u0026 !pParams-\u003efUseFraiging )\n    {\n        clk = Abc_Clock();\n        RetValue = Abc_NtkMiterSat( pNtk, (ABC_INT64_T)pParams-\u003enMiteringLimitLast, (ABC_INT64_T)0, 0, NULL, NULL );\n        Abc_NtkMiterPrint( pNtk, \"SAT solving\", clk, pParams-\u003efVerbose );\n        *ppNtk = pNtk;\n        return RetValue;\n    }\n\n    // check the current resource limits\n    for ( nIter = 0; nIter \u003c pParams-\u003enItersMax; nIter++ )\n    {\n        if ( pParams-\u003efVerbose )\n        {\n            printf( \"ITERATION %2d : Confs = %6d. FraigBTL = %3d. \\n\", nIter+1, \n                 (int)(pParams-\u003enMiteringLimitStart * pow(pParams-\u003enMiteringLimitMulti,nIter)), \n                 (int)(pParams-\u003enFraigingLimitStart * pow(pParams-\u003enFraigingLimitMulti,nIter)) );\n            fflush( stdout );\n        }\n\n        // try brute-force SAT\n        clk = Abc_Clock();\n        nInspectLimit = pParams-\u003enTotalInspectLimit? pParams-\u003enTotalInspectLimit - pParams-\u003enTotalInspectsMade : 0;\n        RetValue = Abc_NtkMiterSat( pNtk, (ABC_INT64_T)(pParams-\u003enMiteringLimitStart * pow(pParams-\u003enMiteringLimitMulti,nIter)), (ABC_INT64_T)nInspectLimit, 0, \u0026nSatConfs, \u0026nSatInspects );\n        Abc_NtkMiterPrint( pNtk, \"SAT solving\", clk, pParams-\u003efVerbose );\n        if ( RetValue \u003e= 0 )\n            break;\n\n        // add to the number of backtracks and inspects\n        pParams-\u003enTotalBacktracksMade += nSatConfs;\n        pParams-\u003enTotalInspectsMade   += nSatInspects;\n        // check if global resource limit is reached\n        if ( (pParams-\u003enTotalBacktrackLimit \u0026\u0026 pParams-\u003enTotalBacktracksMade \u003e= pParams-\u003enTotalBacktrackLimit) ||\n             (pParams-\u003enTotalInspectLimit   \u0026\u0026 pParams-\u003enTotalInspectsMade   \u003e= pParams-\u003enTotalInspectLimit) )\n        {\n            printf( \"Reached global limit on conflicts/inspects. Quitting.\\n\" );\n            *ppNtk = pNtk;\n            return -1;\n        }\n\n        // try rewriting\n        if ( pParams-\u003efUseRewriting )\n        {\n            clk = Abc_Clock();\n            Counter = (int)(pParams-\u003enRewritingLimitStart * pow(pParams-\u003enRewritingLimitMulti,nIter));\n//            Counter = 1;\n            while ( 1 )\n            {\n/*\n                extern Abc_Ntk_t * Abc_NtkIvyResyn( Abc_Ntk_t * pNtk, int fUpdateLevel, int fVerbose );\n                pNtk = Abc_NtkIvyResyn( pNtkTemp = pNtk, 0, 0 );  Abc_NtkDelete( pNtkTemp );\n                if ( (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 )\n                    break;\n                if ( --Counter == 0 )\n                    break;\n*/\n/*\n                Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n                if ( (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 )\n                    break;\n                if ( --Counter == 0 )\n                    break;\n*/\n                Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n                if ( (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 )\n                    break;\n                if ( --Counter == 0 )\n                    break;\n                Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n                if ( (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 )\n                    break;\n                if ( --Counter == 0 )\n                    break;\n                pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );  Abc_NtkDelete( pNtkTemp );\n                if ( (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 )\n                    break;\n                if ( --Counter == 0 )\n                    break;\n            }\n            Abc_NtkMiterPrint( pNtk, \"Rewriting  \", clk, pParams-\u003efVerbose );\n        }\n \n        if ( pParams-\u003efUseFraiging )\n        {\n            // try FRAIGing\n            clk = Abc_Clock();\n            nInspectLimit = pParams-\u003enTotalInspectLimit? pParams-\u003enTotalInspectLimit - pParams-\u003enTotalInspectsMade : 0;\n            pNtk = Abc_NtkMiterFraig( pNtkTemp = pNtk, (int)(pParams-\u003enFraigingLimitStart * pow(pParams-\u003enFraigingLimitMulti,nIter)), nInspectLimit, \u0026RetValue, \u0026nSatFails, \u0026nSatConfs, \u0026nSatInspects );  Abc_NtkDelete( pNtkTemp );\n            Abc_NtkMiterPrint( pNtk, \"FRAIGing   \", clk, pParams-\u003efVerbose );\n//            printf( \"NumFails = %d\\n\", nSatFails );\n            if ( RetValue \u003e= 0 )\n                break;\n\n            // add to the number of backtracks and inspects\n            pParams-\u003enTotalBacktracksMade += nSatConfs;\n            pParams-\u003enTotalInspectsMade += nSatInspects;\n            // check if global resource limit is reached\n            if ( (pParams-\u003enTotalBacktrackLimit \u0026\u0026 pParams-\u003enTotalBacktracksMade \u003e= pParams-\u003enTotalBacktrackLimit) ||\n                 (pParams-\u003enTotalInspectLimit   \u0026\u0026 pParams-\u003enTotalInspectsMade   \u003e= pParams-\u003enTotalInspectLimit) )\n            {\n                printf( \"Reached global limit on conflicts/inspects. Quitting.\\n\" );\n                *ppNtk = pNtk;\n                return -1;\n            }\n        }\n\n    }    \n\n    // try to prove it using brute force SAT\n#ifdef ABC_USE_CUDD\n    if ( RetValue \u003c 0 \u0026\u0026 pParams-\u003efUseBdds )\n    {\n        if ( pParams-\u003efVerbose )\n        {\n            printf( \"Attempting BDDs with node limit %d ...\\n\", pParams-\u003enBddSizeLimit );\n            fflush( stdout );\n        }\n        clk = Abc_Clock();\n        pNtk = Abc_NtkCollapse( pNtkTemp = pNtk, pParams-\u003enBddSizeLimit, 0, pParams-\u003efBddReorder, 0, 0, 0 );\n        if ( pNtk )   \n        {\n            Abc_NtkDelete( pNtkTemp );\n            RetValue = ( (Abc_NtkNodeNum(pNtk) == 1) \u0026\u0026 (Abc_ObjFanin0(Abc_NtkPo(pNtk,0))-\u003epData == Cudd_ReadLogicZero((DdManager *)pNtk-\u003epManFunc)) );\n        }\n        else \n            pNtk = pNtkTemp;\n        Abc_NtkMiterPrint( pNtk, \"BDD building\", clk, pParams-\u003efVerbose );\n    }\n#endif\n\n    if ( RetValue \u003c 0 )\n    {\n        if ( pParams-\u003efVerbose )\n        {\n            printf( \"Attempting SAT with conflict limit %d ...\\n\", pParams-\u003enMiteringLimitLast );\n            fflush( stdout );\n        }\n        clk = Abc_Clock();\n        nInspectLimit = pParams-\u003enTotalInspectLimit? pParams-\u003enTotalInspectLimit - pParams-\u003enTotalInspectsMade : 0;\n        RetValue = Abc_NtkMiterSat( pNtk, (ABC_INT64_T)pParams-\u003enMiteringLimitLast, (ABC_INT64_T)nInspectLimit, 0, NULL, NULL );\n        Abc_NtkMiterPrint( pNtk, \"SAT solving\", clk, pParams-\u003efVerbose );\n    }\n\n    // assign the model if it was proved by rewriting (const 1 miter)\n    if ( RetValue == 0 \u0026\u0026 pNtk-\u003epModel == NULL )\n    {\n        pNtk-\u003epModel = ABC_ALLOC( int, Abc_NtkCiNum(pNtk) );\n        memset( pNtk-\u003epModel, 0, sizeof(int) * Abc_NtkCiNum(pNtk) );\n    }\n    *ppNtk = pNtk;\n    return RetValue;\n}",
+      "Draft": "func Abc_NtkMiterProve(ppNtk **Abc_Ntk_t, pPars any) int32 {\n    var pParams *Prove_Params_t  = (Prove_Params_t *)pPars;\n    var pNtk, pNtkTemp *Abc_Ntk_t;\n    var RetValue int32 = -1;\n    var nIter int32;\n    var nSatFails int32;\n    var Counter int32;\n    var clk abctime; //, timeStart = Abc_Clock();\n    var nSatConfs, nSatInspects, nInspectLimit ABC_INT64_T;\n\n    // get the starting network\n    pNtk = *ppNtk;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    assert(Abc_NtkPoNum(pNtk) == 1, \"Abc_NtkPoNum(pNtk) == 1\");\n \n    if pParams.fVerbose {\n        fmt.Printf(\"RESOURCE LIMITS: Iterations = %d. Rewriting = %s. Fraiging = %s.\\n\", pParams.nItersMax, pParams.fUseRewriting? \"yes\":\"no\", pParams.fUseFraiging? \"yes\":\"no\");\n        fmt.Printf(\"Miter = %d (%3.1f).  Rwr = %d (%3.1f).  Fraig = %d (%3.1f).  Last = %d.\\n\", pParams.nMiteringLimitStart, pParams.nMiteringLimitMulti, pParams.nRewritingLimitStart, pParams.nRewritingLimitMulti, pParams.nFraigingLimitStart, pParams.nFraigingLimitMulti, pParams.nMiteringLimitLast);\n    }\n\n    // if SAT only, solve without iteration\n    if !pParams.fUseRewriting \u0026\u0026 !pParams.fUseFraiging {\n        clk = Abc_Clock();\n        RetValue = Abc_NtkMiterSat( pNtk, (ABC_INT64_T)pParams.nMiteringLimitLast, (ABC_INT64_T)0, 0, nil, nil );\n        Abc_NtkMiterPrint( pNtk, \"SAT solving\", clk, pParams.fVerbose );\n        *ppNtk = pNtk;\n        return RetValue;\n    }\n\n    // check the current resource limits\n    for  nIter = 0; nIter \u003c pParams.nItersMax; nIter++  {\n        if pParams.fVerbose {\n            fmt.Printf(\"ITERATION %2d : Confs = %6d. FraigBTL = %3d. \\n\", nIter+1, int32((pParams.nMiteringLimitStart * math.Pow(float64(pParams.nMiteringLimitMulti), float64(nIter)))), int32((pParams.nFraigingLimitStart * math.Pow(float64(pParams.nFraigingLimitMulti), float64(nIter)))));\n            fflush( os.Stdout );\n        }\n\n        // try brute-force SAT\n        clk = Abc_Clock();\n        if pParams.nTotalInspectLimit {\n            nInspectLimit = pParams.nTotalInspectLimit - pParams.nTotalInspectsMade;\n        } else {\n            nInspectLimit = 0;\n        }\n        RetValue = Abc_NtkMiterSat( pNtk, (ABC_INT64_T)(pParams.nMiteringLimitStart * math.Pow(float64(pParams.nMiteringLimitMulti), float64(nIter))), (ABC_INT64_T)nInspectLimit, 0, \u0026nSatConfs, \u0026nSatInspects );\n        Abc_NtkMiterPrint( pNtk, \"SAT solving\", clk, pParams.fVerbose );\n        if RetValue \u003e= 0 {\n            break; }\n\n        // add to the number of backtracks and inspects\n        pParams.nTotalBacktracksMade += nSatConfs;\n        pParams.nTotalInspectsMade   += nSatInspects;\n        // check if global resource limit is reached\n        if (pParams.nTotalBacktrackLimit \u0026\u0026 pParams.nTotalBacktracksMade \u003e= pParams.nTotalBacktrackLimit) ||\n             (pParams.nTotalInspectLimit   \u0026\u0026 pParams.nTotalInspectsMade   \u003e= pParams.nTotalInspectLimit) {\n            fmt.Printf(\"Reached global limit on conflicts/inspects. Quitting.\\n\");\n            *ppNtk = pNtk;\n            return -1;\n        }\n\n        // try rewriting\n        if pParams.fUseRewriting {\n            clk = Abc_Clock();\n            Counter = int32((pParams.nRewritingLimitStart * math.Pow(float64(pParams.nRewritingLimitMulti), float64(nIter))));\n//            Counter = 1;\n            for {\n/*\n                extern Abc_Ntk_t * Abc_NtkIvyResyn( Abc_Ntk_t * pNtk, int fUpdateLevel, int fVerbose );\n                pNtk = Abc_NtkIvyResyn( pNtkTemp = pNtk, 0, 0 );  Abc_NtkDelete( pNtkTemp );\n                if ( (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 )\n                    break;\n                if ( --Counter == 0 )\n                    break;\n*/\n/*\n                Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n                if ( (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 )\n                    break;\n                if ( --Counter == 0 )\n                    break;\n*/\n                Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n                if (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 {\n                    break; }\n                if Counter--; Counter == 0 {\n                    break; }\n                Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n                if (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 {\n                    break; }\n                if Counter--; Counter == 0 {\n                    break; }\n                pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );  Abc_NtkDelete( pNtkTemp );\n                if (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 {\n                    break; }\n                if Counter--; Counter == 0 {\n                    break; }\n            }\n            Abc_NtkMiterPrint( pNtk, \"Rewriting  \", clk, pParams.fVerbose );\n        }\n \n        if pParams.fUseFraiging {\n            // try FRAIGing\n            clk = Abc_Clock();\n            if pParams.nTotalInspectLimit {\n                nInspectLimit = pParams.nTotalInspectLimit - pParams.nTotalInspectsMade;\n            } else {\n                nInspectLimit = 0;\n            }\n            pNtk = Abc_NtkMiterFraig( pNtkTemp = pNtk, int32((pParams.nFraigingLimitStart * math.Pow(float64(pParams.nFraigingLimitMulti), float64(nIter)))), nInspectLimit, \u0026RetValue, \u0026nSatFails, \u0026nSatConfs, \u0026nSatInspects );  Abc_NtkDelete( pNtkTemp );\n            Abc_NtkMiterPrint( pNtk, \"FRAIGing   \", clk, pParams.fVerbose );\n//            printf( \"NumFails = %d\\n\", nSatFails );\n            if RetValue \u003e= 0 {\n                break; }\n\n            // add to the number of backtracks and inspects\n            pParams.nTotalBacktracksMade += nSatConfs;\n            pParams.nTotalInspectsMade += nSatInspects;\n            // check if global resource limit is reached\n            if (pParams.nTotalBacktrackLimit \u0026\u0026 pParams.nTotalBacktracksMade \u003e= pParams.nTotalBacktrackLimit) ||\n                 (pParams.nTotalInspectLimit   \u0026\u0026 pParams.nTotalInspectsMade   \u003e= pParams.nTotalInspectLimit) {\n                fmt.Printf(\"Reached global limit on conflicts/inspects. Quitting.\\n\");\n                *ppNtk = pNtk;\n                return -1;\n            }\n        }\n\n    }    \n\n    // try to prove it using brute force SAT\n#ifdef ABC_USE_CUDD\n    if ( RetValue \u003c 0 \u0026\u0026 pParams-\u003efUseBdds )\n    {\n        if ( pParams-\u003efVerbose )\n        {\n            printf( \"Attempting BDDs with node limit %d ...\\n\", pParams-\u003enBddSizeLimit );\n            fflush( stdout );\n        }\n        clk = Abc_Clock();\n        pNtk = Abc_NtkCollapse( pNtkTemp = pNtk, pParams-\u003enBddSizeLimit, 0, pParams-\u003efBddReorder, 0, 0, 0 );\n        if ( pNtk )   \n        {\n            Abc_NtkDelete( pNtkTemp );\n            RetValue = ( (Abc_NtkNodeNum(pNtk) == 1) \u0026\u0026 (Abc_ObjFanin0(Abc_NtkPo(pNtk,0))-\u003epData == Cudd_ReadLogicZero((DdManager *)pNtk-\u003epManFunc)) );\n        }\n        else \n            pNtk = pNtkTemp;\n        Abc_NtkMiterPrint( pNtk, \"BDD building\", clk, pParams-\u003efVerbose );\n    }\n#endif\n\n    if RetValue \u003c 0 {\n        if pParams.fVerbose {\n            fmt.Printf(\"Attempting SAT with conflict limit %d ...\\n\", pParams.nMiteringLimitLast);\n            fflush( os.Stdout );\n        }\n        clk = Abc_Clock();\n        if pParams.nTotalInspectLimit {\n            nInspectLimit = pParams.nTotalInspectLimit - pParams.nTotalInspectsMade;\n        } else {\n            nInspectLimit = 0;\n        }\n        RetValue = Abc_NtkMiterSat( pNtk, (ABC_INT64_T)pParams.nMiteringLimitLast, (ABC_INT64_T)nInspectLimit, 0, nil, nil );\n        Abc_NtkMiterPrint( pNtk, \"SAT solving\", clk, pParams.fVerbose );\n    }\n\n    // assign the model if it was proved by rewriting (const 1 miter)\n    if RetValue == 0 \u0026\u0026 pNtk.pModel == nil {\n        pNtk.pModel = ABC_ALLOC( int, Abc_NtkCiNum(pNtk) );\n        memset( pNtk.pModel, 0, sizeof(int) * Abc_NtkCiNum(pNtk) );\n    }\n    *ppNtk = pNtk;\n    return RetValue;\n}"
+    },
+    {
+      "Name": "Abc_NtkMiterFraig",
+      "Start": 10095,
+      "End": 12225,
+      "BodyStart": 10270,
+      "Original": "Abc_Ntk_t * Abc_NtkMiterFraig( Abc_Ntk_t * pNtk, int nBTLimit, ABC_INT64_T nInspLimit, int * pRetValue, int * pNumFails, ABC_INT64_T * pNumConfs, ABC_INT64_T * pNumInspects )\n{\n    Abc_Ntk_t * pNtkNew;\n    Fraig_Params_t Params, * pParams = \u0026Params;\n    Fraig_Man_t * pMan;\n    int nWords1, nWords2, nWordsMin, RetValue;\n    int * pModel;\n\n    // to determine the number of simulation patterns\n    // use the following strategy\n    // at least 64 words (32 words random and 32 words dynamic)\n    // no more than 256M for one circuit (128M + 128M)\n    nWords1 = 32;\n    nWords2 = (1\u003c\u003c27) / (Abc_NtkNodeNum(pNtk) + Abc_NtkCiNum(pNtk));\n    nWordsMin = Abc_MinInt( nWords1, nWords2 );\n\n    // set the FRAIGing parameters\n    Fraig_ParamsSetDefault( pParams );\n    pParams-\u003enPatsRand  = nWordsMin * 32; // the number of words of random simulation info\n    pParams-\u003enPatsDyna  = nWordsMin * 32; // the number of words of dynamic simulation info\n    pParams-\u003enBTLimit   = nBTLimit;       // the max number of backtracks\n    pParams-\u003enSeconds   = -1;             // the runtime limit\n    pParams-\u003efTryProve  = 0;              // do not try to prove the final miter\n    pParams-\u003efDoSparse  = 1;              // try proving sparse functions\n    pParams-\u003efVerbose   = 0;\n    pParams-\u003enInspLimit = nInspLimit;\n\n    // transform the target into a fraig\n    pMan = (Fraig_Man_t *)Abc_NtkToFraig( pNtk, pParams, 0, 0 ); \n    Fraig_ManProveMiter( pMan );\n    RetValue = Fraig_ManCheckMiter( pMan );\n\n    // create the network \n    pNtkNew = Abc_NtkFromFraig( pMan, pNtk );\n\n    // save model\n    if ( RetValue == 0 )\n    {\n        pModel = Fraig_ManReadModel( pMan );\n        ABC_FREE( pNtkNew-\u003epModel );\n        pNtkNew-\u003epModel = ABC_ALLOC( int, Abc_NtkCiNum(pNtkNew) );\n        memcpy( pNtkNew-\u003epModel, pModel, sizeof(int) * Abc_NtkCiNum(pNtkNew) );\n    }\n\n    // save the return values\n    *pRetValue = RetValue;\n    *pNumFails = Fraig_ManReadSatFails( pMan );\n    *pNumConfs = Fraig_ManReadConflicts( pMan );\n    *pNumInspects = Fraig_ManReadInspects( pMan );\n\n    // delete the fraig manager\n    Fraig_ManFree( pMan );\n    return pNtkNew;\n}",
+      "Draft": "func Abc_NtkMiterFraig(pNtk *Abc_Ntk_t, nBTLimit int32, nInspLimit ABC_INT64_T, pRetValue *int32, pNumFails *int32, pNumConfs *ABC_INT64_T, pNumInspects *ABC_INT64_T) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var Params Fraig_Params_t;\n    var pParams *Fraig_Params_t = \u0026Params;\n    var pMan *Fraig_Man_t;\n    var nWords1, nWords2, nWordsMin, RetValue int32;\n    var pModel *int32;\n\n    // to determine the number of simulation patterns\n    // use the following strategy\n    // at least 64 words (32 words random and 32 words dynamic)\n    // no more than 256M for one circuit (128M + 128M)\n    nWords1 = 32;\n    nWords2 = (1\u003c\u003c27) / (Abc_NtkNodeNum(pNtk) + Abc_NtkCiNum(pNtk));\n    nWordsMin = Abc_MinInt( nWords1, nWords2 );\n\n    // set the FRAIGing parameters\n    Fraig_ParamsSetDefault( pParams );\n    pParams.nPatsRand  = nWordsMin * 32; // the number of words of random simulation info\n    pParams.nPatsDyna  = nWordsMin * 32; // the number of words of dynamic simulation info\n    pParams.nBTLimit   = nBTLimit;       // the max number of backtracks\n    pParams.nSeconds   = -1;             // the runtime limit\n    pParams.fTryProve  = 0;              // do not try to prove the final miter\n    pParams.fDoSparse  = 1;              // try proving sparse functions\n    pParams.fVerbose   = 0;\n    pParams.nInspLimit = nInspLimit;\n\n    // transform the target into a fraig\n    pMan = (Fraig_Man_t *)Abc_NtkToFraig( pNtk, pParams, 0, 0 ); \n    Fraig_ManProveMiter( pMan );\n    RetValue = Fraig_ManCheckMiter( pMan );\n\n    // create the network \n    pNtkNew = Abc_NtkFromFraig( pMan, pNtk );\n\n    // save model\n    if RetValue == 0 {\n        pModel = Fraig_ManReadModel( pMan );\n        ABC_FREE( pNtkNew.pModel );\n        pNtkNew.pModel = ABC_ALLOC( int, Abc_NtkCiNum(pNtkNew) );\n        memcpy( pNtkNew.pModel, pModel, sizeof(int) * Abc_NtkCiNum(pNtkNew) );\n    }\n\n    // save the return values\n    *pRetValue = RetValue;\n    *pNumFails = Fraig_ManReadSatFails( pMan );\n    *pNumConfs = Fraig_ManReadConflicts( pMan );\n    *pNumInspects = Fraig_ManReadInspects( pMan );\n\n    // delete the fraig manager\n    Fraig_ManFree( pMan );\n    return pNtkNew;\n}"
+    },
+    {
+      "Name": "Abc_NtkMiterPrint",
+      "Start": 12560,
+      "End": 12871,
+      "BodyStart": 12646,
+      "Original": "void Abc_NtkMiterPrint( Abc_Ntk_t * pNtk, char * pString, abctime clk, int fVerbose )\n{\n    if ( !fVerbose )\n        return;\n    printf( \"Nodes = %7d.  Levels = %4d.  \", Abc_NtkNodeNum(pNtk), \n        Abc_NtkIsStrash(pNtk)? Abc_AigLevel(pNtk) : Abc_NtkLevel(pNtk) );\n    ABC_PRT( pString, Abc_Clock() - clk );\n}",
+      "Draft": "func Abc_NtkMiterPrint(pNtk *Abc_Ntk_t, pString string, clk abctime, fVerbose int32) {\n    if !(fVerbose != 0) {\n        return; }\n    fmt.Printf(\"Nodes = %7d.  Levels = %4d.  \", Abc_NtkNodeNum(pNtk), Abc_NtkIsStrash(pNtk)? Abc_AigLevel(pNtk) : Abc_NtkLevel(pNtk));\n    ABC_PRT( pString, Abc_Clock() - clk );\n}"
+    },
+    {
+      "Name": "Abc_NtkMiterRwsat",
+      "Start": 13141,
+      "End": 13455,
+      "BodyStart": 13191,
+      "Original": "Abc_Ntk_t * Abc_NtkMiterRwsat( Abc_Ntk_t * pNtk )\n{\n    Abc_Ntk_t * pNtkTemp;\n    Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n    pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );  Abc_NtkDelete( pNtkTemp );\n    Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n    Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n    return pNtk;\n}",
+      "Draft": "func Abc_NtkMiterRwsat(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkTemp *Abc_Ntk_t;\n    Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n    pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );  Abc_NtkDelete( pNtkTemp );\n    Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n    Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n    return pNtk;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::mechanical::sizeof::9022",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 9677,
+      "End": 9683
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::mechanical::sizeof::11238",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 11893,
+      "End": 11899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::pointer-cast::2308",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2293,
+      "End": 2311
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::pointer-cast::10792",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11447,
+      "End": 11462
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::void-pointer::Abc_NtkMiterProve",
+      "Category": "void-pointer-review",
+      "Symbol": "Abc_NtkMiterProve",
+      "Status": "open",
+      "Message": "C void pointers use any in the draft; recover concrete types and repair casts/dereferences from call sites.",
+      "Start": 2202,
+      "End": 9760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::ternary::Abc_NtkMiterProve",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkMiterProve",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 2202,
+      "End": 9760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::Abc_NtkMiterProve",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMiterProve",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2202,
+      "End": 9760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::Abc_NtkMiterFraig",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMiterFraig",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10095,
+      "End": 12225
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::ternary::Abc_NtkMiterPrint",
+      "Category": "ternary-review",
+      "Symbol": "Abc_NtkMiterPrint",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 12560,
+      "End": 12871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::Abc_NtkMiterPrint",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMiterPrint",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12560,
+      "End": 12871
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::Abc_NtkMiterRwsat",
+      "Category": "semantic-review",
+      "Symbol": "Abc_NtkMiterRwsat",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13141,
+      "End": 13455
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 13703
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 630,
+      "End": 689
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::conditional::1",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 8148,
+      "End": 8892
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::macro-inline::9606",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 9606,
+      "End": 9642
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::macro-inline::11756",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_FREE",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11756,
+      "End": 11783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::macro-inline::11811",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_ALLOC",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 11811,
+      "End": 11850
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/base/abci/abcProve.c::macro-inline::12831",
+      "Category": "macro-inline-review",
+      "Symbol": "ABC_PRT",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 12831,
+      "End": 12868
+    }
+  ],
+  "Draft": "package abci\n\nimport (\n\t\"fmt\"\n\t\"math\"\n\t\"os\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [abcProve.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Network and node package.]\n\n  Synopsis    [Proves the miter using AIG rewriting, FRAIGing, and SAT solving.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: abcProve.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \u003cmath.h\u003e\n\n//#include \"base/abc/abc.h\"\n//#include \"proof/fraig/fraig.h\"\n\n#ifdef ABC_USE_CUDD\n#include \"bdd/extrab/extraBdd.h\"\n#endif\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// extern int  Abc_NtkRefactor( Abc_Ntk_t * pNtk, int nNodeSizeMax, int nConeSizeMax, int fUpdateLevel, int fUseZeros, int fUseDcs, int fVerbose );\n\n// extern Abc_Ntk_t * Abc_NtkFromFraig( Fraig_Man_t * pMan, Abc_Ntk_t * pNtk );\n\n\n// static Abc_Ntk_t * Abc_NtkMiterFraig( Abc_Ntk_t * pNtk, int nBTLimit, ABC_INT64_T nInspLimit, int * pRetValue, int * pNumFails, ABC_INT64_T * pNumConfs, ABC_INT64_T * pNumInspects );\n\n// static void Abc_NtkMiterPrint( Abc_Ntk_t * pNtk, char * pString, abctime clk, int fVerbose );\n\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n  \n/**Function*************************************************************\n\n  Synopsis    [Attempts to solve the miter using a number of tricks.]\n\n  Description [Returns -1 if timed out; 0 if SAT; 1 if UNSAT. Returns\n  a simplified version of the original network (or a constant 0 network).\n  In case the network is not a constant zero and a SAT assignment is found,\n  pNtk-\u003epModel contains a satisfying assignment.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMiterProve(ppNtk **Abc_Ntk_t, pPars any) int32 {\n    var pParams *Prove_Params_t  = (Prove_Params_t *)pPars;\n    var pNtk, pNtkTemp *Abc_Ntk_t;\n    var RetValue int32 = -1;\n    var nIter int32;\n    var nSatFails int32;\n    var Counter int32;\n    var clk abctime; //, timeStart = Abc_Clock();\n    var nSatConfs, nSatInspects, nInspectLimit ABC_INT64_T;\n\n    // get the starting network\n    pNtk = *ppNtk;\n    assert(Abc_NtkIsStrash(pNtk), \"Abc_NtkIsStrash(pNtk)\");\n    assert(Abc_NtkPoNum(pNtk) == 1, \"Abc_NtkPoNum(pNtk) == 1\");\n \n    if pParams.fVerbose {\n        fmt.Printf(\"RESOURCE LIMITS: Iterations = %d. Rewriting = %s. Fraiging = %s.\\n\", pParams.nItersMax, pParams.fUseRewriting? \"yes\":\"no\", pParams.fUseFraiging? \"yes\":\"no\");\n        fmt.Printf(\"Miter = %d (%3.1f).  Rwr = %d (%3.1f).  Fraig = %d (%3.1f).  Last = %d.\\n\", pParams.nMiteringLimitStart, pParams.nMiteringLimitMulti, pParams.nRewritingLimitStart, pParams.nRewritingLimitMulti, pParams.nFraigingLimitStart, pParams.nFraigingLimitMulti, pParams.nMiteringLimitLast);\n    }\n\n    // if SAT only, solve without iteration\n    if !pParams.fUseRewriting \u0026\u0026 !pParams.fUseFraiging {\n        clk = Abc_Clock();\n        RetValue = Abc_NtkMiterSat( pNtk, (ABC_INT64_T)pParams.nMiteringLimitLast, (ABC_INT64_T)0, 0, nil, nil );\n        Abc_NtkMiterPrint( pNtk, \"SAT solving\", clk, pParams.fVerbose );\n        *ppNtk = pNtk;\n        return RetValue;\n    }\n\n    // check the current resource limits\n    for  nIter = 0; nIter \u003c pParams.nItersMax; nIter++  {\n        if pParams.fVerbose {\n            fmt.Printf(\"ITERATION %2d : Confs = %6d. FraigBTL = %3d. \\n\", nIter+1, int32((pParams.nMiteringLimitStart * math.Pow(float64(pParams.nMiteringLimitMulti), float64(nIter)))), int32((pParams.nFraigingLimitStart * math.Pow(float64(pParams.nFraigingLimitMulti), float64(nIter)))));\n            fflush( os.Stdout );\n        }\n\n        // try brute-force SAT\n        clk = Abc_Clock();\n        if pParams.nTotalInspectLimit {\n            nInspectLimit = pParams.nTotalInspectLimit - pParams.nTotalInspectsMade;\n        } else {\n            nInspectLimit = 0;\n        }\n        RetValue = Abc_NtkMiterSat( pNtk, (ABC_INT64_T)(pParams.nMiteringLimitStart * math.Pow(float64(pParams.nMiteringLimitMulti), float64(nIter))), (ABC_INT64_T)nInspectLimit, 0, \u0026nSatConfs, \u0026nSatInspects );\n        Abc_NtkMiterPrint( pNtk, \"SAT solving\", clk, pParams.fVerbose );\n        if RetValue \u003e= 0 {\n            break; }\n\n        // add to the number of backtracks and inspects\n        pParams.nTotalBacktracksMade += nSatConfs;\n        pParams.nTotalInspectsMade   += nSatInspects;\n        // check if global resource limit is reached\n        if (pParams.nTotalBacktrackLimit \u0026\u0026 pParams.nTotalBacktracksMade \u003e= pParams.nTotalBacktrackLimit) ||\n             (pParams.nTotalInspectLimit   \u0026\u0026 pParams.nTotalInspectsMade   \u003e= pParams.nTotalInspectLimit) {\n            fmt.Printf(\"Reached global limit on conflicts/inspects. Quitting.\\n\");\n            *ppNtk = pNtk;\n            return -1;\n        }\n\n        // try rewriting\n        if pParams.fUseRewriting {\n            clk = Abc_Clock();\n            Counter = int32((pParams.nRewritingLimitStart * math.Pow(float64(pParams.nRewritingLimitMulti), float64(nIter))));\n//            Counter = 1;\n            for {\n/*\n                extern Abc_Ntk_t * Abc_NtkIvyResyn( Abc_Ntk_t * pNtk, int fUpdateLevel, int fVerbose );\n                pNtk = Abc_NtkIvyResyn( pNtkTemp = pNtk, 0, 0 );  Abc_NtkDelete( pNtkTemp );\n                if ( (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 )\n                    break;\n                if ( --Counter == 0 )\n                    break;\n*/\n/*\n                Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n                if ( (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 )\n                    break;\n                if ( --Counter == 0 )\n                    break;\n*/\n                Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n                if (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 {\n                    break; }\n                if Counter--; Counter == 0 {\n                    break; }\n                Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n                if (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 {\n                    break; }\n                if Counter--; Counter == 0 {\n                    break; }\n                pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );  Abc_NtkDelete( pNtkTemp );\n                if (RetValue = Abc_NtkMiterIsConstant(pNtk)) \u003e= 0 {\n                    break; }\n                if Counter--; Counter == 0 {\n                    break; }\n            }\n            Abc_NtkMiterPrint( pNtk, \"Rewriting  \", clk, pParams.fVerbose );\n        }\n \n        if pParams.fUseFraiging {\n            // try FRAIGing\n            clk = Abc_Clock();\n            if pParams.nTotalInspectLimit {\n                nInspectLimit = pParams.nTotalInspectLimit - pParams.nTotalInspectsMade;\n            } else {\n                nInspectLimit = 0;\n            }\n            pNtk = Abc_NtkMiterFraig( pNtkTemp = pNtk, int32((pParams.nFraigingLimitStart * math.Pow(float64(pParams.nFraigingLimitMulti), float64(nIter)))), nInspectLimit, \u0026RetValue, \u0026nSatFails, \u0026nSatConfs, \u0026nSatInspects );  Abc_NtkDelete( pNtkTemp );\n            Abc_NtkMiterPrint( pNtk, \"FRAIGing   \", clk, pParams.fVerbose );\n//            printf( \"NumFails = %d\\n\", nSatFails );\n            if RetValue \u003e= 0 {\n                break; }\n\n            // add to the number of backtracks and inspects\n            pParams.nTotalBacktracksMade += nSatConfs;\n            pParams.nTotalInspectsMade += nSatInspects;\n            // check if global resource limit is reached\n            if (pParams.nTotalBacktrackLimit \u0026\u0026 pParams.nTotalBacktracksMade \u003e= pParams.nTotalBacktrackLimit) ||\n                 (pParams.nTotalInspectLimit   \u0026\u0026 pParams.nTotalInspectsMade   \u003e= pParams.nTotalInspectLimit) {\n                fmt.Printf(\"Reached global limit on conflicts/inspects. Quitting.\\n\");\n                *ppNtk = pNtk;\n                return -1;\n            }\n        }\n\n    }    \n\n    // try to prove it using brute force SAT\n#ifdef ABC_USE_CUDD\n    if ( RetValue \u003c 0 \u0026\u0026 pParams-\u003efUseBdds )\n    {\n        if ( pParams-\u003efVerbose )\n        {\n            printf( \"Attempting BDDs with node limit %d ...\\n\", pParams-\u003enBddSizeLimit );\n            fflush( stdout );\n        }\n        clk = Abc_Clock();\n        pNtk = Abc_NtkCollapse( pNtkTemp = pNtk, pParams-\u003enBddSizeLimit, 0, pParams-\u003efBddReorder, 0, 0, 0 );\n        if ( pNtk )   \n        {\n            Abc_NtkDelete( pNtkTemp );\n            RetValue = ( (Abc_NtkNodeNum(pNtk) == 1) \u0026\u0026 (Abc_ObjFanin0(Abc_NtkPo(pNtk,0))-\u003epData == Cudd_ReadLogicZero((DdManager *)pNtk-\u003epManFunc)) );\n        }\n        else \n            pNtk = pNtkTemp;\n        Abc_NtkMiterPrint( pNtk, \"BDD building\", clk, pParams-\u003efVerbose );\n    }\n#endif\n\n    if RetValue \u003c 0 {\n        if pParams.fVerbose {\n            fmt.Printf(\"Attempting SAT with conflict limit %d ...\\n\", pParams.nMiteringLimitLast);\n            fflush( os.Stdout );\n        }\n        clk = Abc_Clock();\n        if pParams.nTotalInspectLimit {\n            nInspectLimit = pParams.nTotalInspectLimit - pParams.nTotalInspectsMade;\n        } else {\n            nInspectLimit = 0;\n        }\n        RetValue = Abc_NtkMiterSat( pNtk, (ABC_INT64_T)pParams.nMiteringLimitLast, (ABC_INT64_T)nInspectLimit, 0, nil, nil );\n        Abc_NtkMiterPrint( pNtk, \"SAT solving\", clk, pParams.fVerbose );\n    }\n\n    // assign the model if it was proved by rewriting (const 1 miter)\n    if RetValue == 0 \u0026\u0026 pNtk.pModel == nil {\n        pNtk.pModel = ABC_ALLOC( int, Abc_NtkCiNum(pNtk) );\n        memset( pNtk.pModel, 0, sizeof(int) * Abc_NtkCiNum(pNtk) );\n    }\n    *ppNtk = pNtk;\n    return RetValue;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Attempts to solve the miter using a number of tricks.]\n\n  Description [Returns -1 if timed out; 0 if SAT; 1 if UNSAT.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMiterFraig(pNtk *Abc_Ntk_t, nBTLimit int32, nInspLimit ABC_INT64_T, pRetValue *int32, pNumFails *int32, pNumConfs *ABC_INT64_T, pNumInspects *ABC_INT64_T) *Abc_Ntk_t {\n    var pNtkNew *Abc_Ntk_t;\n    var Params Fraig_Params_t;\n    var pParams *Fraig_Params_t = \u0026Params;\n    var pMan *Fraig_Man_t;\n    var nWords1, nWords2, nWordsMin, RetValue int32;\n    var pModel *int32;\n\n    // to determine the number of simulation patterns\n    // use the following strategy\n    // at least 64 words (32 words random and 32 words dynamic)\n    // no more than 256M for one circuit (128M + 128M)\n    nWords1 = 32;\n    nWords2 = (1\u003c\u003c27) / (Abc_NtkNodeNum(pNtk) + Abc_NtkCiNum(pNtk));\n    nWordsMin = Abc_MinInt( nWords1, nWords2 );\n\n    // set the FRAIGing parameters\n    Fraig_ParamsSetDefault( pParams );\n    pParams.nPatsRand  = nWordsMin * 32; // the number of words of random simulation info\n    pParams.nPatsDyna  = nWordsMin * 32; // the number of words of dynamic simulation info\n    pParams.nBTLimit   = nBTLimit;       // the max number of backtracks\n    pParams.nSeconds   = -1;             // the runtime limit\n    pParams.fTryProve  = 0;              // do not try to prove the final miter\n    pParams.fDoSparse  = 1;              // try proving sparse functions\n    pParams.fVerbose   = 0;\n    pParams.nInspLimit = nInspLimit;\n\n    // transform the target into a fraig\n    pMan = (Fraig_Man_t *)Abc_NtkToFraig( pNtk, pParams, 0, 0 ); \n    Fraig_ManProveMiter( pMan );\n    RetValue = Fraig_ManCheckMiter( pMan );\n\n    // create the network \n    pNtkNew = Abc_NtkFromFraig( pMan, pNtk );\n\n    // save model\n    if RetValue == 0 {\n        pModel = Fraig_ManReadModel( pMan );\n        ABC_FREE( pNtkNew.pModel );\n        pNtkNew.pModel = ABC_ALLOC( int, Abc_NtkCiNum(pNtkNew) );\n        memcpy( pNtkNew.pModel, pModel, sizeof(int) * Abc_NtkCiNum(pNtkNew) );\n    }\n\n    // save the return values\n    *pRetValue = RetValue;\n    *pNumFails = Fraig_ManReadSatFails( pMan );\n    *pNumConfs = Fraig_ManReadConflicts( pMan );\n    *pNumInspects = Fraig_ManReadInspects( pMan );\n\n    // delete the fraig manager\n    Fraig_ManFree( pMan );\n    return pNtkNew;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Attempts to solve the miter using a number of tricks.]\n\n  Description [Returns -1 if timed out; 0 if SAT; 1 if UNSAT.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMiterPrint(pNtk *Abc_Ntk_t, pString string, clk abctime, fVerbose int32) {\n    if !(fVerbose != 0) {\n        return; }\n    fmt.Printf(\"Nodes = %7d.  Levels = %4d.  \", Abc_NtkNodeNum(pNtk), Abc_NtkIsStrash(pNtk)? Abc_AigLevel(pNtk) : Abc_NtkLevel(pNtk));\n    ABC_PRT( pString, Abc_Clock() - clk );\n}\n\n  \n/**Function*************************************************************\n\n  Synopsis    [Implements resynthesis for CEC.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Abc_NtkMiterRwsat(pNtk *Abc_Ntk_t) *Abc_Ntk_t {\n    var pNtkTemp *Abc_Ntk_t;\n    Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n    pNtk = Abc_NtkBalance( pNtkTemp = pNtk, 0, 0, 0 );  Abc_NtkDelete( pNtkTemp );\n    Abc_NtkRewrite( pNtk, 0, 0, 0, 0, 0 );\n    Abc_NtkRefactor( pNtk, 10, 16, 0, 0, 0, 0 );\n    return pNtk;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

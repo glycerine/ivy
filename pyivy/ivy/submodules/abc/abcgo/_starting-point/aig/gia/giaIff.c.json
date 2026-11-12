@@ -1,0 +1,616 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c",
+  "SHA256": "3ee6c95bf5a16b907b267f4eb9c53db62b8eaf9c860a7e8748bb072e7804b262",
+  "Library": [
+    {
+      "Name": "free",
+      "Status": "review",
+      "Message": "Ownership, element type, byte size, pointer arithmetic and failure policy must be established.",
+      "Location": {
+        "Line": 78,
+        "Column": 57,
+        "ByteOffset": 3146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    /*__starting_point_inline_macro:ABC_FREE__*/((p) ? (free((char *) (p)), (p) = 0) : 0);"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 144,
+        "Column": 5,
+        "ByteOffset": 5646
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( i == Gia_ObjLutSize(p.pGia, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 157,
+        "Column": 5,
+        "ByteOffset": 6417
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( DelayMax \u003e= 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 169,
+        "Column": 9,
+        "ByteOffset": 6996
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nSize \u003c= p.pLib.LutMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 193,
+        "Column": 9,
+        "ByteOffset": 8092
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( nSize \u003c= p.pLib.LutMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 225,
+        "Column": 5,
+        "ByteOffset": 8952
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( nDegree == 2 || nDegree == 3 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 263,
+        "Column": 21,
+        "ByteOffset": 10655
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "                    assert( arrTime3 \u003c arrTime2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 269,
+        "Column": 22,
+        "ByteOffset": 10872
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            } else { assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 281,
+        "Column": 18,
+        "ByteOffset": 11378
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { assert( 0 ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 283,
+        "Column": 5,
+        "ByteOffset": 11403
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Max delay = %.2f.  Count1 = %d.  Count2 = %d.  Count3 = %d.\\n\", "
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 304,
+        "Column": 5,
+        "ByteOffset": 12036
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Gia_ObjIsLut(p.pGia, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 308,
+        "Column": 9,
+        "ByteOffset": 12201
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iFaninSkip3 == -1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 316,
+        "Column": 9,
+        "ByteOffset": 12585
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iFaninSkip2 \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 329,
+        "Column": 9,
+        "ByteOffset": 13284
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( iFaninSkip2 \u003e 0 \u0026\u0026 iFaninSkip3 \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 389,
+        "Column": 18,
+        "ByteOffset": 15900
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { printf( \"LUT library for packing 4-LUTs should have 7 or 10 inputs.\\n\" ); return; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 397,
+        "Column": 18,
+        "ByteOffset": 16177
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        } else { printf( \"LUT library for packing 6-LUTs should have 11 or 16 inputs.\\n\" ); return; }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 400,
+        "Column": 9,
+        "ByteOffset": 16288
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"The LUT size is more than 6.\\n\" );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 404,
+        "Column": 9,
+        "ByteOffset": 16380
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        printf( \"Performing %d-clustering with %d-LUTs:\\n\", nDegree, nLutSize ); }"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Iff_ObjTimeId",
+      "Start": 1146,
+      "End": 1303,
+      "BodyStart": 1238,
+      "Original": "static inline float Iff_ObjTimeId( Iff_Man_t * p, int iObj )                                { return Vec_FltEntry( p-\u003evTimes, iObj );                       }",
+      "Draft": "func Iff_ObjTimeId(p *Iff_Man_t, iObj int32) float32 { return Vec_FltEntry( p.vTimes, iObj );                       }"
+    },
+    {
+      "Name": "Iff_ObjTime",
+      "Start": 1304,
+      "End": 1461,
+      "BodyStart": 1396,
+      "Original": "static inline float Iff_ObjTime( Iff_Man_t * p, Gia_Obj_t * pObj )                          { return Iff_ObjTimeId( p, Gia_ObjId(p-\u003epGia, pObj) );          }",
+      "Draft": "func Iff_ObjTime(p *Iff_Man_t, pObj *Gia_Obj_t) float32 { return Iff_ObjTimeId( p, Gia_ObjId(p.pGia, pObj) );          }"
+    },
+    {
+      "Name": "Iff_ObjSetTimeId",
+      "Start": 1462,
+      "End": 1619,
+      "BodyStart": 1554,
+      "Original": "static inline void  Iff_ObjSetTimeId( Iff_Man_t * p, int iObj, float Time )                 { Vec_FltWriteEntry( p-\u003evTimes, iObj, Time );                   }",
+      "Draft": "func Iff_ObjSetTimeId(p *Iff_Man_t, iObj int32, Time float32) { Vec_FltWriteEntry( p.vTimes, iObj, Time );                   }"
+    },
+    {
+      "Name": "Iff_ObjSetTime",
+      "Start": 1620,
+      "End": 1777,
+      "BodyStart": 1712,
+      "Original": "static inline void  Iff_ObjSetTime( Iff_Man_t * p, Gia_Obj_t * pObj, float Time )           { Iff_ObjSetTimeId( p, Gia_ObjId(p-\u003epGia, pObj), Time );        }",
+      "Draft": "func Iff_ObjSetTime(p *Iff_Man_t, pObj *Gia_Obj_t, Time float32) { Iff_ObjSetTimeId( p, Gia_ObjId(p.pGia, pObj), Time );        }"
+    },
+    {
+      "Name": "Iff_ObjMatchId",
+      "Start": 1779,
+      "End": 1936,
+      "BodyStart": 1871,
+      "Original": "static inline int   Iff_ObjMatchId( Iff_Man_t * p, int iObj, int Type )                     { return Vec_IntEntry( p-\u003evMatch[Type], iObj );                 }",
+      "Draft": "func Iff_ObjMatchId(p *Iff_Man_t, iObj int32, Type int32) int32 { return Vec_IntEntry( p.vMatch[Type], iObj );                 }"
+    },
+    {
+      "Name": "Iff_ObjMatch",
+      "Start": 1937,
+      "End": 2094,
+      "BodyStart": 2029,
+      "Original": "static inline int   Iff_ObjMatch( Iff_Man_t * p, Gia_Obj_t * pObj, int Type )               { return Iff_ObjMatchId( p, Gia_ObjId(p-\u003epGia, pObj), Type );   }",
+      "Draft": "func Iff_ObjMatch(p *Iff_Man_t, pObj *Gia_Obj_t, Type int32) int32 { return Iff_ObjMatchId( p, Gia_ObjId(p.pGia, pObj), Type );   }"
+    },
+    {
+      "Name": "Iff_ObjSetMatchId",
+      "Start": 2095,
+      "End": 2252,
+      "BodyStart": 2187,
+      "Original": "static inline void  Iff_ObjSetMatchId( Iff_Man_t * p, int iObj, int Type, int Match )       { Vec_IntWriteEntry( p-\u003evMatch[Type], iObj, Match );            }",
+      "Draft": "func Iff_ObjSetMatchId(p *Iff_Man_t, iObj int32, Type int32, Match int32) { Vec_IntWriteEntry( p.vMatch[Type], iObj, Match );            }"
+    },
+    {
+      "Name": "Iff_ObjSetMatch",
+      "Start": 2253,
+      "End": 2410,
+      "BodyStart": 2345,
+      "Original": "static inline void  Iff_ObjSetMatch( Iff_Man_t * p, Gia_Obj_t * pObj, int Type, int Match ) { Iff_ObjSetMatchId( p, Gia_ObjId(p-\u003epGia, pObj), Type, Match );}",
+      "Draft": "func Iff_ObjSetMatch(p *Iff_Man_t, pObj *Gia_Obj_t, Type int32, Match int32) { Iff_ObjSetMatchId( p, Gia_ObjId(p.pGia, pObj), Type, Match );}"
+    },
+    {
+      "Name": "Gia_ManIffStart",
+      "Start": 2866,
+      "End": 3159,
+      "BodyStart": 2914,
+      "Original": "Iff_Man_t * Gia_ManIffStart( Gia_Man_t * pGia )\n{\n    Iff_Man_t * p = ABC_CALLOC( Iff_Man_t, 1 );\n    p-\u003evTimes    = Vec_FltStartFull( Gia_ManObjNum(pGia) );\n    p-\u003evMatch[2] = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p-\u003evMatch[3] = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    return p;\n}",
+      "Draft": "func Gia_ManIffStart(pGia *Gia_Man_t) *Iff_Man_t {\n    // inlining of macro ABC_CALLOC\n    var p *Iff_Man_t  = \u0026Iff_Man_t{};\n    p.vTimes    = Vec_FltStartFull( Gia_ManObjNum(pGia) );\n    p.vMatch[2] = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p.vMatch[3] = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_ManIffStop",
+      "Start": 3160,
+      "End": 3315,
+      "BodyStart": 3197,
+      "Original": "void Gia_ManIffStop( Iff_Man_t * p )\n{\n    Vec_FltFree( p-\u003evTimes );\n    Vec_IntFree( p-\u003evMatch[2] );\n    Vec_IntFree( p-\u003evMatch[3] );\n    ABC_FREE( p );\n}",
+      "Draft": "func Gia_ManIffStop(p *Iff_Man_t) {\n    Vec_FltFree( p.vTimes );\n    Vec_IntFree( p.vMatch[2] );\n    Vec_IntFree( p.vMatch[3] );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}"
+    },
+    {
+      "Name": "Gia_IffObjCount",
+      "Start": 3585,
+      "End": 4745,
+      "BodyStart": 3669,
+      "Original": "int Gia_IffObjCount( Gia_Man_t * pGia, int iObj, int iFaninSkip2, int iFaninSkip3 )\n{\n    int i, iFanin, Count = 0;\n    Gia_ManIncrementTravId( pGia );\n    Gia_LutForEachFanin( pGia, iObj, iFanin, i )\n    {\n        if ( iFanin == iFaninSkip2 || iFanin == iFaninSkip3 )\n            continue;\n        if ( Gia_ObjIsTravIdCurrentId( pGia, iFanin ) )\n            continue;\n        Gia_ObjSetTravIdCurrentId( pGia, iFanin );\n        Count++;\n    }\n    if ( iFaninSkip2 \u003e= 0 )\n    {\n        Gia_LutForEachFanin( pGia, iFaninSkip2, iFanin, i )\n        {\n            if ( iFanin == iFaninSkip3 )\n                continue;\n            if ( Gia_ObjIsTravIdCurrentId( pGia, iFanin ) )\n                continue;\n            Gia_ObjSetTravIdCurrentId( pGia, iFanin );\n            Count++;\n        }\n    }\n    if ( iFaninSkip3 \u003e= 0 )\n    {\n        Gia_LutForEachFanin( pGia, iFaninSkip3, iFanin, i )\n        {\n            if ( iFanin == iFaninSkip2 )\n                continue;\n            if ( Gia_ObjIsTravIdCurrentId( pGia, iFanin ) )\n                continue;\n            Gia_ObjSetTravIdCurrentId( pGia, iFanin );\n            Count++;\n        }\n    }\n    return Count;\n}",
+      "Draft": "func Gia_IffObjCount(pGia *Gia_Man_t, iObj int32, iFaninSkip2 int32, iFaninSkip3 int32) int32 {\n    var i, iFanin, Count int32;\n    Gia_ManIncrementTravId( pGia );\n    // inlining of macro Gia_LutForEachFanin\n    for  i = 0; i \u003c Gia_ObjLutSize(pGia,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(pGia,iObj)[i]),1); i++  {\n        if iFanin == iFaninSkip2 || iFanin == iFaninSkip3 {\n            continue; }\n        if Gia_ObjIsTravIdCurrentId( pGia, iFanin ) {\n            continue; }\n        Gia_ObjSetTravIdCurrentId( pGia, iFanin );\n        Count++;\n    }\n    if iFaninSkip2 \u003e= 0 {\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(pGia,iFaninSkip2) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(pGia,iFaninSkip2)[i]),1); i++  {\n            if iFanin == iFaninSkip3 {\n                continue; }\n            if Gia_ObjIsTravIdCurrentId( pGia, iFanin ) {\n                continue; }\n            Gia_ObjSetTravIdCurrentId( pGia, iFanin );\n            Count++;\n        }\n    }\n    if iFaninSkip3 \u003e= 0 {\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(pGia,iFaninSkip3) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(pGia,iFaninSkip3)[i]),1); i++  {\n            if iFanin == iFaninSkip2 {\n                continue; }\n            if Gia_ObjIsTravIdCurrentId( pGia, iFanin ) {\n                continue; }\n            Gia_ObjSetTravIdCurrentId( pGia, iFanin );\n            Count++;\n        }\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Gia_IffObjTimeOne",
+      "Start": 4981,
+      "End": 5902,
+      "BodyStart": 5066,
+      "Original": "float Gia_IffObjTimeOne( Iff_Man_t * p, int iObj, int iFaninSkip2, int iFaninSkip3 )\n{\n    int i, iFanin;\n    float DelayMax = -ABC_INFINITY;\n    Gia_LutForEachFanin( p-\u003epGia, iObj, iFanin, i )\n        if ( iFanin != iFaninSkip2 \u0026\u0026 iFanin != iFaninSkip3 \u0026\u0026 DelayMax \u003c Iff_ObjTimeId(p, iFanin) )\n            DelayMax = Iff_ObjTimeId(p, iFanin);\n    assert( i == Gia_ObjLutSize(p-\u003epGia, iObj) );\n    if ( iFaninSkip2 == -1 )\n        return DelayMax;\n    Gia_LutForEachFanin( p-\u003epGia, iFaninSkip2, iFanin, i )\n        if ( iFanin != iFaninSkip3 \u0026\u0026 DelayMax \u003c Iff_ObjTimeId(p, iFanin) )\n            DelayMax = Iff_ObjTimeId(p, iFanin);\n    if ( iFaninSkip3 == -1 )\n        return DelayMax;\n    Gia_LutForEachFanin( p-\u003epGia, iFaninSkip3, iFanin, i )\n        if ( iFanin != iFaninSkip2 \u0026\u0026 DelayMax \u003c Iff_ObjTimeId(p, iFanin) )\n            DelayMax = Iff_ObjTimeId(p, iFanin);\n    assert( DelayMax \u003e= 0 );\n    return DelayMax;\n}",
+      "Draft": "func Gia_IffObjTimeOne(p *Iff_Man_t, iObj int32, iFaninSkip2 int32, iFaninSkip3 int32) float32 {\n    var i, iFanin int32;\n    var DelayMax float32  = -ABC_INFINITY;\n    // inlining of macro Gia_LutForEachFanin\n    for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iObj)[i]),1); i++  {\n        if iFanin != iFaninSkip2 \u0026\u0026 iFanin != iFaninSkip3 \u0026\u0026 DelayMax \u003c Iff_ObjTimeId(p, iFanin) {\n            DelayMax = Iff_ObjTimeId(p, iFanin); }\n    }\n    assert(i == Gia_ObjLutSize(p.pGia, iObj), \"i == Gia_ObjLutSize(p.pGia, iObj)\");\n    if iFaninSkip2 == -1 {\n        return DelayMax; }\n    // inlining of macro Gia_LutForEachFanin\n    for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iFaninSkip2) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iFaninSkip2)[i]),1); i++  {\n        if iFanin != iFaninSkip3 \u0026\u0026 DelayMax \u003c Iff_ObjTimeId(p, iFanin) {\n            DelayMax = Iff_ObjTimeId(p, iFanin); }\n    }\n    if iFaninSkip3 == -1 {\n        return DelayMax; }\n    // inlining of macro Gia_LutForEachFanin\n    for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iFaninSkip3) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iFaninSkip3)[i]),1); i++  {\n        if iFanin != iFaninSkip2 \u0026\u0026 DelayMax \u003c Iff_ObjTimeId(p, iFanin) {\n            DelayMax = Iff_ObjTimeId(p, iFanin); }\n    }\n    assert(DelayMax \u003e= 0, \"DelayMax \u003e= 0\");\n    return DelayMax;\n}"
+    },
+    {
+      "Name": "Gia_IffObjTimeTwo",
+      "Start": 5903,
+      "End": 6533,
+      "BodyStart": 5985,
+      "Original": "float Gia_IffObjTimeTwo( Iff_Man_t * p, int iObj, int * piFanin, float DelayMin )\n{\n    int i, iFanin, nSize;\n    float This;\n    *piFanin = -1;\n    Gia_LutForEachFanin( p-\u003epGia, iObj, iFanin, i )\n    {\n        if ( Gia_ObjIsCi(Gia_ManObj(p-\u003epGia, iFanin)) )\n            continue;\n        This = Gia_IffObjTimeOne( p, iObj, iFanin, -1 );\n        nSize = Gia_IffObjCount( p-\u003epGia, iObj, iFanin, -1 );\n        assert( nSize \u003c= p-\u003epLib-\u003eLutMax );\n        This += p-\u003epLib-\u003epLutDelays[nSize][0];\n        if ( DelayMin \u003e This )\n        {\n            DelayMin = This;\n            *piFanin = iFanin;\n        }\n    }\n    return DelayMin;\n}",
+      "Draft": "func Gia_IffObjTimeTwo(p *Iff_Man_t, iObj int32, piFanin *int32, DelayMin float32) float32 {\n    var i, iFanin, nSize int32;\n    var This float32;\n    *piFanin = -1;\n    // inlining of macro Gia_LutForEachFanin\n    for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iObj)[i]),1); i++  {\n        if Gia_ObjIsCi(Gia_ManObj(p.pGia, iFanin)) {\n            continue; }\n        This = Gia_IffObjTimeOne( p, iObj, iFanin, -1 );\n        nSize = Gia_IffObjCount( p.pGia, iObj, iFanin, -1 );\n        assert(nSize \u003c= p.pLib.LutMax, \"nSize \u003c= p.pLib.LutMax\");\n        This += p.pLib.pLutDelays[nSize][0];\n        if DelayMin \u003e This {\n            DelayMin = This;\n            *piFanin = iFanin;\n        }\n    }\n    return DelayMin;\n}"
+    },
+    {
+      "Name": "Gia_IffObjTimeThree",
+      "Start": 6534,
+      "End": 7447,
+      "BodyStart": 6634,
+      "Original": "float Gia_IffObjTimeThree( Iff_Man_t * p, int iObj, int * piFanin, int * piFanin2, float DelayMin )\n{\n    int i, k, iFanin, iFanin2, nSize;\n    float This;\n    *piFanin = -1;\n    *piFanin2 = -1;\n    Gia_LutForEachFanin( p-\u003epGia, iObj, iFanin, i )\n    Gia_LutForEachFanin( p-\u003epGia, iObj, iFanin2, k )\n    {\n        if ( iFanin == iFanin2 )\n            continue;\n        if ( Gia_ObjIsCi(Gia_ManObj(p-\u003epGia, iFanin)) )\n            continue;\n        if ( Gia_ObjIsCi(Gia_ManObj(p-\u003epGia, iFanin2)) )\n            continue;\n        This  = Gia_IffObjTimeOne( p, iObj, iFanin, iFanin2 );\n        nSize = Gia_IffObjCount( p-\u003epGia, iObj, iFanin, iFanin2 );\n        assert( nSize \u003c= p-\u003epLib-\u003eLutMax );\n        This += p-\u003epLib-\u003epLutDelays[nSize][0];\n        if ( DelayMin \u003e This )\n        {\n            DelayMin  = This;\n            *piFanin  = iFanin;\n            *piFanin2 = iFanin2;\n        }\n    }\n    return DelayMin;\n}",
+      "Draft": "func Gia_IffObjTimeThree(p *Iff_Man_t, iObj int32, piFanin *int32, piFanin2 *int32, DelayMin float32) float32 {\n    var i, k, iFanin, iFanin2, nSize int32;\n    var This float32;\n    *piFanin = -1;\n    *piFanin2 = -1;\n    // inlining of macro Gia_LutForEachFanin\n    for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iObj)[i]),1); i++  {\n    // inlining of macro Gia_LutForEachFanin\n    for  k = 0; k \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iFanin2 = Gia_ObjLutFanins(p.pGia,iObj)[k]),1); k++  {\n        if iFanin == iFanin2 {\n            continue; }\n        if Gia_ObjIsCi(Gia_ManObj(p.pGia, iFanin)) {\n            continue; }\n        if Gia_ObjIsCi(Gia_ManObj(p.pGia, iFanin2)) {\n            continue; }\n        This  = Gia_IffObjTimeOne( p, iObj, iFanin, iFanin2 );\n        nSize = Gia_IffObjCount( p.pGia, iObj, iFanin, iFanin2 );\n        assert(nSize \u003c= p.pLib.LutMax, \"nSize \u003c= p.pLib.LutMax\");\n        This += p.pLib.pLutDelays[nSize][0];\n        if DelayMin \u003e This {\n            DelayMin  = This;\n            *piFanin  = iFanin;\n            *piFanin2 = iFanin2;\n        }\n    }\n    }\n    return DelayMin;\n}"
+    },
+    {
+      "Name": "Gia_ManIffPerform",
+      "Start": 7683,
+      "End": 10584,
+      "BodyStart": 7799,
+      "Original": "Iff_Man_t * Gia_ManIffPerform( Gia_Man_t * pGia, If_LibLut_t * pLib, Tim_Man_t * pTime, int nLutSize, int nDegree )\n{\n    Iff_Man_t * p;\n    Gia_Obj_t * pObj;\n    int iObj, iFanin, iFanin1, iFanin2;\n    int CountAll = 0, Count2 = 0, Count3 = 0;\n    float arrTime1, arrTime2, arrTime3, arrMax = -ABC_INFINITY; \n    assert( nDegree == 2 || nDegree == 3 );\n    // start the mapping manager and set its parameters\n    p = Gia_ManIffStart( pGia );\n    p-\u003epGia     = pGia;\n    p-\u003epLib     = pLib;\n    p-\u003enLutSize = nLutSize;\n    p-\u003enDegree  = nDegree;\n    // compute arrival times of each node\n    Iff_ObjSetTimeId( p, 0, 0 );\n    Tim_ManIncrementTravId( pTime );\n    Gia_ManForEachObj1( pGia, pObj, iObj )\n    {\n        if ( Gia_ObjIsAnd(pObj) )\n        {\n            if ( !Gia_ObjIsLut(pGia, iObj) )\n                continue;\n            CountAll++;\n            // compute arrival times of LUT inputs\n            arrTime1 = Gia_IffObjTimeOne( p, iObj, -1, -1 );\n            arrTime1 += p-\u003epLib-\u003epLutDelays[Gia_ObjLutSize(pGia, iObj)][0];\n            // compute arrival times of LUT pairs\n            arrTime2 = Gia_IffObjTimeTwo( p, iObj, \u0026iFanin, arrTime1 );\n            if ( nDegree == 2 )\n            {\n                // set arrival times\n                Iff_ObjSetTimeId( p, iObj, arrTime2 );\n                if ( arrTime2 \u003c arrTime1 )\n                    Iff_ObjSetMatchId( p, iObj, 2, iFanin ), Count2++;                \n            }\n            else if ( nDegree == 3 )\n            {                \n                // compute arrival times of LUT triples\n                arrTime3 = Gia_IffObjTimeThree( p, iObj, \u0026iFanin1, \u0026iFanin2, arrTime2 );\n                // set arrival times\n                Iff_ObjSetTimeId( p, iObj, arrTime3 );\n                if ( arrTime3 == arrTime1 )\n                    continue;\n                if ( arrTime3 == arrTime2 )\n                    Iff_ObjSetMatchId( p, iObj, 2, iFanin ), Count2++;\n                else\n                {\n                    assert( arrTime3 \u003c arrTime2 );\n                    Iff_ObjSetMatchId( p, iObj, 2, iFanin1 );\n                    Iff_ObjSetMatchId( p, iObj, 3, iFanin2 ), Count3++;\n                }\n            }\n            else assert( 0 );\n        }\n        else if ( Gia_ObjIsCi(pObj) )\n        {\n            arrTime1 = Tim_ManGetCiArrival( pTime, Gia_ObjCioId(pObj) );\n            Iff_ObjSetTime( p, pObj, arrTime1 );\n        }\n        else if ( Gia_ObjIsCo(pObj) )\n        {\n            arrTime1 = Iff_ObjTimeId( p, Gia_ObjFaninId0p(pGia, pObj) );\n            Tim_ManSetCoArrival( pTime, Gia_ObjCioId(pObj), arrTime1 );\n            Iff_ObjSetTime( p, pObj, arrTime1 );\n            arrMax = Abc_MaxFloat( arrMax, arrTime1 );\n        }\n        else assert( 0 );\n    }\n    printf( \"Max delay = %.2f.  Count1 = %d.  Count2 = %d.  Count3 = %d.\\n\", \n        arrMax, CountAll - Count2 - Count3, Count2, Count3 );\n    return p;\n}",
+      "Draft": "func Gia_ManIffPerform(pGia *Gia_Man_t, pLib *If_LibLut_t, pTime *Tim_Man_t, nLutSize int32, nDegree int32) *Iff_Man_t {\n    var p *Iff_Man_t;\n    var pObj *Gia_Obj_t;\n    var iObj, iFanin, iFanin1, iFanin2 int32;\n    var CountAll, Count2, Count3 int32;\n    var arrTime1 float32;\n    var arrTime2 float32;\n    var arrTime3 float32;\n    var arrMax float32 = -ABC_INFINITY; \n    assert(nDegree == 2 || nDegree == 3, \"nDegree == 2 || nDegree == 3\");\n    // start the mapping manager and set its parameters\n    p = Gia_ManIffStart( pGia );\n    p.pGia     = pGia;\n    p.pLib     = pLib;\n    p.nLutSize = nLutSize;\n    p.nDegree  = nDegree;\n    // compute arrival times of each node\n    Iff_ObjSetTimeId( p, 0, 0 );\n    Tim_ManIncrementTravId( pTime );\n    // inlining of macro Gia_ManForEachObj1\n    for  iObj = 1; (iObj \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, iObj)); iObj++  {\n        if Gia_ObjIsAnd(pObj) {\n            if !Gia_ObjIsLut(pGia, iObj) {\n                continue; }\n            CountAll++;\n            // compute arrival times of LUT inputs\n            arrTime1 = Gia_IffObjTimeOne( p, iObj, -1, -1 );\n            arrTime1 += p.pLib.pLutDelays[Gia_ObjLutSize(pGia, iObj)][0];\n            // compute arrival times of LUT pairs\n            arrTime2 = Gia_IffObjTimeTwo( p, iObj, \u0026iFanin, arrTime1 );\n            if nDegree == 2 {\n                // set arrival times\n                Iff_ObjSetTimeId( p, iObj, arrTime2 );\n                if arrTime2 \u003c arrTime1 {\n                    Iff_ObjSetMatchId( p, iObj, 2, iFanin );\nCount2++; }                \n            \n            } else if nDegree == 3 {                \n                // compute arrival times of LUT triples\n                arrTime3 = Gia_IffObjTimeThree( p, iObj, \u0026iFanin1, \u0026iFanin2, arrTime2 );\n                // set arrival times\n                Iff_ObjSetTimeId( p, iObj, arrTime3 );\n                if arrTime3 == arrTime1 {\n                    continue; }\n                if arrTime3 == arrTime2 {\n                    Iff_ObjSetMatchId( p, iObj, 2, iFanin );\nCount2++;\n                } else {\n                    assert(arrTime3 \u003c arrTime2, \"arrTime3 \u003c arrTime2\");\n                    Iff_ObjSetMatchId( p, iObj, 2, iFanin1 );\n                    Iff_ObjSetMatchId( p, iObj, 3, iFanin2 );\nCount3++;\n                }\n            \n            } else { assert(false, \"0\"); }\n        \n        } else if Gia_ObjIsCi(pObj) {\n            arrTime1 = Tim_ManGetCiArrival( pTime, Gia_ObjCioId(pObj) );\n            Iff_ObjSetTime( p, pObj, arrTime1 );\n        \n        } else if Gia_ObjIsCo(pObj) {\n            arrTime1 = Iff_ObjTimeId( p, Gia_ObjFaninId0p(pGia, pObj) );\n            Tim_ManSetCoArrival( pTime, Gia_ObjCioId(pObj), arrTime1 );\n            Iff_ObjSetTime( p, pObj, arrTime1 );\n            arrMax = Abc_MaxFloat( arrMax, arrTime1 );\n        \n        } else { assert(false, \"0\"); }\n    }\n    fmt.Printf(\"Max delay = %.2f.  Count1 = %d.  Count2 = %d.  Count3 = %d.\\n\", arrMax, CountAll - Count2 - Count3, Count2, Count3);\n    return p;\n}"
+    },
+    {
+      "Name": "Gia_ManIffSelect_rec",
+      "Start": 10821,
+      "End": 12738,
+      "BodyStart": 10896,
+      "Original": "void Gia_ManIffSelect_rec( Iff_Man_t * p, int iObj, Vec_Int_t * vPacking )\n{\n    int i, iFanin, iFaninSkip2, iFaninSkip3;\n    if ( Gia_ObjIsTravIdCurrentId( p-\u003epGia, iObj ) )\n        return;\n    Gia_ObjSetTravIdCurrentId( p-\u003epGia, iObj );\n    assert( Gia_ObjIsLut(p-\u003epGia, iObj) );\n    iFaninSkip2 = Iff_ObjMatchId(p, iObj, 2);\n    iFaninSkip3 = Iff_ObjMatchId(p, iObj, 3);\n    if ( iFaninSkip2 == -1 )\n    {\n        assert( iFaninSkip3 == -1 );\n        Gia_LutForEachFanin( p-\u003epGia, iObj, iFanin, i )\n            Gia_ManIffSelect_rec( p, iFanin, vPacking );\n        Vec_IntPush( vPacking, 1 );\n        Vec_IntPush( vPacking, iObj );\n    }\n    else if ( iFaninSkip3 == -1 )\n    {\n        assert( iFaninSkip2 \u003e 0 );\n        Gia_LutForEachFanin( p-\u003epGia, iObj, iFanin, i )\n            if ( iFanin != iFaninSkip2 )\n                Gia_ManIffSelect_rec( p, iFanin, vPacking );\n        Gia_LutForEachFanin( p-\u003epGia, iFaninSkip2, iFanin, i )\n            Gia_ManIffSelect_rec( p, iFanin, vPacking );\n        Vec_IntPush( vPacking, 2 );\n        Vec_IntPush( vPacking, iFaninSkip2 );\n        Vec_IntPush( vPacking, iObj );\n    }\n    else\n    {\n        assert( iFaninSkip2 \u003e 0 \u0026\u0026 iFaninSkip3 \u003e 0 );\n        Gia_LutForEachFanin( p-\u003epGia, iObj, iFanin, i )\n            if ( iFanin != iFaninSkip2 \u0026\u0026 iFanin != iFaninSkip3 )\n                Gia_ManIffSelect_rec( p, iFanin, vPacking );\n        Gia_LutForEachFanin( p-\u003epGia, iFaninSkip2, iFanin, i )\n            if ( iFanin != iFaninSkip3 )\n                Gia_ManIffSelect_rec( p, iFanin, vPacking );\n        Gia_LutForEachFanin( p-\u003epGia, iFaninSkip3, iFanin, i )\n            if ( iFanin != iFaninSkip2 )\n                Gia_ManIffSelect_rec( p, iFanin, vPacking );\n        Vec_IntPush( vPacking, 3 );\n        Vec_IntPush( vPacking, iFaninSkip2 );\n        Vec_IntPush( vPacking, iFaninSkip3 );\n        Vec_IntPush( vPacking, iObj );\n    }\n    Vec_IntAddToEntry( vPacking, 0, 1 );\n}",
+      "Draft": "func Gia_ManIffSelect_rec(p *Iff_Man_t, iObj int32, vPacking *Vec_Int_t) {\n    var i, iFanin, iFaninSkip2, iFaninSkip3 int32;\n    if Gia_ObjIsTravIdCurrentId( p.pGia, iObj ) {\n        return; }\n    Gia_ObjSetTravIdCurrentId( p.pGia, iObj );\n    assert(Gia_ObjIsLut(p.pGia, iObj), \"Gia_ObjIsLut(p.pGia, iObj)\");\n    iFaninSkip2 = Iff_ObjMatchId(p, iObj, 2);\n    iFaninSkip3 = Iff_ObjMatchId(p, iObj, 3);\n    if iFaninSkip2 == -1 {\n        assert(iFaninSkip3 == -1, \"iFaninSkip3 == -1\");\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iObj)[i]),1); i++  {\n            Gia_ManIffSelect_rec( p, iFanin, vPacking );\n        }\n        Vec_IntPush( vPacking, 1 );\n        Vec_IntPush( vPacking, iObj );\n    \n    } else if iFaninSkip3 == -1 {\n        assert(iFaninSkip2 \u003e 0, \"iFaninSkip2 \u003e 0\");\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iObj)[i]),1); i++  {\n            if iFanin != iFaninSkip2 {\n                Gia_ManIffSelect_rec( p, iFanin, vPacking ); }\n        }\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iFaninSkip2) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iFaninSkip2)[i]),1); i++  {\n            Gia_ManIffSelect_rec( p, iFanin, vPacking );\n        }\n        Vec_IntPush( vPacking, 2 );\n        Vec_IntPush( vPacking, iFaninSkip2 );\n        Vec_IntPush( vPacking, iObj );\n    \n    } else {\n        assert(iFaninSkip2 \u003e 0 \u0026\u0026 iFaninSkip3 \u003e 0, \"iFaninSkip2 \u003e 0 \u0026\u0026 iFaninSkip3 \u003e 0\");\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iObj)[i]),1); i++  {\n            if iFanin != iFaninSkip2 \u0026\u0026 iFanin != iFaninSkip3 {\n                Gia_ManIffSelect_rec( p, iFanin, vPacking ); }\n        }\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iFaninSkip2) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iFaninSkip2)[i]),1); i++  {\n            if iFanin != iFaninSkip3 {\n                Gia_ManIffSelect_rec( p, iFanin, vPacking ); }\n        }\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iFaninSkip3) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iFaninSkip3)[i]),1); i++  {\n            if iFanin != iFaninSkip2 {\n                Gia_ManIffSelect_rec( p, iFanin, vPacking ); }\n        }\n        Vec_IntPush( vPacking, 3 );\n        Vec_IntPush( vPacking, iFaninSkip2 );\n        Vec_IntPush( vPacking, iFaninSkip3 );\n        Vec_IntPush( vPacking, iObj );\n    }\n    Vec_IntAddToEntry( vPacking, 0, 1 );\n}"
+    },
+    {
+      "Name": "Gia_ManIffSelect",
+      "Start": 12739,
+      "End": 13314,
+      "BodyStart": 12785,
+      "Original": "Vec_Int_t * Gia_ManIffSelect( Iff_Man_t * p )\n{\n    Vec_Int_t * vPacking;\n    Gia_Obj_t * pObj; int i;\n    vPacking = Vec_IntAlloc( Gia_ManObjNum(p-\u003epGia) );\n    Vec_IntPush( vPacking, 0 );\n    // mark const0 and PIs\n    Gia_ManIncrementTravId( p-\u003epGia );\n    Gia_ObjSetTravIdCurrentId( p-\u003epGia, 0 );\n    Gia_ManForEachCi( p-\u003epGia, pObj, i )\n        Gia_ObjSetTravIdCurrent( p-\u003epGia, pObj );\n    // recursively collect internal nodes\n    Gia_ManForEachCo( p-\u003epGia, pObj, i )\n        Gia_ManIffSelect_rec( p, Gia_ObjFaninId0p(p-\u003epGia, pObj), vPacking );\n    return vPacking;\n}",
+      "Draft": "func Gia_ManIffSelect(p *Iff_Man_t) *Vec_Int_t {\n    var vPacking *Vec_Int_t;\n    var pObj *Gia_Obj_t; var i int32;\n    vPacking = Vec_IntAlloc( Gia_ManObjNum(p.pGia) );\n    Vec_IntPush( vPacking, 0 );\n    // mark const0 and PIs\n    Gia_ManIncrementTravId( p.pGia );\n    Gia_ObjSetTravIdCurrentId( p.pGia, 0 );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p.pGia, i)); i++  {\n        Gia_ObjSetTravIdCurrent( p.pGia, pObj );\n    }\n    // recursively collect internal nodes\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p.pGia, i)); i++  {\n        Gia_ManIffSelect_rec( p, Gia_ObjFaninId0p(p.pGia, pObj), vPacking );\n    }\n    return vPacking;\n}"
+    },
+    {
+      "Name": "Gia_ManIffTest",
+      "Start": 13593,
+      "End": 15197,
+      "BodyStart": 13667,
+      "Original": "void Gia_ManIffTest( Gia_Man_t * pGia, If_LibLut_t * pLib, int fVerbose )\n{\n    Iff_Man_t * p;\n    Tim_Man_t * pTemp = NULL;\n    int nDegree = -1;\n    int nLutSize = Gia_ManLutSizeMax( pGia );\n    if ( nLutSize \u003c= 4 )\n    {\n        nLutSize = 4;\n        if ( pLib-\u003eLutMax == 7 )\n            nDegree = 2;\n        else if ( pLib-\u003eLutMax == 10 )\n            nDegree = 3;\n        else\n            { printf( \"LUT library for packing 4-LUTs should have 7 or 10 inputs.\\n\" ); return; }\n    }\n    else if ( nLutSize \u003c= 6 )\n    {\n        nLutSize = 6;\n        if ( pLib-\u003eLutMax == 11 )\n            nDegree = 2;\n        else if ( pLib-\u003eLutMax == 16 )\n            nDegree = 3;\n        else\n            { printf( \"LUT library for packing 6-LUTs should have 11 or 16 inputs.\\n\" ); return; }\n    }\n    else\n    {\n        printf( \"The LUT size is more than 6.\\n\" );\n        return;\n    }\n    if ( fVerbose )\n        printf( \"Performing %d-clustering with %d-LUTs:\\n\", nDegree, nLutSize );\n    // create timing manager\n    if ( pGia-\u003epManTime == NULL )\n        pGia-\u003epManTime = pTemp = Tim_ManStart( Gia_ManCiNum(pGia), Gia_ManCoNum(pGia) );\n    // perform timing computation\n    p = Gia_ManIffPerform( pGia, pLib, (Tim_Man_t *)pGia-\u003epManTime, nLutSize, nDegree );\n    // remove timing manager\n    if ( pGia-\u003epManTime == pTemp )\n        pGia-\u003epManTime = NULL;\n    Tim_ManStopP( (Tim_Man_t **)\u0026pTemp );\n    // derive clustering\n    Vec_IntFreeP( \u0026pGia-\u003evPacking );\n    pGia-\u003evPacking = Gia_ManIffSelect( p );\n    Gia_ManIffStop( p );\n    // print statistics\n    if ( fVerbose )\n        Gia_ManPrintPackingStats( pGia );\n}",
+      "Draft": "func Gia_ManIffTest(pGia *Gia_Man_t, pLib *If_LibLut_t, fVerbose int32) {\n    var p *Iff_Man_t;\n    var pTemp *Tim_Man_t  = nil;\n    var nDegree int32  = -1;\n    var nLutSize int32  = Gia_ManLutSizeMax( pGia );\n    if nLutSize \u003c= 4 {\n        nLutSize = 4;\n        if pLib.LutMax == 7 {\n            nDegree = 2;\n        } else if pLib.LutMax == 10 {\n            nDegree = 3;\n        } else { fmt.Printf(\"LUT library for packing 4-LUTs should have 7 or 10 inputs.\\n\"); return; }\n    \n    } else if nLutSize \u003c= 6 {\n        nLutSize = 6;\n        if pLib.LutMax == 11 {\n            nDegree = 2;\n        } else if pLib.LutMax == 16 {\n            nDegree = 3;\n        } else { fmt.Printf(\"LUT library for packing 6-LUTs should have 11 or 16 inputs.\\n\"); return; }\n    \n    } else {\n        fmt.Printf(\"The LUT size is more than 6.\\n\");\n        return;\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Performing %d-clustering with %d-LUTs:\\n\", nDegree, nLutSize); }\n    // create timing manager\n    if pGia.pManTime == nil {\n        pGia.pManTime = pTemp = Tim_ManStart( Gia_ManCiNum(pGia), Gia_ManCoNum(pGia) ); }\n    // perform timing computation\n    p = Gia_ManIffPerform( pGia, pLib, (Tim_Man_t *)pGia.pManTime, nLutSize, nDegree );\n    // remove timing manager\n    if pGia.pManTime == pTemp {\n        pGia.pManTime = nil; }\n    Tim_ManStopP( (Tim_Man_t **)\u0026pTemp );\n    // derive clustering\n    Vec_IntFreeP( \u0026pGia.vPacking );\n    pGia.vPacking = Gia_ManIffSelect( p );\n    Gia_ManIffStop( p );\n    // print statistics\n    if fVerbose != 0 {\n        Gia_ManPrintPackingStats( pGia ); }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::struct::Iff_Man_t::// arrival times\n    Vec_Int_t *     vMatch[4];",
+      "Category": "struct-field-review",
+      "Symbol": "Iff_Man_t",
+      "Status": "open",
+      "Message": "Complex field declaration retained verbatim; repair its Go type and representation.",
+      "Start": 1077,
+      "End": 1129
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::struct::Iff_Man_t",
+      "Category": "struct-review",
+      "Symbol": "Iff_Man_t",
+      "Status": "open",
+      "Message": "Typedef/struct pair combined; review pointer versus slice representation and any retained complex fields.",
+      "Start": 813,
+      "End": 1144
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::mechanical::sizeof::3017",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "C object size/layout may differ from Go. Whole known struct zeroing is handled separately; otherwise establish the representation before replacing byte counts.",
+      "Start": 2936,
+      "End": 2936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::pointer-cast::2983",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 2936,
+      "End": 2936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::pointer-cast::3430",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 3299,
+      "End": 3299
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::pointer-cast::16965",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14792,
+      "End": 14805
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::pointer-cast::17128",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14955,
+      "End": 14969
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Iff_ObjTimeId",
+      "Category": "semantic-review",
+      "Symbol": "Iff_ObjTimeId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1146,
+      "End": 1303
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Iff_ObjTime",
+      "Category": "semantic-review",
+      "Symbol": "Iff_ObjTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1304,
+      "End": 1461
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Iff_ObjSetTimeId",
+      "Category": "semantic-review",
+      "Symbol": "Iff_ObjSetTimeId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1462,
+      "End": 1619
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Iff_ObjSetTime",
+      "Category": "semantic-review",
+      "Symbol": "Iff_ObjSetTime",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1620,
+      "End": 1777
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Iff_ObjMatchId",
+      "Category": "semantic-review",
+      "Symbol": "Iff_ObjMatchId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1779,
+      "End": 1936
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Iff_ObjMatch",
+      "Category": "semantic-review",
+      "Symbol": "Iff_ObjMatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1937,
+      "End": 2094
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Iff_ObjSetMatchId",
+      "Category": "semantic-review",
+      "Symbol": "Iff_ObjSetMatchId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2095,
+      "End": 2252
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Iff_ObjSetMatch",
+      "Category": "semantic-review",
+      "Symbol": "Iff_ObjSetMatch",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2253,
+      "End": 2410
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Gia_ManIffStart",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManIffStart",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2866,
+      "End": 3159
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::ternary::Gia_ManIffStop",
+      "Category": "ternary-review",
+      "Symbol": "Gia_ManIffStop",
+      "Status": "open",
+      "Message": "Embedded conditional expression requires typed temporary or structural expression lowering; retained verbatim. Check C truth-value conversion in lowered conditions too.",
+      "Start": 3160,
+      "End": 3315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Gia_ManIffStop",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManIffStop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3160,
+      "End": 3315
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Gia_IffObjCount",
+      "Category": "semantic-review",
+      "Symbol": "Gia_IffObjCount",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3585,
+      "End": 4745
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Gia_IffObjTimeOne",
+      "Category": "semantic-review",
+      "Symbol": "Gia_IffObjTimeOne",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4981,
+      "End": 5902
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Gia_IffObjTimeTwo",
+      "Category": "semantic-review",
+      "Symbol": "Gia_IffObjTimeTwo",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5903,
+      "End": 6533
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Gia_IffObjTimeThree",
+      "Category": "semantic-review",
+      "Symbol": "Gia_IffObjTimeThree",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6534,
+      "End": 7447
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Gia_ManIffPerform",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManIffPerform",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7683,
+      "End": 10584
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Gia_ManIffSelect_rec",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManIffSelect_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10821,
+      "End": 12738
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Gia_ManIffSelect",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManIffSelect",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12739,
+      "End": 13314
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::Gia_ManIffTest",
+      "Category": "semantic-review",
+      "Symbol": "Gia_ManIffTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 13593,
+      "End": 15197
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/aig/gia/giaIff.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 15444
+    }
+  ],
+  "Draft": "package gia\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [giaIff.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Scalable AIG package.]\n\n  Synopsis    [Hierarchical mapping of AIG with white boxes.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: giaIff.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"gia.h\"\n//#include \"map/if/if.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n   \ntype Iff_Man_t struct {\n    pGia      *Gia_Man_t;       // mapped GIA\n    pLib    *If_LibLut_t;       // LUT library\n    nLutSize             int32;   // LUT size\n    nDegree             int32;    // degree \n    vTimes      *Vec_Flt_t;     // arrival times\n    Vec_Int_t *     vMatch[4];  // matches\n}\n\nfunc Iff_ObjTimeId(p *Iff_Man_t, iObj int32) float32 { return Vec_FltEntry( p.vTimes, iObj );                       }\nfunc Iff_ObjTime(p *Iff_Man_t, pObj *Gia_Obj_t) float32 { return Iff_ObjTimeId( p, Gia_ObjId(p.pGia, pObj) );          }\nfunc Iff_ObjSetTimeId(p *Iff_Man_t, iObj int32, Time float32) { Vec_FltWriteEntry( p.vTimes, iObj, Time );                   }\nfunc Iff_ObjSetTime(p *Iff_Man_t, pObj *Gia_Obj_t, Time float32) { Iff_ObjSetTimeId( p, Gia_ObjId(p.pGia, pObj), Time );        }\n\nfunc Iff_ObjMatchId(p *Iff_Man_t, iObj int32, Type int32) int32 { return Vec_IntEntry( p.vMatch[Type], iObj );                 }\nfunc Iff_ObjMatch(p *Iff_Man_t, pObj *Gia_Obj_t, Type int32) int32 { return Iff_ObjMatchId( p, Gia_ObjId(p.pGia, pObj), Type );   }\nfunc Iff_ObjSetMatchId(p *Iff_Man_t, iObj int32, Type int32, Match int32) { Vec_IntWriteEntry( p.vMatch[Type], iObj, Match );            }\nfunc Iff_ObjSetMatch(p *Iff_Man_t, pObj *Gia_Obj_t, Type int32, Match int32) { Iff_ObjSetMatchId( p, Gia_ObjId(p.pGia, pObj), Type, Match );}\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManIffStart(pGia *Gia_Man_t) *Iff_Man_t {\n    // inlining of macro ABC_CALLOC\n    var p *Iff_Man_t  = \u0026Iff_Man_t{};\n    p.vTimes    = Vec_FltStartFull( Gia_ManObjNum(pGia) );\n    p.vMatch[2] = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    p.vMatch[3] = Vec_IntStartFull( Gia_ManObjNum(pGia) );\n    return p;\n}\nfunc Gia_ManIffStop(p *Iff_Man_t) {\n    Vec_FltFree( p.vTimes );\n    Vec_IntFree( p.vMatch[2] );\n    Vec_IntFree( p.vMatch[3] );\n    // inlining of macro ABC_FREE\n    ((p) ? (free((char *) (p)), (p) = 0) : 0);\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Count the number of unique fanins.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_IffObjCount(pGia *Gia_Man_t, iObj int32, iFaninSkip2 int32, iFaninSkip3 int32) int32 {\n    var i, iFanin, Count int32;\n    Gia_ManIncrementTravId( pGia );\n    // inlining of macro Gia_LutForEachFanin\n    for  i = 0; i \u003c Gia_ObjLutSize(pGia,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(pGia,iObj)[i]),1); i++  {\n        if iFanin == iFaninSkip2 || iFanin == iFaninSkip3 {\n            continue; }\n        if Gia_ObjIsTravIdCurrentId( pGia, iFanin ) {\n            continue; }\n        Gia_ObjSetTravIdCurrentId( pGia, iFanin );\n        Count++;\n    }\n    if iFaninSkip2 \u003e= 0 {\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(pGia,iFaninSkip2) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(pGia,iFaninSkip2)[i]),1); i++  {\n            if iFanin == iFaninSkip3 {\n                continue; }\n            if Gia_ObjIsTravIdCurrentId( pGia, iFanin ) {\n                continue; }\n            Gia_ObjSetTravIdCurrentId( pGia, iFanin );\n            Count++;\n        }\n    }\n    if iFaninSkip3 \u003e= 0 {\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(pGia,iFaninSkip3) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(pGia,iFaninSkip3)[i]),1); i++  {\n            if iFanin == iFaninSkip2 {\n                continue; }\n            if Gia_ObjIsTravIdCurrentId( pGia, iFanin ) {\n                continue; }\n            Gia_ObjSetTravIdCurrentId( pGia, iFanin );\n            Count++;\n        }\n    }\n    return Count;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_IffObjTimeOne(p *Iff_Man_t, iObj int32, iFaninSkip2 int32, iFaninSkip3 int32) float32 {\n    var i, iFanin int32;\n    var DelayMax float32  = -ABC_INFINITY;\n    // inlining of macro Gia_LutForEachFanin\n    for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iObj)[i]),1); i++  {\n        if iFanin != iFaninSkip2 \u0026\u0026 iFanin != iFaninSkip3 \u0026\u0026 DelayMax \u003c Iff_ObjTimeId(p, iFanin) {\n            DelayMax = Iff_ObjTimeId(p, iFanin); }\n    }\n    assert(i == Gia_ObjLutSize(p.pGia, iObj), \"i == Gia_ObjLutSize(p.pGia, iObj)\");\n    if iFaninSkip2 == -1 {\n        return DelayMax; }\n    // inlining of macro Gia_LutForEachFanin\n    for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iFaninSkip2) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iFaninSkip2)[i]),1); i++  {\n        if iFanin != iFaninSkip3 \u0026\u0026 DelayMax \u003c Iff_ObjTimeId(p, iFanin) {\n            DelayMax = Iff_ObjTimeId(p, iFanin); }\n    }\n    if iFaninSkip3 == -1 {\n        return DelayMax; }\n    // inlining of macro Gia_LutForEachFanin\n    for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iFaninSkip3) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iFaninSkip3)[i]),1); i++  {\n        if iFanin != iFaninSkip2 \u0026\u0026 DelayMax \u003c Iff_ObjTimeId(p, iFanin) {\n            DelayMax = Iff_ObjTimeId(p, iFanin); }\n    }\n    assert(DelayMax \u003e= 0, \"DelayMax \u003e= 0\");\n    return DelayMax;\n}\nfunc Gia_IffObjTimeTwo(p *Iff_Man_t, iObj int32, piFanin *int32, DelayMin float32) float32 {\n    var i, iFanin, nSize int32;\n    var This float32;\n    *piFanin = -1;\n    // inlining of macro Gia_LutForEachFanin\n    for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iObj)[i]),1); i++  {\n        if Gia_ObjIsCi(Gia_ManObj(p.pGia, iFanin)) {\n            continue; }\n        This = Gia_IffObjTimeOne( p, iObj, iFanin, -1 );\n        nSize = Gia_IffObjCount( p.pGia, iObj, iFanin, -1 );\n        assert(nSize \u003c= p.pLib.LutMax, \"nSize \u003c= p.pLib.LutMax\");\n        This += p.pLib.pLutDelays[nSize][0];\n        if DelayMin \u003e This {\n            DelayMin = This;\n            *piFanin = iFanin;\n        }\n    }\n    return DelayMin;\n}\nfunc Gia_IffObjTimeThree(p *Iff_Man_t, iObj int32, piFanin *int32, piFanin2 *int32, DelayMin float32) float32 {\n    var i, k, iFanin, iFanin2, nSize int32;\n    var This float32;\n    *piFanin = -1;\n    *piFanin2 = -1;\n    // inlining of macro Gia_LutForEachFanin\n    for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iObj)[i]),1); i++  {\n    // inlining of macro Gia_LutForEachFanin\n    for  k = 0; k \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iFanin2 = Gia_ObjLutFanins(p.pGia,iObj)[k]),1); k++  {\n        if iFanin == iFanin2 {\n            continue; }\n        if Gia_ObjIsCi(Gia_ManObj(p.pGia, iFanin)) {\n            continue; }\n        if Gia_ObjIsCi(Gia_ManObj(p.pGia, iFanin2)) {\n            continue; }\n        This  = Gia_IffObjTimeOne( p, iObj, iFanin, iFanin2 );\n        nSize = Gia_IffObjCount( p.pGia, iObj, iFanin, iFanin2 );\n        assert(nSize \u003c= p.pLib.LutMax, \"nSize \u003c= p.pLib.LutMax\");\n        This += p.pLib.pLutDelays[nSize][0];\n        if DelayMin \u003e This {\n            DelayMin  = This;\n            *piFanin  = iFanin;\n            *piFanin2 = iFanin2;\n        }\n    }\n    }\n    return DelayMin;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Gia_ManIffPerform(pGia *Gia_Man_t, pLib *If_LibLut_t, pTime *Tim_Man_t, nLutSize int32, nDegree int32) *Iff_Man_t {\n    var p *Iff_Man_t;\n    var pObj *Gia_Obj_t;\n    var iObj, iFanin, iFanin1, iFanin2 int32;\n    var CountAll, Count2, Count3 int32;\n    var arrTime1 float32;\n    var arrTime2 float32;\n    var arrTime3 float32;\n    var arrMax float32 = -ABC_INFINITY; \n    assert(nDegree == 2 || nDegree == 3, \"nDegree == 2 || nDegree == 3\");\n    // start the mapping manager and set its parameters\n    p = Gia_ManIffStart( pGia );\n    p.pGia     = pGia;\n    p.pLib     = pLib;\n    p.nLutSize = nLutSize;\n    p.nDegree  = nDegree;\n    // compute arrival times of each node\n    Iff_ObjSetTimeId( p, 0, 0 );\n    Tim_ManIncrementTravId( pTime );\n    // inlining of macro Gia_ManForEachObj1\n    for  iObj = 1; (iObj \u003c pGia.nObjs) \u0026\u0026 ((pObj) = Gia_ManObj(pGia, iObj)); iObj++  {\n        if Gia_ObjIsAnd(pObj) {\n            if !Gia_ObjIsLut(pGia, iObj) {\n                continue; }\n            CountAll++;\n            // compute arrival times of LUT inputs\n            arrTime1 = Gia_IffObjTimeOne( p, iObj, -1, -1 );\n            arrTime1 += p.pLib.pLutDelays[Gia_ObjLutSize(pGia, iObj)][0];\n            // compute arrival times of LUT pairs\n            arrTime2 = Gia_IffObjTimeTwo( p, iObj, \u0026iFanin, arrTime1 );\n            if nDegree == 2 {\n                // set arrival times\n                Iff_ObjSetTimeId( p, iObj, arrTime2 );\n                if arrTime2 \u003c arrTime1 {\n                    Iff_ObjSetMatchId( p, iObj, 2, iFanin );\nCount2++; }                \n            \n            } else if nDegree == 3 {                \n                // compute arrival times of LUT triples\n                arrTime3 = Gia_IffObjTimeThree( p, iObj, \u0026iFanin1, \u0026iFanin2, arrTime2 );\n                // set arrival times\n                Iff_ObjSetTimeId( p, iObj, arrTime3 );\n                if arrTime3 == arrTime1 {\n                    continue; }\n                if arrTime3 == arrTime2 {\n                    Iff_ObjSetMatchId( p, iObj, 2, iFanin );\nCount2++;\n                } else {\n                    assert(arrTime3 \u003c arrTime2, \"arrTime3 \u003c arrTime2\");\n                    Iff_ObjSetMatchId( p, iObj, 2, iFanin1 );\n                    Iff_ObjSetMatchId( p, iObj, 3, iFanin2 );\nCount3++;\n                }\n            \n            } else { assert(false, \"0\"); }\n        \n        } else if Gia_ObjIsCi(pObj) {\n            arrTime1 = Tim_ManGetCiArrival( pTime, Gia_ObjCioId(pObj) );\n            Iff_ObjSetTime( p, pObj, arrTime1 );\n        \n        } else if Gia_ObjIsCo(pObj) {\n            arrTime1 = Iff_ObjTimeId( p, Gia_ObjFaninId0p(pGia, pObj) );\n            Tim_ManSetCoArrival( pTime, Gia_ObjCioId(pObj), arrTime1 );\n            Iff_ObjSetTime( p, pObj, arrTime1 );\n            arrMax = Abc_MaxFloat( arrMax, arrTime1 );\n        \n        } else { assert(false, \"0\"); }\n    }\n    fmt.Printf(\"Max delay = %.2f.  Count1 = %d.  Count2 = %d.  Count3 = %d.\\n\", arrMax, CountAll - Count2 - Count3, Count2, Count3);\n    return p;\n}\n\n/**Function*************************************************************\n\n  Synopsis    []\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     [] \n\n***********************************************************************/\nfunc Gia_ManIffSelect_rec(p *Iff_Man_t, iObj int32, vPacking *Vec_Int_t) {\n    var i, iFanin, iFaninSkip2, iFaninSkip3 int32;\n    if Gia_ObjIsTravIdCurrentId( p.pGia, iObj ) {\n        return; }\n    Gia_ObjSetTravIdCurrentId( p.pGia, iObj );\n    assert(Gia_ObjIsLut(p.pGia, iObj), \"Gia_ObjIsLut(p.pGia, iObj)\");\n    iFaninSkip2 = Iff_ObjMatchId(p, iObj, 2);\n    iFaninSkip3 = Iff_ObjMatchId(p, iObj, 3);\n    if iFaninSkip2 == -1 {\n        assert(iFaninSkip3 == -1, \"iFaninSkip3 == -1\");\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iObj)[i]),1); i++  {\n            Gia_ManIffSelect_rec( p, iFanin, vPacking );\n        }\n        Vec_IntPush( vPacking, 1 );\n        Vec_IntPush( vPacking, iObj );\n    \n    } else if iFaninSkip3 == -1 {\n        assert(iFaninSkip2 \u003e 0, \"iFaninSkip2 \u003e 0\");\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iObj)[i]),1); i++  {\n            if iFanin != iFaninSkip2 {\n                Gia_ManIffSelect_rec( p, iFanin, vPacking ); }\n        }\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iFaninSkip2) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iFaninSkip2)[i]),1); i++  {\n            Gia_ManIffSelect_rec( p, iFanin, vPacking );\n        }\n        Vec_IntPush( vPacking, 2 );\n        Vec_IntPush( vPacking, iFaninSkip2 );\n        Vec_IntPush( vPacking, iObj );\n    \n    } else {\n        assert(iFaninSkip2 \u003e 0 \u0026\u0026 iFaninSkip3 \u003e 0, \"iFaninSkip2 \u003e 0 \u0026\u0026 iFaninSkip3 \u003e 0\");\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iObj) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iObj)[i]),1); i++  {\n            if iFanin != iFaninSkip2 \u0026\u0026 iFanin != iFaninSkip3 {\n                Gia_ManIffSelect_rec( p, iFanin, vPacking ); }\n        }\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iFaninSkip2) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iFaninSkip2)[i]),1); i++  {\n            if iFanin != iFaninSkip3 {\n                Gia_ManIffSelect_rec( p, iFanin, vPacking ); }\n        }\n        // inlining of macro Gia_LutForEachFanin\n        for  i = 0; i \u003c Gia_ObjLutSize(p.pGia,iFaninSkip3) \u0026\u0026 ((iFanin = Gia_ObjLutFanins(p.pGia,iFaninSkip3)[i]),1); i++  {\n            if iFanin != iFaninSkip2 {\n                Gia_ManIffSelect_rec( p, iFanin, vPacking ); }\n        }\n        Vec_IntPush( vPacking, 3 );\n        Vec_IntPush( vPacking, iFaninSkip2 );\n        Vec_IntPush( vPacking, iFaninSkip3 );\n        Vec_IntPush( vPacking, iObj );\n    }\n    Vec_IntAddToEntry( vPacking, 0, 1 );\n}\nfunc Gia_ManIffSelect(p *Iff_Man_t) *Vec_Int_t {\n    var vPacking *Vec_Int_t;\n    var pObj *Gia_Obj_t; var i int32;\n    vPacking = Vec_IntAlloc( Gia_ManObjNum(p.pGia) );\n    Vec_IntPush( vPacking, 0 );\n    // mark const0 and PIs\n    Gia_ManIncrementTravId( p.pGia );\n    Gia_ObjSetTravIdCurrentId( p.pGia, 0 );\n    // inlining of macro Gia_ManForEachCi\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCis)) \u0026\u0026 ((pObj) = Gia_ManCi(p.pGia, i)); i++  {\n        Gia_ObjSetTravIdCurrent( p.pGia, pObj );\n    }\n    // recursively collect internal nodes\n    // inlining of macro Gia_ManForEachCo\n    for  i = 0; (i \u003c Vec_IntSize(p.pGia.vCos)) \u0026\u0026 ((pObj) = Gia_ManCo(p.pGia, i)); i++  {\n        Gia_ManIffSelect_rec( p, Gia_ObjFaninId0p(p.pGia, pObj), vPacking );\n    }\n    return vPacking;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [This command performs hierarhical mapping.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     [] \n\n***********************************************************************/\nfunc Gia_ManIffTest(pGia *Gia_Man_t, pLib *If_LibLut_t, fVerbose int32) {\n    var p *Iff_Man_t;\n    var pTemp *Tim_Man_t  = nil;\n    var nDegree int32  = -1;\n    var nLutSize int32  = Gia_ManLutSizeMax( pGia );\n    if nLutSize \u003c= 4 {\n        nLutSize = 4;\n        if pLib.LutMax == 7 {\n            nDegree = 2;\n        } else if pLib.LutMax == 10 {\n            nDegree = 3;\n        } else { fmt.Printf(\"LUT library for packing 4-LUTs should have 7 or 10 inputs.\\n\"); return; }\n    \n    } else if nLutSize \u003c= 6 {\n        nLutSize = 6;\n        if pLib.LutMax == 11 {\n            nDegree = 2;\n        } else if pLib.LutMax == 16 {\n            nDegree = 3;\n        } else { fmt.Printf(\"LUT library for packing 6-LUTs should have 11 or 16 inputs.\\n\"); return; }\n    \n    } else {\n        fmt.Printf(\"The LUT size is more than 6.\\n\");\n        return;\n    }\n    if fVerbose != 0 {\n        fmt.Printf(\"Performing %d-clustering with %d-LUTs:\\n\", nDegree, nLutSize); }\n    // create timing manager\n    if pGia.pManTime == nil {\n        pGia.pManTime = pTemp = Tim_ManStart( Gia_ManCiNum(pGia), Gia_ManCoNum(pGia) ); }\n    // perform timing computation\n    p = Gia_ManIffPerform( pGia, pLib, (Tim_Man_t *)pGia.pManTime, nLutSize, nDegree );\n    // remove timing manager\n    if pGia.pManTime == pTemp {\n        pGia.pManTime = nil; }\n    Tim_ManStopP( (Tim_Man_t **)\u0026pTemp );\n    // derive clustering\n    Vec_IntFreeP( \u0026pGia.vPacking );\n    pGia.vPacking = Gia_ManIffSelect( p );\n    Gia_ManIffStop( p );\n    // print statistics\n    if fVerbose != 0 {\n        Gia_ManPrintPackingStats( pGia ); }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,653 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c",
+  "SHA256": "61e55ca74f872fbc01552a788c7fbcdb57f2e9c46e5bdec4d1a84a6c7942ce45",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 51,
+        "Column": 5,
+        "ByteOffset": 1448
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Sfm_ObjIsNode(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 55,
+        "Column": 5,
+        "ByteOffset": 1567
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value == 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 75,
+        "Column": 5,
+        "ByteOffset": 2319
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Sfm_ObjIsNode(p, iObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 5,
+        "ByteOffset": 2438
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Value == 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 101,
+        "Column": 5,
+        "ByteOffset": 3246
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Sfm_ObjIsNode( p, iObj ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 104,
+        "Column": 5,
+        "ByteOffset": 3360
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Count1 == Count2 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 152,
+        "Column": 13,
+        "ByteOffset": 5540
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Sfm_ObjIsNode(p, iNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 250,
+        "Column": 5,
+        "ByteOffset": 9898
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Sfm_ObjIsNode(p, iNode) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 290,
+        "Column": 13,
+        "ByteOffset": 11631
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Sfm_ObjFaninNum(p, iFanout) \u003e 1 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 350,
+        "Column": 5,
+        "ByteOffset": 13600
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Sfm_ObjIsNode( p, iNode ) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 389,
+        "Column": 5,
+        "ByteOffset": 15106
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vDivs) \u003c= p.pPars.nWinSizeMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 405,
+        "Column": 5,
+        "ByteOffset": 15937
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    assert( Vec_IntSize(p.vDivs) \u003c= p.pPars.nWinSizeMax );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 415,
+        "Column": 9,
+        "ByteOffset": 16430
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(p.vRoots) \u003e 0 );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 416,
+        "Column": 9,
+        "ByteOffset": 16475
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( Vec_IntSize(p.vTfo) \u003e 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 464,
+        "Column": 5,
+        "ByteOffset": 18454
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%6d : \", iNode );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 465,
+        "Column": 5,
+        "ByteOffset": 18485
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Leaves = %5d. \", 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 466,
+        "Column": 5,
+        "ByteOffset": 18520
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Nodes = %5d. \",  Vec_IntSize(p.vNodes) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 467,
+        "Column": 5,
+        "ByteOffset": 18575
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Roots = %5d. \",  Vec_IntSize(p.vRoots) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 468,
+        "Column": 5,
+        "ByteOffset": 18630
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Divs = %5d. \",   Vec_IntSize(p.vDivs) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 469,
+        "Column": 5,
+        "ByteOffset": 18684
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"\\n\" );"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Sfm_ObjRef_rec",
+      "Start": 1284,
+      "End": 1686,
+      "BodyStart": 1330,
+      "Original": "int Sfm_ObjRef_rec( Sfm_Ntk_t * p, int iObj )\n{\n    int i, iFanin, Value, Count;\n    if ( Sfm_ObjIsPi(p, iObj) )\n        return 0;\n    assert( Sfm_ObjIsNode(p, iObj) );\n    Value = Sfm_ObjRefIncrement(p, iObj);\n    if ( Value \u003e 1 )\n        return 0;\n    assert( Value == 1 );\n    Count = 1;\n    Sfm_ObjForEachFanin( p, iObj, iFanin, i )\n        Count += Sfm_ObjRef_rec( p, iFanin );\n    return Count;\n}",
+      "Draft": "func Sfm_ObjRef_rec(p *Sfm_Ntk_t, iObj int32) int32 {\n    var i, iFanin, Value, Count int32;\n    if Sfm_ObjIsPi(p, iObj) {\n        return 0; }\n    assert(Sfm_ObjIsNode(p, iObj), \"Sfm_ObjIsNode(p, iObj)\");\n    Value = Sfm_ObjRefIncrement(p, iObj);\n    if Value \u003e 1 {\n        return 0; }\n    assert(Value == 1, \"Value == 1\");\n    Count = 1;\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iObj)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iObj, i)), 1);  i++  {\n        Count += Sfm_ObjRef_rec( p, iFanin );\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Sfm_ObjRef",
+      "Start": 1687,
+      "End": 1872,
+      "BodyStart": 1729,
+      "Original": "int Sfm_ObjRef( Sfm_Ntk_t * p, int iObj )\n{\n    int i, iFanin, Count = 1;\n    Sfm_ObjForEachFanin( p, iObj, iFanin, i )\n        Count += Sfm_ObjRef_rec( p, iFanin );\n    return Count;\n}",
+      "Draft": "func Sfm_ObjRef(p *Sfm_Ntk_t, iObj int32) int32 {\n    var i int32;\n    var iFanin int32;\n    var Count int32 = 1;\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iObj)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iObj, i)), 1);  i++  {\n        Count += Sfm_ObjRef_rec( p, iFanin );\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Sfm_ObjDeref_rec",
+      "Start": 1873,
+      "End": 2279,
+      "BodyStart": 1921,
+      "Original": "int Sfm_ObjDeref_rec( Sfm_Ntk_t * p, int iObj )\n{\n    int i, iFanin, Value, Count;\n    if ( Sfm_ObjIsPi(p, iObj) )\n        return 0;\n    assert( Sfm_ObjIsNode(p, iObj) );\n    Value = Sfm_ObjRefDecrement(p, iObj);\n    if ( Value \u003e 0 )\n        return 0;\n    assert( Value == 0 );\n    Count = 1;\n    Sfm_ObjForEachFanin( p, iObj, iFanin, i )\n        Count += Sfm_ObjDeref_rec( p, iFanin );\n    return Count;\n}",
+      "Draft": "func Sfm_ObjDeref_rec(p *Sfm_Ntk_t, iObj int32) int32 {\n    var i, iFanin, Value, Count int32;\n    if Sfm_ObjIsPi(p, iObj) {\n        return 0; }\n    assert(Sfm_ObjIsNode(p, iObj), \"Sfm_ObjIsNode(p, iObj)\");\n    Value = Sfm_ObjRefDecrement(p, iObj);\n    if Value \u003e 0 {\n        return 0; }\n    assert(Value == 0, \"Value == 0\");\n    Count = 1;\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iObj)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iObj, i)), 1);  i++  {\n        Count += Sfm_ObjDeref_rec( p, iFanin );\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Sfm_ObjDeref",
+      "Start": 2280,
+      "End": 2469,
+      "BodyStart": 2324,
+      "Original": "int Sfm_ObjDeref( Sfm_Ntk_t * p, int iObj )\n{\n    int i, iFanin, Count = 1;\n    Sfm_ObjForEachFanin( p, iObj, iFanin, i )\n        Count += Sfm_ObjDeref_rec( p, iFanin );\n    return Count;\n}",
+      "Draft": "func Sfm_ObjDeref(p *Sfm_Ntk_t, iObj int32) int32 {\n    var i int32;\n    var iFanin int32;\n    var Count int32 = 1;\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iObj)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iObj, i)), 1);  i++  {\n        Count += Sfm_ObjDeref_rec( p, iFanin );\n    }\n    return Count;\n}"
+    },
+    {
+      "Name": "Sfm_ObjMffcSize",
+      "Start": 2470,
+      "End": 2819,
+      "BodyStart": 2517,
+      "Original": "int Sfm_ObjMffcSize( Sfm_Ntk_t * p, int iObj )\n{\n    int Count1, Count2;\n    if ( Sfm_ObjIsPi(p, iObj) )\n        return 0;\n    if ( Sfm_ObjFanoutNum(p, iObj) != 1 )\n        return 0;\n    assert( Sfm_ObjIsNode( p, iObj ) );\n    Count1 = Sfm_ObjDeref( p, iObj );\n    Count2 = Sfm_ObjRef( p, iObj );\n    assert( Count1 == Count2 );\n    return Count1;\n}",
+      "Draft": "func Sfm_ObjMffcSize(p *Sfm_Ntk_t, iObj int32) int32 {\n    var Count1, Count2 int32;\n    if Sfm_ObjIsPi(p, iObj) {\n        return 0; }\n    if Sfm_ObjFanoutNum(p, iObj) != 1 {\n        return 0; }\n    assert(Sfm_ObjIsNode( p, iObj ), \"Sfm_ObjIsNode( p, iObj )\");\n    Count1 = Sfm_ObjDeref( p, iObj );\n    Count2 = Sfm_ObjRef( p, iObj );\n    assert(Count1 == Count2, \"Count1 == Count2\");\n    return Count1;\n}"
+    },
+    {
+      "Name": "Sfm_NtkIncrementTravId",
+      "Start": 3082,
+      "End": 3214,
+      "BodyStart": 3153,
+      "Original": "static inline void  Sfm_NtkIncrementTravId( Sfm_Ntk_t * p )            { p-\u003enTravIds++;                                            }",
+      "Draft": "func Sfm_NtkIncrementTravId(p *Sfm_Ntk_t) { p.nTravIds++;                                            }"
+    },
+    {
+      "Name": "Sfm_ObjSetTravIdCurrent",
+      "Start": 3222,
+      "End": 3354,
+      "BodyStart": 3293,
+      "Original": "static inline void  Sfm_ObjSetTravIdCurrent( Sfm_Ntk_t * p, int Id )   { Vec_IntWriteEntry( \u0026p-\u003evTravIds, Id, p-\u003enTravIds );       }",
+      "Draft": "func Sfm_ObjSetTravIdCurrent(p *Sfm_Ntk_t, Id int32) { Vec_IntWriteEntry( \u0026p.vTravIds, Id, p.nTravIds );       }"
+    },
+    {
+      "Name": "Sfm_ObjIsTravIdCurrent",
+      "Start": 3355,
+      "End": 3487,
+      "BodyStart": 3426,
+      "Original": "static inline int   Sfm_ObjIsTravIdCurrent( Sfm_Ntk_t * p, int Id )    { return (Vec_IntEntry(\u0026p-\u003evTravIds, Id) == p-\u003enTravIds);   }",
+      "Draft": "func Sfm_ObjIsTravIdCurrent(p *Sfm_Ntk_t, Id int32) int32 { return (Vec_IntEntry(\u0026p.vTravIds, Id) == p.nTravIds);   }"
+    },
+    {
+      "Name": "Sfm_ObjIsTravIdPrevious",
+      "Start": 3491,
+      "End": 3623,
+      "BodyStart": 3562,
+      "Original": "static inline int   Sfm_ObjIsTravIdPrevious( Sfm_Ntk_t * p, int Id )   { return (Vec_IntEntry(\u0026p-\u003evTravIds, Id) == p-\u003enTravIds-1); }",
+      "Draft": "func Sfm_ObjIsTravIdPrevious(p *Sfm_Ntk_t, Id int32) int32 { return (Vec_IntEntry(\u0026p.vTravIds, Id) == p.nTravIds-1); }"
+    },
+    {
+      "Name": "Sfm_NtkIncrementTravId2",
+      "Start": 3628,
+      "End": 3760,
+      "BodyStart": 3699,
+      "Original": "static inline void  Sfm_NtkIncrementTravId2( Sfm_Ntk_t * p )           { p-\u003enTravIds2++;                                           }",
+      "Draft": "func Sfm_NtkIncrementTravId2(p *Sfm_Ntk_t) { p.nTravIds2++;                                           }"
+    },
+    {
+      "Name": "Sfm_ObjSetTravIdCurrent2",
+      "Start": 3768,
+      "End": 3900,
+      "BodyStart": 3839,
+      "Original": "static inline void  Sfm_ObjSetTravIdCurrent2( Sfm_Ntk_t * p, int Id )  { Vec_IntWriteEntry( \u0026p-\u003evTravIds2, Id, p-\u003enTravIds2 );     }",
+      "Draft": "func Sfm_ObjSetTravIdCurrent2(p *Sfm_Ntk_t, Id int32) { Vec_IntWriteEntry( \u0026p.vTravIds2, Id, p.nTravIds2 );     }"
+    },
+    {
+      "Name": "Sfm_ObjIsTravIdCurrent2",
+      "Start": 3901,
+      "End": 4033,
+      "BodyStart": 3972,
+      "Original": "static inline int   Sfm_ObjIsTravIdCurrent2( Sfm_Ntk_t * p, int Id )   { return (Vec_IntEntry(\u0026p-\u003evTravIds2, Id) == p-\u003enTravIds2); }",
+      "Draft": "func Sfm_ObjIsTravIdCurrent2(p *Sfm_Ntk_t, Id int32) int32 { return (Vec_IntEntry(\u0026p.vTravIds2, Id) == p.nTravIds2); }"
+    },
+    {
+      "Name": "Sfm_NtkDfs_rec",
+      "Start": 4454,
+      "End": 5660,
+      "BodyStart": 4590,
+      "Original": "void Sfm_NtkDfs_rec( Sfm_Ntk_t * p, int iNode, Vec_Int_t * vNodes, Vec_Wec_t * vGroups, Vec_Int_t * vGroupMap, Vec_Int_t * vBoxesLeft )\n{\n    int i, iFanin;\n    if ( Sfm_ObjIsPi(p, iNode) )\n        return;\n    if ( Sfm_ObjIsTravIdCurrent(p, iNode) )\n        return;\n    if ( Vec_IntEntry(vGroupMap, iNode) \u003e= 0 )\n    {\n        int k, iGroup = Abc_Lit2Var( Vec_IntEntry(vGroupMap, iNode) );\n        Vec_Int_t * vGroup = Vec_WecEntry( vGroups, iGroup );\n        Vec_IntForEachEntry( vGroup, iNode, i )\n            assert( Sfm_ObjIsNode(p, iNode) );\n        Vec_IntForEachEntry( vGroup, iNode, i )\n            Sfm_ObjSetTravIdCurrent( p, iNode );\n        Vec_IntForEachEntry( vGroup, iNode, i )\n            Sfm_ObjForEachFanin( p, iNode, iFanin, k )\n                Sfm_NtkDfs_rec( p, iFanin, vNodes, vGroups, vGroupMap, vBoxesLeft );\n        Vec_IntForEachEntry( vGroup, iNode, i )\n            Vec_IntPush( vNodes, iNode );\n        Vec_IntPush( vBoxesLeft, iGroup );\n    }\n    else\n    {\n        Sfm_ObjSetTravIdCurrent(p, iNode);\n        Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n            Sfm_NtkDfs_rec( p, iFanin, vNodes, vGroups, vGroupMap, vBoxesLeft );\n        Vec_IntPush( vNodes, iNode );\n    }\n}",
+      "Draft": "func Sfm_NtkDfs_rec(p *Sfm_Ntk_t, iNode int32, vNodes *Vec_Int_t, vGroups *Vec_Wec_t, vGroupMap *Vec_Int_t, vBoxesLeft *Vec_Int_t) {\n    var i, iFanin int32;\n    if Sfm_ObjIsPi(p, iNode) {\n        return; }\n    if Sfm_ObjIsTravIdCurrent(p, iNode) != 0 {\n        return; }\n    if Vec_IntEntry(vGroupMap, iNode) \u003e= 0 {\n        var k int32;\n        var iGroup int32 = Abc_Lit2Var( Vec_IntEntry(vGroupMap, iNode) );\n        var vGroup *Vec_Int_t  = Vec_WecEntry( vGroups, iGroup );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vGroup)) \u0026\u0026 (((iNode) = Vec_IntEntry(vGroup, i)), 1); i++  {\n            assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n        }\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vGroup)) \u0026\u0026 (((iNode) = Vec_IntEntry(vGroup, i)), 1); i++  {\n            Sfm_ObjSetTravIdCurrent( p, iNode );\n        }\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vGroup)) \u0026\u0026 (((iNode) = Vec_IntEntry(vGroup, i)), 1); i++  {\n            // inlining of macro Sfm_ObjForEachFanin\n            for  k = 0; k \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, k)), 1);  k++  {\n                Sfm_NtkDfs_rec( p, iFanin, vNodes, vGroups, vGroupMap, vBoxesLeft );\n            }\n        }\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vGroup)) \u0026\u0026 (((iNode) = Vec_IntEntry(vGroup, i)), 1); i++  {\n            Vec_IntPush( vNodes, iNode );\n        }\n        Vec_IntPush( vBoxesLeft, iGroup );\n    \n    } else {\n        Sfm_ObjSetTravIdCurrent(p, iNode);\n        // inlining of macro Sfm_ObjForEachFanin\n        for  i = 0; i \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, i)), 1);  i++  {\n            Sfm_NtkDfs_rec( p, iFanin, vNodes, vGroups, vGroupMap, vBoxesLeft );\n        }\n        Vec_IntPush( vNodes, iNode );\n    }\n}"
+    },
+    {
+      "Name": "Sfm_NtkDfs",
+      "Start": 5661,
+      "End": 6275,
+      "BodyStart": 5784,
+      "Original": "Vec_Int_t * Sfm_NtkDfs( Sfm_Ntk_t * p, Vec_Wec_t * vGroups, Vec_Int_t * vGroupMap, Vec_Int_t * vBoxesLeft, int fAllBoxes )\n{\n    Vec_Int_t * vNodes;\n    int i;\n    Vec_IntClear( vBoxesLeft );\n    vNodes = Vec_IntAlloc( p-\u003enObjs );\n    Sfm_NtkIncrementTravId( p );\n    if ( fAllBoxes )\n    {\n        Vec_Int_t * vGroup;\n        Vec_WecForEachLevel( vGroups, vGroup, i )\n            Sfm_NtkDfs_rec( p, Vec_IntEntry(vGroup, 0), vNodes, vGroups, vGroupMap, vBoxesLeft );\n    }\n    Sfm_NtkForEachPo( p, i )\n        Sfm_NtkDfs_rec( p, Sfm_ObjFanin(p, i, 0), vNodes, vGroups, vGroupMap, vBoxesLeft );\n    return vNodes;\n}",
+      "Draft": "func Sfm_NtkDfs(p *Sfm_Ntk_t, vGroups *Vec_Wec_t, vGroupMap *Vec_Int_t, vBoxesLeft *Vec_Int_t, fAllBoxes int32) *Vec_Int_t {\n    var vNodes *Vec_Int_t;\n    var i int32;\n    Vec_IntClear( vBoxesLeft );\n    vNodes = Vec_IntAlloc( p.nObjs );\n    Sfm_NtkIncrementTravId( p );\n    if fAllBoxes != 0 {\n        var vGroup *Vec_Int_t;\n        // inlining of macro Vec_WecForEachLevel\n        for  i = 0; (i \u003c Vec_WecSize(vGroups)) \u0026\u0026 (((vGroup) = Vec_WecEntry(vGroups, i)), 1); i++  {\n            Sfm_NtkDfs_rec( p, Vec_IntEntry(vGroup, 0), vNodes, vGroups, vGroupMap, vBoxesLeft );\n        }\n    }\n    // inlining of macro Sfm_NtkForEachPo\n    for  i = p.nObjs - p.nPos; i \u003c p.nObjs; i++  {\n        Sfm_NtkDfs_rec( p, Sfm_ObjFanin(p, i, 0), vNodes, vGroups, vGroupMap, vBoxesLeft );\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Sfm_NtkCheckOverlap_rec",
+      "Start": 6567,
+      "End": 7026,
+      "BodyStart": 6634,
+      "Original": "int Sfm_NtkCheckOverlap_rec( Sfm_Ntk_t * p, int iThis, int iNode )\n{\n    int i, iFanin;\n    if ( Sfm_ObjIsTravIdCurrent2(p, iThis) || iThis == iNode )\n        return 0;\n//    if ( Sfm_ObjIsTravIdCurrent(p, iThis) )\n    if ( Sfm_ObjIsTravIdPrevious(p, iThis) )\n        return 1;\n    Sfm_ObjSetTravIdCurrent2(p, iThis);\n    Sfm_ObjForEachFanin( p, iThis, iFanin, i )\n        if ( Sfm_NtkCheckOverlap_rec(p, iFanin, iNode) )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Sfm_NtkCheckOverlap_rec(p *Sfm_Ntk_t, iThis int32, iNode int32) int32 {\n    var i, iFanin int32;\n    if (Sfm_ObjIsTravIdCurrent2(p, iThis) != 0) || iThis == iNode {\n        return 0; }\n//    if ( Sfm_ObjIsTravIdCurrent(p, iThis) )\n    if Sfm_ObjIsTravIdPrevious(p, iThis) != 0 {\n        return 1; }\n    Sfm_ObjSetTravIdCurrent2(p, iThis);\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iThis)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iThis, i)), 1);  i++  {\n        if Sfm_NtkCheckOverlap_rec(p, iFanin, iNode) != 0 {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Sfm_NtkCheckOverlap",
+      "Start": 7027,
+      "End": 7180,
+      "BodyStart": 7089,
+      "Original": "int Sfm_NtkCheckOverlap( Sfm_Ntk_t * p, int iFan, int iNode )\n{\n    Sfm_NtkIncrementTravId2( p );\n    return Sfm_NtkCheckOverlap_rec( p, iFan, iNode );\n}",
+      "Draft": "func Sfm_NtkCheckOverlap(p *Sfm_Ntk_t, iFan int32, iNode int32) int32 {\n    Sfm_NtkIncrementTravId2( p );\n    return Sfm_NtkCheckOverlap_rec( p, iFan, iNode );\n}"
+    },
+    {
+      "Name": "Sfm_NtkCheckRoot",
+      "Start": 7457,
+      "End": 8139,
+      "BodyStart": 7535,
+      "Original": "static inline int Sfm_NtkCheckRoot( Sfm_Ntk_t * p, int iNode, int nLevelMax )\n{\n    int i, iFanout;\n    // the node is the root if one of the following is true:\n    // (1) the node has more than fanouts than the limit or has no fanouts (should not happen in general)\n    if ( Sfm_ObjFanoutNum(p, iNode) == 0 || Sfm_ObjFanoutNum(p, iNode) \u003e p-\u003epPars-\u003enFanoutMax )\n        return 1;\n    // (2) the node has CO fanouts\n    // (3) the node has fanouts above the cutoff level\n    Sfm_ObjForEachFanout( p, iNode, iFanout, i )\n        if ( Sfm_ObjIsPo(p, iFanout) || Sfm_ObjLevel(p, iFanout) \u003e nLevelMax )//|| !Sfm_NtkCheckOverlap(p, iFanout, iNode) )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Sfm_NtkCheckRoot(p *Sfm_Ntk_t, iNode int32, nLevelMax int32) int32 {\n    var i, iFanout int32;\n    // the node is the root if one of the following is true:\n    // (1) the node has more than fanouts than the limit or has no fanouts (should not happen in general)\n    if Sfm_ObjFanoutNum(p, iNode) == 0 || Sfm_ObjFanoutNum(p, iNode) \u003e p.pPars.nFanoutMax {\n        return 1; }\n    // (2) the node has CO fanouts\n    // (3) the node has fanouts above the cutoff level\n    // inlining of macro Sfm_ObjForEachFanout\n    for  i = 0; i \u003c Sfm_ObjFanoutNum(p, iNode) \u0026\u0026 ((iFanout = Sfm_ObjFanout(p, iNode, i)), 1); i++  {\n        if Sfm_ObjIsPo(p, iFanout) || Sfm_ObjLevel(p, iFanout) \u003e nLevelMax {//|| !Sfm_NtkCheckOverlap(p, iFanout, iNode) )\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Sfm_NtkComputeRoots_rec",
+      "Start": 8140,
+      "End": 8783,
+      "BodyStart": 8250,
+      "Original": "void Sfm_NtkComputeRoots_rec( Sfm_Ntk_t * p, int iNode, int nLevelMax, Vec_Int_t * vRoots, Vec_Int_t * vTfo )\n{\n    int i, iFanout;\n    assert( Sfm_ObjIsNode(p, iNode) );\n    if ( Sfm_ObjIsTravIdCurrent(p, iNode) )\n        return;\n    Sfm_ObjSetTravIdCurrent(p, iNode);\n    if ( iNode != p-\u003eiPivotNode )\n        Vec_IntPush( vTfo, iNode );\n    // check if the node should be the root\n    if ( Sfm_NtkCheckRoot( p, iNode, nLevelMax ) )\n        Vec_IntPush( vRoots, iNode );\n    else // if not, explore its fanouts\n        Sfm_ObjForEachFanout( p, iNode, iFanout, i )\n            Sfm_NtkComputeRoots_rec( p, iFanout, nLevelMax, vRoots, vTfo );\n}",
+      "Draft": "func Sfm_NtkComputeRoots_rec(p *Sfm_Ntk_t, iNode int32, nLevelMax int32, vRoots *Vec_Int_t, vTfo *Vec_Int_t) {\n    var i, iFanout int32;\n    assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n    if Sfm_ObjIsTravIdCurrent(p, iNode) != 0 {\n        return; }\n    Sfm_ObjSetTravIdCurrent(p, iNode);\n    if iNode != p.iPivotNode {\n        Vec_IntPush( vTfo, iNode ); }\n    // check if the node should be the root\n    if Sfm_NtkCheckRoot( p, iNode, nLevelMax ) != 0 {\n        Vec_IntPush( vRoots, iNode );\n    } else { // if not, explore its fanouts\n        // inlining of macro Sfm_ObjForEachFanout\n        for  i = 0; i \u003c Sfm_ObjFanoutNum(p, iNode) \u0026\u0026 ((iFanout = Sfm_ObjFanout(p, iNode, i)), 1); i++  {\n            Sfm_NtkComputeRoots_rec( p, iFanout, nLevelMax, vRoots, vTfo );\n        } }\n}"
+    },
+    {
+      "Name": "Sfm_NtkAddDivisors",
+      "Start": 9049,
+      "End": 10091,
+      "BodyStart": 9116,
+      "Original": "void Sfm_NtkAddDivisors( Sfm_Ntk_t * p, int iNode, int nLevelMax )\n{\n    int i, iFanout;\n    Sfm_ObjForEachFanout( p, iNode, iFanout, i )\n    {\n        // skip some of the fanouts if the number is large\n        if ( p-\u003epPars-\u003enFanoutMax \u0026\u0026 i \u003e p-\u003epPars-\u003enFanoutMax )\n            return;\n        // skip TFI nodes, PO nodes, or nodes with high logic level\n        if ( Sfm_ObjIsTravIdCurrent(p, iFanout) || Sfm_ObjIsPo(p, iFanout) || Sfm_ObjLevel(p, iFanout) \u003e nLevelMax )\n            continue;\n        // handle single-input nodes\n        if ( Sfm_ObjFaninNum(p, iFanout) == 1 )\n            Vec_IntPush( p-\u003evDivs, iFanout );\n        // visit node for the first time\n        else if ( !Sfm_ObjIsTravIdCurrent2(p, iFanout) )\n        {\n            assert( Sfm_ObjFaninNum(p, iFanout) \u003e 1 );\n            Sfm_ObjSetTravIdCurrent2( p, iFanout );\n            Sfm_ObjResetFaninCount( p, iFanout );\n        }\n        // visit node again\n        else if ( Sfm_ObjUpdateFaninCount(p, iFanout) == 0 )\n            Vec_IntPush( p-\u003evDivs, iFanout );\n    }\n}",
+      "Draft": "func Sfm_NtkAddDivisors(p *Sfm_Ntk_t, iNode int32, nLevelMax int32) {\n    var i, iFanout int32;\n    // inlining of macro Sfm_ObjForEachFanout\n    for  i = 0; i \u003c Sfm_ObjFanoutNum(p, iNode) \u0026\u0026 ((iFanout = Sfm_ObjFanout(p, iNode, i)), 1); i++  {\n        // skip some of the fanouts if the number is large\n        if p.pPars.nFanoutMax \u0026\u0026 i \u003e p.pPars.nFanoutMax {\n            return; }\n        // skip TFI nodes, PO nodes, or nodes with high logic level\n        if (Sfm_ObjIsTravIdCurrent(p, iFanout) != 0) || Sfm_ObjIsPo(p, iFanout) || Sfm_ObjLevel(p, iFanout) \u003e nLevelMax {\n            continue; }\n        // handle single-input nodes\n        if Sfm_ObjFaninNum(p, iFanout) == 1 {\n            Vec_IntPush( p.vDivs, iFanout );\n        // visit node for the first time\n        } else if !(Sfm_ObjIsTravIdCurrent2(p, iFanout) != 0) {\n            assert(Sfm_ObjFaninNum(p, iFanout) \u003e 1, \"Sfm_ObjFaninNum(p, iFanout) \u003e 1\");\n            Sfm_ObjSetTravIdCurrent2( p, iFanout );\n            Sfm_ObjResetFaninCount( p, iFanout );\n        \n        // visit node again\n        } else if Sfm_ObjUpdateFaninCount(p, iFanout) == 0 {\n            Vec_IntPush( p.vDivs, iFanout ); }\n    }\n}"
+    },
+    {
+      "Name": "Sfm_ObjIsUseful",
+      "Start": 10381,
+      "End": 10649,
+      "BodyStart": 10443,
+      "Original": "static inline int Sfm_ObjIsUseful( Sfm_Ntk_t * p, int iNode )\n{\n    int i, iFanout;\n    if ( !Sfm_ObjIsFixed(p, iNode) )\n        return 1;\n    Sfm_ObjForEachFanout( p, iNode, iFanout, i )\n        if ( !Sfm_ObjIsFixed(p, iFanout) )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Sfm_ObjIsUseful(p *Sfm_Ntk_t, iNode int32) int32 {\n    var i, iFanout int32;\n    if !Sfm_ObjIsFixed(p, iNode) {\n        return 1; }\n    // inlining of macro Sfm_ObjForEachFanout\n    for  i = 0; i \u003c Sfm_ObjFanoutNum(p, iNode) \u0026\u0026 ((iFanout = Sfm_ObjFanout(p, iNode, i)), 1); i++  {\n        if !Sfm_ObjIsFixed(p, iFanout) {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Sfm_NtkCollectTfi_rec",
+      "Start": 10912,
+      "End": 11357,
+      "BodyStart": 10986,
+      "Original": "int Sfm_NtkCollectTfi_rec( Sfm_Ntk_t * p, int iNode, Vec_Int_t * vNodes )\n{\n    int i, iFanin;\n    if ( Sfm_ObjIsTravIdCurrent( p, iNode ) )\n        return 0;\n    Sfm_ObjSetTravIdCurrent( p, iNode );\n    Sfm_ObjForEachFanin( p, iNode, iFanin, i )\n        if ( Sfm_NtkCollectTfi_rec( p, iFanin, vNodes ) )\n            return 1;\n    Vec_IntPush( vNodes, iNode );\n    return p-\u003epPars-\u003enWinSizeMax \u0026\u0026 (Vec_IntSize(vNodes) \u003e p-\u003epPars-\u003enWinSizeMax);\n}",
+      "Draft": "func Sfm_NtkCollectTfi_rec(p *Sfm_Ntk_t, iNode int32, vNodes *Vec_Int_t) int32 {\n    var i, iFanin int32;\n    if Sfm_ObjIsTravIdCurrent( p, iNode ) != 0 {\n        return 0; }\n    Sfm_ObjSetTravIdCurrent( p, iNode );\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, i)), 1);  i++  {\n        if Sfm_NtkCollectTfi_rec( p, iFanin, vNodes ) != 0 {\n            return 1; }\n    }\n    Vec_IntPush( vNodes, iNode );\n    return p.pPars.nWinSizeMax \u0026\u0026 (Vec_IntSize(vNodes) \u003e p.pPars.nWinSizeMax);\n}"
+    },
+    {
+      "Name": "Sfm_NtkCreateWindow",
+      "Start": 11358,
+      "End": 15965,
+      "BodyStart": 11424,
+      "Original": "int Sfm_NtkCreateWindow( Sfm_Ntk_t * p, int iNode, int fVerbose )\n{\n    int i, k, iTemp;\n    abctime clkDiv, clkWin = Abc_Clock();\n\n    assert( Sfm_ObjIsNode( p, iNode ) );\n    p-\u003eiPivotNode = iNode;\n    Vec_IntClear( p-\u003evNodes );  // internal\n    Vec_IntClear( p-\u003evDivs );   // divisors\n    Vec_IntClear( p-\u003evRoots );  // roots\n    Vec_IntClear( p-\u003evTfo );    // roots\n    Vec_IntClear( p-\u003evOrder );  // variable order\n\n    // collect transitive fanin\n    Sfm_NtkIncrementTravId( p );\n    if ( Sfm_NtkCollectTfi_rec( p, iNode, p-\u003evNodes ) )\n    {\n        p-\u003enMaxDivs++;\n        p-\u003etimeWin += Abc_Clock() - clkWin;\n        return 0;\n    }\n\n    // create divisors\n    clkDiv = Abc_Clock();\n    Vec_IntClear( p-\u003evDivs );\n    Vec_IntAppend( p-\u003evDivs, p-\u003evNodes );\n    Vec_IntPop( p-\u003evDivs );\n    // add non-topological divisors\n    if ( Vec_IntSize(p-\u003evDivs) \u003c p-\u003epPars-\u003enWinSizeMax + 0 )\n    {\n        Sfm_NtkIncrementTravId2( p );\n        Vec_IntForEachEntry( p-\u003evDivs, iTemp, i )\n            if ( Vec_IntSize(p-\u003evDivs) \u003c p-\u003epPars-\u003enWinSizeMax + 0 )\n//                Sfm_NtkAddDivisors( p, iTemp, Sfm_ObjLevel(p, iNode) - 1 );\n                Sfm_NtkAddDivisors( p, iTemp, p-\u003enLevelMax - Sfm_ObjLevelR(p, iNode) ); \n    }\n    if ( Vec_IntSize(p-\u003evDivs) \u003e p-\u003epPars-\u003enWinSizeMax )\n    {\n/*\n        k = 0;\n        Vec_IntForEachEntryStart( p-\u003evDivs, iTemp, i, Vec_IntSize(p-\u003evDivs) - p-\u003epPars-\u003enWinSizeMax )\n            Vec_IntWriteEntry( p-\u003evDivs, k++, iTemp );\n        assert( k == p-\u003epPars-\u003enWinSizeMax );\n*/\n        Vec_IntShrink( p-\u003evDivs, p-\u003epPars-\u003enWinSizeMax );\n    }\n    assert( Vec_IntSize(p-\u003evDivs) \u003c= p-\u003epPars-\u003enWinSizeMax );\n    p-\u003enMaxDivs += (int)(Vec_IntSize(p-\u003evDivs) == p-\u003epPars-\u003enWinSizeMax);\n    // remove node/fanins from divisors\n    // mark fanins\n    Sfm_NtkIncrementTravId2( p );\n    Sfm_ObjSetTravIdCurrent2( p, iNode );\n    Sfm_ObjForEachFanin( p, iNode, iTemp, i )\n        Sfm_ObjSetTravIdCurrent2( p, iTemp );\n    // compact divisors\n    k = 0;\n    Vec_IntForEachEntry( p-\u003evDivs, iTemp, i )\n        if ( !Sfm_ObjIsTravIdCurrent2(p, iTemp) \u0026\u0026 Sfm_ObjIsUseful(p, iTemp) )\n            Vec_IntWriteEntry( p-\u003evDivs, k++, iTemp );\n    Vec_IntShrink( p-\u003evDivs, k );\n    assert( Vec_IntSize(p-\u003evDivs) \u003c= p-\u003epPars-\u003enWinSizeMax );\n    clkDiv = Abc_Clock() - clkDiv;\n    p-\u003etimeDiv += clkDiv;\n    p-\u003enTotalDivs += Vec_IntSize(p-\u003evDivs);\n \n    // collect TFO and window roots\n    if ( p-\u003epPars-\u003enTfoLevMax \u003e 0 \u0026\u0026 !Sfm_NtkCheckRoot(p, iNode, Sfm_ObjLevel(p, iNode) + p-\u003epPars-\u003enTfoLevMax) )\n    {\n        // explore transitive fanout\n        Sfm_NtkIncrementTravId( p );\n        Sfm_NtkComputeRoots_rec( p, iNode, Sfm_ObjLevel(p, iNode) + p-\u003epPars-\u003enTfoLevMax, p-\u003evRoots, p-\u003evTfo );\n        assert( Vec_IntSize(p-\u003evRoots) \u003e 0 );\n        assert( Vec_IntSize(p-\u003evTfo) \u003e 0 );\n        // compute new leaves and nodes\n        Sfm_NtkIncrementTravId( p );\n        Vec_IntForEachEntry( p-\u003evRoots, iTemp, i )\n            if ( Sfm_NtkCollectTfi_rec( p, iTemp, p-\u003evOrder ) )\n            {\n                Vec_IntClear( p-\u003evRoots );\n                Vec_IntClear( p-\u003evTfo );\n                Vec_IntClear( p-\u003evOrder );\n                break;\n            }\n        if ( Vec_IntSize(p-\u003evRoots) \u003e 0 )\n        Vec_IntForEachEntry( p-\u003evTfo, iTemp, i )\n            if ( Sfm_NtkCollectTfi_rec( p, iTemp, p-\u003evOrder ) )\n            {\n                Vec_IntClear( p-\u003evRoots );\n                Vec_IntClear( p-\u003evTfo );\n                Vec_IntClear( p-\u003evOrder );\n                break;\n            }\n        if ( Vec_IntSize(p-\u003evRoots) \u003e 0 )\n        Vec_IntForEachEntry( p-\u003evDivs, iTemp, i )\n            if ( Sfm_NtkCollectTfi_rec( p, iTemp, p-\u003evOrder ) )\n            {\n                Vec_IntClear( p-\u003evRoots );\n                Vec_IntClear( p-\u003evTfo );\n                Vec_IntClear( p-\u003evOrder );\n                break;\n            }\n    }\n\n    if ( Vec_IntSize(p-\u003evOrder) == 0 )\n    {\n        int Temp = p-\u003epPars-\u003enWinSizeMax;\n        p-\u003epPars-\u003enWinSizeMax = 0;\n        Sfm_NtkIncrementTravId( p );\n        Sfm_NtkCollectTfi_rec( p, iNode, p-\u003evOrder );\n        Vec_IntForEachEntry( p-\u003evDivs, iTemp, i )\n            Sfm_NtkCollectTfi_rec( p, iTemp, p-\u003evOrder );\n        p-\u003epPars-\u003enWinSizeMax = Temp;\n    }\n\n    // statistics\n    p-\u003etimeWin += Abc_Clock() - clkWin - clkDiv;\n    if ( !fVerbose )\n        return 1;\n\n    // print stats about the window\n    printf( \"%6d : \", iNode );\n    printf( \"Leaves = %5d. \", 0 );\n    printf( \"Nodes = %5d. \",  Vec_IntSize(p-\u003evNodes) );\n    printf( \"Roots = %5d. \",  Vec_IntSize(p-\u003evRoots) );\n    printf( \"Divs = %5d. \",   Vec_IntSize(p-\u003evDivs) );\n    printf( \"\\n\" );\n    return 1;\n}",
+      "Draft": "func Sfm_NtkCreateWindow(p *Sfm_Ntk_t, iNode int32, fVerbose int32) int32 {\n    var i, k, iTemp int32;\n    var clkDiv abctime;\n    var clkWin abctime = Abc_Clock();\n\n    assert(Sfm_ObjIsNode( p, iNode ), \"Sfm_ObjIsNode( p, iNode )\");\n    p.iPivotNode = iNode;\n    Vec_IntClear( p.vNodes );  // internal\n    Vec_IntClear( p.vDivs );   // divisors\n    Vec_IntClear( p.vRoots );  // roots\n    Vec_IntClear( p.vTfo );    // roots\n    Vec_IntClear( p.vOrder );  // variable order\n\n    // collect transitive fanin\n    Sfm_NtkIncrementTravId( p );\n    if Sfm_NtkCollectTfi_rec( p, iNode, p.vNodes ) != 0 {\n        p.nMaxDivs++;\n        p.timeWin += Abc_Clock() - clkWin;\n        return 0;\n    }\n\n    // create divisors\n    clkDiv = Abc_Clock();\n    Vec_IntClear( p.vDivs );\n    Vec_IntAppend( p.vDivs, p.vNodes );\n    Vec_IntPop( p.vDivs );\n    // add non-topological divisors\n    if Vec_IntSize(p.vDivs) \u003c p.pPars.nWinSizeMax + 0 {\n        Sfm_NtkIncrementTravId2( p );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vDivs)) \u0026\u0026 (((iTemp) = Vec_IntEntry(p.vDivs, i)), 1); i++  {\n            if Vec_IntSize(p.vDivs) \u003c p.pPars.nWinSizeMax + 0 {\n//                Sfm_NtkAddDivisors( p, iTemp, Sfm_ObjLevel(p, iNode) - 1 );\n                Sfm_NtkAddDivisors( p, iTemp, p.nLevelMax - Sfm_ObjLevelR(p, iNode) ); }\n        } \n    }\n    if Vec_IntSize(p.vDivs) \u003e p.pPars.nWinSizeMax {\n/*\n        k = 0;\n        Vec_IntForEachEntryStart( p-\u003evDivs, iTemp, i, Vec_IntSize(p-\u003evDivs) - p-\u003epPars-\u003enWinSizeMax )\n            Vec_IntWriteEntry( p-\u003evDivs, k++, iTemp );\n        assert( k == p-\u003epPars-\u003enWinSizeMax );\n*/\n        Vec_IntShrink( p.vDivs, p.pPars.nWinSizeMax );\n    }\n    assert(Vec_IntSize(p.vDivs) \u003c= p.pPars.nWinSizeMax, \"Vec_IntSize(p.vDivs) \u003c= p.pPars.nWinSizeMax\");\n    p.nMaxDivs += int32((Vec_IntSize(p.vDivs) == p.pPars.nWinSizeMax));\n    // remove node/fanins from divisors\n    // mark fanins\n    Sfm_NtkIncrementTravId2( p );\n    Sfm_ObjSetTravIdCurrent2( p, iNode );\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iTemp = Sfm_ObjFanin(p, iNode, i)), 1);  i++  {\n        Sfm_ObjSetTravIdCurrent2( p, iTemp );\n    }\n    // compact divisors\n    k = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vDivs)) \u0026\u0026 (((iTemp) = Vec_IntEntry(p.vDivs, i)), 1); i++  {\n        if !(Sfm_ObjIsTravIdCurrent2(p, iTemp) != 0) \u0026\u0026 (Sfm_ObjIsUseful(p, iTemp) != 0) {\n            Vec_IntWriteEntry( p.vDivs, k++, iTemp ); }\n    }\n    Vec_IntShrink( p.vDivs, k );\n    assert(Vec_IntSize(p.vDivs) \u003c= p.pPars.nWinSizeMax, \"Vec_IntSize(p.vDivs) \u003c= p.pPars.nWinSizeMax\");\n    clkDiv = Abc_Clock() - clkDiv;\n    p.timeDiv += clkDiv;\n    p.nTotalDivs += Vec_IntSize(p.vDivs);\n \n    // collect TFO and window roots\n    if p.pPars.nTfoLevMax \u003e 0 \u0026\u0026 !(Sfm_NtkCheckRoot(p, iNode, Sfm_ObjLevel(p, iNode) + p.pPars.nTfoLevMax) != 0) {\n        // explore transitive fanout\n        Sfm_NtkIncrementTravId( p );\n        Sfm_NtkComputeRoots_rec( p, iNode, Sfm_ObjLevel(p, iNode) + p.pPars.nTfoLevMax, p.vRoots, p.vTfo );\n        assert(Vec_IntSize(p.vRoots) \u003e 0, \"Vec_IntSize(p.vRoots) \u003e 0\");\n        assert(Vec_IntSize(p.vTfo) \u003e 0, \"Vec_IntSize(p.vTfo) \u003e 0\");\n        // compute new leaves and nodes\n        Sfm_NtkIncrementTravId( p );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vRoots)) \u0026\u0026 (((iTemp) = Vec_IntEntry(p.vRoots, i)), 1); i++  {\n            if Sfm_NtkCollectTfi_rec( p, iTemp, p.vOrder ) != 0 {\n                Vec_IntClear( p.vRoots );\n                Vec_IntClear( p.vTfo );\n                Vec_IntClear( p.vOrder );\n                break;\n            }\n        }\n        if Vec_IntSize(p.vRoots) \u003e 0 {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vTfo)) \u0026\u0026 (((iTemp) = Vec_IntEntry(p.vTfo, i)), 1); i++  {\n            if Sfm_NtkCollectTfi_rec( p, iTemp, p.vOrder ) != 0 {\n                Vec_IntClear( p.vRoots );\n                Vec_IntClear( p.vTfo );\n                Vec_IntClear( p.vOrder );\n                break;\n            }\n        } }\n        if Vec_IntSize(p.vRoots) \u003e 0 {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vDivs)) \u0026\u0026 (((iTemp) = Vec_IntEntry(p.vDivs, i)), 1); i++  {\n            if Sfm_NtkCollectTfi_rec( p, iTemp, p.vOrder ) != 0 {\n                Vec_IntClear( p.vRoots );\n                Vec_IntClear( p.vTfo );\n                Vec_IntClear( p.vOrder );\n                break;\n            }\n        } }\n    }\n\n    if Vec_IntSize(p.vOrder) == 0 {\n        var Temp int32  = p.pPars.nWinSizeMax;\n        p.pPars.nWinSizeMax = 0;\n        Sfm_NtkIncrementTravId( p );\n        Sfm_NtkCollectTfi_rec( p, iNode, p.vOrder );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vDivs)) \u0026\u0026 (((iTemp) = Vec_IntEntry(p.vDivs, i)), 1); i++  {\n            Sfm_NtkCollectTfi_rec( p, iTemp, p.vOrder );\n        }\n        p.pPars.nWinSizeMax = Temp;\n    }\n\n    // statistics\n    p.timeWin += Abc_Clock() - clkWin - clkDiv;\n    if !(fVerbose != 0) {\n        return 1; }\n\n    // print stats about the window\n    fmt.Printf(\"%6d : \", iNode);\n    fmt.Printf(\"Leaves = %5d. \", 0);\n    fmt.Printf(\"Nodes = %5d. \", Vec_IntSize(p.vNodes));\n    fmt.Printf(\"Roots = %5d. \", Vec_IntSize(p.vRoots));\n    fmt.Printf(\"Divs = %5d. \", Vec_IntSize(p.vDivs));\n    fmt.Printf(\"\\n\");\n    return 1;\n}"
+    },
+    {
+      "Name": "Sfm_NtkWindowTest",
+      "Start": 15966,
+      "End": 16102,
+      "BodyStart": 16017,
+      "Original": "void Sfm_NtkWindowTest( Sfm_Ntk_t * p, int iNode )\n{\n    int i;\n    Sfm_NtkForEachNode( p, i )\n        Sfm_NtkCreateWindow( p, i, 1 );\n}",
+      "Draft": "func Sfm_NtkWindowTest(p *Sfm_Ntk_t, iNode int32) {\n    var i int32;\n    // inlining of macro Sfm_NtkForEachNode\n    for  i = p.nPis; i + p.nPos \u003c p.nObjs; i++  {\n        Sfm_NtkCreateWindow( p, i, 1 );\n    }\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_ObjRef_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjRef_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1284,
+      "End": 1686
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_ObjRef",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjRef",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1687,
+      "End": 1872
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_ObjDeref_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjDeref_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1873,
+      "End": 2279
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_ObjDeref",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjDeref",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2280,
+      "End": 2469
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_ObjMffcSize",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjMffcSize",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2470,
+      "End": 2819
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_NtkIncrementTravId",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkIncrementTravId",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3082,
+      "End": 3214
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_ObjSetTravIdCurrent",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjSetTravIdCurrent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3222,
+      "End": 3354
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_ObjIsTravIdCurrent",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjIsTravIdCurrent",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3355,
+      "End": 3487
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_ObjIsTravIdPrevious",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjIsTravIdPrevious",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3491,
+      "End": 3623
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_NtkIncrementTravId2",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkIncrementTravId2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3628,
+      "End": 3760
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_ObjSetTravIdCurrent2",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjSetTravIdCurrent2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3768,
+      "End": 3900
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_ObjIsTravIdCurrent2",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjIsTravIdCurrent2",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3901,
+      "End": 4033
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_NtkDfs_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkDfs_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4454,
+      "End": 5660
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_NtkDfs",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkDfs",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5661,
+      "End": 6275
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_NtkCheckOverlap_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkCheckOverlap_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6567,
+      "End": 7026
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_NtkCheckOverlap",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkCheckOverlap",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7027,
+      "End": 7180
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_NtkCheckRoot",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkCheckRoot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7457,
+      "End": 8139
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_NtkComputeRoots_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkComputeRoots_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8140,
+      "End": 8783
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_NtkAddDivisors",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkAddDivisors",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9049,
+      "End": 10091
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_ObjIsUseful",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_ObjIsUseful",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10381,
+      "End": 10649
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_NtkCollectTfi_rec",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkCollectTfi_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10912,
+      "End": 11357
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_NtkCreateWindow",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkCreateWindow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11358,
+      "End": 15965
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::Sfm_NtkWindowTest",
+      "Category": "semantic-review",
+      "Symbol": "Sfm_NtkWindowTest",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15966,
+      "End": 16102
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/sfm/sfmWin.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 16349
+    }
+  ],
+  "Draft": "package sfm\n\nimport \"fmt\"\n\n/**CFile****************************************************************\n\n  FileName    [sfmWin.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [SAT-based optimization using internal don't-cares.]\n\n  Synopsis    [Structural window computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: sfmWin.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"sfmInt.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Returns the MFFC size.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_ObjRef_rec(p *Sfm_Ntk_t, iObj int32) int32 {\n    var i, iFanin, Value, Count int32;\n    if Sfm_ObjIsPi(p, iObj) {\n        return 0; }\n    assert(Sfm_ObjIsNode(p, iObj), \"Sfm_ObjIsNode(p, iObj)\");\n    Value = Sfm_ObjRefIncrement(p, iObj);\n    if Value \u003e 1 {\n        return 0; }\n    assert(Value == 1, \"Value == 1\");\n    Count = 1;\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iObj)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iObj, i)), 1);  i++  {\n        Count += Sfm_ObjRef_rec( p, iFanin );\n    }\n    return Count;\n}\nfunc Sfm_ObjRef(p *Sfm_Ntk_t, iObj int32) int32 {\n    var i int32;\n    var iFanin int32;\n    var Count int32 = 1;\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iObj)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iObj, i)), 1);  i++  {\n        Count += Sfm_ObjRef_rec( p, iFanin );\n    }\n    return Count;\n}\nfunc Sfm_ObjDeref_rec(p *Sfm_Ntk_t, iObj int32) int32 {\n    var i, iFanin, Value, Count int32;\n    if Sfm_ObjIsPi(p, iObj) {\n        return 0; }\n    assert(Sfm_ObjIsNode(p, iObj), \"Sfm_ObjIsNode(p, iObj)\");\n    Value = Sfm_ObjRefDecrement(p, iObj);\n    if Value \u003e 0 {\n        return 0; }\n    assert(Value == 0, \"Value == 0\");\n    Count = 1;\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iObj)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iObj, i)), 1);  i++  {\n        Count += Sfm_ObjDeref_rec( p, iFanin );\n    }\n    return Count;\n}\nfunc Sfm_ObjDeref(p *Sfm_Ntk_t, iObj int32) int32 {\n    var i int32;\n    var iFanin int32;\n    var Count int32 = 1;\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iObj)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iObj, i)), 1);  i++  {\n        Count += Sfm_ObjDeref_rec( p, iFanin );\n    }\n    return Count;\n}\nfunc Sfm_ObjMffcSize(p *Sfm_Ntk_t, iObj int32) int32 {\n    var Count1, Count2 int32;\n    if Sfm_ObjIsPi(p, iObj) {\n        return 0; }\n    if Sfm_ObjFanoutNum(p, iObj) != 1 {\n        return 0; }\n    assert(Sfm_ObjIsNode( p, iObj ), \"Sfm_ObjIsNode( p, iObj )\");\n    Count1 = Sfm_ObjDeref( p, iObj );\n    Count2 = Sfm_ObjRef( p, iObj );\n    assert(Count1 == Count2, \"Count1 == Count2\");\n    return Count1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Working with traversal IDs.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NtkIncrementTravId(p *Sfm_Ntk_t) { p.nTravIds++;                                            }       \nfunc Sfm_ObjSetTravIdCurrent(p *Sfm_Ntk_t, Id int32) { Vec_IntWriteEntry( \u0026p.vTravIds, Id, p.nTravIds );       }\nfunc Sfm_ObjIsTravIdCurrent(p *Sfm_Ntk_t, Id int32) int32 { return (Vec_IntEntry(\u0026p.vTravIds, Id) == p.nTravIds);   }   \nfunc Sfm_ObjIsTravIdPrevious(p *Sfm_Ntk_t, Id int32) int32 { return (Vec_IntEntry(\u0026p.vTravIds, Id) == p.nTravIds-1); }   \n\nfunc Sfm_NtkIncrementTravId2(p *Sfm_Ntk_t) { p.nTravIds2++;                                           }       \nfunc Sfm_ObjSetTravIdCurrent2(p *Sfm_Ntk_t, Id int32) { Vec_IntWriteEntry( \u0026p.vTravIds2, Id, p.nTravIds2 );     }\nfunc Sfm_ObjIsTravIdCurrent2(p *Sfm_Ntk_t, Id int32) int32 { return (Vec_IntEntry(\u0026p.vTravIds2, Id) == p.nTravIds2); }   \n\n\n/**Function*************************************************************\n\n  Synopsis    [Collects used internal nodes in a topological order.]\n\n  Description [Additionally considers objects in groups as a single object\n  and collects them in a topological order together as single entity.]\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NtkDfs_rec(p *Sfm_Ntk_t, iNode int32, vNodes *Vec_Int_t, vGroups *Vec_Wec_t, vGroupMap *Vec_Int_t, vBoxesLeft *Vec_Int_t) {\n    var i, iFanin int32;\n    if Sfm_ObjIsPi(p, iNode) {\n        return; }\n    if Sfm_ObjIsTravIdCurrent(p, iNode) != 0 {\n        return; }\n    if Vec_IntEntry(vGroupMap, iNode) \u003e= 0 {\n        var k int32;\n        var iGroup int32 = Abc_Lit2Var( Vec_IntEntry(vGroupMap, iNode) );\n        var vGroup *Vec_Int_t  = Vec_WecEntry( vGroups, iGroup );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vGroup)) \u0026\u0026 (((iNode) = Vec_IntEntry(vGroup, i)), 1); i++  {\n            assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n        }\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vGroup)) \u0026\u0026 (((iNode) = Vec_IntEntry(vGroup, i)), 1); i++  {\n            Sfm_ObjSetTravIdCurrent( p, iNode );\n        }\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vGroup)) \u0026\u0026 (((iNode) = Vec_IntEntry(vGroup, i)), 1); i++  {\n            // inlining of macro Sfm_ObjForEachFanin\n            for  k = 0; k \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, k)), 1);  k++  {\n                Sfm_NtkDfs_rec( p, iFanin, vNodes, vGroups, vGroupMap, vBoxesLeft );\n            }\n        }\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(vGroup)) \u0026\u0026 (((iNode) = Vec_IntEntry(vGroup, i)), 1); i++  {\n            Vec_IntPush( vNodes, iNode );\n        }\n        Vec_IntPush( vBoxesLeft, iGroup );\n    \n    } else {\n        Sfm_ObjSetTravIdCurrent(p, iNode);\n        // inlining of macro Sfm_ObjForEachFanin\n        for  i = 0; i \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, i)), 1);  i++  {\n            Sfm_NtkDfs_rec( p, iFanin, vNodes, vGroups, vGroupMap, vBoxesLeft );\n        }\n        Vec_IntPush( vNodes, iNode );\n    }\n}\nfunc Sfm_NtkDfs(p *Sfm_Ntk_t, vGroups *Vec_Wec_t, vGroupMap *Vec_Int_t, vBoxesLeft *Vec_Int_t, fAllBoxes int32) *Vec_Int_t {\n    var vNodes *Vec_Int_t;\n    var i int32;\n    Vec_IntClear( vBoxesLeft );\n    vNodes = Vec_IntAlloc( p.nObjs );\n    Sfm_NtkIncrementTravId( p );\n    if fAllBoxes != 0 {\n        var vGroup *Vec_Int_t;\n        // inlining of macro Vec_WecForEachLevel\n        for  i = 0; (i \u003c Vec_WecSize(vGroups)) \u0026\u0026 (((vGroup) = Vec_WecEntry(vGroups, i)), 1); i++  {\n            Sfm_NtkDfs_rec( p, Vec_IntEntry(vGroup, 0), vNodes, vGroups, vGroupMap, vBoxesLeft );\n        }\n    }\n    // inlining of macro Sfm_NtkForEachPo\n    for  i = p.nObjs - p.nPos; i \u003c p.nObjs; i++  {\n        Sfm_NtkDfs_rec( p, Sfm_ObjFanin(p, i, 0), vNodes, vGroups, vGroupMap, vBoxesLeft );\n    }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Check if this fanout overlaps with TFI cone of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NtkCheckOverlap_rec(p *Sfm_Ntk_t, iThis int32, iNode int32) int32 {\n    var i, iFanin int32;\n    if (Sfm_ObjIsTravIdCurrent2(p, iThis) != 0) || iThis == iNode {\n        return 0; }\n//    if ( Sfm_ObjIsTravIdCurrent(p, iThis) )\n    if Sfm_ObjIsTravIdPrevious(p, iThis) != 0 {\n        return 1; }\n    Sfm_ObjSetTravIdCurrent2(p, iThis);\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iThis)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iThis, i)), 1);  i++  {\n        if Sfm_NtkCheckOverlap_rec(p, iFanin, iNode) != 0 {\n            return 1; }\n    }\n    return 0;\n}\nfunc Sfm_NtkCheckOverlap(p *Sfm_Ntk_t, iFan int32, iNode int32) int32 {\n    Sfm_NtkIncrementTravId2( p );\n    return Sfm_NtkCheckOverlap_rec( p, iFan, iNode );\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Recursively collects roots of the window.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NtkCheckRoot(p *Sfm_Ntk_t, iNode int32, nLevelMax int32) int32 {\n    var i, iFanout int32;\n    // the node is the root if one of the following is true:\n    // (1) the node has more than fanouts than the limit or has no fanouts (should not happen in general)\n    if Sfm_ObjFanoutNum(p, iNode) == 0 || Sfm_ObjFanoutNum(p, iNode) \u003e p.pPars.nFanoutMax {\n        return 1; }\n    // (2) the node has CO fanouts\n    // (3) the node has fanouts above the cutoff level\n    // inlining of macro Sfm_ObjForEachFanout\n    for  i = 0; i \u003c Sfm_ObjFanoutNum(p, iNode) \u0026\u0026 ((iFanout = Sfm_ObjFanout(p, iNode, i)), 1); i++  {\n        if Sfm_ObjIsPo(p, iFanout) || Sfm_ObjLevel(p, iFanout) \u003e nLevelMax {//|| !Sfm_NtkCheckOverlap(p, iFanout, iNode) )\n            return 1; }\n    }\n    return 0;\n}\nfunc Sfm_NtkComputeRoots_rec(p *Sfm_Ntk_t, iNode int32, nLevelMax int32, vRoots *Vec_Int_t, vTfo *Vec_Int_t) {\n    var i, iFanout int32;\n    assert(Sfm_ObjIsNode(p, iNode), \"Sfm_ObjIsNode(p, iNode)\");\n    if Sfm_ObjIsTravIdCurrent(p, iNode) != 0 {\n        return; }\n    Sfm_ObjSetTravIdCurrent(p, iNode);\n    if iNode != p.iPivotNode {\n        Vec_IntPush( vTfo, iNode ); }\n    // check if the node should be the root\n    if Sfm_NtkCheckRoot( p, iNode, nLevelMax ) != 0 {\n        Vec_IntPush( vRoots, iNode );\n    } else { // if not, explore its fanouts\n        // inlining of macro Sfm_ObjForEachFanout\n        for  i = 0; i \u003c Sfm_ObjFanoutNum(p, iNode) \u0026\u0026 ((iFanout = Sfm_ObjFanout(p, iNode, i)), 1); i++  {\n            Sfm_NtkComputeRoots_rec( p, iFanout, nLevelMax, vRoots, vTfo );\n        } }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Collects divisors of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NtkAddDivisors(p *Sfm_Ntk_t, iNode int32, nLevelMax int32) {\n    var i, iFanout int32;\n    // inlining of macro Sfm_ObjForEachFanout\n    for  i = 0; i \u003c Sfm_ObjFanoutNum(p, iNode) \u0026\u0026 ((iFanout = Sfm_ObjFanout(p, iNode, i)), 1); i++  {\n        // skip some of the fanouts if the number is large\n        if p.pPars.nFanoutMax \u0026\u0026 i \u003e p.pPars.nFanoutMax {\n            return; }\n        // skip TFI nodes, PO nodes, or nodes with high logic level\n        if (Sfm_ObjIsTravIdCurrent(p, iFanout) != 0) || Sfm_ObjIsPo(p, iFanout) || Sfm_ObjLevel(p, iFanout) \u003e nLevelMax {\n            continue; }\n        // handle single-input nodes\n        if Sfm_ObjFaninNum(p, iFanout) == 1 {\n            Vec_IntPush( p.vDivs, iFanout );\n        // visit node for the first time\n        } else if !(Sfm_ObjIsTravIdCurrent2(p, iFanout) != 0) {\n            assert(Sfm_ObjFaninNum(p, iFanout) \u003e 1, \"Sfm_ObjFaninNum(p, iFanout) \u003e 1\");\n            Sfm_ObjSetTravIdCurrent2( p, iFanout );\n            Sfm_ObjResetFaninCount( p, iFanout );\n        \n        // visit node again\n        } else if Sfm_ObjUpdateFaninCount(p, iFanout) == 0 {\n            Vec_IntPush( p.vDivs, iFanout ); }\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Fixed object is useful when it has a non-fixed fanout.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_ObjIsUseful(p *Sfm_Ntk_t, iNode int32) int32 {\n    var i, iFanout int32;\n    if !Sfm_ObjIsFixed(p, iNode) {\n        return 1; }\n    // inlining of macro Sfm_ObjForEachFanout\n    for  i = 0; i \u003c Sfm_ObjFanoutNum(p, iNode) \u0026\u0026 ((iFanout = Sfm_ObjFanout(p, iNode, i)), 1); i++  {\n        if !Sfm_ObjIsFixed(p, iFanout) {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes structural window.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Sfm_NtkCollectTfi_rec(p *Sfm_Ntk_t, iNode int32, vNodes *Vec_Int_t) int32 {\n    var i, iFanin int32;\n    if Sfm_ObjIsTravIdCurrent( p, iNode ) != 0 {\n        return 0; }\n    Sfm_ObjSetTravIdCurrent( p, iNode );\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iFanin = Sfm_ObjFanin(p, iNode, i)), 1);  i++  {\n        if Sfm_NtkCollectTfi_rec( p, iFanin, vNodes ) != 0 {\n            return 1; }\n    }\n    Vec_IntPush( vNodes, iNode );\n    return p.pPars.nWinSizeMax \u0026\u0026 (Vec_IntSize(vNodes) \u003e p.pPars.nWinSizeMax);\n}\nfunc Sfm_NtkCreateWindow(p *Sfm_Ntk_t, iNode int32, fVerbose int32) int32 {\n    var i, k, iTemp int32;\n    var clkDiv abctime;\n    var clkWin abctime = Abc_Clock();\n\n    assert(Sfm_ObjIsNode( p, iNode ), \"Sfm_ObjIsNode( p, iNode )\");\n    p.iPivotNode = iNode;\n    Vec_IntClear( p.vNodes );  // internal\n    Vec_IntClear( p.vDivs );   // divisors\n    Vec_IntClear( p.vRoots );  // roots\n    Vec_IntClear( p.vTfo );    // roots\n    Vec_IntClear( p.vOrder );  // variable order\n\n    // collect transitive fanin\n    Sfm_NtkIncrementTravId( p );\n    if Sfm_NtkCollectTfi_rec( p, iNode, p.vNodes ) != 0 {\n        p.nMaxDivs++;\n        p.timeWin += Abc_Clock() - clkWin;\n        return 0;\n    }\n\n    // create divisors\n    clkDiv = Abc_Clock();\n    Vec_IntClear( p.vDivs );\n    Vec_IntAppend( p.vDivs, p.vNodes );\n    Vec_IntPop( p.vDivs );\n    // add non-topological divisors\n    if Vec_IntSize(p.vDivs) \u003c p.pPars.nWinSizeMax + 0 {\n        Sfm_NtkIncrementTravId2( p );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vDivs)) \u0026\u0026 (((iTemp) = Vec_IntEntry(p.vDivs, i)), 1); i++  {\n            if Vec_IntSize(p.vDivs) \u003c p.pPars.nWinSizeMax + 0 {\n//                Sfm_NtkAddDivisors( p, iTemp, Sfm_ObjLevel(p, iNode) - 1 );\n                Sfm_NtkAddDivisors( p, iTemp, p.nLevelMax - Sfm_ObjLevelR(p, iNode) ); }\n        } \n    }\n    if Vec_IntSize(p.vDivs) \u003e p.pPars.nWinSizeMax {\n/*\n        k = 0;\n        Vec_IntForEachEntryStart( p-\u003evDivs, iTemp, i, Vec_IntSize(p-\u003evDivs) - p-\u003epPars-\u003enWinSizeMax )\n            Vec_IntWriteEntry( p-\u003evDivs, k++, iTemp );\n        assert( k == p-\u003epPars-\u003enWinSizeMax );\n*/\n        Vec_IntShrink( p.vDivs, p.pPars.nWinSizeMax );\n    }\n    assert(Vec_IntSize(p.vDivs) \u003c= p.pPars.nWinSizeMax, \"Vec_IntSize(p.vDivs) \u003c= p.pPars.nWinSizeMax\");\n    p.nMaxDivs += int32((Vec_IntSize(p.vDivs) == p.pPars.nWinSizeMax));\n    // remove node/fanins from divisors\n    // mark fanins\n    Sfm_NtkIncrementTravId2( p );\n    Sfm_ObjSetTravIdCurrent2( p, iNode );\n    // inlining of macro Sfm_ObjForEachFanin\n    for  i = 0; i \u003c Sfm_ObjFaninNum(p, iNode)  \u0026\u0026 ((iTemp = Sfm_ObjFanin(p, iNode, i)), 1);  i++  {\n        Sfm_ObjSetTravIdCurrent2( p, iTemp );\n    }\n    // compact divisors\n    k = 0;\n    // inlining of macro Vec_IntForEachEntry\n    for  i = 0; (i \u003c Vec_IntSize(p.vDivs)) \u0026\u0026 (((iTemp) = Vec_IntEntry(p.vDivs, i)), 1); i++  {\n        if !(Sfm_ObjIsTravIdCurrent2(p, iTemp) != 0) \u0026\u0026 (Sfm_ObjIsUseful(p, iTemp) != 0) {\n            Vec_IntWriteEntry( p.vDivs, k++, iTemp ); }\n    }\n    Vec_IntShrink( p.vDivs, k );\n    assert(Vec_IntSize(p.vDivs) \u003c= p.pPars.nWinSizeMax, \"Vec_IntSize(p.vDivs) \u003c= p.pPars.nWinSizeMax\");\n    clkDiv = Abc_Clock() - clkDiv;\n    p.timeDiv += clkDiv;\n    p.nTotalDivs += Vec_IntSize(p.vDivs);\n \n    // collect TFO and window roots\n    if p.pPars.nTfoLevMax \u003e 0 \u0026\u0026 !(Sfm_NtkCheckRoot(p, iNode, Sfm_ObjLevel(p, iNode) + p.pPars.nTfoLevMax) != 0) {\n        // explore transitive fanout\n        Sfm_NtkIncrementTravId( p );\n        Sfm_NtkComputeRoots_rec( p, iNode, Sfm_ObjLevel(p, iNode) + p.pPars.nTfoLevMax, p.vRoots, p.vTfo );\n        assert(Vec_IntSize(p.vRoots) \u003e 0, \"Vec_IntSize(p.vRoots) \u003e 0\");\n        assert(Vec_IntSize(p.vTfo) \u003e 0, \"Vec_IntSize(p.vTfo) \u003e 0\");\n        // compute new leaves and nodes\n        Sfm_NtkIncrementTravId( p );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vRoots)) \u0026\u0026 (((iTemp) = Vec_IntEntry(p.vRoots, i)), 1); i++  {\n            if Sfm_NtkCollectTfi_rec( p, iTemp, p.vOrder ) != 0 {\n                Vec_IntClear( p.vRoots );\n                Vec_IntClear( p.vTfo );\n                Vec_IntClear( p.vOrder );\n                break;\n            }\n        }\n        if Vec_IntSize(p.vRoots) \u003e 0 {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vTfo)) \u0026\u0026 (((iTemp) = Vec_IntEntry(p.vTfo, i)), 1); i++  {\n            if Sfm_NtkCollectTfi_rec( p, iTemp, p.vOrder ) != 0 {\n                Vec_IntClear( p.vRoots );\n                Vec_IntClear( p.vTfo );\n                Vec_IntClear( p.vOrder );\n                break;\n            }\n        } }\n        if Vec_IntSize(p.vRoots) \u003e 0 {\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vDivs)) \u0026\u0026 (((iTemp) = Vec_IntEntry(p.vDivs, i)), 1); i++  {\n            if Sfm_NtkCollectTfi_rec( p, iTemp, p.vOrder ) != 0 {\n                Vec_IntClear( p.vRoots );\n                Vec_IntClear( p.vTfo );\n                Vec_IntClear( p.vOrder );\n                break;\n            }\n        } }\n    }\n\n    if Vec_IntSize(p.vOrder) == 0 {\n        var Temp int32  = p.pPars.nWinSizeMax;\n        p.pPars.nWinSizeMax = 0;\n        Sfm_NtkIncrementTravId( p );\n        Sfm_NtkCollectTfi_rec( p, iNode, p.vOrder );\n        // inlining of macro Vec_IntForEachEntry\n        for  i = 0; (i \u003c Vec_IntSize(p.vDivs)) \u0026\u0026 (((iTemp) = Vec_IntEntry(p.vDivs, i)), 1); i++  {\n            Sfm_NtkCollectTfi_rec( p, iTemp, p.vOrder );\n        }\n        p.pPars.nWinSizeMax = Temp;\n    }\n\n    // statistics\n    p.timeWin += Abc_Clock() - clkWin - clkDiv;\n    if !(fVerbose != 0) {\n        return 1; }\n\n    // print stats about the window\n    fmt.Printf(\"%6d : \", iNode);\n    fmt.Printf(\"Leaves = %5d. \", 0);\n    fmt.Printf(\"Nodes = %5d. \", Vec_IntSize(p.vNodes));\n    fmt.Printf(\"Roots = %5d. \", Vec_IntSize(p.vRoots));\n    fmt.Printf(\"Divs = %5d. \", Vec_IntSize(p.vDivs));\n    fmt.Printf(\"\\n\");\n    return 1;\n}\nfunc Sfm_NtkWindowTest(p *Sfm_Ntk_t, iNode int32) {\n    var i int32;\n    // inlining of macro Sfm_NtkForEachNode\n    for  i = p.nPis; i + p.nPos \u003c p.nObjs; i++  {\n        Sfm_NtkCreateWindow( p, i, 1 );\n    }\n}\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

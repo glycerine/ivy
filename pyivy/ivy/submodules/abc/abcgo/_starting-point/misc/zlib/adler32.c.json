@@ -1,0 +1,242 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c",
+  "SHA256": "a00ab0796f774141a0f6b7dce6d3ae3eb5562fc9abb5b10aef863235a5c457e1",
+  "Conditionals": [
+    {
+      "Location": {
+        "Line": 32,
+        "Column": 1,
+        "ByteOffset": 902
+      },
+      "Directive": "#ifdef NO_DIVIDE"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "adler32",
+      "Start": 2247,
+      "End": 3979,
+      "BodyStart": 2310,
+      "Original": "uLong ZEXPORT adler32(uLong adler, const Bytef *buf, uInt len)\n{\n    unsigned long sum2;\n    unsigned n;\n\n    /* split Adler-32 into component sums */\n    sum2 = (adler \u003e\u003e 16) \u0026 0xffff;\n    adler \u0026= 0xffff;\n\n    /* in case user likes doing a byte at a time, keep it fast */\n    if (len == 1) {\n        adler += buf[0];\n        if (adler \u003e= BASE)\n            adler -= BASE;\n        sum2 += adler;\n        if (sum2 \u003e= BASE)\n            sum2 -= BASE;\n        return adler | (sum2 \u003c\u003c 16);\n    }\n\n    /* initial Adler-32 value (deferred check for len == 1 speed) */\n    if (buf == Z_NULL)\n        return 1L;\n\n    /* in case short lengths are provided, keep it somewhat fast */\n    if (len \u003c 16) {\n        while (len--) {\n            adler += *buf++;\n            sum2 += adler;\n        }\n        if (adler \u003e= BASE)\n            adler -= BASE;\n        MOD4(sum2);             /* only added so many BASE's */\n        return adler | (sum2 \u003c\u003c 16);\n    }\n\n    /* do length NMAX blocks -- requires just one modulo operation */\n    while (len \u003e= NMAX) {\n        len -= NMAX;\n        n = NMAX / 16;          /* NMAX is divisible by 16 */\n        do {\n            DO16(buf);          /* 16 sums unrolled */\n            buf += 16;\n        } while (--n);\n        MOD(adler);\n        MOD(sum2);\n    }\n\n    /* do remaining bytes (less than NMAX, still just one modulo) */\n    if (len) {                  /* avoid modulos if none remaining */\n        while (len \u003e= 16) {\n            len -= 16;\n            DO16(buf);\n            buf += 16;\n        }\n        while (len--) {\n            adler += *buf++;\n            sum2 += adler;\n        }\n        MOD(adler);\n        MOD(sum2);\n    }\n\n    /* return recombined sums */\n    return adler | (sum2 \u003c\u003c 16);\n}",
+      "Draft": "func adler32(adler uLong, buf *Bytef, len uInt) uLong ZEXPORT {\n    unsigned long sum2;\n    var n uint32;\n\n    /* split Adler-32 into component sums */\n    sum2 = (adler \u003e\u003e 16) \u0026 0xffff;\n    adler \u0026= 0xffff;\n\n    /* in case user likes doing a byte at a time, keep it fast */\n    if len == 1 {\n        adler += buf[0];\n        if adler \u003e= BASE {\n            adler -= BASE; }\n        sum2 += adler;\n        if sum2 \u003e= BASE {\n            sum2 -= BASE; }\n        return adler | (sum2 \u003c\u003c 16);\n    }\n\n    /* initial Adler-32 value (deferred check for len == 1 speed) */\n    if buf == Z_NULL {\n        return int64(1); }\n\n    /* in case short lengths are provided, keep it somewhat fast */\n    if len \u003c 16 {\n        for len-- {\n            adler += *buf++;\n            sum2 += adler;\n        }\n        if adler \u003e= BASE {\n            adler -= BASE; }\n        MOD4(sum2);             /* only added so many BASE's */\n        return adler | (sum2 \u003c\u003c 16);\n    }\n\n    /* do length NMAX blocks -- requires just one modulo operation */\n    for len \u003e= NMAX {\n        len -= NMAX;\n        n = NMAX / 16;          /* NMAX is divisible by 16 */\n        for {\n            // inlining of macro DO16\n            // inlining of macro DO8\n            // inlining of macro DO4\n            // inlining of macro DO2\n            // inlining of macro DO1\n            {adler += (buf)[0]; sum2 += adler;}; {adler += (buf)[0+1]; sum2 += adler;};; {adler += (buf)[0+2]; sum2 += adler;}; {adler += (buf)[0+2+1]; sum2 += adler;};;; {adler += (buf)[0+4]; sum2 += adler;}; {adler += (buf)[0+4+1]; sum2 += adler;};; {adler += (buf)[0+4+2]; sum2 += adler;}; {adler += (buf)[0+4+2+1]; sum2 += adler;};;;; {adler += (buf)[8]; sum2 += adler;}; {adler += (buf)[8+1]; sum2 += adler;};; {adler += (buf)[8+2]; sum2 += adler;}; {adler += (buf)[8+2+1]; sum2 += adler;};;; {adler += (buf)[8+4]; sum2 += adler;}; {adler += (buf)[8+4+1]; sum2 += adler;};; {adler += (buf)[8+4+2]; sum2 += adler;}; {adler += (buf)[8+4+2+1]; sum2 += adler;};;;;;          /* 16 sums unrolled */\n            buf += 16;\n        \nif !(--n) { break }\n} \n        MOD(adler);\n        MOD(sum2);\n    }\n\n    /* do remaining bytes (less than NMAX, still just one modulo) */\n    if len {                  /* avoid modulos if none remaining */\n        for len \u003e= 16 {\n            len -= 16;\n            // inlining of macro DO16\n            // inlining of macro DO8\n            // inlining of macro DO4\n            // inlining of macro DO2\n            // inlining of macro DO1\n            {adler += (buf)[0]; sum2 += adler;}; {adler += (buf)[0+1]; sum2 += adler;};; {adler += (buf)[0+2]; sum2 += adler;}; {adler += (buf)[0+2+1]; sum2 += adler;};;; {adler += (buf)[0+4]; sum2 += adler;}; {adler += (buf)[0+4+1]; sum2 += adler;};; {adler += (buf)[0+4+2]; sum2 += adler;}; {adler += (buf)[0+4+2+1]; sum2 += adler;};;;; {adler += (buf)[8]; sum2 += adler;}; {adler += (buf)[8+1]; sum2 += adler;};; {adler += (buf)[8+2]; sum2 += adler;}; {adler += (buf)[8+2+1]; sum2 += adler;};;; {adler += (buf)[8+4]; sum2 += adler;}; {adler += (buf)[8+4+1]; sum2 += adler;};; {adler += (buf)[8+4+2]; sum2 += adler;}; {adler += (buf)[8+4+2+1]; sum2 += adler;};;;;;\n            buf += 16;\n        }\n        for len-- {\n            adler += *buf++;\n            sum2 += adler;\n        }\n        MOD(adler);\n        MOD(sum2);\n    }\n\n    /* return recombined sums */\n    return adler | (sum2 \u003c\u003c 16);\n}"
+    },
+    {
+      "Name": "adler32_combine_",
+      "Start": 4061,
+      "End": 4696,
+      "BodyStart": 4134,
+      "Original": "local uLong adler32_combine_(uLong adler1, uLong adler2, z_off64_t len2)\n{\n    unsigned long sum1;\n    unsigned long sum2;\n    unsigned rem;\n\n    /* the derivation of this formula is left as an exercise for the reader */\n    rem = (unsigned)(len2 % BASE);\n    sum1 = adler1 \u0026 0xffff;\n    sum2 = rem * sum1;\n    MOD(sum2);\n    sum1 += (adler2 \u0026 0xffff) + BASE - 1;\n    sum2 += ((adler1 \u003e\u003e 16) \u0026 0xffff) + ((adler2 \u003e\u003e 16) \u0026 0xffff) + BASE - rem;\n    if (sum1 \u003e= BASE) sum1 -= BASE;\n    if (sum1 \u003e= BASE) sum1 -= BASE;\n    if (sum2 \u003e= (BASE \u003c\u003c 1)) sum2 -= (BASE \u003c\u003c 1);\n    if (sum2 \u003e= BASE) sum2 -= BASE;\n    return sum1 | (sum2 \u003c\u003c 16);\n}",
+      "Draft": "func adler32_combine_(adler1 uLong, adler2 uLong, len2 z_off64_t) local uLong {\n    unsigned long sum1;\n    unsigned long sum2;\n    var rem uint32;\n\n    /* the derivation of this formula is left as an exercise for the reader */\n    rem = uint32((len2 % BASE));\n    sum1 = adler1 \u0026 0xffff;\n    sum2 = rem * sum1;\n    MOD(sum2);\n    sum1 += (adler2 \u0026 0xffff) + BASE - 1;\n    sum2 += ((adler1 \u003e\u003e 16) \u0026 0xffff) + ((adler2 \u003e\u003e 16) \u0026 0xffff) + BASE - rem;\n    if sum1 \u003e= BASE { sum1 -= BASE; }\n    if sum1 \u003e= BASE { sum1 -= BASE; }\n    if sum2 \u003e= (BASE \u003c\u003c 1) { sum2 -= (BASE \u003c\u003c 1); }\n    if sum2 \u003e= BASE { sum2 -= BASE; }\n    return sum1 | (sum2 \u003c\u003c 16);\n}"
+    },
+    {
+      "Name": "adler32_combine",
+      "Start": 4778,
+      "End": 4904,
+      "BodyStart": 4850,
+      "Original": "uLong ZEXPORT adler32_combine(uLong adler1, uLong adler2, z_off_t len2)\n{\n    return adler32_combine_(adler1, adler2, len2);\n}",
+      "Draft": "func adler32_combine(adler1 uLong, adler2 uLong, len2 z_off_t) uLong ZEXPORT {\n    return adler32_combine_(adler1, adler2, len2);\n}"
+    },
+    {
+      "Name": "adler32_combine64",
+      "Start": 4906,
+      "End": 5036,
+      "BodyStart": 4982,
+      "Original": "uLong ZEXPORT adler32_combine64(uLong adler1, uLong adler2, z_off64_t len2)\n{\n    return adler32_combine_(adler1, adler2, len2);\n}",
+      "Draft": "func adler32_combine64(adler1 uLong, adler2 uLong, len2 z_off64_t) uLong ZEXPORT {\n    return adler32_combine_(adler1, adler2, len2);\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::mechanical::do::2189",
+      "Category": "mechanical-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Simple do/while bodies are lowered. Retained loops with continue need control-flow repair so continue still evaluates the condition.",
+      "Start": 3378,
+      "End": 3380
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::macro::DO1",
+      "Category": "macro-review",
+      "Symbol": "DO1",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 592,
+      "End": 647
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::macro::DO2",
+      "Category": "macro-review",
+      "Symbol": "DO2",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 648,
+      "End": 693
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::macro::DO4",
+      "Category": "macro-review",
+      "Symbol": "DO4",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 694,
+      "End": 739
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::macro::DO8",
+      "Category": "macro-review",
+      "Symbol": "DO8",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 740,
+      "End": 785
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::macro::DO16",
+      "Category": "macro-review",
+      "Symbol": "DO16",
+      "Status": "open",
+      "Message": "Function-like macro retained as a comment; supported visible invocations are expanded and retained calls are reported separately.",
+      "Start": 786,
+      "End": 829
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::adler32",
+      "Category": "semantic-review",
+      "Symbol": "adler32",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2247,
+      "End": 3979
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::adler32_combine_",
+      "Category": "semantic-review",
+      "Symbol": "adler32_combine_",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4061,
+      "End": 4696
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::adler32_combine",
+      "Category": "semantic-review",
+      "Symbol": "adler32_combine",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4778,
+      "End": 4904
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::adler32_combine64",
+      "Category": "semantic-review",
+      "Symbol": "adler32_combine64",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4906,
+      "End": 5036
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 5063
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::conditional::0",
+      "Category": "conditional-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor region preserved without selecting a branch. Delimiter-only scaffolding was used during analysis; surrounding code may also be retained when branch structures disagree.",
+      "Start": 902,
+      "End": 2165
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::macro-inline::2261",
+      "Category": "macro-inline-review",
+      "Symbol": "adler32",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 2261,
+      "End": 2309
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::macro-inline::3091",
+      "Category": "macro-inline-review",
+      "Symbol": "MOD4",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3091,
+      "End": 3101
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::macro-inline::3492",
+      "Category": "macro-inline-review",
+      "Symbol": "MOD",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3492,
+      "End": 3502
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::macro-inline::3512",
+      "Category": "macro-inline-review",
+      "Symbol": "MOD",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3512,
+      "End": 3521
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::macro-inline::3874",
+      "Category": "macro-inline-review",
+      "Symbol": "MOD",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3874,
+      "End": 3884
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::macro-inline::3894",
+      "Category": "macro-inline-review",
+      "Symbol": "MOD",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 3894,
+      "End": 3903
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::macro-inline::4372",
+      "Category": "macro-inline-review",
+      "Symbol": "MOD",
+      "Status": "open",
+      "Message": "Macro depends on an unresolved preprocessor choice.",
+      "Start": 4372,
+      "End": 4381
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::macro-inline::4792",
+      "Category": "macro-inline-review",
+      "Symbol": "adler32_combine",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4792,
+      "End": 4849
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/misc/zlib/adler32.c::macro-inline::4920",
+      "Category": "macro-inline-review",
+      "Symbol": "adler32_combine64",
+      "Status": "open",
+      "Message": "Macro visibility depends on an unresolved conditional include.",
+      "Start": 4920,
+      "End": 4981
+    }
+  ],
+  "Draft": "package zlib\n\n/* adler32.c -- compute the Adler-32 checksum of a data stream\n * Copyright (C) 1995-2007 Mark Adler\n * For conditions of distribution and use, see copyright notice in zlib.h\n */\n\n/* @(#) $Id$ */\n\n//#include \u003cstdio.h\u003e\n//#include \u003cstdlib.h\u003e\n//#include \u003cstring.h\u003e\n//#include \"misc/util/abc_global.h\"\n\n//#include \"zutil.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n#define local static\n\n// local uLong adler32_combine_(uLong adler1, uLong adler2, z_off64_t len2);\n\n\nconst BASE uint64 = 65521    /* largest prime smaller than 65536 */\nconst NMAX = 5552\n/* NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) \u003c= 2^32-1 */\n\n// Original macro:\n// #define DO1(buf,i)  {adler += (buf)[i]; sum2 += adler;}\n\n// Original macro:\n// #define DO2(buf,i)  DO1(buf,i); DO1(buf,i+1);\n\n// Original macro:\n// #define DO4(buf,i)  DO2(buf,i); DO2(buf,i+2);\n\n// Original macro:\n// #define DO8(buf,i)  DO4(buf,i); DO4(buf,i+4);\n\n// Original macro:\n// #define DO16(buf)   DO8(buf,0); DO8(buf,8);\n\n\n/* use NO_DIVIDE if your processor does not do division in hardware */\n#ifdef NO_DIVIDE\n#  define MOD(a) \\\n    do { \\\n        if (a \u003e= (BASE \u003c\u003c 16)) a -= (BASE \u003c\u003c 16); \\\n        if (a \u003e= (BASE \u003c\u003c 15)) a -= (BASE \u003c\u003c 15); \\\n        if (a \u003e= (BASE \u003c\u003c 14)) a -= (BASE \u003c\u003c 14); \\\n        if (a \u003e= (BASE \u003c\u003c 13)) a -= (BASE \u003c\u003c 13); \\\n        if (a \u003e= (BASE \u003c\u003c 12)) a -= (BASE \u003c\u003c 12); \\\n        if (a \u003e= (BASE \u003c\u003c 11)) a -= (BASE \u003c\u003c 11); \\\n        if (a \u003e= (BASE \u003c\u003c 10)) a -= (BASE \u003c\u003c 10); \\\n        if (a \u003e= (BASE \u003c\u003c 9)) a -= (BASE \u003c\u003c 9); \\\n        if (a \u003e= (BASE \u003c\u003c 8)) a -= (BASE \u003c\u003c 8); \\\n        if (a \u003e= (BASE \u003c\u003c 7)) a -= (BASE \u003c\u003c 7); \\\n        if (a \u003e= (BASE \u003c\u003c 6)) a -= (BASE \u003c\u003c 6); \\\n        if (a \u003e= (BASE \u003c\u003c 5)) a -= (BASE \u003c\u003c 5); \\\n        if (a \u003e= (BASE \u003c\u003c 4)) a -= (BASE \u003c\u003c 4); \\\n        if (a \u003e= (BASE \u003c\u003c 3)) a -= (BASE \u003c\u003c 3); \\\n        if (a \u003e= (BASE \u003c\u003c 2)) a -= (BASE \u003c\u003c 2); \\\n        if (a \u003e= (BASE \u003c\u003c 1)) a -= (BASE \u003c\u003c 1); \\\n        if (a \u003e= BASE) a -= BASE; \\\n    } while (0)\n#  define MOD4(a) \\\n    do { \\\n        if (a \u003e= (BASE \u003c\u003c 4)) a -= (BASE \u003c\u003c 4); \\\n        if (a \u003e= (BASE \u003c\u003c 3)) a -= (BASE \u003c\u003c 3); \\\n        if (a \u003e= (BASE \u003c\u003c 2)) a -= (BASE \u003c\u003c 2); \\\n        if (a \u003e= (BASE \u003c\u003c 1)) a -= (BASE \u003c\u003c 1); \\\n        if (a \u003e= BASE) a -= BASE; \\\n    } while (0)\n#else\n#  define MOD(a) a %= BASE\n#  define MOD4(a) a %= BASE\n#endif\n\n/* ========================================================================= */\nfunc adler32(adler uLong, buf *Bytef, len uInt) uLong ZEXPORT {\n    unsigned long sum2;\n    var n uint32;\n\n    /* split Adler-32 into component sums */\n    sum2 = (adler \u003e\u003e 16) \u0026 0xffff;\n    adler \u0026= 0xffff;\n\n    /* in case user likes doing a byte at a time, keep it fast */\n    if len == 1 {\n        adler += buf[0];\n        if adler \u003e= BASE {\n            adler -= BASE; }\n        sum2 += adler;\n        if sum2 \u003e= BASE {\n            sum2 -= BASE; }\n        return adler | (sum2 \u003c\u003c 16);\n    }\n\n    /* initial Adler-32 value (deferred check for len == 1 speed) */\n    if buf == Z_NULL {\n        return int64(1); }\n\n    /* in case short lengths are provided, keep it somewhat fast */\n    if len \u003c 16 {\n        for len-- {\n            adler += *buf++;\n            sum2 += adler;\n        }\n        if adler \u003e= BASE {\n            adler -= BASE; }\n        MOD4(sum2);             /* only added so many BASE's */\n        return adler | (sum2 \u003c\u003c 16);\n    }\n\n    /* do length NMAX blocks -- requires just one modulo operation */\n    for len \u003e= NMAX {\n        len -= NMAX;\n        n = NMAX / 16;          /* NMAX is divisible by 16 */\n        for {\n            // inlining of macro DO16\n            // inlining of macro DO8\n            // inlining of macro DO4\n            // inlining of macro DO2\n            // inlining of macro DO1\n            {adler += (buf)[0]; sum2 += adler;}; {adler += (buf)[0+1]; sum2 += adler;};; {adler += (buf)[0+2]; sum2 += adler;}; {adler += (buf)[0+2+1]; sum2 += adler;};;; {adler += (buf)[0+4]; sum2 += adler;}; {adler += (buf)[0+4+1]; sum2 += adler;};; {adler += (buf)[0+4+2]; sum2 += adler;}; {adler += (buf)[0+4+2+1]; sum2 += adler;};;;; {adler += (buf)[8]; sum2 += adler;}; {adler += (buf)[8+1]; sum2 += adler;};; {adler += (buf)[8+2]; sum2 += adler;}; {adler += (buf)[8+2+1]; sum2 += adler;};;; {adler += (buf)[8+4]; sum2 += adler;}; {adler += (buf)[8+4+1]; sum2 += adler;};; {adler += (buf)[8+4+2]; sum2 += adler;}; {adler += (buf)[8+4+2+1]; sum2 += adler;};;;;;          /* 16 sums unrolled */\n            buf += 16;\n        \nif !(--n) { break }\n} \n        MOD(adler);\n        MOD(sum2);\n    }\n\n    /* do remaining bytes (less than NMAX, still just one modulo) */\n    if len {                  /* avoid modulos if none remaining */\n        for len \u003e= 16 {\n            len -= 16;\n            // inlining of macro DO16\n            // inlining of macro DO8\n            // inlining of macro DO4\n            // inlining of macro DO2\n            // inlining of macro DO1\n            {adler += (buf)[0]; sum2 += adler;}; {adler += (buf)[0+1]; sum2 += adler;};; {adler += (buf)[0+2]; sum2 += adler;}; {adler += (buf)[0+2+1]; sum2 += adler;};;; {adler += (buf)[0+4]; sum2 += adler;}; {adler += (buf)[0+4+1]; sum2 += adler;};; {adler += (buf)[0+4+2]; sum2 += adler;}; {adler += (buf)[0+4+2+1]; sum2 += adler;};;;; {adler += (buf)[8]; sum2 += adler;}; {adler += (buf)[8+1]; sum2 += adler;};; {adler += (buf)[8+2]; sum2 += adler;}; {adler += (buf)[8+2+1]; sum2 += adler;};;; {adler += (buf)[8+4]; sum2 += adler;}; {adler += (buf)[8+4+1]; sum2 += adler;};; {adler += (buf)[8+4+2]; sum2 += adler;}; {adler += (buf)[8+4+2+1]; sum2 += adler;};;;;;\n            buf += 16;\n        }\n        for len-- {\n            adler += *buf++;\n            sum2 += adler;\n        }\n        MOD(adler);\n        MOD(sum2);\n    }\n\n    /* return recombined sums */\n    return adler | (sum2 \u003c\u003c 16);\n}\n\n/* ========================================================================= */\nfunc adler32_combine_(adler1 uLong, adler2 uLong, len2 z_off64_t) local uLong {\n    unsigned long sum1;\n    unsigned long sum2;\n    var rem uint32;\n\n    /* the derivation of this formula is left as an exercise for the reader */\n    rem = uint32((len2 % BASE));\n    sum1 = adler1 \u0026 0xffff;\n    sum2 = rem * sum1;\n    MOD(sum2);\n    sum1 += (adler2 \u0026 0xffff) + BASE - 1;\n    sum2 += ((adler1 \u003e\u003e 16) \u0026 0xffff) + ((adler2 \u003e\u003e 16) \u0026 0xffff) + BASE - rem;\n    if sum1 \u003e= BASE { sum1 -= BASE; }\n    if sum1 \u003e= BASE { sum1 -= BASE; }\n    if sum2 \u003e= (BASE \u003c\u003c 1) { sum2 -= (BASE \u003c\u003c 1); }\n    if sum2 \u003e= BASE { sum2 -= BASE; }\n    return sum1 | (sum2 \u003c\u003c 16);\n}\n\n/* ========================================================================= */\nfunc adler32_combine(adler1 uLong, adler2 uLong, len2 z_off_t) uLong ZEXPORT {\n    return adler32_combine_(adler1, adler2, len2);\n}\n\nfunc adler32_combine64(adler1 uLong, adler2 uLong, len2 z_off64_t) uLong ZEXPORT {\n    return adler32_combine_(adler1, adler2, len2);\n}\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}

@@ -1,0 +1,842 @@
+{
+  "InlineMacros": true,
+  "Schema": 2,
+  "Path": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c",
+  "SHA256": "60b0a78563bad7471e543f6705744a93e944ea1919fe1a4bc79499b0aa6419bd",
+  "Library": [
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 71,
+        "Column": 9,
+        "ByteOffset": 2592
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 79,
+        "Column": 9,
+        "ByteOffset": 2863
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( 0 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 389,
+        "Column": 9,
+        "ByteOffset": 12583
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "        assert( pObj.MarkA == 0 );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 396,
+        "Column": 13,
+        "ByteOffset": 12979
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            printf( \"Nwk_ManRetimeVerifyCutForward(): Internal cut verification failed.\\n\" ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 456,
+        "Column": 5,
+        "ByteOffset": 15308
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Forward:  Max-flow = %4d -\u003e \", Counter ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 466,
+        "Column": 5,
+        "ByteOffset": 15792
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%4d.  \", Counter+Counter2 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 472,
+        "Column": 13,
+        "ByteOffset": 16197
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 480,
+        "Column": 13,
+        "ByteOffset": 16627
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Nwk_ObjHasFlow(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 481,
+        "Column": 13,
+        "ByteOffset": 16671
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Nwk_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 490,
+        "Column": 5,
+        "ByteOffset": 16920
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Min-cut = %4d.  Unmoved = %4d. \", Vec_PtrSize(vNodes), Counter );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 492,
+        "Column": 73,
+        "ByteOffset": 17146
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 537,
+        "Column": 5,
+        "ByteOffset": 19194
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Backward: Max-flow = %4d -\u003e \", Counter ); }"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 547,
+        "Column": 5,
+        "ByteOffset": 19701
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"%4d.  \", Counter+Counter2 ); }"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 553,
+        "Column": 13,
+        "ByteOffset": 20129
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !RetValue );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 560,
+        "Column": 13,
+        "ByteOffset": 20542
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( Nwk_ObjHasFlow(pObj) );"
+    },
+    {
+      "Name": "assert",
+      "Status": "converted",
+      "Message": "Calls the package assert helper with condition text. Repair C truth values downstream; C NDEBUG/abort semantics differ.",
+      "Location": {
+        "Line": 561,
+        "Column": 13,
+        "ByteOffset": 20586
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "            assert( !Nwk_ObjIsCo(pObj) );"
+    },
+    {
+      "Name": "printf",
+      "Status": "converted",
+      "Message": "C length modifiers and unsigned/integer verbs normalized for literal formats. Review dynamic formats, argument types and byte/string representation. Go count/error results are left for downstream repair.",
+      "Location": {
+        "Line": 575,
+        "Column": 5,
+        "ByteOffset": 21100
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "    printf( \"Min-cut = %4d.  Unmoved = %4d. \", Vec_PtrSize(vNodes), Counter );"
+    },
+    {
+      "Name": "CLOCKS_PER_SEC",
+      "Status": "converted",
+      "Message": "Nanoseconds per second for the wall-clock clock() draft policy.",
+      "Location": {
+        "Line": 577,
+        "Column": 73,
+        "ByteOffset": 21326
+      },
+      "Coordinates": "pre-library Go draft",
+      "SourceLine": "Abc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(CLOCKS_PER_SEC)));;"
+    }
+  ],
+  "Functions": [
+    {
+      "Name": "Nwk_ObjPred",
+      "Start": 1129,
+      "End": 1248,
+      "BodyStart": 1205,
+      "Original": "static inline Nwk_Obj_t * Nwk_ObjPred( Nwk_Obj_t * pObj )                   { return (Nwk_Obj_t *)pObj-\u003epCopy;        }",
+      "Draft": "func Nwk_ObjPred(pObj *Nwk_Obj_t) *Nwk_Obj_t { return (Nwk_Obj_t *)pObj.pCopy;        }"
+    },
+    {
+      "Name": "Nwk_ObjSetPred",
+      "Start": 1249,
+      "End": 1355,
+      "BodyStart": 1325,
+      "Original": "static inline int         Nwk_ObjSetPred( Nwk_Obj_t * pObj, Nwk_Obj_t * p ) { pObj-\u003epCopy = p; return 1; }",
+      "Draft": "func Nwk_ObjSetPred(pObj *Nwk_Obj_t, p *Nwk_Obj_t) int32 { pObj.pCopy = p; return 1; }"
+    },
+    {
+      "Name": "Nwk_ObjIsSink",
+      "Start": 1364,
+      "End": 1470,
+      "BodyStart": 1440,
+      "Original": "static inline int         Nwk_ObjIsSink( Nwk_Obj_t * pObj )                 { return pObj-\u003eMarkA;        }",
+      "Draft": "func Nwk_ObjIsSink(pObj *Nwk_Obj_t) int32 { return pObj.MarkA;        }"
+    },
+    {
+      "Name": "Nwk_ObjSetSink",
+      "Start": 1471,
+      "End": 1577,
+      "BodyStart": 1547,
+      "Original": "static inline void        Nwk_ObjSetSink( Nwk_Obj_t * pObj )                { pObj-\u003eMarkA = 1;           }",
+      "Draft": "func Nwk_ObjSetSink(pObj *Nwk_Obj_t) { pObj.MarkA = 1;           }"
+    },
+    {
+      "Name": "Nwk_ObjHasFlow",
+      "Start": 1586,
+      "End": 1692,
+      "BodyStart": 1662,
+      "Original": "static inline int         Nwk_ObjHasFlow( Nwk_Obj_t * pObj )                { return pObj-\u003eMarkB;        }",
+      "Draft": "func Nwk_ObjHasFlow(pObj *Nwk_Obj_t) int32 { return pObj.MarkB;        }"
+    },
+    {
+      "Name": "Nwk_ObjSetFlow",
+      "Start": 1693,
+      "End": 1799,
+      "BodyStart": 1769,
+      "Original": "static inline void        Nwk_ObjSetFlow( Nwk_Obj_t * pObj )                { pObj-\u003eMarkB = 1;           }",
+      "Draft": "func Nwk_ObjSetFlow(pObj *Nwk_Obj_t) { pObj.MarkB = 1;           }"
+    },
+    {
+      "Name": "Nwk_ObjClearFlow",
+      "Start": 1800,
+      "End": 1906,
+      "BodyStart": 1876,
+      "Original": "static inline void        Nwk_ObjClearFlow( Nwk_Obj_t * pObj )              { pObj-\u003eMarkB = 0;           }",
+      "Draft": "func Nwk_ObjClearFlow(pObj *Nwk_Obj_t) { pObj.MarkB = 0;           }"
+    },
+    {
+      "Name": "Nwk_ObjVisitedBotOnly",
+      "Start": 2178,
+      "End": 2298,
+      "BodyStart": 2242,
+      "Original": "static inline int  Nwk_ObjVisitedBotOnly( Nwk_Obj_t * pObj )   \n{\n    return pObj-\u003eTravId == pObj-\u003epMan-\u003enTravIds - 2;\n}",
+      "Draft": "func Nwk_ObjVisitedBotOnly(pObj *Nwk_Obj_t) int32 {\n    return pObj.TravId == pObj.pMan.nTravIds - 2;\n}"
+    },
+    {
+      "Name": "Nwk_ObjVisitedBot",
+      "Start": 2299,
+      "End": 2459,
+      "BodyStart": 2361,
+      "Original": "static inline int  Nwk_ObjVisitedBot( Nwk_Obj_t * pObj )     \n{ \n    return pObj-\u003eTravId == pObj-\u003epMan-\u003enTravIds - 2 || pObj-\u003eTravId == pObj-\u003epMan-\u003enTravIds; \n}",
+      "Draft": "func Nwk_ObjVisitedBot(pObj *Nwk_Obj_t) int32 { \n    return pObj.TravId == pObj.pMan.nTravIds - 2 || pObj.TravId == pObj.pMan.nTravIds; \n}"
+    },
+    {
+      "Name": "Nwk_ObjVisitedTop",
+      "Start": 2460,
+      "End": 2620,
+      "BodyStart": 2522,
+      "Original": "static inline int  Nwk_ObjVisitedTop( Nwk_Obj_t * pObj )     \n{ \n    return pObj-\u003eTravId == pObj-\u003epMan-\u003enTravIds - 1 || pObj-\u003eTravId == pObj-\u003epMan-\u003enTravIds; \n}",
+      "Draft": "func Nwk_ObjVisitedTop(pObj *Nwk_Obj_t) int32 { \n    return pObj.TravId == pObj.pMan.nTravIds - 1 || pObj.TravId == pObj.pMan.nTravIds; \n}"
+    },
+    {
+      "Name": "Nwk_ObjSetVisitedBot",
+      "Start": 2621,
+      "End": 2918,
+      "BodyStart": 2683,
+      "Original": "static inline void Nwk_ObjSetVisitedBot( Nwk_Obj_t * pObj )  \n{\n    if ( pObj-\u003eTravId \u003c pObj-\u003epMan-\u003enTravIds - 2 )\n        pObj-\u003eTravId = pObj-\u003epMan-\u003enTravIds - 2;\n    else if ( pObj-\u003eTravId == pObj-\u003epMan-\u003enTravIds - 1 )\n        pObj-\u003eTravId = pObj-\u003epMan-\u003enTravIds;\n    else\n        assert( 0 );\n}",
+      "Draft": "func Nwk_ObjSetVisitedBot(pObj *Nwk_Obj_t) {\n    if pObj.TravId \u003c pObj.pMan.nTravIds - 2 {\n        pObj.TravId = pObj.pMan.nTravIds - 2;\n    } else if pObj.TravId == pObj.pMan.nTravIds - 1 {\n        pObj.TravId = pObj.pMan.nTravIds;\n    } else {\n        assert(false, \"0\"); }\n}"
+    },
+    {
+      "Name": "Nwk_ObjSetVisitedTop",
+      "Start": 2919,
+      "End": 3216,
+      "BodyStart": 2981,
+      "Original": "static inline void Nwk_ObjSetVisitedTop( Nwk_Obj_t * pObj )  \n{\n    if ( pObj-\u003eTravId \u003c pObj-\u003epMan-\u003enTravIds - 2 )\n        pObj-\u003eTravId = pObj-\u003epMan-\u003enTravIds - 1;\n    else if ( pObj-\u003eTravId == pObj-\u003epMan-\u003enTravIds - 2 )\n        pObj-\u003eTravId = pObj-\u003epMan-\u003enTravIds;\n    else\n        assert( 0 );\n}",
+      "Draft": "func Nwk_ObjSetVisitedTop(pObj *Nwk_Obj_t) {\n    if pObj.TravId \u003c pObj.pMan.nTravIds - 2 {\n        pObj.TravId = pObj.pMan.nTravIds - 1;\n    } else if pObj.TravId == pObj.pMan.nTravIds - 2 {\n        pObj.TravId = pObj.pMan.nTravIds;\n    } else {\n        assert(false, \"0\"); }\n}"
+    },
+    {
+      "Name": "Nwk_ManIncrementTravIdFlow",
+      "Start": 3217,
+      "End": 3394,
+      "BodyStart": 3283,
+      "Original": "static inline void Nwk_ManIncrementTravIdFlow( Nwk_Man_t * pMan )\n{\n    Nwk_ManIncrementTravId( pMan );\n    Nwk_ManIncrementTravId( pMan );\n    Nwk_ManIncrementTravId( pMan );\n}",
+      "Draft": "func Nwk_ManIncrementTravIdFlow(pMan *Nwk_Man_t) {\n    Nwk_ManIncrementTravId( pMan );\n    Nwk_ManIncrementTravId( pMan );\n    Nwk_ManIncrementTravId( pMan );\n}"
+    },
+    {
+      "Name": "Nwk_ManMarkTfiCone_rec",
+      "Start": 4184,
+      "End": 4412,
+      "BodyStart": 4232,
+      "Original": "void Nwk_ManMarkTfiCone_rec( Nwk_Obj_t * pObj )\n{\n    Nwk_Obj_t * pNext;\n    int i;\n    if ( pObj-\u003eMarkA )\n        return;\n    pObj-\u003eMarkA = 1;\n    Nwk_ObjForEachFanin( pObj, pNext, i )\n        Nwk_ManMarkTfiCone_rec( pNext );\n}",
+      "Draft": "func Nwk_ManMarkTfiCone_rec(pObj *Nwk_Obj_t) {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if pObj.MarkA {\n        return; }\n    pObj.MarkA = 1;\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[i]); i++  {\n        Nwk_ManMarkTfiCone_rec( pNext );\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ManMarkTfoCone_rec",
+      "Start": 4670,
+      "End": 4899,
+      "BodyStart": 4718,
+      "Original": "void Nwk_ManMarkTfoCone_rec( Nwk_Obj_t * pObj )\n{\n    Nwk_Obj_t * pNext;\n    int i;\n    if ( pObj-\u003eMarkA )\n        return;\n    pObj-\u003eMarkA = 1;\n    Nwk_ObjForEachFanout( pObj, pNext, i )\n        Nwk_ManMarkTfoCone_rec( pNext );\n}",
+      "Draft": "func Nwk_ManMarkTfoCone_rec(pObj *Nwk_Obj_t) {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if pObj.MarkA {\n        return; }\n    pObj.MarkA = 1;\n    // inlining of macro Nwk_ObjForEachFanout\n    for  i = 0; (i \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pNext) = (pObj).pFanio[(pObj).nFanins+i]); i++  {\n        Nwk_ManMarkTfoCone_rec( pNext );\n    }\n}"
+    },
+    {
+      "Name": "Nwk_ManPushForwardFast_rec",
+      "Start": 5161,
+      "End": 5752,
+      "BodyStart": 5231,
+      "Original": "int Nwk_ManPushForwardFast_rec( Nwk_Obj_t * pObj, Nwk_Obj_t * pPred )\n{\n    Nwk_Obj_t * pNext;\n    int i;\n    if ( Nwk_ObjIsTravIdCurrent( pObj ) )\n        return 0;\n    Nwk_ObjSetTravIdCurrent( pObj );\n    if ( Nwk_ObjHasFlow(pObj) )\n        return 0;\n    if ( Nwk_ObjIsSink(pObj) )\n    {\n        Nwk_ObjSetFlow(pObj);\n        return Nwk_ObjSetPred( pObj, pPred );\n    }\n    Nwk_ObjForEachFanout( pObj, pNext, i )\n        if ( Nwk_ManPushForwardFast_rec( pNext, pObj ) )\n        {\n            Nwk_ObjSetFlow(pObj);\n            return Nwk_ObjSetPred( pObj, pPred );\n        }\n    return 0;\n}",
+      "Draft": "func Nwk_ManPushForwardFast_rec(pObj *Nwk_Obj_t, pPred *Nwk_Obj_t) int32 {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if Nwk_ObjIsTravIdCurrent( pObj ) {\n        return 0; }\n    Nwk_ObjSetTravIdCurrent( pObj );\n    if Nwk_ObjHasFlow(pObj) != 0 {\n        return 0; }\n    if Nwk_ObjIsSink(pObj) != 0 {\n        Nwk_ObjSetFlow(pObj);\n        return Nwk_ObjSetPred( pObj, pPred );\n    }\n    // inlining of macro Nwk_ObjForEachFanout\n    for  i = 0; (i \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pNext) = (pObj).pFanio[(pObj).nFanins+i]); i++  {\n        if Nwk_ManPushForwardFast_rec( pNext, pObj ) != 0 {\n            Nwk_ObjSetFlow(pObj);\n            return Nwk_ObjSetPred( pObj, pPred );\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Nwk_ManPushBackwardFast_rec",
+      "Start": 6015,
+      "End": 6607,
+      "BodyStart": 6086,
+      "Original": "int Nwk_ManPushBackwardFast_rec( Nwk_Obj_t * pObj, Nwk_Obj_t * pPred )\n{\n    Nwk_Obj_t * pNext;\n    int i;\n    if ( Nwk_ObjIsTravIdCurrent( pObj ) )\n        return 0;\n    Nwk_ObjSetTravIdCurrent( pObj );\n    if ( Nwk_ObjHasFlow(pObj) )\n        return 0;\n    if ( Nwk_ObjIsSink(pObj) )\n    {\n        Nwk_ObjSetFlow(pObj);\n        return Nwk_ObjSetPred( pObj, pPred );\n    }\n    Nwk_ObjForEachFanin( pObj, pNext, i )\n        if ( Nwk_ManPushBackwardFast_rec( pNext, pObj ) )\n        {\n            Nwk_ObjSetFlow(pObj);\n            return Nwk_ObjSetPred( pObj, pPred );\n        }\n    return 0;\n}",
+      "Draft": "func Nwk_ManPushBackwardFast_rec(pObj *Nwk_Obj_t, pPred *Nwk_Obj_t) int32 {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if Nwk_ObjIsTravIdCurrent( pObj ) {\n        return 0; }\n    Nwk_ObjSetTravIdCurrent( pObj );\n    if Nwk_ObjHasFlow(pObj) != 0 {\n        return 0; }\n    if Nwk_ObjIsSink(pObj) != 0 {\n        Nwk_ObjSetFlow(pObj);\n        return Nwk_ObjSetPred( pObj, pPred );\n    }\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[i]); i++  {\n        if Nwk_ManPushBackwardFast_rec( pNext, pObj ) != 0 {\n            Nwk_ObjSetFlow(pObj);\n            return Nwk_ObjSetPred( pObj, pPred );\n        }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Nwk_ManPushForwardBot_rec",
+      "Start": 6898,
+      "End": 7666,
+      "BodyStart": 6967,
+      "Original": "int Nwk_ManPushForwardBot_rec( Nwk_Obj_t * pObj, Nwk_Obj_t * pPred )\n{\n    Nwk_Obj_t * pNext;\n    int i;\n    if ( Nwk_ObjVisitedBot(pObj) )\n        return 0;\n    Nwk_ObjSetVisitedBot(pObj);\n    // propagate through the internal edge\n    if ( Nwk_ObjHasFlow(pObj) )\n    {\n        if ( Nwk_ObjPred(pObj) )\n            if ( Nwk_ManPushForwardTop_rec( Nwk_ObjPred(pObj), Nwk_ObjPred(pObj) ) )\n                return Nwk_ObjSetPred( pObj, pPred ); \n    }\n    else if ( Nwk_ManPushForwardTop_rec(pObj, pObj) )\n    {\n        Nwk_ObjSetFlow( pObj );\n        return Nwk_ObjSetPred( pObj, pPred );\n    }\n    // try to push through the fanins\n    Nwk_ObjForEachFanin( pObj, pNext, i )\n        if ( Nwk_ManPushForwardBot_rec( pNext, pPred ) )\n            return 1;\n    return 0;\n}",
+      "Draft": "func Nwk_ManPushForwardBot_rec(pObj *Nwk_Obj_t, pPred *Nwk_Obj_t) int32 {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if Nwk_ObjVisitedBot(pObj) != 0 {\n        return 0; }\n    Nwk_ObjSetVisitedBot(pObj);\n    // propagate through the internal edge\n    if Nwk_ObjHasFlow(pObj) != 0 {\n        if Nwk_ObjPred(pObj) != nil {\n            if Nwk_ManPushForwardTop_rec( Nwk_ObjPred(pObj), Nwk_ObjPred(pObj) ) != 0 {\n                return Nwk_ObjSetPred( pObj, pPred ); } } \n    \n    } else if Nwk_ManPushForwardTop_rec(pObj, pObj) != 0 {\n        Nwk_ObjSetFlow( pObj );\n        return Nwk_ObjSetPred( pObj, pPred );\n    }\n    // try to push through the fanins\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[i]); i++  {\n        if Nwk_ManPushForwardBot_rec( pNext, pPred ) != 0 {\n            return 1; }\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Nwk_ManPushForwardTop_rec",
+      "Start": 7952,
+      "End": 8654,
+      "BodyStart": 8021,
+      "Original": "int Nwk_ManPushForwardTop_rec( Nwk_Obj_t * pObj, Nwk_Obj_t * pPred )\n{\n    Nwk_Obj_t * pNext;\n    int i;\n    if ( Nwk_ObjVisitedTop(pObj) )\n        return 0;\n    Nwk_ObjSetVisitedTop(pObj);\n    // check if this is the sink\n    if ( Nwk_ObjIsSink(pObj) )\n        return 1;\n    // try to push through the fanouts\n    Nwk_ObjForEachFanout( pObj, pNext, i )\n        if ( Nwk_ManPushForwardBot_rec( pNext, pPred ) )\n            return 1;\n    // redirect the flow\n    if ( Nwk_ObjHasFlow(pObj) \u0026\u0026 !Nwk_ObjIsCi(pObj) )\n        if ( Nwk_ManPushForwardBot_rec( pObj, Nwk_ObjPred(pObj) ) )\n        {\n            Nwk_ObjClearFlow( pObj );\n            return Nwk_ObjSetPred( pObj, NULL );\n        }\n    return 0;\n}",
+      "Draft": "func Nwk_ManPushForwardTop_rec(pObj *Nwk_Obj_t, pPred *Nwk_Obj_t) int32 {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if Nwk_ObjVisitedTop(pObj) != 0 {\n        return 0; }\n    Nwk_ObjSetVisitedTop(pObj);\n    // check if this is the sink\n    if Nwk_ObjIsSink(pObj) != 0 {\n        return 1; }\n    // try to push through the fanouts\n    // inlining of macro Nwk_ObjForEachFanout\n    for  i = 0; (i \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pNext) = (pObj).pFanio[(pObj).nFanins+i]); i++  {\n        if Nwk_ManPushForwardBot_rec( pNext, pPred ) != 0 {\n            return 1; }\n    }\n    // redirect the flow\n    if (Nwk_ObjHasFlow(pObj) != 0) \u0026\u0026 !Nwk_ObjIsCi(pObj) {\n        if Nwk_ManPushForwardBot_rec( pObj, Nwk_ObjPred(pObj) ) != 0 {\n            Nwk_ObjClearFlow( pObj );\n            return Nwk_ObjSetPred( pObj, nil );\n        } }\n    return 0;\n}"
+    },
+    {
+      "Name": "Nwk_ManPushBackwardBot_rec",
+      "Start": 8945,
+      "End": 9523,
+      "BodyStart": 9015,
+      "Original": "int Nwk_ManPushBackwardBot_rec( Nwk_Obj_t * pObj, Nwk_Obj_t * pPred )\n{\n    if ( Nwk_ObjVisitedBot(pObj) )\n        return 0;\n    Nwk_ObjSetVisitedBot(pObj);\n    // propagate through the internal edge\n    if ( Nwk_ObjHasFlow(pObj) )\n    {\n        if ( Nwk_ObjPred(pObj) )\n            if ( Nwk_ManPushBackwardTop_rec( Nwk_ObjPred(pObj), Nwk_ObjPred(pObj) ) )\n                return Nwk_ObjSetPred( pObj, pPred ); \n    }\n    else if ( Nwk_ManPushBackwardTop_rec(pObj, pObj) )\n    {\n        Nwk_ObjSetFlow( pObj );\n        return Nwk_ObjSetPred( pObj, pPred );\n    }\n    return 0;\n}",
+      "Draft": "func Nwk_ManPushBackwardBot_rec(pObj *Nwk_Obj_t, pPred *Nwk_Obj_t) int32 {\n    if Nwk_ObjVisitedBot(pObj) != 0 {\n        return 0; }\n    Nwk_ObjSetVisitedBot(pObj);\n    // propagate through the internal edge\n    if Nwk_ObjHasFlow(pObj) != 0 {\n        if Nwk_ObjPred(pObj) != nil {\n            if Nwk_ManPushBackwardTop_rec( Nwk_ObjPred(pObj), Nwk_ObjPred(pObj) ) != 0 {\n                return Nwk_ObjSetPred( pObj, pPred ); } } \n    \n    } else if Nwk_ManPushBackwardTop_rec(pObj, pObj) != 0 {\n        Nwk_ObjSetFlow( pObj );\n        return Nwk_ObjSetPred( pObj, pPred );\n    }\n    return 0;\n}"
+    },
+    {
+      "Name": "Nwk_ManPushBackwardTop_rec",
+      "Start": 9809,
+      "End": 10695,
+      "BodyStart": 9879,
+      "Original": "int Nwk_ManPushBackwardTop_rec( Nwk_Obj_t * pObj, Nwk_Obj_t * pPred )\n{\n    Nwk_Obj_t * pNext;\n    int i;\n    if ( Nwk_ObjVisitedTop(pObj) )\n        return 0;\n    Nwk_ObjSetVisitedTop(pObj);\n    // check if this is the sink\n    if ( Nwk_ObjIsSink(pObj) )\n        return 1;\n    // try to push through the fanins\n    Nwk_ObjForEachFanin( pObj, pNext, i )\n        if ( Nwk_ManPushBackwardBot_rec( pNext, pPred ) )\n            return 1;\n    // try to push through the fanouts\n    Nwk_ObjForEachFanout( pObj, pNext, i )\n        if ( !Nwk_ObjIsCo(pObj) \u0026\u0026 Nwk_ManPushBackwardTop_rec( pNext, pPred ) )\n            return 1;\n    // redirect the flow\n    if ( Nwk_ObjHasFlow(pObj) )\n        if ( Nwk_ObjPred(pObj) \u0026\u0026 Nwk_ManPushBackwardBot_rec( pObj, Nwk_ObjPred(pObj) ) )\n        {\n            Nwk_ObjClearFlow( pObj );\n            return Nwk_ObjSetPred( pObj, NULL );\n        }\n    return 0;\n}",
+      "Draft": "func Nwk_ManPushBackwardTop_rec(pObj *Nwk_Obj_t, pPred *Nwk_Obj_t) int32 {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if Nwk_ObjVisitedTop(pObj) != 0 {\n        return 0; }\n    Nwk_ObjSetVisitedTop(pObj);\n    // check if this is the sink\n    if Nwk_ObjIsSink(pObj) != 0 {\n        return 1; }\n    // try to push through the fanins\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[i]); i++  {\n        if Nwk_ManPushBackwardBot_rec( pNext, pPred ) != 0 {\n            return 1; }\n    }\n    // try to push through the fanouts\n    // inlining of macro Nwk_ObjForEachFanout\n    for  i = 0; (i \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pNext) = (pObj).pFanio[(pObj).nFanins+i]); i++  {\n        if !Nwk_ObjIsCo(pObj) \u0026\u0026 (Nwk_ManPushBackwardTop_rec( pNext, pPred ) != 0) {\n            return 1; }\n    }\n    // redirect the flow\n    if Nwk_ObjHasFlow(pObj) != 0 {\n        if (Nwk_ObjPred(pObj) != nil) \u0026\u0026 (Nwk_ManPushBackwardBot_rec( pObj, Nwk_ObjPred(pObj) ) != 0) {\n            Nwk_ObjClearFlow( pObj );\n            return Nwk_ObjSetPred( pObj, nil );\n        } }\n    return 0;\n}"
+    },
+    {
+      "Name": "Nwk_ManVerifyCut_rec",
+      "Start": 10978,
+      "End": 11369,
+      "BodyStart": 11023,
+      "Original": "int Nwk_ManVerifyCut_rec( Nwk_Obj_t * pObj )\n{\n    Nwk_Obj_t * pNext;\n    int i;\n    if ( pObj-\u003eMarkA )\n        return 1;\n    if ( Nwk_ObjIsLo(pObj) )\n        return 0;\n    if ( Nwk_ObjIsTravIdCurrent( pObj ) )\n        return 1;\n    Nwk_ObjSetTravIdCurrent( pObj );\n    Nwk_ObjForEachFanin( pObj, pNext, i )\n        if ( !Nwk_ManVerifyCut_rec( pNext ) )\n            return 0;\n    return 1;\n}",
+      "Draft": "func Nwk_ManVerifyCut_rec(pObj *Nwk_Obj_t) int32 {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if pObj.MarkA {\n        return 1; }\n    if Nwk_ObjIsLo(pObj) {\n        return 0; }\n    if Nwk_ObjIsTravIdCurrent( pObj ) {\n        return 1; }\n    Nwk_ObjSetTravIdCurrent( pObj );\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[i]); i++  {\n        if !(Nwk_ManVerifyCut_rec( pNext ) != 0) {\n            return 0; }\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Nwk_ManRetimeVerifyCutForward",
+      "Start": 11631,
+      "End": 12253,
+      "BodyStart": 11705,
+      "Original": "int Nwk_ManRetimeVerifyCutForward( Nwk_Man_t * pMan, Vec_Ptr_t * vNodes )\n{\n    Nwk_Obj_t * pObj;\n    int i;\n    // mark the nodes\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vNodes, pObj, i )\n    {\n        assert( pObj-\u003eMarkA == 0 );\n        pObj-\u003eMarkA = 1;\n    }\n    // traverse from the COs\n    Nwk_ManIncrementTravId( pMan );\n    Nwk_ManForEachCo( pMan, pObj, i )\n        if ( !Nwk_ManVerifyCut_rec( pObj ) )\n            printf( \"Nwk_ManRetimeVerifyCutForward(): Internal cut verification failed.\\n\" );\n    // unmark the nodes\n    Vec_PtrForEachEntry( Nwk_Obj_t *, vNodes, pObj, i )\n        pObj-\u003eMarkA = 0;\n    return 1;\n}",
+      "Draft": "func Nwk_ManRetimeVerifyCutForward(pMan *Nwk_Man_t, vNodes *Vec_Ptr_t) int32 {\n    var pObj *Nwk_Obj_t;\n    var i int32;\n    // mark the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        assert(pObj.MarkA == 0, \"pObj.MarkA == 0\");\n        pObj.MarkA = 1;\n    }\n    // traverse from the COs\n    Nwk_ManIncrementTravId( pMan );\n    // inlining of macro Nwk_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vCos)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {\n        if !(Nwk_ManVerifyCut_rec( pObj ) != 0) {\n            fmt.Printf(\"Nwk_ManRetimeVerifyCutForward(): Internal cut verification failed.\\n\"); }\n    }\n    // unmark the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.MarkA = 0;\n    }\n    return 1;\n}"
+    },
+    {
+      "Name": "Nwk_ManRetimeVerifyCutBackward",
+      "Start": 12514,
+      "End": 12606,
+      "BodyStart": 12589,
+      "Original": "int Nwk_ManRetimeVerifyCutBackward( Nwk_Man_t * pMan, Vec_Ptr_t * vNodes )\n{\n    return 1;\n}",
+      "Draft": "func Nwk_ManRetimeVerifyCutBackward(pMan *Nwk_Man_t, vNodes *Vec_Ptr_t) int32 {\n    return 1;\n}"
+    },
+    {
+      "Name": "Nwk_ManRetimeCutForward",
+      "Start": 12884,
+      "End": 15120,
+      "BodyStart": 12968,
+      "Original": "Vec_Ptr_t * Nwk_ManRetimeCutForward( Nwk_Man_t * pMan, int nLatches, int fVerbose )\n{\n    Vec_Ptr_t * vNodes;\n    Nwk_Obj_t * pObj;\n    int i, RetValue, Counter = 0, Counter2 = 0;\n    abctime clk = Abc_Clock();\n    // set the sequential parameters\n    pMan-\u003enLatches = nLatches;\n    pMan-\u003enTruePis = Nwk_ManCiNum(pMan) - nLatches;\n    pMan-\u003enTruePos = Nwk_ManCoNum(pMan) - nLatches;\n    // mark the COs and the TFO of PIs\n    Nwk_ManForEachCo( pMan, pObj, i )\n        pObj-\u003eMarkA = 1;\n    Nwk_ManForEachPiSeq( pMan, pObj, i )\n        Nwk_ManMarkTfoCone_rec( pObj );\n    // start flow computation from each LO\n    Nwk_ManIncrementTravIdFlow( pMan );\n    Nwk_ManForEachLoSeq( pMan, pObj, i )\n    {\n        if ( !Nwk_ManPushForwardFast_rec( pObj, NULL ) )\n            continue;\n        Nwk_ManIncrementTravIdFlow( pMan );\n        Counter++;\n    }\n    if ( fVerbose )\n    printf( \"Forward:  Max-flow = %4d -\u003e \", Counter );\n    // continue flow computation from each LO\n    Nwk_ManIncrementTravIdFlow( pMan );\n    Nwk_ManForEachLoSeq( pMan, pObj, i )\n    {\n        if ( !Nwk_ManPushForwardBot_rec( pObj, NULL ) )\n            continue;\n        Nwk_ManIncrementTravIdFlow( pMan );\n        Counter2++;\n    }\n    if ( fVerbose )\n    printf( \"%4d.  \", Counter+Counter2 );\n    // repeat flow computation from each LO\n    if ( Counter2 \u003e 0 )\n    {\n        Nwk_ManIncrementTravIdFlow( pMan );\n        Nwk_ManForEachLoSeq( pMan, pObj, i )\n        {\n            RetValue = Nwk_ManPushForwardBot_rec( pObj, NULL );\n            assert( !RetValue );\n        }\n    }\n    // cut is a set of nodes whose bottom is visited but top is not visited\n    vNodes = Vec_PtrAlloc( Counter+Counter2 );\n    Counter = 0;\n    Nwk_ManForEachObj( pMan, pObj, i )\n    {\n        if ( Nwk_ObjVisitedBotOnly(pObj) )\n        {\n            assert( Nwk_ObjHasFlow(pObj) );\n            assert( !Nwk_ObjIsCo(pObj) );\n            Vec_PtrPush( vNodes, pObj );\n            Counter += Nwk_ObjIsCi(pObj);\n        }\n    }\n    Nwk_ManCleanMarks( pMan );\n//    assert( Nwk_ManRetimeVerifyCutForward(pMan, vNodes) );\n    if ( fVerbose )\n    {\n    printf( \"Min-cut = %4d.  Unmoved = %4d. \", Vec_PtrSize(vNodes), Counter );\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    return vNodes;\n}",
+      "Draft": "func Nwk_ManRetimeCutForward(pMan *Nwk_Man_t, nLatches int32, fVerbose int32) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Nwk_Obj_t;\n    var i, RetValue, Counter, Counter2 int32;\n    var clk abctime  = Abc_Clock();\n    // set the sequential parameters\n    pMan.nLatches = nLatches;\n    pMan.nTruePis = Nwk_ManCiNum(pMan) - nLatches;\n    pMan.nTruePos = Nwk_ManCoNum(pMan) - nLatches;\n    // mark the COs and the TFO of PIs\n    // inlining of macro Nwk_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vCos)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {\n        pObj.MarkA = 1;\n    }\n    // inlining of macro Nwk_ManForEachPiSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c (pMan).nTruePis) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {\n        Nwk_ManMarkTfoCone_rec( pObj );\n    }\n    // start flow computation from each LO\n    Nwk_ManIncrementTravIdFlow( pMan );\n    // inlining of macro Nwk_ManForEachLoSeq\n    for  i = 0; (i \u003c (pMan).nLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCis, i+(pMan).nTruePis)), 1); i++  {\n        if !(Nwk_ManPushForwardFast_rec( pObj, nil ) != 0) {\n            continue; }\n        Nwk_ManIncrementTravIdFlow( pMan );\n        Counter++;\n    }\n    if fVerbose != 0 {\n    fmt.Printf(\"Forward:  Max-flow = %4d -\u003e \", Counter); }\n    // continue flow computation from each LO\n    Nwk_ManIncrementTravIdFlow( pMan );\n    // inlining of macro Nwk_ManForEachLoSeq\n    for  i = 0; (i \u003c (pMan).nLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCis, i+(pMan).nTruePis)), 1); i++  {\n        if !(Nwk_ManPushForwardBot_rec( pObj, nil ) != 0) {\n            continue; }\n        Nwk_ManIncrementTravIdFlow( pMan );\n        Counter2++;\n    }\n    if fVerbose != 0 {\n    fmt.Printf(\"%4d.  \", Counter+Counter2); }\n    // repeat flow computation from each LO\n    if Counter2 \u003e 0 {\n        Nwk_ManIncrementTravIdFlow( pMan );\n        // inlining of macro Nwk_ManForEachLoSeq\n        for  i = 0; (i \u003c (pMan).nLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCis, i+(pMan).nTruePis)), 1); i++  {\n            RetValue = Nwk_ManPushForwardBot_rec( pObj, nil );\n            assert(!RetValue, \"!RetValue\");\n        }\n    }\n    // cut is a set of nodes whose bottom is visited but top is not visited\n    vNodes = Vec_PtrAlloc( Counter+Counter2 );\n    Counter = 0;\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  {         if pObj == nil {} else {\n        if Nwk_ObjVisitedBotOnly(pObj) != 0 {\n            assert((Nwk_ObjHasFlow(pObj) != 0), \"Nwk_ObjHasFlow(pObj)\");\n            assert(!Nwk_ObjIsCo(pObj), \"!Nwk_ObjIsCo(pObj)\");\n            Vec_PtrPush( vNodes, pObj );\n            Counter += Nwk_ObjIsCi(pObj);\n        }\n    }\n    }\n    Nwk_ManCleanMarks( pMan );\n//    assert( Nwk_ManRetimeVerifyCutForward(pMan, vNodes) );\n    if fVerbose != 0 {\n    fmt.Printf(\"Min-cut = %4d.  Unmoved = %4d. \", Vec_PtrSize(vNodes), Counter);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    return vNodes;\n}"
+    },
+    {
+      "Name": "Nwk_ManRetimeCutBackward",
+      "Start": 15399,
+      "End": 17946,
+      "BodyStart": 15484,
+      "Original": "Vec_Ptr_t * Nwk_ManRetimeCutBackward( Nwk_Man_t * pMan, int nLatches, int fVerbose )\n{\n    Vec_Ptr_t * vNodes;\n    Nwk_Obj_t * pObj;\n    int i, RetValue, Counter = 0, Counter2 = 0;\n    abctime clk = Abc_Clock();\n    // set the sequential parameters\n    pMan-\u003enLatches = nLatches;\n    pMan-\u003enTruePis = Nwk_ManCiNum(pMan) - nLatches;\n    pMan-\u003enTruePos = Nwk_ManCoNum(pMan) - nLatches;\n    // mark the CIs, the TFI of POs, and the constant nodes\n    Nwk_ManForEachCi( pMan, pObj, i )\n        pObj-\u003eMarkA = 1;\n    Nwk_ManForEachPoSeq( pMan, pObj, i )\n        Nwk_ManMarkTfiCone_rec( pObj );\n    Nwk_ManForEachNode( pMan, pObj, i )\n        if ( Nwk_ObjFaninNum(pObj) == 0 )\n            pObj-\u003eMarkA = 1;\n    // start flow computation from each LI driver\n    Nwk_ManIncrementTravIdFlow( pMan );\n    Nwk_ManForEachLiSeq( pMan, pObj, i )\n    {\n        if ( !Nwk_ManPushBackwardFast_rec( Nwk_ObjFanin0(pObj), NULL ) )\n            continue;\n        Nwk_ManIncrementTravIdFlow( pMan );\n        Counter++; \n    }\n    if ( fVerbose ) \n    printf( \"Backward: Max-flow = %4d -\u003e \", Counter );\n    // continue flow computation from each LI driver\n    Nwk_ManIncrementTravIdFlow( pMan );\n    Nwk_ManForEachLiSeq( pMan, pObj, i )\n    {\n        if ( !Nwk_ManPushBackwardBot_rec( Nwk_ObjFanin0(pObj), NULL ) )\n            continue;\n        Nwk_ManIncrementTravIdFlow( pMan );\n        Counter2++;\n    }\n    if ( fVerbose )\n    printf( \"%4d.  \", Counter+Counter2 );\n    // repeat flow computation from each LI driver\n    if ( Counter2 \u003e 0 )\n    {\n        Nwk_ManIncrementTravIdFlow( pMan );\n        Nwk_ManForEachLiSeq( pMan, pObj, i )\n        {\n            RetValue = Nwk_ManPushBackwardBot_rec( Nwk_ObjFanin0(pObj), NULL );\n            assert( !RetValue );\n        }\n    }\n    // cut is a set of nodes whose bottom is visited but top is not visited\n    vNodes = Vec_PtrAlloc( Counter+Counter2 );\n    Nwk_ManForEachObj( pMan, pObj, i )\n    {\n        if ( Nwk_ObjVisitedBotOnly(pObj) )\n        {\n            assert( Nwk_ObjHasFlow(pObj) );\n            assert( !Nwk_ObjIsCo(pObj) );\n            Vec_PtrPush( vNodes, pObj );\n        }\n    }\n    // count CO drivers\n    Counter = 0;\n    Nwk_ManForEachLiSeq( pMan, pObj, i )\n        if ( Nwk_ObjVisitedBotOnly( Nwk_ObjFanin0(pObj) ) )\n            Counter++;\n    Nwk_ManCleanMarks( pMan );\n//    assert( Nwk_ManRetimeVerifyCutBackward(pMan, vNodes) );\n    if ( fVerbose )\n    {\n    printf( \"Min-cut = %4d.  Unmoved = %4d. \", Vec_PtrSize(vNodes), Counter );\n    ABC_PRT( \"Time\", Abc_Clock() - clk );\n    }\n    return vNodes;\n}",
+      "Draft": "func Nwk_ManRetimeCutBackward(pMan *Nwk_Man_t, nLatches int32, fVerbose int32) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Nwk_Obj_t;\n    var i, RetValue, Counter, Counter2 int32;\n    var clk abctime  = Abc_Clock();\n    // set the sequential parameters\n    pMan.nLatches = nLatches;\n    pMan.nTruePis = Nwk_ManCiNum(pMan) - nLatches;\n    pMan.nTruePos = Nwk_ManCoNum(pMan) - nLatches;\n    // mark the CIs, the TFI of POs, and the constant nodes\n    // inlining of macro Nwk_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vCis)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {\n        pObj.MarkA = 1;\n    }\n    // inlining of macro Nwk_ManForEachPoSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c (pMan).nTruePos) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {\n        Nwk_ManMarkTfiCone_rec( pObj );\n    }\n    // inlining of macro Nwk_ManForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  {         if (pObj) == nil || !Nwk_ObjIsNode(pObj) {} else\n        if Nwk_ObjFaninNum(pObj) == 0 {\n            pObj.MarkA = 1; }\n    }\n    // start flow computation from each LI driver\n    Nwk_ManIncrementTravIdFlow( pMan );\n    // inlining of macro Nwk_ManForEachLiSeq\n    for  i = 0; (i \u003c (pMan).nLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCos, i+(pMan).nTruePos)), 1); i++  {\n        if !(Nwk_ManPushBackwardFast_rec( Nwk_ObjFanin0(pObj), nil ) != 0) {\n            continue; }\n        Nwk_ManIncrementTravIdFlow( pMan );\n        Counter++; \n    }\n    if fVerbose != 0 { \n    fmt.Printf(\"Backward: Max-flow = %4d -\u003e \", Counter); }\n    // continue flow computation from each LI driver\n    Nwk_ManIncrementTravIdFlow( pMan );\n    // inlining of macro Nwk_ManForEachLiSeq\n    for  i = 0; (i \u003c (pMan).nLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCos, i+(pMan).nTruePos)), 1); i++  {\n        if !(Nwk_ManPushBackwardBot_rec( Nwk_ObjFanin0(pObj), nil ) != 0) {\n            continue; }\n        Nwk_ManIncrementTravIdFlow( pMan );\n        Counter2++;\n    }\n    if fVerbose != 0 {\n    fmt.Printf(\"%4d.  \", Counter+Counter2); }\n    // repeat flow computation from each LI driver\n    if Counter2 \u003e 0 {\n        Nwk_ManIncrementTravIdFlow( pMan );\n        // inlining of macro Nwk_ManForEachLiSeq\n        for  i = 0; (i \u003c (pMan).nLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCos, i+(pMan).nTruePos)), 1); i++  {\n            RetValue = Nwk_ManPushBackwardBot_rec( Nwk_ObjFanin0(pObj), nil );\n            assert(!RetValue, \"!RetValue\");\n        }\n    }\n    // cut is a set of nodes whose bottom is visited but top is not visited\n    vNodes = Vec_PtrAlloc( Counter+Counter2 );\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  {         if pObj == nil {} else {\n        if Nwk_ObjVisitedBotOnly(pObj) != 0 {\n            assert((Nwk_ObjHasFlow(pObj) != 0), \"Nwk_ObjHasFlow(pObj)\");\n            assert(!Nwk_ObjIsCo(pObj), \"!Nwk_ObjIsCo(pObj)\");\n            Vec_PtrPush( vNodes, pObj );\n        }\n    }\n    }\n    // count CO drivers\n    Counter = 0;\n    // inlining of macro Nwk_ManForEachLiSeq\n    for  i = 0; (i \u003c (pMan).nLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCos, i+(pMan).nTruePos)), 1); i++  {\n        if Nwk_ObjVisitedBotOnly( Nwk_ObjFanin0(pObj) ) != 0 {\n            Counter++; }\n    }\n    Nwk_ManCleanMarks( pMan );\n//    assert( Nwk_ManRetimeVerifyCutBackward(pMan, vNodes) );\n    if fVerbose != 0 {\n    fmt.Printf(\"Min-cut = %4d.  Unmoved = %4d. \", Vec_PtrSize(vNodes), Counter);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    return vNodes;\n}"
+    }
+  ],
+  "Issues": [
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::1214",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 1214,
+      "End": 1227
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::12815",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11766,
+      "End": 11766
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::13170",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 11960,
+      "End": 11960
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::13498",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 12161,
+      "End": 12161
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::14808",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13310,
+      "End": 13310
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::15054",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13373,
+      "End": 13373
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::15339",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13537,
+      "End": 13537
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::15833",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 13893,
+      "End": 13893
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::16350",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14272,
+      "End": 14272
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::16798",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 14576,
+      "End": 14576
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::18416",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15847,
+      "End": 15847
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::18662",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15910,
+      "End": 15910
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::18871",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 15991,
+      "End": 15991
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::19257",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16192,
+      "End": 16192
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::19776",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16573,
+      "End": 16573
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::20316",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 16975,
+      "End": 16975
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::20763",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17278,
+      "End": 17278
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::pointer-cast::21205",
+      "Category": "representation-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Pointer cast retained: decide pointer/slice/string representation, aliasing and any tagged-pointer bits before translating.",
+      "Start": 17560,
+      "End": 17560
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ObjPred",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjPred",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1129,
+      "End": 1248
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ObjSetPred",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjSetPred",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1249,
+      "End": 1355
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ObjIsSink",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjIsSink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1364,
+      "End": 1470
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ObjSetSink",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjSetSink",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1471,
+      "End": 1577
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ObjHasFlow",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjHasFlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1586,
+      "End": 1692
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ObjSetFlow",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjSetFlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1693,
+      "End": 1799
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ObjClearFlow",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjClearFlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 1800,
+      "End": 1906
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ObjVisitedBotOnly",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjVisitedBotOnly",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2178,
+      "End": 2298
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ObjVisitedBot",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjVisitedBot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2299,
+      "End": 2459
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ObjVisitedTop",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjVisitedTop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2460,
+      "End": 2620
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ObjSetVisitedBot",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjSetVisitedBot",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2621,
+      "End": 2918
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ObjSetVisitedTop",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ObjSetVisitedTop",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 2919,
+      "End": 3216
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ManIncrementTravIdFlow",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManIncrementTravIdFlow",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 3217,
+      "End": 3394
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ManMarkTfiCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManMarkTfiCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4184,
+      "End": 4412
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ManMarkTfoCone_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManMarkTfoCone_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 4670,
+      "End": 4899
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ManPushForwardFast_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManPushForwardFast_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 5161,
+      "End": 5752
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ManPushBackwardFast_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManPushBackwardFast_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6015,
+      "End": 6607
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ManPushForwardBot_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManPushForwardBot_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 6898,
+      "End": 7666
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ManPushForwardTop_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManPushForwardTop_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 7952,
+      "End": 8654
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ManPushBackwardBot_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManPushBackwardBot_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 8945,
+      "End": 9523
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ManPushBackwardTop_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManPushBackwardTop_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 9809,
+      "End": 10695
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ManVerifyCut_rec",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManVerifyCut_rec",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 10978,
+      "End": 11369
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ManRetimeVerifyCutForward",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManRetimeVerifyCutForward",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 11631,
+      "End": 12253
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ManRetimeVerifyCutBackward",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManRetimeVerifyCutBackward",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12514,
+      "End": 12606
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ManRetimeCutForward",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManRetimeCutForward",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 12884,
+      "End": 15120
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::Nwk_ManRetimeCutBackward",
+      "Category": "semantic-review",
+      "Symbol": "Nwk_ManRetimeCutBackward",
+      "Status": "open",
+      "Message": "Review C truth values, casts, control-flow braces, allocation, macros and numeric semantics; draft is not executable Go.",
+      "Start": 15399,
+      "End": 17946
+    },
+    {
+      "ID": "/wd_black1tb/home/jaten/go/src/github.com/glycerine/ivy/pyivy/ivy/submodules/abc/src/opt/nwk/nwkFlow.c::file",
+      "Category": "file-review",
+      "Symbol": "",
+      "Status": "open",
+      "Message": "Preprocessor configuration, types, macros and declarations outside recognized functions are preserved verbatim and require review.",
+      "Start": 0,
+      "End": 18194
+    }
+  ],
+  "Draft": "package nwk\n\nimport (\n\t\"fmt\"\n\t\"time\"\n)\n\n/**CFile****************************************************************\n\n  FileName    [nwkFlow.c]\n\n  SystemName  [ABC: Logic synthesis and verification system.]\n\n  PackageName [Netlist representation.]\n\n  Synopsis    [Max-flow/min-cut computation.]\n\n  Author      [Alan Mishchenko]\n  \n  Affiliation [UC Berkeley]\n\n  Date        [Ver. 1.0. Started - June 20, 2005.]\n\n  Revision    [$Id: nwkFlow.c,v 1.00 2005/06/20 00:00:00 alanmi Exp $]\n\n***********************************************************************/\n\n//#include \"nwk.h\"\n\n//ABC_NAMESPACE_IMPL_START\n\n\n/*\n    This code is based on the papers:\n    A. Hurst, A. Mishchenko, and R. Brayton, \"Fast minimum-register retiming \n    via binary maximum-flow\", Proc. FMCAD '07, pp. 181-187. \n    A. Hurst, A. Mishchenko, and R. Brayton, \"Scalable min-area retiming \n    under simultaneous delay and initial state constraints\". Proc. DAC'08. \n*/\n\n////////////////////////////////////////////////////////////////////////\n///                        DECLARATIONS                              ///\n////////////////////////////////////////////////////////////////////////\n\n// predecessors\nfunc Nwk_ObjPred(pObj *Nwk_Obj_t) *Nwk_Obj_t { return (Nwk_Obj_t *)pObj.pCopy;        }\nfunc Nwk_ObjSetPred(pObj *Nwk_Obj_t, p *Nwk_Obj_t) int32 { pObj.pCopy = p; return 1; }\n// sink\nfunc Nwk_ObjIsSink(pObj *Nwk_Obj_t) int32 { return pObj.MarkA;        }\nfunc Nwk_ObjSetSink(pObj *Nwk_Obj_t) { pObj.MarkA = 1;           }\n// flow\nfunc Nwk_ObjHasFlow(pObj *Nwk_Obj_t) int32 { return pObj.MarkB;        }\nfunc Nwk_ObjSetFlow(pObj *Nwk_Obj_t) { pObj.MarkB = 1;           }\nfunc Nwk_ObjClearFlow(pObj *Nwk_Obj_t) { pObj.MarkB = 0;           }\n \n// representation of visited nodes\n// pObj-\u003eTravId  \u003c pNtk-\u003enTravIds-2   --- not visited\n// pObj-\u003eTravId == pNtk-\u003enTravIds-2   --- visited bot only\n// pObj-\u003eTravId == pNtk-\u003enTravIds-1   --- visited top only\n// pObj-\u003eTravId == pNtk-\u003enTravIds     --- visited bot and top\nfunc Nwk_ObjVisitedBotOnly(pObj *Nwk_Obj_t) int32 {\n    return pObj.TravId == pObj.pMan.nTravIds - 2;\n}\nfunc Nwk_ObjVisitedBot(pObj *Nwk_Obj_t) int32 { \n    return pObj.TravId == pObj.pMan.nTravIds - 2 || pObj.TravId == pObj.pMan.nTravIds; \n}\nfunc Nwk_ObjVisitedTop(pObj *Nwk_Obj_t) int32 { \n    return pObj.TravId == pObj.pMan.nTravIds - 1 || pObj.TravId == pObj.pMan.nTravIds; \n}\nfunc Nwk_ObjSetVisitedBot(pObj *Nwk_Obj_t) {\n    if pObj.TravId \u003c pObj.pMan.nTravIds - 2 {\n        pObj.TravId = pObj.pMan.nTravIds - 2;\n    } else if pObj.TravId == pObj.pMan.nTravIds - 1 {\n        pObj.TravId = pObj.pMan.nTravIds;\n    } else {\n        assert(false, \"0\"); }\n}\nfunc Nwk_ObjSetVisitedTop(pObj *Nwk_Obj_t) {\n    if pObj.TravId \u003c pObj.pMan.nTravIds - 2 {\n        pObj.TravId = pObj.pMan.nTravIds - 1;\n    } else if pObj.TravId == pObj.pMan.nTravIds - 2 {\n        pObj.TravId = pObj.pMan.nTravIds;\n    } else {\n        assert(false, \"0\"); }\n}\nfunc Nwk_ManIncrementTravIdFlow(pMan *Nwk_Man_t) {\n    Nwk_ManIncrementTravId( pMan );\n    Nwk_ManIncrementTravId( pMan );\n    Nwk_ManIncrementTravId( pMan );\n}\n\n// static int Nwk_ManPushForwardTop_rec( Nwk_Obj_t * pObj, Nwk_Obj_t * pPred );\n\n// static int Nwk_ManPushForwardBot_rec( Nwk_Obj_t * pObj, Nwk_Obj_t * pPred );\n\n\n// static int Nwk_ManPushBackwardTop_rec( Nwk_Obj_t * pObj, Nwk_Obj_t * pPred );\n\n// static int Nwk_ManPushBackwardBot_rec( Nwk_Obj_t * pObj, Nwk_Obj_t * pPred );\n\n\n////////////////////////////////////////////////////////////////////////\n///                     FUNCTION DEFINITIONS                         ///\n////////////////////////////////////////////////////////////////////////\n\n/**Function*************************************************************\n\n  Synopsis    [Marks TFI of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManMarkTfiCone_rec(pObj *Nwk_Obj_t) {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if pObj.MarkA {\n        return; }\n    pObj.MarkA = 1;\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[i]); i++  {\n        Nwk_ManMarkTfiCone_rec( pNext );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Marks TFO of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManMarkTfoCone_rec(pObj *Nwk_Obj_t) {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if pObj.MarkA {\n        return; }\n    pObj.MarkA = 1;\n    // inlining of macro Nwk_ObjForEachFanout\n    for  i = 0; (i \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pNext) = (pObj).pFanio[(pObj).nFanins+i]); i++  {\n        Nwk_ManMarkTfoCone_rec( pNext );\n    }\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Fast forward flow pushing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManPushForwardFast_rec(pObj *Nwk_Obj_t, pPred *Nwk_Obj_t) int32 {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if Nwk_ObjIsTravIdCurrent( pObj ) {\n        return 0; }\n    Nwk_ObjSetTravIdCurrent( pObj );\n    if Nwk_ObjHasFlow(pObj) != 0 {\n        return 0; }\n    if Nwk_ObjIsSink(pObj) != 0 {\n        Nwk_ObjSetFlow(pObj);\n        return Nwk_ObjSetPred( pObj, pPred );\n    }\n    // inlining of macro Nwk_ObjForEachFanout\n    for  i = 0; (i \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pNext) = (pObj).pFanio[(pObj).nFanins+i]); i++  {\n        if Nwk_ManPushForwardFast_rec( pNext, pObj ) != 0 {\n            Nwk_ObjSetFlow(pObj);\n            return Nwk_ObjSetPred( pObj, pPred );\n        }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Fast backward flow pushing.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManPushBackwardFast_rec(pObj *Nwk_Obj_t, pPred *Nwk_Obj_t) int32 {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if Nwk_ObjIsTravIdCurrent( pObj ) {\n        return 0; }\n    Nwk_ObjSetTravIdCurrent( pObj );\n    if Nwk_ObjHasFlow(pObj) != 0 {\n        return 0; }\n    if Nwk_ObjIsSink(pObj) != 0 {\n        Nwk_ObjSetFlow(pObj);\n        return Nwk_ObjSetPred( pObj, pPred );\n    }\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[i]); i++  {\n        if Nwk_ManPushBackwardFast_rec( pNext, pObj ) != 0 {\n            Nwk_ObjSetFlow(pObj);\n            return Nwk_ObjSetPred( pObj, pPred );\n        }\n    }\n    return 0;\n}\n  \n/**Function*************************************************************\n\n  Synopsis    [Pushing the flow through the bottom part of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManPushForwardBot_rec(pObj *Nwk_Obj_t, pPred *Nwk_Obj_t) int32 {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if Nwk_ObjVisitedBot(pObj) != 0 {\n        return 0; }\n    Nwk_ObjSetVisitedBot(pObj);\n    // propagate through the internal edge\n    if Nwk_ObjHasFlow(pObj) != 0 {\n        if Nwk_ObjPred(pObj) != nil {\n            if Nwk_ManPushForwardTop_rec( Nwk_ObjPred(pObj), Nwk_ObjPred(pObj) ) != 0 {\n                return Nwk_ObjSetPred( pObj, pPred ); } } \n    \n    } else if Nwk_ManPushForwardTop_rec(pObj, pObj) != 0 {\n        Nwk_ObjSetFlow( pObj );\n        return Nwk_ObjSetPred( pObj, pPred );\n    }\n    // try to push through the fanins\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[i]); i++  {\n        if Nwk_ManPushForwardBot_rec( pNext, pPred ) != 0 {\n            return 1; }\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Pushing the flow through the top part of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManPushForwardTop_rec(pObj *Nwk_Obj_t, pPred *Nwk_Obj_t) int32 {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if Nwk_ObjVisitedTop(pObj) != 0 {\n        return 0; }\n    Nwk_ObjSetVisitedTop(pObj);\n    // check if this is the sink\n    if Nwk_ObjIsSink(pObj) != 0 {\n        return 1; }\n    // try to push through the fanouts\n    // inlining of macro Nwk_ObjForEachFanout\n    for  i = 0; (i \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pNext) = (pObj).pFanio[(pObj).nFanins+i]); i++  {\n        if Nwk_ManPushForwardBot_rec( pNext, pPred ) != 0 {\n            return 1; }\n    }\n    // redirect the flow\n    if (Nwk_ObjHasFlow(pObj) != 0) \u0026\u0026 !Nwk_ObjIsCi(pObj) {\n        if Nwk_ManPushForwardBot_rec( pObj, Nwk_ObjPred(pObj) ) != 0 {\n            Nwk_ObjClearFlow( pObj );\n            return Nwk_ObjSetPred( pObj, nil );\n        } }\n    return 0;\n}\n  \n/**Function*************************************************************\n\n  Synopsis    [Pushing the flow through the bottom part of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManPushBackwardBot_rec(pObj *Nwk_Obj_t, pPred *Nwk_Obj_t) int32 {\n    if Nwk_ObjVisitedBot(pObj) != 0 {\n        return 0; }\n    Nwk_ObjSetVisitedBot(pObj);\n    // propagate through the internal edge\n    if Nwk_ObjHasFlow(pObj) != 0 {\n        if Nwk_ObjPred(pObj) != nil {\n            if Nwk_ManPushBackwardTop_rec( Nwk_ObjPred(pObj), Nwk_ObjPred(pObj) ) != 0 {\n                return Nwk_ObjSetPred( pObj, pPred ); } } \n    \n    } else if Nwk_ManPushBackwardTop_rec(pObj, pObj) != 0 {\n        Nwk_ObjSetFlow( pObj );\n        return Nwk_ObjSetPred( pObj, pPred );\n    }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Pushing the flow through the top part of the node.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManPushBackwardTop_rec(pObj *Nwk_Obj_t, pPred *Nwk_Obj_t) int32 {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if Nwk_ObjVisitedTop(pObj) != 0 {\n        return 0; }\n    Nwk_ObjSetVisitedTop(pObj);\n    // check if this is the sink\n    if Nwk_ObjIsSink(pObj) != 0 {\n        return 1; }\n    // try to push through the fanins\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[i]); i++  {\n        if Nwk_ManPushBackwardBot_rec( pNext, pPred ) != 0 {\n            return 1; }\n    }\n    // try to push through the fanouts\n    // inlining of macro Nwk_ObjForEachFanout\n    for  i = 0; (i \u003c int32((pObj).nFanouts)) \u0026\u0026 ((pNext) = (pObj).pFanio[(pObj).nFanins+i]); i++  {\n        if !Nwk_ObjIsCo(pObj) \u0026\u0026 (Nwk_ManPushBackwardTop_rec( pNext, pPred ) != 0) {\n            return 1; }\n    }\n    // redirect the flow\n    if Nwk_ObjHasFlow(pObj) != 0 {\n        if (Nwk_ObjPred(pObj) != nil) \u0026\u0026 (Nwk_ManPushBackwardBot_rec( pObj, Nwk_ObjPred(pObj) ) != 0) {\n            Nwk_ObjClearFlow( pObj );\n            return Nwk_ObjSetPred( pObj, nil );\n        } }\n    return 0;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Returns 0 if there is an unmarked path to a CI.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManVerifyCut_rec(pObj *Nwk_Obj_t) int32 {\n    var pNext *Nwk_Obj_t;\n    var i int32;\n    if pObj.MarkA {\n        return 1; }\n    if Nwk_ObjIsLo(pObj) {\n        return 0; }\n    if Nwk_ObjIsTravIdCurrent( pObj ) {\n        return 1; }\n    Nwk_ObjSetTravIdCurrent( pObj );\n    // inlining of macro Nwk_ObjForEachFanin\n    for  i = 0; (i \u003c int32((pObj).nFanins)) \u0026\u0026 ((pNext) = (pObj).pFanio[i]); i++  {\n        if !(Nwk_ManVerifyCut_rec( pNext ) != 0) {\n            return 0; }\n    }\n    return 1;\n}\n \n/**Function*************************************************************\n\n  Synopsis    [Verifies the forward cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManRetimeVerifyCutForward(pMan *Nwk_Man_t, vNodes *Vec_Ptr_t) int32 {\n    var pObj *Nwk_Obj_t;\n    var i int32;\n    // mark the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        assert(pObj.MarkA == 0, \"pObj.MarkA == 0\");\n        pObj.MarkA = 1;\n    }\n    // traverse from the COs\n    Nwk_ManIncrementTravId( pMan );\n    // inlining of macro Nwk_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vCos)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {\n        if !(Nwk_ManVerifyCut_rec( pObj ) != 0) {\n            fmt.Printf(\"Nwk_ManRetimeVerifyCutForward(): Internal cut verification failed.\\n\"); }\n    }\n    // unmark the nodes\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(vNodes)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(vNodes, i)), 1); i++  {\n        pObj.MarkA = 0;\n    }\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Verifies the forward cut.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManRetimeVerifyCutBackward(pMan *Nwk_Man_t, vNodes *Vec_Ptr_t) int32 {\n    return 1;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes minimum cut for forward retiming.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManRetimeCutForward(pMan *Nwk_Man_t, nLatches int32, fVerbose int32) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Nwk_Obj_t;\n    var i, RetValue, Counter, Counter2 int32;\n    var clk abctime  = Abc_Clock();\n    // set the sequential parameters\n    pMan.nLatches = nLatches;\n    pMan.nTruePis = Nwk_ManCiNum(pMan) - nLatches;\n    pMan.nTruePos = Nwk_ManCoNum(pMan) - nLatches;\n    // mark the COs and the TFO of PIs\n    // inlining of macro Nwk_ManForEachCo\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vCos)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {\n        pObj.MarkA = 1;\n    }\n    // inlining of macro Nwk_ManForEachPiSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c (pMan).nTruePis) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {\n        Nwk_ManMarkTfoCone_rec( pObj );\n    }\n    // start flow computation from each LO\n    Nwk_ManIncrementTravIdFlow( pMan );\n    // inlining of macro Nwk_ManForEachLoSeq\n    for  i = 0; (i \u003c (pMan).nLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCis, i+(pMan).nTruePis)), 1); i++  {\n        if !(Nwk_ManPushForwardFast_rec( pObj, nil ) != 0) {\n            continue; }\n        Nwk_ManIncrementTravIdFlow( pMan );\n        Counter++;\n    }\n    if fVerbose != 0 {\n    fmt.Printf(\"Forward:  Max-flow = %4d -\u003e \", Counter); }\n    // continue flow computation from each LO\n    Nwk_ManIncrementTravIdFlow( pMan );\n    // inlining of macro Nwk_ManForEachLoSeq\n    for  i = 0; (i \u003c (pMan).nLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCis, i+(pMan).nTruePis)), 1); i++  {\n        if !(Nwk_ManPushForwardBot_rec( pObj, nil ) != 0) {\n            continue; }\n        Nwk_ManIncrementTravIdFlow( pMan );\n        Counter2++;\n    }\n    if fVerbose != 0 {\n    fmt.Printf(\"%4d.  \", Counter+Counter2); }\n    // repeat flow computation from each LO\n    if Counter2 \u003e 0 {\n        Nwk_ManIncrementTravIdFlow( pMan );\n        // inlining of macro Nwk_ManForEachLoSeq\n        for  i = 0; (i \u003c (pMan).nLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCis, i+(pMan).nTruePis)), 1); i++  {\n            RetValue = Nwk_ManPushForwardBot_rec( pObj, nil );\n            assert(!RetValue, \"!RetValue\");\n        }\n    }\n    // cut is a set of nodes whose bottom is visited but top is not visited\n    vNodes = Vec_PtrAlloc( Counter+Counter2 );\n    Counter = 0;\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  {         if pObj == nil {} else {\n        if Nwk_ObjVisitedBotOnly(pObj) != 0 {\n            assert((Nwk_ObjHasFlow(pObj) != 0), \"Nwk_ObjHasFlow(pObj)\");\n            assert(!Nwk_ObjIsCo(pObj), \"!Nwk_ObjIsCo(pObj)\");\n            Vec_PtrPush( vNodes, pObj );\n            Counter += Nwk_ObjIsCi(pObj);\n        }\n    }\n    }\n    Nwk_ManCleanMarks( pMan );\n//    assert( Nwk_ManRetimeVerifyCutForward(pMan, vNodes) );\n    if fVerbose != 0 {\n    fmt.Printf(\"Min-cut = %4d.  Unmoved = %4d. \", Vec_PtrSize(vNodes), Counter);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    return vNodes;\n}\n\n/**Function*************************************************************\n\n  Synopsis    [Computes minimum cut for backward retiming.]\n\n  Description []\n               \n  SideEffects []\n\n  SeeAlso     []\n\n***********************************************************************/\nfunc Nwk_ManRetimeCutBackward(pMan *Nwk_Man_t, nLatches int32, fVerbose int32) *Vec_Ptr_t {\n    var vNodes *Vec_Ptr_t;\n    var pObj *Nwk_Obj_t;\n    var i, RetValue, Counter, Counter2 int32;\n    var clk abctime  = Abc_Clock();\n    // set the sequential parameters\n    pMan.nLatches = nLatches;\n    pMan.nTruePis = Nwk_ManCiNum(pMan) - nLatches;\n    pMan.nTruePos = Nwk_ManCoNum(pMan) - nLatches;\n    // mark the CIs, the TFI of POs, and the constant nodes\n    // inlining of macro Nwk_ManForEachCi\n    // inlining of macro Vec_PtrForEachEntry\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vCis)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCis, i)), 1); i++  {\n        pObj.MarkA = 1;\n    }\n    // inlining of macro Nwk_ManForEachPoSeq\n    // inlining of macro Vec_PtrForEachEntryStop\n    for  i = 0; (i \u003c (pMan).nTruePos) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCos, i)), 1); i++  {\n        Nwk_ManMarkTfiCone_rec( pObj );\n    }\n    // inlining of macro Nwk_ManForEachNode\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  {         if (pObj) == nil || !Nwk_ObjIsNode(pObj) {} else\n        if Nwk_ObjFaninNum(pObj) == 0 {\n            pObj.MarkA = 1; }\n    }\n    // start flow computation from each LI driver\n    Nwk_ManIncrementTravIdFlow( pMan );\n    // inlining of macro Nwk_ManForEachLiSeq\n    for  i = 0; (i \u003c (pMan).nLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCos, i+(pMan).nTruePos)), 1); i++  {\n        if !(Nwk_ManPushBackwardFast_rec( Nwk_ObjFanin0(pObj), nil ) != 0) {\n            continue; }\n        Nwk_ManIncrementTravIdFlow( pMan );\n        Counter++; \n    }\n    if fVerbose != 0 { \n    fmt.Printf(\"Backward: Max-flow = %4d -\u003e \", Counter); }\n    // continue flow computation from each LI driver\n    Nwk_ManIncrementTravIdFlow( pMan );\n    // inlining of macro Nwk_ManForEachLiSeq\n    for  i = 0; (i \u003c (pMan).nLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCos, i+(pMan).nTruePos)), 1); i++  {\n        if !(Nwk_ManPushBackwardBot_rec( Nwk_ObjFanin0(pObj), nil ) != 0) {\n            continue; }\n        Nwk_ManIncrementTravIdFlow( pMan );\n        Counter2++;\n    }\n    if fVerbose != 0 {\n    fmt.Printf(\"%4d.  \", Counter+Counter2); }\n    // repeat flow computation from each LI driver\n    if Counter2 \u003e 0 {\n        Nwk_ManIncrementTravIdFlow( pMan );\n        // inlining of macro Nwk_ManForEachLiSeq\n        for  i = 0; (i \u003c (pMan).nLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCos, i+(pMan).nTruePos)), 1); i++  {\n            RetValue = Nwk_ManPushBackwardBot_rec( Nwk_ObjFanin0(pObj), nil );\n            assert(!RetValue, \"!RetValue\");\n        }\n    }\n    // cut is a set of nodes whose bottom is visited but top is not visited\n    vNodes = Vec_PtrAlloc( Counter+Counter2 );\n    // inlining of macro Nwk_ManForEachObj\n    for  i = 0; (i \u003c Vec_PtrSize(pMan.vObjs)) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vObjs, i)), 1); i++  {         if pObj == nil {} else {\n        if Nwk_ObjVisitedBotOnly(pObj) != 0 {\n            assert((Nwk_ObjHasFlow(pObj) != 0), \"Nwk_ObjHasFlow(pObj)\");\n            assert(!Nwk_ObjIsCo(pObj), \"!Nwk_ObjIsCo(pObj)\");\n            Vec_PtrPush( vNodes, pObj );\n        }\n    }\n    }\n    // count CO drivers\n    Counter = 0;\n    // inlining of macro Nwk_ManForEachLiSeq\n    for  i = 0; (i \u003c (pMan).nLatches) \u0026\u0026 (((pObj) = (Nwk_Obj_t *)Vec_PtrEntry(pMan.vCos, i+(pMan).nTruePos)), 1); i++  {\n        if Nwk_ObjVisitedBotOnly( Nwk_ObjFanin0(pObj) ) != 0 {\n            Counter++; }\n    }\n    Nwk_ManCleanMarks( pMan );\n//    assert( Nwk_ManRetimeVerifyCutBackward(pMan, vNodes) );\n    if fVerbose != 0 {\n    fmt.Printf(\"Min-cut = %4d.  Unmoved = %4d. \", Vec_PtrSize(vNodes), Counter);\n    // inlining of macro ABC_PRT\n    Abc_Print(1, \"%s =\", (\"Time\"));\nAbc_Print(1, \"%9.2f sec\\n\", 1.0*(float64((Abc_Clock() - clk)))/(float64(int64(time.Second))));;\n    }\n    return vNodes;\n}\n\n\n////////////////////////////////////////////////////////////////////////\n///                       END OF FILE                                ///\n////////////////////////////////////////////////////////////////////////\n\n\n//ABC_NAMESPACE_IMPL_END\n\n"
+}
